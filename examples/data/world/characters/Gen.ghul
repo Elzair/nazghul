@@ -126,28 +126,38 @@ RESP Gen_BoTuMa {
         SET_FLAG WILL_JOIN;
 }
 
+RESP Gen_Shroom {
+        SAY "She is an old friend. Can you believe she was a war-maiden in the Goblin Wars?";
+}
+
+RESP Gen_Maiden {
+        SAY "It's true! I can still remember her hand-axe flashing in the moonlight as she hacked her way through goblin war parties, chanting a battle-ward with ragged breath! She was a sight to see.";
+}
+
 CONV Gen_Conv {
         IMPORT { c_generic }
         NATIVE {
 
-                ADMI Gen_primal;
-                AMBI Gen_ambitious;
-                CAPT Gen_captain;
-                CAVE Gen_cave;
-                GOBL Gen_goblin;
-                JOB  Gen_job;
-                JOIN Gen_join;
-                LANG Gen_language;
-                NAME Gen_name;                 
-                PRIM Gen_primal;
-                PRAC Gen_practice;
-                RANG Gen_ranger;
-                REAS Gen_reasons;
-                SAVA Gen_primal;
-                SHAK Gen_shakespeare;
-                WARS Gen_wars;
-                WOOD Gen_woodsman;
-                FORE Gen_job;
+                ADMIRE      Gen_primal;
+                AMBITIOUS   Gen_ambitious;
+                CAPTAIN     Gen_captain;
+                CAVES       Gen_cave;
+                GOBLINS     Gen_goblin;
+                JOB         Gen_job;
+                JOIN        Gen_join;
+                LANGUAGE    Gen_language;
+                NAME        Gen_name;                 
+                PRIMAL      Gen_primal;
+                PRACTICE    Gen_practice;
+                RANGER      Gen_ranger;
+                REASONS     Gen_reasons;
+                SAVAGE      Gen_primal;
+                SHAKESPEARE Gen_shakespeare;
+                WARS        Gen_wars;
+                WOODSMAN    Gen_woodsman;
+                FOREST      Gen_job;
+                SHROOM      Gen_Shroom;
+                MAIDEN      Gen_Maiden;
 
                 BO   Gen_Bo;
                 CHO  Gen_Cho;
@@ -172,6 +182,22 @@ CONV Gen_Conv {
         }
 }
 
+SCHED Gen_Sched {
+        // Specific to Green Tower:
+     // hr mn x  y  w  h  act
+        0  0  2  13  1  1  SLEEPING; // his bed
+        4  0  3  12  3  3  EATING;   // his hut
+        5  0  7  20  5  5  IDLE;     // the woods
+       10  0  26 27  2 12  IDLE;     // the tower west
+       12  0  46 50 12  8  EATING;   // white stag
+       13  0  49  3  7  2  IDLE;     // shroom's shop
+       14  0  7  20  5  5  IDLE;     // the woods
+       18  0  46 50 12  8  EATING;   // white stag
+       19  0  3  12  3  3  IDLE;     // his hut
+       20  0  2  13  1  1  SLEEPING; // his bed
+}
+
+
 CHAR Gen {
         name     "Gen";
         species  human;
@@ -190,6 +216,7 @@ CHAR Gen {
                 t_sword;
                 t_sm_shield;
         }
+        sched Gen_Sched;
 }
 
 #endif

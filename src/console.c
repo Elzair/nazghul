@@ -33,7 +33,7 @@
 #include <ctype.h>
 #include <stdio.h>
 
-#define MAX_MSG_SZ 256
+#define MAX_MSG_SZ 512
 
 static struct console {
         SDL_Rect screenRect;

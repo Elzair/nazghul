@@ -47,24 +47,24 @@ MAP GreenTower_Map {
     "||||.||||||.||||||||||||||ttttt...tt|||||||||||txSHROOMSx|||||||";  //  7
     "||||........||||||||||||||ttttb...bt|||||||||tttxxxxxxxxx|||||||";  //  8
     "||||||||.||||||||||||||||tttttt...tt||||||||ttttx...x...x|||||||";  //  9
-    "||||||||.||||||||||||||||tttttb...bt||||||||tttt....?...?ttttttt";  // 10
-    "||rrrrr|.............||||tttttt...tt||||ttttt||tx...x...x|||||||";  // 11
-    "||rcccr|.|||||||||||.||||tttttb...bt||||t.ttt||txx0xxx.xx|||||||";  // 12
-    "||rcccc..|||||||||||.|||ttttttt...tt|tttt..t|||t||||||||||||||||";  // 13
-    "||rcccr|||||||||||||.|||ttttttb...bt|t||ttttttt.||||||||||||||||";  // 14
-    "||rrrrr|||||||||||||.|ttttttttt...tt|t|||||||||.||||||||||||||||";  // 15
-    "||||||||||||||||||||.|ttttttttb...bttttttttttttt||||||||||||||||";  // 16
-    "||||||||||||||||||tb.b.btbtbtb.....tbtbttbtbtbtt||||||||||||||||";  // 17
-    "||||||||||||||||||t............................tt|||||||||||||||";  // 18
-    "||||||||||||||||||b............................|t|||||||||||||||";  // 19
-    "||||||||||||||||||t............................tt|||||||||||||||";  // 20
-    "||||||||||||||||||b.....bdbdbd......bttbtbt....bt|||||||||||||||";  // 21
-    "||||||||||||||||||t....dddddddb....bttttttbt...tt|||||||||||||||";  // 22
-    "||||||||||||||||||b...bd|||||ddxccxtt|||||tt...bt|||||||||||||||";  // 23
-    "|||||||||||||||||||...dd||||xxxxccxxxx||||tb...tt|||||||||||||||";  // 24
-    "||||||||||||||||||b...bd||xxxccccccccxxx||tt...bt|||||||||||||||";  // 25
-    "|||||||||||||||||||...dd|xxccccccccccccxx|tb...tt|||||||||||||||";  // 26
-    "||||||||||||||||||b...bd|xccccccccccccccx|tt...tt|||||||||||||||";  // 27
+    "|||rrr||.||||||||||||||||tttttb...bt||||||||tttt....?...?ttttttt";  // 10
+    "||rrcrr|.............||||tttttt...tt||||ttttt||tx...x...x|||||||";  // 11
+    "|rrcccrr.|||||||||||.||||tttttb...bt||||t.ttt||txx0xxx.xx|||||||";  // 12
+    "|rcccccc.||||||||t||.|||ttttttt...tt|tttt..t|||t||||||||||||||||";  // 13
+    "|rrcccrr|||||t||ttt|.|||ttttttb...bt|t||ttttttt.||||||||||||||||";  // 14
+    "||rr&rr|t|||ttb||t||.|ttttttttt...tt|t|||||||||.||||||||||||||||";  // 15
+    "|||rrr|ttt|tt.tt||||.|ttttttttb...bttttttttttttt||||||||||||||||";  // 16
+    "|||t||||t|tt...tt|tb.b.btbtbtb.....tbtbttbtbtbtt||||||||||||||||";  // 17
+    "||ttt||||||tt.tt||t............................tt|||||||||||||||";  // 18
+    "|||t|||||tttttt|||b............................|t|||||||||||||||";  // 19
+    "|||||||ttttttt||||t............................tt|||||||||||||||";  // 20
+    "||||||ttt.ttt|||||b.....bdbdbd......bttbtbt....bt|||||||||||||||";  // 21
+    "|||||btt...ttt||||t....dddddddb....bttttttbt...tt|||||||||||||||";  // 22
+    "|||||tt.....tt||||b...bd|||||ddxccxtt|||||tt...bt|||||||||||||||";  // 23
+    "|||||ttt...ttt|||||...dd||||xxxxccxxxx||||tb...tt|||||||||||||||";  // 24
+    "|||||tttt.ttt||t||b...bd||xxxccccccccxxx||tt...bt|||||||||||||||";  // 25
+    "||tttt|ttttb||ttt||...dd|xxccccccccccccxx|tb...tt|||||||||||||||";  // 26
+    "||t|||||ttt||||t||b...bd|xccccccccccccccx|tt...tt|||||||||||||||";  // 27
     "ttt|||||||||||||||t...ddxxcccxxxccxxxcccxxtb...bt||||||||||||||t";  // 28
     "btttttttttttttttttb...bdxcccxx|tcct|xxcccxtt...tt||||||||||||||t";  // 29
     "..btbtbtbtbtbtbtbt....dbxcccx|t.cc.t|xcccxb....bt||||||||||||||t";  // 30
@@ -125,39 +125,55 @@ PLACE  GreenTower {
   underground 0;
   objects {
 
-    // Shroom's Shop
-    mech_vdoor shrooms_house_door 48 10 "locked";
-    mech_vdoor shrooms_counter_door 48 6 "locked";
-    mech_vdoor shrooms_shop_door  48 4  "closed";
-    mech_hdoor shrooms_storeroom_door 54 12 "magically locked";
-    t_bed 51 9;
+          //--------------------------------------------------
+          // Shroom's Shop
+          //--------------------------------------------------
+          mech_vdoor shrooms_house_door 48 10 "locked";
+          mech_vdoor shrooms_counter_door 48 6 "locked";
+          mech_vdoor shrooms_shop_door  48 4  "closed";
+          mech_hdoor shrooms_storeroom_door 54 12 "magically locked";
+          t_bed 51 9;
 
-    // White Stag Lodge
-    mech_hdoor ws_entrance_left 51 49 "closed";
-    mech_hdoor ws_entrance_right 52 49 "closed";
-    mech_vdoor ws_counter_door 57 59 "closed";
-    mech_1hr_self_locking_hdoor ws_A_door 44 58 "locked";
-    invisible_unlock_step_trigger ws_A_inside_unlock 44 59 "invisible";    
-    invisible_lock_step_trigger ws_A_outside_lock 44 57 "invisible";    
-    CONNECT ws_A_inside_unlock => ws_A_door;
-    //CONNECT ws_A_outside_lock => ws_A_door;
-    t_bed 43 61;
-    t_bed 58 61;
-    mech_hdoor doris_room_door 59 58 "locked";
+          //--------------------------------------------------
+          // Gen's Hut
+          //--------------------------------------------------
+          mech_vdoor gens_house_door 7 13 "closed";
+          t_bed 2 13;
+
+          //--------------------------------------------------
+          // White Stag Lodge
+          //--------------------------------------------------
+          mech_hdoor ws_entrance_left 51 49 "closed";
+          mech_hdoor ws_entrance_right 52 49 "closed";
+          mech_vdoor ws_counter_door 57 59 "closed";
+          mech_1hr_self_locking_hdoor ws_A_door 44 58 "locked";
+          invisible_unlock_step_trigger ws_A_inside_unlock 44 59 "invisible";    
+          invisible_lock_step_trigger ws_A_outside_lock 44 57 "invisible";    
+          CONNECT ws_A_inside_unlock => ws_A_door;
+          //CONNECT ws_A_outside_lock => ws_A_door;
+          t_bed 43 61;
+          t_bed 58 61;
+          mech_hdoor doris_room_door 59 58 "locked";
     
-    // ruins
-    mech_mandrake_generator altar_mandrake_gen 9 53 "active";
+          //--------------------------------------------------
+          // Temple Ruins
+          //--------------------------------------------------
+          mech_mandrake_generator altar_mandrake_gen 9 53 "active";
+          
+          //--------------------------------------------------
+          // Tower 
+          //--------------------------------------------------
+          // This lever will be connected to the prison portcullis in
+          // GreenTowerLower:
+          mech_C_lever prison_portcullis_lever      30 30 "right";
+          prison_drawbridge prison_drawbridge_lever 35 30 "down";
 
-    // Tower 
-    // This lever will be connected to the prison portcullis in
-    // GreenTowerLower:
-    mech_C_lever prison_portcullis_lever      30 30 "right";
-    prison_drawbridge prison_drawbridge_lever 35 30 "down";
-
-    // Characters
-    Shroom_the_Hag  40 11 (ALIGN_TOWN) 1;
-    char_doris      59 59 (ALIGN_TOWN) 1;   
-    Gen             32 32 (ALIGN_TOWN) 1;
+          //--------------------------------------------------
+          // Characters
+          //--------------------------------------------------
+          Shroom_the_Hag  40 11 (ALIGN_TOWN) 1;
+          char_doris      59 59 (ALIGN_TOWN) 1;   
+          Gen             32 32 (ALIGN_TOWN) 1;
 
   }
   object_type t_town;
