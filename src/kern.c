@@ -158,12 +158,13 @@ static struct kjob * kjob_new(void *data, closure_t *clx)
         assert(kjob);
         kjob->data = data;
         kjob->clx = clx;
+        closure_ref(clx);
         return kjob;
 }
 
 static void kjob_del(struct kjob *kjob)
 {
-        closure_del(kjob->clx);
+        closure_unref(kjob->clx);
         free(kjob);
 }
 
@@ -670,6 +671,7 @@ static pointer kern_mk_terrain(scheme *sc, pointer args)
 
         if (proc != sc->NIL) {
                 terrain->effect = closure_new(sc, proc);
+                closure_ref(terrain->effect);
         }
 
         session_add(Session, terrain, terrain_dtor, NULL, NULL);
@@ -989,8 +991,7 @@ static int kern_place_load_hooks(scheme *sc, pointer *args,
                         return -1;
                 }
 
-                place->pre_entry_hook = closure_new(sc, pre_entry_proc);
-
+                place->pre_entry_hook = closure_new_ref(sc, pre_entry_proc);
         }
 
         return 0;
@@ -1216,8 +1217,7 @@ static pointer kern_mk_species(scheme *sc, pointer args)
 
         /* Check if an on-death procedure was specified. */
         if (on_death != sc->NIL) {
-                species->on_death = closure_new(sc, on_death);
-                closure_ref(species->on_death);
+                species->on_death = closure_new_ref(sc, on_death);
         }
 
         /* Load the list of slots. */
@@ -1547,8 +1547,7 @@ static pointer kern_mk_char(scheme *sc, pointer args)
                 character->setConversation(closure_new(sc, conv));
 
         if (ai != sc->NIL) {
-                character->ai = closure_new(sc, ai);
-                closure_ref(character->ai);
+                character->setAI(closure_new(sc, ai));
         }
 
         /* Load the list of arms. */
@@ -1760,13 +1759,12 @@ static pointer kern_obj_relocate(scheme *sc, pointer args)
         }
 
         if (cutscene != sc->NIL) {
-                clx = closure_new(sc, cutscene);
+                clx = closure_new_ref(sc, cutscene);
         }
 
         obj->relocate(place, x, y, true, clx);
 
-        if (clx)
-                closure_del(clx);
+        closure_unref_safe(clx);
 
         return sc->NIL;
 }
@@ -3041,7 +3039,7 @@ static pointer kern_mk_astral_body(scheme *sc, pointer args)
         body->phase = initial_phase;
 
         if (proc != sc->NIL)
-                body->gifc = closure_new(sc, proc);
+                body->gifc = closure_new_ref(sc, proc);
 
         i = 0;
         while (scm_is_pair(sc, phases)) {
@@ -3480,6 +3478,32 @@ KERN_API_CALL(kern_char_set_sleep)
                 ch->sleep();
         else
                 ch->awaken();
+
+        return sc->T;
+}
+
+/* 
+ * kern_char_set_ai -- change the AI for a Character object
+ */
+KERN_API_CALL(kern_char_set_ai)
+{
+        class Character *ch;
+        pointer ai;
+
+        ch = (class Character*)unpack_obj(sc, &args, "kern-char-set-sleep");
+        if (!ch)
+                return sc->F;
+
+        if (unpack(sc, &args, "c", &ai)) {
+                rt_err("kern-char-set-ai: bad args");
+                return sc->F;
+        }
+
+        if (ai == sc->NIL) {
+                ch->setAI(NULL);
+        } else {
+                ch->setAI(closure_new(sc, ai));
+        }
 
         return sc->T;
 }
@@ -4199,8 +4223,7 @@ KERN_API_CALL(kern_mk_stock_char)
         assert(character);
         character->initStock(species, occ, sprite, name, 0);
         if (ai != sc->NIL) {
-                character->ai = closure_new(sc, ai);
-                closure_ref(character->ai);
+                character->setAI(closure_new(sc, ai));
         }
 
         return scm_mk_ptr(sc, character);
@@ -4838,10 +4861,11 @@ KERN_API_CALL(kern_ui_handle_events)
         }
 
         kh.fx = kern_kh_cb;
-        kh.data = closure_new(sc, func);
+        kh.data = closure_new_ref(sc, func);
         eventPushKeyHandler(&kh);
         eventHandle();
         eventPopKeyHandler();
+        closure_unref((struct closure*)kh.data);
         return sc->T;
 }
 
@@ -5359,9 +5383,7 @@ KERN_API_CALL(kern_set_camping_proc)
                 return sc->NIL;
         }
 
-        if (Session->camping_proc)
-                closure_del(Session->camping_proc);
-        Session->camping_proc = closure_new(sc, proc);
+        session_set_camping_proc(Session, closure_new(sc, proc));
 
         return proc;
 }
@@ -6060,6 +6082,30 @@ KERN_API_CALL(kern_ambush_while_camping)
         return sc->F;
 }
 
+/*
+ * kern_being_pathfind_to -- wrapper for Being::pathfindTo
+ */
+KERN_API_CALL(kern_being_pathfind_to)
+{
+        class Being *being;
+        struct place *place;
+        int x, y;
+
+        /* unpack being */
+        being = (class Being*)unpack_obj(sc, &args, "kern-being-pathfind-to");
+        if (! being)
+                return sc->F;
+
+        /* unpack destination */
+        if (unpack_loc(sc, &args, &place, &x, &y, "kern-being-pathfind-to"))
+                return sc->F;
+
+        /* pathfind */
+        if (being->pathfindTo(place, x, y))
+                return sc->T;
+        return sc->F;
+}
+
 KERN_API_CALL(kern_get_player)
 {
         return scm_mk_ptr(sc, player_party);
@@ -6120,6 +6166,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-being-get-current-faction", kern_being_get_current_faction);
         API_DECL(sc, "kern-being-get-visible-hostiles", kern_being_get_visible_hostiles);
         API_DECL(sc, "kern-being-is-hostile?", kern_being_is_hostile);
+        API_DECL(sc, "kern-being-pathfind-to", kern_being_pathfind_to);
         API_DECL(sc, "kern-being-set-base-faction", kern_being_set_base_faction);
 
         /* kern-char api */
@@ -6136,6 +6183,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-char-get-weapons", kern_char_get_weapons);
         API_DECL(sc, "kern-char-kill", kern_char_kill);
         API_DECL(sc, "kern-char-resurrect", kern_char_resurrect);
+        API_DECL(sc, "kern-char-set-ai", kern_char_set_ai);
         API_DECL(sc, "kern-char-set-sleep", kern_char_set_sleep);
         API_DECL(sc, "kern-char-set-fleeing", kern_char_set_fleeing);
         API_DECL(sc, "kern-char-is-asleep?", kern_char_is_asleep);

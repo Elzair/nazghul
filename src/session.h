@@ -235,9 +235,11 @@ extern void * session_add_connection(struct session *session, void *obj,
         );
 extern void session_rm(struct session *session, void *handle);
 
-extern void session_set_start_proc(struct session *session, struct closure *proc);
+extern void session_set_start_proc(struct session *session, 
+                                   struct closure *proc);
 extern void session_run_start_proc(struct session *session);
-
+extern void session_set_camping_proc(struct session *session, 
+                                     struct closure *proc);
 extern void save_err(char *fmt, ...);
 
 // Global session object.

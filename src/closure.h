@@ -34,9 +34,11 @@ typedef struct closure {
         int ref;
 } closure_t;
 
+#define closure_unref_safe(clx) if ((clx)) closure_unref(clx)
+
 extern closure_t *closure_new(scheme *interp, pointer code);
+extern closure_t *closure_new_ref(scheme *interp, pointer code);
 extern void closure_init(closure_t *closure, scheme *interp, pointer code);
-extern void closure_del(closure_t *closure);
 extern int closure_exec(closure_t *closure, char *fmt, ...);
 extern void closure_save(closure_t *closure, struct save *save);
 extern void closure_ref(closure_t *closure);

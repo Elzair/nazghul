@@ -14,3 +14,5 @@
     (cond ((null? gifc) #f)
           (else (gifc 'can signal)))))
   
+(define (kobj-place kobj)
+  (loc-place (kern-obj-get-location kobj)))

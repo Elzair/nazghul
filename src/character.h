@@ -201,7 +201,8 @@ class Character:public Being {
 		       struct sprite * sprite, char *name, int order);
 
         bool canBeLeader();
-        bool pathfindTo(int x, int y);
+        void setAI(struct closure *val);
+        struct closure *getAI();
 
 	char *tag;
         struct node *plnode; // pointer back to party list node
@@ -214,10 +215,6 @@ class Character:public Being {
         int hp_mult;
         int mp_mod;
         int mp_mult;
-
-        struct closure *ai; // experimental
-        struct astar_node *cachedPath; // for pathfinding
-        struct place *cachedPathPlace; // for pathfinding
 
  protected:
 	bool initCommon(void);
@@ -283,6 +280,7 @@ class Character:public Being {
         int factionSwitch;
         int tmpFaction;
         bool ambushedWhileCamping;
+        struct closure *ai; // should be moved up to Being...
 };
 
 extern void char_dtor(void *val);

@@ -32,14 +32,22 @@ class Being:public Object {
 
 	Being();
         Being(class ObjectType *type);
-	virtual ~Being();
 
-        int getBaseFaction();
-        void setBaseFaction(int faction);
+	virtual ~Being();
         virtual int getCurrentFaction();
 	virtual enum layer getLayer();
 
+        int getBaseFaction();
+        bool pathfindTo(struct place *place, int x, int y);
+        void setBaseFaction(int faction);
+
+        // These are public because player_party::rendezvous makes heavy use of
+        // them...
+        struct astar_node *cachedPath; // for pathfinding
+        struct place *cachedPathPlace; // for pathfinding
+
       protected:
+        void setDefaults();
         int baseFaction;
 };
 

@@ -593,8 +593,7 @@ bool Party::createMembers(void)
 				return false;
 
                         if (ginfo->ai) {
-                                closure_ref(ginfo->ai);
-                                c->ai = ginfo->ai;
+                                c->setAI(ginfo->ai);
                         }
 
                         addMember(c);

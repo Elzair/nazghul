@@ -173,7 +173,7 @@
              (car klist) (cdr klist))))
 
 ;; Move an object one step along a path to a destination.
-(define (pathfind kobj dest)
+(define (old-pathfind kobj dest)
   ;;(display "pathfind")(newline)
   (define (follow-path path)
     (if (not (null? path))
@@ -189,6 +189,12 @@
     (if (not (null? path))
         ;; skip the first location in the path
         (follow-path (cdr path)))))
+
+;; pathfind - use the built-in kernel call that uses cached paths and tries to
+;; handle blocking mechanisms
+(define (pathfind kobj kdest)
+  (and (kern-obj-is-being? kobj)
+       (kern-being-pathfind-to kobj kdest)))
 
 (define (can-pathfind? kobj dest)
   (not (null? (kern-obj-find-path kobj dest))))
@@ -400,11 +406,38 @@
 
 ;; ----------------------------------------------------------------------------
 ;; blit-maps -- blit multiple maps to a single target map
-(;; ----------------------------------------------------------------------------
+(;; ---------------------------------------------------------------------------
 define (blit-maps kmap . blits)
   (define (blit dstx dsty srcmap srcx srcy w h)
     (kern-blit-map kmap dstx dsty srcmap srcx srcy w h))
   (foldr (lambda (a b) (apply blit b))
          kmap
          blits))
-        
+
+;;============================================================================
+;; rect 
+;;============================================================================
+(define (mk-rect x y w h) (list x y w h))
+(define (rect-x r) (car r))
+(define (rect-y r) (cadr r))
+(define (rect-w r) (caddr r))
+(define (rect-h r) (cadddr r))
+(define (rect-ex r) (+ (rect-x r) (rect-w r)))
+(define (rect-ey r) (+ (rect-y r) (rect-h r)))
+(define (x-in-rect? x r)
+  (and (>= x (rect-x r))
+       (< x (rect-ex r))))
+(define (y-in-rect? y r)
+  (and (>= y (rect-y r))
+       (< y (rect-ey r))))
+(define (xy-in-rect? x y r)
+  (and (x-in-rect? x r)
+       (y-in-rect? y r)))
+(define (rect-in-rect? a b)
+  (and (xy-in-rect? (rect-x a) (rect-y a) b)
+       (xy-in-rect? (rect-ex a) (rect-ey a) b)))
+(define (loc-in-rect? loc rect)
+  (xy-in-rect? (loc-x loc)
+               (loc-y loc)
+               rect))
+  

@@ -62,7 +62,7 @@ void terrain_del(struct terrain *terrain)
 	if (terrain->name)
 		free(terrain->name);
         if (terrain->effect)
-                closure_del(terrain->effect);
+                closure_unref(terrain->effect);
         delete terrain;
 }
 

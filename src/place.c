@@ -522,7 +522,7 @@ void place_del(struct place *place)
 	if (place->terrain_map)
 		terrain_map_del(place->terrain_map);
         if (place->pre_entry_hook)
-                closure_del(place->pre_entry_hook);
+                closure_unref(place->pre_entry_hook);
 	free(place);
 }
 

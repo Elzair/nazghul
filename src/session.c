@@ -264,10 +264,8 @@ void session_del(struct session *session)
         }
 
         /* Clean up the closures */
-        if (Session->start_proc)
-                closure_del(Session->start_proc);
-        if (Session->camping_proc)
-                closure_del(Session->camping_proc);
+        closure_unref_safe(Session->start_proc);
+        closure_unref_safe(Session->camping_proc);
 
         free(session);
 }
@@ -553,9 +551,32 @@ void session_save(char *fname)
 
 void session_set_start_proc(struct session *session, struct closure *proc)
 {
-        if (session->start_proc)
-                closure_del(session->start_proc);
-        session->start_proc = proc;
+        /* out with the old */
+        if (session->start_proc) {
+                closure_unref(session->start_proc);
+                session->start_proc = NULL;
+        }
+        
+        /* in with the new */
+        if (proc) {
+                closure_ref(proc);
+                session->start_proc = proc;
+        }
+}
+
+void session_set_camping_proc(struct session *session, struct closure *proc)
+{
+        /* out with the old */
+        if (session->camping_proc) {
+                closure_unref(session->camping_proc);
+                session->camping_proc = NULL;
+        }
+        
+        /* in with the new */
+        if (proc) {
+                closure_ref(proc);
+                session->camping_proc = proc;
+        }
 }
 
 void session_run_start_proc(struct session *session)

@@ -41,6 +41,14 @@
 /* Defined in kern.c: */
 extern pointer vpack(scheme *sc, char *fmt, va_list ap);
 
+/*
+ * closure_del - free a closure (external code should use closure_unref)
+ */
+static void closure_del(closure_t *closure)
+{
+        free(closure);
+}
+
 closure_t *closure_new(scheme *sc, pointer code)
 {
         closure_t *clx = (closure_t*)calloc(1, sizeof(*clx));
@@ -50,15 +58,17 @@ closure_t *closure_new(scheme *sc, pointer code)
         return clx;
 }
 
+closure_t *closure_new_ref(scheme *sc, pointer code)
+{
+        closure_t *clx = closure_new(sc, code);
+        closure_ref(clx);
+        return clx;
+}
+
 void closure_init(closure_t *clx, scheme *sc, pointer code)
 {
         clx->sc = sc;
         clx->code = code;
-}
-
-void closure_del(closure_t *closure)
-{
-        free(closure);
 }
 
 int closure_exec(closure_t *closure, char *fmt, ...)
@@ -69,6 +79,9 @@ int closure_exec(closure_t *closure, char *fmt, ...)
         va_list ap;
         void *ptr;
         pointer old_dump;
+        int ret = 0;
+
+        closure_ref(closure);
 
         assert(closure->code);
 
@@ -122,13 +135,13 @@ int closure_exec(closure_t *closure, char *fmt, ...)
 
         if (result == closure->sc->NIL ||
             result == closure->sc->F)
-                return 0;
+                ret = 0;
 
-        if (closure->sc->vptr->is_number(result) &&
-            closure->sc->vptr->is_integer(result))
-                return closure->sc->vptr->ivalue(result);
+        else if (closure->sc->vptr->is_number(result) &&
+                 closure->sc->vptr->is_integer(result))
+                ret = closure->sc->vptr->ivalue(result);
 
-        if (scm_is_symbol(closure->sc, result)) {
+        else if (scm_is_symbol(closure->sc, result)) {
                 pointer pair;
                 pair = closure->sc->vptr->find_slot_in_env(closure->sc, 
                                                            closure->sc->envir, 
@@ -139,7 +152,10 @@ int closure_exec(closure_t *closure, char *fmt, ...)
                 goto evaluate_result;
         }
 
-        return 1;
+ unlock:
+        closure_unref(closure);
+
+        return ret;
 }
 
 void closure_save(closure_t *closure, struct save *save)

@@ -58,6 +58,7 @@ Container::Container(ObjectType *type)
 
 Container::~Container()
 {
+        closure_unref_safe(trap);
 	forEach(destroy_content, NULL);
 }
 
@@ -142,7 +143,17 @@ closure_t *Container::getTrap()
 
 void Container::setTrap(closure_t * val)
 {
-	trap = val;
+        // out with the old
+        if (trap) {
+                closure_unref(trap);
+                trap = NULL;
+        }
+
+        // in with the new
+        if (val) {
+                closure_ref(val);
+                trap = val;
+        }
 }
 
 void Container::saveContents(struct save *save)

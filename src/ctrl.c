@@ -836,11 +836,13 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
         return character->isTurnEnded();
 }
 
-static void ctrl_pathfind_between_objects(class Object *source, 
+static int ctrl_pathfind_between_objects(class Object *source, 
                                           class Object *target)
 {
         struct astar_node *path;
         struct astar_search_info as_info;
+
+        dbg("FIXME: use Being::pathfindTo\n");
 
         memset(&as_info, 0, sizeof (as_info));
         as_info.x0 = source->getX();
@@ -851,7 +853,7 @@ static void ctrl_pathfind_between_objects(class Object *source,
         path = place_find_path(source->getPlace(), &as_info, source);
         
         if (!path) {
-                return;
+                return 0;
         }
         
         if (path->next) {
@@ -861,6 +863,7 @@ static void ctrl_pathfind_between_objects(class Object *source,
         }
 
         astar_path_destroy(path);                
+        return 1;
 }
 
 
@@ -1027,9 +1030,9 @@ static void ctrl_idle(class Character *character)
 {
         class Character *target;
 
-        if (character->ai) {
+        if (character->getAI()) {
                 int time = SDL_GetTicks();
-                closure_exec(character->ai, "p", character);
+                closure_exec(character->getAI(), "p", character);
 /*                 printf("%s ai: %d ms\n", character->getName(), */
 /*                        SDL_GetTicks() - time); */
                 return;
@@ -1054,7 +1057,8 @@ static void ctrl_idle(class Character *character)
         // -------------------------------------------------------------------
         
         if (!character->canSee(target)) {
-                ctrl_pathfind_between_objects(character, target);
+                if (! ctrl_pathfind_between_objects(character, target))
+                        ctrl_wander(character);
                 return;
         }
         
@@ -1063,7 +1067,8 @@ static void ctrl_idle(class Character *character)
         // -------------------------------------------------------------------
 
         if (!ctrl_attack_target(character, target))
-                ctrl_pathfind_between_objects(character, target);
+                if (! ctrl_pathfind_between_objects(character, target))
+                        ctrl_wander(character);
 }
 
 void ctrl_character_ai(class Character *character)

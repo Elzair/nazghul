@@ -262,6 +262,7 @@ void astral_body_del(struct astral_body *body)
         assert(body->name);
         assert(body->phases);
 
+        closure_unref_safe(body->gifc);
         if (body->gob)
                 gob_del(body->gob);
         free(body->tag);

@@ -97,7 +97,7 @@ ObjectType::~ObjectType()
 	if (name)
 		free(name);
         if (gifc)
-                closure_del(gifc);
+                closure_unref(gifc);
 }
 
 bool ObjectType::init(char *tag, char *name, enum layer layer,
@@ -601,6 +601,9 @@ Object::~Object()
                 mapDestroyView(getView());
                 setView(NULL);                
         }                
+
+        if (conv)
+                closure_unref(conv);
 
         // For each type of hook...
         for (i = 0; i < OBJ_NUM_HOOKS; i++) {
@@ -1761,8 +1764,19 @@ closure_t *ObjectType::getGifc()
 
 void ObjectType::setGifc(closure_t *g, int cap)
 {
-        gifc = g;
-        gifc_cap = cap;
+        // out with the old
+        if (gifc) {
+                closure_unref(gifc);
+                gifc = NULL;
+                gifc_cap = 0;
+        }
+
+        // in with the new
+        if (g) {
+                closure_ref(g);
+                gifc = g;
+                gifc_cap = cap;
+        }
 }
 
 bool Object::add(ObjectType *type, int amount)
@@ -1825,7 +1839,17 @@ struct closure *Object::getConversation()
 
 void Object::setConversation(closure_t *val)
 {
-        conv = val;
+        // out with the old
+        if (conv) {
+                closure_unref(conv);
+                conv = NULL;
+        }
+
+        // in with the new
+        if (val) {
+                closure_ref(val);
+                conv = val;
+        }
 }
 
 bool Object::canEnter()

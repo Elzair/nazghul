@@ -41,14 +41,17 @@ struct effect *effect_new(char *tag, scheme *sc, pointer exec_proc,
 
         if (exec_proc) {
                 et->exec = closure_new(sc, exec_proc);
+                closure_ref(et->exec);
         }
 
         if (apply_proc) {
                 et->apply = closure_new(sc, apply_proc);
+                closure_ref(et->apply);
         }
 
         if (rm_proc) {
                 et->rm = closure_new(sc, rm_proc);
+                closure_ref(et->rm);
         }
 
         et->tag = strdup(tag);
@@ -67,8 +70,11 @@ extern void effect_del(struct effect *et)
 {
         free(et->name);
         free(et->description);
-        closure_del(et->exec);
+        if (et->exec)
+                closure_unref(et->exec);
         if (et->apply)
-                closure_del(et->apply);
+                closure_unref(et->apply);
+        if (et->rm)
+                closure_unref(et->rm);
         free(et);
 }
