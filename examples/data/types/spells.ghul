@@ -140,7 +140,7 @@ SPELL spell_minor_light {
   cost     1;
   range    3;
   missile  M_illum;
-  effects  (EFFECT_BURN);  // This points out the need for an EFFECT_NONE...
+  effects  (EFFECT_NONE);
   strength 0;
   duration 0;
   context  CTW;
