@@ -196,7 +196,7 @@ class ObjectType {
         void handle(Object *obj, Object *handler);
         void attack(Object *obj, Object *attacker);
         void enter(Object *obj, Object *enterer);
-        void cast(Object *caster);
+        int cast(Object *caster);
         void bump(Object *obj, Object *bumper);
         closure_t *getGifc();
         void setGifc(closure_t *gifc, int cap);

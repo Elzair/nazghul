@@ -166,13 +166,13 @@
     (kern-obj-add-effect slime ef_slime_split nil)
     (kern-obj-add-effect slime ef_poison_immunity nil))
   
-(define (mk-slime align)
+(define (mk-slime faction)
   (let ((slime (kern-mk-stock-char sp_green_slime 
                                    nil
                                    s_slime
                                    " a slime" 
-                                   align
                                    nil)))
+    (kern-being-set-base-faction slime faction)
     (slime-init slime)
     slime
     ))

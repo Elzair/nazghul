@@ -65,7 +65,6 @@
 (define (ui-target origin range pred)
   (define (select-from seq)
     (cond ((null? seq) 
-           (kern-print "Nothing!\n") 
            nil)
           (else (car seq))))
   (let ((coords (kern-ui-target origin range)))
@@ -293,7 +292,7 @@
                      (lambda () (kern-mk-stock-char sp_snake 
                                                     nil s_snake 
                                                     " a snake" 
-                                                    align-player
+                                                    faction-player
                                                     nil))
                      (kern-dice-roll "1d4")))
 
@@ -360,7 +359,7 @@
 
 (define (in-bet-xen kspell caster)
   (cast-summon-spell (kern-obj-get-location caster)
-                     (lambda () (kern-mk-stock-char sp_insect nil s_insects "an insect swarm" align-player nil))
+                     (lambda () (kern-mk-stock-char sp_insect nil s_insects "an insect swarm" faction-player nil))
                      (kern-dice-roll "1d6")))
 
 (define (in-zu kspell caster)
@@ -385,11 +384,14 @@
 (define (an-xen-exe kspell caster)
    (let ((target (ui-target (kern-obj-get-location caster) 
                             8 
-                            (lambda (kobj) (is-hostile? caster kobj)))))
-     (if (null? target) nil
-         (kern-obj-add-effect target 
-                              ef_charm 
-                              (charm-mk (kern-obj-get-alignment caster))))))
+                            (lambda (kobj) (kern-obj-is-char? kobj)))))
+     (if (null? target) 
+         result-no-target
+         (if (kern-obj-add-effect target 
+                                  ef_charm 
+                                  (charm-mk (kern-being-get-current-faction caster)))
+             result-ok
+             result-no-effect))))
 
 (define (in-vas-por-ylem kspell caster)
   (define (tremor kchar)
@@ -419,11 +421,12 @@
 (define (quas-an-wis kspell caster)
   (define (confuse kchar)
     (if (> (kern-dice-roll "2d20") 16)
-          (kern-char-set-alignment kchar align-none)))
+        (kern-obj-add-effect kchar ef_charm (charm-mk faction-none))))
   (let ((foes (all-hostiles caster)))
     (cond ((null? foes) (kern-print "No hostiles here!\n"))
           (else
-           (map confuse foes)))))
+           (map confuse foes))))
+  result-ok)
 
 ;; ----------------------------------------------------------------------------
 ;; Seventh Circle
@@ -500,14 +503,17 @@
   (kern-add-time-stop 512))
 
 (define (kal-xen-corp kspell caster)
+  (define (mk-skeleton)
+    (let ((skeleton (kern-mk-stock-char sp_skeleton 
+                                        oc_raider
+                                        s_skeleton
+                                        " a skeleton" 
+                                        nil)))
+      (kern-being-set-base-faction skeleton faction-player)))
   (cast-summon-spell (kern-obj-get-location caster)
-                     (lambda () (kern-mk-stock-char sp_skeleton 
-                                                    oc_raider
-                                                    s_skeleton
-                                                    " a skeleton" 
-                                                    align-player
-                                                    nil))
-                     (kern-dice-roll "1d4")))
+                     mk-skeleton
+                     (kern-dice-roll "1d4"))
+  result-ok)
 
 (define (xen-corp kspell caster)
   (cast-missile-spell caster 6 deathball))
@@ -530,7 +536,7 @@
 
 (define (kal-xen-nox kspell caster)
   (define (mk-aligned-slime)
-    (mk-slime (kern-obj-get-alignment caster)))
+    (mk-slime (kern-obj-get-current-faction caster)))
   (cast-summon-spell (kern-obj-get-location caster) 
                      mk-aligned-slime
                      (kern-dice-roll "1d4")))

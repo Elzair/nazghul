@@ -2,12 +2,6 @@
 ;; Constants
 ;;----------------------------------------------------------------------------
 
-;; Alignments
-(define align-none    0)
-(define align-player  1)
-(define align-town    2)
-(define align-monster 4)
-
 ;; Sounds
 (define sound-damage         "sounds/damage.wav")
 (define sound-walking        "sounds/walk.wav")

@@ -65,6 +65,7 @@
 #include "log.h"
 #include "dtable.h"
 #include "factions.h"
+#include "cmdwin.h"
 
 #include <assert.h>
 #include <ctype.h>              // isspace()
@@ -3282,6 +3283,9 @@ KERN_API_CALL(kern_ui_target)
                 rt_err("kern-ui-target: bad range arg");
                 return sc->NIL;
         }
+
+        /* Not sure if this is really the best place to do this... */
+	cmdwin_print("-");
 
         /* Get the target coords from the user */
         tx = ox;

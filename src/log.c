@@ -54,6 +54,9 @@ static void log_entry_print(struct log_entry *entry, char *fmt, va_list args)
                 entry->room = 0;
         }
 
+#if 0
+        /* Doing this makes log_abort() moot */
+
         /* If this entry is already at the head of the queue then flush it to
          * the console now. */
         if (&entry->q_hook == log_q.next) {
@@ -65,6 +68,7 @@ static void log_entry_print(struct log_entry *entry, char *fmt, va_list args)
                         entry->room = sizeof(entry->buf);
                 }
         }
+#endif
 }
 
 static inline void log_print_queued_msgs()
@@ -80,6 +84,20 @@ static inline void log_print_queued_msgs()
                 entry = outcast(elem, struct log_entry, q_hook);
                 elem = elem->next;
                 consolePrint("%s\n", entry->buf);
+                list_remove(&entry->q_hook);
+                log_entry_del(entry);
+        }
+}
+
+static inline void log_flush_queued_msgs(struct log_entry *entry)
+{
+        struct list *elem;
+
+        elem = &entry->q_hook;
+
+        while (elem != &log_q) {
+                entry = outcast(elem, struct log_entry, q_hook);
+                elem = elem->next;
                 list_remove(&entry->q_hook);
                 log_entry_del(entry);
         }
@@ -102,6 +120,21 @@ static inline void log_pop()
         /* If the msg stack is now empty then log all msgs on the queue */
         if (list_empty(&log_stk))
                 log_print_queued_msgs();
+        log_end_group();
+}
+
+void log_abort(void)
+{
+        struct log_entry *entry;
+
+        if (log_disabled)
+                return;
+
+        assert(! list_empty(&log_stk));
+        entry = outcast(log_stk.next, struct log_entry, stk_hook);
+
+        list_remove(log_stk.next);
+        log_flush_queued_msgs(entry);
         log_end_group();
 }
 

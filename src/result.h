@@ -20,28 +20,12 @@
 // gmcnutt@users.sourceforge.net
 //
 
-#ifndef log_h
-#define log_h
+#ifndef result_h
+#define result_h
 
-/* Called on startup */
-extern void log_init(void);
-
-/* A group of messages are all printed with no blank line between them. Blank
- * lines appear between top-level groups. */
-extern void log_begin_group();
-extern void log_end_group();
-
-/* Begin a message that will start a group and prevent members of the group
- * from printing until it finishes. This is to de-interleave messages. */
-extern void log_begin(char *fmt, ...);
-extern void log_continue(char *fmt, ...);
-extern void log_end(char *fmt, ...);
-extern void log_abort();
-
-/* Log a single message as its own group. */
-extern void log_msg(char *fmt, ...);
-
-extern void log_disable();
-extern void log_enable();
+/* These need to match naz.scm */
+#define RESULT_OK        0
+#define RESULT_NO_TARGET 1
+#define RESULT_NO_EFFECT 2
 
 #endif

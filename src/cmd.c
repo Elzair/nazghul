@@ -51,6 +51,7 @@
 #include "conv.h"
 #include "log.h"
 #include "factions.h"
+#include "result.h"
 
 #define DEBUG
 #include "debug.h"
@@ -1860,29 +1861,25 @@ bool cmdCastSpell(class Character * pc)
         // Decrement caster's mana
         pc->addMana(0 - spell->cost);
 
-        log_continue("success!");
-
-	// High-level casters get multiple tries per spell.
-	// max_tries = 1 + pc->getLevel() / 3;
-	max_tries = 1;
-
-	for (tries = 0; tries < max_tries; tries++) {
-                spell->type->cast(pc);
-	}
-
-	if (tries == 0)
-		return false;
+        // Cast the spell.
+        switch (spell->type->cast(pc)) {
+        case RESULT_OK:
+                log_continue("ok!");
+                break;
+        case RESULT_NO_TARGET:
+                log_end("no target!");
+                return false;
+        case RESULT_NO_EFFECT:
+                log_end("no effect!");
+                return false;
+        default:
+                assert(false);
+                break;
+        }
 
 	// If the spell was mixed then remove it from inventory.
 	if (mixed)
 		player_party->takeOut(ie->type, 1);
-
-#if 0
-	// Update the character's target memory. This will automatically resort
-	// back to the character as its own target if this target is dead.
-	if (spell->target == SPELL_TARGET_CHARACTER)
-		pc->setAttackTarget((class Character *) target);
-#endif
 
         /* Some spells have status in the foogod window, so repaint it now. */
         foogodRepaint();

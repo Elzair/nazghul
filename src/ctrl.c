@@ -949,7 +949,7 @@ static class Character * ctrl_select_target(class Character *character)
                     !obj->isOnMap() ||
                     obj->isDead() ||
                     !obj->isType(CHARACTER_ID) ||
-                    !are_hostile((Being*)obj, character) ||
+                    !are_hostile(character, (Being*)obj) ||
                     !character->canSee(obj))
                         continue;
 

@@ -1977,6 +1977,9 @@ void Character::unCharm()
                         mapDestroyView(getView());
                         setView(NULL);
                 }
+
+                // Switch the controller back to the AI
+                //ctrl = ctrl_character_ai;
                 
         } else {
 
@@ -2022,6 +2025,10 @@ void Character::charm(int newFaction)
                 
                 // Switch the non-party member to be player-controlled
                 setControlMode(CONTROL_MODE_PLAYER);
+
+                // Switch the controller over to the player
+                // NOTE: this needs a bit more work to be nicely done
+                // ctrl = ctrl_character_ui;
         }
 }
 

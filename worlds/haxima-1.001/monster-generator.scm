@@ -1,10 +1,10 @@
 
-(define (mk-gen-ifc threshold party alignment vehicle)
+(define (mk-gen-ifc threshold party faction vehicle)
   (mk-ifc nil 
           nil
           (lambda (gen)
             (if (> (modulo (random-next) 100) threshold)
-                (kern-obj-put-at (kern-mk-party party alignment vehicle)
+                (kern-obj-put-at (kern-mk-party party faction vehicle)
                                  (kern-obj-get-location gen))))))
 
 ;; Note: if you try to create this interface on-the-fly, as in the commented
@@ -16,7 +16,7 @@
        (method 'exec (lambda (kobj)
                        (if (> (modulo (random-next) 100) 99)
                            (kern-obj-put-at (kern-mk-party t_goblin_horde
-                                                           align-monster
+                                                           faction-monster
                                                            '())
                                             (kern-obj-get-location kobj)))))))
 

@@ -1473,19 +1473,11 @@ void Object::saveHooks(struct save *save)
         save->enter(save, "(list\n");
         for (i = 0; i < OBJ_NUM_HOOKS; i++) {
                 struct list *elem;
-/*                 save->enter(save, "(cons \"%s\"\n", hookIdToName(i)); */
-/*                 if (hook_list_empty(&hooks[i])) { */
-/*                         save->write(save, "nil\n"); */
-/*                 } else { */
-/*                         save->enter(save, "(list\n"); */
                 hook_list_for_each(&hooks[i], elem) {
                         hook_entry_t *entry;
                         entry = outcast(elem, hook_entry_t, list);
                         hook_entry_save(entry, save);
                 }
-/*                         save->exit(save, ")\n"); */
-/*                 } */
-/*                 save->exit(save, ")\n"); */
         }
         save->exit(save, ")\n");
 }
@@ -1690,9 +1682,9 @@ void ObjectType::use(Object *user)
         closure_exec(gifc, "ypp", "use", this, user);
 }
 
-void ObjectType::cast(Object *caster)
+int ObjectType::cast(Object *caster)
 {
-        closure_exec(gifc, "ypp", "cast", this, caster);
+        return closure_exec(gifc, "ypp", "cast", this, caster);
 }
 
 void ObjectType::get(Object *obj, Object *getter)

@@ -133,3 +133,8 @@
 (define (distance kobj-a kobj-b)
   (kern-get-distance (kern-obj-get-location kobj-a)
                      (kern-obj-get-location kobj-b)))
+
+;; Result codes
+(define result-ok          0)
+(define result-no-target   1)
+(define result-no-effect   2)

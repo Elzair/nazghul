@@ -74,16 +74,16 @@
 ;; Used by the An Xen Exe spell. This effect was the first to use its own
 ;; non-nil gob.
 ;; ----------------------------------------------------------------------------
-(define (charm-mk align) (list align))
+(define (charm-mk faction) (list faction))
 
-(define (charm-align charm) (car charm))
+(define (charm-faction charm) (car charm))
 
 (define (charm-rm charm kchar)
   (kern-obj-remove-effect kchar ef_charm)
   (kern-char-uncharm kchar))
 
 (define (charm-apply charm kchar)
-  (kern-char-charm kchar (charm-align charm)))
+  (kern-char-charm kchar (charm-faction charm)))
 
 ;; ----------------------------------------------------------------------------
 ;; Invisibility
@@ -113,7 +113,7 @@
           (if (> (kern-dice-roll "2d20") 20)
               (let ((clone (kern-obj-clone kobj)))
                 (kern-print "Slime divides!\n")
-                (kern-char-set-alignment clone (kern-obj-get-alignment kobj))
+                (kern-being-set-base-faction clone (kern-obj-get-base-faction kobj))
                 (slime-init clone)
                 (kern-obj-put-at clone (pick-loc loc clone)))
               (begin (display "roll failed")(newline))

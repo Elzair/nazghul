@@ -35,7 +35,7 @@
                sp_human              ; species
                oc_druid              ; occ
                s_companion_druid     ; sprite
-               align-town            ; starting alignment
+               faction-men            ; starting alignment
                0 10 0                ; str/int/dex
                0 0                   ; hp mod/mult
                0 0                   ; mp mod/mult
@@ -53,7 +53,7 @@
               sp_ghast              ; species
               nil                   ; occ
               s_ghost               ; sprite
-              align-town            ; starting alignment
+              faction-men            ; starting alignment
               0 10 2                ; str/int/dex
               0 1                   ; hp mod/mult
               10 5                  ; mp mod/mult
@@ -70,7 +70,7 @@
               sp_human              ; species
               oc_wizard             ; occ
               s_companion_wizard    ; sprite
-              align-player          ; starting alignment
+              faction-player          ; starting alignment
               0 10 2                ; str/int/dex
               0 1                   ; hp mod/mult
               10 5                  ; mp mod/mult
@@ -87,7 +87,7 @@
               sp_yellow_slime       ; species
               oc_wizard             ; occ
               s_yellow_slime        ; sprite
-              align-player          ; starting alignment
+              faction-player          ; starting alignment
               0 10 2                ; str/int/dex
               0 1                   ; hp mod/mult
               10 5                  ; mp mod/mult
@@ -545,12 +545,12 @@
                 (lay-featmap road-map 3 18)
                 (list
                  (list player 3  18)
-                 (list (kern-mk-party t_skeleton_brigade align-monster nil) 25 19)
-                 (list (kern-mk-party t_slime_glob align-monster nil) 36 20)
+                 (list (kern-mk-party t_skeleton_brigade faction-monster nil) 25 19)
+                 (list (kern-mk-party t_slime_glob faction-monster nil) 36 20)
                  (list (kern-mk-obj F_fire 1) 34 23)
                  (list (kern-mk-obj F_poison 1) 34 22)
                  (list (kern-mk-obj F_sleep_perm 1) 34 24)
-                 (list (kern-mk-party t_goblin_horde align-monster (mk-ship)) 3 28)
+                 (list (kern-mk-party t_goblin_horde faction-orks (mk-ship)) 3 28)
                  (list (kern-mk-obj t_goblin_generator 1) 20 20)
                  (list (kern-tag 'mg-1 (mk-moongate 'ord)) 32 23)
                  (list (kern-tag 'mg-2 (mk-moongate 'ord)) 35 25)
@@ -631,10 +631,11 @@
 ;; are hostile, positive are friendly.
 ;; ----------------------------------------------------------------------------
 (kern-mk-dtable
- ;;    none play men orks accu
- (dtable-row  0    0    0   0   -1   ) ;; none
- (dtable-row  0    2    1   0   -1   ) ;; play
- (dtable-row -1    1    2  -1   -2   ) ;; men
- (dtable-row -1    0   -1   2   -1   ) ;; orks
- (dtable-row -1   -1   -1  -1    2   ) ;; accu
+ ;;           none play men orks accu mons
+ (dtable-row  0    0    0   0   -1    -2) ;; none
+ (dtable-row  0    2    1   0   -1    -2) ;; player
+ (dtable-row -1    1    2  -1   -2    -2) ;; men
+ (dtable-row -1    0   -1   2   -1    -2) ;; orks
+ (dtable-row -1   -1   -1  -1    2    -2) ;; accursed
+ (dtable-row -2   -2   -2  -2   -2     0) ;; monsters
  )
