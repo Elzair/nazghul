@@ -34,6 +34,9 @@
 #include "session.h"
 #include "sched.h"
 #include "log.h"
+#include "event.h"
+#include "cmd.h"
+#include "cmdwin.h"
 
 #include <stdio.h>
 
@@ -291,7 +294,7 @@ void Party::getFleeVector(int *x, int *y)
 
 int Party::getSize(void)
 {
-                return size;
+        return size;
 }
 
 
@@ -1151,4 +1154,77 @@ class Character *Party::getMemberByOrder(int order)
         }
 
         return NULL;
+}
+
+Object *Party::getSpeaker()
+{
+        struct list *entry;
+        class Character *member;
+        struct stat_list_entry *statlist;
+        int list_sz = 0;
+        class Character *selected = NULL;
+        enum StatusMode orig_stat_mode;
+	struct KeyHandler kh;
+	struct ScrollerContext sc;
+
+        // Allocate an array of status list entries big enough for the entire
+        // party (this is probably more than we need, but it's only temporary).
+        statlist = (struct stat_list_entry*)
+                calloc(getSize(), sizeof(struct stat_list_entry));
+        assert(statlist);
+
+
+        // For each party member that has a conversation, add it to the list.
+        FOR_EACH_MEMBER(entry, member) {
+                conv = member->getConversation();
+                if (! conv)
+                        continue;
+
+                statlist[list_sz].sprite = member->getSprite();
+                snprintf(statlist[list_sz].line1, STAT_MAX_CHARS_PER_LINE,
+                         member->getName());
+                statlist[list_sz].data = member;
+                list_sz++;
+        }
+
+        // Check if nobody has a conversation.
+        if (! list_sz)
+                goto done;
+
+        // Check if only one has a conversation.
+        if (list_sz == 1) {
+                selected = (class Character*)statlist[0].data;
+                goto done;
+        }
+
+        // The player has to choose. Poke the list into the status state.
+        statusSetGenericList(list_sz, statlist);
+
+        // Remember the current stat mode so we can restore it.
+        orig_stat_mode = statusGetMode();
+
+        // Switch the status mode over to list selection.
+        statusSetMode(GenericList);
+
+        // Setup a keyhandler for handling the scrolling
+	sc.selector  = Generic;
+	sc.selection = NULL;
+	kh.fx        = scroller;
+	kh.data      = &sc;
+
+        // Push the handler and wait for the player to make a selection.
+	eventPushKeyHandler(&kh);
+	cmdwin_print("<select>");
+	eventHandle();
+	cmdwin_backspace(strlen("<select>"));
+	eventPopKeyHandler();
+
+	statusRepaint();
+
+	selected = (class Character *) sc.selection;
+        
+ done:
+        statusSetMode(orig_stat_mode);
+        free(statlist);
+        return selected;
 }

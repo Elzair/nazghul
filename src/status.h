@@ -23,8 +23,11 @@
 #define status_h
 
 #include "macros.h"
+#include "common.h"
 
 BEGIN_DECL
+
+#define STAT_MAX_CHARS_PER_LINE (STAT_W / ASCII_W)
 
 struct trade_info {
         struct sprite *sprite;
@@ -34,6 +37,13 @@ struct trade_info {
         void *data; /* object type */
         char show_quantity:1;
         char show_sprite:1;
+};
+
+struct stat_list_entry {
+        struct sprite *sprite;
+        char line1[STAT_MAX_CHARS_PER_LINE - TILE_W];
+        char line2[STAT_MAX_CHARS_PER_LINE - TILE_W];
+        void *data;
 };
 
 enum StatusScrollDir {
@@ -53,14 +63,16 @@ enum StatusMode {
         Use,
         Page,
         Trade,
-        MixReagents
+        MixReagents,
+        GenericList
 };
-								
+					
 enum StatusSelection {
         Character,
         InventoryItem,
         TradeItem,
         Reagents,
+        Generic
 };
 
 extern int statusInit(void);
@@ -74,9 +86,12 @@ extern void *statusGetSelected(enum StatusSelection sel);
 extern void statusSelectCharacter(int partyOrderIndex);
 
 extern void statusSetPageText(char *title, char *text);
-extern void statusSetTradeInfo(int n_trades, struct trade_info *trades);
-extern void statusUpdateTradeInfo(int n_trades, 
+extern void statusSetTradeInfo(int list_sz, struct trade_info *trades);
+extern void statusUpdateTradeInfo(int list_sz, 
                                   struct trade_info *trades);
+extern void statusSetGenericList(int list_sz, struct stat_list_entry *list);
+extern void statusUpdateGenericList(int list_sz, struct stat_list_entr *list);
+
 extern int status_get_h(void);
         
 END_DECL

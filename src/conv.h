@@ -201,7 +201,7 @@ extern int convInit(void);
 
 /* THE NEW CONVERSATION API */
 
-extern void conv_enter(Object *npc, Object *pc);
+extern void conv_enter(Object *npc, Object *pc, struct closure *conv);
 extern void conv_end(void);
 
 #endif

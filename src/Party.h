@@ -126,6 +126,7 @@ class Party:public Object {
         virtual void switchOrder(class Character *ch1, class Character *ch2);
 	virtual bool turn_vehicle();
         virtual void applyEffect(closure_t *effect);
+        virtual Object *getSpeaker();
 
         // NOTE: dup of getMemberAtIndex in player.cpp
         virtual class Character *getMemberByOrder(int order);

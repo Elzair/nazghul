@@ -142,11 +142,9 @@ static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
                         cmdSearch(party->getPlace(),
                                   party->getX(), party->getY());
                         break;
-                        /* To enable talking in party mode I need to prompt for
-                         * a character to do the talking. */
-/*                 case 't': */
-/*                         cmdTalk(party->getX(), party->getY()); */
-/*                         break; */
+                case 't':
+                        cmdTalk(NULL);
+                        break;
                 case 'u':
                         cmdUse(NULL, CMD_SELECT_MEMBER|CMD_PRINT_MEMBER);
                         break;

@@ -1794,14 +1794,9 @@ void Object::attack(Object *stepper)
         getObjectType()->attack(this, stepper);
 }
 
-bool Object::canTalk()
+struct closure *Object::getConversation()
 {
-        return (conv != NULL);
-}
-
-void Object::talk(char *query, Object *talker)
-{
-        closure_exec(conv, "ypp", query, this, talker);
+        return conv;
 }
 
 void Object::setConversation(closure_t *val)
@@ -1844,4 +1839,9 @@ void Object::setTemporary(bool val)
 struct mmode *Object::getMovementMode()
 {
         return NULL;
+}
+
+Object *Object::getSpeaker()
+{
+        return this;
 }

@@ -25,6 +25,8 @@
 #include "cmdwin.h"
 #include "common.h"
 #include "object.h"
+#include "closure.h"
+#include "log.h"
 
 #include <ctype.h>
 #include <stdio.h>
@@ -106,10 +108,12 @@ void conv_end()
         conv_done = 1;
 }
 
-void conv_enter(Object *npc, Object *pc)
+void conv_enter(Object *npc, Object *pc, struct closure *conv)
 {
 	struct KeyHandler kh;
 	struct response *resp;
+
+        assert(conv);
 
         conv_done = 0;
 	kh.fx = get_player_query;
@@ -121,7 +125,7 @@ void conv_enter(Object *npc, Object *pc)
                 C_query[4] = 0;
 
                 /* Query the NPC */
-                npc->talk(C_query, pc);
+                closure_exec(conv, "ypp", C_query, npc, pc);
 
 		if (conv_done)
 			break;
@@ -145,7 +149,7 @@ void conv_enter(Object *npc, Object *pc)
 		C_len = strlen(C_query);
                 if (! C_len)
                         sprintf(C_query, "bye");
-		consolePrint("\n%s: %s\n", pc->getName(), C_query);
+		log_msg("%s: %s", pc->getName(), C_query);
 
 		/*** Check if player ended conversation ***/
 

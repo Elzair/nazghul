@@ -2236,16 +2236,16 @@ static pointer kern_conv_say(scheme *sc,  pointer args)
                 }
 
                 if (first) {
-                        consolePrint("%s: %s", speaker->getName(), msg);
+                        log_begin("%s: %s", speaker->getName(), msg);
                         first = 0;
                 } else {
-                        consolePrint("%s", msg);
+                        log_continue("%s", msg);
                 }
 
         }
 
         if (! first)
-                consolePrint("\n");
+                log_end(NULL);
 
         return sc->NIL;
 }

@@ -38,7 +38,7 @@
 #include <ctype.h>
 
 #define LINE_H TILE_H
-#define N_CHARS_PER_LINE (STAT_W / ASCII_W)
+#define N_CHARS_PER_LINE STAT_MAX_CHARS_PER_LINE
 #define Y_TO_LINE(Y) (((Y) - Status.screenRect.y) / TILE_H)
 #define N_LINES Status.numLines	/* (STAT_H / TILE_H) */
 
@@ -106,8 +106,9 @@ static struct status {
 	SDL_Rect pg_rect;
 	int pg_max_y;
 
-	int n_trades;
+	int list_sz;
 	struct trade_info *trades;
+        struct stat_list_entry *list;
 
         Container *container;
         struct filter *filter;
@@ -760,7 +761,7 @@ static void myPaintTrade(void)
 	SDL_Rect srect, nrect, prect, qrect;
 	int i, top, line;
 
-	if (!Status.n_trades)
+	if (!Status.list_sz)
 		return;
 
 	// *** Setup sprite, name and price rects ***
@@ -801,7 +802,7 @@ static void myPaintTrade(void)
 
 	line = 0;
 
-	for (i = 0; i < Status.n_trades && line < N_LINES; i++) {
+	for (i = 0; i < Status.list_sz && line < N_LINES; i++) {
 
 		// Skip entries until we encounter the index which is at the
 		// top of our scrolled window.
@@ -819,7 +820,8 @@ static void myPaintTrade(void)
 
 		// quantity
 		if (Status.trades[i].show_quantity) {
-			screenPrint(&qrect, 0, "%d", Status.trades[i].quantity);
+			screenPrint(&qrect, 0, "%d", 
+                                    Status.trades[i].quantity);
 		}
 		// price
 		screenPrint(&prect, SP_RIGHTJUSTIFIED, "%dgp",
@@ -839,14 +841,81 @@ static void myPaintTrade(void)
 	}
 }
 
-static void myScrollTrade(enum StatusScrollDir dir)
+static void statusPaintGenericList(void)
+{
+	SDL_Rect srect, l1rect, l2rect;
+	int i, top, line;
+
+	if (!Status.list_sz)
+		return;
+
+	// Setup sprite rect
+	srect = Status.screenRect;
+	srect.w = TILE_W;
+	srect.h = TILE_H;
+
+        // Setup line 1 rect1
+	l1rect = Status.screenRect;
+	if (Status.list[0].sprite) {
+		l1rect.x += TILE_W;
+		l1rect.w -= TILE_W;
+	}
+	l1rect.h = ASCII_H;
+
+        // Setup line 2 rect
+        l2rect = l1rect;
+        l2rect.y += ASCII_H;
+
+	// The top line is the index at the top of the scrolled window. All
+	// entries prior to this index are above the window and therefore
+	// unseen.
+	top = Status.topLine;
+
+	line = 0;
+
+	for (i = 0; i < Status.list_sz && line < N_LINES; i++) {
+
+		// Skip entries until we encounter the index which is at the
+		// top of our scrolled window.
+		if (top) {
+			top--;
+			continue;
+		}
+
+		// paint sprite (if applicable)
+		if (Status.list[i].sprite) {
+			spritePaint(Status.list[i].sprite, 0, srect.x,
+				    srect.y);
+		}
+
+		// print line 1
+		screenPrint(&l1rect, 0, "%s", Status.list[i].line1);
+
+		// print line 2
+		screenPrint(&l1rect, 0, "%s", Status.list[i].line1);
+
+
+		// Shade unselected items.
+		if (i != Status.curLine) {
+			myShade2Lines(line);
+		}
+		line++;
+
+		// Advance all the rectangles to the next line.
+		srect.y += TILE_H;
+		l1rect.y += TILE_H;
+		l2rect.y += TILE_H;
+	}
+}
+
+static void myScrollGeneric(enum StatusScrollDir dir)
 {
 	switch (dir) {
 	case ScrollUp:
 		// If the window is not at the top of the list and the current
 		// line is centered in the window then move the window up.
 		if (Status.topLine &&
-		    Status.curLine < (Status.n_trades - Status.numLines / 2))
+		    Status.curLine < (Status.list_sz - Status.numLines / 2))
 			Status.topLine--;
 		// Move up the currently selected line.
 		if (Status.curLine)
@@ -859,7 +928,7 @@ static void myScrollTrade(enum StatusScrollDir dir)
 		if (Status.topLine < Status.maxLine &&
 		    Status.curLine >= (Status.numLines / 2))
 			Status.topLine++;
-		if (Status.curLine < (Status.n_trades - 1))
+		if (Status.curLine < (Status.list_sz - 1))
 			Status.curLine++;
 		break;
 	default:
@@ -915,15 +984,14 @@ void statusSetMode(enum StatusMode mode)
 {
 	Status.mode = mode;
 
+        /* note: must always repaint title AFTER switching mode because
+         * switching modes repaints the border, and the * title must be painted
+         * over the border. */
+
 	switch (mode) {
 	case ShowParty:
 		switch_to_short_mode();
-		myRepaintTitle("Party");	/* note: must always repaint
-						 * title AFTER switching mode
-						 * because switching modes
-						 * repaints the border, and the 
-						 * * title must be painted over
-						 * the border. */
+		myRepaintTitle("Party");	
 		Status.pcIndex = -1;
 		Status.scroll = 0;
 		Status.paint = myShowParty;
@@ -952,13 +1020,11 @@ void statusSetMode(enum StatusMode mode)
 		Status.topLine = 0;
 		Status.curLine = 0;
 		Status.container = player_party->inventory;
-                //Status.filter = &ZtatsFilters[ViewArmaments];
                 Status.filter = &stat_ready_arms_filter;
 		Status.maxLine = Status.container->
                         filter_count(Status.filter) - Status.numLines;
 		Status.paint = stat_show_container;
                 Status.scroll = stat_scroll_container;
-		//Status.selectedEntry = stat_first_ready_arms_entry();
 		Status.selectedEntry = Status.container->first(Status.filter);
 		break;
 	case Use:
@@ -983,9 +1049,9 @@ void statusSetMode(enum StatusMode mode)
 		myRepaintTitle("select");
 		Status.topLine = 0;
 		Status.curLine = 0;
-		Status.maxLine = Status.n_trades - Status.numLines;
+		Status.maxLine = Status.list_sz - Status.numLines;
 		Status.paint = myPaintTrade;
-		Status.scroll = myScrollTrade;
+		Status.scroll = myScrollGeneric;
 		Status.selectedEntry = 0;
 		break;
 	case MixReagents:
@@ -995,11 +1061,21 @@ void statusSetMode(enum StatusMode mode)
 		Status.curLine = 0;
 		Status.container = player_party->inventory;
                 Status.filter = &ZtatsFilters[ViewReagents];
-		Status.maxLine = Status.container->filter_count(Status.filter) - Status.numLines;
+		Status.maxLine = Status.container->
+                        filter_count(Status.filter) - Status.numLines;
 		Status.paint = stat_show_container;
                 Status.scroll = stat_scroll_container;
 		Status.selectedEntry = Status.container->first(Status.filter);
 		break;
+        case GenericList:
+                myRepaintTitle("select");
+		Status.topLine = 0;
+		Status.curLine = 0;
+		Status.maxLine = Status.list_sz - Status.numLines;
+		Status.paint = statusPaintGenericList;
+		Status.scroll = myScrollGeneric;
+		Status.selectedEntry = 0;                
+                break;
 	}
 
 	statusRepaint();
@@ -1013,8 +1089,10 @@ void *statusGetSelected(enum StatusSelection sel)
 	case InventoryItem:
 	case Reagents:
 		return Status.selectedEntry;
+        case Generic:
+                return Status.list_sz ? Status.list[Status.curLine].data : 0;
 	case TradeItem:
-		return Status.n_trades ? &Status.trades[Status.curLine] : 0;
+		return Status.list_sz ? &Status.trades[Status.curLine] : 0;
 	default:
 		return 0;
 	}
@@ -1031,19 +1109,35 @@ void statusSetPageText(char *title, char *text)
 	Status.pg_text = text;
 }
 
-void statusSetTradeInfo(int n_trades, struct trade_info *trades)
+void statusSetTradeInfo(int list_sz, struct trade_info *trades)
 {
-	Status.n_trades = n_trades;
+	Status.list_sz = list_sz;
 	Status.trades = trades;
 }
 
-void statusUpdateTradeInfo(int n_trades, struct trade_info *trades)
+void statusUpdateTradeInfo(int list_sz, struct trade_info *trades)
 {
-	Status.n_trades = n_trades;
+	Status.list_sz = list_sz;
 	Status.trades = trades;
-	Status.maxLine = Status.n_trades - Status.numLines;
-	if (Status.curLine >= n_trades)
-		Status.curLine = max(0, n_trades - 1);
+	Status.maxLine = Status.list_sz - Status.numLines;
+	if (Status.curLine >= list_sz)
+		Status.curLine = max(0, list_sz - 1);
+	statusRepaint();
+}
+
+void statusSetGenericList(int list_sz, struct stat_list_entry *list)
+{
+	Status.list_sz = list_sz;
+	Status.list    = list;
+}
+
+void statusUpdateGenericList(int list_sz, struct stat_list_entry *list)
+{
+	Status.list_sz = list_sz;
+	Status.list    = list;
+	Status.maxLine = Status.list_sz - Status.numLines;
+	if (Status.curLine >= list_sz)
+		Status.curLine = max(0, list_sz - 1);
 	statusRepaint();
 }
 

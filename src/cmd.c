@@ -1369,21 +1369,23 @@ static void run_combat(bool camping, class Character * guard, int hours,
 
 bool cmdTalk(Object *member)
 {
-	struct conv *conv = NULL;
+	struct closure *conv = NULL;
         class Object *obj;
-        int x = member->getX();
-        int y = member->getY();
+        int x, y;
 
 	// *** Prompt user & check if valid ***
 
 	cmdwin_clear();
 	cmdwin_print("Talk-");
 
-	if (Place->wilderness) {
-		cmdwin_print("not here!");
-                log_msg("Can't talk here!\n");
-		return false;
-	}
+        if (! member) {
+                member = select_party_member();
+                if (! member)
+                        return false;
+        }
+
+        x = member->getX();
+        y = member->getY();
 
 	if (select_target(x, y, &x, &y, 4) == -1) {
 		return false;
@@ -1393,35 +1395,44 @@ bool cmdTalk(Object *member)
 
 	if (!obj) {
                 cmdwin_print("nobody there!");
-                log_msg("Try talking to a PERSON.\n");
-                return true;
+                log_msg("Try talking to a PERSON.");
+                return false;
         }
 
-        //conv = obj->getConversation();
-        //if (!conv) {
+        // This next bit was added to support talking to parties, where the
+        // speaker is not the party itself.
+        obj = obj->getSpeaker();
+        if (! obj) {
+                cmdwin_print("cancel");
+                return false;
+        }
 
-        if (! obj->canTalk()) {
+        conv = obj->getConversation();
+        if (!conv) {
 		cmdwin_print("no response!");
-                log_msg("No response from ");
+                log_begin("No response from ");
                 obj->describe();
-                consolePrint(".\n");
+                log_end(".");
 		return true;
         }
 
 	cmdwin_print(obj->getName());
 
-	log_msg("\n\n*** CONVERSATION ***\n\n");
-	consolePrint("You meet ");
+	log_msg("*** CONVERSATION ***");
+
+        log_begin_group();
+	log_begin("You meet ");
 	obj->describe();
-	consolePrint(".\n");
+	log_end(".");
 
 	if (obj->getActivity() == SLEEPING) {
 		log_msg("Zzzz...\n");
+                log_end_group();
 		return true;
 	}
 
-        conv_enter(obj, member);
-
+        conv_enter(obj, member, conv);
+        log_end_group();
 
 	mapSetDirty();
 

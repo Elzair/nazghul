@@ -361,8 +361,8 @@ class Object {
 
         // Conversation interface
         void setConversation(closure_t *conv);
-        bool canTalk();
-        void talk(char *query, Object *asker);
+        virtual struct closure *getConversation();
+        virtual Object *getSpeaker();
 
         virtual bool isTemporary();
         virtual void setTemporary(bool val);
