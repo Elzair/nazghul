@@ -252,6 +252,7 @@
    ;;     ===========================================================================================================
    (list   't_sm_shield             "small shield"   s_shield_blank_round_1  "-1"     "1"      slot-shield)
    (list   't_shield_wooden_buckler "wooden buckler" s_shield_blank_round_2  "-1"     "1"      slot-shield)
+   (list   't_jims_shield           "scratched shield" s_scratched_shield    "-1"     "2"      slot-shield)
    ))
 
 

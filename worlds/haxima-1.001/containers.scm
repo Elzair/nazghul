@@ -51,3 +51,6 @@
 ;;----------------------------------------------------------------------------
 (define (mk-small-wooden-chest trap contents)
   (kern-mk-container t_small_wooden_chest trap contents))
+
+(define (mk-large-iron-chest trap contents)
+  (kern-mk-container t_large_iron_chest trap contents))

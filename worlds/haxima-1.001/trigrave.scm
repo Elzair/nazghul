@@ -235,6 +235,16 @@
  (earl-mk))
 
 ;;----------------------------------------------------------------------------
+;; Special Objects
+;;----------------------------------------------------------------------------
+(define jims-chest
+  (mk-large-iron-chest
+   nil ;; trap
+   (mk-contents (add-content 1 t_jims_shield)
+                (add-content 1 t_armor_plate)
+                (add-content 1 t_iron_helm))))
+
+;;----------------------------------------------------------------------------
 ;; Place
 ;;
 ;; The place definition instantiates the place.
@@ -287,10 +297,11 @@
   (list (mk-door)         7 27)
   
   ;; Iron Works
-  (list (mk-door) 24 6)
-  (list (mk-locked-door) 26 9)
+  (list (mk-door)                                  24 6)
+  (list (mk-locked-door)                           26 9)
   (list (kern-tag 'tiw-portcullis (mk-portcullis)) 28 9)
-  (list (mk-lever 'tiw-portcullis) 25 10)
+  (list (mk-lever 'tiw-portcullis)                 25 10)
+  (list jims-chest                                 25 11)
 
   ;; Lusty Juggs (tavern)
   (list (mk-door) 28 24)

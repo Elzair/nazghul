@@ -219,6 +219,7 @@
 (kern-mk-sprite 's_open_door_in_stone                         ss_mine 1 50 #f 0 )
 (kern-mk-sprite 's_locked_solid_wood_door_in_stone            ss_mine 1 51 #f 0 )
 (kern-mk-sprite 's_magically_locked_solid_wood_door_in_stone  ss_mine 3 52 #f 0 )
+(kern-mk-sprite 's_scratched_shield                           ss_mine 1 55 #f 0 )
 (kern-mk-sprite 's_closed_solid_wood_door_in_rock             ss_mine 1 56 #f 0 )
 (kern-mk-sprite 's_open_door_in_rock                          ss_mine 1 57 #f 0 )
 (kern-mk-sprite 's_locked_solid_wood_door_in_rock             ss_mine 1 58 #f 0 )

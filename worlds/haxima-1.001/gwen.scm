@@ -115,9 +115,9 @@
                       "has taken the pass through the Ork hills. Once his "
                       "knights cross the pass nothing will stop them west "
                       "of the river.")))
-       (method 'chant
+       (method 'chan
                (lambda (knpc kpc)
-                 (say knpc "That roguish bard is usually at the tavern.")))
+                 (say knpc "That rapscallion is usually at the tavern.")))
        (method 'civi 
                (lambda (knpc kpc) 
                  (say knpc "You will not find civilization on this side "
@@ -129,6 +129,10 @@
                       "his spies through the woods disguised as bandits. "
                       "No doubt they seek a place where he can use his famous "
                       "archers in an ambush.")))
+       (method 'earl
+               (lambda (knpc kpc)
+                 (say knpc "A sweet but befuddled old man. He keeps the shop "
+                      "south of my Inn.")))
        (method 'empi gwen-king)
        (method 'enem 
                (lambda (knpc kpc) (say knpc "That is not your business.")))
@@ -148,6 +152,10 @@
                (lambda (knpc kpc)
                  (say knpc "I enjoy running the Inn because I get to hear "
                             "news from travelers.")))
+       (method 'jim
+               (lambda (knpc kpc)
+                 (say knpc "Handsome, but rather grim. He owns the "
+                      "blacksmith shop on the east end.")))
        (method 'king gwen-king)
        (method 'news (lambda (knpc kpc)
                        (say knpc "The news lately has been rumours of trouble "

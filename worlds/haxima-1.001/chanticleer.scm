@@ -20,7 +20,14 @@
 ;;----------------------------------------------------------------------------
 (define (chant-mk) (list 0))
 (define (chant-get-gold knpc) (car (kobj-gob-data knpc)))
-(define (chant-set-gold! knpc amount) (set-car! (kobj-gob-data knpc) amount))
+(define (chant-has-gold? knpc) (> (chant-get-gold knpc) 0))
+(define (chant-set-gold! knpc amount) 
+  (if (>= amount 0)
+      (set-car! (kobj-gob-data knpc) 
+                amount)))
+(define (chant-dec-gold! knpc) (chant-set-gold! knpc 
+                                                (- (chant-get-gold knpc)
+                                                   1)))
 
 ;; ----------------------------------------------------------------------------
 ;; Chanticleer
@@ -55,35 +62,75 @@
                           " [He strikes a loud, brash, chord and bows]"))
                     (else
                      (say knpc "That will fill my yearning mug! "
-                          "Now, of what would you hear? Of land, legend, "
-                          "or loot?")
+                          "Now, of what would you hear? Of Fen, Forest "
+                          "or Forgotten places?")
                      (chant-set-gold! knpc amount))))
             ;; no -- don't give him some gold
             (say knpc "A sober bard doesn't do anybody any good!")))))
 
-(define (chant-land knpc kpc)
+(define (chant-fen knpc kpc)
   (if (isdrunk? knpc)
-      (say knpc "Drier than sea! [Hic]")
-      (if (= (chant-get-gold knpc) 0)
+      (say knpc "Nazzty place! [Hic]")
+      (if (not (chant-has-gold? knpc))
           (chant-song knpc kpc)
-          (say knpc 
-               "Hmm... can't think of anything right now. Sorry."))))
+          (begin
+            (chant-dec-gold! knpc)
+            (say knpc 
+                 "THE FENS\n"
+                 "\n"
+                 "  If you like...\n"
+                 "  biting flies, and farting bogs,\n"
+                 "  dismal skies, man-sized frogs,\n"
+                 "  evil altars, muck-filled boots,\n"
+                 "  mislaid rangers (wary of strangers),\n"
+                 "  trackless wastes,\n"
+                 "  lichs, wraiths,\n"
+                 "  and skeletal warriors, too...\n"
+                 "  then, my friend,\n"
+                 "  to the northern Fen!\n"
+                 "  For that's the place for you.\n")))))
 
-(define (chant-legend knpc kpc)
+(define (chant-forest knpc kpc)
   (if (isdrunk? knpc)
-      (say knpc "Yes, I am! [He belches]")
-      (if (= (chant-get-gold knpc) 0)
+      (say knpc "Run, Forest, run! [Hee-hee]")
+      (if (not (chant-has-gold? knpc))
           (chant-song knpc kpc)
-          (say knpc 
-               "Hmm... can't think of anything right now. Sorry."))))
+          (begin
+            (chant-dec-gold! knpc)
+            (say knpc 
+                 "THE EASTERN WOODS\n"
+                 "\n"
+                 "The woods are lovely, dark and deep\n"
+                 "and always hungry, too!\n"
+                 "They've eaten many travelers\n"
+                 "and gulped a king or two.\n"
+                 "\n"
+                 "There goblins lurk and bandits hide\n"
+                 "and giant spiders drool,\n"
+                 "So if you go there don't forget\n"
+                 "to bring a slower fool!\n"
+                 )))))
 
-(define (chant-loot knpc kpc)
+(define (chant-forgotten knpc kpc)
   (if (isdrunk? knpc)
-      (say knpc "I drank all my money!")
-      (if (= (chant-get-gold knpc) 0)
+      (say knpc "I don't remember! [he weeps with laughter]")
+      (if (not (chant-has-gold? knpc))
           (chant-song knpc kpc)
-          (say knpc 
-               "Hmm... can't think of anything right now. Sorry."))))
+          (begin
+            (chant-dec-gold! knpc)
+            (say knpc 
+                 "THE LOST HALLS\n"
+                 "\n"
+                 "Delving ever deeper,\n"
+                 "They woke the ancient sleeper,\n"
+                 "You know the tale\n"
+                 "(The moral's stale)\n"
+                 "So I won't bore you with detail!\n"
+                 "\n"
+                 "[stops playing] If you simply MUST go investigate, "
+                 "travel northeast through the woods and find the "
+                 "entrance in a nook in the mounains."
+               )))))
 
 (define chant-conv
   (ifc basic-conv
@@ -95,7 +142,7 @@
                (lambda (knpc kpc) 
                  (if (isdrunk? knpc)
                      (say knpc "I's drunk... [hic]")
-                     (say knpc "Surprisingly, I know nothing about that."))))
+                     (say knpc "I am at a loss."))))
        (method 'hail 
                (lambda (knpc kpc)
                  (if (isdrunk? knpc)
@@ -132,12 +179,26 @@
                  (if (isdrunk? knpc)
                      (say knpc "[Hic!] Whooze that maudlin, drunken fool,\n"
                           "Who plaize the tung like beast made man...")
-                     (say knpc
+                     (say knpc "\n"
                           "\n"
                           " Who is that wise, enchanting bard,\n"
                           " Who plays the lute like song made flesh\n"
                           " And tells tales Fate herself would tell\n"
                           " If Fate could only lie so well?"))))
+       (method 'earl
+               (lambda (knpc kpc)
+                 (if (isdrunk? knpc)
+                     (say knpc "e's furgotten mor' 'an I'll ever know!")
+                     (say knpc 
+                          "Our distinguished shopkeeper...\n"
+                          "\n"
+                          " There once was a master of flame\n"
+                          " As a warmage he gathered great fame\n"
+                          " But as you can tell\n"
+                          " He tried a bad spell\n"
+                          " And now can't remember his name!\n"
+                          ))))
+
        (method 'ench
                (lambda (knpc kpc)
                  (if (isdrunk? knpc)
@@ -153,22 +214,24 @@
                           "Ever seen a witch carry a sword?")
                      (say knpc
                           "Ah, our mysterious inkeeper...\n"
+                          "\n"
                           " When the gray dove is weeping\n"
                           " And the whole world is sleeping\n"
                           " When ghosts rise like mist from the sea\n"
                           " The owl in the moonlight\n"
                           " Inquires of the still night\n"
                           " The question we all ask of she!\n"))))
-       (method 'land chant-land)
-       (method 'lege chant-legend)
-       (method 'loot chant-loot)
+       (method 'fen chant-fen)
+       (method 'fore chant-forest)
+       (method 'forg chant-forgotten)
        (method 'jim
                (lambda (knpc kpc)
                  (if (isdrunk? knpc)
                      (say knpc "A knight turned inside out! [Burp!]")
                      (say knpc
                           "Ha! Here's a bit of gossip!\n"
-                          "Full fell and grim\n"
+                          "\n"
+                          " Full fell and grim\n"
                           " the righteous Jim,\n"
                           " His armour slicked in gore,\n"
                           " Slew his master on the field,\n"
@@ -196,8 +259,9 @@
                           "It watches the Fen to the north, "
                           "but if you're thinking of going there, "
                           "know that the Enchanter does not like visitors!"))))
+
        (method 'wit
                (lambda (knpc kpc)
-                 (say knpc "Anything worth taking seriously is worth making "
-                      "fun of.")))
+                 (say knpc "Well, gossip really. Give me a name, I'll give "
+                      "you the dirt.")))
        ))
