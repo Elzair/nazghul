@@ -31,6 +31,12 @@
 #define WRAP(c,max) (((c) + (max)) % (max))
 #define WRAP_DISTANCE(a,b,max) (min((a) + (max) - (b), (b) - (a)))
 #define INDEX(x,y,w) ((x) + (y) * (w))
+#define WRAP_COORDS(place, x, y) do { \
+        if ((place)->wraps) { \
+                (x) = place_wrap_x((place), (x)); \
+                (y) = place_wrap_y((place), (y)); \
+        } \
+} while(0)
 
 #define TERRAIN(p,x,y) ((p)->terrain_map->terrain[(y) * \
    (p)->terrain_map->w + (x)])
@@ -220,6 +226,7 @@ int place_is_passable(struct place *place, int x, int y,
 
 int place_is_occupied(struct place *place, int x, int y)
 {
+        WRAP_COORDS(place, x, y);
 	return (place_get_object(place, x, y, being_layer) != 0);
 }
 
@@ -622,6 +629,8 @@ Object *place_get_object(struct place *place, int x, int y, enum layer layer)
 	struct olist *olist;
 	struct tile *tile;
 
+        WRAP_COORDS(place, x, y);
+
 	tile = place_lookup_tile(place, x, y);
 	if (!tile)
 		return 0;
@@ -637,6 +646,8 @@ class Portal *place_get_portal(struct place * place, int x, int y)
 {
 	Object *object;
 
+        WRAP_COORDS(place, x, y);
+
 	object = place_get_object(place, x, y, portal_layer);
 	if (!object)
 		return 0;
@@ -647,6 +658,8 @@ class Portal *place_get_portal(struct place * place, int x, int y)
 class NpcParty *place_get_NpcParty(struct place * place, int x, int y)
 {
 	Object *object;
+
+        WRAP_COORDS(place, x, y);
 
 	// fixme: this will get Character's, too... and be careful because the
 	// pathfinding code appears to rely on this fact.
@@ -664,6 +677,7 @@ class Vehicle *place_get_vehicle(struct place * place, int x, int y)
 {
 	struct tile *tile;
 
+        WRAP_COORDS(place, x, y);
 	tile = place_lookup_tile(place, x, y);
 	if (!tile)
 		return 0;
@@ -675,8 +689,7 @@ struct terrain_map *place_get_combat_terrain_map(struct place *place,
 {
 	struct terrain *terrain;
 
-	x = place_wrap_x(place, x);
-	y = place_wrap_y(place, y);
+        WRAP_COORDS(place, x, y);
 	terrain = place->terrain_map->terrain[y * place->terrain_map->w + x];
 	return terrain_combat_map(terrain);
 }
@@ -821,11 +834,10 @@ int place_get_light(struct place *place, int x, int y)
 	Object *obj;
 	struct tile *tile;
 
-	/* Wrap the coordinates if necessary. */
-	if (place->wraps) {
-		x = WRAP(x, place->terrain_map->w);
-		y = WRAP(y, place->terrain_map->h);
-	}
+        if (place->wraps) {
+                x = place_wrap_x(place, x);
+                y = place_wrap_y(place, y);
+        }
 
 	/* Check if the coordinates are off-map */
 	else if (place_off_map(place, x, y))
@@ -876,6 +888,7 @@ void placeEnter(void)
 
 class Moongate *place_get_moongate(struct place *place, int x, int y)
 {
+        WRAP_COORDS(place, x, y);
 	struct tile *tile = place_lookup_tile(place, x, y);
 	if (!tile)
 		return 0;
@@ -894,34 +907,40 @@ void placeRemoveObject(Object * object)
 
 class NpcParty *placeGetNPC(int x, int y)
 {
+        WRAP_COORDS(Place, x, y);
 	return place_get_NpcParty(Place, x, y);
 }
 
 int place_get_movement_cost(struct place *place, int x, int y)
 {
+        WRAP_COORDS(place, x, y);
 	struct terrain *t = TERRAIN(place, x, y);
 	return (place->scale * (t ? t->movement_cost : 0));
 }
 
 int placeGetMovementCost(int x, int y)
 {
+        WRAP_COORDS(Place, x, y);
 	struct terrain *t = TERRAIN(Place, x, y);
 	return (t ? t->movement_cost : 0);
 }
 
 struct terrain *placeGetTerrain(int x, int y)
 {
+        WRAP_COORDS(Place, x, y);
 	return TERRAIN(Place, x, y);
 }
 
 void place_set_terrain(struct place *place, int x, int y,
 		       struct terrain *terrain)
 {
+        WRAP_COORDS(place, x, y);
 	TERRAIN(place, x, y) = terrain;
 }
 
 struct terrain *place_get_terrain(struct place *place, int x, int y)
 {
+        WRAP_COORDS(place, x, y);
 	if (place_off_map(place, x, y))
 		return NULL;
 	x = place_wrap_x(place, x);
@@ -931,17 +950,20 @@ struct terrain *place_get_terrain(struct place *place, int x, int y)
 
 Uint32 place_get_color(struct place * place, int x, int y)
 {
+        WRAP_COORDS(place, x, y);
 	struct terrain *terrain = place_get_terrain(place, x, y);
 	return (terrain == NULL ? 0 : terrain->color);
 }
 
 int placeWrapX(int x)
 {
+        // obsolete
 	return place_wrap_x(Place, x);
 }
 
 int placeWrapY(int y)
 {
+        // obsolete
 	return place_wrap_y(Place, y);
 }
 
@@ -1024,6 +1046,8 @@ static void myDumpObject(class Object * obj, void *data)
 
 void placeDescribe(int x, int y)
 {
+        WRAP_COORDS(Place, x, y);
+
 	if (place_off_map(Place, x, y)) {
 		consolePrint("Nothing!");
 		return;
@@ -1176,6 +1200,9 @@ void place_clip_to_map(struct place *place, int *x, int *y)
 	*y = max(*y, 0);
 	*y = min(*y, place_h(place) - 1);
 }
+
+
+
 
 #ifdef PLACE_LOAD_CODE_REWRITTEN
 // started rewriting all the code to load places, almost done but don't want to

@@ -3385,33 +3385,38 @@ PLACE p_wilderness {
   }
 }
 RESP BB_name_resp {
-        SAY "Black Bart, at your service! [roguish wink]";
+        SAY "KU-RO-O-NEE... Black Bart";
 }
 RESP BB_health_resp {
-        SAY "[coughing] Never better!";
+        SAY "[hawks and spits] CHOTTO BYO-KEE. DIE-JO-BOO.";
 }
 RESP BB_job_resp {
-        SAY "I make ships! The finest in the land! I sell them for 200 pieces of gold.";
+        SAY "HEE-NAY ...ship! Bart make ship! Good ship.";
+}
+RESP BB_ship_resp {
+        SAY "Ship 200 gold. Good ship.";
         CHECK_PARM -2 > 200 {
-                SAY "Would ye like one?";
+                SAY "HEE-NAY CHO-DIE? Want ship? Very good ship. Don't sink.";
                 GET_YES_NO {
                         CHANGE_PARM -1 200;
                         TAKE -2;
-                        SAY "Pick one and sail her out!";
                         send_signal shipwright_portcullis_1 100;
+                        SAY "Unh! Ok, take ship. I take gold.";
                 }{
-                        SAY "Suit yerself. Ye'll find none better in all the land!";
+                        SAY "[grunt] Good ship. You see, when you can't swim.";
+                        TURN_AWAY;
                 }
         }{
-                SAY "Maybe someday you can afford one!";
+                SAY "Too poor. Go kill rats. Or something. Come back with gold.";
         }
 }
 CONV BlackBart_Conversation {
-        IMPORT { }
+        IMPORT { c_goblin }
         NATIVE {
                 NAME BB_name_resp;
                 HEALTH BB_health_resp;
                 JOB BB_job_resp;
+                SHIP BB_ship_resp;
         }
 }
 CHAR BlackBart_the_Shipwright {
@@ -3925,8 +3930,8 @@ portals {
 }
 player {
   place p_empire_city;
-  x 32;
-  y 25;
+  x 42;
+  y 34;
   sprite s_companion_wizard;
   speed 2;
   pmask 1;

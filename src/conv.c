@@ -1238,7 +1238,7 @@ struct response *load_response_chain(class Loader * loader)
 		}
 
 		if (i < array_sz(api_tbl))
-			continue;
+                        goto link;
 
 		if (loader->matchWord("SAY") || loader->matchWord("print")) {
 			if (!loader->getString(&resp->msg))
@@ -1339,6 +1339,7 @@ struct response *load_response_chain(class Loader * loader)
 			goto fail;
 		}
 
+        link:
 		presp = &resp->next;
 	} while (!loader->matchToken('}'));
 
