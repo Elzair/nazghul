@@ -1116,9 +1116,9 @@
                 (list (kern-mk-obj t_iron_helm      1) 01 12)
                 (list (kern-mk-obj t_sm_shield      1) 01 13)
 
-                (list (kern-mk-obj deathball        1) 01 15)  ;; crash and lock upon pickup
-                (list (kern-mk-obj short-sword      1) 01 16)
-                (list (kern-mk-obj wooden-buckler   1) 01 17)
+                (list (kern-mk-obj deathball                 1) 01 15)  ;; crash and lock upon pickup
+                (list (kern-mk-obj short-sword               1) 01 16)
+                (list (kern-mk-obj t_shield_wooden_buckler   1) 01 17)
 
 
                 (list large_chest 1 30)

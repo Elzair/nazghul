@@ -160,32 +160,89 @@
 
 (define melee-arms-types
   (list
-   ;;     ===========================================================================================================
-   ;;     tag          | name          | sprite           | to-hit | damage | to-def | slots       | hnds | rng
-   ;;     ===========================================================================================================
-   (list  't_hands       "bare hands"     nil               "1d2"    "1d4"    "1d2"    slot-nil      1      1)
-   (list  't_fangs       "fangs"          nil               "1d2"    "1d8"    "0"      slot-nil      1      1)
-   (list  't_dagger      "dagger"         s_dagger_1        "1d3"    "1d6"    "1d2"    slot-weapon   1      1)
-   (list  't_acid_spray  "acid spray"     nil               "1d2"    "1d1"    "0"      slot-nil      2      2)   
-   (list  't_stinger     "stinger"        nil               "1d8"    "1d2-1"  "0"      slot-nil      1      1)
-   (list  'short-sword   "short sword"    s_sword_short_1   "1d4"    "1d8"    "1d2"    slot-weapon   1      1)
+   ;;     ===============================================================================================================
+   ;;     tag          |    name          | sprite           |  to-hit | damage | to-def | slots       | hnds | rng
+   ;;     ===============================================================================================================
+   (list  't_hands          "bare hands"     nil                "1d2"    "1d4"    "1d2"    slot-nil      1      1)
+
+   (list  't_fangs          "fangs"          nil                "1d2"    "1d8"    "+0"     slot-nil      1      1)
+   (list  't_acid_spray     "acid spray"     nil                "1d2"    "1d1"    "+0"     slot-nil      2      2)   
+   (list  't_stinger        "stinger"        nil                "1d8"    "1d2-1"  "+0"     slot-nil      1      1)
+
+   (list  't_dagger         "dagger"         s_dagger_1         "1d4"    "1d6"    "1d2"    slot-weapon   1      1)
+   (list  'short-sword      "short sword"    s_sword_short_1    "1d3"    "1d8"    "1d2"    slot-weapon   1      1)
+   (list  't_longsword      "long sword"     s_sword_long_1     "1d2"    "1d10"   "1d2"    slot-weapon   1      2)
+   (list  't_2H_sword       "2H sword"       s_sword_zweihander "0"      "2d8"    "+0"     slot-weapon   2      3)
+
+   (list  't_eldritch_blade "eldritch blade" s_sword_eldritch   "2"      "2d8+5"  "+0"     slot-weapon   2      3)
+   (list  't_mystic_sword   "mystic sword"   s_sword_mystic     "+3"     "1d10+1" "+2"     slot-weapon   1      2)
+   (list  't_flaming_sword  "flaming sword"  s_sword_flaming    "1d2"    "1d10+3" "1d2"    slot-weapon   1      2)
+
+   (list  't_mace           "mace"           s_mace_1           "1d3"    "1d8+1"   "+0"    slot-weapon   1      1)
+   (list  't_mace_and_chain "mace and chain" s_flail_1          "1d3+3"  "1d8+1"   "-1"    slot-weapon   2      2)
+   (list  't_nunchaku       "nunchaku"       s_nunchaku_1       "1d6+3"  "1d6"     "1d4"   slot-weapon   2      1)
+
+   (list  't_hatchet        "hatchet"        s_axe_2            "+0"     "1d6+1"   "-1"    slot-weapon   1      1)
+   (list  't_war_axe        "war axe"        s_axe_4            "+0"     "2d6+2"   "-2"    slot-weapon   2      2)
+
+   (list  't_spear          "short spear"    s_spear_1          "1d4+2"  "1d8"     "+0"    slot-weapon   1      1)
+   (list  't_halberd        "halberd"        s_halberd_2        "1d4+2"  "2d6"     "+1"    slot-weapon   2      1)
+
+   (list  't_quarterstaff   "quarterstaff"   s_quarterstaff_1   "1d4"    "1d8"    "1d4"    slot-weapon   2      2)
+   (list  't_bo_staff       "bo staff"       s_quarterstaff_2   "1d6"    "1d4"    "1d6"    slot-weapon   2      2)
+
+   (list  't_bullwhip       "bullwhip"       s_whip             "1d8"    "1d3"    "0"      slot-weapon   1      4)
+
    ))
 
 (define armor-types
   (list
-   ;;     ===========================================================================================================
-   ;;     tag             | name          | sprite           | to-hit | armor  | slots
-   ;;     ===========================================================================================================
-   (list   't_iron_helm     "iron helm"     s_helm_metal_1     "0"      "2"      slot-helm)
+   ;;     =============================================================================================================
+   ;;     tag             | name          |  sprite           |  to-hit | armor  | slots
+   ;;     =============================================================================================================
+   (list   't_ranger_cap    "feathered cap"  s_hat_green_feather "0"      "0"      slot-helm)
+   (list   't_leather_helm  "leather helm"   s_helm_leather_1    "0"      "1"      slot-helm)
+   (list   't_iron_helm     "iron helm"      s_helm_metal_1      "0"      "2"      slot-helm)
+   (list   't_ancient_helm  "ancient helmet" s_helm_gold_horned  "0"      "3"      slot-helm)
+   (list   't_silver_crown  "silver crown"   s_crown_1           "0"      "1"      slot-helm)
+
+   (list   't_amulet_green  "green amulet"   s_amulet_3          "0"      "1"      slot-amulet)
+   (list   't_amulet_red    "red amulet"     s_amulet_8          "1"      "0"      slot-amulet)
+   (list   't_amulet_blue   "blue amulet"    s_amulet_9          "0"      "0"      slot-amulet)
+
+   (list   't_ring_wooden   "wooden ring"    s_ring_1            "0"      "0"      slot-ring)
+   (list   't_ring_silver   "silver ring"    s_ring_4            "0"      "0"      slot-ring)
+   (list   't_ring_golden   "golden ring"    s_ring_5            "0"      "0"      slot-ring)
+   (list   't_ring_opal     "opal ring"      s_ring_9            "0"      "0"      slot-ring)
+   (list   't_ring_ruby     "ruby ring"      s_ring_11           "0"      "0"      slot-ring)
+   (list   't_ring_sapphire "sapphire ring"  s_ring_12           "0"      "0"      slot-ring)
+
+   (list   't_clothing_rags "torn rags"      s_robe_rags         "0"      "0"      slot-armor)
+   (list   't_robe_red      "red robe"       s_robe_1            "0"      "0"      slot-armor)
+   (list   't_robe_green    "green robe"     s_robe_2            "0"      "0"      slot-armor)
+   (list   't_robe_purple   "purple robe"    s_robe_3            "0"      "0"      slot-armor)
+   (list   't_robe_blue     "blue robe"      s_robe_4            "0"      "0"      slot-armor)
+
+   (list   't_armor_leather "leather armor"  s_armor_leather_3   "+0"     "1"      slot-armor)
+   (list   't_armor_l_stud  "heavy leather"  s_armor_leather_4   "-1"     "2"      slot-armor)
+   (list   't_armor_chain   "chain shirt"    s_armor_chain_3     "-1"     "3"      slot-armor)
+   (list   't_armor_plate   "plate mail"     s_armor_plate_2     "-2"     "4"      slot-armor)
+
+   (list   't_armor_viridian "viridian leather"   s_armor_chain_8  "+1"   "3"      slot-armor)
+   (list   't_armor_opaline  "opaline chain"      s_armor_chain_5  "+0"   "1d4+1"  slot-armor)
+   (list   't_armor_ancient  "ancient plate"      s_armor_plate_3  "-3"   "8"      slot-armor)
+   (list   't_armor_warlord  "warlords suit"      s_armor_dragon_3 "+2"   "5"      slot-armor)
+   (list   't_armor_golden   "golden breastplate" s_breastplate_dragon_6 "+1"  "2d3+1" slot-armor)
+
    ))
 
 (define shield-types
   (list
    ;;     ===========================================================================================================
-   ;;     tag             | name          | sprite                 | to-hit | armor  | slots
+   ;;     tag                     | name           | sprite                | to-hit | armor  | slots
    ;;     ===========================================================================================================
-   (list   't_sm_shield    "small shield"   s_shield_blank_round_1  "-1"     "3"       slot-shield)
-   (list   'wooden-buckler "wooden buckler" s_shield_blank_round_2  "-1"     "3"       slot-shield)
+   (list   't_sm_shield             "small shield"   s_shield_blank_round_1  "-1"     "3"      slot-shield)
+   (list   't_shield_wooden_buckler "wooden buckler" s_shield_blank_round_2  "-1"     "3"      slot-shield)
    ))
 
 (map (lambda (type) (apply mk-thrown-arms-type     type)) thrown-arms-types)
