@@ -744,7 +744,7 @@ fi
 
 PACKAGE=nazghul
 
-VERSION=0.1.0
+VERSION=0.2.0
 
 if test "`cd $srcdir && pwd`" != "`pwd`" && test -f $srcdir/config.status; then
   { echo "configure: error: source directory already configured; run "make distclean" there first" 1>&2; exit 1; }
@@ -1624,10 +1624,7 @@ rm -f conftest*
   rm -f conf.sdltest
 
 
-# gmcnutt: hack commented out and replaced the line below to avoid the -O2
-#option which causes runtime problems
-# CFLAGS="$CFLAGS $SDL_CFLAGS -Wall"
-CFLAGS="$SDL_CFLAGS -g -Wall"
+CFLAGS="$CFLAGS $SDL_CFLAGS -Wall"
 
 # gmcnutt: hack - how do I add a check for the SDL_image lib?
 LIBS="$LIBS $SDL_LIBS  -lSDL_image"
@@ -1654,10 +1651,9 @@ esac
 
 CFLAGS="$CFLAGS"
 
-# gmcnutt: hack commented out and replaced the line below to avoid the -O2
-#option which causes runtime problems
-#CXXFLAGS="$CXXFLAGS $CFLAGS"
-CXXFLAGS="$CFLAGS"
+CXXFLAGS="$CXXFLAGS $CFLAGS"
+
+TAR="$TAR --exclude CVS"
 
 # Finally create all the generated files
 trap '' 1 2 15

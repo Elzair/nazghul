@@ -6,7 +6,7 @@ AC_CANONICAL_HOST
 AC_CANONICAL_TARGET
 
 dnl Setup for automake
-AM_INIT_AUTOMAKE(nazghul, 0.1.0)
+AM_INIT_AUTOMAKE(nazghul, 0.2.0)
 
 dnl Check for tools
 
@@ -61,6 +61,9 @@ CFLAGS="$CFLAGS"
 
 dnl C++ flags are the same as the C flags
 CXXFLAGS="$CXXFLAGS $CFLAGS"
+
+dnl Exclude CVS directories when creating tarball
+TAR="$TAR --exclude CVS"
 
 # Finally create all the generated files
 AC_OUTPUT([
