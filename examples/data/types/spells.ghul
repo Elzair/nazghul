@@ -127,6 +127,27 @@ REAGENT reagent_spider_silk {
 /*****************************************************************************
                            F I R S T    C I R C L E
  *****************************************************************************/
+
+SPELL spell_minor_light {
+  name     "Bet Lor (minor light)";
+  sprite   s_magic;
+  code     BL;
+  cost     SPELL_COST_LEVEL_1;
+  range    3;
+  missile  M_illum;
+  effects  (EFFECT_BURN);
+  strength 0;
+  duration 0;
+  context  CTW;
+  level    1;
+  target   SPELL_TARGET_LOCATION;
+  reagents {
+    reagent_sulphorous_ash;
+  }
+  parms { }
+}
+
+
 SPELL spell_cure_poison {
   name     "An Nox (cure poison)";
   sprite   s_green_potion;

@@ -175,6 +175,9 @@ player {
   
     // Spell Mixtures:
 
+    // New spells:
+    50 spell_minor_light;
+
     // Circle I
     50 spell_cure_poison;
     50 spell_awaken;
