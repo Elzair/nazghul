@@ -1183,12 +1183,13 @@ static int load_map(void)
 
 #endif                          // OLD_MAP
 
-static Object *game_load_place_item(struct place *place)
+static void game_load_place_item(struct place *place)
 {
         class ObjectType *type;
         class Object *obj = 0;
         class Loader loader;
         class Character *ch;
+        int quantity = 1;
 
         PARSE_ASSERT((Lexer->token == lexer_WORD),
                      "Expected type tag, got '%s'\n", Lexer->lexeme);
@@ -1222,7 +1223,7 @@ static Object *game_load_place_item(struct place *place)
                 obj = new NpcParty();
                 PARSE_ASSERT(obj, "Failed to create wrapper for %s\n",
                              ch->getName());
-                ((class NpcParty *) obj)->init((class Character *) ch);
+                ((class NpcParty *) obj)->init(ch);
 
         }
         else {
@@ -1246,7 +1247,52 @@ static Object *game_load_place_item(struct place *place)
                 list_add(&Objects, &obj->list);
         }
 
-        return obj;
+        // gmcnutt: added support for an optional quantity field for placed
+        // objects.
+        if (!loader.getInt(&quantity)) {
+                quantity = 1;
+        }
+
+        if (quantity == 0) {
+                err("Zero instances of %s requested (zero is an illegal "
+                    "quantity", obj->getName());
+        }
+        if (quantity > 1) {
+                if (!type) {
+                        err("Cannot create more than one CHAR type (%d "
+                            "instances of %s requested", quantity, 
+                            obj->getName());
+                        assert(false);
+                }
+                if (type->isType(NPCPARTY_TYPE_ID)) {
+                        err("Cannot create more than one PARTY type on the "
+                            "same line (%d instances of %s requested", 
+                            quantity, 
+                            obj->getName());
+                        assert(false);
+                }
+        }
+
+        while (quantity) {
+
+                if (place_add_object(place, obj)) {
+                        err("Failed to add object %s to place %s (hint: if "
+                            "the object is vehicle then only one vehicle may "
+                            "occupy a tile)", obj->getName(), place->name);
+                        assert(false);
+                }
+
+                quantity--;
+                if (!quantity)
+                        break;
+
+                obj = obj->clone();
+                if (!obj) {
+                        err("Failed to create another %s object", 
+                            obj->getName());
+                        assert(false);
+                }
+        }
 }
 
 static bool loadConnect(class Loader * loader)
@@ -1329,8 +1375,6 @@ static int game_load_place_items(struct place *place)
         PARSE_START_OF_BLOCK();
         lexer_lex(Lexer);
         while (Lexer->token != '}') {
-                Object *object;
-
                 if (!strcmp(Lexer->lexeme, "CONNECT")) {
                         loader.lexer = Lexer;
                         loader.lookupTag = lookupTag;
@@ -1341,17 +1385,7 @@ static int game_load_place_items(struct place *place)
                         continue;
                 }
 
-                object = game_load_place_item(place);
-                if (!object)
-                        return -1;
-
-                if (place_add_object(place, object)) {
-                        err("Failed to add object %s to place %s (hint: if "
-                            "the object is vehicle then only one vehicle may "
-                            "occupy a tile)", object->getName(), place->name);
-                        delete object;
-                }
-
+                game_load_place_item(place);
         }
 
       cleanup:

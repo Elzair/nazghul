@@ -103,7 +103,7 @@ PLACE  p_terrain_test {
     // but I know the very next thing he'll want is the ability to add items to
     // containers :-).
 
-    t_chest1          11 29;  // Container  // Causes a segfault...why?
+    t_chest1          11 29;  // Container
 
     t_dagger          10 11;  // Weapon (dagger)
     t_long_sword      10 12;
@@ -122,9 +122,9 @@ PLACE  p_terrain_test {
     F_sleep   15 21;  // Sleep  Field
     F_protect 16 21;  // Protection Field
 
-    t_arrow  2 27;  // Ammo (arrows)
-    t_bolt   2 28;  // Ammo (crossbow bolts)
-    t_rock   2 29;  // Ammo (rocks)
+    t_arrow  2 27 50;  // Ammo (arrows)
+    t_bolt   2 28 50;  // Ammo (crossbow bolts)
+    t_rock   2 29 20;  // Ammo (rocks)
 
     t_cannonball 4 25;  // Ammo (cannonball)
 

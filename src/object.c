@@ -163,7 +163,8 @@ bool Object::load(class Loader * loader)
 {
 	loader->getWord(&script_tag);
 
-	if (!loader->getInt(&x) || !loader->getInt(&y))
+	if (!loader->getInt(&x) || 
+            !loader->getInt(&y))
 		return false;
 	return true;
 }
@@ -183,4 +184,20 @@ void Object::describe(int count)
 char *Object::get_movement_sound()
 {
         return 0;
+}
+
+class Object *Object::clone()
+{
+        // gmcnutt: added support for an optional quantity field for placed
+        // objects.
+
+        class Object *obj;
+
+        obj = getObjectType()->createInstance();
+        obj->setX(getX());
+        obj->setY(getY());
+
+        // FIXME: should assign the new object a unique script tag
+
+        return obj;
 }

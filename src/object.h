@@ -266,6 +266,7 @@ class Object {
 	}
 	virtual void paint(int sx, int sy);
         virtual char *get_movement_sound();
+        virtual class Object *clone();
 
 	struct olist container_link;
 
