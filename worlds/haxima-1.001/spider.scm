@@ -44,7 +44,7 @@
                  #t             ;; visible: can be seen
                  sound-damage   ;; damage sound
                  sound-walking  ;; walking sound
-                 nil            ;; on-death closure
+                 'queen-spider-killed ;; on-death closure
                  humanoid-slots ;; slots: hands
                  nil            ;; native spells: currently unused
                  )
@@ -66,6 +66,24 @@
 
 (define (spider-killed kspider)
   (kern-obj-put-at (mk-spider-corpse)
+                   (kern-obj-get-location kspider)))
+
+;; ----------------------------------------------------------------------------
+;; queen-spider-killed -- virtually the same as spider-killed except for a few
+;; details
+;; ----------------------------------------------------------------------------
+(mk-obj-type 'queen-spider-corpse-type "queen spider corpse" s_dead_queen_spider
+             layer-container nil)
+
+(define (mk-queen-spider-corpse)
+  (kern-mk-container queen-spider-corpse-type
+                     nil
+                     (list 
+                      (list (kern-dice-roll "1d10") spider_silk)
+                      )))
+
+(define (queen-spider-killed kspider)
+  (kern-obj-put-at (mk-queen-spider-corpse)
                    (kern-obj-get-location kspider)))
 
 ;;----------------------------------------------------------------------------
