@@ -93,8 +93,7 @@ static int mapKey(SDL_keysym * keysym)
                 if (keysym->unicode < 0x7f)
                         return keysym->unicode & 0x7f;
 
-                /* Other code pages not supported */
-                return 0;
+                /* Code page not supported... fall through */
         }
 
         /* Map the arrow keys */
@@ -102,8 +101,8 @@ static int mapKey(SDL_keysym * keysym)
 		return map_arrows[key - SDLK_UP +
 				  ((keysym->mod & KMOD_SHIFT) ? 4 : 0)];
 
-        /* Unsupported */
-	return 0;
+        /* Unsupported? fallback to the SDL sym */
+	return keysym->sym;;
 }
 
 #else /* ! USE_UNICODE */
