@@ -1,3 +1,33 @@
+;;----------------------------------------------------------------------------
+;; Gregor
+;;
+;; Gregor is one of the first characters the player will meet. He starts out
+;; in the moongate clearing in the shrine room.
+;;----------------------------------------------------------------------------
+(kern-load "gregor.scm")
+(bind 
+ (kern-mk-char 'ch_gregor ; tag
+               "Gregor"              ; name
+               sp_human            ; species
+               nil                 ; occ
+               s_townsman          ; sprite
+               faction-men         ; starting alignment
+               0 10 5              ; str/int/dex
+               0 0                 ; hp mod/mult
+               0 0                 ; mp mod/mult
+               30 0 9 9            ; hp/xp/mp/lvl
+               'gregor-conv          ; conv
+               nil ;sch_gregor           ; sched
+               nil                 ; special ai
+               nil                 ; readied
+               )
+ (gregor-mk #f #f))
+
+;;----------------------------------------------------------------------------
+;; Moongate Clearing
+;;
+;; This is where the player starts out.
+;;----------------------------------------------------------------------------
 (kern-mk-place 'p_moongate_clearing "Moongate Clearing"
   s_shrine ;; sprite
   (kern-mk-map 'm_moongate_clearing 23 28 pal_expanded
@@ -39,6 +69,7 @@
   nil
   (list ;; contents
    (list (kern-tag 'black-gate (mk-moongate nil)) 11 11)
+   (list ch_gregor 1 23)
    )
   nil ;; hooks
   (list  ;; edge entrances
