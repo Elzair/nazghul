@@ -256,3 +256,8 @@ struct inv_entry *Container::prev(struct inv_entry *ie, struct filter *filter)
         }
         return NULL;
 }
+
+bool Container::isEmpty()
+{
+        return list_empty(&contents);
+}

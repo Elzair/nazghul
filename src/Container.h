@@ -37,14 +37,17 @@ class Container:public Object {
 	Container();
         Container(class ObjectType *type);
 	virtual ~ Container();
-	virtual bool add(class ObjectType * type, int quantity);
-	virtual void open();
-	virtual bool takeOut(class ObjectType * type, int quantity);
+	void open();
 	virtual struct inv_entry *search(class ObjectType * type);
-	virtual bool isTrapped();
-	virtual void setTrap(closure_t *trap);
-	virtual closure_t *getTrap();
+        bool isEmpty();
+	bool isTrapped();
+	void setTrap(closure_t *trap);
+	closure_t *getTrap();
+
+        // Virtual methods from base class
+	virtual bool add(class ObjectType * type, int quantity);
         virtual void save(struct save *save);
+	virtual bool takeOut(class ObjectType * type, int quantity);
 
         int filter_count(struct filter *);
 	struct inv_entry *first(struct filter *);

@@ -77,7 +77,7 @@ class Character:public Being {
 	virtual int getType();
 	virtual char *getName();
 	virtual int getHp();
-        class Container *getInventory();
+        class Container *getInventoryContainer();
 	virtual int getMaxHp();
 	virtual int getOrder();
 	virtual void addExperience(int delta);
@@ -138,6 +138,7 @@ class Character:public Being {
         virtual void setActivity(int val);
         virtual void setControlMode(enum control_mode mode);
         virtual void setDefaultCondition();
+        virtual void setInventoryContainer(class Container *container);
         virtual void setLeader(bool val);
 	virtual void setName(char *name);
         virtual void setSchedule(struct sched *sched);

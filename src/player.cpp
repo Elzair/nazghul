@@ -1452,7 +1452,8 @@ bool player_party::rendezvous(struct place *place, int rx, int ry)
                         done = false;
 
                         // move one step
-                        member->move(member->path->next->x - member->getX(), member->path->next->y - member->getY());
+                        member->move(member->path->next->x - member->getX(), 
+                                     member->path->next->y - member->getY());
 
                         // clean up used path node
                         tmp = member->path;

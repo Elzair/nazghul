@@ -2306,7 +2306,7 @@ void Character::save(struct save *save)
         save->write(save, "%s\n",  this->species->tag);
         save->write(save, "%s\n", this->occ ? this->occ->tag : "nil");
         save->write(save, "%s\n", this->sprite->tag);
-        save->write(save, "%d\n", baseFaction); /* "charmed" is applied as an effect on load */
+        save->write(save, "%d\n", baseFaction);
         save->write(save, "%d %d %d\n", this->getStrength(), 
                     this->getIntelligence(), this->getDexterity());
         save->write(save, "%d %d\n", this->hp_mod, this->hp_mult);
@@ -2325,6 +2325,13 @@ void Character::save(struct save *save)
                 closure_save(ai, save);
         } else
                 save->write(save, "nil\n");
+
+        // Items in personal inventory.
+        if (!container) {
+                save->write(save, "nil ;; inventory\n");
+        } else {
+                container->save(save);
+        }
 
         // Readied items
 	arms = this->enumerateArms();
@@ -2427,8 +2434,19 @@ int Character::getCurrentFaction()
         return getBaseFaction();
 }
 
-class Container* Character::getInventory()
+class Container* Character::getInventoryContainer()
 {
         /* for player-controlled maybe return party inventory? */
         return container;
+}
+
+void Character::setInventoryContainer(class Container *val)
+{
+        // Blow away the old one
+        if (container) {
+                assert(container->isEmpty());
+                delete container;
+        }
+
+        container = val;
 }

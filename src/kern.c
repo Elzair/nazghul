@@ -1443,12 +1443,14 @@ static pointer kern_mk_char(scheme *sc, pointer args)
         int base_faction;
         struct sched *sched;
         pointer factions;
+        class Container *inventory;
 
-        if (unpack(sc, &args, "yspppddddddddddddcpc",
+        if (unpack(sc, &args, "yspppddddddddddddcpcp",
                    &tag, &name, &species, &occ, 
                    &sprite, &base_faction, &str,
-                   &intl, &dex, &hpmod, &hpmult, &mpmod, &mpmult, &hp, &xp, &mp, &lvl, 
-                   &conv, &sched, &ai)) {
+                   &intl, &dex, &hpmod, &hpmult, &mpmod, &mpmult, 
+                   &hp, &xp, &mp, &lvl, 
+                   &conv, &sched, &ai, &inventory)) {
                 load_err("kern-mk-char %s: bad args", tag);
                 return sc->NIL;
         }
@@ -1468,6 +1470,7 @@ static pointer kern_mk_char(scheme *sc, pointer args)
         assert(character);
         character->setBaseFaction(base_faction);
         character->setSchedule(sched);
+        character->setInventoryContainer(inventory);
 
         if (conv != sc->NIL)
                 character->setConversation(closure_new(sc, conv));
@@ -4195,6 +4198,8 @@ KERN_API_CALL(kern_get_distance)
             unpack_loc(sc, &args, &p2, &x2, &y2, "kern-get-distance"))
                 return sc->NIL;
 
+        warn("p1=%s x1=%d y1=%d x2=%d y2=%d\n", p1->name, x1, y1, x2, y2);
+
         if (p1 != p2) {
                 rt_err("kern-get-distance: place %s different from %s",
                        p1->tag, p2->tag);
@@ -5047,7 +5052,7 @@ KERN_API_CALL(kern_char_get_inventory)
                 return sc->NIL;
 
         /* grab it's inventory container */
-        container = character->getInventory();
+        container = character->getInventoryContainer();
         if (!container)
                 return sc->NIL;
 
