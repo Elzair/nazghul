@@ -666,6 +666,7 @@ bool cmdGet(class Object *actor, bool scoop_all)
 
 	item = place_get_item(actor->getPlace(), x, y);
 	if (!item) {
+                log_msg("Get - nothing there!");
 		return false;
 	}
                
@@ -1210,6 +1211,7 @@ bool cmdHandle(class Character * pc)
 	mech = place_get_object(Place, x, y, mech_layer);
 	if (! mech || ! mech->getObjectType()->canHandle()) {
                 cmdwin_print("nothing!");
+                log_msg("Handle - nothing there!");
                 return false;
         }
 
@@ -2159,7 +2161,7 @@ void terraform_XY(struct place *place, int x, int y, void * data)
         mapSetDirty();
         //player_party->updateView();
         mapUpdate(0);
-        log_msg("TERRAFORM put %s '%s' at XY=(%d,%d)\n", 
+        log_msg("TERRAFORM put %s '%s' at XY=(%d,%d)", 
                      tt->tag, tt->name, x, y);
 } // terraform_XY()
 

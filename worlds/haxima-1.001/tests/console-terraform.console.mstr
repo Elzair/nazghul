@@ -41,8 +41,6 @@ At XY=(36,24) you see grass
 TERRAFORM put t_deep 'deep water' at XY=(36,24)
 
 
-
-
 At XY=(36,23) you see grass and the player party
 
 
@@ -53,8 +51,6 @@ Enter-grass
 
 
 
-
-Thorald Greybeard is now party leader.
 
 Terraform on map tmp_combat_map, palette pal_expanded.
 

@@ -679,7 +679,10 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
                                 break;;
                         }
                         
+                        log_begin_group();
                         portal->enter(character);
+                        log_end_group();
+
                         break;
 
 
@@ -744,7 +747,7 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
                         cmdAT(character);
                         break;
                 case ' ':
-                        log_msg("Pass\n");
+                        log_msg("Pass");
                         character->endTurn();
                         break;
 

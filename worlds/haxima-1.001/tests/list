@@ -28,3 +28,8 @@ party-ready
 party-search
 party-talk
 party-at
+char-enter
+char-get
+char-handle
+char-ready
+char-xamine-ztats-at-pass

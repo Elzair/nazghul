@@ -1396,8 +1396,8 @@ bool player_party::rendezvous(struct place *place, int rx, int ry)
 
         mapCenterCamera(rx, ry);
         mapUpdate(0);
-        consolePrint("Rendezvous...");
-        consoleRepaint();
+        //consolePrint("Rendezvous...");
+        //consoleRepaint();
 
         // --------------------------------------------------------------------
         // Have each party member find and store a path to the rendezvous
@@ -1423,13 +1423,13 @@ bool player_party::rendezvous(struct place *place, int rx, int ry)
                                                member);
 
                 if (!member->path) {
-                        consolePrint("%s cannot make the rendezvous!\n", 
+                        log_msg("%s cannot make the rendezvous!", 
                                      member->getName());
                         abort = true;
                 }
                 else if (max_path_len > 0 && 
                          member->path->len > max_path_len) {
-                        consolePrint("%s is too far away!\n", 
+                        log_msg("%s is too far away!", 
                                      member->getName());
                         abort = true;
                 }
@@ -1457,7 +1457,7 @@ bool player_party::rendezvous(struct place *place, int rx, int ry)
         done = false;
         while (!done) {
                 done = true;
-                consolePrint(".");
+                //consolePrint(".");
                 FOR_EACH_MEMBER(entry, member) {
 
                         struct astar_node *tmp;
@@ -1491,7 +1491,7 @@ bool player_party::rendezvous(struct place *place, int rx, int ry)
                 }
         }
 
-        consolePrint("Ok!\n");
+        //consolePrint("Ok!\n");
 
         return true;
 
@@ -1658,9 +1658,9 @@ bool player_party::addFood(int amount)
                 return true;
 
         if (amount > 0)
-                log_msg("You get %d food\n", amount);
+                log_msg("You get %d food.", amount);
         else
-                log_msg("You lose %d food\n", amount);
+                log_msg("You lose %d food.", amount);
 
         food += amount;
         if (food < 0)

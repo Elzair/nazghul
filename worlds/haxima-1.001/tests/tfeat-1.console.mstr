@@ -1,8 +1,4 @@
-Thorald Greybeard is now party leader.
-
-Thorald Greybeard is now party leader.
 Welcome to Nazghul version 0.2.0.
-
 
 
 
@@ -52,13 +48,9 @@ At XY=(25,26) you see shoals and a bridge
 TERRAFORM put t_fireplace 'fireplace' at XY=(25,26)
 
 
-
-
 At XY=(25,27) you see shallow water
 
 TERRAFORM put t_fireplace 'fireplace' at XY=(25,27)
-
-
 
 
 

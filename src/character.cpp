@@ -1953,7 +1953,7 @@ void Character::setSolo(bool val)
         if (solo) {
                 attachCamera(true);
                 setControlMode(CONTROL_MODE_PLAYER);
-                consolePrint("%s goes solo.\n", getName());
+                log_msg("%s goes solo.", getName());
                 mapCenterCamera(getX(), getY());
                 mapSetDirty();
         } else {
@@ -2211,7 +2211,7 @@ void Character::setLeader(bool val)
         } else {
                 attachCamera(true);
                 setControlMode(CONTROL_MODE_PLAYER);
-                consolePrint("%s is now party leader.\n", getName());
+                //consolePrint("%s is now party leader.\n", getName());
                 mapSetPlace(getPlace());
                 mapCenterCamera(getX(), getY());
                 mapSetDirty();
@@ -2398,7 +2398,7 @@ bool Character::tryToRelocateToNewPlace(struct place *newplace,
         // -----------------------------------------------------------------
 
         if (player_party->getPartyControlMode() != PARTY_CONTROL_FOLLOW) {
-                consolePrint("Can't exit place: must be in follow mode!\n");
+                log_msg("Exit - must be in follow mode!");
                 return false;
         }
 
@@ -2406,7 +2406,7 @@ bool Character::tryToRelocateToNewPlace(struct place *newplace,
                 return false;
 
         if (!player_party->rendezvous(getPlace(), getX(), getY())) {
-                consolePrint("Can't exit place: party can't rendezvous!\n");
+                log_msg("Exit - party can't rendezvous!");
                 return false;
         }
 
