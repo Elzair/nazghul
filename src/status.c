@@ -110,7 +110,7 @@ static void switch_to_tall_mode(void)
 	Status.numLines     = Status.screenRect.h / LINE_H;
 
     foogod_set_y(STAT_Y + Status.screenRect.h + BORDER_H);
-    console_set_y(foogod_get_y() + FOOGOD_H);
+    //console_set_y(foogod_get_y() + FOOGOD_H);
 
 	foogodRepaint();
 	consoleRepaint();
@@ -129,7 +129,7 @@ static void switch_to_short_mode(void)
     Status.screenRect.h = party_height;
 
     foogod_set_y(STAT_Y + Status.screenRect.h + BORDER_H);
-    console_set_y(foogod_get_y() + FOOGOD_H);
+    //console_set_y(foogod_get_y() + FOOGOD_H);
 
 	foogodRepaint();
 	consoleRepaint();

@@ -31,8 +31,9 @@ extern "C" {
 	extern void consoleBackspace(int n);
 	extern void consoleNewline(void);
 	extern void consoleRepaint(void);
-	extern void console_set_y(int y);
+	//extern void console_set_y(int y);
 	extern int console_get_y(void);
+	extern int console_get_h(void);
 
 #ifdef __cplusplus
 }

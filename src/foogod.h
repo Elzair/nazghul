@@ -33,6 +33,7 @@ extern "C" {
 	extern void foogodAdvanceTurns();
 	extern void foogod_set_y(int y);
 	extern int foogod_get_y(void);
+        extern int foogod_get_h(void);
 
 #ifdef __cplusplus
 }

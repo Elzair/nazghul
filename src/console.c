@@ -77,9 +77,7 @@ int consoleInit(void)
         Console.screenRect.x = CONS_X;
         Console.screenRect.w = CONS_W;
 
-        console_set_y(foogod_get_y() + FOOGOD_H);
-        // Console.screenRect.y = foogod_get_y() + FOOGOD_H;
-        // Console.screenRect.h = CONS_H;
+        //console_set_y(foogod_get_y() + FOOGOD_H + BORDER_H);
 
         memset(Console.buf, 0, CONSOLE_MAX_MSG_SZ + 1);
         Console.cursor = Console.buf;
@@ -392,12 +390,14 @@ void consoleRepaint(void)
         int max_lines;
         int line;
 
-        screenErase(&Console.screenRect);
+        //screenErase(&Console.screenRect);
 
         rect.x = Console.screenRect.x;
-        rect.y = Console.screenRect.y;
         rect.w = Console.screenRect.w;
-        rect.h = Console.screenRect.h;
+        rect.y = console_get_y();
+        rect.h = console_get_h();
+
+        screenErase(&rect);
 
         max_lines = rect.h / ASCII_H;
         n_lines = min(Console.numLines, max_lines);
@@ -420,15 +420,14 @@ void consoleRepaint(void)
         screenUpdate(&Console.screenRect);
 }
 
-void console_set_y(int y)
-{
-        Console.screenRect.y = y;
-        Console.screenRect.h = (SCREEN_H - BORDER_H - y);
-}
-
 int console_get_y(void)
 {
-        return Console.screenRect.y;
+        return (foogod_get_y() + foogod_get_h());
+}
+
+int console_get_h(void)
+{
+        return (SCREEN_H - BORDER_H - console_get_y());
 }
 
 int console_max_lines (void) {

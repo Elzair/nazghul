@@ -48,9 +48,9 @@ void foogodInit(void)
 	Foogod.screenRect.x = FOOGOD_X;
 	Foogod.screenRect.w = FOOGOD_W;
 	// Foogod.screenRect.y = STAT_Y + Status.screenRect.h + BORDER_H;
-	// Foogod.screenRect.h = FOOGOD_H;
-    foogod_set_y(STAT_Y + status_get_h() + BORDER_H);
-
+        foogod_set_y(STAT_Y + status_get_h() + BORDER_H);
+        Foogod.screenRect.h = FOOGOD_H;
+    
 	// turns
 	Foogod.turnRect.x = FOOGOD_X;
 	Foogod.turnRect.y = foogod_get_y();
@@ -113,13 +113,18 @@ void foogodRepaint(void)
 void foogod_set_y(int y)
 {
 	Foogod.screenRect.y = y;
-	Foogod.turnRect.y = y;
-	Foogod.foodRect.y = y + ASCII_H;
-	Foogod.goldRect.y = y;
+	Foogod.turnRect.y   = y;
+	Foogod.foodRect.y   = y + ASCII_H;
+	Foogod.goldRect.y   = y;
 	Foogod.combatRect.y = y + ASCII_H;
 }
 
 int foogod_get_y(void)
 {
 	return Foogod.screenRect.y;
+}
+
+int foogod_get_h(void)
+{
+        return (FOOGOD_H + BORDER_H);
 }
