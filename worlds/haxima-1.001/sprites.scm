@@ -891,6 +891,8 @@
 
 
 ;; ss_dg_weapons          16 x 16
+;; 
+;; IDEA:  What about a notation for the index field like r1+0, r1+2, ...
 
 (kern-mk-sprite 's_sword_broken_1       ss_dg_weapons 1   0 #f 0)
 (kern-mk-sprite 's_sword_broken_2       ss_dg_weapons 1   1 #f 0)
@@ -926,6 +928,51 @@
 (kern-mk-sprite 's_sword_eldritch       ss_dg_weapons 2  42 #f 0)
 (kern-mk-sprite 's_sword_mystic         ss_dg_weapons 2  44 #f 0)
 (kern-mk-sprite 's_sword_flaming        ss_dg_weapons 2  46 #f 0)
+
+(kern-mk-sprite 's_mace_1               ss_dg_weapons 1  64 #f 0)
+(kern-mk-sprite 's_mace_2               ss_dg_weapons 1  65 #f 0)
+(kern-mk-sprite 's_mace_3               ss_dg_weapons 1  66 #f 0)
+(kern-mk-sprite 's_mace_4               ss_dg_weapons 1  67 #f 0)
+(kern-mk-sprite 's_mace_magical         ss_dg_weapons 1  68 #f 0)  ;; TODO: needs an animation frame
+
+(kern-mk-sprite 's_hammer_golden        ss_dg_weapons 1  72 #f 0)
+(kern-mk-sprite 's_hammer_warhammer     ss_dg_weapons 1  73 #f 0)
+(kern-mk-sprite 's_hammer_sledgehammer  ss_dg_weapons 1  74 #f 0)
+(kern-mk-sprite 's_hammer_giant         ss_dg_weapons 1  75 #f 0)
+
+(kern-mk-sprite 's_flail_1              ss_dg_weapons 1  80 #f 0)
+(kern-mk-sprite 's_flail_2              ss_dg_weapons 1  81 #f 0)
+(kern-mk-sprite 's_flail_3              ss_dg_weapons 1  82 #f 0)
+(kern-mk-sprite 's_flail_4              ss_dg_weapons 1  83 #f 0)
+(kern-mk-sprite 's_flail_5              ss_dg_weapons 1  84 #f 0)
+(kern-mk-sprite 's_nunchaku_1           ss_dg_weapons 1  85 #f 0)
+(kern-mk-sprite 's_nunchaku_2           ss_dg_weapons 1  86 #f 0)
+
+(kern-mk-sprite 's_whip                 ss_dg_weapons 1  88 #f 0)
+
+(kern-mk-sprite 's_axe_1           ss_dg_weapons 1  96 #f 0)
+(kern-mk-sprite 's_axe_2           ss_dg_weapons 1  97 #f 0)
+(kern-mk-sprite 's_axe_3           ss_dg_weapons 1  98 #f 0)
+(kern-mk-sprite 's_axe_4           ss_dg_weapons 1  99 #f 0)
+(kern-mk-sprite 's_axe_5           ss_dg_weapons 1 100 #f 0)
+
+(kern-mk-sprite 's_scythe_1        ss_dg_weapons 1 104 #f 0)
+(kern-mk-sprite 's_scythe_2        ss_dg_weapons 1 105 #f 0)
+
+(kern-mk-sprite 's_spear_1         ss_dg_weapons 1 112 #f 0)
+(kern-mk-sprite 's_spear_2         ss_dg_weapons 1 113 #f 0)
+(kern-mk-sprite 's_spear_3         ss_dg_weapons 1 114 #f 0)
+(kern-mk-sprite 's_trident_1       ss_dg_weapons 1 115 #f 0)
+(kern-mk-sprite 's_trident_2       ss_dg_weapons 1 116 #f 0)
+(kern-mk-sprite 's_trident_3       ss_dg_weapons 1 117 #f 0)
+(kern-mk-sprite 's_lance           ss_dg_weapons 1 118 #f 0)
+
+(kern-mk-sprite 's_quarterstaff_1       ss_dg_weapons 1 120 #f 0)
+(kern-mk-sprite 's_quarterstaff_2       ss_dg_weapons 1 121 #f 0)
+
+(kern-mk-sprite 's_halberd_1            ss_dg_weapons 1 128 #f 0)
+(kern-mk-sprite 's_halberd_2            ss_dg_weapons 1 129 #f 0)
+(kern-mk-sprite 's_halberd_3            ss_dg_weapons 1 130 #f 0)
 
 
 
