@@ -108,7 +108,7 @@ class Party:public Being {
         virtual char *getName(void);
 	virtual bool joinPlayer(void);
         virtual bool removeEffect(struct effect *effect);
-	virtual void forEachMember(bool(*fx) (class Character *, void *), 
+	virtual void forEachMember(bool (*fx) (class Character *, void *), 
                                    void *);
 	virtual void init(class PartyType * type);
 	virtual void init(int x, int y, struct place *place, 

@@ -123,6 +123,26 @@
                  (run-loop (- n 1)))))))
   (run-loop count))
 
+;; check if klooker can see kobj
+(define (can-see? klooker kobj)
+  (let ((from (kern-obj-get-location klooker))
+        (to (kern-obj-get-location kobj)))
+    (and (kern-in-los? from to)
+         (<= (kern-get-distance from to)
+             (kern-obj-get-vision-radius klooker))
+         (kern-obj-is-visible? kobj))))
+
+;; check if klooker can can see anything in the list kobs
+(define (can-see-any? klooker kobjs)
+  (if (null? kobjs)
+      #f
+      (or (can-see? klooker (car kobjs))
+          (can-see-any? klooker (cdr kobjs)))))
+
+;; check if knpc can see any of the player party members
+(define (any-player-party-member-visible? knpc)
+  (can-see-any? knpc 
+                (kern-party-get-members (kern-get-player))))
 
 ;; Check if an object is hostile toward a character
 (define (is-hostile? kbeing kobj)

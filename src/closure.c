@@ -94,12 +94,6 @@ int closure_exec(closure_t *closure, char *fmt, ...)
 
         assert(closure->code);
 
-        /* Don't permit recursively calling into the scheme intepreter. It
-         * messes up its state when we eventually return back into it. */
-        if (closure->sc->inside) {
-                warn("script->kernel->script recursion detected!\n");
-        }
-
         head = closure->sc->NIL;
 
         /* Convert the args to a scheme list */

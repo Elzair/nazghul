@@ -9,11 +9,19 @@
 ;;
 ;; Quest flags, etc, go here.
 ;;----------------------------------------------------------------------------
-(define (roland-mk free? joined?) (list free? joined?))
+(define (roland-mk free? joined? greeted?) (list free? joined? greeted?))
 (define (roland-is-free? knpc) (car (kobj-gob-data knpc)))
 (define (roland-joined? knpc) (cadr (kobj-gob-data knpc)))
+(define (roland-greeted? knpc) (caddr (kobj-gob-data knpc)))
 (define (roland-set-free! knpc) (set-car! (kobj-gob-data knpc) #t))
 (define (roland-set-joined! knpc) (set-car! (cdr (kobj-gob-data knpc)) #t))
+(define (roland-set-greeted! knpc) (set-car! (cddr (kobj-gob-data knpc)) #t))
+
+(define roland-greetings
+  (list
+   "Well met!"
+   "Hail, Wanderer!"
+   ))
 
 ;;----------------------------------------------------------------------------
 ;; Custom AI
@@ -38,6 +46,11 @@
   (define (set-free)
     (roland-set-free! knpc)
     (kern-char-set-ai knpc nil))
+  (or (roland-greeted? knpc)
+      (and (any-player-party-member-visible? knpc)
+           (begin
+             (taunt knpc nil roland-greetings)
+             (roland-set-greeted! knpc))))
   (if (out-of-cell?)
       (set-free knpc)
       (try-to-escape)))
@@ -134,4 +147,4 @@
                  nil                 ; container
                  nil                 ; readied
                  )
-   (roland-mk #f #f)))
+   (roland-mk #f #f #f)))

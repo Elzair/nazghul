@@ -615,7 +615,7 @@ bool Party::createMembers(void)
 }
 
 
-void Party::forEachMember(bool(*fx) (class Character *, void *), void *data)
+void Party::forEachMember(bool (*fx) (class Character *, void *), void *data)
 {
 	struct node *elem;
 

@@ -5286,6 +5286,40 @@ KERN_API_CALL(kern_party_add_member)
         return sc->F;
 }
 
+static bool wrap_kern_append_obj(class Character *c, void *v)
+{
+        kern_append_object(c, v);
+        return false;
+}
+
+KERN_API_CALL(kern_party_get_members)
+{
+        class Party *party;
+        struct kern_append_info info;
+
+        if (unpack(sc, &args, "p", &party)) {
+                rt_err("kern-party-get-members: bad args");
+                return sc->NIL;
+        }
+
+        /* initialize the context used by the callback to append objects */
+        info.sc = sc;
+        info.head = sc->NIL;
+        info.tail = sc->NIL;
+        info.filter = NULL;
+        info.data = NULL;
+
+        /* build a scheme list of the objects at that location */
+        party->forEachMember(wrap_kern_append_obj, &info);
+
+        /* unprotect the list prior to return */
+        if (info.head != sc->NIL)
+                scm_unprotect(sc, info.head);
+
+        /* return the scheme list */
+        return info.head;
+}
+
 KERN_API_CALL(kern_being_set_base_faction)
 {
         class Being *being;
@@ -6527,7 +6561,7 @@ scheme *kern_init(void)
 
         /* kern-party-api */
         API_DECL(sc, "kern-party-add-member", kern_party_add_member);
-        
+        API_DECL(sc, "kern-party-get-members", kern_party_get_members);
 
         /* Revisit: probably want to provide some kind of custom port here. */
         scheme_set_output_port_file(sc, stderr);
