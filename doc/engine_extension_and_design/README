@@ -1,0 +1,8 @@
+This directory contains miscellaneous notes on extending and designing
+the Haxima engine.
+
+The contents of this directory do not necessarily correspond to what
+_IS_ in the game engine/kernal, but to things which have been proposed
+to be added.  Keeping these sort of notes in CVS seems like a better
+way to communicate than each developer keeping their own notes which
+get lost.

@@ -1,0 +1,180 @@
+---------------------------------------------------------------------------
+My TODO from meeting 2004/04/29
+-------------------------------
+- Find / rewrite the stencil API (in C, Perl, whatever)
+
+- Prototype the Object Browser Pane "pictures" code for UI
+  specification (in C, Perl, whatever)
+
+- Write Perl scripts for seeded random map generation
+
+- Do data tables for weapons, armour, etc.
+
+- Get a good start on world-building
+
+
+---------------------------------------------------------------------------
+Stencil API:
+------------
+A stencil is simply a terrain_map used as a stencil.
+Each cell (x,y) contains either NULL, or non-NULL.
+When blit_map() or blit_terrain() is called, 
+    NULL cells are not blitted
+    non-NULL cells indicate to blit
+        the from_map terrain for blit_map()
+        the fill_terrain terrain for blit_terrain()
+
+
+blit_map     (map * to_map, map * from_map_stencil, 
+              int x, int y, int w, int h)
+blit_terrain (map * to_map, map * from_map_stencil, 
+              int x, int y, int w, int h, terrain * tt)
+
+Blitting starts at (0,0) in from_map_stencil, blitting onto an origin
+point of (x,y) in to_map.
+
+Blitting iterates over a region (w,h) wide,high.
+
+Blitting truncates any coordinate which is not in-bounds of both
+to_map and from_map_stencil.
+
+
+---------------------------------------------------------------------------
+Object Browser "Picture" UI-building Code:
+------------------------------------------
+An Object Browser "pane" is a rectangular region whose size is
+measured in character cells 8x16 pixels in size.
+
+Standard-sized tiles can be displayed, taking up 4x2 character cells.
+
+Panes can be defined for different object types, which have different
+data to display and which may have a different display layout.  
+For example, a Terrain and an Item which is a melee weapon have
+different data to display.
+
+An object type may specify multiple pages of panes.
+For example, a Being has a lot of data, which may take multiple pages.
+
+An object type may specify multiple pane views, depending on the state
+of the object instance.  For example, an Item subtype might specify
+different panes for an object instance which is identified versus an
+object instance which is not.
+
+
+Pane Specifications:
+--------------------
+Panes can be specified by calling a function whose arguments contain
+information describing the display.  Multiple such functions are
+defined for distinct, common types of pane displays.
+
+new_text_pane (elements_before, 
+               num_lines, lines_of_text, 
+               elements_after)
+
+    - elements_before 
+          is a pane object of full width.
+          It will be rendered above the text region. 
+
+    - num_lines
+          defines the height in character cells of the central text region.
+
+    - lines_of_text 
+          Contains text to fill the central text region.
+
+          Any individual lines which are longer/wider than the pane
+          width will be line-wrapped and treated as multiple lines.
+
+          Explicit line breaks within lines_of_text will be kept.
+          Leading, trailing, and internal spaces will be kept.
+          Tab characters will be treated as single spaces.
+
+          Text with fewer lines than num_lines will be
+          space-padded at the end of the vertical space.
+
+          Text with more lines than num_lines will be scrolled within
+          the central text region.
+
+    - elements_after
+          is a pane object of full width.
+          It will be rendered below the text region.
+
+
+new_pane (picture_lines, ...varargs...)
+
+    - picture_lines
+          An array of lines, each of full width.
+          Each line contains some mix of literal text
+          and "Picture Elements".
+
+          Picture Elements are sequences of reserved characters which
+          define a rectangular region of character cells, serving a
+          purpose analogous to a '%' specifier in printf().
+
+          Picture Elements have an origin (x,y) relative to the origin
+          (1,1) of the array, and a width,height (w,h).  Occupying a
+          rectangular region, they are like a 2D printf() specifier.
+
+          The characters reserved for Picture Elements are 
+          hash '#', carat '^', underscore '_', and pipe '|'.
+
+          The Nazghul window is 1024 pixels wide
+              -608 == -(19 * 32) for map view window
+               -48 == -(16 * 3) for borders
+          This leaves 368 pixels wide for the Object Browser pane,
+          which translates to (368 / 16) 23 character cells wide.
+
+          Example:  (Obj Browser pane for a Terrain tile
+
+          "#### Terrain:          "
+          "#### ################  "
+          "                       "
+          "Passability:           "
+
+          // 1 (4x2 == 32x32 pixels == 1 tile)
+          // 2 (16x1 characters)
+          tile(this.tile),  // Tile for this object
+          text(this.name),  // Name for this object
+
+
+Hmmm...how to express a "foreach" kind of thing...
+I think such a thing is not initial-attempt functionality, unless the
+means of implementation and the script syntax become obvious.
+For now, a passability display would be hard-coded to display up to N
+movement modes.
+    Note also that we will probably want a distinct set of terrain for
+    wilderness-scale maps and town-scale maps (which probably means
+    two terrain palettes), and perhaps two sets of movement modes
+    since "jumping" perhaps makes no sense at wilderness scale.
+    Hmmm...or maybe the _party_ has different modes from the
+    _characters_ or some such thing...
+
+          " ######## ###### (##)  "
+
+          // One or more movement modes:
+          // 1 (8x1 characters) movement mode name
+          // 2 (6x1 characters) speed adjective "slow", "normal", ...
+          // 3 (2x1 characters) movement point cost
+
+
+Algorithm for Parsing a "Picture"
+---------------------------------
+(See UI_panes.perl)
+
+
+
+
+
+
+
+
+
+
+          
+
+
+
+
+
+
+
+---------------------------------------------------------------------------
