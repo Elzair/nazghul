@@ -41,7 +41,7 @@ PLACE p_slime_cave {
           //t_slimes  7  4 (ALIGN_MONSTER) 1 null;
           mech_slime_generator slime_gen 0 0 "active";
           invisible_step_trigger slime_trig 7 10 "invisible";
-          CONNECT slime_trig => slime_gen;
+          //CONNECT slime_trig => slime_gen;
   }
 
 } // PLACE p_slime_cave

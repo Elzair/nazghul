@@ -42,6 +42,8 @@ portals {
   PORTAL_PAIR_LADDERS(p_prison_chamber,  28, 26, p_empire_city, 61, 25, 0);
   PORTAL_PAIR_LADDERS(DarkPassage_Place,  3,  3, p_empire_city, 38, 25, 0);
 
+  PORTAL_PAIR_LADDERS(p_slime_cave, 7, 1, ForestCave, 11, 20, 0);
+
 } // portals
 
 

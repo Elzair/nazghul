@@ -19,30 +19,54 @@
 // and in any way, including by methods that have not yet been invented or
 // conceived.
 //
-/* all_places.ghul
- *
- * Defines all the place objects which form the game world.
- */
-#ifndef all_places_ghul
-#define all_places_ghul
 
-// Order matters: wilderness must be before any towns which refer to it as a
-// parent
-#include "./P_wilderness.ghul"
-#include "./P_empire_city.ghul"
-#include "./P_prison_and_torture_chamber.ghul"
-#include "./GreenTower.ghul"
-#include "./GreenTowerLower.ghul"
-#include "./P_terrain_test.ghul"
+#ifndef ForestCave_ghul
+#define ForestCave_ghul
 
-#include "./P_cavernous_troll_deeps.ghul"
-#include "./P_rom_camp.ghul"
-#include "./P_slime_cave.ghul"
-#include "./Glasdrin.ghul"
-#include "./ForestCave.ghul"
+MAP ForestCave_Map {
+        type   ascii;
+        width  23;
+        height 22;
+        one_char_per_tile 1;
+        palette pal_standard;
+        terrain {
+    "rrrrrrrrrrrrrrrrrrrrrrr";
+    "r...r|||||tbtrrrrrrrrrr";
+    "r.||--|rrt...trrrrrrrrr";
+    "r.||_-rrtb.a.btrrrrrrrr";
+    "rr-__-.rtt....trrrrrrrr";
+    "r|----.rttb.bt|rrrrrrrr";
+    "r||r...rrttt||rrrrrrrrr";
+    "r|rrrrrrr|||||rrrrrrrrr";
+    "r|rtttrrr|||||rrr|||rrr";
+    "r|btttb|||||||||||||trr";
+    "rtt...tb|||||||||||tt.r";
+    "rtt.&..t||||||||||tt..r";
+    "r|t...tb||||||||||tt..r";
+    "rr|tttb||||||||||||t.rr";
+    "rrr|ttrrr|||||rrr|||rrr";
+    "rrrrrrrrr||||trrrrrrrrr";
+    "rrrrrrrrr||tttrrrrrrrrr";
+    "rrrrrrrrrttt..rrrrrrrrr";
+    "rrrrrrrrr.....rrrrrrrrr";
+    "rrrrrrrrrr...rrrrrrrrrr";
+    "rrrrrrrrrrr.rrrrrrrrrrr";
+    "rrrrrrrrrrrrrrrrrrrrrrr";
+    }
+}
 
-STACK_PLACES GreenTower GreenTowerLower
+PLACE ForestCave {
+  type        dungeon;
+  parent      null;
+  x           0;
+  y           0;
+  name        "Forest Cave";
+  wraps       0;
+  map         ForestCave_Map;
+  underground 1;
+  objects {
+  }
+}
 
-#endif // all_places_ghul
 
-/* eof */
+#endif
