@@ -33,11 +33,11 @@
 )
 
 (kern-mk-map
- 'm_johns_irony 7 12 pal_expanded
+ 'm_iron_works 7 12 pal_expanded
  (list
   " x  x  x  x  x  x  x "
-  " x .J .O .H .N .S  x "
-  " x .I .R .O .N .Y  x "
+  " x .I .R .O .N  @  x "
+  " x .W .O .R .K .S  x "
   "ws cc cc cc cc cc  x "
   " x cc cc cc cc cc  x "
   "cc cc cc cc cc __  x "
@@ -149,10 +149,10 @@
 ;; definition file (this file includes their conversation, schedule,
 ;; constructor, etc). Step 2 is to call kern-mk-char to instantiate them.
 ;;----------------------------------------------------------------------------
-(kern-load "john_iron.scm")
+(kern-load "jim.scm")
 (bind 
- (kern-mk-char 'ch_john ; tag
-               "John Iron"         ; name
+ (kern-mk-char 'ch_jim ; tag
+               "Jim the Blacksmith" ; name
                sp_human            ; species
                nil                 ; occ
                s_townsman          ; sprite
@@ -161,13 +161,13 @@
                0 0                 ; hp mod/mult
                0 0                 ; mp mod/mult
                30 0 9 9            ; hp/xp/mp/lvl
-               'john-conv          ; conv
-               sch_john           ; sched
+               'jim-conv          ; conv
+               sch_jim           ; sched
                nil                 ; special ai
                nil                 ; container
                nil                 ; readied
                )
- (john-mk))
+ (jim-mk))
 
 
 ;;----------------------------------------------------------------------------
@@ -185,7 +185,7 @@
      m_trigrave
      (blit-maps m_trigrave
                 (list 17 21 m_lusty_juggs 0 0 14 10)
-                (list 24 1  m_johns_irony 0 0 7  12)
+                (list 24 1  m_iron_works 0 0 7  12)
                 (list 1  1  m_quiet_inn   0 0 13 10)
                 (list 1 21  m_dry_goods   0 0 7  10)))
  
@@ -198,7 +198,7 @@
  (list ; objects
 
   ;; characters
-  (list ch_john 15 15)
+  (list ch_jim 15 15)
 
   )
  nil ; hooks

@@ -5,7 +5,7 @@
 ;;      (upper-left-corner-x upper-left-corner-y width height)
 ;;----------------------------------------------------------------------------
 (define trigrave-forge           (list 25  4  5  5))
-(define trigrave-johns-bed       (list 25 11  1  1))
+(define trigrave-jims-bed        (list 25 11  1  1))
 (define trigrave-tavern-hall     (list 18 23  8  6))
 (define trigrave-tavern-kitchen  (list 27 25  3  5))
 (define trigrave-tavern-bed      (list 27 22  1  1))
