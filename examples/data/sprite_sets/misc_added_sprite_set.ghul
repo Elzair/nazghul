@@ -43,12 +43,12 @@ SPRITE_SET ss_mine {
   file "data/images/mine-32x32.png";
   
   sprites {
-    SPRITE(s_crosshair,          1, 0, normal);;
-    FACING_SPRITE(s_arrow,       1, 1, normal, FAC_NSEW);;
-    FACING_SPRITE(s_horse,       1, 5, normal, FAC_EW);;
-    SPRITE(s_happy_monster_face, 1, 7, normal);;
-    FACING_SPRITE(s_ship,        1, 8, normal, FAC_NSEW);;
-    FACING_SPRITE(s_bolt,        1, 12, normal, FAC_NSEW);;
+    SPRITE(s_crosshair,          1,  0, normal);
+    FACING_SPRITE(s_arrow,       1,  1, normal, FAC_NSEW);
+    FACING_SPRITE(s_horse,       1,  5, normal, FAC_EW);
+    SPRITE(s_happy_monster_face, 1,  7, normal);
+    FACING_SPRITE(s_ship,        1,  8, normal, FAC_NSEW);
+    FACING_SPRITE(s_bolt,        1, 12, normal, FAC_NSEW);
 
     SPRITE(s_hdoor,              1, 19, normal);
     SPRITE(s_hdoor_locked,       1, 20, normal);
