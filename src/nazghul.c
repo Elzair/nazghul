@@ -63,6 +63,10 @@ char *RecordFile     = 0;
 char *PlaybackFile   = 0;
 int PlaybackSpeed    = 100;
 
+#ifndef PACKAGE_VERSION
+#define PACKAGE_VERSION "0.4.0"
+#endif
+
 static char program_name[] = "nazghul";
 static int version_major = 0;
 static int version_minor = 4;
@@ -80,7 +84,7 @@ char * version_as_string(void)
 
 static void print_version(void)
 {
-        printf("%s %s\n", program_name, version_as_string() );
+        printf("%s %s\n", program_name, PACKAGE_VERSION);
         printf("Copyright (C) 2003 Gordon McNutt, Sam Glasby\n"
                "%s comes with NO WARRANTY,\n"
                "to the extent permitted by law.\n"

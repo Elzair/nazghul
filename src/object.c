@@ -594,6 +594,8 @@ Object::~Object()
 
         assert(! refcount);
 
+        dbg("destroying %d %08lx %s\n", refcount, this, getName());
+
         if (handle) {
                 session_rm(Session, handle);
                 handle = 0;
@@ -660,7 +662,9 @@ enum layer Object::getLayer(void)
 
 char *Object::getName(void)
 {
-        return type->getName();
+        if (type)
+                return type->getName();
+        return "<no type>";
 }
 
 class ObjectType *Object::getObjectType()
@@ -1915,11 +1919,13 @@ void Object::setActionPoints(int amount)
 
 void obj_inc_ref(Object *obj)
 {
+        dbg("obj_inc_ref: %d %08lx %s\n", obj->refcount, obj, obj->getName());
         obj->refcount++;
 }
 
 void obj_dec_ref(Object *obj)
 {
+        dbg("obj_dec_ref: %d %08lx %s\n", obj->refcount, obj, obj->getName());
         assert((obj)->refcount >= 0);
         (obj)->refcount--;
         if (! obj->refcount)

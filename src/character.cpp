@@ -278,8 +278,6 @@ void Character::damage(int amount)
         sound_play(get_damage_sound(), SOUND_MAX_VOLUME);
 
         setHp(hp - amount);
-	if (hp <= 0)
-		kill();
 
 	if (isPlayerControlled()) {
 		statusFlash(getOrder(), Red);
@@ -695,7 +693,7 @@ class Character *Character::getAttackTarget(void)
 	// Is the old target still valid?
 	if (!target || !target->isOnMap() || target->isDead() ||
 	    !isAttackTargetInRange() || !target->isVisible()) {
-		target = this;
+		setAttackTarget(this);
 		return this;
 	}
 
