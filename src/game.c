@@ -57,6 +57,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>  // isspace()
 #include <SDL/SDL_image.h>
 #include <unistd.h>
 #include <sys/mman.h>
@@ -786,53 +787,48 @@ static struct terrain_palette_entry * load_terrain_palette_entry (class Loader *
 	// base case
 	if (loader->matchToken('}')) {
 		set = new struct terrain_palette_entry[*n];
-		if (set != NULL)
-			memset(set, 0, *n * sizeof(struct terrain_palette_entry));
+        PARSE_ASSERT(!(set == NULL),
+                     "Failed to allocate memory for terrain_palette_entry.");
+        memset(set, 0, *n * sizeof(struct terrain_palette_entry));
 		return set;
 	}
 	// recursive case
 	memset(&entry, 0, sizeof(entry));
 
-    // Note: getRaw() eats up through the closing tick.
-    // The closing tick is then replaced with '\0' below.
-	if (!loader->matchToken('\'') ||
-	    !loader->getRaw(entry.glyph, MAX_TERRAIN_PALETTE_ENTRY_SYMBOL_SZ + 1) ||
-	    !loader->getWord(&terrain_tag))
+	if (!loader->getString(&entry.glyph) ||
+        !loader->getWord(&terrain_tag)    )
 		return NULL;
 
-	// the last non-zero byte in the symbol is the closing ' symbol, which
-	// is not really part of the symbol so clobber it
-	if ((len = strlen(entry.glyph)) < 2) {
-		loader->setError("Error loading terrain map palette: "
-				 "zero-length palette code detected");
-		free(terrain_tag);
-		return NULL;
-	}
-
-	if (entry.glyph[len - 1] != '\'') {
-		loader->setError("Error loading terrain map palette: "
-				 "non-terminated palette code detected: '%s'",
-				 entry.glyph);
-		free(terrain_tag);
-		return NULL;
-	}
-
-    // Clobber the closing ' and terminate the string:
-	entry.glyph[len - 1] = '\0';
-    len--;  // Update for purposes of 'widest'
-
+    len = strlen(entry.glyph);
+    
+    PARSE_ASSERT(!(len == 0),
+                 "Zero-length glyph (glyph '' terrain '%s') "
+                 "found in terrain palette.\n", 
+                 terrain_tag);
+    
+    PARSE_ASSERT(!(len > LONGEST_TERRAIN_GLYPH),
+                 "Too-long glyph '%s' (length %d, max = %d) "
+                 "found in terrain palette.\n", 
+                 entry.glyph, len, LONGEST_TERRAIN_GLYPH);
+    
+    for (i = 0; i < len; i++) {
+      PARSE_ASSERT(!(isspace(entry.glyph[i])),
+                   "Whitespace-containing glyph '%s' "
+                   "found in terrain palette.\n", 
+                   entry.glyph);
+    }
+    
     // SAM:
     // Add code here for terrain_palette_entry to accept a 'null' entry.
     // Hmmm...perhaps terrain should accept binding a null terrain?
     // That would mean that here, it is not a special case...
 	entry.terrain = (struct terrain *) loader->lookupTag(terrain_tag,
 							     TERRAIN_ID);
-	if (entry.terrain == NULL) {
-		loader->setError("Error loading terrain map palette: '%s' "
-				 "is not a valid TERRAIN tag", terrain_tag);
-		free(terrain_tag);
-		return NULL;
-	}
+    PARSE_ASSERT(!(entry.terrain == NULL),
+                 "Error loading terrain map palette: '%s' "
+				 "is not a valid TERRAIN tag", 
+                 terrain_tag);
+
 	free(terrain_tag);
 
     if (len > *widest)
@@ -840,9 +836,10 @@ static struct terrain_palette_entry * load_terrain_palette_entry (class Loader *
 	i = *n;
 	(*n)++;
 
-	if ((set = load_terrain_palette_entry(loader, n, widest)) == NULL)
-		return NULL;
-
+    // And recurse, for the next palette entry:
+    set = load_terrain_palette_entry(loader, n, widest);
+    PARSE_ASSERT(!(set == NULL),
+                 "Got a null terrain_palette back somehow!");
 	set[i] = entry;
 
 	return set;
@@ -856,6 +853,7 @@ static struct terrain_map * game_load_ascii_terrain_map (char *tag)
     unsigned int width;
     unsigned int height;
     int i;
+    int x, y;  // SAM
     int ret = 0;
     class Loader loader;
     bool one_char_per_tile = false;
@@ -889,10 +887,25 @@ static struct terrain_map * game_load_ascii_terrain_map (char *tag)
     palette->tag = palette_tag;
     // palette_print(stdout, INITIAL_INDENTATION, palette);
 
+#ifdef HACK_GLOBAL_PALETTE
+    static int HACK_global_palette_set = 0;
+    if (!HACK_global_palette_set &&
+        !strcmp("pal_expanded", palette_tag) )
+      {
+        memcpy(&HACK_global_palette, palette, 
+               sizeof(struct terrain_palette) );
+        HACK_global_palette_set = 1;
+        // palette_print(stdout, INITIAL_INDENTATION, &HACK_global_palette);
+      }
+#endif // HACK_GLOBAL_PALETTE
+
     if (!(terrain_map = terrain_map_create(tag, width, height)))
         return 0;
 
     if (one_char_per_tile) {
+      // SAM: 
+      // TODO -- Make this block grab lines via getString()
+      //         for consistency.
         if (strcmp(Lexer->lexeme, "terrain")) {
             err("Error loading ascii map '%s': \n"
                 "  expected 'terrain', got '%s'", tag, Lexer->lexeme);
@@ -907,37 +920,6 @@ static struct terrain_map * game_load_ascii_terrain_map (char *tag)
             char * glyph = two_bytes;
             glyph[0] = lexer_lex(Lexer);
             glyph[1] = '\0';
-
-#ifdef TERRAIN_LOOKUP_RLE_OPTIMIZATION
-            // Optimization:
-            // It is common for the same terrain type to 
-            // occur 2+ times in a row, so we try the most 
-            // recently used glyph before doing a full search.
-            // (This is basically run-length encoding.)
-            // 
-            // SAM: Is it worth adding a lookup function in terrain.c
-            //      so we can find the index of the last terrain found, 
-            //      and keep this optimization?
-            // 
-            //      (The current code palette_terrain_for_glyph()
-            //      does not leave us with a meaningful 'j' like
-            //      the original code did...)
-            //
-            // gmcnutt: it looks like the new code completely breaks the
-            // original optimization. This is not a BIG deal since loading
-            // palettes doesn't really take a lot of time. When we do the new
-            // loader for 0.4 I plan to do profiling and if warranted I'll put
-            // the optimization back in then. Frankly, a better strategy for
-            // optimizing would be to do the obvious thing and store palettes
-            // in a hash table instead of a linked list.
-            //
-            int j = 0;  // No meaningful value available...            
-            char * prev_glyph = palette_glyph(palette, j);
-            if (!strncmp(prev_glyph, glyph, 1)) {
-              terrain_map->terrain[i] = palette_terrain(palette, j);
-              continue;
-            }
-#endif // TERRAIN_LOOKUP_RLE_OPTIMIZATION
 
             // If this terrain is not the same as the previous,
             // we look it up from the terrain palette:
@@ -968,44 +950,63 @@ static struct terrain_map * game_load_ascii_terrain_map (char *tag)
             return NULL;
         }
 
-        char glyph[MAX_TERRAIN_PALETTE_ENTRY_SYMBOL_SZ + 1];
+        // We grab the map terrain lines one at a time:
+        for (y = 0; y < terrain_map->h; y++) {
+          char * map_line;
+          char * p;
+          bool got_line = loader.getString(&map_line);
+          PARSE_ASSERT(got_line,
+                       "Failed to getString() for map line %d of map '%s'.\n",
+                       y, tag);
+          //printf("line %d = '%s'\n", y, map_line);
+
+          // Now we slice the map line into glyphs:
+          p = strtok(map_line, " \t\r\n");  // Prime the pump
+          x = 0;
+          while (1) {
+            //printf("x=%d p='%s'\n", x, p);
+            int i = (y * terrain_map->w) + x;
+            struct terrain * tt = palette_terrain_for_glyph(palette, p);
+            PARSE_ASSERT(tt,
+                         "Error loading (multi-byte palette) ASCII MAP '%s':\n"
+                         "  Glyph '%s' at XY=(%d,%d)"
+                         "does not map to a TERRAIN type.\n"
+                         "  (Check the palette definition versus the terrain block.)",
+                         tag, p, x, y);
+            //printf("tt->tag='%s' name='%s'\n", tt->tag, tt->name);
+            terrain_map->terrain[i] = tt;
+            x++;
+            p = strtok(NULL, " \t\r\n");
+            if (p == NULL) {
+              break;
+            }
+          } // while(1)
+
+          PARSE_ASSERT((x == terrain_map->w),
+                       "Error loading (multi-byte palette) ASCII MAP '%s':\n"
+                       "  Found %d glyphs on map line %d, expected %d.",
+                       tag, x, y, terrain_map->w);
+          free(map_line);
+        } // for (y)
+        PARSE_ASSERT((y == terrain_map->h),
+                     "Error loading (multi-byte palette) ASCII MAP '%s':\n"
+                     "  Found %d lines in the terrain {} block, expected %d.",
+                     tag, y, terrain_map->h);
+
+#ifdef BIG_MESS_WITH_GETRAW
+        char glyph[LONGEST_TERRAIN_GLYPH + 1];
 
         for (i = 0; i < terrain_map->w * terrain_map->h; i++) {
 
             memset(glyph, 0, sizeof(glyph));
 
-            if (!loader.getRaw(glyph,
-                       MAX_TERRAIN_PALETTE_ENTRY_SYMBOL_SZ)) {
+            if (!loader.getRaw(glyph, LONGEST_TERRAIN_GLYPH)) {
                 err("%s", loader.error);
                 return NULL;
             }
-
-#ifdef TERRAIN_LOOKUP_RLE_OPTIMIZATION
-            // Optimization:
-            // It is common for the same terrain type to 
-            // occur 2+ times in a row, so we try the most 
-            // recently used glyph before doing a full search.
-            // (This is basically run-length encoding.)
-            // 
-            // SAM: Is it worth adding a lookup function in terrain.c
-            //      so we can find the index of the last terrain found, 
-            //      and keep this optimization?
-            // 
-            //      (The current code palette_terrain_for_glyph()
-            //      does not leave us with a meaningful 'j' like
-            //      the original code did...)
-            //
-            // gmcnutt: same notes as above in the one-char-per-tile
-            // section. And yes, for 0.4 we need to get rid of having two code
-            // sections doing the same thing.
-            //
-            int j = 0;  // No meaningful value available...
-            char * prev_glyph = palette_glyph(palette, j);
-            if (!strcmp(prev_glyph, glyph)) {
-              terrain_map->terrain[i] = palette_terrain(palette, j);
-              continue;
-            }
-#endif // TERRAIN_LOOKUP_RLE_OPTIMIZATION
+            // SAM: The below is showing very wrong grabbed values
+            //      for at least 2 cases.  getRaw() is not my friend.
+            printf("getRaw() grabbed '%s' at index %d\n", glyph, i);
 
             struct terrain * tt = palette_terrain_for_glyph(palette, glyph);
             if (tt) {
@@ -1020,6 +1021,7 @@ static struct terrain_map * game_load_ascii_terrain_map (char *tag)
               return 0;
             }
         } // for (i)
+#endif // BIG_MESS_WITH_GETRAW
 
         // terrain {} block end was already parsed by loader.getRaw()
         PARSE_END_OF_BLOCK();  // MAP {} block

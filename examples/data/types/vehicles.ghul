@@ -28,6 +28,7 @@
 
 #include "projectiles.ghul" // for t_cannonball
 
+
 #ifdef OLDER_SHIP_MAP
 MAP map_ship {
   type   ascii;
@@ -36,22 +37,22 @@ MAP map_ship {
   one_char_per_tile 1;
 
   palette pal_old_ship {
-    '_' t_deep;
-    '=' t_shallow;
-    '~' t_shoals;
-    '#' t_ship_hull;
-    'o' t_pillar;
-    '.' t_deck;
+    "_" t_deep;
+    "=" t_shallow;
+    "~" t_shoals;
+    "#" t_ship_hull;
+    "o" t_pillar;
+    "." t_deck;
   }
   terrain {
-          ~~~~~~.~~.~~~~~~
-          ===###.##.###===
-          __##........##__
-          _##..........##_
-          _#....o..o....#_
-          _##..........##_
-          __##........##__
-          ___##########___
+    "~~~~~~.~~.~~~~~~";
+    "===###.##.###===";
+    "__##........##__";
+    "_##..........##_";
+    "_#....o..o....#_";
+    "_##..........##_";
+    "__##........##__";
+    "___##########___";
   }
 } // MAP map_ship
 #endif // OLDER_SHIP_MAP
@@ -63,31 +64,31 @@ MAP map_ship {
   width  17;
   height 9;
   palette pal_funky_ship {
-    '__' t_deep;
-    '--' t_shallow;
-    '~~' t_shoals;
+    "__" t_deep;
+    "--" t_shallow;
+    "~~" t_shoals;
 
-    '##' t_ship_hull;
+    "##" t_ship_hull;
     // SAM: The corner hull pieces get messed up when the map is rotated...
-    'nw' t_sh_hull_NW;  // NW corner is water
-    'se' t_sh_hull_SW;  // SW corner is water
-    'ne' t_sh_hull_NE;  // NE corner is water
-    'se' t_sh_hull_SE;  // SE corner is water
+    "nw" t_sh_hull_NW;  // NW corner is water
+    "se" t_sh_hull_SW;  // SW corner is water
+    "ne" t_sh_hull_NE;  // NE corner is water
+    "se" t_sh_hull_SE;  // SE corner is water
 
-    'o'  t_mast;
-    '|'  t_ships_wheel;
-    '.'  t_deck;
+    "o"  t_mast;
+    "|"  t_ships_wheel;
+    "."  t_deck;
   }
   terrain {
-       -- -- -- -- -- -- --  . -- --  . -- -- -- -- -- --
-       -- -- -- -- nw ## ##  . ## ##  . ## ## ## ## ne --
-       -- -- -- nw ##  .  .  .  .  .  .  .  .  .  . ## --
-       -- -- nw ##  .  .  .  .  .  .  .  .  .  .  . ## --
-       -- ## ##  .  .  .  o  .  .  .  .  o  |  .  . ## --
-       -- -- sw ##  .  .  .  .  .  .  .  .  .  .  . ## --
-       -- -- -- sw ##  .  .  .  .  .  .  .  .  .  . ## --
-       -- -- -- -- sw ## ##  . ## ##  . ## ## ## ## se --
-       -- -- -- -- -- -- --  . -- --  . -- -- -- -- -- --
+    "-- -- -- -- -- -- --  . -- --  . -- -- -- -- -- --";
+    "-- -- -- -- nw ## ##  . ## ##  . ## ## ## ## ne --";
+    "-- -- -- nw ##  .  .  .  .  .  .  .  .  .  . ## --";
+    "-- -- nw ##  .  .  .  .  .  .  .  .  .  .  . ## --";
+    "-- ## ##  .  .  .  o  .  .  .  .  o  |  .  . ## --";
+    "-- -- sw ##  .  .  .  .  .  .  .  .  .  .  . ## --";
+    "-- -- -- sw ##  .  .  .  .  .  .  .  .  .  . ## --";
+    "-- -- -- -- sw ## ##  . ## ##  . ## ## ## ## se --";
+    "-- -- -- -- -- -- --  . -- --  . -- -- -- -- -- --";
   }
 } // MAP map_ship
 #endif // FUNKY_ROTATING_SHIP
@@ -98,31 +99,31 @@ MAP map_ship {
   width  17;
   height 9;
   palette pal_ship {
-    '__' t_deep;
-    '--' t_shallow;
-    '~~' t_shoals;
+    "__" t_deep;
+    "--" t_shallow;
+    "~~" t_shoals;
 
-    '##' t_ship_hull;
+    "##" t_ship_hull;
     // SAM: The corner hull pieces get messed up when the map is rotated...
-    'NW' t_sh_hull_NW;  // NW corner is water
-    'SW' t_sh_hull_SW;  // SW corner is water
-    'ne' t_sh_hull_NE;  // NE corner is water
-    'se' t_sh_hull_SE;  // SE corner is water
+    "NW" t_sh_hull_NW;  // NW corner is water
+    "SW" t_sh_hull_SW;  // SW corner is water
+    "ne" t_sh_hull_NE;  // NE corner is water
+    "se" t_sh_hull_SE;  // SE corner is water
 
-    'o'  t_mast;
-    '|'  t_ships_wheel;
-    '.'  t_deck;
+    "o"  t_mast;
+    "|"  t_ships_wheel;
+    "."  t_deck;
   }
   terrain {
-       -- -- -- -- -- -- --  . -- --  . -- -- -- -- -- --
-       -- -- -- -- ## ## ##  . ## ##  . ## ## ## ## -- --
-       -- -- -- ## ##  .  .  .  .  .  .  .  .  . ## ## --
-       -- -- ## ##  .  .  .  .  .  .  .  .  .  .  . ## --
-       -- ## ##  .  .  .  o  .  .  .  .  o  |  .  . ## --
-       -- -- ## ##  .  .  .  .  .  .  .  .  .  .  . ## --
-       -- -- -- ## ##  .  .  .  .  .  .  .  .  . ## ## --
-       -- -- -- -- ## ## ##  . ## ##  . ## ## ## ## -- --
-       -- -- -- -- -- -- --  . -- --  . -- -- -- -- -- --
+    "-- -- -- -- -- -- --  . -- --  . -- -- -- -- -- --";
+    "-- -- -- -- ## ## ##  . ## ##  . ## ## ## ## -- --";
+    "-- -- -- ## ##  .  .  .  .  .  .  .  .  . ## ## --";
+    "-- -- ## ##  .  .  .  .  .  .  .  .  .  .  . ## --";
+    "-- ## ##  .  .  .  o  .  .  .  .  o  |  .  . ## --";
+    "-- -- ## ##  .  .  .  .  .  .  .  .  .  .  . ## --";
+    "-- -- -- ## ##  .  .  .  .  .  .  .  .  . ## ## --";
+    "-- -- -- -- ## ## ##  . ## ##  . ## ## ## ## -- --";
+    "-- -- -- -- -- -- --  . -- --  . -- -- -- -- -- --";
   }
 } // MAP map_ship
 

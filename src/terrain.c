@@ -75,9 +75,10 @@ void palette_entry_print(FILE * fp, int indent,
 			 struct terrain_palette_entry *entry)
 {
 	static char glyph_str[BOGUS_MAX_SIZE + 1];
-	static char tag_str[BOGUS_MAX_SIZE + 1];
-	static char name_str[BOGUS_MAX_SIZE + 1];
+	static char   tag_str[BOGUS_MAX_SIZE + 1];
+	static char  name_str[BOGUS_MAX_SIZE + 1];
 	assert(fp);
+    assert(entry);
 
 	snprintf(glyph_str, BOGUS_MAX_SIZE, "'%s'", entry->glyph);
 	snprintf(tag_str, BOGUS_MAX_SIZE, "'%s'", entry->terrain->tag);
@@ -88,6 +89,14 @@ void palette_entry_print(FILE * fp, int indent,
 	fprintf(fp, "glyph %-6s tag %-20s name %-20s\n", glyph_str, tag_str,
 		name_str);
 }				// palette_entry_print()
+
+#ifdef HACK_GLOBAL_PALETTE
+// SAM: This gets initialized in game.c game_load_ascii_terrain_map()
+//      to the first palette whose tag name is 'pal_extended'.
+//      This is a big, ugly hack, and a temporary work-around
+//      a bug with making a global list of terrain_palette.
+struct terrain_palette HACK_global_palette;
+#endif // HACK_GLOBAL_PALETTE
 
 struct terrain_palette *new_terrain_palette(void)
 {

@@ -32,9 +32,9 @@ MAP m_campsite {
         height 7;
         one_char_per_tile 1;
         palette pal_campsite {
-                '%' t_boulder;
-                '.' t_grass;
-                '!' t_fireplace;
+                "%" t_boulder;
+                "." t_grass;
+                "!" t_fireplace;
         }
         terrain {
                 %%...%%

@@ -63,16 +63,16 @@ extern "C" {
 
 	extern void terrain_destroy(struct terrain *terrain);
 
-#define MAX_TERRAIN_PALETTE_ENTRY_SYMBOL_SZ 4
-#define NUM_QUICK_TERRAINS                  10
-#define INITIAL_INDENTATION                 0
-#define INDENTATION_FACTOR                  2
+#define LONGEST_TERRAIN_GLYPH 4
+#define NUM_QUICK_TERRAINS    10
+#define INITIAL_INDENTATION   0
+#define INDENTATION_FACTOR    2
 
 #define INDENT fprintf(fp, "%*s", indent, "")
 
 	struct terrain_palette_entry {
-		char glyph[MAX_TERRAIN_PALETTE_ENTRY_SYMBOL_SZ + 2];
-		struct terrain *terrain;
+        char           * glyph;    // Loader::getString() will strdup()
+		struct terrain * terrain;
 	};
 	void palette_entry_print(FILE * fp, int indent,
 				 struct terrain_palette_entry *entry);

@@ -30,40 +30,40 @@ MAP m_prison_chamber {
   height 32;
   STD_TERRAIN_PALETTE;
   terrain {
-   // 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-      x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x // 0
-      x , , , , , , , 0 . . . 0 e , , e 0 . . . 0 , , , 0 ! c ! 0 e x // 1
-      x , - - - - , , 0 . . . 0 , , , , 0 . . . 0 , , , 0 ! c ! 0 , x // 2
-      x , = = e - , , 0 0 , 0 0 , , , , 0 0 , 0 0 , , , , , , , , , x // 3
-      x , - - - - , , , , , , , , , , , , , , , , , , , , , , , , , x // 4
-      x , , , , , , , , , , , , , , , , , , , , , , , , 0 f c f 0 , x // 5
-      x , , , , , , , , , a , , , , , , , , a , , , , , 0 f c f 0 e x // 6
-      x x x x x x x x x x x x x x , x x x x x x x x x x x x x x x x x // 7
-      x x x x [ T O R T U R E ] x , x [ C H A M B E R ] x x x x x x x // 8
-      x x x x , , , , , , , , , , , , , , , , , , , , , x x x x x x x // 9
-      x x x x , , , , , , , , , , , , , , , , , , , , , x x x x x x x // 0
-      x x x x x x x x x x x , , p , p , , x x x x x x x x x x x x x x // 1
-      x x x x x x x x x ! - , , , , , , , - ! x x x x x x x x x x x x // 2
-      x x x x x x x x x - - , , p , p , , - - x x x x x x x x x x x x // 3
-      x x x x x x x x x ! - , , , , , , , - ! x x x x x x x x , , , x // 4
-      x x x x x x x x x - - , , p , p , , - - x x x x x x x x x x , x // 5
-      x x x x x x x x x ! - , , , , , , , - ! x x x x x x x x x x , x // 6
-      x x x x x x x x x x x , , p , p , , x x x x x x x x x x x x , x // 7
-      x , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , x // 8
-      x , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , x // 9
-      x x x x x x x x P R I S O N @ C E L L S x x , , x x x x x x x x // 0
-      x x x x x x x x x x x x x x x x x x x x x x , , x x x x x x x x // 1
-      x , , , , , , , , , , , , , , , , , , , , , , , x x x x x x x x // 2
-      x x , x x x x x x x x x x x x x x x x x x x x x x x x x x x x x // 3
-      x x , x x x x , x , x , x x x , , , x , , , x , , , x x x x x x // 4
-      x , , . , , , , , , , , x x x , , , x , , , x , , , x x x x x x // 5
-      x x , [ @ @ @ @ @ @ @ ] x e x x , x x x , x x x , x x x , , , x // 6
-      x , , , , , , , , , , , , e , , , , , , , , , , , , f , , , , x // 7
-      x x . [ @ @ @ @ @ @ @ ] x e x x , x x x , x x x , x x x , , , x // 8
-      x , , , , , , , , , , , x x x , , , x , , , x , , , x x x x x x // 9
-      x , x , x x x , x , x , x x x , , , x , , , x , , , x x x x x x // 0
-      x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x // 1
-      }
+    // 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+    "x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x"; // 0
+    "x , , , , , , , 0 . . . 0 e , , e 0 . . . 0 , , , 0 ! c ! 0 e x"; // 1
+    "x , - - - - , , 0 . . . 0 , , , , 0 . . . 0 , , , 0 ! c ! 0 , x"; // 2
+    "x , = = e - , , 0 0 , 0 0 , , , , 0 0 , 0 0 , , , , , , , , , x"; // 3
+    "x , - - - - , , , , , , , , , , , , , , , , , , , , , , , , , x"; // 4
+    "x , , , , , , , , , , , , , , , , , , , , , , , , 0 f c f 0 , x"; // 5
+    "x , , , , , , , , , a , , , , , , , , a , , , , , 0 f c f 0 e x"; // 6
+    "x x x x x x x x x x x x x x , x x x x x x x x x x x x x x x x x"; // 7
+    "x x x x [ T O R T U R E ] x , x [ C H A M B E R ] x x x x x x x"; // 8
+    "x x x x , , , , , , , , , , , , , , , , , , , , , x x x x x x x"; // 9
+    "x x x x , , , , , , , , , , , , , , , , , , , , , x x x x x x x"; // 0
+    "x x x x x x x x x x x , , p , p , , x x x x x x x x x x x x x x"; // 1
+    "x x x x x x x x x ! - , , , , , , , - ! x x x x x x x x x x x x"; // 2
+    "x x x x x x x x x - - , , p , p , , - - x x x x x x x x x x x x"; // 3
+    "x x x x x x x x x ! - , , , , , , , - ! x x x x x x x x , , , x"; // 4
+    "x x x x x x x x x - - , , p , p , , - - x x x x x x x x x x , x"; // 5
+    "x x x x x x x x x ! - , , , , , , , - ! x x x x x x x x x x , x"; // 6
+    "x x x x x x x x x x x , , p , p , , x x x x x x x x x x x x , x"; // 7
+    "x , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , x"; // 8
+    "x , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , x"; // 9
+    "x x x x x x x x P R I S O N @ C E L L S x x , , x x x x x x x x"; // 0
+    "x x x x x x x x x x x x x x x x x x x x x x , , x x x x x x x x"; // 1
+    "x , , , , , , , , , , , , , , , , , , , , , , , x x x x x x x x"; // 2
+    "x x , x x x x x x x x x x x x x x x x x x x x x x x x x x x x x"; // 3
+    "x x , x x x x , x , x , x x x , , , x , , , x , , , x x x x x x"; // 4
+    "x , , . , , , , , , , , x x x , , , x , , , x , , , x x x x x x"; // 5
+    "x x , [ @ @ @ @ @ @ @ ] x e x x , x x x , x x x , x x x , , , x"; // 6
+    "x , , , , , , , , , , , , e , , , , , , , , , , , , f , , , , x"; // 7
+    "x x . [ @ @ @ @ @ @ @ ] x e x x , x x x , x x x , x x x , , , x"; // 8
+    "x , , , , , , , , , , , x x x , , , x , , , x , , , x x x x x x"; // 9
+    "x , x , x x x , x , x , x x x , , , x , , , x , , , x x x x x x"; // 0
+    "x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x"; // 1
+  }
 }  /* m_prison_chamber */
 
 MAP m_BOG_TRAP_OPEN {
@@ -72,8 +72,8 @@ MAP m_BOG_TRAP_OPEN {
   height 2;
   STD_TERRAIN_PALETTE;
   terrain {
-    % % %
-    % % %
+    "% % %";
+    "% % %";
   }
 } // m_BOG_TRAP_OPEN
 
@@ -83,8 +83,8 @@ MAP m_BOG_TRAP_CLOSED {
   height 2;
   STD_TERRAIN_PALETTE;
   terrain {
-    . . .
-    . . .
+    ". . .";
+    ". . .";
   }
 } // m_BOG_TRAP_CLOSED
 
@@ -131,8 +131,8 @@ MAP m_BOULDER_TRAP_OPEN {
   height 2;
   STD_TERRAIN_PALETTE;
   terrain {
-    b b b
-    b b b
+    "b b b";
+    "b b b";
   }
 } // m_BOULDER_TRAP_OPEN
 
@@ -142,8 +142,8 @@ MAP m_BOULDER_TRAP_CLOSED {
   height 2;
   STD_TERRAIN_PALETTE;
   terrain {
-    . . .
-    . . .
+    ". . .";
+    ". . .";
   }
 } // m_BOULDER_TRAP_CLOSED
 
@@ -191,7 +191,7 @@ MAP m_FLAME_BARRIER_TRAP_OPEN {
   height 1;
   STD_TERRAIN_PALETTE;
   terrain {
-    f
+    "f";
   }
 } // m_FLAME_BARRIER_TRAP_OPEN
 
@@ -201,7 +201,7 @@ MAP m_FLAME_BARRIER_TRAP_CLOSED {
   height 1;
   STD_TERRAIN_PALETTE;
   terrain {
-    c
+    "c";
   }
 } // m_FLAME_BARRIER_TRAP_CLOSED
 

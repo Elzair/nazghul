@@ -441,11 +441,11 @@ MAP m_WATER_TRAP_OPEN {
   height 5;
   STD_TERRAIN_PALETTE;
   terrain {
-    _ _ _ _ _
-    _ _ _ _ _
-    _ _ _ _ _
-    _ _ _ _ _
-    _ _ _ _ _
+    "_ _ _ _ _";
+    "_ _ _ _ _";
+    "_ _ _ _ _";
+    "_ _ _ _ _";
+    "_ _ _ _ _";
   }
 } // m_WATER_TRAP_OPEN
 
@@ -455,11 +455,11 @@ MAP m_WATER_TRAP_CLOSED {
   height 5;
   STD_TERRAIN_PALETTE;
   terrain {
-    e e e e e
-    e e e e e
-    e e e e e
-    e e e e e
-    e e e e e
+    "e e e e e";
+    "e e e e e";
+    "e e e e e";
+    "e e e e e";
+    "e e e e e";
   }
 } // m_WATER_TRAP_CLOSED
 

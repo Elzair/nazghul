@@ -34,38 +34,38 @@ MAP m_passage {
   height  32;
   STD_TERRAIN_PALETTE;
   terrain {
-      x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x
-      x , , , , , , x x x x x x x x x x x x x x x x x x ~ ~ x x x x x
-      x , , , , , , x x x x x x x x x x x x x x x x x x ~ x x x x x x
-      x , , , , , , x x x x x x x x x x x x x x x x ~ ~ ~ x x x x x x
-      x , , , , , , x x x x x x x x x x x x x x x x ~ x x x x x x x x
-      x , , , , , , x x x x x x x x x x x x x x x x ~ x x x x x x x x
-      x x x x , , , x x x x x x x x x x x x x ~ ~ ~ ~ x x x x x x x x
-      x x x x , , , x x x x x x x x x x x x x ~ x x x x x x x x x x x
-      x x x x , , , x x x x x x x x x x x x x ~ x x x x x x x x x x x
-      x x x x , , , x x x x x , , , , , ~ ~ ~ ~ x x x x x x x x x x x
-      x x x x , , , x x x x , , , , , , ~ ~ ~ ~ ~ ~ x x x x x x x x x
-      x x x x , , , x x , , , , , , , ~ ~ ~ ~ , , , x x x x x x x x x
-      x x x x x , , , , , , , , , , , ~ , , , , , , x x x x x x x x x
-      x x x x x x , , , , , , , , , , ~ , , , , , , x x x x x x x x x
-      x x x x x x x x x , , , , , , , = , , , , , , x x x x x x x x x
-      x x x x x x x x x , , , , , , , ~ , , , , , , x x x x x x x x x
-      x x x x x x x x x x , , , , , , ~ , , , , , , , x x x x x x x x
-      x x x x x x x x x x , , , , , ~ ~ , , , , , , , x x x x x x x x
-      x x x x x x x x x x , , , , ~ ~ , , , , , , , , , , , , x x x x
-      x x x x x x x x x x , , ~ ~ ~ , , , , , , , , , , , , , x x x x
-      x x x x x x x x x x , ~ ~ , , , , , , , , , , , x x , , , x x x
-      x x x x x x x x x x ~ ~ , , , , , , , , , , x x x x , , , x x x
-      x x x x x x x x x x ~ x x x x x x x x x x x x x x x , , , x x x
-      x x x x x x x x x ~ ~ x x x x x x x x x x x x x x x , , , x x x
-      x x x x x x x x x ~ x x x x . . . . . . . x x x x x , , , x x x
-      x x x x x x x x ~ ~ x x x . . . . . . . . . x x x x , , , x x x
-      x x x x x x x x ~ x x x x . . . . . . . . . x x x x , , , , , x
-      x x x x x x x ~ ~ x x x x . . . . . . . . . x x x x , , , , , x
-      x x x x x x x ~ ~ x x x x ~ . . . . . . . . x x x x , , , , , x
-      x x x x x x x x ~ ~ ~ ~ ~ ~ ~ . . . . . . . x x x x , , , , , x
-      x x x x x x x x x x x x x ~ . . . . . . . x x x x x , , , , , x
-      x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x
+    "x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x";
+    "x , , , , , , x x x x x x x x x x x x x x x x x x ~ ~ x x x x x";
+    "x , , , , , , x x x x x x x x x x x x x x x x x x ~ x x x x x x";
+    "x , , , , , , x x x x x x x x x x x x x x x x ~ ~ ~ x x x x x x";
+    "x , , , , , , x x x x x x x x x x x x x x x x ~ x x x x x x x x";
+    "x , , , , , , x x x x x x x x x x x x x x x x ~ x x x x x x x x";
+    "x x x x , , , x x x x x x x x x x x x x ~ ~ ~ ~ x x x x x x x x";
+    "x x x x , , , x x x x x x x x x x x x x ~ x x x x x x x x x x x";
+    "x x x x , , , x x x x x x x x x x x x x ~ x x x x x x x x x x x";
+    "x x x x , , , x x x x x , , , , , ~ ~ ~ ~ x x x x x x x x x x x";
+    "x x x x , , , x x x x , , , , , , ~ ~ ~ ~ ~ ~ x x x x x x x x x";
+    "x x x x , , , x x , , , , , , , ~ ~ ~ ~ , , , x x x x x x x x x";
+    "x x x x x , , , , , , , , , , , ~ , , , , , , x x x x x x x x x";
+    "x x x x x x , , , , , , , , , , ~ , , , , , , x x x x x x x x x";
+    "x x x x x x x x x , , , , , , , = , , , , , , x x x x x x x x x";
+    "x x x x x x x x x , , , , , , , ~ , , , , , , x x x x x x x x x";
+    "x x x x x x x x x x , , , , , , ~ , , , , , , , x x x x x x x x";
+    "x x x x x x x x x x , , , , , ~ ~ , , , , , , , x x x x x x x x";
+    "x x x x x x x x x x , , , , ~ ~ , , , , , , , , , , , , x x x x";
+    "x x x x x x x x x x , , ~ ~ ~ , , , , , , , , , , , , , x x x x";
+    "x x x x x x x x x x , ~ ~ , , , , , , , , , , , x x , , , x x x";
+    "x x x x x x x x x x ~ ~ , , , , , , , , , , x x x x , , , x x x";
+    "x x x x x x x x x x ~ x x x x x x x x x x x x x x x , , , x x x";
+    "x x x x x x x x x ~ ~ x x x x x x x x x x x x x x x , , , x x x";
+    "x x x x x x x x x ~ x x x x . . . . . . . x x x x x , , , x x x";
+    "x x x x x x x x ~ ~ x x x . . . . . . . . . x x x x , , , x x x";
+    "x x x x x x x x ~ x x x x . . . . . . . . . x x x x , , , , , x";
+    "x x x x x x x ~ ~ x x x x . . . . . . . . . x x x x , , , , , x";
+    "x x x x x x x ~ ~ x x x x ~ . . . . . . . . x x x x , , , , , x";
+    "x x x x x x x x ~ ~ ~ ~ ~ ~ ~ . . . . . . . x x x x , , , , , x";
+    "x x x x x x x x x x x x x ~ . . . . . . . x x x x x , , , , , x";
+    "x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x";
   }
 } // m_passage
 
