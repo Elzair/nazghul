@@ -403,6 +403,7 @@ int vinfo_init(struct vinfo_type *vinfo, int w)
 	/* Enforce maximal efficiency */
 	if (num_grids < VINFO_MAX_GRIDS) {
 		err("Too few grids (%d < %d)!", num_grids, VINFO_MAX_GRIDS);
+                KILL(hack);
 		return -1;
 	}
 
@@ -410,6 +411,7 @@ int vinfo_init(struct vinfo_type *vinfo, int w)
 	if (hack->num_slopes < VINFO_MAX_SLOPES) {
 		err("Too few slopes (%d < %d)!",
 		    hack->num_slopes, VINFO_MAX_SLOPES);
+                KILL(hack);
 		return -1;
 	}
 
@@ -526,6 +528,7 @@ int vinfo_init(struct vinfo_type *vinfo, int w)
 	    ((vinfo[1].bits_1 | vinfo[2].bits_1) != VINFO_BITS_1) ||
 	    ((vinfo[1].bits_0 | vinfo[2].bits_0) != VINFO_BITS_0)) {
 		err("Incorrect bit masks!");
+                KILL(hack);
 		return -1;
 	}
 
@@ -733,6 +736,10 @@ static void ANGBAND_compute(struct los *los)
 int ANGBAND_Init(struct los *los)
 {
 	struct vinfo_type *vinfo;
+
+        if (los->data) {
+                free(los->data);
+        }
 
 	vinfo = (struct vinfo_type *) malloc((VINFO_MAX_GRIDS + 1) *
 					     sizeof(struct vinfo_type));

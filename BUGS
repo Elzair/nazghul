@@ -1,7 +1,17 @@
-* Nixie attacks sometimes start combat with wrong orientation
-* Nixies attacked while party was camped on land
-* Frame sometimes gets messed up and needs a repaint
-* If in follow mode, casting a combat spell should exit follow mode
+* Nixie attacks sometimes start combat with wrong orientation (hard to
+  reproduce)
+
+* Frame sometimes gets messed up and needs a repaint (really? or only during
+  debug sessions?)
+
+* Can't attack in town
+
+* Show last line of command window on the console
+
+* Have repetitive messages show repeat counts
+
+* Quoted (Sam favors single quote for glyph conservation purposes) map terrain
+  lines for sane syntax highlighting
 
 Known BUGS in release 0.1.1
 

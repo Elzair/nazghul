@@ -2,7 +2,7 @@
 // nazghul - an old-school RPG engine
 // Copyright (C) 2002, 2003 Gordon McNutt
 //
-// This program is free software; you can redistribute it and/or modify it
+// Thi program is free software; you can redistribute it and/or modify it
 // under the terms of the GNU General Public License as published by the Free
 // Software Foundation; either version 2 of the License, or (at your option)
 // any later version.
@@ -93,7 +93,7 @@ int is_midnight (void)
     MIDNIGHT_DEGREE_LATE  - (DEGREES_PER_HOUR / 2);
   static int mid_arc_end   = 
     MIDNIGHT_DEGREE_EARLY + (DEGREES_PER_HOUR / 2);
-  return ( (Sun.arc >= mid_arc_begin) && 
+  return ( (Sun.arc >= mid_arc_begin) ||
            (Sun.arc <= mid_arc_end)    );
 } // is_midnight()
 

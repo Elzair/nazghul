@@ -2048,6 +2048,7 @@ bool cmdMixReagents(void)
 
 void look_at_XY(int x, int y)
 {
+        consolePrint("%d\n", mapTileIsVisible(x, y));
 	consolePrint("At XY=(%d,%d) you see ", x, y);
 	placeDescribe(x, y);
 }
@@ -2169,11 +2170,11 @@ bool cmdAT (class Character * pc)
 
       // Message(s) about the sun:
       if (sun_is_up() ) {
-        consolePrint("The sun is up.%s\n",
-                     is_noon() ? "  It is noon." : "");
+              consolePrint("The sun is up at arc %d.%s\n", Sun.arc,
+                           is_noon() ? "  It is noon." : "");
       }
       if (sun_is_down() ) {
-        consolePrint("The sun has set.%s\n",
+              consolePrint("The sun has set at arc %d.%s\n", Sun.arc,
                      is_midnight() ? "  It is midnight." : "");
       }
 

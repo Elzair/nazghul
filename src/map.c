@@ -112,7 +112,8 @@ static void myMergeVmask(struct mview *view, void *data)
 		return;
 
 	/* 
-	 * x |<-- w -->| +--------------------+ | A | | +-------------------+-y
+	 * x |<-- w -->| 
+         *   +--------------------+ | A | | +-------------------+-y
 	 * | |/////////.  |^ | |/////////.  || | |/////////.  || | |/////////.
 	 * || | |/////////.  || | |/////////.  || | |/////////.  || |
 	 * |/////////.  || | |/////////.  |h | |/////////.  || | |/////////.  ||
@@ -506,6 +507,24 @@ void mapRepaintView(struct mview *view, int flags)
 #endif
 }
 
+int mapTileIsVisible(int x, int y)
+{       
+        int index;
+
+        // check if the coords are in the view rect
+        if (x < Map.aview->vrect.x ||
+            x >= (Map.aview->vrect.x + Map.aview->vrect.w) ||
+            y < Map.aview->vrect.y ||
+            y >= (Map.aview->vrect.y + Map.aview->vrect.h))
+                return 0;
+
+        // check if the tile is marked as visible in the view rect
+        index = (y - Map.aview->vrect.y) * Map.aview->vrect.w +
+                (x - Map.aview->vrect.x);
+        
+        return Map.vmask[index];
+            
+}
 void mapMarkAsDirty(struct mview *view)
 {
 	if (view == ALL_VIEWS)
@@ -664,3 +683,4 @@ void mapGetCameraFocus(struct place **place, int *x, int *y)
         *x = Map.cam_x;
         *y = Map.cam_y;
 }
+

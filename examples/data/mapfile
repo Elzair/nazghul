@@ -810,7 +810,7 @@ terrains {
     alpha 1;
     movement_cost 1;
     effects 2;
-    light 512;
+    light 4096;
   };
   t_A { name "A" pmask 0 sprite s_A glyph A id 96 alpha 1 movement_cost 0 effects 0 light 0 };
   t_B { name "B" pmask 0 sprite s_B glyph B id 97 alpha 1 movement_cost 0 effects 0 light 0 };
@@ -968,22 +968,24 @@ General syntax:
 
 General commands:
 
-    <dir>......................Move in that direction
-    B)oard.....................Board/exit a vehicle like a ship or horse
-    C)ast-<member>-<spell>-<*>...Cast a spell (the last argument depends on the spell)
-    E)nter.....................Enter a portal, including up or down ladders
-    F)ire-<dir>................Fire vehicle's weapon (e.g., ship cannon)
-    G)et-<dir>.................Get an object from the ground
-    H)andle-<member>-<target>..Activate a switch or lever
-    L)ook-<dir>................Describe an adjacent tile
-    O)pen-<dir>................Open a container or door
-    Q)uit......................Quits the game
-    R)eady-<member>-<item>.....Ready an armament like a weapon, shield, etc.
-    S)witch-<member>-<member>...Swap order of two party members
-    T)alk-<target>.............Talk to an NPC
-    U)se-<member>-<item>.......Use an item like a torch or potion
-    Z)tats.....................Show party stats like inventory, armaments, etc
-    <space>....................Pass one turn
+  <dir>......................Move in that direction
+  B)oard.....................Board/exit a vehicle like a ship or horse
+  C)ast-<member>-<spell>-<*>...Cast a spell (the last argument depends on the spell)
+  E)nter.....................Enter a portal, including up or down ladders
+  F)ire-<dir>................Fire vehicle's weapon (e.g., ship cannon)
+  G)et-<dir>.................Get an object from the ground
+  H)andle-<member>-<target>..Activate a switch or lever
+  L)ook-<dir>................Describe an adjacent tile
+  O)pen-<dir>................Open a container or door
+  Q)uit......................Quits the game
+  R)eady-<member>-<item>.....Ready an armament like a weapon, shield, etc.
+  S)witch-<member>-<member>...Swap order of two party members
+  T)alk-<target>.............Talk to an NPC
+  U)se-<member>-<item>.......Use an item like a torch or potion
+  Z)tats.....................Show party stats like inventory, armaments, etc
+  X)amine....................Examine map files within view
+  @)AT.......................Information about where the party is AT, etc
+  <space>....................Pass one turn
 
 
 Wilderness-only commands:
@@ -3463,7 +3465,7 @@ MAP m_wilderness {
       --.......{{~^^~~~{{^{{ttttt.........--__
       tttttt.ttt~~{{^^^{^^{{tt....ttttttttt---
       ||||tt..~~~t.{{{^^^{{{{tt..tt||||ttttt~t
-      |||||tt.=......{{{^^^^{{t..t||||||tttt~~
+      |||||tt.==.....{{{^^^^{{t..t||||||tttt~~
       ~~~||~~~~~tttt...{{^{{{....t|||btbttt||~
       ||~~~~ttt~~~~---..{{{---...tt||ttt||||~~
       ||||tttt.%%~~-_--.....--....t||btb|||~~|
@@ -4074,7 +4076,7 @@ moon_info {
     }
   }
   sun {
-    arc 150;
+    arc 0;
     sprite s_sun;
   }
   moongates {
@@ -4152,10 +4154,50 @@ portals {
   { object_type t_ladder_up; from_place p_prison_chamber; from_x 28; from_y 26; to_place p_empire_city; to_x 61; to_y 25; auto_enter 0; } { object_type t_ladder_down; from_place p_empire_city; from_x 61; from_y 25; to_place p_prison_chamber; to_x 28; to_y 26; auto_enter 0; };
   { object_type t_ladder_up; from_place DarkPassage_Place; from_x 3; from_y 3; to_place p_empire_city; to_x 38; to_y 25; auto_enter 0; } { object_type t_ladder_down; from_place p_empire_city; from_x 38; from_y 25; to_place DarkPassage_Place; to_x 3; to_y 3; auto_enter 0; };
 }
+MAP m_campsite {
+        type ascii;
+        width 7;
+        height 7;
+        one_char_per_tile 1;
+        palette {
+                '%' t_boulder;
+                '.' t_grass;
+                '!' t_fireplace;
+        }
+        terrain {
+                %%...%%
+                %.....%
+                .......
+                ...!...
+                .......
+                %.....%
+                %%...%%
+        }
+}
+FORMATION f_campsite {
+        w 7;
+        h 7;
+        n 16;
+        . . . 12 . . .
+        . . 4 . 8 . .
+        . 9 . 0 . 7 .
+        13 . 1 . 2 . 15
+        . 5 . 3 . 11 .
+        . . 10 . 6 . .
+        . . . 14 . . .
+}
+FORMATION f_football {
+        w 9;
+        h 3;
+        n 8;
+        . 6 . 3 1 5 . 7 .
+        . . . . 0 . . . .
+        . . . 2 . 4 . . .
+}
 player {
-        place p_empire_city;
-        x 42;
-        y 34;
+  place p_wilderness;
+  x 28;
+  y 14;
   sprite s_companion_wizard;
   speed 2;
   mv_desc Walk;
@@ -4163,6 +4205,9 @@ player {
   food 1000;
   gold 500;
   alignment (1|2);
+  formation f_football;
+  campsite_map m_campsite;
+  campsite_formation f_campsite;
   inventory {
     1 t_dagger;
     1 t_sword;

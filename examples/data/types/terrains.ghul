@@ -420,7 +420,7 @@ terrains  {
     alpha     1;
     movement_cost 1;
     effects   EFFECT_BURN;
-    light     512;
+    light     4096;
   };
   
   TERRAIN(t_A, "A", 0, s_A,  96, TRANSPARENT, 0, EFFECT_NONE, 0, A);
