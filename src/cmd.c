@@ -684,29 +684,80 @@ bool cmdOpen(class Character * pc)
                                  player_party->getY() + directionToDy(dir));
 	}
 
+        /* Check for a mechanism */
+         mech = place_get_object(pc->getPlace(), x, y, mech_layer);
 
-	/*** Open Mech ***/
+         /* Check for a container */
+         container = (class Container *) place_get_object(Place, x, y, 
+                                                          container_layer);
 
-        mech = place_get_object(pc->getPlace(), x, y, mech_layer);
-        if (mech && mech->getObjectType()->canOpen()) {
-                mech->getObjectType()->open(mech, pc);
-                mapSetDirty();
-                return true;
-        }
+         /* If both are present the user must select one */
+         if (mech && mech->getObjectType()->canOpen() && container) {
 
-	/*** Open Container ***/
+                 enum StatusMode omode;
+                 struct stat_list_entry statlist[2];
+                 struct KeyHandler kh;
+                 struct ScrollerContext data;
+                 class Object *selection;
 
-	// Get the container.
-	container = (class Container *) place_get_object(Place, x, y, 
-                                                         container_layer);
-	if (NULL == container) {
-                log_msg("Open - nothing there!");
-		return false;
-	}
+                 cmdwin_print("<select>");
+
+                 statlist[0].sprite = mech->getSprite();
+                 snprintf(statlist[0].line1, sizeof(statlist[0].line1), "%s",
+                          mech->getName());
+                 statlist[0].line2[0] = 0;
+                 statlist[0].data = mech;
+
+                 statlist[1].sprite = container->getSprite();
+                 snprintf(statlist[1].line1, sizeof(statlist[1].line2), "%s",
+                          container->getName());
+                 statlist[1].line2[0] = 0;
+                 statlist[1].data   = container;
+
+                 omode = statusGetMode();
+                 statusSetGenericList(2, statlist);
+                 statusSetMode(GenericList);
+                 
+                 data.selection = NULL;
+                 data.selector  = Generic;
+                 kh.fx   = scroller;
+                 kh.data = &data;
+                 eventPushKeyHandler(&kh);
+                 eventHandle();
+                 eventPopKeyHandler();
+                 
+                 statusSetMode(omode);
+                 
+                 /* Disqualify the object NOT selected */
+                 if (data.selection == mech)
+                         container = NULL;
+                 else
+                         mech = NULL;
+
+                 cmdwin_backspace(strlen("<select>"));
+         }
+
+         /* Open a mechanism */
+         if (mech) {
+                 cmdwin_print("%s!", mech->getName());
+                 mech->getObjectType()->open(mech, pc);
+                 mapSetDirty();
+                 return true;
+         }
+
+         /* Nothing to open */
+         if (NULL == container) {
+                 cmdwin_print("abort!");
+                 log_msg("Open - nothing there!");
+                 return false;
+         }
+
+	/* Open Container */
 
         log_begin_group();
 
         pc->decActionPoints(NAZGHUL_BASE_ACTION_POINTS);
+        cmdwin_print("%s!", container->getName());
 
 	// Check for traps.
 	if (container->isTrapped()) {
