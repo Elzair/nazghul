@@ -838,7 +838,7 @@ static struct terrain_map *game_load_ascii_terrain_map(char *tag)
 	struct terrain_map *terrain_map = 0;
 	unsigned int width;
 	unsigned int height;
-	int i, j, pal_sz;
+	int i, j, pal_sz = 0;
 	int ret = 0;
 	// struct terrain *terrain = 0;
 	struct terrain_palette *palette = 0;
