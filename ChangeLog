@@ -1,3 +1,7 @@
+Sat Jan 22 15:44:09 CET 2005  Andreas Bauer <baueran@in.tum.de>
+
+ * nazghul/examples/data/images/.xvpics: remove
+
 Sat Dec 11 19:14:51 CET 2004  Andreas Bauer <baueran@in.tum.de>
 
  * configure.ac, AUTHORS, ChangeLog, NEWS, m4: new
