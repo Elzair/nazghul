@@ -75,6 +75,6 @@
  s_brigand             ;; sprite
  nil                   ;; formation
  (list                 ;; members
-  (list sp_human oc_bandit s_brigand "1d4" nil)
+  (list sp_human oc_bandit s_brigand "1d4" 'generic-ai)
   ))
  

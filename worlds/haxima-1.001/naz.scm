@@ -157,7 +157,6 @@
 (define (distance kobj-a kobj-b)
   (let ((loc-a (kern-obj-get-location kobj-a))
         (loc-b (kern-obj-get-location kobj-b)))
-  (display "distance:loc-a=")(display loc-a)(display " loc-b=")(display loc-b)(newline)
   (kern-get-distance loc-a loc-b)))
 
 ;; Result codes
@@ -167,7 +166,6 @@
 
 ;; Inefficient code to find nearest obj from a list
 (define (nearest-obj kobj klist)
-  (display "nearest-obj")(newline)
   (if (null? klist) nil
       (foldr (lambda (a b) (if (< (distance kobj a) (distance kobj b)) a b))
              (car klist) (cdr klist))))
@@ -222,6 +220,28 @@
 
 (define (join-player kchar)
   (kern-char-join-player kchar))
+
+;;============================================================================
+;; taunt
+;;============================================================================
+(define taunts 
+  (list 
+   "Yer money or yer life!"
+   "Have at 'cher!"
+   "Yer a dead man, ye are!"
+   "Oy!  You!  Gerrout!"
+   "'Ave at 'im, boys!"
+   "Circle round, we've got a dead one!"
+   "Dibs on 'is boots!"
+   "Stranger, meetcha couple my friends..."
+   ))
+
+(define (random-select list)
+  (list-ref list (modulo (random-next) (length list))))
+
+(define (taunt kchar ktarg)
+  (if (> (kern-dice-roll "1d20") 15)
+      (say kchar (random-select taunts))))
 
 ;; ----------------------------------------------------------------------------
 ;; search-rect -- apply a procedure to every location in a rectangular region

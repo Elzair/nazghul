@@ -252,5 +252,5 @@
                                                    oc_bandit
                                                    s_brigand
                                                    " a bandit" 
-                                                   nil)
+                                                   'generic-ai)
                                faction-outlaw))
