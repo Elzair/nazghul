@@ -116,6 +116,39 @@ MAKE_SIMPLE_STEP_TRIGGER(mech_pressure_plate,    "pressure plate", "simple",
 MAKE_SIMPLE_STEP_TRIGGER(invisible_step_trigger, "trigger", "invisible",
                          null,                   MECH_SIGNAL_DOWN, 1);
 
+MAKE_SIMPLE_STEP_TRIGGER(invisible_unlock_step_trigger, "trigger", "invisible",
+                         null,                   MECH_UNLOCK, 1);
+
+
+#define MAKE_TWO_SIGNAL_STEP_TRIGGER(type_name, _name, _state, _sprite, _sig1, _sig2, _invisible) \
+MECH_TYPE type_name { \
+  name _name;         \
+  defaults {          \
+    sprite _sprite;   \
+    pmask  PASS_ALL;  \
+    invisible _invisible; \
+  }        \
+  states { \
+    {      \
+       name   _state; \
+    } \
+  }   \
+  transitions {           \
+    state      _state;    \
+    event      MECH_STEP; \
+    next_state _state;    \
+    actions {             \
+      send_signal _sig1;  \
+      send_signal _sig2;  \
+    } \
+  }   \
+}
+
+MAKE_TWO_SIGNAL_STEP_TRIGGER(invisible_lock_step_trigger, "trigger", 
+                             "invisible",                 null,
+                             MECH_CLOSE,                  MECH_LOCK, 
+                             1);
+
 MECH_TYPE mech_portcullis {
   name "portcullis";
   defaults {}
@@ -281,6 +314,89 @@ MECH_TYPE type_name { \
   }   \
 } /* MAKE_DOORLIKE_MECH() */
 
+#define MAKE_SELF_LOCKING_DOORLIKE_MECH(type_name, m_name, self_close_time,\
+                           s_CLOSED_nm,  s_CLOSED_spr,  s_CLOSED_opaque,   \
+                           s_OPEN_nm,    s_OPEN_spr,    s_OPEN_opaque,     \
+                           s_LOCKED_nm,  s_LOCKED_spr,  s_LOCKED_opaque,   \
+                           s_MAGLOCK_nm, s_MAGLOCK_spr, s_MAGLOCK_opaque,  \
+                           self_lock_time)                                 \
+MECH_TYPE type_name { \
+  name m_name; \
+  defaults {}  \
+  states {     \
+    {          \
+      name   s_CLOSED_nm;     \
+      sprite s_CLOSED_spr;    \
+      pmask  SOLID;           \
+      opaque s_CLOSED_opaque; \
+    } \
+    { \
+      name   s_OPEN_nm;     \
+      sprite s_OPEN_spr;    \
+      pmask  PASS_ALL;      \
+      opaque s_OPEN_opaque; \
+    } \
+    { \
+      name   s_LOCKED_nm;     \
+      sprite s_LOCKED_spr;    \
+      pmask  SOLID;           \
+      opaque s_LOCKED_opaque; \
+    } \
+    { \
+      name   s_MAGLOCK_nm;     \
+      sprite s_MAGLOCK_spr;    \
+      pmask  SOLID;            \
+      opaque s_MAGLOCK_opaque; \
+    } \
+  }   \
+  transitions {              \
+    state      s_CLOSED_nm;  \
+    event      MECH_OPEN;    \
+    next_state s_OPEN_nm;    \
+    actions {                \
+      send_signal MECH_OPEN; \
+      set_alarm   self_close_time MECH_CLOSE; \
+    } \
+      \
+    state      s_OPEN_nm;     \
+    event      MECH_CLOSE;    \
+    next_state s_CLOSED_nm;   \
+    actions {                 \
+      send_signal MECH_CLOSE; \
+    } \
+      \
+    state      s_CLOSED_nm;  \
+    event      MECH_LOCK;    \
+    next_state s_LOCKED_nm;  \
+    actions {                \
+      send_signal MECH_LOCK; \
+    } \
+      \
+    state      s_LOCKED_nm;    \
+    event      MECH_UNLOCK;    \
+    next_state s_CLOSED_nm;    \
+    actions {                  \
+      send_signal MECH_UNLOCK; \
+      set_alarm   self_lock_time MECH_LOCK; \
+    } \
+      \
+    state      s_CLOSED_nm;        \
+    event      MECH_MAGIC_LOCK;    \
+    next_state s_MAGLOCK_nm;       \
+    actions {                      \
+      send_signal MECH_MAGIC_LOCK; \
+    } \
+      \
+    state      s_MAGLOCK_nm;         \
+    event      MECH_MAGIC_UNLOCK;    \
+    next_state s_CLOSED_nm;          \
+    actions {                        \
+      send_signal MECH_MAGIC_UNLOCK; \
+    } \
+  }   \
+} /* MAKE_DOORLIKE_MECH() */
+
+
 MAKE_DOORLIKE_MECH(mech_vdoor, "door", 8,
                    "closed",           s_door,        1,
                    "open",             null,          0,
@@ -299,6 +415,12 @@ MAKE_DOORLIKE_MECH(mech_h_fence_gate, "gate", 8,
                    "locked",           s_hdoor_locked, 0,
                    "magically locked", s_hdoor_locked, 0);
 
+MAKE_SELF_LOCKING_DOORLIKE_MECH(mech_1hr_self_locking_hdoor, "door", 8,
+                   "closed",           s_hdoor,        1,
+                   "open",             null,           0,
+                   "locked",           s_hdoor_locked, 1,
+                   "magically locked", s_hdoor_locked, 1,
+                   TURNS_PER_HOUR);
 
 
 

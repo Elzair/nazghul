@@ -1519,7 +1519,7 @@ bool player_party::resting()
         return (hours_to_rest > 0);
 }
 
-bool player_party::throw_out_of_bed()
+void player_party::throw_out_of_bed()
 {
         assert(resting());
         awaken();

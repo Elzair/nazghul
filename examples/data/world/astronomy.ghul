@@ -59,7 +59,7 @@ moon_info {
     // Noon is 180, Sunrise(4AM) = 60, Sunset(8PM) = 300
     // 15 degrees per hour after midnight
     // (These numbers based on values in common.h)
-    arc    60;
+    arc    120;
     sprite s_sun;
   } // sun
 

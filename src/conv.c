@@ -95,6 +95,12 @@ static void prompt_amount(struct response *resp, struct conv *conv)
 	consolePrint("You give %d\n", conv->amount);
 }
 
+static void set_amount(struct response *resp, struct conv *conv)
+{
+	conv->amount = resp->amount;
+}
+
+
 static void give_item(struct response *resp, struct conv *conv)
 {
 	// Note: for now ignore the speaker's inventory. Not realistic, but
@@ -1272,6 +1278,10 @@ struct response *load_response_chain(class Loader * loader)
 			resp->fx = attack;
 		} else if (loader->matchWord("GET_AMOUNT")) {
 			resp->fx = prompt_amount;
+		} else if (loader->matchWord("SET_AMOUNT")) {
+			if (!loader->getInt(&resp->amount))
+				goto fail;
+			resp->fx = set_amount;
 		} else if (loader->matchWord("CHECK_PARM")) {
 			if (!api_parse_check_parm(loader, resp))
 				goto fail;

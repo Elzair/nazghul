@@ -1,0 +1,104 @@
+//
+// Copyright-Only Dedication (based on United States law)
+//
+// The person or persons who have associated their work with this document (the
+// "Dedicator") hereby dedicate the entire copyright in the work of authorship
+// identified below (the "Work") to the public domain.
+//
+// Dedicator makes this dedication for the benefit of the public at large and
+// to the detriment of Dedicator's heirs and successors. Dedicator intends this
+// dedication to be an overt act of relinquishment in perpetuity of all present
+// and future rights under copyright law, whether vested or contingent, in the
+// Work. Dedicator understands that such relinquishment of all rights includes
+// the relinquishment of all rights to enforce (by lawsuit or otherwise) those
+// copyrights in the Work.
+//
+// Dedicator recognizes that, once placed in the public domain, the Work may be
+// freely reproduced, distributed, transmitted, used, modified, built upon, or
+// otherwise exploited by anyone for any purpose, commercial or non-commercial,
+// and in any way, including by methods that have not yet been invented or
+// conceived.
+//
+
+#ifndef ch_doris_the_inkeeper
+#define ch_doris_the_inkeeper
+
+#include "../conversations/C_green_tower.ghul"
+
+RESP resp_doris_name {
+        SAY "Hi, I'm Doris, innkeeper of the White Stag Lodge.";
+}
+
+RESP resp_doris_default {
+        SAY "Let me think... nope, can't help you there.";
+}
+
+RESP resp_doris_join {
+        SAY "[laughing] No thanks! I've got my hands full with the lodge.";
+}
+
+RESP resp_doris_doris {
+        SAY "Yep. That's me.";
+}
+
+RESP resp_doris_trade {
+        SAY "My rooms are 25 gold. I'll unlock the door for an hour and you can sleep for as long as you like. What do you say?";
+
+        GET_YES_NO {
+                CHECK_PARM GOLD > 25 {
+                        SET_AMOUNT 25;
+                        TAKE GOLD;
+                        SAY "Very well. Take the west passage. First room at the end of the hall.";
+                        send_signal ws_A_door MECH_UNLOCK;
+                        
+                } {
+                        SAY "Seems you're short of funds. Why don't you walk around and kill things until you loot enough corpses? Or whatever you bold adventurers do. [she smiles a bit too sweetly]";
+                }
+        } {
+                SAY "Maybe some other time, then.";
+        }
+}
+
+CONV conv_doris {
+        IMPORT { 
+                c_generic;
+                GreenTower_Common_Conv;
+        }
+        NATIVE {
+                NAME    resp_doris_name;
+                DEFAULT resp_doris_default;
+                JOIN    resp_doris_join;
+                DORIS   resp_doris_doris;
+                BUY     resp_doris_trade;
+        }
+}
+
+SCHED sched_doris {
+     // Specific to Green Tower:
+     // hr mn x  y  w  h  act
+        0  0  58 61 1  1  SLEEPING;
+        8  0  47 59 10 1  WORKING;
+        24 0  58 61 1  1  SLEEPING;
+}
+
+CHAR char_doris {
+        name      "Doris";
+        species   human;
+        occ       merchant;
+        sprite    s_green_townsman;
+        hp        30;
+        xp        1000;
+        cond      G;
+        str       110;
+        intl      100;
+        dex       100;
+        magic     0;
+        lvl       3;
+        conv      conv_doris;
+        readied {
+        }
+        sched     sched_doris;
+
+}
+
+#endif

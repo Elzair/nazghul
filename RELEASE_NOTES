@@ -2,6 +2,13 @@ Changes between nazghul-0.1.2 and nazghul-0.1.3
 
 gmcnutt:
 
+--Created a simple inn where the player can check out a room to sleep
+  in. Haven't perfected the logic behind locking the player back out when he's
+  done, or kicking him out if he sleeps too long, etc. I wanted to this
+  completely with mechs, and I think it can be done (except for the kicking out
+  of bed part). Maybe Sam can figure out a nice way to do inns, it seems like
+  his kind of puzzle.
+
 --Npc parties now wake up the player if he is sleeping in their bed. They don't
   throw him out like they do in u5, but they will keep waking the player up
   until he moves and let's them get into bed.

@@ -34,6 +34,11 @@
 #define TRUE  1
 #define FALSE 0
 
+/*
+ * TODO: instead of being hardcoded, this one should be specified within the
+ * script and used by the engine.
+ */
+#define TURNS_PER_HOUR 3600
 
 /*
  *  Facings. These need to correspond with the direction macros in common.h,
