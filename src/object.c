@@ -602,8 +602,7 @@ Object::~Object()
                 setView(NULL);                
         }                
 
-        if (conv)
-                closure_unref(conv);
+        closure_unref_safe(conv);
 
         // For each type of hook...
         for (i = 0; i < OBJ_NUM_HOOKS; i++) {

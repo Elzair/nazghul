@@ -245,8 +245,6 @@ Character::~Character()
 	if (rdyArms != NULL)
 		free(rdyArms);
 
-        closure_unref_safe(conv);
-
         if (party)
                 party->removeMember(this);
 
