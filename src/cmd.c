@@ -377,6 +377,29 @@ void emit_terraform_status (char * msg, struct terrain_palette * pp,
             tt->name);
 }
 
+static void cmd_terraform_fill(struct terrain *nt, struct terrain *ot, 
+                               struct place *place, int x, int y)
+{
+        struct terrain *ct = place_get_terrain(place, x, y);
+
+        /* base case 1: off-map */
+        if (!ct)
+                return;
+
+        /* base case 2: current terrain does not match old terrain */
+        if (ct != ot)
+                return;
+
+        /* recursive case - change current terrain to new terrain */
+        place_set_terrain(place, x, y, nt);
+        vmask_invalidate(place, x, y, 1, 1);
+
+        /* recur on four neighbors */
+        cmd_terraform_fill(nt, ot, place, x-1, y);
+        cmd_terraform_fill(nt, ot, place, x+1, y);
+        cmd_terraform_fill(nt, ot, place, x, y-1);
+        cmd_terraform_fill(nt, ot, place, x, y+1);
+}
 
 /*
  * cmd_terraform_movecursor_and_do - key handler function for terraform mode
@@ -387,7 +410,9 @@ int cmd_terraform_movecursor_and_do(struct KeyHandler * kh, int key,
         struct terraform_mode_keyhandler * data;
         struct terrain_palette * pp;
         struct terrain * tt;
+
         assert(kh);
+
         data = (struct terraform_mode_keyhandler *) kh->data;
         pp   = data->palette;
   
@@ -435,6 +460,23 @@ int cmd_terraform_movecursor_and_do(struct KeyHandler * kh, int key,
                 if (index >= 0) {
                         palette_set_current_terrain(pp, index);
                         emit_terraform_status("Here", pp, tt);
+                }
+                return 0;
+        }
+
+        if (key == 'f') {
+                /* "Fill" using the 4-neighbors algorithm */
+                tt = palette_current_terrain(pp);
+                if (tt) {
+                        struct terrain *ot;
+                        ot = place_get_terrain(Session->crosshair->getPlace(),
+                                               Session->crosshair->getX(),
+                                               Session->crosshair->getY());
+                        cmd_terraform_fill(tt, ot,
+                                           Session->crosshair->getPlace(),
+                                           Session->crosshair->getX(),
+                                           Session->crosshair->getY());
+                        mapUpdate(0);
                 }
                 return 0;
         }
