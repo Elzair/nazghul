@@ -100,6 +100,21 @@
                  (run-loop (- n 1)))))))
   (run-loop count))
 
+;; Like summon but the beings are permanent, not temporary.
+(define (psummon origin mk-critter count)
+  (define (run-loop n)
+    (if (= n 0) nil
+        (let* ((critter (mk-critter))
+               (loc (pick-loc origin critter)))
+          (cond ((null? loc) 
+                 (kern-obj-destroy critter) 
+                 nil)
+                (else
+                 (kern-obj-put-at critter loc)
+                 (run-loop (- n 1)))))))
+  (run-loop count))
+
+
 ;; Check if an object is hostile toward a character
 (define (is-hostile? kchar kobj)
   (and (kern-obj-is-char? kobj)

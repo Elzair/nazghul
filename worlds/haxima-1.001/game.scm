@@ -90,12 +90,14 @@
 
 ;; Factions. The diplomacy table (which defines the relationship between
 ;; factions) must be defined in the session file, because it changes over time.
-(define faction-none     0)
-(define faction-player   1)
-(define faction-men      2)
-(define faction-orks     3)
-(define faction-accursed 4)
-(define faction-monster  5)
+(define faction-none        0)
+(define faction-player      1)
+(define faction-men         2)
+(define faction-orks        3)
+(define faction-accursed    4)
+(define faction-monster     5)
+(define faction-hill-troll  6)
+(define faction-wood-spider 7)
 
 ;; Layers (must match object.h)
 (define layer-none       0)

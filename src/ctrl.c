@@ -324,10 +324,8 @@ void ctrl_do_attack(class Character *character, class ArmsType *weapon,
         // roll for damage
         damage = dice_roll(weapon->getDamageDice());
         armor = target->getArmor();
-        dbg("Rolled %d damage, %d armor ", damage, armor);
         damage -= armor;
         damage = max(damage, 0);
-        dbg("for %d total damage, ", damage);
         target->damage(damage);
 
         log_end("%s!", target->getWoundDescription());

@@ -528,7 +528,7 @@ MoveResult player_party::move(int newdx, int newdy)
 
                 // run the place's pre-entry hook, if applicable
                 if (info.subplace->pre_entry_hook &&
-                    ! closure_exec(info.subplace->pre_entry_hook, "p", this))
+                    ! closure_exec(info.subplace->pre_entry_hook, "pp", info.subplace, this))
                         return UserCanceled;
 
                 return try_to_enter_subplace_from_edge(info.subplace, info.dx, 

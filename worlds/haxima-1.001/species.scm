@@ -147,6 +147,7 @@
                  )
 
 (load "troll.scm")
+(load "spider.scm")
 
 ;;----------------------------------------------------------------------------
 ;; This list of the undead species is used by spells which affect the undead.

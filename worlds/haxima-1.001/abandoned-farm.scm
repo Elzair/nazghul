@@ -65,8 +65,14 @@
                nil ; neighbors
                ;;objects
                (list
-                (list (mk-troll faction-monster) 20 13)
+                ;;(list (mk-troll faction-monster) 20 13)
                 )
-               nil ; hooks
+               (list 'af-entry) ; hooks
                nil ; edge entrances
                )
+
+;; ----------------------------------------------------------------------------
+;; The entry hooks must be kern-loaded from a separate file, since they are
+;; read-only and not saved with the session.
+;; ----------------------------------------------------------------------------
+(kern-load "af-entry.scm")
