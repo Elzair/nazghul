@@ -269,8 +269,8 @@ void Character::damage(int amount)
         Object::damage(amount);
 
         soundPlay(get_damage_sound(), SOUND_MAX_VOLUME);
-        amount = min(amount, hp);
-	hp -= amount;
+
+        setHp(hp - amount);
 	if (hp <= 0)
 		kill();
 
@@ -1386,8 +1386,10 @@ int Character::getArmourClass() {
         return ac;
 }
 
-void Character::setHp(int hp) {
-        this->hp = hp;
+void Character::setHp(int val) 
+{
+        hp = val;
+        hp = clamp(hp, 0, getMaxHp());
 }
 
 bool Character::isPlayerControlled() {

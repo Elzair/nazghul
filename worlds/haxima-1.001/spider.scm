@@ -1,5 +1,6 @@
 ;; Local variables
 (define spider-melee-weapon t_hands)
+(define web-spew-range      3)
 
 ;;----------------------------------------------------------------------------
 ;; Species declaration (used by the kernel)
@@ -68,18 +69,34 @@
 ;; Wood Spider AI
 ;; ============================================================================
 
-(define (ensnare-loc kspider loc)
+(define (suck-hp kspider ktarg amount)
+  (kern-log-msg (kern-obj-get-name kspider) 
+                " sucks the juices from " 
+                (kern-obj-get-name ktarg))
+  (let ((amount (min amount (kern-char-get-hp ktarg))))
+    (kern-obj-apply-damage ktarg nil amount)
+    (kern-obj-heal kspider amount)))
+
+(define (ensnare-loc loc)
   (display "ensnare-loc")(newline)
   (kern-obj-put-at (kern-mk-obj web-type 1) loc))
+
+(define (spew-web kspider dir)
+  (display "spew-web:dir=")(display dir)(newline)
+  (let ((loc (kern-obj-get-location kspider)))
+    (display "mark")(newline)
+    (cast-wind-spell2 loc
+                      ensnare-loc
+                      dir
+                      web-spew-range)))
 
 (define (wood-spider-no-hostiles kspider)
   (display "wood-spider-no-hostiles")(newline)
   (let ((loc (kern-obj-get-location kspider)))
     (if (not (is-object-type-at? loc web-type))
-        (ensnare-loc kspider loc)))
+        (ensnare-loc loc)))
   (wander kspider))
 
-;; fixme: add is-paralyzed? once that's implemented
 (define (is-helpless? kchar)
   (or (kern-char-is-asleep? kchar)
       (is-ensnared? kchar)))
@@ -87,19 +104,56 @@
 (define (wood-spider-attack-helpless-foe kspider kfoe)
   (define (attack kspider coords)
     (display "wood-spider-attack")(newline)
-    (kern-char-attack kspider spider-melee-weapon kfoe))
+    (suck-hp kspider kfoe (kern-dice-roll "1d6")))
   (display "wood-spider-attack-helpless-foe")(newline)
   (do-or-goto kspider (kern-obj-get-location kfoe) attack))
+
+(define (wood-spider-can-spew-web? kspider)
+  ;; fixme: I want this to depend on the spider's level
+  #t)
+
+(define (wood-spider-spew-web-at-foe kspider kfoe)
+  (display "wood-spider-spew-web-at-foe")(newline)
+  (let* ((v (loc-diff (kern-obj-get-location kfoe)
+                      (kern-obj-get-location kspider)))
+         (dir (loc-to-cardinal-dir v)))
+    (display "v=")(display v)(newline)
+    (spew-web kspider dir)))
+
+(define (wood-spider-foe-in-range-of-web-spew? kspider kfoe)
+  (display "wood-spider-foe-in-range-of-web-spew?")(newline)
+  (let ((v (loc-diff (kern-obj-get-location kspider)
+                      (kern-obj-get-location kfoe))))
+    (and (< (abs (loc-x v)) web-spew-range)
+         (< (abs (loc-y v)) web-spew-range))))
+
+(define (wood-spider-pathfind-to-foe kspider kfoe)
+  (display "wood-spider-pathfind-to-foe")(newline)
+  (pathfind kspider (kern-obj-get-location kfoe)))
+
+(define (wood-spider-try-to-spew-web kspider foe)
+  (display "wood-spider-try-to-spew-web")(newline)
+  (if (wood-spider-foe-in-range-of-web-spew? kspider foe)
+      (wood-spider-spew-web-at-foe kspider foe)
+      (wood-spider-pathfind-to-foe kspider foe)))
+
+(define (wood-spider-no-helpless-foes kspider foes)
+  (display "wood-spider-no-helpless-foes")(newline)
+  (if (wood-spider-can-spew-web? kspider)
+      (wood-spider-try-to-spew-web kspider (closest-obj 
+                                            (kern-obj-get-location kspider)
+                                            foes))
+      (evade kspider foes)))
 
 (define (wood-spider-hostiles kspider foes)
   (display "wood-spider-hostiles")(newline)
   (let ((helpless-foes (filter is-helpless? foes)))
-    (display "helpless-foes:")(display helpless-foes)(newline)
     (if (null? helpless-foes)
-        (evade kspider foes)
+        (wood-spider-no-helpless-foes kspider foes)
         (wood-spider-attack-helpless-foe kspider 
-                                         (closest-obj kspider 
-                                                      helpless-foes)))))
+                                         (closest-obj 
+                                          (kern-obj-get-location kspider)
+                                          helpless-foes)))))
 
 (define (wood-spider-ai kspider)
   (newline)(display "spider-ai")(newline)

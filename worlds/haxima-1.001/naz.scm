@@ -388,6 +388,10 @@
 ;; the list that is closest (in city-block distance) to the origin
 ;; ----------------------------------------------------------------------------
 (define (closest-obj origin lst)
+  (display "closest-obj")
+  (display " origin=")(display origin)
+  (display " lst=")(display lst)
+  (newline)
   (if (null? lst) nil
       (foldr (lambda (a b) 
                (if (loc-closer? (kern-obj-get-location a)

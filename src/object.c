@@ -1505,10 +1505,17 @@ bool Object::removeEffect(struct effect *effect)
 {
         struct list *elem;
         struct hook_list *hl;
+        int hook_id = effect->hook_id;
 
         assert(VALID_HOOK_ID(effect->hook_id));
         
-        hl = &hooks[effect->hook_id];
+        // Hack: NPC's don't go through a keystroke handler. For these,
+        // substitute the start-of-turn-hook for the keystroke-hook.
+        if (effect->hook_id == OBJ_HOOK_KEYSTROKE &&
+            ! isPlayerControlled())
+                hook_id = OBJ_HOOK_START_OF_TURN;
+
+        hl = &hooks[hook_id];
 
         elem = hook_list_first(hl);
         while (elem != hook_list_end(hl)) {

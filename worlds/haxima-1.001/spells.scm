@@ -235,6 +235,25 @@
                   (else
                    (map doline (cdr lines))
                    (kern-map-repaint))))))))
+
+;; This version:
+;;   o has caller-limited depth
+;;   o has caller-specified direction
+;;   o applies caller-specified proc to each location
+;; (Note: currently used for the spider's web-spew "spell")
+(define (cast-wind-spell2 origin proc dir depth)
+  (display "cast-wind-spell2")(newline)
+  (define (dropfield loc)
+    (if (kern-is-valid-location? loc)
+        (proc loc)))
+  (define (doline line)
+    (map dropfield line)
+    (kern-map-repaint))
+  (let ((lines (get-cone origin depth dir)))
+    (cond ((null? lines) nil)
+          (else
+           (map doline (cdr lines))
+           (kern-map-repaint)))))
   
 ;; ----------------------------------------------------------------------------
 ;; All the spell cast handlers are listed here. These are the procedures that

@@ -9,9 +9,50 @@
           (op (loc-x a) (loc-x b))
           (op (loc-y a) (loc-y b))))
 (define (loc-sum a b) (loc-op a b +))
-(define (loc-diff a b) (loc-op a b +))
 (define (loc-distance a b)
   (kern-get-distance a b))
+
+(define (loc-diff a b)
+  (let ((place (loc-place a)))
+    (if (kern-place-is-wrapping? place)
+        (let ((w (kern-place-get-width place)))
+          (mk-loc place 
+                  (mdist (loc-x a) (loc-x b) w)
+                  (mdist (loc-y a) (loc-y b) w)))
+        (mk-loc place
+                (- (loc-x a) (loc-x b))
+                (- (loc-y a) (loc-y b))))))
+
+(define (loc-to-cardinal-dir loc)
+  (let ((x (loc-x loc))
+        (y (loc-y loc)))
+    (display "loc-to-cardinal-dir")
+    (display " x=")(display x)
+    (display " y=")(display y)
+    (newline)
+    (if (> x 0)
+        ;; eastern half
+        (if (> y 0)
+          ;; southeast quarter
+          (if (> x y)
+              east
+              south)
+          ;; northeast quarter
+          (if (> x (abs y))
+              east
+              north))
+        ;; western half
+        (if (> y 0)
+            ;; southwest quarter
+            (if (> (abs x) y)
+                west
+                south)
+            ;; northwest quarter
+            (if (> (abs x) (abs y))
+                west
+                north)))))
+          
+          
 
 ;; ----------------------------------------------------------------------------
 ;; loc-grid-distance -- return the distance needed to walk between two points
