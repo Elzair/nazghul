@@ -130,6 +130,9 @@ static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
                 cmdZoomIn();
                 party->endTurn();
                 break;
+        case '?':
+                cmdHelp();
+                break;
 
         case KEY_CTRL_D:
                 cmdDumpPalette();
@@ -749,6 +752,9 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
         case ' ':
                 log_msg("Pass");
                 character->endTurn();
+                break;
+        case '?':
+                cmdHelp();
                 break;
 
         case SDLK_1:

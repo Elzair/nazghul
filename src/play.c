@@ -337,6 +337,8 @@ int playRun(void)
         log_msg("*********************************");
         log_end_group();
 
+        log_msg("'?' for help.");
+
         // Run the optional startup script.
         session_run_start_proc(Session);
 

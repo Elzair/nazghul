@@ -2927,3 +2927,51 @@ void ui_trade(struct merchant *merch)
 		}
 	}
 }
+
+static char *cmd_help_text =
+"Use the arrow keys to indicate direction.\n"
+"Use the ESC key to cancel commands.\n"
+"Use the first letter to start a command.\n"
+"\n"
+"A)ttack something\n"
+"B)oard a ship or other vehicle\n"
+"C)ast a spell\n"
+"E)nter a town or dungeon\n"
+"F)ire a ship's cannon or other ordnance\n"
+"G)et something on the ground\n"
+"H)andle a lever or other mechanism\n"
+"N)ew-Order (rearrange party order)\n"
+"O)pen a chest, door or other closed object\n"
+"Q)uit and save the game\n"
+"R)eady arms for a party member\n"
+"S)earch for hidden stuff\n"
+"T)alk to somebody\n"
+"U)se an item in inventory\n"
+"Z)tats (show party status)\n"
+"X)amine around\n"
+"@)AT (info about place & time)\n"
+"<space> (pass a turn)\n"
+"CTRL-Q)uit saves without quitting\n"
+"CTRL-R)eload the last saved game\n"
+"\n"
+"When talking to people, enter a keyword.\n"
+"Most people reply to NAME, JOB, TRADE and\n"
+"JOIN. Their replies will give you hints\n"
+"about more keywords.\n"
+;
+
+void cmdHelp(void)
+{
+        struct KeyHandler kh;
+
+        statusSetPageText("Commands", cmd_help_text);
+        statusSetMode(Page);
+
+        kh.fx = scroller;
+        kh.data = NULL;
+	eventPushKeyHandler(&kh);
+	eventHandle();
+	eventPopKeyHandler();
+
+        statusSetMode(ShowParty);
+}
