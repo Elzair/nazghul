@@ -1,0 +1,131 @@
+* Startup
+
+Life begins in main() in nazghul.c. First we parse command-line arguments, then
+we initialize all the internal "libs" or "modules" (they aren't really modular,
+but they are conceptually separate).
+
+By the time all this is done SDL has been initialized, all the UI widgets are
+ready, the internal libs are ready for use and we have an empty player party
+allocated (not sure we need that last thing there).
+
+** commonInit
+
+Sets the globals:
+
+Tick - drives the tick work queue, currently only used by the kern-add-tick-job
+       call, which in turn is currently only used by the moongate sequence
+
+Turn - drives the turn work queue, which appears to be completely obsolete and
+       unfreferenced by anyone
+
+Also seeds srand() and initializes the busywait loop, which in turn is only
+used by map.c to add a small delay to projectile animations.
+
+** screenInit
+
+Bunch of stuff related to screen colors and special blitting surfaces, but most
+importantly this is where SDL_Init gets called to setup the SDL lib.
+
+** spriteInit
+
+Initializes the ticks_to_next_animation counter. This could probably be done
+statically, eliminating the need for this call altogether.
+
+** player_init
+
+Creates a player party object. Do I still need to do this here, just so I can
+blow it away on reload? I hope not. Maybe things will be clear by the time I'm
+done writing these notes.
+
+*** player party constructor
+
+Bunch of harmless initialization. Creates a view for the party, which may be
+interesting later... the base Object class destructor will destroy it.
+
+** eventInit
+
+Inits the handler stacks (leaves them empty), sets up to record or playback
+events, and enables unicode in SDL.
+
+** windInit
+
+Sets up the screen rectangles for the viewer, sets default wind direction to
+NORTH.
+
+** formationInit
+
+Wow, totally forgot about this one. The formation is just a big array of
+vectors. The init sets the default formation to this array, accessible via
+formation_get_default(), which is still used to this day in combat.c since most
+party types  don't specify a formation. Damn, I probably haven't looked at that
+code for two years.
+
+** astar_init
+
+Allocates the priority heap used by the alg.
+
+** cmdwinInit
+
+Sets up the screen rects, allocates the line buffer, clears the cmdwin and
+opens the cmdwin log file.
+
+** consoleInit
+
+Sets up the screen rect, allocates the text buffer, inits all the pointers and
+indices and opens the console log file.
+
+** mapInit
+
+Creates a persistent camera view, inits the (empty) list of map views, sets up
+the screen rects and some flags.
+
+** vmask_init
+
+Initializes some vars to empty/nil/etc.
+
+** combatInit
+
+Sets combat state to COMBAT_STATE_DONE and zeros out all the other combat vars.
+
+** foogodInit
+
+Sets up the screen rects.
+
+** statusInit
+
+Sets up the screen rects and dimensions.
+
+
+** soundInit
+
+Sets up SDL_audio which will kick off a thread that keeps calling into the
+sound_mix() function for more stuff to play. We only do this if the useSound
+flag is set.
+
+** nazghul_splash
+
+Opens a splash image file and blits it to the screen.
+
+** tick_start
+
+Kicks off the timer tick thread to generate tick events.
+
+** playRun
+
+This loads the session, starts it up, pushes the default tick and quit handlers
+then enters the main loop. If the session fails to load it will return an error
+to main(), which will 
+
+*** session_load
+
+The easy part is now over. The global Session pointer is initialized to NULL
+statically. session_load() remembers the existing session so it can try and go
+back to it if things go badly setting up the new one.
+
+session_load() opens the load file, creates a new instance of scheme, creates a
+new session instance, then tells scheme to load from the opened FILE
+pointer. Scheme runs all the code, most of which invokes calls into the kern
+API to setup kernel data structures, objects and parameters. Calls that setup
+read-once things like ObjectTypes put themselves on the session data_objects
+list for cleanup.
+

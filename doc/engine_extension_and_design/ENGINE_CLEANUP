@@ -1,0 +1,25 @@
+* Command-line args. Go through and remove unused/unwanted commands. Document
+  others in the USERS_GUIDE.
+
+* Remove all references to the obsolete Turn counter, including the unused work
+  queue. 
+
+* Remove the useless spriteInit call
+
+* The two player_party constructors share a lot of common initialization
+  code. Pull that into a setup method. In fact, the default one is only used by
+  the suspect player_init() function traditionally invoked on startup so look
+  at getting rid of it, first.
+
+* Pull default formation code into combat.c and get rid of formation.[ch]?
+  Check that reference to it in Party.cpp first.
+
+* player_party should at least be per-session (even if the session is globally
+  accessible) to get rid of the creation/destruction conflict in
+  kern_mk_player.
+
+* Use refcounts on all the read-only structures like sprite sets, sprites,
+  etc. The session needs to hold a reference until done loading, then it should
+  traverse everything and release its reference. Hmm... no, that may not
+  work. Anything clicked with a scm_define() will be referenced by the
+  interpreter...
