@@ -741,37 +741,41 @@ static void mapPaintPlace(struct place *place,
 				break;
 			}
 
-			/* Skip terrain that is masked out unless
-                           show-all-terrain is in effect */
-			if (!ShowAllTerrain && use_mask && !mask[mask_i + col])
-				continue;
-
                         /* Set the screen pixel column */
 			scr_x = col * tile_w + dest->x;
 
-			/* Paint the terrain */
+                        // Is the tile visible?
+                        if (use_mask && !mask[mask_i + col]) {
+                                
+                                // No - is show all terrain in effect?
+                                if (!ShowAllTerrain) {
+
+                                        // No - skip this tile
+                                        continue;
+                                }
+
+                                // Yes - paint the terrain and then
+                                // shade it.
+                                terrain = place_get_terrain(place,map_x,map_y);
+                                sprite = terrain->sprite;
+                                spritePaint(sprite, 0, scr_x, scr_y);
+                                
+                                SDL_Rect shade_rect;
+                                shade_rect.x = scr_x;
+                                shade_rect.y = scr_y;
+                                shade_rect.w = TILE_W;
+                                shade_rect.h = TILE_H;
+                                screenShade(&shade_rect, 128);
+
+                                // Do NOT paint objects on this tile
+                                continue;
+                        }
+
+                        // Tile is visible, so paint terrain and objects.
                         terrain = place_get_terrain(place, map_x, map_y);
 			sprite = terrain->sprite;
 			spritePaint(sprite, 0, scr_x, scr_y);
-
-			/* Shade terrain that is masked out if show-all-terrain
-                           is in effect */
-			if (ShowAllTerrain) { 
-                                if (use_mask && !mask[mask_i + col]) {
-                                        SDL_Rect shade_rect;
-                                        shade_rect.x = scr_x;
-                                        shade_rect.y = scr_y;
-                                        shade_rect.w = TILE_W;
-                                        shade_rect.h = TILE_H;
-                                        screenShade(&shade_rect, 128);
-                                }
-                        } else {
-                                /* Show-all-terrain is not in effect, so this
-                                   tile must not be masked out. Paint the
-                                   objects. */
-                                place_paint_objects(place, map_x, map_y, 
-                                                    scr_x, scr_y);
-                        }
+                        place_paint_objects(place, map_x, map_y, scr_x, scr_y);
 		}
 	}
 
