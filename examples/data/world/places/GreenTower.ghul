@@ -61,24 +61,24 @@ MAP GreenTower_Map {
     "|| || || || || || tt tt tt .. tt tt tt || || || || ||  b .. .. .. .. ..  b  d  b  d  b  d .. .. .. .. .. ..  b tt tt  b tt  b tt .. .. .. ..  b tt || || || || || || || || || || || || || || || ";  // 21
     "|| || || || ||  b tt tt .. .. .. tt tt tt || || || || tt .. .. .. ..  d  d  d  d  d  d  d  b .. .. .. ..  b tt tt tt tt tt tt  b tt .. .. .. tt tt || || || || || || || || || || || || || || || ";  // 22
     "|| || || || || tt tt .. .. .. .. .. tt tt || || || ||  b .. .. ..  b  d || || || || ||  d  d  x cc cc  x tt tt || || || || || tt tt .. .. ..  b tt || || || || || || || || || || || || || || || ";  // 23
-    "|| || || || || tt tt tt .. .. .. tt tt tt || || || || || .. .. ..  d  d || || || ||  x  x  x  x cc cc  x  x  x  x || || || || tt  b .. .. .. tt tt || || || || || || || || || || || || || || || ";  // 24
+    "|| || || || || tt tt tt .. .. .. tt tt tt || || || || || .. .. ..  d  d || || || ||  x w+  x  x cc cc  x w+  x  x || || || || tt  b .. .. .. tt tt || || || || || || || || || || || || || || || ";  // 24
     "|| || || || || tt tt tt tt .. tt tt tt || || tt || ||  b .. .. ..  b  d || ||  x  x  x cc cc cc cc cc cc cc cc  x  x  x || || tt tt .. .. ..  b tt || || || || || || || || || || || || || || || ";  // 25
     "|| || tt tt tt tt || tt tt tt tt  b || || tt tt tt || || .. .. ..  d  d ||  x  x cc cc cc cc cc cc cc cc cc cc cc cc  x  x || tt  b .. .. .. tt tt || || || || || || || || || || || || || || || ";  // 26
     "|| || tt || || || || || tt tt tt || || || || tt || ||  b .. .. ..  b  d ||  x cc cc cc cc cc cc cc cc cc cc cc cc cc cc  x || tt tt .. .. .. tt tt || || || || || || || || || || || || || || || ";  // 27
     "tt tt tt || || || || || || || || || || || || || || || tt .. .. ..  d  d  x  x cc cc cc  x x!  x cc cc  x x!  x cc cc cc  x  x tt  b .. .. ..  b tt || || || || || || || || || || || || || || tt ";  // 28
     " b tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt  b .. .. ..  b  d  x cc cc cc  x  x || tt cc cc tt ||  x  x cc cc cc  x tt tt .. .. .. tt tt || || || || || || || || || || || || || || tt ";  // 29
-    ".. ..  b tt  b tt  b tt  b tt  b tt  b tt  b tt  b tt .. .. .. ..  d  b  x cc cc cc x! || tt .. cc cc .. tt || x! cc cc cc  x  b .. .. .. ..  b tt || || || || || || || || || || || || || || tt ";  // 30
+    ".. ..  b tt  b tt  b tt  b tt  b tt  b tt  b tt  b tt .. .. .. ..  d  b w+ cc cc cc x! || tt .. cc cc .. tt || x! cc cc cc w+  b .. .. .. ..  b tt || || || || || || || || || || || || || || tt ";  // 30
     ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x cc cc cc  x tt ..  b cc cc  b .. tt  x cc cc cc  x .. .. .. .. .. tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt ";  // 31
     ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ";  // 32
     ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ";  // 33
     ".. ..  b tt  b tt  b tt  b tt  b tt  b tt tt  b tt  b .. .. .. .. .. ..  x cc cc cc  x tt ..  b cc cc  b .. tt  x cc cc cc  x .. .. .. .. .. tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt ";  // 34
-    " b tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt .. .. .. ..  b  x cc cc cc x! || tt .. cc cc .. tt || x! cc cc cc  x  b .. .. .. ..  b tt || || || || || || || || || || || tt tt tt tt ";  // 35
+    " b tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt .. .. .. ..  b w+ cc cc cc x! || tt .. cc cc .. tt || x! cc cc cc w+  b .. .. .. ..  b tt || || || || || || || || || || || tt tt tt tt ";  // 35
     "tt tt || || || || tt tt tt tt tt tt tt tt || || || tt tt .. .. .. .. tt  x cc cc cc  x  x || tt cc cc tt ||  x  x cc cc cc  x tt .. .. .. .. tt tt || || || || || || || || || || || || || || tt ";  // 36
     "tt tt || || || || tt tt tt tt tt tt tt tt || || || tt  b .. .. ..  b tt  x  x cc cc cc  x x!  x cc cc  x x!  x cc cc cc  x  x tt  b .. .. ..  b tt || || || || || || || || || || || || || || || ";  // 37
     "|| || || || || || || tt tt tt tt tt tt tt || || || tt tt .. .. .. tt tt ||  x cc cc cc cc cc cc cc cc cc cc cc cc cc cc  x || tt tt .. .. .. tt tt || || || || || || || || || || || || || || || ";  // 38
     "|| || || || || || || || tt tt tt tt tt tt || || || tt  b .. .. ..  b tt ||  x  x cc cc cc cc cc cc cc cc cc cc cc cc  x  x || tt  b .. .. ..  b tt || || || || || || || || || || || || || || || ";  // 39
     "|| || || || || || || || || || || || || || || || || tt tt .. .. .. tt tt || ||  x  x  x cc cc cc cc cc cc cc cc  x  x  x || || tt tt .. .. .. tt tt || || || || || || || || || || || || || || || ";  // 40
-    "|| || || || || || || || || || || || || || || || || tt  b .. .. ..  b tt || || || ||  x  x  x  x cc cc  x  x  x  x || || || || tt  b .. .. ..  b tt || || || || || || || || || || || || || || || ";  // 41
+    "|| || || || || || || || || || || || || || || || || tt  b .. .. ..  b tt || || || ||  x w+  x  x cc cc  x w+  x  x || || || || tt  b .. .. ..  b tt || || || || || || || || || || || || || || || ";  // 41
     "|| || || || || || || || || || || || || ||  r ||  r tt tt .. .. .. tt tt || || || || || tt tt  x cc cc  x tt tt || || || || tt tt tt .. .. .. tt tt || || || || || || || || || || || || || || || ";  // 42
     "|| || || || || || || || || || || || || || || || || tt  b .. .. ..  b tt tt tt tt tt tt tt  b .. .. .. ..  b tt tt tt tt tt tt tt  b .. .. ..  b tt tt tt tt tt tt tt || || || || || || || || || ";  // 43
     "|| || || || || || || tt tt tt tt || || || || || || tt tt .. .. .. .. tt  b tt  b tt  b .. .. .. .. .. .. .. ..  b tt  b tt  b tt .. .. .. .. .. tt  b tt  b tt  b tt || || || || || || || || || ";  // 44
@@ -86,7 +86,7 @@ MAP GreenTower_Map {
     "|| || ||  r  r tt tt tt || || tt tt  r  r  r || || tt tt .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  b tt || || || || || || || || || ";  // 46
     "|| || ||  r || || || tt tt tt || tt tt ||  r || || ||  b .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. tt tt || || || || || || || || || ";  // 47
     "|| || || || tt tt tt tt .. .. tt || tt tt ||  r  r || || tt  b tt  b tt  b tt  b tt  b tt  b tt .. .. tt  b tt  b tt  b tt  b tt  b tt  b tt  b tt tt  b .. ..  b tt || || || || || || || || || ";  // 48
-    "||  r  r || tt tt || .. ..  b .. tt tt tt tt ||  r  r || tt tt tt tt tt tt tt tt tt tt tt tt tt .. .. tt tt tt tt tt tt tt tt tt tt tt  x  x  x  x  0  x cc cc  x  0  x  x  x  x || || || || || ";  // 49
+    "||  r  r || tt tt || .. ..  b .. tt tt tt tt ||  r  r || tt tt tt tt tt tt tt tt tt tt tt tt tt .. .. tt tt tt tt tt tt tt tt tt tt tt  x  x  x  x w+  x cc cc  x w+  x  x  x  x || || || || || ";  // 49
     "|| || || || tt tt .. .. .. .. .. tt .. tt tt || ||  r || || || || || || || || || || || || || || .. .. tt || || || || || || || || || ||  x cc cc cc cc cc cc cc cc cc cc cc cc  x || || || || || ";  // 50
     "|| tt tt tt tt .. .. .. .. .. .. .. .. .. tt tt || tt tt || || || || || || || || || || || || || .. .. tt || || || || || || || || || ||  x cc cc cc cc cc cc cc cc cc cc cc cc  x || || || || || ";  // 51
     "|| tt tt tt ..  b .. .. .. .. .. .. ..  b .. tt .. tt tt tt tt tt tt || || || || || || || || || .. .. tt || || || || || || || || || ||  x cc cc  0 cc cc cc cc cc cc  0 cc cc  x || || || || || ";  // 52

@@ -180,6 +180,7 @@ terrains  {
   TERRAIN(t_rune_DOT, "a rune", SOLID, s_rune_DOTSEP, 162, SEE, 0, 0, 0);
 
   TERRAIN(t_red_roses, "roses", LAND,  s_trees_red,   163, SEE, 1, 0, 0);
+  TERRAIN(t_arrow_slit, "arrow slit", SOLID, s_arrow_slit, 154, SEE, 0, 0, 0);
         
 } /* terrains */
 
@@ -360,6 +361,7 @@ PALETTE pal_expanded {
         ">"    t_rightwing;
 
         "d"    t_red_roses;
+        "w+"   t_arrow_slit;
 } // PALETTE pal_expanded
 
 

@@ -96,7 +96,7 @@ SPRITE_SET ss_mine {
     SPRITE(s_open_solid_wood_door_in_rock,   1, 57, normal);
     SPRITE(s_locked_solid_wood_door_in_rock, 1, 58, normal);
     SPRITE(s_magically_locked_solid_wood_door_in_rock, 3, 59, normal);
-
+    SPRITE(s_arrow_slit,                     1, 62, normal);
 
   }
 } /* SPRITE_SET ss_mine */
