@@ -44,9 +44,12 @@ class ArmsType *Missile::getObjectType()
 
 void Missile::animate(int Ax, int Ay, int Bx, int By)
 {
+        int origBx = Bx;
+        int origBy = By;
+
         mapAnimateProjectile(Ax, Ay, &Bx, &By, getSprite(), getPlace());
 
-        hit = (Ax == Bx && Ay == By);
+        hit = (origBx == Bx && origBy == By);
 
 	// If this missile/thrown weapon is supposed to leave behind a field
 	// then create a field object and drop it on the final target
