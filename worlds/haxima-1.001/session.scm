@@ -398,6 +398,7 @@
   "__ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ -- -- -- -- __ __ __ __ __ __ __ "
   ))
 
+(load "gregors-hut.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Places
@@ -520,10 +521,11 @@
                #f                 ; tmp combat place
                (list
                 (list p_green_tower 35 23)
+                (list p_gregors_hut 3 17)
                 )
                nil ; neighbors
                (list
-                (list player 36 23)
+                (list player 3 18)
                 (list (kern-mk-party t_skeleton_brigade align-monster nil) 25 19)
                 (list (kern-mk-party t_slime_glob align-monster nil) 36 20)
                 (list (kern-mk-obj F_fire 1) 34 23)
