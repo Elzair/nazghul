@@ -169,6 +169,25 @@
                )
  (jim-mk))
 
+(kern-load "gwen.scm")
+(bind 
+ (kern-mk-char 'ch_jim ; tag
+               "Gwen the Innkeeper" ; name
+               sp_human            ; species
+               nil                 ; occ
+               s_townsman          ; sprite
+               faction-men         ; starting alignment
+               0 10 5              ; str/int/dex
+               0 0                 ; hp mod/mult
+               0 0                 ; mp mod/mult
+               30 0 9 9            ; hp/xp/mp/lvl
+               'gwen-conv          ; conv
+               sch_gwen           ; sched
+               nil                 ; special ai
+               nil                 ; container
+               nil                 ; readied
+               )
+ (gwen-mk))
 
 ;;----------------------------------------------------------------------------
 ;; Place
