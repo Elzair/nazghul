@@ -10,6 +10,11 @@ To compile and install nazghul:
 (Note: if you don't want to install as root then use the --prefix option with
 configure. E.g., ./configure --prefix=$HOME)
 
+The install presumes that the bin/ subdir of the --prefix where you
+installed nazghul is in your PATH.  Ergo, if you install to $HOME then
+the nazghul binary lives in $HOME/bin/nazghul and would need $HOME/bin
+in your PATH.
+
 To test out the example world:
 
         cd examples; nazghul
