@@ -1401,74 +1401,20 @@ static pointer kern_mk_occ(scheme *sc, pointer args)
         int mpmod, mpmult, hit, def, dam, arm, i, xpval;
         char *tag = TAG_UNK, *name;
         float magic;
-        class ObjectType *container;
-        pointer traps;
-        pointer arms;
-        pointer items;
         pointer ret;
 
         /* Basic args */
-        if (unpack(sc, &args, "ysrddddddddpd",
+        if (unpack(sc, &args, "ysrddddddddd",
                    &tag, &name, &magic, &hpmod, &hpmult, &mpmod, &mpmult, &hit,
-                   &def, &dam, &arm, &container, &xpval)) {
+                   &def, &dam, &arm, &xpval)) {
                 load_err("kern-mk-occ %s: bad args", tag);
                 return sc->NIL;
         }
 
-        if (scm_len(sc, args) < 3) {
-                load_err("kern-mk-occ %s: arg list too short", tag,
-                         argno++);
-                return sc->NIL;
-        }
-
-        traps = scm_car(sc, args);
-        arms = scm_car(sc, scm_cdr(sc, args));
-        items =  scm_car(sc, scm_cdr(sc, scm_cdr(sc, args)));
-
         occ = occ_new(tag, name, magic, hpmod, hpmult, mpmod, mpmult, hit, def,
-                      dam, arm, scm_len(sc, arms), scm_len(sc, items), 
-                      scm_len(sc, traps));
+                      dam, arm);
         occ_ref(occ);
-        occ->container = container;
         occ->xpval = xpval;
-
-        /* Traps */
-        i = 0;
-        while (scm_is_pair(sc, traps)) {
-                pointer func;
-                if (unpack(sc, &traps, "c", &func)) {
-                        load_err("kern-mk-occ %s: error in trap list", tag);
-                        goto abort;
-                }
-                closure_init(&occ->traps[i++], sc, func);
-                closure_ref(&occ->traps[i++]);
-        }
-
-        /* Arms */
-
-        i = 0;
-        while (scm_is_pair(sc, arms)) {
-                class ArmsType *dummy;
-                if (unpack(sc, &arms, "p", &dummy /*&occ->arms[i++]*/)) {
-                        load_err("kern-mk-occ %s: error in arms list", tag);
-                        goto abort;
-                }
-        }
-
-        /* Items */
-        i = 0;
-        while (scm_is_pair(sc, items)) {
-                pointer item = scm_car(sc, items);
-                if (unpack(sc, &item, "pdd",  
-                           &occ->items[i].type,
-                           &occ->items[i].prob, 
-                           &occ->items[i].n_max)) {
-                        load_err("kern-mk-occ %s: error in items list", tag);
-                        goto abort;
-                }
-                items = scm_cdr(sc, items);
-                i++;
-        }
 
         session_add(Session, occ, occ_dtor, NULL, NULL);
         ret = scm_mk_ptr(sc, occ);

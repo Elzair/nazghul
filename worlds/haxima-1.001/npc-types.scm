@@ -246,8 +246,11 @@
     oc_troll ;;.................occupation
     s_troll ;;..................sprite
     faction-hill-troll ;;.......faction
-    nil ;;......................custom ai (optional)
-    nil ;;......................container (and contents, used to arm char)
+    'troll-ai ;;................custom ai (optional)
+
+    ;;..........................container (and contents, used to arm char)
+    (mk-small-wooden-chest nil nil)
+
     nil ;;......................readied arms (in addition to container)
     nil ;;......................effects
     ))

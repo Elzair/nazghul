@@ -13,15 +13,7 @@
              -1                   ; def_mod 
              -1                   ; dam_mod 
              -1                   ; arm_mod
-             nil                  ; container 
              6                    ; xpval
-             nil                  ; typical traps 
-             (list 
-              t_dagger
-              )
-             (list                ; typical items
-              (list t_dagger 100 1)              
-              )
              )
 
 (kern-mk-occ 'oc_wanderer         ; tag
@@ -35,11 +27,7 @@
              +1                   ; def_mod 
              +1                   ; dam_mod 
              +1                   ; arm_mod
-             nil                  ; container 
              16                   ; xpval
-             nil                  ; typical traps 
-             nil                  ; typical arms
-             nil                  ; typical items
              )
 
 (kern-mk-occ 'oc_druid
@@ -53,15 +41,7 @@
              0                    ; def_mod 
              0                    ; dam_mod 
              0                    ; arm_mod
-             t_small_wooden_chest ; container 
              4                    ; xpval
-             nil                  ; typical traps 
-             (list 
-              t_dagger
-              )
-             (list                ; typical items
-              (list t_dagger 100 1)              
-              )
              )
 
 (kern-mk-occ 'oc_raider           ; tag
@@ -75,13 +55,7 @@
              -1                   ; def_mod 
              +2                   ; dam_mod 
              -1                   ; arm_mod
-             nil ; container 
              4                    ; xpval
-             nil    ; typical traps 
-             ;; readied:
-             nil
-             ;; items:
-             nil
              )
 
 (kern-mk-occ 'oc_bandit           ; tag
@@ -95,13 +69,7 @@
              -1                   ; def_mod 
              0                    ; dam_mod 
              0                    ; arm_mod
-             nil                  ; container 
              4                    ; xpval
-             nil                  ; typical traps 
-             ;; readied:
-             nil
-             ;; items:
-             nil
              )
 
 (kern-mk-occ 'oc_troll            ;; tag
@@ -115,12 +83,5 @@
              -1                   ;; def_mod 
              2                    ;; dam_mod 
              -1                   ;; arm_mod
-             troll-corpse-type    ;; container (needed for items)
              4                    ;; xpval
-             nil                  ;; typical traps on the container
-             ;; readied:
-             (list troll-ranged-weapon)
-             ;; items: typical equipment
-             (list (list troll-ranged-weapon 100 3)
-                   )
              )

@@ -49,17 +49,6 @@ struct occ {
         int dam_mod;  /* unused */
         int arm_mod;  /* unused */
         
-	class ObjectType *container;
-
-/* 	int n_arms; */
-/* 	class ArmsType **arms; */
-
-	int n_items;
-	struct typical_items *items;
-
-	int n_traps;
-	closure_t *traps;
-
         int xpval; /* reward for killing this type */
         int refcount;
 };
@@ -74,8 +63,7 @@ extern struct occ *occ_new(char *tag,
                            int hit_mod,
                            int def_mod,
                            int dam_mod,
-                           int arm_mod,
-                           int n_arms, int n_items, int n_traps);
+                           int arm_mod);
 
 extern void occ_unref(struct occ *occ);
 

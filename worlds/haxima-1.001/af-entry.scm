@@ -23,7 +23,7 @@
           (spiders (filter char-is-spider? chars)))
       (if (< (length trolls) 2)
           (psummon (mk-loc kplace 19 13)
-                  mk-hill-troll
+                  mk-troll
                   (kern-dice-roll "1d2")))
       (if (< (length spiders) 2)
           (af-spawn-spiders kplace (kern-dice-roll "1d2")))))

@@ -36,10 +36,6 @@ static void occ_del(struct occ *occ)
 		free(occ->tag);
 	if (occ->name)
 		free(occ->name);
-	if (occ->items)
-		free(occ->items);
-        if (occ->traps)
-                free(occ->traps);
         free(occ);
 }
 
@@ -53,8 +49,7 @@ extern struct occ *occ_new(char *tag,
                            int hit_mod,
                            int def_mod,
                            int dam_mod,
-                           int arm_mod,
-                           int n_arms, int n_items, int n_traps)
+                           int arm_mod)
 {
 	struct occ *occ = 0;
 
@@ -68,25 +63,6 @@ extern struct occ *occ_new(char *tag,
         occ->name = strdup(name);
         assert(occ->name);
 
-/*         if (n_arms > 0) { */
-/*                 occ->arms = (class ArmsType**)calloc(n_arms,  */
-/*                                                      sizeof(class ArmsType*)); */
-/*                 assert(occ->arms); */
-/*         } */
-
-        if (n_items > 0) {
-                occ->items = (struct typical_items*)calloc(
-                        n_items, 
-                        sizeof(struct typical_items));
-                assert(occ->items);
-        }
-
-        if (n_traps > 0) {
-                occ->traps = (closure_t*)calloc(n_traps, 
-                                                sizeof(occ->traps[0]));
-                assert(occ->traps);
-        }
-
         occ->magic = magic;
         occ->hp_mod = hp_mod;
         occ->hp_mult = hp_mult;
@@ -96,9 +72,6 @@ extern struct occ *occ_new(char *tag,
         occ->def_mod = def_mod;
         occ->dam_mod = dam_mod;
         occ->arm_mod = arm_mod;
-/*         occ->n_arms = n_arms; */
-        occ->n_items = n_items;
-        occ->n_traps = n_traps;
 
         assert(occ->tag);
         assert(occ->name);
