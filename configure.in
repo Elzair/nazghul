@@ -6,7 +6,7 @@ AC_CANONICAL_HOST
 AC_CANONICAL_TARGET
 
 dnl Setup for automake
-AM_INIT_AUTOMAKE(nazghul, 0.2.0)
+AM_INIT_AUTOMAKE(nazghul, 0.1.1)
 
 dnl Check for tools
 
