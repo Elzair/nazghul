@@ -67,6 +67,7 @@ class NpcPartyType:public ObjectType {
 	}
 
 	struct formation *formation;
+        struct sprite *sleep_sprite;
 
       protected:
 	int i_group;		// group index (for silly enumeration)
@@ -159,6 +160,7 @@ class NpcParty:public Object {
 	virtual struct formation *get_formation();
         virtual void describe(int count);
         virtual char *get_movement_sound();
+        virtual struct sprite *getSprite();
 
 	struct list members;
 

@@ -141,14 +141,14 @@ CONV Shrooms_Conv {
 SCHED Shrooms_Sched {
         // Specific to Green Tower:
      // hr mn x  y  w  h  act
-        0  0  50 9  1  1  SLEEPING;
+        0  0  51 9  1  1  SLEEPING;
         8  0  40 11 3  3  IDLE;      // picking shrooms
         9  0  49 6  7  1  WORKING;
         12 0  50 9  1  1  EATING;
         13 0  49 6  7  1  WORKING;
         18 0  56 54 1  1  EATING;
         19 0  46 50 12 7  IDLE;     // hanging out
-        21 0  50 9  1  1  SLEEPING;
+        21 0  51 9  1  1  SLEEPING;
 }
 
 CHAR Shroom_the_Hag {

@@ -1185,7 +1185,7 @@ static Object *game_load_place_item(struct place *place)
             (type = lookupNpcPartyType(Lexer->lexeme))) {
 
                 // gmcnutt: big glaring HACK. If this object type occupies the
-                // container layer then allocate is specifically as a
+                // container layer then allocate it specifically as a
                 // Container.
                 if (type->getLayer() == container_layer) {
 

@@ -52,6 +52,7 @@ NpcPartyType::NpcPartyType():formation(NULL), i_group(-1), n_groups(0),
                              groups(NULL),
                              pmask(0), vrad(0), speed(0)
 {
+        sleep_sprite = NULL;
 }
 
 NpcPartyType::~NpcPartyType()
@@ -75,6 +76,7 @@ bool NpcPartyType::init(class Character * ch)
 	speed = ch->getSpeed();
 	vrad = ch->getVisionRadius();
 	visible = ch->isVisible();
+        sleep_sprite = ch->species->sleep_sprite;
 	return true;
 }
 
@@ -230,6 +232,10 @@ bool NpcPartyType::load(class Loader * loader)
 		// invisible
 		if (groups[i].species->visible)
 			visible = true;
+
+                // Check if any of the groups have a sleep sprite
+                if (!sleep_sprite && groups[i].species->sleep_sprite)
+                        sleep_sprite = groups[i].species->sleep_sprite;
 	}
 
 	if (!loader->matchToken('}'))
@@ -886,8 +892,9 @@ bool NpcParty::load(class Loader * loader)
 			return false;
 
 		if (strcmp(conv_tag, "null")) {
-			conv = (struct conv *) loader->lookupTag(conv_tag,
-								 CONVERSATION_TYPE_ID);
+			conv = (struct conv *) 
+                                loader->lookupTag(conv_tag,
+                                                  CONVERSATION_TYPE_ID);
 			if (!conv) {
 				loader->setError("Invalid CONV tag '%s'",
 						 conv_tag);
@@ -1044,6 +1051,17 @@ void NpcParty::paint(int sx, int sy)
 		vehicle->paint(sx, sy);
 	else
 		Object::paint(sx, sy);
+}
+
+struct sprite *NpcParty::getSprite()
+{
+	if (vehicle)
+		return vehicle->getSprite();
+
+        if (act == SLEEPING && getObjectType()->sleep_sprite)
+                return getObjectType()->sleep_sprite;
+
+	return type->getSprite();
 }
 
 void NpcParty::disembark()

@@ -2,6 +2,9 @@ Changes between nazghul-0.1.2 and nazghul-0.1.3
 
 gmcnutt:
 
+--When npc parties are asleep they show a different sprite (if any species in
+  the party has a 'sleep_sprite' specified)
+
 --The player can now sleep in beds when in town. Added a bed object.
 
 --Added slimes. Hacked in a cloning effect to make them work, and added an
