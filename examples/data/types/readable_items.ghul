@@ -33,6 +33,10 @@
 #define readable_items_ghul
 
 
+ITEM_TYPE(t_short_scroll, "scroll", s_scroll1,
+          EFFECT_NONE, 0, 0, TARG_NONE, 0, 0,
+          "This is a short document.");
+
 ITEM_TYPE(t_users_guide, "The Users Guide to Nazghul", s_scroll1,
           EFFECT_NONE, 0, 0, TARG_NONE, 0, 0,
           "                                PLAYER COMMANDS

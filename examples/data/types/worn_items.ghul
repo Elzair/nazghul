@@ -29,14 +29,14 @@
 
 
 // Helms
-ARMS_TYPE(t_iron_helm, "iron helm",     s_helm9,         0,  4, HELM_SLOT,   0, 1, null,    0, 0, null,   10);
+ARMS_TYPE(t_iron_helm,  "iron helm",    s_helm9,     0, 4, HELM_SLOT,   0, 1, null, 0, 0, null, 10);
 
 // Shields
-ARMS_TYPE(t_sm_shield, "small shield",   s_shield1,      0, 2,  SHIELD_SLOT, 1, 1, null,     0, 0, null,  20);
-ARMS_TYPE(t_lrg_shield, "large sheild2", s_shield2,      0, 4,  SHIELD_SLOT, 1, 1, null,     0, 0, null,  30);
+ARMS_TYPE(t_sm_shield,  "small shield", s_shield1,   0, 2, SHIELD_SLOT, 1, 1, null, 0, 0, null, 20);
+ARMS_TYPE(t_lrg_shield, "large shield", s_shield2,   0, 4, SHIELD_SLOT, 1, 1, null, 0, 0, null, 30);
 
 // Body Armour
-ARMS_TYPE(t_ring_mail, "ring mail",      s_ring_mail,    0, 8, ARMOUR_SLOT, 1, 0, null,     0, 0, null,  60);
+ARMS_TYPE(t_ring_mail,  "ring mail",    s_ring_mail, 0, 8, ARMOUR_SLOT, 1, 0, null, 0, 0, null, 60);
 
 // Boots
 // (No boots yet)

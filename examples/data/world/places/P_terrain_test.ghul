@@ -33,8 +33,8 @@ MAP m_terrain_test {
   height  32;
   palette pal_expanded;
   terrain {
-//                               1  1  1  1  1  1  1  1  1  1  2  2  2  2 
-// 0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5  6  7  8  9  0  1  2  3 
+  //                               1  1  1  1  1  1  1  1  1  1  2  2  2  2 
+  // 0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5  6  7  8  9  0  1  2  3 
    "xx xx xx .. .. xx xx xx .. .. xx .. .. .. xx .. .. xx xx xx .. .. xx xx";  // 0
    "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx";  // x
    "xx .. .A .B .C .D .E .F .G .H .. .I .J .K .L .M .N .O .P .. .. .. .. ..";  // x
@@ -47,8 +47,8 @@ MAP m_terrain_test {
    ".. .. ,Q ,R ,S ,T ,U ,V ,W ,X .. ,Y ,Z ;T ;E ;N ;A ;S ;D .. .. .. .. ..";  // x
    "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx";  // 10
    "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx";  // x
-   "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx";  // x
-   ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..";  // x
+   "xx .. -- -- .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx";  // x
+   ".. .. -- -- .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..";  // x
    ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..";  // x
    ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..";  // x
    ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..";  // x
@@ -82,6 +82,47 @@ PLACE  p_terrain_test {
   map         m_terrain_test;
   underground 0;
   objects {
+    // To place most objects, use a line like the below:
+    // object_type_tag x y;
+
+//  t_chest1          11 29;  // Container  // Causes a segfault...why?
+
+    t_dagger          10 11;  // Weapon (dagger)
+    t_long_sword      10 12;
+
+    t_iron_helm       11 11;  // Worn item (helmet)
+    t_sm_shield       11 12;
+    t_lrg_shield      11 13;
+    t_ring_mail       11 14;
+
+
+    t_short_scroll    10 28;  // Document
+    item_sleep_potion 11 28;  // Usable item (potion)
+
+    F_fire    15 20;  // Fire   Field
+    F_poison  16 20;  // Poison Field
+    F_sleep   15 21;  // Sleep  Field
+    F_protect 16 21;  // Protection Field
+
+    t_arrow  2 27;  // Ammo (arrows)
+    t_bolt   2 28;  // Ammo (crossbow bolts)
+    t_rock   2 29;  // Ammo (rocks)
+
+    t_cannonball 4 25;  // Ammo (cannonball)
+
+    // Note sure these are ever "placed" objects.
+    // All the better reason to test them...
+    M_fire       4 26;  // Temporary projectiles
+    M_protect    4 27;
+    M_poison     4 28;
+    M_sleep      4 29;
+    M_fireball   4 30;
+
+    // To place a vehicle, use a line like the below:
+    // vehicle_type x y facing vehicle_HP;
+    vt_ship  2 12 east 100;  // Vehicle (ship)
+    vt_horse 2 15 east 100;  // Vehicle (horse)
+
   }
   object_type t_town;
 

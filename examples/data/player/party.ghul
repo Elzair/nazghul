@@ -117,24 +117,25 @@ player {
     3  t_spear;
   
     1  t_crossbow;
-    20 t_bolt;
+    99 t_bolt;
   
     1  t_bow;
     1  t_magic_bow;
-    20 t_arrow;
+    99 t_arrow;
   
     1  t_sling;
   
-    10 t_oil;
+    99 t_oil;
   
     // Armor and Worn Items          
     1  t_ring_mail;
   
     // Potions
-    6  t_red_potion;
-    3  t_blue_potion;
-    6  t_green_potion;
-    3  t_light_potion;
+    50 t_red_potion;
+    50 t_blue_potion;
+    50 t_green_potion;
+    50 t_light_potion;
+    50 item_sleep_potion;
   
     // Use-able Items
     99 t_torch;
@@ -142,6 +143,7 @@ player {
     12 t_mushroom1;
   
     1  t_users_guide;
+    1  t_short_scroll;
   
     // Reagents
     10 reagent_garlic;
