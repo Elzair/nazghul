@@ -26,11 +26,18 @@
 #include "player.h"
 #include "sprite.h"
 #include "cursor.h"
+#include "terrain.h"
 
 #include <SDL/SDL.h>
 
+#if 0
 #define MVIEW_W  (MAP_TILE_W)
 #define MVIEW_H  (MAP_TILE_H)
+#else
+#define MVIEW_W  (MAP_TILE_W * 2 + 1)
+#define MVIEW_H  (MAP_TILE_H * 2 + 1)
+#endif
+
 #define VMASK_SZ (MVIEW_W * MVIEW_H)
 #define MVIEW_SZ (sizeof(struct mview) + VMASK_SZ)
 #define MAX_LIGHTS (MVIEW_W * MVIEW_H)
@@ -48,6 +55,7 @@ static struct light_source {
 struct mview {
 	struct list list;	/* used internally by map lib */
 	SDL_Rect vrect;		/* map coords of vrect */
+        SDL_Rect subrect;       /* offset into visible subrect of vrect */
 	char *vmask;		/* visibility mask */
 	int rad;		/* light radius */
 	int zoom;
@@ -256,27 +264,30 @@ static void myBuildLightMap(struct mview *view)
 	}
 }
 
-static void myShadeScene(void)
+static void myShadeScene(SDL_Rect *subrect)
 {
-	int i, x, y;
+	int x, y;
 	SDL_Rect rect;
+        int lmap_i;
 
 	rect.x = Map.srect.x;
 	rect.y = Map.srect.y;
 	rect.w = TILE_W;
 	rect.h = TILE_H;
 
+        lmap_i = subrect->y * MVIEW_W + subrect->x;
+
 	/* Iterate over the tiles in the map window and the corresponding
 	 * values in the lightmap simultaneously */
-	for (y = 0, i = 0; y < MAP_TILE_H; y++, rect.y += TILE_H) {
+	for (y = 0; y < MAP_TILE_H; y++, rect.y += TILE_H, lmap_i += MVIEW_W) {
 		for (x = 0, rect.x = Map.srect.x;
-		     x < MAP_TILE_W; x++, i++, rect.x += TILE_W) {
+		     x < MAP_TILE_W; x++, rect.x += TILE_W) {
 
 			/* Set the shading based on the lightmap value. The
 			 * lightmap values must be converted to opacity values
 			 * for a black square, so I reverse them by subtracting
 			 * them from LIT. */
-			screenShade(&rect, LIT - lmap[i]);
+			screenShade(&rect, LIT - lmap[lmap_i + x]);
 		}
 	}
 }
@@ -338,7 +349,7 @@ int mapInit(char *los)
 	Map.peering = false;
 
 	/* fixme -- why create this here? why not just pass it in? */
-#if 1
+#if 0
 	LosEngine = los_create(los, MAP_TILE_W, MAP_TILE_H,
 			       map_use_circular_vision_radius ?
 			       MAX_VISION_RADIUS : -1);
@@ -396,6 +407,11 @@ struct mview *mapCreateView(void)
 	v->vrect.w = MVIEW_W;
 	v->vrect.h = MVIEW_H;
 	v->vmask = (char *) v + sizeof(*v);
+        v->zoom = 1;
+        v->subrect.w = MAP_TILE_W * v->zoom;
+        v->subrect.h = MAP_TILE_H * v->zoom;
+        v->subrect.x = (v->vrect.w - v->subrect.w) / 2;
+        v->subrect.y = (v->vrect.h - v->subrect.h) / 2;
 
 	return v;
 
@@ -421,8 +437,10 @@ void mapRmView(struct mview *view)
 
 void mapCenterView(struct mview *view, int x, int y)
 {
-	view->vrect.x = place_wrap_x(Map.place, x - view->vrect.w / 2);
-	view->vrect.y = place_wrap_y(Map.place, y - view->vrect.h / 2);
+        x -= view->vrect.w / 2; // back up to corner of vrect
+        y -= view->vrect.h / 2; // back up to corner of vrect
+	view->vrect.x = place_wrap_x(Map.place, x);
+	view->vrect.y = place_wrap_y(Map.place, y);
 }
 
 void mapRecomputeLos(struct mview *view)
@@ -480,14 +498,191 @@ static void map_paint_cursor(void)
         }
 
         // Paint it
-        sx = Map.srect.x + (x - Map.aview->vrect.x) * TILE_W;
-        sy = Map.srect.y + (y - Map.aview->vrect.y) * TILE_H;
+        sx = Map.srect.x + (x - (Map.aview->vrect.x + Map.aview->subrect.x)) * 
+                TILE_W;
+        sy = Map.srect.y + (y - (Map.aview->vrect.y + Map.aview->subrect.y)) * 
+                TILE_H;
         printf("[%d %d %d %d] [%d %d] [%d %d]\n", 
                Map.aview->vrect.x, Map.aview->vrect.y, 
                Map.aview->vrect.w, Map.aview->vrect.h,
                x, y, sx, sy);
         spritePaint(Cursor->getSprite(), 0, sx, sy);
 }
+
+static void mapPaintPlace(struct place *place, 
+                          SDL_Rect * region,   /* portion of place covered by
+                                                * the vmask */
+                          SDL_Rect * dest,     /* screen rectangle */
+                          unsigned char *mask, /* visibility mask for entire
+                                                * region */
+                          SDL_Rect * subrect,  /* sub-rectangle within region
+                                                * that the map viewer sees */
+                          int tile_h, 
+                          int tile_w)
+{
+	int row;
+	int col;
+	int map_y; /* in rows */
+	int map_x; /* in cols */
+	int scr_x; /* in pixels */
+	int scr_y; /* in pixels */
+        int mask_i;
+	bool use_mask;
+
+	if (place->wraps) {
+		region->x = place_wrap_x(place, region->x);
+		region->y = place_wrap_y(place, region->y);
+	}
+
+        /* 
+           +-----------------------------------------------------------------+
+           | region/mask                                                     |
+           |                                                                 |
+           |                    +-------------------------+                  |
+           |                    | subrect                 |                  |
+           |                    |                         |                  |
+           |                    |                         |                  |
+           |                    |                         |                  |
+           |                    |                         |                  |
+           |                    |                         |                  |
+           |                    |                         |                  |
+           |                    |                         |                  |
+           |                    |                         |                  |
+           |                    |                         |                  |
+           |                    |                         |                  |
+           |                    |                         |                  |
+           |                    +-------------------------+                  |
+           |                                                                 |
+           |                                                                 |
+           +-----------------------------------------------------------------+
+        */
+
+        /* 
+         * Paint the terrain.
+         */
+
+
+	use_mask = (mask != NULL);
+	map_y = region->y + subrect->y;
+        mask_i = (subrect->y * region->w) + subrect->x;
+
+	for (row = 0; 
+             row < subrect->h; 
+             row++, map_y++, mask_i += region->w) {
+
+                /* Test if the row is off-map */
+		if (place->wraps) {
+			map_y = place_wrap_y(place, map_y);
+		} else if (map_y < 0) {
+			continue;
+		} else if (map_y >= place->terrain_map->h) {
+			break;
+		}
+                
+                /* Set the screen pixel row */
+		scr_y = row * tile_h + dest->y;
+
+                /* Set the initial map column for this row */
+		map_x = region->x + subrect->x;
+
+		for (col = 0; col < subrect->w; col++, map_x++) {
+
+			struct sprite *sprite;
+                        struct terrain *terrain;
+
+                        /* Test if the column is off-map */
+			if (place->wraps) {
+				map_x = place_wrap_x(place, map_x);
+			} else if (map_x < 0) {
+				continue;
+			} else if (map_x >= place->terrain_map->w) {
+				break;
+			}
+
+			/* Skip terrain that is masked out unless
+                           show-all-terrain is in effect */
+			if (!ShowAllTerrain && use_mask && !mask[mask_i + col])
+				continue;
+
+                        /* Set the screen pixel column */
+			scr_x = col * tile_w + dest->x;
+
+			/* Paint the terrain */
+                        terrain = place_get_terrain(place, map_x, map_y);
+			sprite = terrain->sprite;
+			spritePaint(sprite, 0, scr_x, scr_y);
+
+			/* Shade terrain that is masked out if show-all-terrain
+                           is in effect */
+			if (ShowAllTerrain) { 
+                                if (use_mask && !mask[mask_i + col]) {
+                                        SDL_Rect shade_rect;
+                                        shade_rect.x = scr_x;
+                                        shade_rect.y = scr_y;
+                                        shade_rect.w = TILE_W;
+                                        shade_rect.h = TILE_H;
+                                        screenShade(&shade_rect, 128);
+                                }
+                        } else {
+                                /* Show-all-terrain is not in effect, so this
+                                   tile must not be masked out. Paint the
+                                   objects. */
+                                place_paint_objects(place, map_x, map_y, 
+                                                    scr_x, scr_y);
+                        }
+		}
+	}
+
+	place->dirty = 0;
+
+#if 0
+        /* 
+         * Paint the objects
+         * fixme: why is this not done in the same loop as terrain?
+         */
+        
+
+	my = region->y;
+
+	for (i = 0; i < region->h; i++, my++, mask += region->w) {
+
+		if (place->wraps) {
+			my = place_wrap_y(place, my);
+		} else if (my < 0) {
+			continue;
+		} else if (my >= place->terrain_map->h) {
+			break;
+		}
+
+		sy = i * tile_h + dest->y;
+
+		mx = region->x;
+
+		for (j = 0; j < region->w; j++, mx++) {
+
+			if (place->wraps) {
+				mx = place_wrap_x(place, mx);
+			} else if (mx < 0) {
+				continue;
+			} else if (mx >= place->terrain_map->w) {
+				break;
+			}
+
+			sx = j * tile_w + dest->x;
+
+			if (use_mask && !mask[j]) {
+				continue;
+			}
+
+			/* Paint the objects */
+			place_paint_objects(place, mx, my, sx, sy);
+
+		}
+	}
+	place->dirty = 0;
+#endif
+}
+
 
 void mapRepaintView(struct mview *view, int flags)
 {
@@ -509,17 +704,19 @@ void mapRepaintView(struct mview *view, int flags)
         }
 
 	t2 = SDL_GetTicks();
-
+        
 	if (Map.aview->zoom > 1) {
                 spriteZoomOut(Map.aview->zoom);
 		screenZoomOut(Map.aview->zoom);
-		placePaint(Map.place, &view->vrect, &Map.srect, 0/* vmask */ ,
-			   TILE_W / Map.aview->zoom, TILE_H / Map.aview->zoom);
+		mapPaintPlace(Map.place, &view->vrect, &Map.srect, 
+                              0/* vmask */, &view->subrect, 
+                              TILE_W / Map.aview->zoom, 
+                              TILE_H / Map.aview->zoom);
 		screenZoomIn(Map.aview->zoom);
                 spriteZoomIn(Map.aview->zoom);
 	} else if (flags & REPAINT_NO_LOS) {
-		placePaint(Map.place, &view->vrect, &Map.srect, 0, TILE_W,
-			   TILE_H);
+		mapPaintPlace(Map.place, &view->vrect, &Map.srect, 0, 
+                              &view->subrect, TILE_W, TILE_H);
 	} else {
 		memcpy(Map.vmask, Map.aview->vmask, VMASK_SZ);
 		t3 = SDL_GetTicks();
@@ -527,10 +724,11 @@ void mapRepaintView(struct mview *view, int flags)
 		t4 = SDL_GetTicks();
 		myBuildLightMap(view);
 		t5 = SDL_GetTicks();
-		placePaint(Map.place, &view->vrect, &Map.srect,
-			   (unsigned char *) Map.vmask, TILE_W, TILE_H);
+		mapPaintPlace(Map.place, &view->vrect, &Map.srect,
+                              (unsigned char *) Map.vmask, &view->subrect,
+                              TILE_W, TILE_H);
 		t6 = SDL_GetTicks();
-		myShadeScene();
+		myShadeScene(&view->subrect);
 		t7 = SDL_GetTicks();
                 map_paint_cursor();
 	}
@@ -658,8 +856,8 @@ int mapGetRadius(struct mview *view)
 void mapGetMapOrigin(int *x, int *y)
 {
 	assert(Map.aview);
-	*x = Map.aview->vrect.x;
-	*y = Map.aview->vrect.y;
+	*x = Map.aview->vrect.x + Map.aview->subrect.x;
+	*y = Map.aview->vrect.y + Map.aview->subrect.y;
 }
 
 void mapGetScreenOrigin(int *x, int *y)
@@ -737,6 +935,13 @@ void mapPeer(bool val)
 		Map.cam_view->vrect.x += dx;
 		Map.cam_view->vrect.y += dy;
 	}
+
+        Map.cam_view->subrect.w = MAP_TILE_W * Map.cam_view->zoom;
+        Map.cam_view->subrect.h = MAP_TILE_H * Map.cam_view->zoom;
+        Map.cam_view->subrect.x = (Map.cam_view->vrect.w - 
+                                   Map.cam_view->subrect.w) / 2;
+        Map.cam_view->subrect.y = (Map.cam_view->vrect.h - 
+                                   Map.cam_view->subrect.h) / 2;
 }
 
 void mapTogglePeering(void)

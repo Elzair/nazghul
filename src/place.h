@@ -121,11 +121,6 @@ extern "C" {
 
 	extern int place_is_occupied(struct place *place, int x, int y);
 
-	extern void placePaint(struct place *place,
-			       SDL_Rect * region,
-			       SDL_Rect * dest,
-			       unsigned char *mask, int tile_w, int tile_h);
-
 	extern int place_visibility(struct place *place, int x, int y);
 
 	extern unsigned int place_walking_distance(struct place *place,
@@ -221,6 +216,8 @@ extern "C" {
         extern int place_is_hazardous(struct place *place, int x, int y);
 
 	extern class NpcParty *place_random_encounter(struct place *);
+        extern void place_paint_objects(struct place *place, int mx, int my,
+                                        int sx, int sy);
 
 
         // Obsolescent global place lib:

@@ -294,18 +294,8 @@ static void myPaintHighlight(Object * obj, int sx, int sy)
 	screenFill(&rect, White);
 }
 
-static void myShade(int sx, int sy, int amount)
-{
-	SDL_Rect rect;
-	rect.x = sx;
-	rect.y = sy;
-	rect.w = TILE_W;
-	rect.h = TILE_H;
-	screenShade(&rect, 128);
-}
-
-static void place_paint_objects(struct place *place, int mx, int my,
-				int sx, int sy)
+void place_paint_objects(struct place *place, int mx, int my,
+                         int sx, int sy)
 {
 	struct list *l;
 	Object *obj;
@@ -353,132 +343,6 @@ static void place_paint_objects(struct place *place, int mx, int my,
 			sprite_unfade(sprite);
 	}
 
-}
-
-void placePaint(struct place *place, SDL_Rect * region, SDL_Rect * dest,
-		unsigned char *mask, int tile_h, int tile_w)
-{
-	int i;			/* row iterator */
-	int j;			/* column iterator */
-	int my;			/* map y coord (in tiles) */
-	int mx;			/* map x coord (in tiles) */
-	int sx;			/* screen x coord (in pixels) */
-	int sy;			/* screen y coord (in pixels) */
-	int base;		/* index to start of row */
-	unsigned char *omask;
-	bool use_mask;
-	int t1, t2, t3, t4;
-
-	if (place->wraps) {
-		region->x = WRAP(region->x, place->terrain_map->w);
-		region->y = WRAP(region->y, place->terrain_map->h);
-	}
-
-	use_mask = (mask != NULL);
-	omask = mask;
-	my = region->y;
-
-	t1 = SDL_GetTicks();
-
-	for (i = 0; i < region->h; i++, my++, mask += region->w) {
-
-		/* 
-		 * Paint the terrain.
-		 */
-
-		if (place->wraps) {
-			my = WRAP(my, place->terrain_map->h);
-		} else if (my < 0) {
-			continue;
-		} else if (my >= place->terrain_map->h) {
-			break;
-		}
-
-		sy = i * tile_h + dest->y;
-
-		mx = region->x;
-		base = my * place->terrain_map->w;
-
-		for (j = 0; j < region->w; j++, mx++) {
-
-			struct sprite *sprite;
-
-			if (place->wraps) {
-				mx = WRAP(mx, place->terrain_map->w);
-			} else if (mx < 0) {
-				continue;
-			} else if (mx >= place->terrain_map->w) {
-				break;
-			}
-			// Skip terrain that is masked out.
-			if (!ShowAllTerrain && use_mask && !mask[j])
-				continue;
-
-			sx = j * tile_w + dest->x;
-
-			/* paint the terrain */
-			sprite = place->terrain_map->terrain[base + mx]->sprite;
-			t2 = SDL_GetTicks();
-			spritePaint(sprite, 0, sx, sy);
-			t3 = SDL_GetTicks();
-
-			// Shade terrain that is masked out.
-			if (ShowAllTerrain && use_mask && !mask[j])
-				myShade(sx, sy, 128);
-
-		}
-	}
-
-	t4 = SDL_GetTicks();
-#ifdef PROFILE
-	printf("    paint tile=%d\n", t3 - t2);
-	printf("    paint all terrain=%d\n", t4 - t1);
-#endif
-	mask = omask;
-	my = region->y;
-
-	for (i = 0; i < region->h; i++, my++, mask += region->w) {
-
-		/* 
-		 * Paint the non-terrain objects
-		 */
-
-		if (place->wraps) {
-			my = WRAP(my, place->terrain_map->h);
-		} else if (my < 0) {
-			continue;
-		} else if (my >= place->terrain_map->h) {
-			break;
-		}
-
-		sy = i * tile_h + dest->y;
-
-		mx = region->x;
-		base = my * place->terrain_map->w;
-
-		for (j = 0; j < region->w; j++, mx++) {
-
-			if (place->wraps) {
-				mx = WRAP(mx, place->terrain_map->w);
-			} else if (mx < 0) {
-				continue;
-			} else if (mx >= place->terrain_map->w) {
-				break;
-			}
-
-			sx = j * tile_w + dest->x;
-
-			if (use_mask && !mask[j]) {
-				continue;
-			}
-
-			/* Paint the objects */
-			place_paint_objects(place, mx, my, sx, sy);
-
-		}
-	}
-
-	place->dirty = 0;
 }
 
 int place_visibility(struct place *place, int x, int y)
