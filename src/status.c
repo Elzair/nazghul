@@ -411,6 +411,7 @@ static void stat_scroll_container(enum StatusScrollDir dir)
 {
 	struct inv_entry *tmp;
         int n_lines;
+        int i;
 
         n_lines = Status.container->filter_count(Status.filter);
 
@@ -419,7 +420,8 @@ static void stat_scroll_container(enum StatusScrollDir dir)
 
 	switch (dir) {
 	case ScrollUp:
-		tmp = Status.container->prev(Status.selectedEntry, Status.filter);
+		tmp = Status.container->prev(Status.selectedEntry, 
+                                             Status.filter);
 		if (!tmp)
 			break;
 		Status.selectedEntry = tmp;
@@ -429,7 +431,8 @@ static void stat_scroll_container(enum StatusScrollDir dir)
 		Status.curLine--;
 		break;
 	case ScrollDown:
-		tmp = Status.container->next(Status.selectedEntry, Status.filter);
+		tmp = Status.container->next(Status.selectedEntry, 
+                                             Status.filter);
 		if (!tmp)
 			break;
 		Status.selectedEntry = tmp;
@@ -437,6 +440,16 @@ static void stat_scroll_container(enum StatusScrollDir dir)
 		    Status.curLine >= (Status.numLines / 2))
 			Status.topLine++;
 		Status.curLine++;
+		break;
+	case ScrollPageUp:
+                for (i = 0; i < Status.numLines; i++) {
+                        stat_scroll_container(ScrollUp);
+                }
+		break;
+	case ScrollPageDown:
+                for (i = 0; i < Status.numLines; i++) {
+                        stat_scroll_container(ScrollDown);
+                }
 		break;
 	default:
 		break;
