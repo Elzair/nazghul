@@ -12,7 +12,7 @@
                  20 20 20          ; str/int/dex
                  speed-human       ; speed
                  13                ; vision radius
-                 pmask-land        ; passability
+                 mmode-walk        ; passability
                  20 2              ; hp mod/mult
                  10 10             ; mp mod/mult
                  0 0 0 0           ; hit/def/dam/arm mod
@@ -30,7 +30,7 @@
                  20 20 20          ; str/int/dex
                  speed-human       ; speed
                  8                 ; vision radius
-                 (+ pmask-solid pmask-land) ; passability
+                 mmode-spirit      ; passability
                  10 5              ; hp mod/mult
                  10 10             ; mp mod/mult
                  0 1 -1 -1         ; hit/def/dam/arm mod
@@ -48,7 +48,7 @@
                  18 18 22          ; str/int/dex
                  speed-human       ; speed
                  14                ; vision radius
-                 pmask-land        ; passability
+                 mmode-walk        ; passability
                  15 2              ; hp mod/mult
                  10 10             ; mp mod/mult
                  0 0 0 0           ; hit/def/dam/arm mod
@@ -66,7 +66,7 @@
                  1  1  30          ; str/int/dex
                  speed-insect      ; speed
                  4                 ; vision radius
-                 (+ pmask-land pmask-shoals) ; passability
+                 mmode-hover       ; passability
                  3 1               ; hp mod/mult
                  0 0               ; mp mod/mult
                  0 0 0 0           ; hit/def/dam/arm mod
@@ -84,7 +84,7 @@
                  4 4 1                 ; str/int/dex
                  speed-yellow-slime    ; speed
                  6                     ; vision radius
-                 pmask-land            ; pmask
+                 mmode-walk            ; pmask
                  15 1                  ; hp mod/mult
                  20 20                 ; mp mod/mult
                  1 0 1 0               ; hit/def/dam/arm mod
@@ -105,7 +105,7 @@
                  2 2 1                 ; str/int/dex
                  speed-yellow-slime    ; speed
                  4                     ; vision radius
-                 pmask-land            ; pmask
+                 mmode-walk            ; pmask
                  10 1                  ; hp mod/mult
                  0 0                   ; mp mod/mult
                  2 0 2 0               ; hit/def/dam/arm mod
@@ -123,7 +123,7 @@
                  18 10 24          ; str/int/dex
                  speed-human       ; speed
                  6                 ; vision radius
-                 pmask-land        ; passability
+                 mmode-walk        ; passability
                  22 2              ; hp mod/mult
                  0  0              ; mp mod/mult
                  0 1 0 0           ; hit/def/dam/arm mod
@@ -141,7 +141,7 @@
                  5 1 5             ; str/int/dex
                  speed-human       ; speed
                  6                 ; vision radius
-                 pmask-land        ; passability
+                 mmode-walk        ; passability
                  5 1               ; hp mod/mult
                  20 10             ; mp mod/mult
                  0 2 0 0           ; hit/def/dam/arm mod

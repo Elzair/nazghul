@@ -44,6 +44,11 @@
 (define pmask-bridge (+ pmask-land pmask-water pmask-shoals))
 (define pmask-all    (+ pmask-solid pmask-land pmask-water pmask-shoals))
 
+;; Movement modes
+(define mmode-walk   pmask-land)
+(define mmode-spirit (+ pmask-solid pmask-land))
+(define mmode-hover  (+ pmask-land pmask-shoals))
+
 ;; Layers
 (define layer-none       0)
 (define layer-mechanism  1)
