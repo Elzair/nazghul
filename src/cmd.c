@@ -2555,13 +2555,80 @@ int ui_get_yes_no(char *name)
 	cmdwin_backspace(strlen("<Y/N>"));
 	if (yesno == 'y') {
 		cmdwin_print("yes");
-		log_msg("%s: Yes\n", name);
+		log_msg("%s: Yes", name);
                 return 1;
 	} else {
 		cmdwin_print("no");
-		log_msg("%s: No\n", name);
+		log_msg("%s: No", name);
                 return 0;
 	}
+}
+
+typedef struct ui_getline_data {
+        char *ptr;
+        char *buf;
+        int room;
+} getline_t;
+
+static int ui_getline_handler(struct KeyHandler *kh, int key, int keymod)
+{
+        getline_t *data = (getline_t*)kh->data;
+
+	if (key == CANCEL) {
+		while (data->ptr > data->buf) {
+			data->ptr--;
+			*data->ptr = 0;
+			cmdwin_backspace(1);
+			data->room++;
+		}
+		return 1;
+	}
+
+	if (key == '\n') {
+		return 1;
+	}
+
+	if (key == '\b') {
+		if (data->ptr != data->buf) {
+			data->ptr--;
+			*data->ptr = 0;
+			data->room++;
+			cmdwin_backspace(1);
+		}
+		return 0;
+	}
+
+	if (isprint(key) && data->room) {
+		cmdwin_print("%c", key);
+		*data->ptr++ = key;
+		data->room--;
+	}
+
+	return 0;
+}
+
+int ui_getline(char *buf, int len)
+{
+        struct KeyHandler kh;
+        getline_t data;
+
+        cmdwin_clear();
+        cmdwin_print("Say: ");
+        
+        data.buf  = buf;
+        data.ptr  = buf;
+        data.room = len - 1;
+
+        memset(buf, 0, len);
+
+        kh.fx   = ui_getline_handler;
+        kh.data = &data;
+
+        eventPushKeyHandler(&kh);
+        eventHandle();
+        eventPopKeyHandler();
+
+        return len - (data.room + 1);
 }
 
 static void buy(struct merchant *merch)

@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 
-#define LOG_ENTRY_BUF_SZ 128
+#define LOG_ENTRY_BUF_SZ 512
 
 static struct list log_q;
 static struct list log_stk;

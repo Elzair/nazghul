@@ -102,6 +102,46 @@
               (say knpc "Ok, but first ask my Grandpa Gregor.")
               (say knpc "Then I can't join you. I must study!")))
         (say knpc "I'm just a little girl, silly!"))))
+
+;;----------------------------------------------------------------------------
+;; Animals
+;;
+;; Ilya has an odd relationship with spiders. She'll teach the player a spell
+;; to ward off spiders if he plays along. Spiders will dominate the woods
+;; around the Abandoned Farm (Ilya's old home). In fact, I intend to have them
+;; locked in a battle with the trolls the first time the player enters the
+;; Abandoned Farm. I'm planning on having a "great mother" spider known around
+;; these parts as Angril or Angriss, perhaps she was one of Ilya's pets as a
+;; child - I'm not sure how I want to play that one out yet.
+;;----------------------------------------------------------------------------
+(define (ilya-animals knpc kpc)
+  (say knpc "We have some sheep, and Charm the cat, and some chickens. Do you like animals?")
+  (if (kern-conv-get-yes-no? kpc)
+
+      ;; yes - the player likes animals
+      (begin
+        (say knpc "What's your favorite animal?")
+        (let ((fav (kern-conv-get-reply kpc)))
+          (if (eq? fav 'spid)
+
+              ;; yes - the player's favorite animal is spiders
+              (begin
+                (say knpc "Mine too! I know how to make them harmless. Want me to teach you?")
+                (if (kern-conv-get-yes-no? kpc)
+
+                    ;; yes - the player wants to learn the spider ward
+                    (say knpc "It's easy! Mix spider silk and garlic, and chant An Xen Bet.")
+
+                    ;; no - the player does not want to learn the spider ward
+                    (say knpc "Ok, but they sometimes attack people.")))
+                    
+
+              ;; no - the player's favorite animal is NOT spiders
+              (say knpc "Spiders are my favorite!"))))
+
+      ;; no - the player does not like animals
+      (say knpc "Well don't hurt them!")))
+
 ;;----------------------------------------------------------------------------
 ;; Conv
 ;;----------------------------------------------------------------------------
@@ -116,10 +156,14 @@
        (method 'bye (lambda (knpc kpc) (say knpc "Bye-bye.")))
        (method 'job (lambda (knpc kpc) (say knpc "I help Grandpa with chores.")))
        (method 'name (lambda (knpc kpc) (say knpc "I'm Ilya.")))
+       (method 'age (lambda (knpc kpc) (say knpc "I'm eight.")))
+       (method 'chor (lambda (knpc kpc) (say knpc "I feed the animals, and keep the fire, and help cook.")))
+       (method 'anim ilya-animals)
        (method 'gran (lambda (knpc kpc) (say knpc "I live with Grandpa now because Mommy and Daddy died.")))
-       (method 'died (lambda (knpc kpc) (say knpc "Our farm was attacked by trolls! "
-                                                "I hid in the cellar, and snuck out when they were sleeping. "
-                                                "But I lost my Puska!")))
+       (method 'died (lambda (knpc kpc) (say knpc "Trolls attacked our farm! "
+                                                "Mommy hid me in the cellar, "
+                                                "and I snuck out when the trolls were sleeping. "
+                                                "But I lost my Puska...")))
        (method 'trol (lambda (knpc kpc) (say knpc "I hate them! When I grow up I want to kill them all.")))
        (method 'hate (lambda (knpc kpc) (say knpc "I will be a sorceress some day and I will kill anyone I hate! "
                                               "I won't be afraid of anything ever again!")))
@@ -132,6 +176,12 @@
                                                "he was just a farmer.")))
        (method 'pusk (lambda (knpc kpc) (say knpc "Puska is my stuffed horse. But now I can't find her!")))
        (method 'home (lambda (knpc kpc) (say knpc "Our farm was north and east through the woods.")))
+       (method 'spid (lambda (knpc kpc) (say knpc "There are lots of spiders in the woods around my old home.")))
+       (method 'wood (lambda (knpc kpc) (say knpc "Grandpa says to stay out of the woods.")))
+       (method 'fire (lambda (knpc kpc) (say knpc "Making fire is easy. Just mix black pearl and sulphos..."
+                                             "surephous... that ashy stuff you know? "
+                                             "And say Vas Flam!")))
+       (method 'greg (lambda (knpc kpc) (say knpc "He's my grandpa.")))
        (method 'join ilya-join)
        (method 'find ilya-quest)
        ))

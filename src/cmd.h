@@ -97,6 +97,7 @@ extern int select_quantity(int max);
 // the new ui api
 extern int ui_get_direction(void);
 extern int ui_get_yes_no(char *asked_persons_name);
+extern int ui_getline(char *buf, int len);
 
 struct merchant {
         char *name;

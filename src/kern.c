@@ -2281,6 +2281,24 @@ static pointer kern_conv_get_yes_no(scheme *sc,  pointer args)
         return ui_get_yes_no(pc->getName()) ? sc->T : sc->F;
 }
 
+static pointer kern_conv_get_reply(scheme *sc,  pointer args)
+{
+        char buf[32];
+
+        Object *pc = unpack_obj(sc, &args, "kern-conv-get-line");
+        if (NULL == pc)
+                return sc->F;
+
+        ui_getline(buf, sizeof(buf));
+        log_msg("%s: %s", pc->getName(), buf);
+
+        /* Return only the first four characters, to be consistent with the
+         * usual keyword/reply scheme. */
+        buf[4] = 0;
+
+        return scm_mk_symbol(sc, buf);
+}
+
 static pointer kern_conv_trade(scheme *sc, pointer args)
 {
         Object *npc;
@@ -4864,6 +4882,7 @@ scheme *kern_init(void)
         scm_define_proc(sc, "kern-conv-say", kern_conv_say);
         scm_define_proc(sc, "kern-conv-get-yes-no?", kern_conv_get_yes_no);
         scm_define_proc(sc, "kern-conv-trade", kern_conv_trade);
+        scm_define_proc(sc, "kern-conv-get-reply", kern_conv_get_reply);
 
         /* kern-map api */
         scm_define_proc(sc, "kern-map-center-camera", kern_map_center_camera);
