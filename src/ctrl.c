@@ -395,7 +395,7 @@ static void ctrl_attack_ui(class Character *character)
 
                 // Check ammo
                 if (!character->hasAmmo(weapon)) {
-                        cmdwin_print("no ammo!\n");
+                        cmdwin_print("no ammo!");
                         log_msg("%s: %s - no ammo!\n",
                                      character->getName(),
                                      weapon->getName());
