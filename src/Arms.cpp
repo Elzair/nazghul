@@ -43,6 +43,7 @@ ArmsType::ArmsType()
         armor[0]       = 0;
         armor[1]       = 0;
         ubiquitousAmmo = false;
+        layer          = item_layer;
 }
 
 ArmsType::~ArmsType()
@@ -330,6 +331,9 @@ bool ArmsType::load(class Loader *loader)
                 }
         }
         free(field_tag);
+
+        if (thrown)
+                setMissileType(this);
 
         return true;
 }

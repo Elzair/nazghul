@@ -49,106 +49,14 @@ struct TypicalObjectInfo {
 
 class Character:public Object {
       public:
-	virtual bool isType(int classID) {
-		if (classID == CHARACTER_ID)
-			return true;
-		return Object::isType(classID);
-	}
-	virtual int getType() {
-		return CHARACTER_ID;
-	}
 
-	Character();
-	virtual ~ Character();
-	bool initStock(struct species * species, struct occ * occ,
-		       struct sprite * sprite, char *name, int order,
-		       int alignment);
-
-	virtual char *getName() {
-		return name;
-	}
-	virtual int getHp() {
-		return hp;
-	}
-	virtual int getMaxHp();
-	virtual int getOrder() {
-		return order;
-	}
-	virtual void addExperience(int delta);
-	virtual int getExperience() {
-		return xp;
-	}
-	virtual unsigned char getStrength() {
-		return str;
-	}
-	virtual unsigned char getIntelligence() {
-		return intl;
-	}
-	virtual unsigned char getDexterity() {
-		return dex;
-	}
-	virtual unsigned char getLevel() {
-		return lvl;
-	}
-	virtual struct mview *getView() {
-		return view;
-	}
-	virtual bool isDead() {
-		return (hp == 0);
-	}
-	virtual bool isPoisoned() {
-		return poison;
-	}
-	virtual bool isAsleep() {
-		return sleep;
-	}
-	virtual bool isOnMap() {
-		return getPlace() != 0;
-	}
-	virtual bool isIncapacitated() {
-		return (!isOnMap() || isDead() || isAsleep());
-	}
-	virtual int getPmask() {
-		return species->pmask;
-	}
-	virtual void changeArmourClass(int val);
-	virtual int getArmourClass() {
-		return ac;
-	}
-	virtual void setPoison(bool val) {
-                if (val && 
-                    species->immunities & EFFECT_POISON) {
-                        consolePrint("%s resists poison\n", getName());
-                        return;
-                }
-		poison = val;
-	}
-	virtual void setHp(int hp) {
-		this->hp = hp;
-	}
-	virtual void changeHp(int delta);
-	virtual void changeSleep(bool val);
-	virtual void awaken(void);
-	virtual int attack(int damage) {
-		if (isDead())
-			return 0;
-		damage -= getArmourClass();
-		if (damage < 0)
-			damage = 0;
-		changeHp(-damage);
-		addExperience(XP_PER_DEFEND);
-		return damage;
-	}
-	virtual void kill();
-	virtual void remove();
 	enum ReadyResult {
 		Readied,
 		NoAvailableSlot,
 		WrongType,
 		TooHeavy,
 	};
-	virtual enum ReadyResult ready(class ArmsType * arms);
-	virtual bool unready(class ArmsType * arms);
+
 	enum MoveResult {
 		MovedOk,
 		ExitedMap,
@@ -159,121 +67,109 @@ class Character:public Object {
 		SwitchedOccupants,
                 CouldNotSwitchOccupants,
 	};
-	virtual enum MoveResult move(int dx, int dy);
-#ifdef RAM_ATTACK
-	virtual void meleeAttack(class Character * target);
-#endif
-	virtual bool isPlayerControlled() {
-		return playerControlled;
-	}
-	virtual void setPlayerControlled(bool val) {
-		playerControlled = val;
-	}
+
+	Character();
+	virtual ~ Character();
+
+	virtual int getType();
+	virtual char *getName();
+	virtual int getHp();
+	virtual int getMaxHp();
+	virtual int getOrder();
+	virtual void addExperience(int delta);
+	virtual int getExperience();
+	virtual unsigned char getStrength();
+	virtual unsigned char getIntelligence();
+	virtual unsigned char getDexterity();
+	virtual unsigned char getLevel();
+	virtual struct mview *getView();
+	virtual int getPmask();
+	virtual int getArmourClass();
 	virtual char *getWoundDescription();
-	virtual void setKilledNotifier(void (*cb) (class Character * c)) {
-		killedNotifier = cb;
-	}
 	virtual class Character *getAttackTarget();
-	virtual void setAttackTarget(class Character * target) {
-		this->target = target;
-	}
-	virtual class ArmsType *enumerateArms();
 	virtual class ArmsType *getNextArms();
-	virtual class ArmsType *enumerateWeapons();
 	virtual class ArmsType *getNextWeapon();
-	virtual class ArmsType *getCurrentWeapon() {
-		return currentArms;
-	}
-	virtual bool hasReadied(class ArmsType * arms);
-	virtual bool setSolo(bool val);
-	virtual bool isSolo() {
-		return solo;
-	}
-	virtual bool attackTarget(class Character * target);
-	virtual int  hasAmmo(class ArmsType * weapon);
-	virtual void changeLight(int delta);
-	virtual int getLight() {
-		return light;
-	}
-	virtual int getVisionRadius() {
-		return species->vr;
-	}
-	virtual int getSpeed() {
-		return species->spd;
-	}
-
-	virtual int getMana() {
-		return mana;
-	}
+	virtual class ArmsType *getCurrentWeapon();
+	virtual int getLight();
+	virtual int getVisionRadius();
+	virtual int getSpeed();
+	virtual int getMana();
 	virtual int getMaxMana();
-	virtual void changeMana(int delta);
-
 	virtual struct sprite *getSprite();
+	virtual int getFleeDx();
+	virtual int getFleeDy();
+	virtual int getAlignment();
+	virtual int getRestCredits(void);
+        virtual char *get_damage_sound();
+        virtual char *get_movement_sound();
 
+	virtual bool isType(int classID);
+	virtual bool isDead();
+	virtual bool isPoisoned();
+	virtual bool isAsleep();
+	virtual bool isOnMap();
+	virtual bool isIncapacitated();
+	virtual bool isPlayerControlled();
+	virtual bool hasReadied(class ArmsType * arms);
+	virtual bool isSolo();
+	virtual int  hasAmmo(class ArmsType * weapon);
+	virtual bool isFleeing();
+	virtual bool isHostile(int alignment);
+	virtual bool wasElevated(void);
+	virtual bool isVisible();
+	virtual bool isShaded();
+
+	virtual void changeArmourClass(int val);
+	virtual void changeHp(int delta);
+	virtual void changeSleep(bool val);
+	virtual void changeLight(int delta);
+	virtual void changeMana(int delta);
+	virtual void addRestCredits(int delta_hours);
+
+	virtual void setName(char *name);
+	virtual void setOrder(int order);
+	virtual void setPoison(bool val);
+	virtual void setHp(int hp);
+	virtual void setPlayerControlled(bool val);
+	virtual void setKilledNotifier(void (*cb) (class Character * c));
+	virtual void setAttackTarget(class Character * target);
+	virtual bool setSolo(bool val);
 	virtual void setFleeing(bool val);
-	virtual bool isFleeing() {
-		return fleeing;
-	}
-	virtual enum Character::MoveResult flee();
-	virtual int getFleeDx() {
-		return fleeX;
-	}
-	virtual int getFleeDy() {
-		return fleeY;
-	}
+	virtual void setAlignment(int val);
+	virtual void setCombat(bool val);
+	virtual void setRestCredits(int hours);
+	virtual void setElevated(bool val);
+	virtual void setVisible(bool val);
 
+	bool initStock(struct species * species, struct occ * occ,
+		       struct sprite * sprite, char *name, int order,
+		       int alignment);
+	virtual void awaken(void);
+	virtual int attack(int damage);
+	virtual void kill();
+	virtual void remove();
+	virtual enum ReadyResult ready(class ArmsType * arms);
+	virtual bool unready(class ArmsType * arms);
+	virtual enum MoveResult move(int dx, int dy);
+	virtual bool attackTarget(class Character * target);
+	virtual enum Character::MoveResult flee();
 	virtual void attackTerrain(int x, int y);
 	virtual void useAmmo();
-	virtual void setName(char *name) {
-		this->name = strdup(name);
-	}
-	virtual void setOrder(int order) {
-		this->order = order;
-	}
-	virtual int getAlignment() {
-		return alignment;
-	}
-	virtual void setAlignment(int val) {
-		alignment = val;
-	}
-	virtual bool isHostile(int alignment) {
-		return ((this->alignment & alignment) == 0);
-	}
-	virtual void setCombat(bool val) {
-		inCombat = val;
-	}
-
 	virtual void rejuvenate();
-
 	virtual void initItems();
 	virtual void armThyself();
 	virtual bool needToRearm();
-
 	virtual void heal();
 	virtual void cure();
 	virtual void resurrect();
-
-	virtual void setRestCredits(int hours);
-	virtual void addRestCredits(int delta_hours);
-	virtual int getRestCredits(void);
 	virtual void rest(int hours);
-
 	virtual bool load(struct Loader *loader);
-
-	virtual bool wasElevated(void) {
-		return elevated;
-	}
-	virtual void setElevated(bool val) {
-		elevated = val;
-	}
-	virtual bool isVisible();
-	virtual bool isShaded();
-	virtual void setVisible(bool val);
 	virtual class Character *clone(class Character *);
 	virtual void describe(int count);
 	virtual void relocate(struct place *place, int x, int y);
-        virtual char *get_damage_sound();
-        virtual char *get_movement_sound();
+
+	virtual class ArmsType *enumerateArms();
+	virtual class ArmsType *enumerateWeapons();
 
 	char *tag;
 	struct list plist;	// party list
@@ -293,8 +189,20 @@ class Character:public Object {
       protected:
 	bool initCommon(void);
 	virtual bool isAttackTargetInRange();
+
 	char *name;
 	int hm;
+
+        int hp_mod;
+        int hp_mult;
+        int mp_mod;
+        int mp_mult;
+
+        int hit_mod;
+        int def_mod;
+        int dam_mod;
+        int arm_mod;
+
 	int xp;
 	int order;
 	int hp;

@@ -32,14 +32,28 @@ CHAR ch_Thorald_Greybeard {
   species   human;
   occ       wizard;
   sprite    s_companion_wizard;
+
+  // Personal stat modifiers
+  str       +0;  // slightly worse than average for humans
+  intl      +10; // 95% for humans
+  dex       +2;  // slightly better than average for humans
+  
+  // Combat modifiers
+  hp_mod  0;
+  hp_mult +1;
+  mp_mod  +10;
+  mp_mult +5;
+  hit_mod 0;
+  def_mod 0;
+  dam_mod 0;
+  arm_mod 0;
+
   hp        240;
   xp        0;
   cond      G;
-  str       80;
-  intl      140;
-  dex       80;
   magic     240;
   lvl       8;
+
   conv      c_generic;
   readied {
     t_long_sword;
@@ -53,17 +67,31 @@ CHAR ch_Thorald_Greybeard {
 
 CHAR ch_Kamafuk_Axedog {
   name      "Kamafuk Axedog";
-  species   human;
+  species   goblin;
   occ       fighter;
-  sprite    s_companion_fighter;
+  sprite    s_orc; //s_companion_fighter;
+
+  // Personal stat modifiers
+  str       +12; // top 5% percentile
+  intl      -6;  // not so bright
+  dex       +12; // top 5% percentile
+
+  // Combat modifiers
+  hp_mod  +10;
+  hp_mult +2;
+  mp_mod  0;
+  mp_mult 0;
+  hit_mod +1;
+  def_mod +1;
+  dam_mod +1;
+  arm_mod +1;
+
   hp        240;
   xp        0;
   cond      G;
-  str       140;
-  intl      80;
-  dex       120;
   magic     0;
   lvl       8;
+
   conv      c_generic;
   readied {
     t_plate_armor;
@@ -80,14 +108,28 @@ CHAR ch_Mesmeme {
   species   gazer;
   occ       wizard;
   sprite    s_gazer;
+
+  // Personal stat modifiers
+  str       +2;
+  intl      +10;
+  dex       +2;
+
+  // Combat modifiers
+  hp_mod  0;
+  hp_mult +1;
+  mp_mod  +5;
+  mp_mult +5;
+  hit_mod 0;
+  def_mod 0;
+  dam_mod 0;
+  arm_mod 0;
+
   hp        240;
   xp        0;
   cond      G;
-  str       60;
-  intl      160;
-  dex       60;
   magic     256;
   lvl       8;
+
   conv      c_generic;
   readied {
   }

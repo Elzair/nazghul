@@ -203,14 +203,29 @@ CHAR Gen {
         species  human;
         occ      ranger;
         sprite   s_companion_ranger;
+
+        // Personal stat modifiers
+        str      +2;
+        intl     +1;
+        dex      +2;
+
+        // Combat modifiers
+        hp_mod  0;
+        hp_mult 0;
+        mp_mod  0;
+        mp_mult 0;
+        hit_mod 0;
+        def_mod 0;
+        dam_mod 0;
+        arm_mod 0;
+
+        // Current stats
         hp       120;
         xp       256;
         cond     G;
-        str      120;
-        intl     100;
-        dex      120;
         magic    10;
         lvl      3;
+
         conv     Gen_Conv;
         readied {
                 t_sword;

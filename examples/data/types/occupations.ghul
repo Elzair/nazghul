@@ -110,8 +110,8 @@ OCC wizard {
   name        "wizard";
   magic       2.0;
 
-    hp_mod  -2;
-    hp_mult -2;
+    hp_mod  -5;
+    hp_mult +0;
     mp_mod  +30;
     mp_mult +15;
     hit_mod -1;

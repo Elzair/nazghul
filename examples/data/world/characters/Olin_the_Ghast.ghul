@@ -63,14 +63,28 @@ CHAR Olin_the_Ghast {
         species   ghast;
         occ       wizard;
         sprite    s_ghost;
+
+        // Personal stat modifiers
+        str       0;
+        intl      0;
+        dex       0;
+
+        // Combat modifiers
+        hp_mod  0;
+        hp_mult 0;
+        mp_mod  0;
+        mp_mult 0;
+        hit_mod 0;
+        def_mod 0;
+        dam_mod 0;
+        arm_mod 0;
+
         hp        30;
         xp        0;
         cond      U;
-        str       25;
-        intl      130;
-        dex       25;
         magic     150;
         lvl       9;
+
         conv      Olins_Conv;
         readied {
         }

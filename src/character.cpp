@@ -83,16 +83,16 @@ static void myConsiderArms(struct inv_entry *ie, void *data)
 }
 
 Character::Character():name(0), hm(0), xp(0), order(-1), hp(0),
-sleep(false),
-ac(0), armsIndex(-1),
-str(0), intl(0),
-dex(0), mana(0), lvl(0), poison(false),
-playerControlled(true), solo(false), view(0),
-killedNotifier(NULL), currentArms(NULL), target(NULL),
-rdyArms(NULL),
-fleeing(false), fleeX(0), fleeY(0), burden(0),
-alignment(0), inCombat(false),
-container(NULL), sprite(0), n_rest_credits(0), elevated(false)
+                       sleep(false),
+                       ac(0), armsIndex(-1),
+                       str(0), intl(0),
+                       dex(0), mana(0), lvl(0), poison(false),
+                       playerControlled(true), solo(false), view(0),
+                       killedNotifier(NULL), currentArms(NULL), target(NULL),
+                       rdyArms(NULL),
+                       fleeing(false), fleeX(0), fleeY(0), burden(0),
+                       alignment(0), inCombat(false),
+                       container(NULL), sprite(0), n_rest_credits(0), elevated(false)
 {
 	view = mapCreateView();
 	list_init(&plist);
@@ -112,6 +112,11 @@ container(NULL), sprite(0), n_rest_credits(0), elevated(false)
 	quarry = 0;
 	path = 0;
         damage_sound = 0;
+
+        mp_mod  = 0;
+        mp_mult = 0;
+        hp_mod  = 0;
+        hp_mult = 0;
 }
 
 Character::~Character()
@@ -887,9 +892,8 @@ bool Character::initStock(struct species * species, struct occ * occ,
 	dex = species->dex;
 	ac = species->ac;
 	lvl = 1;		// fixme: hardcoded hack!
-	hp = lvl * HP_PER_LVL;
 
-	// Max mana
+	hp = getMaxHp();
 	mana = getMaxMana();
 
 	initItems();
@@ -945,18 +949,37 @@ bool Character::load(class Loader * loader)
 	      loader->getWord(&occ_tag) &&
 	      loader->matchWord("sprite") &&
 	      loader->getWord(&sprite_tag) &&
-	      loader->matchWord("hp") &&
-	      loader->getInt(&hp) &&
-	      loader->matchWord("xp") &&
-	      loader->getInt(&xp) &&
-	      loader->matchWord("cond") &&
-	      loader->getChar(&cond) &&
+
 	      loader->matchWord("str") &&
 	      loader->getInt(&str) &&
 	      loader->matchWord("intl") &&
 	      loader->getInt(&intl) &&
 	      loader->matchWord("dex") &&
 	      loader->getInt(&dex) &&
+              
+              loader->matchWord("hp_mod") &&
+              loader->getInt(&hp_mod) &&
+              loader->matchWord("hp_mult") &&
+              loader->getInt(&hp_mult) &&
+              loader->matchWord("mp_mod") &&
+              loader->getInt(&mp_mod) &&
+              loader->matchWord("mp_mult") &&
+              loader->getInt(&mp_mult) &&
+              loader->matchWord("hit_mod") &&
+              loader->getInt(&hit_mod) &&
+              loader->matchWord("def_mod") &&
+              loader->getInt(&def_mod) &&
+              loader->matchWord("dam_mod") &&
+              loader->getInt(&dam_mod) &&
+              loader->matchWord("arm_mod") &&
+              loader->getInt(&arm_mod) &&
+
+	      loader->matchWord("hp") &&
+	      loader->getInt(&hp) &&
+	      loader->matchWord("xp") &&
+	      loader->getInt(&xp) &&
+	      loader->matchWord("cond") &&
+	      loader->getChar(&cond) &&
 	      loader->matchWord("magic") &&
 	      loader->getInt(&mana) &&
 	      loader->matchWord("lvl") &&
@@ -1064,7 +1087,7 @@ bool Character::load(class Loader * loader)
 
 	// *** Constrain Attributes ***
 
-	hp = min(hp, lvl * HP_PER_LVL);
+	hp = min(hp, getMaxHp());
 	mana = min(mana, getMaxMana());
 
 	// *** Cleanup ***
@@ -1136,17 +1159,32 @@ void Character::addExperience(int amount)
 
 int Character::getMaxHp()
 {       
-        return min(lvl * HP_PER_LVL, MAX_ATTRIBUTE_VALUE);
+        int base = hp_mod + species->hp_mod;
+        int mult = hp_mult + species->hp_mult;
+
+        if (occ) {
+                base += occ->hp_mod;
+                mult += occ->hp_mult;
+        }
+
+        mult = max(0, mult);
+        
+        return (base + getLevel() * mult);
 }
 
 int Character::getMaxMana()
 {
-	// Typically mana is based on occupation (spellcasters have a higher
-	// multiplier than other occupations). But because I've overloaded the
-	// magic system to handle wild animals (think venomous spray) I need to
-	// give them at least SOME mana, thus the default 0.5 multiplier.
-        return min(MAX_ATTRIBUTE_VALUE, 
-                   (int) (intl * lvl * (occ ? occ->magic : 0.5)));
+        int base = mp_mod + species->mp_mod;
+        int mult = mp_mult + species->mp_mult;
+
+        if (occ) {
+                base += occ->mp_mod;
+                mult += occ->mp_mult;
+        }
+
+        mult = max(0, mult);
+        
+        return (base + getLevel() * mult);
 }
 
 void Character::changeArmourClass(int delta)
@@ -1228,4 +1266,184 @@ char *Character::get_movement_sound()
         if (species)
                 return species->movement_sound;
         return 0;
+}
+
+bool Character::isType(int classID) {
+        if (classID == CHARACTER_ID)
+                return true;
+        return Object::isType(classID);
+}
+
+int Character::getType() {
+        return CHARACTER_ID;
+}
+
+char *Character::getName() {
+        return name;
+}
+int Character::getHp() {
+        return hp;
+}
+
+int Character::getOrder() {
+        return order;
+}
+
+int Character::getExperience() {
+        return xp;
+}
+
+unsigned char Character::getStrength() {
+        return (species->str + str);
+}
+
+unsigned char Character::getIntelligence() {
+        return (species->intl + intl);
+}
+
+unsigned char Character::getDexterity() {
+        return (species->dex + dex);
+}
+
+unsigned char Character::getLevel() {
+        return lvl;
+}
+
+struct mview *Character::getView() {
+        return view;
+}
+
+bool Character::isDead() {
+        return (hp == 0);
+}
+
+bool Character::isPoisoned() {
+        return poison;
+}
+
+bool Character::isAsleep() {
+        return sleep;
+}
+
+bool Character::isOnMap() {
+        return getPlace() != 0;
+}
+
+bool Character::isIncapacitated() {
+        return (!isOnMap() || isDead() || isAsleep());
+}
+
+int Character::getPmask() {
+        return species->pmask;
+}
+
+int Character::getArmourClass() {
+        return ac;
+}
+
+void Character::setPoison(bool val) {
+        if (val && 
+            species->immunities & EFFECT_POISON) {
+                return;
+        }
+        poison = val;
+}
+
+void Character::setHp(int hp) {
+        this->hp = hp;
+}
+
+int Character::attack(int damage) {
+        if (isDead())
+                return 0;
+        damage -= getArmourClass();
+        if (damage < 0)
+                damage = 0;
+        changeHp(-damage);
+        addExperience(XP_PER_DEFEND);
+        return damage;
+}
+
+bool Character::isPlayerControlled() {
+        return playerControlled;
+}
+
+void Character::setPlayerControlled(bool val) {
+        playerControlled = val;
+}
+
+void Character::setKilledNotifier(void (*cb) (class Character * c)) {
+        killedNotifier = cb;
+}
+
+void Character::setAttackTarget(class Character * target) {
+        this->target = target;
+}
+
+class ArmsType *Character::getCurrentWeapon() {
+        return currentArms;
+}
+
+bool Character::isSolo() {
+        return solo;
+}
+
+int Character::getLight() {
+        return light;
+}
+
+int Character::getVisionRadius() {
+        return species->vr;
+}
+
+int Character::getSpeed() {
+        return species->spd;
+}
+
+int Character::getMana() {
+        return mana;
+}
+
+bool Character::isFleeing() {
+        return fleeing;
+}
+
+int Character::getFleeDx() {
+        return fleeX;
+}
+
+int Character::getFleeDy() {
+        return fleeY;
+}
+
+void Character::setName(char *name) {
+        this->name = strdup(name);
+}
+
+void Character::setOrder(int order) {
+        this->order = order;
+}
+
+int Character::getAlignment() {
+        return alignment;
+}
+
+void Character::setAlignment(int val) {
+        alignment = val;
+}
+
+bool Character::isHostile(int alignment) {
+        return ((this->alignment & alignment) == 0);
+}
+
+void Character::setCombat(bool val) {
+        inCombat = val;
+}
+
+bool Character::wasElevated(void) {
+        return elevated;
+}
+
+void Character::setElevated(bool val) {
+        elevated = val;
 }

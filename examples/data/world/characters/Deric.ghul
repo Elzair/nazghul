@@ -133,12 +133,12 @@ CHAR Deric {
         species  human;
         occ      ranger;
         sprite   s_companion_ranger;
+
+        DEFAULT_STATS;
+
         hp       120;
         xp       256;
         cond     G;
-        str      120;
-        intl     100;
-        dex      120;
         magic    10;
         lvl      5;
         conv     Deric_Conv;

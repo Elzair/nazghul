@@ -2983,7 +2983,7 @@ static bool keyHandler(struct KeyHandler *kh, int key, int keymod)
                 } // switch(key)
         } // !keymod
 
-        cmdwin_flush_to_console();
+        //cmdwin_flush_to_console();
 
 	// Quit now before advancing turns or anything of that sort. It makes
 	// life easier.

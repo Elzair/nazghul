@@ -66,12 +66,12 @@ CHAR BlackBart_the_Shipwright {
         species  goblin;
         occ      merchant;
         sprite   s_orc;
+
+        DEFAULT_STATS;
+
         hp       30;
         xp       0;
         cond     G;
-        str      100;
-        intl     100;
-        dex      100;
         magic    0;
         lvl      1;
         conv     BlackBart_Conversation;

@@ -2010,7 +2010,7 @@ static bool myPcCommandHandler(struct KeyHandler *kh, int key, int keymod)
                 }
 
         }
-        cmdwin_flush_to_console();
+        //cmdwin_flush_to_console();
 
         return ret;
 }

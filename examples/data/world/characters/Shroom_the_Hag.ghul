@@ -189,14 +189,28 @@ CHAR Shroom_the_Hag {
         species   human;
         occ       druid;
         sprite    s_companion_druid;
+
+        // Personal stat modifiers
+        str       0;
+        intl      0;
+        dex       0;
+
+        // Combat modifiers
+        hp_mod  0;
+        hp_mult 0;
+        mp_mod  0;
+        mp_mult 0;
+        hit_mod 0;
+        def_mod 0;
+        dam_mod 0;
+        arm_mod 0;
+
         hp        30;
         xp        10000;
         cond      G;
-        str       25;
-        intl      110;
-        dex       90;
         magic     150;
         lvl       9;
+
         conv      Shrooms_Conv;
         readied {
         }

@@ -41,14 +41,15 @@ CHAR ch_Hawknoz {
     species  human
     occ      wizard
     sprite   s_wizard
+
+    DEFAULT_STATS;
+
     hp       120
     xp       256
     cond     G
-    str      80
-    intl     140
-    dex      110
     magic    200
     lvl      3
+
     conv     c_Hawknoz
     readied {
         t_dagger
@@ -63,14 +64,15 @@ CHAR ch_Joan {
     species  human
     occ      beggar
     sprite   s_beggar
+
+    DEFAULT_STATS;
+
     hp       30
     xp       0
     cond     G
-    str      100
-    intl     100
-    dex      100
     magic    0
     lvl      1
+
     conv     c_Joan
     readied {
     }
@@ -83,14 +85,15 @@ CHAR ch_John_the_Armourer {
     species  human
     occ      merchant
     sprite   s_townsman
+
+    DEFAULT_STATS;
+
     hp       30
     xp       0
     cond     G
-    str      100
-    intl     100
-    dex      100
     magic    0
     lvl      1
+
     conv     c_armourer
     readied {
     }
@@ -103,14 +106,15 @@ CHAR ch_Jeff_the_Weaponsmith {
     species  human
     occ      merchant
     sprite   s_townsman
+
+    DEFAULT_STATS;
+
     hp       30
     xp       0
     cond     G
-    str      100
-    intl     100
-    dex      100
     magic    0
     lvl      1
+
     conv     c_weaponsmith
     readied {    
     }
@@ -123,12 +127,12 @@ CHAR ch_Golin_the_Healer {
     species  human
     occ      wizard
     sprite   s_wizard
+
+    DEFAULT_STATS;
+
     hp       120
     xp       0
     cond     G
-    str      100
-    intl     100
-    dex      100
     magic    0
     lvl      4
     conv     c_healer
@@ -144,14 +148,15 @@ CHAR ch_Sly_the_Thief {
     species  human
     occ      fighter
     sprite   s_brigand
+
+    DEFAULT_STATS;
+
     hp       60
     xp       0
     cond     G
-    str      100
-    intl     100
-    dex      100
     magic    0
     lvl      1
+
     conv     c_thief
     readied {
         t_sword

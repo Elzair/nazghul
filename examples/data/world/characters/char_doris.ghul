@@ -86,12 +86,12 @@ CHAR char_doris {
         species   human;
         occ       merchant;
         sprite    s_green_townsman;
+
+        DEFAULT_STATS;
+
         hp        30;
         xp        1000;
         cond      G;
-        str       110;
-        intl      100;
-        dex       100;
         magic     0;
         lvl       3;
         conv      conv_doris;
