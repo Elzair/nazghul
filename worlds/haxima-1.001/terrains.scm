@@ -275,7 +275,7 @@
    (list 't_bridge          "bridge"        pclass-grass     s_ew_bridge       1 0 nil)
    (list 't_bridge_top      "bridge"        pclass-grass     s_bridge_top      1 0 nil)
    (list 't_bridge_bottom   "bridge"        pclass-grass     s_bridge_bottom   1 0 nil)
-
+   (list 't_brazier         "brazier"       pclass-wall      s_brazier         1 512 'burn)
 
    )) ; town_scale_terrains
 
