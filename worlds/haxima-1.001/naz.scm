@@ -326,3 +326,6 @@
     ((4) (mk-loc kplace  
                  (- (kern-place-get-height kplace) 1) 
                  (- (kern-place-get-width kplace) 1)))))
+
+(define (hostile-chars-at kbeing loc)
+  (filter pred (kern-place-get-objects-at loc)))

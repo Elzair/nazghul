@@ -96,6 +96,12 @@ void Missile::animate(int Ax, int Ay, int Bx, int By, int _flags)
 	if (field == NULL)
 		return;
 	field->relocate(getPlace(), Bx, By);
+
+        // New system: check if this object type has a "hit" procedure. If so
+        // then run it here. Objects which drop fields will drop the field in
+        // their "hit" procedure.
+        if (getObjectType()->canHitLocation())
+                getObjectType()->hitLocation(this, getPlace(), Bx, By);
 }
 
 bool Missile::hitTarget()

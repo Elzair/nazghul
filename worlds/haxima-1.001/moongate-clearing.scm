@@ -50,7 +50,8 @@
     ;; Items
     (list 3 heal-potion)
     (list 3 cure-poison-potion)
-    (list 3 poison-bolt-scroll-type)
+    (list 2 poison-bolt-scroll-type)
+    (list 1 death-bolt-scroll-type)
 
     ;; Hints/instructions
     (list 1 basic-survival-manual)

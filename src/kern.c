@@ -3432,6 +3432,15 @@ KERN_API_CALL(kern_fire_missile)
         missile->animate(ox, oy, dx, dy, 0);
         if (missile->hitTarget()) {
 
+#if 1
+                /* Run the missile's hit-loc procedure, if any */
+                if (missile->getObjectType()->canHitLocation()) {
+                        missile->getObjectType()->hitLocation(missile, 
+                                                              dplace, 
+                                                              dx, 
+                                                              dy);
+                }
+#else
                 /* Select a likely target and deliver the damage and effect */
                 if ((target = place_get_object(dplace, dx, dy, being_layer)) ||
                     (target = place_get_object(dplace, dx, dy, mech_layer))) {
@@ -3442,6 +3451,7 @@ KERN_API_CALL(kern_fire_missile)
                                 missile_type->exec(target);
                         }
                 }
+#endif
         }
 
         delete missile;

@@ -70,17 +70,18 @@
                      nil 0 nil obj-ifc-cap obj-ifc))
 
 ;; ----------------------------------------------------------------------------
-;; Custom interfaces
+;; mk-missile-ifc -- automate missile ifc creation. 'pred?' takes an object as
+;; a parameter and returns true iff the 'hit' proc should be applied to it.
 ;; ----------------------------------------------------------------------------
-(define poison-bolt-ifc
+(define (mk-missile-ifc hit)
   (ifc '()
-       (method 'exec apply-poison)))
+       (method 'hit-loc (lambda (kmissile kplace x y)
+                          (let ((targets (filter kern-obj-is-char? (kern-place-get-objects-at (mk-loc kplace x y)))))
+                            (if (notnull? targets)
+                                (hit (car targets))))))))
 
-(define deathball-ifc
-  (ifc '()
-       (method 'exec (lambda (kobj)
-                       (if (kern-obj-is-char? kobj)
-                           (kern-char-kill kobj))))))
+(define poison-bolt-ifc (mk-missile-ifc apply-poison))
+(define deathball-ifc   (mk-missile-ifc kern-char-kill))
 
 ;;--------------------------------------------------------------------------
 ;; Standard arms type tables

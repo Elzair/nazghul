@@ -45,18 +45,21 @@
 
 /*****************************************************************************/
 
-// The GIFC_CAN bits need to match the script.
-#define GIFC_CAN_GET    1
-#define GIFC_CAN_USE    2
-#define GIFC_CAN_EXEC   4
-#define GIFC_CAN_OPEN   8
-#define GIFC_CAN_HANDLE 16
-#define GIFC_CAN_STEP   32
-#define GIFC_CAN_ATTACK 64
-#define GIFC_CAN_MIX    128
-#define GIFC_CAN_ENTER  256
-#define GIFC_CAN_CAST   512
-#define GIFC_CAN_BUMP   1024
+//
+// These GIFC_CAN_* bits need to match the script:
+//
+#define GIFC_CAN_GET          1
+#define GIFC_CAN_USE          2
+#define GIFC_CAN_EXEC         4
+#define GIFC_CAN_OPEN         8
+#define GIFC_CAN_HANDLE       16
+#define GIFC_CAN_STEP         32
+#define GIFC_CAN_ATTACK       64
+#define GIFC_CAN_MIX          128
+#define GIFC_CAN_ENTER        256
+#define GIFC_CAN_CAST         512
+#define GIFC_CAN_BUMP         1024
+#define GIFC_CAN_HIT_LOCATION 2048
 
 ObjectType::ObjectType()
 {
@@ -1660,6 +1663,16 @@ bool ObjectType::canHandle()
 void ObjectType::handle(Object *obj, Object *handler)
 {
         closure_exec(gifc, "ypp", "handle", obj, handler);
+}
+
+bool ObjectType::canHitLocation()
+{
+        return (gifc_cap & GIFC_CAN_HIT_LOCATION);
+}
+
+void ObjectType::hitLocation(Object *obj, struct place *place, int x, int y)
+{
+        closure_exec(gifc, "yppdd", "hit-loc", obj, place, x, y);
 }
 
 void ObjectType::step(Object *obj, Object *stepper)

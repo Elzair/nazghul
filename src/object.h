@@ -187,6 +187,7 @@ class ObjectType {
         bool canAttack();
         bool canEnter();
         bool canBump(); // attempted entry onto same tile
+        bool canHitLocation(); // weapon hitting a target location
 
         void use(Object *user);
         void exec(Object *obj);
@@ -198,6 +199,7 @@ class ObjectType {
         void enter(Object *obj, Object *enterer);
         int cast(Object *caster);
         void bump(Object *obj, Object *bumper);
+        void hitLocation(Object *obj, struct place *place, int x, int y);
         closure_t *getGifc();
         void setGifc(closure_t *gifc, int cap);
 

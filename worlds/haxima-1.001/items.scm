@@ -148,6 +148,7 @@
 
 (define (basic-survival-manual-commands)
   (kern-ui-page-text
+   "Command Summary"
    "Use the arrow keys to indicate direction."
    "Use the ESC key to cancel commands."
    "Use the first letter to start a command."

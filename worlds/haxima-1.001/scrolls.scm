@@ -24,3 +24,4 @@
 ;; Scrolls
 ;; ----------------------------------------------------------------------------
 (mk-scroll 'poison-bolt-scroll-type "In Nox Por scroll" s_scroll_spell_29 in-nox-por)
+(mk-scroll 'death-bolt-scroll-type  "Xen Corp scroll"   s_scroll_spell_25 xen-corp)
