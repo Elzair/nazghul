@@ -1773,13 +1773,13 @@ bool combat_enter(struct combat_info * info)
 
         if (combat_get_state() == COMBAT_STATE_FIGHTING) {
                 player_party->enableRoundRobinMode();
-                consolePrint("\n*** Combat ***\n\n");
                 soundPlay(Combat.sound_enter, SOUND_MAX_VOLUME);
         }
         else if (combat_get_state() != COMBAT_STATE_CAMPING) {
                 player_party->enableFollowMode();
         }
 
+        mapUpdate(0);
         foogodRepaint();
 
 
