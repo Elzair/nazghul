@@ -29,13 +29,16 @@
 #include "terrain.h"
 
 #include <SDL/SDL.h>
+#include <math.h>
 
 #define MVIEW_W  (MAP_TILE_W * 2 + 1)
 #define MVIEW_H  (MAP_TILE_H * 2 + 1)
-#define LMAP_W   (MAP_TILE_W)
-#define LMAP_H   (MAP_TILE_H)
+#define LMAP_W   (MVIEW_W)
+#define LMAP_H   (MVIEW_H)
+#define VMASK_W  (MVIEW_W)
+#define VMASK_H  (MVIEW_H)
 
-#define VMASK_SZ (MVIEW_W * MVIEW_H)
+#define VMASK_SZ (VMASK_W * VMASK_H)
 #define MVIEW_SZ (sizeof(struct mview) + VMASK_SZ)
 #define LMAP_SZ (LMAP_W * LMAP_H)
 #define MAX_LIGHTS LMAP_SZ
@@ -111,6 +114,71 @@ static void myRecomputeLos(struct mview *view, void *data)
 		LosEngine->r = view->rad;
 	LosEngine->compute(LosEngine);
 	memcpy(view->vmask, LosEngine->vmask, VMASK_SZ);
+}
+
+static void mapMergeRects(SDL_Rect *src_rect, unsigned char *src,
+                          SDL_Rect *dst_rect, unsigned char *dst)
+{
+	int r_src, r_src_start, c_src, c_src_start, i_src, r_end, c_end;
+	int r_dst, r_dst_start, c_dst, c_dst_start, i_dst;
+	int tmp;
+
+        printf("src=(%d %d %d %d)\n", src_rect->x, src_rect->y, src_rect->w,
+               src_rect->h);
+        printf("dst=(%d %d %d %d)\n", dst_rect->x, dst_rect->y, dst_rect->w,
+               dst_rect->h);
+
+	// skip identical merges (yes, it happens)
+	if (src == dst)
+		return;
+
+	if (src_rect->x < dst_rect->x) {
+		// Source leftmost
+		tmp = src_rect->x + src_rect->w - dst_rect->x;
+		if (tmp < 0)
+			return;
+		c_src_start = dst_rect->x - src_rect->x;
+		c_end = c_src_start + tmp;
+		c_dst_start = 0;
+	} else {
+		// Destination leftmost
+		tmp = dst_rect->x + dst_rect->w - src_rect->x;
+		if (tmp < 0)
+			return;
+		c_src_start = 0;
+		c_end = tmp;
+		c_dst_start = src_rect->x - dst_rect->x;
+	}
+
+	if (src_rect->y < dst_rect->y) {
+		// Source topmost
+		tmp = src_rect->y + src_rect->h - dst_rect->y;
+		if (tmp < 0)
+			return;
+		r_src_start = dst_rect->y - src_rect->y;
+		r_end = r_src_start + tmp;
+		r_dst_start = 0;
+	} else {
+		// Destination topmost
+		tmp = dst_rect->y + dst_rect->h - src_rect->y;
+		if (tmp < 0)
+			return;
+		r_src_start = 0;
+		r_end = tmp;
+		r_dst_start = src_rect->y - dst_rect->y;
+	}
+
+	for (r_src = r_src_start, r_dst = r_dst_start; r_src < r_end;
+	     r_src++, r_dst++) {
+		for (c_src = c_src_start, c_dst = c_dst_start; c_src < c_end;
+		     c_src++, c_dst++) {
+                        int val;
+			i_src = r_src * src_rect->w + c_src;
+			i_dst = r_dst * dst_rect->w + c_dst;
+                        val = dst[i_dst] + src[i_src];
+			dst[i_dst] = (unsigned char)min(val, 255);
+		}
+	}
 }
 
 static void myMergeVmask(struct mview *view, void *data)
@@ -190,86 +258,156 @@ static void mySetViewLightRadius(struct mview *view, void *data)
 	view->rad = rad;
 }
 
-static void myBuildLightMap(struct mview *view)
+static int mapCalcMaxLightRadius(int light)
 {
-	int x, y, i = 0, j, k, map_x, map_y;
+        // until something faster becomes necessary
+        return (int)sqrt(light);
+}
 
-	// Initialize the lightmap to ambient light levels.
-	if (Map.place->underground) {
-		memset(lmap, UNLIT, sizeof(lmap));
-	} else {
-		memset(lmap, Sun.light, sizeof(lmap));
-	}
+#if 0
+// debug
+static void mapDumpRect(char *name, SDL_Rect *rect, unsigned char *data)
+{
+        int x, y, i;
 
-	// Pass 1: fill out all the light sources
+        printf("Rect %s (%d %d %d %d):\n", name, rect->x, rect->y, rect->w,
+               rect->h);
+        i = 0;
+        for (y = 0; y < rect->h; y++) {
+                for (x = 0; x < rect->w; x++, i++) {
+                        printf(" %03d", data[i]);
+                }
+                printf("\n");
+        }
+        printf("\n");
+}
+#endif
+
+static void mapMergeLightSource(struct light_source *light, 
+                                struct mview *main_view)
+{
+        unsigned char tmp_vmask[VMASK_SZ];
+        int radius;
+        int vmask_i;
+        struct mview tmp_view;
+        int x;
+        int y;
+        int map_x;
+        int map_y;
+        int D;
+
+        // Initialize the temporary view to be centered on the light
+        // source. (Note: ignore the subrect, it shouldn't matter)
+        memset(&tmp_view, 0, sizeof(tmp_view));
+        tmp_view.vrect.x = place_wrap_x(Map.place, light->x - (MVIEW_W / 2));
+        tmp_view.vrect.y = place_wrap_y(Map.place, light->y - (MVIEW_H / 2));
+        tmp_view.vrect.w = MVIEW_W;
+        tmp_view.vrect.h = MVIEW_H;
+        tmp_view.vmask = (char*)tmp_vmask;
+        tmp_view.zoom = 1;
+
+        // Build a vmask using the standard LOS algorithm. For
+        // performance, limit the radius based on the brightness of the
+        // light source and the size of our vmask.
+        myUpdateAlphaMask(&tmp_view);
+        radius = min(mapCalcMaxLightRadius(light->light), MVIEW_W / 2);
+        LosEngine->r = radius;
+        LosEngine->compute(LosEngine);
+        memcpy(tmp_view.vmask, LosEngine->vmask, VMASK_SZ);
+
+        // For each visible tile in the vmask, calculate how much light is
+        // hitting that tile from the light source. (Note: in the future,
+        // optimize by only checking tiles within the radius).
+        vmask_i = 0;
+        for (y = 0; y < tmp_view.vrect.h; y++) {
+
+                map_y = place_wrap_y(Map.place, tmp_view.vrect.y + y);
+
+                for (x = 0; x < tmp_view.vrect.w; x++, vmask_i++) {
+
+                        // skip non-visible tiles
+                        if (tmp_view.vmask[vmask_i] == 0)
+                                continue;
+                                
+                        map_x = place_wrap_x(Map.place, tmp_view.vrect.x + x);
+
+                        D = place_flying_distance(Map.place,
+                                                  light->x,
+                                                  light->y,
+                                                  map_x, map_y);
+                        D = D * D + 1;
+                        tmp_view.vmask[vmask_i] = min(light->light / D, 255);
+                }
+        }
+
+        // Merge this source's lightmap (contained in the vmask we just built)
+        // with the main lightmap.
+        mapMergeRects(&tmp_view.vrect, (unsigned char*)tmp_view.vmask, 
+                      &main_view->vrect, lmap);
+
+}
+
+static void mapBuildLightMap(struct mview *view)
+{
+        //
+        // New lightmap-building code
+        //
+        int x;
+        int y;
+        int lt_i;
+        int map_x;
+        int map_y;
+
+        // Initialize the main lightmap to ambient light levels.
+        memset(lmap, (Map.place->underground ? UNLIT : Sun.light), 
+               sizeof(lmap));
+
+        // Build the list of light sources visible in the current map viewer
+        // window. (Note: might expand this to see the light from sources
+        // outside the viewer window).
+        lt_i = 0;
 	for (y = 0; y < LMAP_H; y++) {
-		map_y = view->vrect.y + view->subrect.y + y;
+		map_y = place_wrap_y(Map.place, 
+                                     view->vrect.y + view->subrect.y + y);
 		for (x = 0; x < LMAP_W; x++) {
 			int light;
 
-			map_x = view->vrect.x + view->subrect.x + x;
+			map_x = place_wrap_x(Map.place, 
+                                             view->vrect.x + view->subrect.x + 
+                                             x);
+
 			light = place_get_light(Map.place, map_x, map_y);
 			if (!light)
 				continue;
 
-			// Remember the light source
-			lights[i].x = map_x;
-			lights[i].y = map_y;
-			lights[i].light = light;
-			i++;
+			lights[lt_i].x = map_x;
+			lights[lt_i].y = map_y;
+			lights[lt_i].light = light;
+			lt_i++;
 		}
 	}
-
-	// Don't forget the player if this is not a small-scale map. Even if
-	// the player has light zero, by simply adding a light source on his
-	// location we make sure that the tile he is standing on will be
-	// lit.
+        
+        // In party mode the player is a light source that hasn't been
+        // accounted for yet (fixme -- why not? is this still true?).
 	if (player_party->context != CONTEXT_COMBAT) {
-		lights[i].x = place_wrap_x(Map.place, player_party->getX());
-		lights[i].y = place_wrap_y(Map.place, player_party->getY());
-		lights[i].light = player_party->light;
-		i++;
+		lights[lt_i].x = place_wrap_x(Map.place, player_party->getX());
+		lights[lt_i].y = place_wrap_y(Map.place, player_party->getY());
+		lights[lt_i].light = player_party->light;
+		lt_i++;
 	}
 
 	// Skip further processing if there are no light sources
-	if (!i)
-		return;
+        if (!lt_i)
+                return;
 
-	// Pass 2: distribute the light to all the squares in the lmap
-	for (y = 0, k = 0; y < LMAP_H; y++) {
-		map_y = view->vrect.y + view->subrect.y + y;
+        // For each light source build a lightmap centered on that source and
+        // merge it into the main lightmap.
+        while (lt_i--) {
+                mapMergeLightSource(&lights[lt_i], view);
+        }
 
-		for (x = 0; x < LMAP_W; x++, k++) {
-			map_x = view->vrect.x + view->subrect.x + x;
-
-			// For each light source...
-			for (j = 0; j < i; j++) {
-
-				int dx, dy, D, tmp;
-
-                                // Check if los is blocked. This might *really* bog us
-                                // down on slow machines.
-                                if (place_los_blocked(Map.place, 
-                                                      lights[j].x, lights[j].y,
-                                                      map_x, map_y))
-                                        continue;
-
-				// Calculate the distance squared.
-                                // fixme -- need to wrap, use place fx?
-				dx = lights[j].x - map_x;
-				dy = lights[j].y - map_y;
-				D = (dx * dx) + (dy * dy) + 1;
-
-				// Calculate the light as source luminence over
-                                // distance squared. Clamp to 255.
-				tmp = lmap[k] + lights[j].light / D;
-				if (tmp > 255)
-					tmp = 255;
-				lmap[k] = tmp;
-			}
-		}
-	}
 }
+
 
 static void myShadeScene(SDL_Rect *subrect)
 {
@@ -282,8 +420,8 @@ static void myShadeScene(SDL_Rect *subrect)
 	rect.w = TILE_W;
 	rect.h = TILE_H;
 
-        //lmap_i = subrect->y * MVIEW_W + subrect->x;
-        lmap_i = 0;
+        lmap_i = subrect->y * MVIEW_W + subrect->x;
+        //lmap_i = 0;
 
 	// Iterate over the tiles in the map window and the corresponding
 	// values in the lightmap simultaneously */
@@ -679,7 +817,7 @@ void mapRepaintView(struct mview *view, int flags)
 		t3 = SDL_GetTicks();
 		mapForEach(myMergeVmask, 0);
 		t4 = SDL_GetTicks();
-		myBuildLightMap(view);
+		mapBuildLightMap(view);
 		t5 = SDL_GetTicks();
 		mapPaintPlace(Map.place, &view->vrect, &Map.srect,
                               (unsigned char *) Map.vmask, &view->subrect,

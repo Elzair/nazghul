@@ -407,6 +407,9 @@ void place_get_direction_vector(struct place *place, int x0, int y0, int x1,
 {
         int east, west, north, south;
 
+        // fixme: is this code assuming that (x0,y0) and (x1,y1) are already
+        // wrapped?
+
         if (! place->wraps) {
                 *dx = x1 - x0;
                 *dy = y1 - y0;
@@ -1237,6 +1240,11 @@ int place_los_blocked(struct place *place, int Ax, int Ay, int Bx, int By)
         // its flight path (missiles don't have a pmask...).
 
         int steps = 0;
+
+        //Ax = place_wrap_x(place, Ax);
+        //Ay = place_wrap_y(place, Ay);
+        //Bx = place_wrap_x(place, Bx);
+        //By = place_wrap_y(place, By);
 
         int Px = Ax;
         int Py = Ay;
