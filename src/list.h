@@ -62,6 +62,17 @@ extern "C" {
 		list_init(list);
 	}
 
+        static inline void list_switch(struct list *e1, struct list *e2)
+        {
+                struct list tmp;
+
+                tmp.next = e1->next;
+                tmp.prev = e1->prev;
+
+                list_add_aux(e2->prev, e2->next, e1);
+                list_add_aux(tmp.prev, tmp.next, e2);
+        }
+
 #ifdef __cplusplus
 }
 #endif

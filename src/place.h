@@ -31,7 +31,7 @@ extern "C" {
 #include "terrain_map.h"
 #include "list.h"
 #include "object.h"
-#include "NpcParty.h"
+#include "Party.h"
 #include "astar.h"
 #include "common.h"
 #include "sky.h"
@@ -84,7 +84,7 @@ extern "C" {
         };
 
         struct typ_npc_party_info {
-                class NpcPartyType *type;
+                class PartyType *type;
                 int prob;
                 int align;
         };
@@ -143,7 +143,7 @@ extern "C" {
 	extern class Portal *place_get_portal(struct place *place,
 					      int x, int y);
 
-	extern class NpcParty *place_get_NpcParty(struct place *place,
+	extern class Party *place_get_Party(struct place *place,
 						  int x, int y);
 
 	extern class Vehicle *place_get_vehicle(struct place *place,
@@ -164,14 +164,14 @@ extern "C" {
         extern void place_add_moongate(struct place *place, 
 				       class Moongate * moongate);
 
-	extern class NpcParty *place_search_for_NpcParty(struct place *place,
+	extern class Party *place_search_for_Party(struct place *place,
                                   int x,
                                   int y,
                                   int radius,
 							 int (*criteria) (class
-									  NpcParty
+									  Party
 									  *
-									  NpcParty)
+									  Party)
                 );
                 
                 
@@ -223,7 +223,7 @@ extern "C" {
         extern int place_get_movement_cost(struct place *place, int x, int y);
         extern int place_adjust_turn_cost(struct place *place, int turns);
         extern int place_is_hazardous(struct place *place, int x, int y);
-	extern class NpcParty *place_random_encounter(struct place *);
+	extern class Party *place_random_encounter(struct place *);
         extern void place_paint_objects(struct place *place, int mx, int my, int sx, int sy);
         extern int place_los_blocked(struct place *place, int ax, int ay, int bx, int by);
         extern void place_exec(struct place *place, struct exec_context *cntxt);
@@ -236,8 +236,8 @@ extern "C" {
 	extern class Moongate *place_get_moongate(struct place *, int x, int y);
 	extern void placeAddObject(Object * object);
 	extern void placeRemoveObject(Object * object);
-        extern class NpcParty *placeGetNPC(int x, int y);
-	extern void placeRemoveNPC(class NpcParty * NpcParty);
+        extern class Party *placeGetNPC(int x, int y);
+	extern void placeRemoveNPC(class Party * Party);
         extern int placeGetMovementCost(int x, int y);
         extern struct terrain *placeGetTerrain(int x, int y);
         extern int placeWrapX(int x);

@@ -255,7 +255,7 @@ extern "C" {
 #define CHARACTER_ID            (OBJECT_ID + 2)
 #define MOONGATE_ID             (OBJECT_ID + 3)
 #define PORTAL_ID               (OBJECT_ID + 4)
-#define NPCPARTY_ID             (OBJECT_ID + 5)
+#define PARTY_ID                (OBJECT_ID + 5)
 
 #define SPRITE_ID               (OBJECT_ID + 7)
 #define OBJECT_TYPE_ID          100
@@ -272,7 +272,7 @@ extern "C" {
 #define FIELD_TYPE_ID           111
 #define FOOD_TYPE_ID            112
 #define TRAP_TYPE_ID            113
-#define NPCPARTY_TYPE_ID        114
+#define PARTY_TYPE_ID           114
 
 #define RESPONSE_TYPE_ID        116
 #define CONVERSATION_TYPE_ID    117

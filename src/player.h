@@ -32,12 +32,10 @@
 
 #include <string.h>
 
-#define MAX_N_PC 8
-
 enum party_control {
         PARTY_CONTROL_ROUND_ROBIN = 0,
         PARTY_CONTROL_FOLLOW,
-        PARTY_CONTROL_SOLO
+        PARTY_CONTROL_SOLO,
 };
 
 enum move_result {
@@ -59,13 +57,13 @@ struct move_info {
         int dx;
         int dy;
         int turns; // consumed by movement
-        class NpcParty *npc_party;
+        class Party *npc_party;
         class Portal *portal;
         class Moongate *moongate;
 };
 
-class player_party:public Object {
-
+class player_party : public Party {
+ 
       public:
         player_party();
 	virtual ~ player_party();
@@ -97,12 +95,12 @@ class player_party:public Object {
         virtual void changePlaceHook();
 
         void distributeMembers(struct place *new_place, int new_x, int new_y, int new_dx, int new_dy);
-        bool move(int dx, int dy, bool teleport);
+        MoveResult move(int dx, int dy);
 	void add_to_inventory(class ObjectType * data, int quantity);
         void remove_from_inventory(struct inv_entry *ie, int quantity);
 	struct inv_entry *search_inventory(class ObjectType * type);
         void enter_portal(void);
-	bool try_to_enter_town_from_edge(class Portal * portal, int dx, int dy);
+	enum MoveResult try_to_enter_town_from_edge(class Portal * portal, int dx, int dy);
         void ready_arms(struct object *object);
         bool allDead(void);
         bool immobilized(void);
@@ -112,13 +110,12 @@ class player_party:public Object {
         class Character *get_leader(void);
 	virtual void removeMember(class Character *);
         virtual bool addMember(class Character *);
-        int get_room_in_party(void);
         void add_spell(struct spell *spell, int quantity);
 	bool enter_moongate(class Moongate * srcGate, int x, int y);
         char *get_movement_description();
         char *get_movement_sound();
 	void enter_moongate(class Moongate * moongate);
-	bool try_to_enter_moongate(class Moongate * src_gate);
+	enum MoveResult try_to_enter_moongate(class Moongate * src_gate);
         enum move_result check_move_to(struct move_info *info);
         virtual void paint(int sx, int sy);
         virtual struct formation *get_formation();
@@ -134,7 +131,6 @@ class player_party:public Object {
         void unCharmMembers();
         void setCamping(bool val);
         bool isCamping();
-        void move_to_wilderness_combat(struct combat_info *cinfo);
         enum party_control getPartyControlMode();
         void enableFollowMode();
         void enableRoundRobinMode();
@@ -143,15 +139,12 @@ class player_party:public Object {
         bool rendezvous(struct place *place, int x, int y);
         int getContext(void);
 
-        int dx, dy;
         struct sprite *sprite;
-        //unsigned char pmask; obsolete
         class Vehicle *vehicle;
         int turns;
         char *mv_desc;
         char *mv_sound;
-        int n_pc;
-        class Character *pc[MAX_N_PC];
+
         struct list inventory;
         int nArms;
         int nReagents;
@@ -172,7 +165,7 @@ class player_party:public Object {
         virtual void applyExistingEffects();
 
         void try_to_enter_portal(class Portal *portal);
-        bool try_to_move_off_map(struct move_info *info);
+        enum MoveResult try_to_move_off_map(struct move_info *info);
         bool turn_vehicle(void);
         void chooseNewLeader();
         void disableCurrentMode();
@@ -192,6 +185,7 @@ class player_party:public Object {
         class Character *leader;
         class Character *solo_member;
         class Character *active_member;
+        void (*ctrl)(class player_party*);
 };
 
 extern class player_party *player_party;

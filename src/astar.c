@@ -202,6 +202,19 @@ static inline void astar_replace_route(struct astar_node *node, int x, int y,
 	node->scheduled = 1;
 }
 
+static void astar_dump_schedule()
+{
+        struct astar_node *node;
+        int i;
+
+        for (i = 0; i < schedule->num_entries; i++) {
+                node = heap_entry(schedule->entries[i], struct astar_node, goodness);
+                printf("(%d %d)", node->x, node->y);
+        }
+        printf("\n");
+        
+}
+
 static inline void
 astar_schedule_neighbor(struct astar_node *node, 
                         struct astar_search_info *info)
@@ -259,7 +272,7 @@ astar_schedule_neighbor(struct astar_node *node,
 	if ((ptr = astar_old_route(location))) {
 
 		/* If the old route is better than skip this neighbor. */
-		if (goodness < ptr->goodness)
+		if (goodness <= ptr->goodness)
 			return;
 
 		/* If the new route is better than replace the old with the new
@@ -277,7 +290,10 @@ astar_schedule_neighbor(struct astar_node *node,
 		return;
 	}
 
-	astar_schedule(ptr);
+	if (astar_schedule(ptr)) {
+                err("Schedule failed!");
+                exit(-1);                
+        }
 }
 
 int astar_init(void)
@@ -319,6 +335,7 @@ struct astar_node *astar_search(struct astar_search_info *info)
 
 	while (!heap_empty(schedule)) {
 
+                //astar_dump_schedule();
 		node = astar_schedule_extract();
 
 		/* Check if this node is the target location */

@@ -19,7 +19,7 @@
 // Gordon McNutt
 // gmcnutt@users.sourceforge.net
 //
-#include "NpcParty.h"
+#include "Party.h"
 #include "place.h"
 #include "portal.h"
 #include "util.h"
@@ -33,6 +33,7 @@
 #include "vehicle.h"
 #include "console.h"
 #include "formation.h"
+#include "ctrl.h"
 
 #include <stdio.h>
 
@@ -45,22 +46,26 @@
                 (coord) = 0; \
 }
 
-/*****************************************************************************/
+// -----------------------------------------------------------------------------
+//
+// PartyType
+//
+// -----------------------------------------------------------------------------
 
-NpcPartyType::NpcPartyType():formation(NULL), i_group(-1), n_groups(0), 
+PartyType::PartyType():formation(NULL), i_group(-1), n_groups(0), 
                              groups(NULL),
                              pmask(0), vrad(0)
 {
         sleep_sprite = NULL;
 }
 
-NpcPartyType::~NpcPartyType()
+PartyType::~PartyType()
 {
 	if (groups != NULL)
 		delete groups;
 }
 
-bool NpcPartyType::init(class Character * ch)
+bool PartyType::init(class Character * ch)
 {
 	char name[64];
 
@@ -79,13 +84,13 @@ bool NpcPartyType::init(class Character * ch)
 	return true;
 }
 
-struct GroupInfo *NpcPartyType::enumerateGroups(void)
+struct GroupInfo *PartyType::enumerateGroups(void)
 {
 	i_group = -1;
 	return getNextGroup();
 }
 
-struct GroupInfo *NpcPartyType::getNextGroup(void)
+struct GroupInfo *PartyType::getNextGroup(void)
 {
 	i_group++;
 	if (i_group < n_groups)
@@ -93,9 +98,9 @@ struct GroupInfo *NpcPartyType::getNextGroup(void)
 	return NULL;
 }
 
-class Object *NpcPartyType::createInstance()
+class Object *PartyType::createInstance()
 {
-	class NpcParty *obj = new NpcParty();
+	class Party *obj = new Party();
 	if (!obj)
                 return NULL;
 
@@ -164,7 +169,7 @@ static struct GroupInfo *load_group_info(class Loader * loader, int *n)
 
 }
 
-bool NpcPartyType::load(class Loader * loader)
+bool PartyType::load(class Loader * loader)
 {
 	char *tmp_tag = 0;
 
@@ -246,7 +251,40 @@ bool NpcPartyType::load(class Loader * loader)
 	return true;
 }
 
-NpcParty::NpcParty()
+bool PartyType::isType(int classID)
+{
+        return (classID == PARTY_TYPE_ID);
+}
+
+int PartyType::getType()
+{
+        return PARTY_TYPE_ID;
+}
+
+int PartyType::getPmask()
+{
+        return pmask;
+}
+
+int PartyType::getVisionRadius()
+{
+        return vrad;
+}
+
+bool PartyType::isVisible()
+{
+        return visible;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// Party
+//
+// -----------------------------------------------------------------------------
+
+
+Party::Party()
 {
 	act = WORKING;
 	alignment = 0;
@@ -255,18 +293,80 @@ NpcParty::NpcParty()
 	size = 0;
 	isWrapper = false;
 	list_init(&members);
+        n_members = 0;
 	vehicle = 0;
 	formation = NULL;
         wandering = false;
         memset(&pinfo, 0, sizeof(pinfo));
+        ctrl = ctrl_party_ai;
 }
 
-NpcParty::~NpcParty()
+Party::~Party()
 {
         printf("Destroying %s\n", getName());
 }
 
-bool NpcParty::turn_vehicle(void)
+bool Party::isType(int classID)
+{
+        if (classID == PARTY_ID)
+                return true;
+        return Object::isType(classID);
+}
+
+int Party::getType()
+{
+        return PARTY_ID;
+}
+
+class PartyType *Party::getObjectType()
+{
+        return (class PartyType *) Object::getObjectType();
+}
+
+int Party::getVisionRadius()
+{
+        return getObjectType()->getVisionRadius();
+}
+
+void Party::init(int x, int y, struct place *place, class PartyType * type)
+{
+        Object::init(x, y, place, type);
+}
+
+int Party::getAlignment()
+{
+        return alignment;
+}
+
+void Party::setAlignment(int val)
+{
+        alignment = val;
+}
+
+bool Party::isHostile(int alignment)
+{
+        return (!(this->alignment & alignment));
+}
+
+void Party::setFleeVector(int x, int y)
+{
+        fdx = x;
+        fdy = y;
+}
+
+void Party::getFleeVector(int *x, int *y)
+{
+        *x = fdx;
+        *y = fdy;
+}
+
+int Party::getSize(void)
+{
+                return size;
+}
+
+
+bool Party::turn_vehicle(void)
 {
 	int cost = 0;
 
@@ -289,7 +389,7 @@ bool NpcParty::turn_vehicle(void)
 	return true;
 }
 
-bool NpcParty::enter_town(class Portal * portal)
+bool Party::enter_town(class Portal * portal)
 {
 	int newx, newy, max_i, dx2, dy2, i;
 	struct place *newplace;
@@ -353,7 +453,7 @@ bool NpcParty::enter_town(class Portal * portal)
 	return false;
 }
 
-bool NpcParty::move(int dx, int dy)
+MoveResult Party::move(int dx, int dy)
 {
 	struct place *newplace;
 	int newx;
@@ -371,7 +471,7 @@ bool NpcParty::move(int dx, int dy)
 	/* Check if the party is in a vehicle that must turn its facing before
 	 * moving */
 	if (turn_vehicle())
-		return true;
+		return ChangedFacing;
 
 	/* Remember old (current) coordinates */
 	oldplace = getPlace();
@@ -385,7 +485,7 @@ bool NpcParty::move(int dx, int dy)
 
 	/* Walking off the edge of a map */
 	if (place_off_map(oldplace, newx, newy)) {
-		return false;
+		return OffMap;
 	}
 
 	/* Check if the player is there. */
@@ -401,7 +501,7 @@ bool NpcParty::move(int dx, int dy)
                 // -------------------------------------------------------------
                 
                 if (! player_party->isOnMap())
-                        return false;
+                        return WasOccupied;
 
 		/* If this party is hostile to the player then begin combat */
 		if (isHostile(player_party->alignment)) {
@@ -421,9 +521,9 @@ bool NpcParty::move(int dx, int dy)
 			cinfo.defend = true;
 			cinfo.move = &info;
 
-			player_party->move_to_wilderness_combat(&cinfo);
+			combat_enter(&cinfo);
                         endTurn();
-                        return true;
+                        return EngagedEnemy;
 		}
 
                 if (player_party->isResting()) {
@@ -435,43 +535,43 @@ bool NpcParty::move(int dx, int dy)
                 }
 
                 /* Else abort the move */
-                return false;
+                return WasOccupied;
 
 	}
 
 	/* Check if another entity is already there */
 	if (place_is_occupied(oldplace, newx, newy)) {
-		return false;
+		return WasOccupied;
 	}
 
 	/* Check for a vehicle. */
 	class Vehicle *veh = place_get_vehicle(newplace, newx, newy);
 	if (veh && (vehicle || veh->occupant)) {
-		return false;
+		return WasOccupied;
 	}
 
 	/* Check for an automatic portal (and avoid it) */
 	portal = place_get_portal(newplace, newx, newy);
 	if (portal && portal->isAutomatic()) {
-		return false;
+		return AvoidedPortal;
 	}
 
 	/* Check for a moongate (and avoid it) */
 	moongate = place_get_moongate(newplace, newx, newy);
 	if (moongate && moongate->isOpen()) {
-		return false;
+		return AvoidedPortal;
 	}
 
 	/* Check passability */
 	if (!place_is_passable(oldplace, newx, newy, getPmask(),
 			       act == COMMUTING ? PFLAG_IGNOREMECHS : 0)) {
-		return false;
+		return WasImpassable;
 	}
 
         /* When wandering, don't wander over terrain hazards. When pathfinding,
          * assume that braving the hazard is the best course. */
 	if (wandering && place_is_hazardous(newplace, newx, newy))
-                return false;
+                return AvoidedHazard;
 
 
 	// Check for a mech (not for passability, for sending the STEP
@@ -484,10 +584,10 @@ bool NpcParty::move(int dx, int dy)
 
 	action_points -= place_get_movement_cost(getPlace(), getX(), getY());
 
-        return true;
+        return MovedOk;
 }
 
-bool NpcParty::gotoSpot(int mx, int my)
+bool Party::gotoSpot(int mx, int my)
 {
 	// Common routine used by work() and commute().
 	struct astar_node *path;
@@ -495,7 +595,7 @@ bool NpcParty::gotoSpot(int mx, int my)
 	struct astar_search_info as_info;
 	int dx;
 	int dy;
-        bool ret = true;
+        enum MoveResult ret = NotApplicable;
 
 	/* Look for a path. */
 	memset(&as_info, 0, sizeof(as_info));
@@ -528,10 +628,10 @@ bool NpcParty::gotoSpot(int mx, int my)
 	/* Cleanup */
 	astar_path_destroy(path);
 
-	return ret;
+	return (ret == MovedOk || ret == EngagedEnemy);
 }
 
-bool NpcParty::attack_with_ordnance(int d)
+bool Party::attack_with_ordnance(int d)
 {
 	class ArmsType *ordnance;
 	int dx, dy;
@@ -589,93 +689,8 @@ bool NpcParty::attack_with_ordnance(int d)
 	return false;
 }
 
-void NpcParty::wander()
-{
-	int dx = 0, dy = 0;
 
-	/* Roll for direction */
-	dx = random() % 3 - 1;
-	if (!dx)
-		dy = random() % 3 - 1;
-
-	if (dx || dy) {
-		move(dx, dy);
-	}
-}
-
-void NpcParty::work()
-{
-	int d;
-
-	if (getAlignment() & player_party->alignment) {
-		// This party is friendly to the player, so just wander for now
-		// (later I'll add schedules).
-		wander();
-		return;
-	}
-
-	/* Check if the player is on this map */
-	if (Place != getPlace()) {
-		wander();
-		// Workaround: this is really to handle the case where
-		// wandering can't consume any turns because the party is
-		// stranded somewhere surrounded by impassable terrain.
-		return;
-	}
-
-        /* Check if the player is _on this spot_. Yes, this can happen under
-         * current game rules. If a player enters a portal and an npc is on the
-         * destination then... */
-	if (getX() == player_party->getX() && getY() == player_party->getY()) {
-                
-                struct move_info info;
-                struct combat_info cinfo;
-
-                memset(&info, 0, sizeof(info));
-                info.place = getPlace();
-                info.x = getX();
-                info.y = getY();
-                info.dx = dx;
-                info.dy = dy;
-                info.npc_party = this;
-                
-                if (!dx && !dy)
-                        info.dx = 1;
-                else if (dx && dy)
-                        info.dy = 0;
-
-                memset(&cinfo, 0, sizeof(cinfo));
-                cinfo.defend = true;
-                cinfo.move = &info;
-                
-                player_party->move_to_wilderness_combat(&cinfo);
-                endTurn();
-		return;
-	}
-
-        
-
-	/* Check if the player is in visible range */
-	d = place_walking_distance(Place,
-				   getX(), getY(),
-				   player_party->getX(), player_party->getY());
-
-	if (d > getVisionRadius()) {
-		wander();
-		return;
-	}
-
-	if (d > 1 && attack_with_ordnance(d)) {
-		return;
-	}
-
-	if (!gotoSpot(player_party->getX(), player_party->getY())) {
-		wander();
-		return;
-	}
-}
-
-void NpcParty::exec(struct exec_context *cntxt)
+void Party::exec(struct exec_context *cntxt)
 {
         assert(!isDestroyed());
 
@@ -686,17 +701,7 @@ void NpcParty::exec(struct exec_context *cntxt)
         while (action_points > 0 && !isDestroyed()) {
 
                 int initial_points = action_points;
-
-                switch (act) {
-                case SLEEPING:
-                case EATING:
-                        break;
-                default:
-                case WORKING:
-                        work();
-                        break;
-                }
-
+                ctrl(this);
                 /* If we didn't use any action points then we're idle and need
                  * to break to prevent an endless loop. */
                 if (action_points == initial_points)
@@ -708,15 +713,15 @@ void NpcParty::exec(struct exec_context *cntxt)
                 action_points = 0;
 }
 
-void NpcParty::init(class NpcPartyType * type)
+void Party::init(class PartyType * type)
 {
 	Object::init(type);
 }
 
-void NpcParty::init(class Character * ch)
+void Party::init(class Character * ch)
 {
 	// This is a "wrapper" party around a single character.
-	NpcPartyType *wtype = new NpcPartyType();
+	PartyType *wtype = new PartyType();
 	wtype->init(ch);
 	Object::init(wtype);
 
@@ -728,10 +733,10 @@ void NpcParty::init(class Character * ch)
 	alignment = ch->getAlignment();
 }
 
-bool NpcParty::createMembers(void)
+bool Party::createMembers(void)
 {
 	int order = 0;
-	class NpcPartyType *type = getObjectType();
+	class PartyType *type = getObjectType();
 	char name[64];
 	static int instance = 0;
 
@@ -780,11 +785,11 @@ bool NpcParty::createMembers(void)
 	return true;
 }
 
-bool NpcParty::load(class Loader * loader)
+bool Party::load(class Loader * loader)
 {
 	bool hflag;
 	class Character *c;
-	class NpcPartyType *type = getObjectType();
+	class PartyType *type = getObjectType();
         char *conv_tag;
 
 	assert(type);
@@ -857,7 +862,7 @@ bool NpcParty::load(class Loader * loader)
 	return createMembers();
 }
 
-void NpcParty::forEachMember(bool(*fx) (class Character *, void *), void *data)
+void Party::forEachMember(bool(*fx) (class Character *, void *), void *data)
 {
 	struct list *elem, *tmp;
 
@@ -876,7 +881,7 @@ void NpcParty::forEachMember(bool(*fx) (class Character *, void *), void *data)
 
 static bool myDestroyMember(class Character * c, void *data)
 {
-	class NpcParty *party = (class NpcParty *) data;
+	class Party *party = (class Party *) data;
 
 	party->removeMember(c);
 	c->destroy();
@@ -885,7 +890,7 @@ static bool myDestroyMember(class Character * c, void *data)
 	return false;
 }
 
-void NpcParty::destroy()
+void Party::destroy()
 {
 	disembark();
 	Object::destroy();	// removes it
@@ -895,7 +900,7 @@ void NpcParty::destroy()
 
 static bool myCleanupMember(class Character * c, void *data)
 {
-	class NpcParty *party = (class NpcParty *) data;
+	class Party *party = (class Party *) data;
 
 	c->setCombat(false);
 
@@ -913,19 +918,19 @@ static bool myCleanupMember(class Character * c, void *data)
 	return false;
 }
 
-void NpcParty::cleanupAfterCombat()
+void Party::cleanupAfterCombat()
 {
 	forEachMember(myCleanupMember, this);
 }
 
-void NpcParty::removeMember(class Character * c)
+void Party::removeMember(class Character * c)
 {
 	list_remove(&c->plist);
 	c->party = 0;
 	size--;
 }
 
-bool NpcParty::addMember(class Character * c)
+bool Party::addMember(class Character * c)
 {
         list_add(&members, &c->plist);
         c->party = this;
@@ -944,23 +949,21 @@ static bool add_to_player_party(class Character * c, void *data)
 	return false;
 }
 
-bool NpcParty::joinPlayer(void)
+bool Party::joinPlayer(void)
 {
-	if (player_party->get_room_in_party() < getSize())
-		return false;
 	remove();
 	forEachMember(add_to_player_party, 0);
 	return true;
 }
 
-int NpcParty::getPmask()
+int Party::getPmask()
 {
 	if (vehicle)
 		return vehicle->getPmask();
 	return getObjectType()->getPmask();
 }
 
-void NpcParty::paint(int sx, int sy)
+void Party::paint(int sx, int sy)
 {
 	if (vehicle)
 		vehicle->paint(sx, sy);
@@ -968,7 +971,7 @@ void NpcParty::paint(int sx, int sy)
 		Object::paint(sx, sy);
 }
 
-struct sprite *NpcParty::getSprite()
+struct sprite *Party::getSprite()
 {
 	if (vehicle)
 		return vehicle->getSprite();
@@ -979,7 +982,7 @@ struct sprite *NpcParty::getSprite()
 	return type->getSprite();
 }
 
-void NpcParty::disembark()
+void Party::disembark()
 {
 	if (vehicle) {
 		assert(getPlace());
@@ -989,7 +992,7 @@ void NpcParty::disembark()
 	}
 }
 
-int NpcParty::getSpeed()
+int Party::getSpeed()
 {
 	if (vehicle)
 		return vehicle->getSpeed();
@@ -1020,7 +1023,7 @@ static bool damage_member(class Character * member, void *data)
 	return false;
 }
 
-void NpcParty::damage(int damage)
+void Party::damage(int damage)
 {
 	struct damage_member_info dm_info;
 
@@ -1046,7 +1049,7 @@ void NpcParty::damage(int damage)
 	}
 }
 
-void NpcParty::distributeMembers()
+void Party::distributeMembers()
 {
         // ---------------------------------------------------------------------
         // Emulate what I currently do for the player party.
@@ -1091,7 +1094,7 @@ void NpcParty::distributeMembers()
 
 }
 
-void NpcParty::relocate(struct place *place, int x, int y)
+void Party::relocate(struct place *place, int x, int y)
 {
 	class Mech *mech;
 
@@ -1128,14 +1131,14 @@ void NpcParty::relocate(struct place *place, int x, int y)
         endTurn();
 }
 
-struct formation *NpcParty::get_formation()
+struct formation *Party::get_formation()
 {
 	if (vehicle && vehicle->get_formation())
 		return vehicle->get_formation();
 	return getObjectType()->formation;
 }
 
-void NpcParty::describe(int count)
+void Party::describe(int count)
 {
         Object::describe(count);
         if (vehicle) {
@@ -1152,7 +1155,7 @@ static bool get_member_movement_sound(class Character * member, void *data)
 }
 
 
-char *NpcParty::get_movement_sound()
+char *Party::get_movement_sound()
 {
         char *sound = 0;
 
@@ -1162,7 +1165,7 @@ char *NpcParty::get_movement_sound()
         return sound;
 }
 
-int NpcParty::getActivity()
+int Party::getActivity()
 {
         return act;
 }
@@ -1198,7 +1201,7 @@ static bool member_apply_existing(class Character * pm, void *data)
 	return false;
 }
 
-void NpcParty::applyExistingEffects()
+void Party::applyExistingEffects()
 {
         forEachMember(member_apply_existing, this);
         if (allDead())
@@ -1206,21 +1209,21 @@ void NpcParty::applyExistingEffects()
 }
 
 
-void NpcParty::burn()
+void Party::burn()
 {
         forEachMember(member_burn, NULL);
         if (allDead())
                 destroy();
 }
 
-void NpcParty::poison()
+void Party::poison()
 {
         forEachMember(member_poison, NULL);
         if (allDead())
                 destroy();
 }
 
-void NpcParty::sleep()
+void Party::sleep()
 {
         forEachMember(member_sleep, NULL);
         if (allDead())
@@ -1236,9 +1239,18 @@ static bool member_check_if_alive(class Character *member, void *data)
         return false;
 }
 
-bool NpcParty::allDead()
+bool Party::allDead()
 {
         bool dead = true;
         forEachMember(member_check_if_alive, &dead);
         return dead;
+}
+
+void Party::switchOrder(class Character *ch1, class Character *ch2)
+{
+        int tmp;
+        list_switch(&ch1->plist, &ch2->plist);
+        tmp = ch1->getOrder();
+        ch1->setOrder(ch2->getOrder());
+        ch2->setOrder(tmp);
 }

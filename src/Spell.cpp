@@ -267,7 +267,7 @@ bool Spell::bindTags(class Loader * loader)
 			free(stag);
 			break;
 		case EFFECT_SUMMON:
-			parms[i] = loader->lookupTag(stag, NPCPARTY_TYPE_ID);
+			parms[i] = loader->lookupTag(stag, PARTY_TYPE_ID);
 			if (!parms[i]) {
 				loader->setError("Invalid PARTY tag '%s' "
 						 "in SPELL '%s'", stag, tag);
@@ -456,7 +456,7 @@ static void Spell_expire_effects_to_character(struct wq_job *job,
 					      struct list *wq)
 {
 	class Spell *spell = (class Spell *) job->data;
-	player_party->for_each_member(Spell_reverse_effects_to_character,
+	player_party->forEachMember(Spell_reverse_effects_to_character,
 				      spell);
 	free(job);
 	consolePrint("%s spell expired!\n", spell->getName());
@@ -761,11 +761,11 @@ enum Spell::cast_result Spell::cast(class Character * caster,
 	} else if (effects == EFFECT_SUMMON) {
 		int i, dx, dy;
 		for (i = 0; i < n_parms; i++) {
-			class NpcParty *party;
-			class NpcPartyType *type;
+			class Party *party;
+			class PartyType *type;
 
-			type = (class NpcPartyType *) parms[i];
-			party = (class NpcParty *) type->createInstance();
+			type = (class PartyType *) parms[i];
+			party = (class Party *) type->createInstance();
 			party->setAlignment(caster->getAlignment());
 			party->createMembers();
 
@@ -788,7 +788,7 @@ enum Spell::cast_result Spell::cast(class Character * caster,
                                 ty = caster->getY();
                         }
                         
-                        if (!combatAddNpcParty(party, dx, dy, true, caster->getPlace(), tx, ty)) {
+                        if (!combatAddParty(party, dx, dy, true, caster->getPlace(), tx, ty)) {
 				success = no_room_on_battlefield;
                                 delete party;
                         } else {
@@ -835,7 +835,7 @@ enum Spell::cast_result Spell::cast(class Character * caster,
 	}
 	if (effects & EFFECT_ARMOUR &&
 	    this->target == SPELL_TARGET_ALL_PARTY_MEMBERS) {
-		player_party->for_each_member(Spell_apply_effects_to_character,
+		player_party->forEachMember(Spell_apply_effects_to_character,
 					      this);
 		wqCreateJob(&TurnWorkQueue, Turn + duration, 0, this,
 			    Spell_expire_effects_to_character);
@@ -970,7 +970,7 @@ enum Spell::cast_result Spell::cast(class Character * caster,
 	    player_party->getContext() & CONTEXT_COMBAT) {
 		class Character *clone = character->clone(character);
 		if (clone) {
-			class NpcParty *party = new NpcParty();
+			class Party *party = new Party();
 			if (!party) {
 				delete clone;
 			} else {
@@ -983,7 +983,7 @@ enum Spell::cast_result Spell::cast(class Character * caster,
                                 // ---------------------------------------------
 
 				party->init(clone);
-				if (!combatAddNpcParty(party, 0, 0, true, caster->getPlace(), tx, ty)) {
+				if (!combatAddParty(party, 0, 0, true, caster->getPlace(), tx, ty)) {
                                         delete party;
                                         success = no_room_on_battlefield;
                                 }
@@ -1061,7 +1061,7 @@ void Spell::teleport_horizontally(class Character * caster, int direction)
 		dy = newy - oldy;
 	}
 
-        if (caster->move(dx, dy) == Character::MovedOk) {
+        if (caster->move(dx, dy) == MovedOk) {
                 success = ok;
         } else {
                 success = teleport_failed;
@@ -1090,11 +1090,6 @@ void Spell::teleport_vertically(class Character * caster, int direction)
 	case move_enter_auto_portal:
 	case move_enter_moongate:
                 player_party->removeMembers();
-#if 0
-                mapRmView(ALL_VIEWS);
-                mapAddView(player_party->view);
-                mapSetDirty();
-#endif
 		player_party->relocate(minfo.place, minfo.x, minfo.y);
 		success = ok;
 		break;
@@ -1103,7 +1098,7 @@ void Spell::teleport_vertically(class Character * caster, int direction)
                 player_party->removeMembers();
 		memset(&cinfo, 0, sizeof(cinfo));
 		cinfo.move = &minfo;
-		player_party->move_to_wilderness_combat(&cinfo);
+		combat_enter(&cinfo);
 		success = ok;
 		break;
 

@@ -924,3 +924,21 @@ void Object::setView(struct mview *new_view)
 void Object::changePlaceHook()
 {
 }
+
+int Object::getDx()
+{
+        return dx;
+}
+
+int Object::getDy()
+{
+        return dy;
+}
+bool Object::canWanderTo(int newx, int newy)
+{
+        return false;
+}
+enum MoveResult Object::move(int dx, int dy)
+{
+        return NotApplicable;
+}

@@ -24,7 +24,7 @@
 #include "Loader.h"
 #include "common.h"
 #include "console.h"
-//#include "NpcParty.h"
+//#include "Party.h"
 #include "event.h"
 #include "player.h"
 #include "foogod.h"
@@ -1073,7 +1073,7 @@ static void api_check_member(struct response *resp, struct conv *conv)
 {
 	struct api_check_member_parms *parms = &resp->parms.check_member;
 
-	player_party->for_each_member(is_member, resp);
+	player_party->forEachMember(is_member, resp);
 	conv->result = resp->result;
 	execute_response_chain(conv->result ? parms->yes : parms->no, conv);
 }
@@ -1476,7 +1476,7 @@ static bool api_bind_create_npc_party(struct response *resp,
         // lookup the object type
         parms->obj_type = 
                 (class ObjectType*)loader->lookupTag(parms->obj_type_tag, 
-                                                     NPCPARTY_TYPE_ID);
+                                                     PARTY_TYPE_ID);
         if (!parms->obj_type) {
                 loader->setError("Error binding create_npc_party: '%s' is not "
                                  "a valid PARTY tag\n",
@@ -1520,7 +1520,7 @@ static void api_create_npc_party(struct response *resp, struct conv *conv)
 {
 	struct api_create_npc_party_parms *parms = 
                 &resp->parms.create_npc_party;
-        class NpcParty *party = NULL;
+        class Party *party = NULL;
 
 
         assert(parms->prob);
@@ -1535,7 +1535,7 @@ static void api_create_npc_party(struct response *resp, struct conv *conv)
         // Allocate the new party
         // ---------------------------------------------------------------------
 
-        party = (class NpcParty *)parms->obj_type->createInstance();
+        party = (class Party *)parms->obj_type->createInstance();
         assert(party);
 
         // ---------------------------------------------------------------------

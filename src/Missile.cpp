@@ -52,7 +52,7 @@ bool Missile::enterTile(struct place *place, int x, int y)
         if (! (flags & MISSILE_HIT_PARTY))
                 return true;
 
-        struck = place_get_NpcParty(place, x, y);
+        struck = place_get_Party(place, x, y);
 
         if (struck != NULL) {
                 hit = true;

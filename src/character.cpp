@@ -46,6 +46,7 @@
 #include "portal.h"
 #include "vehicle.h"
 #include "foogod.h"
+#include "ctrl.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -172,11 +173,11 @@ void Character::damage(int damage)
                 printf("Cloning %s\n", getName());
                 class Character *copy = clone(this);
                 assert(copy);
-                class NpcParty *copy_party = new NpcParty();
+                class Party *copy_party = new Party();
                 assert(copy_party);
                 copy->setAlignment(this->getAlignment());
                 copy_party->init(copy);
-                if (!combatAddNpcParty(copy_party, 0, 0, true, getPlace(), getX(), getY())) {
+                if (!combatAddParty(copy_party, 0, 0, true, getPlace(), getX(), getY())) {
                         delete copy_party;
                         delete copy;                                
                 } else {
@@ -300,7 +301,7 @@ void Character::groupExitTo(struct place *dest_place, int dest_x, int dest_y)
         endTurn();
 }
 
-enum Character::MoveResult Character::move(int dx, int dy)
+enum MoveResult Character::move(int dx, int dy)
 {
 	int newx, newy;
 	class Character *occupant;
@@ -324,7 +325,7 @@ enum Character::MoveResult Character::move(int dx, int dy)
                         // true.
                         // -----------------------------------------------------
 
-                        return (player_party->move(dx, dy, (dx > 1 || dy > 1)) ? MovedOk : WasImpassable);
+                        return (player_party->move(dx, dy));
                 } else {
                         return (party->move(dx, dy) ? MovedOk : WasImpassable);
                 }
@@ -370,7 +371,7 @@ enum Character::MoveResult Character::move(int dx, int dy)
                         return NotFollowMode;
                 }
                 
-                if (!combat_rendezvous_party(player_party->n_pc * 2)) {
+                if (!player_party->rendezvous(getPlace(), getX(), getY())) {
                         return CantRendezvous;
                 }
 
@@ -723,25 +724,6 @@ void Character::changeSleep(bool val)
 
         }
 
-#if 0
-        // Not sure this is relevant any more...
-
-        // ---------------------------------------------------------------------
-        // Special case: if this character just woke up, and it is a player
-        // party member, and it is the only member on the map then it will be
-        // the party leader. Make sure that it is player-controlled.
-        // ---------------------------------------------------------------------
-
-        if (! val                              &&
-            isPlayerControlled()               &&
-            isOnMap()                          &&
-            this == player_party->get_leader() &&
-            getControlMode() != CONTROL_MODE_PLAYER) {
-
-                setControlMode(CONTROL_MODE_PLAYER);
-                consolePrint("%s is the new party leader.\n", this->getName());
-        }
-#endif
 }
 
 void Character::awaken(void)
@@ -799,7 +781,7 @@ void Character::setFleeing(bool val)
 	}
 }
 
-enum Character::MoveResult Character::flee()
+enum MoveResult Character::flee()
 {
 	return move(fleeX, fleeY);
 }
@@ -935,7 +917,7 @@ void Character::useAmmo()
 				// exhausted the individual characters have one
 				// remaining in their hands.
 
-				player_party->for_each_member (myUnreadyDepletedThrownWeapon, ie);
+				player_party->forEachMember (myUnreadyDepletedThrownWeapon, ie);
 			}
 			player_party->remove_from_inventory(ie, 1);
 
@@ -1012,7 +994,7 @@ bool Character::needToRearm()
         // party inventory. Non-player characters pull from their own personal
         // inventory. I really need to merge both types into the same behaviour
         // to simplify things.
-        if (party == (NpcParty*)player_party)
+        if (party == (Party*)player_party)
                 return false;
 
 	return rearm;
@@ -1546,6 +1528,10 @@ bool Character::isPlayerControlled() {
 
 void Character::setPlayerControlled(bool val) {
         playerControlled = val;
+        if (playerControlled)
+                ctrl = ctrl_character_ui;
+        else
+                ctrl = ctrl_character_ai;
 }
 
 void Character::setAttackTarget(class Character * target) {
@@ -1653,7 +1639,7 @@ int Character::getArmor()
 
 }
 
-class NpcParty *Character::getParty()
+class Party *Character::getParty()
 {
         return party;
 }
@@ -1687,723 +1673,7 @@ bool Character::canSee(class Object *obj)
                 obj->isVisible());
 }
 
-void Character::ai_select_target(void)
-{
-        struct list *head;
-        struct list *elem;
-        class Object *obj;
-        class Object *new_target = NULL;
-        int min_distance = 1000;
-        int distance;
 
-        /* Get a list of all the objects within vision radius. */
-        head = place_get_all_objects(getPlace());
-
-        /* Walk the list, looking for the nearest hostile character. */
-        list_for_each(head, elem) {
-                
-	  obj = outcast(elem, class Object, turn_list);
-
-                /* Skip invalid targets */
-                if (obj == this ||
-                    !obj->isOnMap() ||
-                    obj->isDead() ||
-                    !obj->isType(CHARACTER_ID) ||
-                    !obj->isHostile(getAlignment()) ||
-                    !canSee(obj))
-                        continue;
-
-                /* Remember the closest target */
-                distance = place_flying_distance(getPlace(), getX(), getY(), obj->getX(), obj->getY());
-                if (distance < min_distance) {
-                        min_distance = distance;
-                        new_target = obj;
-                }
-        }
-
-        if (new_target) {
-                setAttackTarget((class Character*)new_target);
-                return;
-        }
-
-        if (target &&
-            target->isHostile(getAlignment()) &&
-            target != this &&
-            target->isOnMap() &&
-            !target->isDead() && 
-            target->isVisible())
-                return;
-
-        target = NULL;
-}
-
-void Character::enchant_target()
-{
-        class Spell *spell;
-        int i;
-        int distance;
-
-        if (MagicNegated)
-                return;
-
-        distance = place_flying_distance(getPlace(), getX(), getY(), target->getX(), target->getY());
-
-        // Enumerate all the known spells for this this
-        for (i = 0; i < species->n_spells; i++) {
-
-                spell = species->spells[i];
-
-                // Check if the THIS has enough mana
-                if (spell->cost > getMana()) {
-                        continue;
-                }
-
-                // Check if the nearest is in range or if the range does not
-                // matter for this spell type
-                if (distance > spell->range &&
-                    ! (spell->effects & EFFECT_SUMMON)) {
-                        continue;
-                }
-
-                // Cast the spell
-                // gmcnutt: for now use the caster's coordinates, only the
-                // summoning spells currently use them.
-                consolePrint("%s casts %s on %s.\n", getName(), spell->getName(), target->getName());
-                spell->cast(this, target, 0, getX(), getY());
-                decActionPoints(spell->getRequiredActionPoints());
-                if (getActionPoints() <= 0)
-                        return;
-        }
-
-        return;
-}
-
-void Character::attack_target(class ArmsType *weapon)
-{
-        int hit;
-        int def;
-        int damage;
-        int armor;
-        bool miss;
-
-        miss = ! weapon->fire(target, getX(), getY());
-        decActionPoints(weapon->getRequiredActionPoints());
-        useAmmo();
-
-        if (miss) {
-                consolePrint("miss!\n");
-                return;
-        }
-
-        // Roll to hit.
-        hit = dice_roll(2, 6) + weapon->getHit();
-        def = dice_roll(2, 6) + target->getDefend();
-        if (hit < def) {
-                consolePrint("miss!\n");
-                return;
-        } else {
-                consolePrint("hit! ");
-        }
-
-        // roll for damage
-        damage = weapon->getDamage();
-        armor = target->getArmor();
-        consolePrint("Rolled %d damage, %d armor ", damage, armor);
-        damage -= armor;
-        damage = max(damage, 0);
-        consolePrint("for %d total damage, ", damage);
-        target->damage(damage);
-
-        consolePrint("%s!\n", target->getWoundDescription());
-}
-
-bool Character::ai_attack_target()
-{
-        int distance;
-        bool attacked = false;
-
-        distance = place_flying_distance(getPlace(), getX(), getY(), target->getX(), target->getY());
-
-        for (class ArmsType * weapon = enumerateWeapons(); weapon != NULL; weapon = getNextWeapon()) {
-
-                if (distance > weapon->getRange()) {
-                        continue;
-                }
-
-                if (!hasAmmo(weapon)) {
-                        continue;
-                }
-
-                if (distance <= 1 && weapon->isMissileWeapon()) {
-                        // Handle missile weapon interference
-                        continue;
-                }
-
-                consolePrint("%s attacks %s with %s...", getName(), target->getName(), weapon->getName());
-                attack_target(weapon);
-                attacked = true;
-                statusRepaint();
-
-                if (target->isDead())
-                        break;
-
-                if (getActionPoints() <= 0)
-                        break;
-        }
-
-        if (((class Character *) this)->needToRearm())
-                ((class Character *) this)->armThyself();
-
-        return attacked;
-}
-
-void Character::pathfind_to(class Object *target)
-{
-        struct astar_node *path;
-        struct astar_search_info as_info;
-
-        /* Find a path to the nearest member */
-        memset(&as_info, 0, sizeof (as_info));
-        as_info.x0 = getX();
-        as_info.y0 = getY();
-        as_info.x1 = target->getX();
-        as_info.y1 = target->getY();
-        as_info.flags = PFLAG_IGNORECOMPANIONS;
-        path = place_find_path(Place, &as_info, getPmask(), this);
-        
-        if (!path) {
-                return;
-        }
-        
-        if (path->next) {
-                move(path->next->x - getX(), path->next->y - getY());
-                
-        }
-
-        astar_path_destroy(path);                
-}
-
-void Character::player_controlled_attack()
-{
-        int x;
-        int y;
-        int i;
-        class ArmsType *weapon;
-        class Character *near;
-        struct terrain *terrain;
-        class Mech *mech;
-        int dx_to_neighbor[] = { 0, -1, 0, 1 };
-        int dy_to_neighbor[] = { -1, 0, 1, 0 };
-
-        consolePrint("Attack!\n");
-
-        // If in follow mode, when the leader attacks automatically switch to
-        // turn-based mode.
-        if (player_party->getPartyControlMode() == PARTY_CONTROL_FOLLOW) {
-                consolePrint("Switching from follow to combat mode\n");
-                player_party->enableRoundRobinMode();
-        }
-
-        // Loop over all readied weapons
-        for (weapon = enumerateWeapons(); weapon != NULL; weapon = getNextWeapon()) {
-
-                cmdwin_clear();
-                cmdwin_print("%s:", getName());
-                consolePrint("[%s]: ", weapon->getName());
-                consoleRepaint();
-
-                // Check ammo
-                if (!hasAmmo(weapon)) {
-                        consolePrint("no ammo!\n");
-                        continue;
-                }
-
-                /* Get the target. It's important to do this every time the
-                 * loop because the last iteration may have killed the previous
-                 * target, or it may be out of range of the weapon. The
-                 * getAttackTarget routine will reevaluate the current
-                 * target. */
-                getAttackTarget();
-
-
-                /* Check the four adjacent tiles for hostiles who will
-                 * interfere with a missile weapon */
-                if (weapon->isMissileWeapon()) {
-                        for (i = 0; i < 4; i++) {
-                                near = (class Character*)place_get_object(getPlace(), getX() + dx_to_neighbor[i], getY() + dy_to_neighbor[i], being_layer);
-                                if (near &&
-                                    near->isHostile(getAlignment()) &&
-                                    !near->isIncapacitated()) {
-                                        consolePrint("%s interferes!\n", near->getName());
-                                        return;
-                                }
-                        }
-
-                }
-
-                // prompt the user
-                cmdwin_clear();
-                if (weapon->isMissileWeapon()) {
-                        // SAM: It would be nice to get ammo name, too...
-                        cmdwin_print("Attack-Fire %s (range %d, %d ammo)-", weapon->getName(), weapon->getRange(), hasAmmo(weapon));
-                }
-                else if (weapon->isThrownWeapon()) {
-                        // SAM: It would be nice to get ammo name, too...
-                        cmdwin_print("Attack-Throw %s (range %d, %d left)-", weapon->getName(), weapon->getRange(), hasAmmo(weapon));
-                }
-                else {
-                        cmdwin_print("Attack-With %s (reach %d)-", weapon->getName(), weapon->getRange() );
-                }
-
-                // select the target location
-                x = target->getX();
-                y = target->getY();
-
-
-        prompt_for_target:
-                // SAM:
-                // select_target() might be a more elegant place to put
-                // logic to prevent (or require confirm of) attacking self, 
-                // party members, etc.
-                if (select_target(getX(), getY(), &x, &y, weapon->getRange()) == -1) {
-                        consolePrint("skip\n");
-                        continue;
-                }
-
-                // Find the new target under the cursor
-                target = (class Character *) place_get_object(Place, x, y, being_layer);
-                if (target == NULL) {
-
-                        /* Attack the terrain */
-                        terrain = placeGetTerrain(x, y);
-                        attackTerrain(x, y);
-                        cmdwin_print("%s", terrain->name);
-                        consolePrint("%s\n", terrain->name);
-
-                        /* Check for a mech */
-                        mech = (class Mech *) place_get_object(Place, x, y, mech_layer);
-                        if (mech)
-                                mech->activate(MECH_ATTACK);
-                }
-                else if (target == this) {
-
-                        // -----------------------------------------------------
-                        // Don't allow attacking self. This results in a nested
-                        // enumerateArms() call when we call getDefend() on
-                        // ourself, which messes up the loop we're in right
-                        // now. If we really want to support suicide then we'll
-                        // need to rework the enumeration code.
-                        // -----------------------------------------------------
-
-                        goto prompt_for_target;
-#if 0
-                        int yesno;
-
-                        // Don't allow targeting self, unless perhaps with
-                        // comfirmation.
-                        cmdwin_print("Confirm Attack Self-Y/N?");
-                        getkey(&yesno, yesnokey);
-                        cmdwin_backspace(4);
-                        if (yesno == 'y') {
-                                cmdwin_print("Yes!");
-                                goto confirmed_attack_self;
-                        }
-                        else {
-                                cmdwin_print("No!");
-                                continue;
-                        }
-#endif
-                }               // confirm attack self
-                else {
-//                      confirmed_attack_self:
-                        // confirmed_attack_ally:
-
-                        // in combat all npc parties and the player party
-                        // should be removed, so only characters reside at the
-                        // being layer
-                        assert(target->isType(CHARACTER_ID));
-
-                        cmdwin_print("%s", target->getName());                        
-                        consolePrint("attack %s...", target->getName());
-
-                        // Strike the target
-                        attack_target(weapon);
-
-                        // If we hit a party member then show their new hit
-                        // points in the status window
-                        if (target->isPlayerControlled())
-                                statusRepaint();
-                }
-
-                // Warn the user if out of ammo
-                if (NULL == getCurrentWeapon() ||
-                    false == hasAmmo(getCurrentWeapon()))
-                        consolePrint("(%s now out of ammo)\n", weapon->getName());
-
-                // Once the player uses a weapon he can't cancel out of the
-                // attack and continue his round with a different command.
-                addExperience(XP_PER_ATTACK);
-        }
-}
-
-static bool character_key_handler(struct KeyHandler *kh, int key, int keymod)
-{
-        extern int G_latency_start;
-        int dir;
-        class Character *character = (class Character *) kh->data;
-        static int unshift[] = { KEY_NORTH, KEY_SOUTH, KEY_EAST, KEY_WEST };
-        class Portal *portal;
-        class Character *solo_member;
-
-
-        G_latency_start = SDL_GetTicks();
-
-        // ---------------------------------------------------------------------
-        // Process the special CTRL commands
-        // ---------------------------------------------------------------------
-
-        if (keymod == KMOD_LCTRL || keymod == KMOD_RCTRL) {
-
-                switch (key) {
-      
-                case 't':
-                        cmdTerraform(character);
-                        break;
-
-                case 's':
-                        cmdSaveTerrainMap(character);
-                        break;
-
-                case 'z':
-                        mapTogglePeering();
-                        break;
-
-                default:
-                        break;
-                }
-        }
-
-        // ---------------------------------------------------------------------
-        // Process normal commands.
-        // ---------------------------------------------------------------------
-
-        else {
-                switch (key) {
-
-                case KEY_NORTH:
-                case KEY_EAST:
-                case KEY_SOUTH:
-                case KEY_WEST:
-
-                        // ------------------------------------------------------
-                        // Move the character.
-                        // ------------------------------------------------------
-
-                        dir = keyToDirection(key);
-
-                        consolePrint("%s-", directionToString(dir));
-
-                        switch (character->move(directionToDx(dir), directionToDy(dir))) {
-                        case Character::MovedOk:
-                                consolePrint("Ok\n");
-                                break;
-                        case Character::OffMap:
-                                consolePrint("No place to go!\n");
-                                break;
-                        case Character::ExitedMap:
-                                consolePrint("Exit!\n");
-                                character->endTurn();
-                                break;
-                        case Character::EngagedEnemy:
-                                break;
-                        case Character::WasOccupied:
-                                consolePrint("Occupied!\n");
-                                break;
-                        case Character::WasImpassable:
-                                consolePrint("Impassable!\n");
-                                break;
-                        case Character::SlowProgress:
-                                consolePrint("Slow progress!\n");
-                                break;
-                        case Character::SwitchedOccupants:
-                                consolePrint("Switch!\n");
-                                break;
-                        case Character::NotFollowMode:
-                                consolePrint("Must be in Follow Mode!\n");
-                                break;
-                        case Character::CantRendezvous:
-                                consolePrint("Party can't rendezvous!\n");
-                                break;
-			case Character::CouldNotSwitchOccupants:
-			  consolePrint("Can't switch!\n");
-			  break;
-                        }
-
-                        mapCenterView(character->getView(), character->getX(), character->getY());
-                        break;
-
-
-                case KEY_SHIFT_NORTH:
-                case KEY_SHIFT_EAST:
-                case KEY_SHIFT_SOUTH:
-                case KEY_SHIFT_WEST:
-
-                        // ------------------------------------------------------
-                        // Pan the camera.
-                        // ------------------------------------------------------
-                        
-                        key = unshift[(key - KEY_SHIFT_NORTH)];
-                        dir = keyToDirection(key);
-                        mapMoveCamera(directionToDx(dir), directionToDy(dir));
-                        mapSetDirty();
-                        break;
-
-
-                case 'a':
-                        character->player_controlled_attack();
-                        break;
-
-                case 'c':
-                        cmdCastSpell(character);
-                        break;
-
-
-                case 'e':
-
-                        // ------------------------------------------------------
-                        // Enter a portal. For this to work a portal must exist
-                        // here, the party must be in follow mode, and all the
-                        // party members must be able to rendezvous at this
-                        // character's position.
-                        // ------------------------------------------------------
-
-                        cmdwin_clear();
-                        cmdwin_print("Enter-");
-                        
-                        portal = place_get_portal(character->getPlace(), character->getX(), character->getY());
-                        if (!portal) {
-                                cmdwin_print("Nothing!");
-                                break;;
-                        }
-                        
-                        if (player_party->getPartyControlMode() != PARTY_CONTROL_FOLLOW) {
-                                cmdwin_print("Must be in follow mode!");
-                                break;
-                        }
-                        
-                        if (!combat_rendezvous_party(player_party->n_pc * 2)) {
-                                cmdwin_print("Party must be together!");
-                                break;
-                        }
-                        
-                        // ------------------------------------------------------
-                        // It's safe to enter the portal.
-                        // ------------------------------------------------------
-
-                        character->groupExitTo(portal->getToPlace(), portal->getToX(), portal->getToY());
-                        cmdwin_print("Ok");
-                        break;
-
-
-                case 'f':
-
-                        // ------------------------------------------------------
-                        // Toggle Follow mode on or off. When turning follow
-                        // mode off, set all party members to player
-                        // control. When turning it on, set all party member to
-                        // follow mode but set the leader to player control.
-                        // ------------------------------------------------------
-                        
-                        consolePrint("Follow mode ");
-                        if (player_party->getPartyControlMode() == PARTY_CONTROL_FOLLOW) {
-                                consolePrint("OFF\n");
-                                player_party->enableRoundRobinMode();
-                        } else {
-                                consolePrint("ON\n");
-                                player_party->enableFollowMode();
-                        }
-                        character->endTurn();
-                        break;
-
-                case 'g':
-                        cmdGet(character, !place_contains_hostiles(character->getPlace(), character->getAlignment()));
-                        break;
-                case 'h':
-                        cmdHandle(character);
-                        break;
-                case 'k':
-                        cmdCamp(character);
-                        break;
-                case 'o':
-                        cmdOpen(character);
-                        break;
-                case 'q':
-                        cmdQuit();
-                        break;
-                case 'r':
-                        cmdReady(character, 0);
-                        break;
-                case 't':
-                        cmdTalk(character->getX(), character->getY());
-                        break;
-                case 'u':
-                        cmdUse(character, 0);
-                        break;
-                case 'x':
-                        consolePrint("examines around\n");
-                        cmdXamine(character);
-                        break;
-                case 'z':
-                        consolePrint("show status\n");
-                        cmdZtats(character);
-                        break;
-                case '@':
-                        consolePrint("skylarks a bit");
-                        cmdAT(character);
-                        break;
-                case ' ':
-                        cmdwin_print("Pass");
-                        consolePrint("Pass\n");
-                        character->endTurn();
-                        break;
-
-                case SDLK_1:
-                case SDLK_2:
-                case SDLK_3:
-                case SDLK_4:
-                case SDLK_5:
-                case SDLK_6:
-                case SDLK_7:
-                case SDLK_8:
-                case SDLK_9:                        
-
-                        // ------------------------------------------------------
-                        // Put a character in solo mode.
-                        // ------------------------------------------------------
-                        
-                        solo_member = player_party->getMemberAtIndex(key - SDLK_1);
-                        if (solo_member != NULL             &&
-                            !solo_member->isIncapacitated() &&
-                            solo_member->isOnMap()) {
-                                player_party->enableSoloMode(solo_member);
-                                character->endTurn();
-                        }
-                        break;
-
-                case SDLK_0:
-                        // ------------------------------------------------------
-                        // Exit solo mode.
-                        // ------------------------------------------------------
-                        player_party->enableRoundRobinMode();
-                        character->endTurn();
-                        break;
-
-
-                case '<':
-                        // ------------------------------------------------------
-                        // Quick exit from wilderness combat. The current place
-                        // must be the special wildernss combat place and it
-                        // must be empty of hostile characters or this fails.
-                        // ------------------------------------------------------
-
-                        if (!place_is_wilderness_combat(character->getPlace())) {
-                                consolePrint("Must use an exit!\n");
-                                consolePrint("%s: ", character->getName());
-                                consoleRepaint();
-                                break;
-                        }
-
-                        if (place_contains_hostiles(character->getPlace(), character->getAlignment())) {
-                                consolePrint("Not while foes remain!\n");
-                                break;
-                        }
-
-                        // -----------------------------------------------------
-                        // This next call is to make sure the "Victory" and
-                        // "Defeated" messages are printed properly. I don't
-                        // *think* it has any other interesting side-effects in
-                        // this case.
-                        // -----------------------------------------------------
-
-                        combat_analyze_results_of_last_turn();
-
-                        // ------------------------------------------------------
-                        // Remove all party members.
-                        // ------------------------------------------------------
-
-                        player_party->removeMembers();
-
-                        character->endTurn();
-
-                        break;
-
-                default:
-                        break;
-                }
-
-        }
-
-        return character->isTurnEnded();
-}
-
-bool Character::gotoSpot(int mx, int my)
-{
-	// Common routine used by work() and commute().
-	struct astar_node *path;
-	struct astar_node *next;
-	struct astar_search_info as_info;
-	int dx;
-	int dy;
-        bool ret = true;
-
-	/* Look for a path. */
-	memset(&as_info, 0, sizeof(as_info));
-	as_info.x0 = getX();
-	as_info.y0 = getY();
-	as_info.x1 = mx;
-	as_info.y1 = my;
-	as_info.flags = PFLAG_IGNOREMECHS | PFLAG_IGNORECOMPANIONS;
-	path = place_find_path(getPlace(), &as_info, getPmask(), this);
-
-	if (!path)
-		return false;
-
-        //dump_path(path);
-
-	/* The first node in the path is the starting location. Get the next
-	 * step. */
-	next = path->next;
-	if (next) {
-
-		/* Get the movement vector */
-		dx = next->x - getX();
-		dy = next->y - getY();
-
-		/* Attempt to move */
-		switch (move(dx, dy)) {
-                case Character::MovedOk:
-                case Character::ExitedMap:
-                case Character::EngagedEnemy:
-                case Character::SlowProgress:
-                case Character::SwitchedOccupants:
-                        ret = true;
-                        break;
-                case Character::OffMap:
-                case Character::WasOccupied:
-                case Character::WasImpassable:
-		case Character::NotFollowMode:
-		case Character::CouldNotSwitchOccupants:
-		case Character::CantRendezvous:
-                        ret = false;
-                        break;
-                }                        
-	}
-
-	/* Cleanup */
-	astar_path_destroy(path);
-
-	return ret;
-}
 
 bool Character::commute()
 {
@@ -2448,44 +1718,63 @@ bool Character::commute()
         return false;
 }
 
-void Character::wander()
+bool Character::gotoSpot(int mx, int my)
 {
-	int dx = 0, dy = 0;
+	// Common routine used by work() and commute().
+	struct astar_node *path;
+	struct astar_node *next;
+	struct astar_search_info as_info;
+	int dx;
+	int dy;
+        bool ret = true;
 
-	/* Roll for direction */
-	dx = random() % 3 - 1;
-	if (!dx)
-		dy = random() % 3 - 1;
+	/* Look for a path. */
+	memset(&as_info, 0, sizeof(as_info));
+	as_info.x0 = getX();
+	as_info.y0 = getY();
+	as_info.x1 = mx;
+	as_info.y1 = my;
+	as_info.flags = PFLAG_IGNOREMECHS | PFLAG_IGNORECOMPANIONS;
+	path = place_find_path(getPlace(), &as_info, getPmask(), this);
 
-	if (dx || dy) {
+	if (!path)
+		return false;
 
-		// If this party is on a schedule then limit wandering to the
-		// area specied in the current appt.
-		if (sched) {
-			int newx, newy;
-			newx = getX() + dx;
-			newy = getY() + dy;
-			if (newx < sched->appts[appt].x ||
-			    newx > (sched->appts[appt].x +
-				    sched->appts[appt].w - 1) ||
-			    newy < sched->appts[appt].y ||
-			    newy > (sched->appts[appt].y +
-				    sched->appts[appt].h) - 1)
-				return;
-		}
+        //dump_path(path);
 
-                // -------------------------------------------------------------
-                // Do a quick check here if this would take the character off
-                // the map. If so, then don't do it. Can't have NPC's wandering
-                // off out of town...
-                // -------------------------------------------------------------
+	/* The first node in the path is the starting location. Get the next
+	 * step. */
+	next = path->next;
+	if (next) {
 
-                if (place_off_map(getPlace(), getX() + dx, getY() + dy) ||
-                    place_is_hazardous(getPlace(), getX() + dx, getY() + dy))
-                        return;
+		/* Get the movement vector */
+		dx = next->x - getX();
+		dy = next->y - getY();
 
-		move(dx, dy);
+		/* Attempt to move */
+		switch (move(dx, dy)) {
+                case MovedOk:
+                case ExitedMap:
+                case EngagedEnemy:
+                case SlowProgress:
+                case SwitchedOccupants:
+                        ret = true;
+                        break;
+                case OffMap:
+                case WasOccupied:
+                case WasImpassable:
+		case NotFollowMode:
+		case CouldNotSwitchOccupants:
+		case CantRendezvous:
+                        ret = false;
+                        break;
+                }                        
 	}
+
+	/* Cleanup */
+	astar_path_destroy(path);
+
+	return ret;
 }
 
 void Character::synchronize()
@@ -2553,77 +1842,30 @@ void Character::getAppointment()
         }
 }
 
-void Character::execIdle()
+void Character::pathfind_to(class Object *target)
 {
-        // ---------------------------------------------------------------------
-        // If they see an enemy they'll engage. Otherwise they just wander
-        // uselessly within the rectangular area imposed by their schedule (or
-        // freely if they have no schedule).
-        // ---------------------------------------------------------------------
+        struct astar_node *path;
+        struct astar_search_info as_info;
 
-        ai_select_target();
-        if (!target) {
-                wander();
+        /* Find a path to the nearest member */
+        memset(&as_info, 0, sizeof (as_info));
+        as_info.x0 = getX();
+        as_info.y0 = getY();
+        as_info.x1 = target->getX();
+        as_info.y1 = target->getY();
+        as_info.flags = PFLAG_IGNORECOMPANIONS;
+        path = place_find_path(getPlace(), &as_info, getPmask(), this);
+        
+        if (!path) {
                 return;
         }
         
-        // ---------------------------------------------------------------------
-        // A bit confusing here next. If the NPC can't see a target I still let
-        // them pathfind. Why? Because the target might be "remembered" - maybe
-        // they were visible last turn and they just stepped out of LOS.
-        // ---------------------------------------------------------------------
-        
-        if (!canSee(target)) {
-                pathfind_to(target);
-                return;
+        if (path->next) {
+                move(path->next->x - getX(), path->next->y - getY());
+                
         }
-        
-        // ---------------------------------------------------------------------
-        // First try magic.
-        // ---------------------------------------------------------------------
 
-        enchant_target();
-        if (isTurnEnded())
-                return;
-        
-        // ---------------------------------------------------------------------
-        // Then try force.
-        // ---------------------------------------------------------------------
-
-        if (!ai_attack_target())
-                pathfind_to(target);
-}
-
-void Character::execAutoMode()
-{
-        // ---------------------------------------------------------------------
-        // Fleeing overrides the current activity (maybe it should be an
-        // activity?)
-        // ---------------------------------------------------------------------
-
-        if (isFleeing()) {
-                flee();
-                return;
-        }
-        
-        // ---------------------------------------------------------------------
-        // What we do in auto mode depends on the character's "activity", which
-        // is set by the schedule. Character's with no schedule are always
-        // "idle", which means they wander aimlessly and act agressive toward
-        // perceived enemies. Think of them as juvenile delinquents.
-        // ---------------------------------------------------------------------
-
-        switch (activity) {
-        case COMMUTING:
-                commute();
-                break;
-        case EATING:
-                break;
-        default:
-                execIdle();
-                break;
-        }
-        
+        astar_path_destroy(path);                
 }
 
 void Character::exec(struct exec_context *context)
@@ -2746,8 +1988,7 @@ void Character::exec(struct exec_context *context)
                        getActionPoints() != points_last_loop) {
                         
                         points_last_loop = action_points;
-
-                        execAutoMode();
+                        ctrl(this);
 
                 }
                 break;
@@ -2762,12 +2003,7 @@ void Character::exec(struct exec_context *context)
                 consoleRepaint();
                 
                 /* Hand control over to the player */
-                kh.fx = &character_key_handler;
-                kh.data = this;
-                eventPushKeyHandler(&kh);
-                mapUpdate(REPAINT_IF_DIRTY);
-                eventHandle();
-                eventPopKeyHandler();
+                ctrl(this);
 
                 /* Un-highlight the character */
                 select(false);
@@ -2848,10 +2084,8 @@ void Character::charm(int new_alignment)
 
         if (new_alignment != native_alignment) {
 
-                charmed = true;
-
                 if (isPlayerPartyMember())
-                        Object::setControlMode(CONTROL_MODE_AUTO);
+                        /*Object::*/setControlMode(CONTROL_MODE_AUTO);
                 else {
                         // -----------------------------------------------------
                         // Create and add a view for this object.
@@ -2859,8 +2093,10 @@ void Character::charm(int new_alignment)
 
                         setView(mapCreateView());
                         addView();
-                        Object::setControlMode(CONTROL_MODE_PLAYER);
+                        /*Object::*/setControlMode(CONTROL_MODE_PLAYER);
                 }
+
+                charmed = true;
 
                 consolePrint("%s is charmed!\n", getName());
 
@@ -2873,7 +2109,7 @@ void Character::charm(int new_alignment)
                         // -----------------------------------------------------
                         // Revert npc party member to AI control
                         // -----------------------------------------------------
-                        Object::setControlMode(CONTROL_MODE_AUTO);
+                        /*Object::*/setControlMode(CONTROL_MODE_AUTO);
                         if (NULL != getView()) {
                                 rmView();
                                 mapDestroyView(getView());
@@ -2889,16 +2125,16 @@ void Character::charm(int new_alignment)
 
                         switch (player_party->getPartyControlMode()) {
                         case PARTY_CONTROL_ROUND_ROBIN:
-                                Object::setControlMode(CONTROL_MODE_PLAYER);
+                                /*Object::*/setControlMode(CONTROL_MODE_PLAYER);
                                 break;
                         case PARTY_CONTROL_SOLO:
-                                Object::setControlMode(CONTROL_MODE_IDLE);
+                                /*Object::*/setControlMode(CONTROL_MODE_IDLE);
                                 break;
                         case PARTY_CONTROL_FOLLOW:
                                 if (isLeader()) {
-                                        Object::setControlMode(CONTROL_MODE_PLAYER);
+                                        /*Object::*/setControlMode(CONTROL_MODE_PLAYER);
                                 } else {
-                                        Object::setControlMode(CONTROL_MODE_FOLLOW);
+                                        /*Object::*/setControlMode(CONTROL_MODE_FOLLOW);
                                 }
                                 break;
                         }
@@ -2940,8 +2176,28 @@ void Character::unCharm()
 
 void Character::setControlMode(enum control_mode mode)
 {
-        if (!isCharmed())
-                Object::setControlMode(mode);
+        // ---------------------------------------------------------------------
+        // Player party calls in here to switch between follow, round-robin and
+        // solo modes. Don't want to change the control mode of charmed
+        // member's in this case. Always need to uncharm before switching
+        // control modes.
+        // ---------------------------------------------------------------------
+
+        if (isCharmed())
+                return;
+
+        control_mode = mode;
+
+        switch (mode) {
+        case CONTROL_MODE_AUTO:
+                ctrl = ctrl_character_ai;
+                break;
+        case CONTROL_MODE_PLAYER:
+        case CONTROL_MODE_IDLE:
+        case CONTROL_MODE_FOLLOW:
+                ctrl = ctrl_character_ui;
+                break;
+        }
 }
 
 void Character::applyExistingEffects()
@@ -3169,7 +2425,7 @@ void Character::clearAlignment(int alignment)
 
 bool Character::joinPlayer(void)
 {
-        class NpcParty *old_party = party;
+        class Party *old_party = party;
 
         if (NULL != old_party) {
                 old_party->removeMember(this);
@@ -3196,4 +2452,19 @@ void Character::setActivity(int val)
 {
         activity = val;
         changeSleep(activity == SLEEPING);
+}
+
+bool Character::canWanderTo(int newx, int newy)
+{
+        // If this party is on a schedule then limit wandering to the
+        // area specied in the current appt.
+        if (sched) {
+                if (newx < sched->appts[appt].x ||
+                    newx > (sched->appts[appt].x + sched->appts[appt].w - 1) ||
+                    newy < sched->appts[appt].y ||
+                    newy > (sched->appts[appt].y + sched->appts[appt].h) - 1)
+                        return false;
+        }
+
+        return true;
 }

@@ -30,7 +30,7 @@
 #include "util.h"
 #include "images.h"
 #include "portal.h"
-#include "NpcParty.h"
+#include "Party.h"
 #include "common.h"
 #include "player.h"
 #include "sky.h"
@@ -145,7 +145,7 @@ static struct list Places;
 static struct list ObjectTypes;
 static struct list Conv;
 static struct list Characters;
-static struct list NpcPartyTypes;
+static struct list PartyTypes;
 static struct list Occs;
 static struct list Species;
 static struct list Schedules;
@@ -659,14 +659,14 @@ static class Character *lookupCharacter(char *tag)
         return 0;
 }
 
-static class NpcPartyType *lookupNpcPartyType(char *tag)
+static class PartyType *lookupPartyType(char *tag)
 {
         struct list *elem;
 
-        list_for_each(&NpcPartyTypes, elem) {
-                class NpcPartyType *ch;
+        list_for_each(&PartyTypes, elem) {
+                class PartyType *ch;
 
-                ch = outcast(elem, class NpcPartyType, list);
+                ch = outcast(elem, class PartyType, list);
                 if (!strcmp(tag, ch->getTag()))
                         return ch;
         }
@@ -711,8 +711,8 @@ void *lookupTag(char *tag, int tid)
                 return lookupConversation(tag);
         case CHARACTER_ID:
                 return lookupCharacter(tag);
-        case NPCPARTY_TYPE_ID:
-                return lookupNpcPartyType(tag);
+        case PARTY_TYPE_ID:
+                return lookupPartyType(tag);
         case OCC_ID:
                 return lookupOcc(tag);
         case SPECIES_ID:
@@ -1165,7 +1165,7 @@ static void game_load_place_item(struct place *place)
                      "Expected type tag, got '%s'\n", Lexer->lexeme);
 
         if ((type = game_object_type_lookup(Lexer->lexeme)) ||
-            (type = lookupNpcPartyType(Lexer->lexeme))) {
+            (type = lookupPartyType(Lexer->lexeme))) {
 
 
                 // -------------------------------------------------------------
@@ -1209,10 +1209,10 @@ static void game_load_place_item(struct place *place)
 
                 // This is an NPC character so create a wrapper party to hold
                 // it.
-                obj = new NpcParty();
+                obj = new Party();
                 PARSE_ASSERT(obj, "Failed to create wrapper for %s\n",
                              ch->getName());
-                ((class NpcParty *) obj)->init(ch);
+                ((class Party *) obj)->init(ch);
 
         }
         else {
@@ -1255,7 +1255,7 @@ static void game_load_place_item(struct place *place)
                             obj->getName());
                         assert(false);
                 }
-                if (type->isType(NPCPARTY_TYPE_ID)) {
+                if (type->isType(PARTY_TYPE_ID)) {
                         err("Cannot create more than one PARTY type on the "
                             "same line (%d instances of %s requested", 
                             quantity, 
@@ -1283,8 +1283,8 @@ static void game_load_place_item(struct place *place)
                 // -------------------------------------------------------------
 
                 if (! place_is_wilderness(place) && 
-                    obj->isType(NPCPARTY_ID)) 
-                        ((class NpcParty*)obj)->distributeMembers();
+                    obj->isType(PARTY_ID)) 
+                        ((class Party*)obj)->distributeMembers();
 
                 quantity--;
                 if (!quantity)
@@ -1417,10 +1417,10 @@ static struct typ_npc_party_info *recursively_load_typical_npc_party_info(class
             !loader->getInt(&tmp.prob) || !loader->getBitmask(&tmp.align))
                 return 0;
 
-        tmp.type = (class NpcPartyType *) loader->lookupTag(type_tag,
-                                                            NPCPARTY_TYPE_ID);
+        tmp.type = (class PartyType *) loader->lookupTag(type_tag,
+                                                            PARTY_TYPE_ID);
         if (!tmp.type) {
-                loader->setError("Invalid NPCPARTY_TYPE tag %s", type_tag);
+                loader->setError("Invalid PARTY_TYPE tag %s", type_tag);
                 free(type_tag);
                 return 0;
         }
@@ -1441,9 +1441,9 @@ static struct typ_npc_party_info *recursively_load_typical_npc_party_info(class
                 return info;
         }
         // type = game_object_type_lookup(Lexer->lexeme);
-        type = (class ObjectType *) lookupTag(Lexer->lexeme, NPCPARTY_TYPE_ID);
+        type = (class ObjectType *) lookupTag(Lexer->lexeme, PARTY_TYPE_ID);
         PARSE_ASSERT(type, "'%s' is an invalid type tag", Lexer->lexeme);
-        PARSE_ASSERT(type->isType(NPCPARTY_TYPE_ID),
+        PARSE_ASSERT(type->isType(PARTY_TYPE_ID),
                      "Type '%s' is not an NPC party type", Lexer->lexeme);
         lexer_lex(Lexer);
         PARSE_ASSERT(Lexer->token == lexer_INT, "Expected integer, got '%s'",
@@ -1454,7 +1454,7 @@ static struct typ_npc_party_info *recursively_load_typical_npc_party_info(class
         (*n)++;
         info = recursively_load_typical_npc_party_info(n);
         if (info) {
-                info[i].type = (class NpcPartyType *) type;
+                info[i].type = (class PartyType *) type;
                 info[i].prob = prob;
         }
 
@@ -2567,14 +2567,14 @@ static int loadCharacter()
         return 0;
 }
 
-static int loadNpcPartyType(void)
+static int loadPartyType(void)
 {
-        class NpcPartyType *type;
+        class PartyType *type;
         class Loader loader;
         bool ret;
 
-        type = new NpcPartyType();
-        PARSE_ASSERT(type, "Failed to allocate NpcPartyType\n");
+        type = new PartyType();
+        PARSE_ASSERT(type, "Failed to allocate PartyType\n");
 
         loader.lexer = Lexer;
         loader.lookupTag = lookupTag;
@@ -2582,7 +2582,7 @@ static int loadNpcPartyType(void)
         ret = type->load(&loader);
         PARSE_ASSERT(ret, "Error loading PARTY: %s\n", loader.error);
 
-        list_add(&NpcPartyTypes, &type->list);
+        list_add(&PartyTypes, &type->list);
 
         return 0;
 }
@@ -2918,7 +2918,7 @@ static struct keyword keywords[] = {
         {"RESP", loadResponse, false},
         {"CONV", loadConversation, false},
         {"CHAR", loadCharacter, false},
-        {"PARTY", loadNpcPartyType, false},
+        {"PARTY", loadPartyType, false},
         {"OCC", loadOcc, false},
         {"SPECIES", loadSpecies, false},
         {"SCHED", loadSchedules, false},
@@ -2950,7 +2950,7 @@ static void initLoader(void)
         list_init(&ObjectTypes);
         list_init(&Conv);
         list_init(&Characters);
-        list_init(&NpcPartyTypes);
+        list_init(&PartyTypes);
         list_init(&Occs);
         list_init(&Species);
         list_init(&Schedules);

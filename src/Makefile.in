@@ -143,8 +143,8 @@ nazghul_SOURCES = \
         moongate.c \
         moongate.h \
         nazghul.c \
-        NpcParty.cpp \
-        NpcParty.h \
+        Party.cpp \
+        Party.h \
         object.c \
         object.h \
         occ.c \
@@ -200,7 +200,9 @@ nazghul_SOURCES = \
 	clock.c \
 	clock.h \
 	vmask.h \
-	vmask.c
+	vmask.c \
+	ctrl.h \
+	ctrl.c
 
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_CLEAN_FILES = 
@@ -219,14 +221,14 @@ cursor.$(OBJEXT) event.$(OBJEXT) Field.$(OBJEXT) floodfill.$(OBJEXT) \
 foogod.$(OBJEXT) formation.$(OBJEXT) game.$(OBJEXT) hash.$(OBJEXT) \
 heap.$(OBJEXT) images.$(OBJEXT) Item.$(OBJEXT) knapsack.$(OBJEXT) \
 lexer.$(OBJEXT) Loader.$(OBJEXT) los.$(OBJEXT) map.$(OBJEXT) \
-Mech.$(OBJEXT) moongate.$(OBJEXT) nazghul.$(OBJEXT) NpcParty.$(OBJEXT) \
+Mech.$(OBJEXT) moongate.$(OBJEXT) nazghul.$(OBJEXT) Party.$(OBJEXT) \
 object.$(OBJEXT) occ.$(OBJEXT) olist.$(OBJEXT) place.$(OBJEXT) \
 play.$(OBJEXT) player.$(OBJEXT) Reagent.$(OBJEXT) sched.$(OBJEXT) \
 screen.$(OBJEXT) sky.$(OBJEXT) sound.$(OBJEXT) species.$(OBJEXT) \
 Spell.$(OBJEXT) sprite.$(OBJEXT) status.$(OBJEXT) terrain.$(OBJEXT) \
 terrain_map.$(OBJEXT) Trap.$(OBJEXT) tree.$(OBJEXT) util.$(OBJEXT) \
 vehicle.$(OBJEXT) wind.$(OBJEXT) wq.$(OBJEXT) Missile.$(OBJEXT) \
-cmd.$(OBJEXT) clock.$(OBJEXT) vmask.$(OBJEXT)
+cmd.$(OBJEXT) clock.$(OBJEXT) vmask.$(OBJEXT) ctrl.$(OBJEXT)
 nazghul_LDADD = $(LDADD)
 nazghul_DEPENDENCIES = 
 nazghul_LDFLAGS = 
@@ -248,18 +250,19 @@ DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
 TAR = gtar
 GZIP_ENV = --best
 DEP_FILES =  .deps/Arms.P .deps/Container.P .deps/Field.P .deps/Item.P \
-.deps/Loader.P .deps/Mech.P .deps/Missile.P .deps/NpcParty.P \
+.deps/Loader.P .deps/Mech.P .deps/Missile.P .deps/Party.P \
 .deps/Reagent.P .deps/Spell.P .deps/Trap.P .deps/angband.P \
 .deps/ascii.P .deps/astar.P .deps/character.P .deps/clock.P .deps/cmd.P \
 .deps/cmdwin.P .deps/combat.P .deps/common.P .deps/console.P \
-.deps/conv.P .deps/cursor.P .deps/event.P .deps/floodfill.P \
-.deps/foogod.P .deps/formation.P .deps/game.P .deps/hash.P .deps/heap.P \
-.deps/images.P .deps/knapsack.P .deps/lexer.P .deps/los.P .deps/map.P \
-.deps/moongate.P .deps/nazghul.P .deps/object.P .deps/occ.P \
-.deps/olist.P .deps/place.P .deps/play.P .deps/player.P .deps/sched.P \
-.deps/screen.P .deps/sky.P .deps/sound.P .deps/species.P .deps/sprite.P \
-.deps/status.P .deps/terrain.P .deps/terrain_map.P .deps/tree.P \
-.deps/util.P .deps/vehicle.P .deps/vmask.P .deps/wind.P .deps/wq.P
+.deps/conv.P .deps/ctrl.P .deps/cursor.P .deps/event.P \
+.deps/floodfill.P .deps/foogod.P .deps/formation.P .deps/game.P \
+.deps/hash.P .deps/heap.P .deps/images.P .deps/knapsack.P .deps/lexer.P \
+.deps/los.P .deps/map.P .deps/moongate.P .deps/nazghul.P .deps/object.P \
+.deps/occ.P .deps/olist.P .deps/place.P .deps/play.P .deps/player.P \
+.deps/sched.P .deps/screen.P .deps/sky.P .deps/sound.P .deps/species.P \
+.deps/sprite.P .deps/status.P .deps/terrain.P .deps/terrain_map.P \
+.deps/tree.P .deps/util.P .deps/vehicle.P .deps/vmask.P .deps/wind.P \
+.deps/wq.P
 SOURCES = $(nazghul_SOURCES)
 OBJECTS = $(nazghul_OBJECTS)
 

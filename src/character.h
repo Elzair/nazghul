@@ -59,20 +59,6 @@ class Character:public Object {
 		TooHeavy,
 	};
 
-	enum MoveResult {
-		MovedOk,
-		ExitedMap,
-		EngagedEnemy,
-		WasOccupied,
-		WasImpassable,
-		SlowProgress,
-		SwitchedOccupants,
-                CouldNotSwitchOccupants,
-                OffMap, // and no parent
-                NotFollowMode,
-                CantRendezvous
-	};
-
 	Character();
 	virtual ~ Character();
 
@@ -80,7 +66,7 @@ class Character:public Object {
         virtual int getArmor();
         virtual struct conv *getConversation();
         virtual int getDefend();
-        virtual class NpcParty * getParty();
+        virtual class Party * getParty();
         virtual struct place *getPlace();
 	virtual int getType();
 	virtual char *getName();
@@ -137,6 +123,7 @@ class Character:public Object {
 	virtual bool isShaded();
         virtual bool isNativelyHostile(int alignment);
         virtual bool isPlayerPartyMember();
+        virtual bool canWanderTo(int newx, int newy);
 
 	virtual void changeArmourClass(int val);
 	virtual void changeSleep(bool val);
@@ -189,7 +176,7 @@ class Character:public Object {
         virtual void unCharm();
 	virtual bool unready(class ArmsType * arms);
 	virtual enum MoveResult move(int dx, int dy);
-	virtual enum Character::MoveResult flee();
+	virtual enum MoveResult flee();
 	virtual void attackTerrain(int x, int y);
 	virtual void useAmmo();
 	virtual void rejuvenate();
@@ -215,7 +202,7 @@ class Character:public Object {
 	char *tag;
 	struct list plist;	// party list
 	struct list llist;	// load list
-	class NpcParty *party;
+	class Party *party;
 	struct species *species;
 	struct occ *occ;
 	bool is_clone;
@@ -224,21 +211,22 @@ class Character:public Object {
 	struct astar_node *path;	// Added when I rewrote party
 	// rendezvous
 
-      protected:
-        bool ai_attack_target();
-        void attack_target(class ArmsType *weapon);
         bool canSee(class Object *obj);
-        void ai_select_target();
-        void enchant_target();
+	bool gotoSpot(int x, int y);
+	bool commute();
+
+      protected:
+        //bool ai_attack_target();
+        //void attack_target(class ArmsType *weapon);
+        //void ai_select_target();
+        //void enchant_target();
 	bool initCommon(void);
 	virtual bool isAttackTargetInRange();
         void pathfind_to(class Object *target);
-        void wander();
-	bool commute();
-	bool gotoSpot(int x, int y);
+        //void wander();
         virtual void getAppointment();
-        void execIdle();
-        void execAutoMode();
+        //void execIdle();
+        //void execAutoMode();
         
 
 	char *name;
@@ -309,6 +297,7 @@ class Character:public Object {
         int appt;
 
         bool is_leader;
+        void (*ctrl)(class Character *character);
 };
 
 #endif

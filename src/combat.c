@@ -20,7 +20,7 @@
 // gmcnutt@users.sourceforge.net
 //
 #include "combat.h"
-#include "NpcParty.h"
+#include "Party.h"
 #include "place.h"
 #include "player.h"
 #include "object.h"
@@ -756,120 +756,6 @@ static bool mySetInitialCameraPosition(class Character * pm, void *data)
 //
 // returns true if everyony can find a path in max_path_len steps, false
 // otherwise.
-bool combat_rendezvous_party(int max_path_len)
-{
-        int i, rx, ry;
-        bool abort = false;
-        bool done;
-        class Character *leader;
-
-        // Use the party leader's position as the rendezvous point.
-        leader = player_party->get_leader();
-        assert(leader);
-        rx = leader->getX();
-        ry = leader->getY();
-
-        printf("rendezvous at [%d %d] on %s\n", rx, ry, leader->getName());
-
-        // Center the camera on the rendezvous point.
-        mapCenterCamera(rx, ry);
-        mapUpdate(0);
-        consolePrint("Rendezvous...");
-        consoleRepaint();
-
-        // Have each party member find and store a path to the rendezvous
-        // point.
-        for (i = 0; i < player_party->n_pc; i++) {
-
-                struct astar_search_info as_info;
-                class Character *pc = player_party->pc[i];
-
-                if (NULL == pc             ||
-                    pc->isDead()           ||
-                    false == pc->isOnMap() ||
-                    pc->isAsleep()         ||
-                    (pc->getX() == rx && pc->getY() == ry))
-                        continue;
-
-                memset(&as_info, 0, sizeof (as_info));
-                as_info.x0 = pc->getX();
-                as_info.y0 = pc->getY();
-                as_info.x1 = rx;
-                as_info.y1 = ry;
-                as_info.flags = PFLAG_IGNOREBEINGS;
-                pc->path = place_find_path(Place, &as_info, pc->getPmask(), NULL);
-
-                if (!pc->path) {
-                        consolePrint("%s cannot make the rendezvous!\n",
-                                     pc->getName());
-                        abort = true;
-                }
-                else if (max_path_len > 0 && pc->path->len > max_path_len) {
-                        consolePrint("%s is too far away!\n", pc->getName());
-                        abort = true;
-                }
-        }
-
-        // If anyone could not find a path then abort.
-        if (abort) {
-                for (i = 0; i < player_party->n_pc; i++) {
-
-                        class Character *pc = player_party->pc[i];
-
-                        if (pc->path) {
-                                astar_path_destroy(pc->path);
-                                pc->path = 0;
-                        }
-                }
-                return false;
-        }
-        // Otherwise everyone has a path, so have them follow it to the
-        // rendezvous point.
-        done = false;
-        while (!done) {
-                done = true;
-                consolePrint(".");
-                for (i = 0; i < player_party->n_pc; i++) {
-
-                        struct astar_node *tmp;
-                        class Character *pc = player_party->pc[i];
-
-                        // already arrived in an earlier iteration
-                        if (!pc->path)
-                                continue;
-
-                        // should always be at least two nodes
-                        assert(pc->path->next);
-
-                        // arrived
-                        if (pc->path->next->x == rx && pc->path->next->y == ry) {
-                                astar_node_destroy(pc->path);
-                                pc->path = 0;
-                                pc->remove();   // try this... seems ok
-                                continue;
-                        }
-
-                        done = false;
-
-                        // move one step
-                        pc->move(pc->path->next->x - pc->getX(),
-                                 pc->path->next->y - pc->getY());
-
-                        // clean up used path node
-                        tmp = pc->path;
-                        pc->path = pc->path->next;
-                        astar_node_destroy(tmp);
-
-                        mapUpdate(0);
-                        // SDL_Delay(100);
-                }
-        }
-
-        consolePrint("Ok!\n");
-        combat_set_state(COMBAT_STATE_DONE);
-        return true;
-
-}
 
 static void combat_overlay_map(struct terrain_map *map, 
                                struct position_info *pinfo, int broadside)
@@ -936,14 +822,14 @@ static void combat_overlay_map(struct terrain_map *map,
         terrain_map_destroy(map);
 }
 
-static void myPutEnemy(class NpcParty * foe, struct position_info *pinfo)
+static void myPutEnemy(class Party * foe, struct position_info *pinfo)
 {
         foe->forEachMember(myPutNpc, pinfo);
         if (foe->pinfo.placed)
                 list_add(&Combat.parties, &foe->container_link.list);
 }
 
-static bool myPositionEnemy(class NpcParty * foe, int dx, int dy, bool defend, struct place *place)
+static bool myPositionEnemy(class Party * foe, int dx, int dy, bool defend, struct place *place)
 {
         assert(foe->getSize());
 
@@ -968,7 +854,7 @@ static bool myPositionEnemy(class NpcParty * foe, int dx, int dy, bool defend, s
 #if 0
 static void random_ambush(void)
 {
-        class NpcParty *foe;
+        class Party *foe;
         int dir;
 
         foe = place_random_encounter(Place->location.place);
@@ -1298,13 +1184,13 @@ static void myFindAndPositionEnemy(class Object * obj, void *data)
 {
         struct v2 *info;
 
-        if (!obj->isType(NPCPARTY_ID))
+        if (!obj->isType(PARTY_ID))
                 return;
 
         info = (struct v2 *) data;
-        if (((class NpcParty *) obj)->isHostile(player_party->alignment))
+        if (((class Party *) obj)->isHostile(player_party->alignment))
                 combat_set_state(COMBAT_STATE_FIGHTING);
-        myPositionEnemy((class NpcParty *) obj, info->dx, info->dy, false, info->place);
+        myPositionEnemy((class Party *) obj, info->dx, info->dy, false, info->place);
 }
 
 int combatInit(void)
@@ -1663,7 +1549,7 @@ static bool position_player_party(struct combat_info *cinfo)
         }
 
         player_party->remove();
-        player_party->for_each_member(combat_place_character, &player_party->pinfo);
+        player_party->forEachMember(combat_place_character, &player_party->pinfo);
         return true;
 }
 
@@ -1769,7 +1655,7 @@ bool combat_enter(struct combat_info * info)
                 place_for_each_object(Place, myFindAndPositionEnemy, &v2);
         }
 
-        player_party->for_each_member(mySetInitialCameraPosition, 0);
+        player_party->forEachMember(mySetInitialCameraPosition, 0);
 
         if (combat_get_state() == COMBAT_STATE_FIGHTING) {
                 player_party->enableRoundRobinMode();
@@ -1815,7 +1701,7 @@ char combatGetState(void)
         return 'N';
 }
 
-bool combatAddNpcParty(class NpcParty * party, int dx, int dy, bool located,
+bool combatAddParty(class Party * party, int dx, int dy, bool located,
                        struct place *place, int x, int y)
 {
         if (!located) {

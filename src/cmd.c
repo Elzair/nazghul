@@ -875,7 +875,7 @@ void cmdAttack(void)
         info.x = player_party->getX() + info.dx;
         info.y = player_party->getY() + info.dy;
         info.place = player_party->getPlace();
-        info.npc_party = place_get_NpcParty(info.place, info.x, info.y);
+        info.npc_party = place_get_Party(info.place, info.x, info.y);
         if (info.npc_party == NULL) {
                 cmdwin_print("-nobody there!");
                 return;
@@ -899,7 +899,7 @@ void cmdAttack(void)
         }
 
         // Enter combat
-        player_party->move_to_wilderness_combat(&cinfo);
+        combat_enter(&cinfo);
 }
 
 void cmdFire(void)
@@ -1308,11 +1308,7 @@ void cmdNewOrder(void)
 		return;
 	}
 
-	player_party->pc[pc1->getOrder()] = pc2;
-	player_party->pc[pc2->getOrder()] = pc1;
-	tmp = pc2->getOrder();
-	pc2->setOrder(pc1->getOrder());
-	pc1->setOrder(tmp);
+        player_party->switchOrder(pc1, pc2);
 
 	consolePrint("%s switched order with %s\n", pc1->getName(),
 		     pc2->getName());
@@ -1326,13 +1322,13 @@ static void run_combat(bool camping, class Character * guard, int hours,
 	struct move_info minfo;
 	struct combat_info cinfo;
 
-        assert(!foe || foe->isType(NPCPARTY_ID));
+        assert(!foe || foe->isType(PARTY_ID));
 
 	memset(&minfo, 0, sizeof(minfo));
 	minfo.place = Place;
 	minfo.x = player_party->getX();
 	minfo.y = player_party->getY();
-        minfo.npc_party = (class NpcParty*)foe;
+        minfo.npc_party = (class Party*)foe;
 
 	memset(&cinfo, 0, sizeof(cinfo));
 	cinfo.camping = camping;
@@ -1355,11 +1351,11 @@ static void run_combat(bool camping, class Character * guard, int hours,
         } else {
                 // No, so we're camping or zooming in. Party values are fine
                 // here.
-                minfo.dx = player_party->dx;
-                minfo.dy = player_party->dy;
+                minfo.dx = player_party->getDx();
+                minfo.dy = player_party->getDy();
         } 
 
-	player_party->move_to_wilderness_combat(&cinfo);
+	combat_enter(&cinfo);
 }
 
 bool cmdTalk(int x, int y)

@@ -65,8 +65,8 @@ nazghul_SOURCES =		\
         moongate.c \
         moongate.h \
         nazghul.c \
-        NpcParty.cpp \
-        NpcParty.h \
+        Party.cpp \
+        Party.h \
         object.c \
         object.h \
         occ.c \
@@ -122,4 +122,6 @@ nazghul_SOURCES =		\
 	clock.c \
 	clock.h \
 	vmask.h \
-	vmask.c
+	vmask.c \
+	ctrl.h \
+	ctrl.c

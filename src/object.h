@@ -53,6 +53,27 @@ enum control_mode {
         CONTROL_MODE_FOLLOW,
 };
 
+enum MoveResult {
+        MovedOk,
+        ExitedMap,
+        EngagedEnemy,
+        WasOccupied,
+        WasImpassable,
+        SlowProgress,
+        SwitchedOccupants,
+        CouldNotSwitchOccupants,
+        OffMap, // and no parent
+        NotFollowMode,
+        CantRendezvous,
+        NotApplicable,
+        ChangedFacing,
+        AvoidedPortal,
+        AvoidedHazard,
+        OutOfRange,
+        NoDestination,
+        UserCanceled
+};
+
 struct inv_entry {
 	struct list list;
 	struct list auxlist;
@@ -139,7 +160,8 @@ class Object {
 	virtual int getVisionRadius();
 	virtual int getX();
 	virtual int getY();
-
+        virtual int getDx();
+        virtual int getDy();
 
         virtual bool isCompanionOf(class Object *other);
 	virtual bool isDestroyed();
@@ -154,6 +176,7 @@ class Object {
         virtual bool isNativelyHostile(int alignment);
         virtual bool isPlayerPartyMember();
         virtual bool isPlayerControlled();
+        virtual bool canWanderTo(int x, int y);
 
         virtual void addView();
         virtual void rmView();
@@ -197,6 +220,7 @@ class Object {
         virtual bool putOnMap(struct place *place, int x, int y, int r);
         virtual void setView(struct mview *view);
         virtual void changePlaceHook();
+        virtual MoveResult move(int dx, int dy);
 
 	struct olist container_link;
 
@@ -211,6 +235,8 @@ class Object {
 	class ObjectType * type;
 	int x;
 	int y;
+        int dx;
+        int dy;
 	struct place *place;
 	bool selected;
 	bool destroyed;

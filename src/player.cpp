@@ -24,7 +24,7 @@
 #include "status.h"
 #include "console.h"
 #include "place.h"
-#include "NpcParty.h"
+#include "Party.h"
 #include "portal.h"
 #include "screen.h"
 #include "sound.h"
@@ -46,6 +46,7 @@
 #include "Field.h"
 #include "event.h"
 #include "formation.h"
+#include "ctrl.h"
 
 #include <unistd.h>
 #include <math.h>
@@ -60,8 +61,6 @@ class player_party *player_party;
     else \
         (coord) = 0; \
 }
-
-#define FOR_EACH_MEMBER(i, m) for (i = 0, (m) = pc[i]; i < n_pc; (m) = pc[++i])
 
 extern void play_update_place_viewer(void);	/* hack */
 
@@ -89,14 +88,14 @@ void player_party::damage(int amount) {
 		if (vehicle->isDestroyed()) {
 			delete vehicle;
 			vehicle = NULL;
-			for_each_member(kill_member, NULL);
+			forEachMember(kill_member, NULL);
 		}
 		return;
 	}
 
 	/* Apply damage to all party members. If they all die then the party is
            destroyed, too. */
-        for_each_member(apply_damage, &amount);
+        forEachMember(apply_damage, &amount);
 }
 
 static bool apply_poison(class Character * pm, void *amount)
@@ -106,7 +105,7 @@ static bool apply_poison(class Character * pm, void *amount)
 }
 
 void player_party::poison() {
-        for_each_member(apply_poison, NULL);
+        forEachMember(apply_poison, NULL);
 }
 
 static bool apply_existing(class Character * pm, void *data)
@@ -117,7 +116,7 @@ static bool apply_existing(class Character * pm, void *data)
 
 void player_party::applyExistingEffects()
 {
-        for_each_member(apply_existing, this);
+        forEachMember(apply_existing, this);
 }
 
 static bool pc_get_first_living(class Character * pm, void *data)
@@ -175,14 +174,14 @@ static bool give_pc_rest_credit(class Character * pm, void *data)
 
 static void eat_food(struct wq_job *job, struct list *wq)
 {
-	player_party->for_each_member(pc_eat_food, 0);
+	player_party->forEachMember(pc_eat_food, 0);
 	foogodRepaint();
 	wqReschedule(wq, job);
 }
 
 static void give_rest_credit(struct wq_job *job, struct list *wq)
 {
-	player_party->for_each_member(give_pc_rest_credit, 0);
+	player_party->forEachMember(give_pc_rest_credit, 0);
 	wqReschedule(wq, job);
 }
 
@@ -248,7 +247,7 @@ void player_party::relocate(struct place *place, int x, int y)
 enum move_result player_party::check_move_to(struct move_info *info)
 {
 	class Portal *new_portal;
-	class NpcParty *npc_party;
+	class Party *npc_party;
 
 	// null place?
 	if (!info->place)
@@ -262,7 +261,7 @@ enum move_result player_party::check_move_to(struct move_info *info)
 		return move_off_map;
 	}
 	// occupied (this handles occupied vehicles, too)
-	if ((npc_party = place_get_NpcParty(info->place, info->x, info->y))) {
+	if ((npc_party = place_get_Party(info->place, info->x, info->y))) {
 		if (npc_party->isHostile(alignment)) {
 			if (info->place->type == wilderness_place ||
 			    info->place->type == town_place) {
@@ -335,7 +334,7 @@ bool player_party::turn_vehicle(void)
 	return true;
 }
 
-bool player_party::try_to_enter_moongate(class Moongate * src_gate)
+enum MoveResult player_party::try_to_enter_moongate(class Moongate * src_gate)
 {
 	class Moongate *dest_gate;
 
@@ -350,7 +349,7 @@ bool player_party::try_to_enter_moongate(class Moongate * src_gate)
 		} else {
 			// No src gate means we probably got in here via a
 			// spell or other effect.
-			return false;
+			return NoDestination;
 		}
 
 	} else {
@@ -386,26 +385,13 @@ bool player_party::try_to_enter_moongate(class Moongate * src_gate)
 
 	// Pass through to the destination gate.
 	enter_moongate(dest_gate);
-	return true;
+	return MovedOk;
 
 }
 
-void player_party::move_to_wilderness_combat(struct combat_info *cinfo)
-{
-	// For wilderness combat the player party always exits back to the
-	// place it was in prior to entering combat.
-
-        combat_enter(cinfo);
-
-#if 0
-	struct place *saved_place = getPlace();
-	int saved_x = getX();
-	int saved_y = getY();
-
-	combat_enter(cinfo);
-	relocate(saved_place, saved_x, saved_y);
-#endif
-}
+#define FOR_EACH_MEMBER(e,c) for ((e) = members.next, (c) = list_entry((e), class Character, plist); \
+                               (e) != &members; \
+                               (e) = (e)->next, (c) = list_entry((e), class Character, plist))
 
 void player_party::distributeMembers(struct place *new_place, int new_x, int new_y, int new_dx, int new_dy)
 {
@@ -417,9 +403,7 @@ void player_party::distributeMembers(struct place *new_place, int new_x, int new
         // ---------------------------------------------------------------------
 
         remove();
-#if 0
-        mapRmView(view);
-#endif
+
         // ---------------------------------------------------------------------
         // Switch the current place to the portal destination place.
         // ---------------------------------------------------------------------
@@ -445,45 +429,13 @@ void player_party::distributeMembers(struct place *new_place, int new_x, int new
         // the code below with position_player_party() in combat.c:
         // ---------------------------------------------------------------------
 
-#if 0
-        // ---------------------------------------------------------------------
-        // The combat alg requires me to fill out a "position info" structure
-        // based on the player party destination.
-        // ---------------------------------------------------------------------
-        
-        combat_fill_position_info(&pinfo, new_place, new_x, new_y, new_dx, new_dy, false);
-
-        // ---------------------------------------------------------------------
-        // Set the party formation to a sane default.
-        // ---------------------------------------------------------------------
-
-        if (NULL == pinfo.formation)
-                pinfo.formation = formation_get_default();
-
-        // ---------------------------------------------------------------------
-        // Party members must be placed such that they can pathfind back to the
-        // party. This minimizes the chance of a party member getting stranded
-        // (which in turn will strand the whole party in that place).
-        // ---------------------------------------------------------------------
-
-        pinfo.find_party = true;
-
-        // ---------------------------------------------------------------------
-        // Use the combat algorithm to place each member. Currently this will
-        // never fail, in the degenerate case all party members will end up
-        // "stranded" on top of the destination tile.
-        // ---------------------------------------------------------------------
-
-        for_each_member(combat_place_character, &pinfo);
-#else
-        int i;
+        struct list *entry;
         class Character *member;
 
-        FOR_EACH_MEMBER(i, member) {
+        FOR_EACH_MEMBER(entry, member) {
                 if (!member->isDead())
-                        member->putOnMap(new_place, new_x, new_y, 2 * n_pc);
+                        member->putOnMap(new_place, new_x, new_y, 2 * size);
 	}
-#endif
 
         // ---------------------------------------------------------------------
         // Set the party mode to "follow" by default, but if hostiles are in
@@ -502,7 +454,7 @@ void player_party::distributeMembers(struct place *new_place, int new_x, int new
 
 }
 
-bool player_party::try_to_enter_town_from_edge(class Portal * portal, int dx, int dy)
+enum MoveResult player_party::try_to_enter_town_from_edge(class Portal * portal, int dx, int dy)
 {
         int new_x;
         int new_y;
@@ -539,14 +491,14 @@ bool player_party::try_to_enter_town_from_edge(class Portal * portal, int dx, in
 
 	switch (dir) {
 	case CANCEL:
-		return false;
+		return UserCanceled;
 	case NORTHWEST:
 	case NORTHEAST:
 	case SOUTHWEST:
 	case SOUTHEAST:
 	case HERE:
 		cmdwin_print("-direction not allowed!");
-		return false;
+		return NoDestination;
 	case SOUTH:
 		new_x = place_w(portal->getToPlace()) / 2;
 		new_y = 0;
@@ -572,7 +524,7 @@ bool player_party::try_to_enter_town_from_edge(class Portal * portal, int dx, in
 
         relocate(portal->getToPlace(), new_x, new_y);
 
-        return true;
+        return MovedOk;
 }
 
 
@@ -608,7 +560,7 @@ void player_party::try_to_enter_portal(class Portal * portal)
 
 }
 
-bool player_party::try_to_move_off_map(struct move_info * info)
+enum MoveResult player_party::try_to_move_off_map(struct move_info * info)
 {
          
         // Yes, I'm making the following unconditional with no further checks.
@@ -627,7 +579,7 @@ bool player_party::try_to_move_off_map(struct move_info * info)
 
         if (! info->place->location.place) {
 		cmdwin_print("-no place to go!");
-                return false;
+                return OffMap;
         }
 
         cmdwin_print("-ok");
@@ -635,13 +587,14 @@ bool player_party::try_to_move_off_map(struct move_info * info)
                  info->place->location.x, 
                  info->place->location.y);
 
-        return true;
+        return MovedOk;
 }
 
-bool player_party::move(int newdx, int newdy, bool teleport)
+MoveResult player_party::move(int newdx, int newdy)
 {
 	struct move_info info;
 	struct combat_info cinfo;
+        bool teleport = (abs(newdx) > 1 || abs(newdy) > 1);
 
 	mapSetDirty();
 	cmdwin_clear();
@@ -654,7 +607,7 @@ bool player_party::move(int newdx, int newdy, bool teleport)
 	// Change vehicle facing. This might consume a turn in which case
 	// that's all we'll do.
 	if (!teleport && turn_vehicle())
-		return true;
+		return ChangedFacing;
 
 	cmdwin_print("%s %s", teleport ? "teleport" :
 		     get_movement_description(),
@@ -691,24 +644,24 @@ bool player_party::move(int newdx, int newdy, bool teleport)
                 }
                 consolePrint("Move %s%s [%d AP]\n", directionToString(vector_to_dir(dx, dy)),
                              progress, mv_cost);
-		return true;
+		return MovedOk;
         }
 
 	case move_off_map:
 		cmdwin_print("-exit place");
 		return try_to_move_off_map(&info);
-		return false;
+		return OffMap;
 
 	case move_occupied:
 		// Occupied by a friendly npc party. If they were unfriendly
 		// we'd be going into combat.
 		cmdwin_print("-occupied!");
-		return false;
+		return WasOccupied;
 
 	case move_impassable:
 		// Impassable terrain.
 		cmdwin_print("-impassable!");
-		return false;
+		return WasImpassable;
 
 	case move_enter_moongate:
 		// An open moongate is on that tile.
@@ -730,24 +683,23 @@ bool player_party::move(int newdx, int newdy, bool teleport)
                 info.x = getX();
                 info.y = getY();
 
-		move_to_wilderness_combat(&cinfo);
+		combat_enter(&cinfo);
 
                 endTurn();
-		return true;
+		return MovedOk;
 
 	case move_enter_auto_portal:
 		// A teleporter is on that tile.
 		if (info.portal->edge_entrance) {
-			return try_to_enter_town_from_edge(info.portal,
-							   info.dx, info.dy);
+			return try_to_enter_town_from_edge(info.portal, info.dx, info.dy);
 		}
 		try_to_enter_portal(info.portal);
-                return true;
+                return MovedOk;
 
 	default:
 		// no other results expected
 		assert(false);
-		return false;
+		return NotApplicable;
 	}
 }
 
@@ -765,7 +717,7 @@ int player_party::getPmask(void)
 	if (vehicle)
 		return vehicle->getPmask();
 
-        for_each_member(union_pmask, &pmask);
+        forEachMember(union_pmask, &pmask);
 	return pmask;
 }
 
@@ -789,7 +741,7 @@ int player_party::getSpeed(void)
 	if (vehicle) {
 		return vehicle->getSpeed();
 	}
-        for_each_member(&member_find_slowest, &speed);
+        forEachMember(&member_find_slowest, &speed);
 	return speed;
 }
 
@@ -911,151 +863,6 @@ void player_party::enter_portal(void)
 
 }
 
-void player_party::for_each_member(bool(*fx) (class Character *, void *data),
-				   void *data)
-{
-	int i;
-	for (i = 0; i < n_pc; i++) {
-		if (fx(pc[i], data))
-			return;
-	}
-}
-
-int G_latency_start = 0;
-
-static bool party_mode_key_handler(struct KeyHandler *kh, int key, int keymod)
-{
-        cmdwin_clear();
-        cmdwin_repaint();
-        
-        G_latency_start = SDL_GetTicks();
-
-        if (keymod == KMOD_LCTRL || keymod == KMOD_RCTRL) {
-
-                // SAM: This seemed like a less ugly way of setting off a group
-                // of keybindings for "DM Mode" use or the like.  If we find
-                // something more aesthetic wrt/ switch() syntax, we will
-                // surely prefer it...
-                // 
-                // Control-key bindings for "DM Mode" commands like terrain
-                // editing.  In future, these may be enabled/disabled at
-                // compile time, or via a GhulScript keyword in the mapfile.
-                switch (key) {
-      
-                case 't':
-                        cmdTerraform(NULL);
-                        break;
-
-                case 's':
-                        cmdSaveTerrainMap(NULL);
-                        break;
-
-                case 'z':
-                        mapTogglePeering();
-                        break;
-
-                default:
-                        break;
-                } // switch(key)
-        } // keymod
-
-        else {
-                // !keymod
-                switch (key) {
-
-                case KEY_NORTH:
-                case KEY_EAST:
-                case KEY_SOUTH:
-                case KEY_WEST:
-                {
-                        int dir = keyToDirection(key);
-                        player_party->move(directionToDx(dir),
-                                           directionToDy(dir), false);
-                        mapSetDirty();
-                }
-                break;
-
-                case 'a':
-                        cmdAttack();
-                        break;
-                case 'b':
-                        player_party->board_vehicle();
-                        break;
-                case 'c':
-                        cmdCastSpell(NULL);
-                        break;
-                case 'e':
-                        // SAM:
-                        // Perhaps this command should be merged with '>' ?
-                        player_party->enter_portal();
-                        break;
-                case 'f':
-                        cmdFire();
-                        break;
-                case 'g':
-                        cmdGet(player_party, true);
-                        break;
-                case 'h':
-                        // SAM: Adding (H)andle command...
-                        cmdHandle(NULL);
-                        break;
-                case 'k':
-                        cmdCamp(player_party);
-                        player_party->endTurn();
-                        break;
-                case 'm':
-                        cmdMixReagents();
-                        break;
-                case 'n':
-                        cmdNewOrder();
-                        break;
-                case 'o':
-                        cmdOpen(NULL);
-                        break;
-                case 'q':
-                        cmdQuit();
-                        break;
-                case 'r':
-                        cmdReady(NULL, CMD_SELECT_MEMBER|CMD_PRINT_MEMBER);
-                        break;
-                case 's':
-                        cmdSearch(player_party->getX(), player_party->getY());
-                        break;
-                case 't':
-                        cmdTalk(player_party->getX(), player_party->getY());
-                        break;
-                case 'u':
-                        cmdUse(NULL, CMD_SELECT_MEMBER|CMD_PRINT_MEMBER);
-                        break;
-                case 'x':
-                        cmdXamine(NULL);
-                        break;
-                case 'z':
-                        cmdZtats(NULL);
-                        break;
-                case '@':
-                        // SAM: 'AT' command for party-centric information
-                        cmdAT(NULL);
-                        break;
-                case ' ':
-                        player_party->endTurn();
-                        consolePrint("Pass\n");
-                        break;
-                case '>':
-                        // This key was chosen to be a cognate for '>' in
-                        // NetHack and other roguelike games.
-                        cmdZoomIn();
-                        player_party->endTurn();
-                        break;
-                default:
-                        break;
-                } // switch(key)
-        } // !keymod
-
-        /* Return true when done processing commands. */
-        return player_party->isTurnEnded();
-}
-
 static bool player_member_rest_one_hour(class Character * pm, void *data)
 {
         if (pm->isAsleep() && pm->getRestCredits())
@@ -1065,7 +872,6 @@ static bool player_member_rest_one_hour(class Character * pm, void *data)
 
 void player_party::exec(struct exec_context *context)
 {
-        struct KeyHandler kh;
 
         if (allDead())
                 return;
@@ -1074,7 +880,7 @@ void player_party::exec(struct exec_context *context)
 
                 /* After each hour of rest heal/restore party members */
                 if (clock_alarm_is_expired(&rest_alarm)) {
-                        for_each_member(player_member_rest_one_hour, NULL);
+                        forEachMember(player_member_rest_one_hour, NULL);
                         clock_alarm_set(&rest_alarm, 60);
                 }
 
@@ -1089,11 +895,7 @@ void player_party::exec(struct exec_context *context)
         startTurn();
 
         if (action_points > 0) {        
-                kh.fx = &party_mode_key_handler;
-                eventPushKeyHandler(&kh);
-                mapUpdate(REPAINT_IF_DIRTY);
-                eventHandle();
-                eventPopKeyHandler();
+                ctrl(this);
         }
 
         endTurn();
@@ -1102,14 +904,14 @@ void player_party::exec(struct exec_context *context)
 bool player_party::allDead(void)
 {
 	int count = 0;
-	for_each_member(pc_check_if_alive, &count);
+	forEachMember(pc_check_if_alive, &count);
 	return (count == 0);
 }
 
 bool player_party::immobilized(void)
 {
 	int count = 0;
-	for_each_member(pc_check_if_not_immobilized, &count);
+	forEachMember(pc_check_if_not_immobilized, &count);
 	return (count == 0);        
 }
 
@@ -1138,12 +940,12 @@ void player_party::updateView()
 
 int player_party::getLight()
 {
-        int i;
+        struct list *entry;
         class Character *member;
 
         light = 0;
 
-        FOR_EACH_MEMBER(i,member) {
+        FOR_EACH_MEMBER(entry, member) {
                 light += member->getLight();
         }
 
@@ -1159,7 +961,7 @@ int player_party::getVisionRadius()
 	// traveling close enough to share their light sources with each other.
 	info.vrad = 0;
 	info.light = 0;
-	for_each_member(myGetBestVisionRadius, &info);
+	forEachMember(myGetBestVisionRadius, &info);
 
 	// hack -- should replace this with a routine for getting the ambient
 	// light from the local environment (place?)
@@ -1191,7 +993,6 @@ player_party::player_party()
 	turns              = 0;
 	mv_desc            = NULL;
 	mv_sound           = NULL;
-	n_pc               = 0;
 	leader             = NULL;
 	nArms              = 0;
 	nReagents          = 0;
@@ -1213,8 +1014,8 @@ player_party::player_party()
         leader             = NULL;
         solo_member        = NULL;
         control_mode       = PARTY_CONTROL_ROUND_ROBIN;
+        ctrl               = ctrl_party_ui;
 
-	memset(pc, 0, sizeof(pc));
 	list_init(&inventory);
         clearCombatExitDestination();
 	container_link.key = being_layer;
@@ -1300,7 +1101,11 @@ class Character *player_party::get_leader(void)
 
 void player_party::removeMember(class Character *c)
 {
-        assert(c->party == (class NpcParty*)this);
+        struct list *entry;
+        class Character *next_member;
+        int index;
+
+        assert(c->party == (class Party*)this);
 
         // ---------------------------------------------------------------------
         // Remove all its readied arms from party inventory.
@@ -1317,18 +1122,23 @@ void player_party::removeMember(class Character *c)
 	}
 
         // ---------------------------------------------------------------------
-        // Unhook it from the party.
+        // Re-order the indices of the remaining party members
         // ---------------------------------------------------------------------
 
-        pc[c->getOrder()] = NULL;
+        for (entry = c->plist.next, index = c->getOrder(); entry != &members; entry = entry->next, index++) {
+                next_member = outcast(entry, class Character, plist);
+                next_member->setOrder(index);
+        }
+
+        // ---------------------------------------------------------------------
+        // Unhook it from the party & relinquish control.
+        // ---------------------------------------------------------------------
+
+        list_remove(&c->plist);
         c->party = NULL;
-
-        // ---------------------------------------------------------------------
-        // Relinquish control.
-        // ---------------------------------------------------------------------
-
         c->setPlayerControlled(false);
         c->setControlMode(CONTROL_MODE_AUTO);
+
 }
 
 bool player_party::addMember(class Character * c)
@@ -1342,24 +1152,19 @@ bool player_party::addMember(class Character * c)
 	assert(!c->isPlayerControlled());
 
         // Check if passability is compatible with rest of party
-        if (n_pc && ! (c->getPmask() & getPmask())) {
+        if (size && ! (c->getPmask() & getPmask())) {
                 return false;
         }
 
-	for (i = 0; i < MAX_N_PC && pc[i]; i++) ;
-
-	if (i == MAX_N_PC)
-		return false;
-
-	pc[i] = c;
-	n_pc++;
-	c->setOrder(i);
+        list_add_tail(&members, &c->plist);
+	c->setOrder(size);
+	size++;
 	c->setPlayerControlled(true);
 	c->setAlignment(c->getAlignment() | alignment);
         
         // gmcnutt: added this as a hack to support quickly determining if a
         // character belongs to the player party.
-        c->party = (NpcParty*)this;
+        c->party = (Party*)this;
 
         if (NULL == c->getView())
                 c->setView(mapCreateView());
@@ -1409,20 +1214,6 @@ bool player_party::addMember(class Character * c)
 	return true;
 }
 
-int player_party::get_room_in_party(void)
-{
-	int i, n = 0;
-
-	// um... this assumes that if I remove a member I shift everybody down
-	// to fill the gap. Which I probably will, come to think of it.
-
-	for (i = 0; i < MAX_N_PC; i++) {
-		if (!pc[i])
-			n++;
-	}
-	return n;
-}
-
 void player_party::paint(int sx, int sy)
 {
 	if (vehicle)
@@ -1458,14 +1249,14 @@ struct formation *player_party::get_formation()
 int player_party::get_num_living_members(void)
 {
 	int count = 0;
-	for_each_member(pc_check_if_alive, &count);
+	forEachMember(pc_check_if_alive, &count);
         return count;
 }
 
 class Character *player_party::get_first_living_member(void)
 {
         class Character *pc = NULL;
-        for_each_member(pc_get_first_living, &pc);
+        forEachMember(pc_get_first_living, &pc);
         return pc;
 }
 
@@ -1479,7 +1270,7 @@ void player_party::beginResting(int hours)
 {
         assert(hours > 0);
 
-        for_each_member(member_begin_resting, &hours);
+        forEachMember(member_begin_resting, &hours);
         statusRepaint();
         clock_alarm_set(&wakeup_alarm, hours * 60);
         clock_alarm_set(&rest_alarm, 60);
@@ -1514,9 +1305,16 @@ void player_party::decActionPoints(int points)
 
 class Character *player_party::getMemberAtIndex(int index)
 {
-        if (index < 0 || index >= MAX_N_PC)
-                return NULL;
-        return pc[index];
+        struct list *entry;
+        class Character *member;
+
+        FOR_EACH_MEMBER(entry, member) {
+                if (!index)
+                        return member;
+                index--;
+        }
+
+        return NULL;
 }
 
 static bool member_remove(class Character *member, void *data)
@@ -1527,7 +1325,7 @@ static bool member_remove(class Character *member, void *data)
 
 void player_party::removeMembers()
 {
-        for_each_member(member_remove, NULL);
+        forEachMember(member_remove, NULL);
 }
 
 void player_party::setCombatExitDestination(struct location *location)
@@ -1559,7 +1357,7 @@ static bool member_uncharm(class Character *member, void *data)
 
 void player_party::unCharmMembers()
 {
-        for_each_member(member_uncharm, NULL);
+        forEachMember(member_uncharm, NULL);
 }
 
 int player_party::getAlignment()
@@ -1576,7 +1374,7 @@ static bool member_clear_alignment(class Character *member, void *data)
 void player_party::clearAlignment(int alignment)
 {
         this->alignment &= ~alignment;
-        for_each_member(member_clear_alignment, &alignment);
+        forEachMember(member_clear_alignment, &alignment);
 }
 
 bool player_party::addToInventory(class Object *object)
@@ -1602,7 +1400,7 @@ bool player_party::isCamping()
 
 void player_party::beginCamping(class Character *guard, int hours)
 {
-        int i;
+        struct list *entry;
         class Character *member;
 
         camping    = true;
@@ -1611,7 +1409,7 @@ void player_party::beginCamping(class Character *guard, int hours)
         if (NULL != camp_guard)
                 camp_guard->beginGuarding(hours);
 
-        FOR_EACH_MEMBER(i, member) {
+        FOR_EACH_MEMBER(entry, member) {
                 if (member != camp_guard)
                         member->beginCamping(hours);
 	}
@@ -1621,7 +1419,7 @@ void player_party::beginCamping(class Character *guard, int hours)
 
 void player_party::endCamping()
 {
-        int i;
+        struct list *entry;
         class Character *member;
 
         if (! isCamping())
@@ -1634,7 +1432,7 @@ void player_party::endCamping()
                 camp_guard = NULL;
         }
 
-        FOR_EACH_MEMBER(i, member) {
+        FOR_EACH_MEMBER(entry, member) {
                 if (member != camp_guard)
                         member->endCamping();
         }
@@ -1643,12 +1441,12 @@ void player_party::endCamping()
 
 void player_party::ambushWhileCamping()
 {
-        int i;
+        struct list *entry;
         class Character *member;
 
         camping = false;
 
-        FOR_EACH_MEMBER(i, member) {
+        FOR_EACH_MEMBER(entry, member) {
 
                 // -------------------------------------------------------------
                 // If there's a guard then he/she/it will wake everybody else
@@ -1671,12 +1469,12 @@ void player_party::ambushWhileCamping()
 
 void player_party::endResting()
 {
-        int i;
+        struct list *entry;
         class Character *member;
 
         resting   = false;
 
-        FOR_EACH_MEMBER(i, member) {
+        FOR_EACH_MEMBER(entry, member) {
                 member->endResting();
         }
 
@@ -1719,7 +1517,7 @@ void player_party::enableFollowMode()
         enum control_mode mode = CONTROL_MODE_FOLLOW;
 
         disableCurrentMode();
-        for_each_member(member_set_control_mode, &mode);
+        forEachMember(member_set_control_mode, &mode);
         chooseNewLeader();
         if (NULL == leader)
                 enableRoundRobinMode();
@@ -1733,7 +1531,7 @@ void player_party::enableRoundRobinMode()
         enum control_mode mode = CONTROL_MODE_PLAYER;
 
         disableCurrentMode();
-        for_each_member(member_set_control_mode, &mode);
+        forEachMember(member_set_control_mode, &mode);
         control_mode = PARTY_CONTROL_ROUND_ROBIN;
 }
 
@@ -1741,10 +1539,10 @@ void player_party::enableSoloMode(class Character *solo)
 {
         enum control_mode mode = CONTROL_MODE_IDLE;
 
-        assert(solo->party == (class NpcParty*)this);
+        assert(solo->party == (class Party*)this);
 
         disableCurrentMode();
-        for_each_member(member_set_control_mode, &mode);
+        forEachMember(member_set_control_mode, &mode);
         solo->setSolo(true);
         solo_member = solo;
         control_mode = PARTY_CONTROL_SOLO;
@@ -1756,7 +1554,7 @@ void player_party::chooseNewLeader()
                 leader->setLeader(false);
                 leader = NULL;
         }
-        for_each_member(check_if_leader, 0);
+        forEachMember(check_if_leader, 0);
         if (NULL != leader)
                 leader->setLeader(true);
 }
@@ -1772,6 +1570,7 @@ bool player_party::rendezvous(struct place *place, int rx, int ry)
         bool abort = false;
         bool done;
         int max_path_len;
+        struct list *entry;
         class Character *member;
 
         assert(NULL != leader);
@@ -1797,11 +1596,9 @@ bool player_party::rendezvous(struct place *place, int rx, int ry)
         // point.
         // ---------------------------------------------------------------------
 
-        for (i = 0; i < n_pc; i++) {
+        FOR_EACH_MEMBER(entry, member) {
 
                 struct astar_search_info as_info;
-
-                member = pc[i];
 
                 if (NULL == member || member->isDead() || !member->isOnMap() || member == leader ||
                     (member->getX() == rx && member->getY() == ry))
@@ -1830,10 +1627,7 @@ bool player_party::rendezvous(struct place *place, int rx, int ry)
         // ---------------------------------------------------------------------
 
         if (abort) {
-                for (i = 0; i < n_pc; i++) {
-
-                        member = pc[i];
-
+                FOR_EACH_MEMBER(entry, member) {
                         if (member->path) {
                                 astar_path_destroy(member->path);
                                 member->path = 0;
@@ -1851,11 +1645,9 @@ bool player_party::rendezvous(struct place *place, int rx, int ry)
         while (!done) {
                 done = true;
                 consolePrint(".");
-                for (i = 0; i < n_pc; i++) {
+                FOR_EACH_MEMBER(entry, member) {
 
                         struct astar_node *tmp;
-
-                        member = pc[i];
 
                         // already arrived in an earlier iteration
                         if (!member->path)

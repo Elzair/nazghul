@@ -19,28 +19,15 @@
 // Gordon McNutt
 // gmcnutt@users.sourceforge.net
 //
-#ifndef cursor_h
-#define cursor_h
+#ifndef ctrl_h
+#define ctrl_h
 
-#include "object.h"
+// Step 1: get all the controller code separated from the objects.
+// Step 2: merge the player and npc party objects
 
-class Cursor:public Object {
-      public:
-	Cursor();
-	virtual ~ Cursor();
-	virtual void init(class ObjectType * type);
-	virtual enum MoveResult move(int dx, int dy);
-        virtual void setViewportBounded(int bounded);
-	virtual void setRange(int range);
-	virtual void setOrigin(int x, int y);
-        virtual bool is_active(void);
-        virtual void relocate(struct place *newplace, int newx, int newy);
-        virtual void remove();
-      protected:
-	int range, bounded, originX, originY;
-        bool active;
-};
+extern void ctrl_party_ui(class player_party *party);
+extern void ctrl_party_ai(class Party *party);
+extern void ctrl_character_ui(class Character *character);
+extern void ctrl_character_ai(class Character *character);
 
-extern class Cursor *Cursor;
-
-#endif // cursor_h
+#endif

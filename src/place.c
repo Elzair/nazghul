@@ -616,7 +616,7 @@ class Portal *place_get_portal(struct place * place, int x, int y)
 	return (class Portal *) object;
 }
 
-class NpcParty *place_get_NpcParty(struct place * place, int x, int y)
+class Party *place_get_Party(struct place * place, int x, int y)
 {
 	Object *object;
 
@@ -628,10 +628,10 @@ class NpcParty *place_get_NpcParty(struct place * place, int x, int y)
 	if (!object)
 		return 0;
 
-	if (!object->isType(NPCPARTY_ID))
+	if (!object->isType(PARTY_ID))
 		return 0;
 
-	return (class NpcParty *) object;
+	return (class Party *) object;
 }
 
 class Vehicle *place_get_vehicle(struct place * place, int x, int y)
@@ -662,6 +662,8 @@ static int place_pathfind_is_valid_location(struct place_pathfind_context *conte
 	class Portal *portal;
 	class Moongate *moongate;
 
+        //printf("Checking [%d %d]...", x, y);
+
         // ---------------------------------------------------------------------
 	// I used to check this after passability, but it really belongs first.
 	// In several cases the target location may not be passable but if the
@@ -669,12 +671,15 @@ static int place_pathfind_is_valid_location(struct place_pathfind_context *conte
         // ---------------------------------------------------------------------
 
 	if (x == context->target_x && 
-            y == context->target_y)
+            y == context->target_y) {
+                //printf("target reached!\n");
 		return 1;
+        }
 
-	if (!place_is_passable(context->place, x, y, context->pmask,
-			       context->pflags))
+	if (!place_is_passable(context->place, x, y, context->pmask, context->pflags)) {
+                //printf("impassable!\n");
 		return 0;
+        }
 
         // ---------------------------------------------------------------------
         // Check if the caller is blocked by an occupant on this tile.
@@ -686,6 +691,7 @@ static int place_pathfind_is_valid_location(struct place_pathfind_context *conte
                 if (occupant != NULL) {
                         if (0 == (context->pflags & PFLAG_IGNORECOMPANIONS) ||
                             ! context->requestor->isCompanionOf(occupant)) {
+                                //printf("occupied!\n");
                                 return 0;
                         }
                 }
@@ -700,13 +706,18 @@ static int place_pathfind_is_valid_location(struct place_pathfind_context *conte
         // ---------------------------------------------------------------------
 
 	if ((portal = place_get_portal(context->place, x, y)) &&
-	    portal->isAutomatic())
+	    portal->isAutomatic()) {
+                //printf("portal!\n");
 		return 0;
+        }
 
 	if ((moongate = place_get_moongate(context->place, x, y)) &&
-	    moongate->isOpen())
+	    moongate->isOpen()) {
+                //printf("moongate!\n");
 		return 0;
+        }
 
+        //printf("ok\n");
 	return 1;
 }
 
@@ -869,10 +880,10 @@ void placeRemoveObject(Object * object)
 	place_remove_object(Place, object);
 }
 
-class NpcParty *placeGetNPC(int x, int y)
+class Party *placeGetNPC(int x, int y)
 {
         WRAP_COORDS(Place, x, y);
-	return place_get_NpcParty(Place, x, y);
+	return place_get_Party(Place, x, y);
 }
 
 int place_get_movement_cost(struct place *place, int x, int y)
@@ -1239,11 +1250,11 @@ void place_exec(struct place *place, struct exec_context *context)
         }
 }
 
-class NpcParty *place_random_encounter(struct place *place)
+class Party *place_random_encounter(struct place *place)
 {
 	int i;
-	class NpcPartyType *type;
-	class NpcParty *npc;
+	class PartyType *type;
+	class Party *npc;
 
 	if (place->type != wilderness_place)
 		// Random encounters only occur in the wilderness
@@ -1255,7 +1266,7 @@ class NpcParty *place_random_encounter(struct place *place)
 
 			// Create the party
 			type = place->typ_npc_parties[i].type;
-			npc = new NpcParty();
+			npc = new Party();
 			if (!npc)
 				return 0;
 			npc->init(type);

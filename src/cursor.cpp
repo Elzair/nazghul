@@ -38,7 +38,7 @@ void Cursor::init(class ObjectType * type)
 	Object::init(type);
 }
 
-bool Cursor::move(int dx, int dy)
+enum MoveResult Cursor::move(int dx, int dy)
 {
   // SAM: Found a few things, noted below.
   // 
@@ -62,20 +62,20 @@ bool Cursor::move(int dx, int dy)
     
 	// Is the new location off the map?
 	if (place_off_map(getPlace(), newx, newy))
-      return false;
+      return OffMap;
     
     // Is the new location out of the current viewport (without scrolling)?
     if (bounded && !mapTileIsWithinViewport(newx,newy))
-      return false;
+      return OutOfRange;
 
 	// Is the new location out of range?
 	if (d > range)
-      return false;
+      return OutOfRange;
     
 	// move the cursor
 	relocate(getPlace(), newx, newy);
     
-	return true;
+	return MovedOk;
 }
 
 void Cursor::setViewportBounded(int bounded)

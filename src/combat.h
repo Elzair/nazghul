@@ -30,7 +30,7 @@ class Character;
 extern int combatInit(void);
 extern int combatLoad(class Loader *loader);
 extern char combatGetState(void);
-extern bool combatAddNpcParty(class NpcParty * party, int dx, int dy, bool located, struct place *place, int x, int y);
+extern bool combatAddParty(class Party * party, int dx, int dy, bool located, struct place *place, int x, int y);
 
 /* This is needed for walking around while zoomed out. Currently only the
    special ^Z command (which is intended for map editing) uses it. */

@@ -231,7 +231,7 @@ static bool quitHandler(struct QuitHandler *kh)
 static void myGenerateRandomEncounter(void)
 {
 	int x, y, dir;
-	class NpcParty *npc;
+	class Party *npc;
 
 	npc = place_random_encounter(Place);
 
