@@ -114,6 +114,21 @@
        (method 'name (lambda (knpc kpc) (say knpc "I am Roland.")))
        (method 'join roland-join)
 
+       (method 'cell
+               (lambda (knpc kpc)
+                 (say knpc "Use picklocks on a locked door to open it. Or, cast "
+                      "an unlock spell.")))
+       (method 'free
+               (lambda (knpc kpc)
+                 (say knpc "I was waylaid and kidnapped by the bandits in this "
+                      "cave. They've locked me in this cell to hold me for "
+                      "ransom.")))
+       (method 'pick
+               (lambda (knpc kpc)
+                 (say knpc "Bandits and thieves usually carry picklocks.")))
+       (method 'spel
+               (lambda (knpc kpc)
+                 (say knpc "You should ask a Wizard about spells.")))
        (method 'trig 
                (lambda (knpc kpc) 
                  (say knpc "I know Trigave is a small town, a crossroad of "

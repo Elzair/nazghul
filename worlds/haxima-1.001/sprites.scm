@@ -216,13 +216,16 @@
 (kern-mk-sprite 's_water_elemental      ss_mine 1 48 #t 0 )
 
 (kern-mk-sprite 's_closed_solid_wood_door_in_stone            ss_mine 1 49 #f 0 )
-(kern-mk-sprite 's_open_solid_wood_door_in_stone              ss_mine 1 50 #f 0 )
+(kern-mk-sprite 's_open_door_in_stone                         ss_mine 1 50 #f 0 )
 (kern-mk-sprite 's_locked_solid_wood_door_in_stone            ss_mine 1 51 #f 0 )
 (kern-mk-sprite 's_magically_locked_solid_wood_door_in_stone  ss_mine 3 52 #f 0 )
 (kern-mk-sprite 's_closed_solid_wood_door_in_rock             ss_mine 1 56 #f 0 )
-(kern-mk-sprite 's_open_solid_wood_door_in_rock               ss_mine 1 57 #f 0 )
+(kern-mk-sprite 's_open_door_in_rock                          ss_mine 1 57 #f 0 )
 (kern-mk-sprite 's_locked_solid_wood_door_in_rock             ss_mine 1 58 #f 0 )
 (kern-mk-sprite 's_magically_locked_solid_wood_door_in_rock   ss_mine 3 59 #f 0 )
+(kern-mk-sprite 's_closed_windowed_wood_door_in_rock          ss_mine 1 68 #f 0 )
+(kern-mk-sprite 's_locked_windowed_wood_door_in_rock          ss_mine 1 69 #f 0 )
+(kern-mk-sprite 's_magically_locked_windowed_wood_door_in_rock ss_mine 3 76 #f 0 )
 
 (kern-mk-sprite 's_arrow_slit       ss_mine 1 62 #f 0 )
 (kern-mk-sprite 's_window_in_stone  ss_mine 1 63 #f 0 )
