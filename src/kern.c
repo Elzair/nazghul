@@ -2725,7 +2725,29 @@ static pointer kern_blit_map(scheme *sc, pointer args)
 
         terrain_map_blit(dst, dst_x, dst_y, src, src_x, src_y, w, h);
 
-        return sc->NIL;
+        /* Return the modified destination map */
+        return scm_mk_ptr(sc, dst);
+}
+
+static pointer kern_map_rotate(scheme *sc, pointer args)
+{
+        struct terrain_map *map;
+        int degree;
+
+        if (unpack(sc, &args, "pd", &map, &degree)) {
+                rt_err("kern-map-rotate: bad args");
+                return sc->NIL;
+        }
+
+        if (! map) {
+                rt_err("kern-map-rotate: null map");
+                return sc->NIL;
+        }
+
+        terrain_map_rotate(map, degree);
+
+        /* Return the modified map */
+        return scm_mk_ptr(sc, map);
 }
 
 static pointer kern_tag(scheme *sc, pointer  args)
@@ -5966,6 +5988,9 @@ scheme *kern_init(void)
 
         /* kern-type api */
         API_DECL(sc, "kern-type-get-gifc", kern_type_get_gifc);
+
+        /* map api */
+        API_DECL(sc, "kern-map-rotate", kern_map_rotate);
 
         /* misc api */
         API_DECL(sc, "kern-add-magic-negated", kern_add_magic_negated);

@@ -83,7 +83,9 @@
                (list
                 (list p_moongate_clearing 29 23)
                 (list p_gregors_hut       40 30)
-                (list p_abandoned_farm    50 36))
+                (list p_abandoned_farm    50 36)
+                (list p_trigrave          33 43)
+                )
 
                 ;; (list p_trigrave          33 43)
                 ;; (list p_enchanters_tower  19 13)

@@ -20,6 +20,7 @@
 (load "abandoned-farm.scm")
 (load "abandoned-cellar.scm")
 (load "slimy-cavern.scm")
+(load "trigrave.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Characters
