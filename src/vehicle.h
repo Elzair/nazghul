@@ -41,7 +41,7 @@ class VehicleType:public ObjectType {
 	}
 	virtual bool init(char *tag, char *name, struct sprite * sprite,
                           int speed, int pmask, char *mv_desc, char *mv_sound, 
-			  class OrdnanceType * ordnance, bool must_turn) {
+			  class ArmsType * ordnance, bool must_turn) {
                 if (!ObjectType::init(tag, name, vehicle_layer, sprite))
                         return false;
                 this->speed = speed;
@@ -52,7 +52,7 @@ class VehicleType:public ObjectType {
                 this->must_turn = must_turn;
                 return true;
         }
-	virtual class OrdnanceType *getOrdnance() {
+	virtual class ArmsType *getOrdnance() {
 		return ordnance;
 	}
 	virtual int getPmask() {
@@ -82,7 +82,7 @@ class VehicleType:public ObjectType {
         int pmask;
         char *mv_desc;
         char *mv_sound;
-        class OrdnanceType *ordnance;
+        class ArmsType *ordnance;
         bool must_turn;
 };
 
@@ -112,7 +112,7 @@ class Vehicle:public Object {
 	virtual char *getName() {
 		return getObjectType()->getName();
 	}
-        virtual class OrdnanceType *getOrdnance() { 
+        virtual class ArmsType *getOrdnance() { 
 		return getObjectType()->getOrdnance();
 	}
 	virtual int getPmask() {
@@ -139,6 +139,8 @@ class Vehicle:public Object {
         int getSpeed();
         void damage(int amount);
         void repair();
+        virtual int getX();
+        virtual int getY();
 
         class Object *occupant;
         int facing;

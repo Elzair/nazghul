@@ -186,10 +186,16 @@ static void combatAttack(class Character *attacker, class ArmsType *weapon,
         int def;
         int damage;
         int armor;
+        bool miss;
 
-        weapon->fire(defender, attacker->getX(), attacker->getY());
+        miss = ! weapon->fire(defender, attacker->getX(), attacker->getY());
         attacker->useAmmo();
         attacker->setAttackTarget(defender);
+
+        if (miss) {
+                consolePrint("miss!\n");
+                return;
+        }
 
         // Roll to hit.
         hit = dice_roll(2, 6) + weapon->getHit();

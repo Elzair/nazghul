@@ -118,9 +118,7 @@ int Vehicle::get_facing_to_fire_weapon(int dx, int dy)
 
 bool Vehicle::fire_weapon(int dx, int dy)
 {
-	Object *cannonball;
-	class OrdnanceType *ordnance;
-	int i;
+	class ArmsType *ordnance;
 
 	ordnance = getOrdnance();
 	assert(ordnance);
@@ -131,6 +129,12 @@ bool Vehicle::fire_weapon(int dx, int dy)
 	    ((vdir == EAST || vdir == WEST) && dx)) {
 		return false;
 	}
+
+        ordnance->fireInDirection(getPlace(), getX(), getY(), dx, dy);
+        return true;
+#if 0
+	int i;
+	Object *cannonball;
 
 	/* Start the sound of the cannon being fired */
 	soundPlay(ordnance->getFireSound(), SOUND_MAX_VOLUME);
@@ -200,6 +204,7 @@ bool Vehicle::fire_weapon(int dx, int dy)
 	mapUpdate(0);
 
 	return true;
+#endif
 }
 
 void Vehicle::paint(int sx, int sy)
@@ -281,4 +286,18 @@ struct place *Vehicle::getPlace()
         if (occupant)
                 return occupant->getPlace();
         return Object::getPlace();
+}
+
+int Vehicle::getX()
+{
+        if (occupant != NULL)
+                return occupant->getX();
+        return Object::getX();
+}
+
+int Vehicle::getY()
+{
+        if (occupant != NULL)
+                return occupant->getY();
+        return Object::getY();
 }

@@ -743,7 +743,7 @@ enum Spell::cast_result Spell::cast(class Character * caster,
 		}
 
 		missile->setPlace(Place);
-		missile->animate(ox, oy, tx, ty);
+		missile->animate(ox, oy, tx, ty, 0);
 		if (!missile->hitTarget())
 			return missed_target;
                 success = ok;

@@ -28,6 +28,7 @@
 #include "console.h"
 #include "Field.h"
 #include "place.h"
+#include "player.h"
 
 Missile::Missile()
 {
@@ -42,14 +43,46 @@ class ArmsType *Missile::getObjectType()
         return (class ArmsType *) Object::getObjectType();
 }
 
-void Missile::animate(int Ax, int Ay, int Bx, int By)
+bool Missile::enterTile(struct place *place, int x, int y)
+{
+        // kind of a hack... cannonballs aren't blocked by forest
+        if (! (flags & MISSILE_IGNORE_LOS))
+                return place_visibility(place, x, y);
+
+        if (! (flags & MISSILE_HIT_PARTY))
+                return true;
+
+        struck = place_get_NpcParty(place, x, y);
+
+        if (struck != NULL) {
+                hit = true;
+                return false;
+        }
+
+        // fugly hack...
+        if (player_party->getPlace() == place &&
+            player_party->getX() == x &&
+            player_party->getY() == y) {
+                struck = player_party;
+                hit = true;
+                return false;
+        }
+
+        return true;
+}
+
+void Missile::animate(int Ax, int Ay, int Bx, int By, int _flags)
 {
         int origBx = Bx;
         int origBy = By;
+        
+        hit = false;
+        struck = NULL;
+        flags = _flags;
 
-        mapAnimateProjectile(Ax, Ay, &Bx, &By, getSprite(), getPlace());
-
-        hit = (origBx == Bx && origBy == By);
+        mapAnimateProjectile(Ax, Ay, &Bx, &By, getSprite(), getPlace(), this);
+        
+        hit = (hit || (origBx == Bx && origBy == By));
 
 	// If this missile/thrown weapon is supposed to leave behind a field
 	// then create a field object and drop it on the final target
@@ -68,4 +101,9 @@ void Missile::animate(int Ax, int Ay, int Bx, int By)
 bool Missile::hitTarget()
 {
 	return hit;
+}
+
+class Object * Missile::getStruck()
+{
+        return struck;
 }

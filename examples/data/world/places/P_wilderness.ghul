@@ -136,7 +136,7 @@ PLACE  p_wilderness {
                 // tag, x, y, alignment, home, conversation, vehicle
                 //t_goblin_horde    4 14  (ALIGN_MONSTER) 0 c_goblin null;
                 //t_undead_brigade  2 26  (ALIGN_MONSTER) 0 null vt_ship;
-                //t_undead_brigade 32  4  (ALIGN_MONSTER) 0 null vt_ship;
+                t_undead_brigade 32  4  (ALIGN_MONSTER) 0 null vt_ship;
                 t_gazer_pod_with_goblin_slaves 30 20 (ALIGN_MONSTER) 0 null null;                
                 
                 //--------------------------------------------------

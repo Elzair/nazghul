@@ -556,7 +556,7 @@ bool NpcParty::gotoSpot(int mx, int my)
 
 bool NpcParty::attack_with_ordnance(int d)
 {
-	class OrdnanceType *ordnance;
+	class ArmsType *ordnance;
 	int dx, dy;
 	bool ret;
 
@@ -1118,14 +1118,14 @@ static bool damage_member(class Character * member, void *data)
 	return false;
 }
 
-void NpcParty::hit_by_ordnance(class OrdnanceType * ordnance)
+void NpcParty::hitByOrdnance(class ArmsType * ordnance)
 {
 	struct damage_member_info dm_info;
 
 	// First apply damage to the vehicle. If the vehicle is destroyed then
 	// destroy the party, too.
 	if (vehicle) {
-		vehicle->damage(ordnance->get_damage());
+		vehicle->damage(ordnance->getDamage());
 		if (vehicle->isDestroyed()) {
 			delete vehicle;
 			vehicle = NULL;
@@ -1135,7 +1135,7 @@ void NpcParty::hit_by_ordnance(class OrdnanceType * ordnance)
 	}
 	// Apply damage to all party members. If they all die then the party is
 	// destroyed, too.
-	dm_info.damage = 0 - ordnance->get_damage();
+	dm_info.damage = 0 - ordnance->getDamage();
 	dm_info.any_alive = false;
 	forEachMember(damage_member, &dm_info);
 	if (!dm_info.any_alive) {

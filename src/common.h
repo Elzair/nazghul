@@ -371,27 +371,26 @@ extern int dice_roll(int n_dice, int n_faces);
 
 /* Global Variables **********************************************************/
 
-    extern struct list Terrain_Palettes;
-	extern struct list OrdnanceTypes;
-	extern struct list Sprites;
-	extern int Turn;
-	extern int AnimationTicks;
-	extern int Tick;
-	extern int TickMilliseconds;
+extern struct list Terrain_Palettes;
+extern struct list Sprites;
+extern int Turn;
+extern int AnimationTicks;
+extern int Tick;
+extern int TickMilliseconds;
 // extern int WindDirection;
-	extern bool Quit;
-	extern struct los *LosEngine;
-	extern char *LOS;
-	extern bool Reveal;
-	extern int Quicken;
-	extern int TimeStop;
-	extern bool TurnChanged;
-	extern int MagicNegated;
-	extern int ShowAllTerrain;
-	extern struct sprite *CursorSprite;
-	extern int SCREEN_BPP;
+extern bool Quit;
+extern struct los *LosEngine;
+extern char *LOS;
+extern bool Reveal;
+extern int Quicken;
+extern int TimeStop;
+extern bool TurnChanged;
+extern int MagicNegated;
+extern int ShowAllTerrain;
+extern struct sprite *CursorSprite;
+extern int SCREEN_BPP;
 // #define SAVEFILE "mapfile"
-	extern char *SAVEFILE;	/* nazghul.c */
+extern char *SAVEFILE;	/* nazghul.c */
 
 
 #ifdef __cplusplus

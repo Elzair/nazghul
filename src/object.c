@@ -423,3 +423,8 @@ struct conv *Object::getConversation()
 {
         return NULL;
 }
+
+void Object::hitByOrdnance(class ArmsType *ordnance)
+{
+        
+}

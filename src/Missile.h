@@ -25,15 +25,22 @@
 #include "object.h"
 #include "Arms.h"
 
+#define MISSILE_IGNORE_LOS (1 << 0)
+#define MISSILE_HIT_PARTY  (1 << 1)
+
 class Missile:public Object {
       public:
 	Missile();
 	virtual ~Missile();
 	virtual class ArmsType *getObjectType();
-	virtual void animate(int Ax, int Ay, int Bx, int By);
+	virtual void animate(int Ax, int Ay, int Bx, int By, int flags);
 	virtual bool hitTarget();
-      protected:
+        virtual class Object *getStruck();
+        virtual bool enterTile(struct place *place, int x, int y);
+ protected:
 	bool hit;
+        class Object *struck;
+        int flags;
 };
 
 #endif

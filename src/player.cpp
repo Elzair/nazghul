@@ -1403,7 +1403,7 @@ static bool kill_member(class Character * member, void *data)
 	return false;
 }
 
-void player_party::hit_by_ordnance(class OrdnanceType * ordnance)
+void player_party::hitByOrdnance(class ArmsType * ordnance)
 {
 	int amount;
 
@@ -1412,7 +1412,7 @@ void player_party::hit_by_ordnance(class OrdnanceType * ordnance)
 	// First apply damage to the vehicle. If the vehicle is destroyed then
 	// destroy the party, too.
 	if (vehicle) {
-		vehicle->damage(ordnance->get_damage());
+		vehicle->damage(ordnance->getDamage());
 		mapFlash(50);
 		foogodRepaint();
 		if (vehicle->isDestroyed()) {
@@ -1427,7 +1427,7 @@ void player_party::hit_by_ordnance(class OrdnanceType * ordnance)
 	}
 	// Apply damage to all party members. If they all die then the party is
 	// destroyed, too.
-	amount = ordnance->get_damage();
+	amount = ordnance->getDamage();
 	for_each_member(apply_damage, &amount);
 }
 

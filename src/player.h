@@ -100,7 +100,7 @@ class player_party:public Object {
         enum move_result check_move_to(struct move_info *info);
 
         virtual void paint(int sx, int sy);
-	virtual void hit_by_ordnance(class OrdnanceType * ordnance);
+	virtual void hitByOrdnance(class ArmsType * ordnance);
         virtual struct formation *get_formation();
 
         int get_num_living_members(void);

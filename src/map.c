@@ -27,6 +27,7 @@
 #include "sprite.h"
 #include "cursor.h"
 #include "terrain.h"
+#include "Missile.h"
 
 #include <SDL/SDL.h>
 #include <math.h>
@@ -1096,7 +1097,8 @@ static void mapPaintProjectile(SDL_Rect *rect, struct sprite *sprite,
 }
 
 void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By, 
-                          struct sprite *sprite, struct place *place)
+                          struct sprite *sprite, struct place *place,
+                          class Missile *missile)
 {
 	// 
 	// Derived from Kenny Hoff's Bresenhaum impl at
@@ -1125,7 +1127,7 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
 
 	// Copy the place coordinates of the origin of flight. I'll walk these
 	// along as the missile flies and check for obstructions.
-	int Px, Py;
+	int Px, Py, oPx, oPy;
 	Px = Ax;
 	Py = Ay;
 
@@ -1171,10 +1173,16 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
 		// For each x
 		for (int i = AdX; i >= 0; i--) {
 
+                        oPx = Px;
+                        oPy = Py;
 			Px = ((rect.x - Sx) / tile_w + Ox);
 			Py = ((rect.y - Sy) / tile_h + Oy);
-			if (!place_visibility(place, Px, Py))
-				goto done;
+
+                        if (oPx != Px || oPy != Py) {
+                                if (!missile->enterTile(place, Px, Py)) {
+                                        goto done;
+                                }
+                        }
 
                         if (sprite)
                                 mapPaintProjectile(&rect, sprite, surf);
@@ -1198,10 +1206,16 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
 		// For each y
 		for (int i = AdY; i >= 0; i--) {
 
+                        oPx = Px;
+                        oPy = Py;
 			Px = ((rect.x - Sx) / tile_w + Ox);
 			Py = ((rect.y - Sy) / tile_h + Oy);
-			if (!place_visibility(place, Px, Py))
-				goto done;
+
+                        if (oPx != Px || oPy != Py) {
+                                if (!missile->enterTile(place, Px, Py)) {
+                                        goto done;
+                                }
+                        }
 
                         if (sprite)
                                 mapPaintProjectile(&rect, sprite, surf);

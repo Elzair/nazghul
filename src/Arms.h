@@ -52,6 +52,7 @@ class ArmsType:public ObjectType {
 	virtual class ArmsType *getMissileType();
 	virtual bool fire(class Character * target, int ox, int oy);
 	virtual bool fire(struct place *place, int ox, int oy, int tx, int ty);
+        virtual bool fireInDirection(struct place *place, int ox, int oy, int dx, int dy);
 	virtual bool isThrownWeapon();
 	virtual void setThrown(bool val);
 	virtual void setFieldType(class FieldType * type);
@@ -77,6 +78,7 @@ class ArmsType:public ObjectType {
 	class FieldType *field;
 	bool ubiquitousAmmo;
 	int weight;
+        char *fire_sound;
 };
 
 #endif

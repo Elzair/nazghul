@@ -80,7 +80,8 @@ extern "C" {
         // was blocked in its path)
         extern void mapAnimateProjectile(int ox, int oy, int *dx, int *dy, 
                                          struct sprite *sprite, 
-                                         struct place *place);
+                                         struct place *place,
+                                         class Missile *missile);
 
 #ifdef __cplusplus
 }

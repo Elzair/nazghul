@@ -134,7 +134,8 @@ class Object {
 	virtual void describe(int count);
 	virtual void paint(int sx, int sy);
         virtual class Object *clone();
-	virtual bool joinPlayer(void);       
+	virtual bool joinPlayer(void);     
+        virtual void hitByOrdnance(class ArmsType *ordnance);
 
 	struct olist container_link;
 
@@ -149,55 +150,6 @@ class Object {
 	bool selected;
 	bool destroyed;
 	int turn;
-};
-
-
-class OrdnanceType:public ObjectType {
-      public:
-	virtual bool isType(int classID) {
-		if (classID == ORDNANCE_TYPE_ID)
-			return true;
-		return ObjectType::isType(classID);
-	}
-	virtual int getType() {
-		return ORDNANCE_TYPE_ID;
-	}
-
-	OrdnanceType() {
-	}
-	virtual ~ OrdnanceType() {
-	}
-	virtual bool init(char *tag, char *name, struct sprite * sprite,
-			  char *fire_sound, int range, int damage,
-			  class ObjectType * ammo) {
-		if (!ObjectType::init(tag, name, projectile_layer, sprite))
-			return false;
-		this->fire_sound = fire_sound;
-		this->range = range;
-		this->damage = damage;
-		this->ammo = ammo;
-		return true;
-	}
-	struct sprite *getSprite() {
-		return ammo->getSprite();
-	}
-	virtual int getRange() {
-		return range;
-	}
-	virtual class ObjectType *getAmmo() {
-		return ammo;
-	}
-	virtual char *getFireSound() {
-		return fire_sound;
-	}
-	virtual int get_damage() {
-		return damage;
-	}
-      protected:
-	char *fire_sound;
-	int range;
-	int damage;
-	class ObjectType *ammo;
 };
 
 

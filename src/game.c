@@ -357,18 +357,6 @@ static struct terrain *game_terrain_lookup(char *tag)
         return 0;
 }
 
-static class OrdnanceType *lookupOrdnanceType(char *tag)
-{
-        struct list *elem;
-        list_for_each(&OrdnanceTypes, elem) {
-                class OrdnanceType *at;
-                at = list_entry(elem, class OrdnanceType, list);
-                if (!strcmp(at->getTag(), tag))
-                        return at;
-        }
-        return 0;
-}
-
 static struct terrain_map *game_terrain_map_lookup(char *tag)
 {
         struct list *elem;
@@ -1920,62 +1908,6 @@ static int loadArmsType()
         list_add(&ObjectTypes, &arms_type->list);
 
         return 0;
-#if 0
-        class ArmsType *type;
-        int damage, armor, numHands, range, slotMask, thrown = 0, U =
-            0, weight;
-        int ret;
-        char *missileTag = NULL;
-        char *fieldTag = NULL;
-        class ArmsType *missileType = NULL;
-        class FieldType *fieldType = NULL;
-
-        type = new ArmsType();
-        if (!type)
-                return 0;
-
-        PARSE_INT("damage", damage);
-        PARSE_INT("armor", armor);
-        PARSE_INT("slotMask", slotMask);
-        PARSE_INT("numHands", numHands);
-        PARSE_INT("range", range);
-
-        PARSE_WORD("missile", missileTag);
-        if (strcmp(missileTag, "null")) {
-                missileType =
-                    (class ArmsType *) game_object_type_lookup(missileTag);
-                PARSE_ASSERT(missileType, "Invalid object type '%s'",
-                             missileTag);
-        }
-
-        PARSE_INT("thrown", thrown);
-        PARSE_INT("ubiquitousAmmo", U);
-        fieldType = (class FieldType *) parseObjectType("field", FIELD_TYPE_ID);
-        PARSE_INT("weight", weight);
-
-        if (!type->
-            init(tag, name, sprite, slotMask, damage, armor, numHands, range)){
-                delete type;
-                type = 0;
-        }
-
-        if (missileType != NULL)
-                type->setMissileType(missileType);
-        if (thrown)
-                type->setThrown(true);
-        if (fieldType != NULL)
-                type->setFieldType(fieldType);
-        if (U)
-                type->setUbiquitousAmmo(true);
-        type->setWeight(weight);
-
-      cleanup:
-        if (missileTag != NULL)
-                free(missileTag);
-        if (fieldTag != NULL)
-                free(fieldTag);
-        return type;
-#endif
 }
 
 static class ItemType *loadItemSubType(char *tag, char *name,
@@ -2176,7 +2108,7 @@ static int loadObjectTypes()
 static class VehicleType *game_load_vehicle_type()
 {
         class VehicleType *vt = 0;
-        class OrdnanceType *ordnance = 0;
+        class ArmsType *ordnance = 0;
         char *sprite_tag = 0;
         struct sprite *sprite;
         char *dir_tag = 0;
@@ -2207,8 +2139,9 @@ static class VehicleType *game_load_vehicle_type()
         PARSE_STRING("mv_sound", mv_sound);
         PARSE_WORD("ordnance", ordnance_tag);
         if (strcmp(ordnance_tag, "null")) {
-                ordnance = lookupOrdnanceType(ordnance_tag);
-                PARSE_ASSERT(ordnance, "Invalid ordnance tag %s", ordnance_tag);
+                ordnance = (class ArmsType*)lookupTag(ordnance_tag, ARMS_TYPE_ID);
+                PARSE_ASSERT(ordnance, "Invalid ordnance tag '%s'", 
+                             ordnance_tag);
         }
         PARSE_INT("max_hp", vt->max_hp);
         PARSE_WORD("map", map_tag);
@@ -2467,65 +2400,6 @@ static int loadMoonInfo()
 }
 
 /* Ordnance types ************************************************************/
-
-static class OrdnanceType *loadOrdnanceType()
-{
-        class OrdnanceType *vt = 0;
-        class ObjectType *ammo;
-        char *ord_tag = 0, *tag = 0, *name = 0, *fire_sound = 0;
-        int ret = 0, range, damage;
-
-        vt = new class OrdnanceType();
-        if (!vt)
-                return 0;
-
-        PARSE_TAG(tag);
-        PARSE_START_OF_BLOCK();
-        PARSE_STRING("name", name);
-        PARSE_STRING("fire_sound", fire_sound);
-        PARSE_INT("range", range);
-        PARSE_INT("damage", damage);
-        PARSE_WORD("ammo", ord_tag);
-        ammo = game_object_type_lookup(ord_tag);
-        PARSE_ASSERT(ammo, "invalid object type tag %s", ord_tag);
-        PARSE_END_OF_BLOCK();
-
-        if (!vt->init(tag, name, NULL, fire_sound, range, damage, ammo))
-                ret = -1;
-
-      cleanup:
-        if (ret < 0) {
-                delete vt;
-                if (tag)
-                        free(tag);
-                if (fire_sound)
-                        free(fire_sound);
-                if (name)
-                        free(name);
-                vt = 0;
-        }
-        if (ord_tag)
-                free(ord_tag);
-        return vt;
-}
-
-static int loadOrdnanceTypes()
-{
-        list_init(&OrdnanceTypes);
-
-        if (!MATCH('{'))
-                return -1;
-
-        while (lexer_lex(Lexer) != '}') {
-                class OrdnanceType *type;
-                type = loadOrdnanceType();
-                if (!type)
-                        return -1;
-                list_add(&OrdnanceTypes, &type->list);
-        }
-
-        return 0;
-}
 
 static int loadAscii()
 {
@@ -2966,7 +2840,6 @@ static struct keyword keywords[] = {
         {"combat_maps", game_bind_combat_maps, true},
         {"vehicle_types", game_load_vehicle_types, true},
         {"moon_info", loadMoonInfo, true},
-        {"ordnance_types", loadOrdnanceTypes, true},
         {"ascii", loadAscii, true},
         {"CROSSHAIR", loadCrosshair, true},
         {"RESP", loadResponse, false},

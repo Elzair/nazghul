@@ -155,7 +155,7 @@ class NpcParty:public Object {
 	virtual void paint(int sx, int sy);
 	virtual void disembark();
 	virtual bool turn_vehicle();
-	virtual void hit_by_ordnance(class OrdnanceType * ordnance);
+	virtual void hitByOrdnance(class ArmsType * ordnance);
 	virtual void relocate(struct place *place, int x, int y);
 	virtual struct formation *get_formation();
         virtual void describe(int count);

@@ -29,6 +29,7 @@
 #include "place.h"
 #include "Missile.h"
 #include "Loader.h"
+#include "sound.h"
 
 ArmsType::ArmsType()
 {
@@ -44,6 +45,7 @@ ArmsType::ArmsType()
         armor[1]       = 0;
         ubiquitousAmmo = false;
         layer          = item_layer;
+        fire_sound     = NULL;
 }
 
 ArmsType::~ArmsType()
@@ -99,11 +101,10 @@ bool ArmsType::fire(class Character * target, int ox, int oy)
 		missile->setPlace(target->getPlace());
 		missile->setX(ox);
 		missile->setY(oy);
-		missile->animate(ox, oy, target->getX(), target->getY());
+		missile->animate(ox, oy, target->getX(), target->getY(), 0);
 		if (!missile->hitTarget())
 			return false;
 	}
-	//target->attack(getDamage());
 	return true;
 }
 
@@ -113,9 +114,45 @@ bool ArmsType::fire(struct place * place, int ox, int oy, int tx, int ty)
 		missile->setPlace(place);
 		missile->setX(ox);
 		missile->setY(oy);
-		missile->animate(ox, oy, tx, ty);
+		missile->animate(ox, oy, tx, ty, 0);
 	}
 	return true;
+}
+
+bool ArmsType::fireInDirection(struct place *place, int ox, int oy, 
+                               int dx, int dy)
+{
+        if (!isMissileWeapon() && !isThrownWeapon())
+                return false;
+
+        if (fire_sound)
+                soundPlay(fire_sound, SOUND_MAX_VOLUME);
+
+        missile->setPlace(place);
+        missile->setX(ox);
+        missile->setY(oy);
+        missile->animate(ox, oy, 
+                         dx * getRange() + ox, 
+                         dy * getRange() + oy, 
+                         MISSILE_IGNORE_LOS|MISSILE_HIT_PARTY);
+
+        if (!missile->hitTarget() || !missile->getStruck())
+                return false;
+
+        consolePrint("%s hit ", getName());
+        missile->getStruck()->describe(1);
+        consolePrint("!\n");
+        missile->getStruck()->hitByOrdnance(this);
+
+        if (missile->getStruck()->isDestroyed()) {
+                consolePrint("%s destroyed ", getName());
+                missile->getStruck()->describe(1);
+                consolePrint("!\n");
+                delete missile->getStruck();
+                mapUpdate(0);
+        }
+        
+        return true;
 }
 
 void ArmsType::setThrown(bool val)
@@ -250,11 +287,12 @@ int ArmsType::getWeight(void)
 
 bool ArmsType::load(class Loader *loader)
 {
-        char *sprite_tag;
-        char *missile_tag;
-        char *field_tag;
+        char *sprite_tag = NULL;
+        char *missile_tag = NULL;
+        char *field_tag = NULL;
         class ArmsType *missile_type;
         
+        // parse required fields
         if (!loader->getWord(&tag) ||
             !loader->matchToken('{') ||
             !loader->matchWord("name") ||
@@ -288,10 +326,24 @@ bool ArmsType::load(class Loader *loader)
             !loader->matchWord("field") ||
             !loader->getWord(&field_tag) ||
             !loader->matchWord("weight") ||
-            !loader->getInt(&weight) ||
-            !loader->matchToken('}'))
+            !loader->getInt(&weight))
                 return false;
+
+        // parse optional fields
+        while (!loader->matchToken('}')) {
+                if (loader->matchWord("fire_sound")) {
+                        if (!loader->getString(&fire_sound))
+                                goto fail;
+                }
+                else {
+                        loader->setError("Error parsing ARMS: %s is not a "
+                                         "valid field name", 
+                                         loader->getLexeme());
+                        goto fail;
+                }
+        }
         
+        // bind tags
         if (strcmp(sprite_tag, "null")) {
                 sprite = (struct sprite*)loader->lookupTag(sprite_tag, 
                                                            SPRITE_ID);
@@ -336,4 +388,13 @@ bool ArmsType::load(class Loader *loader)
                 setMissileType(this);
 
         return true;
+
+ fail:
+        if (sprite_tag)
+                free(sprite_tag);
+        if (missile_tag)
+                free(missile_tag);
+        if (field_tag)
+                free(field_tag);
+        return false;
 }
