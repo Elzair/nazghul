@@ -266,11 +266,11 @@
                 (list (kern-mk-obj t_breastplate_dragon_5  1)  5  26)
                 (list (kern-mk-obj t_breastplate_dragon_6  1)  6  26)
 
-                (list (kern-mk-obj t_shield_symbol_crown        1)  7  26)
-                (list (kern-mk-obj t_shield_symbol_unicorn_1    1)  8  26)
-                (list (kern-mk-obj t_shield_symbol_unicorn_2    1)  9  26)
-                (list (kern-mk-obj t_shield_symbol_lion_rampant 1) 10  26)
-                (list (kern-mk-obj t_shield_symbol_skull        1) 11  26)
+                (list (kern-mk-obj t_shield_symbol_crown        1)  8  26)
+                (list (kern-mk-obj t_shield_symbol_unicorn_1    1)  9  26)
+                (list (kern-mk-obj t_shield_symbol_unicorn_2    1) 10  26)
+                (list (kern-mk-obj t_shield_symbol_lion_rampant 1) 11  26)
+                (list (kern-mk-obj t_shield_symbol_skull        1) 12  26)
 
                 (list (kern-mk-obj t_armor_leather_1 1)  1  27)
                 (list (kern-mk-obj t_armor_leather_2 1)  2  27)
@@ -304,14 +304,15 @@
                 (list (kern-mk-obj t_armor_dragon_6  1)  6  29)
                 (list (kern-mk-obj t_armor_dragon_7  1)  7  29)
                 (list (kern-mk-obj t_armor_dragon_8  1)  8  29)
-                (list (kern-mk-obj t_armor_dragon_9  1)  9  29)
-                (list (kern-mk-obj t_armor_dragon_10 1) 10  29)
-                (list (kern-mk-obj t_armor_dragon_11 1) 11  29)
-                (list (kern-mk-obj t_armor_dragon_12 1) 12  29)
-                (list (kern-mk-obj t_armor_dragon_13 1) 13  29)
-                (list (kern-mk-obj t_armor_dragon_14 1) 14  29)
-                (list (kern-mk-obj t_armor_dragon_15 1) 15  29)
-                (list (kern-mk-obj t_armor_dragon_16 1) 16  29)
+
+                (list (kern-mk-obj t_armor_dragon_9  1) 10  29)
+                (list (kern-mk-obj t_armor_dragon_10 1) 11  29)
+                (list (kern-mk-obj t_armor_dragon_11 1) 12  29)
+                (list (kern-mk-obj t_armor_dragon_12 1) 13  29)
+                (list (kern-mk-obj t_armor_dragon_13 1) 14  29)
+                (list (kern-mk-obj t_armor_dragon_14 1) 15  29)
+                (list (kern-mk-obj t_armor_dragon_15 1) 16  29)
+                (list (kern-mk-obj t_armor_dragon_16 1) 17  29)
 
 
                 
