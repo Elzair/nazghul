@@ -348,7 +348,7 @@
 (mk-scenery-type 't_arrow_white  "white arrow"  s_arrow_white)
 (mk-scenery-type 't_arrow_gold   "golden arrow" s_arrow_gold)
 
-(mk-scenery-type 't_arrow_glowing_red   "glowing red arrow"   s_arrow_glowing_red)   ;; fix sprite
+(mk-scenery-type 't_arrow_glowing_red   "glowing red arrow"   s_arrow_glowing_red)
 (mk-scenery-type 't_arrow_glowing_green "glowing green arrow" s_arrow_glowing_green) ;; fix sprite
 
 (mk-scenery-type 't_arrow_wooden_flaming "wooden flaming arrow" s_arrow_wooden_flaming)
@@ -366,8 +366,8 @@
 (mk-scenery-type 't_bolt_white  "white bolt"  s_bolt_white)
 (mk-scenery-type 't_bolt_gold   "golden bolt" s_bolt_gold)
 
-(mk-scenery-type 't_bolt_glowing_red "glowing red bolt" s_bolt_glowing_red)
-(mk-scenery-type 't_bolt_glowing_red "glowing red bolt" s_bolt_glowing_green)
+(mk-scenery-type 't_bolt_glowing_red    "glowing red bolt"    s_bolt_glowing_red)
+(mk-scenery-type 't_bolt_glowing_green  "glowing green bolt"  s_bolt_glowing_green)
 
 (mk-scenery-type 't_bolt_wooden_flaming "wooden flaming bolt" s_bolt_wooden_flaming)
 (mk-scenery-type 't_bolt_metal_flaming  "metal flaming bolt"  s_bolt_metal_flaming)
