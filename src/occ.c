@@ -172,7 +172,25 @@ struct occ *occLoad(class Loader * loader)
 	    !loader->matchToken('{') ||
 	    !loader->matchWord("name") ||
 	    !loader->getString(&occ->name) ||
-	    !loader->matchWord("magic") || !loader->getFloat(&occ->magic))
+	    !loader->matchWord("magic") || 
+            !loader->getFloat(&occ->magic) ||
+
+            !loader->matchWord("hp_mod") ||
+            !loader->getInt(&occ->hp_mod) ||
+            !loader->matchWord("hp_mult") ||
+            !loader->getInt(&occ->hp_mult) ||
+            !loader->matchWord("mp_mod") ||
+            !loader->getInt(&occ->mp_mod) ||
+            !loader->matchWord("mp_mult") ||
+            !loader->getInt(&occ->mp_mult) ||
+            !loader->matchWord("hit_mod") ||
+            !loader->getInt(&occ->hit_mod) ||
+            !loader->matchWord("def_mod") ||
+            !loader->getInt(&occ->def_mod) ||
+            !loader->matchWord("dam_mod") ||
+            !loader->getInt(&occ->dam_mod) ||
+            !loader->matchWord("arm_mod") ||
+            !loader->getInt(&occ->arm_mod))
 		goto fail;
 
 	if (!loader->matchWord("container") ||

@@ -35,11 +35,25 @@ struct occ {
 	struct list list;
 	char *name;
 	float magic;
+
+        int hp_mod;
+        int hp_mult;
+        int mp_mod;
+        int mp_mult;
+
+        int hit_mod;
+        int def_mod;
+        int dam_mod;
+        int arm_mod;
+        
 	class ObjectType *container;
+
 	int n_arms;
 	class ArmsType **arms;
+
 	int n_items;
 	struct typical_items *items;
+
 	int n_traps;
 	class TrapType **traps;
 };

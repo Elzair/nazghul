@@ -131,8 +131,8 @@ SPECIES human {
 
   hp_mod  20;
   hp_mult 2;
-  mp_mod  20;
-  mp_mult 2;
+  mp_mod  10;
+  mp_mult 10; // but a lvl 1 human can cast 1 lvl 1 spell
   hit_mod 0;
   def_mod 0;
   dam_mod 0;
@@ -169,8 +169,8 @@ SPECIES goblin {
 
   hp_mod  15;
   hp_mult 2;
-  mp_mod  15;
-  mp_mult 2;
+  mp_mod  10;
+  mp_mult 10;
   hit_mod 0;
   def_mod 0;
   dam_mod 0;
@@ -206,8 +206,8 @@ SPECIES gazer {
 
   hp_mod  10;
   hp_mult 1;
-  mp_mod  30; // natural magic-users
-  mp_mult 3;
+  mp_mod  20; // natural magic-users
+  mp_mult 15;
   hit_mod -1;
   def_mod -1;
   dam_mod 0;
@@ -309,8 +309,8 @@ SPECIES snake {
 
   hp_mod  5; // kill them with one blow from about anything
   hp_mult 1;
-  mp_mod  0;
-  mp_mult 0;
+  mp_mod  20; // level 0 can spit poison once
+  mp_mult 10; // once more per level
   hit_mod 0;
   def_mod +2; // but a bit hard to hit
   dam_mod 0;
@@ -336,8 +336,8 @@ SPECIES insects {
   vr      8;
   pmask   (LAND);
 
-  hp_mod  1;
-  hp_mult 0;
+  hp_mod  5;
+  hp_mult 1;
   mp_mod  0;
   mp_mult 0;
   hit_mod 0;
@@ -366,8 +366,8 @@ SPECIES ghast {
 
   hp_mod  10; // most are pretty ethereal
   hp_mult 5;  // but high-level gets tougher
-  mp_mod  0;
-  mp_mult 0;
+  mp_mod  10;
+  mp_mult 10;
   hit_mod 0;
   def_mod +1;
   dam_mod -1;
@@ -402,8 +402,8 @@ SPECIES nixie {
 
   hp_mod  16;
   hp_mult 2;
-  mp_mod  16;
-  mp_mult 2;
+  mp_mod  10;
+  mp_mult 10;
   hit_mod 0;
   def_mod 0;
   dam_mod 0;
@@ -438,9 +438,9 @@ SPECIES water_elemental {
   pmask (WATER|SHOALS);
 
   hp_mod  30;
-  hp_mult 3;
-  mp_mod  25;
-  mp_mult 2;
+  hp_mult 10;
+  mp_mod  10;
+  mp_mult 10;
   hit_mod 0;
   def_mod 0;
   dam_mod 0;
@@ -473,9 +473,9 @@ SPECIES slime {
         mp_mod  0;
         mp_mult 0;
         hit_mod 0;
-        def_mod -2; // not too quick
+        def_mod +1; // not quick, but spongy
         dam_mod 0;
-        arm_mod +1; // but spongy
+        arm_mod 0;
 
         sleep_sprite s_slime_asleep;
         weapon       t_acid_spray;
@@ -506,12 +506,12 @@ SPECIES yellow_slime {
 
         hp_mod  15;
         hp_mult 1;
-        mp_mod  15;
-        mp_mult 1;
+        mp_mod  20; // can cast slime-summon...
+        mp_mult 20; // ...once per level
         hit_mod +1; // acid sprays in a bigger glob
-        def_mod -3; // still slow, and bigger
+        def_mod  0; // still spongy, but bigger
         dam_mod +1; // acid is stronger
-        arm_mod +1; // not much spongier 
+        arm_mod  0; // not much spongier 
 
         sleep_sprite s_yellow_slime_asleep;
         weapon       t_acid_spray;
