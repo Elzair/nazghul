@@ -81,6 +81,12 @@
 
 #include "scheme-private.h"
 
+#define scm_protect(sc, cell) \
+        (sc)->vptr->protect((sc), (cell))
+
+#define scm_unprotect(sc, cell) \
+        (sc)->vptr->unprotect((sc), (cell))
+
 #define scm_mk_ptr(sc, val) \
         (sc)->vptr->mk_foreign_func((sc), (foreign_func)(val))
 
@@ -484,16 +490,25 @@ pointer vpack(scheme *sc, char *fmt, va_list ap)
                         break;
                 }
 
+                /* Note: arg already protected during _cons */
                 cell = _cons(sc, arg, sc->NIL, 0);
 
                 if (head == sc->NIL) {
                         head = cell;
                         tail = cell;
+
+                        /* By protecting the head we protect the rest of the
+                         * list */
+                        scm_protect(sc, head);
                 } else {
                         tail->_object._cons._cdr = cell;
                         tail = cell;
                 }
         }
+
+        /* Allocations are over so unprotect the list */
+        if (head != sc->NIL)
+                scm_unprotect(sc, head);
 
         return head;
 }
@@ -3740,6 +3755,9 @@ static void kern_append_object(Object *obj, void *data)
         if (info->head == info->sc->NIL) {
                 info->head = cell;
                 info->tail = cell;
+
+                /* Protect the list from gc until we can return to scheme */
+                scm_protect(info->sc, cell);
         } else {
                 info->tail->_object._cons._cdr = cell;
                 info->tail = cell;
@@ -3748,40 +3766,88 @@ static void kern_append_object(Object *obj, void *data)
 
 static pointer scm_mk_loc(scheme *sc, struct place *place, int x, int y)
 {
+        return pack(sc, "pdd", place, x, y);
+
+#if 0
         pointer pcell, xcell, ycell;
 
-        pcell = scm_mk_ptr(sc, place);
-        xcell = scm_mk_integer(sc, x);
-        ycell = scm_mk_integer(sc, y);
+        pcell = scm_protect(scm_mk_ptr(sc, place));
+        xcell = scm_protect(scm_mk_integer(sc, x));
+        ycell = scm_protect(scm_mk_integer(sc, y));
 
         return _cons(sc, pcell, 
                      _cons(sc, xcell, 
                            _cons(sc, ycell, sc->NIL, 0), 
                            0), 
                      0);
+#endif
 }
 
-KERN_API_CALL(kern_get_objects_at)
+static pointer 
+kern_place_for_each_object_at(scheme *sc, struct place *place, int x, int y,
+                              int (*filter)(Object *, 
+                                            struct kern_append_info *),
+                              void *data)
 {
-        struct place *place;
-        int x, y;
         struct kern_append_info info;
-
-        /* unpack the location */
-        if (unpack_loc(sc, &args, &place, &x, &y, "kern-get-objects-at"))
-                return sc->NIL;
 
         /* initialize the context used by the callback to append objects */
         info.sc = sc;
         info.head = sc->NIL;
         info.tail = sc->NIL;
-        info.filter = NULL;
+        info.filter = filter;
+        info.data = data;
 
         /* build a scheme list of the objects at that location */
         place_for_each_object_at(place, x, y, kern_append_object, &info);
 
+        /* unprotect the list prior to return */
+        if (info.head != sc->NIL)
+                scm_unprotect(sc, info.head);
+
         /* return the scheme list */
         return info.head;
+
+}
+
+static pointer 
+kern_place_for_each_object(scheme *sc, struct place *place, 
+                           int (*filter)(Object *, struct kern_append_info *),
+                           void *data)
+{
+        struct kern_append_info info;
+
+        /* initialize the context used by the callback to append objects */
+        info.sc = sc;
+        info.head = sc->NIL;
+        info.tail = sc->NIL;
+        info.filter = filter;
+        info.data = data;
+
+        /* build a scheme list of the objects at that location */
+        place_for_each_object(place, kern_append_object, &info);
+
+        /* unprotect the list prior to return */
+        if (info.head != sc->NIL)
+                scm_unprotect(sc, info.head);
+
+        /* return the scheme list */
+        return info.head;
+
+}
+
+
+KERN_API_CALL(kern_get_objects_at)
+{
+        struct place *place;
+        int x, y;
+
+        /* unpack the location */
+        if (unpack_loc(sc, &args, &place, &x, &y, "kern-get-objects-at"))
+                return sc->NIL;
+
+        /* get all objects with no filtering */
+        return kern_place_for_each_object_at(sc, place, x, y, NULL, NULL);
 }
 
 KERN_API_CALL(kern_obj_is_char)
@@ -3851,8 +3917,6 @@ KERN_API_CALL(kern_char_get_mana)
 KERN_API_CALL(kern_place_get_beings)
 {
         struct place *place;
-        int x, y;
-        struct kern_append_info info;
 
         /* unpack the place */
         if (unpack(sc, &args, "p", &place)) {
@@ -3864,22 +3928,11 @@ KERN_API_CALL(kern_place_get_beings)
                 return sc->NIL;
         }
 
-        /* initialize the context used by the callback to append objects */
-        info.sc = sc;
-        info.head = sc->NIL;
-        info.tail = sc->NIL;        
-        info.filter = kern_filter_being;
-
-        /* build a scheme list of the objects */
-        place_for_each_object(place, kern_append_object, &info);
-
-        /* return the scheme list */
-        return info.head;
+        return kern_place_for_each_object(sc, place, kern_filter_being, NULL);
 }
 
 KERN_API_CALL(kern_being_get_visible_hostiles)
 {
-        struct kern_append_info info;        
         Object *subj;
 
         /* Unpack the subject */
@@ -3892,25 +3945,14 @@ KERN_API_CALL(kern_being_get_visible_hostiles)
                 return sc->NIL;
         }
 
-        /* initialize the context used by the callback to append objects */
-        info.sc = sc;
-        info.head = sc->NIL;
-        info.tail = sc->NIL;
-        info.filter = kern_filter_visible_hostile;
-        info.data = subj;
-
-        /* build a scheme list of the objects */
-        place_for_each_object(subj->getPlace(), kern_append_object, &info);
-
-        /* return the scheme list */
-        return info.head;
+        return kern_place_for_each_object(sc, subj->getPlace(), 
+                                          kern_filter_visible_hostile,
+                                          subj);
 }
 
 KERN_API_CALL(kern_place_get_objects)
 {
         struct place *place;
-        int x, y;
-        struct kern_append_info info;
 
         /* unpack the place */
         if (unpack(sc, &args, "p", &place)) {
@@ -3922,41 +3964,9 @@ KERN_API_CALL(kern_place_get_objects)
                 return sc->NIL;
         }
 
-        /* initialize the context used by the callback to append objects */
-        info.sc = sc;
-        info.head = sc->NIL;
-        info.tail = sc->NIL;
-        info.filter = NULL;
-
-        /* build a scheme list of the objects */
-        place_for_each_object(place, kern_append_object, &info);
-
-        /* return the scheme list */
-        return info.head;
+        return kern_place_for_each_object(sc, place, NULL, NULL);
 }
 
-KERN_API_CALL(kern_place_get_objects_at)
-{
-        struct place *place;
-        int x, y;
-        struct kern_append_info info;
-
-        /* unpack the location*/
-        if (unpack_loc(sc, &args, &place, &x, &y, "kern-place-get-objects-at"))
-                return sc->NIL;
-
-        /* initialize the context used by the callback to append objects */
-        info.sc = sc;
-        info.head = sc->NIL;
-        info.tail = sc->NIL;
-        info.filter = NULL;
-
-        /* build a scheme list of the objects */
-        place_for_each_object_at(place, x, y, kern_append_object, &info);
-
-        /* return the scheme list */
-        return info.head;
-}
 
 /* struct kern_place_get_objects_in_los_info { */
 /*         struct kern_append_info ap_info; */
@@ -5486,6 +5496,7 @@ static void kern_append_loc(Object *obj, void *data)
         if (info->head == info->sc->NIL) {
                 info->head = cell;
                 info->tail = cell;
+                scm_protect(info->sc, cell);
         } else {
                 info->tail->_object._cons._cdr = cell;
                 info->tail = cell;
@@ -5540,6 +5551,7 @@ KERN_API_CALL(kern_search_rect)
                                 if (info.head == info.sc->NIL) {
                                         info.head = cell;
                                         info.tail = cell;
+                                        scm_protect(sc, cell);
                                 } else {
                                         info.tail->_object._cons._cdr = cell;
                                         info.tail = cell;
@@ -5555,6 +5567,10 @@ KERN_API_CALL(kern_search_rect)
                         }
                 }
         }
+
+        /* unprotect the list prior to returning */
+        if (info.head != sc->NIL)
+                scm_unprotect(sc, info.head);
 
         return info.head;
 }
@@ -5602,6 +5618,10 @@ KERN_API_CALL(kern_search_rect_for_obj_type)
                                                  &info);
                 }
         }
+
+        /* unprotect the list prior to returning */
+        if (info.head != sc->NIL)
+                scm_unprotect(sc, info.head);
 
         return info.head;
 }
@@ -5664,6 +5684,10 @@ KERN_API_CALL(kern_search_rect_for_terrain)
                 }
         }
 
+        /* unprotect the list prior to returning */
+        if (info.head != sc->NIL)
+                scm_unprotect(sc, info.head);
+
         /* return the list of locations */
         return info.head;
 }
@@ -5715,23 +5739,24 @@ KERN_API_CALL(kern_fold_rect)
         for (y = ulc_y; y < lrc_y; y++) {
                 for (x = ulc_x; x < lrc_x; x++) {
 
-                        /* make the location */
+                        /* val may be unreferenced by the script, so protect it
+                         * while we allocate cells (I don't think it matters if
+                         * val is immutable, but we could always test that) */
+                        scm_protect(sc, val);
+
+                        /* make the location for the closure callback */
                         pointer loc = scm_mk_loc(sc, place, x, y);
 
-                        /* **************************************** */
-                        /* WARNING: no protection against gc for the location;
-                         * I believe this is causing the occasional script
-                         * error */
-                        /* **************************************** */
+                        /* NOTE: don't need to protect the loc, the args to
+                         * _cons are always protected within it */
 
                         /* make the arg list (val, loc) */
                         pointer pargs = _cons(sc, val, 
                                               _cons(sc, loc, sc->NIL, 0), 0);
 
-                        /* **************************************** */
-                        /* WARNING: no protection against gc for the
-                         * accumulated value, I believe */
-                        /* **************************************** */
+                        /* done with allocations, so val does not need
+                         * protectiong any more */
+                        scm_unprotect(sc, val);
 
                         /* call the procedure, storing the return val for
                          * later */
@@ -5899,7 +5924,6 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-place-get-name", kern_place_get_name);
         API_DECL(sc, "kern-place-get-neighbor", kern_place_get_neighbor);
         API_DECL(sc, "kern-place-get-objects", kern_place_get_objects);
-        API_DECL(sc, "kern-place-get-objects-at", kern_place_get_objects_at);
         API_DECL(sc, "kern-place-get-terrain", kern_place_get_terrain);
         API_DECL(sc, "kern-place-get-width", kern_place_get_width);
         API_DECL(sc, "kern-place-is-passable", kern_place_is_passable);

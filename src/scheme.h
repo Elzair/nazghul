@@ -233,8 +233,8 @@ struct scheme_interface {
   void (*load_string)(scheme *sc, const char *input);
 
 #if USE_PROTECT
-  void (*protect)(scheme *sc, pointer p);
-  void (*unprotect)(scheme *sc, pointer p);
+  pointer (*protect)(scheme *sc, pointer p);
+  pointer (*unprotect)(scheme *sc, pointer p);
 #endif
 };
 #endif

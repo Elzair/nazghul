@@ -243,7 +243,7 @@
                (or a (eqv? (kern-obj-get-type b) ktype)))
              #f
              lst))
-    (if (scanobjlst (kern-place-get-objects-at loc))
+    (if (scanobjlst (kern-get-objects-at loc))
         loc
         nil))
   (search-rect kplace x y w h check))
@@ -289,7 +289,7 @@
 ;; ----------------------------------------------------------------------------
 (define (find-object-types-at loc ktype)
   (filter (lambda (a) (eqv? (kern-obj-get-type a) ktype))
-          (kern-place-get-objects-at loc)))
+          (kern-get-objects-at loc)))
 
 ;; ----------------------------------------------------------------------------
 ;; is-object-type-at? -- check for an object (by type) at a location
@@ -297,7 +297,7 @@
 (define (is-object-type-at? loc ktype)
   (foldr (lambda (a b) (or a (eqv? (kern-obj-get-type b) ktype)))
          #f
-         (kern-place-get-objects-at loc)))
+         (kern-get-objects-at loc)))
   
 
 ;; ----------------------------------------------------------------------------

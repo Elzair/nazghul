@@ -78,7 +78,7 @@
                                  (and (kern-obj-is-char? b)
                                       (not (is-spider? b)))))
                #f
-               (kern-place-get-objects-at loc))))
+               (kern-get-objects-at loc))))
   (let ((loc (kern-obj-get-location kegg)))
     (kern-fold-rect (loc-place loc)
                     (- (loc-x loc) 2)

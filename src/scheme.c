@@ -241,18 +241,20 @@ INTERFACE INLINE int is_environment(pointer p) { return (type(p)==T_ENVIRONMENT)
 #define clrmark(p)       typeflag(p) &= UNMARK
 
 #if USE_PROTECT
-INTERFACE INLINE void protect(scheme *sc, pointer p) 
+INTERFACE INLINE pointer protect(scheme *sc, pointer p) 
 { 
         if (! p->pref)
                 list_add(&sc->protect, &p->plist);
         p->pref++;
+        return p;
 }
-INTERFACE INLINE void unprotect(scheme *sc, pointer p) 
+INTERFACE INLINE pointer unprotect(scheme *sc, pointer p) 
 { 
+        assert(p->pref > 0);
         p->pref--;
-        assert(p->pref >= 0);
         if (! p->pref)
                 list_remove(&p->plist); 
+        return p;
 }
 #define init_pref(p) ((p)->pref = 0)
 #else
