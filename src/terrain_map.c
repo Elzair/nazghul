@@ -131,10 +131,10 @@ void terrain_map_rotate(struct terrain_map *map, int degree)
 	case 2:
 		// 180 degree rotation:
 		// 
-		// 0 1 2 11 10 9 
-		// 3 4 5 => 8 7 6
-		// 6 7 8 5 4 3
-		// 9 10 11 2 1 0
+		// 0  1  2    11 10  9 
+		// 3  4  5 =>  8  7  6
+		// 6  7  8     5  4  3
+		// 9 10 11     2  1  0
 		w2 = map->w;
 		h2 = map->h;
 		for (y1 = 0, y2 = h2 - 1; y1 < map->h; y1++, y2--) {
@@ -147,9 +147,9 @@ void terrain_map_rotate(struct terrain_map *map, int degree)
 	case 3:
 		// 90 degree counter-clockwise rotation:
 		// 
-		// 0 1 2 2 5 8 11
-		// 3 4 5 => 1 4 7 10
-		// 6 7 8 0 3 6 9
+		// 0  1  2    2 5 8 11
+		// 3  4  5 => 1 4 7 10
+		// 6  7  8    0 3 6  9
 		// 9 10 11
 		w2 = map->h;
 		h2 = map->w;
