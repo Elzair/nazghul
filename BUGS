@@ -13,6 +13,12 @@
 * Quoted (Sam favors single quote for glyph conservation purposes) map terrain
   lines for sane syntax highlighting
 
+* Named palettes, palette unions (abort on conflicts)
+
+* soundPlay for mechs
+
+* spaceship the lightswitch in the dungeon => crash when handled
+
 Known BUGS in release 0.1.1
 
 * Firing ship cannons in town at the nixies causes combat to begin immediately,

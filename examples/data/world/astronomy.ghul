@@ -54,7 +54,7 @@ moon_info {
   } // moons
 
   sun {
-    arc    0;    /* 105=7:00 am (sunrise) */
+    arc    150;    /* 105=7:00 am (sunrise) */
     sprite s_sun;
   } // sun
 

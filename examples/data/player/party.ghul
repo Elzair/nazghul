@@ -74,8 +74,8 @@ FORMATION f_football {
 player {
   
   place p_wilderness;
-  x     28;
-  y     14;
+  x     35;
+  y     22;
   
 //        place p_empire_city;
 //        x     42;

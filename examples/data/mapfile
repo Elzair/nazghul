@@ -7,151 +7,151 @@ SPRITE_SET ss_u4 {
   file_offy 0;
   file "data/images/shapes-32x32.png";
   sprites {
-    s_deep { frames 1 index 0 style wave facings 0 };
-    s_shallow { frames 1 index 1 style wave facings 0 };
-    s_shoals { frames 1 index 2 style wave facings 0 };
-    s_bog { frames 1 index 3 style wave facings 0 };
-    s_grass { frames 1 index 4 style normal facings 0 };
-    s_trees { frames 1 index 5 style normal facings 0 };
-    s_forest { frames 1 index 6 style normal facings 0 };
-    s_hills { frames 1 index 7 style normal facings 0 };
-    s_mountains { frames 1 index 8 style normal facings 0 };
-    s_dungeon { frames 1 index 9 style normal facings 0 };
-    s_town { frames 1 index 10 style normal facings 0 };
-    s_keep { frames 1 index 11 style normal facings 0 };
-    s_hamlet { frames 1 index 12 style normal facings 0 };
-    s_leftwing { frames 1 index 13 style normal facings 0 };
-    s_castle { frames 1 index 14 style normal facings 0 };
-    s_rightwing { frames 1 index 15 style normal facings 0 };
-    s_cobblestone { frames 1 index 22 style normal facings 0 };
-    s_bridge { frames 1 index 23 style normal facings 0 };
-    s_ballon { frames 1 index 24 style normal facings 0 };
-    s_bridge_top { frames 1 index 25 style normal facings 0 };
-    s_bridge_bottom { frames 1 index 26 style normal facings 0 };
-    s_ladder_up { frames 1 index 27 style normal facings 0 };
-    s_ladder_down { frames 1 index 28 style normal facings 0 };
-    s_ruin { frames 1 index 29 style normal facings 0 };
-    s_shrine { frames 1 index 30 style normal facings 0 };
-    s_avatar { frames 1 index 31 style normal facings 0 };
-    s_companion_wizard { frames 2 index 32 style normal facings 0 };
-    s_companion_bard { frames 2 index 34 style normal facings 0 };
-    s_companion_fighter { frames 2 index 36 style normal facings 0 };
-    s_companion_druid { frames 2 index 38 style normal facings 0 };
-    s_companion_tinker { frames 2 index 40 style normal facings 0 };
-    s_companion_paladin { frames 2 index 42 style normal facings 0 };
-    s_companion_ranger { frames 2 index 44 style normal facings 0 };
-    s_companion_shepherd { frames 2 index 46 style normal facings 0 };
-    s_pillar { frames 1 index 48 style normal facings 0 };
-    s_wall_b { frames 1 index 49 style normal facings 0 };
-    s_wall_a { frames 1 index 50 style normal facings 0 };
-    s_wall_c { frames 1 index 51 style normal facings 0 };
-    s_wall_d { frames 1 index 52 style normal facings 0 };
-    s_mast { frames 1 index 53 style normal facings 0 };
-    s_ships_wheel { frames 1 index 54 style normal facings 0 };
-    s_boulder { frames 1 index 55 style normal facings 0 };
-    s_corpse { frames 1 index 56 style normal facings 0 };
-    s_wall_rock { frames 1 index 57 style normal facings 0 };
-    s_door_locked { frames 1 index 58 style normal facings 0 };
-    s_door { frames 1 index 59 style normal facings 0 };
-    s_chest { frames 1 index 60 style normal facings 0 };
-    s_ankh { frames 1 index 61 style normal facings 0 };
-    s_flagstone { frames 1 index 62 style normal facings 0 };
-    s_deck { frames 1 index 63 style normal facings 0 };
-    s_moongate_quarter { frames 1 index 64 style normal facings 0 };
-    s_moongate_half { frames 1 index 65 style normal facings 0 };
-    s_moongate_three_quarters { frames 1 index 66 style normal facings 0 };
-    s_moongate_full { frames 1 index 67 style normal facings 0 };
-    s_field_poison { frames 1 index 68 style wave facings 0 };
-    s_field_energy { frames 1 index 69 style wave facings 0 };
-    s_field_fire { frames 1 index 70 style wave facings 0 };
-    s_field_sleep { frames 1 index 71 style wave facings 0 };
-    s_wall { frames 1 index 72 style normal facings 0 };
-    s_secret_door { frames 1 index 73 style normal facings 0 };
-    s_altar { frames 1 index 74 style normal facings 0 };
-    s_fireplace { frames 1 index 75 style normal facings 0 };
-    s_lava { frames 1 index 76 style wave facings 0 };
-    s_projectile { frames 1 index 77 style normal facings 0 };
-    s_magic { frames 1 index 78 style normal facings 0 };
-    s_hit { frames 1 index 79 style normal facings 0 };
-    s_guard { frames 2 index 80 style normal facings 0 };
-    s_townsman { frames 2 index 82 style normal facings 0 };
-    s_bard { frames 2 index 84 style normal facings 0 };
-    s_jester { frames 2 index 86 style normal facings 0 };
-    s_beggar { frames 2 index 88 style normal facings 0 };
-    s_child { frames 2 index 90 style normal facings 0 };
-    s_bull { frames 2 index 92 style normal facings 0 };
-    s_aristocrat { frames 2 index 94 style normal facings 0 };
-    s_A { frames 1 index 96 style normal facings 0 };
-    s_B { frames 1 index 97 style normal facings 0 };
-    s_C { frames 1 index 98 style normal facings 0 };
-    s_D { frames 1 index 99 style normal facings 0 };
-    s_E { frames 1 index 100 style normal facings 0 };
-    s_F { frames 1 index 101 style normal facings 0 };
-    s_G { frames 1 index 102 style normal facings 0 };
-    s_H { frames 1 index 103 style normal facings 0 };
-    s_I { frames 1 index 104 style normal facings 0 };
-    s_J { frames 1 index 105 style normal facings 0 };
-    s_K { frames 1 index 106 style normal facings 0 };
-    s_L { frames 1 index 107 style normal facings 0 };
-    s_M { frames 1 index 108 style normal facings 0 };
-    s_N { frames 1 index 109 style normal facings 0 };
-    s_O { frames 1 index 110 style normal facings 0 };
-    s_P { frames 1 index 111 style normal facings 0 };
-    s_Q { frames 1 index 112 style normal facings 0 };
-    s_R { frames 1 index 113 style normal facings 0 };
-    s_S { frames 1 index 114 style normal facings 0 };
-    s_T { frames 1 index 115 style normal facings 0 };
-    s_U { frames 1 index 116 style normal facings 0 };
-    s_V { frames 1 index 117 style normal facings 0 };
-    s_W { frames 1 index 118 style normal facings 0 };
-    s_X { frames 1 index 119 style normal facings 0 };
-    s_Y { frames 1 index 120 style normal facings 0 };
-    s_Z { frames 1 index 121 style normal facings 0 };
-    s_counter_middle { frames 1 index 122 style normal facings 0 };
-    s_counter_right { frames 1 index 123 style normal facings 0 };
-    s_counter_left { frames 1 index 124 style normal facings 0 };
-    s_counter_pillar { frames 1 index 125 style normal facings 0 };
-    s_blank { frames 1 index 126 style normal facings 0 };
-    s_null { frames 1 index 126 style normal facings 0 };
-    s_wall_stone { frames 1 index 127 style normal facings 0 };
-    s_pirate_left { frames 1 index 128 style normal facings 0 };
-    s_pirate_front { frames 1 index 129 style normal facings 0 };
-    s_pirate_right { frames 1 index 130 style normal facings 0 };
-    s_pirate_back { frames 1 index 131 style normal facings 0 };
-    s_nixie { frames 2 index 132 style normal facings 0 };
-    s_kraken { frames 2 index 134 style normal facings 0 };
-    s_sea_serpent { frames 2 index 136 style normal facings 0 };
-    s_sea_horse { frames 2 index 138 style normal facings 0 };
-    s_whirlpool { frames 2 index 140 style normal facings 0 };
-    s_tornado { frames 2 index 142 style normal facings 0 };
-    s_rat { frames 4 index 144 style normal facings 0 };
-    s_bat { frames 4 index 148 style normal facings 0 };
-    s_spider { frames 4 index 152 style normal facings 0 };
-    s_ghost { frames 4 index 156 style normal facings 0 };
-    s_slime { frames 4 index 160 style normal facings 0 };
-    s_shaman { frames 4 index 164 style normal facings 0 };
-    s_gemlin { frames 4 index 168 style normal facings 0 };
-    s_mimic { frames 4 index 172 style normal facings 0 };
-    s_reaper { frames 4 index 176 style normal facings 0 };
-    s_insects { frames 4 index 180 style normal facings 0 };
-    s_gazer { frames 4 index 184 style normal facings 0 };
-    s_knight { frames 4 index 188 style normal facings 0 };
-    s_orc { frames 4 index 192 style normal facings 0 };
-    s_skeleton { frames 4 index 196 style normal facings 0 };
-    s_brigand { frames 4 index 200 style normal facings 0 };
-    s_snake { frames 4 index 204 style normal facings 0 };
-    s_etin { frames 4 index 208 style normal facings 0 };
-    s_headless { frames 4 index 212 style normal facings 0 };
-    s_cyclops { frames 4 index 216 style normal facings 0 };
-    s_wisp { frames 4 index 220 style normal facings 0 };
-    s_wizard { frames 4 index 224 style normal facings 0 };
-    s_lich { frames 4 index 228 style normal facings 0 };
-    s_drake { frames 4 index 232 style normal facings 0 };
-    s_xorn { frames 4 index 236 style normal facings 0 };
-    s_demon { frames 4 index 240 style normal facings 0 };
-    s_hydra { frames 4 index 244 style normal facings 0 };
-    s_dragon { frames 4 index 248 style normal facings 0 };
-    s_balron { frames 4 index 252 style normal facings 0 };
+    s_deep { frames 1; index 0; style wave; facings 0; };
+    s_shallow { frames 1; index 1; style wave; facings 0; };
+    s_shoals { frames 1; index 2; style wave; facings 0; };
+    s_bog { frames 1; index 3; style wave; facings 0; };
+    s_grass { frames 1; index 4; style normal; facings 0; };
+    s_trees { frames 1; index 5; style normal; facings 0; };
+    s_forest { frames 1; index 6; style normal; facings 0; };
+    s_hills { frames 1; index 7; style normal; facings 0; };
+    s_mountains { frames 1; index 8; style normal; facings 0; };
+    s_dungeon { frames 1; index 9; style normal; facings 0; };
+    s_town { frames 1; index 10; style normal; facings 0; };
+    s_keep { frames 1; index 11; style normal; facings 0; };
+    s_hamlet { frames 1; index 12; style normal; facings 0; };
+    s_leftwing { frames 1; index 13; style normal; facings 0; };
+    s_castle { frames 1; index 14; style normal; facings 0; };
+    s_rightwing { frames 1; index 15; style normal; facings 0; };
+    s_cobblestone { frames 1; index 22; style normal; facings 0; };
+    s_bridge { frames 1; index 23; style normal; facings 0; };
+    s_ballon { frames 1; index 24; style normal; facings 0; };
+    s_bridge_top { frames 1; index 25; style normal; facings 0; };
+    s_bridge_bottom { frames 1; index 26; style normal; facings 0; };
+    s_ladder_up { frames 1; index 27; style normal; facings 0; };
+    s_ladder_down { frames 1; index 28; style normal; facings 0; };
+    s_ruin { frames 1; index 29; style normal; facings 0; };
+    s_shrine { frames 1; index 30; style normal; facings 0; };
+    s_avatar { frames 1; index 31; style normal; facings 0; };
+    s_companion_wizard { frames 2; index 32; style normal; facings 0; };
+    s_companion_bard { frames 2; index 34; style normal; facings 0; };
+    s_companion_fighter { frames 2; index 36; style normal; facings 0; };
+    s_companion_druid { frames 2; index 38; style normal; facings 0; };
+    s_companion_tinker { frames 2; index 40; style normal; facings 0; };
+    s_companion_paladin { frames 2; index 42; style normal; facings 0; };
+    s_companion_ranger { frames 2; index 44; style normal; facings 0; };
+    s_companion_shepherd { frames 2; index 46; style normal; facings 0; };
+    s_pillar { frames 1; index 48; style normal; facings 0; };
+    s_wall_b { frames 1; index 49; style normal; facings 0; };
+    s_wall_a { frames 1; index 50; style normal; facings 0; };
+    s_wall_c { frames 1; index 51; style normal; facings 0; };
+    s_wall_d { frames 1; index 52; style normal; facings 0; };
+    s_mast { frames 1; index 53; style normal; facings 0; };
+    s_ships_wheel { frames 1; index 54; style normal; facings 0; };
+    s_boulder { frames 1; index 55; style normal; facings 0; };
+    s_corpse { frames 1; index 56; style normal; facings 0; };
+    s_wall_rock { frames 1; index 57; style normal; facings 0; };
+    s_door_locked { frames 1; index 58; style normal; facings 0; };
+    s_door { frames 1; index 59; style normal; facings 0; };
+    s_chest { frames 1; index 60; style normal; facings 0; };
+    s_ankh { frames 1; index 61; style normal; facings 0; };
+    s_flagstone { frames 1; index 62; style normal; facings 0; };
+    s_deck { frames 1; index 63; style normal; facings 0; };
+    s_moongate_quarter { frames 1; index 64; style normal; facings 0; };
+    s_moongate_half { frames 1; index 65; style normal; facings 0; };
+    s_moongate_three_quarters { frames 1; index 66; style normal; facings 0; };
+    s_moongate_full { frames 1; index 67; style normal; facings 0; };
+    s_field_poison { frames 1; index 68; style wave; facings 0; };
+    s_field_energy { frames 1; index 69; style wave; facings 0; };
+    s_field_fire { frames 1; index 70; style wave; facings 0; };
+    s_field_sleep { frames 1; index 71; style wave; facings 0; };
+    s_wall { frames 1; index 72; style normal; facings 0; };
+    s_secret_door { frames 1; index 73; style normal; facings 0; };
+    s_altar { frames 1; index 74; style normal; facings 0; };
+    s_fireplace { frames 1; index 75; style normal; facings 0; };
+    s_lava { frames 1; index 76; style wave; facings 0; };
+    s_projectile { frames 1; index 77; style normal; facings 0; };
+    s_magic { frames 1; index 78; style normal; facings 0; };
+    s_hit { frames 1; index 79; style normal; facings 0; };
+    s_guard { frames 2; index 80; style normal; facings 0; };
+    s_townsman { frames 2; index 82; style normal; facings 0; };
+    s_bard { frames 2; index 84; style normal; facings 0; };
+    s_jester { frames 2; index 86; style normal; facings 0; };
+    s_beggar { frames 2; index 88; style normal; facings 0; };
+    s_child { frames 2; index 90; style normal; facings 0; };
+    s_bull { frames 2; index 92; style normal; facings 0; };
+    s_aristocrat { frames 2; index 94; style normal; facings 0; };
+    s_A { frames 1; index 96; style normal; facings 0; };
+    s_B { frames 1; index 97; style normal; facings 0; };
+    s_C { frames 1; index 98; style normal; facings 0; };
+    s_D { frames 1; index 99; style normal; facings 0; };
+    s_E { frames 1; index 100; style normal; facings 0; };
+    s_F { frames 1; index 101; style normal; facings 0; };
+    s_G { frames 1; index 102; style normal; facings 0; };
+    s_H { frames 1; index 103; style normal; facings 0; };
+    s_I { frames 1; index 104; style normal; facings 0; };
+    s_J { frames 1; index 105; style normal; facings 0; };
+    s_K { frames 1; index 106; style normal; facings 0; };
+    s_L { frames 1; index 107; style normal; facings 0; };
+    s_M { frames 1; index 108; style normal; facings 0; };
+    s_N { frames 1; index 109; style normal; facings 0; };
+    s_O { frames 1; index 110; style normal; facings 0; };
+    s_P { frames 1; index 111; style normal; facings 0; };
+    s_Q { frames 1; index 112; style normal; facings 0; };
+    s_R { frames 1; index 113; style normal; facings 0; };
+    s_S { frames 1; index 114; style normal; facings 0; };
+    s_T { frames 1; index 115; style normal; facings 0; };
+    s_U { frames 1; index 116; style normal; facings 0; };
+    s_V { frames 1; index 117; style normal; facings 0; };
+    s_W { frames 1; index 118; style normal; facings 0; };
+    s_X { frames 1; index 119; style normal; facings 0; };
+    s_Y { frames 1; index 120; style normal; facings 0; };
+    s_Z { frames 1; index 121; style normal; facings 0; };
+    s_counter_middle { frames 1; index 122; style normal; facings 0; };
+    s_counter_right { frames 1; index 123; style normal; facings 0; };
+    s_counter_left { frames 1; index 124; style normal; facings 0; };
+    s_counter_1x1 { frames 1; index 125; style normal; facings 0; };
+    s_blank { frames 1; index 126; style normal; facings 0; };
+    s_null { frames 1; index 126; style normal; facings 0; };
+    s_wall_stone { frames 1; index 127; style normal; facings 0; };
+    s_pirate_left { frames 1; index 128; style normal; facings 0; };
+    s_pirate_front { frames 1; index 129; style normal; facings 0; };
+    s_pirate_right { frames 1; index 130; style normal; facings 0; };
+    s_pirate_back { frames 1; index 131; style normal; facings 0; };
+    s_nixie { frames 2; index 132; style normal; facings 0; };
+    s_kraken { frames 2; index 134; style normal; facings 0; };
+    s_sea_serpent { frames 2; index 136; style normal; facings 0; };
+    s_sea_horse { frames 2; index 138; style normal; facings 0; };
+    s_whirlpool { frames 2; index 140; style normal; facings 0; };
+    s_tornado { frames 2; index 142; style normal; facings 0; };
+    s_rat { frames 4; index 144; style normal; facings 0; };
+    s_bat { frames 4; index 148; style normal; facings 0; };
+    s_spider { frames 4; index 152; style normal; facings 0; };
+    s_ghost { frames 4; index 156; style normal; facings 0; };
+    s_slime { frames 4; index 160; style normal; facings 0; };
+    s_shaman { frames 4; index 164; style normal; facings 0; };
+    s_gemlin { frames 4; index 168; style normal; facings 0; };
+    s_mimic { frames 4; index 172; style normal; facings 0; };
+    s_reaper { frames 4; index 176; style normal; facings 0; };
+    s_insects { frames 4; index 180; style normal; facings 0; };
+    s_gazer { frames 4; index 184; style normal; facings 0; };
+    s_knight { frames 4; index 188; style normal; facings 0; };
+    s_orc { frames 4; index 192; style normal; facings 0; };
+    s_skeleton { frames 4; index 196; style normal; facings 0; };
+    s_brigand { frames 4; index 200; style normal; facings 0; };
+    s_snake { frames 4; index 204; style normal; facings 0; };
+    s_etin { frames 4; index 208; style normal; facings 0; };
+    s_headless { frames 4; index 212; style normal; facings 0; };
+    s_cyclops { frames 4; index 216; style normal; facings 0; };
+    s_wisp { frames 4; index 220; style normal; facings 0; };
+    s_wizard { frames 4; index 224; style normal; facings 0; };
+    s_lich { frames 4; index 228; style normal; facings 0; };
+    s_drake { frames 4; index 232; style normal; facings 0; };
+    s_xorn { frames 4; index 236; style normal; facings 0; };
+    s_demon { frames 4; index 240; style normal; facings 0; };
+    s_hydra { frames 4; index 244; style normal; facings 0; };
+    s_dragon { frames 4; index 248; style normal; facings 0; };
+    s_balron { frames 4; index 252; style normal; facings 0; };
   }
 }
 SPRITE_SET ss_angband {
@@ -163,147 +163,147 @@ SPRITE_SET ss_angband {
   file_offy 0;
   file "data/images/angband-32x32.png";
   sprites {
-    s_gold_explosion { frames 1 index 61 style normal facings 0 };
-    s_brown_powder { frames 1 index 113 style normal facings 0 };
-    s_silver_powder { frames 1 index 114 style normal facings 0 };
-    s_gold_powder { frames 1 index 115 style normal facings 0 };
-    s_bluish_white_powder { frames 1 index 116 style normal facings 0 };
-    s_greenish_white_powder { frames 1 index 117 style normal facings 0 };
-    s_grayish_red_hunks { frames 1 index 118 style normal facings 0 };
-    s_white_hunks { frames 1 index 119 style normal facings 0 };
-    s_aquamarine_hunks { frames 1 index 120 style normal facings 0 };
-    s_red_hunks { frames 1 index 121 style normal facings 0 };
-    s_lightblue_hunks { frames 1 index 122 style normal facings 0 };
-    s_green_hunks { frames 1 index 123 style normal facings 0 };
-    s_scroll1 { frames 1 index 124 style normal facings 0 };
-    s_scroll2 { frames 1 index 125 style normal facings 0 };
-    s_scroll3 { frames 1 index 126 style normal facings 0 };
-    s_scroll4 { frames 1 index 127 style normal facings 0 };
-    s_ring1 { frames 1 index 128 style normal facings 0 };
-    s_ring2 { frames 1 index 129 style normal facings 0 };
-    s_ring3 { frames 1 index 130 style normal facings 0 };
-    s_ring4 { frames 1 index 131 style normal facings 0 };
-    s_ring5 { frames 1 index 132 style normal facings 0 };
-    s_ring6 { frames 1 index 133 style normal facings 0 };
-    s_ring7 { frames 1 index 134 style normal facings 0 };
-    s_ring8 { frames 1 index 135 style normal facings 0 };
-    s_ring9 { frames 1 index 136 style normal facings 0 };
-    s_ring10 { frames 1 index 137 style normal facings 0 };
-    s_ring11 { frames 1 index 138 style normal facings 0 };
-    s_ring12 { frames 1 index 139 style normal facings 0 };
-    s_ring13 { frames 1 index 140 style normal facings 0 };
-    s_ring14 { frames 1 index 141 style normal facings 0 };
-    s_ring15 { frames 1 index 142 style normal facings 0 };
-    s_ring16 { frames 1 index 143 style normal facings 0 };
-    s_ring17 { frames 1 index 145 style normal facings 0 };
-    s_ring18 { frames 1 index 146 style normal facings 0 };
-    s_ring19 { frames 1 index 147 style normal facings 0 };
-    s_ring20 { frames 1 index 148 style normal facings 0 };
-    s_ring21 { frames 1 index 149 style normal facings 0 };
-    s_necklace1 { frames 1 index 150 style normal facings 0 };
-    s_necklace2 { frames 1 index 151 style normal facings 0 };
-    s_necklace3 { frames 1 index 152 style normal facings 0 };
-    s_chest1 { frames 1 index 153 style normal facings 0 };
-    s_chest2 { frames 1 index 154 style normal facings 0 };
-    s_chest3 { frames 1 index 155 style normal facings 0 };
-    s_chest4 { frames 1 index 156 style normal facings 0 };
-    s_chest5 { frames 1 index 157 style normal facings 0 };
-    s_chest6 { frames 1 index 158 style normal facings 0 };
-    s_chest7 { frames 1 index 159 style normal facings 0 };
-    s_white_potion { frames 1 index 160 style normal facings 0 };
-    s_black_potion { frames 1 index 161 style normal facings 0 };
-    s_orange_potion { frames 1 index 162 style normal facings 0 };
-    s_red_potion { frames 1 index 163 style normal facings 0 };
-    s_green_potion { frames 1 index 164 style normal facings 0 };
-    s_blue_potion { frames 1 index 165 style normal facings 0 };
-    s_brown_potion { frames 1 index 166 style normal facings 0 };
-    s_gray_potion { frames 1 index 167 style normal facings 0 };
-    s_silver_potion { frames 1 index 168 style normal facings 0 };
-    s_purple_potion { frames 1 index 169 style normal facings 0 };
-    s_yellow_potion { frames 1 index 170 style normal facings 0 };
-    s_ruby_potion { frames 1 index 171 style normal facings 0 };
-    s_emarald_potion { frames 1 index 172 style normal facings 0 };
-    s_skyblue_potion { frames 1 index 173 style normal facings 0 };
-    s_golden_potion { frames 1 index 174 style normal facings 0 };
-    s_mushroom1 { frames 1 index 176 style normal facings 0 };
-    s_mushroom2 { frames 1 index 177 style normal facings 0 };
-    s_mushroom3 { frames 1 index 178 style normal facings 0 };
-    s_mushroom4 { frames 1 index 179 style normal facings 0 };
-    s_mushroom5 { frames 1 index 180 style normal facings 0 };
-    s_mushroom6 { frames 1 index 181 style normal facings 0 };
-    s_brown_mushroom { frames 1 index 182 style normal facings 0 };
-    s_black_mushroom { frames 1 index 183 style normal facings 0 };
-    s_mushroom9 { frames 1 index 184 style normal facings 0 };
-    s_mushroom10 { frames 1 index 185 style normal facings 0 };
-    s_mushroom11 { frames 1 index 186 style normal facings 0 };
-    s_mushroom12 { frames 1 index 187 style normal facings 0 };
-    s_mushroom13 { frames 1 index 188 style normal facings 0 };
-    s_mushroom14 { frames 1 index 189 style normal facings 0 };
-    s_mushroom15 { frames 1 index 190 style normal facings 0 };
-    s_helm1 { frames 1 index 248 style normal facings 0 };
-    s_helm2 { frames 1 index 249 style normal facings 0 };
-    s_helm3 { frames 1 index 250 style normal facings 0 };
-    s_helm4 { frames 1 index 251 style normal facings 0 };
-    s_helm5 { frames 1 index 252 style normal facings 0 };
-    s_helm6 { frames 1 index 253 style normal facings 0 };
-    s_helm7 { frames 1 index 254 style normal facings 0 };
-    s_helm8 { frames 1 index 255 style normal facings 0 };
-    s_helm9 { frames 1 index 256 style normal facings 0 };
-    s_helm10 { frames 1 index 257 style normal facings 0 };
-    s_helm11 { frames 1 index 258 style normal facings 0 };
-    s_helm12 { frames 1 index 259 style normal facings 0 };
-    s_helm13 { frames 1 index 260 style normal facings 0 };
-    s_helm14 { frames 1 index 261 style normal facings 0 };
-    s_helm15 { frames 1 index 262 style normal facings 0 };
-    s_helm16 { frames 1 index 263 style normal facings 0 };
-    s_helm17 { frames 1 index 264 style normal facings 0 };
-    s_helm18 { frames 1 index 265 style normal facings 0 };
-    s_helm19 { frames 1 index 266 style normal facings 0 };
-    s_helm20 { frames 1 index 267 style normal facings 0 };
-    s_helm21 { frames 1 index 268 style normal facings 0 };
-    s_helm22 { frames 1 index 269 style normal facings 0 };
-    s_shoe1 { frames 1 index 270 style normal facings 0 };
-    s_shoe2 { frames 1 index 271 style normal facings 0 };
-    s_shoe3 { frames 1 index 272 style normal facings 0 };
-    s_shoe4 { frames 1 index 273 style normal facings 0 };
-    s_shoe5 { frames 1 index 274 style normal facings 0 };
-    s_shoe6 { frames 1 index 275 style normal facings 0 };
-    s_shield1 { frames 1 index 276 style normal facings 0 };
-    s_shield2 { frames 1 index 277 style normal facings 0 };
-    s_shield3 { frames 1 index 278 style normal facings 0 };
-    s_shield4 { frames 1 index 279 style normal facings 0 };
-    s_shield5 { frames 1 index 280 style normal facings 0 };
-    s_shield6 { frames 1 index 281 style normal facings 0 };
-    s_shield7 { frames 1 index 282 style normal facings 0 };
-    s_shield8 { frames 1 index 283 style normal facings 0 };
-    s_shield9 { frames 1 index 284 style normal facings 0 };
-    s_shield10 { frames 1 index 285 style normal facings 0 };
-    s_shield11 { frames 1 index 286 style normal facings 0 };
-    s_shield12 { frames 1 index 287 style normal facings 0 };
-    s_shield13 { frames 1 index 288 style normal facings 0 };
-    s_shield14 { frames 1 index 289 style normal facings 0 };
-    s_shield15 { frames 1 index 290 style normal facings 0 };
-    s_shield16 { frames 1 index 291 style normal facings 0 };
-    s_shield17 { frames 1 index 292 style normal facings 0 };
-    s_shield18 { frames 1 index 293 style normal facings 0 };
-    s_shield19 { frames 1 index 294 style normal facings 0 };
-    s_shield20 { frames 1 index 295 style normal facings 0 };
-    s_dagger { frames 1 index 334 style normal facings 0 };
-    s_sword { frames 1 index 345 style normal facings 0 };
-    s_2h_hammer { frames 1 index 352 style normal facings 0 };
-    s_mace { frames 1 index 353 style normal facings 0 };
-    s_spear { frames 1 index 361 style normal facings 0 };
-    s_lght_bow { frames 1 index 376 style normal facings 0 };
-    s_hvy_bow { frames 1 index 377 style normal facings 0 };
-    s_lght_xbow { frames 1 index 378 style normal facings 0 };
-    s_hvy_xbow { frames 1 index 379 style normal facings 0 };
-    s_sling { frames 1 index 380 style normal facings 0 };
-    s_ring_mail { frames 1 index 309 style normal facings 0 };
-    s_torch { frames 1 index 459 style normal facings 0 };
-    s_explosion { frames 1 index 570 style normal facings 0 };
-    s_long_sword { frames 1 index 1708 style normal facings 0 };
-    s_2h_sword { frames 1 index 1709 style normal facings 0 };
-    s_giant { frames 2 index 652 style normal facings 0 };
+    s_gold_explosion { frames 1; index 61; style normal; facings 0; };
+    s_brown_powder { frames 1; index 113; style normal; facings 0; };
+    s_silver_powder { frames 1; index 114; style normal; facings 0; };
+    s_gold_powder { frames 1; index 115; style normal; facings 0; };
+    s_bluish_white_powder { frames 1; index 116; style normal; facings 0; };
+    s_greenish_white_powder { frames 1; index 117; style normal; facings 0; };
+    s_grayish_red_hunks { frames 1; index 118; style normal; facings 0; };
+    s_white_hunks { frames 1; index 119; style normal; facings 0; };
+    s_aquamarine_hunks { frames 1; index 120; style normal; facings 0; };
+    s_red_hunks { frames 1; index 121; style normal; facings 0; };
+    s_lightblue_hunks { frames 1; index 122; style normal; facings 0; };
+    s_green_hunks { frames 1; index 123; style normal; facings 0; };
+    s_scroll1 { frames 1; index 124; style normal; facings 0; };
+    s_scroll2 { frames 1; index 125; style normal; facings 0; };
+    s_scroll3 { frames 1; index 126; style normal; facings 0; };
+    s_scroll4 { frames 1; index 127; style normal; facings 0; };
+    s_ring1 { frames 1; index 128; style normal; facings 0; };
+    s_ring2 { frames 1; index 129; style normal; facings 0; };
+    s_ring3 { frames 1; index 130; style normal; facings 0; };
+    s_ring4 { frames 1; index 131; style normal; facings 0; };
+    s_ring5 { frames 1; index 132; style normal; facings 0; };
+    s_ring6 { frames 1; index 133; style normal; facings 0; };
+    s_ring7 { frames 1; index 134; style normal; facings 0; };
+    s_ring8 { frames 1; index 135; style normal; facings 0; };
+    s_ring9 { frames 1; index 136; style normal; facings 0; };
+    s_ring10 { frames 1; index 137; style normal; facings 0; };
+    s_ring11 { frames 1; index 138; style normal; facings 0; };
+    s_ring12 { frames 1; index 139; style normal; facings 0; };
+    s_ring13 { frames 1; index 140; style normal; facings 0; };
+    s_ring14 { frames 1; index 141; style normal; facings 0; };
+    s_ring15 { frames 1; index 142; style normal; facings 0; };
+    s_ring16 { frames 1; index 143; style normal; facings 0; };
+    s_ring17 { frames 1; index 145; style normal; facings 0; };
+    s_ring18 { frames 1; index 146; style normal; facings 0; };
+    s_ring19 { frames 1; index 147; style normal; facings 0; };
+    s_ring20 { frames 1; index 148; style normal; facings 0; };
+    s_ring21 { frames 1; index 149; style normal; facings 0; };
+    s_necklace1 { frames 1; index 150; style normal; facings 0; };
+    s_necklace2 { frames 1; index 151; style normal; facings 0; };
+    s_necklace3 { frames 1; index 152; style normal; facings 0; };
+    s_chest1 { frames 1; index 153; style normal; facings 0; };
+    s_chest2 { frames 1; index 154; style normal; facings 0; };
+    s_chest3 { frames 1; index 155; style normal; facings 0; };
+    s_chest4 { frames 1; index 156; style normal; facings 0; };
+    s_chest5 { frames 1; index 157; style normal; facings 0; };
+    s_chest6 { frames 1; index 158; style normal; facings 0; };
+    s_chest7 { frames 1; index 159; style normal; facings 0; };
+    s_white_potion { frames 1; index 160; style normal; facings 0; };
+    s_black_potion { frames 1; index 161; style normal; facings 0; };
+    s_orange_potion { frames 1; index 162; style normal; facings 0; };
+    s_red_potion { frames 1; index 163; style normal; facings 0; };
+    s_green_potion { frames 1; index 164; style normal; facings 0; };
+    s_blue_potion { frames 1; index 165; style normal; facings 0; };
+    s_brown_potion { frames 1; index 166; style normal; facings 0; };
+    s_gray_potion { frames 1; index 167; style normal; facings 0; };
+    s_silver_potion { frames 1; index 168; style normal; facings 0; };
+    s_purple_potion { frames 1; index 169; style normal; facings 0; };
+    s_yellow_potion { frames 1; index 170; style normal; facings 0; };
+    s_ruby_potion { frames 1; index 171; style normal; facings 0; };
+    s_emarald_potion { frames 1; index 172; style normal; facings 0; };
+    s_skyblue_potion { frames 1; index 173; style normal; facings 0; };
+    s_golden_potion { frames 1; index 174; style normal; facings 0; };
+    s_mushroom1 { frames 1; index 176; style normal; facings 0; };
+    s_mushroom2 { frames 1; index 177; style normal; facings 0; };
+    s_mushroom3 { frames 1; index 178; style normal; facings 0; };
+    s_mushroom4 { frames 1; index 179; style normal; facings 0; };
+    s_mushroom5 { frames 1; index 180; style normal; facings 0; };
+    s_mushroom6 { frames 1; index 181; style normal; facings 0; };
+    s_brown_mushroom { frames 1; index 182; style normal; facings 0; };
+    s_black_mushroom { frames 1; index 183; style normal; facings 0; };
+    s_mushroom9 { frames 1; index 184; style normal; facings 0; };
+    s_mushroom10 { frames 1; index 185; style normal; facings 0; };
+    s_mushroom11 { frames 1; index 186; style normal; facings 0; };
+    s_mushroom12 { frames 1; index 187; style normal; facings 0; };
+    s_mushroom13 { frames 1; index 188; style normal; facings 0; };
+    s_mushroom14 { frames 1; index 189; style normal; facings 0; };
+    s_mushroom15 { frames 1; index 190; style normal; facings 0; };
+    s_helm1 { frames 1; index 248; style normal; facings 0; };
+    s_helm2 { frames 1; index 249; style normal; facings 0; };
+    s_helm3 { frames 1; index 250; style normal; facings 0; };
+    s_helm4 { frames 1; index 251; style normal; facings 0; };
+    s_helm5 { frames 1; index 252; style normal; facings 0; };
+    s_helm6 { frames 1; index 253; style normal; facings 0; };
+    s_helm7 { frames 1; index 254; style normal; facings 0; };
+    s_helm8 { frames 1; index 255; style normal; facings 0; };
+    s_helm9 { frames 1; index 256; style normal; facings 0; };
+    s_helm10 { frames 1; index 257; style normal; facings 0; };
+    s_helm11 { frames 1; index 258; style normal; facings 0; };
+    s_helm12 { frames 1; index 259; style normal; facings 0; };
+    s_helm13 { frames 1; index 260; style normal; facings 0; };
+    s_helm14 { frames 1; index 261; style normal; facings 0; };
+    s_helm15 { frames 1; index 262; style normal; facings 0; };
+    s_helm16 { frames 1; index 263; style normal; facings 0; };
+    s_helm17 { frames 1; index 264; style normal; facings 0; };
+    s_helm18 { frames 1; index 265; style normal; facings 0; };
+    s_helm19 { frames 1; index 266; style normal; facings 0; };
+    s_helm20 { frames 1; index 267; style normal; facings 0; };
+    s_helm21 { frames 1; index 268; style normal; facings 0; };
+    s_helm22 { frames 1; index 269; style normal; facings 0; };
+    s_shoe1 { frames 1; index 270; style normal; facings 0; };
+    s_shoe2 { frames 1; index 271; style normal; facings 0; };
+    s_shoe3 { frames 1; index 272; style normal; facings 0; };
+    s_shoe4 { frames 1; index 273; style normal; facings 0; };
+    s_shoe5 { frames 1; index 274; style normal; facings 0; };
+    s_shoe6 { frames 1; index 275; style normal; facings 0; };
+    s_shield1 { frames 1; index 276; style normal; facings 0; };
+    s_shield2 { frames 1; index 277; style normal; facings 0; };
+    s_shield3 { frames 1; index 278; style normal; facings 0; };
+    s_shield4 { frames 1; index 279; style normal; facings 0; };
+    s_shield5 { frames 1; index 280; style normal; facings 0; };
+    s_shield6 { frames 1; index 281; style normal; facings 0; };
+    s_shield7 { frames 1; index 282; style normal; facings 0; };
+    s_shield8 { frames 1; index 283; style normal; facings 0; };
+    s_shield9 { frames 1; index 284; style normal; facings 0; };
+    s_shield10 { frames 1; index 285; style normal; facings 0; };
+    s_shield11 { frames 1; index 286; style normal; facings 0; };
+    s_shield12 { frames 1; index 287; style normal; facings 0; };
+    s_shield13 { frames 1; index 288; style normal; facings 0; };
+    s_shield14 { frames 1; index 289; style normal; facings 0; };
+    s_shield15 { frames 1; index 290; style normal; facings 0; };
+    s_shield16 { frames 1; index 291; style normal; facings 0; };
+    s_shield17 { frames 1; index 292; style normal; facings 0; };
+    s_shield18 { frames 1; index 293; style normal; facings 0; };
+    s_shield19 { frames 1; index 294; style normal; facings 0; };
+    s_shield20 { frames 1; index 295; style normal; facings 0; };
+    s_dagger { frames 1; index 334; style normal; facings 0; };
+    s_sword { frames 1; index 345; style normal; facings 0; };
+    s_2h_hammer { frames 1; index 352; style normal; facings 0; };
+    s_mace { frames 1; index 353; style normal; facings 0; };
+    s_spear { frames 1; index 361; style normal; facings 0; };
+    s_lght_bow { frames 1; index 376; style normal; facings 0; };
+    s_hvy_bow { frames 1; index 377; style normal; facings 0; };
+    s_lght_xbow { frames 1; index 378; style normal; facings 0; };
+    s_hvy_xbow { frames 1; index 379; style normal; facings 0; };
+    s_sling { frames 1; index 380; style normal; facings 0; };
+    s_ring_mail { frames 1; index 309; style normal; facings 0; };
+    s_torch { frames 1; index 459; style normal; facings 0; };
+    s_explosion { frames 1; index 570; style normal; facings 0; };
+    s_long_sword { frames 1; index 1708; style normal; facings 0; };
+    s_2h_sword { frames 1; index 1709; style normal; facings 0; };
+    s_giant { frames 2; index 652; style normal; facings 0; };
   }
 }
 SPRITE_SET ss_mine {
@@ -315,83 +315,22 @@ SPRITE_SET ss_mine {
   file_offy 0;
   file "data/images/mine-32x32.png";
   sprites {
-    s_crosshair { frames 1 index 0 style normal facings 0 };
+    s_crosshair { frames 1; index 0; style normal; facings 0; };
     s_arrow { frames 1 index 1 style normal facings 170 };
     s_horse { frames 1 index 5 style normal facings 40 };
-    s_happy_monster_face { frames 1 index 7 style normal facings 0 };
+    s_happy_monster_face { frames 1; index 7; style normal; facings 0; };
     s_ship { frames 1 index 8 style normal facings 170 };
     s_bolt { frames 1 index 12 style normal facings 170 };
-    s_hdoor { frames 1 index 19 style normal facings 0 };
-    s_hdoor_locked { frames 1 index 20 style normal facings 0 };
-    s_portcullis_down { frames 1 index 21 style normal facings 0 };
-    s_portcullis_up { frames 1 index 22 style normal facings 0 };
-    s_L_lever_up { frames 1 index 24 style normal facings 0 };
-    s_L_lever_down { frames 1 index 25 style normal facings 0 };
-    s_R_lever_up { frames 1 index 26 style normal facings 0 };
-    s_R_lever_down { frames 1 index 27 style normal facings 0 };
-    s_floor_plate { frames 1 index 28 style normal facings 0 };
+    s_hdoor { frames 1; index 19; style normal; facings 0; };
+    s_hdoor_locked { frames 1; index 20; style normal; facings 0; };
+    s_portcullis_down { frames 1; index 21; style normal; facings 0; };
+    s_portcullis_up { frames 1; index 22; style normal; facings 0; };
+    s_L_lever_up { frames 1; index 24; style normal; facings 0; };
+    s_L_lever_down { frames 1; index 25; style normal; facings 0; };
+    s_R_lever_up { frames 1; index 26; style normal; facings 0; };
+    s_R_lever_down { frames 1; index 27; style normal; facings 0; };
+    s_floor_plate { frames 1; index 28; style normal; facings 0; };
   }
-}
-SPRITE_SET ss_moons {
-  image_width 16;
-  image_height 16;
-  file_rows 8;
-  file_cols 1;
-  file_offx 0;
-  file_offy 0;
-  file "data/images/moons-16x16.png";
-  sprites {
-    s_sun { frames 1 index 8 style normal facings 0 };
-  }
-}
-SPRITE_SET ss_little_sprites {
-  image_width 8;
-  image_height 16;
-  file_rows 8;
-  file_cols 16;
-  file_offx 0;
-  file_offy 0;
-  file "data/images/charset-8x16.png";
-  sprites {
-    ls_ankh { frames 1 index 0 style normal facings 0 };
-    ls_shield { frames 1 index 1 style normal facings 0 };
-    ls_holey_wall { frames 1 index 2 style normal facings 0 };
-    ls_wall { frames 1 index 3 style normal facings 0 };
-    ls_updown_arrow { frames 1 index 4 style normal facings 0 };
-    ls_down_arrow { frames 1 index 5 style normal facings 0 };
-    ls_up_arrow { frames 1 index 6 style normal facings 0 };
-    ls_holey_ankh { frames 1 index 7 style normal facings 0 };
-    ls_white_ball { frames 1 index 8 style normal facings 0 };
-    ls_copyright { frames 1 index 9 style normal facings 0 };
-    ls_trademark { frames 1 index 10 style normal facings 0 };
-    ls_male { frames 1 index 11 style normal facings 0 };
-    ls_female { frames 1 index 12 style normal facings 0 };
-    ls_hbar { frames 1 index 13 style normal facings 0 };
-    ls_vbar { frames 1 index 13 style rotate facings 0 };
-    ls_square { frames 1 index 14 style normal facings 0 };
-    ls_blue_ball { frames 1 index 15 style normal facings 0 };
-    ls_hbar_right { frames 1 index 16 style normal facings 0 };
-    ls_hbar_left { frames 1 index 17 style normal facings 0 };
-    ls_vbar_top { frames 1 index 16 style rotate facings 0 };
-    ls_vbar_bottom { frames 1 index 17 style rotate facings 0 };
-    ls_blank_one { frames 1 index 18 style normal facings 0 };
-    ls_dot_dot_dot { frames 1 index 19 style normal facings 0 };
-    s_wax_quarter_moon { frames 1 index 20 style normal facings 0 };
-    s_wax_half_moon { frames 1 index 21 style normal facings 0 };
-    s_wax_three_quarter_moon { frames 1 index 22 style normal facings 0 };
-    s_full_moon { frames 1 index 23 style normal facings 0 };
-    s_wane_three_quarter_moon { frames 1 index 24 style normal facings 0 };
-    s_wane_half_moon { frames 1 index 25 style normal facings 0 };
-    s_wane_quarter_moon { frames 1 index 26 style normal facings 0 };
-    s_new_moon { frames 1 index 27 style normal facings 0 };
-    ls_whirlpool { frames 4 index 28 style normal facings 0 };
-    ls_blank_three { frames 1 index 32 style normal facings 0 };
-  }
-}
-ascii
-{
-  images ss_little_sprites;
-  offset 32;
 }
 SPRITE_SET ss_frame {
   image_width 16;
@@ -402,18 +341,18 @@ SPRITE_SET ss_frame {
   file_offy 0;
   file "data/images/frame_pieces.png";
   sprites {
-    s_frame_ulc { frames 1 index 0 style normal facings 0 };
-    s_frame_llc { frames 1 index 1 style normal facings 0 };
-    s_frame_urc { frames 1 index 2 style normal facings 0 };
-    s_frame_lrc { frames 1 index 3 style normal facings 0 };
-    s_frame_horz { frames 1 index 4 style normal facings 0 };
-    s_frame_vert { frames 1 index 5 style normal facings 0 };
-    s_frame_td { frames 1 index 6 style normal facings 0 };
-    s_frame_tr { frames 1 index 7 style normal facings 0 };
-    s_frame_tu { frames 1 index 8 style normal facings 0 };
-    s_frame_tl { frames 1 index 9 style normal facings 0 };
-    s_frame_endl { frames 1 index 10 style normal facings 0 };
-    s_frame_endr { frames 1 index 11 style normal facings 0 };
+    s_frame_ulc { frames 1; index 0; style normal; facings 0; };
+    s_frame_llc { frames 1; index 1; style normal; facings 0; };
+    s_frame_urc { frames 1; index 2; style normal; facings 0; };
+    s_frame_lrc { frames 1; index 3; style normal; facings 0; };
+    s_frame_horz { frames 1; index 4; style normal; facings 0; };
+    s_frame_vert { frames 1; index 5; style normal; facings 0; };
+    s_frame_td { frames 1; index 6; style normal; facings 0; };
+    s_frame_tr { frames 1; index 7; style normal; facings 0; };
+    s_frame_tu { frames 1; index 8; style normal; facings 0; };
+    s_frame_tl { frames 1; index 9; style normal; facings 0; };
+    s_frame_endl { frames 1; index 10; style normal; facings 0; };
+    s_frame_endr { frames 1; index 11; style normal; facings 0; };
   }
 }
 FRAME {
@@ -431,6 +370,18 @@ FRAME {
   endl s_frame_endl;
   endr s_frame_endr;
 }
+SPRITE_SET ss_moons {
+  image_width 16;
+  image_height 16;
+  file_rows 8;
+  file_cols 1;
+  file_offx 0;
+  file_offy 0;
+  file "data/images/moons-16x16.png";
+  sprites {
+    s_sun { frames 1; index 8; style normal; facings 0; };
+  }
+}
 SPRITE_SET ss_mechanisms {
   image_width 32;
   image_height 32;
@@ -440,430 +391,259 @@ SPRITE_SET ss_mechanisms {
   file_offy 0;
   file "data/images/mechanisms.png";
   sprites {
-    s_left_lever_up { frames 1 index 0 style normal facings 0 };
-    s_left_lever_down { frames 1 index 1 style normal facings 0 };
-    s_top_lever_left { frames 1 index 2 style normal facings 0 };
-    s_top_lever_right { frames 1 index 3 style normal facings 0 };
-    s_right_lever_up { frames 1 index 4 style normal facings 0 };
-    s_right_lever_down { frames 1 index 5 style normal facings 0 };
-    s_bottom_lever_left { frames 1 index 6 style normal facings 0 };
-    s_bottom_lever_right { frames 1 index 7 style normal facings 0 };
-    s_floor_plate { frames 1 index 8 style normal facings 0 };
-    s_floor_lever_left { frames 1 index 10 style normal facings 0 };
-    s_floor_lever_right { frames 1 index 11 style normal facings 0 };
-    s_portcullis_down { frames 1 index 12 style normal facings 0 };
-    s_portcullis_up { frames 1 index 13 style normal facings 0 };
+    s_left_lever_up { frames 1; index 0; style normal; facings 0; };
+    s_left_lever_down { frames 1; index 1; style normal; facings 0; };
+    s_top_lever_left { frames 1; index 2; style normal; facings 0; };
+    s_top_lever_right { frames 1; index 3; style normal; facings 0; };
+    s_right_lever_up { frames 1; index 4; style normal; facings 0; };
+    s_right_lever_down { frames 1; index 5; style normal; facings 0; };
+    s_bottom_lever_left { frames 1; index 6; style normal; facings 0; };
+    s_bottom_lever_right { frames 1; index 7; style normal; facings 0; };
+    s_floor_plate { frames 1; index 8; style normal; facings 0; };
+    s_floor_lever_left { frames 1; index 10; style normal; facings 0; };
+    s_floor_lever_right { frames 1; index 11; style normal; facings 0; };
+    s_portcullis_down { frames 1; index 12; style normal; facings 0; };
+    s_portcullis_up { frames 1; index 13; style normal; facings 0; };
+  }
+}
+SPRITE_SET ss_little_sprites {
+  image_width 8;
+  image_height 16;
+  file_rows 8;
+  file_cols 16;
+  file_offx 0;
+  file_offy 0;
+  file "data/images/charset-8x16.png";
+  sprites {
+    ls_ankh { frames 1; index 0; style normal; facings 0; };
+    ls_shield { frames 1; index 1; style normal; facings 0; };
+    ls_holey_wall { frames 1; index 2; style normal; facings 0; };
+    ls_wall { frames 1; index 3; style normal; facings 0; };
+    ls_updown_arrow { frames 1; index 4; style normal; facings 0; };
+    ls_down_arrow { frames 1; index 5; style normal; facings 0; };
+    ls_up_arrow { frames 1; index 6; style normal; facings 0; };
+    ls_holey_ankh { frames 1; index 7; style normal; facings 0; };
+    ls_white_ball { frames 1; index 8; style normal; facings 0; };
+    ls_copyright { frames 1; index 9; style normal; facings 0; };
+    ls_trademark { frames 1; index 10; style normal; facings 0; };
+    ls_male { frames 1; index 11; style normal; facings 0; };
+    ls_female { frames 1; index 12; style normal; facings 0; };
+    ls_hbar { frames 1; index 13; style normal; facings 0; };
+    ls_vbar { frames 1; index 13; style rotate; facings 0; };
+    ls_square { frames 1; index 14; style normal; facings 0; };
+    ls_blue_ball { frames 1; index 15; style normal; facings 0; };
+    ls_hbar_right { frames 1; index 16; style normal; facings 0; };
+    ls_hbar_left { frames 1; index 17; style normal; facings 0; };
+    ls_vbar_top { frames 1; index 16; style rotate; facings 0; };
+    ls_vbar_bottom { frames 1; index 17; style rotate; facings 0; };
+    ls_blank_one { frames 1; index 18; style normal; facings 0; };
+    ls_dot_dot_dot { frames 1; index 19; style normal; facings 0; };
+    s_wax_quarter_moon { frames 1; index 20; style normal; facings 0; };
+    s_wax_half_moon { frames 1; index 21; style normal; facings 0; };
+    s_wax_three_quarter_moon { frames 1; index 22; style normal; facings 0; };
+    s_full_moon { frames 1; index 23; style normal; facings 0; };
+    s_wane_three_quarter_moon { frames 1; index 24; style normal; facings 0; };
+    s_wane_half_moon { frames 1; index 25; style normal; facings 0; };
+    s_wane_quarter_moon { frames 1; index 26; style normal; facings 0; };
+    s_new_moon { frames 1; index 27; style normal; facings 0; };
+    ls_whirlpool { frames 4; index 28; style normal; facings 0; };
+    ls_blank_three { frames 1; index 32; style normal; facings 0; };
+  }
+}
+ascii
+{
+  images ss_little_sprites;
+  offset 32;
+}
+SPRITE_SET ss_rune_font_32x32 {
+  image_width 32;
+  image_height 32;
+  file_rows 4;
+  file_cols 8;
+  file_offx 0;
+  file_offy 0;
+  file "data/images/rune_font_32x32.png";
+  sprites {
+    s_rune_A { frames 1; index 0; style normal; facings 0; };
+    s_rune_B { frames 1; index 1; style normal; facings 0; };
+    s_rune_C { frames 1; index 2; style normal; facings 0; };
+    s_rune_D { frames 1; index 3; style normal; facings 0; };
+    s_rune_E { frames 1; index 4; style normal; facings 0; };
+    s_rune_F { frames 1; index 5; style normal; facings 0; };
+    s_rune_G { frames 1; index 6; style normal; facings 0; };
+    s_rune_H { frames 1; index 7; style normal; facings 0; };
+    s_rune_I { frames 1; index 8; style normal; facings 0; };
+    s_rune_J { frames 1; index 9; style normal; facings 0; };
+    s_rune_K { frames 1; index 10; style normal; facings 0; };
+    s_rune_L { frames 1; index 11; style normal; facings 0; };
+    s_rune_M { frames 1; index 12; style normal; facings 0; };
+    s_rune_N { frames 1; index 13; style normal; facings 0; };
+    s_rune_O { frames 1; index 14; style normal; facings 0; };
+    s_rune_P { frames 1; index 15; style normal; facings 0; };
+    s_rune_Q { frames 1; index 16; style normal; facings 0; };
+    s_rune_R { frames 1; index 17; style normal; facings 0; };
+    s_rune_S { frames 1; index 18; style normal; facings 0; };
+    s_rune_T { frames 1; index 19; style normal; facings 0; };
+    s_rune_U { frames 1; index 20; style normal; facings 0; };
+    s_rune_V { frames 1; index 21; style normal; facings 0; };
+    s_rune_W { frames 1; index 22; style normal; facings 0; };
+    s_rune_X { frames 1; index 23; style normal; facings 0; };
+    s_rune_Y { frames 1; index 24; style normal; facings 0; };
+    s_rune_Z { frames 1; index 25; style normal; facings 0; };
+    s_rune_TH { frames 1; index 26; style normal; facings 0; };
+    s_rune_EE { frames 1; index 27; style normal; facings 0; };
+    s_rune_NG { frames 1; index 28; style normal; facings 0; };
+    s_rune_EA { frames 1; index 29; style normal; facings 0; };
+    s_rune_ST { frames 1; index 30; style normal; facings 0; };
+    s_rune_DOTSEP { frames 1; index 31; style normal; facings 0; };
+  }
+}
+SPRITE_SET ss_rune_font_8x16 {
+  image_width 8;
+  image_height 16;
+  file_rows 1;
+  file_cols 32;
+  file_offx 0;
+  file_offy 0;
+  file "data/images/rune_font_8x16.png";
+  sprites {
+    ls_rune_A { frames 1; index 0; style normal; facings 0; };
+    ls_rune_B { frames 1; index 1; style normal; facings 0; };
+    ls_rune_C { frames 1; index 2; style normal; facings 0; };
+    ls_rune_D { frames 1; index 3; style normal; facings 0; };
+    ls_rune_E { frames 1; index 4; style normal; facings 0; };
+    ls_rune_F { frames 1; index 5; style normal; facings 0; };
+    ls_rune_G { frames 1; index 6; style normal; facings 0; };
+    ls_rune_H { frames 1; index 7; style normal; facings 0; };
+    ls_rune_I { frames 1; index 8; style normal; facings 0; };
+    ls_rune_J { frames 1; index 9; style normal; facings 0; };
+    ls_rune_K { frames 1; index 10; style normal; facings 0; };
+    ls_rune_L { frames 1; index 11; style normal; facings 0; };
+    ls_rune_M { frames 1; index 12; style normal; facings 0; };
+    ls_rune_N { frames 1; index 13; style normal; facings 0; };
+    ls_rune_O { frames 1; index 14; style normal; facings 0; };
+    ls_rune_P { frames 1; index 15; style normal; facings 0; };
+    ls_rune_Q { frames 1; index 16; style normal; facings 0; };
+    ls_rune_R { frames 1; index 17; style normal; facings 0; };
+    ls_rune_S { frames 1; index 18; style normal; facings 0; };
+    ls_rune_T { frames 1; index 19; style normal; facings 0; };
+    ls_rune_U { frames 1; index 20; style normal; facings 0; };
+    ls_rune_V { frames 1; index 21; style normal; facings 0; };
+    ls_rune_W { frames 1; index 22; style normal; facings 0; };
+    ls_rune_X { frames 1; index 23; style normal; facings 0; };
+    ls_rune_Y { frames 1; index 24; style normal; facings 0; };
+    ls_rune_Z { frames 1; index 25; style normal; facings 0; };
+    ls_rune_TH { frames 1; index 26; style normal; facings 0; };
+    ls_rune_EE { frames 1; index 27; style normal; facings 0; };
+    ls_rune_NG { frames 1; index 28; style normal; facings 0; };
+    ls_rune_EA { frames 1; index 29; style normal; facings 0; };
+    ls_rune_ST { frames 1; index 30; style normal; facings 0; };
+    ls_rune_DOTSEP { frames 1; index 31; style normal; facings 0; };
   }
 }
 CURSOR ls_whirlpool;
 terrains {
-  t_deep {
-    name "deep water";
-    pmask 4;
-    sprite s_deep;
-    glyph _;
-    id 0;
-    alpha 1;
-    movement_cost 1;
-    effects 0;
-    light 0;
-    color 0x23408e;
-  }
-  t_shallow {
-    name "shallow water";
-    pmask 4;
-    sprite s_shallow;
-    glyph -;
-    id 1;
-    alpha 1;
-    movement_cost 1;
-    effects 0;
-    light 0;
-    color 0x008fff;
-  };
-  t_shoals {
-    name "shoals";
-    pmask 8;
-    sprite s_shoals;
-    glyph ~;
-    id 2;
-    alpha 1;
-    movement_cost 1;
-    effects 0;
-    light 0;
-    color 0x00ffff;
-  };
-  t_bog {
-    name "bog";
-    pmask 2;
-    sprite s_bog;
-    glyph %;
-    id 3;
-    alpha 1;
-    movement_cost 2;
-    effects 1;
-    light 0;
-    color 0xa160d6;
-  };
-  t_grass {
-    name "grass";
-    pmask 2;
-    sprite s_grass;
-    glyph .;
-    id 4;
-    alpha 1;
-    movement_cost 1;
-    effects 0;
-    light 0;
-    color 0x17ea1e;
-  };
-  t_trees {
-    name "trees";
-    pmask 2;
-    sprite s_trees;
-    glyph t;
-    id 5;
-    alpha 1;
-    movement_cost 1;
-    effects 0;
-    light 0;
-    color 0x45a845;
-  };
-  t_forest {
-    name "forest";
-    pmask 2;
-    sprite s_forest;
-    glyph |;
-    id 6;
-    alpha 0;
-    movement_cost 2;
-    effects 0;
-    light 0;
-    color 0x1d7025;
-  };
-  t_hills {
-    name "hills";
-    pmask 2;
-    sprite s_hills;
-    glyph ?;
-    id 7;
-    alpha 1;
-    movement_cost 2;
-    effects 0;
-    light 0;
-    color 0x808080;
-  };
-  t_mountains {
-    name "mountains";
-    pmask 1;
-    sprite s_mountains;
-    glyph ^;
-    id 8;
-    alpha 0;
-    movement_cost 2;
-    effects 0;
-    light 0;
-    color 0xffffff;
-  };
-  t_leftwing {
-    name "castle";
-    pmask 1;
-    sprite s_leftwing;
-    glyph <;
-    id 13;
-    alpha 1;
-    movement_cost 1;
-    effects 0;
-    light 0;
-  };
-  t_rightwing {
-    name "castle";
-    pmask 1;
-    sprite s_rightwing;
-    glyph >;
-    id 15;
-    alpha 1;
-    movement_cost 1;
-    effects 0;
-    light 0;
-  };
-  t_cobblestone {
-    name "cobblestone";
-    pmask 2;
-    sprite s_cobblestone;
-    glyph c;
-    id 22;
-    alpha 1;
-    movement_cost 1;
-    effects 0;
-    light 0;
-  };
-  t_bridge {
-    name "bridge";
-    pmask 3;
-    sprite s_bridge;
-    glyph =;
-    id 23;
-    alpha 1;
-    movement_cost 1;
-    effects 0;
-    light 0;
-  };
-  t_bridge_top {
-    name "bridge";
-    pmask 3;
-    sprite s_bridge_top;
-    glyph g;
-    id 25;
-    alpha 1;
-    movement_cost 1;
-    effects 0;
-    light 0;
-  };
-  t_bridge_bottom {
-    name "bridge";
-    pmask 3;
-    sprite s_bridge_bottom;
-    glyph h;
-    id 26;
-    alpha 1;
-    movement_cost 1;
-    effects 0;
-    light 0;
-  };
-  t_pillar {
-    name "pillar";
-    pmask 1;
-    sprite s_pillar;
-    glyph p;
-    id 48;
-    alpha 1;
-    movement_cost 1;
-    effects 0;
-    light 0;
-  };
-  t_wall_b {
-    name "sea wall";
-    pmask 1;
-    sprite s_wall_b;
-    glyph 1;
-    id 49;
-    alpha 0;
-    movement_cost 1;
-    effects 0;
-    light 0;
-  };
-  t_wall_a {
-    name "sea wall";
-    pmask 1;
-    sprite s_wall_a;
-    glyph 2;
-    id 50;
-    alpha 0;
-    movement_cost 1;
-    effects 0;
-    light 0;
-  };
-  t_wall_c {
-    name "sea wall";
-    pmask 1;
-    sprite s_wall_c;
-    glyph 3;
-    id 51;
-    alpha 0;
-    movement_cost 1;
-    effects 0;
-    light 0;
-  };
-  ;
-  t_wall_d {
-    name "sea wall";
-    pmask 1;
-    sprite s_wall_d;
-    glyph 4;
-    id 52;
-    alpha 0;
-    movement_cost 1;
-    effects 0;
-    light 0;
-  };
-  t_mast {
-    name "mast";
-    pmask 1;
-    sprite s_mast;
-    glyph m;
-    id 53;
-    alpha 1;
-    movement_cost 1;
-    effects 0;
-    light 0;
-  };
-  t_trail {
-    name "ship's wheel";
-    pmask 2;
-    sprite s_ships_wheel;
-    glyph f;
-    id 54;
-    alpha 1;
-    movement_cost 1;
-    effects 0;
-    light 0;
-  };
-  t_boulder {
-    name "boulder";
-    pmask 1;
-    sprite s_boulder;
-    glyph b;
-    id 55;
-    alpha 1;
-    movement_cost 1;
-    effects 0;
-    light 0;
-  };
-  t_wall_rock {
-    name "rock wall";
-    pmask 1;
-    sprite s_wall_rock;
-    glyph r;
-    id 57;
-    alpha 0;
-    movement_cost 1;
-    effects 0;
-    light 0;
-  };
-  t_ankh {
-    name "ankh";
-    pmask 0;
-    sprite s_ankh;
-    glyph +;
-    id 61;
-    alpha 1;
-    movement_cost 1;
-    effects 0;
-    light 0;
-  };
-  t_flagstones {
-    name "flagstones";
-    pmask 2;
-    sprite s_flagstone;
-    glyph ,;
-    id 62;
-    alpha 1;
-    movement_cost 1;
-    effects 0;
-    light 0;
-  };
-  t_deck {
-    name "deck";
-    pmask 2;
-    sprite s_deck;
-    glyph e;
-    id 63;
-    alpha 1;
-    movement_cost 1;
-    effects 0;
-    light 0;
-  };
-  t_fire_terrain {
-    name "fire";
-    pmask 2;
-    sprite s_field_fire;
-    glyph f;
-    id 70;
-    alpha 1;
-    movement_cost 1;
-    effects 2;
-    light 512;
-  };
-  t_white_wall { name "wall" pmask 1 sprite s_wall glyph w id 72 alpha 0 movement_cost 0 effects 0 light 0 };
-  t_bulwark { name "ship's bulwark" pmask 1 sprite s_wall glyph w id 72 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_secret_door {
-    name "secret door";
-    pmask 2;
-    sprite s_secret_door;
-    glyph ?;
-    id 73;
-    alpha 0;
-    movement_cost 1;
-    effects 0;
-    light 0;
-  };
-  ;
-  t_altar {
-    name "altar";
-    pmask 1;
-    sprite s_altar;
-    glyph a;
-    id 74;
-    alpha 1;
-    movement_cost 1;
-    effects 0;
-    light 0;
-  };
-  ;
-  t_fireplace {
-    name "fireplace";
-    pmask 2;
-    sprite s_fireplace;
-    glyph &;
-    id 75;
-    alpha 1;
-    movement_cost 1;
-    effects 2;
-    light 4096;
-  };
-  t_A { name "A" pmask 0 sprite s_A glyph A id 96 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_B { name "B" pmask 0 sprite s_B glyph B id 97 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_C { name "C" pmask 0 sprite s_C glyph C id 98 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_D { name "D" pmask 0 sprite s_D glyph D id 99 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_E { name "E" pmask 0 sprite s_E glyph E id 100 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_F { name "F" pmask 0 sprite s_F glyph F id 101 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_G { name "G" pmask 0 sprite s_G glyph G id 102 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_H { name "H" pmask 0 sprite s_H glyph H id 103 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_I { name "I" pmask 0 sprite s_I glyph I id 104 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_J { name "J" pmask 0 sprite s_J glyph J id 105 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_K { name "K" pmask 0 sprite s_K glyph K id 106 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_L { name "L" pmask 0 sprite s_L glyph L id 107 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_M { name "M" pmask 0 sprite s_M glyph M id 108 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_N { name "N" pmask 0 sprite s_N glyph N id 109 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_O { name "O" pmask 0 sprite s_O glyph O id 110 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_P { name "P" pmask 0 sprite s_P glyph P id 111 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_Q { name "Q" pmask 0 sprite s_Q glyph Q id 112 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_R { name "R" pmask 0 sprite s_R glyph R id 113 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_S { name "S" pmask 0 sprite s_S glyph S id 114 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_T { name "T" pmask 0 sprite s_T glyph T id 115 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_U { name "U" pmask 0 sprite s_U glyph U id 116 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_V { name "V" pmask 0 sprite s_V glyph V id 117 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_W { name "W" pmask 0 sprite s_W glyph W id 118 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_X { name "X" pmask 0 sprite s_X glyph X id 119 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_Y { name "Y" pmask 0 sprite s_Y glyph Y id 120 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_Z { name "Z" pmask 0 sprite s_Z glyph Z id 121 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_counter_middle { name "counter" pmask 0 sprite s_counter_middle glyph @ id 122 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_counter_right { name "counter" pmask 0 sprite s_counter_right glyph ] id 123 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_counter_left { name "counter" pmask 0 sprite s_counter_left glyph [ id 124 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_counter_pillar { name "pillar" pmask 0 sprite s_counter_pillar glyph 0 id 125 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_lava {
-    name "lava";
-    pmask 2;
-    sprite s_lava;
-    glyph !;
-    id 76;
-    alpha 1;
-    movement_cost 1;
-    effects 2;
-    light 128;
-  };
-  t_wall {
-    name "wall";
-    pmask 1;
-    sprite s_wall_stone;
-    glyph x;
-    id 127;
-    alpha 0;
-    movement_cost 1;
-    effects 0;
-    light 0;
-  }
+  t_deep { name "deep water" pmask 4 sprite s_deep glyph X id 0 alpha 1 movement_cost 1 effects 0 light 0 };
+  t_shallow { name "shallow water" pmask 4 sprite s_shallow glyph X id 1 alpha 1 movement_cost 1 effects 0 light 0 };
+  t_shoals { name "shoals" pmask 8 sprite s_shoals glyph X id 2 alpha 1 movement_cost 1 effects 0 light 0 };
+  t_grass { name "grass" pmask 2 sprite s_grass glyph X id 4 alpha 1 movement_cost 1 effects 0 light 0 };
+  t_trees { name "trees" pmask 2 sprite s_trees glyph X id 5 alpha 1 movement_cost 1 effects 0 light 0 };
+  t_forest { name "forest" pmask 2 sprite s_forest glyph X id 6 alpha 0 movement_cost 2 effects 0 light 0 };
+  t_hills { name "hills" pmask 2 sprite s_hills glyph X id 7 alpha 1 movement_cost 2 effects 0 light 0 };
+  t_mountains { name "mountains" pmask 1 sprite s_mountains glyph X id 8 alpha 0 movement_cost 2 effects 0 light 0 };
+  t_leftwing { name "castle wall" pmask 1 sprite s_leftwing glyph X id 13 alpha 1 movement_cost 1 effects 0 light 0 };
+  t_rightwing { name "castle wall" pmask 1 sprite s_rightwing glyph X id 15 alpha 1 movement_cost 1 effects 0 light 0 };
+  t_cobblestone { name "cobblestone" pmask 2 sprite s_cobblestone glyph X id 22 alpha 1 movement_cost 1 effects 0 light 0 };
+  t_flagstones { name "flagstones" pmask 2 sprite s_flagstone glyph X id 62 alpha 1 movement_cost 1 effects 0 light 0 };
+  t_bog { name "bog" pmask 2 sprite s_bog glyph X id 3 alpha 1 movement_cost 2 effects 1 light 0 };
+  t_fire_terrain { name "fire" pmask 2 sprite s_field_fire glyph X id 70 alpha 1 movement_cost 1 effects 2 light 512 };
+  t_fireplace { name "fireplace" pmask 2 sprite s_fireplace glyph X id 75 alpha 1 movement_cost 1 effects 2 light 4096 };
+  t_lava { name "lava" pmask 2 sprite s_lava glyph X id 76 alpha 1 movement_cost 1 effects 2 light 128 };
+  t_bridge { name "bridge" pmask 14 sprite s_bridge glyph X id 23 alpha 1 movement_cost 1 effects 0 light 0 };
+  t_bridge_top { name "bridge" pmask 14 sprite s_bridge_top glyph X id 25 alpha 1 movement_cost 1 effects 0 light 0 };
+  t_bridge_bottom { name "bridge" pmask 14 sprite s_bridge_bottom glyph X id 26 alpha 1 movement_cost 1 effects 0 light 0 };
+  t_ship_hull { name "ship's hull" pmask 1 sprite s_wall glyph X id 72 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_sh_hull_NE { name "ship's hull" pmask 1 sprite s_wall_b glyph X id 49 alpha 1 movement_cost 1 effects 0 light 0 };
+  t_sh_hull_NW { name "ship's hull" pmask 1 sprite s_wall_a glyph X id 50 alpha 1 movement_cost 1 effects 0 light 0 };
+  t_sh_hull_SE { name "ship's hull" pmask 1 sprite s_wall_c glyph X id 51 alpha 1 movement_cost 1 effects 0 light 0 };
+  t_sh_hull_SW { name "ship's hull" pmask 1 sprite s_wall_d glyph X id 52 alpha 1 movement_cost 1 effects 0 light 0 };
+  t_mast { name "mast" pmask 1 sprite s_mast glyph X id 53 alpha 1 movement_cost 1 effects 0 light 0 };
+  t_ships_wheel { name "ship's wheel" pmask 1 sprite s_ships_wheel glyph X id 54 alpha 1 movement_cost 1 effects 0 light 0 };
+  t_deck { name "deck" pmask 2 sprite s_deck glyph X id 63 alpha 1 movement_cost 1 effects 0 light 0 };
+  t_wall_rock { name "rock wall" pmask 1 sprite s_wall_rock glyph X id 57 alpha 0 movement_cost 1 effects 0 light 0 };
+  t_wall { name "wall" pmask 1 sprite s_wall_stone glyph X id 127 alpha 0 movement_cost 1 effects 0 light 0 };
+  t_secret_door { name "secret door" pmask 2 sprite s_secret_door glyph X id 73 alpha 0 movement_cost 1 effects 0 light 0 };
+  t_sea_wall { name "sea wall" pmask 1 sprite s_wall glyph X id 72 alpha 0 movement_cost 0 effects 0 light 0 };
+  t_sea_wall_NE { name "sea wall" pmask 1 sprite s_wall_b glyph X id 49 alpha 0 movement_cost 1 effects 0 light 0 };
+  t_sea_wall_NW { name "sea wall" pmask 1 sprite s_wall_a glyph X id 50 alpha 0 movement_cost 1 effects 0 light 0 };
+  t_sea_wall_SE { name "sea wall" pmask 1 sprite s_wall_c glyph X id 51 alpha 0 movement_cost 1 effects 0 light 0 };
+  t_sea_wall_SW { name "sea wall" pmask 1 sprite s_wall_d glyph X id 52 alpha 0 movement_cost 1 effects 0 light 0 };
+  t_boulder { name "boulder" pmask 1 sprite s_boulder glyph X id 55 alpha 1 movement_cost 1 effects 0 light 0 };
+  t_ankh { name "ankh" pmask 0 sprite s_ankh glyph X id 61 alpha 1 movement_cost 1 effects 0 light 0 };
+  t_altar { name "altar" pmask 0 sprite s_altar glyph X id 74 alpha 1 movement_cost 1 effects 0 light 0 };
+  t_pillar { name "pillar" pmask 1 sprite s_pillar glyph X id 48 alpha 1 movement_cost 1 effects 0 light 0 };
+  t_counter_middle { name "counter" pmask 1 sprite s_counter_middle glyph X id 122 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_counter_right { name "counter" pmask 1 sprite s_counter_right glyph X id 123 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_counter_left { name "counter" pmask 1 sprite s_counter_left glyph X id 124 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_counter_1x1 { name "counter" pmask 1 sprite s_counter_1x1 glyph X id 125 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_A { name "an A" pmask 1 sprite s_A glyph X id 96 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_B { name "a B" pmask 1 sprite s_B glyph X id 97 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_C { name "a C" pmask 1 sprite s_C glyph X id 98 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_D { name "a D" pmask 1 sprite s_D glyph X id 99 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_E { name "an E" pmask 1 sprite s_E glyph X id 100 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_F { name "an F" pmask 1 sprite s_F glyph X id 101 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_G { name "a G" pmask 1 sprite s_G glyph X id 102 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_H { name "an H" pmask 1 sprite s_H glyph X id 103 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_I { name "an I" pmask 1 sprite s_I glyph X id 104 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_J { name "a J" pmask 1 sprite s_J glyph X id 105 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_K { name "a K" pmask 1 sprite s_K glyph X id 106 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_L { name "an L" pmask 1 sprite s_L glyph X id 107 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_M { name "an M" pmask 1 sprite s_M glyph X id 108 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_N { name "an N" pmask 1 sprite s_N glyph X id 109 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_O { name "an O" pmask 1 sprite s_O glyph X id 110 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_P { name "a P" pmask 1 sprite s_P glyph X id 111 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_Q { name "a Q" pmask 1 sprite s_Q glyph X id 112 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_R { name "an R" pmask 1 sprite s_R glyph X id 113 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_S { name "an S" pmask 1 sprite s_S glyph X id 114 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_T { name "a T" pmask 1 sprite s_T glyph X id 115 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_U { name "a U" pmask 1 sprite s_U glyph X id 116 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_V { name "a V" pmask 1 sprite s_V glyph X id 117 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_W { name "a W" pmask 1 sprite s_W glyph X id 118 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_X { name "an X" pmask 1 sprite s_X glyph X id 119 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_Y { name "a Y" pmask 1 sprite s_Y glyph X id 120 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_Z { name "a Z" pmask 1 sprite s_Z glyph X id 121 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_A { name "a rune" pmask 1 sprite s_rune_A glyph X id 131 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_B { name "a rune" pmask 1 sprite s_rune_B glyph X id 132 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_C { name "a rune" pmask 1 sprite s_rune_C glyph X id 133 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_D { name "a rune" pmask 1 sprite s_rune_D glyph X id 134 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_E { name "a rune" pmask 1 sprite s_rune_E glyph X id 135 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_F { name "a rune" pmask 1 sprite s_rune_F glyph X id 136 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_G { name "a rune" pmask 1 sprite s_rune_G glyph X id 137 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_H { name "a rune" pmask 1 sprite s_rune_H glyph X id 138 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_I { name "a rune" pmask 1 sprite s_rune_I glyph X id 139 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_J { name "a rune" pmask 1 sprite s_rune_J glyph X id 140 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_K { name "a rune" pmask 1 sprite s_rune_K glyph X id 141 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_L { name "a rune" pmask 1 sprite s_rune_L glyph X id 142 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_M { name "a rune" pmask 1 sprite s_rune_M glyph X id 143 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_N { name "a rune" pmask 1 sprite s_rune_N glyph X id 144 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_O { name "a rune" pmask 1 sprite s_rune_O glyph X id 145 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_P { name "a rune" pmask 1 sprite s_rune_P glyph X id 146 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_Q { name "a rune" pmask 1 sprite s_rune_Q glyph X id 147 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_R { name "a rune" pmask 1 sprite s_rune_R glyph X id 148 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_S { name "a rune" pmask 1 sprite s_rune_S glyph X id 149 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_T { name "a rune" pmask 1 sprite s_rune_T glyph X id 150 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_U { name "a rune" pmask 1 sprite s_rune_U glyph X id 151 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_V { name "a rune" pmask 1 sprite s_rune_V glyph X id 152 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_W { name "a rune" pmask 1 sprite s_rune_W glyph X id 153 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_X { name "a rune" pmask 1 sprite s_rune_X glyph X id 154 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_Y { name "a rune" pmask 1 sprite s_rune_Y glyph X id 155 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_Z { name "a rune" pmask 1 sprite s_rune_Z glyph X id 156 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_TH { name "a rune" pmask 1 sprite s_rune_TH glyph X id 157 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_EE { name "a rune" pmask 1 sprite s_rune_EE glyph X id 158 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_NG { name "a rune" pmask 1 sprite s_rune_NG glyph X id 159 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_EA { name "a rune" pmask 1 sprite s_rune_EA glyph X id 160 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_ST { name "a rune" pmask 1 sprite s_rune_ST glyph X id 161 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_DOT { name "a rune" pmask 1 sprite s_rune_DOTSEP glyph X id 162 alpha 1 movement_cost 0 effects 0 light 0 };
 }
 object_types {
   t_cursor { name "cursor" sprite s_crosshair subtype null layer 9 };
@@ -2451,26 +2231,31 @@ PARTY t_nixies {
 }
 MAP map_ship {
   type ascii;
-  width 16;
-  height 8;
-  one_char_per_tile 1;
+  width 17;
+  height 9;
   palette {
-    '@' t_deep;
-    '~' t_shoals;
-    '=' t_shallow;
+    '__' t_deep;
+    '--' t_shallow;
+    '~~' t_shoals;
+    '##' t_ship_hull;
+    'NW' t_sh_hull_NW;
+    'SW' t_sh_hull_SW;
+    'ne' t_sh_hull_NE;
+    'se' t_sh_hull_SE;
+    'o' t_mast;
+    '|' t_ships_wheel;
     '.' t_deck;
-    '#' t_bulwark;
-    'o' t_pillar;
   }
   terrain {
-          ~~~~~~.~~.~~~~~~
-          ===###.##.###===
-          @@##........##@@
-          @##..........##@
-          @#....o..o....#@
-          @##..........##@
-          @@##........##@@
-          @@@##########@@@
+       -- -- -- -- -- -- -- . -- -- . -- -- -- -- -- --
+       -- -- -- -- ## ## ## . ## ## . ## ## ## ## -- --
+       -- -- -- ## ## . . . . . . . . . ## ## --
+       -- -- ## ## . . . . . . . . . . . ## --
+       -- ## ## . . . o . . . . o | . . ## --
+       -- -- ## ## . . . . . . . . . . . ## --
+       -- -- -- ## ## . . . . . . . . . ## ## --
+       -- -- -- -- ## ## ## . ## ## . ## ## ## ## -- --
+       -- -- -- -- -- -- -- . -- -- . -- -- -- -- -- --
   }
 }
 ordnance_types {
@@ -2512,7 +2297,7 @@ MAP m_forest_combat {
   type ascii;
   width 32;
   height 32;
-  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; '<' t_leftwing; '>' t_rightwing; 'c' t_cobblestone; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'p' t_pillar; '1' t_wall_b; '2' t_wall_a; '3' t_wall_c; '4' t_wall_d; 'm' t_mast; 'f' t_fire_terrain; 'b' t_boulder; 'r' t_wall_rock; '+' t_ankh; ',' t_flagstones; 'e' t_deck; '?' t_secret_door; 'a' t_altar; '&' t_fireplace; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; '!' t_lava; 'x' t_wall; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_pillar; };
+  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; ',' t_flagstones; 'c' t_cobblestone; 'e' t_deck; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; 'q' t_rune_Q; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
   terrain {
       | | t . . . . . t t t . t t t . ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
       | t . . . . . . . t t . t t . . . ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -2552,7 +2337,7 @@ MAP m_grass_combat {
   type ascii;
   width 32;
   height 32;
-  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; '<' t_leftwing; '>' t_rightwing; 'c' t_cobblestone; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'p' t_pillar; '1' t_wall_b; '2' t_wall_a; '3' t_wall_c; '4' t_wall_d; 'm' t_mast; 'f' t_fire_terrain; 'b' t_boulder; 'r' t_wall_rock; '+' t_ankh; ',' t_flagstones; 'e' t_deck; '?' t_secret_door; 'a' t_altar; '&' t_fireplace; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; '!' t_lava; 'x' t_wall; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_pillar; };
+  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; ',' t_flagstones; 'c' t_cobblestone; 'e' t_deck; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; 'q' t_rune_Q; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
   terrain {
       r . . . . . . . . . . t t t t t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
       . . . . . . . . . . . . . . t t t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -2592,7 +2377,7 @@ MAP m_water_combat {
   type ascii;
   width 32;
   height 32;
-  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; '<' t_leftwing; '>' t_rightwing; 'c' t_cobblestone; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'p' t_pillar; '1' t_wall_b; '2' t_wall_a; '3' t_wall_c; '4' t_wall_d; 'm' t_mast; 'f' t_fire_terrain; 'b' t_boulder; 'r' t_wall_rock; '+' t_ankh; ',' t_flagstones; 'e' t_deck; '?' t_secret_door; 'a' t_altar; '&' t_fireplace; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; '!' t_lava; 'x' t_wall; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_pillar; };
+  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; ',' t_flagstones; 'c' t_cobblestone; 'e' t_deck; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; 'q' t_rune_Q; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
   terrain {
       - - - - - - - t t t . . . . . . . . . . . . . . - - - - - - - -
       - - - - - - - - t . . . . . . . - - . . . . . - - - - - - - - -
@@ -2632,7 +2417,7 @@ MAP m_east_west_small_bridge_combat {
   type ascii;
   width 32;
   height 32;
-  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; '<' t_leftwing; '>' t_rightwing; 'c' t_cobblestone; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'p' t_pillar; '1' t_wall_b; '2' t_wall_a; '3' t_wall_c; '4' t_wall_d; 'm' t_mast; 'f' t_fire_terrain; 'b' t_boulder; 'r' t_wall_rock; '+' t_ankh; ',' t_flagstones; 'e' t_deck; '?' t_secret_door; 'a' t_altar; '&' t_fireplace; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; '!' t_lava; 'x' t_wall; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_pillar; };
+  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; ',' t_flagstones; 'c' t_cobblestone; 'e' t_deck; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; 'q' t_rune_Q; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
   terrain {
       . % ~ ~ ~ ~ ~ ~ ~ ~ - - - - - - _ _ _ _ - - - - - - - - - ~ ~ .
       . % ~ % % ~ ~ ~ ~ ~ ~ - - - - - _ _ _ - - - - - - - - - ~ ~ ~ .
@@ -2672,7 +2457,7 @@ MAP m_passage {
   type ascii;
   width 32;
   height 32;
-  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; '<' t_leftwing; '>' t_rightwing; 'c' t_cobblestone; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'p' t_pillar; '1' t_wall_b; '2' t_wall_a; '3' t_wall_c; '4' t_wall_d; 'm' t_mast; 'f' t_fire_terrain; 'b' t_boulder; 'r' t_wall_rock; '+' t_ankh; ',' t_flagstones; 'e' t_deck; '?' t_secret_door; 'a' t_altar; '&' t_fireplace; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; '!' t_lava; 'x' t_wall; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_pillar; };
+  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; ',' t_flagstones; 'c' t_cobblestone; 'e' t_deck; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; 'q' t_rune_Q; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
   terrain {
       x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x
       x , , , , , , x x x x x x x x x x x x x x x x x x ~ ~ x x x x x
@@ -3414,7 +3199,7 @@ MAP m_WATER_TRAP_OPEN {
   type ascii;
   width 5;
   height 5;
-  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; '<' t_leftwing; '>' t_rightwing; 'c' t_cobblestone; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'p' t_pillar; '1' t_wall_b; '2' t_wall_a; '3' t_wall_c; '4' t_wall_d; 'm' t_mast; 'f' t_fire_terrain; 'b' t_boulder; 'r' t_wall_rock; '+' t_ankh; ',' t_flagstones; 'e' t_deck; '?' t_secret_door; 'a' t_altar; '&' t_fireplace; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; '!' t_lava; 'x' t_wall; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_pillar; };
+  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; ',' t_flagstones; 'c' t_cobblestone; 'e' t_deck; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; 'q' t_rune_Q; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
   terrain {
     _ _ _ _ _
     _ _ _ _ _
@@ -3427,7 +3212,7 @@ MAP m_WATER_TRAP_CLOSED {
   type ascii;
   width 5;
   height 5;
-  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; '<' t_leftwing; '>' t_rightwing; 'c' t_cobblestone; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'p' t_pillar; '1' t_wall_b; '2' t_wall_a; '3' t_wall_c; '4' t_wall_d; 'm' t_mast; 'f' t_fire_terrain; 'b' t_boulder; 'r' t_wall_rock; '+' t_ankh; ',' t_flagstones; 'e' t_deck; '?' t_secret_door; 'a' t_altar; '&' t_fireplace; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; '!' t_lava; 'x' t_wall; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_pillar; };
+  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; ',' t_flagstones; 'c' t_cobblestone; 'e' t_deck; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; 'q' t_rune_Q; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
   terrain {
     e e e e e
     e e e e e
@@ -3442,7 +3227,7 @@ MAP m_wilderness {
   width 40;
   height 40;
   one_char_per_tile 1;
-  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; '<' t_leftwing; '>' t_rightwing; 'c' t_cobblestone; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'p' t_pillar; '1' t_wall_b; '2' t_wall_a; '3' t_wall_c; '4' t_wall_d; 'm' t_mast; 'f' t_fire_terrain; 'b' t_boulder; 'r' t_wall_rock; '+' t_ankh; ',' t_flagstones; 'e' t_deck; '?' t_secret_door; 'a' t_altar; '&' t_fireplace; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; '!' t_lava; 'x' t_wall; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_pillar; };
+  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; ',' t_flagstones; 'c' t_cobblestone; 'e' t_deck; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; 'q' t_rune_Q; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
   terrain {
       ________________________________________
       ________________________________________
@@ -3621,7 +3406,7 @@ MAP m_empire_city {
                 't' t_trees;
                 ',' t_flagstones;
                 'o' t_pillar;
-                '0' t_counter_pillar;
+                '0' t_counter_1x1;
                 'x' t_altar;
                 '!' t_lava;
                 'e' t_deck;
@@ -3781,7 +3566,7 @@ MAP m_prison_chamber {
   type ascii;
   width 32;
   height 32;
-  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; '<' t_leftwing; '>' t_rightwing; 'c' t_cobblestone; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'p' t_pillar; '1' t_wall_b; '2' t_wall_a; '3' t_wall_c; '4' t_wall_d; 'm' t_mast; 'f' t_fire_terrain; 'b' t_boulder; 'r' t_wall_rock; '+' t_ankh; ',' t_flagstones; 'e' t_deck; '?' t_secret_door; 'a' t_altar; '&' t_fireplace; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; '!' t_lava; 'x' t_wall; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_pillar; };
+  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; ',' t_flagstones; 'c' t_cobblestone; 'e' t_deck; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; 'q' t_rune_Q; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
   terrain {
       x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x
       x , , , , , , , 0 . . . 0 e , , e 0 . . . 0 , , , 0 ! c ! 0 e x
@@ -3821,7 +3606,7 @@ MAP m_BOG_TRAP_OPEN {
   type ascii;
   width 3;
   height 2;
-  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; '<' t_leftwing; '>' t_rightwing; 'c' t_cobblestone; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'p' t_pillar; '1' t_wall_b; '2' t_wall_a; '3' t_wall_c; '4' t_wall_d; 'm' t_mast; 'f' t_fire_terrain; 'b' t_boulder; 'r' t_wall_rock; '+' t_ankh; ',' t_flagstones; 'e' t_deck; '?' t_secret_door; 'a' t_altar; '&' t_fireplace; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; '!' t_lava; 'x' t_wall; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_pillar; };
+  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; ',' t_flagstones; 'c' t_cobblestone; 'e' t_deck; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; 'q' t_rune_Q; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
   terrain {
     % % %
     % % %
@@ -3831,7 +3616,7 @@ MAP m_BOG_TRAP_CLOSED {
   type ascii;
   width 3;
   height 2;
-  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; '<' t_leftwing; '>' t_rightwing; 'c' t_cobblestone; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'p' t_pillar; '1' t_wall_b; '2' t_wall_a; '3' t_wall_c; '4' t_wall_d; 'm' t_mast; 'f' t_fire_terrain; 'b' t_boulder; 'r' t_wall_rock; '+' t_ankh; ',' t_flagstones; 'e' t_deck; '?' t_secret_door; 'a' t_altar; '&' t_fireplace; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; '!' t_lava; 'x' t_wall; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_pillar; };
+  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; ',' t_flagstones; 'c' t_cobblestone; 'e' t_deck; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; 'q' t_rune_Q; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
   terrain {
     . . .
     . . .
@@ -3873,7 +3658,7 @@ MAP m_BOULDER_TRAP_OPEN {
   type ascii;
   width 3;
   height 2;
-  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; '<' t_leftwing; '>' t_rightwing; 'c' t_cobblestone; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'p' t_pillar; '1' t_wall_b; '2' t_wall_a; '3' t_wall_c; '4' t_wall_d; 'm' t_mast; 'f' t_fire_terrain; 'b' t_boulder; 'r' t_wall_rock; '+' t_ankh; ',' t_flagstones; 'e' t_deck; '?' t_secret_door; 'a' t_altar; '&' t_fireplace; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; '!' t_lava; 'x' t_wall; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_pillar; };
+  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; ',' t_flagstones; 'c' t_cobblestone; 'e' t_deck; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; 'q' t_rune_Q; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
   terrain {
     b b b
     b b b
@@ -3883,7 +3668,7 @@ MAP m_BOULDER_TRAP_CLOSED {
   type ascii;
   width 3;
   height 2;
-  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; '<' t_leftwing; '>' t_rightwing; 'c' t_cobblestone; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'p' t_pillar; '1' t_wall_b; '2' t_wall_a; '3' t_wall_c; '4' t_wall_d; 'm' t_mast; 'f' t_fire_terrain; 'b' t_boulder; 'r' t_wall_rock; '+' t_ankh; ',' t_flagstones; 'e' t_deck; '?' t_secret_door; 'a' t_altar; '&' t_fireplace; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; '!' t_lava; 'x' t_wall; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_pillar; };
+  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; ',' t_flagstones; 'c' t_cobblestone; 'e' t_deck; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; 'q' t_rune_Q; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
   terrain {
     . . .
     . . .
@@ -3925,7 +3710,7 @@ MAP m_FLAME_BARRIER_TRAP_OPEN {
   type ascii;
   width 1;
   height 1;
-  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; '<' t_leftwing; '>' t_rightwing; 'c' t_cobblestone; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'p' t_pillar; '1' t_wall_b; '2' t_wall_a; '3' t_wall_c; '4' t_wall_d; 'm' t_mast; 'f' t_fire_terrain; 'b' t_boulder; 'r' t_wall_rock; '+' t_ankh; ',' t_flagstones; 'e' t_deck; '?' t_secret_door; 'a' t_altar; '&' t_fireplace; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; '!' t_lava; 'x' t_wall; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_pillar; };
+  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; ',' t_flagstones; 'c' t_cobblestone; 'e' t_deck; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; 'q' t_rune_Q; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
   terrain {
     f
   }
@@ -3934,7 +3719,7 @@ MAP m_FLAME_BARRIER_TRAP_CLOSED {
   type ascii;
   width 1;
   height 1;
-  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; '<' t_leftwing; '>' t_rightwing; 'c' t_cobblestone; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'p' t_pillar; '1' t_wall_b; '2' t_wall_a; '3' t_wall_c; '4' t_wall_d; 'm' t_mast; 'f' t_fire_terrain; 'b' t_boulder; 'r' t_wall_rock; '+' t_ankh; ',' t_flagstones; 'e' t_deck; '?' t_secret_door; 'a' t_altar; '&' t_fireplace; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; '!' t_lava; 'x' t_wall; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_pillar; };
+  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; ',' t_flagstones; 'c' t_cobblestone; 'e' t_deck; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; 'q' t_rune_Q; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
   terrain {
     c
   }
@@ -4051,6 +3836,145 @@ PLACE p_prison_chamber {
     mech_L_lever guard_trap_lever 1 25 "up";
   }
 }
+MAP GreenTower_Map {
+        type ascii;
+        width 64;
+        height 64;
+        one_char_per_tile 1;
+        palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; ',' t_flagstones; 'c' t_cobblestone; 'e' t_deck; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; 'q' t_rune_Q; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
+        terrain {
+    |||||||||||||||||||||||||||||tb...bt|||||||||||||||||||||||tttt|
+    |||||||||||||||||||||||||||||tt...tt|||||||||||||||||||||ttt..t|
+    |||||||||||||||||||||||||||||tb...b|||||||||.........|||tt|tt.t|
+    ||||||||||||||||||||||||||||ttt........|||||.|||||||.tttt||tttt|
+    ||||||||||||||||||||||||||||tb...b||||.|||||.|||||||.||||||||t||
+    |||||||||||||||||||||||||||tt....t||||.|||||.|||||||.|||||||tt||
+    |||||||||||||||||||||||||||b.....|||||.|||||.||......ttttt||t|||
+    ||||||||||||||||||||||||||tt....b|||||....||.||.xxxx.xxxxttttt||
+    ||||||||||||||||||||||||||tb....t||||||||....||.x.......xtt..t||
+    |||||||||||||||||||||||||tt....bt|||||||||||t||.0.......0tt..t||
+    |||||||||||||||||||||||||tb....tt|||||||||||t||.x@@@@@@@xtt..t||
+    |||||||||||||||||||||||||tt....bt|||||||ttttt||.x.......x|tttt||
+    |||||||||||||||||||||||||tb....tt|||||||t.ttt||.xSHROOMSx|||||||
+    ||||||||||||||||||||||||ttt....bt||||tttt..t|||.xxxxxxxxx|||||||
+    ||||||||||||||||||||||||tb.....ttt|||t||ttttttt.x...x...x|||||||
+    ||||||||||||||||||||||ttt.......bt|||t|||||||||.x...?...?|||ttt|
+    ||||||||||||||||||||||tb........ttt||t||||||||||x...x...x||tt|t|
+    ||||||||||||||||||||ttt..........btttt||||||||||xx0xxx?xx||t||tt
+    ||||||||||||||||||tttb.............bttttt|||||||||||||t||||t||||
+    ||||||||||||||||tttb................tbtbttt|||||||||||tt|||tt|||
+    |||||||||||||||ttb.....btbtbtb...........btt|||||||||||tt|||t|||
+    ||||||||||||||tt......tttttttttbt..........tttt|||||||||ttt|t|||
+    ||||||||||||tttb.....bt|||||||tttb..........tttt||||||||||ttt|||
+    ||||||||||||tb......ttt||||||||ttttttb........bt||||||||||||||||
+    |||||||||||tt......bt||||||||||tt||ttttb.......tt|||||||||||||||
+    |||||||||||t......ttt||||||tttttttt|||tttb.....bt|||||||||||||||
+    ||||||||||ttb....bt|||||||tttttttttt||||tttbt...t|||||||||||||||
+    |||||||||tt.....ttt||||||ttttxxxxtttt|||||tttb..b||||||ttttt||||
+    |||||||tttb....bt||||||tttxxxxccxxxxttt||||ttt..t||||tttbtbttttt
+    t||||||tb......tt|||||ttxxxccccccccxxxtt||||tb..bt|||tbt.....btb
+    tttttttt.......tt|||||txxccccccccccccxxt||||tt....bttt..........
+    ..btbtb........bt||||ttxccccccccccccccxtt|||ttb....tb...btbt....
+    ................ttt||txxcccxxxccxxxcccxxt||||tttt......tttttb...
+    ..........bttb...bttttxcccxxccccccxxcccxtt||||ttb.....tbt||ttt..
+    ........bttttt....tbtbxcccxccccccccxcccxbtttttttt....tttt|||tb..
+    ..btbtbttt|||ttb......xcccxccb..bccxcccx.tbtbtbt.....bt|||||tttb
+    bttttttt||||||ttt.....ccccxcc.tt.ccxcccc.............tt||||||||t
+    tt||||||||||||||tb....ccccxcc.tt.ccxcccc.............tt|||||||||
+    ||||||||||||||||tttbt.xcccxccb..bccxcccx.tbtbt.......bt|||||||||
+    ||||||||||||||||||tttbxcccxccccccccxcccxbttttb........tt||||||||
+    |||||||||||||||||||||txcccxxccccccxxcccxtt|tt....bt...bt||||||||
+    |||||||||||||||||||||txxcccxxxccxxxcccxxt||tb...bttt...tt|||||||
+    |||||||||||||||||||||||xccccccccccccccx||||t....tt|tb..bt|||||||
+    |||||||||||||||||||||||xxccccccccccccxx|||tb...bt||tt..tt|||||||
+    |||||||tttt|||||||||||||xxxccccccccxxx|||tt...t||||tb..bt|||||||
+    |||||trtrrtrr||||||||||||txxxxccxxxx||||tb...b||||ttt..tt|||||||
+    |||rrttt||ttrrr|||||||||tt|||xxxx|tt|||tt...t|||||tb..bt||||||||
+    |||r|||ttt|tt|r|||||||.t|||||||||||||ttb...b|||||tt...tt||||||||
+    ||||tttt..t|tt|rr|||||t||||||||||||ttb....t||||||tb..bt|||||||||
+    |rr|tt|..b.tttt|rr||tt||||||||||||tbt....bt||xxxx0xccx0xxxx|||||
+    ||||tt.....t.tt||r|..||||||||||||tt....bt||||xccccccccccccx|||||
+    |tttt.........tt|tt|||||||||||||tb....t||||||xccccccccccccx|||||
+    |ttt.b.......b.t.t|||||||||||||tt...tbt||||||xcc0cccccc0ccx|||||
+    |||t.....a.....t|r||||||||||||tb...bt||||||||xcc0cc&&cc0ccx|||||
+    |r|tttt......tt||r||||||||||||t...tt|||||||xxxcc0cccccc0ccxxx|||
+    |r|||.t......tt|r||||||||||||tb...b||||||||xccccccccccccccccx|||
+    |rr|tttb...b.tt|r||||||||||||t....t||||||||xccccccccccccccccx|||
+    ||r|ttttt....t|rr||||||||||||b...bt||||||||xccccccccccccccccx|||
+    ||||||||ttttt|tr|||||||||||||t...t|||||||||xccx@@@@@@@@@@xccx|||
+    |||rr|||ttt|tt|r|||||||||||||b...bt||||||||xccxccccccccccxccx|||
+    ||||rr|rrr|rrrr||||||||||||||tt...t||||||||xccxWHITE@STAGxccx|||
+    ||||||||||||||||||||||||||||ttb...b||||||||xxxxxxxxxxxxxxxxxx|||
+    ||||||||||||||||||||||||||||tt....tt||||||||||||||||||||||||||||
+    ||||||||||||||||||||||||||||tb.....bt|||||||||||||||||||||||||||
+    }
+}
+PLACE GreenTower {
+  type town;
+  parent p_wilderness;
+  x 35;
+  y 23;
+  name "Town of GreenTower"
+  wraps 0;
+  map GreenTower_Map;
+  underground 0;
+  objects {
+  }
+  object_type t_town;
+}
+MAP m_terrain_test {
+  type ascii;
+  width 24;
+  height 32;
+  palette { '__' t_deep; '--' t_shallow; '~~' t_shoals; '%%' t_bog; '..' t_grass; 'tt' t_trees; '||' t_forest; '{{' t_hills; '^^' t_mountains; ',,' t_flagstones; 'cc' t_cobblestone; 'ee' t_deck; '==' t_bridge; 'gg' t_bridge_top; 'hh' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; '.A' t_A; '.B' t_B; '.C' t_C; '.D' t_D; '.E' t_E; '.F' t_F; '.G' t_G; '.H' t_H; '.I' t_I; '.J' t_J; '.K' t_K; '.L' t_L; '.M' t_M; '.N' t_N; '.O' t_O; '.P' t_P; '.Q' t_Q; '.R' t_R; '.S' t_S; '.T' t_T; '.U' t_U; '.V' t_V; '.W' t_W; '.X' t_X; '.Y' t_Y; '.Z' t_Z; ',A' t_rune_A; ',B' t_rune_B; ',C' t_rune_C; ',D' t_rune_D; ',E' t_rune_E; ',F' t_rune_F; ',G' t_rune_G; ',H' t_rune_H; ',I' t_rune_I; ',J' t_rune_J; ',K' t_rune_K; ',L' t_rune_L; ',M' t_rune_M; ',N' t_rune_N; ',O' t_rune_O; ',P' t_rune_P; ',Q' t_rune_Q; ',R' t_rune_R; ',S' t_rune_S; ',T' t_rune_T; ',U' t_rune_U; ',V' t_rune_V; ',W' t_rune_W; ',X' t_rune_X; ',Y' t_rune_Y; ',Z' t_rune_Z; ';T' t_rune_TH; ';E' t_rune_EE; ';N' t_rune_NG; ';A' t_rune_EA; ';S' t_rune_ST; ';D' t_rune_DOT; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
+  terrain {
+   xx xx xx .. .. xx xx xx .. .. xx .. .. .. xx .. .. xx xx xx .. .. xx xx
+   xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx
+   xx .. .A .B .C .D .E .F .G .H .. .I .J .K .L .M .N .O .P .. .. .. .. ..
+   .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..
+   .. .. ,A ,B ,C ,D ,E ,F ,G ,H .. ,I ,J ,K ,L ,M ,N ,O ,P .. .. .. .. ..
+   xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx
+   xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx
+   xx .. .Q .R .S .T .U .V .W .X .. .Y .Z [ @ @ @ @ ] .. .. .. .. xx
+   .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..
+   .. .. ,Q ,R ,S ,T ,U ,V ,W ,X .. ,Y ,Z ;T ;E ;N ;A ;S ;D .. .. .. .. ..
+   xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx
+   xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx
+   xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx
+   .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..
+   .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..
+   .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..
+   .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..
+   .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..
+   .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..
+   .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..
+   xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx
+   xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx
+   xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx
+   .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..
+   .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..
+   xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx
+   xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx
+   xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx
+   .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..
+   .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..
+   xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx
+   xx xx xx .. .. xx xx xx .. .. xx .. .. .. xx .. .. xx xx xx .. .. xx xx
+  }
+}
+PLACE p_terrain_test {
+  type town;
+  parent p_wilderness;
+  x 34;
+  y 14;
+  name "Terrain Test";
+  wraps 0;
+  map m_terrain_test;
+  underground 0;
+  objects {
+  }
+  object_type t_town;
+}
 moon_info {
   phases 8;
   {
@@ -4076,7 +4000,7 @@ moon_info {
     }
   }
   sun {
-    arc 0;
+    arc 150;
     sprite s_sun;
   }
   moongates {
@@ -4100,7 +4024,7 @@ MAP DarkPassage_Map {
   type ascii;
   width 32;
   height 32;
-  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; '<' t_leftwing; '>' t_rightwing; 'c' t_cobblestone; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'p' t_pillar; '1' t_wall_b; '2' t_wall_a; '3' t_wall_c; '4' t_wall_d; 'm' t_mast; 'f' t_fire_terrain; 'b' t_boulder; 'r' t_wall_rock; '+' t_ankh; ',' t_flagstones; 'e' t_deck; '?' t_secret_door; 'a' t_altar; '&' t_fireplace; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; '!' t_lava; 'x' t_wall; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_pillar; };
+  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; ',' t_flagstones; 'c' t_cobblestone; 'e' t_deck; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; 'q' t_rune_Q; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
   terrain {
       x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x
       x , , , , , , x x x x x x x x x x x x x x x x x x ~ ~ x x x x x
@@ -4196,8 +4120,8 @@ FORMATION f_football {
 }
 player {
   place p_wilderness;
-  x 28;
-  y 14;
+  x 35;
+  y 22;
   sprite s_companion_wizard;
   speed 2;
   mv_desc Walk;
