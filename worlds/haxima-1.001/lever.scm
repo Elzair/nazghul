@@ -2,8 +2,8 @@
 
 (define (lever-state on?)
   (if on?
-      (state-mk 's_R_lever_up #f pmask-all 0)
-      (state-mk 's_R_lever_down #f pmask-all 0)))
+      (state-mk 's_R_lever_up #f pclass-none 0)
+      (state-mk 's_R_lever_down #f pclass-none 0)))
 
 (define lever-ifc
   (ifc bim-ifc
@@ -14,4 +14,4 @@
 
 (define (mk-lever dest-tag)
   (bind (kern-mk-obj t_lever 1)
-        (bim-mk #f dest-tag)))
+        (bim-mk #f dest-tag nil)))

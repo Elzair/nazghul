@@ -329,6 +329,7 @@
                 #f
                 'gt-b-1
                 #f
+                '()
               )
             ) ;; bind
           63 31)
@@ -386,6 +387,7 @@
                 #f
                 'portcullis-1
                 #f
+                '()
               )
             ) ;; bind
           36 31)
@@ -412,6 +414,7 @@
                   #f
                   '()
                   #f
+                  '()
                 )
               ) ;; bind
             ) ;; kern-tag
@@ -856,8 +859,32 @@
       ) ;; kern-tag
     35 25)
     (list
+      (bind
+        (kern-mk-obj t_lever 1)
+        (list
+          #f
+          'bridge-1
+          #f
+          '()
+        )
+      ) ;; bind
+    35 25)
+    (list
       (kern-mk-obj t_goblin_generator 1)
     20 20)
+    (list
+      (kern-tag 'bridge-1
+        (bind
+          (kern-mk-obj tf_drawbridge 1)
+          (list
+            #f
+            '()
+            #f
+            's_ew_bridge
+          )
+        ) ;; bind
+      ) ;; kern-tag
+    37 25)
     (list
       (kern-mk-field f_poison 8)    34 22)
     (list

@@ -2,7 +2,6 @@
 ;; a generic 'signal by toggling its state.
 
 ;; Extend the bim interface to support the 'signal message
-
 (define (portcullis-state on?)
   (if on?
       (state-mk 's_portcullis_up #f pclass-none 0)
@@ -20,4 +19,4 @@
 ;; Define a constructor
 (define (mk-portcullis)
   (bind (kern-mk-obj t_portcullis 1) 
-        (bim-mk #f '())))
+        (bim-mk #f nil nil)))

@@ -542,6 +542,8 @@
                 (list (kern-mk-obj t_dagger 1) 38 22)
                 (list (kern-mk-obj t_green_potion 2) 38 22)
                 (list (mk-ship) 36 26)
+                (list (kern-tag 'bridge-1 (mk-drawbridge east)) 37 25)
+                (list (mk-lever 'bridge-1) 35 25)
                 )
                nil ; hooks
                )

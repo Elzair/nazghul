@@ -25,4 +25,4 @@
 ;; Constructor
 (define (mk-stone-lantern)
   (bind (kern-mk-obj tf_stone_lantern 1)
-        (bim-mk #f nil)))
+        (bim-mk #f nil nil)))

@@ -46,6 +46,10 @@
 #define HIGHLIGHT_W 2
 #define HIGHLIGHT_H 2
 
+#define BLOCKS_PASSABILITY -1
+#define IGNORES_PASSABILITY 0
+#define ALLOWS_PASSABILITY  1
+
 #define WRAP(c,max) (((c) + (max)) % (max))
 #define WRAP_DISTANCE(a,b,max) (min((a) + (max) - (b), (b) - (a)))
 #define INDEX(x,y,w) ((x) + (y) * (w))
@@ -439,19 +443,25 @@ static int place_field_is_passable(struct place *place, int x, int y,
 static int place_obj_is_passable(class Object *obj,
                                 class Object *subject, int flags)
 {
+        int pclass = obj->getPclass();
+
+        // Does the object care about passability?
+        if (pclass == PCLASS_NONE)
+                return IGNORES_PASSABILITY;
+
         // Is the obj passable?
         if (subject->isPassable(obj->getPclass()))
-                return 1;
+                return ALLOWS_PASSABILITY;
 
         // Is the caller actually trying to move the subject there?
         if (0 == (flags & PFLAG_MOVEATTEMPT))
-                return 0;
+                return BLOCKS_PASSABILITY;
 
         // Does the obj run a bump handler on failed entry?
         if (obj->getObjectType()->canBump())
                 obj->getObjectType()->bump(obj, subject);
 
-        return 0;
+        return BLOCKS_PASSABILITY;
 }
 
 int place_is_passable(struct place *place, int x, int y,
@@ -460,7 +470,7 @@ int place_is_passable(struct place *place, int x, int y,
 	class Object *mech;
 	bool impassable_terrain;
 	bool no_convenient_vehicle;
-        class Object *tfeat = NULL;
+        int tfeat_pass = IGNORES_PASSABILITY;
 
 	// For a wrapping place, wrap out-of-bounds x,y
 	// For a non-wrapping place, return impassable.
@@ -473,17 +483,23 @@ int place_is_passable(struct place *place, int x, int y,
 
         // Does the caller want to check terrain features?
         if (0 == (flags & PFLAG_IGNORETFEAT)) {
+                class Object *tfeat = NULL;
                 
                 tfeat = place_get_object(place, x, y, tfeat_layer);
-                if (tfeat &&
-                    ! place_obj_is_passable(tfeat, subject, flags))
-                        return 0;
+                if (tfeat) {
+                        tfeat_pass = place_obj_is_passable(tfeat, subject, 
+                                                           flags);
+
+                        // Does is specifically block passability?
+                        if (tfeat_pass == BLOCKS_PASSABILITY)
+                                return 0;
+                }
         }
 
         // Does the caller want to check terrain, and if so is there no
         // overriding terrain feature?
         if (0 == (flags & PFLAG_IGNORETERRAIN) &&
-            NULL == tfeat) {
+            IGNORES_PASSABILITY == tfeat_pass) {
 
                 // Is the terrain passable?
                 if (! place_terrain_is_passable(place, x, y, subject, flags))
@@ -505,7 +521,8 @@ int place_is_passable(struct place *place, int x, int y,
                 // Is the mech passable?
                 mech = place_get_object(place, x, y, mech_layer);
                 if (mech &&
-                    ! place_obj_is_passable(mech, subject, flags))
+                    (place_obj_is_passable(mech, subject, flags) == 
+                     BLOCKS_PASSABILITY))
                         return 0;
 	}
 

@@ -835,15 +835,10 @@
     (list
       (kern-mk-field f_sleep_perm -1)    34 24)
     (list
-      (kern-mk-party t_goblin_horde 4
-        (kern-mk-vehicle t_ship 1 100)
-      )
-    3 28)
-    (list
       (kern-mk-party t_slime_glob 4
         nil
       )
-    36 21)
+    36 24)
     (list
       (kern-mk-party t_skeleton_brigade 4
         nil
@@ -875,51 +870,10 @@
       ) ;; bind
     35 25)
     (list
-      (kern-mk-obj t_goblin_generator 1)
-    20 20)
-    (list
-      (kern-tag 'bridge-1
-        (bind
-          (kern-mk-obj tf_drawbridge 1)
-          (list
-            #f
-            '()
-            #f
-            's_ew_bridge
-          )
-        ) ;; bind
-      ) ;; kern-tag
-    37 25)
-    (list
-      (kern-mk-field f_poison 17)    34 22)
-    (list
-      (kern-mk-obj t_mushroom 1)
-    38 22)
-    (list
-      (kern-mk-obj t_dagger 1)
-    38 22)
-    (list
-      (kern-mk-obj t_green_potion 2)
-    38 22)
-    (list
-      (kern-tag 'mg-1
-        (bind
-          (kern-mk-obj t_moongate 1)
-          (list
-            'ord
-            #f
-            '()
-            #f
-            #f
-          )
-        ) ;; bind
-      ) ;; kern-tag
-    32 23)
-    (list
-      (kern-mk-vehicle t_ship 1 100)
-    36 26)
-    (list
-      (kern-mk-field f_fire 17)    34 23)
+      (kern-mk-party t_goblin_horde 4
+        (kern-mk-vehicle t_ship 5 100)
+      )
+    39 28)
     (list
       (kern-mk-player
         'player
@@ -1026,7 +980,53 @@
           )
         )
       )
-    36 23)
+    36 25)
+    (list
+      (kern-mk-obj t_goblin_generator 1)
+    20 20)
+    (list
+      (kern-tag 'bridge-1
+        (bind
+          (kern-mk-obj tf_drawbridge 1)
+          (list
+            #f
+            '()
+            #f
+            's_ew_bridge
+          )
+        ) ;; bind
+      ) ;; kern-tag
+    37 25)
+    (list
+      (kern-mk-field f_poison 7)    34 22)
+    (list
+      (kern-mk-obj t_mushroom 1)
+    38 22)
+    (list
+      (kern-mk-obj t_dagger 1)
+    38 22)
+    (list
+      (kern-mk-obj t_green_potion 2)
+    38 22)
+    (list
+      (kern-tag 'mg-1
+        (bind
+          (kern-mk-obj t_moongate 1)
+          (list
+            'ord
+            #f
+            '()
+            #f
+            #f
+          )
+        ) ;; bind
+      ) ;; kern-tag
+    32 23)
+    (list
+      (kern-mk-vehicle t_ship 1 100)
+    36 26)
+    (list
+      (kern-mk-field f_fire 7)    34 23)
   ) ;; end of objects
   (list
   )
@@ -1039,7 +1039,7 @@
 (kern-set-cursor ls_whirlpool)
 (kern-set-crosshair t_crosshair)
 (kern-set-ascii ss_little_sprites 32)
-(kern-set-clock 0 0 0 0 12 55)
+(kern-set-clock 0 0 0 0 13 49)
 ;; ---------
 ;; Astronomy
 ;; ---------

@@ -8,14 +8,15 @@
 (define (state-light state) (cadddr state))
 
 ;; ctor
-(define (bim-mk on? port)
+(define (bim-mk on? port members)
   ;;(display "bim-mk")(newline)
-  (list on? port #f))
+  (list on? port #f members))
 
 ;; accessors
 (define (bim-on? bim) (car bim))
 (define (bim-port bim) (cadr bim))
 (define (bim-active? bim) (caddr bim))
+(define (bim-members bim) (cadddr bim))
 
 ;; mutators
 (define (bim-set-on! bim val) (set-car! bim val))
@@ -23,9 +24,8 @@
 
 ;; helpers
 (define (bim-send-signal kobj sig)
-  ;;(display "bim-send-signal ")(display sig)(newline)
+  (display "bim-send-signal ")(display sig)(newline)
   (let ((bim (gob-data (kobj-gob kobj))))
-    ;;(display bim)(newline)
     (if (not (bim-active? bim))
         (let ((port (bim-port bim)))
           (if (and (not (null? port)) 
@@ -36,10 +36,11 @@
                 (bim-set-active! bim #f)))))))
 
 (define (bim-change-state kobj khandler on?)
-  ;;(display "bim-change-state")(newline)
+  (display "bim-change-state")(newline)
   (let ((bim (gob-data (kobj-gob kobj))))
     (bim-set-on! bim on?)
-    (let ((state ((kobj-ifc kobj) 'state on?)))
+    (let ((state ((kobj-ifc kobj) 'state on? kobj)))
+      (display "state:")(display state)(newline)
       (kern-obj-set-sprite kobj (state-sprite state))
       (kern-obj-set-opacity kobj (state-opacity state))
       (kern-obj-set-pclass kobj (state-pclass state))
@@ -48,7 +49,7 @@
 
 ;; handlers
 (define (bim-on kobj khandler) 
-  ;;(display "bim-on")(newline)
+  (display "bim-on")(newline)
   (bim-change-state kobj khandler #t 'on)
   (bim-send-signal kobj 'on)
   )

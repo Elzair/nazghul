@@ -172,6 +172,7 @@
 (load "bridge.scm")
 (load "stone-lantern.scm")
 (load "road.scm")
+(load "drawbridge.scm")
 
 (load "conv.scm") ;; basic conversation
 
