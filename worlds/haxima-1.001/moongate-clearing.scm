@@ -1,3 +1,23 @@
+;;----------------------------------------------------------------------------
+;; Characters
+;;----------------------------------------------------------------------------
+(kern-mk-char 
+ 'ch_wanderer
+ "The Wanderer"        ; name
+ sp_human              ; species
+ oc_wanderer           ; occ
+ s_companion_ranger    ; sprite
+ faction-player        ; starting alignment
+ 0 10 2                ; str/int/dex
+ 0 1                   ; hp mod/mult
+ 10 5                  ; mp mod/mult
+ 24 0 3 3              ; hp/xp/mp/lvl
+ nil                   ; conv
+ nil                   ; sched
+ nil                   ; special ai
+ nil)                  ; readied
+ 
+
 (kern-mk-place 'p_moongate_clearing "Moongate Clearing"
   s_shrine ;; sprite
   (kern-mk-map 'm_moongate_clearing 23 28 pal_expanded
@@ -37,13 +57,36 @@
   nil
   ;; neighbors
   nil
-  ;; contents
-  nil
-  (list
-  )
+  (list ;; contents
+   (list (kern-tag 'black-gate (mk-moongate nil)) 11 11)
+   )
+  nil ;; hooks
   (list  ;; edge entrances
    (list north 16 27)
    (list east  0  11)
    (list west 22 10)
    )
 ) ;; end of place p_moongate_clearing
+
+;;----------------------------------------------------------------------------
+;; Startup - this is a one-time only script that runs when the player starts
+;; the game for the first time (or whenever he starts over from scratch,
+;; loading the game from this file). It sets up the story a bit.
+;;
+;; The camera should center on the moongate clearing. Then, a gate should rise
+;; from the ground, pause, then sink back down, leaving the player's sleep
+;; sprite on the ground. Another pause, and then the player should wake up.
+;;----------------------------------------------------------------------------
+(define blackgate-stages
+  (list (list '()                       0)
+        (list s_moongate_quarter        32)
+        (list s_moongate_half           64)
+        (list s_moongate_three_quarters 96)
+        (list s_moongate_full           128)))
+
+(define (start-scene kplayer)
+  (moongate-animate black-gate blackgate-stages)
+  (kern-obj-put-at ch_wanderer 11 11)
+  (kern-log-msg "You awaken to a quiet clearing."))
+
+(kern-set-start-proc start-scene)

@@ -2287,6 +2287,23 @@ static pointer kern_log_msg(scheme *sc,  pointer args)
         return sc->NIL;
 }
 
+KERN_API_CALL(kern_log_enable)
+{
+        int val;
+
+        if (unpack(sc, &args, "b", &val)) {
+                rt_err("kern_log_enable: bad args");
+                return sc->F;
+        }
+
+        if (val)
+                log_enable();
+        else
+                log_disable();
+
+        return sc->T;
+}
+
 static pointer kern_conv_say(scheme *sc,  pointer args)
 {
         char *msg;
@@ -4776,6 +4793,20 @@ KERN_API_CALL(kern_being_get_base_faction)
         return scm_mk_integer(sc, faction);
 }
 
+KERN_API_CALL(kern_set_start_proc)
+{
+        pointer proc;
+
+        if (unpack(sc, &args, "o", &proc)) {
+                rt_err("kern-set-start-proc");
+                return sc->NIL;
+        }
+
+        session_set_start_proc(Session, closure_new(sc, proc));
+
+        return proc;
+}
+
 scheme *kern_init(void)
 {        
         scheme *sc;
@@ -4919,6 +4950,7 @@ scheme *kern_init(void)
         scm_define_proc(sc, "kern-is-valid-location?", kern_is_valid_location);
         scm_define_proc(sc, "kern-print", kern_print);
         scm_define_proc(sc, "kern-set-spell-words", kern_set_spell_words);
+        scm_define_proc(sc, "kern-set-start-proc", kern_set_start_proc);
         scm_define_proc(sc, "kern-set-wind", kern_set_wind);
         scm_define_proc(sc, "kern-sleep", kern_sleep);
         scm_define_proc(sc, "kern-sound-play", kern_sound_play);
@@ -4955,6 +4987,7 @@ scheme *kern_init(void)
 
         /* kern-log api */
         scm_define_proc(sc, "kern-log-msg", kern_log_msg);
+        scm_define_proc(sc, "kern-log-enable", kern_log_enable);
 
         /* kern-dtable api */
         scm_define_proc(sc, "kern-mk-dtable", kern_mk_dtable);

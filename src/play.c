@@ -292,7 +292,14 @@ int playRun(void)
 	}
 
         log_enable();
+        log_begin_group();
+        log_msg("******************************");
 	log_msg("Welcome to Nazghul version %s.", version_as_string() );
+        log_msg("******************************");
+        log_end_group();
+
+        // Run the optional startup script.
+        session_run_start_proc(Session);
 
         mapUpdate(REPAINT_IF_DIRTY);
 

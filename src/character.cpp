@@ -1498,8 +1498,7 @@ void Character::sleep()
                 return;
 
         changeSleep(true);
-        consolePrint("%s sleeping!\n", getName());
-        consoleRepaint();
+        log_msg("%s sleeping!\n", getName());
 }
 
 bool Character::canSee(class Object *obj)

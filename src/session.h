@@ -80,7 +80,6 @@ extern int save_errs;
 #define TickWorkQueue (Session->tickq)
 #define TurnWorkQueue (Session->turnq)
 
-
 struct session {
 
         // This list keeps track of all loaded object types. It's private to
@@ -160,6 +159,9 @@ struct session {
         /* The turn/tick work queues */
         struct list turnq;
         struct list tickq;
+
+        /* Startup script */
+        struct closure *start_proc;
 };
 
 // Callback table for saving objects
@@ -214,6 +216,9 @@ extern void * session_add_connection(struct session *session, void *obj,
                                      void (*save)(save_t *save, void *obj)
         );
 extern void session_rm(struct session *session, void *handle);
+
+extern void session_set_start_proc(struct session *session, struct closure *proc);
+extern void session_run_start_proc(struct session *session);
 
 extern void save_err(char *fmt, ...);
 

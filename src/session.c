@@ -257,6 +257,9 @@ void session_del(struct session *session)
         }
 
 
+        if (Session->start_proc)
+                closure_del(Session->start_proc);
+
         free(session);
 }
 
@@ -536,4 +539,18 @@ void session_save(char *fname)
 
         save_del(save);
         fclose(file);                
+}
+
+void session_set_start_proc(struct session *session, struct closure *proc)
+{
+        if (session->start_proc)
+                closure_del(session->start_proc);
+        session->start_proc = proc;
+}
+
+void session_run_start_proc(struct session *session)
+{
+        if (Session->start_proc) {
+                closure_exec(Session->start_proc, "p", player_party);
+        }
 }

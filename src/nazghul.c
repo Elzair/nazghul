@@ -39,6 +39,8 @@
 #include "status.h"
 #include "log.h"
 
+#include <errno.h>
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <SDL.h>
@@ -209,6 +211,11 @@ static void parse_args(int argc, char **argv)
 
 }				// parse_args()
 
+static void tick_sig_handler(int signo)
+{
+        exit(0);
+}
+
 int tick_fx(void *data)
 {
 	unsigned int tick_usecs = TickMilliseconds * 1000;
@@ -271,8 +278,9 @@ int main(int argc, char **argv)
 
         nazghul_init_internal_libs();
 
-        if (TickMilliseconds > 0)
+        if (TickMilliseconds > 0) {
                 tick_thread = SDL_CreateThread(tick_fx, 0);
+        }
 
 	playRun();
 

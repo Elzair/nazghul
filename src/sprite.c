@@ -147,11 +147,11 @@ void spritePaint(struct sprite *sprite, int frame, int x, int y)
 void spriteAdvanceTicks(int ticks)
 {
         Sprite.ticks_to_next_animation -= ticks;
-        if (ticks <= 0) {
+        if (Sprite.ticks_to_next_animation <= 0) {
                 spriteAdvanceFrames();
                 cmdwin_repaint_cursor();
                 statusRepaint();
-                Sprite.ticks_to_next_animation += ticks;                
+                Sprite.ticks_to_next_animation += AnimationTicks;
         }
 }
 

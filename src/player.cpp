@@ -1510,6 +1510,10 @@ void player_party::startSession(void)
         // --------------------------------------------------------------------
        
         Place = getPlaceFromMembers();
+
+        if (! Place)
+                return;
+
         assert(Place);
         mapSetPlace(Place);
         mapSetDirty();
