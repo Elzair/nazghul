@@ -788,6 +788,16 @@ bool player_party::try_to_enter_portal(class Portal * portal, int dx, int dy)
                 return enter_dungeon(portal->getToPlace(), portal->getToX(),
                                      portal->getToY(), dx, dy);
 
+#if 0
+        // gmcnutt: originally wrote this so that if the player tries to enter
+        // a combat map that the party can't distribute on he'll see why. But
+        // that's an uncommon case. A more common case is entering a town from
+        // a portal and seeing all the npc parties 'jump' or 'warp in/out'. The
+        // 'warp' effect is caused by us painting them here in their current
+        // positions, and then calling relocate(), which calls placeEnter(),
+        // which calls synchronize() on all npc parties and teleports them to
+        // their currently scheduled appointment place.
+
 	// Show the destination so the player knows what he's getting himself
 	// into...
 	mapSetPlace(portal->getToPlace());
@@ -796,6 +806,7 @@ bool player_party::try_to_enter_portal(class Portal * portal, int dx, int dy)
 	mapRecomputeLos(view);
 	mapUpdate(0);
 	usleep(MS_PER_TICK * 2000);
+#endif
 
         relocate(portal->getToPlace(), portal->getToX(), portal->getToY());
 
