@@ -4716,14 +4716,6 @@ KERN_API_CALL(kern_mk_dtable)
         /* allocate the kernel table */
         dtable = dtable_new(n_factions);
 
-        /* For now, hardcode the table limits and settings. Note that we must
-         * set the upper and lower bounds before poking any entries into the
-         * table. */
-        dtable_set_hostile(dtable, -2);
-        dtable_set_allies(dtable, 2);
-        dtable_set_upper_bound(dtable, 2);
-        dtable_set_lower_bound(dtable, -2);
-        
         /* for each row */
         for (r_faction = 0; r_faction < n_factions; r_faction++) {
 

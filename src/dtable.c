@@ -58,6 +58,14 @@ struct dtable *dtable_new(int n_factions)
                 }
         }
 
+        /* For now, hardcode the table limits and settings. Note that we must
+         * set the upper and lower bounds before poking any entries into the
+         * table. */
+        dtable_set_hostile(dtable, DTABLE_DEFAULT_HOSTILE);
+        dtable_set_allies(dtable, DTABLE_DEFAULT_ALLIES);
+        dtable_set_upper_bound(dtable, DTABLE_DEFAULT_UPPER_BOUND);
+        dtable_set_lower_bound(dtable, DTABLE_DEFAULT_LOWER_BOUND);
+        
         return dtable;        
 }
 
