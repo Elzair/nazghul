@@ -1,2 +1,2 @@
 #!/bin/sh
-rm -f *~ *.err *.out *.diff *.save
+rm -f *~ *.err *.out *.diff *.save *.console *.cmdwin *.result

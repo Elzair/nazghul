@@ -1,66 +1,7 @@
-;;----------------------------------------------------------------------------
-;; The very first line of any session file should be (load "naz.scm"). This
-;; bootstraps some procedures that we need to continue. This is the only place
-;; you should use 'load'. Every other place you want to load a file you should
-;; user 'kern-load'. 'kern-load' ensures that a saved session will be able to
-;; load the file, too.
-;;----------------------------------------------------------------------------
 (load "naz.scm")
-
-;;----------------------------------------------------------------------------
-;; Load the read-only game data. See the note on 'kern-load' vs 'load' above.
-;;----------------------------------------------------------------------------
-
 (kern-load "game.scm")
-
-;;----------------------------------------------------------------------------
-;; Characters
-;;----------------------------------------------------------------------------
-
-(kern-mk-char 'ch_thorald_greybeard ; tag
-              "Thorald Greybeard"   ; name
-              sp_human              ; species
-              oc_wizard             ; occ
-              s_companion_wizard    ; sprite
-              align-player          ; starting alignment
-              0 10 2                ; str/int/dex
-              0 1                   ; hp mod/mult
-              10 5                  ; mp mod/mult
-              0 0                   ; hit mod def mod
-              0 0                   ; dam mod arm mod
-              240 0 240 8           ; hp/xp/mp/lvl
-              nil                   ; conv
-              nil                   ; sched
-              nil                   ; special ai
-              (list t_rpg))         ; readied
-
-;;----------------------------------------------------------------------------
-;; Player
-;;----------------------------------------------------------------------------
-(kern-mk-player
- 'player                     ; tag
- s_companion_fighter         ; sprite
- "Walk"                      ; movement description
- sound-walking               ; movement sound
- 1000                        ; food
- 500                         ; gold
- (+ align-player align-town) ; alignment
- nil                         ; formation
- nil                         ; campsite map
- nil                         ; campsite formation
- nil                         ; vehicle
-
- 
- ;; inventory
- (kern-mk-container
-  nil ;; type
-  nil ;; trap
-  nil ;; contents:
-  )
- 
- ;; party members
- (list ch_thorald_greybeard)
- )
+(load "tests/basic-party.scm")
+(load "tests/basic-time.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Maps
@@ -129,32 +70,3 @@
                 )
                nil ; hooks
                )
-
-(define hour 12)
-(define minutes 45)
-(define time-in-minutes (+ (* hour 60) minutes))
-
-(kern-set-clock 
- 0 ; year
- 0 ; month
- 0 ; week
- 0 ; day
- hour  ; hour
- minutes ; minutes(
- )
-
-
-(kern-mk-astral-body
- 'sun              ; tag
- "Fyer (the sun)"  ; name
- 1                 ; relative astronomical distance 
- 1                 ; minutes per phase (n/a for sun)
- (/ (* 24 60) 360) ; minutes per degree
- 0                 ; initial arc
- 0                 ; initial phase
- '()               ; script interface
- ;; phases:
- (list 
-  (list s_sun 255 "full")
-  )
- )

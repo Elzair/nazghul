@@ -125,7 +125,7 @@
           )
         )
       )
-    39 1)
+    38 39)
   ) ;; end of objects
   (list
   )
@@ -138,7 +138,7 @@
 (kern-set-cursor ls_whirlpool)
 (kern-set-crosshair t_crosshair)
 (kern-set-ascii ss_little_sprites 32)
-(kern-set-clock 0 0 0 0 13 33)
+(kern-set-clock 0 0 0 0 13 38)
 ;; ---------
 ;; Astronomy
 ;; ---------

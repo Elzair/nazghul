@@ -1,0 +1,8 @@
+wrap-1: Walking around the origin of a wrapping wilderness map.
+
+wrap-2: Walking to the four corners of a non-wrapping wilderness and trying to
+cross.
+
+cmdwin-1: Walking in wilderness mode
+cmdwin-2: Attacking in wilderness mode
+cmdwin-3: Boarding in wilderness mode

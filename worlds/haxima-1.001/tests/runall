@@ -1,0 +1,5 @@
+#!/bin/sh
+
+for test in `cat list`; do
+  ./testexec $test
+done

@@ -2,4 +2,6 @@
 cd ..
 nazghul --record tests/$1.rec tests/$1.scm 2> tests/$1.err > tests/$1.out
 mv save.scm tests/$1.save.mstr
+mv .cmdwin tests/$1.cmdwin.mstr
+mv .console tests/$1.console.mstr
 echo "Mastered $1"

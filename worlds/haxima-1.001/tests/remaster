@@ -1,4 +1,6 @@
 #!/bin/sh
 
 mv $1.save $1.save.mstr
+mv $1.cmdwin $1.cmdwin.mstr
+mv $1.console $1.console.mstr
 echo "Remastered $1"
