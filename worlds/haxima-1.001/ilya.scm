@@ -72,16 +72,18 @@
                   (begin
                     (say knpc "Do you remember where our farm was?")
                     (if (kern-conv-get-yes-no? kpc)
-                        (say kpc "She must be there somewhere!")
-                        (say kpc "North and east, in a nook in the hills."))))))
+                        (say knpc "She must be there somewhere!")
+                        (say knpc "East and south, not far from the hills."))))))
 
         ;; no - didn't give quest yet
         (begin
           (say knpc "I think I left Puska back at home. If you find her will you give her to me?")
           (if (kern-conv-get-yes-no? kpc)
               (begin
-                (say kpc "Our farm was north and east through the woods. "
-                     "Watch out for the trolls! They hate fire.")
+                (say knpc "Our farm was east and south through the woods. "
+                     "Watch out for the trolls! They throw big rocks. "
+                     "Oh, and the spiders have probably moved in by now, too. "
+                     "Stay out of their webs.")
                 (ilya-give-quest ilya))
               (begin
                 (say knpc "If you keep her I will find you when I grow up.")
