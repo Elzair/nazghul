@@ -26,6 +26,8 @@
 extern "C" {
 #endif
 
+#include "common.h"  // Other files want common.h 
+
 	extern char *mmap_file(char *file, int *len);
 
 	static inline int util_point_in_rect(int px, int py, int rx, int ry,
