@@ -68,20 +68,24 @@ ObjectType::ObjectType()
         speed                  = 0;
         required_action_points = 0;
         max_hp                 = 0;
+        name                   = NULL;
+        tag                    = NULL;
         gifc = NULL;
         gifc_cap = 0;
 }
 
-ObjectType::ObjectType(char *tag, char *name, struct sprite *sprite, 
+ObjectType::ObjectType(char *tag, char *sname, struct sprite *sprite, 
                        enum layer layer)
         : speed(0), required_action_points(0), max_hp(0), sprite(sprite)
 {
 	this->tag = strdup(tag);
         assert(this->tag);
 
-        if (name) {
-                this->name = strdup(name);
+        if (sname) {
+                this->name = strdup(sname);
                 assert(this->name);
+        } else {
+                this->name = 0;
         }
 
 	this->layer = layer;
