@@ -1,0 +1,47 @@
+#!/bin/bash
+# 
+# run_nazghul
+# 
+# A wrapper script to run Nazghul after regenerating 
+# it and its' mapfile from source.
+
+if [[ -z "$NNN" ]]; then
+    echo "Nazghul src dir NNN is not defined!"
+    exit 1
+fi
+
+if [[ -z "$DDD" ]]; then
+    echo "Nazghul data dir DDD is not defined!"
+    exit 1
+fi
+
+echo "=== Using Nazghul src  dir '$NNN'..."
+echo "=== Using Nazghul data dir '$DDD'..."
+
+cd $NNN
+echo "=== Making Nazghul binary..."
+make
+if [ $? != 0 ]; then
+    echo "There was some problem making the Nazghul binary."
+    exit 1
+fi
+make install
+if [ $? != 0 ]; then
+    echo "There was some problem installing the Nazghul binary."
+    exit 1
+fi
+
+cd $DDD
+echo "=== Making Nazghul mapfile..."
+rm -f mapfile
+make
+if [ $? != 0 ]; then
+    echo "There was some problem making the Nazghul mapfile."
+    exit 1
+fi
+
+# nazghul --sound 0
+# nazghul --sound 1
+nazghul --record nazghul_keylog.$$
+
+# eof
