@@ -172,7 +172,6 @@
 (load "beds.scm")
 (load "money.scm")
 (load "ai.scm")
-
 (load "species.scm")
 (load "occs.scm")
 (load "npc-types.scm")

@@ -54,8 +54,8 @@ extern void getkey(void *data, int(*handler) (struct KeyHandler * kh,
 #define CMD_PRINT_MEMBER  (1 << 1)
   
 extern void cmdAttack(void);
-extern int cmdCampInTown(class Character *camper);
-extern int cmdCampInWilderness(class Party *camper);
+extern int cmd_camp_in_town(class Character *camper);
+extern int cmd_camp_in_wilderness(class Party *camper);
 extern void cmdFire(void);
 extern void cmdHelp(void);
 extern bool cmdMixReagents(void);

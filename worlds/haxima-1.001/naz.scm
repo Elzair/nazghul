@@ -473,4 +473,9 @@ define (blit-maps kmap . blits)
   (xy-in-rect? (loc-x loc)
                (loc-y loc)
                rect))
-  
+
+(define original-load load)  
+(define (load file)
+  (display (kern-get-ticks))(display " loading ")(display file)(newline)
+  (original-load file))
+

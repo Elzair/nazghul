@@ -225,7 +225,7 @@
                   (in-lor kobj kuser) 
                   (in-lor kobj kuser)))
 
-(mk-usable-item 't_picklock "picklocks" s_golden_skeleton_key
+(mk-usable-item 't_picklock "picklock" s_golden_skeleton_key
                 (lambda (kobj kuser)
                   (let ((ktarg (ui-target (kern-obj-get-location kuser)
                                           1 

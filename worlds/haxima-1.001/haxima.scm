@@ -11,6 +11,7 @@
 ;; Load the read-only game data. See the note on 'kern-load' vs 'load' above.
 ;;----------------------------------------------------------------------------
 (kern-load "game.scm")
+
 (kern-load "camping-map.scm")
 
 ;;----------------------------------------------------------------------------
@@ -23,6 +24,8 @@
 (load "slimy-cavern.scm")
 (load "trigrave.scm")
 (load "lost-halls.scm")
+(load "enchanters-tower.scm")
+
 
 ;;----------------------------------------------------------------------------
 ;; Characters

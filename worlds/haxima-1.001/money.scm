@@ -13,7 +13,7 @@
                       (kern-obj-destroy kobj)))))
 
 (mk-obj-type 't_gold_coins ;; tag
-             "gold coins"  ;; name
+             "gold coin"  ;; name
              s_coins_gold  ;; sprite
              layer-item    ;; layer
              money-ifc      ;; ifc

@@ -1548,7 +1548,7 @@ int ui_get_quantity(int max)
 	return info.digit;
 }
 
-int cmdCampInWilderness(class Party *camper)
+int cmd_camp_in_wilderness(class Party *camper)
 {
 	int hours, yesno;
 	class Character *guard = 0;
@@ -1601,7 +1601,7 @@ int cmdCampInWilderness(class Party *camper)
         return 0;
 }
 
-int cmdCampInTown(class Character *camper)
+int cmd_camp_in_town(class Character *camper)
 {
         int hours;
 
@@ -1612,7 +1612,7 @@ int cmdCampInTown(class Character *camper)
         if (player_party->getPartyControlMode() != PARTY_CONTROL_FOLLOW) {
                 cmdwin_print("must be in follow mode!");
                 log_begin_group();
-                log_msg("Kamp - party not in follow mode!");
+                log_msg("Camp - party not in follow mode!");
                 log_msg("(Hint: hit 'f' to enter follow mode)");
                 log_end_group();
                 return 0;
@@ -1622,14 +1622,14 @@ int cmdCampInTown(class Character *camper)
         if (place_get_object(camper->getPlace(), camper->getX(), 
                              camper->getY(),  bed_layer) == NULL) {
                 cmdwin_print("no bed!");
-                log_msg("Kamp - no bed here!");
+                log_msg("Camp - no bed here!");
                 return 0;
         }
 
         // Rendezvous the party around the bed.
         if (! player_party->rendezvous(camper->getPlace(), camper->getX(), 
                                        camper->getY())) {
-                log_msg("Kamp - party can't rendezvous!");
+                log_msg("Camp - party can't rendezvous!");
                 return 0;
         }
 
