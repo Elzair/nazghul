@@ -28,7 +28,6 @@
 
 #include "projectiles.ghul" // for t_cannonball
 
-
 #ifdef OLDER_SHIP_MAP
 MAP map_ship {
   type   ascii;

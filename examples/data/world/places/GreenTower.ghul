@@ -56,16 +56,16 @@ MAP GreenTower_Map {
     ||||||||||||||||||t............................tt|||||||||||||||
     ||||||||||||||||||b............................|t|||||||||||||||
     ||||||||||||||||||t............................tt|||||||||||||||
-    ||||||||||||||||||b.....btbtbt......bttbtbt....bt|||||||||||||||
-    ||||||||||||||||||t....tttttttb....bttttttbt...tt|||||||||||||||
-    ||||||||||||||||||b...bt|||||ttxccxtt|||||tt...bt|||||||||||||||
-    |||||||||||||||||||...tt||||xxxxccxxxx||||tb...tt|||||||||||||||
-    ||||||||||||||||||b...bt||xxxccccccccxxx||tt...bt|||||||||||||||
-    |||||||||||||||||||...tt|xxccccccccccccxx|tb...tt|||||||||||||||
-    ||||||||||||||||||b...bt|xccccccccccccccx|tt...tt|||||||||||||||
-    ttt|||||||||||||||t...ttxxcccxxxccxxxcccxxtb...bt||||||||||||||t
-    btttttttttttttttttb...btxcccxx|tcct|xxcccxtt...tt||||||||||||||t
-    ..btbtbtbtbtbtbtbt....tbxcccx|t.cc.t|xcccxb....bt||||||||||||||t
+    ||||||||||||||||||b.....bdbdbd......bttbtbt....bt|||||||||||||||
+    ||||||||||||||||||t....dddddddb....bttttttbt...tt|||||||||||||||
+    ||||||||||||||||||b...bd|||||ddxccxtt|||||tt...bt|||||||||||||||
+    |||||||||||||||||||...dd||||xxxxccxxxx||||tb...tt|||||||||||||||
+    ||||||||||||||||||b...bd||xxxccccccccxxx||tt...bt|||||||||||||||
+    |||||||||||||||||||...dd|xxccccccccccccxx|tb...tt|||||||||||||||
+    ||||||||||||||||||b...bd|xccccccccccccccx|tt...tt|||||||||||||||
+    ttt|||||||||||||||t...ddxxcccxxxccxxxcccxxtb...bt||||||||||||||t
+    btttttttttttttttttb...bdxcccxx|tcct|xxcccxtt...tt||||||||||||||t
+    ..btbtbtbtbtbtbtbt....dbxcccx|t.cc.t|xcccxb....bt||||||||||||||t
     ........................xcccxt.bccb.txcccx.....ttttttttttttttttt
     ........................cccccccccccccccccc......................
     ........................cccccccccccccccccc......................

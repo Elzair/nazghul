@@ -177,6 +177,8 @@ terrains  {
   TERRAIN(t_rune_EA,  "a rune", SOLID, s_rune_EA,     160, SEE, 0, 0, 0);
   TERRAIN(t_rune_ST,  "a rune", SOLID, s_rune_ST,     161, SEE, 0, 0, 0);
   TERRAIN(t_rune_DOT, "a rune", SOLID, s_rune_DOTSEP, 162, SEE, 0, 0, 0);
+
+  TERRAIN(t_red_roses, "roses", LAND, s_trees_red, 163, SEE, 1, 0, 0);
         
 } /* terrains */
 
@@ -254,6 +256,7 @@ palette pal_standard {      \
         'a'    t_altar;         \
         '<'    t_leftwing;      \
         '>'    t_rightwing;     \
+        'd'    t_red_roses;     \
 } // palette STD_TERRAIN_PALETTE
 
 #define STD_EXPANDED_PALETTE \

@@ -189,8 +189,10 @@ bool Vehicle::fire_weapon(int dx, int dy)
 		}
 
 		/* move the cannonball */
-		cannonball->setX(cannonball->getX() + dx);
-		cannonball->setY(cannonball->getY() + dy);
+		cannonball->setX(place_wrap_x(getPlace(), 
+                                              cannonball->getX() + dx));
+		cannonball->setY(place_wrap_y(getPlace(),
+                                              cannonball->getY() + dy));
 	}
 
 	delete(cannonball);
@@ -272,4 +274,11 @@ void Vehicle::repair(void)
 struct formation *Vehicle::get_formation()
 {
 	return getObjectType()->formation;
+}
+
+struct place *Vehicle::getPlace()
+{
+        if (occupant)
+                return occupant->getPlace();
+        return Object::getPlace();
 }

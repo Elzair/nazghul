@@ -56,12 +56,23 @@ SPRITE_SET ss_mine {
     SPRITE(s_portcullis_down,    1, 21, normal);
     SPRITE(s_portcullis_up,      1, 22, normal);
 
+    SPRITE(s_forest_yellow,     1, 23, normal);
+
     SPRITE(s_L_lever_up,         1, 24, normal);
     SPRITE(s_L_lever_down,       1, 25, normal);
     SPRITE(s_R_lever_up,         1, 26, normal);
     SPRITE(s_R_lever_down,       1, 27, normal);
 
     SPRITE(s_floor_plate,  1, 28, normal);
+
+    SPRITE(s_vert_bridge,  1, 29, normal);
+
+    SPRITE(s_forest_purple, 1, 30, normal);
+    SPRITE(s_forest_red,    1, 31, normal);
+    SPRITE(s_trees_orange,  1, 32, normal);
+    SPRITE(s_trees_yellow,  1, 33, normal);
+    SPRITE(s_trees_purple,  1, 34, normal);
+    SPRITE(s_trees_red,     1, 35, normal);
   }
 } /* SPRITE_SET ss_mine */
 

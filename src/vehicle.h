@@ -133,6 +133,7 @@ class Vehicle:public Object {
         virtual bool fire_weapon(int dx, int dy);
         virtual void paint(int sx, int sy);
         virtual struct formation *get_formation();
+        virtual struct place *getPlace();
 
         bool turn(int dx, int dy, int *cost);
         int getSpeed();
