@@ -195,22 +195,14 @@ extern class Party *place_search_for_Party(struct place *place,
                                            int (*criteria) (class
                                                             Party
                                                             *
-                                                            Party)
-        );
-                
-                
-        // -------------------------------------------------------------
-        // Caller needs to zero out the info struct and fill in the
-        // following fields: x0, y0, x1, y1, pmask, flags. Optionally
-        // if the caller wants to limit the depth of the search he
-        // should fill out the limit_depth and max_depth fields.
-        //
-        // Note: the requestor needs to be non-null if and only if the
-        //       PFLAG_IGNORECOMPANIONS flag is set.
-        // -------------------------------------------------------------
-        extern struct astar_node *place_find_path(struct place *place, struct astar_search_info
-                                                  *info, unsigned char pmask, class Object *requestor);
-                
+                                                            Party));
+        
+        
+extern struct astar_node *place_find_path(struct place *place, 
+                                          struct astar_search_info
+                                          *info, unsigned char pmask, 
+                                          class Object *requestor);
+
 extern struct terrain_map *place_get_combat_terrain_map(struct place
                                                         *place, int x,
                                                         int y);
@@ -264,20 +256,16 @@ extern void place_remove_subplace(struct place *place, struct place *subplace);
 extern void place_for_each_object_at(struct place *place, int x, int y, void (*fx)(class Object *, void *), void *);
 extern void place_exit(struct place *place);
 extern void place_unlock(struct place *place);
+extern void place_describe(struct place *place, int x, int y, int flags);
 
 // Obsolescent global place lib:
-extern void placeExit(void);
-extern class Moongate *place_get_moongate(struct place *, int x, int y);
-extern void placeAddObject(Object * object);
-extern void placeRemoveObject(Object * object);
-extern class Party *placeGetNPC(int x, int y);
-extern void placeRemoveNPC(class Party * Party);
-extern int placeGetMovementCost(int x, int y);
-extern struct terrain *placeGetTerrain(int x, int y);
-extern int placeWrapX(int x);
-extern int placeWrapY(int y);
-extern void placeDescribe(int x, int y, int flags);
-extern void placeDumpObjects(void);
+/* extern class Moongate *place_get_moongate(struct place *, int x, int y); */
+/* extern void placeAddObject(Object * object); */
+/* extern void placeRemoveObject(Object * object); */
+/* extern class Party *placeGetNPC(int x, int y); */
+/* extern void placeRemoveNPC(class Party * Party); */
+/* extern int placeGetMovementCost(int x, int y); */
+/* extern struct terrain *placeGetTerrain(int x, int y); */
 
 
 END_DECL

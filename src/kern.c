@@ -619,12 +619,13 @@ static pointer kern_mk_terrain(scheme *sc, pointer args)
         char *tag = TAG_UNK, *name;
         pointer ret;
         pointer proc = NULL;
+        pointer cost = NULL;
         closure_t *clx = NULL;
 
         /* Revisit: ignore effects for now */
 
-        if (unpack(sc, &args, "ysdpdddc", &tag, &name, &pmask, &sprite, &alpha,
-                   &movement_cost, &light, &proc)) {
+        if (unpack(sc, &args, "ysdpdddc", &tag, &name, &pmask, &sprite, 
+                   &alpha, &movement_cost, &light, &proc)) {
                 load_err("kern-mk-terrain %s: bad args", tag);
                 return sc->NIL;
         }
@@ -635,6 +636,9 @@ static pointer kern_mk_terrain(scheme *sc, pointer args)
         if (proc != sc->NIL) {
                 terrain->effect = closure_new(sc, proc);
         }
+
+/*         if (cost != sc->NIL) */
+/*                 terrain->cost = closure_new(sc, cost); */
 
         session_add(Session, terrain, terrain_dtor, NULL, NULL);
         ret = scm_mk_ptr(sc, terrain);

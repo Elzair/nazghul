@@ -63,8 +63,9 @@ extern "C" {
 
 
         // SAM: Using this typedef below, and in play.[ch]
-        typedef void (*v_funcpointer_ii)  (int x, int y);
-        typedef void (*v_funcpointer_iiv) (int x, int y, void * v);
+        typedef void (*v_funcpointer_ii)  (struct place *, int x, int y);
+        typedef void (*v_funcpointer_iiv) (struct place *, int x, int y, 
+                                           void * v);
   
         struct cursor_movement_keyhandler {
                 // This struct is put into the 'data' field of a 

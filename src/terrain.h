@@ -63,7 +63,7 @@ extern struct terrain *terrain_new(char *tag, char *name,
                                    int alpha, int movement_cost, int light);
 extern void terrain_del(struct terrain *terrain);
 extern int terrain_get_movement_cost(struct terrain *terrain,
-                                     Object *mover);
+                                     class Object *mover);
 
 #define LONGEST_TERRAIN_GLYPH       4
 #define NUM_QUICK_TERRAINS         10

@@ -146,7 +146,8 @@ static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
                         cmdReady(NULL, CMD_SELECT_MEMBER|CMD_PRINT_MEMBER);
                         break;
                 case 's':
-                        cmdSearch(party->getX(), party->getY());
+                        cmdSearch(party->getPlace(),
+                                  party->getX(), party->getY());
                         break;
                         /* To enable talking in party mode I need to prompt for
                          * a character to do the talking. */
@@ -157,7 +158,7 @@ static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
                         cmdUse(NULL, CMD_SELECT_MEMBER|CMD_PRINT_MEMBER);
                         break;
                 case 'x':
-                        cmdXamine(NULL);
+                        cmdXamine(party);
                         break;
                 case 'z':
                         cmdZtats(NULL);
@@ -434,7 +435,8 @@ static void ctrl_attack_ui(class Character *character)
                 if (target == NULL) {
 
                         /* Attack the terrain */
-                        terrain = placeGetTerrain(x, y);
+                        terrain = place_get_terrain(character->getPlace(),
+                                                    x, y);
                         character->attackTerrain(x, y);
                         cmdwin_print("%s", terrain->name);
                         consolePrint("%s\n", terrain->name);

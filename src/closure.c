@@ -118,8 +118,14 @@ int closure_exec(closure_t *closure, char *fmt, ...)
 
         /* FIXME: need to return integer results, too */
 
-        return (result != closure->sc->NIL &&
-                result != closure->sc->F);
+        if (result == closure->sc->NIL ||
+            result == closure->sc->F)
+                return 0;
+
+        if (closure->sc->vptr->is_integer(result))
+                return closure->sc->vptr->ivalue(result);
+
+        return 1;
 }
 
 void closure_save(closure_t *closure, struct save *save)

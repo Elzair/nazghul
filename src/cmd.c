@@ -339,18 +339,21 @@ int movecursor_and_do(struct KeyHandler * kh, int key, int keymod)
                 int x = Session->crosshair->getX();
                 int y = Session->crosshair->getY();
                 if (data->each_target_func)
-                        data->each_target_func(x, y);
+                        data->each_target_func(Session->crosshair->getPlace(),
+                                               x, y);
                 return 0;  // Keep on keyhandling
         }
   
         if (keyIsDirection(key)) {
                 int dir = keyToDirection(key);
-                Session->crosshair->move(directionToDx(dir), directionToDy(dir));
+                Session->crosshair->move(directionToDx(dir), 
+                                         directionToDy(dir));
                 mapSetDirty();
                 int x = Session->crosshair->getX();
                 int y = Session->crosshair->getY();
                 if (data->each_point_func)
-                        data->each_point_func(x, y);
+                        data->each_point_func(Session->crosshair->getPlace(),
+                                              x, y);
                 return 0;  // Keep on keyhandling
         }
   
@@ -376,18 +379,21 @@ int terraform_movecursor_and_do(struct KeyHandler * kh, int key, int keymod)
                 int x = Session->crosshair->getX();
                 int y = Session->crosshair->getY();
                 if (data->each_target_func)
-                        data->each_target_func(x, y, data);
+                        data->each_target_func(Session->crosshair->getPlace(),
+                                               x, y, data);
                 return 0;  // Keep on keyhandling
         }
 
         if (keyIsDirection(key)) {
                 int dir = keyToDirection(key);
-                Session->crosshair->move(directionToDx(dir), directionToDy(dir));
+                Session->crosshair->move(directionToDx(dir), 
+                                         directionToDy(dir));
                 mapSetDirty();
                 int x = Session->crosshair->getX();
                 int y = Session->crosshair->getY();
                 if (data->each_point_func)
-                        data->each_point_func(x, y, data);
+                        data->each_point_func(Session->crosshair->getPlace(),
+                                              x, y, data);
                 return 0;  // Keep on keyhandling
         }
 
@@ -599,7 +605,7 @@ int ui_get_direction(void)
 	return dir;
 }
 
-bool cmdSearch(int x, int y)
+bool cmdSearch(struct place *place, int x, int y)
 {
 	int dir;
         bool old_reveal;
@@ -614,9 +620,9 @@ bool cmdSearch(int x, int y)
 	consolePrint("You find ");
         old_reveal = Reveal;
         Reveal = true;
-	placeDescribe(placeWrapX(x + directionToDx(dir)),
-		      placeWrapY(y + directionToDy(dir)),
-                      PLACE_DESCRIBE_ALL);
+	place_describe(place, x + directionToDx(dir),
+                       y + directionToDy(dir),
+                       PLACE_DESCRIBE_ALL);
         Reveal = old_reveal;
 	return true;
 }
@@ -698,11 +704,15 @@ bool cmdOpen(class Character * pc)
 		return false;
 
 	if (pc) {
-		x = placeWrapX(pc->getX() + directionToDx(dir));
-		y = placeWrapY(pc->getY() + directionToDy(dir));
+		x = place_wrap_x(pc->getPlace(), 
+                                 pc->getX() + directionToDx(dir));
+		y = place_wrap_y(pc->getPlace(), 
+                                 pc->getY() + directionToDy(dir));
 	} else {
-		x = placeWrapX(player_party->getX() + directionToDx(dir));
-		y = placeWrapY(player_party->getY() + directionToDy(dir));
+		x = place_wrap_x(player_party->getPlace(),
+                                 player_party->getX() + directionToDx(dir));
+		y = place_wrap_y(player_party->getPlace(),
+                                 player_party->getY() + directionToDy(dir));
 	}
 
 	cmdwin_print("-");
@@ -755,7 +765,7 @@ bool cmdOpen(class Character * pc)
 	// map).
 	container->open();
 
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
         // Delete container automatically on the combat map because if
         // containers are stacked (and they frequently are) then the top one
         // always gets selected and the player can't get at the ones
@@ -769,13 +779,13 @@ bool cmdOpen(class Character * pc)
         // possible. This is an open issue and it may take some time and user
         // feedback to decide what best to do, so for now I'll simply always
         // remove containers after opening them.
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
 
         container->remove();
         delete container;
 
         consolePrint("You find ");
-	placeDescribe(x, y, PLACE_DESCRIBE_OBJECTS);
+	place_describe(pc->getPlace(), x, y, PLACE_DESCRIBE_OBJECTS);
 
 
 	mapSetDirty();
@@ -1983,46 +1993,51 @@ bool cmdMixReagents(void)
 	return true;
 }
 
-void look_at_XY(int x, int y)
+void look_at_XY(struct place *place, int x, int y)
 {
         if ( mapTileIsVisible(x, y) ) {
                 consolePrint("At XY=(%d,%d) you see ", x, y);
-                placeDescribe(x, y, PLACE_DESCRIBE_ALL);
+                place_describe(place, x, y, PLACE_DESCRIBE_ALL);
                 return;
         } else if (ShowAllTerrain) {
                 consolePrint("At XY=(%d,%d) you see (via xray) ", x, y);
-                placeDescribe(x, y, PLACE_DESCRIBE_TERRAIN);
+                place_describe(place, x, y, PLACE_DESCRIBE_TERRAIN);
                 return;
         }
         consolePrint("At XY=(%d,%d) you see nothing (out of LOS)\n", x, y);
 }
 
-void detailed_examine_XY(int x, int y)
+void detailed_examine_XY(struct place *place, int x, int y)
 {
 	// SAM: 
 	// Hmmm...how best to print more info about
 	// the objects on this tile?
         if ( mapTileIsVisible(x, y) ) {
                 consolePrint("DETAIL XY=(%d,%d) TODO - print detailed view\n", x, y);
-                // For each object/terrain on the tile, print
-                // the name (and perhaps show the sprite in a Status Window mode),
-                // and also show:
+                // For each object/terrain on the tile, print the name (and
+                // perhaps show the sprite in a Status Window mode), and also
+                // show:
+                //
                 //     o whether this object blocks LOS (alpha)
                 //     o whether this object blocks movement (pmask)
-                //     o whether this object causes some effect when stepped upon
-                //       (hazardous terrain effects, pressure plate triggers)
+                //     o whether this object causes some effect when stepped
+                //       upon (hazardous terrain effects, pressure plate
+                //       triggers)
                 //     o information specific to the object type, such as:
-                //       o Triggers: current state, and perhaps what it is connected to?
-                //       o NpcParties: alignment/hostility, movement mode (pmask), ...
-                //       o Vehicles: movement mode, armament, current HP
-                //       o Portable items: weapon/armor stats, (U)se effects, etc...
+                //     o Triggers: current state, and perhaps what it is 
+                //       connected to?
+                //     o NpcParties: alignment/hostility, movement mode 
+                //       (pmask), ...
+                //     o Vehicles: movement mode, armament, current HP
+                //     o Portable items: weapon/armor stats, (U)se effects, 
+                //       etc...
                 // Hmmm...what else?
                 return;
         }
         consolePrint("DETAIL XY=(%d,%d) out of LOS\n", x, y);
 }
 
-void DM_XRAY_look_at_XY(int x, int y, void * data)
+void DM_XRAY_look_at_XY(struct place *place, int x, int y, void * data)
 {
         // Like look_at_XY() but unconditionally reports what is there.
         // For use by cmdTerraform and similar.
@@ -2032,14 +2047,14 @@ void DM_XRAY_look_at_XY(int x, int y, void * data)
         if (!mapTileIsVisible(x, y) ) {
                 consolePrint("(Out of LOS) ", x, y);
                 consolePrint("At XY=(%d,%d) you see ", x, y);
-                placeDescribe(x, y, PLACE_DESCRIBE_ALL);
+                place_describe(place, x, y, PLACE_DESCRIBE_ALL);
                 return;
         }
         consolePrint("At XY=(%d,%d) you see ", x, y);
-        placeDescribe(x, y, PLACE_DESCRIBE_ALL);
+        place_describe(place, x, y, PLACE_DESCRIBE_ALL);
 }
 
-void terraform_XY(int x, int y, void * data)
+void terraform_XY(struct place *place, int x, int y, void * data)
 {
         struct terraform_mode_keyhandler * kh = 
                 (struct terraform_mode_keyhandler *) data;
@@ -2048,17 +2063,18 @@ void terraform_XY(int x, int y, void * data)
         struct terrain         * tt  = palette_current_terrain(pp);
 
         if (!mapTileIsVisible(x, y)) {
-                consolePrint("TERRAFORM warning - XY=(%d,%d) out of LOS\n", x, y);
+                consolePrint("TERRAFORM warning - XY=(%d,%d) out of LOS\n", 
+                             x, y);
         }
         terrain_map_fill(map, x, y, 1, 1, tt);
-        vmask_invalidate(Place, x, y, 1, 1); // FIXME: need the place
+        vmask_invalidate(place, x, y, 1, 1); // FIXME: need the place
         mapSetDirty();
         player_party->updateView();
         consolePrint("TERRAFORM put %s '%s' at XY=(%d,%d)\n", 
                      tt->tag, tt->name, x, y);
 } // terraform_XY()
 
-bool cmdXamine(class Character * pc)
+bool cmdXamine(class Object * pc)
 {
 	// SAM: Working on an improved (L)ook command,
 	// which works as a "Look Mode" rather than a 
@@ -2068,24 +2084,10 @@ bool cmdXamine(class Character * pc)
 	cmdwin_clear();
 	cmdwin_print("Xamine-");
 
-	if (pc) {
-		// A party member was specified as a parameter, so this must be
-		// combat mode. Use the party member's location as the origin.
-		x = pc->getX();
-		y = pc->getY();
-		// SAM: We don't care now who is examining stuff.
-		// Conceivably in future, we might 
-		// (different characters with different sensory abilities, 
-		// or knowledge of the names of objects, or some such).  
-		// But that day is a long ways off.
-	} else {
-		// Must be party mode. 
-		// Use the player party's location as the origin.
-		x = player_party->getX();
-		y = player_party->getY();
-	}
+        x = pc->getX();
+        y = pc->getY();
 
-        look_at_XY(x,y);  // First look at the current tile
+        look_at_XY(pc->getPlace(), x,y);  // First look at the current tile
 	if (select_target_with_doing(x, y, &x, &y, 99,
 				     look_at_XY, detailed_examine_XY) == -1) {
 		return false;
@@ -2279,7 +2281,8 @@ bool cmdTerraform(class Character * pc)
                      map->tag, palette->tag, 
                      terrain->tag, terrain->name);
 
-        DM_XRAY_look_at_XY(x,y, NULL);  // First look at the current tile
+        DM_XRAY_look_at_XY(pc->getPlace(),
+                           x,y, NULL);  // First look at the current tile
 	if (terraform_cursor_func(x, y, &x, &y, 99,
                                   DM_XRAY_look_at_XY, terraform_XY,
                                   place) == -1) {

@@ -938,22 +938,6 @@ void place_enter(struct place *place)
 	place_for_each_object(place, myResetObjectTurns, 0);
 }
 
-void placeAddObject(Object * object)
-{
-	place_add_object(Place, object);
-}
-
-void placeRemoveObject(Object * object)
-{
-	place_remove_object(Place, object);
-}
-
-class Party *placeGetNPC(int x, int y)
-{
-        WRAP_COORDS(Place, x, y);
-	return place_get_Party(Place, x, y);
-}
-
 int place_get_movement_cost(struct place *place, int x, int y)
 {
         WRAP_COORDS(place, x, y);
@@ -970,19 +954,6 @@ int place_is_hazardous(struct place *place, int x, int y)
         if (place_get_object(place, x, y, field_layer) != NULL)
                 return 1;
         return 0;
-}
-
-int placeGetMovementCost(int x, int y)
-{
-        WRAP_COORDS(Place, x, y);
-	struct terrain *t = TERRAIN(Place, x, y);
-	return (t ? t->movement_cost : 0);
-}
-
-struct terrain *placeGetTerrain(int x, int y)
-{
-        WRAP_COORDS(Place, x, y);
-	return TERRAIN(Place, x, y);
 }
 
 void place_set_terrain(struct place *place, int x, int y,
@@ -1002,25 +973,14 @@ struct terrain *place_get_terrain(struct place *place, int x, int y)
 	return TERRAIN(place, x, y);
 }
 
-int placeWrapX(int x)
+static void place_describe_terrain(struct place *place, int x, int y)
 {
-        // obsolete
-	return place_wrap_x(Place, x);
-}
-
-int placeWrapY(int y)
-{
-        // obsolete
-	return place_wrap_y(Place, y);
-}
-
-static void myPlaceDescribeTerrain(int x, int y)
-{
-	struct terrain *t = placeGetTerrain(x, y);
+	struct terrain *t = place_get_terrain(place, x, y);
 	consolePrint("%s", t->name);        
 }
 
-static int myPlaceDescribeObjects(int x, int y, int first_thing_listed)
+static int place_describe_objects(struct place *place, int x, int y, 
+                                  int first_thing_listed)
 {
 
 	struct list *l;
@@ -1031,7 +991,7 @@ static int myPlaceDescribeObjects(int x, int y, int first_thing_listed)
         int n_types;
         int n_described = 0;
 
-	tile = place_lookup_tile(Place, x, y);
+	tile = place_lookup_tile(place, x, y);
 	if (!tile)
 		return n_described;
         
@@ -1181,22 +1141,22 @@ static int myPlaceDescribeObjects(int x, int y, int first_thing_listed)
 
 }				// myPlaceDescribeObjects()
 
-void placeDescribe(int x, int y, int flags)
+void place_describe(struct place *place, int x, int y, int flags)
 {
         int count = 0;
 
-        WRAP_COORDS(Place, x, y);
+        WRAP_COORDS(place, x, y);
 
-	if (place_off_map(Place, x, y)) {
+	if (place_off_map(place, x, y)) {
 		consolePrint("nothing!");
 		return;
 	}
         if (flags & PLACE_DESCRIBE_TERRAIN) {
-                myPlaceDescribeTerrain(x, y);
+                place_describe_terrain(place, x, y);
                 count = 1;
         }
         if (flags & PLACE_DESCRIBE_OBJECTS)
-                count += myPlaceDescribeObjects(x, y, 
+                count += place_describe_objects(place, x, y, 
                                        (flags & PLACE_DESCRIBE_TERRAIN) == 0);
         if (!count)
                 consolePrint("nothing!\n");

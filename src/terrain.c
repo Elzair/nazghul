@@ -23,6 +23,7 @@
 #include "debug.h"
 #include "sprite.h"
 #include "common.h"
+#include "object.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -70,6 +71,10 @@ void terrain_del(struct terrain *terrain)
 
 int terrain_get_movement_cost(struct terrain *terrain, Object *object)
 {
+        if (terrain->pmask & object->getPmask())
+                return terrain->movement_cost;
+        return -1;
+
         assert(terrain->cost);
         return closure_exec(terrain->cost, "pp", terrain, object);
 }

@@ -23,6 +23,7 @@
 #define cmd_h
 
 #include "macros.h"
+#include "event.h" /* for v_funcpointer_ii */
 
 class Character;
 
@@ -60,14 +61,14 @@ extern bool cmdMixReagents(void);
 extern void cmdNewOrder(void);
 extern void cmdQuickSave(void);
 extern void cmdReload(void);
-extern bool cmdSearch(int x, int y);
+extern bool cmdSearch(struct place *place, int x, int y);
 extern bool cmdTalk(Object *member);
 extern void cmdZoomIn(void);
 extern bool cmdUse(class Character * pc, int flags);
 extern bool cmdHandle(class Character * pc);
 extern bool cmdReady(class Character * pc, int flags);
 extern bool cmdZtats(class Character * pc);
-extern bool cmdXamine (class Character * pc);
+extern bool cmdXamine (class Object *examiner);
 extern bool cmdYuse(class Character *pc);
 extern bool cmdAT(class Character * pc);
 extern bool cmdGet(class Object *actor, bool scoop_all);
@@ -85,7 +86,6 @@ extern int select_target(int ox, int oy, int *x, int *y, int range);
 extern char * name_of_context (void);
 
 // SAM: This typedef also exists in event.h
-typedef void (*v_funcpointer_ii) (int x, int y);
 extern int select_target_with_doing (int ox, int oy, int *x, int *y, 
                                      int range, 
                                      v_funcpointer_ii each_point_func,
