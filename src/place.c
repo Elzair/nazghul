@@ -1260,7 +1260,7 @@ static int place_describe_objects(struct place *place, int x, int y,
                                                 log_continue(", ");
                                 }
 
-                                prev_obj->describe();
+                                prev_obj->getObjectType()->describe(n_instances);
                                 n_described++;
                                 n_types--;
                         }
