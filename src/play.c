@@ -933,11 +933,17 @@ bool cmdHandle(class Character * pc)
 		y = player_party->getY();
 
 		// And find out what the party member is Handling (so we can
-		// print the name)
-		pc = select_party_member();
-		if (pc == NULL) {
-			return false;
-		}
+		// print the name). If only one party member then select the
+		// only one.
+		if (player_party->get_num_living_members() == 1) {
+                        pc = player_party->get_first_living_member();
+                        cmdwin_print("%s", pc->getName());
+                } else {
+                        pc = select_party_member();
+                        if (pc == NULL) {
+                                return false;
+                        }
+                }
 	}
 
 	cmdwin_print("-");

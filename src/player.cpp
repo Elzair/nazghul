@@ -71,12 +71,22 @@ static bool apply_existing(class Character * pm, void *unused)
 	return false;
 }
 
+static bool pc_get_first_living(class Character * pm, void *data)
+{
+        class Character **pc = (class Character**)data;
+	if (!pm->isDead()) {
+                *pc = pm;
+		return true;
+	}
+	return false;
+}
+
 static bool pc_check_if_alive(class Character * pm, void *data)
 {
 	int *count = (int *) data;
 	if (!pm->isDead()) {
 		(*count)++;
-		return true;
+		return false;
 	}
 	return false;
 }
@@ -1285,4 +1295,18 @@ struct formation *player_party::get_formation()
 	if (camping && campsite_formation)
 		return campsite_formation;
 	return formation;
+}
+
+int player_party::get_num_living_members(void)
+{
+	int count = 0;
+	for_each_member(pc_check_if_alive, &count);
+        return count;
+}
+
+class Character *player_party::get_first_living_member(void)
+{
+        class Character *pc = NULL;
+        for_each_member(pc_get_first_living, &pc);
+        return pc;
 }

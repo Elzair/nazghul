@@ -775,6 +775,8 @@ static struct terrain_palette *load_terrain_palette(int *n,
 	// recursive case
 	memset(&entry, 0, sizeof(entry));
 
+        // Note: getRaw() eats up through the closing tick, which is then
+        // clobbered below
 	if (!loader->matchToken('\'') ||
 	    !loader->getRaw(entry.symbol, MAX_TERRAIN_PALETTE_SYMBOL_SZ) ||
 	    !loader->getWord(&terrain_tag))

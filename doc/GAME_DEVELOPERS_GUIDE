@@ -87,3 +87,23 @@ A: Use the SCHED declaration and assign a schedule in the character's CHAR
    This response says that if the player asks the character about his job, the
    character will respond with "[Mouth full] Mrmph rormph..." if he is eating
    or "Not much." otherwise.
+
+----------------------------------------------------------------------------
+Q: How do I add a mechanism to a place?
+A: First declare the mechanism and then put it in the objects block of the
+   place. For example, to add a drawbridge:
+
+   MECH drawbridge {
+       // mech definition goes here
+   }
+
+   PLACE castle {
+       // other fields
+       objects {
+           drawbridge west_bridge 30 5 "down";
+       }
+   }
+
+   The syntax for the line in the objects block is:
+
+   <mech type name> <instance name> <x> <y> <initial state name>

@@ -83,6 +83,9 @@ class player_party:public Object {
 	virtual void hit_by_ordnance(class OrdnanceType * ordnance);
         virtual struct formation *get_formation();
 
+        int get_num_living_members(void);
+        class Character *get_first_living_member(void);
+
         int dx, dy;
         struct sprite *sprite;
         int speed;
