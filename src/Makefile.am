@@ -141,4 +141,6 @@ nazghul_SOURCES =		\
 	factions.h \
 	result.h \
 	node.h \
-	node.c
+	node.c \
+	tick.h \
+	tick.c

@@ -37,6 +37,7 @@
 #include "vmask.h"
 #include "status.h"
 #include "log.h"
+#include "tick.h"
 
 #include <errno.h>
 #include <signal.h>
@@ -50,7 +51,6 @@
 
 extern char *optarg;
 extern int optind, opterr, optopt;
-
 
 // gmcnutt: by default I'd like it on :). For one thing, printing all those
 // "Playing sound %s" messages to the console breaks all the regression tests
@@ -211,30 +211,6 @@ static void parse_args(int argc, char **argv)
 
 }				// parse_args()
 
-static void tick_sig_handler(int signo)
-{
-        exit(0);
-}
-
-int tick_fx(void *data)
-{
-	unsigned int tick_usecs = TickMilliseconds * 1000;
-	SDL_Event tick_event;
-
-	tick_event.type = SDL_USEREVENT;
-	tick_event.user.code = TICK_EVENT;
-
-        /* Use the global Quit flag to determine when to exit. */
-        while (! Quit) {
-
-                SDL_Delay(TickMilliseconds);
-
-                /* The tick event will trigger an animation cycle when it gets
-                 * dequeued and processed by the main loop. */
-		SDL_PushEvent(&tick_event);
-	}
-}
-
 static void nazghul_init_internal_libs(void)
 {
         struct lib_entry {
@@ -301,8 +277,6 @@ static void nazghul_splash(void)
 
 int main(int argc, char **argv)
 {
-	SDL_Thread *tick_thread = NULL;
-
 	parse_args(argc, argv);
 
         nazghul_init_internal_libs();
@@ -310,20 +284,12 @@ int main(int argc, char **argv)
         /* Show the splash screen on startup */
         nazghul_splash();
 
-        if (TickMilliseconds > 0) {
-                tick_thread = SDL_CreateThread(tick_fx, 0);
-        }
+        tick_start(TickMilliseconds);
+        tick_pause();
 
 	playRun();
 
-        if (NULL != tick_thread) {
-
-                /* As soon as the tick thread checks the Quit flag it should
-                 * exit. Until then we'll wait here. To make good and sure it
-                 * exits I'll force the Quit flag. */
-                Quit = 1;
-                SDL_WaitThread(tick_thread, NULL);
-        }
+        tick_kill();
 
 	return 0;
 }

@@ -52,6 +52,7 @@
 #include "cmd.h"
 #include "debug.h"
 #include "log.h"
+#include "tick.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -79,7 +80,6 @@ enum cmdstate {
 };
 
 bool Quit;
-
 
 static bool tickHandler(struct TickHandler *th)
 {
@@ -158,6 +158,7 @@ int G_exec_loops = 0;
 
 static void play_reload()
 {
+        tick_pause();
         log_begin("Loading from %s...", QUICKSAVE_FNAME);
         log_flush();
         log_disable();
@@ -165,6 +166,7 @@ static void play_reload()
         log_enable();
         log_end("ok!");
         Reload = 0;
+        tick_run();
         /*vmask_flush_all();*/
 }
 
@@ -326,6 +328,7 @@ int playRun(void)
 	eventAddHook(updateAfterEvent);
 
 	Quit = false;
+        tick_run();
 
 	// Enter the main event loop. This won't exit until the player quits or
 	// dies.
