@@ -739,6 +739,7 @@ void NpcParty::advanceTurn(int turn)
 		break;
 	case SLEEPING:
 	case EATING:
+        default:
 		// For now do nothing.
 		setTurn(turn);
 		break;

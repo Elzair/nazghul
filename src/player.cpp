@@ -846,10 +846,21 @@ bool player_party::move(int newdx, int newdy, bool teleport)
 	}
 }
 
+static bool union_pmask(class Character * pm, void *data)
+{
+        unsigned char *pmask = (unsigned char*)data;
+        *pmask &= pm->getPmask();
+        return false;
+}
+
 unsigned char player_party::get_pmask(void)
 {
+        unsigned char pmask = 0xff;
+
 	if (vehicle)
 		return vehicle->getPmask();
+
+        for_each_member(union_pmask, &pmask);
 	return pmask;
 }
 
@@ -1135,7 +1146,7 @@ player_party::player_party()
 	dy = -1;
 	sprite = 0;
 	speed = 0;
-	pmask = 0;
+	//pmask = 0; obsolete
 	vehicle = 0;
 	turns = 0;
 	mv_desc = 0;
@@ -1244,6 +1255,11 @@ bool player_party::add_to_party(class Character * c)
 	// status if necessary.
 
 	assert(!c->isPlayerControlled());
+
+        // Check if passability is compatible with rest of party
+        if (n_pc && ! (c->getPmask() & get_pmask())) {
+                return false;
+        }
 
 	for (i = 0; i < MAX_N_PC && pc[i]; i++) ;
 

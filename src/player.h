@@ -109,7 +109,7 @@ class player_party:public Object {
         int dx, dy;
         struct sprite *sprite;
         int speed;
-        unsigned char pmask;
+        //unsigned char pmask; obsolete
         class Vehicle *vehicle;
         int turns;
         char *mv_desc;

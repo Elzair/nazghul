@@ -1699,7 +1699,10 @@ static int loadPartyMember(void)
 	c = (class Character *) lookupTag(Lexer->lexeme, CHARACTER_ID);
 	PARSE_ASSERT(c, "Invalid CHAR tag '%s'\n", Lexer->lexeme);
 	c->setRestCredits(MAX_USEFUL_REST_HOURS_PER_DAY);
-	player_party->add_to_party(c);
+	if (! player_party->add_to_party(c)) {
+                PARSE_ASSERT(false, "Failed to add %s to party\n", 
+                             c->getName());
+        }
 	return 0;
 }
 
@@ -1767,7 +1770,7 @@ static int loadPlayer()
 	player_party->setY(y);
 	PARSE_WORD("sprite", sprite_tag);
 	PARSE_INT("speed", player_party->speed);
-	PARSE_INT("pmask", player_party->pmask);
+	//PARSE_INT("pmask", player_party->pmask); obsolete
 	PARSE_WORD("mv_desc", player_party->mv_desc);
 	PARSE_STRING("mv_sound", player_party->mv_sound);
 	PARSE_INT("food", player_party->food);
