@@ -138,6 +138,7 @@ class player_party:public Object {
 
  protected:
         bool try_to_enter_portal(class Portal *portal, int dx, int dy);
+        bool enter_dungeon(class Portal *portal, int dx, int dy);
         bool try_to_move_off_map(struct move_info *info);
         void move_to_wilderness_combat(struct combat_info *cinfo);
         bool turn_vehicle(void);

@@ -43,6 +43,7 @@ extern "C" {
 #define place_index(p,x,y) ((y) * place_w(p) + (x))
 #define place_name(p) ((p)->name)
 #define place_is_wilderness(p) ((p)->type == wilderness_place)
+#define place_is_dungeon(p) ((p)->type == dungeon_place)
 #define place_get_item(p,x,y) place_get_object((p),(x),(y),item_layer)
 
 #define PFLAG_HORZ          (1 << 0) /* matches ASTAR_HORZ */

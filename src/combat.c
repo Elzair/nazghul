@@ -2585,10 +2585,6 @@ bool combat_enter(struct combat_info * info)
 		struct list *melem, *tmp;
 		class Character *member;
 		bool keep, put, onmap;
-#ifdef OLD_PARTY_REINTRO
-		class Character *npc_leader = NULL;
-		int px, py;
-#endif
 
 		tmp = pelem->next;
 		party = outcast(pelem, class NpcParty, container_link.list);
@@ -2625,28 +2621,6 @@ bool combat_enter(struct combat_info * info)
 				continue;
 			}
 
-#ifdef OLD_PARTY_REINTRO
-			// This one is one the map and safe, so remember
-			// it. Later we'll try to place the party at this
-			// location.
-			if (npc_leader == NULL)
-				npc_leader = member;
-
-			// If we haven't found anyplace safe to put the party
-			// yet then check if this member's location is ok. The
-			// problem I need to solve here is that parties might
-			// have members with different passability masks, and
-			// the party must be placed where all the members have
-			// passability.
-			if (!place_is_passable(Place, member->getX(),
-					       member->getY(),
-					       party->getPmask(), 0))
-				continue;
-
-			put = true;
-			npc_leader = member;	// override any previous choice
-			break;
-#endif				/* OLD_PARTY_REINTRO */
 
 		}
 
@@ -2658,128 +2632,11 @@ bool combat_enter(struct combat_info * info)
 			party->destroy();
 			continue;
 		}
-#ifdef OLD_PARTY_REINTRO
-		// Put the party back on the map. If we already found a place
-		// to put it then great.
-		if (put) {
-			assert(npc_leader);
-			party->cleanupAfterCombat();
-			party->relocate(Place, npc_leader->getX(),
-					npc_leader->getY());
-			continue;
-		}
-		// But if the party is not on the map (all the surviving
-		// members fled during combat) then we need to bring the party
-		// in on a map edge. Use the party flee vector to find the map
-		// edge which the last party member escaped from.  Update: it's
-		// simpler just to use the original party position info and put
-		// the party back where it was. It may look funny to see them
-		// suddenly appear, but oh well.
-		if (!onmap) {
-			int fdx, fdy;
-			party->getFleeVector(&fdx, &fdy);
-
-			switch (fdx) {
-			case -1:
-				px = 0;
-				break;
-			case 0:
-				px = place_w(Place) / 2;
-				break;
-			case 1:
-				px = place_w(Place);
-				break;
-			default:
-				assert(0);
-			}
-
-			switch (fdy) {
-			case -1:
-				py = 0;
-				break;
-			case 0:
-				py = place_h(Place) / 2;
-				break;
-			case 1:
-				py = place_h(Place);
-				break;
-			default:
-				assert(0);
-			}
-
-			pinfo.px = px;
-			pinfo.py = py;
-			pinfo.dx = -fdx;
-			pinfo.dy = -fdy;
-			pinfo.rw = MAX_PLACEMENT_RECTANGLE_W;
-			pinfo.rh = MAX_PLACEMENT_RECTANGLE_H;
-			pinfo.rx = px - pinfo.rw / 2;
-			pinfo.ry = py - pinfo.rh / 2;
-			pinfo.pmask = party->getPmask();
-			pinfo.find_party = false;
-			memset(&rmap, 0, sizeof(rmap));
-
-			// Normally the party should be able to backtrack to
-			// the edge it fled to, simulating that it reentered
-			// from that direction. HOWEVER, the party may not have
-			// fled the map in cases where I exceed the max number
-			// of NPCs upon entry. In this case there is no edge to
-			// pathfind to, so just relax the requirement.
-			pinfo.find_edge = pinfo.dx || pinfo.dy;
-
-			printf("%s reentering\n", party->getName());
-			if (!myFindSafePosition(&pinfo)) {
-				party->cleanupAfterCombat();
-				party->relocate(Place, pinfo.px, pinfo.py);
-				consolePrint("%s reenters town after combat\n",
-					     party->getName());
-				continue;
-			}
-			// fixme: I guess this can happen. Not sure how to fix
-			// it right now.
-			assert(false);
-			continue;
-		}
-		// Otherwise start with the coordinates of the npc leader.
-		// (Note: since the results of this could be VERY confusing to
-		// users it might be a good idea to add an animation showing
-		// the party members rendezvousing on the final position, much
-		// like I already do for the player party.)
-		assert(npc_leader);
-		px = npc_leader->getX();
-		py = npc_leader->getY();
-
-		pinfo.px = px;
-		pinfo.py = py;
-		pinfo.dx = 0;
-		pinfo.dy = 0;
-		pinfo.rw = MAX_PLACEMENT_RECTANGLE_W;
-		pinfo.rh = MAX_PLACEMENT_RECTANGLE_H;
-		pinfo.rx = px - pinfo.rw / 2;
-		pinfo.ry = py - pinfo.rh / 2;
-		pinfo.pmask = party->getPmask();
-		pinfo.find_edge = false;
-		pinfo.find_party = true;
-		memset(&rmap, 0, sizeof(rmap));
-
-		if (!myFindSafePosition(&pinfo)) {
-			party->cleanupAfterCombat();
-			party->relocate(Place, pinfo.px, pinfo.py);
-			consolePrint("%s reenters town after combat\n",
-				     party->getName());
-			continue;
-		}
-		// This is bad, but it could happen. This is a bug. I think the
-		// best way to solve it is via a 'party rendezvous' algorithm.
-		assert(false);
-
-#else				/* ! OLD_PARTY_REINTRO */
 
 		// Put the party back where it was at the beginning of combat.
 		party->cleanupAfterCombat();
 		party->relocate(Place, party->pinfo.x, party->pinfo.y);
 
-#endif				/* ! OLD_PARTY_REINTRO */
 	}
 
 	memset(Combat.npcs, 0, sizeof(Combat.npcs));

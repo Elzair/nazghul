@@ -657,78 +657,84 @@ bool player_party::try_to_enter_town_from_edge(class Portal * portal, int dx,
 	return false;
 }
 
-bool player_party::try_to_enter_portal(class Portal * portal, int dx, int dy)
+bool player_party::enter_dungeon(class Portal * portal, int dx, int dy)
 {
-	struct move_info info;
+        struct combat_info cinfo;
+        struct move_info move;
+        bool first_time = true;
 
-	memset(&info, 0, sizeof(info));
+        // On initial entry we still don't know if we can enter combat or not,
+        // so the following might fail.
 
-	// Switch to the portal destination and run through the
-	// check again.
-	info.place = portal->getToPlace();
-	info.x = portal->getToX();
-	info.y = portal->getToY();
-	info.dx = dx;
-	info.dy = dy;
+        memset(&move, 0, sizeof(move));
+        move.place = portal->getToPlace();
+        move.x = portal->getToX();
+        move.y = portal->getToY();
+        move.dx = dx;
+        move.dy = dy;
 
-	cmdwin_print("-%s", portal->getName());
+        memset(&cinfo, 0, sizeof(cinfo));
+        cinfo.move = &move;
 
-#ifdef CHECK_PORTAL_DESINATION
-	switch (check_move_to(&info)) {
+ retry:
+        if (!combat_enter(&cinfo)) {
+                assert(first_time);
+                return false;
+        }
+        
+        // There are three ways to exit a dungeon: quit, die or teleport. In
+        // the case of teleporting the party might end up in another
+        // dungeon. Or the same dungeon, if the portal just leads to elsewhere
+        // in the same one - combat doesn't deal with that special case so do
+        // it here.
 
-	case move_ok:
-	case move_enter_auto_portal:
-	case move_enter_moongate:
-		cmdwin_print("-ok");
-		relocate(info.place, info.x, info.y);
-		return true;
+        if (Quit)
+                return true;
 
-	case move_occupied:
-		cmdwin_print("-destination blocked!");
-		return false;
+        if (all_dead())
+                return true;
 
-	case move_enter_combat:
-		if (info.place->type == wilderness_place) {
-			// Simple rule to save sanity: never automatically
-			// enter combat in the wilderness.
-			cmdwin_print("-destination blocked!");
-			return false;
-		}
-		cmdwin_print("-combat!");
-		struct combat_info cinfo;
-		memset(&cinfo, 0, sizeof(cinfo));
-		cinfo.move = &info;
-		move_to_combat(&cinfo);
-		return true;
+        if (place_is_dungeon(move.place)) {
+                first_time = false;
+                goto retry;
+        }
+        
+        // Otherwise the party is back in party mode on a town or wilderness
+        // map, just like entering a portal.
 
-	case move_impassable:
-		cmdwin_print("-destination impassable!");
-		return false;
-
-	case move_player_quit:
-	case move_off_map:
-	case move_null_place:
-	default:
-		assert(false);
-		return false;
-	}
-#else // ! CHECK_PORTAL_DESTINATION
-
-        cmdwin_print("-ok");
-
-	// Show the destination so the player knows what he's getting himself
-	// into...
-	mapSetPlace(info.place);
-	mapCenterCamera(info.x, info.y);
-	mapCenterView(view, info.x, info.y);
+	mapSetPlace(move.place);
+	mapCenterCamera(move.x, move.y);
+	mapCenterView(view, move.x, move.y);
 	mapRecomputeLos(view);
 	mapUpdate(0);
 	usleep(MS_PER_TICK * 2000);
 
+        relocate(move.place, move.x, move.y);
 
-        relocate(info.place, info.x, info.y);
         return true;
-#endif // ! CHECK_PORTAL_DESTINATION
+}
+
+bool player_party::try_to_enter_portal(class Portal * portal, int dx, int dy)
+{
+
+	cmdwin_print("-%s-ok", portal->getName());
+
+        // If the destination is a dungeon then enter the dungeon loop.
+        if (place_is_dungeon(portal->getToPlace()))
+                return enter_dungeon(portal, dx, dy);
+
+	// Show the destination so the player knows what he's getting himself
+	// into...
+	mapSetPlace(portal->getToPlace());
+	mapCenterCamera(portal->getToX(), portal->getToY());
+	mapCenterView(view, portal->getToX(), portal->getToY());
+	mapRecomputeLos(view);
+	mapUpdate(0);
+	usleep(MS_PER_TICK * 2000);
+
+        relocate(portal->getToPlace(), portal->getToX(), portal->getToY());
+
+        return true;
 }
 
 bool player_party::try_to_move_off_map(struct move_info * info)
