@@ -405,7 +405,7 @@ void terrain_map_save(struct save *save, void *val)
                         }
 
                         // print with no indentation (same line)
-                        fprintf(save->file, "%02s ", glyph);
+                        fprintf(save->file, "%2s ", glyph);
 
                         i++;
                 }
