@@ -28,8 +28,8 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-#ifndef USE_UNICODE
-# define USE_UNICODE 1
+#ifndef DEBUG_KEYS
+# define DEBUG_KEYS 0
 #endif
 
 #define EVENT_NONBLOCK   (1 << 0)
@@ -67,11 +67,13 @@ static int mapKey(SDL_keysym * keysym)
 
 	int key = keysym->sym;
         
-        printf("sym='%c'[%d] mod=%02x unicode=%04x\n", 
-               keysym->sym,  
-               keysym->sym,
-               keysym->mod,
-               keysym->unicode);
+        if (DEBUG_KEYS) {
+                printf("sym='%c'[%d] mod=%02x unicode=%04x\n", 
+                       keysym->sym,  
+                       keysym->sym,
+                       keysym->mod,
+                       keysym->unicode);
+        }
 
         /* If the key has a UNICODE representation and its from the default
          * Basic Latin code page then return it as an ASCII character. */
@@ -273,9 +275,7 @@ int eventInit(void)
 		wait_event = playback_event;
 	}
 
-#if USE_UNICODE
         SDL_EnableUNICODE(1);
-#endif
 
 	return 0;
 }

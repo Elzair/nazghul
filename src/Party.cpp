@@ -883,15 +883,15 @@ void Party::describe()
 
 static bool get_member_movement_sound(class Character * member, void *data)
 {
-        char **sound = (char **)data;
+        sound_t **sound = (sound_t **)data;
 	*sound = member->get_movement_sound();
         return data != 0;
 }
 
 
-char *Party::get_movement_sound()
+sound_t *Party::get_movement_sound()
 {
-        char *sound = 0;
+        sound_t *sound = NULL_SOUND;
 
 	if (vehicle)
 		return vehicle->get_movement_sound();

@@ -80,7 +80,7 @@ class Party:public Being {
         virtual int getActivity();
 	virtual void getFleeVector(int *x, int *y);
 	virtual struct formation *get_formation();
-        virtual char *get_movement_sound();
+        virtual sound_t *get_movement_sound();
 	virtual class PartyType *getObjectType();
         virtual int getMovementCost(int pclass);
 	virtual int getSize(void);

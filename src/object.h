@@ -27,6 +27,7 @@
 #include "olist.h"
 #include "closure.h"
 #include "console.h"		// SAM: for DEBUG purposes...
+#include "sound.h"
 
 #include <assert.h>
 
@@ -225,7 +226,7 @@ class Object {
 			  class ObjectType * type);
 	virtual void init(class ObjectType * type);
 
-        virtual char *get_movement_sound();
+        virtual sound_t *get_movement_sound();
         virtual int getActivity();
         virtual enum control_mode getControlMode();
         virtual int getCount();

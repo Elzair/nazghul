@@ -573,10 +573,10 @@ char *player_party::get_movement_description(void)
 	return vehicle->getMvDesc();
 }
 
-char *player_party::get_movement_sound(void)
+sound_t *player_party::get_movement_sound(void)
 {
 	if (vehicle) {
-		return vehicle->getMvSound();
+		return vehicle->get_movement_sound();
 	}
 	return mv_sound;
 }
@@ -725,7 +725,7 @@ player_party::player_party()
 	vehicle            = 0;
 	turns              = 0;
 	mv_desc            = NULL;
-	mv_sound           = NULL;
+	mv_sound           = NULL_SOUND;
 	leader             = NULL;
 	light              = 1;
 	food               = 0;
@@ -753,7 +753,7 @@ player_party::player_party()
 
 player_party::player_party(char *_tag,
                            struct sprite *sprite,
-                           char *movement_desc, char *movement_sound,
+                           char *movement_desc, sound_t *movement_sound,
                            int _food, int _gold,
                            struct formation *_formation, 
                            struct terrain_map *_camping_map,
@@ -810,20 +810,14 @@ player_party::player_party(char *_tag,
         } else {
                 mv_desc = 0;
         }
-        if (movement_sound) {
-                this->mv_sound = strdup(movement_sound);
-                assert(this->mv_sound);
-        } else {
-                mv_sound = 0;
-        }
+
+        this->mv_sound = movement_sound;
 }
 
 player_party::~player_party()
 {
         if (mv_desc)
                 free(mv_desc);
-        if (mv_sound)
-                free(mv_sound);
 
         if (inventory)
                 delete inventory;
@@ -1591,7 +1585,7 @@ void player_party::save(save_t *save)
                 save->write(save, "nil\n");
         save->write(save, "%s\n", this->sprite->tag);
         save->write(save, "\"%s\"\n", this->mv_desc);
-        save->write(save, "\"%s\"\n", this->mv_sound);
+        save->write(save, "%s\n", sound_get_tag(this->mv_sound));
         save->write(save, "%d %d\n", food, gold);
         save->write(save, "%d ;; turns to next meal\n", 
                     turns_to_next_meal);

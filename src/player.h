@@ -69,7 +69,7 @@ class player_party : public Party {
         player_party();
         player_party(char *tag,
                      struct sprite *sprite,
-                     char *mv_desc, char *mv_sound,
+                     char *mv_desc, sound_t *mv_sound,
                      int food, int gold, 
                      struct formation *formation, 
                      struct terrain_map *camping_map,
@@ -117,7 +117,7 @@ class player_party : public Party {
         virtual bool addMember(class Character *);
         void add_spell(struct spell *spell, int quantity);
         char *get_movement_description();
-        char *get_movement_sound();
+        sound_t *get_movement_sound();
         enum move_result check_move_to(struct move_info *info);
         virtual void paint(int sx, int sy);
         virtual struct formation *get_formation();
@@ -150,7 +150,6 @@ class player_party : public Party {
         struct sprite *sprite;
         int turns;
         char *mv_desc;
-        char *mv_sound;
 
         /* Inventory management */
         Container *inventory;
@@ -190,6 +189,7 @@ class player_party : public Party {
         void (*ctrl)(class player_party*);
         int turns_to_next_rest_credit;
         int turns_to_next_meal;
+        sound_t *mv_sound;
 };
 
 extern class player_party *player_party;

@@ -40,8 +40,8 @@ struct species_spell_elem {
 
 struct species *species_new(char *tag,
                             char *name,
-                            char *damage_sound,
-                            char *movement_sound,
+                            sound_t *damage_sound,
+                            sound_t *movement_sound,
                             int str,
                             int intl,
                             int dex,
@@ -66,15 +66,8 @@ struct species *species_new(char *tag,
         species->name = strdup(name);
         assert(species->name);
 
-        if (damage_sound) {
-                species->damage_sound = strdup(damage_sound);
-                assert(species->damage_sound);
-        }
-
-        if (movement_sound) {
-                species->movement_sound = strdup(movement_sound);
-                assert(species->movement_sound);
-        }
+        species->damage_sound = damage_sound;
+        species->movement_sound = movement_sound;
 
         if (n_slots > 0) {
                 species->slots = (int*)calloc(n_slots, sizeof(int));
@@ -121,10 +114,6 @@ void species_del(struct species *species)
                         free(species->spells[i]);
 		free(species->spells);
         }
-        if (species->damage_sound)
-                free(species->damage_sound);
-        if (species->movement_sound)
-                free(species->movement_sound);
         if (species->on_death)
                 closure_unref(species->on_death);
 

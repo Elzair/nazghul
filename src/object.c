@@ -422,7 +422,7 @@ void Object::relocate(struct place *newplace, int newx, int newy, bool noStep,
                                                  getX(), getY());
                 if (distance > 1)
                         volume /= (distance/2);
-                soundPlay(get_movement_sound(), volume);
+                sound_play(get_movement_sound(), volume);
         }
 
         // --------------------------------------------------------------------
@@ -482,9 +482,9 @@ void Object::describe()
                 consolePrint(" (invisible)");
 }
 
-char *Object::get_movement_sound()
+sound_t *Object::get_movement_sound()
 {
-        return 0;
+        return NULL_SOUND;
 }
 
 class Object *Object::clone()
@@ -574,6 +574,7 @@ static int object_delete_hook_entry(struct hook_entry *entry, void *data)
 {
         list_remove(&entry->list);
         hook_entry_del(entry);
+        return 0;
 }
 
 Object::~Object()

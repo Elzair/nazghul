@@ -138,7 +138,7 @@ Character::Character(char *tag, char *name,
 	this->visible      = 1;
 	this->target       = 0;
 	this->path         = 0;
-        this->damage_sound = NULL;
+        this->damage_sound = NULL_SOUND;
         this->charmed      = false;
         this->resting      = false;
         this->guarding     = false;
@@ -199,7 +199,7 @@ Character::Character():name(0), hm(0), xp(0), order(-1),
 	occ          = 0;
 	target       = 0;
 	path         = 0;
-        damage_sound = NULL;
+        damage_sound = NULL_SOUND;
         charmed      = false;
         resting      = false;
         guarding     = false;
@@ -246,9 +246,6 @@ Character::~Character()
 	if (rdyArms != NULL)
 		free(rdyArms);
 
-        if (damage_sound)
-                free(damage_sound);
-
         if (conv)
                 closure_del(conv);
 
@@ -267,7 +264,7 @@ void Character::damage(int amount)
         // This will run the "on-damage-hook":
         Object::damage(amount);
 
-        soundPlay(get_damage_sound(), SOUND_MAX_VOLUME);
+        sound_play(get_damage_sound(), SOUND_MAX_VOLUME);
 
         setHp(hp - amount);
 	if (hp <= 0)
@@ -1309,20 +1306,20 @@ void Character::describe()
                 log_continue(" (invisible)");
 }
 
-char *Character::get_damage_sound()
+sound_t *Character::get_damage_sound()
 {
         if (damage_sound)
                 return damage_sound;
         if (species && species->damage_sound)
                 return species->damage_sound;
-        return 0;
+        return NULL_SOUND;
 }
 
-char *Character::get_movement_sound()
+sound_t *Character::get_movement_sound()
 {
         if (species)
                 return species->movement_sound;
-        return 0;
+        return NULL_SOUND;
 }
 
 bool Character::isType(int classID) {

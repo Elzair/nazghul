@@ -47,7 +47,7 @@ VehicleType::VehicleType(char *tag, char *name, struct sprite *sprite,
                          bool _killsOccupants,
                          bool _mustTurn,
                          char *_mv_desc,
-                         char *_mv_sound,
+                         sound_t *_mv_sound,
                          int _tailwind_penalty,
                          int _headwind_penalty,
                          int _crosswind_penalty,
@@ -64,8 +64,7 @@ VehicleType::VehicleType(char *tag, char *name, struct sprite *sprite,
         must_turn = _mustTurn;
         mv_desc = strdup(_mv_desc);
         assert(mv_desc);
-        mv_sound = strdup(_mv_sound);
-        assert(mv_sound);
+        mv_sound = _mv_sound;
         tailwind_penalty = _tailwind_penalty;
         headwind_penalty = _headwind_penalty;
         crosswind_penalty = _crosswind_penalty;
@@ -76,8 +75,6 @@ VehicleType::VehicleType(char *tag, char *name, struct sprite *sprite,
 
 VehicleType::~ VehicleType() 
 {
-        if (mv_sound)
-                free(mv_sound);
         if (mv_desc)
                 free(mv_desc);
 }
@@ -165,7 +162,7 @@ char *VehicleType::getMvDesc()
         return mv_desc;
 }
 
-char *VehicleType::getMvSound() 
+sound_t *VehicleType::get_movement_sound() 
 {
         return mv_sound;
 }
@@ -359,9 +356,9 @@ char *Vehicle::getMvDesc()
         return getObjectType()->getMvDesc();
 }
 
-char *Vehicle::getMvSound() 
+sound_t *Vehicle::get_movement_sound()
 {
-        return getObjectType()->getMvSound();
+        return getObjectType()->get_movement_sound();
 }
 
 void Vehicle::save(struct save *save)

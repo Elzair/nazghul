@@ -24,6 +24,7 @@
 
 #include "macros.h"
 #include "list.h"
+#include "sound.h"
 
 BEGIN_DECL
 
@@ -50,8 +51,8 @@ struct species {
         char **spells;
         class ArmsType *weapon;
         bool visible;
-        char *damage_sound;
-        char *movement_sound;
+        sound_t *damage_sound;
+        sound_t *movement_sound;
 
         struct closure *on_death; /* run-on-death-event script closure */
 
@@ -59,8 +60,8 @@ struct species {
 
 extern struct species *species_new(char *tag,
                                    char *name,
-                                   char *damage_sound,
-                                   char *movement_sound,
+                                   sound_t *damage_sound,
+                                   sound_t *movement_sound,
                                    int str,
                                    int intl,
                                    int dex,

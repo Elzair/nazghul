@@ -46,7 +46,7 @@ ArmsType::ArmsType(char *tag, char *name, struct sprite *sprite,
                    int reqActPts,
                    bool thrown,
                    bool ubiquitousAmmo,
-                   char *fireSound,
+                   sound_t *fireSound,
                    class ArmsType *missileType
                    )
         : ObjectType(tag, name, sprite, item_layer),
@@ -62,12 +62,7 @@ ArmsType::ArmsType(char *tag, char *name, struct sprite *sprite,
         damageDice = strdup(damage_dice);
         armorDice = strdup(armor_dice);
         assert(toHitDice && toDefendDice && damageDice && armorDice);
-
-        if (fireSound) {
-                this->fire_sound = strdup(fireSound);
-                assert(fire_sound);
-        } else
-                this->fire_sound = NULL;
+        this->fire_sound = fireSound;
 
         if (missileType) {
                 missile = new Missile(missileType);
@@ -94,7 +89,7 @@ ArmsType::ArmsType()
         weight         = 0;
         ubiquitousAmmo = false;
         layer          = item_layer;
-        fire_sound     = NULL;
+        fire_sound     = NULL_SOUND;
         required_action_points = 1;
 }
 
@@ -102,8 +97,6 @@ ArmsType::~ArmsType()
 {
 	if (missile != NULL)
 		delete missile;
-        if (fire_sound)
-                free(fire_sound);
         if (toHitDice)
                 free(toHitDice);
         if (toDefendDice)
@@ -182,7 +175,7 @@ bool ArmsType::fireInDirection(struct place *place, int ox, int oy,
                 return false;
 
         if (fire_sound)
-                soundPlay(fire_sound, SOUND_MAX_VOLUME);
+                sound_play(fire_sound, SOUND_MAX_VOLUME);
 
         missile->setPlace(place);
         missile->setX(ox);

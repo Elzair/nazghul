@@ -24,6 +24,7 @@
 #define vehicle_h
 
 #include "object.h"
+#include "sound.h"
 
 class VehicleType:public ObjectType {
  public:
@@ -36,7 +37,7 @@ class VehicleType:public ObjectType {
                     bool killsOccupants,
                     bool mustTurn,
                     char *mv_desc,
-                    char *mv_sound,
+                    sound_t *mv_sound,
                     int tailwind_penalty,
                     int headwind_penalty,
                     int crosswind_penalty,
@@ -46,7 +47,7 @@ class VehicleType:public ObjectType {
 	virtual ~VehicleType();
 	virtual class ArmsType *getOrdnance();
 	virtual char *getMvDesc();
-	virtual char *getMvSound();
+	virtual sound_t *get_movement_sound();
 	virtual bool mustTurn();
         virtual bool canFace(int facing);
         virtual class Object *createInstance();
@@ -66,7 +67,7 @@ class VehicleType:public ObjectType {
         bool kills_occupants; /* on destroy */
         bool must_turn;
         char *mv_desc;
-        char *mv_sound;
+        sound_t *mv_sound;
         int pmask;
         int tailwind_penalty;
         int headwind_penalty;
@@ -88,7 +89,7 @@ class Vehicle:public Object {
         virtual class ArmsType *getOrdnance();
         virtual struct mmode *getMovementMode();
 	virtual char *getMvDesc();
-	virtual char *getMvSound();
+        virtual sound_t *get_movement_sound();
 	virtual bool mustTurn();
         virtual int getFacing();
         virtual int get_facing_to_fire_weapon(int dx, int dy);

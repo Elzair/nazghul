@@ -248,7 +248,7 @@ static void nazghul_init_internal_libs(void)
         log_init();
 
 	if (useSound)
-		soundInit();
+		sound_init();
 }
 
 static void nazghul_splash(void)

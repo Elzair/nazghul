@@ -2,15 +2,6 @@
 ;; Constants
 ;;----------------------------------------------------------------------------
 
-;; Sounds
-(define sound-damage         "sounds/damage.wav")
-(define sound-walking        "sounds/walk.wav")
-(define sound-splashing      "sounds/rowing.wav")
-(define sound-squishing      "sounds/walk.wav") ;; fixme
-(define sound-moongate-enter "sounds/enter_moongate.wav")
-(define sound-cannon-fire    "sounds/cannon.wav")
-(define sound-ship-move       sound-splashing)
-
 ;; Slots
 (define slot-nil              0)
 (define slot-amulet           1)
@@ -155,6 +146,7 @@
 (load "ifc.scm")
 (load "sprite-sets.scm")
 (load "sprites.scm")
+(load "sounds.scm")
 (load "effects.scm")
 (load "terrains.scm")
 (load "palette.scm")

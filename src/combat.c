@@ -82,9 +82,9 @@ static struct {
         enum combat_state state;
         char vmap[7 * 7];       // visited map (used to search for positions)
         class Vehicle *enemy_vehicle;
-        char *sound_enter;
-        char *sound_defeat;
-        char *sound_victory;
+        sound_t *sound_enter;
+        sound_t *sound_defeat;
+        sound_t *sound_victory;
         int round;
 } Combat;
 
@@ -141,7 +141,7 @@ void combat_set_state(enum combat_state new_state)
                 switch (new_state) {
                 case COMBAT_STATE_FIGHTING:
                         combat_print_banner("COMBAT");
-                        soundPlay(Combat.sound_enter, SOUND_MAX_VOLUME);
+                        sound_play(Combat.sound_enter, SOUND_MAX_VOLUME);
                         break;
                 case COMBAT_STATE_LOOTING:
                         break;
@@ -158,11 +158,11 @@ void combat_set_state(enum combat_state new_state)
                 switch (new_state) {
                 case COMBAT_STATE_LOOTING:
                         combat_print_banner("VICTORY");
-                        soundPlay(Combat.sound_victory, SOUND_MAX_VOLUME);
+                        sound_play(Combat.sound_victory, SOUND_MAX_VOLUME);
                         break;
                 case COMBAT_STATE_DONE:
                         combat_print_banner("DEFEAT");
-                        soundPlay(Combat.sound_defeat, SOUND_MAX_VOLUME);
+                        sound_play(Combat.sound_defeat, SOUND_MAX_VOLUME);
                         break;
                 default:
                         assert(false);
@@ -174,7 +174,7 @@ void combat_set_state(enum combat_state new_state)
                 switch (new_state) {
                 case COMBAT_STATE_FIGHTING:
                         combat_print_banner("COMBAT");
-                        soundPlay(Combat.sound_enter, SOUND_MAX_VOLUME);
+                        sound_play(Combat.sound_enter, SOUND_MAX_VOLUME);
                         break;
                 case COMBAT_STATE_DONE:
                         break;
@@ -188,7 +188,7 @@ void combat_set_state(enum combat_state new_state)
                 switch (new_state) {
                 case COMBAT_STATE_FIGHTING:
                         combat_print_banner("COMBAT");
-                        soundPlay(Combat.sound_enter, SOUND_MAX_VOLUME);
+                        sound_play(Combat.sound_enter, SOUND_MAX_VOLUME);
                         break;
                 case COMBAT_STATE_LOOTING:
                 case COMBAT_STATE_DONE:
@@ -1572,7 +1572,7 @@ bool combat_enter(struct combat_info * info)
 
         if (combat_get_state() == COMBAT_STATE_FIGHTING) {
                 player_party->enableRoundRobinMode();
-                soundPlay(Combat.sound_enter, SOUND_MAX_VOLUME);
+                sound_play(Combat.sound_enter, SOUND_MAX_VOLUME);
         }
         else if (combat_get_state() != COMBAT_STATE_CAMPING) {
                 player_party->enableFollowMode();

@@ -23,6 +23,7 @@
 #define Arms_h
 
 #include "object.h"
+#include "sound.h"
 
 class Missile;
 
@@ -45,7 +46,7 @@ class ArmsType:public ObjectType {
                  int reqActPts,
                  bool thrown,
                  bool ubiquitousAmmo,
-                 char *fire_sound,
+                 sound_t *fire_sound,
                  class ArmsType *missileType
                  );
 	virtual ~ ArmsType();
@@ -83,7 +84,7 @@ class ArmsType:public ObjectType {
         char *damageDice;
         char *toDefendDice;
         char *toHitDice;
-        char *fire_sound;
+        sound_t *fire_sound;
 	class Missile *missile;
 };
 

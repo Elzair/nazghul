@@ -215,6 +215,11 @@ static void terrain_dtor(void *val)
         terrain_del((struct terrain*)val);
 }
 
+static void sound_dtor(void *val)
+{
+        sound_del((sound_t*)val);
+}
+
 static void terrain_palette_dtor(void *val)
 {
         terrain_palette_del((struct terrain_palette*)val);
@@ -669,6 +674,27 @@ static pointer kern_mk_terrain(scheme *sc, pointer args)
 
         session_add(Session, terrain, terrain_dtor, NULL, NULL);
         ret = scm_mk_ptr(sc, terrain);
+        scm_define(sc, tag, ret);
+
+        return ret;
+}
+
+static pointer kern_mk_sound(scheme *sc, pointer args)
+{
+        sound_t *sound;
+        char *tag = TAG_UNK, *name;
+        pointer ret;
+
+        if (unpack(sc, &args, "ys", &tag, &name)) {
+                load_err("kern-mk-sound %s: bad args", tag);
+                return sc->NIL;
+        }
+
+        sound = sound_new(tag, name);
+
+        /* Add it to the session */
+        session_add(Session, sound, sound_dtor, NULL, NULL);
+        ret = scm_mk_ptr(sc, sound);
         scm_define(sc, tag, ret);
 
         return ret;
@@ -1134,14 +1160,15 @@ static pointer kern_mk_species(scheme *sc, pointer args)
         int mpmod, mpmult, visible, n_slots, n_spells, i;
         struct sprite *sleep_sprite;
         class ArmsType *weapon;
-        char *tag = TAG_UNK, *name, *damage_sound, *walking_sound;
+        char *tag = TAG_UNK, *name;
+        sound_t *damage_sound, *walking_sound;
         pointer slots;
         pointer spells;
         pointer ret;
         struct mmode *mmode;
         pointer on_death;
 
-        if (unpack(sc, &args, "ysdddddpddddppbssc", &tag, &name, &str, 
+        if (unpack(sc, &args, "ysdddddpddddppbppc", &tag, &name, &str, 
                    &intl, &dex, &spd, &vr, &mmode, &hpmod, &hpmult, &mpmod, 
                    &mpmult, &sleep_sprite, &weapon, 
                    &visible, &damage_sound, &walking_sound, &on_death)) {
@@ -1218,7 +1245,8 @@ static pointer kern_mk_species(scheme *sc, pointer args)
 static pointer kern_mk_arms_type(scheme *sc, pointer args)
 {
         class ArmsType *arms;
-        char *tag = TAG_UNK, *name, *fire_sound;
+        char *tag = TAG_UNK, *name;
+        sound_t *fire_sound;
         int slots, hands, range, weight;
         char *hit, *defend, *damage, *armor;
         int rap, thrown, ubiq, argno = 1;
@@ -1228,7 +1256,7 @@ static pointer kern_mk_arms_type(scheme *sc, pointer args)
         pointer ret;
         int gifc_cap;
 
-        if (unpack(sc, &args, "yspssssddddpbbdsdo", &tag, &name, &sprite, 
+        if (unpack(sc, &args, "yspssssddddpbbdpdo", &tag, &name, &sprite, 
                    &hit, &damage, &defend, &armor, &slots, &hands, 
                    &range, &rap, &missile, &thrown, &ubiq, &weight, 
                    &fire_sound, &gifc_cap, &gifc)) {
@@ -1950,7 +1978,8 @@ static pointer kern_mk_container(scheme *sc, pointer args)
 KERN_API_CALL(kern_mk_player)
 {
         int food, gold, ttnrc, ttnm;
-        char *mv_desc, *mv_sound, *tag;
+        char *mv_desc, *tag;
+        sound_t *mv_sound;
         struct sprite *sprite;
         struct terrain_map *campsite;
         struct formation *form, *camp_form;
@@ -1979,7 +2008,7 @@ KERN_API_CALL(kern_mk_player)
                 delete player_party;
         }
 
-        if (unpack(sc, &args, "ypssddddppppp", 
+        if (unpack(sc, &args, "ypspddddppppp", 
                    &tag,
                    &sprite,
                    &mv_desc, &mv_sound,
@@ -2994,7 +3023,7 @@ KERN_API_CALL(kern_mk_vehicle_type)
         int killsOccupants;
         int mustTurn;
         char *mv_desc;
-        char *mv_sound;
+        sound_t *mv_sound;
         int tailwind_penalty;
         int headwind_penalty;
         int crosswind_penalty;
@@ -3003,7 +3032,7 @@ KERN_API_CALL(kern_mk_vehicle_type)
         pointer ret;
         struct mmode *mmode;
 
-        if (unpack(sc, &args, "yspppbbbssdddddp",
+        if (unpack(sc, &args, "yspppbbbspdddddp",
                    &tag,
                    &name,
                    &sprite,
@@ -3233,12 +3262,12 @@ KERN_API_CALL(kern_map_flash)
 
 KERN_API_CALL(kern_sound_play)
 {
-        char *sound;
-        if (unpack(sc, &args, "s", &sound)) {
+        sound_t *sound;
+        if (unpack(sc, &args, "p", &sound)) {
                 rt_err("kern-sound-play: bad args");
                 return sc->NIL;
         }
-        soundPlay(sound, SOUND_MAX_VOLUME);
+        sound_play(sound, SOUND_MAX_VOLUME);
         return sc->NIL;
 }
 
@@ -5830,6 +5859,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-mk-player", kern_mk_player);
         API_DECL(sc, "kern-mk-ptable", kern_mk_ptable);
         API_DECL(sc, "kern-mk-sched", kern_mk_sched);
+        API_DECL(sc, "kern-mk-sound", kern_mk_sound);
         API_DECL(sc, "kern-mk-species", kern_mk_species);
         API_DECL(sc, "kern-mk-sprite", kern_mk_sprite);
         API_DECL(sc, "kern-mk-sprite-set", kern_mk_sprite_set);

@@ -22,16 +22,18 @@
 #ifndef sound_h
 #define sound_h
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-        extern int SOUND_MAX_VOLUME;
+#define NULL_SOUND NULL
 
-	extern void soundInit(void);
-	extern void soundPlay(char *file, int volume);
+struct sound;
+typedef struct sound sound_t;
 
-#ifdef __cplusplus
-}
-#endif
+extern int SOUND_MAX_VOLUME;
+
+extern int sound_init(void);
+extern void sound_exit(void);
+extern sound_t *sound_new(char *tag, char *file);
+extern void sound_del(sound_t *sound);
+extern void sound_play(sound_t *sound, int volume);
+extern char *sound_get_tag(sound_t *sound);
 
 #endif

@@ -26,6 +26,7 @@
 #include "Arms.h"
 #include "species.h"
 #include "clock.h"
+#include "sound.h"
 
 #undef RAM_ATTACK
 
@@ -102,8 +103,8 @@ class Character:public Being {
 	virtual int getFleeDx();
 	virtual int getFleeDy();
 	virtual int getRestCredits(void);
-        virtual char *get_damage_sound();
-        virtual char *get_movement_sound();
+        virtual sound_t *get_damage_sound();
+        virtual sound_t *get_movement_sound();
 
 
         virtual bool isCharmed();
@@ -257,7 +258,7 @@ class Character:public Being {
 	int fleeX, fleeY;
 	int burden;
 	bool inCombat;
-        char *damage_sound;
+        sound_t *damage_sound;
 
 	// *** NPC fields
 	virtual void dropRdyArms();
