@@ -390,13 +390,6 @@ void Missile::animate(int Ax, int Ay, int Bx, int By)
                 spriteSetFacing(sprite, SPRITE_DEF_FACING);
         }
 
-	// This object's type is either Ammo (for missile weapons) or Arms (for
-	// thrown weapons). If it's Ammo then just bailout here, because I
-	// don't have field effects for Ammo right now. But if it's thrown then
-	// fall on through and check if we need to leave behind a field.
-	if (getObjectType()->isType(AMMO_TYPE_ID))
-		return;
-
 	// If this missile/thrown weapon is supposed to leave behind a field
 	// then create a field object and drop it on the final target
 	// location. This is how burning oil leaves behind a fire field, for

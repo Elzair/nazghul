@@ -54,7 +54,6 @@
 enum ZtatsView {
 	ViewMember = 0,
 	ViewArmaments,
-	ViewAmmo,
 	ViewReagents,
 	ViewSpells,
 	ViewItems,
@@ -64,7 +63,6 @@ enum ZtatsView {
 static char *ZtatsTitles[] = {
 	"Party Member",
 	"Armaments",
-	"Ammo",
 	"Reagents",
 	"Spells",
 	"Items",
@@ -73,7 +71,6 @@ static char *ZtatsTitles[] = {
 static int ZtatsTypes[] = {
 	OBJECT_TYPE_ID,
 	ARMS_TYPE_ID,
-	AMMO_TYPE_ID,
 	REAGENT_TYPE_ID,
 	SPELL_TYPE_ID,
 	ITEM_TYPE_ID,
@@ -560,10 +557,6 @@ static void myScrollZtatsHorz(int d)
 
 		case ViewArmaments:
 			Status.maxLine = player_party->nArms - Status.numLines;
-			break;
-
-		case ViewAmmo:
-			Status.maxLine = player_party->nAmmo - Status.numLines;
 			break;
 
 		case ViewReagents:

@@ -70,24 +70,6 @@ class ArmsType:public ObjectType {
 	int weight;
 };
 
-class AmmoType:public ObjectType {
-      public:
-	virtual bool isType(int classID) {
-		if (classID == AMMO_TYPE_ID)
-			return true;
-		return ObjectType::isType(classID);
-	}
-	virtual int getType() {
-		return AMMO_TYPE_ID;
-	}
-
-	AmmoType() {
-	}
-	virtual ~ AmmoType() {
-	}
-      protected:
-};
-
 class Missile:public Object {
       public:
 	Missile();

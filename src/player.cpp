@@ -1024,9 +1024,6 @@ void player_party::add_to_inventory(class ObjectType * type, int quantity)
 		case ITEM_TYPE_ID:
 			nItems++;
 			break;
-		case AMMO_TYPE_ID:
-			nAmmo++;
-			break;
 		case SPELL_TYPE_ID:
 			nSpells++;
 			break;

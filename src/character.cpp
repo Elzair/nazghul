@@ -74,8 +74,8 @@ static void myConsiderArms(struct inv_entry *ie, void *data)
 	if (!ie->type->isType(ARMS_TYPE_ID))
 		return;
 	class ArmsType *arms = (class ArmsType *) ie->type;
-	int val = arms->getAttackValue() * arms->getRange() +
-	    arms->getDefendValue();
+	int val = arms->getDamage() * arms->getRange() +
+	    arms->getArmor();
 	for (int i = 0; i < ie->count; i++, ks->n_items++) {
 		ks->item[ks->n_items] = arms;
 		ks->value[ks->n_items] = val;
@@ -219,7 +219,7 @@ enum Character::ReadyResult Character::ready(class ArmsType * arms)
 		}
 		// Ready the item. Recalculate armour class.
 		rdyArms[i] = arms;
-		ac += arms->getDefendValue();
+		ac += arms->getArmor();
 		burden += arms->getWeight();
 		return Readied;
 	}
@@ -247,7 +247,7 @@ bool Character::unready(class ArmsType * arms)
 		}
 		// Unready the item. Recacalculate armour class.
 		rdyArms[i] = NULL;
-		ac -= arms->getDefendValue();
+		ac -= arms->getArmor();
 		burden -= arms->getWeight();
 		return true;
 	}
@@ -273,35 +273,6 @@ char *Character::getWoundDescription()
 
 	return desc[(getHp() * 4) / getMaxHp()];
 }
-
-#ifdef RAM_ATTACK
-// Dropping this feature. I don't really want to maintain two different ways to
-// attack, and u5 did not support this. I'm sure Sam will complain about it,
-// but let's save it for a refactor of the attack code later.
-void Character::meleeAttack(class Character * target)
-{
-	class ArmsType *weapon;
-
-	weapon = enumerateWeapons();
-
-	while (weapon != NULL) {
-
-		// Hit the target
-		target->attack(weapon->getAttackValue());
-
-		// Give the user some feedback
-		consolePrint("%s %s\n", target->getName(),
-			     target->getWoundDescription());
-		consoleRepaint();
-
-		// Is the target dead yet?
-		if (target->isDead())
-			break;
-
-		weapon = getNextWeapon();
-	};
-}
-#endif				/* RAM_ATTACK */
 
 enum Character::MoveResult Character::move(int dx, int dy)
 {
@@ -440,7 +411,7 @@ class ArmsType *Character::getNextWeapon(void)
 {
 	do {
 		getNextArms();
-	} while (currentArms != NULL && currentArms->getAttackValue() <= 0);
+	} while (currentArms != NULL && currentArms->getDamage() <= 0);
 	return currentArms;
 }
 

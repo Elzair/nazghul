@@ -2367,11 +2367,6 @@ static class ObjectType *loadObjectType()
                 ot = loadFieldSubType(tag, name, sprite);
         else if (strcmp(subtype_tag, "trap") == 0)
                 ot = loadTrapSubType(tag, name, sprite);
-        else if (strcmp(subtype_tag, "ammo") == 0) {
-                ot = new AmmoType();
-                ot->init(tag, name, projectile_layer, sprite);
-        }
-
         else if (strcmp(subtype_tag, "null") == 0) {
                 PARSE_INT("layer", layer);
                 ot = new ObjectType();
