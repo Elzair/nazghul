@@ -2,6 +2,8 @@ Changes between nazghul-0.1.2 and nazghul-0.1.3
 
 gmcnutt:
 
+--Added a ^z for map editing. This toggles map zooming.
+
 --Created a simple inn where the player can check out a room to sleep
   in. Haven't perfected the logic behind locking the player back out when he's
   done, or kicking him out if he sleeps too long, etc. I wanted to this

@@ -486,9 +486,6 @@ void mapRepaintView(struct mview *view, int flags)
 {
 	int t2, t3, t4, t5, t6, t7, t8;
 
-	if (Map.peering)
-		return;
-
 	Map.aview = view;
 
 	if (flags & REPAINT_IF_DIRTY && !view->dirty)
@@ -715,6 +712,7 @@ void mapPeer(bool val)
 	int dx, dy;
 	// Peering will apply to the camera view. Set the scale factor and
 	// adjust the pertinent rectangle dimensions.
+        Map.peering = val;
 	if (val) {
 		Map.cam_view->zoom = PEER_ZOOM;
 		dx = (Map.cam_view->vrect.w / 2) * (PEER_ZOOM - 1);
@@ -732,8 +730,32 @@ void mapPeer(bool val)
 		Map.cam_view->vrect.x += dx;
 		Map.cam_view->vrect.y += dy;
 	}
-#if 0
+}
 
+void mapTogglePeering(void)
+{
+        mapPeer(!Map.peering);
+        mapUpdate(0);
+        mapUpdate(0); // BUG: for some reason this is necessary in the
+                      // wilderness or the map remains black until the next
+                      // animation tick
+}
+
+void mapGetCameraFocus(struct place **place, int *x, int *y)
+{
+        *place = Map.place;
+        *x = Map.cam_x;
+        *y = Map.cam_y;
+}
+
+void mapBlackout(int val)
+{
+        Map.cam_view->blackout = !!val;
+}
+
+
+
+#if 0
 	// This is the original peering code which used one pixel per
 	// tile. That makes the map WAY too small. But it could be useful for a
 	// minimap so I'm keeping the code for now.
@@ -780,16 +802,3 @@ void mapPeer(bool val)
 
 	screenUpdate(&Map.srect);
 #endif
-}
-
-void mapGetCameraFocus(struct place **place, int *x, int *y)
-{
-        *place = Map.place;
-        *x = Map.cam_x;
-        *y = Map.cam_y;
-}
-
-void mapBlackout(int val)
-{
-        Map.cam_view->blackout = !!val;
-}

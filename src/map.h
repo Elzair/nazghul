@@ -66,7 +66,7 @@ extern "C" {
         extern void mapRepaintClock(void);
         extern void mapJitter(bool val);	// added for tremor
         extern void mapPeer(bool val);
-        
+        extern void mapTogglePeering(void);
 
         extern void mapGetCameraFocus(struct place **place, int *x, int *y);
         

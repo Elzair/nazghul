@@ -2785,6 +2785,9 @@ static bool keyHandler(struct KeyHandler *kh, int key, int keymod)
         cmdwin_repaint();
 
         if (keymod == KMOD_LCTRL || keymod == KMOD_RCTRL) {
+
+                turns_used = 0;
+
                 // SAM: This seemed like a less ugly way of setting off a group
                 // of keybindings for "DM Mode" use or the like.  If we find
                 // something more aesthetic wrt/ switch() syntax, we will
@@ -2797,16 +2800,17 @@ static bool keyHandler(struct KeyHandler *kh, int key, int keymod)
       
                 case 't':
                         cmdTerraform(NULL);
-                        turns_used = 0;
                         break;
 
                 case 's':
                         cmdSaveTerrainMap(NULL);
-                        turns_used = 0;
                         break;
-      
+
+                case 'z':
+                        mapTogglePeering();
+                        break;
+
                 default:
-                        turns_used = 0;
                         break;
                 } // switch(key)
         } // keymod
