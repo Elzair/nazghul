@@ -452,7 +452,6 @@ static struct terrain *game_load_terrain(void)
 	char *name = 0;
 	unsigned char passable;
 	char *sprite_tag = 0;
-	char glyph;
 	int id;
 	int alpha;
 	struct sprite *sprite = 0;
@@ -463,13 +462,6 @@ static struct terrain *game_load_terrain(void)
 	PARSE_STRING("name", name);
 	PARSE_INT("pmask", passable);
 	PARSE_WORD("sprite", sprite_tag);
-
-	PARSE_ASSERT(MATCH_WORD("glyph"), "Expected keyword 'glyph', got %s\n",
-		     Lexer->lexeme);
-	Lexer->mode = LEX_CHAR;
-	glyph = lexer_lex(Lexer);
-	Lexer->mode = LEX_NORMAL;
-
 	PARSE_INT("id", id);
 	PARSE_INT("alpha", alpha);
 
@@ -477,7 +469,7 @@ static struct terrain *game_load_terrain(void)
 		err("line %d: invalid sprite tag %s", Lexer->line, sprite_tag);
 		goto cleanup;
 	}
-	terrain = terrain_create(tag, name, passable, sprite, glyph, id, alpha);
+	terrain = terrain_create(tag, name, passable, sprite, id, alpha);
 
 	PARSE_INT("movement_cost", terrain->movement_cost);
 	PARSE_INT("effects", terrain->effects);
@@ -757,11 +749,7 @@ void *lookupTag(char *tag, int tid)
 	}
 }
 
-#define MAX_TERRAIN_PALETTE_SYMBOL_SZ 4
-struct terrain_palette {
-	char symbol[MAX_TERRAIN_PALETTE_SYMBOL_SZ + 2];
-	struct terrain *terrain;
-};
+// SAM: Moved 'struct terrain_palette' to terrain.h
 
 static struct terrain_palette *load_terrain_palette(int *n,
 						    class Loader * loader)

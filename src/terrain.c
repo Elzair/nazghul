@@ -29,7 +29,6 @@ struct terrain *terrain_create(char *tag,
                                char *name,
                                unsigned int pmask,
                                struct sprite *sprite,
-                               char glyph, 
                                int  id, 
                                unsigned char alpha)
 {
@@ -41,7 +40,6 @@ struct terrain *terrain_create(char *tag,
 	terrain->name   = strdup(name);
 	terrain->pmask  = pmask;
 	terrain->sprite = sprite;
-	terrain->glyph  = glyph;
 	terrain->id     = id;
 	terrain->alpha  = alpha;
 

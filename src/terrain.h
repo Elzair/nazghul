@@ -29,40 +29,46 @@ extern "C" {
 #include "list.h"
 #include "common.h"
 
-        struct sprite;
+  struct sprite;
 
 #define terrain_combat_map(t) ((t)->combat_map)
 
-/* Terrain effects */
+  /* Terrain effects */
 #define TERRAIN_NEUTRAL 0
 #define TERRAIN_POISON  EFFECT_POISON
 #define TERRAIN_BURN    EFFECT_BURN
 
-        struct terrain {
-                struct list list;
-                char *tag;
-                char *name;
-                struct sprite *sprite;
-                struct terrain_map *combat_map;
-                int id;      // Used for binary maps
-                char glyph;  // Obsolete now that terrain_palette exists
-                unsigned char alpha;
-                unsigned int pmask;  // passability mask (sea, air land)
-                int movement_cost;   // should not exceed PLAYER_MAX_PROGRESS
-                char effects;
-                int light;
-                Uint32 color;
-        };
+  struct terrain {
+    struct list list;
+    char *tag;
+    char *name;
+    struct sprite *sprite;
+    struct terrain_map *combat_map;
+    unsigned char alpha;
+    unsigned int pmask;  // passability mask (sea, air land)
+    int movement_cost;   // should not exceed PLAYER_MAX_PROGRESS
+    char effects;
+    int light;
+    Uint32 color;
 
-    extern struct terrain *terrain_create(char *tag,
-                                          char *name, 
-                                          unsigned int pmask,
-                                          struct sprite *sprite, 
-                                          char glyph, 
-                                          int  id, 
-                                          unsigned char alpha);
+    int id;      // Used for binary maps, obsolescent
+  };
 
-        extern void terrain_destroy(struct terrain *terrain);
+  extern struct terrain *terrain_create(char *tag,
+                                        char *name, 
+                                        unsigned int pmask,
+                                        struct sprite *sprite, 
+                                        int  id, 
+                                        unsigned char alpha);
+
+  extern void terrain_destroy(struct terrain *terrain);
+
+
+#define MAX_TERRAIN_PALETTE_SYMBOL_SZ 4
+  struct terrain_palette {
+	char symbol[MAX_TERRAIN_PALETTE_SYMBOL_SZ + 2];
+	struct terrain *terrain;
+  };
 
 #ifdef __cplusplus
 }

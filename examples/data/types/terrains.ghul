@@ -33,7 +33,6 @@
         name          _name    \
         pmask         _pmask   \
         sprite        _sprite  \
-        glyph         X        \
         id            _id      \
         alpha         _alpha   \
         movement_cost _mc      \
