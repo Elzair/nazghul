@@ -92,7 +92,7 @@ extern int select_target_with_doing (int ox, int oy, int *x, int *y,
                                      int range, 
                                      v_funcpointer_ii each_point_func,
                                      v_funcpointer_ii each_target_func);
-extern int select_quantity(int max);
+extern int ui_get_quantity(int max);
   
 // the new ui api
 extern int ui_get_direction(void);

@@ -1517,7 +1517,7 @@ static int select_hours(void)
 	return info.digit;
 }
 
-int select_quantity(int max)
+int ui_get_quantity(int max)
 {
 	struct get_number_info info;
 	char prompt[64];
@@ -2003,7 +2003,7 @@ bool cmdMixReagents(void)
 
 		int dummy;
 
-		quantity = select_quantity(max_quantity);
+		quantity = ui_get_quantity(max_quantity);
 
 		if (quantity == 0) {
 			goto done;
@@ -2728,7 +2728,7 @@ static void buy(struct merchant *merch)
 		max_q = player_party->gold / trade->cost;
 
 		cmdwin_mark();
-		quantity = select_quantity(max_q);
+		quantity = ui_get_quantity(max_q);
 		cmdwin_erase_back_to_mark();
 
 		if (quantity == 0) {
@@ -2851,7 +2851,7 @@ static void sell(struct merchant *merch)
 		max_q = ie->count - ie->ref;
 
 		cmdwin_mark();
-		quantity = select_quantity(max_q);
+		quantity = ui_get_quantity(max_q);
 		cmdwin_erase_back_to_mark();
 
 		if (quantity == 0) {

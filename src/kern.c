@@ -2503,6 +2503,13 @@ static pointer kern_conv_get_yes_no(scheme *sc,  pointer args)
         return ui_get_yes_no(pc->getName()) ? sc->T : sc->F;
 }
 
+static pointer kern_conv_get_amount(scheme *sc,  pointer args)
+{
+        cmdwin_clear();
+        cmdwin_print("How much-");
+        return scm_mk_integer(sc, ui_get_quantity(-1));
+}
+
 static pointer kern_conv_get_reply(scheme *sc,  pointer args)
 {
         char buf[32];
@@ -6530,6 +6537,7 @@ scheme *kern_init(void)
         /* conv api */
         API_DECL(sc, "kern-conv-end", kern_conv_end);
         API_DECL(sc, "kern-conv-say", kern_conv_say);
+        API_DECL(sc, "kern-conv-get-amount", kern_conv_get_amount);
         API_DECL(sc, "kern-conv-get-yes-no?", kern_conv_get_yes_no);
         API_DECL(sc, "kern-conv-trade", kern_conv_trade);
         API_DECL(sc, "kern-conv-get-reply", kern_conv_get_reply);

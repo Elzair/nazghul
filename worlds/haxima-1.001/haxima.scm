@@ -200,9 +200,9 @@
   )
 
 (define (simple-start kplayer)
-  (kern-obj-put-at kplayer (list p_moongate_clearing 11 11))
-  (kern-log-msg "You notice a cave to the southwest."))
-  ;;(kern-obj-put-at kplayer (list p_trigrave 15 15))
+  (kern-obj-put-at kplayer (list p_trigrave 15 15)))
+  ;;(kern-obj-put-at kplayer (list p_moongate_clearing 11 11))
+  ;;(kern-log-msg "You notice a cave to the southwest."))
   ;;(kern-obj-put-at kplayer (list p_slimy_cavern 13 2))
   
                    

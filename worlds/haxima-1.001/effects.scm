@@ -282,10 +282,10 @@
   (kern-obj-apply-damage actor "ouch" 1))
 
 (define (burn obj)
-  (kern-obj-apply-damage obj "burning" 10))
+  (kern-obj-apply-damage obj "burning" (kern-dice-roll "2d3+2")))
 
 (define (apply-lightning obj)
-  (kern-obj-apply-damage obj "shocked" 15))
+  (kern-obj-apply-damage obj "shocked" (kern-dice-roll "2d8")))
 
 (define (lightning-trap actor subject)
   (kern-log-msg "Lightning trap!")
