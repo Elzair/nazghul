@@ -4,14 +4,14 @@
 
 ;; Remapped display and newline to local procs so they can be disabled/enabled
 ;; for debug more conveniently
-; (define (spider-display . args) 
-;   (display (kern-get-ticks))
-;   (display ":")
-;   (apply display args))
-; (define (spider-newline) (newline))
+(define (spider-display . args) 
+  (display (kern-get-ticks))
+  (display ":")
+  (apply display args))
+(define (spider-newline) (newline))
 
-(define (spider-display . args) )
-(define (spider-newline) )
+;(define (spider-display . args) )
+;(define (spider-newline) )
 
 ;;----------------------------------------------------------------------------
 ;; Species declaration (used by the kernel)
@@ -72,28 +72,27 @@
 
 (define (spider-egg-disturbed kegg)
   (spider-display "spider-egg-disturbed")(spider-newline)
-  (define (check loc)
-    (if (foldr (lambda (a b) (or a
+  (define (check val loc)
+    (or val
+        (foldr (lambda (a b) (or a
                                  (and (kern-obj-is-char? b)
                                       (not (is-spider? b)))))
                #f
-               (kern-place-get-objects-at loc))
-        loc
-        nil))
+               (kern-place-get-objects-at loc))))
   (let ((loc (kern-obj-get-location kegg)))
-    (notnull? (search-rect (loc-place loc)
-                           (- (loc-x loc) 2)
-                           (- (loc-y loc) 2)
-                           5
-                           5
-                           check))))
+    (kern-fold-rect (loc-place loc)
+                    (- (loc-x loc) 2)
+                    (- (loc-y loc) 2)
+                    5
+                    5
+                    check
+                    #f)))
 
 (define (spider-egg-hatch kegg)
   (spider-display "spider-egg-hatch")(spider-newline)
   (kern-log-msg "A spider hatches!")
   (kern-obj-put-at (mk-wood-spider) (kern-obj-get-location kegg))
-  (kern-obj-remove kegg)
-  (kern-obj-destroy kegg))
+  (kern-obj-remove kegg))
 
 (define (spider-egg-exec kegg)
   (spider-display "spider-egg-exec")(spider-newline)

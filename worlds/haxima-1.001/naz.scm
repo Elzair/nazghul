@@ -354,9 +354,6 @@
 ;; vector(s).
 ;; ----------------------------------------------------------------------------
 (define (evade kchar foes)
-  (display "evade")
-  (display " foes=")(display foes)
-  (newline)
   (let* ((tloc (kern-obj-get-location kchar))
          (v (loc-norm (foldr (lambda (a b) 
                                (loc-sum a 
@@ -364,16 +361,21 @@
                                                   (kern-obj-get-location b))))
                              (mk-loc (loc-place tloc) 0 0)
                              foes))))
-    (display "char-evade:v=")(display v)(newline)
+    (define (move dx dy)
+      ;; Note: stepping on impassable terrain can have bad side effects, so
+      ;; avoid it
+      (if (kern-place-is-passable (loc-sum (mk-loc (loc-place tloc) dx dy) tloc) kchar)
+          (kern-obj-move kchar dx dy)
+          #f))
     (define (evade-on-normal)
       (and (or (eq? 0 (loc-x v))
-              (eq? 0 (loc-y v)))
-           (kern-obj-move kchar (loc-x v) (loc-y v))))
+               (eq? 0 (loc-y v)))
+           (move (loc-x v) (loc-y v))))
     (or (evade-on-normal)
         (and (not (eq? 0 (loc-y v)))
-             (kern-obj-move kchar (loc-x v) 0))
+             (move (loc-x v) 0))
         (and (not (eq? 0 (loc-x v)))
-             (kern-obj-move kchar 0 (loc-y v))))))
+             (move 0 (loc-y v))))))
 
 ;; ----------------------------------------------------------------------------
 ;; closest-obj -- given an origin and a list of objects, return the object from

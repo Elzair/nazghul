@@ -96,7 +96,6 @@ ObjectType::~ObjectType()
 		free(name);
         if (gifc)
                 closure_del(gifc);
-
 }
 
 bool ObjectType::init(char *tag, char *name, enum layer layer,
@@ -584,6 +583,12 @@ Object::~Object()
 
         if (gob)
                 gob_del(gob);
+
+        if (getView()) {
+                rmView();
+                mapDestroyView(getView());
+                setView(NULL);                
+        }                
 
 }
 

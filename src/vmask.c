@@ -102,6 +102,7 @@ static void vmask_delete(struct vmask *vmask)
         tree_delete(&vmask_root, &vmask->tree);
         free(vmask->tree.key.s_key);
         free(vmask);
+        vmask_n_entries--;
 }
 
 static void vmask_insert(struct vmask *vmask)
@@ -109,6 +110,7 @@ static void vmask_insert(struct vmask *vmask)
         //printf("vmask_insert: %s\n", vmask_key(vmask));
         list_add(&vmask_q, &vmask->list);
         tree_insert(&vmask_root, &vmask->tree);
+        vmask_n_entries++;
 }
 
 static void vmask_purge(void)
@@ -309,5 +311,24 @@ void vmask_invalidate(struct place *place, int x, int y, int w, int h)
                                 vmask_delete(vmask);
                         }
                 }
+        }
+}
+
+void vmask_flush_all(void)
+{
+        struct vmask *vmask;
+        struct list *tail;
+
+        //printf("vmask_purge\n");
+
+        // --------------------------------------------------------------------
+        // Remove and destroy the least-recently-used vmasks until we are down
+        // to the low-water mark.
+        // --------------------------------------------------------------------
+
+        while(vmask_n_entries) {
+                tail = vmask_q.prev;
+                vmask = list_entry(tail, struct vmask, list);
+                vmask_delete(vmask);
         }
 }

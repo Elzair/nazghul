@@ -65,6 +65,12 @@ extern "C" {
 
         extern void vmask_invalidate(struct place *place, int x, int y, int w, int h);
 
+        // --------------------------------------------------------------------
+        // Invalidate all vmasks everywhere.
+        // --------------------------------------------------------------------
+
+        extern void vmask_flush_all(void);
+
 #ifdef __cplusplus
 }
 #endif

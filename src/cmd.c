@@ -2548,6 +2548,7 @@ void cmdReload(void)
         log_enable();
         Session->reloaded = 1;
         log_end("ok!");
+        vmask_flush_all();
 }
 
 /****** New UI ******/

@@ -32,7 +32,7 @@ class Being:public Object {
 
 	Being();
         Being(class ObjectType *type);
-	~Being();
+	virtual ~Being();
 
         int getBaseFaction();
         void setBaseFaction(int faction);

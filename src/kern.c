@@ -4098,6 +4098,22 @@ KERN_API_CALL(kern_place_is_passable)
         return place_is_passable(place, x, y, obj, 0) ? sc->T : sc->F;
 }
 
+KERN_API_CALL(kern_place_is_hazardous)
+{
+        struct place *place;
+        int x, y, pmask;
+        class Object *obj;
+
+        if (unpack_loc(sc, &args, &place, &x, &y, "kern-place-is-hazardous"))
+                return sc->F;
+
+        obj = unpack_obj(sc, &args, "kern-place-is-hazardous");
+        if (!obj)
+                return sc->F;
+
+        return place_is_hazardous(place, x, y) ? sc->T : sc->F;
+}
+
 KERN_API_CALL(kern_place_set_terrain)
 {
         struct place *place;
@@ -5702,6 +5718,12 @@ KERN_API_CALL(kern_fold_rect)
                         /* make the location */
                         pointer loc = scm_mk_loc(sc, place, x, y);
 
+                        /* **************************************** */
+                        /* WARNING: no protection against gc for the location;
+                         * I believe this is causing the occasional script
+                         * error */
+                        /* **************************************** */
+
                         /* make the arg list (val, loc) */
                         pointer pargs = _cons(sc, val, 
                                               _cons(sc, loc, sc->NIL, 0), 0);
@@ -5881,6 +5903,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-place-get-terrain", kern_place_get_terrain);
         API_DECL(sc, "kern-place-get-width", kern_place_get_width);
         API_DECL(sc, "kern-place-is-passable", kern_place_is_passable);
+        API_DECL(sc, "kern-place-is-hazardous", kern_place_is_hazardous);
         API_DECL(sc, "kern-place-is-wrapping?", kern_place_is_wrapping);
         API_DECL(sc, "kern-place-is-wilderness?", kern_place_is_wilderness);
         API_DECL(sc, "kern-place-map", kern_place_map);

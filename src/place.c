@@ -1224,8 +1224,8 @@ int place_is_hazardous(struct place *place, int x, int y)
 	if (t->effect)
                 return 1;        
         if (place_get_object(place, x, y, field_layer) != NULL)
-                return 1;
-        return 0;
+                return 1; 
+       return 0;
 }
 
 void place_set_terrain(struct place *place, int x, int y,
@@ -1543,12 +1543,23 @@ static void place_apply_tile_effects(struct place *place, class Object *obj)
 
 }
 
+static int place_timed_obj_exec(Object *obj)
+{
+        int time = SDL_GetTicks();
+        obj->exec();
+        if (obj->isPlayerControlled())
+                return 0;
+        return SDL_GetTicks() - time;
+        
+}
+
 /***************************************************************************** 
  * place_exec - run all the objects in a place through one turn
  *****************************************************************************/
 void place_exec(struct place *place)
 {
         class Object *obj = NULL;
+        int times = 0;
 
         /* FIXME: not sure if we still need this assert */
         assert(Place == place);
@@ -1580,7 +1591,10 @@ void place_exec(struct place *place)
                         }
                 } else {
                         /* 'run' the object */
-                        obj->exec();
+                        int t = place_timed_obj_exec(obj);
+                        times += t;
+                        if (t > 0)
+                                printf("%s: %d ms to exec\n", obj->getName(), t);
                         
                         /* Apply terrain, field and any other environmental
                          * effects. */
@@ -1613,6 +1627,8 @@ void place_exec(struct place *place)
                 }
 
         }
+
+        printf("*** place_exec: total=%d\n", times);
 
         /* Allow the place to be destroyed. */
         place_unlock(place);

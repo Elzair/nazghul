@@ -18,6 +18,7 @@
 (load "gregors-hut.scm")
 (load "moongate-clearing.scm")
 (load "abandoned-farm.scm")
+(load "abandoned-cellar.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Characters

@@ -72,7 +72,7 @@ class Party:public Being {
 
 	Party();
         Party(class PartyType *type, int faction, class Vehicle *vehicle);
-	~Party();
+	virtual ~Party();
         void setup();
 
 	virtual bool isType(int classID);
