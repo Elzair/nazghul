@@ -20,7 +20,6 @@
 ;;      missile : nil or the armament type it fires
 ;;       thrown : true or false
 ;;         ubiq : true if it needs ammo in inventory, false otherwise
-;;        field : nil or the field type it leaves on the target tile
 ;;       weight : unused
 ;;   fire-sound : string name of sound file to play when it's fired
 ;;
@@ -43,31 +42,35 @@
 (define (mk-melee-arms-type tag name sprite to-hit-bonus damage deflect slots 
                             num-hands range)
   (kern-mk-arms-type tag name sprite to-hit-bonus damage deflect "0"  slots 
-                     num-hands range default-rap nil #f #f nil 0 nil obj-ifc-cap obj-ifc))
+                     num-hands range default-rap nil #f #f 0 nil obj-ifc-cap obj-ifc))
 
 ;; Curried constructor: missile weapon (add missile, ubiq flag to melee)
 (define (mk-projectile-arms-type tag name sprite to-hit-bonus damage deflect 
                                  slots num-hands range missile ubiq)
   (kern-mk-arms-type tag name sprite to-hit-bonus damage deflect "0"  slots 
-                     num-hands range default-rap missile #f ubiq nil 0 nil obj-ifc-cap obj-ifc))
+                     num-hands range default-rap missile #f ubiq 0 nil obj-ifc-cap obj-ifc))
 
 ;; Curried constructor: thrown weapon (add field to melee)
 (define (mk-thrown-arms-type tag name sprite to-hit-bonus damage deflect slots 
-                             num-hands range field)
+                             num-hands range ifc)
   (kern-mk-arms-type tag name sprite to-hit-bonus damage deflect "0" slots 
-                     num-hands range default-rap nil #t #f field 0 nil obj-ifc-cap obj-ifc))
+                     num-hands range default-rap nil #t #f 0 nil (ifc-cap ifc) ifc))
 
-(define (mk-missile-arms-type tag name sprite field damage ifc)
+(define (mk-missile-arms-type tag name sprite damage ifc)
   (kern-mk-arms-type tag name sprite "0" damage "0" "0" slot-nil 0 0 0 nil #f #f 
-                     field 0 nil (ifc-cap ifc) ifc))
+                     0 nil (ifc-cap ifc) ifc))
 
 (define (mk-armor-type tag name sprite to-hit armor slots)
   (kern-mk-arms-type tag name sprite to-hit "0" armor "0" slots 1 0 0 nil #f #f 
-                     nil 0 nil obj-ifc-cap obj-ifc))
+                     0 nil obj-ifc-cap obj-ifc))
 
 (define (mk-shield-type tag name sprite to-hit armor slots) 
   (kern-mk-arms-type tag name sprite to-hit "0" armor "0" slots 1 0 0 nil #f #f 
-                     nil 0 nil obj-ifc-cap obj-ifc))
+                     0 nil obj-ifc-cap obj-ifc))
+
+;; ============================================================================
+;; Missiles for Projectile Weapons
+;; ============================================================================
 
 ;; ----------------------------------------------------------------------------
 ;; mk-missile-ifc -- automate missile ifc creation. 'pred?' takes an object as
@@ -82,6 +85,12 @@
 
 (define poison-bolt-ifc (mk-missile-ifc apply-poison))
 (define deathball-ifc   (mk-missile-ifc kern-char-kill))
+(define warhead-ifc
+  (ifc nil
+       (method 'hit-loc 
+               (lambda (kmissile kplace x y)
+                 (kern-obj-put-at (kern-mk-obj F_fire 1) 
+                                  (mk-loc kplace x y))))))
 
 ;;--------------------------------------------------------------------------
 ;; Standard arms type tables
@@ -93,14 +102,14 @@
 (define missile-arms-types
   (list
    ;;    ============================================================================================================
-   ;;    tag           | name        | sprite                     | field  | damage | gifc
+   ;;    tag           | name        | sprite                     | damage | gifc
    ;;    ============================================================================================================
-   (list 't_arrow        "arrow"       s_arrow_wooden               nil      "1d6"    obj-ifc)
-   (list 't_warhead      "warhead"     s_magic_ball_core_red        F_fire   "0"      obj-ifc)
-   (list 't_cannonball   "cannonball"  s_sling_bullet               nil      "0"      obj-ifc)
-   (list 't_poison_bolt  "poison bolt" s_lightning_bolt_green       nil      "1d6"    poison-bolt-ifc)
-   (list 't_fireball     "fireball"    s_lightning_bolt_red         nil      "2d6"    nil)
-   (list 'deathball      "deathball"   s_magic_ball_core_dark_grey  nil      "0"      deathball-ifc)
+   (list 't_arrow        "arrow"       s_arrow_wooden               "1d6"    obj-ifc)
+   (list 't_warhead      "warhead"     s_magic_ball_core_red        "0"      warhead-ifc)
+   (list 't_cannonball   "cannonball"  s_sling_bullet               "0"      obj-ifc)
+   (list 't_poison_bolt  "poison bolt" s_lightning_bolt_green       "1d6"    poison-bolt-ifc)
+   (list 't_fireball     "fireball"    s_lightning_bolt_red         "2d6"    nil)
+   (list 'deathball      "deathball"   s_magic_ball_core_dark_grey  "0"      deathball-ifc)
    ))
 
 ;; If we don't create these missile types now, we won't be able to refer to
@@ -108,6 +117,10 @@
 ;; refer to t_arrow. But the interpreter won't recognize t_arrow as a variable
 ;; name until we call this procedure to create the t_arrow type.
 (map (lambda (type) (apply mk-missile-arms-type type)) missile-arms-types)
+
+;; ============================================================================
+;; Projectile Weapons
+;; ============================================================================
 
 (define projectile-arms-types
   (list
@@ -118,14 +131,25 @@
    (list 't_rpg   "doom staff" s_staff_7    "1d4"    "2d20"   "-5"     slot-weapon   2      12    t_warhead #t)
    ))
 
+;; ============================================================================
+;; Thrown Weapons
+;; ============================================================================
+
+(define flaming-oil-ifc
+  (ifc obj-ifc
+       (method 'hit-loc 
+               (lambda (kmissile kplace x y)
+                 (kern-obj-put-at (kern-mk-obj F_fire 1) 
+                                  (mk-loc kplace x y))))))
+
 (define thrown-arms-types
   (list
    ;;     ====================================================================================================================
-   ;;     tag              | name          | sprite              | to-hit | damage | to-def | slots       | hnds | rng | field
+   ;;     tag              | name          | sprite              | to-hit | damage | to-def | slots       | hnds | rng | ifc
    ;;     ====================================================================================================================
-   (list  't_oil            "flaming oil"   s_kg_potion_red_f33_2  "-1"     "1d6"    "-2"     slot-weapon   1      4     F_fire)
-   (list  't_spear          "spear"         s_spear_1              "-1"     "1d8"    "+1"     slot-weapon   2      4     nil)
-   (list  't_thrown_boulder "boulder"       s_boulder              "-2"     "2d6"    "-2"     slot-weapon   2      5     nil)
+   (list  't_oil            "flaming oil"   s_kg_potion_red_f33_2  "-1"     "1d6"    "-2"     slot-weapon   1      4     flaming-oil-ifc)
+   (list  't_spear          "spear"         s_spear_1              "-1"     "1d8"    "+1"     slot-weapon   2      4     obj-ifc)
+   (list  't_thrown_boulder "boulder"       s_boulder              "-2"     "2d6"    "-2"     slot-weapon   2      5     obj-ifc)
    ))
 
 (define melee-arms-types
@@ -185,7 +209,6 @@
                    t_cannonball      ;;      missile : nil or the armament type it fires
                    #f                ;;       thrown : true or false
                    #t                ;;         ubiq : true if it needs ammo in inventory, false otherwise
-                   nil               ;;        field : nil or the field type it leaves on the target tile
                    0                 ;;       weight : unused
                    sound-cannon-fire ;;   fire-sound : string name of sound file to play when it's fired
                    0                 ;;      ifc-cap : integer bitmap describing interface slots

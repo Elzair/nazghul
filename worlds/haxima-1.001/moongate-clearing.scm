@@ -46,6 +46,8 @@
     ;; Arms
     (list 1 short-sword)
     (list 1 wooden-buckler)
+    (list 3 t_oil)
+    ;;(list 1 t_rpg)
 
     ;; Items
     (list 3 heal-potion)

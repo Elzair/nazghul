@@ -28,7 +28,6 @@
 #include "screen.h"
 #include "sprite.h"
 #include "map.h"
-#include "Field.h"
 #include "place.h"
 #include "Missile.h"
 #include "sound.h"
@@ -48,16 +47,15 @@ ArmsType::ArmsType(char *tag, char *name, struct sprite *sprite,
                    bool thrown,
                    bool ubiquitousAmmo,
                    char *fireSound,
-                   class ArmsType *missileType,
-                   class FieldType *fieldType)
+                   class ArmsType *missileType
+                   )
         : ObjectType(tag, name, sprite, item_layer),
           slotMask(slotMask),
           numHands(numHands),
           range(range),
           weight(weight),
           thrown(thrown),
-          ubiquitousAmmo(ubiquitousAmmo),          
-          fieldType(fieldType)
+          ubiquitousAmmo(ubiquitousAmmo)
 {
         toHitDice = strdup(to_hit_dice);
         toDefendDice = strdup(to_defend_dice);
@@ -93,7 +91,6 @@ ArmsType::ArmsType()
 
         missile        = NULL;
         thrown         = false;
-        fieldType      = NULL;
         weight         = 0;
         ubiquitousAmmo = false;
         layer          = item_layer;
@@ -240,19 +237,6 @@ void ArmsType::setThrown(bool val)
 	setMissileType(this);
 }
 
-bool ArmsType::dropsField()
-{
-	if (fieldType != NULL)
-		return true;
-	if (missile == NULL)
-		return false;
-	if (thrown)
-		// Because a thrown weapon is its own missile, and I just
-		// checked myself
-		return false;
-	return missile->getObjectType()->dropsField();
-}
-
 class ArmsType *ArmsType::getAmmoType()
 {
 	if (thrown)
@@ -300,16 +284,6 @@ int ArmsType::getRange()
 bool ArmsType::isThrownWeapon()
 {
         return thrown;
-}
-
-void ArmsType::setFieldType(class FieldType * type)
-{
-        fieldType = type;
-}
-
-class FieldType *ArmsType::getFieldType()
-{
-        return fieldType;
 }
 
 void ArmsType::setUbiquitousAmmo(bool val)

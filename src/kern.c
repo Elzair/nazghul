@@ -1193,14 +1193,13 @@ static pointer kern_mk_arms_type(scheme *sc, pointer args)
         int rap, thrown, ubiq, argno = 1;
         struct sprite *sprite;
         class ArmsType *missile;
-        class FieldType *field;
         pointer gifc;
         pointer ret;
         int gifc_cap;
 
-        if (unpack(sc, &args, "yspssssddddpbbpdsdo", &tag, &name, &sprite, 
+        if (unpack(sc, &args, "yspssssddddpbbdsdo", &tag, &name, &sprite, 
                    &hit, &damage, &defend, &armor, &slots, &hands, 
-                   &range, &rap, &missile, &thrown, &ubiq, &field, &weight, 
+                   &range, &rap, &missile, &thrown, &ubiq, &weight, 
                    &fire_sound, &gifc_cap, &gifc)) {
                 load_err("kern-mk-arms-type %s: bad args", tag);
                 return sc->NIL;
@@ -1233,7 +1232,7 @@ static pointer kern_mk_arms_type(scheme *sc, pointer args)
         arms = new ArmsType(tag, name, sprite, slots, hit, defend, hands, 
                             range,
                             weight, damage, armor, rap, thrown, ubiq,
-                            fire_sound, missile, field);
+                            fire_sound, missile);
 
         if (gifc != sc->NIL) {
                 /* arms->get_handler = closure_new(sc, get_handler); */
@@ -3432,7 +3431,6 @@ KERN_API_CALL(kern_fire_missile)
         missile->animate(ox, oy, dx, dy, 0);
         if (missile->hitTarget()) {
 
-#if 1
                 /* Run the missile's hit-loc procedure, if any */
                 if (missile->getObjectType()->canHitLocation()) {
                         missile->getObjectType()->hitLocation(missile, 
@@ -3440,18 +3438,6 @@ KERN_API_CALL(kern_fire_missile)
                                                               dx, 
                                                               dy);
                 }
-#else
-                /* Select a likely target and deliver the damage and effect */
-                if ((target = place_get_object(dplace, dx, dy, being_layer)) ||
-                    (target = place_get_object(dplace, dx, dy, mech_layer))) {
-                        target->damage(dice_roll(missile_type->getDamageDice()));
-
-                        /* Does the missile have an effect? */
-                        if (missile_type->canExec()) {
-                                missile_type->exec(target);
-                        }
-                }
-#endif
         }
 
         delete missile;

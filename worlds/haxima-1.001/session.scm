@@ -43,6 +43,7 @@
                'shroom-conv          ; conv
                sch_shroom            ; sched
                nil                   ; special ai
+               nil                   ; container
                (list t_dagger))      ; readied
  (shroom-mk #f #f))
 
@@ -59,6 +60,7 @@
               nil                   ; conv
               nil                   ; sched
               nil                   ; special ai
+              nil                   ; container
               nil)                  ; readied
 
 (kern-mk-char 'ch_thorald_greybeard ; tag
@@ -74,6 +76,7 @@
               nil                   ; conv
               nil                   ; sched
               nil                   ; special ai
+              nil                   ; container
               (list t_rpg))         ; readied
 
 (kern-mk-char 'ch_slurmok ; tag
@@ -89,6 +92,7 @@
               nil                   ; conv
               nil                   ; sched
               nil                   ; special ai
+              nil                   ; container
               (list t_dagger))      ; readied
 
 (kern-obj-add-effect ch_slurmok ef_poison_immunity nil)
@@ -121,7 +125,6 @@
    ;; spells
    (list 1 in_an)
    (list 1 wis_an_ylem)
-   (list 10 test_recur)
    (list 10 vas_rel_por)
    (list 2 an_xen_corp)
    (list 2 kal_xen)
