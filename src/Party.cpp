@@ -80,48 +80,27 @@ PartyType::~PartyType()
 {
         i_group = groups.next;
         while (i_group != &groups) {
-                struct GroupInfo *info = outcast(i_group, struct GroupInfo, list);
+                struct group *info = outcast(i_group, struct group, list);
                 i_group = i_group->next;
                 if (info->dice)
                         free(info->dice);
-                if (info->ai)
-                        closure_unref(info->ai);
+                if (info->factory)
+                        closure_unref(info->factory);
                 delete info;
         }
 }
 
-#if 0
-bool PartyType::init(class Character * ch)
-{
-	char name[64];
-
-	// Use the species and occupation as the name of the party.
-	snprintf(name, sizeof(name), "%s %s", ch->species->name, 
-                 ch->occ ? ch->occ->name : "");
-
-	if (!ObjectType::init("fake_tag", name, being_layer, ch->getSprite()))
-		return false;
-
-	pmask = ch->getPmask();
-	speed = ch->getSpeed();
-	vrad = ch->getVisionRadius();
-	visible = ch->isVisible();
-        sleep_sprite = ch->species->sleep_sprite;
-	return true;
-}
-#endif
-
-struct GroupInfo *PartyType::enumerateGroups(void)
+struct group *PartyType::enumerateGroups(void)
 {
 	i_group = &groups;
 	return getNextGroup();
 }
 
-struct GroupInfo *PartyType::getNextGroup(void)
+struct group *PartyType::getNextGroup(void)
 {
 	i_group = i_group->next;
 	if (i_group != &groups)
-                return outcast(i_group, struct GroupInfo, list);
+                return outcast(i_group, struct group, list);
 	return NULL;
 }
 
@@ -157,19 +136,32 @@ bool PartyType::isVisible()
         return visible;
 }
 
-void PartyType::addGroup(struct species *species, struct occ *occ, struct sprite *sprite, char *dice, struct closure *ai)
+void PartyType::addGroup(struct species *species, struct sprite *sprite,
+                         char *dice, struct closure *factory)
 {
-        struct GroupInfo *group = new struct GroupInfo;
+        struct group *group;
+        
+        /* assumptions */
+        assert(factory);
+        assert(species);
+        assert(sprite);
+        assert(dice);
+
+        /* create the group */
+        group = new struct group;
         assert(group);
         list_init(&group->list);
         group->species = species;
-        group->occ = occ;
         group->sprite = sprite;
         group->dice = strdup(dice);
-        group->ai = ai;
-        if (ai)
-                closure_ref(ai);
+        group->factory = factory;        
+        if (factory)
+                closure_ref(factory);
+
+        /* add it to the list */
         list_add(&groups, &group->list);
+
+        /* update party type vars */
         vrad = max(vrad, species->vr);
         visible = species->visible || visible;
         speed = min(speed, species->spd);
@@ -591,7 +583,7 @@ bool Party::createMembers(void)
 	char name[64];
 	static int instance = 0;
 
-	for (struct GroupInfo * ginfo = type->enumerateGroups(); ginfo;
+	for (struct group * ginfo = type->enumerateGroups(); ginfo;
 	     ginfo = type->getNextGroup()) {
 
 		int n;
@@ -605,13 +597,16 @@ bool Party::createMembers(void)
 		while (n) {
 
 			// Create and initialize a new "stock" character.
-			class Character *c = new class Character();
+                        class Character *c;
+#ifdef OLD_WAY
+			c = new class Character();
 			if (!c)
 				break;
 			snprintf(name, sizeof(name), "%s %s %d",
 				 ginfo->species->name,
 				 ginfo->occ ? ginfo->occ->name : "",
 				 instance++);
+
 			if (!(c->initStock(ginfo->species, ginfo->occ,
 					   ginfo->sprite, name, order)))
 				return false;
@@ -619,10 +614,19 @@ bool Party::createMembers(void)
                         if (ginfo->ai) {
                                 c->setAI(ginfo->ai);
                         }
+#else
+                        assert(ginfo->factory);
+                        c = (class Character*)closure_exec(ginfo->factory, 
+                                                           NULL);
 
-                        addMember(c);
-			order++;
-			n--;
+#endif
+                        if (! c) {
+                                warn("Failed to create character");
+                        } else {
+                                addMember(c);
+                                order++;
+                                n--;
+                        }
 		}
 	}
 

@@ -75,21 +75,13 @@
              -1                   ; def_mod 
              +2                   ; dam_mod 
              -1                   ; arm_mod
-             t_small_wooden_chest ; container 
+             nil ; container 
              4                    ; xpval
-             (list 'test-trap)    ; typical traps 
+             nil    ; typical traps 
              ;; readied:
              nil
              ;; items:
-             (list
-              (list t_dagger 75 1)
-              (list t_spear  50 3)
-              (list t_mushroom 50 2)
-              (list t_arrow 50 20)
-              (list t_sm_shield 50 1)
-              (list t_bow 50 1)
-              (list t_iron_helm 50 1)
-              )
+             nil
              )
 
 (kern-mk-occ 'oc_bandit           ; tag
@@ -103,24 +95,32 @@
              -1                   ; def_mod 
              0                    ; dam_mod 
              0                    ; arm_mod
-             t_small_wooden_chest ; container 
+             nil                  ; container 
              4                    ; xpval
-             (list 'spike-trap)   ; typical traps 
+             nil                  ; typical traps 
              ;; readied:
              nil
              ;; items:
-             (list
-              (list heal-potion     50 1)
-              (list t_dagger        75 1)
-              (list short-sword     50 1)
-              (list t_oil           25 2)
-              (list t_mace          50 1)
-              (list t_bolt          50 20)
-              (list t_xbow          25 1)
-              (list t_sm_shield     75 1)
-              (list t_armor_leather 90 1)
-              (list t_leather_helm  90 1)
-              (list t_gold_coins    50 10)
-              (list t_picklock      50 3)
-              )
+             nil
+             )
+
+(kern-mk-occ 'oc_troll            ;; tag
+             "troll"              ;; name 
+             0.0                  ;; magic 
+             2                    ;; base hp
+             2                    ;; hp per level 
+             0                    ;; base mp
+             0                    ;; mp per level 
+             2                    ;; hit_mod 
+             -1                   ;; def_mod 
+             2                    ;; dam_mod 
+             -1                   ;; arm_mod
+             troll-corpse-type    ;; container (needed for items)
+             4                    ;; xpval
+             nil                  ;; typical traps on the container
+             ;; readied:
+             (list troll-ranged-weapon)
+             ;; items: typical equipment
+             (list (list troll-ranged-weapon 100 3)
+                   )
              )

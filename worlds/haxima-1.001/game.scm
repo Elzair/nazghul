@@ -162,6 +162,7 @@
 
 ;; Object types
 (load "objs.scm")
+(load "containers.scm")
 (load "reagents.scm")
 (load "food.scm")
 (load "arms.scm")
@@ -173,6 +174,7 @@
 
 (load "species.scm")
 (load "occs.scm")
+(load "npc-types.scm")
 (load "parties.scm")
 
 ;; Mechanism-like things

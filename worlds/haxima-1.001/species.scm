@@ -7,6 +7,14 @@
                              slot-ring
                              slot-ring))
 
+(define troll-speed         speed-human)
+(define troll-base-hp       20)
+(define troll-critical-hp   10)
+(define troll-melee-weapon  t_hands)
+(define troll-ranged-weapon t_thrown_boulder)
+(define troll-ripup-boulder-ap (* 2 troll-speed))
+
+
 (kern-mk-species 'sp_human         ; tag
                  "human"           ; name
                  10 10 10          ; str/int/dex
@@ -164,8 +172,74 @@
                  nil               ; native spells FIXME!!!!
                  )
 
-(load "troll.scm")
-(load "spider.scm")
+(kern-mk-species 'sp_spider      ;; tag: script variable name
+                 "spider"        ;; name: used to display name in the UI
+                 12             ;; strength: limits armament weight
+                 6              ;; intelligence: (just reported in stats)
+                 14              ;; dexterity: used to avoid traps on chests
+                 speed-insect   ;; speed: action points per turn
+                 10              ;; vision radius: in tiles
+                 mmode-walk     ;; movement mode
+                 10             ;; base hp: hit points at level zero
+                 4              ;; hp multiplier: extra hp per level
+                 0              ;; base mp: mana points at level zero
+                 0              ;; mp multiplier: extra mana points per level
+                 s_corpse       ;; sleep sprite
+                 t_hands        ;; natural weapon: used when unarmed
+                 #t             ;; visible: can be seen
+                 sound-damage   ;; damage sound
+                 sound-walking  ;; walking sound
+                 'spider-killed ;; on-death
+                 4              ;; xpval
+                 humanoid-slots ;; slots: hands
+                 nil            ;; native spells: currently unused
+                 )
+
+(kern-mk-species 'sp_queen_spider ;; tag: script variable name
+                 "queen spider"   ;; name: used to display name in the UI
+                 18             ;; strength: limits armament weight
+                 6              ;; intelligence: (just reported in stats)
+                 12             ;; dexterity: used to avoid traps on chests
+                 speed-human    ;; speed: action points per turn
+                 10             ;; vision radius: in tiles
+                 mmode-walk     ;; movement mode
+                 30             ;; base hp: hit points at level zero
+                 4              ;; hp multiplier: extra hp per level
+                 0              ;; base mp: mana points at level zero
+                 0              ;; mp multiplier: extra mana points per level
+                 s_corpse       ;; sleep sprite
+                 t_hands        ;; natural weapon: used when unarmed
+                 #t             ;; visible: can be seen
+                 sound-damage   ;; damage sound
+                 sound-walking  ;; walking sound
+                 'queen-spider-killed ;; on-death closure
+                 16             ;; xpval
+                 humanoid-slots ;; slots: hands
+                 nil            ;; native spells: currently unused
+                 )
+
+(kern-mk-species 'sp_troll      ;; tag: script variable name
+                 "troll"        ;; name: used to display name in the UI
+                 14             ;; strength: limits armament weight
+                 6              ;; intelligence: (just reported in stats)
+                 12             ;; dexterity: used to avoid traps on chests
+                 troll-speed    ;; speed: action points per turn
+                 10             ;; vision radius: in tiles
+                 mmode-walk     ;; movement mode
+                 troll-base-hp  ;; base hp: hit points at level zero
+                 2              ;; hp multiplier: extra hp per level
+                 0              ;; base mp: mana points at level zero
+                 0              ;; mp multiplier: extra mana points per level
+                 s_troll_corpse ;; sleep sprite
+                 t_hands        ;; natural weapon: used when unarmed
+                 #t             ;; visible: can be seen
+                 sound-damage   ;; damage sound
+                 sound-walking  ;; walking sound
+                 nil            ;; on-death closure
+                 12             ;; xpval
+                 humanoid-slots ;; slots: hands
+                 nil            ;; native spells: currently unused
+                 )
 
 ;;----------------------------------------------------------------------------
 ;; This list of the undead species is used by spells which affect the undead.
@@ -188,28 +262,22 @@
   #f)
 
 ;;----------------------------------------------------------------------------
-;; This slime constructor attaches the native effects:
+;; Species Queries
 ;;----------------------------------------------------------------------------
-(define (slime-init slime)
-    (kern-obj-add-effect slime ef_slime_split nil)
-    (kern-obj-add-effect slime ef_poison_immunity nil))
-  
-(define (mk-green-slime faction)
-  (let ((slime (kern-mk-stock-char sp_green_slime 
-                                   nil
-                                   s_slime
-                                   " a slime" 
-                                   nil)))
-    (kern-being-set-base-faction slime faction)
-    (slime-init slime)
-    slime
-    ))
-
 (define (obj-is-green-slime? kobj)
   (and (obj-is-char? kobj)
        (eqv? (kern-char-get-species kobj) sp_green_slime)))
 
-(load "yellow-slime.scm")
+(define (char-is-spider? kchar)
+  (eqv? (kern-char-get-species kchar) sp_spider))
+
+(define (is-spider? kchar)
+  (let ((species (kern-char-get-species kchar)))
+    (or (eqv? species sp_spider)
+        (eqv? species sp_queen_spider))))
+
+(define (char-is-troll? kchar)
+  (eqv? (kern-char-get-species kchar) sp_troll))
 
 ;;----------------------------------------------------------------------------
 ;; Trigger to generate slimes
@@ -225,7 +293,7 @@
 (define (slime-generator-step kgen kstepper)
   (define (mkslime)
     (kern-log-msg "A slime emerges from the ooze!")
-    (mk-green-slime faction-monster))
+    (mk-green-slime))
   (let* ((kplace (loc-place (kern-obj-get-location kstepper)))
          (slimes (filter obj-is-green-slime? (kern-place-get-objects kplace))))
     (if (< (length slimes) 1)
@@ -243,14 +311,3 @@
   (kern-obj-set-visible (bind (kern-mk-obj t_slime_generator 1)
                               (list x y))
                         #f))
-
-;;----------------------------------------------------------------------------
-;; Simple NPC constructors
-;;----------------------------------------------------------------------------
-(define (mk-bandit)
-  (kern-being-set-base-faction (kern-mk-stock-char sp_human
-                                                   oc_bandit
-                                                   s_brigand
-                                                   " a bandit" 
-                                                   'generic-ai)
-                               faction-outlaw))

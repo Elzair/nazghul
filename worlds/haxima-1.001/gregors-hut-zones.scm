@@ -7,6 +7,7 @@
 (define gh-all             (list 0  0  32 32))
 (define gh-living-room     (list 10 16 7  4))
 (define gh-ilyas-room      (list 7  18 2  2))
+(define gh-ilyas-bed       (list 7  18 1  1))
 (define gh-gregors-room    (list 7  15 2  2))
 (define gh-kitchen         (list 10 10 7  5))
 (define gh-storeroom       (list 18 10 2  5))

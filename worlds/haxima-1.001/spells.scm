@@ -327,11 +327,10 @@
 
 (define (kal-xen kspell caster)
   (cast-summon-spell (kern-obj-get-location caster)
-                     (lambda () (kern-mk-stock-char sp_snake 
-                                                    nil s_snake 
-                                                    " a snake" 
-                                                    faction-player
-                                                    nil))
+                     (lambda () (mk-animal " a snake"
+                                           sp_snake 
+                                           s_snake 
+                                           faction-player))
                      (kern-dice-roll "1d4")))
 
 (define (rel-hur kspell caster)
@@ -397,7 +396,10 @@
 
 (define (in-bet-xen kspell caster)
   (cast-summon-spell (kern-obj-get-location caster)
-                     (lambda () (kern-mk-stock-char sp_insect nil s_insects "an insect swarm" faction-player nil))
+                     (lambda () (mk-animal "an insect swarm"
+                                           sp_insect 
+                                           s_insects
+                                           faction-player))
                      (kern-dice-roll "1d6")))
 
 (define (in-zu kspell caster)
@@ -542,12 +544,7 @@
 
 (define (kal-xen-corp kspell caster)
   (define (mk-skeleton)
-    (let ((skeleton (kern-mk-stock-char sp_skeleton 
-                                        oc_raider
-                                        s_skeleton
-                                        " a skeleton" 
-                                        nil)))
-      (kern-being-set-base-faction skeleton faction-player)))
+    (kern-being-set-base-faction (mk-skeletal-warrior) faction-player))
   (cast-summon-spell (kern-obj-get-location caster)
                      mk-skeleton
                      (kern-dice-roll "1d4"))
@@ -576,7 +573,8 @@
 
 (define (kal-xen-nox kspell caster)
   (define (mk-aligned-slime)
-    (mk-green-slime (kern-being-get-current-faction caster)))
+    (kern-being-set-base-faction (mk-green-slime) 
+                                 (kern-being-get-current-faction caster)))
   (cast-summon-spell (kern-obj-get-location caster) 
                      mk-aligned-slime
                      (kern-dice-roll "1d4")))

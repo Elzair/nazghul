@@ -1091,7 +1091,8 @@ static pointer kern_mk_party_type(scheme *sc, pointer args)
         struct formation *formation;
         pointer groups;
         pointer ret;
-
+        int count;
+        
         if (unpack(sc, &args, "yspp", &tag, &name, &sprite, &formation)) {
                 load_err("kern-mk-party %s: bad args", tag);
                 return sc->NIL;
@@ -1106,35 +1107,38 @@ static pointer kern_mk_party_type(scheme *sc, pointer args)
                 goto abort;
         }
 
+        count = 0;
         while (scm_is_pair(sc, groups)) {
 
                 struct species *species;
-                struct occ *occ;
                 char *dice;
                 pointer group;
-                pointer ai;
-                struct closure *ai_clx;
+                pointer factory;
 
                 group = scm_car(sc, groups);
                 groups = scm_cdr(sc, groups);
 
-                if (unpack(sc, &group, "pppsc", &species, &occ, &sprite, &dice, &ai)) {
+                if (unpack(sc, &group, "ppsc", &species, &sprite, &dice,
+                           &factory)) {
                         load_err("kern-mk-party %s: error in group list", tag);
                         goto abort;
                 }
 
                 if (!dice_valid(dice)) {
-                        load_err("kern-mk-party %s: bad dice format '%s'", dice);
+                        load_err("kern-mk-party %s: bad dice format '%s'", 
+                                 dice);
                         goto abort;
                 }
 
-                if (ai == sc->NIL)
-                        ai_clx = NULL;
-                else {
-                        ai_clx = closure_new(sc, ai);
+                if (factory == sc->NIL) {
+                        load_err("kern-mk-party %s: nil factory in group %d",
+                                 tag, count);
+                        goto abort;
                 }
 
-                party->addGroup(species, occ, sprite, dice, ai_clx);
+                party->addGroup(species, sprite, dice, 
+                                closure_new(sc, factory));
+                count++;
         }
         
         session_add(Session, party, party_dtor, NULL, NULL);
@@ -5549,7 +5553,8 @@ KERN_API_CALL(kern_char_get_weapons)
         pointer lst;
 
         /* unpack the character */
-        character = (class Character*)unpack_obj(sc, &args, "kern-char-get-weapons");
+        character = (class Character*)unpack_obj(sc, &args, 
+                                                 "kern-char-get-weapons");
         if (!character)
                 return sc->NIL;
 
@@ -5558,6 +5563,24 @@ KERN_API_CALL(kern_char_get_weapons)
         return kern_build_weapon_list(sc, 
                                       character, 
                                       character->enumerateWeapons());
+}
+
+KERN_API_CALL(kern_char_arm_self)
+{
+        class Character *character;
+        pointer lst;
+
+        /* unpack the character */
+        character = (class Character*)unpack_obj(sc, &args, 
+                                                 "kern-char-get-weapons");
+        if (!character)
+                return sc->NIL;
+
+        /* recursively enumerate the character's available weapons into a
+         * scheme list */
+        character->armThyself();
+
+        return scm_mk_ptr(sc, character);
 }
 
 static pointer kern_build_container_list(scheme *sc,
@@ -5660,7 +5683,12 @@ KERN_API_CALL(kern_arms_type_get_range)
          * tell) */
         if (unpack(sc, &args, "p", &type)) {
                 rt_err("kern-char-arms-type");
-                return sc->NIL;
+                return scm_mk_integer(sc, 0);
+        }
+
+        if (! type) {
+                rt_err("kern-arms-type-get-range: null type");
+                return scm_mk_integer(sc, 0);
         }
 
         /* get the range */
@@ -6158,6 +6186,142 @@ KERN_API_CALL(kern_get_player)
         return scm_mk_ptr(sc, player_party);
 }
 
+KERN_API_CALL(kern_species_get_hp_mod)
+{
+        struct species *species;
+
+        if (unpack(sc, &args, "p", &species)) {
+                rt_err("kern-species-get-hp-mod: bad args");
+                return scm_mk_integer(sc, 0);
+        }
+
+        if (! species) {
+                rt_err("kern-species-get-hp-mod: null species");
+                return scm_mk_integer(sc, 0);
+        }
+
+        return scm_mk_integer(sc, species->hp_mod);
+}
+
+KERN_API_CALL(kern_species_get_hp_mult)
+{
+        struct species *species;
+
+        if (unpack(sc, &args, "p", &species)) {
+                rt_err("kern-species-get-hp-mult: bad args");
+                return scm_mk_integer(sc, 0);
+        }
+
+        if (! species) {
+                rt_err("kern-species-get-hp-mult: null species");
+                return scm_mk_integer(sc, 0);
+        }
+
+        return scm_mk_integer(sc, species->hp_mult);
+}
+
+KERN_API_CALL(kern_species_get_mp_mod)
+{
+        struct species *species;
+
+        if (unpack(sc, &args, "p", &species)) {
+                rt_err("kern-species-get-mp-mod: bad args");
+                return scm_mk_integer(sc, 0);
+        }
+
+        if (! species) {
+                rt_err("kern-species-get-mp-mod: null species");
+                return scm_mk_integer(sc, 0);
+        }
+
+        return scm_mk_integer(sc, species->mp_mod);
+}
+
+KERN_API_CALL(kern_species_get_mp_mult)
+{
+        struct species *species;
+
+        if (unpack(sc, &args, "p", &species)) {
+                rt_err("kern-species-get-mp-mult: bad args");
+                return scm_mk_integer(sc, 0);
+        }
+
+        if (! species) {
+                rt_err("kern-species-get-mp-mult: null species");
+                return scm_mk_integer(sc, 0);
+        }
+
+        return scm_mk_integer(sc, species->mp_mult);
+}
+
+KERN_API_CALL(kern_occ_get_hp_mod)
+{
+        struct occ *occ;
+
+        if (unpack(sc, &args, "p", &occ)) {
+                rt_err("kern-occ-get-hp-mod: bad args");
+                return scm_mk_integer(sc, 0);
+        }
+
+        if (! occ) {
+                rt_err("kern-occ-get-hp-mod: null occ");
+                return scm_mk_integer(sc, 0);
+        }
+
+        return scm_mk_integer(sc, occ->hp_mod);
+}
+
+KERN_API_CALL(kern_occ_get_hp_mult)
+{
+        struct occ *occ;
+
+        if (unpack(sc, &args, "p", &occ)) {
+                rt_err("kern-occ-get-hp-mult: bad args");
+                return scm_mk_integer(sc, 0);
+        }
+
+        if (! occ) {
+                rt_err("kern-occ-get-hp-mult: null occ");
+                return scm_mk_integer(sc, 0);
+        }
+
+        return scm_mk_integer(sc, occ->hp_mult);
+}
+
+KERN_API_CALL(kern_occ_get_mp_mod)
+{
+        struct occ *occ;
+
+        if (unpack(sc, &args, "p", &occ)) {
+                rt_err("kern-occ-get-mp-mod: bad args");
+                return scm_mk_integer(sc, 0);
+        }
+
+        if (! occ) {
+                rt_err("kern-occ-get-mp-mod: null occ");
+                return scm_mk_integer(sc, 0);
+        }
+
+        return scm_mk_integer(sc, occ->mp_mod);
+}
+
+KERN_API_CALL(kern_occ_get_mp_mult)
+{
+        struct occ *occ;
+
+        if (unpack(sc, &args, "p", &occ)) {
+                rt_err("kern-occ-get-mp-mult: bad args");
+                return scm_mk_integer(sc, 0);
+        }
+
+        if (! occ) {
+                rt_err("kern-occ-get-mp-mult: null occ");
+                return scm_mk_integer(sc, 0);
+        }
+
+        return scm_mk_integer(sc, occ->mp_mult);
+}
+
 #if 0
 KERN_API_CALL(kern_los_invalidate)
 {
@@ -6218,6 +6382,7 @@ scheme *kern_init(void)
 
         /* kern-char api */
         API_DECL(sc, "kern-char-add-defense", kern_char_add_defense);
+        API_DECL(sc, "kern-char-arm-self", kern_char_arm_self);
         API_DECL(sc, "kern-char-attack", kern_char_attack);
         API_DECL(sc, "kern-char-dec-mana", kern_char_dec_mana);
         API_DECL(sc, "kern-char-charm", kern_char_charm);
@@ -6315,6 +6480,12 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-obj-set-visible", kern_obj_set_visible);
         API_DECL(sc, "kern-obj-wander", kern_obj_wander);
 
+        /* kern-occ api */
+        API_DECL(sc, "kern-occ-get-hp-mod",  kern_occ_get_hp_mod);
+        API_DECL(sc, "kern-occ-get-hp-mult", kern_occ_get_hp_mult);
+        API_DECL(sc, "kern-occ-get-mp-mod",  kern_occ_get_mp_mod);
+        API_DECL(sc, "kern-occ-get-mp-mult", kern_occ_get_mp_mult);
+
         /* kern-place api */
         API_DECL(sc, "kern-place-get-beings", kern_place_get_beings);
         API_DECL(sc, "kern-place-get-height", kern_place_get_height);
@@ -6343,6 +6514,12 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-set-frame", kern_set_frame);
         API_DECL(sc, "kern-set-ascii", kern_set_ascii);
         API_DECL(sc, "kern-set-clock", kern_set_clock);
+
+        /* kern-species api */
+        API_DECL(sc, "kern-species-get-hp-mod",  kern_species_get_hp_mod);
+        API_DECL(sc, "kern-species-get-hp-mult", kern_species_get_hp_mult);
+        API_DECL(sc, "kern-species-get-mp-mod",  kern_species_get_mp_mod);
+        API_DECL(sc, "kern-species-get-mp-mult", kern_species_get_mp_mult);
 
         /* kern-terrain api */
         API_DECL(sc, "kern-terrain-get-pclass", kern_terrain_get_pclass);

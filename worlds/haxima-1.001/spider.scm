@@ -13,64 +13,10 @@
 (define (spider-display . args) )
 (define (spider-newline) )
 
-;;----------------------------------------------------------------------------
-;; Species declaration (used by the kernel)
-;;----------------------------------------------------------------------------
-(kern-mk-species 'sp_spider      ;; tag: script variable name
-                 "spider"        ;; name: used to display name in the UI
-                 12             ;; strength: limits armament weight
-                 6              ;; intelligence: (just reported in stats)
-                 14              ;; dexterity: used to avoid traps on chests
-                 speed-insect   ;; speed: action points per turn
-                 10              ;; vision radius: in tiles
-                 mmode-walk     ;; movement mode
-                 10             ;; base hp: hit points at level zero
-                 4              ;; hp multiplier: extra hp per level
-                 0              ;; base mp: mana points at level zero
-                 0              ;; mp multiplier: extra mana points per level
-                 s_corpse       ;; sleep sprite
-                 t_hands        ;; natural weapon: used when unarmed
-                 #t             ;; visible: can be seen
-                 sound-damage   ;; damage sound
-                 sound-walking  ;; walking sound
-                 'spider-killed ;; on-death
-                 4              ;; xpval
-                 humanoid-slots ;; slots: hands
-                 nil            ;; native spells: currently unused
-                 )
-
-(kern-mk-species 'sp_queen_spider ;; tag: script variable name
-                 "queen spider"   ;; name: used to display name in the UI
-                 18             ;; strength: limits armament weight
-                 6              ;; intelligence: (just reported in stats)
-                 12             ;; dexterity: used to avoid traps on chests
-                 speed-human    ;; speed: action points per turn
-                 10             ;; vision radius: in tiles
-                 mmode-walk     ;; movement mode
-                 30             ;; base hp: hit points at level zero
-                 4              ;; hp multiplier: extra hp per level
-                 0              ;; base mp: mana points at level zero
-                 0              ;; mp multiplier: extra mana points per level
-                 s_corpse       ;; sleep sprite
-                 t_hands        ;; natural weapon: used when unarmed
-                 #t             ;; visible: can be seen
-                 sound-damage   ;; damage sound
-                 sound-walking  ;; walking sound
-                 'queen-spider-killed ;; on-death closure
-                 16             ;; xpval
-                 humanoid-slots ;; slots: hands
-                 nil            ;; native spells: currently unused
-                 )
-
 ;; ----------------------------------------------------------------------------
 ;; Spider Egg
 ;; 
 ;; ----------------------------------------------------------------------------
-(define (is-spider? kchar)
-  (spider-display "is-spider?")(spider-newline)
-  (let ((species (kern-char-get-species kchar)))
-    (or (eqv? species sp_spider)
-        (eqv? species sp_queen_spider))))
 
 (define (spider-egg-disturbed kegg)
   (spider-display "spider-egg-disturbed")(spider-newline)
@@ -132,34 +78,6 @@
                                 (kern-dice-roll "1d6"))
                    (kern-obj-get-location kspider)))
 
-;;----------------------------------------------------------------------------
-;; Constructor
-;;----------------------------------------------------------------------------
-(define (mk-spider faction)
-  (let ((spider (kern-mk-stock-char sp_spider 
-                                    nil
-                                    s_spider
-                                    "a spider" 
-                                    'spider-ai)))
-    (kern-being-set-base-faction spider faction)
-    spider ;; return the kernel object
-    ))
-
-(define (mk-queen-spider faction)
-  (let ((spider (kern-mk-stock-char sp_queen_spider 
-                                    nil
-                                    s_queen_spider ;; no spider sprite yet
-                                    "a queen spider" 
-                                    'spider-ai)))
-    (kern-being-set-base-faction spider faction)
-    spider ;; return the kernel object
-    ))
-
-(define (mk-wood-spider)
-  (mk-spider faction-wood-spider))
-
-(define (char-is-spider? kchar)
-  (eqv? (kern-char-get-species kchar) sp_spider))
 
 ;; ----------------------------------------------------------------------------
 ;; Spider "Skills"

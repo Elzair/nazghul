@@ -1,10 +1,3 @@
-(define troll-base-hp       20)
-(define troll-critical-hp   10)
-(define troll-melee-weapon  t_hands)
-(define troll-ranged-weapon t_thrown_boulder)
-(define troll-speed         speed-human)
-(define troll-ripup-boulder-ap (* 2 troll-speed))
-
 ; (define (troll-display . args)
 ;   (display (kern-get-ticks))
 ;   (display ":")
@@ -13,84 +6,6 @@
 
 (define (troll-display . args) )
 (define (troll-newline) )
-
-;; ----------------------------------------------------------------------------
-;; Trick: make a "troll corpse" container type and use it as the troll's
-;; container. When the troll dies the kernel will drop the troll's container,
-;; making it look like the troll corpse is a container.
-;; ----------------------------------------------------------------------------
-(mk-obj-type 'troll-corpse-type "troll corpse" s_troll_corpse
-             layer-container nil)
-
-
-;;----------------------------------------------------------------------------
-;; Species declaration (used by the kernel)
-;;----------------------------------------------------------------------------
-(kern-mk-species 'sp_troll      ;; tag: script variable name
-                 "troll"        ;; name: used to display name in the UI
-                 14             ;; strength: limits armament weight
-                 6              ;; intelligence: (just reported in stats)
-                 12             ;; dexterity: used to avoid traps on chests
-                 troll-speed    ;; speed: action points per turn
-                 10             ;; vision radius: in tiles
-                 mmode-walk     ;; movement mode
-                 troll-base-hp  ;; base hp: hit points at level zero
-                 2              ;; hp multiplier: extra hp per level
-                 0              ;; base mp: mana points at level zero
-                 0              ;; mp multiplier: extra mana points per level
-                 s_troll_corpse ;; sleep sprite
-                 t_hands        ;; natural weapon: used when unarmed
-                 #t             ;; visible: can be seen
-                 sound-damage   ;; damage sound
-                 sound-walking  ;; walking sound
-                 nil            ;; on-death closure
-                 12             ;; xpval
-                 humanoid-slots ;; slots: hands
-                 nil            ;; native spells: currently unused
-                 )
-
-;;----------------------------------------------------------------------------
-;; Occupation declaration (used by the kernel)
-;;----------------------------------------------------------------------------
-(kern-mk-occ 'oc_troll            ;; tag
-             "raider"             ;; name 
-             0.0                  ;; magic 
-             2                    ;; base hp
-             2                    ;; hp per level 
-             0                    ;; base mp
-             0                    ;; mp per level 
-             2                    ;; hit_mod 
-             -1                   ;; def_mod 
-             2                    ;; dam_mod 
-             -1                   ;; arm_mod
-             troll-corpse-type    ;; container (needed for items)
-             4                    ;; xpval
-             nil                  ;; typical traps on the container
-             ;; readied:
-             (list troll-ranged-weapon)
-             ;; items: typical equipment
-             (list (list troll-ranged-weapon 100 3)
-                   )
-             )
-
-;;----------------------------------------------------------------------------
-;; Constructor
-;;----------------------------------------------------------------------------
-(define (mk-troll faction)
-  (let ((troll (kern-mk-stock-char sp_troll 
-                                   oc_troll
-                                   s_troll ;; no troll sprite yet
-                                   "a troll" 
-                                   'troll-ai)))
-    (kern-being-set-base-faction troll faction)
-    troll ;; return the kernel object
-    ))
-
-(define (mk-hill-troll)
-  (mk-troll faction-hill-troll))
-
-(define (char-is-troll? kchar)
-  (eqv? (kern-char-get-species kchar) sp_troll))
 
 
 ;;----------------------------------------------------------------------------

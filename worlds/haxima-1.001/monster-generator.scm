@@ -133,19 +133,5 @@
                                  nil)
 
 (define (mk-generator type)
+  (display "mk-generator")(newline)
   (kern-obj-set-visible (kern-mk-obj type 1) #f))
-
-;; ----------------------------------------------------------------------------
-;; A monster type is a convenient collection of all the attributes needed to
-;; create an instance of a stock monster.
-;; ----------------------------------------------------------------------------
-(define (mk-monster-type species occupation sprite name faction ai)
-  (list species occupation sprite name faction ai))
-
-;; ----------------------------------------------------------------------------
-;; Given one of our monster types, create an instance. Note the trick here with
-;; apply: a monster-type is a list of exactly the args needed for the
-;; kern-mk-stock-char api call.
-;; ----------------------------------------------------------------------------
-(define (mk-monster type)
-  (apply kern-mk-stock-char type))

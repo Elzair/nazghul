@@ -37,6 +37,7 @@
 #define scm_car(p) ((p)->_object._cons._car)
 #define scm_is_symbol(sc, arg) ((sc)->vptr->is_symbol(arg))
 #define scm_is_closure(sc, arg) ((sc)->vptr->is_closure(arg))
+#define scm_is_ptr(sc, arg) ((sc)->vptr->is_foreign(arg))
 
 /* Defined in kern.c: */
 extern pointer vpack(scheme *sc, char *fmt, va_list ap);
@@ -50,6 +51,7 @@ static void closure_del(closure_t *closure)
 {
         assert(0 == closure->ref);
         assert(closure->magic == CLOSURE_MAGIC);
+        closure->sc->vptr->unprotect(closure->sc, closure->code);
         free(closure);
 }
 
@@ -60,6 +62,7 @@ closure_t *closure_new(scheme *sc, pointer code)
         clx->magic = CLOSURE_MAGIC;
         clx->sc = sc;
         clx->code = code;
+        sc->vptr->protect(sc, code);
         return clx;
 }
 
@@ -140,14 +143,12 @@ int closure_exec(closure_t *closure, char *fmt, ...)
  evaluate_result:
 
         if (result == closure->sc->NIL ||
-            result == closure->sc->F)
+            result == closure->sc->F) {
                 ret = 0;
-
-        else if (closure->sc->vptr->is_number(result) &&
-                 closure->sc->vptr->is_integer(result))
+        } else if (closure->sc->vptr->is_number(result) &&
+                   closure->sc->vptr->is_integer(result)) {
                 ret = closure->sc->vptr->ivalue(result);
-
-        else if (scm_is_symbol(closure->sc, result)) {
+        } else if (scm_is_symbol(closure->sc, result)) {
                 pointer pair;
                 pair = closure->sc->vptr->find_slot_in_env(closure->sc, 
                                                            closure->sc->envir, 
@@ -156,6 +157,8 @@ int closure_exec(closure_t *closure, char *fmt, ...)
                 assert(scm_is_pair(closure->sc, pair));
                 result = closure->sc->vptr->pair_cdr(pair);
                 goto evaluate_result;
+        } else if (scm_is_ptr(closure->sc, result)) {
+                ret = (int)closure->sc->vptr->ffvalue(result);
         }
 
  unlock:

@@ -29,13 +29,15 @@
 #include "node.h"
 #include "pinfo.h"
 
-struct GroupInfo {
-        struct list list;
-	struct species *species;
-	struct occ *occ;
-	struct sprite *sprite;
-        char *dice;
-        struct closure *ai;
+/*
+ * group - a subset of a party type
+ */
+struct group {
+        struct list list;         /* list of groups for PartyType */
+	struct species *species;  /* species of group */
+	struct sprite *sprite;    /* sprite of group */
+        char *dice;               /* number of members in group */
+        struct closure *factory;  /* closure to create members */
 };
 
 class PartyType : public ObjectType {
@@ -49,11 +51,13 @@ class PartyType : public ObjectType {
 	virtual int getType();
 	//virtual bool init(class Character * ch);
 	virtual int getVisionRadius();
-	virtual struct GroupInfo *enumerateGroups();
-	virtual struct GroupInfo *getNextGroup();
+	virtual struct group *enumerateGroups();
+	virtual struct group *getNextGroup();
 	virtual class Object *createInstance();
 	virtual bool isVisible();
-        virtual void addGroup(struct species *species, struct occ *occ, struct sprite *sprite, char *dice, struct closure *ai);
+        virtual void addGroup(struct species *species,
+                              struct sprite *sprite, char *dice, 
+                              struct closure *factory);
 
 	struct formation *formation;
         struct sprite *sleep_sprite;

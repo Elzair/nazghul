@@ -96,6 +96,7 @@
 (kern-party-add-member player ch_wanderer)
 ;(kern-party-add-member player ch_thorald_greybeard)
 
+
 ;;----------------------------------------------------------------------------
 ;; Places
 ;;----------------------------------------------------------------------------

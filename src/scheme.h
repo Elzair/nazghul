@@ -240,6 +240,8 @@ struct scheme_interface {
   pointer (*protect)(scheme *sc, pointer p);
   pointer (*unprotect)(scheme *sc, pointer p);
 #endif
+
+  foreign_func (*ffvalue)(pointer arg); /* gmcnutt: new addition */
 };
 #endif
 

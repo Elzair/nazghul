@@ -1411,8 +1411,9 @@ void Character::setPlayerControlled(bool val) {
                 ctrl = ctrl_character_ai;
 }
 
-void Character::setAttackTarget(class Character * target) {
-        this->target = target;
+void Character::setAttackTarget(class Character * newtarget) 
+{
+        target = newtarget;
 }
 
 class ArmsType *Character::getCurrentWeapon() {

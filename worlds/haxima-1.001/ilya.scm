@@ -4,15 +4,15 @@
 ;; The schedule below is for the place "Gregor's Hut".
 ;;----------------------------------------------------------------------------
 (kern-mk-sched 'sch_ilya
-               (list 0  0  gh-ilyas-room  "sleeping")
+               (list 0  0  gh-ilyas-bed   "sleeping")
                (list 6  0  gh-stable      "working")
-               (list 7  0  gh-kitchen      "working")
-               (list 12 0  gh-kitchen      "working")
+               (list 7  0  gh-kitchen     "working")
+               (list 12 0  gh-kitchen     "working")
                (list 13 0  gh-pasture     "working")
                (list 15 0  gh-all         "idle")
                (list 17 0  gh-kitchen     "eating")
                (list 18 0  gh-living-room "idle")
-               (list 20 0  gh-ilyas-room  "sleeping"))
+               (list 20 0  gh-ilyas-bed   "sleeping"))
 
 ;;----------------------------------------------------------------------------
 ;; Gob

@@ -67,7 +67,8 @@ bool Container::add(class ObjectType * type, int quantity)
 {
 	struct inv_entry *ie;
 
-	assert(quantity > 0);
+	if (quantity <= 0)
+                return false;
 
 	ie = search(type);
 	if (!ie) {

@@ -198,6 +198,9 @@ SCHEME_EXPORT INLINE int hasprop(pointer p)     { return (typeflag(p)&T_SYMBOL);
 #define symprop(p)       cdr(p)
 #endif
 
+INTERFACE INLINE foreign_func ffvalue(pointer p) 
+{ return (!is_foreign(p) ? NULL : p->_object._ff); }
+
 INTERFACE INLINE int is_syntax(pointer p)   { return (typeflag(p)&T_SYNTAX); }
 INTERFACE INLINE int is_proc(pointer p)     { return (type(p)==T_PROC); }
 INTERFACE INLINE int is_foreign(pointer p)  { return (type(p)==T_FOREIGN); }
@@ -4005,6 +4008,8 @@ static void Eval_Cycle(scheme *sc, enum scheme_opcodes op) {
   int count=0;
   int old_op;
   
+  sc->inside++;
+
   sc->op = op;
   for (;;) {
 
@@ -4068,6 +4073,7 @@ static void Eval_Cycle(scheme *sc, enum scheme_opcodes op) {
       }
       if(!ok) {
 	if(_Error_1(sc,msg,0)==sc->NIL) {
+                sc->inside--;
 	  return;
 	}
 	pcd=dispatch_table+sc->op;
@@ -4075,14 +4081,17 @@ static void Eval_Cycle(scheme *sc, enum scheme_opcodes op) {
     }
     old_op=sc->op;
     if (pcd->func(sc, (scheme_opcodes)sc->op) == sc->NIL) {
+            sc->inside--;
       return;
     }
     if(sc->no_memory) {
       fprintf(stderr,"No memory!\n");
+      sc->inside--;
       return;
     }
     count++;
   }
+  sc->inside--;
 }
 
 /* ========== Initialization of internal keywords ========== */
@@ -4221,6 +4230,7 @@ static struct scheme_interface vtbl ={
   protect,
   unprotect
 #endif
+  , ffvalue
 };
 #endif
 
@@ -4510,9 +4520,7 @@ pointer scheme_call(scheme *sc, pointer func, pointer args) {
    sc->code = func; 
    sc->interactive_repl =0; 
    sc->retcode = 0;
-   sc->inside++;
    Eval_Cycle(sc, OP_APPLY); 
-   sc->inside--;
 
    /* s_return puts the value in sc->value. I don't know how I got away with
     * using sc->code for so long... maybe it depends upon the context? I hope
