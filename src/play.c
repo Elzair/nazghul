@@ -2661,7 +2661,6 @@ bool cmdSaveTerrainMap(class Character * pc)
     FILE * palette_fp = NULL;
 
 	cmdwin_clear();
-	cmdwin_print("Save Map-");
 
 	if (pc) {
 		// Combat Mode
@@ -2694,6 +2693,8 @@ bool cmdSaveTerrainMap(class Character * pc)
     }
     palette_print(palette_fp, INITIAL_INDENTATION, palette);
     fclose(palette_fp);
+    consolePrint("Saved palette as '%s'.\n", palette_filename);
+    printf("Saved palette as '%s'.\n", palette_filename);
 
     // And save the current map:
     sprintf(map_filename, "/tmp/nazghul.map.%s.%d.ghul", 
@@ -2706,7 +2707,8 @@ bool cmdSaveTerrainMap(class Character * pc)
     }
     terrain_map_print(map_fp, INITIAL_INDENTATION, map);
     fclose(map_fp);
-
+    consolePrint("Saved map as '%s'.\n", map_filename);
+    printf("Saved map as '%s'.\n", map_filename);
 
 	return true;
 } // cmdSaveTerrainMap()
