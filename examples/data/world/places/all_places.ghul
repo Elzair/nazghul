@@ -38,6 +38,7 @@
 #include "./P_cavernous_troll_deeps.ghul"
 #include "./P_rom_camp.ghul"
 #include "./P_slime_cave.ghul"
+#include "./Glasdrin.ghul"
 
 STACK_PLACES GreenTower GreenTowerLower
 

@@ -1,0 +1,114 @@
+//
+// Copyright-Only Dedication (based on United States law)
+//
+// The person or persons who have associated their work with this document (the
+// "Dedicator") hereby dedicate the entire copyright in the work of authorship
+// identified below (the "Work") to the public domain.
+//
+// Dedicator makes this dedication for the benefit of the public at large and
+// to the detriment of Dedicator's heirs and successors. Dedicator intends this
+// dedication to be an overt act of relinquishment in perpetuity of all present
+// and future rights under copyright law, whether vested or contingent, in the
+// Work. Dedicator understands that such relinquishment of all rights includes
+// the relinquishment of all rights to enforce (by lawsuit or otherwise) those
+// copyrights in the Work.
+//
+// Dedicator recognizes that, once placed in the public domain, the Work may be
+// freely reproduced, distributed, transmitted, used, modified, built upon, or
+// otherwise exploited by anyone for any purpose, commercial or non-commercial,
+// and in any way, including by methods that have not yet been invented or
+// conceived.
+//
+
+#ifndef Glasrin_ghul
+#define Glasrin_ghul
+MAP Glasdrin_Map {
+        type   ascii;
+        width  64;
+        height 64;
+        one_char_per_tile 1;
+        palette pal_standard;
+        terrain {
+                "...............................cc...............................";
+                "...............................cc...............................";
+                "..xx0xxx.................xxx0xxccxx0xxx.................xxx0xx..";
+                "..x,,,,xxxxxxxxxxxxxxxxxxx,,,,xccx,,,,xxxxxxxxxxxxxxxxxxx,,,,x..";
+                "..0,,,,,,,,,,,,,,,,,,,,,,,,,,,0cc0,,,,,,,,,,,,,,,,,,,,,,,,,,,0..";
+                "..x,,,,,,,,,,,,,,,,,,,,,,,,,,,xccx,,,,,,,,,,,,,,,,,,,,,,,,,,,x..";
+                "..x,,,,xxxxxxxxxxxxxxxxxxx,,,,xccx,,,,xxxxxxxxxxxxxxxxxxx,,,,x..";
+                "..xx,,xxHEALxtt.........txxx,xxccxx,xxxtt........ttxHOLYxx,,xx..";
+                "...x,,x,,,,,xt.................cc.................txGRAILx,,x...";
+                "...x,,x,,,,,cccccccccccccccccccccccccccccccccccccc.x,,,,,x,,x...";
+                "...x,,x,,,,,x.c..................................c.x@@@@@x,,x...";
+                "...x,,x,,,,,x.c.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.c.x,,,,,x,,x...";
+                "...x,,x,,,,,x.c.xKIT,HENxDINING@HALLx@BARRA,KS@x.cc,,,,,,x,,x...";
+                "...x,,x,,,,,x.c.x,,,,,,,x,,,,,,,,,,,x,,,,,,,,,,x.c.x,,0,,x,,x...";
+                "...x,,xxx,xxx.c.x,,,,,,,x,,,,,,,,,,,x,,,,,,,,,,x.c.x,,0,,x,,x...";
+                "...x,,x,,,,,x.c.x,,,,,,,,,,,,,,,,,,,x,,,,,,,,,,x.c.x,,0,,x,,x...";
+                "...x,,x,,,,,x.c.x,,,,,,,x,,,,,,,,,,,x,,,,,,,,,,x.c.x,,,,,x,,x...";
+                "...x,,x,,,,,x.c.x,,,,,,,x,,,,,,,,,,,x,,,,,,,,,,x.c.x,,,,,x,,x...";
+                "...x,,xxxxxxx.c.xxxxx,x,xxxxxx,xxxxxxx,xxx,,,,,x.c.x,,,,,x,,x...";
+                "...x,,x||tt...c.xS,,,,x,,,,,,,,,,,,,,,,,,x,,,,,x.c.xx,,,xx,,x...";
+                "...x,,x||t....c.xU,,,,x,,,,,,,,,,,,,,,,,,x,xxxxx.c.txx,xxx,,x...";
+                "...x,,xttt....c.xP,,,,,,,xxxxxxxxxxxxxx,,x,,,,Ax.c..txxx|x,,x...";
+                "...x,,xtt.....c.xP,,,,x,,x____________x,,x,,,,Rx.c..tt|||x,,xt..";
+                "...x,,xt......c.xL,,,,x,,x_xxxxxxxxxx_x,,x,,,,Mx.c...t|||x,,xt..";
+                "...x,,x.......c.xY,,,,x,,x_x,x,,,,,,x_x,,,,,,,Ox.c...ttt|x,,x...";
+                "..xx,,xx......c.xxxxxxx,,x_x,?,,,,,,x_x,,x,,,,Ux.c......xx,,xx..";
+                "..x,,,,x......c.x,,,,,x,,x_x,x,,,,,,x_x,,x,,,,Rx.c......x,,,,x..";
+                "..x,,,,x......c.x,,,,,,,,x_xxxxxxxx,x_x,,x,,,,Yx.c......x,,,,x..";
+                "..0,,,,,......c.x,,,,,x,,x_xKEEP@x,,x_x,,xxxxxxx.c......,,,,,0..";
+                "..x,,,,x......c.xxxxxxx,,x_x,,,,,x,,x_x,,x,,,,Tx.c......x,,,,x..";
+                "..xx0xxx......c.x,,x,,x,,x_x,,,,,,,,x_x,,xxx,,Rx.c......xxx0xx..";
+                "..............c.x,,x,,x,,x_x,,,,,x,,x_x,,x,x,,Ex.c..............";
+                "ccccccccccccccc.xx,xx,x,,x_xxxx,xxxxx_x,,,,,,,Ax.ccccccccccccccc";
+                "..............c.x,,,,,,,,x____________x,,x,x,,Sx.c..............";
+                "..xx0xxx......c.xx,xx,x,,xxxxxx,xxxxxxx,,xxx,,Ux.c......xxx0xx..";
+                "..x,,,,x......c.x,,x,,x,,,,,,,,,,,,,,,,,,x,,,,Rx.c......x,,,,x..";
+                "..0,,,,,......c.x,,x,,x,,,,,,,,,,,,,,,,,,x,,,,Yx.c......,,,,,0..";
+                "..x,,,,x......c.xxxxxxxxxx,,xxxxxxxx,,xxxxxxxxxx.c......x,,,,x..";
+                "..x,,,,xbbb...c.x@GARDEN@x,,xp,cc,px,,xLIBRARY@x.c......x,,,,x..";
+                "..xx,,xx...b..c.x+t....btx,,x,,cc,,x,,x,,,,,,,,x.c......xx,,xx..";
+                "...x,,x.....b.c.xtt.--...,,,xp,cc,px,,,,,,,,,,,x.c.......x,,x...";
+                "...x,,x.....b.c.xt...=..tx,,x,,cc,,x,,x,,,,,,,,x.c.......x,,x...";
+                "...x,,x.....b.c.x||b.-.||x,,xp,cc,px,,x,,,,,,,,x.c.......x,,x...";
+                "...x,,x.....b.c.x.|t..t||x,,xxxccxxx,,x,,,,,,,,x.c.......x,,x...";
+                "...x,,x.....b.c.xxxxxxxxxx,,,,,cc,,,,,xxxxxxxxxx.c.......x,,x...";
+                "...x,,x.....b.c......tt||x,,,,,cc,,,,,x||tt......c......tx,,x...";
+                "...x,,x.....b.c.......t||xxxxxxccxxxxxx||t.......c....tttx,,x...";
+                "...x,,x.....b.c.......tttx,,,,,cc,,,,,xttt...ccccc....t||x,,x...";
+                "...x,,xtt...b.c.........tx,,,,,cc,,,,,xt.....c.......tt||x,,x...";
+                "...x,,x||...b.ccccc......x,,,,,cc,,,,,x......c.xxxxxxxxxxx,,x...";
+                "...x,,x||...b.c...c......xxxxxxccxxxxxx......c.xMAGI,x,,,x,,x...";
+                "...x,,xxx,xxxx,xx.c............cc............c.x,,,,,,,,,x,,x...";
+                "...x,,x,,,,,,,,,,cccccccccccccccccccccccccccccc,,,,,,x,,,x,,x...";
+                "...x,,x,,,,,,,,,xt.............cc.............tx,,,,,xx,xx,,x...";
+                "...x,,x,,,,,,,,,xttt...........cc...........tttx,,,,,x,,,x,,x...";
+                "...x,,x,,,,,,,,,x||t...........cc...........t||x,,,,,x,,,x,,x...";
+                "..xx,,xx@STABLE@x||tt....xxx,xxccxx,xxx....tt||xGUILDx,,xx,,xx..";
+                "..x,,,,xxxxxxxxxxxxxxxxxxx,,,,xccx,,,,xxxxxxxxxxxxxxxxxxx,,,,x..";
+                "..x,,,,,,,,,,,,,,,,,,,,,,,,,,,xccx,,,,,,,,,,,,,,,,,,,,,,,,,,,x..";
+                "..0,,,,,,,,,,,,,,,,,,,,,,,,,,,0cc0,,,,,,,,,,,,,,,,,,,,,,,,,,,0..";
+                "..x,,,,xxxxxxxxxxxxxxxxxxx,,,,xccx,,,,xxxxxxxxxxxxxxxxxxx,,,,x..";
+                "..xx0xxx.................xxx0xxccxx0xxx.................xxx0xx..";
+                "...............................cc...............................";
+                "...............................cc...............................";
+    }
+}
+
+PLACE  GreenTower {
+  type        town;
+  parent      p_wilderness;
+  x           39;
+  y           9;
+  name        "Castle Glasdrin"
+  wraps       0;
+  map         Glasdrin_Map;
+  underground 0;
+  objects {
+  }
+  object_type t_town;
+}
+
+
+#endif
