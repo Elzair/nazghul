@@ -28,454 +28,139 @@
 
 #include "../def_constants.ghul"
 
-/*
- *   Quick Guide for Map Creation:
- *   -----------------------------
- *   _    deep water
- *   -    shallow water
- *   ~    shoals
- *   %    bog
- *   .    grass
- *   t    trees
- *   |    forest
- *   {    hills
- *   ^    mountains
- *   <    left wing of large castle
- *   >    right wing of large castle
- *   c    cobblestone
- *   =    small bridge
- *   g    top of large bridge
- *   h    bottom of large bridge
- *   p    pillar (round column)
- *   1-4  sea wall
- *   m    mast
- *   (    trail
- *   b    boulder
- *   r    rock wall
- *   +    ankh
- *   ,    flagstone
- *   e    deck
- *   w    white wall
- *   ?    secret door
- *   a    altar
- *   &    fireplace
- *   A-Z  letters
- *   !    lava
- *   x    stone wall
- *   f    trail
- */
+#define SEE TRANSPARENT
+// #define NOC OPAQUE
 
 
 terrains  {
-  t_deep {      
-    name      "deep water";
-    pmask     WATER;
-    sprite    s_deep;
-    glyph     _;
-    id        0;
-    alpha     1;
-    movement_cost 1;
-    effects   0;
-    light     0;
-    color     0x23408e;
-  }
-  t_shallow {
-    name      "shallow water";
-    pmask     WATER;
-    sprite    s_shallow;
-    glyph     -;
-    id        1;
-    alpha     1;
-    movement_cost 1;
-    effects   0;
-    light     0;
-    color     0x008fff;
-  };
-  t_shoals {
-    name      "shoals";
-    pmask     SHOALS;
-    sprite    s_shoals;
-    glyph     ~;
-    id        2;
-    alpha     1;
-    movement_cost 1;
-    effects   0;
-    light     0;
-    color     0x00ffff;
-  };
-  t_bog {
-    name      "bog";
-    pmask     LAND;
-    sprite    s_bog;
-    glyph     %;
-    id        3;
-    alpha     1;
-    movement_cost 2;
-    effects   EFFECT_POISON;
-    light     0;
-    color     0xa160d6;
-  };
-  t_grass {
-    name      "grass";
-    pmask     LAND;
-    sprite    s_grass;
-    glyph     .;
-    id        4;
-    alpha     1;
-    movement_cost 1;
-    effects   0;
-    light     0;
-    color     0x17ea1e;
-  };
-  t_trees {
-    name      "trees";
-    pmask     LAND;
-    sprite    s_trees;
-    glyph     t;
-    id        5;
-    alpha     1;
-    movement_cost 1;
-    effects   0;
-    light     0;
-    color     0x45a845;
-  };
-  t_forest {
-    name      "forest";
-    pmask     LAND;
-    sprite    s_forest;
-    glyph     |;
-    id        6;
-    alpha     0;
-    movement_cost 2;
-    effects   0;
-    light     0;
-    color     0x1d7025;
-  };
-  t_hills {
-    name      "hills";
-    pmask     LAND;
-    sprite    s_hills;
-    glyph     ?;
-    id        7;
-    alpha     1;
-    movement_cost 2;
-    effects   0;
-    light     0;
-    color     0x808080;
-  };
-  t_mountains {
-    name      "mountains";
-    pmask     SOLID;
-    sprite    s_mountains;
-    glyph     ^;
-    id        8;
-    alpha     0;
-    movement_cost 2;
-    effects   0;
-    light     0;
-    color     0xffffff;
-  };
-  t_leftwing {
-    name      "castle";
-    pmask     SOLID;
-    sprite    s_leftwing;
-    glyph     <;
-    id        13;
-    alpha     1;
-    movement_cost 1;
-    effects   0;
-    light     0;
-  };
-  t_rightwing {
-    name      "castle";
-    pmask     SOLID;
-    sprite    s_rightwing;
-    glyph     >;
-    id        15;
-    alpha     1;
-    movement_cost 1;
-    effects   0;
-    light     0;
-  };
-  t_cobblestone {
-    name      "cobblestone";
-    pmask     LAND;
-    sprite    s_cobblestone;
-    glyph     c;
-    id        22;
-    alpha     1;
-    movement_cost 1;
-    effects   0;
-    light     0;
-  };
-  t_bridge {
-    name      "bridge";
-    pmask     3;
-    sprite    s_bridge;
-    glyph     =;
-    id        23;
-    alpha     1;
-    movement_cost 1;
-    effects   0;
-    light     0;
-  };
-  t_bridge_top {
-    name      "bridge";
-    pmask     3;
-    sprite    s_bridge_top;
-    glyph     g;
-    id        25;
-    alpha     1;
-    movement_cost 1;
-    effects   0;
-    light     0;
-  };
-  t_bridge_bottom {
-    name      "bridge";
-    pmask     3;
-    sprite    s_bridge_bottom;
-    glyph     h;
-    id        26;
-    alpha     1;
-    movement_cost 1;
-    effects   0;
-    light     0;
-  };
-  t_pillar {
-    name      "pillar";
-    pmask     SOLID;
-    sprite    s_pillar;
-    glyph     p;
-    id        48;
-    alpha     TRANSPARENT;
-    movement_cost 1;
-    effects   0;
-    light     0;
-  };
-  t_wall_b {
-    name      "sea wall";
-    pmask     SOLID;
-    sprite    s_wall_b;
-    glyph     1;
-    id        49;
-    alpha     0;
-    movement_cost 1;
-    effects   0;
-    light     0;
-  };
-  t_wall_a {
-    name      "sea wall";
-    pmask     SOLID;
-    sprite    s_wall_a;
-    glyph     2;
-    id        50;
-    alpha     0;
-    movement_cost 1;
-    effects   0;
-    light     0;
-  };
-  t_wall_c {
-    name      "sea wall";
-    pmask     SOLID;
-    sprite    s_wall_c;
-    glyph     3;
-    id        51;
-    alpha     0;
-    movement_cost 1;
-    effects   0;
-    light     0;
-  };
-  ;
-  t_wall_d {
-    name      "sea wall";
-    pmask     SOLID;
-    sprite    s_wall_d;
-    glyph     4;
-    id        52;
-    alpha     0;
-    movement_cost 1;
-    effects   0;
-    light     0;
-  };
-  t_mast {
-    name      "mast";
-    pmask     SOLID;
-    sprite    s_mast;
-    glyph     m;
-    id        53;
-    alpha     1;
-    movement_cost 1;
-    effects   0;
-    light     0;
-  };
-  t_trail {
-    name      "ship's wheel";
-    pmask     LAND;
-    sprite    s_ships_wheel;
-    glyph     f;
-    id        54;
-    alpha     1;
-    movement_cost 1;
-    effects   0;
-    light     0;
-  };
-  t_boulder {
-    name      "boulder";
-    pmask     SOLID;
-    sprite    s_boulder;
-    glyph     b;
-    id        55;
-    alpha     1;
-    movement_cost 1;
-    effects   0;
-    light     0;
-  };
-  t_wall_rock {
-    name      "rock wall";
-    pmask     SOLID;
-    sprite    s_wall_rock;
-    glyph     r;
-    id        57;
-    alpha     0;
-    movement_cost 1;
-    effects   0;
-    light     0;
-  };
-  t_ankh {
-    name      "ankh";
-    pmask     PASS_NONE;
-    sprite    s_ankh;
-    glyph     +;
-    id        61;
-    alpha     1;
-    movement_cost 1;
-    effects   0;
-    light     0;
-  };
-  t_flagstones {
-    name      "flagstones";
-    pmask     LAND;
-    sprite    s_flagstone;
-    glyph     ,;
-    id        62;
-    alpha     1;
-    movement_cost 1;
-    effects   0;
-    light     0;
-  };
-  t_deck {
-    name      "deck";
-    pmask     LAND;
-    sprite    s_deck;
-    glyph     e;
-    id        63;
-    alpha     1;
-    movement_cost 1;
-    effects   0;
-    light     0;
-  };
-  t_fire_terrain {
-    name      "fire";
-    pmask     LAND;
-    sprite    s_field_fire;
-    glyph     f;
-    id        70;
-    alpha     1;
-    movement_cost 1;
-    effects   EFFECT_BURN;
-    light     512;
-  };
-  TERRAIN(t_white_wall, "wall", SOLID, s_wall, 72, OPAQUE, 0, EFFECT_NONE, 0, w);
-  TERRAIN(t_bulwark, "ship's bulwark", SOLID, s_wall, 72, TRANSPARENT, 0, EFFECT_NONE, 0, w);
-  t_secret_door {
-    name      "secret door";
-    pmask     LAND;
-    sprite    s_secret_door;
-    glyph     ?;
-    id        73;
-    alpha     0;
-    movement_cost 1;
-    effects   0;
-    light     0;
-  };
-  ;
-  t_altar {
-    name      "altar";
-    pmask     SOLID;
-    sprite    s_altar;
-    glyph     a;
-    id        74;
-    alpha     1;
-    movement_cost 1;
-    effects   0;
-    light     0;
-  };
-  ;
-  t_fireplace {
-    name      "fireplace";
-    pmask     LAND;
-    sprite    s_fireplace;
-    glyph     &;
-    id        75;
-    alpha     1;
-    movement_cost 1;
-    effects   EFFECT_BURN;
-    light     4096;
-  };
+  // The TERRAIN() macro (from def_macros.ghul) takes these arguments:
+  // tag, "name", pmask, sprite, id, alpha, move_cost, effects, light, glyph
+
+  // Outdoor terrains
+  TERRAIN(t_deep,      "deep water",    WATER,  s_deep,       0, SEE, 1, 0, 0, _);
+  TERRAIN(t_shallow,   "shallow water", WATER,  s_shallow,    1, SEE, 1, 0, 0, -);
+  TERRAIN(t_shoals,    "shoals",        SHOALS, s_shoals,     2, SEE, 1, 0, 0, ~);
+  TERRAIN(t_grass,     "grass",         LAND,   s_grass,      4, SEE, 1, 0, 0, .);
+  TERRAIN(t_trees,     "trees",         LAND,   s_trees,      5, SEE, 1, 0, 0, t);
+  TERRAIN(t_forest,    "forest",        LAND,   s_forest,     6, 0,   2, 0, 0, |);
+  TERRAIN(t_hills,     "hills",         LAND,   s_hills,      7, SEE, 2, 0, 0, ?);
+  TERRAIN(t_mountains, "mountains",     SOLID,  s_mountains,  8, 0,   2, 0, 0, ^);
+
+  // Special outdoor structures:
+  TERRAIN(t_leftwing,  "castle wall",   SOLID,  s_leftwing,  13, SEE, 1, 0, 0, <);
+  TERRAIN(t_rightwing, "castle wall",   SOLID,  s_rightwing, 15, SEE, 1, 0, 0, >);
+
+  TERRAIN(t_cobblestone, "cobblestone", LAND,  s_cobblestone, 22, SEE, 1, 0, 0, c);
+  TERRAIN(t_flagstones,  "flagstones",  LAND,  s_flagstone,   62, SEE, 1, 0, 0, r);
+
+  // Effect-bearing terrains:
+  TERRAIN(t_bog,          "bog",       LAND, s_bog,         3, SEE, 2, EFFECT_POISON,  0, %);
+  TERRAIN(t_fire_terrain, "fire",      LAND, s_field_fire, 70, SEE, 1, EFFECT_BURN,  512, f);
+  TERRAIN(t_fireplace,    "fireplace", LAND, s_fireplace,  75, SEE, 1, EFFECT_BURN, 4096, &);
+  TERRAIN(t_lava,         "lava",      LAND, s_lava,       76, SEE, 1, EFFECT_BURN,  128, !);
+
+  // Bridge Terrains:
+  TERRAIN(t_bridge,        "bridge", BRIDGE, s_bridge,        23, SEE, 1, 0, 0, =);
+  TERRAIN(t_bridge_top,    "bridge", BRIDGE, s_bridge_top,    25, SEE, 1, 0, 0, g);
+  TERRAIN(t_bridge_bottom, "bridge", BRIDGE, s_bridge_bottom, 26, SEE, 1, 0, 0, h);
+
+  // Terrain used to build Ships (for combat maps, etc.)
+  // SAM: Note that there is a problem with using the corner pieces,
+  //      when a map gets rotated, such "oriented" terrains need to be
+  //      rotated also, or you get funky spiky effects.
+  TERRAIN(t_ship_hull,   "ship's hull",  SOLID, s_wall,        72, SEE, 0, 0, 0, w);
+  TERRAIN(t_sh_hull_NE,  "ship's hull",  SOLID, s_wall_b,      49, SEE, 1, 0, 0, 1);
+  TERRAIN(t_sh_hull_NW,  "ship's hull",  SOLID, s_wall_a,      50, SEE, 1, 0, 0, 2);
+  TERRAIN(t_sh_hull_SE,  "ship's hull",  SOLID, s_wall_c,      51, SEE, 1, 0, 0, 3);
+  TERRAIN(t_sh_hull_SW,  "ship's hull",  SOLID, s_wall_d,      52, SEE, 1, 0, 0, 4);
+  TERRAIN(t_mast,        "mast",         SOLID, s_mast,        53, SEE, 1, 0, 0, m);
+  TERRAIN(t_ships_wheel, "ship's wheel", SOLID, s_ships_wheel, 54, SEE, 1, 0, 0, f);
+  TERRAIN(t_deck,        "deck",         LAND,  s_deck,        63, SEE, 1, 0, 0, e);
+
+  // Wall type terrains
+  TERRAIN(t_wall_rock,   "rock wall",   SOLID, s_wall_rock,   57, 0, 1, 0, 0, r);
+  TERRAIN(t_wall,        "wall",        SOLID, s_wall_stone, 127, 0, 1, 0, 0, x);
+  TERRAIN(t_secret_door, "secret door", LAND,  s_secret_door, 73, 0, 1, 0, 0, ?);
+  TERRAIN(t_sea_wall,    "sea wall",    SOLID, s_wall,        72, 0, 0, 0, 0, w);
+  TERRAIN(t_sea_wall_NE, "sea wall",    SOLID, s_wall_b,      49, 0, 1, 0, 0, 1);
+  TERRAIN(t_sea_wall_NW, "sea wall",    SOLID, s_wall_a,      50, 0, 1, 0, 0, 2);
+  TERRAIN(t_sea_wall_SE, "sea wall",    SOLID, s_wall_c,      51, 0, 1, 0, 0, 3);
+  TERRAIN(t_sea_wall_SW, "sea wall",    SOLID, s_wall_d,      52, 0, 1, 0, 0, 4);
+
+  // Obstacles, furniture, features:
+  TERRAIN(t_boulder,     "boulder", SOLID,     s_boulder,      55, SEE, 1, 0, 0, b);
+  TERRAIN(t_ankh,        "ankh",    PASS_NONE, s_ankh,         61, SEE, 1, 0, 0, +);
+  TERRAIN(t_altar,       "altar",   PASS_NONE, s_altar,        74, SEE, 1, 0, 0, a);
+  TERRAIN(t_pillar,      "pillar",  SOLID,     s_pillar,       48, SEE, 1, 0, 0, p);
+
+  // Blank shop counter sections
+  TERRAIN(t_counter_middle, "counter", SOLID, s_counter_middle, 122, SEE, 0, 0, 0, @);
+  TERRAIN(t_counter_right,  "counter", SOLID, s_counter_right,  123, SEE, 0, 0, 0, ]);
+  TERRAIN(t_counter_left,   "counter", SOLID, s_counter_left,   124, SEE, 0, 0, 0, [);
+  TERRAIN(t_counter_1x1,    "counter", SOLID, s_counter_1x1,    125, SEE, 0, 0, 0, 0);
   
-  TERRAIN(t_A, "A", 0, s_A,  96, TRANSPARENT, 0, EFFECT_NONE, 0, A);
-  TERRAIN(t_B, "B", 0, s_B,  97, TRANSPARENT, 0, EFFECT_NONE, 0, B);
-  TERRAIN(t_C, "C", 0, s_C,  98, TRANSPARENT, 0, EFFECT_NONE, 0, C);
-  TERRAIN(t_D, "D", 0, s_D,  99, TRANSPARENT, 0, EFFECT_NONE, 0, D);
-  TERRAIN(t_E, "E", 0, s_E, 100, TRANSPARENT, 0, EFFECT_NONE, 0, E);
-  TERRAIN(t_F, "F", 0, s_F, 101, TRANSPARENT, 0, EFFECT_NONE, 0, F);
-  TERRAIN(t_G, "G", 0, s_G, 102, TRANSPARENT, 0, EFFECT_NONE, 0, G);
-  TERRAIN(t_H, "H", 0, s_H, 103, TRANSPARENT, 0, EFFECT_NONE, 0, H);
-  TERRAIN(t_I, "I", 0, s_I, 104, TRANSPARENT, 0, EFFECT_NONE, 0, I);
-  TERRAIN(t_J, "J", 0, s_J, 105, TRANSPARENT, 0, EFFECT_NONE, 0, J);
-  TERRAIN(t_K, "K", 0, s_K, 106, TRANSPARENT, 0, EFFECT_NONE, 0, K);
-  TERRAIN(t_L, "L", 0, s_L, 107, TRANSPARENT, 0, EFFECT_NONE, 0, L);
-  TERRAIN(t_M, "M", 0, s_M, 108, TRANSPARENT, 0, EFFECT_NONE, 0, M);
-  TERRAIN(t_N, "N", 0, s_N, 109, TRANSPARENT, 0, EFFECT_NONE, 0, N);
-  TERRAIN(t_O, "O", 0, s_O, 110, TRANSPARENT, 0, EFFECT_NONE, 0, O);
-  TERRAIN(t_P, "P", 0, s_P, 111, TRANSPARENT, 0, EFFECT_NONE, 0, P);
-  TERRAIN(t_Q, "Q", 0, s_Q, 112, TRANSPARENT, 0, EFFECT_NONE, 0, Q);
-  TERRAIN(t_R, "R", 0, s_R, 113, TRANSPARENT, 0, EFFECT_NONE, 0, R);
-  TERRAIN(t_S, "S", 0, s_S, 114, TRANSPARENT, 0, EFFECT_NONE, 0, S);
-  TERRAIN(t_T, "T", 0, s_T, 115, TRANSPARENT, 0, EFFECT_NONE, 0, T);
-  TERRAIN(t_U, "U", 0, s_U, 116, TRANSPARENT, 0, EFFECT_NONE, 0, U);
-  TERRAIN(t_V, "V", 0, s_V, 117, TRANSPARENT, 0, EFFECT_NONE, 0, V);
-  TERRAIN(t_W, "W", 0, s_W, 118, TRANSPARENT, 0, EFFECT_NONE, 0, W);
-  TERRAIN(t_X, "X", 0, s_X, 119, TRANSPARENT, 0, EFFECT_NONE, 0, X);
-  TERRAIN(t_Y, "Y", 0, s_Y, 120, TRANSPARENT, 0, EFFECT_NONE, 0, Y);
-  TERRAIN(t_Z, "Z", 0, s_Z, 121, TRANSPARENT, 0, EFFECT_NONE, 0, Z);
-  TERRAIN(t_counter_middle, "counter", 0, s_counter_middle, 122, TRANSPARENT, 0, EFFECT_NONE, 0, @);
-  TERRAIN(t_counter_right,  "counter", 0, s_counter_right,  123, TRANSPARENT, 0, EFFECT_NONE, 0, ]);
-  TERRAIN(t_counter_left,   "counter", 0, s_counter_left,   124, TRANSPARENT, 0, EFFECT_NONE, 0, [);
-  TERRAIN(t_counter_pillar, "pillar",  0, s_counter_pillar, 125, TRANSPARENT, 0, EFFECT_NONE, 0, 0);
+  // English Alphabet Sign Terrains 
+  // (Each tile is a sign bearing a single letter.)
+  TERRAIN(t_A, "an A", SOLID, s_A,  96, SEE, 0, 0, 0, A);
+  TERRAIN(t_B,  "a B", SOLID, s_B,  97, SEE, 0, 0, 0, B);
+  TERRAIN(t_C,  "a C", SOLID, s_C,  98, SEE, 0, 0, 0, C);
+  TERRAIN(t_D,  "a D", SOLID, s_D,  99, SEE, 0, 0, 0, D);
+  TERRAIN(t_E, "an E", SOLID, s_E, 100, SEE, 0, 0, 0, E);
+  TERRAIN(t_F, "an F", SOLID, s_F, 101, SEE, 0, 0, 0, F);
+  TERRAIN(t_G,  "a G", SOLID, s_G, 102, SEE, 0, 0, 0, G);
+  TERRAIN(t_H, "an H", SOLID, s_H, 103, SEE, 0, 0, 0, H);
+  TERRAIN(t_I, "an I", SOLID, s_I, 104, SEE, 0, 0, 0, I);
+  TERRAIN(t_J,  "a J", SOLID, s_J, 105, SEE, 0, 0, 0, J);
+  TERRAIN(t_K,  "a K", SOLID, s_K, 106, SEE, 0, 0, 0, K);
+  TERRAIN(t_L, "an L", SOLID, s_L, 107, SEE, 0, 0, 0, L);
+  TERRAIN(t_M, "an M", SOLID, s_M, 108, SEE, 0, 0, 0, M);
+  TERRAIN(t_N, "an N", SOLID, s_N, 109, SEE, 0, 0, 0, N);
+  TERRAIN(t_O, "an O", SOLID, s_O, 110, SEE, 0, 0, 0, O);
+  TERRAIN(t_P,  "a P", SOLID, s_P, 111, SEE, 0, 0, 0, P);
+  TERRAIN(t_Q,  "a Q", SOLID, s_Q, 112, SEE, 0, 0, 0, Q);
+  TERRAIN(t_R, "an R", SOLID, s_R, 113, SEE, 0, 0, 0, R);
+  TERRAIN(t_S, "an S", SOLID, s_S, 114, SEE, 0, 0, 0, S);
+  TERRAIN(t_T,  "a T", SOLID, s_T, 115, SEE, 0, 0, 0, T);
+  TERRAIN(t_U,  "a U", SOLID, s_U, 116, SEE, 0, 0, 0, U);
+  TERRAIN(t_V,  "a V", SOLID, s_V, 117, SEE, 0, 0, 0, V);
+  TERRAIN(t_W,  "a W", SOLID, s_W, 118, SEE, 0, 0, 0, W);
+  TERRAIN(t_X, "an X", SOLID, s_X, 119, SEE, 0, 0, 0, X);
+  TERRAIN(t_Y,  "a Y", SOLID, s_Y, 120, SEE, 0, 0, 0, Y);
+  TERRAIN(t_Z,  "a Z", SOLID, s_Z, 121, SEE, 0, 0, 0, Z);
+
+  TERRAIN(t_rune_A,   "a rune", SOLID, s_rune_A,      131, SEE, 0, 0, 0, X);
+  TERRAIN(t_rune_B,   "a rune", SOLID, s_rune_B,      132, SEE, 0, 0, 0, X);
+  TERRAIN(t_rune_C,   "a rune", SOLID, s_rune_C,      133, SEE, 0, 0, 0, X);
+  TERRAIN(t_rune_D,   "a rune", SOLID, s_rune_D,      134, SEE, 0, 0, 0, X);
+  TERRAIN(t_rune_E,   "a rune", SOLID, s_rune_E,      135, SEE, 0, 0, 0, X);
+  TERRAIN(t_rune_F,   "a rune", SOLID, s_rune_F,      136, SEE, 0, 0, 0, X);
+  TERRAIN(t_rune_G,   "a rune", SOLID, s_rune_G,      137, SEE, 0, 0, 0, X);
+  TERRAIN(t_rune_H,   "a rune", SOLID, s_rune_H,      138, SEE, 0, 0, 0, X);
+  TERRAIN(t_rune_I,   "a rune", SOLID, s_rune_I,      139, SEE, 0, 0, 0, X);
+  TERRAIN(t_rune_J,   "a rune", SOLID, s_rune_J,      140, SEE, 0, 0, 0, X);
+  TERRAIN(t_rune_K,   "a rune", SOLID, s_rune_K,      141, SEE, 0, 0, 0, X);
+  TERRAIN(t_rune_L,   "a rune", SOLID, s_rune_L,      142, SEE, 0, 0, 0, X);
+  TERRAIN(t_rune_M,   "a rune", SOLID, s_rune_M,      143, SEE, 0, 0, 0, X);
+  TERRAIN(t_rune_N,   "a rune", SOLID, s_rune_N,      144, SEE, 0, 0, 0, X);
+  TERRAIN(t_rune_O,   "a rune", SOLID, s_rune_O,      145, SEE, 0, 0, 0, X);
+  TERRAIN(t_rune_P,   "a rune", SOLID, s_rune_P,      146, SEE, 0, 0, 0, X);
+  TERRAIN(t_rune_Q,   "a rune", SOLID, s_rune_Q,      147, SEE, 0, 0, 0, X);
+  TERRAIN(t_rune_R,   "a rune", SOLID, s_rune_R,      148, SEE, 0, 0, 0, X);
+  TERRAIN(t_rune_S,   "a rune", SOLID, s_rune_S,      149, SEE, 0, 0, 0, X);
+  TERRAIN(t_rune_T,   "a rune", SOLID, s_rune_T,      150, SEE, 0, 0, 0, X);
+  TERRAIN(t_rune_U,   "a rune", SOLID, s_rune_U,      151, SEE, 0, 0, 0, X);
+  TERRAIN(t_rune_V,   "a rune", SOLID, s_rune_V,      152, SEE, 0, 0, 0, X);
+  TERRAIN(t_rune_W,   "a rune", SOLID, s_rune_W,      153, SEE, 0, 0, 0, X);
+  TERRAIN(t_rune_X,   "a rune", SOLID, s_rune_X,      154, SEE, 0, 0, 0, X);
+  TERRAIN(t_rune_Y,   "a rune", SOLID, s_rune_Y,      155, SEE, 0, 0, 0, X);
+  TERRAIN(t_rune_Z,   "a rune", SOLID, s_rune_Z,      156, SEE, 0, 0, 0, X);
+  TERRAIN(t_rune_TH,  "a rune", SOLID, s_rune_TH,     157, SEE, 0, 0, 0, X);
+  TERRAIN(t_rune_EE,  "a rune", SOLID, s_rune_EE,     158, SEE, 0, 0, 0, X);
+  TERRAIN(t_rune_NG,  "a rune", SOLID, s_rune_NG,     159, SEE, 0, 0, 0, X);
+  TERRAIN(t_rune_EA,  "a rune", SOLID, s_rune_EA,     160, SEE, 0, 0, 0, X);
+  TERRAIN(t_rune_ST,  "a rune", SOLID, s_rune_ST,     161, SEE, 0, 0, 0, X);
+  TERRAIN(t_rune_DOT, "a rune", SOLID, s_rune_DOTSEP, 162, SEE, 0, 0, 0, X);
         
-  t_lava {
-    name      "lava";
-    pmask     LAND;
-    sprite    s_lava;
-    glyph     !;
-    id        76;
-    alpha     1;
-    movement_cost 1;
-    effects   EFFECT_BURN;
-    light     128;
-  };
-  t_wall {
-    name      "wall";
-    pmask     SOLID;
-    sprite    s_wall_stone;
-    glyph     x;
-    id        127;
-    alpha     0;
-    movement_cost 1;
-    effects   0;
-    light     0;
-  }
 } /* terrains */
 
 

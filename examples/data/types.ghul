@@ -44,11 +44,16 @@
 #include "sprite_sets/ultima_IV_sprite_set.ghul"
 #include "sprite_sets/angband_sprite_set.ghul"
 #include "sprite_sets/misc_added_sprite_set.ghul"    
+// #include "sprite_sets/sam_new_tiles_32x32.ghul"  // Not ready yet
 
-#include "sprite_sets/moons_sprite_set.ghul"
-#include "sprite_sets/ultima_IV_font_sprite_set.ghul"
 #include "sprite_sets/frame_sprite_set.ghul"
+#include "sprite_sets/moons_sprite_set.ghul"
 #include "sprite_sets/mechanism_sprites.ghul"
+
+#include "sprite_sets/ultima_IV_font_sprite_set.ghul"
+#include "sprite_sets/rune_font_sprite_set_32x32.ghul"
+#include "sprite_sets/rune_font_sprite_set_8x16.ghul"
+
 
 CURSOR ls_whirlpool;  // From ss_u4
 

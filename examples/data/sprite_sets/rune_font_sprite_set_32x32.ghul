@@ -48,7 +48,7 @@ SPRITE_SET ss_rune_font_32x32 {
   file_cols     8;
   file_offx     0;
   file_offy     0;
-  file         "images/rune_font_32x32.png";
+  file         "data/images/rune_font_32x32.png";
   
   sprites {
     STD_SPRITE(s_rune_A,        0);

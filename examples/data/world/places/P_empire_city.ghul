@@ -23,8 +23,8 @@
  *
  *
  */
-#ifndef P_lcb_1_ghul
-#define P_lcb_1_ghul
+#ifndef P_empire_city_ghul
+#define P_empire_city_ghul
 
 #include "../characters/BlackBart_the_Shipwright.ghul"
 #include "../characters/Olin_the_Ghast.ghul"
@@ -48,36 +48,37 @@ MAP m_empire_city {
                 't' t_trees;
                 ',' t_flagstones;
                 'o' t_pillar;
-                '0' t_counter_pillar;
+                '0' t_counter_1x1;
                 'x' t_altar;
                 '!' t_lava; 
                 'e' t_deck;
-                'A'    t_A;
-                'B'    t_B; 
-                'C'    t_C; 
-                'D'    t_D; 
-                'E'    t_E; 
-                'F'    t_F; 
-                'G'    t_G; 
-                'H'    t_H; 
-                'I'    t_I; 
-                'J'    t_J; 
-                'K'    t_K; 
-                'L'    t_L; 
-                'M'    t_M; 
-                'N'    t_N; 
-                'O'    t_O; 
-                'P'    t_P; 
-                'Q'    t_Q; 
-                'R'    t_R; 
-                'S'    t_S; 
-                'T'    t_T; 
-                'U'    t_U; 
-                'V'    t_V; 
-                'W'    t_W; 
-                'X'    t_X; 
-                'Y'    t_Y; 
-                'Z'    t_Z;
+
+                'A' t_A;
+                'B' t_B; 
+                'C' t_C; 
+                'D' t_D; 
+                'E' t_E; 
+                'F' t_F; 
+                'G' t_G; 
+                'H' t_H; 
+                'I' t_I; 
+                'J' t_J; 
+                'K' t_K; 
+                'L' t_L; 
+                'M' t_M; 
+                'N' t_N; 
+                'O' t_O; 
+                'P' t_P; 
+                'Q' t_Q; 
+                'R' t_R; 
+                'S' t_S; 
+                'T' t_T; 
+                'U' t_U; 
+                'V' t_V; 
+                'W' t_W; 
+                'X' t_X; 
+                'Y' t_Y; 
+                'Z' t_Z;
         }
         terrain {
 //           111111111122222222223333333333444444444455555555556666
@@ -232,6 +233,4 @@ PLACE  p_empire_city {
 
 } // PLACE  p_empire_city
 
-#endif
-
-/* eof */
+#endif // P_empire_city_ghul

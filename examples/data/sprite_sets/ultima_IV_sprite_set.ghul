@@ -145,7 +145,7 @@ SPRITE_SET ss_u4 {
     SPRITE(s_counter_middle, 1, 122, normal);
     SPRITE(s_counter_right,  1, 123, normal);
     SPRITE(s_counter_left,   1, 124, normal);
-    SPRITE(s_counter_pillar, 1, 125, normal);
+    SPRITE(s_counter_1x1,    1, 125, normal);
 
     SPRITE(s_blank,        1, 126, normal);
     SPRITE(s_null,         1, 126, normal);
