@@ -35,10 +35,10 @@
 
 static void dump_state(struct mech_state *state)
 {
-        printf("  name=%s\n", state->name);
+        printf("  name=%s\n",   state->name);
         printf(" pmask=0x%x\n", state->pmask);
-        printf(" light=%d\n", state->light);
-        printf("opaque=%d\n", state->opaque);
+        printf(" light=%d\n",   state->light);
+        printf("opaque=%d\n",   state->opaque);
 }
 
 
@@ -196,7 +196,7 @@ static struct mech_state *load_states(class Loader * loader, int *n,
 	if (!load_state(loader, &tmp))
 		goto fail;
 
-        dump_state(def);
+    // dump_state(def);  // For debug purposes
 
 	index = *n;
 	(*n)++;
@@ -256,7 +256,7 @@ bool MechType::load(class Loader * loader)
 		return false;
 
 	memset(&def, 0, sizeof(def));
-        printf("Loading default state for MECH %s:\n", tag);
+    // printf("Loading default state for MECH %s:\n", tag);
 	if (!load_state(loader, &def))
 		return false;
 
