@@ -4,6 +4,10 @@
 # 
 # A wrapper script to run Nazghul after regenerating 
 # it and its' mapfile from source.
+# 
+# This script desires that you have two ENV variables set,
+# NNN for the Nazghul source   dir (.../src), and
+# DDD for the nazghul examples dir (.../examples)
 
 if [[ -z "$NNN" ]]; then
     echo "Nazghul src dir NNN is not defined!"
