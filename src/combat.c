@@ -851,6 +851,154 @@ static void random_ambush(void)
 }
 #endif
 
+#if 0
+struct node {
+        struct node *next;
+        struct node *prev;
+        void *ptr;
+};
+
+
+/*****************************************************************************
+ * combat_npc_status_visitor - determine the status of the npc faction(s)
+ *
+ * This is a "visitor" function applied to each object in a list of nodes. It's
+ * meant to be applied to every object in a place. It checks for any npc
+ * party members and whether or not they're charmed, and sets the combat status
+ * of the npc faction.
+ *
+ * This routine does not distinguish between different NPC factions, it just
+ * looks for anybody hostile to the player.
+ *
+ *****************************************************************************/
+static void combat_hostile_status_visitor(struct node *node, void *data)
+{
+        enum combat_faction_status *stat;
+        class Object *obj;
+
+        /* Extract the typed variables from the generic parms */
+        stat = (struct combat_faction_status *)data;
+        obj = (class Object*)node->ptr;
+
+        /* If we already know a hostile faction exists then skip the rest */
+        if (*stat == COMBAT_FACTION_EXISTS)
+                return;
+
+        /* Skip non-beings */
+        if (! obj_is_being(obj))
+                return;
+
+        /* Skip player party members */
+        if (obj->isPlayerPartyMember())
+                return;
+
+        /* A hostile npc means a hostile faction still exists */
+        if (are_hostile((Being*)obj, player_party)) {
+                *stat = COMBAT_FACTION_EXISTS;
+                return;
+        }
+
+        /* Check for a charmed hostile */
+        if (are_natively_hostile((Being*)obj, player_party)) {
+                *stat = COMBAT_FACTION_CHARMED;
+        }
+}
+
+/*****************************************************************************
+ * combat_get_hostile_faction_status - check hostile combat status
+ *
+ * This is literally a dupe of combat_get_player_faction_status() below.
+ *
+ *****************************************************************************/
+static enum combat_faction_status combat_get_hostile_faction_status(void)
+{
+        enum combat_faction_status stat;
+
+        /* Assume until proven otherwise that the player faction is gone. */
+        stat = COMBAT_FACTION_GONE;
+
+        /* Check each object in the current place to determine the status of
+         * the player faction. */
+        node_for_each(place_get_all_objects(Place),
+                      combat_hostile_status_visitor,
+                      &stat);
+
+        /* Return the discovered status. */
+        return stat;
+}
+
+/*****************************************************************************
+ * combat_player_status_visitor - determine the status of the player faction
+ *
+ * This is a "visitor" function applied to each object in a list of nodes. It's
+ * meant to be applied to every object in a place. It checks for any player
+ * party members and whether or not they're charmed, and sets the combat status
+ * of the player party based on the cumulative results.
+ *
+ *****************************************************************************/
+static void combat_player_status_visitor(struct node *node, void *data)
+{
+        enum combat_faction_status *stat;
+        class Object *obj;
+
+        /* Extract the typed variables from the generic parms */
+        stat = (struct combat_faction_status *)data;
+        obj = (class Object*)node->ptr;
+
+        /* If we already know the player is still fighting then skip the rest
+         * of this. */
+        if (info->status == COMBAT_FACTION_EXISTS)
+                return;
+
+        /* Skip non-beings */
+        if (! obj_is_being(obj))
+                return;
+
+        /* Skip non-party-members */
+        if (! obj->isPlayerPartyMember())
+                return;
+
+        /* A non-hostile party member means the player is still fighting. */
+        if (! are_hostile((Being*)obj, player_party)) {
+                info->status = COMBAT_FACTION_EXISTS;
+                return;
+        }
+
+        /* Check if a player party members has been charmed */
+        if (are_natively_hostile((Being*)obj, player_party)) {
+                info->status = COMBAT_FACTION_CHARMED;
+        }
+}
+
+/*****************************************************************************
+ * combat_get_player_faction_status - check player combat status
+ *
+ * Loops over all objects to check if any player party members are still around
+ * and whether or not they're charmed.
+ *
+ * FIXME: why not just check the player party directly? Or at least merge this
+ * with the combat_get_hostile_faction_status() function above?
+ *
+ *****************************************************************************/
+static enum combat_faction_status combat_get_player_faction_status(void)
+{
+        enum combat_faction_status stat;
+
+        /* Assume until proven otherwise that the player faction is gone. */
+        stat = COMBAT_FACTION_GONE;
+
+        /* Check each object in the current place to determine the status of
+         * the player faction. */
+        node_for_each(place_get_all_objects(Place),
+                      combat_player_status_visitor,
+                      &stat);
+
+        /* Return the discovered status. */
+        return stat;
+}
+
+#else /* ! TURN_LIST_NODES */
+
 enum combat_faction_status combat_get_hostile_faction_status(void)
 {
         // ---------------------------------------------------------------------
@@ -928,121 +1076,6 @@ enum combat_faction_status combat_get_hostile_faction_status(void)
         return COMBAT_FACTION_GONE;
 }
 
-#if 0
-struct node {
-        struct node *next;
-        struct node *prev;
-        void *ptr;
-};
-
-
-/*****************************************************************************
- * combat_npc_status_visitor - determine the status of the npc faction(s)
- *
- * This is a "visitor" function applied to each object in a list of nodes. It's
- * meant to be applied to every object in a place. It checks for any npc
- * party members and whether or not they're charmed, and sets the combat status
- * of the npc faction.
- *
- * This routine does not distinguish between different NPC factions, it just
- * looks for anybody hostile to the player.
- *
- *****************************************************************************/
-static void combat_hostile_status_visitor(struct node *node, void *data)
-{
-        enum combat_faction_status *stat;
-        class Object *obj;
-
-        /* Extract the typed variables from the generic parms */
-        stat = (struct combat_faction_status *)data;
-        obj = (class Object*)node->ptr;
-
-        /* If we already know a hostile faction exists then skip the rest */
-        if (*stat == COMBAT_FACTION_EXISTS)
-                return;
-
-        /* Skip non-beings */
-        if (! obj_is_being(obj))
-                return;
-
-        /* Skip player party members */
-        if (obj->isPlayerPartyMember())
-                return;
-
-        /* A hostile npc means a hostile faction still exists */
-        if (are_hostile((Being*)obj, player_party)) {
-                *stat = COMBAT_FACTION_EXISTS;
-                return;
-        }
-
-        /* Check for a charmed hostile */
-        if (are_natively_hostile((Being*)obj, player_party)) {
-                *stat = COMBAT_FACTION_CHARMED;
-        }
-}
-
-
-/*****************************************************************************
- * combat_player_status_visitor - determine the status of the player faction
- *
- * This is a "visitor" function applied to each object in a list of nodes. It's
- * meant to be applied to every object in a place. It checks for any player
- * party members and whether or not they're charmed, and sets the combat status
- * of the player party based on the cumulative results.
- *
- *****************************************************************************/
-static void combat_player_status_visitor(struct node *node, void *data)
-{
-        enum combat_faction_status *stat;
-        class Object *obj;
-
-        /* Extract the typed variables from the generic parms */
-        stat = (struct combat_faction_status *)data;
-        obj = (class Object*)node->ptr;
-
-        /* If we already know the player is still fighting then skip the rest
-         * of this. */
-        if (info->status == COMBAT_FACTION_EXISTS)
-                return;
-
-        /* Skip non-beings */
-        if (! obj_is_being(obj))
-                return;
-
-        /* Skip non-party-members */
-        if (! obj->isPlayerPartyMember())
-                return;
-
-        /* A non-hostile party member means the player is still fighting. */
-        if (! are_hostile((Being*)obj, player_party)) {
-                info->status = COMBAT_FACTION_EXISTS;
-                return;
-        }
-
-        /* Check if a player party members has been charmed */
-        if (are_natively_hostile((Being*)obj, player_party)) {
-                info->status = COMBAT_FACTION_CHARMED;
-        }
-}
-
-static enum combat_faction_status combat_get_player_faction_status(void)
-{
-        enum combat_faction_status stat;
-
-        /* Assume until proven otherwise that the player faction is gone. */
-        stat = COMBAT_FACTION_GONE;
-
-        /* Check each object in the current place to determine the status of
-         * the player faction. */
-        node_for_each(place_get_all_objects(Place),
-                      combat_player_status_visitor,
-                      &stat);
-
-        /* Return the discovered status. */
-        return stat;
-}
-
-#endif
 
 enum combat_faction_status combat_get_player_faction_status(void)
 {
@@ -1096,6 +1129,8 @@ enum combat_faction_status combat_get_player_faction_status(void)
         return COMBAT_FACTION_GONE;
         
 }
+
+#endif /* ! TURN_LIST_NODES */
 
 void combat_analyze_results_of_last_turn()
 {

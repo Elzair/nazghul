@@ -36,6 +36,10 @@ BEGIN_DECL
 #include "common.h"
 #include "sky.h"
 
+#ifdef TURN_LIST_NODES
+#include "node.h"
+#endif
+
 #include <SDL.h>
 
 #define place_w(p) ((p)->terrain_map->w)
@@ -57,6 +61,7 @@ BEGIN_DECL
 #define place_is_locked(p) ((p)->lock)
 #define place_mark_for_death(p) ((p)->marked_for_death = 1)
 #define place_is_marked_for_death(p) ((p)->marked_for_death)
+#define place_max_distance(p) (place_w(p) + place_h(p))
 
 #define PFLAG_HORZ             (1 << 0) /* matches ASTAR_HORZ */
 #define PFLAG_VERT             (1 << 1) /* matches ASTAR_VERT */
@@ -93,9 +98,15 @@ struct place {
         // the script.
         int magic;
 
-        struct list list;
+#ifdef TURN_LIST_NODES
+        struct node turn_list;
+        struct node *turn_elem;
+#else
         struct list turn_list;
         struct list *turn_elem;
+#endif
+
+        struct list list;
         struct location location;
         struct place *above, *below;
         char *tag;

@@ -932,6 +932,116 @@ static bool ctrl_attack_target(class Character *character,
         return attacked;
 }
 
+#ifdef TURN_LIST_NODES
+
+struct ctrl_select_target_data {
+        class Character *target;
+        class Character *attacker;
+        int distance;
+};
+
+/*****************************************************************************
+ * ctrl_is_valid_target - check if 'obj' is a valid target for 'attacker'
+ *****************************************************************************/
+static int ctrl_is_valid_target(class Character *attacker, class Object *obj)
+{
+        /* Skip NULL */
+        if (! obj)
+                return 0;
+
+        /* Skip non-characters */
+        if (! obj->isType(CHARACTER_ID))
+                return 0;
+
+        /* Skip the attacker */
+        if (obj == data->attacker)
+                return 0;
+
+        /* Skip dead beings */
+        if (obj->isDead)
+                return 0;
+
+        /* Skip non-hostiles */
+        if (! are_hostile(data->attacker, obj))
+                return 0;
+
+        /* Skip non-visible objects */
+        if (! attacker->canSee(obj))
+                return 0;
+
+        /* Skip off-map beings (is this even possible?) */
+        if (! obj->isOnMap)
+                return 0;
+
+        return 1;
+}
+
+/*****************************************************************************
+ * ctrl_select_target_visitor - find and remember the closest valid target for
+ * an attacker
+ *****************************************************************************/
+static void ctrl_select_target_visitor(struct node *node, void *parm)
+{
+        class Object *obj;
+        struct ctrl_select_target_data *data;
+
+        /* Extract the typed variables from the generic parms */
+        obj = (class Object*)node->ptr;
+        data = (struct ctrl_select_target_data *)data;
+
+        /* Check if this object makes a valid target */
+        if (! ctrl_is_valid_target(data.attacker, obj))
+                return;
+
+        /* Compute the distance from attacker to obj */
+        distance = place_flying_distance(data->attacker->getPlace(), 
+                                         data->attacker->getX(), 
+                                         data->attacker->getY(), 
+                                         obj->getX(), 
+                                         obj->getY());
+
+        /* Memoize the closest target and its distance */
+        if (distance < data->distance) {
+                data->distance = distance;
+                data->target = (class Character*)obj;
+        }
+}
+
+/*****************************************************************************
+ * ctrl_select_target - use a heuristic to pick a target for an attacker
+ *****************************************************************************/
+static class Character * ctrl_select_target(class Character *character)
+{
+        struct ctrl_select_target_data data;
+
+        /* Initialize the search data. */
+        data.attacker = character;
+        data.target = NULL;
+        data.distance = place_max_distance(character->getPlace()) + 1;
+
+        /* Search all objects in the current place for targets. */
+        node_for_each(place_get_all_objects(character->getPlace()),
+                      ctrl_select_target_visitor,
+                      &data);
+
+        /* Check if one was found */
+        if (data.target) {
+                character->setAttackTarget((class Character*)data.target);
+                return data.target;
+        }
+
+        /* Try the old one */
+        if (ctrl_is_valid_target(character,
+                                 character->getAttackTarget()))
+                return character->getAttackTarget();
+
+        /* No valid targets */
+        character->setAttackTarget(NULL);
+        return NULL;
+}
+
+#else /* ! TURN_LIST_NODES */
+
 static class Character * ctrl_select_target(class Character *character)
 {
         struct list *head;
@@ -990,6 +1100,8 @@ static class Character * ctrl_select_target(class Character *character)
         character->setAttackTarget(NULL);
         return NULL;
 }
+
+#endif  /* ! TURN_LIST_NODES */
 
 static void ctrl_idle(class Character *character)
 {

@@ -369,7 +369,11 @@ struct place *place_new(char *tag,
         place->is_wilderness_combat = wild_combat;
 
 	list_init(&place->vehicles);
+#ifdef TURN_LIST_NODES
+        node_init(&place->turn_list);
+#else
         list_init(&place->turn_list);
+#endif
         list_init(&place->subplaces);
         list_init(&place->container_link);
         place->turn_elem = &place->turn_list;
@@ -790,6 +794,54 @@ void place_move_object(struct place *place, Object * object,
         tile_add_object(new_tile, object);
 }
 
+static void place_add_to_turn_list(struct place *place, Object *object)
+{
+#ifdef TURN_LIST_NODES
+        struct node *node;
+
+        /* The object should not be pointing to an existing node. */
+        assert(! object->turn_list);
+
+        /* Create a new node that points to the object. */
+        node = node_new(object);
+
+        /* Link the object back to its node. */
+        object->turn_list = node;
+
+        /* Add the node to the turn list. */
+        node_add(&place->turn_list, node);
+#else
+        list_add(&place->turn_list, &object->turn_list);
+#endif
+
+}
+
+static void place_remove_from_turn_list(struct place *place, Object *object)
+{
+        /* Note: this is a bit subtle. If it just so happens that we are in the
+         * process of running place_exec, there is a chance that the object we
+         * are removing here is the next object to be processed in the
+         * turn_list. In this special case we must setup the next object after
+         * this to be processed instead. */
+#ifdef TURN_LIST_NODES
+        struct node *node;
+
+        node = object->turn_list;
+
+        assert(node);
+
+        if (place->turn_elem == node)
+                place->turn_elem = node;
+
+        node_remove(node);
+        node_del(node);
+#else
+        if (place->turn_elem == &object->turn_list)
+                place->turn_elem = object->turn_list.next;
+        list_remove(&object->turn_list);
+#endif
+}
+
 int place_add_object(struct place *place, Object * object)
 {
 	struct tile *tile = place_lookup_tile(place, object->getX(),
@@ -803,7 +855,7 @@ int place_add_object(struct place *place, Object * object)
 	}
 
         tile_add_object(tile, object);
-        list_add(&place->turn_list, &object->turn_list);
+        place_add_to_turn_list(place, object);
         mapSetDirty();
 	return 0;
 }
@@ -815,16 +867,7 @@ void place_remove_object(struct place *place, Object * object)
 	assert(tile);
 
         tile_remove_object(tile, object);
-
-        /* Note: this is a bit subtle. If it just so happens that we are in the
-         * process of running place_exec, there is a chance that the object we
-         * are removing here is the next object to be processed in the
-         * turn_list. In this special case we must setup the next object after
-         * this to be processed instead. */
-        if (place->turn_elem == &object->turn_list)
-                place->turn_elem = object->turn_list.next;
-
-        list_remove(&object->turn_list);
+        place_remove_from_turn_list(place, object);
 }
 
 Object *place_get_object(struct place *place, int x, int y, enum layer layer)
