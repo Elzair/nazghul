@@ -1,22 +1,9 @@
-;; !!! OBSOLETE !!!
-;; Note: if you try to create this interface on-the-fly, as in the commented
-;; out part below, then you will eventually get a runtime crash. The reason is
-;; that the procedure created by the lambda in mk-gen-ifc will not be referred
-;; to by any environment variable, so the gc will deallocate it.
-(define goblin-gen-ifc 
-  (ifc '()
-       (method 'exec (lambda (kobj)
-                       (if (>= (modulo (random-next) 100) 99)
-                           (kern-obj-put-at (kern-mk-party t_goblin_horde
-                                                           faction-monster
-                                                           '())
-                                            (kern-obj-get-location kobj)))))))
-
-
-;; A monster generator
-(mk-obj-type 't_goblin_generator "goblin generator" nil layer-none 
-             goblin-gen-ifc)
-
+(define (mk-ambush-gob x y w h msg) (list x y w h msg))
+(define (ambush-x gob) (list-ref gob 0))
+(define (ambush-y gob) (list-ref gob 1))
+(define (ambush-w gob) (list-ref gob 2))
+(define (ambush-h gob) (list-ref gob 3))
+(define (ambush-msg gob) (list-ref gob 4))
 
 ;; ----------------------------------------------------------------------------
 ;; mk-wilderness-monster-generator-ifc -- make an interface for a monster
@@ -42,16 +29,32 @@
        (method 'exec generate)))
 
 ;; ----------------------------------------------------------------------------
-;; mk-wilderness-ambush-ifc -- make an interface for a monster ambush generator
-;; in the wilderness
+;; mk-wilderness-ambush-generator-ifc - construct an interface with an 'exec
+;; handler that will roll to ambush the player. If the roll succeeds the
+;; handler will then check if the player is in the designated region and, if
+;; so, create a wilderness combat with the specified npc party of the
+;; given faction.
 ;; ----------------------------------------------------------------------------
-(define (mk-wilderness-ambush-generator-ifc threshold max party faction) 
-  (define (generate gen)
-    (if (>= (modulo (random-next) 1000) threshold)
+(define (mk-wilderness-ambush-generator-ifc threshold max party faction)
+  (define (roll-to-encounter)
+    (>= (modulo (random-next) 1000) threshold))
+  (define (player-in-rect? kgen)
+    (let ((loc (kern-obj-get-location (kern-get-player)))
+          (gob (gob-data (kobj-gob kgen))))
+      (display "gob:")(display gob)(newline)
+      (and (>= (loc-x loc) (ambush-x gob))
+           (<  (loc-x loc) (+ (ambush-x gob) (ambush-w gob)))
+           (>= (loc-y loc) (ambush-y gob))
+           (<  (loc-y loc) (+ (ambush-y gob) (ambush-h gob))))))
+  (define (generate kgen)
+    (if (and (roll-to-encounter)
+             (player-in-rect? kgen))
         (begin
-          (kern-log-msg "*** AMBUSH ***")
-          (kern-begin-combat (kern-obj-get-location gen)
-                             (kern-mk-party party faction nil)))))
+          (kern-log-msg (ambush-msg (gob-data (kobj-gob kgen))))
+          (kern-begin-combat (kern-obj-get-location (kern-get-player))
+                             (kern-mk-party party 
+                                            faction 
+                                            nil)))))
   (ifc '() 
        (method 'exec generate)))
 
@@ -75,7 +78,7 @@
 ;; mk-wilderness-ambush-generator -- make an object type for spawning random
 ;; ambush encounters
 ;; ----------------------------------------------------------------------------
-(define (mk-wilderness-ambush-generator tag threshold max party faction)
+(define (mk-wilderness-ambush-generator-type tag threshold party faction)
   (mk-obj-type tag                ;; tag
                "ambush generator" ;; name
                nil                ;; sprite
@@ -84,6 +87,14 @@
                                                    max
                                                    party
                                                    faction)))
+
+;; ----------------------------------------------------------------------------
+;; mk-wilderness-ambush-generator -- make an instance of a wilderness ambush
+;; generator type which monitors the given rectangle
+;; ----------------------------------------------------------------------------
+(define (mk-wilderness-ambush-generator type x y w h msg)
+  (bind (kern-mk-obj type 1)
+        (mk-ambush-gob x y w h msg)))
 
 ;; ----------------------------------------------------------------------------
 ;; Monster Generators
@@ -98,17 +109,15 @@
                                  t_goblin_horde 
                                  faction-monster nil)
 
-(mk-wilderness-ambush-generator 't_spider_generator
-                                 990
-                                 2
-                                 t_wood_spiders
-                                 faction-wood-spider nil)
+(mk-wilderness-ambush-generator-type 't_spider_generator
+                                     950
+                                     t_wood_spiders
+                                     faction-wood-spider nil)
 
-(mk-wilderness-ambush-generator 't_queen_spider_generator
-                                 999
-                                 1
-                                 t_queen_wood_spiders
-                                 faction-wood-spider nil)
+(mk-wilderness-ambush-generator-type 't_queen_spider_generator
+                                     999
+                                     t_queen_wood_spiders
+                                     faction-wood-spider nil)
 
 (mk-wilderness-monster-generator 't_skeleton_generator
                                  990

@@ -5946,10 +5946,14 @@ KERN_API_CALL(kern_begin_combat)
         info.py = player_party->getY();
         info.npc_party = party;
                 
-        if (!info.dx && !info.dy)
-                info.dx = 1;
-        else if (info.dx && info.dy)
-                info.dy = 0;
+        /* If the npc party has a null or invalid direction vector (this is the
+         * case with an ambush) then use the opposite of the player's direction
+         * vector. */
+        if ((!info.dx && !info.dy) ||
+            (info.dx && info.dy)) {
+                info.dx = - player_party->getDx();
+                info.dy = - player_party->getDy();
+        }
 
         memset(&cinfo, 0, sizeof(cinfo));
         cinfo.defend = true;
@@ -5957,6 +5961,11 @@ KERN_API_CALL(kern_begin_combat)
                 
         combat_enter(&cinfo);
         return sc->T;
+}
+
+KERN_API_CALL(kern_get_player)
+{
+        return scm_mk_ptr(sc, player_party);
 }
 
 #if 0
@@ -6157,6 +6166,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-fold-rect", kern_fold_rect);
         API_DECL(sc, "kern-get-distance", kern_get_distance);
         API_DECL(sc, "kern-get-objects-at", kern_get_objects_at);
+        API_DECL(sc, "kern-get-player", kern_get_player);
         API_DECL(sc, "kern-get-ticks", kern_get_ticks);
         API_DECL(sc, "kern-in-los?", kern_in_los);
         /*API_DECL(sc, "kern-los-invalidate", kern_los_invalidate);*/

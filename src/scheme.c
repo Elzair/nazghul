@@ -4544,6 +4544,8 @@ static void serialize(scheme *sc, pointer p, struct save *save, int flags)
                         }
                 } else if (is_foreign(p)) {
                         save->write(save, "'()\n");
+                } else if (is_string(p)) {
+                        save->write(save, "\"%s\"\n", strvalue(p));
                 } else {
                         assert(0);
                 }

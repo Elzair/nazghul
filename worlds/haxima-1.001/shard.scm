@@ -101,8 +101,15 @@
                 (list (kern-mk-obj t_orc_generator 1) 1 22)
 
                 ;; spiders in the deep woods
-                (list (kern-mk-obj t_spider_generator 1) 46 37)
-                (list (kern-mk-obj t_queen_spider_generator 1) 56 43)
+                (list (mk-wilderness-ambush-generator 
+                       t_spider_generator ;; type
+                       43 ;; x
+                       34 ;; y
+                       5  ;; w
+                       6  ;; h
+                       "A nest of spiders!" ;; msg
+                       )
+                      46 37)
 
                 ;; skeletons in the northern fens
                 (list (kern-mk-obj t_skeleton_generator 1) 0 0)
