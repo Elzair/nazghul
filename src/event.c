@@ -62,6 +62,9 @@ static int mapKey(SDL_keysym * keysym)
 
 	int key = keysym->sym;
 
+        printf("sym='%c'[%d] mod=%02x\n", keysym->sym,  keysym->sym,
+               keysym->mod);
+
 	if (keysym->mod & KMOD_SHIFT) {
 
 		switch (key) {

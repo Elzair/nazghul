@@ -48,7 +48,7 @@ static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
         
         G_latency_start = SDL_GetTicks();
 
-        if (keymod == KMOD_LCTRL || keymod == KMOD_RCTRL) {
+        if (keymod & KMOD_LCTRL || keymod & KMOD_RCTRL) {
 
                 // SAM: This seemed like a less ugly way of setting off a group
                 // of keybindings for "DM Mode" use or the like.  If we find
@@ -585,7 +585,7 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
         // Process the special CTRL commands
         // -------------------------------------------------------------------
 
-        if (keymod == KMOD_LCTRL || keymod == KMOD_RCTRL) {
+        if (keymod & KMOD_LCTRL || keymod & KMOD_RCTRL) {
 
                 switch (key) {
       
