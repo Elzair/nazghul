@@ -5141,6 +5141,17 @@ KERN_API_CALL(kern_obj_get_ap)
         return scm_mk_integer(sc, object->getActionPoints());
 }
 
+KERN_API_CALL(kern_obj_get_count)
+{
+        class Object *object;
+
+        /* unpack the object */
+        object = (class Object*)unpack_obj(sc, &args, "kern-obj-get-count");
+        if (!object)
+                return sc->NIL;
+
+        return scm_mk_integer(sc, object->getCount());
+}
 
 KERN_API_CALL(kern_arms_type_get_range)
 {
@@ -5201,6 +5212,11 @@ KERN_API_CALL(kern_obj_move)
         default:
                 return sc->F;
         }
+}
+
+KERN_API_CALL(kern_get_ticks)
+{
+        return scm_mk_integer(sc, SDL_GetTicks());
 }
 
 scheme *kern_init(void)
@@ -5272,6 +5288,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-obj-find-path", kern_obj_find_path);
         API_DECL(sc, "kern-obj-get-activity", kern_obj_get_activity);
         API_DECL(sc, "kern-obj-get-ap", kern_obj_get_ap);
+        API_DECL(sc, "kern-obj-get-count", kern_obj_get_count);
         API_DECL(sc, "kern-obj-get-gob", kern_obj_get_gob);
         API_DECL(sc, "kern-obj-get-light", kern_obj_get_light);
         API_DECL(sc, "kern-obj-get-location", kern_obj_get_location);
@@ -5356,6 +5373,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-fire-missile", kern_fire_missile);
         API_DECL(sc, "kern-get-distance", kern_get_distance);
         API_DECL(sc, "kern-get-objects-at", kern_get_objects_at);
+        API_DECL(sc, "kern-get-ticks", kern_get_ticks);
         API_DECL(sc, "kern-in-los?", kern_in_los);
         API_DECL(sc, "kern-include", kern_include);
         API_DECL(sc, "kern-interp-error", kern_interp_error);

@@ -132,15 +132,16 @@
           (kern-place-get-objects (loc-place (kern-obj-get-location kchar)))))
 
 (define (is-visible-hostile? kchar kobj)  
-  ;;(display "is-visible-hostile?kchar=")(display kchar)(display " kobj=")(display kobj)(newline)
   (and (kern-obj-is-char? kobj)
        (kern-char-is-hostile? kchar kobj)
-       (<= (kern-get-distance (kern-obj-get-location kchar) 
-                              (kern-obj-get-location kobj))
-           (kern-obj-get-vision-radius kchar))
-       (kern-in-los? (kern-obj-get-location kchar)
-                     (kern-obj-get-location kobj))
-       (kern-obj-is-visible? kobj)))
+       (let ((charloc (kern-obj-get-location kchar))
+             (objloc (kern-obj-get-location kobj)))
+         (display "is-visible-hostile? charloc=")(display charloc)
+         (display " objloc=")(display objloc)(newline)
+         (and (<= (kern-get-distance charloc objloc)
+                  (kern-obj-get-vision-radius kchar))
+              (kern-in-los? charloc objloc)
+              (kern-obj-is-visible? kobj)))))
 
 (define (all-visible-hostiles kchar)
   (display "all-visible-hostiles")(newline)
@@ -220,88 +221,37 @@
       a
       b))
 
-;; Return a list of locations with matching terrain
-(define (find-terrain kplace x y w h kter)
-  ;;(display "find-terrain:x=")(display x)
-  ;;(display " y=")(display y)
-  ;;(display " w=")(display w)
-  ;;(display " h=")(display h)
-  ;;(newline)
-  (define (find-in-row x w)
-    ;;(display "find-terrain:find-in-row")
-    ;;(display " x=")(display x)
-    ;;(display " w=")(display w)
-    ;;(newline)
-    (define (check)
-      ;;(display "find-terrain:find-in-row:check")
-      ;;(display " x=")(display x)
-      ;;(display " w=")(display w)
-      ;;(newline)
-      (if (eqv? (kern-place-get-terrain (mk-loc kplace x y)) kter)
-          (mk-loc kplace x y)
-          nil))
-    (if (= 0 w)
-        nil
-        (let ((coord (check)))
-          (cond ((null? coord) (find-in-row (+ x 1) (- w 1)))
-                (else (cons coord (find-in-row (+ x 1) (- w 1))))))))
-  (if (= 0 h)
-      nil
-      (let ((coords (find-in-row x w)))
-        (cond ((null? coords) (find-terrain kplace x (+ y 1) w (- h 1) kter))
-              (else (append coords (find-terrain kplace x (+ y 1) w (- h 1) kter)))))))
+;; ----------------------------------------------------------------------------
+;; search-rect -- apply a procedure to every location in a rectangular region
+;; and return a list of its non-nil results.
+;; ----------------------------------------------------------------------------
+(define (search-rect kplace x y w h proc)
+  (filter notnull? (map proc (loc-enum-rect kplace x y w h))))
 
-;;
+;;----------------------------------------------------------------------------
+;; Return a list of locations with matching terrain
+;;----------------------------------------------------------------------------
+(define (find-terrain kplace x y w h kter)
+  (define (check loc)
+    (if (eqv? (kern-place-get-terrain loc) kter)
+        loc
+        nil))
+  (search-rect kplace x y w h check))
+
+;;----------------------------------------------------------------------------
 ;; find-objects -- return a list of locations with the given object on them
-;;
-;; Get this working then refactor it with kern-terrain above into a common
-;; procedure.
-;;
+;;----------------------------------------------------------------------------
 (define (find-objects kplace x y w h ktype)
-  ;;(display "find-objects")
-  ;;(display " x=")(display x)
-  ;;(display " y=")(display y)
-  ;;(display " w=")(display w)
-  ;;(display " h=")(display h)
-  ;;(display " ktype=")(display ktype)
-  ;;(newline)
-  (define (find-in-row x w)
-    ;;(display "find-objects:find-in-row")
-    ;;(display " x=")(display x)
-    ;;(display " w=")(display w)
-    ;;(newline)
-    (define (check)
-      ;;(display "find-objects:find-in-row:check")
-      ;;(display " x=")(display x)
-      ;;(display " w=")(display w)
-      ;;(newline)
-      ;;
-      ;; NOTE: need to implement kern-place-get-objects-at in the kernel.
-      ;;
-      (define (scanobjlst lst)
-        (foldr (lambda (a b) 
-                 (or a (eqv? (kern-obj-get-type b) ktype)))
-               #f
-               lst))
-      (if (scanobjlst (kern-place-get-objects-at (mk-loc kplace x y)))
-          (mk-loc kplace x y)
-          nil))
-    (if (= 0 w)
-        nil
-        (let ((coord (check)))
-          (cond ((null? coord) (find-in-row (+ x 1) (- w 1)))
-                (else (cons coord (find-in-row (+ x 1) (- w 1))))))))
-  (if (= 0 h)
-      nil
-      (let ((coords (find-in-row x w)))
-        (cond ((null? coords) (find-objects kplace x (+ y 1) w (- h 1) ktype))
-              (else (append coords 
-                            (find-objects kplace 
-                                          x 
-                                          (+ y 1) 
-                                          w 
-                                          (- h 1) 
-                                          ktype)))))))
+  (define (check loc)
+    (define (scanobjlst lst)
+      (foldr (lambda (a b) 
+               (or a (eqv? (kern-obj-get-type b) ktype)))
+             #f
+             lst))
+    (if (scanobjlst (kern-place-get-objects-at loc))
+        loc
+        nil))
+  (search-rect kplace x y w h check))
 
 (define (in-inventory? kchar ktype)
   (define (hasit? item inv)
@@ -327,3 +277,40 @@
 ;; distance..
 ;;----------------------------------------------------------------------------
 (define (mdist a b R) (min (msub a b R) (msub b a R)))
+
+;; ----------------------------------------------------------------------------
+;; Turn on/off verbose scheme garbage collection. Useful if you think scheme is
+;; gc'ing some of your code behind your back.
+;; ----------------------------------------------------------------------------
+;; (gc-verbose #t)
+
+(define (profile proc . args)
+  (let ((t (kern-get-ticks))
+        (result (apply proc args)))
+    (display "*** TIME: ")(display (- (kern-get-ticks) t)) (display " ms")
+    (newline)
+    result))
+
+;; ----------------------------------------------------------------------------
+;; find-object-types-at -- return a list of objects of the given type which can
+;; be found at the given location
+;; ----------------------------------------------------------------------------
+(define (find-object-types-at loc ktype)
+  (filter (lambda (a) (eqv? (kern-obj-get-type a) ktype))
+          (kern-place-get-objects-at loc)))
+
+;; ----------------------------------------------------------------------------
+;; kobj-get -- remove an object from the map and put it into another object
+;; ----------------------------------------------------------------------------
+(define (kobj-get kchar kobj)
+  (kern-obj-remove kobj)
+  (kern-obj-put-into kobj kchar)
+  (kern-map-repaint))
+
+;; ----------------------------------------------------------------------------
+;; kobj-get-at -- get an object of a specific type from the location
+;; ----------------------------------------------------------------------------
+(define (kobj-get-at kchar loc ktype)
+  (let ((objs (find-object-types-at loc ktype)))
+    (if (notnull? objs)
+        (kobj-get kchar (car objs)))))

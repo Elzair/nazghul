@@ -2083,6 +2083,7 @@ bool Character::add(ObjectType *type, int amount)
                 return player_party->add(type, amount);
         } else if (container) {
                 container->add(type, amount);
+                return true;
         }
 
         return false;

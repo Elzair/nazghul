@@ -3,6 +3,7 @@
 (define (loc-place loc) (car loc))
 (define (loc-x loc) (cadr loc))
 (define (loc-y loc) (caddr loc))
+
 (define (loc-op a b op)
   (mk-loc (loc-place a)
           (op (loc-x a) (loc-x b))
@@ -11,6 +12,31 @@
 (define (loc-diff a b) (loc-op a b +))
 (define (loc-distance a b)
   (kern-get-distance a b))
+
+;; Convert a location vector to "normal" form
+(define (loc-norm loc)
+  (define (norm a)
+    (cond ((> a 0) 1)
+          ((< a 0) -1)
+          (else 0)))
+  (mk-loc (loc-place loc)
+          (norm (loc-x loc))
+          (norm (loc-y loc))))
+
+;; ----------------------------------------------------------------------------
+;; loc-enum-rect -- given a rectangular region of a place return a flat list of
+;; all locations in that rectangle. Useful in conjunction with map.
+;; ----------------------------------------------------------------------------
+(define (loc-enum-rect place x y w h)
+  (define (enum-row x w)
+    (if (= 0 w)
+        nil
+        (cons (mk-loc place x y) 
+              (enum-row (+ x 1) (- w 1)))))
+  (if (= 0 h)
+      nil
+      (append (enum-row x w)
+              (loc-enum-rect place x (+ y 1) w (- h 1)))))
 
 ;; ----------------------------------------------------------------------------
 ;; loc-adjacent? -- check if two locations are adjacent neighbors in one of the
@@ -28,16 +54,6 @@
                  (mdist (loc-y a) (loc-y b) w)))
         (check (abs (- (loc-x a) (loc-x b)))
                (abs (- (loc-y a) (loc-y b)))))))
-
-;; Convert a location vector to "normal" form
-(define (loc-norm loc)
-  (define (norm a)
-    (cond ((> a 0) 1)
-          ((< a 0) -1)
-          (else 0)))
-  (mk-loc (loc-place loc)
-          (norm (loc-x loc))
-          (norm (loc-y loc))))
 
 (define (mk-lvect dx dy dz) (list dx dy dz))
 (define (lvect-dx lvect) (car lvect))
