@@ -133,6 +133,7 @@ void PARSE_ASSERT(bool expr, char *format, ...)
 static struct lexer *Lexer;
 static struct list Images;
 static struct list Terrains;
+static struct list Terrain_Palettes;
 static struct list Maps;
 static struct list Places;
 static struct list ObjectTypes;
@@ -852,9 +853,8 @@ static struct terrain_map * game_load_ascii_terrain_map (char *tag)
     char * palette_tag;
     unsigned int width;
     unsigned int height;
-    int i;
-    int x, y;  // SAM
-    int ret = 0;
+    int x, y;
+    int ret = 0;  // Wanted by certain PARSE_*() macros
     class Loader loader;
     bool one_char_per_tile = false;
 
@@ -886,60 +886,62 @@ static struct terrain_map * game_load_ascii_terrain_map (char *tag)
     }
     palette->tag = palette_tag;
     // palette_print(stdout, INITIAL_INDENTATION, palette);
-
-#ifdef HACK_GLOBAL_PALETTE
-    static int HACK_global_palette_set = 0;
-    if (!HACK_global_palette_set &&
-        !strcmp("pal_expanded", palette_tag) )
-      {
-        memcpy(&HACK_global_palette, palette, 
-               sizeof(struct terrain_palette) );
-        HACK_global_palette_set = 1;
-        // palette_print(stdout, INITIAL_INDENTATION, &HACK_global_palette);
-      }
-#endif // HACK_GLOBAL_PALETTE
+    list_add(&Terrain_Palettes, &palette->list);
 
     if (!(terrain_map = terrain_map_create(tag, width, height)))
         return 0;
 
     if (one_char_per_tile) {
-      // SAM: 
-      // TODO -- Make this block grab lines via getString()
-      //         for consistency.
-        if (strcmp(Lexer->lexeme, "terrain")) {
-            err("Error loading ascii map '%s': \n"
-                "  expected 'terrain', got '%s'", tag, Lexer->lexeme);
-            goto cleanup;
+        // one_char_per_tile
+        if (!loader.matchWord("terrain") || !loader.matchToken('{')) {
+            err("Error loading MAP %s: %s", tag, loader.error);
+            return NULL;
         }
-        PARSE_START_OF_BLOCK();
+        //printf("map tag '%s' width %d height %d\n", tag, width, height);
 
-        Lexer->mode = LEX_CHAR;
+        // We grab the map terrain lines one at a time:
+        for (y = 0; y < terrain_map->h; y++) {
+          char * map_line = 0;
+          bool got_line = loader.getString(&map_line);
+          PARSE_ASSERT(got_line,
+                       "Failed to getString() for map line %d of map '%s'.\n",
+                       y, tag);
+          //printf("line %2d = '%s'\n", y, map_line);
 
-        for (i = 0; i < terrain_map->w * terrain_map->h; i++) {
-            char two_bytes[2];
-            char * glyph = two_bytes;
-            glyph[0] = lexer_lex(Lexer);
-            glyph[1] = '\0';
+          // Now we slice the map line into glyphs:
+          //   Note that, unlike multi-byte palette maps
+          //   we do not ignore or allow leading or trailing whitespace
+          //   in map_line before/after the glyph characters.
+          int len = strlen(map_line);
+          PARSE_ASSERT((len == terrain_map->w),
+                       "Error loading (single-byte palette) ASCII MAP '%s':\n"
+                       "  Found %d glyphs on map line %d, expected %d.\n",
+                       tag, len, y, terrain_map->w);
 
-            // If this terrain is not the same as the previous,
-            // we look it up from the terrain palette:
-            struct terrain * tt = palette_terrain_for_glyph(palette, glyph);
-            if (tt) {
-              terrain_map->terrain[i] = tt;
-            }
-            else {
-              err("Error loading (single-byte palette) ASCII MAP '%s':\n"
-                  "  Glyph character '%c' at index %d "
-                  "does not map to a TERRAIN type.\n"
-                  "  (Check the palette definition versus the terrain block.)",
-                  tag, glyph[0], i);
-              return 0;
-            }
-        } // for (i)
+          for (x = 0; x < terrain_map->w; x++)
+            {
+              int    i = (y * terrain_map->w) + x;
+              char   two_bytes[2];
+              char * glyph = two_bytes;
+              glyph[0] = map_line[x];
+              glyph[1] = '\0';
+              // printf("x=%d glyph='%s'\n", x, glyph);
 
-        Lexer->mode = LEX_NORMAL;
+              struct terrain * tt = palette_terrain_for_glyph(palette, glyph);
+              PARSE_ASSERT(tt,
+                           "Error loading (single-byte palette) ASCII MAP '%s':\n"
+                           "  Glyph '%s' at XY=(%d,%d) "
+                           "does not map to a TERRAIN type.\n"
+                           "  (Check the palette definition versus the terrain block.)\n",
+                           tag, glyph, x, y);
+              // printf("tt->tag='%s' name='%s'\n", tt->tag, tt->name);
+              terrain_map->terrain[i] = tt;              
+            } // for (x)
 
-        PARSE_END_OF_BLOCK();  // terrain {} block
+          free(map_line);
+        } // for (y)
+
+        // terrain {} block end was already grabbed the lexer, it seems
         PARSE_END_OF_BLOCK();  // MAP {} block
     } // one_char_per_tile
 
@@ -949,6 +951,7 @@ static struct terrain_map * game_load_ascii_terrain_map (char *tag)
             err("Error loading MAP %s: %s", tag, loader.error);
             return NULL;
         }
+        //printf("map tag '%s' width %d height %d\n", tag, width, height);
 
         // We grab the map terrain lines one at a time:
         for (y = 0; y < terrain_map->h; y++) {
@@ -958,7 +961,7 @@ static struct terrain_map * game_load_ascii_terrain_map (char *tag)
           PARSE_ASSERT(got_line,
                        "Failed to getString() for map line %d of map '%s'.\n",
                        y, tag);
-          //printf("line %d = '%s'\n", y, map_line);
+          //printf("line %2d = '%s'\n", y, map_line);
 
           // Now we slice the map line into glyphs:
           p = strtok(map_line, " \t\r\n");  // Prime the pump
@@ -969,9 +972,9 @@ static struct terrain_map * game_load_ascii_terrain_map (char *tag)
             struct terrain * tt = palette_terrain_for_glyph(palette, p);
             PARSE_ASSERT(tt,
                          "Error loading (multi-byte palette) ASCII MAP '%s':\n"
-                         "  Glyph '%s' at XY=(%d,%d)"
+                         "  Glyph '%s' at XY=(%d,%d) "
                          "does not map to a TERRAIN type.\n"
-                         "  (Check the palette definition versus the terrain block.)",
+                         "  (Check the palette definition versus the terrain block.)\n",
                          tag, p, x, y);
             //printf("tt->tag='%s' name='%s'\n", tt->tag, tt->name);
             terrain_map->terrain[i] = tt;
@@ -984,52 +987,21 @@ static struct terrain_map * game_load_ascii_terrain_map (char *tag)
 
           PARSE_ASSERT((x == terrain_map->w),
                        "Error loading (multi-byte palette) ASCII MAP '%s':\n"
-                       "  Found %d glyphs on map line %d, expected %d.",
+                       "  Found %d glyphs on map line %d, expected %d.\n",
                        tag, x, y, terrain_map->w);
           free(map_line);
         } // for (y)
         PARSE_ASSERT((y == terrain_map->h),
                      "Error loading (multi-byte palette) ASCII MAP '%s':\n"
-                     "  Found %d lines in the terrain {} block, expected %d.",
+                     "  Found %d lines in the terrain {} block, expected %d.\n",
                      tag, y, terrain_map->h);
 
-#ifdef BIG_MESS_WITH_GETRAW
-        char glyph[LONGEST_TERRAIN_GLYPH + 1];
-
-        for (i = 0; i < terrain_map->w * terrain_map->h; i++) {
-
-            memset(glyph, 0, sizeof(glyph));
-
-            if (!loader.getRaw(glyph, LONGEST_TERRAIN_GLYPH)) {
-                err("%s", loader.error);
-                return NULL;
-            }
-            // SAM: The below is showing very wrong grabbed values
-            //      for at least 2 cases.  getRaw() is not my friend.
-            printf("getRaw() grabbed '%s' at index %d\n", glyph, i);
-
-            struct terrain * tt = palette_terrain_for_glyph(palette, glyph);
-            if (tt) {
-              terrain_map->terrain[i] = tt;
-            }
-            else {
-              err("Error loading (multi-byte palette) ASCII MAP '%s':\n"
-                  "  Glyph '%s' at index %d "
-                  "does not map to a TERRAIN type.\n"
-                  "  (Check the palette definition versus the terrain block.)",
-                  tag, glyph, i);
-              return 0;
-            }
-        } // for (i)
-#endif // BIG_MESS_WITH_GETRAW
-
-        // terrain {} block end was already parsed by loader.getRaw()
+        // terrain {} block end was already grabbed the lexer, it seems
         PARSE_END_OF_BLOCK();  // MAP {} block
     } // !one_char_per_tile
 
       cleanup:
-    if (palette)
-      delete palette;
+
     return terrain_map;
 } // game_load_ascii_terrain_map()
 
@@ -3124,6 +3096,7 @@ static struct keyword keywords[] = {
 static void initLoader(void)
 {
 	list_init(&Terrains);
+    list_init(&Terrain_Palettes);
 	list_init(&Maps);
 	list_init(&Places);
 	list_init(&Images);

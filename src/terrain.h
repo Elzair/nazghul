@@ -78,6 +78,7 @@ extern "C" {
 				 struct terrain_palette_entry *entry);
 
 	struct terrain_palette {
+        struct list list;
 		char *tag;
 		int widest_glyph;
 		int num_entries;
@@ -99,4 +100,5 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
-#endif
+
+#endif // terrain_h

@@ -29,35 +29,6 @@
 #include "projectiles.ghul" // for t_cannonball
 
 
-#ifdef OLDER_SHIP_MAP
-MAP map_ship {
-  type   ascii;
-  width  16;
-  height 8;
-  one_char_per_tile 1;
-
-  palette pal_old_ship {
-    "_" t_deep;
-    "=" t_shallow;
-    "~" t_shoals;
-    "#" t_ship_hull;
-    "o" t_pillar;
-    "." t_deck;
-  }
-  terrain {
-    "~~~~~~.~~.~~~~~~";
-    "===###.##.###===";
-    "__##........##__";
-    "_##..........##_";
-    "_#....o..o....#_";
-    "_##..........##_";
-    "__##........##__";
-    "___##########___";
-  }
-} // MAP map_ship
-#endif // OLDER_SHIP_MAP
-
-
 #ifdef FUNKY_ROTATING_SHIP
 MAP map_ship {
   type   ascii;

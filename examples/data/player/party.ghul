@@ -37,13 +37,13 @@ MAP m_campsite {
                 "!" t_fireplace;
         }
         terrain {
-                %%...%%
-                %.....%
-                .......
-                ...!...
-                .......
-                %.....%
-                %%...%%
+          "%%...%%";
+          "%.....%";
+          ".......";
+          "...!...";
+          ".......";
+          "%.....%";
+          "%%...%%";
         }
         
 }
@@ -87,21 +87,20 @@ player {
   x     35;
   y     22;
 #else
-        place p_empire_city;
-        x     16;
-        y     16;
+  place p_empire_city;
+  x     16;
+  y     16;
 #endif
 
   sprite    s_companion_wizard;
   speed     2;
-  //  pmask     LAND; obsolete
   mv_desc   Walk;
   mv_sound  "data/sounds/walk.wav";
   food      1000;
   gold      500;
   alignment (ALIGN_PLAYER|ALIGN_TOWN);
   formation Checker_Formation
-  campsite_map m_campsite;
+  campsite_map       m_campsite;
   campsite_formation f_campsite;
   
   inventory {
@@ -208,40 +207,6 @@ player {
     50 spell_resurrect;
     50 spell_summon;
     50 spell_gate_travel;
-        
-#if 0
-    5  spell_sleep;
-    5  spell_cure_poison;
-    5  spell_awaken;
-    5  spell_magic_missile;
-    5  spell_light;
-    5  spell_heal;
-    5  spell_unlock;
-    5  spell_repel_undead;
-    5  spell_locate;
-    5  spell_call_animal;
-    5  spell_wind_change;
-    5  spell_poison;
-    5  spell_fire_wall;
-    5  spell_magic_unlock;
-    5  spell_unlock;
-    99 spell_peer;
-    5  spell_clone;
-    5  spell_invisibility;
-    5  spell_resurrect;
-    5  spell_fear;
-    5  spell_summon;
-    10 spell_reveal;
-    10 spell_xray;
-    10 spell_invisibility;
-    10 spell_flame_wind;
-    10 spell_great_heal;
-    10 spell_move_up;
-    10 spell_move_down;
-    10 spell_blink;
-    10 spell_protection;
-    10 spell_kill;
-#endif // 0
 
   } // inventory
 

@@ -1,3 +1,15 @@
+Changes 2003/06/19
+sglasby:
+
+--Finished converting game_load_ascii_terrain_map() to use
+  string-oriented terrain {} block parsing rather than
+  Loader::getRaw().
+
+  Now, both compact one_char_per_tile maps and single/multi-byte
+  palette non-compact maps work alike.  That is, each line is a quoted
+  string like "line".
+
+
 Changes between nazghul-0.1.1 and nazghul-0.1.2
 
 gmcnutt:
