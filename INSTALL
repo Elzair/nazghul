@@ -1,3 +1,5 @@
+BUILDING AND INSTALLING
+
 Nazghul requires linux and the following libraris:
 
     SDL-1.2............http://www.libsdl.org
@@ -5,18 +7,40 @@ Nazghul requires linux and the following libraris:
 
 To compile and install nazghul:
 
-        ./configure; make; make install
+    ./configure
+    make
+    make install
 
 (Note: if you don't want to install as root then use the --prefix option with
 configure. E.g., ./configure --prefix=$HOME)
 
-The install presumes that the bin/ subdir of the --prefix where you
-installed nazghul is in your PATH.  Ergo, if you install to $HOME then
-the nazghul binary lives in $HOME/bin/nazghul and would need $HOME/bin
-in your PATH.
+The install presumes that the bin subdirectory of the --prefix where you
+installed nazghul is in your PATH.  Ergo, if you install to $HOME then the
+nazghul binary lives in $HOME/bin/nazghul and would need $HOME/bin in your
+PATH.
 
-To test out the example world:
 
-        cd examples; nazghul
+STARTING THE GAME
+
+    cd examples
+    nazghul
+
+
+TIPS FOR SLOW COMPUTERS
+
+If you are running with a slow machine (<= 133Mhz) or a slow video card then
+try the following options to help performance:
+
+    nazghul --tick -1 --bpp 8
+
+This will start nazghul in 256-color mode with no animation.
+
+
+TIPS FOR SOUND DRIVER PROBLEMS
+
+Also, if you get a lot of annoying messages about your sound card not working,
+you can disable sound:
+
+    nazghul --sound 0
 
 Gordon McNutt <gmcnutt@cableone.net>

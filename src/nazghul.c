@@ -81,7 +81,7 @@ static void print_version(void)
         printf("Copyright (C) 2003 Gordon McNutt, Sam Glasby\n"
                "%s comes with NO WARRANTY,\n"
                "to the extent permitted by law.\n"
-               "You may redistribute copues of %s\n"
+               "You may redistribute copies of %s\n"
                "under the terms of the GNU General Public License.\n"
                "For more information about these matters,\n"
                "see the files named COPYING.\n",

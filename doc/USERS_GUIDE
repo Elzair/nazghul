@@ -34,22 +34,26 @@ npcs the map will show you a combat screen. Combat is pretty much the same
 except instead of one icon for the party you will see an icon for each party
 member.
 
-To exit a city walk off the edge. This will take you to the wilderness map. To
-enter a city step onto its icon on the wilderness map. Usually this will take
-you right in on the edge you entered from. Sometime you're party will find
-itself direcly over the city icon. In that case hit the 'e' key (for 'enter')
-and the game will prompt you for a direction to enter from. Note that sometimes
-you cannot enter cities because they have no passable terrain on the side you
-indicate.
+To enter a city first find one and then try to step on it. You will
+automatically zoom in and see all of your individual party members clustered on
+the edge of the town map. Unless you have some enemies in this city you will
+start out in "follow mode", which means you control the party leader and
+everybody else in the party tries to keep up. But if hostiles are in town you
+will be in "character mode", which means you control each party member in
+turn. To switch between these two mode use the 'f' key.
 
-Below the map you'll see a prompt screen. This gives you hints when you're
-entering commands to tell you what type of input the command wants. For
-example, if you type 'l' (for look) the command prompt will say:
+To exit a city walk off the edge while in follow mode. This will take you to
+the wilderness map, and your party icon will be directly over the city.
 
-    Look-<direction>
+Below the map you'll see a little window with a prompt. This gives you hints
+when you're entering commands to tell you what type of input the command
+wants. For example, if you type 'x' (for e[x]amine) the command prompt will
+say:
 
-Which means it wants you to hit an arrow key to indicate which direction to
-look. If you hit 'ESC' instead the command will cancel. Pretty much all
+    Xamine-<target>(ESC to exit)
+
+Which means it wants you to hit the arrow keys and move the targeting
+cursor. When you hit 'ESC' instead the command will cancel. Pretty much all
 commands can be canceled by hitting 'ESC'.
 
 
@@ -63,13 +67,14 @@ Astronomy Window
     the position of the sun and two moons. It also shows the phase of the
     moons, which is important for moongate travel.
 
-FPS Counter
+LAT/AT Counter
       
-    Not that it matters with a game like this, but for you're idle amusement in
-    the top left corner of the map you can see how fast frames are drawing. No,
-    we're not really drawing 100 frames per second - the engine only redraws
-    when it needs to. 100 fps means each draw - when we get around to it -
-    takes 10ms.
+    These are for performance measurement. You may safely ignore these. But,
+    for the curious: LAT means 'latency', and indicates how many milliseconds
+    passed between your last keystroke and a map window update. TA means
+    'turnaround', and indicates how many milliseconds passed between your last
+    chance to enter input and the current one. I want these numbers to be as
+    low as possible.
 
 Clock
 
@@ -79,7 +84,7 @@ Clock
 Coordinates
 
     Eventually I'll make you work for this one, too, but for now I nicely
-    indicate you're parties coordinates in the lower left corner of the
+    indicate your party's coordinates in the lower left corner of the
     map. This is convenient for map hackers to walk around and figure out where
     to put things.
 
@@ -87,7 +92,7 @@ Wind
 
     Below the map, embedded in the frame, is the wind direction
     indicator. Currently the wind only affects ships. Tacking across the wind
-    provides the best rate of travel, the wind at your back is second back, and
+    provides the best rate of travel, the wind at your back is second best, and
     heading into the wind is the worst. Note that this indicates the direction
     the wind is blowing _from_.
 
@@ -96,9 +101,9 @@ Command Prompt
     Unlike u4/u5/u6 the command prompt has its own window, just below the wind
     indicator. Interactive command prompts appear here, as well as the things
     the player says in conversation. BTW, I've thought about moving this back
-    to the console window, so if you have an opinion let me know. Sam's says I
-    should log the final form of all commands to the console, so that's an
-    alternative to consider.
+    to the console window, so if you have an opinion let me know. At one point
+    I trried to log the final form of all commands to the console, but that was
+    just too verbose for my taste.
 
 Status Window
 
@@ -109,10 +114,10 @@ Status Window
 
 Foogod Window
 
-    That's my sacrilegious acronym for Food/Gold Window. This little window
-    appears below the status window and shows the turn, food and gold counters
-    as well as the current combat status. If you board a vehicle it will also
-    show you the hit points for the vehicle.
+    It sounds sacrilegious, but that's just my acronym for Food/Gold
+    Window. This little window appears below the status window and shows the
+    turn, food and gold counters as well as the current combat status. If you
+    board a vehicle it will also show you the hit points for the vehicle.
 
 Console Window
 
@@ -150,7 +155,6 @@ General commands:
     F)ire-<dir>................Fire vehicle's weapon (e.g., ship cannon)
     G)et-<dir>.................Get an object from the ground
     H)andle-<member>-<target>..Activate a switch or lever
-    L)ook-<dir>................Describe an adjacent tile
     N)ew-order-<member>-<member>...Swap order of two party members
     O)pen-<dir>................Open a container or door
     Q)uit......................Quits the game
@@ -167,10 +171,10 @@ General commands:
 Wilderness-only commands:
 
     K)amp-<0-9>-<y/n>-<player>...Camp in the wilderness (to heal and recover 
-                                 mana) or aboprd ship (to repair hull damage)
+                                 mana) or aboard ship (to repair hull damage)
 
 
-Combat-only commands:
+Town/Dungeon/Combat-only commands:
 
     A)ttack-<target>.........Attack the specified target
     C)ast-<spell>-<*>........Cast a spell
@@ -179,7 +183,8 @@ Combat-only commands:
     [1-9]....................Select a party member for solo mode.
     [0]......................Select turn-based party mode, where each party 
                              member takes directions one at a time.
-    
+    K)amp-<0-9>..............Sleep on a bed.  
+
 Special commands:
 
     <ESC>....................Aborts most commands
@@ -189,11 +194,11 @@ Special commands:
                                 MOVEMENT MODES
 
 
-Party Mode (wilderness/towns)
+Party Mode (wilderness)
 
     The party appears as a single icon in the center of the screen.
 
-Follow Mode (combat/dungeons)
+Follow Mode (town/combat/dungeons)
 
     You control the party leader and the other members follow the
     leader. Attacking a target will automatically switch to Round-Robin
@@ -227,14 +232,14 @@ Round Robin Mode (combat/dungeons)
                                     PLACES
 
 
-Towns/Wilderness:
+Wilderness:
 
     In the outdoor or wilderness map the party moves as a single unit. You can
     enter into combat with enemy NPC parties by moving into them or waiting for
     them to attack you. Likewise you can enter towns, dungeons or moongates by
     simply walking into them.
 
-Town/Wilderness Combat:
+Wilderness Combat:
 
     This is a special temporary combat map that pops up when you engage an
     enemy NPC party in the wilderness. In this mode you control individual
@@ -242,10 +247,10 @@ Town/Wilderness Combat:
     living party members walk off the edge of the map. (Hint: if combat is over
     you can press <ESC> to quickly leave the map).
 
-Dungeons:
+Towns/Dungeons:
 
-    In dungeons you move just like in combat mode. You can control the
-    individual party members in turn, have one of them scout around in solo
+    In towns and dungeons you move just like in combat mode. You can control
+    the individual party members in turn, have one of them scout around in solo
     mode, or control the leader and have the other party members follow.
 
 
@@ -254,7 +259,8 @@ Dungeons:
 
 
 What can I say? It's pretty much like u5. Try the flaming oil at night or in an
-underground place.
+underground place. Oh, and watch out for gazers. They can charm you. Kill them
+or charm them right away.
 
 
 
@@ -267,7 +273,7 @@ syllables. A spell name is a combination of one to four syllables.
 
 The syllables, spell names and reagent mixtures provided in the example game
 are a direct ripoff of Ultima 5. If you don't have a u5 reference manual laying
-around the tables below will help:
+around then the tables below will help:
 
                                Table 1: Reagents
 ============================================================================
@@ -341,8 +347,9 @@ Kal Xen Corp     | Summon Undead  | SS, MA, NI             | C
 Vas Rel Por      | Gate Travel    | SA, MA, BP             | P
 ============================================================================
 
-[1] In Combat Context, teleportation only works when combat is over and party
-    is in Follow Mode
+[1] In Towns and Dungeons teleport spells that can move the party from one
+    place to another will fail unless combat is over and the party if in Follow
+    Mode.
 
 
                                  CONVERSATION
