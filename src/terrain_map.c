@@ -69,6 +69,17 @@ struct terrain_map *terrain_map_clone(struct terrain_map *orig)
 
 void terrain_map_rotate(struct terrain_map *map, int degree)
 {
+    // SAM:
+    // One thing we will want to provide for in the future
+    // is maps with terrain with different orientations.
+    // The canonical example is diagonal wall sections
+    // for NW,NE,SW,SE corners.
+    // 
+    // A map containing such pieces looks strange after rotation.
+    // Presumably in future some means will exist of specifying 
+    // that a terrain has an "orientation" or "facing" which must 
+    // be preserved (by substitution of terrain and/or sprite) 
+    // when the map is rotated.
 	struct terrain **rbuf;
 	int x1, y1, x2, y2, w2, h2;
 
@@ -171,8 +182,8 @@ void terrain_map_destroy(struct terrain_map *terrain_map)
 }
 
 void terrain_map_blit(struct terrain_map *dest, int dest_x, int dest_y,
-		      struct terrain_map *src, int src_x, int src_y,
-		      int w, int h)
+                      struct terrain_map *src,  int src_x,  int src_y,
+                      int w, int h)
 {
 	int x, y;
 	struct terrain **dptr, **sptr;
