@@ -256,7 +256,7 @@ CONV c_Hawknoz {
 RESP r_thief_name { SAY "Sliwan. [he tips his cap]" }
 RESP r_thief_job {
   SAY "Fingersmith.";
-  CHECK_ITEM t_spear {
+  CHECK_ITEM t_spear > 0 {
     TAKE_ITEM t_spear 1;
   }{
     CHANGE_PARM AMOUNT 50;

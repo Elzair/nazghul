@@ -1147,7 +1147,23 @@ static bool api_parse_check_flag(class Loader * loader, struct response *resp)
 static void api_check_item(struct response *resp, struct conv *conv)
 {
 	struct api_check_item_parms *parms = &resp->parms.check_item;
-	conv->result = player_party->search_inventory(parms->obj) != 0;
+        struct inv_entry *ie = player_party->search_inventory(parms->obj);
+        int val = ie ? ie->count : 0;
+        
+	switch (parms->operation) {
+	case '=':
+		conv->result = (val == parms->val);
+		break;
+	case '<':
+		conv->result = (val < parms->val);
+		break;
+	case '>':
+		conv->result = (val > parms->val);
+		break;
+	default:
+		assert(0);
+	}        
+
 	execute_response_chain(conv->result ? parms->yes : parms->no, conv);
 }
 
@@ -1168,6 +1184,13 @@ static bool api_parse_check_item(class Loader * loader, struct response *resp)
 	parms->obj = (class ObjectType *) loader->lookupTag(tag,
 							    OBJECT_TYPE_ID);
 	free(tag);
+
+	loader->getToken(&parms->operation);
+	if ((parms->operation != '=' &&
+	     parms->operation != '<' &&
+	     parms->operation != '>') ||
+	    !loader->getInt(&parms->val))
+		return false;
 
 	if (!parms->obj || !(parms->yes = load_response_chain(loader)))
 		return false;

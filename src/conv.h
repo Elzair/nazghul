@@ -43,6 +43,8 @@ struct api_check_parm_parms {
 
 struct api_check_item_parms {
 	class ObjectType *obj;
+        char operation;
+        int val;
 	struct response *yes;
 	struct response *no;
 };
