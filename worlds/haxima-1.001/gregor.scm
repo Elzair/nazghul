@@ -49,12 +49,12 @@
        (method 'name (lambda (knpc kpc) (say knpc "Gregor's my name.")))
 
        (method 'accu (lambda (knpc kpc) 
-                       (say knpc "The Accursed trade their souls for power, "
-                            "and care naught for anything or anyone else. "
+                       (say knpc "The Accursed trade their souls for power. "
                             "If not for the Wise they would overrun the Shard.")))     
-       (method 'angr (lambda (knpc kpc) (say knpc "Angriss is a local legend: "
-                                             "the mother of the giant wood spiders. Just a story.")))
-       (method 'band (lambda (knpc kpc) (say knpc "A band of rogues has been raiding the shrine "
+       (method 'angr (lambda (knpc kpc) (say knpc "Just a legend. Mother of all wood spiders. "
+                                             "Scares the kids, keeps them out o' the woods "
+                                             "where they can get lost.")))
+       (method 'band (lambda (knpc kpc) (say knpc "A band of rogues been raiding the shrine "
                                              "when I'm not around. They haven't attacked me, "
                                              "so they're probably just vagabonds, "
                                              "afraid of an old man's cudgel.")))

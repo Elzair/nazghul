@@ -16,9 +16,10 @@
                0 0                 ; hp mod/mult
                0 0                 ; mp mod/mult
                30 0 9 9            ; hp/xp/mp/lvl
-               'gregor-conv          ; conv
-               nil ;sch_gregor           ; sched
+               'gregor-conv        ; conv
+               nil ;sch_gregor     ; sched
                nil                 ; special ai
+               nil                 ; container
                nil                 ; readied
                )
  (gregor-mk #f #f))

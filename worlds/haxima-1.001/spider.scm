@@ -3,7 +3,7 @@
 ;;----------------------------------------------------------------------------
 (kern-mk-species 'sp_spider      ;; tag: script variable name
                  "spider"        ;; name: used to display name in the UI
-                 20             ;; strength: limits armament weight
+                 10             ;; strength: limits armament weight
                  0              ;; intelligence: unused by kernel (just reported in stats)
                  0              ;; dexterity: used to avoid traps on chests
                  speed-insect   ;; speed: action points per turn

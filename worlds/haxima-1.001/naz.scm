@@ -132,7 +132,7 @@
           (kern-place-get-objects (loc-place (kern-obj-get-location kchar)))))
 
 (define (is-visible-hostile? kchar kobj)  
-  (display "is-visible-hostile?kchar=")(display kchar)(display " kobj=")(display kobj)(newline)
+  ;;(display "is-visible-hostile?kchar=")(display kchar)(display " kobj=")(display kobj)(newline)
   (and (kern-obj-is-char? kobj)
        (kern-char-is-hostile? kchar kobj)
        (<= (kern-get-distance (kern-obj-get-location kchar) 
@@ -146,6 +146,10 @@
   (display "all-visible-hostiles")(newline)
   (filter (lambda (kobj) (is-visible-hostile? kchar kobj))
           (kern-place-get-objects (loc-place (kern-obj-get-location kchar)))))
+
+;; Find all the characters in a place
+(define (all-chars kplace)
+  (filter kern-obj-is-char? (kern-place-get-objects kplace)))
 
 (define (all-in-range origin radius objlst)
   (filter (lambda (kobj) (<= (kern-get-distance origin 
@@ -179,18 +183,18 @@
 
 ;; Move an object one step along a path to a destination.
 (define (pathfind kobj dest)
-  (display "pathfind")(newline)
+  ;;(display "pathfind")(newline)
   (define (follow-path path)
     (if (not (null? path))
         (let ((coords (car path))
               (origin (kern-obj-get-location kobj)))
-          (display "pathfind:coords=")(display coords)(newline)
+          ;;(display "pathfind:coords=")(display coords)(newline)
           (let ((dx (- (car coords) (loc-x origin)))
                 (dy (- (cdr coords) (loc-y origin))))
-            (display "pathfind:dx=")(display dx)(display " y=")(display dy)(newline)
+            ;;(display "pathfind:dx=")(display dx)(display " y=")(display dy)(newline)
             (kern-obj-move kobj dx dy)))))
   (let ((path (kern-obj-find-path kobj dest)))
-    (display "pathfind:path=")(display path)(newline)
+    ;;(display "pathfind:path=")(display path)(newline)
     (if (not (null? path))
         ;; skip the first location in the path
         (follow-path (cdr path)))))
@@ -259,4 +263,3 @@
           ((eqv? item (car (car inv))) #t)
           (else (hasit? item (cdr inv)))))
   (hasit? ktype (kern-char-get-inventory kchar)))
-  

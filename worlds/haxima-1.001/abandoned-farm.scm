@@ -15,6 +15,36 @@
 ;; One or two very frightened sheep might also remain, and quite a few have
 ;; been eaten by the trolls.
 ;;----------------------------------------------------------------------------
+
+;; Make a monster generator specific to this place. It will generate trolls and
+;; spiders periodically. It should not generate more than five trolls or
+;; spiders at a time. It should not try to generate any trolls if two already
+;; exist, and likewise for spiders.
+;;
+;; I'll have an invisible "abandoned farm" abstract object that runs every turn
+;; the player is in the place. It will monitor the troll and spider counts to
+;; maintain them.
+
+
+(define (is-monster-type? kchar type)
+  (eq? (kern-char-get-species kchar)
+       (monster-type-get-species type)))
+
+(define (count-monsters kgen type)
+  (length (filter (lambda (kchar) (is-monster-type? kchar type)) 
+                  (all-chars (loc-place (kern-obj-get-location kgen))))))
+
+;; left off here
+
+
+(define (abandoned-farm-exec kgen)
+  (let ((trolls (count-monsters kgen trolls))
+        (spiders (count-monsters kgen spiders)))
+    (if (< trolls 2)
+        (summon af-troll-spawn-point mk-troll (kern-dice-roll "1d3"))
+    (if (< spiders 2)
+        (summon af-spider-spawn-point mk-spider (kern-dice-roll "1d3"))))))
+
 (kern-mk-map 
  'm_abandoned_farm 32 32 pal_expanded
  (list

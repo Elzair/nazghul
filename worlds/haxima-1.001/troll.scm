@@ -199,7 +199,9 @@
                (cdr coords)))))
 
 (define (troll-stronger? ktroll foes)
-  (display "troll-stronger?")(newline)
+  (display "troll-stronger?")
+  (display " foes=")(display foes)
+  (newline)
   (> (kern-char-get-strength ktroll)
      (foldr (lambda (a b) (+ a (kern-char-get-strength b))) 
             0 
@@ -214,17 +216,27 @@
 ;; 1 or -1. This is the dx/dy to move. If the terrain is impassable in the
 ;; preferred direction then try zeroing out the non-zero components and
 ;; moving. This will give two backup vectors to try.
+;;
+;; ADDENDUM: I don't want to allow diagonal evasion, so the "normalized" vector
+;; must be skipped if it's a diagonal, thus causing us to try the fallbak
+;; vector(s).
 (define (troll-evade ktroll foes)
-  (display "troll-evade")(newline)
+  (display "troll-evade")
+  (display " foes=")(display foes)
+  (newline)
   (let* ((tloc (kern-obj-get-location ktroll))
          (v (loc-norm (foldr (lambda (a b) (loc-sum a (loc-diff tloc (kern-obj-get-location b))))
                              (mk-loc (loc-place tloc) 0 0)
                              foes))))
     (display "troll-evade:v=")(display v)(newline)
-    (or (kern-obj-move ktroll (loc-x v) (loc-y v))
-        (and (!= 0 (loc-y v))
+    (define (evade-on-normal)
+      (and (or (eq? 0 (loc-x v))
+               (eq? 0 (loc-y v)))
+           (kern-obj-move ktroll (loc-x v) (loc-y v))))
+    (or (evade-on-normal)
+        (and (not (eq? 0 (loc-y v)))
              (kern-obj-move ktroll (loc-x v) 0))
-        (and (!= 0 (loc-x v))
+        (and (not (eq? 0 (loc-x v)))
              (kern-obj-move ktroll 0 (loc-y v))))))
   
 ;; troll-get-ammo -- give troll a boulder and convert terrain to grass
@@ -234,7 +246,7 @@
   (kern-place-set-terrain coords t_grass))
 
 (define (troll-ai ktroll)
-  (display "troll-ai")(newline)
+  (newline)(display "troll-ai")(newline)
   (let ((foes (all-visible-hostiles ktroll)))
     (if (null? foes)
         (troll-wander ktroll)
@@ -243,15 +255,21 @@
             (let ((melee-targs (troll-foes-in-weapon-range ktroll 
                                                            troll-melee-weapon 
                                                            foes)))
+              (display "troll-ai:melee-targs=")(display melee-targs)
+              (newline)
               (if (null? melee-targs)
                   (if (troll-has-ranged-weapon? ktroll)
                       (let ((ranged-foes (troll-foes-in-weapon-range ktroll
                                                                      troll-ranged-weapon
                                                                      foes)))
+                        (display "troll-ai:ranged-foes=")(display ranged-foes)
+                        (newline)
                         (if (null? ranged-foes)
                             (troll-pathfind-foe ktroll foes)
                             (troll-attack ktroll troll-ranged-weapon ranged-foes)))
                       (let ((ammo-coords (troll-find-nearest-ammo ktroll)))
+                        (display "troll-ai:ammo-coords=")(display ammo-coords)
+                        (newline)
                         (if (null? ammo-coords)
                             (troll-pathfind-foe ktroll foes)
                             (if (adjacent? (kern-obj-get-location ktroll) ammo-coords)

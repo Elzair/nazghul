@@ -36,6 +36,7 @@
  nil                   ; conv
  nil                   ; sched
  nil                   ; special ai
+ nil                   ; container
  nil)                  ; readied
  
 ;;----------------------------------------------------------------------------

@@ -6,7 +6,7 @@
 (define (loc-op a b op)
   (mk-loc (loc-place a)
           (op (loc-x a) (loc-x b))
-          (op (lox-y a) (loc-y b))))
+          (op (loc-y a) (loc-y b))))
 (define (loc-sum a b) (loc-op a b +))
 (define (loc-diff a b) (loc-op a b +))
 (define (loc-distance a b)

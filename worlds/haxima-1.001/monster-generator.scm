@@ -1,11 +1,10 @@
 
-(define (mk-gen-ifc threshold party faction vehicle)
-  (mk-ifc nil 
-          nil
-          (lambda (gen)
-            (if (> (modulo (random-next) 100) threshold)
-                (kern-obj-put-at (kern-mk-party party faction vehicle)
-                                 (kern-obj-get-location gen))))))
+(define (mk-monster-generator-ifc threshold party faction vehicle)
+  (ifc '() 
+       (method 'exec (lambda (gen)
+                       (if (> (modulo (random-next) 100) threshold)
+                           (kern-obj-put-at (kern-mk-party party faction vehicle)
+                                            (kern-obj-get-location gen)))))))
 
 ;; Note: if you try to create this interface on-the-fly, as in the commented
 ;; out part below, then you will eventually get a runtime crash. The reason is
@@ -25,3 +24,17 @@
 (mk-obj-type 't_goblin_generator "goblin generator" nil layer-none 
              goblin-gen-ifc)
 
+;; ----------------------------------------------------------------------------
+;; A monster type is a convenient collection of all the attributes needed to
+;; create an instance of a stock monster.
+;; ----------------------------------------------------------------------------
+(define (mk-monster-type species occupation sprite name faction ai)
+  (list species occupation sprite name faction ai))
+
+;; ----------------------------------------------------------------------------
+;; Given one of our monster types, create an instance. Note the trick here with
+;; apply: a monster-type is a list of exactly the args needed for the
+;; kern-mk-stock-char api call.
+;; ----------------------------------------------------------------------------
+(define (mk-monster type)
+  (apply kern-mk-stock-char type))

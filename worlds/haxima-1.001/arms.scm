@@ -124,7 +124,7 @@
    ;;     ====================================================================================================================
    (list  't_oil            "flaming oil"   s_kg_potion_red_f33_2  "0"      "1d6"    "-2"     slot-weapon   1      4     F_fire)
    (list  't_spear          "spear"         s_spear_1              "0"      "1d8"    "+1"     slot-weapon   2      4     nil)
-   (list  't_thrown_boulder "boulder"       s_boulder              "-1"     "2d6"    "0"      slot-weapon   2      5     nil)
+   (list  't_thrown_boulder "boulder"       s_boulder              "0"      "2d6"    "0"      slot-weapon   2      5     nil)
    ))
 
 (define melee-arms-types

@@ -74,6 +74,7 @@
                'ilya-conv          ; conv
                sch_ilya           ; sched
                nil                 ; special ai
+               nil                 ; container
                nil                 ; readied
                )
  (ilya-mk #f #f))
