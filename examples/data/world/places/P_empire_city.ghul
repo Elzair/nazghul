@@ -1,0 +1,198 @@
+/* P_empire_city.ghul
+ *
+ *
+ */
+#ifndef P_lcb_1_ghul
+#define P_lcb_1_ghul
+
+#include "../characters/BlackBart_the_Shipwright.ghul"
+
+MAP m_empire_city {
+        type ascii;
+        width 64;
+        height 64;
+        one_char_per_tile 1; /* optional */
+        palette {
+                '%' t_wall;
+                '-'	t_cobblestone;
+                '@'	t_shallow;
+                '~'	t_deep;
+                'f'	t_forest;
+                '.'	t_grass;
+                '&'	t_shoals;
+                '*'	t_counter_middle;
+                '='	t_A;
+                'b'	t_boulder;
+                't'     t_trees;
+                ','     t_flagstones;
+                'o'     t_pillar;
+                '0'     t_counter_pillar;
+                'x'     t_altar;
+                '!'    t_lava; 
+                'e'    t_deck;
+                'A'    t_A;
+                'B'    t_B; 
+                'C'    t_C; 
+                'D'    t_D; 
+                'E'    t_E; 
+                'F'    t_F; 
+                'G'    t_G; 
+                'H'    t_H; 
+                'I'    t_I; 
+                'J'    t_J; 
+                'K'    t_K; 
+                'L'    t_L; 
+                'M'    t_M; 
+                'N'    t_N; 
+                'O'    t_O; 
+                'P'    t_P; 
+                'Q'    t_Q; 
+                'R'    t_R; 
+                'S'    t_S; 
+                'T'    t_T; 
+                'U'    t_U; 
+                'V'    t_V; 
+                'W'    t_W; 
+                'X'    t_X; 
+                'Y'    t_Y; 
+                'Z'    t_Z;
+        }
+        terrain {
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%--%@~%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%--------------------------------%@~*,,,%..................%,,,%
+%---%%%%%%%%%%%%%%%%%%%%%%%---*--%@~%,,,%..................*,,,%
+%---*fffffffffffffffffffff*---%--%@~*,,,%..................%,,,%
+%-%*%ffffff%%%%%%%%%ffffff%%-%%--%@~%,,,%..................%%,%%
+%-%ffffffff%..,,,..%fffffft.-----.@~*,,,,-.....................%
+%-%ffffffff%..,x,..%fffffft....--.@~%,,,%-.....................%
+%-%ffffffff%..,,,..%fffffftttt.--.@~%%*%%-.....................%
+%-%fffff%%%%%..,..%%%%%fffffft.--.@~------......0SAM0..........%
+%-%fffff%...%%.,.%%...%fffffft.--.@~000%%-.....................%
+%-%fffff%....%.,.%....%fffffft.--.@~0,,,%-......0GORDON0.......%
+%-%f%%%%%...%%.,.%%...%%%%%fft.--.@~0,,,,-.....................%
+%-%f%...%%.%%..,..%%.%%...%fft.--.@~%,,,%......................%
+%-%f%....%%%...,...%%%....%fft.--.@~%%*%%......................%
+%-%f%,,,......,,,......,,,%fft.--.@~%..........................%
+%-%f%,x,,,,,,,,,,,,,,,,,x,%fft.--.@~%..........................%
+%-%f%,,,......,,,......,,,%fft.--.@~%..........................%
+%-%f%....%%%...,...%%%....%fft.--.@~%..........................%
+%-%f%...%%.%%..,..%%.%%...%fft.--.@~%..........................%
+%-%f%%%%%...%%.,.%%...%%%%%fft.--.@~%..........................%
+%-%fffff%....%.,.%....%fffffft.--.@~%..........................%
+%-%fffff%...%%.,.%%...%fffffft.--.@~%..........................%
+%-%fffff%%%%%..,..%%%%%ffffftt.--.@~%..........................%
+%-%ffffffff%...,...%ffftttttt..--.@~%%,%%..................%%,%%
+%-%ffffffff%...,...%ffft---------.@~%,,,%.....@@@@@@@@.....%,,,%
+%-%ffffffff%...,...%ffft---------.@~*,,,*....@@@@@@@@@@....*,,,%
+%-*ffffffff%%%%,%%%%ffft--ttt.....@~%,,,%....@~~~~~~~~@....%,,,%
+%-%*%..tffffffb.bfffffft--tffftt..@~%%*%%%%%%%%%%~%%%%%%%%%%%*%%
+%-----.tffffffb.bffff--------fft..@~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%---%-.ttttttb...btf----------ft..@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+%-*%%-............tt---tttt---ft...%**********%@@@@@@@@@........
+----------------------tb&&bt------.%SHIPWRIGHT%@@@@@@@@@.-------
+----------------------t&@@&t------.%,,,,,,,,,,*@@@e@@e@@.-------
+%-*%%%%%%%%%%%%%%%%f--t&@@&t--ft.-.%**********%@@@e@@e@@.-.%%*-%
+%---%T*E*M*P*L*A*R%f--tb&&bt--ft.--,,,,,,,,@@@%@@.-..-...-t%---%
+%---%***H*A*L*L***%f---tttt---ft.-.%,,,,,,,@@@@@@.--------f%---%
+%---%-------------%f----------ft.-.*,,,,,,,ee@@@@.-.....tft%---%
+%-%%%o,---------,o%ff--------fft.-.%,,,,,,,@@@@@@.-.%%%%%%%%%%-%
+%-%,,,,,,-----,,,,%fffft--tffftt.-.%%-%%%,,@@@%...-.%*A*R*M*S%-%
+%-%,,,,,,,,-,,,,,,%tttt.--.ttt...-...-..%%*%%%%...-.%--------%-%
+%-%,,,,,,%o-o%,,,,%.....---------------------------.%********%-%
+%-%,,,,,,%,-,%,,,,%-------------.%%%%-%%*%%%*%%%.--t%--------%-%
+%-%,,,,,,%o-o%,,,,%-tttttttttt--.%,,,,,,,,,,,,,%.------------%-%
+%-%,,,,,,%,-,%,,,,%-t%%%%%%%%%--.%,,,,,,,,,,,,,%.--t%--------%-%
+%-%,,,,,,%o-o%,,,,%-t%oTRADEo%--.%,,,,,,,,,,,,,%.--.%********%-%
+%-%%%%%%%%t-t%%%%%%-t%,,,,,,,%----,,,,,,,,,,,,,----.%--------%-%
+%-%,,,,,,%----------t%,,,,,,,%--.%,,,,,,,,,,,,,%.--.%SUPPLIES%-%
+%-%,,,,,,%-.tttt...--,,,,,,,,%--.%*************%.--.%%%%%%%%%%-%
+%-%,,,,,,,-ttbfttt.-t%,,,,,,,%--.%,,,,,,%,,,,,,%.--.%*LIVELY*%-%
+%-%,,,,,,%-.ttttft.-t%oGUILDo%--.%*HEAL*%*BANK*%.--.%BARWENCH%-%
+%-%,,,,,,%-----tbt.-t%%%%%%%%%--.%%%%%%%%%%%%%%%t--.%--------%-%
+%-%%%,%%%%%%%%-ttt--------------.......t.t.....tt--.%********%-%
+%-%,,,,,,,,,,%-...-%%%%%%%%...---------------------t%--------%-%
+%-%,,,,,,,,,,%-----%,,,,,,%..t-------------------------------%-%
+%-%,,,,,,,,,,%%,,,%%,,,,,,%..tt--tt.....t-t....bbbbb%--0-0-0-%-%
+%-%,,,,,,,,,,%,,,,,%,,,,,,%...t--t...%%%%-%%%%%.....%--------%-%
+%-%,,,,,,,%,%%,,,,,%%,%%%%%....--....%---------.....%--0-0-0-%-%
+%-%%%,%%%%%,,,,,,,,,,,%,,,%....--....%--------%.....%%-------%-%
+%-%,%,,,,,%,,,,,,,,,,,,,,,%.--------.%********%......%%%%%%%%%-%
+%-%%%,,,,,%,,,,,,,,,,,%,,,%%-%%--%%-%%--------%t..........t%*%-%
+%---%,,,,,%MAGIC*GUILD%,,,%---%--%---%*STABLE*%ft..........*---%
+%---%%%%%%%%%%%%%%%%%%%%%%%---*--*---%%%%%%%%%%%%%%%%%%%%%%%---%
+%--------------------------------------------------------------%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%--%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+             }
+}
+
+MAKE_DRAWBRIDGE(castle_drawbridge, p_empire_city, 34, 8);
+
+
+PLACE  p_empire_city {
+  type        town;
+  parent      p_wilderness;
+  x           17;
+  y           20;
+  name        "The Imperial City";
+  wraps       0;
+  map         m_empire_city;
+  underground 0;
+  objects {
+
+    vt_ship 44 35 west 100;
+
+    // doors
+    mech_hdoor door 62 33 "closed door";
+    mech_vdoor door 30  1 "closed door";
+    mech_hdoor door 28  4 "closed door";
+    mech_hdoor door  1 30 "closed door";
+    mech_hdoor door  1 33 "closed door";
+    mech_vdoor door  4 28 "closed door";
+    mech_hdoor door 28 59 "closed door";
+    mech_hdoor door 35 59 "closed door";
+    mech_vdoor door 30 62 "closed door";
+    mech_vdoor door 33 62 "closed door";
+
+    // castle mechs
+    castle_drawbridge west_bridge 38 11 "lever down";
+    mech_portcullis castle_bay_portcullis   49 27 "lowered portcullis";
+
+    // shipwright mechs
+    mech_portcullis shipwright_portcullis_1 46 35 "lowered portcullis";
+    mech_portcullis shipwright_portcullis_2 46 36 "lowered portcullis";
+    mech_portcullis shipwright_portcullis_3 46 37 "lowered portcullis";
+    invisible_step_trigger shipwright_exit_trigger_1 47 35 "";
+    invisible_step_trigger shipwright_exit_trigger_2 47 36 "";
+    invisible_step_trigger shipwright_exit_trigger_3 47 37 "";
+    mech_L_lever shipwright_exit_lever 42 34 "lever down";
+    CONNECT shipwright_exit_lever <=> shipwright_portcullis_1;
+    CONNECT shipwright_portcullis_1 => shipwright_portcullis_2
+    CONNECT shipwright_portcullis_2 => shipwright_portcullis_3
+    CONNECT shipwright_exit_trigger_1 => shipwright_portcullis_1
+    CONNECT shipwright_exit_trigger_2 => shipwright_portcullis_1
+    CONNECT shipwright_exit_trigger_3 => shipwright_portcullis_1
+
+    // cardboard characters
+    t_town_guards              61 33 (ALIGN_TOWN) 1 c_guard;
+    t_town_guards              28  2 (ALIGN_TOWN) 1 c_guard;
+    t_town_guards               1 28 (ALIGN_TOWN) 1 c_guard;
+    t_town_guards               2 35 (ALIGN_TOWN) 1 c_guard;
+    t_town_guards              28 61 (ALIGN_TOWN) 1 c_guard;
+    t_town_guards              35 61 (ALIGN_TOWN) 1 c_guard;
+
+    // special characters
+    ch_Hawknoz                 16 57 (ALIGN_TOWN) 1;
+    ch_Joan                    25 36 (ALIGN_TOWN) 1;
+    ch_John_the_Armourer       53 39 (ALIGN_TOWN) 1;
+    ch_Jeff_the_Weaponsmith    60 39 (ALIGN_TOWN) 1;
+    ch_Sly_the_Thief           31 8  (ALIGN_TOWN) 1;
+    ch_Golin_the_Healer        34 48 (ALIGN_TOWN) 1;
+    BlackBart_the_Shipwright   40 32 (ALIGN_TOWN) 1;  
+  }
+  object_type t_town;
+
+} // PLACE  p_empire_city
+
+#endif
+
+/* eof */
