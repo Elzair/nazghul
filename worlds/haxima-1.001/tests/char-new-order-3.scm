@@ -120,10 +120,9 @@
                   )
 
                  )
-                ;; party members
-                (list
-                 ch_olin
-                 ch_shroom
-                 ch_broom
-                 )
+                nil ;; party members
                 )
+
+(kern-party-add-member player ch_olin)
+(kern-party-add-member player ch_shroom)
+(kern-party-add-member player ch_broom)

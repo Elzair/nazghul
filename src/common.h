@@ -378,6 +378,11 @@ extern "C" {
 /* Action point values (temporary - should be moved to the load file) */
 #define NAZGHUL_BASE_ACTION_POINTS  1
 
+/* Factions */
+#define INVALID_FACTION     -1
+#define NIL_FACTION          0
+#define PLAYER_PARTY_FACTION 1
+
 /* Macros ********************************************************************/
 
 #define perror_sdl(msg) err("%s: %s\n", (msg), SDL_GetError())

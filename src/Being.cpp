@@ -59,16 +59,24 @@ bool Being::bottomFaction()
 
 static void being_save_faction_data(struct save *save, void *data)
 {
-        save->write(save, "%d ", (int)data);
+        save->append(save, "%d ", (int)data);
 }
 
 void Being::saveFactions(struct save *save)
 {
+        save->write(save, ";; factions\n");
+        save->write(save, "");
         hstack_save(factions, save, being_save_faction_data);
+        save->write(save, "\n");
 }
 
 void Being::clearFactions()
 {
         while (! hstack_empty(factions))
                 hstack_pop(factions);
+}
+
+void Being::restoreFaction(int handle, int faction)
+{
+        hstack_restore(factions, (void*)faction, handle);
 }

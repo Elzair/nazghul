@@ -961,7 +961,7 @@ void player_party::removeMember(class Character *c)
         obj_dec_ref(c);
 }
 
-bool player_party::addMember(class Character * c)
+bool player_party::addMemberBackend(class Character * c)
 {
 	int i = 0;
 
@@ -978,7 +978,7 @@ bool player_party::addMember(class Character * c)
 	size++;
 	c->setPlayerControlled(true);
 	c->setAlignment(c->getAlignment() | alignment);
-        
+
         // gmcnutt: added this as a hack to support quickly determining if a
         // character belongs to the player party.
         c->party = (Party*)this;
@@ -1032,6 +1032,22 @@ bool player_party::addMember(class Character * c)
         }
 
 	return true;
+}
+
+bool player_party::restoreMember(class Character * c)
+{
+        return addMemberBackend(c);
+}
+
+bool player_party::addMember(class Character * c)
+{
+        assert(getFaction());
+
+        if (! addMemberBackend(c))
+                return false;
+
+        c->pushFaction(getFaction());
+        return true;
 }
 
 void player_party::paint(int sx, int sy)

@@ -48,27 +48,27 @@
               nil                   ; special ai
               nil)                  ; readied
 
-(kern-mk-player
- 'player                     ; tag
- s_companion_fighter         ; sprite
- "Walk"                      ; movement description
- sound-walking               ; movement sound
- 1000                        ; food
- 500                         ; gold
- (+ align-player align-town) ; alignment
- nil                         ; formation
- nil                         ; campsite map
- nil                         ; campsite formation
- nil                         ; vehicle
- ;; inventory
- (kern-mk-container
-  nil ;; type
-  nil ;; trap
-  nil ;; contents:
-  )
- ;; party members
- (list ch_olin)
- )
+(kern-mk-player 'player                     ; tag
+                s_companion_fighter         ; sprite
+                "Walk"                      ; movement description
+                sound-walking               ; movement sound
+                1000                        ; food
+                500                         ; gold
+                (+ align-player align-town) ; alignment
+                nil                         ; formation
+                nil                         ; campsite map
+                nil                         ; campsite formation
+                nil                         ; vehicle
+                ;; inventory
+                (kern-mk-container
+                 nil ;; type
+                 nil ;; trap
+                 nil ;; contents:
+                 )
+                nil
+                )
+
+(kern-party-add-member player ch_olin)
 
 (kern-mk-place 
  'p_test

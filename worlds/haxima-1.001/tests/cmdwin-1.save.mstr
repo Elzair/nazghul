@@ -412,6 +412,8 @@
                 ;; hooks
                 (list
                 )
+                ;; factions
+                (list )                 
               )
               (list
                 #f
@@ -509,6 +511,8 @@
                   0
                 )
               )
+              ;; factions
+              (list (list 0 1 ) )               
             )
           19 32)
           (list
@@ -549,6 +553,8 @@
               ;; hooks
               (list
               )
+              ;; factions
+              (list (list 0 1 ) )               
             )
           20 32)
           (list
@@ -688,6 +694,8 @@
         ;; hooks
         (list
         )
+        ;; factions
+        (list )         
       )
     59 32)
   ) ;; end of objects

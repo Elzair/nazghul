@@ -92,9 +92,8 @@
                  nil ;; trap
                  nil ;; contents:
                  )
-                ;; party members
-                (list
-                 ch_olin
-                 ch_shroom
-                 )
+                nil ;; party members
                 )
+
+(kern-party-add-member player ch_olin)
+(kern-party-add-member player ch_shroom)

@@ -40,6 +40,7 @@ class Being:public Object {
         int setFaction(int faction); // returns a handle
         bool hasFaction(); // false if stack empty
         bool bottomFaction(); // true iff one faction on the stack
+        void restoreFaction(int handle, int faction);
 
       protected:
 

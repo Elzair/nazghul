@@ -59,8 +59,7 @@
                   )
 
                  )
-                ;; party members
-                (list
-                 ch_shroom
-                 )
+                nil ;; party members
                 )
+
+(kern-party-add-member player ch_shroom)

@@ -161,11 +161,15 @@
    (list 1 the-goblin-lexicon)
    ))
  
- ;; party members
- (list ch_thorald_greybeard
-       ch_slurmok
-       )
+ ;; party members (should be nil for initial load file)
+ nil
  )
+
+;;----------------------------------------------------------------------------
+;; Party members
+;;----------------------------------------------------------------------------
+(kern-party-add-member player ch_thorald_greybeard)
+(kern-party-add-member player ch_slurmok)
 
 ;;----------------------------------------------------------------------------
 ;; Maps
@@ -403,7 +407,7 @@
 
 (load "gregors-hut.scm")
 (load "P_terrain_test.scm")
-
+(load "moongate-clearing.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Places

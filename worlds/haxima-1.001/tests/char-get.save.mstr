@@ -79,6 +79,8 @@
         ;; hooks
         (list
         )
+        ;; factions
+        (list (list 0 1 ) )         
       )
     9 11)
     (list
@@ -105,6 +107,8 @@
         ;; hooks
         (list
         )
+        ;; factions
+        (list (list 0 1 ) )         
       )
     9 10)
   ) ;; end of objects

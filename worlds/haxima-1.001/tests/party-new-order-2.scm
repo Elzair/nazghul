@@ -59,9 +59,11 @@
   nil ;; trap
   nil ;; contents:
   )
- ;; party members
- (list ch_thorald_greybeard ch_olin)
+ nil ;; party members
  )
+
+(kern-party-add-member player ch_thorald_greybeard)
+(kern-party-add-member player ch_olin)
 
 (kern-mk-place 
  'p_test

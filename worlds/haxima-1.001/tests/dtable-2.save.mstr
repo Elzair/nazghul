@@ -97,6 +97,8 @@
             ;; hooks
             (list
             )
+            ;; factions
+            (list (list 0 1 ) )             
           )
         )
       )

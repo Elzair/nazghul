@@ -992,11 +992,12 @@
       (list 10 test_recur)
     )
   )
-  (list
-    ch_thorald_greybeard
-    ch_slurmok
-  )
+  nil 
 )
+
+(kern-party-add-member player ch_thorald_greybeard)
+(kern-party-add-member player ch_slurmok)
+
 ;;--------------
 ;; Miscellaneous
 ;;--------------

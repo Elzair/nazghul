@@ -151,6 +151,8 @@
         ;; hooks
         (list
         )
+        ;; factions
+        (list (list 0 1 ) )         
       )
     5 12)
     (list
@@ -175,6 +177,8 @@
         ;; hooks
         (list
         )
+        ;; factions
+        (list (list 0 1 ) )         
       )
     6 12)
     (list

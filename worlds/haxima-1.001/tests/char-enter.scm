@@ -27,45 +27,6 @@
     )
   )
 
-
-(kern-mk-char 'ch_thorald_greybeard
-              "Thorald Greybeard"
-              sp_human
-              oc_wizard
-              s_companion_wizard
-              3
-              20 30 22
-              0 1
-              10 5
-              0 0
-              0 0
-              39 0
-              240 8
-              nil
-              nil
-              nil
-              (list
-               t_rpg
-               ))
-
-(kern-mk-char 'ch_slurmok ; tag
-              "Slurmok"             ; name
-              sp_yellow_slime       ; species
-              oc_wizard             ; occ
-              s_yellow_slime        ; sprite
-              align-player          ; starting alignment
-              0 10 2                ; str/int/dex
-              0 1                   ; hp mod/mult
-              10 5                  ; mp mod/mult
-              0 0                   ; hit mod def mod
-              0 0                   ; dam mod arm mod
-              240 0 5 7             ; hp/xp/mp/lvl
-              'conv-b                 ; conv
-              nil                   ; sched
-              nil                   ; special ai
-              (list t_dagger))      ; readied
-
-
 (kern-mk-place 'p_test2
                "Underplace"
                nil          ; sprite
@@ -154,9 +115,8 @@
                  nil ;; trap
                  nil ;; contents:
                  )
-                ;; party members
-                (list
-                 ch_olin
-                 ch_shroom
-                 )
+                nil ;; party members
                 )
+
+(kern-party-add-member player ch_olin)
+(kern-party-add-member player ch_shroom)

@@ -116,6 +116,7 @@ class player_party : public Party {
         class Character *get_leader(void);
 	virtual void removeMember(class Character *);
         virtual bool addMember(class Character *);
+        virtual bool restoreMember(class Character *);
         void add_spell(struct spell *spell, int quantity);
         char *get_movement_description();
         char *get_movement_sound();
@@ -166,6 +167,7 @@ class player_party : public Party {
         struct position_info pinfo;
 
  protected:
+        bool addMemberBackend(class Character*);
         enum MoveResult try_to_move_off_map(struct move_info *info);
         bool turn_vehicle(void);
         void disableCurrentMode();

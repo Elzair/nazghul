@@ -291,6 +291,8 @@
                 ;; hooks
                 (list
                 )
+                ;; factions
+                (list )                 
               )
               (list
                 #f
@@ -632,6 +634,8 @@
         ;; hooks
         (list
         )
+        ;; factions
+        (list )         
       )
     59 32)
   ) ;; end of objects
@@ -990,6 +994,8 @@
             ;; hooks
             (list
             )
+            ;; factions
+            (list (list 0 1 ) )             
           )
           (kern-mk-char
             'ch_slurmok
@@ -1018,6 +1024,8 @@
                 0
               )
             )
+            ;; factions
+            (list (list 0 1 ) )             
           )
         )
       )

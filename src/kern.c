@@ -1362,6 +1362,34 @@ static pointer kern_mk_occ(scheme *sc, pointer args)
         return sc->NIL;
 }
 
+static void kern_being_restore_faction(int handle, int faction, void *context)
+{
+        ((Being *)context)->restoreFaction(handle, faction);
+}
+
+static int kern_load_hstack(scheme *sc, pointer args, 
+                            void (*restore)(int, int, void *),
+                            char *name, void *context)
+{
+        int val, handle;
+        pointer pair;
+                
+        while (scm_is_pair(sc, args)) {
+                
+                pair = scm_car(sc, args);
+                args = scm_cdr(sc, args);
+
+                if (unpack(sc, &pair, "dd", &handle, &val)) {
+                        load_err("%s: bad stack node", name);
+                        return -1;
+                }
+                
+                restore(handle, val, context);
+        }        
+
+        return 0;
+}
+
 static pointer kern_mk_char(scheme *sc, pointer args)
 {
         class Character *character;
@@ -1378,6 +1406,7 @@ static pointer kern_mk_char(scheme *sc, pointer args)
         pointer ai;
         int alignment;
         struct sched *sched;
+        pointer factions;
 
         if (unpack(sc, &args, "yspppddddddddddddddddcpc",
                    &tag, &name, &species, &occ, 
@@ -1438,7 +1467,8 @@ static pointer kern_mk_char(scheme *sc, pointer args)
                 hook_entry = scm_car(sc, hook_tbl);
                 hook_tbl = scm_cdr(sc, hook_tbl);
 
-                if (unpack(sc, &hook_entry, "pldd", &effect, &gobcell, &flags, &clk)) {
+                if (unpack(sc, &hook_entry, "pldd", &effect, &gobcell, &flags, 
+                           &clk)) {
                         load_err("kern-mk-char %s: bad hook entry", tag);
                         goto abort;
                 }
@@ -1451,6 +1481,14 @@ static pointer kern_mk_char(scheme *sc, pointer args)
                 gob->flags |= GOB_SAVECAR;
                 
                 character->restoreEffect(effect, gob, flags, clk);
+        }
+
+        /* Load the factions */
+        factions = scm_car(sc, args);
+        args = scm_cdr(sc, args);
+        if (kern_load_hstack(sc, factions, kern_being_restore_faction, 
+                             "kern-mk-char", (class Being *)character)) {
+                goto abort;
         }
 
         ret = scm_mk_ptr(sc, character);
@@ -1845,10 +1883,10 @@ KERN_API_CALL(kern_mk_player)
         //members = scm_car(sc, scm_cdr(sc, args));
         members = scm_car(sc, args);
 
-        if (! scm_is_pair(sc, members)) {
-                load_err("kern-mk-player: no member list");
-                return sc->NIL;
-        }
+/*         if (! scm_is_pair(sc, members)) { */
+/*                 load_err("kern-mk-player: no member list"); */
+/*                 return sc->NIL; */
+/*         } */
 
         player_party = new class player_party(tag, sprite, 
                                               mv_desc, 
@@ -1858,8 +1896,13 @@ KERN_API_CALL(kern_mk_player)
                                               camp_form);
         player_party->inventory = inventory;
 
-        /* Load the members. */
+        /* Set the player's faction (WARNING: must do this before loading the
+         * members) */
+        player_party->setFaction(PLAYER_PARTY_FACTION);
 
+
+        /* Load the members. (WARNING: must set the player party faction before
+         * doing this) */
         while (scm_is_pair(sc, members)) {
 
                 class Character *ch;
@@ -1877,7 +1920,7 @@ KERN_API_CALL(kern_mk_player)
                 /* fixme: looks like a hack below */
                 ch->setRestCredits(MAX_USEFUL_REST_HOURS_PER_DAY);
 
-                if (! player_party->addMember(ch)) {
+                if (! player_party->restoreMember(ch)) {
                         load_err("kern-mk-player: failed to add %s to player "
                                  "party", ch->getName());
                         goto abort;
@@ -4427,6 +4470,13 @@ KERN_API_CALL(kern_mk_ptable)
         return sc->NIL;
 }
 
+static void kern_dtable_restore_faction(int handle, int level, void *context)
+{
+        int *args = (int*)context;
+        dtable_restore((struct dtable*)args[0], args[1], args[2], handle, 
+                       level);
+}
+
 KERN_API_CALL(kern_mk_dtable)
 {
         int n_factions;
@@ -4489,6 +4539,7 @@ KERN_API_CALL(kern_mk_dtable)
                 for (c_faction = 0; c_faction < n_factions; c_faction++) {
 
                         pointer col;
+                        int parms[3];
 
                         col = scm_car(sc, row);
                         row = scm_cdr(sc, row);
@@ -4502,6 +4553,14 @@ KERN_API_CALL(kern_mk_dtable)
                         }
 
                         /* each column is a stack of pairs of numbers */
+                        parms[0] = (int)dtable;
+                        parms[1] = r_faction;
+                        parms[2] = c_faction;
+                        if (kern_load_hstack(sc, col, 
+                                             kern_dtable_restore_faction,
+                                             "kern-mk-dtable", &parms))
+                                goto abort;
+#if 0
                         while (scm_is_pair(sc, col)) {
 
                                 int level, handle;
@@ -4522,6 +4581,7 @@ KERN_API_CALL(kern_mk_dtable)
                                 dtable_restore(dtable, r_faction, c_faction, 
                                                handle, level);
                         }
+#endif
                 }
         }
 
@@ -4620,6 +4680,26 @@ KERN_API_CALL(kern_dtable_pop)
 KERN_API_CALL(kern_dtable_get)
 {
         return kern_dtable_aux(sc, args, "kern_dtable_get", DTABLE_GET);
+}
+
+KERN_API_CALL(kern_party_add_member)
+{
+        class Party *party;
+        class Character *new_member;
+
+        party = (Party*)unpack_obj(sc, &args, "kern_party_add_member:<party>");
+        if (!party)
+                return sc->NIL;
+
+        new_member = (class Character*)unpack_obj(sc, &args, 
+                                                  "kern_party_add_member:<member>");
+        if (!new_member)
+                return sc->NIL;
+
+        if (party->addMember(new_member))
+                return sc->T;
+
+        return sc->F;
 }
 
 scheme *kern_init(void)
@@ -4739,7 +4819,6 @@ scheme *kern_init(void)
         scm_define_proc(sc, "kern-place-get-name", kern_place_get_name);
         scm_define_proc(sc, "kern-place-get-neighbor", kern_place_get_neighbor);
         scm_define_proc(sc, "kern-place-get-objects", kern_place_get_objects);
-/*         scm_define_proc(sc, "kern-place-get-objects-in-los", kern_place_get_objects_in_los); */
         scm_define_proc(sc, "kern-place-get-width", kern_place_get_width);
         scm_define_proc(sc, "kern-place-is-passable", kern_place_is_passable);
         scm_define_proc(sc, "kern-place-is-wilderness?", kern_place_is_wilderness);
@@ -4774,7 +4853,6 @@ scheme *kern_init(void)
         scm_define_proc(sc, "kern-tag", kern_tag);
         scm_define_proc(sc, "kern-test-recursion", kern_test_recursion);
         
-
         /* ui api */
         scm_define_proc(sc, "kern-ui-direction", kern_ui_direction);
         scm_define_proc(sc, "kern-ui-select-party-member", 
@@ -4812,6 +4890,9 @@ scheme *kern_init(void)
         scm_define_proc(sc, "kern-dtable-pop", kern_dtable_pop);
         scm_define_proc(sc, "kern-dtable-push", kern_dtable_push);
         scm_define_proc(sc, "kern-dtable-set", kern_dtable_set);
+
+        /* kern-party-api */
+        scm_define_proc(sc, "kern-party-add-member", kern_party_add_member);
         
         /* Revisit: probably want to provide some kind of custom port here. */
         scheme_set_output_port_file(sc, stderr);

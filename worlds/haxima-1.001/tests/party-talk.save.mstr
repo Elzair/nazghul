@@ -128,6 +128,8 @@
             ;; hooks
             (list
             )
+            ;; factions
+            (list (list 0 1 ) )             
           )
           (kern-mk-char
             'ch_shroom
@@ -152,6 +154,8 @@
             ;; hooks
             (list
             )
+            ;; factions
+            (list (list 0 1 ) )             
           )
           (kern-mk-char
             'ch_slurmok
@@ -174,6 +178,8 @@
             ;; hooks
             (list
             )
+            ;; factions
+            (list (list 0 1 ) )             
           )
         )
       )

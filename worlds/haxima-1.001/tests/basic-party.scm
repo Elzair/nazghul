@@ -44,5 +44,7 @@
   )
  
  ;; party members
- (list ch_thorald_greybeard)
+ nil
  )
+
+(kern-party-add-member player ch_thorald_greybeard)

@@ -92,6 +92,8 @@
         ;; hooks
         (list
         )
+        ;; factions
+        (list (list 0 1 ) )         
       )
     8 9)
     (list
@@ -118,6 +120,8 @@
         ;; hooks
         (list
         )
+        ;; factions
+        (list (list 0 1 ) )         
       )
     9 9)
     (list

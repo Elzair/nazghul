@@ -722,6 +722,8 @@ bool Party::addMember(class Character * c)
         list_add(&members, &c->plist);
         c->party = this;
         size++;
+        if (hasFaction())
+                c->pushFaction(getFaction());
 
         // Can't think of any reason why a char should be on the orphan list
         assert(! c->handle);

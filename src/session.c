@@ -317,6 +317,14 @@ void session_load(char *filename)
                 load_err("diplomacy table not set (use kern-set-dtable)");
         }
 
+        if (! player_party) {
+                load_err("no player party");
+        }
+        if (player_party->getSize() == 0) {
+                load_err("player party empty");
+        }
+
+
         /* Check for any errors. If there are any then destroy the new session
          * and return the old one. Otherwise destroy the old session and return
          * the new one. */

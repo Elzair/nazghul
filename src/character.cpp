@@ -2368,6 +2368,9 @@ void Character::save(struct save *save)
         // Hooks
         Object::saveHooks(save);
 
+        // Factions
+        saveFactions(save);
+
         save->exit(save, ")\n");
 
         if (getGob()) {
