@@ -687,7 +687,7 @@
   (list
     (list
       (kern-mk-place 'p_gregors_hut "Gregor's Hut"
-        s_hamlet ;; sprite
+        s_hut ;; sprite
         (kern-mk-map 'm_gregors_hut 32 32 pal_expanded
           (list
             "|| || || || tt tt .. .. .. .. .. .. .. .. .. .. /7 .. .. .. .. .. .. .. .. .. .. .. tt tt tt tt "
