@@ -19,10 +19,7 @@
 // and in any way, including by methods that have not yet been invented or
 // conceived.
 //
-/* all_mechanisms.ghul
- *
- * Defines all mechanism types in the world, from various files:
- */
+
 #ifndef all_mechanisms_ghul
 #define all_mechanisms_ghul
 
@@ -32,6 +29,117 @@
 #define MECH_SIGNAL_DOWN   101
 #define MECH_SIGNAL_CHANGE 102
 
+// Create a mechanism which will create an object when signalled. The intention
+// is that this is a "hidden" mechanism which is activated exclusively by
+// another mech which is wired to send it a signal. It supports a variety of
+// signals. For example, you might wire it up to a pressure plate or a lever or
+// a turn trigger. Any of these will activate the mech which will then attempt
+// to create a new instance of the specified object in the indicated place.  It
+// only has one state (so it's always primed, a more sophisticated version
+// might have another state where it is idle, or warming up, or something).
+//
+// NOTE: a simpler way of accomodating multiple trigger sources would be to
+// parameterize the signal sent by these sources. So, for instance, the
+// MAKE_SIMPLE_STEP_TRIGGER macro would take the signal type as a paremeter.
+//
+#define MAKE_NPC_PARTY_GENERATOR_MECH(_tag, _name, _obj_type_tag, _align, _place_tag, _x, _y, _w, _h, _prob) \
+MECH_TYPE _tag {             \
+  name _name;                \
+  defaults {                 \
+    pmask     PASS_ALL;      \
+    invisible 1;             \
+  }                          \
+  states {                   \
+    {                        \
+      name   "active";       \
+      sprite null;           \
+    }                        \
+  }                          \
+  transitions {              \
+    state      "active";     \
+    event      MECH_HANDLE;  \
+    next_state "active";     \
+    actions {                \
+      create_npc_party _obj_type_tag _align _place_tag _x _y _w _h _prob; \
+    }                        \
+    state      "active";     \
+    event      MECH_STEP;    \
+    next_state "active";     \
+    actions {                \
+      create_npc_party _obj_type_tag _align _place_tag _x _y _w _h _prob; \
+    }                        \
+    state      "active";     \
+    event      MECH_SIGNAL_UP; \
+    next_state "active";     \
+    actions {                \
+      create_npc_party _obj_type_tag _align _place_tag _x _y _w _h _prob; \
+    }                        \
+    state      "active";     \
+    event      MECH_SIGNAL_DOWN; \
+    next_state "active";     \
+    actions {                \
+      create_npc_party _obj_type_tag _align _place_tag _x _y _w _h _prob; \
+    }                        \
+    state      "active";     \
+    event      MECH_SIGNAL_CHANGE; \
+    next_state "active";     \
+    actions {                \
+      create_npc_party _obj_type_tag _align _place_tag _x _y _w _h _prob; \
+    }                        \
+  }                          \
+}
+
+#define MAKE_OBJECT_GENERATOR_MECH(_tag, _name, _obj_type_tag, _obj_n, _place_tag, _x, _y, _w, _h, _prob) \
+MECH_TYPE _tag {             \
+  name _name;                \
+  defaults {                 \
+    pmask     PASS_ALL;      \
+    invisible 1;             \
+  }                          \
+  states {                   \
+    {                        \
+      name   "active";       \
+      sprite null;           \
+    }                        \
+  }                          \
+  transitions {              \
+    state      "active";     \
+    event      MECH_HANDLE;  \
+    next_state "active";     \
+    actions {                \
+      create_object _obj_type_tag _obj_n _place_tag _x _y _w _h _prob ; \
+    }                        \
+    state      "active";     \
+    event      MECH_STEP;    \
+    next_state "active";     \
+    actions {                \
+      create_object _obj_type_tag _obj_n _place_tag _x _y _w _h _prob ; \
+    }                        \
+    state      "active";     \
+    event      MECH_SIGNAL_UP; \
+    next_state "active";     \
+    actions {                \
+      create_object _obj_type_tag _obj_n _place_tag _x _y _w _h _prob ; \
+    }                        \
+    state      "active";     \
+    event      MECH_SIGNAL_DOWN; \
+    next_state "active";     \
+    actions {                \
+      create_object _obj_type_tag _obj_n _place_tag _x _y _w _h _prob ; \
+    }                        \
+    state      "active";     \
+    event      MECH_SIGNAL_CHANGE; \
+    next_state "active";     \
+    actions {                \
+      create_object _obj_type_tag _obj_n _place_tag _x _y _w _h _prob ; \
+    }                        \
+  }                          \
+}
+
+// Note: need to make a trigger mech which receives the as-yet-undefined
+// MECH_TURN signal, which the engine will send to every mech every turn. I can
+// then wire these triggers up to the object-generator mechs and create monster
+// generators which randomly generate NPC parties on a per-turn basis.
 
 // Define a new type of mechanism: a simple lever that could be used to send a
 // signal to, say, open a door.
@@ -87,8 +195,7 @@ MAKE_LEVER_MECH(mech_hidden_lever, "lever", 1,
                 "up",    s_left_lever_up, 
                 "down",  s_left_lever_down);
 
-
-#define MAKE_SIMPLE_STEP_TRIGGER(type_name, _name, _state, _sprite, _sig, _invisible) \
+#define MAKE_GENERIC_TRIGGER(type_name, _name, _state, _sprite, _sig, _invisible, _event) \
 MECH_TYPE type_name { \
   name _name;         \
   defaults {          \
@@ -103,13 +210,17 @@ MECH_TYPE type_name { \
   }   \
   transitions {           \
     state      _state;    \
-    event      MECH_STEP; \
+    event      _event; \
     next_state _state;    \
     actions {             \
       send_signal _sig;   \
     } \
   }   \
 }
+
+
+#define MAKE_SIMPLE_STEP_TRIGGER(type_name, _name, _state, _sprite, _sig, _invisible) \
+  MAKE_GENERIC_TRIGGER(type_name, _name, _state, _sprite, _sig, _invisible, MECH_STEP)
 
 MAKE_SIMPLE_STEP_TRIGGER(mech_pressure_plate,    "pressure plate", "simple",
                          s_floor_plate,          MECH_SIGNAL_CHANGE, 0);
@@ -119,6 +230,8 @@ MAKE_SIMPLE_STEP_TRIGGER(invisible_step_trigger, "trigger", "invisible",
 MAKE_SIMPLE_STEP_TRIGGER(invisible_unlock_step_trigger, "trigger", "invisible",
                          null,                   MECH_UNLOCK, 1);
 
+
+MAKE_GENERIC_TRIGGER(t_turn_trigger, "turn trigger", "active", null, MECH_HANDLE, 1, MECH_TURN);
 
 #define MAKE_TWO_SIGNAL_STEP_TRIGGER(type_name, _name, _state, _sprite, _sig1, _sig2, _invisible) \
 MECH_TYPE type_name { \

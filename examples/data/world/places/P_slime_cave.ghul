@@ -22,6 +22,11 @@
 
 #include "../maps/M_slime_cave.ghul"
 
+MAKE_NPC_PARTY_GENERATOR_MECH(mech_slime_generator, "slime gen", 
+                              t_yellow_slimes, (ALIGN_MONSTER),
+                              p_slime_cave, 7, 7, 1, 1,              
+                              1.0);
+
 PLACE p_slime_cave {
   type        dungeon;
   parent      null;
@@ -33,7 +38,10 @@ PLACE p_slime_cave {
   underground 1;
   objects {
           //mech_h_fence_gate fence_gate  8 10 "closed";
-          t_slimes  7  4 (ALIGN_MONSTER) 1 null;
+          //t_slimes  7  4 (ALIGN_MONSTER) 1 null;
+          mech_slime_generator slime_gen 0 0 "active";
+          invisible_step_trigger slime_trig 7 10 "invisible";
+          CONNECT slime_trig => slime_gen;
   }
 
 } // PLACE p_slime_cave

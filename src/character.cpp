@@ -1120,7 +1120,7 @@ bool Character::load(class Loader * loader)
 
 struct sprite *Character::getSprite()
 {
-	if (isAsleep() || isDead() && species->sleep_sprite)
+	if ((isAsleep() || isDead()) && species->sleep_sprite)
 		return species->sleep_sprite;
 	return sprite;
 }

@@ -82,13 +82,49 @@ struct api_blit_map_parms {
 	int rot;
 };
 
+struct api_create_object_parms {
+        char *obj_type_tag;
+        class ObjectType *obj_type;
+        int obj_count;
+        char *place_tag;
+        struct place *place;
+        int x, y, w, h;
+        float prob;
+};
+
+struct api_create_npc_party_parms {
+        char *obj_type_tag;
+        class ObjectType *obj_type;
+        char *place_tag;
+        struct place *place;
+        int x, y, w, h;
+        float prob;
+        int align;
+};
+
 struct response {
 	int magic;		/* RESPONSE_TYPE_ID */
 	char *tag;
+
+        // list of tagged responses held by loader
 	struct list list;
+
+        // chain of responses (hm... means responses can't really be shared on
+        // different chains... never happens now... latent bug waiting to
+        // manifest)
+        // FIXME (see above)
 	struct response *next;
+
+        // execute:
 	void (*fx) (struct response *, struct conv *);
+
+        // bind tags to pointers after parsing:
+        bool (*bind) (struct response *, class Loader *);
+
+        // cleanup resources:
 	void (*dtor) (struct response *);
+
+        // the obsolescent response style: common fields
 	char *msg;
 	int n_trades;
 	struct trade_info *trades;
@@ -97,6 +133,9 @@ struct response {
 	int parm_id;
 	int flag_id;
 	class ObjectType *item;
+
+        // the new response style: union of specific parameter structs, the
+        // executing function implicitly knows which struct to use
 	union {
 		struct api_ui_yes_no_parms yes_no;
 		struct api_check_parm_parms check_parm;
@@ -106,6 +145,8 @@ struct response {
 		struct api_send_signal_parms send_signal;
 		struct api_set_mech_alarm_parms mech_alarm;
 		struct api_blit_map_parms blit_map;
+                struct api_create_object_parms create_object;
+                struct api_create_npc_party_parms create_npc_party;
 	} parms;
 };
 

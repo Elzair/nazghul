@@ -272,14 +272,14 @@ SPECIES nixie {
 }
 
 SPECIES slime {
-        name  "slime";
+        name  "green slime";
         str   10;
         int   10;
         dex   10;
         spd   2;
         vr    8;
         pmask (LAND);
-        sleep_sprite null;
+        sleep_sprite s_slime_asleep;
         weapon       t_acid_spray;
         visible      1;
         occs {}
@@ -294,6 +294,37 @@ SPECIES slime {
         // when, knowing that it would all be thrown away after 0.2.0,
         // I got sick of writing all the boilerplate parsing code.
         effects  (EFFECT_CLONE);
+
+        // Also new, this allows some species to be completely immune to
+        // certain effects.
+        immunities (EFFECT_POISON);
+}
+
+SPECIES yellow_slime {
+        name  "yellow slime";
+        str   10;
+
+        // Wart alert: since mana is directly tied to intelligence, and since
+        // the ability to spawn green slimes is a spell, I need to give this
+        // rather stupid creature a modicum of intelligence. 80 is enough to
+        // cast 2 level 2 spells.
+        int   60;
+
+        dex   10;
+        spd   2;
+        vr    8;
+        pmask (LAND);
+        sleep_sprite s_yellow_slime_asleep;
+        weapon       t_acid_spray;
+        visible      1;
+        occs {}
+        slots {}
+
+        // The yellow boss slimes can summon the green slimes
+        spells { spell_summon_slime }
+
+        STD_DAMAGE_SOUND;
+        SQUISHING_SOUND;
 
         // Also new, this allows some species to be completely immune to
         // certain effects.

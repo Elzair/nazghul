@@ -303,14 +303,15 @@ extern "C" {
 #define CONTEXT_TOWN       4	// same as dungeon
 
 /* Spells (loadfile must match) */
-#define SPELL_TARGET_NONE      0
-#define SPELL_TARGET_CHARACTER 1
-#define SPELL_TARGET_MECH      2
-#define SPELL_TARGET_DIRECTION 3
-#define SPELL_TARGET_LOCATION  4
-#define SPELL_TARGET_UP        5
-#define SPELL_TARGET_DOWN      6
+#define SPELL_TARGET_NONE              0
+#define SPELL_TARGET_CHARACTER         1
+#define SPELL_TARGET_MECH              2
+#define SPELL_TARGET_DIRECTION         3
+#define SPELL_TARGET_LOCATION          4
+#define SPELL_TARGET_UP                5
+#define SPELL_TARGET_DOWN              6
 #define SPELL_TARGET_ALL_PARTY_MEMBERS 7
+#define SPELL_TARGET_CASTER_LOCATION   8
 
 /* Macros ********************************************************************/
 

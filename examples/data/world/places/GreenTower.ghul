@@ -104,6 +104,10 @@ MAP GreenTower_Map {
   } // terrain
 } // MAP GreenTower_Map
 
+MAKE_OBJECT_GENERATOR_MECH(mech_mandrake_generator, "mandrake altar", 
+                           reagent_mandrake, 5, 
+                           GreenTower, 9, 53, 1, 1, 
+                           1.0);
 
 PLACE  GreenTower {
   type        town;
@@ -136,6 +140,8 @@ PLACE  GreenTower {
     t_bed 58 61;
     mech_hdoor doris_room_door 59 58 "locked";
     
+    // ruins
+    mech_mandrake_generator altar_mandrake_gen 9 53 "active";
 
     // Characters
     Shroom_the_Hag  40 11 (ALIGN_TOWN) 1;

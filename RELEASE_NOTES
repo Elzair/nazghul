@@ -2,25 +2,39 @@ Changes between nazghul-0.1.2 and nazghul-0.1.3
 
 gmcnutt:
 
---Added a ^z for map editing. This toggles map zooming.
+o Added the create_object api call for mech and conversations scriptlets. This
+  creates a simple object like an armament or item.
 
---Created a simple inn where the player can check out a room to sleep
+o Added the create_npc_party api call for same. This creates npc parties and
+  adds them to the specified place (haven't tested created them in other
+  places, but the support is all there). Works in combat (dungeon rooms), too.
+
+o Added a new engine-supported mech signal: MECH_TURN, which is delivered every
+  turn to every mechanism within the player's current place.
+
+o Added some new mechanism macros in the examples to test the new
+  constructs. See the wilderness, the slime cave and Green Tower for example
+  usage.
+
+o Added a ^z for map editing. This toggles map zooming.
+
+o Created a simple inn where the player can check out a room to sleep
   in. Haven't perfected the logic behind locking the player back out when he's
   done, or kicking him out if he sleeps too long, etc. I wanted to this
   completely with mechs, and I think it can be done (except for the kicking out
   of bed part). Maybe Sam can figure out a nice way to do inns, it seems like
   his kind of puzzle.
 
---Npc parties now wake up the player if he is sleeping in their bed. They don't
+o Npc parties now wake up the player if he is sleeping in their bed. They don't
   throw him out like they do in u5, but they will keep waking the player up
   until he moves and let's them get into bed.
 
---When npc parties are asleep they show a different sprite (if any species in
+o When npc parties are asleep they show a different sprite (if any species in
   the party has a 'sleep_sprite' specified)
 
---The player can now sleep in beds when in town. Added a bed object.
+o The player can now sleep in beds when in town. Added a bed object.
 
---Added slimes. Hacked in a cloning effect to make them work, and added an
+o Added slimes. Hacked in a cloning effect to make them work, and added an
   immunities field to species to make them immune to poison. I actually had
   about 50% of a new effects system implemented when I gave up because of all
   the boring parsing code boilerplate, and it was going into overtime
@@ -28,24 +42,24 @@ gmcnutt:
   GHULSCRIPT documentation. Cloning is not really the ideal effect to start
   with anyway.
 
---Bugfix: field effects never worked outside of combat. Added support for
+o Bugfix: field effects never worked outside of combat. Added support for
   them. Also modified the main game loop so that the player cannot give
   commands until somebody in the party is not asleep. If everyone is sleeping
   then the player has to wait until at least one party member wakes up.
 
---Bugfix: chests created via the load file (as opposed to chests created as
+o Bugfix: chests created via the load file (as opposed to chests created as
   corpse loot) were causing a seg fault when the player tried to open them. The
   problem is that they were being created as generic Objects, and not as
   specific Container Objects, so they didn't really support the open command. I
   don't plan on making a good solution for this until the 0.3.x series, but for
   now I added a hack to make it work and keep Sam happy :-)
 
---Bugfix: cursor was being shaded according to lighting conditions, but it
+o Bugfix: cursor was being shaded according to lighting conditions, but it
   should always be bright and clearly visible. I fixed this by changing the way
   the cursor is rendered so that now it is simply accepted as a special
   case. This allowed me to remove one or two unsightly hacks in the process.
 
---Bugfix: if you zoomed in while sailing the vehicle map was oriented
+o Bugfix: if you zoomed in while sailing the vehicle map was oriented
   wrong. This was because zoom-in is handled by combat and combat always
   rotated the vehicle maps so that ships were broadside to one another. I fixed
   this by adding a check to see if an opponent was specified and, if not, then

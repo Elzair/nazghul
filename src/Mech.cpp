@@ -282,6 +282,19 @@ bool MechType::load(class Loader * loader)
 	return true;
 }
 
+bool MechType::bindTags(class Loader * loader)
+{
+        int i;
+
+        for (i = 0; i < n_transitions; i++) {
+                if (transitions[i].actions->bind &&
+                    !transitions[i].actions->bind(transitions[i].actions, 
+                                                  loader))
+                        return false;
+        }
+        return true;
+}
+
 /*****************************************************************************/
 
 Mech::Mech()
@@ -445,4 +458,10 @@ void Mech::describe(int count)
         }
 
         consolePrint(name);
+}
+
+void Mech::advanceTurn(int turn)
+{
+        activate(MECH_TURN);
+        Object::advanceTurn(turn);
 }

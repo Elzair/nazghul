@@ -32,6 +32,7 @@
 #include "Mech.h"
 #include "wq.h"
 #include "lexer.h"		// for parse error msgs
+#include "combat.h"
 
 #include <ctype.h>
 #include <stdio.h>
@@ -1217,14 +1218,285 @@ static bool api_parse_ui_yes_no(class Loader * loader, struct response *resp)
 	return true;
 }
 
+// api_create_object ----------------------------------------------------------
+
+static void api_destroy_create_object(struct response *resp)
+{
+	struct api_create_object_parms *parms = &resp->parms.create_object;
+        if (parms->obj_type_tag) {
+                free(parms->obj_type_tag);
+                parms->obj_type_tag = 0;
+        }
+        if (parms->place_tag) {
+                free(parms->place_tag);
+                parms->place_tag = 0;
+        }
+}
+
+static bool api_bind_create_object(struct response *resp, class Loader *loader)
+{
+	struct api_create_object_parms *parms = &resp->parms.create_object;
+        SDL_Rect rect;
+
+        // lookup the object type
+        parms->obj_type = 
+                (class ObjectType*)loader->lookupTag(parms->obj_type_tag, 
+                                                     OBJECT_TYPE_ID);
+        if (!parms->obj_type) {
+                loader->setError("Error binding create_object: '%s' is not "
+                                 "a valid OBJECT TYPE tag\n",
+                                 parms->obj_type_tag);
+                return false;
+        }
+
+        // lookup the place
+        parms->place = (struct place*)loader->lookupTag(parms->place_tag, 
+                                                        PLACE_ID);
+        if (!parms->place) {
+                loader->setError("Error binding create_object: '%s' is not "
+                                 "a valid PLACE tag\n", 
+                                 parms->place_tag);
+                return false;
+        }
+
+        // check if the target rect is within the place
+        rect.x = 0;
+        rect.y = 0;
+        rect.w = place_w(parms->place);
+        rect.h = place_h(parms->place);
+        if (!point_in_rect(parms->x, parms->y, &rect)) {
+                loader->setError("Error binding create_object: upper left "
+                                 "corner (%d, %d) not in place %s\n", 
+                                 parms->x, parms->y, parms->place_tag);
+                return false;
+        }
+        if (!point_in_rect(parms->x + parms->w, parms->y + parms->h, &rect)) {
+                loader->setError("Error binding create_object: lower right "
+                                 "corner (%d, %d) not in place %s\n", 
+                                 parms->x + parms->w, parms->y + parms->h, 
+                                 parms->place_tag);
+                return false;
+        }
+
+        return true;
+}
+
+static void api_create_object(struct response *resp, struct conv *conv)
+{
+	struct api_create_object_parms *parms = &resp->parms.create_object;
+        class Object *obj = NULL;
+        int i;
+
+        assert(parms->prob);
+        assert(parms->obj_type);
+        assert(parms->place);
+
+        // roll for success
+        if ((rand() % (int)(1 / parms->prob)))
+                return;
+
+        // for each object
+        for (i = 0; i < parms->obj_count; i++) {
+
+                // create the object
+                obj = parms->obj_type->createInstance();
+                if (!obj)
+                        return;
+                
+                // set the turns so it doesn't get a bunch of extra ones
+                obj->setTurn(Turn);
+                
+                // place the object
+                obj->relocate(parms->place, parms->x, parms->y);
+        }
+}
+
+static bool api_parse_create_object(class Loader * loader, 
+                                    struct response *resp)
+{
+	struct api_create_object_parms *parms = &resp->parms.create_object;
+
+	// parse
+	if (!loader->getWord(&parms->obj_type_tag) ||
+	    !loader->getInt(&parms->obj_count) ||
+            !loader->getWord(&parms->place_tag) ||
+	    !loader->getInt(&parms->x) ||
+	    !loader->getInt(&parms->y) ||
+	    !loader->getInt(&parms->w) ||
+	    !loader->getInt(&parms->h) ||
+	    !loader->getFloat(&parms->prob))
+		goto fail;
+
+
+        // bind tags later
+        
+	resp->fx = api_create_object;
+	resp->dtor = api_destroy_create_object;
+        resp->bind = api_bind_create_object;
+	return true;
+
+ fail:
+        api_destroy_create_object(resp);
+	return false;
+}
+
+// api_create_npc_party -------------------------------------------------------
+
+static void api_destroy_create_npc_party(struct response *resp)
+{
+	struct api_create_npc_party_parms *parms = 
+                &resp->parms.create_npc_party;
+        if (parms->obj_type_tag) {
+                free(parms->obj_type_tag);
+                parms->obj_type_tag = 0;
+        }
+        if (parms->place_tag) {
+                free(parms->place_tag);
+                parms->place_tag = 0;
+        }
+}
+
+static bool api_bind_create_npc_party(struct response *resp, 
+                                      class Loader *loader)
+{
+	struct api_create_npc_party_parms *parms = 
+                &resp->parms.create_npc_party;
+        SDL_Rect rect;
+
+        // lookup the object type
+        parms->obj_type = 
+                (class ObjectType*)loader->lookupTag(parms->obj_type_tag, 
+                                                     NPCPARTY_TYPE_ID);
+        if (!parms->obj_type) {
+                loader->setError("Error binding create_npc_party: '%s' is not "
+                                 "a valid PARTY tag\n",
+                                 parms->obj_type_tag);
+                return false;
+        }
+
+        // lookup the place
+        parms->place = (struct place*)loader->lookupTag(parms->place_tag, 
+                                                        PLACE_ID);
+        if (!parms->place) {
+                loader->setError("Error binding create_npc_party: '%s' is not "
+                                 "a valid PLACE tag\n", 
+                                 parms->place_tag);
+                return false;
+        }
+
+        // check if the target rect is within the place
+        rect.x = 0;
+        rect.y = 0;
+        rect.w = place_w(parms->place);
+        rect.h = place_h(parms->place);
+        if (!point_in_rect(parms->x, parms->y, &rect)) {
+                loader->setError("Error binding create_npc_party: upper left "
+                                 "corner (%d, %d) not in place %s\n", 
+                                 parms->x, parms->y, parms->place_tag);
+                return false;
+        }
+        if (!point_in_rect(parms->x + parms->w, parms->y + parms->h, &rect)) {
+                loader->setError("Error binding create_npc_party: lower right "
+                                 "corner (%d, %d) not in place %s\n", 
+                                 parms->x + parms->w, parms->y + parms->h, 
+                                 parms->place_tag);
+                return false;
+        }
+
+        return true;
+}
+
+static void api_create_npc_party(struct response *resp, struct conv *conv)
+{
+	struct api_create_npc_party_parms *parms = 
+                &resp->parms.create_npc_party;
+        class NpcParty *party = NULL;
+
+
+        assert(parms->prob);
+        assert(parms->obj_type);
+        assert(parms->place);
+
+        // roll for success
+        if ((rand() % (int)(1 / parms->prob)))
+                return;
+
+        // for each object
+
+        // create the npc party
+        party = (class NpcParty *)parms->obj_type->createInstance();
+        assert(party);
+        party->setAlignment(parms->align);
+        party->createMembers();
+
+        // Combat is special
+        if (player_party->context == CONTEXT_COMBAT) {
+                
+                int dx = 0;
+                int dy = 0;
+                
+                // randomly pick a direction of travel
+                do {
+                        dx = random() % 3 - 1;
+                        if (!dx)
+                                dy = random() % 3 - 1;
+                } while (!dx && !dy);
+                
+                // add the party to combat
+                if (!combatAddNpcParty(party, dx, dy, true, 
+                                       parms->x, parms->y)) {
+                        delete party;
+                }          
+                return;
+        }
+
+        // set the turns so it doesn't get a bunch of extra ones
+        party->setTurn(Turn);
+
+        // place the object
+        party->relocate(parms->place, parms->x, parms->y);
+}
+
+static bool api_parse_create_npc_party(class Loader * loader, 
+                                       struct response *resp)
+{
+	struct api_create_npc_party_parms *parms = 
+                &resp->parms.create_npc_party;
+
+	// parse
+	if (!loader->getWord(&parms->obj_type_tag) ||
+            !loader->getBitmask(&parms->align) ||
+            !loader->getWord(&parms->place_tag) ||
+	    !loader->getInt(&parms->x) ||
+	    !loader->getInt(&parms->y) ||
+	    !loader->getInt(&parms->w) ||
+	    !loader->getInt(&parms->h) ||
+	    !loader->getFloat(&parms->prob))
+		goto fail;
+
+
+        // bind tags later
+        
+	resp->fx = api_create_npc_party;
+	resp->dtor = api_destroy_create_npc_party;
+        resp->bind = api_bind_create_npc_party;
+	return true;
+
+ fail:
+        api_destroy_create_npc_party(resp);
+	return false;
+}
+
 static struct api_entry {
 	char *name;
 	 bool(*parse) (class Loader *, struct response *);
 } api_tbl[] = {
-	{
-	"send_signal", api_parse_send_signal}, {
-	"set_alarm", api_parse_set_mech_alarm}, {
-"blit_map", api_parse_blit_map},};
+	{ "send_signal",      api_parse_send_signal    },
+        { "set_alarm",        api_parse_set_mech_alarm },
+        { "blit_map",         api_parse_blit_map       },
+        { "create_object",    api_parse_create_object  },
+        { "create_npc_party", api_parse_create_npc_party  },
+};
 
 struct response *load_response_chain(class Loader * loader)
 {

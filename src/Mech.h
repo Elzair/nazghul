@@ -36,46 +36,11 @@ struct mech_state {
         bool invisible;          // is not shown or described
 };
 
-#ifdef OLD_MECH_ACTION
-struct mech_alarm_parms {
-	int signal;
-	int turns;
-};
-
-struct mech_blit_map_parms {
-	struct place *dst;
-	int dst_x;
-	int dst_y;
-	struct terrain_map *src;
-	int src_x;
-	int src_y;
-	int w;
-	int h;
-	int rot;
-};
-
-struct mech_action {
-	void (*fx) (struct mech_action *, class Mech * mech);
-	union {
-		int signal;	// for actions that propagate a signal value
-		char *string;
-		struct mech_alarm_parms alarm;
-		struct mech_blit_map_parms blit_map;
-	} parms;
-};
-#endif				// OLD_MECH_ACTION
-
 struct mech_transition {
 	struct mech_state *from;
 	int method;		// fixme: rename as 'event'
 	struct mech_state *to;
-
-#ifdef OLD_MECH_ACTIONS
-	int n_actions;
-	struct mech_action *actions;
-#else
 	struct response *actions;
-#endif
 };
 
 class MechType:public ObjectType {
@@ -90,6 +55,7 @@ class MechType:public ObjectType {
 	~MechType();
 	virtual class Object *createInstance();
 	virtual bool load(class Loader * loader);
+        virtual bool bindTags(class Loader*);
 
 	struct mech_transition *MechType::load_transitions(class Loader *
 							   loader, int *n);
@@ -123,6 +89,7 @@ class Mech:public Object {
 	virtual bool is_opaque();
 	virtual bool isVisible();
 	virtual void describe(int count);
+	virtual void advanceTurn(int turn);
 
 	class Mech *port;
 	struct mech_state *state;

@@ -64,6 +64,8 @@ extern "C" {
   extern bool cmdCastSpell(class Character * pc);
   extern bool cmdQuit(void);
   extern bool cmdLook(int x, int y);
+        extern bool cmdTerraform(class Character * pc);
+        extern bool cmdSaveTerrainMap(class Character * pc);
   
   extern class Character *select_party_member(void);
   
@@ -88,6 +90,8 @@ extern "C" {
   
   // the new ui api
   extern int ui_get_direction(void);
+
+
 
 #ifdef __cplusplus
 }

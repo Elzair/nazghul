@@ -124,6 +124,15 @@ PARTY t_slimes {
         }
 }
 
+PARTY t_yellow_slimes {
+        name "yellow slime";
+        sprite s_yellow_slime;
+        formation null;
+        groups {
+                yellow_slime null s_yellow_slime 1;
+        }
+}
+
 #endif // npc_party_defs_ghul
 
 /* eof */

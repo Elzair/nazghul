@@ -84,7 +84,7 @@ FORMATION f_football {
 
 player {
 
-#if 0
+#if 1
   place p_wilderness;
   x     35;
   y     22;

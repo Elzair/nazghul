@@ -26,6 +26,11 @@
 #ifndef p_wilderness_ghul
 #define p_wilderness_ghul
 
+MAKE_NPC_PARTY_GENERATOR_MECH(t_wilderness_goblin_generator, "goblin cave", 
+                              t_goblin_horde, (ALIGN_MONSTER),
+                              p_wilderness, 25, 15, 1, 1, 
+                              0.01);
+
 MAP m_wilderness {
   type    ascii;
   width   40;
@@ -97,6 +102,12 @@ PLACE  p_wilderness {
     t_goblin_horde    4 14  (ALIGN_MONSTER) 0 c_goblin null;
     t_undead_brigade  2 26  (ALIGN_MONSTER) 0 null vt_ship;
     t_undead_brigade 32  4  (ALIGN_MONSTER) 0 null vt_ship;
+
+
+    // mechs
+    t_turn_trigger                goblin_cave_trigger 0  0  "active";
+    t_wilderness_goblin_generator goblin_cave         15 25 "active";
+    CONNECT goblin_cave_trigger => goblin_cave;
 
   }
   typical_npc_parties {

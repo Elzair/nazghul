@@ -760,6 +760,7 @@ enum Spell::cast_result Spell::cast(class Character * caster,
 		for (i = 0; i < n_parms; i++) {
 			class NpcParty *party;
 			class NpcPartyType *type;
+                        bool position;
 
 			type = (class NpcPartyType *) parms[i];
 			party = (class NpcParty *) type->createInstance();
@@ -778,10 +779,12 @@ enum Spell::cast_result Spell::cast(class Character * caster,
 			// Add the party to combat. For spells which specify a
 			// location tell the combat system where to put the
 			// party.
-			if (!combatAddNpcParty(party, dx, dy,
-					       this->target ==
-					       SPELL_TARGET_LOCATION, tx, 
-                                               ty)) {
+                        position = ((this->target == SPELL_TARGET_LOCATION) ||
+                                    (this->target == 
+                                     SPELL_TARGET_CASTER_LOCATION));
+                        
+                        if (!combatAddNpcParty(party, dx, dy,
+                                               position, tx, ty)) {
 				success = no_room_on_battlefield;
                                 delete party;
                         } else {

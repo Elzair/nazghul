@@ -1976,8 +1976,13 @@ target_spell(class Spell * spell, class Character * pc,
                 // The following was commented out. I don't know why. By
                 // default, the target should always be the caster, which is
                 // what SPELL_TARGET_NONE should really mean.
-		*ret = pc; 
+		*ret = pc;
 		return true;
+        case SPELL_TARGET_CASTER_LOCATION:
+                assert(pc->isOnMap());
+                *x = pc->getX();
+                *y = pc->getY();
+                return true;
 	case SPELL_TARGET_LOCATION:
 		cmdwin_print("-");
 		result = target_location_for_spell(pc, ret, spell, x, y);
@@ -2524,11 +2529,8 @@ bool cmdAT (class Character * pc)
 	if (pc) {
 		// A party member was specified as a parameter, so this must be
 		// combat mode. Use the party member's location as the origin.
-        who = pc->getName();
-        place_name = "a combat map";  // Hack
-        // SAM: The below won't work. 
-        //      'Combat' is declared static in combat.c ...
-        // place_name = Combat.place.name;
+                who = pc->getName();
+                place_name =  Place->name;
 		x = pc->getX();
 		y = pc->getY();
 	}
@@ -2651,53 +2653,50 @@ bool cmdAT (class Character * pc)
 bool cmdTerraform(class Character * pc)
 {
 	int x, y;
-    struct place           * place;
-    struct terrain_map     * map;
-    struct terrain_palette * palette;
-    struct terrain         * terrain;
+        struct place           * place;
+        struct terrain_map     * map;
+        struct terrain_palette * palette;
+        struct terrain         * terrain;
 
 	cmdwin_clear();
 	cmdwin_print("Terraform-");
 
 	if (pc) {
 		// Combat Mode
-        // Use the party member's location as the origin.
-        consolePrint("TODO - Terraform does not work in combat mode.\n");
-        return false;
-        // TODO: play.c needs a way to get at Combat from combat.c
-        // place = Combat;  // Won't work, file-scoped to combat.c
+                // Use the party member's location as the origin.
+                place = Place;
 		x = pc->getX();
 		y = pc->getY();
 	} else {
 		// Party Mode
 		// Use the player party's location as the origin.
-        place = player_party->getPlace();
+                place = player_party->getPlace();
 		x     = player_party->getX();
 		y     = player_party->getY();
 	}
 
-    map     = place->terrain_map;
-    palette = map->palette;
-    terrain = palette_current_terrain(palette);
+        map     = place->terrain_map;
+        palette = map->palette;
+        terrain = palette_current_terrain(palette);
 
-    consolePrint("\n");
-    // SAM: 
-    // It would probably be better to set the upper-right 
-    // "status window" to a new mode.
-    // Then I could show the sprite for the current terrain, and so forth.
-    // That is TODO later; I have not written a new status mode before.
-    // First thing is to get the map editor working.
-    consolePrint("Terraform on map %s, palette %s\n"
-                 "Current terrain is %s '%s'\n",
-                 map->tag, palette->tag, 
-                 terrain->tag, terrain->name);
+        consolePrint("\n");
+        // SAM: 
+        // It would probably be better to set the upper-right 
+        // "status window" to a new mode.
+        // Then I could show the sprite for the current terrain, and so forth.
+        // That is TODO later; I have not written a new status mode before.
+        // First thing is to get the map editor working.
+        consolePrint("Terraform on map %s, palette %s\n"
+                     "Current terrain is %s '%s'\n",
+                     map->tag, palette->tag, 
+                     terrain->tag, terrain->name);
 
-    DM_XRAY_look_at_XY(x,y, NULL);  // First look at the current tile
+        DM_XRAY_look_at_XY(x,y, NULL);  // First look at the current tile
 	if (terraform_cursor_func(x, y, &x, &y, 99,
-                              DM_XRAY_look_at_XY, terraform_XY,
-                              place) == -1) {
-      return false;
-	}
+                                  DM_XRAY_look_at_XY, terraform_XY,
+                                  place) == -1) {
+                return false;
+        }
 	return true;
 } // cmdTerraform()
 
@@ -2705,63 +2704,60 @@ bool cmdTerraform(class Character * pc)
 bool cmdSaveTerrainMap(class Character * pc)
 {
 	int x, y;
-    struct place           * place;
-    struct terrain_map     * map;
-    struct terrain_palette * palette;
-    char map_filename    [BOGUS_FILENAME_LENGTH+1];
-    char palette_filename[BOGUS_FILENAME_LENGTH+1];
-    FILE * map_fp     = NULL;
-    FILE * palette_fp = NULL;
+        struct place           * place;
+        struct terrain_map     * map;
+        struct terrain_palette * palette;
+        char map_filename    [BOGUS_FILENAME_LENGTH+1];
+        char palette_filename[BOGUS_FILENAME_LENGTH+1];
+        FILE * map_fp     = NULL;
+        FILE * palette_fp = NULL;
 
 	cmdwin_clear();
 
 	if (pc) {
 		// Combat Mode
-        // Use the party member's location as the origin.
-        consolePrint("TODO - Save Map does not work in combat mode.\n");
-        return false;
-        // TODO: play.c needs a way to get at Combat from combat.c
-        // place = Combat;  // Won't work, file-scoped to combat.c
+                // Use the party member's location as the origin.
+                place = Place;
 		x = pc->getX();
 		y = pc->getY();
 	} else {
 		// Party Mode
 		// Use the player party's location as the origin.
-        place = player_party->getPlace();
+                place = player_party->getPlace();
 		x     = player_party->getX();
 		y     = player_party->getY();
 	}
 
-    map     = place->terrain_map;
-    palette = map->palette;
+        map     = place->terrain_map;
+        palette = map->palette;
 
-    // Save the palette for the current map:
-    sprintf(palette_filename, "/tmp/nazghul.pal.%s.%d.ghul", 
-            palette->tag, getpid() );
-    palette_fp = fopen(palette_filename, "w");
-    if (!palette_fp) {
-      printf("Filed to open palette save file '%s' for writing "
-             "because '%s'.\n",
-             palette_filename, strerror(errno) );
-    }
-    palette_print(palette_fp, INITIAL_INDENTATION, palette);
-    fclose(palette_fp);
-    consolePrint("Saved palette as '%s'.\n", palette_filename);
-    printf("Saved palette as '%s'.\n", palette_filename);
+        // Save the palette for the current map:
+        sprintf(palette_filename, "/tmp/nazghul.pal.%s.%d.ghul", 
+                palette->tag, getpid() );
+        palette_fp = fopen(palette_filename, "w");
+        if (!palette_fp) {
+                printf("Filed to open palette save file '%s' for writing "
+                       "because '%s'.\n",
+                       palette_filename, strerror(errno) );
+        }
+        palette_print(palette_fp, INITIAL_INDENTATION, palette);
+        fclose(palette_fp);
+        consolePrint("Saved palette as '%s'.\n", palette_filename);
+        printf("Saved palette as '%s'.\n", palette_filename);
 
-    // And save the current map:
-    sprintf(map_filename, "/tmp/nazghul.map.%s.%d.ghul", 
-            map->tag, getpid() );
-    map_fp = fopen(map_filename, "w");
-    if (!map_fp) {
-      printf("Filed to open map save file '%s' for writing "
-             "because '%s'.\n",
-             map_filename, strerror(errno) );
-    }
-    terrain_map_print(map_fp, INITIAL_INDENTATION, map);
-    fclose(map_fp);
-    consolePrint("Saved map as '%s'.\n", map_filename);
-    printf("Saved map as '%s'.\n", map_filename);
+        // And save the current map:
+        sprintf(map_filename, "/tmp/nazghul.map.%s.%d.ghul", 
+                map->tag, getpid() );
+        map_fp = fopen(map_filename, "w");
+        if (!map_fp) {
+                printf("Filed to open map save file '%s' for writing "
+                       "because '%s'.\n",
+                       map_filename, strerror(errno) );
+        }
+        terrain_map_print(map_fp, INITIAL_INDENTATION, map);
+        fclose(map_fp);
+        consolePrint("Saved map as '%s'.\n", map_filename);
+        printf("Saved map as '%s'.\n", map_filename);
 
 	return true;
 } // cmdSaveTerrainMap()

@@ -81,6 +81,8 @@ SPRITE_SET ss_mine {
     SPRITE(s_fireplace,     2, 37, normal);
 
     SPRITE(s_green_townsman, 2, 40, normal);
+    SPRITE(s_yellow_slime,   4, 42, normal);
+    SPRITE(s_yellow_slime_asleep, 1, 42, normal);
   }
 } /* SPRITE_SET ss_mine */
 

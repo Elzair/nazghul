@@ -97,8 +97,11 @@ struct GroupInfo *NpcPartyType::getNextGroup(void)
 class Object *NpcPartyType::createInstance()
 {
 	class NpcParty *obj = new NpcParty();
-	if (obj)
-		obj->init(this);
+	if (!obj)
+                return NULL;
+
+        obj->init(this);
+
 	return obj;
 }
 
@@ -413,6 +416,7 @@ bool NpcParty::move(int dx, int dy)
                         this->destroy_on_combat_exit = false;
 
 			player_party->move_to_combat(&cinfo);
+                        return true;
 		}
 
                 if (player_party->resting()) {
@@ -747,6 +751,7 @@ void NpcParty::synchronize(int turn)
 
 void NpcParty::advanceTurn(int turn)
 {
+        assert(!isDestroyed());
 
 	turn_cost = 0;
 
@@ -836,7 +841,7 @@ bool NpcParty::createMembers(void)
 		// NPCs from that group based on its max size (need at least
 		// one). Then create that many NPC characters and add them to
 		// the party.
-#define RANDOM_NUMBER_OF_MEMBERS false
+#define RANDOM_NUMBER_OF_MEMBERS true
 		if (RANDOM_NUMBER_OF_MEMBERS) {
 			n = (random() % ginfo->n_max) + 1;
 		} else {
@@ -850,7 +855,6 @@ bool NpcParty::createMembers(void)
 		while (n) {
 
 			// Create and initialize a new "stock" character.
-			// c = (class Character*)ginfo->type->createInstance();
 			class Character *c = new class Character();
 			if (!c)
 				break;

@@ -58,7 +58,7 @@
 #include <math.h>
 
 #define FORMATION_H     (formation[array_sz(formation) - 1].y)
-#define N_MAX_NPCS      32      /* arbitrary limit */
+#define N_MAX_NPCS      256      /* arbitrary limit */
 #define MAX_DEPTH       64
 #define MAX_PLACEMENT_RECTANGLE_W 32
 #define MAX_PLACEMENT_RECTANGLE_H 16
@@ -608,7 +608,20 @@ static void myFillPositionInfo(struct position_info *info, int x, int y,
         // kind of thing. I made this change when I found that nixies were not
         // getting distributed on bridge combat maps.
         info->find_edge = false;
-        info->find_party = false;
+
+        // gmcnutt: addendum to the above comment. When I remove the find_party
+        //requirement I get situations where party members (player and
+        //otherwise) get plopped down on the other side of impassable
+        //barriers. For the player this is bad because a member might get
+        //stuck, thus deadlocking the game. For npcs this is bad because
+        //sometimes the player can't complete combat because he can't attack
+        //the lost enemy members. The problem with the nixies should be
+        //resolved another way: the party location should be someplace
+        //passable, and the engine should be willing to search half the map to
+        //find such a place if necessary.
+        //
+        //info->find_party = false;
+        info->find_party = true;
 #endif
         info->placed = 0;
 }
@@ -1350,14 +1363,21 @@ static bool myNPCEnchantNearest(class Character * npc, class Character * pc,
                                npc->getMana());
                         continue;
                 }
-                // Check if the nearest is in range
-                if (d > spell->range) {
+
+                // Check if the nearest is in range or if the range does not
+                // matter for this spell type
+                if (d > spell->range &&
+                    ! (spell->effects & EFFECT_SUMMON)) {
                         printf("out-of-range\n");
                         continue;
                 }
+
                 // Cast the spell
                 printf("ok!\n");
-                spell->cast(npc, pc, 0, 0, 0);
+
+                // gmcnutt: for now use the caster's coordinates, only the
+                // summoning spells currently use them.
+                spell->cast(npc, pc, 0, pc->getX(), pc->getY());
                 return true;
         }
 
@@ -1869,99 +1889,132 @@ static bool myPcCommandHandler(struct KeyHandler *kh, int key, int keymod)
         class Character *pc = (class Character *) kh->data;
         static int unshift[] = { KEY_NORTH, KEY_SOUTH, KEY_EAST, KEY_WEST };
 
-        switch (key) {
-        case KEY_NORTH:
-        case KEY_EAST:
-        case KEY_SOUTH:
-        case KEY_WEST:
-                dir = keyToDirection(key);
-                myMovePC(pc, directionToDx(dir), directionToDy(dir));
-                ret = true;
-                break;
-        case KEY_SHIFT_NORTH:
-        case KEY_SHIFT_EAST:
-        case KEY_SHIFT_SOUTH:
-        case KEY_SHIFT_WEST:
-                key = unshift[(key - KEY_SHIFT_NORTH)];
-                dir = keyToDirection(key);
-                mapMoveCamera(directionToDx(dir), directionToDy(dir));
-                mapUpdate(0);
-                ret = false;
-                break;
-        case 'a':
-                ret = myAttack(pc);
-                break;
-        case 'c':
-                ret = cmdCastSpell(pc); // myCastSpell(pc);
-                break;
-        case 'e':
-                ret = combat_enter_portal(pc);
-                break;
-        case 'f':
-                ret = myFollow(pc);
-                break;
-        case 'g':
-                cmdGet(pc->getX(), pc->getY(), Combat.state == LOOTING);
-                ret = true;
-                break;
-        case 'h':
-                ret = cmdHandle(pc);
-                break;
-        case 'l':
-                // SAM: Changing (L)ook command 
-                // from "look at 1 tile" to a "Look Mode"
-                ret = cmdLook(pc->getX(), pc->getY());
-                break;
-        case 'o':
-                ret = cmdOpen(pc);
-                break;
-        case 'q':
-                ret = cmdQuit();
-                break;
-        case 'r':
-                ret = cmdReady(pc);
-                break;
-        case 'u':
-                ret = cmdUse(pc);
-                break;
-        case 'x':
-                ret = cmdXamine(pc);    // SAM: 1st step towards new (L)ook cmd...
-                break;
-        case 'z':
-                ret = cmdZtats(pc);
-                break;
-        case '@':
-                // SAM: 'AT' command for party-centric information
-                ret = cmdAT(pc);
-                break;
-        case ' ':
-                cmdwin_print("Pass");
-                ret = true;
-                break;
-        case SDLK_1:
-        case SDLK_2:
-        case SDLK_3:
-        case SDLK_4:
-        case SDLK_5:
-        case SDLK_6:
-        case SDLK_7:
-        case SDLK_8:
-        case SDLK_9:
-                ret = myEnterSoloMode(pc, key - SDLK_1);
-                break;
-        case SDLK_0:
-                ret = myExitSoloMode(pc);
-                break;
-        case '<':
-                // This key was chosen to be a cognate for '<' in NetHack
-                // and other roguelike games.
-                ret = myExitCombat();
-                break;
-        default:
-                ret = false;
-                break;
-        }
 
+        if (keymod == KMOD_LCTRL || keymod == KMOD_RCTRL) {
+
+                // SAM: This seemed like a less ugly way of setting off a group
+                // of keybindings for "DM Mode" use or the like.  If we find
+                // something more aesthetic wrt/ switch() syntax, we will
+                // surely prefer it...
+                // 
+                // Control-key bindings for "DM Mode" commands like terrain
+                // editing.  In future, these may be enabled/disabled at
+                // compile time, or via a GhulScript keyword in the mapfile.
+                switch (key) {
+      
+                case 't':
+                        cmdTerraform(pc);
+                        break;
+
+                case 's':
+                        cmdSaveTerrainMap(pc);
+                        break;
+
+                case 'z':
+                        mapTogglePeering();
+                        break;
+
+                default:
+                        break;
+                } // switch(key)
+        } // keymod
+
+        else {
+                switch (key) {
+                case KEY_NORTH:
+                case KEY_EAST:
+                case KEY_SOUTH:
+                case KEY_WEST:
+                        dir = keyToDirection(key);
+                        myMovePC(pc, directionToDx(dir), directionToDy(dir));
+                        ret = true;
+                        break;
+                case KEY_SHIFT_NORTH:
+                case KEY_SHIFT_EAST:
+                case KEY_SHIFT_SOUTH:
+                case KEY_SHIFT_WEST:
+                        key = unshift[(key - KEY_SHIFT_NORTH)];
+                        dir = keyToDirection(key);
+                        mapMoveCamera(directionToDx(dir), directionToDy(dir));
+                        mapUpdate(0);
+                        ret = false;
+                        break;
+                case 'a':
+                        ret = myAttack(pc);
+                        break;
+                case 'c':
+                        ret = cmdCastSpell(pc); // myCastSpell(pc);
+                        break;
+                case 'e':
+                        ret = combat_enter_portal(pc);
+                        break;
+                case 'f':
+                        ret = myFollow(pc);
+                        break;
+                case 'g':
+                        cmdGet(pc->getX(), pc->getY(), Combat.state == LOOTING);
+                        ret = true;
+                        break;
+                case 'h':
+                        ret = cmdHandle(pc);
+                        break;
+                case 'l':
+                        // SAM: Changing (L)ook command 
+                        // from "look at 1 tile" to a "Look Mode"
+                        ret = cmdLook(pc->getX(), pc->getY());
+                        break;
+                case 'o':
+                        ret = cmdOpen(pc);
+                        break;
+                case 'q':
+                        ret = cmdQuit();
+                        break;
+                case 'r':
+                        ret = cmdReady(pc);
+                        break;
+                case 'u':
+                        ret = cmdUse(pc);
+                        break;
+                case 'x':
+                        ret = cmdXamine(pc);    // SAM: 1st step towards new
+                                                // (L)ook cmd...
+                        break;
+                case 'z':
+                        ret = cmdZtats(pc);
+                        break;
+                case '@':
+                        // SAM: 'AT' command for party-centric information
+                        ret = cmdAT(pc);
+                        break;
+                case ' ':
+                        cmdwin_print("Pass");
+                        ret = true;
+                        break;
+                case SDLK_1:
+                case SDLK_2:
+                case SDLK_3:
+                case SDLK_4:
+                case SDLK_5:
+                case SDLK_6:
+                case SDLK_7:
+                case SDLK_8:
+                case SDLK_9:
+                        ret = myEnterSoloMode(pc, key - SDLK_1);
+                        break;
+                case SDLK_0:
+                        ret = myExitSoloMode(pc);
+                        break;
+                case '<':
+                        // This key was chosen to be a cognate for '<' in NetHack
+                        // and other roguelike games.
+                        ret = myExitCombat();
+                        break;
+                default:
+                        ret = false;
+                        break;
+                }
+
+        }
         cmdwin_flush_to_console();
 
         return ret;
@@ -2807,12 +2860,18 @@ bool combat_enter(struct combat_info * info)
 
         if (info->move->npc_party) {
                 Combat.state = FIGHTING;
-                myPositionEnemy(info->move->npc_party, info->move->dx,
-                                info->move->dy, !info->defend);
-                if (Combat.n_npcs == 0) {
+                if (!myPositionEnemy(info->move->npc_party, info->move->dx,
+                                     info->move->dy, !info->defend)) {
+                        //if (Combat.n_npcs == 0) {
                         consolePrint("\n*** FORFEIT ***\n\n");
                         consolePrint("Your opponent slips away!\n");
                         Combat.state = LOOTING;
+
+                        // The npc party did not get added to the list because
+                        // myPositionEnemy() failed. Add it to the list so that
+                        // it gets cleaned up in the normal way.
+                        list_add(&Combat.parties, 
+                                 &info->move->npc_party->container_link.list);
                 }
         }
         else if (info->camping) {
@@ -2918,69 +2977,23 @@ bool combat_enter(struct combat_info * info)
         while (pelem != &Combat.parties) {
 
                 class NpcParty *party;
-                struct list *melem, *tmp;
-                class Character *member;
-                bool keep, put, onmap;
+                struct list *tmp;
 
                 tmp = pelem->next;
                 party = outcast(pelem, class NpcParty, container_link.list);
-                printf("processing %s\n", party->getName());
+                list_remove(pelem);
                 pelem = tmp;
 
-                // For wilderness combat automatically destroy the npc parties
-                // after combat.
-                if (Place == &Combat.place) {
-                        printf("cleaning up %s\n", party->getName());
-                        party->cleanupAfterCombat();
-                        party->destroy();
-
-                        // If the party was summoned or was brought in as an
-                        // ambush then we need to delete it now. Parties which
-                        // were originally on the map are deleted after combat.
-                        if (party->destroy_on_combat_exit)
-                                delete party;
-
-                        continue;
-                }
-                // If the party contains any living members still on the map
-                // then keep it here.
-                keep = false;
-                put = false;
-                onmap = false;
-                list_for_each(&party->members, melem) {
-                        member = outcast(melem, class Character, plist);
-
-                        if (member->isDead() || member->is_clone)
-                                continue;
-
-                        // Parties who 'belong' in a place are allowed to
-                        // return after combat if all of their surviving
-                        // members fled. 'Invaders' that flee do not return.
-                        if (member->isOnMap()) {
-                                onmap = true;
-                                keep = true;
-                        }
-                        else {
-                                if (party->isHome(Place)) {
-                                        keep = true;
-                                }
-                                continue;
-                        }
-                }
-
-                if (!keep) {
-                        // Destroying the party will automatically remove all
-                        // of its members and destroy them.
-                        printf("Destroying party %s\n", party->getName());
-                        party->cleanupAfterCombat();
-                        party->destroy();
-                        continue;
-                }
-
-                // Put the party back where it was at the beginning of combat.
+                printf("cleaning up %s\n", party->getName());
                 party->cleanupAfterCombat();
-                party->relocate(Place, party->pinfo.x, party->pinfo.y);
+                party->destroy();
 
+                // If the party was summoned or brought as an ambush then we
+                // need to delete it now.
+                if (party->destroy_on_combat_exit) {
+                        printf("Destroying party %s\n", party->getName());
+                        delete party;
+                }
         }
 
         memset(Combat.npcs, 0, sizeof (Combat.npcs));
@@ -3070,6 +3083,7 @@ bool combatAddNpcParty(class NpcParty * party, int dx, int dy, bool located,
         party->pinfo.dx = dx;
         party->pinfo.dy = dy;
         party->pinfo.formation = party->get_formation();
+        party->pinfo.find_party = true;
         if (!party->pinfo.formation)
                 party->pinfo.formation = &default_formation;
         set_party_initial_position(&party->pinfo, x, y);

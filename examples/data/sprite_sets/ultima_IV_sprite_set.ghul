@@ -169,6 +169,7 @@ SPRITE_SET ss_u4 {
     SPRITE(s_spider,     4, 152, normal);
     SPRITE(s_ghost,      4, 156, normal);
     SPRITE(s_slime,      4, 160, normal);
+    SPRITE(s_slime_asleep, 1, 160, normal);
     SPRITE(s_shaman,     4, 164, normal);
     SPRITE(s_gemlin,     4, 168, normal);
     SPRITE(s_mimic,      4, 172, normal);

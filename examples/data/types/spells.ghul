@@ -109,14 +109,15 @@ REAGENT reagent_spider_silk {
 #define SPELL_COST_LEVEL_8     80
 
 // Shared with the code (must match common.h):
-#define SPELL_TARGET_NONE      0
-#define SPELL_TARGET_CHARACTER 1
-#define SPELL_TARGET_MECH      2
-#define SPELL_TARGET_DIRECTION 3
-#define SPELL_TARGET_LOCATION  4
-#define SPELL_TARGET_UP        5
-#define SPELL_TARGET_DOWN      6
+#define SPELL_TARGET_NONE              0
+#define SPELL_TARGET_CHARACTER         1
+#define SPELL_TARGET_MECH              2
+#define SPELL_TARGET_DIRECTION         3
+#define SPELL_TARGET_LOCATION          4
+#define SPELL_TARGET_UP                5
+#define SPELL_TARGET_DOWN              6
 #define SPELL_TARGET_ALL_PARTY_MEMBERS 7
+#define SPELL_TARGET_CASTER_LOCATION  8
 
 // Note: the 'context' codes are:
 //   C - combat
@@ -317,6 +318,30 @@ SPELL spell_call_animal {
   parms {
     // Party types this spell will summon:
     t_snakes;
+  }
+}
+
+SPELL spell_summon_slime {
+  name     "Kal Nox Xen (summon slime)";
+  sprite   s_slime;
+  code     KNX;
+  cost     SPELL_COST_LEVEL_2;
+  range    0;
+  missile  null;
+  effects  (EFFECT_SUMMON);
+  strength 1;
+  duration 0;
+  context  C;
+  level    2;
+  target   SPELL_TARGET_CASTER_LOCATION;
+  reagents {
+    reagent_spider_silk;
+    reagent_mandrake;
+    reagent_nightshade;
+  }
+  parms {
+    // Party types this spell will summon:
+    t_slimes;
   }
 }
 

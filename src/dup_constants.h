@@ -32,6 +32,7 @@
 #define MECH_UNLOCK       7
 #define MECH_MAGIC_LOCK   8
 #define MECH_MAGIC_UNLOCK 9
+#define MECH_TURN         10
 
 // This value marks the beginning of the unreserved events. A game script can
 // define its own events and number them starting from here.
