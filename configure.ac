@@ -92,12 +92,14 @@ dnl      work by trying to link or run a program; by checking for libraries
 dnl      first you ensure that the resulting programs can be linked.
 dnl ---------------------------------------------------------------------------
 
-dnl Check for SDL and SDL features
+dnl Check for SDL and SDL features, i.e. -lSDL
 SDL_VERSION=1.2.3
 AM_PATH_SDL($SDL_VERSION,
             :,
 	    AC_MSG_ERROR([*** SDL version $SDL_VERSION not found!])
 )
+
+dnl Check specifically for SDL_image library, i.e. -lSDL_image switch
 AC_CHECK_LIB(SDL_image, IMG_ReadXPMFromArray)
 
 dnl ---------------------------------------------------------------------------
@@ -156,17 +158,19 @@ CXXFLAGS="$CFLAGS"
 dnl Set the compiler to c++ (for now)
 CC="$CXX"
 
+dnl Add libraries to build process
+LIBS="$LIBS $SDL_LIBS"
+
 dnl ---------------------------------------------------------------------------
 dnl 8. Output
 dnl      This is done by invoking AC_OUTPUT.
 dnl ---------------------------------------------------------------------------
 
 # Finally create all the generated files
-AC_CONFIG_FILES([
-Makefile
-src/Makefile
-worlds/Makefile
-])
+AC_CONFIG_FILES([Makefile \
+	m4/Makefile       \
+	src/Makefile      \
+	worlds/Makefile])
 
 AC_OUTPUT
 

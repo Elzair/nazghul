@@ -1,3 +1,8 @@
+Sun Jan 30 17:50:58 CET 2005  Andreas Bauer <baueran@in.tum.de>
+
+ * m4/sdl.m4: new
+ * configure.ac: modify check for SDL library
+
 Sat Jan 22 15:44:09 CET 2005  Andreas Bauer <baueran@in.tum.de>
 
  * nazghul/examples/data/images/.xvpics: remove

@@ -1,6 +1,6 @@
 AUTOMAKE_OPTIONS = dist-shar dist-zip dist-tarZ
 
-SUBDIRS = src worlds
+SUBDIRS = src worlds m4
 
 DIST_SUBDIRS = $(SUBDIRS)
 
@@ -37,11 +37,6 @@ ACLOCAL_AMFLAGS = -I m4
 @MAINT@	@-rm -f config.guess config.sub config.cache config.log config.status
 @MAINT@	@-rm -f mkinstalldirs missing install-sh COPYING ABOUT-NLS config.rpath
 @MAINT@	@-rm -fr @PACKAGE@-@VERSION@* *~ */*~
-@MAINT@	@-rm -fr m4/codeset.m4 m4/glibc21.m4 m4/iconv.m4 m4/intdiv0.m4
-@MAINT@	@-rm -fr m4/inttypes.m4 m4/inttypes_h.m4 m4/inttypes-pri.m4 \
-        m4/isc-posix.m4
-@MAINT@	@-rm -fr m4/lcmessage.m4 m4/lib-ld.m4 m4/lib-link.m4 m4/lib-prefix.m4
-@MAINT@	@-rm -fr m4/progtest.m4 m4/stdint_h.m4 m4/uintmax_t.m4 m4/ulonglong.m4
 @MAINT@	@echo "================================================="
 @MAINT@	@echo "Don't forget your ChangeLog and NEWS entries ...."
 @MAINT@	@echo "================================================="
