@@ -62,8 +62,11 @@ SPRITE_SET ss_mechanisms {
     STD_SPRITE(s_floor_lever_left,     10);
     STD_SPRITE(s_floor_lever_right,    11);
 
+#if 0                                  
+    // gmcnutt: switched to the image in misc pending general approval
     STD_SPRITE(s_portcullis_down,      12);
     STD_SPRITE(s_portcullis_up,        13);
+#endif
   }
 
 } // SPRITE_SET ss_mechanisms

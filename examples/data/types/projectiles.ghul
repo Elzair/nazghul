@@ -65,7 +65,8 @@
 
 
 // Temporary Missiles (for spells and such)
-PROJECTILE_TYPE(M_illum,    "glowing mote",   s_magic,        F_illum,  0);
+//PROJECTILE_TYPE(M_illum,    "glowing mote",   s_magic,        F_illum,  0);
+PROJECTILE_TYPE(M_illum,    "glowing mote",   null,        F_illum,  0);
 PROJECTILE_TYPE(M_fire,     "fire missile",   s_field_fire,   F_fire,   0);
 PROJECTILE_TYPE(M_protect,  "protect missile",s_field_energy, F_protect,0);
 PROJECTILE_TYPE(M_poison,   "poison missile", s_field_poison, F_poison, 0);

@@ -142,6 +142,9 @@ Missile::~Missile()
 
 void Missile::paint(SDL_Rect * rect)
 {
+        if (!getSprite())
+                return;
+                
 	// The rect coordinates are in SCREEN coordinates (not map) so I need
 	// to do some clipping here to make sure we don't paint off the map
 	// viewer.
@@ -221,8 +224,9 @@ void Missile::animate(int Ax, int Ay, int Bx, int By)
 
 	// Select the sprite orientation based on direction of travel
 	struct sprite *sprite = getSprite();
-	assert(sprite);
-	spriteSetFacing(sprite, vector_to_dir(dX, dY));
+        if (sprite) {
+                spriteSetFacing(sprite, vector_to_dir(dX, dY));
+        }
 
 	// Moving left?
 	int Xincr = (rect.x > sBx) ? -1 : 1;
@@ -291,7 +295,9 @@ void Missile::animate(int Ax, int Ay, int Bx, int By)
 	mapUpdate(0);
 
 	// restore the missile sprite to the default facing
-	spriteSetFacing(sprite, SPRITE_DEF_FACING);
+        if (sprite) {
+                spriteSetFacing(sprite, SPRITE_DEF_FACING);
+        }
 
 	// This object's type is either Ammo (for missile weapons) or Arms (for
 	// thrown weapons). If it's Ammo then just bailout here, because I

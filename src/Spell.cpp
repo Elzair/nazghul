@@ -744,6 +744,7 @@ enum Spell::cast_result Spell::cast(class Character * caster,
 		missile->animate(ox, oy, tx, ty);
 		if (!missile->hitTarget())
 			return missed_target;
+                success = ok;
 	}
 	// Apply any effects of this spell. First I test for the mutually
 	// exclusive effects which cannot be combined with one another (because
