@@ -54,6 +54,7 @@
 #include "vehicle.h"
 #include "formation.h"
 #include "combat.h"
+#include "Container.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -1183,10 +1184,24 @@ static Object *game_load_place_item(struct place *place)
         if ((type = game_object_type_lookup(Lexer->lexeme)) ||
             (type = lookupNpcPartyType(Lexer->lexeme))) {
 
-                // This is an object type so create an instance.
-                obj = type->createInstance();
-                PARSE_ASSERT(obj, "Failed to create instance of %s\n",
-                             type->getName());
+                // gmcnutt: big glaring HACK. If this object type occupies the
+                // container layer then allocate is specifically as a
+                // Container.
+                if (type->getLayer() == container_layer) {
+
+                        obj = new Container();
+                        PARSE_ASSERT(obj, "Failed to create instance of %s\n",
+                                     type->getName());
+                        obj->init(type);
+
+                } else {
+
+                        // This is an object type so create an instance.
+                        obj = type->createInstance();
+                        PARSE_ASSERT(obj, "Failed to create instance of %s\n",
+                                     type->getName());
+
+                }
 
         }
         else if ((ch = lookupCharacter(Lexer->lexeme))) {
@@ -1202,11 +1217,11 @@ static Object *game_load_place_item(struct place *place)
                 PARSE_ASSERT(type, "Invalid type tag '%s'\n", Lexer->lexeme);
         }
 
-        obj->setPlace(place);   // Must do this BEFORE calling load() because
-        // NPC
-        // parties will check the 'home' flag as they
-        // load and assign the current place as their
-        // home.
+        // Must do this BEFORE calling load() because NPC parties will check
+        // the 'home' flag as they load and assign the current place as their
+        // home.  
+        obj->setPlace(place);
+
         loader.lexer = Lexer;
         loader.lookupTag = lookupTag;
         loader.advance();

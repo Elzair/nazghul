@@ -85,7 +85,25 @@ PLACE  p_terrain_test {
     // To place most objects, use a line like the below:
     // object_type_tag x y;
 
-//  t_chest1          11 29;  // Container  // Causes a segfault...why?
+    // gmcnutt: the following causes a seg fault if the player tries to open
+    // the container. The reason is that t_chest1 is just another object
+    // type. When the parser hits the following line it creates an Object whose
+    // type is t_chest1. The parser does not realize that the intention is to
+    // create specifically a Container Object (Container is a subclass of
+    // Object which supports the open() method - Object does not). It could
+    // infer this from the layer of t_chest1, I suppose, but I don't think that
+    // is the right thing to do in the long run.
+    //
+    // The reason dropped chests work (as in corpse loot) is because the
+    // Character class knows that it specifically wants to create a
+    // Container. Currently all working chests are created via this route.
+    //
+    // This is a problem which is going to be fixed in the 0.3.x series. It's
+    // tempting to hack in a tmp fix now, and I might do that to satisfy Sam,
+    // but I know the very next thing he'll want is the ability to add items to
+    // containers :-).
+
+    t_chest1          11 29;  // Container  // Causes a segfault...why?
 
     t_dagger          10 11;  // Weapon (dagger)
     t_long_sword      10 12;

@@ -2,6 +2,13 @@ Changes between nazghul-0.1.2 and nazghul-0.1.3
 
 gmcnutt:
 
+--Bugfix: chests created via the load file (as opposed to chests created as
+  corpse loot) were causing a seg fault when the player tried to open them. The
+  problem is that they were being created as generic Objects, and not as
+  specific Container Objects, so they didn't really support the open command. I
+  don't plan on making a good solution for this until the 0.3.x series, but for
+  now I added a hack to make it work and keep Sam happy :-)
+
 --Bugfix: cursor was being shaded according to lighting conditions, but it
   should always be bright and clearly visible. I fixed this by changing the way
   the cursor is rendered so that now it is simply accepted as a special
