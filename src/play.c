@@ -2146,71 +2146,46 @@ bool cmdCastSpell(class Character * pc)
 		if (!target_spell(spell, pc, &target, &direction, &tx, &ty))
 			break;
 
+                // Console message.
+		consolePrint("%s casts %s", pc->getName(), spell->getName());
+                consolePrint("...");
+
+
 		// Cast the spell. This automatically decrements the caster's
 		// mana.
-#if PRINT_MSG_TO_CONSOLE
-		consolePrint("%s casts %s", pc->getName(), spell->getName());
-		if (direction != DIRECTION_NONE)
-			consolePrint(" to the %s",
-				     directionToString(direction));
-		else if (target)
-			consolePrint(" on %s", target->getName());
-		consolePrint("...");
-		switch (spell->cast(pc, target, direction, tx, ty)) {
-		case Spell::ok:
-			consolePrint("success!\n");
-			break;
-		case Spell::no_room_on_battlefield:
-			consolePrint("summoned party fails to enter!\n");
-			break;
-		case Spell::magic_negated:
-			consolePrint("a mysterious force blocks magic!\n");
-			break;
-		case Spell::missed_target:
-			consolePrint("but misses!\n");
-			break;
-		case Spell::no_effect:
-			consolePrint("no effect!\n");
-			break;
-		case Spell::teleport_failed:
-			consolePrint("movement failed!\n");
-			break;
-		case Spell::unknown_failure:
-		default:
-			consolePrint("fizzles!\n");
-			break;
-		}
 
-		consolePrint("\n");
-#else
-                // The new way: print to the cmdwin and when the turn is over
-                // that will get logged to the console.
                 cmdwin_print("-");
 		switch (spell->cast(pc, target, direction, tx, ty)) {
 		case Spell::ok:
 			cmdwin_print("success!");
+			consolePrint("success!\n");
 			break;
 		case Spell::no_room_on_battlefield:
 			cmdwin_print("no room on battlefield!");
+			consolePrint("no room on battlefield!\n");
 			break;
 		case Spell::magic_negated:
 			cmdwin_print("magic negated!");
+			consolePrint("magic negated!\n");
 			break;
 		case Spell::missed_target:
 			cmdwin_print("miss!");
+                        consolePrint("missed!\n");
 			break;
 		case Spell::no_effect:
 			cmdwin_print("no effect!");
+                        consolePrint("no effect!\n");
 			break;
 		case Spell::teleport_failed:
 			cmdwin_print("teleport failed!");
+                        consolePrint("teleport failed!\n");
 			break;
 		case Spell::unknown_failure:
 		default:
 			cmdwin_print("fizzles!");
+                        consolePrint("fizzles!\n");
 			break;
 		}
-#endif
 
 		statusRepaint();
 

@@ -184,7 +184,7 @@ static void combatAttack(class Character *attacker, class ArmsType *weapon,
         weapon->fire(defender, attacker->getX(), attacker->getY());
         attacker->useAmmo();
         attacker->setAttackTarget(defender);
-        consolePrint("%s\n", defender->getWoundDescription());
+        consolePrint("%s!\n", defender->getWoundDescription());
 }
 
 static void Defeat(void)
@@ -1258,30 +1258,24 @@ static bool myNPCAttackNearest(class Character * npc, class Character * pc,
 {
         bool ret = false;
 
-        consolePrint("%s attacks %s:\n", npc->getName(), pc->getName());
-
         for (class ArmsType * weapon = npc->enumerateWeapons(); weapon != NULL;
              weapon = npc->getNextWeapon()) {
 
-                consolePrint("[%s]: ", weapon->getName());
-
                 if (d > weapon->getRange()) {
-                        consolePrint("out of range!\n");
                         continue;
                 }
 
                 if (!npc->hasAmmo(weapon)) {
-                        consolePrint("no ammo!\n");
                         continue;
                 }
 
                 if (d <= 1 && weapon->isMissileWeapon()) {
                         // Handle missile weapon interference
-                        consolePrint("too close!\n");
                         continue;
                 }
 
-                consolePrint("%s ", pc->getName());
+                consolePrint("%s attacks %s with %s...", npc->getName(),
+                             pc->getName(), weapon->getName());
                 combatAttack(npc, weapon, pc);
                 statusRepaint();
                 ret = true;
@@ -1302,19 +1296,13 @@ static bool myNPCEnchantNearest(class Character * npc, class Character * pc,
         class Spell *spell;
         int i;
 
-        printf("%s considering spells...\n", npc->getName());
-
         // Enumerate all the known spells for this npc
         for (i = 0; i < npc->species->n_spells; i++) {
 
                 spell = npc->species->spells[i];
 
-                printf("\t%s...", spell->getName());
-
                 // Check if the NPC has enough mana
                 if (spell->cost > npc->getMana()) {
-                        printf("not enough mana [%d > %d]\n", spell->cost,
-                               npc->getMana());
                         continue;
                 }
 
@@ -1322,15 +1310,14 @@ static bool myNPCEnchantNearest(class Character * npc, class Character * pc,
                 // matter for this spell type
                 if (d > spell->range &&
                     ! (spell->effects & EFFECT_SUMMON)) {
-                        printf("out-of-range\n");
                         continue;
                 }
 
                 // Cast the spell
-                printf("ok!\n");
-
                 // gmcnutt: for now use the caster's coordinates, only the
                 // summoning spells currently use them.
+                consolePrint("%s casts %s\n", npc->getName(), 
+                             spell->getName());
                 spell->cast(npc, pc, 0, npc->getX(), npc->getY());
                 return true;
         }
@@ -1446,7 +1433,6 @@ static bool myRunNpc(class Character * npc, void *data)
 
         if (npc->isFleeing()) {
                 // Handle the case where the NPC is still fleeing.
-                printf("%s fleeing\n", npc->getName());
                 if (npc->flee() == Character::ExitedMap) {
                         myExitMap(npc, npc->getFleeDx(), npc->getFleeDy());
                 }
@@ -1454,13 +1440,7 @@ static bool myRunNpc(class Character * npc, void *data)
         }
         // First check for a victim within LOS.
         nearest = mySelectVictim(npc, &min, 0);
-        if (nearest) {
-                // printf("%s selected %s for victim\n", npc->getName(),
-                // nearest->getName());
-        }
-        else {
-                printf("%s cannot find a victim in los\n", npc->getName());
-
+        if (!nearest) {
                 // Maybe the victim just stepped out of sight. In this case I
                 // want the npc to continue pursuit.
                 nearest = npc->quarry;
@@ -1473,9 +1453,6 @@ static bool myRunNpc(class Character * npc, void *data)
                     nearest != npc &&
                     nearest->isOnMap() &&
                     !nearest->isDead() && nearest->isVisible()) {
-                        printf("Aha! %s remembers previous victim %s and "
-                               "gives chase!\n", npc->getName(),
-                               nearest->getName());
                         min = place_flying_distance(Place,
                                                     npc->getX(), npc->getY(),
                                                     nearest->getX(),
@@ -1491,11 +1468,7 @@ static bool myRunNpc(class Character * npc, void *data)
 
         // Don't allow NPCs to attack characters they can't see (this gives
         // their bowmen an unfair advantage).
-        if (min > (unsigned int) npc->getVisionRadius()) {
-                printf("%s can't see %s at range %d\n", npc->getName(),
-                       nearest->getName(), min);
-        }
-        else {
+        if (min <= (unsigned int) npc->getVisionRadius()) {
                 // Check if there are any spells this NPC can cast on the
                 // nearest PC.
                 if (myNPCEnchantNearest(npc, nearest, min)) {
@@ -1505,8 +1478,6 @@ static bool myRunNpc(class Character * npc, void *data)
                 // so, attack. If the nearest was attacked then this NPCs turn
                 // is over.
                 if (myNPCAttackNearest(npc, nearest, min)) {
-                        printf("%s attacked %s\n", npc->getName(),
-                               nearest->getName());
                         return false;
                 }
         }
@@ -1520,12 +1491,10 @@ static bool myRunNpc(class Character * npc, void *data)
         path = place_find_path(Place, &as_info, npc->getPmask());
 
         if (!path) {
-                consolePrint("No path to %s, lurking.\n", nearest->getName());
                 return false;
         }
 
         if (path->next) {
-                consolePrint("Advances toward %s\n", nearest->getName());
                 myMoveNPC(npc,
                           path->next->x - npc->getX(),
                           path->next->y - npc->getY());
@@ -1540,7 +1509,7 @@ static bool myRunNpc(class Character * npc, void *data)
 
 static void doNpcRound(void)
 {
-        printf("--- NPCs ---\n");
+        consolePrint("---\n");
 
         myForEachNpc((bool(*)(class Character *, void *)) doApplyCombatEffects,
                      NULL);
@@ -2052,7 +2021,7 @@ static bool myRunPc(class Character * pc, void *data)
         cmdwin_clear();
         cmdwin_print("%s:", pc->getName());
 
-        consolePrint("%s: ", pc->getName());
+        consolePrint("\n%s: ", pc->getName());
         consoleRepaint();
 
         enum CombatState original_state = Combat.state;
