@@ -38,6 +38,13 @@ extern void log_continue(char *fmt, ...);
 extern void log_end(char *fmt, ...);
 extern void log_abort();
 
+/* log_flush - force a partial entry started with log_begin() to print now
+ * rather than waiting for log_end(). Warning: calling log_abort() after this
+ * will not erase what was written to the console. Normally you don't need to
+ * use log_flush().
+ */
+extern void log_flush();
+
 /* Log a single message as its own group. */
 extern void log_msg(char *fmt, ...);
 

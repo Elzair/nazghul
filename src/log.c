@@ -53,22 +53,24 @@ static void log_entry_print(struct log_entry *entry, char *fmt, va_list args)
         } else {
                 entry->room = 0;
         }
+}
 
-#if 0
-        /* Doing this makes log_abort() moot */
+void log_flush()
+{
+        struct log_entry *entry;
 
-        /* If this entry is already at the head of the queue then flush it to
-         * the console now. */
-        if (&entry->q_hook == log_q.next) {
-                if (entry->ptr != entry->buf) {
-                        consolePrint(entry->buf);
-                        consoleRepaint();
-                        memset(entry->buf, 0, sizeof(entry->buf));
-                        entry->ptr = entry->buf;
-                        entry->room = sizeof(entry->buf);
-                }
+        if (list_empty(&log_q))
+                return;
+
+        entry = outcast(log_q.next, struct log_entry, q_hook);
+
+        if (entry->ptr != entry->buf) {
+                consolePrint(entry->buf);
+                consoleRepaint();
+                memset(entry->buf, 0, sizeof(entry->buf));
+                entry->ptr = entry->buf;
+                entry->room = sizeof(entry->buf);
         }
-#endif
 }
 
 static inline void log_print_queued_msgs()

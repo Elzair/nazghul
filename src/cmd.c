@@ -2534,6 +2534,7 @@ void cmdQuickSave(void)
 void cmdReload(void)
 {
         log_begin("Loading from %s...", QUICKSAVE_FNAME);
+        log_flush();
         log_disable();
         session_load(QUICKSAVE_FNAME);
         log_enable();
