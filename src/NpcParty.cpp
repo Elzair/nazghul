@@ -415,8 +415,17 @@ bool NpcParty::move(int dx, int dy)
 			player_party->move_to_combat(&cinfo);
 		}
 
-		/* Else abort the move */
-		return false;
+                if (player_party->resting()) {
+
+                        /* If the player is sleeping then kick him out of
+                         * bed */
+                        player_party->throw_out_of_bed();
+
+                }
+
+                /* Else abort the move */
+                return false;
+
 	}
 
 	/* Check if another entity is already there */

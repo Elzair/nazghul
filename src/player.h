@@ -111,6 +111,8 @@ class player_party:public Object {
 
         void begin_resting(int hours);
         bool resting();
+        void awaken();
+        void throw_out_of_bed();
 
         int dx, dy;
         struct sprite *sprite;

@@ -1130,6 +1130,13 @@ static bool player_wakeup_member(class Character *member, void *data)
         return false;
 }
 
+void player_party::awaken()
+{
+        hours_to_rest = 0;
+        for_each_member(player_wakeup_member, this);
+        statusRepaint();
+}
+
 void player_party::advance_turns(void)
 {
 	/* Apply terrain and field affects */
@@ -1163,9 +1170,8 @@ void player_party::advance_turns(void)
                 hours_to_rest--;
                 assert(hours_to_rest >= 0);
                 if (!resting()) {
-                        for_each_member(player_wakeup_member, this);
+                        awaken();
                         cmdwin_print("rested!");
-                        statusRepaint();
                 }
         }
 }
@@ -1511,4 +1517,11 @@ void player_party::begin_resting(int hours)
 bool player_party::resting()
 {
         return (hours_to_rest > 0);
+}
+
+bool player_party::throw_out_of_bed()
+{
+        assert(resting());
+        awaken();
+        cmdwin_print("thrown out!");
 }

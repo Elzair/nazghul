@@ -2,6 +2,10 @@ Changes between nazghul-0.1.2 and nazghul-0.1.3
 
 gmcnutt:
 
+--Npc parties now wake up the player if he is sleeping in their bed. They don't
+  throw him out like they do in u5, but they will keep waking the player up
+  until he moves and let's them get into bed.
+
 --When npc parties are asleep they show a different sprite (if any species in
   the party has a 'sleep_sprite' specified)
 
