@@ -13,8 +13,4 @@
    (ifc food-ifc
         (method 'food-amount (lambda () 10))))
 
-(mk-obj-type 't_mushroom 
-             "edible mushroom" 
-             s_silver_mushroom 
-             layer-item 
-             mushroom-ifc)
+(mk-obj-type 't_mushroom "edible mushroom" s_silver_mushroom layer-item mushroom-ifc)

@@ -46,8 +46,8 @@
  s_companion_fighter         ; sprite
  "Walk"                      ; movement description
  sound-walking               ; movement sound
- 1000                        ; food
- 500                         ; gold
+ 10                          ; food
+ 0                           ; gold
  0                           ; turns to next meal
  0                           ; turns to next rest credit
  nil                         ; formation
@@ -58,9 +58,8 @@
  (kern-mk-container
   nil ;; type
   nil ;; trap
-  ;; contents
-  (list (list 1 t_dagger))
-  nil)
+  nil ;; contents
+  )
 
  nil ;; party members (should be nil for initial load file)
  )

@@ -156,7 +156,7 @@
 (kern-mk-sprite 's_ghost          ss_u4 4 156 #f 0 )
 (kern-mk-sprite 's_slime          ss_u4 4 160 #f 0 )
 (kern-mk-sprite 's_slime_asleep   ss_u4 1 160 #f 0 )
-(kern-mk-sprite 's_shaman         ss_u4 4 164 #f 0 )
+(kern-mk-sprite 's_troll          ss_u4 4 164 #f 0 )
 (kern-mk-sprite 's_gremlin        ss_u4 4 168 #f 0 )
 (kern-mk-sprite 's_mimic          ss_u4 4 172 #f 0 )
 (kern-mk-sprite 's_reaper         ss_u4 4 176 #f 0 )

@@ -137,6 +137,7 @@
    (list  't_dagger      "dagger"         s_dagger          "1d3"    "1d6"    "1d2"    slot-weapon   1      1)
    (list  't_acid_spray  "acid spray"     nil               "1d2"     "1d8"   "0"      slot-nil      2      2)   
    (list  't_stinger     "stinger"        nil               "1d8"    "1d2-1"  "0"      slot-nil      1      1)
+   (list  'short-sword   "short sword"    s_sword_short_1   "1d4"    "1d8"    "1d2"    slot-weapon   1      1)
    ))
 
 (define armor-types
@@ -153,6 +154,7 @@
    ;;     tag             | name          | sprite           | to-hit | armor  | slots
    ;;     ===========================================================================================================
    (list   't_sm_shield    "small shield"  s_small_shield     "-1"     "3"      slot-shield)
+   (list   'wooden-buckler "wooden buckler" s_shield_blank_round_2 "-1" "3"     slot-shield)
    ))
 
 (map (lambda (type) (apply mk-thrown-arms-type type)) thrown-arms-types)

@@ -51,7 +51,7 @@
 (define (mk-troll faction)
   (let ((troll (kern-mk-stock-char sp_troll 
                                    oc_troll
-                                   s_cyclops ;; no troll sprite yet
+                                   s_troll ;; no troll sprite yet
                                    "a troll" 
                                    nil)))
     (kern-being-set-base-faction troll faction)

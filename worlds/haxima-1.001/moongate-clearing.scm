@@ -23,6 +23,38 @@
                )
  (gregor-mk #f #f))
 
+;;-----------------------------------------------------------------------------
+;; Make a chest with some items to get the player started. This will be dropped
+;; on the map in the shrine room.
+;;-----------------------------------------------------------------------------
+(define warchest
+  (kern-mk-container
+   t_small_wooden_chest ;; type
+   nil ;; trap
+
+   (list
+
+    ;; Food
+    (list 10 t_mushroom)
+
+    ;; Reagents
+    (list 10 garlic)
+    (list 10 ginseng)
+    (list 10 sulphorous_ash)
+
+    ;; Arms
+    (list 1 short-sword)
+    (list 1 wooden-buckler)
+
+    ;; Items
+    (list 3 heal-potion)
+    (list 3 cure-poison-potion)
+
+    ;; Hints/instructions
+    (list 1 basic-survival-manual)
+    )
+   ))
+
 ;;----------------------------------------------------------------------------
 ;; Moongate Clearing
 ;;
@@ -67,10 +99,14 @@
   nil
   ;; neighbors
   nil
-  (list ;; contents
+
+  ;; *** contents of the place ***
+  (list
    (list (kern-tag 'black-gate (mk-moongate nil)) 11 11)
    (list ch_gregor 1 23)
+   (list warchest 1 24)
    )
+
   nil ;; hooks
   (list  ;; edge entrances
    (list north 16 27)
