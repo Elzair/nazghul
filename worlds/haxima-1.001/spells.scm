@@ -292,7 +292,8 @@
   (cast-missile-spell caster 8 t_arrow))
 
 (define (in-lor kspell caster)
-  (kern-obj-add-effect caster ef_light nil))
+  (kern-obj-add-effect caster ef_light nil)
+  #t)
 
 (define (mani kspell caster)
   (cast-heal-spell caster "2d20"))
