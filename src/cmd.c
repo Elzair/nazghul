@@ -2283,7 +2283,7 @@ bool cmdTerraform(class Character * pc)
                      map->tag, palette->tag, 
                      terrain->tag, terrain->name);
 
-        DM_XRAY_look_at_XY(pc->getPlace(),
+        DM_XRAY_look_at_XY(place,   // pc->getPlace(),  // SAM: caused SIGSEGV here.  Hmmm...I thought this was fixed.
                            x,y, NULL);  // First look at the current tile
 	if (terraform_cursor_func(x, y, &x, &y, 99,
                                   DM_XRAY_look_at_XY, terraform_XY,
