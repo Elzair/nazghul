@@ -2765,6 +2765,7 @@ void Character::exec(struct exec_context *context)
                 kh.fx = &character_key_handler;
                 kh.data = this;
                 eventPushKeyHandler(&kh);
+                mapUpdate(REPAINT_IF_DIRTY);
                 eventHandle();
                 eventPopKeyHandler();
 

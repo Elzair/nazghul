@@ -1091,6 +1091,7 @@ void player_party::exec(struct exec_context *context)
         if (action_points > 0) {        
                 kh.fx = &party_mode_key_handler;
                 eventPushKeyHandler(&kh);
+                mapUpdate(REPAINT_IF_DIRTY);
                 eventHandle();
                 eventPopKeyHandler();
         }

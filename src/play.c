@@ -303,6 +303,7 @@ static void play_loop(void)
 
         while (true) {
 
+
                 // -------------------------------------------------------------
                 // "Execute" the current place. This will loop through all
                 // objects in the current place and give them a chance to
