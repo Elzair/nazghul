@@ -81,30 +81,30 @@ MECH_TYPE mech_R_lever {
   }
 } // MECH_TYPE mech_L_lever
 
+#define MAKE_SIMPLE_STEP_TRIGGER(type_name, desc, _sprite, _sig) \
+MECH_TYPE type_name { \
+  name desc; \
+  defaults { \
+    sprite _sprite; \
+    pmask  PASS_ALL; \
+  } \
+  states { \
+    { \
+       name   desc; \
+    } \
+  } \
+  transitions { \
+    state      desc; \
+    event      MECH_STEP; \
+    next_state desc; \
+    actions { \
+      send_signal _sig; \
+    } \
+  } \
+}
 
-MECH_TYPE mech_pressure_plate {
-  name "pressure plate";  /* fixme - need this? -- perhaps move to defaults ?*/
-  defaults {
-    sprite s_magic;
-    pmask  PASS_ALL;
-  }
-  states {
-    {
-      name   "pressure plate";
-      sprite s_floor_plate;
-    }
-  }
-  transitions {
-    // Note: only 1 state:
-    state      "pressure plate";
-    event      MECH_STEP;
-    next_state "pressure plate";
-    actions {
-      send_signal MECH_SIGNAL_CHANGE;
-    }
-  }
-} // MECH_TYPE mech_pressure_plate
-
+MAKE_SIMPLE_STEP_TRIGGER(mech_pressure_plate, "pressure plate", s_floor_plate, MECH_SIGNAL_CHANGE);
+MAKE_SIMPLE_STEP_TRIGGER(invisible_step_trigger, "", null, MECH_SIGNAL_DOWN);
 
 // Define a new type of mechanism: a simple door that responds to a signal and
 // sends feedback (usually to the sender, but really whoever is wired to

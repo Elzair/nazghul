@@ -1,0 +1,55 @@
+#ifndef Black_Bart_the_Shipwright_ghul
+#define Black_Bart_the_Shipwright_ghul
+
+RESP BB_name_resp { 
+        SAY "Black Bart, at your service! [roguish wink]";
+}
+RESP BB_health_resp { 
+        SAY "[coughing] Never better!";
+}
+RESP BB_job_resp {
+        SAY "I make ships! The finest in the land! I sell them for 200 pieces of gold.";
+        CHECK_PARM GOLD > 200 {
+                SAY "Would ye like one?";
+                GET_YES_NO {
+                        CHANGE_PARM AMOUNT 200;
+                        TAKE GOLD;
+                        SAY "Pick one and sail her out!";
+                        send_signal shipwright_portcullis_1 MECH_SIGNAL_UP; // bug! must be last
+                }{
+                        SAY "Suit yerself. Ye'll find none better in all the land!";
+                }
+        }{
+                SAY "Maybe someday you can afford one!";
+        }
+}
+CONV BlackBart_Conversation {
+        IMPORT { }
+        NATIVE {
+                NAME BB_name_resp;
+                HEALTH BB_health_resp;
+                JOB BB_job_resp;
+        }
+}
+
+
+CHAR BlackBart_the_Shipwright {
+        name     "Black Bart";
+        species  goblin;
+        occ      merchant;
+        sprite   s_orc;
+        hp       30;
+        xp       0;
+        cond     G;
+        str      100;
+        intl     100;
+        dex      100;
+        magic    0;
+        lvl      1;
+        conv     BlackBart_Conversation;
+        readied {
+        }
+} // CHAR ch_John_the_Armourer
+
+
+#endif // #ifndef Black_Bart_the_Shipwright_ghul
