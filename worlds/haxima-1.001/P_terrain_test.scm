@@ -196,15 +196,15 @@
                 (list (kern-mk-obj t_magic_field_dark_grey 1)  5 12)
                 (list (kern-mk-obj t_magic_field_blue_2    1)  5 13)
 
-                (list (kern-mk-obj t_magic_field_red_pulsed    1)  5 15)
-                (list (kern-mk-obj t_magic_field_green_pulsed  1)  5 16)
-                (list (kern-mk-obj t_magic_field_blue_pulsed   1)  5 17)
-                (list (kern-mk-obj t_magic_field_white_pulsed  1)  5 18)
-                (list (kern-mk-obj t_magic_field_purple_pulsed 1)  5 19)
-                (list (kern-mk-obj t_magic_field_brown_pulsed  1)  5 20)
-                (list (kern-mk-obj t_magic_field_blue_2_pulsed 1)  5 21)
+                (list (kern-mk-obj t_magic_field_red_pulsed       1)  5 15)
+                (list (kern-mk-obj t_magic_field_green_pulsed     1)  5 16)
+                (list (kern-mk-obj t_magic_field_blue_pulsed      1)  5 17)
+                (list (kern-mk-obj t_magic_field_white_pulsed     1)  5 18)
 
-                (list (kern-mk-obj t_magic_field_chromatic_pulsed 1)  5 23)
+                (list (kern-mk-obj t_magic_field_purple_pulsed    1)  7 15)
+                (list (kern-mk-obj t_magic_field_brown_pulsed     1)  7 16)
+                (list (kern-mk-obj t_magic_field_blue_2_pulsed    1)  7 17)
+                (list (kern-mk-obj t_magic_field_chromatic_pulsed 1)  7 18)
 
                 ;; Lightning discharges:
                 (list (kern-mk-obj t_lightning_discharge_red   1)  7  2)
