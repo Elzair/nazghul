@@ -1,0 +1,73 @@
+MAP GreenTowerLower_Map {
+        type   ascii;
+        width  64;
+        height 64;
+        one_char_per_tile 1;
+        STD_TERRAIN_PALETTE;
+        terrain {
+    rrrrrrrrrrrrrr~~||||rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr|||||||||
+    rrrrrrrrrrrrrrr~|||||rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr||||||||||
+    rrrrrrrrrrrrrrr~||||rrrrrrrxxxxxxxxxxxxrrrrrrrrrrrrrrrxtxtt|||||
+    rrrrrrrrrrrrrrr~||||rrrrrrrxccxccccxccxrrrrrrrrrrrrrr...xttt||||
+    rrrrrrrrrrrrrrr~~|||rrrrrrrxccccccccccxrrrrrrrrrrrrr....tttt||||
+    rrrrrrrrrrrrrr||~|||rrrrrrrxccxccccxccxrrrrrrrrrrrrr@t@txttt||||
+    rrrrrrrrrrrrrr||~|||rrrrrrrxxxxccccxxxxrrrrrrrrrrrr.....xtt|||||
+    rrrrrrrrrrrrrr||~|||rrrrrrrxccxccccxccxrrrrrrrrrrrttttttx|||||||
+    rrrrrrrrrrrrrr||~~||rrrrrrrxccccccccccxrrrrrrrrrrrxxxxtxx|||||||
+    rrrrrrrrrrrrrr|||~||rrrrrrrxccxccccxccxrrrrrrrrrr...x...x|||||||
+    rrrrrrrrrrrrrr|||~||rrrrrrrxxxxccccxxxxrrrrrrrtt....?...?ttttttt
+    rrrrrrrrrrrrrrr..~~~rrrrrrrxccxccccxccxrrrrrr||tx...x...x|||||||
+    rrrrrrrrrrrrrrr||||~rrrrrrrxccccccccccx|rrrrrxxtxxtxxx.xx|||||||
+    rrrrrrrrrrrrrrr||||~rrrrrrrxccxccccxccxtr~~~~~|t||||||||||||||||
+    rrrrrrrrrrrrrrr|||~~rrrrrrrxxxxxccxxxxxxx~xx-~~.||||||||||||||||
+    rrrrrrrrrrrrrrrr||~|.|t~~~....xccccx~~~-___x--~~||||||||||||||||
+    rrrrrrrrrrrrrrrr|~~|.|t~t~..~~~~~~~~~~~-___x_-~~~~~~~~~|||~~~~||
+    rrrrrrrrrrrrrrrr|~tb.b.~t~..~txccccxcc~-___x_-~~||||||~|||~||~~|
+    rrrrrrrrrrrrrrrrr~~....~.~~~~txxccxxcc~----x-~~tt|||||~|||~|||~~
+    rrrrrrrrrrrrrrrrr|~~~~~~......xccccxcc~~~~~x~~.|t|||||~~~~~|||||
+    rrrrrrrrrrrrrrrrrrr........rrrxccccccccccccx...tt|||||||||||||||
+    rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrxccccxcccccccx...bt|||||||||||||||
+    rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrxxccxxCISTERNx...tt|||||||||||||||
+    rrrrrrrrrrrxxxxxxxxxxrrrrrrxxxxccccxxxxxxxxx...bt||||||||||rrrrr
+    rrrrrrrrrrrxBARRACKSxrrrrxxxccxccccxccxxxccx...tt||||||||||rcccr
+    rrrrrrrrrrrxccccccccxrrxxxccccxccccxccccxxxx...bt||trrrrrrrrcccr
+    rrrrrrrrrrrxccccccccxrrxccccccxccccxccccccxx...tt||trccccccccccr
+    rrrrrrrrrrrxccccccccxrxxccccccccccccccccccxx...tt||trcrrrrrrcccr
+    rrrrrrrrrrrxccccccccxrxcccccccxccccxcccccccxxxxxxxxxxcrrrrrrrrrr
+    rrrrrrrrrrrxccccccccxrxcccccccxccccxcccccccxxCOUNCILxcrrrrrrrrrr
+    rrrrrrrrrrrxccccccccxrxxxxcxxxxccccxxxxcxxxxxcccccccxcrrrrrrrrrr
+    rrrrrrrrrrrxxxxccxxxxxxcccccccccccccccccccccxcccccccxcrrrrrrrrrr
+    rrrrrrrrrrrxccccccccccccccccccccccccccccccccccc000ccxcrrrrrrrrrr
+    rrrrrrrrrrrxccccccccccccccccccccccccccccccccccc000ccxcrrrrrrrrrr
+    rrrrrrrrrrrxxxxccxxxxxxcccccccccccccccccccccxcccccccxcrrrrrrrrrr
+    rrrrrrrrrrrxccccccccxrxxxxcxxxxccccxxxxcxxxxxcccccc&xcrrrrrrrrrr
+    rrrrrrrrrrrxccccccccxrxcccccccxccccxcccccccxxxxxxxxxxcrrrrrrrrrr
+    rrrrrrrrrrrxccccccccxrxcccccccxccccxcccccccxccccccccccrrrrrrrrrr
+    rrrrrrrrrrrxccccccccxrxxccccccxccccxccccccxxrrrrrrrrcrrrrrrrrrrr
+    rrrrrrrrrrrxccccccccxrrxccccccccccccccccccxrrrrrrrrrcrrrrrrrrrrr
+    rrrrrrrrrrrxTRAININGxrrxxxccccxccccxccccxxxrrrrrrrrrcrrrrrrrrrrr
+    rrrrrrrrrrrxxxxxxxxxxrrrrxxxccxccccxccxxxrrrrrrrrrrrcrrrrrrrrrrr
+    rrrrrrrrrrrrrrrrrrrrrrrrrrrxxxxccccxxxxrrrrrrrrrrrrrcrrrrrrrrrrr
+    rrrrrrrrrrrrrrrrrrrrrrrrrrrxxxxxccxxxxxxxxxxxrrrrrrrcrrrrrrrrrrr
+    rrrrrrrrrrrrrrrrrrrrrrrrrrrxcccccccccccx[@@]xrrrrrrrcrrrrrrrrrrr
+    r......r...........r.....rrxcccccccccccxccccxxrrrrrrcrrrrrrrrrrr
+    r......r...........r.....rrxcc0cc0cc0ccccccc&xrrrrrrcrrrrrrrrrrr
+    r......r.................rrxcc0cc0cc0ccccccc&xrrrrrrcrrrrrrrrrrr
+    r.rrrrrr...........r.....rrxcc0cc0cc0ccccccc&xrrrrrrcrrrrrrrrrrr
+    r..................r.....rrxcccccccccccxcccc&xrrrrrrcrrrrrrrrrrr
+    r.p.p.p.p.p.p.p.p..rrrrrrrrxcccccccccccxccccxxrrrrrrcrccccccrrrr
+    r..................rrrrrrrrxDINING@HALLx[@@]xrrrrrrrrrccccccrrrr
+    r..................rrrrrrrrxxxxxxxxxxxxxxxxxxrrrrrrrrrccccccrrrr
+    r..................rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrccccccrrrr
+    r..................rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrccccccrrrr
+    r.p.p.p.p.p.p.p.p..rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrccccccrrrr
+    r..................r.....rrrrrrrrrrrrrrrrrrrrrrrrrrrrrccccccrrrr
+    r.rrrrrr...........r.....rrrrrrrrrrrrrrrrrrrrrrrrrrrrrccccccrrrr
+    r......r.................rrrrrrrrrrrrrrrrrrrrrrrrrrrrrccccccrrrr
+    r......r...........r.....rrrrrrrrrrrrrrrrrrrrrrrrrrrrrccccccrrrr
+    r......r...........r.....rrrrrrrrrrrrrrrrrrrrrrrrrrrrrccccccrrrr
+    rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
+    rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
+    rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
+    }
+}

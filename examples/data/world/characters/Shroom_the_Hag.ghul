@@ -1,0 +1,173 @@
+//
+// Copyright-Only Dedication (based on United States law)
+//
+// The person or persons who have associated their work with this document (the
+// "Dedicator") hereby dedicate the entire copyright in the work of authorship
+// identified below (the "Work") to the public domain.
+//
+// Dedicator makes this dedication for the benefit of the public at large and
+// to the detriment of Dedicator's heirs and successors. Dedicator intends this
+// dedication to be an overt act of relinquishment in perpetuity of all present
+// and future rights under copyright law, whether vested or contingent, in the
+// Work. Dedicator understands that such relinquishment of all rights includes
+// the relinquishment of all rights to enforce (by lawsuit or otherwise) those
+// copyrights in the Work.
+//
+// Dedicator recognizes that, once placed in the public domain, the Work may be
+// freely reproduced, distributed, transmitted, used, modified, built upon, or
+// otherwise exploited by anyone for any purpose, commercial or non-commercial,
+// and in any way, including by methods that have not yet been invented or
+// conceived.
+//
+
+#ifndef Shroom_the_Hag_ghul
+#define Shroom_the_Hag_ghul
+
+RESP GreenTower_Tower_Resp {
+        SAY "You'll find it at the center of town. The Queens Rangers quarter there."
+}
+
+RESP GreenTower_Rangers_Resp {
+        SAY "The Rangers keep the peace in these woods."
+}
+
+RESP GreenTower_Woods_Resp {
+        SAY "The surrounding woods are dark and old, and famous in legend for the strange things that lurk in them. Rumour has it that these days outlaws camp there."
+}
+
+#if 0
+RESP GreenTower_x_Resp {
+        SAY "";
+}
+#endif
+
+RESP GreenTower_Outlaws_Resp {
+        SAY "Smugglers keep a hidden camp in the woods. Or so the stories go.";
+}
+
+RESP GreenTower_Legend_Resp {
+        SAY "If you want to hear legends go to the White Stag Lodge. Between the hunters and troubadours you should get an earful.";
+}
+
+RESP GreenTower_White_Resp {
+        SAY "The White Stag Lodge is in the southeast corner of town. It's a hunting lodge, wayfarer's inn and the local watering hole. Most folks gather there after work.";
+}
+
+RESP GreenTower_Hunters_Resp {
+        SAY "Aye, burghers and noblemen alike come to these woods to hunt for sport. Most stay in the White Stag Lodge.";
+}
+
+RESP GreenTower_Green_Resp {
+        SAY "You're in Green Tower now. It's named for the fortress that guards these woods.";
+}
+
+RESP GreenTower_Shroom_Resp {
+        SAY "Old Hag Shroom keeps a reagent shop in the northeast corner of town.";
+}
+
+CONV GreenTower_Common_Conv {
+        IMPORT { }
+        NATIVE {
+                TOWER   GreenTower_Tower_Resp;
+                WOODS   GreenTower_Woods_Resp;
+                RANGERS GreenTower_Rangers_Resp;
+                OUTLAWS GreenTower_Outlaws_Resp;
+                LEGEND  GreenTower_Legend_Resp;
+                WHITE   GreenTower_White_Resp;
+                HUNTERS GreenTower_Hunters_Resp;
+                GREEN   GreenTower_Green_Resp;
+                SHROOM  GreenTower_Shroom_Resp;
+                        
+        }
+        
+}
+
+RESP Shrooms_Name_Resp {
+        SAY "I'm known as Shroom. At your service."
+}
+
+RESP Shrooms_Join_Resp {
+        SAY "I'm too old for you, sweetie!";
+}
+
+RESP Shrooms_Default_Resp {
+        SAY "I might have known something about that long ago...";
+}
+
+RESP Shrooms_Shroom_Resp {
+        SAY "Mushrooms are my specialty. That's why they call me Shroom.";
+}
+
+RESP Shrooms_Mushroom_Resp {
+        CHECK_PARM ACTIVITY = WORKING {
+                SAY "Yes, I trade in mushrooms and other reagents. Interested?";
+                GET_YES_NO {
+                        TRADE {
+                                reagent_sulphorous_ash 2;
+                                reagent_garlic         2;
+                                reagent_ginseng        2;
+                                reagent_blood_moss     8;
+                                reagent_black_pearl    8;
+                                reagent_spider_silk    8;
+                                reagent_mandrake       16;
+                                reagent_nightshade     16;
+                                item_sleep_potion      10;
+                        }
+                        SAY "Be careful with those.";
+                }{
+                        SAY "Don't try to pick your own. Kill you, the wrong ones will!";
+                }
+        } {
+                SAY "Yes, I trade in mushrooms and other reagents. My shops in the northeast corner of town. Come by when I'm open."
+        }
+}
+
+CONV Shrooms_Conv {
+        IMPORT { 
+                c_generic;
+                GreenTower_Common_Conv;
+        }
+        NATIVE {
+                NAME    Shrooms_Name_Resp;
+                DEFAULT Shrooms_Default_Resp;
+                JOIN    Shrooms_Join_Resp;
+                SHROOM  Shrooms_Shroom_Resp;
+                MUSHROOM Shrooms_Mushroom_Resp;
+                BUY      Shrooms_Mushroom_Resp;
+        }
+        
+}
+
+SCHED Shrooms_Sched {
+        // Specific to Green Tower:
+     // hr mn x  y  w  h  act
+        0  0  50 9  1  1  SLEEPING;
+        8  0  40 11 3  3  IDLE;      // picking shrooms
+        9  0  49 6  7  1  WORKING;
+        12 0  50 9  1  1  EATING;
+        13 0  49 6  7  1  WORKING;
+        18 0  56 54 1  1  EATING;
+        19 0  46 50 12 7  IDLE;     // hanging out
+        21 0  50 9  1  1  SLEEPING;
+}
+
+CHAR Shroom_the_Hag {
+        name      "Shroom";
+        species   human;
+        occ       druid;
+        sprite    s_companion_druid;
+        hp        30;
+        xp        10000;
+        cond      G;
+        str       25;
+        intl      110;
+        dex       90;
+        magic     150;
+        lvl       9;
+        conv      Shrooms_Conv;
+        readied {
+        }
+        sched     Shrooms_Sched;
+}
+
+#endif
