@@ -79,6 +79,7 @@ class player_party:public Object {
         int get_speed(void);
         void ready_arms(struct object *object);
         bool all_dead(void);
+        bool immobilized(void);
 	void for_each_member(bool(*fx) (class Character *, void *data),
 			     void *data);
         void recompute_los(void);

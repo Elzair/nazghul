@@ -43,6 +43,7 @@
 #include "vehicle.h"
 #include "sprite.h"
 #include "play.h"		// for ui_get_direction()
+#include "Field.h"
 
 #include <unistd.h>
 #include <math.h>
@@ -60,6 +61,32 @@ class player_party *player_party;
 
 extern void play_update_place_viewer(void);	/* hack */
 
+static bool player_apply_generic_effects(class Character * c, void *val)
+{
+        int effects = *(int*)val;
+
+        if (effects & TERRAIN_BURN) {
+                c->changeHp(-DAMAGE_FIRE);
+                consolePrint("%s burning-%s!\n", c->getName(),
+                             c->getWoundDescription());
+                consoleRepaint();
+        }
+        if (effects & TERRAIN_POISON && !c->isPoisoned()) {
+                c->setPoison(true);
+                c->changeHp(-DAMAGE_POISON);
+                consolePrint("%s poisoned-%s!\n", c->getName(),
+                             c->getWoundDescription());
+                consoleRepaint();
+        }
+        if (effects & EFFECT_SLEEP && !c->isAsleep()) {
+                c->changeSleep(true);
+                consolePrint("%s sleeping!\n", c->getName());
+                consoleRepaint();
+        }
+
+        return false;
+}
+
 bool apply_damage(class Character * pm, void *amount)
 {
 	if (!pm->getHp())
@@ -69,12 +96,14 @@ bool apply_damage(class Character * pm, void *amount)
 	return false;
 }
 
+#if 0
 static bool apply_fire_damage(class Character * pm, void *unused)
 {
 	int amount = DAMAGE_FIRE;
 	apply_damage(pm, &amount);
 	return false;
 }
+#endif
 
 bool apply_poison(class Character * pm, void *unused)
 {
@@ -88,6 +117,14 @@ static bool apply_existing(class Character * pm, void *unused)
 		int amount = DAMAGE_POISON;
 		apply_damage(pm, &amount);
 	}
+        if (pm->isAsleep()) {
+                consolePrint("%s sleeping...", pm->getName());
+                if ((random() % 100) < PROB_AWAKEN) {
+                        pm->awaken();
+                        consolePrint("awakes!");
+                }
+                consolePrint("\n");
+        }
 	return false;
 }
 
@@ -105,6 +142,16 @@ static bool pc_check_if_alive(class Character * pm, void *data)
 {
 	int *count = (int *) data;
 	if (!pm->isDead()) {
+		(*count)++;
+		return false;
+	}
+	return false;
+}
+
+static bool pc_check_if_not_immobilized(class Character * pm, void *data)
+{
+	int *count = (int *) data;
+	if (!pm->isAsleep()) {
 		(*count)++;
 		return false;
 	}
@@ -1071,21 +1118,28 @@ void player_party::for_each_member(bool(*fx) (class Character *, void *data),
 
 void player_party::advance_turns(void)
 {
-	/* Apply terrain affects */
+	/* Apply terrain and field affects */
 	struct terrain *terrain;
+        class Field *field;
+        int effects = 0;
+
 	terrain = placeGetTerrain(x, y);
-	if (terrain->effects) {
-		if (terrain->effects & TERRAIN_BURN) {
-			consolePrint("Burning!");
-			for_each_member(apply_fire_damage, 0);
-		}
-		if (terrain->effects & TERRAIN_POISON) {
-			consolePrint("Poison!");
-			for_each_member(apply_poison, 0);
-		}
-		statusRepaint();
-		consoleNewline();
-		consoleRepaint();
+        effects |= terrain->effects;
+
+        // Get any field effects. Note that only the topmost field at this
+        // tile (if any) is used.
+        field = (class Field *) place_get_object(getPlace(), getX(),
+                                                 getY(), field_layer);
+        if (field != NULL)
+                effects |= field->getObjectType()->getEffects();
+
+	if (effects) {
+                
+                for_each_member(player_apply_generic_effects, &effects);
+
+		//statusRepaint();
+		//consoleNewline();
+		//consoleRepaint();
 	}
 
 	/* Apply existing effects */
@@ -1097,6 +1151,13 @@ bool player_party::all_dead(void)
 	int count = 0;
 	for_each_member(pc_check_if_alive, &count);
 	return (count == 0);
+}
+
+bool player_party::immobilized(void)
+{
+	int count = 0;
+	for_each_member(pc_check_if_not_immobilized, &count);
+	return (count == 0);        
 }
 
 struct VradInfo {

@@ -2921,36 +2921,53 @@ static bool keyHandler(struct KeyHandler *kh, int key, int keymod)
   if (Quit)
     return Quit;
 
-  turnAdvance(turns_used);
+  int first_time = 1;
 
-  if (Turn != saved_turn) {
 
-    // Sigh. Time has definitely grown into a wearisome hack. There
-    // must be a better way.
+  // Loop at least once, and more if the party is immobilized
+  do {
 
-    // Note: always update the clock before the turn wq. For
-    // example, when entering a place all the NPC parties use the
-    // wall clock time to synchronize their schedules, so it needs
-    // to be set BEFORE calling them.
+          if (first_time) {
+                  first_time = 0;
+          } else {
+                  statusRepaint();
+                  saved_turn = Turn;
+                  turns_used = 1;
+                  SDL_Delay(500);
+          }
 
-    clockUpdate();
+          turnAdvance(turns_used);
 
-    foogodAdvanceTurns();
-    placeAdvanceTurns();
-    player_party->advance_turns();
-    skyAdvanceTurns();
-    windAdvanceTurns();
+          if (Turn != saved_turn) {
 
-    // Most commands burn through at least one turn. Let the
-    // turn-based work queue catch up.
-    wqRunToTick(&TurnWorkQueue, Turn);
-  }
-  // The player may have died as a result of executing a command or
-  // running the work queue.
-  if (player_party->all_dead()) {
-    dead();
-    return true;
-  }
+                  // Note: always update the clock before the turn wq. For
+                  // example, when entering a place all the NPC parties use the
+                  // wall clock time to synchronize their schedules, so it
+                  // needs to be set BEFORE calling them.
+                  clockUpdate();
+
+                  foogodAdvanceTurns();
+                  placeAdvanceTurns();
+                  player_party->advance_turns();
+                  skyAdvanceTurns();
+                  windAdvanceTurns();
+
+                  // Most commands burn through at least one turn. Let the
+                  // turn-based work queue catch up.
+                  wqRunToTick(&TurnWorkQueue, Turn);
+          }
+
+          // The player may have died as a result of executing a command or
+          // running the work queue.
+          if (player_party->all_dead()) {
+                  dead();
+                  return true;
+          }
+
+  } while (player_party->immobilized());
+
+  if (!first_time)
+          statusRepaint();
 
   if (!Quit)		// fixme: is this check necessary? 
     myGenerateRandomEncounter();
