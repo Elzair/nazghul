@@ -53,6 +53,7 @@
 #include "screen.h"
 #include "vehicle.h"
 #include "formation.h"
+#include "combat.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -2520,6 +2521,16 @@ static int game_bind_combat_map()
 		ret = -1;
 		goto cleanup;
 	}
+
+        if (terrain_map->w < COMBAT_MAP_W ||
+            terrain_map->h < COMBAT_MAP_H) {
+                err("line %d: MAP %s must be at least %d x %d to be used",
+                    Lexer->line, map_tag, COMBAT_MAP_W, COMBAT_MAP_H);
+                err(" as a combat map. It is only %d x %d", terrain_map->w,
+                    terrain_map->h);
+                ret = -1;
+                goto cleanup;
+        }
 
 	terrain_combat_map(terrain) = terrain_map;
 

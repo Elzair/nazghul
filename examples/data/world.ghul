@@ -68,6 +68,8 @@
 #define GAVE_ITEM 2
 #define WILL_JOIN 3
 
+/*** Optional Feature Bindings ***/
+#define WATER_COMBAT_MAP 0
 
 /*****************************************************************************
  ***  MAPS  ***

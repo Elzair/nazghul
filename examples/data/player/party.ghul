@@ -30,8 +30,8 @@
 player {
   
   place p_empire_city;
-  x     60;
-  y     10;
+  x     30;
+  y     29;
   
   sprite    s_companion_wizard;
   speed     2;

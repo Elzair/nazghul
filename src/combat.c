@@ -2270,6 +2270,8 @@ int combatInit(void)
 	return 0;
 }
 
+#ifdef USE_OLD_MAP_FILL
+
 static void fill_map_half(struct terrain_map *map, int dx, int dy,
 			  struct terrain *terrain)
 {
@@ -2291,53 +2293,149 @@ static void fill_map_half(struct terrain_map *map, int dx, int dy,
 		terrain_map_fill(map, 0, 0, map->w, map->h / 2, terrain);
 	}
 }
+
+#else // ! USE_OLD_MAP_FILL
+
+static void fill_temporary_terrain_map(struct terrain_map *map, 
+                                       struct place *place, int x, int y, 
+                                       int dx, int dy)
+{
+        struct terrain_map *tile_map;
+        struct terrain *terrain;
+        int dst_x = 0, dst_y = 0, src_x = 0, src_y = 0, src_w = 0, src_h = 0;
+
+        assert(dx || dy);
+        assert(!(dx && dy));
+
+        if (dx < 0) {
+
+		// facing west, fill east half
+                dst_x = map->w/2;
+                dst_y = 0;
+                src_x = 0;
+                src_y = 0;
+                src_w = map->w/2;
+                src_h = map->h;
+
+        } else if (dx > 0) {
+
+		// facing east, fill west half
+                dst_x = 0;
+                dst_y = 0;
+                src_x = map->w/2;
+                src_y = 0;
+                src_w = map->w/2;
+                src_h = map->h;
+
+        } else if (dy < 0) {
+
+		// facing north, fill south half
+                dst_x = 0;
+                dst_y = map->h/2;
+                src_x = 0;
+                src_y = 0;
+                src_w = map->w;
+                src_h = map->h/2;
+
+        } else if (dy > 0) {
+
+		// facing south, fill north half
+                dst_x = 0;
+                dst_y = 0;
+                src_x = 0;
+                src_y = map->h/2;
+                src_w = map->w;
+                src_h = map->h/2;
+        }
+
+        tile_map = place_get_combat_terrain_map(place, x, y);
+        
+        if (tile_map) {
+
+                // fixme -- instead of crashing at runtime, check for properly
+                // sized combat maps at load time (this will require the combat
+                // map dimensions to be also specified at load time or at least
+                // well-documented for map developers)
+                assert(tile_map->w >= (src_x + src_w));
+                assert(tile_map->h >= (src_y + src_h));
+
+                // Use the combat map associated with the terrain type.
+                terrain_map_blit(map, dst_x, dst_y, tile_map, src_x, src_y,
+                                 src_w, src_h);
+        } else {
+                // Fill with the terrain type.
+                terrain = place_get_terrain(place, x, y);
+                terrain_map_fill(map, dst_x, dst_y, src_w, src_h, terrain);
+        }
+}
+
+#endif  // ! USE_OLD_MAP_FILL
+
+static struct terrain_map *create_camping_map(struct place *place, int x, 
+                                              int y)
+{
+        struct terrain_map *map;
+
+        map = place_get_combat_terrain_map(place, x, y);
+        if (map)
+                return terrain_map_clone(map);
+
+        map = terrain_map_create("tmp_combat_map", COMBAT_MAP_W, COMBAT_MAP_H);
+        if (map) {
+                terrain_map_fill(map, 0, 0, COMBAT_MAP_W, COMBAT_MAP_H, 
+                                 place_get_terrain(place, x, y));
+        }
+
+        return map;
+}
+
 static struct terrain_map *create_temporary_terrain_map(struct combat_info
 							*info)
 {
 	struct terrain_map *map;
-	struct terrain *t1, *t2 = 0;
-	int dx1, dx2, dy1, dy2;
+        int player_dx, player_dy, npc_dx, npc_dy;
 
-	/* Derive a map on the fly. The attacker's half of the map will consist
-	 * of terrain from the attacker's location and the defender's half
-	 * likewise. This map will be discarded upon exit from combat. NOTE:
-	 * This is important to permit combat when the attacker or defender are
-	 * on tiles that are impassable to their opponent. This gaurantees that
-	 * the combat map will have some passable terrain for party members to
-	 * occupy upon entry. */
+        // If there is no enemy then create a map derived entirely from the
+        // player party's tile. This is the case for camping and zoom-in.
 
-	map = terrain_map_create("tmp_combat_map", 32, 32);
+        if (!info->move->npc_party) {
+                return create_camping_map(info->move->place, info->move->x, 
+                                          info->move->y);
+        }
+
+        // Otherwise create a map derived partially from the enemy's tile and
+        // partially from the player's tile.
+
+	map = terrain_map_create("tmp_combat_map", COMBAT_MAP_W, COMBAT_MAP_H);
 	if (!map)
 		return 0;
 
-	Combat.tmp_terrain_map = true;
-	t1 = place_get_terrain(player_party->getPlace(), player_party->getX(),
-			       player_party->getY());
+        // Determine orientation for both parties.
 
-	if (!info->move->npc_party) {
-		// No opponent, so just use the terrain beneath the player
-		// (this is the case for camping and zoom-in).
-		terrain_map_fill(map, 0, 0, map->w, map->h, t1);
-		return map;
-	}
+        if (info->defend) {
+                player_dx = -info->move->dx;
+                player_dy = -info->move->dy;
+                npc_dx    = info->move->dx;
+                npc_dy    = info->move->dy;
+        } else {
+                player_dx = info->move->dx;
+                player_dy = info->move->dy;
+                npc_dx    = -info->move->dx;
+                npc_dy    = -info->move->dy;
+        }
 
-	t2 = place_get_terrain(info->move->npc_party->getPlace(),
-			       info->move->npc_party->getX(),
-			       info->move->npc_party->getY());
+        // Fill the player's half of the combat map
 
-	if (info->defend) {
-		dx1 = -info->move->dx;
-		dy1 = -info->move->dy;
-		dx2 = info->move->dx;
-		dy2 = info->move->dy;
-	} else {
-		dx1 = info->move->dx;
-		dy1 = info->move->dy;
-		dx2 = -info->move->dx;
-		dy2 = -info->move->dy;
-	}
-	fill_map_half(map, dx1, dy1, t1);
-	fill_map_half(map, dx2, dy2, t2);
+        fill_temporary_terrain_map(map, player_party->getPlace(), 
+                                   player_party->getX(), player_party->getY(), 
+                                   player_dx, player_dy);
+
+        // Fill the npc party's half of the combat map
+
+	fill_temporary_terrain_map(map, info->move->npc_party->getPlace(),
+                                   info->move->npc_party->getX(),
+                                   info->move->npc_party->getY(), npc_dx, 
+                                   npc_dy);
 
 	return map;
 }
@@ -2437,24 +2535,16 @@ bool combat_enter(struct combat_info * info)
 		Place = info->move->place;
 	} else {
 
-		struct terrain_map *map;
-
-		// Lookup the combat_map associated with the terrain
-		map = place_get_combat_terrain_map(info->move->place,
-						   info->move->x,
-						   info->move->y);
-
-		// If there is none then create a temporary default map filled
-		// with the terrain.
-		if (!map)
-			map = create_temporary_terrain_map(info);
+                // Town or wilderness combat uses a temporary terrain map which
+                // we create on the fly.
+		Combat.place.terrain_map = create_temporary_terrain_map(info);
+                Combat.tmp_terrain_map = true;
 
 		// fixme -- instead of asserting I should use a last-resort map
 		// that does not require allocation.
-		assert(map);
+		assert(Combat.place.terrain_map);
 
-		// Setup the terrain and location of the combat map
-		Combat.place.terrain_map = map;
+                // fixme -- are these obsolete now?
 		Combat.place.location.place = info->move->place;
 		Combat.place.location.x = info->move->x;
 		Combat.place.location.y = info->move->y;
