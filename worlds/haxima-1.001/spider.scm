@@ -65,9 +65,9 @@
 (define (char-is-spider? kchar)
   (eqv? (kern-char-get-species kchar) sp_spider))
 
-;; ============================================================================
-;; Wood Spider AI
-;; ============================================================================
+;; ----------------------------------------------------------------------------
+;; Spider "Skills"
+;; ----------------------------------------------------------------------------
 
 (define (suck-hp kspider ktarg amount)
   (kern-log-msg (kern-obj-get-name kspider) 
@@ -76,6 +76,10 @@
   (let ((amount (min amount (kern-char-get-hp ktarg))))
     (kern-obj-apply-damage ktarg nil amount)
     (kern-obj-heal kspider amount)))
+
+(define (spider-paralyze ktarg)
+  (display "spider-paralyze")(newline)
+  (paralyze ktarg))
 
 (define (ensnare-loc loc)
   (display "ensnare-loc")(newline)
@@ -90,6 +94,11 @@
                       dir
                       web-spew-range)))
 
+
+;; ----------------------------------------------------------------------------
+;; Spider AI
+;; ----------------------------------------------------------------------------
+
 (define (wood-spider-no-hostiles kspider)
   (display "wood-spider-no-hostiles")(newline)
   (let ((loc (kern-obj-get-location kspider)))
@@ -99,12 +108,15 @@
 
 (define (is-helpless? kchar)
   (or (kern-char-is-asleep? kchar)
-      (is-ensnared? kchar)))
+      (is-ensnared? kchar)
+      (is-paralyzed? kchar)))
 
 (define (wood-spider-attack-helpless-foe kspider kfoe)
   (define (attack kspider coords)
     (display "wood-spider-attack")(newline)
-    (suck-hp kspider kfoe (kern-dice-roll "1d6")))
+    (if (is-paralyzed? kfoe)
+        (suck-hp kspider kfoe (kern-dice-roll "1d6"))
+        (spider-paralyze kfoe)))
   (display "wood-spider-attack-helpless-foe")(newline)
   (do-or-goto kspider (kern-obj-get-location kfoe) attack))
 

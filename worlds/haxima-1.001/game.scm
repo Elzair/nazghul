@@ -33,7 +33,8 @@
 (define ap-to-use-scroll speed-human)
 
 ;; Difficulty Classes
-(define dc-escape-ensnare 26)
+(define dc-escape-ensnare  26)
+(define dc-escape-paralyze 10)
 
 ;; Pmasks (keep them around until mechs are converted to use passability
 ;; classes (see below))

@@ -88,6 +88,49 @@
 (define (is-ensnared? kobj)
   (in-list? ef_ensnare (kern-obj-get-effects kobj)))
 
+(define (ensnare kobj)
+  (if (can-ensnare? kobj)
+      (begin
+        (kern-obj-add-effect kobj ef_ensnare nil))))
+
+;; ----------------------------------------------------------------------------
+;; paralyze
+;;
+;; The paralyze effect rolls to expire each turn. If the roll fails, the
+;; character loses its turn. If it succeeds, the effect removes itself from the
+;; character. Treats a natural roll of 20 as success.
+;; ----------------------------------------------------------------------------
+(define (can-paralyze? kobj)
+  (and (kern-obj-is-char? kobj)
+       (not (species-is-immune-to-paralyze? (kern-char-get-species kobj)))))
+
+(define (paralyze-apply fgob kobj)
+  (kern-log-msg (kern-obj-get-name kobj) " paralyzed!"))
+
+(define (paralyze-exec fgob kchar)
+  (let ((droll (kern-dice-roll "1d20")))
+    (if (or (= droll 20)
+            (> droll
+               dc-escape-paralyze))
+        (begin
+          (kern-log-msg "Paralysis wears off of " (kern-obj-get-name kchar))
+          (kern-obj-remove-effect kchar ef_paralyze)
+          #t)
+        (begin
+          (kern-obj-set-ap kchar 0)
+          #f))))
+
+(mk-effect 'ef_paralyze 'paralyze-exec 'paralyze-apply nil "keystroke-hook" 
+           "Z" 0 #f 15)
+
+(define (is-paralyzed? kobj)
+  (in-list? ef_paralyze (kern-obj-get-effects kobj)))
+
+(define (paralyze kobj)
+  (if (can-paralyze? kobj)
+      (begin
+        (kern-obj-add-effect kobj ef_paralyze nil))))
+
 ;; ----------------------------------------------------------------------------
 ;; light
 ;;
@@ -215,11 +258,6 @@
 
 (define (apply-slime-split kobj)
   (kern-obj-add-effect kobj ef_slime_split nil))
-
-(define (ensnare kobj)
-  (if (can-ensnare? kobj)
-      (begin
-        (kern-obj-add-effect kobj ef_ensnare nil))))
 
 ;; ----------------------------------------------------------------------------
 ;; Container traps

@@ -162,10 +162,13 @@
          #f undead-species-tags))
 
 ;; ----------------------------------------------------------------------------
-;; Species immune to the ensnare effect (all one of them right now)
+;; Species immunities
 ;; ----------------------------------------------------------------------------
 (define (species-is-immune-to-ensnare? species)
   (eqv? species sp_spider))
+
+(define (species-is-immune-to-paralyze? species)
+  #f)
 
 ;;----------------------------------------------------------------------------
 ;; This slime constructor attaches the native effects:
