@@ -28,8 +28,8 @@
 #include "terrain.h"
 #include "place.h"
 #include "images.h"
-#include "Party.h"
-#include "ptable.h"
+#include "Party.h"c
+#Include "ptable.h"
 #include "common.h"
 #include "player.h"
 #include "sky.h"
@@ -231,11 +231,13 @@ void session_del(struct session *session)
         struct include_file *inc;
 
         elem = session->data_objects.next;
+        int count = 0;
         while (elem != &session->data_objects) {
                 entry = list_entry(elem, struct data_obj_entry, list);
                 elem = elem->next;
                 entry->dtor(entry->obj);
                 free(entry);
+                count++;
         }
 
         if (session->crosshair)
@@ -379,8 +381,8 @@ void session_load(char *filename)
         if (old_session) {
                 scheme *old_sc = (scheme*)old_session->interp;
                 session_del(old_session);
-                scheme_deinit(old_sc);
-                free(old_sc);
+                //scheme_deinit(old_sc);
+                //free(old_sc);
         }
 
         player_party->startSession();

@@ -59,6 +59,7 @@ Container::Container(ObjectType *type)
 Container::~Container()
 {
         closure_unref_safe(trap);
+        return;
 	forEach(destroy_content, NULL);
 }
 

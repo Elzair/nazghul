@@ -18,8 +18,23 @@
   accessible) to get rid of the creation/destruction conflict in
   kern_mk_player.
 
+* place.c: replace the tile locks with refcounts
+
+* Move the global Place variable into the global session struct.
+
 * Use refcounts on all the read-only structures like sprite sets, sprites,
   etc. The session needs to hold a reference until done loading, then it should
   traverse everything and release its reference. Hmm... no, that may not
   work. Anything clicked with a scm_define() will be referenced by the
   interpreter...
+
+* Convert the ObjectType class to a struct, link all the kernel read-only-types
+  (ROTs) on their own list on the session struct. Use refcounting on them. Ref
+  them as they are loaded. Objects should also ref/unref them. Destroy all the
+  RDWR types first in the session, then unref all the ROTs. If any ROTs remain
+  we can detect a reference leak.
+
+* Define an interface for plugging other types of script interpreters into the
+  kernel. The kern_* API should be made generic, and the scheme unpacking left
+  to a shim layer. Likewise the save code should use some kind of abstraction
+  layer to pack objects into script code.

@@ -225,8 +225,7 @@ void Party::setup()
 static bool party_remove_member(class Character *ch, void *data)
 {
         ((Party*)data)->removeMember(ch);
-        if (! ch->refcount)
-                delete ch;
+        if (! ch->refcount) delete ch;
         return false;
 }
 

@@ -93,6 +93,10 @@ static struct tile *tile_new(int hashkey)
 }
 static void tile_del(struct tile *tile)
 {
+        /* 
+         * FIXME! use a straightforward refcount on the tile instead of an
+         * explicit lock
+         */
 	// Locking prevents me from destroying a tile while the place_for_each
 	// algorithm is using it.
 	if (!tile->lock) {
@@ -480,8 +484,9 @@ void place_del_tile_object_visitor(class Object *obj, void *data)
         // Called by tile_for_each_object()
         struct tile *tile = (struct tile*)data;
         tile_remove_object(tile, obj);
-        if (! obj->refcount)
+        if (! obj->refcount) {
                 delete obj;
+        }
 }
 
 void place_del_tile_visitor(struct tile *tile, void *data)
@@ -490,7 +495,7 @@ void place_del_tile_visitor(struct tile *tile, void *data)
         tile->lock++;
         tile_for_each_object(tile, place_del_tile_object_visitor, tile);
         if (tile->subplace) {
-                place_del(tile->subplace);
+                //place_del(tile->subplace);
                 tile_remove_subplace(tile);
         }
         tile->lock--;
@@ -503,6 +508,8 @@ void place_del(struct place *place)
         // If the place is locked then we cannot delete it now. Mark it for
         // death so that it will be deleted when unlocked.
         // --------------------------------------------------------------------
+
+        printf("place_del(%s)\n", place->name);
 
         if (place_is_locked(place)) {
                 place_mark_for_death(place);
@@ -1439,6 +1446,7 @@ void place_for_each_tile(struct place *place,
 	struct list *tileElem, *tileTmp;
 	struct tile *tile;
 	class Object *obj;
+        int count = 0;
 
 	// for each bucket
 	for (i = 0; i < place->objects->n && !Quit; i++) {
@@ -1460,9 +1468,13 @@ void place_for_each_tile(struct place *place,
 			if (!tile->objects)
 				tile_del(tile);
                         
-
 			tileElem = tileTmp;
+                        count++;
+                        if (count == 4)
+                                count;
 		}
+                if (count == 4)
+                        count;
 	}
 }
 

@@ -25,6 +25,8 @@
 #include "list.h"
 #include "closure.h"
 
+#define occ_ref(occ) ((occ)->refcount++)
+
 struct typical_items {
 	int prob;
 	class ObjectType *type;
@@ -59,6 +61,7 @@ struct occ {
 	closure_t *traps;
 
         int xpval; /* reward for killing this type */
+        int refcount;
 };
 
 extern struct occ *occ_new(char *tag,
@@ -74,6 +77,6 @@ extern struct occ *occ_new(char *tag,
                            int arm_mod,
                            int n_arms, int n_items, int n_traps);
 
-extern void occ_del(struct occ *occ);
+extern void occ_unref(struct occ *occ);
 
 #endif

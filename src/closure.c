@@ -41,11 +41,15 @@
 /* Defined in kern.c: */
 extern pointer vpack(scheme *sc, char *fmt, va_list ap);
 
+static char *CLOSURE_MAGIC = "CLOSURE";
+
 /*
  * closure_del - free a closure (external code should use closure_unref)
  */
 static void closure_del(closure_t *closure)
 {
+        assert(0 == closure->ref);
+        assert(closure->magic == CLOSURE_MAGIC);
         free(closure);
 }
 
@@ -53,6 +57,7 @@ closure_t *closure_new(scheme *sc, pointer code)
 {
         closure_t *clx = (closure_t*)calloc(1, sizeof(*clx));
         assert(clx);
+        clx->magic = CLOSURE_MAGIC;
         clx->sc = sc;
         clx->code = code;
         return clx;
@@ -67,6 +72,7 @@ closure_t *closure_new_ref(scheme *sc, pointer code)
 
 void closure_init(closure_t *clx, scheme *sc, pointer code)
 {
+        clx->magic = CLOSURE_MAGIC;
         clx->sc = sc;
         clx->code = code;
 }
@@ -178,7 +184,7 @@ void closure_ref(closure_t *closure)
 
 void closure_unref(closure_t *closure)
 {
-        assert(closure->ref);
+        assert(closure->ref > 0);
         closure->ref--;
         if (! closure->ref)
                 closure_del(closure);

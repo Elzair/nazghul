@@ -28,7 +28,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-void occ_del(struct occ *occ)
+static void occ_del(struct occ *occ)
 {
 	if (!occ)
 		return;
@@ -36,8 +36,6 @@ void occ_del(struct occ *occ)
 		free(occ->tag);
 	if (occ->name)
 		free(occ->name);
-/* 	if (occ->arms) */
-/* 		free(occ->arms); */
 	if (occ->items)
 		free(occ->items);
         if (occ->traps)
@@ -106,4 +104,12 @@ extern struct occ *occ_new(char *tag,
         assert(occ->name);
 
         return occ;
+}
+
+extern void occ_unref(struct occ* occ)
+{
+        assert(occ->refcount > 0);
+        occ->refcount--;
+        if (! occ->refcount)
+                occ_del(occ);
 }

@@ -120,7 +120,8 @@ to main(), which will
 
 The easy part is now over. The global Session pointer is initialized to NULL
 statically. session_load() remembers the existing session so it can try and go
-back to it if things go badly setting up the new one.
+back to it if things go badly setting up the new one. On startup, this is moot
+since we don't have a session yet.
 
 session_load() opens the load file, creates a new instance of scheme, creates a
 new session instance, then tells scheme to load from the opened FILE
@@ -129,3 +130,71 @@ API to setup kernel data structures, objects and parameters. Calls that setup
 read-once things like ObjectTypes put themselves on the session data_objects
 list for cleanup.
 
+An important call which must be made by the script is kern_mk_player(). This
+function (unconditionally!) destroys the existing player_party created by
+player_init() above. This is a hack, plain and simple, and arose mostly due to
+the fact that the player party is a global variable. The player party should at
+least be per-session and referenced through the global session pointer, which
+at least is reasonably well-managed across reloads.
+
+Either the result of kern_mk_player() will be fed (by the script) to a place
+constructor or the script must make an explicit call to kern_obj_put_at() in
+order to position the player party on the map. If the target location is a
+town, the latter approach MUST be taken, as it knows that it needs to break out
+the player party into town mode. The former approach does not handle this
+properly (that's a bug).
+
+If any errors occur session_load cleans up and returns, leaving the original
+session active (but in the case of startup, there is no original session, and
+odds are good that the player party we allocated back with player_init() has
+been destroyed by the call to kern_mk_player).
+
+If all seems to be well it will destory the old session and interpreter and
+make the new session active.
+
+The next thing it does is call the startSession() method in the player party
+class. See below. Upon exit the global Place will be setup.
+
+It then runs through the list of all the data_objects created by the scheme
+script and runs their start function if they registered one. Currently the only
+thing that uses this feature is the place, which registers
+place_start(). place_start() runs through all the objects in it and calls their
+start method. This in turn traverses all the effects attached to the object and
+invokes their "apply" closures, if they have one. Currently, the effects which
+use this feature are light/great light, protection, charm and invisibility. All
+of these examples could be implemented without the apply closure if each object
+saved and loaded its light, defense, charm and invisibility status. Whether or
+not future effects will need this feature is not clear to me. If an effect
+simply changes state, and the state is saved and loaded, I don't think 'apply'
+is necessary.
+
+The final step is to start painting the auxiliary widgets: the screen frame,
+the foogod, console and status windows.
+
+**** kern_init
+
+This is where all the kernal API calls get poked into the new scheme
+interpreter's environment.
+
+**** kern_mk_player
+
+This (unconditionally) blows away the current player party and creates a new
+one. The player party constructor creates a new view, among other things, but
+doesn't add it just yet. Back in kern_mk_player it unpacks and adds the party
+members one by one, connects the party and its vehicle (if applicable), and
+adds the party to the session.
+
+The party is added to the session as a data object because there are times
+(especially like right after this call, for instance) where the player party is
+in "limbo", meaning it isn't on any map or referenced by any place. When the
+player enters a town or dungeon is another example. The reason I need the
+player party on the data_objects list is so that it will generate a call to
+kern_mk_player outside of the context of any place constructor, so that on load
+the party is not physically present as an object/icon in the place where the
+party members are.
+
+Note that this call does not put the player party on the map anywhere - it will
+be located as a result of being loaded by its place (this will happen within
+kern_mk_place()) or the script will explicitly give it a location via
+kern_obj_put_at(). This is the case with the script that starts the game for
+the first time.

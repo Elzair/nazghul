@@ -210,5 +210,5 @@
 ;; To skip the extended start scene comment out this next line and uncomment
 ;; the line after it.
 ;;----------------------------------------------------------------------------
-(kern-set-start-proc start-scene)
-;(kern-set-start-proc simple-start)
+;(kern-set-start-proc start-scene)
+(kern-set-start-proc simple-start)

@@ -253,7 +253,7 @@ static void species_dtor(void *val)
 
 static void occ_dtor(void *val)
 {
-        occ_del((struct occ*)val);
+        occ_unref((struct occ*)val);
 }
 
 static void party_dtor(void *val)
@@ -1424,6 +1424,7 @@ static pointer kern_mk_occ(scheme *sc, pointer args)
         occ = occ_new(tag, name, magic, hpmod, hpmult, mpmod, mpmult, hit, def,
                       dam, arm, scm_len(sc, arms), scm_len(sc, items), 
                       scm_len(sc, traps));
+        occ_ref(occ);
         occ->container = container;
         occ->xpval = xpval;
 
@@ -1436,6 +1437,7 @@ static pointer kern_mk_occ(scheme *sc, pointer args)
                         goto abort;
                 }
                 closure_init(&occ->traps[i++], sc, func);
+                closure_ref(&occ->traps[i++]);
         }
 
         /* Arms */
@@ -1470,7 +1472,7 @@ static pointer kern_mk_occ(scheme *sc, pointer args)
         return ret;
 
  abort:
-        occ_del(occ);
+        occ_unref(occ);
         return sc->NIL;
 }
 

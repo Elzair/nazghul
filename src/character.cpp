@@ -134,6 +134,8 @@ Character::Character(char *tag, char *name,
 	this->conv         = conv;
 	this->species      = species;
 	this->occ          = occ;
+        if (occ)
+                occ_ref(occ);
 	this->is_clone     = false;
 	this->visible      = 1;
 	this->target       = 0;
@@ -244,12 +246,21 @@ Character::~Character()
 	if (rdyArms != NULL)
 		free(rdyArms);
 
+
         if (party)
                 party->removeMember(this);
 
         if (ai)
                 closure_unref(ai);
 
+        /* Hack: make sure you deref occ after deleting the
+         * container. Currently the container references traps that are built
+         * into the occ struct. The container unrefs the traps, and if the occ
+         * isn't still holding a ref then you get a double-deallocation and
+         * usually a crash. This will get cleaned up when I rework the way NPCs
+         * are factoried; the traps won't be kept as part of occ any more. */
+        if (occ)
+                occ_unref(occ);
 }
 
 void Character::damage(int amount)
@@ -1133,8 +1144,10 @@ bool Character::initStock(struct species * species, struct occ * occ,
 	// fill out an NPC party. I think of them as "stock" characters since
 	// they don't have much in the way of individual personality.
 
-	this->species = species;
+	this->species = species;        
 	this->occ = occ;
+        if (occ)
+                occ_ref(occ);
 	this->sprite = sprite;
 
 	if (!initCommon())

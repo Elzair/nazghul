@@ -28,6 +28,7 @@
 BEGIN_DECL
 
 typedef struct closure {
+        char *magic;
         scheme *sc;
         pointer env;
         pointer code;
