@@ -133,6 +133,32 @@ PLACE  GreenTower {
           mech_vdoor shrooms_shop_door  48 4  "closed";
           mech_hdoor shrooms_storeroom_door 54 12 "magically locked";
           t_bed 51 9;
+          t_large_iron_chest 53 9 {
+                  reagent_sulphorous_ash 50;
+                  reagent_garlic         50;
+                  reagent_ginseng        50;
+                  reagent_blood_moss     50;
+                  reagent_black_pearl    50;
+                  reagent_spider_silk    50;
+                  reagent_mandrake       50;
+                  reagent_nightshade     50;
+          }
+          t_large_iron_chest 54 9 {
+                  t_cure_potion         10;
+                  t_light_potion        10;
+                  t_heal_potion         10;
+                  t_sleep_potion        10;
+                  t_awaken_potion       10;
+                  t_restore_potion      10;
+          }
+          t_large_iron_chest 55 9 {
+          }
+          t_large_iron_chest 53 10 {
+          }
+          t_large_iron_chest 54 10 {
+          }
+          t_large_iron_chest 53 11 {
+          }
 
           //--------------------------------------------------
           // Gen's Hut

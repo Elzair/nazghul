@@ -54,7 +54,7 @@ RESP Shrooms_Mushroom_Resp {
                                 reagent_spider_silk    8;
                                 reagent_mandrake       16;
                                 reagent_nightshade     16;
-                                item_sleep_potion      10;
+                                t_sleep_potion         10;
                         }
                         SAY "Be careful with those.";
                 }{

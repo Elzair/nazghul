@@ -75,7 +75,7 @@ static struct terrain_palette *LTP_wrapper(class Loader * loader);
     ret = -1; \
     goto cleanup; \
    } \
-  (var) = atoi(lexer_lexeme(Lexer));
+  (var) = atol(lexer_lexeme(Lexer));
 
 #define PARSE_CHAR(tag,var)         \
   if (! MATCH_WORD((tag))) { \

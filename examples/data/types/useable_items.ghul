@@ -55,19 +55,22 @@
               0, 1, "")
 
 // Potions
-POTION_TYPE(t_green_potion,    "green potion",  s_green_potion,  
+POTION_TYPE(t_cure_potion,    "green potion",  s_green_potion,  
             EFFECT_CURE,   0,    0,   TARG_SELF);
 
 POTION_TYPE(t_light_potion,    "white potion",  s_white_potion,  
             EFFECT_LIGHT,  4080, 500, TARG_SELF);
 
-POTION_TYPE(t_red_potion,      "red potion",    s_red_potion,    
+POTION_TYPE(t_heal_potion,      "red potion",    s_red_potion,    
             EFFECT_HEAL,   25,   0,   TARG_SELF);
 
-POTION_TYPE(item_sleep_potion, "purple potion", s_purple_potion, 
+POTION_TYPE(t_sleep_potion, "purple potion", s_purple_potion, 
             EFFECT_SLEEP,  0,    0,   TARG_SELF);
 
-POTION_TYPE(t_blue_potion,     "blue potion",   s_blue_potion,   
+POTION_TYPE(t_restore_potion,     "blue potion",   s_blue_potion,   
+            EFFECT_RESTORE, 25,    0,   TARG_FRIEND);
+
+POTION_TYPE(t_awaken_potion,     "orange potion",   s_orange_potion,   
             EFFECT_AWAKEN, 0,    0,   TARG_FRIEND);
 
 

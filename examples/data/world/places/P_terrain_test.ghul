@@ -119,7 +119,7 @@ PLACE  p_terrain_test {
 
 
     t_short_scroll    10 28;  // Document
-    item_sleep_potion 11 28;  // Usable item (potion)
+    t_sleep_potion 11 28;  // Usable item (potion)
 
     F_fire    15 20;  // Fire   Field
     F_poison  16 20;  // Poison Field

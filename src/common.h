@@ -181,6 +181,7 @@ extern "C" {
 #define MAX_NAME_LEN            STAT_TEXT_LEN
 #define MIN_VISION_RADIUS       1
 #define HP_PER_LVL              30
+#define MAX_ATTRIBUTE_VALUE     999
 
 // MAX_VISION_RADIUS must be <= MAX_SIGHT in angband.c, but it cannot be
 // greater than the map viewer. The reason it can't be greater than the map

@@ -594,6 +594,7 @@ void Character::changeMana(int delta)
 {
 	mana += delta;
 	mana = max(mana, 0);
+        mana = min(mana, getMaxMana());
 }
 
 void Character::changeSleep(bool val)
@@ -1166,13 +1167,20 @@ void Character::addExperience(int amount)
 		setElevated(true);
 	}
 }
+
+int Character::getMaxHp()
+{       
+        return min(lvl * HP_PER_LVL, MAX_ATTRIBUTE_VALUE);
+}
+
 int Character::getMaxMana()
 {
 	// Typically mana is based on occupation (spellcasters have a higher
 	// multiplier than other occupations). But because I've overloaded the
 	// magic system to handle wild animals (think venomous spray) I need to
 	// give them at least SOME mana, thus the default 0.5 multiplier.
-	return (int) (intl * lvl * (occ ? occ->magic : 0.5));
+        return min(MAX_ATTRIBUTE_VALUE, 
+                   (int) (intl * lvl * (occ ? occ->magic : 0.5)));
 }
 
 void Character::changeArmourClass(int delta)

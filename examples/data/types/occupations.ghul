@@ -45,7 +45,7 @@ OCC ranger {
       t_sword        75  1;
       t_torch        50  5;
       t_mushroom1    50  5;
-      t_green_potion 50  2;
+      t_cure_potion 50  2;
     }
 }
 
@@ -80,7 +80,7 @@ OCC fighter {
     t_sm_shield  25 1;
     t_lrg_shield 25 1;
     t_ring_mail  25 1;
-    t_red_potion 75 5;
+    t_heal_potion 75 5;
   }
 }
 
@@ -103,9 +103,9 @@ OCC wizard {
     t_sm_shield    50  1;
     t_oil          50  10;
     t_light_potion 50  5;
-    t_green_potion 50  2;
-    t_red_potion   75  5;
-    t_blue_potion  50  2;
+    t_cure_potion 50  2;
+    t_heal_potion   75  5;
+    t_restore_potion  50  2;
   }
 }
 
@@ -125,9 +125,9 @@ OCC druid {
     t_dagger       100 1;
     t_oil          50  10;
     t_light_potion 50  5;
-    t_green_potion 50  2;
-    t_red_potion   75  5;
-    t_blue_potion  50  2;
+    t_cure_potion 50  2;
+    t_heal_potion   75  5;
+    t_restore_potion  50  2;
   }
 }
 

@@ -40,6 +40,20 @@
 #define MECH_FIRST_UNRESERVED_EVENT 100
 
 /* Effects */
+// gmcnutt: EFFECT_NATURAL was bit 30, and is intended to be used for natural
+// abilities (like snakes spitting venom) so that they will not be affected by
+// negate magic. But I ran into a problem: I needed to add EFFECT_RESTORE for
+// mana restoration potions, but I found that using a constant with bit 31 set
+// did not work out right. The parser uses atol(), which sees the high bit set
+// and I think assumes it's an overflow, so it converts the value to LONG_MAX,
+// which isn't what we intended. Since I'm basically out of bits something had
+// to give, and I sacrificed EFFECT_NATURAL for EFFECT_RESTORE.
+//
+// During the 0.3.x development line we'll address this issue. A simple thing
+// to do would be to start using multi-byte bitmaps and fix the parser. But the
+// new effect system may make this a non-issue anyway, so let's wait and see.
+//
+#define EFFECT_NATURAL      0
 #define EFFECT_NONE         0
 #define EFFECT_POISON       1	/* 0 */
 #define EFFECT_BURN         2	/* 1 */
@@ -71,8 +85,7 @@
 #define EFFECT_TIME_STOP    134217728	/* 27 */
 #define EFFECT_RESURRECT    268435456	/* 28 */
 #define EFFECT_GATE_TRAVEL  536870912	/* 29 */
-#define EFFECT_NATURAL      1073741824	/* 30 hack: not really an effect, just
-					 * used to avoid the effects of negate
-					 * magic */
+#define EFFECT_RESTORE      1073741824  /* 30 */
+// WARNING: bit 31 will not work as intended! We are out of bits!
 
 #endif

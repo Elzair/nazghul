@@ -70,9 +70,7 @@ class Character:public Object {
 	virtual int getHp() {
 		return hp;
 	}
-	virtual int getMaxHp() {
-		return lvl * HP_PER_LVL;
-	}
+	virtual int getMaxHp();
 	virtual int getOrder() {
 		return order;
 	}

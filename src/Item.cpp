@@ -68,7 +68,7 @@ void ItemType::setTarget(int val)
 	target = val;
 }
 
-int ItemType::getEffect()
+unsigned int ItemType::getEffect()
 {
 	return effect;
 }
@@ -90,38 +90,29 @@ int ItemType::getTarget()
 
 void ItemType::use(class Character * target)
 {
-	switch (getEffect()) {
-
-	case EFFECT_LIGHT:
+        if (effect & EFFECT_LIGHT) {
 		effectLight(getName(), getAmount(), getDuration(), target);
-		break;
-
-	case EFFECT_POISON:
+        }
+        if (effect & EFFECT_POISON) {
 		target->setPoison(true);
-		break;
-
-	case EFFECT_CURE:
+        }
+	if (effect & EFFECT_CURE) {
 		if (target->isPoisoned())
 			target->setPoison(false);
-		break;
-
-	case EFFECT_AWAKEN:
+        }
+	if (effect & EFFECT_AWAKEN) {
 		if (target->isAsleep())
 			target->awaken();
-		break;
-
-	case EFFECT_HEAL:
+        }
+	if (effect & EFFECT_HEAL) {
 		target->changeHp(getAmount());
-		break;
-
-        case EFFECT_SLEEP:
+        }
+	if (effect & EFFECT_RESTORE) {
+		target->changeMana(getAmount());
+        }
+        if (effect & EFFECT_SLEEP) {
                 target->changeSleep(true);
-                break;
-
-	case EFFECT_NONE:
-	default:
-		break;
-	}
+        }
 
 	if (message != NULL) {
 		struct KeyHandler kh;

@@ -883,6 +883,11 @@ enum Spell::cast_result Spell::cast(class Character * caster,
 		success = ok;
 		character->changeHp(strength);
 	}
+	if (effects & EFFECT_RESTORE && character &&
+	    character->getMana() < character->getMaxMana()) {
+		success = ok;
+		character->changeMana(strength);
+	}
 	if (effects & EFFECT_UNLOCK && mech) {
 		// hack: use the strength field to distinguish between
 		// different intents.

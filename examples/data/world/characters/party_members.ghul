@@ -38,7 +38,7 @@ CHAR ch_Thorald_Greybeard {
   str       80;
   intl      140;
   dex       80;
-  magic     280;
+  magic     240;
   lvl       8;
   conv      c_generic;
   readied {
@@ -86,7 +86,7 @@ CHAR ch_Mesmeme {
   str       60;
   intl      160;
   dex       60;
-  magic     320;
+  magic     256;
   lvl       8;
   conv      c_generic;
   readied {

@@ -38,7 +38,7 @@ class ItemType:public ObjectType {
 	virtual bool init(char *tag, char *name, struct sprite *sprite,
 			  int effect, int amount, int duration);
 	virtual void setTarget(int val);
-	virtual int getEffect();
+	virtual unsigned int getEffect();
 	virtual int getAmount();
 	virtual int getDuration();
 	virtual int getTarget();

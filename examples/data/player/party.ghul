@@ -148,11 +148,11 @@ player {
     2 t_plate_boots;
   
     // Potions
-    50 t_red_potion;
-    50 t_blue_potion;
-    50 t_green_potion;
+    50 t_heal_potion;
+    50 t_cure_potion;
     50 t_light_potion;
-    50 item_sleep_potion;
+    50 t_sleep_potion;
+    10 t_restore_potion;
   
     // Use-able Items
     1  t_short_scroll;
