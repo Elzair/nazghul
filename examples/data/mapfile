@@ -953,30 +953,55 @@ t_red_potion { name "red potion" sprite s_red_potion subtype item effect 32 amou
 t_blue_potion { name "blue potion" sprite s_blue_potion subtype item effect 64 amount 0 duration 0 target 2 food 0 consumable 1 message "" };
 t_torch { name "torch" sprite s_torch subtype item effect 8 amount 4096 duration 200 target 1 food 0 consumable 1 message "" };
 t_mushroom1 { name "edible mushroom" sprite s_mushroom1 subtype item effect 0 amount 10 duration 0 target 0 food 1 consumable 1 message "" };
-t_lb_journal { name "The Journal of LB" sprite s_scroll1 subtype item effect 0 amount 0 duration 0 target 0 food 0 consumable 0 message "The Journal of Lord British, Ruler of Britannia
+t_users_guide { name "The Users Guide to Nazghul" sprite s_scroll1 subtype item effect 0 amount 0 duration 0 target 0 food 0 consumable 0 message "                                PLAYER COMMANDS
 
-11/14/63
-Still no sign of the Avatar. If he does not come soon I fear he will be too late.
+General syntax:
 
-11/17/63
-I signed the order to seal the dungeons, all save Hythloth, for I cannot bear to cut off access to the Codex of Ultimate Wisdom. Surely the Guardians that watch the passage there will suffice.
+<dir>    = one of the four arrow keys
+<member> = a party member, selected from a list by scrolling with the arrow keys and pressing <enter> or <space>
+<item>   = an inventory item, selected from a list
+<spell>  = a spell, selected from a list
+<space>  = spacebar
+<target> = a combat target, selected by moving the crosshairs and pressing <enter> or <space>
+<*>      = varies depending on context (see the C)ast command)
 
-12/09/63
-The expedition from Wrong returned three days ago, reporting that all the dungeons are closed. There has been no sign of the vile creatures for over a week, though I have scouts everywhere. Perhaps the horror is over. But it troubles me that the Avatar did not come. Is the link between this world and my old homeland broken?
+General commands:
 
-12/12/63
-Where are they coming from?!? Shamino straggled in today, bleeding from multiple wounds, and reported that Cove has fallen. I fear that even I cannot heal him. He lies in a fever even know.
+    <dir>......................Move in that direction
+    B)oard.....................Board/exit a vehicle like a ship or horse
+    C)ast-<member>-<spell>-<*>...Cast a spell (the last argument depends on the spell)
+    E)nter.....................Enter a portal, including up or down ladders
+    F)ire-<dir>................Fire vehicle's weapon (e.g., ship cannon)
+    G)et-<dir>.................Get an object from the ground
+    H)andle-<member>-<target>..Activate a switch or lever
+    L)ook-<dir>................Describe an adjacent tile
+    O)pen-<dir>................Open a container or door
+    Q)uit......................Quits the game
+    R)eady-<member>-<item>.....Ready an armament like a weapon, shield, etc.
+    S)witch-<member>-<member>...Swap order of two party members
+    T)alk-<target>.............Talk to an NPC
+    U)se-<member>-<item>.......Use an item like a torch or potion
+    Z)tats.....................Show party stats like inventory, armaments, etc
+    <space>....................Pass one turn
 
-12/15/63
-Shamino passed away last night. I am nearly faint with grief and weariness. Reluctantly, I ordered Sir Geoffrey to the Isle of Fire and charged him to seal the entrance to Hythloth. I can think of no other passage by which they may be coming in. Still no sign of the Avatar.
 
-12/16/63
-Today a wounded pigeon fluttered in from Yew with a message begging for aid. I dispatched all the troops I could spare to march with all haste through the mountain passes.
+Wilderness-only commands:
 
-12/17/63
-Treachery! The pigeon from Yew must have been a decoy, for surely they cannot move that fast through the mountains and forests! They are at the gates. Though it has been  many years, my armour awaits. Perhaps for the last time, I will ride into battle, though I am old and feeble. Perhaps the Avatar will arrive before it is too late. Perhaps."
+    K)amp-<0-9>-<y/n>-<player>...Camp in the wilderness (to heal and recover mana) or aboprd ship (to repair hull damage)
+
+
+Combat-only commands:
+
+    A)ttack-<target>.........Attack the specified target
+    C)ast-<spell>-<*>........Cast a spell
+    F)ollow..................Select follow mode, where the party members automatically follow the party leader.
+    [1-9]....................Select a party member for solo mode.
+    [0]......................Select turn-based party mode, where each party member takes directions one at a time.
+    
+Special commands:
+
+    <ESC>....................Aborts most commands)"
  };
-t_note { name "A Charred Note" sprite s_scroll1 subtype item effect 0 amount 0 duration 0 target 0 food 0 consumable 0 message "Seek him in the mountains at 91, 72" };
 }
 MAGIC_WORDS {
   An;
@@ -4156,8 +4181,7 @@ player {
     3 t_light_potion;
     99 t_torch;
     12 t_mushroom1;
-    1 t_lb_journal;
-    1 t_note;
+    1 t_users_guide;
     10 reagent_garlic;
     10 reagent_ginseng;
     10 reagent_nightshade;

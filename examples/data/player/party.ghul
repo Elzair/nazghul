@@ -82,8 +82,7 @@ player {
   
     12 t_mushroom1;
   
-    1  t_lb_journal;
-    1  t_note;
+    1  t_users_guide;
   
     // Reagents
     10 reagent_garlic;
