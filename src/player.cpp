@@ -319,6 +319,7 @@ void player_party::distributeMembers(struct place *new_place, int new_x,
                 }
 	}
 
+#ifdef CONFIG_ENABLE_ROUND_ROBIN_ON_ENTRANCE_TO_HOSTILE_PLACE
         // --------------------------------------------------------------------
         // Set the party mode to "follow" by default, but if hostiles are in
         // this place then set to "character" mode.
@@ -331,7 +332,19 @@ void player_party::distributeMembers(struct place *new_place, int new_x,
                 enableFollowMode();
                 combat_set_state(COMBAT_STATE_LOOTING);
         }        
-
+#else
+        // --------------------------------------------------------------------
+        // Set the party mode to "follow" by default. If hostiles are present
+        // the user can opt to engage them manually. If hostiles are present
+        // but not visible it's confusing/annoying when the camera does not
+        // follow the party leader. This is especially true when there is only
+        // one party member. 
+        // --------------------------------------------------------------------
+        enableFollowMode();
+        if (place_contains_hostiles(new_place, this)) {
+                combat_set_state(COMBAT_STATE_FIGHTING);                
+        }
+#endif
         endTurn();
 
 }

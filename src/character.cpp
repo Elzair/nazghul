@@ -493,8 +493,14 @@ enum MoveResult Character::move(int dx, int dy)
                 if (place_get_parent(getPlace()) == NULL)
                         return OffMap;
                 
-                if (player_party->getPartyControlMode() != 
-                    PARTY_CONTROL_FOLLOW) {
+                if (player_party->getSize() == 1) {
+                        // Force to follow mode to avoid the annoying case
+                        // where only one member is in the party and the player
+                        // wants to leave a combat map.
+                        player_party->enableFollowMode();
+                }
+
+                if (player_party->getPartyControlMode() != PARTY_CONTROL_FOLLOW) {
                         return NotFollowMode;
                 }
                 
@@ -2359,6 +2365,13 @@ bool Character::tryToRelocateToNewPlace(struct place *newplace,
         // At this point I know the character is player-controlled, so I can
         // print informative messages.
         // -----------------------------------------------------------------
+
+        if (player_party->getSize() == 1) {
+                // Force to follow mode to avoid the annoying case
+                // where only one member is in the party and the player
+                // wants to leave a combat map.
+                player_party->enableFollowMode();
+        }
 
         if (player_party->getPartyControlMode() != PARTY_CONTROL_FOLLOW) {
                 log_msg("Exit - must be in follow mode!");
