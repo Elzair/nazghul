@@ -30,24 +30,26 @@
 moon_info {
   phases 8;  // SAM: is this needed given that the below is in a {} block?
   {       
-    sprite s_new_moon;
-    sprite s_wax_quarter_moon;
-    sprite s_wax_half_moon;
-    sprite s_wax_three_quarter_moon;
+    // gmcnutt: WART alert: make full moon phase 0 so the engine can send
+    // the MECH_FULL_MOON signal at the appropriate time.
     sprite s_full_moon;
     sprite s_wane_three_quarter_moon;
     sprite s_wane_half_moon;
     sprite s_wane_quarter_moon;
+    sprite s_new_moon;
+    sprite s_wax_quarter_moon;
+    sprite s_wax_half_moon;
+    sprite s_wax_three_quarter_moon;
   } // phases
 
   moons {
     {
-      phase           0;
+      phase           7;
       days_per_cycle  1;
       arc             100;
     }
     {
-      phase           4;
+      phase           3;
       days_per_cycle  2;
       arc             200;
     }

@@ -31,6 +31,30 @@ MAKE_NPC_PARTY_GENERATOR_MECH(t_wilderness_goblin_generator, "goblin cave",
                               p_wilderness, 25, 15, 1, 1, 
                               0.01);
 
+// A mandrake patch is kind of special-purpose, so no macro for now...
+MECH_TYPE mech_mandrake_patch {
+        name "mandrake patch";
+        defaults {
+                pmask PASS_ALL;
+                invisible 1;
+        }
+        states {
+                {
+                        name "growing";
+                        sprite null;
+                }
+        }
+        transitions {
+                state "growing";
+                event MECH_FULL_MOON;
+                next_state "growing";
+                actions {
+                        create_object reagent_mandrake 1 p_wilderness
+                                37 21 1 1 1.0;
+                }
+        }
+}
+
 MAP m_wilderness {
   type    ascii;
   width   40;
@@ -108,6 +132,8 @@ PLACE  p_wilderness {
     t_turn_trigger                goblin_cave_trigger 0  0  "active";
     t_wilderness_goblin_generator goblin_cave         15 25 "active";
     CONNECT goblin_cave_trigger => goblin_cave;
+    mech_mandrake_patch           mandrake_patch      37 21 "growing";
+
 
   }
   typical_npc_parties {

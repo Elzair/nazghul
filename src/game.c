@@ -398,6 +398,18 @@ static struct place *game_place_lookup(char *tag)
         return 0;
 }
 
+void game_for_each_place(bool (*fx)(struct place *place, void *data),
+                         void *data)
+{
+        struct list *elem;
+
+        list_for_each(&Places, elem) {
+                struct place *place = list_entry(elem, struct place, list);
+                if (fx(place, data))
+                        return;
+        }
+}
+
 class ObjectType *game_object_type_lookup(char *tag)
 {
         struct list *elem;

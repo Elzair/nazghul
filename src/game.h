@@ -31,4 +31,9 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
+
+
+extern void game_for_each_place(bool (*fx)(struct place *place, void *data),
+                                void *data);
+
 #endif

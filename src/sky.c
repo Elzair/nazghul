@@ -28,6 +28,8 @@
 #include "moongate.h"
 #include "player.h"
 #include "wq.h"
+#include "Mech.h"
+#include "game.h"
 
 #include <assert.h>
 #include <math.h>
@@ -40,6 +42,10 @@ struct clock Clock;
 static struct sky {
 	SDL_Rect screenRect;
 } Sky;
+
+// This is a wart, and should be either in the script or made unnecessary via
+// some more general mechanism.
+#define MOON_PHASE_FULL 0
 
 // Amount by which we horizontally shift the light function to make noon
 // produce maximum light
@@ -76,12 +82,16 @@ static double SKY_AMPLITUDE = 0.0;
 // m = (W + t)/(S - R)
 // b = -R * m
 //
-static double SKY_WIN_SLOPE = ((double)SKY_W + (double)SKY_SPRITE_W) / 
-                              ((double)SUNSET_DEGREE - (double)SUNRISE_DEGREE); // 1.06667
-static double SKY_WIN_OFFSET = -(double)SUNRISE_DEGREE * 
-                                (double)SKY_WIN_SLOPE; // -64.0002
 
-#define SKY_ARC_TO_PIXEL_OFFSET(arc) (int)(SKY_WIN_SLOPE * (double)(arc) + (SKY_WIN_OFFSET))
+// 1.06667
+static double SKY_WIN_SLOPE = ((double)SKY_W + (double)SKY_SPRITE_W) / 
+                              ((double)SUNSET_DEGREE - (double)SUNRISE_DEGREE);
+
+ // -64.0002
+static double SKY_WIN_OFFSET = -(double)SUNRISE_DEGREE * (double)SKY_WIN_SLOPE;
+
+#define SKY_ARC_TO_PIXEL_OFFSET(arc) (int)(SKY_WIN_SLOPE * (double)(arc) + \
+                                           (SKY_WIN_OFFSET))
 
 #define DEGREES_TO_RADIANS(deg) (double)((deg) * 0.0174603)
 
@@ -254,6 +264,26 @@ static void moon_adjust_light(struct moon *moon)
 
 }
 
+static void sky_send_signal_to_obj(class Object *obj, void *data)
+{
+        class Mech *mech;
+        int sig;
+
+        if (! obj->isType(MECH_ID))
+                return;
+
+        sig = (int)data;
+        mech = (class Mech*)obj;
+
+        mech->activate(sig);
+}
+
+static bool sky_send_signal_to_place(struct place *place, void *data)
+{
+        place_for_each_object(place, sky_send_signal_to_obj, data);
+        return false;
+}
+
 static void myAdvanceMoons(void)
 {
 	int i;
@@ -279,6 +309,13 @@ static void myAdvanceMoons(void)
 			moon->phase = (moon->phase + 1) % MoonInfo.phases;
 			moon->openMoongate(moon->phase);
 			moon->next_phase_turn += moon->turns_per_phase;
+
+                        // Wart: if the moon is now full then send a signal to
+                        // all mechanisms in the game
+                        if (moon->phase == MOON_PHASE_FULL) {
+                                game_for_each_place(sky_send_signal_to_place,
+                                                    (void*)MECH_FULL_MOON);
+                        }
 		}
 
                 // Adjust light coming from moon.
