@@ -571,7 +571,8 @@ class Character *select_party_member(void)
 		/* Hack alert: this saves the caller from having to remember to
 		 * do this. Doing it unconditionally is undesirable because it
 		 * can cause status screen flashes if the old mode requires a
-		 * short status window and the next mode requires a tall one. */
+		 * short status window and the next mode requires a tall
+		 * one. */
 	} else {
 		cmdwin_print("%s", character->getName());
 	}
@@ -1255,10 +1256,6 @@ bool cmdUse(class Character * member, int flags)
 
 	item = ie->type;
         assert(item->isUsable());
-
-        consolePrint("%s uses ", member->getName());
-        item->describe(1);
-        consolePrint("\n");
 
 	item->use(member);
 	statusRepaint();
@@ -2246,7 +2243,7 @@ bool cmdAT (class Character * pc)
         log_begin_group();
         log_msg("This is %s.", name_of_context() );
         log_msg("%s is in %s (%d,%d).", who, place_name, x, y);
-        log_msg("It is %s on %s, \n"
+        log_msg("It is %s on %s, "
                 "%s of %s in the year %d.",
                 time_HHMM_as_string(), day_name(), 
                 week_name(), month_name(), Session->clock.year );
@@ -2268,7 +2265,7 @@ bool cmdAT (class Character * pc)
                 // This message won't be true if you are under 
                 // a roof in a town.  In future there should be 
                 // logic querying the (future) roof-ripping code here.
-                log_msg("%s is beneath the open sky.\n", who);
+                log_msg("%s is beneath the open sky.", who);
 
                 // The kernel no longer has any special knowledge about which
                 // astral body is the sun, so we have to deal with all astral

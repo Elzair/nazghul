@@ -32,6 +32,7 @@
 #include "wind.h"
 #include "foogod.h"
 #include "mmode.h"
+#include "cmdwin.h"
 
 #include <stdio.h>
 #include <assert.h>
@@ -754,6 +755,10 @@ static void mySetPageMode(void)
 	myRepaintTitle(Status.pg_title);
 	Status.paint = myPaintPage;
 	Status.scroll = myScrollPage;
+
+        // Clear the cmdwin and print instructions for exiting page mode.
+        cmdwin_clear();
+        cmdwin_print("(Hit ESC when done reading)");
 }
 
 static void myPaintTrade(void)
