@@ -108,8 +108,7 @@ object_types {
 #include "types/worn_items.ghul"      // 
 #include "types/useable_items.ghul"   // 
 #include "types/readable_items.ghul"  // 
-
-  GENERIC_TYPE(t_bed, "bed", s_bed, LAYER_BED);
+#include "types/furniture.ghul"
     
 } /* object_types */
 

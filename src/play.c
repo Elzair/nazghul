@@ -1972,13 +1972,20 @@ target_location_for_spell(class Character * caster,
 			  class Spell * spell, int *x, int *y)
 {
 	class Character *target;
+        int ox, oy;
 
-	target = caster->getAttackTarget();
-	*x = target->getX();
-	*y = target->getY();
+        if (player_party->context == CONTEXT_COMBAT) {
+                target = caster->getAttackTarget();
+                *x = target->getX();
+                *y = target->getY();
+                ox = caster->getX();
+                oy = caster->getY();
+        } else {
+                *x = ox = player_party->getX();
+                *y = oy = player_party->getY();
+        }
 
-	if (select_target(caster->getX(), caster->getY(), x, y,
-			  spell->range) == -1)
+	if (select_target(ox, oy, x, y, spell->range) == -1)
 		return false;
 
 	// Note: cheat a bit here. If possible, grab a character from this

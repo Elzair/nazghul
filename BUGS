@@ -1,17 +1,21 @@
+Known bugs in release 0.1.3
+
+
+
 Known bugs in release 0.1.2
 
---Nixie attacks sometimes start combat with wrong orientation (hard to
+o Nixie attacks sometimes start combat with wrong orientation (hard to
   reproduce)
 
---Frame sometimes gets messed up and needs a repaint (really? or only during
+o Frame sometimes gets messed up and needs a repaint (really? or only during
   debug sessions?)
 
---NPC combat behaviour on maps with lots of los-blocking terrain still looks
+o NPC combat behaviour on maps with lots of los-blocking terrain still looks
   weird. NPCs need to be a bit more aggressive, blocked missiles need to be
   reported better; in general I think the user just needs more feedback to
   understand what's going on.
 
---Bridge-nixie problem: nixie's don't get placed because their party is placed
+o Bridge-nixie problem: nixie's don't get placed because their party is placed
   on impassable terrain and the party members can't pathfind back to the
   party. So I removed find_party as a restriction. Now if the player party
   enters  dungeon one of the members can get placed in a cell where they are
@@ -19,22 +23,17 @@ Known bugs in release 0.1.2
   placement more flexible (search at least half the map for a passable location
   for the party), and permit stacking.
 
---Entering the sotheast ladder of the castle section of Empire City will place
-  one of your party members into a prison cell, effectively deadlocking the
-  game. This is an unexpected side-effect of removing the find_party
-  requirement for combat entry.
-
---Ship-to-shore combat can look funny, especially when the bridge terrain is
+o Ship-to-shore combat can look funny, especially when the bridge terrain is
   involved.
 
---Looks like we segfault upon exit from ship-to-ship combat. Just noticed this
+o Looks like we segfault upon exit from ship-to-ship combat. Just noticed this
   while preparing the release, so it might be -O2 optimization (meaning an
   uninitialized variable somewhere).
 
 
 Known BUGS in release 0.1.1
 
-* Firing ship cannons in town at the nixies causes combat to begin immediately,
+o Firing ship cannons in town at the nixies causes combat to begin immediately,
   regardless of how far away the nixie party is
 
-* Lots of warnings about non-existent sound files
+o Lots of warnings about non-existent sound files
