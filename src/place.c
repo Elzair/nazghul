@@ -1403,6 +1403,50 @@ void place_remove_and_destroy_all_objects(struct place *place)
         place_for_each_object(place, place_remove_and_destroy_object, NULL);
 }
 
+static void place_apply_tile_effects(struct place *place, class Object *obj)
+{
+        class Object *tfeat;
+        class Field *field;
+
+        assert(! obj->isDestroyed());
+
+        // --------------------------------------------------------------------
+        // First check for a terrain feature, which will override any terrain
+        // effects.
+        // --------------------------------------------------------------------
+        tfeat = place_get_object(place, obj->getX(), obj->getY(), tfeat_layer);
+        if (tfeat) {
+                if (tfeat->canStep())
+                        tfeat->step(obj);
+        } else {
+                struct terrain *terrain;                
+                terrain = place_get_terrain(place, obj->getX(), obj->getY());
+                if (terrain->effect) {
+                        obj->applyEffect(terrain->effect);
+                }
+        }
+
+        // --------------------------------------------------------------------
+        // Check if the terrain or feature effect destroyed the object.
+        // --------------------------------------------------------------------
+        if (obj->isDestroyed())
+                return;
+        
+        // --------------------------------------------------------------------
+        // Now apply effects from any fields on that tile.
+        // --------------------------------------------------------------------
+        field = (class Field *)place_get_object(place, 
+                                                obj->getX(),
+                                                obj->getY(), 
+                                                field_layer);
+        if (field && 
+            field != obj && 
+            field->getObjectType()->effect) {
+                obj->applyEffect(field->getObjectType()->effect);
+        }
+
+}
+
 void place_exec(struct place *place, struct exec_context *context)
 {
         // --------------------------------------------------------------------
@@ -1428,8 +1472,6 @@ void place_exec(struct place *place, struct exec_context *context)
                && ! player_party->allDead()) {
                
                 class Object *obj;                
-                struct terrain *terrain;
-                class Field *field;
 
                 obj = outcast(place->turn_elem, class Object, turn_list);
                 place->turn_elem = place->turn_elem->next;
@@ -1439,41 +1481,15 @@ void place_exec(struct place *place, struct exec_context *context)
                                 obj->exec(context);
                         }
                 } else {
-
-                        /* apply effects from any terrain features */
-                        class Object *tfeat;
-                        tfeat = place_get_object(place, obj->getX(), obj->getY(), 
-                                                 tfeat_layer);
-                        if (tfeat) {
-                                if (tfeat->canStep())
-                                        tfeat->step(obj);
-                        } else {
-
-                                /* apply any effects from the terrain */
-                                terrain = place_get_terrain(place, obj->getX(), 
-                                                            obj->getY());
-                                if (terrain->effect) {
-                                        obj->applyEffect(terrain->effect);
-                                        if (obj->isDestroyed())
-                                                goto obj_destroyed;
-                                }
-                        }
-
-                        
-                        /* apply any effects from other objects on the same tile
-                         * (currently only fields) */
-                        field = (class Field *)place_get_object(place, obj->getX(),
-                                                                obj->getY(), 
-                                                                field_layer);
-                        if (field && field != obj && 
-                            field->getObjectType()->effect) {
-                                obj->applyEffect(field->getObjectType()->effect);
-                                if (obj->isDestroyed())
-                                        goto obj_destroyed;
-                        }
                         
                         /* 'run' the object */
                         obj->exec(context);
+
+                        /* Apply terrain, field and any other environmental
+                         * effects. */
+                        if (obj->isOnMap())
+                                place_apply_tile_effects(place, obj);
+                            
 
                 }
 

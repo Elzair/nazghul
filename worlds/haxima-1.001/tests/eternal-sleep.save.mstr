@@ -58,66 +58,33 @@
   ;; contents
   (list
     (list
+      (kern-mk-field f_sleep_perm -1)    8 8)
+    (list
       (kern-mk-char
-        'ch_thorald_greybeard
-        "Thorald Greybeard"
+        'ch_shroom
+        "Shroom"
         sp_human
-        oc_wizard
-        s_companion_wizard
+        oc_druid
+        s_companion_druid
         3
-        40 50 42
-        0 1
-        10 5
+        20 30 20
         0 0
         0 0
-        39 0
-        8 8
+        0 0
+        0 0
+        30 0
+        9 9
         nil
         nil
         nil
         (list
-          t_rpg
+          t_dagger
         )
         ;; hooks
         (list
         )
       )
-    12 10)
-    (list
-      (kern-tag 'portcullis-1
-        (bind
-          (kern-mk-obj t_portcullis 1)
-          (list
-            #f
-            '()
-            #f
-            '()
-          )
-        ) ;; bind
-      ) ;; kern-tag
-    5 12)
-    (list
-      (bind
-        (kern-mk-obj tf_stone_lantern 1)
-        (list
-          #t
-          '()
-          #f
-          '()
-        )
-      ) ;; bind
-    12 9)
-    (list
-      (bind
-        (kern-mk-obj t_lever 1)
-        (list
-          #f
-          'portcullis-1
-          #f
-          '()
-        )
-      ) ;; bind
-    6 11)
+    8 9)
   ) ;; end of objects
   (list
   )
@@ -139,11 +106,13 @@
     nil
     ;; contents
     (list
-      (list 1 t_rpg)
+      (list 1 t_dagger)
+      (list 1 the-goblin-lexicon)
+      (list 1 t_poison_immunity_potion)
     )
   )
   (list
-    ch_thorald_greybeard
+    ch_shroom
   )
 )
 ;;--------------
@@ -153,7 +122,7 @@
 (kern-set-cursor ls_whirlpool)
 (kern-set-crosshair t_crosshair)
 (kern-set-ascii ss_little_sprites 32)
-(kern-set-clock 0 0 0 0 0 46)
+(kern-set-clock 0 0 0 0 15 45)
 ;; ---------
 ;; Astronomy
 ;; ---------
