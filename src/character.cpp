@@ -515,10 +515,12 @@ bool Character::attackTarget(class Character * target)
 	return true;
 }
 
-bool Character::hasAmmo(class ArmsType * weapon)
+int Character::hasAmmo (class ArmsType * weapon)
 {
+  // SAM: Changed this from returning bool to 
+  //      returning int (0 for no ammo, n for amount)
 	if (weapon->ammoIsUbiquitous())
-		return true;
+        return 1;  // One more available, that is.
 
 	if (playerControlled) {
 		struct inv_entry *ie;
@@ -526,24 +528,27 @@ bool Character::hasAmmo(class ArmsType * weapon)
 		if (weapon->isMissileWeapon()) {
 			ie = player_party->search_inventory(weapon->
 							    getMissileType());
-			return (ie != NULL && ie->count > 0);
-		} else if (weapon->isThrownWeapon()) {
+            if (ie == NULL)
+              return 0;  // No ammo
+			return ie->count;  // 1 or more
+		}
+        else if (weapon->isThrownWeapon()) {
 			ie = player_party->search_inventory(weapon);
 			if (ie == NULL) {
 				unready(weapon);
-				return false;
+				return 0;  // No more
 			}
 			assert(ie->count > 0);
-			return true;
+			return ie->count;  // 1 or more
 		}
-		return true;
+		return 1;  // Melee weapons are like ubiquitous
 	} else {
+        // SAM: Not bothering with quantity of NPC ammo for now
 		return (!weapon->isMissileWeapon() ||
-			container != NULL &&
-			container->search(weapon->getMissileType()));
+                container != NULL &&
+                container->search(weapon->getMissileType()));
 	}
-
-}
+} // Character::hasAmmo()
 
 void Character::changeLight(int delta)
 {

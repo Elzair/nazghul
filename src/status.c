@@ -213,6 +213,12 @@ static void myShowMember(void)
 	rect.y += ASCII_H;
 	screenPrint(&rect, 0, "Slp:%2d", pm->getRestCredits());
 
+    // Show Movement Modes (pmask for now)
+    rect.y += ASCII_H;
+    // SAM: What is wanted here is a function to turn a pmask 
+    //      into one or more words of text (names of movement modes).
+    screenPrint(&rect, 0, "Pmask:%1d", pm->getPmask() );
+
 	/* Show arms */
 	rect.y += ASCII_H;
 	rect.y += ASCII_H;
@@ -555,20 +561,25 @@ static void myScrollZtatsHorz(int d)
 		case ViewArmaments:
 			Status.maxLine = player_party->nArms - Status.numLines;
 			break;
+
 		case ViewAmmo:
 			Status.maxLine = player_party->nAmmo - Status.numLines;
 			break;
+
 		case ViewReagents:
 			Status.maxLine =
 			    player_party->nReagents - Status.numLines;
 			break;
+
 		case ViewSpells:
 			Status.maxLine =
 			    player_party->nSpells - Status.numLines;
 			break;
+
 		case ViewItems:
 			Status.maxLine = player_party->nItems - Status.numLines;
 			break;
+
 		default:
 			break;
 		}

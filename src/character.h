@@ -187,7 +187,7 @@ class Character:public Object {
 		return solo;
 	}
 	virtual bool attackTarget(class Character * target);
-	virtual bool hasAmmo(class ArmsType * weapon);
+	virtual int  hasAmmo(class ArmsType * weapon);
 	virtual void changeLight(int delta);
 	virtual int getLight() {
 		return light;

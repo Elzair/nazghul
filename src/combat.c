@@ -1125,11 +1125,27 @@ static bool myAttack(class Character * pc)
 		}
 		// prompt the user
 		cmdwin_clear();
-		cmdwin_print("Attack[%s]-", weapon->getName());
+        if ( weapon->isMissileWeapon()  ) {
+          // SAM: It would be nice to get ammo name, too...
+          cmdwin_print("Attack-Fire %s (%d ammo)-", 
+                       weapon->getName(), pc->hasAmmo(weapon) );
+        }
+        else if ( weapon->isThrownWeapon() ) {
+          // SAM: It would be nice to get ammo name, too...
+          cmdwin_print("Attack-Throw %s (%d left)-", 
+                       weapon->getName(), pc->hasAmmo(weapon) );
+        }
+        else {
+          cmdwin_print("Attack-With %s-", weapon->getName());
+        }
 
 		// select the target location
 		x = target->getX();
 		y = target->getY();
+        // SAM:
+        // select_target() might be a more elegant place to put
+        // logic to prevent (or require confirm of) attacking self, 
+        // party members, etc.
 		if (select_target(pc->getX(), pc->getY(), &x, &y,
 				  weapon->getRange()) == -1)
 			continue;
@@ -1147,11 +1163,35 @@ static bool myAttack(class Character * pc)
 			/* Check for a mech */
 			class Mech *mech;
 			mech = (class Mech *) place_get_object(Place, x, y,
-							       mech_layer);
+                                                   mech_layer);
 			if (mech)
 				mech->activate(MECH_ATTACK);
+		}
+        else if (target == pc) {
+          // Don't allow targeting self, unless perhaps with comfirmation.
+          int yesno;
+          cmdwin_print("Confirm Attack Self-Y/N?");
+          getkey(&yesno, yesnokey);
+          cmdwin_backspace(4);
+          if (yesno == 'y') {
+            cmdwin_print("Yes!");
+            goto confirmed_attack_self;
+          }
+          else {
+            cmdwin_print("No!");
+            continue;
+          }
+        } // confirm attack self
 
-		} else {
+        // else if ( player_party->hasMember(target) ) {
+        //  // Don't allow targeting allies, unless perhaps with confirmation.
+        //  consolePrint("Attacking an ally?  How bloodthirsty of you.\n");
+        //  continue;
+        // }
+
+        else {
+        confirmed_attack_self:
+        // confirmed_attack_ally:
 
 			// in combat all npc parties and the player party
 			// should be removed, so only characters reside at the
@@ -1187,10 +1227,10 @@ static bool myAttack(class Character * pc)
 		// attack and continue his round with a different command.
 		committed = true;
 		pc->addExperience(XP_PER_ATTACK);
-	}
+	} // for (loop over all readied weapons)
 
 	return committed;
-}
+} // myAttack()
 
 static bool myNPCAttackNearest(class Character * npc, class Character * pc,
 			       int d)
@@ -1730,7 +1770,7 @@ static bool myExitCombat(void)
                 return combat_rendezvous_party(-1);
         }
 
-        consolePrint("Exit!\n");
+        consolePrint("Exit Combat!\n");
         Combat.state = DONE;
         return true;
 }
@@ -1838,7 +1878,10 @@ static bool myPcCommandHandler(struct KeyHandler *kh, int key)
 	case SDLK_0:
 		ret = myExitSoloMode(pc);
 		break;
-	case SDLK_ESCAPE:
+    case '\\':
+ // case SDLK_ESCAPE:
+        // SAM: ESCAPE from combat confliicts with its other,
+        //      general UI use.  The \ key is perhaps a better choice?
 		ret = myExitCombat();
 		break;
 	default:

@@ -819,14 +819,14 @@ bool cmdQuit(void)
 	int yesno;
 
 	cmdwin_clear();
-	cmdwin_print("Quit-Y/N?");
+	cmdwin_print("Quit Game-Y/N?");
 	getkey(&yesno, yesnokey);
 
 	cmdwin_backspace(4);
 
 	if (yesno == 'y') {
 		cmdwin_print("Yes!");
-		consolePrint("Goodye!\n");
+		consolePrint("Goodbye!\n");
 		Quit = true;
 	} else {
 		cmdwin_print("No");
@@ -844,7 +844,10 @@ void cmdFire(void)
 
 	if ((!player_party->vehicle ||
              !player_party->vehicle->getOrdnance())) {
-		cmdwin_print("-Nothing!");
+        // SAM: 
+        // In future, we may check for adjacent "cannon" 
+        // mechanisms here (as in U5).
+		cmdwin_print("-No cannons available!");
 		return;
 	}
 
