@@ -704,7 +704,8 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
                                 log_end("ON");
                                 player_party->enableFollowMode();
                         }
-                        character->endTurn();
+                        if (! character->isLeader())
+                                character->endTurn();
                         break;
 
                 case 'g':
