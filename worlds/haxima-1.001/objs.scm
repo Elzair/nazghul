@@ -18,3 +18,5 @@
 (mk-obj-type 't_small_wooden_chest "small wooden chest" s_small_wooden_chest 
              layer-container nil)
 
+;; A stone lantern
+(mk-obj-type 'tf_stone_lantern "stone lantern" s_stone_lantern layer-mechanism nil)

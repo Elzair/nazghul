@@ -15,6 +15,7 @@
   (list
    ;;    tag                name            pclass           sprite            t light step-on
    ;;    =================  ==============  =============    ==============    = ===== =======
+   (list 't_stone_lantern   "stone lantern" pclass-mountains s_stone_lantern   1 512 nil)
    (list 't_lava            "lava"          pclass-grass     s_lava            1 128 'burn)
    (list 't_deep            "deep water"    pclass-deep      s_deep            1 0 nil)
    (list 't_shallow         "shallow water" pclass-deep      s_shallow         1 0 nil)
@@ -55,9 +56,9 @@
    (list 't_ankh            "ankh"          pclass-wall      s_ankh            1 0 nil)
    (list 't_altar           "altar"         pclass-wall      s_altar           1 0 nil)
    (list 't_pillar          "pillar"        pclass-wall      s_pillar          1 0 nil)
-   (list 't_counter_middle  "counter"       pclass-wall      s_counter_middle  1 0 nil)
-   (list 't_counter_right   "counter"       pclass-wall      s_counter_right   1 0 nil)
-   (list 't_counter_left    "counter"       pclass-wall      s_counter_left    1 0 nil)
+   (list 't_counter_2x1_w   "counter"       pclass-wall      s_counter_2x1_w   1 0 nil)
+   (list 't_counter_2x1_c   "counter"       pclass-wall      s_counter_2x1_c   1 0 nil)
+   (list 't_counter_2x1_e   "counter"       pclass-wall      s_counter_2x1_e   1 0 nil)
    (list 't_counter_1x1     "counter"       pclass-wall      s_counter_1x1     1 0 nil)
    (list 't_trail_0         "trail"         pclass-grass     s_trail_0         1 0 nil)
    (list 't_trail_1         "trail"         pclass-grass     s_trail_1         1 0 nil)

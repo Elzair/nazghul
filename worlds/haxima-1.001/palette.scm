@@ -4,6 +4,7 @@
 
 (kern-mk-palette 'pal_expanded
                  (list
+                  (list "sl" t_stone_lantern)
                   (list "__" t_deep)
                   (list "--" t_shallow)
                   (list "~~" t_shoals)
@@ -90,9 +91,9 @@
                   (list ";A" t_rune_EA)
                   (list ";S" t_rune_ST)
                   (list ";D" t_rune_DOT)
-                  (list "@" t_counter_middle)
-                  (list "[" t_counter_left)
-                  (list "]" t_counter_right)
+                  (list "@" t_counter_2x1_c)
+                  (list "[" t_counter_2x1_w)
+                  (list "]" t_counter_2x1_e)
                   (list "0" t_counter_1x1)
                   (list "+" t_ankh)
                   (list "a" t_altar)
