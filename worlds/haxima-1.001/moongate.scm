@@ -54,7 +54,7 @@
            (kern-obj-set-sprite kgate (stage-sprite stage))
            (kern-obj-set-light kgate (stage-light stage))
            (kern-map-repaint)
-           (kern-sleep 1000))
+           (kern-sleep 250))
          stages)
     (kern-obj-set-sprite kgate original-sprite)
     (kern-obj-set-light kgate original-light)
