@@ -33,6 +33,7 @@
 #include "ctrl.h"
 #include "session.h"
 #include "sched.h"
+#include "log.h"
 
 #include <stdio.h>
 
@@ -893,7 +894,7 @@ void Party::describe()
 {
         Object::describe();
         if (vehicle) {
-                consolePrint(" in ");
+                log_continue(" in ");
                 vehicle->describe();
         }
 }

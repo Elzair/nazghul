@@ -891,10 +891,12 @@ void cmdFire(void)
                 // In future, we may check for adjacent "cannon" 
                 // mechanisms here (as in U5).
 		cmdwin_print("-No cannons available!");
+                log_msg("Fire - nothing to fire!");
 		return;
 	}
 
-	cmdwin_print(" %s-<direction>", player_party->vehicle->getOrdnance()->getName());
+	cmdwin_print(" %s-<direction>", 
+                     player_party->vehicle->getOrdnance()->getName());
 	getkey(&dir, dirkey);
 	cmdwin_backspace(strlen("<direction>"));
 
@@ -904,10 +906,15 @@ void cmdFire(void)
 	}
 
 	cmdwin_print("%s", directionToString(dir));
-	if (! player_party->vehicle->fire_weapon(directionToDx(dir), directionToDy(dir), player_party)) {
+        log_begin("Fire: %s - ", directionToString(dir));
+	if (! player_party->vehicle->fire_weapon(directionToDx(dir), 
+                                                 directionToDy(dir), 
+                                                 player_party)) {
 		cmdwin_print("-Not a broadside!");
+                log_end("not a broadside!");
 		return;
         }
+        log_end("hits away!");
 }
 
 bool cmdReady(class Character * member, int flags)
