@@ -195,3 +195,25 @@
        (method 'use basic-survival-manual-use2)))
 
 (mk-obj-type 'basic-survival-manual "Basic Survival Manual" s_book_red_4 layer-item basic-survival-manual-ifc)
+
+;; ----------------------------------------------------------------------------
+;; use-and-remove -- use an item type and remove it from the user's inventory.
+;; The 'use' proc should return nil for abort.
+;; ----------------------------------------------------------------------------
+(define (use-and-remove ktype kuser use)
+  (if (notnull? (use ktype kuser))
+      (begin
+        (kern-obj-remove-from-inventory kuser ktype 1)
+        (kern-obj-dec-ap kuser ap-to-use-scroll))))
+
+;; ----------------------------------------------------------------------------
+;; mk-usable-item -- make a type for an object that can be U)sed by the
+;; player.. The usage parm should be a procedure which takes the object and the
+;; user as parameters.
+;; ----------------------------------------------------------------------------
+(define (mk-usable-item tag name sprite usage)
+  (let ((item-ifc (ifc obj-ifc 
+                       (method 'use 
+                               (lambda (ktype kuser) 
+                                 (use-and-remove ktype kuser usage))))))
+    (mk-obj-type tag name sprite layer-item item-ifc)))
