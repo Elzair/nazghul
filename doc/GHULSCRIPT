@@ -1,0 +1,389 @@
+The GhulScript Specification
+
+
+-Conversation
+
+A conversation is a set of other conversations and a set of keyword-response
+pairs.
+
+        <conversation> := CONV tag { IMPORT { <conversations> } 
+                                     NATIVE { <qr_pairs> }}
+        <conversation> := tag <conversations> |
+        <qr_pairs> := <qr_pair> <qr_pairs> |
+        <qr_pair> := <query> tag
+
+The lookup rules determine how to match a keyword to a response. The order of
+searching qr_pairs for a keyword match is as follows:
+
+        1. The NATIVE section of a conversation, in the order specified
+        2. Each conversation in the IMPORT section, in the order specified
+        3. The DEFAULT keyword
+
+Note that rule 2 is recursive (and if I haven't said it yet circular inclusion
+of conversations is disallowed). The DEFAULT keyword is a special keyword used
+when a search fails. Other special keywords include HAIL, used when starting a
+conversation, and BYE, used when ending a conversation.
+
+
+--Special Keywords
+
+ Normally a keyword is something the player types during a conversation, but
+ the following keywords are special in that the engine generates them
+ automatically in certain situations.
+
+        DEFAULT If the player keyword does not match anything in the
+                conversation, then the engine looks up the response for the
+                DEFAULT keyword instead. This gives NPC characters the chance
+                to customize their "I don't know" response.
+
+        HAIL    When the conversation first starts up, before the player has a
+                chance to give a query, the engine will check if the
+                conversation has a response for the HAIL keyword and will
+                invoke it if so. This gives NPC characters a chance to have the
+                first word.
+
+        BYE     When the conversation terminates, after the player has issued
+                his last query and received a response, the engine will check
+                if the conversation has a response to the BYE keyword and will
+                invoke it if so. This gives NPC characters a chance to say
+                "Farewell" or have the last word.
+
+The player may type these keywords and they will be looked up in the usual way.
+
+
+--Responses
+
+In the grammar above a qr_pair is a <query> (which is a simple string) and a
+tag. The tag refers to a response. Each response is defined separately in its
+own construct. Because responses are independent you may mix them with
+different keywords in different conversations as you like. The syntax for a
+response declaration is like this:
+
+        <tagged_response> := RESP tag <response-list>
+
+        <response-list> := { <response> <response-or-nil> }
+
+        <response> := SAY string              |
+                      TRADE <trade-list>      |
+                      TURN_AWAY               |
+                      SET_FLAG flag           |
+                      CLEAR_FLAG flag         |
+                      TAKE GOLD               |
+                      CHANGE_PARM <parm-id> <delta> |
+                      TAKE_ITEM tag           |
+                      GIVE_ITEM tag           |
+                      JOIN                    |
+                      ATTACK                  |
+                      GET_AMOUNT              |
+                      <check> <response-list> <response-list>
+
+                      /* Proposed constructs: */
+                      MENU <menu> |
+                      BREAK
+
+        <delta> := +int | -int
+        <trade-list> := { <trade-entry> <trade-entry-or-nil> }
+        <trade-entry> := tag <price>
+        <price> := int
+
+        <check> := GET_YES_NO |
+                   CHECK_PARM <parm-id> operator int |
+                   CHECK_FLAG flag int bool |
+                   CHECK_ITEM tag |
+                   CHECK_MEMBER tag
+
+        <parm-id> := int
+
+        <menu> := { <menu-item> <menu-item-or-nil> }
+        <menu-item> := <name> <cost> <response-list>
+        <name> := string
+        <cost> := int
+
+        <menu-item-or-nil> := <menu-item> |
+        
+        <response-or-nil> := <response> |
+
+
+        SAY     The SAY command prints a line on the console. It prints the
+                literal string that follows it with no formatting.
+
+        TRADE   The TRADE command invokes the trading subroutine of the game
+                engine, providing it a list of items and prices to trade. The
+                engine automatically adds buy/sell and quantity prompts and
+                handles the exchange of money and goods.
+
+                When the player opts to Buy he sees the list of goods and
+                prices. He can buy as many as he cares to and can afford (in
+                other words the merchant has an endless supply of the goods
+                listed).
+
+                When the player opts to Sell then the engine scans player
+                inventory and lists any of the items from inventory which
+                appear on the trade list. The sell price is fixed at 1/4 of the
+                buying price. This constant is currently hard-coded in the
+                engine and applies to all trade situations.
+
+        TURN_AWAY
+                The TURN_AWAY command causes the NPC to terminate the
+                conversation without player consent. The player will see a
+                console message like "Hawknoz turns away." and then
+                conversation mode will be over.
+
+        SET_FLAG
+                The SET_FLAG command sets the value of the specified flag,
+                causing a subsequent CHECK_FLAG to evaluate to true. The
+                opposite of SET_FLAG is CLEAR_FLAG.
+
+        CLEAR_FLAG
+                The opposite of SET_FLAG.
+
+        TAKE_GOLD
+                Decrement the player's gold counter by the indicated
+                amount. The engine will not decrement beyond zero. (Note that
+                there is no corresponding GIVE_GOLD simply because I haven't
+                needed it).
+
+        CHANGE_PARM
+                Change the indicated parameter by the indicated amount. If the
+                amount is negative the engine will not decrement beyond
+                zero. (Note the absence of a SET_PARM - again because I haven't
+                needed it yet).
+
+        TAKE_ITEM
+                Decrement one count of the indicated item type from player
+                inventory. If the player has none in inventory then this has no
+                effect. If the tag does not resolve to an item type then this
+                has no effect.
+
+                Note: currently this does not add the item to the NPC's
+                inventory, as one might expect.
+
+        GIVE_ITEM
+                The opposite of TAKE_ITEM. This does not actually remove
+                anything from the NPC's inventory.
+
+        GET_YES_NO
+                Prompt the player to answer yes or no. The player must respond
+                with one or the other (ie he cannot escape from the
+                prompt). "Yes" means true and "no" means false.
+
+         CHECK_PARM
+                Check if the given expression is true for the indicated
+                parameter.
+
+         CHECK_FLAG
+                Test if a flag is set.
+
+         CHECK_ITEM
+                Check if the player has at least one count of the indicated
+                item in inventory.
+
+         CHECK_MEMBER
+                Check if the indicated character has joined the player party.
+
+         
+         /* Proposed constructs */
+         
+         MENU   Use the status window to display a list of choices to the
+                player. When the player selects an entry from the list the
+                corresponding set of responses is executed. Upon completion -
+                unless one of the responses was a BREAK or EXIT - the menu will
+                "loop", displaying the list of choices again. MENUs may be
+                nested.
+
+         BREAK  Break out of a MENU loop. Execution resumes after the MENU
+                block. If the MENUs are nested, only the lowest level MENU is
+                aborted.
+
+---Flags
+
+The SET_FLAG, CLEAR_FLAG and CHECK_FLAG responses all operate on flags. A flag
+is an unsigned 8-bit integer id for a boolean value. 
+
+Flags may be global or per-conversation. Global flags may be accessed from any
+conversation in the game. Per-conversation flags apply only to the conversation
+in which they appear. Different conversations may use the same per-conversation
+flag id but each will have its own value for the flag. Per-conversation flag
+ids have the high bit clear (giving them the range 0 to 127) and global flag
+ids have the high bit set (giving them the range 128 to 255).
+
+Note: Initially all flags are clear. When savegames are implemented flag values
+will need to be saved/restored, so in the future there will need to be syntax
+for specifying initial flag values.
+
+
+---Parameters
+
+The CHANGE_PARM and CHECK_PARM responses operate on parameters. A parameter is
+a signed 32-bit id for an integer value.
+
+The engine reserves all negative parameter ids. The following parameter ids are
+currently supported by the engine:
+
+        -1 AMOUNT
+                The AMOUNT parameter refers to the value obtained by the last
+                GET_AMOUNT response. A value of -1 means the player did not
+                enter an amount at the last prompt (i.e. escaped out of the
+                prompt).
+
+        -2 GOLD
+                This refers to the player's gold counter.
+
+        -3 FOOD
+                This refers to the player's food counter.
+
+        -4 ACTIVITY
+                This refers to the speaking NPC party's current activity
+                code. Activity codes are used by schedules. This parameter
+                allows conversation scripts to change their response based on
+                what the npc party is currently doing. For example, in u5 the
+                NPC merchants would not trade with the player when they were
+                not in their shop.
+
+All parameter id's of 0 or greater are available for use by the game script.
+
+All parameters are global in scope.
+
+Note: Initially all non-reserved parameters are zero. When savegames are
+implemented parameter values will need to be saved/restored, so in the future
+there will need to be syntax for specifying initial parameter values.
+
+
+---Branching
+
+The GET_YES_NO, CHECK_PARM, CHECK_FLAG, CHECK_ITEM and CHECK_MEMBER responses
+are all branching responses. They each specify a test and two sets of
+responses. If the test evaluates to true then the first set executes, otherwise
+the second set executes.
+
+
+---Examples
+
+These are not final, but are experimental examples for my own benefit while
+designing changes to the language.
+
+Example: a healer. This example illustrates how one might use some as-yet
+unimplemented constructs like MENU, GET_PARTY_MEMBER, CHANGE_HP and an
+unsupported PARTY_MEMBER parameter to script a healer. Note the heavy
+duplication of code for each menu response, and also the dubious syntax for
+checking if the player escaped out of the GET_PARTY_MEMBER prompt.
+
+RESP r_healer {
+    SAY "Hail, traveler! Do you require my healing services?"
+    GET_YES_NO {
+        MENU {
+            "Heal        30g"  {
+                CHECK_PARM GOLD >= 30 {
+                    SAY "Who requires healing?"
+                    GET_PARTY_MEMBER
+                    CHECK_PARM PARTY_MEMBER = 0 {
+                        SAY "Never mind then."
+                    }{                    
+                        CHANGE_HP PARTY_MEMBER +10
+                    }
+                }{
+                    SAY "You lack the gold, my friend."
+                }
+            }
+            "Cure       50g" {
+                SAY "Whom shall I cure?"
+                GET_PARTY_MEMBER
+                CHECK_PARM PARTY_MEMBER = 0 {
+                    SAY "Never mind then."
+                }{
+                    SET_POISONED PARTY_MEMBER false
+                }
+            }
+            "Resurrect 500g" {
+                SAY "Whom shall I call back from the dead?"
+                GET_PARTY_MEMBER
+                CHECK_PARM PARTY_MEMBER = 0 {
+                    SAY "Never mind then."
+                }{
+                    SET_DEAD PARTY_MEMBER false
+                    CHANGE_HP PARTY_MEMBER +10
+                }
+            }
+            "Done" { 
+                SAY "Very well." 
+                BREAK /* exit the MENU loop */
+            }
+        }
+    }{
+        SAY "Very well."    
+    }
+}
+
+
+Example: A weapon merchant. The example illustrates the use of a
+yet-unimplemented technique whereby one response "calls" another by referring
+to its tag. The r_weaponsmith_hail response invokes the r_sell_to_player
+response in order to avoid some of the duplication seen above in the healer
+example. "Arguments" to the "called" response take the form of parameters set
+by the caller before invoking it.
+
+Note that I left the SELL clause blank because I was at a loss on how to
+proceed. There is no proposed syntax for building a MENU list on the fly at
+runtime, and that is essentially what is required for the SELL clause as
+written. An alternative is not to use a MENU for sell, but to use hand-crafted
+checks for items in player inventory followed by offers to buy them one type at
+a time off the player.
+
+Also note the use of multiplication in the r_sell_to_player response. This is
+currently not implemented.
+
+
+RESP r_sell_to_player {
+    SAY "How many would you like?"
+    GET_AMOUNT
+    CHECK_PARM AMOUNT > 0 {
+        SET_PARM COST (AMOUNT * COST)
+        CHECK_PARM GOLD >= COST) {
+            SAY "Here you go.";
+            TAKE GOLD COST;
+            GIVE t_sword AMOUNT;
+        }{
+            SAY "You don't have enough gold!";
+        }
+    }{
+        SAY "Changed your mind, eh?";
+    }     
+}
+
+RESP r_weaponsmith_hail {
+    SAY "Hail, traveler! Do you require my healing services?"
+    GET_YES_NO {
+        MENU {
+            "Buy"  {
+                MENU {
+                    "Swords 100g" {
+
+
+                        /*
+                         * "Call" the other response after setting up the
+                         * "arguments" to it.
+                         */
+                        SET_PARM ITEM $t_sword; 
+                        SET_PARM COST 100;
+                        $r_sell_to_player;
+
+                    }
+                    /*** add other items here ***/
+                    "Done" { 
+                        BREAK;
+                    }
+                }
+            }
+            "Sell" { 
+            
+            }
+            "Done" { 
+                SAY "Very well.";
+                BREAK; /* exit the MENU loop */
+            }
+        }
+    }{
+        SAY "Hrumph.";
+        EXIT;
+    }
+}
