@@ -14,24 +14,17 @@ fi
 rm -rf $INSTALL
 cd $NAZGHUL
 find . -name '*~' -exec rm -f {} \; 
-make clean; 
-make distclean; 
 ./autogen.sh && \
-    ./configure --prefix=$HOME
-
-pwd
-
-    make nazghul-$version.tar.gz
-
-pwd
-
-    cd ~/tmp &&                \
-    rm -rf nazghul-$version && \
-    tar -xvzf $NAZGHUL/nazghul-$version.tar.gz && \
-    cd nazghul-$version &&     \
-    ./configure --prefix=$INSTALL && \
-    make &&         \
-    make install && \
-    cd examples &&  \
-    $INSTALL/bin/nazghul
+make cvsclean && \
+./autogen.sh && \
+make alldist && \
+cd ~/nazghul-tmp &&                \
+rm -rf * && \
+tar -xvzf $NAZGHUL/nazghul-$version.tar.gz && \
+cd nazghul-$version &&     \
+./configure --prefix=$INSTALL && \
+make &&         \
+make install && \
+cd worlds/haxima-1.001 &&  \
+$INSTALL/bin/nazghul haxima.scm
 

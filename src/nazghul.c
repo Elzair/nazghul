@@ -18,6 +18,7 @@
 // Gordon McNutt
 // gmcnutt@users.sourceforge.net
 //
+#include "../config.h"
 #include "foogod.h"
 #include "constants.h"
 #include "common.h"
@@ -63,24 +64,11 @@ char *RecordFile     = 0;
 char *PlaybackFile   = 0;
 int PlaybackSpeed    = 100;
 
-#ifndef PACKAGE_VERSION
-#define PACKAGE_VERSION "0.4.0"
-#endif
-
 static char program_name[] = "nazghul";
 static int version_major = 0;
 static int version_minor = 4;
 static int version_incr  = 0;
 static char *NAZGHUL_SPLASH_IMAGE_FILENAME = "images/gmcnutt/splash.png";
-
-#define VERSION_STRLEN 8  // Length of "xx.yy.zz" == 6+2
-char * version_as_string(void)
-{
-  static char version_string[VERSION_STRLEN+1];
-  snprintf(version_string, VERSION_STRLEN, "%d.%d.%d", 
-           version_major, version_minor, version_incr);
-  return version_string;
-}
 
 static void print_version(void)
 {

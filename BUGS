@@ -1,32 +1,22 @@
-Known bugs in release 0.2.0
+Known bugs in release 0.4.0:
+
+o First keystroke responds slowly (new with UNICODE enablement)
+
+o Start the game, and before pressing a key, look at the astronomy window. It
+  should show the current sky, but instead is completely blank.  Press a key,
+  and notice that the sky is redrawn correctly.
 
 o Some combinations of (terrain + terrain) or (terrain + terrain + vehicle)
   result in sub-optimal combat maps.  This may be largely fixed/worked around
   by means of better maps in examples/data/world/maps/terrain_combat_maps.ghul
 
-o LOS code has been re-written to use new algorithms and looks mush
-  better, including circular LOS radii greater than 9.  Some LOS
-  behaviors are still imperfect, such as the view through a window
+o Some LOS behaviors are still imperfect, such as the view through a window
   when aligned perfectly on a diagonal line.  This might be fixed by manually
   tweaking the generated table for the 1.0 slope.
 
-o The in-game map editor (^Terraform and ^Save Map commands) is very
-  useful, but only saves "maps" (grids of terrain), as distinct from
-  "places" (map + mechanisms, NPCs, objects, ...).  This will remain
-  so until the new lexer + parser is in place, as such functionality
-  requires the ability to save arbitrary data.
-
-  Also, the "terrain palette" saved also saves the "quick terrains",
-  but only as comments in the GhulScript.  Adding support to load
-  quick terrains is trivial, and will be done in future.
-
-o Bridge-nixie problem: nixie's don't get placed because their party is placed
-  on impassable terrain and the party members can't pathfind back to the
-  party. So I removed find_party as a restriction. Now if the player party
-  enters  dungeon one of the members can get placed in a cell where they are
-  trapped. Proper solution: restore find-party restriction, make party
-  placement more flexible (search at least half the map for a passable location
-  for the party), and permit stacking.
+o Combat placement problem: in some cases -- particularly when the player is
+  standing on a bridge -- the opposing party does not get placed on the
+  wilderness combat map.
 
 o Ship-to-shore combat can look funny, especially when the bridge terrain is
   involved.

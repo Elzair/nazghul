@@ -21,7 +21,7 @@
 //
 /* 12/14/2002  Added HANDLE command by Sam Glasby.
  */
-
+#include "config.h"
 #include "foogod.h"
 #include "play.h"
 #include "session.h"
@@ -281,7 +281,7 @@ int playRun(void)
         log_enable();
         log_begin_group();
         log_msg("*********************************");
-	log_msg("Welcome to Nazghul version %s", version_as_string() );
+	log_msg("Welcome to Nazghul version %s", PACKAGE_VERSION );
         log_msg("*********************************");
         log_end_group();
 

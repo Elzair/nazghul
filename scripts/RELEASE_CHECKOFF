@@ -1,9 +1,16 @@
 * INSTALL is up-to-date
 * BUGS is up-to-date
 * RELEASE_NOTES is up-to-date
-* Version number is correct in Configure.in and nazghul.c
+* Version number is correct in configure.ac
 * Ensure the SUBDIRS of Makefile.am are correct for this release
-* Test the distribution: ~/bin/ghul-test-install <version>
+
+        $ ./autogen.sh
+        $ make cvsclean
+        $ ./autogen.sh
+        $ make alldist
+        $ cd ~/tmp
+        $ rm -rf *
+
 * upload the distro tarball
 
   ncftp -u anonymous upload.sourceforge.net

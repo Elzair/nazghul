@@ -1,16 +1,18 @@
 BUILDING AND INSTALLING
 
-Nazghul requires linux and the following libraris:
+Nazghul has been built on linux, cygwin (Windows) and MacOS.
 
-    SDL-1.2............http://www.libsdl.org
-    libSDL_image-1.2...http://www.libsdl.org/projects/SDL_image/
+Nazghul requires the following libraries:
+
+        SDL-1.2............http://www.libsdl.org
+        libSDL_image-1.2...http://www.libsdl.org/projects/SDL_image/
 
 To compile and install nazghul:
 
-    ./configure
-    make
-    make install
-
+        $ ./configure
+        $ make
+        $ make install
+    
 (Note: if you don't want to install as root then use the --prefix option with
 configure. E.g., ./configure --prefix=$HOME)
 
@@ -19,28 +21,60 @@ installed nazghul is in your PATH.  Ergo, if you install to $HOME then the
 nazghul binary lives in $HOME/bin/nazghul and would need $HOME/bin in your
 PATH.
 
+If you have problems see the FAQ below and if that fails try
+nazghul-users@lists.sourceforge.net.
+
 
 STARTING THE GAME
 
-    cd world/haxima-1.001
-    nazghul session.scm
+        $ cd world/haxima-1.001
+        $ nazghul session.scm
 
 
-TIPS FOR SLOW COMPUTERS
+TROUBLESHOOTING FAQ
 
-If you are running with a slow machine (<= 133Mhz) or a slow video card then
-try the following options to help performance:
+----------------------------------------------------------------------------
+Q: MY COMPUTER IS OLD AND THE GAME IS TOO SLOW
 
-    nazghul --tick -1 --bpp 8
+A: If you are running with a slow machine (<= 133Mhz) or a slow video card then
+   try the following options to help performance:
 
-This will start nazghul in 256-color mode with no animation.
+        $ nazghul --tick -1 haxima.scm
 
+   This will start nazghul with no animation.
 
-TIPS FOR SOUND DRIVER PROBLEMS
+----------------------------------------------------------------------------
+Q: I GET LOTS OF ANNOYING MESSAGES ABOUT MY SOUND CARD NOT WORKING
+   or THE SOUND LAGS BADLY ON MY WINDOWS BOX
 
-Also, if you get a lot of annoying messages about your sound card not working,
-you can disable sound:
+A: Start nazghul with sound disabled:
 
-    nazghul --sound 0
+        $ nazghul --sound 0 haxima.scm
+
+----------------------------------------------------------------------------
+Q: WHEN I TRY TO BUILD I GET A LINK ERROR ABOUT SDL_Image
+
+A: Do this and then re-run ./configure and try again:
+
+        $ export LDFLAGS=-L/usr/local/lib
+        $ ./configure
+        $ ...etc
+
+   Or, if you know that SDL_image is installed in some other directory specify
+   that instead.
+
+----------------------------------------------------------------------------
+Q: WHEN I TRY AND RUN IT ON MY WINDOWS SYSTEM I GET AN ERROR ABOUT
+   SDL_image.dll.
+
+A: Copy SDL_image.dll from wherever it is on your system to the same directory
+   from which you invoke nazghul. If you need SDL_image Google around or
+   checkout libsdl.org.
+
+----------------------------------------------------------------------------
+Q: WHILE I WAS PLAYING THE GAME IT SUDDENLY CRASHED
+
+A: Please report it to nazghul-user@lists.sourceforge.net or submit a bug on
+   the sourceforge site.
 
 Gordon McNutt <gmcnutt@cableone.net>
