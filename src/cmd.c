@@ -1842,6 +1842,7 @@ bool cmdMixReagents(void)
 	int quantity, max_quantity;
 	struct inv_entry *ie;
 	bool mistake = false;
+        char spell_name[MAX_SPELL_NAME_LENGTH];
 
 	list_init(&reagents);
 
@@ -1851,6 +1852,12 @@ bool cmdMixReagents(void)
 	// Select a spell...
 	if (select_spell(&context) == -1)
 		return false;
+
+        // The code for the spell is stored in the context, but not the full
+        // name. I want the full name for log msgs.
+        magic_spell_code_to_name(&Session->magic, spell_name, 
+                                 MAX_SPELL_NAME_LENGTH, 
+                                 context.spell_name);
 
 	// Lookup the spell. If null then keep going and bomb when done.
 	spell = magic_lookup_spell(&Session->magic, context.spell_name);
@@ -1921,6 +1928,7 @@ bool cmdMixReagents(void)
 		cmdwin_print("none!");
 		goto done;
 	}
+
 	// Determine the max number of mixtures the player can make.
 	max_quantity = 0x7fffff;
 	list_for_each(&reagents, elem) {
@@ -1956,6 +1964,8 @@ bool cmdMixReagents(void)
 
 	cmdwin_print("-");
 
+	log_begin("Mix: %s - ", spell_name);
+
 	// For each reagent required by the spell, check if it is in the list
 	// of reagents given by the player. If not then remember this fact. If
 	// the reagent is found then remove it from player inventory and remove
@@ -1968,7 +1978,8 @@ bool cmdMixReagents(void)
 				if (ie->type ==
 				    (class ObjectType *) spell->reagents[i]) {
 					ie->ref--;
-					player_party->takeOut(ie->type, quantity);
+					player_party->takeOut(ie->type, 
+                                                              quantity);
                                         // The following line is safe only
 					// because this is the end of the
 					// list_for_each loop!
@@ -1981,6 +1992,7 @@ bool cmdMixReagents(void)
 				mistake = true;
 		}
 	}
+
 	// Now, if any reagents remain leftover then remember this fact and
 	// remove the remaining reagents from inventory.
 	if (!list_empty(&reagents)) {
@@ -1996,33 +2008,27 @@ bool cmdMixReagents(void)
 		}
 	}
 
-	consolePrint("Mixing spell...");
-	consoleRepaint();
+        statusSetMode(ShowParty);
 
 	// If the spell is invalid or the reagents are incorrect then punish
 	// the player.
-	if (!spell || mistake) {
-		statusSetMode(ShowParty);
-		switch (random() % 2) {
-		case 0:
-		default:
-			cmdwin_print("oops!");
-			consolePrint("ACID!\n");
-			player_party->damage(DAMAGE_ACID);
-			break;
-		case 1:
-			cmdwin_print("ouch!");
-			consolePrint("BOMB!\n");
-			player_party->damage(DAMAGE_BOMB);
-			break;
-		}
+	if (!spell) {
+                cmdwin_print("oops!");
+                player_party->damage(DAMAGE_ACID);
+                log_end("ACID!");
+                goto done;
 
-		return true;
+        } else if (mistake) {
+                cmdwin_print("ouch!");
+                player_party->damage(DAMAGE_BOMB);
+                log_end("BOMB!");
+                goto done;
 	}
+
 	// All is well. Add the spell to player inventory.
-	cmdwin_print("ok");
-	consolePrint("%s!\n", spell->type->getName());
+        cmdwin_print("ok");
 	player_party->add(spell->type, quantity);
+        log_end("ok!");
 
  done:
 	// In case of cancellation I need to unselect all the reagents.
