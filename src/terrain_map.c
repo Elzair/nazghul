@@ -245,14 +245,15 @@ extern void terrain_map_print(FILE * fp, int indent, struct terrain_map *map)
 	INDENT; fprintf(fp, "MAP '%s' {\n", map->tag);
 	indent += INDENTATION_FACTOR;
 
-    INDENT; fprintf(fp, "type   ascii;\n");
-    INDENT; fprintf(fp, "width  %d;\n", map->w);
-    INDENT; fprintf(fp, "height %d;\n", map->h);
+    INDENT; fprintf(fp, "type    ascii;\n");
+    INDENT; fprintf(fp, "width   %d;\n", map->w);
+    INDENT; fprintf(fp, "height  %d;\n", map->h);
 
     palette = map->palette;
     // assert(palette);
     if (!palette) {
       // SAM: We will at least try to carry on...
+      //      This may not be the Right Thing generally, though.
       palette = new_terrain_palette();
       palette->tag          = "NO_PALETTE";
       palette->widest_glyph = 1;
@@ -263,11 +264,7 @@ extern void terrain_map_print(FILE * fp, int indent, struct terrain_map *map)
     if (compact) {
       INDENT; fprintf(fp, "one_char_per_tile 1;\n");
     }
-    // palette_print();  // SAM: upgrade to this once palettes are global scope
-    INDENT; fprintf(fp, "palette '%s' {\n", palette->tag);
-    INDENT; fprintf(fp, "// copy palette in manually for now...\n");
-    INDENT; fprintf(fp, "}\n");
-
+    INDENT; fprintf(fp, "palette %s;\n", palette->tag);
 	INDENT;	fprintf(fp, "terrain {\n");
 	indent += INDENTATION_FACTOR;
 
