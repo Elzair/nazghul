@@ -5,14 +5,14 @@
 (define troll-speed         speed-human)
 (define troll-ripup-boulder-ap (* 2 troll-speed))
 
-; (define (troll-display . args)
-;   (display (kern-get-ticks))
-;   (display ":")
-;   (apply display args))
-; (define (troll-newline) (newline))
+(define (troll-display . args)
+  (display (kern-get-ticks))
+  (display ":")
+  (apply display args))
+(define (troll-newline) (newline))
 
-(define (troll-display . args) )
-(define (troll-newline) )
+;(define (troll-display . args) )
+;(define (troll-newline) )
 
 ;; ----------------------------------------------------------------------------
 ;; Trick: make a "troll corpse" container type and use it as the troll's
@@ -180,26 +180,91 @@
 ;; ----------------------------------------------------------------------------
 (define (troll-find-nearest-ammo ktroll)
   (troll-display "troll-find-nearest-ammo")(troll-newline)
-  (define (check loc)
-    (define (scanobjlst lst)
-      (foldr (lambda (a b) 
-               (or a (eqv? (kern-obj-get-type b) troll-ranged-weapon)))
-             #f
-             lst))
+  (define (scanobjlst lst)
+    (foldr (lambda (a b) 
+             (or a (eqv? (kern-obj-get-type b) troll-ranged-weapon)))
+           #f
+           lst))
+  (define (check lst loc)
     (if (troll-terrain-is-ammo? loc)
-        loc
+        (cons loc lst)
         (if (scanobjlst (kern-place-get-objects-at loc))
-            loc
-            nil)))
+            (cons loc lst)
+            lst)))
   (let* ((loc (kern-obj-get-location ktroll))
          (rad (kern-obj-get-vision-radius ktroll))
-         (coords (search-rect (loc-place loc)
+         (coords (profile foldr-rect (loc-place loc)
                               (- (loc-x loc) (/ rad 2))
                               (- (loc-y loc) (/ rad 2))
                               (* 1 rad)
                               (* 1 rad)
-                              check)))
-    (loc-closest loc coords)))
+                              check
+                              nil)))
+    (troll-display coords)(troll-newline)
+    (profile loc-closest loc coords)))
+
+(define (troll-find-nearest-ammo2 ktroll)
+  (troll-display "troll-find-nearest-ammo2")(troll-newline)
+  (let* ((loc (kern-obj-get-location ktroll))
+         (rad (kern-obj-get-vision-radius ktroll))
+         (coords (profile kern-search-rect (loc-place loc)
+                                   (- (loc-x loc) (/ rad 2))
+                                   (- (loc-y loc) (/ rad 2))
+                                   (* 1 rad)
+                                   (* 1 rad)
+                                   t_boulder
+                                   troll-ranged-weapon)))
+    (profile loc-closest loc coords)))
+
+(define (troll-find-nearest-ammo3 ktroll)
+  (troll-display "troll-find-nearest-ammo3")(troll-newline)
+  (define (scanobjlst lst)
+    (foldr (lambda (a b) 
+             (or a (eqv? (kern-obj-get-type b) troll-ranged-weapon)))
+           #f
+           lst))
+  (define (check lst loc)
+    (if (troll-terrain-is-ammo? loc)
+        (cons loc lst)
+        (if (scanobjlst (kern-place-get-objects-at loc))
+            (cons loc lst)
+            lst)))
+  (let* ((loc (kern-obj-get-location ktroll))
+         (rad (kern-obj-get-vision-radius ktroll))
+         (coords (profile kern-fold-rect (loc-place loc)
+                          (- (loc-x loc) (/ rad 2))
+                          (- (loc-y loc) (/ rad 2))
+                          (* 1 rad)
+                          (* 1 rad)
+                          check
+                          nil)))
+    (troll-display coords)(troll-newline)
+    (profile loc-closest loc coords)))
+
+(define (troll-find-nearest-ammo4 ktroll)
+  (troll-display "troll-find-nearest-ammo4")(troll-newline)
+  (let* ((loc (kern-obj-get-location ktroll))
+         (rad (kern-obj-get-vision-radius ktroll))
+         (terrain-coords (profile kern-search-rect-for-terrain (loc-place loc)
+                                  (- (loc-x loc) (/ rad 2))
+                                  (- (loc-y loc) (/ rad 2))
+                                  (* 1 rad)
+                                  (* 1 rad)
+                                  t_boulder))
+         (closest-terrain (profile loc-closest loc terrain-coords))
+         (obj-coords (profile kern-search-rect-for-obj-type (loc-place loc)
+                              (- (loc-x loc) (/ rad 2))
+                              (- (loc-y loc) (/ rad 2))
+                              (* 1 rad)
+                              (* 1 rad)
+                              troll-ranged-weapon))
+         (closest-obj (profile loc-closest loc obj-coords)))
+    (cond ((null? closest-obj) closest-terrain)
+          ((null? closest-terrain) closest-obj)
+          (else
+           (if (loc-closer? closest-obj closest-terrain loc)
+               closest-obj
+               closest-terrain)))))
 
 ;; ----------------------------------------------------------------------------
 ;; troll-get-ammo -- given the location of an ammo object or terrain that can
@@ -215,9 +280,9 @@
 ;; troll-hunt-for-ammo2 -- find the nearest available ammo and pathfind to it
 ;; or pick it up. Returns false iff none available.
 ;; ----------------------------------------------------------------------------
-(define (troll-hunt-for-ammo2 ktroll)
+(define (troll-hunt-for-ammo ktroll)
   (troll-display "troll-hunt-for-ammo")(troll-newline)
-  (let ((nearest (profile troll-find-nearest-ammo ktroll))
+  (let ((nearest (profile troll-find-nearest-ammo2 ktroll))
         (kloc (kern-obj-get-location ktroll)))
     (troll-display "nearest=")(troll-display nearest)(troll-newline)
     (if (null? nearest)
@@ -260,7 +325,7 @@
                       (troll-pathfind-foe ktroll foes)
                       (troll-attack ktroll troll-ranged-weapon 
                                     ranged-foes)))
-                (or (troll-hunt-for-ammo2 ktroll)
+                (or (troll-hunt-for-ammo ktroll)
                     (troll-pathfind-foe ktroll foes)))
             (if (troll-stronger? ktroll melee-targs)
                 (troll-attack ktroll troll-melee-weapon melee-targs)

@@ -3746,6 +3746,21 @@ static void kern_append_object(Object *obj, void *data)
         }
 }
 
+static pointer scm_mk_loc(scheme *sc, struct place *place, int x, int y)
+{
+        pointer pcell, xcell, ycell;
+
+        pcell = scm_mk_ptr(sc, place);
+        xcell = scm_mk_integer(sc, x);
+        ycell = scm_mk_integer(sc, y);
+
+        return _cons(sc, pcell, 
+                     _cons(sc, xcell, 
+                           _cons(sc, ycell, sc->NIL, 0), 
+                           0), 
+                     0);
+}
+
 KERN_API_CALL(kern_get_objects_at)
 {
         struct place *place;
@@ -5428,6 +5443,285 @@ KERN_API_CALL(kern_get_ticks)
         return scm_mk_integer(sc, SDL_GetTicks());
 }
 
+#if 1
+
+static int kern_obj_is_type(class Object *obj, struct kern_append_info *info)
+{
+        return (obj->getObjectType() == (class ObjectType*)info->data);
+}
+
+static void kern_append_loc(Object *obj, void *data)
+{
+        pointer cell;
+        struct kern_append_info *info;
+
+        info = (struct kern_append_info *)data;
+
+        /* If there is a filter then use it */
+        if (info->filter != NULL)
+
+                /* If the filter rejects the object then don't append it */
+                if (! info->filter(obj, info))
+                        return;
+
+        cell = scm_mk_loc(info->sc, obj->getPlace(), obj->getX(), obj->getY());
+        cell = _cons(info->sc, cell, info->sc->NIL, 0);
+
+        if (info->head == info->sc->NIL) {
+                info->head = cell;
+                info->tail = cell;
+        } else {
+                info->tail->_object._cons._cdr = cell;
+                info->tail = cell;
+        }
+}
+
+KERN_API_CALL(kern_search_rect)
+{
+        struct place *place;
+        int ulc_x, ulc_y, w, h, lrc_x, lrc_y, x, y;
+        struct terrain *ter;
+        class ObjectType *objtype;
+        struct kern_append_info info;
+
+        /* unpack the args */
+        if (unpack(sc, &args, "pddddpp", &place, &ulc_x, &ulc_y, &w, &h, 
+                   &ter, &objtype)) {
+                rt_err("kern-search-rect: bad args");
+                return sc->NIL;
+        }
+
+        /* check the place */
+        if (! place) {
+                rt_err("kern-search-rect: null place");
+                return sc->NIL;
+        }
+
+        /* clip the rectangle */
+        lrc_x = ulc_x + w;
+        lrc_y = ulc_y + h;
+        place_clip_to_map(place, &ulc_x, &ulc_y);
+        place_clip_to_map(place, &lrc_x, &lrc_y);
+
+        /* prepare to search */
+        info.sc = sc;
+        info.head = sc->NIL;
+        info.tail = sc->NIL;
+        info.filter = kern_obj_is_type;
+        info.data = objtype;
+
+        /* iterate over the tiles */
+        for (y = ulc_y; y < lrc_y; y++) {
+                for (x = ulc_x; x < lrc_x; x++) {
+
+                        /* check if terrain matches */
+                        if (place_get_terrain(place, x, y) == ter) {
+                                
+                                pointer cell = scm_mk_loc(info.sc, 
+                                                          place, x, y);
+                                cell = _cons(info.sc, cell, info.sc->NIL, 0);
+                                
+                                if (info.head == info.sc->NIL) {
+                                        info.head = cell;
+                                        info.tail = cell;
+                                } else {
+                                        info.tail->_object._cons._cdr = cell;
+                                        info.tail = cell;
+                                }
+                                
+
+                        } else {
+
+                                /* check for an object match */
+                                place_for_each_object_at(place, x, y, 
+                                                         kern_append_loc, 
+                                                         &info);
+                        }
+                }
+        }
+
+        return info.head;
+}
+
+KERN_API_CALL(kern_search_rect_for_obj_type)
+{
+        struct place *place;
+        int ulc_x, ulc_y, w, h, lrc_x, lrc_y, x, y;
+        class ObjectType *objtype;
+        struct kern_append_info info;
+
+        /* unpack the args */
+        if (unpack(sc, &args, "pddddp", &place, &ulc_x, &ulc_y, &w, &h, 
+                   &objtype)) {
+                rt_err("kern-search-rect-for-obj-type: bad args");
+                return sc->NIL;
+        }
+
+        /* check the place */
+        if (! place) {
+                rt_err("kern-search-rect-for-obj-type: null place");
+                return sc->NIL;
+        }
+
+        /* clip the rectangle */
+        lrc_x = ulc_x + w;
+        lrc_y = ulc_y + h;
+        place_clip_to_map(place, &ulc_x, &ulc_y);
+        place_clip_to_map(place, &lrc_x, &lrc_y);
+
+        /* prepare to search */
+        info.sc = sc;
+        info.head = sc->NIL;
+        info.tail = sc->NIL;
+        info.filter = kern_obj_is_type;
+        info.data = objtype;
+
+        /* iterate over the tiles */
+        for (y = ulc_y; y < lrc_y; y++) {
+                for (x = ulc_x; x < lrc_x; x++) {
+
+                        /* check for an object match */
+                        place_for_each_object_at(place, x, y, 
+                                                 kern_append_loc, 
+                                                 &info);
+                }
+        }
+
+        return info.head;
+}
+
+KERN_API_CALL(kern_search_rect_for_terrain)
+{
+        struct place *place;
+        int ulc_x, ulc_y, w, h, lrc_x, lrc_y, x, y;
+        struct terrain *ter;
+        pointer cell;
+        struct kern_append_info info;
+
+        /* unpack the args */
+        if (unpack(sc, &args, "pddddp", &place, &ulc_x, &ulc_y, &w, &h, 
+                   &ter)) {
+                rt_err("kern-search-rect-for-terrain: bad args");
+                return sc->NIL;
+        }
+
+        /* check the place */
+        if (! place) {
+                rt_err("kern-search-rect-for-terrain: null place");
+                return sc->NIL;
+        }
+
+        /* clip the rectangle */
+        lrc_x = ulc_x + w;
+        lrc_y = ulc_y + h;
+        place_clip_to_map(place, &ulc_x, &ulc_y);
+        place_clip_to_map(place, &lrc_x, &lrc_y);
+
+        /* prepare to search */
+        info.sc = sc;
+        info.head = sc->NIL;
+        info.tail = sc->NIL;
+        info.filter = NULL;
+
+        /* iterate over the tiles */
+        for (y = ulc_y; y < lrc_y; y++) {
+                for (x = ulc_x; x < lrc_x; x++) {
+
+                        /* check if terrain matches */
+                        if (place_get_terrain(place, x, y) != ter)
+                                continue;
+                                
+                        /* make a scheme-style loc */
+                        cell = scm_mk_loc(info.sc, place, x, y);
+
+                        /* make it a list element */
+                        cell = _cons(info.sc, cell, info.sc->NIL, 0);
+                        
+                        /* append it to the list */
+                        if (info.head == info.sc->NIL) {
+                                info.head = cell;
+                                info.tail = cell;
+                        } else {
+                                info.tail->_object._cons._cdr = cell;
+                                info.tail = cell;
+                        }
+                }
+        }
+
+        /* return the list of locations */
+        return info.head;
+}
+
+
+KERN_API_CALL(kern_fold_rect)
+{
+        struct place *place;
+        int ulc_x, ulc_y, w, h, lrc_x, lrc_y, x, y;
+        struct terrain *ter;
+        pointer proc;
+        pointer val;
+
+        /* unpack the args */
+        if (unpack(sc, &args, "pdddd", &place, &ulc_x, &ulc_y, &w, &h)) { 
+                rt_err("kern-fold-rect: bad args");
+                return sc->NIL;
+        }
+
+        /* check the place */
+        if (! place) {
+                rt_err("kern-fold-rect: null place");
+                return sc->NIL;
+        }
+
+        /* get a ptr to the procedure */
+        if (! scm_is_pair(sc, args)) {
+                rt_err("kern-fold-rect: no proc arg");
+                return sc->NIL;
+        }
+        proc = scm_car(sc, args);
+        args = scm_cdr(sc, args);
+
+        /* get a ptr to the initial value */
+        if (! scm_is_pair(sc, args)) {
+                rt_err("kern-fold-rect: no proc arg");
+                return sc->NIL;
+        }
+        val = scm_car(sc, args);
+        args = scm_cdr(sc, args);
+
+        /* clip the rectangle */
+        lrc_x = ulc_x + w;
+        lrc_y = ulc_y + h;
+        place_clip_to_map(place, &ulc_x, &ulc_y);
+        place_clip_to_map(place, &lrc_x, &lrc_y);
+
+        /* iterate over the tiles */
+        for (y = ulc_y; y < lrc_y; y++) {
+                for (x = ulc_x; x < lrc_x; x++) {
+
+                        /* make the location */
+                        pointer loc = scm_mk_loc(sc, place, x, y);
+
+                        /* make the arg list (val, loc) */
+                        pointer pargs = _cons(sc, val, 
+                                              _cons(sc, loc, sc->NIL, 0), 0);
+
+                        /* **************************************** */
+                        /* WARNING: no protection against gc for the
+                         * accumulated value, I believe */
+                        /* **************************************** */
+
+                        /* call the procedure, storing the return val for
+                         * later */
+                        val = scheme_call(sc, proc, pargs);
+                }
+        }
+
+        return val;
+}
+
+#endif
+
 #if 0
 KERN_API_CALL(kern_los_invalidate)
 {
@@ -5607,6 +5901,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-blit-map", kern_blit_map);
         API_DECL(sc, "kern-dice-roll", kern_dice_roll);
         API_DECL(sc, "kern-fire-missile", kern_fire_missile);
+        API_DECL(sc, "kern-fold-rect", kern_fold_rect);
         API_DECL(sc, "kern-get-distance", kern_get_distance);
         API_DECL(sc, "kern-get-objects-at", kern_get_objects_at);
         API_DECL(sc, "kern-get-ticks", kern_get_ticks);
@@ -5615,8 +5910,14 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-include", kern_include);
         API_DECL(sc, "kern-interp-error", kern_interp_error);
         API_DECL(sc, "kern-is-valid-location?", kern_is_valid_location);
-        API_DECL(sc, "kern-player-set-follow-mode", kern_player_set_follow_mode);
+        API_DECL(sc, "kern-player-set-follow-mode", 
+                 kern_player_set_follow_mode);
         API_DECL(sc, "kern-print", kern_print);
+        API_DECL(sc, "kern-search-rect", kern_search_rect);
+        API_DECL(sc, "kern-search-rect-for-terrain", 
+                 kern_search_rect_for_terrain);
+        API_DECL(sc, "kern-search-rect-for-obj-type", 
+                 kern_search_rect_for_obj_type);
         API_DECL(sc, "kern-set-spell-words", kern_set_spell_words);
         API_DECL(sc, "kern-set-start-proc", kern_set_start_proc);
         API_DECL(sc, "kern-set-wind", kern_set_wind);

@@ -3918,7 +3918,6 @@ static pointer opexe_ghul(scheme *sc, enum scheme_opcodes op) {
                  * consuming any more stack frames. We need to leave the stack
                  * frames below this operation intact so that when C returns to
                  * the script the script can continue processing. */
-                printf("OP_EXIT_REENTER\n");
                 return sc->NIL;
                 break;
         }

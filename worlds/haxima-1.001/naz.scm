@@ -215,6 +215,14 @@
 (define (search-rect kplace x y w h proc)
   (filter notnull? (map proc (loc-enum-rect kplace x y w h))))
 
+;; ----------------------------------------------------------------------------
+;; foldr-rect -- similar to search-rect above, but the procedure must
+;; accumulate its own results. Faster because it doesn't have to run the
+;; filter.
+;; ----------------------------------------------------------------------------
+(define (foldr-rect kplace x y w h proc ival)
+  (foldr proc ival (loc-enum-rect kplace x y w h)))
+
 ;;----------------------------------------------------------------------------
 ;; Return a list of locations with matching terrain
 ;;----------------------------------------------------------------------------
