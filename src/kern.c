@@ -4346,6 +4346,58 @@ KERN_API_CALL(kern_ui_handle_events)
         return sc->T;
 }
 
+KERN_API_CALL(kern_ui_select_from_list)
+{
+        struct KeyHandler kh;
+	struct ScrollerContext data;
+        char **strings;
+        int list_sz;
+        int i = 0;
+        enum StatusMode omode;
+        char *selection = NULL;
+
+        list_sz = scm_len(sc, args);
+        if (! list_sz)
+                return sc->NIL;
+
+        strings = (char**)calloc(list_sz, sizeof(strings[0]));
+        assert(strings);
+
+        while (scm_is_pair(sc, args)) {
+                if (unpack(sc, &args, "s", &strings[i])) {
+                        rt_err("kern-ui-select-from-list: bad args");
+                        goto done;
+                }
+                i++;
+        }
+
+        omode = statusGetMode();
+        statusSetStringList(list_sz, strings);
+        statusSetMode(StringList);
+
+        data.selection = NULL;
+        data.selector  = String;
+        kh.fx   = scroller;
+        kh.data = &data;
+	eventPushKeyHandler(&kh);
+	eventHandle();
+	eventPopKeyHandler();
+
+        statusSetMode(omode);
+        
+        selection = (char*)data.selection;
+
+ done:
+        if (strings)
+                free(strings);
+
+        if (selection)
+                return scm_mk_string(sc, selection);
+
+        return sc->NIL;
+
+}
+
 KERN_API_CALL(kern_ui_page_text)
 {
         struct KeyHandler kh;
@@ -4971,6 +5023,7 @@ scheme *kern_init(void)
         scm_define_proc(sc, "kern-ui-target", kern_ui_target);
         scm_define_proc(sc, "kern-ui-waitkey", kern_ui_waitkey);
         scm_define_proc(sc, "kern-ui-page-text", kern_ui_page_text);
+        scm_define_proc(sc, "kern-ui-select-from-list", kern_ui_select_from_list);
 
         /* conv api */
         scm_define_proc(sc, "kern-conv-end", kern_conv_end);

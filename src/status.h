@@ -64,7 +64,8 @@ enum StatusMode {
         Page,
         Trade,
         MixReagents,
-        GenericList
+        GenericList,
+        StringList
 };
 					
 enum StatusSelection {
@@ -72,7 +73,8 @@ enum StatusSelection {
         InventoryItem,
         TradeItem,
         Reagents,
-        Generic
+        Generic,
+        String
 };
 
 extern int statusInit(void);
@@ -91,6 +93,7 @@ extern void statusUpdateTradeInfo(int list_sz,
                                   struct trade_info *trades);
 extern void statusSetGenericList(int list_sz, struct stat_list_entry *list);
 extern void statusUpdateGenericList(int list_sz, struct stat_list_entr *list);
+extern void statusSetStringList(int list_sz, char **list);
 
 extern int status_get_h(void);
         

@@ -110,6 +110,7 @@ static struct status {
 	int list_sz;
 	struct trade_info *trades;
         struct stat_list_entry *list;
+        char **strlist;
 
         Container *container;
         struct filter *filter;
@@ -296,13 +297,23 @@ static void myShowMember(void)
 	// enough.
 }
 
-static void myShade2Lines(int line)
+static void myShadeLines(int line, int n)
 {
 	SDL_Rect rect;
 	rect.x = Status.screenRect.x;
 	rect.y = Status.screenRect.y + line * TILE_H;
 	rect.w = STAT_W;
-	rect.h = ASCII_H * 2;
+	rect.h = ASCII_H * n;
+	screenShade(&rect, 128);
+}
+
+static void myShadeHalfLines(int line, int n)
+{
+	SDL_Rect rect;
+	rect.x = Status.screenRect.x;
+	rect.y = Status.screenRect.y + line * ASCII_H;
+	rect.w = STAT_W;
+	rect.h = ASCII_H * n;
 	screenShade(&rect, 128);
 }
 
@@ -375,7 +386,7 @@ static void stat_show_container()
 		if (Status.selectedEntry && ie != Status.selectedEntry) {
 			/* Highlight the selected item by shading all the other
 			 * entries. */
-			myShade2Lines(line);
+			myShadeLines(line, 2);
 		}
 
 		line++;
@@ -452,7 +463,7 @@ static bool myShowPCInPartyView(class Character * pm, void *data)
 	if (Status.pcIndex != -1 && pm->getOrder() != Status.pcIndex) {
 		/* Highlight the selected party member by shading all the other
 		 * entries. */
-		myShade2Lines(Y_TO_LINE(Status.lineRect.y - 2 * ASCII_H));
+		myShadeLines(Y_TO_LINE(Status.lineRect.y - 2 * ASCII_H), 2);
 	}
 
 	return false;
@@ -834,7 +845,7 @@ static void myPaintTrade(void)
 
 		// Shade unselected items.
 		if (i != Status.curLine) {
-			myShade2Lines(line);
+			myShadeLines(line, 2);
 		}
 		line++;
 
@@ -902,7 +913,7 @@ static void statusPaintGenericList(void)
 
 		// Shade unselected items.
 		if (i != Status.curLine) {
-			myShade2Lines(line);
+			myShadeLines(line, 2);
 		}
 		line++;
 
@@ -910,6 +921,54 @@ static void statusPaintGenericList(void)
 		srect.y += TILE_H;
 		l1rect.y += TILE_H;
 		l2rect.y += TILE_H;
+	}
+}
+
+static void statusPaintStringList(void)
+{
+	SDL_Rect srect, l1rect;
+	int i, top, line;
+
+	if (!Status.list_sz)
+		return;
+
+	// Setup sprite rect
+	srect = Status.screenRect;
+	srect.w = TILE_W;
+	srect.h = TILE_H;
+
+        // Setup line rect
+	l1rect = Status.screenRect;
+	l1rect.h = ASCII_H;
+
+	// The top line is the index at the top of the scrolled window. All
+	// entries prior to this index are above the window and therefore
+	// unseen.
+	top = Status.topLine;
+
+	line = 0;
+
+	for (i = 0; i < Status.list_sz && line < N_LINES; i++) {
+
+		// Skip entries until we encounter the index which is at the
+		// top of our scrolled window.
+		if (top) {
+			top--;
+			continue;
+		}
+
+		// print line 1
+		screenPrint(&l1rect, 0, "%s", Status.strlist[i]);
+
+		// Shade unselected items.
+		if (i != Status.curLine) {
+			myShadeHalfLines(line, 1);
+		}
+		line++;
+
+		// Advance all the rectangles to the next line.
+		srect.y += ASCII_H;
+		l1rect.y += ASCII_H;
 	}
 }
 
@@ -1073,11 +1132,22 @@ void statusSetMode(enum StatusMode mode)
 		Status.selectedEntry = Status.container->first(Status.filter);
 		break;
         case GenericList:
+		switch_to_tall_mode();
                 myRepaintTitle("select");
 		Status.topLine = 0;
 		Status.curLine = 0;
 		Status.maxLine = Status.list_sz - Status.numLines;
 		Status.paint = statusPaintGenericList;
+		Status.scroll = myScrollGeneric;
+		Status.selectedEntry = 0;                
+                break;
+        case StringList:
+		switch_to_tall_mode();
+                myRepaintTitle("select");
+		Status.topLine = 0;
+		Status.curLine = 0;
+		Status.maxLine = Status.list_sz - Status.numLines;
+		Status.paint = statusPaintStringList;
 		Status.scroll = myScrollGeneric;
 		Status.selectedEntry = 0;                
                 break;
@@ -1098,6 +1168,8 @@ void *statusGetSelected(enum StatusSelection sel)
                 return Status.list_sz ? Status.list[Status.curLine].data : 0;
 	case TradeItem:
 		return Status.list_sz ? &Status.trades[Status.curLine] : 0;
+        case String:
+                return Status.list_sz ? Status.strlist[Status.curLine] : 0;
 	default:
 		return 0;
 	}
@@ -1144,6 +1216,12 @@ void statusUpdateGenericList(int list_sz, struct stat_list_entry *list)
 	if (Status.curLine >= list_sz)
 		Status.curLine = max(0, list_sz - 1);
 	statusRepaint();
+}
+
+void statusSetStringList(int list_sz, char **strings)
+{
+	Status.list_sz = list_sz;
+	Status.strlist = strings;
 }
 
 enum StatusMode statusGetMode(void)
