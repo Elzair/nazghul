@@ -4,13 +4,7 @@
 --Frame sometimes gets messed up and needs a repaint (really? or only during
   debug sessions?)
 
---spaceship the lightswitch in the dungeon => crash when handled
-
---Converse with guards, let them attack => no guards on combat map
-
---Set the initial sun arc to sunrise, on bootup the game should have the
-  dimmest amount of sunlight and it should account for moonlight; instead we
-  get full sunlight
+--spaceship the lightswitch in the dungeon => crash when handled.
 
 Known BUGS in release 0.1.1
 

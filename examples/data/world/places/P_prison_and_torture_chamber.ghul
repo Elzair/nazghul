@@ -259,8 +259,8 @@ PLACE p_prison_chamber {
     mech_R_lever light_switch 30 14 "down";
     mech_light   light_1      31 13 "unlit";
     mech_light   light_2      31 20 "unlit";
-    CONNECT light_switch => light_1;
-    CONNECT light_1      => light_2;
+    CONNECT light_switch <=> light_1;
+    CONNECT light_1      <=> light_2;
 
     // Some ordinary doors
     mech_hdoor door_1 22 20 "closed";

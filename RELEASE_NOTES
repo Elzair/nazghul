@@ -91,11 +91,12 @@ Changes for nazghul-0.1.2
   getting concerned about Shroom walking around in the firepit at the White
   Stag Lodge. :-)
 
-
 --Bugfix: combat resulting from a conversation was not placing the opponent on
   the combat map. This broke when I made towns function in party mode like the
   wildernesses. Before that change combat just occurred in town so I didn't
   need to setup the npc party in the combat map.
 
-
+--Bugfix: circular mech activation now has some crude
+  (over)protection. Connecting two lights spaceship-style in no longer causes
+  the engine to crash on stack overflow.
 

@@ -291,6 +291,7 @@ Mech::Mech()
 	conv.speaker = NULL;
 	conv.mech = this;
 	conv.amount = 0;
+        activating = false;
 }
 
 Mech::~Mech()
@@ -351,20 +352,15 @@ bool Mech::activate(int method)
 		struct mech_transition *trans = &type->transitions[i];
 		if (trans->from == state && trans->method == method) {
 
-#ifdef OLD_MECH_ACTIONS
+                        if (activating) {
+                                printf("%s: circular loop detected!\n",
+                                       getName());
+                                return false;
+                        }
 
-			int j;
-
-			// Execute all the actions specified for this
-			// transition
-			for (j = 0; j < trans->n_actions; j++) {
-				struct mech_action *action;
-				action = &trans->actions[j];
-				action->fx(action, this);
-			}
-#else
+                        activating = true;
 			execute_response_chain(trans->actions, &conv);
-#endif				// OLD_MECH_ACTIONS
+                        activating = false;
 
 			// If the state change will affect opacity then update
 			// LOS on all the views.

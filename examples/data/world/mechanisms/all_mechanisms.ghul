@@ -182,9 +182,6 @@ MAKE_SIMPLE_STEP_TRIGGER(mech_pressure_plate,    "pressure plate", "simple",
 MAKE_SIMPLE_STEP_TRIGGER(invisible_step_trigger, "trigger", "invisible",
                          null,                   MECH_SIGNAL_DOWN, 1);
 
-// Define a new type of mechanism: a simple door that responds to a signal and
-// sends feedback (usually to the sender, but really whoever is wired to
-// receive signals from it... confused yet? ;) ).
 MECH_TYPE mech_portcullis {
   name "portcullis";
   defaults {}
@@ -235,9 +232,6 @@ MECH_TYPE mech_portcullis {
 } // MECH_TYPE mech_portcullis
 
 
-// Define a new type of mechanism: a simple door that responds to a signal and
-// sends feedback (usually to the sender, but really whoever is wired to
-// receive signals from it... confused yet? ;) ).
 MECH_TYPE mech_light {
   name "light source";
   defaults {

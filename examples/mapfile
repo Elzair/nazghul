@@ -3789,8 +3789,8 @@ PLACE p_prison_chamber {
     mech_R_lever light_switch 30 14 "down";
     mech_light light_1 31 13 "unlit";
     mech_light light_2 31 20 "unlit";
-    CONNECT light_switch => light_1;
-    CONNECT light_1 => light_2;
+    CONNECT light_switch <=> light_1;
+    CONNECT light_1 <=> light_2;
     mech_hdoor door_1 22 20 "closed";
     mech_hdoor door_1 23 20 "closed";
     mech_light light_3 9 20 "lit";
@@ -4264,9 +4264,9 @@ FORMATION f_football {
         . . . 2 . 4 . . .
 }
 player {
-  place p_wilderness;
-  x 35;
-  y 22;
+        place p_empire_city;
+        x 16;
+        y 16;
   sprite s_companion_wizard;
   speed 2;
   mv_desc Walk;

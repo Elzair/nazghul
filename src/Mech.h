@@ -127,6 +127,7 @@ class Mech:public Object {
 	class Mech *port;
 	struct mech_state *state;
 	struct conv conv;
+        bool activating;
 };
 
 #endif				// Mech_h
