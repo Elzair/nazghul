@@ -147,9 +147,9 @@ void terrain_map_rotate(struct terrain_map *map, int degree)
 	case 3:
 		// 90 degree counter-clockwise rotation:
 		// 
-		// 0  1  2    2 5 8 11
-		// 3  4  5 => 1 4 7 10
-		// 6  7  8    0 3 6  9
+		// 0  1  2    2  5  8 11
+		// 3  4  5 => 1  4  7 10
+		// 6  7  8    0  3  6  9
 		// 9 10 11
 		w2 = map->h;
 		h2 = map->w;
@@ -196,8 +196,9 @@ void terrain_map_blit(struct terrain_map *dest, int dest_x, int dest_y,
 	w = min(dest->w - dest_x, min(w, min(dest->w, src->w)));
 	h = min(dest->h - dest_y, min(h, min(dest->h, src->h)));
 
-	printf("[%d %d %d %d] => [%d %d %d %d]\n", src_x, src_y, w, h, dest_x,
-	       dest_y, w, h);
+	printf("terrain_map_blit: [%d %d %d %d] => [%d %d %d %d]\n", 
+           src_x,  src_y,  w, h, 
+           dest_x, dest_y, w, h);
 
 	for (y = 0; y < h; y++) {
 		dptr = dest->terrain + ((y + dest_y) * dest->w + dest_x);
@@ -238,35 +239,39 @@ extern void terrain_map_print(FILE * fp, int indent, struct terrain_map *map)
 	assert(fp);
     assert(map);
 
-	INDENT; fprintf(fp, "MAP '%s' {\n", map->tag);
-	indent += INDENTATION_FACTOR;
-
-    INDENT; fprintf(fp, "type    ascii;\n");
-    INDENT; fprintf(fp, "width   %d;\n", map->w);
-    INDENT; fprintf(fp, "height  %d;\n", map->h);
-
     palette = map->palette;
-    // assert(palette);
     if (!palette) {
-      // SAM: We will at least try to carry on...
-      //      This may not be the Right Thing generally, though.
-      palette = terrain_palette_new("NO_PALETTE");
-      palette->widest_glyph = 1;
+        // No point in carrying on without a palette.
+        printf("terrain_map_print(): No palette for map '%s'.", map->tag);
+        exit(1);
     }
+
+    // (kern-mk-map 'm_map www hhh pal_expanded
+    //     (list
+    //         ; 0  1  2  3
+    //         ".. .. .. ..";  //  0
+    //         ".. .. .. ..";  //  1
+    //         ".. .. .. ..";  //  2
+    //     )
+    // ) ;; map m_map
+
+
+	INDENT;
+    // fprintf(fp, "MAP '%s' {\n", map->tag);
+    fprintf(fp, "(kern-mk-map '%s %d %d %s\n", map->tag, map->w, map->h, palette->tag);
+	indent += INDENTATION_FACTOR;
 
     compact = (PREFER_COMPACT_MAPS && palette->widest_glyph == 1);
     if (compact) {
-      INDENT; fprintf(fp, "one_char_per_tile 1;\n");
+      INDENT; fprintf(fp, ";; Compact map (glyphs are 1 char wide)\n");
     }
-    INDENT; fprintf(fp, "palette %s;\n", palette->tag);
-	INDENT;	fprintf(fp, "terrain {\n");
 
+    INDENT; fprintf(fp, "(list\n");
     print_horizontal_guideline(fp, indent, map);
 
 	indent += INDENTATION_FACTOR;
 
     int w = palette->widest_glyph;
-    int unk = 0;
 	for (y = 0; y < map->h; y++) {
       INDENT; fprintf(fp, "\"");
 
@@ -281,31 +286,25 @@ extern void terrain_map_print(FILE * fp, int indent, struct terrain_map *map)
           // The ship hull terrain is not in the standard palette,
           // and each such terrain will hit this clause.
           // 
-          // For now, this work-around will have to suffice,
-          // the alternative is to write palette-merging code and such,
-          // and that would happen at run-time, whereas any assertions
-          // due to strange GhulScript should happen at load time.
-          static char hack_glyph[LONGEST_TERRAIN_GLYPH+1];
-          snprintf(hack_glyph, w+1, "%*s", w, "?????????");
-          hack_glyph[LONGEST_TERRAIN_GLYPH] = '\0';
-          glyph = hack_glyph;  // Filled with '?' to appropriate width
-          unk = 1;  // Turn on a message below
+          // No point in carrying on.
+          printf("terrain_map_print(): No glyph at XY=(%d,%d) map '%s'.", x, y, map->tag);
+          exit(1);
         }
         fprintf(fp, "%*s%s", w, glyph, (compact) ? "" : " ");
       } // for (x)
 
-      fprintf(fp, "\";  // %2d\n", y);
+      fprintf(fp, "\";  // %3d\n", y);
 	} // for (y)
 
 	indent -= INDENTATION_FACTOR;
-    print_horizontal_guideline(fp, indent, map);
+    // SAM: BUG: The horizontal guide after the list of terrain produces a complaint from Scheme.  Why?
+    // print_horizontal_guideline(fp, indent, map);
 	INDENT;	
-    fprintf(fp, "} // terrain%s\n", 
-            unk ? " (unknown glyphs found, printed as '?')" : "");
+    fprintf(fp, ")\n");
 
 	indent -= INDENTATION_FACTOR;
 	INDENT;	
-    fprintf(fp, "} // MAP %s\n", map->tag);
+    fprintf(fp, ") ;; map %s\n", map->tag);
 	fprintf(fp, "\n");
 }
 
@@ -335,8 +334,8 @@ void print_horizontal_guideline (FILE * fp, int indent, struct terrain_map *map)
         line_1[w] = '\0';
         line_2[w] = '\0';
       }
-      INDENT; fprintf(fp, "// %s\n", line_1);
-      INDENT; fprintf(fp, "// %s\n", line_2);
+      INDENT; fprintf(fp, ";; %s\n", line_1);
+      INDENT; fprintf(fp, ";; %s\n", line_2);
     }
     else if (palette->widest_glyph == 1) {
       // These templates will suffice for maps of up to width 50
@@ -351,8 +350,8 @@ void print_horizontal_guideline (FILE * fp, int indent, struct terrain_map *map)
         line_1[w] = '\0';
         line_2[w] = '\0';
       }
-      INDENT; fprintf(fp, "// %s\n", line_1);
-      INDENT; fprintf(fp, "// %s\n", line_2);
+      INDENT; fprintf(fp, ";; %s\n", line_1);
+      INDENT; fprintf(fp, ";; %s\n", line_2);
     }
     else if (palette->widest_glyph == 2) {
       // These templates will suffice for maps of up to width 40
@@ -367,8 +366,8 @@ void print_horizontal_guideline (FILE * fp, int indent, struct terrain_map *map)
         line_1[w] = '\0';
         line_2[w] = '\0';
       }
-      INDENT; fprintf(fp, "// %s\n", line_1);
-      INDENT; fprintf(fp, "// %s\n", line_2);
+      INDENT; fprintf(fp, ";; %s\n", line_1);
+      INDENT; fprintf(fp, ";; %s\n", line_2);
     }
     // TODO: width 3 and 4 palettes.
 }
