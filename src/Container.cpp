@@ -149,13 +149,17 @@ void Container::saveContents(struct save *save)
 {
         struct list *elem;
         struct inv_entry *ie;
+        int count;
 
         save->enter(save, "(list\n");
         list_for_each(&contents, elem) {
                 ie = outcast(elem, struct inv_entry, list);
-                save->write(save, "(list %d %s)\n", 
-                            ie->count,
-                            ie->type->getTag());
+                count = ie->count - ie->ref;
+                if (count) {
+                        save->write(save, "(list %d %s)\n", 
+                                    count,
+                                    ie->type->getTag());
+                }
         }
         save->exit(save, ")\n");
 }
