@@ -1,0 +1,237 @@
+---------------------------------------------------------------------------
+Small-Scale Terrain and Tile Media Wanted
+---------------------------------------------------------------------------
+Terrain
+Terrain Features (static)
+  Furniture
+Terrain Features (mechanism-like)
+  Doors, gates, portcullis, drawbridge
+  well, forge, anvil, bellows
+Items
+  weapons, armor/wearable items, 
+  consumable/commodity items (food, drink, potions, oils, herbs, ...)
+  readable items, tools, reagents, musical instruments
+
+
+---------------------------------------------------------------------------
+Small-Scale Environments
+------------------------
+Outdoors
+Village / Urban
+Indoors
+Caves
+Subterranean Chambers (built areas, worked stone)
+Exotic locales
+
+
+Small-Scale Terrain
+-------------------
+Water
+  (shallow, deep, oceanic)
+  (stream, river, lake, ocean)
+  (clear, murky)
+  (still, rippling, flowing N,S,E,W, fast flowing N,S,E,W)
+  shoals, coral, sandbar, rocky shallows, mudbar
+  Other non-solid terrains:
+    lava
+    acid lake
+    boiling mud
+
+Land
+  Grass
+    TF: trails/roads, bridges, droos, portcullis, gates
+  Bog/march/swamp
+  badlands
+  tilled land, crops
+  desert
+  wasteland
+
+  flooring
+    bare earth
+    planks / deck / wooden floors
+    cobblestones
+    flagstones
+    stone/tile floors (various block/tile shapes, colors)
+    various colors / patterns of rugs
+
+  walls
+    (crude stone, brick, giant stone blocks)
+    (frame and plaster, wooden (logs, boards), tent walls)
+    (various colors of stone / plaster / paint)
+
+  Runic signs
+    Latin alphabet (A-Z)
+      -- Add (0-9), (a-z), (I,II,III,IV, V, X, L, C, M) ???
+    Runic alphabet
+
+  vegetation
+    brush, small trees, hedges
+    TF: single tree, fruiting tree, dead tree, stump
+
+
+Small-Scale Terrain Features
+----------------------------
+signs/walls (Terrain or Terrain Feature?)
+cobblestones
+brick paths
+carpets
+plank flooring
+roads
+bridges
+fences
+gates
+doors
+portcullis
+drawbridge
+signs
+gravestones
+standing stones
+boulders
+
+campfire
+firepit
+stove/oven
+fireplace
+forge
+anvil
+bellows
+winch
+hitching posts
+gears
+counterweights
+levers
+floor pressure plate
+
+Portal-type Mechanisms
+  trapdoor
+  ladders
+  stairs
+  moongates (blue, red, black, ...)
+
+tables
+chairs
+thrones
+privy / outhouse
+
+force fields (force waves like U3, colors like U4, ...)
+emplaced traps
+  blades
+  boulder
+  net
+  trap door
+
+organ
+waterclock
+horse trough
+cistern
+pipes
+
+levers
+folding counter sections (like in U6)
+fence stiles
+
+
+Semi-Portable Features
+----------------------
+round boulders
+giant ice cubes
+barrels
+chests
+crates
+potted plants
+chairs
+(smaller) tables
+beds
+dresser / cabinet
+(large) harp
+harpsichord
+mirror
+clock
+cannons
+
+
+Vehicles and Such
+-----------------
+skiff
+raft
+magic carpet
+saddle
+
+
+Porable Items
+-------------
+wall torches (lit, unlit, torch burnt out)
+keys
+
+
+chimney
+fire pit
+cauldron (empty / full, with / without bubbles)
+skeletons
+bones
+manacles
+pillories
+torture rack
+iron maiden
+
+many types of doors
+
+
+Missing Item Sprites
+--------------------
+Weapons
+  boomerang
+
+Armor / Worn Items
+  belts
+  normal clothing (male, female)
+
+Commodities / Consumable Items
+  meal / place setting (to put on tables)
+  more food sprites
+  more drink sprites
+  more single gems
+
+Tools
+  crystal ball
+  telescope (large)
+  spyglass / telescope (small)
+  mirror
+  tongs
+  scissors
+  sextant
+  theodolite
+  keys
+
+Readable Items
+  normal scrolls, books, tablets, maps
+
+Reagents
+  various powders, liquids, gases
+  body parts (heads, hand, feet, ears, hearts, skulls, bones,
+              scales, tails, features, ...)
+
+
+Various Laboratory Furniture (think: wizard's lab or mad scientist)
+----------------------------
+giant crystals
+huge runic stones, tablets
+stone slabs (for corpse / patient / victim)
+statues
+
+
+
+tapestries, paintings
+
+various colors of
+  walls
+  roads / cobblestone / floors
+  rugs
+
+non-stone walls
+  wooden
+  plaster
+  tent wall
+
+
+---------------------------------------------------------------------------

@@ -1,0 +1,49 @@
+---------------------------------------------------------------------------
+Character Advancement Path: Wright
+---------------------------------------------------------------------------
+
+Items/Objects created/gathered by Wright skills:
+
+Weapons
+Armor and worn items
+Tools
+Materials
+Alchemical goods
+Furniture
+Vehicles
+Structures (buildings, non-portable objects and tools)
+Public Works (terrain modifications)
+
+
+Materials
+---------
+Reagents
+  herbal (plants and parts thereof)
+  mineral (powders, stones, ...)
+  organic (animals and parts thereof)
+  essences (moonlight, abstract essences,
+            ordinary materials infused with essences)
+
+Food
+  plant
+  animal
+  other (honey, ...)
+
+Ores
+
+Fibers
+
+Wood
+
+Hides
+
+...
+
+
+---------------------------------------------------------------------------
+
+Pick the top 3 Wright skills for early implementation...
+
+
+
+---------------------------------------------------------------------------

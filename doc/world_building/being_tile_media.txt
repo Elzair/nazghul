@@ -1,11 +1,11 @@
 Being Sprites Wanted
 --------------------
-Troll (horns, unarmed or club/hammer)
-Spider - Wolf Spider
+Troll (horns, unarmed or club/hammer)  -- exists in U4 and U5 tilesets
+Spider - Wolf Spider  -- exists in U4/U5 tileset
 Spider - Black Widow
 Deer
 
-Female Townsman
-Cat (domestic)
+Female Townsman  -- create by modifying townsman sprite?
+Cat (domestic)   -- create by modifying dog sprite?
 Sheep
 Goat

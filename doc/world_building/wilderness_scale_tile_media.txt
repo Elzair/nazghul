@@ -1,0 +1,138 @@
+---------------------------------------------------------------------------
+Large-Scale Terrain and Tile Media Wanted
+---------------------------------------------------------------------------
+
+Water Terrain Tiles
+-------------------
+Oceanic water
+Deep water
+Shallow water
+
+
+Differentiate water tiles as (river, lake, ocean)
+  - Direction of flow: N,S,E,W, rippling-in-place
+  - different shades/colors of water (clear, murky)
+
+Tidal Terrain is proposed
+  - Shard Tilt Tides
+  - Lunar Tides
+
+Streams (passable by walking, zoom-in contains a stream)
+
+ford
+rapids
+
+rocks / shoals
+sandbar
+mud bank
+reefs
+algae bloom
+kelp
+jellyfish
+fish spawning
+wave crests
+fog banks
+
+Light-emitting water terrain/features
+    coral
+    jellyfish
+    ...
+
+
+Other non-solid Terrains
+------------------------
+Acid Lake
+Boiling Mud
+Lava
+Astral Void
+Swirling Fog
+
+
+Land Terrain Tiles
+------------------
+Grasslands
+  - High Grass
+Fields
+Orchards
+Brush
+Forest
+Hills
+  - Forested Hills
+Mountains
+  - Forested Mountains
+Mountain Peaks
+  - Snow-covered peaks
+Swamp / Marsh / Fens / Bog
+  - Flooded Swamp
+  - Wooded Swamp (blocks LOS)
+Desert (depletes water rations)
+Tundra
+  - Many other terrain types covered in snow
+Wasteland / Blasted Ground
+Rocky Ground
+
+Badlands
+  - Mesas   -- Not for Haxima I, too much art required
+  - Rifts/Canyons
+  - Cliffs  -- Not for Haxima I, too much art required
+
+
+Light-emitting Terrain
+  magical woods
+  towns
+  some coral
+  jellyfish
+  lava
+  swamp glow
+
+
+Large-Scale Terrain Features
+----------------------------
+Roads  - Made with transparency, goes over most any terrain
+Trails - Made with transparency, goes over most any terrain
+Bridges
+Fords                    (terrain or terrain feature?)
+Piers / Ports / Landings (terrain or terrain feature?)
+Signs
+Markers / Monuments (many of these sprites are also used for sub-places)
+  - Standing Stone(s)
+  - Battlefield marker
+  - Ancient graveyard / battlefield
+  - Ancient ruins
+Fog Banks
+Walls (Hadrian's Wall, Great Wall of China, LCB)
+
+
+Portal Types
+------------
+Castle (major, minor, ...)
+Tower
+Town (walled)
+Village
+Ruins
+Hut
+Dungeon Entrance
+Cave Entrance
+Mine Entrance
+Transparent Portal (no visible sprite, no description shown)
+Moongate (blue, red, black, other colors)
+
+
+---------------------------------------------------------------------------
+What attributes Terrain / Terrain Features Have
+-----------------------------------------------
+- Display a sprite
+- Affect passability / movement by movement mode
+- Affect LOS
+- Provide illumination
+- Invoke an effect upon successful/failed movement
+- Act as a portal (auto-enter or no, directional or not)
+  - Portals can invoke a method, often used for confirmation of
+    entering the portal
+
+
+
+
+
+
+---------------------------------------------------------------------------

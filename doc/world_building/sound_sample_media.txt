@@ -1,0 +1,233 @@
+---------------------------------------------------------------------------
+Non-Looped Sound Media
+---------------------------------------------------------------------------
+
+
+Music (loops, once-off)
+Atmospheric / environment sounds
+Utterances
+  Words
+    Runes
+    spell names
+    species names
+    target specifier names (ground, object, foe type, unseen foe, ...)
+  Non-verbal
+Other Sounds
+  UI
+    Command names
+  Action
+  Object
+  Movement
+  Combat
+
+
+
+Movement Sounds
+---------------
+1 per movement mode (including vehicles/riding)
+2 per terrain
+
+snd = movement_sound(terrain, mode)  ???
+
+Moongate sounds
+  open
+  close
+  enter
+  arrival / exit
+
+
+---------------------------------------------------------------------------
+Sounds for
+----------
+Change to <movement mode>
+  Walking
+  Stealth mode
+  Riding
+  Swimming
+  Sailing
+  Flying
+
+Change to
+  Combat Mode
+  Peace Mode
+
+Change to
+  Solo Mode
+  Follow Mode
+  Round-Robin mode
+
+Rendezvous
+  begin          "Let's go", "follow me"
+  end (success)
+  failed         "I'm stuck", "Wait for me!"
+
+Combat
+  Initiate combat
+  Victory
+  Character Fled
+  Party Fled
+
+UI Sounds
+  Cursor movement
+
+  list element up/down
+  list scrolling
+  list PgUp/PgDn
+  List Home/End
+
+  type a character (when entering text, such as when talking)
+  backspace
+
+  CANCEL action (Escape key)
+  select (character, item, coordinates, targeted being
+
+
+Command names
+  "Attack"
+  "Board" / "Disembark"
+    -- per vehicle, a board and disembark sound
+    "Mount" / "Dismount"
+    "Board <vehicle_name>" / "Disembark <vehicle_name>"
+  "Cast"
+  ...
+
+
+---------------------------------------------------------------------------
+Combat UI Sounds
+----------------
+hit armor vs flesh?
+
+Blunt, Edged, Piercing
+Melee, Thrown, Bow/Xbow, Boomerang, Sling
+
+Attacker
+  fumbles (various)
+  miss
+  miss (parried with weapon, blocked by shield, dodged blow)
+  hit (soaked, damaging, armor-defeating)
+  critical
+
+Defender
+  parry/block/dodge
+  suffer knockdown / knockback
+  suffer wound
+  suffer KO
+  suffer death
+
+Spellcasting
+  ...
+
+
+---------------------------------------------------------------------------
+Runes and Such
+--------------
+
+Ultima IV / V Runes
+-------------------
+An    - Negate
+Bet   - Small
+Corp  - Death / undead
+Des   - Down
+Ex    - Freedom
+Flam  - Flame / fire
+Grav  - Energy
+Hur   - Wind
+In    - Create
+Jux   - Trap
+Kal   - Invoke / summon
+Lor   - Light
+Mani  - Life / health
+Nox   - Poison
+Ort   - Magic
+Por   - Movement
+Quis  - Illusion
+Rel   - Control / Change
+Sanct - Protection
+Tym   - Time
+Uus   - Up
+Vas   - Great
+Wis   - Vision / percieve
+Xen   - Creature / being
+Ylem  - Earth
+Zu    - Sleep
+
+Jzeth - Ether
+Orax  - Water / waves
+
+
+
+Ultima Virtues / Mantras / Dungeons / Power Words
+--------------------------------------------------------------
+Honesty      / Ahm  / Deceit   / Fallax
+Compassion   / Mu   / Depise   / Vilis
+Valor        / Ra   / Destard  / Inopia
+Sacrifice    / Cah  / Covetous / Avidus
+Justice      / Beh  / Wrong    / Malum
+Honor        / Summ / Shame    / Infama
+Spirituality / Om   / Hythloth / Ignavus
+Humility     / Lum  / Stygia   / Mul
+
+Truth   / Ver / Falsehood / Faulinei
+Love    / Amo / Hatred    / Astaroth
+Courage / Cor / Cowardice / Nosfentor
+
+Veramocor
+Infinity
+
+
+Ultima VI Gargoyle Virtues / Principles
+---------------------------------------
+Control
+Passion
+Diligence
+
+C   - Direction
+P   - Feeling
+D   - Persistence
+CP  - Balance
+PD  - Achievement
+CD  - Precision
+CPD - Order / Chaos
+    - Singularity
+
+
+Dungeon Master Runes
+--------------------
+Power
+-----
+Lo  - 1
+Um  - 2
+On  - 3
+Ee  - 4
+Pal - 5
+Mon - 6
+
+Elemental
+---------
+Ya  - Earth (stamina)
+Vi  - Water (health)
+Oh  - Air
+Ful - Fire
+Des - Negativity
+Zo  - Energy
+
+Form
+----
+Ven  - Poison
+Ew   - Elemental Creature
+Kath - Explosive / Shock
+Ir   - Motion
+Bro  - Support / Friendship
+Gor  - Destruction
+
+Class/Alignment
+---------------
+Ku   - Fighter (strength)
+Ros  - Ninja   (dexterity)
+Dain - Wizard  (wisdom)
+Neta - Priest  (vitality)
+Ra   - Order / Sun
+Sar  - Chaos / Darkness
+
+
+---------------------------------------------------------------------------

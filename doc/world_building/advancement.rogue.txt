@@ -1,0 +1,29 @@
+---------------------------------------------------------------------------
+Advancement Path: Rogue
+---------------------------------------------------------------------------
+Rogue Skills by Category
+------------------------
+
+Physical (swim, climb, jump, ...)
+
+Sensory (see, hear, evaluate foe, search, detect traps, ...)
+
+Stealth (overall, urban, wilderness, ...)
+
+Roguery (pick pockets, pick lock, disable mechanism, set trap, ...)
+
+Social (lie, detect lie, intimidate, bluff, seduce, haggle, ...)
+
+Rogue Combat (
+    rogue weapons (knife, sap, lasso, net, small crossbows, 
+                   shuriken, darts) 
+    critical strike, stunning blow, surprise strike,
+    feint/riposte, dodge/tumble, ...)
+
+
+
+
+
+
+
+---------------------------------------------------------------------------
