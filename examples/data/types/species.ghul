@@ -90,7 +90,7 @@ SPECIES gazer {
   dex     40;
   spd     4;
   vr      10;
-  pmask   (LAND|WATER|SHOALS);;
+  pmask   (LAND|SHOALS);
   sleep_sprite s_corpse;
   weapon t_teeth;
   visible 1;
@@ -187,7 +187,7 @@ SPECIES ghast {
   dex     100;
   spd     2;
   vr      8;
-  pmask   (LAND);
+  pmask   (LAND|WATER|SHOALS|SOLID);
   sleep_sprite s_corpse;
   weapon t_hands;
   visible 0

@@ -57,7 +57,7 @@ vehicle_types {
     name      "horse";
     sprite    s_horse;
     speed     1;
-    pmask     1;
+    pmask     LAND;
     must_turn 0;
     mv_desc   Ride;
     mv_sound  "data/sounds/horse.wav";
@@ -69,7 +69,7 @@ vehicle_types {
     name      "ship";
     sprite    s_ship;
     speed     1;
-    pmask     2;
+    pmask     WATER;
     must_turn 1;
     mv_desc   Sail;
     mv_sound  "data/sounds/rowing.wav";

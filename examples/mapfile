@@ -459,7 +459,7 @@ CURSOR ls_whirlpool;
 terrains {
   t_deep {
     name "deep water";
-    pmask 2;
+    pmask 4;
     sprite s_deep;
     glyph _;
     id 0;
@@ -471,7 +471,7 @@ terrains {
   }
   t_shallow {
     name "shallow water";
-    pmask 2;
+    pmask 4;
     sprite s_shallow;
     glyph -;
     id 1;
@@ -483,7 +483,7 @@ terrains {
   };
   t_shoals {
     name "shoals";
-    pmask 4;
+    pmask 8;
     sprite s_shoals;
     glyph ~;
     id 2;
@@ -495,7 +495,7 @@ terrains {
   };
   t_bog {
     name "bog";
-    pmask 1;
+    pmask 2;
     sprite s_bog;
     glyph %;
     id 3;
@@ -507,7 +507,7 @@ terrains {
   };
   t_grass {
     name "grass";
-    pmask 1;
+    pmask 2;
     sprite s_grass;
     glyph .;
     id 4;
@@ -519,7 +519,7 @@ terrains {
   };
   t_trees {
     name "trees";
-    pmask 1;
+    pmask 2;
     sprite s_trees;
     glyph t;
     id 5;
@@ -531,7 +531,7 @@ terrains {
   };
   t_forest {
     name "forest";
-    pmask 1;
+    pmask 2;
     sprite s_forest;
     glyph |;
     id 6;
@@ -543,7 +543,7 @@ terrains {
   };
   t_hills {
     name "hills";
-    pmask 1;
+    pmask 2;
     sprite s_hills;
     glyph ?;
     id 7;
@@ -555,7 +555,7 @@ terrains {
   };
   t_mountains {
     name "mountains";
-    pmask 0;
+    pmask 1;
     sprite s_mountains;
     glyph ^;
     id 8;
@@ -567,7 +567,7 @@ terrains {
   };
   t_leftwing {
     name "castle";
-    pmask 0;
+    pmask 1;
     sprite s_leftwing;
     glyph <;
     id 13;
@@ -578,7 +578,7 @@ terrains {
   };
   t_rightwing {
     name "castle";
-    pmask 0;
+    pmask 1;
     sprite s_rightwing;
     glyph >;
     id 15;
@@ -589,7 +589,7 @@ terrains {
   };
   t_cobblestone {
     name "cobblestone";
-    pmask 1;
+    pmask 2;
     sprite s_cobblestone;
     glyph c;
     id 22;
@@ -633,7 +633,7 @@ terrains {
   };
   t_pillar {
     name "pillar";
-    pmask 0;
+    pmask 1;
     sprite s_pillar;
     glyph p;
     id 48;
@@ -644,7 +644,7 @@ terrains {
   };
   t_wall_b {
     name "sea wall";
-    pmask 0;
+    pmask 1;
     sprite s_wall_b;
     glyph 1;
     id 49;
@@ -655,7 +655,7 @@ terrains {
   };
   t_wall_a {
     name "sea wall";
-    pmask 0;
+    pmask 1;
     sprite s_wall_a;
     glyph 2;
     id 50;
@@ -666,7 +666,7 @@ terrains {
   };
   t_wall_c {
     name "sea wall";
-    pmask 0;
+    pmask 1;
     sprite s_wall_c;
     glyph 3;
     id 51;
@@ -678,7 +678,7 @@ terrains {
   ;
   t_wall_d {
     name "sea wall";
-    pmask 0;
+    pmask 1;
     sprite s_wall_d;
     glyph 4;
     id 52;
@@ -689,7 +689,7 @@ terrains {
   };
   t_mast {
     name "mast";
-    pmask 0;
+    pmask 1;
     sprite s_mast;
     glyph m;
     id 53;
@@ -700,7 +700,7 @@ terrains {
   };
   t_trail {
     name "ship's wheel";
-    pmask 1;
+    pmask 2;
     sprite s_ships_wheel;
     glyph f;
     id 54;
@@ -711,7 +711,7 @@ terrains {
   };
   t_boulder {
     name "boulder";
-    pmask 0;
+    pmask 1;
     sprite s_boulder;
     glyph b;
     id 55;
@@ -722,7 +722,7 @@ terrains {
   };
   t_wall_rock {
     name "rock wall";
-    pmask 0;
+    pmask 1;
     sprite s_wall_rock;
     glyph r;
     id 57;
@@ -744,7 +744,7 @@ terrains {
   };
   t_flagstones {
     name "flagstones";
-    pmask 1;
+    pmask 2;
     sprite s_flagstone;
     glyph ,;
     id 62;
@@ -755,7 +755,7 @@ terrains {
   };
   t_deck {
     name "deck";
-    pmask 1;
+    pmask 2;
     sprite s_deck;
     glyph e;
     id 63;
@@ -766,7 +766,7 @@ terrains {
   };
   t_fire_terrain {
     name "fire";
-    pmask 1;
+    pmask 2;
     sprite s_field_fire;
     glyph f;
     id 70;
@@ -775,11 +775,11 @@ terrains {
     effects 2;
     light 512;
   };
-  t_white_wall { name "wall" pmask 0 sprite s_wall glyph w id 72 alpha 0 movement_cost 0 effects 0 light 0 };
-  t_bulwark { name "ship's bulwark" pmask 0 sprite s_wall glyph w id 72 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_white_wall { name "wall" pmask 1 sprite s_wall glyph w id 72 alpha 0 movement_cost 0 effects 0 light 0 };
+  t_bulwark { name "ship's bulwark" pmask 1 sprite s_wall glyph w id 72 alpha 1 movement_cost 0 effects 0 light 0 };
   t_secret_door {
     name "secret door";
-    pmask 1;
+    pmask 2;
     sprite s_secret_door;
     glyph ?;
     id 73;
@@ -791,7 +791,7 @@ terrains {
   ;
   t_altar {
     name "altar";
-    pmask 0;
+    pmask 1;
     sprite s_altar;
     glyph a;
     id 74;
@@ -803,7 +803,7 @@ terrains {
   ;
   t_fireplace {
     name "fireplace";
-    pmask 1;
+    pmask 2;
     sprite s_fireplace;
     glyph &;
     id 75;
@@ -844,7 +844,7 @@ terrains {
   t_counter_pillar { name "pillar" pmask 0 sprite s_counter_pillar glyph 0 id 125 alpha 1 movement_cost 0 effects 0 light 0 };
   t_lava {
     name "lava";
-    pmask 1;
+    pmask 2;
     sprite s_lava;
     glyph !;
     id 76;
@@ -855,7 +855,7 @@ terrains {
   };
   t_wall {
     name "wall";
-    pmask 0;
+    pmask 1;
     sprite s_wall_stone;
     glyph x;
     id 127;
@@ -911,9 +911,9 @@ t_moongate {
     sprite s_moongate_full;
   }
 }
-F_fire { name "fire field" sprite s_field_fire subtype field effects 2 light 512 duration 20 pmask 7 };
-F_poison { name "poison field" sprite s_field_poison subtype field effects 1 light 256 duration 20 pmask 7 };
-F_sleep { name "sleep field" sprite s_field_sleep subtype field effects 4 light 256 duration 20 pmask 7 };
+F_fire { name "fire field" sprite s_field_fire subtype field effects 2 light 512 duration 20 pmask 16 };
+F_poison { name "poison field" sprite s_field_poison subtype field effects 1 light 256 duration 20 pmask 16 };
+F_sleep { name "sleep field" sprite s_field_sleep subtype field effects 4 light 256 duration 20 pmask 16 };
 F_protect { name "protection field" sprite s_field_energy subtype field effects 2 light 512 duration 20 pmask 0 };
 t_chest1 { name "small wooden chest" sprite s_chest1 subtype null layer 4 } ;t_burn_trap { name "burn trap" sprite null subtype trap effects 2 amount 10 };
 t_poison_trap { name "poison trap" sprite null subtype trap effects 1 amount 0 };
@@ -2143,7 +2143,7 @@ SPECIES human {
   dex 100;
   spd 2;
   vr 8;
-  pmask (1);
+  pmask (2);
   sleep_sprite s_corpse;
   weapon t_hands;
   visible 1;
@@ -2170,7 +2170,7 @@ SPECIES goblin {
   dex 120;
   spd 2;
   vr 8;
-  pmask (1);
+  pmask (2);
   sleep_sprite s_corpse;
   weapon t_hands;
   visible 1;
@@ -2197,7 +2197,7 @@ SPECIES gazer {
   dex 40;
   spd 4;
   vr 10;
-  pmask (1|2|4);;
+  pmask (2|8);
   sleep_sprite s_corpse;
   weapon t_teeth;
   visible 1;
@@ -2226,7 +2226,7 @@ SPECIES skeleton {
   dex 110;
   spd 2;
   vr 8;
-  pmask (1);
+  pmask (2);
   sleep_sprite s_corpse;
   weapon t_hands;
   visible 1
@@ -2253,7 +2253,7 @@ SPECIES snake {
   dex 120;
   spd 2;
   vr 8;
-  pmask (1);
+  pmask (2);
   sleep_sprite null;
   weapon t_teeth;
   visible 1
@@ -2272,7 +2272,7 @@ SPECIES insects {
   dex 120;
   spd 2;
   vr 8;
-  pmask (1);
+  pmask (2);
   sleep_sprite null;
   weapon t_stinger;
   visible 1
@@ -2290,7 +2290,7 @@ SPECIES ghast {
   dex 100;
   spd 2;
   vr 8;
-  pmask (1);
+  pmask (2|4|8|1);
   sleep_sprite s_corpse;
   weapon t_hands;
   visible 0
@@ -2404,7 +2404,7 @@ vehicle_types {
     name "horse";
     sprite s_horse;
     speed 1;
-    pmask 1;
+    pmask 2;
     must_turn 0;
     mv_desc Ride;
     mv_sound "data/sounds/horse.wav";
@@ -2416,7 +2416,7 @@ vehicle_types {
     name "ship";
     sprite s_ship;
     speed 1;
-    pmask 2;
+    pmask 4;
     must_turn 1;
     mv_desc Sail;
     mv_sound "data/sounds/rowing.wav";
@@ -3028,7 +3028,7 @@ CHAR ch_Mesmeme {
 MECH_TYPE mech_L_lever {
   name "lever";
   defaults {
-    pmask 7;
+    pmask 16;
   }
   states {
     {
@@ -3058,7 +3058,7 @@ MECH_TYPE mech_L_lever {
 MECH_TYPE mech_R_lever {
   name "lever";
   defaults {
-    pmask 7;
+    pmask 16;
   }
   states {
     {
@@ -3085,8 +3085,8 @@ MECH_TYPE mech_R_lever {
     }
   }
 }
-MECH_TYPE mech_pressure_plate { name "pressure plate"; defaults { sprite s_floor_plate; pmask 7; } states { { name "pressure plate"; } } transitions { state "pressure plate"; event 2; next_state "pressure plate"; actions { send_signal 102; } } };
-MECH_TYPE invisible_step_trigger { name ""; defaults { sprite null; pmask 7; } states { { name ""; } } transitions { state ""; event 2; next_state ""; actions { send_signal 101; } } };
+MECH_TYPE mech_pressure_plate { name "pressure plate"; defaults { sprite s_floor_plate; pmask 16; } states { { name "pressure plate"; } } transitions { state "pressure plate"; event 2; next_state "pressure plate"; actions { send_signal 102; } } };
+MECH_TYPE invisible_step_trigger { name ""; defaults { sprite null; pmask 16; } states { { name ""; } } transitions { state ""; event 2; next_state ""; actions { send_signal 101; } } };
 MECH_TYPE mech_portcullis {
   name "portcullis";
   defaults {}
@@ -3094,12 +3094,12 @@ MECH_TYPE mech_portcullis {
     {
       name "raised portcullis";
       sprite s_portcullis_up;
-      pmask 7;
+      pmask 16;
     }
     {
       name "lowered portcullis";
       sprite s_portcullis_down;
-      pmask 0;
+      pmask 1;
     }
   }
   transitions {
@@ -3133,7 +3133,7 @@ MECH_TYPE mech_light {
   name "light";
   defaults {
     sprite null;
-    pmask 7;
+    pmask 16;
   }
   states {
     {
@@ -3167,25 +3167,25 @@ MECH_TYPE mech_vdoor {
     {
       name "closed door";
       sprite s_door;
-      pmask 0;
+      pmask 1;
       opaque 1;
     }
     {
       name "open door";
       sprite null;
-      pmask 7;
+      pmask 16;
       opaque 0;
     }
     {
       name "locked door";
       sprite s_door_locked;
-      pmask 0;
+      pmask 1;
       opaque 1;
     }
     {
       name "magically locked door";
       sprite s_door_locked;
-      pmask 0;
+      pmask 1;
       opaque 1;
     }
   }
@@ -3236,25 +3236,25 @@ MECH_TYPE mech_hdoor {
     {
       name "closed door";
       sprite s_hdoor;
-      pmask 0;
+      pmask 1;
       opaque 1;
     }
     {
       name "open door";
       sprite null;
-      pmask 7;
+      pmask 16;
       opaque 0;
     }
     {
       name "locked door";
       sprite s_hdoor_locked;
-      pmask 0;
+      pmask 1;
       opaque 1;
     }
     {
       name "magically locked door";
       sprite s_hdoor_locked;
-      pmask 0;
+      pmask 1;
       opaque 1;
     }
   }
@@ -3324,7 +3324,7 @@ MAP m_WATER_TRAP_CLOSED {
     e e e e e
   }
 }
-MECH_TYPE mech_water_trap_L_lever { name "lever"; defaults { pmask 7; } states { { name "lever up"; sprite s_floor_lever_left; } { name "lever down"; sprite s_floor_lever_right; } } transitions { state "lever up"; event 3; next_state "lever down"; actions { print "A trap door opens, revealing a watery pit!"; blit_map p_prison_chamber 3 3 m_WATER_TRAP_OPEN 0 0 2 1 0; } state "lever down"; event 3; next_state "lever up"; actions { print "A trap door closes."; blit_map p_prison_chamber 3 3 m_WATER_TRAP_CLOSED 0 0 2 1 0; } } };
+MECH_TYPE mech_water_trap_L_lever { name "lever"; defaults { pmask 16; } states { { name "lever up"; sprite s_floor_lever_left; } { name "lever down"; sprite s_floor_lever_right; } } transitions { state "lever up"; event 3; next_state "lever down"; actions { print "A trap door opens, revealing a watery pit!"; blit_map p_prison_chamber 3 3 m_WATER_TRAP_OPEN 0 0 2 1 0; } state "lever down"; event 3; next_state "lever up"; actions { print "A trap door closes."; blit_map p_prison_chamber 3 3 m_WATER_TRAP_CLOSED 0 0 2 1 0; } } };
 MAP m_wilderness {
   type ascii;
   width 32;
@@ -3436,6 +3436,51 @@ CHAR BlackBart_the_Shipwright {
         readied {
         }
 }
+RESP Olins_JoinResp {
+        SAY "[silently the phantom floats to your side]";
+        JOIN;
+}
+RESP Olins_DefaultResp {
+        SAY "[the spectre fixes you with an icy stare]";
+}
+RESP Olins_CryptResp {
+        SAY "[a terrible groan whispers] Hommmme....";
+}
+RESP Olins_WaterResp {
+        SAY "[a terrible groan whispers] Myyy... Loooove... Waaatchesss... ";
+}
+CONV Olins_Conv {
+        IMPORT { }
+        NATIVE {
+                DEFAULT Olins_DefaultResp;
+                JOIN Olins_JoinResp;
+                CRYPT Olins_CryptResp;
+                LOVE Olins_WaterResp;
+                PARK Olins_WaterResp;
+        }
+}
+SCHED Olins_Sched {
+        0 0 21 29 7 7 5;
+        10 0 5 57 4 3 5;
+}
+CHAR Olin_the_Ghast {
+        name "Olin";
+        species ghast;
+        occ wizard;
+        sprite s_ghost;
+        hp 30;
+        xp 0;
+        cond U;
+        str 25;
+        intl 130;
+        dex 25;
+        magic 150;
+        lvl 9;
+        conv Olins_Conv;
+        sched Olins_Sched;
+        readied {
+        }
+}
 MAP m_empire_city {
         type ascii;
         width 64;
@@ -3538,22 +3583,22 @@ MAP m_empire_city {
 %-%,,,,,,,-ttbfttt.-t%,,,,,,,%--.%,,,,,,%,,,,,,%.--.%*LIVELY*%-%
 %-%,,,,,,%-.ttttft.-t%oGUILDo%--.%*HEAL*%*BANK*%.--.%BARWENCH%-%
 %-%,,,,,,%-----tbt.-t%%%%%%%%%--.%%%%%%%%%%%%%%%t--.%--------%-%
-%-%%%,%%%%%%%%-ttt--------------.......t.t.....tt--.%********%-%
-%-%,,,,,,,,,,%-...-%%%%%%%%...---------------------t%--------%-%
-%-%,,,,,,,,,,%-----%,,,,,,%..t-------------------------------%-%
+%-%%%%%%%%%%%%-ttt--------------.......t.t.....tt--.%********%-%
+%-%%MORTUARY%%-...-%%%%%%%%...---------------------t%--------%-%
+%-%,,,,,,,,,,,-----%,,,,,,%..t-------------------------------%-%
 %-%,,,,,,,,,,%%,,,%%,,,,,,%..tt--tt.....t-t....bbbbb%--0-0-0-%-%
-%-%,,,,,,,,,,%,,,,,%,,,,,,%...t--t...%%%%-%%%%%.....%--------%-%
-%-%,,,,,,,%,%%,,,,,%%,%%%%%....--....%---------.....%--0-0-0-%-%
-%-%%%,%%%%%,,,,,,,,,,,%,,,%....--....%--------%.....%%-------%-%
-%-%,%,,,,,%,,,,,,,,,,,,,,,%.--------.%********%......%%%%%%%%%-%
+%-%,,,,,,,,,,%,,,,,,,,,,,,%...t--t...%%%%-%%%%%.....%--------%-%
+%-%%%%%,%%%%%%,,,,,,,,%%%%%....--....%---------.....%--0-0-0-%-%
+%-%,%,,,,,%,,,,,,,,,,,,,,,%....--....%--------%.....%%-------%-%
+%-%,%,,,,,%,,,,,,,,,,,%,,,%.--------.%********%......%%%%%%%%%-%
 %-%%%,,,,,%,,,,,,,,,,,%,,,%%-%%--%%-%%--------%t..........t%*%-%
-%---%,,,,,%MAGIC*GUILD%,,,%---%--%---%*STABLE*%ft..........*---%
+%---%CRYPT%MAGIC*GUILD%,,,%---%--%---%*STABLE*%ft..........*---%
 %---%%%%%%%%%%%%%%%%%%%%%%%---*--*---%%%%%%%%%%%%%%%%%%%%%%%---%
 %--------------------------------------------------------------%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%--%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
              }
 }
-MECH_TYPE castle_drawbridge { name "lever"; defaults { pmask 7; } states { { name "lever up"; sprite s_floor_lever_left; } { name "lever down"; sprite s_floor_lever_right; } } transitions { state "lever up"; event 3; next_state "lever down"; actions { print "The drawbridge raises."; blit_map p_empire_city 34 8 m_WATER_TRAP_OPEN 0 0 2 1 0; } state "lever down"; event 3; next_state "lever up"; actions { print "The drawbridge lowers."; blit_map p_empire_city 34 8 m_WATER_TRAP_CLOSED 0 0 2 1 0; } } };
+MECH_TYPE castle_drawbridge { name "lever"; defaults { pmask 16; } states { { name "lever up"; sprite s_floor_lever_left; } { name "lever down"; sprite s_floor_lever_right; } } transitions { state "lever up"; event 3; next_state "lever down"; actions { print "The drawbridge raises."; blit_map p_empire_city 34 8 m_WATER_TRAP_OPEN 0 0 2 1 0; } state "lever down"; event 3; next_state "lever up"; actions { print "The drawbridge lowers."; blit_map p_empire_city 34 8 m_WATER_TRAP_CLOSED 0 0 2 1 0; } } };
 PLACE p_empire_city {
   type town;
   parent p_wilderness;
@@ -3603,6 +3648,7 @@ PLACE p_empire_city {
     ch_Sly_the_Thief 31 8 (2) 1;
     ch_Golin_the_Healer 34 48 (2) 1;
     BlackBart_the_Shipwright 40 32 (2) 1;
+    Olin_the_Ghast 5 57 (2) 1;
   }
   object_type t_town;
 }
@@ -3669,7 +3715,7 @@ MAP m_BOG_TRAP_CLOSED {
 MECH_TYPE mech_bog_trap_L_lever {
   name "bog trap lever";
   defaults {
-    pmask 7;
+    pmask 16;
   }
   states {
     {
@@ -3721,7 +3767,7 @@ MAP m_BOULDER_TRAP_CLOSED {
 MECH_TYPE mech_boulder_trap_R_lever {
   name "boulder trap lever";
   defaults {
-    pmask 7;
+    pmask 16;
   }
   states {
     {
@@ -3771,7 +3817,7 @@ MAP m_FLAME_BARRIER_TRAP_CLOSED {
 MECH_TYPE mech_flame_barrier_trap_L_lever {
   name "flame_barrier trap lever";
   defaults {
-    pmask 7;
+    pmask 16;
   }
   states {
     {
@@ -3934,7 +3980,6 @@ player {
   y 34;
   sprite s_companion_wizard;
   speed 2;
-  pmask 1;
   mv_desc Walk;
   mv_sound "data/sounds/walk.wav";
   food 1000;

@@ -26,6 +26,7 @@
 #ifndef terrains_ghul
 #define terrains_ghul
 
+#include "../def_constants.ghul"
 
 /*
  *   Quick Guide for Map Creation:
@@ -68,7 +69,7 @@
 terrains  {
   t_deep {      
     name      "deep water";
-    pmask     2;
+    pmask     WATER;
     sprite    s_deep;
     glyph     _;
     id        0;
@@ -80,7 +81,7 @@ terrains  {
   }
   t_shallow {
     name      "shallow water";
-    pmask     2;
+    pmask     WATER;
     sprite    s_shallow;
     glyph     -;
     id        1;
@@ -104,7 +105,7 @@ terrains  {
   };
   t_bog {
     name      "bog";
-    pmask     1;
+    pmask     LAND;
     sprite    s_bog;
     glyph     %;
     id        3;
@@ -116,7 +117,7 @@ terrains  {
   };
   t_grass {
     name      "grass";
-    pmask     1;
+    pmask     LAND;
     sprite    s_grass;
     glyph     .;
     id        4;
@@ -128,7 +129,7 @@ terrains  {
   };
   t_trees {
     name      "trees";
-    pmask     1;
+    pmask     LAND;
     sprite    s_trees;
     glyph     t;
     id        5;
@@ -140,7 +141,7 @@ terrains  {
   };
   t_forest {
     name      "forest";
-    pmask     1;
+    pmask     LAND;
     sprite    s_forest;
     glyph     |;
     id        6;
@@ -152,7 +153,7 @@ terrains  {
   };
   t_hills {
     name      "hills";
-    pmask     1;
+    pmask     LAND;
     sprite    s_hills;
     glyph     ?;
     id        7;
@@ -164,7 +165,7 @@ terrains  {
   };
   t_mountains {
     name      "mountains";
-    pmask  0;
+    pmask     SOLID;
     sprite    s_mountains;
     glyph     ^;
     id        8;
@@ -176,7 +177,7 @@ terrains  {
   };
   t_leftwing {
     name      "castle";
-    pmask  0;
+    pmask     SOLID;
     sprite    s_leftwing;
     glyph     <;
     id        13;
@@ -187,7 +188,7 @@ terrains  {
   };
   t_rightwing {
     name      "castle";
-    pmask     0;
+    pmask     SOLID;
     sprite    s_rightwing;
     glyph     >;
     id        15;
@@ -198,7 +199,7 @@ terrains  {
   };
   t_cobblestone {
     name      "cobblestone";
-    pmask     1;
+    pmask     LAND;
     sprite    s_cobblestone;
     glyph     c;
     id        22;
@@ -242,7 +243,7 @@ terrains  {
   };
   t_pillar {
     name      "pillar";
-    pmask     0;
+    pmask     SOLID;
     sprite    s_pillar;
     glyph     p;
     id        48;
@@ -253,7 +254,7 @@ terrains  {
   };
   t_wall_b {
     name      "sea wall";
-    pmask     0;
+    pmask     SOLID;
     sprite    s_wall_b;
     glyph     1;
     id        49;
@@ -264,7 +265,7 @@ terrains  {
   };
   t_wall_a {
     name      "sea wall";
-    pmask     0;
+    pmask     SOLID;
     sprite    s_wall_a;
     glyph     2;
     id        50;
@@ -275,7 +276,7 @@ terrains  {
   };
   t_wall_c {
     name      "sea wall";
-    pmask     0;
+    pmask     SOLID;
     sprite    s_wall_c;
     glyph     3;
     id        51;
@@ -287,7 +288,7 @@ terrains  {
   ;
   t_wall_d {
     name      "sea wall";
-    pmask     0;
+    pmask     SOLID;
     sprite    s_wall_d;
     glyph     4;
     id        52;
@@ -298,7 +299,7 @@ terrains  {
   };
   t_mast {
     name      "mast";
-    pmask     0;
+    pmask     SOLID;
     sprite    s_mast;
     glyph     m;
     id        53;
@@ -309,7 +310,7 @@ terrains  {
   };
   t_trail {
     name      "ship's wheel";
-    pmask     1;
+    pmask     LAND;
     sprite    s_ships_wheel;
     glyph     f;
     id        54;
@@ -320,7 +321,7 @@ terrains  {
   };
   t_boulder {
     name      "boulder";
-    pmask  0;
+    pmask     SOLID;
     sprite    s_boulder;
     glyph     b;
     id        55;
@@ -331,7 +332,7 @@ terrains  {
   };
   t_wall_rock {
     name      "rock wall";
-    pmask     0;
+    pmask     SOLID;
     sprite    s_wall_rock;
     glyph     r;
     id        57;
@@ -342,7 +343,7 @@ terrains  {
   };
   t_ankh {
     name      "ankh";
-    pmask  0;
+    pmask     PASS_NONE;
     sprite    s_ankh;
     glyph     +;
     id        61;
@@ -353,7 +354,7 @@ terrains  {
   };
   t_flagstones {
     name      "flagstones";
-    pmask     1;
+    pmask     LAND;
     sprite    s_flagstone;
     glyph     ,;
     id        62;
@@ -364,7 +365,7 @@ terrains  {
   };
   t_deck {
     name      "deck";
-    pmask     1;
+    pmask     LAND;
     sprite    s_deck;
     glyph     e;
     id        63;
@@ -375,7 +376,7 @@ terrains  {
   };
   t_fire_terrain {
     name      "fire";
-    pmask     1;
+    pmask     LAND;
     sprite    s_field_fire;
     glyph     f;
     id        70;
@@ -384,11 +385,11 @@ terrains  {
     effects   EFFECT_BURN;
     light     512;
   };
-  TERRAIN(t_white_wall, "wall", 0, s_wall, 72, OPAQUE, 0, EFFECT_NONE, 0, w);
-  TERRAIN(t_bulwark, "ship's bulwark", 0, s_wall, 72, TRANSPARENT, 0, EFFECT_NONE, 0, w);
+  TERRAIN(t_white_wall, "wall", SOLID, s_wall, 72, OPAQUE, 0, EFFECT_NONE, 0, w);
+  TERRAIN(t_bulwark, "ship's bulwark", SOLID, s_wall, 72, TRANSPARENT, 0, EFFECT_NONE, 0, w);
   t_secret_door {
     name      "secret door";
-    pmask     1;
+    pmask     LAND;
     sprite    s_secret_door;
     glyph     ?;
     id        73;
@@ -400,7 +401,7 @@ terrains  {
   ;
   t_altar {
     name      "altar";
-    pmask     0;
+    pmask     SOLID;
     sprite    s_altar;
     glyph     a;
     id        74;
@@ -412,7 +413,7 @@ terrains  {
   ;
   t_fireplace {
     name      "fireplace";
-    pmask     1;
+    pmask     LAND;
     sprite    s_fireplace;
     glyph     &;
     id        75;
@@ -455,7 +456,7 @@ terrains  {
         
   t_lava {
     name      "lava";
-    pmask  1;
+    pmask     LAND;
     sprite    s_lava;
     glyph     !;
     id        76;
@@ -466,7 +467,7 @@ terrains  {
   };
   t_wall {
     name      "wall";
-    pmask     0;
+    pmask     SOLID;
     sprite    s_wall_stone;
     glyph     x;
     id        127;

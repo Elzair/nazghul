@@ -128,11 +128,12 @@
 /* 
  * Passability masks 
  */
-#define LAND      1
-#define WATER     2
-#define SHOALS    4
-#define PASS_ALL  7
 #define PASS_NONE 0
+#define SOLID     1
+#define LAND      2
+#define WATER     4
+#define SHOALS    8
+#define PASS_ALL  16
 
 /*
  * Default map palette (for convenience - I would prefer maps to use their own
@@ -213,6 +214,7 @@ palette { \
 #define COMMUTING 2  /* reserved */
 #define EATING    3  /* reserved */
 #define RELAXING  4
+#define IDLE      5
 
 
 

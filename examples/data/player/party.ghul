@@ -35,7 +35,7 @@ player {
   
   sprite    s_companion_wizard;
   speed     2;
-  pmask     1;
+  //  pmask     LAND; obsolete
   mv_desc   Walk;
   mv_sound  "data/sounds/walk.wav";
   food      1000;

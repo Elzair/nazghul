@@ -143,7 +143,7 @@ MECH_TYPE mech_portcullis {
     {
       name   "lowered portcullis";
       sprite s_portcullis_down;
-      pmask  PASS_NONE;
+      pmask  SOLID;
     }
   }
 
@@ -225,7 +225,7 @@ MECH_TYPE mech_vdoor {
     {
       name   "closed door";
       sprite s_door;
-      pmask  PASS_NONE;
+      pmask  SOLID;
       opaque 1;
     }
     {
@@ -237,13 +237,13 @@ MECH_TYPE mech_vdoor {
     {
       name   "locked door";
       sprite s_door_locked;
-      pmask  PASS_NONE;
+      pmask  SOLID;
       opaque 1;
     }
     {
       name   "magically locked door";
       sprite s_door_locked;
-      pmask  PASS_NONE;
+      pmask  SOLID;
       opaque 1;
     }
   }
@@ -307,7 +307,7 @@ MECH_TYPE mech_hdoor {
     {
       name   "closed door";
       sprite s_hdoor;
-      pmask  PASS_NONE;
+      pmask  SOLID;
       opaque 1;
     }
     {
@@ -319,13 +319,13 @@ MECH_TYPE mech_hdoor {
     {
       name   "locked door";
       sprite s_hdoor_locked;
-      pmask  PASS_NONE;
+      pmask  SOLID;
       opaque 1;
     }
     {
       name   "magically locked door";
       sprite s_hdoor_locked;
-      pmask  PASS_NONE;
+      pmask  SOLID;
       opaque 1;
     }
   }
