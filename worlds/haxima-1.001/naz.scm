@@ -314,3 +314,15 @@
   (let ((objs (find-object-types-at loc ktype)))
     (if (notnull? objs)
         (kobj-get kchar (car objs)))))
+
+;; ----------------------------------------------------------------------------
+;; place-random-corner -- randomly select a corner and return it as a location
+;; ----------------------------------------------------------------------------
+(define (place-random-corner kplace)
+  (case (kern-dice-roll "1d4")
+    ((1) (mk-loc kplace  0  0))
+    ((2) (mk-loc kplace  0  (- (kern-place-get-width kplace 1))))
+    ((3) (mk-loc kplace  (- (kern-place-get-height kplace) 1) 0))
+    ((4) (mk-loc kplace  
+                 (- (kern-place-get-height kplace) 1) 
+                 (- (kern-place-get-width kplace) 1)))))

@@ -9,6 +9,14 @@
 ;; add monsters if there are 2 or less, and I'll never add more than 3.
 ;; ----------------------------------------------------------------------------
 
+(define (af-spawn-spiders kplace n)
+  (if (> n 0)
+      (begin
+        (psummon (place-random-corner kplace)
+                 mk-wood-spider 
+                 1)
+        (af-spawn-spiders kplace (- n 1)))))
+
 (define (af-entry kplace kplayer)
   (let ((chars (filter kern-obj-is-char? (kern-place-get-objects kplace))))
     (let ((trolls (filter char-is-troll? chars))
@@ -18,7 +26,5 @@
                   mk-hill-troll
                   (kern-dice-roll "1d2")))
       (if (< (length spiders) 2)
-          (psummon (mk-loc kplace 23 3)
-                  mk-wood-spider
-                  (kern-dice-roll "1d2")))))
+          (af-spawn-spiders kplace (kern-dice-roll "1d2")))))
   #t)
