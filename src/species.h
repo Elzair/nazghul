@@ -34,8 +34,6 @@ extern "C" {
                 char *name;
                 int str, intl, dex, spd, vr, pmask, ac;
                 struct sprite *sleep_sprite;
-                int n_occs;
-                struct occ **occs;
                 int n_slots;
                 int *slots;
                 int n_spells;

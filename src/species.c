@@ -95,43 +95,6 @@ static int *loadSlots(class Loader * loader, int *n)
 	return set;
 }
 
-static struct occ **loadOccs(class Loader * loader, int *n)
-{
-	char *tag;
-	struct occ **set;
-	int index;
-
-	// base case
-	if (loader->matchToken('}')) {
-		set = new struct occ *[*n];
-		if (!set)
-			loader->setError("Memory allocation failed");
-		return set;
-	}
-	// recursive case
-	if (!loader->getWord(&tag))
-		return 0;
-
-	index = *n;
-	(*n)++;
-
-	set = loadOccs(loader, n);
-	if (!set) {
-		free(tag);
-		return 0;
-	}
-
-	set[index] = (struct occ *) loader->lookupTag(tag, OCC_ID);
-	if (!set[index]) {
-		loader->setError("Invalid OCC type '%s'", tag);
-		free(tag);
-		delete set;
-		return 0;
-	}
-
-	return set;
-}
-
 void speciesDestroy(struct species *species)
 {
 	if (!species)
@@ -140,8 +103,6 @@ void speciesDestroy(struct species *species)
 		free(species->tag);
 	if (species->name)
 		free(species->name);
-	if (species->occs)
-		delete species->occs;
 	if (species->slots)
 		delete species->slots;
 	if (species->spells)
@@ -203,10 +164,7 @@ struct species *speciesLoad(class Loader * loader)
 	    !loader->getBool(&species->visible))
 		goto fail;
 
-	if (!loader->matchWord("occs") ||
-	    !loader->matchToken('{') ||
-	    !(species->occs = loadOccs(loader, &species->n_occs)) ||
-	    !loader->matchWord("slots") ||
+	if (!loader->matchWord("slots") ||
 	    !loader->matchToken('{') ||
 	    !(species->slots = loadSlots(loader, &species->n_slots)) ||
 	    !loader->matchWord("spells") ||

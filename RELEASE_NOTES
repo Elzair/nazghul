@@ -2,6 +2,10 @@ Changes between nazghul-0.1.2 and nazghul-0.1.3
 
 gmcnutt:
 
+o [both] The damage and armor fields of ARMS are now a range of integers. This
+  simulates a single dice with a modifier. Currently only the max end of the
+  range is actually used by the engine.
+
 o [engine] Added EFFECT_RESTORE to support mana restoration potions. Had to
   sacrifice EFFECT_NATURAL because the effects bitmask is out of bits. Turns
   out bit 31 does not work right because of an issue with atoi interpreting it

@@ -40,9 +40,6 @@ SPECIES human {
   sleep_sprite s_corpse;
   weapon       t_hands;
   visible      1;
-  occs {
-    ranger;
-  }
   slots {
     HELM_SLOT;
     AMULET_SLOT;
@@ -70,9 +67,6 @@ SPECIES goblin {
   sleep_sprite s_corpse;
   weapon t_hands;
   visible 1;
-  occs {
-    raider;
-  }
   slots {
     HELM_SLOT;
     AMULET_SLOT;
@@ -100,9 +94,6 @@ SPECIES gazer {
   sleep_sprite s_corpse;
   weapon t_teeth;
   visible 1;
-  occs {
-    wizard;
-  }
   slots {
     HELM_SLOT;
     AMULET_SLOT;
@@ -131,9 +122,6 @@ SPECIES skeleton {
   sleep_sprite s_corpse;
   weapon t_hands;
   visible 1
-    occs {
-    soldier;
-  }
   slots {
     HELM_SLOT;
     AMULET_SLOT;
@@ -161,8 +149,6 @@ SPECIES horse {
   sleep_sprite null;
   weapon       t_hooves;  // SAM: Noticed that 'null' is not valid here...
   visible 1
-    occs {
-  }
   slots {
   }
   spells {
@@ -181,8 +167,6 @@ SPECIES snake {
   sleep_sprite null;
   weapon t_teeth;
   visible 1
-    occs {
-  }
   slots {
   }
   spells {
@@ -202,8 +186,6 @@ SPECIES insects {
   sleep_sprite null;
   weapon       t_stinger;
   visible      1
-    occs {
-  }
   slots {
   }
   spells {
@@ -222,8 +204,6 @@ SPECIES ghast {
   sleep_sprite s_corpse;
   weapon       t_hands;
   visible      0
-    occs {
-  }
   slots {
     HELM_SLOT;
     AMULET_SLOT;
@@ -250,9 +230,6 @@ SPECIES nixie {
   sleep_sprite s_corpse;
   weapon       t_hands;  // Should be magical water blast...
   visible      1;
-  occs {
-    triton;
-  }
   slots {
     HELM_SLOT;
     AMULET_SLOT;
@@ -280,8 +257,6 @@ SPECIES water_elemental {
   sleep_sprite s_shallow;  // Looks like water when asleep...  :-)
   weapon       t_hands;  // Should be magical water blast...
   visible      1;
-  occs {
-  }
   slots {
   }
   spells {
@@ -303,7 +278,6 @@ SPECIES slime {
         sleep_sprite s_slime_asleep;
         weapon       t_acid_spray;
         visible      1;
-        occs {}
         slots {}
         spells {}
         STD_DAMAGE_SOUND;
@@ -338,7 +312,6 @@ SPECIES yellow_slime {
         sleep_sprite s_yellow_slime_asleep;
         weapon       t_acid_spray;
         visible      1;
-        occs {}
         slots {}
 
         // The yellow boss slimes can summon the green slimes
