@@ -133,7 +133,7 @@ SPRITE_SET ss_angband {
     STD_SPRITE(s_mushroom15, 190);
     
     /* Hats, helms and the occasional crown */
-    STD_SPRITE(s_helm1,  248);
+    STD_SPRITE(s_helm1,  248);  // Leather cap
     STD_SPRITE(s_helm2,  249);
     STD_SPRITE(s_helm3,  250);
     STD_SPRITE(s_helm4,  251);
@@ -141,7 +141,7 @@ SPRITE_SET ss_angband {
     STD_SPRITE(s_helm6,  253);
     STD_SPRITE(s_helm7,  254);
     STD_SPRITE(s_helm8,  255);
-    STD_SPRITE(s_helm9,  256);
+    STD_SPRITE(s_helm9,  256);  // Metal helm
     STD_SPRITE(s_helm10, 257);
     STD_SPRITE(s_helm11, 258);
     STD_SPRITE(s_helm12, 259);
@@ -156,17 +156,19 @@ SPRITE_SET ss_angband {
     STD_SPRITE(s_helm21, 268);
     STD_SPRITE(s_helm22, 269);
     
-    /* Footware */
-    STD_SPRITE(s_shoe1, 270);
-    STD_SPRITE(s_shoe2, 271);
-    STD_SPRITE(s_shoe3, 272);
-    STD_SPRITE(s_shoe4, 273);
-    STD_SPRITE(s_shoe5, 274);
-    STD_SPRITE(s_shoe6, 275);
+    // Footwear
+    STD_SPRITE(s_shoes,         270);
+    STD_SPRITE(s_leather_boots, 271);
+    STD_SPRITE(s_plate_boots,   272);
 
-    /* Shields */
-    STD_SPRITE(s_shield1,  276);
-    STD_SPRITE(s_shield2,  277);
+    // Gloves / Gauntlets
+    STD_SPRITE(s_leather_gauntlets, 273);
+    STD_SPRITE(s_plate_gauntlets,   274);
+    STD_SPRITE(s_black_gauntlets,   275);
+
+    // Shields
+    STD_SPRITE(s_shield1,  276);  // Bronze small round shield
+    STD_SPRITE(s_shield2,  277);  // Bronze large triangular shield
     STD_SPRITE(s_shield3,  278);
     STD_SPRITE(s_shield4,  279);
     STD_SPRITE(s_shield5,  280);
@@ -186,23 +188,37 @@ SPRITE_SET ss_angband {
     STD_SPRITE(s_shield19, 294);
     STD_SPRITE(s_shield20, 295);
     
-    STD_SPRITE(s_dagger,    334);
-    STD_SPRITE(s_sword,     345);
+    // Melee Weapons
+    STD_SPRITE(s_dagger,      334);
+    STD_SPRITE(s_sword,       345);
+    STD_SPRITE(s_long_sword, 1708);
+    STD_SPRITE(s_2h_sword,  1709);
+
     STD_SPRITE(s_2h_hammer, 352);
     STD_SPRITE(s_mace,      353);
+
+    // Thrown Weapons
     STD_SPRITE(s_spear,     361);
+
+    // Projectile Weapons
     STD_SPRITE(s_lght_bow,  376);
     STD_SPRITE(s_hvy_bow,   377);
+
     STD_SPRITE(s_lght_xbow, 378);
     STD_SPRITE(s_hvy_xbow,  379);
+
     STD_SPRITE(s_sling,     380);
-    STD_SPRITE(s_ring_mail, 309);
-    
+
+    // Body Armor
+    STD_SPRITE(s_hard_leather, 305);  // Leather suit
+    STD_SPRITE(s_ring_mail,    309);  // Mail    suit
+    STD_SPRITE(s_plate_armor,  316);  // Plate   suit
+
+    // Tools and Such    
     STD_SPRITE(s_torch,     459);
-    
+
+    // Misc / Other / Unsorted ...
     SPRITE(s_explosion,  1,  570, normal);
-    SPRITE(s_long_sword, 1, 1708, normal);
-    SPRITE(s_2h_sword,   1, 1709, normal);
     SPRITE(s_giant,      2,  652, normal);
   }
 } /* SPRITE_SET ss_angband */

@@ -127,8 +127,25 @@ player {
   
     99 t_oil;
   
-    // Armor and Worn Items          
-    1  t_ring_mail;
+    // Armor and Worn Items:
+
+    // Helms
+    2  t_leather_cap;
+    2  t_iron_helm;
+
+    // Body Armor
+    2  t_leather_armor;
+    2  t_ring_mail;
+    1  t_plate_armor;
+
+    // Shields
+    2  t_sm_shield;
+    2  t_lrg_shield;
+
+    // Boots
+    2 t_shoes;
+    2 t_leather_boots;
+    2 t_plate_boots;
   
     // Potions
     50 t_red_potion;
