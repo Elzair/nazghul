@@ -1,0 +1,54 @@
+/* M_dark_passage.ghul
+ * Map created by Gordon McNutt 2002
+ *
+ * A dark subterranean passage connecting two points.
+ */
+#ifndef M_dark_passage_ghul
+#define M_dark_passage_ghul
+
+
+MAP m_passage {
+  type    ascii;
+  width   32;
+  height  32;
+  STD_TERRAIN_PALETTE;
+  terrain {
+      x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x
+      x , , , , , , x x x x x x x x x x x x x x x x x x ~ ~ x x x x x
+      x , , , , , , x x x x x x x x x x x x x x x x x x ~ x x x x x x
+      x , , , , , , x x x x x x x x x x x x x x x x ~ ~ ~ x x x x x x
+      x , , , , , , x x x x x x x x x x x x x x x x ~ x x x x x x x x
+      x , , , , , , x x x x x x x x x x x x x x x x ~ x x x x x x x x
+      x x x x , , , x x x x x x x x x x x x x ~ ~ ~ ~ x x x x x x x x
+      x x x x , , , x x x x x x x x x x x x x ~ x x x x x x x x x x x
+      x x x x , , , x x x x x x x x x x x x x ~ x x x x x x x x x x x
+      x x x x , , , x x x x x , , , , , ~ ~ ~ ~ x x x x x x x x x x x
+      x x x x , , , x x x x , , , , , , ~ ~ ~ ~ ~ ~ x x x x x x x x x
+      x x x x , , , x x , , , , , , , ~ ~ ~ ~ , , , x x x x x x x x x
+      x x x x x , , , , , , , , , , , ~ , , , , , , x x x x x x x x x
+      x x x x x x , , , , , , , , , , ~ , , , , , , x x x x x x x x x
+      x x x x x x x x x , , , , , , , = , , , , , , x x x x x x x x x
+      x x x x x x x x x , , , , , , , ~ , , , , , , x x x x x x x x x
+      x x x x x x x x x x , , , , , , ~ , , , , , , , x x x x x x x x
+      x x x x x x x x x x , , , , , ~ ~ , , , , , , , x x x x x x x x
+      x x x x x x x x x x , , , , ~ ~ , , , , , , , , , , , , x x x x
+      x x x x x x x x x x , , ~ ~ ~ , , , , , , , , , , , , , x x x x
+      x x x x x x x x x x , ~ ~ , , , , , , , , , , , x x , , , x x x
+      x x x x x x x x x x ~ ~ , , , , , , , , , , x x x x , , , x x x
+      x x x x x x x x x x ~ x x x x x x x x x x x x x x x , , , x x x
+      x x x x x x x x x ~ ~ x x x x x x x x x x x x x x x , , , x x x
+      x x x x x x x x x ~ x x x x . . . . . . . x x x x x , , , x x x
+      x x x x x x x x ~ ~ x x x . . . . . . . . . x x x x , , , x x x
+      x x x x x x x x ~ x x x x . . . . . . . . . x x x x , , , , , x
+      x x x x x x x ~ ~ x x x x . . . . . . . . . x x x x , , , , , x
+      x x x x x x x ~ ~ x x x x ~ . . . . . . . . x x x x , , , , , x
+      x x x x x x x x ~ ~ ~ ~ ~ ~ ~ . . . . . . . x x x x , , , , , x
+      x x x x x x x x x x x x x ~ . . . . . . . x x x x x , , , , , x
+      x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x
+  }
+} // m_passage
+
+
+#endif // M_dark_passage_ghul
+
+/* eof */

@@ -1,0 +1,463 @@
+/* terrains.ghul
+ *
+ * Defines terrain objects which are used to form maps.
+ */
+#ifndef terrains_ghul
+#define terrains_ghul
+
+
+/*
+ *   Quick Guide for Map Creation:
+ *   -----------------------------
+ *   _    deep water
+ *   -    shallow water
+ *   ~    shoals
+ *   %    bog
+ *   .    grass
+ *   t    trees
+ *   |    forest
+ *   {    hills
+ *   ^    mountains
+ *   <    left wing of large castle
+ *   >    right wing of large castle
+ *   c    cobblestone
+ *   =    small bridge
+ *   g    top of large bridge
+ *   h    bottom of large bridge
+ *   p    pillar (round column)
+ *   1-4  sea wall
+ *   m    mast
+ *   (    trail
+ *   b    boulder
+ *   r    rock wall
+ *   +    ankh
+ *   ,    flagstone
+ *   e    deck
+ *   w    white wall
+ *   ?    secret door
+ *   a    altar
+ *   &    fireplace
+ *   A-Z  letters
+ *   !    lava
+ *   x    stone wall
+ *   f    trail
+ */
+
+
+terrains  {
+  t_deep {      
+    name      "deep water";
+    pmask     2;
+    sprite    s_deep;
+    glyph     _;
+    id        0;
+    alpha     1;
+    movement_cost 1;
+    effects   0;
+    light     0;
+    color     0x23408e;
+  }
+  t_shallow {
+    name      "shallow water";
+    pmask     2;
+    sprite    s_shallow;
+    glyph     -;
+    id        1;
+    alpha     1;
+    movement_cost 1;
+    effects   0;
+    light     0;
+    color     0x008fff;
+  };
+  t_shoals {
+    name      "shoals";
+    pmask     SHOALS;
+    sprite    s_shoals;
+    glyph     ~;
+    id        2;
+    alpha     1;
+    movement_cost 1;
+    effects   0;
+    light     0;
+    color     0x00ffff;
+  };
+  t_bog {
+    name      "bog";
+    pmask     1;
+    sprite    s_bog;
+    glyph     %;
+    id        3;
+    alpha     1;
+    movement_cost 2;
+    effects   EFFECT_POISON;
+    light     0;
+    color     0xa160d6;
+  };
+  t_grass {
+    name      "grass";
+    pmask     1;
+    sprite    s_grass;
+    glyph     .;
+    id        4;
+    alpha     1;
+    movement_cost 1;
+    effects   0;
+    light     0;
+    color     0x17ea1e;
+  };
+  t_trees {
+    name      "trees";
+    pmask     1;
+    sprite    s_trees;
+    glyph     t;
+    id        5;
+    alpha     1;
+    movement_cost 1;
+    effects   0;
+    light     0;
+    color     0x45a845;
+  };
+  t_forest {
+    name      "forest";
+    pmask     1;
+    sprite    s_forest;
+    glyph     |;
+    id        6;
+    alpha     0;
+    movement_cost 2;
+    effects   0;
+    light     0;
+    color     0x1d7025;
+  };
+  t_hills {
+    name      "hills";
+    pmask     1;
+    sprite    s_hills;
+    glyph     ?;
+    id        7;
+    alpha     1;
+    movement_cost 2;
+    effects   0;
+    light     0;
+    color     0x808080;
+  };
+  t_mountains {
+    name      "mountains";
+    pmask  0;
+    sprite    s_mountains;
+    glyph     ^;
+    id        8;
+    alpha     0;
+    movement_cost 2;
+    effects   0;
+    light     0;
+    color     0xffffff;
+  };
+  t_leftwing {
+    name      "castle";
+    pmask  0;
+    sprite    s_leftwing;
+    glyph     <;
+    id        13;
+    alpha     1;
+    movement_cost 1;
+    effects   0;
+    light     0;
+  };
+  t_rightwing {
+    name      "castle";
+    pmask     0;
+    sprite    s_rightwing;
+    glyph     >;
+    id        15;
+    alpha     1;
+    movement_cost 1;
+    effects   0;
+    light     0;
+  };
+  t_cobblestone {
+    name      "cobblestone";
+    pmask     1;
+    sprite    s_cobblestone;
+    glyph     c;
+    id        22;
+    alpha     1;
+    movement_cost 1;
+    effects   0;
+    light     0;
+  };
+  t_bridge {
+    name      "bridge";
+    pmask     3;
+    sprite    s_bridge;
+    glyph     =;
+    id        23;
+    alpha     1;
+    movement_cost 1;
+    effects   0;
+    light     0;
+  };
+  t_bridge_top {
+    name      "bridge";
+    pmask     3;
+    sprite    s_bridge_top;
+    glyph     g;
+    id        25;
+    alpha     1;
+    movement_cost 1;
+    effects   0;
+    light     0;
+  };
+  t_bridge_bottom {
+    name      "bridge";
+    pmask     3;
+    sprite    s_bridge_bottom;
+    glyph     h;
+    id        26;
+    alpha     1;
+    movement_cost 1;
+    effects   0;
+    light     0;
+  };
+  t_pillar {
+    name      "pillar";
+    pmask     0;
+    sprite    s_pillar;
+    glyph     p;
+    id        48;
+    alpha     TRANSPARENT;
+    movement_cost 1;
+    effects   0;
+    light     0;
+  };
+  t_wall_b {
+    name      "sea wall";
+    pmask     0;
+    sprite    s_wall_b;
+    glyph     1;
+    id        49;
+    alpha     0;
+    movement_cost 1;
+    effects   0;
+    light     0;
+  };
+  t_wall_a {
+    name      "sea wall";
+    pmask     0;
+    sprite    s_wall_a;
+    glyph     2;
+    id        50;
+    alpha     0;
+    movement_cost 1;
+    effects   0;
+    light     0;
+  };
+  t_wall_c {
+    name      "sea wall";
+    pmask     0;
+    sprite    s_wall_c;
+    glyph     3;
+    id        51;
+    alpha     0;
+    movement_cost 1;
+    effects   0;
+    light     0;
+  };
+  ;
+  t_wall_d {
+    name      "sea wall";
+    pmask     0;
+    sprite    s_wall_d;
+    glyph     4;
+    id        52;
+    alpha     0;
+    movement_cost 1;
+    effects   0;
+    light     0;
+  };
+  t_mast {
+    name      "mast";
+    pmask     0;
+    sprite    s_mast;
+    glyph     m;
+    id        53;
+    alpha     1;
+    movement_cost 1;
+    effects   0;
+    light     0;
+  };
+  t_trail {
+    name      "ship's wheel";
+    pmask     1;
+    sprite    s_ships_wheel;
+    glyph     f;
+    id        54;
+    alpha     1;
+    movement_cost 1;
+    effects   0;
+    light     0;
+  };
+  t_boulder {
+    name      "boulder";
+    pmask  0;
+    sprite    s_boulder;
+    glyph     b;
+    id        55;
+    alpha     1;
+    movement_cost 1;
+    effects   0;
+    light     0;
+  };
+  t_wall_rock {
+    name      "rock wall";
+    pmask     0;
+    sprite    s_wall_rock;
+    glyph     r;
+    id        57;
+    alpha     0;
+    movement_cost 1;
+    effects   0;
+    light     0;
+  };
+  t_ankh {
+    name      "ankh";
+    pmask  0;
+    sprite    s_ankh;
+    glyph     +;
+    id        61;
+    alpha     1;
+    movement_cost 1;
+    effects   0;
+    light     0;
+  };
+  t_flagstones {
+    name      "flagstones";
+    pmask     1;
+    sprite    s_flagstone;
+    glyph     ,;
+    id        62;
+    alpha     1;
+    movement_cost 1;
+    effects   0;
+    light     0;
+  };
+  t_deck {
+    name      "deck";
+    pmask     1;
+    sprite    s_deck;
+    glyph     e;
+    id        63;
+    alpha     1;
+    movement_cost 1;
+    effects   0;
+    light     0;
+  };
+  t_fire_terrain {
+    name      "fire";
+    pmask     1;
+    sprite    s_field_fire;
+    glyph     f;
+    id        70;
+    alpha     1;
+    movement_cost 1;
+    effects   EFFECT_BURN;
+    light     512;
+  };
+  TERRAIN(t_white_wall, "wall", 0, s_wall, 72, OPAQUE, 0, EFFECT_NONE, 0, w);
+  TERRAIN(t_bulwark, "ship's bulwark", 0, s_wall, 72, TRANSPARENT, 0, EFFECT_NONE, 0, w);
+  t_secret_door {
+    name      "secret door";
+    pmask     1;
+    sprite    s_secret_door;
+    glyph     ?;
+    id        73;
+    alpha     0;
+    movement_cost 1;
+    effects   0;
+    light     0;
+  };
+  ;
+  t_altar {
+    name      "altar";
+    pmask     0;
+    sprite    s_altar;
+    glyph     a;
+    id        74;
+    alpha     1;
+    movement_cost 1;
+    effects   0;
+    light     0;
+  };
+  ;
+  t_fireplace {
+    name      "fireplace";
+    pmask     1;
+    sprite    s_fireplace;
+    glyph     &;
+    id        75;
+    alpha     1;
+    movement_cost 1;
+    effects   EFFECT_BURN;
+    light     512;
+  };
+  
+  TERRAIN(t_A, "A", 0, s_A,  96, TRANSPARENT, 0, EFFECT_NONE, 0, A);
+  TERRAIN(t_B, "B", 0, s_B,  97, TRANSPARENT, 0, EFFECT_NONE, 0, B);
+  TERRAIN(t_C, "C", 0, s_C,  98, TRANSPARENT, 0, EFFECT_NONE, 0, C);
+  TERRAIN(t_D, "D", 0, s_D,  99, TRANSPARENT, 0, EFFECT_NONE, 0, D);
+  TERRAIN(t_E, "E", 0, s_E, 100, TRANSPARENT, 0, EFFECT_NONE, 0, E);
+  TERRAIN(t_F, "F", 0, s_F, 101, TRANSPARENT, 0, EFFECT_NONE, 0, F);
+  TERRAIN(t_G, "G", 0, s_G, 102, TRANSPARENT, 0, EFFECT_NONE, 0, G);
+  TERRAIN(t_H, "H", 0, s_H, 103, TRANSPARENT, 0, EFFECT_NONE, 0, H);
+  TERRAIN(t_I, "I", 0, s_I, 104, TRANSPARENT, 0, EFFECT_NONE, 0, I);
+  TERRAIN(t_J, "J", 0, s_J, 105, TRANSPARENT, 0, EFFECT_NONE, 0, J);
+  TERRAIN(t_K, "K", 0, s_K, 106, TRANSPARENT, 0, EFFECT_NONE, 0, K);
+  TERRAIN(t_L, "L", 0, s_L, 107, TRANSPARENT, 0, EFFECT_NONE, 0, L);
+  TERRAIN(t_M, "M", 0, s_M, 108, TRANSPARENT, 0, EFFECT_NONE, 0, M);
+  TERRAIN(t_N, "N", 0, s_N, 109, TRANSPARENT, 0, EFFECT_NONE, 0, N);
+  TERRAIN(t_O, "O", 0, s_O, 110, TRANSPARENT, 0, EFFECT_NONE, 0, O);
+  TERRAIN(t_P, "P", 0, s_P, 111, TRANSPARENT, 0, EFFECT_NONE, 0, P);
+  TERRAIN(t_Q, "Q", 0, s_Q, 112, TRANSPARENT, 0, EFFECT_NONE, 0, Q);
+  TERRAIN(t_R, "R", 0, s_R, 113, TRANSPARENT, 0, EFFECT_NONE, 0, R);
+  TERRAIN(t_S, "S", 0, s_S, 114, TRANSPARENT, 0, EFFECT_NONE, 0, S);
+  TERRAIN(t_T, "T", 0, s_T, 115, TRANSPARENT, 0, EFFECT_NONE, 0, T);
+  TERRAIN(t_U, "U", 0, s_U, 116, TRANSPARENT, 0, EFFECT_NONE, 0, U);
+  TERRAIN(t_V, "V", 0, s_V, 117, TRANSPARENT, 0, EFFECT_NONE, 0, V);
+  TERRAIN(t_W, "W", 0, s_W, 118, TRANSPARENT, 0, EFFECT_NONE, 0, W);
+  TERRAIN(t_X, "X", 0, s_X, 119, TRANSPARENT, 0, EFFECT_NONE, 0, X);
+  TERRAIN(t_Y, "Y", 0, s_Y, 120, TRANSPARENT, 0, EFFECT_NONE, 0, Y);
+  TERRAIN(t_Z, "Z", 0, s_Z, 121, TRANSPARENT, 0, EFFECT_NONE, 0, Z);
+  TERRAIN(t_counter_middle, "counter", 0, s_counter_middle, 122, TRANSPARENT, 0, EFFECT_NONE, 0, @);
+  TERRAIN(t_counter_right,  "counter", 0, s_counter_right,  123, TRANSPARENT, 0, EFFECT_NONE, 0, ]);
+  TERRAIN(t_counter_left,   "counter", 0, s_counter_left,   124, TRANSPARENT, 0, EFFECT_NONE, 0, [);
+  TERRAIN(t_counter_pillar, "pillar",  0, s_counter_pillar, 125, TRANSPARENT, 0, EFFECT_NONE, 0, 0);
+        
+  t_lava {
+    name      "lava";
+    pmask  1;
+    sprite    s_lava;
+    glyph     !;
+    id        76;
+    alpha     1;
+    movement_cost 1;
+    effects   EFFECT_BURN;
+    light     128;
+  };
+  t_wall {
+    name      "wall";
+    pmask     0;
+    sprite    s_wall_stone;
+    glyph     x;
+    id        127;
+    alpha     0;
+    movement_cost 1;
+    effects   0;
+    light     0;
+  }
+} /* terrains */
+
+
+
+#endif // terrains_ghul
+
+/* eof */

@@ -1,0 +1,36 @@
+/* projectiles.ghul
+ *
+ * Defines objects which are used as projectiles.
+ * By convention, objects which may appear in inventory
+ * (as ammunition for missile weapons, for example)
+ * are tagged as 
+ *     t_SOMETHING, 
+ * whereas objects which are typically created as temporary 
+ * objects lasting only the duration of a missile attack
+ * (such as fireballs and such) are tagged as
+ *     M_SOMETHING
+ * 
+ * Note that ammunition object types must be defined before 
+ * the missile weapons(s) that use them are.
+ */
+#ifndef projectiles_ghul
+#define projectiles_ghul
+
+
+// Temporary Missiles (for spells and such)
+ARMS_TYPE(M_fire,     "fire missile",   s_field_fire,   0, 0, NO_SLOT, 0, 0, null, 0, 0, F_fire,   0);
+ARMS_TYPE(M_protect,  "protect missile",s_field_energy, 0, 0, NO_SLOT, 0, 0, null, 0, 0, F_protect,0);
+ARMS_TYPE(M_poison,   "poison missile", s_field_poison, 0, 0, NO_SLOT, 0, 0, null, 0, 0, F_poison, 0);
+ARMS_TYPE(M_sleep,    "sleep missile",  s_field_sleep,  0, 0, NO_SLOT, 0, 0, null, 0, 0, F_sleep,  0);
+ARMS_TYPE(M_fireball, "fire ball",      s_lava,         0, 0, NO_SLOT, 0, 0, null, 0, 0, null,     0);
+
+// Ammunition Objects (can be found in inventory)
+ARMS_TYPE(t_arrow,    "arrows",         s_arrow,        0, 0, NO_SLOT, 0, 0, null, 0, 0, null,     1);
+ARMS_TYPE(t_bolt,     "bolts",          s_bolt,         0, 0, NO_SLOT, 0, 0, null, 0, 0, null,     1);
+ARMS_TYPE(t_rock,     "rock",           s_boulder,      0, 0, NO_SLOT, 0, 0, null, 0, 0, null,     1);
+
+
+
+#endif // projectiles_ghul
+
+/* eof */

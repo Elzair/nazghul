@@ -1,0 +1,96 @@
+/* Copyright (c) 2002 Gordon McNutt */
+/* types.ghul
+ * 
+ * Definition file for all the object types in u5
+ */
+#ifndef types_ghul
+#define types_ghul
+
+
+/*****************************************************************************
+ ***   CONSTANTS AND MACROS   ***
+ ****************************************************************************/
+#include "../dup_constants.h"  // From the Nazghul source dir
+
+#include "def_constants.ghul"
+#include "def_macros.ghul"
+
+
+/*****************************************************************************
+ ***   SPRITES, FRAME, and CURSOR   ***
+ ****************************************************************************/
+
+// FIXME: The U4 sprite set must be first, because s_null is used elsewhere...
+#include "sprite_sets/ultima_IV_sprite_set.ghul"
+#include "sprite_sets/angband_sprite_set.ghul"
+#include "sprite_sets/misc_added_sprite_set.ghul"    
+
+#include "sprite_sets/moons_sprite_set.ghul"
+#include "sprite_sets/ultima_IV_font_sprite_set.ghul"
+#include "sprite_sets/frame_sprite_set.ghul"
+
+CURSOR ls_whirlpool;  // From ss_u4
+
+
+/*****************************************************************************
+ ***   TERRAINS   ***
+ ****************************************************************************/
+#include "types/terrains.ghul"
+
+
+/*****************************************************************************
+ ***   OBJECT TYPES   ***
+ ****************************************************************************/
+
+object_types {
+  // This is needed later for CROSSHAIR
+  GENERIC_TYPE(t_cursor, "cursor", s_crosshair, LAYER_CURSOR);
+
+#include "types/portal_types.ghul"    // Must be before places
+#include "types/magical_fields.ghul"  // Must be before spells
+#include "types/containers.ghul"      // Must be before occupations
+#include "types/chest_traps.ghul"     // Must be before occupations
+#include "types/projectiles.ghul"     // Must be before weapons and spells
+#include "types/weapons.ghul"         // 
+#include "types/worn_items.ghul"      // 
+#include "types/useable_items.ghul"   // 
+#include "types/readable_items.ghul"  // 
+    
+} /* object_types */
+
+
+/*****************************************************************************
+ ***  MAGIC_WORDS, REAGENTS, SPELLS  ***
+ *****************************************************************************/
+#include "types/spells.ghul"  // Must be before species
+
+
+/*****************************************************************************
+ ***  OCCUPATIONS, SPECIES, NPC PARTY TYPES  ***
+ *****************************************************************************/
+#include "types/occupations.ghul"  // Must be before species
+#include "types/species.ghul"
+#include "types/npc_party_defs.ghul"
+
+
+/*****************************************************************************
+ ***  ORPHANED BITS  ***
+ *****************************************************************************/
+// Gordon mentioned that ordnance_types would be changed to armaments,
+// at which time this stuff would get moved into "projectiles.ghul":
+ordnance_types {
+  at_cannon {
+    name       "cannon";
+    fire_sound "data/sounds/cannon.wav";
+    range      5;
+    damage     10;
+    ammo       t_sword;
+  }
+}
+
+#include "types/vehicles.ghul"  // Must be after ordnance (for now, projectiles eventually)
+
+
+#endif // types_ghul
+
+/* eof */

@@ -1,0 +1,188 @@
+/* def_constants.ghul
+ *
+ * Contains constants defined and used in GhulScript files.
+ * Constants shared with the C engine core are in "dup_constants.h".
+ */
+#ifndef def_constants_ghul
+#define def_constants_ghul
+
+
+/*
+ * Some common defines:
+ */
+#define TRUE  1
+#define FALSE 0
+
+
+/*
+ *  Facings. These need to correspond with the direction macros in common.h,
+ *  but these are bit masks, whereas those in common.h can be read as bit 
+ *  numbers.
+ */
+#define FAC_NW    1
+#define FAC_N     2
+#define FAC_NE    4
+
+#define FAC_W     8
+#define FAC_H     16
+#define FAC_E     32
+
+#define FAC_SW    64
+#define FAC_S     128
+#define FAC_SE    256
+
+#define FAC_EW    40
+#define FAC_NSEW  170
+
+
+/*
+ * Defines for transparency / opacity and such:
+ */
+#define TRANSPARENT 1
+#define OPAQUE      0
+
+
+/*
+ * Targeting Modes (must match similar macros in common.h)
+ * SAM: TODO: Move this to dup_constants.h ?
+ */
+#define TARG_NONE       0
+#define TARG_SELF       1
+#define TARG_FRIEND     2
+
+
+/*
+ * Armament slot masks
+ */
+#define NO_SLOT                 0
+#define AMULET_SLOT             1
+#define RING_SLOT               2
+#define GAZER_HELM              4
+#define WEAPON_SLOT             8
+#define SHIELD_SLOT             8
+#define WEAPON_OR_SHIELD_SLOT   8
+#define ARMOUR_SLOT             16
+#define BOOT_SLOT               32
+#define HELM_SLOT               64
+
+
+/*
+ * Morphologies (in terms of Armament slot masks)
+ */
+#define HUMANOID_MORPHOLOGY        \
+    n_slots 8 {                    \
+        mask HELM_SLOT             \
+        mask AMULET_SLOT           \
+        mask WEAPON_OR_SHIELD_SLOT \
+        mask WEAPON_OR_SHIELD_SLOT \
+        mask ARMOUR_SLOT           \
+        mask BOOT_SLOT             \
+        mask RING_SLOT             \
+        mask RING_SLOT             \
+    } 
+
+
+/*
+ * Services (must match the macros in common.h)
+ */
+#define SRV_HEAL      1
+#define SRV_CURE      2
+#define SRV_RESURRECT 3
+
+
+/*
+ * Layers (must match the layer enumeration in object.h)
+ * SAM: 2003/05/06 Note that they are already a little out
+ *                 of sync, though the ORDERING still matches, 
+ *                 which is required.
+ */
+#define LAYER_MECHANISM  1
+#define LAYER_PORTAL     2
+#define LAYER_CONTAINER  4
+#define LAYER_FIELD      6
+#define LAYER_BEING      9
+#define LAYER_CURSOR     10
+
+
+/* 
+ * Passability masks 
+ */
+#define LAND      1
+#define WATER     2
+#define SHOALS    4
+#define PASS_ALL  7
+#define PASS_NONE 0
+
+/*
+ * Default map palette (for convenience - I would prefer maps to use their own
+ * optimized palettes. An optimized palette contains only the necessary entries
+ * and lists them in order of frequency. --gmcnutt).
+ */
+#define STD_TERRAIN_PALETTE \
+palette { \
+        '_'    t_deep; \
+        '-'    t_shallow; \
+        '~'    t_shoals; \
+        '%'    t_bog; \
+        '.'    t_grass; \
+        't'    t_trees; \
+        '|'    t_forest; \
+        '{'    t_hills; \
+        '^'    t_mountains; \
+        '<'    t_leftwing; \
+        '>'    t_rightwing; \
+        'c'    t_cobblestone; \
+        '='    t_bridge; \
+        'g'    t_bridge_top; \
+        'h'    t_bridge_bottom; \
+        'p'    t_pillar; \
+        '1'    t_wall_b; \
+        '2'    t_wall_a; \
+        '3'    t_wall_c; \
+        '4'    t_wall_d; \
+        'm'    t_mast; \
+        'f'    t_fire_terrain; \
+        'b'    t_boulder; \
+        'r'    t_wall_rock; \
+        '+'    t_ankh; \
+        ','    t_flagstones; \
+        'e'    t_deck; \
+        '?'    t_secret_door; \
+        'a'    t_altar; \
+        '&'    t_fireplace; \
+        'A'    t_A; \
+        'B'    t_B; \
+        'C'    t_C; \
+        'D'    t_D; \
+        'E'    t_E; \
+        'F'    t_F; \
+        'G'    t_G; \
+        'H'    t_H; \
+        'I'    t_I; \
+        'J'    t_J; \
+        'K'    t_K; \
+        'L'    t_L; \
+        'M'    t_M; \
+        'N'    t_N; \
+        'O'    t_O; \
+        'P'    t_P; \
+        'Q'    t_Q; \
+        'R'    t_R; \
+        'S'    t_S; \
+        'T'    t_T; \
+        'U'    t_U; \
+        'V'    t_V; \
+        'W'    t_W; \
+        'X'    t_X; \
+        'Y'    t_Y; \
+        'Z'    t_Z; \
+        '!'    t_lava; \
+        'x'    t_wall; \
+        '@'    t_counter_middle; \
+        '['    t_counter_left; \
+        ']'    t_counter_right; \
+        '0'    t_counter_pillar; \
+}
+
+#endif // def_constants_ghul
+/* eof */

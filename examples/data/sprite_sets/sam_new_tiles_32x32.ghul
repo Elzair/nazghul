@@ -1,0 +1,61 @@
+/* sam_new_tiles_32x32.ghul
+ *
+ * Contains tiles intended to be used with other terrain, 
+ * being road/trail sections with transparency set to show
+ * the underlying terrain.
+ * 
+ * Added bridge tiles, for both West/East and North/South bridges.
+ * 
+ * Trail tiles created by Sam Glasby (2003)
+ * Bridge tiles based on U4 enhanced tiles by 'jcsteele@moongates.com'
+ */
+#ifndef sam_new_tiles_32x32_ghul
+#define sam_new_tiles_32x32_ghul
+
+
+SPRITE_SET ss_sam_new_tiles {
+  
+  image_width  32;
+  image_height 32;
+  file_rows    10;
+  file_cols    10;
+  file_offx    0;
+  file_offy    0;
+  file "images/sam_new_tiles_32x32.png";
+  
+  sprites {
+    SPRITE(s_NW_corner_trail,         1,  0, normal);
+    SPRITE(s_N_T_trail,               1,  1, normal);
+    SPRITE(s_NE_corner_trail,         1,  2, normal);
+    SPRITE(s_W_T_trail,               1, 10, normal);
+    SPRITE(s_center_crossroads_trail, 1, 11, normal);
+    SPRITE(s_E_T_trail,               1, 12, normal);
+    SPRITE(s_SW_corner_trail,         1, 20, normal);
+    SPRITE(s_S_T_trail,               1, 21, normal);
+    SPRITE(s_SE_corner_trail,         1, 22, normal);
+
+    SPRITE(s_N_end_trail,             1,  3, normal);
+    SPRITE(s_NS_section_trail,        1, 13, normal);
+    SPRITE(s_S_end_trail,             1, 23, normal);
+
+    SPRITE(s_W_end_trail,             1, 30, normal);
+    SPRITE(s_WE_section_trail,        1, 31, normal);
+    SPRITE(s_E_end_trail,             1, 32, normal);
+
+    SPRITE(s_standing_stone,          1, 33, normal);
+
+    SPRITE(s_WE_bridge,               1,  4, normal);
+    SPRITE(s_NS_bridge,               1,  5, normal);
+    SPRITE(s_N_bridge_edge,           1,  6, normal);
+    SPRITE(s_S_bridge_edge,           1, 16, normal);
+    SPRITE(s_W_bridge_edge,           1, 14, normal);
+    SPRITE(s_E_bridge_edge,           1, 15, normal);
+    SPRITE(s_center_planking,         1, 24, normal);
+
+  }
+} // SPRITE_SET ss_sam_new_tiles
+
+
+#endif // sam_new_tiles_32x32_ghul
+
+/* eof */

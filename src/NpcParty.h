@@ -1,0 +1,169 @@
+/* Copyright (c) 2002 Gordon McNutt */
+#ifndef NpcParty_h
+#define NpcParty_h
+
+#include "object.h"
+#include "list.h"
+#include "common.h"
+#include "character.h"
+#include "moongate.h"
+#include "pinfo.h"
+
+class Loader;
+
+struct GroupInfo {
+	struct species *species;
+	struct occ *occ;
+	struct sprite *sprite;
+	int n_max;
+};
+
+class NpcPartyType:public ObjectType {
+      public:
+	virtual bool isType(int classID) {
+		return (classID == NPCPARTY_TYPE_ID);
+	}
+	virtual int getType() {
+		return NPCPARTY_TYPE_ID;
+	}
+	NpcPartyType();
+	virtual ~ NpcPartyType();
+	virtual bool init(class Character * ch);
+	int getPmask() {
+		return pmask;
+	}
+	int getVisionRadius() {
+		return vrad;
+	}
+	int getSpeed() {
+		return speed;
+	}
+	virtual struct GroupInfo *enumerateGroups();
+	virtual struct GroupInfo *getNextGroup();
+	virtual class Object *createInstance();
+	virtual bool load(class Loader * loader);
+	virtual bool isVisible() {
+		return visible;
+	}
+
+	struct formation *formation;
+
+      protected:
+	int i_group;		// group index (for silly enumeration)
+	int n_groups;
+	struct GroupInfo *groups;
+	int pmask;
+	int vrad;
+	int speed;
+	bool visible;
+};
+
+class NpcParty:public Object {
+      public:
+	virtual bool isType(int classID) {
+		if (classID == NPCPARTY_ID)
+			return true;
+		return Object::isType(classID);
+	}
+	virtual int getType() {
+		return NPCPARTY_ID;
+	}
+
+	NpcParty();
+	~NpcParty();
+
+	virtual class NpcPartyType *getObjectType() {
+		return (class NpcPartyType *) Object::getObjectType();
+	}
+
+	virtual int getPmask();
+	virtual int getVisionRadius() {
+		return getObjectType()->getVisionRadius();
+	}
+	virtual int getSpeed();
+
+	virtual void init(int x, int y, struct place *place,
+			  class NpcPartyType * type) {
+		Object::init(x, y, place, type);
+	}
+	virtual void init(class Character * ch);
+	virtual void init(class NpcPartyType * type);
+	virtual void advanceTurn(int turn);
+	virtual void synchronize(int turn);
+	virtual void move(int dx, int dy);
+	virtual int getAlignment() {
+		return alignment;
+	}
+	virtual void setAlignment(int val) {
+		alignment = val;
+	}
+	virtual bool load(class Loader *);
+	virtual bool isHostile(int alignment) {
+		return (!(this->alignment & alignment));
+	}
+
+	virtual void setFleeVector(int x, int y) {
+		fdx = x;
+		fdy = y;
+	}
+	virtual void getFleeVector(int *x, int *y) {
+		*x = fdx;
+		*y = fdy;
+	}
+
+	virtual bool isHome(struct place *place) {
+		return (place == home);
+	}
+
+	virtual void setHome(struct place *place) {
+		home = place;
+	}
+
+	virtual int getSize(void) {
+		return size;
+	}
+
+	virtual void forEachMember(bool(*fx) (class Character *, void *),
+				   void *);
+	virtual void destroy();
+	virtual void cleanupAfterCombat(void);
+	virtual void removeMember(class Character *);
+	virtual struct conv *getConversation();
+	virtual bool joinPlayer(void);
+	virtual bool createMembers();
+	virtual void paint(int sx, int sy);
+	virtual void disembark();
+	virtual bool turn_vehicle();
+	virtual void hit_by_ordnance(class OrdnanceType * ordnance);
+	virtual void relocate(struct place *place, int x, int y);
+	virtual struct formation *get_formation();
+
+	struct list members;
+
+	struct sched *sched;
+	int act;
+	int appt;
+	class Vehicle *vehicle;
+	int dx, dy;
+	struct position_info pinfo;
+
+      protected:
+	virtual bool enter_town(class Portal * portal);
+	virtual void wander();
+	void work();
+	void commute();
+	bool gotoSpot(int x, int y);
+	bool attack_with_ordnance(int d);
+
+	int alignment;
+	int fdx, fdy;
+	struct place *home;
+	int size;
+	struct conv *conv;
+	bool isWrapper;
+	int turn_cost;
+	bool loitering;
+	struct formation *formation;
+};
+
+#endif

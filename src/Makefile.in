@@ -1,0 +1,557 @@
+# Makefile.in generated automatically by automake 1.4-p5 from Makefile.am
+
+# Copyright (C) 1994, 1995-8, 1999, 2001 Free Software Foundation, Inc.
+# This Makefile.in is free software; the Free Software Foundation
+# gives unlimited permission to copy and/or distribute it,
+# with or without modifications, as long as this notice is preserved.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY, to the extent permitted by law; without
+# even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE.
+
+
+SHELL = @SHELL@
+
+srcdir = @srcdir@
+top_srcdir = @top_srcdir@
+VPATH = @srcdir@
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+
+bindir = @bindir@
+sbindir = @sbindir@
+libexecdir = @libexecdir@
+datadir = @datadir@
+sysconfdir = @sysconfdir@
+sharedstatedir = @sharedstatedir@
+localstatedir = @localstatedir@
+libdir = @libdir@
+infodir = @infodir@
+mandir = @mandir@
+includedir = @includedir@
+oldincludedir = /usr/include
+
+DESTDIR =
+
+pkgdatadir = $(datadir)/@PACKAGE@
+pkglibdir = $(libdir)/@PACKAGE@
+pkgincludedir = $(includedir)/@PACKAGE@
+
+top_builddir = ..
+
+ACLOCAL = @ACLOCAL@
+AUTOCONF = @AUTOCONF@
+AUTOMAKE = @AUTOMAKE@
+AUTOHEADER = @AUTOHEADER@
+
+INSTALL = @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@ $(AM_INSTALL_PROGRAM_FLAGS)
+INSTALL_DATA = @INSTALL_DATA@
+INSTALL_SCRIPT = @INSTALL_SCRIPT@
+transform = @program_transform_name@
+
+NORMAL_INSTALL = :
+PRE_INSTALL = :
+POST_INSTALL = :
+NORMAL_UNINSTALL = :
+PRE_UNINSTALL = :
+POST_UNINSTALL = :
+host_alias = @host_alias@
+host_triplet = @host@
+CC = @CC@
+CXX = @CXX@
+GAME_INSTALLDIR = @GAME_INSTALLDIR@
+MAKEINFO = @MAKEINFO@
+PACKAGE = @PACKAGE@
+RANLIB = @RANLIB@
+SDL_CFLAGS = @SDL_CFLAGS@
+SDL_CONFIG = @SDL_CONFIG@
+SDL_LIBS = @SDL_LIBS@
+VERSION = @VERSION@
+
+bin_PROGRAMS = nazghul
+
+nazghul_SOURCES = \
+	angband.c \
+        Arms.cpp \
+        Arms.h \
+        ascii.c \
+        ascii.h \
+        astar.c \
+        astar.h \
+        character.cpp \
+        character.h \
+        cmdwin.c \
+        cmdwin.h \
+        combat.c \
+        combat.h \
+        common.c \
+        common.h \
+        console.c \
+        console.h \
+        constants.h \
+        Container.cpp \
+        Container.h \
+        conv.c \
+        conv.h \
+        cursor.cpp \
+        cursor.h \
+        debug.h \
+        dup_constants.h \
+        event.c \
+        event.h \
+        Field.h \
+        floodfill.c \
+        foogod.c \
+        foogod.h \
+        formation.h \
+        game.c \
+        game.h \
+        hash.c \
+        hash.h \
+        heap.c \
+        heap.h \
+        images.c \
+        images.h \
+        Item.cpp \
+        Item.h \
+        knapsack.c \
+        knapsack.h \
+        lexer.c \
+        lexer.h \
+        list.h \
+        Loader.cpp \
+        Loader.h \
+        los.c \
+        los.h \
+        Makefile \
+        map.c \
+        map.h \
+        Mech.cpp \
+        Mech.h \
+        moongate.c \
+        moongate.h \
+        nazghul.c \
+        NpcParty.cpp \
+        NpcParty.h \
+        object.c \
+        object.h \
+        occ.c \
+        occ.h \
+        olist.c \
+        olist.h \
+        pinfo.h \
+        place.c \
+        place.h \
+        play.c \
+        player.cpp \
+        player.h \
+        play.h \
+        portal.h \
+        Reagent.cpp \
+        Reagent.h \
+        sched.c \
+        sched.h \
+        screen.c \
+        screen.h \
+        sky.c \
+        sky.h \
+        sound.c \
+        sound.h \
+        species.c \
+        species.h \
+        Spell.cpp \
+        Spell.h \
+        sprite.c \
+        sprite.h \
+        status.c \
+        status.h \
+        terrain.c \
+        terrain.h \
+        terrain_map.c \
+        terrain_map.h \
+        Trap.cpp \
+        Trap.h \
+        tree.c \
+        tree.h \
+        util.c \
+        util.h \
+        vehicle.cpp \
+        vehicle.h \
+        wind.c \
+        wind.h \
+        wq.c \
+        wq.h         
+
+mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
+CONFIG_CLEAN_FILES = 
+PROGRAMS =  $(bin_PROGRAMS)
+
+
+DEFS = @DEFS@ -I. -I$(srcdir) 
+CPPFLAGS = @CPPFLAGS@
+LDFLAGS = @LDFLAGS@
+LIBS = @LIBS@
+nazghul_OBJECTS =  angband.o Arms.o ascii.o astar.o character.o cmdwin.o \
+combat.o common.o console.o Container.o conv.o cursor.o event.o \
+floodfill.o foogod.o game.o hash.o heap.o images.o Item.o knapsack.o \
+lexer.o Loader.o los.o map.o Mech.o moongate.o nazghul.o NpcParty.o \
+object.o occ.o olist.o place.o play.o player.o Reagent.o sched.o \
+screen.o sky.o sound.o species.o Spell.o sprite.o status.o terrain.o \
+terrain_map.o Trap.o tree.o util.o vehicle.o wind.o wq.o
+nazghul_LDADD = $(LDADD)
+nazghul_DEPENDENCIES = 
+nazghul_LDFLAGS = 
+CXXFLAGS = @CXXFLAGS@
+CXXCOMPILE = $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
+CXXLD = $(CXX)
+CXXLINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(LDFLAGS) -o $@
+CFLAGS = @CFLAGS@
+COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+CCLD = $(CC)
+LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(LDFLAGS) -o $@
+DIST_COMMON =  Makefile.am Makefile.in
+
+
+DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
+
+TAR = gtar
+GZIP_ENV = --best
+SOURCES = $(nazghul_SOURCES)
+OBJECTS = $(nazghul_OBJECTS)
+
+all: all-redirect
+.SUFFIXES:
+.SUFFIXES: .S .c .cpp .o .s
+$(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
+	cd $(top_srcdir) && $(AUTOMAKE) --foreign --include-deps src/Makefile
+
+Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status
+	cd $(top_builddir) \
+	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status
+
+
+mostlyclean-binPROGRAMS:
+
+clean-binPROGRAMS:
+	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
+
+distclean-binPROGRAMS:
+
+maintainer-clean-binPROGRAMS:
+
+install-binPROGRAMS: $(bin_PROGRAMS)
+	@$(NORMAL_INSTALL)
+	$(mkinstalldirs) $(DESTDIR)$(bindir)
+	@list='$(bin_PROGRAMS)'; for p in $$list; do \
+	  if test -f $$p; then \
+	    echo "  $(INSTALL_PROGRAM) $$p $(DESTDIR)$(bindir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`"; \
+	     $(INSTALL_PROGRAM) $$p $(DESTDIR)$(bindir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`; \
+	  else :; fi; \
+	done
+
+uninstall-binPROGRAMS:
+	@$(NORMAL_UNINSTALL)
+	list='$(bin_PROGRAMS)'; for p in $$list; do \
+	  rm -f $(DESTDIR)$(bindir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`; \
+	done
+
+.c.o:
+	$(COMPILE) -c $<
+
+.s.o:
+	$(COMPILE) -c $<
+
+.S.o:
+	$(COMPILE) -c $<
+
+mostlyclean-compile:
+	-rm -f *.o core *.core
+
+clean-compile:
+
+distclean-compile:
+	-rm -f *.tab.c
+
+maintainer-clean-compile:
+
+nazghul: $(nazghul_OBJECTS) $(nazghul_DEPENDENCIES)
+	@rm -f nazghul
+	$(CXXLINK) $(nazghul_LDFLAGS) $(nazghul_OBJECTS) $(nazghul_LDADD) $(LIBS)
+.cpp.o:
+	$(CXXCOMPILE) -c $<
+
+tags: TAGS
+
+ID: $(HEADERS) $(SOURCES) $(LISP)
+	list='$(SOURCES) $(HEADERS)'; \
+	unique=`for i in $$list; do echo $$i; done | \
+	  awk '    { files[$$0] = 1; } \
+	       END { for (i in files) print i; }'`; \
+	here=`pwd` && cd $(srcdir) \
+	  && mkid -f$$here/ID $$unique $(LISP)
+
+TAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) $(LISP)
+	tags=; \
+	here=`pwd`; \
+	list='$(SOURCES) $(HEADERS)'; \
+	unique=`for i in $$list; do echo $$i; done | \
+	  awk '    { files[$$0] = 1; } \
+	       END { for (i in files) print i; }'`; \
+	test -z "$(ETAGS_ARGS)$$unique$(LISP)$$tags" \
+	  || (cd $(srcdir) && etags $(ETAGS_ARGS) $$tags  $$unique $(LISP) -o $$here/TAGS)
+
+mostlyclean-tags:
+
+clean-tags:
+
+distclean-tags:
+	-rm -f TAGS ID
+
+maintainer-clean-tags:
+
+distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
+
+subdir = src
+
+distdir: $(DISTFILES)
+	@for file in $(DISTFILES); do \
+	  d=$(srcdir); \
+	  if test -d $$d/$$file; then \
+	    cp -pr $$d/$$file $(distdir)/$$file; \
+	  else \
+	    test -f $(distdir)/$$file \
+	    || ln $$d/$$file $(distdir)/$$file 2> /dev/null \
+	    || cp -p $$d/$$file $(distdir)/$$file || :; \
+	  fi; \
+	done
+angband.o: angband.c debug.h los.h
+Arms.o: Arms.cpp Arms.h object.h list.h olist.h common.h debug.h los.h \
+	dup_constants.h console.h character.h species.h screen.h \
+	sprite.h map.h Field.h place.h terrain_map.h NpcParty.h \
+	moongate.h pinfo.h astar.h tree.h sky.h
+ascii.o: ascii.c ascii.h images.h list.h screen.h common.h debug.h los.h \
+	dup_constants.h
+astar.o: astar.c astar.h tree.h list.h heap.h debug.h
+character.o: character.cpp character.h object.h list.h olist.h common.h \
+	debug.h los.h dup_constants.h console.h Arms.h species.h map.h \
+	place.h terrain_map.h NpcParty.h moongate.h pinfo.h astar.h \
+	tree.h sky.h Container.h player.h status.h sound.h Trap.h \
+	screen.h Loader.h knapsack.h occ.h sched.h Mech.h conv.h
+cmdwin.o: cmdwin.c cmdwin.h screen.h common.h list.h debug.h los.h \
+	dup_constants.h sprite.h
+combat.o: combat.c combat.h player.h list.h object.h olist.h common.h \
+	debug.h los.h dup_constants.h console.h map.h character.h \
+	Arms.h species.h pinfo.h NpcParty.h moongate.h place.h \
+	terrain_map.h astar.h tree.h sky.h hash.h wq.h sound.h status.h \
+	cursor.h Container.h terrain.h Field.h event.h play.h Spell.h \
+	Trap.h portal.h foogod.h Mech.h conv.h wind.h cmdwin.h \
+	vehicle.h formation.h
+common.o: common.c common.h list.h debug.h los.h dup_constants.h sky.h \
+	screen.h player.h object.h olist.h console.h map.h character.h \
+	Arms.h species.h pinfo.h foogod.h place.h terrain_map.h \
+	NpcParty.h moongate.h astar.h tree.h event.h
+console.o: console.c console.h screen.h common.h list.h debug.h los.h \
+	dup_constants.h sprite.h play.h status.h event.h
+Container.o: Container.cpp Container.h object.h list.h olist.h common.h \
+	debug.h los.h dup_constants.h console.h
+conv.o: conv.c conv.h list.h status.h play.h Loader.h common.h debug.h \
+	los.h dup_constants.h console.h NpcParty.h object.h olist.h \
+	character.h Arms.h species.h moongate.h pinfo.h event.h \
+	player.h map.h foogod.h cmdwin.h Mech.h place.h terrain_map.h \
+	astar.h tree.h sky.h wq.h lexer.h
+cursor.o: cursor.cpp cursor.h object.h list.h olist.h common.h debug.h \
+	los.h dup_constants.h console.h place.h terrain_map.h \
+	NpcParty.h character.h Arms.h species.h moongate.h pinfo.h \
+	astar.h tree.h sky.h
+event.o: event.c event.h list.h
+floodfill.o: floodfill.c los.h
+foogod.o: foogod.c foogod.h screen.h common.h list.h debug.h los.h \
+	dup_constants.h player.h object.h olist.h console.h map.h \
+	character.h Arms.h species.h pinfo.h wq.h combat.h vehicle.h
+game.o: game.c debug.h game.h sprite.h list.h terrain.h common.h los.h \
+	dup_constants.h place.h terrain_map.h object.h olist.h \
+	console.h NpcParty.h character.h Arms.h species.h moongate.h \
+	pinfo.h astar.h tree.h sky.h lexer.h util.h images.h portal.h \
+	player.h map.h ascii.h cursor.h Field.h Spell.h Item.h Trap.h \
+	Loader.h conv.h status.h occ.h sched.h Reagent.h Mech.h \
+	screen.h vehicle.h formation.h
+hash.o: hash.c hash.h olist.h list.h util.h common.h debug.h los.h \
+	dup_constants.h
+heap.o: heap.c heap.h
+images.o: images.c images.h list.h util.h common.h debug.h los.h \
+	dup_constants.h Loader.h screen.h
+Item.o: Item.cpp Item.h object.h list.h olist.h common.h debug.h los.h \
+	dup_constants.h console.h character.h Arms.h species.h wq.h \
+	player.h map.h pinfo.h place.h terrain_map.h NpcParty.h \
+	moongate.h astar.h tree.h sky.h play.h status.h event.h
+knapsack.o: knapsack.c knapsack.h
+lexer.o: lexer.c lexer.h
+Loader.o: Loader.cpp Loader.h lexer.h
+los.o: los.c los.h
+map.o: map.c map.h screen.h place.h terrain_map.h list.h object.h \
+	olist.h common.h debug.h los.h dup_constants.h console.h \
+	NpcParty.h character.h Arms.h species.h moongate.h pinfo.h \
+	astar.h tree.h sky.h player.h
+Mech.o: Mech.cpp Mech.h object.h list.h olist.h common.h debug.h los.h \
+	dup_constants.h console.h place.h terrain_map.h NpcParty.h \
+	character.h Arms.h species.h moongate.h pinfo.h astar.h tree.h \
+	sky.h conv.h status.h Loader.h terrain.h wq.h lexer.h map.h
+moongate.o: moongate.c moongate.h object.h list.h olist.h common.h \
+	debug.h los.h dup_constants.h console.h screen.h sprite.h \
+	place.h terrain_map.h NpcParty.h character.h Arms.h species.h \
+	pinfo.h astar.h tree.h sky.h map.h wq.h player.h
+nazghul.o: nazghul.c lexer.h util.h common.h list.h debug.h los.h \
+	dup_constants.h constants.h screen.h sound.h play.h status.h \
+	event.h combat.h player.h object.h olist.h console.h map.h \
+	character.h Arms.h species.h pinfo.h images.h sprite.h wq.h \
+	place.h terrain_map.h NpcParty.h moongate.h astar.h tree.h \
+	sky.h conv.h Spell.h wind.h cmdwin.h
+NpcParty.o: NpcParty.cpp NpcParty.h object.h list.h olist.h common.h \
+	debug.h los.h dup_constants.h console.h character.h Arms.h \
+	species.h moongate.h pinfo.h place.h terrain_map.h astar.h \
+	tree.h sky.h portal.h util.h player.h map.h combat.h Loader.h \
+	conv.h status.h occ.h sched.h wind.h Mech.h vehicle.h
+object.o: object.c object.h list.h olist.h common.h debug.h los.h \
+	dup_constants.h console.h util.h place.h terrain_map.h \
+	NpcParty.h character.h Arms.h species.h moongate.h pinfo.h \
+	astar.h tree.h sky.h map.h sprite.h screen.h Loader.h
+occ.o: occ.c occ.h list.h Loader.h object.h olist.h common.h debug.h \
+	los.h dup_constants.h console.h sprite.h
+olist.o: olist.c olist.h list.h util.h common.h debug.h los.h \
+	dup_constants.h
+place.o: place.c place.h terrain_map.h list.h object.h olist.h common.h \
+	debug.h los.h dup_constants.h console.h NpcParty.h character.h \
+	Arms.h species.h moongate.h pinfo.h astar.h tree.h sky.h \
+	sprite.h util.h terrain.h portal.h hash.h screen.h player.h \
+	map.h wq.h Field.h Mech.h conv.h status.h vehicle.h
+play.o: play.c play.h status.h util.h common.h list.h debug.h los.h \
+	dup_constants.h game.h place.h terrain_map.h object.h olist.h \
+	console.h NpcParty.h character.h Arms.h species.h moongate.h \
+	pinfo.h astar.h tree.h sky.h constants.h images.h sprite.h \
+	screen.h player.h map.h wq.h foogod.h combat.h cursor.h event.h \
+	wind.h Item.h Container.h Trap.h conv.h Mech.h Spell.h cmdwin.h \
+	vehicle.h
+player.o: player.cpp player.h list.h object.h olist.h common.h debug.h \
+	los.h dup_constants.h console.h map.h character.h Arms.h \
+	species.h pinfo.h status.h place.h terrain_map.h NpcParty.h \
+	moongate.h astar.h tree.h sky.h portal.h screen.h sound.h \
+	terrain.h wq.h foogod.h combat.h wind.h Item.h Mech.h conv.h \
+	cmdwin.h vehicle.h sprite.h play.h
+Reagent.o: Reagent.cpp Reagent.h object.h list.h olist.h common.h \
+	debug.h los.h dup_constants.h console.h Loader.h
+sched.o: sched.c sched.h list.h Loader.h
+screen.o: screen.c screen.h common.h list.h debug.h los.h \
+	dup_constants.h ascii.h sprite.h Loader.h status.h foogod.h
+sky.o: sky.c sky.h common.h list.h debug.h los.h dup_constants.h \
+	screen.h sprite.h place.h terrain_map.h object.h olist.h \
+	console.h NpcParty.h character.h Arms.h species.h moongate.h \
+	pinfo.h astar.h tree.h map.h player.h wq.h
+sound.o: sound.c sound.h common.h list.h debug.h los.h dup_constants.h \
+	console.h
+species.o: species.c species.h list.h Loader.h occ.h sprite.h common.h \
+	debug.h los.h dup_constants.h
+Spell.o: Spell.cpp Spell.h object.h list.h olist.h common.h debug.h \
+	los.h dup_constants.h console.h Loader.h character.h Arms.h \
+	species.h play.h status.h place.h terrain_map.h NpcParty.h \
+	moongate.h pinfo.h astar.h tree.h sky.h player.h map.h combat.h \
+	wind.h wq.h Field.h Mech.h conv.h
+sprite.o: sprite.c sprite.h list.h images.h screen.h wq.h map.h common.h \
+	debug.h los.h dup_constants.h console.h status.h Loader.h \
+	cmdwin.h
+status.o: status.c status.h screen.h sprite.h list.h common.h debug.h \
+	los.h dup_constants.h player.h object.h olist.h console.h map.h \
+	character.h Arms.h species.h pinfo.h Spell.h ascii.h sky.h \
+	wind.h foogod.h
+terrain.o: terrain.c terrain.h list.h common.h debug.h los.h \
+	dup_constants.h sprite.h util.h
+terrain_map.o: terrain_map.c terrain_map.h list.h util.h common.h \
+	debug.h los.h dup_constants.h terrain.h map.h
+Trap.o: Trap.cpp Trap.h object.h list.h olist.h common.h debug.h los.h \
+	dup_constants.h console.h
+tree.o: tree.c tree.h
+util.o: util.c util.h common.h list.h debug.h los.h dup_constants.h
+vehicle.o: vehicle.cpp vehicle.h object.h list.h olist.h common.h \
+	debug.h los.h dup_constants.h console.h sprite.h Loader.h \
+	sound.h place.h terrain_map.h NpcParty.h character.h Arms.h \
+	species.h moongate.h pinfo.h astar.h tree.h sky.h map.h wind.h \
+	player.h
+wind.o: wind.c wind.h wq.h list.h common.h debug.h los.h dup_constants.h \
+	screen.h
+wq.o: wq.c wq.h list.h util.h common.h debug.h los.h dup_constants.h
+
+info-am:
+info: info-am
+dvi-am:
+dvi: dvi-am
+check-am: all-am
+check: check-am
+installcheck-am:
+installcheck: installcheck-am
+install-exec-am: install-binPROGRAMS
+install-exec: install-exec-am
+
+install-data-am:
+install-data: install-data-am
+
+install-am: all-am
+	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
+install: install-am
+uninstall-am: uninstall-binPROGRAMS
+uninstall: uninstall-am
+all-am: Makefile $(PROGRAMS)
+all-redirect: all-am
+install-strip:
+	$(MAKE) $(AM_MAKEFLAGS) AM_INSTALL_PROGRAM_FLAGS=-s install
+installdirs:
+	$(mkinstalldirs)  $(DESTDIR)$(bindir)
+
+
+mostlyclean-generic:
+
+clean-generic:
+
+distclean-generic:
+	-rm -f Makefile $(CONFIG_CLEAN_FILES)
+	-rm -f config.cache config.log stamp-h stamp-h[0-9]*
+
+maintainer-clean-generic:
+mostlyclean-am:  mostlyclean-binPROGRAMS mostlyclean-compile \
+		mostlyclean-tags mostlyclean-generic
+
+mostlyclean: mostlyclean-am
+
+clean-am:  clean-binPROGRAMS clean-compile clean-tags clean-generic \
+		mostlyclean-am
+
+clean: clean-am
+
+distclean-am:  distclean-binPROGRAMS distclean-compile distclean-tags \
+		distclean-generic clean-am
+
+distclean: distclean-am
+
+maintainer-clean-am:  maintainer-clean-binPROGRAMS \
+		maintainer-clean-compile maintainer-clean-tags \
+		maintainer-clean-generic distclean-am
+	@echo "This command is intended for maintainers to use;"
+	@echo "it deletes files that may require special tools to rebuild."
+
+maintainer-clean: maintainer-clean-am
+
+.PHONY: mostlyclean-binPROGRAMS distclean-binPROGRAMS clean-binPROGRAMS \
+maintainer-clean-binPROGRAMS uninstall-binPROGRAMS install-binPROGRAMS \
+mostlyclean-compile distclean-compile clean-compile \
+maintainer-clean-compile tags mostlyclean-tags distclean-tags \
+clean-tags maintainer-clean-tags distdir info-am info dvi-am dvi check \
+check-am installcheck-am installcheck install-exec-am install-exec \
+install-data-am install-data install-am install uninstall-am uninstall \
+all-redirect all-am all installdirs mostlyclean-generic \
+distclean-generic clean-generic maintainer-clean-generic clean \
+mostlyclean distclean maintainer-clean
+
+
+# Tell versions [3.59,3.63) of GNU make to not export all variables.
+# Otherwise a system limit (for SysV at least) may be exceeded.
+.NOEXPORT:

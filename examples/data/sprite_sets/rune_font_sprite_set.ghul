@@ -1,0 +1,77 @@
+/* rune_font_sprite_set.ghul
+ *
+ * Defines a sprite set for an Anglo-Saxon Runic font.
+ * The sprites are intended for use as terrain, in the form
+ * of large, usually horizontal-reading signs, where each
+ * letter takes up 1 terrain tile (notionally 1 yard or so).
+ * 
+ * This font is modeled after a variation of Anglo-Saxon
+ * runes which I have heard referred to as "Anglo-American".
+ * 
+ * Font created by Sam Glasby (2003).
+ * 
+ * TODO:
+ * This terrain font would be more complete if sprites
+ * for (left endcap, right endcap, and numerals 0123456789)
+ * were included.
+ */
+#ifndef rune_font_sprite_set_ghul
+#define rune_font_sprite_set_ghul
+
+
+SPRITE_SET ss_rune_font_32x32 {
+  
+  image_width  32;
+  image_height 32;
+  file_rows     4;
+  file_cols     8;
+  file_offx     0;
+  file_offy     0;
+  file         "data/images/rune_font_32x32.png";
+  
+  sprites {
+    STD_SPRITE(s_rune_A,        0);
+    STD_SPRITE(s_rune_B,        1);
+    STD_SPRITE(s_rune_C,        2);
+    STD_SPRITE(s_rune_D,        3);
+    STD_SPRITE(s_rune_E,        4);
+    STD_SPRITE(s_rune_F,        5);
+    STD_SPRITE(s_rune_G,        6);
+    STD_SPRITE(s_rune_H,        7);
+
+    STD_SPRITE(s_rune_I,        8);
+    STD_SPRITE(s_rune_J,        9);
+    STD_SPRITE(s_rune_K,       10);
+    STD_SPRITE(s_rune_L,       11);
+    STD_SPRITE(s_rune_M,       12);
+    STD_SPRITE(s_rune_N,       13);
+    STD_SPRITE(s_rune_O,       14);
+    STD_SPRITE(s_rune_P,       15);
+
+    STD_SPRITE(s_rune_Q,       16);
+    STD_SPRITE(s_rune_R,       17);
+    STD_SPRITE(s_rune_S,       18);
+    STD_SPRITE(s_rune_T,       19);
+    STD_SPRITE(s_rune_U,       20);
+    STD_SPRITE(s_rune_V,       21);
+    STD_SPRITE(s_rune_W,       22);
+    STD_SPRITE(s_rune_X,       23);
+
+    STD_SPRITE(s_rune_Y,       24);
+    STD_SPRITE(s_rune_Z,       25);
+    STD_SPRITE(s_rune_TH,      26);
+    STD_SPRITE(s_rune_EE,      27);
+    STD_SPRITE(s_rune_NG,      28);
+    STD_SPRITE(s_rune_EA,      29);
+    STD_SPRITE(s_rune_ST,      30);
+    STD_SPRITE(s_rune_DOTSEP,  31);
+
+    // STD_SPRITE(s_rune_blank_drawing_template, 33);
+    
+  }
+} /* SPRITE_SET ss_rune_font_32x32 */
+
+
+#endif // rune_font_sprite_set_ghul
+
+/* eof */

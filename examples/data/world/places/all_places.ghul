@@ -1,0 +1,21 @@
+/* all_places.ghul
+ *
+ * Defines all the place objects which form the game world.
+ */
+#ifndef all_places_ghul
+#define all_places_ghul
+
+
+#ifdef YAUR
+#include "./yaur/yaur_world.ghul"
+#endif // YAUR
+
+
+#ifdef U4_U5
+#include "./u4_u5/u4_u5_world.ghul"
+#endif // U4_U5
+
+
+#endif // all_places_ghul
+
+/* eof */

@@ -1,0 +1,61 @@
+/* frame_sprite_set.ghul
+ *
+ * Defines a sprite_set for the game UI window frame.
+ * Also binds the sprites from same into a FRAME definition.
+ */
+#ifndef frame_sprite_set_ghul
+#define frame_sprite_set_ghul
+
+
+SPRITE_SET ss_frame {
+  image_width  16;
+  image_height 16;
+  file_rows    12;
+  file_cols    1;
+  file_offx    0;
+  file_offy    0;
+  file "data/images/frame_pieces.png";
+  
+  sprites {
+    STD_SPRITE(s_frame_ulc,   0);
+    STD_SPRITE(s_frame_llc,   1);
+    STD_SPRITE(s_frame_urc,   2);
+    STD_SPRITE(s_frame_lrc,   3);
+    STD_SPRITE(s_frame_horz,  4);
+    STD_SPRITE(s_frame_vert,  5);
+    STD_SPRITE(s_frame_td,    6);
+    STD_SPRITE(s_frame_tr,    7);
+    STD_SPRITE(s_frame_tu,    8);
+    STD_SPRITE(s_frame_tl,    9);
+    STD_SPRITE(s_frame_endl, 10);
+    STD_SPRITE(s_frame_endr, 11);
+  }
+} /* SPRITE_SET ss_frame */
+
+/*
+ * The FRAME construct binds frame elements to sprites (the frame is the border
+ * painted around the UI).
+ */
+/* WARNING!!!: the BORDER_W and BORDER_H macros should match the dimensions
+ * of the sprites used for the frame.
+ */
+FRAME {
+  ulc  s_frame_ulc;
+  llc  s_frame_llc;
+  urc  s_frame_urc;
+  lrc  s_frame_lrc;
+  horz s_frame_horz;
+  vert s_frame_vert;
+  td   s_frame_td;
+  tu   s_frame_tu;
+  tr   s_frame_tr;
+  tl   s_frame_tl;
+  tx   s_null;
+  endl s_frame_endl;
+  endr s_frame_endr;
+}
+
+
+#endif // frame_sprite_set_ghul
+
+/* eof */

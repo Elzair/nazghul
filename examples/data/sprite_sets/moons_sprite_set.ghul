@@ -1,0 +1,28 @@
+/* moons_sprite_set.ghul
+ *
+ * Defines a sprite_set containing images of astronomical objects
+ * including a moon in various phases.
+ */
+#ifndef moons_sprite_set_ghul
+#define moons_sprite_set_ghul
+
+
+SPRITE_SET ss_moons {
+  
+  image_width  16;
+  image_height 16;
+  file_rows    8;
+  file_cols    1;
+  file_offx    0;
+  file_offy    0;
+  file "data/images/moons-16x16.png";
+  
+  sprites {
+    SPRITE(s_sun, 1, 8, normal);
+  }
+} /* SPRITE_SET ss_moons */
+
+
+#endif // moons_sprite_set_ghul
+
+/* eof */

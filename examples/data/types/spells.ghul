@@ -1,0 +1,1177 @@
+/* spells.ghul
+ * 
+ * Defines MAGIC_WORDS, REAGENTS, and SPELLS
+ */      
+
+#ifndef spells_ghul
+#define spells_ghul
+
+
+MAGIC_WORDS {
+  An;
+  Bet;
+  Corp;
+  Des;
+  Ex;
+  Flam;
+  Grav;
+  Hur;
+  In;
+  Jux;
+  Kal;
+  Lor;
+  Mani;
+  Nox;
+  Ort;
+  Por;
+  Quas;
+  Rel;
+  Sanct;
+  Tym;
+  Uus;
+  Vas;
+  Wis;
+  Xen;
+  Ylem;
+  Zu;
+}
+
+REAGENT reagent_garlic {
+  name   "garlic";
+  sprite s_gold_powder;
+}
+
+REAGENT reagent_ginseng {
+  name   "ginseng";
+  sprite s_brown_powder;
+}
+
+REAGENT reagent_mandrake {
+  name   "mandrake";
+  sprite s_brown_mushroom;
+}
+
+REAGENT reagent_nightshade {
+  name   "nightshade";
+  sprite s_black_mushroom;
+}
+
+REAGENT reagent_sulphorous_ash {
+  name   "sulphorous ash";
+  sprite s_grayish_red_hunks;
+}
+
+REAGENT reagent_blood_moss {
+  name   "blood moss";
+  sprite s_red_hunks;
+}
+
+REAGENT reagent_black_pearl {
+  name   "black pearl";
+  sprite s_ring2;
+}
+
+REAGENT reagent_spider_silk {
+  name   "spider_silk";
+  sprite s_gold_explosion;
+}
+
+// Local constants used in the game script (not the main program):
+#define SPELL_COST_LEVEL_1     10
+#define SPELL_COST_LEVEL_2     20
+#define SPELL_COST_LEVEL_3     30
+#define SPELL_COST_LEVEL_4     40
+#define SPELL_COST_LEVEL_5     50
+#define SPELL_COST_LEVEL_6     60
+#define SPELL_COST_LEVEL_7     70
+#define SPELL_COST_LEVEL_8     80
+
+// Shared with the code (must match common.h):
+#define SPELL_TARGET_NONE      0
+#define SPELL_TARGET_CHARACTER 1
+#define SPELL_TARGET_MECH      2
+#define SPELL_TARGET_DIRECTION 3
+#define SPELL_TARGET_LOCATION  4
+#define SPELL_TARGET_UP        5
+#define SPELL_TARGET_DOWN      6
+#define SPELL_TARGET_ALL_PARTY_MEMBERS 7
+
+// Note: the 'context' codes are:
+//   C - combat
+//   T - town/dungeon
+//   W - wilderness
+
+/*****************************************************************************
+                           F I R S T    C I R C L E
+ *****************************************************************************/
+SPELL spell_cure_poison {
+  name     "An Nox (cure poison)";
+  sprite   s_green_potion;
+  code     AN;
+  cost     SPELL_COST_LEVEL_1;
+  range    1;
+  missile  null;
+  effects  (EFFECT_CURE);
+  strength 0;
+  duration 0;
+  context  CTW;
+  level    1;
+  target   SPELL_TARGET_CHARACTER;
+  reagents {
+    reagent_ginseng;
+    reagent_garlic;
+  }
+  parms {
+  }
+}
+
+SPELL spell_awaken {
+  name     "An Zu (awaken)";
+  sprite   s_corpse;
+  code     AZ;
+  cost     SPELL_COST_LEVEL_1;
+  range    1;
+  missile  null;
+  effects  (EFFECT_AWAKEN);
+  strength 0;
+  duration 0;
+  context  CTW;
+  level    1;
+  target   SPELL_TARGET_CHARACTER;
+  reagents {
+    reagent_ginseng;
+    reagent_garlic;
+  }
+  parms {
+  }
+}
+
+SPELL spell_magic_missile {
+  name     "Grav Por (magic missile)";
+  sprite   s_magic;
+  code     GP;
+  cost     SPELL_COST_LEVEL_1;
+  range    6;
+  missile  t_arrow;
+  effects  (EFFECT_DAMAGE);
+  strength 5;
+  duration 0;
+  context  C;
+  level    1;
+  target   SPELL_TARGET_CHARACTER;
+  reagents {
+    reagent_sulphorous_ash;
+    reagent_black_pearl;
+  }
+  parms {
+  }
+}
+
+SPELL spell_light {
+  name     "In Lor (light)";
+  sprite   s_magic;
+  code     IL;
+  cost     SPELL_COST_LEVEL_1;
+  range    0;
+  missile  null;
+  effects  (EFFECT_LIGHT);
+  strength 4080;
+  duration 100;
+  context  CTW;
+  level    1;
+  target   SPELL_TARGET_NONE;
+  reagents {
+    reagent_sulphorous_ash;
+  }
+  parms {
+  }
+}
+
+SPELL spell_heal {
+  name     "Mani (healing)";
+  sprite   s_red_potion;
+  code     M;
+  cost     SPELL_COST_LEVEL_1;
+  range    1;
+  missile  null;
+  effects  (EFFECT_HEAL);
+  strength 10;
+  duration 0;
+  context  CTW;
+  level    1;
+  target   SPELL_TARGET_CHARACTER;
+  reagents {
+    reagent_ginseng;
+    reagent_spider_silk;
+  }
+  parms {
+  }
+}
+
+/*****************************************************************************
+                          S E C O N D    C I R C L E
+ *****************************************************************************/
+SPELL spell_unlock {
+  name     "An Sanct (unlock)";
+  sprite   s_door_locked;
+  code     AS;
+  cost     SPELL_COST_LEVEL_2;
+  range    1;
+  missile  null;
+  effects  (EFFECT_UNLOCK);
+  strength 1;
+  duration 0;
+  context  CTW;
+  level    2;
+  target   SPELL_TARGET_MECH;
+  reagents {
+    reagent_sulphorous_ash;
+    reagent_blood_moss;
+  }
+  parms {
+  }
+}
+
+SPELL spell_repel_undead {
+  name     "An Xen Corp (repel undead)";
+  sprite   s_skeleton;
+  code     AXC;
+  cost     SPELL_COST_LEVEL_2;
+  range    0;
+  missile  null;
+  effects  (EFFECT_REPEL);
+  strength 0;
+  duration 0;
+  context  C;
+  level    2;
+  target   SPELL_TARGET_NONE;
+  reagents {
+    reagent_garlic;
+    reagent_sulphorous_ash;
+  }
+  parms {
+    // Species this spell will repel:
+    skeleton;
+  }
+}
+
+SPELL spell_locate {
+  name     "In Wis (locate)";
+  sprite   s_magic;
+  code     IW;
+  cost     SPELL_COST_LEVEL_2;
+  range    0;
+  missile  null;
+  effects  (EFFECT_LOCATE);
+  strength 0;
+  duration 0;
+  context  CTW;
+  level    2;
+  target   SPELL_TARGET_NONE;
+  reagents {
+    reagent_nightshade;
+  }
+  parms {
+  }
+}
+
+SPELL spell_call_animal {
+  name     "Kal Xen (summon snakes)";
+  sprite   s_snake;
+  code     KX;
+  cost     SPELL_COST_LEVEL_2;
+  range    0;
+  missile  null;
+  effects  (EFFECT_SUMMON);
+  strength 1;
+  duration 0;
+  context  C;
+  level    2;
+  target   SPELL_TARGET_NONE;
+  reagents {
+    reagent_spider_silk;
+    reagent_mandrake;
+  }
+  parms {
+    // Party types this spell will summon:
+    t_snakes;
+  }
+}
+
+SPELL spell_wind_change {
+  name     "Rel Hur (wind)";
+  sprite   s_ship;
+  code     RH;
+  cost     SPELL_COST_LEVEL_2;
+  range    0;
+  missile  null;
+  effects  (EFFECT_WIND_CHANGE);
+  strength 0;
+  duration 10;
+  context  CTW;
+  level    2;
+  target   SPELL_TARGET_DIRECTION;
+  reagents {
+    reagent_sulphorous_ash;
+    reagent_blood_moss;
+  }
+  parms {
+  }
+}
+
+// Technically this one is from u6, not u5, but I need it for venomous animals.
+SPELL spell_poison {
+  name      "In Nox Por (poison bolt)";
+  sprite    s_field_poison;
+  code      INP;
+  cost      SPELL_COST_LEVEL_2;
+  range     4;
+  missile   t_poison_projectile;
+  effects   (EFFECT_POISON);
+  strength  0;  // n/a
+  duration  0;
+  context   C;
+  level     2;
+  target    SPELL_TARGET_CHARACTER;
+  reagents {
+    reagent_nightshade;
+    reagent_blood_moss;
+    reagent_black_pearl;
+  }
+  parms {
+  }
+}
+
+/*****************************************************************************
+                           T H I R D    C I R C L E
+ *****************************************************************************/
+
+SPELL spell_fire_wall {
+  name     "In Flam Grav (fire field)";
+  sprite   s_field_fire;
+  code     IFG;
+  cost     SPELL_COST_LEVEL_3;
+  range    4;
+  missile  M_fire;
+  effects  (EFFECT_BURN);
+  strength 5;
+  duration 0;
+  context  C;
+  level    3;
+  target   SPELL_TARGET_LOCATION;
+  reagents {
+    reagent_sulphorous_ash;
+    reagent_black_pearl;
+    reagent_spider_silk;
+  }
+  parms {
+  }
+}
+
+SPELL spell_sleep_wall {
+  name     "In Zu Grav (sleep field)";
+  sprite   s_field_sleep;
+  code     IZG;
+  cost     SPELL_COST_LEVEL_3;
+  range    4;
+  missile  M_sleep;
+  effects  (EFFECT_SLEEP);
+  strength 5;
+  duration 0;
+  context  C;
+  level    3;
+  target   SPELL_TARGET_LOCATION;
+  reagents {
+    reagent_ginseng;
+    reagent_black_pearl;
+    reagent_spider_silk;
+  }
+  parms {
+  }
+}
+
+SPELL spell_poison_wall {
+  name     "In Nox Grav (poison field)";
+  sprite   s_field_poison;
+  code     ING;
+  cost     SPELL_COST_LEVEL_3;
+  range    4;
+  missile  M_poison;
+  effects  (EFFECT_POISON);
+  strength 5;
+  duration 0;
+  context  C;
+  level    3;
+  target   SPELL_TARGET_LOCATION;
+  reagents {
+    reagent_nightshade;
+    reagent_black_pearl;
+    reagent_spider_silk;
+  }
+  parms {
+  }
+}
+
+SPELL spell_blink {
+  name     "In Por (blink)";
+  sprite   s_magic;
+  code     IP;
+  cost     SPELL_COST_LEVEL_3;
+  range    64;
+  missile  null;
+  effects  (EFFECT_TELEPORT);
+  strength 0;
+  duration 0;
+  context  CWT;
+  level    3;
+  target   SPELL_TARGET_DIRECTION;
+  reagents {
+    reagent_blood_moss;
+    reagent_spider_silk;
+  }
+  parms {
+  }
+}
+
+SPELL spell_fire_ball {
+  name     "Vas Flam (fireball)";
+  sprite   s_lava;
+  code     VF;
+  cost     SPELL_COST_LEVEL_3;
+  range    8;
+  missile  M_fireball;
+  effects  (EFFECT_BURN);
+  strength 30;
+  duration 0;
+  context  C;
+  level    3;
+  target   SPELL_TARGET_CHARACTER;
+  reagents {
+    reagent_black_pearl;
+    reagent_sulphorous_ash;
+  }
+  parms {
+  }
+
+}
+
+SPELL spell_great_light {
+  name     "Vas Lor (great light)";
+  sprite   s_magic;
+  code     VL;
+  cost     SPELL_COST_LEVEL_3;
+  range    0;
+  missile  null;
+  effects  (EFFECT_LIGHT);
+  strength 8192;
+  duration 200;
+  context  CTW;
+  level    3;
+  target   SPELL_TARGET_NONE;
+  reagents {
+    reagent_sulphorous_ash;
+    reagent_mandrake;
+  }
+  parms {
+  }
+}
+
+
+/*****************************************************************************
+                          F O U R T H    C I R C L E
+ *****************************************************************************/
+SPELL spell_dispel_field {
+  name     "An Grav (dispel field)";
+  sprite   s_magic;
+  code     AG;
+  cost     SPELL_COST_LEVEL_4;
+  range    4;
+  missile  null;
+  effects  (EFFECT_DESTROY);
+  strength 0;
+  duration 0;
+  context  CTW;
+  level    4;
+  target   SPELL_TARGET_LOCATION;
+  reagents {
+    reagent_black_pearl;
+    reagent_sulphorous_ash;
+  }
+  parms {
+    // Object types this spell will destroy:
+    F_fire;
+    F_poison;
+    F_sleep;
+  }
+}
+
+SPELL spell_move_up {
+  name     "Uus Por (transport up)";
+  sprite   s_ladder_up;
+  code     UP;
+  cost     SPELL_COST_LEVEL_4;
+  range    0;
+  missile  null;
+  effects  (EFFECT_TELEPORT);
+  strength 0;
+  duration 0;
+  context  TW;
+  level    4;
+  target   SPELL_TARGET_UP;
+  reagents {
+    reagent_blood_moss;
+    reagent_spider_silk;
+  }
+  parms {
+  }        
+}
+
+SPELL spell_move_down {
+  name     "Des Por (transport down)";
+  sprite   s_ladder_down;
+  code     DP;
+  cost     SPELL_COST_LEVEL_4;
+  range    0;
+  missile  null;
+  effects  (EFFECT_TELEPORT);
+  strength 0;
+  duration 0;
+  context  TW;
+  level    4;
+  target   SPELL_TARGET_DOWN;
+  reagents {
+    reagent_blood_moss;
+    reagent_spider_silk;
+  }
+  parms {
+  }        
+}
+
+SPELL spell_protection_field {
+  name     "In Sanct Grav (protection field)";
+  sprite   s_field_energy;
+  code     ISG;
+  cost     SPELL_COST_LEVEL_4;
+  range    4;
+  missile  M_protect;
+  effects  (EFFECT_NONE);
+  strength 0;
+  duration 0;
+  context  C;
+  level    4;
+  target   SPELL_TARGET_LOCATION;
+  reagents {
+    reagent_mandrake;
+    reagent_black_pearl;
+    reagent_spider_silk;
+  }
+  parms {
+  }        
+}
+
+SPELL spell_protection {
+  name     "In Sanct (protection)";
+  sprite   s_shield2;
+  code     IS;
+  cost     SPELL_COST_LEVEL_4;
+  range    4;
+  missile  null;
+  effects  (EFFECT_ARMOUR);
+  strength 10;
+  duration 10;
+  context  CWT;
+  level    4;
+  target   SPELL_TARGET_ALL_PARTY_MEMBERS;
+  reagents {
+    reagent_sulphorous_ash;
+    reagent_ginseng;
+    reagent_garlic;
+  }
+  parms {
+  }        
+
+}
+
+SPELL spell_reveal {
+  name     "Wis Quas (reveal)";
+  sprite   s_magic;
+  code     WQ;
+  cost     SPELL_COST_LEVEL_4;
+  range    4;
+  missile  null;
+  effects  (EFFECT_REVEAL);
+  strength 0;
+  duration 100;
+  context  CWT;
+  level    4;
+  target   SPELL_TARGET_NONE;
+  reagents {
+    reagent_spider_silk;
+    reagent_nightshade;
+  }
+  parms {
+  }        
+
+}
+
+
+
+/*****************************************************************************
+                           F I F T H    C I R C L E
+ *****************************************************************************/
+SPELL spell_magic_unlock {
+  name     "In Ex Por (magic unlock)";
+  sprite   s_door_locked;
+  code     IEP;
+  cost     SPELL_COST_LEVEL_5;
+  range    1;
+  missile  null;
+  effects  (EFFECT_UNLOCK);
+  strength 2;
+  duration 0;
+  context  CTW;
+  level    5;
+  target   SPELL_TARGET_MECH;
+  reagents {
+    reagent_sulphorous_ash;
+    reagent_blood_moss;
+  }
+  parms {
+  }
+}
+
+SPELL spell_magic_lock {
+  name     "An Ex Por (magic lock)";
+  sprite   s_door_locked;
+  code     AEP;
+  cost     SPELL_COST_LEVEL_5;
+  range    1;
+  missile  null;
+  effects  (EFFECT_UNLOCK);
+  strength -2;
+  duration 0;
+  context  CTW;
+  level    5;
+  target   SPELL_TARGET_MECH;
+  reagents {
+    reagent_sulphorous_ash;
+    reagent_blood_moss;
+    reagent_garlic;
+  }
+  parms {
+  }
+}
+
+SPELL spell_insect_swarm {
+  name     "In Bet Xen (summon insects)";
+  sprite   s_insects;
+  code     IBX;
+  cost     SPELL_COST_LEVEL_5;
+  range    4;
+  missile  null;
+  effects  (EFFECT_SUMMON);
+  strength 2;
+  duration 0;
+  context  C;
+  level    5;
+  target   SPELL_TARGET_LOCATION;
+  reagents {
+    reagent_spider_silk;
+    reagent_blood_moss;
+    reagent_sulphorous_ash;
+  }
+  parms {
+    // Party types this spell will summon:
+    t_insect_cloud;
+  }
+}
+
+SPELL spell_sleep {
+  name      "In Zu (sleep)";
+  sprite    s_field_sleep;
+  code      IZ;
+  cost      SPELL_COST_LEVEL_5;
+  range     4;
+  missile   null;
+  effects   (EFFECT_SLEEP);
+  strength  5;
+  duration  0;
+  context   C;
+  level     5;
+  target    SPELL_TARGET_CHARACTER;
+  reagents {
+    reagent_nightshade;
+    reagent_spider_silk;
+    reagent_black_pearl;
+  }
+  parms {
+  }
+}
+
+SPELL spell_great_heal {
+  name     "Vas Mani (great heal)";
+  sprite   s_red_potion;
+  code     VM;
+  cost     SPELL_COST_LEVEL_5;
+  range    1;
+  missile  null;
+  effects  (EFFECT_HEAL);
+  strength 60;
+  duration 0;
+  context  CTW;
+  level    5;
+  target   SPELL_TARGET_CHARACTER;
+  reagents {
+    reagent_ginseng;
+    reagent_spider_silk;
+    reagent_mandrake;
+  }
+  parms {
+  }
+}
+
+SPELL spell_quickness {
+  name     "Rel Tym (quickness)";
+  sprite   s_magic;
+  code     RT;
+  cost     SPELL_COST_LEVEL_5;
+  range    0;
+  missile  null;
+  effects  (EFFECT_QUICK);
+  strength 0;
+  duration 10;
+  context  CTW;
+  level    5;
+  target   SPELL_TARGET_NONE;
+  reagents {
+    reagent_sulphorous_ash;
+    reagent_blood_moss;
+    reagent_mandrake;
+  }
+  parms {
+  }
+       
+}
+
+/*****************************************************************************
+                           S I X T H    C I R C L E
+ *****************************************************************************/
+SPELL spell_charm {
+  name      "An Xen Exe (charm)"
+    sprite    s_happy_monster_face
+    code      AXE
+    cost      SPELL_COST_LEVEL_6
+    range     4
+    missile   null
+    effects   (EFFECT_CHARM)
+    strength  5 // # of turns added to charm effects
+    duration  0
+    context   C
+    level     6
+    target    SPELL_TARGET_CHARACTER
+    reagents {
+    reagent_black_pearl
+      reagent_nightshade
+      reagent_spider_silk
+      }
+  parms {
+  }
+}
+
+SPELL spell_negate_magic {
+  name      "In An (negate magic)";
+  sprite    s_magic;
+  code      IA;
+  cost      SPELL_COST_LEVEL_6;
+  range     0;
+  missile   null;
+  effects   (EFFECT_NEGATE);
+  strength  0;
+  duration  10;
+  context   C;
+  level     6;
+  target    SPELL_TARGET_NONE;
+  reagents {
+    reagent_garlic;
+    reagent_mandrake;
+    reagent_sulphorous_ash;
+  }
+  parms {
+  }
+}
+
+SPELL spell_tremor {
+  name      "In Vas Por Ylem (tremor)";
+  sprite    s_mountains;
+  code      IVPY;
+  cost      SPELL_COST_LEVEL_6;
+  range     0;
+  missile   null;
+  effects   (EFFECT_TREMOR);
+  strength  5;
+  duration  50;
+  context   C;
+  level     6;
+  target    SPELL_TARGET_NONE;
+  reagents {
+    reagent_blood_moss;
+    reagent_mandrake;
+    reagent_sulphorous_ash;
+  }
+  parms {
+  }
+}
+
+SPELL spell_confuse {
+  name      "Quas An Wis (confuse)";
+  sprite    s_magic;
+  code      QAW;
+  cost      SPELL_COST_LEVEL_6;
+  range     0;
+  missile   null;
+  effects   (EFFECT_CONFUSE);
+  strength  0;
+  duration  0;
+  context   C;
+  level     6;
+  target    SPELL_TARGET_NONE;
+  reagents {
+    reagent_mandrake;
+    reagent_nightshade;
+  }
+  parms {
+  }
+}
+
+SPELL spell_xray {
+  name      "Wis An Ylem (X-ray)";
+  sprite    s_magic;
+  code      WAY;
+  cost      SPELL_COST_LEVEL_6;
+  range     0;
+  missile   null;
+  effects   (EFFECT_SHOW_TERRAIN);
+  strength  0;
+  duration  100;
+  context   CWT;
+  level     6;
+  target    SPELL_TARGET_NONE;
+  reagents {
+    reagent_mandrake;
+    reagent_sulphorous_ash;
+  }
+  parms {
+  }
+}
+
+
+/*****************************************************************************
+                         S E V E N T H    C I R C L E
+ *****************************************************************************/
+SPELL spell_poison_wind {
+  name     "In Nox Hur (poison wind)";
+  sprite   s_field_poison;
+  code     INH;
+  cost     SPELL_COST_LEVEL_7;
+  range    0;
+  missile  null;
+  effects  (EFFECT_WIND);
+  strength 0;
+  duration 0;
+  context  C;
+  level    7;
+  target   SPELL_TARGET_DIRECTION;
+  reagents {
+    reagent_nightshade;
+    reagent_sulphorous_ash;
+    reagent_blood_moss;
+  }
+  parms {
+    F_poison;
+  }
+}
+
+SPELL spell_fear {
+  name     "In Quas Corp (fear)";
+  sprite   s_magic;
+  code     IQC;
+  cost     SPELL_COST_LEVEL_7;
+  range    0;
+  missile  null;
+  effects  (EFFECT_REPEL);
+  strength 0;
+  duration 0;
+  context  C;
+  level    7;
+  target   SPELL_TARGET_NONE;
+  reagents {
+    reagent_nightshade;
+    reagent_mandrake;
+    reagent_garlic;
+  }
+  parms {
+    // Null means repel ALL species...
+  }
+
+}
+
+SPELL spell_peer {
+  name     "In Quas Wis (peer)";
+  sprite   s_magic;
+  code     IQW;
+  cost     SPELL_COST_LEVEL_7;
+  range    0;
+  missile  null;
+  effects  (EFFECT_PEER);
+  strength 0;
+  duration 0;
+  context  CTW;
+  level    7;
+  target   SPELL_TARGET_NONE;
+  reagents {
+    reagent_nightshade;
+    reagent_mandrake;
+  }
+  parms {
+  }       
+}
+
+SPELL spell_clone {
+  name     "In Quas Xen (clone)";
+  sprite   s_companion_wizard;
+  code     IQX;
+  cost     SPELL_COST_LEVEL_7;
+  range    4;
+  missile  null;
+  effects  (EFFECT_CLONE);
+  strength 0;
+  duration 0;
+  context  C;
+  level    7;
+  target   SPELL_TARGET_CHARACTER;
+  reagents {
+    reagent_nightshade;
+    reagent_mandrake;
+    reagent_sulphorous_ash;
+    reagent_spider_silk;
+    reagent_blood_moss;
+    reagent_ginseng;
+  }
+  parms {
+  }       
+}
+
+SPELL spell_invisibility {
+  name     "Sanct Lor (invisibility)";
+  sprite   s_null;
+  code     SL;
+  cost     SPELL_COST_LEVEL_7;
+  range    4;
+  missile  null;
+  effects  (EFFECT_INVISIBLE);
+  strength 0;
+  duration 10;
+  context  C;
+  level    7;
+  target   SPELL_TARGET_CHARACTER;
+  reagents {
+    reagent_nightshade;
+    reagent_mandrake;
+    reagent_blood_moss;
+  }
+  parms {
+  }       
+}
+
+SPELL spell_kill {
+  name     "Xen Corp (kill)";
+  sprite   s_null;
+  code     XC;
+  cost     SPELL_COST_LEVEL_7;
+  range    4;
+  missile  null;
+  effects  (EFFECT_DAMAGE);
+  strength 1000;
+  duration 0;
+  context  C;
+  level    7;
+  target   SPELL_TARGET_CHARACTER;
+  reagents {
+    reagent_nightshade;
+    reagent_black_pearl;
+  }
+  parms {
+  }       
+}
+
+/*****************************************************************************
+                          E I G H T H    C I R C L E
+ *****************************************************************************/
+
+SPELL spell_time_stop {
+  name     "An Tym (time stop)";
+  sprite   s_magic;
+  code     AT;
+  cost     SPELL_COST_LEVEL_8;
+  range    0;
+  missile  null;
+  effects  (EFFECT_TIME_STOP);
+  strength 0;
+  duration 10;
+  context  CTW;
+  level    8;
+  target   SPELL_TARGET_NONE;
+  reagents {
+    reagent_mandrake;
+    reagent_garlic;
+    reagent_blood_moss;
+  }
+  parms {
+  }       
+}
+
+SPELL spell_flame_wind {
+  name     "In Flam Hur (flame wind)";
+  sprite   s_field_fire;
+  code     IFH;
+  cost     SPELL_COST_LEVEL_8;
+  range    0;
+  missile  null;
+  effects  (EFFECT_WIND);
+  strength 0;
+  duration 0;
+  context  C;
+  level    8;
+  target   SPELL_TARGET_DIRECTION;
+  reagents {
+    reagent_mandrake;
+    reagent_sulphorous_ash;
+    reagent_blood_moss;
+  }
+  parms {
+    F_fire;
+  }
+}
+
+SPELL spell_energy_wind {
+  name     "In Vas Grav Corp (energy wind)";
+  sprite   s_field_energy;
+  code     IVGC;
+  cost     SPELL_COST_LEVEL_8;
+  range    0;
+  missile  null;
+  effects  (EFFECT_WIND);
+  strength 0;
+  duration 0;
+  context  C;
+  level    8;
+  target   SPELL_TARGET_DIRECTION;
+  reagents {
+    reagent_mandrake;
+    reagent_sulphorous_ash;
+    reagent_nightshade;
+  }
+  parms {
+    F_protect;
+  }
+}
+
+SPELL spell_resurrect {
+  name     "In Mani Corp (resurrect)";
+  sprite   s_corpse;
+  code     IMC;
+  cost     SPELL_COST_LEVEL_8;
+  range    4;
+  missile  null;
+  effects  (EFFECT_RESURRECT);
+  strength 0;
+  duration 0;
+  context  CTW;
+  level    8;
+  target   SPELL_TARGET_CHARACTER;
+  reagents {
+    reagent_garlic;
+    reagent_ginseng;
+    reagent_spider_silk;
+    reagent_sulphorous_ash;
+    reagent_blood_moss;
+    reagent_mandrake;
+  }
+  parms {
+  }
+
+}
+
+SPELL spell_summon {
+  name     "Kal Xen Corp (summon undead)";
+  sprite   s_skeleton;
+  code     KXC;
+  cost     SPELL_COST_LEVEL_8;
+  range    0;
+  missile  null;
+  effects  (EFFECT_SUMMON);
+  strength 1;
+  duration 0;
+  context  C;
+  level    8;
+  target   SPELL_TARGET_NONE;
+  reagents {
+    reagent_spider_silk;
+    reagent_mandrake;
+    reagent_nightshade;
+  }
+  parms {
+    // Party types this spell will summon:
+    t_undead_brigade;
+  }
+}
+
+SPELL spell_gate_travel {
+  name     "Vas Rel Por (gate)";
+  sprite   s_moongate_full;
+  code     VRP;
+  cost     SPELL_COST_LEVEL_8;
+  range    0;
+  missile  null;
+  effects  (EFFECT_GATE_TRAVEL);
+  strength 1;
+  duration 0;
+  context  TW;
+  level    8;
+  target   SPELL_TARGET_NONE;
+  reagents {
+    reagent_sulphorous_ash;
+    reagent_mandrake;
+    reagent_black_pearl;
+  }
+  parms {
+  }
+}
+
+#if 0
+// template for new spells:
+SPELL spell_ {
+  name     "";
+  sprite   s_magic;
+  code     ;
+  cost     SPELL_COST_LEVEL_1;
+  range    0;
+  missile  null;
+  effects  (EFFECT_);
+  strength 0;
+  duration 0;
+  context  CTW;
+  level    1;
+  target   SPELL_TARGET_CHARACTER;
+  reagents {
+    reagent_;
+  }
+  parms {
+  }
+}
+#endif // 0
+
+
+#endif // spells_ghul
+
+/* eof */

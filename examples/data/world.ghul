@@ -1,0 +1,152 @@
+/* world.ghul
+ *     Copyright (c) 2002 Gordon McNutt with contributions by Sam Glasby
+ *
+ * Object instances which make up the game world.
+ */
+#ifndef world_ghul
+#define world_ghul
+
+
+// #define BATTLE_OF_BRITAIN
+
+
+// SAM: 
+// Alignment probably belong in "types.ghul", however
+// world-specific alignments such as ALIGN_RED_GOBLIN
+// do seem to belong somewhere under "data/world/".
+// What to do?
+
+/*** Alignments ***/
+#define ALIGN_PLAYER    1 /* bit 0 ALWAYS reserved for player */
+#define ALIGN_TOWN      2 /* for townsfolk, guards, domestic animals, etc */
+#define ALIGN_MONSTER   4 /* general monster alignment (need SOMETHING so they
+                           * don't attack each other by default) 
+                           */
+
+#define GOBLIN_WAR
+#ifdef  GOBLIN_WAR
+#define ALIGN_RED_GOBLIN   8
+#define ALIGN_BLUE_GOBLIN 16
+#endif // GOBLIN_WAR
+
+/*** Reserved parameter id's ***/
+#define AMOUNT   -1
+#define GOLD     -2
+#define FOOD     -3
+#define ACTIVITY -4
+
+/*** Game parameter id's ***/
+#define HONOR     0
+#define SACRIFICE 1
+
+/*** Global flags ***/
+#define HELPED_JOAN_OF_MYRE 129
+
+/*** Conversation flags ***/
+#define TELL_RUNE 1
+#define GAVE_ITEM 2
+#define WILL_JOIN 3
+
+
+/*****************************************************************************
+ ***  MAPS  ***
+ *****************************************************************************/
+
+#ifdef YAUR
+#include "world/maps/yaur/all_yaur_maps.ghul"
+#endif // YAUR
+  
+#ifdef U4_U5
+#include "world/maps/u4_u5/all_ultima_maps.ghul"
+#endif // U4_U5
+
+  // Some combat maps:
+#include "world/maps/terrain_combat_maps.ghul"
+
+  // Miscellaneous maps:
+#include "world/maps/M_dark_passage.ghul"
+#include "world/maps/M_prison_and_torture_chamber.ghul"
+#include "world/maps/M_secret_shrine.ghul"
+
+combat_maps {
+  t_grass  m_grass_combat;
+  t_trees  m_grass_combat;
+  t_forest m_forest_combat;
+} // combat_maps
+
+
+/*****************************************************************************
+ ***   SCHEDULES   ***
+ *****************************************************************************/
+#define WORKING   0  /* reserved */
+#define SLEEPING  1  /* reserved */
+#define COMMUTING 2  /* reserved */
+#define EATING    3  /* reserved */
+
+SCHED sched_Hawknoz {
+  0  0  29 6  1  1  SLEEPING;
+  7  0  13 26 3  3  WORKING;
+  12 0  17 3  7  1  EATING;
+  13 0  7  28 1  1  WORKING;
+  19 0  29 6  1  1  SLEEPING;
+}
+
+
+/*****************************************************************************
+ ***   CONVERSATIONS   ***
+ *****************************************************************************/
+#include "world/conversations/conversations.ghul"
+
+
+/*****************************************************************************
+ ***  CHARACTERS  ***
+ *****************************************************************************/
+#include "world/characters/inhabitants_of_britain.ghul"
+#include "world/characters/party_members.ghul"
+
+
+/*****************************************************************************
+ ***   MECHANISMS   ***
+ *****************************************************************************/
+#include "world/mechanisms/all_mechanisms.ghul"
+
+
+/*****************************************************************************
+ ***  PLACES  ***
+ *****************************************************************************/
+#include "world/places/all_places.ghul"
+
+
+/*****************************************************************************
+ ***  MOONGATES  ***
+ *****************************************************************************/
+#include "world/astronomy.ghul"
+
+
+/*****************************************************************************
+ ***  PORTALS  ***
+ *****************************************************************************/
+#include "world/portals.ghul"
+
+
+/*****************************************************************************
+ ***  PLAYER  ***
+ *****************************************************************************/
+#include "player/party.ghul"
+
+
+/*****************************************************************************
+ ***  MISC  ***
+ *****************************************************************************/
+
+// SAM: 
+// Perhaps this could be moved to a point near the CURSOR declaration?
+// Currently, it seems to be a requirement that this be at the end.
+CROSSHAIR {
+  objectType t_cursor;
+}
+
+
+#endif // world_ghul
+
+/* eof */

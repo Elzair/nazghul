@@ -1,0 +1,159 @@
+/* occupations.ghul
+ *
+ * Defines OCCUPATIONS which NPC beings may belong to.
+ */
+#ifndef occupations_ghul
+#define occupations_ghul
+
+
+OCC ranger {
+    name        "ranger";
+    magic       0.5;
+    container   t_chest1;
+    traps {
+      t_burn_trap;
+    }
+    arms {
+      t_sword;
+      t_bow;
+      t_dagger;
+    }
+    items {
+      t_bow          50  1;
+      t_arrow        50  20;
+      t_sword        75  1;
+      t_torch        50  5;
+      t_mushroom1    50  5;
+      t_green_potion 50  2;
+    }
+}
+
+OCC fighter {
+  name        "fighter";
+  magic       0.0;
+  container   t_chest1;
+  traps {}
+  arms {
+    t_dagger;
+    t_sword;
+    t_spear;
+    t_long_sword;
+    t_2h_sword;
+    t_oil;
+    t_mace;
+    t_2h_hammer;
+    t_iron_helm;
+    t_sm_shield;
+    t_lrg_shield;
+    t_ring_mail;
+  }
+  items {
+    t_dagger     25 1;
+    t_sword      25 1;
+    t_spear      25 1;
+    t_long_sword 25 1;
+    t_2h_sword   25 1;
+    t_mace       25 1;
+    t_2h_hammer  25 1;
+    t_iron_helm  25 1;
+    t_sm_shield  25 1;
+    t_lrg_shield 25 1;
+    t_ring_mail  25 1;
+    t_red_potion 75 5;
+  }
+}
+
+OCC wizard {
+  name        "wizard";
+  magic       2.0;
+  container   t_chest1;
+  traps {
+    t_poison_trap;
+  }
+  arms {
+    t_dagger;
+    t_sword;
+    t_sm_shield;
+    t_oil;
+  }
+  items {
+    t_dagger       100 1;
+    t_sword        50  1;
+    t_sm_shield    50  1;
+    t_oil          50  10;
+    t_light_potion 50  5;
+    t_green_potion 50  2;
+    t_red_potion   75  5;
+    t_blue_potion  50  2;
+  }
+}
+
+OCC merchant {
+  name        "merchant";
+  magic       0.0;
+  container   t_chest1;
+  traps {}
+  arms {
+    t_dagger;
+  }
+  items {
+    t_dagger    100 1;
+  }
+}
+
+OCC beggar {
+  name        "beggar";
+  magic       0.0;
+  container   null;
+  traps {}
+  arms  {}
+  items {}
+}
+
+OCC soldier {
+  name        "soldier";
+  magic       0.0;
+  container   t_chest1;
+  traps {}
+  arms {
+    t_long_sword;
+    t_lrg_shield;
+    t_crossbow;
+    t_ring_mail;
+  }
+  items {
+    t_long_sword  100 1;
+    t_lrg_shield  100 1;
+    t_crossbow    75  1;
+    t_ring_mail   100 1;
+    t_bolt        75  20;
+  }
+}
+
+OCC raider {
+  name        "raider";
+  magic       0.0;
+  container   t_chest1;
+  traps {}
+  arms {
+    t_spear;
+    t_bow;
+    t_dagger;
+    t_sm_shield;
+    t_iron_helm;
+  }
+  items {
+    t_dagger     75  1;
+    t_mushroom1  50  2;
+    t_arrow      50  20;
+    t_spear      50  2;
+    t_sm_shield  50  1;
+    t_bow        50  1;
+    t_iron_helm  50  1;
+  }
+}
+
+
+#endif // occupations_ghul
+
+/* eof */

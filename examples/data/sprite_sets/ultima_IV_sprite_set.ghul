@@ -1,0 +1,179 @@
+/* ultima_IV_spritte_set.ghul
+ *
+ * Defines a sprite_set based on the "Enhanced Ultima IV" graphical tile set.
+ */
+#ifndef ultima_IV_sprite_set_ghul
+#define ultima_IV_sprite_set_ghul
+
+
+SPRITE_SET ss_u4 {
+  
+  image_width  32;
+  image_height 32;
+  file_rows    16;
+  file_cols    16;
+  file_offx    0;
+  file_offy    0;
+  file "data/images/shapes-32x32.png";
+  
+  sprites {
+    WAVE_SPRITE(s_deep,      0);
+    WAVE_SPRITE(s_shallow,   1);
+    WAVE_SPRITE(s_shoals,    2);
+    WAVE_SPRITE(s_bog,       3);
+    STD_SPRITE(s_grass,      4);
+    STD_SPRITE(s_trees,      5);
+    STD_SPRITE(s_forest,     6);
+    STD_SPRITE(s_hills,      7);
+    STD_SPRITE(s_mountains,  8);
+    STD_SPRITE(s_dungeon,    9);
+    STD_SPRITE(s_town,      10);
+    STD_SPRITE(s_keep,      11);
+    STD_SPRITE(s_hamlet,    12);
+    STD_SPRITE(s_leftwing,  13);
+    STD_SPRITE(s_castle,    14);
+    STD_SPRITE(s_rightwing, 15);
+    STD_SPRITE(s_cobblestone,   22);
+    STD_SPRITE(s_bridge,        23);
+    STD_SPRITE(s_ballon,        24);
+    STD_SPRITE(s_bridge_top,    25);
+    STD_SPRITE(s_bridge_bottom, 26);
+    STD_SPRITE(s_ladder_up,     27);
+    STD_SPRITE(s_ladder_down,   28);
+    STD_SPRITE(s_ruin,   29);
+    STD_SPRITE(s_shrine, 30);
+    STD_SPRITE(s_avatar, 31);
+
+    SPRITE(s_companion_wizard,   2, 32, normal);
+    SPRITE(s_companion_bard,     2, 34, normal);
+    SPRITE(s_companion_fighter,  2, 36, normal);
+    SPRITE(s_companion_druid,    2, 38, normal);
+    SPRITE(s_companion_tinker,   2, 40, normal);
+    SPRITE(s_companion_paladin,  2, 42, normal);
+    SPRITE(s_companion_ranger,   2, 44, normal);
+    SPRITE(s_companion_shepherd, 2, 46, normal);
+
+    SPRITE(s_pillar,  1, 48, normal);
+    SPRITE(s_wall_b,  1, 49, normal);
+    SPRITE(s_wall_a,  1, 50, normal);
+    SPRITE(s_wall_c,  1, 51, normal);
+    SPRITE(s_wall_d,  1, 52, normal);
+    SPRITE(s_mast,        1, 53, normal);
+    SPRITE(s_ships_wheel, 1, 54, normal);
+    SPRITE(s_boulder,     1, 55, normal);
+    SPRITE(s_corpse,      1, 56, normal);
+    SPRITE(s_wall_rock,   1, 57, normal);
+    SPRITE(s_door_locked, 1, 58, normal);
+    SPRITE(s_door,        1, 59, normal);
+    SPRITE(s_chest,       1, 60, normal);
+    SPRITE(s_ankh,        1, 61, normal);
+    SPRITE(s_flagstone,   1, 62, normal);
+    SPRITE(s_deck,        1, 63, normal);
+    SPRITE(s_moongate_quarter, 1, 64, normal);
+    SPRITE(s_moongate_half,    1, 65, normal);
+    SPRITE(s_moongate_three_quarters, 1, 66, normal);
+    SPRITE(s_moongate_full, 1, 67, normal);
+    SPRITE(s_field_poison,  1, 68, wave);
+    SPRITE(s_field_energy,  1, 69, wave);
+    SPRITE(s_field_fire,  1, 70, wave);
+    SPRITE(s_field_sleep, 1, 71, wave);
+    SPRITE(s_wall,        1, 72, normal);
+    SPRITE(s_secret_door, 1, 73, normal);
+    SPRITE(s_altar,       1, 74, normal);
+    SPRITE(s_fireplace,   1, 75, normal);
+    SPRITE(s_lava,        1, 76, wave);
+    SPRITE(s_projectile,  1, 77, normal);
+    SPRITE(s_magic,       1, 78, normal);
+    SPRITE(s_hit,         1, 79, normal);
+    SPRITE(s_guard,       2, 80, normal);
+    SPRITE(s_townsman,    2, 82, normal);
+    SPRITE(s_bard,        2, 84, normal);
+    SPRITE(s_jester,      2, 86, normal);
+    SPRITE(s_beggar,      2, 88, normal);
+    SPRITE(s_child,       2, 90, normal);
+    SPRITE(s_bull,        2, 92, normal);
+    SPRITE(s_aristocrat,  2, 94, normal);
+
+    SPRITE(s_A, 1,  96, normal);
+    SPRITE(s_B, 1,  97, normal);
+    SPRITE(s_C, 1,  98, normal);
+    SPRITE(s_D, 1,  99, normal);
+    SPRITE(s_E, 1, 100, normal);
+    SPRITE(s_F, 1, 101, normal);
+    SPRITE(s_G, 1, 102, normal);
+    SPRITE(s_H, 1, 103, normal);
+    SPRITE(s_I, 1, 104, normal);
+    SPRITE(s_J, 1, 105, normal);
+    SPRITE(s_K, 1, 106, normal);
+    SPRITE(s_L, 1, 107, normal);
+    SPRITE(s_M, 1, 108, normal);
+    SPRITE(s_N, 1, 109, normal);
+    SPRITE(s_O, 1, 110, normal);
+    SPRITE(s_P, 1, 111, normal);
+    SPRITE(s_Q, 1, 112, normal);
+    SPRITE(s_R, 1, 113, normal);
+    SPRITE(s_S, 1, 114, normal);
+    SPRITE(s_T, 1, 115, normal);
+    SPRITE(s_U, 1, 116, normal);
+    SPRITE(s_V, 1, 117, normal);
+    SPRITE(s_W, 1, 118, normal);
+    SPRITE(s_X, 1, 119, normal);
+    SPRITE(s_Y, 1, 120, normal);
+    SPRITE(s_Z, 1, 121, normal);
+
+    SPRITE(s_counter_middle, 1, 122, normal);
+    SPRITE(s_counter_right,  1, 123, normal);
+    SPRITE(s_counter_left,   1, 124, normal);
+    SPRITE(s_counter_pillar, 1, 125, normal);
+
+    SPRITE(s_blank,        1, 126, normal);
+    SPRITE(s_null,         1, 126, normal);
+    SPRITE(s_wall_stone,   1, 127, normal);
+
+    SPRITE(s_pirate_left,  1, 128, normal);
+    SPRITE(s_pirate_front, 1, 129, normal);
+    SPRITE(s_pirate_right, 1, 130, normal);
+    SPRITE(s_pirate_back,  1, 131, normal);
+
+    SPRITE(s_nixie,       2, 132, normal);
+    SPRITE(s_kraken,      2, 134, normal);
+    SPRITE(s_sea_serpent, 2, 136, normal);
+    SPRITE(s_sea_horse,   2, 138, normal);
+    SPRITE(s_whirlpool,   2, 140, normal);
+    SPRITE(s_tornado,     2, 142, normal);
+
+    SPRITE(s_rat,        4, 144, normal);
+    SPRITE(s_bat,        4, 148, normal);
+    SPRITE(s_spider,     4, 152, normal);
+    SPRITE(s_ghost,      4, 156, normal);
+    SPRITE(s_slime,      4, 160, normal);
+    SPRITE(s_shaman,     4, 164, normal);
+    SPRITE(s_gemlin,     4, 168, normal);
+    SPRITE(s_mimic,      4, 172, normal);
+    SPRITE(s_reaper,     4, 176, normal);
+    SPRITE(s_insects,    4, 180, normal);
+    SPRITE(s_gazer,      4, 184, normal);
+    SPRITE(s_knight,     4, 188, normal);
+    SPRITE(s_orc,        4, 192, normal);
+    SPRITE(s_skeleton,   4, 196, normal);
+    SPRITE(s_brigand,    4, 200, normal);
+    SPRITE(s_snake,      4, 204, normal);
+    SPRITE(s_etin,       4, 208, normal);
+    SPRITE(s_headless,   4, 212, normal);
+    SPRITE(s_cyclops,    4, 216, normal);
+    SPRITE(s_wisp,       4, 220, normal);
+    SPRITE(s_wizard,     4, 224, normal);
+    SPRITE(s_lich,       4, 228, normal);
+    SPRITE(s_drake,      4, 232, normal);
+    SPRITE(s_xorn,       4, 236, normal);
+    SPRITE(s_demon,      4, 240, normal);
+    SPRITE(s_hydra,      4, 244, normal);
+    SPRITE(s_dragon,     4, 248, normal);
+    SPRITE(s_balron,     4, 252, normal);
+  }
+} /* SPRITE_SET ss_u4 */
+
+
+#endif // ultima_IV_sprite_set_ghul
+
+/* eof */

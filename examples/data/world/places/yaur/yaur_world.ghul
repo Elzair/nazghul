@@ -1,0 +1,39 @@
+/* yaur_world.ghul
+ *
+ * TODO: Split this up more, once there is more to split up.
+ */
+#ifndef yaur_world_ghul
+#define yaur_world_ghul
+
+
+PLACE p_yaur {
+  type        wilderness;
+  parent      null;
+  x           0;
+  y           0;
+  name        "Yaur";
+  wraps       1;
+  map         m_yaur;
+  underground 0;
+  objects {}
+  typical_npc_parties {}
+} // PLACE p_yaur
+
+
+PLACE p_castle_adare {
+  type        town;
+  parent      p_yaur;
+  x           90;
+  y           177;
+  name        "Castle Adare";
+  wraps       0;
+  map         m_castle_adare;
+  underground 0;
+  objects {}
+  object_type t_town;
+} // PLACE p_castle_adare
+
+
+#endif // yaur_world_ghul
+
+/* eof */

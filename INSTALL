@@ -1,0 +1,17 @@
+Nazghul requires SDL-1.2 or greater to run. Get it at:
+
+        http://www.libsdl.org
+
+To compile and install nazghul:
+
+        1. Run './configure; make; make install'.
+
+To test out the example world:
+
+        1. Run 'cd examples; make; nazghul mapfile'
+
+To run the regression test suite:
+
+        1. Run 'cd test; ./exec'
+
+Gordon McNutt <gmcnutt@cableone.net>

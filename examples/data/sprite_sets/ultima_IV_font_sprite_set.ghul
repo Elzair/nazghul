@@ -1,0 +1,87 @@
+/* ultima_IV_font_sprite_set.ghul
+ *
+ * Defines a sprite_set for the font from the "Enhanced Ultima IV" graphical tile set.
+ */
+#ifndef ultima_IV_font_sprite_set_ghul
+#define ultima_IV_font_sprite_set_ghul
+
+
+/*
+ * The u4 charset file, which contains all the tiles images which were 8x8 in
+ * u4. Map it in like any other sprite file, and elsewhere in the loadfile
+ * you'll need a table binding ASCII characters to some of these sprites so you
+ * can use them as your font images.
+ * 
+ * By convention I use 'ls_' as the prefix for these -- "little sprite".
+ */
+    
+SPRITE_SET ss_little_sprites {
+  
+  image_width 8;
+  image_height 16;
+  file_rows 8;
+  file_cols 16;
+  file_offx 0;
+  file_offy 0;
+  file "data/images/charset-8x16.png";
+  
+  sprites {
+    STD_SPRITE(ls_ankh,                     0);
+    STD_SPRITE(ls_shield ,                  1);
+    STD_SPRITE(ls_holey_wall ,              2);
+    STD_SPRITE(ls_wall ,                    3);
+    STD_SPRITE(ls_updown_arrow ,            4);
+    STD_SPRITE(ls_down_arrow ,              5);
+    STD_SPRITE(ls_up_arrow ,                6);
+    STD_SPRITE(ls_holey_ankh ,              7);
+    STD_SPRITE(ls_white_ball ,              8);
+    STD_SPRITE(ls_copyright ,               9);
+    STD_SPRITE(ls_trademark ,               10);
+    STD_SPRITE(ls_male ,                    11);
+    STD_SPRITE(ls_female ,                  12);
+    STD_SPRITE(ls_hbar,                     13);
+    SPRITE    (ls_vbar,                  1, 13, rotate);
+    STD_SPRITE(ls_square ,                  14);
+    STD_SPRITE(ls_blue_ball ,               15);
+    STD_SPRITE(ls_hbar_right,               16);
+    STD_SPRITE(ls_hbar_left,                17);
+    SPRITE    (ls_vbar_top,              1, 16, rotate);
+    SPRITE    (ls_vbar_bottom,           1, 17, rotate);
+    STD_SPRITE(ls_blank_one ,               18);
+    STD_SPRITE(ls_dot_dot_dot ,             19);
+    STD_SPRITE(s_wax_quarter_moon ,         20);
+    STD_SPRITE(s_wax_half_moon ,            21);
+    STD_SPRITE(s_wax_three_quarter_moon ,   22);
+    STD_SPRITE(s_full_moon ,                23);
+    STD_SPRITE(s_wane_three_quarter_moon ,  24);
+    STD_SPRITE(s_wane_half_moon ,           25);
+    STD_SPRITE(s_wane_quarter_moon ,        26);
+    STD_SPRITE(s_new_moon ,                 27);
+    SPRITE    (ls_whirlpool,             4, 28, normal);
+    STD_SPRITE(ls_blank_three,              32);
+    
+    /*
+     * From here on the file is the ASCII symbols in order. Instead
+     * of mapping sprites to these, I use the ascii_table construct
+     * elsewhere in the config file, and map it to this image set.
+     */
+  }
+} /* SPRITE_SET ss_little_sprites */
+
+
+/*
+ * ascii.naz - tells the game how to find images which correlate to 
+ * the ASCII symbol set. The image set must be defined elsewhere in 
+ * the config file as part of the "sprite_set" construct. The ASCII 
+ * symbols must appear in order in that image set, starting with the 
+ * '!' symbol as the image at the offset given below.
+ */
+ascii
+{
+  images  ss_little_sprites;  /* tag for the image set */
+  offset  32;                 /* index of first image in the set */
+}
+
+
+#endif // ultima_IV_font_sprite_set_ghul
+/* eof */

@@ -1,0 +1,60 @@
+/* portal_types.ghul
+ *
+ * Defines objects which reside on the PORTAL layer,
+ * which serve to connect locations on same/different maps
+ * to one another.
+ */
+#ifndef portal_types_ghul
+#define portal_types_ghul
+
+
+t_shrine {
+  name    "shrine entrance";
+  sprite  s_shrine;
+  subtype null;
+  layer   LAYER_PORTAL;
+}
+t_town {
+  name    "town entrance";
+  sprite  s_town;
+  subtype null;
+  layer   LAYER_PORTAL;
+}
+t_dungeon {
+  name    "dungeon entrance";
+  sprite  s_dungeon;
+  subtype null;
+  layer   LAYER_PORTAL;
+}
+t_ladder_up {
+  name    "a ladder leading up";
+  sprite  s_ladder_up;
+  subtype null;
+  layer   LAYER_PORTAL;
+}
+t_ladder_down {
+  name    "a ladder leading down";
+  sprite  s_ladder_down;
+  subtype null;
+  layer   LAYER_PORTAL;
+}
+
+t_moongate {
+  name        "moongate";
+  sprite      s_moongate_full;
+  subtype     moongate;
+  enter_sound "data/sounds/enter_moongate.wav";
+  maxLight    512;
+  sprites     4;
+  {
+    sprite s_moongate_quarter;
+    sprite s_moongate_half;
+    sprite s_moongate_three_quarters;
+    sprite s_moongate_full;
+  }
+}
+
+
+#endif // portal_types_ghul
+
+/* eof */

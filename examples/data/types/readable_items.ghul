@@ -1,0 +1,47 @@
+/* readable_items.ghul
+ *
+ * Defines object types which, when USED, display small or large amounts of text.
+ * 
+ * SAM: 
+ * Note that the object types defined in here contain world-specific content.
+ * As such, they would belong better in data/world/ rather than data/types/.
+ * However, since all object types must be in the object_types {} block,
+ * I cannot currently put some object types here and some there.
+ */
+#ifndef readable_items_ghul
+#define readable_items_ghul
+
+
+ITEM_TYPE(t_lb_journal, "The Journal of LB", s_scroll1,
+          EFFECT_NONE, 0, 0, TARG_NONE, 0, 0,
+          "The Journal of Lord British, Ruler of Britannia
+
+11/14/63
+Still no sign of the Avatar. If he does not come soon I fear he will be too late.
+
+11/17/63
+I signed the order to seal the dungeons, all save Hythloth, for I cannot bear to cut off access to the Codex of Ultimate Wisdom. Surely the Guardians that watch the passage there will suffice.
+
+12/09/63
+The expedition from Wrong returned three days ago, reporting that all the dungeons are closed. There has been no sign of the vile creatures for over a week, though I have scouts everywhere. Perhaps the horror is over. But it troubles me that the Avatar did not come. Is the link between this world and my old homeland broken?
+
+12/12/63
+Where are they coming from?!? Shamino straggled in today, bleeding from multiple wounds, and reported that Cove has fallen. I fear that even I cannot heal him. He lies in a fever even know.
+
+12/15/63
+Shamino passed away last night. I am nearly faint with grief and weariness. Reluctantly, I ordered Sir Geoffrey to the Isle of Fire and charged him to seal the entrance to Hythloth. I can think of no other passage by which they may be coming in. Still no sign of the Avatar.
+
+12/16/63
+Today a wounded pigeon fluttered in from Yew with a message begging for aid. I dispatched all the troops I could spare to march with all haste through the mountain passes.
+
+12/17/63
+Treachery! The pigeon from Yew must have been a decoy, for surely they cannot move that fast through the mountains and forests! They are at the gates. Though it has been  many years, my armour awaits. Perhaps for the last time, I will ride into battle, though I am old and feeble. Perhaps the Avatar will arrive before it is too late. Perhaps.");
+
+ITEM_TYPE(t_note, "A Charred Note", s_scroll1, 
+          EFFECT_NONE, 0, 0, TARG_NONE, 0, 0, 
+          "Seek him in the mountains at 91, 72");
+
+
+#endif // readable_items_ghul
+
+/* eof */

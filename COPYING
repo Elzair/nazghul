@@ -1,0 +1,23 @@
+The source code to the nazghul enigine has been released under the GNU General
+Public License which can be found in COPYING.GPL.
+
+The author of the very nice angband tileset is Adam Bolt, but I
+have had no success in contacting him. If anyone knows how to contact him
+please email me at gmcnutt@cableone.net. These tilesets were obtained from 
+http://www.thangorodrim.net/download.html. Thanks to Adam - I hope he doesn't
+mind - and the Thangorodrim website for providing these downloads.
+
+The excellent u4 upgrade tiles were obtained from
+http://www.moongates.com/u4/images/misc/shapes.gif. The Ultima Moongates
+website gives explicit permission to use these tiles in other projects. Thanks,
+guys!
+
+The sounds were obtained from some forgotten site somewhere that did not report
+any copying information. Unfortunately I don't know who created them so I can't
+give proper credit.
+
+The ghulscript files found in the test and example directories are released to
+the public domain.
+
+Copying, modifying, bundling, and burning to new ROMs is encouraged!
+

@@ -1,0 +1,69 @@
+Nazghul, a u5 clone.
+
+General Description
+-------------------
+
+Nazghul is a game engine modeled after the late-1980's game Ultima 5 (hence u5)
+by Origin Systems (no affiliation with Origin or its parent company is implied
+by that statement). The goal is to do everything u5 can do, except for the bad
+parts, and to do some things better.
+
+Nazghul presents a very similar user interface and game system as u5. The main
+view is top-down and tile-based. Players control a party of one or more
+characters. The principle game activities are exploration, turn-based combat
+with hostile npc parties, solving puzzles and experimenting with magic and
+artifacts.
+
+Although very similar to u5, nazghul has some important differences, summarized
+below (this is not a comprehensive list):
+
+* Unlike u5, nazghul is *not* the game. Nazghul is the engine which runs the
+  game. A game is a script which the engine reads when loading a game and
+  writes when saving a game. All object types, maps, characters, magical
+  effects and anything else that qualifies as game data is configured in the
+  script.
+
+* Dungeons in u5 were first-person 3d perspective. In nazghul they are top-down
+  2d like everything else.
+
+* Conversation with npc's was very limited in u5. For example, each npc could
+  only ask one question. In nazghul conversation trees have no such limitations
+  and npc's have many more options to respond with.
+
+* In u5 triggers were limited and special-cases. Nazghul replaces triggers with
+  a much more generic "mechanism" feature, including the ability to link
+  mechanisms together.
+
+* Party members can be any species of class of character in the game.
+
+* Different species can have different body types (e.g., a centaur, or a
+  four-handed creature, or a creature which is all head and eyestalks) and
+  armor and weapon types may be specific or general across the different body
+  types.
+
+
+Top-Level Directories
+---------------------
+
+test    The test suite for the engine.
+scripts Various utility scripts.
+src     The source code fort the engine.
+examples
+        An example game world for demonstrating the engine.
+doc     Documents for players and developers.
+
+
+Installation & Playing
+----------------------
+
+Refer to the INSTALL file(s) for instructions on installing nazghul on your
+system.
+
+Refer to doc/PLAYERS_GUIDE for instructions on how to play the game.
+
+Licensing
+---------
+
+The source code for the nazghul engine is released under the GNU General Public
+License. The source code for the test and example scripts are relased to the
+public domain. See the COPYING file for detailed information.

@@ -1,0 +1,71 @@
+/* party_members.ghul
+ *
+ * Defines characters in the initial party.
+ */
+#ifndef party_members_ghul
+#define party_members_ghul
+
+
+CHAR ch_Thorald_Greybeard {
+  name      "Thorald Greybeard";
+  species   human;
+  occ       wizard;
+  sprite    s_companion_wizard;
+  hp        240;
+  xp        0;
+  cond      G;
+  str       80;
+  intl      140;
+  dex       80;
+  magic     280;
+  lvl       8;
+  conv      c_generic;
+  readied {
+    t_magic_bow;
+  }
+} // CHAR ch_Thorald_Greybeard
+
+
+CHAR ch_Kamafuk_Axedog {
+  name      "Kamafuk Axedog";
+  species   human;
+  occ       fighter;
+  sprite    s_companion_fighter;
+  hp        240;
+  xp        0;
+  cond      G;
+  str       140;
+  intl      80;
+  dex       120;
+  magic     0;
+  lvl       8;
+  conv      c_generic;
+  readied {
+    t_ring_mail;
+    t_crossbow;
+  }
+} // CHAR ch_Kamafuk_Axedog
+
+
+CHAR ch_Mesmeme {
+  name      "Mesmeme";
+  species   gazer;
+  occ       wizard;
+  sprite    s_gazer;
+  hp        240;
+  xp        0;
+  cond      G;
+  str       60;
+  intl      160;
+  dex       60;
+  magic     320;
+  lvl       8;
+  conv      c_generic;
+  readied {
+  }
+} // CHAR ch_Mesmeme  
+
+
+#endif // party_members_ghul
+
+/* eof */

@@ -1,0 +1,82 @@
+/* npc_party_defs.ghul
+ *
+ * Defines the composition of NPC parties which may be found
+ * in the wilderness, towns, etc.
+ */
+#ifndef npc_party_defs_ghul
+#define npc_party_defs_ghul
+
+
+PARTY t_goblin_horde {
+  name   "horde of goblins";
+  sprite s_orc;
+  formation null; // a null formation will use the game engine default
+  groups {    
+    goblin raider s_orc 6;
+  }
+}
+
+// This formation takes advantage of the fact that a multi-group PARTY will put
+// the first member of the first group in position 0, the second member of the
+// first group in slot 1, etc. So I know that since the
+// t_gazer_pod_with_goblin_slaves PARTY lists two gazers and then six goblins
+// then positions 0 and 1 will be the gazers and the rest will be goblins.
+FORMATION f_gazers_and_goblins {
+        w 9;
+        h 3;
+        n 8;
+        2 3 4 . . . 5 6 7
+        . 0 . . . . . 1 .
+        . . . . . . . . .
+}
+    
+PARTY t_gazer_pod_with_goblin_slaves {
+  name   "pod of gazers with goblin slaves";
+  sprite s_gazer;
+  formation f_gazers_and_goblins;
+  groups {
+    gazer  wizard s_gazer 2;
+    goblin raider s_orc   6;
+  }
+}
+
+PARTY t_town_guards {
+  name   "troop of guardsmen";
+  sprite s_guard;
+  formation null;
+  groups { 
+    human soldier s_guard 3;
+  }
+}
+
+PARTY t_undead_brigade {
+  name   "brigade of skeletons";
+  sprite s_skeleton;
+  formation null;
+  groups {
+    skeleton soldier s_skeleton 3;
+  }
+}
+
+PARTY t_insect_cloud {
+  name   "cloud of insects";
+  sprite s_insects;
+  formation null;
+  groups {
+    insects null s_insects 3;
+  }
+}
+
+PARTY t_snakes {
+  name   "slither of snakes";
+  sprite s_snake;
+  formation null;
+  groups {
+    snake null s_snake 3;
+  }
+}
+
+
+#endif // npc_party_defs_ghul
+
+/* eof */

@@ -1,0 +1,55 @@
+#ifndef dup_constants_h
+#define dup_constants_h
+
+// This section defines the mechanism events reserved by the game engine.
+#define MECH_ATTACK       1
+#define MECH_STEP         2
+#define MECH_HANDLE       3
+#define MECH_OPEN         4
+#define MECH_CLOSE        5
+#define MECH_LOCK         6
+#define MECH_UNLOCK       7
+#define MECH_MAGIC_LOCK   8
+#define MECH_MAGIC_UNLOCK 9
+
+// This value marks the beginning of the unreserved events. A game script can
+// define its own events and number them starting from here.
+#define MECH_FIRST_UNRESERVED_EVENT 100
+
+/* Effects */
+#define EFFECT_NONE         0
+#define EFFECT_POISON       1	/* 0 */
+#define EFFECT_BURN         2	/* 1 */
+#define EFFECT_SLEEP        4	/* 2 */
+#define EFFECT_LIGHT        8	/* 3 */
+#define EFFECT_CURE         16	/* 4 */
+#define EFFECT_HEAL         32	/* 5 */
+#define EFFECT_AWAKEN       64	/* 6 */
+#define EFFECT_CHARM        128	/* 7 */
+#define EFFECT_DAMAGE       256	/* 8 */
+#define EFFECT_UNLOCK       512	/* 9 */
+#define EFFECT_REPEL        1024	/* 10 */
+#define EFFECT_LOCATE       2048	/* 11 */
+#define EFFECT_SUMMON       4096	/* 12 */
+#define EFFECT_WIND_CHANGE  8192	/* 13 */
+#define EFFECT_TELEPORT     16384	/* 14 */
+#define EFFECT_DESTROY      32768	/* 15 */
+#define EFFECT_ARMOUR       65536	/* 16 */
+#define EFFECT_REVEAL       131072	/* 17 */
+#define EFFECT_QUICK        262144	/* 18 */
+#define EFFECT_NEGATE       524288	/* 19 */
+#define EFFECT_TREMOR       1048576	/* 20 */
+#define EFFECT_CONFUSE      2097152	/* 21 */
+#define EFFECT_SHOW_TERRAIN 4194304	/* 22 */
+#define EFFECT_WIND         8388608	/* 23 */
+#define EFFECT_PEER         16777216	/* 24 */
+#define EFFECT_CLONE        33554432	/* 25 */
+#define EFFECT_INVISIBLE    67108864	/* 26 */
+#define EFFECT_TIME_STOP    134217728	/* 27 */
+#define EFFECT_RESURRECT    268435456	/* 28 */
+#define EFFECT_GATE_TRAVEL  536870912	/* 29 */
+#define EFFECT_NATURAL      1073741824	/* 30 hack: not really an effect, just
+					 * used to avoid the effects of negate
+					 * magic */
+
+#endif

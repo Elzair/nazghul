@@ -1,0 +1,18 @@
+/* core.naz
+ *
+ * Central GhulScript definition file, responsible for loading 
+ * all other GhulScript files (by means of 'cpp' macros).
+ * 
+ * Copyright 2002, 2003 Gordon McNutt with contributions by Sam Glasby
+ */
+
+
+// #define YAUR  // New game world being created
+#define U4_U5    // Uses data files from Ultima, temporary and to be replaced
+
+
+#include "./types.ghul"  // Object types, underpinnings of the world
+#include "./world.ghul"  // Object instances, the world itself
+
+
+/* eof */

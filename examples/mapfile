@@ -1,0 +1,3913 @@
+SPRITE_SET ss_u4 {
+  image_width 32;
+  image_height 32;
+  file_rows 16;
+  file_cols 16;
+  file_offx 0;
+  file_offy 0;
+  file "data/images/shapes-32x32.png";
+  sprites {
+    s_deep { frames 1 index 0 style wave facings 0 };
+    s_shallow { frames 1 index 1 style wave facings 0 };
+    s_shoals { frames 1 index 2 style wave facings 0 };
+    s_bog { frames 1 index 3 style wave facings 0 };
+    s_grass { frames 1 index 4 style normal facings 0 };
+    s_trees { frames 1 index 5 style normal facings 0 };
+    s_forest { frames 1 index 6 style normal facings 0 };
+    s_hills { frames 1 index 7 style normal facings 0 };
+    s_mountains { frames 1 index 8 style normal facings 0 };
+    s_dungeon { frames 1 index 9 style normal facings 0 };
+    s_town { frames 1 index 10 style normal facings 0 };
+    s_keep { frames 1 index 11 style normal facings 0 };
+    s_hamlet { frames 1 index 12 style normal facings 0 };
+    s_leftwing { frames 1 index 13 style normal facings 0 };
+    s_castle { frames 1 index 14 style normal facings 0 };
+    s_rightwing { frames 1 index 15 style normal facings 0 };
+    s_cobblestone { frames 1 index 22 style normal facings 0 };
+    s_bridge { frames 1 index 23 style normal facings 0 };
+    s_ballon { frames 1 index 24 style normal facings 0 };
+    s_bridge_top { frames 1 index 25 style normal facings 0 };
+    s_bridge_bottom { frames 1 index 26 style normal facings 0 };
+    s_ladder_up { frames 1 index 27 style normal facings 0 };
+    s_ladder_down { frames 1 index 28 style normal facings 0 };
+    s_ruin { frames 1 index 29 style normal facings 0 };
+    s_shrine { frames 1 index 30 style normal facings 0 };
+    s_avatar { frames 1 index 31 style normal facings 0 };
+    s_companion_wizard { frames 2 index 32 style normal facings 0 };
+    s_companion_bard { frames 2 index 34 style normal facings 0 };
+    s_companion_fighter { frames 2 index 36 style normal facings 0 };
+    s_companion_druid { frames 2 index 38 style normal facings 0 };
+    s_companion_tinker { frames 2 index 40 style normal facings 0 };
+    s_companion_paladin { frames 2 index 42 style normal facings 0 };
+    s_companion_ranger { frames 2 index 44 style normal facings 0 };
+    s_companion_shepherd { frames 2 index 46 style normal facings 0 };
+    s_pillar { frames 1 index 48 style normal facings 0 };
+    s_wall_b { frames 1 index 49 style normal facings 0 };
+    s_wall_a { frames 1 index 50 style normal facings 0 };
+    s_wall_c { frames 1 index 51 style normal facings 0 };
+    s_wall_d { frames 1 index 52 style normal facings 0 };
+    s_mast { frames 1 index 53 style normal facings 0 };
+    s_ships_wheel { frames 1 index 54 style normal facings 0 };
+    s_boulder { frames 1 index 55 style normal facings 0 };
+    s_corpse { frames 1 index 56 style normal facings 0 };
+    s_wall_rock { frames 1 index 57 style normal facings 0 };
+    s_door_locked { frames 1 index 58 style normal facings 0 };
+    s_door { frames 1 index 59 style normal facings 0 };
+    s_chest { frames 1 index 60 style normal facings 0 };
+    s_ankh { frames 1 index 61 style normal facings 0 };
+    s_flagstone { frames 1 index 62 style normal facings 0 };
+    s_deck { frames 1 index 63 style normal facings 0 };
+    s_moongate_quarter { frames 1 index 64 style normal facings 0 };
+    s_moongate_half { frames 1 index 65 style normal facings 0 };
+    s_moongate_three_quarters { frames 1 index 66 style normal facings 0 };
+    s_moongate_full { frames 1 index 67 style normal facings 0 };
+    s_field_poison { frames 1 index 68 style wave facings 0 };
+    s_field_energy { frames 1 index 69 style wave facings 0 };
+    s_field_fire { frames 1 index 70 style wave facings 0 };
+    s_field_sleep { frames 1 index 71 style wave facings 0 };
+    s_wall { frames 1 index 72 style normal facings 0 };
+    s_secret_door { frames 1 index 73 style normal facings 0 };
+    s_altar { frames 1 index 74 style normal facings 0 };
+    s_fireplace { frames 1 index 75 style normal facings 0 };
+    s_lava { frames 1 index 76 style wave facings 0 };
+    s_projectile { frames 1 index 77 style normal facings 0 };
+    s_magic { frames 1 index 78 style normal facings 0 };
+    s_hit { frames 1 index 79 style normal facings 0 };
+    s_guard { frames 2 index 80 style normal facings 0 };
+    s_townsman { frames 2 index 82 style normal facings 0 };
+    s_bard { frames 2 index 84 style normal facings 0 };
+    s_jester { frames 2 index 86 style normal facings 0 };
+    s_beggar { frames 2 index 88 style normal facings 0 };
+    s_child { frames 2 index 90 style normal facings 0 };
+    s_bull { frames 2 index 92 style normal facings 0 };
+    s_aristocrat { frames 2 index 94 style normal facings 0 };
+    s_A { frames 1 index 96 style normal facings 0 };
+    s_B { frames 1 index 97 style normal facings 0 };
+    s_C { frames 1 index 98 style normal facings 0 };
+    s_D { frames 1 index 99 style normal facings 0 };
+    s_E { frames 1 index 100 style normal facings 0 };
+    s_F { frames 1 index 101 style normal facings 0 };
+    s_G { frames 1 index 102 style normal facings 0 };
+    s_H { frames 1 index 103 style normal facings 0 };
+    s_I { frames 1 index 104 style normal facings 0 };
+    s_J { frames 1 index 105 style normal facings 0 };
+    s_K { frames 1 index 106 style normal facings 0 };
+    s_L { frames 1 index 107 style normal facings 0 };
+    s_M { frames 1 index 108 style normal facings 0 };
+    s_N { frames 1 index 109 style normal facings 0 };
+    s_O { frames 1 index 110 style normal facings 0 };
+    s_P { frames 1 index 111 style normal facings 0 };
+    s_Q { frames 1 index 112 style normal facings 0 };
+    s_R { frames 1 index 113 style normal facings 0 };
+    s_S { frames 1 index 114 style normal facings 0 };
+    s_T { frames 1 index 115 style normal facings 0 };
+    s_U { frames 1 index 116 style normal facings 0 };
+    s_V { frames 1 index 117 style normal facings 0 };
+    s_W { frames 1 index 118 style normal facings 0 };
+    s_X { frames 1 index 119 style normal facings 0 };
+    s_Y { frames 1 index 120 style normal facings 0 };
+    s_Z { frames 1 index 121 style normal facings 0 };
+    s_counter_middle { frames 1 index 122 style normal facings 0 };
+    s_counter_right { frames 1 index 123 style normal facings 0 };
+    s_counter_left { frames 1 index 124 style normal facings 0 };
+    s_counter_pillar { frames 1 index 125 style normal facings 0 };
+    s_blank { frames 1 index 126 style normal facings 0 };
+    s_null { frames 1 index 126 style normal facings 0 };
+    s_wall_stone { frames 1 index 127 style normal facings 0 };
+    s_pirate_left { frames 1 index 128 style normal facings 0 };
+    s_pirate_front { frames 1 index 129 style normal facings 0 };
+    s_pirate_right { frames 1 index 130 style normal facings 0 };
+    s_pirate_back { frames 1 index 131 style normal facings 0 };
+    s_nixie { frames 2 index 132 style normal facings 0 };
+    s_kraken { frames 2 index 134 style normal facings 0 };
+    s_sea_serpent { frames 2 index 136 style normal facings 0 };
+    s_sea_horse { frames 2 index 138 style normal facings 0 };
+    s_whirlpool { frames 2 index 140 style normal facings 0 };
+    s_tornado { frames 2 index 142 style normal facings 0 };
+    s_rat { frames 4 index 144 style normal facings 0 };
+    s_bat { frames 4 index 148 style normal facings 0 };
+    s_spider { frames 4 index 152 style normal facings 0 };
+    s_ghost { frames 4 index 156 style normal facings 0 };
+    s_slime { frames 4 index 160 style normal facings 0 };
+    s_shaman { frames 4 index 164 style normal facings 0 };
+    s_gemlin { frames 4 index 168 style normal facings 0 };
+    s_mimic { frames 4 index 172 style normal facings 0 };
+    s_reaper { frames 4 index 176 style normal facings 0 };
+    s_insects { frames 4 index 180 style normal facings 0 };
+    s_gazer { frames 4 index 184 style normal facings 0 };
+    s_knight { frames 4 index 188 style normal facings 0 };
+    s_orc { frames 4 index 192 style normal facings 0 };
+    s_skeleton { frames 4 index 196 style normal facings 0 };
+    s_brigand { frames 4 index 200 style normal facings 0 };
+    s_snake { frames 4 index 204 style normal facings 0 };
+    s_etin { frames 4 index 208 style normal facings 0 };
+    s_headless { frames 4 index 212 style normal facings 0 };
+    s_cyclops { frames 4 index 216 style normal facings 0 };
+    s_wisp { frames 4 index 220 style normal facings 0 };
+    s_wizard { frames 4 index 224 style normal facings 0 };
+    s_lich { frames 4 index 228 style normal facings 0 };
+    s_drake { frames 4 index 232 style normal facings 0 };
+    s_xorn { frames 4 index 236 style normal facings 0 };
+    s_demon { frames 4 index 240 style normal facings 0 };
+    s_hydra { frames 4 index 244 style normal facings 0 };
+    s_dragon { frames 4 index 248 style normal facings 0 };
+    s_balron { frames 4 index 252 style normal facings 0 };
+  }
+}
+SPRITE_SET ss_angband {
+  image_width 32;
+  image_height 32;
+  file_rows 63;
+  file_cols 32;
+  file_offx 0;
+  file_offy 0;
+  file "data/images/angband-32x32.png";
+  sprites {
+    s_gold_explosion { frames 1 index 61 style normal facings 0 };
+    s_brown_powder { frames 1 index 113 style normal facings 0 };
+    s_silver_powder { frames 1 index 114 style normal facings 0 };
+    s_gold_powder { frames 1 index 115 style normal facings 0 };
+    s_bluish_white_powder { frames 1 index 116 style normal facings 0 };
+    s_greenish_white_powder { frames 1 index 117 style normal facings 0 };
+    s_grayish_red_hunks { frames 1 index 118 style normal facings 0 };
+    s_white_hunks { frames 1 index 119 style normal facings 0 };
+    s_aquamarine_hunks { frames 1 index 120 style normal facings 0 };
+    s_red_hunks { frames 1 index 121 style normal facings 0 };
+    s_lightblue_hunks { frames 1 index 122 style normal facings 0 };
+    s_green_hunks { frames 1 index 123 style normal facings 0 };
+    s_scroll1 { frames 1 index 124 style normal facings 0 };
+    s_scroll2 { frames 1 index 125 style normal facings 0 };
+    s_scroll3 { frames 1 index 126 style normal facings 0 };
+    s_scroll4 { frames 1 index 127 style normal facings 0 };
+    s_ring1 { frames 1 index 128 style normal facings 0 };
+    s_ring2 { frames 1 index 129 style normal facings 0 };
+    s_ring3 { frames 1 index 130 style normal facings 0 };
+    s_ring4 { frames 1 index 131 style normal facings 0 };
+    s_ring5 { frames 1 index 132 style normal facings 0 };
+    s_ring6 { frames 1 index 133 style normal facings 0 };
+    s_ring7 { frames 1 index 134 style normal facings 0 };
+    s_ring8 { frames 1 index 135 style normal facings 0 };
+    s_ring9 { frames 1 index 136 style normal facings 0 };
+    s_ring10 { frames 1 index 137 style normal facings 0 };
+    s_ring11 { frames 1 index 138 style normal facings 0 };
+    s_ring12 { frames 1 index 139 style normal facings 0 };
+    s_ring13 { frames 1 index 140 style normal facings 0 };
+    s_ring14 { frames 1 index 141 style normal facings 0 };
+    s_ring15 { frames 1 index 142 style normal facings 0 };
+    s_ring16 { frames 1 index 143 style normal facings 0 };
+    s_ring17 { frames 1 index 145 style normal facings 0 };
+    s_ring18 { frames 1 index 146 style normal facings 0 };
+    s_ring19 { frames 1 index 147 style normal facings 0 };
+    s_ring20 { frames 1 index 148 style normal facings 0 };
+    s_ring21 { frames 1 index 149 style normal facings 0 };
+    s_necklace1 { frames 1 index 150 style normal facings 0 };
+    s_necklace2 { frames 1 index 151 style normal facings 0 };
+    s_necklace3 { frames 1 index 152 style normal facings 0 };
+    s_chest1 { frames 1 index 153 style normal facings 0 };
+    s_chest2 { frames 1 index 154 style normal facings 0 };
+    s_chest3 { frames 1 index 155 style normal facings 0 };
+    s_chest4 { frames 1 index 156 style normal facings 0 };
+    s_chest5 { frames 1 index 157 style normal facings 0 };
+    s_chest6 { frames 1 index 158 style normal facings 0 };
+    s_chest7 { frames 1 index 159 style normal facings 0 };
+    s_white_potion { frames 1 index 160 style normal facings 0 };
+    s_black_potion { frames 1 index 161 style normal facings 0 };
+    s_orange_potion { frames 1 index 162 style normal facings 0 };
+    s_red_potion { frames 1 index 163 style normal facings 0 };
+    s_green_potion { frames 1 index 164 style normal facings 0 };
+    s_blue_potion { frames 1 index 165 style normal facings 0 };
+    s_brown_potion { frames 1 index 166 style normal facings 0 };
+    s_gray_potion { frames 1 index 167 style normal facings 0 };
+    s_silver_potion { frames 1 index 168 style normal facings 0 };
+    s_purple_potion { frames 1 index 169 style normal facings 0 };
+    s_yellow_potion { frames 1 index 170 style normal facings 0 };
+    s_ruby_potion { frames 1 index 171 style normal facings 0 };
+    s_emarald_potion { frames 1 index 172 style normal facings 0 };
+    s_skyblue_potion { frames 1 index 173 style normal facings 0 };
+    s_golden_potion { frames 1 index 174 style normal facings 0 };
+    s_mushroom1 { frames 1 index 176 style normal facings 0 };
+    s_mushroom2 { frames 1 index 177 style normal facings 0 };
+    s_mushroom3 { frames 1 index 178 style normal facings 0 };
+    s_mushroom4 { frames 1 index 179 style normal facings 0 };
+    s_mushroom5 { frames 1 index 180 style normal facings 0 };
+    s_mushroom6 { frames 1 index 181 style normal facings 0 };
+    s_brown_mushroom { frames 1 index 182 style normal facings 0 };
+    s_black_mushroom { frames 1 index 183 style normal facings 0 };
+    s_mushroom9 { frames 1 index 184 style normal facings 0 };
+    s_mushroom10 { frames 1 index 185 style normal facings 0 };
+    s_mushroom11 { frames 1 index 186 style normal facings 0 };
+    s_mushroom12 { frames 1 index 187 style normal facings 0 };
+    s_mushroom13 { frames 1 index 188 style normal facings 0 };
+    s_mushroom14 { frames 1 index 189 style normal facings 0 };
+    s_mushroom15 { frames 1 index 190 style normal facings 0 };
+    s_helm1 { frames 1 index 248 style normal facings 0 };
+    s_helm2 { frames 1 index 249 style normal facings 0 };
+    s_helm3 { frames 1 index 250 style normal facings 0 };
+    s_helm4 { frames 1 index 251 style normal facings 0 };
+    s_helm5 { frames 1 index 252 style normal facings 0 };
+    s_helm6 { frames 1 index 253 style normal facings 0 };
+    s_helm7 { frames 1 index 254 style normal facings 0 };
+    s_helm8 { frames 1 index 255 style normal facings 0 };
+    s_helm9 { frames 1 index 256 style normal facings 0 };
+    s_helm10 { frames 1 index 257 style normal facings 0 };
+    s_helm11 { frames 1 index 258 style normal facings 0 };
+    s_helm12 { frames 1 index 259 style normal facings 0 };
+    s_helm13 { frames 1 index 260 style normal facings 0 };
+    s_helm14 { frames 1 index 261 style normal facings 0 };
+    s_helm15 { frames 1 index 262 style normal facings 0 };
+    s_helm16 { frames 1 index 263 style normal facings 0 };
+    s_helm17 { frames 1 index 264 style normal facings 0 };
+    s_helm18 { frames 1 index 265 style normal facings 0 };
+    s_helm19 { frames 1 index 266 style normal facings 0 };
+    s_helm20 { frames 1 index 267 style normal facings 0 };
+    s_helm21 { frames 1 index 268 style normal facings 0 };
+    s_helm22 { frames 1 index 269 style normal facings 0 };
+    s_shoe1 { frames 1 index 270 style normal facings 0 };
+    s_shoe2 { frames 1 index 271 style normal facings 0 };
+    s_shoe3 { frames 1 index 272 style normal facings 0 };
+    s_shoe4 { frames 1 index 273 style normal facings 0 };
+    s_shoe5 { frames 1 index 274 style normal facings 0 };
+    s_shoe6 { frames 1 index 275 style normal facings 0 };
+    s_shield1 { frames 1 index 276 style normal facings 0 };
+    s_shield2 { frames 1 index 277 style normal facings 0 };
+    s_shield3 { frames 1 index 278 style normal facings 0 };
+    s_shield4 { frames 1 index 279 style normal facings 0 };
+    s_shield5 { frames 1 index 280 style normal facings 0 };
+    s_shield6 { frames 1 index 281 style normal facings 0 };
+    s_shield7 { frames 1 index 282 style normal facings 0 };
+    s_shield8 { frames 1 index 283 style normal facings 0 };
+    s_shield9 { frames 1 index 284 style normal facings 0 };
+    s_shield10 { frames 1 index 285 style normal facings 0 };
+    s_shield11 { frames 1 index 286 style normal facings 0 };
+    s_shield12 { frames 1 index 287 style normal facings 0 };
+    s_shield13 { frames 1 index 288 style normal facings 0 };
+    s_shield14 { frames 1 index 289 style normal facings 0 };
+    s_shield15 { frames 1 index 290 style normal facings 0 };
+    s_shield16 { frames 1 index 291 style normal facings 0 };
+    s_shield17 { frames 1 index 292 style normal facings 0 };
+    s_shield18 { frames 1 index 293 style normal facings 0 };
+    s_shield19 { frames 1 index 294 style normal facings 0 };
+    s_shield20 { frames 1 index 295 style normal facings 0 };
+    s_dagger { frames 1 index 334 style normal facings 0 };
+    s_sword { frames 1 index 345 style normal facings 0 };
+    s_2h_hammer { frames 1 index 352 style normal facings 0 };
+    s_mace { frames 1 index 353 style normal facings 0 };
+    s_spear { frames 1 index 361 style normal facings 0 };
+    s_lght_bow { frames 1 index 376 style normal facings 0 };
+    s_hvy_bow { frames 1 index 377 style normal facings 0 };
+    s_lght_xbow { frames 1 index 378 style normal facings 0 };
+    s_hvy_xbow { frames 1 index 379 style normal facings 0 };
+    s_sling { frames 1 index 380 style normal facings 0 };
+    s_ring_mail { frames 1 index 309 style normal facings 0 };
+    s_torch { frames 1 index 459 style normal facings 0 };
+    s_explosion { frames 1 index 570 style normal facings 0 };
+    s_long_sword { frames 1 index 1708 style normal facings 0 };
+    s_2h_sword { frames 1 index 1709 style normal facings 0 };
+    s_giant { frames 2 index 652 style normal facings 0 };
+  }
+}
+SPRITE_SET ss_mine {
+  image_width 32;
+  image_height 32;
+  file_rows 8;
+  file_cols 8;
+  file_offx 0;
+  file_offy 0;
+  file "data/images/mine-32x32.png";
+  sprites {
+    s_crosshair { frames 1 index 0 style normal facings 0 };;
+    s_arrow { frames 1 index 1 style normal facings 170 };;
+    s_horse { frames 1 index 5 style normal facings 40 };;
+    s_happy_monster_face { frames 1 index 7 style normal facings 0 };;
+    s_ship { frames 1 index 8 style normal facings 170 };;
+    s_bolt { frames 1 index 12 style normal facings 170 };;
+    s_hdoor { frames 1 index 19 style normal facings 0 };
+    s_hdoor_locked { frames 1 index 20 style normal facings 0 };
+    s_portcullis_down { frames 1 index 21 style normal facings 0 };
+    s_portcullis_up { frames 1 index 22 style normal facings 0 };
+    s_L_lever_up { frames 1 index 24 style normal facings 0 };
+    s_L_lever_down { frames 1 index 25 style normal facings 0 };
+    s_R_lever_up { frames 1 index 26 style normal facings 0 };
+    s_R_lever_down { frames 1 index 27 style normal facings 0 };
+    s_floor_plate { frames 1 index 28 style normal facings 0 };
+  }
+}
+SPRITE_SET ss_moons {
+  image_width 16;
+  image_height 16;
+  file_rows 8;
+  file_cols 1;
+  file_offx 0;
+  file_offy 0;
+  file "data/images/moons-16x16.png";
+  sprites {
+    s_sun { frames 1 index 8 style normal facings 0 };
+  }
+}
+SPRITE_SET ss_little_sprites {
+  image_width 8;
+  image_height 16;
+  file_rows 8;
+  file_cols 16;
+  file_offx 0;
+  file_offy 0;
+  file "data/images/charset-8x16.png";
+  sprites {
+    ls_ankh { frames 1 index 0 style normal facings 0 };
+    ls_shield { frames 1 index 1 style normal facings 0 };
+    ls_holey_wall { frames 1 index 2 style normal facings 0 };
+    ls_wall { frames 1 index 3 style normal facings 0 };
+    ls_updown_arrow { frames 1 index 4 style normal facings 0 };
+    ls_down_arrow { frames 1 index 5 style normal facings 0 };
+    ls_up_arrow { frames 1 index 6 style normal facings 0 };
+    ls_holey_ankh { frames 1 index 7 style normal facings 0 };
+    ls_white_ball { frames 1 index 8 style normal facings 0 };
+    ls_copyright { frames 1 index 9 style normal facings 0 };
+    ls_trademark { frames 1 index 10 style normal facings 0 };
+    ls_male { frames 1 index 11 style normal facings 0 };
+    ls_female { frames 1 index 12 style normal facings 0 };
+    ls_hbar { frames 1 index 13 style normal facings 0 };
+    ls_vbar { frames 1 index 13 style rotate facings 0 };
+    ls_square { frames 1 index 14 style normal facings 0 };
+    ls_blue_ball { frames 1 index 15 style normal facings 0 };
+    ls_hbar_right { frames 1 index 16 style normal facings 0 };
+    ls_hbar_left { frames 1 index 17 style normal facings 0 };
+    ls_vbar_top { frames 1 index 16 style rotate facings 0 };
+    ls_vbar_bottom { frames 1 index 17 style rotate facings 0 };
+    ls_blank_one { frames 1 index 18 style normal facings 0 };
+    ls_dot_dot_dot { frames 1 index 19 style normal facings 0 };
+    s_wax_quarter_moon { frames 1 index 20 style normal facings 0 };
+    s_wax_half_moon { frames 1 index 21 style normal facings 0 };
+    s_wax_three_quarter_moon { frames 1 index 22 style normal facings 0 };
+    s_full_moon { frames 1 index 23 style normal facings 0 };
+    s_wane_three_quarter_moon { frames 1 index 24 style normal facings 0 };
+    s_wane_half_moon { frames 1 index 25 style normal facings 0 };
+    s_wane_quarter_moon { frames 1 index 26 style normal facings 0 };
+    s_new_moon { frames 1 index 27 style normal facings 0 };
+    ls_whirlpool { frames 4 index 28 style normal facings 0 };
+    ls_blank_three { frames 1 index 32 style normal facings 0 };
+  }
+}
+ascii
+{
+  images ss_little_sprites;
+  offset 32;
+}
+SPRITE_SET ss_frame {
+  image_width 16;
+  image_height 16;
+  file_rows 12;
+  file_cols 1;
+  file_offx 0;
+  file_offy 0;
+  file "data/images/frame_pieces.png";
+  sprites {
+    s_frame_ulc { frames 1 index 0 style normal facings 0 };
+    s_frame_llc { frames 1 index 1 style normal facings 0 };
+    s_frame_urc { frames 1 index 2 style normal facings 0 };
+    s_frame_lrc { frames 1 index 3 style normal facings 0 };
+    s_frame_horz { frames 1 index 4 style normal facings 0 };
+    s_frame_vert { frames 1 index 5 style normal facings 0 };
+    s_frame_td { frames 1 index 6 style normal facings 0 };
+    s_frame_tr { frames 1 index 7 style normal facings 0 };
+    s_frame_tu { frames 1 index 8 style normal facings 0 };
+    s_frame_tl { frames 1 index 9 style normal facings 0 };
+    s_frame_endl { frames 1 index 10 style normal facings 0 };
+    s_frame_endr { frames 1 index 11 style normal facings 0 };
+  }
+}
+FRAME {
+  ulc s_frame_ulc;
+  llc s_frame_llc;
+  urc s_frame_urc;
+  lrc s_frame_lrc;
+  horz s_frame_horz;
+  vert s_frame_vert;
+  td s_frame_td;
+  tu s_frame_tu;
+  tr s_frame_tr;
+  tl s_frame_tl;
+  tx s_null;
+  endl s_frame_endl;
+  endr s_frame_endr;
+}
+CURSOR ls_whirlpool;
+terrains {
+  t_deep {
+    name "deep water";
+    pmask 2;
+    sprite s_deep;
+    glyph _;
+    id 0;
+    alpha 1;
+    movement_cost 1;
+    effects 0;
+    light 0;
+    color 0x23408e;
+  }
+  t_shallow {
+    name "shallow water";
+    pmask 2;
+    sprite s_shallow;
+    glyph -;
+    id 1;
+    alpha 1;
+    movement_cost 1;
+    effects 0;
+    light 0;
+    color 0x008fff;
+  };
+  t_shoals {
+    name "shoals";
+    pmask 4;
+    sprite s_shoals;
+    glyph ~;
+    id 2;
+    alpha 1;
+    movement_cost 1;
+    effects 0;
+    light 0;
+    color 0x00ffff;
+  };
+  t_bog {
+    name "bog";
+    pmask 1;
+    sprite s_bog;
+    glyph %;
+    id 3;
+    alpha 1;
+    movement_cost 2;
+    effects 1;
+    light 0;
+    color 0xa160d6;
+  };
+  t_grass {
+    name "grass";
+    pmask 1;
+    sprite s_grass;
+    glyph .;
+    id 4;
+    alpha 1;
+    movement_cost 1;
+    effects 0;
+    light 0;
+    color 0x17ea1e;
+  };
+  t_trees {
+    name "trees";
+    pmask 1;
+    sprite s_trees;
+    glyph t;
+    id 5;
+    alpha 1;
+    movement_cost 1;
+    effects 0;
+    light 0;
+    color 0x45a845;
+  };
+  t_forest {
+    name "forest";
+    pmask 1;
+    sprite s_forest;
+    glyph |;
+    id 6;
+    alpha 0;
+    movement_cost 2;
+    effects 0;
+    light 0;
+    color 0x1d7025;
+  };
+  t_hills {
+    name "hills";
+    pmask 1;
+    sprite s_hills;
+    glyph ?;
+    id 7;
+    alpha 1;
+    movement_cost 2;
+    effects 0;
+    light 0;
+    color 0x808080;
+  };
+  t_mountains {
+    name "mountains";
+    pmask 0;
+    sprite s_mountains;
+    glyph ^;
+    id 8;
+    alpha 0;
+    movement_cost 2;
+    effects 0;
+    light 0;
+    color 0xffffff;
+  };
+  t_leftwing {
+    name "castle";
+    pmask 0;
+    sprite s_leftwing;
+    glyph <;
+    id 13;
+    alpha 1;
+    movement_cost 1;
+    effects 0;
+    light 0;
+  };
+  t_rightwing {
+    name "castle";
+    pmask 0;
+    sprite s_rightwing;
+    glyph >;
+    id 15;
+    alpha 1;
+    movement_cost 1;
+    effects 0;
+    light 0;
+  };
+  t_cobblestone {
+    name "cobblestone";
+    pmask 1;
+    sprite s_cobblestone;
+    glyph c;
+    id 22;
+    alpha 1;
+    movement_cost 1;
+    effects 0;
+    light 0;
+  };
+  t_bridge {
+    name "bridge";
+    pmask 3;
+    sprite s_bridge;
+    glyph =;
+    id 23;
+    alpha 1;
+    movement_cost 1;
+    effects 0;
+    light 0;
+  };
+  t_bridge_top {
+    name "bridge";
+    pmask 3;
+    sprite s_bridge_top;
+    glyph g;
+    id 25;
+    alpha 1;
+    movement_cost 1;
+    effects 0;
+    light 0;
+  };
+  t_bridge_bottom {
+    name "bridge";
+    pmask 3;
+    sprite s_bridge_bottom;
+    glyph h;
+    id 26;
+    alpha 1;
+    movement_cost 1;
+    effects 0;
+    light 0;
+  };
+  t_pillar {
+    name "pillar";
+    pmask 0;
+    sprite s_pillar;
+    glyph p;
+    id 48;
+    alpha 1;
+    movement_cost 1;
+    effects 0;
+    light 0;
+  };
+  t_wall_b {
+    name "sea wall";
+    pmask 0;
+    sprite s_wall_b;
+    glyph 1;
+    id 49;
+    alpha 0;
+    movement_cost 1;
+    effects 0;
+    light 0;
+  };
+  t_wall_a {
+    name "sea wall";
+    pmask 0;
+    sprite s_wall_a;
+    glyph 2;
+    id 50;
+    alpha 0;
+    movement_cost 1;
+    effects 0;
+    light 0;
+  };
+  t_wall_c {
+    name "sea wall";
+    pmask 0;
+    sprite s_wall_c;
+    glyph 3;
+    id 51;
+    alpha 0;
+    movement_cost 1;
+    effects 0;
+    light 0;
+  };
+  ;
+  t_wall_d {
+    name "sea wall";
+    pmask 0;
+    sprite s_wall_d;
+    glyph 4;
+    id 52;
+    alpha 0;
+    movement_cost 1;
+    effects 0;
+    light 0;
+  };
+  t_mast {
+    name "mast";
+    pmask 0;
+    sprite s_mast;
+    glyph m;
+    id 53;
+    alpha 1;
+    movement_cost 1;
+    effects 0;
+    light 0;
+  };
+  t_trail {
+    name "ship's wheel";
+    pmask 1;
+    sprite s_ships_wheel;
+    glyph f;
+    id 54;
+    alpha 1;
+    movement_cost 1;
+    effects 0;
+    light 0;
+  };
+  t_boulder {
+    name "boulder";
+    pmask 0;
+    sprite s_boulder;
+    glyph b;
+    id 55;
+    alpha 1;
+    movement_cost 1;
+    effects 0;
+    light 0;
+  };
+  t_wall_rock {
+    name "rock wall";
+    pmask 0;
+    sprite s_wall_rock;
+    glyph r;
+    id 57;
+    alpha 0;
+    movement_cost 1;
+    effects 0;
+    light 0;
+  };
+  t_ankh {
+    name "ankh";
+    pmask 0;
+    sprite s_ankh;
+    glyph +;
+    id 61;
+    alpha 1;
+    movement_cost 1;
+    effects 0;
+    light 0;
+  };
+  t_flagstones {
+    name "flagstones";
+    pmask 1;
+    sprite s_flagstone;
+    glyph ,;
+    id 62;
+    alpha 1;
+    movement_cost 1;
+    effects 0;
+    light 0;
+  };
+  t_deck {
+    name "deck";
+    pmask 1;
+    sprite s_deck;
+    glyph e;
+    id 63;
+    alpha 1;
+    movement_cost 1;
+    effects 0;
+    light 0;
+  };
+  t_fire_terrain {
+    name "fire";
+    pmask 1;
+    sprite s_field_fire;
+    glyph f;
+    id 70;
+    alpha 1;
+    movement_cost 1;
+    effects 2;
+    light 512;
+  };
+  t_white_wall { name "wall" pmask 0 sprite s_wall glyph w id 72 alpha 0 movement_cost 0 effects 0 light 0 };
+  t_bulwark { name "ship's bulwark" pmask 0 sprite s_wall glyph w id 72 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_secret_door {
+    name "secret door";
+    pmask 1;
+    sprite s_secret_door;
+    glyph ?;
+    id 73;
+    alpha 0;
+    movement_cost 1;
+    effects 0;
+    light 0;
+  };
+  ;
+  t_altar {
+    name "altar";
+    pmask 0;
+    sprite s_altar;
+    glyph a;
+    id 74;
+    alpha 1;
+    movement_cost 1;
+    effects 0;
+    light 0;
+  };
+  ;
+  t_fireplace {
+    name "fireplace";
+    pmask 1;
+    sprite s_fireplace;
+    glyph &;
+    id 75;
+    alpha 1;
+    movement_cost 1;
+    effects 2;
+    light 512;
+  };
+  t_A { name "A" pmask 0 sprite s_A glyph A id 96 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_B { name "B" pmask 0 sprite s_B glyph B id 97 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_C { name "C" pmask 0 sprite s_C glyph C id 98 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_D { name "D" pmask 0 sprite s_D glyph D id 99 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_E { name "E" pmask 0 sprite s_E glyph E id 100 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_F { name "F" pmask 0 sprite s_F glyph F id 101 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_G { name "G" pmask 0 sprite s_G glyph G id 102 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_H { name "H" pmask 0 sprite s_H glyph H id 103 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_I { name "I" pmask 0 sprite s_I glyph I id 104 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_J { name "J" pmask 0 sprite s_J glyph J id 105 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_K { name "K" pmask 0 sprite s_K glyph K id 106 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_L { name "L" pmask 0 sprite s_L glyph L id 107 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_M { name "M" pmask 0 sprite s_M glyph M id 108 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_N { name "N" pmask 0 sprite s_N glyph N id 109 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_O { name "O" pmask 0 sprite s_O glyph O id 110 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_P { name "P" pmask 0 sprite s_P glyph P id 111 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_Q { name "Q" pmask 0 sprite s_Q glyph Q id 112 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_R { name "R" pmask 0 sprite s_R glyph R id 113 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_S { name "S" pmask 0 sprite s_S glyph S id 114 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_T { name "T" pmask 0 sprite s_T glyph T id 115 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_U { name "U" pmask 0 sprite s_U glyph U id 116 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_V { name "V" pmask 0 sprite s_V glyph V id 117 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_W { name "W" pmask 0 sprite s_W glyph W id 118 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_X { name "X" pmask 0 sprite s_X glyph X id 119 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_Y { name "Y" pmask 0 sprite s_Y glyph Y id 120 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_Z { name "Z" pmask 0 sprite s_Z glyph Z id 121 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_counter_middle { name "counter" pmask 0 sprite s_counter_middle glyph @ id 122 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_counter_right { name "counter" pmask 0 sprite s_counter_right glyph ] id 123 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_counter_left { name "counter" pmask 0 sprite s_counter_left glyph [ id 124 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_counter_pillar { name "pillar" pmask 0 sprite s_counter_pillar glyph 0 id 125 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_lava {
+    name "lava";
+    pmask 1;
+    sprite s_lava;
+    glyph !;
+    id 76;
+    alpha 1;
+    movement_cost 1;
+    effects 2;
+    light 128;
+  };
+  t_wall {
+    name "wall";
+    pmask 0;
+    sprite s_wall_stone;
+    glyph x;
+    id 127;
+    alpha 0;
+    movement_cost 1;
+    effects 0;
+    light 0;
+  }
+}
+object_types {
+  t_cursor { name "cursor" sprite s_crosshair subtype null layer 10 };
+t_shrine {
+  name "shrine entrance";
+  sprite s_shrine;
+  subtype null;
+  layer 2;
+}
+t_town {
+  name "town entrance";
+  sprite s_town;
+  subtype null;
+  layer 2;
+}
+t_dungeon {
+  name "dungeon entrance";
+  sprite s_dungeon;
+  subtype null;
+  layer 2;
+}
+t_ladder_up {
+  name "a ladder leading up";
+  sprite s_ladder_up;
+  subtype null;
+  layer 2;
+}
+t_ladder_down {
+  name "a ladder leading down";
+  sprite s_ladder_down;
+  subtype null;
+  layer 2;
+}
+t_moongate {
+  name "moongate";
+  sprite s_moongate_full;
+  subtype moongate;
+  enter_sound "data/sounds/enter_moongate.wav";
+  maxLight 512;
+  sprites 4;
+  {
+    sprite s_moongate_quarter;
+    sprite s_moongate_half;
+    sprite s_moongate_three_quarters;
+    sprite s_moongate_full;
+  }
+}
+F_fire { name "fire field" sprite s_field_fire subtype field effects 2 light 512 duration 20 pmask 7 };
+F_poison { name "poison field" sprite s_field_poison subtype field effects 1 light 256 duration 20 pmask 7 };
+F_sleep { name "sleep field" sprite s_field_sleep subtype field effects 4 light 256 duration 20 pmask 7 };
+F_protect { name "protection field" sprite s_field_energy subtype field effects 2 light 512 duration 20 pmask 0 };
+t_chest1 { name "small wooden chest" sprite s_chest1 subtype null layer 4 } ;t_burn_trap { name "burn trap" sprite null subtype trap effects 2 amount 10 };
+t_poison_trap { name "poison trap" sprite null subtype trap effects 1 amount 0 };
+t_charm_trap { name "charm trap" sprite null subtype trap effects 128 amount 5 };
+t_sleep_trap { name "sleep trap" sprite null subtype trap effects 4 amount 5 };
+M_fire { name "fire missile" sprite s_field_fire subtype arms attackValue 0 defendValue 0 slotMask 0 numHands 0 range 0 missile null thrown 0 ubiquitousAmmo 0 field F_fire weight 0 };
+M_protect { name "protect missile" sprite s_field_energy subtype arms attackValue 0 defendValue 0 slotMask 0 numHands 0 range 0 missile null thrown 0 ubiquitousAmmo 0 field F_protect weight 0 };
+M_poison { name "poison missile" sprite s_field_poison subtype arms attackValue 0 defendValue 0 slotMask 0 numHands 0 range 0 missile null thrown 0 ubiquitousAmmo 0 field F_poison weight 0 };
+M_sleep { name "sleep missile" sprite s_field_sleep subtype arms attackValue 0 defendValue 0 slotMask 0 numHands 0 range 0 missile null thrown 0 ubiquitousAmmo 0 field F_sleep weight 0 };
+M_fireball { name "fire ball" sprite s_lava subtype arms attackValue 0 defendValue 0 slotMask 0 numHands 0 range 0 missile null thrown 0 ubiquitousAmmo 0 field null weight 0 };
+t_arrow { name "arrows" sprite s_arrow subtype arms attackValue 0 defendValue 0 slotMask 0 numHands 0 range 0 missile null thrown 0 ubiquitousAmmo 0 field null weight 1 };
+t_bolt { name "bolts" sprite s_bolt subtype arms attackValue 0 defendValue 0 slotMask 0 numHands 0 range 0 missile null thrown 0 ubiquitousAmmo 0 field null weight 1 };
+t_rock { name "rock" sprite s_boulder subtype arms attackValue 0 defendValue 0 slotMask 0 numHands 0 range 0 missile null thrown 0 ubiquitousAmmo 0 field null weight 1 };
+t_dagger { name "dagger" sprite s_dagger subtype arms attackValue 8 defendValue 2 slotMask 8 numHands 1 range 1 missile null thrown 0 ubiquitousAmmo 0 field null weight 5 };
+t_sling { name "sling" sprite s_sling subtype arms attackValue 8 defendValue -1 slotMask 8 numHands 1 range 6 missile t_rock thrown 0 ubiquitousAmmo 1 field null weight 2 };
+t_bow { name "bow" sprite s_lght_bow subtype arms attackValue 20 defendValue -2 slotMask 8 numHands 2 range 8 missile t_arrow thrown 0 ubiquitousAmmo 0 field null weight 10 };
+t_crossbow { name "crossbow" sprite s_hvy_xbow subtype arms attackValue 24 defendValue -2 slotMask 8 numHands 2 range 8 missile t_bolt thrown 0 ubiquitousAmmo 0 field null weight 15 };
+t_magic_bow { name "magic bow" sprite s_hvy_bow subtype arms attackValue 32 defendValue 0 slotMask 8 numHands 2 range 8 missile t_arrow thrown 0 ubiquitousAmmo 0 field null weight 5 };
+t_spear { name "spear" sprite s_spear subtype arms attackValue 20 defendValue 1 slotMask 8 numHands 1 range 4 missile null thrown 1 ubiquitousAmmo 0 field null weight 8 };
+t_sword { name "short sword" sprite s_sword subtype arms attackValue 20 defendValue 2 slotMask 8 numHands 1 range 1 missile null thrown 0 ubiquitousAmmo 0 field null weight 15 };
+t_long_sword { name "long sword" sprite s_long_sword subtype arms attackValue 20 defendValue 1 slotMask 8 numHands 1 range 2 missile null thrown 0 ubiquitousAmmo 0 field null weight 20 };
+t_2h_sword { name "2h sword" sprite s_2h_sword subtype arms attackValue 24 defendValue 0 slotMask 8 numHands 2 range 2 missile null thrown 0 ubiquitousAmmo 0 field null weight 25 };
+t_oil { name "flaming oil" sprite s_orange_potion subtype arms attackValue 8 defendValue -1 slotMask 8 numHands 1 range 4 missile null thrown 1 ubiquitousAmmo 0 field F_fire weight 5 };
+t_hands { name "bare hands" sprite s_null subtype arms attackValue 4 defendValue 1 slotMask 8 numHands 1 range 1 missile null thrown 0 ubiquitousAmmo 0 field null weight 0 };
+t_teeth { name "fangs" sprite s_null subtype arms attackValue 8 defendValue 0 slotMask 64 numHands 1 range 1 missile null thrown 0 ubiquitousAmmo 0 field null weight 0 };
+t_poison_projectile { name "poison projectile" sprite s_field_poison subtype arms attackValue 3 defendValue 0 slotMask 0 numHands 0 range 0 missile null thrown 0 ubiquitousAmmo 0 field null weight 0 };
+t_mace { name "mace" sprite s_mace subtype arms attackValue 20 defendValue 0 slotMask 8 numHands 1 range 1 missile null thrown 0 ubiquitousAmmo 0 field null weight 20 };
+t_2h_hammer { name "2h hammer" sprite s_2h_hammer subtype arms attackValue 28 defendValue -1 slotMask 8 numHands 1 range 1 missile null thrown 0 ubiquitousAmmo 0 field null weight 30 };
+t_stinger { name "stinger" sprite s_null subtype arms attackValue 4 defendValue 0 slotMask 0 numHands 0 range 1 missile null thrown 0 ubiquitousAmmo 0 field null weight 0 };
+t_iron_helm { name "iron helm" sprite s_helm9 subtype arms attackValue 0 defendValue 4 slotMask 64 numHands 0 range 1 missile null thrown 0 ubiquitousAmmo 0 field null weight 10 };
+t_sm_shield { name "small shield" sprite s_shield1 subtype arms attackValue 0 defendValue 2 slotMask 8 numHands 1 range 1 missile null thrown 0 ubiquitousAmmo 0 field null weight 20 };
+t_lrg_shield { name "large sheild2" sprite s_shield2 subtype arms attackValue 0 defendValue 4 slotMask 8 numHands 1 range 1 missile null thrown 0 ubiquitousAmmo 0 field null weight 30 };
+t_ring_mail { name "ring mail" sprite s_ring_mail subtype arms attackValue 0 defendValue 8 slotMask 16 numHands 1 range 0 missile null thrown 0 ubiquitousAmmo 0 field null weight 60 };
+t_green_potion { name "green potion" sprite s_green_potion subtype item effect 16 amount 0 duration 0 target 1 food 0 consumable 1 message "" };
+t_light_potion { name "white potion" sprite s_white_potion subtype item effect 8 amount 4080 duration 100 target 1 food 0 consumable 1 message "" };
+t_red_potion { name "red potion" sprite s_red_potion subtype item effect 32 amount 25 duration 0 target 1 food 0 consumable 1 message "" };
+t_blue_potion { name "blue potion" sprite s_blue_potion subtype item effect 64 amount 0 duration 0 target 2 food 0 consumable 1 message "" };
+t_torch { name "torch" sprite s_torch subtype item effect 8 amount 4096 duration 200 target 1 food 0 consumable 1 message "" };
+t_mushroom1 { name "edible mushroom" sprite s_mushroom1 subtype item effect 0 amount 10 duration 0 target 0 food 1 consumable 1 message "" };
+t_lb_journal { name "The Journal of LB" sprite s_scroll1 subtype item effect 0 amount 0 duration 0 target 0 food 0 consumable 0 message "The Journal of Lord British, Ruler of Britannia
+
+11/14/63
+Still no sign of the Avatar. If he does not come soon I fear he will be too late.
+
+11/17/63
+I signed the order to seal the dungeons, all save Hythloth, for I cannot bear to cut off access to the Codex of Ultimate Wisdom. Surely the Guardians that watch the passage there will suffice.
+
+12/09/63
+The expedition from Wrong returned three days ago, reporting that all the dungeons are closed. There has been no sign of the vile creatures for over a week, though I have scouts everywhere. Perhaps the horror is over. But it troubles me that the Avatar did not come. Is the link between this world and my old homeland broken?
+
+12/12/63
+Where are they coming from?!? Shamino straggled in today, bleeding from multiple wounds, and reported that Cove has fallen. I fear that even I cannot heal him. He lies in a fever even know.
+
+12/15/63
+Shamino passed away last night. I am nearly faint with grief and weariness. Reluctantly, I ordered Sir Geoffrey to the Isle of Fire and charged him to seal the entrance to Hythloth. I can think of no other passage by which they may be coming in. Still no sign of the Avatar.
+
+12/16/63
+Today a wounded pigeon fluttered in from Yew with a message begging for aid. I dispatched all the troops I could spare to march with all haste through the mountain passes.
+
+12/17/63
+Treachery! The pigeon from Yew must have been a decoy, for surely they cannot move that fast through the mountains and forests! They are at the gates. Though it has been  many years, my armour awaits. Perhaps for the last time, I will ride into battle, though I am old and feeble. Perhaps the Avatar will arrive before it is too late. Perhaps."
+ };
+t_note { name "A Charred Note" sprite s_scroll1 subtype item effect 0 amount 0 duration 0 target 0 food 0 consumable 0 message "Seek him in the mountains at 91, 72" };
+}
+MAGIC_WORDS {
+  An;
+  Bet;
+  Corp;
+  Des;
+  Ex;
+  Flam;
+  Grav;
+  Hur;
+  In;
+  Jux;
+  Kal;
+  Lor;
+  Mani;
+  Nox;
+  Ort;
+  Por;
+  Quas;
+  Rel;
+  Sanct;
+  Tym;
+  Uus;
+  Vas;
+  Wis;
+  Xen;
+  Ylem;
+  Zu;
+}
+REAGENT reagent_garlic {
+  name "garlic";
+  sprite s_gold_powder;
+}
+REAGENT reagent_ginseng {
+  name "ginseng";
+  sprite s_brown_powder;
+}
+REAGENT reagent_mandrake {
+  name "mandrake";
+  sprite s_brown_mushroom;
+}
+REAGENT reagent_nightshade {
+  name "nightshade";
+  sprite s_black_mushroom;
+}
+REAGENT reagent_sulphorous_ash {
+  name "sulphorous ash";
+  sprite s_grayish_red_hunks;
+}
+REAGENT reagent_blood_moss {
+  name "blood moss";
+  sprite s_red_hunks;
+}
+REAGENT reagent_black_pearl {
+  name "black pearl";
+  sprite s_ring2;
+}
+REAGENT reagent_spider_silk {
+  name "spider_silk";
+  sprite s_gold_explosion;
+}
+SPELL spell_cure_poison {
+  name "An Nox (cure poison)";
+  sprite s_green_potion;
+  code AN;
+  cost 10;
+  range 1;
+  missile null;
+  effects (16);
+  strength 0;
+  duration 0;
+  context CTW;
+  level 1;
+  target 1;
+  reagents {
+    reagent_ginseng;
+    reagent_garlic;
+  }
+  parms {
+  }
+}
+SPELL spell_awaken {
+  name "An Zu (awaken)";
+  sprite s_corpse;
+  code AZ;
+  cost 10;
+  range 1;
+  missile null;
+  effects (64);
+  strength 0;
+  duration 0;
+  context CTW;
+  level 1;
+  target 1;
+  reagents {
+    reagent_ginseng;
+    reagent_garlic;
+  }
+  parms {
+  }
+}
+SPELL spell_magic_missile {
+  name "Grav Por (magic missile)";
+  sprite s_magic;
+  code GP;
+  cost 10;
+  range 6;
+  missile t_arrow;
+  effects (256);
+  strength 5;
+  duration 0;
+  context C;
+  level 1;
+  target 1;
+  reagents {
+    reagent_sulphorous_ash;
+    reagent_black_pearl;
+  }
+  parms {
+  }
+}
+SPELL spell_light {
+  name "In Lor (light)";
+  sprite s_magic;
+  code IL;
+  cost 10;
+  range 0;
+  missile null;
+  effects (8);
+  strength 4080;
+  duration 100;
+  context CTW;
+  level 1;
+  target 0;
+  reagents {
+    reagent_sulphorous_ash;
+  }
+  parms {
+  }
+}
+SPELL spell_heal {
+  name "Mani (healing)";
+  sprite s_red_potion;
+  code M;
+  cost 10;
+  range 1;
+  missile null;
+  effects (32);
+  strength 10;
+  duration 0;
+  context CTW;
+  level 1;
+  target 1;
+  reagents {
+    reagent_ginseng;
+    reagent_spider_silk;
+  }
+  parms {
+  }
+}
+SPELL spell_unlock {
+  name "An Sanct (unlock)";
+  sprite s_door_locked;
+  code AS;
+  cost 20;
+  range 1;
+  missile null;
+  effects (512);
+  strength 1;
+  duration 0;
+  context CTW;
+  level 2;
+  target 2;
+  reagents {
+    reagent_sulphorous_ash;
+    reagent_blood_moss;
+  }
+  parms {
+  }
+}
+SPELL spell_repel_undead {
+  name "An Xen Corp (repel undead)";
+  sprite s_skeleton;
+  code AXC;
+  cost 20;
+  range 0;
+  missile null;
+  effects (1024);
+  strength 0;
+  duration 0;
+  context C;
+  level 2;
+  target 0;
+  reagents {
+    reagent_garlic;
+    reagent_sulphorous_ash;
+  }
+  parms {
+    skeleton;
+  }
+}
+SPELL spell_locate {
+  name "In Wis (locate)";
+  sprite s_magic;
+  code IW;
+  cost 20;
+  range 0;
+  missile null;
+  effects (2048);
+  strength 0;
+  duration 0;
+  context CTW;
+  level 2;
+  target 0;
+  reagents {
+    reagent_nightshade;
+  }
+  parms {
+  }
+}
+SPELL spell_call_animal {
+  name "Kal Xen (summon snakes)";
+  sprite s_snake;
+  code KX;
+  cost 20;
+  range 0;
+  missile null;
+  effects (4096);
+  strength 1;
+  duration 0;
+  context C;
+  level 2;
+  target 0;
+  reagents {
+    reagent_spider_silk;
+    reagent_mandrake;
+  }
+  parms {
+    t_snakes;
+  }
+}
+SPELL spell_wind_change {
+  name "Rel Hur (wind)";
+  sprite s_ship;
+  code RH;
+  cost 20;
+  range 0;
+  missile null;
+  effects (8192);
+  strength 0;
+  duration 10;
+  context CTW;
+  level 2;
+  target 3;
+  reagents {
+    reagent_sulphorous_ash;
+    reagent_blood_moss;
+  }
+  parms {
+  }
+}
+SPELL spell_poison {
+  name "In Nox Por (poison bolt)";
+  sprite s_field_poison;
+  code INP;
+  cost 20;
+  range 4;
+  missile t_poison_projectile;
+  effects (1);
+  strength 0;
+  duration 0;
+  context C;
+  level 2;
+  target 1;
+  reagents {
+    reagent_nightshade;
+    reagent_blood_moss;
+    reagent_black_pearl;
+  }
+  parms {
+  }
+}
+SPELL spell_fire_wall {
+  name "In Flam Grav (fire field)";
+  sprite s_field_fire;
+  code IFG;
+  cost 30;
+  range 4;
+  missile M_fire;
+  effects (2);
+  strength 5;
+  duration 0;
+  context C;
+  level 3;
+  target 4;
+  reagents {
+    reagent_sulphorous_ash;
+    reagent_black_pearl;
+    reagent_spider_silk;
+  }
+  parms {
+  }
+}
+SPELL spell_sleep_wall {
+  name "In Zu Grav (sleep field)";
+  sprite s_field_sleep;
+  code IZG;
+  cost 30;
+  range 4;
+  missile M_sleep;
+  effects (4);
+  strength 5;
+  duration 0;
+  context C;
+  level 3;
+  target 4;
+  reagents {
+    reagent_ginseng;
+    reagent_black_pearl;
+    reagent_spider_silk;
+  }
+  parms {
+  }
+}
+SPELL spell_poison_wall {
+  name "In Nox Grav (poison field)";
+  sprite s_field_poison;
+  code ING;
+  cost 30;
+  range 4;
+  missile M_poison;
+  effects (1);
+  strength 5;
+  duration 0;
+  context C;
+  level 3;
+  target 4;
+  reagents {
+    reagent_nightshade;
+    reagent_black_pearl;
+    reagent_spider_silk;
+  }
+  parms {
+  }
+}
+SPELL spell_blink {
+  name "In Por (blink)";
+  sprite s_magic;
+  code IP;
+  cost 30;
+  range 64;
+  missile null;
+  effects (16384);
+  strength 0;
+  duration 0;
+  context CWT;
+  level 3;
+  target 3;
+  reagents {
+    reagent_blood_moss;
+    reagent_spider_silk;
+  }
+  parms {
+  }
+}
+SPELL spell_fire_ball {
+  name "Vas Flam (fireball)";
+  sprite s_lava;
+  code VF;
+  cost 30;
+  range 8;
+  missile M_fireball;
+  effects (2);
+  strength 30;
+  duration 0;
+  context C;
+  level 3;
+  target 1;
+  reagents {
+    reagent_black_pearl;
+    reagent_sulphorous_ash;
+  }
+  parms {
+  }
+}
+SPELL spell_great_light {
+  name "Vas Lor (great light)";
+  sprite s_magic;
+  code VL;
+  cost 30;
+  range 0;
+  missile null;
+  effects (8);
+  strength 8192;
+  duration 200;
+  context CTW;
+  level 3;
+  target 0;
+  reagents {
+    reagent_sulphorous_ash;
+    reagent_mandrake;
+  }
+  parms {
+  }
+}
+SPELL spell_dispel_field {
+  name "An Grav (dispel field)";
+  sprite s_magic;
+  code AG;
+  cost 40;
+  range 4;
+  missile null;
+  effects (32768);
+  strength 0;
+  duration 0;
+  context CTW;
+  level 4;
+  target 4;
+  reagents {
+    reagent_black_pearl;
+    reagent_sulphorous_ash;
+  }
+  parms {
+    F_fire;
+    F_poison;
+    F_sleep;
+  }
+}
+SPELL spell_move_up {
+  name "Uus Por (transport up)";
+  sprite s_ladder_up;
+  code UP;
+  cost 40;
+  range 0;
+  missile null;
+  effects (16384);
+  strength 0;
+  duration 0;
+  context TW;
+  level 4;
+  target 5;
+  reagents {
+    reagent_blood_moss;
+    reagent_spider_silk;
+  }
+  parms {
+  }
+}
+SPELL spell_move_down {
+  name "Des Por (transport down)";
+  sprite s_ladder_down;
+  code DP;
+  cost 40;
+  range 0;
+  missile null;
+  effects (16384);
+  strength 0;
+  duration 0;
+  context TW;
+  level 4;
+  target 6;
+  reagents {
+    reagent_blood_moss;
+    reagent_spider_silk;
+  }
+  parms {
+  }
+}
+SPELL spell_protection_field {
+  name "In Sanct Grav (protection field)";
+  sprite s_field_energy;
+  code ISG;
+  cost 40;
+  range 4;
+  missile M_protect;
+  effects (0);
+  strength 0;
+  duration 0;
+  context C;
+  level 4;
+  target 4;
+  reagents {
+    reagent_mandrake;
+    reagent_black_pearl;
+    reagent_spider_silk;
+  }
+  parms {
+  }
+}
+SPELL spell_protection {
+  name "In Sanct (protection)";
+  sprite s_shield2;
+  code IS;
+  cost 40;
+  range 4;
+  missile null;
+  effects (65536);
+  strength 10;
+  duration 10;
+  context CWT;
+  level 4;
+  target 7;
+  reagents {
+    reagent_sulphorous_ash;
+    reagent_ginseng;
+    reagent_garlic;
+  }
+  parms {
+  }
+}
+SPELL spell_reveal {
+  name "Wis Quas (reveal)";
+  sprite s_magic;
+  code WQ;
+  cost 40;
+  range 4;
+  missile null;
+  effects (131072);
+  strength 0;
+  duration 100;
+  context CWT;
+  level 4;
+  target 0;
+  reagents {
+    reagent_spider_silk;
+    reagent_nightshade;
+  }
+  parms {
+  }
+}
+SPELL spell_magic_unlock {
+  name "In Ex Por (magic unlock)";
+  sprite s_door_locked;
+  code IEP;
+  cost 50;
+  range 1;
+  missile null;
+  effects (512);
+  strength 2;
+  duration 0;
+  context CTW;
+  level 5;
+  target 2;
+  reagents {
+    reagent_sulphorous_ash;
+    reagent_blood_moss;
+  }
+  parms {
+  }
+}
+SPELL spell_magic_lock {
+  name "An Ex Por (magic lock)";
+  sprite s_door_locked;
+  code AEP;
+  cost 50;
+  range 1;
+  missile null;
+  effects (512);
+  strength -2;
+  duration 0;
+  context CTW;
+  level 5;
+  target 2;
+  reagents {
+    reagent_sulphorous_ash;
+    reagent_blood_moss;
+    reagent_garlic;
+  }
+  parms {
+  }
+}
+SPELL spell_insect_swarm {
+  name "In Bet Xen (summon insects)";
+  sprite s_insects;
+  code IBX;
+  cost 50;
+  range 4;
+  missile null;
+  effects (4096);
+  strength 2;
+  duration 0;
+  context C;
+  level 5;
+  target 4;
+  reagents {
+    reagent_spider_silk;
+    reagent_blood_moss;
+    reagent_sulphorous_ash;
+  }
+  parms {
+    t_insect_cloud;
+  }
+}
+SPELL spell_sleep {
+  name "In Zu (sleep)";
+  sprite s_field_sleep;
+  code IZ;
+  cost 50;
+  range 4;
+  missile null;
+  effects (4);
+  strength 5;
+  duration 0;
+  context C;
+  level 5;
+  target 1;
+  reagents {
+    reagent_nightshade;
+    reagent_spider_silk;
+    reagent_black_pearl;
+  }
+  parms {
+  }
+}
+SPELL spell_great_heal {
+  name "Vas Mani (great heal)";
+  sprite s_red_potion;
+  code VM;
+  cost 50;
+  range 1;
+  missile null;
+  effects (32);
+  strength 60;
+  duration 0;
+  context CTW;
+  level 5;
+  target 1;
+  reagents {
+    reagent_ginseng;
+    reagent_spider_silk;
+    reagent_mandrake;
+  }
+  parms {
+  }
+}
+SPELL spell_quickness {
+  name "Rel Tym (quickness)";
+  sprite s_magic;
+  code RT;
+  cost 50;
+  range 0;
+  missile null;
+  effects (262144);
+  strength 0;
+  duration 10;
+  context CTW;
+  level 5;
+  target 0;
+  reagents {
+    reagent_sulphorous_ash;
+    reagent_blood_moss;
+    reagent_mandrake;
+  }
+  parms {
+  }
+}
+SPELL spell_charm {
+  name "An Xen Exe (charm)"
+    sprite s_happy_monster_face
+    code AXE
+    cost 60
+    range 4
+    missile null
+    effects (128)
+    strength 5
+    duration 0
+    context C
+    level 6
+    target 1
+    reagents {
+    reagent_black_pearl
+      reagent_nightshade
+      reagent_spider_silk
+      }
+  parms {
+  }
+}
+SPELL spell_negate_magic {
+  name "In An (negate magic)";
+  sprite s_magic;
+  code IA;
+  cost 60;
+  range 0;
+  missile null;
+  effects (524288);
+  strength 0;
+  duration 10;
+  context C;
+  level 6;
+  target 0;
+  reagents {
+    reagent_garlic;
+    reagent_mandrake;
+    reagent_sulphorous_ash;
+  }
+  parms {
+  }
+}
+SPELL spell_tremor {
+  name "In Vas Por Ylem (tremor)";
+  sprite s_mountains;
+  code IVPY;
+  cost 60;
+  range 0;
+  missile null;
+  effects (1048576);
+  strength 5;
+  duration 50;
+  context C;
+  level 6;
+  target 0;
+  reagents {
+    reagent_blood_moss;
+    reagent_mandrake;
+    reagent_sulphorous_ash;
+  }
+  parms {
+  }
+}
+SPELL spell_confuse {
+  name "Quas An Wis (confuse)";
+  sprite s_magic;
+  code QAW;
+  cost 60;
+  range 0;
+  missile null;
+  effects (2097152);
+  strength 0;
+  duration 0;
+  context C;
+  level 6;
+  target 0;
+  reagents {
+    reagent_mandrake;
+    reagent_nightshade;
+  }
+  parms {
+  }
+}
+SPELL spell_xray {
+  name "Wis An Ylem (X-ray)";
+  sprite s_magic;
+  code WAY;
+  cost 60;
+  range 0;
+  missile null;
+  effects (4194304);
+  strength 0;
+  duration 100;
+  context CWT;
+  level 6;
+  target 0;
+  reagents {
+    reagent_mandrake;
+    reagent_sulphorous_ash;
+  }
+  parms {
+  }
+}
+SPELL spell_poison_wind {
+  name "In Nox Hur (poison wind)";
+  sprite s_field_poison;
+  code INH;
+  cost 70;
+  range 0;
+  missile null;
+  effects (8388608);
+  strength 0;
+  duration 0;
+  context C;
+  level 7;
+  target 3;
+  reagents {
+    reagent_nightshade;
+    reagent_sulphorous_ash;
+    reagent_blood_moss;
+  }
+  parms {
+    F_poison;
+  }
+}
+SPELL spell_fear {
+  name "In Quas Corp (fear)";
+  sprite s_magic;
+  code IQC;
+  cost 70;
+  range 0;
+  missile null;
+  effects (1024);
+  strength 0;
+  duration 0;
+  context C;
+  level 7;
+  target 0;
+  reagents {
+    reagent_nightshade;
+    reagent_mandrake;
+    reagent_garlic;
+  }
+  parms {
+  }
+}
+SPELL spell_peer {
+  name "In Quas Wis (peer)";
+  sprite s_magic;
+  code IQW;
+  cost 70;
+  range 0;
+  missile null;
+  effects (16777216);
+  strength 0;
+  duration 0;
+  context CTW;
+  level 7;
+  target 0;
+  reagents {
+    reagent_nightshade;
+    reagent_mandrake;
+  }
+  parms {
+  }
+}
+SPELL spell_clone {
+  name "In Quas Xen (clone)";
+  sprite s_companion_wizard;
+  code IQX;
+  cost 70;
+  range 4;
+  missile null;
+  effects (33554432);
+  strength 0;
+  duration 0;
+  context C;
+  level 7;
+  target 1;
+  reagents {
+    reagent_nightshade;
+    reagent_mandrake;
+    reagent_sulphorous_ash;
+    reagent_spider_silk;
+    reagent_blood_moss;
+    reagent_ginseng;
+  }
+  parms {
+  }
+}
+SPELL spell_invisibility {
+  name "Sanct Lor (invisibility)";
+  sprite s_null;
+  code SL;
+  cost 70;
+  range 4;
+  missile null;
+  effects (67108864);
+  strength 0;
+  duration 10;
+  context C;
+  level 7;
+  target 1;
+  reagents {
+    reagent_nightshade;
+    reagent_mandrake;
+    reagent_blood_moss;
+  }
+  parms {
+  }
+}
+SPELL spell_kill {
+  name "Xen Corp (kill)";
+  sprite s_null;
+  code XC;
+  cost 70;
+  range 4;
+  missile null;
+  effects (256);
+  strength 1000;
+  duration 0;
+  context C;
+  level 7;
+  target 1;
+  reagents {
+    reagent_nightshade;
+    reagent_black_pearl;
+  }
+  parms {
+  }
+}
+SPELL spell_time_stop {
+  name "An Tym (time stop)";
+  sprite s_magic;
+  code AT;
+  cost 80;
+  range 0;
+  missile null;
+  effects (134217728);
+  strength 0;
+  duration 10;
+  context CTW;
+  level 8;
+  target 0;
+  reagents {
+    reagent_mandrake;
+    reagent_garlic;
+    reagent_blood_moss;
+  }
+  parms {
+  }
+}
+SPELL spell_flame_wind {
+  name "In Flam Hur (flame wind)";
+  sprite s_field_fire;
+  code IFH;
+  cost 80;
+  range 0;
+  missile null;
+  effects (8388608);
+  strength 0;
+  duration 0;
+  context C;
+  level 8;
+  target 3;
+  reagents {
+    reagent_mandrake;
+    reagent_sulphorous_ash;
+    reagent_blood_moss;
+  }
+  parms {
+    F_fire;
+  }
+}
+SPELL spell_energy_wind {
+  name "In Vas Grav Corp (energy wind)";
+  sprite s_field_energy;
+  code IVGC;
+  cost 80;
+  range 0;
+  missile null;
+  effects (8388608);
+  strength 0;
+  duration 0;
+  context C;
+  level 8;
+  target 3;
+  reagents {
+    reagent_mandrake;
+    reagent_sulphorous_ash;
+    reagent_nightshade;
+  }
+  parms {
+    F_protect;
+  }
+}
+SPELL spell_resurrect {
+  name "In Mani Corp (resurrect)";
+  sprite s_corpse;
+  code IMC;
+  cost 80;
+  range 4;
+  missile null;
+  effects (268435456);
+  strength 0;
+  duration 0;
+  context CTW;
+  level 8;
+  target 1;
+  reagents {
+    reagent_garlic;
+    reagent_ginseng;
+    reagent_spider_silk;
+    reagent_sulphorous_ash;
+    reagent_blood_moss;
+    reagent_mandrake;
+  }
+  parms {
+  }
+}
+SPELL spell_summon {
+  name "Kal Xen Corp (summon undead)";
+  sprite s_skeleton;
+  code KXC;
+  cost 80;
+  range 0;
+  missile null;
+  effects (4096);
+  strength 1;
+  duration 0;
+  context C;
+  level 8;
+  target 0;
+  reagents {
+    reagent_spider_silk;
+    reagent_mandrake;
+    reagent_nightshade;
+  }
+  parms {
+    t_undead_brigade;
+  }
+}
+SPELL spell_gate_travel {
+  name "Vas Rel Por (gate)";
+  sprite s_moongate_full;
+  code VRP;
+  cost 80;
+  range 0;
+  missile null;
+  effects (536870912);
+  strength 1;
+  duration 0;
+  context TW;
+  level 8;
+  target 0;
+  reagents {
+    reagent_sulphorous_ash;
+    reagent_mandrake;
+    reagent_black_pearl;
+  }
+  parms {
+  }
+}
+OCC ranger {
+    name "ranger";
+    magic 0.5;
+    container t_chest1;
+    traps {
+      t_burn_trap;
+    }
+    arms {
+      t_sword;
+      t_bow;
+      t_dagger;
+    }
+    items {
+      t_bow 50 1;
+      t_arrow 50 20;
+      t_sword 75 1;
+      t_torch 50 5;
+      t_mushroom1 50 5;
+      t_green_potion 50 2;
+    }
+}
+OCC fighter {
+  name "fighter";
+  magic 0.0;
+  container t_chest1;
+  traps {}
+  arms {
+    t_dagger;
+    t_sword;
+    t_spear;
+    t_long_sword;
+    t_2h_sword;
+    t_oil;
+    t_mace;
+    t_2h_hammer;
+    t_iron_helm;
+    t_sm_shield;
+    t_lrg_shield;
+    t_ring_mail;
+  }
+  items {
+    t_dagger 25 1;
+    t_sword 25 1;
+    t_spear 25 1;
+    t_long_sword 25 1;
+    t_2h_sword 25 1;
+    t_mace 25 1;
+    t_2h_hammer 25 1;
+    t_iron_helm 25 1;
+    t_sm_shield 25 1;
+    t_lrg_shield 25 1;
+    t_ring_mail 25 1;
+    t_red_potion 75 5;
+  }
+}
+OCC wizard {
+  name "wizard";
+  magic 2.0;
+  container t_chest1;
+  traps {
+    t_poison_trap;
+  }
+  arms {
+    t_dagger;
+    t_sword;
+    t_sm_shield;
+    t_oil;
+  }
+  items {
+    t_dagger 100 1;
+    t_sword 50 1;
+    t_sm_shield 50 1;
+    t_oil 50 10;
+    t_light_potion 50 5;
+    t_green_potion 50 2;
+    t_red_potion 75 5;
+    t_blue_potion 50 2;
+  }
+}
+OCC merchant {
+  name "merchant";
+  magic 0.0;
+  container t_chest1;
+  traps {}
+  arms {
+    t_dagger;
+  }
+  items {
+    t_dagger 100 1;
+  }
+}
+OCC beggar {
+  name "beggar";
+  magic 0.0;
+  container null;
+  traps {}
+  arms {}
+  items {}
+}
+OCC soldier {
+  name "soldier";
+  magic 0.0;
+  container t_chest1;
+  traps {}
+  arms {
+    t_long_sword;
+    t_lrg_shield;
+    t_crossbow;
+    t_ring_mail;
+  }
+  items {
+    t_long_sword 100 1;
+    t_lrg_shield 100 1;
+    t_crossbow 75 1;
+    t_ring_mail 100 1;
+    t_bolt 75 20;
+  }
+}
+OCC raider {
+  name "raider";
+  magic 0.0;
+  container t_chest1;
+  traps {}
+  arms {
+    t_spear;
+    t_bow;
+    t_dagger;
+    t_sm_shield;
+    t_iron_helm;
+  }
+  items {
+    t_dagger 75 1;
+    t_mushroom1 50 2;
+    t_arrow 50 20;
+    t_spear 50 2;
+    t_sm_shield 50 1;
+    t_bow 50 1;
+    t_iron_helm 50 1;
+  }
+}
+SPECIES human {
+  name "human";
+  str 100;
+  int 100;
+  dex 100;
+  spd 2;
+  vr 8;
+  pmask (1);
+  sleep_sprite s_corpse;
+  weapon t_hands;
+  visible 1;
+  occs {
+    ranger;
+  }
+  slots {
+    64;
+    1;
+    8;
+    8;
+    16;
+    32;
+    2;
+    2;
+  }
+  spells {
+  }
+}
+SPECIES goblin {
+  name "goblin";
+  str 80;
+  int 80;
+  dex 120;
+  spd 2;
+  vr 8;
+  pmask (1);
+  sleep_sprite s_corpse;
+  weapon t_hands;
+  visible 1;
+  occs {
+    raider;
+  }
+  slots {
+    64;
+    1;
+    8;
+    8;
+    16;
+    32;
+    2;
+    2;
+  }
+  spells {
+  }
+}
+SPECIES gazer {
+  name "gazer";
+  str 40;
+  int 200;
+  dex 40;
+  spd 4;
+  vr 10;
+  pmask (1|2|4);;
+  sleep_sprite s_corpse;
+  weapon t_teeth;
+  visible 1;
+  occs {
+    wizard;
+  }
+  slots {
+    64;
+    1;
+    1;
+    2;
+    2;
+    2;
+    2;
+  }
+  spells {
+    spell_poison;
+    spell_sleep;
+    spell_charm;
+  }
+}
+SPECIES skeleton {
+  name "skeleton";
+  str 110;
+  int 60;
+  dex 110;
+  spd 2;
+  vr 8;
+  pmask (1);
+  sleep_sprite s_corpse;
+  weapon t_hands;
+  visible 1
+    occs {
+    soldier;
+  }
+  slots {
+    64;
+    1;
+    8;
+    8;
+    16;
+    32;
+    2;
+    2;
+  }
+  spells {
+  }
+}
+SPECIES snake {
+  name "snake";
+  str 50;
+  int 80;
+  dex 120;
+  spd 2;
+  vr 8;
+  pmask (1);
+  sleep_sprite null;
+  weapon t_teeth;
+  visible 1
+    occs {
+  }
+  slots {
+  }
+  spells {
+    spell_poison;
+  }
+}
+SPECIES insects {
+  name "insects";
+  str 5;
+  int 5;
+  dex 120;
+  spd 2;
+  vr 8;
+  pmask (1);
+  sleep_sprite null;
+  weapon t_stinger;
+  visible 1
+    occs {
+  }
+  slots {
+  }
+  spells {
+  }
+}
+SPECIES ghast {
+  name "ghast";
+  str 100;
+  int 100;
+  dex 100;
+  spd 2;
+  vr 8;
+  pmask (1);
+  sleep_sprite s_corpse;
+  weapon t_hands;
+  visible 0
+    occs {
+  }
+  slots {
+    64;
+    1;
+    8;
+    8;
+    16;
+    32;
+    2;
+    2;
+  }
+  spells {
+  }
+}
+PARTY t_goblin_horde {
+  name "horde of goblins";
+  sprite s_orc;
+  formation null;
+  groups {
+    goblin raider s_orc 6;
+  }
+}
+FORMATION f_gazers_and_goblins {
+        w 9;
+        h 3;
+        n 8;
+        2 3 4 . . . 5 6 7
+        . 0 . . . . . 1 .
+        . . . . . . . . .
+}
+PARTY t_gazer_pod_with_goblin_slaves {
+  name "pod of gazers with goblin slaves";
+  sprite s_gazer;
+  formation f_gazers_and_goblins;
+  groups {
+    gazer wizard s_gazer 2;
+    goblin raider s_orc 6;
+  }
+}
+PARTY t_town_guards {
+  name "troop of guardsmen";
+  sprite s_guard;
+  formation null;
+  groups {
+    human soldier s_guard 3;
+  }
+}
+PARTY t_undead_brigade {
+  name "brigade of skeletons";
+  sprite s_skeleton;
+  formation null;
+  groups {
+    skeleton soldier s_skeleton 3;
+  }
+}
+PARTY t_insect_cloud {
+  name "cloud of insects";
+  sprite s_insects;
+  formation null;
+  groups {
+    insects null s_insects 3;
+  }
+}
+PARTY t_snakes {
+  name "slither of snakes";
+  sprite s_snake;
+  formation null;
+  groups {
+    snake null s_snake 3;
+  }
+}
+ordnance_types {
+  at_cannon {
+    name "cannon";
+    fire_sound "data/sounds/cannon.wav";
+    range 5;
+    damage 10;
+    ammo t_sword;
+  }
+}
+MAP map_ship {
+  type ascii;
+  width 16;
+  height 8;
+  one_char_per_tile 1;
+  palette {
+    '@' t_deep;
+    '~' t_shoals;
+    '=' t_shallow;
+    '.' t_deck;
+    '#' t_bulwark;
+    'o' t_pillar;
+  }
+  terrain {
+          ~~~~~~.~~.~~~~~~
+          ===###.##.###===
+          @@##........##@@
+          @##..........##@
+          @#....o..o....#@
+          @##..........##@
+          @@##........##@@
+          @@@##########@@@
+  }
+}
+vehicle_types {
+  vt_horse {
+    name "horse";
+    sprite s_horse;
+    speed 1;
+    pmask 1;
+    must_turn 0;
+    mv_desc Ride;
+    mv_sound "data/sounds/horse.wav";
+    ordnance null;
+    max_hp 50;
+    map null;
+  }
+  vt_ship {
+    name "ship";
+    sprite s_ship;
+    speed 1;
+    pmask 2;
+    must_turn 1;
+    mv_desc Sail;
+    mv_sound "data/sounds/rowing.wav";
+    ordnance at_cannon;
+    max_hp 100;
+    map map_ship;
+  }
+}
+MAP m_u5_world {
+  type binary;
+  file "data/world/maps/u4_u5/u5_world_map.med";
+}
+MAP m_skara {
+  type binary;
+  file "data/world/maps/u4_u5/skara.med";
+}
+MAP m_britain {
+  type binary;
+  file "data/world/maps/u4_u5/britain.med";
+}
+MAP m_lcb1 {
+  type binary;
+  file "data/world/maps/u4_u5/lcb1.med";
+}
+MAP m_lcb2 {
+  type binary;
+  file "data/world/maps/u4_u5/lcb2.med";
+}
+MAP m_forest_combat {
+  type ascii;
+  width 22;
+  height 22;
+  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; '<' t_leftwing; '>' t_rightwing; 'c' t_cobblestone; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'p' t_pillar; '1' t_wall_b; '2' t_wall_a; '3' t_wall_c; '4' t_wall_d; 'm' t_mast; 'f' t_fire_terrain; 'b' t_boulder; 'r' t_wall_rock; '+' t_ankh; ',' t_flagstones; 'e' t_deck; '?' t_secret_door; 'a' t_altar; '&' t_fireplace; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; '!' t_lava; 'x' t_wall; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_pillar; };
+  terrain {
+      . . . . . . . . . . . . . . . . ~ ~ ~ ~ ~ ~
+      . . . . . . . . . . . . . . . . . ~ ~ ~ ~ ~
+      . . . . . . . . . . . . . . . . . . . ~ ~ ~
+      . . . @ . . . . . . . . . . . . . . . . . ~
+      . . . . . . . . . . . . . . . . . . . . . .
+      . . . . . . . . . . . . . . . . . . . . . .
+      . . . . . . . . . . . . . . . . . @ . . . .
+      . . . . . . . . . . . . . . . . . . . . . .
+      . . . . . . . . . . . . . . . . . . | | | |
+      . . . . | | . . . . . . . . . . . | | | | |
+      . . . . | | | . . . . . . . . . . | | | | |
+      . . . . | | | | | | . . . . . . . . | | | |
+      . . . | | | | | | | | | . . . . . . . | | |
+      . . . | | | | | | | | | | . . . . . . . | |
+      . . . | | @ | | | | . . . . . . . . . . . |
+      . . | | | | | | . . . . . . . . . . . . . .
+      . | | | | . . . . . . . . . . . . . . . . |
+      . | | . . . . . . . . . . . . . . . . . . |
+      | | | . . . . . . . . . . . . . . . . . | |
+      | | . . . . . . . . . . . . . . . . . | | |
+      | | | . . . . . . . . . . . . . . | | | | |
+      | | | | | | | | | | | | | | | | | | | | | |
+  }
+}
+MAP m_grass_combat {
+  type ascii;
+  width 22;
+  height 22;
+  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; '<' t_leftwing; '>' t_rightwing; 'c' t_cobblestone; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'p' t_pillar; '1' t_wall_b; '2' t_wall_a; '3' t_wall_c; '4' t_wall_d; 'm' t_mast; 'f' t_fire_terrain; 'b' t_boulder; 'r' t_wall_rock; '+' t_ankh; ',' t_flagstones; 'e' t_deck; '?' t_secret_door; 'a' t_altar; '&' t_fireplace; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; '!' t_lava; 'x' t_wall; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_pillar; };
+  terrain {
+      r . . . . . . . . . . t t t t t ~ ~ ~ ~ ~ ~
+      . . . . . . . . . . . . . . t t t ~ ~ ~ ~ ~
+      . . . . . . . . . . . . . . b t t t t ~ ~ ~
+      . . . b . . . . . . . . . . . . . . t t t ~
+      . . . . . . . . . . . . . . . . . . . t t t
+      . . . . . . . . . . . . . . . . . . . . . t
+      . . . . . . . . . . . . . . . . . b . . . .
+      . . . . . . . . . . . . . . . . . . . . . .
+      . . . . . . . . . . . t t t t . . . . . . .
+      . . . . . . b . . . t t t t t t t . . . . .
+      . . . . . . . . . . . t t t t t . . . . . .
+      . . . . . . . . . . . . . t t . . . . . . .
+      . . . . . . . . . . . . . . . . . . . . . .
+      . . . . . . . . . . . . . . . . . . . . . .
+      . . . . . . . . . . . . . . . . . . . . . .
+      . . . . . . . . . . . . . . . . . . . . . .
+      . . . . . . . . . . . . . . . . . . . . . .
+      . . . . . . . . . r r r r . . . . . . r r r
+      . . . . . . . . . . . . . . . . . . . . . .
+      . . . . . . . . . . . . . . . . . . . . . .
+      . . . . . . . . . . . . . . . . . . . . . .
+      . . . . . . . . . . . . . . . . . . . . . .
+  }
+}
+MAP m_passage {
+  type ascii;
+  width 32;
+  height 32;
+  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; '<' t_leftwing; '>' t_rightwing; 'c' t_cobblestone; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'p' t_pillar; '1' t_wall_b; '2' t_wall_a; '3' t_wall_c; '4' t_wall_d; 'm' t_mast; 'f' t_fire_terrain; 'b' t_boulder; 'r' t_wall_rock; '+' t_ankh; ',' t_flagstones; 'e' t_deck; '?' t_secret_door; 'a' t_altar; '&' t_fireplace; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; '!' t_lava; 'x' t_wall; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_pillar; };
+  terrain {
+      x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x
+      x , , , , , , x x x x x x x x x x x x x x x x x x ~ ~ x x x x x
+      x , , , , , , x x x x x x x x x x x x x x x x x x ~ x x x x x x
+      x , , , , , , x x x x x x x x x x x x x x x x ~ ~ ~ x x x x x x
+      x , , , , , , x x x x x x x x x x x x x x x x ~ x x x x x x x x
+      x , , , , , , x x x x x x x x x x x x x x x x ~ x x x x x x x x
+      x x x x , , , x x x x x x x x x x x x x ~ ~ ~ ~ x x x x x x x x
+      x x x x , , , x x x x x x x x x x x x x ~ x x x x x x x x x x x
+      x x x x , , , x x x x x x x x x x x x x ~ x x x x x x x x x x x
+      x x x x , , , x x x x x , , , , , ~ ~ ~ ~ x x x x x x x x x x x
+      x x x x , , , x x x x , , , , , , ~ ~ ~ ~ ~ ~ x x x x x x x x x
+      x x x x , , , x x , , , , , , , ~ ~ ~ ~ , , , x x x x x x x x x
+      x x x x x , , , , , , , , , , , ~ , , , , , , x x x x x x x x x
+      x x x x x x , , , , , , , , , , ~ , , , , , , x x x x x x x x x
+      x x x x x x x x x , , , , , , , = , , , , , , x x x x x x x x x
+      x x x x x x x x x , , , , , , , ~ , , , , , , x x x x x x x x x
+      x x x x x x x x x x , , , , , , ~ , , , , , , , x x x x x x x x
+      x x x x x x x x x x , , , , , ~ ~ , , , , , , , x x x x x x x x
+      x x x x x x x x x x , , , , ~ ~ , , , , , , , , , , , , x x x x
+      x x x x x x x x x x , , ~ ~ ~ , , , , , , , , , , , , , x x x x
+      x x x x x x x x x x , ~ ~ , , , , , , , , , , , x x , , , x x x
+      x x x x x x x x x x ~ ~ , , , , , , , , , , x x x x , , , x x x
+      x x x x x x x x x x ~ x x x x x x x x x x x x x x x , , , x x x
+      x x x x x x x x x ~ ~ x x x x x x x x x x x x x x x , , , x x x
+      x x x x x x x x x ~ x x x x . . . . . . . x x x x x , , , x x x
+      x x x x x x x x ~ ~ x x x . . . . . . . . . x x x x , , , x x x
+      x x x x x x x x ~ x x x x . . . . . . . . . x x x x , , , , , x
+      x x x x x x x ~ ~ x x x x . . . . . . . . . x x x x , , , , , x
+      x x x x x x x ~ ~ x x x x ~ . . . . . . . . x x x x , , , , , x
+      x x x x x x x x ~ ~ ~ ~ ~ ~ ~ . . . . . . . x x x x , , , , , x
+      x x x x x x x x x x x x x ~ . . . . . . . x x x x x , , , , , x
+      x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x
+  }
+}
+MAP m_prison_chamber {
+  type ascii;
+  width 32;
+  height 32;
+  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; '<' t_leftwing; '>' t_rightwing; 'c' t_cobblestone; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'p' t_pillar; '1' t_wall_b; '2' t_wall_a; '3' t_wall_c; '4' t_wall_d; 'm' t_mast; 'f' t_fire_terrain; 'b' t_boulder; 'r' t_wall_rock; '+' t_ankh; ',' t_flagstones; 'e' t_deck; '?' t_secret_door; 'a' t_altar; '&' t_fireplace; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; '!' t_lava; 'x' t_wall; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_pillar; };
+  terrain {
+      x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x
+      x , , , , , , , 0 . . . 0 e , , e 0 . . . 0 , , , 0 ! c ! 0 e x
+      x , - - - - , , 0 . . . 0 , , , , 0 . . . 0 , , , 0 ! c ! 0 , x
+      x , = = e - , , 0 0 , 0 0 , , , , 0 0 , 0 0 , , , , , , , , , x
+      x , - - - - , , , , , , , , , , , , , , , , , , , , , , , , , x
+      x , , , , , , , , , , , , , , , , , , , , , , , , 0 f c f 0 , x
+      x , , , , , , , , , a , , , , , , , , a , , , , , 0 f c f 0 e x
+      x x x x x x x x x x x x x x , x x x x x x x x x x x x x x x x x
+      x x x x [ T O R T U R E ] x , x [ C H A M B E R ] x x x x x x x
+      x x x x , , , , , , , , , , , , , , , , , , , , , x x x x x x x
+      x x x x , , , , , , , , , , , , , , , , , , , , , x x x x x x x
+      x x x x x x x x x x x , , p , p , , x x x x x x x x x x x x x x
+      x x x x x x x x x ! - , , , , , , , - ! x x x x x x x x x x x x
+      x x x x x x x x x - - , , p , p , , - - x x x x x x x x x x x x
+      x x x x x x x x x ! - , , , , , , , - ! x x x x x x x x , , , x
+      x x x x x x x x x - - , , p , p , , - - x x x x x x x x x x , x
+      x x x x x x x x x ! - , , , , , , , - ! x x x x x x x x x x , x
+      x x x x x x x x x x x , , p , p , , x x x x x x x x x x x x , x
+      x , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , x
+      x , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , x
+      x x x x x x x x P R I S O N @ C E L L S x x , , x x x x x x x x
+      x x x x x x x x x x x x x x x x x x x x x x , , x x x x x x x x
+      x , , , , , , , , , , , , , , , , , , , , , , , x x x x x x x x
+      x x , x x x x x x x x x x x x x x x x x x x x x x x x x x x x x
+      x x , x x x x , x , x , x x x , , , x , , , x , , , x x x x x x
+      x , , . , , , , , , , , x x x , , , x , , , x , , , x x x x x x
+      x x , [ @ @ @ @ @ @ @ ] x e x x , x x x , x x x , x x x , , , x
+      x , , , , , , , , , , , , e , , , , , , , , , , , , f , , , , x
+      x x . [ @ @ @ @ @ @ @ ] x e x x , x x x , x x x , x x x , , , x
+      x , , , , , , , , , , , x x x , , , x , , , x , , , x x x x x x
+      x , x , x x x , x , x , x x x , , , x , , , x , , , x x x x x x
+      x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x
+      }
+}
+MAP m_secret_shrine {
+  type ascii;
+  width 7;
+  height 7;
+  palette {
+    '.' t_grass;
+    'A' t_altar;
+    'S' t_boulder;
+  }
+  terrain {
+    . . S . S . .
+    . . . . . . .
+    S . . . . . S
+    . . . A . . .
+    S . . . . . S
+    . . . . . . .
+    . . S . S . .
+  }
+}
+combat_maps {
+  t_grass m_grass_combat;
+  t_trees m_grass_combat;
+  t_forest m_forest_combat;
+}
+SCHED sched_Hawknoz {
+  0 0 29 6 1 1 1;
+  7 0 13 26 3 3 0;
+  12 0 17 3 7 1 3;
+  13 0 7 28 1 1 0;
+  19 0 29 6 1 1 1;
+}
+RESP r_greeting {
+  SAY "Good day.";
+}
+RESP r_default {
+  SAY "I cannot help you with that.";
+}
+RESP r_farewell {
+  SAY "Farewell.";
+}
+RESP r_health {
+  SAY "Well.";
+}
+RESP r_join {
+  SAY "My duties prevent me.";
+}
+CONV c_generic {
+  IMPORT {}
+  NATIVE {
+    HAIL r_greeting;
+    DEFAULT r_default;
+    BYE r_farewell;
+    HEAL r_health;
+    JOIN r_join;
+  }
+}
+RESP r_armourer_hail {
+        SAY "Well met, traveler. Can I interest you in some armour?";
+        GET_YES_NO {
+                TRADE {
+                        t_iron_helm 80;
+                        t_sm_shield 40;
+                        t_lrg_shield 80;
+                        t_ring_mail 160;
+                }
+                SAY "Have a nice day.";
+        }{
+                SAY "Hrumph.";
+        }
+        TURN_AWAY;
+}
+CONV c_armourer {
+        IMPORT { c_generic }
+        NATIVE {
+                HAIL r_armourer_hail;
+        }
+}
+RESP r_weaponsmith_hail {
+  SAY "Hail, friend. Need to trade in weaponry?";
+  GET_YES_NO {
+    SAY "Excellent!";
+    TRADE {
+      t_arrow 1;
+      t_bolt 2;
+      t_dagger 10;
+      t_sling 14;
+      t_bow 144;
+      t_crossbow 176;
+      t_magic_bow 256;
+      t_spear 5;
+      t_sword 22;
+      t_long_sword 42;
+      t_2h_sword 48;
+      t_oil 10;
+      t_mace 20;
+      t_2h_hammer 27;
+    }
+    SAY "Have a nice day.";
+  }{
+    SAY "Hrumph.";
+  }
+  TURN_AWAY;
+}
+CONV c_weaponsmith {
+  IMPORT { c_generic }
+  NATIVE {
+    HAIL r_weaponsmith_hail;
+  }
+}
+RESP r_healer_hail {
+  SAY "Welcome, friend. Are you in need of healing?";
+  GET_YES_NO {
+    SERVICE {
+      1 "Heal" 100;
+      2 "Cure Poison" 150;
+      3 "Resurrect" 500;
+    }
+    SAY "Be well.";
+  }{
+    SAY "That is good.";
+  }
+  TURN_AWAY;
+}
+CONV c_healer {
+  IMPORT { c_generic }
+     NATIVE {
+       HAIL r_healer_hail;
+     }
+}
+RESP r_beggar_name {
+  SAY "I am a Joan of Myre.";
+}
+RESP r_beggar_job {
+  SAY "None will hire me. I beg for money so I can feed my baby.";
+}
+RESP r_beggar_baby {
+  CHECK_PARM -2 = 0 {
+    SAY "If only I had the gold to pay the healer...";
+  } {
+    SAY "Oh please, sir, won't you help my baby?";
+    GET_YES_NO {
+      SAY "How much?";
+      GET_AMOUNT;
+      CHECK_PARM -1 > 0 {
+        SAY "Oh thank you! In return I will tell thee of the rune!";
+        SET_FLAG 1;
+        SET_FLAG 129;
+        TAKE -2;
+        CHECK_PARM -2 = 0 {
+          CHANGE_PARM 1 +3;
+        } {
+          CHANGE_PARM 1 +1;
+        }
+      } {
+        CHECK_PARM -2 = 0 {
+          SAY "I know thou wouldst help me if thou couldst.";
+        } {
+          SAY "It is cruel to tease me in my misery, sir.";
+          CHANGE_PARM 0 -1;
+          CHANGE_PARM 1 -1;
+        }
+      }
+    } {
+      CHECK_PARM -2 = 0 {
+        SAY "Perhaps we could both use some good fortune.";
+      } {
+        SAY "I have no claim to thy gold, but I know not what I shall do... [she turns away and sobs quietly].";
+        CHANGE_PARM 1 -1;
+        CLEAR_FLAG 1;
+        TURN_AWAY;
+      }
+    }
+  }
+}
+RESP r_beggar_rune {
+  CHECK_FLAG 1 {
+    SAY "There is no rune!";
+  }{
+    SAY "I trust you not.";
+  }
+}
+CONV c_Joan {
+  IMPORT { c_generic }
+  NATIVE {
+    NAME r_beggar_name;
+    JOB r_beggar_job;
+    BABY r_beggar_baby;
+    RUNE r_beggar_rune;
+  }
+}
+RESP r_hawknoz_name { SAY "I am Hawknoz, the Wizard." }
+RESP r_hawknoz_job {
+  CHECK_PARM -4 = 3 {
+    SAY "[Mouth full] Mrmph rormph... [he swallows and takes a drink]. And that's how to turn rocks into gold. Now don't ask me again or I'll turn you into a toad and feed you to a nest of griffin kittenchicks.";
+  }{
+    SAY "Not much.";
+  }
+}
+RESP r_hawknoz_hail {
+  CHECK_MEMBER ch_Gen {
+    SAY "Ah, I see that Gen has joined your travels. He has protected us well from the orcs!";
+  }{
+  }
+  CHECK_FLAG 129 {
+    CHECK_FLAG 2 {
+      SAY "Hail, friend of the troubled.";
+    }{
+      SAY "I saw what you did for Joan the beggar. Here, take these potions. They will serve you well in dark times.";
+      GIVE_ITEM t_light_potion 2;
+      SET_FLAG 2;
+    }
+  }{
+    SAY "Well met, stranger.";
+  }
+}
+CONV c_Hawknoz {
+  IMPORT { c_generic }
+  NATIVE {
+    HAIL r_hawknoz_hail;
+    NAME r_hawknoz_name;
+    JOB r_hawknoz_job;
+  }
+}
+RESP r_thief_name { SAY "Sliwan. [he tips his cap]" }
+RESP r_thief_job {
+  SAY "Fingersmith.";
+  CHECK_ITEM t_spear {
+    TAKE_ITEM t_spear 1;
+  }{
+    CHANGE_PARM -1 50;
+    TAKE -2;
+  }
+}
+CONV c_thief {
+  IMPORT { c_generic }
+  NATIVE {
+    NAME r_thief_name;
+    JOB r_thief_job;
+  }
+}
+RESP r_guard_name { SAY "I am the commander of this troop." }
+RESP r_guard_health { SAY "Excellent." }
+RESP r_guard_job {
+  SAY "To keep the peace. Do you intend to cause trouble?";
+  GET_YES_NO {
+    SAY "Then I shall bring it to you! On guard, knave!";
+    ATTACK;
+  }{
+    SAY "Wise of you.";
+  }
+}
+CONV c_guard {
+  IMPORT { c_generic }
+  NATIVE {
+    NAME r_guard_name;
+    HEALTH r_guard_health;
+    JOB r_guard_job;
+  }
+}
+RESP r_Gen_name { SAY "I am Gen the Huntsman." }
+RESP r_Gen_job {
+  SAY "I hunt the wilds for dangerous beasts and monsters. Do you hunt the orcs, too?";
+  GET_YES_NO {
+    SAY "If you like, I would join you in the hunt.";
+    SET_FLAG 3;
+  }{
+    SAY "Foul creatures. They have their own language but cannot read or write.";
+  }
+}
+RESP r_Gen_join {
+  CHECK_FLAG 3 {
+    SAY "Let's hunt some orc!";
+    JOIN;
+  }{
+    SAY "Sorry, but I am drawn to the wilds.";
+  }
+}
+CONV c_Gen {
+  IMPORT { c_generic }
+  NATIVE {
+    NAME r_Gen_name;
+    JOB r_Gen_job;
+    JOIN r_Gen_join;
+  }
+}
+RESP r_goblin_greeting {
+  SAY "OHA";
+}
+RESP r_goblin_default {
+  SAY "[grunt] NAN BAKA?";
+}
+RESP r_goblin_farewell {
+  SAY "JA";
+}
+CONV c_goblin {
+  IMPORT {}
+  NATIVE {
+    HAIL r_goblin_greeting;
+    DEFAULT r_goblin_default;
+    BYE r_goblin_farewell;
+  }
+}
+CHAR ch_Olin_the_Ghast {
+        name "Olin";
+        species ghast;
+        occ fighter;
+        sprite s_ghost;
+        hp 30;
+        xp 0;
+        cond U;
+        str 100;
+        intl 100;
+        dex 100;
+        magic 100;
+        lvl 3;
+        conv null;
+        readied {
+        }
+}
+CHAR ch_Gen {
+    name "Gen"
+    species human
+    occ ranger
+    sprite s_companion_ranger
+    hp 120
+    xp 256
+    cond G
+    str 120
+    intl 100
+    dex 120
+    magic 10
+    lvl 3
+    conv c_Gen
+    readied {
+        t_sword
+        t_sm_shield
+    }
+}
+CHAR ch_Hawknoz {
+    name "Hawknoz"
+    species human
+    occ wizard
+    sprite s_wizard
+    hp 120
+    xp 256
+    cond G
+    str 80
+    intl 140
+    dex 110
+    magic 200
+    lvl 3
+    conv c_Hawknoz
+    sched sched_Hawknoz
+    readied {
+        t_dagger
+    }
+}
+CHAR ch_Joan {
+    name "Joan"
+    species human
+    occ beggar
+    sprite s_beggar
+    hp 30
+    xp 0
+    cond G
+    str 100
+    intl 100
+    dex 100
+    magic 0
+    lvl 1
+    conv c_Joan
+    readied {
+    }
+}
+CHAR ch_John_the_Armourer {
+    name "John the Armourer"
+    species human
+    occ merchant
+    sprite s_townsman
+    hp 30
+    xp 0
+    cond G
+    str 100
+    intl 100
+    dex 100
+    magic 0
+    lvl 1
+    conv c_armourer
+    readied {
+    }
+}
+CHAR ch_Jeff_the_Weaponsmith {
+    name "Jeff the Weaponsmith"
+    species human
+    occ merchant
+    sprite s_townsman
+    hp 30
+    xp 0
+    cond G
+    str 100
+    intl 100
+    dex 100
+    magic 0
+    lvl 1
+    conv c_weaponsmith
+    readied {
+    }
+}
+CHAR ch_Golin_the_Healer {
+    name "Golin the Healer"
+    species human
+    occ wizard
+    sprite s_wizard
+    hp 120
+    xp 0
+    cond G
+    str 100
+    intl 100
+    dex 100
+    magic 0
+    lvl 4
+    conv c_healer
+    readied {
+        t_dagger
+    }
+}
+CHAR ch_Sly_the_Thief {
+    name "Sly the Trusty"
+    species human
+    occ fighter
+    sprite s_brigand
+    hp 60
+    xp 0
+    cond G
+    str 100
+    intl 100
+    dex 100
+    magic 0
+    lvl 1
+    conv c_thief
+    readied {
+        t_sword
+        t_dagger
+    }
+}
+CHAR ch_Thorald_Greybeard {
+  name "Thorald Greybeard";
+  species human;
+  occ wizard;
+  sprite s_companion_wizard;
+  hp 240;
+  xp 0;
+  cond G;
+  str 80;
+  intl 140;
+  dex 80;
+  magic 280;
+  lvl 8;
+  conv c_generic;
+  readied {
+    t_magic_bow;
+  }
+}
+CHAR ch_Kamafuk_Axedog {
+  name "Kamafuk Axedog";
+  species human;
+  occ fighter;
+  sprite s_companion_fighter;
+  hp 240;
+  xp 0;
+  cond G;
+  str 140;
+  intl 80;
+  dex 120;
+  magic 0;
+  lvl 8;
+  conv c_generic;
+  readied {
+    t_ring_mail;
+    t_crossbow;
+  }
+}
+CHAR ch_Mesmeme {
+  name "Mesmeme";
+  species gazer;
+  occ wizard;
+  sprite s_gazer;
+  hp 240;
+  xp 0;
+  cond G;
+  str 60;
+  intl 160;
+  dex 60;
+  magic 320;
+  lvl 8;
+  conv c_generic;
+  readied {
+  }
+}
+MECH_TYPE mech_L_lever {
+  name "lever";
+  defaults {
+    pmask 7;
+  }
+  states {
+    {
+      name "lever up";
+      sprite s_L_lever_up;
+    }
+    {
+      name "lever down";
+      sprite s_L_lever_down;
+    }
+  }
+  transitions {
+    state "lever up";
+    event 3;
+    next_state "lever down";
+    actions {
+      send_signal 101;
+    }
+    state "lever down";
+    event 3;
+    next_state "lever up";
+    actions {
+      send_signal 100;
+    }
+  }
+}
+MECH_TYPE mech_R_lever {
+  name "lever";
+  defaults {
+    pmask 7;
+  }
+  states {
+    {
+      name "lever up";
+      sprite s_R_lever_up;
+    }
+    {
+      name "lever down";
+      sprite s_R_lever_down;
+    }
+  }
+  transitions {
+    state "lever up";
+    event 3;
+    next_state "lever down";
+    actions {
+      send_signal 101;
+    }
+    state "lever down";
+    event 3;
+    next_state "lever up";
+    actions {
+      send_signal 100;
+    }
+  }
+}
+MECH_TYPE mech_pressure_plate {
+  name "pressure plate";
+  defaults {
+    sprite s_magic;
+    pmask 7;
+  }
+  states {
+    {
+      name "pressure plate";
+      sprite s_floor_plate;
+    }
+  }
+  transitions {
+    state "pressure plate";
+    event 2;
+    next_state "pressure plate";
+    actions {
+      print "Click";
+      send_signal 102;
+    }
+  }
+}
+MECH_TYPE mech_portcullis {
+  name "portcullis";
+  defaults {}
+  states {
+    {
+      name "raised portcullis";
+      sprite s_portcullis_up;
+      pmask 7;
+    }
+    {
+      name "lowered portcullis";
+      sprite s_portcullis_down;
+      pmask 0;
+    }
+  }
+  transitions {
+    state "raised portcullis";
+    event 101;
+    next_state "lowered portcullis";
+    actions {
+      print "The portcullis slams shut!";
+      send_signal 101;
+    }
+    state "raised portcullis";
+    event 102;
+    next_state "lowered portcullis";
+    actions {
+      print "The portcullis slams shut!";
+      send_signal 101;
+    }
+    state "lowered portcullis";
+    event 100;
+    next_state "raised portcullis";
+    actions {
+      print "The portcullis opens.";
+      send_signal 100;
+    }
+    state "lowered portcullis";
+    event 102;
+    next_state "raised portcullis";
+    actions {
+      print "The portcullis opens.";
+      send_signal 100;
+    }
+  }
+}
+MECH_TYPE mech_light {
+  name "light";
+  defaults {
+    sprite null;
+    pmask 7;
+  }
+  states {
+    {
+      name "lit light source";
+      light 1024;
+    }
+    {
+      name "unlit light source";
+      light 0;
+    }
+  }
+  transitions {
+    state "lit light source";
+    event 101;
+    next_state "unlit light source";
+    actions {
+      print "Click.";
+      send_signal 101;
+    }
+    state "unlit light source";
+    event 100;
+    next_state "lit light source";
+    actions {
+      print "Click.";
+      send_signal 100;
+    }
+  }
+}
+MECH_TYPE mech_Vdoor {
+  name "door";
+  defaults {}
+  states {
+    {
+      name "closed door";
+      sprite s_door;
+      pmask 0;
+    }
+    {
+      name "open door";
+      sprite null;
+      pmask 7;
+    }
+    {
+      name "locked door";
+      sprite s_door_locked;
+      pmask 0;
+    }
+    {
+      name "magically locked door";
+      sprite s_door_locked;
+      pmask 0;
+    }
+  }
+  transitions {
+    state "closed door";
+    event 4;
+    next_state "open door";
+    actions {
+      print "The door opens.";
+      send_signal 4;
+      set_alarm 8 5;
+    }
+    state "open door";
+    event 5;
+    next_state "closed door";
+    actions {
+      print "The door closes.";
+      send_signal 5;
+    }
+    state "closed door";
+    event 6;
+    next_state "locked door";
+    actions {
+      print "Click.";
+      send_signal 6;
+    }
+    state "locked door";
+    event 7;
+    next_state "closed door";
+    actions {
+      print "Click.";
+      send_signal 7;
+    }
+    state "closed door";
+    event 8;
+    next_state "magically locked door";
+    actions {
+      print "Throom-Click!";
+      send_signal 8;
+    }
+    state "magically locked door";
+    event 9;
+    next_state "closed door";
+    actions {
+      print "Throom-Click!";
+      send_signal 9;
+    }
+  }
+}
+MECH_TYPE mech_Hdoor {
+  name "door";
+  defaults {}
+  states {
+    {
+      name "closed door";
+      sprite s_hdoor;
+      pmask 0;
+    }
+    {
+      name "open door";
+      sprite null;
+      pmask 7;
+    }
+    {
+      name "locked door";
+      sprite s_hdoor_locked;
+      pmask 0;
+    }
+    {
+      name "magically locked door";
+      sprite s_hdoor_locked;
+      pmask 0;
+    }
+  }
+  transitions {
+    state "closed door";
+    event 4;
+    next_state "open door";
+    actions {
+      print "The door opens.";
+      send_signal 4;
+      set_alarm 16 5;
+    }
+    state "open door";
+    event 5;
+    next_state "closed door";
+    actions {
+      print "The door closes.";
+      send_signal 5;
+    }
+    state "closed door";
+    event 6;
+    next_state "locked door";
+    actions {
+      print "Click.";
+      send_signal 6;
+    }
+    state "locked door";
+    event 7;
+    next_state "closed door";
+    actions {
+      print "Click.";
+      send_signal 7;
+    }
+    state "closed door";
+    event 8;
+    next_state "magically locked door";
+    actions {
+      print "Throom-Click!";
+      send_signal 8;
+    }
+    state "magically locked door";
+    event 9;
+    next_state "closed door";
+    actions {
+      print "Throom-Click!";
+      send_signal 9;
+    }
+  }
+}
+MECH_TYPE mech_shrine_warp {
+  name "shrine maker";
+  defaults {
+    pmask 7;
+  }
+  states {
+    {
+      name "untriggered shrine gate";
+      sprite s_magic;
+    }
+    {
+      name "triggered shrine gate";
+      sprite null;
+    }
+  }
+  transitions {
+    state "untriggered shrine gate";
+    event 2;
+    next_state "triggered shrine gate";
+    actions {
+      print "Wow! A secret shrine just materialized out of nowhere!";
+      blit_map p_lcb1 12 14 m_secret_shrine 0 0 7 7 0;
+    }
+  }
+}
+PLACE p_u5_world {
+  type wilderness;
+  parent null;
+  x 0;
+  y 0;
+  name "The Great Wild";
+  wraps 1;
+  map m_u5_world;
+  underground 0;
+  objects {
+    vt_ship 86 110 west 100;
+    t_goblin_horde 86 100 (4) 0 c_goblin null;
+    t_undead_brigade 86 120 (4) 0 null vt_ship;
+  }
+  typical_npc_parties {
+    t_goblin_horde 100 (4);
+    t_gazer_pod_with_goblin_slaves 1 (4);
+  }
+}
+PLACE p_britain {
+  type town;
+  parent p_u5_world;
+  x 82;
+  y 105;
+  name "The Ruins of Britain";
+  wraps 0;
+  map m_britain;
+  underground 0;
+  objects {
+    mech_Vdoor door_healer 8 25 "closed door";
+    mech_Hdoor door_brit_manor 26 8 "closed door";
+    t_town_guards 8 15 (2) 1 c_guard;
+    t_town_guards 17 24 (2) 1 c_guard;
+    t_town_guards 18 10 (2) 1 c_guard;
+    ch_Hawknoz 15 25 (2) 1;
+    ch_Gen 20 20 (2) 1;
+    ch_Joan 15 15 (2) 1;
+    ch_John_the_Armourer 6 8 (2) 1;
+    ch_Jeff_the_Weaponsmith 6 2 (2) 1;
+    ch_Sly_the_Thief 10 15 (2) 1;
+    ch_Golin_the_Healer 4 30 (2) 1;
+  }
+  object_type t_town;
+}
+PLACE p_lcb1 {
+  type town;
+  parent p_u5_world;
+  x 86;
+  y 107;
+  name "A Castle Ruin";
+  wraps 0 ;
+  map m_lcb1;
+  underground 0;
+  objects {
+    ch_Olin_the_Ghast 15 15 (2) 1;
+    mech_shrine_warp sw 15 21 "untriggered shrine gate";
+  }
+  object_type t_town;
+}
+PLACE p_lcb2 {
+  type dungeon;
+  parent null;
+  x 0;
+  y 0;
+  name "A Castle Ruin (Second Story)";
+  wraps 0;
+  map m_lcb2;
+  underground 0;
+  objects {
+    t_note 19 7;
+  }
+}
+PLACE p_passage {
+  type dungeon;
+  parent null;
+  x 0;
+  y 0;
+  name "A Dark Passage";
+  wraps 0;
+  map m_passage;
+  underground 1;
+  objects {
+    t_goblin_horde 13 14 (8) 1 c_goblin;
+    t_goblin_horde 19 14 (16) 1 c_goblin;
+  }
+}
+MAP m_BOG_TRAP_OPEN {
+  type ascii;
+  width 3;
+  height 2;
+  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; '<' t_leftwing; '>' t_rightwing; 'c' t_cobblestone; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'p' t_pillar; '1' t_wall_b; '2' t_wall_a; '3' t_wall_c; '4' t_wall_d; 'm' t_mast; 'f' t_fire_terrain; 'b' t_boulder; 'r' t_wall_rock; '+' t_ankh; ',' t_flagstones; 'e' t_deck; '?' t_secret_door; 'a' t_altar; '&' t_fireplace; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; '!' t_lava; 'x' t_wall; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_pillar; };
+  terrain {
+    % % %
+    % % %
+  }
+}
+MAP m_BOG_TRAP_CLOSED {
+  type ascii;
+  width 3;
+  height 2;
+  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; '<' t_leftwing; '>' t_rightwing; 'c' t_cobblestone; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'p' t_pillar; '1' t_wall_b; '2' t_wall_a; '3' t_wall_c; '4' t_wall_d; 'm' t_mast; 'f' t_fire_terrain; 'b' t_boulder; 'r' t_wall_rock; '+' t_ankh; ',' t_flagstones; 'e' t_deck; '?' t_secret_door; 'a' t_altar; '&' t_fireplace; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; '!' t_lava; 'x' t_wall; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_pillar; };
+  terrain {
+    . . .
+    . . .
+  }
+}
+MECH_TYPE mech_bog_trap_L_lever {
+  name "bog trap lever";
+  defaults {
+    pmask 7;
+  }
+  states {
+    {
+      name "lever up";
+      sprite s_L_lever_up;
+    }
+    {
+      name "lever down";
+      sprite s_L_lever_down;
+    }
+  }
+  transitions {
+    state "lever up";
+    event 3;
+    next_state "lever down";
+    actions {
+      print "The floor sinks, revealing a bog!";
+      blit_map p_prison_chamber 9 1 m_BOG_TRAP_OPEN 0 0 3 2 0;
+    }
+    state "lever down";
+    event 3;
+    next_state "lever up";
+    actions {
+      print "The floor rises, leaving a muddy floor";
+      blit_map p_prison_chamber 9 1 m_BOG_TRAP_CLOSED 0 0 3 2 0;
+    }
+  }
+}
+MAP m_BOULDER_TRAP_OPEN {
+  type ascii;
+  width 3;
+  height 2;
+  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; '<' t_leftwing; '>' t_rightwing; 'c' t_cobblestone; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'p' t_pillar; '1' t_wall_b; '2' t_wall_a; '3' t_wall_c; '4' t_wall_d; 'm' t_mast; 'f' t_fire_terrain; 'b' t_boulder; 'r' t_wall_rock; '+' t_ankh; ',' t_flagstones; 'e' t_deck; '?' t_secret_door; 'a' t_altar; '&' t_fireplace; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; '!' t_lava; 'x' t_wall; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_pillar; };
+  terrain {
+    b b b
+    b b b
+  }
+}
+MAP m_BOULDER_TRAP_CLOSED {
+  type ascii;
+  width 3;
+  height 2;
+  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; '<' t_leftwing; '>' t_rightwing; 'c' t_cobblestone; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'p' t_pillar; '1' t_wall_b; '2' t_wall_a; '3' t_wall_c; '4' t_wall_d; 'm' t_mast; 'f' t_fire_terrain; 'b' t_boulder; 'r' t_wall_rock; '+' t_ankh; ',' t_flagstones; 'e' t_deck; '?' t_secret_door; 'a' t_altar; '&' t_fireplace; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; '!' t_lava; 'x' t_wall; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_pillar; };
+  terrain {
+    . . .
+    . . .
+  }
+}
+MECH_TYPE mech_boulder_trap_R_lever {
+  name "boulder trap lever";
+  defaults {
+    pmask 7;
+  }
+  states {
+    {
+      name "lever up";
+      sprite s_R_lever_up;
+    }
+    {
+      name "lever down";
+      sprite s_R_lever_down;
+    }
+  }
+  transitions {
+    state "lever up";
+    event 3;
+    next_state "lever down";
+    actions {
+      print "Boulders fall from the ceiling, filling the cell!";
+      blit_map p_prison_chamber 18 1 m_BOULDER_TRAP_OPEN 0 0 3 2 0;
+    }
+    state "lever down";
+    event 3;
+    next_state "lever up";
+    actions {
+      print "The boulders retract, leaving the cell empty.";
+      blit_map p_prison_chamber 18 1 m_BOULDER_TRAP_CLOSED 0 0 3 2 0;
+    }
+  }
+}
+MAP m_WATER_TRAP_OPEN {
+  type ascii;
+  width 2;
+  height 1;
+  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; '<' t_leftwing; '>' t_rightwing; 'c' t_cobblestone; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'p' t_pillar; '1' t_wall_b; '2' t_wall_a; '3' t_wall_c; '4' t_wall_d; 'm' t_mast; 'f' t_fire_terrain; 'b' t_boulder; 'r' t_wall_rock; '+' t_ankh; ',' t_flagstones; 'e' t_deck; '?' t_secret_door; 'a' t_altar; '&' t_fireplace; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; '!' t_lava; 'x' t_wall; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_pillar; };
+  terrain {
+    _ _
+  }
+}
+MAP m_WATER_TRAP_CLOSED {
+  type ascii;
+  width 2;
+  height 1;
+  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; '<' t_leftwing; '>' t_rightwing; 'c' t_cobblestone; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'p' t_pillar; '1' t_wall_b; '2' t_wall_a; '3' t_wall_c; '4' t_wall_d; 'm' t_mast; 'f' t_fire_terrain; 'b' t_boulder; 'r' t_wall_rock; '+' t_ankh; ',' t_flagstones; 'e' t_deck; '?' t_secret_door; 'a' t_altar; '&' t_fireplace; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; '!' t_lava; 'x' t_wall; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_pillar; };
+  terrain {
+    = e
+  }
+}
+MECH_TYPE mech_water_trap_L_lever {
+  name "water trap lever";
+  defaults {
+    pmask 7;
+  }
+  states {
+    {
+      name "lever up";
+      sprite s_L_lever_up;
+    }
+    {
+      name "lever down";
+      sprite s_L_lever_down;
+    }
+  }
+  transitions {
+    state "lever up";
+    event 3;
+    next_state "lever down";
+    actions {
+      print "A trap door opens, revealing a watery pit!";
+      blit_map p_prison_chamber 3 3 m_WATER_TRAP_OPEN 0 0 2 1 0;
+    }
+    state "lever down";
+    event 3;
+    next_state "lever up";
+    actions {
+      print "A trap door closes.";
+      blit_map p_prison_chamber 3 3 m_WATER_TRAP_CLOSED 0 0 2 1 0;
+    }
+  }
+}
+MAP m_FLAME_BARRIER_TRAP_OPEN {
+  type ascii;
+  width 1;
+  height 1;
+  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; '<' t_leftwing; '>' t_rightwing; 'c' t_cobblestone; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'p' t_pillar; '1' t_wall_b; '2' t_wall_a; '3' t_wall_c; '4' t_wall_d; 'm' t_mast; 'f' t_fire_terrain; 'b' t_boulder; 'r' t_wall_rock; '+' t_ankh; ',' t_flagstones; 'e' t_deck; '?' t_secret_door; 'a' t_altar; '&' t_fireplace; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; '!' t_lava; 'x' t_wall; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_pillar; };
+  terrain {
+    f
+  }
+}
+MAP m_FLAME_BARRIER_TRAP_CLOSED {
+  type ascii;
+  width 1;
+  height 1;
+  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; '<' t_leftwing; '>' t_rightwing; 'c' t_cobblestone; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'p' t_pillar; '1' t_wall_b; '2' t_wall_a; '3' t_wall_c; '4' t_wall_d; 'm' t_mast; 'f' t_fire_terrain; 'b' t_boulder; 'r' t_wall_rock; '+' t_ankh; ',' t_flagstones; 'e' t_deck; '?' t_secret_door; 'a' t_altar; '&' t_fireplace; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; '!' t_lava; 'x' t_wall; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_pillar; };
+  terrain {
+    c
+  }
+}
+MECH_TYPE mech_flame_barrier_trap_L_lever {
+  name "flame_barrier trap lever";
+  defaults {
+    pmask 7;
+  }
+  states {
+    {
+      name "lever up";
+      sprite s_L_lever_up;
+    }
+    {
+      name "lever down";
+      sprite s_L_lever_down;
+    }
+  }
+  transitions {
+    state "lever up";
+    event 3;
+    next_state "lever down";
+    actions {
+      print "You hear cracking flames!";
+      blit_map p_prison_chamber 26 27 m_FLAME_BARRIER_TRAP_OPEN 0 0 1 1 0;
+    }
+    state "lever down";
+    event 3;
+    next_state "lever up";
+    actions {
+      print "The sounds of flame stop.";
+      blit_map p_prison_chamber 26 27 m_FLAME_BARRIER_TRAP_CLOSED 0 0 1 1 0;
+    }
+  }
+}
+PLACE p_prison_chamber {
+  type dungeon;
+  parent null;
+  x 0;
+  y 0;
+  name "Prison Chambers";
+  wraps 0;
+  map m_prison_chamber;
+  underground 1;
+  objects {
+    mech_R_lever light_switch 30 14 "lever down";
+    mech_light light_1 31 13 "unlit light source";
+    mech_light light_2 31 20 "unlit light source";
+    CONNECT light_switch => light_1;
+    CONNECT light_1 => light_2;
+    mech_Hdoor door_1 22 20 "closed door";
+    mech_Hdoor door_1 23 20 "closed door";
+    mech_light light_3 9 20 "lit light source";
+    mech_light light_4 12 20 "lit light source";
+    mech_light light_5 16 20 "lit light source";
+    mech_light light_6 18 20 "lit light source";
+    mech_light light_7 2 22 "lit light source";
+    mech_light light_8 2 27 "lit light source";
+    mech_light light_9 9 25 "lit light source";
+    mech_light light_10 9 29 "lit light source";
+    mech_light light_11 13 25 "lit light source";
+    mech_light light_12 13 29 "lit light source";
+    mech_pressure_plate plate_a 14 8 "pressure plate";
+    mech_pressure_plate plate_b 14 6 "pressure plate";
+    mech_portcullis torture_chamber_portcullis 14 7 "lowered portcullis";
+    CONNECT plate_a => torture_chamber_portcullis;
+    CONNECT plate_b => torture_chamber_portcullis;
+    mech_L_lever swamp_door_lever 13 3 "lever up";
+    mech_portcullis swamp_portcullis 10 3 "raised portcullis";
+    CONNECT swamp_door_lever <=> swamp_portcullis;
+    mech_bog_trap_L_lever swamp_trap_lever 13 1 "lever up";
+    mech_R_lever rock_door_lever 16 3 "lever up";
+    mech_portcullis rock_portcullis 19 3 "raised portcullis";
+    CONNECT rock_door_lever <=> rock_portcullis;
+    mech_boulder_trap_R_lever boulder_trap_lever 16 1 "lever up";
+    mech_L_lever prison_doors_lever 1 22 "lever down";
+    mech_portcullis prison_door_1 2 23 "lowered portcullis";
+    mech_portcullis prison_door_2 3 25 "lowered portcullis";
+    mech_portcullis prison_door_3 2 28 "lowered portcullis";
+    CONNECT prison_doors_lever => prison_door_1;
+    CONNECT prison_door_1 => prison_door_2;
+    CONNECT prison_door_2 => prison_door_3;
+    mech_R_lever cell_lever_A 7 24 "lever down";
+    mech_R_lever cell_lever_B 9 24 "lever down";
+    mech_R_lever cell_lever_C 11 24 "lever down";
+    mech_R_lever cell_lever_D 7 30 "lever down";
+    mech_R_lever cell_lever_E 9 30 "lever down";
+    mech_R_lever cell_lever_F 11 30 "lever down";
+    mech_portcullis cell_door_A 16 26 "lowered portcullis";
+    mech_portcullis cell_door_B 20 26 "lowered portcullis";
+    mech_portcullis cell_door_C 24 26 "lowered portcullis";
+    mech_portcullis cell_door_D 16 28 "lowered portcullis";
+    mech_portcullis cell_door_E 20 28 "lowered portcullis";
+    mech_portcullis cell_door_F 24 28 "lowered portcullis";
+    CONNECT cell_lever_A <=> cell_door_A;
+    CONNECT cell_lever_B <=> cell_door_B;
+    CONNECT cell_lever_C <=> cell_door_C;
+    CONNECT cell_lever_D <=> cell_door_D;
+    CONNECT cell_lever_E <=> cell_door_E;
+    CONNECT cell_lever_F <=> cell_door_F;
+    mech_L_lever guard_room_lever 1 27 "lever down";
+    mech_portcullis guard_door_A 12 27 "lowered portcullis";
+    mech_portcullis guard_door_B 14 27 "lowered portcullis";
+    CONNECT guard_room_lever => guard_door_A;
+    CONNECT guard_door_A => guard_door_B;
+    mech_L_lever special_cell_lever 1 30 "lever down";
+    mech_portcullis special_cell_door 27 27 "lowered portcullis";
+    CONNECT special_cell_lever <=> special_cell_door;
+    mech_flame_barrier_trap_L_lever barrier_lever 3 30 "lever down";
+    mech_water_trap_L_lever water_trap 1 6 "lever up";
+    mech_L_lever lava_trap_lever 30 1 "lever up";
+    mech_L_lever fire_trap_lever 30 6 "lever up";
+    mech_L_lever guard_trap_lever 1 25 "lever up";
+  }
+}
+STACK_PLACES p_lcb2 p_lcb1;
+STACK_PLACES p_britain p_passage;
+moon_info {
+  phases 8;
+  {
+    sprite s_full_moon;
+    sprite s_wane_three_quarter_moon;
+    sprite s_wane_half_moon;
+    sprite s_wane_quarter_moon;
+    sprite s_new_moon;
+    sprite s_wax_quarter_moon;
+    sprite s_wax_half_moon;
+    sprite s_wax_three_quarter_moon;
+  }
+  moons {
+    {
+      phase 0;
+      days_per_cycle 1;
+      arc 100;
+    }
+    {
+      phase 1;
+      days_per_cycle 2;
+      arc 200;
+    }
+  }
+  sun {
+    arc 150;
+    sprite s_sun;
+  }
+  moongates {
+    {
+      place p_u5_world;
+      object_type t_moongate;
+      x 89;
+      y 106;
+      phase 0;
+    }
+    {
+      place p_u5_world;
+      object_type t_moongate;
+      x 79;
+      y 104;
+      phase 1;
+    }
+  }
+}
+portals {
+  { object_type t_ladder_up; from_place p_lcb1; from_x 3; from_y 3; to_place p_lcb2; to_x 3; to_y 3; auto_enter 0; } { object_type t_ladder_down; from_place p_lcb2; from_x 3; from_y 3; to_place p_lcb1; to_x 3; to_y 3; auto_enter 0; };
+  { object_type t_ladder_up; from_place p_passage; from_x 28; from_y 28; to_place p_lcb1; to_x 7; to_y 2; auto_enter 0; } { object_type t_ladder_down; from_place p_lcb1; from_x 7; from_y 2; to_place p_passage; to_x 28; to_y 28; auto_enter 0; };
+  { object_type t_ladder_up; from_place p_prison_chamber; from_x 28; from_y 14; to_place p_lcb1; to_x 12; to_y 27; auto_enter 0; } { object_type t_ladder_down; from_place p_lcb1; from_x 12; from_y 27; to_place p_prison_chamber; to_x 28; to_y 14; auto_enter 0; };
+  { object_type t_ladder_up; from_place p_passage; from_x 1; from_y 1; to_place p_britain; to_x 30; to_y 1; auto_enter 0; } { object_type t_ladder_down; from_place p_britain; from_x 30; from_y 1; to_place p_passage; to_x 1; to_y 1; auto_enter 0; };
+}
+player {
+  place p_u5_world;
+  x 85;
+  y 107;
+  sprite s_companion_wizard;
+  speed 2;
+  pmask 1;
+  mv_desc Walk;
+  mv_sound "data/sounds/walk.wav";
+  food 1000;
+  gold 500;
+  alignment (1|2);
+  inventory {
+    1 t_dagger;
+    1 t_sword;
+    1 t_2h_sword;
+    1 t_long_sword;
+    1 t_mace;
+    1 t_2h_hammer;
+    3 t_spear;
+    1 t_crossbow;
+    20 t_bolt;
+    1 t_bow;
+    1 t_magic_bow;
+    20 t_arrow;
+    1 t_sling;
+    10 t_oil;
+    1 t_ring_mail;
+    6 t_red_potion;
+    3 t_blue_potion;
+    6 t_green_potion;
+    3 t_light_potion;
+    99 t_torch;
+    12 t_mushroom1;
+    1 t_lb_journal;
+    1 t_note;
+    10 reagent_garlic;
+    10 reagent_ginseng;
+    10 reagent_nightshade;
+    10 reagent_sulphorous_ash;
+    10 reagent_mandrake;
+    10 reagent_blood_moss;
+    10 reagent_black_pearl;
+    10 reagent_spider_silk;
+    50 spell_cure_poison;
+    50 spell_awaken;
+    50 spell_magic_missile;
+    50 spell_light;
+    50 spell_heal;
+    50 spell_unlock;
+    50 spell_repel_undead;
+    50 spell_locate;
+    50 spell_call_animal;
+    50 spell_wind_change;
+    50 spell_poison;
+    50 spell_fire_wall;
+    50 spell_sleep_wall;
+    50 spell_poison_wall;
+    50 spell_blink;
+    50 spell_fire_ball;
+    50 spell_great_light;
+    50 spell_dispel_field;
+    50 spell_move_up;
+    50 spell_move_down;
+    50 spell_protection_field;
+    50 spell_protection;
+    50 spell_reveal;
+    50 spell_magic_unlock;
+    50 spell_magic_lock;
+    50 spell_insect_swarm;
+    50 spell_sleep;
+    50 spell_great_heal;
+    50 spell_quickness;
+    50 spell_charm;
+    50 spell_negate_magic;
+    50 spell_tremor;
+    50 spell_confuse;
+    50 spell_xray;
+    50 spell_poison_wind;
+    50 spell_fear;
+    50 spell_peer;
+    50 spell_clone;
+    50 spell_invisibility;
+    50 spell_kill;
+    50 spell_time_stop;
+    50 spell_flame_wind;
+    50 spell_energy_wind;
+    50 spell_resurrect;
+    50 spell_summon;
+    50 spell_gate_travel;
+  }
+  party_members {
+    ch_Thorald_Greybeard;
+    ch_Kamafuk_Axedog;
+    ch_Mesmeme;
+  }
+}
+CROSSHAIR {
+  objectType t_cursor;
+}

@@ -1,0 +1,192 @@
+/* species.ghul
+ *
+ * Defines species which beings may belong to.
+ */
+#ifndef species_ghul
+#define species_ghul
+
+
+SPECIES human {
+  name    "human";
+  str     100;
+  int     100;
+  dex     100;
+  spd     2;
+  vr      8;
+  pmask   (LAND);
+  sleep_sprite s_corpse;
+  weapon t_hands;
+  visible 1;
+  occs {
+    ranger;
+  }
+  slots {
+    HELM_SLOT;
+    AMULET_SLOT;
+    WEAPON_OR_SHIELD_SLOT;
+    WEAPON_OR_SHIELD_SLOT;
+    ARMOUR_SLOT;
+    BOOT_SLOT;
+    RING_SLOT;
+    RING_SLOT;
+  }
+  spells {
+  }
+}
+
+SPECIES goblin {
+  name    "goblin";
+  str     80;
+  int     80;
+  dex     120;
+  spd     2;
+  vr      8;
+  pmask   (LAND);
+  sleep_sprite s_corpse;
+  weapon t_hands;
+  visible 1;
+  occs {
+    raider;
+  }
+  slots {
+    HELM_SLOT;
+    AMULET_SLOT;
+    WEAPON_OR_SHIELD_SLOT;
+    WEAPON_OR_SHIELD_SLOT;
+    ARMOUR_SLOT;
+    BOOT_SLOT;
+    RING_SLOT;
+    RING_SLOT;
+  }
+  spells {
+  }
+}
+
+SPECIES gazer {
+  name    "gazer";
+  str     40;
+  int     200;
+  dex     40;
+  spd     4;
+  vr      10;
+  pmask   (LAND|WATER|SHOALS);;
+  sleep_sprite s_corpse;
+  weapon t_teeth;
+  visible 1;
+  occs {
+    wizard;
+  }
+  slots {
+    HELM_SLOT;
+    AMULET_SLOT;
+    AMULET_SLOT;
+    RING_SLOT;
+    RING_SLOT;
+    RING_SLOT;
+    RING_SLOT;
+  }
+  spells {
+    spell_poison;
+    spell_sleep;
+    spell_charm;
+  }
+}
+
+SPECIES skeleton {
+  name    "skeleton";
+  str     110;
+  int     60;
+  dex     110;
+  spd     2;
+  vr      8;
+  pmask   (LAND);
+  sleep_sprite s_corpse;
+  weapon t_hands;
+  visible 1
+    occs {
+    soldier;
+  }
+  slots {
+    HELM_SLOT;
+    AMULET_SLOT;
+    WEAPON_OR_SHIELD_SLOT;
+    WEAPON_OR_SHIELD_SLOT;
+    ARMOUR_SLOT;
+    BOOT_SLOT;
+    RING_SLOT;
+    RING_SLOT;
+  }
+  spells {
+  }
+}
+
+SPECIES snake {
+  name    "snake";
+  str     50;
+  int     80;
+  dex     120;
+  spd     2;
+  vr      8;
+  pmask   (LAND);
+  sleep_sprite null;
+  weapon t_teeth;
+  visible 1
+    occs {
+  }
+  slots {
+  }
+  spells {
+    spell_poison;
+  }
+}
+
+SPECIES insects {
+  name    "insects";
+  str     5;
+  int     5;
+  dex     120;
+  spd     2;
+  vr      8;
+  pmask   (LAND);
+  sleep_sprite null;
+  weapon t_stinger;
+  visible 1
+    occs {
+  }
+  slots {
+  }
+  spells {
+  }
+}
+
+SPECIES ghast {
+  name    "ghast";
+  str     100;
+  int     100;
+  dex     100;
+  spd     2;
+  vr      8;
+  pmask   (LAND);
+  sleep_sprite s_corpse;
+  weapon t_hands;
+  visible 0
+    occs {
+  }
+  slots {
+    HELM_SLOT;
+    AMULET_SLOT;
+    WEAPON_OR_SHIELD_SLOT;
+    WEAPON_OR_SHIELD_SLOT;
+    ARMOUR_SLOT;
+    BOOT_SLOT;
+    RING_SLOT;
+    RING_SLOT;
+  }
+  spells {
+  }
+}
+
+
+#endif // species_ghul
+
+/* eof */

@@ -1,0 +1,405 @@
+/* all_mechanisms.ghul
+ *
+ * Defines all mechanism types in the world, from various files:
+ */
+#ifndef all_mechanisms_ghul
+#define all_mechanisms_ghul
+
+
+// These are game-defined signals:
+#define MECH_SIGNAL_UP     100
+#define MECH_SIGNAL_DOWN   101
+#define MECH_SIGNAL_CHANGE 102
+
+
+// Define a new type of mechanism: a simple lever that could be used to send a
+// signal to, say, open a door.
+MECH_TYPE mech_L_lever {
+  name "lever";
+  defaults {
+    pmask PASS_ALL;
+  }
+  states {
+    {
+      name   "lever up";
+      sprite s_L_lever_up;
+    }
+    {
+      name   "lever down";
+      sprite s_L_lever_down;
+    }
+  }
+  transitions {
+    
+    state      "lever up";
+    event      MECH_HANDLE;
+    next_state "lever down";
+    actions {
+      send_signal MECH_SIGNAL_DOWN;
+    }
+    
+    state      "lever down";
+    event      MECH_HANDLE;
+    next_state "lever up";
+    actions {
+      send_signal MECH_SIGNAL_UP;
+    }
+  }
+} // MECH_TYPE mech_L_lever
+
+
+MECH_TYPE mech_R_lever {
+  name "lever";
+  defaults {
+    pmask PASS_ALL;
+  }
+  states {
+    {
+      name   "lever up";
+      sprite s_R_lever_up;
+    }
+    {
+      name   "lever down";
+      sprite s_R_lever_down;
+    }
+  }
+  transitions {
+    
+    state      "lever up";
+    event      MECH_HANDLE;
+    next_state "lever down";
+    actions {
+      send_signal MECH_SIGNAL_DOWN;
+    }
+    
+    state      "lever down";
+    event      MECH_HANDLE;
+    next_state "lever up";
+    actions {
+      send_signal MECH_SIGNAL_UP;
+    }
+  }
+} // MECH_TYPE mech_L_lever
+
+
+MECH_TYPE mech_pressure_plate {
+  name "pressure plate";
+  defaults {
+    sprite s_magic;
+    pmask  PASS_ALL;
+  }
+  states {
+    {
+      name   "pressure plate";
+      sprite s_floor_plate;
+    }
+  }
+  transitions {
+    // Note: only 1 state:
+    state      "pressure plate";
+    event      MECH_STEP;
+    next_state "pressure plate";
+    actions {
+      print "Click";
+      send_signal MECH_SIGNAL_CHANGE;
+    }
+  }
+} // MECH_TYPE mech_pressure_plate
+
+
+// Define a new type of mechanism: a simple door that responds to a signal and
+// sends feedback (usually to the sender, but really whoever is wired to
+// receive signals from it... confused yet? ;) ).
+MECH_TYPE mech_portcullis {
+  name "portcullis";
+  defaults {}
+
+  states {
+    {
+      name   "raised portcullis";
+      sprite s_portcullis_up;
+      pmask  PASS_ALL;
+    }
+    {
+      name   "lowered portcullis";
+      sprite s_portcullis_down;
+      pmask  PASS_NONE;
+    }
+  }
+
+  transitions {
+    state      "raised portcullis";
+    event      MECH_SIGNAL_DOWN;
+    next_state "lowered portcullis";
+    actions {
+      print "The portcullis slams shut!";
+      send_signal MECH_SIGNAL_DOWN;
+    }
+    
+    state      "raised portcullis";
+    event      MECH_SIGNAL_CHANGE;
+    next_state "lowered portcullis";
+    actions {
+      print "The portcullis slams shut!";
+      send_signal MECH_SIGNAL_DOWN;
+    }
+    
+    state      "lowered portcullis";
+    event      MECH_SIGNAL_UP;
+    next_state "raised portcullis";
+    actions {
+      print "The portcullis opens.";
+      send_signal MECH_SIGNAL_UP;
+    }
+    
+    state      "lowered portcullis";
+    event      MECH_SIGNAL_CHANGE;
+    next_state "raised portcullis";
+    actions {
+      print "The portcullis opens.";
+      send_signal MECH_SIGNAL_UP;
+    }
+  } // transitions
+
+} // MECH_TYPE mech_portcullis
+
+
+// Define a new type of mechanism: a simple door that responds to a signal and
+// sends feedback (usually to the sender, but really whoever is wired to
+// receive signals from it... confused yet? ;) ).
+MECH_TYPE mech_light {
+  name "light";
+  defaults {
+    sprite null;
+    pmask  PASS_ALL;  // SAM: Found that this is not being honored!
+  }
+  states {
+    {
+      name "lit light source";
+      light 1024;
+    }
+    {
+      name "unlit light source";
+      light 0;
+    }
+  }
+  transitions {
+    
+    state      "lit light source";
+    event      MECH_SIGNAL_DOWN;
+    next_state "unlit light source";
+    actions {
+      print "Click.";
+      send_signal MECH_SIGNAL_DOWN;
+    }
+    
+    state      "unlit light source";
+    event      MECH_SIGNAL_UP;
+    next_state "lit light source";
+    actions {
+      print "Click.";
+      send_signal MECH_SIGNAL_UP;
+    }
+  }
+} // MECH_TYPE mech_light
+
+
+MECH_TYPE mech_Vdoor {
+  name "door";
+  defaults {}
+  states {
+    {
+      name   "closed door";
+      sprite s_door;
+      pmask  PASS_NONE;
+    }
+    {
+      name   "open door";
+      sprite null;
+      pmask  PASS_ALL;
+    }
+    {
+      name   "locked door";
+      sprite s_door_locked;
+      pmask  PASS_NONE;
+    }
+    {
+      name   "magically locked door";
+      sprite s_door_locked;
+      pmask  PASS_NONE;
+    }
+  }
+  
+  transitions {
+    
+    state      "closed door";
+    event      MECH_OPEN;
+    next_state "open door";
+    actions {
+      print "The door opens.";
+      send_signal MECH_OPEN;
+      
+      // After 8 turns the door should close automatically.
+      // This next line sets an alarm to send the "close"
+      // signal to the door after 8 turns.
+      set_alarm 8 MECH_CLOSE;
+    }
+    
+    state      "open door";
+    event      MECH_CLOSE;
+    next_state "closed door";
+    actions {
+      print "The door closes.";
+      send_signal MECH_CLOSE;
+    }
+    
+    state      "closed door";
+    event      MECH_LOCK;
+    next_state "locked door";
+    actions {
+      print "Click.";
+      send_signal MECH_LOCK;
+    }
+    
+    state      "locked door";
+    event      MECH_UNLOCK;
+    next_state "closed door";
+    actions {
+      print "Click.";
+      send_signal MECH_UNLOCK;
+    }
+    
+    state      "closed door";
+    event      MECH_MAGIC_LOCK;
+    next_state "magically locked door";
+    actions {
+      print "Throom-Click!";
+      send_signal MECH_MAGIC_LOCK;
+    }
+    
+    state      "magically locked door";
+    event      MECH_MAGIC_UNLOCK;
+    next_state "closed door";
+    actions {
+      print "Throom-Click!";
+      send_signal MECH_MAGIC_UNLOCK;
+    }
+  }
+} // MECH_TYPE mech_Vdoor
+
+
+MECH_TYPE mech_Hdoor {
+  name "door";
+  defaults {}
+  states {
+    {
+      name   "closed door";
+      sprite s_hdoor;
+      pmask  PASS_NONE;
+    }
+    {
+      name   "open door";
+      sprite null;
+      pmask  PASS_ALL;
+    }
+    {
+      name   "locked door";
+      sprite s_hdoor_locked;
+      pmask  PASS_NONE;
+    }
+    {
+      name   "magically locked door";
+      sprite s_hdoor_locked;
+      pmask  PASS_NONE;
+    }
+  }
+  
+  transitions {
+    
+    state      "closed door";
+    event      MECH_OPEN;
+    next_state "open door";
+    actions {
+      print "The door opens.";
+      send_signal MECH_OPEN;
+      
+      // After 8 turns the door should close automatically.
+      // This next line sets an alarm to send the "close"
+      // signal to the door after 8 turns.
+      set_alarm 16 MECH_CLOSE;
+    }
+    
+    state      "open door";
+    event      MECH_CLOSE;
+    next_state "closed door";
+    actions {
+      print "The door closes.";
+      send_signal MECH_CLOSE;
+    }
+    
+    state      "closed door";
+    event      MECH_LOCK;
+    next_state "locked door";
+    actions {
+      print "Click.";
+      send_signal MECH_LOCK;
+    }
+    
+    state      "locked door";
+    event      MECH_UNLOCK;
+    next_state "closed door";
+    actions {
+      print "Click.";
+      send_signal MECH_UNLOCK;
+    }
+    
+    state      "closed door";
+    event      MECH_MAGIC_LOCK;
+    next_state "magically locked door";
+    actions {
+      print "Throom-Click!";
+      send_signal MECH_MAGIC_LOCK;
+    }
+    
+    state      "magically locked door";
+    event      MECH_MAGIC_UNLOCK;
+    next_state "closed door";
+    actions {
+      print "Throom-Click!";
+      send_signal MECH_MAGIC_UNLOCK;
+    }
+  }
+} // MECH_TYPE mech_Hdoor
+
+
+MECH_TYPE mech_shrine_warp {
+  name "shrine maker";
+  defaults {
+    pmask PASS_ALL;
+  }
+  states {
+    {
+      name   "untriggered shrine gate";
+      sprite s_magic;
+    }
+    { 
+      name   "triggered shrine gate";
+      sprite null;
+    }
+  }
+  transitions {
+    state      "untriggered shrine gate";
+    event      MECH_STEP;
+    next_state "triggered shrine gate";
+    actions {
+      print "Wow! A secret shrine just materialized out of nowhere!";
+      // SAM: I notice that a (forward?) reference to p_lcb1 is made here...
+      blit_map p_lcb1 12 14 m_secret_shrine 0 0 7 7 0;
+    }
+  }
+} // MECH_TYPE mech_shrine_warp
+
+
+#endif // all_mechanisms_ghul
+
+/* eof */

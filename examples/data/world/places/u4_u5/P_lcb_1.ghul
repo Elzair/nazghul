@@ -1,0 +1,28 @@
+/* P_lcb_1.ghul
+ *
+ *
+ */
+#ifndef P_lcb_1_ghul
+#define P_lcb_1_ghul
+
+
+PLACE  p_lcb1 {
+  type        town;
+  parent      p_u5_world;
+  x           86;
+  y           107;
+  name        "A Castle Ruin";
+  wraps       0 ;
+  map         m_lcb1;
+  underground 0;
+  objects {
+    ch_Olin_the_Ghast 15 15 (ALIGN_TOWN) 1;
+    mech_shrine_warp sw 15 21 "untriggered shrine gate";
+  }
+  object_type t_town;
+} // PLACE  p_lcb1
+
+
+#endif // P_lcb_1_ghul
+
+/* eof */

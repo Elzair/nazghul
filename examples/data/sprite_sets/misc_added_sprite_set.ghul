@@ -1,0 +1,50 @@
+/* misc_added_sprite_set.ghul
+ *
+ * Defines a sprite_set containing misc extra tiles 
+ * added as they were found useful.
+ * 
+ * TODO:
+ * At some time when this gets too large and messy, 
+ * re-organize these into nice tidy piles.
+ */
+#ifndef misc_added_sprite_set_ghul
+#define misc_added_sprite_set_ghul
+
+
+SPRITE_SET ss_mine {
+  
+  image_width  32;
+  image_height 32;
+  file_rows    8;
+  file_cols    8;
+  file_offx    0;
+  file_offy    0;
+  file "data/images/mine-32x32.png";
+  
+  sprites {
+    SPRITE(s_crosshair,          1, 0, normal);;
+    FACING_SPRITE(s_arrow,       1, 1, normal, FAC_NSEW);;
+    FACING_SPRITE(s_horse,       1, 5, normal, FAC_EW);;
+    SPRITE(s_happy_monster_face, 1, 7, normal);;
+    FACING_SPRITE(s_ship,        1, 8, normal, FAC_NSEW);;
+    FACING_SPRITE(s_bolt,        1, 12, normal, FAC_NSEW);;
+
+    SPRITE(s_hdoor,              1, 19, normal);
+    SPRITE(s_hdoor_locked,       1, 20, normal);
+
+    SPRITE(s_portcullis_down,    1, 21, normal);
+    SPRITE(s_portcullis_up,      1, 22, normal);
+
+    SPRITE(s_L_lever_up,         1, 24, normal);
+    SPRITE(s_L_lever_down,       1, 25, normal);
+    SPRITE(s_R_lever_up,         1, 26, normal);
+    SPRITE(s_R_lever_down,       1, 27, normal);
+
+    SPRITE(s_floor_plate,  1, 28, normal);
+  }
+} /* SPRITE_SET ss_mine */
+
+
+#endif // misc_added_sprite_set_ghul
+
+/* eof*/

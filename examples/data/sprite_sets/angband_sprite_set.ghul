@@ -1,0 +1,191 @@
+/* angband_sprite_set.ghul
+ *
+ * Defines a sprite_set based on the angband graphical tile set.
+ */
+#ifndef angband_sprite_set_ghul
+#define angband_sprite_set_ghul
+
+
+SPRITE_SET ss_angband {
+  
+  image_width  32;
+  image_height 32;
+  file_rows    63;
+  file_cols    32;
+  file_offx    0;
+  file_offy    0;
+  file "data/images/angband-32x32.png";
+  
+  sprites {
+    
+    /* Misc/unidentified */
+    STD_SPRITE(s_gold_explosion,        61);
+    
+    /* Piles of powder or rock hunks */
+    STD_SPRITE(s_brown_powder,          113);
+    STD_SPRITE(s_silver_powder,         114);
+    STD_SPRITE(s_gold_powder,           115);
+    STD_SPRITE(s_bluish_white_powder,   116);
+    STD_SPRITE(s_greenish_white_powder, 117);
+    STD_SPRITE(s_grayish_red_hunks,     118);
+    STD_SPRITE(s_white_hunks,           119);
+    STD_SPRITE(s_aquamarine_hunks,      120);
+    STD_SPRITE(s_red_hunks,             121);
+    STD_SPRITE(s_lightblue_hunks,       122);
+    STD_SPRITE(s_green_hunks,           123);
+    
+    /* Scrolls */
+    STD_SPRITE(s_scroll1, 124);
+    STD_SPRITE(s_scroll2, 125);
+    STD_SPRITE(s_scroll3, 126);
+    STD_SPRITE(s_scroll4, 127);
+    
+    /* Rings */
+    STD_SPRITE(s_ring1,  128);
+    STD_SPRITE(s_ring2,  129);
+    STD_SPRITE(s_ring3,  130);
+    STD_SPRITE(s_ring4,  131);
+    STD_SPRITE(s_ring5,  132);
+    STD_SPRITE(s_ring6,  133);
+    STD_SPRITE(s_ring7,  134);
+    STD_SPRITE(s_ring8,  135);
+    STD_SPRITE(s_ring9,  136);
+    STD_SPRITE(s_ring10, 137);
+    STD_SPRITE(s_ring11, 138);
+    STD_SPRITE(s_ring12, 139);
+    STD_SPRITE(s_ring13, 140);
+    STD_SPRITE(s_ring14, 141);
+    STD_SPRITE(s_ring15, 142);
+    STD_SPRITE(s_ring16, 143);
+    STD_SPRITE(s_ring17, 145); /* rainbow        */
+    STD_SPRITE(s_ring18, 146); /* glowing violet */
+    STD_SPRITE(s_ring19, 147); /* glowing blue   */
+    STD_SPRITE(s_ring20, 148); /* glowing green  */
+    STD_SPRITE(s_ring21, 149); /* glowing orange */
+    
+    /* A few necklaces (lots more later) */
+    STD_SPRITE(s_necklace1, 150);
+    STD_SPRITE(s_necklace2, 151);
+    STD_SPRITE(s_necklace3, 152); /* pearls? */
+    
+    /* Some chests */
+    STD_SPRITE(s_chest1, 153); /* small wood   */
+    STD_SPRITE(s_chest2, 154); /* big wood     */
+    STD_SPRITE(s_chest3, 155); /* small iron   */
+    STD_SPRITE(s_chest4, 156); /* big iron     */
+    STD_SPRITE(s_chest5, 157); /* small silver */
+    STD_SPRITE(s_chest6, 158); /* big silver   */
+    STD_SPRITE(s_chest7, 159); /* not sure what this it */
+    
+    /* Potions */
+    STD_SPRITE(s_white_potion,   160);
+    STD_SPRITE(s_black_potion,   161);
+    STD_SPRITE(s_orange_potion,  162);
+    STD_SPRITE(s_red_potion,     163);
+    STD_SPRITE(s_green_potion,   164);
+    STD_SPRITE(s_blue_potion,    165);
+    STD_SPRITE(s_brown_potion,   166);
+    STD_SPRITE(s_gray_potion,    167);
+    STD_SPRITE(s_silver_potion,  168);
+    STD_SPRITE(s_purple_potion,  169);
+    STD_SPRITE(s_yellow_potion,  170);
+    STD_SPRITE(s_ruby_potion,    171);
+    STD_SPRITE(s_emarald_potion, 172);
+    STD_SPRITE(s_skyblue_potion, 173);
+    STD_SPRITE(s_golden_potion,  174);
+    
+    /* Mushrooms */
+    STD_SPRITE(s_mushroom1,  176);
+    STD_SPRITE(s_mushroom2,  177);
+    STD_SPRITE(s_mushroom3,  178);
+    STD_SPRITE(s_mushroom4,  179);
+    STD_SPRITE(s_mushroom5,  180);
+    STD_SPRITE(s_mushroom6,  181);
+    STD_SPRITE(s_brown_mushroom,  182);
+    STD_SPRITE(s_black_mushroom,  183);
+    STD_SPRITE(s_mushroom9,  184);
+    STD_SPRITE(s_mushroom10, 185);
+    STD_SPRITE(s_mushroom11, 186);
+    STD_SPRITE(s_mushroom12, 187);
+    STD_SPRITE(s_mushroom13, 188);
+    STD_SPRITE(s_mushroom14, 189);
+    STD_SPRITE(s_mushroom15, 190);
+    
+    /* Hats, helms and the occasional crown */
+    STD_SPRITE(s_helm1,  248);
+    STD_SPRITE(s_helm2,  249);
+    STD_SPRITE(s_helm3,  250);
+    STD_SPRITE(s_helm4,  251);
+    STD_SPRITE(s_helm5,  252);
+    STD_SPRITE(s_helm6,  253);
+    STD_SPRITE(s_helm7,  254);
+    STD_SPRITE(s_helm8,  255);
+    STD_SPRITE(s_helm9,  256);
+    STD_SPRITE(s_helm10, 257);
+    STD_SPRITE(s_helm11, 258);
+    STD_SPRITE(s_helm12, 259);
+    STD_SPRITE(s_helm13, 260);
+    STD_SPRITE(s_helm14, 261);
+    STD_SPRITE(s_helm15, 262);
+    STD_SPRITE(s_helm16, 263);
+    STD_SPRITE(s_helm17, 264);
+    STD_SPRITE(s_helm18, 265);
+    STD_SPRITE(s_helm19, 266);
+    STD_SPRITE(s_helm20, 267);
+    STD_SPRITE(s_helm21, 268);
+    STD_SPRITE(s_helm22, 269);
+    
+    /* Footware */
+    STD_SPRITE(s_shoe1, 270);
+    STD_SPRITE(s_shoe2, 271);
+    STD_SPRITE(s_shoe3, 272);
+    STD_SPRITE(s_shoe4, 273);
+    STD_SPRITE(s_shoe5, 274);
+    STD_SPRITE(s_shoe6, 275);
+
+    /* Shields */
+    STD_SPRITE(s_shield1,  276);
+    STD_SPRITE(s_shield2,  277);
+    STD_SPRITE(s_shield3,  278);
+    STD_SPRITE(s_shield4,  279);
+    STD_SPRITE(s_shield5,  280);
+    STD_SPRITE(s_shield6,  281);
+    STD_SPRITE(s_shield7,  282);
+    STD_SPRITE(s_shield8,  283);
+    STD_SPRITE(s_shield9,  284);
+    STD_SPRITE(s_shield10, 285);
+    STD_SPRITE(s_shield11, 286);
+    STD_SPRITE(s_shield12, 287);
+    STD_SPRITE(s_shield13, 288);
+    STD_SPRITE(s_shield14, 289);
+    STD_SPRITE(s_shield15, 290);
+    STD_SPRITE(s_shield16, 291);
+    STD_SPRITE(s_shield17, 292);
+    STD_SPRITE(s_shield18, 293);
+    STD_SPRITE(s_shield19, 294);
+    STD_SPRITE(s_shield20, 295);
+    
+    STD_SPRITE(s_dagger,    334);
+    STD_SPRITE(s_sword,     345);
+    STD_SPRITE(s_2h_hammer, 352);
+    STD_SPRITE(s_mace,      353);
+    STD_SPRITE(s_spear,     361);
+    STD_SPRITE(s_lght_bow,  376);
+    STD_SPRITE(s_hvy_bow,   377);
+    STD_SPRITE(s_lght_xbow, 378);
+    STD_SPRITE(s_hvy_xbow,  379);
+    STD_SPRITE(s_sling,     380);
+    STD_SPRITE(s_ring_mail, 309);
+    
+    STD_SPRITE(s_torch,     459);
+    
+    SPRITE(s_explosion,  1,  570, normal);
+    SPRITE(s_long_sword, 1, 1708, normal);
+    SPRITE(s_2h_sword,   1, 1709, normal);
+    SPRITE(s_giant,      2,  652, normal);
+  }
+} /* SPRITE_SET ss_angband */
+
+
+#endif // angband_sprite_set_ghul
+/* eof */

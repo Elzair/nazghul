@@ -1,0 +1,64 @@
+/* vehicles.ghul
+ *
+ * Defines what types of vehicles exist.
+ */
+#ifndef vehicles_ghul
+#define vehicles_ghul
+
+MAP map_ship {
+  type   ascii;
+  width  16;
+  height 8;
+  one_char_per_tile 1;
+
+  palette {
+    '@' t_deep;
+    '~' t_shoals;
+    '=' t_shallow;
+    '.' t_deck;
+    '#' t_bulwark;
+    'o' t_pillar;
+  }
+  terrain {
+          ~~~~~~.~~.~~~~~~
+          ===###.##.###===
+          @@##........##@@
+          @##..........##@
+          @#....o..o....#@
+          @##..........##@
+          @@##........##@@
+          @@@##########@@@
+  }
+}
+
+vehicle_types {
+  vt_horse {
+    name      "horse";
+    sprite    s_horse;
+    speed     1;
+    pmask     1;
+    must_turn 0;
+    mv_desc   Ride;
+    mv_sound  "data/sounds/horse.wav";
+    ordnance   null;
+    max_hp    50;
+    map       null;
+  }
+  vt_ship {
+    name      "ship";
+    sprite    s_ship;
+    speed     1;
+    pmask     2;
+    must_turn 1;
+    mv_desc   Sail;
+    mv_sound  "data/sounds/rowing.wav";
+    ordnance  at_cannon;
+    max_hp    100;
+    map       map_ship;
+  }
+} /* vehicle_types */
+
+
+#endif // vehicles_ghul
+
+/* eof */

@@ -1,0 +1,57 @@
+/* u4_u5_world.ghul
+ *
+ *
+ */
+#ifndef P_U5_world_ghul
+#define P_U5_world_ghul
+
+
+PLACE  p_u5_world {
+  type        wilderness;
+  parent      null;
+  x           0;
+  y           0;
+  name        "The Great Wild";
+  wraps       1;
+  map         m_u5_world;
+  underground 0;
+  objects {          
+
+    // vehicles:
+    // tag, x, y, facing
+    vt_ship        86 110 west 100;
+
+    // npc parties:
+    // tag, x, y, alignment, home, conversation, vehicle
+    t_goblin_horde   86 100 (ALIGN_MONSTER) 0 c_goblin null;
+    t_undead_brigade 86 120 (ALIGN_MONSTER) 0 null vt_ship;
+
+  }
+  typical_npc_parties {
+    t_goblin_horde                 100  /* 0.1  % */ (ALIGN_MONSTER);
+    t_gazer_pod_with_goblin_slaves 1    /* 0.01 % */ (ALIGN_MONSTER);
+  }
+} // PLACE  p_u5_world
+
+
+#include "./P_britain.ghul"
+#include "./P_lcb_1.ghul"
+#include "./P_lcb_2.ghul"
+#include "./P_dark_passage.ghul"
+#include "./P_prison_and_torture_chamber.ghul"
+
+
+// Make castle level 1 be precisely below castle level 2
+STACK_PLACES p_lcb2 p_lcb1;
+
+// Make the dark passage run beneath britain. Note that this is not truly
+// compatible with the way the ladder portals are laid out, but those are the
+// breaks for version 1: places can only be stacked above/below exactly one
+// other place.
+STACK_PLACES p_britain p_passage;
+
+
+
+#endif // P_U5_world_ghul
+
+/* eof */

@@ -1,0 +1,185 @@
+/* party.ghul
+ *
+ * Defines the initial adventuring party, their inventory, etc.
+ */
+#ifndef party_ghul
+#define party_ghul
+
+
+player {
+  
+#ifdef YAUR
+  place p_castle_adare;
+  x     0;
+  y     31;
+#endif // YAUR
+  
+#ifdef U4_U5
+  place p_u5_world;
+  x     85;
+  y     107;
+#endif // U4_U5
+  
+  sprite    s_companion_wizard;
+  speed     2;
+  pmask     1;
+  mv_desc   Walk;
+  mv_sound  "data/sounds/walk.wav";
+  food      1000;
+  gold      500;
+  alignment (ALIGN_PLAYER|ALIGN_TOWN);
+  
+  inventory {
+    // Weapons
+    1  t_dagger;
+    1  t_sword;
+    1  t_2h_sword;
+    1  t_long_sword;
+  
+    1  t_mace;
+    1  t_2h_hammer;
+    3  t_spear;
+  
+    1  t_crossbow;
+    20 t_bolt;
+  
+    1  t_bow;
+    1  t_magic_bow;
+    20 t_arrow;
+  
+    1  t_sling;
+  
+    10 t_oil;
+  
+    // Armor and Worn Items          
+    1  t_ring_mail;
+  
+    // Potions
+    6  t_red_potion;
+    3  t_blue_potion;
+    6  t_green_potion;
+    3  t_light_potion;
+  
+    // Use-able Items
+    99 t_torch;
+  
+    12 t_mushroom1;
+  
+    1  t_lb_journal;
+    1  t_note;
+  
+    // Reagents
+    10 reagent_garlic;
+    10 reagent_ginseng;
+    10 reagent_nightshade;
+    10 reagent_sulphorous_ash;
+    10 reagent_mandrake;
+    10 reagent_blood_moss;
+    10 reagent_black_pearl;
+    10 reagent_spider_silk;
+  
+    // Spell Mixtures:
+
+    // Circle I
+    50 spell_cure_poison;
+    50 spell_awaken;
+    50 spell_magic_missile;
+    50 spell_light;
+    50 spell_heal;
+    // Circle II
+    50 spell_unlock;
+    50 spell_repel_undead;
+    50 spell_locate;
+    50 spell_call_animal;
+    50 spell_wind_change;
+    50 spell_poison;
+    // Circle III
+    50 spell_fire_wall;
+    50 spell_sleep_wall;
+    50 spell_poison_wall;
+    50 spell_blink;
+    50 spell_fire_ball;
+    50 spell_great_light;
+    // Circle IV
+    50 spell_dispel_field;
+    50 spell_move_up;
+    50 spell_move_down;
+    50 spell_protection_field;
+    50 spell_protection;
+    50 spell_reveal;
+    // Circle V
+    50 spell_magic_unlock;
+    50 spell_magic_lock;
+    50 spell_insect_swarm;
+    50 spell_sleep;
+    50 spell_great_heal;
+    50 spell_quickness;
+    // Circle VI
+    50 spell_charm;
+    50 spell_negate_magic;
+    50 spell_tremor;
+    50 spell_confuse;
+    50 spell_xray;
+    // Circle VII
+    50 spell_poison_wind;
+    50 spell_fear;
+    50 spell_peer;
+    50 spell_clone;
+    50 spell_invisibility;
+    50 spell_kill;
+    // Circle VIII
+    50 spell_time_stop;
+    50 spell_flame_wind;
+    50 spell_energy_wind;
+    50 spell_resurrect;
+    50 spell_summon;
+    50 spell_gate_travel;
+        
+#if 0
+    5  spell_sleep;
+    5  spell_cure_poison;
+    5  spell_awaken;
+    5  spell_magic_missile;
+    5  spell_light;
+    5  spell_heal;
+    5  spell_unlock;
+    5  spell_repel_undead;
+    5  spell_locate;
+    5  spell_call_animal;
+    5  spell_wind_change;
+    5  spell_poison;
+    5  spell_fire_wall;
+    5  spell_magic_unlock;
+    5  spell_unlock;
+    99 spell_peer;
+    5  spell_clone;
+    5  spell_invisibility;
+    5  spell_resurrect;
+    5  spell_fear;
+    5  spell_summon;
+    10 spell_reveal;
+    10 spell_xray;
+    10 spell_invisibility;
+    10 spell_flame_wind;
+    10 spell_great_heal;
+    10 spell_move_up;
+    10 spell_move_down;
+    10 spell_blink;
+    10 spell_protection;
+    10 spell_kill;
+#endif // 0
+
+  } // inventory
+
+  party_members {
+    ch_Thorald_Greybeard;
+    ch_Kamafuk_Axedog;
+    ch_Mesmeme;
+  }
+
+} // player
+
+
+#endif // party_ghul
+
+/* eof */

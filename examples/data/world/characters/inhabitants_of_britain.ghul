@@ -1,0 +1,170 @@
+/* inhabitants_of_britain.ghul
+ *
+ * Defines the (NPC) inhabitants of the town of Britain.
+ */
+#ifndef inhabitants_of_britain_ghul
+#define inhabitants_of_britain_ghul
+
+
+CHAR ch_Olin_the_Ghast {
+        name      "Olin";
+        species   ghast;
+        occ       fighter;
+        sprite    s_ghost;
+        hp        30;
+        xp        0;
+        cond      U;
+        str       100;
+        intl      100;
+        dex       100;
+        magic     100;
+        lvl       3;
+        conv      null;  // TODO: Give Olin something to say
+        readied {
+        }
+} // CHAR ch_Olin_the_Ghast
+
+
+CHAR ch_Gen {
+    name     "Gen"
+    species  human
+    occ      ranger
+    sprite   s_companion_ranger
+    hp       120
+    xp       256
+    cond     G
+    str      120
+    intl     100
+    dex      120
+    magic    10
+    lvl      3
+    conv     c_Gen
+    readied {
+        t_sword
+        t_sm_shield
+    }
+} // CHAR ch_Gen
+
+
+CHAR ch_Hawknoz {
+    name     "Hawknoz"
+    species  human
+    occ      wizard
+    sprite   s_wizard
+    hp       120
+    xp       256
+    cond     G
+    str      80
+    intl     140
+    dex      110
+    magic    200
+    lvl      3
+    conv     c_Hawknoz
+    sched    sched_Hawknoz
+    readied {
+        t_dagger
+    }
+} // CHAR ch_Hawknoz
+
+
+CHAR ch_Joan {
+    name     "Joan"
+    species  human
+    occ      beggar
+    sprite   s_beggar
+    hp       30
+    xp       0
+    cond     G
+    str      100
+    intl     100
+    dex      100
+    magic    0
+    lvl      1
+    conv     c_Joan
+    readied {
+    }
+} // CHAR ch_Joan
+
+
+CHAR ch_John_the_Armourer {
+    name     "John the Armourer"
+    species  human
+    occ      merchant
+    sprite   s_townsman
+    hp       30
+    xp       0
+    cond     G
+    str      100
+    intl     100
+    dex      100
+    magic    0
+    lvl      1
+    conv     c_armourer
+    readied {
+    }
+} // CHAR ch_John_the_Armourer
+
+
+CHAR ch_Jeff_the_Weaponsmith {
+    name     "Jeff the Weaponsmith"
+    species  human
+    occ      merchant
+    sprite   s_townsman
+    hp       30
+    xp       0
+    cond     G
+    str      100
+    intl     100
+    dex      100
+    magic    0
+    lvl      1
+    conv     c_weaponsmith
+    readied {    
+    }
+} // CHAR ch_Jeff_the_Weaponsmith
+
+
+CHAR ch_Golin_the_Healer {
+    name     "Golin the Healer"
+    species  human
+    occ      wizard
+    sprite   s_wizard
+    hp       120
+    xp       0
+    cond     G
+    str      100
+    intl     100
+    dex      100
+    magic    0
+    lvl      4
+    conv     c_healer
+    readied {
+        t_dagger
+    }
+} // CHAR ch_Golin_the_Healer
+
+
+CHAR ch_Sly_the_Thief {
+    name     "Sly the Trusty"
+    species  human
+    occ      fighter
+    sprite   s_brigand
+    hp       60
+    xp       0
+    cond     G
+    str      100
+    intl     100
+    dex      100
+    magic    0
+    lvl      1
+    conv     c_thief
+    readied {
+        t_sword
+        t_dagger
+    }       
+} // CHAR ch_Sly_the_Thief
+
+
+#endif // inhabitants_of_britain_ghul
+
+/* eof */
