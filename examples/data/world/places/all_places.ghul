@@ -33,11 +33,11 @@
 //----------------------------------------------------------------------------
 // gmcnutt: old test/dev places, or places which are still in development
 //----------------------------------------------------------------------------
-//#include "./P_empire_city.ghul"
-//#include "./P_prison_and_torture_chamber.ghul"
+#include "./P_empire_city.ghul"
+#include "./P_prison_and_torture_chamber.ghul"
 //#include "./P_terrain_test.ghul"
-//#include "./P_rom_camp.ghul"
-//#include "./Glasdrin.ghul"
+#include "./P_rom_camp.ghul"
+#include "./Glasdrin.ghul"
 //#include "./P_cavernous_troll_deeps.ghul"
 
 //----------------------------------------------------------------------------
