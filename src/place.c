@@ -573,8 +573,8 @@ unsigned int place_flying_distance(struct place *place,
 		dx = WRAP_DISTANCE(x1, x0, place->terrain_map->w);
 		dy = WRAP_DISTANCE(y1, y0, place->terrain_map->h);
 	} else {
-		dx = x1 - x0;
-		dy = y1 - y0;
+		dx = abs(x1 - x0);
+		dy = abs(y1 - y0);
 	}
 
 	// This approx comes from the angband LOS source, and overestimates

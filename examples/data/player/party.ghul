@@ -29,9 +29,9 @@
 
 player {
   
-  place p_empire_city;
-  x     30;
-  y     29;
+  place p_prison_chamber;
+  x     28;
+  y     27;
   
   sprite    s_companion_wizard;
   speed     2;

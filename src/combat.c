@@ -2461,8 +2461,12 @@ static bool position_player_party(struct combat_info *cinfo)
 
 	}
 	// Next check if the player is OVER (on the map) but not in a vehicle
-	// on the map.
-	else if ((vehicle = place_get_vehicle(player_party->getPlace(),
+	// on the map. Note: this only applies to non-dungeon combat, and in a
+	// series of dungeon combats the player party may not have a place
+	// (because we remove it just below and the calling code does not
+	// relocate the player party until it returns to a town or wilderness.
+	else if (player_party->getPlace() &&
+                 (vehicle = place_get_vehicle(player_party->getPlace(),
 					      player_party->getX(),
 					      player_party->getY())) &&
 		 vehicle->getObjectType()->map) {
