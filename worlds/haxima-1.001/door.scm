@@ -73,13 +73,22 @@
        (door-send-signal kdoor 'open)
        #t))))
   
-(define (door-close kdoor khandler)
+(define (door-close2 kdoor khandler)
   ;;(display "door-close")(newline)
   (let ((door (kobj-gob kdoor)))
     (door-set-open door #f)
     (door-set-timeout! door 0)
     (door-update-kstate kdoor)
     (door-send-signal kdoor 'close)))
+
+(define (door-close kdoor khandler)
+  ;;(display "door-close")(newline)
+  (if (not (occupied? (kern-obj-get-location kdoor)))
+      (let ((door (kobj-gob kdoor)))
+        (door-set-open door #f)
+        (door-set-timeout! door 0)
+        (door-update-kstate kdoor)
+        (door-send-signal kdoor 'close))))
 
 (define (door-lock kdoor khandler)
   (let ((door (kobj-gob kdoor)))
