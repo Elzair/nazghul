@@ -77,7 +77,8 @@
 #define OBJ_HOOK_START_OF_TURN 0
 #define OBJ_HOOK_ADD_HOOK      1
 #define OBJ_HOOK_DAMAGE        2
-#define OBJ_NUM_HOOKS          3
+#define OBJ_HOOK_KEYSTROKE     3
+#define OBJ_NUM_HOOKS          4
 #define OBJ_MAX_CONDITIONS     8
 
 // Note: if you change the layers you'll probably need to change the save

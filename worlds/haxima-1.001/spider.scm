@@ -87,5 +87,3 @@
     (if (null? foes)
         (wood-spider-no-hostiles kspider)
         (wood-spider-hostiles kspider foes))))
-  
-

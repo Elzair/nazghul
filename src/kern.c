@@ -3026,6 +3026,17 @@ KERN_API_CALL(kern_obj_get_mmode)
         return sc->NIL;
 }
 
+KERN_API_CALL(kern_obj_get_name)
+{
+        struct mmode *mmode;
+
+        Object *obj = unpack_obj(sc, &args, "kern-obj-get-name");
+        if (!obj)
+                return sc->NIL;
+
+        return scm_mk_string(sc, obj->getName());
+}
+
 KERN_API_CALL(kern_obj_set_light)
 {
         Object *obj;
@@ -5310,6 +5321,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-obj-get-light", kern_obj_get_light);
         API_DECL(sc, "kern-obj-get-location", kern_obj_get_location);
         API_DECL(sc, "kern-obj-get-mmode", kern_obj_get_mmode);
+        API_DECL(sc, "kern-obj-get-name", kern_obj_get_name);
         API_DECL(sc, "kern-obj-get-sprite", kern_obj_get_sprite);
         API_DECL(sc, "kern-obj-get-type", kern_obj_get_type);
         API_DECL(sc, "kern-obj-get-vision-radius", kern_obj_get_vision_radius);

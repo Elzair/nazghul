@@ -1359,8 +1359,15 @@ bool Object::addEffect(struct effect *effect, struct gob *gob)
 {
         hook_entry_t *entry;
         struct add_hook_hook_data data;
+        int hook_id = effect->hook_id;
         
         assert(VALID_HOOK_ID(effect->hook_id));
+
+        // Hack: NPC's don't go through a keystroke handler. For these,
+        // substitute the start-of-turn-hook for the keystroke-hook.
+        if (effect->hook_id == OBJ_HOOK_KEYSTROKE &&
+            ! isPlayerControlled())
+                hook_id = OBJ_HOOK_START_OF_TURN;
 
         // Use the same data structure to search for the effect and to check
         // for countereffects.
@@ -1369,7 +1376,7 @@ bool Object::addEffect(struct effect *effect, struct gob *gob)
 
         // For non-cumulative effects Check if the effect is already applied.
         if (! effect->cumulative) {
-                hookForEach(effect->hook_id, object_find_effect, &data);
+                hookForEach(hook_id, object_find_effect, &data);
                 if (data.reject)
                         return false;
         }
@@ -1404,7 +1411,7 @@ bool Object::addEffect(struct effect *effect, struct gob *gob)
                 hook_entry_detect(entry);
         }
 
-        hook_list_add(&hooks[effect->hook_id], &entry->list);
+        hook_list_add(&hooks[hook_id], &entry->list);
 
         statusRepaint();
 
@@ -1456,6 +1463,8 @@ int Object::nameToHookId(char *name)
                 return OBJ_HOOK_ADD_HOOK;
         if (! strcmp(name, "on-damage-hook"))
                 return OBJ_HOOK_DAMAGE;
+        if (! strcmp(name, "keystroke-hook"))
+                return OBJ_HOOK_KEYSTROKE;
         return -1;
 }
 
@@ -1468,6 +1477,8 @@ char *Object::hookIdToName(int hook_id)
                 return "add-hook-hook";
         case OBJ_HOOK_DAMAGE:
                 return "on-damage-hook";
+        case OBJ_HOOK_KEYSTROKE:
+                return "keystroke-hook";
         default:
                 return NULL;
         }

@@ -9,8 +9,9 @@
 ;; ----------------------------------------------------------------------------
 (define (use-and-remove ktype kuser use)
   (if (notnull? (use ktype kuser))
-      (kern-obj-remove-from-inventory kuser ktype 1)
-      (kern-obj-dec-ap kuser ap-to-use-scroll)))
+      (begin
+        (kern-obj-remove-from-inventory kuser ktype 1)
+        (kern-obj-dec-ap kuser ap-to-use-scroll))))
 
 ;; ----------------------------------------------------------------------------
 ;; mk-scroll -- make a scroll. The usage parm should be a procedure which takes
