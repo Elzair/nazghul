@@ -153,10 +153,6 @@ extern "C" {
         extern void place_add_moongate(struct place *place, 
 				       class Moongate * moongate);
 
-#if 0
-	extern void place_remove_vehicle(struct place *place,
-					 class Vehicle * vehicle);
-#endif
 	extern class NpcParty *place_search_for_NpcParty(struct place *place,
                                   int x,
                                   int y,
@@ -210,12 +206,16 @@ extern "C" {
         
         extern void place_set_terrain(struct place *place, int x, int y, 
                                       struct terrain *terrain);
-	struct terrain *place_get_terrain(struct place *place, int x, int y);
-        Uint32 place_get_color(struct place *place, int x, int y);
-        int place_get_movement_cost(struct place *place, int x, int y);
+	extern struct terrain *place_get_terrain(struct place *place, int x, 
+                                                 int y);
+        extern Uint32 place_get_color(struct place *place, int x, int y);
+        extern int place_get_movement_cost(struct place *place, int x, int y);
+        extern int place_adjust_turn_cost(struct place *place, int turns);
 
 	extern class NpcParty *place_random_encounter(struct place *);
 
+
+        // Obsolescent global place lib:
         extern void placeExit(void);
         extern void placeEnter(void);
 	extern class Moongate *place_get_moongate(struct place *, int x, int y);

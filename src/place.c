@@ -1002,6 +1002,11 @@ int place_get_movement_cost(struct place *place, int x, int y)
 	return (place->scale * (t ? t->movement_cost : 0));
 }
 
+int place_adjust_turn_cost(struct place *place, int turns)
+{
+        return place->scale * turns;
+}
+
 int placeGetMovementCost(int x, int y)
 {
         WRAP_COORDS(Place, x, y);

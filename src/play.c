@@ -839,7 +839,8 @@ void cmdFire(void)
 	cmdwin_clear();
 	cmdwin_print("Fire");
 
-	if ((!player_party->vehicle || !player_party->vehicle->getOrdnance())) {
+	if ((!player_party->vehicle ||
+             !player_party->vehicle->getOrdnance())) {
 		cmdwin_print("-Nothing!");
 		return;
 	}
@@ -854,9 +855,15 @@ void cmdFire(void)
 		return;
 	}
 
-	cmdwin_print("%s-", directionToString(dir));
-	player_party->fire_vehicle_weapon(directionToDx(dir),
-					  directionToDy(dir));
+	cmdwin_print("%s", directionToString(dir));
+	if (! player_party->vehicle->fire_weapon(directionToDx(dir),
+                                                 directionToDy(dir))) {
+		cmdwin_print("-Not a broadside!");
+		return;
+        }
+
+	turnAdvance(place_adjust_turn_cost(player_party->getPlace(),
+                                           TURNS_TO_FIRE_VEHICLE_WEAPON));
 }
 
 bool cmdReady(class Character * pc)

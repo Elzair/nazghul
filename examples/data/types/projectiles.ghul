@@ -46,10 +46,12 @@ ARMS_TYPE(M_sleep,    "sleep missile",  s_field_sleep,  0, 0, NO_SLOT, 0, 0, nul
 ARMS_TYPE(M_fireball, "fire ball",      s_lava,         0, 0, NO_SLOT, 0, 0, null, 0, 0, null,     0);
 
 // Ammunition Objects (can be found in inventory)
-ARMS_TYPE(t_arrow,    "arrows",         s_arrow,        0, 0, NO_SLOT, 0, 0, null, 0, 0, null,     1);
-ARMS_TYPE(t_bolt,     "bolts",          s_bolt,         0, 0, NO_SLOT, 0, 0, null, 0, 0, null,     1);
-ARMS_TYPE(t_rock,     "rock",           s_boulder,      0, 0, NO_SLOT, 0, 0, null, 0, 0, null,     1);
+ARMS_TYPE(t_arrow,    "arrows",         s_arrow,        0, 0, NO_SLOT, 0, 0, null, 0, 0, null, 1);
+ARMS_TYPE(t_bolt,     "bolts",          s_bolt,         0, 0, NO_SLOT, 0, 0, null, 0, 0, null, 1);
+ARMS_TYPE(t_rock,     "rock",           s_boulder,      0, 0, NO_SLOT, 0, 0, null, 0, 0, null, 1);
 
+// Ordnance Ammunition (for vehicle weapons)
+ARMS_TYPE(t_cannonball, "cannonball",   s_magic,        0, 0, NO_SLOT, 0, 0, null, 0, 0, null, 50);
 
 
 #endif // projectiles_ghul

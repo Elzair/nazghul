@@ -164,12 +164,14 @@ bool Vehicle::fire_weapon(int dx, int dy)
 
 		/* check if we hit an npc party (suicide doesn't count) */
 		if (npc && npc != occupant) {
-			consolePrint("Hit %s\n", npc->getName());
+			consolePrint("You hit ");
+                        npc->describe(1);
+                        consolePrint("!\n");
 			npc->hit_by_ordnance(ordnance);
 			if (npc->isDestroyed()) {
 				consolePrint("You destroyed ");
 				npc->describe(1);
-				consoleNewline();
+				consolePrint("!\n");
 				delete npc;
 				mapUpdate(0);
 			}

@@ -1053,21 +1053,6 @@ void player_party::enter_portal(void)
 #endif				/* OLD_ENTER_PORTAL */
 }
 
-void player_party::fire_vehicle_weapon(int dx, int dy)
-{
-	// these should be checked by the 'fire' command
-	assert(vehicle);
-	assert(vehicle->getOrdnance());
-
-	// currently the only reason this will fail is because the vehicle is
-	// not facing the right way to fire in the given direction
-	if (!vehicle->fire_weapon(dx, dy)) {
-		cmdwin_print("Not a broadside!");
-		return;
-	}
-	turnAdvance(TURNS_TO_FIRE_VEHICLE_WEAPON);
-}
-
 void player_party::for_each_member(bool(*fx) (class Character *, void *data),
 				   void *data)
 {

@@ -77,7 +77,6 @@ class player_party:public Object {
         void enter_portal(void);
 	bool try_to_enter_town_from_edge(class Portal * portal, int dx, int dy);
         int get_speed(void);
-        void fire_vehicle_weapon(int dx, int dy);
         void ready_arms(struct object *object);
         bool all_dead(void);
 	void for_each_member(bool(*fx) (class Character *, void *data),

@@ -927,6 +927,7 @@ M_fireball { name "fire ball" sprite s_lava subtype arms attackValue 0 defendVal
 t_arrow { name "arrows" sprite s_arrow subtype arms attackValue 0 defendValue 0 slotMask 0 numHands 0 range 0 missile null thrown 0 ubiquitousAmmo 0 field null weight 1 };
 t_bolt { name "bolts" sprite s_bolt subtype arms attackValue 0 defendValue 0 slotMask 0 numHands 0 range 0 missile null thrown 0 ubiquitousAmmo 0 field null weight 1 };
 t_rock { name "rock" sprite s_boulder subtype arms attackValue 0 defendValue 0 slotMask 0 numHands 0 range 0 missile null thrown 0 ubiquitousAmmo 0 field null weight 1 };
+t_cannonball { name "cannonball" sprite s_magic subtype arms attackValue 0 defendValue 0 slotMask 0 numHands 0 range 0 missile null thrown 0 ubiquitousAmmo 0 field null weight 50 };
 t_dagger { name "dagger" sprite s_dagger subtype arms attackValue 8 defendValue 2 slotMask 8 numHands 1 range 1 missile null thrown 0 ubiquitousAmmo 0 field null weight 5 };
 t_sling { name "sling" sprite s_sling subtype arms attackValue 8 defendValue -1 slotMask 8 numHands 1 range 6 missile t_rock thrown 0 ubiquitousAmmo 1 field null weight 2 };
 t_bow { name "bow" sprite s_lght_bow subtype arms attackValue 20 defendValue -2 slotMask 8 numHands 2 range 8 missile t_arrow thrown 0 ubiquitousAmmo 0 field null weight 10 };
@@ -2434,15 +2435,6 @@ PARTY t_nixies {
     nixie null s_nixie 3;
   }
 }
-ordnance_types {
-  at_cannon {
-    name "cannon";
-    fire_sound "data/sounds/cannon.wav";
-    range 5;
-    damage 10;
-    ammo t_sword;
-  }
-}
 MAP map_ship {
   type ascii;
   width 16;
@@ -2465,6 +2457,15 @@ MAP map_ship {
           @##..........##@
           @@##........##@@
           @@@##########@@@
+  }
+}
+ordnance_types {
+  at_cannon {
+    name "cannon";
+    fire_sound "data/sounds/cannon.wav";
+    range 5;
+    damage 10;
+    ammo t_cannonball;
   }
 }
 vehicle_types {

@@ -1,0 +1,7 @@
+Changes for nazghul-0.1.2
+
+--Fixed the bug Sam reported about firing cannons in town. Whenever the cannon
+  was fired the turns were updates as if the party was in the wilderness, not
+  town. So about 64 turns passed, and if any hostiles happened to be nearby you
+  would immediately enter combat. Also spruced up the messages shown when
+  firing and fixed the cannonball sprite (finally :-)) in the examples.

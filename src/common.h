@@ -157,7 +157,7 @@ extern "C" {
 #define MS_PER_TICK      100
 
 /* Misc */
-#define TURNS_TO_FIRE_VEHICLE_WEAPON    (2 * WILDERNESS_SCALE)
+#define TURNS_TO_FIRE_VEHICLE_WEAPON    2
 #define APPLICATION_NAME        "Nazghul"
 #define WIND_CHANGE_PROBABILITY 5
 #define PLAYER_MAX_PROGRESS     100
