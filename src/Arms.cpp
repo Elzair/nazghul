@@ -103,7 +103,7 @@ bool ArmsType::fire(class Character * target, int ox, int oy)
 		if (!missile->hitTarget())
 			return false;
 	}
-	target->attack(getDamage());
+	//target->attack(getDamage());
 	return true;
 }
 
@@ -169,7 +169,7 @@ int ArmsType::getHit()
 
 int ArmsType::getDamage()
 {
-        return damage[1];
+        return dice_roll(1, damage[1] - damage[0]) + damage[0];
 }
 
 int ArmsType::getDamageMin()
@@ -189,7 +189,7 @@ int ArmsType::getDefend()
 
 int ArmsType::getArmor()
 {
-        return armor[1];
+        return dice_roll(1, armor[1] - armor[0]) + armor[0];
 }
 
 int ArmsType::getArmorMin()

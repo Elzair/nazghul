@@ -255,4 +255,18 @@ bool point_in_rect(int x, int y, SDL_Rect *rect)
                 y < (rect->y + rect->h));
 }
 
+int dice_roll(int n_dice, int n_faces)
+{
+        int val = 0;
+
+        if (n_faces == 0)
+                return 0;
+
+        while (n_dice-- > 0) {
+                val += (rand() % n_faces) + 1;
+        }
+        return val;
+}
+
+
 // eof

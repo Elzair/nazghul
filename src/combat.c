@@ -181,9 +181,34 @@ static int q_tail;
 static void combatAttack(class Character *attacker, class ArmsType *weapon,
                          class Character *defender)
 {
+        int hit;
+        int def;
+        int damage;
+        int armor;
+
         weapon->fire(defender, attacker->getX(), attacker->getY());
         attacker->useAmmo();
         attacker->setAttackTarget(defender);
+
+        // Roll to hit.
+        hit = dice_roll(2, 6) + weapon->getHit();
+        def = dice_roll(2, 6) + defender->getDefend();
+        if (hit < def) {
+                consolePrint("miss!\n");
+                return;
+        } else {
+                consolePrint("hit! ");
+        }
+
+        // roll for damage
+        damage = weapon->getDamage();
+        armor = defender->getArmor();
+        consolePrint("Rolled %d damage, %d armor ", damage, armor);
+        damage -= armor;
+        damage = max(damage, 0);
+        consolePrint("for %d total damage, ", damage);
+        defender->changeHp(-damage);
+
         consolePrint("%s!\n", defender->getWoundDescription());
 }
 
@@ -1228,7 +1253,7 @@ static bool myAttack(class Character * pc)
 
                         cmdwin_print("%s", target->getName());
                         
-                        consolePrint("attack %s ", target->getName());
+                        consolePrint("attack %s...", target->getName());
 
                         // Strike the target
                         combatAttack(pc, weapon, target);

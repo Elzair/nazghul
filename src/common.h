@@ -188,7 +188,8 @@ extern "C" {
 // viewer is because we set our visibility mask to be the same dimensions as
 // the map viewer, and if we let the LOS alg exceed these dimensions it will
 // produce artifacts on the vmask.
-#define MAX_VISION_RADIUS       (MAP_TILE_W / 2)
+//#define MAX_VISION_RADIUS       (MAP_TILE_W / 2)
+#define MAX_VISION_RADIUS       (MAP_TILE_W)
 #define MAX_VIEWPORT_RANGE      (MAX_VISION_RADIUS + (MAX_VISION_RADIUS / 2))
 
 #define FRAME_IMAGE             "images/frame.bmp"
@@ -362,6 +363,7 @@ extern int directionToDy(int dir);
 extern char *directionToString(int dir);
 extern bool isvowel(char c);
 extern bool point_in_rect(int x, int y, SDL_Rect *rect);
+extern int dice_roll(int n_dice, int n_faces);
 
 
 #define keyIsDirection(key) ((key) >= KEY_SOUTHWEST && (key) <= KEY_NORTHEAST)

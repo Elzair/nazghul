@@ -74,8 +74,8 @@ static void myConsiderArms(struct inv_entry *ie, void *data)
 	if (!ie->type->isType(ARMS_TYPE_ID))
 		return;
 	class ArmsType *arms = (class ArmsType *) ie->type;
-	int val = arms->getDamage() * arms->getRange() +
-	    arms->getArmor();
+	int val = arms->getDamageMax() * arms->getRange() +
+	    arms->getArmorMax();
 	for (int i = 0; i < ie->count; i++, ks->n_items++) {
 		ks->item[ks->n_items] = arms;
 		ks->value[ks->n_items] = val;
@@ -224,7 +224,6 @@ enum Character::ReadyResult Character::ready(class ArmsType * arms)
 		}
 		// Ready the item. Recalculate armour class.
 		rdyArms[i] = arms;
-		ac += arms->getArmor();
 		burden += arms->getWeight();
 		return Readied;
 	}
@@ -252,7 +251,6 @@ bool Character::unready(class ArmsType * arms)
 		}
 		// Unready the item. Recacalculate armour class.
 		rdyArms[i] = NULL;
-		ac -= arms->getArmor();
 		burden -= arms->getWeight();
 		return true;
 	}
@@ -413,7 +411,7 @@ class ArmsType *Character::getNextWeapon(void)
 {
 	do {
 		getNextArms();
-	} while (currentArms != NULL && currentArms->getDamage() <= 0);
+	} while (currentArms != NULL && currentArms->getDamageMax() <= 0);
 	return currentArms;
 }
 
@@ -1435,4 +1433,36 @@ bool Character::wasElevated(void) {
 
 void Character::setElevated(bool val) {
         elevated = val;
+}
+
+int Character::getDefend()
+{
+        int defend = 0;
+
+        if (isAsleep())
+                return -3; // hack: hard-coded constant
+
+        for (class ArmsType * arms = enumerateArms();
+             arms != NULL; arms = getNextArms()) {
+                defend += arms->getDefend();
+        }
+        
+        return defend;
+}
+
+int Character::getArmor()
+{
+        int armor = 0;
+
+        for (class ArmsType * arms = enumerateArms();
+             arms != NULL; arms = getNextArms()) {
+                armor += arms->getArmor();
+        }
+
+        // the obsolescent 'armor class' is still used by the 'protect' spell
+        // effect
+        armor += ac;
+        
+        return armor;
+
 }

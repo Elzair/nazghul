@@ -72,6 +72,8 @@ class Character:public Object {
 	Character();
 	virtual ~ Character();
 
+        virtual int getArmor();
+        virtual int getDefend();
 	virtual int getType();
 	virtual char *getName();
 	virtual int getHp();
