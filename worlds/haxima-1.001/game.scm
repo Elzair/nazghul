@@ -18,7 +18,7 @@
 (define speed-yellow-slime 1)
 (define speed-human        1)
 (define speed-insect       2)
-(define speed-ship         3)
+(define speed-ship         2)
 
 ;; Action Points
 (define ap-to-use-scroll speed-human)
@@ -39,11 +39,9 @@
 
 ;; Passability Difficulty Levels (Note: 255 is well-known to the kernel to mean
 ;; "impassible" in the case of movement costs)
-(define veasy      1)
-(define easy       2)
-(define normal     3)
-(define hard       4)
-(define vhard      5)
+(define norm       1)
+(define hard       2)
+(define vhard      3)
 (define cant       255)
 
 ;; Passability classes
@@ -77,13 +75,13 @@
   ;;   walk   hover ship   phase  fly    skiff
   ;;   ====== ===== ====== =====  ====== ======
  (list 0      0     0      0      0      0     ) ;; none
- (list normal easy  cant   normal easy   cant  ) ;; grass/paving
- (list cant   cant  normal cant   easy   vhard ) ;; deep
- (list cant   hard  cant   cant   easy   normal) ;; shoals
+ (list norm   norm  cant   norm   norm   cant  ) ;; grass/paving
+ (list cant   cant  norm   cant   norm   vhard ) ;; deep
+ (list cant   hard  cant   cant   norm   norm  ) ;; shoals
  (list cant   cant  cant   cant   vhard  cant  ) ;; mountains
- (list cant   cant  cant   normal cant   cant  ) ;; wall (w/ ceiling)
- (list hard   hard  cant   normal easy   cant  ) ;; trees  
- (list vhard  vhard cant   normal easy   cant  ) ;; forest/hills/bog
+ (list cant   cant  cant   norm   cant   cant  ) ;; wall (w/ ceiling)
+ (list hard   hard  cant   norm   norm   cant  ) ;; trees  
+ (list vhard  vhard cant   norm   norm   cant  ) ;; forest/hills/bog
  (list cant   cant  cant   cant   cant   cant  ) ;; energy fields
  )
 

@@ -27,7 +27,7 @@
 
 ;; Make the default number of required action points the same as the number of
 ;; turns it takes a human to cross normal terrain
-(define default-rap normal) 
+(define default-rap norm) 
 
 ;;--------------------------------------------------------------------------
 ;; Curried constructors

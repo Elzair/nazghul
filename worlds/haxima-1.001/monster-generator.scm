@@ -66,15 +66,12 @@
   (define (roll-to-encounter)
     (>= (modulo (random-next) 1000) threshold))
   (define (not-too-many kobj)
-    (display "not-too-many")(newline)
     (< (length (filter is-monster?
                        (kern-place-get-beings (loc-place 
                                                (kern-obj-get-location kobj)))))
        max))
   (define (player-out-of-sight? gen)
-    (display "player-out-of-sight?")(newline)
     (define (can-see? members)
-      (display "can-see?")(newline)
       (if (null? members)
           #f
           (or (kern-in-los? (kern-obj-get-location (car members))
