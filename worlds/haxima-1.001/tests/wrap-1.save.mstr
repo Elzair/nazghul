@@ -1,6 +1,4 @@
 ;; save.scm -- a nazghul session file
-;; Created Mon Dec 23 02:40:56 1935
-
 ;; Load the standard definitions file
 (load "naz.scm")
 

@@ -1,6 +1,4 @@
 ;; save.scm -- a nazghul session file
-;; Created Mon Dec 23 02:41:12 1935
-
 ;; Load the standard definitions file
 (load "naz.scm")
 
@@ -140,7 +138,7 @@
 (kern-set-cursor ls_whirlpool)
 (kern-set-crosshair t_crosshair)
 (kern-set-ascii ss_little_sprites 32)
-(kern-set-clock 0 0 0 1 17 22)
+(kern-set-clock 0 0 0 1 17 38)
 ;; ---------
 ;; Astronomy
 ;; ---------

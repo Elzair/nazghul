@@ -3,7 +3,7 @@
 for test in `cat list`; do
   printf $test
   cd ..
-  nazghul --playback tests/$test.rec --playback_speed 10 tests/$test.scm 2> tests/$test.err > tests/$test.out
+  nazghul --playback tests/$test.rec --playback_speed 0 tests/$test.scm 2> tests/$test.err > tests/$test.out
   mv save.scm tests/$test.save
   cd tests
   diff $test.save $test.save.mstr > $test.diff
