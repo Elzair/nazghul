@@ -287,8 +287,7 @@ static void mapDumpRect(char *name, SDL_Rect *rect, unsigned char *data)
 }
 #endif
 
-static void mapMergeLightSource(struct light_source *light, 
-                                struct mview *main_view)
+static void mapMergeLightSource(struct light_source *light, struct mview *main_view)
 {
         unsigned char tmp_vmask[VMASK_SZ];
         int radius;
@@ -300,28 +299,40 @@ static void mapMergeLightSource(struct light_source *light,
         int map_y;
         int D;
 
+        // ---------------------------------------------------------------------
         // Initialize the temporary view to be centered on the light
         // source. (Note: ignore the subrect, it shouldn't matter)
+        // ---------------------------------------------------------------------
+
         memset(&tmp_view, 0, sizeof(tmp_view));
+        memset(&tmp_vmask, 0, sizeof(tmp_vmask));
         tmp_view.vrect.x = place_wrap_x(Map.place, light->x - (MVIEW_W / 2));
         tmp_view.vrect.y = place_wrap_y(Map.place, light->y - (MVIEW_H / 2));
         tmp_view.vrect.w = MVIEW_W;
         tmp_view.vrect.h = MVIEW_H;
-        tmp_view.vmask = (char*)tmp_vmask;
-        tmp_view.zoom = 1;
+        tmp_view.vmask   = (char*)tmp_vmask;
+        tmp_view.zoom    = 1;
 
-        // Build a vmask using the standard LOS algorithm. For
-        // performance, limit the radius based on the brightness of the
-        // light source and the size of our vmask.
+        // ---------------------------------------------------------------------
+        // Build a vmask using the standard LOS algorithm. For performance,
+        // limit the radius based on the brightness of the light source and the
+        // size of our vmask.
+        // ---------------------------------------------------------------------
+
         myUpdateAlphaMask(&tmp_view);
         radius = min(mapCalcMaxLightRadius(light->light), MVIEW_W / 2);
         LosEngine->r = radius;
         LosEngine->compute(LosEngine);
         memcpy(tmp_view.vmask, LosEngine->vmask, VMASK_SZ);
 
+
+#if 0
+        // ---------------------------------------------------------------------
         // For each visible tile in the vmask, calculate how much light is
-        // hitting that tile from the light source. (Note: in the future,
-        // optimize by only checking tiles within the radius).
+        // hitting that tile from the light source. This loop is unoptimized,
+        // and checks tiles that aren't within the radius of the light source.
+        // ---------------------------------------------------------------------
+
         vmask_i = 0;
         for (y = 0; y < tmp_view.vrect.h; y++) {
 
@@ -340,11 +351,49 @@ static void mapMergeLightSource(struct light_source *light,
                         tmp_view.vmask[vmask_i] = min(light->light / D, 255);
                 }
         }
+#else
+        // ---------------------------------------------------------------------
+        // For each visible tile in the vmask, calculate how much light is
+        // hitting that tile from the light source. The loop optimizes by only
+        // checking those tiles that are within the radius of the light source.
+        // This optimization makes no difference on my fast box, haven't tested
+        // it yet on my slow one.
+        // ---------------------------------------------------------------------
 
+        int min_y = MVIEW_H / 2 - radius;
+        int max_y = MVIEW_H / 2 + radius;
+        int min_x = MVIEW_W / 2 - radius;
+        int max_x = MVIEW_W / 2 + radius;
+
+        for (y = min_y; y < max_y; y++) {
+
+                map_y = place_wrap_y(Map.place, tmp_view.vrect.y + y);
+                vmask_i = y * MVIEW_W + min_x;
+                
+                for (x = min_x; x < max_x; x++, vmask_i++) {
+
+                        // skip non-visible tiles
+                        if (tmp_view.vmask[vmask_i] == 0)
+                                continue;
+                                
+                        map_x = place_wrap_x(Map.place, tmp_view.vrect.x + x);
+
+                        D = place_flying_distance(Map.place, light->x, light->y, map_x, map_y);
+                        D = D * D + 1;
+                        tmp_view.vmask[vmask_i] = min(light->light / D, 255);
+                }
+        }
+#endif
+        // ---------------------------------------------------------------------
         // Merge this source's lightmap (contained in the vmask we just built)
         // with the main lightmap.
-        mapMergeRects(&tmp_view.vrect, (unsigned char*)tmp_view.vmask, 
-                      &main_view->vrect, lmap);
+        //
+        // Note: try to optimize this by merging only the portion of the vmask
+        // which is within the light radius. In fact, why don't I just limit
+        // the vrect to the radius? Would that work?
+        // ---------------------------------------------------------------------
+
+        mapMergeRects(&tmp_view.vrect, (unsigned char*)tmp_view.vmask, &main_view->vrect, lmap);
 
 }
 
@@ -382,9 +431,7 @@ static void mapBuildLightMap(struct mview *view)
 		for (x = 0; x < LMAP_W; x++) {
 			int light;
 
-			map_x = place_wrap_x(Map.place, 
-                                             view->vrect.x + view->subrect.x + 
-                                             x);
+			map_x = place_wrap_x(Map.place, view->vrect.x + view->subrect.x +  x);
 
 			light = place_get_light(Map.place, map_x, map_y);
 			if (!light)
@@ -401,12 +448,17 @@ static void mapBuildLightMap(struct mview *view)
         if (!lt_i)
                 return;
 
+        printf("merge %d=", lt_i);
+        int t1 = SDL_GetTicks();
+
+
         // For each light source build a lightmap centered on that source and
         // merge it into the main lightmap.
         while (lt_i--) {
                 mapMergeLightSource(&lights[lt_i], view);
         }
 
+        printf("%d\n", SDL_GetTicks() - t1);
 }
 
 
