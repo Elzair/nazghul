@@ -48,8 +48,9 @@
 
 /*****************************************************************************/
 
-NpcPartyType::NpcPartyType():i_group(-1), n_groups(0), groups(NULL),
-pmask(0), vrad(0), speed(0)
+NpcPartyType::NpcPartyType():formation(NULL), i_group(-1), n_groups(0), 
+                             groups(NULL),
+                             pmask(0), vrad(0), speed(0)
 {
 }
 

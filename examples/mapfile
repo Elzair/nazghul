@@ -729,10 +729,11 @@ t_sm_shield { name "small shield" sprite s_shield1 subtype arms attackValue 0 de
 t_lrg_shield { name "large sheild2" sprite s_shield2 subtype arms attackValue 0 defendValue 4 slotMask 8 numHands 1 range 1 missile null thrown 0 ubiquitousAmmo 0 field null weight 30 };
 t_ring_mail { name "ring mail" sprite s_ring_mail subtype arms attackValue 0 defendValue 8 slotMask 16 numHands 1 range 0 missile null thrown 0 ubiquitousAmmo 0 field null weight 60 };
 t_green_potion { name "green potion" sprite s_green_potion subtype item effect 16 amount 0 duration 0 target 1 food 0 consumable 1 message "" };
-t_light_potion { name "white potion" sprite s_white_potion subtype item effect 8 amount 4080 duration 100 target 1 food 0 consumable 1 message "" };
+t_light_potion { name "white potion" sprite s_white_potion subtype item effect 8 amount 4080 duration 500 target 1 food 0 consumable 1 message "" };
 t_red_potion { name "red potion" sprite s_red_potion subtype item effect 32 amount 25 duration 0 target 1 food 0 consumable 1 message "" };
 t_blue_potion { name "blue potion" sprite s_blue_potion subtype item effect 64 amount 0 duration 0 target 2 food 0 consumable 1 message "" };
-t_torch { name "torch" sprite s_torch subtype item effect 8 amount 4096 duration 200 target 1 food 0 consumable 1 message "" };
+item_sleep_potion { name "purple potion" sprite s_purple_potion subtype item effect 4 amount 0 duration 0 target 1 food 0 consumable 1 message "" };
+t_torch { name "torch" sprite s_torch subtype item effect 8 amount 4096 duration 1000 target 1 food 0 consumable 1 message "" };
 t_mushroom1 { name "edible mushroom" sprite s_mushroom1 subtype item effect 0 amount 10 duration 0 target 0 food 1 consumable 1 message "" };
 t_users_guide { name "The Users Guide to Nazghul" sprite s_scroll1 subtype item effect 0 amount 0 duration 0 target 0 food 0 consumable 0 message "                                PLAYER COMMANDS
 
@@ -915,7 +916,7 @@ SPELL spell_light {
   missile null;
   effects (8);
   strength 4080;
-  duration 100;
+  duration 1000;
   context CTW;
   level 1;
   target 0;
@@ -1179,7 +1180,7 @@ SPELL spell_great_light {
   missile null;
   effects (8);
   strength 8192;
-  duration 200;
+  duration 2000;
   context CTW;
   level 3;
   target 0;
@@ -1446,7 +1447,7 @@ SPELL spell_charm {
     sprite s_happy_monster_face
     code AXE
     cost 60
-    range 4
+    range 8
     missile null
     effects (128)
     strength 5
@@ -2110,7 +2111,7 @@ SPECIES snake {
   damage_sound "data/sounds/damage.wav";
 }
 SPECIES insects {
-  name "insects";
+  name "insect swarm";
   str 5;
   int 5;
   dex 120;
@@ -3274,7 +3275,7 @@ MAP m_wilderness {
       ~~~||~~~~~tttt...{{^{{{....t|||btbttt||~
       ||~~~~ttt~~~~---..{{{---...tt||ttt||||~~
       ||||tttt.%%~~-_--.....--....t||btb|||~~|
-      |||tttt...%%~-__----..---...t||||||||~||
+      |||tttt...%%~-__----..---...t||||||||=||
       ----tt...%.%%-_____-----....tttttttt----
       ___-...%%.%%~-_________--........----___
       ___--~%%~%%~--_________-----------______
@@ -3305,7 +3306,7 @@ PLACE p_wilderness {
     t_undead_brigade 2 26 (4) 0 null vt_ship;
   }
   typical_npc_parties {
-    t_goblin_horde 1 (4);
+    t_goblin_horde 10 (4);
     t_gazer_pod_with_goblin_slaves 1 (4);
     t_nixies 100 (4);
   }
@@ -3922,6 +3923,7 @@ RESP Shrooms_Mushroom_Resp {
                                 reagent_spider_silk 8;
                                 reagent_mandrake 16;
                                 reagent_nightshade 16;
+                                item_sleep_potion 10;
                         }
                         SAY "Be careful with those.";
                 }{
@@ -3942,6 +3944,7 @@ CONV Shrooms_Conv {
                 JOIN Shrooms_Join_Resp;
                 SHROOM Shrooms_Shroom_Resp;
                 MUSHROOM Shrooms_Mushroom_Resp;
+                BUY Shrooms_Mushroom_Resp;
         }
 }
 SCHED Shrooms_Sched {
@@ -3991,7 +3994,7 @@ MAP GreenTower_Map {
     ||||||||.||||||||||||||||tttttt...tt||||||||ttttx...x...x|||||||
     ||||||||.||||||||||||||||tttttb...bt||||||||tttt....?...?ttttttt
     ||rrrrr|.............||||tttttt...tt||||ttttt||tx...x...x|||||||
-    ||rcccr|.|||||||||||.||||tttttb...bt||||t.ttt||txx0xxx?xx|||||||
+    ||rcccr|.|||||||||||.||||tttttb...bt||||t.ttt||txx0xxx.xx|||||||
     ||rcccc..|||||||||||.|||ttttttt...tt|tttt..t|||t||||||||||||||||
     ||rcccr|||||||||||||.|||ttttttb...bt|t||ttttttt.||||||||||||||||
     ||rrrrr|||||||||||||.|ttttttttt...tt|t|||||||||.||||||||||||||||
@@ -4056,6 +4059,95 @@ PLACE GreenTower {
   underground 0;
   objects {
     Shroom_the_Hag 40 11 (2) 1;
+    mech_vdoor shrooms_house_door 48 10 "locked";
+    mech_vdoor shrooms_shop_door 48 4 "closed";
+    mech_hdoor shrooms_storeroom_door 54 12 "magically locked";
+  }
+  object_type t_town;
+}
+MAP GreenTowerLower_Map {
+        type ascii;
+        width 64;
+        height 64;
+        one_char_per_tile 1;
+        palette pal_standard { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; ',' t_flagstones; 'c' t_cobblestone; 'e' t_deck; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; 'q' t_rune_Q; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
+        terrain {
+    rrrrrrrrrrrrrr~~||||rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr|||||||||
+    rrrrrrrrrrrrrrr~|||||rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr||||||||||
+    rrrrrrrrrrrrrrr~||||rrrrrrrxxxxxxxxxxxxrrrrrrrrrrrrrrrxtxtt|||||
+    rrrrrrrrrrrrrrr~||||rrrrrrrxccxccccxccxrrrrrrrrrrrrrr...xttt||||
+    rrrrrrrrrrrrrrr~~|||rrrrrrrxccccccccccxrrrrrrrrrrrrr....tttt||||
+    rrrrrrrrrrrrrr||~|||rrrrrrrxccxccccxccxrrrrrrrrrrrrr@t@txttt||||
+    rrrrrrrrrrrrrr||~|||rrrrrrrxxxxccccxxxxrrrrrrrrrrrr.....xtt|||||
+    rrrrrrrrrrrrrr||~|||rrrrrrrxccxccccxccxrrrrrrrrrrrttttttx|||||||
+    rrrrrrrrrrrrrr||~~||rrrrrrrxccccccccccxrrrrrrrrrrrxxxxtxx|||||||
+    rrrrrrrrrrrrrr|||~||rrrrrrrxccxccccxccxrrrrrrrrrr...x...x|||||||
+    rrrrrrrrrrrrrr|||~||rrrrrrrxxxxccccxxxxrrrrrrrtt....?...?ttttttt
+    rrrrrrrrrrrrrrr..~~~rrrrrrrxccxccccxccxrrrrrr||tx...x...x|||||||
+    rrrrrrrrrrrrrrr||||~rrrrrrrxccccccccccx|rrrrrxxtxxtxxx.xx|||||||
+    rrrrrrrrrrrrrrr||||~rrrrrrrxccxccccxccxtr~~~~~|t||||||||||||||||
+    rrrrrrrrrrrrrrr|||~~rrrrrrrxxxxxccxxxxxxx~xx-~~.||||||||||||||||
+    rrrrrrrrrrrrrrrr||~|.|t~~~....xccccx~~~-___x--~~||||||||||||||||
+    rrrrrrrrrrrrrrrr|~~|.|t~t~..~~~~~~~~~~~-___x_-~~~~~~~~~|||~~~~||
+    rrrrrrrrrrrrrrrr|~tb.b.~t~..~txccccxcc~-___x_-~~||||||~|||~||~~|
+    rrrrrrrrrrrrrrrrr~~....~.~~~~txxccxxcc~----x-~~tt|||||~|||~|||~~
+    rrrrrrrrrrrrrrrrr|~~~~~~......xccccxcc~~~~~x~~.|t|||||~~~~~|||||
+    rrrrrrrrrrrrrrrrrrr........rrrxccccccccccccx...tt|||||||||||||||
+    rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrxccccxcccccccx...bt|||||||||||||||
+    rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrxxccxxCISTERNx...tt|||||||||||||||
+    rrrrrrrrrrrxxxxxxxxxxrrrrrrxxxxccccxxxxxxxxx...bt||||||||||rrrrr
+    rrrrrrrrrrrxBARRACKSxrrrrxxxccxccccxccxxxccx...tt||||||||||rcccr
+    rrrrrrrrrrrxccccccccxrrxxxccccxccccxccccxxxx...bt||trrrrrrrrcccr
+    rrrrrrrrrrrxccccccccxrrxccccccxccccxccccccxx...tt||trccccccccccr
+    rrrrrrrrrrrxccccccccxrxxccccccccccccccccccxx...tt||trcrrrrrrcccr
+    rrrrrrrrrrrxccccccccxrxcccccccxccccxcccccccxxxxxxxxxxcrrrrrrrrrr
+    rrrrrrrrrrrxccccccccxrxcccccccxccccxcccccccxxCOUNCILxcrrrrrrrrrr
+    rrrrrrrrrrrxccccccccxrxxxxcxxxxccccxxxxcxxxxxcccccccxcrrrrrrrrrr
+    rrrrrrrrrrrxxxxccxxxxxxcccccccccccccccccccccxcccccccxcrrrrrrrrrr
+    rrrrrrrrrrrxccccccccccccccccccccccccccccccccccc000ccxcrrrrrrrrrr
+    rrrrrrrrrrrxccccccccccccccccccccccccccccccccccc000ccxcrrrrrrrrrr
+    rrrrrrrrrrrxxxxccxxxxxxcccccccccccccccccccccxcccccccxcrrrrrrrrrr
+    rrrrrrrrrrrxccccccccxrxxxxcxxxxccccxxxxcxxxxxcccccc&xcrrrrrrrrrr
+    rrrrrrrrrrrxccccccccxrxcccccccxccccxcccccccxxxxxxxxxxcrrrrrrrrrr
+    rrrrrrrrrrrxccccccccxrxcccccccxccccxcccccccxccccccccccrrrrrrrrrr
+    rrrrrrrrrrrxccccccccxrxxccccccxccccxccccccxxrrrrrrrrcrrrrrrrrrrr
+    rrrrrrrrrrrxccccccccxrrxccccccccccccccccccxrrrrrrrrrcrrrrrrrrrrr
+    rrrrrrrrrrrxTRAININGxrrxxxccccxccccxccccxxxrrrrrrrrrcrrrrrrrrrrr
+    rrrrrrrrrrrxxxxxxxxxxrrrrxxxccxccccxccxxxrrrrrrrrrrrcrrrrrrrrrrr
+    rrrrrrrrrrrrrrrrrrrrrrrrrrrxxxxccccxxxxrrrrrrrrrrrrrcrrrrrrrrrrr
+    rrrrrrrrrrrrrrrrrrrrrrrrrrrxxxxxxxxxxxxxxxxxxrrrrrrrcrrrrrrrrrrr
+    rrrrrrrrrrrrrrrrrrrrrrrrrrrxcccccccccccx[@@]xrrrrrrrcrrrrrrrrrrr
+    r......r...........r.....rrxcccccccccccxccccxxrrrrrrcrrrrrrrrrrr
+    r......r...........r.....rrxcc0cc0cc0ccccccc&xrrrrrrcrrrrrrrrrrr
+    r......r.................rrxcc0cc0cc0ccccccc&xrrrrrrcrrrrrrrrrrr
+    r.rrrrrr...........r.....rrxcc0cc0cc0ccccccc&xrrrrrrcrrrrrrrrrrr
+    r..................r.....rrxcccccccccccxcccc&xrrrrrrcrrrrrrrrrrr
+    r.p.p.p.p.p.p.p.p..rrrrrrrrxcccccccccccxccccxxrrrrrrcrccccccrrrr
+    r..................rrrrrrrrxDINING@HALLx[@@]xrrrrrrrrrccccccrrrr
+    r..................rrrrrrrrxxxxxxxxxxxxxxxxxxrrrrrrrrrccccccrrrr
+    r..................rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrccccccrrrr
+    r..................rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrccccccrrrr
+    r.p.p.p.p.p.p.p.p..rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrccccccrrrr
+    r..................r.....rrrrrrrrrrrrrrrrrrrrrrrrrrrrrccccccrrrr
+    r.rrrrrr...........r.....rrrrrrrrrrrrrrrrrrrrrrrrrrrrrccccccrrrr
+    r......r.................rrrrrrrrrrrrrrrrrrrrrrrrrrrrrccccccrrrr
+    r......r...........r.....rrrrrrrrrrrrrrrrrrrrrrrrrrrrrccccccrrrr
+    r......r...........r.....rrrrrrrrrrrrrrrrrrrrrrrrrrrrrccccccrrrr
+    rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
+    rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
+    rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
+    }
+}
+PLACE GreenTowerLower {
+  type town;
+  parent null;
+  x 0;
+  y 0;
+  name "Underground beneath the Town of GreenTower"
+  wraps 0;
+  map GreenTowerLower_Map;
+  underground 0;
+  objects {
   }
   object_type t_town;
 }
@@ -4112,6 +4204,7 @@ PLACE p_terrain_test {
   }
   object_type t_town;
 }
+STACK_PLACES GreenTower GreenTowerLower
 moon_info {
   phases 8;
   {
@@ -4137,7 +4230,7 @@ moon_info {
     }
   }
   sun {
-    arc 285;
+    arc 60;
     sprite s_sun;
   }
   moongates {
@@ -4264,9 +4357,9 @@ FORMATION f_football {
         . . . 2 . 4 . . .
 }
 player {
-        place p_empire_city;
-        x 16;
-        y 16;
+  place p_wilderness;
+  x 35;
+  y 22;
   sprite s_companion_wizard;
   speed 2;
   mv_desc Walk;

@@ -154,10 +154,8 @@ static int sky_get_light_from_astral_body(int arc, int max_light)
         double radians = DEGREES_TO_RADIANS(degrees);
         double factor = SKY_AMPLITUDE * (sin(radians) + SKY_VERT_SHIFT);
         factor = clamp(factor, 0.0, 1.0);
-        printf("degrees=%d radians=%f factor=%f\n", degrees, radians, factor);
         int light = (int)(factor * max_light);
         light = (light < 0) ? 0 : light;
-        printf("arc=%d max_light=%d light=%d\n", arc, max_light, light);
         return light;
 }
 
@@ -189,9 +187,6 @@ static void sky_compute_factors(void)
                              SKY_VERT_SHIFT);
         assert(inverse != 0.0);
         SKY_AMPLITUDE = 1 / inverse;
-
-        printf("vert=%f ampl=%f\n", SKY_VERT_SHIFT, SKY_AMPLITUDE);
-        printf("slope=%f offset=%f\n", SKY_WIN_SLOPE, SKY_WIN_OFFSET);
 }
 
 
@@ -257,8 +252,6 @@ static void moon_adjust_light(struct moon *moon)
         // Light depends on arc
         moon->light = sky_get_light_from_astral_body(moon->arc, max_light);
 
-        printf("arc=%d phase=%d light=%d\n", moon->arc, moon->phase, 
-               moon->light);
 }
 
 static void myAdvanceMoons(void)

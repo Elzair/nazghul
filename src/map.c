@@ -24,6 +24,7 @@
 #include "screen.h"
 #include "place.h"
 #include "player.h"
+#include "sprite.h"
 
 #include <SDL/SDL.h>
 
@@ -453,10 +454,12 @@ void mapRepaintView(struct mview *view, int flags)
 	t2 = SDL_GetTicks();
 
 	if (Map.aview->zoom > 1) {
+                spriteZoomOut(Map.aview->zoom);
 		screenZoomOut(Map.aview->zoom);
 		placePaint(Map.place, &view->vrect, &Map.srect, 0/* vmask */ ,
 			   TILE_W / Map.aview->zoom, TILE_H / Map.aview->zoom);
 		screenZoomIn(Map.aview->zoom);
+                spriteZoomIn(Map.aview->zoom);
 	} else if (flags & REPAINT_NO_LOS) {
 		placePaint(Map.place, &view->vrect, &Map.srect, 0, TILE_W,
 			   TILE_H);

@@ -562,6 +562,7 @@ static void myFillPositionInfo(struct position_info *info, int x, int y,
 	info->pmask = 0;
 	memset(rmap, 0, sizeof(rmap));
 
+#if 0
 	// If this is the special combat map then the attackers must be able to
 	// flee back the way they came. Defenders are placed in the center, so
 	// this requirement does not apply. If this is NOT the special combat
@@ -586,6 +587,16 @@ static void myFillPositionInfo(struct position_info *info, int x, int y,
 	} else {
 		info->find_party = true;
 	}
+#else
+        // I'm not sure I really care about any of the above concerns any
+        // more. I think my big concern was that the player be able to
+        // flee. But these days I don't relly think that's a concern of the
+        // game engine. Map hackers should take the responsibility for that
+        // kind of thing. I made this change when I found that nixies were not
+        // getting distributed on bridge combat maps.
+        info->find_edge = false;
+        info->find_party = false;
+#endif
 	info->placed = 0;
 }
 
@@ -893,6 +904,8 @@ static bool los_blocked(int Ax, int Ay, int Bx, int By)
 	// another. The missile flight code in Missile:animate() uses a test
 	// for visibility on each tile to determine if a missile is blocked in
 	// its flight path (missiles don't have a pmask...).
+        
+        int steps = 0;
 
 	int Px = Ax;
 	int Py = Ay;
@@ -909,6 +922,9 @@ static bool los_blocked(int Ax, int Ay, int Bx, int By)
 	// Moving down?
 	int Yincr = (Ay > By) ? -1 : 1;
 
+        printf("Checking LOS between [%d %d] and [%d %d]\n",
+               Ax, Ay, Bx, By);
+
 	// Walk the x-axis
 	if (AdX >= AdY) {
 
@@ -919,8 +935,13 @@ static bool los_blocked(int Ax, int Ay, int Bx, int By)
 		// For each x
 		for (int i = AdX; i >= 0; i--) {
 
-			if (!place_visibility(Place, Px, Py))
-				return true;
+			if (steps > 1) {
+                                printf("  [%d %d]\n", Px, Py);
+                                if (!place_visibility(Place, Px, Py))
+                                               return true;
+                        }
+
+                        steps++;
 
 			if (P > 0) {
 				Px += Xincr;
@@ -941,8 +962,13 @@ static bool los_blocked(int Ax, int Ay, int Bx, int By)
 		// For each y
 		for (int i = AdY; i >= 0; i--) {
 
-			if (!place_visibility(Place, Px, Py))
-				return true;
+                        if (steps > 1) {
+                                printf("  [%d %d]\n", Px, Py);
+                                if (!place_visibility(Place, Px, Py))
+                                        return true;
+                        }
+
+                        steps++;
 
 			if (P > 0) {
 				Px += Xincr;
@@ -1017,7 +1043,8 @@ static class Character *mySelectVictim(class Character * from,
 			// from the search. Need to recompute the distance.
 			victim = remember;
 			*min = place_flying_distance(Place,
-						     from->getX(), from->getY(),
+						     from->getX(), 
+                                                     from->getY(),
 						     victim->getX(),
 						     victim->getY());
 		}
@@ -1254,6 +1281,9 @@ static bool myNPCAttackNearest(class Character * npc, class Character * pc,
 			continue;
 		}
 
+                printf("%s attacks %s with %s\n", npc->getName(), 
+                       pc->getName(), weapon->getName());
+                       
 		if (npc->attackTarget(pc)) {
 			consolePrint("%s %s\n", pc->getName(),
 				     pc->getWoundDescription());
@@ -1324,6 +1354,11 @@ static void myApplyGenericEffects(class Character * c, int effects)
 		c->changeHp(-DAMAGE_POISON * Combat.turns_per_round);
 		consolePrint("%s poisoned-%s!\n", c->getName(),
 			     c->getWoundDescription());
+		consoleRepaint();
+	}
+	if (effects & EFFECT_SLEEP && !c->isAsleep()) {
+		c->changeSleep(true);
+		consolePrint("%s sleeping!\n", c->getName());
 		consoleRepaint();
 	}
 }
@@ -1424,13 +1459,23 @@ static bool myRunNpc(class Character * npc, void *data)
 		// nearest->getName());
 	} else {
 		printf("%s cannot find a victim in los\n", npc->getName());
-		// 
+
+		// Maybe the victim just stepped out of sight. In this case I
+		// want the npc to continue pursuit.
 		nearest = npc->quarry;
-		if (nearest && nearest != npc && nearest->isOnMap() &&
-		    !nearest->isDead() && nearest->isVisible()) {
-			// printf("Aha! %s remembers previous victim %s and "
-			// "gives chase!\n", npc->getName(), 
-			// nearest->getName());
+
+                // But maybe the reason we couldn't find a victim in LOS is
+                // because we were just charmed! So doublecheck the quarry's
+                // alignment.
+		if (nearest && 
+                    npc->isHostile(nearest->getAlignment()) &&
+                    nearest != npc && 
+                    nearest->isOnMap() &&
+		    !nearest->isDead() && 
+                    nearest->isVisible()) {
+			printf("Aha! %s remembers previous victim %s and "
+                               "gives chase!\n", npc->getName(), 
+                               nearest->getName());
 			min = place_flying_distance(Place,
 						    npc->getX(), npc->getY(),
 						    nearest->getX(),
@@ -1446,8 +1491,8 @@ static bool myRunNpc(class Character * npc, void *data)
 	// Don't allow NPCs to attack characters they can't see (this gives
 	// their bowmen an unfair advantage).
 	if (min > (unsigned int) npc->getVisionRadius()) {
-		// printf("%s can't see %s at range %d\n", npc->getName(),
-		// nearest->getName(), min);
+		printf("%s can't see %s at range %d\n", npc->getName(),
+                       nearest->getName(), min);
 	} else {
 		// Check if there are any spells this NPC can cast on the
 		// nearest PC.
@@ -1458,14 +1503,14 @@ static bool myRunNpc(class Character * npc, void *data)
 		// so, attack. If the nearest was attacked then this NPCs turn
 		// is over.
 		if (myNPCAttackNearest(npc, nearest, min)) {
-			// printf("%s attacked %s\n", npc->getName(), 
-			// nearest->getName());
+			printf("%s attacked %s\n", npc->getName(), 
+                               nearest->getName());
 			return false;
 		}
 	}
 
-	// printf("%s searching for path to %s\n", npc->getName(), 
-	// nearest->getName());
+	printf("%s searching for path to %s\n", npc->getName(), 
+               nearest->getName());
 
 	/* Find a path to the nearest member */
 	memset(&as_info, 0, sizeof(as_info));

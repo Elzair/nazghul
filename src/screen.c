@@ -247,9 +247,9 @@ static void scaled_blit_32bpp(SDL_Surface * source, SDL_Rect * from,
 	d = (Uint32 *) dest->pixels;
 	s = (Uint32 *) source->pixels;
 
-	for (dy = 0; dy < to->w; dy++) {
+	for (dy = 0; dy < to->h; dy++) {
 		sy = dy * Zoom;
-		for (dx = 0; dx < to->h; dx++) {
+		for (dx = 0; dx < to->w; dx++) {
 			sx = dx * Zoom;
 			di = (dy + to->y) * dpitch + (dx + to->x);
 			si = (sy + from->y) * spitch + (sx + from->x);
@@ -268,9 +268,9 @@ static void scaled_blit_16bpp(SDL_Surface * source, SDL_Rect * from,
 	d = (Uint16 *) dest->pixels;
 	s = (Uint16 *) source->pixels;
 
-	for (dy = 0; dy < to->w; dy++) {
+	for (dy = 0; dy < to->h; dy++) {
 		sy = dy * Zoom;
-		for (dx = 0; dx < to->h; dx++) {
+		for (dx = 0; dx < to->w; dx++) {
 			sx = dx * Zoom;
 			di = (dy + to->y) * dpitch + (dx + to->x);
 			si = (sy + from->y) * spitch + (sx + from->x);
@@ -289,9 +289,9 @@ static void scaled_blit_8bpp(SDL_Surface * source, SDL_Rect * from,
 	d = (Uint8 *) dest->pixels;
 	s = (Uint8 *) source->pixels;
 
-	for (dy = 0; dy < to->w; dy++) {
+	for (dy = 0; dy < to->h; dy++) {
 		sy = dy * Zoom;
-		for (dx = 0; dx < to->h; dx++) {
+		for (dx = 0; dx < to->w; dx++) {
 			sx = dx * Zoom;
 			di = (dy + to->y) * dpitch + (dx + to->x);
 			si = (sy + from->y) * spitch + (sx + from->x);

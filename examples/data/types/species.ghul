@@ -173,7 +173,7 @@ SPECIES snake {
 }
 
 SPECIES insects {
-  name    "insects";
+  name    "insect swarm";
   str     5;
   int     5;
   dex     120;

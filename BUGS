@@ -6,6 +6,11 @@
 
 --spaceship the lightswitch in the dungeon => crash when handled.
 
+--NPC combat behaviour on maps with lots of los-blocking terrain still looks
+  weird. NPCs need to be a bit more aggressive, blocked missiles need to be
+  reported better; in general I think the user just needs more feedback to
+  understand what's going on.
+
 Known BUGS in release 0.1.1
 
 * Firing ship cannons in town at the nixies causes combat to begin immediately,

@@ -23,10 +23,11 @@
 #ifndef GreenTower_ghul
 #define GreenTower_ghul
 
-//#include "GreenTower_Map.ghul"
-
 #include "../characters/Shroom_the_Hag.ghul"
 
+#if 0
+#include "GreenTower_Map.ghul"
+#else
 MAP GreenTower_Map {
         type   ascii;
         width  64;
@@ -46,7 +47,7 @@ MAP GreenTower_Map {
     ||||||||.||||||||||||||||tttttt...tt||||||||ttttx...x...x|||||||
     ||||||||.||||||||||||||||tttttb...bt||||||||tttt....?...?ttttttt
     ||rrrrr|.............||||tttttt...tt||||ttttt||tx...x...x|||||||
-    ||rcccr|.|||||||||||.||||tttttb...bt||||t.ttt||txx0xxx?xx|||||||
+    ||rcccr|.|||||||||||.||||tttttb...bt||||t.ttt||txx0xxx.xx|||||||
     ||rcccc..|||||||||||.|||ttttttt...tt|tttt..t|||t||||||||||||||||
     ||rcccr|||||||||||||.|||ttttttb...bt|t||ttttttt.||||||||||||||||
     ||rrrrr|||||||||||||.|ttttttttt...tt|t|||||||||.||||||||||||||||
@@ -100,7 +101,7 @@ MAP GreenTower_Map {
     ||||||||||||||||||||||||||||ttt....tt|||||||||||||||||||||||||||
     }
 }
-
+#endif
 
 
 PLACE  GreenTower {
@@ -113,7 +114,16 @@ PLACE  GreenTower {
   map         GreenTower_Map;
   underground 0;
   objects {
+
+    // Characters
     Shroom_the_Hag  40 11 (ALIGN_TOWN) 1;
+
+    // Shroom's Shop
+    mech_vdoor shrooms_house_door 48 10 "locked";
+    mech_vdoor shrooms_shop_door  48 4  "closed";
+    mech_hdoor shrooms_storeroom_door 54 12 "magically locked";
+    
+
   }
   object_type t_town;
 

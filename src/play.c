@@ -1736,13 +1736,20 @@ static bool
 target_spell(class Spell * spell, class Character * pc,
 	     class Object ** ret, int *direction, int *x, int *y)
 {
+        bool result;
+
 	switch (spell->target) {
 	case SPELL_TARGET_NONE:
-		// *ret = pc; 
+                // The following was commented out. I don't know why. By
+                // default, the target should always be the caster, which is
+                // what SPELL_TARGET_NONE should really mean.
+		*ret = pc; 
 		return true;
 	case SPELL_TARGET_LOCATION:
 		cmdwin_print("-");
-		return target_location_for_spell(pc, ret, spell, x, y);
+		result = target_location_for_spell(pc, ret, spell, x, y);
+                cmdwin_backspace(1);
+                return result;
 	case SPELL_TARGET_CHARACTER:
 		cmdwin_print("-");
 		*ret = target_character_for_spell(pc, spell, x, y);
@@ -1859,6 +1866,7 @@ bool cmdCastSpell(class Character * pc)
 
 		// Cast the spell. This automatically decrements the caster's
 		// mana.
+#if PRINT_MSG_TO_CONSOLE
 		consolePrint("%s casts %s", pc->getName(), spell->getName());
 		if (direction != DIRECTION_NONE)
 			consolePrint(" to the %s",
@@ -1892,6 +1900,35 @@ bool cmdCastSpell(class Character * pc)
 		}
 
 		consolePrint("\n");
+#else
+                // The new way: print to the cmdwin and when the turn is over
+                // that will get logged to the console.
+                cmdwin_print("-");
+		switch (spell->cast(pc, target, direction, tx, ty)) {
+		case Spell::ok:
+			cmdwin_print("success!");
+			break;
+		case Spell::no_room_on_battlefield:
+			cmdwin_print("no room on battlefield!");
+			break;
+		case Spell::magic_negated:
+			cmdwin_print("magic negated!");
+			break;
+		case Spell::missed_target:
+			cmdwin_print("miss!");
+			break;
+		case Spell::no_effect:
+			cmdwin_print("no effect!");
+			break;
+		case Spell::teleport_failed:
+			cmdwin_print("qfailed!");
+			break;
+		case Spell::unknown_failure:
+		default:
+			cmdwin_print("fizzles!");
+			break;
+		}
+#endif
 
 		statusRepaint();
 

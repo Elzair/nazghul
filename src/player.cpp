@@ -431,17 +431,23 @@ bool player_party::try_to_enter_moongate(class Moongate * src_gate)
 
 	cmdwin_print("-ok");
 
-	// Briefly move the player party over the open gate
-	relocate(src_gate->getPlace(), src_gate->getX(), src_gate->getY());
-	mapUpdate(0);
-	usleep(MS_PER_TICK * 1000);
+	// Briefly move the player party over the open source gate if one is
+	// specified (for spells it won't be)
+        if (src_gate) {
+                relocate(src_gate->getPlace(), src_gate->getX(), 
+                         src_gate->getY());
+                mapUpdate(0);
+                usleep(MS_PER_TICK * 1000);
+        }
 
 	// Take the player party off the scene.
 	remove();
 
 	// Now show the source gate closing.
-	src_gate->animateClosing();
-	soundPlay(src_gate->getEnterSound(), SOUND_MAX_VOLUME);
+        if (src_gate)
+                src_gate->animateClosing();
+
+	soundPlay(dest_gate->getEnterSound(), SOUND_MAX_VOLUME);
 
 	// Pass through to the destination gate.
 	enter_moongate(dest_gate);
@@ -1224,7 +1230,11 @@ void player_party::board_vehicle(void)
 
 static bool check_if_leader(class Character * pc, void *data)
 {
-	if (!pc->isDead() && pc->isOnMap()) {
+        // Going to add a check for sleep here to handle the case where the
+        // party is in follow mode and the leader is put asleep for some
+        // reason. Otherwise the engine cranks out turns until the leader wakes
+        // up.
+	if (!pc->isDead() && pc->isOnMap() && !pc->isAsleep()) {
 		player_party->leader = pc;
 		return true;
 	}
@@ -1233,11 +1243,23 @@ static bool check_if_leader(class Character * pc, void *data)
 
 class Character *player_party::get_leader(void)
 {
-	if (!leader || leader->isDead() || !leader->isOnMap()) {
+#ifdef CACHE_LEADER // false
+        // Going to add a check for sleep here to handle the case where the
+        // party is in follow mode and the leader is put asleep for some
+        // reason. Otherwise the engine cranks out turns until the leader wakes
+        // up.
+	if (!leader || leader->isDead() || !leader->isOnMap() 
+            || leader->isAsleep()) {
 		leader = NULL;
 		for_each_member(check_if_leader, 0);
 	}
-
+#else
+        // Force a reevaluation every time. For example, say Thorald is the
+        // leader. Then he goes to sleep. Now Kama should be the leader. But as
+        // soon as Thorald wakes up I want leadership to revert back to him.
+        leader = NULL;
+        for_each_member(check_if_leader, 0);
+#endif
 	return leader;
 }
 
@@ -1266,6 +1288,10 @@ bool player_party::add_to_party(class Character * c)
 	c->setOrder(i);
 	c->setPlayerControlled(true);
 	c->setAlignment(c->getAlignment() | alignment);
+
+        // gmcnutt: added this as a hack to support quickly determining if a
+        // character belongs to the player party.
+        c->party = (NpcParty*)this;
 
 	// Loop over all readied weapons and add them to player inventory. Also
 	// must set the refcount once they are in inventory.

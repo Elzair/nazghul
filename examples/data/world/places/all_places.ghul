@@ -32,7 +32,10 @@
 #include "./P_empire_city.ghul"
 #include "./P_prison_and_torture_chamber.ghul"
 #include "./GreenTower.ghul"
+#include "./GreenTowerLower.ghul"
 #include "./P_terrain_test.ghul"
+
+STACK_PLACES GreenTower GreenTowerLower
 
 #endif // all_places_ghul
 

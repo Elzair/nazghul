@@ -113,6 +113,10 @@ void ItemType::use(class Character * target)
 		target->changeHp(getAmount());
 		break;
 
+        case EFFECT_SLEEP:
+                target->changeSleep(true);
+                break;
+
 	case EFFECT_NONE:
 	default:
 		break;

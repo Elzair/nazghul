@@ -507,8 +507,12 @@ bool Character::setSolo(bool val)
 bool Character::attackTarget(class Character * target)
 {
 	class ArmsType *weapon = getCurrentWeapon();
-	if (!weapon->fire(target, getX(), getY()))
-		return false;
+
+        // gmcnutt: this needs to be a bit more sophisticated, perhaps. I used
+        // to return if fire() failed, but it can fail for a variety of
+        // reasons. But if we fail to hit the target we still want to decrement
+        // ammo, etc.
+	weapon->fire(target, getX(), getY());
 	consoleRepaint();
 	useAmmo();
 	setAttackTarget(target);
@@ -517,10 +521,10 @@ bool Character::attackTarget(class Character * target)
 
 int Character::hasAmmo (class ArmsType * weapon)
 {
-  // SAM: Changed this from returning bool to 
-  //      returning int (0 for no ammo, n for amount)
+        // SAM: Changed this from returning bool to 
+        //      returning int (0 for no ammo, n for amount)
 	if (weapon->ammoIsUbiquitous())
-        return 1;  // One more available, that is.
+                return 1;  // One more available, that is.
 
 	if (playerControlled) {
 		struct inv_entry *ie;
@@ -528,11 +532,11 @@ int Character::hasAmmo (class ArmsType * weapon)
 		if (weapon->isMissileWeapon()) {
 			ie = player_party->search_inventory(weapon->
 							    getMissileType());
-            if (ie == NULL)
-              return 0;  // No ammo
+                        if (ie == NULL)
+                                return 0;  // No ammo
 			return ie->count;  // 1 or more
 		}
-        else if (weapon->isThrownWeapon()) {
+                else if (weapon->isThrownWeapon()) {
 			ie = player_party->search_inventory(weapon);
 			if (ie == NULL) {
 				unready(weapon);
@@ -543,10 +547,10 @@ int Character::hasAmmo (class ArmsType * weapon)
 		}
 		return 1;  // Melee weapons are like ubiquitous
 	} else {
-        // SAM: Not bothering with quantity of NPC ammo for now
+                // SAM: Not bothering with quantity of NPC ammo for now
 		return (!weapon->isMissileWeapon() ||
-                container != NULL &&
-                container->search(weapon->getMissileType()));
+                        (container != NULL &&
+                         container->search(weapon->getMissileType())));
 	}
 } // Character::hasAmmo()
 
@@ -833,7 +837,14 @@ void Character::armThyself(void)
 
 bool Character::needToRearm()
 {
-	assert(!playerControlled);
+        // gmcnutt: I currently don't have any way to tell a charmed player
+        // party member how to rearm themselves. Player characters pull from
+        // party inventory. Non-player characters pull from their own personal
+        // inventory. I really need to merge both types into the same behaviour
+        // to simplify things.
+        if (party == (NpcParty*)player_party)
+                return false;
+
 	return rearm;
 }
 
@@ -1181,7 +1192,9 @@ void Character::describe(int count)
 		consolePrint("an ");
 	else
 		consolePrint("a ");
-	consolePrint("%s %s", species->name, occ->name);
+	consolePrint("%s", species->name);
+        if (occ && occ->name)
+                consolePrint(" %s", occ->name);
 }
 
 void Character::relocate(struct place *place, int x, int y)

@@ -197,7 +197,7 @@ SPELL spell_light {
   missile  null;
   effects  (EFFECT_LIGHT);
   strength 4080;
-  duration 100;
+  duration 1000;
   context  CTW;
   level    1;
   target   SPELL_TARGET_NONE;
@@ -484,7 +484,7 @@ SPELL spell_great_light {
   missile  null;
   effects  (EFFECT_LIGHT);
   strength 8192;
-  duration 200;
+  duration 2000;
   context  CTW;
   level    3;
   target   SPELL_TARGET_NONE;
@@ -781,7 +781,7 @@ SPELL spell_charm {
     sprite    s_happy_monster_face
     code      AXE
     cost      SPELL_COST_LEVEL_6
-    range     4
+    range     8
     missile   null
     effects   (EFFECT_CHARM)
     strength  5 // # of turns added to charm effects

@@ -40,6 +40,8 @@ struct {
 	struct wq_job animationJob;
 } Sprite;
 
+static int sprite_zoom_factor = 1;
+
 static void myPaintWave(struct sprite *sprite, int frame, int x, int y)
 {
 	SDL_Rect src;
@@ -51,8 +53,8 @@ static void myPaintWave(struct sprite *sprite, int frame, int x, int y)
 	frame += sprite->sequence * sprite->n_frames;
 
 	/* Wave sprites are painted in two blits. The first blit copies
-	 * everything below the wavecrest to the top part of the onscreen tile. 
-	 * * The second blit copies everything above the wavecrest to the
+	 * everything below the wavecrest to the top part of the onscreen tile.
+	 * The second blit copies everything above the wavecrest to the
 	 * bottom part of the onscreen tile. This gives the appearance of a
 	 * wave rolling over the tile in a direction opposite the wavefront. */
 
@@ -72,7 +74,8 @@ static void myPaintWave(struct sprite *sprite, int frame, int x, int y)
 	src.h = sprite->wavecrest;
 
 	dest.x = x;
-	dest.y = dest.y + sprite->images->h - sprite->wavecrest;
+	dest.y = dest.y + (sprite->images->h - sprite->wavecrest) / 
+                sprite_zoom_factor;
 	dest.w = sprite->images->w;
 	dest.h = src.h;
 
@@ -118,8 +121,14 @@ static void myAdvanceFrame(struct sprite *sprite)
 	if (sprite->n_frames > 1)
 		sprite->frame = (sprite->frame + 1) % sprite->n_frames;
 
-	sprite->wavecrest = ((sprite->wavecrest - 1) + sprite->images->h) %
-	    sprite->images->h;
+        // Subtle: when rendering wave sprites zoomed, we'll get artifacts due
+        // to roundoff errors in integer division. Unless we align the
+        // wavecrest to the zoom factor. So for example, if we zoom at a factor
+        // of two then the wavecrest must be a multiple of 2. Since we only
+        // support a zoom factor of 2 right now, the simplest thing to do is
+        // always use 2.
+	sprite->wavecrest = ((sprite->wavecrest - 2) + sprite->images->h) % 
+                sprite->images->h;
 }
 
 #if 0
@@ -478,4 +487,14 @@ void sprite_unfade(struct sprite *sprite)
 		SDL_SetAlpha(sprite->images->images, SDL_SRCALPHA,
 			     SDL_ALPHA_OPAQUE);
 	sprite->faded = 0;
+}
+
+void spriteZoomOut(int factor)
+{
+        sprite_zoom_factor *= factor;
+}
+
+extern void spriteZoomIn(int factor)
+{
+        sprite_zoom_factor /= factor;
 }

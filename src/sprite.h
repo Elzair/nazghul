@@ -77,6 +77,8 @@ extern "C" {
                                           struct images *images);
         extern int sprite_fade(struct sprite *sprite);
         extern void sprite_unfade(struct sprite *sprite);
+        extern void spriteZoomOut(int factor);
+        extern void spriteZoomIn(int factor);
 
 #ifdef __cplusplus
 }
