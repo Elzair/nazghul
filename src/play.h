@@ -52,10 +52,13 @@ extern "C" {
   extern void getkey(void *data, bool(*handler) (struct KeyHandler * kh,
                                                  int key, int keymod));
   extern int num_for_key (int key);
+
+#define CMD_SELECT_MEMBER (1 << 0)
+#define CMD_PRINT_MEMBER  (1 << 1)
   
-  extern bool cmdUse    (class Character * pc);
+  extern bool cmdUse    (class Character * pc, int flags);
   extern bool cmdHandle (class Character * pc);
-  extern bool cmdReady  (class Character * pc);
+  extern bool cmdReady  (class Character * pc, int flags);
   extern bool cmdZtats  (class Character * pc);
   extern bool cmdXamine (class Character * pc);
   extern bool cmdAT     (class Character * pc);

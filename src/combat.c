@@ -178,6 +178,16 @@ static int y_q[SEARCH_QUEUE_SZ];
 static int q_head;
 static int q_tail;
 
+static void combatAttack(class Character *attacker, class ArmsType *weapon,
+                    class Character *defender)
+{
+        weapon->fire(defender, attacker->getX(), attacker->getY());
+        //consoleRepaint();
+        attacker->useAmmo();
+        attacker->setAttackTarget(defender);
+        consolePrint("%s\n", defender->getWoundDescription());
+}
+
 static void Defeat(void)
 {
         // The NPCs have won.
@@ -800,14 +810,12 @@ static void myExitMap(class Character * c, int dx, int dy)
                 // If combat is still raging than the PC has fled; if combat is
                 // over then it has simply left the map.
                 if (Combat.state == FIGHTING) {
-                        consolePrint("%s escapes!\n", c->getName());
                         if (Combat.n_pcs == 0)
                                 // Handle the case where the last PC has left
                                 // the map.
                                 Retreat();
                 }
                 else {
-                        consolePrint("%s exits\n", c->getName());
                         if (Combat.n_pcs == 0)
                                 Combat.state = DONE;
                 }
@@ -872,27 +880,47 @@ static bool myExitSoloMode(class Character * pc)
         return true;
 }
 
-static void myMovePC(class Character * c, int dx, int dy)
+static void myMovePC(class Character * c, int dx, int dy, int verbose)
 {
+        int is_leader = (c == player_party->get_leader());
+
+        if (verbose)
+                consolePrint("%s-", directionToString(vector_to_dir(dx, dy)));
+
         if (place_off_map(Place, c->getX() + dx, c->getY() + dy) &&
             !myCanRetreat(c->getX(), c->getY(), dx, dy)) {
-                consolePrint("All party members must exit the same way!\n");
+                if (verbose) {
+                        consolePrint("Denied!\n");
+                        consolePrint("All party members must exit the same "
+                                     "way!\n");
+                }
                 return;
         }
 
         switch (c->move(dx, dy)) {
         case Character::MovedOk:
+                if (verbose)
+                        consolePrint("Ok\n");
                 break;
         case Character::ExitedMap:
+                if (verbose) {
+                        class Character *new_leader;
+                        consolePrint("Exit!\n");
+                        new_leader = player_party->get_leader();
+                        if (new_leader) {
+                                consolePrint("%s is the new party leader\n",
+                                             new_leader->getName());
+                        }
+                }
                 myExitMap(c, dx, dy);
 
                 // The first member to exit from a town map sets the exit: the
                 // other members must all leave the same way.
                 if (
 #ifdef NO_RETREAT
-                           Place != &Combat.place &&
+                        Place != &Combat.place &&
 #endif
-                           Combat.rinfo.type == retreat_info::NO_RETREAT) {
+                        Combat.rinfo.type == retreat_info::NO_RETREAT) {
                         Combat.rinfo.type = retreat_info::EDGE_RETREAT;
                         Combat.rinfo.dx = dx;
                         Combat.rinfo.dy = dy;
@@ -905,16 +933,23 @@ static void myMovePC(class Character * c, int dx, int dy)
                 // Normally I don't print this message in follow mode unless
                 // this is the leader because otherwise I see it all the time
                 // as the other party members bump into each other.
-                if (!Combat.followMode || c == player_party->get_leader())
-                        consolePrint("Occupied!\n");
+                if (!Combat.followMode || is_leader) {
+                        if (verbose) {
+                                consolePrint("Occupied!\n");
+                        }
+                }
                 break;
         case Character::WasImpassable:
-                consolePrint("Impassable\n");
+                if (verbose)
+                        consolePrint("Impassable!\n");
                 break;
         case Character::SlowProgress:
-                consolePrint("Slow progress!\n");
+                if (verbose)
+                        consolePrint("Slow progress!\n");
                 break;
         case Character::SwitchedOccupants:
+                if (verbose)
+                        consolePrint("Switch!\n");
                 break;
         }
 
@@ -1142,9 +1177,14 @@ static bool myAttack(class Character * pc)
         bool committed = false;
         int x, y;
 
+        consolePrint("Attack!\n");
+
         // If in follow mode, when the leader attacks automatically switch to
         // turn-based mode.
-        Combat.followMode = false;
+        if (Combat.followMode) {
+                consolePrint("Switching from follow to combat mode\n");
+                Combat.followMode = false;
+        }
 
         // Loop over all readied weapons
         for (class ArmsType * weapon = pc->enumerateWeapons();
@@ -1153,10 +1193,12 @@ static bool myAttack(class Character * pc)
                 cmdwin_clear();
                 cmdwin_print("%s:", pc->getName());
 
+                consolePrint("[%s]: ", weapon->getName());
+                consoleRepaint();
+
                 // Check ammo
                 if (!pc->hasAmmo(weapon)) {
-                        consolePrint("%s has no ammo for %s\n", pc->getName(),
-                                     weapon->getName());
+                        consolePrint("no ammo!\n");
                         continue;
                 }
                 // Get the target. It's important to do this every time through
@@ -1174,9 +1216,8 @@ static bool myAttack(class Character * pc)
                         // I really only need to check adjacent squares here...
                         near = mySelectVictim(pc, &d, MSV_IGNORESLEEPERS);
                         if (near != NULL && d <= 1) {
-                                consolePrint("%s interferes with %s's %s!\n",
-                                             near->getName(), pc->getName(),
-                                             weapon->getName());
+                                consolePrint("%s interferes!\n",
+                                             near->getName());
                                 committed = true;
                                 continue;
                         }
@@ -1220,6 +1261,8 @@ static bool myAttack(class Character * pc)
                         t = placeGetTerrain(x, y);
                         pc->attackTerrain(x, y);
                         cmdwin_print("%s", t->name);
+                        
+                        consolePrint("%s\n", t->name);
 
                         /* Check for a mech */
                         class Mech *mech;
@@ -1229,7 +1272,8 @@ static bool myAttack(class Character * pc)
                                 mech->activate(MECH_ATTACK);
                 }
                 else if (target == pc) {
-                        // Don't allow targeting self, unless perhaps with comfirmation.
+                        // Don't allow targeting self, unless perhaps with
+                        // comfirmation.
                         int yesno;
                         cmdwin_print("Confirm Attack Self-Y/N?");
                         getkey(&yesno, yesnokey);
@@ -1243,13 +1287,6 @@ static bool myAttack(class Character * pc)
                                 continue;
                         }
                 }               // confirm attack self
-
-                // else if ( player_party->hasMember(target) ) {
-                //  // Don't allow targeting allies, unless perhaps with confirmation.
-                //  consolePrint("Attacking an ally?  How bloodthirsty of you.\n");
-                //  continue;
-                // }
-
                 else {
                       confirmed_attack_self:
                         // confirmed_attack_ally:
@@ -1260,18 +1297,11 @@ static bool myAttack(class Character * pc)
                         assert(target->isType(CHARACTER_ID));
 
                         cmdwin_print("%s", target->getName());
-                        consolePrint("%s attacks %s with %s: ",
-                                     pc->getName(), target->getName(),
-                                     weapon->getName());
+                        
+                        consolePrint("attack %s... ", target->getName());
 
                         // Strike the target
-                        if (pc->attackTarget(target)) {
-                                consolePrint("%s\n",
-                                             target->getWoundDescription());
-                        }
-                        else {
-                                consolePrint("missed!\n");
-                        }
+                        combatAttack(pc, weapon, target);
 
                         // If we hit a party member then show their new hit
                         // points in the status window
@@ -1281,8 +1311,7 @@ static bool myAttack(class Character * pc)
 
                 // Warn the user if out of ammo
                 if (!pc->hasAmmo(pc->getCurrentWeapon()))
-                        consolePrint("%s out of ammo for %s!\n",
-                                     pc->getCurrentWeapon()->getName(),
+                        consolePrint("(%s now out of ammo)\n",
                                      weapon->getName());
 
                 // Once the player uses a weapon he can't cancel out of the
@@ -1377,7 +1406,7 @@ static bool myNPCEnchantNearest(class Character * npc, class Character * pc,
 
                 // gmcnutt: for now use the caster's coordinates, only the
                 // summoning spells currently use them.
-                spell->cast(npc, pc, 0, pc->getX(), pc->getY());
+                spell->cast(npc, pc, 0, npc->getX(), npc->getY());
                 return true;
         }
 
@@ -1871,11 +1900,16 @@ static bool myExitCombat(void)
 
 static bool myFollow(class Character * pc)
 {
+        consolePrint("Follow mode ");
         if (Combat.followMode) {
+                consolePrint("OFF\n");
                 Combat.followMode = false;
                 return true;
         }
 
+        consolePrint("ON\n");
+        consolePrint("%s is the leader\n", 
+                     player_party->get_leader()->getName());
         Combat.followMode = true;
         if (pc)
                 myExitSoloMode(pc);
@@ -1926,7 +1960,8 @@ static bool myPcCommandHandler(struct KeyHandler *kh, int key, int keymod)
                 case KEY_SOUTH:
                 case KEY_WEST:
                         dir = keyToDirection(key);
-                        myMovePC(pc, directionToDx(dir), directionToDy(dir));
+                        myMovePC(pc, directionToDx(dir), directionToDy(dir), 
+                                 1);
                         ret = true;
                         break;
                 case KEY_SHIFT_NORTH:
@@ -1965,24 +2000,28 @@ static bool myPcCommandHandler(struct KeyHandler *kh, int key, int keymod)
                         ret = cmdQuit();
                         break;
                 case 'r':
-                        ret = cmdReady(pc);
+                        ret = cmdReady(pc, 0);
                         break;
                 case 'u':
-                        ret = cmdUse(pc);
+                        ret = cmdUse(pc, 0);
                         break;
                 case 'x':
+                        consolePrint("examines around\n");
                         ret = cmdXamine(pc);    // SAM: 1st step towards new
                                                 // (L)ook cmd...
                         break;
                 case 'z':
+                        consolePrint("show status\n");
                         ret = cmdZtats(pc);
                         break;
                 case '@':
+                        consolePrint("skylarks a bit");
                         // SAM: 'AT' command for party-centric information
                         ret = cmdAT(pc);
                         break;
                 case ' ':
                         cmdwin_print("Pass");
+                        consolePrint("Pass\n");
                         ret = true;
                         break;
                 case SDLK_1:
@@ -2039,7 +2078,8 @@ static bool myRunPc(class Character * pc, void *data)
         // *** Follow Mode ***
 
         class Character *leader;
-        if (Combat.followMode && ((leader = player_party->get_leader()) != pc)) {
+        if (Combat.followMode && 
+            ((leader = player_party->get_leader()) != pc)) {
 
                 struct astar_node *path;
                 struct astar_search_info as_info;
@@ -2063,7 +2103,7 @@ static bool myRunPc(class Character * pc, void *data)
                 if (path->next) {
                         myMovePC(pc,
                                  path->next->x - pc->getX(),
-                                 path->next->y - pc->getY());
+                                 path->next->y - pc->getY(), 0);
                 }
 
                 astar_path_destroy(path);
@@ -2077,15 +2117,8 @@ static bool myRunPc(class Character * pc, void *data)
         cmdwin_clear();
         cmdwin_print("%s:", pc->getName());
 
-#ifdef SHOW_WEAPONS_ON_PROMPT
-        consolePrint("%s[", pc->getName());
-        for (class ArmsType * weapon = pc->enumerateWeapons(); weapon != NULL;
-             weapon = pc->getNextWeapon()) {
-                consolePrint("%s ", weapon->getName());
-        }
-        cmdwin_backspace(1);
-        cmdwin_print("]:");
-#endif
+        consolePrint("%s: ", pc->getName());
+        consoleRepaint();
 
         struct KeyHandler kh;
         kh.fx = myPcCommandHandler;

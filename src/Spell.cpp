@@ -792,6 +792,7 @@ enum Spell::cast_result Spell::cast(class Character * caster,
                         } else {
 				success = ok;
                         }
+                        mapUpdate(0);
 		}
 
 	} else if (effects == EFFECT_DESTROY) {

@@ -377,25 +377,25 @@ return false;
 
 bool getdigit(struct KeyHandler * kh, int key, int keymod)
 {
-	struct get_number_info *info;
+struct get_number_info *info;
 
-	info = (struct get_number_info *) kh->data;
+info = (struct get_number_info *) kh->data;
 
-	if (key == CANCEL) {
-		cmdwin_backspace(info->erase);
-		info->digit = 0;
-		return true;
-	}
+if (key == CANCEL) {
+cmdwin_backspace(info->erase);
+info->digit = 0;
+return true;
+}
 
-	if (isdigit(key)) {
-		cmdwin_backspace(info->erase);
-		info->digit = key - '0';
-		if (info->digit != 0)
-			cmdwin_print("%c", key);
-		return true;
-	}
+if (isdigit(key)) {
+cmdwin_backspace(info->erase);
+info->digit = key - '0';
+if (info->digit != 0)
+        cmdwin_print("%c", key);
+return true;
+}
 
-	return false;
+return false;
 }
 
 bool anykey(struct KeyHandler * kh, int key, int keymod)
@@ -432,7 +432,7 @@ bool scroller(struct KeyHandler * kh, int key, int keymod)
 	case '\n':
 		if (context != NULL) {
 			context->selection =
-			    statusGetSelected(context->selector);
+                                statusGetSelected(context->selector);
 		}
 		return true;
 	case SDLK_ESCAPE:
@@ -455,211 +455,211 @@ bool scroller(struct KeyHandler * kh, int key, int keymod)
 
 bool movecursor(struct KeyHandler * kh, int key, int keymod)
 {
-  // A UI mode in which the user can move the cursor 
-  // with ARROW keys, select a target with 
-  // (ENTER | RETURN | SPACE), or cancel with ESCAPE.
-  struct cursor_movement_keyhandler * data;
-  assert(kh);
-  data = (struct cursor_movement_keyhandler *) kh->data;
+        // A UI mode in which the user can move the cursor 
+        // with ARROW keys, select a target with 
+        // (ENTER | RETURN | SPACE), or cancel with ESCAPE.
+        struct cursor_movement_keyhandler * data;
+        assert(kh);
+        data = (struct cursor_movement_keyhandler *) kh->data;
   
-  if (key == '\n' || key == SDLK_SPACE || key == SDLK_RETURN) {
-    return true;  // Done (target selected)
-  }
+        if (key == '\n' || key == SDLK_SPACE || key == SDLK_RETURN) {
+                return true;  // Done (target selected)
+        }
   
-  if (keyIsDirection(key)) {
-    int dir = keyToDirection(key);
-    Cursor->move(directionToDx(dir), directionToDy(dir));
-    mapUpdate(0);
-    return false;  // Keep on keyhandling
-  }
+        if (keyIsDirection(key)) {
+                int dir = keyToDirection(key);
+                Cursor->move(directionToDx(dir), directionToDy(dir));
+                mapUpdate(0);
+                return false;  // Keep on keyhandling
+        }
   
-  if (key == SDLK_ESCAPE) {
-    data->abort = true;
-    return true;  // Done (abort)
-  }
+        if (key == SDLK_ESCAPE) {
+                data->abort = true;
+                return true;  // Done (abort)
+        }
   
-  return false;  // Keep on keyhandling
+        return false;  // Keep on keyhandling
 } // movecursor()
 
 bool movecursor_and_do(struct KeyHandler * kh, int key, int keymod)
 {
-  // As movecursor(), but call kh->each_point_func()
-  // for each cursor move, and kh->each_target_func()
-  // for each point selected with (ENTER, SPACE, RETURN).
-  // 
-  // Unlike movecursor(), multiple targets can be selected.
-  // We expect that eventually the user will exit 
-  // this UI mode with ESCAPE.
-  // 
-  // Also unlike movecursor(), we don't return the (last) target 
-  // selected, as the ESC to exit this UI mode stomps on that info.
-  struct cursor_movement_keyhandler * data;
-  assert(kh);
-  data = (struct cursor_movement_keyhandler *) kh->data;
+        // As movecursor(), but call kh->each_point_func()
+        // for each cursor move, and kh->each_target_func()
+        // for each point selected with (ENTER, SPACE, RETURN).
+        // 
+        // Unlike movecursor(), multiple targets can be selected.
+        // We expect that eventually the user will exit 
+        // this UI mode with ESCAPE.
+        // 
+        // Also unlike movecursor(), we don't return the (last) target 
+        // selected, as the ESC to exit this UI mode stomps on that info.
+        struct cursor_movement_keyhandler * data;
+        assert(kh);
+        data = (struct cursor_movement_keyhandler *) kh->data;
   
-  if (key == '\n' || key == SDLK_SPACE || key == SDLK_RETURN) {
-    int x = Cursor->getX();
-    int y = Cursor->getY();
-    if (data->each_target_func)
-      data->each_target_func(x, y);
-    return false;  // Keep on keyhandling
-  }
+        if (key == '\n' || key == SDLK_SPACE || key == SDLK_RETURN) {
+                int x = Cursor->getX();
+                int y = Cursor->getY();
+                if (data->each_target_func)
+                        data->each_target_func(x, y);
+                return false;  // Keep on keyhandling
+        }
   
-  if (keyIsDirection(key)) {
-    int dir = keyToDirection(key);
-    Cursor->move(directionToDx(dir), directionToDy(dir));
-    mapUpdate(0);
-    int x = Cursor->getX();
-    int y = Cursor->getY();
-    if (data->each_point_func)
-      data->each_point_func(x, y);
-    return false;  // Keep on keyhandling
-  }
+        if (keyIsDirection(key)) {
+                int dir = keyToDirection(key);
+                Cursor->move(directionToDx(dir), directionToDy(dir));
+                mapUpdate(0);
+                int x = Cursor->getX();
+                int y = Cursor->getY();
+                if (data->each_point_func)
+                        data->each_point_func(x, y);
+                return false;  // Keep on keyhandling
+        }
   
-  if (key == SDLK_ESCAPE) {
-    data->abort = true;
-    return true;  // Done (abort)
-  }
-  return false;  // Keep on keyhandling
+        if (key == SDLK_ESCAPE) {
+                data->abort = true;
+                return true;  // Done (abort)
+        }
+        return false;  // Keep on keyhandling
 } // movecursor_and_do()
 
 bool terraform_movecursor_and_do(struct KeyHandler * kh, int key, int keymod)
 {
-  // As movecursor_and_do(), but with additional keybindings
-  // intended for cmdTerraform().
-  struct terraform_mode_keyhandler * data;
-  struct terrain_palette * pp;
-  struct terrain * tt;
-  assert(kh);
-  data = (struct terraform_mode_keyhandler *) kh->data;
-  pp   = data->palette;
+        // As movecursor_and_do(), but with additional keybindings
+        // intended for cmdTerraform().
+        struct terraform_mode_keyhandler * data;
+        struct terrain_palette * pp;
+        struct terrain * tt;
+        assert(kh);
+        data = (struct terraform_mode_keyhandler *) kh->data;
+        pp   = data->palette;
   
-  if (key == '\n' || key == SDLK_SPACE || key == SDLK_RETURN) {
-    int x = Cursor->getX();
-    int y = Cursor->getY();
-    if (data->each_target_func)
-      data->each_target_func(x, y, data);
-    return false;  // Keep on keyhandling
-  }
+        if (key == '\n' || key == SDLK_SPACE || key == SDLK_RETURN) {
+                int x = Cursor->getX();
+                int y = Cursor->getY();
+                if (data->each_target_func)
+                        data->each_target_func(x, y, data);
+                return false;  // Keep on keyhandling
+        }
 
-  if (keyIsDirection(key)) {
-    int dir = keyToDirection(key);
-    Cursor->move(directionToDx(dir), directionToDy(dir));
-    mapUpdate(0);
-    int x = Cursor->getX();
-    int y = Cursor->getY();
-    if (data->each_point_func)
-      data->each_point_func(x, y, data);
-    return false;  // Keep on keyhandling
-  }
+        if (keyIsDirection(key)) {
+                int dir = keyToDirection(key);
+                Cursor->move(directionToDx(dir), directionToDy(dir));
+                mapUpdate(0);
+                int x = Cursor->getX();
+                int y = Cursor->getY();
+                if (data->each_point_func)
+                        data->each_point_func(x, y, data);
+                return false;  // Keep on keyhandling
+        }
 
-  if (key == SDLK_PAGEUP) {
-    // Page Up == Cycle back through terrain in palette
-    palette_prev_terrain(pp);
-    tt = palette_current_terrain(pp);
-    consolePrint("[Prev]  terrain %s '%s'\n", tt->tag, tt->name);
-    return false;  // Keep on keyhandling
-  }
-  if (key == SDLK_PAGEDOWN) {
-    // Page Down == Cycle forward through terrain in palette
-    palette_next_terrain(pp);
-    tt = palette_current_terrain(pp);
-    consolePrint("[Next]  terrain %s '%s'\n", tt->tag, tt->name);
-    return false;  // Keep on keyhandling
-  }
-  if (key == SDLK_HOME) {
-    // Home == Select first terrain in palette
-    palette_first_terrain(pp);
-    tt = palette_current_terrain(pp);
-    consolePrint("[First] terrain %s '%s'\n", tt->tag, tt->name);
-    return false;  // Keep on keyhandling
-  }
-  if (key == SDLK_END) {
-    // End == Select last terrain in palette
-    palette_last_terrain(pp);
-    tt = palette_current_terrain(pp);
-    consolePrint("[Last]  terrain %s '%s'\n", tt->tag, tt->name);
-    return false;  // Keep on keyhandling
-  }
+        if (key == SDLK_PAGEUP) {
+                // Page Up == Cycle back through terrain in palette
+                palette_prev_terrain(pp);
+                tt = palette_current_terrain(pp);
+                consolePrint("[Prev]  terrain %s '%s'\n", tt->tag, tt->name);
+                return false;  // Keep on keyhandling
+        }
+        if (key == SDLK_PAGEDOWN) {
+                // Page Down == Cycle forward through terrain in palette
+                palette_next_terrain(pp);
+                tt = palette_current_terrain(pp);
+                consolePrint("[Next]  terrain %s '%s'\n", tt->tag, tt->name);
+                return false;  // Keep on keyhandling
+        }
+        if (key == SDLK_HOME) {
+                // Home == Select first terrain in palette
+                palette_first_terrain(pp);
+                tt = palette_current_terrain(pp);
+                consolePrint("[First] terrain %s '%s'\n", tt->tag, tt->name);
+                return false;  // Keep on keyhandling
+        }
+        if (key == SDLK_END) {
+                // End == Select last terrain in palette
+                palette_last_terrain(pp);
+                tt = palette_current_terrain(pp);
+                consolePrint("[Last]  terrain %s '%s'\n", tt->tag, tt->name);
+                return false;  // Keep on keyhandling
+        }
 
-  if (key >= SDLK_0 && key <= SDLK_9) {
-    // Number key 0..9 == get/set quick terrain
-    int qt = num_for_key(key);
+        if (key >= SDLK_0 && key <= SDLK_9) {
+                // Number key 0..9 == get/set quick terrain
+                int qt = num_for_key(key);
     
-    if ((keymod && KMOD_LCTRL) || (keymod && KMOD_RCTRL)) {
-      // Control-NUM == set quick terrain to current:
-      int index = palette_get_current_terrain_index(pp);
-      palette_set_quick_terrain(pp, qt, index);
-      tt = palette_current_terrain(pp);
-      consolePrint("[Quick %d] set to %s '%s'\n", qt, tt->tag, tt->name);
-      return false; // Keep on keyhandling
-    }
-    // Plain NUM == set current terrain from quick terrain:
-    int index = palette_get_quick_terrain_index(pp, qt);
-    palette_set_current_terrain(pp, index);
-    tt = palette_current_terrain(pp);
-    consolePrint("[Quick %d] %s '%s'\n", qt, tt->tag, tt->name);
-    return false;  // Keep on keyhandling
-  }
+                if ((keymod && KMOD_LCTRL) || (keymod && KMOD_RCTRL)) {
+                        // Control-NUM == set quick terrain to current:
+                        int index = palette_get_current_terrain_index(pp);
+                        palette_set_quick_terrain(pp, qt, index);
+                        tt = palette_current_terrain(pp);
+                        consolePrint("[Quick %d] set to %s '%s'\n", qt, tt->tag, tt->name);
+                        return false; // Keep on keyhandling
+                }
+                // Plain NUM == set current terrain from quick terrain:
+                int index = palette_get_quick_terrain_index(pp, qt);
+                palette_set_current_terrain(pp, index);
+                tt = palette_current_terrain(pp);
+                consolePrint("[Quick %d] %s '%s'\n", qt, tt->tag, tt->name);
+                return false;  // Keep on keyhandling
+        }
 
-  // ...
+        // ...
     
-  if (key == SDLK_ESCAPE) {
-    data->abort = true;
-    return true;  // Done (abort)
-  }
-  return false;  // Keep on keyhandling
+        if (key == SDLK_ESCAPE) {
+                data->abort = true;
+                return true;  // Done (abort)
+        }
+        return false;  // Keep on keyhandling
 } // terraform_movecursor_and_do()
 
 int num_for_key (int key)
 {
-  int num;
-  switch (key) {
-  case SDLK_0:
-  case SDLK_KP0:
-    num = 0;
-    break;
-  case SDLK_1:
-  case SDLK_KP1:
-    num = 1;
-    break;
-  case SDLK_2:
-  case SDLK_KP2:
-    num = 2;
-    break;
-  case SDLK_3:
-  case SDLK_KP3:
-    num = 3;
-    break;
-  case SDLK_4:
-  case SDLK_KP4:
-    num = 4;
-    break;
-  case SDLK_5:
-  case SDLK_KP5:
-    num = 5;
-    break;
-  case SDLK_6:
-  case SDLK_KP6:
-    num = 6;
-    break;
-  case SDLK_7:
-  case SDLK_KP7:
-    num = 7;
-    break;
-  case SDLK_8:
-  case SDLK_KP8:
-    num = 8;
-    break;
-  case SDLK_9:
-  case SDLK_KP9:
-    num = 9;
-    break;
-  default:
-    printf("num_for_key() IMPOSSIBLE - funky number %d\n", key);
-    assert(0);
-  } // switch(key)
-  return num;
+        int num;
+        switch (key) {
+        case SDLK_0:
+        case SDLK_KP0:
+                num = 0;
+                break;
+        case SDLK_1:
+        case SDLK_KP1:
+                num = 1;
+                break;
+        case SDLK_2:
+        case SDLK_KP2:
+                num = 2;
+                break;
+        case SDLK_3:
+        case SDLK_KP3:
+                num = 3;
+                break;
+        case SDLK_4:
+        case SDLK_KP4:
+                num = 4;
+                break;
+        case SDLK_5:
+        case SDLK_KP5:
+                num = 5;
+                break;
+        case SDLK_6:
+        case SDLK_KP6:
+                num = 6;
+                break;
+        case SDLK_7:
+        case SDLK_KP7:
+                num = 7;
+                break;
+        case SDLK_8:
+        case SDLK_KP8:
+                num = 8;
+                break;
+        case SDLK_9:
+        case SDLK_KP9:
+                num = 9;
+                break;
+        default:
+                printf("num_for_key() IMPOSSIBLE - funky number %d\n", key);
+                assert(0);
+        } // switch(key)
+        return num;
 } // num_for_key()
 
 struct inv_entry *select_item(void)
@@ -1060,9 +1060,9 @@ void cmdFire(void)
 
 	if ((!player_party->vehicle ||
              !player_party->vehicle->getOrdnance())) {
-        // SAM: 
-        // In future, we may check for adjacent "cannon" 
-        // mechanisms here (as in U5).
+                // SAM: 
+                // In future, we may check for adjacent "cannon" 
+                // mechanisms here (as in U5).
 		cmdwin_print("-No cannons available!");
 		return;
 	}
@@ -1088,7 +1088,7 @@ void cmdFire(void)
                                            TURNS_TO_FIRE_VEHICLE_WEAPON));
 }
 
-bool cmdReady(class Character * pc)
+bool cmdReady(class Character * member, int flags)
 {
 	bool committed = false;
 	struct inv_entry *ie;
@@ -1100,17 +1100,20 @@ bool cmdReady(class Character * pc)
 	cmdwin_clear();
 	cmdwin_print("Ready-");
 
-	if (pc != NULL) {
-		cmdwin_print("%s", pc->getName());
-	} else {
-		pc = select_party_member();
-		if (pc == NULL)
-			return false;
-	}
+        // Select user
+        if (flags & CMD_SELECT_MEMBER) {
+                member = select_party_member();
+                if (member == NULL)
+                        return false;       
+        } else {
+                assert(member);
+                cmdwin_print("%s", member->getName());
+        }
+	statusSelectCharacter(member->getOrder());
 
 	cmdwin_print("-");
+	statusSelectCharacter(member->getOrder());
 
-	statusSelectCharacter(pc->getOrder());
 	statusSetMode(Ready);
 	sc.selector = InventoryItem;
 	kh.fx = scroller;
@@ -1138,21 +1141,17 @@ bool cmdReady(class Character * pc)
 
 		cmdwin_print("%s-", arms->getName());
 
-		if (ie->ref && pc->unready(arms)) {
+		if (ie->ref && member->unready(arms)) {
 			msg = "unreadied!";
 			ie->ref--;
 			statusRepaint();
-			consolePrint("%s unreadied %s\n", pc->getName(),
-				     arms->getName());
 		} else {
 
-			switch (pc->ready(arms)) {
+			switch (member->ready(arms)) {
 			case Character::Readied:
 				ie->ref++;
 				statusRepaint();
 				msg = "readied";
-				consolePrint("%s readied %s\n", pc->getName(),
-					     arms->getName());
 				break;
 			case Character::NoAvailableSlot:
 				msg = "no place to put!";
@@ -1175,44 +1174,52 @@ bool cmdReady(class Character * pc)
 
 	eventPopKeyHandler();
 	statusSetMode(ShowParty);
+
+        if (committed) {
+                if (flags & CMD_PRINT_MEMBER) {
+                        consolePrint("%s ", member->getName());
+                }
+                consolePrint("readies arms.\n");
+        }
+
 	return committed;
 }
 
 int select_target(int ox, int oy, int *x, int *y, int range)
 {
-  Cursor->setRange(range);
-  Cursor->setOrigin(ox, oy);
-  Cursor->relocate(Place, *x, *y);  // Remember prev target, if any
-  mapUpdate(0);
+        Cursor->setRange(range);
+        Cursor->setOrigin(ox, oy);
+        Cursor->relocate(Place, *x, *y);  // Remember prev target, if any
+        mapUpdate(0);
   
-  struct cursor_movement_keyhandler data;
-  data.each_point_func  = NULL;
-  data.each_target_func = NULL;
-  data.abort            = false;
-  struct KeyHandler kh;
-  kh.fx   = movecursor;
-  kh.data = &data;
+        struct cursor_movement_keyhandler data;
+        data.each_point_func  = NULL;
+        data.each_target_func = NULL;
+        data.abort            = false;
+        struct KeyHandler kh;
+        kh.fx   = movecursor;
+        kh.data = &data;
   
-  eventPushKeyHandler(&kh);
-  cmdwin_print("<target> (ESC to cancel)");
-  eventHandle();
-  cmdwin_backspace(strlen("<target> (ESC to cancel)"));
-  eventPopKeyHandler();
+        eventPushKeyHandler(&kh);
+        cmdwin_print("<target> (ESC to cancel)");
+        eventHandle();
+        cmdwin_backspace(strlen("<target> (ESC to cancel)"));
+        eventPopKeyHandler();
   
-  *x = Cursor->getX();
-  *y = Cursor->getY();
-  Cursor->remove();
-  mapUpdate(0);
+        *x = Cursor->getX();
+        *y = Cursor->getY();
+        Cursor->remove();
+        mapUpdate(0);
   
-  struct cursor_movement_keyhandler * data_ret;
-  data_ret = (struct cursor_movement_keyhandler *) kh.data;
-  if (data_ret->abort) {
-    cmdwin_print("none!");
-    return -1;  // Aborted, no target
-  }
+        struct cursor_movement_keyhandler * data_ret;
+        data_ret = (struct cursor_movement_keyhandler *) kh.data;
+        if (data_ret->abort) {
+                cmdwin_print("none!");
+                return -1;  // Aborted, no target
+        }
   
-  // Target has been selected, (x,y) contain where
-  return 0;  
+        // Target has been selected, (x,y) contain where
+        return 0;  
 } // select_target()
 
 int select_target_with_doing(int ox, int oy, int *x, int *y,
@@ -1220,51 +1227,51 @@ int select_target_with_doing(int ox, int oy, int *x, int *y,
                              v_funcpointer_ii each_point_func,
                              v_funcpointer_ii each_target_func)
 {
-  // SAM: 
-  // As select_target(), but each_point_func() 
-  // will be called at each point cursored over,
-  // and each_target_func() will be called at each point
-  // selected as a target.
-  // 
-  // Eventually, the user will abort with ESC.
-  // 
-  // SAM: It might be nice to return the last target,
-  // in case our caller wants it, but it seems that
-  // the ESC abort stomps on it.
-  Cursor->setRange(range);
-  Cursor->setViewportBounded(1);
-  Cursor->setOrigin(ox, oy);
-  Cursor->relocate(Place, *x, *y);  // Remember prev target, if any
-  mapUpdate(0);
+        // SAM: 
+        // As select_target(), but each_point_func() 
+        // will be called at each point cursored over,
+        // and each_target_func() will be called at each point
+        // selected as a target.
+        // 
+        // Eventually, the user will abort with ESC.
+        // 
+        // SAM: It might be nice to return the last target,
+        // in case our caller wants it, but it seems that
+        // the ESC abort stomps on it.
+        Cursor->setRange(range);
+        Cursor->setViewportBounded(1);
+        Cursor->setOrigin(ox, oy);
+        Cursor->relocate(Place, *x, *y);  // Remember prev target, if any
+        mapUpdate(0);
   
-  struct cursor_movement_keyhandler data;
-  data.each_point_func  = each_point_func;
-  data.each_target_func = each_target_func;
-  data.abort            = false;
-  struct KeyHandler kh;
-  kh.fx   = movecursor_and_do;
-  kh.data = &data;
+        struct cursor_movement_keyhandler data;
+        data.each_point_func  = each_point_func;
+        data.each_target_func = each_target_func;
+        data.abort            = false;
+        struct KeyHandler kh;
+        kh.fx   = movecursor_and_do;
+        kh.data = &data;
   
-  eventPushKeyHandler(&kh);
-  cmdwin_print("<target> (ESC to exit)");
-  eventHandle();
-  cmdwin_backspace(strlen("<target> (ESC to exit)"));
-  eventPopKeyHandler();
+        eventPushKeyHandler(&kh);
+        cmdwin_print("<target> (ESC to exit)");
+        eventHandle();
+        cmdwin_backspace(strlen("<target> (ESC to exit)"));
+        eventPopKeyHandler();
   
-  *x = Cursor->getX();
-  *y = Cursor->getY();
-  Cursor->remove();
-  mapUpdate(0);
+        *x = Cursor->getX();
+        *y = Cursor->getY();
+        Cursor->remove();
+        mapUpdate(0);
   
-  struct cursor_movement_keyhandler * data_ret;
-  data_ret = (struct cursor_movement_keyhandler *) kh.data;
-  if (data_ret->abort) {
-    cmdwin_print("Done.");
-    return -1;  // Aborted, no target
-  }
+        struct cursor_movement_keyhandler * data_ret;
+        data_ret = (struct cursor_movement_keyhandler *) kh.data;
+        if (data_ret->abort) {
+                cmdwin_print("Done.");
+                return -1;  // Aborted, no target
+        }
   
-  // Target has been selected, (x,y) contain where
-  return 0;
+        // Target has been selected, (x,y) contain where
+        return 0;
 } // select_target_with_doing()
 
 int terraform_cursor_func(int ox, int oy, int *x, int *y,
@@ -1273,46 +1280,46 @@ int terraform_cursor_func(int ox, int oy, int *x, int *y,
                           v_funcpointer_iiv each_target_func,
                           struct place * place)
 {
-  // SAM: 
-  // As select_target(), select_target_with_doing(), 
-  // but with additional keybindings intended for cmdTerraform().
-  Cursor->setRange(range);
-  Cursor->setViewportBounded(1);
-  Cursor->setOrigin(ox, oy);
-  Cursor->relocate(Place, *x, *y);  // Remember prev target, if any
-  mapUpdate(0);
+        // SAM: 
+        // As select_target(), select_target_with_doing(), 
+        // but with additional keybindings intended for cmdTerraform().
+        Cursor->setRange(range);
+        Cursor->setViewportBounded(1);
+        Cursor->setOrigin(ox, oy);
+        Cursor->relocate(Place, *x, *y);  // Remember prev target, if any
+        mapUpdate(0);
   
-  struct terraform_mode_keyhandler data;
-  data.each_point_func  = each_point_func;
-  data.each_target_func = each_target_func;
-  data.abort            = false;
-  data.map              = place->terrain_map;
-  data.palette          = place->terrain_map->palette;
+        struct terraform_mode_keyhandler data;
+        data.each_point_func  = each_point_func;
+        data.each_target_func = each_target_func;
+        data.abort            = false;
+        data.map              = place->terrain_map;
+        data.palette          = place->terrain_map->palette;
 
-  struct KeyHandler kh;
-  kh.fx   = terraform_movecursor_and_do;
-  kh.data = &data;
+        struct KeyHandler kh;
+        kh.fx   = terraform_movecursor_and_do;
+        kh.data = &data;
   
-  eventPushKeyHandler(&kh);
-  cmdwin_print("<target> (ESC to exit)");
-  eventHandle();
-  cmdwin_backspace(strlen("<target> (ESC to exit)"));
-  eventPopKeyHandler();
+        eventPushKeyHandler(&kh);
+        cmdwin_print("<target> (ESC to exit)");
+        eventHandle();
+        cmdwin_backspace(strlen("<target> (ESC to exit)"));
+        eventPopKeyHandler();
   
-  *x = Cursor->getX();
-  *y = Cursor->getY();
-  Cursor->remove();
-  mapUpdate(0);
+        *x = Cursor->getX();
+        *y = Cursor->getY();
+        Cursor->remove();
+        mapUpdate(0);
   
-  struct terraform_mode_keyhandler * data_ret;
-  data_ret = (struct terraform_mode_keyhandler *) kh.data;
-  if (data_ret->abort) {
-    cmdwin_print("Done.");
-    return -1;  // Aborted, no target
-  }
+        struct terraform_mode_keyhandler * data_ret;
+        data_ret = (struct terraform_mode_keyhandler *) kh.data;
+        if (data_ret->abort) {
+                cmdwin_print("Done.");
+                return -1;  // Aborted, no target
+        }
   
-  // Target has been selected, (x,y) contain where
-  return 0;
+        // Target has been selected, (x,y) contain where
+        return 0;
 } // terraform_cursor_func()
 
 bool cmdHandle(class Character * pc)
@@ -1376,47 +1383,61 @@ bool cmdHandle(class Character * pc)
 	return true;
 }
 
-bool cmdUse(class Character * pc)
+bool cmdUse(class Character * member, int flags)
 {
 	struct inv_entry *ie;
 	class ItemType *item;
 	class Character *target;
+        bool print_target;
 
 	cmdwin_clear();
 	cmdwin_print("Use-");
 
-	if (pc != NULL) {
-		cmdwin_print("%s", pc->getName());
-	} else {
-		pc = select_party_member();
-		if (pc == NULL)
-			return false;
-	}
+        // Select user
+        if (flags & CMD_SELECT_MEMBER) {
+                member = select_party_member();
+                if (member == NULL)
+                        return false;       
+        } else {
+                assert(member);
+                cmdwin_print("%s", member->getName());
+        }
+	statusSelectCharacter(member->getOrder());
 
-	target = pc;		// by default
-	cmdwin_print("-");
-
-	statusSelectCharacter(pc->getOrder());
+        // select item to use
+        cmdwin_print("-");
 	statusSetMode(Use);
 	ie = select_item();
 	statusSetMode(ShowParty);
-	if (ie == NULL)
+	if (ie == NULL) {
 		return false;
+        }
 	item = (class ItemType *) ie->type;
 
 	// Get the target to use the item on
+	target = member; // default
 	if (item->getTarget() == TARG_FRIEND) {
 		cmdwin_print("-");
 		target = select_party_member();
 		if (target == NULL)
 			return false;
-	}
+                print_target = true;
+	} else {
+                print_target = false;
+        }
+
 	// Use it on the target
 	item->use(target);
 	statusRepaint();
 
-	consolePrint("%s used ", pc->getName());
+        // Print console message
+        if (flags & CMD_PRINT_MEMBER) {
+                consolePrint("%s ", member->getName());
+        }
+        consolePrint("uses ");
 	item->describe(1);
+        if (print_target)
+                consolePrint(" on %s", target->getName());
 	consolePrint(".\n");
 
 	// Consume the item
@@ -1917,8 +1938,8 @@ static class Object *target_character_for_spell(class Character * caster,
 	if (select_target(caster->getX(), caster->getY(), tx, ty,
 			  spell->range) == 0) {
 		ret =
-		    (class Object *) place_get_object(Place, *tx, *ty,
-						      being_layer);
+                        (class Object *) place_get_object(Place, *tx, *ty,
+                                                          being_layer);
 	}
 
 	if (ret == NULL)
@@ -1945,7 +1966,7 @@ static class Object *target_mech_for_spell(class Character * caster,
 
 	if (select_target(x, y, &x, &y, spell->range) == 0) {
 		ret =
-		    (class Object *) place_get_object(Place, x, y, mech_layer);
+                        (class Object *) place_get_object(Place, x, y, mech_layer);
 	}
 
 	if (ret == NULL)
@@ -2405,7 +2426,7 @@ bool cmdMixReagents(void)
 	consolePrint("%s!\n", spell->getName());
 	player_party->add_to_inventory(spell, quantity);
 
-      done:
+ done:
 	// In case of cancellation I need to unselect all the reagents.
 	elem = reagents.next;
 	while (elem != &reagents) {
@@ -2421,16 +2442,16 @@ bool cmdMixReagents(void)
 
 void look_at_XY(int x, int y)
 {
-    if ( mapTileIsVisible(x, y) ) {
-        consolePrint("At XY=(%d,%d) you see ", x, y);
-        placeDescribe(x, y, PLACE_DESCRIBE_ALL);
-        return;
-    } else if (ShowAllTerrain) {
-        consolePrint("At XY=(%d,%d) you see (via xray) ", x, y);
-        placeDescribe(x, y, PLACE_DESCRIBE_TERRAIN);
-        return;
-    }
-    consolePrint("At XY=(%d,%d) you see nothing (out of LOS)\n", x, y);
+        if ( mapTileIsVisible(x, y) ) {
+                consolePrint("At XY=(%d,%d) you see ", x, y);
+                placeDescribe(x, y, PLACE_DESCRIBE_ALL);
+                return;
+        } else if (ShowAllTerrain) {
+                consolePrint("At XY=(%d,%d) you see (via xray) ", x, y);
+                placeDescribe(x, y, PLACE_DESCRIBE_TERRAIN);
+                return;
+        }
+        consolePrint("At XY=(%d,%d) you see nothing (out of LOS)\n", x, y);
 }
 
 void detailed_examine_XY(int x, int y)
@@ -2438,58 +2459,58 @@ void detailed_examine_XY(int x, int y)
 	// SAM: 
 	// Hmmm...how best to print more info about
 	// the objects on this tile?
-    if ( mapTileIsVisible(x, y) ) {
-        consolePrint("DETAIL XY=(%d,%d) TODO - print detailed view\n", x, y);
-        // For each object/terrain on the tile, print
-        // the name (and perhaps show the sprite in a Status Window mode),
-        // and also show:
-        //     o whether this object blocks LOS (alpha)
-        //     o whether this object blocks movement (pmask)
-        //     o whether this object causes some effect when stepped upon
-        //       (hazardous terrain effects, pressure plate triggers)
-        //     o information specific to the object type, such as:
-        //       o Triggers: current state, and perhaps what it is connected to?
-        //       o NpcParties: alignment/hostility, movement mode (pmask), ...
-        //       o Vehicles: movement mode, armament, current HP
-        //       o Portable items: weapon/armor stats, (U)se effects, etc...
-        // Hmmm...what else?
-        return;
-    }
-    consolePrint("DETAIL XY=(%d,%d) out of LOS\n", x, y);
+        if ( mapTileIsVisible(x, y) ) {
+                consolePrint("DETAIL XY=(%d,%d) TODO - print detailed view\n", x, y);
+                // For each object/terrain on the tile, print
+                // the name (and perhaps show the sprite in a Status Window mode),
+                // and also show:
+                //     o whether this object blocks LOS (alpha)
+                //     o whether this object blocks movement (pmask)
+                //     o whether this object causes some effect when stepped upon
+                //       (hazardous terrain effects, pressure plate triggers)
+                //     o information specific to the object type, such as:
+                //       o Triggers: current state, and perhaps what it is connected to?
+                //       o NpcParties: alignment/hostility, movement mode (pmask), ...
+                //       o Vehicles: movement mode, armament, current HP
+                //       o Portable items: weapon/armor stats, (U)se effects, etc...
+                // Hmmm...what else?
+                return;
+        }
+        consolePrint("DETAIL XY=(%d,%d) out of LOS\n", x, y);
 }
 
 void DM_XRAY_look_at_XY(int x, int y, void * data)
 {
-    // Like look_at_XY() but unconditionally reports what is there.
-    // For use by cmdTerraform and similar.
-    // 
-    // NOTE: data needs to be unused unless cmdTerraform() 
-    //       itself makes such a one.
-    if (!mapTileIsVisible(x, y) ) {
-      consolePrint("(Out of LOS) ", x, y);
-      consolePrint("At XY=(%d,%d) you see ", x, y);
-      placeDescribe(x, y, PLACE_DESCRIBE_ALL);
-      return;
-    }
-    consolePrint("At XY=(%d,%d) you see ", x, y);
-    placeDescribe(x, y, PLACE_DESCRIBE_ALL);
+        // Like look_at_XY() but unconditionally reports what is there.
+        // For use by cmdTerraform and similar.
+        // 
+        // NOTE: data needs to be unused unless cmdTerraform() 
+        //       itself makes such a one.
+        if (!mapTileIsVisible(x, y) ) {
+                consolePrint("(Out of LOS) ", x, y);
+                consolePrint("At XY=(%d,%d) you see ", x, y);
+                placeDescribe(x, y, PLACE_DESCRIBE_ALL);
+                return;
+        }
+        consolePrint("At XY=(%d,%d) you see ", x, y);
+        placeDescribe(x, y, PLACE_DESCRIBE_ALL);
 }
 
 void terraform_XY(int x, int y, void * data)
 {
-    struct terraform_mode_keyhandler * kh = 
-      (struct terraform_mode_keyhandler *) data;
-    struct terrain_map     * map = kh->map;
-    struct terrain_palette * pp  = kh->palette;
-    struct terrain         * tt  = palette_current_terrain(pp);
+        struct terraform_mode_keyhandler * kh = 
+                (struct terraform_mode_keyhandler *) data;
+        struct terrain_map     * map = kh->map;
+        struct terrain_palette * pp  = kh->palette;
+        struct terrain         * tt  = palette_current_terrain(pp);
 
-    if (!mapTileIsVisible(x, y)) {
-      consolePrint("TERRAFORM warning - XY=(%d,%d) out of LOS\n", x, y);
-    }
-    terrain_map_fill(map, x, y, 1, 1, tt);
-    player_party->recompute_los();
-    consolePrint("TERRAFORM put %s '%s' at XY=(%d,%d)\n", 
-                 tt->tag, tt->name, x, y);
+        if (!mapTileIsVisible(x, y)) {
+                consolePrint("TERRAFORM warning - XY=(%d,%d) out of LOS\n", x, y);
+        }
+        terrain_map_fill(map, x, y, 1, 1, tt);
+        player_party->recompute_los();
+        consolePrint("TERRAFORM put %s '%s' at XY=(%d,%d)\n", 
+                     tt->tag, tt->name, x, y);
 } // terraform_XY()
 
 bool cmdXamine(class Character * pc)
@@ -2519,7 +2540,7 @@ bool cmdXamine(class Character * pc)
 		y = player_party->getY();
 	}
 
-    look_at_XY(x,y);  // First look at the current tile
+        look_at_XY(x,y);  // First look at the current tile
 	if (select_target_with_doing(x, y, &x, &y, 99,
 				     look_at_XY, detailed_examine_XY) == -1) {
 		return false;
@@ -2529,30 +2550,30 @@ bool cmdXamine(class Character * pc)
 
 char * name_of_context (void)
 {
-  // SAM: Perhaps this function belongs in common.c?
-  int context = player_party->context;
-  switch (context) {
-  case CONTEXT_WILDERNESS:
-    return "Wilderness Mode";
-  case CONTEXT_COMBAT:
-    return "Combat Mode";
-  case CONTEXT_TOWN:
-    return "Town Mode";
-  default: assert(0);
-  }
+        // SAM: Perhaps this function belongs in common.c?
+        int context = player_party->context;
+        switch (context) {
+        case CONTEXT_WILDERNESS:
+                return "Wilderness Mode";
+        case CONTEXT_COMBAT:
+                return "Combat Mode";
+        case CONTEXT_TOWN:
+                return "Town Mode";
+        default: assert(0);
+        }
 } // name_of_context()
 
 bool cmdAT (class Character * pc)
 {
 	int x, y;
-    char * who = "";
-    char * place_name = "";
+        char * who = "";
+        char * place_name = "";
 
 	cmdwin_clear();
 
-    // Should I check player_party->context
-    // for the context info below, 
-    // rather than the current method?
+        // Should I check player_party->context
+        // for the context info below, 
+        // rather than the current method?
 	if (pc) {
 		// A party member was specified as a parameter, so this must be
 		// combat mode. Use the party member's location as the origin.
@@ -2561,120 +2582,120 @@ bool cmdAT (class Character * pc)
 		x = pc->getX();
 		y = pc->getY();
 	}
-    else {
+        else {
 		// Must be party mode. 
 		// Use the player party's location as the origin.
-        who = "The party";
-        place_name = player_party->getPlace()->name;
-        x = player_party->getX();
-        y = player_party->getY();
+                who = "The party";
+                place_name = player_party->getPlace()->name;
+                x = player_party->getX();
+                y = player_party->getY();
 	}
-    // SAM: Why is this line not safe in combat mode?
-    //      Would it be The Right Thing (TM) 
-    //      for it to be made safe in all contexts?
-    // place_name = player_party->getPlace()->name;
+        // SAM: Why is this line not safe in combat mode?
+        //      Would it be The Right Thing (TM) 
+        //      for it to be made safe in all contexts?
+        // place_name = player_party->getPlace()->name;
     
-    consolePrint("\n");
-    consolePrint("This is %s\n", name_of_context() );
-    consolePrint("%s is in %s (%d,%d)\n", who, place_name, x, y);
+        consolePrint("\n");
+        consolePrint("This is %s\n", name_of_context() );
+        consolePrint("%s is in %s (%d,%d)\n", who, place_name, x, y);
 
-    consolePrint("It is %s on %s, \n"
-                 "%s of %s in the year %d.\n",
-                 time_HHMM_as_string(), day_name(), 
-                 week_name(), month_name(), Clock.year );
+        consolePrint("It is %s on %s, \n"
+                     "%s of %s in the year %d.\n",
+                     time_HHMM_as_string(), day_name(), 
+                     week_name(), month_name(), Clock.year );
 
-    // SAM: Is this really interesting though, I wonder?
-    consolePrint("%d game turns have passed.\n", Turn);
+        // SAM: Is this really interesting though, I wonder?
+        consolePrint("%d game turns have passed.\n", Turn);
 
-    consolePrint("The wind is blowing from the %s.\n",
-                 directionToString(windGetDirection()) );
+        consolePrint("The wind is blowing from the %s.\n",
+                     directionToString(windGetDirection()) );
 
-    if (Place->underground) {
-      consolePrint("%s is underground, and cannot see the sky.\n", who);
-    } // underground
-    else {
-      // SAM: 
-      // This message won't be true if you are under 
-      // a roof in a town.  In future there should be 
-      // logic querying the (future) roof-ripping code here.
-      consolePrint("%s is beneath the open sky.\n", who);
+        if (Place->underground) {
+                consolePrint("%s is underground, and cannot see the sky.\n", who);
+        } // underground
+        else {
+                // SAM: 
+                // This message won't be true if you are under 
+                // a roof in a town.  In future there should be 
+                // logic querying the (future) roof-ripping code here.
+                consolePrint("%s is beneath the open sky.\n", who);
 
-      // Message(s) about the sun:
-      if (sun_is_up() ) {
-              consolePrint("The sun is up at arc %d.%s\n", Sun.arc,
-                           is_noon() ? "  It is noon." : "");
-      }
-      if (sun_is_down() ) {
-              consolePrint("The sun has set at arc %d.%s\n", Sun.arc,
-                     is_midnight() ? "  It is midnight." : "");
-      }
+                // Message(s) about the sun:
+                if (sun_is_up() ) {
+                        consolePrint("The sun is up at arc %d.%s\n", Sun.arc,
+                                     is_noon() ? "  It is noon." : "");
+                }
+                if (sun_is_down() ) {
+                        consolePrint("The sun has set at arc %d.%s\n", Sun.arc,
+                                     is_midnight() ? "  It is midnight." : "");
+                }
 
-      // Message(s) about the moon(s):
-      int num_moons_visible = 0;
-      for (int i = 0; i < NUM_MOONS; i++) {
-        struct moon *moon = &Moons[i];
+                // Message(s) about the moon(s):
+                int num_moons_visible = 0;
+                for (int i = 0; i < NUM_MOONS; i++) {
+                        struct moon *moon = &Moons[i];
 
-        if (moon_is_visible(moon->arc))
-          {
-            num_moons_visible++;
-            consolePrint("Moon %d is at arc %d in phase %d.\n",
-                         i, moon->arc, moon->phase);
-            // SAM:
-            // In future, we shall want GhulScript for
-            // the names of the heavenly bodies, 
-            // and the names of their phases:
-            // 
-            // consolePrint("%s is %s in phase %s.\n",
-            //              moon_name(i), 
-            //              arc_description(moon->arc), 
-            //              phase_name(moon->phase) );
+                        if (moon_is_visible(moon->arc))
+                        {
+                                num_moons_visible++;
+                                consolePrint("Moon %d is at arc %d in phase %d.\n",
+                                             i, moon->arc, moon->phase);
+                                // SAM:
+                                // In future, we shall want GhulScript for
+                                // the names of the heavenly bodies, 
+                                // and the names of their phases:
+                                // 
+                                // consolePrint("%s is %s in phase %s.\n",
+                                //              moon_name(i), 
+                                //              arc_description(moon->arc), 
+                                //              phase_name(moon->phase) );
 
-          }
-        // moon->arc,
-        // MoonInfo.sprite[moon->phase]
-      }
-      if (num_moons_visible == 0)
-        consolePrint("No moons can be seen now.\n");
+                        }
+                        // moon->arc,
+                        // MoonInfo.sprite[moon->phase]
+                }
+                if (num_moons_visible == 0)
+                        consolePrint("No moons can be seen now.\n");
 
-    } // open air, under the sky
+        } // open air, under the sky
 
-    if (player_party->vehicle) {
-      consolePrint("%s is %s a %s.\n", 
-                   who, "using", player_party->vehicle->getName() );
-      // SAM:
-      // In future, we shall want GhulScript to specify 
-      // whether one is to be
-      //     "riding" "driving" "piloting" "sailing"
-      // a particular vehicle type.
-      // The existing 'mv_desc' field (Ride, Sail)
-      // is related, but we need the gerund of the verb.
-    }
-    else {
-      // SAM: Not true for a party of Gazers or Nixies.
-      // Similar GhulScript for party / character movement mode
-      // descriptions and gerunds?
-      consolePrint("%s is on foot.\n", who);
-    }
-    consolePrint("\n");
+        if (player_party->vehicle) {
+                consolePrint("%s is %s a %s.\n", 
+                             who, "using", player_party->vehicle->getName() );
+                // SAM:
+                // In future, we shall want GhulScript to specify 
+                // whether one is to be
+                //     "riding" "driving" "piloting" "sailing"
+                // a particular vehicle type.
+                // The existing 'mv_desc' field (Ride, Sail)
+                // is related, but we need the gerund of the verb.
+        }
+        else {
+                // SAM: Not true for a party of Gazers or Nixies.
+                // Similar GhulScript for party / character movement mode
+                // descriptions and gerunds?
+                consolePrint("%s is on foot.\n", who);
+        }
+        consolePrint("\n");
     
 
-    /*
-      Information reported shall include:
-      X the current place,X,Y
-      X the in-game time in game time units (HH:MM, YYYY/MM/DD)
-      X the in-game time in elapased turns (this is of less interest)
-      X the current weather status (wind)
-      X the current astronomy (day/night, sun, moons)
-      X the UI mode of the party (Wilderness,Town,Dungeon,Combat)
-      X whether the party is on foot or in a vehicle (and what type)
-      . the number of party members, names, order, and basic vital stats
-      . global party stats such as food and gold
-      . any special effects (buffs/nerfs) currently affecting the party,
-      . such as haste/quickness/slow, time stop, protection, etc.
-      . Xamine type information about the tile the party is standing on.
-    */
+        /*
+          Information reported shall include:
+          X the current place,X,Y
+          X the in-game time in game time units (HH:MM, YYYY/MM/DD)
+          X the in-game time in elapased turns (this is of less interest)
+          X the current weather status (wind)
+          X the current astronomy (day/night, sun, moons)
+          X the UI mode of the party (Wilderness,Town,Dungeon,Combat)
+          X whether the party is on foot or in a vehicle (and what type)
+          . the number of party members, names, order, and basic vital stats
+          . global party stats such as food and gold
+          . any special effects (buffs/nerfs) currently affecting the party,
+          . such as haste/quickness/slow, time stop, protection, etc.
+          . Xamine type information about the tile the party is standing on.
+        */
 
-    return true;
+        return true;
 } // cmdAT()
 
 bool cmdTerraform(class Character * pc)
@@ -2898,7 +2919,7 @@ static bool keyHandler(struct KeyHandler *kh, int key, int keymod)
                         cmdQuit();
                         break;
                 case 'r':
-                        cmdReady(NULL);
+                        cmdReady(NULL, CMD_SELECT_MEMBER|CMD_PRINT_MEMBER);
                         break;
                 case 's':
                         cmdSearch(player_party->getX(), player_party->getY());
@@ -2907,7 +2928,7 @@ static bool keyHandler(struct KeyHandler *kh, int key, int keymod)
                         myTalk();
                         break;
                 case 'u':
-                        cmdUse(NULL);
+                        cmdUse(NULL, CMD_SELECT_MEMBER|CMD_PRINT_MEMBER);
                         break;
                 case 'x':
                         cmdXamine(NULL);
@@ -3017,10 +3038,11 @@ static bool keyHandler(struct KeyHandler *kh, int key, int keymod)
 
                 if (Turn != saved_turn) {
 
-                        // Note: always update the clock before the turn wq. For
-                        // example, when entering a place all the NPC parties use the
-                        // wall clock time to synchronize their schedules, so it
-                        // needs to be set BEFORE calling them.
+                        // Note: always update the clock before the turn
+                        // wq. For example, when entering a place all the NPC
+                        // parties use the wall clock time to synchronize their
+                        // schedules, so it needs to be set BEFORE calling
+                        // them.
                         clockUpdate();
 
                         foogodAdvanceTurns();
@@ -3029,13 +3051,13 @@ static bool keyHandler(struct KeyHandler *kh, int key, int keymod)
                         skyAdvanceTurns();
                         windAdvanceTurns();
 
-                        // Most commands burn through at least one turn. Let the
-                        // turn-based work queue catch up.
+                        // Most commands burn through at least one turn. Let
+                        // the turn-based work queue catch up.
                         wqRunToTick(&TurnWorkQueue, Turn);
                 }
 
-                // The player may have died as a result of executing a command or
-                // running the work queue.
+                // The player may have died as a result of executing a command
+                // or running the work queue.
                 if (player_party->all_dead()) {
                         dead();
                         return true;

@@ -120,11 +120,21 @@ PARTY t_water_elemental {
   }
 }
 
+FORMATION Swarm_Formation {
+        w 5;
+        h 5;
+        n 25;
+        13 12 11 10 9
+        14 3  2  1  24
+        15 4  0  8  23
+        16 5  6  7  22
+        17 18 19 20 21
+}
 
 PARTY t_slimes {
         name "puddle of slimes";
         sprite s_slime;
-        formation null;
+        formation Swarm_Formation;
         groups {
                 slime null s_slime 10;
         }
@@ -133,7 +143,7 @@ PARTY t_slimes {
 PARTY t_yellow_slimes {
         name "yellow slime";
         sprite s_yellow_slime;
-        formation null;
+        formation Swarm_Formation;
         groups {
                 yellow_slime null s_yellow_slime 1;
         }

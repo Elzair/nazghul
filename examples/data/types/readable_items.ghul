@@ -51,7 +51,7 @@
 DOCUMENT_TYPE(t_short_scroll, "scroll", s_scroll1,
           "This is a short document.");
 
-DOCUMENT_TYPE(t_users_guide, "The Users Guide to Nazghul", s_scroll1,
+DOCUMENT_TYPE(t_users_guide, "book titled 'The Users Guide to Nazghul'", s_scroll1,
           "PLAYER COMMANDS
 
 *** General syntax ***
@@ -124,7 +124,7 @@ F)ollow = Select follow mode, where the party members automatically follow the p
 
 <ESC> = Aborts most commands");
 
-DOCUMENT_TYPE(t_map_editors_guide, "Nazghul Map Editors Guide", s_scroll1,
+DOCUMENT_TYPE(t_map_editors_guide, "book titled 'Nazghul Map Editors Guide'", s_scroll1,
               "Map Editing Commands:
 ^S)ave Map  - Save the current map and palette.
 ^T)erraform - Enter map editing mode.
