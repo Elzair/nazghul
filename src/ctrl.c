@@ -954,15 +954,15 @@ static int ctrl_is_valid_target(class Character *attacker, class Object *obj)
                 return 0;
 
         /* Skip the attacker */
-        if (obj == data->attacker)
+        if (obj == attacker)
                 return 0;
 
         /* Skip dead beings */
-        if (obj->isDead)
+        if (obj->isDead())
                 return 0;
 
         /* Skip non-hostiles */
-        if (! are_hostile(data->attacker, obj))
+        if (! are_hostile(attacker, (Being*)obj))
                 return 0;
 
         /* Skip non-visible objects */
@@ -970,7 +970,7 @@ static int ctrl_is_valid_target(class Character *attacker, class Object *obj)
                 return 0;
 
         /* Skip off-map beings (is this even possible?) */
-        if (! obj->isOnMap)
+        if (! obj->isOnMap())
                 return 0;
 
         return 1;
@@ -984,13 +984,14 @@ static void ctrl_select_target_visitor(struct node *node, void *parm)
 {
         class Object *obj;
         struct ctrl_select_target_data *data;
+        int distance;
 
         /* Extract the typed variables from the generic parms */
         obj = (class Object*)node->ptr;
         data = (struct ctrl_select_target_data *)data;
 
         /* Check if this object makes a valid target */
-        if (! ctrl_is_valid_target(data.attacker, obj))
+        if (! ctrl_is_valid_target(data->attacker, obj))
                 return;
 
         /* Compute the distance from attacker to obj */
@@ -1020,9 +1021,9 @@ static class Character * ctrl_select_target(class Character *character)
         data.distance = place_max_distance(character->getPlace()) + 1;
 
         /* Search all objects in the current place for targets. */
-        node_for_each(place_get_all_objects(character->getPlace()),
-                      ctrl_select_target_visitor,
-                      &data);
+        node_foldr(place_get_all_objects(character->getPlace()),
+                   ctrl_select_target_visitor,
+                   &data);
 
         /* Check if one was found */
         if (data.target) {

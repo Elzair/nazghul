@@ -608,7 +608,7 @@ static bool player_member_rest_one_hour(class Character * pm, void *data)
         return false;
 }
 
-void player_party::exec(struct exec_context *context)
+void player_party::exec()
 {
 
         if (allDead())

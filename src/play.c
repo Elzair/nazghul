@@ -158,8 +158,6 @@ int G_exec_loops = 0;
 
 static void play_loop(void)
 {
-        struct exec_context context;
-        memset(&context, 0, sizeof(context));
         int times[8];
 
         Turn = 0;
@@ -178,7 +176,7 @@ static void play_loop(void)
                 // ------------------------------------------------------------
 
                 times[0] = SDL_GetTicks();
-                place_exec(Place, &context);
+                place_exec(Place);
 
                 if (Session->reloaded)
                         /* Safe now. */

@@ -134,13 +134,6 @@ struct inv_entry {
 	class ObjectType *type;
 };
 
-struct exec_context {
-        struct place *place;
-        int combat:1;
-        int quicken:1;
-        int time_stop:1;
-};
-
 typedef struct hook_entry {
         struct list list;
         struct effect *effect;
@@ -294,7 +287,7 @@ class Object {
         virtual class Object *clone();
 	virtual bool joinPlayer(void);     
 	virtual void synchronize();
-        virtual void exec(struct exec_context *context);
+        virtual void exec();
         virtual int getActionPointsPerTurn();
         virtual void applyEffect(closure_t *effect);
         virtual int getActionPoints();
@@ -376,7 +369,14 @@ class Object {
 
 	char *tag;
 	struct list list;	// for the loader, not the place
+
+#ifdef TURN_LIST_NODES
+        /* Points back to the node used to keep this object on the turn list
+         * for its place */
+        struct node *turn_list;
+#else        
         struct list turn_list; /* for processing each object in a turn */
+#endif
 
         // The session handle for removing/checking the orphan list
         void *handle;

@@ -83,7 +83,7 @@ class player_party : public Party {
         virtual char *getName(void);
         virtual bool isVisible();
         virtual void describe();
-        virtual void exec(struct exec_context *context);
+        virtual void exec();
         virtual void damage(int amount);
         virtual int getSpeed(void);
         virtual void decActionPoints(int points);

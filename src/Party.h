@@ -98,7 +98,7 @@ class Party:public Being {
 	virtual void destroy();        
 	virtual void disembark();
         virtual void distributeMembers();
-	virtual void exec(struct exec_context *cntxt);
+	virtual void exec();
         virtual char *getName(void);
 	virtual bool joinPlayer(void);
         virtual bool removeEffect(struct effect *effect);

@@ -1733,7 +1733,7 @@ void Character::pathfind_to(class Object *target)
         astar_path_destroy(path);                
 }
 
-void Character::exec(struct exec_context *context)
+void Character::exec()
 {
         int points_last_loop;
         struct KeyHandler kh;

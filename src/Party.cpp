@@ -533,7 +533,7 @@ bool Party::attack_with_ordnance(int d)
 }
 
 
-void Party::exec(struct exec_context *cntxt)
+void Party::exec()
 {        
         assert(!isDestroyed());
 

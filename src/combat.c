@@ -851,13 +851,7 @@ static void random_ambush(void)
 }
 #endif
 
-#if 0
-struct node {
-        struct node *next;
-        struct node *prev;
-        void *ptr;
-};
-
+#ifdef TURN_LIST_NODES
 
 /*****************************************************************************
  * combat_npc_status_visitor - determine the status of the npc faction(s)
@@ -873,15 +867,15 @@ struct node {
  *****************************************************************************/
 static void combat_hostile_status_visitor(struct node *node, void *data)
 {
-        enum combat_faction_status *stat;
+        enum combat_faction_status *status;
         class Object *obj;
 
         /* Extract the typed variables from the generic parms */
-        stat = (struct combat_faction_status *)data;
+        status = (enum combat_faction_status *)data;
         obj = (class Object*)node->ptr;
 
         /* If we already know a hostile faction exists then skip the rest */
-        if (*stat == COMBAT_FACTION_EXISTS)
+        if (*status == COMBAT_FACTION_EXISTS)
                 return;
 
         /* Skip non-beings */
@@ -894,13 +888,13 @@ static void combat_hostile_status_visitor(struct node *node, void *data)
 
         /* A hostile npc means a hostile faction still exists */
         if (are_hostile((Being*)obj, player_party)) {
-                *stat = COMBAT_FACTION_EXISTS;
+                *status = COMBAT_FACTION_EXISTS;
                 return;
         }
 
         /* Check for a charmed hostile */
         if (are_natively_hostile((Being*)obj, player_party)) {
-                *stat = COMBAT_FACTION_CHARMED;
+                *status = COMBAT_FACTION_CHARMED;
         }
 }
 
@@ -919,9 +913,9 @@ static enum combat_faction_status combat_get_hostile_faction_status(void)
 
         /* Check each object in the current place to determine the status of
          * the player faction. */
-        node_for_each(place_get_all_objects(Place),
-                      combat_hostile_status_visitor,
-                      &stat);
+        node_foldr(place_get_all_objects(Place),
+                   combat_hostile_status_visitor,
+                   &stat);
 
         /* Return the discovered status. */
         return stat;
@@ -938,16 +932,16 @@ static enum combat_faction_status combat_get_hostile_faction_status(void)
  *****************************************************************************/
 static void combat_player_status_visitor(struct node *node, void *data)
 {
-        enum combat_faction_status *stat;
+        enum combat_faction_status *status;
         class Object *obj;
 
         /* Extract the typed variables from the generic parms */
-        stat = (struct combat_faction_status *)data;
+        status = (enum combat_faction_status *)data;
         obj = (class Object*)node->ptr;
 
         /* If we already know the player is still fighting then skip the rest
          * of this. */
-        if (info->status == COMBAT_FACTION_EXISTS)
+        if (*status == COMBAT_FACTION_EXISTS)
                 return;
 
         /* Skip non-beings */
@@ -960,13 +954,13 @@ static void combat_player_status_visitor(struct node *node, void *data)
 
         /* A non-hostile party member means the player is still fighting. */
         if (! are_hostile((Being*)obj, player_party)) {
-                info->status = COMBAT_FACTION_EXISTS;
+                *status = COMBAT_FACTION_EXISTS;
                 return;
         }
 
         /* Check if a player party members has been charmed */
         if (are_natively_hostile((Being*)obj, player_party)) {
-                info->status = COMBAT_FACTION_CHARMED;
+                *status = COMBAT_FACTION_CHARMED;
         }
 }
 
@@ -989,9 +983,9 @@ static enum combat_faction_status combat_get_player_faction_status(void)
 
         /* Check each object in the current place to determine the status of
          * the player faction. */
-        node_for_each(place_get_all_objects(Place),
-                      combat_player_status_visitor,
-                      &stat);
+        node_foldr(place_get_all_objects(Place),
+                   combat_player_status_visitor,
+                   &stat);
 
         /* Return the discovered status. */
         return stat;

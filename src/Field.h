@@ -58,7 +58,7 @@ class Field:public Object {
         Field(class FieldType *type, int duration);
 	virtual ~ Field();
 	virtual int getLight();
-	virtual void exec(struct exec_context *context);
+	virtual void exec();
         virtual void save(struct save *save);
         virtual int getPclass();
 

@@ -23,7 +23,10 @@
 #ifndef node_h
 #define node_h
 
+#include "macros.h"
 #include "list.h"
+
+BEGIN_DECL
 
 struct node {
         struct node *next;
@@ -32,14 +35,22 @@ struct node {
         int ref;
 };
 
-#define node_add(n1,n2) list_add(n1, n2)
-#define node_init(n) { list_init(n); (n)->ptr = NULL; }
-#define node_add_tail(n1,n2) list_add_tail(n1,n2)
-#define node_remove(n) list_remove(n)
-#define node_addref(n) ((n)->ref++)
 
+#define nodelst(n) ((struct list *)(n))
+#define node_add(n1,n2) list_add(nodelst(n1), nodelst(n2))
+#define node_init(n) { list_init(nodelst(n)); (n)->ptr = NULL; }
+#define node_add_tail(n1,n2) list_add_tail(nodelst(n1), nodelst(n2))
+#define node_remove(n) list_remove(nodelst(n))
+#define node_addref(n) ((n)->ref++)
+#define node_for_each(head,ptr) \
+        for ((ptr) = (head)->next; (ptr) != (head); (ptr) = (ptr)->next)
+                                           
 extern struct node *node_new(void *data);
 extern void node_unref(struct node *node);
+extern void node_foldr(struct node *node,
+                       void (*fx)(struct node *node, void *data),
+                       void *data);
 
+END_DECL
 
 #endif /* node_h */

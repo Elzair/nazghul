@@ -63,6 +63,10 @@ BEGIN_DECL
 #define place_is_marked_for_death(p) ((p)->marked_for_death)
 #define place_max_distance(p) (place_w(p) + place_h(p))
 
+#ifdef TURN_LIST_NODES
+#define place_get_all_objects(p) (&(p)->turn_list)
+#endif
+
 #define PFLAG_HORZ             (1 << 0) /* matches ASTAR_HORZ */
 #define PFLAG_VERT             (1 << 1) /* matches ASTAR_VERT */
 #define PFLAG_IGNOREMECHS      (1 << 2)
@@ -230,7 +234,11 @@ extern int place_add_object(struct place *place, Object * object);
 extern void place_remove_object(struct place *place, Object * object);
 
 extern Object *place_get_object(struct place *place, int x, int y, enum layer layer);
+
+#ifndef TURN_LIST_NODES
 extern struct list *place_get_all_objects(struct place *place);
+#endif
+
 extern void place_add_moongate(struct place *place, 
                                class Moongate * moongate);
 
@@ -287,7 +295,7 @@ extern int place_is_hazardous(struct place *place, int x, int y);
 extern class Party *place_random_encounter(struct place *);
 extern void place_paint_objects(struct place *place, int mx, int my, int sx, int sy);
 extern int place_los_blocked(struct place *place, int ax, int ay, int bx, int by);
-extern void place_exec(struct place *place, struct exec_context *cntxt);
+extern void place_exec(struct place *place);
 extern int place_contains_hostiles(struct place *place, Being *subject);
 extern void place_synchronize(struct place *place);
 extern void place_enter(struct place *place);

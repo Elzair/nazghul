@@ -161,7 +161,7 @@ class Character:public Being {
         virtual void endCamping(void);
         virtual void endGuarding();
         virtual void endResting(void);
-        virtual void exec(struct exec_context *context);
+        virtual void exec();
         virtual void groupExitTo(struct place *dest_place, 
                                  int dest_x, int dest_y,
                                  struct closure *closure);

@@ -111,7 +111,7 @@ int Field::getLight()
         return getObjectType()->getLight();
 }
 
-void Field::exec(struct exec_context *context)
+void Field::exec()
 {
         startTurn();
         if (isDestroyed())

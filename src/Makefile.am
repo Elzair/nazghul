@@ -139,4 +139,6 @@ nazghul_SOURCES =		\
 	Being.h \
 	Being.cpp \
 	factions.h \
-	result.h
+	result.h \
+	node.h \
+	node.c

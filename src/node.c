@@ -22,6 +22,7 @@
 
 #include "node.h"
 
+#include <assert.h>
 #include <stdlib.h>
 
 struct node *node_new(void *data)
@@ -40,4 +41,21 @@ void node_unref(struct node *node)
         node->ref--;
         if (! node->ref)
                 free(node);
+}
+
+void node_foldr(struct node *head,
+                void (*fx)(struct node *node, void *data),
+                void *data)
+{
+        struct node *i;
+        struct node *p;
+
+        i = head->next;
+
+        while (i != head) {
+                p = i;
+                i = i->next;
+
+                fx(p, data);
+        }
 }

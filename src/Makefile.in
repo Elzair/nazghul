@@ -217,7 +217,9 @@ nazghul_SOURCES = \
 	Being.h \
 	Being.cpp \
 	factions.h \
-	result.h
+	result.h \
+	node.h \
+	node.c
 
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_CLEAN_FILES = 
@@ -245,7 +247,7 @@ cmd.$(OBJEXT) clock.$(OBJEXT) vmask.$(OBJEXT) ctrl.$(OBJEXT) \
 scheme.$(OBJEXT) session.$(OBJEXT) closure.$(OBJEXT) kern.$(OBJEXT) \
 dice.$(OBJEXT) gob.$(OBJEXT) magic.$(OBJEXT) effect.$(OBJEXT) \
 conv.$(OBJEXT) ptable.$(OBJEXT) mmode.$(OBJEXT) log.$(OBJEXT) \
-dtable.$(OBJEXT) hstack.$(OBJEXT) Being.$(OBJEXT)
+dtable.$(OBJEXT) hstack.$(OBJEXT) Being.$(OBJEXT) node.$(OBJEXT)
 nazghul_LDADD = $(LDADD)
 nazghul_DEPENDENCIES = 
 nazghul_LDFLAGS = 
