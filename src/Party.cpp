@@ -1124,7 +1124,7 @@ int Party::getMovementCost(int pclass)
 {
         struct list *entry;
         class Character *member;
-        int minCost = 255;
+        int maxCost = 0;
 
         if (vehicle)
                 return vehicle->getMovementCost(pclass);
@@ -1132,11 +1132,11 @@ int Party::getMovementCost(int pclass)
         FOR_EACH_MEMBER(entry, member) {
                 if (!member->isDead()) {
                         int cost = member->getMovementCost(pclass);
-                        minCost = min(cost, minCost);
+                        maxCost = max(cost, maxCost);
                 }
         }
 
-        return minCost;
+        return maxCost;
 }
 
 class Character *Party::getMemberByOrder(int order)

@@ -39,8 +39,15 @@ static void log_entry_del(struct log_entry *entry)
 
 static void log_entry_print(struct log_entry *entry, char *fmt, va_list args)
 {
+        /* If fmt is NULL experimentation shows that vsnprintf returns -1,
+         * which is also the indication that we attempted to overflow the
+         * buffer. To prevent the ambiguity (we want to handle 'nothing
+         * written' differently than 'overflow') check for NULL here. */
+        if (!fmt)
+                return;
+
         int wrote = vsnprintf(entry->ptr, entry->room, fmt, args);
-        if (wrote > 0) {
+        if (wrote >= 0) {
                 entry->room -= wrote;
                 entry->ptr += wrote;
         } else {

@@ -62,6 +62,7 @@
 #include "Missile.h"
 #include "conv.h"
 #include "mmode.h"
+#include "log.h"
 
 #include <assert.h>
 #include <ctype.h>              // isspace()
@@ -2095,8 +2096,7 @@ static pointer kern_obj_apply_damage(scheme *sc, pointer args)
         }
 
         obj->damage(amount);
-        if (obj->isPlayerControlled())
-                consolePrint("%s %s!\n", obj->getName(), desc);
+
         return sc->NIL;
 }
 
@@ -2179,6 +2179,31 @@ static pointer kern_print(scheme *sc,  pointer args)
                         rt_err("kern-print: bad args");
                 }
         }
+
+        return sc->NIL;
+}
+
+static pointer kern_log_msg(scheme *sc,  pointer args)
+{
+        log_begin(NULL);
+
+        while (scm_is_pair(sc, args)) {
+
+                pointer val = scm_car(sc, args);
+                args = scm_cdr(sc, args);
+
+                if (scm_is_str(sc, val)) {
+                        log_continue(scm_str_val(sc, val));
+                } else if (scm_is_int(sc, val)) {
+                        log_continue("%d", scm_int_val(sc, val));
+                } else if (scm_is_real(sc, val)) {
+                        log_continue("%f", scm_real_val(sc, val));
+                } else {
+                        rt_err("kern-print: bad args");
+                }
+        }
+
+        log_end(NULL);
 
         return sc->NIL;
 }
@@ -4579,6 +4604,9 @@ scheme *kern_init(void)
         scm_define_proc(sc, "kern-map-view-center", kern_map_view_center);
         scm_define_proc(sc, "kern-map-view-add", kern_map_view_add);
         scm_define_proc(sc, "kern-map-view-rm", kern_map_view_rm);
+
+        /* kern-log api */
+        scm_define_proc(sc, "kern-log-msg", kern_log_msg);
 
         /* Revisit: probably want to provide some kind of custom port here. */
         scheme_set_output_port_file(sc, stderr);

@@ -663,13 +663,13 @@ bool cmdGet(class Object *actor, bool scoop_all)
         x = actor->getX() + directionToDx(dir);
         y = actor->getY() + directionToDy(dir);
 
-        log_begin("Get: %s - ", directionToString(dir));
 	item = place_get_item(actor->getPlace(), x, y);
 	if (!item) {
-		log_end("nothing to get!\n");
 		return false;
 	}
-       
+               
+        log_begin_group();
+
         cmdGetObject(actor, item);
 
 	if (scoop_all) {
@@ -679,7 +679,8 @@ bool cmdGet(class Object *actor, bool scoop_all)
 		}
 	}
 
-        log_end("ok!");
+        log_end_group();
+
         mapSetDirty();
         actor->decActionPoints(NAZGHUL_BASE_ACTION_POINTS);
 
@@ -737,15 +738,13 @@ bool cmdOpen(class Character * pc)
 	/*** Open Container ***/
 
 	// Get the container.
-	container = (class Container *) place_get_object(Place, x, y, container_layer);
+	container = (class Container *) place_get_object(Place, x, y, 
+                                                         container_layer);
 	if (NULL == container) {
 		return false;
 	}
 
         log_begin_group();
-
-	log_begin("%s opens ", pc->getName());
-	container->describe();
 
         pc->decActionPoints(NAZGHUL_BASE_ACTION_POINTS);
 
@@ -756,9 +755,8 @@ bool cmdOpen(class Character * pc)
 
 		// Roll to disarm
 		if (random() % 999 < pc->getDexterity()) {
-			log_end("...disarmed a trap!");
+			log_msg("You disarm a trap!");
 		} else {
-			log_end("...triggered a trap!\n");
                         closure_exec(trap, "pp", pc, container);
 		}
 
@@ -791,7 +789,9 @@ bool cmdOpen(class Character * pc)
 
         log_begin("You find ");
 	place_describe(pc->getPlace(), x, y, PLACE_DESCRIBE_OBJECTS);
-        log_end(NULL);
+        log_end(".");
+
+        log_end_group();
 
 	mapSetDirty();
 	return true;

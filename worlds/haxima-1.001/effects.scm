@@ -184,7 +184,11 @@
   (kern-obj-apply-damage obj "burning" 10))
 
 (define (apply-lightning obj)
-  (kern-obj-apply-damage obj "shocking" 15))
+  (kern-obj-apply-damage obj "shocked" 15))
+
+(define (lightning-trap actor subject)
+  (kern-log-msg "Lightning trap!")
+  (apply-lightning actor))
 
 ;; Explosion trap - shakes the screen and damages all surrounding objects
 
