@@ -35,7 +35,7 @@ PLACE  GreenTowerLower {
   name        "Underground beneath the Town of GreenTower"
   wraps       0;
   map         GreenTowerLower_Map;
-  underground 0;
+  underground 1;
   objects {
 
           // Mechs

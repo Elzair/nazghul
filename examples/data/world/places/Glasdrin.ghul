@@ -96,7 +96,7 @@ MAP Glasdrin_Map {
     }
 }
 
-PLACE  GreenTower {
+PLACE  Glasdrin {
   type        town;
   parent      p_wilderness;
   x           39;

@@ -80,7 +80,6 @@ PROJECTILE_TYPE(t_rock,     "rock",           s_boulder,      null, 1);
 // Ordnance Ammunition (for vehicle weapons)
 PROJECTILE_TYPE(t_cannonball, "cannonball",   s_magic,        null, 50);
 
-
 #endif // projectiles_ghul
 
 /* eof */
