@@ -202,6 +202,9 @@
 (define (is-alive? kchar)
   (> (kern-char-get-hp kchar) 0))
 
+(define (dead? kchar)
+  (not (is-alive? kchar)))
+
 (define (has-ap? kobj) 
   (> (kern-obj-get-ap kobj) 0))
 
