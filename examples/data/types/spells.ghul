@@ -340,7 +340,6 @@ SPELL spell_wind_change {
   }
 }
 
-// Technically this one is from u6, not u5, but I need it for venomous animals.
 SPELL spell_poison {
   name      "In Nox Por (poison bolt)";
   sprite    s_field_poison;

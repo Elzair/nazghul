@@ -28,10 +28,6 @@
  */
 
 
-// #define YAUR  // New game world being created
-#define U4_U5    // Uses data files from Ultima, temporary and to be replaced
-
-
 #include "./types.ghul"  // Object types, underpinnings of the world
 #include "./world.ghul"  // Object instances, the world itself
 
