@@ -214,7 +214,9 @@
   (moongate-animate black-gate (reverse blackgate-stages))
   (kern-log-enable #f)
   (kern-char-set-sleep ch_wanderer #t)
+
   (kern-obj-put-at kplayer (list p_moongate_clearing 11 11))
+
   (moongate-animate black-gate (reverse blackgate-stages))
   (kern-sleep 10000)
   
@@ -228,4 +230,8 @@
   (kern-log-enable #t)  
   (kern-log-msg "...then awaken to a strange new world."))
 
-(kern-set-start-proc start-scene)
+(define (simple-start kplayer)
+  (kern-obj-put-at kplayer (list p_moongate_clearing 11 11)))
+
+;;(kern-set-start-proc start-scene)
+(kern-set-start-proc simple-start)
