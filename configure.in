@@ -30,10 +30,7 @@ AM_PATH_SDL($SDL_VERSION,
             AC_MSG_ERROR([*** SDL version $SDL_VERSION not found!])
 )
 
-# gmcnutt: hack commented out and replaced the line below to avoid the -O2
-#option which causes runtime problems
-# CFLAGS="$CFLAGS $SDL_CFLAGS -Wall"
-CFLAGS="$SDL_CFLAGS -g -Wall"
+CFLAGS="$CFLAGS $SDL_CFLAGS -Wall"
 
 # gmcnutt: hack - how do I add a check for the SDL_image lib?
 LIBS="$LIBS $SDL_LIBS  -lSDL_image"
@@ -63,10 +60,7 @@ AC_SUBST(GAME_INSTALLDIR)
 CFLAGS="$CFLAGS"
 
 dnl C++ flags are the same as the C flags
-# gmcnutt: hack commented out and replaced the line below to avoid the -O2
-#option which causes runtime problems
-#CXXFLAGS="$CXXFLAGS $CFLAGS"
-CXXFLAGS="$CFLAGS"
+CXXFLAGS="$CXXFLAGS $CFLAGS"
 
 # Finally create all the generated files
 AC_OUTPUT([
