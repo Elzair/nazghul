@@ -975,9 +975,9 @@ int select_target(int ox, int oy, int *x, int *y, int range)
   kh.data = &data;
   
   eventPushKeyHandler(&kh);
-  cmdwin_print("<target>");
+  cmdwin_print("<target> (ESC to cancel)");
   eventHandle();
-  cmdwin_backspace(strlen("<target>"));
+  cmdwin_backspace(strlen("<target> (ESC to cancel)"));
   eventPopKeyHandler();
   
   *x = Cursor->getX();
@@ -1026,9 +1026,9 @@ int select_target_with_doing(int ox, int oy, int *x, int *y,
   kh.data = &data;
   
   eventPushKeyHandler(&kh);
-  cmdwin_print("<target>");
+  cmdwin_print("<target> (ESC to exit)");
   eventHandle();
-  cmdwin_backspace(strlen("<target>"));
+  cmdwin_backspace(strlen("<target> (ESC to exit)"));
   eventPopKeyHandler();
   
   *x = Cursor->getX();
@@ -2238,7 +2238,7 @@ bool cmdAT (class Character * pc)
       . Xamine type information about the tile the party is standing on.
     */
 
-	return true;
+    return true;
 } // cmdAT()
 
 static bool keyHandler(struct KeyHandler *kh, int key)
@@ -2299,7 +2299,8 @@ static bool keyHandler(struct KeyHandler *kh, int key)
 		// SAM: Changing (L)ook command 
 		// from "look at 1 tile" to a "Look Mode"
 		cmdLook(player_party->getX(), player_party->getY());
-		break;
+		turns_used = 0;
+        break;
 	case 'm':
 		cmdMixReagents();
 		break;
@@ -2324,13 +2325,16 @@ static bool keyHandler(struct KeyHandler *kh, int key)
 	case 'x':
 		cmdXamine(NULL);	// SAM: 1st step towards new (L)ook
 					// cmd...
-		break;
+		turns_used = 0;
+        break;
 	case 'z':
 		cmdZtats(NULL);
-		break;
+		turns_used = 0;
+        break;
     case '@':
       // SAM: 'AT' command for party-centric information
       cmdAT(NULL);
+      turns_used = 0;
       break;
 	case ' ':
 		consolePrint("Pass\n");
