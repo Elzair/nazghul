@@ -1,3 +1,14 @@
+Changes between nazghul-0.1.4 and nazghul0.1.3
+
+o Towns now work like dungeons and combat, as opposed to working like the
+  wilderness. This means that instead of seeing a single icon represent the
+  party in town you will see each party member. Follow, Solo and Round-Robin
+  modes all work as you would expect.
+
+o Fixed the problems with compiling on recent versions of gcc.
+
+o Minor tweeks to the main map.
+
 Changes between nazghul-0.1.2 and nazghul-0.1.3
 
 sglasby:

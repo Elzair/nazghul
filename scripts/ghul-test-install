@@ -1,6 +1,6 @@
 #!/bin/sh
 
-NAZGHUL=$HOME/main-nazghul/nazghul
+NAZGHUL=$HOME/nazghul-cvs
 INSTALL=$HOME/nazghul-install
 
 version=$1
