@@ -220,6 +220,9 @@
       a
       b))
 
+(define (join-player kchar)
+  (kern-char-join-player kchar))
+
 ;; ----------------------------------------------------------------------------
 ;; search-rect -- apply a procedure to every location in a rectangular region
 ;; and return a list of its non-nil results.

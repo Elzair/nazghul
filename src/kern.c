@@ -3483,6 +3483,22 @@ KERN_API_CALL(kern_char_set_sleep)
 }
 
 /* 
+ * kern_char_join_player -- wrapper for Character::joinPlayer
+ */
+KERN_API_CALL(kern_char_join_player)
+{
+        class Character *ch;
+
+        ch = (class Character*)unpack_obj(sc, &args, "kern-char-join-player");
+        if (!ch)
+                return sc->F;
+
+        if (ch->joinPlayer())
+                return sc->T;
+        return sc->F;
+}
+
+/* 
  * kern_char_set_ai -- change the AI for a Character object
  */
 KERN_API_CALL(kern_char_set_ai)
@@ -6181,6 +6197,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-char-get-species", kern_char_get_species);
         API_DECL(sc, "kern-char-get-strength", kern_char_get_strength);
         API_DECL(sc, "kern-char-get-weapons", kern_char_get_weapons);
+        API_DECL(sc, "kern-char-join-player", kern_char_join_player);
         API_DECL(sc, "kern-char-kill", kern_char_kill);
         API_DECL(sc, "kern-char-resurrect", kern_char_resurrect);
         API_DECL(sc, "kern-char-set-ai", kern_char_set_ai);

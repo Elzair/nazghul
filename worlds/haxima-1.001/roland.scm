@@ -49,17 +49,8 @@
   (if (roland-is-free? knpc)
       ;; yes - will the player accept his continued allegiance to Froederick?
       (begin
-        (say knpc "I am a vassal of Lord Froederick and cannot turn my "
-             "hand against him, and must aid him any way I can. Do you still "
-             "wish me to join you?")
-        (if (kern-conv-get-yes-no? kpc)
-            ;; yes - join
-            (begin 
-              (say knpc "Then I am honored to join you!")
-              (kern-char-join-party knpc (kern-char-get-party kpc)))
-            ;; no - don't join
-            (say knpc "I understand. I must proceed with haste to Trigrave!")))
-      ;; no - roland is still imprisoned
+        (say knpc "I am honored to join you!")
+        (join-player knpc))
       (say knpc "But I am locked in this cell!")))
 
 (define roland-conv
