@@ -12,7 +12,8 @@
 (define (moon-signal-gate moon phase signal)
   (display "moon-signal-gate")(newline)
   (let ((kgate (safe-eval (list-ref moon phase))))
-        (signal-kobj kgate signal kgate)))
+    (if (not (null? kgate))
+        (signal-kobj kgate signal kgate))))
 
 (define (moon-phase-change kmoon old-phase new-phase)
   (display "moon-phase-change")(newline)

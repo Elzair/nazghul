@@ -639,3 +639,5 @@
  (dtable-row -1   -1   -1  -1    2    -2) ;; accursed
  (dtable-row -2   -2   -2  -2   -2     0) ;; monsters
  )
+
+(kern-load "pre-entry-hooks.scm")

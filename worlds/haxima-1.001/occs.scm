@@ -23,6 +23,23 @@
               )
              )
 
+(kern-mk-occ 'oc_wanderer         ; tag
+             "wanderer"           ; name 
+             2.0                  ; magic 
+             -5                   ; hp_mod 
+             +10                   ; hp_mult 
+             +10                  ; mp_mod 
+             +10                  ; mp_mult 
+             +1                   ; hit_mod 
+             +1                   ; def_mod 
+             +1                   ; dam_mod 
+             +1                   ; arm_mod
+             nil ; container 
+             nil ; typical traps 
+             nil ; typical arms
+             nil ; typical items
+             )
+
 (kern-mk-occ 'oc_druid
              "wizard"             ; name 
              2.0                  ; magic 
