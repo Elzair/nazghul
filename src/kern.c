@@ -5892,6 +5892,53 @@ KERN_API_CALL(kern_player_set_gold)
         return sc->T;
 }
 
+KERN_API_CALL(kern_begin_combat)
+{
+        struct move_info info;
+        struct combat_info cinfo;
+        class Party *party;
+        struct place *place;
+        int x, y;
+
+        if (unpack_loc(sc, &args, &place, &x, &y, "kern-begin-combat")) {
+                return sc->NIL;
+        }
+
+        party = (class Party*)unpack_obj(sc, &args, "kern-begin-combat");
+        if (!party)
+                return sc->NIL;
+
+        /* Combat expects the npc party to have valid coords, whereas I don't
+         * expect the script to always put the npc part on the map before
+         * calling this function, so force the location of the npc party to the
+         * location specified. */
+        party->setPlace(place);
+        party->setX(x);
+        party->setY(y);
+
+        memset(&info, 0, sizeof(info));
+        info.place = place;
+        info.x = x;
+        info.y = y;
+        info.dx = party->getDx();
+        info.dy = party->getDy();
+        info.px = player_party->getX();
+        info.py = player_party->getY();
+        info.npc_party = party;
+                
+        if (!info.dx && !info.dy)
+                info.dx = 1;
+        else if (info.dx && info.dy)
+                info.dy = 0;
+
+        memset(&cinfo, 0, sizeof(cinfo));
+        cinfo.defend = true;
+        cinfo.move = &info;
+                
+        combat_enter(&cinfo);
+        return sc->T;
+}
+
 #if 0
 KERN_API_CALL(kern_los_invalidate)
 {
@@ -6082,6 +6129,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-add-tick-job", kern_add_tick_job);
         API_DECL(sc, "kern-add-time-stop", kern_add_time_stop);
         API_DECL(sc, "kern-add-xray-vision", kern_add_xray_vision);
+        API_DECL(sc, "kern-begin-combat", kern_begin_combat);
         API_DECL(sc, "kern-blit-map", kern_blit_map);
         API_DECL(sc, "kern-dice-roll", kern_dice_roll);
         API_DECL(sc, "kern-fire-missile", kern_fire_missile);
@@ -6112,7 +6160,7 @@ scheme *kern_init(void)
         /* ui api */
         API_DECL(sc, "kern-ui-direction", kern_ui_direction);
         API_DECL(sc, "kern-ui-select-party-member", 
-                        kern_ui_select_party_member);
+                 kern_ui_select_party_member);
         API_DECL(sc, "kern-ui-target", kern_ui_target);
         API_DECL(sc, "kern-ui-waitkey", kern_ui_waitkey);
         API_DECL(sc, "kern-ui-page-text", kern_ui_page_text);

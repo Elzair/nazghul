@@ -219,7 +219,8 @@ static void ctrl_work(class Party *party)
         /* Check if the player is _on this spot_. Yes, this can happen under
          * current game rules. If a player enters a portal and an npc is on the
          * destination then... */
-	if (party->getX() == player_party->getX() && party->getY() == player_party->getY()) {
+	if (party->getX() == player_party->getX() && 
+            party->getY() == player_party->getY()) {
                 
                 struct move_info info;
                 struct combat_info cinfo;
@@ -251,7 +252,8 @@ static void ctrl_work(class Party *party)
         
 
 	/* Check if the player is in visible range */
-	d = place_walking_distance(party->getPlace(), party->getX(), party->getY(),
+	d = place_walking_distance(party->getPlace(), party->getX(), 
+                                   party->getY(),
 				   player_party->getX(), player_party->getY());
 
 	if (d > party->getVisionRadius()) {

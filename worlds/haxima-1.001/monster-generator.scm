@@ -19,15 +19,17 @@
 
 
 ;; ----------------------------------------------------------------------------
-;; mk-monster-generator-ifc -- make an interface for a monster generator in the
-;; wilderness
+;; mk-wilderness-monster-generator-ifc -- make an interface for a monster
+;; generator in the wilderness
 ;; ----------------------------------------------------------------------------
-(define (mk-wilderness-monster-generator-ifc threshold max party faction vehicle)
+(define (mk-wilderness-monster-generator-ifc threshold max party faction 
+                                             vehicle)
   (define (roll-to-encounter)
     (>= (modulo (random-next) 1000) threshold))
   (define (not-too-many kobj)
     (< (length (filter (lambda (a) (eqv? (kern-obj-get-type a) party))
-                       (kern-place-get-beings (loc-place (kern-obj-get-location kobj)))))
+                       (kern-place-get-beings (loc-place 
+                                               (kern-obj-get-location kobj)))))
        max))
   (define (generate gen)
     (if (and (roll-to-encounter)
@@ -40,9 +42,25 @@
        (method 'exec generate)))
 
 ;; ----------------------------------------------------------------------------
-;; mk-monster-generator -- make an object type for spawning random encounters
+;; mk-wilderness-ambush-ifc -- make an interface for a monster ambush generator
+;; in the wilderness
 ;; ----------------------------------------------------------------------------
-(define (mk-wilderness-monster-generator tag threshold max party faction vehicle)
+(define (mk-wilderness-ambush-generator-ifc threshold max party faction) 
+  (define (generate gen)
+    (if (>= (modulo (random-next) 1000) threshold)
+        (begin
+          (kern-log-msg "*** AMBUSH ***")
+          (kern-begin-combat (kern-obj-get-location gen)
+                             (kern-mk-party party faction nil)))))
+  (ifc '() 
+       (method 'exec generate)))
+
+;; ----------------------------------------------------------------------------
+;; mk-wilderness-monster-generator -- make an object type for spawning random
+;; encounters
+;; ----------------------------------------------------------------------------
+(define (mk-wilderness-monster-generator tag threshold max party faction 
+                                         vehicle)
   (mk-obj-type tag                                  ;; tag
                "monster generator"                  ;; name
                nil                                  ;; sprite
@@ -52,6 +70,20 @@
                                                     party
                                                     faction
                                                     vehicle)))
+
+;; ----------------------------------------------------------------------------
+;; mk-wilderness-ambush-generator -- make an object type for spawning random
+;; ambush encounters
+;; ----------------------------------------------------------------------------
+(define (mk-wilderness-ambush-generator tag threshold max party faction)
+  (mk-obj-type tag                ;; tag
+               "ambush generator" ;; name
+               nil                ;; sprite
+               layer-none         ;; layer
+               (mk-wilderness-ambush-generator-ifc threshold  ;; ifc
+                                                   max
+                                                   party
+                                                   faction)))
 
 ;; ----------------------------------------------------------------------------
 ;; Monster Generators
@@ -66,13 +98,13 @@
                                  t_goblin_horde 
                                  faction-monster nil)
 
-(mk-wilderness-monster-generator 't_spider_generator
+(mk-wilderness-ambush-generator 't_spider_generator
                                  990
                                  2
                                  t_wood_spiders
                                  faction-wood-spider nil)
 
-(mk-wilderness-monster-generator 't_queen_spider_generator
+(mk-wilderness-ambush-generator 't_queen_spider_generator
                                  999
                                  1
                                  t_queen_wood_spiders
