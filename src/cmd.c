@@ -1498,8 +1498,17 @@ static int cmdCampInWilderness(class Object *camper)
 	if (!place_is_passable(camper->getPlace(), camper->getX(), 
                                camper->getY(), camper, PFLAG_IGNOREVEHICLES)) {
 		cmdwin_print("not here!");
+                log_msg("Camp - not here!");
 		return 0;
 	}
+
+        if (place_get_subplace(camper->getPlace(), 
+                               camper->getX(), 
+                               camper->getY())) {
+		cmdwin_print("not here!");
+                log_msg("Camp - not here!");
+                return 0;
+        }
 
 	hours = select_hours();
 	if (hours == 0)

@@ -568,7 +568,7 @@ static void ctrl_move_character(class Character *character, int dir)
         if (result) {
 
                 /* Log unusual results to the console */
-                log_msg("%s: %s - %s\n", character->getName(), dirstr,
+                log_msg("%s: %s - %s", character->getName(), dirstr,
                              result);
         }
 

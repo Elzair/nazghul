@@ -836,7 +836,7 @@ void Character::awaken(void)
 {
         if (isAsleep() && ! isResting()) {
                 changeSleep(false);
-                consolePrint("%s wakes up!\n", getName());
+                log_msg("%s wakes up!", getName());
         }
 }
 
