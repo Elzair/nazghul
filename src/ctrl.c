@@ -794,6 +794,7 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
                 break;
 
         case '<':
+        case SDLK_ESCAPE:
                 // ----------------------------------------------------
                 // Quick exit from wilderness combat. The current place
                 // must be the special wildernss combat place and it
