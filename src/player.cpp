@@ -1195,7 +1195,7 @@ void player_party::ambushWhileCamping()
                 // ------------------------------------------------------------
                 
                 if (camp_guard != NULL) {
-                        member->awaken();
+                        member->endResting();
                 }
 
                 // ------------------------------------------------------------
@@ -1206,6 +1206,9 @@ void player_party::ambushWhileCamping()
                         member->ambushWhileCamping();
                 }
         }
+
+        if (camp_guard)
+                camp_guard->endGuarding();
 }
 
 void player_party::endResting()
