@@ -73,15 +73,15 @@ void palette_entry_print(FILE * fp, int indent,
 			 struct terrain_palette_entry *entry)
 {
 	static char glyph_str[BOGUS_MAX_SIZE + 1];
-        static char   tag_str[BOGUS_MAX_SIZE + 1];
+    static char   tag_str[BOGUS_MAX_SIZE + 1];
 	assert(fp);
-        assert(entry);
-
-	snprintf(glyph_str, BOGUS_MAX_SIZE, "\"%s\"", entry->glyph);
-        snprintf(tag_str,   BOGUS_MAX_SIZE, "%s;",    entry->terrain->name);
-
+    assert(entry);
+    
+    snprintf(glyph_str, BOGUS_MAX_SIZE, "\"%s\"", entry->glyph);
+    snprintf(tag_str,   BOGUS_MAX_SIZE, "%s)",    entry->terrain->tag);
+    
 	INDENT;
-        fprintf(fp, "%-6s %s\n", glyph_str, tag_str);
+    fprintf(fp, "(list  %-6s %-20s  ;; \"%s\"\n", glyph_str, tag_str, entry->terrain->name);
 } // palette_entry_print()
 
 struct terrain_palette *terrain_palette_new(char *tag)
@@ -92,6 +92,7 @@ struct terrain_palette *terrain_palette_new(char *tag)
 
         list_init(&palette->set);
         palette->tag = strdup(tag);
+        palette->widest_glyph = 0;
         palette->current_terrain_index = PAL_TERRAIN_NOT_SET;
         palette->num_entries = 0;
 
@@ -139,10 +140,13 @@ void terrain_palette_del(struct terrain_palette *pal)
 void terrain_palette_add(struct terrain_palette *pal, char *glyph, struct terrain *ter)
 {
         struct terrain_palette_entry *entry;
+        int n = strlen(glyph);
 
         entry = terrain_palette_entry_new(glyph, ter);
         list_add_tail(&pal->set, &entry->list);
         pal->num_entries++;
+        if (pal->widest_glyph < n)
+                pal->widest_glyph = n;
 }
 
 struct terrain_palette_entry *palette_entry(struct terrain_palette *palette, int n)
@@ -390,23 +394,38 @@ void palette_print(FILE * fp, int indent, struct terrain_palette *palette)
         struct list *elem;
 	assert(fp);
 
+    // (kern-mk-palette 'pal_expanded
+    //     (list
+    //         ;; There are 999 entries in this palette
+    //         ;; The widest glyph is 4 characters
+    //         (list "__" t_deep)
+    //         (list ".." t_grass)
+    //     )
+    // )
+
+
 	INDENT;
-	fprintf(fp, "PALETTE %s {\n", palette->tag);
+	fprintf(fp, "(kern-mk-palette '%s\n", palette->tag);
 	indent += INDENTATION_FACTOR;
 
 	INDENT;
-	fprintf(fp, "// num_entries  %d;\n", palette->num_entries);
-        INDENT;
-        fprintf(fp, "// widest_glyph %d;\n", palette->widest_glyph);
-
-        list_for_each(&palette->set, elem) {
-                struct terrain_palette_entry *entry;
-                entry = outcast(elem, struct terrain_palette_entry, list);
+	fprintf(fp, "(list\n");
+	indent += INDENTATION_FACTOR;
+    INDENT;
+    fprintf(fp, ";; There are %d entries in this palette\n", palette->num_entries);
+    INDENT;
+    fprintf(fp, ";; The widest glyph is %d characters\n",   palette->widest_glyph);
+    
+    list_for_each(&palette->set, elem) {
+        struct terrain_palette_entry *entry;
+        entry = outcast(elem, struct terrain_palette_entry, list);
 		palette_entry_print(fp, indent, entry);
 	}
 
-	INDENT;
-	fprintf(fp, "// quick terrains:\n");
+    fprintf(fp, "\n");
+    // SAM: BUG here -- The interpreter complains about the commented-out quick terrains lines.
+	//INDENT;
+	//fprintf(fp, ";; quick terrains:\n");
 	for (i = 0; i < NUM_QUICK_TERRAINS; i++) {
 		struct terrain *qt = palette_quick_terrain(palette, i);
 		char *tag  = "(none)";
@@ -414,12 +433,17 @@ void palette_print(FILE * fp, int indent, struct terrain_palette *palette)
 		if (qt) {
 			name = qt->name;
 		}
-		INDENT;
-		fprintf(fp, "// %d '%s' '%s'\n", i, tag, name);
+        // SAM: BUG here -- The interpreter complains about the commented-out quick terrains lines...
+		//INDENT;
+		//fprintf(fp, ";; %d '%s' '%s'\n", i, tag, name);
 	}
 
-        indent -= INDENTATION_FACTOR;
-        INDENT;
-        fprintf(fp, "} // PALETTE %s\n", palette->tag);
+    indent -= INDENTATION_FACTOR;
+    INDENT;
+    fprintf(fp, ")\n");
+
+    indent -= INDENTATION_FACTOR;
+    INDENT;
+    fprintf(fp, ") ;; palette %s\n", palette->tag);
 	fprintf(fp, "\n");
 } // palette_print()
