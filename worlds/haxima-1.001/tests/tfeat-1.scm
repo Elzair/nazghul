@@ -135,7 +135,7 @@
       " r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r || || ~~ || .. || tt ~~ ~~ ~~ .. .. .. ..  x cc cc cc cc  x ~~ ~~ ~~ -- __ __ __  x -- -- ~~ ~~ || || || || || || || || || || || || || || || || "
       " r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r || ~~ ~~ || .. || tt ~~ tt ~~ .. .. ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ -- __ __ __  x __ -- ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ || || || ~~ ~~ ~~ ~~ || || "
       " r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r || ~~ tt  b ..  b .. ~~ tt ~~ .. .. ~~ tt  x cc cc cc cc  x cc cc ~~ -- __ __ __  x __ -- ~~ ~~ || || || || || || ~~ || || || ~~ || || ~~ ~~ || "
-      " r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r ~~ ~~ .. .. .. .. ~~ .. ~~ ~~ ~~ ~~ tt  x x! cc cc x!  x cc cc ~~ -- -- -- --  x -- ~~ ~~ tt tt || || || || || ~~ || || || ~~ || || tt ~~ ~~ "
+      " r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r ~~ ~~ .. .. .. .. ~~ .. ~~ ~~ ~~ ~~ tt  x x! cc cc x!  x cc cc ~~ -- -- -- --  x -- ~~ ~~ tt tt || || || || || || || || || ~~ || || tt ~~ ~~ "
       " r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r || ~~ ~~ ~~ ~~ ~~ ~~ .. .. .. .. .. ..  x cc cc cc cc  x cc cc ~~ ~~ ~~ ~~ ~~  x ~~ ~~ .. || tt || || || || || ~~ ~~ ~~ ~~ ~~ || tt tt tt || "
       " r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r .. .. .. .. .. .. .. ..  r  r  r  x cc cc cc cc cc cc cc cc cc cc cc cc  x .. .. .. tt tt || || || || || || || || || || || || tt || || "
       " r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  x cc cc cc cc  x cc cc cc cc cc cc cc x! .. .. ..  b tt || || || || || || tt || || || || || || || || "
@@ -272,9 +272,9 @@
                 (kern-mk-obj t_moongate 1)
                 (list
                   'ord
-                  #f
+                  #t
                   '()
-                  #f
+                  #t
                   #f
                 )
               ) ;; bind
@@ -771,6 +771,62 @@
             ) ;; bind
           18 20)
           (list
+            (kern-mk-char
+              'ch_slurmok
+              "Slurmok"
+              sp_yellow_slime
+              oc_wizard
+              s_yellow_slime
+              3
+              4 14 3
+              0 1
+              10 5
+              0 0
+              0 0
+              26 0
+              240 8
+              nil
+              nil
+              nil
+              nil
+              ;; hooks
+              (list
+                (list
+                  ef_poison_immunity
+                  '()
+                  2
+                  0
+                )
+              )
+            )
+          17 26)
+          (list
+            (kern-mk-char
+              'ch_thorald_greybeard
+              "Thorald Greybeard"
+              sp_human
+              oc_wizard
+              s_companion_wizard
+              3
+              20 30 22
+              0 1
+              10 5
+              0 0
+              0 0
+              39 0
+              240 8
+              nil
+              nil
+              nil
+              (list
+                t_rpg
+              )
+              ;; hooks
+              (list
+              )
+            )
+          23 26)
+          (list
             (bind
               (kern-mk-obj tf_ew_bridge 1)
               '()
@@ -830,111 +886,12 @@
   ;; contents
   (list
     (list
-      (kern-mk-player
-        'player
-        s_companion_fighter
-        "Walk"
-        "sounds/walk.wav"
-        1000 500 3
-        nil
-        m_campsite
-        nil
-        nil ; player's vehicle
-        (kern-mk-container
-          nil
-          ;; trap
-          nil
-          ;; contents
-          (list
-            (list 1 t_rpg)
-            (list 1 the-goblin-lexicon)
-            (list 1 t_poison_immunity_potion)
-            (list 10 mandrake)
-            (list 10 nightshade)
-            (list 10 blood_moss)
-            (list 10 sulphorous_ash)
-            (list 10 black_pearl)
-            (list 10 spider_silk)
-            (list 10 ginseng)
-            (list 10 garlic)
-            (list 25 t_oil)
-            (list 100 t_arrow)
-            (list 1 t_dagger)
-            (list 1 in_vas_por_ylem)
-            (list 1 in_flam_hur)
-            (list 1 sanct_lor)
-            (list 3 in_sanct)
-            (list 3 vas_lor)
-            (list 10 in_lor)
-            (list 1 in_zu)
-            (list 2 an_xen_exe)
-            (list 2 sanct)
-            (list 2 an_sanct)
-            (list 2 in_nox_por)
-            (list 2 kal_xen)
-            (list 2 an_xen_corp)
-            (list 10 vas_rel_por)
-            (list 10 test_recur)
-          )
-        )
-        (list
-          (kern-mk-char
-            'ch_thorald_greybeard
-            "Thorald Greybeard"
-            sp_human
-            oc_wizard
-            s_companion_wizard
-            3
-            20 30 22
-            0 1
-            10 5
-            0 0
-            0 0
-            39 0
-            240 8
-            nil
-            nil
-            nil
-            (list
-              t_rpg
-            )
-            ;; hooks
-            (list
-            )
-          )
-          (kern-mk-char
-            'ch_slurmok
-            "Slurmok"
-            sp_yellow_slime
-            oc_wizard
-            s_yellow_slime
-            3
-            4 14 3
-            0 1
-            10 5
-            0 0
-            0 0
-            26 0
-            240 8
-            nil
-            nil
-            nil
-            nil
-            ;; hooks
-            (list
-              (list
-                ef_poison_immunity
-                '()
-                2
-                0
-              )
-            )
-          )
-        )
-      )
-    32 24)
-    (list
       (kern-mk-field f_sleep_perm -1)    34 24)
+    (list
+      (kern-mk-party t_goblin_horde 4
+        (kern-mk-vehicle t_ship 1 100)
+      )
+    3 28)
     (list
       (kern-mk-party t_skeleton_brigade 4
         nil
@@ -958,19 +915,16 @@
       (kern-mk-obj t_goblin_generator 1)
     20 20)
     (list
-      (kern-mk-party t_goblin_horde 4
-        (kern-mk-vehicle t_ship 7 100)
-      )
-    2 29)
+      (kern-mk-field f_poison 19)    34 22)
     (list
       (kern-tag 'mg-1
         (bind
           (kern-mk-obj t_moongate 1)
           (list
             'ord
-            #t
+            #f
             '()
-            #t
+            #f
             #f
           )
         ) ;; bind
@@ -979,11 +933,70 @@
     (list
       (kern-mk-vehicle t_ship 1 100)
     36 26)
+    (list
+      (kern-mk-field f_fire 19)    34 23)
+    (list
+      (kern-mk-party t_slime_glob 4
+        nil
+      )
+    36 20)
   ) ;; end of objects
   (list
   )
 ) ;; end of place p_wilderness
 
+(kern-mk-player
+  'player
+  s_companion_fighter
+  "Walk"
+  "sounds/walk.wav"
+  1000 500 3
+  nil
+  m_campsite
+  nil
+  nil ; player's vehicle
+  (kern-mk-container
+    nil
+    ;; trap
+    nil
+    ;; contents
+    (list
+      (list 1 t_rpg)
+      (list 1 the-goblin-lexicon)
+      (list 1 t_poison_immunity_potion)
+      (list 10 mandrake)
+      (list 10 nightshade)
+      (list 10 blood_moss)
+      (list 10 sulphorous_ash)
+      (list 10 black_pearl)
+      (list 10 spider_silk)
+      (list 10 ginseng)
+      (list 10 garlic)
+      (list 25 t_oil)
+      (list 100 t_arrow)
+      (list 1 t_dagger)
+      (list 1 in_vas_por_ylem)
+      (list 1 in_flam_hur)
+      (list 1 sanct_lor)
+      (list 3 in_sanct)
+      (list 3 vas_lor)
+      (list 10 in_lor)
+      (list 1 in_zu)
+      (list 2 an_xen_exe)
+      (list 2 sanct)
+      (list 2 an_sanct)
+      (list 2 in_nox_por)
+      (list 2 kal_xen)
+      (list 2 an_xen_corp)
+      (list 10 vas_rel_por)
+      (list 10 test_recur)
+    )
+  )
+  (list
+    ch_thorald_greybeard
+    ch_slurmok
+  )
+)
 ;;--------------
 ;; Miscellaneous
 ;;--------------
@@ -991,7 +1004,7 @@
 (kern-set-cursor ls_whirlpool)
 (kern-set-crosshair t_crosshair)
 (kern-set-ascii ss_little_sprites 32)
-(kern-set-clock 0 0 0 0 16 40)
+(kern-set-clock 0 0 0 0 12 48)
 ;; ---------
 ;; Astronomy
 ;; ---------

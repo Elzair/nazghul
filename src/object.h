@@ -85,16 +85,17 @@
 // Proper rendering depends on keeping these in order!
 enum layer {
 	null_layer       = 0,
-	mech_layer       = 1,
-	portal_layer     = 2,
-	vehicle_layer    = 3,
-        bed_layer        = 4,
-	container_layer  = 5,
-	item_layer       = 6,
-	field_layer      = 7,
-	being_layer      = 8,
-	projectile_layer = 9,
-	cursor_layer     = 10,
+        tfeat_layer      = 1,
+	mech_layer       = 2,
+	portal_layer     = 3,
+	vehicle_layer    = 4,
+        bed_layer        = 5,
+	container_layer  = 6,
+	item_layer       = 7,
+	field_layer      = 8,
+	being_layer      = 9,
+	projectile_layer = 10,
+	cursor_layer     = 11,
 };
 
 enum control_mode {
@@ -213,7 +214,6 @@ class ObjectType {
         /* ghulscript-interface (gifc) */
         closure_t *gifc;
         int gifc_cap;
-        
 };
 
 class Object {

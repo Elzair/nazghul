@@ -369,8 +369,8 @@ void place_del(struct place *place)
 	free(place);
 }
 
-static int place_generic_is_passable(int pclass, closure_t *effect, 
-                                     class Object *subject, int flags)
+static int place_generic_is_passable(class Object *subject, int flags, 
+                                     int pclass, struct closure *effect)
 {
         // Is it passable?
         if (subject->isPassable(pclass))
@@ -386,7 +386,6 @@ static int place_generic_is_passable(int pclass, closure_t *effect,
         }
 
         return 0;
-
 }
 
 static int place_terrain_is_passable(struct place *place, int x, int y,
@@ -398,9 +397,9 @@ static int place_terrain_is_passable(struct place *place, int x, int y,
 
         // Can we use the generic passability test?
         if (flags & PFLAG_IGNOREVEHICLES)
-                return place_generic_is_passable(terrain_pclass(terrain),
-                                                 terrain->effect,
-                                                 subject, flags);
+                return place_generic_is_passable(subject, flags, 
+                                                 terrain_pclass(terrain),
+                                                 terrain->effect);
 
         // Is the terrain passable?
         if (subject->isPassable(terrain_pclass(terrain)))
@@ -432,32 +431,25 @@ static int place_field_is_passable(struct place *place, int x, int y,
 	if (! field)
                 return 1;
 
-        return place_generic_is_passable(field->getPclass(),
-                                         field->getObjectType()->effect,
-                                         subject, flags);
+        return place_generic_is_passable(subject, flags,
+                                         field->getPclass(),
+                                         field->getObjectType()->effect);
 }
 
-static int place_mech_is_passable(struct place *place, int x, int y,
-                                   class Object *subject, int flags)
+static int place_obj_is_passable(class Object *obj,
+                                class Object *subject, int flags)
 {
-	class Object *mech;
-
-        // Is there a mech there?
-	mech = place_get_object(place, x, y, mech_layer);
-	if (! mech)
-                return 1;
-
-        // Is the mech passable?
-        if (subject->isPassable(mech->getPclass()))
+        // Is the obj passable?
+        if (subject->isPassable(obj->getPclass()))
                 return 1;
 
         // Is the caller actually trying to move the subject there?
         if (0 == (flags & PFLAG_MOVEATTEMPT))
                 return 0;
 
-        // Does the mech run a bump handler on failed entry?
-        if (mech->getObjectType()->canBump())
-                mech->getObjectType()->bump(mech, subject);
+        // Does the obj run a bump handler on failed entry?
+        if (obj->getObjectType()->canBump())
+                obj->getObjectType()->bump(obj, subject);
 
         return 0;
 }
@@ -468,6 +460,7 @@ int place_is_passable(struct place *place, int x, int y,
 	class Object *mech;
 	bool impassable_terrain;
 	bool no_convenient_vehicle;
+        class Object *tfeat = NULL;
 
 	// For a wrapping place, wrap out-of-bounds x,y
 	// For a non-wrapping place, return impassable.
@@ -478,15 +471,26 @@ int place_is_passable(struct place *place, int x, int y,
 		   x < 0 || x >= place->terrain_map->w)
 		return 0;
 
-        // Does the caller want to ignore terrain?
-        if (0 == (flags & PFLAG_IGNORETERRAIN)) {
+        // Does the caller want to check terrain features?
+        if (0 == (flags & PFLAG_IGNORETFEAT)) {
+                
+                tfeat = place_get_object(place, x, y, tfeat_layer);
+                if (tfeat &&
+                    ! place_obj_is_passable(tfeat, subject, flags))
+                        return 0;
+        }
+
+        // Does the caller want to check terrain, and if so is there no
+        // overriding terrain feature?
+        if (0 == (flags & PFLAG_IGNORETERRAIN) &&
+            NULL == tfeat) {
 
                 // Is the terrain passable?
                 if (! place_terrain_is_passable(place, x, y, subject, flags))
                         return 0;
         }
                 
-        // Does the caller want to ignore fields?
+        // Does the caller want to check fields?
         if (0 == (flags & PFLAG_IGNOREFIELDS)) {
 
                 // Is the field passable?
@@ -495,11 +499,13 @@ int place_is_passable(struct place *place, int x, int y,
 
         }
 
-	// Does the caller want to ignore mechs?
+	// Does the caller want to check mechs?
 	if (0 == (flags & PFLAG_IGNOREMECHS)) {
                 
                 // Is the mech passable?
-                if (! place_mech_is_passable(place, x, y, subject, flags))
+                mech = place_get_object(place, x, y, mech_layer);
+                if (mech &&
+                    ! place_obj_is_passable(mech, subject, flags))
                         return 0;
 	}
 
@@ -1036,10 +1042,22 @@ int place_get_movement_cost(struct place *place, int x, int y,
 {
         int cost;
         struct terrain *t;
+        class Object *tfeat = NULL;
+        int pclass;
 
         WRAP_COORDS(place, x, y);
+
+        // Terrain features override terrain
+        tfeat = place_get_object(place, x, y, tfeat_layer);
+        if (tfeat) {
+                return obj->getMovementCost(tfeat->getPclass());
+        }
+
 	t = TERRAIN(place, x, y);
         cost = obj->getMovementCost(terrain_pclass(t));
+
+        // Impassable terrain must have a vehicle that makes it passable; use
+        // the cost of vehicle movement
         if (PTABLE_IMPASSABLE == cost) {
                 class Vehicle *vehicle;
                 vehicle = place_get_vehicle(place, x, y);
@@ -1427,13 +1445,25 @@ void place_exec(struct place *place, struct exec_context *context)
                         }
                 } else {
 
-                        /* apply any effects from the terrain */
-                        terrain = place_get_terrain(place, obj->getX(), obj->getY());
-                        if (terrain->effect) {
-                                obj->applyEffect(terrain->effect);
-                                if (obj->isDestroyed())
-                                        goto obj_destroyed;
+                        /* apply effects from any terrain features */
+                        class Object *tfeat;
+                        tfeat = place_get_object(place, obj->getX(), obj->getY(), 
+                                                 tfeat_layer);
+                        if (tfeat) {
+                                if (tfeat->canStep())
+                                        tfeat->step(obj);
+                        } else {
+
+                                /* apply any effects from the terrain */
+                                terrain = place_get_terrain(place, obj->getX(), 
+                                                            obj->getY());
+                                if (terrain->effect) {
+                                        obj->applyEffect(terrain->effect);
+                                        if (obj->isDestroyed())
+                                                goto obj_destroyed;
+                                }
                         }
+
                         
                         /* apply any effects from other objects on the same tile
                          * (currently only fields) */

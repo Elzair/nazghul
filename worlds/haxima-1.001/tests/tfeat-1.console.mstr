@@ -1,0 +1,69 @@
+You get a RPG
+
+Thorald Greybeard is now party leader.
+
+Thorald Greybeard is now party leader.
+Welcome to Nazghul version 0.2.0
+
+
+
+
+Terraform on map m_gregors_hut, palette pal_expanded
+Current terrain is t_stone_lantern 'stone lantern'
+
+
+
+
+At XY=(24,26) you see grass and a human wizard.
+
+
+At XY=(25,26) you see shoals and a bridge.
+
+[Next]  terrain t_deep 'deep water'
+
+[Next]  terrain t_shallow 'shallow water'
+
+[Next]  terrain t_shoals 'shoals'
+
+[Next]  terrain t_bog 'bog'
+
+[Next]  terrain t_grass 'grass'
+
+[Next]  terrain t_trees 'trees'
+
+[Next]  terrain t_forest 'forest'
+
+[Next]  terrain t_hills 'hills'
+
+[Next]  terrain t_mountains 'mountains'
+
+[Next]  terrain t_flagstones 'flagstones'
+
+[Next]  terrain t_cobblestone 'cobblestone'
+
+[Next]  terrain t_deck 'deck'
+
+[Next]  terrain t_mast 'mast'
+
+[Next]  terrain t_fire_terrain 'fire'
+
+[Next]  terrain t_lava 'lava'
+
+At XY=(26,26) you see grass.
+
+At XY=(25,26) you see shoals and a bridge.
+
+TERRAFORM put t_lava 'lava' at XY=(25,26)
+
+At XY=(25,27) you see shallow water.
+
+TERRAFORM put t_lava 'lava' at XY=(25,27)
+
+Thorald Greybeard burning!
+
+Thorald Greybeard: West - switch!
+
+Thorald Greybeard: North - impassable!
+
+Goodbye!
+

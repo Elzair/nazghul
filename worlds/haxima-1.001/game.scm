@@ -64,6 +64,7 @@
 (define pclass-trees     6)
 (define pclass-forest    7)
 (define pclass-repel     8) ;; energy shield blocks all
+(define pclass-bridge    pclass-grass)
 
 ;; Movement modes
 (define mmodes
@@ -92,18 +93,19 @@
  (list cant   cant  cant   cant   cant   cant  ) ;; energy fields
  )
 
-;; Layers
+;; Layers (must match object.h)
 (define layer-none       0)
-(define layer-mechanism  1)
-(define layer-portal     2)
-(define layer-vehicle    3)
-(define layer-bed        4)
-(define layer-container  5)
-(define layer-item       6)
-(define layer-field      7)
-(define layer-being      8)
-(define layer-projectile 9)
-(define layer-crosshair  10)
+(define layer-tfeat      1)
+(define layer-mechanism  2)
+(define layer-portal     3)
+(define layer-vehicle    4)
+(define layer-bed        5)
+(define layer-container  6)
+(define layer-item       7)
+(define layer-field      8)
+(define layer-being      9)
+(define layer-projectile 10)
+(define layer-crosshair  11)
 
 ;; Contexts
 (define context-wilderness 1)
@@ -166,6 +168,7 @@
 (load "tblit.scm")
 (load "portals.scm")
 (load "moongate.scm")
+(load "bridge.scm")
 
 (load "conv.scm") ;; basic conversation
 
