@@ -511,6 +511,14 @@
                (list 'green-tower-pre-entry-hook)
                )
 
+(define road-map
+  (list
+   (list 'r8 'rd 'rd 'r2)
+   (list '.. '.. '.. 'r7)
+   (list '.. '.. '.. 'r7)
+   (list '.. '.. '.. 'r7)
+   (list 'rd 'rd 'rd 'ra)))
+
 (kern-mk-place 'p_wilderness
                "The Great Wild"
                nil          ; sprite
@@ -524,19 +532,22 @@
                 (list p_gregors_hut 3 17)
                 )
                nil ; neighbors
-               (list
-                (list player 3  18)
-                (list (kern-mk-party t_skeleton_brigade align-monster nil) 25 19)
-                (list (kern-mk-party t_slime_glob align-monster nil) 36 20)
-                (list (kern-mk-obj F_fire 1) 34 23)
-                (list (kern-mk-obj F_poison 1) 34 22)
-                (list (kern-mk-obj F_sleep_perm 1) 34 24)
-                (list (kern-mk-party t_goblin_horde align-monster (mk-ship)) 3 28)
-                (list (kern-mk-obj t_goblin_generator 1) 20 20)
-                (list (kern-tag 'mg-1 (mk-moongate 'ord)) 32 23)
-                (list (kern-tag 'mg-2 (mk-moongate 'ord)) 35 25)
-                (list (mk-ship) 36 26)
-                )
+               (append 
+                (lay-featmap road-map 3 18)
+                (list
+                 (list player 3  18)
+                 (list (kern-mk-party t_skeleton_brigade align-monster nil) 25 19)
+                 (list (kern-mk-party t_slime_glob align-monster nil) 36 20)
+                 (list (kern-mk-obj F_fire 1) 34 23)
+                 (list (kern-mk-obj F_poison 1) 34 22)
+                 (list (kern-mk-obj F_sleep_perm 1) 34 24)
+                 (list (kern-mk-party t_goblin_horde align-monster (mk-ship)) 3 28)
+                 (list (kern-mk-obj t_goblin_generator 1) 20 20)
+                 (list (kern-tag 'mg-1 (mk-moongate 'ord)) 32 23)
+                 (list (kern-tag 'mg-2 (mk-moongate 'ord)) 35 25)
+                 (list (mk-ship) 36 26)
+                 ))
+
                nil ; hooks
                )
 

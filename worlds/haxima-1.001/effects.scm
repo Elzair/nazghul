@@ -30,6 +30,7 @@
   (kern-char-set-sleep kchar #t))
 
 (define (sleep-rm fgob kchar)
+  (display "sleep-rm: ")(display (kern-obj-get-name kchar))(newline)
   (kern-char-set-sleep kchar #f))
 
 ;; ----------------------------------------------------------------------------

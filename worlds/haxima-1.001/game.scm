@@ -65,6 +65,7 @@
 (define pclass-forest    7)
 (define pclass-repel     8) ;; energy shield blocks all
 (define pclass-bridge    pclass-grass)
+(define pclass-road      pclass-grass)
 
 ;; Movement modes
 (define mmodes
@@ -170,6 +171,7 @@
 (load "moongate.scm")
 (load "bridge.scm")
 (load "stone-lantern.scm")
+(load "road.scm")
 
 (load "conv.scm") ;; basic conversation
 
