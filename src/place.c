@@ -1612,7 +1612,10 @@ void place_exec(struct place *place)
                 } else {
                         /* 'run' the object */
                         int t = place_timed_obj_exec(obj);
-                        
+                        char *name = obj->getName();
+                        /*printf("%20s: %3d ms\n", name ? name : "null", t);*/
+                        times += t;
+
                         /* Apply terrain, field and any other environmental
                          * effects. */
                         if (obj->isOnMap())

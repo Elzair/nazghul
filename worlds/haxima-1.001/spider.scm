@@ -18,6 +18,19 @@
 ;; 
 ;; ----------------------------------------------------------------------------
 
+(define spider-egg-hatch-time 10)
+(define (spider-egg-gob-mk) (list spider-egg-hatch-time))
+(define (spider-egg-hatch-timer gob) (car gob))
+(define (spider-egg-set-hatch-timer! gob val) (set-car! gob val))
+(define (spider-egg-hatch-timer-expired? gob) (= 0 (spider-egg-hatch-timer gob)))
+(define (spider-egg-dec-hatch-timer! gob)
+  (spider-egg-set-hatch-timer! gob
+                               (- (spider-egg-hatch-timer gob)
+                                  1)))
+
+;; spider-egg-disturbed - obsolete function that would return true if any
+;; neighboring tiles contained non-spiders. I discontinued it because it made
+;; eggs run too slowly (about 30ms per). Replaced it with a simple egg timer.
 (define (spider-egg-disturbed kegg)
   (spider-display "spider-egg-disturbed")(spider-newline)
   (define (check val loc)
@@ -43,9 +56,10 @@
   (kern-obj-remove kegg))
 
 (define (spider-egg-exec kegg)
-  (spider-display "spider-egg-exec")(spider-newline)
-  (if (spider-egg-disturbed kegg)
-      (spider-egg-hatch kegg)))
+  (let ((gob (kobj-gob-data kegg)))
+    (if (spider-egg-hatch-timer-expired? gob)
+        (spider-egg-hatch kegg)
+        (spider-egg-dec-hatch-timer! gob))))
 
 (define spider-egg-ifc
   (ifc '()
@@ -58,7 +72,8 @@
              spider-egg-ifc)
 
 (define (mk-spider-egg)
-  (kern-mk-obj spider-egg-type 1))
+  (bind (kern-mk-obj spider-egg-type 1)
+        (spider-egg-gob-mk)))
 
 ;; ----------------------------------------------------------------------------
 ;; spider-killed -- called when a spider is killed, the character is passed as
