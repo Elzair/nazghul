@@ -46,17 +46,22 @@ SPRITE_SET ss_mechanisms {
   sprites {
     STD_SPRITE(s_left_lever_up,         0);
     STD_SPRITE(s_left_lever_down,       1);
-    STD_SPRITE(s_top_lever_up,          2);
-    STD_SPRITE(s_top_lever_down,        3);
+
+    STD_SPRITE(s_top_lever_left,        2);
+    STD_SPRITE(s_top_lever_right,       3);
+
     STD_SPRITE(s_right_lever_up,        4);
     STD_SPRITE(s_right_lever_down,      5);
-    STD_SPRITE(s_bottom_lever_up,       6);
-    STD_SPRITE(s_bottom_lever_down,     7);
+
+    STD_SPRITE(s_bottom_lever_left,     6);
+    STD_SPRITE(s_bottom_lever_right,    7);
 
     STD_SPRITE(s_floor_plate,           8);
     // STD_SPRITE(s_blank_empty_tile,   9);
+
     STD_SPRITE(s_floor_lever_left,     10);
     STD_SPRITE(s_floor_lever_right,    11);
+
     STD_SPRITE(s_portcullis_down,      12);
     STD_SPRITE(s_portcullis_up,        13);
   }

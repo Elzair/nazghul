@@ -35,6 +35,56 @@
 
 // Define a new type of mechanism: a simple lever that could be used to send a
 // signal to, say, open a door.
+#define MAKE_LEVER_MECH(type_name, m_name, s1_nm, s1_spr, s2_nm, s2_spr) \
+MECH_TYPE type_name { \
+  name m_name;        \
+  defaults {          \
+    pmask PASS_ALL;   \
+  }                   \
+  states {            \
+    {                 \
+      name   s1_nm;   \
+      sprite s1_spr;  \
+    }                 \
+    {                 \
+      name   s2_nm;   \
+      sprite s2_spr;  \
+    }                 \
+  }                   \
+  transitions {             \
+    state      s1_nm;       \
+    event      MECH_HANDLE; \
+    next_state s2_nm;       \
+    actions {               \
+      send_signal MECH_SIGNAL_DOWN; \
+    }                       \
+    state      s2_nm;       \
+    event      MECH_HANDLE; \
+    next_state s1_nm;       \
+    actions {               \
+      send_signal MECH_SIGNAL_UP; \
+    } \
+  }   \
+}
+
+MAKE_LEVER_MECH(mech_L_lever,  "lever", 
+                "lever up",    s_left_lever_up,    
+                "lever down",  s_left_lever_down);
+MAKE_LEVER_MECH(mech_R_lever,  "lever", 
+                "lever up",    s_right_lever_up,   
+                "lever down",  s_right_lever_down);
+MAKE_LEVER_MECH(mech_T_lever,  "lever", 
+                "lever left",  s_top_lever_left,   
+                "lever right", s_top_lever_right);
+MAKE_LEVER_MECH(mech_B_lever,  "lever", 
+                "lever left",  s_bottom_lever_left,
+                "lever right", s_bottom_lever_right);
+MAKE_LEVER_MECH(mech_C_lever,  "lever", 
+                "lever left",  s_floor_lever_left, 
+                "lever right", s_floor_lever_right);
+
+
+#if 0
 MECH_TYPE mech_L_lever {
   name "lever";
   defaults {
@@ -101,6 +151,8 @@ MECH_TYPE mech_R_lever {
     }
   }
 } // MECH_TYPE mech_L_lever
+#endif // 0
+
 
 #define MAKE_SIMPLE_STEP_TRIGGER(type_name, desc, _sprite, _sig) \
 MECH_TYPE type_name { \
@@ -124,8 +176,10 @@ MECH_TYPE type_name { \
   } \
 }
 
-MAKE_SIMPLE_STEP_TRIGGER(mech_pressure_plate, "pressure plate", s_floor_plate, MECH_SIGNAL_CHANGE);
-MAKE_SIMPLE_STEP_TRIGGER(invisible_step_trigger, "", null, MECH_SIGNAL_DOWN);
+MAKE_SIMPLE_STEP_TRIGGER(mech_pressure_plate,    "pressure plate", 
+                         s_floor_plate,          MECH_SIGNAL_CHANGE);
+MAKE_SIMPLE_STEP_TRIGGER(invisible_step_trigger, "", 
+                         null,                   MECH_SIGNAL_DOWN);
 
 // Define a new type of mechanism: a simple door that responds to a signal and
 // sends feedback (usually to the sender, but really whoever is wired to
@@ -452,10 +506,16 @@ MECH_TYPE _name { \
 }
 
 #define MAKE_WATER_TRAP(mech_name, plc, x, y, w, h) \
-    MAKE_BLIT_MECH(mech_name, plc, x, y, m_WATER_TRAP_OPEN, m_WATER_TRAP_CLOSED, w, h, "A trap door opens, revealing a watery pit!", "A trap door closes.")
+    MAKE_BLIT_MECH(mech_name, plc, x, y, \
+                   m_WATER_TRAP_OPEN, m_WATER_TRAP_CLOSED, w, h, \
+                   "A trap door opens, revealing a watery pit!", \
+                   "A trap door closes.")
 
 #define MAKE_DRAWBRIDGE(mech_name, plc, x, y) \
-    MAKE_BLIT_MECH(mech_name, plc, x, y, m_WATER_TRAP_OPEN, m_WATER_TRAP_CLOSED, 2, 1, "The drawbridge raises.", "The drawbridge lowers.")
+    MAKE_BLIT_MECH(mech_name, plc, x, y, \
+                   m_WATER_TRAP_OPEN, m_WATER_TRAP_CLOSED, 2, 1, \
+                   "The drawbridge raises.", \
+                   "The drawbridge lowers.")
 
 MAKE_WATER_TRAP(mech_water_trap_L_lever, p_prison_chamber, 3, 3, 2, 1);
 

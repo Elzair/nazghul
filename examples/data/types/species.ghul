@@ -36,8 +36,8 @@ SPECIES human {
   vr      8;
   pmask   (LAND);
   sleep_sprite s_corpse;
-  weapon t_hands;
-  visible 1;
+  weapon       t_hands;
+  visible      1;
   occs {
     ranger;
   }
@@ -170,8 +170,8 @@ SPECIES insects {
   vr      8;
   pmask   (LAND);
   sleep_sprite null;
-  weapon t_stinger;
-  visible 1
+  weapon       t_stinger;
+  visible      1
     occs {
   }
   slots {
@@ -189,8 +189,8 @@ SPECIES ghast {
   vr      8;
   pmask   (LAND|WATER|SHOALS|SOLID);
   sleep_sprite s_corpse;
-  weapon t_hands;
-  visible 0
+  weapon       t_hands;
+  visible      0
     occs {
   }
   slots {
@@ -204,6 +204,34 @@ SPECIES ghast {
     RING_SLOT;
   }
   spells {
+  }
+}
+
+SPECIES nixie {
+  name  "nixie";
+  str   100;
+  int   100;
+  dex   100;
+  spd   2;
+  vr    8;
+  pmask (WATER|SHOALS);
+  sleep_sprite s_corpse;
+  weapon       t_hands;  // Should be magical water blast...
+  visible      1;
+  occs {
+    triton;
+  }
+  slots {
+    HELM_SLOT;
+    AMULET_SLOT;
+    WEAPON_OR_SHIELD_SLOT;
+    WEAPON_OR_SHIELD_SLOT;
+    ARMOUR_SLOT;
+    RING_SLOT;
+    RING_SLOT;
+  }
+  spells {
+    spell_magic_missile;
   }
 }
 

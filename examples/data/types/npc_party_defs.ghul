@@ -97,6 +97,15 @@ PARTY t_snakes {
   }
 }
 
+PARTY t_nixies {
+  name      "splash of nixies";
+  sprite    s_nixie;
+  formation null;
+  groups {
+    nixie null s_nixie 3;
+  }
+}
+
 
 #endif // npc_party_defs_ghul
 

@@ -126,7 +126,7 @@
 
 
 /* 
- * Passability masks 
+ * Passability masks (pmasks)
  */
 #define PASS_NONE 0
 #define SOLID     1
@@ -141,37 +141,37 @@
  * and lists them in order of frequency. --gmcnutt).
  */
 #define STD_TERRAIN_PALETTE \
-palette { \
-        '_'    t_deep; \
-        '-'    t_shallow; \
-        '~'    t_shoals; \
-        '%'    t_bog; \
-        '.'    t_grass; \
-        't'    t_trees; \
-        '|'    t_forest; \
-        '{'    t_hills; \
-        '^'    t_mountains; \
-        '<'    t_leftwing; \
-        '>'    t_rightwing; \
-        'c'    t_cobblestone; \
-        '='    t_bridge; \
-        'g'    t_bridge_top; \
+palette {                   \
+        '_'    t_deep;      \
+        '-'    t_shallow;   \
+        '~'    t_shoals;    \
+        '%'    t_bog;       \
+        '.'    t_grass;     \
+        't'    t_trees;     \
+        '|'    t_forest;    \
+        '{'    t_hills;     \
+        '^'    t_mountains;     \
+        '<'    t_leftwing;      \
+        '>'    t_rightwing;     \
+        'c'    t_cobblestone;   \
+        '='    t_bridge;        \
+        'g'    t_bridge_top;    \
         'h'    t_bridge_bottom; \
         'p'    t_pillar; \
         '1'    t_wall_b; \
         '2'    t_wall_a; \
         '3'    t_wall_c; \
         '4'    t_wall_d; \
-        'm'    t_mast; \
+        'm'    t_mast;   \
         'f'    t_fire_terrain; \
-        'b'    t_boulder; \
-        'r'    t_wall_rock; \
-        '+'    t_ankh; \
-        ','    t_flagstones; \
-        'e'    t_deck; \
-        '?'    t_secret_door; \
-        'a'    t_altar; \
-        '&'    t_fireplace; \
+        'b'    t_boulder;      \
+        'r'    t_wall_rock;    \
+        '+'    t_ankh;         \
+        ','    t_flagstones;   \
+        'e'    t_deck;         \
+        '?'    t_secret_door;  \
+        'a'    t_altar;        \
+        '&'    t_fireplace;    \
         'A'    t_A; \
         'B'    t_B; \
         'C'    t_C; \
@@ -201,8 +201,8 @@ palette { \
         '!'    t_lava; \
         'x'    t_wall; \
         '@'    t_counter_middle; \
-        '['    t_counter_left; \
-        ']'    t_counter_right; \
+        '['    t_counter_left;   \
+        ']'    t_counter_right;  \
         '0'    t_counter_pillar; \
 }
 

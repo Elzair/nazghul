@@ -30,8 +30,8 @@
 #include "../characters/Olin_the_Ghast.ghul"
 
 MAP m_empire_city {
-        type ascii;
-        width 64;
+        type   ascii;
+        width  64;
         height 64;
         one_char_per_tile 1; /* optional */
         palette {
@@ -45,13 +45,13 @@ MAP m_empire_city {
                 '*'	t_counter_middle;
                 '='	t_A;
                 'b'	t_boulder;
-                't'     t_trees;
-                ','     t_flagstones;
-                'o'     t_pillar;
-                '0'     t_counter_pillar;
-                'x'     t_altar;
-                '!'    t_lava; 
-                'e'    t_deck;
+                't' t_trees;
+                ',' t_flagstones;
+                'o' t_pillar;
+                '0' t_counter_pillar;
+                'x' t_altar;
+                '!' t_lava; 
+                'e' t_deck;
                 'A'    t_A;
                 'B'    t_B; 
                 'C'    t_C; 
@@ -88,9 +88,9 @@ MAP m_empire_city {
 %-%ffffffff%..,,,..%fffffft.-----.@~*,,,,-.....................%
 %-%ffffffff%..,x,..%fffffft....--.@~%,,,%-.....................%
 %-%ffffffff%..,,,..%fffffftttt.--.@~%%*%%-.....................%
-%-%fffff%%%%%..,..%%%%%fffffft.--.@~------......0SAM0..........%
+%-%fffff%%%%%..,..%%%%%fffffft.--.ee------.....................%
 %-%fffff%...%%.,.%%...%fffffft.--.@~000%%-.....................%
-%-%fffff%....%.,.%....%fffffft.--.@~0,,,%-......0GORDON0.......%
+%-%fffff%....%.,.%....%fffffft.--.@~0,,,%-.....................%
 %-%f%%%%%...%%.,.%%...%%%%%fft.--.@~0,,,,-.....................%
 %-%f%...%%.%%..,..%%.%%...%fft.--.@~%,,,%......................%
 %-%f%....%%%...,...%%%....%fft.--.@~%%*%%......................%
@@ -112,7 +112,7 @@ MAP m_empire_city {
 %---%-.ttttttb...btf----------ft..@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 %-*%%-............tt---tttt---ft...%**********%@@@@@@@@@........
 ----------------------tb&&bt------.%SHIPWRIGHT%@@@@@@@@@.-------
-----------------------t&@@&t------.%,,,,,,,,,,*@@@e@@e@@.-------
+----------------------t&@@&t------.,,,,,,,,,,,*@@@e@@e@@.-------
 %-*%%%%%%%%%%%%%%%%f--t&@@&t--ft.-.%**********%@@@e@@e@@.-.%%*-%
 %---%T*E*M*P*L*A*R%f--tb&&bt--ft.--,,,,,,,,@@@%@@.-..-...-t%---%
 %---%***H*A*L*L***%f---tttt---ft.-.%,,,,,,,@@@@@@.--------f%---%
@@ -176,8 +176,10 @@ PLACE  p_empire_city {
     mech_vdoor door 33 62 "closed door";
 
     // castle mechs
-    castle_drawbridge west_bridge 38 11 "lever down";
-    mech_portcullis castle_bay_portcullis   49 27 "lowered portcullis";
+    castle_drawbridge west_bridge           38 11 "lever up";
+    mech_portcullis   castle_bay_portcullis 49 27 "lowered portcullis";
+    mech_B_lever      castle_bay_lever      56 26 "lever left";
+    CONNECT castle_bay_lever <=> castle_bay_portcullis;
 
     // shipwright mechs
     mech_portcullis shipwright_portcullis_1 46 35 "lowered portcullis";
@@ -186,13 +188,22 @@ PLACE  p_empire_city {
     invisible_step_trigger shipwright_exit_trigger_1 47 35 "";
     invisible_step_trigger shipwright_exit_trigger_2 47 36 "";
     invisible_step_trigger shipwright_exit_trigger_3 47 37 "";
-    mech_L_lever shipwright_exit_lever 42 34 "lever down";
-    CONNECT shipwright_exit_lever <=> shipwright_portcullis_1;
-    CONNECT shipwright_portcullis_1 => shipwright_portcullis_2
-    CONNECT shipwright_portcullis_2 => shipwright_portcullis_3
-    CONNECT shipwright_exit_trigger_1 => shipwright_portcullis_1
-    CONNECT shipwright_exit_trigger_2 => shipwright_portcullis_1
-    CONNECT shipwright_exit_trigger_3 => shipwright_portcullis_1
+    mech_R_lever shipwright_exit_lever 45 32 "lever down";
+    CONNECT shipwright_exit_lever    <=> shipwright_portcullis_1;
+    CONNECT shipwright_portcullis_1   => shipwright_portcullis_2;
+    CONNECT shipwright_portcullis_2   => shipwright_portcullis_3;
+    CONNECT shipwright_exit_trigger_1 => shipwright_portcullis_1;
+    CONNECT shipwright_exit_trigger_2 => shipwright_portcullis_1;
+    CONNECT shipwright_exit_trigger_3 => shipwright_portcullis_1;
+    mech_vdoor door 35 32 "magically locked door";
+    
+    // SAM: Examples of all 5 lever types:
+    // 
+    //mech_L_lever mll 36 35 "lever up";
+    //mech_R_lever mrl 37 38 "lever up";
+    //mech_T_lever mtl 36 34 "lever left";
+    //mech_B_lever mbl 36 37 "lever left";
+    //mech_C_lever mbl 37 35 "lever left";
 
     // cardboard characters
     t_town_guards              61 33 (ALIGN_TOWN) 1 c_guard;
@@ -201,6 +212,9 @@ PLACE  p_empire_city {
     t_town_guards               2 35 (ALIGN_TOWN) 1 c_guard;
     t_town_guards              28 61 (ALIGN_TOWN) 1 c_guard;
     t_town_guards              35 61 (ALIGN_TOWN) 1 c_guard;
+
+    t_nixies                   33 29 (ALIGN_MONSTER) 1 null;
+    // SAM: No proper combat map for nixies?
 
     // special characters
     ch_Hawknoz                 16 57 (ALIGN_TOWN) 1;

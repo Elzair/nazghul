@@ -81,9 +81,16 @@
 #include "world/maps/M_secret_shrine.ghul"
 
 combat_maps {
-  t_grass  m_grass_combat;
-  t_trees  m_grass_combat;
-  t_forest m_forest_combat;
+  t_grass   m_grass_combat;
+  t_trees   m_grass_combat;
+  t_forest  m_forest_combat;
+
+#if WATER_COMBAT_MAP
+  t_shoals  m_water_combat;
+  t_shallow m_water_combat;
+  t_deep    m_water_combat;
+#endif // WATER_COMBAT_MAP
+
 } // combat_maps
 
 

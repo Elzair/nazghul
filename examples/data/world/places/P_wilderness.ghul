@@ -46,13 +46,13 @@ MAP m_wilderness {
       ......ttttt_^^^^^~~^^^^^^{{.~~..
       .....tt^^^^^^...~~~^^^^{{{...~~.
       ...^^^^^^.....~~^^^^{{{{......~~
-      ~.....^^^.....~^^^{{{{..........
+      ~.....^^^.....~^^^{{{{.........~
       ~~......^^^...~^{{__............
       .=.......{^^^.^^{{__....tttttt..
       .~~~~~....{{^^^{{{{_...tt||||tt.
       .....~~..~..{{^^^^{{...t||||||t.
       ......~~~~--..{^^{{....t||||||t.
-      ......%%~-----.{{---...tt||||tt.
+      ......%%~-----.{{{--...tt||||tt.
       .....%%~~-___--...--....tttttt..
       ......%%~-____--.._--...........
       .....%.%%-_________-............
@@ -89,8 +89,11 @@ PLACE  p_wilderness {
 
   }
   typical_npc_parties {
-    t_goblin_horde                 1    /* 0.01  % */ (ALIGN_MONSTER);
-    t_gazer_pod_with_goblin_slaves 1    /* 0.01 % */ (ALIGN_MONSTER);
+    // party_type chance (alignment)
+    //     chance is n * 0.01% 
+    t_goblin_horde                 1   (ALIGN_MONSTER);
+    t_gazer_pod_with_goblin_slaves 1   (ALIGN_MONSTER);
+    t_nixies                       100 (ALIGN_MONSTER);
   }
 } // PLACE  p_wilderness
 
