@@ -144,3 +144,7 @@ nazghul_SOURCES =		\
 	node.c \
 	tick.h \
 	tick.c
+
+INCLUDES = -I$(includedir)                                      \
+        -I$(srcdir) -I$(top_srcdir)/include -I$(top_srcdir)     \
+        -I$(top_builddir) -I$(top_builddir)/include -I.

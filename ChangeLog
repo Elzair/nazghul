@@ -1,0 +1,8 @@
+Sat Dec 11 19:14:51 CET 2004  Andreas Bauer <baueran@in.tum.de>
+
+ * configure.ac, AUTHORS, ChangeLog, NEWS, m4: new
+ * configure.in, configure, Makefile.in, aclocal.m4, acinclude.m4: remove
+ * config.guess, config.sub, missing, ltmain.sh, install-sh: remove
+ * depcomp, mkinstalldirs, src/Makefile.in, worlds/Makefile.in: remove
+ * RELEASE_NOTES: remove and copy contents to NEWS file
+ * Makefile.am, src/Makefile.am: changed to GNU tool chain & reflect changes
