@@ -57,7 +57,6 @@
 
   // Miscellaneous maps:
 #include "world/maps/M_dark_passage.ghul"
-#include "world/maps/M_prison_and_torture_chamber.ghul"
 #include "world/maps/M_secret_shrine.ghul"
 
 combat_maps {

@@ -196,10 +196,12 @@ maintainer-clean-generic clean mostlyclean distclean maintainer-clean
 
 
 # Special rule to build the mapfile
-mapfile:
-	rm -f mapfile
+mapfile: forced_rebuild
 	$(MAKE) -C data
 	cp data/mapfile ./
+
+forced_rebuild:
+	rm -f mapfile
 
 # Special rule to clean
 clean:

@@ -2525,46 +2525,6 @@ MAP m_passage {
       x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x
   }
 }
-MAP m_prison_chamber {
-  type ascii;
-  width 32;
-  height 32;
-  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; '<' t_leftwing; '>' t_rightwing; 'c' t_cobblestone; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'p' t_pillar; '1' t_wall_b; '2' t_wall_a; '3' t_wall_c; '4' t_wall_d; 'm' t_mast; 'f' t_fire_terrain; 'b' t_boulder; 'r' t_wall_rock; '+' t_ankh; ',' t_flagstones; 'e' t_deck; '?' t_secret_door; 'a' t_altar; '&' t_fireplace; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; '!' t_lava; 'x' t_wall; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_pillar; };
-  terrain {
-      x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x
-      x , , , , , , , 0 . . . 0 e , , e 0 . . . 0 , , , 0 ! c ! 0 e x
-      x , - - - - , , 0 . . . 0 , , , , 0 . . . 0 , , , 0 ! c ! 0 , x
-      x , = = e - , , 0 0 , 0 0 , , , , 0 0 , 0 0 , , , , , , , , , x
-      x , - - - - , , , , , , , , , , , , , , , , , , , , , , , , , x
-      x , , , , , , , , , , , , , , , , , , , , , , , , 0 f c f 0 , x
-      x , , , , , , , , , a , , , , , , , , a , , , , , 0 f c f 0 e x
-      x x x x x x x x x x x x x x , x x x x x x x x x x x x x x x x x
-      x x x x [ T O R T U R E ] x , x [ C H A M B E R ] x x x x x x x
-      x x x x , , , , , , , , , , , , , , , , , , , , , x x x x x x x
-      x x x x , , , , , , , , , , , , , , , , , , , , , x x x x x x x
-      x x x x x x x x x x x , , p , p , , x x x x x x x x x x x x x x
-      x x x x x x x x x ! - , , , , , , , - ! x x x x x x x x x x x x
-      x x x x x x x x x - - , , p , p , , - - x x x x x x x x x x x x
-      x x x x x x x x x ! - , , , , , , , - ! x x x x x x x x , , , x
-      x x x x x x x x x - - , , p , p , , - - x x x x x x x x x x , x
-      x x x x x x x x x ! - , , , , , , , - ! x x x x x x x x x x , x
-      x x x x x x x x x x x , , p , p , , x x x x x x x x x x x x , x
-      x , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , x
-      x , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , x
-      x x x x x x x x P R I S O N @ C E L L S x x , , x x x x x x x x
-      x x x x x x x x x x x x x x x x x x x x x x , , x x x x x x x x
-      x , , , , , , , , , , , , , , , , , , , , , , , x x x x x x x x
-      x x , x x x x x x x x x x x x x x x x x x x x x x x x x x x x x
-      x x , x x x x , x , x , x x x , , , x , , , x , , , x x x x x x
-      x , , . , , , , , , , , x x x , , , x , , , x , , , x x x x x x
-      x x , [ @ @ @ @ @ @ @ ] x e x x , x x x , x x x , x x x , , , x
-      x , , , , , , , , , , , , e , , , , , , , , , , , , f , , , , x
-      x x . [ @ @ @ @ @ @ @ ] x e x x , x x x , x x x , x x x , , , x
-      x , , , , , , , , , , , x x x , , , x , , , x , , , x x x x x x
-      x , x , x x x , x , x , x x x , , , x , , , x , , , x x x x x x
-      x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x
-      }
-}
 MAP m_secret_shrine {
   type ascii;
   width 7;
@@ -3437,8 +3397,8 @@ RESP BB_job_resp {
                 GET_YES_NO {
                         CHANGE_PARM -1 200;
                         TAKE -2;
-                        send_signal shipwright_portcullis_1 100;
                         SAY "Pick one and sail her out!";
+                        send_signal shipwright_portcullis_1 100;
                 }{
                         SAY "Suit yerself. Ye'll find none better in all the land!";
                 }

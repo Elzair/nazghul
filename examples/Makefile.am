@@ -4,10 +4,12 @@ bin_SCRIPTS = mapfile
 EXTRA_DIST = data dup_constants.h
 
 # Special rule to build the mapfile
-mapfile:
-	rm -f mapfile
+mapfile: forced_rebuild
 	$(MAKE) -C data
 	cp data/mapfile ./
+
+forced_rebuild:
+	rm -f mapfile
 
 # Special rule to clean
 clean:
