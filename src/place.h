@@ -30,15 +30,12 @@ BEGIN_DECL
 
 #include "terrain_map.h"
 #include "list.h"
+#include "node.h"
 #include "object.h"
 #include "Party.h"
 #include "astar.h"
 #include "common.h"
 #include "sky.h"
-
-#ifdef TURN_LIST_NODES
-#include "node.h"
-#endif
 
 #include <SDL.h>
 
@@ -62,10 +59,7 @@ BEGIN_DECL
 #define place_mark_for_death(p) ((p)->marked_for_death = 1)
 #define place_is_marked_for_death(p) ((p)->marked_for_death)
 #define place_max_distance(p) (place_w(p) + place_h(p))
-
-#ifdef TURN_LIST_NODES
 #define place_get_all_objects(p) (&(p)->turn_list)
-#endif
 
 #define PFLAG_HORZ             (1 << 0) /* matches ASTAR_HORZ */
 #define PFLAG_VERT             (1 << 1) /* matches ASTAR_VERT */
@@ -102,13 +96,8 @@ struct place {
         // the script.
         int magic;
 
-#ifdef TURN_LIST_NODES
-        struct node turn_list;
-        struct node *turn_elem;
-#else
-        struct list turn_list;
-        struct list *turn_elem;
-#endif
+        struct node turn_list;   /* objects that run each turn in place_exec */
+        struct node *turn_elem;  /* iterator over above list */
 
         struct list list;
         struct location location;
@@ -234,10 +223,6 @@ extern int place_add_object(struct place *place, Object * object);
 extern void place_remove_object(struct place *place, Object * object);
 
 extern Object *place_get_object(struct place *place, int x, int y, enum layer layer);
-
-#ifndef TURN_LIST_NODES
-extern struct list *place_get_all_objects(struct place *place);
-#endif
 
 extern void place_add_moongate(struct place *place, 
                                class Moongate * moongate);

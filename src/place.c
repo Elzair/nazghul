@@ -1,4 +1,3 @@
-//
 // nazghul - an old-school RPG engine
 // Copyright (C) 2002, 2003 Gordon McNutt
 //
@@ -332,11 +331,7 @@ static void place_set_default_edge_entrance(struct place *place)
  *****************************************************************************/
 static void place_init_turn_list(struct place *place)
 {
-#ifdef TURN_LIST_NODES
         node_init(&place->turn_list);
-#else
-        list_init(&place->turn_list);
-#endif
 }
 
 /*****************************************************************************
@@ -344,7 +339,6 @@ static void place_init_turn_list(struct place *place)
  *****************************************************************************/
 static void place_add_to_turn_list(struct place *place, Object *object)
 {
-#ifdef TURN_LIST_NODES
         struct node *node;
 
         /* The object should not be pointing to an existing node. */
@@ -358,10 +352,6 @@ static void place_add_to_turn_list(struct place *place, Object *object)
 
         /* Add the node to the turn list. */
         node_add(&place->turn_list, node);
-#else
-        list_add(&place->turn_list, &object->turn_list);
-#endif
-
 }
 
 /*****************************************************************************
@@ -369,28 +359,32 @@ static void place_add_to_turn_list(struct place *place, Object *object)
  *****************************************************************************/
 static void place_remove_from_turn_list(struct place *place, Object *object)
 {
+
+        struct node *node;
+
+        /* Get a convenience pointer to the node which holds the object */
+        node = object->turn_list;
+
+        /* Should be valid */
+        assert(node);
+
         /* Note: this is a bit subtle. If it just so happens that we are in the
          * process of running place_exec, there is a chance that the object we
          * are removing here is the next object to be processed in the
          * turn_list. In this special case we must setup the next object after
-         * this to be processed instead. */
-#ifdef TURN_LIST_NODES
-        struct node *node;
-
-        node = object->turn_list;
-
-        assert(node);
-
+         * this to be processed instead. This can happen when one object
+         * destroys or picks up another object on its turn. */
         if (place->turn_elem == node)
-                place->turn_elem = node;
+                place->turn_elem = node->next;
 
+        /* Unlink the node from the turn list. */
         node_remove(node);
+
+        /* Zero out the object's link to the node */
+        object->turn_list = NULL;
+
+        /* Release the node for destruction. */
         node_unref(node);
-#else
-        if (place->turn_elem == &object->turn_list)
-                place->turn_elem = object->turn_list.next;
-        list_remove(&object->turn_list);
-#endif
 }
 
 struct place *place_new(char *tag,
@@ -1585,7 +1579,6 @@ static void place_apply_tile_effects(struct place *place, class Object *obj)
  *****************************************************************************/
 void place_exec(struct place *place)
 {
-#ifdef TURN_LIST_NODES
         class Object *obj = NULL;
 
         /* FIXME: not sure if we still need this assert */
@@ -1653,80 +1646,6 @@ void place_exec(struct place *place)
 
         /* Allow the place to be destroyed. */
         place_unlock(place);
-
-#else /* ! TURN_LIST_NODES */
-        // --------------------------------------------------------------------
-        // Upon entry this should always by the current place. That may change
-        // while we're in the loop, but upon entry it should always be true.
-        // --------------------------------------------------------------------
-
-        assert(Place == place);
-
-        // --------------------------------------------------------------------
-        // Lock the place to prevent destruction while running the exec loop.
-        // --------------------------------------------------------------------
-
-        place_lock(place);
-
-        // --------------------------------------------------------------------
-        // Loop over every object in the place...
-        // --------------------------------------------------------------------
-        place->turn_elem = place->turn_list.next;
-        while (place->turn_elem != &place->turn_list 
-               && ! Quit
-               && ! player_party->allDead()) {
-               
-                class Object *obj;                
-
-                obj = outcast(place->turn_elem, class Object, turn_list);
-                place->turn_elem = place->turn_elem->next;
-
-                if (TimeStop) {
-                        if (obj->isPlayerControlled()) {
-                                obj->exec();
-                        }
-                } else {
-                        
-                        /* 'run' the object */
-                        obj->exec();
-
-                        /* Apply terrain, field and any other environmental
-                         * effects. */
-                        if (obj->isOnMap())
-                                /* Bugfix: as a result of executing its turn,
-                                 * the object may now be in a different
-                                 * place! */
-                                place_apply_tile_effects(obj->getPlace(), obj);
-                            
-
-                }
-
-                /* check if the session was reloaded while running the
-                 * object. If so, the object, this place and everything in it
-                 * has been destroyeed. Leave now. Don't touch a thing. */
-                if (Session->reloaded)
-                        return;                                
-
-                /* one more time, check if the object is toast */
-                if (!obj->isDestroyed())
-                        continue;
-
-        obj_destroyed:
-                /* don't delete the player party */
-                if (obj == player_party)
-                        return;
-
-                /* done with this object */
-                delete obj;
-        }
-
-        // --------------------------------------------------------------------
-        // Note: unlocking can finalize the destruction of the place if
-        // somebody tried to destroy it in the above loop.
-        // --------------------------------------------------------------------
-
-        place_unlock(place);
-#endif /* ! TURN_LIST_NODES */
 }
 
 void place_clip_to_map(struct place *place, int *x, int *y)
@@ -1835,7 +1754,9 @@ int place_los_blocked(struct place *place, int Ax, int Ay, int Bx, int By)
         return 0;
 }
 
-#ifdef TURN_LIST_NODES
+/*****************************************************************************
+ * place_contains_hostile -- helper utility to scan for hostiles
+ *****************************************************************************/
 int place_contains_hostiles(struct place *place, Being *subject)
 {
         struct node *node;
@@ -1851,28 +1772,6 @@ int place_contains_hostiles(struct place *place, Being *subject)
 
         return 0;
 }
-#else
-struct list *place_get_all_objects(struct place *place)
-{
-        return &place->turn_list;
-}
-
-int place_contains_hostiles(struct place *place, Being *subject)
-{
-        struct list *elem;
-        class Object *obj;
-        
-        list_for_each(&place->turn_list, elem) {
-                obj = outcast(elem, class Object, turn_list);
-                if (! obj_is_being(obj))
-                        continue;
-                if (are_hostile((Being*)obj, subject))
-                        return 1;
-        }
-
-        return 0;
-}
-#endif
 
 static void place_save_object(class Object *object, void *data)
 {

@@ -534,11 +534,7 @@ void Object::setup()
         int i;
 
         list_init(&container_link.list);
-#ifdef TURN_LIST_NODES
         turn_list       = NULL;
-#else
-        list_init(&turn_list);
-#endif
 
         for (i = 0; i < OBJ_NUM_HOOKS; i++) {
                 hook_list_init(&hooks[i]);

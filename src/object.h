@@ -370,13 +370,7 @@ class Object {
 	char *tag;
 	struct list list;	// for the loader, not the place
 
-#ifdef TURN_LIST_NODES
-        /* Points back to the node used to keep this object on the turn list
-         * for its place */
-        struct node *turn_list;
-#else        
-        struct list turn_list; /* for processing each object in a turn */
-#endif
+        struct node *turn_list; /* points back to node in place's turn list */
 
         // The session handle for removing/checking the orphan list
         void *handle;

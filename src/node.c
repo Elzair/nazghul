@@ -31,7 +31,7 @@ struct node *node_new(void *data)
 
         node = (struct node *)calloc(1, sizeof(*node));
         node->ptr = data;
-
+        node->ref = 1;
         return node;
 }
 

@@ -932,12 +932,11 @@ static bool ctrl_attack_target(class Character *character,
         return attacked;
 }
 
-#ifdef TURN_LIST_NODES
-
+/* Data structure used by the ctrl_is_valid_target visitor function below */
 struct ctrl_select_target_data {
-        class Character *target;
-        class Character *attacker;
-        int distance;
+        class Character *target;    /* best target found so far */
+        class Character *attacker;  /* attacking character */
+        int distance;               /* distance to 'target' */
 };
 
 /*****************************************************************************
@@ -988,7 +987,7 @@ static void ctrl_select_target_visitor(struct node *node, void *parm)
 
         /* Extract the typed variables from the generic parms */
         obj = (class Object*)node->ptr;
-        data = (struct ctrl_select_target_data *)data;
+        data = (struct ctrl_select_target_data *)parm;
 
         /* Check if this object makes a valid target */
         if (! ctrl_is_valid_target(data->attacker, obj))
@@ -1041,68 +1040,6 @@ static class Character * ctrl_select_target(class Character *character)
         return NULL;
 }
 
-#else /* ! TURN_LIST_NODES */
-
-static class Character * ctrl_select_target(class Character *character)
-{
-        struct list *head;
-        struct list *elem;
-        class Object *obj;
-        class Character *new_target = NULL;
-        int min_distance = 1000;
-        int distance;
-
-        /* Get a list of all the objects within vision radius. */
-        head = place_get_all_objects(character->getPlace());
-
-        /* Walk the list, looking for the nearest hostile character. */
-        list_for_each(head, elem) {
-                
-                obj = outcast(elem, class Object, turn_list);
-
-                /* Skip invalid targets */
-                if (! obj_is_being(obj) ||
-                    obj == character ||
-                    !obj->isOnMap() ||
-                    obj->isDead() ||
-                    !obj->isType(CHARACTER_ID) ||
-                    !are_hostile(character, (Being*)obj) ||
-                    !character->canSee(obj))
-                        continue;
-
-                /* Remember the closest target */
-                distance = place_flying_distance(character->getPlace(), 
-                                                 character->getX(), 
-                                                 character->getY(), 
-                                                 obj->getX(), obj->getY());
-                if (distance < min_distance) {
-                        min_distance = distance;
-                        new_target = (class Character*)obj;
-                }
-        }
-
-        if (new_target) {
-                character->setAttackTarget((class Character*)new_target);
-                return new_target;
-        }
-
-        // use the old one
-        new_target = character->getAttackTarget();
-
-        if (new_target &&
-            are_hostile(new_target, character) &&
-            new_target != character &&
-            new_target->isOnMap() &&
-            !new_target->isDead() && 
-            new_target->isVisible())
-                return new_target;
-
-        // old one invalid now
-        character->setAttackTarget(NULL);
-        return NULL;
-}
-
-#endif  /* ! TURN_LIST_NODES */
 
 static void ctrl_idle(class Character *character)
 {
