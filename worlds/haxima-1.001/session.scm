@@ -111,7 +111,6 @@
  sound-walking               ; movement sound
  1000                        ; food
  500                         ; gold
- (+ align-player align-town) ; alignment
  nil                         ; formation
  m_campsite                  ; campsite map
  nil                         ; campsite formation
