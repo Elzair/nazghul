@@ -188,7 +188,7 @@ terrains  {
  * That should save memory and parse time.
  */
 #define STD_TERRAIN_PALETTE \
-palette {                   \
+palette pal_standard {      \
         '_'    t_deep;      \
         '-'    t_shallow;   \
         '~'    t_shoals;    \
@@ -257,7 +257,7 @@ palette {                   \
 } // palette STD_TERRAIN_PALETTE
 
 #define STD_EXPANDED_PALETTE \
-palette {                   \
+palette pal_expanded {       \
         '__'    t_deep;      \
         '--'    t_shallow;   \
         '~~'    t_shoals;    \

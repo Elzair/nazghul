@@ -36,7 +36,7 @@ MAP map_ship {
   height 8;
   one_char_per_tile 1;
 
-  palette {
+  palette pal_old_ship {
     '_' t_deep;
     '=' t_shallow;
     '~' t_shoals;
@@ -63,7 +63,7 @@ MAP map_ship {
   type   ascii;
   width  17;
   height 9;
-  palette {
+  palette pal_funky_ship {
     '__' t_deep;
     '--' t_shallow;
     '~~' t_shoals;
@@ -98,7 +98,7 @@ MAP map_ship {
   type   ascii;
   width  17;
   height 9;
-  palette {
+  palette pal_ship {
     '__' t_deep;
     '--' t_shallow;
     '~~' t_shoals;

@@ -64,11 +64,36 @@ extern "C" {
   extern void terrain_destroy(struct terrain *terrain);
 
 
-#define MAX_TERRAIN_PALETTE_SYMBOL_SZ 4
-  struct terrain_palette {
-	char symbol[MAX_TERRAIN_PALETTE_SYMBOL_SZ + 2];
-	struct terrain *terrain;
+#define MAX_TERRAIN_PALETTE_ENTRY_SYMBOL_SZ 4
+#define NUM_QUICK_TERRAINS                  10
+#define INITIAL_INDENTATION                 0
+#define INDENTATION_FACTOR                  2
+
+#define INDENT fprintf(fp, "%*s", indent, "")
+
+  struct terrain_palette_entry {
+	char             glyph[MAX_TERRAIN_PALETTE_ENTRY_SYMBOL_SZ + 2];
+	struct terrain * terrain;
   };
+  void palette_entry_print (FILE * fp, int indent, struct terrain_palette_entry * entry);
+
+  struct terrain_palette {
+    char * tag;
+    int    widest_glyph;
+    int    num_entries;
+    struct terrain_palette_entry * set;
+    struct terrain               * quick_terrain[NUM_QUICK_TERRAINS];
+    // "quick terrain" for quick UI access (ten number keys 0..9)
+  };
+
+  struct terrain_palette * new_terrain_palette (void);
+  char *           palette_glyph             (struct terrain_palette * palette, int n);
+  struct terrain * palette_terrain           (struct terrain_palette * palette, int n);
+  struct terrain * palette_terrain_for_glyph (struct terrain_palette * palette, char * glyph);
+  struct terrain * palette_quick_terrain     (struct terrain_palette * palette, int n);
+  void palette_print (FILE * fp, int indent, struct terrain_palette * palette);
+
+
 
 #ifdef __cplusplus
 }

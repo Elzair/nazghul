@@ -34,7 +34,7 @@ MAP m_empire_city {
         width  64;
         height 64;
         one_char_per_tile 1; /* optional */
-        palette {
+        palette pal_empire_city {
                 '%' t_wall;
                 '-'	t_cobblestone;
                 '@'	t_shallow;

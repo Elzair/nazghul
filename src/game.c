@@ -448,7 +448,7 @@ static struct sprite *parseSprite(char *field)
 static struct terrain *game_load_terrain(void)
 {
 	struct terrain *terrain = 0;
-	char *tag = 0;
+	char *tag  = 0;
 	char *name = 0;
 	unsigned char passable;
 	char *sprite_tag = 0;
@@ -459,11 +459,11 @@ static struct terrain *game_load_terrain(void)
 
 	PARSE_TAG(tag);
 	PARSE_START_OF_BLOCK();
-	PARSE_STRING("name", name);
-	PARSE_INT("pmask", passable);
-	PARSE_WORD("sprite", sprite_tag);
-	PARSE_INT("id", id);
-	PARSE_INT("alpha", alpha);
+	PARSE_STRING("name",   name);
+	PARSE_INT(   "pmask",  passable);
+	PARSE_WORD(  "sprite", sprite_tag);
+	PARSE_INT(   "id",     id);
+	PARSE_INT(   "alpha",  alpha);
 
 	if (!(sprite = spriteLookup(sprite_tag))) {
 		err("line %d: invalid sprite tag %s", Lexer->line, sprite_tag);
@@ -472,10 +472,10 @@ static struct terrain *game_load_terrain(void)
 	terrain = terrain_create(tag, name, passable, sprite, id, alpha);
 
 	PARSE_INT("movement_cost", terrain->movement_cost);
-	PARSE_INT("effects", terrain->effects);
-	PARSE_INT("light", terrain->light);
+	PARSE_INT("effects",       terrain->effects);
+	PARSE_INT("light",         terrain->light);
 
-	// terrain->color = 0xffffffff;
+	// terrain->color = 0xFFFFFFFF;
 
 	lexer_lex(Lexer);
 	if (Lexer->token == lexer_WORD) {
@@ -487,9 +487,9 @@ static struct terrain *game_load_terrain(void)
 				     "Expected INT value for color, "
 				     "got %s\n", Lexer->lexeme);
 			sscanf(Lexer->lexeme, "0x%x", &color);
-			red = (color >> 16) & 0xff;
-			grn = (color >> 8) & 0xff;
-			blu = color & 0xff;
+			red = (color >> 16) & 0xFF;
+			grn = (color >>  8) & 0xFF;
+			blu = (color      ) & 0xFF;
 			terrain->color = screenMapRGB(red, grn, blu);
 		} else {
 			PARSE_ASSERT(false,
@@ -532,6 +532,7 @@ static int game_load_Terrains()
 	return 0;
 }
 
+#ifdef SUPPORT_BINARY_TERRAIN_MAPS
 static struct terrain_map *game_load_binary_terrain_map(char *tag)
 {
 	struct terrain_map *terrain_map = 0;
@@ -589,6 +590,7 @@ static struct terrain_map *game_load_binary_terrain_map(char *tag)
 		munmap(start, len);
 	return terrain_map;
 }
+#endif // SUPPORT_BINARY_TERRAIN_MAPS
 
 static void *lookupConversation(char *tag)
 {
@@ -749,82 +751,78 @@ void *lookupTag(char *tag, int tid)
 	}
 }
 
-// SAM: Moved 'struct terrain_palette' to terrain.h
+// SAM: Moved 'struct terrain_palette_entry' to terrain.h
 
-static struct terrain_palette *load_terrain_palette(int *n,
-						    class Loader * loader)
+static struct terrain_palette * LTP_wrapper (class Loader * loader);
+static struct terrain_palette_entry * load_terrain_palette_entry (class Loader * loader,
+                                                                  int *num_entries,
+                                                                  int *widest);
+
+static struct terrain_palette * LTP_wrapper (class Loader * loader)
 {
-	struct terrain_palette *set;
-	struct terrain_palette entry;
+  struct terrain_palette * palette;
+  int num_entries = 0;
+  int widest      = 0;
+
+  palette = new_terrain_palette();
+  palette->set          = load_terrain_palette_entry(loader, &num_entries, &widest);
+  palette->num_entries  = num_entries;
+  palette->widest_glyph = widest;
+
+  return palette;
+} // LTP_wrapper()
+
+
+static struct terrain_palette_entry * load_terrain_palette_entry (class Loader * loader,
+                                                                  int *n,
+                                                                  int *widest)
+{
+	struct terrain_palette_entry *set;
+	struct terrain_palette_entry entry;
 	char *terrain_tag;
 	int i;
 	int len;
 
 	// base case
 	if (loader->matchToken('}')) {
-		set = new struct terrain_palette[*n];
+		set = new struct terrain_palette_entry[*n];
 		if (set != NULL)
-			memset(set, 0, *n * sizeof(struct terrain_palette));
+			memset(set, 0, *n * sizeof(struct terrain_palette_entry));
 		return set;
 	}
-#ifdef ONE_CHAR_PER_TILE
-	// recursive case
-	if (!loader->matchToken('\'') ||
-	    !loader->getChar(&entry.symbol) ||
-	    !loader->matchToken('\'') || !loader->getWord(&terrain_tag))
-		return NULL;
-
-    // SAM:
-    // Add code here for terrain_palette to accept a 'null' entry.
-    // Hmmm...perhaps terrain should accept binding a null terrain?
-    // That would mean that here, it is not a special case...
-	entry.terrain = (struct terrain *) loader->lookupTag(terrain_tag,
-							     TERRAIN_ID);
-	if (entry.terrain == NULL) {
-		loader->setError("Error loading terrain map palette: '%s' "
-				 "is not a valid TERRAIN tag", terrain_tag);
-		free(terrain_tag);
-		return NULL;
-	}
-	free(terrain_tag);
-
-	i = *n;
-	(*n)++;
-
-	if ((set = load_terrain_palette(n, loader)) == NULL)
-		return NULL;
-#else				/* ! ONE_CHAR_PER_TILE */
 	// recursive case
 	memset(&entry, 0, sizeof(entry));
 
-        // Note: getRaw() eats up through the closing tick, which is then
-        // clobbered below
+    // Note: getRaw() eats up through the closing tick.
+    // The closing tick is then replaced with '\0' below.
 	if (!loader->matchToken('\'') ||
-	    !loader->getRaw(entry.symbol, MAX_TERRAIN_PALETTE_SYMBOL_SZ) ||
+	    !loader->getRaw(entry.glyph, MAX_TERRAIN_PALETTE_ENTRY_SYMBOL_SZ + 1) ||
 	    !loader->getWord(&terrain_tag))
 		return NULL;
 
 	// the last non-zero byte in the symbol is the closing ' symbol, which
 	// is not really part of the symbol so clobber it
-	if ((len = strlen(entry.symbol)) < 2) {
+	if ((len = strlen(entry.glyph)) < 2) {
 		loader->setError("Error loading terrain map palette: "
 				 "zero-length palette code detected");
 		free(terrain_tag);
 		return NULL;
 	}
 
-	if (entry.symbol[len - 1] != '\'') {
+	if (entry.glyph[len - 1] != '\'') {
 		loader->setError("Error loading terrain map palette: "
 				 "non-terminated palette code detected: '%s'",
-				 entry.symbol);
+				 entry.glyph);
 		free(terrain_tag);
 		return NULL;
 	}
 
-	entry.symbol[len - 1] = 0;
+    // Clobber the closing ' and terminate the string:
+	entry.glyph[len - 1] = '\0';
+    len--;  // Update for purposes of 'widest'
 
     // SAM:
-    // Add code here for terrain_palette to accept a 'null' entry.
+    // Add code here for terrain_palette_entry to accept a 'null' entry.
     // Hmmm...perhaps terrain should accept binding a null terrain?
     // That would mean that here, it is not a special case...
 	entry.terrain = (struct terrain *) loader->lookupTag(terrain_tag,
@@ -837,288 +835,188 @@ static struct terrain_palette *load_terrain_palette(int *n,
 	}
 	free(terrain_tag);
 
+    if (len > *widest)
+      *widest = len;  // This is the widest glyph thus far
 	i = *n;
 	(*n)++;
 
-	if ((set = load_terrain_palette(n, loader)) == NULL)
+	if ((set = load_terrain_palette_entry(loader, n, widest)) == NULL)
 		return NULL;
-
-#endif				/* ! ONE_CHAR_PER_TILE */
 
 	set[i] = entry;
 
 	return set;
 }
 
-static struct terrain_map *game_load_ascii_terrain_map(char *tag)
+static struct terrain_map * game_load_ascii_terrain_map (char *tag)
 {
-	struct terrain_map *terrain_map = 0;
-	unsigned int width;
-	unsigned int height;
-	int i, j, pal_sz = 0;
-	int ret = 0;
-	// struct terrain *terrain = 0;
-	struct terrain_palette *palette = 0;
-	class Loader loader;
-	bool one_char_per_tile = false;
+    struct terrain_map     *terrain_map = 0;
+    struct terrain_palette *palette = 0;
+    char * palette_tag;
+    unsigned int width;
+    unsigned int height;
+    int i;
+    int ret = 0;
+    class Loader loader;
+    bool one_char_per_tile = false;
 
-	PARSE_INT("width", width);
-	PARSE_INT("height", height);
+    PARSE_INT("width",  width);
+    PARSE_INT("height", height);
 
-	loader.lexer = Lexer;
-	loader.lookupTag = lookupTag;
-	loader.advance();
+    loader.lexer     = Lexer;
+    loader.lookupTag = lookupTag;
+    loader.advance();
 
-	if (loader.matchWord("one_char_per_tile")) {
-		if (!loader.getBool(&one_char_per_tile))
-			return NULL;
-	}
+    // SAM: We could almost determine this by palette->widest now,
+    //      though compact and WS-padded 1-byte-wide palette maps 
+    //      both exist...
+    if (loader.matchWord("one_char_per_tile")) {
+        if (!loader.getBool(&one_char_per_tile))
+            return NULL;
+    }
 
-	if (!loader.matchWord("palette") || !loader.matchToken('{')) {
-		err("%s", loader.error);
-		return NULL;
-	}
+    // Palette {} block
+    if (!loader.matchWord("palette") || 
+        !loader.getWord(&palette_tag) ||
+        !loader.matchToken('{')) {
+        err("%s", loader.error);
+        return NULL;
+    }
+    if ((palette = LTP_wrapper(&loader)) == NULL) {
+        err("%s", loader.error);
+        return NULL;
+    }
+    palette->tag = palette_tag;
+    // palette_print(stdout, INITIAL_INDENTATION, palette);
 
-	if ((palette = load_terrain_palette(&pal_sz, &loader)) == NULL) {
-		err("%s", loader.error);
-		return NULL;
-	}
+    if (!(terrain_map = terrain_map_create(tag, width, height)))
+        return 0;
 
-	if (!(terrain_map = terrain_map_create(tag, width, height)))
-		return 0;
+    if (one_char_per_tile) {
+        if (strcmp(Lexer->lexeme, "terrain")) {
+            err("Error loading ascii map '%s': \n"
+                "  expected 'terrain', got '%s'", tag, Lexer->lexeme);
+            goto cleanup;
+        }
+        PARSE_START_OF_BLOCK();
 
-	if (one_char_per_tile) {
+        Lexer->mode = LEX_CHAR;
 
-		if (strcmp(Lexer->lexeme, "terrain")) {
-			err("Error loading ascii map '%s': expected "
-			    "'terrain', got " "'%s'", tag, Lexer->lexeme);
-			goto cleanup;
-		}
+        for (i = 0; i < terrain_map->w * terrain_map->h; i++) {
+            char two_bytes[2];
+            char * glyph = two_bytes;
+            glyph[0] = lexer_lex(Lexer);
+            glyph[1] = '\0';
 
-		PARSE_START_OF_BLOCK();
+#ifdef TERRAIN_LOOKUP_RLE_OPTIMIZATION
+            // Optimization:
+            // It is common for the same terrain type to 
+            // occur 2+ times in a row, so we try the most 
+            // recently used glyph before doing a full search.
+            // (This is basically run-length encoding.)
+            // 
+            // SAM: Is it worth adding a lookup function in terrain.c
+            //      so we can find the index of the last terrain found, 
+            //      and keep this optimization?
+            // 
+            //      (The current code palette_terrain_for_glyph()
+            //      does not leave us with a meaningful 'j' like
+            //      the original code did...)
+            int j = 0;  // No meaningful value available...
+            char * prev_glyph = palette_glyph(palette, j);
+            if (!strncmp(prev_glyph, glyph, 1)) {
+              terrain_map->terrain[i] = palette_terrain(palette, j);
+              continue;
+            }
+#endif // TERRAIN_LOOKUP_RLE_OPTIMIZATION
 
-		Lexer->mode = LEX_CHAR;
-		j = 0;
+            // If this terrain is not the same as the previous,
+            // we look it up from the terrain palette:
+            struct terrain * tt = palette_terrain_for_glyph(palette, glyph);
+            if (tt) {
+              terrain_map->terrain[i] = tt;
+            }
+            else {
+              err("Error loading (single-byte palette) ASCII MAP '%s':\n"
+                  "  Glyph character '%c' at index %d "
+                  "does not map to a TERRAIN type.\n"
+                  "  (Check the palette definition versus the terrain block.)",
+                  tag, glyph[0], i);
+              return 0;
+            }
+        } // for (i)
 
-		for (i = 0; i < terrain_map->w * terrain_map->h; i++) {
+        Lexer->mode = LEX_NORMAL;
 
-			char glyph = lexer_lex(Lexer);
+        PARSE_END_OF_BLOCK();  // terrain {} block
+        PARSE_END_OF_BLOCK();  // MAP {} block
+    } // one_char_per_tile
 
-			// try the last one before doing a full search
-			if (palette[j].symbol[0] == glyph) {
-				terrain_map->terrain[i] = palette[j].terrain;
-				continue;
-			}
+    else {
+        // !one_char_per_tile
+        if (!loader.matchWord("terrain") || !loader.matchToken('{')) {
+            err("Error loading MAP %s: %s", tag, loader.error);
+            return NULL;
+        }
 
-			for (j = 0; j < pal_sz; j++) {
-				if (palette[j].symbol[0] == glyph) {
-					terrain_map->terrain[i] =
-					    palette[j].terrain;
-					break;;
-				}
-			}
-			if (j == pal_sz) {
-				err("Error loading ASCII MAP %s: '%c' at "
-				    "index %d does not map to a TERRAIN type "
-				    "(check the palette definition)", tag,
-				    glyph, i);
-				return 0;
-			}
-		}
+        char glyph[MAX_TERRAIN_PALETTE_ENTRY_SYMBOL_SZ + 1];
 
-		Lexer->mode = LEX_NORMAL;
+        for (i = 0; i < terrain_map->w * terrain_map->h; i++) {
 
-		PARSE_END_OF_BLOCK();
-		PARSE_END_OF_BLOCK();
+            memset(glyph, 0, sizeof(glyph));
 
-	} else {		/* ! ONE_CHAR_PER_TILE */
+            if (!loader.getRaw(glyph,
+                       MAX_TERRAIN_PALETTE_ENTRY_SYMBOL_SZ)) {
+                err("%s", loader.error);
+                return NULL;
+            }
 
-		if (!loader.matchWord("terrain") || !loader.matchToken('{')) {
-			err("Error loading MAP %s: %s", tag, loader.error);
-			return NULL;
-		}
+#ifdef TERRAIN_LOOKUP_RLE_OPTIMIZATION
+            // Optimization:
+            // It is common for the same terrain type to 
+            // occur 2+ times in a row, so we try the most 
+            // recently used glyph before doing a full search.
+            // (This is basically run-length encoding.)
+            // 
+            // SAM: Is it worth adding a lookup function in terrain.c
+            //      so we can find the index of the last terrain found, 
+            //      and keep this optimization?
+            // 
+            //      (The current code palette_terrain_for_glyph()
+            //      does not leave us with a meaningful 'j' like
+            //      the original code did...)
+            int j = 0;  // No meaningful value available...
+            char * prev_glyph = palette_glyph(palette, j);
+            if (!strcmp(prev_glyph, glyph)) {
+              terrain_map->terrain[i] = palette_terrain(palette, j);
+              continue;
+            }
+#endif // TERRAIN_LOOKUP_RLE_OPTIMIZATION
 
-		char glyph[MAX_TERRAIN_PALETTE_SYMBOL_SZ + 1];
+            struct terrain * tt = palette_terrain_for_glyph(palette, glyph);
+            if (tt) {
+              terrain_map->terrain[i] = tt;
+            }
+            else {
+              err("Error loading (multi-byte palette) ASCII MAP '%s':\n"
+                  "  Glyph '%s' at index %d "
+                  "does not map to a TERRAIN type.\n"
+                  "  (Check the palette definition versus the terrain block.)",
+                  tag, glyph, i);
+              return 0;
+            }
+        } // for (i)
 
-		j = 0;
-
-		for (i = 0; i < terrain_map->w * terrain_map->h; i++) {
-
-			memset(glyph, 0, sizeof(glyph));
-
-			if (!loader.getRaw(glyph,
-					   MAX_TERRAIN_PALETTE_SYMBOL_SZ)) {
-				err("%s", loader.error);
-				return NULL;
-			}
-			// try the last one before doing a full search
-			if (!strcmp(palette[j].symbol, glyph)) {
-				terrain_map->terrain[i] = palette[j].terrain;
-				continue;
-			}
-
-			for (j = 0; j < pal_sz; j++) {
-				if (!strcmp(palette[j].symbol, glyph)) {
-					terrain_map->terrain[i] =
-					    palette[j].terrain;
-					break;;
-				}
-			}
-
-			if (j == pal_sz) {
-				err("Error loading ASCII MAP %s: '%s' does "
-				    "not map to a TERRAIN type (check the "
-				    "palette definition)", tag, glyph);
-				return 0;
-			}
-		}
-
-		if (!loader.matchToken('}')) {	// ||
-			// !loader.matchToken('}')) {
-			err("Error loading MAP %s: %s", tag, loader.error);
-			terrain_map_destroy(terrain_map);
-			return NULL;
-		}
-	}			/* ! ONE_CHAR_PER_TILE */
+        // terrain {} block end was already parsed by loader.getRaw()
+        PARSE_END_OF_BLOCK();  // MAP {} block
+    } // !one_char_per_tile
 
       cleanup:
-	if (palette)
-		delete palette;
-	return terrain_map;
-}
+    if (palette)
+      delete palette;
+    return terrain_map;
+} // game_load_ascii_terrain_map()
 
-#ifdef SUPPORT_XPM_TERRAIN_MAPS
-static struct terrain_map *load_xpm_terrain_map(char *tag)
-{
-	class Loader loader;
-	int pal_sz = 0;
-	struct terrain_palette *palette;
-	char *fname;
-	char *xpm;
-	int flen;
-	struct lexer *xpm_lexer;
-	char *string;
-	struct terrain_map *terrain_map;
-	int i, j, w, h, n, x, y;
-
-	loader.lexer = Lexer;
-	loader.lookupTag = lookupTag;
-	loader.advance();
-
-	// Parse the .naz entry
-	if (!loader.matchWord("palette") || !loader.matchToken('{')) {
-		err("%s", loader.error);
-		return NULL;
-	}
-
-	if ((palette = load_terrain_palette(&pal_sz, &loader)) == NULL) {
-		err("%s", loader.error);
-		return NULL;
-	}
-
-	if (!loader.getStringKeyValue("file", &fname)) {
-		err("%s", loader.error);
-		delete palette;
-		return NULL;
-	}
-	// Load and parse the .xpm
-	if ((xpm = mmap_file(fname, &flen)) == NULL) {
-		err("Failed to load '%s'", fname);
-		delete palette;
-		return NULL;
-	}
-
-	if ((xpm_lexer = lexer_create(512)) == NULL) {
-		err("Error in MAP: failed to allocate a lexer");
-		delete palette;
-		return NULL;
-	}
-
-	lexer_init(xpm_lexer, xpm, flen);
-	xpm_lexer->ignore_semicolons = 1;
-
-	loader.lexer = xpm_lexer;
-	loader.lookupTag = lookupTag;
-	loader.advance();
-
-	if (!loader.matchToken('/') || !loader.matchToken('*') ||
-	    !loader.matchWord("XPM") || !loader.matchToken('*') ||
-	    !loader.matchToken('/') ||
-	    !loader.matchWord("static") || !loader.matchWord("char") ||
-	    !loader.matchToken('*') || !loader.matchToken(lexer_WORD) ||
-	    !loader.matchToken('[') || !loader.matchToken(']') ||
-	    !loader.matchToken('=') || !loader.matchToken('{') ||
-	    !loader.getString(&string) || !loader.matchToken(',')) {
-		err("Error loading XPM: %s", loader.error);
-		goto delete_lexer;
-	}
-	// Find the dimensions
-	w = atoi(strtok(string, " "));
-	h = atoi(strtok(NULL, " "));
-	n = atoi(strtok(NULL, " "));
-	if (atoi(strtok(NULL, " ")) != 1) {
-		err("Unsupported XPM format (chars per pixel != 1)");
-		goto delete_lexer;
-	}
-	free(string);
-
-	// Alloc the terrain map
-	if ((terrain_map = terrain_map_create(tag, w, h)) == NULL) {
-		err("Error loading XPM MAP: memory allocation failed");
-		return 0;
-	}
-	// Discard the xpm palette info
-	while (n) {
-		n--;
-		if (!loader.getString(&string) || !loader.matchToken(',')) {
-			err("Error loading XPM: %s", loader.error);
-			goto delete_map;
-		}
-		free(string);
-	}
-
-	// Load the data row by row
-	i = 0;
-	for (y = 0; y < h; y++) {
-		if (!loader.getString(&string) ||
-		    (y < (h - 1) && !loader.matchToken(','))) {
-			err("Error loading XPM: %s", loader.error);
-			goto delete_map;
-		}
-		for (x = 0; x < w; x++, i++) {
-			for (j = 0; j < pal_sz; j++) {
-				if (palette[j].symbol == string[x]) {
-					terrain_map->terrain[i] =
-					    palette[j].terrain;
-					break;;
-				}
-			}
-			if (j == pal_sz) {
-				err("Error loading XPM MAP: '%c' does not map "
-				    "to a TERRAIN type (check the palette "
-				    "definition)", string[x]);
-				goto delete_map;
-			}
-		}
-	}
-
-	if (!loader.matchToken('}')) {
-		err("Error loading XPM: %s", loader.error);
-		goto delete_map;
-	}
-
-	delete palette;
-	lexer_destroy(xpm_lexer);
-	return terrain_map;
-
-      delete_map:
-	terrain_map_destroy(terrain_map);
-      delete_lexer:
-	lexer_destroy(xpm_lexer);
-	delete palette;
-	return NULL;
-}
-#endif // SUPPORT_XPM_TERRAIN_MAPS
 
 #ifdef OLD_MAP
 
@@ -1136,16 +1034,16 @@ static struct terrain_map *game_load_terrain_map()
 	if (!strcmp(type, "ascii")) {
 		terrain_map = game_load_ascii_terrain_map(tag);
 		// PARSE_END_OF_BLOCK();
-	} else if (!strcmp(type, "binary")) {
+	}
+
+#ifdef SUPPORT_BINARY_TERRAIN_MAPS
+    else if (!strcmp(type, "binary")) {
 		terrain_map = game_load_binary_terrain_map(tag);
 		PARSE_END_OF_BLOCK();
+	}
+#endif // SUPPORT_BINARY_TERRAIN_MAPS
 
-#ifdef SUPPORT_XPM_TERRAIN_MAPS
-	} else if (strcmp(type, "xpm") == 0) {
-		terrain_map = load_xpm_terrain_map(tag);
-#endif // SUPPORT_XPM_TERRAIN_MAPS
-
-	} else {
+    else {
 		err("line %d: unknown terrain_map type %s", Lexer->line, type);
 	}
 
@@ -1197,10 +1095,16 @@ static int load_map(void)
 	if (!strcmp(type, "ascii")) {
 		terrain_map = game_load_ascii_terrain_map(tag);
 		// PARSE_END_OF_BLOCK();
-	} else if (!strcmp(type, "binary")) {
+	}
+
+#ifdef SUPPORT_BINARY_TERRAIN_MAPS
+    else if (!strcmp(type, "binary")) {
 		terrain_map = game_load_binary_terrain_map(tag);
 		PARSE_END_OF_BLOCK();
-	} else {
+	}
+#endif // SUPPORT_BINARY_TERRAIN_MAPS
+
+    else {
 		err("line %d: unknown terrain_map type %s", Lexer->line, type);
 	}
 
