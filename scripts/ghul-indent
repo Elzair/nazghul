@@ -1,0 +1,17 @@
+#!/bin/sh
+# -kr = Kernighan & Ritchie style
+# -i8 = indent eight spaces
+# -ts8 = tab is eight spaces
+# -sob = swallow (discard) optional blank lines
+# -l80 = right margin 80 spaces
+# -ss = space special (semicolon on one-line for/while loops)
+# -br = braces right (of expression)
+# -ce = cuddle elses
+# -saf = space after for
+# -saw = space after while
+# -sai = space after if
+# -brs = braces on struct declaration line
+# -fca = format all comments
+# -sc = start comments with star
+# -npcs = no space between called procedure name and '('
+indent -kr -i8 -ts8 -sob -l80 -ss -br -ce -saf -saw -sai -brs -fca -sc -npcs "$@"

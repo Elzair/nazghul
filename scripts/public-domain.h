@@ -19,19 +19,3 @@
 // and in any way, including by methods that have not yet been invented or
 // conceived.
 //
-/* containers.ghul
- *
- * Defines object types which reside on the CONTAINERS layer.
- * 
- * Note that these must be defined before occupations which use them.
- */
-#ifndef containers_ghul
-#define containers_ghul
-
-
-GENERIC_TYPE(t_chest1, "small wooden chest", s_chest1, LAYER_CONTAINER) /* small wood */;
-
-
-#endif // containers_ghul
-
-/* eof */

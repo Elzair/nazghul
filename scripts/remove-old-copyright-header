@@ -1,0 +1,10 @@
+#!/bin/sh
+#
+# remove-old-copyright-header <source file>
+#
+
+grep -v "Copyright (c) 2002 Gordon McNutt" $1 > /tmp/foobarbaz
+mv /tmp/foobarbaz $1
+
+grep -v "Copyright (c) 2003 Gordon McNutt" $1 > /tmp/foobarbaz
+mv /tmp/foobarbaz $1

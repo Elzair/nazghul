@@ -1,0 +1,7 @@
+#!/bin/sh
+#
+# apply-license-header <header> <source file>
+#
+
+cat $1 $2 > /tmp/licensed-file
+mv /tmp/licensed-file $2
