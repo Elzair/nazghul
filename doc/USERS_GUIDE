@@ -1,50 +1,174 @@
-Start
------
+                            USERS GUIDE TO NAZGHUL
 
-Run the 'nazghul' executable from this directory.
+Nazghul is an old-school RPG clone modeled after those made in the heyday of
+top-down, 2d tile-based graphics. It is specifically modeled after Ultima V, so
+if you've played that game then this should be familiar.
 
-Commands
---------
+
+
+                               STARTING THE GAME
+
+
+The nazghul distribution is laid out as follows:
+
+nazghul-0.x.0
+|- doc
+|- examples
+`- src
+
+First, see the nazghul-0.x.0/INSTALL instructions in the top-level of the
+nazghul distribution for instructions on setting up and installing the game.
+
+Next, to play the example that comes with the game cd to nazghul-0.x.0/examples
+and run the command nazghul. If your installation worked correctly the game
+should fire up.
+
+
+
+                                  ORIENTATION
+
+
+When you start you will be in party mode and the icon for your party will be in
+the center of the map view on the left. Later, when you get into trouble with
+npcs the map will show you a combat screen. Combat is pretty much the same
+except instead of one icon for the party you will see an icon for each party
+member.
+
+To exit a city walk off the edge. This will take you to the wilderness map. To
+enter a city step onto its icon on the wilderness map. Usually this will take
+you right in on the edge you entered from. Sometime you're party will find
+itself direcly over the city icon. In that case hit the 'e' key (for 'enter')
+and the game will prompt you for a direction to enter from. Note that sometimes
+you cannot enter cities because they have no passable terrain on the side you
+indicate.
+
+Below the map you'll see a prompt screen. This gives you hints when you're
+entering commands to tell you what type of input the command wants. For
+example, if you type 'l' (for look) the command prompt will say:
+
+    Look-<direction>
+
+Which means it wants you to hit an arrow key to indicate which direction to
+look. If you hit 'ESC' instead the command will cancel. Pretty much all
+commands can be canceled by hitting 'ESC'.
+
+
+
+                                USER INTERFACE
+
+
+Astronomy Window
+
+    Above the map you'll see a little window embedded in the frame which shows
+    the position of the sun and two moons. It also shows the phase of the
+    moons, which is important for moongate travel.
+
+FPS Counter
+      
+    Not that it matters with a game like this, but for you're idle amusement in
+    the top left corner of the map you can see how fast frames are drawing. No,
+    we're not really drawing 100 frames per second - the engine only redraws
+    when it needs to. 100 fps means each draw - when we get around to it -
+    takes 10ms.
+
+Clock
+
+    Eventually I'll make you carry around a pocketwatch but for now you can see
+    the current game time by looking in the top right corner of the map window.
+
+Coordinates
+
+    Eventually I'll make you work for this one, too, but for now I nicely
+    indicate you're parties coordinates in the lower left corner of the
+    map. This is convenient for map hackers to walk around and figure out where
+    to put things.
+
+Wind
+
+    Below the map, embedded in the frame, is the wind direction
+    indicator. Currently the wind only affects ships. Tacking across the wind
+    provides the best rate of travel, the wind at your back is second back, and
+    heading into the wind is the worst. Note that this indicates the direction
+    the wind is blowing _from_.
+
+Command Prompt
+
+    Unlike u4/u5/u6 the command prompt has its own window, just below the wind
+    indicator. Interactive command prompts appear here, as well as the things
+    the player says in conversation. BTW, I've thought about moving this back
+    to the console window, so if you have an opinion let me know. Sam's says I
+    should log the final form of all commands to the console, so that's an
+    alternative to consider.
+
+Status Window
+
+    In the top right you have a general-purpose window for viewing and
+    selecting lists of things. Normally it shows some basic party stats, but
+    its contents change as required by used commands. For example, (R)eady will
+    turn it into a selection list.
+
+Foogod Window
+
+    That's my sacrilegious acronym for Food/Gold Window. This little window
+    appears below the status window and shows the turn, food and gold counters
+    as well as the current combat status. If you board a vehicle it will also
+    show you the hit points for the vehicle.
+
+Console Window
+
+    Finally on the right hand side you'll find the window where all the game
+    messages get logged.
+
+
+
+                                PLAYER COMMANDS
+
+
+Here's your chance to let the sweat dry on your mouse - all commands are via
+the keyboard. As it should be, forever and ever amen.
 
 General syntax:
 
 <dir>    = one of the four arrow keys
-<player> = a party member, selected from a list by scrolling with the arrow
+<member> = a party member, selected from a list by scrolling with the arrow
            keys and pressing <enter> or <space>
 <item>   = an inventory item, selected from a list
 <spell>  = a spell, selected from a list
 <space>  = spacebar
 <target> = a combat target, selected by moving the crosshairs and pressing
            <enter> or <space>
+<*>      = varies depending on context (see the C)ast command)
 
 General commands:
 
     <dir>......................Move in that direction
     B)oard.....................Board/exit a vehicle like a ship or horse
-    E)nter.....................Enter a portal, including up or down ladders.
+    C)ast-<member>-<spell>-<*>...Cast a spell (the last argument depends on the
+                                 spell)
+    E)nter.....................Enter a portal, including up or down ladders
     F)ire-<dir>................Fire vehicle's weapon (e.g., ship cannon)
-    G)et-<dir>.................Get an object from the ground.
-    H)andle-<player>-<target>..Activate a switch or lever
+    G)et-<dir>.................Get an object from the ground
+    H)andle-<member>-<target>..Activate a switch or lever
     L)ook-<dir>................Describe an adjacent tile
-    O)pen-<dir>................Open a container or door.
+    O)pen-<dir>................Open a container or door
     Q)uit......................Quits the game
-    R)eady-<player>-<item>.....Ready an armament like a weapon, shield, etc.
+    R)eady-<member>-<item>.....Ready an armament like a weapon, shield, etc.
     T)alk-<target>.............Talk to an NPC
-    U)se-<player>-<item>.......Use an item like a torch or potion.
-    Z)tats.....................Show party stats like inventory, armaments, etc.
+    U)se-<member>-<item>.......Use an item like a torch or potion
+    Z)tats.....................Show party stats like inventory, armaments, etc
     <space>....................Pass one turn
 
 
 Wilderness-only commands:
 
     K)amp-<0-9>-<y/n>-<player>...Camp in the wilderness (to heal and recover 
-                                 mana).
+                                 mana) or aboprd ship (to repair hull damage)
 
 
-Combat-Town-Dungeon-only commands:
+Combat-only commands:
 
-    A)ttack-<target>.........Attack the specified target.
-    C)ast-<spell>............Cast a spell (combat only!).
+    A)ttack-<target>.........Attack the specified target
+    C)ast-<spell>-<*>........Cast a spell
     F)ollow..................Select follow mode, where the party members
                              automatically follow the party leader.
     [1-9]....................Select a party member for solo mode.
@@ -56,48 +180,130 @@ Special commands:
     <ESC>....................Aborts most commands
 
 
-Places
-------
 
-Wilderness:
-
-In the outdoor or wilderness map the party moves as a single unit. You can
-enter into combat with enemy NPC parties by moving into them or waiting for
-them to attack you. Likewise you can enter towns, dungeons or moongates by
-simply walking into them.
-
-Wilderness Combat:
-
-This is a special temporary combat map that pops up when you engage an enemy
-NPC party in the wilderness. In this mode you control individual party
-members. You return to the wilderness map by having all of your living party
-members walk off the edge of the map. (Hint: if combat is over you can press
-<ESC> to quickly leave the map).
-
-Towns/Dungeons:
-
-In towns and dungeons you move just like in combat mode. You can control the
-individual party members in turn, have one of them scout around in solo mode,
-or control the leader and have the other party members follow.
+                                MOVEMENT MODES
 
 
-Combat
-------
+Party Mode (wilderness/towns)
 
-Pretty much like u5. Try the flaming oil at night or in an underground place --
-it's fun.
+    The party appears as a single icon in the center of the screen.
+
+Follow Mode (combat/dungeons)
+
+    You control the party leader and the other members follow the
+    leader. Attacking a target will automatically switch to Round-Robin
+    Mode. The party leader is always the top person in the list who is alive
+    and still on the current map. Enter follow mode from Solo or Round Robin
+    Mode by pressing 'f'.
+
+Solo Mode (combat/dungeons)
+
+    You control one party member while the others stand around looking
+    bored. Enter Solo Mode by pressing the number key associated with the
+    party member's order in the list. 1 is the first member in the list.
+
+    NOTE: Follow mode can be very useful if one of your party members has
+          greater passability then the others. In the example game Mesmeme the
+          gazer can cross water unaided because he floats. This gives him the
+          ability to scout places the other members don't normally have access,
+          to. For fun, see if you can find a ghost to join your party :). I
+          promise I'll put one in the example game. No cheating by looking at
+          the scripts!
+
+Round Robin Mode (combat/dungeons)
+
+    You control each member in turn. This is the default mode when you enter
+    combat. To enter Round Robin Mode from solo mode, press 0. To enter from
+    Follow Mode press 'f'. Yes, confusing to have two methods. I'll fix it
+    someday. Let me know if you have an opinion.
 
 
-Magic
------
 
-There isn't much to speak of yet. The only 'magic' I've implemented are natural
-abilities. The gazer in your party has a few spells, and if you add a gazer NPC
-party to the mapfile then beware -- they can be quite dangerous!
+                                    PLACES
 
 
-Conversation
-------------
+Towns/Wilderness:
+
+    In the outdoor or wilderness map the party moves as a single unit. You can
+    enter into combat with enemy NPC parties by moving into them or waiting for
+    them to attack you. Likewise you can enter towns, dungeons or moongates by
+    simply walking into them.
+
+Town/Wilderness Combat:
+
+    This is a special temporary combat map that pops up when you engage an
+    enemy NPC party in the wilderness. In this mode you control individual
+    party members. You return to the wilderness map by having all of your
+    living party members walk off the edge of the map. (Hint: if combat is over
+    you can press <ESC> to quickly leave the map).
+
+Dungeons:
+
+    In dungeons you move just like in combat mode. You can control the
+    individual party members in turn, have one of them scout around in solo
+    mode, or control the leader and have the other party members follow.
+
+
+
+                                    COMBAT
+
+
+What can I say? It's pretty much like u5. Try the flaming oil at night or in an
+underground place.
+
+
+
+                                     MAGIC
+
+
+The example game contains a full complement of spells. The magic system is
+similar to Ultima 5 and Ultima 6: you select a spell by entering magic
+syllables. A spell name is a combination of one to four syllables, so the
+engine supports up to 26 + (26 * 26) + (26 * 26 * 26) + (26 * 26 * 26 * 26) =
+511,758 spells. I hope that's enough. What do you think? Let me know.
+
+Magic Syllables
+
+    A
+    B
+    C
+    D
+    E
+    F
+    G
+    H
+    I
+    J
+    K
+    L
+    M
+    N
+    O
+    P
+    Q
+    R
+    S
+    T
+    U
+    V
+    W
+    X
+    Y
+    Z
+
+Magic Spells
+
+NOTE: These syllables and spells are not hard-coded in the engine. They are
+      defined in the script files. Currently the syntax is sort of hackish and
+      limited, and not all combinations of effects have been tested (and likely
+      never will be). But the goal is to get that all spruced up and accessible
+      to people with less free time on their hands than me. If you feel like
+      hacking them see the GAME_DEVELOPERS_GUIDE.
+
+
+
+                                 CONVERSATION
+
 
 Start a conversation with an NPC with the T)alk command. During conversation
 you type simple inquiries and the NPC responds, sometimes asking you a question
@@ -105,26 +311,30 @@ in return. Conversations with shopkeepers will allow you to buy and sell
 items. Most NPCs respond to the 'NAME', 'JOB', and 'HEALTH' queries. Their
 responses usually give you clues to further fruitful queries. Also, with the
 special 'JOIN' query you can ask an NPC to join your party (some will join you,
-and some will join you only if you do or say something that impresses them).
+and some will join you only if you do or say something that impresses
+them).
 
 
-Hacker's Addendum
------------------
+
+                             APPENDIX: MAP HACKING
+
 
 Like many games, "nazghul" is separated into an engine and a data file. In this
-case the default data file is called 'mapfile' in the src. It's an ASCII
-file, but I don't edit it directly to make changes. Instead I edit u5.naz which
-defines the basic types and core.naz which lays out the maps, places and player
-party. Then I 'make mapfile' to generate the mapfile using the C preprocessor.
+case the default data file is called 'mapfile' in the example directory. This
+file is built from the files in the subdirectories beneath example by invoking
+the 'make' command from within examples. I encourage people to experiment with
+modifying the examples file or even using it as a basis to create their own
+games. The example script code is all committed to the public domain. The image
+and sound files come from various sources - see the COPYING file in the top
+nazghul directory for details on where they came from.
 
-If you want to experiment with changing the gamefile (and you probably will
-since there isn't much to speak of right now) go ahead. The game.c file
-contains most of the parsing code if you need to see the source to puzzle out
-my bizarre format (it uses lexer.c to handle token processing).
+If you want to make a proprietary game you may use the example script files,
+but you will probably need to make your own image and sound resource files as
+the ones in the examples directory come from other open-source or freeware
+projects and their copyright holders might object to proprietary use.
 
-I'm not going to try to explain the format because it is in a constant state
-of evolution right now. You can see some older (possibly broken) examples in
-the maps/ directory, including one that uses the moongates.
+A more detailed guide to map hacking is under development in the
+GAME_DEVELOPERS_GUIDE in this same directory.
 
 
 --gmcnutt (gmcnutt@cableone.net)
