@@ -301,10 +301,7 @@ static void myShowInventory(int type)
 		spritePaint(ie->type->getSprite(), 0, Status.screenRect.x,
 			    rect.y);
 
-		if (type != ARMS_TYPE_ID)
-			/* Not an arms type, so it has no weight, so we only
-			 * use one line. */
-			rect.y += LINE_H / 4;
+                rect.y += LINE_H / 4;
 
 		if (avail)
 			screenPrint(&rect, flags, "%2d%c%s", avail,
@@ -313,20 +310,15 @@ static void myShowInventory(int type)
 			screenPrint(&rect, flags, "--%c%s",
 				    (inUse ? '*' : ' '), ie->type->getName());
 
-		if (type != ARMS_TYPE_ID) {
-			/* No weight, so advance to the start of the next line
-			 * pair */
-			rect.y += (LINE_H * 3) / 4;
-		} else {
-			/* Show the weight on the second line */
-			rect.y += LINE_H / 2;
+		if (type == ARMS_TYPE_ID) {
 			rect.w -= TILE_W;
 			screenPrint(&rect, flags | SP_RIGHTJUSTIFIED,
 				    "%ds",
 				    ((class ArmsType *) ie->type)->getWeight());
 			rect.w += TILE_W;
-			rect.y += LINE_H / 2;
 		}
+
+                rect.y += (LINE_H * 3) / 4;
 
 		if (Status.selectedEntry && ie != Status.selectedEntry) {
 			/* Highlight the selected item by shading all the other
