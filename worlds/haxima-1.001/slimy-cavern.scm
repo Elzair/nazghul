@@ -67,9 +67,3 @@
                (list 'slimy-cavern-entry) ; hooks
                nil ; edge entrances
                )
-
-;; ----------------------------------------------------------------------------
-;; The entry hooks must be kern-loaded from a separate file, since they are
-;; read-only and not saved with the session.
-;; ----------------------------------------------------------------------------
-(kern-load "slimy-cave-entry.scm")
