@@ -1350,8 +1350,8 @@ void Object::hookForEach(int hook_id,
 
 static int object_start_effect(struct hook_entry *entry, void *data)
 {
-        if (entry->effect->apply)
-                closure_exec(entry->effect->apply, "lp", hook_entry_gob(entry),
+        if (entry->effect->restart)
+                closure_exec(entry->effect->restart, "lp", hook_entry_gob(entry),
                              data);
         return 0;
 }

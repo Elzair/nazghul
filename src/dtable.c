@@ -45,18 +45,9 @@ struct dtable *dtable_new(int n_factions)
         dtable->n_factions = n_factions;
 
         /* allocate the table of stack pointers */
-        dtable->table = (hstack_t**)calloc(n_factions * n_factions, 
-                                           sizeof(dtable->table[0]));
+        dtable->table = (int*)calloc(n_factions * n_factions, 
+                                     sizeof(dtable->table[0]));
         assert(dtable->table);
-
-        /* initialize each stack ptr in the table */
-        index = 0;
-        for (row = 0; row < n_factions; row++) {
-                for (col = 0; col < n_factions; col++) {
-                        dtable->table[index] = hstack_new();
-                        index++;
-                }
-        }
 
         /* For now, hardcode the table limits and settings. Note that we must
          * set the upper and lower bounds before poking any entries into the
@@ -100,12 +91,11 @@ void dtable_set(struct dtable *dtable, int f1, int f2, int level)
         if ((index = dtable_index(dtable, f1, f2)) < 0)
                 return;
 
-        /* clear the stack */
-        while (! hstack_empty(dtable->table[index]))
-                hstack_pop(dtable->table[index]);
-
-        /* push the new value */
-        hstack_push(dtable->table[index], (void*)level);
+        dtable->table[index] = level;
+        
+        /* mirror the change on the other half of the table */
+        index =  dtable_index(dtable, f2, f1);
+        dtable->table[index] = level;
 }
 
 int dtable_get(struct dtable *dtable, int f1, int f2)
@@ -117,27 +107,7 @@ int dtable_get(struct dtable *dtable, int f1, int f2)
                 return 0;
         }
 
-        return (int)hstack_top(dtable->table[index]);
-}
-
-void dtable_change(struct dtable *dtable, int f1, int f2, int delta)
-{
-        int level;
-
-        level = dtable_get(dtable, f1, f2);
-        level += delta;
-        dtable_set(dtable, f1, f2, level);
-}
-
-static void dtable_del_entry(hstack_t *entry)
-{
-        if (! entry)
-                return;
-
-        while (hstack_top(entry))
-                hstack_pop(entry);
-
-        hstack_del(entry);
+        return dtable->table[index];
 }
 
 void dtable_del(struct dtable *dtable)
@@ -147,75 +117,11 @@ void dtable_del(struct dtable *dtable)
         assert(dtable);
 
         if (dtable->table) {
-
-                index = 0;
-                for (row = 0; row < dtable->n_factions; row++) {
-                        for (col = 0; col < dtable->n_factions; col++) {
-                                dtable_del_entry(dtable->table[index]);
-                                index++;
-                        }
-                }
-
                 free(dtable->table);
         }
         free(dtable);
 }
 
-void dtable_push(struct dtable *dtable, int f1, int f2, int level)
-{
-        int index;
-
-        dtable_clamp_level(dtable, level);
-
-        if ((index = dtable_index(dtable, f1, f2)) < 0)
-                return;
-
-        /* push the new value */
-        hstack_push(dtable->table[index], (void*)level);
-}
-
-void dtable_restore(struct dtable *dtable, int f1, int f2, int handle, 
-                    int level)
-{
-        int index;
-
-        dtable_clamp_level(dtable, level);
-
-        if ((index = dtable_index(dtable, f1, f2)) < 0)
-                return;
-
-        /* push the new value */
-        hstack_restore(dtable->table[index], (void*)level, handle);
-}
-
-int dtable_pop(struct dtable *dtable, int f1, int f2)
-{
-        int index;
-
-        if ((index = dtable_index(dtable, f1, f2)) < 0)
-                return -1;
-
-        if (dtable_bottom(dtable, f1, f2))
-                return -1;
-
-        hstack_pop(dtable->table[index]);
-        return 0;
-}
-
-int dtable_bottom(struct dtable *dtable, int f1, int f2)
-{
-        int index;
-
-        if ((index = dtable_index(dtable, f1, f2)) < 0)
-                return -1;
-        
-        return (hstack_depth(dtable->table[index]) == 1);
-}
-
-static void dtable_save_data(struct save *save, void *data)
-{
-        save->append(save, "%d ", (int)data);
-}
 
 void dtable_save(struct dtable *dtable, struct save *save)
 {
@@ -229,12 +135,28 @@ void dtable_save(struct dtable *dtable, struct save *save)
         for (rows = 0; rows < dtable->n_factions; rows++) {
                 save->write(save, "(list ");
                 for (cols = 0; cols < dtable->n_factions; cols++) {
-                        hstack_save(dtable->table[index], save,
-                                    dtable_save_data);
+                        save->write(save, "%2d ", dtable->table[index]);
                         index++;
                 }
                 save->append(save, ")\n");
         }
         
         save->exit(save, ")\n");
+}
+
+void dtable_inc(struct dtable *dtable, int f1, int f2)
+{
+        int level;
+
+        level = dtable_get(dtable, f1, f2);
+        dtable_set(dtable, f1, f2, level+1);
+}
+
+void dtable_dec(struct dtable *dtable, int f1, int f2)
+{
+        int level;
+
+        level = dtable_get(dtable, f1, f2);
+        dtable_set(dtable, f1, f2, level-1);
+
 }

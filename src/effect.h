@@ -39,6 +39,7 @@ struct effect {
         closure_t *exec;        /* scheme proc to execute on-hook */
         closure_t *apply;       /* scheme proc to execute on-attach */
         closure_t *rm;          /* scheme proc to execute on-removal */
+        closure_t *restart;     /* scheme proc to restart effect on reload */
         char *tag;              /* identifier tag name */
         char *name;             /* short name */
         char *description;      /* longer description */
@@ -53,7 +54,10 @@ struct effect {
 /* Create the closure and dup the strings. Zero out other fields (caller must
  * fill them in). */
 extern struct effect *effect_new(char *tag, scheme *sc, 
-                                 pointer exec, pointer apply, pointer rm, 
+                                 pointer exec, 
+                                 pointer apply, 
+                                 pointer rm, 
+                                 pointer restart,
                                  char *name, 
                                  char *description);
 

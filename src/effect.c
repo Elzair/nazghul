@@ -30,6 +30,7 @@ char *EFFECT_ID = "EFFECT";
 
 struct effect *effect_new(char *tag, scheme *sc, pointer exec_proc,
                           pointer apply_proc, pointer rm_proc,
+                          pointer restart,
                           char *name, char *description)
 {
         struct effect *et;
@@ -40,18 +41,19 @@ struct effect *effect_new(char *tag, scheme *sc, pointer exec_proc,
         et->ID = EFFECT_ID;
 
         if (exec_proc) {
-                et->exec = closure_new(sc, exec_proc);
-                closure_ref(et->exec);
+                et->exec = closure_new_ref(sc, exec_proc);
         }
 
         if (apply_proc) {
-                et->apply = closure_new(sc, apply_proc);
-                closure_ref(et->apply);
+                et->apply = closure_new_ref(sc, apply_proc);
         }
 
         if (rm_proc) {
-                et->rm = closure_new(sc, rm_proc);
-                closure_ref(et->rm);
+                et->rm = closure_new_ref(sc, rm_proc);
+        }
+
+        if (restart) {
+                et->restart = closure_new_ref(sc, restart);
         }
 
         et->tag = strdup(tag);
@@ -70,11 +72,9 @@ extern void effect_del(struct effect *et)
 {
         free(et->name);
         free(et->description);
-        if (et->exec)
-                closure_unref(et->exec);
-        if (et->apply)
-                closure_unref(et->apply);
-        if (et->rm)
-                closure_unref(et->rm);
+        closure_unref_safe(et->exec);
+        closure_unref_safe(et->apply);
+        closure_unref_safe(et->rm);
+        closure_unref_safe(et->restart);
         free(et);
 }

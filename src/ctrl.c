@@ -283,6 +283,10 @@ void ctrl_do_attack(class Character *character, class ArmsType *weapon,
         int armor;
         bool miss;
 
+        /* Reduce the diplomacy rating between the attacker's and target's
+         * factions */
+        harm_relations(character, target);
+
         log_begin("%s: %s - %s ", character->getName()
                   , weapon->getName()
                   , target->getName()

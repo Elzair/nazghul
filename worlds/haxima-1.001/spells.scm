@@ -292,7 +292,11 @@
 
 (define (in-lor kspell caster)
   (kern-obj-add-effect caster ef_light nil)
-  #t)
+  result-ok)
+
+(define (an-xen-bet kspell caster)
+  (kern-obj-add-effect caster ef_spider_calm nil)
+  result-ok)
 
 (define (mani kspell caster)
   (cast-heal-spell caster "2d20"))
@@ -600,6 +604,7 @@
    (list 'kal_xen     "Kal Xen spell"     s_snake         kal-xen     "KX"  2 context-town (list spider_silk mandrake))
    (list 'rel_hur     "Rel Hur spell"     s_ship          rel-hur     "RH"  2 context-any  (list sulphorous_ash blood_moss))
    (list 'in_nox_por  "In Nox Por spell"  s_green_magbolt in-nox-por  "INP" 2 context-town (list nightshade blood_moss black_pearl))
+   (list 'an_xen_bet  "An Xen Bet spell"  s_spider        an-xen-bet  "AXB" 2 context-town (list spider_silk garlic))
 
    (list 'in_flam_grav "In Flam Grav spell" s_field_fire   in-flam-grav "IFG" 3 context-town (list sulphorous_ash black_pearl spider_silk))
    (list 'in_nox_grav  "In Nox Grav spell"  s_field_poison in-nox-grav  "ING" 3 context-town (list nightshade black_pearl spider_silk))

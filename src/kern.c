@@ -1426,29 +1426,6 @@ static pointer kern_mk_occ(scheme *sc, pointer args)
         return sc->NIL;
 }
 
-static int kern_load_hstack(scheme *sc, pointer args, 
-                            void (*restore)(int, int, void *),
-                            char *name, void *context)
-{
-        int val, handle;
-        pointer pair;
-                
-        while (scm_is_pair(sc, args)) {
-                
-                pair = scm_car(sc, args);
-                args = scm_cdr(sc, args);
-
-                if (unpack(sc, &pair, "dd", &handle, &val)) {
-                        load_err("%s: bad stack node", name);
-                        return -1;
-                }
-                
-                restore(handle, val, context);
-        }        
-
-        return 0;
-}
-
 static pointer kern_mk_char(scheme *sc, pointer args)
 {
         class Character *character;
@@ -3619,13 +3596,14 @@ KERN_API_CALL(kern_mk_effect)
         pointer exec_proc = sc->NIL;
         pointer apply_proc = sc->NIL;
         pointer rm_proc = sc->NIL;
+        pointer restart_proc = sc->NIL;
         pointer ret;
         pointer pair; // dbg        
         char *name, *tag, *desc, *status_code_str, *hook_name;
         int hook_id;
 
-        if (unpack(sc, &args, "ysscccs", &tag, &name, &desc, &exec_proc,
-                   &apply_proc, &rm_proc, &hook_name)) {
+        if (unpack(sc, &args, "yssccccs", &tag, &name, &desc, &exec_proc,
+                   &apply_proc, &rm_proc, &restart_proc, &hook_name)) {
                 load_err("kern-mk-effect: bad args");
                 return sc->NIL;
         }
@@ -3645,7 +3623,11 @@ KERN_API_CALL(kern_mk_effect)
         if (rm_proc == sc->NIL)
                 rm_proc = NULL;
 
-        effect = effect_new(tag, sc, exec_proc, apply_proc, rm_proc, name, desc);
+        if (restart_proc == sc->NIL)
+                restart_proc = NULL;
+
+        effect = effect_new(tag, sc, exec_proc, apply_proc, rm_proc, 
+                            restart_proc, name, desc);
 
         effect->hook_id = hook_id;
 
@@ -5127,13 +5109,6 @@ KERN_API_CALL(kern_mk_ptable)
         return sc->NIL;
 }
 
-static void kern_dtable_restore_faction(int handle, int level, void *context)
-{
-        int *args = (int*)context;
-        dtable_restore((struct dtable*)args[0], args[1], args[2], handle, 
-                       level);
-}
-
 KERN_API_CALL(kern_mk_dtable)
 {
         int n_factions;
@@ -5187,50 +5162,18 @@ KERN_API_CALL(kern_mk_dtable)
                 /* for each column up to the limit */
                 for (c_faction = 0; c_faction < n_factions; c_faction++) {
 
-                        pointer col;
-                        int parms[3];
+                        int val;
 
-                        col = scm_car(sc, row);
-                        row = scm_cdr(sc, row);
-
-                        /* make sure each column stack has at least one
-                         * entry */
-                        if (scm_len(sc, col) == 0) {
-                                load_err("kern-mk-dtable: row %d col %d stack "
-                                         "empty", r_faction, c_faction);
+                        /* unpack the value */
+                        if (unpack(sc, &row, "d", &val)) {
+                                load_err("kern-mk-dtable: row %d column %d "
+                                         "is a bad entry", r_faction, 
+                                         c_faction);
                                 goto abort;
                         }
-
-                        /* each column is a stack of pairs of numbers */
-                        parms[0] = (int)dtable;
-                        parms[1] = r_faction;
-                        parms[2] = c_faction;
-                        if (kern_load_hstack(sc, col, 
-                                             kern_dtable_restore_faction,
-                                             "kern-mk-dtable", &parms))
-                                goto abort;
-#if 0
-                        while (scm_is_pair(sc, col)) {
-
-                                int level, handle;
-                                pointer pair;
-
-                                pair = scm_car(sc, col);
-                                col = scm_cdr(sc, col);
-
-                                /* get the handle/level pair */
-                                if (unpack(sc, &pair, "dd", &handle, &level)) {
-                                        load_err("kern-mk-dtable: row %d col "
-                                                 "%d bad arg",
-                                                 r_faction, c_faction);
-                                        goto abort;
-                                }
-
-                                /* restore it into the diplomacy table */
-                                dtable_restore(dtable, r_faction, c_faction, 
-                                               handle, level);
-                        }
-#endif
+                        
+                        /* poke it into the table */
+                        dtable_set(dtable, r_faction, c_faction, val);
                 }
         }
 
@@ -5248,10 +5191,9 @@ KERN_API_CALL(kern_mk_dtable)
 }
 
 #define DTABLE_SET    0x81
-#define DTABLE_PUSH   0x82
-#define DTABLE_CHANGE 0x83
-#define DTABLE_POP    0x04
 #define DTABLE_GET    0x05
+#define DTABLE_INC    0x06
+#define DTABLE_DEC    0x07
 
 #define DTABLE_FX_USES_LEVEL(fx) ((fx) & 0x80)
 
@@ -5281,18 +5223,15 @@ static pointer kern_dtable_aux(scheme *sc, pointer args, char *name, int fx)
         case DTABLE_SET:
                 dtable_set(session_dtable(), f1, f2, level);
                 break;
-        case DTABLE_CHANGE:
-                dtable_change(session_dtable(), f1, f2, level);
-                break;
-        case DTABLE_PUSH:
-                dtable_push(session_dtable(), f1, f2, level);
-                break;
-        case DTABLE_POP:
-                dtable_pop(session_dtable(), f1, f2);
-                break;
         case DTABLE_GET:
                 level = dtable_get(session_dtable(), f1, f2);
                 return scm_mk_integer(sc, level);
+                break;
+        case DTABLE_INC:
+                dtable_inc(session_dtable(), f1, f2);
+                break;
+        case DTABLE_DEC:
+                dtable_dec(session_dtable(), f1, f2);
                 break;
         default:
                 assert(0);
@@ -5311,24 +5250,19 @@ KERN_API_CALL(kern_dtable_set)
         return kern_dtable_aux(sc, args, "kern_dtable_set", DTABLE_SET);
 }
 
-KERN_API_CALL(kern_dtable_change)
-{
-        return kern_dtable_aux(sc, args, "kern_dtable_change", DTABLE_CHANGE);
-}
-
-KERN_API_CALL(kern_dtable_push)
-{
-        return kern_dtable_aux(sc, args, "kern_dtable_push", DTABLE_PUSH);
-}
-
-KERN_API_CALL(kern_dtable_pop)
-{
-        return kern_dtable_aux(sc, args, "kern_dtable_pop", DTABLE_POP);
-}
-
 KERN_API_CALL(kern_dtable_get)
 {
         return kern_dtable_aux(sc, args, "kern_dtable_get", DTABLE_GET);
+}
+
+KERN_API_CALL(kern_dtable_inc)
+{
+        return kern_dtable_aux(sc, args, "kern_dtable_inc", DTABLE_INC);
+}
+
+KERN_API_CALL(kern_dtable_dec)
+{
+        return kern_dtable_aux(sc, args, "kern_dtable_dec", DTABLE_DEC);
 }
 
 KERN_API_CALL(kern_party_add_member)
@@ -6622,11 +6556,10 @@ scheme *kern_init(void)
 
         /* kern-dtable api */
         API_DECL(sc, "kern-mk-dtable", kern_mk_dtable);
-        API_DECL(sc, "kern-dtable-change", kern_dtable_change);
         API_DECL(sc, "kern-dtable-get", kern_dtable_get);
-        API_DECL(sc, "kern-dtable-pop", kern_dtable_pop);
-        API_DECL(sc, "kern-dtable-push", kern_dtable_push);
         API_DECL(sc, "kern-dtable-set", kern_dtable_set);
+        API_DECL(sc, "kern-dtable-inc", kern_dtable_inc);
+        API_DECL(sc, "kern-dtable-dec", kern_dtable_dec);
 
         /* kern-party-api */
         API_DECL(sc, "kern-party-add-member", kern_party_add_member);

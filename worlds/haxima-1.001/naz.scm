@@ -168,10 +168,7 @@
           objlst))
 
 ;; Convenience proc for rolling dtables by hand
-(define (dtable-row . cols)
-  (define (dtable-col val)
-    (list (list 0 val)))
-  (map dtable-col cols))
+(define (dtable-row . cols) cols)
 
 (define (distance kobj-a kobj-b)
   (let ((loc-a (kern-obj-get-location kobj-a))

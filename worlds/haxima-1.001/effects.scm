@@ -2,13 +2,14 @@
 ;; effects.scm - generic effects procedures used in multiple places
 ;; ----------------------------------------------------------------------------
 
-(define (mk-effect tag exec apply rm hook sym ddc cum dur)
+(define (mk-effect tag exec apply rm restart hook sym ddc cum dur)
   (kern-mk-effect tag 
                   "undef" 
                   "undef" 
                   exec 
                   apply 
                   rm 
+                  restart
                   hook 
                   sym 
                   ddc 
@@ -74,8 +75,8 @@
           (kern-obj-set-ap kchar 0)
           #f))))
 
-(mk-effect 'ef_paralyze 'paralyze-exec 'paralyze-apply nil "keystroke-hook" 
-           "Z" 0 #f 15)
+(mk-effect 'ef_paralyze 'paralyze-exec 'paralyze-apply nil 'paralyze-apply 
+           "keystroke-hook" "Z" 0 #f 15)
 
 (define (is-paralyzed? kobj)
   (in-list? ef_paralyze (kern-obj-get-effects kobj)))
@@ -123,8 +124,8 @@
               (kern-obj-set-ap kchar 0)
               #f)))))
 
-(mk-effect 'ef_ensnare 'ensnare-exec 'ensnare-apply nil "keystroke-hook" 
-           "E" 0 #f 15)
+(mk-effect 'ef_ensnare 'ensnare-exec 'ensnare-apply nil 'ensnare-apply
+           "keystroke-hook" "E" 0 #f 15)
 
 (define (is-ensnared? kobj)
   (in-list? ef_ensnare (kern-obj-get-effects kobj)))
@@ -223,23 +224,39 @@
               )))))
 
 ;; ----------------------------------------------------------------------------
+;; Spider Calm
+;;
+;; Used by the An Xen Bet spell to prevent spiders from attacking.
+;; ----------------------------------------------------------------------------
+(define (spider-calm-rm fgob kchar)
+  (kern-dtable-dec (kern-being-get-current-faction kchar)
+                   faction-wood-spider)
+  (kern-log-msg (kern-obj-get-name kchar) " seems less friendly to spiders"))
+
+(define (spider-calm-apply fgob kchar)
+  (kern-dtable-inc (kern-being-get-current-faction kchar)
+                   faction-wood-spider)
+  (kern-log-msg (kern-obj-get-name kchar) " makes spiders seem friendlier"))
+
+;; ----------------------------------------------------------------------------
 ;; Effects Table
 ;; ----------------------------------------------------------------------------
 
 (define effects
   (list
-   ;;    tag                           exec proc             apply proc          rm proc          hook                 sym ddc cum dur
-   ;;    ============================= ============          ==========          =========        ==================== === === === ===
-   (list 'ef_poison                    'poison-exec          nil                 nil              "start-of-turn-hook" "P" 0   #f  120)
-   (list 'ef_poison_immunity           'poison-immunity-exec nil                 nil              "add-hook-hook"      "I" 0   #f  -1)
-   (list 'ef_temporary_poison_immunity 'poison-immunity-exec nil                 nil              "add-hook-hook"      "I" 0   #f  60)
-   (list 'ef_sleep                     'sleep-exec           nil                 'sleep-rm        "start-of-turn-hook" "S" 0   #f  60)
-   (list 'ef_light                     nil                   'light-apply        'light-rm        "start-of-turn-hook" ""  0   #t  60)
-   (list 'ef_great_light               nil                   'great-light-apply  'great-light-rm  "start-of-turn-hook" "L" 0   #t  120)
-   (list 'ef_protection                nil                   'protection-apply   'protection-rm   "start-of-turn-hook" "P" 0   #t  10)
-   (list 'ef_charm                     nil                   'charm-apply        'charm-rm        "start-of-turn-hook" "C" 0   #f  10)
-   (list 'ef_invisibility              nil                   'invisibility-apply 'invisibility-rm "start-of-turn-hook" "N" 0   #t  10)
-   (list 'ef_slime_split               'slime-split-exec     nil                 nil              "on-damage-hook"     ""  0   #f  -1)
+   ;;    tag                           exec proc             apply proc          rm proc          restart proc        hook                 sym ddc cum dur
+   ;;    ============================= ============          ==========          =========        ============        ==================== === === === ===
+   (list 'ef_poison                    'poison-exec          nil                 nil              nil                 "start-of-turn-hook" "P" 0   #f  120)
+   (list 'ef_poison_immunity           'poison-immunity-exec nil                 nil              nil                 "add-hook-hook"      "I" 0   #f  -1)
+   (list 'ef_temporary_poison_immunity 'poison-immunity-exec nil                 nil              nil                 "add-hook-hook"      "I" 0   #f  60)
+   (list 'ef_sleep                     'sleep-exec           nil                 'sleep-rm        nil                 "start-of-turn-hook" "S" 0   #f  60)
+   (list 'ef_light                     nil                   'light-apply        'light-rm        'light-apply        "start-of-turn-hook" ""  0   #t  60)
+   (list 'ef_great_light               nil                   'great-light-apply  'great-light-rm  'great-light-apply  "start-of-turn-hook" "L" 0   #t  120)
+   (list 'ef_protection                nil                   'protection-apply   'protection-rm   'protection-apply   "start-of-turn-hook" "P" 0   #t  10)
+   (list 'ef_charm                     nil                   'charm-apply        'charm-rm        'charm-apply        "start-of-turn-hook" "C" 0   #f  10)
+   (list 'ef_invisibility              nil                   'invisibility-apply 'invisibility-rm 'invisibility-apply "start-of-turn-hook" "N" 0   #t  10)
+   (list 'ef_slime_split               'slime-split-exec     nil                 nil              'slime-split-exec   "on-damage-hook"     ""  0   #f  -1)
+   (list 'ef_spider_calm               nil                   'spider-calm-apply  'spider-calm-rm  nil                 "start-of-turn-hook" ""  0   #f  60) 
    ))
 
 (map (lambda (effect) (apply mk-effect effect)) effects)

@@ -69,4 +69,18 @@ static inline void make_allies(Being *a, Being *b)
                    dtable_allies(session_dtable()));
 }
 
+static inline void improve_relations(Being *a, Being *b)
+{
+        dtable_inc(session_dtable(),
+                   a->getCurrentFaction(),
+                   b->getCurrentFaction());
+}
+
+static inline void harm_relations(Being *a, Being *b)
+{
+        dtable_dec(session_dtable(),
+                   a->getCurrentFaction(),
+                   b->getCurrentFaction());
+}
+
 #endif
