@@ -1,3 +1,19 @@
+Changes between nazghul-0.1.2 and nazghul-0.1.3
+
+gmcnutt:
+
+--Bugfix: if you zoomed in while sailing the vehicle map was oriented
+  wrong. This was because zoom-in is handled by combat and combat always
+  rotated the vehicle maps so that ships were broadside to one another. I fixed
+  this by adding a check to see if an opponent was specified and, if not, then
+  I don't rotate for broadside. This is still something of a hack because not
+  all vehicles will require a broadside in combat, so this behaviour assumes a
+  ship vehicle. We could add a flag to the vehicle definition which species
+  wether or not to do this, but currently nothing would take advantage of it
+  and by the time we create something that does we might think of a better way
+  to solve the problem.
+
+
 Changes 2003/06/25
 sglasby:
 -- Implemented a terrain- and palette-saving command (^S)ave Map.

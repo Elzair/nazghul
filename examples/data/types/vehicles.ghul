@@ -78,28 +78,38 @@ PALETTE pal_ship {
   "se" t_sh_hull_SE;  // SE corner is water
   
   "o"  t_mast;
-  "|"  t_ships_wheel;
+  "W"  t_ships_wheel;
   "."  t_deck;
 }
 
+// gmcnutt: I rotated the ship map so that the prow faces north. Typically a
+// vehicle map should face north. I also moved the forward gangplank and mast
+// forward one more space so that the gangplanks line up in combat.
 MAP map_ship {
   type    ascii;
-  width   17;
-  height  9;
+  width   9;
+  height  17;
   palette pal_ship;
   terrain {
-    "-- -- -- -- -- -- --  . -- --  . -- -- -- -- -- --";
-    "-- -- -- -- ## ## ##  . ## ##  . ## ## ## ## -- --";
-    "-- -- -- ## ##  .  .  .  .  .  .  .  .  . ## ## --";
-    "-- -- ## ##  .  .  .  .  .  .  .  .  .  .  . ## --";
-    "-- ## ##  .  .  .  o  .  .  .  .  o  |  .  . ## --";
-    "-- -- ## ##  .  .  .  .  .  .  .  .  .  .  . ## --";
-    "-- -- -- ## ##  .  .  .  .  .  .  .  .  . ## ## --";
-    "-- -- -- -- ## ## ##  . ## ##  . ## ## ## ## -- --";
-    "-- -- -- -- -- -- --  . -- --  . -- -- -- -- -- --";
+          "-- -- -- -- -- -- -- -- --";
+          "-- -- -- -- ## -- -- -- --";
+          "-- -- -- ## ## ## -- -- --";
+          "-- -- ## ##  . ## ## -- --";
+          "-- ## ##  .  .  . ## ## --";
+          "-- ##  .  .  o  .  . ## --";
+          " .  .  .  .  .  .  .  .  .";
+          "-- ##  .  .  .  .  . ## --";
+          "-- ##  .  .  .  .  . ## --";
+          "-- ##  .  .  .  .  . ## --";
+          " .  .  .  .  .  .  .  .  .";
+          "-- ##  .  .  o  .  . ## --";
+          "-- ##  .  .  W  .  . ## --";
+          "-- ##  .  .  .  .  . ## --";
+          "-- ## ##  .  .  . ## ## --";
+          "-- -- ## ## ## ## ## -- --";
+          "-- -- -- -- -- -- -- -- --";
   }
 } // MAP map_ship
-
 
 // gmcnutt: needed for the ship type below
 ordnance_types {
