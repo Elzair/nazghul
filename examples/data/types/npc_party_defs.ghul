@@ -115,6 +115,16 @@ PARTY t_nixies {
   }
 }
 
+PARTY t_water_elemental {
+  name      "water elemental";
+  sprite    s_water_elemental;
+  formation null;
+  groups {
+    water_elemental null s_water_elemental 1;
+  }
+}
+
+
 PARTY t_slimes {
         name "puddle of slimes";
         sprite s_slime;

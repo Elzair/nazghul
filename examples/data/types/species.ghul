@@ -271,6 +271,29 @@ SPECIES nixie {
   SPLASHING_SOUND;
 }
 
+SPECIES water_elemental {
+  name  "water elemental";
+  str   200;
+  int   200;
+  dex   300;
+  spd   3;
+  vr    8;
+  pmask (WATER|SHOALS);
+  sleep_sprite s_shallow;  // Looks like water when asleep...  :-)
+  weapon       t_hands;  // Should be magical water blast...
+  visible      1;
+  occs {
+  }
+  slots {
+  }
+  spells {
+    spell_magic_missile;
+  }
+  STD_DAMAGE_SOUND;
+  SPLASHING_SOUND;
+}
+
+
 SPECIES slime {
         name  "green slime";
         str   10;
