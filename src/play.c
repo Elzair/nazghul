@@ -55,6 +55,8 @@
 #include "dup_constants.h"
 #include "cmdwin.h"
 #include "vehicle.h"
+#include "portal.h"
+#include "terrain.h"
 
 #define DEBUG
 #include "debug.h"
@@ -2412,6 +2414,8 @@ static bool keyHandler(struct KeyHandler *kh, int key)
 		cmdCastSpell(NULL);
 		break;
 	case 'e':
+        // SAM:
+        // Perhaps this command should be merged with '>' ?
 		player_party->enter_portal();
 		break;
 	case 'f':
@@ -2456,8 +2460,7 @@ static bool keyHandler(struct KeyHandler *kh, int key)
 		cmdUse(NULL);
 		break;
 	case 'x':
-		cmdXamine(NULL);	// SAM: 1st step towards new (L)ook
-					// cmd...
+		cmdXamine(NULL);
 		turns_used = 0;
         break;
 	case 'z':
@@ -2473,21 +2476,50 @@ static bool keyHandler(struct KeyHandler *kh, int key)
 		consolePrint("Pass\n");
 		turns_used = Place->scale;
 		break;
-	case '<':
-		// If standing over a portal then enter it
-		if (place_get_portal(player_party->getPlace(),
-				     player_party->getX(),
-				     player_party->getY()))
-			player_party->enter_portal();
+	case '>':
+        // This key was chosen to be a cognate for '>' in NetHack
+        // and other roguelike games.
+        // 
+        // SAM: Curently no "Enter" message is printed.
+        //      It turns out to be moderately complicated to do so properly,
+        //      as a distinct message for each enter_combat() case might
+        //      be desired...
+        // 
+        // For now, I print a placeholder message for each case here:
+      {
+        Portal * pp = place_get_portal(player_party->getPlace(),
+                                       player_party->getX(),
+                                       player_party->getY() );
+		if (pp) {
+          //if (place_get_portal(player_party->getPlace(),
+          //                   player_party->getX(),
+          //                   player_party->getY())) {
+            // If standing over a portal then enter it:
+            consolePrint("Enter-%s\n", pp->getName() );
+            player_party->enter_portal();
+        }
 		else if (!place_is_passable(player_party->getPlace(),
-					    player_party->getX(),
-					    player_party->getY(),
-					    player_party->get_pmask(),
-					    PFLAG_IGNOREVEHICLES))
+                                    player_party->getX(),
+                                    player_party->getY(),
+                                    player_party->get_pmask(),
+                                    PFLAG_IGNOREVEHICLES)) {
+            // Currently zooming in to impassable terrain is not doable;
+            // since the party might not be placeable on the default map,
+            // which would be a solid grid of that impassable terrain.
+            // Also, if somehow placed, the party could not escape unless on an edge.
+            // There would be no harm in it otherwise, however.
 			consolePrint("Cannot zoom-in here!\n");
-		else
+        }
+		else {
+            // If standing on ordinary terrain, zoom in:
+            struct terrain * tt = place_get_terrain(player_party->getPlace(),
+                                                    player_party->getX(),
+                                                    player_party->getY() );
+            consolePrint("Enter-%s\n", tt->name);
 			run_combat(false, 0, 0, NULL);
+        }
 		break;
+      }
 	default:
 		turns_used = 0;
 		break;

@@ -1947,10 +1947,9 @@ static bool myPcCommandHandler(struct KeyHandler *kh, int key)
         case SDLK_0:
                 ret = myExitSoloMode(pc);
                 break;
-        case '\\':
-                // case SDLK_ESCAPE:
-                // SAM: ESCAPE from combat confliicts with its other,
-                //      general UI use.  The \ key is perhaps a better choice?
+        case '<':
+                // This key was chosen to be a cognate for '<' in NetHack
+                // and other roguelike games.
                 ret = myExitCombat();
                 break;
         default:
