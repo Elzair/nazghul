@@ -1585,7 +1585,10 @@ void player_party::save(save_t *save)
                 save->write(save, "nil\n");
         save->write(save, "%s\n", this->sprite->tag);
         save->write(save, "\"%s\"\n", this->mv_desc);
-        save->write(save, "%s\n", sound_get_tag(this->mv_sound));
+        if (NULL_SOUND != mv_sound)
+                save->write(save, "%s\n", sound_get_tag(this->mv_sound));
+        else
+                save->write(save, "nil\n");
         save->write(save, "%d %d\n", food, gold);
         save->write(save, "%d ;; turns to next meal\n", 
                     turns_to_next_meal);
