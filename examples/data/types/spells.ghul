@@ -129,13 +129,18 @@ REAGENT reagent_spider_silk {
  *****************************************************************************/
 
 SPELL spell_minor_light {
+  // This spell creates a short-duration magical field 
+  // which provides illumination.  It is an "initial" spell.
+  // The strong illumination but short duration means that torches
+  // are more practical, but it is cheap to cast, and might be used 
+  // as the means of activating some puzzle or somesuch.
   name     "Bet Lor (minor light)";
   sprite   s_magic;
   code     BL;
-  cost     SPELL_COST_LEVEL_1;
+  cost     1;
   range    3;
   missile  M_illum;
-  effects  (EFFECT_BURN);
+  effects  (EFFECT_BURN);  // This points out the need for an EFFECT_NONE...
   strength 0;
   duration 0;
   context  CTW;
