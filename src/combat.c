@@ -1779,6 +1779,11 @@ bool combat_enter(struct combat_info * info)
                 player_party->enableFollowMode();
         }
 
+        // ---------------------------------------------------------------------
+        // Force a map update. If an npc initiates combat then the event
+        // handler will not run and do a repaint until the next event.
+        // ---------------------------------------------------------------------
+
         mapUpdate(0);
         foogodRepaint();
 
@@ -1871,6 +1876,16 @@ void combat_exit(void)
                                        place_get_x(Place), 
                                        place_get_y(Place));
         }
-        
+
         assert(NULL != player_party->getPlace());
+
+        // ---------------------------------------------------------------------
+        // Force a map update. Although the map has been marked dirty by now,
+        // we will not see a repaint until the next event if we do not act
+        // now. This routine is called from the context of the main play loop,
+        // not the event loop.
+        // ---------------------------------------------------------------------
+
+        mapUpdate(0);
+        
 }
