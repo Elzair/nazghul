@@ -3597,7 +3597,7 @@ KERN_API_CALL(kern_place_is_passable)
         if (!obj)
                 return sc->F;
 
-        return place_is_passable(place, x, y, obj->getPmask(), 0) ? sc->T : sc->F;
+        return place_is_passable(place, x, y, obj, 0) ? sc->T : sc->F;
 }
 
 KERN_API_CALL(kern_obj_set_temporary)

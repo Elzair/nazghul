@@ -149,7 +149,7 @@ extern struct place *place_new(char *tag,
 extern void place_del(struct place *place);
 
 extern int place_is_passable(struct place *place, int x, int y,
-                             unsigned char pmask, int flags);
+                             class Object *passer, int flags);
 
 extern int place_is_occupied(struct place *place, int x, int y);
 
@@ -199,8 +199,7 @@ extern class Party *place_search_for_Party(struct place *place,
         
         
 extern struct astar_node *place_find_path(struct place *place, 
-                                          struct astar_search_info
-                                          *info, unsigned char pmask, 
+                                          struct astar_search_info *info,
                                           class Object *requestor);
 
 extern struct terrain_map *place_get_combat_terrain_map(struct place

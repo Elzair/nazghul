@@ -256,7 +256,7 @@ static int location_is_safe(struct position_info *info)
 
         // Is it passable?
         if (!place_is_passable(info->place, info->px, info->py, 
-                               info->pmask, 0)) {
+                               info->subject, 0)) {
                 dbg("impassable\n");
                 return -1;
         }
@@ -326,7 +326,7 @@ static int location_is_safe(struct position_info *info)
                 as_info.y1 = edge_y;
                 as_info.flags = flags;
 
-                path = place_find_path(info->place, &as_info, info->pmask, NULL);
+                path = place_find_path(info->place, &as_info, info->subject);
 
                 if (!path)
                         dbg("no path back to edge\n");
@@ -346,7 +346,7 @@ static int location_is_safe(struct position_info *info)
                 as_info.limit_depth = true;
                 as_info.max_depth = 5;
 
-                path = place_find_path(info->place, &as_info, info->pmask, NULL);
+                path = place_find_path(info->place, &as_info, info->subject);
 
                 if (!path)
                         dbg("no path back to party\n");
@@ -503,7 +503,7 @@ static bool myPutNpc(class Character * pm, void *data)
         // that WILL work.
 
         // initialize the position info for a new search
-        info->pmask = pm->getPmask();
+        info->subject = pm;
         memset(rmap, 0, sizeof (rmap));
 
         // set the preferred location
@@ -612,7 +612,7 @@ void combat_fill_position_info(struct position_info *info, struct place *place, 
         set_party_initial_position(info, info->x, info->y);
 
         // clear the pmask and search map before first use
-        info->pmask = 0;
+        info->subject = NULL;
         memset(rmap, 0, sizeof (rmap));
 
         info->placed = 0;
@@ -665,7 +665,7 @@ bool combat_place_character(class Character * pm, void *data)
         // that WILL work.
 
         // init the position info for a new search
-        info->pmask = pm->getPmask();
+        info->subject = pm;
         memset(rmap, 0, sizeof (rmap));
         info->px = pm->getX();
         info->py = pm->getY();

@@ -1046,8 +1046,7 @@ bool Object::putOnMap(struct place *new_place, int new_x, int new_y, int r)
                 // ------------------------------------------------------------
 
                 if (place_off_map(new_place, new_x, new_y) ||
-                    ! place_is_passable(new_place, new_x, new_y, 
-                                        getPmask(), 0)) {
+                    ! place_is_passable(new_place, new_x, new_y, this, 0)) {
                         printf("off-map or impassable\n");
                         continue;
                 }

@@ -1481,8 +1481,10 @@ static int cmdCampInWilderness(class Object *camper)
 	cmdwin_clear();
 	cmdwin_print("Camp-");
 
-	if (place_get_portal(camper->getPlace(), camper->getX(), camper->getY()) ||
-	    !place_is_passable(camper->getPlace(), camper->getX(), camper->getY(), camper->getPmask(), PFLAG_IGNOREVEHICLES)) {
+	if (place_get_portal(camper->getPlace(), camper->getX(), 
+                             camper->getY()) ||
+	    !place_is_passable(camper->getPlace(), camper->getX(), 
+                               camper->getY(), camper, PFLAG_IGNOREVEHICLES)) {
 		cmdwin_print("not here!");
 		return 0;
 	}
@@ -2384,7 +2386,7 @@ void cmdZoomIn(void)
         } else if (!place_is_passable(player_party->getPlace(),
                                       player_party->getX(),
                                       player_party->getY(),
-                                      player_party->getPmask(),
+                                      player_party,
                                       PFLAG_IGNOREVEHICLES)) {
 
                 // Currently zooming in to impassable terrain is not doable;

@@ -73,7 +73,7 @@ int terrain_get_movement_cost(struct terrain *terrain, Object *object)
 {
         if (terrain->pmask & object->getPmask())
                 return terrain->movement_cost;
-        return -1;
+        return IMPASSABLE;
 
         assert(terrain->cost);
         return closure_exec(terrain->cost, "pp", terrain, object);

@@ -22,11 +22,11 @@
 #ifndef pinfo_h
 #define pinfo_h
 
-// -----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 // The ugly position_info struct is used by the algorithm which places party
-// members on a map. It unsightly, but not wholly foul, and will likely live on
-// for a while until the placement algorithm is completely revisited.
-// -----------------------------------------------------------------------------
+// members on a map. It is unsightly, but not wholy foul, and will likely live
+// on for a while until the placement algorithm is completely revisited.
+// ----------------------------------------------------------------------------
 
 struct position_info {
 
@@ -47,13 +47,14 @@ struct position_info {
 
         int rx, ry, rw, rh;  // The placement rectangle.
 
-        int px, py;          // The initial preferred location of a party member
-                             // (this is set just before running the placement
-                             // algorithm on a member). This depends on the
-                             // "order" of the member in the party, the
+        int px, py;          // The initial preferred location of a party
+                             // member (this is set just before running the
+                             // placement algorithm on a member). This depends
+                             // on the "order" of the member in the party, the
                              // formation, and the direction vector.
 
-        int pmask;           // The passability mask of the member being placed.
+        class Object *subject; // Use the subject being positioned instead of
+                               // the obsolete pmask.
 
         bool find_edge;      // When running the placement algorithm, true iff
                              // the party member must be able to pathfind back

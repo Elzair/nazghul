@@ -861,14 +861,15 @@ static void ctrl_pathfind_between_objects(class Object *source,
         as_info.x1 = target->getX();
         as_info.y1 = target->getY();
         as_info.flags = PFLAG_IGNORECOMPANIONS;
-        path = place_find_path(source->getPlace(), &as_info, source->getPmask(), source);
+        path = place_find_path(source->getPlace(), &as_info, source);
         
         if (!path) {
                 return;
         }
         
         if (path->next) {
-                source->move(path->next->x - source->getX(), path->next->y - source->getY());
+                source->move(path->next->x - source->getX(), 
+                             path->next->y - source->getY());
                 
         }
 
@@ -877,7 +878,8 @@ static void ctrl_pathfind_between_objects(class Object *source,
 
 
 
-static bool ctrl_attack_target(class Character *character, class Character *target)
+static bool ctrl_attack_target(class Character *character, 
+                               class Character *target)
 {
         int distance;
         bool attacked = false;
@@ -888,9 +890,12 @@ static bool ctrl_attack_target(class Character *character, class Character *targ
         bool miss;
 
 
-        distance = place_flying_distance(character->getPlace(), character->getX(), character->getY(), target->getX(), target->getY());
+        distance = place_flying_distance(character->getPlace(), 
+                                         character->getX(), character->getY(), 
+                                         target->getX(), target->getY());
 
-        for (class ArmsType * weapon = character->enumerateWeapons(); weapon != NULL; weapon = character->getNextWeapon()) {
+        for (class ArmsType * weapon = character->enumerateWeapons(); 
+             weapon != NULL; weapon = character->getNextWeapon()) {
 
                 if (distance > weapon->getRange()) {
                         continue;

@@ -371,7 +371,7 @@ bool Party::enter_town(class Portal * portal)
 	for (i = 0; i < max_i; i++) {
 
 		if (!place_is_occupied(newplace, newx, newy) &&
-		    place_is_passable(newplace, newx, newy, getPmask(), 0)) {
+		    place_is_passable(newplace, newx, newy, this, 0)) {
 			relocate(newplace, newx, newy);
 			consolePrint("%s enters %s\n", getName(),
 				     newplace->name);
@@ -495,7 +495,7 @@ MoveResult Party::move(int dx, int dy)
 	}
 
 	/* Check passability */
-	if (!place_is_passable(oldplace, newx, newy, getPmask(),
+	if (!place_is_passable(oldplace, newx, newy, this,
 			       act == COMMUTING ? PFLAG_IGNOREMECHS : 0)) {
 		return WasImpassable;
 	}
@@ -536,7 +536,7 @@ bool Party::gotoSpot(int mx, int my)
 	as_info.x1 = mx;
 	as_info.y1 = my;
 	as_info.flags = PFLAG_IGNOREMECHS;
-	path = place_find_path(Place, &as_info, getPmask(), NULL);
+	path = place_find_path(Place, &as_info, this);
 
 	if (!path)
 		return false;

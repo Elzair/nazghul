@@ -63,7 +63,6 @@ struct place_pathfind_context {
 	struct place *place;
 	int target_x;
 	int target_y;
-	unsigned char pmask;
 	int pflags;
         class Object *requestor;
 };
@@ -371,7 +370,7 @@ void place_del(struct place *place)
 }
 
 int place_is_passable(struct place *place, int x, int y,
-		      unsigned char pmask, int flags)
+		      class Object *subject, int flags)
 {
 	struct terrain *terrain;
 	class Field *field;
@@ -388,16 +387,14 @@ int place_is_passable(struct place *place, int x, int y,
 		   x < 0 || x >= place->terrain_map->w)
 		return 0;
 
-	// Unless the destination terrain is passable, 
-	// or a vehicle is present at the destination, return impassable.
-	// 
-	// We allow movement onto impassable terrain with a vehicle,
-	// so that the vehicle can be boarded.
-	// 
-	// For example, a ship on water, which is impassable to a walking
-	// pmask.
+	// Unless the destination terrain is passable, or a vehicle is present
+	// at the destination, return impassable. We allow movement onto
+	// impassable terrain with a vehicle, so that the vehicle can be
+	// boarded. For example, a ship on water, which is impassable to a
+	// walking pmask.
 	terrain = place->terrain_map->terrain[y * place->terrain_map->w + x];
-	impassable_terrain = (terrain->pmask & pmask) == 0;
+
+        impassable_terrain = ! terrain_is_passable(terrain, subject);
 	no_convenient_vehicle = ((flags & PFLAG_IGNOREVEHICLES) ||
 				 !place_get_vehicle(place, x, y));
 	if (impassable_terrain && no_convenient_vehicle)
@@ -405,13 +402,15 @@ int place_is_passable(struct place *place, int x, int y,
 
 	// Test for an impassable Field
 	field = (class Field *) place_get_object(place, x, y, field_layer);
-	if (field != NULL && (field->getObjectType()->getPmask() & pmask) == 0)
+	if (field != NULL && 
+            (field->getObjectType()->getPmask() & subject->getPmask()) == 0)
 		return 0;
 
 	// Test for an impassable Mech
 	if ((flags & PFLAG_IGNOREMECHS) == 0) {
 		mech = place_get_object(place, x, y, mech_layer);
-		if (mech != NULL && (mech->getPmask() & pmask) == 0)
+		if (mech != NULL && 
+                    (mech->getPmask() & subject->getPmask()) == 0)
 			return 0;
 	}
 
@@ -729,32 +728,31 @@ struct terrain_map *place_get_combat_terrain_map(struct place *place,
 
 /* Pathfinding ***************************************************************/
 
-static int place_pathfind_is_valid_location(struct place_pathfind_context *context, int x, int y)
+static int place_pathfind_is_valid_location(
+        struct place_pathfind_context *context, int x, int y)
 {
 	class Object *portal;
 
-        //printf("Checking [%d %d]...", x, y);
 
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
 	// I used to check this after passability, but it really belongs first.
 	// In several cases the target location may not be passable but if the
 	// seeker can get adjacent to it that will be good enough.
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
 
 	if (x == context->target_x && 
             y == context->target_y) {
-                //printf("target reached!\n");
 		return 1;
         }
 
-	if (!place_is_passable(context->place, x, y, context->pmask, context->pflags)) {
-                //printf("impassable!\n");
+	if (!place_is_passable(context->place, x, y, context->requestor, 
+                               context->pflags)) {
 		return 0;
         }
 
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
         // Check if the caller is blocked by an occupant on this tile.
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
 
 	if (0 == (context->pflags & PFLAG_IGNOREBEINGS)) {
                 class Object *occupant;
@@ -849,7 +847,9 @@ static void place_pathfind_heuristic(struct astar_search_info *info,
 		*cost += 9;
 }
 
-struct astar_node *place_find_path(struct place *place, struct astar_search_info *info, unsigned char pmask, class Object *requestor)
+struct astar_node *place_find_path(struct place *place, 
+                                   struct astar_search_info *info, 
+                                   class Object *requestor)
 {
 	struct astar_node *path;
 	struct place_pathfind_context context;
@@ -858,7 +858,6 @@ struct astar_node *place_find_path(struct place *place, struct astar_search_info
 	context.place = place;
 	context.target_x = info->x1;
 	context.target_y = info->y1;
-	context.pmask = pmask;
 	context.pflags = info->flags;
         context.requestor = requestor;
 
@@ -1428,7 +1427,7 @@ int place_los_blocked(struct place *place, int Ax, int Ay, int Bx, int By)
         // intention here is to see if I can fire an arrow from one point to
         // another. The missile flight code in Missile:animate() uses a test
         // for visibility on each tile to determine if a missile is blocked in
-        // its flight path (missiles don't have a pmask...).
+        // its flight path.
 
         int steps = 0;
 

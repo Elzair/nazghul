@@ -391,7 +391,7 @@ void Character::groupExitTo(struct place *dest_place, int dest_x, int dest_y,
         if (party->vehicle 
             && (! place_is_wilderness(dest_place)
                 || ! place_is_passable(dest_place, dest_x, dest_y,
-                                       party->getPmask(), 0))) {
+                                       party, 0))) {
                 
                 assert(getPlace());
                 assert(getPlace()->location.place);
@@ -514,7 +514,7 @@ enum MoveResult Character::move(int dx, int dy)
         // ------------------------------------------------------------------
 
 	if (!place_is_passable(
-                    getPlace(), newx, newy, getPmask(), 
+                    getPlace(), newx, newy, this,
                     activity == COMMUTING ? PFLAG_IGNOREMECHS : 0)) {
 		return WasImpassable;
 	}
@@ -565,7 +565,7 @@ enum MoveResult Character::move(int dx, int dy)
                         // just to pick a new leader just to get out of this
                         // mess...)
                         if (!place_is_passable(getPlace(), getX(), getY(), 
-                                               occupant->getPmask(), 0)) {
+                                               occupant, 0)) {
                                 relocate(getPlace(), newx, newy);
                                 decActionPoints(
                                         place_get_movement_cost(getPlace(), 
@@ -1606,7 +1606,7 @@ bool Character::commute()
                      tx < sched->appts[appt].x + sched->appts[appt].w; 
                      tx++) {
 
-                        if (!place_is_passable(getPlace(), tx, ty, getPmask(), 
+                        if (!place_is_passable(getPlace(), tx, ty, this, 
                                                PFLAG_IGNOREMECHS) ||
                             place_is_hazardous(getPlace(), tx, ty))
                                 continue;
@@ -1655,7 +1655,7 @@ bool Character::gotoSpot(int mx, int my)
 	as_info.x1 = mx;
 	as_info.y1 = my;
 	as_info.flags = PFLAG_IGNOREMECHS | PFLAG_IGNORECOMPANIONS;
-	path = place_find_path(getPlace(), &as_info, getPmask(), this);
+	path = place_find_path(getPlace(), &as_info, this);
 
 	if (!path)
 		return false;
@@ -1775,7 +1775,7 @@ void Character::pathfind_to(class Object *target)
         as_info.x1 = target->getX();
         as_info.y1 = target->getY();
         as_info.flags = PFLAG_IGNORECOMPANIONS;
-        path = place_find_path(getPlace(), &as_info, getPmask(), this);
+        path = place_find_path(getPlace(), &as_info, this);
         
         if (!path) {
                 return;

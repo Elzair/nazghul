@@ -243,7 +243,7 @@ enum move_result player_party::check_move_to(struct move_info *info)
 	// portal is accessible iff the player can move across the terrain it
 	// is placed on. The "ladder in the lake to the ladder on land" test
 	// case just plain looks counterintuitive without it.
-	if (!place_is_passable(info->place, info->x, info->y, getPmask(), 0))
+	if (!place_is_passable(info->place, info->x, info->y, this, 0))
 		return move_impassable;
 
 	return move_ok;
@@ -1597,7 +1597,7 @@ bool player_party::rendezvous(struct place *place, int rx, int ry)
                 as_info.y1    = ry;
                 as_info.flags = PFLAG_IGNOREBEINGS;
                 member->path = place_find_path(place, &as_info, 
-                                               member->getPmask(), NULL);
+                                               member);
 
                 if (!member->path) {
                         consolePrint("%s cannot make the rendezvous!\n", 

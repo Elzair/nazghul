@@ -42,6 +42,11 @@ struct sprite;
 //extern int TERRAIN_MAGIC;
 #define TERRAIN_MAGIC (0xc01dbee3)
 
+#define IMPASSABLE 0xff
+
+#define terrain_is_passable(t,obj) \
+        (terrain_get_movement_cost((t),(obj)) != IMPASSABLE)
+
 struct terrain {
         int magic;
         struct list list;
