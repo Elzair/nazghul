@@ -111,7 +111,7 @@
 ;;----------------------------------------------------------------------------
 ;; Player manual
 ;;----------------------------------------------------------------------------
-(define (basic-survival-manual-use manual user)
+(define (basic-survival-manual-intro)
   (kern-ui-page-text
    "Basic Survival Manual"
    "by Gorn the Wayward"
@@ -136,7 +136,7 @@
    "Meanwhile, I've jotted down some quick notes "
    "about how to survive in the Shard. They'll "
    "get you started. Just remember: you don't "
-   "know who is friend of foe yet, and that can "
+   "know who is friend or foe yet, and that can "
    "always change anyway, so don't be too quick "
    "with the sword or too careless with your "
    "mouth. "
@@ -146,8 +146,51 @@
    "And don't forget: SEEK THE HERMIT!"
    ))
 
+(define (basic-survival-manual-commands)
+  (kern-ui-page-text
+   "Use the arrow keys to indicate direction."
+   "Use the ESC key to cancel commands."
+   "Use the first letter to start a command."
+   ""
+   "A)ttack something"
+   "B)oard a ship or other vehicle"
+   "C)ast a spell"
+   "E)nter a town or dungeon"
+   "F)ire a ship's cannon or other ordnance"
+   "G)et something on the ground"
+   "H)andle a lever or other mechanism"
+   "N)ew-Order (rearrange party order)"
+   "O)pen a chest, door or other closed object"
+   "Q)uit and save the game"
+   "R)eady arms for a party member"
+   "S)earch for hidden stuff"
+   "T)alk to somebody"
+   "U)se an item in inventory"
+   "Z)tats (show party status)"
+   "X)amine around"
+   "@)AT (info about place & time)"
+   "<space> (pass a turn)"
+   "CTRL-Q)uit saves without quitting"
+   "CTRL-R)eload the last saved game"
+   ))
+
+(define (basic-survival-manual-use manual user)
+  (basic-survival-manual-intro))
+
+(define (basic-survival-manual-use2 manual user)
+  (let ((selection (kern-ui-select-from-list "Intro" "Commands")))
+    (display "selection:")(display selection)(newline)
+    (if (null? selection)
+        '()
+        (begin
+          (if (string=? selection "Intro")
+              (basic-survival-manual-intro)
+              (if (string=? selection "Commands")
+                  (basic-survival-manual-commands)))          
+          (basic-survival-manual-use2 manual user)))))
+
 (define basic-survival-manual-ifc
   (ifc obj-ifc
-       (method 'use basic-survival-manual-use)))
+       (method 'use basic-survival-manual-use2)))
 
 (mk-obj-type 'basic-survival-manual "Basic Survival Manual" s_book_red_4 layer-item basic-survival-manual-ifc)
