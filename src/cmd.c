@@ -117,6 +117,14 @@ struct get_number_info {
 	char *prompt;
 };
 
+struct get_char_info {
+        char *string;
+        char c;
+	int erase;
+	int state;
+	char *prompt;
+};
+
 static inline void getnum_erase_prompt(struct get_number_info *info)
 {
 	if (info->erase) {
@@ -236,6 +244,28 @@ int getdigit(struct KeyHandler * kh, int key, int keymod)
         }
         
         return 0;
+}
+
+int getchar(struct KeyHandler * kh, int key, int keymod)
+{
+        struct get_char_info *info;
+
+        info = (struct get_char_info *) kh->data;
+        
+        if (key == CANCEL) {
+                cmdwin_backspace(info->erase);
+                info->c = 0;
+                return 1;
+        }
+
+        if (strchr(info->string, key)) {
+                cmdwin_backspace(info->erase);
+                info->c = key;
+                cmdwin_print("%c", key);
+                return 1;
+        }
+        
+        return 0;        
 }
 
 int anykey(struct KeyHandler * kh, int key, int keymod)
@@ -1571,23 +1601,42 @@ bool cmdZtats(class Character * pc)
 
 static int select_hours(void)
 {
-	struct get_number_info info;
+	struct get_char_info info;
 
-	cmdwin_print("<hours[0-9]>");
+	cmdwin_print("<hours[0-9]/[s]unrise>");
 
-	info.digit = 0;
-	info.erase = strlen("<hours[0-9]>");
+	info.c = '0';
+        info.string = "0123456789sS";
+	info.erase = strlen("<hours[0-9]/[s]unrise>");
 
-	getkey(&info, &getdigit);
+	getkey(&info, &getchar);
 
-	if (info.digit == 0)
+	if (! info.c || info.c == '0') {
+                cmdwin_backspace(1);
 		cmdwin_print("none!");
-	else if (info.digit == 1)
-		cmdwin_print(" hour");
-	else
-		cmdwin_print(" hours");
+                return 0;
+        }
+        else if (info.c == 's' ||
+                 info.c == 'S') {
+                int hour;
+                int sunrise;
 
-	return info.digit;
+                cmdwin_backspace(1);
+                cmdwin_print("until sunrise");
+                hour = clock_time_of_day() / 60;
+                sunrise = SUNRISE_HOUR + 1;
+                if (hour < sunrise)
+                        return sunrise - hour;
+                return HOURS_PER_DAY - hour + sunrise;
+        }
+	else if (info.c == '1') {
+		cmdwin_print(" hour");
+                return 1;
+        }
+	else {
+		cmdwin_print(" hours");
+                return info.c - '0';
+        }
 }
 
 int ui_get_quantity(int max)
