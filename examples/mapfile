@@ -3384,6 +3384,65 @@ MAP m_WATER_TRAP_CLOSED {
   }
 }
 MECH_TYPE mech_water_trap_L_lever { name "lever"; defaults { pmask 7; } states { { name "lever up"; sprite s_floor_lever_left; } { name "lever down"; sprite s_floor_lever_right; } } transitions { state "lever up"; event 3; next_state "lever down"; actions { print "A trap door opens, revealing a watery pit!"; blit_map p_prison_chamber 3 3 m_WATER_TRAP_OPEN 0 0 2 1 0; } state "lever down"; event 3; next_state "lever up"; actions { print "A trap door closes."; blit_map p_prison_chamber 3 3 m_WATER_TRAP_CLOSED 0 0 2 1 0; } } };
+MAP m_wilderness {
+  type ascii;
+  width 32;
+  height 32;
+  one_char_per_tile 1;
+  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; '<' t_leftwing; '>' t_rightwing; 'c' t_cobblestone; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'p' t_pillar; '1' t_wall_b; '2' t_wall_a; '3' t_wall_c; '4' t_wall_d; 'm' t_mast; 'f' t_fire_terrain; 'b' t_boulder; 'r' t_wall_rock; '+' t_ankh; ',' t_flagstones; 'e' t_deck; '?' t_secret_door; 'a' t_altar; '&' t_fireplace; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; '!' t_lava; 'x' t_wall; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_pillar; };
+  terrain {
+      ____---------------.........----
+      ___--.....tttt..................
+      -----...ttt|||||^^^^^^^^{{{.....
+      ....ttttt|||^^^^^^^^^!^{{!{{....
+      ..ttt|||||^^^^^^^^^^^!!!{{{.....
+      ..tt|||^^^^^^^^^ttttt^^^^^!{....
+      .tt||^^^^^^^^^tt....ttttt^^{....
+      ..ttt|^^.|||tt..~~~~~~~~~.^{....
+      ....tt|^^^||t...=.......=.......
+      .....tt||||tttt|~~^||^^{~~~~~...
+      ......ttttt_^^^^^~~^^^^^^{{.~~..
+      .....tt^^^^^^...~~~^^^^{{{...~~.
+      ...^^^^^^.....~~^^^^{{{{......~~
+      ~.....^^^.....~^^^{{{{..........
+      ~~......^^^...~^{{__............
+      .=.......{^^^.^^{{__....tttttt..
+      .~~~~~....{{^^^{{{{_...tt||||tt.
+      .....~~..~..{{^^^^{{...t||||||t.
+      ......~~~~--..{^^{{....t||||||t.
+      ......%%~-----.{{---...tt||||tt.
+      .....%%~~-___--...--....tttttt..
+      ......%%~-____--.._--...........
+      .....%.%%-_________-............
+      ...%%.%%~-_________-~........~~~
+      ~~%%~%%~--__________~~~~~~~~~___
+      _~~~~~~~~-______________________
+      _--~%%%%~-______________________
+      __-~~~~~~-__-----_______________
+      ___-------_--~~~---_____________
+      ___________-~~~~~~-_____________
+      ___________--~~~---__________---
+      ____________--------------------
+      }
+}
+PLACE p_wilderness {
+  type wilderness;
+  parent null;
+  x 0;
+  y 0;
+  name "The Great Wild";
+  wraps 1;
+  map m_wilderness;
+  underground 0;
+  objects {
+    t_goblin_horde 1 8 (4) 0 c_goblin null;
+    t_undead_brigade 2 26 (4) 0 null vt_ship;
+  }
+  typical_npc_parties {
+    t_goblin_horde 1 (4);
+    t_gazer_pod_with_goblin_slaves 1 (4);
+  }
+}
 MAP m_empire_city {
         type ascii;
         width 64;
@@ -3503,14 +3562,15 @@ MAP m_empire_city {
 MECH_TYPE castle_drawbridge { name "lever"; defaults { pmask 7; } states { { name "lever up"; sprite s_floor_lever_left; } { name "lever down"; sprite s_floor_lever_right; } } transitions { state "lever up"; event 3; next_state "lever down"; actions { print "The drawbridge raises."; blit_map p_empire_city 34 8 m_WATER_TRAP_OPEN 0 0 2 1 0; } state "lever down"; event 3; next_state "lever up"; actions { print "The drawbridge lowers."; blit_map p_empire_city 34 8 m_WATER_TRAP_CLOSED 0 0 2 1 0; } } };
 PLACE p_empire_city {
   type town;
-  parent null;
-  x 0;
-  y 0;
+  parent p_wilderness;
+  x 17;
+  y 20;
   name "The Imperial City";
   wraps 0;
   map m_empire_city;
   underground 0;
   objects {
+    vt_ship 34 5 west 100;
     mech_hdoor door 62 33 "closed door";
     mech_vdoor door 30 1 "closed door";
     mech_hdoor door 28 4 "closed door";
@@ -3840,6 +3900,20 @@ moon_info {
     sprite s_sun;
   }
   moongates {
+    {
+      place p_wilderness;
+      object_type t_moongate;
+      x 26;
+      y 18;
+      phase 0;
+    }
+    {
+      place p_wilderness;
+      object_type t_moongate;
+      x 13;
+      y 15;
+      phase 1;
+    }
   }
 }
 portals {

@@ -38,22 +38,20 @@ moon_info {
   } // sun
 
   moongates {
-#if 0
     {
-      place       p_u5_world;
+      place       p_wilderness;
       object_type t_moongate;
-      x           89;
-      y           106;
+      x           26;
+      y           18;
       phase       0;
     }
     {
-      place       p_u5_world;
+      place       p_wilderness;
       object_type t_moongate;
-      x           79;
-      y           104;
+      x           13;
+      y           15;
       phase       1;
     }
-#endif
   } // moongates
 
 } // moon_info
