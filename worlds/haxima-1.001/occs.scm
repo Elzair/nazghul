@@ -113,7 +113,7 @@
               (list heal-potion     50 1)
               (list t_dagger        75 1)
               (list short-sword     50 1)
-              (list t_oil           25 10)
+              (list t_oil           25 2)
               (list t_mace          50 1)
               (list t_bolt          50 20)
               (list t_xbow          25 1)

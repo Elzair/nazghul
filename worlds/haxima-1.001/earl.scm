@@ -54,9 +54,10 @@
                          (list t_sm_shield             10)
 
                          ;; usable stuff
-                         (list t_torch                 5)
-                         (list heal-potion             20)
-                         (list cure-poison-potion      20)
+                         (list t_torch                  5)
+                         (list heal-potion              20)
+                         (list cure-poison-potion       20)
+                         (list resurrection-scroll-type 200)
 
                          ;; reagents
                          (list sulphorous_ash          4)

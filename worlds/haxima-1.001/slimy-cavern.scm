@@ -73,6 +73,26 @@
   )
  )
 
+;;----------------------------------------------------------------------------
+;; Special Objects
+;;----------------------------------------------------------------------------
+(define rolands-chest
+  (kern-mk-container
+   t_small_iron_chest ;; type
+   nil ;; trap
+   (list
+    ;; Food
+    (list 2 t_mushroom)
+
+    ;; Arms
+    (list 1 t_2H_sword)
+    (list 1 t_armor_chain)
+    (list 1 t_iron_helm)
+
+    ;; Hints/instructions
+    )))
+
+
 (kern-mk-place 'p_slimy_cavern    ; tag
                "Slimy Cavern"     ; name
                nil                ; sprite
@@ -86,6 +106,9 @@
 
                ;; objects
                (list
+
+                ;; loot and loose-lying objects
+                (list rolands-chest 9 2)
 
                 ;; terrain features
                 (list (mk-ladder-up 'p_moongate_clearing 20 1) 8 30)

@@ -54,15 +54,19 @@
   (if (roland-is-or-can-be-free? knpc)
       ;; yes - will the player accept his continued allegiance to Froederick?
       (begin
-        (say knpc "I have sworn fealty to Lord Froederick. "
-             "But if you swear not to raise your hand against him, "
-             "I will join you. What say you?")
+        (say knpc "I thank you for freeing me! I have sworn fealty to Lord "
+             "Froederick. But if you swear not to raise your hand against "
+             "him, I will join you. What say you?")
         (if (kern-conv-get-yes-no? kpc)
             (begin
-              (say knpc "I am honored to join you!")
+              (say knpc "I am honored to join you! Those vile rogues took my "
+                   "iron chest which contains my equipment. It should be "
+                   "around here somewhere.")
               (join-player knpc))
             (say knpc "[sadly] As you will. May our swords never cross.")))
-      (say knpc "But I am locked in this cell!")))
+      (say knpc "But I am locked in this cell! Free me from this dishonour, "
+           "and you will gain an ally. I might even JOIN you if you are "
+           "willing.")))
 
 (define roland-conv
   (ifc basic-conv
@@ -106,7 +110,7 @@
                  0 10 5              ; str/int/dex
                  0 0                 ; hp mod/mult
                  0 0                 ; mp mod/mult
-                 30 0 9 9            ; hp/xp/mp/lvl
+                 30 0 9 3            ; hp/xp/mp/lvl
                  #f                  ; dead
                  'roland-conv        ; conv
                  nil                 ; sched

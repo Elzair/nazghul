@@ -559,7 +559,9 @@
 (define (in-mani-corp kspell caster)
   (let ((target (kern-ui-select-party-member)))
     (if (null? target) nil
-        (kern-char-resurrect target))))
+        (begin
+          (kern-char-resurrect target)
+          #t))))
 
 (define (vas-rel-por kspell caster)
   (define (rmgate kobj)

@@ -11,3 +11,5 @@
                 in-nox-por)
 (mk-usable-item 'death-bolt-scroll-type  "Xen Corp scroll"   s_scroll_spell_25 
                 xen-corp)
+(mk-usable-item 'resurrection-scroll-type  "In Mani Corp scroll"   
+                s_scroll_spell_36 in-mani-corp)

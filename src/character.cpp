@@ -959,6 +959,10 @@ void Character::kill()
 		dropItems();
 	}
 
+        if (isPlayerControlled()) {
+                log_msg("%s has fallen!!", getName());
+        }
+
 	hp = 0;
         setDead(true);
 

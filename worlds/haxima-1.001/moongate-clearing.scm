@@ -57,6 +57,7 @@
     (list 3 cure-poison-potion)
     (list 2 poison-bolt-scroll-type)
     (list 1 death-bolt-scroll-type)
+    (list 1 resurrection-scroll-type)
     (list 5 t_torch)
     (list 3 t_picklock)
     

@@ -243,7 +243,7 @@
   (list-ref list (modulo (random-next) (length list))))
 
 (define (taunt kchar ktarg)
-  (if (> (kern-dice-roll "1d20") 15)
+  (if (> (kern-dice-roll "1d20") 16)
       (say kchar (random-select taunts))))
 
 ;; ----------------------------------------------------------------------------
