@@ -154,6 +154,7 @@ class Character:public Object {
 		WasImpassable,
 		SlowProgress,
 		SwitchedOccupants,
+                CouldNotSwitchOccupants,
 	};
 	virtual enum MoveResult move(int dx, int dy);
 #ifdef RAM_ATTACK

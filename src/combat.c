@@ -642,31 +642,59 @@ static bool myPutPC(class Character * pm, void *data)
 		// leader is right on the map border facing towards the map
 		// center. In this case the find-safe-place alg won't handle
 		// followers that are too deep off the map. If this IS the
-		// party leader then we really are screwed -- nobody will make
-		// it on the map. But if it ISN'T then that means the party
-		// leader was already placed. In that case we'll retry from HIS
-		// position. Then if that fails we'll give up on this one.
+		// party leader, or if upon retry we STILL can't find a safe
+		// place, then screw it - we'll place this character on the
+		// start location (even if we have to end up stacking the whole
+		// party there!).
+
+                // Corner case: a portal leads from one lake to another. A
+                // hostile npc party is sitting right on the destination. The
+                // party enters the portal on foot, upon arrival the npc party
+                // attacks. Party members which are on foot get stacked on the
+                // entry point and cannot move or flee. This is an unfriendly
+                // situation, but something of a corner case. Map hackers can
+                // skirt the issue and player's can expect that entering
+                // portals involves an element of danger :). The engine won't
+                // crash and the player can usually get out of the fix by
+                // defeating the npc's.
 
 		class Character *leader = player_party->get_leader();
 
 		if (!leader) {
+#ifdef POSITION_CAN_FAIL
 			// No party leader => nobody can be placed
 			consolePrint("No place to put %s on the combat map!\n",
 				     pm->getName());
 			return false;
-		}
-		// init the position info to search again
-		memset(rmap, 0, sizeof(rmap));
-		info->px = leader->getX();
-		info->py = leader->getY();
-		printf("Retrying %s\n", pm->getName());
+#else // ! POSITION_CAN_FAIL
+                        printf("Putting %s on start location [%d %d]\n",
+                               pm->getName(), info->x, info->y);
+                        info->px = info->x;
+                        info->py = info->y;
+#endif // ! POSITION_CAN_FAIL
+		} else {
+                        // init the position info to search again
+                        memset(rmap, 0, sizeof(rmap));
+                        info->px = leader->getX();
+                        info->py = leader->getY();
+                        printf("Retrying %s\n", pm->getName());
 
-		if (myFindSafePosition(info) == -1) {
-			consolePrint("No place to put %s on the combat map!\n",
-				     pm->getName());
-			return false;
-		}
-	}
+                        if (myFindSafePosition(info) == -1) {
+#ifdef POSITION_CAN_FAIL
+                                consolePrint("No place to put %s on the "
+                                             "combat map!\n",
+                                             pm->getName());
+                                return false;
+#else // ! POSITION_CAN_FAIL
+                                printf("Putting %s on start location "
+                                       "[%d %d]\n",
+                                       pm->getName(), info->x, info->y);
+                                info->px = info->x;
+                                info->py = info->y;
+#endif // ! POSITION_CAN_FAIL
+                        }
+                }
+        }
 
 	pm->setX(info->px);
 	pm->setY(info->py);
@@ -697,7 +725,7 @@ static bool myPutPC(class Character * pm, void *data)
 	return false;
 }
 
-static bool mySetInitialCameraPosition(class Character * pm, void *data)
+        static bool mySetInitialCameraPosition(class Character * pm, void *data)
 {
 	if (pm->isOnMap()) {
 		mapCenterCamera(pm->getX(), pm->getY());
@@ -768,6 +796,7 @@ static void myMoveNPC(class Character * c, int dx, int dy)
 	case Character::SlowProgress:
 	case Character::MovedOk:
 	case Character::SwitchedOccupants:
+	case Character::CouldNotSwitchOccupants:
 		break;
 	}
 
@@ -1570,7 +1599,8 @@ static bool rendezvous_party(void)
 		struct astar_search_info as_info;
 		class Character *pc = player_party->pc[i];
 
-		if (!pc || pc->isDead() || !pc->isOnMap() || pc == leader)
+		if (!pc || pc->isDead() || !pc->isOnMap() || pc == leader ||
+                    (pc->getX() == rx && pc->getY() == ry))
 			continue;
 
 		memset(&as_info, 0, sizeof(as_info));

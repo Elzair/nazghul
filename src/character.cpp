@@ -324,8 +324,21 @@ enum Character::MoveResult Character::move(int dx, int dy)
 			struct place *oldPlace;
 			bool wasSolo;
 
+                        // Wait - first have to check if the other character
+                        // can occupy this tile (may have different
+                        // passability)
+                        if (!place_is_passable(getPlace(), getX(), getY(),
+                                               occupant->getPmask(), 0)) {
+                                return CouldNotSwitchOccupants;
+                        }
+
+
 			oldx = getX();
 			oldy = getY();
+
+                        // Save these before calling remove because remove()
+                        // automatically resets these to defaults (for sane
+                        // reasons... I think)
 			oldTarget = target;
 			oldPlace = getPlace();
 			wasSolo = isSolo();
