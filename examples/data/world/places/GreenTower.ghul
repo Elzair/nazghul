@@ -24,7 +24,7 @@
 #define GreenTower_ghul
 
 #include "../characters/Shroom_the_Hag.ghul"
-#include "../characters/char_doris.ghul"
+#include "../characters/Doris.ghul"
 #include "../characters/Gen.ghul"
 #include "../characters/Deric.ghul"
 

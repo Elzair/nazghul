@@ -20,8 +20,8 @@
 // conceived.
 //
 
-#ifndef ch_doris_the_inkeeper
-#define ch_doris_the_inkeeper
+#ifndef Doris_ghul
+#define Doris_ghul
 
 #include "../conversations/C_green_tower.ghul"
 
