@@ -50,6 +50,59 @@
                  )
 
 ;; ----------------------------------------------------------------------------
+;; Spider Egg
+;; 
+;; ----------------------------------------------------------------------------
+(define (is-spider? kchar)
+  (display "is-spider?")(newline)
+  (let ((species (kern-char-get-species kchar)))
+    (or (eqv? species sp_spider)
+        (eqv? species sp_queen_spider))))
+
+(define (spider-egg-disturbed kegg)
+  (display "spider-egg-disturbed")(newline)
+  (define (check loc)
+    (if (foldr (lambda (a b) (or a
+                                 (and (kern-obj-is-char? b)
+                                      (not (is-spider? b)))))
+               #f
+               (kern-place-get-objects-at loc))
+        loc
+        nil))
+  (let ((loc (kern-obj-get-location kegg)))
+    (notnull? (search-rect (loc-place loc)
+                           (- (loc-x loc) 2)
+                           (- (loc-y loc) 2)
+                           5
+                           5
+                           check))))
+
+(define (spider-egg-hatch kegg)
+  (display "spider-egg-hatch")(newline)
+  (kern-log-msg "A spider hatches!")
+  (kern-obj-put-at (mk-wood-spider) (kern-obj-get-location kegg))
+  (kern-obj-remove kegg)
+  (kern-obj-destroy kegg))
+
+(define (spider-egg-exec kegg)
+  (display "spider-egg-exec")(newline)
+  (if (spider-egg-disturbed kegg)
+      (spider-egg-hatch kegg)))
+
+(define spider-egg-ifc
+  (ifc '()
+       (method 'exec spider-egg-exec)))
+
+(mk-obj-type 'spider-egg-type
+             "spider egg"
+             s_magic
+             layer-item
+             spider-egg-ifc)
+
+(define (mk-spider-egg)
+  (kern-mk-obj spider-egg-type 1))
+
+;; ----------------------------------------------------------------------------
 ;; spider-killed -- called when a spider is killed, the character is passed as
 ;; an arg. Drops a spider corpse object with a random amount of spider silk
 ;; inside.
@@ -149,11 +202,23 @@
 ;; Spider AI
 ;; ----------------------------------------------------------------------------
 
+(define (is-queen-spider? kspider)
+  (eqv? (kern-char-get-species kspider) sp_queen_spider))
+
+(define (spider-try-to-lay-egg kspider)
+  (display "spider-try-to-lay-egg")(newline)
+  (let ((loc (kern-obj-get-location kspider)))
+    (if (and (not (is-object-type-at? loc spider-egg-type))
+             (> (kern-dice-roll "1d20") 18))
+        (kern-obj-put-at (mk-spider-egg) loc))))
+
 (define (spider-no-hostiles kspider)
   (display "spider-no-hostiles")(newline)
   (let ((loc (kern-obj-get-location kspider)))
     (if (not (is-object-type-at? loc web-type))
-        (ensnare-loc loc)))
+        (ensnare-loc loc))
+    (if (is-queen-spider? kspider)
+        (spider-try-to-lay-egg kspider)))
   (wander kspider))
 
 (define (is-helpless? kchar)
@@ -200,7 +265,7 @@
 
 (define (spider-no-helpless-foes kspider foes)
   (display "spider-no-helpless-foes")(newline)
-  (if (spider-can-spew-web? kspider)
+  (if (is-queen-spider? kspider)
       (spider-try-to-spew-web kspider (closest-obj 
                                             (kern-obj-get-location kspider)
                                             foes))
