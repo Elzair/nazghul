@@ -49,7 +49,7 @@
    "^^ ^^ ^^ {{ .. .. .. .. .. .. .. .. .. .. .. tt tt tt || || || tt tt tt tt tt || || ~~ || || || tt /7 tt || || tt tt tt tt tt || || || || || || || || || || || || || || || "
    "^^ ^^ ^^ {{ {{ .. .. .. .. .. .. .. .. .. .. .. tt tt tt tt tt tt tt .. tt tt || || ~~ ~~ ~~ || tt /7 tt tt || || tt tt tt tt tt || || || || || || || || || || || || || || "
    "^^ ^^ ^^ ^^ {{ .. .. .. .. .. .. .. .. .. .. .. .. tt tt tt tt tt .. .. tt tt tt || tt tt ~~ tt .. /7 .. tt tt || || tt tt tt tt tt || || || || || || || || || || || || || "
-   "^^ ^^ ^^ ^^ {{ {{ .. .. .. .. .. .. .. .. .. .. .. .. .. /0 /d /d /d /d /d /d /d /d /d /d ~~ /d /d .. /d /d /d /d /d /d /d /d /d /2 || || || || || || || || || || || || || "
+   "^^ ^^ ^^ ^^ {{ {{ .. .. .. .. .. .. .. .. .. .. .. .. .. /0 /d /d /d /d /d /d /d /d /d /d == /d /d .. /d /d /d /d /d /d /d /d /d /2 || || || || || || || || || || || || || "
    "^^ ^^ ^^ ^^ ^^ {{ {{ {{ .. .. .. .. .. .. .. .. .. .. .. /7 .. .. .. .. .. .. tt tt tt tt ~~ tt .. /7 .. tt tt || || || tt tt tt /7 tt || || || || || || || || || || || || "
    "^^ ^^ ^^ ^^ ^^ ^^ ^^ {{ {{ .. .. .. .. .. .. .. .. .. .. /7 .. .. .. .. .. .. tt tt ~~ ~~ ~~ tt tt /7 tt tt || || || || tt tt tt /7 tt tt tt tt || || || || || || || || || "
    "^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ {{ .. .. .. .. .. .. .. .. .. .. /7 .. .. .. .. .. .. tt tt ~~ tt tt tt tt /7 tt || || || || tt tt tt .. /7 tt tt tt tt tt tt || || || || || || || "
@@ -91,7 +91,7 @@
   (list (mk-mine-entrance 'p_lost_halls 1 4) 46 12)
 
   ;; terrain features
-  (list (mk-bridge east) 30 43)
+  ;;(list (mk-bridge east) 30 43)
 
   ;; existing npc parties
   (list (kern-mk-party t_bandit_gang faction-monster nil) 29 28)

@@ -121,6 +121,8 @@
     (list  "w+"   t_arrow_slit)         ;; "arrow slit"
     (list  "ws"   t_window_in_stone)    ;; "window"
 
+    (list  "=="   t_bridge_WE)          ;; "east-west bridge"
+
     (list  "/0"   t_trail_0)            ;; "trail"
     (list  "/1"   t_trail_1)            ;; "trail"
     (list  "/2"   t_trail_2)            ;; "trail"
