@@ -54,6 +54,15 @@ extern "C" {
 #define KEY_SHIFT_EAST  (SDLK_LAST + 3)
 #define KEY_SHIFT_WEST  (SDLK_LAST + 4)
 
+/* 
+ * Give canonical names to the UNICODE versions of the CTRL keypresses that we
+ * care about.
+ */
+#define KEY_CTRL_Q      0x11
+#define KEY_CTRL_R      0x12
+#define KEY_CTRL_S      0x13
+#define KEY_CTRL_T      0x14
+#define KEY_CTRL_Z      0x1a
 
 	struct TickHandler {
 		struct list list;

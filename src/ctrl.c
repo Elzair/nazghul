@@ -50,130 +50,110 @@ static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
         
         G_latency_start = SDL_GetTicks();
 
-        if (keymod & KMOD_LCTRL || keymod & KMOD_RCTRL) {
+        switch (key) {
 
-                // SAM: This seemed like a less ugly way of setting off a group
-                // of keybindings for "DM Mode" use or the like.  If we find
-                // something more aesthetic wrt/ switch() syntax, we will
-                // surely prefer it...
-                // 
-                // Control-key bindings for "DM Mode" commands like terrain
-                // editing.  In future, these may be enabled/disabled at
-                // compile time, or via a GhulScript keyword in the mapfile.
-                switch (key) {
-                        
-                case 'q':
-                        cmdQuickSave();
-                        break;
+        case KEY_NORTH:
+        case KEY_EAST:
+        case KEY_SOUTH:
+        case KEY_WEST:
+        {
+                int dir = keyToDirection(key);
+                party->move(directionToDx(dir), directionToDy(dir));
+                mapSetDirty();
+        }
+        break;
 
-                case 'r':
-                        cmdReload();
-                        return true;
-                        break;
-      
-                case 's':
-                        cmdSaveTerrainMap(NULL);
-                        break;
-
-                case 't':
-                        cmdTerraform(NULL);
-                        break;
-
-                case 'z':                        
-                        mapTogglePeering();
-                        break;
-
-                default:
-                        break;
-                } // switch(key)
-        } // keymod
-
-        else {
-                // !keymod
-                switch (key) {
-
-                case KEY_NORTH:
-                case KEY_EAST:
-                case KEY_SOUTH:
-                case KEY_WEST:
-                {
-                        int dir = keyToDirection(key);
-                        party->move(directionToDx(dir), directionToDy(dir));
-                        mapSetDirty();
-                }
+        case 'a':
+                cmdAttack();
+                break;
+        case 'b':
+                party->board_vehicle();
+                break;
+        case 'c':
+                cmdCastSpell(NULL);
+                break;
+        case 'f':
+                cmdFire();
+                break;
+        case 'g':
+                cmdGet(party, true);
+                break;
+        case 'h':
+                // SAM: Adding (H)andle command...
+                cmdHandle(NULL);
+                break;
+        case 'k':
+                cmdCampInWilderness(party);
+                break;
+        case 'm':
+                cmdMixReagents();
+                break;
+        case 'n':
+                cmdNewOrder();
+                break;
+        case 'o':
+                cmdOpen(NULL);
+                break;
+        case 'q':
+                cmdQuit();
+                break;
+        case 'r':
+                cmdReady(NULL);
+                break;
+        case 's':
+                cmdSearch(party->getPlace(),
+                          party->getX(), party->getY());
+                break;
+        case 't':
+                cmdTalk(NULL);
+                break;
+        case 'u':
+                cmdUse(NULL, CMD_SELECT_MEMBER|CMD_PRINT_MEMBER);
+                break;
+        case 'x':
+                cmdXamine(party);
+                break;
+        case 'z':
+                cmdZtats(NULL);
+                break;
+        case '@':
+                // SAM: 'AT' command for party-centric information
+                cmdAT(NULL);
+                break;
+        case ' ':
+                party->endTurn();
+                log_msg("Pass");
+                break;
+        case '>':
+                // This key was chosen to be a cognate for '>' in
+                // NetHack and other roguelike games.
+                cmdZoomIn();
+                party->endTurn();
                 break;
 
-                case 'a':
-                        cmdAttack();
-                        break;
-                case 'b':
-                        party->board_vehicle();
-                        break;
-                case 'c':
-                        cmdCastSpell(NULL);
-                        break;
-                case 'f':
-                        cmdFire();
-                        break;
-                case 'g':
-                        cmdGet(party, true);
-                        break;
-                case 'h':
-                        // SAM: Adding (H)andle command...
-                        cmdHandle(NULL);
-                        break;
-                case 'k':
-                        cmdCampInWilderness(party);
-                        break;
-                case 'm':
-                        cmdMixReagents();
-                        break;
-                case 'n':
-                        cmdNewOrder();
-                        break;
-                case 'o':
-                        cmdOpen(NULL);
-                        break;
-                case 'q':
-                        cmdQuit();
-                        break;
-                case 'r':
-                        cmdReady(NULL);
-                        break;
-                case 's':
-                        cmdSearch(party->getPlace(),
-                                  party->getX(), party->getY());
-                        break;
-                case 't':
-                        cmdTalk(NULL);
-                        break;
-                case 'u':
-                        cmdUse(NULL, CMD_SELECT_MEMBER|CMD_PRINT_MEMBER);
-                        break;
-                case 'x':
-                        cmdXamine(party);
-                        break;
-                case 'z':
-                        cmdZtats(NULL);
-                        break;
-                case '@':
-                        // SAM: 'AT' command for party-centric information
-                        cmdAT(NULL);
-                        break;
-                case ' ':
-                        party->endTurn();
-                        log_msg("Pass");
-                        break;
-                case '>':
-                        // This key was chosen to be a cognate for '>' in
-                        // NetHack and other roguelike games.
-                        cmdZoomIn();
-                        party->endTurn();
-                        break;
-                default:
-                        break;
-                } // switch(key)
-        } // !keymod
+        case KEY_CTRL_Q:
+                cmdQuickSave();
+                break;
+                        
+        case KEY_CTRL_R:
+                cmdReload();
+                return true;
+                break;
+                        
+        case KEY_CTRL_S:
+                cmdSaveTerrainMap(NULL);
+                break;
+                        
+        case KEY_CTRL_T:
+                cmdTerraform(NULL);
+                break;
+                        
+        case KEY_CTRL_Z:
+                mapTogglePeering();
+                break;
+        default:
+                break;
+        } // switch(key)
 
         /* Prep cmdwin for next prompt */
         cmdwin_clear();
@@ -583,268 +563,256 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
 
         G_latency_start = SDL_GetTicks();
 
-        // -------------------------------------------------------------------
-        // Process the special CTRL commands
-        // -------------------------------------------------------------------
 
-        if (keymod & KMOD_LCTRL || keymod & KMOD_RCTRL) {
+        /* First process commands which should not be affected by the keystroke
+         * hooks. */
+        switch (key) {
 
-                switch (key) {
+        case KEY_CTRL_Q:
+                cmdQuickSave();
+                break;
+
+        case KEY_CTRL_R:
+                cmdReload();
+                return true;
+                break;
       
-                case 'q':
-                        cmdQuickSave();
-                        break;
+        case KEY_CTRL_S:
+                cmdSaveTerrainMap(character);
+                break;
 
-                case 'r':
-                        cmdReload();
-                        return true;
-                        break;
-      
-                case 't':
-                        cmdTerraform(character);
-                        break;
+        case KEY_CTRL_T:
+                cmdTerraform(character);
+                break;
 
-                case 's':
-                        cmdSaveTerrainMap(character);
-                        break;
+        case KEY_CTRL_Z:
+                mapTogglePeering();
+                break;
 
-                case 'z':
-                        mapTogglePeering();
-                        break;
-
-                default:
-                        break;
-                }
+        default:
+                break;
         }
 
-        // -------------------------------------------------------------------
-        // Process normal commands.
-        // -------------------------------------------------------------------
-
-        else {
-
-                // Don't run the keystroke hook until we get here. Keystroke
-                // effects should not affect the special ctrl charactes
-                // (otherwise something like being stuck in a web can prevent a
-                // user from reloading a game).
-                character->runHook(OBJ_HOOK_KEYSTROKE);
-                if (character->isTurnEnded())
-                        return true;
+        // Don't run the keystroke hook until we get here. Keystroke
+        // effects should not affect the special ctrl charactes
+        // (otherwise something like being stuck in a web can prevent a
+        // user from reloading a game).
+        character->runHook(OBJ_HOOK_KEYSTROKE);
+        if (character->isTurnEnded())
+                return true;
 
 
-                switch (key) {
+        switch (key) {
 
-                case KEY_NORTH:
-                case KEY_EAST:
-                case KEY_SOUTH:
-                case KEY_WEST:
+        case KEY_NORTH:
+        case KEY_EAST:
+        case KEY_SOUTH:
+        case KEY_WEST:
 
-                        dir = keyToDirection(key);
-                        ctrl_move_character(character, dir);
-                        break;
+                dir = keyToDirection(key);
+                ctrl_move_character(character, dir);
+                break;
 
 
-                case KEY_SHIFT_NORTH:
-                case KEY_SHIFT_EAST:
-                case KEY_SHIFT_SOUTH:
-                case KEY_SHIFT_WEST:
+        case KEY_SHIFT_NORTH:
+        case KEY_SHIFT_EAST:
+        case KEY_SHIFT_SOUTH:
+        case KEY_SHIFT_WEST:
 
-                        // ----------------------------------------------------
-                        // Pan the camera.
-                        // ----------------------------------------------------
+                // ----------------------------------------------------
+                // Pan the camera.
+                // ----------------------------------------------------
                         
-                        key = unshift[(key - KEY_SHIFT_NORTH)];
-                        dir = keyToDirection(key);
-                        mapMoveCamera(directionToDx(dir), directionToDy(dir));
-                        mapSetDirty();
+                key = unshift[(key - KEY_SHIFT_NORTH)];
+                dir = keyToDirection(key);
+                mapMoveCamera(directionToDx(dir), directionToDy(dir));
+                mapSetDirty();
+                break;
+
+
+        case 'a':
+                ctrl_attack_ui(character);
+                break;
+
+        case 'c':
+                cmdCastSpell(character);
+                break;
+
+
+        case 'e':
+
+                // ----------------------------------------------------
+                // Enter a portal. For this to work a portal must exist
+                // here, the party must be in follow mode, and all the
+                // party members must be able to rendezvous at this
+                // character's position.
+                // ----------------------------------------------------
+
+                portal = place_get_object(character->getPlace(), 
+                                          character->getX(), 
+                                          character->getY(), 
+                                          mech_layer);
+                if (!portal || !portal->canEnter()) {
                         break;
-
-
-                case 'a':
-                        ctrl_attack_ui(character);
-                        break;
-
-                case 'c':
-                        cmdCastSpell(character);
-                        break;
-
-
-                case 'e':
-
-                        // ----------------------------------------------------
-                        // Enter a portal. For this to work a portal must exist
-                        // here, the party must be in follow mode, and all the
-                        // party members must be able to rendezvous at this
-                        // character's position.
-                        // ----------------------------------------------------
-
-                        portal = place_get_object(character->getPlace(), 
-                                                  character->getX(), 
-                                                  character->getY(), 
-                                                  mech_layer);
-                        if (!portal || !portal->canEnter()) {
-                                break;
-                        }
+                }
                         
-                        log_begin_group();
-                        portal->enter(character);
-                        log_end_group();
+                log_begin_group();
+                portal->enter(character);
+                log_end_group();
 
-                        break;
+                break;
 
 
-                case 'f':
+        case 'f':
 
-                        // ----------------------------------------------------
-                        // Toggle Follow mode on or off. When turning follow
-                        // mode off, set all party members to player
-                        // control. When turning it on, set all party member to
-                        // follow mode but set the leader to player control.
-                        // ----------------------------------------------------
+                // ----------------------------------------------------
+                // Toggle Follow mode on or off. When turning follow
+                // mode off, set all party members to player
+                // control. When turning it on, set all party member to
+                // follow mode but set the leader to player control.
+                // ----------------------------------------------------
                         
-                        log_begin("Follow mode ");
-                        if (player_party->getPartyControlMode() == 
-                            PARTY_CONTROL_FOLLOW) {
-                                log_end("OFF");
-                                player_party->enableRoundRobinMode();
-                        } else {
-                                log_end("ON");
-                                player_party->enableFollowMode();
-                        }
-                        if (! character->isLeader())
-                                character->endTurn();
-                        break;
-
-                case 'g':
-                        cmdGet(character, 
-                               !place_contains_hostiles(character->getPlace(), 
-                                                        character));
-                        break;
-                case 'h':
-                        cmdHandle(character);
-                        break;
-                case 'k':
-                        cmdCampInTown(character);
-                        break;
-                case 'm':
-                        cmdMixReagents();
-                        break;
-                case 'n':
-                        cmdNewOrder();
-                        break;
-                case 'o':
-                        cmdOpen(character);
-                        break;
-                case 'q':
-                        cmdQuit();
-                        break;
-                case 'r':
-                        cmdReady(character);
-                        break;
-                case 's':
-                        cmdSearch(character->getPlace(),
-                                  character->getX(),
-                                  character->getY());
-                        break;
-                case 't':
-                        cmdTalk(character);
-                        break;
-                case 'u':
-                        cmdUse(character, 0);
-                        break;
-                case 'x':
-                        cmdXamine(character);
-                        break;
-                case 'y':
-                        cmdYuse(character);
-                        break;
-                case 'z':
-                        cmdZtats(character);
-                        break;
-                case '@':
-                        cmdAT(character);
-                        break;
-                case ' ':
-                        log_msg("Pass");
-                        character->endTurn();
-                        break;
-
-                case SDLK_1:
-                case SDLK_2:
-                case SDLK_3:
-                case SDLK_4:
-                case SDLK_5:
-                case SDLK_6:
-                case SDLK_7:
-                case SDLK_8:
-                case SDLK_9:                        
-
-                        // ----------------------------------------------------
-                        // Put a character in solo mode.
-                        // ----------------------------------------------------
-                        
-                        solo_member = 
-                                player_party->getMemberAtIndex(key - SDLK_1);
-                        if (solo_member != NULL             &&
-                            !solo_member->isIncapacitated() &&
-                            solo_member->isOnMap()) {
-                                player_party->enableSoloMode(solo_member);
-                                character->endTurn();
-                        }
-                        break;
-
-                case SDLK_0:
-                        // ----------------------------------------------------
-                        // Exit solo mode.
-                        // ----------------------------------------------------
+                log_begin("Follow mode ");
+                if (player_party->getPartyControlMode() == 
+                    PARTY_CONTROL_FOLLOW) {
+                        log_end("OFF");
                         player_party->enableRoundRobinMode();
+                } else {
+                        log_end("ON");
+                        player_party->enableFollowMode();
+                }
+                if (! character->isLeader())
                         character->endTurn();
-                        break;
+                break;
 
+        case 'g':
+                cmdGet(character, 
+                       !place_contains_hostiles(character->getPlace(), 
+                                                character));
+                break;
+        case 'h':
+                cmdHandle(character);
+                break;
+        case 'k':
+                cmdCampInTown(character);
+                break;
+        case 'm':
+                cmdMixReagents();
+                break;
+        case 'n':
+                cmdNewOrder();
+                break;
+        case 'o':
+                cmdOpen(character);
+                break;
+        case 'q':
+                cmdQuit();
+                break;
+        case 'r':
+                cmdReady(character);
+                break;
+        case 's':
+                cmdSearch(character->getPlace(),
+                          character->getX(),
+                          character->getY());
+                break;
+        case 't':
+                cmdTalk(character);
+                break;
+        case 'u':
+                cmdUse(character, 0);
+                break;
+        case 'x':
+                cmdXamine(character);
+                break;
+        case 'y':
+                cmdYuse(character);
+                break;
+        case 'z':
+                cmdZtats(character);
+                break;
+        case '@':
+                cmdAT(character);
+                break;
+        case ' ':
+                log_msg("Pass");
+                character->endTurn();
+                break;
 
-                case '<':
-                        // ----------------------------------------------------
-                        // Quick exit from wilderness combat. The current place
-                        // must be the special wildernss combat place and it
-                        // must be empty of hostile characters or this fails.
-                        // ----------------------------------------------------
+        case SDLK_1:
+        case SDLK_2:
+        case SDLK_3:
+        case SDLK_4:
+        case SDLK_5:
+        case SDLK_6:
+        case SDLK_7:
+        case SDLK_8:
+        case SDLK_9:                        
 
-                        if (!place_is_wilderness_combat(character->getPlace()))
-                        {
-                                log_msg("Must use an exit!");
-                                break;
-                        }
-
-                        if (place_contains_hostiles(character->getPlace(), 
-                                                    character))
-                        {
-                                log_msg("Not while foes remain!");
-                                break;
-                        }
-
-                        // ----------------------------------------------------
-                        // This next call is to make sure the "Victory" and
-                        // "Defeated" messages are printed properly. I don't
-                        // *think* it has any other interesting side-effects in
-                        // this case.
-                        // ----------------------------------------------------
-
-                        combat_analyze_results_of_last_turn();
-
-                        // ----------------------------------------------------
-                        // Remove all party members.
-                        // ----------------------------------------------------
-
-                        player_party->removeMembers();
-
+                // ----------------------------------------------------
+                // Put a character in solo mode.
+                // ----------------------------------------------------
+                        
+                solo_member = 
+                        player_party->getMemberAtIndex(key - SDLK_1);
+                if (solo_member != NULL             &&
+                    !solo_member->isIncapacitated() &&
+                    solo_member->isOnMap()) {
+                        player_party->enableSoloMode(solo_member);
                         character->endTurn();
+                }
+                break;
 
-                        break;
+        case SDLK_0:
+                // ----------------------------------------------------
+                // Exit solo mode.
+                // ----------------------------------------------------
+                player_party->enableRoundRobinMode();
+                character->endTurn();
+                break;
 
-                default:
+
+        case '<':
+                // ----------------------------------------------------
+                // Quick exit from wilderness combat. The current place
+                // must be the special wildernss combat place and it
+                // must be empty of hostile characters or this fails.
+                // ----------------------------------------------------
+
+                if (!place_is_wilderness_combat(character->getPlace()))
+                {
+                        log_msg("Must use an exit!");
                         break;
                 }
 
+                if (place_contains_hostiles(character->getPlace(), 
+                                            character))
+                {
+                        log_msg("Not while foes remain!");
+                        break;
+                }
+
+                // ----------------------------------------------------
+                // This next call is to make sure the "Victory" and
+                // "Defeated" messages are printed properly. I don't
+                // *think* it has any other interesting side-effects in
+                // this case.
+                // ----------------------------------------------------
+
+                combat_analyze_results_of_last_turn();
+
+                // ----------------------------------------------------
+                // Remove all party members.
+                // ----------------------------------------------------
+
+                player_party->removeMembers();
+
+                character->endTurn();
+
+                break;
+
+        default:
+                break;
         }
 
         cmdwin_clear();

@@ -28,6 +28,10 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
+#ifndef USE_UNICODE
+# define USE_UNICODE 1
+#endif
+
 #define EVENT_NONBLOCK   (1 << 0)
 #define EVENT_NOPLAYBACK (1 << 1)
 
@@ -53,6 +57,14 @@ static int playback_fd;
 static void (*eventHook) (void);
 static int (*wait_event) (SDL_Event * event, int flags);
 
+#if USE_UNICODE
+
+static char unicode_to_char[128] = {
+        0, 0, ' ', '0', '@', 'P', '`', 'p',
+        0, 0, '!', '1', 'A', 'Q', 'a', 'q',
+
+};
+
 static int mapKey(SDL_keysym * keysym)
 {
 	static int map_arrows[] = {
@@ -62,9 +74,55 @@ static int mapKey(SDL_keysym * keysym)
 	};
 
 	int key = keysym->sym;
+        
+        printf("sym='%c'[%d] mod=%02x unicode=%04x\n", 
+               keysym->sym,  
+               keysym->sym,
+               keysym->mod,
+               keysym->unicode);
 
-        printf("sym='%c'[%d] mod=%02x\n", keysym->sym,  keysym->sym,
-               keysym->mod);
+        /* If the key has a UNICODE representation and its from the default
+         * Basic Latin code page then return it as an ASCII character. */
+        if (keysym->unicode) {
+
+                /* Map CR to LF (legacy code expects this) */
+                if (keysym->unicode == 0x000d)
+                        return '\n';
+
+                /* Map all other Basic Latin codes to ASCII */
+                if (keysym->unicode < 0x7f)
+                        return keysym->unicode & 0x7f;
+
+                /* Other code pages not supported */
+                return 0;
+        }
+
+        /* Map the arrow keys */
+	if (key >= SDLK_UP && key <= SDLK_LEFT)
+		return map_arrows[key - SDLK_UP +
+				  ((keysym->mod & KMOD_SHIFT) ? 4 : 0)];
+
+        /* Unsupported */
+	return 0;
+}
+
+#else /* ! USE_UNICODE */
+
+static int mapKey(SDL_keysym * keysym)
+{
+	static int map_arrows[] = {
+		KEY_NORTH, KEY_SOUTH, KEY_EAST, KEY_WEST,
+		KEY_SHIFT_NORTH, KEY_SHIFT_SOUTH, KEY_SHIFT_EAST, 
+                KEY_SHIFT_WEST
+	};
+
+	int key = keysym->sym;
+        
+        printf("sym='%c'[%d] mod=%02x unicode=%04x\n", 
+               keysym->sym,  
+               keysym->sym,
+               keysym->mod,
+               keysym->unicode);
 
         /* If NUMLOCK is enabled then map keypad entries to numbers. This
          * allows French keyboards, for instance, to enter numbers. */
@@ -152,6 +210,8 @@ static int mapKey(SDL_keysym * keysym)
 
 	return key;
 }
+
+#endif /* ! USE_UNICODE */
 
 static int mapButton(Uint8 button)
 {
@@ -328,6 +388,10 @@ int eventInit(void)
 		// Override the normal wait_event routine
 		wait_event = playback_event;
 	}
+
+#if USE_UNICODE
+        SDL_EnableUNICODE(1);
+#endif
 
 	return 0;
 }
