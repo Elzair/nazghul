@@ -2,6 +2,11 @@
 (define spider-melee-weapon t_hands)
 (define web-spew-range      3)
 
+;; Remapped display and newline to local procs so they can be disabled/enabled
+;; for debug more conveniently
+(define (spider-display .) )
+(define (spider-newline) )
+
 ;;----------------------------------------------------------------------------
 ;; Species declaration (used by the kernel)
 ;;----------------------------------------------------------------------------
@@ -54,13 +59,13 @@
 ;; 
 ;; ----------------------------------------------------------------------------
 (define (is-spider? kchar)
-  (display "is-spider?")(newline)
+  (spider-display "is-spider?")(spider-newline)
   (let ((species (kern-char-get-species kchar)))
     (or (eqv? species sp_spider)
         (eqv? species sp_queen_spider))))
 
 (define (spider-egg-disturbed kegg)
-  (display "spider-egg-disturbed")(newline)
+  (spider-display "spider-egg-disturbed")(spider-newline)
   (define (check loc)
     (if (foldr (lambda (a b) (or a
                                  (and (kern-obj-is-char? b)
@@ -78,14 +83,14 @@
                            check))))
 
 (define (spider-egg-hatch kegg)
-  (display "spider-egg-hatch")(newline)
+  (spider-display "spider-egg-hatch")(spider-newline)
   (kern-log-msg "A spider hatches!")
   (kern-obj-put-at (mk-wood-spider) (kern-obj-get-location kegg))
   (kern-obj-remove kegg)
   (kern-obj-destroy kegg))
 
 (define (spider-egg-exec kegg)
-  (display "spider-egg-exec")(newline)
+  (spider-display "spider-egg-exec")(spider-newline)
   (if (spider-egg-disturbed kegg)
       (spider-egg-hatch kegg)))
 
@@ -181,17 +186,17 @@
     (kern-obj-heal kspider amount)))
 
 (define (spider-paralyze ktarg)
-  (display "spider-paralyze")(newline)
+  (spider-display "spider-paralyze")(spider-newline)
   (paralyze ktarg))
 
 (define (ensnare-loc loc)
-  (display "ensnare-loc")(newline)
+  (spider-display "ensnare-loc")(spider-newline)
   (kern-obj-put-at (kern-mk-obj web-type 1) loc))
 
 (define (spew-web kspider dir)
-  (display "spew-web:dir=")(display dir)(newline)
+  (spider-display "spew-web:dir=")(spider-display dir)(spider-newline)
   (let ((loc (kern-obj-get-location kspider)))
-    (display "mark")(newline)
+    (spider-display "mark")(spider-newline)
     (cast-wind-spell2 loc
                       ensnare-loc
                       dir
@@ -206,14 +211,14 @@
   (eqv? (kern-char-get-species kspider) sp_queen_spider))
 
 (define (spider-try-to-lay-egg kspider)
-  (display "spider-try-to-lay-egg")(newline)
+  (spider-display "spider-try-to-lay-egg")(spider-newline)
   (let ((loc (kern-obj-get-location kspider)))
     (if (and (not (is-object-type-at? loc spider-egg-type))
              (> (kern-dice-roll "1d20") 18))
         (kern-obj-put-at (mk-spider-egg) loc))))
 
 (define (spider-no-hostiles kspider)
-  (display "spider-no-hostiles")(newline)
+  (spider-display "spider-no-hostiles")(spider-newline)
   (let ((loc (kern-obj-get-location kspider)))
     (if (not (is-object-type-at? loc web-type))
         (ensnare-loc loc))
@@ -228,43 +233,43 @@
 
 (define (spider-attack-helpless-foe kspider kfoe)
   (define (attack kspider coords)
-    (display "spider-attack")(newline)
+    (spider-display "spider-attack")(spider-newline)
     (if (is-paralyzed? kfoe)
         (suck-hp kspider kfoe (kern-dice-roll "1d6"))
         (spider-paralyze kfoe)))
-  (display "spider-attack-helpless-foe")(newline)
+  (spider-display "spider-attack-helpless-foe")(spider-newline)
   (do-or-goto kspider (kern-obj-get-location kfoe) attack))
 
 (define (spider-can-spew-web? kspider)
   (eqv? (kern-char-get-species kspider) sp_queen_spider))
 
 (define (spider-spew-web-at-foe kspider kfoe)
-  (display "spider-spew-web-at-foe")(newline)
+  (spider-display "spider-spew-web-at-foe")(spider-newline)
   (let* ((v (loc-diff (kern-obj-get-location kfoe)
                       (kern-obj-get-location kspider)))
          (dir (loc-to-cardinal-dir v)))
-    (display "v=")(display v)(newline)
+    (spider-display "v=")(spider-display v)(spider-newline)
     (spew-web kspider dir)))
 
 (define (spider-foe-in-range-of-web-spew? kspider kfoe)
-  (display "spider-foe-in-range-of-web-spew?")(newline)
+  (spider-display "spider-foe-in-range-of-web-spew?")(spider-newline)
   (let ((v (loc-diff (kern-obj-get-location kspider)
                       (kern-obj-get-location kfoe))))
     (and (< (abs (loc-x v)) web-spew-range)
          (< (abs (loc-y v)) web-spew-range))))
 
 (define (spider-pathfind-to-foe kspider kfoe)
-  (display "spider-pathfind-to-foe")(newline)
+  (spider-display "spider-pathfind-to-foe")(spider-newline)
   (pathfind kspider (kern-obj-get-location kfoe)))
 
 (define (spider-try-to-spew-web kspider foe)
-  (display "spider-try-to-spew-web")(newline)
+  (spider-display "spider-try-to-spew-web")(spider-newline)
   (if (spider-foe-in-range-of-web-spew? kspider foe)
       (spider-spew-web-at-foe kspider foe)
       (spider-pathfind-to-foe kspider foe)))
 
 (define (spider-no-helpless-foes kspider foes)
-  (display "spider-no-helpless-foes")(newline)
+  (spider-display "spider-no-helpless-foes")(spider-newline)
   (if (is-queen-spider? kspider)
       (spider-try-to-spew-web kspider (closest-obj 
                                             (kern-obj-get-location kspider)
@@ -272,7 +277,7 @@
       (evade kspider foes)))
 
 (define (spider-hostiles kspider foes)
-  (display "spider-hostiles")(newline)
+  (spider-display "spider-hostiles")(spider-newline)
   (let ((helpless-foes (filter is-helpless? foes)))
     (if (null? helpless-foes)
         (spider-no-helpless-foes kspider foes)
@@ -282,7 +287,7 @@
                                           helpless-foes)))))
 
 (define (spider-ai kspider)
-  (newline)(display "spider-ai")(newline)
+  (spider-newline)(spider-display "spider-ai")(spider-newline)
   (let ((foes (all-visible-hostiles kspider)))
     (if (null? foes)
         (spider-no-hostiles kspider)
