@@ -1,0 +1,38 @@
+#!/bin/bash
+# 
+# touch_all_src
+# 
+# This script serves to 'touch' all source files
+# (by which I mean C and C++ source and header files,
+# and GhulScript source files) in the Nazghul tree.
+# 
+# The purpose of doing so is to facilitate separating 
+# files which one has worked on, from other files.
+# By running this script, all files become marked with
+# the current time.  By then waiting a minute before
+# making any change to any file, you ensure that 
+# files you have modified are distinct from other files.
+# 
+# This script desires that you have two ENV variables set,
+# NNN for the Nazghul source   dir (.../src), and
+# DDD for the nazghul examples dir (.../examples)
+
+if [[ -z "$NNN" ]]; then
+    echo "Nazghul src dir NNN is not defined!"
+    exit 1
+fi
+
+if [[ -z "$DDD" ]]; then
+    echo "Nazghul data dir DDD is not defined!"
+    exit 1
+fi
+
+cd $NNN
+touch *.c *.cpp *.h
+
+cd $DDD
+find data/ -type f -name '*.ghul' -exec touch {} \;
+
+echo "Files touched.  Time/date set to $(date +'%I:%M:%S %p, %a %b %d, %Y')"
+    echo "Wait until the next minute to change any file(s)."
+exit 0;

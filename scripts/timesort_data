@@ -1,0 +1,25 @@
+#!/bin/bash
+# 
+# timesort_data
+# 
+# This script serves to list all GhulScript source files 
+# sorted by time.  (Use 'timesort_src' to do this for 
+# Nazghul engine source files).
+# 
+# When used in conjunction with 'touch_all_src', 
+# (and 'timesort_src' for the Nazghul engine source files) 
+# this is useful to find what files you have modified since 
+# starting a session of Nazghul hacking.
+# 
+# This script desires that you have an ENV variable set,
+# DDD for the nazghul examples dir (.../examples)
+
+if [[ -z "$DDD" ]]; then
+    echo "Nazghul data dir DDD is not defined!"
+    exit 1
+fi
+
+cd $DDD
+ls -ltr $(find data/ -type f -name '*.ghul')
+
+exit $?

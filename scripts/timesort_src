@@ -1,0 +1,26 @@
+#!/bin/bash
+# 
+# timesort_src
+# 
+# This script serves to list all source files sorted by time
+# (where source files here means C and C++ source and header
+# files in the main nazghul src directory -- use 'timesort_data'
+# to do this for ghulscript source files).
+# 
+# When used in conjunction with 'touch_all_src', 
+# (and 'timesort_data' for the GhulScript files) this is 
+# useful to find what files you have modified since 
+# starting a session of Nazghul hacking.
+# 
+# This script desires that you have an ENV variable set,
+# NNN for the Nazghul source   dir (.../src), and
+
+if [[ -z "$NNN" ]]; then
+    echo "Nazghul src dir NNN is not defined!"
+    exit 1
+fi
+
+cd $NNN
+ls -ltr *.c *.cpp *.h
+
+exit $?
