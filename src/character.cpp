@@ -154,6 +154,8 @@ Character::Character(char *tag, char *name,
         tmpFaction         = NIL_FACTION;
         ambushedWhileCamping = false;
 
+        setDead(hp <= 0);
+
         setActivity(NONE);
 
         initCommon();
@@ -213,6 +215,8 @@ Character::Character():name(0), hm(0), xp(0), order(-1),
         tmpFaction   = NIL_FACTION;
         ambushedWhileCamping = false;
 
+        setDead(hp <= 0);
+
         //assert(place);
 
         setActivity(NONE);
@@ -233,11 +237,6 @@ Character::~Character()
 {
 	if (name)
 		free(name);
-
-// 	if (view) {
-//                 rmView();
-// 		free(view);
-// 	}
 
 	if (container)
 		delete container;
@@ -961,6 +960,7 @@ void Character::kill()
 	}
 
 	hp = 0;
+        setDead(true);
 
         /* Run the species on-death procedure (must do this _before_ calling
          * remove()) */
@@ -1145,6 +1145,7 @@ bool Character::initStock(struct species * species, struct occ * occ,
 
 	hp = getMaxHp();
 	mana = getMaxMana();
+        setDead(false);
 
         defenseBonus = 0;
         
@@ -1158,8 +1159,9 @@ bool Character::initStock(struct species * species, struct occ * occ,
 
 void Character::resurrect(void)
 {
-	assert(isPlayerControlled());	// shotgun assert put here during refactor
+	assert(isPlayerControlled());// shotgun assert put here during refactor
 	setHp(min(10, getMaxHp()));
+        setDead(false);
 	statusFlash(getOrder(), Blue);
 
         // ------------------------------------------------------------------
@@ -1357,7 +1359,7 @@ unsigned char Character::getLevel() {
 }
 
 bool Character::isDead() {
-        return (hp == 0);
+        return dead;
 }
 
 bool Character::isAsleep() {
@@ -1376,6 +1378,8 @@ void Character::setHp(int val)
 {
         hp = val;
         hp = clamp(hp, 0, getMaxHp());
+        if (hp == 0)
+                kill();
 }
 
 bool Character::isPlayerControlled() {
@@ -2237,6 +2241,7 @@ void Character::save(struct save *save)
         save->write(save, "%d %d\n", this->mp_mod, this->mp_mult);
         save->write(save, "%d %d\n", this->getHp(), this->getExperience());
         save->write(save, "%d %d\n", this->getMana(), this->getLevel());
+        save->write(save, "#%c ;; dead?\n", isDead() ? 't' : 'f');
 
         if (conv != NULL) {
                 closure_save(conv, save);
@@ -2393,4 +2398,9 @@ void Character::setAI(struct closure *val)
 struct closure *Character::getAI()
 {
         return ai;
+}
+
+void Character::setDead(bool val)
+{
+        dead = val;
 }

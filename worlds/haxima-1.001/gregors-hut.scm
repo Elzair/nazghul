@@ -71,6 +71,7 @@
                0 0                 ; hp mod/mult
                0 0                 ; mp mod/mult
                30 0 9 9            ; hp/xp/mp/lvl
+               #f                  ; dead
                'ilya-conv          ; conv
                sch_ilya           ; sched
                nil                 ; special ai

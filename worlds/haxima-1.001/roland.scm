@@ -94,6 +94,7 @@
                  0 0                 ; hp mod/mult
                  0 0                 ; mp mod/mult
                  30 0 9 9            ; hp/xp/mp/lvl
+                 #f                  ; dead
                  'roland-conv        ; conv
                  nil                 ; sched
                  'roland-ai          ; special ai

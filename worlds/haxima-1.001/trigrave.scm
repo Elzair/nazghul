@@ -162,6 +162,7 @@
                0 0                 ; hp mod/mult
                0 0                 ; mp mod/mult
                30 0 9 9            ; hp/xp/mp/lvl
+               #f                  ; dead
                'jim-conv          ; conv
                sch_jim           ; sched
                nil                 ; special ai
@@ -182,6 +183,7 @@
                0 0                 ; hp mod/mult
                0 0                 ; mp mod/mult
                30 0 9 9            ; hp/xp/mp/lvl
+               #f                  ; dead
                'gwen-conv          ; conv
                sch_gwen           ; sched
                nil                 ; special ai
@@ -202,6 +204,7 @@
                0 0                 ; hp mod/mult
                0 0                 ; mp mod/mult
                30 0 9 9            ; hp/xp/mp/lvl
+               #f                  ; dead
                'chant-conv         ; conv
                sch_chant           ; sched
                nil                 ; special ai
@@ -222,6 +225,7 @@
                0 0          ;; hp mod/mult
                0 0          ;; mp mod/mult
                30 0 9 9     ;; hp/xp/mp/lvl
+               #f                  ; dead
                'earl-conv   ;; conv
                sch_earl     ;; sched
                nil          ;; special ai

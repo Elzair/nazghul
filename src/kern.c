@@ -1501,7 +1501,7 @@ static pointer kern_mk_char(scheme *sc, pointer args)
 {
         class Character *character;
         int str, intl, dex, hpmod, hpmult;
-        int mpmod, mpmult, hp, xp, mp, lvl;
+        int mpmod, mpmult, hp, xp, mp, lvl, dead;
         char *tag = TAG_UNK, *name;
         struct species *species;
         struct occ *occ;
@@ -1516,11 +1516,11 @@ static pointer kern_mk_char(scheme *sc, pointer args)
         pointer factions;
         class Container *inventory;
 
-        if (unpack(sc, &args, "yspppddddddddddddcpcp",
+        if (unpack(sc, &args, "yspppddddddddddddbcpcp",
                    &tag, &name, &species, &occ, 
                    &sprite, &base_faction, &str,
                    &intl, &dex, &hpmod, &hpmult, &mpmod, &mpmult, 
-                   &hp, &xp, &mp, &lvl, 
+                   &hp, &xp, &mp, &lvl, &dead,
                    &conv, &sched, &ai, &inventory)) {
                 load_err("kern-mk-char %s: bad args", tag);
                 return sc->NIL;
@@ -1542,6 +1542,7 @@ static pointer kern_mk_char(scheme *sc, pointer args)
         character->setBaseFaction(base_faction);
         character->setSchedule(sched);
         character->setInventoryContainer(inventory);
+        character->setDead(dead);
 
         if (conv != sc->NIL)
                 character->setConversation(closure_new(sc, conv));
