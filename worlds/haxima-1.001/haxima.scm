@@ -97,7 +97,7 @@
 ;; Party members
 ;;----------------------------------------------------------------------------
 (kern-party-add-member player ch_wanderer)
-(kern-party-add-member player ch_thorald_greybeard)
+;(kern-party-add-member player ch_thorald_greybeard)
 
 
 ;;----------------------------------------------------------------------------
@@ -213,5 +213,5 @@
 ;; To skip the extended start scene comment out this next line and uncomment
 ;; the line after it.
 ;;----------------------------------------------------------------------------
-;(kern-set-start-proc start-scene)
-(kern-set-start-proc simple-start)
+(kern-set-start-proc start-scene)
+;(kern-set-start-proc simple-start)

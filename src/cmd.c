@@ -1547,7 +1547,7 @@ bool cmdTalk(Object *member)
 
 	log_msg("*** CONVERSATION ***");
 
-        log_begin_group();
+        //log_begin_group();
 	log_begin("You meet ");
 	obj->describe();
 	log_end(".");
@@ -1559,7 +1559,7 @@ bool cmdTalk(Object *member)
 	}
 
         conv_enter(obj, member, conv);
-        log_end_group();
+        //log_end_group();
 
 	mapSetDirty();
 
