@@ -161,15 +161,46 @@ int ArmsType::getSlotMask()
         return slotMask;
 }
 
+int ArmsType::getHit()
+{
+        return hit;
+}
+
 int ArmsType::getDamage()
 {
         return damage[1];
+}
+
+int ArmsType::getDamageMin()
+{
+        return damage[0];
+}
+
+int ArmsType::getDamageMax()
+{
+        return damage[1];
+}
+
+int ArmsType::getDefend()
+{
+        return defend;
 }
 
 int ArmsType::getArmor()
 {
         return armor[1];
 }
+
+int ArmsType::getArmorMin()
+{
+        return armor[0];
+}
+
+int ArmsType::getArmorMax()
+{
+        return armor[1];
+}
+
 
 int ArmsType::getNumHands()
 {

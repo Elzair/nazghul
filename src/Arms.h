@@ -37,8 +37,14 @@ class ArmsType:public ObjectType {
 	virtual ~ ArmsType();
 
 	virtual int getSlotMask();
+        virtual int getHit();
 	virtual int getDamage();
+	virtual int getDamageMin();
+	virtual int getDamageMax();
+        virtual int getDefend();
 	virtual int getArmor();
+	virtual int getArmorMin();
+	virtual int getArmorMax();
 	virtual int getNumHands();
 	virtual int getRange();
 	virtual bool isMissileWeapon();
@@ -56,7 +62,7 @@ class ArmsType:public ObjectType {
 	virtual bool ammoIsUbiquitous();
 	virtual void setWeight(int val);
 	virtual int getWeight(void);
-	virtual bool load(class Loader * loader);        
+	virtual bool load(class Loader * loader);
 
       protected:
 	int slotMask;
