@@ -4527,6 +4527,23 @@ KERN_API_CALL(kern_is_valid_location)
         return sc->T;
 }
 
+KERN_API_CALL(kern_terrain_get_pclass)
+{
+        struct terrain *terrain;
+
+        if (unpack(sc, &args, "p", &terrain)) {
+                rt_err("kern-terrain-get-pclass: bad args");
+                return sc->NIL;
+        }
+
+        if(! terrain) {
+                rt_err("kern-terrain-get-pclass: null terrain");
+                return sc->NIL;
+        }
+
+        return scm_mk_integer(sc, terrain_pclass(terrain));
+}
+
 KERN_API_CALL(kern_place_get_width)
 {
         struct place *place;
@@ -5900,6 +5917,9 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-set-frame", kern_set_frame);
         API_DECL(sc, "kern-set-ascii", kern_set_ascii);
         API_DECL(sc, "kern-set-clock", kern_set_clock);
+
+        /* kern-terrain api */
+        API_DECL(sc, "kern-terrain-get-pclass", kern_terrain_get_pclass);
 
         /* kern-obj api */
         API_DECL(sc, "kern-obj-add-food", kern_obj_add_food);

@@ -151,9 +151,21 @@
                 (lambda (target)
                   (kern-obj-heal target (kern-dice-roll dice)))))
 
-;; ----------------------------------------------------------------------------
+;; ============================================================================
 ;; Wind spell support
+;; ============================================================================
+
 ;; ----------------------------------------------------------------------------
+;; terrain-ok-for-field? -- check if the terrain at a given location will allow
+;; a field to be dropped on it. Terrains with passability class equivalent to
+;; Grass, trees and forest are ok, everything else is not.
+;; ----------------------------------------------------------------------------
+(define (terrain-ok-for-field? loc)
+  (let ((pclass (kern-terrain-get-pclass (kern-place-get-terrain loc))))
+    (display "pclass=")(display pclass)(newline)
+    (foldr (lambda (a b) (or a (= pclass b)))
+           #f
+           (list pclass-grass pclass-trees pclass-forest))))
 
 (define (get-line origin dir n)
   (if (= n 0) nil
@@ -164,7 +176,8 @@
   (let ((place (loc-place origin)))
     (define (get-lines x y n h)
       (if (< h 0) nil
-          (cons (filter (lambda (a) (kern-in-los? origin a))
+          (cons (filter (lambda (a) (and (kern-in-los? origin a)
+                                         (terrain-ok-for-field? a)))
                         (get-line (mk-loc place x y) east n))
                 (get-lines (if (= x 0) 0 (- x 1))
                            (+ y dy) 
@@ -179,7 +192,9 @@
   (let ((place (loc-place origin)))
     (define (get-lines x y n h)
       (if (< h 0) nil
-          (cons (get-line (mk-loc place x y) south n)
+          (cons (filter (lambda (a) (and (kern-in-los? origin a)
+                                         (terrain-ok-for-field? a)))
+                        (get-line (mk-loc place x y) east n))
                 (get-lines (+ x dx)
                            (if (= y 0) 0 (- y 1))
                            (+ n (if (= y 0) 1 2))
