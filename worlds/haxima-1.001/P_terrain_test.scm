@@ -1,5 +1,17 @@
-;; TODO: entrance to Sprite Gallery 1 should be a portal, not a subplace
 ;; TODO: We need 32x32 number (and roman numeral II, III, ...) sprites
+
+(define large_chest
+  (kern-mk-container
+   t_large_wooden_chest ;; type
+   nil ;; trap
+
+   (list
+
+    ;; Food
+    (list 10 t_mushroom)
+
+    )
+   ))
 
 
 (kern-mk-map 
@@ -793,7 +805,7 @@
                 (list (kern-mk-obj t_kg_potion_bubbling_blue   1) 06 110)
 
 
-                ;; ss_kg_potions_2 (6 shapes, 7 colors, full/partial/dregs, plus dull colors)
+                ;; ss_kg_potions_2 (6 shapes, 7 colors, fullness(3/3, 2/3, 1/3), plus dull colors)
                                         ; pink
                 (list (kern-mk-obj t_kg_potion_pink_f33_1 1) 01 111)
                 (list (kern-mk-obj t_kg_potion_pink_f23_1 1) 02 111)
@@ -1090,6 +1102,8 @@
                nil ; neighbors
                (list
                 (list (mk-perm-gate 'p_sprite_gallery_1  9  1) 21  2)
+
+                (list large_chest 1 30)
 
                 ) ; objects
                nil ; hooks

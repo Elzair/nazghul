@@ -15,6 +15,8 @@
                       (kern-obj-put-into kobj getter)))))
 
 ;; Make a simple container (no ifc)
-(mk-obj-type 't_small_wooden_chest "small wooden chest" s_small_wooden_chest 
+(mk-obj-type 't_small_wooden_chest "small wooden chest" s_chest_small_wooden_closed
              layer-container nil)
 
+(mk-obj-type 't_large_wooden_chest "large wooden chest" s_chest_large_wooden_closed
+             layer-container nil)
