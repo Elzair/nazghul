@@ -4807,6 +4807,12 @@ KERN_API_CALL(kern_set_start_proc)
         return proc;
 }
 
+KERN_API_CALL(kern_player_set_follow_mode)
+{
+        player_party->enableFollowMode();
+        return sc->NIL;
+}
+
 scheme *kern_init(void)
 {        
         scheme *sc;
@@ -4948,6 +4954,7 @@ scheme *kern_init(void)
         scm_define_proc(sc, "kern-include", kern_include);
         scm_define_proc(sc, "kern-interp-error", kern_interp_error);
         scm_define_proc(sc, "kern-is-valid-location?", kern_is_valid_location);
+        scm_define_proc(sc, "kern-player-set-follow-mode", kern_player_set_follow_mode);
         scm_define_proc(sc, "kern-print", kern_print);
         scm_define_proc(sc, "kern-set-spell-words", kern_set_spell_words);
         scm_define_proc(sc, "kern-set-start-proc", kern_set_start_proc);

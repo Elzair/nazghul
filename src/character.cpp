@@ -1509,7 +1509,6 @@ bool Character::canSee(class Object *obj)
 }
 
 
-
 bool Character::commute()
 {
 	int tx, ty;

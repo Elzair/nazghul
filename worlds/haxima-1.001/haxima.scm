@@ -176,21 +176,33 @@
 ;;----------------------------------------------------------------------------
 (define blackgate-stages
   (list (list '()                       0)
-        (list s_moongate_quarter        32)
-        (list s_moongate_half           64)
-        (list s_moongate_three_quarters 96)
-        (list s_moongate_full           128)))
+        (list s_blackgate_quarter        32)
+        (list s_blackgate_half           64)
+        (list s_blackgate_three_quarters 96)
+        (list s_blackgate_full           128)))
 
 (define (start-scene kplayer)
+
+  (kern-log-msg "A dark gate rises in a quiet clearing...")
   (moongate-animate black-gate blackgate-stages)
-  (kern-sleep 10000)
+  (kern-sleep 30000)
+
+  (kern-log-msg "Then closes without a trace...")
+  (moongate-animate black-gate (reverse blackgate-stages))
   (kern-log-enable #f)
   (kern-char-set-sleep ch_wanderer #t)
   (kern-obj-put-at kplayer (list p_moongate_clearing 11 11))
   (moongate-animate black-gate (reverse blackgate-stages))
   (kern-sleep 10000)
+  
+  (kern-log-enable #t)
+  (kern-log-msg "You lie dreaming for a while, of another life...")
+  (kern-sleep 30000)
+
+  (kern-log-enable #f)
   (kern-char-set-sleep ch_wanderer #f)
+  (kern-player-set-follow-mode)
   (kern-log-enable #t)  
-  (kern-log-msg "You awaken to a quiet clearing."))
+  (kern-log-msg "...then awaken to a strange new world."))
 
 (kern-set-start-proc start-scene)

@@ -561,6 +561,11 @@
 (kern-mk-sprite 's_mine_entrance     ss_features_1 1 11 #f 0)
 (kern-mk-sprite 's_cave_entrance     ss_features_1 1 19 #f 0)
 
+(kern-mk-sprite 's_blackgate_quarter        ss_features_2 1 4 #f 0 )
+(kern-mk-sprite 's_blackgate_half           ss_features_2 1 5 #f 0 )
+(kern-mk-sprite 's_blackgate_three_quarters ss_features_2 1 6 #f 0 )
+(kern-mk-sprite 's_blackgate_full           ss_features_2 1 7 #f 0 )
+
 ; (kern-mk-sprite 's_counter_1x2_n   ss_features_1 1 4 #f 0)
 ; (kern-mk-sprite 's_counter_3x3_nw  ss_features_1 1 5 #f 0)
 ; (kern-mk-sprite 's_counter_3x3_n   ss_features_1 1 6 #f 0)
