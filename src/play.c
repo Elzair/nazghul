@@ -1098,7 +1098,7 @@ int select_target_with_doing(int ox, int oy, int *x, int *y,
   struct cursor_movement_keyhandler * data_ret;
   data_ret = (struct cursor_movement_keyhandler *) kh.data;
   if (data_ret->abort) {
-    cmdwin_print("none!");
+    cmdwin_print("Done.");
     return -1;  // Aborted, no target
   }
   
@@ -2207,6 +2207,7 @@ bool cmdXamine(class Character * pc)
 		y = player_party->getY();
 	}
 
+    look_at_XY(x,y);  // First look at the current tile
 	if (select_target_with_doing(x, y, &x, &y, 9,
 				     look_at_XY, detailed_examine_XY) == -1) {
 		return false;
@@ -2264,8 +2265,9 @@ bool cmdAT (class Character * pc)
     //      for it to be made safe in all contexts?
     // place_name = player_party->getPlace()->name;
     
+    consolePrint("\n");
     consolePrint("This is %s\n", name_of_context() );
-    consolePrint("%s is at %s (%d,%d)\n", who, place_name, x, y);
+    consolePrint("%s is in %s (%d,%d)\n", who, place_name, x, y);
 
     consolePrint("It is %s on %s, \n"
                  "%s of %s in the year %d.\n",
@@ -2344,6 +2346,7 @@ bool cmdAT (class Character * pc)
       // descriptions and gerunds?
       consolePrint("%s is on foot.\n", who);
     }
+    consolePrint("\n");
     
 
     /*
