@@ -1,0 +1,6 @@
+Known BUGS in release 0.1.1
+
+* Firing ship cannons in town at the nixies causes combat to begin immediately,
+  regardless of how far away the nixie party is
+
+* Lots of warnings about non-existent sound files
