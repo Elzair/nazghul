@@ -5,14 +5,23 @@
 (define troll-speed         speed-human)
 (define troll-ripup-boulder-ap (* 2 troll-speed))
 
+;; ----------------------------------------------------------------------------
+;; Trick: make a "troll corpse" container type and use it as the troll's
+;; container. When the troll dies the kernel will drop the troll's container,
+;; making it look like the troll corpse is a container.
+;; ----------------------------------------------------------------------------
+(mk-obj-type 'troll-corpse-type "troll corpse" s_troll_corpse
+             layer-container nil)
+
+
 ;;----------------------------------------------------------------------------
 ;; Species declaration (used by the kernel)
 ;;----------------------------------------------------------------------------
 (kern-mk-species 'sp_troll      ;; tag: script variable name
                  "troll"        ;; name: used to display name in the UI
-                 20             ;; strength: limits armament weight
-                 0              ;; intelligence: (just reported in stats)
-                 0              ;; dexterity: used to avoid traps on chests
+                 14             ;; strength: limits armament weight
+                 6              ;; intelligence: (just reported in stats)
+                 12             ;; dexterity: used to avoid traps on chests
                  troll-speed    ;; speed: action points per turn
                  10             ;; vision radius: in tiles
                  mmode-walk     ;; movement mode
@@ -20,7 +29,7 @@
                  2              ;; hp multiplier: extra hp per level
                  0              ;; base mp: mana points at level zero
                  0              ;; mp multiplier: extra mana points per level
-                 s_corpse       ;; sleep sprite
+                 s_troll_corpse ;; sleep sprite
                  t_hands        ;; natural weapon: used when unarmed
                  #t             ;; visible: can be seen
                  sound-damage   ;; damage sound
@@ -43,7 +52,7 @@
              -1                   ;; def_mod 
              2                    ;; dam_mod 
              -1                   ;; arm_mod
-             t_small_wooden_chest ;; container (needed for items)
+             troll-corpse-type    ;; container (needed for items)
              nil                  ;; typical traps on the container
              ;; readied:
              (list troll-ranged-weapon)
@@ -108,38 +117,6 @@
                     (troll-pick-target ktroll 
                                        foes)))
 
-;; Simple approach: each foe's coordinates forms a vector to the troll's
-;; coordinates. Take the sum of these coordinates to get the evasion
-;; vector. "Normalize" the vector components by rounding them to the nearest 0,
-;; 1 or -1. This is the dx/dy to move. If the terrain is impassable in the
-;; preferred direction then try zeroing out the non-zero components and
-;; moving. This will give two backup vectors to try.
-;;
-;; ADDENDUM: I don't want to allow diagonal evasion, so the "normalized" vector
-;; must be skipped if it's a diagonal, thus causing us to try the fallbak
-;; vector(s).
-(define (troll-evade ktroll foes)
-  (display "troll-evade")
-  (display " foes=")(display foes)
-  (newline)
-  (let* ((tloc (kern-obj-get-location ktroll))
-         (v (loc-norm (foldr (lambda (a b) 
-                               (loc-sum a 
-                                        (loc-diff tloc 
-                                                  (kern-obj-get-location b))))
-                             (mk-loc (loc-place tloc) 0 0)
-                             foes))))
-    (display "troll-evade:v=")(display v)(newline)
-    (define (evade-on-normal)
-      (and (or (eq? 0 (loc-x v))
-              (eq? 0 (loc-y v)))
-           (kern-obj-move ktroll (loc-x v) (loc-y v))))
-    (or (evade-on-normal)
-        (and (not (eq? 0 (loc-y v)))
-             (kern-obj-move ktroll (loc-x v) 0))
-        (and (not (eq? 0 (loc-x v)))
-             (kern-obj-move ktroll 0 (loc-y v))))))
-  
 (define (loc-closer? a b c)
   (< (loc-grid-distance a c)
      (loc-grid-distance b c)))
@@ -176,17 +153,6 @@
 ;; ----------------------------------------------------------------------------
 (define (troll-get-loose-ammo ktroll loc)
   (kobj-get-at ktroll loc troll-ranged-weapon))
-
-;; ----------------------------------------------------------------------------
-;; kchar-get-or-goto -- if the location is close enough run the get proc,
-;; otherwise have the char pathfind to it
-;; ----------------------------------------------------------------------------
-(define (kchar-get-or-goto kchar coords getproc)
-  (display "kchar-get-or-goto")(newline)
-  (if (or (loc-adjacent? (kern-obj-get-location kchar) coords)
-          (eq? coords (kern-obj-get-location kchar)))
-      (getproc kchar coords)
-      (pathfind kchar coords)))
 
 ;; ----------------------------------------------------------------------------
 ;; troll-terrain-is-ammo -- true iff the given location's terrain can be
@@ -242,7 +208,7 @@
     (if (null? nearest)
         #f
         (begin
-          (kchar-get-or-goto ktroll nearest troll-get-ammo)
+          (do-or-goto ktroll nearest troll-get-ammo)
           #t))))
 
 ;; ----------------------------------------------------------------------------
@@ -279,4 +245,4 @@
                           (troll-pathfind-foe ktroll foes)))
                   (if (troll-stronger? ktroll melee-targs)
                       (troll-attack ktroll troll-melee-weapon melee-targs)
-                      (troll-evade ktroll melee-targs))))))))
+                      (evade ktroll melee-targs))))))))

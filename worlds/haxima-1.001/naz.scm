@@ -300,6 +300,15 @@
           (kern-place-get-objects-at loc)))
 
 ;; ----------------------------------------------------------------------------
+;; is-object-type-at? -- check for an object (by type) at a location
+;; ----------------------------------------------------------------------------
+(define (is-object-type-at? loc ktype)
+  (foldr (lambda (a b) (or a (eqv? (kern-obj-get-type b) ktype)))
+         #f
+         (kern-place-get-objects-at loc)))
+  
+
+;; ----------------------------------------------------------------------------
 ;; kobj-get -- remove an object from the map and put it into another object
 ;; ----------------------------------------------------------------------------
 (define (kobj-get kchar kobj)
@@ -327,5 +336,49 @@
                  (- (kern-place-get-height kplace) 1) 
                  (- (kern-place-get-width kplace) 1)))))
 
-(define (hostile-chars-at kbeing loc)
-  (filter pred (kern-place-get-objects-at loc)))
+;; ----------------------------------------------------------------------------
+;; do-or-goto -- if the location is close enough run the proc, otherwise have
+;; the char pathfind to it
+;; ----------------------------------------------------------------------------
+(define (do-or-goto kchar coords proc)
+  (display "do-or-goto")(newline)
+  (if (or (loc-adjacent? (kern-obj-get-location kchar) coords)
+          (eq? coords (kern-obj-get-location kchar)))
+      (proc kchar coords)
+      (pathfind kchar coords)))
+
+;; ----------------------------------------------------------------------------
+;; evade -- simple alg for evading melee foes
+;;
+;; Simple approach: each foe's coordinates forms a vector to the char's
+;; coordinates. Take the sum of these coordinates to get the evasion
+;; vector. "Normalize" the vector components by rounding them to the nearest 0,
+;; 1 or -1. This is the dx/dy to move. If the terrain is impassable in the
+;; preferred direction then try zeroing out the non-zero components and
+;; moving. This will give two backup vectors to try.
+;;
+;; ADDENDUM: I don't want to allow diagonal evasion, so the "normalized" vector
+;; must be skipped if it's a diagonal, thus causing us to try the fallbak
+;; vector(s).
+;; ----------------------------------------------------------------------------
+(define (evade kchar foes)
+  (display "evade")
+  (display " foes=")(display foes)
+  (newline)
+  (let* ((tloc (kern-obj-get-location kchar))
+         (v (loc-norm (foldr (lambda (a b) 
+                               (loc-sum a 
+                                        (loc-diff tloc 
+                                                  (kern-obj-get-location b))))
+                             (mk-loc (loc-place tloc) 0 0)
+                             foes))))
+    (display "char-evade:v=")(display v)(newline)
+    (define (evade-on-normal)
+      (and (or (eq? 0 (loc-x v))
+              (eq? 0 (loc-y v)))
+           (kern-obj-move kchar (loc-x v) (loc-y v))))
+    (or (evade-on-normal)
+        (and (not (eq? 0 (loc-y v)))
+             (kern-obj-move kchar (loc-x v) 0))
+        (and (not (eq? 0 (loc-x v)))
+             (kern-obj-move kchar 0 (loc-y v))))))

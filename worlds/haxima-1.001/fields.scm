@@ -24,6 +24,7 @@
 (kern-mk-field-type 'F_sleep  "sleep field"  s_field_sleep    256  20 pclass-none  'apply-sleep)
 (kern-mk-field-type 'F_sleep_perm "sleep field" s_field_sleep 256 -1  pclass-none  'apply-sleep)
 (kern-mk-field-type 'F_energy "energy field" s_field_energy   512  20 pclass-repel 'apply-lightning)
+(kern-mk-field-type 'web-type "spider web"   s_spider_web     0    256 pclass-none 'ensnare)
 
 (define field-tags
   (list F_fire F_poison F_sleep F_sleep_perm))

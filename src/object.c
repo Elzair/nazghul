@@ -1826,3 +1826,8 @@ void Object::resetActionPoints()
 {
         action_points = 0;
 }
+
+void Object::setActionPoints(int amount)
+{
+        action_points = amount;
+}

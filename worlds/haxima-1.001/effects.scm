@@ -33,6 +33,19 @@
   (kern-char-set-sleep kchar #f))
 
 ;; ----------------------------------------------------------------------------
+;; ensnare
+;;
+;; The ensnare effect rolls against a character's strength each turn. If the
+;; roll fails, the character loses all action points for the turn. If it
+;; succeeds, the effect removes itself from the character.
+;; ----------------------------------------------------------------------------
+(define (ensnare-exec fgob kchar)
+  (display "ensnare-exec")(newline)
+  (if (> (kern-char-get-strength kchar) (kern-dice-roll "1d20"))
+      (kern-obj-remove-effect kchar ef_ensnare)
+      (kern-obj-set-ap kchar 0)))
+
+;; ----------------------------------------------------------------------------
 ;; light
 ;;
 ;; Light works by increasing the effected object's light value when the effect
@@ -139,6 +152,7 @@
    (list 'ef_charm                     nil                   'charm-apply        'charm-rm        "start-of-turn-hook" "C" 0   #f  10)
    (list 'ef_invisibility              nil                   'invisibility-apply 'invisibility-rm "start-of-turn-hook" "N" 0   #t  10)
    (list 'ef_slime_split               'slime-split-exec     nil                 nil              "on-damage-hook"     ""  0   #f  -1)
+   (list 'ef_ensnare                   'ensnare-exec         nil                 nil              "start-of-turn-hook" "E" 0   #f  15)
    ))
 
 (map (lambda (effect) (apply mk-effect effect)) effects)
@@ -161,6 +175,9 @@
 
 (define (apply-slime-split kobj)
   (kern-obj-add-effect kobj ef_slime_split nil))
+
+(define (ensnare kobj)
+  (kern-obj-add-effect kobj ef_ensnare nil))
 
 ;; ----------------------------------------------------------------------------
 ;; Container traps

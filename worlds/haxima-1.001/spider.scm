@@ -3,9 +3,9 @@
 ;;----------------------------------------------------------------------------
 (kern-mk-species 'sp_spider      ;; tag: script variable name
                  "spider"        ;; name: used to display name in the UI
-                 10             ;; strength: limits armament weight
-                 0              ;; intelligence: unused by kernel (just reported in stats)
-                 0              ;; dexterity: used to avoid traps on chests
+                 12             ;; strength: limits armament weight
+                 6              ;; intelligence: unused by kernel (just reported in stats)
+                 14              ;; dexterity: used to avoid traps on chests
                  speed-insect   ;; speed: action points per turn
                  10              ;; vision radius: in tiles
                  mmode-walk     ;; movement mode: determines passability and cost of travel
@@ -50,7 +50,7 @@
                                    oc_spider
                                    s_spider ;; no spider sprite yet
                                    "a spider" 
-                                   nil)))
+                                   'wood-spider-ai)))
     (kern-being-set-base-faction spider faction)
     spider ;; return the kernel object
     ))
@@ -60,3 +60,32 @@
 
 (define (char-is-spider? kchar)
   (eqv? (kern-char-get-species kchar) sp_spider))
+
+;; ============================================================================
+;; Wood Spider AI
+;; ============================================================================
+
+(define (ensnare-loc kspider loc)
+  (display "ensnare-loc")(newline)
+  (kern-obj-put-at (kern-mk-obj web-type 1) loc))
+
+(define (wood-spider-no-hostiles kspider)
+  (display "wood-spider-no-hostiles")(newline)
+  (let ((loc (kern-obj-get-location kspider)))
+    (if (not (is-object-type-at? loc web-type))
+        (ensnare-loc kspider loc)))
+  (wander kspider))
+
+(define (wood-spider-hostiles kspider foes)
+  (display "wood-spider-hostiles")(newline)
+  (evade kspider foes))
+
+(define (wood-spider-ai kspider)
+  (newline)(display "spider-ai")(newline)
+  (let ((foes (all-visible-hostiles kspider)))
+    (display "foes=")(display foes)(newline)
+    (if (null? foes)
+        (wood-spider-no-hostiles kspider)
+        (wood-spider-hostiles kspider foes))))
+  
+

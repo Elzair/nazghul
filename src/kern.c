@@ -2488,6 +2488,26 @@ static pointer kern_obj_set_opacity(scheme *sc, pointer args)
         return sc->NIL;
 }
 
+static pointer kern_obj_set_ap(scheme *sc, pointer args)
+{
+        class Object *obj;
+        int ap;
+
+        if (unpack(sc, &args, "pb", &obj, &ap)) {
+                rt_err("kern-obj-set-ap: bad args");
+                return sc->NIL;
+        }
+
+        if (!obj) {
+                rt_err("kern-obj-set-ap: null object");
+                return sc->NIL;
+        }
+
+        obj->setActionPoints(ap != 0);
+
+        return sc->NIL;
+}
+
 static pointer kern_obj_set_visible(scheme *sc, pointer args)
 {
         class Object *obj;
@@ -5304,6 +5324,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-obj-remove", kern_obj_remove);
         API_DECL(sc, "kern-obj-remove-effect", kern_obj_remove_effect);
         API_DECL(sc, "kern-obj-remove-from-inventory", kern_obj_remove_from_inventory);
+        API_DECL(sc, "kern-obj-set-ap", kern_obj_set_ap);
         API_DECL(sc, "kern-obj-set-gob", kern_obj_set_gob);
         API_DECL(sc, "kern-obj-set-light", kern_obj_set_light);
         API_DECL(sc, "kern-obj-set-opacity", kern_obj_set_opacity);

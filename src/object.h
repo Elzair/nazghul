@@ -302,6 +302,7 @@ class Object {
         virtual void sleep();
         virtual void damage(int amount);
         virtual void decActionPoints(int points);
+        virtual void setActionPoints(int amount);
         virtual void endTurn();
         virtual void startTurn();
         virtual void setControlMode(enum control_mode);

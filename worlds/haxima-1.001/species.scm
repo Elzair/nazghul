@@ -9,7 +9,7 @@
 
 (kern-mk-species 'sp_human         ; tag
                  "human"           ; name
-                 20 20 20          ; str/int/dex
+                 10 10 10          ; str/int/dex
                  speed-human       ; speed
                  13                ; vision radius
                  mmode-walk        ; passability
@@ -28,7 +28,7 @@
 
 (kern-mk-species 'sp_ghast         ; tag
                  "ghast"           ; name
-                 20 20 20          ; str/int/dex
+                 10 10 10          ; str/int/dex
                  speed-human       ; speed
                  8                 ; vision radius
                  mmode-phase       ; passability
@@ -45,7 +45,7 @@
 
 (kern-mk-species 'sp_goblin        ; tag
                  "goblin"          ; name
-                 18 18 22          ; str/int/dex
+                 12  8 12          ; str/int/dex
                  speed-human       ; speed
                  14                ; vision radius
                  mmode-walk        ; passability
@@ -62,7 +62,7 @@
 
 (kern-mk-species 'sp_insect        ; tag
                  "insect swarm"    ; name
-                 1  1  30          ; str/int/dex
+                 1  1  18          ; str/int/dex
                  speed-insect      ; speed
                  4                 ; vision radius
                  mmode-hover       ; passability
@@ -79,7 +79,7 @@
 
 (kern-mk-species 'sp_yellow_slime      ; tag
                  "yellow slime"        ; name
-                 4 4 1                 ; str/int/dex
+                 4 4 4                 ; str/int/dex
                  speed-yellow-slime    ; speed
                  6                     ; vision radius
                  mmode-walk            ; pmask
@@ -99,7 +99,7 @@
 
 (kern-mk-species 'sp_green_slime       ; tag
                  "green slime"         ; name
-                 2 2 1                 ; str/int/dex
+                 2 2 2                 ; str/int/dex
                  speed-yellow-slime    ; speed
                  4                     ; vision radius
                  mmode-walk            ; pmask
@@ -116,7 +116,7 @@
 
 (kern-mk-species 'sp_skeleton      ; tag
                  "skeleton"        ; name
-                 18 10 24          ; str/int/dex
+                 12 8 12          ; str/int/dex
                  speed-human       ; speed
                  6                 ; vision radius
                  mmode-walk        ; passability
@@ -133,7 +133,7 @@
 
 (kern-mk-species 'sp_snake         ; tag
                  "snake"           ; name
-                 5 1 5             ; str/int/dex
+                 2 2 14             ; str/int/dex
                  speed-human       ; speed
                  6                 ; vision radius
                  mmode-walk        ; passability
