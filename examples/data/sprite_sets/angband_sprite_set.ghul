@@ -116,21 +116,21 @@ SPRITE_SET ss_angband {
     STD_SPRITE(s_golden_potion,  174);
     
     /* Mushrooms */
-    STD_SPRITE(s_mushroom1,  176);
-    STD_SPRITE(s_mushroom2,  177);
-    STD_SPRITE(s_mushroom3,  178);
-    STD_SPRITE(s_mushroom4,  179);
-    STD_SPRITE(s_mushroom5,  180);
-    STD_SPRITE(s_mushroom6,  181);
+    STD_SPRITE(s_silver_mushroom,  176);
+    STD_SPRITE(s_charcoal_mushroom,  177);
+    STD_SPRITE(s_orange_mushroom,  178);
+    STD_SPRITE(s_blood_mushroom,  179);
+    STD_SPRITE(s_olive_mushroom,  180);
+    STD_SPRITE(s_turqoise_mushroom,  181);
     STD_SPRITE(s_brown_mushroom,  182);
     STD_SPRITE(s_black_mushroom,  183);
-    STD_SPRITE(s_mushroom9,  184);
-    STD_SPRITE(s_mushroom10, 185);
-    STD_SPRITE(s_mushroom11, 186);
-    STD_SPRITE(s_mushroom12, 187);
-    STD_SPRITE(s_mushroom13, 188);
-    STD_SPRITE(s_mushroom14, 189);
-    STD_SPRITE(s_mushroom15, 190);
+    STD_SPRITE(s_gray_mushroom,  184);
+    STD_SPRITE(s_purple_mushroom, 185);
+    STD_SPRITE(s_golden_mushroom, 186);
+    STD_SPRITE(s_ruby_mushroom, 187);
+    STD_SPRITE(s_verdant_mushroom, 188);
+    STD_SPRITE(s_blue_mushroom, 189);
+    STD_SPRITE(s_sandy_mushroom, 190);
     
     /* Hats, helms and the occasional crown */
     STD_SPRITE(s_helm1,  248);  // Leather cap

@@ -58,10 +58,91 @@ RESP Shrooms_Mushroom_Resp {
                         }
                         SAY "Be careful with those.";
                 }{
-                        SAY "Don't try to pick your own. Kill you, the wrong ones will!";
+                        SAY "Don't try to pick your own. Kill you, the bad ones will!";
                 }
         } {
                 SAY "Yes, I trade in mushrooms and other reagents. My shops in the northeast corner of town. Come by when I'm open."
+        }
+}
+
+RESP Shroom_Gen {
+        SAY "Aye, a handsome young man he was, once. He could stay up all night in bed! But gone a bit strange, he has, befriending the goblins and all that.";
+}
+
+RESP Shroom_strange {
+        SAY "He meets them in the forest and runs with their hunts. Half-goblin he nearly is; learned their ways he has. But ye could never tell him what to do, the silly man.";
+}
+
+RESP Shroom_goblins {
+        SAY "I trade with them now and then. Their shamans know well the plants in these woods. I even speak a little. Know some of their magic. But I never trust them.";
+}
+
+RESP Shroom_trust {
+        SAY "The goblins will turn on us when their opportunity comes. I would do the same in their place.";
+}
+
+RESP Shroom_wars {
+        SAY "Ha! Yes, I fought the goblins. Long ago that was. People forget."
+}
+
+RESP Shroom_maiden {
+        SAY "[she grins with crooked teeth] Is it so hard to believe I was once a fair war-maiden? [she cackles obscenely]";
+}
+
+RESP Shroom_wards {
+        CHECK_FLAG GAVE_QUEST {        
+                CHECK_FLAG QUEST_COMPLETE {
+                        SAY "I've forgotten all the others. But long ago the librarian from Glasdrin had me teach him and he wrote them all down. Check with him.";
+                }{ // !  QUEST_COMPLETE
+                        SAY "Bring me the mushrooms and I will teach ye the ward of panic. Do ye remember where they are?";
+                        GET_YES_NO {
+                                SAY "Well...";
+                        }{
+                                SAY "[sigh] Perhaps ye should write this down. Leave town and take the path north to the open plain and travel west until ye reach the mountains. Nearby will be the cave entrance. In the cave ye will find the mushrooms.";
+                        }
+                }  // !  QUEST_COMPLETE
+        }{ // ! GAVE_QUEST
+                SAY "In my time I knew many battle wards. Be wanting me to teach ye, now, won't ye?";
+                GET_YES_NO {
+                        SAY "I know a battle ward that will throw your enemies into a panic. But perhaps ye can do me a favor first, yes?";
+                        GET_YES_NO {
+                                SAY "In a cave to the west in the mountains grows a purple mushroom. Bring me four. Agreed?";
+                                GET_YES_NO {
+                                        SAY "Good. A colony of slimes infests that cave, so take plenty of flaming oil!";
+                                        SET_FLAG GAVE_QUEST;
+                                }{
+                                        SAY "Yes, perhaps ye are afraid.";
+                                        }
+                        }{
+                                SAY "Naught for naught, youngling!";
+                        }
+                }{
+                        SAY "Of course, a skillfull warrior such as you has nothing to learn from an old witch like me.";
+                        
+                }
+        } // ! GAVE_QUEST
+}
+
+RESP Shroom_Glasdrin {
+        SAY "I don't know where Glasdrin or the librarion are. Not in these woods, anyway.";
+}
+
+RESP Shroom_hail {
+        CHECK_FLAG GAVE_QUEST {
+                CHECK_FLAG QUEST_COMPLETE {
+                        SAY "Hello again, young wanderer. Come visit a bit with old Shroom.";
+                }{
+                        CHECK_ITEM PurpleMushroom > 3 {
+                                SAY "Ah, ye have the mushrooms, as I requested!";
+                                TAKE_ITEM PurpleMushroom 4;
+                                SET_FLAG QUEST_COMPLETE;
+                                SAY "Now for your reward. The battle ward is called In Quas Corp, of the seventh circle. Mix nightshade, mandrake and garlic. Cast it in battle and your enemies will flee in terror!";
+                        }{
+                                SAY "No purple mushrooms yet, I see. No rush, dear. But I would like them before I die.";
+                        }
+                }
+        }{
+                SAY "Hello and well met.";
         }
 }
 
@@ -71,12 +152,21 @@ CONV Shrooms_Conv {
                 GreenTower_Common_Conv;
         }
         NATIVE {
-                NAME    Shrooms_Name_Resp;
-                DEFAULT Shrooms_Default_Resp;
-                JOIN    Shrooms_Join_Resp;
-                SHROOM  Shrooms_Shroom_Resp;
-                MUSHROOM Shrooms_Mushroom_Resp;
                 BUY      Shrooms_Mushroom_Resp;
+                DEFAULT  Shrooms_Default_Resp;
+                GEN      Shroom_Gen;
+                GLASDRIN Shroom_Glasdrin;
+                GOBLINS  Shroom_goblins;
+                HAIL     Shroom_hail;
+                JOIN     Shrooms_Join_Resp;
+                MAIDEN   Shroom_maiden;
+                MUSHROOM Shrooms_Mushroom_Resp;
+                NAME     Shrooms_Name_Resp;
+                SHROOM   Shrooms_Shroom_Resp;
+                STRANGE  Shroom_strange;
+                TRUST    Shroom_trust;
+                WARDS    Shroom_wards;
+                WARS     Shroom_wars;
         }
         
 }

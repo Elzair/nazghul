@@ -89,9 +89,11 @@
 // conversation. Use the SET_FLAG, CLEAR_FLAG and CHECK_FLAG constructs to
 // manipulate them from within conversation and mechanism scriptlets.
 //----------------------------------------------------------------------------
-#define TELL_RUNE 1
-#define GAVE_ITEM 2
-#define WILL_JOIN 3
+#define TELL_RUNE      1
+#define GAVE_ITEM      2
+#define WILL_JOIN      3
+#define GAVE_QUEST     4
+#define QUEST_COMPLETE 5
 
 /*** Optional Feature Bindings ***/
 #define WATER_COMBAT_MAP 0

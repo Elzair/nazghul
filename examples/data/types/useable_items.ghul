@@ -82,11 +82,14 @@ ITEM_TYPE(t_torch, "torch", s_torch,
 //     NOTE:
 // Edible items do not appear in any inventory list,
 // but are converted to food/rations upon being picked up.
-ITEM_TYPE(t_mushroom1, "edible mushroom", s_mushroom1, 
+ITEM_TYPE(t_mushroom1, "edible mushroom", s_silver_mushroom, 
           EFFECT_NONE, 10, 0, TARG_NONE, TRUE, 1, "");
 
 
 ///////////////////////////////////////////////////////////////////////////
+
+ITEM_TYPE(PurpleMushroom, "purple mushroom", s_purple_mushroom, EFFECT_NONE, 
+          2, 0, TARG_NONE, FALSE, 0, "");
 
 #endif // useable_items_ghul
 
