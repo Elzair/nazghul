@@ -195,7 +195,7 @@ Possible outcomes:
 
 if the destination tile is occupied {
 
-    /**************
+    /**************************************************************************
      * In older versions moving toward a hostile npc party was implicitly
      * interpreted as an attack. This may cause some user confusion when
      * moving from one place to another, depending on how other features are
@@ -219,27 +219,23 @@ if the destination tile is occupied {
      * we allow any npc to be bumpbed? What about npcs in vehicles? What if we
      * bump them onto an autportal (or should that be disallowed)?
      *
-     * Since these solutions require yet other solutions to suppor them, I tend
-     * to disfavor them.
-     **************/
+     * Since these solutions require yet other solutions to support them, I
+     * tend to disfavor them.
+     *************************************************************************/
 
     return blocked by npc
 
-} else if the destination tile is impassable {
-
-    if the tile has a vehicle (empty) and the player is not in a vehicle {
-
-        move party to destination
-
-        return success
-
-    } else {
-
-        return impassable
-
-    }
 } else if the destination tile contains an autoportal and autoportals are not
   ignored {
+
+    /*************************************************************************
+     * I give automatic portals higher priority than passability. This is
+     * mainly to allow ships to have access to towns which are placed on land
+     * but which may have a port. Passability should be determined by checking
+     * the town map to see if it allows entrance, not checking the terrain the
+     * tile is on.
+     *************************************************************************/
+
         if portal destination is a dungeon {
             if dungeon can be entered {
                 return entered dungeon
@@ -254,19 +250,41 @@ if the destination tile is occupied {
                 return recursion results
             }
         }
+} else if the destination tile is impassable {
+
+    if the tile has a vehicle (empty) and the player is not in a vehicle {
+
+        move party to destination
+
+        return success
+
+    } else {
+
+        return impassable
+
+    }
 } else if the destination tile is off-map {
     if this place has no parent map {
         return noplace to go
     } else {
-        recur on off-map destination with autoportals disabled
-        if recursion resulted in combat {
-            retry recursion and return results
-        } else if recursion succeeded {        
-            repaint to show party's new location
-            return recur on tile in direction of travel (autoportals enabled)
-        } else {
-            return recursion results
-        }
+
+        /*********************************************************************
+         * Yes, I'm making the following unconditional with no further checks.
+         * The parent tile is _always_ and _unconditionally_ passable.
+         * Consider everything that could make that tile impassable:
+         *   --Terrain on parent map... don't care
+         *   --Autoportals leading elsewhere... ignore them
+         *   --Npc's... they aren't allowed on town tiles in the wilderness,
+         *     and if one sneaks through ignore it
+         *   --Fields... unlikely, and don't care
+         *   --Vehicles (when player is already in one)... ignore them (and
+         *     don't allow player to abandon a vehicle over a town, otherwise
+         *     we can leak vehicles since consecutive abandonments will 
+         *     clobber previous ones)
+         * See notes on the ship problem in discussion #1 below.
+         *********************************************************************/
+        move party to tile on parent map
+        return success
     }
 } else if the party is in a vehicle and the destination tile also contains a
   vehicle {
@@ -377,6 +395,24 @@ of travel is occupied by a hostile npc party in a ship.
 4. If combat entry succeeds then the party will still be on the town and the
    empty npc ship will be visible next to town.
 
+In general, I want to completely separate combat from movement - at least for
+version 1.0. In fact, I'm probably going to disable the implicit attack that
+occurs when you try to step on a tile with a hostile npc. Attacks will be
+explicit with the (A)ttack-<dir> command like u4/u5.
+
+
+[the ship problem]
+
+Another issue Sam and I discovered the other night is with passability on the
+parent map. We were in a ship on the wilderness and entered town while still on
+the ship. This worked because the edge of town we entered on had a tile
+passable to the ship. But exiting didn't work... the tile the town occupied on
+the parent map had land passability. Here's a disadvantage to the rule! But
+this needs to work. This is the reason I added the clause that moving off the
+edge of a town map _always_ works as long as it has a parent map. Ah... much
+simpler.
+
+
 ----------------------------------------------------------------------------
 Design Discussion #2: Should the party move to the destination tile after
 succeeding in combat?
@@ -414,4 +450,42 @@ recursive call will "succeed".
 ----------------------------------------------------------------------------
 Design Discussion #3: Complications when entering portals
 ----------------------------------------------------------------------------
+
+What should happen when a portal destination is on impassable terrain? What if
+a portal itself is on impassable terrain?
+
+In the case where a portal entrance is really a town entrance, the passability
+of the terrain the portal is on should not be a consideration. Instead, the
+engine should check and see if the town edge in question has some passable
+terrain the party can be moved to.
+
+But what about other cases? It looks rather strange when the player can step
+from the shore onto a whirlpool - especially when the whirlpool is linked to
+another whirlpool in the middle of some ocean. Entering whirlpools on a ship
+makes perfect sense. But if the ocean is usually impassable to the party, what
+then?
+
+I think that except for the special case of town entrances the passability of
+the tile a portal is on should be a consideration. If the party can't leap into
+the ocean, they shouldn't be able to leap into a whirlpool.
+
+Likewise the destination passability should also be a consideration. On the one
+hand, it might be kind of fun to let the player drive a ship through a moongate
+and get marooned on dry land - because the player can always walk away. But
+letting the player get marooned someplace they can't get out of seems
+unfriendly. On the other hand, maybe I shouldn't be trying to make that
+decision for game designers. After all, it won't crash the engine.
+
+Ok, yes, that's a good principle to follow. Portal links are completely under
+the game developers control, so I'll leave it to them. Terrain passability will
+not be a consideration for portals, either on the source or on the destination.
+
+Well, I tried it and discovered that ships can turn when stranded. This is sort
+of disconcerting, so I tried to disable that by having the turning code check
+for impassable terrain. And then that broke the ship-exit-town problem! I still
+think that this is a good principle, though, so I'll simply permit turning
+while stranded. This will also permit the case where a ship portals to a
+stranded destination, but right next to it is another auto-portal, so the ship
+can still enter that autoportal and escape. Weird, but I'm not going to lose
+sleep over it.
 
