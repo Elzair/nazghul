@@ -19,10 +19,6 @@
 (kern-mk-sprite-set 'ss_rune_font_32x32  32 32    4  8   0 0   "images/sglasby/rune_font_32x32.png")
 
 (kern-mk-sprite-set 'ss_u4               32 32   16 16   0 0   "images/jsteele/shapes-32x32.png")
-(kern-mk-sprite-set 'ss_angband          32 32   63 32   0 0   "images/dgervais/angband-32x32.png")
-(kern-mk-sprite-set 'ss_dg_wearable      32 32   20 12   0 0   "images/dgervais/dg_wearable_items.trans.png")
-(kern-mk-sprite-set 'ss_dg_missiles      32 32   16 16   0 0   "images/dgervais/dg_missiles.trans.png")
-(kern-mk-sprite-set 'ss_dg_commodities   32 32   10 16   0 0   "images/dgervais/dg_commodities.trans.png")
 
 (kern-mk-sprite-set 'ss_mine             32 32   16  8   0 0   "images/mixed/mine-32x32.png")
 (kern-mk-sprite-set 'ss_mechanisms       32 32    4  8   0 0   "images/sglasby/mechanisms.png")
@@ -30,5 +26,16 @@
 (kern-mk-sprite-set 'ss_features_1       32 32    8  8   0 0   "images/gmcnutt/features.png")
 (kern-mk-sprite-set 'ss_features_2       32 32    8  8   0 0   "images/gmcnutt/features2.png")
 
+(kern-mk-sprite-set 'ss_angband          32 32   63 32   0 0   "images/dgervais/angband-32x32.png")
+(kern-mk-sprite-set 'ss_dg_wearable      32 32   20 12   0 0   "images/dgervais/dg_wearable_items.trans.png")
+(kern-mk-sprite-set 'ss_dg_weapons       32 32   16 16   0 0   "images/dgervais/dg_weapons.trans.png")
+(kern-mk-sprite-set 'ss_dg_missiles      32 32   16 16   0 0   "images/dgervais/dg_missiles.trans.png")
+(kern-mk-sprite-set 'ss_dg_tools         32 32   16 16   0 0   "images/dgervais/dg_tools.trans.png")
+(kern-mk-sprite-set 'ss_dg_commodities   32 32   10 16   0 0   "images/dgervais/dg_commodities.trans.png")
+(kern-mk-sprite-set 'ss_dg_potions       32 32    7 16   0 0   "images/dgervais/dg_potions.trans.png")
+(kern-mk-sprite-set 'ss_dg_readable      32 32   16 16   0 0   "images/dgervais/dg_readable.trans.png")
+
 (kern-mk-sprite-set 'ss_kg_roads         32 32    8  4   0 0   "images/kgabbert/new_roads.png")
 (kern-mk-sprite-set 'ss_kg_terrains      32 32   32  8   0 0   "images/kgabbert/new_terrains.png")
+(kern-mk-sprite-set 'ss_kg_potions_1     32 32    8  6   0 0   "images/kgabbert/kg_potions_1.trans.png")
+(kern-mk-sprite-set 'ss_kg_potions_2     32 32   18 14   0 0   "images/kgabbert/kg_potions_2.trans.png")
