@@ -312,14 +312,21 @@ void eventHandlePending(void)
         event_handle_aux(EVENT_NONBLOCK|EVENT_NOPLAYBACK);
 }
 
+int G_turnaround_start = 0;
+int G_turnaround_stop  = 0;
+
 void eventPushKeyHandler(struct KeyHandler *keyh)
 {
+        if (list_empty(&KeyHandlers))
+                G_turnaround_stop = SDL_GetTicks();
 	pushHandler(&KeyHandlers, keyh);
 }
 
 void eventPopKeyHandler(void)
 {
 	popHandler(&KeyHandlers);
+        if (list_empty(&KeyHandlers))
+                G_turnaround_start = SDL_GetTicks();
 }
 
 void eventPushTickHandler(struct TickHandler *keyh)

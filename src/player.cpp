@@ -922,11 +922,15 @@ void player_party::for_each_member(bool(*fx) (class Character *, void *data),
 	}
 }
 
+int G_latency_start = 0;
+
 static bool party_mode_key_handler(struct KeyHandler *kh, int key, int keymod)
 {
         cmdwin_clear();
         cmdwin_repaint();
         
+        G_latency_start = SDL_GetTicks();
+
         if (keymod == KMOD_LCTRL || keymod == KMOD_RCTRL) {
 
                 // SAM: This seemed like a less ugly way of setting off a group

@@ -75,7 +75,8 @@ struct mview {
 
 static struct map {
 	SDL_Rect srect;		/* screen coords of viewer */
-	SDL_Rect fpsRect;	/* screen coords of FPS counter */
+	SDL_Rect latencyRect;	/* screen coords of FPS counter */
+	SDL_Rect turnaroundRect; /* screen coords of FPS counter */
 	SDL_Rect locRect;	/* screen coords of locater */
 	SDL_Rect clkRect;	/* screen coords of clock */
 	struct place *place;	/* subject being viewed */
@@ -493,10 +494,15 @@ int mapInit(void)
 	Map.srect.w   = MAP_W;
 	Map.srect.h   = MAP_H;
 
-	Map.fpsRect.x = MAP_X;
-	Map.fpsRect.y = MAP_Y;
-	Map.fpsRect.w = ASCII_W * 10;
-	Map.fpsRect.h = ASCII_H;
+	Map.latencyRect.x = MAP_X;
+	Map.latencyRect.y = MAP_Y;
+	Map.latencyRect.w = ASCII_W * 10;
+	Map.latencyRect.h = ASCII_H;
+
+	Map.turnaroundRect.x = MAP_X;
+	Map.turnaroundRect.y = MAP_Y + ASCII_H;
+	Map.turnaroundRect.w = ASCII_W * 10;
+	Map.turnaroundRect.h = ASCII_H;
 
 	Map.locRect.x = MAP_X;
 	Map.locRect.y = MAP_Y + MAP_H - ASCII_H;
@@ -790,6 +796,46 @@ static void mapRepaintCoordinates(void)
                 screenPrint(&Map.locRect, 0, "[%d,%d]", Map.subject->getX(), Map.subject->getY());
 }
 
+static void mapRepaintTurnaround(void)
+{
+        extern int G_turnaround_start, G_turnaround_stop;
+        static int turnaround = 0;
+
+        if (G_turnaround_start && G_turnaround_stop) {
+                turnaround = G_turnaround_stop - G_turnaround_start;
+        }
+
+	screenPrint(&Map.turnaroundRect, 0, "TA: %d", turnaround);
+
+        if (G_turnaround_start && G_turnaround_stop) {
+                G_turnaround_start = 0;
+                G_turnaround_stop  = 0;
+        }
+
+}
+
+static void mapRepaintLatency(void)
+{
+        extern int G_latency_start;
+        static int latency = 0;
+
+        // ---------------------------------------------------------------------
+        // G_latency_start is set when the user presses a key in
+        // character_key_handler (character.cpp) and party_mode_key_handler
+        // (player.cpp).
+        //
+        // G_exec_loops is set in the main loop in play.c.
+        // ---------------------------------------------------------------------
+
+        if (G_latency_start) {
+                latency = SDL_GetTicks() - G_latency_start;
+        }
+
+        screenPrint(&Map.latencyRect, 0, "LAT: %d", latency);
+        screenUpdate(&Map.latencyRect);
+        G_latency_start = 0;
+}
+
 void mapRepaintView(struct mview *view, int flags)
 {
 	int t1, t2, t3, t4, t5, t6, t7, t8;
@@ -857,15 +903,16 @@ void mapRepaintView(struct mview *view, int flags)
  done_painting_place:
 
         mapRepaintCoordinates();
-	mapRepaintClock();	// since we erased it above
-
+	mapRepaintClock();
+        mapRepaintTurnaround();
 	screenUpdate(&Map.srect);
-	t8 = SDL_GetTicks();
 
-	// Show the frame rate (do this after the update above to get a better
-	// measure of the time it takes to paint the screen).
-	screenPrint(&Map.fpsRect, 0, "FPS: %d", 1000 / (SDL_GetTicks() - t1 + 1));
-	screenUpdate(&Map.fpsRect);
+        // ---------------------------------------------------------------------
+        // Repaint the latency AFTER the screenUpdate because we want that to
+        // be part of the time measurement.
+        // ---------------------------------------------------------------------
+
+        mapRepaintLatency();
 
 	if (PROFILE_REPAINT) {
 	  printf("Total time=%d\n", t8 - t1);

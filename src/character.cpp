@@ -2027,12 +2027,15 @@ void Character::player_controlled_attack()
 
 static bool character_key_handler(struct KeyHandler *kh, int key, int keymod)
 {
+        extern int G_latency_start;
         int dir;
         class Character *character = (class Character *) kh->data;
         static int unshift[] = { KEY_NORTH, KEY_SOUTH, KEY_EAST, KEY_WEST };
         class Portal *portal;
         class Character *solo_member;
 
+
+        G_latency_start = SDL_GetTicks();
 
         // ---------------------------------------------------------------------
         // Process the special CTRL commands

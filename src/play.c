@@ -284,6 +284,8 @@ static void play_print_end_of_game_prompt()
 	getkey(NULL, anykey);
 }
 
+int G_exec_loops = 0;
+
 static void play_loop(void)
 {
         struct exec_context context;
@@ -361,6 +363,8 @@ static void play_loop(void)
 
                 //Turn += place_get_scale(player_party->getPlace());
                 Turn += place_get_scale(Place);
+
+                G_exec_loops++;
                 
         }
 }
