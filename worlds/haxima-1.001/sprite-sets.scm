@@ -21,6 +21,8 @@
 (kern-mk-sprite-set 'ss_u4               32 32   16 16   0 0   "images/jsteele/shapes-32x32.png")
 (kern-mk-sprite-set 'ss_angband          32 32   63 32   0 0   "images/dgervais/angband-32x32.png")
 (kern-mk-sprite-set 'ss_dg_wearable      32 32   20 12   0 0   "images/dgervais/dg_wearable_items-32x32.png")
+(kern-mk-sprite-set 'ss_dg_missiles      32 32   16 16   0 0   "images/dgervais/dg_missiles-32x32.png")
+
 (kern-mk-sprite-set 'ss_mine             32 32   16  8   0 0   "images/mixed/mine-32x32.png")
 (kern-mk-sprite-set 'ss_mechanisms       32 32    4  8   0 0   "images/sglasby/mechanisms.png")
 (kern-mk-sprite-set 'ss_lost_dragon      32 32    8  8   0 0   "images/dbailey/lost_dragon.png")
