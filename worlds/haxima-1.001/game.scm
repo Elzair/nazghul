@@ -182,7 +182,7 @@
 
 ;; Read-only data for specific characters
 (load "shroom.scm")
-(load "ilya.scm")
+;;(load "ilya.scm")
 
 ;; Astronomy
 (load "moon.scm")

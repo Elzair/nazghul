@@ -13,6 +13,13 @@
 (kern-load "game.scm")
 
 ;;----------------------------------------------------------------------------
+;; Maps
+;;----------------------------------------------------------------------------
+(load "gregors-hut.scm")
+(load "moongate-clearing.scm")
+(load "abandoned-farm.scm")
+
+;;----------------------------------------------------------------------------
 ;; Characters
 ;;----------------------------------------------------------------------------
 (kern-mk-char 
@@ -32,27 +39,6 @@
  nil                   ; sched
  nil                   ; special ai
  nil)                  ; readied
-
-(load "ilya.scm")
-(bind 
- (kern-mk-char 'ch_ilya ; tag
-               "Ilya"              ; name
-               sp_human            ; species
-               nil                 ; occ
-               s_child             ; sprite
-               faction-men         ; starting alignment
-               0 10 5              ; str/int/dex
-               0 0                 ; hp mod/mult
-               0 0                 ; mp mod/mult
-               0 0                 ; hit mod def mod
-               0 0                 ; dam mod arm mod
-               30 0 9 9            ; hp/xp/mp/lvl
-               'ilya-conv          ; conv
-               nil                 ; sched
-               nil                 ; special ai
-               nil                 ; readied
-               )
- (ilya-mk #f #f))
  
 ;;----------------------------------------------------------------------------
 ;; Player Party
@@ -82,13 +68,6 @@
 ;; Party members
 ;;----------------------------------------------------------------------------
 (kern-party-add-member player ch_wanderer)
-
-;;----------------------------------------------------------------------------
-;; Maps
-;;----------------------------------------------------------------------------
-(load "gregors-hut.scm")
-(load "moongate-clearing.scm")
-(load "abandoned-farm.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Places

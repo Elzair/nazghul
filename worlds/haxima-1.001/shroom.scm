@@ -2,14 +2,14 @@
 ;; northeast corner of green tower.
 
 (kern-mk-sched 'sch_shroom
-               (list 0  0  51 9  1  1  "sleeping")
-               (list 8  0  40 11 3  3  "idle")
-               (list 9  0  49 6  7  1  "working")
-               (list 12 0  50 9  1  1  "eating")
-               (list 13 0  49 6  7  1  "working")
-               (list 18 0  56 54 1  1  "eating")
-               (list 19 0  53 50 4  7  "idle")
-               (list 21 0  51 9  1  1  "sleeping"))
+               (list 0  0  (list 51 9  1  1)  "sleeping")
+               (list 8  0  (list 40 11 3  3)  "idle")
+               (list 9  0  (list 49 6  7  1)  "working")
+               (list 12 0  (list 50 9  1  1)  "eating")
+               (list 13 0  (list 49 6  7  1)  "working")
+               (list 18 0  (list 56 54 1  1)  "eating")
+               (list 19 0  (list 53 50 4  7)  "idle")
+               (list 21 0  (list 51 9  1  1)  "sleeping"))
 
 (define (shroom-mk gave-quest? finished-quest?) (list gave-quest? 
                                                       finished-quest?))

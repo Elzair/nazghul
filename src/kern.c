@@ -1959,11 +1959,27 @@ static pointer kern_mk_sched(scheme *sc, pointer args)
         for (i = 0; i < n_appts; i++) {
                 struct appt *appt = &sched->appts[i];
                 pointer p = scm_car(sc, args);
+                pointer rect;
                 args = scm_cdr(sc, args);
 
-                if (unpack(sc, &p, "dddddds", &appt->hr, &appt->min, &appt->x, 
-                           &appt->y, &appt->w, &appt->h, &activity)) {
-                        load_err("kern-mk-sched %s: bad args in appt %d",
+                if (unpack(sc, &p, "dd", &appt->hr, &appt->min, &activity)) {
+                        load_err("kern-mk-sched %s: bad args in appt %d time",
+                                 tag, i);
+                        goto abort;
+                }
+
+                rect = scm_car(sc, p);
+                p = scm_cdr(sc, p);
+
+                if (unpack(sc, &rect, "dddd", &appt->x, &appt->y, &appt->w, 
+                           &appt->h)) {
+                        load_err("kern-mk-sched %s: bad args in appt %d rect",
+                                 tag, i);
+                        goto abort;
+                }
+
+                if (unpack(sc, &p, "s", &activity)) {
+                        load_err("kern-mk-sched %s: bad args in appt %d activity",
                                  tag, i);
                         goto abort;
                 }
