@@ -1255,26 +1255,14 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
 
 	// Convert to screen coordinates. (I need to keep the original
 	// B-coordinates for field effects at the bottom of this routine).
-        if (Ax > Ox)
-                Ax = (Ax - Ox) * tile_w + Sx;
-        else
-                Ax = (place_w(place) - Ox + Ax)  * tile_w + Sx;
-        if (Ay >= Oy)
-                Ay = (Ay - Oy) * tile_h + Sy;
-        else
-                Ay = (place_h(place) - Oy + Ay)  * tile_h + Sy;
+        Ax = (Ax - Ox) * tile_w + Sx;
+        Ay = (Ay - Oy) * tile_h + Sy;
 
         int sBx;
         int sBy;
 
-        if (*Bx >= Ox)
-                sBx = (*Bx - Ox) * tile_w + Sx;
-        else
-                sBx = (place_w(place) - Ox + *Bx) * tile_w + Sx;
-        if (*By >= Oy)
-                sBy = (*By - Oy) * tile_h + Sy;
-        else
-                sBy = (place_h(place) - Oy + *By)  * tile_h + Sy;
+        sBx = (*Bx - Ox) * tile_w + Sx;
+        sBy = (*By - Oy) * tile_h + Sy;
 
 	// Create the rect which bounds the missile's sprite (used to update
 	// that portion of the screen after blitting the sprite).
@@ -1283,7 +1271,7 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
 	rect.y = Ay;
 	rect.w = TILE_W;
 	rect.h = TILE_H;
-
+ 
 	// Get the distance components
 	int dX = sBx - rect.x;
 	int dY = sBy - rect.y;
