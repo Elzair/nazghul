@@ -96,19 +96,38 @@
 ;; are hostile, positive are friendly.
 ;; ----------------------------------------------------------------------------
 (kern-mk-dtable
- (list (list -2)  (list -1)   (list 0))
- (list (list 1)   (list 2)    (list 1))
- (list (list 0)   (list -1)   (list -2))
+ ;;    none play men orks accu
+ (list (list -2 1)   (list -1)    (list 0))
+ (list  (list 1)    (list 2)    (list 1))
+ (list  (list 0)   (list -1)   (list -2))
  )
 
 ;; These are the tests:
-(kern-dtable-set -1  0  0) ;; f1 bad
-(kern-dtable-set  0 -1  0) ;; f2 bad
-(kern-dtable-set  0  0 -3) ;; lower bound clipped
-(kern-dtable-set  0  1  3) ;; upper bound clipped
-(kern-dtable-set  0  2  2) ;; ok
-(kern-dtable-get -1  0)    ;; f1 bad -- no crash
-(kern-dtable-get  0 -1)    ;; f2 bad -- no crash
-(kern-dtable-get  0  0)    ;; ok
-(kern-dtable-change 1 0  1) ;; ok positive change
-(kern-dtable-change 1 1 -1) ;; ok negative change
+(kern-dtable-push  0  0  0)
+
+(kern-dtable-push  0  1  0)
+(kern-dtable-push  0  1  1)
+
+(kern-dtable-push  0  2  0)
+(kern-dtable-pop   0  2)
+
+(kern-dtable-push  1  0 -2)
+(kern-dtable-push  1  0 -1)
+(kern-dtable-pop   1  0)
+
+(kern-dtable-pop   1  1)
+
+(if (= 0 (kern-dtable-get 2 0))
+    (kern-dtable-push 2 0 1)
+    (kern-dtable-push 2 0 -1))
+
+(kern-dtable-push  2  1  0)
+(kern-dtable-push  2  1  1)
+(kern-dtable-pop   2  1)
+
+(define (push-a-lot n)
+  (if (> n 0)
+      (begin
+        (kern-dtable-push 2 2 2)
+        (push-a-lot (- n 1)))))
+(push-a-lot 10)

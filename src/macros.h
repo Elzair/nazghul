@@ -37,4 +37,8 @@
 
 #define maxstrlen(array) (sizeof((array)) - 1)
 
+#ifndef clamp
+#define clamp(v,a,b) ((v) = (v) < (a) ? (a) : ((v) > (b) ? (b) : (v)))
+#endif
+
 #endif

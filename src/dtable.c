@@ -26,10 +26,11 @@
 #include <assert.h>
 #include <stdlib.h>
 
-#define dtable_index(ptab,f1,f2) ((f1) * (ptab)->n_factions + (f2))
-
 #define dtable_is_valid_faction(dtable,fac) \
         ((fac) >= 0 && (fac) < (dtable)->n_factions)
+
+#define dtable_clamp_level(dtable,lvl) \
+        clamp((lvl), (dtable)->lower_bound, (dtable)->upper_bound)
 
 struct dtable *dtable_new(int n_factions)
 {
@@ -69,26 +70,29 @@ static int dtable_check(struct dtable *dtable, int faction)
         return 0;
 }
 
+static int dtable_index(struct dtable *dtable, int f1, int f2)
+{
+        if (dtable_check(dtable, f1))
+                return -1;
+
+        if (dtable_check(dtable, f2))
+                return -1;
+
+        return f1 * dtable->n_factions + f2;
+        
+}
+
 void dtable_set(struct dtable *dtable, int f1, int f2, int level)
 {
         int index;
 
-        if (dtable_check(dtable, f1))
+        dtable_clamp_level(dtable, level);
+
+        if ((index = dtable_index(dtable, f1, f2)) < 0)
                 return;
-
-        if (dtable_check(dtable, f2))
-                return;
-
-        if (level < dtable->lower_bound) {
-                level = dtable->lower_bound;
-        } else if (level > dtable->upper_bound) {
-                level = dtable->upper_bound;
-        }
-
-        index = dtable_index(dtable, f1, f2);
 
         /* clear the stack */
-        while (hstack_top(dtable->table[index]))
+        while (! hstack_empty(dtable->table[index]))
                 hstack_pop(dtable->table[index]);
 
         /* push the new value */
@@ -99,17 +103,11 @@ int dtable_get(struct dtable *dtable, int f1, int f2)
 {
         int index;
 
-        if (dtable_check(dtable, f1)) {
+        if ((index = dtable_index(dtable, f1, f2)) < 0) {
                 warn("dtable_get: defaulting to neutral\n");
                 return 0;
         }
 
-        if (dtable_check(dtable, f2)) {
-                warn("dtable_get: defaulting to neutral\n");
-                return 0;
-        }
-
-        index = dtable_index(dtable, f1, f2);
         return (int)hstack_top(dtable->table[index]);
 }
 
@@ -152,4 +150,41 @@ void dtable_del(struct dtable *dtable)
                 free(dtable->table);
         }
         free(dtable);
+}
+
+void dtable_push(struct dtable *dtable, int f1, int f2, int level)
+{
+        int index;
+
+        dtable_clamp_level(dtable, level);
+
+        if ((index = dtable_index(dtable, f1, f2)) < 0)
+                return;
+
+        /* push the new value */
+        hstack_push(dtable->table[index], (void*)level);
+}
+
+int dtable_pop(struct dtable *dtable, int f1, int f2)
+{
+        int index;
+
+        if ((index = dtable_index(dtable, f1, f2)) < 0)
+                return -1;
+
+        if (dtable_bottom(dtable, f1, f2))
+                return -1;
+
+        hstack_pop(dtable->table[index]);
+        return 0;
+}
+
+int dtable_bottom(struct dtable *dtable, int f1, int f2)
+{
+        int index;
+
+        if ((index = dtable_index(dtable, f1, f2)) < 0)
+                return -1;
+        
+        return (hstack_depth(dtable->table[index]) == 1);
 }

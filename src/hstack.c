@@ -106,3 +106,22 @@ void hstack_rm(hstack_t *stack, int handle)
         warn("handle not found in stack\n");
 }
 
+int hstack_depth(hstack_t *hstack)
+{
+        hstack_t *entry;
+        int count = 0;
+
+        entry = (hstack_t*)hstack->list.next;
+
+        while (entry != hstack) {
+                count++;
+                entry = (hstack_t*)entry->list.next;
+        }
+
+        return count;
+}
+
+int hstack_empty(hstack_t *hstack)
+{
+        return (hstack->list.next == &hstack->list);
+}

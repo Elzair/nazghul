@@ -4432,8 +4432,8 @@ KERN_API_CALL(kern_mk_dtable)
         int n_factions;
         int r_faction;
         struct dtable *dtable;
+        pointer rows;
         pointer row;
-        pointer col;
 
         /* The dtable table is a list of lists. Each row corresponds to a
          * passability class (a property of terrain, and objects which affect
@@ -4446,10 +4446,10 @@ KERN_API_CALL(kern_mk_dtable)
         }
 
         /* count the number of factions given in the table */
-        row = args;
-        col = scm_car(sc, args);
-        n_factions = scm_len(sc, row);
-        if (n_factions != scm_len(sc, col)) {
+        rows = args;
+        row  = scm_car(sc, rows);
+        n_factions = scm_len(sc, rows);
+        if (n_factions != scm_len(sc, row)) {
                 load_err("kern-mk-dtable: # of rows and columns must be same");
                 return sc->NIL;
         }
@@ -4474,13 +4474,13 @@ KERN_API_CALL(kern_mk_dtable)
 
                 int c_faction;
 
-                col = scm_car(sc, row);
-                row = scm_cdr(sc, row);
+                row  = scm_car(sc, rows);
+                rows = scm_cdr(sc, rows);
 
-                if (scm_len(sc, col) < n_factions) {
+                if (scm_len(sc, row) < n_factions) {
                         load_err("kern-mk-dtable: row %d has only %d columns "
                                  "(expected %d)",
-                                 r_faction, scm_len(sc, col),
+                                 r_faction, scm_len(sc, row),
                                  n_factions);
                         goto abort;
                 }
@@ -4488,18 +4488,36 @@ KERN_API_CALL(kern_mk_dtable)
                 /* for each column up to the limit */
                 for (c_faction = 0; c_faction < n_factions; c_faction++) {
 
-                        int level;
+                        pointer col;
 
-                        /* get the level */
-                        if (unpack(sc, &col, "d", &level)) {
-                                load_err("kern-mk-dtable: row %d col %d bad "
-                                         "arg",
-                                         r_faction, c_faction);
+                        col = scm_car(sc, row);
+                        row = scm_cdr(sc, row);
+
+                        /* make sure each column stack has at least one
+                         * entry */
+                        if (scm_len(sc, col) == 0) {
+                                load_err("kern-mk-dtable: row %d col %d stack "
+                                         "empty", r_faction, c_faction);
                                 goto abort;
                         }
 
-                        /* insert it into the diplomacy table (both ways) */
-                        dtable_set(dtable, r_faction, c_faction, level);
+                        /* each column is a stack of numbers */
+                        while (scm_is_pair(sc, col)) {
+
+                                int level;
+
+                                /* get the level */
+                                if (unpack(sc, &col, "d", &level)) {
+                                        load_err("kern-mk-dtable: row %d col "
+                                                 "%d bad arg",
+                                                 r_faction, c_faction);
+                                        goto abort;
+                                }
+
+                                /* push it into the diplomacy table */
+                                dtable_push(dtable, r_faction, c_faction, 
+                                            level);
+                        }
                 }
         }
 
@@ -4516,46 +4534,88 @@ KERN_API_CALL(kern_mk_dtable)
         return sc->NIL;
 }
 
-KERN_API_CALL(kern_dtable_set)
+#define DTABLE_SET    0x81
+#define DTABLE_PUSH   0x82
+#define DTABLE_CHANGE 0x83
+#define DTABLE_POP    0x04
+#define DTABLE_GET    0x05
+
+#define DTABLE_FX_USES_LEVEL(fx) ((fx) & 0x80)
+
+static pointer kern_dtable_aux(scheme *sc, pointer args, char *name, int fx)
 {
         int f1, f2, level;
+        char *errstr = NULL;
 
-        if (unpack(sc, &args, "ddd", &f1, &f2, &level)) {
-                rt_err("kern_dtable_set: bad args");
-                return sc->F;
+        if (! session_dtable()) {
+                errstr = "no dtable";
+                goto abort;
         }
 
-        dtable_set(session_dtable(), f1, f2, level);
-        
+        if (unpack(sc, &args, "dd", &f1, &f2)) {
+                errstr = "bad faction args";
+                goto abort;
+        }
+
+        if (DTABLE_FX_USES_LEVEL(fx)) {
+                if (unpack(sc, &args, "d", &level)) {
+                        errstr = "bad level arg";
+                        goto abort;
+                }
+        }
+
+        switch (fx) {
+        case DTABLE_SET:
+                dtable_set(session_dtable(), f1, f2, level);
+                break;
+        case DTABLE_CHANGE:
+                dtable_change(session_dtable(), f1, f2, level);
+                break;
+        case DTABLE_PUSH:
+                dtable_push(session_dtable(), f1, f2, level);
+                break;
+        case DTABLE_POP:
+                dtable_pop(session_dtable(), f1, f2);
+                break;
+        case DTABLE_GET:
+                level = dtable_get(session_dtable(), f1, f2);
+                return scm_mk_integer(sc, level);
+                break;
+        default:
+                assert(0);
+                break;
+        }
+
         return sc->T;
+abort:
+        rt_err("%s: %s", name, errstr);
+        return sc->F;
+
+}
+
+KERN_API_CALL(kern_dtable_set)
+{
+        return kern_dtable_aux(sc, args, "kern_dtable_set", DTABLE_SET);
 }
 
 KERN_API_CALL(kern_dtable_change)
 {
-        int f1, f2, level;
+        return kern_dtable_aux(sc, args, "kern_dtable_change", DTABLE_CHANGE);
+}
 
-        if (unpack(sc, &args, "ddd", &f1, &f2, &level)) {
-                rt_err("kern_dtable_change: bad args");
-                return sc->F;
-        }
+KERN_API_CALL(kern_dtable_push)
+{
+        return kern_dtable_aux(sc, args, "kern_dtable_push", DTABLE_PUSH);
+}
 
-        dtable_change(session_dtable(), f1, f2, level);
-        
-        return sc->T;
+KERN_API_CALL(kern_dtable_pop)
+{
+        return kern_dtable_aux(sc, args, "kern_dtable_pop", DTABLE_POP);
 }
 
 KERN_API_CALL(kern_dtable_get)
 {
-        int f1, f2, level;
-
-        if (unpack(sc, &args, "dd", &f1, &f2)) {
-                rt_err("kern_dtable_get: bad args");
-                return sc->F;
-        }
-
-        level = dtable_get(session_dtable(), f1, f2);
-        
-        return scm_mk_integer(sc, level);
+        return kern_dtable_aux(sc, args, "kern_dtable_get", DTABLE_GET);
 }
 
 scheme *kern_init(void)
@@ -4743,9 +4803,11 @@ scheme *kern_init(void)
 
         /* kern-dtable api */
         scm_define_proc(sc, "kern-mk-dtable", kern_mk_dtable);
-        scm_define_proc(sc, "kern-dtable-set", kern_dtable_set);
-        scm_define_proc(sc, "kern-dtable-get", kern_dtable_get);
         scm_define_proc(sc, "kern-dtable-change", kern_dtable_change);
+        scm_define_proc(sc, "kern-dtable-get", kern_dtable_get);
+        scm_define_proc(sc, "kern-dtable-pop", kern_dtable_pop);
+        scm_define_proc(sc, "kern-dtable-push", kern_dtable_push);
+        scm_define_proc(sc, "kern-dtable-set", kern_dtable_set);
         
         /* Revisit: probably want to provide some kind of custom port here. */
         scheme_set_output_port_file(sc, stderr);

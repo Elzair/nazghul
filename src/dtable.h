@@ -60,6 +60,9 @@ extern void dtable_set(struct dtable *dtable, int f1, int f2, int level);
 extern int dtable_get(struct dtable *dtable, int f1, int f2);
 extern void dtable_change(struct dtable *dtable, int f1, int f2, int level);
 extern void dtable_del(struct dtable *dtable);
+extern void dtable_push(struct dtable *dtable, int f1, int f2, int level);
+extern int dtable_pop(struct dtable *dtable, int f1, int f2);
+extern int dtable_bottom(struct dtable *dtable, int f1, int f2);
 
 END_DECL
 

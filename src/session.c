@@ -205,19 +205,50 @@ static void session_save_dtable(struct save *save, struct session *session)
 {
         int rows;
         int cols;
+        int level;
+        hstack_t *hstack;
+
+        hstack = hstack_new();
 
         save->enter(save, "(kern-mk-dtable\n");
 
         for (rows = 0; rows < session->dtable->n_factions; rows++) {
                 save->write(save, "(list ");
                 for (cols = 0; cols < session->dtable->n_factions; cols++) {
-                        save->write(save, "%d ", 
-                                    dtable_get(session->dtable, rows, cols));
+                        save->write(save, "(list ");
+
+                        /* To save the stack in the proper order we have to pop
+                         * everything into a temp stack. The dtable will refuse
+                         * to pop its last entry. */
+                        level = dtable_get(session->dtable, rows, cols);
+                        while (0 == dtable_pop(session->dtable, rows, cols)) {
+                                hstack_push(hstack, (void*)level);
+                                level = dtable_get(session->dtable, rows, 
+                                                   cols);
+                        }
+
+                        /* At this point 'level' holds the bottom entry of the
+                         * stack. */
+                        save->write(save, "%d ", level);
+
+                        /* Now we have to deal with everything above it, and
+                         * push back all the levels we just popped as we write
+                         * them out. */
+                        while (! hstack_empty(hstack)) {
+                                level = (int)hstack_top(hstack);
+                                dtable_push(session->dtable, rows, cols, 
+                                            level);
+                                save->write(save, "%d ", level);
+                                hstack_pop(hstack);
+                        }
+                        save->write(save, ") ");
                 }
                 save->write(save, ")\n");
         }
 
         save->exit(save, ")\n");
+
+        hstack_del(hstack);
 }
 
 struct session *session_new(void *interp)

@@ -38,6 +38,8 @@ extern int hstack_push(hstack_t *stack, void *data);
 extern void hstack_pop(hstack_t *stack);
 extern void * hstack_top(hstack_t *stack);
 extern void hstack_rm(hstack_t *stack, int handle);
+extern int hstack_depth(hstack_t *stack);
+extern int hstack_empty(hstack_t *stack);
 
 END_DECL
 
