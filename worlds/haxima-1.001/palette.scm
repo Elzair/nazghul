@@ -4,7 +4,6 @@
 
 (kern-mk-palette 'pal_expanded
                  (list
-                  (list "sl" t_stone_lantern)
                   (list "__" t_deep)
                   (list "--" t_shallow)
                   (list "~~" t_shoals)

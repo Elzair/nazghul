@@ -2,8 +2,8 @@
 
 (define (lever-state on?)
   (if on?
-      (list 's_R_lever_up #f pmask-all)
-      (list 's_R_lever_down #f pmask-all)))
+      (state-mk 's_R_lever_up #f pmask-all 0)
+      (state-mk 's_R_lever_down #f pmask-all 0)))
 
 (define lever-ifc
   (ifc bim-ifc

@@ -11,4 +11,5 @@
 (kern-mk-sprite-set 'ss_rune_font_8x16  8  16 1  32 0 0 "images/sglasby/rune_font_8x16.png")
 (kern-mk-sprite-set 'ss_lost_dragon     32 32 8  8  0 0 "images/dbailey/lost_dragon.png")
 (kern-mk-sprite-set 'ss_angband         32 32 63 32 0 0 "images/dgervais/angband-32x32.png")
-(kern-mk-sprite-set 'ss_gmcnutt         32 32 8  8  0 0 "images/gmcnutt/features.png")
+(kern-mk-sprite-set 'ss_features_1      32 32 8  8  0 0 "images/gmcnutt/features.png")
+(kern-mk-sprite-set 'ss_features_2      32 32 8  8  0 0 "images/gmcnutt/features2.png")

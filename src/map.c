@@ -623,8 +623,8 @@ void mapCenterView(struct mview *view, int x, int y)
 {
         x -= view->vrect.w / 2; // back up to corner of vrect
         y -= view->vrect.h / 2; // back up to corner of vrect
-	view->vrect.x = place_wrap_x(Map.place, x);
-	view->vrect.y = place_wrap_y(Map.place, y);
+        view->vrect.x = place_wrap_x(Map.place, x);
+        view->vrect.y = place_wrap_y(Map.place, y);
 }
 
 void mapRepaintClock(void)

@@ -169,6 +169,7 @@
 (load "portals.scm")
 (load "moongate.scm")
 (load "bridge.scm")
+(load "stone-lantern.scm")
 
 (load "conv.scm") ;; basic conversation
 

@@ -1188,7 +1188,7 @@ bool cmdHandle(class Character * pc)
 
         // Try to find a mech
 	class Object *mech;
-	mech = (class Object *) place_get_object(Place, x, y, mech_layer);
+	mech = place_get_object(Place, x, y, mech_layer);
 	if (! mech || ! mech->getObjectType()->canHandle()) {
                 cmdwin_print("nothing!");
                 return false;

@@ -9,8 +9,7 @@ Welcome to Nazghul version 0.2.0
 
 
 Terraform on map m_gregors_hut, palette pal_expanded
-Current terrain is t_stone_lantern 'stone lantern'
-
+Current terrain is t_deep 'deep water'
 
 
 
@@ -18,8 +17,6 @@ At XY=(24,26) you see grass and a human wizard.
 
 
 At XY=(25,26) you see shoals and a bridge.
-
-[Next]  terrain t_deep 'deep water'
 
 [Next]  terrain t_shallow 'shallow water'
 
@@ -49,15 +46,19 @@ At XY=(25,26) you see shoals and a bridge.
 
 [Next]  terrain t_lava 'lava'
 
+[Next]  terrain t_fireplace 'fireplace'
+
 At XY=(26,26) you see grass.
 
 At XY=(25,26) you see shoals and a bridge.
 
-TERRAFORM put t_lava 'lava' at XY=(25,26)
+TERRAFORM put t_fireplace 'fireplace' at XY=(25,26)
+
 
 At XY=(25,27) you see shallow water.
 
-TERRAFORM put t_lava 'lava' at XY=(25,27)
+TERRAFORM put t_fireplace 'fireplace' at XY=(25,27)
+
 
 Thorald Greybeard burning!
 

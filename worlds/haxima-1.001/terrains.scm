@@ -15,7 +15,6 @@
   (list
    ;;    tag                name            pclass           sprite            t light step-on
    ;;    =================  ==============  =============    ==============    = ===== =======
-   (list 't_stone_lantern   "stone lantern" pclass-mountains s_stone_lantern   1 512 nil)
    (list 't_lava            "lava"          pclass-grass     s_lava            1 128 'burn)
    (list 't_deep            "deep water"    pclass-deep      s_deep            1 0 nil)
    (list 't_shallow         "shallow water" pclass-deep      s_shallow         1 0 nil)

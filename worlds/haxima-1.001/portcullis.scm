@@ -5,8 +5,8 @@
 
 (define (portcullis-state on?)
   (if on?
-      (list 's_portcullis_up #f pclass-none)
-      (list 's_portcullis_down #f pclass-wall)))
+      (state-mk 's_portcullis_up #f pclass-none 0)
+      (state-mk 's_portcullis_down #f pclass-wall 0)))
 
 (define portcullis-ifc
   (ifc bim-ifc
