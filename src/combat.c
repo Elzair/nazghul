@@ -140,7 +140,7 @@ struct retreat_info {
 
 static struct {
         struct place place;     // The temporary combat place used for
-        // wilderness combat
+                                // wilderness combat
         enum CombatState state;
         class Character *pm;    // The currently active player party membet
         int n_pcs;              /* number of PCs on the map */
@@ -2820,6 +2820,8 @@ bool combat_enter(struct combat_info * info)
                 Combat.place.location.place = info->move->place;
                 Combat.place.location.x = info->move->x;
                 Combat.place.location.y = info->move->y;
+
+                Combat.place.underground = info->move->place->underground;
 
                 Place = &Combat.place;
         }
