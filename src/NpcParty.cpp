@@ -346,7 +346,7 @@ bool NpcParty::enter_town(class Portal * portal)
 	return false;
 }
 
-void NpcParty::move(int dx, int dy)
+bool NpcParty::move(int dx, int dy)
 {
 	struct place *newplace;
 	int newx;
@@ -364,7 +364,7 @@ void NpcParty::move(int dx, int dy)
 	/* Check if the party is in a vehicle that must turn its facing before
 	 * moving */
 	if (turn_vehicle())
-		return;
+		return true;
 
 	/* Remember old (current) coordinates */
 	oldplace = getPlace();
@@ -378,7 +378,7 @@ void NpcParty::move(int dx, int dy)
 
 	/* Walking off the edge of a map */
 	if (place_off_map(oldplace, newx, newy)) {
-		return;
+		return false;
 	}
 
 	/* Check if the player is there. */
@@ -408,39 +408,40 @@ void NpcParty::move(int dx, int dy)
 		}
 
 		/* Else abort the move */
-		return;
+		return true;
 	}
 
 	/* Check if another entity is already there */
 	if (place_is_occupied(oldplace, newx, newy)) {
-		return;
+		return false;
 	}
 
 	/* Check for a vehicle. */
 	class Vehicle *veh = place_get_vehicle(newplace, newx, newy);
 	if (veh && (vehicle || veh->occupant)) {
-		return;
+		return false;
 	}
 
 	/* Check for an automatic portal (and avoid it) */
 	portal = place_get_portal(newplace, newx, newy);
 	if (portal && portal->isAutomatic()) {
-		return;
+		return false;
 	}
 
 	/* Check for a moongate (and avoid it) */
 	moongate = place_get_moongate(newplace, newx, newy);
 	if (moongate && moongate->isOpen()) {
-		return;
+		return false;
 	}
 
 	/* Check passability */
 	if (!place_is_passable(oldplace, newx, newy, getPmask(),
 			       act == COMMUTING ? PFLAG_IGNOREMECHS : 0)) {
-		return;
+		return false;
 	}
 
-	/* Check for a mech (not for passability, for sending the STEP signal) */
+	// Check for a mech (not for passability, for sending the STEP
+        // signal)
 	mech = (class Mech *) place_get_object(Place, newx, newy, mech_layer);
 	if (mech)
 		mech->activate(MECH_STEP);
@@ -450,6 +451,7 @@ void NpcParty::move(int dx, int dy)
 	turn_cost = place_get_movement_cost(getPlace(), getX(), getY());
 	turn_cost *= getSpeed();
 
+        return true;
 }
 
 void NpcParty::wander()
@@ -492,6 +494,7 @@ bool NpcParty::gotoSpot(int mx, int my)
 	struct astar_search_info as_info;
 	int dx;
 	int dy;
+        bool ret = true;
 
 	/* Look for a path. */
 	memset(&as_info, 0, sizeof(as_info));
@@ -515,13 +518,14 @@ bool NpcParty::gotoSpot(int mx, int my)
 		dy = next->y - getY();
 
 		/* Attempt to move */
-		move(dx, dy);
+		ret = move(dx, dy);
+                        
 	}
 
 	/* Cleanup */
 	astar_path_destroy(path);
 
-	return true;
+	return ret;
 }
 
 bool NpcParty::attack_with_ordnance(int d)

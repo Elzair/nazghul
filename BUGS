@@ -1,15 +1,12 @@
-* Nixie attacks sometimes start combat with wrong orientation (hard to
+--Nixie attacks sometimes start combat with wrong orientation (hard to
   reproduce)
 
-* Frame sometimes gets messed up and needs a repaint (really? or only during
+--Frame sometimes gets messed up and needs a repaint (really? or only during
   debug sessions?)
 
-* Quoted (Sam favors single quote for glyph conservation purposes) map terrain
-  lines for sane syntax highlighting
+--spaceship the lightswitch in the dungeon => crash when handled
 
-* spaceship the lightswitch in the dungeon => crash when handled
-
-* Converse with guards, let them attack => no guards on combat map
+--Converse with guards, let them attack => no guards on combat map
 
 Known BUGS in release 0.1.1
 

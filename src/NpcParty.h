@@ -110,7 +110,7 @@ class NpcParty:public Object {
 	virtual void init(class NpcPartyType * type);
 	virtual void advanceTurn(int turn);
 	virtual void synchronize(int turn);
-	virtual void move(int dx, int dy);
+	virtual bool move(int dx, int dy);
 	virtual int getAlignment() {
 		return alignment;
 	}

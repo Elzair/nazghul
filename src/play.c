@@ -882,6 +882,9 @@ void cmdAttack(void)
                         return;
                 }
                 cmdwin_print("yes");
+
+                // Make the npc party (and all its friends) hostile
+                player_party->alignment &= ~(info.npc_party->getAlignment());
         }
 
         // Enter combat

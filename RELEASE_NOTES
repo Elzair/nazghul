@@ -16,6 +16,7 @@ Changes for nazghul-0.1.2
   example with ship cannons) because npc party damage calls the character
   damage routines. In the examples I modified all species to play the old
   traditional damage sound.
+
 --Added sound attenuation with distance (hearing the nixies splash around gets
   really annoying when you can't get away from it - need to find some better
   sounds). I only made it apply in party mode because in combat mode it's a bit
@@ -53,3 +54,11 @@ Changes for nazghul-0.1.2
 
 --Added the (a)ttack command for towns and wilderness. If the target is
   non-hostile it prompts the player for confirmation.
+
+--If the player attacks a non-hostile npc party then the target's alignment
+  bits are cleared from the player's alignment bits. In other words, the npc
+  party and all of its allies are now the player's enemies. If you attack a
+  townsperson all the other townspeople and the guards will attack you if they
+  can. Note that they still aren't smart enough to pathfind through impassable
+  mechanisms, so a door is enough to hold them off.
+
