@@ -5,6 +5,9 @@
 (define troll-speed         speed-human)
 (define troll-ripup-boulder-ap (* 2 troll-speed))
 
+(define (troll-display .) )
+(define (troll-newline) )
+
 ;; ----------------------------------------------------------------------------
 ;; Trick: make a "troll corpse" container type and use it as the troll's
 ;; container. When the troll dies the kernel will drop the troll's container,
@@ -92,7 +95,7 @@
 (define (troll-flee ktroll) (flee ktroll))
 
 (define (troll-foes-in-weapon-range ktroll karms kfoes)
-  (display "troll-foes-in-weapon-range")(newline)
+  (troll-display "troll-foes-in-weapon-range")(troll-newline)
   (all-in-range (kern-obj-get-location ktroll) 
                 (kern-arms-type-get-range karms)
                  kfoes))
@@ -106,7 +109,7 @@
          (cdr foes)))
 
 (define (troll-pathfind-foe ktroll foes)
-  (display "troll-pathfind-foe")(newline)
+  (troll-display "troll-pathfind-foe")(troll-newline)
   (let ((ktarg (troll-pick-target ktroll foes)))
     (if (notnull? ktarg)
         (pathfind ktroll (kern-obj-get-location (troll-pick-target ktroll 
@@ -137,7 +140,7 @@
 
 ;; troll-get-ammo -- give troll a boulder and convert terrain to grass
 (define (troll-get-terrain-ammo ktroll coords)
-  (display "troll-get-terrain-ammo")(newline)
+  (troll-display "troll-get-terrain-ammo")(troll-newline)
   (kern-obj-add-to-inventory ktroll troll-ranged-weapon 1)
   (kern-place-set-terrain coords t_grass)
   (kern-map-repaint)
@@ -189,7 +192,7 @@
 ;; be converted to ammo, have the troll get the ammo
 ;; ----------------------------------------------------------------------------
 (define (troll-get-ammo ktroll loc)
-  (display "troll-get-ammo")(newline)
+  (troll-display "troll-get-ammo")(troll-newline)
   (if (troll-terrain-is-ammo? loc)
       (troll-get-terrain-ammo ktroll loc)
       (troll-get-loose-ammo ktroll loc)))
@@ -201,29 +204,29 @@
 (define (troll-hunt-for-ammo2 ktroll)
   (let ((nearest (profile troll-find-nearest-ammo ktroll))
         (kloc (kern-obj-get-location ktroll)))
-    (display "nearest=")(display nearest)(newline)
+    (troll-display "nearest=")(troll-display nearest)(troll-newline)
     (if (null? nearest)
         #f
         (begin
           (do-or-goto ktroll nearest troll-get-ammo)
           #t))))
 
-(define (display-objs lst)
+(define (troll-display-objs lst)
   (if (null? lst)
-      (newline)
+      (troll-newline)
       (begin
-        (display (kern-obj-get-name (car lst)))
-        (display " ")
-        (display-objs (cdr lst)))))
+        (troll-display (kern-obj-get-name (car lst)))
+        (troll-display " ")
+        (troll-display-objs (cdr lst)))))
 
 ;; ----------------------------------------------------------------------------
 ;; troll-ai -- combat ai for a troll npc. Called repeatedly by the kernel on
 ;; the troll's turn until the troll is out of ap.
 ;; ----------------------------------------------------------------------------
 (define (troll-ai ktroll)
-  (newline)(display "troll-ai")(newline)
+  (troll-newline)(troll-display "troll-ai")(troll-newline)
   (let ((foes (all-visible-hostiles ktroll)))
-    (display "foes: ")(display-objs foes)
+    (troll-display "foes: ")(troll-display-objs foes)
     (if (null? foes)
         (troll-wander ktroll)
         (if (troll-is-critical? ktroll) 
@@ -231,8 +234,8 @@
             (let ((melee-targs (troll-foes-in-weapon-range ktroll 
                                                            troll-melee-weapon 
                                                            foes)))
-              (display "troll-ai:melee-targs=")(display melee-targs)
-              (newline)
+              (troll-display "troll-ai:melee-targs=")(troll-display melee-targs)
+              (troll-newline)
               (if (null? melee-targs)
                   (if (troll-has-ranged-weapon? ktroll)
                       (let 
@@ -240,8 +243,8 @@
                             (troll-foes-in-weapon-range ktroll
                                                         troll-ranged-weapon
                                                         foes)))
-                        (display "troll-ai:ranged-foes=")(display ranged-foes)
-                        (newline)
+                        (troll-display "troll-ai:ranged-foes=")(troll-display ranged-foes)
+                        (troll-newline)
                         (if (null? ranged-foes)
                             (troll-pathfind-foe ktroll foes)
                             (troll-attack ktroll troll-ranged-weapon 

@@ -4,8 +4,11 @@
 
 ;; Remapped display and newline to local procs so they can be disabled/enabled
 ;; for debug more conveniently
-(define (spider-display .) )
-(define (spider-newline) )
+(define (spider-display . args) 
+  (display (kern-get-ticks))
+  (display ":")
+  (apply display args))
+(define (spider-newline) (newline))
 
 ;;----------------------------------------------------------------------------
 ;; Species declaration (used by the kernel)

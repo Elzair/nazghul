@@ -131,22 +131,9 @@
   (filter (lambda (kobj) (is-hostile? kchar kobj))
           (kern-place-get-objects (loc-place (kern-obj-get-location kchar)))))
 
-(define (is-visible-hostile? kchar kobj)  
-  (and (kern-obj-is-char? kobj)
-       (kern-char-is-hostile? kchar kobj)
-       (let ((charloc (kern-obj-get-location kchar))
-             (objloc (kern-obj-get-location kobj)))
-         ;; BUG: objloc intermittently comes back 'bad'
-         ;;(display " objloc=")(display objloc)(newline)
-         (and (<= (kern-get-distance charloc objloc)
-                  (kern-obj-get-vision-radius kchar))
-              (kern-in-los? charloc objloc)
-              (kern-obj-is-visible? kobj)))))
-
-(define (all-visible-hostiles kchar)
-  (display "all-visible-hostiles")(newline)
-  (filter (lambda (kobj) (is-visible-hostile? kchar kobj))
-          (kern-place-get-objects (loc-place (kern-obj-get-location kchar)))))
+;; Find all beings hostile 
+(define (all-visible-hostiles kbeing)
+  (kern-being-get-visible-hostiles kbeing))
 
 ;; Find all the characters in a place
 (define (all-chars kplace)
@@ -255,9 +242,6 @@
 
 (define (in-inventory? kchar ktype)
   (define (hasit? item inv)
-    (display "in-inventory:hasit")
-    (display " inv=")(display inv)
-    (newline)
     (cond ((null? inv) #f)
           ((eqv? item (car (car inv))) #t)
           (else (hasit? item (cdr inv)))))
@@ -388,10 +372,6 @@
 ;; the list that is closest (in city-block distance) to the origin
 ;; ----------------------------------------------------------------------------
 (define (closest-obj origin lst)
-  (display "closest-obj")
-  (display " origin=")(display origin)
-  (display " lst=")(display lst)
-  (newline)
   (if (null? lst) nil
       (foldr (lambda (a b) 
                (if (loc-closer? (kern-obj-get-location a)

@@ -178,6 +178,8 @@ struct kern_append_info {
         scheme *sc;
         pointer head;
         pointer tail;
+        int (*filter)(Object *, struct kern_append_info *);
+        void *data;
 };
 
 
@@ -3645,12 +3647,91 @@ KERN_API_CALL(kern_obj_heal)
         return sc->NIL;
 }
 
+static int kern_in_los_internal(struct place *p1, int x1, int y1,
+                                struct place *p2, int x2, int y2)
+{
+        char *vmask;
+        int x3, y3;
+
+        /* Get the vmask for the origin (viewer's coords) */
+        vmask = vmask_get(p1, x1, y1);
+
+        /* Translate (x2, y2) into vmask coordinates. Notationally, let:
+
+              a = vector from place origin to (x1, y1)
+              b = vector from place origin to (x2, y2)
+              o = vector from place origin to vmask origin
+
+           We already know a, b and (a - o) = (VMASK_W/2, VMASK_H/2). We need
+           to solve for (b - o) and then wrap if the place supports wrapping.
+
+              b - a + (a - o) = b - o
+        */
+
+        x3 = place_wrap_x(p1, x2 - x1 + VMASK_W/2);
+        y3 = place_wrap_y(p1, y2 - y1 + VMASK_H/2);
+
+        if (x3 < 0 ||
+            y3 < 0 ||
+            x3 >= VMASK_W ||
+            y3 >= VMASK_H)
+                return 0;
+
+        return vmask[x3 + y3 * VMASK_W];
+}
+
+static int kern_filter_being(Object *obj, struct kern_append_info *info)
+{
+        return (obj->getLayer() == being_layer);
+}
+
+static int kern_filter_visible_hostile(Object *obj, 
+                                       struct kern_append_info *info)
+{
+        class Being *subj;
+
+        /* Extract a pointer to the subject looking for hostiles */
+        subj = (class Being *)info->data;
+
+        /* Filter out non-beings */
+        if (obj->getLayer() != being_layer)
+                return 0;
+
+        /* Filter out non-hostiles */
+        if (! are_hostile(subj, (class Being*)obj))
+                return 0;
+
+        /* Filter out objects not in los of the subject */
+        if (! kern_in_los_internal(subj->getPlace(),subj->getX(),subj->getY(),
+                                   obj->getPlace(),obj->getX(),obj->getY()))
+                return 0;
+
+        /* Filter out object not in the vision radius of the subject */
+        if (place_flying_distance(subj->getPlace(),subj->getX(),subj->getY(),
+                                  obj->getX(),obj->getY())
+            > subj->getVisionRadius())
+                return 0;
+
+        /* Filter out invisible objects */
+        if (! obj->isVisible())
+                return 0;
+
+        return 1;
+}
+
 static void kern_append_object(Object *obj, void *data)
 {
         pointer cell;
         struct kern_append_info *info;
 
         info = (struct kern_append_info *)data;
+
+        /* If there is a filter then use it */
+        if (info->filter != NULL)
+
+                /* If the filter rejects the object then don't append it */
+                if (! info->filter(obj, info))
+                        return;
 
         cell = scm_mk_ptr(info->sc, obj);
         cell = _cons(info->sc, cell, info->sc->NIL, 0);
@@ -3662,12 +3743,6 @@ static void kern_append_object(Object *obj, void *data)
                 info->tail->_object._cons._cdr = cell;
                 info->tail = cell;
         }
-}
-
-static void kern_filter_and_append_being(Object *obj, void *data)
-{
-        if (obj->getLayer() == being_layer)
-                kern_append_object(obj, data);
 }
 
 KERN_API_CALL(kern_get_objects_at)
@@ -3775,10 +3850,40 @@ KERN_API_CALL(kern_place_get_beings)
         /* initialize the context used by the callback to append objects */
         info.sc = sc;
         info.head = sc->NIL;
-        info.tail = sc->NIL;
+        info.tail = sc->NIL;        
+        info.filter = kern_filter_being;
 
         /* build a scheme list of the objects */
-        place_for_each_object(place, kern_filter_and_append_being, &info);
+        place_for_each_object(place, kern_append_object, &info);
+
+        /* return the scheme list */
+        return info.head;
+}
+
+KERN_API_CALL(kern_being_get_visible_hostiles)
+{
+        struct kern_append_info info;        
+        Object *subj;
+
+        /* Unpack the subject */
+        subj = unpack_obj(sc, &args, "kern-place-get-visible-hostiles");
+        if (!subj)
+                return sc->NIL;
+
+        if (! subj->getPlace()) {
+                rt_err("kern-place-get-visible-hostiles: null place");
+                return sc->NIL;
+        }
+
+        /* initialize the context used by the callback to append objects */
+        info.sc = sc;
+        info.head = sc->NIL;
+        info.tail = sc->NIL;
+        info.filter = kern_filter_visible_hostile;
+        info.data = subj;
+
+        /* build a scheme list of the objects */
+        place_for_each_object(subj->getPlace(), kern_append_object, &info);
 
         /* return the scheme list */
         return info.head;
@@ -3826,6 +3931,7 @@ KERN_API_CALL(kern_place_get_objects_at)
         info.sc = sc;
         info.head = sc->NIL;
         info.tail = sc->NIL;
+        info.filter = NULL;
 
         /* build a scheme list of the objects */
         place_for_each_object_at(place, x, y, kern_append_object, &info);
@@ -4396,31 +4502,8 @@ KERN_API_CALL(kern_in_los)
                 return sc->F;
         }
 
-        vmask = vmask_get(p1, x1, y1);
-
-        /* Translate (x2, y2) into vmask coordinates. Notationally, let:
-
-              a = vector from place origin to (x1, y1)
-              b = vector from place origin to (x2, y2)
-              o = vector from place origin to vmask origin
-
-           We already know a, b and (a - o) = (VMASK_W/2, VMASK_H/2). We need
-           to solve for (b - o) and then wrap if the place supports wrapping.
-
-              b - a + (a - o) = b - o
-        */
-
-        x3 = place_wrap_x(p1, x2 - x1 + VMASK_W/2);
-        y3 = place_wrap_y(p1, y2 - y1 + VMASK_H/2);
-
-        if (x3 < 0 ||
-            y3 < 0 ||
-            x3 >= VMASK_W ||
-            y3 >= VMASK_H)
-                return sc->F;
-
-        return vmask[x3 + y3 * VMASK_W] ? sc->T : sc->F;
-  }
+        return kern_in_los_internal(p1, x1, y1, p2, x2, y2) ? sc->T : sc->F;
+}
 
 KERN_API_CALL(kern_map_set_peering)
 {
@@ -5579,9 +5662,14 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-party-add-member", kern_party_add_member);
         
         /* kern-being-api */
-        API_DECL(sc, "kern-being-get-base-faction", kern_being_get_base_faction);
-        API_DECL(sc, "kern-being-get-current-faction", kern_being_get_current_faction);
-        API_DECL(sc, "kern-being-set-base-faction", kern_being_set_base_faction);
+        API_DECL(sc, "kern-being-get-base-faction", 
+                 kern_being_get_base_faction);
+        API_DECL(sc, "kern-being-get-current-faction", 
+                 kern_being_get_current_faction);
+        API_DECL(sc, "kern-being-get-visible-hostiles", 
+                 kern_being_get_visible_hostiles);
+        API_DECL(sc, "kern-being-set-base-faction", 
+                 kern_being_set_base_faction);
 
 
         /* Revisit: probably want to provide some kind of custom port here. */
