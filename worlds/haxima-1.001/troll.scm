@@ -2,6 +2,8 @@
 (define troll-critical-hp   10)
 (define troll-melee-weapon  t_hands)
 (define troll-ranged-weapon t_thrown_boulder)
+(define troll-speed         speed-human)
+(define troll-ripup-boulder-ap (* 2 troll-speed))
 
 ;;----------------------------------------------------------------------------
 ;; Species declaration (used by the kernel)
@@ -11,7 +13,7 @@
                  20             ;; strength: limits armament weight
                  0              ;; intelligence: (just reported in stats)
                  0              ;; dexterity: used to avoid traps on chests
-                 speed-human    ;; speed: action points per turn
+                 troll-speed    ;; speed: action points per turn
                  10             ;; vision radius: in tiles
                  mmode-walk     ;; movement mode
                  troll-base-hp  ;; base hp: hit points at level zero
@@ -69,77 +71,6 @@
 (define (char-is-troll? kchar)
   (eqv? (kern-char-get-species kchar) sp_troll))
 
-;;----------------------------------------------------------------------------
-;; Generic AI used by kernel, reproduced here as a starting point
-;;----------------------------------------------------------------------------
-(define (ai-select-target kchar)
-  (display "ai-select-target")(newline)
-  (nearest-obj kchar (all-visible-hostiles kchar)))
-
-(define (ai-wander kchar)
-  (display "ai-wander")(newline)
-  (kern-obj-wander kchar))
-
-(define (in-range? karms dist)
-  (display "in-range?")(newline)
-  (<= dist (kern-arms-type-get-range karms)))
-
-(define (has-ammo? kchar karms)
-  (display "has-ammo?")(newline)
-  (or (not (arms-type-needs-ammo? karms))
-      (let ((ammo-type (kern-arms-type-get-ammo-type karms)))
-        (display "has-ammo?: ammo-type=")(display ammo-type)(newline)
-        (or (null? ammo-type)
-            (kern-obj-has? kchar ammo-type)))))
-
-(define (weapon-blocked? karms dist)
-  (display "weapon-blocked?")(newline)
-  (and (< dist 2)
-       (arms-type-is-blockable? karms)))
-
-(define (ai-select-weapon katt kdef)  
-  (let ((defdist (distance katt kdef)))
-  (display "ai-select-weapon:defdist=")(display defdist)(newline)
-    (define (weapon-ok? karms)
-      (display "ai-select-weapon:weapon-ok?")(newline)
-      (and (in-range? karms defdist)
-           (has-ammo? katt karms)
-           (not (weapon-blocked? karms defdist))))
-    (define (scan-weapons wlist)
-      (display "ai-select-weapon:scan-weapons")(newline)
-      (if (null? wlist) nil
-          (let ((karms (car wlist)))
-            (if (weapon-ok? karms)
-                karms
-                (scan-weapons (cdr wlist))))))
-    (scan-weapons (kern-char-get-weapons katt))))
-
-(define (ai-attack-target kchar ktarg)
-  (display "ai-attack-target")(newline)
-  (define (do-attack-loop retval)
-    (let ((kweap (ai-select-weapon kchar ktarg)))
-      (display "ai-attack-target:kweap=")(display kweap)(newline)
-      (if (null? kweap) retval
-          (begin
-            (kern-char-attack kchar kweap ktarg)
-            (if (and (is-alive? ktarg)
-                     (has-ap? kchar))
-                (do-attack-loop #t)
-                #t)))))
-  (do-attack-loop #f))
-
-(define (ai-pathfind-to-target kchar ktarg)
-  (display "ai-pathfind-to-target")(newline)
-  (pathfind kchar (kern-obj-get-location ktarg)))
-
-(define (generic-ai kchar)
-  (display "generic-ai")(newline)
-  (let ((ktarg (ai-select-target kchar)))
-    (display "generic-ai: ktarg=")(display ktarg)(newline)
-    (if (null? ktarg)
-        (ai-wander kchar)
-        (or (ai-attack-target kchar ktarg)
-            (ai-pathfind-to-target kchar ktarg)))))
 
 ;;----------------------------------------------------------------------------
 ;; Troll AI
@@ -235,6 +166,8 @@
   (display "troll-get-terrain-ammo")(newline)
   (kern-obj-add-to-inventory ktroll troll-ranged-weapon 1)
   (kern-place-set-terrain coords t_grass)
+  (kern-map-repaint)
+  (kern-obj-dec-ap ktroll troll-ripup-boulder-ap)
   )
 
 ;; ----------------------------------------------------------------------------
