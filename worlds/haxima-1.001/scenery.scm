@@ -244,3 +244,137 @@
 (mk-scenery-type 't_armor_dragon_15  "dragon armor" s_armor_dragon_15)
 (mk-scenery-type 't_armor_dragon_16  "dragon armor" s_armor_dragon_16)
 
+
+;; ss_dg_weapons
+(mk-scenery-type 't_sword_broken_1 "broken sword" s_sword_broken_1)
+(mk-scenery-type 't_sword_broken_2 "broken sword" s_sword_broken_2)
+(mk-scenery-type 't_sword_broken_3 "broken sword" s_sword_broken_3)
+(mk-scenery-type 't_sword_broken_4 "broken sword" s_sword_broken_4)
+
+(mk-scenery-type 't_dagger_1 "dagger" s_dagger_1)
+(mk-scenery-type 't_dagger_2 "dagger" s_dagger_2)
+(mk-scenery-type 't_dagger_3 "dagger" s_dagger_3)
+
+(mk-scenery-type 't_sword_short_1 "short sword" s_sword_short_1)
+(mk-scenery-type 't_sword_short_2 "short sword" s_sword_short_2)
+(mk-scenery-type 't_sword_short_3 "short sword" s_sword_short_3)
+
+(mk-scenery-type 't_rapier_1   "rapier"  s_rapier_1)
+(mk-scenery-type 't_rapier_2   "rapier"  s_rapier_2)
+(mk-scenery-type 't_saber_1    "saber"   s_saber_1)
+(mk-scenery-type 't_saber_2    "saber"   s_saber_2)
+(mk-scenery-type 't_cutlass_1  "cutlass" s_cutlass_1)
+(mk-scenery-type 't_cutlass_2  "cutlass" s_cutlass_2)
+(mk-scenery-type 't_falchion_1 "falcion" s_falchion_1)
+
+(mk-scenery-type 't_sword_long_1 "long sword" s_sword_long_1)
+(mk-scenery-type 't_sword_long_2 "long sword" s_sword_long_2)
+(mk-scenery-type 't_sword_long_3 "long sword" s_sword_long_3)
+
+(mk-scenery-type 't_sword_bastard "bastard sword" s_sword_bastard)
+(mk-scenery-type 't_sword_katana  "katana"        s_sword_katana)
+
+(mk-scenery-type 't_sword_zweihander "zweihander"   s_sword_zweihander)
+(mk-scenery-type 't_sword_vorpal     "vorpal sword" s_sword_vorpal)
+
+(mk-scenery-type 't_sword_eldritch "eldritch sword" s_sword_eldritch)
+(mk-scenery-type 't_sword_mystic   "mystic sword"   s_sword_mystic)
+(mk-scenery-type 't_sword_flaming  "flaming sword"  s_sword_flaming)
+
+(mk-scenery-type 't_mace_1       "mace" s_mace_1)
+(mk-scenery-type 't_mace_2       "mace" s_mace_2)
+(mk-scenery-type 't_mace_3       "mace" s_mace_3)
+(mk-scenery-type 't_mace_4       "mace" s_mace_4)
+(mk-scenery-type 't_mace_magical "mace" s_mace_magical)
+
+(mk-scenery-type 't_hammer_golden       "hammer" s_hammer_golden)
+(mk-scenery-type 't_hammer_warhammer    "hammer" s_hammer_warhammer)
+(mk-scenery-type 't_hammer_sledgehammer "hammer" s_hammer_sledgehammer)
+(mk-scenery-type 't_hammer_giant        "hammer" s_hammer_giant)
+
+(mk-scenery-type 't_flail_1 "flail" s_flail_1)
+(mk-scenery-type 't_flail_2 "flail" s_flail_2)
+(mk-scenery-type 't_flail_3 "flail" s_flail_3)
+(mk-scenery-type 't_flail_4 "flail" s_flail_4)
+(mk-scenery-type 't_flail_5 "flail" s_flail_5)
+(mk-scenery-type 't_nunchaku_1 "nunchaku" s_nunchaku_1)
+(mk-scenery-type 't_nunchaku_2 "nunchaku" s_nunchaku_2)
+
+(mk-scenery-type 't_whip "whip" s_whip)
+
+(mk-scenery-type 't_axe_1 "axe" s_axe_1)
+(mk-scenery-type 't_axe_2 "axe" s_axe_2)
+(mk-scenery-type 't_axe_3 "axe" s_axe_3)
+(mk-scenery-type 't_axe_4 "axe" s_axe_4)
+(mk-scenery-type 't_axe_5 "axe" s_axe_5)
+
+(mk-scenery-type 't_scythe_1 "scythe" s_scythe_1)
+(mk-scenery-type 't_scythe_2 "scythe" s_scythe_2)
+
+(mk-scenery-type 't_spear_1   "spear"   s_spear_1)
+(mk-scenery-type 't_spear_2   "spear"   s_spear_2)
+(mk-scenery-type 't_spear_3   "spear"   s_spear_3)
+(mk-scenery-type 't_trident_1 "trident" s_trident_1)
+(mk-scenery-type 't_trident_2 "trident" s_trident_2)
+(mk-scenery-type 't_trident_3 "trident" s_trident_3)
+(mk-scenery-type 't_lance     "lance"   s_lance)
+
+(mk-scenery-type 't_quarterstaff_1 "quarterstaff" s_quarterstaff_1)
+(mk-scenery-type 't_quarterstaff_2 "quarterstaff" s_quarterstaff_2)
+
+(mk-scenery-type 't_halberd_1 "halberd" s_halberd_1)
+(mk-scenery-type 't_halberd_2 "halberd" s_halberd_2)
+(mk-scenery-type 't_halberd_3 "halberd" s_halberd_3)
+
+(mk-scenery-type 't_shortbow   "shortbow" s_shortbow)
+(mk-scenery-type 't_longbow_1  "longbow"  s_longbow_1)
+(mk-scenery-type 't_longbow_2  "longbow"  s_longbow_2)
+(mk-scenery-type 't_crossbow_1 "crossbow" s_crossbow_1)
+(mk-scenery-type 't_crossbow_2 "crossbow" s_crossbow_2)
+(mk-scenery-type 't_crossbow_3 "crossbow" s_crossbow_3)
+
+(mk-scenery-type 't_sling "sling" s_sling)
+(mk-scenery-type 't_sling_bullet "sling bullet" s_sling_bullet)
+(mk-scenery-type 't_sling_stones "sling stones" s_sling_stones)
+
+(mk-scenery-type 't_dart_red            "red dart"   s_dart_red)
+(mk-scenery-type 't_dart_green_dripping "green dart" s_dart_green_dripping)
+(mk-scenery-type 't_dart_blue_dripping  "blue dart"  s_dart_blue_dripping)
+(mk-scenery-type 't_shuriken            "shuriken"   s_shuriken)
+(mk-scenery-type 't_shuriken_spinning   "shuriken"   s_shuriken_spinning)
+
+(mk-scenery-type 't_arrow_wooden "wooden arrow" s_arrow_wooden)
+(mk-scenery-type 't_arrow_metal  "metal arrow"  s_arrow_metal)
+(mk-scenery-type 't_arrow_white  "white arrow"  s_arrow_white)
+(mk-scenery-type 't_arrow_gold   "golden arrow" s_arrow_gold)
+
+(mk-scenery-type 't_arrow_glowing_red   "glowing red arrow"   s_arrow_glowing_red)   ;; fix sprite
+(mk-scenery-type 't_arrow_glowing_green "glowing green arrow" s_arrow_glowing_green) ;; fix sprite
+
+(mk-scenery-type 't_arrow_wooden_flaming "wooden flaming arrow" s_arrow_wooden_flaming)
+(mk-scenery-type 't_arrow_metal_flaming  "metal flaming arrow"  s_arrow_metal_flaming)
+(mk-scenery-type 't_arrow_wooden_acid    "wooden acid arrow"    s_arrow_wooden_acid)
+(mk-scenery-type 't_arrow_metal_acid     "metal acid arrow"     s_arrow_metal_acid)
+(mk-scenery-type 't_arrow_wooden_frost   "wooden frost arrow"   s_arrow_wooden_frost)
+(mk-scenery-type 't_arrow_metal_frost    "metal frost arrow"    s_arrow_metal_frost)
+
+(mk-scenery-type 't_arrow_glowing_blue   "glowing blue arrow"   s_arrow_glowing_blue)
+(mk-scenery-type 't_arrow_glowing_purple "glowing purple arrow" s_arrow_glowing_purple)
+
+(mk-scenery-type 't_bolt_wooden "wooden bolt" s_bolt_wooden)
+(mk-scenery-type 't_bolt_metal  "metal bolt"  s_bolt_metal)
+(mk-scenery-type 't_bolt_white  "white bolt"  s_bolt_white)
+(mk-scenery-type 't_bolt_gold   "golden bolt" s_bolt_gold)
+
+(mk-scenery-type 't_bolt_glowing_red "bolt_glowing_red" s_bolt_glowing_red)
+(mk-scenery-type 't_bolt_glowing_red "bolt_glowing_red" s_bolt_glowing_green)
+
+(mk-scenery-type 't_bolt_wooden_flaming "wooden flaming bolt" s_bolt_wooden_flaming)
+(mk-scenery-type 't_bolt_metal_flaming  "metal flaming bolt"  s_bolt_metal_flaming)
+(mk-scenery-type 't_bolt_wooden_acid    "wooden acid bolt"    s_bolt_wooden_acid)
+(mk-scenery-type 't_bolt_metal_acid     "metal acid bolt"     s_bolt_metal_acid)
+(mk-scenery-type 't_bolt_wooden_frost   "wooden frost bolt"   s_bolt_wooden_frost)
+(mk-scenery-type 't_bolt_metal_frost    "metal frost bolt"    s_bolt_metal_frost)
+
+(mk-scenery-type 't_bolt_glowing_blue   "glowing blue bolt"   s_bolt_glowing_blue)   ;; fix sprite
+(mk-scenery-type 't_bolt_glowing_purple "glowing purple bolt" s_bolt_glowing_purple) ;; fix sprite

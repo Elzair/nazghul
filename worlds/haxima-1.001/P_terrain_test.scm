@@ -3,7 +3,7 @@
 
 
 (kern-mk-map 
- 'm_sprite_gallery_1 19 40 pal_expanded
+ 'm_sprite_gallery_1 19 58 pal_expanded
   ;                               1  1  1  1  1  1  1  1  1
   ; 0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5  6  7  8
  (list
@@ -44,6 +44,26 @@
   "xx .. .. .W .E .A .R .A .B .L .E .. .I .T .E .M .S .. xx "
   "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
   "xx xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .W .E .A .P .O .N .S .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
   "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
   "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
   "xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx "
@@ -313,6 +333,141 @@
                 (list (kern-mk-obj t_armor_dragon_14 1) 15  29)
                 (list (kern-mk-obj t_armor_dragon_15 1) 16  29)
                 (list (kern-mk-obj t_armor_dragon_16 1) 17  29)
+
+
+                ;; ss_dg_weapons
+                (list (kern-mk-obj t_sword_broken_1   1)  1 37)
+                (list (kern-mk-obj t_sword_broken_2   1)  2 37)
+                (list (kern-mk-obj t_sword_broken_3   1)  3 37)
+                (list (kern-mk-obj t_sword_broken_4   1)  4 37)
+
+                (list (kern-mk-obj t_dagger_1         1)  6 37)
+                (list (kern-mk-obj t_dagger_2         1)  7 37)
+                (list (kern-mk-obj t_dagger_3         1)  8 37)
+
+                (list (kern-mk-obj t_sword_short_1    1) 10 37)
+                (list (kern-mk-obj t_sword_short_2    1) 11 37)
+                (list (kern-mk-obj t_sword_short_3    1) 12 37)
+
+                (list (kern-mk-obj t_rapier_1         1)  1 38)
+                (list (kern-mk-obj t_rapier_2         1)  2 38)
+                (list (kern-mk-obj t_saber_1          1)  3 38)
+                (list (kern-mk-obj t_saber_2          1)  4 38)
+                (list (kern-mk-obj t_cutlass_1        1)  5 38)
+                (list (kern-mk-obj t_cutlass_2        1)  6 38)
+                (list (kern-mk-obj t_falchion_1       1)  7 38)
+
+                (list (kern-mk-obj t_sword_long_1     1)  9 38)
+                (list (kern-mk-obj t_sword_long_2     1) 10 38)
+                (list (kern-mk-obj t_sword_long_3     1) 11 38)
+
+                (list (kern-mk-obj t_sword_bastard    1)  1 39)
+                (list (kern-mk-obj t_sword_katana     1)  2 39)
+
+                (list (kern-mk-obj t_sword_zweihander 1)  4 39)
+                (list (kern-mk-obj t_sword_vorpal     1)  5 39)
+
+                (list (kern-mk-obj t_sword_eldritch 1)  7 39)
+                (list (kern-mk-obj t_sword_mystic   1)  8 39)
+                (list (kern-mk-obj t_sword_flaming  1)  9 39)
+
+                (list (kern-mk-obj t_mace_1         1)  1 40)
+                (list (kern-mk-obj t_mace_2         1)  2 40)
+                (list (kern-mk-obj t_mace_3         1)  3 40)
+                (list (kern-mk-obj t_mace_4         1)  4 40)
+                (list (kern-mk-obj t_mace_magical   1)  5 40)
+
+                (list (kern-mk-obj t_hammer_golden       1)  7 40)
+                (list (kern-mk-obj t_hammer_warhammer    1)  8 40)
+                (list (kern-mk-obj t_hammer_sledgehammer 1)  9 40)
+                (list (kern-mk-obj t_hammer_giant        1) 10 40)
+
+                (list (kern-mk-obj t_flail_1    1)  1 41)
+                (list (kern-mk-obj t_flail_2    1)  2 41)
+                (list (kern-mk-obj t_flail_3    1)  3 41)
+                (list (kern-mk-obj t_flail_4    1)  4 41)
+                (list (kern-mk-obj t_flail_5    1)  5 41)
+                (list (kern-mk-obj t_nunchaku_1 1)  6 41)
+                (list (kern-mk-obj t_nunchaku_2 1)  7 41)
+
+                (list (kern-mk-obj t_whip       1)  9 41)
+
+                (list (kern-mk-obj t_axe_1      1) 11 41)
+                (list (kern-mk-obj t_axe_2      1) 12 41)
+                (list (kern-mk-obj t_axe_3      1) 13 41)
+                (list (kern-mk-obj t_axe_4      1) 14 41)
+                (list (kern-mk-obj t_axe_5      1) 15 41)
+
+                (list (kern-mk-obj t_scythe_1   1)  1 42)
+                (list (kern-mk-obj t_scythe_2   1)  2 42)
+
+                (list (kern-mk-obj t_spear_1    1)  4 42)
+                (list (kern-mk-obj t_spear_2    1)  5 42)
+                (list (kern-mk-obj t_spear_3    1)  6 42)
+                (list (kern-mk-obj t_trident_1  1)  7 42)
+                (list (kern-mk-obj t_trident_2  1)  8 42)
+                (list (kern-mk-obj t_trident_3  1)  9 42)
+                (list (kern-mk-obj t_lance      1) 10 42)
+
+                (list (kern-mk-obj t_quarterstaff_1 1)  1 43)
+                (list (kern-mk-obj t_quarterstaff_2 1)  2 43)
+
+                (list (kern-mk-obj t_halberd_1  1)  4 43)
+                (list (kern-mk-obj t_halberd_2  1)  5 43)
+                (list (kern-mk-obj t_halberd_3  1)  6 43)
+
+                (list (kern-mk-obj t_shortbow   1)  1 44)
+                (list (kern-mk-obj t_longbow_1  1)  2 44)
+                (list (kern-mk-obj t_longbow_2  1)  3 44)
+                (list (kern-mk-obj t_crossbow_1 1)  4 44)
+                (list (kern-mk-obj t_crossbow_2 1)  5 44)
+                (list (kern-mk-obj t_crossbow_3 1)  6 44)
+
+                (list (kern-mk-obj t_sling                1)  8 44)
+                (list (kern-mk-obj t_sling_bullet         1)  9 44)
+                (list (kern-mk-obj t_sling_stones         1) 10 44)
+
+                (list (kern-mk-obj t_dart_red             1) 12 44)
+                (list (kern-mk-obj t_dart_green_dripping  1) 13 44)
+                (list (kern-mk-obj t_dart_blue_dripping   1) 14 44)
+                (list (kern-mk-obj t_shuriken             1) 15 44)
+                (list (kern-mk-obj t_shuriken_spinning    1) 16 44)
+
+                (list (kern-mk-obj t_arrow_wooden         1)  1 45)
+                (list (kern-mk-obj t_arrow_metal          1)  2 45)
+                (list (kern-mk-obj t_arrow_white          1)  3 45)
+                (list (kern-mk-obj t_arrow_gold           1)  4 45)
+
+                (list (kern-mk-obj t_arrow_glowing_red    1)  6 45)
+                (list (kern-mk-obj t_arrow_glowing_green  1)  7 45)
+
+                (list (kern-mk-obj t_arrow_wooden_flaming 1)  9 45)
+                (list (kern-mk-obj t_arrow_metal_flaming  1) 10 45)
+                (list (kern-mk-obj t_arrow_wooden_acid    1) 11 45)
+                (list (kern-mk-obj t_arrow_metal_acid     1) 12 45)
+                (list (kern-mk-obj t_arrow_wooden_frost   1) 13 45)
+                (list (kern-mk-obj t_arrow_metal_frost    1) 14 45)
+
+                (list (kern-mk-obj t_arrow_glowing_blue   1) 16 45)
+                (list (kern-mk-obj t_arrow_glowing_purple 1) 17 45)
+
+                (list (kern-mk-obj t_bolt_wooden          1)  1 46)
+                (list (kern-mk-obj t_bolt_metal           1)  2 46)
+                (list (kern-mk-obj t_bolt_white           1)  3 46)
+                (list (kern-mk-obj t_bolt_gold            1)  4 46)
+
+                (list (kern-mk-obj t_bolt_glowing_red     1)  6 46)
+                (list (kern-mk-obj t_bolt_glowing_red     1)  7 46)
+
+                (list (kern-mk-obj t_bolt_wooden_flaming  1)  9 46)
+                (list (kern-mk-obj t_bolt_metal_flaming   1) 10 46)
+                (list (kern-mk-obj t_bolt_wooden_acid     1) 11 46)
+                (list (kern-mk-obj t_bolt_metal_acid      1) 12 46)
+                (list (kern-mk-obj t_bolt_wooden_frost    1) 13 46)
+                (list (kern-mk-obj t_bolt_metal_frost     1) 14 46)
+
+                (list (kern-mk-obj t_bolt_glowing_blue    1) 16 46)
+                (list (kern-mk-obj t_bolt_glowing_purple  1) 17 46)
 
 
                 
