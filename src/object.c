@@ -289,6 +289,7 @@ class Object *Object::clone()
         class Object *obj;
 
         obj = getObjectType()->createInstance();
+        obj->setPlace(getPlace());
         obj->setX(getX());
         obj->setY(getY());
 
