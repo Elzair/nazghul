@@ -166,6 +166,7 @@ Character::Character(char *tag, char *name,
         tmpFaction         = NIL_FACTION;
         cachedPath         = NULL;
         cachedPathPlace    = NULL;
+        ambushedWhileCamping = false;
 
         setActivity(NONE);
 
@@ -226,6 +227,7 @@ Character::Character():name(0), hm(0), xp(0), order(-1),
         tmpFaction   = NIL_FACTION;
         cachedPath   = NULL;
         cachedPathPlace = NULL;
+        ambushedWhileCamping = false;
 
         //assert(place);
 
@@ -1831,7 +1833,7 @@ void Character::exec()
 
         startTurn();
         
-        if (isDead()) {
+        if (isDead() || ! isOnMap() ||action_points <= 0) {
                 endTurn();
                 return;
         }
@@ -1905,9 +1907,7 @@ void Character::exec()
                                 else if (player_party->isResting())
                                         player_party->endResting();
                         }
-
                 }
-
                 endTurn();
                 return;
         }
@@ -1918,12 +1918,15 @@ void Character::exec()
         // sleep is part of his schedule.
         // ------------------------------------------------------------------
 
-        if (! isOnMap()                               ||
-            isDead()                                  ||
-            (isAsleep() && getActivity() != SLEEPING) ||
-            action_points <= 0) {
-                endTurn();
-                return;
+        if (isAsleep() && getActivity() != SLEEPING) {
+                
+                if (ambushedWhileCamping &&
+                    ((rand() % 100) < PROB_AWAKEN)) {
+                        endCamping();
+                } else {
+                        endTurn();
+                        return;
+                }
         }
 
         switch (getControlMode()) {
@@ -2237,11 +2240,13 @@ bool Character::isResting()
 
 void Character::beginCamping(int hours)
 {
+        ambushedWhileCamping = false;
         beginResting(hours);
 }
 
 void Character::endCamping()
 {
+        ambushedWhileCamping = false;
         endResting();
 }
 
@@ -2253,6 +2258,7 @@ bool Character::isCamping()
 void Character::ambushWhileCamping()
 {
         resting = false;
+        ambushedWhileCamping = true;
 
         if (!isAsleep())
                 return;

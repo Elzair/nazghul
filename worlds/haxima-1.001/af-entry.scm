@@ -18,7 +18,7 @@
         (af-spawn-spiders kplace (- n 1)))))
 
 (define (af-entry kplace kplayer)
-  (let ((chars (filter kern-obj-is-char? (kern-place-get-objects kplace))))
+  (let ((chars (filter obj-is-char? (kern-place-get-objects kplace))))
     (let ((trolls (filter char-is-troll? chars))
           (spiders (filter char-is-spider? chars)))
       (if (< (length trolls) 2)

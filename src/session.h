@@ -176,6 +176,10 @@ struct session {
         /* A multiplier for temporarily speeding up time (used when the player
          * is camping or resting) */
         int time_accel;
+
+        /* Optional script to run every turn the player is camping in the
+         * wilderness */
+        struct closure *camping_proc;
 };
 
 // Callback table for saving objects

@@ -11,6 +11,7 @@
 ;; Load the read-only game data. See the note on 'kern-load' vs 'load' above.
 ;;----------------------------------------------------------------------------
 (kern-load "game.scm")
+(kern-load "camping-map.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Maps
@@ -55,7 +56,7 @@
  0                           ; gold
  0                           ; turns to next meal
  nil                         ; formation
- nil                         ; campsite map
+ m_campsite                  ; campsite map
  nil                         ; campsite formation
  nil                         ; vehicle
  ;; inventory
@@ -183,3 +184,4 @@
 ;;----------------------------------------------------------------------------
 ;(kern-set-start-proc start-scene)
 (kern-set-start-proc simple-start)
+(kern-set-camping-proc camping-proc)

@@ -377,6 +377,7 @@ MoveResult Party::move(int dx, int dy)
 
 			combat_enter(&cinfo);
                         endTurn();
+                        //destroy();
                         return EngagedEnemy;
 		}
 

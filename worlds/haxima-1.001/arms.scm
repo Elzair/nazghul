@@ -79,7 +79,7 @@
 (define (mk-missile-ifc hit)
   (ifc '()
        (method 'hit-loc (lambda (kmissile kplace x y)
-                          (let ((targets (filter kern-obj-is-char? 
+                          (let ((targets (filter obj-is-char? 
                                                  (kern-get-objects-at (mk-loc kplace 
                                                                               x 
                                                                               y)))))

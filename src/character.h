@@ -282,6 +282,7 @@ class Character:public Being {
 
         int factionSwitch;
         int tmpFaction;
+        bool ambushedWhileCamping;
 };
 
 extern void char_dtor(void *val);

@@ -54,7 +54,7 @@
 ;; character. Treats a natural roll of 20 as success.
 ;; ----------------------------------------------------------------------------
 (define (can-paralyze? kobj)
-  (and (kern-obj-is-char? kobj)
+  (and (obj-is-char? kobj)
        (not (species-is-immune-to-paralyze? (kern-char-get-species kobj)))))
 
 (define (paralyze-apply fgob kobj)
@@ -93,7 +93,7 @@
 ;; itself from the character. Also treat a natural roll of 20 as success.
 ;; ----------------------------------------------------------------------------
 (define (can-ensnare? kobj)
-  (and (kern-obj-is-char? kobj)
+  (and (obj-is-char? kobj)
        (not (species-is-immune-to-ensnare? (kern-char-get-species kobj)))))
 
 (define (ensnare-apply fgob kobj)

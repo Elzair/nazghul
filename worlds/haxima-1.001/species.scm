@@ -206,7 +206,7 @@
     ))
 
 (define (obj-is-green-slime? kobj)
-  (and (kern-obj-is-char? kobj)
+  (and (obj-is-char? kobj)
        (eqv? (kern-char-get-species kobj) sp_green_slime)))
 
 (load "yellow-slime.scm")

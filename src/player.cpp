@@ -1200,6 +1200,9 @@ void player_party::ambushWhileCamping()
 
         camping = false;
 
+        // Un-accelerate time when done camping.
+        session_set_time_accel(1);
+
         FOR_EACH_MEMBER(entry, member) {
 
                 // ------------------------------------------------------------

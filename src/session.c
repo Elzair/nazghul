@@ -263,9 +263,11 @@ void session_del(struct session *session)
                 wq_job_del(job);
         }
 
-
+        /* Clean up the closures */
         if (Session->start_proc)
                 closure_del(Session->start_proc);
+        if (Session->camping_proc)
+                closure_del(Session->camping_proc);
 
         free(session);
 }

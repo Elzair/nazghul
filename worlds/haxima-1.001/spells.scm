@@ -143,7 +143,7 @@
   (let ((loc (kern-obj-get-location caster)))
   (if (kern-place-is-wilderness? (loc-place loc))
       (cast-it (kern-ui-select-party-member))
-      (cast-it (ui-target loc 2 kern-obj-is-char?)))))
+      (cast-it (ui-target loc 2 obj-is-char?)))))
   
 
 (define (cast-heal-spell caster dice)
@@ -308,7 +308,7 @@
 
 (define (an-xen-corp kspell caster)
   (define (is-undead-char? kobj)
-    (and (kern-obj-is-char? kobj)
+    (and (obj-is-char? kobj)
          (species-is-undead? (kern-char-get-species kobj))))
   (define (repel kchar)
     (kern-char-set-fleeing kchar #t))
@@ -422,7 +422,7 @@
 (define (an-xen-exe kspell caster)
    (let ((target (ui-target (kern-obj-get-location caster) 
                             8 
-                            (lambda (kobj) (kern-obj-is-char? kobj)))))
+                            (lambda (kobj) (obj-is-char? kobj)))))
      (if (null? target) 
          result-no-target
          (if (kern-obj-add-effect target 
@@ -509,7 +509,7 @@
   (cast-bimodal caster hide))
   
 (define (in-quas-xen kspell caster)
-  (let ((target (ui-target (kern-obj-get-location caster) 1 kern-obj-is-char?)))
+  (let ((target (ui-target (kern-obj-get-location caster) 1 obj-is-char?)))
     (if (null? target) nil
         (let* ((clone (kern-obj-clone target))
                (loc (pick-loc (kern-obj-get-location target) clone)))

@@ -1581,8 +1581,8 @@ char combatGetState(void)
         return 'N';
 }
 
-bool combatAddParty(class Party * party, int dx, int dy, bool located,
-                       struct place *place, int x, int y)
+int combat_add_party(class Party * party, int dx, int dy, int located,
+                     struct place *place, int x, int y)
 {
         if (!located) {
                 // Caller has not specified a location so use the normal

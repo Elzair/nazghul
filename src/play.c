@@ -62,6 +62,10 @@
 #include <unistd.h>     // getpid()
 #include <errno.h>
 
+#ifndef USE_AMBUSH
+# define USE_AMBUSH 1
+#endif
+
 #define PROFILE_PLAY_LOOP 0
 
 enum cmdstate {
@@ -182,6 +186,24 @@ static void play_loop(void)
         // --------------------------------------------------------------------
 
         while (true) {
+
+                // ------------------------------------------------------------
+                // If the player party is camping then run the camping hook
+                // so the script can do things like ambushes, visions, etc.
+                // Since we don't know what the script might do check for party
+                // death and the Quit condition when it comes back.
+                // ------------------------------------------------------------
+
+                if (player_party->isCamping() && Session->camping_proc) {
+                        closure_exec(Session->camping_proc, "pp", player_party, 
+                                     Place);
+                        if (player_party->allDead()) {
+                                play_print_end_of_game_prompt();
+                                break;
+                        }
+                        if (Quit)
+                                break;
+                }
 
                 // ------------------------------------------------------------
                 // "Execute" the current place. This will loop through all

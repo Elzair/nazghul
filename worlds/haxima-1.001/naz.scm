@@ -78,9 +78,11 @@
 (define (passable? loc char)
   (kern-place-is-passable loc char))
 
+(define (obj-is-char? kobj) (kern-obj-is-being? kobj))
+
 ;; Check if a location is occupied by a character or party
 (define (occupied? loc)
-  (foldr (lambda (val kobj) (or val (kern-obj-is-char? kobj)))
+  (foldr (lambda (val kobj) (or val (obj-is-char? kobj)))
          #f 
          (kern-get-objects-at loc)))
 
@@ -123,9 +125,9 @@
 
 
 ;; Check if an object is hostile toward a character
-(define (is-hostile? kchar kobj)
-  (and (kern-obj-is-char? kobj)
-       (kern-char-is-hostile? kchar kobj)))
+(define (is-hostile? kbeing kobj)
+  (and (kern-obj-is-being? kobj)
+       (kern-being-is-hostile? kbeing kobj)))
 
 ;; Find all characters hostile to the given character
 (define (all-hostiles kchar)
@@ -138,7 +140,7 @@
 
 ;; Find all the characters in a place
 (define (all-chars kplace)
-  (filter kern-obj-is-char? (kern-place-get-objects kplace)))
+  (filter obj-is-char? (kern-place-get-objects kplace)))
 
 (define (all-in-range origin radius objlst)
   (filter (lambda (kobj) (<= (kern-get-distance origin 
@@ -187,6 +189,9 @@
     (if (not (null? path))
         ;; skip the first location in the path
         (follow-path (cdr path)))))
+
+(define (can-pathfind? kobj dest)
+  (not (null? (kern-obj-find-path kobj dest))))
 
 (define (notnull? val) (not (null? val)))
 

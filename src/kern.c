@@ -1789,6 +1789,31 @@ static pointer kern_obj_get_location(scheme *sc, pointer args)
         return pack(sc, "pdd", place, x, y);
 }
 
+static pointer kern_place_get_location(scheme *sc, pointer args)
+{
+        class Object *obj;
+        struct place *place;
+        int x, y;
+
+        if (unpack(sc, &args, "p", &place)) {
+                rt_err("kern-place-get-location: bad args");
+                return sc->NIL;
+        }
+
+        if (! place) {
+                rt_err("kern-place-get-location: null place");
+                return sc->NIL;
+        }
+
+        if (! place->location.place)
+                return sc->NIL;
+
+        return pack(sc, "pdd", 
+                    place->location.place, 
+                    place->location.x, 
+                    place->location.y);
+}
+
 static int kern_append_effect(struct hook_entry *entry, void *data)
 {
         pointer cell;
@@ -3929,9 +3954,21 @@ KERN_API_CALL(kern_get_objects_at)
 
 KERN_API_CALL(kern_obj_is_char)
 {
+        /* OBSOLETE! Use kern-obj-is-being */
         Object *obj;
 
         obj = unpack_obj(sc, &args, "kern-obj-is-char?");
+        if (!obj)
+                return sc->F;
+
+        return (obj->getLayer() == being_layer) ? sc->T : sc->F;
+}
+
+KERN_API_CALL(kern_obj_is_being)
+{
+        Object *obj;
+
+        obj = unpack_obj(sc, &args, "kern-obj-is-being?");
         if (!obj)
                 return sc->F;
 
@@ -4445,17 +4482,17 @@ KERN_API_CALL(kern_add_time_stop)
         return sc->T;
 }
 
-KERN_API_CALL(kern_char_is_hostile)
+KERN_API_CALL(kern_being_is_hostile)
 {
-        class Character *one, *another;
+        class Being *one, *another;
 
         if (unpack(sc, &args, "pp", &one, &another)) {
-                rt_err("kern-char-is-hostile: bad args");
+                rt_err("kern-being-is-hostile: bad args");
                 return sc->F;
         }
 
         if (! one || ! another) {
-                rt_err("kern-char-is-hostile: null character");
+                rt_err("kern-being-is-hostile: null character");
                 return sc->F;                
         }
 
@@ -5313,6 +5350,22 @@ KERN_API_CALL(kern_set_start_proc)
         return proc;
 }
 
+KERN_API_CALL(kern_set_camping_proc)
+{
+        pointer proc;
+
+        if (unpack(sc, &args, "o", &proc)) {
+                rt_err("kern-set-camping-proc");
+                return sc->NIL;
+        }
+
+        if (Session->camping_proc)
+                closure_del(Session->camping_proc);
+        Session->camping_proc = closure_new(sc, proc);
+
+        return proc;
+}
+
 KERN_API_CALL(kern_player_set_follow_mode)
 {
         player_party->enableFollowMode();
@@ -5928,7 +5981,7 @@ KERN_API_CALL(kern_begin_combat)
                 return sc->NIL;
 
         /* Combat expects the npc party to have valid coords, whereas I don't
-         * expect the script to always put the npc part on the map before
+         * expect the script to always put the npc party on the map before
          * calling this function, so force the location of the npc party to the
          * location specified. */
         party->setPlace(place);
@@ -5960,6 +6013,51 @@ KERN_API_CALL(kern_begin_combat)
                 
         combat_enter(&cinfo);
         return sc->T;
+}
+
+KERN_API_CALL(kern_ambush_while_camping)
+{
+        class Party *party;
+        int dx, dy;
+        struct place *place;
+
+        /* we need to be in town or wilderness combat for this to work; this
+         * will leak memory if it fails and the caller does not destroy the
+         * party */
+        if (place_is_wilderness(Place)) {
+                rt_err("kern-ambush-while-camping: not in combat");
+                return sc->F;
+        }
+
+        /* unpack the npc party */
+        party = (class Party*)unpack_obj(sc, &args, "kern-ambush-while-camping");
+        if (!party)
+                return sc->F;
+        
+        if (unpack(sc, &args, "p", &place)) {
+                rt_err("kern-ambush-while-camping: bad args");
+                return sc->F;
+        }
+
+        if (! place) {
+                rt_err("kern-ambush-while-camping: null place");
+                return sc->F;
+        }
+
+        /* If the npc party has a null or invalid direction vector then
+         * generate a random one. */
+        dx = party->getDx();
+        dy = party->getDy();
+        if ((! dx && ! dy) || (dx && dy)) {
+                dx = - player_party->getDx();
+                dy = - player_party->getDy();
+        }
+
+        if (combat_add_party(party, dx, dy, 0, place, 0, 0)) {
+                player_party->ambushWhileCamping();
+                return sc->T;
+        }
+        return sc->F;
 }
 
 KERN_API_CALL(kern_get_player)
@@ -6008,6 +6106,44 @@ scheme *kern_init(void)
 
         /* Setup the script-to-kernel API */
 
+        /* kern-arms-type api */
+        API_DECL(sc, "kern-arms-type-get-ammo-type", kern_arms_type_get_ammo_type);
+        API_DECL(sc, "kern-arms-type-get-range",     kern_arms_type_get_range);
+
+        /* kern-astral-body api */
+        API_DECL(sc, "kern-astral-body-get-gob", kern_astral_body_get_gob);
+        API_DECL(sc, "kern-astral-body-get-phase", kern_astral_body_get_phase);
+        API_DECL(sc, "kern-astral-body-set-gob", kern_astral_body_set_gob);
+
+        /* kern-being-api */
+        API_DECL(sc, "kern-being-get-base-faction", kern_being_get_base_faction);
+        API_DECL(sc, "kern-being-get-current-faction", kern_being_get_current_faction);
+        API_DECL(sc, "kern-being-get-visible-hostiles", kern_being_get_visible_hostiles);
+        API_DECL(sc, "kern-being-is-hostile?", kern_being_is_hostile);
+        API_DECL(sc, "kern-being-set-base-faction", kern_being_set_base_faction);
+
+        /* kern-char api */
+        API_DECL(sc, "kern-char-add-defense", kern_char_add_defense);
+        API_DECL(sc, "kern-char-attack", kern_char_attack);
+        API_DECL(sc, "kern-char-dec-mana", kern_char_dec_mana);
+        API_DECL(sc, "kern-char-charm", kern_char_charm);
+        API_DECL(sc, "kern-char-get-hp", kern_char_get_hp);
+        API_DECL(sc, "kern-char-get-inventory", kern_char_get_inventory);
+        API_DECL(sc, "kern-char-get-mana", kern_char_get_mana);
+        API_DECL(sc, "kern-char-get-party", kern_char_get_party);
+        API_DECL(sc, "kern-char-get-species", kern_char_get_species);
+        API_DECL(sc, "kern-char-get-strength", kern_char_get_strength);
+        API_DECL(sc, "kern-char-get-weapons", kern_char_get_weapons);
+        API_DECL(sc, "kern-char-kill", kern_char_kill);
+        API_DECL(sc, "kern-char-resurrect", kern_char_resurrect);
+        API_DECL(sc, "kern-char-set-sleep", kern_char_set_sleep);
+        API_DECL(sc, "kern-char-set-fleeing", kern_char_set_fleeing);
+        API_DECL(sc, "kern-char-is-asleep?", kern_char_is_asleep);
+        API_DECL(sc, "kern-char-uncharm", kern_char_uncharm);
+
+        /* kern-map api */
+        API_DECL(sc, "kern-map-rotate", kern_map_rotate);
+
         /* kern-mk api */
         API_DECL(sc, "kern-mk-arms-type", kern_mk_arms_type);
         API_DECL(sc, "kern-mk-astral-body", kern_mk_astral_body);
@@ -6037,21 +6173,6 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-mk-vehicle", kern_mk_vehicle);
         API_DECL(sc, "kern-mk-vehicle-type", kern_mk_vehicle_type);
 
-        /* kern-arms-type api */
-        API_DECL(sc, "kern-arms-type-get-ammo-type", kern_arms_type_get_ammo_type);
-        API_DECL(sc, "kern-arms-type-get-range",     kern_arms_type_get_range);
-
-        /* kern-set api */
-        API_DECL(sc, "kern-set-crosshair", kern_set_crosshair);
-        API_DECL(sc, "kern-set-cursor", kern_set_cursor);
-        API_DECL(sc, "kern-set-frame", kern_set_frame);
-        API_DECL(sc, "kern-set-ascii", kern_set_ascii);
-        API_DECL(sc, "kern-set-clock", kern_set_clock);
-
-        /* kern-terrain api */
-        API_DECL(sc, "kern-terrain-get-pclass", kern_terrain_get_pclass);
-        API_DECL(sc, "kern-terrain-set-combat-map", kern_terrain_set_combat_map);
-
         /* kern-obj api */
         API_DECL(sc, "kern-obj-add-food", kern_obj_add_food);
         API_DECL(sc, "kern-obj-add-gold", kern_obj_add_gold);
@@ -6078,6 +6199,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-obj-has?", kern_obj_has);
         API_DECL(sc, "kern-obj-heal", kern_obj_heal);
         API_DECL(sc, "kern-obj-inc-light", kern_obj_inc_light);
+        API_DECL(sc, "kern-obj-is-being?", kern_obj_is_being);
         API_DECL(sc, "kern-obj-is-char?", kern_obj_is_char);
         API_DECL(sc, "kern-obj-is-visible?", kern_obj_is_visible);
         API_DECL(sc, "kern-obj-move", kern_obj_move);
@@ -6097,34 +6219,10 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-obj-set-visible", kern_obj_set_visible);
         API_DECL(sc, "kern-obj-wander", kern_obj_wander);
 
-        /* kern-char api */
-        API_DECL(sc, "kern-char-add-defense", kern_char_add_defense);
-        API_DECL(sc, "kern-char-attack", kern_char_attack);
-        API_DECL(sc, "kern-char-dec-mana", kern_char_dec_mana);
-        API_DECL(sc, "kern-char-charm", kern_char_charm);
-        API_DECL(sc, "kern-char-get-hp", kern_char_get_hp);
-        API_DECL(sc, "kern-char-get-inventory", kern_char_get_inventory);
-        API_DECL(sc, "kern-char-get-mana", kern_char_get_mana);
-        API_DECL(sc, "kern-char-get-party", kern_char_get_party);
-        API_DECL(sc, "kern-char-get-species", kern_char_get_species);
-        API_DECL(sc, "kern-char-get-strength", kern_char_get_strength);
-        API_DECL(sc, "kern-char-get-weapons", kern_char_get_weapons);
-        API_DECL(sc, "kern-char-kill", kern_char_kill);
-        API_DECL(sc, "kern-char-resurrect", kern_char_resurrect);
-        API_DECL(sc, "kern-char-set-sleep", kern_char_set_sleep);
-        API_DECL(sc, "kern-char-set-fleeing", kern_char_set_fleeing);
-        API_DECL(sc, "kern-char-is-asleep?", kern_char_is_asleep);
-        API_DECL(sc, "kern-char-is-hostile?", kern_char_is_hostile);
-        API_DECL(sc, "kern-char-uncharm", kern_char_uncharm);
-
-        /* kern-astral-body api */
-        API_DECL(sc, "kern-astral-body-get-gob", kern_astral_body_get_gob);
-        API_DECL(sc, "kern-astral-body-get-phase", kern_astral_body_get_phase);
-        API_DECL(sc, "kern-astral-body-set-gob", kern_astral_body_set_gob);
-
         /* kern-place api */
         API_DECL(sc, "kern-place-get-beings", kern_place_get_beings);
         API_DECL(sc, "kern-place-get-height", kern_place_get_height);
+        API_DECL(sc, "kern-place-get-location", kern_place_get_location);
         API_DECL(sc, "kern-place-get-name", kern_place_get_name);
         API_DECL(sc, "kern-place-get-neighbor", kern_place_get_neighbor);
         API_DECL(sc, "kern-place-get-objects", kern_place_get_objects);
@@ -6138,17 +6236,24 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-place-set-terrain", kern_place_set_terrain);
         API_DECL(sc, "kern-place-synch", kern_place_synch);
 
-        /* kern-type api */
-        API_DECL(sc, "kern-type-get-gifc", kern_type_get_gifc);
-
-        /* map api */
-        API_DECL(sc, "kern-map-rotate", kern_map_rotate);
-
         /* player api */
         API_DECL(sc, "kern-player-get-gold", kern_player_get_gold);
-        API_DECL(sc, "kern-player-set-follow-mode", 
-                 kern_player_set_follow_mode);
+        API_DECL(sc, "kern-player-set-follow-mode", kern_player_set_follow_mode);
         API_DECL(sc, "kern-player-set-gold", kern_player_set_gold);
+
+        /* kern-set api */
+        API_DECL(sc, "kern-set-crosshair", kern_set_crosshair);
+        API_DECL(sc, "kern-set-cursor", kern_set_cursor);
+        API_DECL(sc, "kern-set-frame", kern_set_frame);
+        API_DECL(sc, "kern-set-ascii", kern_set_ascii);
+        API_DECL(sc, "kern-set-clock", kern_set_clock);
+
+        /* kern-terrain api */
+        API_DECL(sc, "kern-terrain-get-pclass", kern_terrain_get_pclass);
+        API_DECL(sc, "kern-terrain-set-combat-map", kern_terrain_set_combat_map);
+
+        /* kern-type api */
+        API_DECL(sc, "kern-type-get-gifc", kern_type_get_gifc);
 
         /* misc api */
         API_DECL(sc, "kern-add-magic-negated", kern_add_magic_negated);
@@ -6157,6 +6262,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-add-spell", kern_add_spell);
         API_DECL(sc, "kern-add-tick-job", kern_add_tick_job);
         API_DECL(sc, "kern-add-time-stop", kern_add_time_stop);
+        API_DECL(sc, "kern-ambush-while-camping", kern_ambush_while_camping);
         API_DECL(sc, "kern-add-xray-vision", kern_add_xray_vision);
         API_DECL(sc, "kern-begin-combat", kern_begin_combat);
         API_DECL(sc, "kern-blit-map", kern_blit_map);
@@ -6174,10 +6280,9 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-is-valid-location?", kern_is_valid_location);
         API_DECL(sc, "kern-print", kern_print);
         API_DECL(sc, "kern-search-rect", kern_search_rect);
-        API_DECL(sc, "kern-search-rect-for-terrain", 
-                 kern_search_rect_for_terrain);
-        API_DECL(sc, "kern-search-rect-for-obj-type", 
-                 kern_search_rect_for_obj_type);
+        API_DECL(sc, "kern-search-rect-for-terrain", kern_search_rect_for_terrain);
+        API_DECL(sc, "kern-search-rect-for-obj-type", kern_search_rect_for_obj_type);
+        API_DECL(sc, "kern-set-camping-proc", kern_set_camping_proc);
         API_DECL(sc, "kern-set-spell-words", kern_set_spell_words);
         API_DECL(sc, "kern-set-start-proc", kern_set_start_proc);
         API_DECL(sc, "kern-set-wind", kern_set_wind);
@@ -6189,8 +6294,7 @@ scheme *kern_init(void)
         
         /* ui api */
         API_DECL(sc, "kern-ui-direction", kern_ui_direction);
-        API_DECL(sc, "kern-ui-select-party-member", 
-                 kern_ui_select_party_member);
+        API_DECL(sc, "kern-ui-select-party-member", kern_ui_select_party_member);
         API_DECL(sc, "kern-ui-target", kern_ui_target);
         API_DECL(sc, "kern-ui-waitkey", kern_ui_waitkey);
         API_DECL(sc, "kern-ui-page-text", kern_ui_page_text);
@@ -6231,16 +6335,6 @@ scheme *kern_init(void)
         /* kern-party-api */
         API_DECL(sc, "kern-party-add-member", kern_party_add_member);
         
-        /* kern-being-api */
-        API_DECL(sc, "kern-being-get-base-faction", 
-                 kern_being_get_base_faction);
-        API_DECL(sc, "kern-being-get-current-faction", 
-                 kern_being_get_current_faction);
-        API_DECL(sc, "kern-being-get-visible-hostiles", 
-                 kern_being_get_visible_hostiles);
-        API_DECL(sc, "kern-being-set-base-faction", 
-                 kern_being_set_base_faction);
-
 
         /* Revisit: probably want to provide some kind of custom port here. */
         scheme_set_output_port_file(sc, stderr);

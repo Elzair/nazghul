@@ -77,7 +77,7 @@
   (define (check val loc)
     (or val
         (foldr (lambda (a b) (or a
-                                 (and (kern-obj-is-char? b)
+                                 (and (obj-is-char? b)
                                       (not (is-spider? b)))))
                #f
                (kern-get-objects-at loc))))
