@@ -166,46 +166,46 @@ PLACE  p_empire_city {
     vt_ship 44 35 west 100;
 
     // doors
-    mech_hdoor door 62 33 "closed door";
-    mech_vdoor door 30  1 "closed door";
-    mech_hdoor door 28  4 "closed door";
-    mech_hdoor door  1 30 "closed door";
-    mech_hdoor door  1 33 "closed door";
-    mech_vdoor door  4 28 "closed door";
-    mech_hdoor door 28 59 "closed door";
-    mech_hdoor door 35 59 "closed door";
-    mech_vdoor door 30 62 "closed door";
-    mech_vdoor door 33 62 "closed door";
+    mech_hdoor door 62 33 "closed";
+    mech_vdoor door 30  1 "closed";
+    mech_hdoor door 28  4 "closed";
+    mech_hdoor door  1 30 "closed";
+    mech_hdoor door  1 33 "closed";
+    mech_vdoor door  4 28 "closed";
+    mech_hdoor door 28 59 "closed";
+    mech_hdoor door 35 59 "closed";
+    mech_vdoor door 30 62 "closed";
+    mech_vdoor door 33 62 "closed";
 
     // castle mechs
-    castle_drawbridge west_bridge           38 11 "lever up";
-    mech_portcullis   castle_bay_portcullis 49 27 "lowered portcullis";
-    mech_B_lever      castle_bay_lever      56 26 "lever right";
+    castle_drawbridge west_bridge           38 11 "up";
+    mech_portcullis   castle_bay_portcullis 49 27 "lowered";
+    mech_B_lever      castle_bay_lever      56 26 "right";
     CONNECT castle_bay_lever <=> castle_bay_portcullis;
 
     // shipwright mechs
-    mech_portcullis shipwright_portcullis_1 46 35 "lowered portcullis";
-    mech_portcullis shipwright_portcullis_2 46 36 "lowered portcullis";
-    mech_portcullis shipwright_portcullis_3 46 37 "lowered portcullis";
-    invisible_step_trigger shipwright_exit_trigger_1 47 35 "";
-    invisible_step_trigger shipwright_exit_trigger_2 47 36 "";
-    invisible_step_trigger shipwright_exit_trigger_3 47 37 "";
-    mech_R_lever shipwright_exit_lever 45 32 "lever down";
+    mech_portcullis shipwright_portcullis_1 46 35 "lowered";
+    mech_portcullis shipwright_portcullis_2 46 36 "lowered";
+    mech_portcullis shipwright_portcullis_3 46 37 "lowered";
+    invisible_step_trigger shipwright_exit_trigger_1 47 35 "invisible";
+    invisible_step_trigger shipwright_exit_trigger_2 47 36 "invisible";
+    invisible_step_trigger shipwright_exit_trigger_3 47 37 "invisible";
+    mech_R_lever shipwright_exit_lever 45 32 "down";
     CONNECT shipwright_exit_lever    <=> shipwright_portcullis_1;
     CONNECT shipwright_portcullis_1   => shipwright_portcullis_2;
     CONNECT shipwright_portcullis_2   => shipwright_portcullis_3;
     CONNECT shipwright_exit_trigger_1 => shipwright_portcullis_1;
     CONNECT shipwright_exit_trigger_2 => shipwright_portcullis_1;
     CONNECT shipwright_exit_trigger_3 => shipwright_portcullis_1;
-    mech_vdoor door 35 32 "magically locked door";
+    mech_vdoor door 35 32 "magically locked";
     
     // SAM: Examples of all 5 lever types:
     // 
-    //mech_L_lever mll 36 35 "lever up";
-    //mech_R_lever mrl 37 38 "lever up";
-    //mech_T_lever mtl 36 34 "lever left";
-    //mech_B_lever mbl 36 37 "lever left";
-    //mech_C_lever mbl 37 35 "lever left";
+    //mech_L_lever mll 36 35 "up";
+    //mech_R_lever mrl 37 38 "up";
+    //mech_T_lever mtl 36 34 "left";
+    //mech_B_lever mbl 36 37 "left";
+    //mech_C_lever mbl 37 35 "left";
 
     // cardboard characters
     t_town_guards              61 33 (ALIGN_TOWN) 1 c_guard;

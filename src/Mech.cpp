@@ -141,6 +141,9 @@ static bool load_state(class Loader * loader, struct mech_state *state)
 		} else if (loader->matchWord("opaque")) {
 			if (!loader->getBool(&state->opaque))
 				goto fail;
+		} else if (loader->matchWord("invisible")) {
+			if (!loader->getBool(&state->invisible))
+				goto fail;                        
 		} else {
 			loader->setError("Invalid state field: '%s'",
 					 loader->lexer->lexeme);
@@ -389,12 +392,14 @@ struct sprite *Mech::getSprite()
 	return NULL;
 }
 
+#ifdef USE_OLD_MECH_GETNAME
 char *Mech::getName()
 {
 	if (state)
 		return state->name;
 	return "unknown";
 }
+#endif
 
 int Mech::getPmask()
 {
@@ -417,4 +422,31 @@ bool Mech::is_opaque(void)
 	if (state)
 		return state->opaque;
 	return false;
+}
+
+bool Mech::isVisible(void)
+{
+        if (state)
+                return !state->invisible;
+        return true;
+}
+
+void Mech::describe(int count)
+{
+        char *name = getName();
+
+        if (state && state->name) {
+		if (isvowel(state->name[0]))
+			consolePrint("an ");
+		else
+			consolePrint("a ");
+                consolePrint("%s ", state->name);
+        } else {
+		if (isvowel(name[0]))
+			consolePrint("an ");
+		else
+			consolePrint("a ");
+        }
+
+        consolePrint(name);
 }

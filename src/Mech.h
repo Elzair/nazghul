@@ -28,11 +28,12 @@
 #include "conv.h"
 
 struct mech_state {
-	char *name;
-	struct sprite *sprite;
-	int pmask;
-	int light;
-	bool opaque;
+	char *name;              // identifies and describes this state
+	struct sprite *sprite;   // shown when rendered
+	int pmask;               // passability to travelers
+	int light;               // amount radiated (for lamps or things that glow)
+	bool opaque;             // blocks line-of-sight
+        bool invisible;          // is not shown or described
 };
 
 #ifdef OLD_MECH_ACTION
@@ -114,10 +115,14 @@ class Mech:public Object {
 	virtual bool load(class Loader * loader);
 	virtual bool activate(int method);
 	virtual struct sprite *getSprite();
+#ifdef USE_OLD_MECH_GETNAME
 	virtual char *getName();
+#endif
 	virtual int getPmask();
 	virtual int getLight();
 	virtual bool is_opaque();
+	virtual bool isVisible();
+	virtual void describe(int count);
 
 	class Mech *port;
 	struct mech_state *state;

@@ -68,20 +68,20 @@ MECH_TYPE type_name { \
 }
 
 MAKE_LEVER_MECH(mech_L_lever,  "lever", 
-                "lever up",    s_left_lever_up,    
-                "lever down",  s_left_lever_down);
+                "up",    s_left_lever_up,    
+                "down",  s_left_lever_down);
 MAKE_LEVER_MECH(mech_R_lever,  "lever", 
-                "lever up",    s_right_lever_up,   
-                "lever down",  s_right_lever_down);
+                "up",    s_right_lever_up,   
+                "down",  s_right_lever_down);
 MAKE_LEVER_MECH(mech_T_lever,  "lever", 
-                "lever left",  s_top_lever_left,   
-                "lever right", s_top_lever_right);
+                "left",  s_top_lever_left,   
+                "right", s_top_lever_right);
 MAKE_LEVER_MECH(mech_B_lever,  "lever", 
-                "lever left",  s_bottom_lever_left,
-                "lever right", s_bottom_lever_right);
+                "left",  s_bottom_lever_left,
+                "right", s_bottom_lever_right);
 MAKE_LEVER_MECH(mech_C_lever,  "lever", 
-                "lever left",  s_floor_lever_left, 
-                "lever right", s_floor_lever_right);
+                "left",  s_floor_lever_left, 
+                "right", s_floor_lever_right);
 
 
 #if 0
@@ -92,26 +92,26 @@ MECH_TYPE mech_L_lever {
   }
   states {
     {
-      name   "lever up";
+      name   "up";
       sprite s_L_lever_up;
     }
     {
-      name   "lever down";
+      name   "down";
       sprite s_L_lever_down;
     }
   }
   transitions {
     
-    state      "lever up";
+    state      "up";
     event      MECH_HANDLE;
-    next_state "lever down";
+    next_state "down";
     actions {
       send_signal MECH_SIGNAL_DOWN;
     }
     
-    state      "lever down";
+    state      "down";
     event      MECH_HANDLE;
-    next_state "lever up";
+    next_state "up";
     actions {
       send_signal MECH_SIGNAL_UP;
     }
@@ -126,26 +126,26 @@ MECH_TYPE mech_R_lever {
   }
   states {
     {
-      name   "lever up";
+      name   "up";
       sprite s_R_lever_up;
     }
     {
-      name   "lever down";
+      name   "down";
       sprite s_R_lever_down;
     }
   }
   transitions {
     
-    state      "lever up";
+    state      "up";
     event      MECH_HANDLE;
-    next_state "lever down";
+    next_state "down";
     actions {
       send_signal MECH_SIGNAL_DOWN;
     }
     
-    state      "lever down";
+    state      "down";
     event      MECH_HANDLE;
-    next_state "lever up";
+    next_state "up";
     actions {
       send_signal MECH_SIGNAL_UP;
     }
@@ -154,32 +154,33 @@ MECH_TYPE mech_R_lever {
 #endif // 0
 
 
-#define MAKE_SIMPLE_STEP_TRIGGER(type_name, desc, _sprite, _sig) \
+#define MAKE_SIMPLE_STEP_TRIGGER(type_name, _name, _state, _sprite, _sig, _invisible) \
 MECH_TYPE type_name { \
-  name desc; \
+  name _name; \
   defaults { \
     sprite _sprite; \
     pmask  PASS_ALL; \
+    invisible _invisible; \
   } \
   states { \
     { \
-       name   desc; \
+       name   _state; \
     } \
   } \
   transitions { \
-    state      desc; \
+    state      _state; \
     event      MECH_STEP; \
-    next_state desc; \
+    next_state _state; \
     actions { \
       send_signal _sig; \
     } \
   } \
 }
 
-MAKE_SIMPLE_STEP_TRIGGER(mech_pressure_plate,    "pressure plate", 
-                         s_floor_plate,          MECH_SIGNAL_CHANGE);
-MAKE_SIMPLE_STEP_TRIGGER(invisible_step_trigger, "", 
-                         null,                   MECH_SIGNAL_DOWN);
+MAKE_SIMPLE_STEP_TRIGGER(mech_pressure_plate,    "pressure plate", "simple",
+                         s_floor_plate,          MECH_SIGNAL_CHANGE, 0);
+MAKE_SIMPLE_STEP_TRIGGER(invisible_step_trigger, "trigger", "invisible",
+                         null,                   MECH_SIGNAL_DOWN, 1);
 
 // Define a new type of mechanism: a simple door that responds to a signal and
 // sends feedback (usually to the sender, but really whoever is wired to
@@ -190,42 +191,42 @@ MECH_TYPE mech_portcullis {
 
   states {
     {
-      name   "raised portcullis";
+      name   "raised";
       sprite s_portcullis_up;
       pmask  PASS_ALL;
     }
     {
-      name   "lowered portcullis";
+      name   "lowered";
       sprite s_portcullis_down;
       pmask  SOLID;
     }
   }
 
   transitions {
-    state      "raised portcullis";
+    state      "raised";
     event      MECH_SIGNAL_DOWN;
-    next_state "lowered portcullis";
+    next_state "lowered";
     actions {
       send_signal MECH_SIGNAL_DOWN;
     }
     
-    state      "raised portcullis";
+    state      "raised";
     event      MECH_SIGNAL_CHANGE;
-    next_state "lowered portcullis";
+    next_state "lowered";
     actions {
       send_signal MECH_SIGNAL_DOWN;
     }
     
-    state      "lowered portcullis";
+    state      "lowered";
     event      MECH_SIGNAL_UP;
-    next_state "raised portcullis";
+    next_state "raised";
     actions {
       send_signal MECH_SIGNAL_UP;
     }
     
-    state      "lowered portcullis";
+    state      "lowered";
     event      MECH_SIGNAL_CHANGE;
-    next_state "raised portcullis";
+    next_state "raised";
     actions {
       send_signal MECH_SIGNAL_UP;
     }
@@ -238,33 +239,33 @@ MECH_TYPE mech_portcullis {
 // sends feedback (usually to the sender, but really whoever is wired to
 // receive signals from it... confused yet? ;) ).
 MECH_TYPE mech_light {
-  name "light";
+  name "light source";
   defaults {
     sprite null;
     pmask  PASS_ALL;
   }
   states {
     {
-      name "lit light source";
+      name "lit";
       light 1024;
     }
     {
-      name "unlit light source";
+      name "unlit";
       light 0;
     }
   }
   transitions {
     
-    state      "lit light source";
+    state      "lit";
     event      MECH_SIGNAL_DOWN;
-    next_state "unlit light source";
+    next_state "unlit";
     actions {
       send_signal MECH_SIGNAL_DOWN;
     }
     
-    state      "unlit light source";
+    state      "unlit";
     event      MECH_SIGNAL_UP;
-    next_state "lit light source";
+    next_state "lit";
     actions {
       send_signal MECH_SIGNAL_UP;
     }
@@ -277,7 +278,7 @@ MECH_TYPE mech_vdoor {
   defaults {}
   states {
     {
-      name   "closed door";
+      name   "closed";
       sprite s_door;
       pmask  SOLID;
       opaque 1;
@@ -289,13 +290,13 @@ MECH_TYPE mech_vdoor {
       opaque 0;
     }
     {
-      name   "locked door";
+      name   "locked";
       sprite s_door_locked;
       pmask  SOLID;
       opaque 1;
     }
     {
-      name   "magically locked door";
+      name   "magically locked";
       sprite s_door_locked;
       pmask  SOLID;
       opaque 1;
@@ -304,7 +305,7 @@ MECH_TYPE mech_vdoor {
   
   transitions {
     
-    state      "closed door";
+    state      "closed";
     event      MECH_OPEN;
     next_state "open door";
     actions {
@@ -318,35 +319,35 @@ MECH_TYPE mech_vdoor {
     
     state      "open door";
     event      MECH_CLOSE;
-    next_state "closed door";
+    next_state "closed";
     actions {
       send_signal MECH_CLOSE;
     }
     
-    state      "closed door";
+    state      "closed";
     event      MECH_LOCK;
-    next_state "locked door";
+    next_state "locked";
     actions {
       send_signal MECH_LOCK;
     }
     
-    state      "locked door";
+    state      "locked";
     event      MECH_UNLOCK;
-    next_state "closed door";
+    next_state "closed";
     actions {
       send_signal MECH_UNLOCK;
     }
     
-    state      "closed door";
+    state      "closed";
     event      MECH_MAGIC_LOCK;
-    next_state "magically locked door";
+    next_state "magically locked";
     actions {
       send_signal MECH_MAGIC_LOCK;
     }
     
-    state      "magically locked door";
+    state      "magically locked";
     event      MECH_MAGIC_UNLOCK;
-    next_state "closed door";
+    next_state "closed";
     actions {
       send_signal MECH_MAGIC_UNLOCK;
     }
@@ -359,25 +360,25 @@ MECH_TYPE mech_hdoor {
   defaults {}
   states {
     {
-      name   "closed door";
+      name   "closed";
       sprite s_hdoor;
       pmask  SOLID;
       opaque 1;
     }
     {
-      name   "open door";
+      name   "open";
       sprite null;
       pmask  PASS_ALL;
       opaque 0;
     }
     {
-      name   "locked door";
+      name   "locked";
       sprite s_hdoor_locked;
       pmask  SOLID;
       opaque 1;
     }
     {
-      name   "magically locked door";
+      name   "magically locked";
       sprite s_hdoor_locked;
       pmask  SOLID;
       opaque 1;
@@ -386,9 +387,9 @@ MECH_TYPE mech_hdoor {
   
   transitions {
     
-    state      "closed door";
+    state      "closed";
     event      MECH_OPEN;
-    next_state "open door";
+    next_state "open";
     actions {
       send_signal MECH_OPEN;
       
@@ -398,37 +399,37 @@ MECH_TYPE mech_hdoor {
       set_alarm 16 MECH_CLOSE;
     }
     
-    state      "open door";
+    state      "open";
     event      MECH_CLOSE;
-    next_state "closed door";
+    next_state "closed";
     actions {
       send_signal MECH_CLOSE;
     }
     
-    state      "closed door";
+    state      "closed";
     event      MECH_LOCK;
-    next_state "locked door";
+    next_state "locked";
     actions {
       send_signal MECH_LOCK;
     }
     
-    state      "locked door";
+    state      "locked";
     event      MECH_UNLOCK;
-    next_state "closed door";
+    next_state "closed";
     actions {
       send_signal MECH_UNLOCK;
     }
     
-    state      "closed door";
+    state      "closed";
     event      MECH_MAGIC_LOCK;
-    next_state "magically locked door";
+    next_state "magically locked";
     actions {
       send_signal MECH_MAGIC_LOCK;
     }
     
-    state      "magically locked door";
+    state      "magically locked";
     event      MECH_MAGIC_UNLOCK;
-    next_state "closed door";
+    next_state "closed";
     actions {
       send_signal MECH_MAGIC_UNLOCK;
     }
@@ -476,27 +477,27 @@ MECH_TYPE _name { \
   } \
   states { \
     { \
-      name "lever up"; \
+      name "up"; \
       sprite s_floor_lever_left; \
     } \
     {  \
-      name "lever down"; \
+      name "down"; \
       sprite s_floor_lever_right; \
     } \
   } \
   transitions { \
  \
-    state "lever up"; \
+    state "up"; \
     event MECH_HANDLE; \
-    next_state "lever down"; \
+    next_state "down"; \
     actions { \
       print open_msg; \
       blit_map plc x y map1 0 0 w h 0; \
     } \
  \
-    state "lever down"; \
+    state "down"; \
     event MECH_HANDLE; \
-    next_state "lever up"; \
+    next_state "up"; \
     actions { \
       print close_msg; \
       blit_map plc x y map2 0 0 w h 0; \

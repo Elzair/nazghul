@@ -95,27 +95,27 @@ MECH_TYPE mech_bog_trap_L_lever {
   }
   states {
     {
-      name "lever up";
+      name "up";
       sprite s_L_lever_up;
     }
     { 
-      name "lever down";
+      name "down";
       sprite s_L_lever_down;
     }
   }
   transitions {
 
-    state "lever up";
+    state "up";
     event MECH_HANDLE;
-    next_state "lever down";
+    next_state "down";
     actions {
       print "The floor sinks, revealing a bog!";
       blit_map p_prison_chamber 9 1 m_BOG_TRAP_OPEN 0 0 3 2 0;
     }
 
-    state "lever down";
+    state "down";
     event MECH_HANDLE;
-    next_state "lever up";
+    next_state "up";
     actions {
       print "The floor rises, leaving a muddy floor";
       blit_map p_prison_chamber 9 1 m_BOG_TRAP_CLOSED 0 0 3 2 0;
@@ -154,27 +154,27 @@ MECH_TYPE mech_boulder_trap_R_lever {
   }
   states {
     {
-      name "lever up";
+      name "up";
       sprite s_R_lever_up;
     }
     { 
-      name "lever down";
+      name "down";
       sprite s_R_lever_down;
     }
   }
   transitions {
 
-    state "lever up";
+    state "up";
     event MECH_HANDLE;
-    next_state "lever down";
+    next_state "down";
     actions {
       print "Boulders fall from the ceiling, filling the cell!";
       blit_map p_prison_chamber 18 1 m_BOULDER_TRAP_OPEN 0 0 3 2 0;
     }
 
-    state "lever down";
+    state "down";
     event MECH_HANDLE;
-    next_state "lever up";
+    next_state "up";
     actions {
       print "The boulders retract, leaving the cell empty.";
       blit_map p_prison_chamber 18 1 m_BOULDER_TRAP_CLOSED 0 0 3 2 0;
@@ -212,27 +212,27 @@ MECH_TYPE mech_flame_barrier_trap_L_lever {
   }
   states {
     {
-      name "lever up";
+      name "up";
       sprite s_L_lever_up;
     }
     { 
-      name "lever down";
+      name "down";
       sprite s_L_lever_down;
     }
   }
   transitions {
 
-    state "lever up";
+    state "up";
     event MECH_HANDLE;
-    next_state "lever down";
+    next_state "down";
     actions {
       print "You hear cracking flames!";
       blit_map p_prison_chamber 26 27 m_FLAME_BARRIER_TRAP_OPEN 0 0 1 1 0;
     }
 
-    state "lever down";
+    state "down";
     event MECH_HANDLE;
-    next_state "lever up";
+    next_state "up";
     actions {
       print "The sounds of flame stop.";
       blit_map p_prison_chamber 26 27 m_FLAME_BARRIER_TRAP_CLOSED 0 0 1 1 0;
@@ -256,72 +256,72 @@ PLACE p_prison_chamber {
   underground 1;
   objects {
     // Entry Hall lights
-    mech_R_lever light_switch 30 14 "lever down";
-    mech_light   light_1      31 13 "unlit light source";
-    mech_light   light_2      31 20 "unlit light source";
+    mech_R_lever light_switch 30 14 "down";
+    mech_light   light_1      31 13 "unlit";
+    mech_light   light_2      31 20 "unlit";
     CONNECT light_switch => light_1;
     CONNECT light_1      => light_2;
 
     // Some ordinary doors
-    mech_hdoor door_1 22 20 "closed door";
-    mech_hdoor door_1 23 20 "closed door";
+    mech_hdoor door_1 22 20 "closed";
+    mech_hdoor door_1 23 20 "closed";
 
     // Prison Sign lights
-    mech_light   light_3       9 20 "lit light source";
-    mech_light   light_4      12 20 "lit light source";
-    mech_light   light_5      16 20 "lit light source";
-    mech_light   light_6      18 20 "lit light source";
+    mech_light   light_3       9 20 "lit";
+    mech_light   light_4      12 20 "lit";
+    mech_light   light_5      16 20 "lit";
+    mech_light   light_6      18 20 "lit";
 
     // Guard Room lights
-    mech_light   light_7       2 22 "lit light source";
-    mech_light   light_8       2 27 "lit light source";
-    mech_light   light_9       9 25 "lit light source";
-    mech_light   light_10      9 29 "lit light source";
-    mech_light   light_11     13 25 "lit light source";
-    mech_light   light_12     13 29 "lit light source";
+    mech_light   light_7       2 22 "lit";
+    mech_light   light_8       2 27 "lit";
+    mech_light   light_9       9 25 "lit";
+    mech_light   light_10      9 29 "lit";
+    mech_light   light_11     13 25 "lit";
+    mech_light   light_12     13 29 "lit";
 
 
     // Torture Chamber Entrance Porcullis
-    mech_pressure_plate plate_a                    14 8 "pressure plate";
-    mech_pressure_plate plate_b                    14 6 "pressure plate";
-    mech_portcullis     torture_chamber_portcullis 14 7 "lowered portcullis";
+    mech_pressure_plate plate_a                    14 8 "simple";
+    mech_pressure_plate plate_b                    14 6 "simple";
+    mech_portcullis     torture_chamber_portcullis 14 7 "lowered";
     CONNECT plate_a => torture_chamber_portcullis;
     CONNECT plate_b => torture_chamber_portcullis;
 
     // Swamp Door and Trap:
-    mech_L_lever    swamp_door_lever   13  3 "lever up";
-    mech_portcullis swamp_portcullis   10  3 "raised portcullis";
+    mech_L_lever    swamp_door_lever   13  3 "up";
+    mech_portcullis swamp_portcullis   10  3 "raised";
     CONNECT swamp_door_lever <=> swamp_portcullis;
-    mech_bog_trap_L_lever swamp_trap_lever 13 1 "lever up";
+    mech_bog_trap_L_lever swamp_trap_lever 13 1 "up";
 
     // Rock Door and Trap:
-    mech_R_lever rock_door_lever       16  3 "lever up";
-    mech_portcullis rock_portcullis    19  3 "raised portcullis";
+    mech_R_lever rock_door_lever       16  3 "up";
+    mech_portcullis rock_portcullis    19  3 "raised";
     CONNECT rock_door_lever <=> rock_portcullis;
-    mech_boulder_trap_R_lever boulder_trap_lever 16 1 "lever up";
+    mech_boulder_trap_R_lever boulder_trap_lever 16 1 "up";
 
     // Prison main doors:
-    mech_L_lever    prison_doors_lever 1 22 "lever down";
-    mech_portcullis prison_door_1      2 23 "lowered portcullis";
-    mech_portcullis prison_door_2      3 25 "lowered portcullis";
-    mech_portcullis prison_door_3      2 28 "lowered portcullis";
+    mech_L_lever    prison_doors_lever 1 22 "down";
+    mech_portcullis prison_door_1      2 23 "lowered";
+    mech_portcullis prison_door_2      3 25 "lowered";
+    mech_portcullis prison_door_3      2 28 "lowered";
     CONNECT prison_doors_lever => prison_door_1;
     CONNECT prison_door_1      => prison_door_2;
     CONNECT prison_door_2      => prison_door_3;
 
     // Cell Doors A,B,C, and D,E,F
-    mech_R_lever cell_lever_A  7 24 "lever down";
-    mech_R_lever cell_lever_B  9 24 "lever down";
-    mech_R_lever cell_lever_C 11 24 "lever down";
-    mech_R_lever cell_lever_D  7 30 "lever down";
-    mech_R_lever cell_lever_E  9 30 "lever down";
-    mech_R_lever cell_lever_F 11 30 "lever down";
-    mech_portcullis cell_door_A 16 26 "lowered portcullis";
-    mech_portcullis cell_door_B 20 26 "lowered portcullis";
-    mech_portcullis cell_door_C 24 26 "lowered portcullis";
-    mech_portcullis cell_door_D 16 28 "lowered portcullis";
-    mech_portcullis cell_door_E 20 28 "lowered portcullis";
-    mech_portcullis cell_door_F 24 28 "lowered portcullis";
+    mech_R_lever cell_lever_A  7 24 "down";
+    mech_R_lever cell_lever_B  9 24 "down";
+    mech_R_lever cell_lever_C 11 24 "down";
+    mech_R_lever cell_lever_D  7 30 "down";
+    mech_R_lever cell_lever_E  9 30 "down";
+    mech_R_lever cell_lever_F 11 30 "down";
+    mech_portcullis cell_door_A 16 26 "lowered";
+    mech_portcullis cell_door_B 20 26 "lowered";
+    mech_portcullis cell_door_C 24 26 "lowered";
+    mech_portcullis cell_door_D 16 28 "lowered";
+    mech_portcullis cell_door_E 20 28 "lowered";
+    mech_portcullis cell_door_F 24 28 "lowered";
     CONNECT cell_lever_A <=> cell_door_A;
     CONNECT cell_lever_B <=> cell_door_B;
     CONNECT cell_lever_C <=> cell_door_C;
@@ -330,29 +330,29 @@ PLACE p_prison_chamber {
     CONNECT cell_lever_F <=> cell_door_F;
 
     // Guard Room portcullises:
-    mech_L_lever    guard_room_lever  1 27 "lever down";
-    mech_portcullis guard_door_A     12 27 "lowered portcullis";
-    mech_portcullis guard_door_B     14 27 "lowered portcullis";
+    mech_L_lever    guard_room_lever  1 27 "down";
+    mech_portcullis guard_door_A     12 27 "lowered";
+    mech_portcullis guard_door_B     14 27 "lowered";
     CONNECT guard_room_lever => guard_door_A;
     CONNECT guard_door_A     => guard_door_B;
 
     // Special Cell Door (starts closed) and Flame Barrier
-    mech_L_lever    special_cell_lever  1 30 "lever down";
-    mech_portcullis special_cell_door  27 27 "lowered portcullis";
+    mech_L_lever    special_cell_lever  1 30 "down";
+    mech_portcullis special_cell_door  27 27 "lowered";
     CONNECT special_cell_lever <=> special_cell_door;
-    mech_flame_barrier_trap_L_lever barrier_lever 3 30 "lever down";
+    mech_flame_barrier_trap_L_lever barrier_lever 3 30 "down";
 
     // Water Trap
-    mech_water_trap_L_lever water_trap 1 6 "lever up";
+    mech_water_trap_L_lever water_trap 1 6 "up";
     
     // Lava Trap and Fire Trap (TODO)
-    mech_L_lever lava_trap_lever 30 1 "lever up";  // inoperative
-    mech_L_lever fire_trap_lever 30 6 "lever up";  // inoperative
+    mech_L_lever lava_trap_lever 30 1 "up";  // inoperative
+    mech_L_lever fire_trap_lever 30 6 "up";  // inoperative
     //t_trigger 30  1 TRIG_HANDLE 1 1 TRIG_ACT_TERRAIN t_lava         27  1 1 2
     //t_trigger 30  6 TRIG_HANDLE 1 1 TRIG_ACT_TERRAIN t_fire_terrain 27  5 1 2
     
     // Guard Room trap (TODO)
-    mech_L_lever guard_trap_lever 1 25 "lever up";  // inoperative
+    mech_L_lever guard_trap_lever 1 25 "up";  // inoperative
     //t_trigger  1 25 TRIG_HANDLE 1 1 TRIG_ACT_TERRAIN t_deep 13 26 1 3
 
   } // objects

@@ -3169,81 +3169,81 @@ CHAR ch_Mesmeme {
   readied {
   }
 }
-MECH_TYPE mech_L_lever { name "lever"; defaults { pmask 255; } states { { name "lever up"; sprite s_left_lever_up; } { name "lever down"; sprite s_left_lever_down; } } transitions { state "lever up"; event 3; next_state "lever down"; actions { send_signal 101; } state "lever down"; event 3; next_state "lever up"; actions { send_signal 100; } } };
-MECH_TYPE mech_R_lever { name "lever"; defaults { pmask 255; } states { { name "lever up"; sprite s_right_lever_up; } { name "lever down"; sprite s_right_lever_down; } } transitions { state "lever up"; event 3; next_state "lever down"; actions { send_signal 101; } state "lever down"; event 3; next_state "lever up"; actions { send_signal 100; } } };
-MECH_TYPE mech_T_lever { name "lever"; defaults { pmask 255; } states { { name "lever left"; sprite s_top_lever_left; } { name "lever right"; sprite s_top_lever_right; } } transitions { state "lever left"; event 3; next_state "lever right"; actions { send_signal 101; } state "lever right"; event 3; next_state "lever left"; actions { send_signal 100; } } };
-MECH_TYPE mech_B_lever { name "lever"; defaults { pmask 255; } states { { name "lever left"; sprite s_bottom_lever_left; } { name "lever right"; sprite s_bottom_lever_right; } } transitions { state "lever left"; event 3; next_state "lever right"; actions { send_signal 101; } state "lever right"; event 3; next_state "lever left"; actions { send_signal 100; } } };
-MECH_TYPE mech_C_lever { name "lever"; defaults { pmask 255; } states { { name "lever left"; sprite s_floor_lever_left; } { name "lever right"; sprite s_floor_lever_right; } } transitions { state "lever left"; event 3; next_state "lever right"; actions { send_signal 101; } state "lever right"; event 3; next_state "lever left"; actions { send_signal 100; } } };
-MECH_TYPE mech_pressure_plate { name "pressure plate"; defaults { sprite s_floor_plate; pmask 255; } states { { name "pressure plate"; } } transitions { state "pressure plate"; event 2; next_state "pressure plate"; actions { send_signal 102; } } };
-MECH_TYPE invisible_step_trigger { name ""; defaults { sprite null; pmask 255; } states { { name ""; } } transitions { state ""; event 2; next_state ""; actions { send_signal 101; } } };
+MECH_TYPE mech_L_lever { name "lever"; defaults { pmask 255; } states { { name "up"; sprite s_left_lever_up; } { name "down"; sprite s_left_lever_down; } } transitions { state "up"; event 3; next_state "down"; actions { send_signal 101; } state "down"; event 3; next_state "up"; actions { send_signal 100; } } };
+MECH_TYPE mech_R_lever { name "lever"; defaults { pmask 255; } states { { name "up"; sprite s_right_lever_up; } { name "down"; sprite s_right_lever_down; } } transitions { state "up"; event 3; next_state "down"; actions { send_signal 101; } state "down"; event 3; next_state "up"; actions { send_signal 100; } } };
+MECH_TYPE mech_T_lever { name "lever"; defaults { pmask 255; } states { { name "left"; sprite s_top_lever_left; } { name "right"; sprite s_top_lever_right; } } transitions { state "left"; event 3; next_state "right"; actions { send_signal 101; } state "right"; event 3; next_state "left"; actions { send_signal 100; } } };
+MECH_TYPE mech_B_lever { name "lever"; defaults { pmask 255; } states { { name "left"; sprite s_bottom_lever_left; } { name "right"; sprite s_bottom_lever_right; } } transitions { state "left"; event 3; next_state "right"; actions { send_signal 101; } state "right"; event 3; next_state "left"; actions { send_signal 100; } } };
+MECH_TYPE mech_C_lever { name "lever"; defaults { pmask 255; } states { { name "left"; sprite s_floor_lever_left; } { name "right"; sprite s_floor_lever_right; } } transitions { state "left"; event 3; next_state "right"; actions { send_signal 101; } state "right"; event 3; next_state "left"; actions { send_signal 100; } } };
+MECH_TYPE mech_pressure_plate { name "pressure plate"; defaults { sprite s_floor_plate; pmask 255; invisible 0; } states { { name "simple"; } } transitions { state "simple"; event 2; next_state "simple"; actions { send_signal 102; } } };
+MECH_TYPE invisible_step_trigger { name "trigger"; defaults { sprite null; pmask 255; invisible 1; } states { { name "invisible"; } } transitions { state "invisible"; event 2; next_state "invisible"; actions { send_signal 101; } } };
 MECH_TYPE mech_portcullis {
   name "portcullis";
   defaults {}
   states {
     {
-      name "raised portcullis";
+      name "raised";
       sprite s_portcullis_up;
       pmask 255;
     }
     {
-      name "lowered portcullis";
+      name "lowered";
       sprite s_portcullis_down;
       pmask 1;
     }
   }
   transitions {
-    state "raised portcullis";
+    state "raised";
     event 101;
-    next_state "lowered portcullis";
+    next_state "lowered";
     actions {
       send_signal 101;
     }
-    state "raised portcullis";
+    state "raised";
     event 102;
-    next_state "lowered portcullis";
+    next_state "lowered";
     actions {
       send_signal 101;
     }
-    state "lowered portcullis";
+    state "lowered";
     event 100;
-    next_state "raised portcullis";
+    next_state "raised";
     actions {
       send_signal 100;
     }
-    state "lowered portcullis";
+    state "lowered";
     event 102;
-    next_state "raised portcullis";
+    next_state "raised";
     actions {
       send_signal 100;
     }
   }
 }
 MECH_TYPE mech_light {
-  name "light";
+  name "light source";
   defaults {
     sprite null;
     pmask 255;
   }
   states {
     {
-      name "lit light source";
+      name "lit";
       light 1024;
     }
     {
-      name "unlit light source";
+      name "unlit";
       light 0;
     }
   }
   transitions {
-    state "lit light source";
+    state "lit";
     event 101;
-    next_state "unlit light source";
+    next_state "unlit";
     actions {
       send_signal 101;
     }
-    state "unlit light source";
+    state "unlit";
     event 100;
-    next_state "lit light source";
+    next_state "lit";
     actions {
       send_signal 100;
     }
@@ -3254,7 +3254,7 @@ MECH_TYPE mech_vdoor {
   defaults {}
   states {
     {
-      name "closed door";
+      name "closed";
       sprite s_door;
       pmask 1;
       opaque 1;
@@ -3266,20 +3266,20 @@ MECH_TYPE mech_vdoor {
       opaque 0;
     }
     {
-      name "locked door";
+      name "locked";
       sprite s_door_locked;
       pmask 1;
       opaque 1;
     }
     {
-      name "magically locked door";
+      name "magically locked";
       sprite s_door_locked;
       pmask 1;
       opaque 1;
     }
   }
   transitions {
-    state "closed door";
+    state "closed";
     event 4;
     next_state "open door";
     actions {
@@ -3288,31 +3288,31 @@ MECH_TYPE mech_vdoor {
     }
     state "open door";
     event 5;
-    next_state "closed door";
+    next_state "closed";
     actions {
       send_signal 5;
     }
-    state "closed door";
+    state "closed";
     event 6;
-    next_state "locked door";
+    next_state "locked";
     actions {
       send_signal 6;
     }
-    state "locked door";
+    state "locked";
     event 7;
-    next_state "closed door";
+    next_state "closed";
     actions {
       send_signal 7;
     }
-    state "closed door";
+    state "closed";
     event 8;
-    next_state "magically locked door";
+    next_state "magically locked";
     actions {
       send_signal 8;
     }
-    state "magically locked door";
+    state "magically locked";
     event 9;
-    next_state "closed door";
+    next_state "closed";
     actions {
       send_signal 9;
     }
@@ -3323,65 +3323,65 @@ MECH_TYPE mech_hdoor {
   defaults {}
   states {
     {
-      name "closed door";
+      name "closed";
       sprite s_hdoor;
       pmask 1;
       opaque 1;
     }
     {
-      name "open door";
+      name "open";
       sprite null;
       pmask 255;
       opaque 0;
     }
     {
-      name "locked door";
+      name "locked";
       sprite s_hdoor_locked;
       pmask 1;
       opaque 1;
     }
     {
-      name "magically locked door";
+      name "magically locked";
       sprite s_hdoor_locked;
       pmask 1;
       opaque 1;
     }
   }
   transitions {
-    state "closed door";
+    state "closed";
     event 4;
-    next_state "open door";
+    next_state "open";
     actions {
       send_signal 4;
       set_alarm 16 5;
     }
-    state "open door";
+    state "open";
     event 5;
-    next_state "closed door";
+    next_state "closed";
     actions {
       send_signal 5;
     }
-    state "closed door";
+    state "closed";
     event 6;
-    next_state "locked door";
+    next_state "locked";
     actions {
       send_signal 6;
     }
-    state "locked door";
+    state "locked";
     event 7;
-    next_state "closed door";
+    next_state "closed";
     actions {
       send_signal 7;
     }
-    state "closed door";
+    state "closed";
     event 8;
-    next_state "magically locked door";
+    next_state "magically locked";
     actions {
       send_signal 8;
     }
-    state "magically locked door";
+    state "magically locked";
     event 9;
-    next_state "closed door";
+    next_state "closed";
     actions {
       send_signal 9;
     }
@@ -3413,7 +3413,7 @@ MAP m_WATER_TRAP_CLOSED {
     e e e e e
   }
 }
-MECH_TYPE mech_water_trap_L_lever { name "lever"; defaults { pmask 255; } states { { name "lever up"; sprite s_floor_lever_left; } { name "lever down"; sprite s_floor_lever_right; } } transitions { state "lever up"; event 3; next_state "lever down"; actions { print "A trap door opens, revealing a watery pit!"; blit_map p_prison_chamber 3 3 m_WATER_TRAP_OPEN 0 0 2 1 0; } state "lever down"; event 3; next_state "lever up"; actions { print "A trap door closes."; blit_map p_prison_chamber 3 3 m_WATER_TRAP_CLOSED 0 0 2 1 0; } } };
+MECH_TYPE mech_water_trap_L_lever { name "lever"; defaults { pmask 255; } states { { name "up"; sprite s_floor_lever_left; } { name "down"; sprite s_floor_lever_right; } } transitions { state "up"; event 3; next_state "down"; actions { print "A trap door opens, revealing a watery pit!"; blit_map p_prison_chamber 3 3 m_WATER_TRAP_OPEN 0 0 2 1 0; } state "down"; event 3; next_state "up"; actions { print "A trap door closes."; blit_map p_prison_chamber 3 3 m_WATER_TRAP_CLOSED 0 0 2 1 0; } } };
 MAP m_wilderness {
   type ascii;
   width 32;
@@ -3688,7 +3688,7 @@ MAP m_empire_city {
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%--%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
              }
 }
-MECH_TYPE castle_drawbridge { name "lever"; defaults { pmask 255; } states { { name "lever up"; sprite s_floor_lever_left; } { name "lever down"; sprite s_floor_lever_right; } } transitions { state "lever up"; event 3; next_state "lever down"; actions { print "The drawbridge raises."; blit_map p_empire_city 34 8 m_WATER_TRAP_OPEN 0 0 2 1 0; } state "lever down"; event 3; next_state "lever up"; actions { print "The drawbridge lowers."; blit_map p_empire_city 34 8 m_WATER_TRAP_CLOSED 0 0 2 1 0; } } };
+MECH_TYPE castle_drawbridge { name "lever"; defaults { pmask 255; } states { { name "up"; sprite s_floor_lever_left; } { name "down"; sprite s_floor_lever_right; } } transitions { state "up"; event 3; next_state "down"; actions { print "The drawbridge raises."; blit_map p_empire_city 34 8 m_WATER_TRAP_OPEN 0 0 2 1 0; } state "down"; event 3; next_state "up"; actions { print "The drawbridge lowers."; blit_map p_empire_city 34 8 m_WATER_TRAP_CLOSED 0 0 2 1 0; } } };
 PLACE p_empire_city {
   type town;
   parent p_wilderness;
@@ -3700,34 +3700,34 @@ PLACE p_empire_city {
   underground 0;
   objects {
     vt_ship 44 35 west 100;
-    mech_hdoor door 62 33 "closed door";
-    mech_vdoor door 30 1 "closed door";
-    mech_hdoor door 28 4 "closed door";
-    mech_hdoor door 1 30 "closed door";
-    mech_hdoor door 1 33 "closed door";
-    mech_vdoor door 4 28 "closed door";
-    mech_hdoor door 28 59 "closed door";
-    mech_hdoor door 35 59 "closed door";
-    mech_vdoor door 30 62 "closed door";
-    mech_vdoor door 33 62 "closed door";
-    castle_drawbridge west_bridge 38 11 "lever up";
-    mech_portcullis castle_bay_portcullis 49 27 "lowered portcullis";
-    mech_B_lever castle_bay_lever 56 26 "lever right";
+    mech_hdoor door 62 33 "closed";
+    mech_vdoor door 30 1 "closed";
+    mech_hdoor door 28 4 "closed";
+    mech_hdoor door 1 30 "closed";
+    mech_hdoor door 1 33 "closed";
+    mech_vdoor door 4 28 "closed";
+    mech_hdoor door 28 59 "closed";
+    mech_hdoor door 35 59 "closed";
+    mech_vdoor door 30 62 "closed";
+    mech_vdoor door 33 62 "closed";
+    castle_drawbridge west_bridge 38 11 "up";
+    mech_portcullis castle_bay_portcullis 49 27 "lowered";
+    mech_B_lever castle_bay_lever 56 26 "right";
     CONNECT castle_bay_lever <=> castle_bay_portcullis;
-    mech_portcullis shipwright_portcullis_1 46 35 "lowered portcullis";
-    mech_portcullis shipwright_portcullis_2 46 36 "lowered portcullis";
-    mech_portcullis shipwright_portcullis_3 46 37 "lowered portcullis";
-    invisible_step_trigger shipwright_exit_trigger_1 47 35 "";
-    invisible_step_trigger shipwright_exit_trigger_2 47 36 "";
-    invisible_step_trigger shipwright_exit_trigger_3 47 37 "";
-    mech_R_lever shipwright_exit_lever 45 32 "lever down";
+    mech_portcullis shipwright_portcullis_1 46 35 "lowered";
+    mech_portcullis shipwright_portcullis_2 46 36 "lowered";
+    mech_portcullis shipwright_portcullis_3 46 37 "lowered";
+    invisible_step_trigger shipwright_exit_trigger_1 47 35 "invisible";
+    invisible_step_trigger shipwright_exit_trigger_2 47 36 "invisible";
+    invisible_step_trigger shipwright_exit_trigger_3 47 37 "invisible";
+    mech_R_lever shipwright_exit_lever 45 32 "down";
     CONNECT shipwright_exit_lever <=> shipwright_portcullis_1;
     CONNECT shipwright_portcullis_1 => shipwright_portcullis_2;
     CONNECT shipwright_portcullis_2 => shipwright_portcullis_3;
     CONNECT shipwright_exit_trigger_1 => shipwright_portcullis_1;
     CONNECT shipwright_exit_trigger_2 => shipwright_portcullis_1;
     CONNECT shipwright_exit_trigger_3 => shipwright_portcullis_1;
-    mech_vdoor door 35 32 "magically locked door";
+    mech_vdoor door 35 32 "magically locked";
     t_town_guards 61 33 (2) 1 c_guard;
     t_town_guards 28 2 (2) 1 c_guard;
     t_town_guards 1 28 (2) 1 c_guard;
@@ -3813,25 +3813,25 @@ MECH_TYPE mech_bog_trap_L_lever {
   }
   states {
     {
-      name "lever up";
+      name "up";
       sprite s_L_lever_up;
     }
     {
-      name "lever down";
+      name "down";
       sprite s_L_lever_down;
     }
   }
   transitions {
-    state "lever up";
+    state "up";
     event 3;
-    next_state "lever down";
+    next_state "down";
     actions {
       print "The floor sinks, revealing a bog!";
       blit_map p_prison_chamber 9 1 m_BOG_TRAP_OPEN 0 0 3 2 0;
     }
-    state "lever down";
+    state "down";
     event 3;
-    next_state "lever up";
+    next_state "up";
     actions {
       print "The floor rises, leaving a muddy floor";
       blit_map p_prison_chamber 9 1 m_BOG_TRAP_CLOSED 0 0 3 2 0;
@@ -3865,25 +3865,25 @@ MECH_TYPE mech_boulder_trap_R_lever {
   }
   states {
     {
-      name "lever up";
+      name "up";
       sprite s_R_lever_up;
     }
     {
-      name "lever down";
+      name "down";
       sprite s_R_lever_down;
     }
   }
   transitions {
-    state "lever up";
+    state "up";
     event 3;
-    next_state "lever down";
+    next_state "down";
     actions {
       print "Boulders fall from the ceiling, filling the cell!";
       blit_map p_prison_chamber 18 1 m_BOULDER_TRAP_OPEN 0 0 3 2 0;
     }
-    state "lever down";
+    state "down";
     event 3;
-    next_state "lever up";
+    next_state "up";
     actions {
       print "The boulders retract, leaving the cell empty.";
       blit_map p_prison_chamber 18 1 m_BOULDER_TRAP_CLOSED 0 0 3 2 0;
@@ -3915,25 +3915,25 @@ MECH_TYPE mech_flame_barrier_trap_L_lever {
   }
   states {
     {
-      name "lever up";
+      name "up";
       sprite s_L_lever_up;
     }
     {
-      name "lever down";
+      name "down";
       sprite s_L_lever_down;
     }
   }
   transitions {
-    state "lever up";
+    state "up";
     event 3;
-    next_state "lever down";
+    next_state "down";
     actions {
       print "You hear cracking flames!";
       blit_map p_prison_chamber 26 27 m_FLAME_BARRIER_TRAP_OPEN 0 0 1 1 0;
     }
-    state "lever down";
+    state "down";
     event 3;
-    next_state "lever up";
+    next_state "up";
     actions {
       print "The sounds of flame stop.";
       blit_map p_prison_chamber 26 27 m_FLAME_BARRIER_TRAP_CLOSED 0 0 1 1 0;
@@ -3950,74 +3950,74 @@ PLACE p_prison_chamber {
   map m_prison_chamber;
   underground 1;
   objects {
-    mech_R_lever light_switch 30 14 "lever down";
-    mech_light light_1 31 13 "unlit light source";
-    mech_light light_2 31 20 "unlit light source";
+    mech_R_lever light_switch 30 14 "down";
+    mech_light light_1 31 13 "unlit";
+    mech_light light_2 31 20 "unlit";
     CONNECT light_switch => light_1;
     CONNECT light_1 => light_2;
-    mech_hdoor door_1 22 20 "closed door";
-    mech_hdoor door_1 23 20 "closed door";
-    mech_light light_3 9 20 "lit light source";
-    mech_light light_4 12 20 "lit light source";
-    mech_light light_5 16 20 "lit light source";
-    mech_light light_6 18 20 "lit light source";
-    mech_light light_7 2 22 "lit light source";
-    mech_light light_8 2 27 "lit light source";
-    mech_light light_9 9 25 "lit light source";
-    mech_light light_10 9 29 "lit light source";
-    mech_light light_11 13 25 "lit light source";
-    mech_light light_12 13 29 "lit light source";
-    mech_pressure_plate plate_a 14 8 "pressure plate";
-    mech_pressure_plate plate_b 14 6 "pressure plate";
-    mech_portcullis torture_chamber_portcullis 14 7 "lowered portcullis";
+    mech_hdoor door_1 22 20 "closed";
+    mech_hdoor door_1 23 20 "closed";
+    mech_light light_3 9 20 "lit";
+    mech_light light_4 12 20 "lit";
+    mech_light light_5 16 20 "lit";
+    mech_light light_6 18 20 "lit";
+    mech_light light_7 2 22 "lit";
+    mech_light light_8 2 27 "lit";
+    mech_light light_9 9 25 "lit";
+    mech_light light_10 9 29 "lit";
+    mech_light light_11 13 25 "lit";
+    mech_light light_12 13 29 "lit";
+    mech_pressure_plate plate_a 14 8 "simple";
+    mech_pressure_plate plate_b 14 6 "simple";
+    mech_portcullis torture_chamber_portcullis 14 7 "lowered";
     CONNECT plate_a => torture_chamber_portcullis;
     CONNECT plate_b => torture_chamber_portcullis;
-    mech_L_lever swamp_door_lever 13 3 "lever up";
-    mech_portcullis swamp_portcullis 10 3 "raised portcullis";
+    mech_L_lever swamp_door_lever 13 3 "up";
+    mech_portcullis swamp_portcullis 10 3 "raised";
     CONNECT swamp_door_lever <=> swamp_portcullis;
-    mech_bog_trap_L_lever swamp_trap_lever 13 1 "lever up";
-    mech_R_lever rock_door_lever 16 3 "lever up";
-    mech_portcullis rock_portcullis 19 3 "raised portcullis";
+    mech_bog_trap_L_lever swamp_trap_lever 13 1 "up";
+    mech_R_lever rock_door_lever 16 3 "up";
+    mech_portcullis rock_portcullis 19 3 "raised";
     CONNECT rock_door_lever <=> rock_portcullis;
-    mech_boulder_trap_R_lever boulder_trap_lever 16 1 "lever up";
-    mech_L_lever prison_doors_lever 1 22 "lever down";
-    mech_portcullis prison_door_1 2 23 "lowered portcullis";
-    mech_portcullis prison_door_2 3 25 "lowered portcullis";
-    mech_portcullis prison_door_3 2 28 "lowered portcullis";
+    mech_boulder_trap_R_lever boulder_trap_lever 16 1 "up";
+    mech_L_lever prison_doors_lever 1 22 "down";
+    mech_portcullis prison_door_1 2 23 "lowered";
+    mech_portcullis prison_door_2 3 25 "lowered";
+    mech_portcullis prison_door_3 2 28 "lowered";
     CONNECT prison_doors_lever => prison_door_1;
     CONNECT prison_door_1 => prison_door_2;
     CONNECT prison_door_2 => prison_door_3;
-    mech_R_lever cell_lever_A 7 24 "lever down";
-    mech_R_lever cell_lever_B 9 24 "lever down";
-    mech_R_lever cell_lever_C 11 24 "lever down";
-    mech_R_lever cell_lever_D 7 30 "lever down";
-    mech_R_lever cell_lever_E 9 30 "lever down";
-    mech_R_lever cell_lever_F 11 30 "lever down";
-    mech_portcullis cell_door_A 16 26 "lowered portcullis";
-    mech_portcullis cell_door_B 20 26 "lowered portcullis";
-    mech_portcullis cell_door_C 24 26 "lowered portcullis";
-    mech_portcullis cell_door_D 16 28 "lowered portcullis";
-    mech_portcullis cell_door_E 20 28 "lowered portcullis";
-    mech_portcullis cell_door_F 24 28 "lowered portcullis";
+    mech_R_lever cell_lever_A 7 24 "down";
+    mech_R_lever cell_lever_B 9 24 "down";
+    mech_R_lever cell_lever_C 11 24 "down";
+    mech_R_lever cell_lever_D 7 30 "down";
+    mech_R_lever cell_lever_E 9 30 "down";
+    mech_R_lever cell_lever_F 11 30 "down";
+    mech_portcullis cell_door_A 16 26 "lowered";
+    mech_portcullis cell_door_B 20 26 "lowered";
+    mech_portcullis cell_door_C 24 26 "lowered";
+    mech_portcullis cell_door_D 16 28 "lowered";
+    mech_portcullis cell_door_E 20 28 "lowered";
+    mech_portcullis cell_door_F 24 28 "lowered";
     CONNECT cell_lever_A <=> cell_door_A;
     CONNECT cell_lever_B <=> cell_door_B;
     CONNECT cell_lever_C <=> cell_door_C;
     CONNECT cell_lever_D <=> cell_door_D;
     CONNECT cell_lever_E <=> cell_door_E;
     CONNECT cell_lever_F <=> cell_door_F;
-    mech_L_lever guard_room_lever 1 27 "lever down";
-    mech_portcullis guard_door_A 12 27 "lowered portcullis";
-    mech_portcullis guard_door_B 14 27 "lowered portcullis";
+    mech_L_lever guard_room_lever 1 27 "down";
+    mech_portcullis guard_door_A 12 27 "lowered";
+    mech_portcullis guard_door_B 14 27 "lowered";
     CONNECT guard_room_lever => guard_door_A;
     CONNECT guard_door_A => guard_door_B;
-    mech_L_lever special_cell_lever 1 30 "lever down";
-    mech_portcullis special_cell_door 27 27 "lowered portcullis";
+    mech_L_lever special_cell_lever 1 30 "down";
+    mech_portcullis special_cell_door 27 27 "lowered";
     CONNECT special_cell_lever <=> special_cell_door;
-    mech_flame_barrier_trap_L_lever barrier_lever 3 30 "lever down";
-    mech_water_trap_L_lever water_trap 1 6 "lever up";
-    mech_L_lever lava_trap_lever 30 1 "lever up";
-    mech_L_lever fire_trap_lever 30 6 "lever up";
-    mech_L_lever guard_trap_lever 1 25 "lever up";
+    mech_flame_barrier_trap_L_lever barrier_lever 3 30 "down";
+    mech_water_trap_L_lever water_trap 1 6 "up";
+    mech_L_lever lava_trap_lever 30 1 "up";
+    mech_L_lever fire_trap_lever 30 6 "up";
+    mech_L_lever guard_trap_lever 1 25 "up";
   }
 }
 moon_info {
@@ -4124,9 +4124,9 @@ portals {
   { object_type t_ladder_up; from_place DarkPassage_Place; from_x 3; from_y 3; to_place p_empire_city; to_x 38; to_y 25; auto_enter 0; } { object_type t_ladder_down; from_place p_empire_city; from_x 38; from_y 25; to_place DarkPassage_Place; to_x 3; to_y 3; auto_enter 0; };
 }
 player {
-  place p_wilderness;
-  x 28;
-  y 14;
+        place p_empire_city;
+        x 42;
+        y 34;
   sprite s_companion_wizard;
   speed 2;
   mv_desc Walk;

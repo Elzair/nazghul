@@ -29,10 +29,14 @@
 
 player {
   
-  place p_wilderness;
-  x     28;
-  y     14;
+//  place p_wilderness;
+//  x     28;
+//  y     14;
   
+        place p_empire_city;
+        x     42;
+        y     34;
+
   sprite    s_companion_wizard;
   speed     2;
   //  pmask     LAND; obsolete

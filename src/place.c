@@ -506,12 +506,7 @@ void placePaint(struct place *place, SDL_Rect * region, SDL_Rect * dest,
 
 			/* Paint the objects */
 			place_paint_objects(place, mx, my, sx, sy);
-#ifdef OLD_PLAYER_PAINT
-			/* Paint the player */
-			if (mx == player_party->getX() &&
-			    my == player_party->getY() && player_party->onMap)
-				player_party->paint(sx, sy);
-#endif
+
 			/* hack: paint the cursor over the player */
 			place_paint_always_visible_objects(place,
 							   mx, my, sx, sy);
@@ -1101,22 +1096,24 @@ static void myPlaceDescribeObjects(int x, int y)
 
                         // This is the first type of thing we need to list.
 			type = obj->getObjectType();
-                        n_types++;
+                        if (obj->isVisible() || Reveal)
+                                n_types++;
 
 		} else if (obj->getObjectType() != type) {
 
                         // We just found a new type of thing (we know because
                         // it's different from the last type of thing).
 			type = obj->getObjectType();
-                        n_types++;
+                        if (obj->isVisible() || Reveal)
+                                n_types++;
 
 		}
 	}
 
-        if (tile->vehicle)
+        if (tile->vehicle && (tile->vehicle->isVisible() || Reveal))
                 n_types++;
 
-        if (tile->moongate)
+        if (tile->moongate && (tile->moongate->isOpen() || Reveal))
                 n_types++;
 
 
@@ -1157,14 +1154,16 @@ static void myPlaceDescribeObjects(int x, int y)
                         // can print the last type of thing since we know how
                         // many there are of it.
 
-                        if (n_types == 1)
-                                consolePrint(" and ");
-                        else
-                                consolePrint(", ");
+                        if (prev_obj->isVisible() || Reveal) {
+                                if (n_types == 1)
+                                        consolePrint(" and ");
+                                else
+                                        consolePrint(", ");
 
-                        printf(">>> %s\n", prev_obj->getName());
-                        prev_obj->describe(n_instances);
-                        n_types--;
+                                printf(">>> %s\n", prev_obj->getName());
+                                prev_obj->describe(n_instances);
+                                n_types--;
+                        }
 
 			type = obj->getObjectType();
                         n_instances = 1;
@@ -1178,7 +1177,7 @@ static void myPlaceDescribeObjects(int x, int y)
 	}
 
         // Now we have to print the last object in the stack.
-        if (prev_obj) {
+        if (prev_obj && (prev_obj->isVisible()  || Reveal)) {
                 if (n_types == 1)
                         consolePrint(" and ");
                 else
@@ -1188,7 +1187,7 @@ static void myPlaceDescribeObjects(int x, int y)
                 n_types--;
         }
 
-        if (tile->vehicle) {
+        if (tile->vehicle && (tile->vehicle->isVisible() || Reveal)) {
                 if (n_types == 1)
                         consolePrint(" and ");
                 else
@@ -1197,7 +1196,7 @@ static void myPlaceDescribeObjects(int x, int y)
                 n_types--;
         }
 
-        if (tile->moongate) {
+        if (tile->moongate && (tile->moongate->isOpen() || Reveal)) {
                 assert(n_types == 1);
                 consolePrint(" and ");
                 tile->moongate->describe(1);

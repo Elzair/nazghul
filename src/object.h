@@ -262,9 +262,6 @@ class Object {
 		return false;
 	}
 
-	// SAM: Experiment shows that Object::describe() gets
-	// called when I use the OPEN command, but not for the LOOK command.
-	// Why is this?
 	virtual void describe(int count);
 
 	virtual bool is_opaque() {
