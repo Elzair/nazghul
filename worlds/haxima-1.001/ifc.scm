@@ -4,7 +4,6 @@
 
 ;; Define a vtable scheme - a list of (<name> <body>) pairs
 (define (vtable-call vtable method args)
-  ;(display "vtable-call")(newline)
   (let ((proc (assoc method vtable)))
     (if (eq? #f proc)
         ;; If we fail to find the desired method then see if there's a default

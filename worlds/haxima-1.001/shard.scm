@@ -102,7 +102,7 @@
 
                 ;; spiders in the deep woods
                 (list (mk-wilderness-ambush-generator 
-                       t_spider_generator ;; type
+                       t_queen_spider_generator ;; type
                        43 ;; x
                        34 ;; y
                        5  ;; w

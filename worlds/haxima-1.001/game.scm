@@ -139,6 +139,11 @@
 (define up        9)
 (define down      10)
 
+;; NPC activities
+(define (isdrunk? knpc)
+  (string=? "drunk" (kern-obj-get-activity knpc)))
+(define (isworking? knpc)
+  (string=? "working" (kern-obj-get-activity knpc)))
 
 ;; Some of the following are order-dependent
 (load "loc.scm")

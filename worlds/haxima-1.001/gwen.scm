@@ -109,67 +109,73 @@
                              "gray. Belted to her waist is a long, thin "
                              "sword.\n")))
 
-       (method 'inn  
-               (lambda (knpc kpc)
-                 (say knpc "I enjoy running the Inn because I get to hear "
-                            "news from travelers.")))
-       (method 'news (lambda (knpc kpc)
-                       (say knpc "The news lately has been rumours of trouble "
-                            "with the local warlords.")))
-       (method 'room gwen-room)
-       (method 'trig 
-               (lambda (knpc kpc) 
-                 (say knpc "This is a small town, far from civilization. "
-                      "Many come here to escape.")))
-       (method 'civi (lambda (knpc kpc) 
-                       (say knpc "You will not find civilization on this side "
-                            "of the Gray Sea, I am afraid, only warlords and "
-                            "pirates.")))
-       (method 'warl 
-               (lambda (knpc kpc)
-                 (say knpc "Even Trigrave is ruled by a warlord, "
-                      "Lord Froederick, but he troubles us little. It is "
-                      "his rivals that threaten our peace.")))
-       (method 'fred 
-               (lambda (knpc kpc)
-                 (say knpc "Froederick never had bold plans for conquest. "
-                      "He has always been content to defend his territory, "
-                      "so he taxed the land little. But now he is weak and "
-                      "old, and has no heir.")))
-       (method 'riva 
-               (lambda (knpc kpc)
-                 (say knpc "Lord Froederick's rivals are Lords Clovis and "
-                      "Bruce. I fear the day we fall under the yoke of "
-                      "either.")))
+
        (method 'bruc 
                (lambda (knpc kpc)
                  (say knpc "Travelers from the west tell me Lord Bruce "
                       "has taken the pass through the Ork hills. Once his "
                       "knights cross the pass nothing will stop them west "
                       "of the river.")))
+       (method 'chant
+               (lambda (knpc kpc)
+                 (say knpc "That roguish bard is usually at the tavern.")))
+       (method 'civi 
+               (lambda (knpc kpc) 
+                 (say knpc "You will not find civilization on this side "
+                      "of the Gray Sea, I am afraid, only warlords and "
+                      "pirates.")))
        (method 'clov 
                (lambda (knpc kpc)
                  (say knpc "News from the east is that Lord Clovis sends "
                       "his spies through the woods disguised as bandits. "
                       "No doubt they seek a place where he can use his famous "
                       "archers in an ambush.")))
-       
-       (method 'sea gwen-sea)
-       (method 'gray gwen-sea)
-       (method 'king gwen-king)
        (method 'empi gwen-king)
+       (method 'enem 
+               (lambda (knpc kpc) (say knpc "That is not your business.")))
        (method 'esca 
                (lambda (knpc kpc)
                  (say knpc "If one wishes to hide from an enemy or a "
                       "shameful act there is no place better than this "
                       "forgotten corner of the Shard.")))
-       (method 'enem 
-               (lambda (knpc kpc) (say knpc "That is not your business.")))
+       (method 'froe 
+               (lambda (knpc kpc)
+                 (say knpc "Froederick never had bold plans for conquest. "
+                      "He has always been content to defend his territory, "
+                      "so he taxed the land little. But now he is weak and "
+                      "old, and has no heir.")))
+       (method 'gray gwen-sea)
+       (method 'inn  
+               (lambda (knpc kpc)
+                 (say knpc "I enjoy running the Inn because I get to hear "
+                            "news from travelers.")))
+       (method 'king gwen-king)
+       (method 'news (lambda (knpc kpc)
+                       (say knpc "The news lately has been rumours of trouble "
+                            "with the local warlords.")))
+       (method 'riva 
+               (lambda (knpc kpc)
+                 (say knpc "Lord Froederick's rivals are Lords Clovis and "
+                      "Bruce. I fear the day we fall under the yoke of "
+                      "either.")))
+       (method 'room gwen-room)
+       (method 'sea gwen-sea)
        (method 'sham 
                (lambda (knpc kpc) (say knpc "That is not your business.")))
-
        (method 'swor
                (lambda (knpc kpc) 
                  (say knpc "It was a gift from a friend.")))
+       (method 'tave
+               (lambda (knpc kpc)
+                 (say knpc "The Lusty Jugs is in the south part of town.")))
+       (method 'trig 
+               (lambda (knpc kpc) 
+                 (say knpc "This is a small town, far from civilization. "
+                      "Many come here to escape.")))
+       (method 'warl 
+               (lambda (knpc kpc)
+                 (say knpc "Even Trigrave is ruled by a warlord, "
+                      "Lord Froederick, but he troubles us little. It is "
+                      "his rivals that threaten our peace.")))
 
        ))

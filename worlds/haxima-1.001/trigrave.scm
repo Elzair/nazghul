@@ -50,18 +50,19 @@
   ))
 
 (kern-mk-map 
- 'm_quiet_inn 13 10 pal_expanded
+ 'm_quiet_inn 13 11 pal_expanded
  (list
   "xx xx xx xx xx xx xx xx xx xx xx xx xx "
-  "xx cc cc x! .Q .U .I .E .T x! cc cc xx "
+  "xx cc cc x! .G .R .A .Y @@ x! cc cc xx "
+  "xx cc cc x! @@ .D .O .V .E x! cc cc xx "
   "cc cc cc cc cc cc cc cc cc cc cc cc xx "
-  "xx xx xx xx @@ .I .N .N @@ xx xx xx xx "
+  "xx xx xx x! @@ .I .N .N @@ x! xx xx xx "
   "xx cc cc xx cc cc cc cc cc xx cc cc xx "
   "xx cc cc cc cc cc cc cc cc cc cc cc xx "
   "xx xx xx x! cc cc cc cc cc x! xx xx xx "
   "xx cc cc cc cc cc cc cc cc cc cc cc xx "
   "xx cc cc xx cc cc cc cc cc xx cc cc xx "
-  "xx xx xx xx ws xx cc xx ws xx xx xx xx "
+  "xx xx xx xx ws x! cc x! ws xx xx xx xx "
   )
  )
 
@@ -152,7 +153,7 @@
 (kern-load "jim.scm")
 (bind 
  (kern-mk-char 'ch_jim ; tag
-               "Jim the Blacksmith" ; name
+               "Jim"                ; name
                sp_human            ; species
                nil                 ; occ
                s_townsman          ; sprite
@@ -172,7 +173,7 @@
 (kern-load "gwen.scm")
 (bind 
  (kern-mk-char 'ch_gwen ; tag
-               "Gwen the Innkeeper" ; name
+               "Gwen"               ; name
                sp_human            ; species
                nil                 ; occ
                s_gray_robed_humanoid ; sprite
@@ -189,6 +190,26 @@
                )
  (gwen-mk))
 
+(kern-load "chanticleer.scm")
+(bind 
+ (kern-mk-char 'ch_chant ; tag
+               "Chanticleer"          ; name
+               sp_human            ; species
+               nil                 ; occ
+               s_townsman          ; sprite
+               faction-men         ; starting alignment
+               0 10 5              ; str/int/dex
+               0 0                 ; hp mod/mult
+               0 0                 ; mp mod/mult
+               30 0 9 9            ; hp/xp/mp/lvl
+               'chant-conv         ; conv
+               sch_chant           ; sched
+               nil                 ; special ai
+               nil                 ; container
+               nil                 ; readied
+               )
+ (chant-mk))
+
 ;;----------------------------------------------------------------------------
 ;; Place
 ;;
@@ -204,8 +225,8 @@
      m_trigrave
      (blit-maps m_trigrave
                 (list 17 21 m_lusty_juggs 0 0 14 10)
-                (list 24 1  m_iron_works 0 0 7  12)
-                (list 1  1  m_quiet_inn   0 0 13 10)
+                (list 24 1  m_iron_works  0 0 7  12)
+                (list 1  1  m_quiet_inn   0 0 13 11)
                 (list 1 21  m_dry_goods   0 0 7  10)))
  
  #f              ; wraps
@@ -218,18 +239,23 @@
 
   ;; characters
   (list ch_jim  15 15)
-  (list ch_gwen 15 16)
+  (list ch_gwen 15 15  )
+  (list ch_chant 15 15)
 
   ;; Inn
-  (list (kern-tag 'trigrave-inn-room-1-door (mk-locked-door))  4 6)
-  (list (kern-tag 'trigrave-inn-room-2-door (mk-locked-door))  4 8)
-  (list (kern-tag 'trigrave-inn-room-3-door (mk-locked-door)) 10 8)
-  (list (kern-tag 'trigrave-inn-room-4-door (mk-locked-door)) 10 6)
-  (list (mk-locked-door) 1 3)
-  (list (mk-door)  4  3)
-  (list (mk-door) 10  3)
-  (list (mk-door)  7 10)
-  (list (mk-bed)   2  5)
+  (list (kern-tag 'trigrave-inn-room-1-door (mk-locked-door))  4 7)
+  (list (kern-tag 'trigrave-inn-room-2-door (mk-locked-door))  4 9)
+  (list (kern-tag 'trigrave-inn-room-3-door (mk-locked-door)) 10 9)
+  (list (kern-tag 'trigrave-inn-room-4-door (mk-locked-door)) 10 7)
+  (list (mk-locked-door) 1 4)
+  (list (mk-door)  4  4)
+  (list (mk-door) 10  4)
+  (list (mk-door)  7 11)
+  (list (mk-bed)   2  6)
+  (list (mk-bed)  12  6)
+  (list (mk-bed)   2  9)
+  (list (mk-bed)  12  9)
+  (list (mk-bed)  12  2)
 
   ;; General store
   (list (mk-locked-door)  1 24)
