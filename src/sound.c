@@ -70,7 +70,7 @@ void soundPlay(char *file, int volume)
 
 	if (!enableSound) {
 		// printf("playing sound %s\n", file);
-		consolePrint("Playing sound %s\n", file);
+		//consolePrint("Playing sound %s\n", file);
 		return;
 	}
 

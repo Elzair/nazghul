@@ -62,15 +62,15 @@ moon_info {
     {
       place       p_wilderness;
       object_type t_moongate;
-      x           26;
-      y           18;
+      x           32;
+      y           23;
       phase       0;
     }
     {
       place       p_wilderness;
       object_type t_moongate;
-      x           13;
-      y           15;
+      x           19;
+      y           33;
       phase       1;
     }
   } // moongates

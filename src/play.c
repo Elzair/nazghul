@@ -2259,8 +2259,8 @@ static int play_init(struct play *play)
 
 	mapInit(play->los_name);	// must be before placeEnter()
 	mapSetPlace(Place);	        // must be before placeEnter()
+	consoleInit();                  // must be before placeEnter()
 	placeEnter();
-	consoleInit();
 
 	moongateSetAnimationWorkQueue(&TickWorkQueue);
 	skyInit();

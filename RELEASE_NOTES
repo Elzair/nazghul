@@ -33,3 +33,5 @@ Changes for nazghul-0.1.2
   the player was doing the firing. Changed the message from "you" to whatever
   the name of the weapon being fired.
 
+--Fixed a crash that occurred on startup if the --sound 0 option was
+  specified.

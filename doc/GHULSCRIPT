@@ -387,3 +387,175 @@ RESP r_weaponsmith_hail {
         EXIT;
     }
 }
+
+----------------------------------------------------------------------------
+Spell Effects
+
+What is effected?
+
+        Character Hit Points
+        Character Mana Points
+        Character Strength
+        Character Dexterity
+        Character Intelligence
+        Character Experience
+        Character Level
+        Object Glow
+        Character or Party Turns
+        Object Location
+        Character or Party Alignment
+        Character, Vehicle, Terrain or Mech Passability
+        Character or Party Can Take a Turn
+        Character is Dead  
+        Hidden Objects are Revealed
+        Time is Stopped
+        Magic is Negated
+        Wind Direction
+        Object's Existence
+        Terrain Type
+        Object's Edibility
+        Ambient Glow
+        Mechanism State
+        Mechanism Jam
+        Existing Effects (an effect that affects another effect)
+
+        Object User Bits
+        Object User Fields
+                Allow some extra unused storage for map hackers'
+                extensions. For example, someone might add a virtue system, or
+                a reputation system. These are values which can be checked in
+                the script (currently conversation supports this kind of
+                thing).
+
+
+How is the effect achieved?
+
+        Poison
+        Fire
+        Acid
+        Sleep
+        Paralysis
+        Petrify
+        Frighten
+        Encourage
+        Extensible Bits
+
+How is the effect quantified?
+
+        Integer
+        Integer Offset
+        Boolean
+        Direction
+        Location
+        Location Offset
+        Object Type
+        Terrain Type
+        Terrain Map
+
+How is the target specified?
+
+        Object
+        Object Type
+        Tile
+        Tile Rectangle
+        Tile Circle
+        Alignment        
+        Species
+        Occupation
+        Circle Arc
+        Passability
+
+What special effects apply?
+
+        Change the character's sprite to prone (sleeping, unconscious or dead)
+        Shake the screen
+        Animated missile
+        Animated shockwave (arc-specified)
+        Chain lightning
+        Meteor strike
+        Sounds
+        Screen flash
+        Alpha transparency
+
+Examples:
+
+        An Nox (Cure Poison)
+        What: Existing Character Effect
+        How: Poison
+        Value: False
+        Target Method: Select Party Member
+        
+        In Nox Por (Poison)
+        What:   Character Hit Points
+        How:    Poison
+        Value:  -10
+        Dur:    Indefinite
+        Target: Tile
+        Cumul:  No
+        Multi:  No
+        
+        Because it affects specifically Character hit points, the engine knows
+        to search the targeted tile for a Character object. Because it does not
+        support multiple targets only the first Character found will be
+        affected. Because the effect is not cumulative the engine will search
+        the list of existing effects for the Character to make sure a Poison
+        effect is not already at work. If not then it checks the Character's
+        immunity mask and if the Poison bit is set then the effect is
+        ignored. Otherwise it inserts the new effect in the list of effects for
+        the character and applies -10 to the Character hit points. Since the
+        duration is indefinite the engine does not decrement the duration
+        counter.
+
+                
+       
+        
+
+EFFECT_POISON
+        Poisons a character. When a character is poisoned it loses hit points
+        each turn. The cure effect unpoisons a character.
+        Residual; Affects Characters
+
+EFFECT_BURN
+        Burns an object, damaging it. If the object catches on fire then it
+        will continue to burn, taking damage on each turn. While burning an
+        object emits a glow. If the object is associated with a character then
+        it adds to the characters glow. If the object is in inventory then it
+        has no glowing effect.
+        Affects Objects; Potentially Residual
+
+EFFECT_SLEEP
+        Puts a character to sleep. Characters forfeit their turns during combat
+        rounds while they are asleep. The awaken effect removes the sleep
+        effect.
+        Residual, Affects Characters
+
+EFFECT_LIGHT
+        Makes an object glow.
+
+EFFECT_CURE         
+EFFECT_HEAL         
+EFFECT_AWAKEN       
+EFFECT_CHARM        
+EFFECT_DAMAGE       
+EFFECT_UNLOCK       
+EFFECT_REPEL        
+EFFECT_LOCATE       
+EFFECT_SUMMON       
+EFFECT_WIND_CHANGE  
+EFFECT_TELEPORT     
+EFFECT_DESTROY      
+EFFECT_ARMOUR       
+EFFECT_REVEAL       
+EFFECT_QUICK        
+EFFECT_NEGATE       
+EFFECT_TREMOR       
+EFFECT_CONFUSE      
+EFFECT_SHOW_TERRAIN 
+EFFECT_WIND         
+EFFECT_PEER         
+EFFECT_CLONE        
+EFFECT_INVISIBLE    
+EFFECT_TIME_STOP    
+EFFECT_RESURRECT    
+EFFECT_GATE_TRAVEL  
+EFFECT_NATURAL
