@@ -68,6 +68,12 @@ void terrain_del(struct terrain *terrain)
         delete terrain;
 }
 
+int terrain_get_movement_cost(struct terrain *terrain, Object *object)
+{
+        assert(terrain->cost);
+        return closure_exec(terrain->cost, "pp", terrain, object);
+}
+
 #define BOGUS_MAX_SIZE 255	// Hack, should get a constant from somewhere
 // LONGEST_TERRAIN_GLYPH would be appropriate for glyph_str...
 

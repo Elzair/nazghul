@@ -116,6 +116,8 @@ int closure_exec(closure_t *closure, char *fmt, ...)
                 assert(false);
         }
 
+        /* FIXME: need to return integer results, too */
+
         return (result != closure->sc->NIL &&
                 result != closure->sc->F);
 }

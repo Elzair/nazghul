@@ -841,7 +841,7 @@ static void place_pathfind_heuristic(struct astar_search_info *info,
 	/* And penalize tiles with hazards on them. I really should assign
 	 * different penalties to different hazerds. */
 	terrain = place_get_terrain(context->place, info->x0, info->y0);
-	if (terrain->effects)
+	if (terrain->effect)
 		*cost += 9;
 
 	if (place_get_object(context->place, info->x0, info->y0,
@@ -965,7 +965,7 @@ int place_is_hazardous(struct place *place, int x, int y)
 {
         WRAP_COORDS(place, x, y);
 	struct terrain *t = TERRAIN(place, x, y);
-	if (t->effects != 0)
+	if (t->effect)
                 return 1;        
         if (place_get_object(place, x, y, field_layer) != NULL)
                 return 1;

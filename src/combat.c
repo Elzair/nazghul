@@ -255,13 +255,14 @@ static int location_is_safe(struct position_info *info)
         struct terrain *terrain;
 
         // Is it passable?
-        if (!place_is_passable(info->place, info->px, info->py, info->pmask, 0)) {
-                printf("impassable\n");
+        if (!place_is_passable(info->place, info->px, info->py, 
+                               info->pmask, 0)) {
+                dbg("impassable\n");
                 return -1;
         }
         // Is it occupied?
         if (place_is_occupied(info->place, info->px, info->py)) {
-                printf("occupied\n");
+                dbg("occupied\n");
                 return -1;
         }
 
@@ -273,12 +274,12 @@ static int location_is_safe(struct position_info *info)
 
         // Is it dangerous? Hack: check for a field and dangerous terrain
         if (place_get_object(info->place, info->px, info->py, field_layer)) {
-                printf("possibly dangerous field\n");
+                dbg("possibly dangerous field\n");
                 return -1;
         }
         terrain = place_get_terrain(info->place, info->px, info->py);
-        if (terrain->effects || terrain->effect) {
-                printf("possibly dangerous terrain\n");
+        if (terrain->effect) {
+                dbg("possibly dangerous terrain\n");
                 return -1;
         }
         
@@ -290,34 +291,34 @@ static int location_is_safe(struct position_info *info)
                 assert(info->dx || info->dy);
                 assert(!info->dx || !info->dy); // assume no diagonals for now
 
-                printf("searching for path to ");
+                dbg("searching for path to ");
 
                 if (info->dx < 0) {
                         // facing west, find path back to east edge
                         edge_x = place_w(info->place) - 1;
                         flags |= PFLAG_VERT;
-                        printf("east ");
+                        dbg("east ");
                 }
                 else if (info->dx > 0) {
                         // facing east, find path to back west edge
                         edge_x = 0;
                         flags |= PFLAG_VERT;
-                        printf("west ");
+                        dbg("west ");
                 }
                 else if (info->dy < 0) {
                         // facing north, find path back to south edge
                         edge_y = place_h(info->place) - 1;
                         flags |= PFLAG_HORZ;
-                        printf("north ");
+                        dbg("north ");
                 }
                 else {
                         // facing south, find path back to north edge
                         edge_y = 0;
                         flags |= PFLAG_HORZ;
-                        printf("south ");
+                        dbg("south ");
                 }
 
-                printf("edge...");
+                dbg("edge...");
 
                 as_info.x0 = info->px;
                 as_info.y0 = info->py;
@@ -328,13 +329,13 @@ static int location_is_safe(struct position_info *info)
                 path = place_find_path(info->place, &as_info, info->pmask, NULL);
 
                 if (!path)
-                        printf("no path back to edge\n");
+                        dbg("no path back to edge\n");
 
         }
         else if (info->find_party) {
                 // Each member should be able to find a path back to the
                 // party's originating location on the map.
-                printf("searching for path to party [%d %d]...",
+                dbg("searching for path to party [%d %d]...",
                        info->x, info->y);
 
                 as_info.x0 = info->px;
@@ -348,7 +349,7 @@ static int location_is_safe(struct position_info *info)
                 path = place_find_path(info->place, &as_info, info->pmask, NULL);
 
                 if (!path)
-                        printf("no path back to party\n");
+                        dbg("no path back to party\n");
         }
         else {
                 // skip the pathfinding check
@@ -370,7 +371,7 @@ static int combat_search_for_safe_position(struct position_info *info)
         static int x_offsets[] = { -1, 1, 0, 0 };
         static int y_offsets[] = { 0, 0, -1, 1 };
 
-        printf("checking [%d %d]...", info->px, info->py);
+        dbg("checking [%d %d]...", info->px, info->py);
 
         // translate the map coords into an rmap index
         index = info->py - info->ry;
@@ -380,16 +381,16 @@ static int combat_search_for_safe_position(struct position_info *info)
         // If the current location is off-map, outside of the placement
         // rectangle or already visited then discontinue the search.  
         if (rmap[index]) {
-                printf("already visited [%d]\n", index);
+                dbg("already visited [%d]\n", index);
                 return -1;      // already visited
         }
         if (info->px < info->rx || info->px >= info->rx + info->rw ||
             info->py < info->ry || info->py >= info->ry + info->rh) {
-                printf("outside the placement area\n");
+                dbg("outside the placement area\n");
                 return -1;      // outside the placement rect
         }
         if (place_off_map(info->place, info->px, info->py)) {
-                printf("off-map\n");
+                dbg("off-map\n");
                 // return -1; // off map
                 goto enqueue_neighbors;
         }
@@ -398,7 +399,7 @@ static int combat_search_for_safe_position(struct position_info *info)
 
         // If the current location is safe then the search succeeded.
         if (location_is_safe(info) == 0) {
-                printf("OK!\n");
+                dbg("OK!\n");
                 return 0;
         }
 
@@ -509,17 +510,17 @@ static bool myPutNpc(class Character * pm, void *data)
         info->px = pm->getX();
         info->py = pm->getY();
 
-        printf("Placing %s\n", pm->getName());
+        dbg("Placing %s\n", pm->getName());
 
         if (combat_find_safe_position(info) == -1) {
                 // If I can't place a member then I can't place it.
-                printf("*** Can't place %s ***\n", pm->getName());
+                dbg("*** Can't place %s ***\n", pm->getName());
                 return false;
         }
 
         pm->setX(info->px);
         pm->setY(info->py);
-        printf("Put '%s' at [%d %d]\n", pm->getName(), info->px, info->py);
+        dbg("Put '%s' at [%d %d]\n", pm->getName(), info->px, info->py);
         pm->setPlace(Place);
         place_add_object(Place, pm);
         pm->setOnMap(true);
@@ -547,7 +548,7 @@ static void set_party_initial_position(struct position_info *pinfo, int x, int y
         pinfo->rx = pinfo->x - pinfo->rw / 2;
         pinfo->ry = pinfo->y - pinfo->rh / 2;
 
-        printf("Moved party start position to [%d %d]\n", pinfo->x, pinfo->y);;
+        dbg("Moved party start position to [%d %d]\n", pinfo->x, pinfo->y);;
 
 }
 
@@ -668,7 +669,7 @@ bool combat_place_character(class Character * pm, void *data)
         memset(rmap, 0, sizeof (rmap));
         info->px = pm->getX();
         info->py = pm->getY();
-        printf("Placing %s\n", pm->getName());
+        dbg("Placing %s\n", pm->getName());
 
         if (combat_find_safe_position(info) == -1) {
 
@@ -695,7 +696,7 @@ bool combat_place_character(class Character * pm, void *data)
                 class Character *leader = player_party->get_leader();
 
                 if (!leader) {
-                        printf("Putting %s on start location [%d %d]\n",
+                        dbg("Putting %s on start location [%d %d]\n",
                                pm->getName(), info->x, info->y);
                         info->px = info->x;
                         info->py = info->y;
@@ -705,10 +706,10 @@ bool combat_place_character(class Character * pm, void *data)
                         memset(rmap, 0, sizeof (rmap));
                         info->px = leader->getX();
                         info->py = leader->getY();
-                        printf("Retrying %s\n", pm->getName());
+                        dbg("Retrying %s\n", pm->getName());
 
                         if (combat_find_safe_position(info) == -1) {
-                                printf("Putting %s on start location "
+                                dbg("Putting %s on start location "
                                        "[%d %d]\n",
                                        pm->getName(), info->x, info->y);
                                 info->px = info->x;
@@ -877,7 +878,7 @@ static void random_ambush(void)
         // might randomly generate a party of nixies as the npc party while the
         // player is camped on dry land.
         if (!myPositionEnemy(foe, directionToDx(dir), directionToDy(dir), false)) {
-                printf("ambush failed for %s\n", foe->getName());
+                dbg("ambush failed for %s\n", foe->getName());
                 // I think the party will get cleaned up on exit...
                 return;
         }
@@ -1363,7 +1364,7 @@ static struct terrain_map *create_camping_map(struct place *place, int x, int y)
                 // had a palette.  Therefore, this error case should
                 // be impossible, and is at the least unlikely or 
                 // a sign that things are badly screwed up.
-                printf("create_camping_map() IMPOSSIBLE (OK, improbable...)\n"
+                dbg("create_camping_map() IMPOSSIBLE (OK, improbable...)\n"
                        "  strange terrain %p (tag '%s' name '%s')\n"
                        "  was in no palette!\n",
                        terrain, terrain->tag, terrain->name);
@@ -1444,13 +1445,13 @@ static struct terrain_map *create_temporary_terrain_map(struct combat_info
         // onto a map with 'pal_standard', and this code has no way of seeing that.
         // Possibly the map blitting should merge the palettes after all...
         if (party_map && npc_party_map) {
-                printf("maps '%s' '%s', palettes '%s' '%s'\n",
+                dbg("maps '%s' '%s', palettes '%s' '%s'\n",
                        party_map->tag, npc_party_map->tag,
                        party_map->palette->tag, npc_party_map->palette->tag);
                 int palette_tags_match = !strcmp(party_map->palette->tag,
                                                  npc_party_map->palette->tag);
                 if (!palette_tags_match) {
-                        printf("create_temporary_terrain_map() warning: \n"
+                        dbg("create_temporary_terrain_map() warning: \n"
                                "  Two combat maps (tags '%s' and '%s') \n"
                                "  merging with dissimilar palettes (tags '%s' and '%s').\n"
                                "  (This should work OK now, but be aware...)\n",
@@ -1513,13 +1514,13 @@ static bool position_player_party(struct combat_info *cinfo)
                                               player_party->getX(),
                                               player_party->getY())) &&
                  vehicle->getObjectType()->map) {
-                // printf("party overlay, party over vehicle\n");
+                // dbg("party overlay, party over vehicle\n");
                 combat_overlay_map(vehicle->getObjectType()->map,
                                    &player_party->pinfo, 0);
         }
         // Finally, since there is no vehicle map check for a camping map.
         else if (cinfo->camping && player_party->campsite_map) {
-                // printf("party overlay, party is camping\n");
+                // dbg("party overlay, party is camping\n");
                 combat_overlay_map(player_party->campsite_map, 
                                    &player_party->pinfo, 0);
         }
