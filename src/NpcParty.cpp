@@ -679,8 +679,6 @@ void NpcParty::exec(struct exec_context *cntxt)
 {
         assert(!isDestroyed());
 
-        printf("%s exec [%d %d]\n", getName(), getX(), getY());
-
         action_points += getActionPointsPerTurn();
         if (action_points <= 0)
                 return;

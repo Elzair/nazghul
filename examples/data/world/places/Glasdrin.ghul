@@ -28,8 +28,8 @@
 // -----------------------------------------------------------------------------
 MAKE_NPC_PARTY_GENERATOR_MECH(t_glasdrin_undead_gen, "undead gen", 
                               t_undead_brigade, (ALIGN_MONSTER),
-                              Glasdrin, 16, 0, 1, 1,              
-                              0.10);
+                              Glasdrin, 7, 19, 1, 1,              
+                              0.010);
 
 MAP Glasdrin_Map {
         type   ascii;

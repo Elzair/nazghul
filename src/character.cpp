@@ -468,7 +468,7 @@ enum Character::MoveResult Character::move(int dx, int dy)
         // ---------------------------------------------------------------------
 
         moongate = place_get_moongate(getPlace(), newx, newy);
-        if (moongate) {
+        if (moongate && moongate->isOpen()) {
 
                 
                 if (! isPlayerControlled() || isCharmed()) {

@@ -1197,8 +1197,6 @@ void place_remove_and_destroy_all_objects(struct place *place)
 
 void place_exec(struct place *place, struct exec_context *context)
 {
-        printf("--- %s exec ---\n", place->name);
-
         // ---------------------------------------------------------------------
         // Upon entry this should always by the current place. That may change
         // while we're in the loop, but upon entry it should always be true.
