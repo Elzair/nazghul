@@ -584,7 +584,7 @@
 ; (kern-mk-sprite 's_counter_1x1     ss_features_1 1 31 #f 0)
 
 ;; Kevin's new terrain sprites:
-(kern-mk-sprite 's_grass            ss_kg_terrains 1  0 #f 0)
+;;(kern-mk-sprite 's_grass            ss_kg_terrains 1  0 #f 0)
 (kern-mk-sprite 's_desert           ss_kg_terrains 1  1 #f 0)
 (kern-mk-sprite 's_desert_cactus    ss_kg_terrains 1  2 #f 0)
 (kern-mk-sprite 's_deep             ss_kg_terrains 1  3 #t 0)
