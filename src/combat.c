@@ -2150,34 +2150,43 @@ static void combat_overlay_map(struct terrain_map *map,
                 return;
         }
         // Rotate the map so that north faces the opponent.
-        if (broadside)
+        if (broadside) {
                 terrain_map_rotate(map, vector_to_rotation(pinfo->dy, 
                                                            pinfo->dx));
-        else
+
+                // Position the map against the boundary dividing the map.
+                if (pinfo->dx < 0) {
+                        // facing west, shift map west toward edge
+                        x = (place_w(Place) + 1) / 2;
+                        y = (place_h(Place) - map->h) / 2;
+                }
+                else if (pinfo->dx > 0) {
+                        // facing east, shift map east toward edge
+                        x = (place_w(Place) + 1) / 2 - map->w;
+                        y = (place_h(Place) - map->h) / 2;
+                }
+                else if (pinfo->dy < 0) {
+                        // facing north, shift map north toward edge
+                        x = (place_w(Place) - map->w) / 2;
+                        y = (place_h(Place) + 1) / 2;
+                }
+                else if (pinfo->dy > 0) {
+                        // facing south, shift map south toward edge
+                        x = (place_w(Place) - map->w) / 2;
+                        y = (place_h(Place) + 1) / 2 - map->h;
+                }
+        }
+        else {
                 terrain_map_rotate(map, vector_to_rotation(pinfo->dx, 
                                                            pinfo->dy));
+                // center the overlayed map
+                x = (place_w(Place) - map->w) / 2;
+                y = (place_h(Place) - map->h) / 2;
+        }
 
-        // Position the map against the boundary dividing the map.
-        if (pinfo->dx < 0) {
-                // facing west, shift map west toward edge
-                x = (place_w(Place) + 1) / 2;
-                y = (place_h(Place) - map->h) / 2;
-        }
-        else if (pinfo->dx > 0) {
-                // facing east, shift map east toward edge
-                x = (place_w(Place) + 1) / 2 - map->w;
-                y = (place_h(Place) - map->h) / 2;
-        }
-        else if (pinfo->dy < 0) {
-                // facing north, shift map north toward edge
-                x = (place_w(Place) - map->w) / 2;
-                y = (place_h(Place) + 1) / 2;
-        }
-        else if (pinfo->dy > 0) {
-                // facing south, shift map south toward edge
-                x = (place_w(Place) - map->w) / 2;
-                y = (place_h(Place) + 1) / 2 - map->h;
-        }
+        assert(x >= 0);
+        assert(y >= 0);
+
         // Adjust the party's starting position to be centered on the overlap
         // map.
         set_party_initial_position(pinfo, 

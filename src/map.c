@@ -1133,10 +1133,26 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
 
 	// Convert to screen coordinates. (I need to keep the original
 	// B-coordinates for field effects at the bottom of this routine).
-	Ax = (Ax - Ox) * tile_w + Sx;
-	Ay = (Ay - Oy) * tile_h + Sy;
-	int sBx = (*Bx - Ox) * tile_w + Sx;
-	int sBy = (*By - Oy) * tile_h + Sy;
+        if (Ax > Ox)
+                Ax = (Ax - Ox) * tile_w + Sx;
+        else
+                Ax = (place_w(place) - Ox + Ax)  * tile_w + Sx;
+        if (Ay > Oy)
+                Ay = (Ay - Oy) * tile_h + Sy;
+        else
+                Ay = (place_h(place) - Oy + Ay)  * tile_h + Sy;
+
+        int sBx;
+        int sBy;
+
+        if (*Bx > Ox)
+                sBx = (*Bx - Ox) * tile_w + Sx;
+        else
+                sBx = (place_w(place) - Ox + *Bx) * tile_w + Sx;
+        if (*By > Oy)
+                sBy = (*By - Oy) * tile_h + Sy;
+        else
+                sBy = (place_h(place) - Oy + *By)  * tile_h + Sy;
 
 	// Create the rect which bounds the missile's sprite (used to update
 	// that portion of the screen after blitting the sprite).
@@ -1175,8 +1191,8 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
 
                         oPx = Px;
                         oPy = Py;
-			Px = ((rect.x - Sx) / tile_w + Ox);
-			Py = ((rect.y - Sy) / tile_h + Oy);
+			Px = place_wrap_x(place, ((rect.x - Sx) / tile_w + Ox));
+			Py = place_wrap_y(place, ((rect.y - Sy) / tile_h + Oy));
 
                         if (oPx != Px || oPy != Py) {
                                 if (!missile->enterTile(place, Px, Py)) {
@@ -1208,8 +1224,8 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
 
                         oPx = Px;
                         oPy = Py;
-			Px = ((rect.x - Sx) / tile_w + Ox);
-			Py = ((rect.y - Sy) / tile_h + Oy);
+			Px = place_wrap_x(place, ((rect.x - Sx) / tile_w + Ox));
+			Py = place_wrap_y(place, ((rect.y - Sy) / tile_h + Oy));
 
                         if (oPx != Px || oPy != Py) {
                                 if (!missile->enterTile(place, Px, Py)) {

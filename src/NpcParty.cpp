@@ -273,6 +273,8 @@ bool NpcParty::turn_vehicle(void)
 {
 	int cost = 0;
 
+        printf("turn_vehicle\n");
+
 	// Three possible outcomes:
 	// 
 	// 1. We do NOT turn any vehicle, therefore we want to continue
@@ -368,6 +370,8 @@ bool NpcParty::move(int dx, int dy)
 	class Moongate *moongate;
 	class Portal *portal;
 	class Mech *mech;
+
+        printf("move\n");
 
 	this->dx = dx;
 	this->dy = dy;
@@ -484,6 +488,8 @@ void NpcParty::wander()
 {
 	int dx = 0, dy = 0;
 
+        printf("wander\n");
+
 	loitering = true;
 
 	/* Roll for direction */
@@ -521,6 +527,8 @@ bool NpcParty::gotoSpot(int mx, int my)
 	int dx;
 	int dy;
         bool ret = true;
+
+        printf("gotoSpot\n");
 
 	/* Look for a path. */
 	memset(&as_info, 0, sizeof(as_info));
@@ -623,6 +631,8 @@ bool NpcParty::attack_with_ordnance(int d)
 void NpcParty::work()
 {
 	int d;
+
+        printf("work\n");
 
 	loitering = false;
 
@@ -751,6 +761,8 @@ void NpcParty::synchronize(int turn)
 
 void NpcParty::advanceTurn(int turn)
 {
+        printf("advanceTurn\n");
+
         assert(!isDestroyed());
 
 	turn_cost = 0;

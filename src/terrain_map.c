@@ -154,8 +154,6 @@ void terrain_map_rotate(struct terrain_map *map, int degree)
 		h2 = map->w;
 		for (y1 = 0, x2 = 0; y1 < map->h; y1++, x2++) {
 			for (x1 = 0, y2 = h2 - 1; x1 < map->w; x1++, y2--) {
-				printf("%d => %d\n", y1 * map->w + x1,
-				       y2 * w2 + x2);
 				rbuf[y2 * w2 + x2] =
 				    map->terrain[y1 * map->w + x1];
 			}

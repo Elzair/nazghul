@@ -1413,7 +1413,7 @@ void player_party::hitByOrdnance(class ArmsType * ordnance)
 	// destroy the party, too.
 	if (vehicle) {
 		vehicle->damage(ordnance->getDamage());
-		mapFlash(50);
+		mapFlash(0);
 		foogodRepaint();
 		if (vehicle->isDestroyed()) {
 			delete vehicle;

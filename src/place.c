@@ -96,7 +96,6 @@ static void tile_destroy(struct tile *tile)
 	if (!tile->lock) {
 		assert(!tile->objects);
 		list_remove(&tile->hashlink.list);
-		// printf("Destroying tile %p\n", tile);
 		free(tile);
 	}
 }
@@ -515,13 +514,19 @@ void place_remove_object(struct place *place, Object * object)
 	assert(tile);
 
 	if (object->isType(VEHICLE_ID)) {
-		tile->vehicle = 0;
+                if (tile->vehicle == object) {
+                        tile->vehicle = 0;
+                        tile->objects--;
+                }
+                // 30Jul2003 gmcnutt: otherwise this vehicle must be occupied,
+                // in which case it does not occupy the tile (it's occupant
+                // does).
 	} else {
 		list_remove(&object->container_link.list);
 		list_init(&object->container_link.list);
+                tile->objects--;
 	}
 
-	tile->objects--;
 	if (!tile->objects) {
 		tile_destroy(tile);
 	}

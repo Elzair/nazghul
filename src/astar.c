@@ -62,6 +62,8 @@ static inline struct astar_node *astar_node_create(int x, int y, int cost,
 		return 0;
 	memset(node, 0, sizeof(struct astar_node));
 
+        printf("astar: allocated node 0x%p\n", node);
+
 	node->x = x;
 	node->y = y;
 	node->cost = cost;
@@ -75,6 +77,7 @@ static inline struct astar_node *astar_node_create(int x, int y, int cost,
 
 void astar_node_destroy(struct astar_node *node)
 {
+        printf("astar: destroying node 0x%p\n", node);
 	dump_node(node);
 	free(node);
 }

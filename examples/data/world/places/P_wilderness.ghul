@@ -128,7 +128,7 @@ PLACE  p_wilderness {
                 //--------------------------------------------------
                 // vehicles:
                 //--------------------------------------------------
-                //vt_ship 0 0 west 100;
+                vt_ship 35 26 west 100;
                 
                 //--------------------------------------------------
                 // npc parties:
@@ -137,7 +137,7 @@ PLACE  p_wilderness {
                 //t_goblin_horde    4 14  (ALIGN_MONSTER) 0 c_goblin null;
                 //t_undead_brigade  2 26  (ALIGN_MONSTER) 0 null vt_ship;
                 t_undead_brigade 32  4  (ALIGN_MONSTER) 0 null vt_ship;
-                t_gazer_pod_with_goblin_slaves 30 20 (ALIGN_MONSTER) 0 null null;                
+                //t_gazer_pod_with_goblin_slaves 30 20 (ALIGN_MONSTER) 0 null null;                
                 
                 //--------------------------------------------------
                 // mechs
@@ -152,7 +152,6 @@ PLACE  p_wilderness {
                 
                 // mandrake patch
                 mech_mandrake_patch           mandrake_patch      37 21 "growing";
-
                 
         }
         
