@@ -738,7 +738,7 @@
 (kern-mk-sprite 's_helm_metal_3           ss_dg_wearable 1   4 #f 0)
 (kern-mk-sprite 's_helm_gold_horned       ss_dg_wearable 1   5 #f 0)
 (kern-mk-sprite 's_helm_metal_horned      ss_dg_wearable 1   6 #f 0)
-(kern-mk-sprite 's_hat_green_featuer      ss_dg_wearable 1   7 #f 0)
+(kern-mk-sprite 's_hat_green_feather      ss_dg_wearable 1   7 #f 0)
 (kern-mk-sprite 's_crown_1                ss_dg_wearable 1   8 #f 0)
 (kern-mk-sprite 's_crown_2                ss_dg_wearable 1   9 #f 0)
 (kern-mk-sprite 's_crown_3                ss_dg_wearable 1  10 #f 0)
@@ -891,6 +891,43 @@
 
 
 ;; ss_dg_weapons          16 x 16
+
+(kern-mk-sprite 's_sword_broken_1       ss_dg_weapons 1   0 #f 0)
+(kern-mk-sprite 's_sword_broken_2       ss_dg_weapons 1   1 #f 0)
+(kern-mk-sprite 's_sword_broken_3       ss_dg_weapons 1   2 #f 0)
+(kern-mk-sprite 's_sword_broken_4       ss_dg_weapons 1   3 #f 0)
+
+(kern-mk-sprite 's_dagger_1             ss_dg_weapons 1   5 #f 0)
+(kern-mk-sprite 's_dagger_2             ss_dg_weapons 1   6 #f 0)
+(kern-mk-sprite 's_dagger_3             ss_dg_weapons 1   7 #f 0)
+
+(kern-mk-sprite 's_sword_short_1        ss_dg_weapons 1   9 #f 0)
+(kern-mk-sprite 's_sword_short_2        ss_dg_weapons 1  10 #f 0)
+(kern-mk-sprite 's_sword_short_3        ss_dg_weapons 1  11 #f 0)
+
+(kern-mk-sprite 's_rapier_1             ss_dg_weapons 1  16 #f 0)
+(kern-mk-sprite 's_rapier_2             ss_dg_weapons 1  17 #f 0)
+(kern-mk-sprite 's_saber_1              ss_dg_weapons 1  18 #f 0)
+(kern-mk-sprite 's_saber_2              ss_dg_weapons 1  19 #f 0)
+(kern-mk-sprite 's_cutlass_1            ss_dg_weapons 1  20 #f 0)
+(kern-mk-sprite 's_cutlass_2            ss_dg_weapons 1  21 #f 0)
+(kern-mk-sprite 's_falchion_1           ss_dg_weapons 1  22 #f 0)
+
+(kern-mk-sprite 's_sword_long_1         ss_dg_weapons 1  32 #f 0)
+(kern-mk-sprite 's_sword_long_2         ss_dg_weapons 1  33 #f 0)
+(kern-mk-sprite 's_sword_long_3         ss_dg_weapons 1  34 #f 0)
+
+(kern-mk-sprite 's_sword_bastard        ss_dg_weapons 1  36 #f 0)
+(kern-mk-sprite 's_sword_katana         ss_dg_weapons 1  37 #f 0)
+
+(kern-mk-sprite 's_sword_zweihander     ss_dg_weapons 1  39 #f 0)
+(kern-mk-sprite 's_sword_vorpal         ss_dg_weapons 1  40 #f 0)
+
+(kern-mk-sprite 's_sword_eldritch       ss_dg_weapons 2  42 #f 0)
+(kern-mk-sprite 's_sword_mystic         ss_dg_weapons 2  44 #f 0)
+(kern-mk-sprite 's_sword_flaming        ss_dg_weapons 2  46 #f 0)
+
+
 
 ; (kern-mk-sprite 's_       ss_dg_weapons 1   0 #f 0)
 
