@@ -61,6 +61,7 @@
   (kern-log-msg (kern-obj-get-name kobj) " paralyzed!"))
 
 (define (paralyze-exec fgob kchar)
+  (display "paralyze-exec")(newline)
   (let ((droll (kern-dice-roll "1d20")))
     (if (or (= droll 20)
             (> droll
@@ -68,7 +69,7 @@
         (begin
           (kern-log-msg "Paralysis wears off of " (kern-obj-get-name kchar))
           (kern-obj-remove-effect kchar ef_paralyze)
-          #t)
+          #f)
         (begin
           (kern-obj-set-ap kchar 0)
           #f))))
@@ -105,6 +106,7 @@
   (map destroy-web (find-object-types-at loc web-type)))
 
 (define (ensnare-exec fgob kchar)
+  (display "ensnare-exec")(newline)
   (let ((droll (kern-dice-roll "1d20")))
     ;; special case -- paralysis prevents struggling against the ensnare
     (if (not (is-paralyzed? kchar))
