@@ -114,6 +114,8 @@ When within map editing mode:
 <page down> select next terrain
 <home>      select first terrain
 <end>       select last terrain
+[space]     alter terrain under cursor
+[enter]     alter terrain under cursor
 [number]         Select quick terrain
 Control-[number] Set quick terrain
 ");
