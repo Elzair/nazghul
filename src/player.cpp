@@ -612,7 +612,7 @@ MoveResult player_party::move(int newdx, int newdy)
 		// speed and terrain difficulties then move the player.
 		cmdwin_print("-ok");
 		relocate(info.place, info.x, info.y);
-                mv_cost = place_get_movement_cost(info.place, info.x, info.y);
+                mv_cost = place_get_movement_cost(info.place, info.x, info.y, this);
                 if (vehicle)
                         mv_cost *= vehicle->getMovementCostMultiplier();
                 decActionPoints(mv_cost);
@@ -687,24 +687,6 @@ MoveResult player_party::move(int newdx, int newdy)
 		assert(false);
 		return NotApplicable;
 	}
-}
-
-static bool union_pmask(class Character * pm, void *data)
-{
-        unsigned char *pmask = (unsigned char*)data;
-        *pmask &= pm->getPmask();
-        return false;
-}
-
-int player_party::getPmask(void)
-{
-        unsigned char pmask = 0xff;
-
-	if (vehicle)
-		return vehicle->getPmask();
-
-        forEachMember(union_pmask, &pmask);
-	return pmask;
 }
 
 struct sprite *player_party::getSprite(void)
@@ -1143,11 +1125,6 @@ bool player_party::addMember(class Character * c)
 	// status if necessary.
 
 	assert(!c->isPlayerControlled());
-
-        // Check if passability is compatible with rest of party
-        if (size && ! (c->getPmask() & getPmask())) {
-                return false;
-        }
 
         list_add_tail(&members, &c->plist);
 	c->setOrder(size);

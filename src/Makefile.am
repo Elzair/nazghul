@@ -127,4 +127,8 @@ nazghul_SOURCES =		\
 	effect.h \
 	effect.c \
 	conv.h \
-	conv.c
+	conv.c \
+	ptable.c \
+	ptable.h \
+	mmode.c \
+	mmode.h

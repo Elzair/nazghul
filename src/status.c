@@ -31,6 +31,7 @@
 #include "sky.h"
 #include "wind.h"
 #include "foogod.h"
+#include "mmode.h"
 
 #include <stdio.h>
 #include <assert.h>
@@ -209,7 +210,8 @@ static void myShowMember(void)
 	SDL_Rect rect;
 	int pad;
 	class Character *pm;
-
+        struct mmode *mmode;
+        
 	// screenErase(&Status.screenRect);
 
 	rect = Status.screenRect;
@@ -247,7 +249,9 @@ static void myShowMember(void)
         rect.y += ASCII_H;
         // SAM: What is wanted here is a function to turn a pmask 
         //      into one or more words of text (names of movement modes).
-        screenPrint(&rect, 0, "Pmask:%1d", pm->getPmask() );
+        mmode = pm->getMovementMode();
+        if (mmode)
+                screenPrint(&rect, 0, "Move:%s", mmode->name);
 
 	/* Show arms */
 	rect.y += ASCII_H;

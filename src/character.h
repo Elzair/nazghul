@@ -85,7 +85,7 @@ class Character:public Object {
 	virtual unsigned char getIntelligence();
 	virtual unsigned char getDexterity();
 	virtual unsigned char getLevel();
-	virtual int getPmask();
+        virtual struct mmode *getMovementMode();
 	virtual int getArmourClass();
 	virtual char *getWoundDescription();
 	virtual class Character *getAttackTarget();

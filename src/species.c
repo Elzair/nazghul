@@ -47,7 +47,6 @@ struct species *species_new(char *tag,
                             int dex,
                             int spd,
                             int vr,
-                            int pmask,
                             int hp_mod,
                             int hp_mult,
                             int mp_mod,
@@ -97,7 +96,6 @@ struct species *species_new(char *tag,
         species->dex                = dex;
         species->spd                = spd;
         species->vr                 = vr;
-        species->pmask              = pmask;
         species->hp_mod             = hp_mod;
         species->hp_mult            = hp_mult;
         species->mp_mod             = mp_mod;

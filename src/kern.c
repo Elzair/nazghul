@@ -36,6 +36,7 @@
 #include "vmask.h"
 #include "wq.h"
 #include "place.h"
+#include "ptable.h"
 #include "images.h"
 #include "Portal.h"
 #include "Party.h"
@@ -61,6 +62,7 @@
 #include "sound.h"
 #include "Missile.h"
 #include "conv.h"
+#include "mmode.h"
 
 #include <assert.h>
 #include <ctype.h>              // isspace()
@@ -618,27 +620,24 @@ static pointer kern_mk_terrain(scheme *sc, pointer args)
         struct terrain *terrain;
         char *tag = TAG_UNK, *name;
         pointer ret;
+        int pclass;
         pointer proc = NULL;
-        pointer cost = NULL;
         closure_t *clx = NULL;
 
         /* Revisit: ignore effects for now */
 
-        if (unpack(sc, &args, "ysdpdddc", &tag, &name, &pmask, &sprite, 
-                   &alpha, &movement_cost, &light, &proc)) {
+        if (unpack(sc, &args, "ysdpddc", &tag, &name, &pclass, &sprite, 
+                   &alpha, &light, &proc)) {
                 load_err("kern-mk-terrain %s: bad args", tag);
                 return sc->NIL;
         }
 
-        terrain = terrain_new(tag, name, (struct sprite*)sprite, pmask, alpha, 
-                              movement_cost, light);
+        terrain = terrain_new(tag, name, (struct sprite*)sprite, pclass, 
+                              alpha, light);
 
         if (proc != sc->NIL) {
                 terrain->effect = closure_new(sc, proc);
         }
-
-/*         if (cost != sc->NIL) */
-/*                 terrain->cost = closure_new(sc, cost); */
 
         session_add(Session, terrain, terrain_dtor, NULL, NULL);
         ret = scm_mk_ptr(sc, terrain);
@@ -1030,7 +1029,7 @@ static bool more_args(scheme *sc, pointer args, char *func, char *tag,
 static pointer kern_mk_species(scheme *sc, pointer args)
 {
         struct species *species;
-        int str, intl, dex, spd, vr, pmask, hpmod, hpmult, argno = 1;
+        int str, intl, dex, spd, vr, hpmod, hpmult, argno = 1;
         int mpmod, mpmult, hit, def, dam, arm, visible, n_slots, n_spells, i;
         struct sprite *sleep_sprite;
         class ArmsType *weapon;
@@ -1038,9 +1037,10 @@ static pointer kern_mk_species(scheme *sc, pointer args)
         pointer slots;
         pointer spells;
         pointer ret;
+        struct mmode *mmode;
 
-        if (unpack(sc, &args, "ysddddddddddddddppbss", &tag, &name, &str, 
-                   &intl, &dex, &spd, &vr, &pmask, &hpmod, &hpmult, &mpmod, 
+        if (unpack(sc, &args, "ysdddddpddddddddppbss", &tag, &name, &str, 
+                   &intl, &dex, &spd, &vr, &mmode, &hpmod, &hpmult, &mpmod, 
                    &mpmult, &hit, &def, &dam, &arm, &sleep_sprite, &weapon, 
                    &visible, &damage_sound, &walking_sound)) {
                 load_err("kern-mk-species %s: bad args", tag);
@@ -1052,6 +1052,12 @@ static pointer kern_mk_species(scheme *sc, pointer args)
                          argno++);
                 return sc->NIL;
         }
+
+        if (! mmode) {
+                load_err("kern-mk-species %s: null mmode", tag);
+                return sc->NIL;
+        }
+        
 
         /* get the list of slots */
         slots = scm_car(sc, args);
@@ -1066,11 +1072,12 @@ static pointer kern_mk_species(scheme *sc, pointer args)
         n_spells = scm_len(sc, spells);
 
         species = species_new(tag, name, damage_sound, walking_sound, str,
-                              intl, dex, spd, vr, pmask, hpmod, hpmult,
+                              intl, dex, spd, vr, hpmod, hpmult,
                               mpmod, mpmult, hit, def, dam, arm, visible,
                               n_slots, n_spells);
         species->weapon = weapon;
         species->sleep_sprite = sleep_sprite;
+        species->mmode = mmode;
 
         /* Load the list of slots. */
         i = 0;
@@ -1189,6 +1196,29 @@ static pointer kern_mk_field_type(scheme *sc, pointer args)
         return ret;
 }
 
+static void mmode_dtor(void *ptr)
+{
+        mmode_del((struct mmode*)ptr);
+}
+
+KERN_API_CALL(kern_mk_mmode)
+{
+        char *tag, *name;
+        int index;
+        struct mmode *mmode;
+        pointer ret;
+
+        if (unpack(sc, &args, "ysd", &tag, &name, &index)) {
+                load_err("kern-mk-mmode: bad args");
+                return sc->NIL;
+        }
+
+        mmode = mmode_new(tag, name, index);
+        session_add(Session, mmode, mmode_dtor, NULL, NULL);
+        ret = scm_mk_ptr(sc, mmode);
+        scm_define(sc, tag, ret);
+        return ret;
+}
 
 static pointer kern_mk_obj_type(scheme *sc, pointer args)
 {
@@ -1817,7 +1847,11 @@ KERN_API_CALL(kern_mk_player)
                 /* fixme: looks like a hack below */
                 ch->setRestCredits(MAX_USEFUL_REST_HOURS_PER_DAY);
 
-                player_party->addMember(ch);
+                if (! player_party->addMember(ch)) {
+                        load_err("kern-mk-player: failed to add %s to player "
+                                 "party", ch->getName());
+                        goto abort;
+                }
         }
 
         /* Board the vehicle */
@@ -2299,22 +2333,22 @@ static pointer kern_obj_set_visible(scheme *sc, pointer args)
         return sc->NIL;
 }
 
-static pointer kern_obj_set_pmask(scheme *sc, pointer args)
+static pointer kern_obj_set_pclass(scheme *sc, pointer args)
 {
         class Object *obj;
         int val;
 
         if (unpack(sc, &args, "pd", &obj, &val)) {
-                rt_err("kern-obj-set-visiblity: bad args");
+                rt_err("kern-obj-set-pclass: bad args");
                 return sc->NIL;
         }
 
         if (!obj) {
-                rt_err("kern-obj-set-pmask: null object");
+                rt_err("kern-obj-set-pclass: null object");
                 return sc->NIL;
         }
 
-        obj->setPmask(val);
+        obj->setPclass(val);
 
         return sc->NIL;
 }
@@ -2686,15 +2720,15 @@ KERN_API_CALL(kern_mk_vehicle_type)
         int mustTurn;
         char *mv_desc;
         char *mv_sound;
-        int pmask;
         int tailwind_penalty;
         int headwind_penalty;
         int crosswind_penalty;
         int max_hp;
         int speed;
         pointer ret;
+        struct mmode *mmode;
 
-        if (unpack(sc, &args, "yspppbbbssdddddd",
+        if (unpack(sc, &args, "yspppbbbssdddddp",
                    &tag,
                    &name,
                    &sprite,
@@ -2705,12 +2739,12 @@ KERN_API_CALL(kern_mk_vehicle_type)
                    &mustTurn,
                    &mv_desc,
                    &mv_sound,
-                   &pmask,
                    &tailwind_penalty,
                    &headwind_penalty,
                    &crosswind_penalty,
                    &max_hp,
-                   &speed
+                   &speed,
+                   &mmode
                     )) {
                 load_err("kern-mk-vehicle-type %s: bad args", tag);
                 return sc->NIL;
@@ -2726,7 +2760,6 @@ KERN_API_CALL(kern_mk_vehicle_type)
                                mustTurn,
                                mv_desc,
                                mv_sound,
-                               pmask,
                                tailwind_penalty,
                                headwind_penalty,
                                crosswind_penalty,
@@ -2735,6 +2768,7 @@ KERN_API_CALL(kern_mk_vehicle_type)
                                );
         assert(type);
 
+        type->mmode = mmode;
         session_add(Session, type, vehicle_type_dtor, NULL, NULL);
         ret = scm_mk_ptr(sc, type);
         scm_define(sc, tag, ret);
@@ -2789,6 +2823,20 @@ KERN_API_CALL(kern_obj_get_alignment)
                 return sc->NIL;
 
         return scm_mk_integer(sc, obj->getAlignment());
+}
+
+KERN_API_CALL(kern_obj_get_mmode)
+{
+        struct mmode *mmode;
+
+        Object *obj = unpack_obj(sc, &args, "kern-obj-get-mmode");
+        if (!obj)
+                return sc->NIL;
+
+        mmode = obj->getMovementMode();
+        if (mmode)
+                return scm_mk_ptr(sc, mmode);
+        return sc->NIL;
 }
 
 KERN_API_CALL(kern_obj_set_light)
@@ -4240,6 +4288,91 @@ KERN_API_CALL(kern_obj_add_to_inventory)
         return sc->NIL;
 }
 
+KERN_API_CALL(kern_mk_ptable)
+{
+        int n_mmode;
+        int n_pclass;
+        int pclass;
+        struct ptable *ptable;
+        pointer row;
+        pointer col;
+
+        /* The ptable table is a list of lists. Each row corresponds to a
+         * passability class (a property of terrain, and objects which affect
+         * passability onto a tile). Each column corresponds to a movement
+         * mode. */
+
+        if (! scm_is_pair(sc, args)) {
+                load_err("kern-mk-ptable: arg 0 not a list");
+                return sc->NIL;
+        }
+
+        /* count the number of passability classes and movement modes given in
+         * the table */
+        row = args;
+        col = scm_car(sc, args);
+
+        n_pclass = scm_len(sc, row);
+        n_mmode = scm_len(sc, col);
+
+        if (n_pclass <= 0) {
+                load_err("kern-mk-ptable: 0 rows given");
+                return sc->NIL;
+        }
+
+        if (n_mmode <= 0) {
+                load_err("kern-mk-ptable: row 0 has no columns");
+                return sc->NIL;
+        }
+
+        /* allocate the kernel passability table */
+        ptable = ptable_new(n_mmode, n_pclass);
+        
+        /* for each row (passability class) */
+        for (pclass = 0; pclass < n_pclass; pclass++) {
+
+                int mmode;
+
+                col = scm_car(sc, row);
+                row = scm_cdr(sc, row);
+
+                if (scm_len(sc, col) < n_mmode) {
+                        load_err("kern-mk-ptable: row %d has only %d columns",
+                                 pclass, scm_len(sc, col));
+                        goto abort;
+                }
+
+                /* for each column (movement mode) */
+                for (mmode = 0; mmode < n_mmode; mmode++) {
+
+                        int mcost;
+
+                        /* get the movement cost */
+                        if (unpack(sc, &col, "d", &mcost)) {
+                                load_err("kern-mk-ptable: row %d col %d bad arg",
+                                         pclass, mmode);
+                                goto abort;
+                        }
+
+                        /* insert it into the passability table */
+                        ptable_set(ptable, mmode, pclass, mcost);
+                }
+        }
+
+
+        /* associate the session with the new table */
+        if (Session->ptable) {
+                ptable_del(Session->ptable);
+        }
+        Session->ptable = ptable;
+
+        return sc->NIL;
+
+ abort:
+        ptable_del(ptable);
+        return sc->NIL;
+}
+
 scheme *kern_init(void)
 {        
         scheme *sc;
@@ -4267,6 +4400,7 @@ scheme *kern_init(void)
         scm_define_proc(sc, "kern-mk-field", kern_mk_field);
         scm_define_proc(sc, "kern-mk-field-type", kern_mk_field_type);
         scm_define_proc(sc, "kern-mk-map", kern_mk_map);
+        scm_define_proc(sc, "kern-mk-mmode", kern_mk_mmode);
         scm_define_proc(sc, "kern-mk-obj", kern_mk_obj);
         scm_define_proc(sc, "kern-mk-obj-type", kern_mk_obj_type);
         scm_define_proc(sc, "kern-mk-occ", kern_mk_occ);
@@ -4275,6 +4409,7 @@ scheme *kern_init(void)
         scm_define_proc(sc, "kern-mk-party-type", kern_mk_party_type);
         scm_define_proc(sc, "kern-mk-place", kern_mk_place);
         scm_define_proc(sc, "kern-mk-player", kern_mk_player);
+        scm_define_proc(sc, "kern-mk-ptable", kern_mk_ptable);
         scm_define_proc(sc, "kern-mk-sched", kern_mk_sched);
         scm_define_proc(sc, "kern-mk-species", kern_mk_species);
         scm_define_proc(sc, "kern-mk-sprite", kern_mk_sprite);
@@ -4305,6 +4440,7 @@ scheme *kern_init(void)
         scm_define_proc(sc, "kern-obj-get-gob", kern_obj_get_gob);
         scm_define_proc(sc, "kern-obj-get-light", kern_obj_get_light);
         scm_define_proc(sc, "kern-obj-get-location", kern_obj_get_location);
+        scm_define_proc(sc, "kern-obj-get-mmode", kern_obj_get_mmode);
         scm_define_proc(sc, "kern-obj-get-sprite", kern_obj_get_sprite);
         scm_define_proc(sc, "kern-obj-get-type", kern_obj_get_type);
         scm_define_proc(sc, "kern-obj-get-vision-radius", kern_obj_get_vision_radius);
@@ -4321,7 +4457,7 @@ scheme *kern_init(void)
         scm_define_proc(sc, "kern-obj-set-gob", kern_obj_set_gob);
         scm_define_proc(sc, "kern-obj-set-light", kern_obj_set_light);
         scm_define_proc(sc, "kern-obj-set-opacity", kern_obj_set_opacity);
-        scm_define_proc(sc, "kern-obj-set-pmask", kern_obj_set_pmask);
+        scm_define_proc(sc, "kern-obj-set-pclass", kern_obj_set_pclass);
         scm_define_proc(sc, "kern-obj-set-sprite", kern_obj_set_sprite);
         scm_define_proc(sc, "kern-obj-set-temporary", kern_obj_set_temporary);
         scm_define_proc(sc, "kern-obj-set-visible", kern_obj_set_visible);
@@ -4387,7 +4523,7 @@ scheme *kern_init(void)
         scm_define_proc(sc, "kern-sleep", kern_sleep);
         scm_define_proc(sc, "kern-sound-play", kern_sound_play);
         scm_define_proc(sc, "kern-tag", kern_tag);
-        scm_define_proc(sc, "kern-test-recursion", kern_test_recursion);
+        scm_define_proc(sc, "kern-test-recursion", kern_test_recursion);        
 
         /* ui api */
         scm_define_proc(sc, "kern-ui-direction", kern_ui_direction);

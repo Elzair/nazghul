@@ -54,6 +54,9 @@
                 obj_dec_ref((obj));                                           \
         } while (0)
 
+/* Hack: until movement modes implemented in objects */
+#define obj_mmode(obj) ((obj)->getMovementMode())
+
 /* Hooks
  *
  * OBJ_HOOK_START_OF_TURN
@@ -340,8 +343,7 @@ class Object {
         // State variables affected by script execution
         virtual void setSprite(struct sprite *sprite);
 	virtual struct sprite *getSprite(); 
-        virtual void setPmask(int pmask);
-        virtual int getPmask();
+
         virtual void setOpacity(bool opaque);
 	virtual bool isOpaque();
         virtual bool tryToRelocateToNewPlace(struct place *place, 
@@ -363,7 +365,11 @@ class Object {
         virtual bool isTemporary();
         virtual void setTemporary(bool val);
 
-
+        virtual int getMovementCost(int pclass);
+        virtual struct mmode *getMovementMode();
+        virtual bool isPassable(int pclass);
+        virtual void setPclass(int val);
+        virtual int getPclass();
         
 	struct olist container_link;
 
@@ -422,7 +428,6 @@ class Object {
         // Used to shadow the ObjectType sprite for objects whose sprite is
         // determined by their gob state (like mechs).
         struct sprite *current_sprite;
-        int pmask;
         bool opacity;
 
         // Used for invisibility;
@@ -431,6 +436,9 @@ class Object {
         // Forces addEffect() to add the given effect without allowing the
         // "add-hook-hook" effects to prevent it. Used by start().
         bool forceEffect;
+
+        // For fields, mechs and other objects that affect passability:
+        int pclass;
 };
 
 #endif				// object_h

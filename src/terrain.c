@@ -35,9 +35,9 @@
 extern struct terrain *terrain_new(char *tag, 
                                    char *name,
                                    struct sprite *sprite,
-                                   int pmask, 
+                                   int pclass, 
                                    int alpha, 
-                                   int movement_cost,
+                                   //int movement_cost,
                                    int light)
 {
 	struct terrain *terrain;
@@ -50,11 +50,10 @@ extern struct terrain *terrain_new(char *tag,
         terrain->tag           = strdup(tag);
 	terrain->name          = strdup(name);
         terrain->sprite        = sprite;
-	terrain->pmask         = pmask;
+	terrain->pclass        = pclass;
 	terrain->alpha         = alpha;
-        terrain->movement_cost = movement_cost;
+        //terrain->movement_cost = movement_cost;
         terrain->light         = light;
-
 	return terrain;
 }
 
@@ -66,17 +65,9 @@ void terrain_del(struct terrain *terrain)
 		free(terrain->name);
         if (terrain->effect)
                 closure_del(terrain->effect);
+        if (terrain->cost)
+                closure_del(terrain->cost);
         delete terrain;
-}
-
-int terrain_get_movement_cost(struct terrain *terrain, Object *object)
-{
-        if (terrain->pmask & object->getPmask())
-                return terrain->movement_cost;
-        return IMPASSABLE;
-
-        assert(terrain->cost);
-        return closure_exec(terrain->cost, "pp", terrain, object);
 }
 
 #define BOGUS_MAX_SIZE 255	// Hack, should get a constant from somewhere

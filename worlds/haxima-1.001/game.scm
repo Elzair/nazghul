@@ -30,12 +30,13 @@
 (define slot-helm             64)
 
 ;; Speeds
-(define speed-insect       3)
 (define speed-yellow-slime 1)
 (define speed-human        2)
+(define speed-insect       3)
 (define speed-ship         4)
 
-;; Pmasks
+;; Pmasks (keep them around until mechs are converted to use passability
+;; classes (see below))
 (define pmask-none   0)
 (define pmask-solid  1)
 (define pmask-land   2)
@@ -44,10 +45,50 @@
 (define pmask-bridge (+ pmask-land pmask-water pmask-shoals))
 (define pmask-all    (+ pmask-solid pmask-land pmask-water pmask-shoals))
 
+;; Difficulty levels (Note: 255 is well-known to the kernel to mean
+;; "impassible" in the case of movement costs)
+(define veasy      1)
+(define easy       2)
+(define normal     3)
+(define hard       4)
+(define vhard      5)
+(define cant       255)
+
+;; Passability classes
+(define pclass-none      0)
+(define pclass-grass     1)
+(define pclass-deep      2)
+(define pclass-shoals    3)
+(define pclass-mountains 4) ;; no ceiling
+(define pclass-wall      5) ;; has a ceiling
+(define pclass-trees     6)
+(define pclass-forest    7)
+
 ;; Movement modes
-(define mmode-walk   pmask-land)
-(define mmode-spirit (+ pmask-solid pmask-land))
-(define mmode-hover  (+ pmask-land pmask-shoals))
+(define mmodes
+  (list
+   (list 'mmode-walk  "walking"  0)
+   (list 'mmode-hover "hovering" 1)
+   (list 'mmode-ship  "sailing"  2)
+   (list 'mmode-phase "phasing"  3)
+   (list 'mmode-fly   "flying"   4)
+   (list 'mmode-skiff "rowing"   5)
+   ))
+(map (lambda (mmode) (apply kern-mk-mmode mmode)) mmodes)
+
+;; Movement cost table
+(kern-mk-ptable
+  ;;   walk   hover ship   phase  fly    skiff
+  ;;   ====== ===== ====== =====  ====== ======
+ (list 0      0     0      0      0      0     ) ;; none
+ (list normal easy  cant   normal easy   cant  ) ;; grass/paving
+ (list cant   cant  normal cant   easy   vhard ) ;; deep
+ (list cant   hard  cant   cant   easy   normal) ;; shoals
+ (list cant   cant  cant   cant   vhard  cant  ) ;; mountains
+ (list cant   cant  cant   normal cant   cant  ) ;; wall (w/ ceiling)
+ (list hard   hard  cant   normal easy   cant  ) ;; trees  
+ (list vhard  vhard cant   normal easy   cant  ) ;; forest/hills/bog
+ )
 
 ;; Layers
 (define layer-none       0)

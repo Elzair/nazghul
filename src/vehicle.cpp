@@ -48,7 +48,6 @@ VehicleType::VehicleType(char *tag, char *name, struct sprite *sprite,
                          bool _mustTurn,
                          char *_mv_desc,
                          char *_mv_sound,
-                         int _pmask,
                          int _tailwind_penalty,
                          int _headwind_penalty,
                          int _crosswind_penalty,
@@ -67,7 +66,6 @@ VehicleType::VehicleType(char *tag, char *name, struct sprite *sprite,
         assert(mv_desc);
         mv_sound = strdup(_mv_sound);
         assert(mv_sound);
-        pmask = _pmask;
         tailwind_penalty = _tailwind_penalty;
         headwind_penalty = _headwind_penalty;
         crosswind_penalty = _crosswind_penalty;
@@ -160,11 +158,6 @@ bool VehicleType::isType(int classID)
 class ArmsType *VehicleType::getOrdnance() 
 {
         return ordnance;
-}
-
-int VehicleType::getPmask() 
-{
-        return pmask;
 }
 
 char *VehicleType::getMvDesc() 
@@ -361,11 +354,6 @@ class ArmsType *Vehicle::getOrdnance()
         return getObjectType()->getOrdnance();
 }
 
-int Vehicle::getPmask() 
-{
-        return getObjectType()->getPmask();
-}
-
 char *Vehicle::getMvDesc() 
 {
         return getObjectType()->getMvDesc();
@@ -380,4 +368,9 @@ void Vehicle::save(struct save *save)
 {
         save->write(save, "(kern-mk-vehicle %s %d %d)\n",
                     getObjectType()->getTag(), getFacing(), getHp());
+}
+
+struct mmode *Vehicle::getMovementMode()
+{
+        return getObjectType()->mmode;
 }

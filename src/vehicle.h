@@ -37,7 +37,6 @@ class VehicleType:public ObjectType {
                     bool mustTurn,
                     char *mv_desc,
                     char *mv_sound,
-                    int pmask,
                     int tailwind_penalty,
                     int headwind_penalty,
                     int crosswind_penalty,
@@ -46,19 +45,20 @@ class VehicleType:public ObjectType {
                     );
 	virtual ~VehicleType();
 	virtual class ArmsType *getOrdnance();
-	virtual int getPmask();
 	virtual char *getMvDesc();
 	virtual char *getMvSound();
 	virtual bool mustTurn();
         virtual bool canFace(int facing);
         virtual class Object *createInstance();
         virtual int getWindPenalty(int facing);
+        
 
         bool isVulnerable();
         bool killsOccupants();
 
         struct formation *formation;
         struct terrain_map *map;
+        struct mmode *mmode;
 
  protected:
         class ArmsType *ordnance;
@@ -86,7 +86,7 @@ class Vehicle:public Object {
         virtual int getX();
         virtual int getY();
         virtual class ArmsType *getOrdnance();
-	virtual int getPmask();
+        virtual struct mmode *getMovementMode();
 	virtual char *getMvDesc();
 	virtual char *getMvSound();
 	virtual bool mustTurn();

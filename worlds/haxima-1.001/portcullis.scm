@@ -5,8 +5,8 @@
 
 (define (portcullis-state on?)
   (if on?
-      (list 's_portcullis_up #f pmask-land)
-      (list 's_portcullis_down #f pmask-solid)))
+      (list 's_portcullis_up #f pclass-none)
+      (list 's_portcullis_down #f pclass-wall)))
 
 (define portcullis-ifc
   (ifc bim-ifc

@@ -27,23 +27,23 @@
 
 (define (door-update-kstate kdoor)
   (let ((door (kobj-gob kdoor)))
-    (display "door-update-kstate:")(display door)(newline)
+    ;;(display "door-update-kstate:")(display door)(newline)
     (cond ((door-magic-locked? door) 
            (kern-obj-set-sprite kdoor s_magically_locked_solid_wood_door_in_stone)
            (kern-obj-set-opacity kdoor #t)
-           (kern-obj-set-pmask kdoor pmask-solid))
+           (kern-obj-set-pclass kdoor pclass-wall))
           ((door-locked? door) 
            (kern-obj-set-sprite kdoor s_locked_solid_wood_door_in_stone)
            (kern-obj-set-opacity kdoor #t)
-           (kern-obj-set-pmask kdoor pmask-solid))
+           (kern-obj-set-pclass kdoor pclass-wall))
           ((door-open? door) 
            (kern-obj-set-sprite kdoor s_open_solid_wood_door_in_stone)
            (kern-obj-set-opacity kdoor #f)
-           (kern-obj-set-pmask kdoor pmask-land))
+           (kern-obj-set-pclass kdoor pclass-none))
           (else 
            (kern-obj-set-sprite kdoor s_closed_solid_wood_door_in_stone)
            (kern-obj-set-opacity kdoor #t)
-           (kern-obj-set-pmask kdoor pmask-solid))))
+           (kern-obj-set-pclass kdoor pclass-wall))))
   kdoor)
 
 (define (door-open kdoor khandler) 
@@ -63,7 +63,7 @@
        #t))))
   
 (define (door-close kdoor khandler)
-  (display "door-close")(newline)
+  ;;(display "door-close")(newline)
   (let ((door (kobj-gob kdoor)))
     (door-set-open door #f)
     (door-set-timeout! door 0)
@@ -72,7 +72,7 @@
 
 (define (door-lock kdoor khandler)
   (let ((door (kobj-gob kdoor)))
-    (display "door-lock:")(display door)(newline)
+    ;;(display "door-lock:")(display door)(newline)
     (cond ((door-open? door) (kern-print "Not closed!\n"))
           ((door-locked? door) (kern-print "Already locked!\n"))
           (else
@@ -81,7 +81,7 @@
 
 (define (door-unlock kdoor khandler)
   (let ((door (kobj-gob kdoor)))
-    (display "door-unlock:")(display door)(newline)
+    ;;(display "door-unlock:")(display door)(newline)
     (cond ((door-open? door) (kern-print "Not closed!\n"))
           ((not (door-locked? door)) (kern-print "Not locked!\n"))
           (else
@@ -90,7 +90,7 @@
 
 (define (door-magic-lock kdoor khandler)
   (let ((door (kobj-gob kdoor)))
-    (display "door-magic-lock:")(display door)(newline)
+    ;;(display "door-magic-lock:")(display door)(newline)
     (cond ((door-open? door) (kern-print "Not closed!\n"))
           ((door-magic-locked? door) (kern-print "Already magically locked!\n"))
           (else
@@ -99,7 +99,7 @@
 
 (define (door-magic-unlock kdoor khandler)
   (let ((door (kobj-gob kdoor)))
-    (display "door-magic-unlock:")(display door)(newline)
+    ;;(display "door-magic-unlock:")(display door)(newline)
     (cond ((door-open? door) (kern-print "Not closed!\n"))
           ((not (door-magic-locked? door)) (kern-print "Not magically locked!\n"))
           (else
@@ -124,15 +124,15 @@
 ;      (cond ((door-open? door) 
 ;             (kern-obj-set-sprite kdoor s_open_solid_wood_door_in_stone)
 ;             (kern-obj-set-opacity kdoor #f)
-;             (kern-obj-set-pmask kdoor pmask-land))
+;             (kern-obj-set-pclass kdoor pclass-land))
 ;            ((door-locked? door)
 ;             (kern-obj-set-sprite kdoor s_locked_solid_wood_door_in_stone)
 ;             (kern-obj-set-opacity kdoor #t)
-;             (kern-obj-set-pmask kdoor pmask-solid))
+;             (kern-obj-set-pclass kdoor pclass-solid))
 ;            (else
 ;             (kern-obj-set-sprite kdoor s_closed_solid_wood_door_in_stone)
 ;             (kern-obj-set-opacity kdoor #t)
-;             (kern-obj-set-pmask kdoor pmask-solid))))
+;             (kern-obj-set-pclass kdoor pclass-solid))))
 ;    kdoor)
 
 (define (door-connect kobj kto-tag)

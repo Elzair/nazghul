@@ -118,12 +118,26 @@ int closure_exec(closure_t *closure, char *fmt, ...)
 
         /* FIXME: need to return integer results, too */
 
+ evaluate_result:
+
         if (result == closure->sc->NIL ||
             result == closure->sc->F)
                 return 0;
 
-        if (closure->sc->vptr->is_integer(result))
+        if (closure->sc->vptr->is_number(result) &&
+            closure->sc->vptr->is_integer(result))
                 return closure->sc->vptr->ivalue(result);
+
+        if (scm_is_symbol(closure->sc, result)) {
+                pointer pair;
+                pair = closure->sc->vptr->find_slot_in_env(closure->sc, 
+                                                           closure->sc->envir, 
+                                                           result, 
+                                                           1);
+                assert(scm_is_pair(closure->sc, pair));
+                result = closure->sc->vptr->pair_cdr(pair);
+                goto evaluate_result;
+        }
 
         return 1;
 }

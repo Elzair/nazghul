@@ -46,8 +46,7 @@ class PartyType : public ObjectType {
 
 	virtual bool isType(int classID);
 	virtual int getType();
-	virtual bool init(class Character * ch);
-	virtual int getPmask();
+	//virtual bool init(class Character * ch);
 	virtual int getVisionRadius();
 	virtual struct GroupInfo *enumerateGroups();
 	virtual struct GroupInfo *getNextGroup();
@@ -84,7 +83,7 @@ class Party:public Object {
 	virtual struct formation *get_formation();
         virtual char *get_movement_sound();
 	virtual class PartyType *getObjectType();
-	virtual int getPmask();
+        virtual int getMovementCost(int pclass);
 	virtual int getSize(void);
 	virtual int getSpeed();
         virtual struct sprite *getSprite();
@@ -112,7 +111,7 @@ class Party:public Object {
         virtual bool removeEffect(struct effect *effect);
 	virtual void forEachMember(bool(*fx) (class Character *, void *), 
                                    void *);
-	virtual void init(class Character * ch);
+	//virtual void init(class Character * ch);
 	virtual void init(class PartyType * type);
 	virtual void init(int x, int y, struct place *place, 
                           class PartyType * type);

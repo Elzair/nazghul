@@ -1,10 +1,10 @@
 ;; bim - binary mechanism
 
-(define (state-mk sprite-tag opacity pmask)
-  (list sprite-tag opacity pmask))
+(define (state-mk sprite-tag opacity pclass)
+  (list sprite-tag opacity pclass))
 (define (state-sprite state) (eval (car state)))
 (define (state-opacity state) (cadr state))
-(define (state-pmask state) (caddr state))
+(define (state-pclass state) (caddr state))
 
 ;; ctor
 (define (bim-mk on? port)
@@ -41,7 +41,7 @@
     (let ((state ((kobj-ifc kobj) 'state on?)))
       (kern-obj-set-sprite kobj (state-sprite state))
       (kern-obj-set-opacity kobj (state-opacity state))
-      (kern-obj-set-pmask kobj (state-pmask state)))))
+      (kern-obj-set-pclass kobj (state-pclass state)))))
 
 ;; handlers
 (define (bim-on kobj khandler) 

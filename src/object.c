@@ -35,6 +35,7 @@
 #include "Field.h"
 #include "dice.h"
 #include "effect.h"
+#include "mmode.h"
 
 #include <assert.h>
 #include <stdlib.h>
@@ -91,6 +92,7 @@ ObjectType::~ObjectType()
 		free(name);
         if (gifc)
                 closure_del(gifc);
+
 }
 
 bool ObjectType::init(char *tag, char *name, enum layer layer,
@@ -555,10 +557,10 @@ void Object::setup()
         gob             = NULL;
         current_sprite  = NULL;
         opacity         = false;
-        pmask           = 0xffffffff;
         light           = 0;
         temporary       = false;
         forceEffect     = false;
+        pclass          = PCLASS_NONE;
         
         if (getObjectType() && ! getObjectType()->isVisible())
                 visible = 0;
@@ -581,6 +583,7 @@ Object::~Object()
 
         if (gob)
                 gob_del(gob);
+
 }
 
 int Object::getX()
@@ -923,14 +926,31 @@ void Object::clearAlignment(int alignment)
 {
 }
 
-int Object::getPmask(void)
+int Object::getPclass()
 {
-        return pmask;
+        return pclass;
 }
 
-void Object::setPmask(int mask)
+void Object::setPclass(int val)
 {
-        pmask = mask;
+        pclass = val;
+}
+
+int Object::getMovementCost(int pclass)
+{        
+        if (pclass == PCLASS_NONE)
+                return 0;
+
+        struct mmode *mmode = getMovementMode();
+        if (! mmode)
+                return PTABLE_IMPASSABLE;
+
+        return ptable_get(session_ptable(), mmode->index, pclass);
+}
+
+bool Object::isPassable(int pclass)
+{
+        return (getMovementCost(pclass) != PTABLE_IMPASSABLE);
 }
 
 bool Object::putOnMap(struct place *new_place, int new_x, int new_y, int r)
@@ -1757,4 +1777,9 @@ bool Object::isTemporary()
 void Object::setTemporary(bool val)
 {
         temporary = val;
+}
+
+struct mmode *Object::getMovementMode()
+{
+        return NULL;
 }

@@ -85,7 +85,7 @@
                              (not (occupied? loc))))
           neighbors 
           origin
-          100))
+          10))
 
 ;; Generic proc to summon other beings. Used by spells and some special
 ;; effects.

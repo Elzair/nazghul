@@ -30,7 +30,7 @@
                  20 20 20          ; str/int/dex
                  speed-human       ; speed
                  8                 ; vision radius
-                 mmode-spirit      ; passability
+                 mmode-phase       ; passability
                  10 5              ; hp mod/mult
                  10 10             ; mp mod/mult
                  0 1 -1 -1         ; hit/def/dam/arm mod

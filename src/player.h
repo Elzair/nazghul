@@ -103,7 +103,6 @@ class player_party : public Party {
         virtual void endCamping();
         virtual void ambushWhileCamping();
         virtual void endResting();
-        virtual int getPmask(void);
 	virtual int getVisionRadius();
         virtual void addView();
         virtual int getLight();

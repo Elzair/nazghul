@@ -32,12 +32,12 @@
                       #t        ; must turn
                       "sail"    ; move description
                       sound-ship-move ; move sound
-                      pmask-water ; pmask
                       2           ; tailwind penalty
                       4           ; headwind penalty
                       1           ; crosswind penalty
                       100         ; max hp
                       speed-ship  ; speed
+                      mmode-ship  ; pmask
                       )
 
 

@@ -70,6 +70,9 @@ extern int save_errs;
 #define dec_magic_negated(val) ((MagicNegated) -= min((MagicNegated), (val)))
 #define dec_xray(val) ((XrayVision) -= min((XrayVision), (val)))
 
+/* Access to global session passability table: */
+#define session_ptable() (Session->ptable)
+
 struct session {
 
         // This list keeps track of all loaded object types. It's private to
@@ -139,6 +142,9 @@ struct session {
 
         /* The number of turns until the "xray vision" effect expires: */
         int xray;
+
+        /* The passability table */
+        struct ptable *ptable;
 };
 
 // Callback table for saving objects

@@ -86,6 +86,7 @@ PartyType::~PartyType()
         }
 }
 
+#if 0
 bool PartyType::init(class Character * ch)
 {
 	char name[64];
@@ -104,6 +105,7 @@ bool PartyType::init(class Character * ch)
         sleep_sprite = ch->species->sleep_sprite;
 	return true;
 }
+#endif
 
 struct GroupInfo *PartyType::enumerateGroups(void)
 {
@@ -141,11 +143,6 @@ int PartyType::getType()
         return PARTY_TYPE_ID;
 }
 
-int PartyType::getPmask()
-{
-        return pmask;
-}
-
 int PartyType::getVisionRadius()
 {
         return vrad;
@@ -169,7 +166,6 @@ void PartyType::addGroup(struct species *species, struct occ *occ, struct sprite
         if (ai)
                 closure_ref(ai);
         list_add(&groups, &group->list);
-        pmask &= species->pmask;
         vrad = max(vrad, species->vr);
         visible = species->visible || visible;
         speed = min(speed, species->spd);
@@ -514,7 +510,7 @@ MoveResult Party::move(int dx, int dy)
 
 	relocate(newplace, newx, newy);
 
-	action_points -= place_get_movement_cost(getPlace(), getX(), getY());
+	action_points -= place_get_movement_cost(getPlace(), getX(), getY(), this);
 
         return MovedOk;
 }
@@ -648,6 +644,7 @@ void Party::init(class PartyType * type)
 	Object::init(type);
 }
 
+#if 0
 void Party::init(class Character * ch)
 {
 	// This is a "wrapper" party around a single character.
@@ -662,6 +659,7 @@ void Party::init(class Character * ch)
 	size = 1;
 	alignment = ch->getAlignment();
 }
+#endif
 
 bool Party::createMembers(void)
 {
@@ -817,13 +815,6 @@ bool Party::joinPlayer(void)
 	remove();
 	forEachMember(add_to_player_party, 0);
 	return true;
-}
-
-int Party::getPmask()
-{
-	if (vehicle)
-		return vehicle->getPmask();
-	return getObjectType()->getPmask();
 }
 
 void Party::paint(int sx, int sy)
@@ -1206,4 +1197,23 @@ static bool memberStart(class Character *member, void *data)
 void Party::start()
 {
         forEachMember(memberStart, NULL);
+}
+
+int Party::getMovementCost(int pclass)
+{
+        struct list *entry;
+        class Character *member;
+        int minCost = 255;
+
+        if (vehicle)
+                return vehicle->getMovementCost(pclass);
+
+        FOR_EACH_MEMBER(entry, member) {
+                if (!member->isDead()) {
+                        int cost = member->getMovementCost(pclass);
+                        minCost = min(cost, minCost);
+                }
+        }
+
+        return minCost;
 }

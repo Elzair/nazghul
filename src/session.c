@@ -30,6 +30,7 @@
 #include "images.h"
 #include "Portal.h"
 #include "Party.h"
+#include "ptable.h"
 #include "common.h"
 #include "player.h"
 #include "sky.h"
@@ -232,6 +233,10 @@ void session_del(struct session *session)
                 delete session->crosshair;
         sky_end_session(&session->sky);
         magic_end_session(&session->magic);
+        if (session->ptable)
+                ptable_del(session->ptable);
+
+        free(session);
 }
 
 void session_load(char *filename)
@@ -335,7 +340,6 @@ void session_load(char *filename)
 
         /* Run through all the objects in the world, initializing their
          * effects */
-        /* Save all the saveable objects. */
         list_for_each(&Session->data_objects, elem) {
                 struct data_obj_entry *entry;
                 entry = list_entry(elem, struct data_obj_entry, list);

@@ -36,7 +36,7 @@ struct species {
         int dex;
         int spd;
         int vr;
-        int pmask;
+        struct mmode *mmode;
 
         int hp_mod;   /* part of base hp contributed by species */
         int hp_mult;  /* additional hp per-level contributed by species */
@@ -68,7 +68,6 @@ extern struct species *species_new(char *tag,
                                    int dex,
                                    int spd,
                                    int vr,
-                                   int pmask,
                                    int hp_mod,
                                    int hp_mult,
                                    int mp_mod,

@@ -27,7 +27,10 @@
 BEGIN_DECL
 
 #include "list.h"
-#include <stdio.h> // for FILE
+#include "object.h"
+#include "ptable.h"     /* for ptable_get() */
+
+#include <stdio.h>      /* for FILE */
 #include <closure.h>
 
 struct sprite;
@@ -42,10 +45,7 @@ struct sprite;
 //extern int TERRAIN_MAGIC;
 #define TERRAIN_MAGIC (0xc01dbee3)
 
-#define IMPASSABLE 0xff
-
-#define terrain_is_passable(t,obj) \
-        (terrain_get_movement_cost((t),(obj)) != IMPASSABLE)
+#define terrain_pclass(t) ((t)->pclass)
 
 struct terrain {
         int magic;
@@ -55,20 +55,25 @@ struct terrain {
         struct sprite *sprite;
         struct terrain_map *combat_map;
         unsigned char alpha;
-        unsigned int pmask;
-        int movement_cost;
+        int pclass;
+        //int movement_cost;
         int light;
         closure_t *effect;
         closure_t *cost;
 };
 
+/* static inline int terrain_is_passable(struct terrain *terrain, class Object *obj) */
+/* { */
+/*         return ptable_is_passable(Session->ptable, obj->getPmask(), terrain->pclass); */
+/* } */
+
 extern struct terrain *terrain_new(char *tag, char *name, 
                                    struct sprite *sprite,
-                                   int pmask, 
-                                   int alpha, int movement_cost, int light);
+                                   int pclass, 
+                                   int alpha, 
+                                   int light);
 extern void terrain_del(struct terrain *terrain);
-extern int terrain_get_movement_cost(struct terrain *terrain,
-                                     class Object *mover);
+extern void terrain_alloc_mmode_table(int n_mmodes);
 
 #define LONGEST_TERRAIN_GLYPH       4
 #define NUM_QUICK_TERRAINS         10

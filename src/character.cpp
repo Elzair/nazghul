@@ -48,6 +48,7 @@
 #include "ctrl.h"
 #include "session.h"
 #include "sprite.h"
+#include "mmode.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -569,7 +570,7 @@ enum MoveResult Character::move(int dx, int dy)
                                 relocate(getPlace(), newx, newy);
                                 decActionPoints(
                                         place_get_movement_cost(getPlace(), 
-                                                                newx, newy));
+                                                                newx, newy, this));
                                 return MovedOk;
         
                         }
@@ -590,7 +591,8 @@ enum MoveResult Character::move(int dx, int dy)
 			relocate(oldPlace, newx, newy);
                         decActionPoints(place_get_movement_cost(getPlace(), 
                                                                 getX(), 
-                                                                getY()));
+                                                                getY(), 
+                                                                this));
 			setAttackTarget(oldTarget);
                         setSolo(wasSolo);
 
@@ -638,7 +640,9 @@ enum MoveResult Character::move(int dx, int dy)
                 //relocate(getPlace(), newx, newy);
 
                 decActionPoints(place_get_movement_cost(getPlace(), 
-                                                        newx, newy));
+                                                        newx, 
+                                                        newy,
+                                                        this));
 
                 endTurn();
 
@@ -648,7 +652,7 @@ enum MoveResult Character::move(int dx, int dy)
 #endif // HARDCODE_PORTALS
 
 	relocate(getPlace(), newx, newy);
-        decActionPoints(place_get_movement_cost(getPlace(), newx, newy));
+        decActionPoints(place_get_movement_cost(getPlace(), newx, newy, this));
 
 	return MovedOk;
 }
@@ -1424,10 +1428,6 @@ bool Character::isAsleep() {
 
 bool Character::isIncapacitated() {
         return (!isOnMap() || isDead() || isAsleep());
-}
-
-int Character::getPmask() {
-        return species->pmask;
 }
 
 int Character::getArmourClass() {
@@ -2475,4 +2475,9 @@ void Character::setDefaultCondition()
 void Character::addDefense(int val)
 {
         defenseBonus += val;
+}
+
+struct mmode *Character::getMovementMode()
+{
+        return species->mmode;
 }

@@ -390,28 +390,24 @@ int place_is_passable(struct place *place, int x, int y,
 	// Unless the destination terrain is passable, or a vehicle is present
 	// at the destination, return impassable. We allow movement onto
 	// impassable terrain with a vehicle, so that the vehicle can be
-	// boarded. For example, a ship on water, which is impassable to a
-	// walking pmask.
+	// boarded. For example, a ship on water.
 	terrain = place->terrain_map->terrain[y * place->terrain_map->w + x];
-
-        impassable_terrain = ! terrain_is_passable(terrain, subject);
-	no_convenient_vehicle = ((flags & PFLAG_IGNOREVEHICLES) ||
-				 !place_get_vehicle(place, x, y));
-	if (impassable_terrain && no_convenient_vehicle)
-		return 0;
+        if (! subject->isPassable(terrain_pclass(terrain)) &&
+            ((flags & PFLAG_IGNOREVEHICLES) ||
+             ! place_get_vehicle(place, x, y)))
+                return 0;
 
 	// Test for an impassable Field
 	field = (class Field *) place_get_object(place, x, y, field_layer);
 	if (field != NULL && 
-            (field->getObjectType()->getPmask() & subject->getPmask()) == 0)
+            ! subject->isPassable(field->getPclass()))
 		return 0;
 
 	// Test for an impassable Mech
 	if ((flags & PFLAG_IGNOREMECHS) == 0) {
 		mech = place_get_object(place, x, y, mech_layer);
-		if (mech != NULL && 
-                    (mech->getPmask() & subject->getPmask()) == 0)
-			return 0;
+		if (mech != NULL && ! subject->isPassable(mech->getPclass()))
+                        return 0;
 	}
 
 	return 1;
@@ -434,7 +430,8 @@ static struct tile *place_lookup_tile(struct place *place, int x, int y)
 	return outcast(olist, struct tile, hashlink);
 }
 
-static struct tile *place_create_and_add_tile(struct place *place, int x, int y)
+static struct tile *place_create_and_add_tile(struct place *place, int x, 
+                                              int y)
 {
 	struct tile *tile;
 	tile = tile_new(INDEX(x, y, place_w(place)));
@@ -828,7 +825,8 @@ static void place_pathfind_heuristic(struct astar_search_info *info,
 	}
 
         /* Add the terrain cost. */
-        *cost += place_get_movement_cost(context->place, info->x0, info->y0);
+        *cost += place_get_movement_cost(context->place, info->x0, info->y0, 
+                                         context->requestor);
 
 	/* And I penalize tiles with portals to encourage the pathfinding
 	 * algorithm to route around them. Make them cost a little bit more
@@ -853,6 +851,7 @@ struct astar_node *place_find_path(struct place *place,
 {
 	struct astar_node *path;
 	struct place_pathfind_context context;
+        int t1;
 
 	/* Store the target location as the context */
 	context.place = place;
@@ -871,7 +870,9 @@ struct astar_node *place_find_path(struct place *place,
 	info->context = &context;
 
 	/* Run the pathfinding alg */
+        t1 = SDL_GetTicks();
 	path = astar_search(info);
+        dbg("place_find_path: %d msecs\n", SDL_GetTicks() - t1);
 
 	return path;
 
@@ -937,11 +938,22 @@ void place_enter(struct place *place)
 	place_for_each_object(place, myResetObjectTurns, 0);
 }
 
-int place_get_movement_cost(struct place *place, int x, int y)
+int place_get_movement_cost(struct place *place, int x, int y, 
+                            class Object *obj)
 {
+        int cost;
+        struct terrain *t;
+
         WRAP_COORDS(place, x, y);
-	struct terrain *t = TERRAIN(place, x, y);
-	return (t ? t->movement_cost : 0);
+	t = TERRAIN(place, x, y);
+        cost = obj->getMovementCost(terrain_pclass(t));
+        if (PTABLE_IMPASSABLE == cost) {
+                class Vehicle *vehicle;
+                vehicle = place_get_vehicle(place, x, y);
+                if (vehicle)
+                        cost = vehicle->getMovementCost(terrain_pclass(t));
+        }
+        return cost;
 }
 
 int place_is_hazardous(struct place *place, int x, int y)
