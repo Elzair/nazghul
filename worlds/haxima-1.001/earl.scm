@@ -50,6 +50,7 @@
                          (list t_armor_leather         20)
                          (list t_shield_wooden_buckler 10)
                          (list t_sm_shield             10)
+                         (list t_torch                 5)
                          )
         (say knpc "Remember, your life depends on your gear."))))
 

@@ -21,6 +21,7 @@
 (load "abandoned-cellar.scm")
 (load "slimy-cavern.scm")
 (load "trigrave.scm")
+(load "lost-halls.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Characters
