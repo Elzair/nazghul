@@ -4377,7 +4377,7 @@ KERN_API_CALL(kern_in_los)
         */
 
         x3 = place_wrap_x(p1, x2 - x1 + VMASK_W/2);
-        y3 = place_wrap_y(p1, y2 - y2 + VMASK_H/2);
+        y3 = place_wrap_y(p1, y2 - y1 + VMASK_H/2);
 
         if (x3 < 0 ||
             y3 < 0 ||

@@ -53,12 +53,18 @@ static void vmask_dump(struct vmask *vmask)
         int x, y, i = 0;
 
         dbg("vmask_dump: %s\n", vmask_key(vmask));
+
+        for (x = 0; x < VMASK_W; x++) {
+                printf("%d", x % 10);
+        }
+        printf("\n");
+
         for (y = 0; y < VMASK_H; y++) {
                 for (x = 0; x < VMASK_W; x++) {
                         printf("%c", vmask->data[i] ? '#' : '.');
                         i++;
                 }
-                printf("\n");
+                printf(" %d\n", y % 10);
         }
 }
 

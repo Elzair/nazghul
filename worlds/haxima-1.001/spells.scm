@@ -164,7 +164,8 @@
   (let ((place (loc-place origin)))
     (define (get-lines x y n h)
       (if (< h 0) nil
-          (cons (get-line (mk-loc place x y) east n)
+          (cons (filter (lambda (a) (kern-in-los? origin a))
+                        (get-line (mk-loc place x y) east n))
                 (get-lines (if (= x 0) 0 (- x 1))
                            (+ y dy) 
                            (+ n (if (= x 0) 1 2))
