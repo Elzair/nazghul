@@ -32,24 +32,24 @@ object_types {
 I compiled these notes as an aid to others trying to learn the goblin language. I hope it is of some small use.
 --Gen
 
-Da.....Abode, World
-Gu.....Spirit, Ancestor
-Ru.....Ancient, Primordal, Deep, Cave
-No.....Name
-Me.....Duty, Job, Destiny
-Ki.....Health, Life-Force, Power
-Hi.....Magic
-Cho....Mankind
-Nu.....Give Birth, Create, Begin
-Ka.....Kill, Destroy, End
-Ha.....Good, Yes, Skillful
-Tu.....Bad, No, Useless
 Bo.....My, Myself
-Na.....Yours, Yourself
-To.....Individual
-Ma.....Forest, Hidden Ways
-Zu.....Watch, Seek
+Cho....Mankind
+Da.....Abode, World
 Eh.....'What?'
+Gu.....Spirit, Ancestor
+Ha.....Good, Yes, Skillful
+Hi.....Magic
+Ka.....Kill, Destroy, End
+Ki.....Health, Life-Force, Power
+Ma.....Forest, Hidden Ways
+Me.....Duty, Job, Destiny
+Na.....Yours, Yourself
+Nu.....Give Birth, Create, Begin
+No.....Name
+Ru.....Ancient, Primordal, Deep, Cave
+To.....Individual
+Tu.....Bad, No, Useless
+Zu.....Watch, Seek
 ");
 }
 
@@ -121,7 +121,7 @@ RESP Gen_To { SAY "Right, To is a general suffix meaning person." }
 RESP Gen_Ma { SAY "Yes, and Ka-Ma-To is their term for lumberjack." }
 RESP Gen_Zu { SAY "Good! And Zu-To means seeker." }
 RESP Gen_Eh { SAY "Eh?" }
-RESP Gen_BoTuMa { 
+RESP Gen_BoNaHa { 
         SAY "Excellent! That is the goblin word for friend. You have come far in mastering their language.";
         SET_FLAG WILL_JOIN;
 }
@@ -137,6 +137,25 @@ RESP Gen_Maiden {
 CONV Gen_Conv {
         IMPORT { c_generic }
         NATIVE {
+
+                BO   Gen_Bo;
+                CHO  Gen_Cho;
+                DA   Gen_Da;
+                EH   Gen_Eh;
+                GU   Gen_Gu;
+                HA   Gen_Ha;
+                HI   Gen_Hi;
+                KA   Gen_Ka;
+                KI   Gen_Ki;
+                ME   Gen_Me;
+                MA   Gen_Ma;
+                NA   Gen_Na;
+                NO   Gen_No;
+                NU   Gen_Nu;
+                RU   Gen_Ru;
+                TO   Gen_To;
+                TU   Gen_Tu;
+                ZU   Gen_Zu;
 
                 ADMIRE      Gen_primal;
                 AMBITIOUS   Gen_ambitious;
@@ -159,26 +178,7 @@ CONV Gen_Conv {
                 SHROOM      Gen_Shroom;
                 MAIDEN      Gen_Maiden;
 
-                BO   Gen_Bo;
-                CHO  Gen_Cho;
-                DA   Gen_Da;
-                EH   Gen_Eh;
-                GU   Gen_Gu;
-                HA   Gen_Ha;
-                HI   Gen_Hi;
-                KA   Gen_Ka;
-                KI   Gen_Ki;
-                ME   Gen_Me;
-                MA   Gen_Ma;
-                NA   Gen_Na;
-                NO   Gen_No;
-                NU   Gen_Nu;
-                RU   Gen_Ru;
-                TO   Gen_To;
-                TU   Gen_Tu;
-                ZU   Gen_Zu;
-
-                BOTUMA Gen_BoTuMa;
+                BONAHA Gen_BoNaHa;
         }
 }
 
