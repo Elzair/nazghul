@@ -213,7 +213,7 @@
     (if (not (kern-place-is-wilderness? (loc-place loc)))
         (begin
           (display "not wilderness")(newline)
-          (if (> (kern-dice-roll "2d20") 20)
+          (if (> (kern-dice-roll "2d20") 25)
               (let ((clone (kern-obj-clone kobj)))
                 (kern-print "Slime divides!\n")
                 (kern-being-set-base-faction 

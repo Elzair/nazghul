@@ -166,7 +166,7 @@
    (list  't_hands       "bare hands"     nil               "1d2"    "1d4"    "1d2"    slot-nil      1      1)
    (list  't_fangs       "fangs"          nil               "1d2"    "1d8"    "0"      slot-nil      1      1)
    (list  't_dagger      "dagger"         s_dagger_1        "1d3"    "1d6"    "1d2"    slot-weapon   1      1)
-   (list  't_acid_spray  "acid spray"     nil               "1d4"    "1d1"    "0"      slot-nil      2      2)   
+   (list  't_acid_spray  "acid spray"     nil               "1d2"    "1d1"    "0"      slot-nil      2      2)   
    (list  't_stinger     "stinger"        nil               "1d8"    "1d2-1"  "0"      slot-nil      1      1)
    (list  'short-sword   "short sword"    s_sword_short_1   "1d4"    "1d8"    "1d2"    slot-weapon   1      1)
    ))
