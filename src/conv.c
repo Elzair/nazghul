@@ -645,7 +645,7 @@ static bool load_imports(struct Loader *loader, int *n_imports,
 	if (!load_imports(loader, n_imports, imports))
 		return false;
 
-	*imports[index] = import;
+	(*imports)[index] = import;
 	return true;
 }
 
@@ -678,6 +678,7 @@ static bool load_qr_pairs(struct Loader *loader, int *n_pairs,
 	response = (struct response *) loader->lookupTag(tag, RESPONSE_TYPE_ID);
 	free(tag);
 	if (!response || response->magic != RESPONSE_TYPE_ID) {
+                loader->setError("Invalid RESP tag '%s'", tag);
 		free(key);
 		return false;
 	}

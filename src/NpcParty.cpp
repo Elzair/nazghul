@@ -746,19 +746,19 @@ void NpcParty::advanceTurn(int turn)
 	}
 
 	switch (act) {
-	case WORKING:
-		work();
-		if (loitering)
-			setTurn(turn);
-		break;
 	case COMMUTING:
 		commute();
 		break;
 	case SLEEPING:
 	case EATING:
-        default:
 		// For now do nothing.
 		setTurn(turn);
+		break;
+        default:
+	case WORKING:
+		work();
+		if (loitering)
+			setTurn(turn);
 		break;
 	}
 

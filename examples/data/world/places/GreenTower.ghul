@@ -25,6 +25,8 @@
 
 //#include "GreenTower_Map.ghul"
 
+#include "../characters/Shroom_the_Hag.ghul"
+
 MAP GreenTower_Map {
         type   ascii;
         width  64;
@@ -111,6 +113,7 @@ PLACE  GreenTower {
   map         GreenTower_Map;
   underground 0;
   objects {
+    Shroom_the_Hag  40 11 (ALIGN_TOWN) 1;
   }
   object_type t_town;
 
