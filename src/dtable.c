@@ -22,6 +22,7 @@
 
 #include "dtable.h"
 #include "debug.h"
+#include "session.h" /* for save */
 
 #include <assert.h>
 #include <stdlib.h>
@@ -165,6 +166,20 @@ void dtable_push(struct dtable *dtable, int f1, int f2, int level)
         hstack_push(dtable->table[index], (void*)level);
 }
 
+void dtable_restore(struct dtable *dtable, int f1, int f2, int handle, 
+                    int level)
+{
+        int index;
+
+        dtable_clamp_level(dtable, level);
+
+        if ((index = dtable_index(dtable, f1, f2)) < 0)
+                return;
+
+        /* push the new value */
+        hstack_restore(dtable->table[index], (void*)level, handle);
+}
+
 int dtable_pop(struct dtable *dtable, int f1, int f2)
 {
         int index;
@@ -187,4 +202,31 @@ int dtable_bottom(struct dtable *dtable, int f1, int f2)
                 return -1;
         
         return (hstack_depth(dtable->table[index]) == 1);
+}
+
+static void dtable_save_data(struct save *save, void *data)
+{
+        save->append(save, "%d ", (int)data);
+}
+
+void dtable_save(struct dtable *dtable, struct save *save)
+{
+        int rows;
+        int cols;
+        int index;
+
+        save->enter(save, "(kern-mk-dtable\n");
+
+        index = 0;
+        for (rows = 0; rows < dtable->n_factions; rows++) {
+                save->write(save, "(list ");
+                for (cols = 0; cols < dtable->n_factions; cols++) {
+                        hstack_save(dtable->table[index], save,
+                                    dtable_save_data);
+                        index++;
+                }
+                save->append(save, ")\n");
+        }
+        
+        save->exit(save, ")\n");
 }

@@ -22,7 +22,7 @@
 #ifndef Party_h
 #define Party_h
 
-#include "object.h"
+#include "Being.h"
 #include "list.h"
 #include "common.h"
 #include "character.h"
@@ -66,7 +66,7 @@ class PartyType : public ObjectType {
 	bool visible;
 };
 
-class Party:public Object {
+class Party:public Being {
       public:
 
 	Party();

@@ -95,11 +95,11 @@
 ;; column. Note that attitudes are not necessarily symmetric. Negative values
 ;; are hostile, positive are friendly.
 ;; ----------------------------------------------------------------------------
+
 (kern-mk-dtable
- ;;    none play men orks accu
- (list (list -2 1)   (list -1)    (list 0))
- (list  (list 1)    (list 2)    (list 1))
- (list  (list 0)   (list -1)   (list -2))
+ (list (list (list 0 -2) (list 1 1)) (list (list 0 -1))   (list (list 0 0)))
+ (list (list (list 0 1))   (list (list 0 2))    (list (list 0 1)))
+ (list (list (list 0 0))   (list (list 0 -1))   (list (list 0 -2)))
  )
 
 ;; These are the tests:

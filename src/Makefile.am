@@ -135,4 +135,6 @@ nazghul_SOURCES =		\
 	dtable.h \
 	dtable.c \
 	hstack.h \
-	hstack.c
+	hstack.c \
+	Being.h \
+	Being.cpp

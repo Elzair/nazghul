@@ -187,7 +187,7 @@ Party::Party()
 }
 
 Party::Party(class PartyType *type, int align, class Vehicle *_vehicle)
-        : Object(type)
+        : Being(type)
 {
         setup();
         

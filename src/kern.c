@@ -4501,22 +4501,26 @@ KERN_API_CALL(kern_mk_dtable)
                                 goto abort;
                         }
 
-                        /* each column is a stack of numbers */
+                        /* each column is a stack of pairs of numbers */
                         while (scm_is_pair(sc, col)) {
 
-                                int level;
+                                int level, handle;
+                                pointer pair;
 
-                                /* get the level */
-                                if (unpack(sc, &col, "d", &level)) {
+                                pair = scm_car(sc, col);
+                                col = scm_cdr(sc, col);
+
+                                /* get the handle/level pair */
+                                if (unpack(sc, &pair, "dd", &handle, &level)) {
                                         load_err("kern-mk-dtable: row %d col "
                                                  "%d bad arg",
                                                  r_faction, c_faction);
                                         goto abort;
                                 }
 
-                                /* push it into the diplomacy table */
-                                dtable_push(dtable, r_faction, c_faction, 
-                                            level);
+                                /* restore it into the diplomacy table */
+                                dtable_restore(dtable, r_faction, c_faction, 
+                                               handle, level);
                         }
                 }
         }

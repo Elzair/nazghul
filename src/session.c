@@ -201,56 +201,6 @@ static void session_save_clock(save_t *save, struct session *session)
                 session->clock.min);
 }
 
-static void session_save_dtable(struct save *save, struct session *session)
-{
-        int rows;
-        int cols;
-        int level;
-        hstack_t *hstack;
-
-        hstack = hstack_new();
-
-        save->enter(save, "(kern-mk-dtable\n");
-
-        for (rows = 0; rows < session->dtable->n_factions; rows++) {
-                save->write(save, "(list ");
-                for (cols = 0; cols < session->dtable->n_factions; cols++) {
-                        save->write(save, "(list ");
-
-                        /* To save the stack in the proper order we have to pop
-                         * everything into a temp stack. The dtable will refuse
-                         * to pop its last entry. */
-                        level = dtable_get(session->dtable, rows, cols);
-                        while (0 == dtable_pop(session->dtable, rows, cols)) {
-                                hstack_push(hstack, (void*)level);
-                                level = dtable_get(session->dtable, rows, 
-                                                   cols);
-                        }
-
-                        /* At this point 'level' holds the bottom entry of the
-                         * stack. */
-                        save->write(save, "%d ", level);
-
-                        /* Now we have to deal with everything above it, and
-                         * push back all the levels we just popped as we write
-                         * them out. */
-                        while (! hstack_empty(hstack)) {
-                                level = (int)hstack_top(hstack);
-                                dtable_push(session->dtable, rows, cols, 
-                                            level);
-                                save->write(save, "%d ", level);
-                                hstack_pop(hstack);
-                        }
-                        save->write(save, ") ");
-                }
-                save->write(save, ")\n");
-        }
-
-        save->exit(save, ")\n");
-
-        hstack_del(hstack);
-}
-
 struct session *session_new(void *interp)
 {
         struct session *session = (struct session*)calloc(1, sizeof(*session));
@@ -429,6 +379,14 @@ static void save_write(save_t *save, char *fmt, ...)
         va_end(args);        
 }
 
+static void save_append(save_t *save, char *fmt, ...)
+{
+        va_list args;
+        va_start(args, fmt);
+        vfprintf(save->file, fmt, args);
+        va_end(args);    
+}
+
 static void save_enter(save_t *save, char *fmt, ...)
 {
         va_list args;
@@ -459,6 +417,7 @@ save_t *save_new(FILE *file)
         save->write = save_write;
         save->enter = save_enter;
         save->exit = save_exit;
+        save->append = save_append;
 
         return save;
 }
@@ -528,7 +487,7 @@ void session_save(char *fname)
         session_save_crosshair(save, Session);
         session_save_ascii(save, Session);
         session_save_clock(save, Session);
-        session_save_dtable(save, Session);
+        dtable_save(Session->dtable, save);
         sky_save(&Session->sky, save);
 
         /* Save the flags */

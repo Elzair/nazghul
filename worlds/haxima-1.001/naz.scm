@@ -123,3 +123,10 @@
 (define (all-visible-hostiles kchar)
   (filter (lambda (kobj) (is-visible-hostile? kchar kobj))
           (kern-place-get-objects (loc-place (kern-obj-get-location kchar)))))
+
+;; Convenience proc for rolling dtables by hand
+(define (dtable-row . cols)
+  (define (dtable-col val)
+    (list (list 0 val)))
+  (map dtable-col cols))
+

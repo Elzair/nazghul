@@ -213,7 +213,9 @@ nazghul_SOURCES = \
 	dtable.h \
 	dtable.c \
 	hstack.h \
-	hstack.c
+	hstack.c \
+	Being.h \
+	Being.cpp
 
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_CLEAN_FILES = 
@@ -241,7 +243,7 @@ cmd.$(OBJEXT) clock.$(OBJEXT) vmask.$(OBJEXT) ctrl.$(OBJEXT) \
 scheme.$(OBJEXT) session.$(OBJEXT) closure.$(OBJEXT) kern.$(OBJEXT) \
 dice.$(OBJEXT) gob.$(OBJEXT) magic.$(OBJEXT) effect.$(OBJEXT) \
 conv.$(OBJEXT) ptable.$(OBJEXT) mmode.$(OBJEXT) log.$(OBJEXT) \
-dtable.$(OBJEXT) hstack.$(OBJEXT)
+dtable.$(OBJEXT) hstack.$(OBJEXT) Being.$(OBJEXT)
 nazghul_LDADD = $(LDADD)
 nazghul_DEPENDENCIES = 
 nazghul_LDFLAGS = 

@@ -166,6 +166,9 @@ typedef struct save {
         // printf with tabs
         void (*write)(struct save *save, char *fmt, ...);
 
+        // printf without tabs
+        void (*append)(struct save *save, char *fmt, ...);
+
         // printf with tabs & incr tabs
         void (*enter)(struct save *save, char *fmt, ...);
 

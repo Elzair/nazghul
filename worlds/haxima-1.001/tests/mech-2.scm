@@ -75,9 +75,9 @@
 ;; ----------------------------------------------------------------------------
 (kern-mk-dtable
  ;;    none play men orks accu
- (list  0    0    0   0   -1   ) ;; none
- (list  0    2    1   0   -1   ) ;; play
- (list -1    1    2  -1   -2   ) ;; men
- (list -1    0   -1   2   -1   ) ;; orks
- (list -1   -1   -1  -1    2   ) ;; accu
+ (dtable-row  0    0    0   0   -1   ) ;; none
+ (dtable-row  0    2    1   0   -1   ) ;; play
+ (dtable-row -1    1    2  -1   -2   ) ;; men
+ (dtable-row -1    0   -1   2   -1   ) ;; orks
+ (dtable-row -1   -1   -1  -1    2   ) ;; accu
  )

@@ -22,7 +22,7 @@
 #ifndef character_h
 #define character_h
 
-#include "object.h"
+#include "Being.h"
 #include "Arms.h"
 #include "species.h"
 #include "clock.h"
@@ -49,7 +49,7 @@ struct TypicalObjectInfo {
 };
 
 
-class Character:public Object {
+class Character:public Being {
  public:
 
 	enum ReadyResult {

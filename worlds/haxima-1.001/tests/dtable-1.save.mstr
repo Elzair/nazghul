@@ -115,9 +115,9 @@
 (kern-set-ascii ss_little_sprites 32)
 (kern-set-clock 0 0 0 0 12 45)
 (kern-mk-dtable
-  (list   (list   -2   )   (list   2   )   (list   2   )   )
-  (list   (list   2   )   (list   1   )   (list   1   )   )
-  (list   (list   0   )   (list   -1   )   (list   -2   )   )
+  (list (list (list 0 -2 ) ) (list (list 0 2 ) ) (list (list 0 2 ) ) )
+  (list (list (list 0 2 ) ) (list (list 0 1 ) ) (list (list 0 1 ) ) )
+  (list (list (list 0 0 ) ) (list (list 0 -1 ) ) (list (list 0 -2 ) ) )
 )
 ;; ---------
 ;; Astronomy
