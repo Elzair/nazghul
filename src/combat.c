@@ -928,6 +928,45 @@ enum combat_faction_status combat_get_hostile_faction_status(void)
         return COMBAT_FACTION_GONE;
 }
 
+#if 0
+static void combat_player_status_visitor(void *a, void *b)
+{
+        enum combat_faction_status *info;
+        struct node *node;
+        class Object *obj;
+
+        /* Extract the typed variables from the generic parms */
+        info = (struct combat_player_status_info *)a;
+        node = (struct node *)b;
+        obj = (class Object*)node->ptr;
+
+        /* If we already know the player is still fighting then skip the rest
+         * of this. */
+        if (info->status == COMBAT_FACTION_EXISTS)
+                return;
+
+        /* Skip non-beings */
+        if (! obj_is_being(obj))
+                return;
+
+        /* Skip non-party-members */
+        if (! obj->isPlayerPartyMember())
+                return;
+
+        /* A non-hostile party member means the player is still fighting. */
+        if (! are_hostile((Being*)obj, player_party)) {
+                info->status = COMBAT_FACTION_EXISTS;
+                return;
+        }
+
+        /* Check if a player party members has been charmed */
+        if (are_natively_hostile((Being*)obj, player_party)) {
+                info->status = COMBAT_FACTION_CHARMED;
+        }
+        
+}
+#endif
+
 enum combat_faction_status combat_get_player_faction_status(void)
 {
         struct list *head;
