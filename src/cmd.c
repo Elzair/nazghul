@@ -686,6 +686,13 @@ bool cmdGet(class Object *actor, bool scoop_all)
 	return true;
 }
 
+static void cmd_describe_inv_entry(struct inv_entry *ie, void *unused)
+{
+        log_begin("...");
+        ie->type->describe(ie->count);
+        log_end(NULL);
+}
+
 bool cmdOpen(class Character * pc)
 {
 	int dir, x, y;
@@ -764,6 +771,10 @@ bool cmdOpen(class Character * pc)
 		pc->addExperience(XP_PER_TRAP);
 	}
 
+        // Describe the contents of the container.
+        log_msg("You find:");
+        container->forEach(cmd_describe_inv_entry, NULL);
+
 	// Open the container (automagically spills all the contents onto the
 	// map).
 	container->open();
@@ -786,10 +797,6 @@ bool cmdOpen(class Character * pc)
 
         container->remove();
         delete container;
-
-        log_begin("You find ");
-	place_describe(pc->getPlace(), x, y, PLACE_DESCRIBE_OBJECTS);
-        log_end(".");
 
         log_end_group();
 
