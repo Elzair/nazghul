@@ -49,22 +49,24 @@ General syntax:
 
 General commands:
 
-    <dir>......................Move in that direction
-    B)oard.....................Board/exit a vehicle like a ship or horse
-    C)ast-<member>-<spell>-<*>...Cast a spell (the last argument depends on the spell)
-    E)nter.....................Enter a portal, including up or down ladders
-    F)ire-<dir>................Fire vehicle's weapon (e.g., ship cannon)
-    G)et-<dir>.................Get an object from the ground
-    H)andle-<member>-<target>..Activate a switch or lever
-    L)ook-<dir>................Describe an adjacent tile
-    O)pen-<dir>................Open a container or door
-    Q)uit......................Quits the game
-    R)eady-<member>-<item>.....Ready an armament like a weapon, shield, etc.
-    S)witch-<member>-<member>...Swap order of two party members
-    T)alk-<target>.............Talk to an NPC
-    U)se-<member>-<item>.......Use an item like a torch or potion
-    Z)tats.....................Show party stats like inventory, armaments, etc
-    <space>....................Pass one turn
+  <dir>......................Move in that direction
+  B)oard.....................Board/exit a vehicle like a ship or horse
+  C)ast-<member>-<spell>-<*>...Cast a spell (the last argument depends on the spell)
+  E)nter.....................Enter a portal, including up or down ladders
+  F)ire-<dir>................Fire vehicle's weapon (e.g., ship cannon)
+  G)et-<dir>.................Get an object from the ground
+  H)andle-<member>-<target>..Activate a switch or lever
+  L)ook-<dir>................Describe an adjacent tile
+  O)pen-<dir>................Open a container or door
+  Q)uit......................Quits the game
+  R)eady-<member>-<item>.....Ready an armament like a weapon, shield, etc.
+  S)witch-<member>-<member>...Swap order of two party members
+  T)alk-<target>.............Talk to an NPC
+  U)se-<member>-<item>.......Use an item like a torch or potion
+  Z)tats.....................Show party stats like inventory, armaments, etc
+  X)amine....................Examine map files within view
+  @)AT.......................Information about where the party is AT, etc
+  <space>....................Pass one turn
 
 
 Wilderness-only commands:
