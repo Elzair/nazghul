@@ -102,25 +102,6 @@ CURSOR ls_whirlpool;  // From ss_u4
         subtype ammo    \
         }
 
-#define ARMS_TYPE(_tag,    _name,    _sprite,         \
-                  _attack, _defend,  _slot,   _hands, \
-                  _range,  _missile, _thrown, _uAmmo, \
-                  _field,  _weight)                   \
-    _tag {                      \
-        name           _name    \
-        sprite         _sprite  \
-        subtype        arms     \
-        attackValue    _attack  \
-        defendValue    _defend  \
-        slotMask       _slot    \
-        numHands       _hands   \
-        range          _range   \
-        missile        _missile \
-        thrown         _thrown  \
-        ubiquitousAmmo _uAmmo   \
-        field          _field   \
-        weight         _weight  \
-    }
 
 #define ITEM_TYPE(_tag,    _name,   _sprite,            \
                   _effect, _amount, _duration, _target, \

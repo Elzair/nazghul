@@ -28,25 +28,117 @@
 #define weapons_ghul
 
 
-/*        tag          name             sprite          A   D   slot         N  R  missile  T  U  F       W */
-/*        ---------    ------------     -------         --  --  ----         -  -  -------  -  -  -       - */
-ARMS_TYPE(t_dagger,    "dagger",        s_dagger,        8,  2, WEAPON_SLOT, 1, 1, null,    0, 0, null,    5);
-ARMS_TYPE(t_sling,     "sling",         s_sling,         8, -1, WEAPON_SLOT, 1, 6, t_rock,  0, 1, null,    2);
-ARMS_TYPE(t_bow,       "bow",           s_lght_bow,     20, -2, WEAPON_SLOT, 2, 8, t_arrow, 0, 0, null,   10);
-ARMS_TYPE(t_crossbow,  "crossbow",      s_hvy_xbow,     24, -2, WEAPON_SLOT, 2, 8, t_bolt,  0, 0, null,   15);
-ARMS_TYPE(t_magic_bow, "magic bow",     s_hvy_bow,      32,  0, WEAPON_SLOT, 2, 8, t_arrow, 0, 0, null,    5);
-ARMS_TYPE(t_spear,     "spear",         s_spear,        20,  1, WEAPON_SLOT, 1, 4, null,    1, 0, null,    8);
-ARMS_TYPE(t_sword,     "short sword",   s_sword,        20,  2, WEAPON_SLOT, 1, 1, null,    0, 0, null,   15);
-ARMS_TYPE(t_long_sword,"long sword",    s_long_sword,   20,  1, WEAPON_SLOT, 1, 2, null,    0, 0, null,   20);
-ARMS_TYPE(t_2h_sword,  "2h sword",      s_2h_sword,     24,  0, WEAPON_SLOT, 2, 2, null,    0, 0, null,   25);
-ARMS_TYPE(t_oil,       "flaming oil",   s_orange_potion, 8, -1, WEAPON_SLOT, 1, 4, null,    1, 0, F_fire, 5);
-ARMS_TYPE(t_hands,     "bare hands",    s_null,          4,  1, WEAPON_SLOT, 1, 1, null,    0, 0, null,   0);
-ARMS_TYPE(t_hooves,    "hooves",        s_null,          4,  1, WEAPON_SLOT, 1, 1, null,    0, 0, null,   0);
-ARMS_TYPE(t_teeth,     "fangs",         s_null,          8,  0, HELM_SLOT,   1, 1, null,    0, 0, null,   0);
-ARMS_TYPE(t_poison_projectile, "poison projectile", s_field_poison, 3, 0, NO_SLOT, 0, 0, null, 0, 0,       null, 0);
-ARMS_TYPE(t_mace,      "mace",          s_mace,         20,  0, WEAPON_SLOT, 1, 1, null,    0, 0, null,   20);
-ARMS_TYPE(t_2h_hammer, "2h hammer",     s_2h_hammer,    28, -1, WEAPON_SLOT, 1, 1, null,    0, 0, null,   30);
-ARMS_TYPE(t_stinger,   "stinger",       s_null,          4,  0, NO_SLOT,     0, 1, null,    0, 0, null,    0);
+#define ARMS_TYPE(_tag,    _name,    _sprite,         \
+                  _attack, _defend,  _slot,   _hands, \
+                  _range,  _missile, _thrown, _uAmmo, \
+                  _field,  _weight)                   \
+    _tag {                      \
+        name           _name    \
+        sprite         _sprite  \
+        subtype        arms     \
+        attackValue    _attack  \
+        defendValue    _defend  \
+        slotMask       _slot    \
+        numHands       _hands   \
+        range          _range   \
+        missile        _missile \
+        thrown         _thrown  \
+        ubiquitousAmmo _uAmmo   \
+        field          _field   \
+        weight         _weight  \
+    }
+
+
+///////////////////////////////////////////////////////////////////////////
+
+#define MELEE_WPN_TYPE(_tag, _name, _sprite,                \
+                       _att, _def, _hands, _range, _weight) \
+    ARMS_TYPE(_tag, _name, _sprite, _att, _def, \
+              WEAPON_SLOT, _hands, _range,      \
+              null, 0, 0, null, _weight)
+
+// Melee Weapons:
+MELEE_WPN_TYPE(t_dagger,    "dagger",        s_dagger,        +8, +2, 1, 1,  5);
+MELEE_WPN_TYPE(t_sword,     "short sword",   s_sword,        +20, +2, 1, 1, 15);
+MELEE_WPN_TYPE(t_long_sword,"long sword",    s_long_sword,   +20, +1, 1, 2, 20);
+MELEE_WPN_TYPE(t_2h_sword,  "2h sword",      s_2h_sword,     +24, +0, 2, 2, 25);
+MELEE_WPN_TYPE(t_mace,      "mace",          s_mace,         +20, +0, 1, 1, 20);
+MELEE_WPN_TYPE(t_2h_hammer, "2h hammer",     s_2h_hammer,    +28, -1, 1, 1, 30);
+
+
+///////////////////////////////////////////////////////////////////////////
+
+#define THROWN_WPN_TYPE(_tag,   _name,  _sprite, _att, _def, \
+                        _hands, _range, _weight)             \
+    ARMS_TYPE(_tag, _name, _sprite, _att, _def, \
+              WEAPON_SLOT, _hands,  _range,     \
+              null, 1, 0,  null,    _weight)
+
+// SAM: It would be desirable if this weapon type 
+//      remained on the battlefield for later recovery.
+//      Ammo for projectiles can be considered broken/lost,
+//      and the "thrown splash" type likewise, but these
+//      are substantial weapons (thrown daggers, spears, axes, etc)
+//      which should remain.
+// 
+// Also, it would be desirable if thrown weapons, 
+// when thrown at range 1, were used as melee weapons;
+// ie they did not decrement ammo because the attacker 
+// just stabbed with them.
+
+// Thrown Weapons:
+THROWN_WPN_TYPE(t_spear,      "spear",       s_spear, +20, +1, 1, 6, 8);
+
+
+///////////////////////////////////////////////////////////////////////////
+
+#define THROWN_SPLASH_WPN_TYPE(_tag,   _name,  _sprite, _att, _def, \
+                               _hands, _range, _field, _weight)     \
+    ARMS_TYPE(_tag, _name, _sprite, _att, _def, \
+              WEAPON_SLOT, _hands,  _range,     \
+              null, 1, 0,  _field,  _weight)
+
+// Thrown Grenade-like Weapons:
+THROWN_SPLASH_WPN_TYPE(t_oil, "flaming oil", s_orange_potion, +8, -1, 1, 4, F_fire, 5);
+
+
+///////////////////////////////////////////////////////////////////////////
+
+#define PROJ_WPN_TYPE(_tag, _name, _sprite,                 \
+                       _att, _def, _hands, _range, _ammo_obj, _inf_ammo, _weight) \
+    ARMS_TYPE(_tag, _name, _sprite, _att, _def, \
+              WEAPON_SLOT, _hands, _range,      \
+              _ammo_obj, 0, _inf_ammo, null, _weight)
+
+// Projectile Weapons:  (use ammo)
+PROJ_WPN_TYPE(t_sling,     "sling",     s_sling,     +8, -1, 1,  6, t_rock,  1,  2);
+PROJ_WPN_TYPE(t_bow,       "bow",       s_lght_bow, +20, -2, 2,  8, t_arrow, 0, 10);
+PROJ_WPN_TYPE(t_crossbow,  "crossbow",  s_hvy_xbow, +24, -2, 2, 13, t_bolt,  0, 15);
+PROJ_WPN_TYPE(t_magic_bow, "magic bow", s_hvy_bow,  +32, +0, 2,  8, t_arrow, 0,  5);
+
+
+///////////////////////////////////////////////////////////////////////////
+
+#define NATURAL_WPN_TYPE(_tag, _name, _sprite,                \
+                         _att, _def, _slot, _hands, _range) \
+    ARMS_TYPE(_tag,  _name,  _sprite, _att, _def, \
+              _slot, _hands, _range,      \
+              null, 0, 0, null, 0)
+
+// Natural weapons:  (melee)
+NATURAL_WPN_TYPE(t_hands,     "bare hands",    s_null, +4, +1, WEAPON_SLOT, 1, 1);
+NATURAL_WPN_TYPE(t_hooves,    "hooves",        s_null, +4, +1, WEAPON_SLOT, 1, 1);
+NATURAL_WPN_TYPE(t_teeth,     "fangs",         s_null, +8, +0, HELM_SLOT,   1, 1);
+NATURAL_WPN_TYPE(t_stinger,   "stinger",       s_null, +4, +0, NO_SLOT,     0, 1);
+
+
+///////////////////////////////////////////////////////////////////////////
+
+// Misc:  (t_poison_projectile used by the spell "IN NOX POR" / poison bolt.)
+ARMS_TYPE(t_poison_projectile, "poison projectile", s_field_poison, 
+          +3, +0, NO_SLOT, 0, 0, null, 0, 0, null, 0);
+
+///////////////////////////////////////////////////////////////////////////
 
 
 #endif // weapons_ghul
