@@ -4516,6 +4516,48 @@ KERN_API_CALL(kern_mk_dtable)
         return sc->NIL;
 }
 
+KERN_API_CALL(kern_dtable_set)
+{
+        int f1, f2, level;
+
+        if (unpack(sc, &args, "ddd", &f1, &f2, &level)) {
+                rt_err("kern_dtable_set: bad args");
+                return sc->F;
+        }
+
+        dtable_set(session_dtable(), f1, f2, level);
+        
+        return sc->T;
+}
+
+KERN_API_CALL(kern_dtable_change)
+{
+        int f1, f2, level;
+
+        if (unpack(sc, &args, "ddd", &f1, &f2, &level)) {
+                rt_err("kern_dtable_change: bad args");
+                return sc->F;
+        }
+
+        dtable_change(session_dtable(), f1, f2, level);
+        
+        return sc->T;
+}
+
+KERN_API_CALL(kern_dtable_get)
+{
+        int f1, f2, level;
+
+        if (unpack(sc, &args, "dd", &f1, &f2)) {
+                rt_err("kern_dtable_get: bad args");
+                return sc->F;
+        }
+
+        level = dtable_get(session_dtable(), f1, f2);
+        
+        return scm_mk_integer(sc, level);
+}
+
 scheme *kern_init(void)
 {        
         scheme *sc;
@@ -4701,7 +4743,10 @@ scheme *kern_init(void)
 
         /* kern-dtable api */
         scm_define_proc(sc, "kern-mk-dtable", kern_mk_dtable);
-
+        scm_define_proc(sc, "kern-dtable-set", kern_dtable_set);
+        scm_define_proc(sc, "kern-dtable-get", kern_dtable_get);
+        scm_define_proc(sc, "kern-dtable-change", kern_dtable_change);
+        
         /* Revisit: probably want to provide some kind of custom port here. */
         scheme_set_output_port_file(sc, stderr);
 

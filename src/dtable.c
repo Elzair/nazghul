@@ -65,10 +65,10 @@ void dtable_set(struct dtable *dtable, int f1, int f2, int level)
         if (dtable_check(dtable, f2))
                 return;
 
-        if (level < dtable->lower_bound || 
-            level > dtable->upper_bound) {
-                warn("dtable_set: invalid level=%d\n", level);
-                return;
+        if (level < dtable->lower_bound) {
+                level = dtable->lower_bound;
+        } else if (level > dtable->upper_bound) {
+                level = dtable->upper_bound;
         }
 
         index = dtable_index(dtable, f1, f2);
@@ -91,6 +91,15 @@ int dtable_get(struct dtable *dtable, int f1, int f2)
 
         index = dtable_index(dtable, f1, f2);
         return dtable->table[index];
+}
+
+void dtable_change(struct dtable *dtable, int f1, int f2, int delta)
+{
+        int level;
+
+        level = dtable_get(dtable, f1, f2);
+        level += delta;
+        dtable_set(dtable, f1, f2, level);
 }
 
 void dtable_del(struct dtable *dtable)
