@@ -1,0 +1,36 @@
+#!/bin/sh
+
+NAZGHUL=$HOME/main-nazghul/nazghul
+INSTALL=$HOME/nazghul-install
+
+version=$1
+if [ -z "$version" ]; then
+    echo "Usage:  $0 <release_version_number>"
+    echo "    release_version_number should be something like x.y.z"
+    exit 1
+fi
+
+rm -rf $INSTALL
+cd $NAZGHUL
+find . -name '*~' -exec rm -f {} \; 
+make clean; 
+make distclean; 
+./autogen.sh && \
+    ./configure --prefix=$HOME
+
+pwd
+
+    make nazghul-$version.tar.gz
+
+pwd
+
+    cd ~/tmp &&                \
+    rm -rf nazghul-$version && \
+    tar -xvzf $NAZGHUL/nazghul-$version.tar.gz && \
+    cd nazghul-$version &&     \
+    ./configure --prefix=$INSTALL && \
+    make &&         \
+    make install && \
+    cd examples &&  \
+    $INSTALL/bin/nazghul
+

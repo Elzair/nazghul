@@ -62,7 +62,7 @@ int PlaybackSpeed = 100;
 static char program_name[] = "nazghul";
 static int version_major = 0;
 static int version_minor = 1;
-static int version_incr = 2;
+static int version_incr  = 3;
 
 static void print_version(void)
 {
