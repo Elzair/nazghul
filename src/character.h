@@ -204,6 +204,8 @@ class Character:public Being {
 	bool initStock(struct species * species, struct occ * occ,
 		       struct sprite * sprite, char *name, int order);
 
+        bool canBeLeader();
+
 	char *tag;
         struct node *plnode; // pointer back to party list node
 	class Party *party;

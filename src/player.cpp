@@ -871,24 +871,6 @@ void player_party::board_vehicle(void)
 	mapSetDirty();
 }
 
-static bool check_if_leader(class Character * pc, void *data)
-{
-        // --------------------------------------------------------------------
-        // Going to add a check for sleep here to handle the case where the
-        // party is in follow mode and the leader is put asleep for some
-        // reason. Otherwise the engine cranks out turns until the leader wakes
-        // up.
-        //
-        // Note: um... what about charmed?
-        // --------------------------------------------------------------------
-
-	if (!pc->isDead() && pc->isOnMap() && !pc->isAsleep()) {
-		player_party->setLeader(pc);
-		return true;
-	}
-	return false;
-}
-
 class Character *player_party::get_leader(void)
 {
         if (leader == NULL) {
@@ -1336,7 +1318,17 @@ void player_party::chooseNewLeader()
                 leader->setLeader(false);
                 leader = NULL;
         }
-        forEachMember(check_if_leader, 0);
+
+        struct node *entry;
+        class Character *member;
+
+        FOR_EACH_MEMBER(entry, member) {
+                if (member->canBeLeader()) {
+                        setLeader(member);
+                        break;
+                }
+        }
+
         if (NULL != leader)
                 leader->setLeader(true);
 }

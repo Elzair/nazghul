@@ -2207,6 +2207,11 @@ void Character::setLeader(bool val)
         is_leader = val;
 }
 
+bool Character::canBeLeader()
+{
+        return (! isDead() && isOnMap() && ! isAsleep() && ! isCharmed());
+}
+
 bool Character::isLeader()
 {
         return is_leader;

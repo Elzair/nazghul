@@ -1335,10 +1335,11 @@ void cmdNewOrder(void)
 		     pc2->getName());
 
         // If one of the switched members was the party leader then make the
-        // other one the new leader.
-        if (pc1->isLeader()) {
+        // other one the new leader (unless the other one is dead or otherwise
+        // incapable of being a party leader).
+        if (pc1->isLeader() && pc2->canBeLeader()) {
                 cmd_switch_party_leader(pc1, pc2);
-        } else if (pc2->isLeader()) {
+        } else if (pc2->isLeader() && pc1->canBeLeader()) {
                 cmd_switch_party_leader(pc2, pc1);
         }
 
