@@ -35,6 +35,11 @@ extern bool combatAddNpcParty(class NpcParty * party, int dx, int dy,
 			      bool located, int x, int y);
 //extern void combatKIA(class Character *killed);
 
+/* This is needed for walking around while zoomed out. Currently only the
+   special ^Z command (which is intended for map editing) uses it. */
+extern void combatGetCameraCenter(int *x, int *y);
+
+
 #include "player.h"		// for struct move_info
 struct combat_info {
 	int hours;		// for moving into camping

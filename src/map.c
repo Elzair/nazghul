@@ -742,11 +742,8 @@ void mapPeer(bool val)
 void mapTogglePeering(void)
 {
         mapPeer(!Map.peering);
-        mapCenterCamera(player_party->getX(), player_party->getY());
-        //mapUpdate(0);
-        mapUpdate(0); // BUG: for some reason this is necessary in the
-                      // wilderness or the map remains black until the next
-                      // animation tick
+        mapCenterCamera(Map.cam_x, Map.cam_y); // recenter
+        mapUpdate(0);
 }
 
 void mapGetCameraFocus(struct place **place, int *x, int *y)
