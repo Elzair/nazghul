@@ -1,5 +1,5 @@
 (kern-mk-place 'p_moongate_clearing "Moongate Clearing"
-  nil ;; sprite
+  s_shrine ;; sprite
   (kern-mk-map 'm_moongate_clearing 32 32 pal_expanded
     (list
       ".. {{ {{ {{ ^^ ^^ ^^ ^^ ^^ ^^ ^^ {{ {{ {{ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ .. .. .. .. .. .. .. .. .. "
