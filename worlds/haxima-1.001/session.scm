@@ -531,23 +531,21 @@
                 (list p_terrain_test  3 15)  ;; For test purposes
                 )
                nil ; neighbors
-               (append 
-                (lay-featmap road-map 3 18)
-                (list
-                 (list player 36 23)
-                 (list (kern-mk-party t_skeleton_brigade faction-monster nil) 25 19)
-                 (list (kern-mk-party t_slime_glob faction-monster nil) 36 20)
-                 (list (kern-mk-obj F_fire 1) 34 23)
-                 (list (kern-mk-obj F_poison 1) 34 22)
-                 (list (kern-mk-obj F_sleep_perm 1) 34 24)
-                 (list (kern-mk-party t_goblin_horde faction-orks (mk-ship)) 3 28)
-                 (list (mk-generator t_orc_generator) 20 20)
-                 (list (kern-tag 'mg-1 (mk-moongate 'ord)) 32 23)
-                 (list (kern-tag 'mg-2 (mk-moongate 'ord)) 35 25)
-                 (list (mk-ship) 36 26)
-                 (list (mk-bridge east) 2 22)
-                 (list (mk-bridge east) 37 25)
-                 ))
+               (list
+                (list player 36 23)
+                (list (kern-mk-party t_skeleton_brigade faction-monster nil) 25 19)
+                (list (kern-mk-party t_slime_glob faction-monster nil) 36 20)
+                (list (kern-mk-obj F_fire 1) 34 23)
+                (list (kern-mk-obj F_poison 1) 34 22)
+                (list (kern-mk-obj F_sleep_perm 1) 34 24)
+                (list (kern-mk-party t_goblin_horde faction-orks (mk-ship)) 3 28)
+                (list (mk-generator t_orc_generator) 20 20)
+                (list (kern-tag 'mg-1 (mk-moongate 'ord)) 32 23)
+                (list (kern-tag 'mg-2 (mk-moongate 'ord)) 35 25)
+                (list (mk-ship) 36 26)
+                (list (mk-bridge east) 2 22)
+                (list (mk-bridge east) 37 25)
+                )
 
                nil ; hooks
                nil ; edge entrances

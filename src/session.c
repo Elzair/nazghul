@@ -205,7 +205,7 @@ static void session_save_clock(save_t *save, struct session *session)
 static void session_save_time_accel(save_t *save, struct session *session)
 {
         save->write(save, "(kern-set-time-accel %d)\n",
-                    Session->time_accel);
+                    session->time_accel);
 }
 
 struct session *session_new(void *interp)
@@ -266,8 +266,8 @@ void session_del(struct session *session)
         }
 
         /* Clean up the closures */
-        closure_unref_safe(Session->start_proc);
-        closure_unref_safe(Session->camping_proc);
+        closure_unref_safe(session->start_proc);
+        closure_unref_safe(session->camping_proc);
 
         free(session);
 }
@@ -592,7 +592,7 @@ void session_set_camping_proc(struct session *session, struct closure *proc)
 
 void session_run_start_proc(struct session *session)
 {
-        if (Session->start_proc) {
-                closure_exec(Session->start_proc, "p", player_party);
+        if (session->start_proc) {
+                closure_exec(session->start_proc, "p", player_party);
         }
 }
