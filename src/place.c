@@ -128,9 +128,11 @@ static Object *tile_get_filtered_object(struct tile *tile, int (*filter)(Object*
         struct node *elem;
         class Object *obj;
 
-        for (elem = tile->objstack.next; elem != &tile->objstack; ) {
+        /* Traverse the list in reverse order, so the first item returned is
+         * the one shown by the UI as topmost in the pile. */
+        for (elem = tile->objstack.prev; elem != &tile->objstack; ) {
 		obj = (class Object *)elem->ptr;
-                elem = elem->next;
+                elem = elem->prev;
                 if (filter(obj))
                         return obj;
 	}
