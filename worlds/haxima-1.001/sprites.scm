@@ -755,12 +755,12 @@
 (kern-mk-sprite 's_amulet_9               ss_dg_wearable 1  20 #f 0)
 (kern-mk-sprite 's_amulet_10              ss_dg_wearable 1  21 #f 0)
 
-(kern-mk-sprite 's_amulet_10              ss_dg_wearable 1  24 #f 0)
-(kern-mk-sprite 's_amulet_10              ss_dg_wearable 1  25 #f 0)
-(kern-mk-sprite 's_amulet_10              ss_dg_wearable 1  26 #f 0)
-(kern-mk-sprite 's_amulet_10              ss_dg_wearable 1  27 #f 0)
-(kern-mk-sprite 's_amulet_10              ss_dg_wearable 1  28 #f 0)
-(kern-mk-sprite 's_amulet_10              ss_dg_wearable 1  29 #f 0)
+(kern-mk-sprite 's_amulet_11              ss_dg_wearable 1  24 #f 0)
+(kern-mk-sprite 's_amulet_12              ss_dg_wearable 1  25 #f 0)
+(kern-mk-sprite 's_amulet_13              ss_dg_wearable 1  26 #f 0)
+(kern-mk-sprite 's_amulet_14              ss_dg_wearable 1  27 #f 0)
+(kern-mk-sprite 's_amulet_15              ss_dg_wearable 1  28 #f 0)
+(kern-mk-sprite 's_amulet_16              ss_dg_wearable 1  29 #f 0)
 
 (kern-mk-sprite 's_ring_1                 ss_dg_wearable 1  36 #f 0)
 (kern-mk-sprite 's_ring_2                 ss_dg_wearable 1  37 #f 0)
