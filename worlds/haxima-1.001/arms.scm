@@ -246,8 +246,8 @@
    ;;     ===========================================================================================================
    ;;     tag                     | name           | sprite                | to-hit | armor  | slots
    ;;     ===========================================================================================================
-   (list   't_sm_shield             "small shield"   s_shield_blank_round_1  "-1"     "3"      slot-shield)
-   (list   't_shield_wooden_buckler "wooden buckler" s_shield_blank_round_2  "-1"     "3"      slot-shield)
+   (list   't_sm_shield             "small shield"   s_shield_blank_round_1  "-1"     "1"      slot-shield)
+   (list   't_shield_wooden_buckler "wooden buckler" s_shield_blank_round_2  "-1"     "1"      slot-shield)
    ))
 
 (map (lambda (type) (apply mk-thrown-arms-type     type)) thrown-arms-types)

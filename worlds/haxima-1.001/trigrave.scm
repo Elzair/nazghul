@@ -210,6 +210,26 @@
                )
  (chant-mk))
 
+(kern-load "earl.scm")
+(bind 
+ (kern-mk-char 'ch_earl     ;; tag
+               "Earl"       ;; name
+               sp_human     ;; species
+               nil          ;; occ
+               s_townsman   ;; sprite
+               faction-men  ;; starting alignment
+               0 10 5       ;; str/int/dex
+               0 0          ;; hp mod/mult
+               0 0          ;; mp mod/mult
+               30 0 9 9     ;; hp/xp/mp/lvl
+               'earl-conv   ;; conv
+               sch_earl     ;; sched
+               nil          ;; special ai
+               nil          ;; container
+               nil          ;; readied
+               )
+ (earl-mk))
+
 ;;----------------------------------------------------------------------------
 ;; Place
 ;;
@@ -238,9 +258,10 @@
  (list ; objects
 
   ;; characters
-  (list ch_jim  15 15)
-  (list ch_gwen 15 15  )
+  (list ch_jim   15 15)
+  (list ch_gwen  15 15)
   (list ch_chant 15 15)
+  (list ch_earl  15 15)
 
   ;; Inn
   (list (kern-tag 'trigrave-inn-room-1-door (mk-locked-door))  4 7)
