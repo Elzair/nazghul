@@ -56,7 +56,6 @@ struct sprite {
 };
 
 extern int spriteInit(void);
-extern void spriteAdd(struct sprite *sprite);
 extern struct sprite *spriteLookup(char *tag);
 extern void spritePaint(struct sprite *sprite, int frame, int x, int y);
 

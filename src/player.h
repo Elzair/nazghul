@@ -178,8 +178,6 @@ class player_party : public Party {
         int           speed;
         int           turn_count;
 
-        struct location combat_exit_destination;
-
         bool camping;
         class Character *camp_guard;
 

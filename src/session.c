@@ -278,6 +278,7 @@ void session_load(char *filename)
         int t1, t2;
         struct list *elem;
 
+        /* Remember the old session in case we have to bail out. */
         old_session = Session;
 
         /* Clear any leftover load errors. */
@@ -313,6 +314,10 @@ void session_load(char *filename)
          * and return the old one. Otherwise destroy the old session and return
          * the new one. */
         if (load_err_any()) {
+                /* 
+                 * FIXME! We're screwed here because we probably already blew
+                 * away the old player party.
+                 */
                 session_del(Session);
                 scheme_deinit(sc);
                 free(sc);
@@ -341,7 +346,7 @@ void session_load(char *filename)
                 load_err("clock not set (use kern-set-clock)");
         }
         if (! Session->ptable) {
-                load_err("passability table ont set (use kern-set-ptable)");
+                load_err("passability table not set (use kern-set-ptable)");
         }
         if (! Session->dtable) {
                 load_err("diplomacy table not set (use kern-set-dtable)");
@@ -359,6 +364,10 @@ void session_load(char *filename)
          * and return the old one. Otherwise destroy the old session and return
          * the new one. */
         if (load_err_any()) {
+                /* 
+                 * FIXME! We're screwed here because we probably already blew
+                 * away the old player party.
+                 */
                 session_del(Session);
                 scheme_deinit(sc);
                 free(sc);

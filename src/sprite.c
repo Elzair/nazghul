@@ -157,14 +157,8 @@ void spriteAdvanceTicks(int ticks)
 
 int spriteInit(void)
 {
-	list_init(&Sprite.list);
         Sprite.ticks_to_next_animation = 0;
         return 0;
-}
-
-void spriteAdd(struct sprite *sprite)
-{
-	list_add(&Sprite.list, &sprite->list);
 }
 
 void spriteAdvanceFrames(void)

@@ -431,7 +431,6 @@ extern int TickMilliseconds;
 extern bool Quit;
 extern struct los *LosEngine;
 extern char *LOS;
-extern bool TurnChanged;
 extern int ShowAllTerrain;
 extern struct sprite *CursorSprite;
 extern int SCREEN_BPP;

@@ -740,7 +740,6 @@ player_party::player_party()
 
         setTurnsToNextMeal(TURNS_PER_FOOD);
         setBaseFaction(PLAYER_PARTY_FACTION);
-        clearCombatExitDestination();
         view = mapCreateView();
 }
 
@@ -784,7 +783,6 @@ player_party::player_party(char *_tag,
         setOnMap(false);
 
         setTurnsToNextMeal(TURNS_PER_FOOD);
-        clearCombatExitDestination();
         setBaseFaction(PLAYER_PARTY_FACTION);
         view = mapCreateView();
 
@@ -1100,27 +1098,6 @@ class Character *player_party::getMemberAtIndex(int index)
         }
 
         return NULL;
-}
-
-void player_party::setCombatExitDestination(struct location *location)
-{
-        combat_exit_destination.place = location->place;
-        combat_exit_destination.x     = location->x;
-        combat_exit_destination.y     = location->y;
-}
-
-void player_party::getCombatExitDestination(struct location *location)
-{
-        location->place = combat_exit_destination.place;
-        location->x     = combat_exit_destination.x;
-        location->y     = combat_exit_destination.y;
-}
-
-void player_party::clearCombatExitDestination()
-{
-        combat_exit_destination.place = NULL;
-        combat_exit_destination.x     = -1;
-        combat_exit_destination.y     = -1;
 }
 
 static bool member_uncharm(class Character *member, void *data)

@@ -1453,7 +1453,6 @@ bool combat_enter(struct combat_info * info)
         loc.place = info->move->place;
         loc.x     = info->move->x;
         loc.y     = info->move->y;
-        player_party->setCombatExitDestination(&loc);
 
 
         // *** Initialize Combat Globals ***

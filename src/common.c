@@ -38,7 +38,6 @@ int Tick;
 int AnimationTicks;
 int TickMilliseconds;
 // int WindDirection;
-bool TurnChanged;
 int ShowAllTerrain = 0;
 
 struct los *LosEngine;
@@ -74,7 +73,6 @@ int commonInit(void)
 {
 	Turn = 0;
 	Tick = 0;
-	TurnChanged = false;
 	srand(0);		// fixme: should save/load as part of
 	// record/playback
 	busywaitInit();

@@ -237,6 +237,7 @@ int sound_init(void)
 		return -1;
 	}
 
+	atexit(SDL_CloseAudio);
 
 	sound_enabled = 1;
 	SDL_PauseAudio(0);
