@@ -1050,8 +1050,8 @@ static void ctrl_idle(class Character *character)
         if (character->ai) {
                 int time = SDL_GetTicks();
                 closure_exec(character->ai, "p", character);
-                printf("%s ai: %d ms\n", character->getName(),
-                       SDL_GetTicks() - time);
+/*                 printf("%s ai: %d ms\n", character->getName(), */
+/*                        SDL_GetTicks() - time); */
                 return;
         }
 
@@ -1131,8 +1131,8 @@ void ctrl_character_ui(class Character *character)
         kh.data = character;
         eventPushKeyHandler(&kh);
         G_turnaround_stop = SDL_GetTicks();
-        printf("*** turnaround: %d ms\n\n", 
-               G_turnaround_stop - G_turnaround_start);
+/*         printf("*** turnaround: %d ms\n\n",  */
+/*                G_turnaround_stop - G_turnaround_start); */
         eventHandle();
         G_turnaround_start = SDL_GetTicks();
         eventPopKeyHandler();
@@ -1165,8 +1165,8 @@ void ctrl_party_ui(class player_party *party)
         kh.data = party;
         eventPushKeyHandler(&kh);
         G_turnaround_stop = SDL_GetTicks();
-        printf("turnaround: %d ms\n\n", 
-               G_turnaround_stop - G_turnaround_start);
+/*         printf("turnaround: %d ms\n\n",  */
+/*                G_turnaround_stop - G_turnaround_start); */
         eventHandle();
         G_turnaround_start = SDL_GetTicks();
         eventPopKeyHandler();

@@ -61,7 +61,7 @@
 #include <unistd.h>     // getpid()
 #include <errno.h>
 
-#define PROFILE_PLAY_LOOP 1
+#define PROFILE_PLAY_LOOP 0
 
 enum cmdstate {
 	CMD_IDLE,

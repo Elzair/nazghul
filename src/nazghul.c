@@ -66,7 +66,7 @@ int PlaybackSpeed    = 100;
 static char program_name[] = "nazghul";
 static int version_major = 0;
 static int version_minor = 3;
-static int version_incr  = 0;
+static int version_incr  = 1;
 
 #define VERSION_STRLEN 8  // Length of "xx.yy.zz" == 6+2
 char * version_as_string(void)
