@@ -194,7 +194,8 @@
   (ifc obj-ifc
        (method 'use basic-survival-manual-use2)))
 
-(mk-obj-type 'basic-survival-manual "Basic Survival Manual" s_book_red_4 layer-item basic-survival-manual-ifc)
+(mk-obj-type 'basic-survival-manual "Basic Survival Manual" s_book_red_4 
+             layer-item basic-survival-manual-ifc)
 
 ;; ----------------------------------------------------------------------------
 ;; use-and-remove -- use an item type and remove it from the user's inventory.
@@ -217,3 +218,25 @@
                                (lambda (ktype kuser) 
                                  (use-and-remove ktype kuser usage))))))
     (mk-obj-type tag name sprite layer-item item-ifc)))
+
+(mk-usable-item 't_torch "torch" s_torch 
+                (lambda (kobj kuser) 
+                  ;; apply two in-lor spells to create light
+                  (in-lor kobj kuser) 
+                  (in-lor kobj kuser)))
+
+(mk-usable-item 't_picklock "picklocks" s_golden_skeleton_key
+                (lambda (kobj kuser)
+                  (let ((ktarg (ui-target (kern-obj-get-location kuser)
+                                          1 
+                                          (mk-ifc-query 'unlock))))
+                    (if (null? ktarg)
+                        (begin
+                          (kern-log-msg "No effect!")
+                          nil)
+                        (begin
+                          (if (> (kern-dice-roll "1d20") 11)
+                              (send-signal kuser ktarg 'unlock)
+                              (kern-log-msg "Picklock broke!"))
+                          #t)))))
+                        

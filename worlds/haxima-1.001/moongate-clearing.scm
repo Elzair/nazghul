@@ -58,6 +58,7 @@
     (list 2 poison-bolt-scroll-type)
     (list 1 death-bolt-scroll-type)
     (list 5 t_torch)
+    (list 3 t_picklock)
     
     ;; Arms
     (list 1 t_shield_wooden_buckler)

@@ -121,5 +121,6 @@
               (list t_armor_leather 90 1)
               (list t_leather_helm  90 1)
               (list t_gold_coins    50 10)
+              (list t_picklock      50 3)
               )
              )
