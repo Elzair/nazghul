@@ -148,14 +148,6 @@ static bool pc_eat_food(class Character * pm, void *data)
 	return false;
 }
 
-static bool give_pc_rest_credit(class Character * pm, void *data)
-{
-	// Characters must be awake to earn rest credits:
-	if (!pm->isAsleep())
-		pm->addRestCredits(1);
-	return false;
-}
-
 void player_party::changePlaceHook()
 {
         mapSetPlace(place);
@@ -606,7 +598,7 @@ bool player_party::takeOut(ObjectType *type, int q)
 
 static bool player_member_rest_one_hour(class Character * pm, void *data)
 {
-        if (pm->isAsleep() && pm->getRestCredits())
+        if (pm->isAsleep())
                 pm->rest(1);
         return false;
 }
@@ -747,7 +739,6 @@ player_party::player_party()
         inventory          = NULL;
 
         setTurnsToNextMeal(TURNS_PER_FOOD);
-        setTurnsToNextRestCredit(TURNS_PER_REST_CREDIT);
         setBaseFaction(PLAYER_PARTY_FACTION);
         clearCombatExitDestination();
         view = mapCreateView();
@@ -793,7 +784,6 @@ player_party::player_party(char *_tag,
         setOnMap(false);
 
         setTurnsToNextMeal(TURNS_PER_FOOD);
-        setTurnsToNextRestCredit(TURNS_PER_REST_CREDIT);
         clearCombatExitDestination();
         setBaseFaction(PLAYER_PARTY_FACTION);
         view = mapCreateView();
@@ -1615,8 +1605,6 @@ void player_party::save(save_t *save)
         save->write(save, "%d %d\n", food, gold);
         save->write(save, "%d ;; turns to next meal\n", 
                     turns_to_next_meal);
-        save->write(save, "%d ;; turns to next rest credit\n", 
-                    turns_to_next_rest_credit);
         save->write(save, "%s\n", 
                 this->formation ? this->formation->tag : "nil");
         save->write(save, "%s\n", 
@@ -1698,23 +1686,11 @@ void player_party::advanceTurns(int turns)
                 foogodRepaint();
                 turns_to_next_meal += TURNS_PER_FOOD;
         }
-
-        // Give the party some rest credits
-        turns_to_next_rest_credit -= turns;
-        if (turns_to_next_rest_credit <= 0) {
-                forEachMember(give_pc_rest_credit, 0);
-                turns_to_next_rest_credit += TURNS_PER_REST_CREDIT;
-        }
 }
 
 void player_party::setTurnsToNextMeal(int turns)
 {
         turns_to_next_meal = turns;
-}
-
-void player_party::setTurnsToNextRestCredit(int turns)
-{
-        turns_to_next_rest_credit = turns;
 }
 
 bool player_party::hasInInventory(class ObjectType *type)

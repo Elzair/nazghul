@@ -2038,11 +2038,11 @@ KERN_API_CALL(kern_mk_player)
                 delete player_party;
         }
 
-        if (unpack(sc, &args, "ypspddddppppp", 
+        if (unpack(sc, &args, "ypspdddppppp", 
                    &tag,
                    &sprite,
                    &mv_desc, &mv_sound,
-                   &food, &gold, &ttnm, &ttnrc,
+                   &food, &gold, &ttnm,
                    &form, &campsite, &camp_form, 
                    &vehicle, 
                    &inventory)) {
@@ -2066,7 +2066,6 @@ KERN_API_CALL(kern_mk_player)
                                               camp_form);
         player_party->inventory = inventory;
         player_party->setTurnsToNextMeal(ttnm);
-        player_party->setTurnsToNextRestCredit(ttnrc);
 
         /* Load the members. */
         while (scm_is_pair(sc, members)) {
@@ -2082,9 +2081,6 @@ KERN_API_CALL(kern_mk_player)
                         load_err("kern-mk-player: null member object");
                         goto abort;
                 }
-
-                /* fixme: looks like a hack below */
-                ch->setRestCredits(MAX_USEFUL_REST_HOURS_PER_DAY);
 
                 if (! player_party->addMember(ch)) {
                         load_err("kern-mk-player: failed to add %s to player "

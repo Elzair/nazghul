@@ -283,8 +283,6 @@ extern "C" {
 /* Resting */
 #define HP_RECOVERED_PER_HOUR_OF_REST   3
 #define MANA_RECOVERED_PER_HOUR_OF_REST 10
-#define MAX_USEFUL_REST_HOURS_PER_DAY   9
-#define TURNS_PER_REST_CREDIT     (TURNS_PER_DAY/MAX_USEFUL_REST_HOURS_PER_DAY)
 #define PROB_AWAKEN                     25
 
 /* My events */

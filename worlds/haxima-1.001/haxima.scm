@@ -54,7 +54,6 @@
  10                          ; food
  0                           ; gold
  0                           ; turns to next meal
- 0                           ; turns to next rest credit
  nil                         ; formation
  nil                         ; campsite map
  nil                         ; campsite formation

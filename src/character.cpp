@@ -125,7 +125,7 @@ Character::Character(char *tag, char *name,
           rdyArms(NULL),
           fleeing(false), fleeX(0), fleeY(0), burden(0),
           inCombat(false),
-          container(NULL), sprite(sprite), n_rest_credits(0)
+          container(NULL), sprite(sprite)
 {
         if (tag) {
                 this->tag = strdup(tag);
@@ -188,7 +188,7 @@ Character::Character():name(0), hm(0), xp(0), order(-1),
                        rdyArms(NULL),
                        fleeing(false), fleeX(0), fleeY(0), burden(0),
                        inCombat(false),
-                       container(NULL), sprite(0), n_rest_credits(0)
+                       container(NULL), sprite(0)
 {
         // --------------------------------------------------------------------
         // Note: this constructor is called by Party::createMembers(); it will
@@ -1208,30 +1208,13 @@ struct sprite *Character::getSprite()
 	return sprite;
 }
 
-void Character::setRestCredits(int hours)
-{
-	n_rest_credits = hours;
-}
-
-void Character::addRestCredits(int delta_hours)
-{
-	n_rest_credits += delta_hours;
-	n_rest_credits = min(n_rest_credits, MAX_USEFUL_REST_HOURS_PER_DAY);
-}
-
-int Character::getRestCredits(void)
-{
-	return n_rest_credits;
-}
-
 void Character::rest(int hours)
 {
-	while (n_rest_credits && hours) {
+	while (hours) {
                 if (!isDead()) {
                         heal(HP_RECOVERED_PER_HOUR_OF_REST);
                         addMana(MANA_RECOVERED_PER_HOUR_OF_REST);
                 }
-		n_rest_credits--;
 		hours--;
 	}
 }
@@ -1866,8 +1849,7 @@ void Character::exec()
                 assert(isAsleep());
 
                 if (clock_alarm_is_expired(&rest_alarm)) {
-                        if (getRestCredits())
-                                rest(1);
+                        rest(1);
                         clock_alarm_set(&rest_alarm, 60);
                 }
 

@@ -102,7 +102,6 @@ class Character:public Being {
 	virtual struct sprite *getSprite();
 	virtual int getFleeDx();
 	virtual int getFleeDy();
-	virtual int getRestCredits(void);
         virtual sound_t *get_damage_sound();
         virtual sound_t *get_movement_sound();
 
@@ -133,7 +132,6 @@ class Character:public Being {
 	virtual void changeSleep(bool val);
 	virtual void setLight(int delta);
 	virtual void addMana(int delta);
-	virtual void addRestCredits(int delta_hours);
 
         virtual void setActivity(int val);
         virtual void setControlMode(enum control_mode mode);
@@ -149,7 +147,6 @@ class Character:public Being {
 	virtual void setAttackTarget(class Character * target);
 	virtual void setFleeing(bool val);
 	virtual void setCombat(bool val);
-	virtual void setRestCredits(int hours);
         virtual void ambushWhileCamping();
 	virtual void awaken(void);
         virtual void beginCamping(int hours);
@@ -266,7 +263,6 @@ class Character:public Being {
 	// *** PC fields
 	struct sprite *sprite;
 
-	int n_rest_credits;
         bool charmed;
 
         // --------------------------------------------------------------------

@@ -282,10 +282,6 @@ static void myShowMember(void)
 	screenPrint(&rect, 0, "Dex=%3d%*cAC:%3d", pm->getDexterity(), pad,
 		    ' ', pm->getArmourClass());
 
-	/* Show rest credits */
-	rect.y += ASCII_H;
-	screenPrint(&rect, 0, "Slp:%2d", pm->getRestCredits());
-
         // Show Movement Modes (pmask for now)
         rect.y += ASCII_H;
         // SAM: What is wanted here is a function to turn a pmask 

@@ -29,4 +29,7 @@
 ;; ----------------------------------------------------------------------------
 (mk-scroll 'poison-bolt-scroll-type "In Nox Por scroll" s_scroll_spell_29 in-nox-por)
 (mk-scroll 'death-bolt-scroll-type  "Xen Corp scroll"   s_scroll_spell_25 xen-corp)
-(mk-scroll 't_torch "torch" s_torch in-lor)
+(mk-scroll 't_torch "torch" s_torch (lambda (kobj kuser) 
+                                      ;; apply two in-lor spells to create light
+                                      (in-lor kobj kuser) 
+                                      (in-lor kobj kuser)))
