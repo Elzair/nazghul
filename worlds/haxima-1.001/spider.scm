@@ -114,39 +114,20 @@
 
 ;; ----------------------------------------------------------------------------
 ;; spider-killed -- called when a spider is killed, the character is passed as
-;; an arg. Drops a spider corpse object with a random amount of spider silk
-;; inside.
+;; an arg. Drops a random amount of spider silk.
 ;; ----------------------------------------------------------------------------
-(mk-obj-type 'spider-corpse-type "spider corpse" s_dead_spider
-             layer-container nil)
-
-(define (mk-spider-corpse)
-  (kern-mk-container spider-corpse-type
-                     nil
-                     (list 
-                      (list (kern-dice-roll "1d3") spider_silk)
-                      )))
-
 (define (spider-killed kspider)
-  (kern-obj-put-at (mk-spider-corpse)
+  (kern-obj-put-at (kern-mk-obj spider_silk 
+                                (kern-dice-roll "1d3"))
                    (kern-obj-get-location kspider)))
 
 ;; ----------------------------------------------------------------------------
 ;; queen-spider-killed -- virtually the same as spider-killed except for a few
 ;; details
 ;; ----------------------------------------------------------------------------
-(mk-obj-type 'queen-spider-corpse-type "queen spider corpse" s_dead_queen_spider
-             layer-container nil)
-
-(define (mk-queen-spider-corpse)
-  (kern-mk-container queen-spider-corpse-type
-                     nil
-                     (list 
-                      (list (kern-dice-roll "1d10") spider_silk)
-                      )))
-
 (define (queen-spider-killed kspider)
-  (kern-obj-put-at (mk-queen-spider-corpse)
+  (kern-obj-put-at (kern-mk-obj spider_silk 
+                                (kern-dice-roll "1d6"))
                    (kern-obj-get-location kspider)))
 
 ;;----------------------------------------------------------------------------
