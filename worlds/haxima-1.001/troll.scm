@@ -175,41 +175,6 @@
                     (troll-pick-target ktroll 
                                        foes)))
 
-(define (troll-find-nearest-ammo ktroll)
-  (let* ((loc (kern-obj-get-location ktroll))
-         (rad (kern-obj-get-vision-radius ktroll))
-         (coords (find-terrain (loc-place loc)
-                               (- (loc-x loc) rad)
-                               (- (loc-y loc) rad)
-                               (* 2 rad)
-                               (* 2 rad)
-                               t_boulder)))
-    ;;(display "troll-find-nearest-ammo:")
-    ;;(display " coords=")(display coords)
-    ;;(newline)
-    ;;(display " loc=")(display loc)
-    ;;(newline)
-    (define (closer? a b)
-      (< (loc-distance a loc)
-         (loc-distance b loc)))
-    (if (null? coords)
-        nil
-        (foldr (lambda (a b) (if (closer? a b) a b))
-               (car coords)
-               (cdr coords)))))
-
-(define (troll-stronger? ktroll foes)
-  (display "troll-stronger?")
-  (display " foes=")(display foes)
-  (newline)
-  (> (kern-char-get-strength ktroll)
-     (foldr (lambda (a b) (+ a (kern-char-get-strength b))) 
-            0 
-            foes)))
-
-(define (troll-has-ranged-weapon? ktroll)
-  (in-inventory? ktroll troll-ranged-weapon))
-
 ;; Simple approach: each foe's coordinates forms a vector to the troll's
 ;; coordinates. Take the sum of these coordinates to get the evasion
 ;; vector. "Normalize" the vector components by rounding them to the nearest 0,
@@ -239,11 +204,75 @@
         (and (not (eq? 0 (loc-x v)))
              (kern-obj-move ktroll 0 (loc-y v))))))
   
+(define (loc-closer? a b c)
+  (< (loc-distance a c)
+     (loc-distance b c)))
+
+;; Given an "origin" location and a list of locations, find the location in the
+;; list closest to the coordinates.
+(define (loc-closest? origin lst)
+  (if (null? lst) nil
+      (foldr (lambda (a b) (if (loc-closer? a b origin) a b))
+             (car lst)
+             (cdr lst))))
+
+(define (troll-find-nearest-terrain-ammo ktroll)
+  (let* ((loc (kern-obj-get-location ktroll))
+         (rad (kern-obj-get-vision-radius ktroll))
+         (coords (find-terrain (loc-place loc)
+                               (- (loc-x loc) rad)
+                               (- (loc-y loc) rad)
+                               (* 2 rad)
+                               (* 2 rad)
+                               t_boulder)))
+    (if (null? coords)
+        nil
+        (foldr (lambda (a b) (if (loc-closer? a b loc) a b))
+               (car coords)
+               (cdr coords)))))
+
+(define (troll-stronger? ktroll foes)
+  (> (kern-char-get-strength ktroll)
+     (foldr (lambda (a b) (+ a (kern-char-get-strength b))) 
+            0 
+            foes)))
+
+(define (troll-has-ranged-weapon? ktroll)
+  (in-inventory? ktroll troll-ranged-weapon))
+
 ;; troll-get-ammo -- give troll a boulder and convert terrain to grass
-(define (troll-get-ammo ktroll coords)
-  (display "troll-get-ammo")(newline)
+(define (troll-get-terrain-ammo ktroll coords)
+  (display "troll-get-terrain-ammo")(newline)
   (kern-obj-add-to-inventory ktroll troll-ranged-weapon 1)
-  (kern-place-set-terrain coords t_grass))
+  (kern-place-set-terrain coords t_grass)
+  #t)
+
+(define (troll-get-loose-ammo ktroll)
+  #f)
+
+(define (troll-find-nearest-loose-ammo ktroll)
+  nil)
+
+(define (kchar-get-or-goto kchar coords getproc)
+  (if (adjacent? (kern-obj-get-location kchar) coords)
+      (getproc kchar coords)
+      (pathfind kchar coords)))
+
+(define (troll-hunt-for-ammo ktroll)
+  (let ((lac (troll-find-nearest-loose-ammo ktroll))
+        (tac (troll-find-nearest-terrain-ammo ktroll))
+        (kloc (kern-obj-get-location ktroll)))
+    (if (null? lac)
+        (if (null? tac)
+            #f
+            (begin
+              (kchar-get-or-goto ktroll tac troll-get-terrain-ammo)
+              #t))
+        (begin
+          (if (closer? lac tac kloc)
+              (kchar-get-or-goto ktroll lac troll-get-loose-ammo)
+              (kchar-get-or-goto ktroll tac troll-get-terrain-ammo))
+          #t))))
 
 (define (troll-ai ktroll)
   (newline)(display "troll-ai")(newline)
@@ -267,14 +296,8 @@
                         (if (null? ranged-foes)
                             (troll-pathfind-foe ktroll foes)
                             (troll-attack ktroll troll-ranged-weapon ranged-foes)))
-                      (let ((ammo-coords (troll-find-nearest-ammo ktroll)))
-                        (display "troll-ai:ammo-coords=")(display ammo-coords)
-                        (newline)
-                        (if (null? ammo-coords)
-                            (troll-pathfind-foe ktroll foes)
-                            (if (adjacent? (kern-obj-get-location ktroll) ammo-coords)
-                                (troll-get-ammo ktroll ammo-coords)
-                                (pathfind ktroll ammo-coords)))))
+                      (or (troll-hunt-for-ammo ktroll)
+                          (troll-pathfind-foe ktroll foes)))
                   (if (troll-stronger? ktroll melee-targs)
                       (troll-attack ktroll troll-melee-weapon melee-targs)
                       (troll-evade ktroll melee-targs))))))))
