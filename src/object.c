@@ -36,6 +36,7 @@
 #include "dice.h"
 #include "effect.h"
 #include "mmode.h"
+#include "log.h"
 
 #include <assert.h>
 #include <stdlib.h>
@@ -121,13 +122,12 @@ void ObjectType::describe(int count)
 	char *name = getName();
 	if (count == 1) {
 		if (isvowel(name[0]))
-			consolePrint("an ");
+			log_continue("an ");
 		else
-			consolePrint("a ");
-		consolePrint(name);
+			log_continue("a ");
+		log_continue("%s", name);
 	} else {
-		consolePrint("some ");
-		consolePrint("%ss (%d)", name, count);
+		log_continue("some %ss (%d)", name, count);
 	}
 }
 

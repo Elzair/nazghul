@@ -549,6 +549,8 @@
                  (list (kern-tag 'mg-1 (mk-moongate 'ord)) 32 23)
                  (list (kern-tag 'mg-2 (mk-moongate 'ord)) 35 25)
                  (list (mk-ship) 36 26)
+                 (list (mk-bridge east) 2 22)
+                 (list (mk-bridge east) 37 25)
                  ))
 
                nil ; hooks

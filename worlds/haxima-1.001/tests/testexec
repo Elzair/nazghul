@@ -29,5 +29,12 @@ test=$1
     exit -3
   fi
 
+  diff $test.console $test.console.mstr > $test.console.diff
+  if [ $? != 0 ]; then
+    printf "FAIL [diff console]\n"
+    exit -3
+  fi
+
   printf " PASS\n"
 
+exit 0

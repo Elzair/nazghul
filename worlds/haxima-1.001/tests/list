@@ -6,3 +6,9 @@ cmdwin-3
 tfeat-1
 mech-1
 mech-2
+console-attack
+console-pass
+console-examine
+console-at
+console-exit
+console-terraform

@@ -41,6 +41,14 @@ static struct {
 
 static FILE *log = NULL;
 
+static inline void cmdwin_clear_no_repaint()
+{
+	memset(cmdwin.buf, 0, cmdwin.blen);
+	cmdwin.ptr = cmdwin.buf;
+	cmdwin.room = cmdwin.blen;
+	cmdwin.mark = cmdwin.buf;
+}
+
 int cmdwin_init(void)
 {
 	cmdwin.srect.x = CMD_X;
@@ -60,7 +68,7 @@ int cmdwin_init(void)
                 return -1;
         }
 
-        cmdwin_clear();
+        cmdwin_clear_no_repaint();
 	return 0;
 }
 
@@ -104,10 +112,8 @@ void cmdwin_backspace(int n)
 
 void cmdwin_clear(void)
 {
-	memset(cmdwin.buf, 0, cmdwin.blen);
-	cmdwin.ptr = cmdwin.buf;
-	cmdwin.room = cmdwin.blen;
-	cmdwin.mark = cmdwin.buf;
+        cmdwin_clear_no_repaint();
+        cmdwin_repaint();
 }
 
 void cmdwin_repaint_cursor(void)
@@ -166,5 +172,4 @@ void cmdwin_flush(void)
         consoleRepaint();
         fprintf(log, "%s\n", cmdwin.buf);
         cmdwin_clear();
-        cmdwin_repaint();
 }

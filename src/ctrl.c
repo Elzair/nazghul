@@ -35,6 +35,7 @@
 #include "terrain.h"
 #include "sched.h"
 #include "session.h"
+#include "log.h"
 
 int G_latency_start = 0;
 
@@ -167,7 +168,7 @@ static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
                         break;
                 case ' ':
                         party->endTurn();
-                        consolePrint("Pass\n");
+                        log_msg("Pass\n");
                         break;
                 case '>':
                         // This key was chosen to be a cognate for '>' in
@@ -179,6 +180,9 @@ static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
                         break;
                 } // switch(key)
         } // !keymod
+
+        /* Prep cmdwin for next prompt */
+        cmdwin_clear();
 
         /* Return true when done processing commands. */
         return party->isTurnEnded();
@@ -296,17 +300,24 @@ void ctrl_do_attack(class Character *character, class ArmsType *weapon,
         int armor;
         bool miss;
 
-        consolePrint("%s: %s - %s ", character->getName()
-                     , weapon->getName()
-                     , target->getName()
+        log_begin("%s: %s - %s ", character->getName()
+                  , weapon->getName()
+                  , target->getName()
                 );
+
+        //struct attack_form *form;
+        // form = log_begin_entry();
+        // form_set_type(form, FORM_CHARACTER_ATTACK);
+        // form_set_subject(form, character->getName());
+        // form_set_verb(form, armstype_get_usage_desc(weapon));
+        // form_set_dirobj_art(form, form_gender_to_pcharacter->getGender());
 
         miss = ! weapon->fire(target, character->getX(), character->getY());
         character->decActionPoints(weapon->getRequiredActionPoints());
         character->useAmmo();
 
         if (miss) {
-                consolePrint("missed!\n");
+                log_end("missed!");
                 return;
         }
 
@@ -314,7 +325,7 @@ void ctrl_do_attack(class Character *character, class ArmsType *weapon,
         hit = dice_roll(weapon->getToHitDice());
         def = target->getDefend();
         if (hit < def) {
-                consolePrint("barely scratched!\n");
+                log_end("barely scratched!");
                 return;
         }
 
@@ -327,7 +338,7 @@ void ctrl_do_attack(class Character *character, class ArmsType *weapon,
         dbg("for %d total damage, ", damage);
         target->damage(damage);
 
-        consolePrint("%s!\n", target->getWoundDescription());
+        log_end("%s!", target->getWoundDescription());
 }
 
 
@@ -368,7 +379,7 @@ static void ctrl_attack_ui(class Character *character)
         // If in follow mode, when the leader attacks automatically switch to
         // turn-based mode.
         if (player_party->getPartyControlMode() == PARTY_CONTROL_FOLLOW) {
-                consolePrint("Switching from follow to combat mode.\n");
+                log_msg("Switching from follow to combat mode.\n");
                 player_party->enableRoundRobinMode();
         }
 
@@ -376,24 +387,24 @@ static void ctrl_attack_ui(class Character *character)
         for (weapon = character->enumerateWeapons(); weapon != NULL; 
              weapon = character->getNextWeapon()) {
                 
-
                 // prompt the user
                 cmdwin_clear();
-                cmdwin_print("%s:", character->getName());
+                cmdwin_print("Attack-");
+
                 if (weapon->isMissileWeapon()) {
                         // SAM: It would be nice to get ammo name, too...
-                        cmdwin_print("fire %s (range %d, %d ammo)-", 
+                        cmdwin_print("%s (range %d, %d ammo)-", 
                                      weapon->getName(), weapon->getRange(), 
                                      character->hasAmmo(weapon));
                 }
                 else if (weapon->isThrownWeapon()) {
                         // SAM: It would be nice to get ammo name, too...
-                        cmdwin_print("throw %s (range %d, %d left)-",
+                        cmdwin_print("%s (range %d, %d left)-",
                                      weapon->getName(), weapon->getRange(), 
                                      character->hasAmmo(weapon));
                 }
                 else {
-                        cmdwin_print("attack with %s (reach %d)-", 
+                        cmdwin_print("%s (reach %d)-", 
                                      weapon->getName(), weapon->getRange() );
                 }
 
@@ -401,7 +412,7 @@ static void ctrl_attack_ui(class Character *character)
                 // Check ammo
                 if (!character->hasAmmo(weapon)) {
                         cmdwin_print("no ammo!\n");
-                        consolePrint("%s: %s - no ammo!\n",
+                        log_msg("%s: %s - no ammo!\n",
                                      character->getName(),
                                      weapon->getName());
                         continue;
@@ -422,7 +433,7 @@ static void ctrl_attack_ui(class Character *character)
                         near = ctrl_get_interfering_hostile(character);
                         if (near) {
                                 cmdwin_print("blocked!");
-                                consolePrint("%s: %s - blocked by %s!\n",
+                                log_msg("%s: %s - blocked by %s!\n",
                                              character->getName(),
                                              weapon->getName(),
                                              near->getName());
@@ -456,14 +467,23 @@ static void ctrl_attack_ui(class Character *character)
                         /* Attack the terrain */
                         terrain = place_get_terrain(character->getPlace(),
                                                     x, y);
+
+                        log_begin("%s: %s - ", character->getName()
+                                  , weapon->getName()
+                                );
+
                         character->attackTerrain(x, y);
                         cmdwin_print("%s", terrain->name);
 
                         /* Check for a mech */
                         mech = place_get_object(character->getPlace(), x, y, 
                                                 mech_layer);
-                        if (mech)
+                        if (mech) {
+                                log_end("%s hit!", mech->getName());
                                 mech->attack(character);
+                        } else {
+                                log_end("%s hit!", terrain->name);
+                        }
                 }
                 else if (target == character) {
 
@@ -499,7 +519,7 @@ static void ctrl_attack_ui(class Character *character)
                 // Warn the user if out of ammo
                 if (NULL == character->getCurrentWeapon() ||
                     false == character->hasAmmo(character->getCurrentWeapon()))
-                        consolePrint("%s : %s now out of ammo)\n", 
+                        log_msg("%s : %s now out of ammo)\n", 
                                      character->getName(), weapon->getName());
 
                 // Once the player uses a weapon he can't cancel out of the
@@ -513,12 +533,9 @@ static void ctrl_move_character(class Character *character, int dir)
         char *result = NULL;
         char *dirstr = directionToString(dir);
         
-        cmdwin_print("move %s-", dirstr);
-
         switch (character->move(directionToDx(dir),
                                 directionToDy(dir))) {
         case MovedOk:
-                cmdwin_print("ok");
                 break;
         case OffMap:
                 result = "no place to go!";
@@ -528,7 +545,7 @@ static void ctrl_move_character(class Character *character, int dir)
                 character->endTurn();
                 break;
         case EngagedEnemy:
-                cmdwin_print("combat");
+                cmdwin_print("enter combat!");
                 break;
         case WasOccupied:
                 result = "occupied!";
@@ -556,10 +573,8 @@ static void ctrl_move_character(class Character *character, int dir)
         /* If something interesting happened... */
         if (result) {
 
-                cmdwin_print("%s", result);
-
                 /* Log unusual results to the console */
-                consolePrint("%s: %s - %s\n", character->getName(), dirstr,
+                log_msg("%s: %s - %s\n", character->getName(), dirstr,
                              result);
         }
 
@@ -664,15 +679,11 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
                         // character's position.
                         // ----------------------------------------------------
 
-                        cmdwin_clear();
-                        cmdwin_print("Enter-");
-                        
                         portal = place_get_object(character->getPlace(), 
                                                   character->getX(), 
                                                   character->getY(), 
                                                   mech_layer);
                         if (!portal || !portal->canEnter()) {
-                                cmdwin_print("Nothing!");
                                 break;;
                         }
                         
@@ -689,13 +700,13 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
                         // follow mode but set the leader to player control.
                         // ----------------------------------------------------
                         
-                        consolePrint("Follow mode ");
+                        log_begin("Follow mode ");
                         if (player_party->getPartyControlMode() == 
                             PARTY_CONTROL_FOLLOW) {
-                                consolePrint("OFF\n");
+                                log_end("OFF\n");
                                 player_party->enableRoundRobinMode();
                         } else {
-                                consolePrint("ON\n");
+                                log_end("ON\n");
                                 player_party->enableFollowMode();
                         }
                         character->endTurn();
@@ -729,22 +740,19 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
                         cmdUse(character, 0);
                         break;
                 case 'x':
-                        consolePrint("examines around\n");
                         cmdXamine(character);
                         break;
                 case 'y':
                         cmdYuse(character);
+                        break;
                 case 'z':
-                        consolePrint("show status\n");
                         cmdZtats(character);
                         break;
                 case '@':
-                        consolePrint("skylarks a bit");
                         cmdAT(character);
                         break;
                 case ' ':
-                        cmdwin_print("Pass");
-                        consolePrint("Pass\n");
+                        log_msg("Pass\n");
                         character->endTurn();
                         break;
 
@@ -790,16 +798,14 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
 
                         if (!place_is_wilderness_combat(character->getPlace()))
                         {
-                                consolePrint("Must use an exit!\n");
-                                consolePrint("%s: ", character->getName());
-                                consoleRepaint();
+                                log_msg("Must use an exit!");
                                 break;
                         }
 
                         if (place_contains_hostiles(character->getPlace(), 
                                                     character->getAlignment()))
                         {
-                                consolePrint("Not while foes remain!\n");
+                                log_msg("Not while foes remain!");
                                 break;
                         }
 
@@ -836,58 +842,6 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
 
         return character->isTurnEnded();
 }
-
-static void ctrl_enchant_target(class Character *character, 
-                                class Character *target)
-{
-        struct spell *spell;
-        int i;
-        int distance;
-
-        if (MagicNegated)
-                return;
-
-        distance = place_flying_distance(character->getPlace(), 
-                                         character->getX(), character->getY(),
-                                         target->getX(), target->getY());
-
-        // Enumerate all the known spells for this species
-        for (i = 0; i < character->species->n_spells; i++) {
-
-                spell = magic_lookup_spell(&Session->magic, 
-                                           character->species->spells[i]);
-                assert(spell);
-
-                // Check if the THIS has enough mana
-                if (spell->cost > character->getMana()) {
-                        continue;
-                }
-
-                // Check if the nearest is in range or if the range does not
-                // matter for this spell type
-                if ((spell->flags & SPELL_RANGE_LIMITED) &&
-                    (distance > spell->range)) {
-                        continue;
-                }
-
-                // Cast the spell
-                // gmcnutt: for now use the caster's coordinates, only the
-                // summoning spells currently use them.
-                consolePrint("%s casts %s on %s.\n", character->getName(), 
-                             spell->type->getName(), target->getName());
-#if 0
-                // revisit
-                spell->cast(character, target, 0, character->getX(), 
-                            character->getY());
-#endif
-                character->decActionPoints(spell->action_points);
-                if (character->getActionPoints() <= 0)
-                        return;
-        }
-
-        return;
-}
-
 
 static void ctrl_pathfind_between_objects(class Object *source, 
                                           class Object *target)
@@ -1058,14 +1012,6 @@ static void ctrl_idle(class Character *character)
         }
         
         // -------------------------------------------------------------------
-        // First try magic.
-        // -------------------------------------------------------------------
-
-        ctrl_enchant_target(character, target);
-        if (character->isTurnEnded())
-                return;
-        
-        // -------------------------------------------------------------------
         // Then try force.
         // -------------------------------------------------------------------
 
@@ -1141,7 +1087,9 @@ void ctrl_party_ui(class player_party *party)
 {
         struct KeyHandler kh;
 
-        
+        /* ready the cmdwin prompt */
+        cmdwin_clear();
+
         kh.fx = &ctrl_party_key_handler;
         kh.data = party;
         eventPushKeyHandler(&kh);

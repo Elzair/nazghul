@@ -28,7 +28,7 @@
 #include "astar.h"
 #include "common.h"
 #include "screen.h"
-#include "console.h"
+//#include "console.h"
 #include "status.h"
 #include "player.h"
 #include "sky.h"
@@ -50,6 +50,7 @@
 #include "session.h"
 #include "sched.h"
 #include "conv.h"
+#include "log.h"
 
 #define DEBUG
 #include "debug.h"
@@ -400,28 +401,28 @@ int terraform_movecursor_and_do(struct KeyHandler * kh, int key, int keymod)
                 // Page Up == Cycle back through terrain in palette
                 palette_prev_terrain(pp);
                 tt = palette_current_terrain(pp);
-                consolePrint("[Prev]  terrain %s '%s'\n", tt->tag, tt->name);
+                log_msg("[Prev] terrain %s '%s'", tt->tag, tt->name);
                 return 0;  // Keep on keyhandling
         }
         if (key == SDLK_PAGEDOWN) {
                 // Page Down == Cycle forward through terrain in palette
                 palette_next_terrain(pp);
                 tt = palette_current_terrain(pp);
-                consolePrint("[Next]  terrain %s '%s'\n", tt->tag, tt->name);
+                log_msg("[Next] terrain %s '%s'", tt->tag, tt->name);
                 return 0;  // Keep on keyhandling
         }
         if (key == SDLK_HOME) {
                 // Home == Select first terrain in palette
                 palette_first_terrain(pp);
                 tt = palette_current_terrain(pp);
-                consolePrint("[First] terrain %s '%s'\n", tt->tag, tt->name);
+                log_msg("[First] terrain %s '%s'", tt->tag, tt->name);
                 return 0;  // Keep on keyhandling
         }
         if (key == SDLK_END) {
                 // End == Select last terrain in palette
                 palette_last_terrain(pp);
                 tt = palette_current_terrain(pp);
-                consolePrint("[Last]  terrain %s '%s'\n", tt->tag, tt->name);
+                log_msg("[Last] terrain %s '%s'", tt->tag, tt->name);
                 return 0;  // Keep on keyhandling
         }
 
@@ -434,14 +435,14 @@ int terraform_movecursor_and_do(struct KeyHandler * kh, int key, int keymod)
                         int index = palette_get_current_terrain_index(pp);
                         palette_set_quick_terrain(pp, qt, index);
                         tt = palette_current_terrain(pp);
-                        consolePrint("[Quick %d] set to %s '%s'\n", qt, tt->tag, tt->name);
+                        log_msg("[Quick %d] set to %s '%s'", qt, tt->tag, tt->name);
                         return 0; // Keep on keyhandling
                 }
                 // Plain NUM == set current terrain from quick terrain:
                 int index = palette_get_quick_terrain_index(pp, qt);
                 palette_set_current_terrain(pp, index);
                 tt = palette_current_terrain(pp);
-                consolePrint("[Quick %d] %s '%s'\n", qt, tt->tag, tt->name);
+                log_msg("[Quick %d] %s '%s'", qt, tt->tag, tt->name);
                 return 0;  // Keep on keyhandling
         }
 
@@ -616,12 +617,13 @@ bool cmdSearch(struct place *place, int x, int y)
 	if (dir == CANCEL)
 		return false;
 
-	consolePrint("You find ");
+	log_begin("You find ");
         old_reveal = Reveal;
         Reveal = true;
 	place_describe(place, x + directionToDx(dir),
                        y + directionToDy(dir),
                        PLACE_DESCRIBE_ALL);
+        log_end(NULL);
         Reveal = old_reveal;
 	return true;
 }
@@ -631,9 +633,9 @@ void cmdGetObject(Object *actor, Object *subject)
         closure_t *handler;
 
         if (! subject->getObjectType()->canGet()) {
-                consolePrint("Can't get ");
+                log_begin("Can't get ");
                 subject->describe();
-                consolePrint("\n");
+                log_end(NULL);
                 return;                
         }
                 
@@ -660,7 +662,7 @@ bool cmdGet(class Object *actor, bool scoop_all)
 
 	item = place_get_item(actor->getPlace(), x, y);
 	if (!item) {
-		consolePrint("Nothing there!\n");
+		log_msg("Nothing there!\n");
 		return false;
 	}
        
@@ -698,6 +700,8 @@ bool cmdOpen(class Character * pc)
 		}
 	}
 
+        cmdwin_print("-");
+
 	dir = ui_get_direction();
 	if (dir == CANCEL)
 		return false;
@@ -714,7 +718,6 @@ bool cmdOpen(class Character * pc)
                                  player_party->getY() + directionToDy(dir));
 	}
 
-	cmdwin_print("-");
 
 	/*** Open Mech ***/
 
@@ -730,30 +733,27 @@ bool cmdOpen(class Character * pc)
 	// Get the container.
 	container = (class Container *) place_get_object(Place, x, y, container_layer);
 	if (NULL == container) {
-		cmdwin_print("nothing!");
 		return false;
 	}
-	cmdwin_print("%s-", container->getName());
 
-	consolePrint("%s opens ", pc->getName());
+        log_begin_group();
+
+	log_begin("%s opens ", pc->getName());
 	container->describe();
+
         pc->decActionPoints(NAZGHUL_BASE_ACTION_POINTS);
 
 	// Check for traps.
-	if (!container->isTrapped()) {
-		consolePrint(".\n");
-	} else {
+	if (container->isTrapped()) {
 
 		closure_t *trap = container->getTrap();
 
 		// Roll to disarm
 		if (random() % 999 < pc->getDexterity()) {
-			consolePrint("...disarmed a trap!\n");
+			log_end("...disarmed a trap!");
 		} else {
-			consolePrint("...triggered a trap!\n");
+			log_end("...triggered a trap!\n");
                         closure_exec(trap, "pp", pc, container);
-			consolePrint("%s %s!\n", pc->getName(),
-				     pc->getWoundDescription());
 		}
 
 		// Give the character some experience for dealing with the trap
@@ -783,9 +783,9 @@ bool cmdOpen(class Character * pc)
         container->remove();
         delete container;
 
-        consolePrint("You find ");
+        log_begin("You find ");
 	place_describe(pc->getPlace(), x, y, PLACE_DESCRIBE_OBJECTS);
-
+        log_end(NULL);
 
 	mapSetDirty();
 	return true;
@@ -803,7 +803,7 @@ bool cmdQuit(void)
 
 	if (yesno == 'y') {
 		cmdwin_print("Yes!");
-		consolePrint("Goodbye!\n");
+		log_msg("Goodbye!\n");
                 session_save(QUICKSAVE_FNAME);
 		Quit = true;
 	} else {
@@ -913,11 +913,6 @@ bool cmdReady(class Character * member, int flags)
 	int erase;
 	char *msg = 0;
 
-        if (member->isCharmed()) {
-                consolePrint("Charmed characters can't ready arms!\n");
-                return false;
-        }
-
 	cmdwin_clear();
 	cmdwin_print("Ready-");
 
@@ -926,13 +921,15 @@ bool cmdReady(class Character * member, int flags)
                 member = select_party_member();
                 if (member == NULL)
                         return false;       
-        } else {
-                assert(member);
-                cmdwin_print("%s", member->getName());
-        }
-	statusSelectCharacter(member->getOrder());
 
-	cmdwin_print("-");
+                if (member->isCharmed()) {
+                        log_msg("Charmed characters can't ready arms!\n");
+                        return false;
+                }
+
+                cmdwin_print("-");
+        }
+
 	statusSelectCharacter(member->getOrder());
 
 	statusSetMode(Ready);
@@ -998,9 +995,9 @@ bool cmdReady(class Character * member, int flags)
 
         if (committed) {
                 if (flags & CMD_PRINT_MEMBER) {
-                        consolePrint("%s ", member->getName());
+                        log_msg("%s ", member->getName());
                 }
-                consolePrint("readies arms.\n");
+                log_msg("readies arms.\n");
                 member->decActionPoints(NAZGHUL_BASE_ACTION_POINTS);
         }
 
@@ -1023,9 +1020,9 @@ int select_target(int ox, int oy, int *x, int *y, int range)
         kh.data = &data;
   
         eventPushKeyHandler(&kh);
-        cmdwin_print("<target> (ESC to cancel)");
+        cmdwin_print("<target>");
         eventHandle();
-        cmdwin_backspace(strlen("<target> (ESC to cancel)"));
+        cmdwin_backspace(strlen("<target>"));
         eventPopKeyHandler();
   
         *x = Session->crosshair->getX();
@@ -1276,7 +1273,7 @@ void cmdNewOrder(void)
 
         player_party->switchOrder(pc1, pc2);
 
-	consolePrint("%s switched order with %s\n", pc1->getName(),
+	log_msg("%s switched order with %s\n", pc1->getName(),
 		     pc2->getName());
 
 	statusRepaint();
@@ -1340,7 +1337,7 @@ bool cmdTalk(Object *member)
 
 	if (Place->wilderness) {
 		cmdwin_print("not here!");
-                consolePrint("Can't talk here!\n");
+                log_msg("Can't talk here!\n");
 		return false;
 	}
 
@@ -1352,7 +1349,7 @@ bool cmdTalk(Object *member)
 
 	if (!obj) {
                 cmdwin_print("nobody there!");
-                consolePrint("Try talking to a PERSON.\n");
+                log_msg("Try talking to a PERSON.\n");
                 return true;
         }
 
@@ -1361,7 +1358,7 @@ bool cmdTalk(Object *member)
 
         if (! obj->canTalk()) {
 		cmdwin_print("no response!");
-                consolePrint("No response from ");
+                log_msg("No response from ");
                 obj->describe();
                 consolePrint(".\n");
 		return true;
@@ -1369,13 +1366,13 @@ bool cmdTalk(Object *member)
 
 	cmdwin_print(obj->getName());
 
-	consolePrint("\n\n*** CONVERSATION ***\n\n");
+	log_msg("\n\n*** CONVERSATION ***\n\n");
 	consolePrint("You meet ");
 	obj->describe();
 	consolePrint(".\n");
 
 	if (obj->getActivity() == SLEEPING) {
-		consolePrint("Zzzz...\n");
+		log_msg("Zzzz...\n");
 		return true;
 	}
 
@@ -1680,7 +1677,7 @@ bool cmdCastSpell(class Character * pc)
 	int tx, ty;
 
         if (MagicNegated) {
-                consolePrint("Magic negated!\n");
+                log_msg("Magic negated!\n");
                 return false;
         }
 
@@ -1996,16 +1993,18 @@ bool cmdMixReagents(void)
 
 void look_at_XY(struct place *place, int x, int y)
 {
+        log_begin("At XY=(%d,%d) you see ", x, y);
+
         if ( mapTileIsVisible(x, y) ) {
-                consolePrint("At XY=(%d,%d) you see ", x, y);
                 place_describe(place, x, y, PLACE_DESCRIBE_ALL);
-                return;
         } else if (ShowAllTerrain) {
-                consolePrint("At XY=(%d,%d) you see (via xray) ", x, y);
+                log_continue("(via xray) ");
                 place_describe(place, x, y, PLACE_DESCRIBE_TERRAIN);
-                return;
+        } else {
+                log_continue("nothing (out of LOS)");
         }
-        consolePrint("At XY=(%d,%d) you see nothing (out of LOS)\n", x, y);
+
+        log_end(NULL);
 }
 
 void detailed_examine_XY(struct place *place, int x, int y)
@@ -2014,7 +2013,7 @@ void detailed_examine_XY(struct place *place, int x, int y)
 	// Hmmm...how best to print more info about
 	// the objects on this tile?
         if ( mapTileIsVisible(x, y) ) {
-                consolePrint("DETAIL XY=(%d,%d) TODO - print detailed view\n", x, y);
+                log_msg("DETAIL XY=(%d,%d) TODO - print detailed view\n", x, y);
                 // For each object/terrain on the tile, print the name (and
                 // perhaps show the sprite in a Status Window mode), and also
                 // show:
@@ -2035,7 +2034,7 @@ void detailed_examine_XY(struct place *place, int x, int y)
                 // Hmmm...what else?
                 return;
         }
-        consolePrint("DETAIL XY=(%d,%d) out of LOS\n", x, y);
+        log_msg("DETAIL XY=(%d,%d) out of LOS\n", x, y);
 }
 
 void DM_XRAY_look_at_XY(struct place *place, int x, int y, void * data)
@@ -2046,13 +2045,14 @@ void DM_XRAY_look_at_XY(struct place *place, int x, int y, void * data)
         // NOTE: data needs to be unused unless cmdTerraform() 
         //       itself makes such a one.
         if (!mapTileIsVisible(x, y) ) {
-                consolePrint("(Out of LOS) ", x, y);
-                consolePrint("At XY=(%d,%d) you see ", x, y);
+                log_msg("(Out of LOS) ", x, y);
+                log_msg("At XY=(%d,%d) you see ", x, y);
                 place_describe(place, x, y, PLACE_DESCRIBE_ALL);
                 return;
         }
-        consolePrint("At XY=(%d,%d) you see ", x, y);
+        log_begin("At XY=(%d,%d) you see ", x, y);
         place_describe(place, x, y, PLACE_DESCRIBE_ALL);
+        log_end(NULL);
 }
 
 void terraform_XY(struct place *place, int x, int y, void * data)
@@ -2064,7 +2064,7 @@ void terraform_XY(struct place *place, int x, int y, void * data)
         struct terrain         * tt  = palette_current_terrain(pp);
 
         if (!mapTileIsVisible(x, y)) {
-                consolePrint("TERRAFORM warning - XY=(%d,%d) out of LOS\n", 
+                log_msg("TERRAFORM warning - XY=(%d,%d) out of LOS\n", 
                              x, y);
         }
         terrain_map_fill(map, x, y, 1, 1, tt);
@@ -2072,7 +2072,7 @@ void terraform_XY(struct place *place, int x, int y, void * data)
         mapSetDirty();
         //player_party->updateView();
         mapUpdate(0);
-        consolePrint("TERRAFORM put %s '%s' at XY=(%d,%d)\n", 
+        log_msg("TERRAFORM put %s '%s' at XY=(%d,%d)\n", 
                      tt->tag, tt->name, x, y);
 } // terraform_XY()
 
@@ -2082,6 +2082,7 @@ bool cmdXamine(class Object * pc)
 	// which works as a "Look Mode" rather than a 
 	// "look at 1 tile" command...
 	int x, y;
+        bool ret = true;
 
 	cmdwin_clear();
 	cmdwin_print("Xamine-");
@@ -2089,12 +2090,22 @@ bool cmdXamine(class Object * pc)
         x = pc->getX();
         y = pc->getY();
 
+        log_begin_group();
+
+        if (pc)
+                log_msg("%s examines around...", pc->getName());
+        else
+                log_msg("You examine around...");
+
         look_at_XY(pc->getPlace(), x,y);  // First look at the current tile
 	if (select_target_with_doing(x, y, &x, &y, 99,
 				     look_at_XY, detailed_examine_XY) == -1) {
-		return false;
+		ret = false;
 	}
-	return true;
+
+        log_end_group();
+
+	return ret;
 } // cmdXamine()
 
 char * name_of_context (void)
@@ -2142,24 +2153,23 @@ bool cmdAT (class Character * pc)
         //      for it to be made safe in all contexts?
         // place_name = player_party->getPlace()->name;
     
-        consolePrint("\n");
-        consolePrint("This is %s\n", name_of_context() );
-        consolePrint("%s is in %s (%d,%d)\n", who, place_name, x, y);
-
-        consolePrint("It is %s on %s, \n"
-                     "%s of %s in the year %d.\n",
-                     time_HHMM_as_string(), day_name(), 
-                     week_name(), month_name(), Session->clock.year );
+        log_begin_group();
+        log_msg("This is %s.", name_of_context() );
+        log_msg("%s is in %s (%d,%d).", who, place_name, x, y);
+        log_msg("It is %s on %s, \n"
+                "%s of %s in the year %d.",
+                time_HHMM_as_string(), day_name(), 
+                week_name(), month_name(), Session->clock.year );
 
         // SAM: Is this really interesting though, I wonder?
-        consolePrint("%d game turns have passed.\n", Turn);
+        log_msg("%d game turns have passed.", Turn);
 
-        consolePrint("The wind is blowing from the %s.\n",
-                     directionToString(windGetDirection()) );
+        log_msg("The wind is blowing from the %s.",
+                directionToString(windGetDirection()) );
 
         if (Place->underground) {
-                consolePrint("%s is underground, and cannot see the sky.\n", 
-                             who);
+                log_msg("%s is underground, and cannot see the sky.", 
+                        who);
         } // underground
         else {
                 struct list *elem;
@@ -2168,7 +2178,7 @@ bool cmdAT (class Character * pc)
                 // This message won't be true if you are under 
                 // a roof in a town.  In future there should be 
                 // logic querying the (future) roof-ripping code here.
-                consolePrint("%s is beneath the open sky.\n", who);
+                log_msg("%s is beneath the open sky.\n", who);
 
                 // The kernel no longer has any special knowledge about which
                 // astral body is the sun, so we have to deal with all astral
@@ -2176,36 +2186,38 @@ bool cmdAT (class Character * pc)
                 // more suns. The time runs independently and isn't cued off
                 // the sun.
                 if (is_noon())
-                        consolePrint("It is noon. ");
+                        log_msg("It is noon.");
                 else if (is_midnight())
-                        consolePrint("It is midnight. ");
+                        log_msg("It is midnight.");
 
                 // Report on each astral body generically.
                 list_for_each(&Session->sky.bodies, elem) {
                         struct astral_body *body;
                         body = outcast(elem, struct astral_body, list);
                         if (astral_body_is_visible(body->arc)) {
-                                consolePrint("%s is up at arc %d", body->name, 
-                                             body->arc);
+                                log_begin("%s is up at arc %d", body->name, 
+                                        body->arc);
                                 if (body->n_phases > 1) {
-                                        char *phase_name = body->phases[body->phase].name;                                
+                                        char *phase_name = 
+                                                body->phases[body->phase].
+                                                name;
                                         if (phase_name)
-                                                consolePrint(" in its %s phase", 
+                                                log_continue(" in its %s "
+                                                             "phase", 
                                                              phase_name);
                                         else
-                                                consolePrint(" in phase %d", 
+                                                log_continue(" in phase %d", 
                                                              body->phase);
                                 }
-                                consolePrint(". ");
+                                log_end(".");
                         }
                 }
-                consolePrint("\n");
 
         } // open air, under the sky
 
         if (player_party->vehicle) {
-                consolePrint("%s is %s a %s.\n", 
-                             who, "using", player_party->vehicle->getName() );
+                log_msg("%s is %s a %s.", 
+                        who, "using", player_party->vehicle->getName() );
                 // SAM:
                 // In future, we shall want GhulScript to specify 
                 // whether one is to be
@@ -2218,10 +2230,10 @@ bool cmdAT (class Character * pc)
                 // SAM: Not true for a party of Gazers or Nixies.
                 // Similar GhulScript for party / character movement mode
                 // descriptions and gerunds?
-                consolePrint("%s is on foot.\n", who);
+                log_msg("%s is on foot.", who);
         }
-        consolePrint("\n");
-    
+
+        log_end_group();
 
         /*
           Information reported shall include:
@@ -2271,25 +2283,24 @@ bool cmdTerraform(class Character * pc)
         palette = map->palette;
         terrain = palette_current_terrain(palette);
 
-        consolePrint("\n");
         // SAM: 
         // It would probably be better to set the upper-right 
         // "status window" to a new mode.
         // Then I could show the sprite for the current terrain, and so forth.
         // That is TODO later; I have not written a new status mode before.
         // First thing is to get the map editor working.
-        consolePrint("Terraform on map %s, palette %s\n"
-                     "Current terrain is %s '%s'\n",
-                     map->tag, palette->tag, 
-                     terrain->tag, terrain->name);
+        log_begin_group();
+        log_msg("Terraform on map %s, palette %s.", map->tag, palette->tag);
+        log_msg("Current terrain is %s '%s'.", terrain->tag, terrain->name);
 
-        DM_XRAY_look_at_XY(place,   // pc->getPlace(),  // SAM: caused SIGSEGV here.  Hmmm...I thought this was fixed.
-                           x,y, NULL);  // First look at the current tile
+        DM_XRAY_look_at_XY(place, x,y, NULL);  // First look at the current tile
 	if (terraform_cursor_func(x, y, &x, &y, 99,
                                   DM_XRAY_look_at_XY, terraform_XY,
                                   place) == -1) {
-                return false;
         }
+
+        log_end_group();
+
 	return true;
 } // cmdTerraform()
 
@@ -2335,7 +2346,7 @@ bool cmdSaveTerrainMap(class Character * pc)
         }
         palette_print(palette_fp, INITIAL_INDENTATION, palette);
         fclose(palette_fp);
-        consolePrint("Saved palette as '%s'.\n", palette_filename);
+        log_msg("Saved palette as '%s'.\n", palette_filename);
         printf("Saved palette as '%s'.\n", palette_filename);
 
         // And save the current map:
@@ -2349,7 +2360,7 @@ bool cmdSaveTerrainMap(class Character * pc)
         }
         terrain_map_print(map_fp, INITIAL_INDENTATION, map);
         fclose(map_fp);
-        consolePrint("Saved map as '%s'.\n", map_filename);
+        log_msg("Saved map as '%s'.\n", map_filename);
         printf("Saved map as '%s'.\n", map_filename);
 
 	return true;
@@ -2372,7 +2383,7 @@ void cmdZoomIn(void)
         if (pp) {
 
                 // If standing over a portal then enter it:
-                consolePrint("Enter-%s\n", pp->getName() );
+                log_msg("Enter-%s\n", pp->getName() );
                 player_party->enter_portal();
         } else if ((subplace = place_get_subplace(player_party->getPlace(),
                                                   player_party->getX(),
@@ -2380,7 +2391,7 @@ void cmdZoomIn(void)
 
                 // Standing over a subplace. Try to enter with no direction,
                 // this will prompt the player to provide a direction.
-                consolePrint("Enter-%s\n", subplace->name);
+                log_msg("Enter-%s\n", subplace->name);
                 player_party->try_to_enter_subplace_from_edge(subplace, 0, 0);
 
         } else if (!place_is_passable(player_party->getPlace(),
@@ -2399,30 +2410,30 @@ void cmdZoomIn(void)
                         place_get_terrain(player_party->getPlace(),
                                           player_party->getX(),
                                           player_party->getY() );
-                consolePrint("Enter-Cannot zoom-in to %s!\n", tt->name);
+                log_msg("Enter-Cannot zoom-in to %s!\n", tt->name);
         } else {
                 // If standing on ordinary terrain, zoom in:
                 struct terrain * tt = 
                         place_get_terrain(player_party->getPlace(),
                                           player_party->getX(),
                                           player_party->getY() );
-                consolePrint("Enter-%s\n", tt->name);
+                log_msg("Enter-%s\n", tt->name);
                 run_combat(false, 0, 0, NULL);
         }
 }
 
 void cmdQuickSave(void)
 {
-        consolePrint("Saving to %s...", QUICKSAVE_FNAME);
+        log_msg("Saving to %s...", QUICKSAVE_FNAME);
         consoleRepaint();
         session_save(QUICKSAVE_FNAME);
-        consolePrint("ok!\n");
+        log_msg("ok!\n");
         consoleRepaint();
 }
 
 void cmdReload(void)
 {
-        consolePrint("Loading from %s...", QUICKSAVE_FNAME);
+        log_msg("Loading from %s...", QUICKSAVE_FNAME);
         consoleRepaint();
         session_load(QUICKSAVE_FNAME);
         Session->reloaded = 1;
@@ -2443,11 +2454,11 @@ int ui_get_yes_no(char *name)
 	cmdwin_backspace(strlen("<Y/N>"));
 	if (yesno == 'y') {
 		cmdwin_print("yes");
-		consolePrint("%s: Yes\n", name);
+		log_msg("%s: Yes\n", name);
                 return 1;
 	} else {
 		cmdwin_print("no");
-		consolePrint("%s: No\n", name);
+		log_msg("%s: No\n", name);
                 return 0;
 	}
 }
@@ -2518,7 +2529,7 @@ static void buy(struct merchant *merch)
 		player_party->add((class ObjectType *) trade->data,
                                   quantity);
 		cmdwin_print("ok");
-		consolePrint("You buy %d %s%s for %d gold\n", quantity,
+		log_msg("You buy %d %s%s for %d gold\n", quantity,
 			     trade->name, quantity > 1 ? "s" : "", cost);
 		foogodRepaint();
 	}
@@ -2578,7 +2589,7 @@ static void sell(struct merchant *merch)
 	// Allocate the trade list.
 	trades = new struct trade_info[merch->n_trades];
 	if (!trades) {
-		consolePrint("%s: I don't need anything.\n", merch->name);
+		log_msg("%s: I don't need anything.\n", merch->name);
 		return;
 	}
 	// Fill out the list
@@ -2639,7 +2650,7 @@ static void sell(struct merchant *merch)
 		foogodRepaint();
 
 		cmdwin_print("ok");
-		consolePrint("You sell %d %s%s for %d gold\n", quantity,
+		log_msg("You sell %d %s%s for %d gold\n", quantity,
 			     trade->name, quantity > 1 ? "s" : "",
 			     quantity * trade->cost);
 

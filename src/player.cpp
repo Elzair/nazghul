@@ -44,6 +44,7 @@
 #include "formation.h"
 #include "ctrl.h"
 #include "session.h"
+#include "log.h"
 
 #include <unistd.h>
 #include <math.h>
@@ -268,10 +269,6 @@ bool player_party::turn_vehicle(void)
 	if (!vehicle || !vehicle->turn(dx, dy, &cost) || !vehicle->mustTurn())
 		return false;
 
-	cmdwin_print("Turn %s %s", vehicle->getName(), get_dir_str(dx, dy));
-	//cost *= getPlace()->scale;
-	//turnAdvance(cost);
-
 	return true;
 }
 
@@ -391,8 +388,6 @@ enum MoveResult player_party::try_to_enter_subplace_from_edge(
         assert(place_is_wilderness(getPlace()));
         assert(!place_is_wilderness(subplace));
 
-	cmdwin_print("enter %s", subplace->name);
-
         // --------------------------------------------------------------------
         // Entering a subplace REQUIRES a direction so I know which edge of the
         // subplace the party should enter from. If we don't have one then
@@ -400,7 +395,7 @@ enum MoveResult player_party::try_to_enter_subplace_from_edge(
         // --------------------------------------------------------------------
 
 	if (dx == 0 && dy == 0) {
-		cmdwin_print("-");
+		cmdwin_print("Enter-");
 		dir = ui_get_direction();
 	} else {
 		dir = vector_to_dir(dx, dy);
@@ -418,7 +413,6 @@ enum MoveResult player_party::try_to_enter_subplace_from_edge(
 	case SOUTHWEST:
 	case SOUTHEAST:
 	case HERE:
-		cmdwin_print("-direction not allowed!");
 		return NoDestination;
 	case SOUTH:
 		new_x = place_w(subplace) / 2;
@@ -466,11 +460,9 @@ enum MoveResult player_party::try_to_move_off_map(struct move_info * info)
         // See notes on the ship problem in discussion #1 of doc/GAME_RULES
 
         if (! info->place->location.place) {
-		cmdwin_print("-no place to go!");
                 return OffMap;
         }
 
-        cmdwin_print("-ok");
         relocate(info->place->location.place, 
                  info->place->location.x, 
                  info->place->location.y);
@@ -497,10 +489,6 @@ MoveResult player_party::move(int newdx, int newdy)
 	if (!teleport && turn_vehicle())
 		return ChangedFacing;
 
-	cmdwin_print("%s %s", teleport ? "teleport" :
-		     get_movement_description(),
-		     directionToString(vector_to_dir(dx, dy)));
-
 	// Check the consequences of moving to the target tile.
 	memset(&info, 0, sizeof(info));
 	info.place = getPlace();
@@ -517,7 +505,6 @@ MoveResult player_party::move(int newdx, int newdy)
 
 		// No complications. Update the turn counter based on player
 		// speed and terrain difficulties then move the player.
-		cmdwin_print("-ok");
 		relocate(info.place, info.x, info.y);
                 mv_cost = place_get_movement_cost(info.place, info.x, info.y, this);
                 if (vehicle)
@@ -539,26 +526,22 @@ MoveResult player_party::move(int newdx, int newdy)
         }
 
 	case move_off_map:
-		cmdwin_print("-exit place");
 		return try_to_move_off_map(&info);
 		return OffMap;
 
 	case move_occupied:
 		// Occupied by a friendly npc party. If they were unfriendly
 		// we'd be going into combat.
-		cmdwin_print("-occupied!");
 		return WasOccupied;
 
 	case move_impassable:
 		// Impassable terrain.
-		cmdwin_print("-impassable!");
 		return WasImpassable;
 
 
 	case move_enter_combat:
 		// Handle combat (possible multiple combats) until we're all
 		// done with them.
-		cmdwin_print("-attack!");
 		memset(&cinfo, 0, sizeof(cinfo));
 		cinfo.move = &info;
 
@@ -642,9 +625,9 @@ bool player_party::add(class ObjectType * type, int quantity)
 	if (!quantity)
 		return true;
 
-        consolePrint("You get ");
+        log_begin("You get ");
         type->describe(quantity);
-        consolePrint("\n");
+        log_end(NULL);
 
         return inventory->add(type, quantity);
 }
@@ -663,11 +646,9 @@ void player_party::enter_portal(void)
 	class Portal *portal;
 
 	cmdwin_clear();
-	cmdwin_print("Enter-");
 
 	portal = place_get_portal(Place, x, y);
 	if (!portal) {
-		cmdwin_print("nothing!");
 		return;
 	}
 
@@ -702,7 +683,6 @@ void player_party::exec(struct exec_context *context)
 
                 if (clock_alarm_is_expired(&wakeup_alarm)) {
                         endResting();
-                        cmdwin_print("rested!");
                 }
 
                 return;
@@ -931,25 +911,19 @@ void player_party::board_vehicle(void)
 	if (vehicle) {
 		vehicle->occupant = 0;
 		vehicle->relocate(getPlace(), getX(), getY());
-		cmdwin_print("Exit-%s", vehicle->getName());
 		vehicle = 0;
 		mapSetDirty();
-		//turnAdvance(1);
 		return;
 	}
 
 	vehicle = place_get_vehicle(Place, x, y);
 	if (!vehicle) {
-		cmdwin_print("Board-Nothing!");
 		return;
 	}
 
 	vehicle->occupant = this;
 	vehicle->remove();
-	// place_remove_vehicle(Place, vehicle);
-	cmdwin_print("Board-%s", vehicle->getName());
 	mapSetDirty();
-	//turnAdvance(1);
 }
 
 static bool check_if_leader(class Character * pc, void *data)
@@ -1116,7 +1090,7 @@ bool player_party::isVisible()
 
 void player_party::describe()
 {
-	consolePrint("the %s", getName());
+	log_continue("the %s", getName());
 }
 
 struct formation *player_party::get_formation()
@@ -1170,7 +1144,6 @@ void player_party::throw_out_of_bed()
 {
         assert(isResting());
         endResting();
-        cmdwin_print("thrown out!");
 }
 
 int player_party::getTurnCount()

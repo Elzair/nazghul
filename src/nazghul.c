@@ -38,6 +38,7 @@
 #include "map.h"
 #include "vmask.h"
 #include "status.h"
+#include "log.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -257,6 +258,8 @@ static void nazghul_init_internal_libs(void)
                         exit(-1);
                 }
         }
+
+        log_init();
 
 	if (useSound)
 		soundInit();

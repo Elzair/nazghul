@@ -34,6 +34,7 @@
 #include "Field.h"
 #include "vehicle.h"
 #include "session.h"
+#include "log.h"
 
 // #define DEBUG
 // #undef debug_h
@@ -1098,7 +1099,7 @@ struct terrain *place_get_terrain(struct place *place, int x, int y)
 static void place_describe_terrain(struct place *place, int x, int y)
 {
 	struct terrain *t = place_get_terrain(place, x, y);
-	consolePrint("%s", t->name);        
+	log_continue("%s", t->name);        
 }
 
 static int place_describe_objects(struct place *place, int x, int y, 
@@ -1135,7 +1136,7 @@ static int place_describe_objects(struct place *place, int x, int y,
                 // there are no objects on the tile, but I don't think the
                 // 'ands' and commas are correct if there are.
                 // ------------------------------------------------------------
-                consolePrint(" and the entrance to %s", tile->subplace->name);
+                log_continue(" and the entrance to %s", tile->subplace->name);
         }
 
 	list_for_each(&tile->objstack.list, l) {
@@ -1189,8 +1190,6 @@ static int place_describe_objects(struct place *place, int x, int y,
                         // Special case: don't describe the cursor
                         continue;
 
-                printf("%s\n", obj->getName());
-
 		if (prev_obj == NULL) {
 
                         // This is the first type of thing we need to
@@ -1212,9 +1211,9 @@ static int place_describe_objects(struct place *place, int x, int y,
                                         first_thing_listed = 0;
                                 } else {
                                         if (n_types == 1)
-                                                consolePrint(" and ");
+                                                log_continue(" and ");
                                         else
-                                                consolePrint(", ");
+                                                log_continue(", ");
                                 }
 
                                 prev_obj->describe();
@@ -1238,11 +1237,10 @@ static int place_describe_objects(struct place *place, int x, int y,
                          prev_obj->isShaded())) {
                 if (!first_thing_listed) {
                         if (n_types == 1)
-                                consolePrint(" and ");
+                                log_continue(" and ");
                         else
-                                consolePrint(", ");
+                                log_continue(", ");
                 }
-                printf("### %s\n", prev_obj->getName());
                 prev_obj->describe();
                 n_described++;
                 n_types--;
@@ -1251,9 +1249,9 @@ static int place_describe_objects(struct place *place, int x, int y,
         if (tile->vehicle && (tile->vehicle->isVisible() || Reveal || 
                               obj->isShaded())) {
                 if (n_types == 1)
-                        consolePrint(" and ");
+                        log_continue(" and ");
                 else
-                        consolePrint(", ");
+                        log_continue(", ");
                 tile->vehicle->describe();
                 n_described++;
                 n_types--;
@@ -1270,7 +1268,7 @@ void place_describe(struct place *place, int x, int y, int flags)
         WRAP_COORDS(place, x, y);
 
 	if (place_off_map(place, x, y)) {
-		consolePrint("nothing!");
+		log_continue("nothing!");
 		return;
 	}
         if (flags & PLACE_DESCRIBE_TERRAIN) {
@@ -1281,9 +1279,7 @@ void place_describe(struct place *place, int x, int y, int flags)
                 count += place_describe_objects(place, x, y, 
                                        (flags & PLACE_DESCRIBE_TERRAIN) == 0);
         if (!count)
-                consolePrint("nothing!\n");
-        else
-                consolePrint(".\n");
+                log_continue("nothing!");
 }
 
 void place_for_each_tile(struct place *place, 

@@ -1,5 +1,10 @@
 #!/bin/sh
 
+echo > failed
+
 for test in `cat list`; do
   ./testexec $test
+  if [ $? != 0 ]; then
+      echo $test >> failed
+      fi
 done

@@ -1,0 +1,86 @@
+You get a RPG
+
+
+
+Entering The Great Wild.
+
+Welcome to Nazghul version 0.2.0
+
+Terraform on map m_wilderness, palette pal_expanded.
+
+
+Current terrain is t_deep 'deep water'.
+
+At XY=(36,23) you see grass and the player party
+
+
+At XY=(37,23) you see forest
+
+At XY=(37,24) you see shoals
+
+At XY=(36,24) you see grass
+
+At XY=(35,24) you see grass
+
+[Next] terrain t_shallow 'shallow water'
+
+[Next] terrain t_shoals 'shoals'
+
+[Prev] terrain t_shallow 'shallow water'
+
+[Prev] terrain t_deep 'deep water'
+
+[First] terrain t_deep 'deep water'
+
+[Last] terrain t_trail_f 'trail'
+
+[Next] terrain t_deep 'deep water'
+
+[Quick 2] set to t_deep 'deep water'
+
+[Quick 2] t_deep 'deep water'
+
+At XY=(36,24) you see grass
+
+TERRAFORM put t_deep 'deep water' at XY=(36,24)
+
+
+
+
+At XY=(36,23) you see grass and the player party
+
+
+
+
+Enter-grass
+
+
+
+
+
+Thorald Greybeard is now party leader.
+
+Terraform on map tmp_combat_map, palette pal_expanded.
+
+
+Current terrain is t_deep 'deep water'.
+
+At XY=(9,15) you see grass and a human wizard
+
+At XY=(10,15) you see grass
+
+At XY=(10,16) you see grass and an yellow slime wizard
+
+
+At XY=(10,15) you see grass
+
+At XY=(10,14) you see grass
+
+
+
+Goodbye!
+
+
+
+
+

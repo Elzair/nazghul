@@ -28,7 +28,7 @@ BEGIN_DECL
 
 #include "list.h"
 #include "closure.h"
-#include <SDL/SDL.h>
+#include <SDL.h>
 
 struct phase {
         struct sprite *sprite;

@@ -49,6 +49,7 @@
 #include "session.h"
 #include "sprite.h"
 #include "mmode.h"
+#include "log.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -1354,14 +1355,14 @@ bool Character::isShaded()
 void Character::describe()
 {
 	if (isvowel(species->name[0]))
-		consolePrint("an ");
+		log_continue("an ");
 	else
-		consolePrint("a ");
-	consolePrint("%s", species->name);
+		log_continue("a ");
+	log_continue("%s", species->name);
         if (occ && occ->name)
-                consolePrint(" %s", occ->name);
+                log_continue(" %s", occ->name);
         if (!isVisible())
-                consolePrint(" (invisible)");
+                log_continue(" (invisible)");
 }
 
 char *Character::get_damage_sound()
@@ -1928,11 +1929,6 @@ void Character::exec(struct exec_context *context)
                         mapCenterCamera(getX(), getY());
                         mapUpdate(0);
                 }
-
-                cmdwin_clear();
-                cmdwin_print("%s:", getName());
-//                 consolePrint("\n%s: ", getName());
-//                 consoleRepaint();
 
                 /* Hand control over to the player */
                 ctrl(this);
