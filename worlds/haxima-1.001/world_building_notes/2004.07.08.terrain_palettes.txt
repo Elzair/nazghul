@@ -1,0 +1,306 @@
+---------------------------------------------------------------------------
+Notes on Terrain Palettes:
+--------------------------
+Fewer palettes are better than many, to avoid palette-merging and such
+when blitting two maps together.  However, the semantics of terrain on
+different scales calls for disjoint palettes.  
+
+Therefore, two Terrain Palettes are called for:
+one for Wilderness scale and one for Town scale. 
+
+Each palette will contain a disjoint set of terrain, appropriate to
+the scale.  Both palettes are probably width 3, to allow for the easy
+encoding of tide-transforming terrains and such.
+
+
+---------------------------------------------------------------------------
+Wilderness Scale Palette:
+-------------------------
+Terrain tiles at wilderness scale represent a large region, notionally
+about 1 mile square (1760 yards).  The town-scale "interior" maps of a
+wilderness tile are not this large, showing rather a region notionally
+somewhere within 
+
+This region contains a variety of terrain at town scale, but has a
+predominant terrain type which is displayed at wilderness scale and
+used to determine questions of wilderness-scale movement, LOS, terrain
+effects, and so forth.
+
+Medieval agriculture and population density meant that fields and
+cultivated land surrounded urban places in a radius of 5 to 10 miles
+(and thus 5 to 10 wilderness tiles).
+
+Linear terrain features such as roads and rivers affect the
+passability of entire tiles.  Having different movement ability / cost
+for North-South or West-East movement is not a feature of the current
+model or game engine.
+
+For this reason, it is possible for terrain tiles to be laid out in a
+manner which enables movement, but which is cosmetically wrong, such
+as a ship being able to sail from one river onto another which is
+placed adjacent with no non-river spaces between.  Correct usage of
+terrain whose image suggests not-entire-tile passability is the
+responsibility of the map creator.
+
+
+Wilderness Scale Movement Modes:
+--------------------------------
+Overland
+    * Walking   -- Most common
+    * Horseback -- Better movement costs, except over rough terrain
+      <other>
+      ...snake slithering?
+      ...walking over lava?
+
+By Sea
+    * Swimming
+...various modes, suitable for various depth/roughness of water...
+    * Sailing
+...various modes for different craft, suitable for various
+   depth/roughness of water...
+
+By Air
+    * Beast Flying (Low-altitude only)
+    * Beast Flying (High-altitude capable)
+...which beasts are willing to fly over the astral void?
+    * Flying (Balloon)
+    * Flying (Airship)
+      <others>
+
+
+Teleportation and Phasing
+    * Teleportation -- Destination must be passable to party
+    * Xorn Phasing  -- Move through solid rock terrain
+      Ghost Phasing -- 
+...cannot cross running water, cannot cross a threshold...
+      <others>
+
+Special/Other
+    * DM-Teleport -- Used by the game editor only
+                     Usable in "walk" mode 
+                     or as a "choose destination" teleport over distance
+                     No restrictions on destination passability
+
+
+Note on the Palette:
+--------------------
+It looks like I want:
+  - a LOS and LOS-blocking variant of most terrain types
+  - passable variants of generally impassable terrain
+  - for each effect-bearing terrain, 
+    different versions with varying intensity
+  - cosmetically-different (snow-covered) versions of terrain
+  - tidally-affected terrain variants (shard tilt and lunar tides)
+
+
+The Wilderness Scale Palette:
+-----------------------------
+Mountains
+  Mountain Peaks
+  Mountains (regular, forested, snow-covered)
+  Mountain pass -- passable by foot
+Hills
+  Hills (regular, forested)
+  Badlands (cliffs, mesas, and small canyons)
+Flat Ground
+  Grasslands
+  Grasslands (rolling ground) -- blocks LOS
+  Bushes
+  Bushes (dense) -- blocks LOS
+  Forest (light)
+  Forest (dense) -- blocks LOS
+  Tundra
+  Desert
+  Wasteland
+  Coast/shore (beach, rocky, etc, and tidal variants)
+Low Ground
+  Swamp (flooded/not, poisonous/not, ...)
+Water
+  Shallow Water
+  Deep Water
+  Oceanic Water
+Special Terrains
+  Lava
+  Acid Lake
+
+
+Terrain Attributes:
+-------------------
+Name
+Sprite
+-- the sprite can be standard, animated, or wave
+Passability
+LOS-blocking
+Effects(successful movement)
+-- effects on failed movement dont' exist yet
+
+
+Pmasks:
+-------
+(define pmask-solid   1)
+(define pmask-land    2)
+(define pmask-water   4)
+(define pmask-shoals  8)
+
+;; ...
+(define pmask-astral 16)  
+
+
+In Progress:
+------------
+terrains.scm  ;; The terrain definitions
+palette.scm   ;; The terrain palettes
+game.scm      ;; for Pmasks
+
+sprite-sets.scm
+sprites.scm
+
+species.scm
+occs.scm
+parties.scm
+
+
+
+
+---------------------------------------------------------------------------
+Town Scale Palette:
+-------------------
+Terrain tiles at town scale represent a small region, notionally about
+1 yard square.  This is enough space for a human to stand in and move
+about normally.  
+
+We presume that a cooperating being of this size can allow another to
+move through this space, or by not cooperating, bar passage.  On the
+same note, cooperating beings can perform "switch places" movement.
+
+Non-cooperating (and hostile) beings may resort to "push/shove" or
+a forcible "switch places" movement, which presumably invokes RPG
+mechanics for a test of (size + strength + skill).  This would
+generally be a provoking / hostile act.
+
+    (Note that this discussion refers to _theoretical_ capabilities
+    within the model of tiled space used here.  Whether in the initial
+    release we implement these various forms of movement depends on
+    interest + time.)
+
+We may allow smaller beings to multiply occupy the same tile, but do
+not allow human-sized beings to end movement in such a position.  An
+exception may be standing over a fallen/slain being, or carrying such
+a one.
+
+We ignore the question of wielding long two-handed weapons (swords,
+axes, spears) within this space without additional room.
+
+We ignore all questions of terrain on a finer scale, such as building
+walls less than a yard thick, with an "inside" and an "outside" side
+to the wall.  Since we do not make use of the Z axis in this release,
+climbing on walls is strictly a matter for special implementation at
+special places, rather than a general capability offered by the rules
+of space and movement.
+
+
+---------------------------------------------------------------------------
+
+And now, for a list of terrains, some of which we don't have.
+I have noted which ones we have, and in which tileset.
+
+The Wilderness Scale Terrain Palette: (tiles represent ~1x1 mile)
+-------------------------------------
+Mountains
+ Mountain Peaks -- like: peaks in U5 tileset
+ Mountains (regular, forested, snow-covered) -- have: regular in u4
+ Mountain pass -- should look good with a road/path over it
+Hills
+ Hills (regular, forested) -- have: regular in u4
+ Badlands (cliffs, mesas, and small canyons)
+Flat Ground
+ Grasslands       -- have: U4
+ Fields/croplands -- have: U5
+ Orchards
+ Bushes           -- have: U4
+ Forest           -- have: U4
+ Forest (conifer) -- can this be made to look good for the large scale?
+ Tundra
+ Desert     -- I think the U5 set has a desert tile?
+ Wasteland
+ Rocky ground -- we could use the existing hill tile
+Low Ground
+ Swamp (flooded/not, poisonous/not, ...) -- have: plain swamp in U4
+Water
+ Shallow Water -- have: u4
+ Deep Water    -- have: u4
+ Oceanic Water -- have: u4
+Special Terrains
+ Lava (wave)   -- have: u4
+     More kinds of lava would be nice, such as
+     dark/crusted (walkable?), red (liquid), yellow (even hotter liquid)
+ Acid Lake (wave or animated)
+ Boiling mud (animated)
+ Billowing Fog (animated)
+
+Features which go over other tiles:
+    (These are arranged in a grid like the roads I showed you,
+     with pieces for North-South, West-East, corners, T-intersection, plus-intersection, etc.)
+ Trail
+ Road  -- have: a very garish set in 'mine-32x32.png'
+ Crevasse / Chasm / Earthquake fault
+ Cliff Edge
+ Large-scale Wall (an array like for roads, used for something like Hadrian's wall or the Wall of China)
+
+Structures and such visible at large-scale:
+ Village      -- Have U4, U5
+ Town         -- Have U4, U5
+ Castle       -- Have U4, U5
+ Royal Castle -- Have U4, U5
+ Tower        -- Have U4, U5
+ Ruins        -- Have U4, U5
+ Shrine       -- Have U4, U5
+ Dungeon Entrance (various styles) -- Have U4, U5 (one style)
+     Styles/types wanted include:
+     Cave entrance (in hills, in mountain), Enchanted Forest Glade, Monster Den,
+     Mine entrance, collapsed entrance (have in U5), etc.
+ Monuments (obelisk, large pyramid, lesser pyramids in a group, stonehenge)
+ Sign      -- Have U5
+ Pier/Dock -- have U4, U5
+
+
+Small-Scale tiles:  (an area we have not surveyed in detail yet)
+------------------
+furniture, individual plants, signs with an icon (blacksmith, inn, chandler, ...)
+various objects (other than weapons, armor, wearable items, scrolls, potions, etc)
+many more...
+
+
+---------------------------------------------------------------------------
+
+...
+
+---------------------------------------------------------------------------
+Small-Scale Terrain
+-------------------
+(most/all large-scale terrain types, but with small-scale semantics)
+
+tree (fruiting, deciduous, conifer, dead)
+tilled earth
+crops
+
+
+
+
+---------------------------------------------------------------------------
+Small-Scale Terrain Features
+----------------------------
+path
+cobblestones
+wood floor / deck (see also Ship-buliding terrain/features)
+
+
+
+---------------------------------------------------------------------------
+Ship-building Terrain/Features
+------------------------------
+
+
+
+
+---------------------------------------------------------------------------

@@ -1,0 +1,229 @@
+---------------------------------------------------------------------------
+
+Tiles needed list
+Specify more Portraits
+
+wilderness scale  Terrain Palette
+town scale        Terrain Palette
+
+Draw world map sketch
+sketch start area, start town, other places
+
+
+---------------------------------------------------------------------------
+
+World Map Planning
+------------------
+TODO: Get a PNG of the map I have drawn up.
+
+Start area is in the north center of a NW shard peninsula in the SW of
+the world shard.  Said peninsula is NW of a sea.
+
+The greater shard peninsula extends far to the W.
+To the E of the start are peninsula is a region of land bordered on
+the E by a high mountain range.
+
+The high E mountain range, and difficult sea conditions to the far E,
+form the E boundary of the game area.
+
+Consider a "screen" to be 16x16 tiles.
+Consider a "big block" to be 6x6 screens.
+
+The game area is 8x5 big blocks, or 48x30 screens.
+
+With a border region 9 tiles wide on N,S,E,W (so that off-map never
+need be displayed for the Wilderness), the size in tiles is
+
+Width  = (screens_wide * 16) + 18
+Height = (screens_tall * 16) + 18
+
+Therefore, the Wilderness map for the whole game area 
+is about 786x498 tiles in size. 
+
+For comparison:
+    The Ultima IV, V wilderness is 256x256 tiles.
+    A town map in Ultima IV is 64x64 tiles.
+
+An area 2x2 "big blocks" in size is 32x32 tiles
+An area 6x6 "big blocks" in size (like the start area) 
+is 102x102 tiles, which is ~1/5 the size of the Ultima IV wilderness.
+
+
+TODO: 
+Write a script to print a skeletal map.scm with each screen
+region (16x16) filled with an appropriate fill terrain (thus providing
+a very blocky, rough starting point for continent outlines) and offset
+by an origin of 9,9 to allow for the border region.
+
+Once this script is invoked, I can feed it a continent describer file
+(essentially a small map, where each tile is a 16x16 region of fill
+terrain), and create a blank blocky map of the continent.
+
+Then, I can load that into Nazghul and use the Terrain Editor mode to
+create the actual world map.
+
+
+---------------------------------------------------------------------------
+
+Idea:
+-----
+Major "seasonal" tides derive from the tilting of the shard.
+
+Imagine the shard as a circular disk with a center point.
+
+An imaginary giant marble follows a track on the outside rim of the
+disk, depressing the disk slightly on the center point axis as it does
+so.  Let us suppose it travels clockwise.
+
+On the "away" side of the disk, water runs downhill towards the far
+side where the marble is.  This means that some water terrain will be
+less deep, or exposed as dry land.  This also means that some edge
+terrain bordering a sea will be land rather than
+shard-edge-waterfall. 
+
+On the "near marble" side of the disk, water levels are higher due to
+this, meaning that some land terrains which are notionally lower
+elevation will be flooded (water terrain of some depth), and some edge
+terrain will be waterfall-going-over-shard-edge rather than land.
+
+The sides of the disk between those points will have water levels
+between these two extremes.
+
+This may be implemented by SEASON_CHANGE signals which cause terrain
+to change like:
+
+Seasons:
+    1 Shard_W_down
+    2 Shard_N_down
+    3 Shard_E_down
+    4 Shard_S_down
+
+Define 4 Terrains for each affected Terrain type:
+    t_<something>_shard_W_down
+    t_<something>_shard_N_down
+    t_<something>_shard_E_down
+    t_<something>_shard_S_down
+
+When a SEASON_CHANGE_<what_season> signal is sent, a block is executed
+which swaps terrain (A --> B --> C --> D --> A).
+This may require a "placeholder" terrain, so that the block would look
+something like:
+    D --> placeholder
+    C --> D
+    B --> C
+    A --> B
+    placeholder --> A
+
+
+Idea:
+-----
+Minor "lunar" tides derive from the pull of (the closest) lunar body
+on the water.  On a daily (or whatever the orbit is) cycle, lesser
+tides occur, mainly on small-scale maps.
+
+This may be implemented like the "seasonal" tides, and even in
+combination with same.  If both types of tides could affect the same
+map, it would be needful to define (M * N) Terrain types per affected
+terrain, with M seasons and N lunar tide states.
+
+
+Idea:
+-----
+In the UnderEarth, one or more illuminating principles on different
+cycles lead to various degrees of illumination in certain caverns.
+
+For instance, a Red and Green principle (mana current), on say 3-day
+and 7-day cycles of waxing and waning would provide illumination from
+(max red, max green) to (max red, min green) to (min red, max green)
+to (min red, min green) at various times in the cycles.
+
+Such illumination would provide the "base illumination" for many large
+open caverns, and any caverns whose ceilings notionally contain
+crystals attuned to the Red and/or Green illuminating principles.
+
+This can be implemented with the Astronomy / Weather code.
+
+
+---------------------------------------------------------------------------
+
+World Map continental outline:
+
+The game area is 8x5 "big blocks", each 6x6 screens of 16x16 tiles.
+The "start region" is at big block 5,2 (zero-based).
+The "start area" within that region is at screen 3,2 (zero-based).
+
+Within the "start area" screen, at the right X,Y and without
+LOS-blocking terrain, one could see the entry moongate and the start
+town on-screen at the same time.
+    (The leftmost 'T' in the map below is the start area.)
+
+Palette:
+`  Astral Void
+^  Mountains
+.  Grasslands
+~  Sea
+T  Forest
+
+
+                                                        //
+`````` `````` `````` `````` `````` `````` `````` `````` 
+`````` `````` `````` `````` ````^^ `````` `````` `````` 
+`````` `````` ``^^^` ``^``` ````^^ `````` `````` `````` 
+`````` `````` `^^^^^ `````` `````` `````` `````` `````` 
+`````` `````` `^^^^^ `^```` `````` `````` `````` `````` 
+`````` `````` ``^^`` `````` `````` `````` `````` `````^ 
+                                                        //
+`````` `````` `````` `````` `````` `````` `````` ```^^^ 
+`````` `````` `````` `````` `````` `````` `````` .^.^^^ 
+`````` `````` `````` `````` `````` `````` `````` .^...^ 
+`````` `````` `````` `````` `````` `````` `````` ..^..^ 
+`````` `````` `````` `````` `````` `````` `````` ..^..^ 
+`````` `````` `````` `````` `````` `````` `````` ^^^.^^ 
+                                                        //
+`````` `````` `````` `````` `````` `^^^^` `````` ^^..^^ 
+`````` `````` `````` `````` `````` ^^^^^` ```^^^ ^....^ 
+`````` ```^`` `````` `````` `````` ^^TT^^ ~~~^.. ...^^^ 
+`````` `^^^^^ ^````` `````` ``^``` `^^~~~ ~~~... ..^.^^ 
+`````` ^^^^^^ ^^^^`` ``^^`` `^^^^` `^^..^ ~~~... .^...^ 
+```^^^ ^^^^^^ ^^^^^^ ^^^^^^ ^^^^^^ ^^^^^^ ~~~~~. ....~^ 
+                                                        //
+^^^^^^ ^^^^^^ ^^^^^^ ^..... ...^.. ~..... ~~~~~. ...~~~ 
+````^^ ^^^^^^ ^````^ ^^^^^^ ^~~... ~~~~~~ ~~~~~~ ~~~~~~ 
+`````` ``^^`` `````` ````^^ .~~~~~ ~~.^~~ ~~~~~~ ~~~~~~ 
+`````` `````` `````` ```^^^ ^.~~.. ..^^~~ ~~~~~~ ~~^~~~ 
+`````` `````` ```^^^ ^^^^^^ ^^^^^^ ^^^^^^ ^~^... .^^^^^ 
+`````` `````` `^^^^^ ^^^^^^ `````` ``^^^^ ^^^^^^ ^^^^^^ 
+                                                        //
+`````` `````^ `````` ^^^^^` `````` `^^^^^ `^^^^^ ^^`^^^ 
+`````` `^^^^` `````` `````` `````^ ^^^^`` ``^``` ````^` 
+`````` `^^^`` `````` `````` `````^ ^^```` `````` `````` 
+`````` ^^```^ ^````` `````` `````^ ^````` `````` `````` 
+`````` `````^ ^````` `````` `````^ `````` `````` `````` 
+`````` `````` `````` `````` `````` `````` `````` `````` 
+                                                        //
+
+
+`^^^^`
+^^^^^`
+^^TT^^
+`^.~~~
+`^^^^^
+^^^^^^
+
+......
+......
+......
+......
+......
+......
+
+......
+......
+......
+......
+......
+......
+
+
+
+---------------------------------------------------------------------------

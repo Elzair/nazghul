@@ -1,0 +1,441 @@
+---------------------------------------------------------------------------
+2004/03/28 (Sunday)
+---------------------------------------------------------------------------
+Character Advancement Paths
+    Warrior (Physical Combat, Warcraft, Leadership)
+    Rogue (Skills and Knowledge)
+    Wizard (Magical Prowess)
+    Wright (Creation and Use of Items)
+
+
+Each path has Major Archetypes which can be fulfilled.  These are
+character types which are highly advanced in skill and power.
+
+
+
+
+Warrior <-- "Basic Path"
+-------
+Warlord          <-- Major Archetypes
+Master of Blades <--
+
+
+Terminology
+-----------
+"path" is a sequence, not a node on a graph
+a "node" on a graph is called (choose a good name...)
+    profession, class, estate, station, title, job, career, ...
+
+
+NPC party members (main party, other than primary character)
+advance towards a _single_ Major Archetype; the player is
+less-than-fully in control of their advancement scheme.
+
+
+Some <nodes> are based upon personal prowess, some are social status,
+quest reward, etc.
+
+Hmmm...how about variants like:
+    "Master of Blades"        <-- status + prowess
+    "Called Master of Blades" <-- status only (NPCs think you are master)
+    "Secret Master of Blades" <-- prowess only (NPCs do not know your mastery)
+
+
+Each <node> has:
+    Name
+    Pre-requisites to attain
+    list/block of Effects
+
+Effects can be:
+    attribute mods
+    new abilities
+    other/special
+    can be "negative" effects (for balance, flavor, etc)
+and can be:
+    immediately acquired
+    made available for training/etc
+    fulfill 1/n prerequisites for ___
+
+
+Hmmm, the above makes me thing that <nodes> are very Mech-like.
+Is the analogy perfect?  Responds to (suitable) signals, actions occur
+on transitions???
+
+
+How to Attain:
+    Trained by NPC / quest / party member / book
+    Self study
+
+Attainment/Advancement Cost can be:
+    XP (various kinds)
+    Time
+    Money
+    Other
+
+
+
+
+
+
+---------------------------------------------------------------------------
+2004/03/31 (Tuesday)
+---------------------------------------------------------------------------
+
+The data structures representing the RPG system must answer various
+questions posed by the system (for its' internal purposes in executing
+game mechanics) and by the player (for UI purposes, so that the player
+can know what the game attributes are, for instance).
+
+An RPG system consists of:
+    <values>  quantities such as STR, HP, etc.
+              These can be primitive, composite, have random factors,
+              and so forth.
+    <>
+    ...
+
+Consider STR in Diablo II:
+    STR = (base STR) + (char points added to STR) + 
+          (bonuses from items) + (bonuses from skills) + ...
+
+This illustrates the general rule that an RPG <value> is determined by
+some composition of factors.  This is much like a formula in a
+spreadsheet cell.
+
+The UI requires more than just the end-result number, however.
+The game system, and/or the UI, may require arbitrary introspection of
+these factors which produce the <value>.  For example:
+    Rule says no more <char_points> to <STR> than <other_value>
+    -- This means the RPG system must be able to determine the
+       <char_points> spent, so that the limit may be enforced upon
+       character load/save, in the UI for character advancement, etc.
+
+    Character stats UI calls for display of total STR, and all the
+    factors which result in that total.  Further, mouseover of each
+    term should tell "why" that term exists.  For example:
+        STR (55) = (15 base) + (20 char points) + 
+                   (+15 for STR_spell_C) + (-5 for STR_curse_Z) +
+                   (+3 for magic belt) + (2 for moon_power(phase) ) +
+                   (+5 for elf_sword and you_are_elf)
+
+These requirements lead me to the following 
+objects / data structures + APIs:
+
+
+---------------------------------------------------------------------------
+
+<thing_that_produces_an_integer> :=
+    integer      |
+    RPG_value    |
+    dice_handful
+
+<integer> := 
+    (the usual)
+
+<dice_handful> :=
+    (a dice handful expression, evaluated each time 
+    its' value is asked for)
+
+    An <RPG_value> can be used to represent a <dice_handful>, 
+    for example:
+        2d10+2d6-1d4+3
+    by setting factors and rule appropriately:
+        (2,10, 2,6, -1,4, 1,3) and (A+B+C+D)
+    Hmmm...not quite...this would further require that rule understand
+    another primitive, the notion of a simple_die...
+
+
+RPG_value
+  data members:
+    owner   // Pointer to an object which "owns" this RPG_value
+            // for example, a sword with +STR owns a +STR RPG_value
+            // The object pointed to must conform to a protocol,
+            // implementing certain methods needed, such as name(),
+            // icon(), and I'm not sure what all else...
+    factors // List of 1 or more of <thing_that_produces_an_integer>
+    rule    // A formulae whose parameters are all from factors,
+            // like: (A + B - (C / D) * E)
+            // where A,B,C,D,E are the elements of factors
+
+  API:
+    value()   // Returns result of evaluating self.rule
+    owner()   // Returns self.owner
+    factors() // Returns self.factors
+    rule()    // Returns a printf-format-like string 
+              // based on self.rule, which can be used by UI code to
+              // figure out how to display the rule.
+              // 
+              // For example, (A + B - (C / D) * E) becomes
+              //     "('A' + 'B' - ('C' / 'D') * 'E')"
+              // The single tick (') is chosen so that traditional
+              // math, comparison, and boolean symbols are available
+              // for the formulae.
+              // 
+              // Based on this string, the UI can find out that space
+              // to render 5 figures (whose size/length can be found
+              // by querying their value) should be allocated in a
+              // display region, and the formula displayed.
+              // 
+              // Mouseover (or whatever) of each element in the
+              // formula shows mouseover text indicating the owner(),
+              // or acting as a link to the object (equipment item,
+              // character skill, buff/nerf effect, ...) which grants
+              // the factor.
+
+
+---------------------------------------------------------------------------
+
+Dynamic registration of factors:
+
+There is no "master" formula for all _possible_ factors contributing
+to an RPG_value.  As each "effect" is attached to a character (or to
+an object which is in turn attached to a character, etc), it calls
+some method to "register" that it is a factor altering an RPG_value.
+
+For example, if:
+    STR = (base + char_points_spent)
+and a +STR buff spell is cast, then this is registered with the
+character object.
+
+If the character equips a sword, and then the sword recieves a
++STR_of_wielder buff, then the buff is registered as an effect on the
+sword, and the +STR is in turn registered with the character object.
+
+If the character then unwields the sword, the +STR is un-registered.
+If the sword +STR_of_wielder buff expires / is dispelled, then the
+buff on the sword is unregistered with the sword object, and the +STR
+is unregistered with the character object, if applicable.
+
+
+--------------------------------------------------------------------------- 
+
+Character Advancement Paths
+    Warrior (Physical Combat, Warcraft, Leadership)
+    Rogue (Skills and Knowledge)
+    Wizard (Magical Prowess)
+    Wright (Creation and Use of Items)
+
+
+Each <node> has a core-to-path skill (or skill group) associated with
+it, and may be named after that skill or skill group.  For example,
+the Swordsman <node> is built around the sword skill group.
+
+Skills from other paths are often associated with a <node> of a
+particular path; there is considerable overlap.  For example, many
+Warrior path <nodes> grant access to Wright skills associated with
+(basic) weapon / armor maintenence, and to Rogue skills associated
+with (basic) first aid / medical skill + knowledge.
+
+
+--------------------------------------------------------------------------- 
+Warrior <nodes>
+    .
+
+
+Warrior-centric skills
+    Master of (weapon type)
+        sword (Swordsman)
+        axe
+        mace
+        spear (Spearman)
+        sling (Slinger)
+        bow   (Archer)
+        crossbow (Crossbowman)
+        boomerang
+    Armor/Shield use
+        unarmored fighting
+        light armor fighting
+        medium armor fighting
+        heavy armor fighting
+        (advanced types) armor fighting
+        (shield type) use
+    Practitioner of (fighting mode / style)
+        unarmed combat
+        unarmored, light blades
+        weapon + shield
+        2H weapon
+        dual blades
+        mounted combat, armored, chivalric weapons (Knight)
+        mounted combat, archery
+    Master of (warcraft skill)
+        leadership of men
+        siegecraft
+        animal handling, beast taming, animal empathy*
+        
+
+Related skills from other paths
+    Rogue
+        size up foe, evaluate self, feign weakness/toughness
+        scan/spot, listen, combat awareness, back attack defense
+        Woodcraft, survival, orienteering (ranger skills)
+        first aid / medical skills
+    Wizard
+        basic warcraft-oriented divination
+        basic morale/luck-oriented combat buffs and defenses,
+            particularly chants/blessings and weapon/armor runes
+        animal/beast empathy/attunement*
+    Wright
+        weapon / armour maintenence
+        blade poison use
+        alchemical fighting skills (hurled alchemical missiles)
+
+        
+--------------------------------------------------------------------------- 
+Rogue <nodes>
+    .
+
+
+Rogue-centric skills
+    perception
+        size up foe, evaluate self, feign strength/weakness
+        listen, scan/spot, search, smell/taste
+        combat awareness, back attack defense, 
+        detect ambush, danger sense / trap sense
+        find secret doors, find hidden mechanism, 
+        find hidden container, find hidden foe
+    stealth
+        sneak/hide, art of invisibility, distract
+        sneak attack, prepare ambush, escape, counter tracking
+        reduce party attraction (of patrols/wandering monsters)
+        conceal object(s) or (other) being(s)
+    physical/mental discipline
+        hold breath, resist alcohol, resist drugs, resist poison,
+        resist fatigue, resist interrogation, resist charm
+    manual dexterity
+        pick pockets / sleight of hand (prestidigitation), 
+        pick locks*, disarm mechanisms*, 
+        juggle, thrown weapons*, special attack maneuvers*,
+    bodily agility
+        dodge, parry*, tumble, special defensive maneuvers*
+        running, swimming, jumping, climbing
+        brachiation / swinging
+    knowledge
+        anatomy (per major type, with combat implications)
+        secret language: thieves' cant
+        secret language: trail signs
+    social
+        streetwise, lie, detect lie, haggle, bribe, fencing
+        gather information, interrogation
+        intimidation, bluff, trick, test of will, persuade, charm
+        resist (intimidate, bluff, trick, test, persuade, charm)
+        prestige (your type/group)
+        entertaining (method), musical skill (voice or instrument)
+
+
+Related skills from other paths
+    Warrior
+    Wizard
+    Wright
+
+
+--------------------------------------------------------------------------- 
+Wizard <nodes>
+    Necromancer
+    Summoner
+    Elementalist
+    Illusionist
+    Enchanter
+    Diviner
+    ...
+
+
+Wizard-centric skills (many are somewhat field-specific)
+    Major fields of Magic
+        Necromancy
+        Summoning
+        Elementalism
+        Illusion
+        Enchanting
+        Divination
+        ...
+    Knowledges
+        Magical theory (basic/general, each field, meta-magic)
+        planes, gates, and the ether
+        physics/mechanics*, metaphysics and philosophy
+        botany*, zoology*, anatomy*, geology*, 
+        ...many other fields of lore...
+    Skills
+        Wizard prestige (general), prestige (magical field)
+        field-specific social skills
+        magical item-creation and use skills*
+        secret language: (mage type)
+        secret language: (ancient/scholarly language)
+    Combat Prowess*
+        combat skills with (dagger/knife, staff, certain others)
+        combat skills with (touch spells, rays, blasts)
+        
+
+Related skills from other paths
+    Warrior
+        combat skills with (dagger/knife, staff, certain others)
+        combat skills with (touch spells, rays, blasts)
+    Rogue
+        .
+    Wright
+        paper making, scribing
+        craft wand, fennling
+        craft runes
+        alchemy, herbalism
+
+
+--------------------------------------------------------------------------- 
+Wright <nodes>
+    .
+
+Wright-specific skills
+    material-centric
+        stone
+        gems / crystals
+        wood
+        horn / bone
+        hides
+        cloth
+        clay / pottery / ceramic
+        metal (copper/tin, bronze, iron, steel, whitesmith, ...)
+    method-centric
+        carving / engraving
+        casting / moulding
+        smithing
+        construction / carpentry (earth, stone, wood)
+        ...
+        bowyer / fletcher
+        mechanical artisan (springs, gears, ...)
+        shipwright (rafts, boats, ships, skyskips)
+        chemist / alchemist (chemicals, potions)
+        scribe (runes, scrolls)
+        rune lore (weapon/armor runes, emplaced runes)
+        tatooing (personal runes, runes on hides)
+        ...
+    skills/knowledge of materials, gathering skills
+        agriculture (crops), arborist (trees and fruits)
+        herbalist (herbs)
+        zoology / anatomy (hides, organs)
+        minerology, gemology (ores, minerals, gems/cystals)
+        hydrology (water, aquatic flora/fauna)
+        aurology (air, winds, clouds)
+    skills of item use and knowledge
+        combat skill in use of (alchemical weapons)*
+        combat skill in used of (created weapon types)*
+        use armor (created types)*
+        scroll / rune use
+        wand use, fennling
+        enhanced herb/potion use
+        (various kinds of) item appraisal and identification
+        musical skill (instrument)*
+    social skills
+        haggling*, mercantile skill*, negotiate cost-plus contract
+        Wright prestige (general), (wright type) prestige
+        secret language: (wright type)
+
+
+Related skills from other paths
+    Warrior
+        combat skill in use of (created weapon types)
+        use armor (created types)
+    Rogue
+        .
+    Wizard
+        various enchanting skills/spells
+        spell knowledge for imbueing
+
+
+--------------------------------------------------------------------------- 

@@ -1,0 +1,366 @@
+---------------------------------------------------------------------------
+Notes on Conversations (2004/06/30)
+---------------------------------------------------------------------------
+
+Humans:
+-------
+Rural folk
+  Live apart from a community, self-sufficient
+Villagers
+  Live in a small community (typically no town wall)
+Townsfolk and City Dwellers
+  Live in a walled, defended community, specialized jobs
+Seafarers
+  Live / work on the sea
+Nomadic Folk
+  No fixed abode, continually move (typically on a pattern following
+  herd beasts or migrating wild game)
+Hermits
+  Live alone
+Merchants and Traders
+  Pedlars     -- travel with a pack or perhaps a beast of burden
+  Caravaneers -- travel in caravans
+  City-based  -- dwell in cities with warehouses
+Soldiers and Mercenaries
+Knights
+Nobility
+
+
+Brigands
+Pirates
+The Accursed
+Members of Secret Orders
+
+
+---------------------------------------------------------------------------
+
+Common Keywords (simple)
+
+(Look)
+(Hail)
+(Bye)
+
+Name
+Job
+Health
+Buy, Sell, Give, Beg
+purchase services (training, healing, transportation, ...)
+
+join
+
+
+
+Common Keywords (common knowledge)
+
+personal info about:
+  profession, duties, skills, fundamental tools of the trade
+  possessions, real property
+  likes and dislikes (people, food, other things)
+
+information about:
+  neighbors and relatives
+    name, profession, location
+
+  directions
+    where am I?
+    essential services (food, sleep, healing, ...)
+    a shop / merchant of a particular type
+    where can ____ be bought?
+
+  social status / caste / profession / loyalties
+    who is your lord / master?
+    what (public) groups do you profess membership in?
+    what is your status / rank?
+
+
+
+Common Keywords (tasks / demeanors)
+  scrutinize (is NPC lying?  more information available?)
+  barter (alter prices, buy/sell an atypical item)
+  persuade
+  threaten
+  trick (distract)
+  trick (get information)
+  insult
+  flirt / seduce
+  grovel / toady / flatter
+
+
+
+Conversation actions doable with a party member:
+  leave party: stay here
+  leave party: return to <some base>  -- such as an inn
+  leave party: return home            -- home of the character in question
+  converse (as with any character other than oneself)
+  change party order (initiative, deployment pattern, etc.)
+  buy/sell or get services at "party members" rates
+  ...
+
+
+
+Idea: Speaking in another language:
+    [word][word][word]  (place words in brackets or somesuch)
+
+
+
+
+
+
+
+
+
+---------------------------------------------------------------------------
+
+Orks
+  by Tribe
+  by Caste
+
+
+---------------------------------------------------------------------------
+Supporting API and Data Structures
+----------------------------------
+
+group
+being
+conversation
+topic
+datum
+
+A being hasa conversation
+A being belongs to 0+ groups
+
+A conversation has 0+ topics
+
+A group has 0+ members
+A group has 0+ topics
+
+(some relation exists between topics and groups)
+topics may have internal structure (and/or state?)
+
+
+---------------------------------------------------------------------------
+General Categories of Society:
+------------------------------
+Simple Folk
+    - These are folk who seek to live, in an often dangerous world.
+      Their skills and knowledge are of ordinary things.  They plant
+      and gather, herd and husband, that which is needful for life.
+      Most folk are simple folk.
+    - Simple folk are ruled by the Powerful.
+      They respect The Wise and shun The Accursed.
+
+Powerful Folk
+    - These are those who wield temporal power.  Whether warrior or
+      wizard -lord, master rogue or wright, they possess skill and
+      knowledge to gather power and hold it to themselves.
+    - The Powerful rule over simple folk.
+      The counsel of The Wise may be heeded or ignored.
+      The power of The Wise and The Accursed alike is sought to wield,
+      by threats or promise of reward, dealings or cozening.
+
+"The Wise" are those who know magic or arcane lore, and use it wisely.
+    - Their power is tempered by restraint, but runs deep.
+    - On occasion they provide counsel, but generally avoid temporal
+      entanglement with the Powerful.
+    - Simple folk may be timid towards their power, but on the whole
+      The Wise are respected by such.
+    - Powerful folk respect their power, but chafe that it cannot be
+      readily wielded for their purposes.
+    - The Wise are opposed to The Accursed.
+
+"The Accursed" are those who know magic, and use it wickedly.
+    - Their power knows only the restraint of what they will dare, and
+      what risks they may survive.  Potency is attained by zealous
+      striving, heeding not the cost.  The (various) costs they pay
+      would be considered precious by others, but deemed of no value
+      to The Accursed.
+    - Simple folk are fearful of their power, seeking to avoid
+      eldritch harm.  Given the chance, they would see The Accursed 
+      burn.
+    - Powerful folk note their power with envy and nervous caution,
+      sometimes seeking to bargain for its' wielding.
+    - The Accursed despise The Wise, and consider them fools.
+
+
+Movers and Shakers
+------------------
+"Warlordism and Piracy" is the watchword!
+
+
+Warlords
+    - These vie among one another for temporal power.
+      Sitting in strongholds, they muster strength and scheme, between
+      intervals of open war.  In the interim, spycraft and raiding
+      serve their ends.
+    - Generally, the term "Warlord" implies a single individual with
+      charisma and force of arms (a Warrior).  Individuals with other
+      skill paths (Wizard, Rogue, Wright) exist as Warlords however,
+      and in some regions, a political unit is ruled by multiple
+      persons acting as a Warlord in aggregate.  Rule by an
+      individual or by a group; each has distinct strengths and
+      weaknesses which will be relevant to the player navigating in /
+      contending with such forces.
+    - Each has a definite region of control, limited in conquest by
+      neighbors and/or geographical features which are impassable or
+      halt conquest by defensibility.
+    - Within these regions, knights and/or patrols of soldiers may be
+      met; though their "control"  includes wilderness regions from
+      which wild or monstrous creatures may wander.
+    - Outside of these regions, bandits in the pay of a warlord may
+      harass travellers or raid lightly settled places.  Spies and
+      agents seek to establish themselves in useful locations outside
+      these borders.
+    - On occasion (as scripted events, or due to AI deciding
+      conquest), a warlord may decide to venture forth in a band
+      himself, or muster an army for raid or conquest.  Unless
+      traveling by stealth, such a retinue will go forth in strength.
+
+    - There are various warlords, each with a particular region,
+      ambition, moral character (wants, dislikes, positive/negative
+      character traits) and so forth.
+    - Each cultural group may have one or more warlords; typically the
+      forces loyal to (as opposed to sujugated  by) a warlord are of a
+      single culture to which that one belongs.  Note however, that
+      among warlords are those who were once known as Wanderer...
+
+
+Bandits (minor)
+    - Small bands of outlaws (also known as "wolfs heads") survive by
+      banditry and foraging.  Sometimes they are employed by a
+      Warlord, serve a faction of The Accursed, or are recruited by
+      Pirates.
+    - Any group of bandits/outlaws which is sufficiently large or
+      well-established is properly considered a (lesser) Warlord
+      group, and as such would not be "minor".
+
+
+Pirates
+    - Well-established groups of pirates exist, with fortified lairs.
+      Such may be secret, or their location may be well-known.  
+    - Major piracy consists of the domination of a region of the seas,
+      blockading trade (or taking a heavy toll) and raiding coastal,
+      riverside, and nearby settlements.
+    - Pirates may be met in single ships (of various sizes) or in
+      groups.  Large groups represent a threat of significance similar
+      to an army, and are best avoided.
+    - Leadership of pirate groups varies from a single charismatic
+      leader to a group of co-equal captains.  Social order on board
+      ship (and back at port) varies from the despotic to the
+      anarchic.  The level of internal violence and internal social
+      stability varies from one group to another, ranging from the
+      chaotic and murderous to settled communities.
+    - Warlords whose primary power base is naval are of this type, and
+      may control multiple towns in addition to the (mandatory) home
+      port. 
+
+
+Pirates (minor)
+    - Minor piracy exists much as minor banditry exists.
+      Such may be independent sea-borne outlaws, or itinerant naval
+      bandits.  Major piracy is a form of Warlordism.
+
+
+Orc Tribes
+    - Multiple tribes of each of the cultural/ethnic types described
+      in (another document).
+    - While each has a characteristic terrain / manner of living,
+      exceptions to these patterns exist.  (Individuals, or entire
+      tribal groups.)
+    - In many (most?) places, Orc Tribes dwell apart from Humans,
+      conflict occurring on the borders between the groups, or as a
+      result of some movement / action of one faction or another.
+    - In other instances however, Orc Tribes (or individuals) dwell
+      quite close to Human habitation.  Instances of interspersed
+      settlement, or individuals dwelling in a foreign culture, exist
+      in quantity, but are somewhat the exception.
+    - Cross-breeding of Orc and Human is possible.  The progeny of
+      such a union exhibits traits favoring one parent or another.
+      There are no "half orcs", though folk may look for / percieve
+      human/orkish features and believe that such half folk exist.
+    - Further treatment of Orkish society (per tribe) is needed, in
+      particular to detail the character types (Warrior, Wizard,
+      Rogue, Wright) which exist among the different tribes and the
+      role they play in their societies.
+
+
+The Accursed (various groups lumped together by this title)
+    Necromancers (corrupt)
+    Diabolists
+    Disharmonic Summoners (? do these belong to this group ?)
+    ,
+
+Secretive Orders of Magi, Druids, and others of the Wise
+    Evokers   - philosophy: control planar apertures, be careful
+    Summoners - philosophy: open planar apertures!
+    Elementalists - p: wield the power of the elements, 
+                       with respect and restraint
+    Illusionists - p: perception is reality, change real<-->unreal
+    Necromancers - p: learn secrets of life and death, 
+                      wield this power with restraint
+    Enchanters - p: Learn Essence from the Mundane.
+                    Through Enchantment, clarify Existence.
+                    (Their magic enchants beings and objects.
+                    Charm Person, Glamer, Geas, enchanted weapons)
+    Druids - p: wisdom comes from nature, lead a simple life
+                (use no metal weapons / armor, live outside cities, ...)
+    Clerics
+        - These are attendants of shrines or ruins.
+        - They are few in number, and at best, recruit to 
+          replacement level (master --> 1 apprentice).
+        - Their ways are of the past, yet they hold ancient wisdom 
+          despite their ties to an earlier age.
+        p: Follow obscure maxims.  examples include:
+           "Knowledge is Destruction"
+           "Spirit is stronger than Flesh"
+           "Ether permeates All"
+
+Guilds of Merchants
+    - Merchants trade any/many goods, but divide themselves by the
+      manner of transport (land, ship, ...) and the character of the
+      movement of goods (bulky versus light, needful vs luxury, ...):
+
+    Grains (and other needful but bulky goods)
+    Cloth  (and other bulky but lucrative goods)
+    Spices (and other small, precious goods)
+
+Professional Orders
+    Smiths
+    Masons
+    Leatherworkers
+    Engineers (construct bridges, mills, large structures)
+    - artificiers are too few in number to form a guild? 
+      or perhaps only one guild, in the largest city (in the play area)
+
+Professional Orders (secretive)
+    Thieves' Guild (probably only one notable one, multiple minor groups)
+    Beggars
+    Spies
+    Assassins (at least one group, solitaries in certain places)
+
+Contemplative and Philosophical Movements
+    Manner of seeking: Pilgrims, Monks, Hermits
+    What is sought:    Various philosophies are followed
+
+Travelers (also known as Wanderers, Gypsies, Tinkers, ...)
+    - shard-wide, more than one ethnic group / culture is represented
+    - in the play area, perhaps only one such group
+    - social organization is very informal, 
+      but very tight relations within small groups
+
+
+---------------------------------------------------------------------------
+Meeting Notes 2004/07/08
+------------------------
+...
+
+Meetings will be weekly Thursdays for some weeks coming up
+
+My Deliverables for next meeting:
+- Terrain Palettes for Wilderness, Town Scale
+- RPG Combat System rules (numbers to be tuned later)
+
+
+
+
+
+---------------------------------------------------------------------------

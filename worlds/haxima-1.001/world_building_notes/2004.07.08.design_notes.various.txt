@@ -1,0 +1,342 @@
+---------------------------------------------------------------------------
+API stuff for Mechs, Spells, and so forth:
+---------------------------------------------------------------------------
+
+Here, I will describe various places in a game world, and interesting
+features (or occupants) therein which have a bearing on what we need
+for the Objects, State Machines, and Signals systems in Nazghul.
+
+
+---------------------------------------------------------------------------
+A Wilderness
+------------
+The wilderness has:
+- A SKY
+- Various TERRAIN
+- Various contained PLACES, with auto-enter or non-auto-enter portals
+- The player PARTY  -- see own section
+- a PEACEFUL_NPC_PARTY -- see own section
+- a combative MONSTER_PARTY -- see own section
+
+
+The Sky:
+--------
+- Has a SUN
+- Has a number of MOONS
+- Has some number of other ASTRONOMICAL_OBJECTS
+- Has weather, including WIND
+
+
+Sun, Moons, Astronomical objects:
+---------------------------------
+- Have a direction of movement, and a speed in degrees/hour or similar
+- May affect illumination, as the sun does
+  This may be by emitting signals when arc changes to a point
+  which would alter illumination.  (Probably more generaly than the
+  specific code used now.)  The existing implementation works, however.
+- May be defined as emitting SIGNALS under astronomically-significant
+  times or junctions.
+  - For example, the SUN sends signals at DAWN, NOON, DUSK, MIDNIGHT
+  - For example, a MOON sends signals at MOONRISE, PERHELION, MOONSET
+  - Also, signals for ECLIPSE (body_over, covering_body)
+    or CONJUNCTION (body1, body1_phase, body2, body2_phase, ...)
+    and similar will be wanted.
+
+Such signals can be used to control illumination, or to open/close
+moongates, grow herbs/mushrooms/crops, alter terrain (tides, magical
+areas), or whatever.
+
+Portable objects, spells, and so forth that "only work under the full
+moon" probably interrogate the moon themselves when invoked.
+
+
+Wind and other Weather:
+-----------------------
+Wind controls/effects movement in certain movement modes (flying,
+sailing).  Wind or water currents might be implemented as terrain
+force vectors, if we have such things.
+
+
+Interesting Terrain:
+--------------------
+- Terrain affects movement, in various modes.
+  This is probably representable as a 2D grid, 
+  where the axes are (movement_mode, terrain_type) 
+  and each cell is (0 = impassable, n = movement point cost)
+
+  A "standard cost" terrain, like GRASS for WALKING, costs a number of
+  movement points (MP) per tile which is evenly divisible various ways.
+  Six or twelve points would be a good choice.  This avoids fractions.
+  Larger scales (wilderness) cost proportionally more MP.
+
+  Terrains which offer easier going (ROAD for WALKING) or movement
+  modes (perhaps vehicles) which are faster (GRASS for HORSEBACK) cost
+  fewer MP than the "standard cost".  More difficult going costs more
+  MP.
+
+An example Passability/MP grid:
+-------------------------------
+        Walk / Ride / Creeping / Climb / Fly / Swim / Boat / Sail
+Grass      6   4  12   X   6   X   X   X
+Road       4   3  12   X   6   X   X   X
+Bridge     4   3  12   X   6   6   6   6
+Brush      9   6  12   X   6   X   X   X
+L.Forest  12  15  12   X  12   X   X   X
+H.Forest  18   X  12   X  12   X   X   X
+Hills     18  18  12  18  18   X   X   X
+Mountains  X   X   X  30   X   X   X   X
+Swamp     12  24  24   X   6  18   X   X
+P.Swamp   12* 24* 24*  X   6   6   X   X
+Shallow    X   X   X   X   6   6   X   X
+Deep       X   X   X   X   6   6*  6   6
+Oceanic    X   X   X   X   6   6*  6*  6
+Lava
+
+- 'X' denotes impassabililty
+- A number denotes how many MP are required
+  A larger than "standard" cost means that movement is to some degree
+  obstructed, or that additional time is spent moving around
+  obstacles, or some such.
+- Note that the terrains in this grid are all "large scale" terrains,
+  and different behavior on "small scale" similar terrain may apply.
+- A number followed by '*' indicates that an effect would be triggered
+  by such movement.
+
+
+Terrain and Effects:
+--------------------
+- Poisonous swamps (of various types) produce poisoning effects on
+  characters that move onto them via WALK or similar movement modes.
+  These vary in strength by the specific terrain type, expressed via
+  combinations of factors such as:
+  - max poison counter
+  - how much the poison counter increments per step
+  - with what frequency the poison counter turns into damage
+  Many other game script implementations could exist.
+
+- Lava and fire terrains cause burning damage, of varying degree.
+  Each terrain has a different damage value, which might be a variable
+  expression such as (2d6), or a composite value such as
+  Intensity: 3, Damage: 3d10+5  (Intensity is compared to strength of
+  protection vs fire to see if the protection is applied).
+  Other variations could exist.
+
+- Water could cause drowning damage to swimmers, depending on the
+  depth, turbulence, or remaining fatigue for the swimmer
+  (recharged at some rate once on land).
+  Water could also cause hull damage to small or frail watercraft, or
+  shallow water or reefs could cause hull damage to larger ships.
+
+- Some terrain may trigger an effect upon attempted (but failed)
+  movement, such as a reef or shore causing damage to a ship.
+  Hmmm...how about a ship pushed by wind or waves (current) into such
+  an obstacle?  Also, consider a spiked wall or thornbush, which
+  prevents movement and extracts some pain from the attempt.  We need
+  look no further than the behavior of Lava and Force Fields towards
+  failed movement, in Ultima III.
+
+
+
+Mechanism-like Terrains:
+------------------------
+Terrain "objects" are references to singleton objects (one for each
+terrain type), and as such are not "really" state machines.
+However, by changing one terrain for another when a code block is
+invoked by some signal, much the same effect can be had.
+Some things which could be accomplished via this technique are
+described here:
+
+- Seasonal variation of terrain (replacing forest/vegatation terrain
+  tiles with seasonal versions of each, changing a road or path to
+  a "muddy track" terrain during a wet season or after rainy weather.
+
+- Defining a few types of "beach" and "shallow" terrains which replace
+  one another depending on moon phases can provide the effect of
+  tides.  Defining more terrain types costs nothing to speak of, so
+  this technique should be simple and robust.
+
+- Wilderness-scale drawbridges or floodgates on rivers could be
+  implemented, with various control mechanisms.
+
+
+Interesting Terrain Features:
+-----------------------------
+Terrain "Features" are non-portable objects which sit on top of a
+terrain.  At Town Scale, features such as individual boulders, doors,
+portcullis, furniture, and so forth are typical examples.
+
+Terrain features at Wilderness Scale may include roads/paths (which
+might be implemented as Terrain instead), or other large-scale
+features visible at long range.  Examples are somewhat scarce, since
+recent decisions on Wilderness vs Town scale policies would indicate
+that features are primarily present on Town Scale.
+
+Ley Lines or a Mana Nexus/Plexus could be implemented as a Wilderness
+Scale terrain feature, or as a stenciled "zone".
+
+
+What Model for Wilderness Scale Wandering Monster Generation?
+-------------------------------------------------------------
+Do we just roll a chance per turn, then drop down a monster party
+completely randomly (on passable terrain)?
+
+Or do we want something more sophisticated.  Perhaps each terrain has
+a "danger" attribute and a table of associated terrain-appropriate
+monster party types.  When a monster is generated, a weighted
+probability determines which terrain type, then the location and
+monster party type generated.
+
+And/or, monster-generating mechanisms may cause monster parties to
+emerge from dungeon entrances, the middle of dangerous regions
+(mountains, swamp, forest) or the like at random intervals.
+
+We should keep as much of this out of the engine as possible, so that
+the script can implement arbitrary schemes at our leisure.  In that
+manner, it does not become a blocking item on our schedule once a
+straw-man placeholder is implemented in the game script.
+
+
+Contained Places and Their Portals:
+-----------------------------------
+Towns, Castles, Shrines, Dungeons, and so forth may be "contained" in
+a Wilderness scale Place.  The Wilderness Scale portal which connects
+the outside tile to the contained Place may be "auto enter" or not.
+
+It is definitely desired that such portals lead to a different
+destination (on the N,S,E,W edge of the Place) depending on the
+direction of approach/entrance (or the previous interior location, for
+cases of re-entry).
+
+
+What else is interesting in the Wilderness?
+Hmmm...I need to discuss Other Wildernesses, such as an Underworld.
+
+
+---------------------------------------------------------------------------
+A Farm
+------
+- Has some farmers
+- Has some domestic animals
+- Has some crops
+- Has one or more buildings
+- Has some structures/tools (terrain features),
+  such as a well
+
+
+Farmers:
+--------
+- Can converse, ideally sophisticated enough to talk about their
+  crops, neighbors, and so forth.
+- Have a schedule, including crop-production actions
+- Actually perform farm tasks which bring about crops
+
+
+Domestic Animals:
+-----------------
+Anything especially notable about them?
+Not sure how fast to replace them after butchering...
+
+
+Crops:
+------
+Mech-like terrain which cycle between (fallow, young, mature,
+harvested) as a result of cultivation/harvesting actions by PC or NPC
+action.
+
+
+Buildings:
+----------
+Map editor should be able to lay these out via stencil overlay; this
+would be a huge time-saver in world creation.
+
+
+Structures/Tools:
+-----------------
+- A well to get water, buckets to carry it, useful for crops, animals,
+  PC/NPC consumption.
+- Some kind of granary container or what have you to store 
+  harvested crops
+- Portable tools to perform cultivation/harvesting with
+  Some are usable as weapons (they are clumsy compared to war-specific
+  weapons, though) 
+
+
+
+
+---------------------------------------------------------------------------
+A Town
+------
+- shops
+- merchants
+  - of arms and armor
+  - of provisions, reagents, and other consumables
+  - of effect-bearing consumable items (potions, ...)
+  - of livestock/horses
+  - of vehicles
+  - of real estate
+
+- PC can own a house/shop, NPCs react accordingly
+- PC could perform burglary of a residence/shop
+- A prison/goal should exist
+- PC or NPC could be subjected to time in stocks/pillory
+- Various objects emit sound
+  - blacksmith working
+  - performing bard / jester
+  - fountain
+  - opening/closing portcullis
+
+
+
+
+
+
+
+
+---------------------------------------------------------------------------
+A Dungeon Chamber
+-----------------
+
+
+
+---------------------------------------------------------------------------
+A Shrine
+--------
+
+
+
+---------------------------------------------------------------------------
+The Adventuring Party
+---------------------
+
+
+
+---------------------------------------------------------------------------
+A single, complex/interesting NPC
+---------------------------------
+
+
+
+---------------------------------------------------------------------------
+A peaceful NPC party moving from point A to B in the wilderness
+---------------------------------------------------------------
+
+
+---------------------------------------------------------------------------
+A randomly-generated, wandering wilderness monster group
+--------------------------------------------------------
+
+
+
+---------------------------------------------------------------------------
+A player-controlled ship at sea
+-------------------------------
+
+
+
+---------------------------------------------------------------------------
+Using the map editing tools
+---------------------------
+
+
+
+---------------------------------------------------------------------------

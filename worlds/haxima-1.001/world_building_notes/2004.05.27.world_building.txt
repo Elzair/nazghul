@@ -1,0 +1,51 @@
+Places
+------
+
+Overall, this is a feudal society.
+
+Start place - a shrine, where every generation or so a moongate arises
+and a Wanderer emerges. Some foodstuffs and basic equipment left by
+(offering left at the shrine, perhaps). An low-key encounter or two
+nearby, and a friendly NPC nearby. 
+
+Cave near start - small cave, perhaps an animal cave.
+
+Dungeon to undersea passage with necropolis at other end - minor task
+to cross undersea that way.
+
+Start town - a humble farming village. Contains the basics: food,
+shelter and basic utensils. A spare bed. Most trading will be with
+townspeople as opposed to merchants, but there will be a
+blacksmith. There will also be an itinerant trader. An herbalist or
+goodwife or hedge-witch of some kind. Peasant class. At least one
+soldier home recuperating, training a militia. Can learn skills from
+blacksmith. Probably someone who knows *of* the thieves guild, though
+thieves aren't tolerated in general. At least one orc or half-orc as a
+slave or menial laborer. An old hermit in the woods nearby with some
+knowledge of magic.  Also a carpenter, hunters and
+fishers. Surrounding terrain is forest but cleared for fields. A
+palisade around the town or town center. Need a well in the town
+center. A headman who is one of the farmers. One modestly
+well-fortified building. This town is a fief of a lord who comes by
+every year or so.  An elderly (retired) sargeant watches over the
+lord's interest. Industries: small-game hunting in the fields and
+surrounding woods, wild foods like mushrooms, berries and perhaps tree
+fruit, fruit trees planted in-town, grain and vegetable
+crops. Chickens, pigs, goats sheep and a few cattle. No butcher shop
+necessary. There is a common brewery/drinking hall, a mill (a miller),
+a common granary and a bakery. A fishing pond. A
+woodcutter. Blacksmith can get pig-iron from traders. Someone who
+knows how to tan hides.
+
+Port town - a town on the border of a channel sea, where the player
+may buy passage as one possible means of getting to phase II.
+
+
+Magic System Requirements
+-------------------------
+
+Targeting system enhancements:
+
+Cone spells: specify arc first, then direction
+Splatter effect: show splatter radius as part of targeting cursor
+Bouncing betty targeting: specify sequence of targets for same spell

@@ -1,0 +1,959 @@
+---------------------------------------------------------------------------
+2004/02/19
+
+The engine is now at a point where we need a highly detailed design
+for the game to direct engine improvement efforts.
+
+Here are the design criteria and such.
+
+
+---------------------------------------------------------------------------
+Major Activities in the Game:
+-----------------------------
+Exploration
+
+Combat
+Use of Magic
+Use of Skills (various kinds)
+Creation and use of Items
+    These imply 4 major areas of character advancement:
+        Warrior
+        Wizard
+        Rogue
+        Wright
+
+Character Advancement
+    We desire that the player should always be motivated to see what
+    kind of advancement is possible just around the bend.
+
+    Some parts of the advancement tree(s) are initially visible, and
+    documented in the game documentation.  However, some parts are NOT
+    initially visible, and only become visible when certain
+    advancement choices are made, etc.
+
+Quests
+    Hand-coded content quests
+    Randomly generated quests
+        In general, we require that many/most elements in the game be
+        randomly generable (outdoors maps, town/dungeon carving, NPC
+        foe/townsman creation, etc.).  This is a valuable capability
+        which extends our content creation beyond our limited
+        manpower.  The success of NetHack and Diablo demonstrate the
+        value of randomly generated content.
+
+Trading
+    Weapons, armor, raw materials, ...
+    Even a simplistic NPC economy would be a very cool feature.
+
+Collection and Display of Stuff
+    Monster memory
+    Stats/Journal page displaying accomplishments
+        (Monster kills, titles, reputations, ...)
+    Home base with trophy display region
+
+Gladiatorial Combat Stuff
+    advancement of ranks
+    means of getting a grubstake
+    trying out party combinations in a sample combat
+    recruiting random or Named NPCs
+
+
+---------------------------------------------------------------------------
+
+Major Game Elements:
+--------------------
+Advancement Primarily by Career Paths
+    Membership / Titles gained, which grant one-time bonuses
+        and increased access to advancement trees.
+    Example:  Starting character chooses a very generic title from
+    (fighter, rogue, magician, wright) and later achieves titles/ranks
+    such as (Swordsman, Sword Master, Dragon Slayer, General, ...)
+    (Wizard of the Green, Necromancer's Apprentice, Adept, Arch-Mage, ...)
+    (Thief, Second-Story Man, Grifter, Thief Lord, ...)
+    (Alchemist's Apprentice, Master of the Alembic, Blade-Forger, ...)
+
+Exploration of Random, Temporarily-Available Regions
+
+Multiple Sentient Species
+    Humans, Uruk, Giants, ..., Undead, Dark Things Below, ...
+    Civilized, Tribal, Feral, historical dead groups
+
+Multiple Political/Tribal Entities
+    Tribes, Nations, Guilds and Societies
+
+Factional Alignments / Reputations
+
+NPC Memories and Attitude
+    PC knows NPC name, NPC knows PC name
+    Things that vary with attitude (prices, information, ...)
+    .
+
+Recruitment of NPC party members
+    Main focus is on the central character, but a party is likely
+
+
+---------------------------------------------------------------------------
+
+Things to Specify:
+------------------
+Detailed game maps (world, towns, dungeons)
+    Use of stencils and overlays over generated terrain
+
+RPG game mechanics, and detailed notes on implementation
+
+Advancement Trees with skills, attribute mods, special abilities
+
+Two Phases for some things to specify:
+    Initial list showing the breadth of things, so that it is known
+    what capabilities are needed to implement skills or whatever
+
+    Thorough and complete list so that media resources (art, sound,
+    etc) can be commissioned.
+
+Items
+    Armor, Weapons, Usable portable items
+
+Terrain
+    Movement types, costs, effects, visibility
+
+Terrain Features / Furniture
+
+Skills
+
+Spells
+
+Item Creation matrix
+    Weapon and Armor creation
+    Potions and consumables (alchemy)
+
+Vehicles
+
+Species
+    Sentient folk
+    Monsters
+    Animals
+
+
+---------------------------------------------------------------------------
+
+Major Questions:
+----------------
+Occupations are problematic
+    Monsters and most NPCs are simple
+    The character (and party members, major NPCs) use a more complex
+    system however.
+
+    Figure out what is needed for expressivity, and what is
+    implementable.
+
+Factory Classes vs Instance Classes:
+    NPC Party class to roll up a "gazer party"
+    vs data structures to represent the party, and the individuals in it
+
+Effects sytem in Terrain and Spell to use Effect Blocks
+
+
+---------------------------------------------------------------------------
+
+TODO: (My deliverables)
+-----
+Art proposal/bid materrials to give to artists.
+This should include:
+    Specifications for tile art (32x32 pixel, palette, PNG or whatever)
+    Examples of tile art
+    Guidelines for tile art (perspective, lighting, ...)
+
+    Proto-specifications for portrait art
+    ...
+
+    Proto-specifications for paperdoll art
+    ...
+
+    Stuff for sample submissions for other art
+    (wallpaper, concept art, graphics for WWW site, ...)
+
+
+See notes in 
+~/src/nazghnul/Media_for_Nazghul/media_requirements_for_artists.txt
+
+
+---------------------------------------------------------------------------
+Met with Gordon 2004/03/04 (Thursday) at the BSU library.
+
+Agenda:
+-------
+Plan world enough that each of us has places to design.
+Figure out how big the world is.
+Identify requirements implied by things we want for
+    Media
+    GhulScript / engine capabilities
+    RPG game system
+
+
+Folk (Humanoid, with a society)
+  Humans (multiple societies)
+  Orcs (multiple societies)
+  Giants are off-screen for volume 1 -- no multi-tile beings
+      A small giant (1x1 tile) would make sense
+
+Humanoid Creatures (no known society)
+  Goblins
+  Ogre / Oni
+  Trolls
+  Yeti / Sasquatch
+
+Domestic Animals
+  Horses (creature, for riding)
+  Cattle
+  Pigs
+  Sheep, Goats
+  Dogs, Cats
+  Fowl
+
+Wild Animals
+  Rats
+  Serpents
+  Wolves
+  Boars
+  Bears
+  Deer
+  Fowl
+  Falcons
+
+  Fish
+  Alligators
+  Sharks
+  Giant Clams
+
+Fantastic Creatures
+  Sea Serpents
+  Kraken
+  Nixies
+  Sea Horses
+
+  Slimes
+  Jellies
+  Mimics
+  Reapers
+  Gazers
+
+  Manticora
+  Hydrae
+  Wisps
+  Wyverns
+  Dragons
+
+  Dire Beasts (Elk, Boars, Wolves, Bears, Dire Bird, Alligator)
+  Giant Spiders (wolf spider, black widow)
+  Giant Scorpions
+
+The Undead
+  Skeletons
+  Zombies
+  Ghouls
+  Lichs
+  Ghosts
+  Spectres
+
+  Elementals (humanoid, non-humanoid) (earth, air, fire, water)
+
+Flora (Large Scale terrain)
+  Grasslands
+  Brush
+  Light trees
+  Large/heavy trees (conifer, deciduous, palms)
+  Swamplands
+
+Flora (small scale terrain feature)
+  one feature per terrain type (tree, bush, rock, ...)
+
+  grain crop
+  root crop
+  fruit trees (2+ types?)
+  mushrooms (multiple types, grows in forest / faerie circle / cave)
+  berry bush
+  grapevines
+  honey tree / beehive
+  strange herb (multiple types/colors)
+  slime/blob growths
+
+  kelp
+  clam bed
+  coral
+
+
+---------------------------------------------------------------------------
+Portrait Art and the Conversation UI:
+-------------------------------------
+We want to be ABLE to use a variety of existing portrait art from
+various sources.  For this reason, we ACCEPT a RANGE of sizes, and one
+can optionally specify a (width, height) to crop to.
+
+The conversation UI consists of "portrait regions" on the left and
+right sides of the screen, starting at the top.
+
+One or more portraits occupy each portrait stack on each side.
+
+The left side is for "them" (NPCs participating) and the right side is
+for "us" (party character initating conversation and other party
+members participating). 
+
+First, the screen (1024 x 768 pixels) has a 16 pixel frame on all four
+edges.  The left and right portrait stacks are 3 portrait regions
+each, coming down from the upper left and upper right corners.
+
+If fewer than 3 portrait regions are used in a portrait stack,
+the area below will display a neutral/blank color.
+
+A portrait region is:
+Height:  208 pixels
+    160 pixels high for the image 
+    plus 32 pixels high for 
+        name / title / other text associated with the portrait
+    plus a 16 pixel frame piece on the bottom.
+Width:  176 pixels
+    160 pixels wide for the image
+    plus a 16 pixel frame piece on the left/right
+
+Portrait images smaller than (160 x 160 pixels)
+will be centered along both dimensions.
+
+The center region will display interleaved conversation text,
+with each block marked as to what character said it (plus color
+coding), and the bottom center will show a text entry region for
+conversation responses.
+
+
+---------------------------------------------------------------------------
+Shopping/Inventory/Equipping UI:
+--------------------------------
+We designed shopping and inventory management UI.
+(Library closing soon, must type faster...)
+
+
+
+
+Private/Owned Items:
+--------------------
+We discussed many complex models for "private" character ownership of
+items or inventories.
+
+We decided that what is actually wanted (at this time) is the simple
+scheme of items having a field (usually empty) for "owner".
+
+The owned item can be equipped by that character, or un-equipped and
+in the party inventory, but no other character is allowed to equip it,
+or sell it, or drop it.
+
+If the character dies, the field is not cleared.  The field only takes
+effect if the character is alive???
+
+
+---------------------------------------------------------------------------
+
+Action Items:
+-------------
+Gordon anticipates having load and save code complete and working by
+next meeting!
+
+I will concentrate on 
+    More UI specs and thoughts (esp. inventory and shopping)
+    World design stuff
+    RPG system stuff
+    Objects and creatures in world
+
+
+---------------------------------------------------------------------------
+2004/04/05 (Friday)
+-------------------
+Global conversation geometry
+    Quests and such in the game mean conversation topics in the
+    root-level, which all will respond to, even if to say they don't
+    know.  But they will reply with a diffferent "I don't know" than
+    for a completely unknown topic.
+
+Multiple conversation replies
+    For a particular topic, multiple possible replies (random
+    selection).  This ensures variety of response.
+
+Adjective substitution in conversation texts
+    <player_title> <player_name> and similar...
+
+
+---------------------------------------------------------------------------
+2004/03/11 (Thursday)
+---------------------
+RPG mechanics must stress that this is a _tactical_ game.
+
+action points/round
+    do not vary from round to round, because
+    requirement:  predictable initiative order among the party
+
+action points saved in a fund for "push" actions (more AP needed in a
+round than ordinary) -- this would work like fatigue over a
+multi-round battle, as these points got used up...
+
+
+Monster attacks on town/castle
+    while player is present in that place (various timings)
+    while player is in the wilderness (probably within view)
+
+
+Character Types:
+    Summoner
+    Enchanter
+    Elementalist
+    Illusionist
+    Necromancer
+    ...
+    Druid
+    Ranger
+    Bard
+    ...
+    Alchemist
+    Scribe
+    Smith
+    Tinker
+    ...
+    (rogue types)
+    ...
+    (warrior types)
+
+
+Places Needed:
+    start location
+    small town near start location
+    larger, fortified town
+    fortified castle
+    port towns (multiple, else no destinations for sea voyage)
+    ...
+
+
+---------------------------------------------------------------------------
+Worn and Wielded Items
+----------------------
+
+
+Combat Forms
+------------
+Unarmed Combat (Natural Weapons)
+Melee Weapons
+Thrown Weapons
+Missile Weapons
+
+
+Primary Equipment Slots
+-----------------------
+Headgear / Helmets
+Neckwear / Amulets
+Clothing / Body Armour
+Gloves / Gauntlets
+Rings, Bracers
+Weapons / Shields
+Belts / Girdles
+Footwear / Boots
+
+
+Weapon and Damage Types
+-----------------------
+Weapon Form
+    Unarmed strike (fist, foot, sweep, throw, ...)
+      -- always available
+    Simple blunt (club, mace, 1H/2H)
+      -- cheap, easy to use
+    Simple blade (knife, dagger, sword, 1H/2H)
+      -- versatile, deadly
+    Axe (hatchet, battle axe, 1H/2H)
+      -- very powerful, break shields/weapons)
+    Pole Arm (short/long spear, halberd, glaive, ...)
+      -- long reach
+    Jointed/Flexible (flail, nunchaku, 3-piece staff, chain)
+      -- difficult to use, difficult to defend against
+         (can wrap around shields, ...)
+
+Damage Type
+    crushing
+    slashing
+    piercing
+    variable (warhammer can crush/pierce, ...)
+
+    disarming
+    damaging to weapon/shield (axe vs shield)
+    knockback, knockdown
+
+    element damage (fire, cold, electricity, acid/alkali)
+    (other forms of damage/effect)
+
+Melee Weapons
+-------------
+...as per notes on weapon types...
+
+
+Thrown/Missile Weapons
+--------------
+thrown rock (by hand)
+hurled rock (by sling, staff sling)
+hurled dart, javelin
+bow and arrow (self bows through recurve bows)
+crossbows (various weights and loading mechanisms)
+boomerang
+
+
+Alchemical Weapons
+------------------
+hurled flaming oil, alchemical frost, acid, poison
+  -- in addition to immediate damage, a damaging pool/cloud
+     may linger in the area for some rounds
+
+
+Other Weapons
+-------------
+attack spells
+magical wands
+fantastic natural attacks (such as by monsters)
+fantastic advanced technique attacks
+
+
+---------------------------------------------------------------------------
+
+vehicles/mounts
+    as passenger (can embark/disembark, movement along a route)
+    as driver/captain/rider (can move freely)
+
+
+---------------------------------------------------------------------------
+Basic Activities in the Game
+----------------------------
+These must be chosen for suitability on the following criteria:
+  - The activity would be fun to do in the game
+  - The activity can be implemented with a reasonable UI
+  - The activity does not require unusual amounts of engine support
+
+
+Basic Activities (very high level)
+----------------
+Exploration (on foot, by sea, by air)
+Combat (melee, missile, spells)
+Character Advancement (warrior, mage, rogue, artisan paths)
+Gather Valuables (find, buy, sell, trade)
+Converse with NPCs
+
+
+Basic Activities (more detailed view)
+----------------
+Exploration
+    On Foot
+        Land travel (foot, horse, etc) is the primary mode of travel.
+        It will be used exclusively at the beginning of the game, and
+        will containue to be a major means of travel at all stages of
+        the game.
+
+        Obstacles (visual, passability) require finding routes to
+        places, which increases the exploration density within a given
+        size region.
+
+        Obstacles include rivers (with bridges, fords, or ferry),
+        mountain range, swamp, lava, and chasms.
+
+        Another kind of obstacle is that of a dangerous region, where
+        the player discovers that movement past a certain radius of a
+        town, or within a guarded/dangerous region, is imperiled by
+        dangerous creatures.  Such an obstacle will require that the
+        player use superior tactics, improved battle prowess, stealth,
+        persistence + luck, or to find a special, safe route.
+
+        Advanced land travel (horses, caravan) does not increase the
+        type of terrain which can be travelled across (a solitary
+        wanderer or small group such as the party, on foot, can cross
+        more kinds of terrain than mounted groups or land vehicles).
+        However, travel by horseback is at increased speed, and travel
+        among a caravan (as a passenger, or leading the caravan and
+        directing its' travel) greatly decreases the threat of monster
+        encounters and night ambushes.
+
+    By Sea
+        Sea travel (raft, boat, ship, etc) is a major mode of travel.
+        Islands and continents are isolated by narrow or vast
+        stretches of water.  Solitary islands can only be discovered
+        by travelling the expanses of the oceans and seas.
+
+        Obstacles to water travel include reefs, strong currents,
+        regions with numerous dangerous creatures or weather phenomena
+        (whirlpools, twisters), wide landmasses, regions of polar ice,
+        regions of boiling sea (surrounding lava?), and the edge of
+        the world (or a vast chasm).
+
+        Water travel within a landmass (rivers, lakes) is also a
+        consideration.  Regions only accessible by inland river/lake
+        travel can be tantalizingly visible in earlier stages of the
+        game, promising a later reward.
+
+        Unlike land travel, water travel is initially unavailable and
+        access to vessels progresses from lesser to greater.  Lesser
+        vehicles (rafts, small boats) are available earlier in the
+        game than greater vehicles (ocean-sailing ships, and warships
+        with armaments).  Access to water travel as a passenger
+        (raft/ferry, hired boat, passage on a ship) is available
+        before ownership and captaincy of a vessel.
+
+    By Air
+        Air travel is the least common form of conventional travel,
+        with a limited role.  Balloons and airships exist, as well as
+        flying mounts, each with their limitations.
+
+        Balloons are difficult to control, their movement determined
+        by the wind.  They can however travel at a low or high
+        altitude, and can potentially travel to any place with a
+        suitable landing zone (flat terrain such as grasslands).
+
+        Airships can only land/dock at particular places, and are
+        restricted to high altitude travel elsewhere, perhaps on
+        specific routes.  If we develop inter-shard travel in a major
+        way, airships are probably the primary vehicles in the void
+        between shards.  If "high altitude" travel proves problematic
+        to handle in the game engine, we can restrict airships to
+        particular routes (commercial and for travel to/from specific
+        quest locations).
+
+        Flying mounts may exist, and can be directed against the wind
+        plus land on rougher terrain than a balloon.  However, they
+        have a limited stamina per flight and per day.  Flying mounts
+        will forcibly insist on landing before their per-trip stamina
+        is exhausted, and must rest overnight to recover per-day
+        stamina.  Stamina is consumed by flying, at an accelerated
+        rate flying crosswind and more so flying upwind.  Per-trip
+        stamina recovers at some rate per turn when landed and
+        resting.  Flying creatures which are not mounts presumably
+        experience stamina consumption, but without the additional
+        load/strain of carrying riders and cargo, concerns of stamina
+        are less limiting.
+
+    Magical / Gate Travel
+        Networks of magical portals and moongates allow nearly
+        instantaneous travel, and travel to unknown regions which may
+        belong to another dimension.  Access to this kind of travel is
+        gained by finding the portal locations, discovering how to
+        predict their destination, and activating individual portals.
+
+        Simple portal networks such as those in Diablo II require only
+        that the player discover each portal and "activate" them.
+        Particular portals may require a keyed object, such as the
+        portal scrolls in Divine Divinity.  Portals could also be
+        activated as a quest reward, by operating a mechanism, or by
+        casting a spell or ritual.
+
+        It will be desirable to have multiple portal networks, from
+        the trivial (a few within one dungeon) to the extensive (the
+        primary moongate system, comprising several to many portals
+        across continents).
+
+        Further, at least certain portal networks will have complex
+        patterns of use, keyed to time and the phases of astronomical
+        objects.  The use of one-way portals will add interest and
+        peril to such exploration.  A consistent nomenclature and
+        visual appearance for different portal types is necessary to
+        give clues and reward the player for learning about the game
+        world.  In this manner, the player will learn that certain
+        color portals behave in a particular way, portals surrounded
+        by a certain number of monoliths in another, and so forth.
+
+        Magical gate / portal travel is present from the earliest
+        phases of the game to the most advanced.  Mastering particular
+        portals networks and learning of entirely new systems of
+        portals represent significant player accomplishments.
+
+        Note that it is not desirable for gate travel to become
+        routine.  For this reason, portals should not be placed with
+        too great a convenience, and other elements should ensure that
+        portal travel stays novel and unusual.
+
+        I propose measures including randomness/danger/risk in portal
+        travel, and NPC / monster manipulation of the portal
+        networks.  In at least one point in the game, a conveniently-
+        placed portal (perhaps in the middle of a town) which has been
+        activated by the player should be the origin of a monster raid
+        on that town!  Further, scripted events in the game where a
+        portal is activated or deactivated by an NPC faction (friend
+        or foe, folk or monsters) have considerable potential.
+        Consider a "routine" gate journey ending up at an unknown and
+        dangerous destination because the intended destination portal
+        has been deactivated / re-routed by NPC actions...
+
+Combat
+    Tactical combat is a major game activity, and much of the game and
+    RPG system will be designed to ensure that it is entertaining and
+    challenging.
+
+    Movement and Maneuver
+        Combat in Nazghul is _tactical_, which means that movement and
+        maneuver, formation, etc are of key importance.  Melee /
+        missile combat considerations of reach/range are the most
+        obvious things affected, tactical considerations such as
+        surrounding foes, pursuit and being pursued must be considered
+        also.
+
+        One basic conclusion is that in a typical character's turn,
+        whatever the "Action Point" scheme, a character can either
+        move _multiple_ tiles, or move a single tile before/after a
+        combat action such as attacking or spellcasting.
+
+    Melee
+        The basic tactical elements in melee are 
+            attack vs defense vs damage
+                ability to choose "tactics" trading off 
+                to-hit accuracy vs defense vs damage
+            weapon selection
+                blunt vs edged vs piercing, reach weapons, 
+                weapon + shield vs 2 weapon style vs 2H weapon,
+                special weapon effects (flaming sword, trident vs fish)
+            reach
+                melee weapons with reach > 1 exist, and are key for
+                many formation ideas such as spearmen from the second
+                row attacking.  Also, consider "attacks of opportunity"
+                when rushing a spearman or similar.
+            special attacks / maneuvers
+                knockdown, disarming, sunder weapon/shield
+                many others are possible
+
+    Missile
+        The primary considerations are
+            range
+            accuracy vs damage
+            special attacks / maneuvers
+
+        UI display considerations require
+            8 (or 16 or 24) missile facings to show flight path
+
+            4 (or 8) character facings for an attack action with
+            missile weapon.  Thrown, sling, bow, crossbow attacks 
+            are different animations.
+
+            Weapons like a triple crossbow (fires 3 bolts at same
+            target or multiple targets near one another) need to be
+            provided for.
+
+            Boomerang requires that a _returning_ flight path also be
+            animated, and a "catch" animation.
+
+    Spells
+        The main ways spells are used in battle include
+            direct damage, single target (bolt / missile)
+            direct damage, area effect (beam / blast)
+            nerf / debuff foe (single or area)
+            buff / un-nerf ally (single or area)
+            alter terrain/feature for hazard or barrier
+            other special attacks (charm, confusion, sleep, turn undead)
+            summon allied creature
+
+    NPC allies in combat
+        These can be
+            mercenary party members
+            NPC bystanders
+            non-foe NPC combatants in an existing battle the party joined
+            beast allies of druid / ranger / etc, or a familiar
+            summoned creatures
+            controlled undead minions
+            charmed foes
+
+
+
+advancement
+    XP overall
+    XP per path
+    XP for specific skill
+        Cost to advance something like 3 for new skill, 
+        then 4, 5, 6 for rank 2, 3, 4...
+
+    XP over time
+    XP from actions taken
+    XP as a side effect of misfortune (learn from experience)
+
+
+
+
+
+
+---------------------------------------------------------------------------
+Necromancy
+----------
+spontaneous casting
+prepared (formulaic) casting
+ritual casting (long casting time, castable only outside of combat)
+
+create undead creature (permanent)
+summon undead creature (various durations)
+control undead creature (various durations)
+
+summon necro-associated or carrion-eating creature
+    carrion insects, snakes, scorpions, spiders,
+    ravens, buzzards
+ability: familiar bond with necro/carrion creature
+
+touch attack (touch, grip, claw, ...)
+ranged attach (bolt, ray, ...)
+area attack (cloud, aura, ...)
+    damage types include
+        life drain, nega-undeath (need a better term), mana drain
+        cold,
+        rotting, disease
+        fear effect, turn undead effect (like fear, for undead)
+        morale nerf (doom, hopelessness)
+
+        attribute damage (permanent until healed)
+        HP damage (permanent until healed)
+            pernicious damage (healing slowed or prevented)
+        attribute nerf (duration, depress value until duration/dispelled) 
+        attribute drain (drain is vampiric, caster/proxy gets a benefit)
+            physical attribute (STR/DEX/CON, ...)
+            mental attribute (INT/WIS/CHA, ...)
+
+        -- Some of these attack types are over-subtle for a CRPG
+           delineate which are suitable for CRPG use...
+
+Necromantic-oriented Divination
+...
+
+
+---------------------------------------------------------------------------
+Summoning
+---------
+Summoning is the art of using magic to call creatures from another
+place or another dimension.
+
+Contact Being (communication only)
+    useful to make a pact, or to gain information
+
+Summon Being (physically transport a being to a point near the caster)
+    useful for combat, to perform a task, or for subsequent binding
+    Summoned beings may be controlled, or not
+    The Summoning may be for a short time (combat rounds)
+        or for a modest time (hours or days)
+    Longer durations require a special pact, or a binding
+
+Call Being (call a being, who may transport himself)
+    you can Call beings too powerful to Summon
+
+Pact with Being (make some trade for some benefit)
+    can be used to enable future Summoning / Calling
+    can be used to enable long-term Summoning
+    can be used to gain powers from the Contacted being
+
+Bind Being (bind and coerce a being into servitude)
+    can be used to enable future Summoning / Calling
+    can be used to enable long-term or semi-permanent Summoning
+    can be used to gain powers from the Contacted being
+    can be used to coerce a Summoned being to inhabit a place, to
+        imbue that place with some effect 
+        (mana regeneration, light/darkness, many others)
+    can be used to coerce a Summoned being to inhabit a physical
+        object, to imbue that object with power
+        (some magical items are empowered by bound entities)
+
+Summoning/Planar-oriented Divination
+...
+
+
+---------------------------------------------------------------------------
+Major question of pacing and mood:
+
+How long to delay the player's discovery that the world is flat?
+By what means to delay this knowledge?
+
+
+---------------------------------------------------------------------------
+
+Met with Gordon 2004/03/18 (Thursday)
+
+Discussed the gmcnutt_scheme branch
+Discussed my notes, including much stuff regarding 
+initiative and UI, and character advancement
+
+
+Action Items:
+-------------
+I will make more notes in a similar vein to recent stuff.
+
+In particular, detail more character classes
+    Also, more detail on character classes and advancement
+
+Notes on spells, effects and such which are hard to implement
+    In particular, buffs and nerfs and "damage objects" which attach
+    to beings, objects, terrain, etc are interesting
+
+Info on the API invocable by spells/mechs/conversations and so forth
+    (Things like blit_terrain, ...)
+
+
+---------------------------------------------------------------------------
+Met with Justin 2004/03/21 (Sunday)
+
+Discussed current features and near-future additions.
+Discussed art needs and the scheme for art resource "fallback".
+
+Note: log the bug where solo mode character gets charmed and the party
+      sits inactive.
+
+
+---------------------------------------------------------------------------
+2004/03/28 (Sunday)
+
+Wrote up various notes (started notes_on_advancement_paths.txt).
+
+
+---------------------------------------------------------------------------
+2004/03/31 (Tuesday)
+
+Wrote much more material on advancement paths and skills.
+
+
+---------------------------------------------------------------------------
+2004/04/01 (Thursday)
+
+Met with Gordon.
+
+Discussed things I wrote up since last meeting
+1 genreal notes on advancement and <nodes>
+2 RPG_value data structures and introspection
+3 advancement paths and skills
+
+Discussed schedule and deliverables.
+
+My deliverables for next meeting are:
+    (mostly UI spec stuff)
+- Methods of user input
+- console model (paging, 8x16 fonts, colored text)
+- General conventions of usage and user feedback
+  (ESC, sounds, prompting, ...)
+
+- model for examination of objects (Xamine, detailed Xamine)
+  (character/object status browser stuff)
+- model for manipulating containers / inventory
+* portraits/conversation -- lower priority
+  (shopping is related to this and to inventory manipulation...)
+
+
+Gordon is working on:
+- rough draft of system design spec (program breakdown by function)
+  (top-down functional design)
+- kernal design spec 
+  (define how the C kernal and the script talk to one another)
+  
+
+Meeting after next (2004/04/29), we plan to be done with
+specifications, and engine coding can resume.
+Also, by that time, I shall endeavor to deliver an initial scope and
+schedule for the RPG system used in Nazghul.
+
+
+We discussed budget for media and so forth.
+Action item: contact the guy who made the really nice 32x32 Angband tiles.
+
+
+Worked on defining the basic command set, including new DM-mode
+editing commands.
+
+Gordon is sending me email with info on the latest dev branch and
+such.
+
+
+---------------------------------------------------------------------------
