@@ -235,11 +235,13 @@ void eventHandle(void)
 		case SDL_KEYDOWN:
 			{
 				struct KeyHandler *keyh;
+                int mapped_key;
 				keyh = getHandler(&KeyHandlers, struct KeyHandler);
                 // SAM: Adding the SDL key modifier as well...
+                mapped_key = mapKey(&event.key.keysym);
                 // printf("sym '%d' mod '%d'\n", event.key.keysym.sym, event.key.keysym.mod);
-				if (keyh && keyh->fx(keyh,
-                                     mapKey(&event.key.keysym), 
+                // printf("mapKey(%d) --> %d\n", event.key.keysym.sym, mapped_key);
+				if (keyh && keyh->fx(keyh, mapped_key, 
                                      event.key.keysym.mod))
 					done = true;
 			}
