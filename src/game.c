@@ -2276,7 +2276,7 @@ static class NpcPartyType *loadNpcPartySubType(char *tag, char *name,
       done:
         return type;
 }
-#endif
+#endif // 0
 
 static class FieldType *loadFieldSubType(char *tag, char *name,
                                          struct sprite *sprite)
@@ -2323,7 +2323,8 @@ static class SpellType *loadSpellSubType(char *tag, char *name,
       cleanup:
         return type;
 }
-#endif
+#endif // 0
+
 static class TrapType *loadTrapSubType(char *tag, char *name,
                                        struct sprite *sprite)
 {
