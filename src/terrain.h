@@ -44,23 +44,23 @@ extern "C" {
                 char *name;
                 struct sprite *sprite;
                 struct terrain_map *combat_map;
-                int id;
-                char glyph;
+                int id;      // Used for binary maps
+                char glyph;  // Obsolete now that terrain_palette exists
                 unsigned char alpha;
-                unsigned int pmask; /* passability mask (sea, air land) */
-		int movement_cost;	/* should not exceed
-					 * PLAYER_MAX_PROGRESS */
+                unsigned int pmask;  // passability mask (sea, air land)
+                int movement_cost;   // should not exceed PLAYER_MAX_PROGRESS
                 char effects;
                 int light;
                 Uint32 color;
         };
 
-	extern struct terrain *terrain_create(char *tag,
-                char *name, 
-                unsigned int pmask,
-                struct sprite *sprite, 
-                char glyph, 
-					      int id, unsigned char alpha);
+    extern struct terrain *terrain_create(char *tag,
+                                          char *name, 
+                                          unsigned int pmask,
+                                          struct sprite *sprite, 
+                                          char glyph, 
+                                          int  id, 
+                                          unsigned char alpha);
 
         extern void terrain_destroy(struct terrain *terrain);
 
