@@ -157,6 +157,7 @@ class NpcParty:public Object {
 	virtual void hit_by_ordnance(class OrdnanceType * ordnance);
 	virtual void relocate(struct place *place, int x, int y);
 	virtual struct formation *get_formation();
+        virtual void describe(int count);
 
 	struct list members;
 

@@ -4044,7 +4044,7 @@ MAP DarkPassage_Map {
       x x x x , , , x x , , , , , , , ~ ~ ~ ~ , , , x x x x x x x x x
       x x x x x , , , , , , , , , , , ~ , , , , , , x x x x x x x x x
       x x x x x x , , , , , , , , , , ~ , , , , , , x x x x x x x x x
-      x x x x x x x x x , , , , , , , = , , , , , , x x x x x x x x x
+      x x x x x x x x x , , , , , , , ~ , , , , , , x x x x x x x x x
       x x x x x x x x x , , , , , , , ~ , , , , , , x x x x x x x x x
       x x x x x x x x x x , , , , , , ~ , , , , , , , x x x x x x x x
       x x x x x x x x x x , , , , , ~ ~ , , , , , , , x x x x x x x x
@@ -4083,9 +4083,9 @@ portals {
   { object_type t_ladder_up; from_place DarkPassage_Place; from_x 3; from_y 3; to_place p_empire_city; to_x 38; to_y 25; auto_enter 0; } { object_type t_ladder_down; from_place p_empire_city; from_x 38; from_y 25; to_place DarkPassage_Place; to_x 3; to_y 3; auto_enter 0; };
 }
 player {
-  place p_prison_chamber;
+  place p_wilderness;
   x 28;
-  y 27;
+  y 16;
   sprite s_companion_wizard;
   speed 2;
   mv_desc Walk;

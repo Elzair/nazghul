@@ -569,13 +569,9 @@ unsigned int place_flying_distance(struct place *place,
 	int dx;
 	int dy;
 
-	if (place->wraps) {
-		dx = WRAP_DISTANCE(x1, x0, place->terrain_map->w);
-		dy = WRAP_DISTANCE(y1, y0, place->terrain_map->h);
-	} else {
-		dx = abs(x1 - x0);
-		dy = abs(y1 - y0);
-	}
+        place_get_direction_vector(place, x0, y0, x1, y1, &dx, &dy);
+        dx = abs(dx);
+        dy = abs(dy);
 
 	// This approx comes from the angband LOS source, and overestimates
 	// about one tile per fifteen tiles of distance.

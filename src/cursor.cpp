@@ -69,13 +69,12 @@ bool Cursor::move(int dx, int dy)
 	int newx = getX() + dx;
 	int newy = getY() + dy;
 
-	dx = newx - originX;
-	dy = newy - originY;
+        newx = place_wrap_x(getPlace(), newx);
+        newy = place_wrap_y(getPlace(), newy);
 
-	dx = (dx < 0) ? -dx : dx;
-	dy = (dy < 0) ? -dy : dy;
-
-	int d = ((dy > dx) ? (dy + (dx >> 1)) : (dx + (dy >> 1)));
+        // this works on wrapping maps
+        int d = place_flying_distance(getPlace(), originX, originY, newx, 
+                                      newy);
 
 	// Is the new location off the map?
 	if (place_off_map(getPlace(), newx, newy))

@@ -29,9 +29,9 @@
 
 player {
   
-  place p_prison_chamber;
+  place p_wilderness;
   x     28;
-  y     27;
+  y     14;
   
   sprite    s_companion_wizard;
   speed     2;

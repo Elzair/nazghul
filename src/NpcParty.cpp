@@ -1098,3 +1098,12 @@ struct formation *NpcParty::get_formation()
 		return vehicle->get_formation();
 	return getObjectType()->formation;
 }
+
+void NpcParty::describe(int count)
+{
+        Object::describe(count);
+        if (vehicle) {
+                consolePrint(" in ");
+                vehicle->describe(1);
+        }
+}
