@@ -36,6 +36,8 @@
   )
  )
 
+(load "ilya.scm")
+
 (kern-mk-place 'p_gregors_hut     ; tag
                "Gregor's Hut"     ; name
                s_hut              ; sprite
@@ -48,6 +50,11 @@
                nil ; neighbors
                ;;objects
                (list
+                
+                ;; characters
+                (list ch_ilya   15 15)
+
+                ;; mechanisms
                 (list (mk-door) 13 20)
                 (list (mk-door)  9 19)
                 (list (mk-door)  9 16)
@@ -55,6 +62,7 @@
                 (list (mk-door) 17 14)
                 (list (mk-door) 18 20)
                 (list (mk-bridge east) 25 26)
+
                 )
                nil ; hooks
                )
