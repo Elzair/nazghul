@@ -43,7 +43,7 @@
                  #t             ;; visible: can be seen
                  sound-damage   ;; damage sound
                  sound-walking  ;; walking sound
-                 'troll-killed  ;; on-death closure
+                 nil            ;; on-death closure
                  humanoid-slots ;; slots: hands
                  nil            ;; native spells: currently unused
                  )
