@@ -181,6 +181,7 @@ terrains  {
 
   TERRAIN(t_red_roses, "roses", LAND,  s_trees_red,   163, SEE, 1, 0, 0);
   TERRAIN(t_arrow_slit, "arrow slit", SOLID, s_arrow_slit, 154, SEE, 0, 0, 0);
+  TERRAIN(t_window_in_stone, "window", SOLID, s_window_in_stone, 0, SEE, 0, 0, 0);
         
 } /* terrains */
 
@@ -362,6 +363,7 @@ PALETTE pal_expanded {
 
         "d"    t_red_roses;
         "w+"   t_arrow_slit;
+        "ws"   t_window_in_stone;
 } // PALETTE pal_expanded
 
 
