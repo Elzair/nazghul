@@ -577,6 +577,7 @@
 
 (kern-mk-sprite 's_toy_horse            ss_features_2 1 22 #f 0)
 (kern-mk-sprite 's_gray_robed_humanoid  ss_features_2 2 24 #f 0)
+(kern-mk-sprite 's_colorful_bard        ss_features_2 2 26 #f 0)
 
 ; (kern-mk-sprite 's_counter_1x2_n   ss_features_1 1 4 #f 0)
 ; (kern-mk-sprite 's_counter_3x3_nw  ss_features_1 1 5 #f 0)
