@@ -728,6 +728,11 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
                 case 'r':
                         cmdReady(character);
                         break;
+                case 's':
+                        cmdSearch(character->getPlace(),
+                                  character->getX(),
+                                  character->getY());
+                        break;
                 case 't':
                         cmdTalk(character);
                         break;

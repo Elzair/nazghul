@@ -743,6 +743,7 @@ bool cmdOpen(class Character * pc)
 	container = (class Container *) place_get_object(Place, x, y, 
                                                          container_layer);
 	if (NULL == container) {
+                log_msg("Open - nothing there!");
 		return false;
 	}
 

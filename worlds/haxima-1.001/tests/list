@@ -33,3 +33,7 @@ char-get
 char-handle
 char-ready
 char-xamine-ztats-at-pass
+char-open
+char-search
+char-use
+char-talk
