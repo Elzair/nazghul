@@ -20,15 +20,18 @@
 ;; to the prison exit. Once it gets outside the cell it sets the "freed" flag
 ;; and resorts to the default kernel AI.
 ;;----------------------------------------------------------------------------
+(define (roland-exit-point knpc)
+  (mk-loc (kobj-place knpc)
+          (rect-x slimey-cavern-prison-cell-exit)
+          (rect-y slimey-cavern-prison-cell-exit)))
+
 (define (roland-ai knpc)
   (define (out-of-cell?)
     (not (loc-in-rect? (kern-obj-get-location knpc)
                        slimey-cavern-prison-cell)))
   (define (try-to-escape)
     (kern-log-enable #f)
-    (pathfind knpc (mk-loc (kobj-place knpc)
-                           (rect-x slimey-cavern-prison-cell-exit)
-                           (rect-y slimey-cavern-prison-cell-exit)))
+    (pathfind knpc (roland-exit-point knpc))
     (kern-log-enable #t))
   (define (set-free)
     (roland-set-free! knpc)
@@ -37,6 +40,10 @@
       (set-free knpc)
       (try-to-escape)))
 
+(define (roland-is-or-can-be-free? knpc)
+  (or (roland-is-free? knpc)
+      (can-pathfind? knpc (roland-exit-point knpc))))
+
 ;;----------------------------------------------------------------------------
 ;; Conv
 ;;
@@ -44,11 +51,17 @@
 ;; cave.
 ;;----------------------------------------------------------------------------
 (define (roland-join knpc kpc)
-  (if (roland-is-free? knpc)
+  (if (roland-is-or-can-be-free? knpc)
       ;; yes - will the player accept his continued allegiance to Froederick?
       (begin
-        (say knpc "I am honored to join you!")
-        (join-player knpc))
+        (say knpc "I have sworn fealty to Lord Froederick. "
+             "But if you swear not to raise your hand against him, "
+             "I will join you. What say you?")
+        (if (kern-conv-get-yes-no? kpc)
+            (begin
+              (say knpc "I am honored to join you!")
+              (join-player knpc))
+            (say knpc "[sadly] As you will. May our swords never cross.")))
       (say knpc "But I am locked in this cell!")))
 
 (define roland-conv

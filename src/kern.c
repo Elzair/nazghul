@@ -5485,9 +5485,7 @@ KERN_API_CALL(kern_obj_find_path)
         /* find the path */
         as_info.x0 = object->getX();
         as_info.y0 = object->getY();
-        printf("%d: begin pathfinding\n", SDL_GetTicks());
         path = place_find_path(place, &as_info, object);
-        printf("%d: end pathfinding\n", SDL_GetTicks());
         if (! path)
                 return sc->NIL;
 
