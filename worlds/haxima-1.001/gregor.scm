@@ -37,7 +37,7 @@
        ;; on the other hand, is a feature of the ifc mechanism (see ifc.scm).
        (method 'default (lambda (knpc kpc) (say knpc "Can't help you there.")))
        (method 'hail (lambda (knpc kpc) (say knpc "Welcome, Wanderer.")))
-       (method 'heal (lambda (knpc kpc) (say knpc "[cough] Well enough.")))
+       (method 'heal (lambda (knpc kpc) (say knpc "[cough] Well enough, my granddaughter helps take care of me.")))
        (method 'bye (lambda (knpc kpc) (say knpc "Yep.")))
        (method 'job (lambda (knpc kpc) (say knpc "I'm a charcoal burner. I also care for this shrine.")))
        (method 'join (lambda (knpc kpc) (say knpc "Nope. Already got a job.")))
@@ -71,7 +71,7 @@
                                              "These are hard times in a hard land.")))
        (method 'hill (lambda (knpc kpc) (say knpc "Trolls are always a threat in the foothills, "
                                              "but more so of late.")))
-       (method 'husb (lambda (knpc kpc) (sat knpc "My son-in-law was a simple farmer. "
+       (method 'husb (lambda (knpc kpc) (say knpc "My son-in-law was a simple farmer. "
                                              "Why the trolls attacked I don't know. "
                                              "Maybe they were driven out of the hills "
                                              "by something else.")))
