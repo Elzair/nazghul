@@ -29,6 +29,12 @@
 (define speed-insect       3)
 (define speed-ship         4)
 
+;; Action Points
+(define ap-to-use-scroll speed-human)
+
+;; Difficulty Classes
+(define dc-escape-ensnare 26)
+
 ;; Pmasks (keep them around until mechs are converted to use passability
 ;; classes (see below))
 (define pmask-none   0)
@@ -39,7 +45,7 @@
 (define pmask-bridge (+ pmask-land pmask-water pmask-shoals))
 (define pmask-all    (+ pmask-solid pmask-land pmask-water pmask-shoals))
 
-;; Difficulty levels (Note: 255 is well-known to the kernel to mean
+;; Passability Difficulty Levels (Note: 255 is well-known to the kernel to mean
 ;; "impassible" in the case of movement costs)
 (define veasy      1)
 (define easy       2)

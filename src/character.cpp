@@ -1151,9 +1151,6 @@ bool Character::initStock(struct species * species, struct occ * occ,
 		return false;
 	this->order = order;
 
-	str = species->str;
-	intl = species->intl;
-	dex = species->dex;
 	lvl = 1;		// fixme: hardcoded hack!
 
 	hp = getMaxHp();
@@ -2311,7 +2308,7 @@ void Character::save(struct save *save)
         save->write(save, "%s\n", this->occ ? this->occ->tag : "nil");
         save->write(save, "%s\n", this->sprite->tag);
         save->write(save, "%d\n", baseFaction);
-        save->write(save, "%d %d %d\n", this->getStrength(), 
+        save->write(save, "%d %d %d\n", str,
                     this->getIntelligence(), this->getDexterity());
         save->write(save, "%d %d\n", this->hp_mod, this->hp_mult);
         save->write(save, "%d %d\n", this->mp_mod, this->mp_mult);

@@ -161,6 +161,12 @@
   (foldr (lambda (x undead) (or x (eqv? species undead)))
          #f undead-species-tags))
 
+;; ----------------------------------------------------------------------------
+;; Species immune to the ensnare effect (all one of them right now)
+;; ----------------------------------------------------------------------------
+(define (species-is-immune-to-ensnare? species)
+  (eqv? species sp_spider))
+
 ;;----------------------------------------------------------------------------
 ;; This slime constructor attaches the native effects:
 ;;----------------------------------------------------------------------------

@@ -39,11 +39,24 @@
 ;; roll fails, the character loses all action points for the turn. If it
 ;; succeeds, the effect removes itself from the character.
 ;; ----------------------------------------------------------------------------
+(define (is-immune-to-ensnare? kchar)
+  (species-is-immune-to-ensnare? (kern-char-get-species kchar) sp_spider))
+
 (define (ensnare-exec fgob kchar)
-  (display "ensnare-exec")(newline)
-  (if (> (kern-char-get-strength kchar) (kern-dice-roll "1d20"))
-      (kern-obj-remove-effect kchar ef_ensnare)
-      (kern-obj-set-ap kchar 0)))
+  (display "ensnare-exec...")
+  (if (is-immune-to-ensnare? kchar)
+      (begin
+        (display "immune!")(newline))
+      (let ((d (kern-dice-roll "1d20"))
+            (s (kern-char-get-strength kchar)))
+        (display "die=")(display d)(display " s=")(display s)(display "...")
+        (if (> (+ s d) dc-escape-ensnare)
+            (begin
+              (display "free!")(newline)
+              (kern-obj-remove-effect kchar ef_ensnare))
+            (begin
+              (display "stuck")(newline)
+              (kern-obj-set-ap kchar 0))))))
 
 ;; ----------------------------------------------------------------------------
 ;; light

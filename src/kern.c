@@ -1712,6 +1712,7 @@ static pointer kern_obj_get_location(scheme *sc, pointer args)
         int x, y;
 
         if (!(obj = unpack_obj(sc, &args, "kern-obj-get-location"))) {
+                assert(false);
                 return sc->NIL;
         }
 
@@ -2493,7 +2494,7 @@ static pointer kern_obj_set_ap(scheme *sc, pointer args)
         class Object *obj;
         int ap;
 
-        if (unpack(sc, &args, "pb", &obj, &ap)) {
+        if (unpack(sc, &args, "pd", &obj, &ap)) {
                 rt_err("kern-obj-set-ap: bad args");
                 return sc->NIL;
         }
@@ -2503,7 +2504,7 @@ static pointer kern_obj_set_ap(scheme *sc, pointer args)
                 return sc->NIL;
         }
 
-        obj->setActionPoints(ap != 0);
+        obj->setActionPoints(0);
 
         return sc->NIL;
 }

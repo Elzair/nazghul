@@ -104,7 +104,8 @@
   (let* ((from (kern-obj-get-location caster))
          (to (kern-ui-target from range)))
     (if (not (null? to))
-        (kern-fire-missile missile from to))))
+        (kern-fire-missile missile from to))
+    to))
 
 (define (cast-field-spell caster field-type)
   (let ((coords (kern-ui-target (kern-obj-get-location caster) 1)))
@@ -281,7 +282,8 @@
           (else (let ((all-undead-combatants (filter is-undead-char? all-kobjs)))
                   (cond ((null? all-undead-combatants) 
                          (kern-print "No undead here!\n"))
-                        (else (map repel all-undead-combatants))))))))
+                        (else (map repel all-undead-combatants)))))))
+  #t) ;; always succeeds
 
 (define (in-wis kspell caster)
   (let ((loc (kern-obj-get-location caster)))
