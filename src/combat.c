@@ -2138,7 +2138,7 @@ static void overlay_map(struct terrain_map *map, struct position_info *pinfo)
 
         // Blit the rotated map centered on the given coordinates.
         terrain_map_blit(Place->terrain_map, x, y, map, 0, 0, map->w, map->h);
-        terrain_map_print(stdout, INITIAL_INDENTATION, Place->terrain_map);
+        // terrain_map_print(stdout, INITIAL_INDENTATION, Place->terrain_map);
 
         // Cleanup.
         terrain_map_destroy(map);
