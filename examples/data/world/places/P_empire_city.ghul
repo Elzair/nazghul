@@ -180,7 +180,7 @@ PLACE  p_empire_city {
     // castle mechs
     castle_drawbridge west_bridge           38 11 "lever up";
     mech_portcullis   castle_bay_portcullis 49 27 "lowered portcullis";
-    mech_B_lever      castle_bay_lever      56 26 "lever left";
+    mech_B_lever      castle_bay_lever      56 26 "lever right";
     CONNECT castle_bay_lever <=> castle_bay_portcullis;
 
     // shipwright mechs
