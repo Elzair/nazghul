@@ -5,3 +5,14 @@ Changes for nazghul-0.1.2
   town. So about 64 turns passed, and if any hostiles happened to be nearby you
   would immediately enter combat. Also spruced up the messages shown when
   firing and fixed the cannonball sprite (finally :-)) in the examples.
+
+--Fixed bugs related to playing a sound when damage is inflicted. Previously it
+  was a hardcoded hack that broke a while back when we split the data files
+  into their own directory. The fix was to add an optional 'damage_sound' field
+  to both the SPECIES and CHAR declarations. When a character receives damage
+  it will first check if it has its own special damage sound to play, otherwise
+  it will check if its species has a damage sound to play, otherwise it doesn't
+  play anything. This works in the case of damaging npc parties, too (for
+  example with ship cannons) because npc party damage calls the character
+  damage routines. In the examples I modified all species to play the old
+  traditional damage sound.

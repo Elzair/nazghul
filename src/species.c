@@ -172,14 +172,16 @@ struct species *speciesLoad(class Loader * loader)
 	    !loader->getInt(&species->spd) ||
 	    !loader->matchWord("vr") ||
 	    !loader->getInt(&species->vr) ||
-	    !loader->matchWord("pmask") || !loader->getBitmask(&species->pmask))
+	    !loader->matchWord("pmask") || 
+            !loader->getBitmask(&species->pmask))
 		goto fail;
 
 	if (!loader->matchWord("sleep_sprite") ||
 	    !loader->getWord(&stag) ||
-	    (strcmp(stag, "null") && !(species->sleep_sprite =
-				       (struct sprite *) loader->lookupTag(stag,
-									   SPRITE_ID))))
+	    (strcmp(stag, "null") && 
+             !(species->sleep_sprite =
+               (struct sprite *) loader->lookupTag(stag,
+                                                   SPRITE_ID))))
 	{
 		loader->setError("Invalid sprite tag '%s'", stag);
 		goto fail;
@@ -208,8 +210,21 @@ struct species *speciesLoad(class Loader * loader)
 	    !(species->spells = loadSpells(loader, &species->n_spells)))
 		goto fail;
 
-	if (!loader->matchToken('}'))
-		goto fail;
+        // Optional fields
+
+        while (!loader->matchToken('}')) {
+
+                // damage sound
+                if (loader->matchWord("damage_sound")) {
+                        if (!loader->getString(&species->damage_sound))
+                                goto fail;
+
+                } else {
+                        loader->setError("Error in SPECIES: unknown field "
+                                         "'%s'", loader->getLexeme());
+                        goto fail;
+                }
+	}
 
       done:
 	if (stag)

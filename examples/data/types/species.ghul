@@ -26,6 +26,7 @@
 #ifndef species_ghul
 #define species_ghul
 
+#define STD_DAMAGE_SOUND damage_sound "data/sounds/damage.wav"
 
 SPECIES human {
   name    "human";
@@ -53,6 +54,7 @@ SPECIES human {
   }
   spells {
   }
+  STD_DAMAGE_SOUND;
 }
 
 SPECIES goblin {
@@ -81,6 +83,7 @@ SPECIES goblin {
   }
   spells {
   }
+  STD_DAMAGE_SOUND;
 }
 
 SPECIES gazer {
@@ -111,6 +114,7 @@ SPECIES gazer {
     spell_sleep;
     spell_charm;
   }
+  STD_DAMAGE_SOUND;
 }
 
 SPECIES skeleton {
@@ -139,6 +143,7 @@ SPECIES skeleton {
   }
   spells {
   }
+  STD_DAMAGE_SOUND;
 }
 
 SPECIES snake {
@@ -159,6 +164,7 @@ SPECIES snake {
   spells {
     spell_poison;
   }
+  STD_DAMAGE_SOUND;
 }
 
 SPECIES insects {
@@ -178,6 +184,7 @@ SPECIES insects {
   }
   spells {
   }
+  STD_DAMAGE_SOUND;
 }
 
 SPECIES ghast {
@@ -205,6 +212,7 @@ SPECIES ghast {
   }
   spells {
   }
+  STD_DAMAGE_SOUND;
 }
 
 SPECIES nixie {
@@ -233,6 +241,7 @@ SPECIES nixie {
   spells {
     spell_magic_missile;
   }
+  STD_DAMAGE_SOUND;
 }
 
 

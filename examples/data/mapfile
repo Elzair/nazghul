@@ -2196,6 +2196,7 @@ SPECIES human {
   }
   spells {
   }
+  damage_sound "data/sounds/damage.wav";
 }
 SPECIES goblin {
   name "goblin";
@@ -2223,6 +2224,7 @@ SPECIES goblin {
   }
   spells {
   }
+  damage_sound "data/sounds/damage.wav";
 }
 SPECIES gazer {
   name "gazer";
@@ -2252,6 +2254,7 @@ SPECIES gazer {
     spell_sleep;
     spell_charm;
   }
+  damage_sound "data/sounds/damage.wav";
 }
 SPECIES skeleton {
   name "skeleton";
@@ -2279,6 +2282,7 @@ SPECIES skeleton {
   }
   spells {
   }
+  damage_sound "data/sounds/damage.wav";
 }
 SPECIES snake {
   name "snake";
@@ -2298,6 +2302,7 @@ SPECIES snake {
   spells {
     spell_poison;
   }
+  damage_sound "data/sounds/damage.wav";
 }
 SPECIES insects {
   name "insects";
@@ -2316,6 +2321,7 @@ SPECIES insects {
   }
   spells {
   }
+  damage_sound "data/sounds/damage.wav";
 }
 SPECIES ghast {
   name "ghast";
@@ -2342,6 +2348,7 @@ SPECIES ghast {
   }
   spells {
   }
+  damage_sound "data/sounds/damage.wav";
 }
 SPECIES nixie {
   name "nixie";
@@ -2369,6 +2376,7 @@ SPECIES nixie {
   spells {
     spell_magic_missile;
   }
+  damage_sound "data/sounds/damage.wav";
 }
 PARTY t_goblin_horde {
   name "horde of goblins";
@@ -2990,23 +2998,6 @@ CONV c_goblin {
     BYE r_goblin_farewell;
   }
 }
-CHAR ch_Olin_the_Ghast {
-        name "Olin";
-        species ghast;
-        occ fighter;
-        sprite s_ghost;
-        hp 30;
-        xp 0;
-        cond U;
-        str 100;
-        intl 100;
-        dex 100;
-        magic 100;
-        lvl 3;
-        conv null;
-        readied {
-        }
-}
 CHAR ch_Gen {
     name "Gen"
     species human
@@ -3048,10 +3039,10 @@ CHAR ch_Hawknoz {
     magic 200
     lvl 3
     conv c_Hawknoz
-    sched sched_Hawknoz
     readied {
         t_dagger
     }
+    sched sched_Hawknoz
 }
 CHAR ch_Joan {
     name "Joan"
@@ -3593,9 +3584,9 @@ CHAR Olin_the_Ghast {
         magic 150;
         lvl 9;
         conv Olins_Conv;
-        sched Olins_Sched;
         readied {
         }
+        sched Olins_Sched;
 }
 MAP m_empire_city {
         type ascii;

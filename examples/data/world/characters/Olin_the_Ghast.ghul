@@ -72,9 +72,9 @@ CHAR Olin_the_Ghast {
         magic     150;
         lvl       9;
         conv      Olins_Conv;
-        sched     Olins_Sched;
         readied {
         }
+        sched     Olins_Sched;
 }
 
 #endif // Olin_the_Ghast_ghul

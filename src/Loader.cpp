@@ -260,3 +260,8 @@ bool Loader::getRaw(char *buf, int len)
 
 	return true;
 }
+
+char *Loader::getLexeme()
+{
+        return lexer->lexeme;
+}

@@ -110,6 +110,7 @@ container(NULL), sprite(0), n_rest_credits(0), elevated(false)
 	occ = 0;
 	quarry = 0;
 	path = 0;
+        damage_sound = 0;
 }
 
 Character::~Character()
@@ -131,7 +132,7 @@ Character::~Character()
 void Character::changeHp(int delta)
 {
 	if (delta < 0)
-		soundPlay("sounds/damage.wav");	/* hack */
+		soundPlay(get_damage_sound());
 	else {
 		delta = min(delta, getMaxHp() - hp);
 	}
@@ -997,18 +998,6 @@ bool Character::load(class Loader * loader)
 		break;
 	}
 
-	// *** Optional Parameters ***
-
-	if (loader->matchWord("sched")) {
-		if (!loader->getWord(&sched_tag))
-			goto fail;
-		if (!(sched = (struct sched *) loader->lookupTag(sched_tag,
-								 SCHEDULE_ID)))
-		{
-			loader->setError("Invalid SCHED tag '%s'", sched_tag);
-			goto fail;
-		}
-	}
 	// *** Ready Arms ***
 
 	if (!loader->matchWord("readied") || !loader->matchToken('{'))
@@ -1032,6 +1021,32 @@ bool Character::load(class Loader * loader)
 		ready(arms);
 	}
 
+	// *** Optional Parameters ***
+
+        while (!loader->matchToken('}')) {
+
+                if (loader->matchWord("sched")) {
+                        if (!loader->getWord(&sched_tag))
+                                goto fail;
+                        if (!(sched = (struct sched *) 
+                              loader->lookupTag(sched_tag,
+                                                SCHEDULE_ID)))
+                        {
+                                loader->setError("Invalid SCHED tag '%s'", 
+                                                 sched_tag);
+                                goto fail;
+                        }
+                } else if (loader->matchWord("damage_sound")) {
+                        if (!loader->getString(&damage_sound))
+                                goto fail;
+
+                } else {
+                        loader->setError("Error in CHAR: unknown field '%s'",
+                                         loader->getLexeme());
+                        goto fail;
+                }
+	}
+
 	// *** Constrain Attributes ***
 
 	hp = min(hp, lvl * HP_PER_LVL);
@@ -1043,7 +1058,7 @@ bool Character::load(class Loader * loader)
 	free(occ_tag);
 	free(sprite_tag);
 
-	return loader->matchToken('}');
+        return true;
 
       fail:
 	if (species_tag)
@@ -1171,4 +1186,13 @@ void Character::relocate(struct place *place, int x, int y)
 	if (mech)
 		mech->activate(MECH_STEP);
 
+}
+
+char *Character::get_damage_sound()
+{
+        if (damage_sound)
+                return damage_sound;
+        if (species && species->damage_sound)
+                return species->damage_sound;
+        return 0;
 }

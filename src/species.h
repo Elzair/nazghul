@@ -42,6 +42,7 @@ extern "C" {
                 class Spell **spells;
                 class ArmsType *weapon;
                 bool visible;
+                char *damage_sound;
         };
 
         extern struct species *speciesLoad(class Loader *);

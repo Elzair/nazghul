@@ -269,6 +269,8 @@ class Character:public Object {
 	virtual class Character *clone(class Character *);
 	virtual void describe(int count);
 	virtual void relocate(struct place *place, int x, int y);
+        virtual char *get_damage_sound();
+
 	char *tag;
 	struct list plist;	// party list
 	struct list llist;	// load list
@@ -313,6 +315,7 @@ class Character:public Object {
 	int burden;
 	int alignment;
 	bool inCombat;
+        char *damage_sound;
 
 	// *** NPC fields
 	virtual void dropRdyArms();

@@ -43,6 +43,7 @@ class Loader {
 	bool getIntKeyValue(char *key, int *val);
 	bool getWordKeyValue(char *key, char **val);
 	bool getStringKeyValue(char *key, char **val);
+        char *getLexeme();
 
 	void advance();
 	void setError(char *fmt, ...);

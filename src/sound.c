@@ -62,6 +62,9 @@ void soundPlay(char *file)
 	Uint32 dlen;
 	SDL_AudioCVT cvt;
 
+        if (file == NULL)
+                return;
+
 	if (!enableSound) {
 		// printf("playing sound %s\n", file);
 		consolePrint("Playing sound %s\n", file);
