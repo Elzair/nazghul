@@ -94,7 +94,7 @@ PLACE  p_wilderness {
 
     // npc parties:
     // tag, x, y, alignment, home, conversation, vehicle
-    t_goblin_horde   1  8   (ALIGN_MONSTER) 0 c_goblin null;
+    t_goblin_horde   4  14   (ALIGN_MONSTER) 0 c_goblin null;
     t_undead_brigade 2  26  (ALIGN_MONSTER) 0 null vt_ship;
 
   }

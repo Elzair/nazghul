@@ -1376,9 +1376,8 @@ static void hole_up_and_camp(void)
 		if (!guard) {
 			cmdwin_backspace(strlen("set a watch-none!"));
 			cmdwin_print("no watch");
-		} else {
-			cmdwin_print(guard->getName());
 		}
+                // else select_party_member() prints the name
 
 	} else {
 		cmdwin_backspace(strlen("set a watch <y/n>-"));

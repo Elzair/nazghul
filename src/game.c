@@ -3074,6 +3074,7 @@ static int loadCombat(void)
 	loader.advance();
         PARSE_ASSERT(combatLoad(&loader) == 0, "Error in COMBAT: %s\n", 
                      loader.error);
+        return 0;
 }
 
 static int loadFormation(void)

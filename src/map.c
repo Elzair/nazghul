@@ -456,8 +456,7 @@ void mapRepaintView(struct mview *view, int flags)
 
 	if (Map.aview->zoom > 1) {
 		screenZoomOut(Map.aview->zoom);
-		placePaint(Map.place, &view->vrect, &Map.srect, 0	/* vmask 
-									 */ ,
+		placePaint(Map.place, &view->vrect, &Map.srect, 0/* vmask */ ,
 			   TILE_W / Map.aview->zoom, TILE_H / Map.aview->zoom);
 		screenZoomIn(Map.aview->zoom);
 	} else if (flags & REPAINT_NO_LOS) {

@@ -34,4 +34,9 @@ Changes for nazghul-0.1.2
   the name of the weapon being fired.
 
 --Fixed a crash that occurred on startup if the --sound 0 option was
-  specified.
+  specified.--Fixed a memory leak. NpcParty objects were not being deleted after combat
+  except in the case where the NpcParty initiated combat. Added a new flag to
+  the NpcParty class: 'destroy_on_combat_exit'. By default it is true. In the
+  case where the NpcParty initiates combat it sets it to false before entering
+  combat. After combat the NpcParty will be deleted once it returns to the code
+  in place.c which updates objects every turn.

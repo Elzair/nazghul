@@ -2087,8 +2087,17 @@ static void random_ambush(void)
 	// Roll to pick a direction
 	dir = ((random() % 4) + 1) * 2 - 1;
 
+        // Try to place the enemy party. This can fail. For example, the place
+        // might randomly generate a party of nixies as the npc party while the
+        // player is camped on dry land.
+	if (!myPositionEnemy(foe, directionToDx(dir), directionToDy(dir), 
+                             false)) {
+                printf("ambush failed for %s\n", foe->getName());
+                // I think the party will get cleaned up on exit...
+                return;
+        }
+
 	Combat.state = FIGHTING;
-	myPositionEnemy(foe, directionToDx(dir), directionToDy(dir), false);
 	Combat.turns_per_round = 1;
 
 	consolePrint("\n*** Ambush ***\n\n");
@@ -2671,13 +2680,22 @@ bool combat_enter(struct combat_info * info)
 
 		tmp = pelem->next;
 		party = outcast(pelem, class NpcParty, container_link.list);
+                printf("processing %s\n", party->getName());
 		pelem = tmp;
 
 		// For wilderness combat automatically destroy the npc parties
 		// after combat.
 		if (Place == &Combat.place) {
+                        printf("cleaning up %s\n", party->getName());
 			party->cleanupAfterCombat();
 			party->destroy();
+                        
+                        // If the party was summoned or was brought in as an
+                        // ambush then we need to delete it now. Parties which
+                        // were originally on the map are deleted after combat.
+                        if (party->destroy_on_combat_exit)
+                                delete party;
+
 			continue;
 		}
 		// If the party contains any living members still on the map
@@ -2800,7 +2818,7 @@ bool combatAddNpcParty(class NpcParty * party, int dx, int dy, bool located,
 	// code in myPositionEnemy except fill out the position info based on
 	// caller's request.
 	party->disembark();
-	party->remove();
+	party->remove();        
 
 	memset(&party->pinfo, 0, sizeof(party->pinfo));
 	party->pinfo.x = x;
@@ -2811,6 +2829,6 @@ bool combatAddNpcParty(class NpcParty * party, int dx, int dy, bool located,
 	if (!party->pinfo.formation)
 		party->pinfo.formation = &default_formation;
 	set_party_initial_position(&party->pinfo, x, y);
-	myPutEnemy(party, &party->pinfo);
+	myPutEnemy(party, &party->pinfo);        
 	return (party->pinfo.placed != 0);
 }

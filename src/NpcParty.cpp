@@ -250,10 +250,12 @@ NpcParty::NpcParty()
 	list_init(&members);
 	vehicle = 0;
 	formation = 0;
+        destroy_on_combat_exit = true;
 }
 
 NpcParty::~NpcParty()
 {
+        printf("Destroying %s\n", getName());
 }
 
 bool NpcParty::turn_vehicle(void)
@@ -399,6 +401,8 @@ void NpcParty::move(int dx, int dy)
 			memset(&cinfo, 0, sizeof(cinfo));
 			cinfo.defend = true;
 			cinfo.move = &info;
+
+                        this->destroy_on_combat_exit = false;
 
 			player_party->move_to_combat(&cinfo);
 		}
@@ -633,6 +637,8 @@ void NpcParty::work()
                 cinfo.defend = true;
                 cinfo.move = &info;
                 
+                this->destroy_on_combat_exit = false;
+
                 player_party->move_to_combat(&cinfo);
 		return;
 	}

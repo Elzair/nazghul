@@ -780,10 +780,13 @@ enum Spell::cast_result Spell::cast(class Character * caster,
 			// party.
 			if (!combatAddNpcParty(party, dx, dy,
 					       this->target ==
-					       SPELL_TARGET_LOCATION, tx, ty))
+					       SPELL_TARGET_LOCATION, tx, 
+                                               ty)) {
 				success = no_room_on_battlefield;
-			else
+                                delete party;
+                        } else {
 				success = ok;
+                        }
 		}
 
 	} else if (effects == EFFECT_DESTROY) {
@@ -965,7 +968,11 @@ enum Spell::cast_result Spell::cast(class Character * caster,
 				// party->setAlignment(caster->getAlignment());
 				clone->setAlignment(caster->getAlignment());
 				party->init(clone);
-				combatAddNpcParty(party, 0, 0, true, tx, ty);
+				if (!combatAddNpcParty(party, 0, 0, true, tx, 
+                                                       ty)) {
+                                        delete party;
+                                        success = no_room_on_battlefield;
+                                }
 				success = ok;
 			}
 		}

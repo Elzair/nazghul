@@ -169,6 +169,13 @@ class NpcParty:public Object {
 	int dx, dy;
 	struct position_info pinfo;
 
+        // This special flag is for npc parties created during combat (for
+        // example summoned parties or parties that randomly cause an ambush).
+        // By default I assume this is true. But if an npc party initiates
+        // combat by attacking the player then I set it to false and delete the
+        // npc party in the placeAdvanceTurns() code.
+        bool destroy_on_combat_exit;
+
       protected:
 	virtual bool enter_town(class Portal * portal);
 	virtual void wander();

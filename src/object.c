@@ -146,7 +146,6 @@ void Object::relocate(struct place *newplace, int newx, int newy)
                 // reduce volume proportionally to distance
                 if (distance > 1)
                         volume /= (distance/2);
-                printf("distance=%d volume=%d\n", distance, volume);
         }
 
         soundPlay(get_movement_sound(), volume);
