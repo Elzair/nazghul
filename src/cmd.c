@@ -366,9 +366,11 @@ int movecursor_and_do(struct KeyHandler * kh, int key, int keymod)
         return 0;  // Keep on keyhandling
 } // movecursor_and_do()
 
-void emit_terraform_status (char * msg, struct terrain_palette * pp, struct terrain * tt)
+void emit_terraform_status (char * msg, struct terrain_palette * pp, 
+                            struct terrain * tt)
 {
-    log_msg("[%s] %3d: %s '%s'", msg, pp->current_terrain_index, tt->tag, tt->name);
+    log_msg("[%s] %3d: %s '%s'", msg, pp->current_terrain_index, tt->tag, 
+            tt->name);
 } // emit_terraform_status()
 
 int terraform_movecursor_and_do(struct KeyHandler * kh, int key, int keymod)
@@ -435,23 +437,25 @@ int terraform_movecursor_and_do(struct KeyHandler * kh, int key, int keymod)
                 return 0;  // Keep on keyhandling
         }
 
-        if (key >= SDLK_0 && key <= SDLK_9) {
+        if (key >= '0' && key <= '9') {
                 // Number key 0..9 == get/set quick terrain
-                int qt = num_for_key(key);
+                int qt = key - '0';
     
                 if ((keymod && KMOD_LCTRL) || (keymod && KMOD_RCTRL)) {
                         // Control-NUM == set quick terrain to current:
                         int index = palette_get_current_terrain_index(pp);
                         palette_set_quick_terrain(pp, qt, index);
                         tt = palette_current_terrain(pp);
-                        log_msg("[Set Quick %d] %3d: %s '%s'", qt, pp->current_terrain_index, tt->tag, tt->name);
+                        log_msg("[Set Quick %d] %3d: %s '%s'", qt, 
+                                pp->current_terrain_index, tt->tag, tt->name);
                         return 0; // Keep on keyhandling
                 }
                 // Plain NUM == set current terrain from quick terrain:
                 int index = palette_get_quick_terrain_index(pp, qt);
                 palette_set_current_terrain(pp, index);
                 tt = palette_current_terrain(pp);
-                log_msg("[Quick %d] %3d: %s '%s'", qt, pp->current_terrain_index, tt->tag, tt->name);
+                log_msg("[Quick %d] %3d: %s '%s'", qt, 
+                        pp->current_terrain_index, tt->tag, tt->name);
                 return 0;  // Keep on keyhandling
         }
 
@@ -463,57 +467,6 @@ int terraform_movecursor_and_do(struct KeyHandler * kh, int key, int keymod)
         }
         return 0;  // Keep on keyhandling
 } // terraform_movecursor_and_do()
-
-int num_for_key (int key)
-{
-        int num;
-        switch (key) {
-        case SDLK_0:
-        case SDLK_KP0:
-                num = 0;
-                break;
-        case SDLK_1:
-        case SDLK_KP1:
-                num = 1;
-                break;
-        case SDLK_2:
-        case SDLK_KP2:
-                num = 2;
-                break;
-        case SDLK_3:
-        case SDLK_KP3:
-                num = 3;
-                break;
-        case SDLK_4:
-        case SDLK_KP4:
-                num = 4;
-                break;
-        case SDLK_5:
-        case SDLK_KP5:
-                num = 5;
-                break;
-        case SDLK_6:
-        case SDLK_KP6:
-                num = 6;
-                break;
-        case SDLK_7:
-        case SDLK_KP7:
-                num = 7;
-                break;
-        case SDLK_8:
-        case SDLK_KP8:
-                num = 8;
-                break;
-        case SDLK_9:
-        case SDLK_KP9:
-                num = 9;
-                break;
-        default:
-                printf("num_for_key() IMPOSSIBLE - funky number %d\n", key);
-                assert(0);
-        } // switch(key)
-        return num;
-} // num_for_key()
 
 struct inv_entry *select_item(void)
 {

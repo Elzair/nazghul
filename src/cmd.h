@@ -50,8 +50,6 @@ extern int movecursor(struct KeyHandler *kh, int key, int keymod);
 extern int getnum(struct KeyHandler *kh, int key, int keymod);
 extern void getkey(void *data, int(*handler) (struct KeyHandler * kh,
                                                int key, int keymod));
-extern int num_for_key (int key);
-
 #define CMD_SELECT_MEMBER (1 << 0)
 #define CMD_PRINT_MEMBER  (1 << 1)
   
