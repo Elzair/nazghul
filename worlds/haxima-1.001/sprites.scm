@@ -582,8 +582,10 @@
 (kern-mk-sprite 's_grass            ss_kg_terrains 1  0 #f 0)
 (kern-mk-sprite 's_desert           ss_kg_terrains 1  1 #f 0)
 (kern-mk-sprite 's_desert_cactus    ss_kg_terrains 1  2 #f 0)
-(kern-mk-sprite 's_shallow          ss_kg_terrains 1  3 #t 0)  ;; TODO: rename to s_deep_water
-(kern-mk-sprite 's_bog              ss_kg_terrains 1  4 #f 0)  ;; TODO: rename to s_marsh
+(kern-mk-sprite 's_deep             ss_kg_terrains 1  3 #t 0)
+(kern-mk-sprite 's_shallow          ss_kg_terrains 1  4 #t 0)  ;; TODO: rename to s_deep_water -- not shallow
+(kern-mk-sprite 's_shoals           ss_kg_terrains 1  5 #t 0)
+(kern-mk-sprite 's_bog              ss_kg_terrains 1  6 #f 0)  ;; TODO: rename to s_marsh?
 
 (kern-mk-sprite 's_orchards         ss_kg_terrains 1  8 #f 0)
 (kern-mk-sprite 's_dead_trees       ss_kg_terrains 1  9 #f 0)
