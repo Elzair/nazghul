@@ -524,17 +524,36 @@ bool terraform_movecursor_and_do(struct KeyHandler * kh, int key, int keymod)
 {
   // As movecursor_and_do(), but with additional keybindings
   // intended for cmdTerraform().
-  struct cursor_movement_keyhandler * data;
+  struct terraform_mode_keyhandler * data;
+  struct terrain_palette * pp;
+  struct terrain * tt;
   assert(kh);
-  data = (struct cursor_movement_keyhandler *) kh->data;
+  data = (struct terraform_mode_keyhandler *) kh->data;
+  pp   = data->palette;
   
   if (key == '\n' || key == SDLK_SPACE || key == SDLK_RETURN) {
     int x = Cursor->getX();
     int y = Cursor->getY();
     if (data->each_target_func)
-      data->each_target_func(x, y);
+      data->each_target_func(x, y, data);
     return false;  // Keep on keyhandling
   }
+
+  if (key == SDLK_PAGEUP) {
+    // Page Up == Cycle back through terrain in palette
+    palette_prev_terrain(pp);
+    tt = palette_current_terrain(pp);
+    consolePrint("Current terrain %s '%s'\n", tt->tag, tt->name);
+    return false;  // Keep on keyhandling
+  }
+  if (key == SDLK_PAGEDOWN) {
+    // Page Down == Cycle forward through terrain in palette
+    palette_next_terrain(pp);
+    tt = palette_current_terrain(pp);
+    consolePrint("Current terrain %s '%s'\n", tt->tag, tt->name);
+    return false;  // Keep on keyhandling
+  }
+  // ...
   
   if (keyIsDirection(key)) {
     int dir = keyToDirection(key);
@@ -543,7 +562,7 @@ bool terraform_movecursor_and_do(struct KeyHandler * kh, int key, int keymod)
     int x = Cursor->getX();
     int y = Cursor->getY();
     if (data->each_point_func)
-      data->each_point_func(x, y);
+      data->each_point_func(x, y, data);
     return false;  // Keep on keyhandling
   }
   
@@ -1143,9 +1162,10 @@ int select_target_with_doing(int ox, int oy, int *x, int *y,
 } // select_target_with_doing()
 
 int terraform_cursor_func(int ox, int oy, int *x, int *y,
-                             int range,
-                             v_funcpointer_ii each_point_func,
-                             v_funcpointer_ii each_target_func)
+                          int range,
+                          v_funcpointer_iiv each_point_func,
+                          v_funcpointer_iiv each_target_func,
+                          struct place * place)
 {
   // SAM: 
   // As select_target(), select_target_with_doing(), 
@@ -1155,12 +1175,15 @@ int terraform_cursor_func(int ox, int oy, int *x, int *y,
   Cursor->relocate(Place, *x, *y);  // Remember prev target, if any
   mapUpdate(0);
   
-  struct cursor_movement_keyhandler data;
+  struct terraform_mode_keyhandler data;
   data.each_point_func  = each_point_func;
   data.each_target_func = each_target_func;
   data.abort            = false;
+  data.map              = place->terrain_map;
+  data.palette          = place->terrain_map->palette;
+
   struct KeyHandler kh;
-  kh.fx   = movecursor_and_do;
+  kh.fx   = terraform_movecursor_and_do;
   kh.data = &data;
   
   eventPushKeyHandler(&kh);
@@ -1174,8 +1197,8 @@ int terraform_cursor_func(int ox, int oy, int *x, int *y,
   Cursor->remove();
   mapUpdate(0);
   
-  struct cursor_movement_keyhandler * data_ret;
-  data_ret = (struct cursor_movement_keyhandler *) kh.data;
+  struct terraform_mode_keyhandler * data_ret;
+  data_ret = (struct terraform_mode_keyhandler *) kh.data;
   if (data_ret->abort) {
     cmdwin_print("Done.");
     return -1;  // Aborted, no target
@@ -2259,23 +2282,38 @@ void detailed_examine_XY(int x, int y)
     consolePrint("DETAIL XY=(%d,%d) out of LOS\n", x, y);
 }
 
-void DM_XRAY_look_at_XY(int x, int y)
+void DM_XRAY_look_at_XY(int x, int y, void * data)
 {
     // Like look_at_XY() but unconditionally reports what is there.
     // For use by cmdTerraform and similar.
+    // 
+    // NOTE: data needs to be unused unless cmdTerraform() 
+    //       itself makes such a one.
     if (!mapTileIsVisible(x, y) ) {
-        consolePrint("(Out of LOS) ", x, y);
+      consolePrint("(Out of LOS) ", x, y);
+      consolePrint("At XY=(%d,%d) you see ", x, y);
+      placeDescribe(x, y);
+      return;
     }
     consolePrint("At XY=(%d,%d) you see ", x, y);
     placeDescribe(x, y);
 }
 
-void terraform_XY(int x, int y)
+void terraform_XY(int x, int y, void * data)
 {
+    struct terraform_mode_keyhandler * kh = 
+      (struct terraform_mode_keyhandler *) data;
+    struct terrain_map     * map = kh->map;
+    struct terrain_palette * pp  = kh->palette;
+    struct terrain         * tt  = palette_current_terrain(pp);
+
     if (!mapTileIsVisible(x, y)) {
       consolePrint("TERRAFORM warning - XY=(%d,%d) out of LOS\n", x, y);
     }
-    consolePrint("TERRAFORM XY=(%d,%d) TODO - edit terrain here\n", x, y);
+    terrain_map_fill(map, x, y, 1, 1, tt);
+    player_party->recompute_los();
+    consolePrint("TERRAFORM put %s '%s' at XY=(%d,%d)\n", 
+                 tt->tag, tt->name, x, y);
 } // terraform_XY()
 
 bool cmdXamine(class Character * pc)
@@ -2470,6 +2508,10 @@ bool cmdAT (class Character * pc)
 bool cmdTerraform(class Character * pc)
 {
 	int x, y;
+    struct place           * place;
+    struct terrain_map     * map;
+    struct terrain_palette * palette;
+    struct terrain         * terrain;
 
 	cmdwin_clear();
 	cmdwin_print("Terraform-");
@@ -2477,21 +2519,43 @@ bool cmdTerraform(class Character * pc)
 	if (pc) {
 		// Combat Mode
         // Use the party member's location as the origin.
+        consolePrint("TODO - Terraform does not work in combat mode.\n");
+        return false;
+        // TODO: play.c needs a way to get at Combat from combat.c
+        // place = Combat;  // Won't work, file-scoped to combat.c
 		x = pc->getX();
 		y = pc->getY();
 	} else {
 		// Party Mode
 		// Use the player party's location as the origin.
-		x = player_party->getX();
-		y = player_party->getY();
+        place = player_party->getPlace();
+		x     = player_party->getX();
+		y     = player_party->getY();
 	}
 
-    DM_XRAY_look_at_XY(x,y);  // First look at the current tile
+    map     = place->terrain_map;
+    palette = map->palette;
+    terrain = palette_current_terrain(palette);
+
+    consolePrint("\n");
+    // SAM: 
+    // It would probably be better to set the upper-right 
+    // "status window" to a new mode.
+    // Then I could show the sprite for the current terrain, and so forth.
+    // That is TODO later; I have not written a new status mode before.
+    // First thing is to get the map editor working.
+    consolePrint("Terraform on map %s, palette %s\n"
+                 "Current terrain is %s '%s'\n",
+                 map->tag, palette->tag, 
+                 terrain->tag, terrain->name);
+
+    DM_XRAY_look_at_XY(x,y, NULL);  // First look at the current tile
     // SAM: TODO - make the range "any in viewport" rather than 9
     //             or perhaps even scrollable past that
 	if (terraform_cursor_func(x, y, &x, &y, 9,
-                              DM_XRAY_look_at_XY, terraform_XY) == -1) {
-		return false;
+                              DM_XRAY_look_at_XY, terraform_XY,
+                              place) == -1) {
+      return false;
 	}
 	return true;
 } // cmdTerraform()

@@ -63,11 +63,13 @@ extern "C" {
 
 	extern void terrain_destroy(struct terrain *terrain);
 
-#define LONGEST_TERRAIN_GLYPH 4
-#define NUM_QUICK_TERRAINS    10
+#define LONGEST_TERRAIN_GLYPH       4
+#define NUM_QUICK_TERRAINS         10
+#define PAL_TERRAIN_QUICK_DEFAULT -(NUM_QUICK_TERRAINS)
+#define PAL_TERRAIN_NOT_SET       -(NUM_QUICK_TERRAINS+1)
 
 	struct terrain_palette_entry {
-        char           * glyph;    // Loader::getString() will strdup()
+        char           * glyph;
 		struct terrain * terrain;
 	};
 	void palette_entry_print(FILE * fp, int indent,
@@ -78,23 +80,37 @@ extern "C" {
 		char *tag;
 		int widest_glyph;
 		int num_entries;
+        int current_terrain_index;
 		struct terrain_palette_entry *set;
 		struct terrain *quick_terrain[NUM_QUICK_TERRAINS];
 		// "quick terrain" for quick UI access (ten number keys 0..9)
 	};
 
 	struct terrain_palette *new_terrain_palette(void);
-	char *palette_glyph(struct terrain_palette *palette, int n);
-    char * palette_glyph_for_terrain (struct terrain_palette * pp, struct terrain * tt);
-	struct terrain *palette_terrain(struct terrain_palette *palette, int n);
-	struct terrain *palette_terrain_for_glyph(struct terrain_palette
-						  *palette, char *glyph);
     struct terrain_palette * palette_contains_terrain (struct terrain_palette *pp, 
                                                        struct terrain *tt);
-	struct terrain *palette_quick_terrain(struct terrain_palette *palette,
-					      int n);
+
+	char * palette_glyph(struct terrain_palette *pp, int n);
+    char * palette_glyph_for_terrain (struct terrain_palette * pp, 
+                                      struct terrain * tt);
+
+	struct terrain * palette_terrain(struct terrain_palette *pp, int n);
+	struct terrain * palette_terrain_for_glyph(struct terrain_palette *pp, 
+                                               char *glyph);
+	struct terrain * palette_quick_terrain(struct terrain_palette *pp,
+                                          int n);
+    struct terrain * palette_current_terrain(struct terrain_palette * pp);
+
+  int palette_set_current_terrain(struct terrain_palette * pp, int n);
+  int palette_prev_terrain(struct terrain_palette * pp);
+  int palette_next_terrain(struct terrain_palette * pp);
+  int palette_first_terrain(struct terrain_palette * pp);
+  int palette_last_terrain(struct terrain_palette * pp);
+
+  int palette_set_quick_terrain(struct terrain_palette * pp, struct terrain * tt, int n);
+
 	void palette_print(FILE * fp, int indent,
-			   struct terrain_palette *palette);
+                       struct terrain_palette *pp);
 
 #ifdef __cplusplus
 }

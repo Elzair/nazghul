@@ -62,7 +62,8 @@ extern "C" {
 
 
   // SAM: Using this typedef below, and in play.[ch]
-  typedef void (*v_funcpointer_ii) (int x, int y);
+  typedef void (*v_funcpointer_ii)  (int x, int y);
+  typedef void (*v_funcpointer_iiv) (int x, int y, void * v);
   
   struct cursor_movement_keyhandler {
     // This struct is put into the 'data' field of a 
@@ -73,9 +74,20 @@ extern "C" {
     v_funcpointer_ii each_target_func;
   };
 
+  struct terraform_mode_keyhandler {
+    // This struct is put into the 'data' field of a 
+    // 'struct KeyHandler'.
+    bool              abort;
+    v_funcpointer_iiv each_point_func;
+    v_funcpointer_iiv each_target_func;
+
+    struct place           * place;  // needed?
+    struct terrain_map     * map;
+    struct terrain_palette * palette;
+  };
+
   struct KeyHandler {
     struct list list;
-    // SAM: I plan to make fx also take an SDL key modifier...
     bool(*fx) (struct KeyHandler * handler, int key, int keymod);
     void *data;  
     // The data field should always be filled with a struct, 
