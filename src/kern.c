@@ -1062,7 +1062,7 @@ static pointer kern_mk_species(scheme *sc, pointer args)
 {
         struct species *species;
         int str, intl, dex, spd, vr, hpmod, hpmult, argno = 1;
-        int mpmod, mpmult, hit, def, dam, arm, visible, n_slots, n_spells, i;
+        int mpmod, mpmult, visible, n_slots, n_spells, i;
         struct sprite *sleep_sprite;
         class ArmsType *weapon;
         char *tag = TAG_UNK, *name, *damage_sound, *walking_sound;
@@ -1071,9 +1071,9 @@ static pointer kern_mk_species(scheme *sc, pointer args)
         pointer ret;
         struct mmode *mmode;
 
-        if (unpack(sc, &args, "ysdddddpddddddddppbss", &tag, &name, &str, 
+        if (unpack(sc, &args, "ysdddddpddddppbss", &tag, &name, &str, 
                    &intl, &dex, &spd, &vr, &mmode, &hpmod, &hpmult, &mpmod, 
-                   &mpmult, &hit, &def, &dam, &arm, &sleep_sprite, &weapon, 
+                   &mpmult, &sleep_sprite, &weapon, 
                    &visible, &damage_sound, &walking_sound)) {
                 load_err("kern-mk-species %s: bad args", tag);
                 return sc->NIL;
@@ -1105,7 +1105,7 @@ static pointer kern_mk_species(scheme *sc, pointer args)
 
         species = species_new(tag, name, damage_sound, walking_sound, str,
                               intl, dex, spd, vr, hpmod, hpmult,
-                              mpmod, mpmult, hit, def, dam, arm, visible,
+                              mpmod, mpmult, visible,
                               n_slots, n_spells);
         species->weapon = weapon;
         species->sleep_sprite = sleep_sprite;
@@ -1391,7 +1391,7 @@ static pointer kern_mk_char(scheme *sc, pointer args)
 {
         class Character *character;
         int str, intl, dex, hpmod, hpmult;
-        int mpmod, mpmult, hitmod, defmod, dammod, armmod, hp, xp, mp, lvl;
+        int mpmod, mpmult, hp, xp, mp, lvl;
         char *tag = TAG_UNK, *name;
         struct species *species;
         struct occ *occ;
@@ -1405,11 +1405,10 @@ static pointer kern_mk_char(scheme *sc, pointer args)
         struct sched *sched;
         pointer factions;
 
-        if (unpack(sc, &args, "yspppddddddddddddddddcpc",
+        if (unpack(sc, &args, "yspppddddddddddddcpc",
                    &tag, &name, &species, &occ, 
                    &sprite, &base_faction, &str,
-                   &intl, &dex, &hpmod, &hpmult, &mpmod, &mpmult, &hitmod, 
-                   &defmod, &dammod, &armmod, &hp, &xp, &mp, &lvl, 
+                   &intl, &dex, &hpmod, &hpmult, &mpmod, &mpmult, &hp, &xp, &mp, &lvl, 
                    &conv, &sched, &ai)) {
                 load_err("kern-mk-char %s: bad args", tag);
                 return sc->NIL;
@@ -1425,7 +1424,7 @@ static pointer kern_mk_char(scheme *sc, pointer args)
 
         character = new class Character(tag, name, sprite,species, occ,
                                         str, intl, dex, hpmod, hpmult, mpmod, 
-                                        mpmult, hitmod, defmod, dammod, armmod,
+                                        mpmult,
                                         hp, xp, mp, lvl);
         assert(character);
         character->setBaseFaction(base_faction);

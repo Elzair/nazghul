@@ -65,8 +65,8 @@ class Character:public Being {
                   struct species *species, struct occ *occ,
                   int str, int intl,
                   int dex, int hpmod, int hpmult, 
-                  int mpmod, int mpmult, int hitmod, int hitmult,
-                  int dammod, int dammult, int hp, int xp, int mp,
+                  int mpmod, int mpmult, 
+                  int hp, int xp, int mp,
                   int lvl);
 	virtual ~ Character();
 
@@ -216,11 +216,6 @@ class Character:public Being {
         int hp_mult;
         int mp_mod;
         int mp_mult;
-
-        int hit_mod;
-        int def_mod;
-        int dam_mod;
-        int arm_mod;
 
         struct closure *ai; // experimental
 

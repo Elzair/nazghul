@@ -69,8 +69,6 @@
                0 10 5              ; str/int/dex
                0 0                 ; hp mod/mult
                0 0                 ; mp mod/mult
-               0 0                 ; hit mod def mod
-               0 0                 ; dam mod arm mod
                30 0 9 9            ; hp/xp/mp/lvl
                'ilya-conv          ; conv
                sch_ilya           ; sched

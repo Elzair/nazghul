@@ -43,11 +43,6 @@ struct species {
         int mp_mod;   /* similar, for mana */
         int mp_mult;  /* similar, for mana */
 
-        int hit_mod;  /* unused */
-        int def_mod;  /* unused */
-        int dam_mod;  /* unused */
-        int arm_mod;  /* unused */
-
         struct sprite *sleep_sprite;
         int n_slots;
         int *slots;
@@ -72,10 +67,6 @@ extern struct species *species_new(char *tag,
                                    int hp_mult,
                                    int mp_mod,
                                    int mp_mult,
-                                   int hit_mod,
-                                   int def_mod,
-                                   int dam_mod,
-                                   int arm_mod,
                                    bool visible,
                                    int n_slots,
                                    int n_spells

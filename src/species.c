@@ -51,10 +51,6 @@ struct species *species_new(char *tag,
                             int hp_mult,
                             int mp_mod,
                             int mp_mult,
-                            int hit_mod,
-                            int def_mod,
-                            int dam_mod,
-                            int arm_mod,
                             bool visible,
                             int n_slots,
                             int n_spells
@@ -100,10 +96,6 @@ struct species *species_new(char *tag,
         species->hp_mult            = hp_mult;
         species->mp_mod             = mp_mod;
         species->mp_mult            = mp_mult;
-        species->hit_mod            = hit_mod;
-        species->def_mod            = def_mod;
-        species->dam_mod            = dam_mod;
-        species->arm_mod            = arm_mod;
         species->visible            = visible;
         species->n_slots            = n_slots;
         species->n_spells           = n_spells;

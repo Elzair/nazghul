@@ -36,6 +36,8 @@
     " b  b .. .. ..  b  b "
   )
 )
+(kern-load "gregors-hut-zones.scm")
+
 (kern-mk-place 'p_dark_passage "A Dark Passage"
   s_dungeon ;; sprite
   (kern-mk-map 'm_dark_passage 32 32 pal_expanded
@@ -570,8 +572,6 @@
                 20 30 20
                 0 0
                 0 0
-                0 0
-                0 0
                 30 0
                 9 9
                 'shroom-conv
@@ -621,8 +621,6 @@
         20 30 22
         0 1
         10 5
-        0 0
-        0 0
         58 0
         8 8
         nil
@@ -818,6 +816,34 @@
               )
             ) ;; bind
           9 19)
+          (list
+            (bind
+              (kern-mk-char
+                'ch_ilya
+                "Ilya"
+                sp_human
+                nil
+                s_child
+                2
+                20 30 25
+                0 0
+                0 0
+                30 0
+                9 9
+                'ilya-conv
+                sch_ilya
+                nil
+                nil
+                ;; hooks
+                (list
+                )
+              )
+              (list
+                #f
+                #f
+              )
+            ) ;; bind
+          15 15)
         ) ;; end of objects
         (list
         )
@@ -967,6 +993,7 @@
             (list 10 vas_rel_por)
             (list 10 test_recur)
             (list 1 in_mani_corp)
+            (list 1 in_an)
             (list 1 wis_an_ylem)
           )
         )
@@ -981,8 +1008,6 @@
             20 30 22
             0 1
             10 5
-            0 0
-            0 0
             39 0
             2 8
             nil
@@ -1005,8 +1030,6 @@
             4 14 3
             0 1
             10 5
-            0 0
-            0 0
             24 0
             4 7
             nil

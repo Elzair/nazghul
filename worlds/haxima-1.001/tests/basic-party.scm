@@ -7,12 +7,10 @@
               sp_human              ; species
               oc_wizard             ; occ
               s_companion_wizard    ; sprite
-              align-player          ; starting alignment
+              faction-player          ; starting alignment
               0 10 2                ; str/int/dex
               0 1                   ; hp mod/mult
               10 5                  ; mp mod/mult
-              0 0                   ; hit mod def mod
-              0 0                   ; dam mod arm mod
               240 0 240 8           ; hp/xp/mp/lvl
               nil                   ; conv
               nil                   ; sched

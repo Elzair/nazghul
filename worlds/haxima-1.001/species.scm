@@ -15,7 +15,6 @@
                  mmode-walk        ; passability
                  20 2              ; hp mod/mult
                  10 10             ; mp mod/mult
-                 0 0 0 0           ; hit/def/dam/arm mod
                  s_corpse          ; sleep sprite
                  t_hands           ; natural (unarmed) weapon
                  #t                ; visible
@@ -33,7 +32,6 @@
                  mmode-phase       ; passability
                  10 5              ; hp mod/mult
                  10 10             ; mp mod/mult
-                 0 1 -1 -1         ; hit/def/dam/arm mod
                  s_corpse          ; sleep sprite
                  t_hands           ; natural (unarmed) weapon
                  #f                ; visible
@@ -51,7 +49,6 @@
                  mmode-walk        ; passability
                  15 2              ; hp mod/mult
                  10 10             ; mp mod/mult
-                 0 0 0 0           ; hit/def/dam/arm mod
                  s_corpse          ; sleep sprite
                  t_hands           ; natural (unarmed) weapon
                  #t                ; visible
@@ -69,7 +66,6 @@
                  mmode-hover       ; passability
                  3 1               ; hp mod/mult
                  0 0               ; mp mod/mult
-                 0 0 0 0           ; hit/def/dam/arm mod
                  nil               ; sleep sprite
                  t_stinger         ; natural (unarmed) weapon
                  #t                ; visible
@@ -87,7 +83,6 @@
                  mmode-walk            ; pmask
                  15 1                  ; hp mod/mult
                  20 20                 ; mp mod/mult
-                 1 0 1 0               ; hit/def/dam/arm mod
                  s_yellow_slime_asleep ; sleep sprite
                  t_acid_spray          ; unarmed weapon
                  #t                    ; visible
@@ -108,7 +103,6 @@
                  mmode-walk            ; pmask
                  10 1                  ; hp mod/mult
                  0 0                   ; mp mod/mult
-                 2 0 2 0               ; hit/def/dam/arm mod
                  s_slime_asleep        ; sleep sprite
                  t_acid_spray          ; unarmed weapon
                  #t                    ; visible
@@ -126,7 +120,6 @@
                  mmode-walk        ; passability
                  22 2              ; hp mod/mult
                  0  0              ; mp mod/mult
-                 0 1 0 0           ; hit/def/dam/arm mod
                  s_corpse          ; sleep sprite
                  t_hands           ; natural (unarmed) weapon
                  #t                ; visible
@@ -144,7 +137,27 @@
                  mmode-walk        ; passability
                  5 1               ; hp mod/mult
                  20 10             ; mp mod/mult
-                 0 2 0 0           ; hit/def/dam/arm mod
+                 nil               ; sleep sprite
+                 t_fangs           ; natural (unarmed) weapon
+                 #t                ; visible
+                 sound-damage      ; damage sound
+                 sound-walking     ; walking sound
+                 nil               ; slots
+                 nil               ; native spells FIXME!!!!
+                 )
+
+(kern-mk-species 'sp_troll      ;; tag: script variable name
+                 "troll"        ;; name: used to display name in the UI
+                 5              ;; strength: limits armament weight
+                 1              ;; intelligence: unused by kernel (just reported in stats)
+                 5              ;; dexterity: used to avoid traps on chests
+                 speed-human    ;; speed: action points per turn
+                 6              ;; vision radius: in tiles
+                 mmode-walk     ;; movement mode: determines passability and cost of travel
+                 5              ;; base hp: hit points at level zero
+                 1              ;; hp multiplier: extra hp per level
+                 20             ;; base mp: mana points at level zero
+                 10             ;; mp multiplier: extra mana points per level
                  nil               ; sleep sprite
                  t_fangs           ; natural (unarmed) weapon
                  #t                ; visible

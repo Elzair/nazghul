@@ -35,12 +35,10 @@
                sp_human              ; species
                oc_druid              ; occ
                s_companion_druid     ; sprite
-               align-town            ; starting alignment
+               faction-men            ; starting alignment
                0 10 0                ; str/int/dex
                0 0                   ; hp mod/mult
                0 0                   ; mp mod/mult
-               0 0                   ; hit mod def mod
-               0 0                   ; dam mod arm mod
                30 0 9 9              ; hp/xp/mp/lvl
                'shroom-conv          ; conv
                sch_shroom            ; sched
@@ -53,12 +51,10 @@
               sp_ghast              ; species
               nil                   ; occ
               s_ghost               ; sprite
-              align-town            ; starting alignment
+              faction-men            ; starting alignment
               0 10 2                ; str/int/dex
               0 1                   ; hp mod/mult
               10 5                  ; mp mod/mult
-              0 0                   ; hit mod def mod
-              0 0                   ; dam mod arm mod
               240 0 8 8             ; hp/xp/mp/lvl
               nil                   ; conv
               nil                   ; sched
@@ -70,12 +66,10 @@
               sp_human              ; species
               oc_wizard             ; occ
               s_companion_wizard    ; sprite
-              align-player          ; starting alignment
+              faction-player          ; starting alignment
               0 10 2                ; str/int/dex
               0 1                   ; hp mod/mult
               10 5                  ; mp mod/mult
-              0 0                   ; hit mod def mod
-              0 0                    ; dam mod arm mod
               240 0 8 8             ; hp/xp/mp/lvl
               nil                   ; conv
               nil                   ; sched
@@ -87,12 +81,10 @@
               sp_yellow_slime       ; species
               oc_wizard             ; occ
               s_yellow_slime        ; sprite
-              align-player          ; starting alignment
+              faction-player          ; starting alignment
               0 10 2                ; str/int/dex
               0 1                   ; hp mod/mult
               10 5                  ; mp mod/mult
-              0 0                   ; hit mod def mod
-              0 0                   ; dam mod arm mod
               240 0 5 7             ; hp/xp/mp/lvl
               nil                   ; conv
               nil                   ; sched

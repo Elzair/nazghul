@@ -36,12 +36,10 @@
               sp_ghast              ; species
               nil                   ; occ
               s_ghost               ; sprite
-              align-town            ; starting alignment
+              faction-men            ; starting alignment
               0 10 2                ; str/int/dex
               0 1                   ; hp mod/mult
               10 5                  ; mp mod/mult
-              0 0                   ; hit mod def mod
-              0 0                   ; dam mod arm mod
               240 0 8 8             ; hp/xp/mp/lvl
               nil                   ; conv
               nil                   ; sched

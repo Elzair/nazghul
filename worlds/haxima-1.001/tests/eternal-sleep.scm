@@ -21,12 +21,10 @@
                                     sp_human              ; species
                                     oc_druid              ; occ
                                     s_companion_druid     ; sprite
-                                    align-town            ; starting alignment
+                                    faction-men            ; starting alignment
                                     0 10 0                ; str/int/dex
                                     0 0                   ; hp mod/mult
                                     0 0                   ; mp mod/mult
-                                    0 0                   ; hit mod def mod
-                                    0 0                   ; dam mod arm mod
                                     30 0 9 9              ; hp/xp/mp/lvl
                                     nil          ; conv
                                     nil            ; sched

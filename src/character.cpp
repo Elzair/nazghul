@@ -100,7 +100,6 @@ Character::Character(char *tag, char *name,
                      int str, int intl, int dex, 
                      int hpmod, int hpmult, 
                      int mpmod, int mpmult, 
-                     int hitmod, int defmod, int dammod, int armmod, 
                      int hp, int xp, 
                      int mp, int lvl)
         : hm(0), xp(xp), order(-1),
@@ -151,10 +150,6 @@ Character::Character(char *tag, char *name,
         this->sched        = NULL;
         this->appt         = 0;
         this->is_leader    = false;
-        this->hit_mod      = hitmod;
-        this->def_mod      = defmod;
-        this->dam_mod      = dammod;
-        this->arm_mod      = armmod;
         this->hp           = hp;        
         this->defenseBonus = 0;
         factionSwitch      = 0;
@@ -1145,10 +1140,6 @@ bool Character::initStock(struct species * species, struct occ * occ,
 	hp = getMaxHp();
 	mana = getMaxMana();
 
-        hit_mod = 0;
-        def_mod = 0;
-        dam_mod = 0;
-        arm_mod = 0;
         defenseBonus = 0;
         
 	initItems();
@@ -2304,8 +2295,6 @@ void Character::save(struct save *save)
                     this->getIntelligence(), this->getDexterity());
         save->write(save, "%d %d\n", this->hp_mod, this->hp_mult);
         save->write(save, "%d %d\n", this->mp_mod, this->mp_mult);
-        save->write(save, "%d %d\n", this->hit_mod, this->def_mod);
-        save->write(save, "%d %d\n", this->dam_mod,  this->arm_mod);
         save->write(save, "%d %d\n", this->getHp(), this->getExperience());
         save->write(save, "%d %d\n", this->getMana(), this->getLevel());
 
