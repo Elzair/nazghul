@@ -70,6 +70,8 @@
  
  ;; objects
  (list
+
+  (list (mk-generator t_dungeon_troll_generator) 11 6)
   
   ;; terrain features
   (list (mk-ladder-up 'p_shard 46 12) 1 4)

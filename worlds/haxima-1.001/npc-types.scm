@@ -248,6 +248,7 @@
    (mk-bandit-gob)))
 
 (define (mk-troll)
+  (display "mk-troll")(newline)
   (bind
    (mk-stock-char
     "a troll " ;;................name

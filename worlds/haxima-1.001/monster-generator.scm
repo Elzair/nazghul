@@ -59,6 +59,39 @@
        (method 'exec generate)))
 
 ;; ----------------------------------------------------------------------------
+;; mk-monster-generator-ifc -- make an interface for a monster generator in a
+;; town or dungeon
+;; ----------------------------------------------------------------------------
+(define (mk-monster-generator-ifc threshold max mk-monster is-monster?)
+  (define (roll-to-encounter)
+    (>= (modulo (random-next) 1000) threshold))
+  (define (not-too-many kobj)
+    (display "not-too-many")(newline)
+    (< (length (filter is-monster?
+                       (kern-place-get-beings (loc-place 
+                                               (kern-obj-get-location kobj)))))
+       max))
+  (define (player-out-of-sight? gen)
+    (display "player-out-of-sight?")(newline)
+    (define (can-see? members)
+      (display "can-see?")(newline)
+      (if (null? members)
+          #f
+          (or (kern-in-los? (kern-obj-get-location (car members))
+                            (kern-obj-get-location gen))
+              (can-see? (cdr members)))))
+    (not (can-see? (kern-party-get-members (kern-get-player)))))
+  (define (generate gen)
+    (if (and (roll-to-encounter)
+             (not-too-many gen)
+             (player-out-of-sight? gen))
+        (kern-obj-put-at (mk-monster)
+                         (kern-obj-get-location gen))))
+  (ifc '() 
+       (method 'exec generate)))
+
+
+;; ----------------------------------------------------------------------------
 ;; mk-wilderness-monster-generator -- make an object type for spawning random
 ;; encounters
 ;; ----------------------------------------------------------------------------
@@ -96,6 +129,20 @@
   (bind (kern-obj-set-visible (kern-mk-obj type 1) #f)
         (mk-ambush-gob x y w h msg)))
 
+;;----------------------------------------------------------------------------
+;; mk-monster-generator -- make an instance of a town or dungeon monster
+;; generator
+;;----------------------------------------------------------------------------
+(define (mk-monster-generator tag threshold max mk-monster is-monster?)
+  (mk-obj-type tag                                  ;; tag
+               nil                                  ;; name
+               nil                                  ;; sprite
+               layer-none                           ;; layer
+               (mk-monster-generator-ifc threshold  ;; ifc
+                                         max
+                                         mk-monster
+                                         is-monster?)))
+
 ;; ----------------------------------------------------------------------------
 ;; Monster Generators
 ;;
@@ -132,6 +179,7 @@
                                  faction-outlaw
                                  nil)
 
+(mk-monster-generator 't_dungeon_troll_generator 990 5 mk-troll char-is-troll?)
+
 (define (mk-generator type)
-  (display "mk-generator")(newline)
   (kern-obj-set-visible (kern-mk-obj type 1) #f))
