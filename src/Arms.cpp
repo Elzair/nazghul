@@ -28,11 +28,42 @@
 #include "Field.h"
 #include "place.h"
 
-/*****************************************************************************/
+ArmsType::ArmsType():missile(NULL), thrown(false), field(NULL), ubiquitousAmmo(false),
+                     weight(0) 
+{
+
+}
+
+bool ArmsType::isType(int classID) 
+{
+        if (classID == ARMS_TYPE_ID)
+                return true;
+        return ObjectType::isType(classID);
+}
+
+int ArmsType::getType() 
+{
+        return ARMS_TYPE_ID;
+}
+
 ArmsType::~ArmsType()
 {
 	if (missile != NULL)
 		delete missile;
+}
+
+bool ArmsType::init(char *tag, char *name, struct sprite * sprite,
+                    int slotMask, int damage, int armor,
+                    int numHands, int range) 
+{
+        if (!ObjectType::init(tag, name, item_layer, sprite))
+                return false;
+        this->slotMask = slotMask;
+        this->damage = damage;
+        this->armor = armor;
+        this->numHands = numHands;
+        this->range = range;
+        return true;
 }
 
 class ArmsType *ArmsType::getMissileType()
@@ -74,7 +105,7 @@ bool ArmsType::fire(class Character * target, int ox, int oy)
 		if (!missile->hitTarget())
 			return false;
 	}
-	target->attack(getAttackValue());
+	target->attack(getDamage());
 	return true;
 }
 
@@ -126,6 +157,66 @@ class ArmsType *ArmsType::getAmmoType()
 	if (missile == NULL)
 		return NULL;
 	return missile->getObjectType();
+}
+
+int ArmsType::getSlotMask()
+{
+        return slotMask;
+}
+
+int ArmsType::getDamage()
+{
+        return damage;
+}
+
+int ArmsType::getArmor()
+{
+        return armor;
+}
+
+int ArmsType::getNumHands()
+{
+        return numHands;
+}
+
+int ArmsType::getRange()
+{
+        return range;
+}
+
+bool ArmsType::isThrownWeapon()
+{
+        return thrown;
+}
+
+void ArmsType::setFieldType(class FieldType * type)
+{
+        field = type;
+}
+
+class FieldType *ArmsType::getFieldType()
+{
+        return field;
+}
+
+void ArmsType::setUbiquitousAmmo(bool val)
+{
+        ubiquitousAmmo = val;
+}
+
+bool ArmsType::ammoIsUbiquitous() 
+{
+        return ubiquitousAmmo;
+}
+
+void ArmsType::setWeight(int val) 
+{
+        weight = val;
+}
+
+int ArmsType::getWeight(void) 
+{
+        return weight;
 }
 
 /*****************************************************************************/

@@ -1941,7 +1941,7 @@ static class ArmsType *loadArmsSubType(char *tag, char *name,
                                        struct sprite *sprite)
 {
         class ArmsType *type;
-        int attackValue, defendValue, numHands, range, slotMask, thrown = 0, U =
+        int damage, armor, numHands, range, slotMask, thrown = 0, U =
             0, weight;
         int ret;
         char *missileTag = NULL;
@@ -1953,8 +1953,8 @@ static class ArmsType *loadArmsSubType(char *tag, char *name,
         if (!type)
                 return 0;
 
-        PARSE_INT("attackValue", attackValue);
-        PARSE_INT("defendValue", defendValue);
+        PARSE_INT("damage", damage);
+        PARSE_INT("armor", armor);
         PARSE_INT("slotMask", slotMask);
         PARSE_INT("numHands", numHands);
         PARSE_INT("range", range);
@@ -1973,8 +1973,7 @@ static class ArmsType *loadArmsSubType(char *tag, char *name,
         PARSE_INT("weight", weight);
 
         if (!type->
-            init(tag, name, sprite, slotMask, attackValue, defendValue,
-                 numHands, range)) {
+            init(tag, name, sprite, slotMask, damage, armor, numHands, range)){
                 delete type;
                 type = 0;
         }

@@ -96,6 +96,30 @@ CURSOR ls_whirlpool;  // From ss_u4
         layer   _layer  \
     }
 
+// gmcnutt: This is needed for projectiles, weapons and armor. It was in
+// weapons.ghul, but I wanted to use it in projectils.ghul and that must come
+// before weapons.ghul
+#define ARMS_TYPE(_tag,    _name,    _sprite,         \
+                  _damage, _armor,   _slot,   _hands, \
+                  _range,  _missile, _thrown, _uAmmo, \
+                  _field,  _weight)                   \
+    _tag {                      \
+        name           _name    \
+        sprite         _sprite  \
+        subtype        arms     \
+        damage         _damage  \
+        armor          _armor   \
+        slotMask       _slot    \
+        numHands       _hands   \
+        range          _range   \
+        missile        _missile \
+        thrown         _thrown  \
+        ubiquitousAmmo _uAmmo   \
+        field          _field   \
+        weight         _weight  \
+    }
+
+
 object_types {
   // This is needed later for CROSSHAIR
   GENERIC_TYPE(t_cursor, "cursor", s_crosshair, LAYER_CURSOR);

@@ -25,86 +25,42 @@
 #include "object.h"
 
 class ArmsType:public ObjectType {
-      public:
-	virtual bool isType(int classID) {
-		if (classID == ARMS_TYPE_ID)
-			return true;
-		return ObjectType::isType(classID);
-	}
-	virtual int getType() {
-		return ARMS_TYPE_ID;
-	}
 
-      ArmsType():missile(NULL), thrown(false), field(NULL), ubiquitousAmmo(false),
-	    weight(0) {
-	}
+      public:
+
+	virtual bool isType(int classID);
+	virtual int getType();
+
+        ArmsType();
 	virtual ~ ArmsType();
 	virtual bool init(char *tag, char *name, struct sprite * sprite,
-			  int slotMask, int attackValue, int defendValue,
-			  int numHands, int range) {
-		if (!ObjectType::init(tag, name, item_layer, sprite))
-			return false;
-		this->slotMask = slotMask;
-		this->attackValue = attackValue;
-		this->defendValue = defendValue;
-		this->numHands = numHands;
-		this->range = range;
-		return true;
-	}
-	virtual int getSlotMask() {
-		return slotMask;
-	}
-	virtual int getAttackValue() {
-		return attackValue;
-	}
-	virtual int getDefendValue() {
-		return defendValue;
-	}
-	virtual int getNumHands() {
-		return numHands;
-	}
-	virtual int getRange() {
-		return range;
-	}
-
+			  int slotMask, int damage, int defendValue,
+			  int numHands, int range);
+	virtual int getSlotMask();
+	virtual int getDamage();
+	virtual int getArmor();
+	virtual int getNumHands();
+	virtual int getRange();
 	virtual bool isMissileWeapon();
 	virtual void setMissileType(class ArmsType * missileType);
 	virtual class ArmsType *getMissileType();
-
 	virtual bool fire(class Character * target, int ox, int oy);
 	virtual bool fire(struct place *place, int ox, int oy, int tx, int ty);
-
-	virtual bool isThrownWeapon() {
-		return thrown;
-	}
+	virtual bool isThrownWeapon();
 	virtual void setThrown(bool val);
-
-	virtual void setFieldType(class FieldType * type) {
-		field = type;
-	}
-	virtual class FieldType *getFieldType() {
-		return field;
-	}
+	virtual void setFieldType(class FieldType * type);
+	virtual class FieldType *getFieldType();
 	virtual bool dropsField();
-
 	virtual class ArmsType *getAmmoType();
-	virtual void setUbiquitousAmmo(bool val) {
-		ubiquitousAmmo = val;
-	}
-	virtual bool ammoIsUbiquitous() {
-		return ubiquitousAmmo;
-	}
-	virtual void setWeight(int val) {
-		weight = val;
-	}
-	virtual int getWeight(void) {
-		return weight;
-	}
+	virtual void setUbiquitousAmmo(bool val);
+	virtual bool ammoIsUbiquitous();
+	virtual void setWeight(int val);
+	virtual int getWeight(void);
 
       protected:
 	int slotMask;
-	int attackValue;
-	int defendValue;
+	int damage;
+	int armor;
 	int numHands;
 	int range;
 	class Missile *missile;

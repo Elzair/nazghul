@@ -27,26 +27,57 @@
 #ifndef weapons_ghul
 #define weapons_ghul
 
-
-#define ARMS_TYPE(_tag,    _name,    _sprite,         \
-                  _attack, _defend,  _slot,   _hands, \
-                  _range,  _missile, _thrown, _uAmmo, \
-                  _field,  _weight)                   \
-    _tag {                      \
-        name           _name    \
-        sprite         _sprite  \
-        subtype        arms     \
-        attackValue    _attack  \
-        defendValue    _defend  \
-        slotMask       _slot    \
-        numHands       _hands   \
-        range          _range   \
-        missile        _missile \
-        thrown         _thrown  \
-        ubiquitousAmmo _uAmmo   \
-        field          _field   \
-        weight         _weight  \
-    }
+// Weapons
+// =======
+// to-hit = +/- 1 digit
+// damage = 2 digits, specifying a range with flat distribution
+// defense = +/- 1 digit
+//
+// Armor
+// =====
+// defense = +/- 1 digit
+// armour = 2 digits
+// (optionally damage and to-hit for spiked armours)
+//
+// Basic game random modifier for 
+//
+// Typical values:
+// ========================================================
+// item        | to-hit | damage | defense | armor  | range
+// ========================================================
+// club        | +0     | d6+2   | +0      | +0     | 1
+// short sword | +1     | d6+2   | +1      | +0     | 1
+// long sword  | +2     | d8+2   | +1      | +0     | 2
+// dagger      | +3     | d6     | +2      | +0     | 1
+// 2h sword    | +1     | d12+4  | -1      | +0     | 2
+// 2h club     | +0     | d10+5  | -2      | +0     | 2
+// short bow   | +1     | d6     | -2      | +0     | 6
+// long bow    | +1     | d8     | -2      | +0     | 9
+// flaming oil | +0     | d6     | -2      | +0     | 4
+// --------------------------------------------------------
+// armour
+// --------------------------------------------------------
+// leather     | +0     | +0     | +0      | d4-2   | 0
+// chain       | +0     | +0     | -1      | d3-1   | 0
+// plate       | +0     | +0     | -2      | d3+1   | 0
+// --------------------------------------------------------
+// helm
+// --------------------------------------------------------
+// leather     | +0     | +0     | +0      | d3-2   | 0
+// chain       | +0     | +0     | -1      | d3-1   | 0
+// plate       | +0     | +0     | -1      | 1      | 0
+// --------------------------------------------------------
+// boots
+// --------------------------------------------------------
+// leather     | +0     | +0     | +0      | d6-4   | 0
+// plate       | +0     | +0     | +0      | d3-1   | 0
+// --------------------------------------------------------
+// shields
+// --------------------------------------------------------
+// small       | +0     | +0     | +2      | 1      | 0
+// large       | +0     | +0     | +3      | 2      | 0
+// spiked      | +0     | d4+1   | +1      | 1      | 1
+// ========================================================
 
 
 ///////////////////////////////////////////////////////////////////////////

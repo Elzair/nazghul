@@ -37,8 +37,10 @@
 #ifndef projectiles_ghul
 #define projectiles_ghul
 
-
 #define PROJECTILE_TYPE(_tag, _name, _sprite, _field, _weight) \
+    ARMS_TYPE(_tag, _name, _sprite, 0, 0, NO_SLOT, 0, 0, \
+              null, 0, 0, _field, _weight)
+#if 0
     _tag {                      \
         name           _name    \
         sprite         _sprite  \
@@ -54,6 +56,7 @@
         field          _field   \
         weight         _weight  \
     }
+#endif
 
 // SAM: This macro seems unused...(moved it from types.ghul)
 #define AMMO_TYPE(_tag, _name, _sprite) \
