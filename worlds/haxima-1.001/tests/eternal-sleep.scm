@@ -37,29 +37,6 @@
                nil ;; hooks
                )
 
-(kern-mk-player 'player                     ; tag
-                s_companion_fighter         ; sprite
-                "Walk"                      ; movement description
-                sound-walking               ; movement sound
-                1000                        ; food
-                500                         ; gold
-                (+ align-player align-town) ; alignment
-                nil                         ; formation
-                nil                         ; campsite map
-                nil                         ; campsite formation
-                nil                         ; vehicle
-                ;; inventory
-                (kern-mk-container
-                 nil ;; type
-                 nil ;; trap
-                 ;; contents:
-                 (list
-                  (list 1 t_poison_immunity_potion)
-                  (list 1 the-goblin-lexicon)
-                  )
-
-                 )
-                nil ;; party members
-                )
+(load "tests/empty-party.scm")
 
 (kern-party-add-member player ch_shroom)

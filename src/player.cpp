@@ -44,6 +44,7 @@
 #include "ctrl.h"
 #include "session.h"
 #include "log.h"
+#include "factions.h"
 
 #include <unistd.h>
 #include <math.h>
@@ -202,7 +203,7 @@ enum move_result player_party::check_move_to(struct move_info *info)
 	}
 	// occupied (this handles occupied vehicles, too)
 	if ((npc_party = place_get_Party(info->place, info->x, info->y))) {
-		if (npc_party->isHostile(alignment)) {
+		if (are_hostile(this, npc_party)) {
 			if (info->place->wilderness) {
 				info->npc_party = npc_party;
 			}
@@ -337,7 +338,7 @@ void player_party::distributeMembers(struct place *new_place, int new_x,
         // this place then set to "character" mode.
         // --------------------------------------------------------------------
 
-        if (place_contains_hostiles(new_place, getAlignment())) {
+        if (place_contains_hostiles(new_place, this)) {
                 enableRoundRobinMode();
                 combat_set_state(COMBAT_STATE_FIGHTING);                
         } else {
@@ -744,7 +745,6 @@ player_party::player_party()
 	food               = 0;
 	view               = 0;
 	onMap              = true;
-	alignment          = 0;
 	gold               = 0;
 	formation          = 0;
 	campsite_map       = 0;
@@ -758,6 +758,7 @@ player_party::player_party()
         ctrl               = ctrl_party_ui;
         inventory          = NULL;
 
+        setBaseFaction(PLAYER_PARTY_FACTION);
         clearCombatExitDestination();
 	container_link.key = being_layer;
         view = mapCreateView();
@@ -766,7 +767,7 @@ player_party::player_party()
 player_party::player_party(char *_tag,
                            struct sprite *sprite,
                            char *movement_desc, char *movement_sound,
-                           int _food, int _gold, int align,
+                           int _food, int _gold,
                            struct formation *_formation, 
                            struct terrain_map *_camping_map,
                            struct formation *_camping_formation)
@@ -781,7 +782,6 @@ player_party::player_party(char *_tag,
 	light              = 1;
 	food               = _food;
 	view               = 0;
-	alignment          = align;
 	gold               = _gold;
 	formation          = _formation;
 	campsite_map       = _camping_map;
@@ -961,7 +961,7 @@ void player_party::removeMember(class Character *c)
         obj_dec_ref(c);
 }
 
-bool player_party::addMemberBackend(class Character * c)
+bool player_party::addMember(class Character * c)
 {
 	int i = 0;
 
@@ -977,7 +977,7 @@ bool player_party::addMemberBackend(class Character * c)
 	c->setOrder(size);
 	size++;
 	c->setPlayerControlled(true);
-	c->setAlignment(c->getAlignment() | alignment);
+	c->setBaseFaction(getBaseFaction());
 
         // gmcnutt: added this as a hack to support quickly determining if a
         // character belongs to the player party.
@@ -1032,22 +1032,7 @@ bool player_party::addMemberBackend(class Character * c)
         }
 
 	return true;
-}
 
-bool player_party::restoreMember(class Character * c)
-{
-        return addMemberBackend(c);
-}
-
-bool player_party::addMember(class Character * c)
-{
-        assert(getFaction());
-
-        if (! addMemberBackend(c))
-                return false;
-
-        c->pushFaction(getFaction());
-        return true;
 }
 
 void player_party::paint(int sx, int sy)
@@ -1188,23 +1173,6 @@ static bool member_uncharm(class Character *member, void *data)
 void player_party::unCharmMembers()
 {
         forEachMember(member_uncharm, NULL);
-}
-
-int player_party::getAlignment()
-{
-        return alignment;
-}
-
-static bool member_clear_alignment(class Character *member, void *data)
-{
-        member->clearAlignment(*((int*)data));
-        return false;
-}
-
-void player_party::clearAlignment(int alignment)
-{
-        this->alignment &= ~alignment;
-        forEachMember(member_clear_alignment, &alignment);
 }
 
 bool player_party::addToInventory(class Object *object)
@@ -1590,7 +1558,7 @@ void player_party::startSession(void)
         // this place then set to "character" mode.
         // --------------------------------------------------------------------
 
-        if (place_contains_hostiles(getPlace(), getAlignment())) {
+        if (place_contains_hostiles(getPlace(), this)) {
                 enableRoundRobinMode();
                 combat_set_state(COMBAT_STATE_FIGHTING);
         } else {
@@ -1648,8 +1616,7 @@ void player_party::save(save_t *save)
         save->write(save, "%s\n", this->sprite->tag);
         save->write(save, "\"%s\"\n", this->mv_desc);
         save->write(save, "\"%s\"\n", this->mv_sound);
-        save->write(save, "%d %d %d\n", this->food, this->gold,
-                this->alignment);
+        save->write(save, "%d %d\n", food, gold);
         save->write(save, "%s\n", 
                 this->formation ? this->formation->tag : "nil");
         save->write(save, "%s\n", 

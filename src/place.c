@@ -34,6 +34,7 @@
 #include "vehicle.h"
 #include "session.h"
 #include "log.h"
+#include "factions.h"
 
 // #define DEBUG
 // #undef debug_h
@@ -1026,8 +1027,12 @@ void place_synchronize(struct place *place)
 static void myResetObjectTurns(class Object * obj, void *data)
 {
 	obj->synchronize();
-        if (obj->isCharmed())
-                obj->unCharm();
+
+        if (obj->isType(CHARACTER_ID)) {
+                class Character *ch = (class Character*)obj;
+                if (ch->isCharmed())
+                        ch->unCharm();
+        }
 }
 
 void place_enter(struct place *place)
@@ -1523,36 +1528,6 @@ void place_exec(struct place *place, struct exec_context *context)
         place_unlock(place);
 }
 
-class Party *place_random_encounter(struct place *place)
-{
-	int i;
-	class PartyType *type;
-	class Party *npc;
-
-	if (! place->wilderness)
-		// Random encounters only occur in the wilderness
-		return 0;
-
-	// Roll to generate an encounter.
-	for (i = 0; i < place->n_typ_npc_parties; i++) {
-		if ((random() % 10000) <= place->typ_npc_parties[i].prob) {
-
-			// Create the party
-			type = place->typ_npc_parties[i].type;
-			npc = new Party();
-			if (!npc)
-				return 0;
-			npc->init(type);
-			npc->setAlignment(place->typ_npc_parties[i].align);
-			npc->createMembers();
-			return npc;
-		}
-	}
-
-	return 0;
-
-}
-
 void place_clip_to_map(struct place *place, int *x, int *y)
 {
 	if (place->wraps)
@@ -1664,14 +1639,16 @@ struct list *place_get_all_objects(struct place *place)
         return &place->turn_list;
 }
 
-int place_contains_hostiles(struct place *place, int alignment)
+int place_contains_hostiles(struct place *place, Being *subject)
 {
         struct list *elem;
         class Object *obj;
         
         list_for_each(&place->turn_list, elem) {
                 obj = outcast(elem, class Object, turn_list);
-                if (obj->isHostile(alignment))
+                if (! obj_is_being(obj))
+                        continue;
+                if (are_hostile((Being*)obj, subject))
                         return 1;
         }
 

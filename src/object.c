@@ -729,11 +729,6 @@ bool Object::isOpaque()
         return opacity;
 }
 
-int Object::getAlignment()
-{
-        return 0;
-}
-
 bool Object::joinPlayer()
 {
         return false;
@@ -827,11 +822,6 @@ bool Object::isDead()
         return false;
 }
 
-bool Object::isHostile(int alignment)
-{
-        return false;
-}
-
 enum control_mode Object::getControlMode()
 {
         return control_mode;
@@ -867,29 +857,9 @@ bool Object::isTurnEnded()
                 Quit);
 }
 
-void Object::charm(int alignment)
-{
-
-}
-
-bool Object::isCharmed()
-{
-        return false;
-}
-
-bool Object::isNativelyHostile(int alignment)
-{
-        return false;
-}
-
 bool Object::isPlayerPartyMember()
 {
         return false;
-}
-
-void Object::unCharm()
-{
-
 }
 
 bool Object::addToInventory(class Object *object)
@@ -921,10 +891,6 @@ int Object::getHp()
 bool Object::isCompanionOf(class Object *other)
 {
         return false;
-}
-
-void Object::clearAlignment(int alignment)
-{
 }
 
 int Object::getPclass()

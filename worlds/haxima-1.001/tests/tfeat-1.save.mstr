@@ -601,8 +601,6 @@
                 ;; hooks
                 (list
                 )
-                ;; factions
-                (list )                 
               )
               (list
                 #f
@@ -652,8 +650,6 @@
         ;; hooks
         (list
         )
-        ;; factions
-        (list )         
       )
     59 32)
   ) ;; end of objects
@@ -805,7 +801,7 @@
               sp_human
               oc_wizard
               s_companion_wizard
-              3
+              1
               40 50 42
               0 1
               10 5
@@ -822,8 +818,6 @@
               ;; hooks
               (list
               )
-              ;; factions
-              (list (list 0 1 ) )               
             )
           18 23)
           (list
@@ -833,7 +827,7 @@
               sp_yellow_slime
               oc_wizard
               s_yellow_slime
-              3
+              1
               8 18 4
               0 1
               10 5
@@ -854,8 +848,6 @@
                   0
                 )
               )
-              ;; factions
-              (list (list 0 1 ) )               
             )
           20 22)
           (list
@@ -979,7 +971,7 @@
   s_companion_fighter
   "Walk"
   "sounds/walk.wav"
-  1000 500 3
+  1000 500
   nil
   m_campsite
   nil

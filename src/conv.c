@@ -72,29 +72,6 @@ static int get_player_query(struct KeyHandler *kh, int key, int keymod)
 	return 0;
 }
 
-static struct response *lookup_response(struct conv *conv)
-{
-	struct response *resp;
-	int i;
-
-	/* Check the native query-response pairs */
-	for (i = 0; i < conv->n_qr_pairs; i++) {
-		if (!strncasecmp(C_query, conv->qr_pairs[i].query, C_len)) {
-			return conv->qr_pairs[i].response;
-		}
-	}
-
-	/* Recursively search the imported conversations */
-	for (i = 0; i < conv->n_imports; i++) {
-		resp = lookup_response(conv->imports[i]);
-		if (resp)
-			return resp;
-	}
-
-	/* No match found */
-	return 0;
-}
-
 static void set_query(char *str)
 {
 	snprintf(C_query, sizeof(C_query) - 1, "%s", str);

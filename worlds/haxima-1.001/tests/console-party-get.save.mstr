@@ -583,8 +583,6 @@
                 ;; hooks
                 (list
                 )
-                ;; factions
-                (list )                 
               )
               (list
                 #f
@@ -634,8 +632,6 @@
         ;; hooks
         (list
         )
-        ;; factions
-        (list )         
       )
     59 32)
   ) ;; end of objects
@@ -839,12 +835,12 @@
     (list
       (kern-mk-field f_sleep_perm -1)    34 24)
     (list
-      (kern-mk-party t_goblin_horde 4
+      (kern-mk-party t_goblin_horde 5
         (kern-mk-vehicle t_ship 1 100)
       )
     3 28)
     (list
-      (kern-mk-party t_skeleton_brigade 4
+      (kern-mk-party t_skeleton_brigade 5
         nil
       )
     25 19)
@@ -897,7 +893,7 @@
         s_companion_fighter
         "Walk"
         "sounds/walk.wav"
-        1010 500 3
+        1010 500
         nil
         m_campsite
         nil
@@ -950,7 +946,7 @@
             sp_human
             oc_wizard
             s_companion_wizard
-            3
+            1
             20 30 22
             0 1
             10 5
@@ -967,8 +963,6 @@
             ;; hooks
             (list
             )
-            ;; factions
-            (list (list 0 1 ) )             
           )
           (kern-mk-char
             'ch_slurmok
@@ -976,7 +970,7 @@
             sp_yellow_slime
             oc_wizard
             s_yellow_slime
-            3
+            1
             4 14 3
             0 1
             10 5
@@ -997,8 +991,6 @@
                 0
               )
             )
-            ;; factions
-            (list (list 0 1 ) )             
           )
         )
       )
@@ -1036,11 +1028,12 @@
 (kern-set-ascii ss_little_sprites 32)
 (kern-set-clock 0 0 0 0 14 6)
 (kern-mk-dtable
-  (list (list (list 0 0 ) ) (list (list 0 0 ) ) (list (list 0 0 ) ) (list (list 0 0 ) ) (list (list 0 -1 ) ) )
-  (list (list (list 0 0 ) ) (list (list 0 2 ) ) (list (list 0 1 ) ) (list (list 0 0 ) ) (list (list 0 -1 ) ) )
-  (list (list (list 0 -1 ) ) (list (list 0 1 ) ) (list (list 0 2 ) ) (list (list 0 -1 ) ) (list (list 0 -2 ) ) )
-  (list (list (list 0 -1 ) ) (list (list 0 0 ) ) (list (list 0 -1 ) ) (list (list 0 2 ) ) (list (list 0 -1 ) ) )
-  (list (list (list 0 -1 ) ) (list (list 0 -1 ) ) (list (list 0 -1 ) ) (list (list 0 -1 ) ) (list (list 0 2 ) ) )
+  (list (list (list 0 0 ) ) (list (list 0 0 ) ) (list (list 0 0 ) ) (list (list 0 0 ) ) (list (list 0 -1 ) ) (list (list 0 -2 ) ) )
+  (list (list (list 0 0 ) ) (list (list 0 2 ) ) (list (list 0 1 ) ) (list (list 0 0 ) ) (list (list 0 -1 ) ) (list (list 0 -2 ) ) )
+  (list (list (list 0 -1 ) ) (list (list 0 1 ) ) (list (list 0 2 ) ) (list (list 0 -1 ) ) (list (list 0 -2 ) ) (list (list 0 -2 ) ) )
+  (list (list (list 0 -1 ) ) (list (list 0 0 ) ) (list (list 0 -1 ) ) (list (list 0 2 ) ) (list (list 0 -1 ) ) (list (list 0 -2 ) ) )
+  (list (list (list 0 -1 ) ) (list (list 0 -1 ) ) (list (list 0 -1 ) ) (list (list 0 -1 ) ) (list (list 0 2 ) ) (list (list 0 -2 ) ) )
+  (list (list (list 0 -2 ) ) (list (list 0 -2 ) ) (list (list 0 -2 ) ) (list (list 0 -2 ) ) (list (list 0 -2 ) ) (list (list 0 0 ) ) )
 )
 ;; ---------
 ;; Astronomy

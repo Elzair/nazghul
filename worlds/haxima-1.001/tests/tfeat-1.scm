@@ -950,7 +950,7 @@
   s_companion_fighter
   "Walk"
   "sounds/walk.wav"
-  1000 500 3
+  1000 500
   nil
   m_campsite
   nil

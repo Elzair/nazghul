@@ -84,7 +84,7 @@
         s_companion_fighter
         "Walk"
         "sounds/walk.wav"
-        997 500 3
+        997 500
         nil
         nil
         nil
@@ -105,7 +105,7 @@
             sp_human
             oc_wizard
             s_companion_wizard
-            3
+            1
             20 30 22
             0 1
             10 5
@@ -122,8 +122,6 @@
             ;; hooks
             (list
             )
-            ;; factions
-            (list (list 0 1 ) )             
           )
         )
       )

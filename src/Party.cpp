@@ -37,6 +37,7 @@
 #include "event.h"
 #include "cmd.h"
 #include "cmdwin.h"
+#include "factions.h"
 
 #include <stdio.h>
 
@@ -186,12 +187,12 @@ Party::Party()
         setup();
 }
 
-Party::Party(class PartyType *type, int align, class Vehicle *_vehicle)
+Party::Party(class PartyType *type, int faction, class Vehicle *_vehicle)
         : Being(type)
 {
         setup();
         
-        alignment = align;
+        setBaseFaction(faction);
 
         // Vehicle
         if (!_vehicle) {
@@ -208,7 +209,6 @@ Party::Party(class PartyType *type, int align, class Vehicle *_vehicle)
 void Party::setup()
 {
 	act = WORKING;
-	alignment = 0;
 	fdx = 0;
 	fdy = 0;
 	size = 0;
@@ -263,21 +263,6 @@ int Party::getVisionRadius()
 void Party::init(int x, int y, struct place *place, class PartyType * type)
 {
         Object::init(x, y, place, type);
-}
-
-int Party::getAlignment()
-{
-        return alignment;
-}
-
-void Party::setAlignment(int val)
-{
-        alignment = val;
-}
-
-bool Party::isHostile(int alignment)
-{
-        return (!(this->alignment & alignment));
 }
 
 void Party::setFleeVector(int x, int y)
@@ -371,7 +356,7 @@ MoveResult Party::move(int dx, int dy)
                         return WasOccupied;
 
 		/* If this party is hostile to the player then begin combat */
-		if (isHostile(player_party->alignment)) {
+		if (are_hostile(this, player_party)) {
 
 			struct move_info info;
 			struct combat_info cinfo;
@@ -574,23 +559,6 @@ void Party::init(class PartyType * type)
 	Object::init(type);
 }
 
-#if 0
-void Party::init(class Character * ch)
-{
-	// This is a "wrapper" party around a single character.
-	PartyType *wtype = new PartyType();
-	wtype->init(ch);
-	Object::init(wtype);
-
-	isWrapper = true;
-	ch->setOrder(0);
-	ch->party = this;
-	list_add(&members, &ch->plist);
-	size = 1;
-	alignment = ch->getAlignment();
-}
-#endif
-
 bool Party::createMembers(void)
 {
 	int order = 0;
@@ -620,8 +588,7 @@ bool Party::createMembers(void)
 				 ginfo->occ ? ginfo->occ->name : "",
 				 instance++);
 			if (!(c->initStock(ginfo->species, ginfo->occ,
-					   ginfo->sprite, name, order,
-					   alignment)))
+					   ginfo->sprite, name, order)))
 				return false;
 
                         if (ginfo->ai) {
@@ -682,31 +649,6 @@ void Party::destroy()
 	Object::destroy();	// removes it
 }
 
-static bool myCleanupMember(class Character * c, void *data)
-{
-	class Party *party = (class Party *) data;
-
-	c->setCombat(false);
-
-	if (c->isOnMap())
-		c->remove();
-
-	if (c->isDead()) {
-		party->removeMember(c);
-		c->destroy();
-		delete c;
-	} else {
-		c->rejuvenate();
-	}
-
-	return false;
-}
-
-void Party::cleanupAfterCombat()
-{
-	forEachMember(myCleanupMember, this);
-}
-
 void Party::removeMember(class Character * c)
 {
 	list_remove(&c->plist);
@@ -722,8 +664,7 @@ bool Party::addMember(class Character * c)
         list_add(&members, &c->plist);
         c->party = this;
         size++;
-        if (hasFaction())
-                c->pushFaction(getFaction());
+        c->setBaseFaction(getBaseFaction());
 
         // Can't think of any reason why a char should be on the orphan list
         assert(! c->handle);
@@ -1093,9 +1034,8 @@ void Party::applyEffect(closure_t *effect)
 
 void Party::save(struct save *save)
 {
-        // fixme: need to add a vehicle constructor if in a vehicle
         save->enter(save, "(kern-mk-party %s %d\n",
-                    getObjectType()->getTag(), getAlignment());
+                    getObjectType()->getTag(), getBaseFaction());
         if (vehicle)
                 vehicle->save(save);
         else

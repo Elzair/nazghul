@@ -100,7 +100,6 @@ class Character:public Being {
 	virtual struct sprite *getSprite();
 	virtual int getFleeDx();
 	virtual int getFleeDy();
-	virtual int getAlignment();
 	virtual int getRestCredits(void);
         virtual char *get_damage_sound();
         virtual char *get_movement_sound();
@@ -121,11 +120,9 @@ class Character:public Being {
 	virtual bool isSolo();
 	virtual int  hasAmmo(class ArmsType * weapon);
 	virtual bool isFleeing();
-	virtual bool isHostile(int alignment);
 	virtual bool wasElevated(void);
 	virtual bool isVisible();
 	virtual bool isShaded();
-        virtual bool isNativelyHostile(int alignment);
         virtual bool isPlayerPartyMember();
         virtual bool canWanderTo(int newx, int newy);
 
@@ -148,23 +145,15 @@ class Character:public Being {
 	virtual void setPlayerControlled(bool val);
 	virtual void setAttackTarget(class Character * target);
 	virtual void setFleeing(bool val);
-	virtual void setAlignment(int val);
 	virtual void setCombat(bool val);
 	virtual void setRestCredits(int hours);
 	virtual void setElevated(bool val);
 	//virtual void setVisible(bool val);
-
-	bool initStock(struct species * species, struct occ * occ,
-		       struct sprite * sprite, char *name, int order,
-		       int alignment);
-
         virtual void ambushWhileCamping();
 	virtual void awaken(void);
         virtual void beginCamping(int hours);
         virtual void beginGuarding(int hours);
-        virtual void beginResting(int hours);
-        virtual void charm(int alignment);
-        virtual void clearAlignment(int alignment);
+        virtual void beginResting(int hours);        
 	virtual void damage(int amount);
         virtual void endCamping(void);
         virtual void endGuarding();
@@ -179,13 +168,10 @@ class Character:public Being {
 	virtual void remove();
 	virtual enum ReadyResult ready(class ArmsType * arms);
 	virtual void synchronize();
-        virtual void unCharm();
 	virtual bool unready(class ArmsType * arms);
 	virtual enum MoveResult move(int dx, int dy);
 	virtual enum MoveResult flee();
 	virtual void attackTerrain(int x, int y);
-	virtual void useAmmo();
-	virtual void rejuvenate();
 	virtual void initItems();
 	virtual void armThyself();
 	virtual bool needToRearm();
@@ -199,16 +185,21 @@ class Character:public Being {
         virtual bool tryToRelocateToNewPlace(struct place *place, 
                                              int x, int y,
                                              struct closure *closure);
-
 	virtual class ArmsType *enumerateArms();
 	virtual class ArmsType *enumerateWeapons();
-
-        void player_controlled_attack();
-        
-        // Inventory managemenet
         virtual bool addFood(int quantity);
         virtual bool add(ObjectType *type, int amount);
         virtual bool takeOut(ObjectType *type, int amount);
+        virtual int getCurrentFaction();
+
+        void charm(int faction);
+        void unCharm();
+	void useAmmo(class ArmsType *weapon);
+        bool canSee(class Object *obj);
+	bool gotoSpot(int x, int y);
+	bool commute();
+	bool initStock(struct species * species, struct occ * occ,
+		       struct sprite * sprite, char *name, int order);
 
 	char *tag;
 	struct list plist;	// party list
@@ -220,10 +211,6 @@ class Character:public Being {
 
 	struct astar_node *path;	// Added when I rewrote party
 	// rendezvous
-
-        bool canSee(class Object *obj);
-	bool gotoSpot(int x, int y);
-	bool commute();
 
         int hp_mod;
         int hp_mult;
@@ -239,10 +226,10 @@ class Character:public Being {
 
  protected:
 	bool initCommon(void);
-	virtual bool isAttackTargetInRange();
+	bool isAttackTargetInRange();
         void pathfind_to(class Object *target);
-        virtual void getAppointment();
-
+        void getAppointment();
+        
 	char *name;
 	int hm;
 
@@ -270,7 +257,6 @@ class Character:public Being {
 	bool fleeing;
 	int fleeX, fleeY;
 	int burden;
-	int native_alignment;
 	bool inCombat;
         char *damage_sound;
 
@@ -286,7 +272,6 @@ class Character:public Being {
 	int n_rest_credits;
 	bool elevated;
         bool charmed;
-        int charmed_alignment;
 
         // --------------------------------------------------------------------
         // Stuff for resting/camping:
@@ -302,6 +287,9 @@ class Character:public Being {
 
         bool is_leader;
         void (*ctrl)(class Character *character);
+
+        int factionSwitch;
+        int tmpFaction;
 
 };
 

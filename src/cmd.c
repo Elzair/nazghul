@@ -50,6 +50,7 @@
 #include "sched.h"
 #include "conv.h"
 #include "log.h"
+#include "factions.h"
 
 #define DEBUG
 #include "debug.h"
@@ -862,7 +863,7 @@ void cmdAttack(void)
         cmdwin_print("-%s", info.npc_party->getName());
 
         // If the npc is not hostile then get player confirmation.
-        if (!info.npc_party->isHostile(player_party->alignment)) {
+        if (! are_hostile(info.npc_party, player_party)) {
                 int yesno;
                 cmdwin_print("-attack non-hostile-<y/n>");
                 getkey(&yesno, yesnokey);
@@ -873,8 +874,7 @@ void cmdAttack(void)
                 }
                 cmdwin_print("yes");
 
-                // Make the npc party (and all its friends) hostile
-                player_party->alignment &= ~(info.npc_party->getAlignment());
+                make_hostile(info.npc_party, player_party);
         }
 
         // Log the attack.
@@ -2138,7 +2138,7 @@ void detailed_examine_XY(struct place *place, int x, int y)
                 //     o information specific to the object type, such as:
                 //     o Triggers: current state, and perhaps what it is 
                 //       connected to?
-                //     o NpcParties: alignment/hostility, movement mode 
+                //     o NpcParties: faction, movement mode 
                 //       (pmask), ...
                 //     o Vehicles: movement mode, armament, current HP
                 //     o Portable items: weapon/armor stats, (U)se effects, 

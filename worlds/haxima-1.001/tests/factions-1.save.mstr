@@ -63,7 +63,7 @@
         s_companion_fighter
         "Walk"
         "sounds/walk.wav"
-        1000 500 3
+        1000 500
         nil
         nil
         nil
@@ -84,7 +84,7 @@
             sp_ghast
             nil
             s_ghost
-            3
+            1
             20 30 22
             0 1
             10 5
@@ -99,8 +99,6 @@
             ;; hooks
             (list
             )
-            ;; factions
-            (list (list 0 1 ) (list 1 7 ) )             
           )
           (kern-mk-char
             'ch_shroom
@@ -108,7 +106,7 @@
             sp_human
             oc_druid
             s_companion_druid
-            3
+            1
             20 30 20
             0 0
             0 0
@@ -125,8 +123,6 @@
             ;; hooks
             (list
             )
-            ;; factions
-            (list (list 0 1 ) (list 2 3 ) (list 1 5 ) )             
           )
           (kern-mk-char
             'ch_broom
@@ -134,7 +130,7 @@
             sp_human
             oc_druid
             s_companion_druid
-            3
+            1
             20 30 20
             0 0
             0 0
@@ -151,8 +147,6 @@
             ;; hooks
             (list
             )
-            ;; factions
-            (list )             
           )
         )
       )

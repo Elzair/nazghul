@@ -66,7 +66,7 @@
         sp_human
         oc_druid
         s_companion_druid
-        3
+        1
         20 30 20
         0 0
         0 0
@@ -83,8 +83,6 @@
         ;; hooks
         (list
         )
-        ;; factions
-        (list (list 0 1 ) )         
       )
     8 9)
   ) ;; end of objects
@@ -97,7 +95,7 @@
   s_companion_fighter
   "Walk"
   "sounds/walk.wav"
-  1000 500 3
+  1000 500
   nil
   nil
   nil
@@ -109,8 +107,6 @@
     ;; contents
     (list
       (list 1 t_dagger)
-      (list 1 the-goblin-lexicon)
-      (list 1 t_poison_immunity_potion)
     )
   )
   (list

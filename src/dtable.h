@@ -36,15 +36,18 @@ BEGIN_DECL
 #define DTABLE_DEFAULT_ALLIES      2
 
 #define dtable_are_hostile(dtable,f1, f2) \
-        (dtable_get((dtable),(f1),(f2)) <= dtable_hostile)
+        (dtable_get((dtable),(f1),(f2)) <= dtable_hostile((dtable)))
 
 #define dtable_are_allies(dtable,f1, f2) \
-        (dtable_get((dtable),(f1),(f2)) >= dtable_allies)
+        (dtable_get((dtable),(f1),(f2)) >= dtable_allies((dtable)))
 
 #define dtable_set_hostile(tab,lvl)     ((tab)->hostile     = (lvl))
 #define dtable_set_allies(tab,lvl)      ((tab)->allies      = (lvl))
 #define dtable_set_lower_bound(tab,lvl) ((tab)->lower_bound = (lvl))
 #define dtable_set_upper_bound(tab,lvl) ((tab)->upper_bound = (lvl))
+
+#define dtable_hostile(tab)             ((tab)->hostile)
+#define dtable_allies(tab)              ((tab)->hostile)
 
 struct dtable {
         int n_factions;

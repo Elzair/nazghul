@@ -378,12 +378,6 @@ extern "C" {
 /* Action point values (temporary - should be moved to the load file) */
 #define NAZGHUL_BASE_ACTION_POINTS  1
 
-/* Factions */
-#define INVALID_HANDLE      -1
-#define INVALID_FACTION     -1
-#define NIL_FACTION          0
-#define PLAYER_PARTY_FACTION 1
-
 /* Macros ********************************************************************/
 
 #define perror_sdl(msg) err("%s: %s\n", (msg), SDL_GetError())
@@ -400,6 +394,7 @@ extern "C" {
     return (err); \
   memset((ptr), 0, sizeof(type));
 #define distance(dx,dy) (((dx)>(dy)) ? ((dx)+((dy)>>1)) : ((dy)+ (dx)>>1)))
+
 
 // SAM: The below are used by palette_print(), terrain_map_print(), etc.
 #define INITIAL_INDENTATION   0
@@ -430,7 +425,6 @@ extern int directionToDy(int dir);
 extern char *directionToString(int dir);
 extern bool isvowel(char c);
 extern bool point_in_rect(int x, int y, SDL_Rect *rect);
-
 
 #define keyIsDirection(key) ((key) >= KEY_SOUTHWEST && (key) <= KEY_NORTHEAST)
 

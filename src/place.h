@@ -84,12 +84,6 @@ struct location {
         int y;
 };
 
-struct typ_npc_party_info {
-        class PartyType *type;
-        int prob;
-        int align;
-};
-
 #define PLACE_MAGIC PLACE_ID
 
 struct place {
@@ -110,8 +104,6 @@ struct place {
         struct terrain_map *terrain_map;
         struct hash *objects;
         struct list vehicles;
-        int n_typ_npc_parties;
-        struct typ_npc_party_info *typ_npc_parties;
         int scale;
         bool wraps;
         bool dirty;
@@ -244,7 +236,7 @@ extern class Party *place_random_encounter(struct place *);
 extern void place_paint_objects(struct place *place, int mx, int my, int sx, int sy);
 extern int place_los_blocked(struct place *place, int ax, int ay, int bx, int by);
 extern void place_exec(struct place *place, struct exec_context *cntxt);
-extern int place_contains_hostiles(struct place *place, int alignment);
+extern int place_contains_hostiles(struct place *place, Being *subject);
 extern void place_synchronize(struct place *place);
 extern void place_enter(struct place *place);
 extern void place_remove_and_destroy_all_objects(struct place *place);
@@ -258,15 +250,6 @@ extern void place_for_each_object_at(struct place *place, int x, int y, void (*f
 extern void place_exit(struct place *place);
 extern void place_unlock(struct place *place);
 extern void place_describe(struct place *place, int x, int y, int flags);
-
-// Obsolescent global place lib:
-/* extern class Moongate *place_get_moongate(struct place *, int x, int y); */
-/* extern void placeAddObject(Object * object); */
-/* extern void placeRemoveObject(Object * object); */
-/* extern class Party *placeGetNPC(int x, int y); */
-/* extern void placeRemoveNPC(class Party * Party); */
-/* extern int placeGetMovementCost(int x, int y); */
-/* extern struct terrain *placeGetTerrain(int x, int y); */
 
 
 END_DECL

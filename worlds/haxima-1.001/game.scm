@@ -101,6 +101,7 @@
 (define faction-men      2)
 (define faction-orks     3)
 (define faction-accursed 4)
+(define faction-monster  5)
 
 ;; Layers (must match object.h)
 (define layer-none       0)

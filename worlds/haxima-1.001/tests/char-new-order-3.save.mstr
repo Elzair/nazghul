@@ -64,7 +64,7 @@
         sp_human
         oc_druid
         s_companion_druid
-        3
+        1
         20 30 20
         0 0
         0 0
@@ -81,8 +81,6 @@
         ;; hooks
         (list
         )
-        ;; factions
-        (list (list 0 1 ) )         
       )
     6 9)
     (list
@@ -92,7 +90,7 @@
         sp_ghast
         nil
         s_ghost
-        3
+        1
         20 30 22
         0 1
         10 5
@@ -107,8 +105,6 @@
         ;; hooks
         (list
         )
-        ;; factions
-        (list (list 0 1 ) )         
       )
     7 9)
     (list
@@ -118,7 +114,7 @@
         sp_human
         oc_druid
         s_companion_druid
-        3
+        1
         20 30 20
         0 0
         0 0
@@ -135,8 +131,6 @@
         ;; hooks
         (list
         )
-        ;; factions
-        (list (list 0 1 ) )         
       )
     8 9)
   ) ;; end of objects
@@ -149,7 +143,7 @@
   s_companion_fighter
   "Walk"
   "sounds/walk.wav"
-  1000 500 3
+  1000 500
   nil
   nil
   nil

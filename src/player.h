@@ -70,7 +70,7 @@ class player_party : public Party {
         player_party(char *tag,
                      struct sprite *sprite,
                      char *mv_desc, char *mv_sound,
-                     int food, int gold, int align,
+                     int food, int gold, 
                      struct formation *formation, 
                      struct terrain_map *camping_map,
                      struct formation *camping_formation);
@@ -81,13 +81,11 @@ class player_party : public Party {
         virtual struct sprite *getSprite(void);
         virtual char *getName(void);
         virtual bool isVisible();
-        virtual void clearAlignment(int alignment);
         virtual void describe();
         virtual void exec(struct exec_context *context);
         virtual void damage(int amount);
         virtual int getSpeed(void);
         virtual void decActionPoints(int points);
-        virtual int getAlignment();
         virtual void beginResting(int hours);
         virtual bool isResting();
         virtual void beginCamping(class Character *guard, int hours);
@@ -116,7 +114,6 @@ class player_party : public Party {
         class Character *get_leader(void);
 	virtual void removeMember(class Character *);
         virtual bool addMember(class Character *);
-        virtual bool restoreMember(class Character *);
         void add_spell(struct spell *spell, int quantity);
         char *get_movement_description();
         char *get_movement_sound();
@@ -159,7 +156,6 @@ class player_party : public Party {
 
         int food;
         bool onMap;
-        int alignment;
         int gold;
         struct formation *formation;
         struct terrain_map *campsite_map;
@@ -167,7 +163,6 @@ class player_party : public Party {
         struct position_info pinfo;
 
  protected:
-        bool addMemberBackend(class Character*);
         enum MoveResult try_to_move_off_map(struct move_info *info);
         bool turn_vehicle(void);
         void disableCurrentMode();

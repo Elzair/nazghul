@@ -70,15 +70,13 @@ class Party:public Being {
       public:
 
 	Party();
-        Party(class PartyType *type, int alignment, class Vehicle *vehicle);
+        Party(class PartyType *type, int faction, class Vehicle *vehicle);
 	~Party();
         void setup();
 
 	virtual bool isType(int classID);
-	virtual bool isHostile(int alignment);
 
         virtual int getActivity();
-	virtual int getAlignment();
 	virtual void getFleeVector(int *x, int *y);
 	virtual struct formation *get_formation();
         virtual char *get_movement_sound();
@@ -89,15 +87,11 @@ class Party:public Being {
         virtual struct sprite *getSprite();
 	virtual int getType();
 	virtual int getVisionRadius();
-
-	virtual void setAlignment(int val);
-	virtual void setFleeVector(int x, int y);
-        
+	virtual void setFleeVector(int x, int y);        
         virtual bool addEffect(struct effect *effect, struct gob *gob);
         virtual bool addMember(class Character *);
         virtual bool allDead();
         virtual void burn();
-	virtual void cleanupAfterCombat(void);
 	virtual bool createMembers();
         virtual void damage(int amount);
         virtual void describe();
@@ -136,6 +130,7 @@ class Party:public Being {
 	bool attack_with_ordnance(int d);
 	bool gotoSpot(int x, int y);
 
+
 	struct list members;
 
 	int act;
@@ -145,7 +140,6 @@ class Party:public Being {
 
       protected:
 
-	int alignment;
 	int fdx, fdy;
 	int size;
 	bool isWrapper;

@@ -23,7 +23,8 @@
 #define Being_h
 
 #include "object.h"
-#include "hstack.h"
+
+#define obj_is_being(obj) ((obj)->getLayer() == being_layer)
 
 class Being:public Object {
 
@@ -33,20 +34,12 @@ class Being:public Object {
         Being(class ObjectType *type);
 	~Being();
 
-        int pushFaction(int faction); // returns a handle
-        void popFaction();
-        void rmFaction(int handle);
-        int getFaction();
-        int setFaction(int faction); // returns a handle
-        bool hasFaction(); // false if stack empty
-        bool bottomFaction(); // true iff one faction on the stack
-        void restoreFaction(int handle, int faction);
+        int getBaseFaction();
+        void setBaseFaction(int faction);
+        virtual int getCurrentFaction();
 
       protected:
-
-        void saveFactions(struct save *);
-        void clearFactions();
-        hstack_t *factions;
+        int baseFaction;
 };
 
 #endif

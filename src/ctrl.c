@@ -35,6 +35,7 @@
 #include "sched.h"
 #include "session.h"
 #include "log.h"
+#include "factions.h"
 
 int G_latency_start = 0;
 
@@ -221,7 +222,7 @@ static void ctrl_work(class Party *party)
 
         /* Check if this party is friendly to the player or if the player is
          * not around */
-	if (party->getAlignment() & player_party->alignment ||
+	if (! are_hostile(party, player_party) ||
             Place != party->getPlace()) {
 		// This party is friendly to the player, so just wander for now
 		// (later I'll add schedules).
@@ -305,7 +306,7 @@ void ctrl_do_attack(class Character *character, class ArmsType *weapon,
 
         miss = ! weapon->fire(target, character->getX(), character->getY());
         character->decActionPoints(weapon->getRequiredActionPoints());
-        character->useAmmo();
+        character->useAmmo(weapon);
 
         if (miss) {
                 log_end("missed!");
@@ -349,7 +350,7 @@ ctrl_get_interfering_hostile(class Character *character)
                         being_layer);
                 
                 if (near &&
-                    near->isHostile(character->getAlignment()) &&
+                    are_hostile(near, character) &&
                     !near->isIncapacitated()) {
                         return near;
                 }
@@ -708,9 +709,8 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
 
                 case 'g':
                         cmdGet(character, 
-                               !place_contains_hostiles(
-                                       character->getPlace(), 
-                                       character->getAlignment()));
+                               !place_contains_hostiles(character->getPlace(), 
+                                                        character));
                         break;
                 case 'h':
                         cmdHandle(character);
@@ -808,7 +808,7 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
                         }
 
                         if (place_contains_hostiles(character->getPlace(), 
-                                                    character->getAlignment()))
+                                                    character))
                         {
                                 log_msg("Not while foes remain!");
                                 break;
@@ -944,11 +944,12 @@ static class Character * ctrl_select_target(class Character *character)
                 obj = outcast(elem, class Object, turn_list);
 
                 /* Skip invalid targets */
-                if (obj == character ||
+                if (! obj_is_being(obj) ||
+                    obj == character ||
                     !obj->isOnMap() ||
                     obj->isDead() ||
                     !obj->isType(CHARACTER_ID) ||
-                    !obj->isHostile(character->getAlignment()) ||
+                    !are_hostile((Being*)obj, character) ||
                     !character->canSee(obj))
                         continue;
 
@@ -972,7 +973,7 @@ static class Character * ctrl_select_target(class Character *character)
         new_target = character->getAttackTarget();
 
         if (new_target &&
-            new_target->isHostile(character->getAlignment()) &&
+            are_hostile(new_target, character) &&
             new_target != character &&
             new_target->isOnMap() &&
             !new_target->isDead() && 

@@ -50,6 +50,7 @@
 #include "session.h"
 #include "log.h"
 #include "vmask.h"
+#include "factions.h"
 
 #include <assert.h>
 #include <stdlib.h>
@@ -488,7 +489,7 @@ static bool myPutNpc(class Character * pm, void *data)
 
         /* Check if we need to go back to fighting */
         if (combat_get_state() != COMBAT_STATE_FIGHTING &&
-            pm->party->isHostile(player_party->alignment)) {
+            are_hostile(pm, player_party)) {
                 combat_set_state(COMBAT_STATE_FIGHTING);
         }
 
@@ -700,7 +701,6 @@ bool combat_place_character(class Character * pm, void *data)
         }
                 
         /* Do some one-time init */
-        //pm->setAlignment(player_party->alignment);
         pm->setCombat(true);
 #else
         pm->relocate(info->place, info->px, info->py);
@@ -856,7 +856,7 @@ enum combat_faction_status combat_get_hostile_faction_status(void)
         // ---------------------------------------------------------------------
         // Search the list of all objects in the current place. For each object
         // that is not a member of the player party check its native and
-        // charmed alignment.
+        // charmed faction.
         //
         // ==================================================
         // Native   | Charmed  | Result
@@ -888,7 +888,11 @@ enum combat_faction_status combat_get_hostile_faction_status(void)
 
         head = place_get_all_objects(Place);
         list_for_each(head, elem) {
+
                 obj = outcast(elem, class Object, turn_list);
+
+                if (! obj_is_being(obj))
+                        continue;
 
                 // -------------------------------------------------------------
                 // Player-controlled objects (objects in the player party) are
@@ -903,7 +907,7 @@ enum combat_faction_status combat_get_hostile_faction_status(void)
                 // simply hostile implies a hostile faction exists.
                 // -------------------------------------------------------------
 
-                if (obj->isHostile(player_party->getAlignment())) {
+                if (are_hostile((Being*)obj, player_party)) {
                         return COMBAT_FACTION_EXISTS;
                 }
 
@@ -913,7 +917,7 @@ enum combat_faction_status combat_get_hostile_faction_status(void)
                 // -------------------------------------------------------------
 
                 if (!found_charmed_hostile &&
-                    obj->isNativelyHostile(player_party->getAlignment())) {
+                    are_natively_hostile((Being*)obj, player_party)) {
                         found_charmed_hostile = true;
                 }
         }
@@ -938,6 +942,9 @@ enum combat_faction_status combat_get_player_faction_status(void)
 
                 obj = outcast(elem, class Object, turn_list);
 
+                if (! obj_is_being(obj))
+                        continue;
+
                 // ------------------------------------------------------------
                 // Non-player-controlled objects (objects not in the player
                 // party) are handled by combat_get_hostile_faction_status(),
@@ -952,7 +959,7 @@ enum combat_faction_status combat_get_player_faction_status(void)
                 // hostile implies a player faction exists.
                 // ------------------------------------------------------------
 
-                if (! obj->isHostile(player_party->getAlignment())) {
+                if (! are_hostile((Being*)obj, player_party)) {
                         return COMBAT_FACTION_EXISTS;
                 }
 
@@ -962,7 +969,7 @@ enum combat_faction_status combat_get_player_faction_status(void)
                 // ------------------------------------------------------------
 
                 if (!found_charmed_member &&
-                    !obj->isNativelyHostile(player_party->getAlignment())) {
+                    are_natively_hostile((Being*)obj, player_party)) {
                         found_charmed_member = true;
                 }
         }
@@ -972,24 +979,6 @@ enum combat_faction_status combat_get_player_faction_status(void)
 
         return COMBAT_FACTION_GONE;
         
-}
-
-static void combat_uncharm_all_hostiles()
-{
-        struct list *head;
-        struct list *elem;
-        class Object *obj;
-
-        head = place_get_all_objects(Place);
-        list_for_each(head, elem) {
-
-                obj = outcast(elem, class Object, turn_list);
-
-                if (obj->isNativelyHostile(player_party->getAlignment()) &&
-                    !obj->isHostile(player_party->getAlignment())) {
-                        obj->unCharm();
-                }
-        }
 }
 
 void combat_analyze_results_of_last_turn()
@@ -1073,21 +1062,6 @@ void combat_analyze_results_of_last_turn()
                 switch (hostile_faction_status) {
                         
                 case COMBAT_FACTION_EXISTS:
-                        // -----------------------------------------------------
-                        // All party members charmed and hostiles are closing
-                        // in. Uncharm the party members to avoid deadlocks
-                        // where the hostiles can't or won't finish off the
-                        // charmed party members.
-                        // -----------------------------------------------------
-                        combat_set_state(COMBAT_STATE_FIGHTING);
-                        break;
-
-                        // ----------------------------------------------------
-                        // Well, both sides are all charmed. An interesting
-                        // case. Again, to avoid deadlocks, uncharm the party
-                        // members. To be fair I'll uncharm the hostiles, too.
-                        // ----------------------------------------------------
-                        combat_uncharm_all_hostiles();
                         combat_set_state(COMBAT_STATE_FIGHTING);
                         break;
 
@@ -1158,7 +1132,8 @@ static void myFindAndPositionEnemy(class Object * obj, void *data)
                 return;
 
         info = (struct v2 *) data;
-        if (((class Party *) obj)->isHostile(player_party->alignment))
+        assert(obj_is_being(obj));
+        if (are_hostile((Being*)obj, player_party))
                 combat_set_state(COMBAT_STATE_FIGHTING);
         myPositionEnemy((class Party *) obj, info->dx, info->dy, false, info->place);
 }

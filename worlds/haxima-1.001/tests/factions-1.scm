@@ -83,26 +83,7 @@
               nil                   ; special ai
               (list t_dagger))      ; readied
 
-(kern-mk-player
- 'player                     ; tag
- s_companion_fighter         ; sprite
- "Walk"                      ; movement description
- sound-walking               ; movement sound
- 1000                        ; food
- 500                         ; gold
- (+ align-player align-town) ; alignment
- nil                         ; formation
- nil                         ; campsite map
- nil                         ; campsite formation
- nil                         ; vehicle
- ;; inventory
- (kern-mk-container
-  nil ;; type
-  nil ;; trap
-  nil ;; contents:
-  )
- nil ;; party members
- )
+(load "tests/empty-party.scm")
 
 (kern-party-add-member player ch_olin)
 (kern-party-add-member player ch_shroom)
@@ -141,38 +122,42 @@
 
 ;; These are the tests:
 (define char ch_olin)
-(define char2 ch_shroom)
-(define char3 ch_broom)
 
-;; basic push/pop
-(kern-being-push-faction char 4)
-(kern-being-pop-faction char)
+(if (not (= (kern-being-get-current-faction char) faction-player))
+    (error "test error 1"))
 
-;; remove 
-(define h1 (kern-being-push-faction char2 2))
-(kern-being-push-faction char2 3)
-(kern-being-rm-faction char2 h1)
+(if (not (= (kern-being-get-base-faction char) faction-player))
+    (error "test error 2"))
 
-;; has-faction?
-;; should be true:
-(if (kern-being-has-faction? char2)
-    (kern-being-push-faction char2 5))
-;; should be false:
-(if (not (kern-being-has-faction? char2))
-    (kern-being-push-faction char2 6))
+(kern-char-charm char faction-monster)
 
-;; bottom-faction?
-;; should be true:
-(if (kern-being-bottom-faction? char)
-    (kern-being-push-faction char 7))
-;; should be false:
-(if (kern-being-bottom-faction? char)
-    (kern-being-push-faction char 8))
+(if (not (= (kern-being-get-current-faction char) faction-monster))
+    (error "test error 3"))
 
-;; try to pop past the end
-(kern-being-pop-faction char3)
-(kern-being-pop-faction char3)
+(if (not (= (kern-being-get-base-faction char) faction-player))
+    (error "test error 4"))
 
-;; try to remove a bad handle
-(kern-being-rm-faction char 99)
-(kern-being-rm-faction char3 h1)
+(kern-char-uncharm char)
+
+(if (not (= (kern-being-get-current-faction char) faction-player))
+    (error "test error 5"))
+
+(if (not (= (kern-being-get-base-faction char) faction-player))
+    (error "test error 6"))
+
+(kern-char-charm char faction-monster)
+(kern-char-charm char faction-orks)
+
+(if (not (= (kern-being-get-current-faction char) faction-orks))
+    (error "test error 7"))
+
+(if (not (= (kern-being-get-base-faction char) faction-player))
+    (error "test error 8"))
+
+(kern-char-uncharm char)
+
+(if (not (= (kern-being-get-current-faction char) faction-orks))
+    (error "test error 9"))
+
+(if (not (= (kern-being-get-base-faction char) faction-player))
+    (error "test error 10"))

@@ -130,3 +130,6 @@
     (list (list 0 val)))
   (map dtable-col cols))
 
+(define (distance kobj-a kobj-b)
+  (kern-get-distance (kern-obj-get-location kobj-a)
+                     (kern-obj-get-location kobj-b)))

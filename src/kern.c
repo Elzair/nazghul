@@ -64,6 +64,7 @@
 #include "mmode.h"
 #include "log.h"
 #include "dtable.h"
+#include "factions.h"
 
 #include <assert.h>
 #include <ctype.h>              // isspace()
@@ -1362,11 +1363,6 @@ static pointer kern_mk_occ(scheme *sc, pointer args)
         return sc->NIL;
 }
 
-static void kern_being_restore_faction(int handle, int faction, void *context)
-{
-        ((Being *)context)->restoreFaction(handle, faction);
-}
-
 static int kern_load_hstack(scheme *sc, pointer args, 
                             void (*restore)(int, int, void *),
                             char *name, void *context)
@@ -1404,13 +1400,13 @@ static pointer kern_mk_char(scheme *sc, pointer args)
         pointer hook_tbl;
         pointer ret;
         pointer ai;
-        int alignment;
+        int base_faction;
         struct sched *sched;
         pointer factions;
 
         if (unpack(sc, &args, "yspppddddddddddddddddcpc",
                    &tag, &name, &species, &occ, 
-                   &sprite, &alignment, &str,
+                   &sprite, &base_faction, &str,
                    &intl, &dex, &hpmod, &hpmult, &mpmod, &mpmult, &hitmod, 
                    &defmod, &dammod, &armmod, &hp, &xp, &mp, &lvl, 
                    &conv, &sched, &ai)) {
@@ -1431,7 +1427,7 @@ static pointer kern_mk_char(scheme *sc, pointer args)
                                         mpmult, hitmod, defmod, dammod, armmod,
                                         hp, xp, mp, lvl);
         assert(character);
-        character->setAlignment(alignment);
+        character->setBaseFaction(base_faction);
         character->setSchedule(sched);
 
         if (conv != sc->NIL)
@@ -1481,14 +1477,6 @@ static pointer kern_mk_char(scheme *sc, pointer args)
                 gob->flags |= GOB_SAVECAR;
                 
                 character->restoreEffect(effect, gob, flags, clk);
-        }
-
-        /* Load the factions */
-        factions = scm_car(sc, args);
-        args = scm_cdr(sc, args);
-        if (kern_load_hstack(sc, factions, kern_being_restore_faction, 
-                             "kern-mk-char", (class Being *)character)) {
-                goto abort;
         }
 
         ret = scm_mk_ptr(sc, character);
@@ -1581,10 +1569,10 @@ static pointer kern_mk_party(scheme *sc, pointer args)
 {
         class Party *obj;
         class PartyType *type = 0;
-        int alignment;
+        int faction;
         class Vehicle *vehicle;
 
-        if (unpack(sc, &args, "pdp", &type, &alignment, &vehicle)) {
+        if (unpack(sc, &args, "pdp", &type, &faction, &vehicle)) {
                 load_err("kern-mk-party: bad args");
                 return sc->NIL;
         }
@@ -1594,8 +1582,9 @@ static pointer kern_mk_party(scheme *sc, pointer args)
                 return sc->NIL;
         }
 
-        obj = new Party(type, alignment, vehicle);
+        obj = new Party(type, faction, vehicle);
         assert(obj);
+
         return scm_mk_ptr(sc, obj);
 }
 
@@ -1833,7 +1822,7 @@ static pointer kern_mk_container(scheme *sc, pointer args)
 
 KERN_API_CALL(kern_mk_player)
 {
-        int food, gold, align;
+        int food, gold;
         char *mv_desc, *mv_sound, *tag;
         struct sprite *sprite;
         struct terrain_map *campsite;
@@ -1863,11 +1852,11 @@ KERN_API_CALL(kern_mk_player)
                 delete player_party;
         }
 
-        if (unpack(sc, &args, "ypssdddppppp", 
+        if (unpack(sc, &args, "ypssddppppp", 
                    &tag,
                    &sprite,
                    &mv_desc, &mv_sound,
-                   &food, &gold, &align,
+                   &food, &gold,
                    &form, &campsite, &camp_form, 
                    &vehicle, 
                    &inventory)) {
@@ -1883,26 +1872,15 @@ KERN_API_CALL(kern_mk_player)
         //members = scm_car(sc, scm_cdr(sc, args));
         members = scm_car(sc, args);
 
-/*         if (! scm_is_pair(sc, members)) { */
-/*                 load_err("kern-mk-player: no member list"); */
-/*                 return sc->NIL; */
-/*         } */
-
         player_party = new class player_party(tag, sprite, 
                                               mv_desc, 
                                               mv_sound,
-                                              food, gold, align, form, 
+                                              food, gold, form, 
                                               campsite, 
                                               camp_form);
         player_party->inventory = inventory;
 
-        /* Set the player's faction (WARNING: must do this before loading the
-         * members) */
-        player_party->setFaction(PLAYER_PARTY_FACTION);
-
-
-        /* Load the members. (WARNING: must set the player party faction before
-         * doing this) */
+        /* Load the members. */
         while (scm_is_pair(sc, members)) {
 
                 class Character *ch;
@@ -1920,7 +1898,7 @@ KERN_API_CALL(kern_mk_player)
                 /* fixme: looks like a hack below */
                 ch->setRestCredits(MAX_USEFUL_REST_HOURS_PER_DAY);
 
-                if (! player_party->restoreMember(ch)) {
+                if (! player_party->addMember(ch)) {
                         load_err("kern-mk-player: failed to add %s to player "
                                  "party", ch->getName());
                         goto abort;
@@ -2913,15 +2891,6 @@ KERN_API_CALL(kern_obj_get_light)
         return scm_mk_integer(sc, obj->getLight());
 }
 
-KERN_API_CALL(kern_obj_get_alignment)
-{
-        Object *obj = unpack_obj(sc, &args, "kern-obj-get-alignment");
-        if (!obj)
-                return sc->NIL;
-
-        return scm_mk_integer(sc, obj->getAlignment());
-}
-
 KERN_API_CALL(kern_obj_get_mmode)
 {
         struct mmode *mmode;
@@ -3708,19 +3677,18 @@ KERN_API_CALL(kern_mk_stock_char)
         struct species *species;
         struct occ *occ;
         struct sprite *sprite;
-        int alignment;
         char *name;
         pointer ai;
 
-        if (unpack(sc, &args, "pppsdc", &species, &occ, &sprite, &name, 
-                   &alignment, &ai)) {
+        if (unpack(sc, &args, "pppsc", &species, &occ, &sprite, &name, 
+                   &ai)) {
                 rt_err("kern-mk-stock-char: bad args");
                 return sc->NIL;
         }
 
         character = new class Character();
         assert(character);
-        character->initStock(species, occ, sprite, name, 0, alignment);
+        character->initStock(species, occ, sprite, name, 0);
         if (ai != sc->NIL) {
                 character->ai = closure_new(sc, ai);
                 closure_ref(character->ai);
@@ -3938,7 +3906,6 @@ KERN_API_CALL(kern_add_time_stop)
 
 KERN_API_CALL(kern_char_is_hostile)
 {
-        int align;
         class Character *one, *another;
 
         if (unpack(sc, &args, "pp", &one, &another)) {
@@ -3951,7 +3918,7 @@ KERN_API_CALL(kern_char_is_hostile)
                 return sc->F;                
         }
 
-        return one->isHostile(another->getAlignment()) ? sc->T : sc->F;
+        return are_hostile(one, another) ? sc->T : sc->F;
 }
 
 KERN_API_CALL(kern_add_xray_vision)
@@ -4010,25 +3977,6 @@ KERN_API_CALL(kern_map_set_jitter)
 
         mapJitter(val);
         return sc->T;
-}
-
-KERN_API_CALL(kern_char_set_alignment)
-{
-        int val;
-        class Character *ch;
-
-        ch = (class Character*)unpack_obj(sc, &args, "kern-char-set-alignment");
-        if (!ch)
-                return sc->NIL;
-
-        if (unpack(sc, &args, "d", &val)) {
-                rt_err("kern-char-set-alignment: bad args");
-                return sc->NIL;
-        }
-        
-        ch->setAlignment(val);
-
-        return sc->NIL;
 }
 
 KERN_API_CALL(kern_char_kill)
@@ -4702,114 +4650,52 @@ KERN_API_CALL(kern_party_add_member)
         return sc->F;
 }
 
-KERN_API_CALL(kern_being_push_faction)
+KERN_API_CALL(kern_being_set_base_faction)
 {
         class Being *being;
         int faction;
-        int handle = INVALID_HANDLE;
 
-        being = (Being*)unpack_obj(sc, &args, "kern-being-push-faction");
+        being = (class Character*)unpack_obj(sc, &args, "kern-being-set-base-faction");
         if (!being)
                 goto done;
 
         if (unpack(sc, &args, "d", &faction)) {
-                rt_err("kern-being-push-faction:<faction>: bad arg");
+                rt_err("kern-being-set-base-faction:<faction>: bad arg");
                 goto done;
         }
 
-        handle = being->pushFaction(faction);
+        being->setBaseFaction(faction);
  done:
-        return scm_mk_integer(sc, handle);
-}
-
-KERN_API_CALL(kern_being_pop_faction)
-{
-        class Being *being;
-
-        being = (Being*)unpack_obj(sc, &args, "kern-being-pop-faction");
-        if (!being)
-                goto done;
-
-        being->popFaction();
- done:
-        return sc->NIL;
-}
-
-KERN_API_CALL(kern_being_rm_faction)
-{
-        class Being *being;
-        int handle = INVALID_HANDLE;
-
-        being = (Being*)unpack_obj(sc, &args, "kern-being-rm-faction");
-        if (!being)
-                goto done;
-
-        if (unpack(sc, &args, "d", &handle)) {
-                rt_err("kern-being-rm-faction:<handle>: bad arg");
-                goto done;
-        }
-
-        being->rmFaction(handle);
- done:
-        return sc->NIL;
-}
-
-KERN_API_CALL(kern_being_set_faction)
-{
-        class Being *being;
-        int faction;
-        int handle = INVALID_HANDLE;
-
-        being = (Being*)unpack_obj(sc, &args, "kern-being-set-faction");
-        if (!being)
-                goto done;
-
-        if (unpack(sc, &args, "d", &faction)) {
-                rt_err("kern-being-set-faction:<faction>: bad arg");
-                goto done;
-        }
-
-        handle = being->setFaction(faction);
- done:
-        return scm_mk_integer(sc, handle);
+        return scm_mk_ptr(sc, being);
 
 }
 
-KERN_API_CALL(kern_being_get_faction)
+KERN_API_CALL(kern_being_get_current_faction)
 {
         class Being *being;
         int faction = INVALID_FACTION;
 
-        being = (Being*)unpack_obj(sc, &args, "kern-being-get-faction");
+        being = (Being*)unpack_obj(sc, &args, "kern-being-get-current-faction");
         if (!being)
                 goto done;
 
-        faction = being->getFaction();
+        faction = being->getCurrentFaction();
  done:
         return scm_mk_integer(sc, faction);
 }
 
-KERN_API_CALL(kern_being_has_faction)
+KERN_API_CALL(kern_being_get_base_faction)
 {
         class Being *being;
+        int faction = INVALID_FACTION;
 
-        being = (Being*)unpack_obj(sc, &args, "kern-being-has-faction?");
+        being = (Being*)unpack_obj(sc, &args, "kern-being-get-base-faction");
         if (!being)
-                return sc->F;
+                goto done;
 
-        return being->hasFaction() ? sc->T : sc->F;
-}
-
-KERN_API_CALL(kern_being_bottom_faction)
-{
-        class Being *being;
-
-        being = (Being*)unpack_obj(sc, &args, "kern-being-bottom-faction?");
-        if (!being)
-                return sc->F;
-
-        return being->bottomFaction() ? sc->T : sc->F;
-
+        faction = being->getBaseFaction();
+ done:
+        return scm_mk_integer(sc, faction);
 }
 
 scheme *kern_init(void)
@@ -4874,7 +4760,6 @@ scheme *kern_init(void)
         scm_define_proc(sc, "kern-obj-dec-ap", kern_obj_dec_ap);
         scm_define_proc(sc, "kern-obj-dec-light", kern_obj_dec_light);
         scm_define_proc(sc, "kern-obj-destroy", kern_obj_destroy);
-        scm_define_proc(sc, "kern-obj-get-alignment", kern_obj_get_alignment);
         scm_define_proc(sc, "kern-obj-get-activity", kern_obj_get_activity);
         scm_define_proc(sc, "kern-obj-get-gob", kern_obj_get_gob);
         scm_define_proc(sc, "kern-obj-get-light", kern_obj_get_light);
@@ -4912,7 +4797,6 @@ scheme *kern_init(void)
         scm_define_proc(sc, "kern-char-get-species", kern_char_get_species);
         scm_define_proc(sc, "kern-char-kill", kern_char_kill);
         scm_define_proc(sc, "kern-char-resurrect", kern_char_resurrect);
-        scm_define_proc(sc, "kern-char-set-alignment", kern_char_set_alignment);
         scm_define_proc(sc, "kern-char-set-sleep", kern_char_set_sleep);
         scm_define_proc(sc, "kern-char-set-fleeing", kern_char_set_fleeing);
         scm_define_proc(sc, "kern-char-is-asleep?", kern_char_is_asleep);
@@ -5005,13 +4889,10 @@ scheme *kern_init(void)
         scm_define_proc(sc, "kern-party-add-member", kern_party_add_member);
         
         /* kern-being-api */
-        scm_define_proc(sc, "kern-being-push-faction", kern_being_push_faction);
-        scm_define_proc(sc, "kern-being-pop-faction", kern_being_pop_faction);
-        scm_define_proc(sc, "kern-being-rm-faction", kern_being_rm_faction);
-        scm_define_proc(sc, "kern-being-set-faction", kern_being_set_faction);
-        scm_define_proc(sc, "kern-being-get-faction", kern_being_get_faction);
-        scm_define_proc(sc, "kern-being-has-faction?", kern_being_has_faction);
-        scm_define_proc(sc, "kern-being-bottom-faction?", kern_being_bottom_faction);
+        scm_define_proc(sc, "kern-being-get-base-faction", kern_being_get_base_faction);
+        scm_define_proc(sc, "kern-being-get-current-faction", kern_being_get_current_faction);
+        scm_define_proc(sc, "kern-being-set-base-faction", kern_being_set_base_faction);
+
 
         /* Revisit: probably want to provide some kind of custom port here. */
         scheme_set_output_port_file(sc, stderr);

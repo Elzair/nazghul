@@ -49,6 +49,7 @@
 #include "sprite.h"
 #include "mmode.h"
 #include "log.h"
+#include "factions.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -112,7 +113,7 @@ Character::Character(char *tag, char *name,
           currentArms(NULL), target(NULL),
           rdyArms(NULL),
           fleeing(false), fleeX(0), fleeY(0), burden(0),
-          native_alignment(0), inCombat(false),
+          inCombat(false),
           container(NULL), sprite(sprite), n_rest_credits(0), elevated(false)
 {
         if (tag) {
@@ -128,6 +129,7 @@ Character::Character(char *tag, char *name,
 	list_init(&plist);
 	list_init(&llist);
 	setPlayerControlled(false);	// by default
+        setBaseFaction(NIL_FACTION);
 
 	this->light        = MIN_PLAYER_LIGHT;
 	this->party        = 0;
@@ -155,6 +157,8 @@ Character::Character(char *tag, char *name,
         this->arm_mod      = armmod;
         this->hp           = hp;        
         this->defenseBonus = 0;
+        factionSwitch      = 0;
+        tmpFaction         = NIL_FACTION;
 
         setActivity(NONE);
 
@@ -163,13 +167,7 @@ Character::Character(char *tag, char *name,
 	this->hp = min(this->hp, getMaxHp());
 	this->mana = min(this->mana, getMaxMana());
 
-        // ------------------------------------------------------------------
-        // Initially always off-map. Loader will position us, put us in a
-        // party, or whatever.
-        // ------------------------------------------------------------------
-
         setOnMap(false);
-
 }
 
 Character::Character():name(0), hm(0), xp(0), order(-1),
@@ -182,13 +180,20 @@ Character::Character():name(0), hm(0), xp(0), order(-1),
                        currentArms(NULL), target(NULL),
                        rdyArms(NULL),
                        fleeing(false), fleeX(0), fleeY(0), burden(0),
-                       native_alignment(0), inCombat(false),
+                       inCombat(false),
                        container(NULL), sprite(0), n_rest_credits(0), 
                        elevated(false)
 {
+        // --------------------------------------------------------------------
+        // Note: this constructor is called by Party::createMembers(); it will
+        // call Character::initStock() after we return, which will call
+        // Character::initCommon().
+        // --------------------------------------------------------------------
+
 	list_init(&plist);
 	list_init(&llist);
 	setPlayerControlled(false);	// by default
+        setBaseFaction(NIL_FACTION);
 
 	light        = MIN_PLAYER_LIGHT;
 	tag          = 0;
@@ -213,6 +218,8 @@ Character::Character():name(0), hm(0), xp(0), order(-1),
         conv         = NULL;
         appt         = 0;
         is_leader    = false;
+        factionSwitch= 0;
+        tmpFaction   = NIL_FACTION;
 
         //assert(place);
 
@@ -227,7 +234,6 @@ Character::Character():name(0), hm(0), xp(0), order(-1),
         setX(-1);
         setY(-1);
         setOnMap(false);
-
 }
 
 
@@ -527,7 +533,7 @@ enum MoveResult Character::move(int dx, int dy)
                 
 
 		// Is the occupant an enemy?
-		if (!(getAlignment() & occupant->getAlignment())) {
+		if (are_hostile(this, occupant)) {
 			return WasImpassable;
 		}
 
@@ -898,18 +904,7 @@ void Character::attackTerrain(int x, int y)
 {
 	class ArmsType *weapon = getCurrentWeapon();
 	weapon->fire(getPlace(), getX(), getY(), x, y);
-	useAmmo();
-}
-
-void Character::rejuvenate(void)
-{
-	// Clear all conditions and restore health and mana to full capacity.
-
-	setAlignment(party->getAlignment());
-	heal(getMaxHp());
-	mana = lvl * HP_PER_LVL;
-	if (isAsleep())
-		awaken();
+	useAmmo(weapon);
 }
 
 void Character::dropRdyArms()
@@ -995,9 +990,8 @@ void Character::initItems()
 	}
 }
 
-void Character::useAmmo()
+void Character::useAmmo(class ArmsType *weapon)
 {
-	class ArmsType *weapon = getCurrentWeapon();
 	if (weapon->ammoIsUbiquitous())
 		return;
 
@@ -1125,8 +1119,7 @@ bool Character::initCommon(void)
 }
 
 bool Character::initStock(struct species * species, struct occ * occ,
-			  struct sprite * sprite, char *name, int order,
-			  int alignment)
+			  struct sprite * sprite, char *name, int order)
 {
 	// This is to initialize characters being automatically generated to
 	// fill out an NPC party. I think of them as "stock" characters since
@@ -1143,7 +1136,6 @@ bool Character::initStock(struct species * species, struct occ * occ,
 	if (!this->name)
 		return false;
 	this->order = order;
-	this->native_alignment = alignment;
 
 	str = species->str;
 	intl = species->intl;
@@ -1285,7 +1277,7 @@ class Object *Character::clone()
 		return NULL;
 
 	snprintf(buf, sizeof(buf), "clone of %s", getName());
-	clone->initStock(species, occ, sprite, buf, 0, 0);
+	clone->initStock(species, occ, sprite, buf, 0);
 	clone->is_clone = true;
 	return clone;
 }
@@ -1298,7 +1290,6 @@ bool Character::isVisible()
 bool Character::isShaded()
 {
 	// Friendly invisible characters are shaded
-	// return (!isHostile(Player.alignment) && !isVisible());
 	return isPlayerControlled();
 }
 
@@ -1450,20 +1441,6 @@ void Character::setName(char *name) {
 
 void Character::setOrder(int order) {
         this->order = order;
-}
-
-int Character::getAlignment() {
-        if (charmed)
-                return charmed_alignment;
-        return native_alignment;
-}
-
-void Character::setAlignment(int val) {
-        native_alignment = val;
-}
-
-bool Character::isHostile(int alignment) {
-        return ((getAlignment() & alignment) == 0);
 }
 
 void Character::setCombat(bool val) {
@@ -1969,103 +1946,93 @@ void Character::setSolo(bool val)
         }
 }
 
-void Character::charm(int new_alignment)
+void Character::unCharm()
 {
+        // Check for illegal request
+        if (0 == factionSwitch) {
+                warn("%s:uncharm:factionSwitch 0", getName());
+                return;
+        }
+
+        // Decrement the faction switch.
+        factionSwitch--;
+
+        // If the faction switch is still on then there are other charms in
+        // effect and we don't want to disturb them. NOTE: the last faction
+        // used with charm will remain in effect until the factionSwitch falls
+        // to zero. This will match most expected behavior related to multiple
+        // charm effects.
+        if (factionSwitch)
+                return;
+
+        // Is this an NPC or a party member?
+        if (! isPlayerPartyMember()) {
+                
+                // Revert the NPC to AI-control
+                setControlMode(CONTROL_MODE_AUTO);
+                
+                // Remove the NPC's map view, if any
+                if (NULL != getView()) {
+                        rmView();
+                        mapDestroyView(getView());
+                        setView(NULL);
+                }
+                
+        } else {
+
+                // Set the party member's control mode based on the party's
+                // current control mode.
+                switch (player_party->getPartyControlMode()) {
+                case PARTY_CONTROL_ROUND_ROBIN:
+                        setControlMode(CONTROL_MODE_PLAYER);
+                        break;
+                case PARTY_CONTROL_SOLO:
+                        setControlMode(CONTROL_MODE_IDLE);
+                        break;
+                case PARTY_CONTROL_FOLLOW:
+                        if (isLeader()) {
+                                setControlMode(CONTROL_MODE_PLAYER);
+                        } else {
+                                setControlMode(CONTROL_MODE_FOLLOW);
+                        }
+                        break;
+                }
+        }
+}
+
+void Character::charm(int newFaction)
+{
+
         if (isDead())
                 return;
 
-        if (new_alignment != native_alignment) {
+        // Increment the faction switch.
+        factionSwitch++;
 
-                if (isPlayerPartyMember())
-                        /*Object::*/setControlMode(CONTROL_MODE_AUTO);
-                else {
-                        // ----------------------------------------------------
-                        // Create and add a view for this object.
-                        // ----------------------------------------------------
-
-                        setView(mapCreateView());
-                        addView();
-                        /*Object::*/setControlMode(CONTROL_MODE_PLAYER);
-                }
-
-                charmed = true;
-                consolePrint("%s is charmed!\n", getName());
-
-        } else {
-
-                charmed = false;
-
-                if (! isPlayerPartyMember()) {
-
-                        // ----------------------------------------------------
-                        // Revert npc party member to AI control
-                        // ----------------------------------------------------
-                        /*Object::*/setControlMode(CONTROL_MODE_AUTO);
-                        if (NULL != getView()) {
-                                rmView();
-                                mapDestroyView(getView());
-                                setView(NULL);
-                        }
-
-                } else {
-
-                        // ----------------------------------------------------
-                        // Figure out what control mode a newly un-charmed
-                        // player party member needs to use.
-                        // ----------------------------------------------------
-
-                        switch (player_party->getPartyControlMode()) {
-                        case PARTY_CONTROL_ROUND_ROBIN:
-                                /*Object::*/setControlMode(CONTROL_MODE_PLAYER);
-                                break;
-                        case PARTY_CONTROL_SOLO:
-                                /*Object::*/setControlMode(CONTROL_MODE_IDLE);
-                                break;
-                        case PARTY_CONTROL_FOLLOW:
-                                if (isLeader()) {
-                                        /*Object::*/setControlMode(CONTROL_MODE_PLAYER);
-                                } else {
-                                        /*Object::*/setControlMode(CONTROL_MODE_FOLLOW);
-                                }
-                                break;
-                        }
-                }
-
-                consolePrint("%s is un-charmed!\n", getName());
+        // Set the temporary faction (possibly clobbering the previous one).
+        tmpFaction = newFaction;
+        
+        if (isPlayerPartyMember())
+                // Switch the party member to be AI-controlled.
+                setControlMode(CONTROL_MODE_AUTO);
+        else {
+                // Add a map view for the non-party member
+                setView(mapCreateView());
+                addView();
+                
+                // Switch the non-party member to be player-controlled
+                setControlMode(CONTROL_MODE_PLAYER);
         }
-
-        charmed_alignment = new_alignment;
-
 }
 
 bool Character::isCharmed()
 {
-        return charmed;
-}
-
-bool Character::isNativelyHostile(int alignment)
-{
-        return (0 == (native_alignment & alignment));
+        return (factionSwitch > 0);
 }
 
 bool Character::isPlayerPartyMember()
 {
         return (class Object*)party == (class Object*)player_party;
-}
-
-void Character::unCharm()
-{
-        charm(native_alignment);
-
-        // -------------------------------------------------------------------
-        // Make passing out a normal aspect of charm recovery. This helps make
-        // the recovery obvious to the player.
-        //
-        // gmcnutt 2004-June-24 addendum: but this sleep never expires, because
-        // it is not applied as an effect.
-        // -------------------------------------------------------------------
-
-        //changeSleep(true);
 }
 
 void Character::setControlMode(enum control_mode mode)
@@ -2242,11 +2209,6 @@ bool Character::isCompanionOf(class Object *other)
         return isPlayerPartyMember() && other->isPlayerPartyMember();
 }
 
-void Character::clearAlignment(int alignment)
-{
-        native_alignment &= ~alignment;
-}
-
 bool Character::joinPlayer(void)
 {
         class Party *old_party = party;
@@ -2330,7 +2292,7 @@ void Character::save(struct save *save)
         save->write(save, "%s\n",  this->species->tag);
         save->write(save, "%s\n", this->occ ? this->occ->tag : "nil");
         save->write(save, "%s\n", this->sprite->tag);
-        save->write(save, "%d\n", this->native_alignment); /* "charmed" is applied as an effect on load */
+        save->write(save, "%d\n", baseFaction); /* "charmed" is applied as an effect on load */
         save->write(save, "%d %d %d\n", this->getStrength(), 
                     this->getIntelligence(), this->getDexterity());
         save->write(save, "%d %d\n", this->hp_mod, this->hp_mult);
@@ -2367,9 +2329,6 @@ void Character::save(struct save *save)
 
         // Hooks
         Object::saveHooks(save);
-
-        // Factions
-        saveFactions(save);
 
         save->exit(save, ")\n");
 
@@ -2439,4 +2398,12 @@ void Character::addDefense(int val)
 struct mmode *Character::getMovementMode()
 {
         return species->mmode;
+}
+
+int Character::getCurrentFaction()
+{
+        if (factionSwitch > 0)
+                return tmpFaction;
+
+        return getBaseFaction();
 }

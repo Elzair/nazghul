@@ -231,7 +231,6 @@ class Object {
 
         virtual char *get_movement_sound();
         virtual int getActivity();
-        virtual int getAlignment();
         virtual enum control_mode getControlMode();
         virtual int getCount();
         virtual int getHp();
@@ -254,12 +253,9 @@ class Object {
 	virtual bool isDestroyed();
         virtual bool isOnMap();
         virtual bool isDead();
-        virtual bool isHostile(int alignment);
 	virtual bool isSelected();
         virtual bool isTurnEnded();
         virtual bool isCameraAttached();
-        virtual bool isCharmed();
-        virtual bool isNativelyHostile(int alignment);
         virtual bool isPlayerPartyMember();
         virtual bool isPlayerControlled();
         virtual bool canWanderTo(int x, int y);
@@ -269,8 +265,6 @@ class Object {
         virtual void updateView();
         virtual bool addToInventory(class Object *object);
         virtual void attachCamera(bool val);
-        virtual void charm(int alignment);
-        virtual void clearAlignment(int alignment);
 	virtual void heal(int amount);
         virtual void save(struct save *save);
         virtual void setLight(int val);
@@ -282,7 +276,6 @@ class Object {
         virtual void setCount(int count);
 	virtual void setPlace(struct place *place);
 	virtual void select(bool val);
-        virtual void unCharm();
 	virtual void destroy();
 	virtual void relocate(struct place *newplace, int newx, int newy, 
                               bool noStep = false, 
