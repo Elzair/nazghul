@@ -83,9 +83,10 @@ extern "C" {
                                          struct place *place,
                                          class Missile *missile);
 
-        void mapAttachCamera(class Object *subject);
-        void mapDetachCamera(class Object *subject);
+        extern void mapAttachCamera(class Object *subject);
+        extern void mapDetachCamera(class Object *subject);
         extern void mapSetLosStyle(char *los);
+        extern void mapUpdateTile(struct place *place, int x, int y);
 
 #ifdef __cplusplus
 }

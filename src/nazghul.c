@@ -39,6 +39,7 @@
 #include "cmdwin.h"
 #include "formation.h"
 #include "map.h"
+#include "vmask.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -231,7 +232,8 @@ static void nazghul_init_internal_libs(void)
                 { "astar_init",     astar_init     },
                 { "cmdwin_init",    cmdwin_init    },
                 { "consoleInit",    consoleInit    },
-                { "mapInit",        mapInit        }
+                { "mapInit",        mapInit        },
+                { "vmask_init",     vmask_init     }
         };
 
         int i;

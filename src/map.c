@@ -29,27 +29,31 @@
 #include "terrain.h"
 #include "Missile.h"
 #include "object.h"
+#include "vmask.h"
 
 #include <SDL.h>
 #include <math.h>
 
-#define PROFILE_REPAINT 0
+#define PROFILE_REPAINT 1
 #define PROFILE_ANIMATE 1
 
-#define MVIEW_W  (MAP_TILE_W * 2 + 1)
-#define MVIEW_H  (MAP_TILE_H * 2 + 1)
-#define LMAP_W   (MVIEW_W)
-#define LMAP_H   (MVIEW_H)
-#define VMASK_W  (MVIEW_W)
-#define VMASK_H  (MVIEW_H)
+#define LMAP_W     (VMASK_W)
+#define LMAP_H     (VMASK_H)
 
-#define VMASK_SZ (VMASK_W * VMASK_H)
-#define MVIEW_SZ (sizeof(struct mview) + VMASK_SZ)
-#define LMAP_SZ (LMAP_W * LMAP_H)
+#define MVIEW_SZ   (sizeof(struct mview))
+#define LMAP_SZ    (LMAP_W * LMAP_H)
 #define MAX_LIGHTS LMAP_SZ
+#define PEER_ZOOM  2
 
-#define LIT 255
-#define UNLIT 0
+#define LIT        255
+#define UNLIT      0
+
+#define mview_x(mview)        ((mview)->vrect.x)
+#define mview_y(mview)        ((mview)->vrect.y)
+#define mview_w(mview)        ((mview)->vrect.w)
+#define mview_h(mview)        ((mview)->vrect.h)
+#define mview_center_x(mview) (mview_x(mview) + mview_w(mview) / 2)
+#define mview_center_y(mview) (mview_y(mview) + mview_h(mview) / 2)
 
 /* Global flag changeble by command-line parameters. */
 int map_use_circular_vision_radius = 0;
@@ -62,7 +66,7 @@ struct mview {
 	struct list list;	/* used internally by map lib */
 	SDL_Rect vrect;		/* map coords of vrect */
         SDL_Rect subrect;       /* offset into visible subrect of vrect */
-	char *vmask;		/* visibility mask */
+	//char *vmask;		/* visibility mask */
 	int rad;		/* light radius */
 	int zoom;
 	int dirty:1;		/* needs repaint */
@@ -89,40 +93,9 @@ static struct map {
 // this makes dungeons appear too bright - I like them dark and gloomy.
 static unsigned char lmap[LMAP_SZ];
 
-static void myUpdateAlphaMask(struct mview *view)
-{
-	int vx;
-	int vy;
-	int mx;
-	int my;
-	int index = 0;
-
-	for (vy = 0; vy < view->vrect.h; vy++) {
-		my = view->vrect.y + vy;
-		for (vx = 0; vx < view->vrect.w; vx++) {
-			mx = view->vrect.x + vx;
-			LosEngine->alpha[index] =
-			    place_visibility(Map.place, mx, my);
-			index++;
-		}
-	}
-}
-
 static void myRmView(struct mview *view, void *data)
 {
 	list_remove(&view->list);
-}
-
-static void myRecomputeLos(struct mview *view, void *data)
-{
-        if (NULL == LosEngine)
-                return;
-
-	myUpdateAlphaMask(view);
-	if (LosEngine->r > 0)
-		LosEngine->r = view->rad;
-	LosEngine->compute(LosEngine);
-	memcpy(view->vmask, LosEngine->vmask, VMASK_SZ);
 }
 
 static void mapMergeRects(SDL_Rect *src_rect, unsigned char *src,
@@ -185,25 +158,22 @@ static void mapMergeRects(SDL_Rect *src_rect, unsigned char *src,
 	}
 }
 
-static void myMergeVmask(struct mview *view, void *data)
+static void mapMergeView(struct mview *view, void *data)
 {
 	int r_src, r_src_start, c_src, c_src_start, i_src, r_end, c_end;
 	int r_dst, r_dst_start, c_dst, c_dst_start, i_dst;
 	int tmp;
+        char *vmask;
 
 	/* Skip this view if it is the active view */
 	if (view == Map.aview)
 		return;
 
-	/* 
-	 * x |<-- w -->| 
-         *   +--------------------+ | A | | +-------------------+-y
-	 * | |/////////.  |^ | |/////////.  || | |/////////.  || | |/////////.
-	 * || | |/////////.  || | |/////////.  || | |/////////.  || |
-	 * |/////////.  || | |/////////.  |h | |/////////.  || | |/////////.  ||
-	 * | |/////////.  || | |/////////.  || | |/////////.  || | |/////////.
-	 * || | |/////////.  |v +----------|..........  |- | B |
-	 * +-------------------+ */
+        // ---------------------------------------------------------------------
+        // Find the indices to merge from depending on the relationship between
+        // the map view rectangle and the mview being merged.
+        // ---------------------------------------------------------------------
+
 	if (view->vrect.x < Map.aview->vrect.x) {
 		/* This view leftmost (A) */
 		tmp = view->vrect.x + view->vrect.w - Map.aview->vrect.x;
@@ -240,13 +210,28 @@ static void myMergeVmask(struct mview *view, void *data)
 		r_dst_start = view->vrect.y - Map.aview->vrect.y;
 	}
 
+        // ---------------------------------------------------------------------
+        // From the vmask cache, fetch the vmask corresponding to the tile in
+        // the center of the view from the vmask cache. (This will automatically
+        // create the vmask if it doesn't already exist).
+        // ---------------------------------------------------------------------
+
+        vmask = vmask_get(Map.place, mview_center_x(view), mview_center_y(view));
+        assert(vmask);
+        if (NULL == vmask)
+                return;
+
+        // ---------------------------------------------------------------------
+        // Copy the contents of the view's vmask to the master vmask.
+        // ---------------------------------------------------------------------
+
 	for (r_src = r_src_start, r_dst = r_dst_start; r_src < r_end;
 	     r_src++, r_dst++) {
 		for (c_src = c_src_start, c_dst = c_dst_start; c_src < c_end;
 		     c_src++, c_dst++) {
-			i_src = r_src * MVIEW_W + c_src;
-			i_dst = r_dst * MVIEW_W + c_dst;
-			Map.vmask[i_dst] |= view->vmask[i_src];
+			i_src = r_src * VMASK_W + c_src;
+			i_dst = r_dst * VMASK_W + c_dst;
+			Map.vmask[i_dst] |= vmask[i_src];
 		}
 	}
 }
@@ -289,7 +274,6 @@ static void mapDumpRect(char *name, SDL_Rect *rect, unsigned char *data)
 
 static void mapMergeLightSource(struct light_source *light, struct mview *main_view)
 {
-        unsigned char tmp_vmask[VMASK_SZ];
         int radius;
         int vmask_i;
         struct mview tmp_view;
@@ -298,60 +282,30 @@ static void mapMergeLightSource(struct light_source *light, struct mview *main_v
         int map_x;
         int map_y;
         int D;
+        char *vmask;
 
         // ---------------------------------------------------------------------
         // Initialize the temporary view to be centered on the light
         // source. (Note: ignore the subrect, it shouldn't matter)
+        //
+        // REVISIT: not sure I'm calculating vrect.x right: VMASK_W is odd
         // ---------------------------------------------------------------------
 
-        memset(&tmp_view, 0, sizeof(tmp_view));
-        memset(&tmp_vmask, 0, sizeof(tmp_vmask));
-        tmp_view.vrect.x = place_wrap_x(Map.place, light->x - (MVIEW_W / 2));
-        tmp_view.vrect.y = place_wrap_y(Map.place, light->y - (MVIEW_H / 2));
-        tmp_view.vrect.w = MVIEW_W;
-        tmp_view.vrect.h = MVIEW_H;
-        tmp_view.vmask   = (char*)tmp_vmask;
+        memset(&tmp_view,  0, sizeof(tmp_view));
+        tmp_view.vrect.x = place_wrap_x(Map.place, light->x - (VMASK_W / 2));
+        tmp_view.vrect.y = place_wrap_y(Map.place, light->y - (VMASK_H / 2));
+        tmp_view.vrect.w = VMASK_W;
+        tmp_view.vrect.h = VMASK_H;
         tmp_view.zoom    = 1;
 
-        // ---------------------------------------------------------------------
-        // Build a vmask using the standard LOS algorithm. For performance,
-        // limit the radius based on the brightness of the light source and the
-        // size of our vmask.
-        // ---------------------------------------------------------------------
+        radius = min(mapCalcMaxLightRadius(light->light), VMASK_W / 2);
 
-        myUpdateAlphaMask(&tmp_view);
-        radius = min(mapCalcMaxLightRadius(light->light), MVIEW_W / 2);
-        LosEngine->r = radius;
-        LosEngine->compute(LosEngine);
-        memcpy(tmp_view.vmask, LosEngine->vmask, VMASK_SZ);
-
-
-#if 0
         // ---------------------------------------------------------------------
-        // For each visible tile in the vmask, calculate how much light is
-        // hitting that tile from the light source. This loop is unoptimized,
-        // and checks tiles that aren't within the radius of the light source.
+        // Fetch the vmask from the cache.
         // ---------------------------------------------------------------------
 
-        vmask_i = 0;
-        for (y = 0; y < tmp_view.vrect.h; y++) {
+        vmask = vmask_get(Map.place, light->x, light->y);
 
-                map_y = place_wrap_y(Map.place, tmp_view.vrect.y + y);
-
-                for (x = 0; x < tmp_view.vrect.w; x++, vmask_i++) {
-
-                        // skip non-visible tiles
-                        if (tmp_view.vmask[vmask_i] == 0)
-                                continue;
-                                
-                        map_x = place_wrap_x(Map.place, tmp_view.vrect.x + x);
-
-                        D = place_flying_distance(Map.place, light->x, light->y, map_x, map_y);
-                        D = D * D + 1;
-                        tmp_view.vmask[vmask_i] = min(light->light / D, 255);
-                }
-        }
-#else
         // ---------------------------------------------------------------------
         // For each visible tile in the vmask, calculate how much light is
         // hitting that tile from the light source. The loop optimizes by only
@@ -360,30 +314,30 @@ static void mapMergeLightSource(struct light_source *light, struct mview *main_v
         // it yet on my slow one.
         // ---------------------------------------------------------------------
 
-        int min_y = MVIEW_H / 2 - radius;
-        int max_y = MVIEW_H / 2 + radius;
-        int min_x = MVIEW_W / 2 - radius;
-        int max_x = MVIEW_W / 2 + radius;
+        int min_y = VMASK_H / 2 - radius;
+        int max_y = VMASK_H / 2 + radius;
+        int min_x = VMASK_W / 2 - radius;
+        int max_x = VMASK_W / 2 + radius;
 
         for (y = min_y; y < max_y; y++) {
 
                 map_y = place_wrap_y(Map.place, tmp_view.vrect.y + y);
-                vmask_i = y * MVIEW_W + min_x;
+                vmask_i = y * VMASK_W + min_x;
                 
                 for (x = min_x; x < max_x; x++, vmask_i++) {
 
                         // skip non-visible tiles
-                        if (tmp_view.vmask[vmask_i] == 0)
+                        if (vmask[vmask_i] == 0)
                                 continue;
                                 
                         map_x = place_wrap_x(Map.place, tmp_view.vrect.x + x);
 
                         D = place_flying_distance(Map.place, light->x, light->y, map_x, map_y);
                         D = D * D + 1;
-                        tmp_view.vmask[vmask_i] = min(light->light / D, 255);
+                        vmask[vmask_i] = min(light->light / D, 255);
                 }
         }
-#endif
+
         // ---------------------------------------------------------------------
         // Merge this source's lightmap (contained in the vmask we just built)
         // with the main lightmap.
@@ -393,7 +347,7 @@ static void mapMergeLightSource(struct light_source *light, struct mview *main_v
         // the vrect to the radius? Would that work?
         // ---------------------------------------------------------------------
 
-        mapMergeRects(&tmp_view.vrect, (unsigned char*)tmp_view.vmask, &main_view->vrect, lmap);
+        mapMergeRects(&tmp_view.vrect, (unsigned char*)vmask, &main_view->vrect, lmap);
 
 }
 
@@ -473,13 +427,13 @@ static void myShadeScene(SDL_Rect *subrect)
 	rect.w = TILE_W;
 	rect.h = TILE_H;
 
-        lmap_i = subrect->y * MVIEW_W + subrect->x;
+        lmap_i = subrect->y * VMASK_W + subrect->x;
         //lmap_i = 0;
 
 	// Iterate over the tiles in the map window and the corresponding
 	// values in the lightmap simultaneously */
 	for (y = 0; y < MAP_TILE_H; y++, rect.y += TILE_H, 
-                     lmap_i += LMAP_W /*lmap_i += MVIEW_W*/) {
+                     lmap_i += LMAP_W /*lmap_i += VMASK_W*/) {
 		for (x = 0, rect.x = Map.srect.x;
 		     x < MAP_TILE_W; x++, rect.x += TILE_W) {
 
@@ -503,7 +457,7 @@ static inline void myAdjustCameraInBounds(void)
 	Map.cam_y = max(Map.cam_y, Map.cam_min_y);
 }
 
-void mapForEach(void (*fx) (struct mview *, void *), void *data)
+void mapForEachView(void (*fx) (struct mview *, void *), void *data)
 {
 	struct list *list;
 	list = Map.views.next;
@@ -520,15 +474,7 @@ void mapForEach(void (*fx) (struct mview *, void *), void *data)
 void mapSetLosStyle(char *los)
 {
 	/* fixme -- why create this here? why not just pass it in? */
-#if 0
-	LosEngine = los_create(los, MAP_TILE_W, MAP_TILE_H,
-			       map_use_circular_vision_radius ?
-			       MAX_VISION_RADIUS : -1);
-#else
-	LosEngine = los_create(los, MVIEW_W, MVIEW_H,
-			       map_use_circular_vision_radius ?
-			       MAX_VISION_RADIUS : -1);
-#endif
+	LosEngine = los_create(los, VMASK_W, VMASK_H, map_use_circular_vision_radius ? MAX_VISION_RADIUS : -1);
 	if (!LosEngine) {
 		mapDestroyView(Map.cam_view);
                 assert(false);
@@ -544,10 +490,12 @@ int mapInit(void)
 	if (!(Map.cam_view = mapCreateView()))
 		return -1;
 
-	Map.srect.x = MAP_X;
-	Map.srect.y = MAP_Y;
-	Map.srect.w = MAP_W;
-	Map.srect.h = MAP_H;
+	list_init(&Map.views);
+
+	Map.srect.x   = MAP_X;
+	Map.srect.y   = MAP_Y;
+	Map.srect.w   = MAP_W;
+	Map.srect.h   = MAP_H;
 
 	Map.fpsRect.x = MAP_X;
 	Map.fpsRect.y = MAP_Y;
@@ -564,9 +512,8 @@ int mapInit(void)
 	Map.clkRect.x = MAP_X + MAP_W - Map.clkRect.w;
 	Map.clkRect.y = MAP_Y;
 
-	list_init(&Map.views);
-	Map.peering = false;
-        LosEngine = NULL;
+	Map.peering   = false;
+        LosEngine     = NULL;
 
 	return 0;
 }
@@ -609,10 +556,9 @@ struct mview *mapCreateView(void)
 	/* Initialize the new view */
 	memset(v, 0, MVIEW_SZ);
 	list_init(&v->list);
-	v->vrect.w = MVIEW_W;
-	v->vrect.h = MVIEW_H;
-	v->vmask = (char *) v + sizeof(*v);
-        v->zoom = 1;
+	v->vrect.w   = VMASK_W;
+	v->vrect.h   = VMASK_H;
+        v->zoom      = 1;
         v->subrect.w = MAP_TILE_W * v->zoom;
         v->subrect.h = MAP_TILE_H * v->zoom;
         v->subrect.x = (v->vrect.w - v->subrect.w) / 2;
@@ -635,7 +581,7 @@ void mapAddView(struct mview *view)
 void mapRmView(struct mview *view)
 {
 	if (view == ALL_VIEWS)
-		mapForEach(myRmView, 0);
+		mapForEachView(myRmView, 0);
 	else
 		myRmView(view, 0);
 }
@@ -648,13 +594,15 @@ void mapCenterView(struct mview *view, int x, int y)
 	view->vrect.y = place_wrap_y(Map.place, y);
 }
 
+#if 0
 void mapRecomputeLos(struct mview *view)
 {
 	if (view == ALL_VIEWS)
-		mapForEach(myRecomputeLos, 0);
+		mapForEachView(myRecomputeLos, 0);
 	else
 		myRecomputeLos(view, 0);
 }
+#endif
 
 void mapRepaintClock(void)
 {
@@ -686,7 +634,7 @@ static void map_convert_point_to_vrect(int *x, int *y)
         }
 }
 
-static void map_paint_cursor(void)
+static void mapUpdateCursor(void)
 {
         int x, y;
         int sx, sy;
@@ -703,10 +651,8 @@ static void map_paint_cursor(void)
         }
 
         // Paint it
-        sx = Map.srect.x + (x - (Map.aview->vrect.x + Map.aview->subrect.x)) * 
-                TILE_W;
-        sy = Map.srect.y + (y - (Map.aview->vrect.y + Map.aview->subrect.y)) * 
-                TILE_H;
+        sx = Map.srect.x + (x - (Map.aview->vrect.x + Map.aview->subrect.x)) * TILE_W;
+        sy = Map.srect.y + (y - (Map.aview->vrect.y + Map.aview->subrect.y)) * TILE_H;
         spritePaint(Cursor->getSprite(), 0, sx, sy);
 }
 
@@ -886,9 +832,20 @@ void mapRepaintView(struct mview *view, int flags)
                               &view->subrect, TILE_W, TILE_H);
 		t6 = SDL_GetTicks();
 	} else {
-		memcpy(Map.vmask, Map.aview->vmask, VMASK_SZ);
+
+                // -------------------------------------------------------------
+                // Map.vmask serves as the "master" vmask. Start by zeroing it
+                // out so that by default nothing is in line-of-sight. Then
+                // iterate over all the active views (each player party member
+                // has an active view, spells may add others), and for each
+                // view merge it's vmask onto the master. The result is the
+                // line-of-sight for all party members is always visible to the
+                // player.
+                // -------------------------------------------------------------
+
+                memset(Map.vmask, 0, VMASK_SZ);
 		t3 = SDL_GetTicks();
-		mapForEach(myMergeVmask, 0);
+		mapForEachView(mapMergeView, 0);
 		t4 = SDL_GetTicks();
 		mapBuildLightMap(view);
 		t5 = SDL_GetTicks();
@@ -898,7 +855,7 @@ void mapRepaintView(struct mview *view, int flags)
 		t6 = SDL_GetTicks();
 		myShadeScene(&view->subrect);
 		t7 = SDL_GetTicks();
-                map_paint_cursor();
+                mapUpdateCursor();
 	}
 
  done_painting_place:
@@ -911,8 +868,7 @@ void mapRepaintView(struct mview *view, int flags)
 
 	// Show the frame rate (do this after the update above to get a better
 	// measure of the time it takes to paint the screen).
-	screenPrint(&Map.fpsRect, 0, "FPS: %d",
-		    1000 / (SDL_GetTicks() - t1 + 1));
+	screenPrint(&Map.fpsRect, 0, "FPS: %d", 1000 / (SDL_GetTicks() - t1 + 1));
 	screenUpdate(&Map.fpsRect);
 
 	if (PROFILE_REPAINT) {
@@ -929,31 +885,31 @@ void mapRepaintView(struct mview *view, int flags)
 
 int mapTileIsWithinViewport(int x, int y)
 {
-  SDL_Rect *vrect = &Map.aview->vrect;
+        SDL_Rect *vrect = &Map.aview->vrect;
   
-  // If the view rect extends past the right side of the map, and x is
-  // left of the view rect, then convert x to be right of the view rect.
-  if ((vrect->x + vrect->w) > place_w(Map.place) && 
-      x < vrect->x) {
-    x += place_w(Map.place);
-  }
-  
-  // Likewise if the view rect extends beyond the southern edge of the
-  // map, and y is less than the top of the view rect, then convert y to
-  // be south of the view rect.
-  if ((vrect->y + vrect->h) > place_h(Map.place) && 
-      y < vrect->y) {
-    y += place_h(Map.place);
-  }
-  
-  // check if the coords are in the view rect
-  if (x < vrect->x ||
-      x >= (vrect->x + vrect->w) ||
-      y < vrect->y ||
-      y >= (vrect->y + vrect->h))
-    return 0;
-
-  return 1;  
+        // If the view rect extends past the right side of the map, and x is
+        // left of the view rect, then convert x to be right of the view rect.
+        if ((vrect->x + vrect->w) > place_w(Map.place) && 
+            x < vrect->x) {
+                x += place_w(Map.place);
+        }
+        
+        // Likewise if the view rect extends beyond the southern edge of the
+        // map, and y is less than the top of the view rect, then convert y to
+        // be south of the view rect.
+        if ((vrect->y + vrect->h) > place_h(Map.place) && 
+            y < vrect->y) {
+                y += place_h(Map.place);
+        }
+        
+        // check if the coords are in the view rect
+        if (x < vrect->x ||
+            x >= (vrect->x + vrect->w) ||
+            y < vrect->y ||
+            y >= (vrect->y + vrect->h))
+                return 0;
+        
+        return 1;  
 }
 
 int mapTileIsVisible(int x, int y)
@@ -998,7 +954,7 @@ int mapTileIsVisible(int x, int y)
 void mapMarkAsDirty(struct mview *view)
 {
 	if (view == ALL_VIEWS)
-		mapForEach(myMarkAsDirty, 0);
+		mapForEachView(myMarkAsDirty, 0);
 	else
 		myMarkAsDirty(view, 0);
 }
@@ -1006,7 +962,7 @@ void mapMarkAsDirty(struct mview *view)
 void mapSetRadius(struct mview *view, int rad)
 {
 	if (view == ALL_VIEWS)
-		mapForEach(mySetViewLightRadius, (void *) rad);
+		mapForEachView(mySetViewLightRadius, (void *) rad);
 	else
 		mySetViewLightRadius(view, (void *) rad);
 }
@@ -1083,7 +1039,6 @@ void mapJitter(bool val)
 
 void mapPeer(bool val)
 {
-#define PEER_ZOOM 2
 	int dx, dy;
 	// Peering will apply to the camera view. Set the scale factor and
 	// adjust the pertinent rectangle dimensions.
@@ -1175,7 +1130,7 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
 	// (no license or copyright noted)
 	// 
 
-  int t1, t2;
+        int t1, t2;
         SDL_Surface * surf;	// for saving/restoring the background
 
 	t1 = SDL_GetTicks();
@@ -1351,6 +1306,67 @@ void mapDetachCamera(class Object *subject)
         Map.subject = NULL;
 }
 
+void mapUpdateTile(struct place *place, int x, int y)
+{
+        struct terrain *terrain;
+        int index;
+        char *vmask;
+        SDL_Rect rect;
+
+        if (NULL == Map.aview)
+                return;
+        
+
+        // ---------------------------------------------------------------------
+        // Assume we want the active view as it was last rendered. Calculate
+        // the screen coordinates of the given map location. Check if the
+        // coordinates are in the map viewer and abort if not.
+        // ---------------------------------------------------------------------
+
+        if (place != Map.place)
+                return;
+
+        rect.x = (x - (Map.aview->vrect.x + Map.aview->subrect.x)) * TILE_W + Map.srect.x;
+        if (rect.x < Map.srect.x || rect.x > (Map.srect.x + Map.srect.w - TILE_W))
+                return;
+
+        rect.y = (y - (Map.aview->vrect.y + Map.aview->subrect.y)) * TILE_H + Map.srect.y;
+        if (rect.y < Map.srect.y || rect.y > (Map.srect.y + Map.srect.h - TILE_H))
+                return;
+
+        // ---------------------------------------------------------------------
+        // Erase the tile.
+        // ---------------------------------------------------------------------
+
+        rect.w = TILE_W;
+        rect.h = TILE_H;
+        screenErase(&rect);
+
+        // ---------------------------------------------------------------------
+        // If the place is not in line-of-sight then don't paint the object(s)
+        // there. Paint the terrain iff ShowAllTerrain is in effect.
+        // ---------------------------------------------------------------------
+
+        //vmask = vmask_get(Map.place, mview_center_x(Map.aview), mview_center_y(Map.aview));
+        vmask = Map.vmask;
+        index = ((y - Map.aview->vrect.y) * Map.aview->vrect.w) + (x - Map.aview->vrect.x);
+        terrain = place_get_terrain(place, x, y);
+
+        if (vmask[index] || ShowAllTerrain) {
+                spritePaint(terrain->sprite, 0, rect.x, rect.y);
+        }
+
+        if (vmask[index]) {
+                place_paint_objects(place, x, y, rect.x, rect.y);
+        }
+
+        if (x == Cursor->getX() && y == Cursor->getY())
+                mapUpdateCursor();
+
+        screenUpdate(&rect);
+        
+}
+
 
 #if 0
 	// This is the original peering code which used one pixel per
@@ -1380,8 +1396,8 @@ void mapDetachCamera(class Object *subject)
 	}
 
 	// Find the edges in map coordinates. Ok if negative.
-	start_my = center_my - MVIEW_H / 2;
-	start_mx = center_mx - MVIEW_W / 2;
+	start_my = center_my - VMASK_H / 2;
+	start_mx = center_mx - VMASK_W / 2;
 
 	// Iterate over the visible region. Paint one pixel for each tile
 	// colored according to its terrain type.

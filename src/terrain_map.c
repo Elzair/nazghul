@@ -205,9 +205,6 @@ void terrain_map_blit(struct terrain_map *dest, int dest_x, int dest_y,
 			*dptr++ = *sptr++;
 		}
 	}
-
-	mapRecomputeLos(ALL_VIEWS);
-	mapSetDirty();
 }
 
 void terrain_map_fill(struct terrain_map *map, int x, int y, int w, int h,

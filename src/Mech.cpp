@@ -31,6 +31,7 @@
 #include "lexer.h"
 #include "map.h"
 #include "terrain_map.h"
+#include "vmask.h"
 
 #if 0 // debug
 static void dump_state(struct mech_state *state)
@@ -383,15 +384,19 @@ bool Mech::activate(int method)
 			execute_response_chain(trans->actions, &conv);
                         activating = false;
 
-			// If the state change will affect opacity then update
-			// LOS on all the views.
+                        // -----------------------------------------------------
+			// If the state change will affect opacity then
+			// invalidate the view mask cache in the surrounding
+			// area.
+                        // -----------------------------------------------------
+
 			recompute = (trans->to->opaque != state->opaque);
 
 			// advance to the new state
 			state = trans->to;
 
 			if (recompute)
-				mapRecomputeLos(ALL_VIEWS);
+                                vmask_invalidate(getPlace(), getX(), getY(), 1, 1);
 
 			mapSetDirty();
 			return true;

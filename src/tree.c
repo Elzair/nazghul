@@ -21,6 +21,31 @@
 //
 #include "tree.h"
 
+#include <assert.h>
+#include <string.h>
+
+static inline int tree_cmp(struct tree *t1, struct tree *t2)
+{
+        assert(t1->key_type == t2->key_type);
+        
+        switch (t1->key_type) {
+
+        case tree_i_key:
+                return t1->key.i_key - t2->key.i_key;
+                break;
+
+        case tree_s_key:
+                return strcmp(t1->key.s_key, t2->key.s_key);
+                break;
+
+        default:
+                assert(false);
+                break;
+        }
+
+        return 0;
+}
+
 void tree_insert(struct tree **root, struct tree *node)
 {
 	struct tree *parent = 0;
@@ -30,7 +55,7 @@ void tree_insert(struct tree **root, struct tree *node)
 
 		parent = current;
 
-		if (node->key < current->key)
+		if (tree_cmp(node, current) < 0)
 			current = current->left;
 		else
 			current = current->right;
@@ -39,7 +64,7 @@ void tree_insert(struct tree **root, struct tree *node)
 	node->p = parent;
 	if (!parent) {
 		*root = node;
-	} else if (node->key < parent->key) {
+	} else if (tree_cmp(node, parent) < 0) {
 		parent->left = node;
 	} else {
 		parent->right = node;
@@ -124,3 +149,27 @@ void tree_replace(struct tree **root, struct tree *out, struct tree *in)
 	if (in->right)
 		in->right->p = in;
 }
+
+struct tree *tree_i_search(struct tree *root, int key) {
+        while (root && root->key.i_key != key) {
+                assert(root->key_type == tree_i_key);
+                if (key < root->key.i_key)
+                        root = root->left;
+                else
+                        root = root->right;
+        }
+        return root;
+}
+
+struct tree *tree_s_search(struct tree *root, char *key)
+{
+        while (root && strcmp(root->key.s_key, key)) {
+                assert(root->key_type == tree_s_key);
+                if (strcmp(key, root->key.s_key) < 0)
+                        root = root->left;
+                else
+                        root = root->right;
+        }
+        return root;
+}
+        

@@ -91,17 +91,17 @@ player {
   x     63;
   y     63;
 #endif
-#if 0
+#if 1
   place GreenTower;
-  x     45;
-  y     46;
+  x     3;
+  y     12;
 #endif
 #if 0
   place MidWorld;
   x     16;
   y     16;
 #endif
-#if 1
+#if 0
   place Glasdrin;
   x     22;
   y     9;

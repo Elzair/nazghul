@@ -211,6 +211,8 @@ void Object::relocate(struct place *newplace, int newx, int newy)
                 changePlaceHook();
         }
 
+        mapSetDirty();
+
         volume = SOUND_MAX_VOLUME;
 
         // ---------------------------------------------------------------------
@@ -234,7 +236,7 @@ void Object::relocate(struct place *newplace, int newx, int newy)
         if (isCameraAttached()) {
                 mapCenterCamera(getX(), getY());
         }
-                
+        
         updateView();
 
 }
@@ -420,7 +422,13 @@ void Object::setPlace(struct place *place)
 void Object::select(bool val)
 {
         selected = val;
-        mapUpdate(0);
+
+        // ---------------------------------------------------------------------
+        // FIXME: instead of doing this, figure out how to just repaint the
+        // tile.
+        // ---------------------------------------------------------------------
+
+        mapUpdateTile(getPlace(), getX(), getY());
 }
 
 void Object::destroy()
@@ -731,7 +739,7 @@ bool Object::putOnMap(struct place *new_place, int new_x, int new_y, int r)
         printf("Putting %s near (%d %d)\n", getName(), new_x, new_y);
 
         // ---------------------------------------------------------------------
-        // Althouth the caller specified a radius, internally I use a bounding
+        // Although the caller specified a radius, internally I use a bounding
         // box. Assign the upper left corner in place coordinates. I don't
         // *think* I have to worry about wrapping coordinates because all the
         // place_* methods should do that internally.
@@ -847,29 +855,10 @@ bool Object::putOnMap(struct place *new_place, int new_x, int new_y, int r)
                 // I've found a good spot, and I know that I can pathfind back
                 // to the preferred location from here because of the manner in
                 // which I found it.
-                //
-                // REVISIT: Would relocate() work just as well in place of the
-                //          following code?
-                //
                 // -------------------------------------------------------------
 
                 printf("OK!\n");
-
-#if 0
-                setX(new_x);
-                setY(new_y);
-                setPlace(new_place);
-                place_add_object(place, this);
-
-                if (isPlayerControlled()) {
-                        mapAddView(getView());
-                        mapCenterView(getView(), getX(), getY());
-                        mapSetRadius(getView(), min(getVisionRadius(), MAX_VISION_RADIUS));;
-                        mapRecomputeLos(getView());
-                }
-#else
                 relocate(new_place, new_x, new_y);
-#endif
                 ret = true;
 
                 goto done;
@@ -923,7 +912,6 @@ void Object::updateView()
         if (NULL != getView()) {
                 mapCenterView(getView(), getX(), getY());
                 mapSetRadius(getView(), min(getVisionRadius(), MAX_VISION_RADIUS));
-                mapRecomputeLos(getView());
                 mapSetDirty();
         }
 }

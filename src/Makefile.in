@@ -195,7 +195,9 @@ nazghul_SOURCES = \
 	cmd.c \
 	cmd.h \
 	clock.c \
-	clock.h 
+	clock.h \
+	vmask.h \
+	vmask.c
 
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_CLEAN_FILES = 
@@ -213,7 +215,7 @@ knapsack.o lexer.o Loader.o los.o map.o Mech.o moongate.o nazghul.o \
 NpcParty.o object.o occ.o olist.o place.o play.o player.o Reagent.o \
 sched.o screen.o sky.o sound.o species.o Spell.o sprite.o status.o \
 terrain.o terrain_map.o Trap.o tree.o util.o vehicle.o wind.o wq.o \
-Missile.o cmd.o clock.o
+Missile.o cmd.o clock.o vmask.o
 nazghul_LDADD = $(LDADD)
 nazghul_DEPENDENCIES = 
 nazghul_LDFLAGS = 

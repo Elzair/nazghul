@@ -128,9 +128,10 @@ Character::Character():name(0), hm(0), xp(0), order(-1),
         hp_mult      = 0;
         sched        = NULL;
         conv         = NULL;
-        activity     = NONE;
         appt         = 0;
         is_leader    = false;
+
+        setActivity(NONE);
 }
 
 
@@ -482,6 +483,7 @@ void Character::remove()
 {
 	Object::remove();
 	setAttackTarget(this);
+        mapSetDirty();
 
         // ---------------------------------------------------------------------
         // Handle changes to party control.
@@ -630,7 +632,7 @@ void Character::changeLight(int delta)
 {
 	light += delta;
 	light = max(light, MIN_PLAYER_LIGHT);
-	mapRecomputeLos(view);
+        mapSetDirty();
 }
 
 void Character::changeMana(int delta)
@@ -1414,7 +1416,6 @@ void Character::relocate(struct place *place, int x, int y)
 
         if (isCameraAttached()) {
                 mapCenterView(getView(), getX(), getY());
-                mapRecomputeLos(getView());
                 mapSetDirty();
         }
 #endif
@@ -2115,7 +2116,6 @@ static bool character_key_handler(struct KeyHandler *kh, int key, int keymod)
                         }
 
                         mapCenterView(character->getView(), character->getX(), character->getY());
-                        mapRecomputeLos(character->getView());
                         break;
 
 
@@ -2406,7 +2406,7 @@ bool Character::commute()
                         // -----------------------------------------------------
 
                         if (getX() == tx && getY() == ty) {
-                                activity = sched->appts[appt].act;
+                                setActivity(sched->appts[appt].act);
                         }
 
                         return true;
@@ -2496,7 +2496,7 @@ void Character::synchronize()
 
 	relocate(getPlace(), sched->appts[appt].x, sched->appts[appt].y);
 
-	activity = sched->appts[appt].act;
+	setActivity(sched->appts[appt].act);
 }
 
 void Character::getAppointment()
@@ -2512,7 +2512,7 @@ void Character::getAppointment()
 
         if (nextAppt == sched->n_appts) {
                 if (Clock.hour < sched->appts[appt].hr) {
-                        activity = COMMUTING;
+                        setActivity(COMMUTING);
                         appt = 0;
                 }
         }
@@ -2524,7 +2524,7 @@ void Character::getAppointment()
 
         else if (Clock.hour >= sched->appts[nextAppt].hr &&
                  Clock.min >= sched->appts[nextAppt].min) {
-                activity = COMMUTING;
+                setActivity(COMMUTING);
                 appt = nextAppt;
         }
 }
@@ -2685,7 +2685,15 @@ void Character::exec(struct exec_context *context)
                 return;
         }
 
-        if (isIncapacitated() ||
+        // ---------------------------------------------------------------------
+        // Check for cases that prevent the character from taking a turn. Note
+        // that if the character is sleeping he will still take a turn iff the
+        // sleep is part of his schedule.
+        // ---------------------------------------------------------------------
+
+        if (! isOnMap()                               ||
+            isDead()                                  ||
+            (isAsleep() && getActivity() != SLEEPING) ||
             action_points <= 0) {
                 endTurn();
                 return;
@@ -2774,7 +2782,6 @@ void Character::exec(struct exec_context *context)
 
                         pathfind_to(leader);
                         mapCenterView(getView(), getX(), getY());
-                        mapRecomputeLos(getView());
                         mapSetDirty();
                 }
                 break;
@@ -2925,7 +2932,7 @@ void Character::applyExistingEffects()
 	}
 
         // ---------------------------------------------------------------------
-        // Sleep. If the party is not intentionally resting then roll to
+        // Sleep. If the character is not intentionally resting then roll to
         // awaken.
         //
         // FIXME: PROB_AWAKEN should not be a constant.
@@ -2933,8 +2940,8 @@ void Character::applyExistingEffects()
         // ---------------------------------------------------------------------
 
         if (isAsleep() && 
-            (! isPlayerPartyMember() ||
-             ! player_party->isResting())) {
+            ((isPlayerPartyMember() && ! player_party->isResting()) ||
+             (! isPlayerPartyMember() && getActivity() != SLEEPING))) {
 
                 consolePrint("%s sleeping...", getName());
                 if ((random() % 100) < PROB_AWAKEN) {
@@ -3144,13 +3151,7 @@ bool Character::joinPlayer(void)
         }
         
         if (player_party->addMember(this)) {
-#if 0                
-                mapAddView(getView());
-                mapSetRadius(getView(), min(getVisionRadius(), MAX_VISION_RADIUS));
-                mapRecomputeLos(getView());
-#else
                 addView();
-#endif
                 return true;
         }
 
@@ -3159,4 +3160,15 @@ bool Character::joinPlayer(void)
         }
 
         return false;
+}
+
+int Character::getActivity()
+{
+        return activity;
+}
+
+void Character::setActivity(int val)
+{
+        activity = val;
+        changeSleep(activity == SLEEPING);
 }

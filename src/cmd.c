@@ -56,6 +56,7 @@
 #include "vehicle.h"
 #include "portal.h"
 #include "terrain.h"
+#include "vmask.h"
 
 #define DEBUG
 #include "debug.h"
@@ -2272,6 +2273,7 @@ void terraform_XY(int x, int y, void * data)
                 consolePrint("TERRAFORM warning - XY=(%d,%d) out of LOS\n", x, y);
         }
         terrain_map_fill(map, x, y, 1, 1, tt);
+        vmask_invalidate(Place, x, y, 1, 1); // FIXME: need the place
         player_party->updateView();
         consolePrint("TERRAFORM put %s '%s' at XY=(%d,%d)\n", 
                      tt->tag, tt->name, x, y);

@@ -62,12 +62,13 @@ static inline struct astar_node *astar_node_create(int x, int y, int cost,
 		return 0;
 	memset(node, 0, sizeof(struct astar_node));
 
-	node->x = x;
-	node->y = y;
-	node->cost = cost;
-	node->goodness = goodness;
-	node->next = next;
-	node->order.key = location;
+	node->x               = x;
+	node->y               = y;
+	node->cost            = cost;
+	node->goodness        = goodness;
+	node->next            = next;
+        node->order.key_type  = tree_i_key;
+	node->order.key.i_key = location;
 
 	dump_node(node);
 	return node;
@@ -171,7 +172,7 @@ static void astar_cleanup(void)
 
 static inline struct astar_node *astar_old_route(int location)
 {
-	struct tree *tree = tree_search(found, location);
+	struct tree *tree = tree_i_search(found, location);
 	if (tree)
 		return tree_entry(tree, struct astar_node, order);
 	return 0;
@@ -187,7 +188,7 @@ static inline void astar_replace_route(struct astar_node *node, int x, int y,
 	node->cost = cost;
 	node->goodness = goodness;
 	node->next = next;
-	node->order.key = location;
+	node->order.key.i_key = location;
 
 	/* If the old route was scheduled but not explored yet then fixup the
 	 * priority queue to reflect the new goodness of the route. */

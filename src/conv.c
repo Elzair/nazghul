@@ -35,6 +35,7 @@
 #include "combat.h"
 #include "cmd.h"
 #include "object.h"
+#include "vmask.h"
 
 #include <ctype.h>
 #include <stdio.h>
@@ -881,6 +882,14 @@ static void api_blit_map(struct response *resp, struct conv *conv)
 			 parms->src,
 			 parms->src_x, parms->src_y, parms->w, parms->h);
 
+        // ---------------------------------------------------------------------
+        // Because we may have changed the line-of-sight properties of the
+        // tiles we just blitted, we have to tell the vmask cache to invalidate
+        // all vmasks in the surrounding area.
+        // ---------------------------------------------------------------------
+
+        vmask_invalidate(parms->dst, parms->dst_x, parms->dst_y, parms->w, parms->h);
+	mapSetDirty();
 }
 
 static void api_destroy_blit_map(struct response *resp)

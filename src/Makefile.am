@@ -120,4 +120,6 @@ nazghul_SOURCES =		\
 	cmd.c \
 	cmd.h \
 	clock.c \
-	clock.h 
+	clock.h \
+	vmask.h \
+	vmask.c

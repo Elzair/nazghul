@@ -76,6 +76,7 @@ class Character:public Object {
 	Character();
 	virtual ~ Character();
 
+        virtual int getActivity();
         virtual int getArmor();
         virtual struct conv *getConversation();
         virtual int getDefend();
@@ -143,6 +144,7 @@ class Character:public Object {
 	virtual void changeMana(int delta);
 	virtual void addRestCredits(int delta_hours);
 
+        virtual void setActivity(int val);
         virtual void setControlMode(enum control_mode mode);
         virtual void setLeader(bool val);
 	virtual void setName(char *name);
