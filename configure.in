@@ -13,7 +13,8 @@ dnl Check for tools
 AC_PROG_MAKE_SET
 AC_PROG_CC
 AC_PROG_CXX
-AC_PROG_RANLIB
+dnl AC_PROG_RANLIB
+AC_PROG_LIBTOOL
 AC_PROG_INSTALL
 
 dnl The alpha architecture needs special flags for binary portability
@@ -22,6 +23,14 @@ case "$target" in
         CFLAGS="$CFLAGS -mcpu=ev4 -Wa,-mall"
         ;;
 esac
+
+
+ 
+
+for top_builddir in . .. ../.. $ac_auxdir $ac_auxdir/..; do
+  test -f $top_builddir/configure && break
+done
+
 
 dnl Check for SDL
 SDL_VERSION=1.2.0
