@@ -224,13 +224,16 @@ int tick_fx(void *data)
 	tick_event.type = SDL_USEREVENT;
 	tick_event.user.code = TICK_EVENT;
 
-	for (;;) {
-                /* usleep is not standard: */
-  		/*usleep(tick_usecs);*/
+        /* Use the global Quit flag to determine when to exit. */
+        while (! Quit) {
+
                 SDL_Delay(TickMilliseconds);
+
+                /* The tick event will trigger an animation cycle when it gets
+                 * dequeued and processed by the main loop. */
 		SDL_PushEvent(&tick_event);
 	}
-}				// tick_fx()
+}
 
 static void nazghul_init_internal_libs(void)
 {
@@ -313,10 +316,15 @@ int main(int argc, char **argv)
 
 	playRun();
 
-        if (NULL != tick_thread)
-                SDL_KillThread(tick_thread);	/* Note: don't try to wait after this */
+        if (NULL != tick_thread) {
+
+                /* As soon as the tick thread checks the Quit flag it should
+                 * exit. Until then we'll wait here. To make good and sure it
+                 * exits I'll force the Quit flag. */
+                Quit = 1;
+                SDL_WaitThread(tick_thread, NULL);
+        }
 
 	return 0;
-}				// main()
+}
 
-// eof

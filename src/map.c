@@ -1206,8 +1206,8 @@ static void mapPaintProjectile(SDL_Rect *rect, struct sprite *sprite,
 
 	screenUpdate(rect);
 
-	// Pause. Doing nothing is too fast, usleep and SDL_Delay are both too
-	// slow, so use the custom calibrated busywait.
+	// Pause. Doing nothing is too fast, SDL_Delay is too slow, so use the
+	// custom calibrated busywait.
 	busywait(1);
 
 	// Erase the missile by blitting the background
