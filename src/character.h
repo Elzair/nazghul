@@ -267,7 +267,7 @@ class Character:public Object {
 	virtual bool isShaded();
 	virtual void setVisible(bool val);
 	virtual class Character *clone(class Character *);
-	virtual void describe();
+	virtual void describe(int count);
 	virtual void relocate(struct place *place, int x, int y);
 	char *tag;
 	struct list plist;	// party list

@@ -1068,66 +1068,145 @@ static void myPlaceDescribeTerrain(int x, int y)
 
 static void myPlaceDescribeObjects(int x, int y)
 {
+
 	struct list *l;
 	struct tile *tile;
-	Object *obj = NULL;
+	Object *obj = NULL, *prev_obj = NULL;
 	class ObjectType *type = NULL;
-	int count = 0;
+	int n_instances;
+        int n_types;
 
 	tile = place_lookup_tile(Place, x, y);
 	if (!tile)
 		return;
+        
+
+        // Let's make things simple. Inefficient, but simple. Efficiency is not
+        // so critical here. We'll do this in two passes. Pass one will count
+        // the number of things we need to list. Pass two will print the things
+        // with the proper punctuation.
+
+        // Step 1: count the number of different types of things we need to
+        // list (multiple counts of one type of thing count as 1)
+
+        type = NULL;
+        n_types = 0;
 
 	list_for_each(&tile->objstack.list, l) {
+
 		obj = outcast(l, Object, container_link.list);
+
+		if (obj->container_link.key == cursor_layer)
+                        // Special case: don't describe the cursor
+                        continue;
+
+
 		if (type == NULL) {
+
+                        // This is the first type of thing we need to list.
 			type = obj->getObjectType();
-			count = 1;
+                        n_types++;
+
 		} else if (obj->getObjectType() != type) {
-			consolePrint(", ");
-			// SAM: Changed to obj->describe() because Mechs have
-			// variable names by state
-			// Hmmm...static binding calls Object::describe() for a 
-			// 
-			// Mech though, eh?
-			obj->describe();
-			// type->describe(count);
+
+                        // We just found a new type of thing (we know because
+                        // it's different from the last type of thing).
 			type = obj->getObjectType();
-			count = 1;
-		} else {
-			count++;
+                        n_types++;
+
 		}
 	}
 
-	if (type != NULL) {
-		if (tile->vehicle == NULL && tile->moongate == NULL)
-			consolePrint(" and ");
-		else
-			consolePrint(", ");
-		type->describe(count);
-	} else if (obj != NULL) {
-		if (tile->vehicle == NULL && tile->moongate == NULL)
-			consolePrint(" and ");
-		else
-			consolePrint(", ");
-		((class Character *) obj)->describe();	// SAM: Crys out for
-		// dynamic binding, eh?
+        if (tile->vehicle)
+                n_types++;
+
+        if (tile->moongate)
+                n_types++;
+
+
+        if (n_types == 0)
+                // Nothing to list so we're done.
+                return;
+
+
+        // Step 2: now we actually list the things, using the count to help us
+        // decide how to punctuate.
+
+        n_instances = 0;
+        type = NULL;
+        prev_obj = NULL;
+
+	list_for_each(&tile->objstack.list, l) {
+
+		obj = outcast(l, Object, container_link.list);
+
+		if (obj->container_link.key == cursor_layer)
+                        // Special case: don't describe the cursor
+                        continue;
+
+                printf("%s\n", obj->getName());
+
+		if (prev_obj == NULL) {
+
+                        // This is the first type of thing we need to
+                        // list. Don't print it until we find out how many
+                        // there are.
+			type = obj->getObjectType();
+                        n_instances = 1;
+
+		} else if (obj->getObjectType() != type) {
+
+                        // We just found a new type of thing (we know because
+                        // it's different from the last type of thing). Now we
+                        // can print the last type of thing since we know how
+                        // many there are of it.
+
+                        if (n_types == 1)
+                                consolePrint(" and ");
+                        else
+                                consolePrint(", ");
+
+                        printf(">>> %s\n", prev_obj->getName());
+                        prev_obj->describe(n_instances);
+                        n_types--;
+
+			type = obj->getObjectType();
+                        n_instances = 1;
+
+		} else {
+                        // More of the same.
+                        n_instances++;
+                }
+
+                prev_obj = obj;
 	}
 
-	/* Check for a vehicle */
-	if (tile->vehicle != NULL) {
-		if (tile->moongate == NULL)
-			consolePrint(" and ");
-		else
-			consolePrint(", ");
-		tile->vehicle->describe();
-	}
+        // Now we have to print the last object in the stack.
+        if (prev_obj) {
+                if (n_types == 1)
+                        consolePrint(" and ");
+                else
+                        consolePrint(", ");
+                printf("### %s\n", prev_obj->getName());
+                prev_obj->describe(n_instances);
+                n_types--;
+        }
 
-	/* Check for a moongate */
-	if (tile->moongate != NULL) {
-		consolePrint(" and ");
-		tile->moongate->describe();
-	}
+        if (tile->vehicle) {
+                if (n_types == 1)
+                        consolePrint(" and ");
+                else
+                        consolePrint(", ");
+                tile->vehicle->describe(1);
+                n_types--;
+        }
+
+        if (tile->moongate) {
+                assert(n_types == 1);
+                consolePrint(" and ");
+                tile->moongate->describe(1);
+                n_types--;
+        }
 
 }				// myPlaceDescribeObjects()
 

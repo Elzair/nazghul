@@ -168,7 +168,7 @@ bool Vehicle::fire_weapon(int dx, int dy)
 			npc->hit_by_ordnance(ordnance);
 			if (npc->isDestroyed()) {
 				consolePrint("You destroyed ");
-				npc->describe();
+				npc->describe(1);
 				consoleNewline();
 				delete npc;
 				mapUpdate(0);

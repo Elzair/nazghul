@@ -152,3 +152,8 @@ void Object::paint(int sx, int sy)
 	if (sprite)
 		spritePaint(sprite, 0, sx, sy);
 }
+
+void Object::describe(int count)
+{
+        getObjectType()->describe(count);        
+}

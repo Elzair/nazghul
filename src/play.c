@@ -448,75 +448,72 @@ bool scroller(struct KeyHandler * kh, int key)
 	return false;
 }
 
-bool movecursor (struct KeyHandler * kh, int key)
+bool movecursor(struct KeyHandler * kh, int key)
 {
-  if (key == '\n' || key == SDLK_SPACE || key == SDLK_RETURN) {
-    return true;  // Done (target selected)
-  }
-  
-  if (keyIsDirection(key)) {
-    int dir = keyToDirection(key);
-    Cursor->move(directionToDx(dir), directionToDy(dir));
-    mapUpdate(0);
-    return false;  // Keep on keyhandling
-  }
-  
-  if (key == SDLK_ESCAPE) {
-    *((bool *) kh->data) = true;
-    return true;  // Done (abort)
-  }
-  
-  return false;  // Keep on keyhandling
-} // movecursor()
+	if (key == '\n' || key == SDLK_SPACE || key == SDLK_RETURN) {
+		return true;	// Done (target selected)
+	}
 
+	if (keyIsDirection(key)) {
+		int dir = keyToDirection(key);
+		Cursor->move(directionToDx(dir), directionToDy(dir));
+		mapUpdate(0);
+		return false;	// Keep on keyhandling
+	}
 
-bool movecursor_and_do (struct KeyHandler * kh, int key) 
+	if (key == SDLK_ESCAPE) {
+		*((bool *) kh->data) = true;
+		return true;	// Done (abort)
+	}
+
+	return false;		// Keep on keyhandling
+}				// movecursor()
+
+bool movecursor_and_do(struct KeyHandler * kh, int key)
 {
-  // As movecursor(), but call kh->each_point_func()
-  // for each cursor move, and kh->each_target_func()
-  // for each point selected with (ENTER, SPACE, RETURN).
-  // Unlike movecursor(), multiple targets can be selected.
-  // We expect that eventually the user will exit 
-  // this UI mode with ESCAPE.
-  // 
-  // It might be better for this functionality to be added to 
-  // eventHandle(), if this UI idiom is common.
-  // (In a sense, this has been done now, with the changes
-  // to struct KeyHandler.)
-  // 
-  // Right now, I am just hoping that I have not butchered
-  // the KeyHandler API...Whoo-Hoo!  It works!  It is cool!
+	// As movecursor(), but call kh->each_point_func()
+	// for each cursor move, and kh->each_target_func()
+	// for each point selected with (ENTER, SPACE, RETURN).
+	// Unlike movecursor(), multiple targets can be selected.
+	// We expect that eventually the user will exit 
+	// this UI mode with ESCAPE.
+	// 
+	// It might be better for this functionality to be added to 
+	// eventHandle(), if this UI idiom is common.
+	// (In a sense, this has been done now, with the changes
+	// to struct KeyHandler.)
+	// 
+	// Right now, I am just hoping that I have not butchered
+	// the KeyHandler API...Whoo-Hoo! It works! It is cool!
 
-  if (key == '\n' || key == SDLK_SPACE || key == SDLK_RETURN) {
-    int x = Cursor->getX();
-    int y = Cursor->getY();
-    if (kh->each_target_func)
-      kh->each_target_func(x,y);
-    return false;  // Keep on keyhandling
-  }
-  
-  if (keyIsDirection(key)) {
-    int dir = keyToDirection(key);
-    Cursor->move(directionToDx(dir), directionToDy(dir));
-    mapUpdate(0);
-    int x = Cursor->getX();
-    int y = Cursor->getY();
-    if (kh->each_point_func)
-      kh->each_point_func(x,y);
-    return false;  // Keep on keyhandling
-  }
-  
-  if (key == SDLK_ESCAPE) {
-    // SAM: Hmmm...how about func_to_call_on_abort() ???
-    *((bool *) kh->data) = true;
-    return true;  // Done (abort)
-  }
+	if (key == '\n' || key == SDLK_SPACE || key == SDLK_RETURN) {
+		int x = Cursor->getX();
+		int y = Cursor->getY();
+		if (kh->each_target_func)
+			kh->each_target_func(x, y);
+		return false;	// Keep on keyhandling
+	}
 
-  // SAM: And perhaps func_to_call_for_other_keys() ?
-  // Maybe not...
-  return false;  // Keep on keyhandling
-} // movecursor_and_do()
+	if (keyIsDirection(key)) {
+		int dir = keyToDirection(key);
+		Cursor->move(directionToDx(dir), directionToDy(dir));
+		mapUpdate(0);
+		int x = Cursor->getX();
+		int y = Cursor->getY();
+		if (kh->each_point_func)
+			kh->each_point_func(x, y);
+		return false;	// Keep on keyhandling
+	}
 
+	if (key == SDLK_ESCAPE) {
+		// SAM: Hmmm...how about func_to_call_on_abort() ???
+		*((bool *) kh->data) = true;
+		return true;	// Done (abort)
+	}
+	// SAM: And perhaps func_to_call_for_other_keys() ?
+	// Maybe not...
+	return false;		// Keep on keyhandling
+}				// movecursor_and_do()
 
 struct inv_entry *select_item(void)
 {
@@ -633,7 +630,7 @@ bool cmdLook(int x, int y)
 	consolePrint("You see ");
 	placeDescribe(placeWrapX(x + directionToDx(dir)),
 		      placeWrapY(y + directionToDy(dir)));
-	return false;  // SAM: Should this be true?
+	return false;		// SAM: Should this be true?
 }
 
 static void myGetAux(Object * item)
@@ -735,7 +732,7 @@ bool cmdOpen(class Character * pc)
 			// SAM: Should this printing be done entirely by mech
 			// scripting?
 			consolePrint("Opened ");
-			mech->describe();
+			mech->describe(1);
 			consolePrint(".\n");
 			mapSetDirty();
 		} else {
@@ -767,7 +764,7 @@ bool cmdOpen(class Character * pc)
 	}
 
 	consolePrint("%s opens ", pc->getName());
-	container->describe();
+	container->describe(1);
 
 	// Check for traps.
 	if (!container->isTrapped()) {
@@ -937,9 +934,9 @@ bool cmdReady(class Character * pc)
 			case Character::TooHeavy:
 				msg = "too heavy!";
 				break;
-                        default:
-                                assert(false);
-                                break;
+			default:
+				assert(false);
+				break;
 			}
 		}
 
@@ -952,17 +949,16 @@ bool cmdReady(class Character * pc)
 	return committed;
 }
 
-
-int select_target (int ox, int oy, int *x, int *y, int range)
+int select_target(int ox, int oy, int *x, int *y, int range)
 {
 	Cursor->setRange(range);
 	Cursor->setOrigin(ox, oy);
-	Cursor->relocate(Place, *x, *y);  // Remember prev target, if any
+	Cursor->relocate(Place, *x, *y);	// Remember prev target, if any
 	mapUpdate(0);
 
 	bool abort = false;
 	struct KeyHandler kh;
-	kh.fx   = movecursor;
+	kh.fx = movecursor;
 	kh.data = &abort;
 	eventPushKeyHandler(&kh);
 	cmdwin_print("<target>");
@@ -977,40 +973,40 @@ int select_target (int ox, int oy, int *x, int *y, int range)
 
 	if (abort) {
 		cmdwin_print("none!");
-		return -1;  // Aborted, no target
+		return -1;	// Aborted, no target
 	}
 
-	return 0;  // Target has been selected, (x,y) contain where
-} // select_target()
+	return 0;		// Target has been selected, (x,y) contain
+				// where
+}				// select_target()
 
-
-int select_target_with_doing (int ox, int oy, int *x, int *y, 
-                              int range, 
-                              v_funcpointer_ii each_point_func,
-                              v_funcpointer_ii each_target_func)
+int select_target_with_doing(int ox, int oy, int *x, int *y,
+			     int range,
+			     v_funcpointer_ii each_point_func,
+			     v_funcpointer_ii each_target_func)
 {
-  // SAM: 
-  // As select_target(), but each_point_func() 
-  // will be called at each point cursored over,
-  // and each_target_func() will be called at each point
-  // selected as a target.
-  // 
-  // Eventually, the user will abort with ESC.
-  // 
-  // SAM: It might be nice to return the last target,
-  //      in case our caller wants it, but it seems that
-  //      the ESC abort stomps on it.
+	// SAM: 
+	// As select_target(), but each_point_func() 
+	// will be called at each point cursored over,
+	// and each_target_func() will be called at each point
+	// selected as a target.
+	// 
+	// Eventually, the user will abort with ESC.
+	// 
+	// SAM: It might be nice to return the last target,
+	// in case our caller wants it, but it seems that
+	// the ESC abort stomps on it.
 	Cursor->setRange(range);
 	Cursor->setOrigin(ox, oy);
-	Cursor->relocate(Place, *x, *y);  // Remember prev target, if any
+	Cursor->relocate(Place, *x, *y);	// Remember prev target, if any
 	mapUpdate(0);
 
 	bool abort = false;
 	struct KeyHandler kh;
-	kh.fx               = movecursor_and_do;
-	kh.data             = &abort;
-    kh.each_point_func  = each_point_func;
-    kh.each_target_func = each_target_func;
+	kh.fx = movecursor_and_do;
+	kh.data = &abort;
+	kh.each_point_func = each_point_func;
+	kh.each_target_func = each_target_func;
 	eventPushKeyHandler(&kh);
 	cmdwin_print("<target>");
 	eventHandle();
@@ -1024,12 +1020,12 @@ int select_target_with_doing (int ox, int oy, int *x, int *y,
 
 	if (abort) {
 		cmdwin_print("none!");
-		return -1;  // Aborted, no target
+		return -1;	// Aborted, no target
 	}
 
-	return 0;  // Target has been selected, (x,y) contain where
-} // select_target_with_doing()
-
+	return 0;		// Target has been selected, (x,y) contain
+				// where
+}				// select_target_with_doing()
 
 bool cmdHandle(class Character * pc)
 {
@@ -1056,14 +1052,14 @@ bool cmdHandle(class Character * pc)
 		// print the name). If only one party member then select the
 		// only one.
 		if (player_party->get_num_living_members() == 1) {
-                        pc = player_party->get_first_living_member();
-                        cmdwin_print("%s", pc->getName());
-                } else {
-                        pc = select_party_member();
-                        if (pc == NULL) {
-                                return false;
-                        }
-                }
+			pc = player_party->get_first_living_member();
+			cmdwin_print("%s", pc->getName());
+		} else {
+			pc = select_party_member();
+			if (pc == NULL) {
+				return false;
+			}
+		}
 	}
 
 	cmdwin_print("-");
@@ -1083,6 +1079,7 @@ bool cmdHandle(class Character * pc)
 		mech->activate(MECH_HANDLE);
 		mapRecomputeLos(player_party->view);	// Often necessary when 
 							// 
+		// 
 		// mechs
 		// change surrounding terrain.
 		mapSetDirty();
@@ -1227,7 +1224,7 @@ static void myTalk(void)
 
 	consolePrint("\n*** CONVERSATION ***\n");
 	consolePrint("You meet a ");
-	npc->describe();
+	npc->describe(1);
 	consolePrint(".\n");
 
 	if (npc->act == SLEEPING) {
@@ -1575,7 +1572,7 @@ static class Object *target_character_for_spell(class Character * caster,
 			  spell->range) == 0) {
 		ret =
 		    (class Object *) place_get_object(Place, *tx, *ty,
-							being_layer);
+						      being_layer);
 	}
 
 	if (ret == NULL)
@@ -1615,8 +1612,8 @@ static class Object *target_mech_for_spell(class Character * caster,
 
 static bool
 target_location_for_spell(class Character * caster,
-				      class Object ** ret,
-				      class Spell * spell, int *x, int *y)
+			  class Object ** ret,
+			  class Spell * spell, int *x, int *y)
 {
 	class Character *target;
 
@@ -1640,7 +1637,7 @@ target_location_for_spell(class Character * caster,
 
 static bool
 target_spell(class Spell * spell, class Character * pc,
-			 class Object ** ret, int *direction, int *x, int *y)
+	     class Object ** ret, int *direction, int *x, int *y)
 {
 	switch (spell->target) {
 	case SPELL_TARGET_NONE:
@@ -2027,57 +2024,52 @@ bool cmdMixReagents(void)
 	return true;
 }
 
-
-void look_at_XY (int x, int y)
+void look_at_XY(int x, int y)
 {
-  consolePrint("At XY=(%d,%d) you see ", x, y);
-  placeDescribe(x, y);
+	consolePrint("At XY=(%d,%d) you see ", x, y);
+	placeDescribe(x, y);
 }
-void detailed_examine_XY (int x, int y)
+void detailed_examine_XY(int x, int y)
 {
-  // SAM: 
-  // Hmmm...how best to print more info about
-  // the objects on this tile?
-  consolePrint("TARGET XY=(%d,%d)\n", x, y);
+	// SAM: 
+	// Hmmm...how best to print more info about
+	// the objects on this tile?
+	consolePrint("TARGET XY=(%d,%d)\n", x, y);
 }
 
-
-bool cmdXamine (class Character * pc)
+bool cmdXamine(class Character * pc)
 {
-  // SAM: Working on an improved (L)ook command,
-  // which works as a "Look Mode" rather than a 
-  // "look at 1 tile" command...
+	// SAM: Working on an improved (L)ook command,
+	// which works as a "Look Mode" rather than a 
+	// "look at 1 tile" command...
 	int x, y;
 
 	cmdwin_clear();
 	cmdwin_print("Xamine-");
 
 	if (pc) {
-      // A party member was specified as a parameter, so this must be
-      // combat mode. Use the party member's location as the origin.
-      x = pc->getX();
-      y = pc->getY();
-      // SAM: We don't care now who is examining stuff.
-      // Conceivably in future, we might 
-      // (different characters with different sensory abilities, 
-      // or knowledge of the names of objects, or some such).  
-      // But that day is a long ways off.
+		// A party member was specified as a parameter, so this must be
+		// combat mode. Use the party member's location as the origin.
+		x = pc->getX();
+		y = pc->getY();
+		// SAM: We don't care now who is examining stuff.
+		// Conceivably in future, we might 
+		// (different characters with different sensory abilities, 
+		// or knowledge of the names of objects, or some such).  
+		// But that day is a long ways off.
+	} else {
+		// Must be party mode. 
+		// Use the player party's location as the origin.
+		x = player_party->getX();
+		y = player_party->getY();
 	}
-    else {
-      // Must be party mode. 
-      // Use the player party's location as the origin.
-      x = player_party->getX();
-      y = player_party->getY();
-    }
-    
-	if (select_target_with_doing(x, y, &x, &y, 9,
-                                 look_at_XY, 
-                                 detailed_examine_XY) == -1) {
-      return false;
-	}
-    return true;
-} // cmdXamine()
 
+	if (select_target_with_doing(x, y, &x, &y, 9,
+				     look_at_XY, detailed_examine_XY) == -1) {
+		return false;
+	}
+	return true;
+}				// cmdXamine()
 
 static bool keyHandler(struct KeyHandler *kh, int key)
 {
@@ -2134,8 +2126,8 @@ static bool keyHandler(struct KeyHandler *kh, int key)
 		hole_up_and_camp();
 		break;
 	case 'l':
-      // SAM: Changing (L)ook command 
-      // from "look at 1 tile" to a "Look Mode"
+		// SAM: Changing (L)ook command 
+		// from "look at 1 tile" to a "Look Mode"
 		cmdLook(player_party->getX(), player_party->getY());
 		break;
 	case 'm':
@@ -2159,9 +2151,10 @@ static bool keyHandler(struct KeyHandler *kh, int key)
 	case 'u':
 		cmdUse(NULL);
 		break;
-    case 'x':
-      cmdXamine(NULL); // SAM: 1st step towards new (L)ook cmd...
-      break;
+	case 'x':
+		cmdXamine(NULL);	// SAM: 1st step towards new (L)ook
+					// cmd...
+		break;
 	case 'z':
 		cmdZtats(NULL);
 		break;
@@ -2257,7 +2250,7 @@ static int play_init(struct play *play)
 					 * the frame because the title is
 					 * always painted OVER the frame. */
 
-	mapInit(play->los_name); // must be before placeEnter()
+	mapInit(play->los_name);	// must be before placeEnter()
 	placeEnter();
 	consoleInit();
 
@@ -2349,24 +2342,21 @@ int playRun(void)
 
 	Quit = false;
 
-        // Major hack warning: if the game loads up with the player in a
-        // dungeon then we need to force the game into dungeon mode. The
-        // easiest way to do that is to have the player party "enter" the
-        // dungeon it's already in. The last two args are the direction vector
-        // - just fake them to "north".
-        if (place_is_dungeon(player_party->getPlace())) {
-                if (! player_party->enter_dungeon(player_party->getPlace(), 
-                                                  player_party->getX(), 
-                                                  player_party->getY(),
-                                                  0, 1)) {
-                        err("Bad starting position for party: %s [%d %d]\n",
-                            player_party->getPlace()->name,
-                            player_party->getX(), 
-                            player_party->getY());
-                        return -1;
-                }
-        }
-
+	// Major hack warning: if the game loads up with the player in a
+	// dungeon then we need to force the game into dungeon mode. The
+	// easiest way to do that is to have the player party "enter" the
+	// dungeon it's already in. The last two args are the direction vector
+	// - just fake them to "north".
+	if (place_is_dungeon(player_party->getPlace())) {
+		if (!player_party->enter_dungeon(player_party->getPlace(),
+						 player_party->getX(),
+						 player_party->getY(), 0, 1)) {
+			err("Bad starting position for party: %s [%d %d]\n",
+			    player_party->getPlace()->name,
+			    player_party->getX(), player_party->getY());
+			return -1;
+		}
+	}
 
 	// Enter the main event loop. This won't exit until the player quits or
 	// dies.

@@ -66,7 +66,7 @@ class player_party:public Object {
         virtual struct sprite *getSprite(void);
         virtual char *getName();
         virtual bool isVisible();
-        virtual void describe();
+        virtual void describe(int count);
         virtual void relocate(struct place *place, int x, int y);
 
         unsigned char get_pmask(void);

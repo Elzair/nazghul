@@ -34,19 +34,19 @@
 enum layer {			/* Proper rendering depends on keeping these in 
 				 * order! */
 	null_layer = 0,
-	mech_layer,
-	portal_layer,
-	vehicle_layer,
-	container_layer,
-	item_layer,
-	field_layer,		/* Make fields a higher priority than items and
+	mech_layer = 1,
+	portal_layer = 2,
+	vehicle_layer = 3,
+	container_layer = 4,
+	item_layer = 5,
+	field_layer = 6,	/* Make fields a higher priority than items and
 				 * containers until transparency is more
 				 * prevalent among the other sprites. This way
 				 * dropped items don't hide dangerous fields
 				 * from the user. */
-	being_layer,
-	projectile_layer,
-	cursor_layer,
+	being_layer = 7,
+	projectile_layer = 8,
+	cursor_layer = 9,
 };
 
 struct inv_entry {
@@ -265,9 +265,8 @@ class Object {
 	// SAM: Experiment shows that Object::describe() gets
 	// called when I use the OPEN command, but not for the LOOK command.
 	// Why is this?
-	virtual void describe() {
-		getObjectType()->describe(1);
-	}
+	virtual void describe(int count);
+
 	virtual bool is_opaque() {
 		return false;
 	}

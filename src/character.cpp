@@ -1131,7 +1131,7 @@ void Character::setVisible(bool val)
 		visible--;
 }
 
-void Character::describe()
+void Character::describe(int count)
 {
 	if (isvowel(species->name[0]))
 		consolePrint("an ");

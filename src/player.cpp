@@ -1335,7 +1335,7 @@ bool player_party::isVisible()
 	return true;
 }
 
-void player_party::describe()
+void player_party::describe(int count)
 {
 	consolePrint("the %s", getName());
 }
