@@ -386,12 +386,6 @@ extern bool point_in_rect(int x, int y, SDL_Rect *rect);
 	extern char *SAVEFILE;	/* nazghul.c */
 
 
-#define HACK_GLOBAL_PALETTE
-#ifdef HACK_GLOBAL_PALETTE
-// SAM: This is an ugly hack.  See terrain.c and game.c
-extern struct terrain_palette HACK_global_palette;
-#endif // HACK_GLOBAL_PALETTE
-
 #ifdef __cplusplus
 }
 #endif
