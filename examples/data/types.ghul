@@ -102,19 +102,6 @@ CURSOR ls_whirlpool;  // From ss_u4
         subtype ammo    \
         }
 
-
-#define FIELD_TYPE(_tag,     _name,  _sprite,           \
-                   _effects, _light, _duration, _pmask) \
-    _tag {                  \
-        name     _name      \
-        sprite   _sprite    \
-        subtype  field      \
-        effects  _effects   \
-        light    _light     \
-        duration _duration  \
-        pmask    _pmask     \
-    }
-
 #define ARMS_TYPE(_tag,    _name,    _sprite,         \
                   _attack, _defend,  _slot,   _hands, \
                   _range,  _missile, _thrown, _uAmmo, \

@@ -31,6 +31,19 @@
 #define magical_fields_ghul
 
 
+#define FIELD_TYPE(_tag,     _name,  _sprite,           \
+                   _effects, _light, _duration, _pmask) \
+    _tag {                  \
+        name     _name      \
+        sprite   _sprite    \
+        subtype  field      \
+        effects  _effects   \
+        light    _light     \
+        duration _duration  \
+        pmask    _pmask     \
+    }
+
+
 //         tag       name                sprite          effect          L    D   P 
 //         -------   ------------        --------------  -------------  ---  --- ---
 FIELD_TYPE(F_fire,   "fire field",       s_field_fire,   EFFECT_BURN,   512, 20, PASS_ALL);
