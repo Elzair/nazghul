@@ -133,7 +133,7 @@
 #define LAND      2
 #define WATER     4
 #define SHOALS    8
-#define PASS_ALL  16
+#define PASS_ALL  255
 
 /*
  * Default map palette (for convenience - I would prefer maps to use their own

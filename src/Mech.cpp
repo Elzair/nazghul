@@ -32,207 +32,15 @@
 #include "map.h"
 #include "terrain_map.h"
 
-#ifdef OLD_MECH_ACTIONS
-struct mech_alarm_info {
-	struct mech_action *action;
-	class Mech *mech;
-};
 
-static void mech_send_signal(struct mech_action *act, class Mech * mech)
+static void dump_state(struct mech_state *state)
 {
-	if (mech->port)
-		mech->port->activate(act->parms.alarm.signal);
+        printf("  name=%s\n", state->name);
+        printf(" pmask=0x%x\n", state->pmask);
+        printf(" light=%d\n", state->light);
+        printf("opaque=%d\n", state->opaque);
 }
 
-static void mech_alarm(struct wq_job *job, struct list *wq)
-{
-	struct mech_alarm_info *info = (struct mech_alarm_info *) job->data;
-	info->mech->activate(info->action->parms.signal);
-	delete info;
-	free(job);
-}
-
-static void mech_set_alarm(struct mech_action *act, class Mech * mech)
-{
-	struct mech_alarm_info *info = new struct mech_alarm_info;
-	if (info) {
-		info->action = act;
-		info->mech = mech;
-		wqCreateJob(&TurnWorkQueue, Turn + act->parms.alarm.turns,
-			    0, info, mech_alarm);
-	}
-}
-
-static void mech_print(struct mech_action *act, class Mech * mech)
-{
-	consolePrint("%s\n", act->parms.string);
-}
-
-static void mech_blit_map(struct mech_action *act, class Mech * mech)
-{
-	// note: tmp heck, default to current place at runtime until I can bind
-	// the place at load time
-	act->parms.blit_map.dst = Place;
-	terrain_map_blit(act->parms.blit_map.dst->terrain_map,
-			 act->parms.blit_map.dst_x,
-			 act->parms.blit_map.dst_y,
-			 act->parms.blit_map.src,
-			 act->parms.blit_map.src_x,
-			 act->parms.blit_map.src_y,
-			 act->parms.blit_map.w, act->parms.blit_map.h);
-}
-
-static bool mech_parse_send_signal(class Loader * loader,
-				   struct mech_action *action)
-{
-	if (!loader->getInt(&action->parms.signal))
-		return false;
-	action->fx = mech_send_signal;
-	return true;
-}
-
-static bool mech_parse_set_alarm(class Loader * loader,
-				 struct mech_action *action)
-{
-	if (!loader->getInt(&action->parms.alarm.turns) ||
-	    !loader->getInt(&action->parms.alarm.signal))
-		return false;
-	action->fx = mech_set_alarm;
-	return true;
-}
-
-static bool mech_parse_print(class Loader * loader, struct mech_action *action)
-{
-	if (!loader->getString(&action->parms.string))
-		return false;
-	action->fx = mech_print;
-	return true;
-}
-
-static bool mech_parse_blit_map(class Loader * loader,
-				struct mech_action *action)
-{
-	char *ptag = 0;
-	char *mtag = 0;
-
-	// parse
-	if (!loader->getWord(&ptag) ||
-	    !loader->getInt(&action->parms.blit_map.dst_x) ||
-	    !loader->getInt(&action->parms.blit_map.dst_y) ||
-	    !loader->getWord(&mtag) ||
-	    !loader->getInt(&action->parms.blit_map.src_x) ||
-	    !loader->getInt(&action->parms.blit_map.src_y) ||
-	    !loader->getInt(&action->parms.blit_map.w) ||
-	    !loader->getInt(&action->parms.blit_map.h) ||
-	    !loader->getInt(&action->parms.blit_map.rot))
-		goto fail;
-
-	// bind tags
-
-#ifdef LATE_BIND_BLIT_MAP
-	// note: have to do a two-pass bind to get the place, since places are
-	// usually specified after mechs. For now default to the current place
-	// at runtime.
-	if (!(action->parms.blit_map.dst =
-	      (struct place *) loader->lookupTag(ptag, PLACE_ID))) {
-		loader->setError("Error parsing blit_map: '%s' is not a "
-				 "valid PLACE tag", ptag);
-		goto fail;
-	}
-#endif				// LATE_BIND_BLIT_MAP
-
-	if (!(action->parms.blit_map.src =
-	      (struct terrain_map *) loader->lookupTag(mtag, MAP_ID))) {
-		loader->setError("Error parsing blit_map: '%s' is not a "
-				 "valid MAP tag", mtag);
-		goto fail;
-	}
-
-	action->fx = mech_blit_map;
-
-	free(ptag);
-	free(mtag);
-
-	return true;
-
-      fail:
-	if (ptag)
-		free(ptag);
-	if (mtag)
-		free(mtag);
-	return false;
-}
-
-static struct mech_api_entry {
-	char *name;
-	 bool(*parse) (class Loader *, struct mech_action *);
-} mech_api_tbl[] = {
-	{
-	"send_signal", mech_parse_send_signal}, {
-	"set_alarm", mech_parse_set_alarm}, {
-	"print", mech_parse_print}, {
-"blit_map", mech_parse_blit_map},};
-
-static struct mech_action *load_actions(class Loader * loader, int *n)
-{
-	struct mech_action *set = 0;
-	struct mech_action tmp;
-	int index;
-	char *api_call = 0;
-	unsigned int i;
-
-	// *** base case ***
-
-	if (loader->matchToken('}')) {
-		if (*n) {
-			set = new struct mech_action[*n];
-			if (!set)
-				loader->setError("Memory allocation failed");
-		}
-		return set;
-	}
-	// *** recursive case ***
-
-	memset(&tmp, 0, sizeof(tmp));
-
-	// get the api call
-	if (!loader->getWord(&api_call))
-		return 0;
-
-	// look it up in the table of valid calls and call its parse routine
-	for (i = 0; i < array_sz(mech_api_tbl); i++) {
-		if (!strcmp(api_call, mech_api_tbl[i].name)) {
-			if (!mech_api_tbl[i].parse(loader, &tmp))
-				goto fail;
-			break;
-		}
-	}
-
-	// check if we failed to find the call in the table
-	if (i == array_sz(mech_api_tbl)) {
-		loader->setError("'%s' is not in the MECH API", api_call);
-		goto fail;
-	}
-
-	index = *n;
-	(*n)++;
-
-	set = load_actions(loader, n);
-	if (!set) {
-		return 0;
-	}
-
-	set[index] = tmp;
-
-	return set;
-
-      fail:
-	if (api_call)
-		free(api_call);
-	return 0;
-}
-
-#endif				// OLD_MECH_ACTIONS
 
 struct mech_transition *MechType::load_transitions(class Loader * loader,
 						   int *n)
@@ -284,20 +92,11 @@ struct mech_transition *MechType::load_transitions(class Loader * loader,
 		loader->setError("Invalid state %s", to_tag);
 		goto fail;
 	}
-#ifdef OLD_MECH_ACTIONS
-	// load the actions
-	if (!loader->matchWord("actions") || !loader->matchToken('{'))
-		goto fail;
-
-	if (!(tmp.actions = load_actions(loader, &tmp.n_actions)))
-		goto fail;
-#else
 	if (!loader->matchWord("actions"))
 		goto fail;
 
 	if (!(tmp.actions = load_response_chain(loader)))
 		goto fail;
-#endif				// OLD_MECH_ACTIONS
 
 	// recur
 
@@ -394,6 +193,8 @@ static struct mech_state *load_states(class Loader * loader, int *n,
 	if (!load_state(loader, &tmp))
 		goto fail;
 
+        dump_state(def);
+
 	index = *n;
 	(*n)++;
 
@@ -452,6 +253,7 @@ bool MechType::load(class Loader * loader)
 		return false;
 
 	memset(&def, 0, sizeof(def));
+        printf("Loading default state for MECH %s:\n", tag);
 	if (!load_state(loader, &def))
 		return false;
 
@@ -596,8 +398,10 @@ char *Mech::getName()
 
 int Mech::getPmask()
 {
-	if (state)
+	if (state) {
 		return state->pmask;
+        }
+        printf("%s has no state\n", getName());
 	return 0;		// SAM: Stateless Mechs are not passable?
 }
 

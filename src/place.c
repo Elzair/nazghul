@@ -236,8 +236,13 @@ int place_is_passable(struct place *place, int x, int y,
 
 	// Test for an impassable Mech
 	if ((flags & PFLAG_IGNOREMECHS) == 0) {
-		mech = (class Mech *) place_get_object(place, x, y, mech_layer);
-		if (mech != NULL && (mech->getPmask() && pmask) == 0)
+		mech = (class Mech *) place_get_object(place, x, y, 
+                                                       mech_layer);
+                if (mech) {
+                        // dbg
+                        printf("*** 0x%x 0x%x\n", pmask, mech->getPmask());
+                }
+		if (mech != NULL && (mech->getPmask() & pmask) == 0)
 			return 0;
 	}
 
