@@ -1,5 +1,24 @@
 Changes 2003/06/25
 sglasby:
+-- Implemented a terrain- and palette-saving command (^S)ave Map.
+
+   The command is bound to CONTROL-S, and writes the current 
+   terrain_palette and terrain_map to disk as:
+       /tmp/nazghul.pal.pal_tag_name.PID.ghul
+       /tmp/nazghul.map.map_tag_name.PID.ghul
+
+   This is useful for map editors in conjunction with (^T)erraform.
+   The saved palettes and maps can easily be used in hand-written 
+   GhulScript with minimal to no hand-editing of the Nazghul-generated 
+   palettes/maps.
+
+   The next step is a command to teleport to a tag-named place, 
+   and a command to create a new place of specified width and height.
+   With these commands, map creation can be done entirely within Nazghul.
+   (Place creation will of course await full game state saving.)
+
+Changes 2003/06/25
+sglasby:
 -- Implemented a terrain-editing command (^T)erraform.
 
    The command is bound to CONTROL-T, and invokes a UI cursoring mode
