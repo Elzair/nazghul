@@ -55,7 +55,8 @@
                   ;; yes - player wants a room
                   (begin
                     (say knpc 
-                         "It will be 25 gold, and you may use the room as "
+                         "It will be " trigrave-inn-room-price " gold, "
+                         "and you may use the room as "
                          "long as you are in town. Agreed?")
                     (if (kern-conv-get-yes-no? kpc)
                         ;; yes - player agrees to the price

@@ -2471,13 +2471,10 @@ KERN_API_CALL(kern_log_enable)
 
 static pointer kern_conv_say(scheme *sc,  pointer args)
 {
-        char *msg;
         Object *speaker;
-        pointer msgs;
-        int first = 1;
 
         if (unpack(sc, &args, "p", &speaker)) {
-                rt_err("kern-print: bad args");
+                rt_err("kern-conv-say: bad args");
                 return sc->NIL;
         }
 
@@ -2486,27 +2483,27 @@ static pointer kern_conv_say(scheme *sc,  pointer args)
                 return sc->NIL;
         }
 
-        msgs = scm_car(sc, args);
-        args = scm_cdr(sc, args);
+        log_begin("%s: ", speaker->getName());
 
-        while (scm_is_pair(sc, msgs)) {
-                
-                if (unpack(sc, &msgs, "s", &msg)) {
-                        rt_err("kern-conv-say: bad args");
-                        return sc->NIL;
-                }
+        args = scm_car(sc, args);
 
-                if (first) {
-                        log_begin("%s: %s", speaker->getName(), msg);
-                        first = 0;
+        while (scm_is_pair(sc, args)) {
+
+                pointer val = scm_car(sc, args);
+                args = scm_cdr(sc, args);
+
+                if (scm_is_str(sc, val)) {
+                        log_continue(scm_str_val(sc, val));
+                } else if (scm_is_int(sc, val)) {
+                        log_continue("%d", scm_int_val(sc, val));
+                } else if (scm_is_real(sc, val)) {
+                        log_continue("%f", scm_real_val(sc, val));
                 } else {
-                        log_continue("%s", msg);
+                        rt_err("kern-print: bad args");
                 }
-
         }
 
-        if (! first)
-                log_end(NULL);
+        log_end(NULL);
 
         return sc->NIL;
 }
