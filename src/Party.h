@@ -126,6 +126,7 @@ class Party:public Object {
         virtual void switchOrder(class Character *ch1, class Character *ch2);
 	virtual bool turn_vehicle();
         virtual void applyEffect(closure_t *effect);
+        virtual class Character *getMemberByOrder(int order);
 
         void removeMembers();
 

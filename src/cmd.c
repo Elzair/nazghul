@@ -1275,23 +1275,46 @@ void cmdNewOrder(void)
 	class Character *pc1, *pc2;
 	int tmp;
 
+        switch (player_party->getSize()) {
+        case 0:
+                assert(0);
+                break;
+        case 1:
+                log_msg("New Order - only one party member!");
+                return;
+        case 2:
+                pc1 = player_party->getMemberByOrder(0);
+                pc2 = player_party->getMemberByOrder(1);
+                goto swap;
+        }
+
 	cmdwin_clear();
 	cmdwin_print("Switch-");
 
+        // Set the mode now - before calling select_party_member - so that the
+        // screen will not flash back to a short status window between the two
+        // calls to select_party_member.
+        statusSetMode(SelectCharacter);
+
 	pc1 = select_party_member();
-	if (pc1 == NULL)
+	if (pc1 == NULL) {
+                statusSetMode(ShowParty);
 		return;
+        }
 
 	cmdwin_print("-with-");
 
 	pc2 = select_party_member();
 	if (pc2 == NULL) {
+                statusSetMode(ShowParty);
 		return;
 	}
 
+        statusSetMode(ShowParty);
+ swap:
         player_party->switchOrder(pc1, pc2);
 
-	log_msg("%s switched order with %s\n", pc1->getName(),
+	log_msg("New Order: %s switched with %s\n", pc1->getName(),
 		     pc2->getName());
 
 	statusRepaint();

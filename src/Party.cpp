@@ -1138,3 +1138,17 @@ int Party::getMovementCost(int pclass)
 
         return minCost;
 }
+
+class Character *Party::getMemberByOrder(int order)
+{
+        struct list *entry;
+        class Character *member;
+
+        FOR_EACH_MEMBER(entry, member) {
+                if (! order)
+                        return member;
+                order--;
+        }
+
+        return NULL;
+}

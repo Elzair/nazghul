@@ -79,9 +79,24 @@ static inline void list_switch_adjacent(struct list *first,
         second->next = first;
 }
 
+static inline void list_replace(struct list *orig, struct list *repl)
+{
+        if (orig ==repl)
+                return;
+
+        *repl = *orig;
+        orig->next->prev = repl;
+        orig->prev->next = repl;
+}
+
 static inline void list_switch(struct list *e1, struct list *e2)
 {
+        struct list tmp;
 
+        list_replace(e1, &tmp);
+        list_replace(e2, e1);
+        list_replace(&tmp, e2);
+#if 0
         if (e1 == e2) {
                 return;
         } else if (e1->next == e2) {
@@ -94,6 +109,7 @@ static inline void list_switch(struct list *e1, struct list *e2)
                 e2->prev->next = e1;
                 e2->next->prev = e1;
         }
+#endif
 }
 
 END_DECL
