@@ -234,10 +234,11 @@ Character::~Character()
 {
 	if (name)
 		free(name);
-	if (view) {
-                rmView();
-		free(view);
-	}
+
+// 	if (view) {
+//                 rmView();
+// 		free(view);
+// 	}
 
 	if (container)
 		delete container;

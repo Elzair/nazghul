@@ -1608,16 +1608,20 @@ void place_exec(struct place *place)
                 /* check if the session was reloaded while running the
                  * object. If so, the object, this place and everything in it
                  * has been destroyeed. Leave now. Don't touch a thing. */
-                if (Session->reloaded)
-                        return;                                
+                if (Session->reloaded) {
+                        place_unlock(place);
+                        return;         
+                }
 
                 /* Check if the object was destroyed. */
                 if (obj->isDestroyed()) {
 
                         /* Don't delete the player party here, that will be
                          * handled by the caller. */
-                        if (obj == player_party)
+                        if (obj == player_party) {
+                                place_unlock(place);
                                 return;
+                        }
 
                         /* Make sure the object was already removed. */
                         assert(! obj->isOnMap());

@@ -1266,6 +1266,9 @@ static void gc(scheme *sc, pointer a, pointer b) {
 }
 
 static void finalize_cell(scheme *sc, pointer a) {
+#if USE_PROTECT
+        assert(! a->pref);
+#endif
   if(is_string(a)) {
     sc->free(strvalue(a));
   } else if(is_port(a)) {
@@ -4370,6 +4373,11 @@ void scheme_set_external_data(scheme *sc, void *p) {
 
 void scheme_deinit(scheme *sc) {
   int i;
+
+#if USE_PROTECT
+  /* Make sure the kernel has released all of its references to scheme cells */
+  assert(list_empty(&sc->protect));
+#endif
 
   sc->oblist=sc->NIL;
   sc->global_env=sc->NIL;
