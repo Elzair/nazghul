@@ -73,10 +73,9 @@ extern struct terrain *terrain_new(char *tag, char *name,
 extern void terrain_del(struct terrain *terrain);
 extern void terrain_alloc_mmode_table(int n_mmodes);
 
-#define LONGEST_TERRAIN_GLYPH       4
-#define NUM_QUICK_TERRAINS         10
-#define PAL_TERRAIN_QUICK_DEFAULT -(NUM_QUICK_TERRAINS)
-#define PAL_TERRAIN_NOT_SET       -1
+#define LONGEST_TERRAIN_GLYPH   4
+#define NUM_QUICK_TERRAINS     10
+#define PAL_TERRAIN_NOT_SET    -1
 
 struct terrain_palette_entry {
         struct list list;
