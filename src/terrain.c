@@ -37,7 +37,6 @@ extern struct terrain *terrain_new(char *tag,
                                    struct sprite *sprite,
                                    int pclass, 
                                    int alpha, 
-                                   //int movement_cost,
                                    int light)
 {
 	struct terrain *terrain;
@@ -52,7 +51,6 @@ extern struct terrain *terrain_new(char *tag,
         terrain->sprite        = sprite;
 	terrain->pclass        = pclass;
 	terrain->alpha         = alpha;
-        //terrain->movement_cost = movement_cost;
         terrain->light         = light;
 	return terrain;
 }
@@ -65,8 +63,6 @@ void terrain_del(struct terrain *terrain)
 		free(terrain->name);
         if (terrain->effect)
                 closure_del(terrain->effect);
-        if (terrain->cost)
-                closure_del(terrain->cost);
         delete terrain;
 }
 

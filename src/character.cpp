@@ -516,7 +516,8 @@ enum MoveResult Character::move(int dx, int dy)
 
 	if (!place_is_passable(
                     getPlace(), newx, newy, this,
-                    activity == COMMUTING ? PFLAG_IGNOREMECHS : 0)) {
+                    PFLAG_MOVEATTEMPT | 
+                    (activity == COMMUTING ? PFLAG_IGNOREMECHS : 0))) {
 		return WasImpassable;
 	}
 
@@ -570,7 +571,8 @@ enum MoveResult Character::move(int dx, int dy)
                                 relocate(getPlace(), newx, newy);
                                 decActionPoints(
                                         place_get_movement_cost(getPlace(), 
-                                                                newx, newy, this));
+                                                                newx, newy, 
+                                                                this));
                                 return MovedOk;
         
                         }

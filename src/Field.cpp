@@ -37,9 +37,9 @@ int FieldType::getType()
 }
 
 FieldType::FieldType(char *tag, char *name, struct sprite *sprite, 
-                     int light, int duration, int pmask, closure_t *clx)
+                     int light, int duration, int pclass, closure_t *clx)
         : ObjectType(tag, name, sprite, field_layer), 
-          light(light), duration(duration), pmask(pmask), effect(clx)
+          light(light), duration(duration), pclass(pclass), effect(clx)
 {
 }
 
@@ -67,16 +67,6 @@ void  FieldType::setDuration(int val)
 int  FieldType::getDuration()
 {
         return duration;
-}
-
-int  FieldType::getPmask()
-{
-        return pmask;
-}
-
-void  FieldType::setPmask(int val)
-{
-        pmask = val;
 }
 
 class Object *FieldType::createInstance()
@@ -140,4 +130,9 @@ void Field::save(struct save *save)
 {
         save->write(save, "(kern-mk-field %s %d)", getObjectType()->getTag(), 
                     duration);
+}
+
+int Field::getPclass()
+{
+        return getObjectType()->pclass;
 }

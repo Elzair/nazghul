@@ -186,6 +186,7 @@ class ObjectType {
         bool canHandle();
         bool canAttack();
         bool canEnter();
+        bool canBump(); // attempted entry onto same tile
 
         void use(Object *user);
         void exec(Object *obj);
@@ -196,6 +197,7 @@ class ObjectType {
         void attack(Object *obj, Object *attacker);
         void enter(Object *obj, Object *enterer);
         void cast(Object *caster);
+        void bump(Object *obj, Object *bumper);
         closure_t *getGifc();
         void setGifc(closure_t *gifc, int cap);
 

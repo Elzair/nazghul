@@ -56,10 +56,8 @@ struct terrain {
         struct terrain_map *combat_map;
         unsigned char alpha;
         int pclass;
-        //int movement_cost;
         int light;
-        closure_t *effect;
-        closure_t *cost;
+        closure_t *effect; /* when stood on */
 };
 
 /* static inline int terrain_is_passable(struct terrain *terrain, class Object *obj) */

@@ -1174,13 +1174,13 @@ static pointer kern_mk_field_type(scheme *sc, pointer args)
         class FieldType *field;
         char *tag = TAG_UNK, *name;
         struct sprite *sprite;
-        int light, duration, pmask;
+        int light, duration, pclass;
         closure_t *clx = NULL;
         pointer func = sc->NIL;
         pointer ret;        
 
         if (unpack(sc, &args, "yspdddc", &tag, &name, &sprite, &light, 
-                   &duration, &pmask, &func)) {
+                   &duration, &pclass, &func)) {
                 load_err("kern-mk-field-type %s: bad args", tag);
                 return sc->NIL;
         }
@@ -1189,7 +1189,7 @@ static pointer kern_mk_field_type(scheme *sc, pointer args)
                 clx = closure_new(sc, func);
         }
 
-        field = new FieldType(tag, name, sprite, light, duration, pmask, clx);
+        field = new FieldType(tag, name, sprite, light, duration, pclass, clx);
         session_add(Session, field, field_type_dtor, NULL, NULL);
         ret = scm_mk_ptr(sc, field);
         scm_define(sc, tag, ret);

@@ -182,6 +182,9 @@
 (define (burn obj)
   (kern-obj-apply-damage obj "burning" 10))
 
+(define (apply-lightning obj)
+  (kern-obj-apply-damage obj "shocking" 15))
+
 ;; Explosion trap - shakes the screen and damages all surrounding objects
 
 ;; Burst trap - splatters the surrounding scene with dangerous fields

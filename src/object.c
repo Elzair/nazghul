@@ -55,6 +55,7 @@
 #define GIFC_CAN_MIX    128
 #define GIFC_CAN_ENTER  256
 #define GIFC_CAN_CAST   512
+#define GIFC_CAN_BUMP   1024
 
 ObjectType::ObjectType()
 {
@@ -1623,9 +1624,19 @@ bool ObjectType::canOpen()
         return (gifc_cap & GIFC_CAN_OPEN);
 }
 
+bool ObjectType::canBump()
+{
+        return (gifc_cap & GIFC_CAN_BUMP);
+}
+
 void ObjectType::open(Object *obj, Object *opener)
 {
         closure_exec(gifc, "ypp", "open", obj, opener);
+}
+
+void ObjectType::bump(Object *obj, Object *bumper)
+{
+        closure_exec(gifc, "ypp", "open", obj, bumper);
 }
 
 bool ObjectType::canHandle()
@@ -1672,6 +1683,7 @@ void ObjectType::get(Object *obj, Object *getter)
 {
         closure_exec(gifc, "ypp", "get", obj, getter);
 }
+
 
 closure_t *ObjectType::getGifc()
 {

@@ -63,6 +63,7 @@ BEGIN_DECL
 #define PFLAG_IGNOREBEINGS     (1 << 3)
 #define PFLAG_IGNOREVEHICLES   (1 << 4)
 #define PFLAG_IGNORECOMPANIONS (1 << 5)
+#define PFLAG_MOVEATTEMPT      (1 << 6)
 
 // Flags for placeDescribe:
 #define PLACE_DESCRIBE_TERRAIN (1 << 0)

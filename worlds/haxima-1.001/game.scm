@@ -63,6 +63,7 @@
 (define pclass-wall      5) ;; has a ceiling
 (define pclass-trees     6)
 (define pclass-forest    7)
+(define pclass-repel     8) ;; energy shield blocks all
 
 ;; Movement modes
 (define mmodes
@@ -88,6 +89,7 @@
  (list cant   cant  cant   normal cant   cant  ) ;; wall (w/ ceiling)
  (list hard   hard  cant   normal easy   cant  ) ;; trees  
  (list vhard  vhard cant   normal easy   cant  ) ;; forest/hills/bog
+ (list cant   cant  cant   cant   cant   cant  ) ;; energy fields
  )
 
 ;; Layers

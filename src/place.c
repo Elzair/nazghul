@@ -394,20 +394,33 @@ int place_is_passable(struct place *place, int x, int y,
 	terrain = place->terrain_map->terrain[y * place->terrain_map->w + x];
         if (! subject->isPassable(terrain_pclass(terrain)) &&
             ((flags & PFLAG_IGNOREVEHICLES) ||
-             ! place_get_vehicle(place, x, y)))
+             ! place_get_vehicle(place, x, y))) {
+                if (flags & PFLAG_MOVEATTEMPT &&
+                    terrain->effect) {
+                        subject->applyEffect(terrain->effect);
+                }
                 return 0;
+        }
 
 	// Test for an impassable Field
 	field = (class Field *) place_get_object(place, x, y, field_layer);
 	if (field != NULL && 
-            ! subject->isPassable(field->getPclass()))
+            ! subject->isPassable(field->getPclass())) {
+                if (flags & PFLAG_MOVEATTEMPT &&
+                    field->getObjectType()->effect)
+                        subject->applyEffect(field->getObjectType()->effect);
 		return 0;
+        }
 
 	// Test for an impassable Mech
 	if ((flags & PFLAG_IGNOREMECHS) == 0) {
 		mech = place_get_object(place, x, y, mech_layer);
-		if (mech != NULL && ! subject->isPassable(mech->getPclass()))
+		if (mech != NULL && ! subject->isPassable(mech->getPclass())) {
+                        if (flags & PFLAG_MOVEATTEMPT &&
+                            mech->getObjectType()->canBump())
+                                mech->getObjectType()->bump(mech, subject);
                         return 0;
+                }
 	}
 
 	return 1;

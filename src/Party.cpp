@@ -492,7 +492,8 @@ MoveResult Party::move(int dx, int dy)
 
 	/* Check passability */
 	if (!place_is_passable(oldplace, newx, newy, this,
-			       act == COMMUTING ? PFLAG_IGNOREMECHS : 0)) {
+                               PFLAG_MOVEATTEMPT |
+			       (act == COMMUTING ? PFLAG_IGNOREMECHS : 0))) {
 		return WasImpassable;
 	}
 
