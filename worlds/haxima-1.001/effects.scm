@@ -2,6 +2,20 @@
 ;; effects.scm - generic effects procedures used in multiple places
 ;; ----------------------------------------------------------------------------
 
+(define (mk-effect tag exec apply rm hook sym ddc cum dur)
+  (kern-mk-effect tag 
+                  "undef" 
+                  "undef" 
+                  exec 
+                  apply 
+                  rm 
+                  hook 
+                  sym 
+                  ddc 
+                  s_null 
+                  cum 
+                  dur))
+
 (define (poison-exec fgob obj)
   (kern-obj-apply-damage obj "poisoned" 1))
 
@@ -67,6 +81,12 @@
           (kern-log-msg (kern-obj-get-name kchar) " struggles in the web!")
           (kern-obj-set-ap kchar 0)
           #f))))
+
+(mk-effect 'ef_ensnare 'ensnare-exec 'ensnare-apply nil "keystroke-hook" 
+           "E" 0 #f 15)
+
+(define (is-ensnared? kobj)
+  (in-list? ef_ensnare (kern-obj-get-effects kobj)))
 
 ;; ----------------------------------------------------------------------------
 ;; light
@@ -158,8 +178,6 @@
 ;; ----------------------------------------------------------------------------
 ;; Effects Table
 ;; ----------------------------------------------------------------------------
-(define (mk-effect tag exec apply rm hook sym ddc cum dur)
-  (kern-mk-effect tag "undef" "undef" exec apply rm hook sym ddc s_null cum dur))
 
 (define effects
   (list
@@ -175,7 +193,6 @@
    (list 'ef_charm                     nil                   'charm-apply        'charm-rm        "start-of-turn-hook" "C" 0   #f  10)
    (list 'ef_invisibility              nil                   'invisibility-apply 'invisibility-rm "start-of-turn-hook" "N" 0   #t  10)
    (list 'ef_slime_split               'slime-split-exec     nil                 nil              "on-damage-hook"     ""  0   #f  -1)
-   (list 'ef_ensnare                   'ensnare-exec         'ensnare-apply      nil              "keystroke-hook"     "E" 0   #f  15)
    ))
 
 (map (lambda (effect) (apply mk-effect effect)) effects)

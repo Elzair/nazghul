@@ -117,10 +117,6 @@
                     (troll-pick-target ktroll 
                                        foes)))
 
-(define (loc-closer? a b c)
-  (< (loc-grid-distance a c)
-     (loc-grid-distance b c)))
-
 ;; Given an "origin" location and a list of locations, find the location in the
 ;; list closest to the coordinates.
 (define (loc-closest origin lst)

@@ -173,6 +173,14 @@ static void kern_run_wq_job(struct wq_job *job, struct list *wq)
 }
 /*****************************************************************************/
 
+/* Struct used by callbacks which build scheme lists */
+struct kern_append_info {
+        scheme *sc;
+        pointer head;
+        pointer tail;
+};
+
+
 static int scm_len(scheme *sc, pointer list)
 {
         int len = 0;
@@ -1721,6 +1729,52 @@ static pointer kern_obj_get_location(scheme *sc, pointer args)
         y = obj->getY();
 
         return pack(sc, "pdd", place, x, y);
+}
+
+static int kern_append_effect(struct hook_entry *entry, void *data)
+{
+        pointer cell;
+        struct kern_append_info *info;
+
+        info = (struct kern_append_info *)data;
+
+        cell = scm_mk_ptr(info->sc, entry->effect);
+        cell = _cons(info->sc, cell, info->sc->NIL, 0);
+
+        if (info->head == info->sc->NIL) {
+                info->head = cell;
+                info->tail = cell;
+        } else {
+                info->tail->_object._cons._cdr = cell;
+                info->tail = cell;
+        }
+
+}
+
+KERN_API_CALL(kern_obj_get_effects)
+{
+        class Object *obj;
+        struct place *place;
+        int i;
+        struct kern_append_info info;
+
+        if (!(obj = unpack_obj(sc, &args, "kern-obj-get-effects"))) {
+                return sc->NIL;
+        }
+
+        /* initialize the context used by the callback to append objects */
+        info.sc = sc;
+        info.head = sc->NIL;
+        info.tail = sc->NIL;
+
+        /* for each effect hook on the object */
+        for (i = 0; i < OBJ_NUM_HOOKS; i++) {
+
+                /* build a scheme list of the attached effects */
+                obj->hookForEach(i, kern_append_effect, &info);
+        }
+
+        return info.head;
 }
 
 static pointer kern_obj_get_vision_radius(scheme *sc, pointer args)
@@ -3583,12 +3637,6 @@ KERN_API_CALL(kern_obj_heal)
         return sc->NIL;
 }
 
-struct kern_append_info {
-        scheme *sc;
-        pointer head;
-        pointer tail;
-};
-
 static void kern_append_object(Object *obj, void *data)
 {
         pointer cell;
@@ -5309,6 +5357,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-obj-get-activity", kern_obj_get_activity);
         API_DECL(sc, "kern-obj-get-ap", kern_obj_get_ap);
         API_DECL(sc, "kern-obj-get-count", kern_obj_get_count);
+        API_DECL(sc, "kern-obj-get-effects", kern_obj_get_effects);
         API_DECL(sc, "kern-obj-get-gob", kern_obj_get_gob);
         API_DECL(sc, "kern-obj-get-light", kern_obj_get_light);
         API_DECL(sc, "kern-obj-get-location", kern_obj_get_location);

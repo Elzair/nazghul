@@ -53,7 +53,8 @@ struct effect {
 /* Create the closure and dup the strings. Zero out other fields (caller must
  * fill them in). */
 extern struct effect *effect_new(char *tag, scheme *sc, 
-                                 pointer exec, pointer apply, pointer rm, char *name, 
+                                 pointer exec, pointer apply, pointer rm, 
+                                 char *name, 
                                  char *description);
 
 /* Dealloc the closure, the strings and the struct. */

@@ -1,19 +1,22 @@
+;; Local variables
+(define spider-melee-weapon t_hands)
+
 ;;----------------------------------------------------------------------------
 ;; Species declaration (used by the kernel)
 ;;----------------------------------------------------------------------------
 (kern-mk-species 'sp_spider      ;; tag: script variable name
                  "spider"        ;; name: used to display name in the UI
                  12             ;; strength: limits armament weight
-                 6              ;; intelligence: unused by kernel (just reported in stats)
+                 6              ;; intelligence: (just reported in stats)
                  14              ;; dexterity: used to avoid traps on chests
                  speed-insect   ;; speed: action points per turn
                  10              ;; vision radius: in tiles
-                 mmode-walk     ;; movement mode: determines passability and cost of travel
+                 mmode-walk     ;; movement mode
                  10             ;; base hp: hit points at level zero
                  4              ;; hp multiplier: extra hp per level
                  0              ;; base mp: mana points at level zero
                  0              ;; mp multiplier: extra mana points per level
-                 s_corpse       ;; sleep sprite: shown when sleeping/dead/unconscious
+                 s_corpse       ;; sleep sprite
                  t_hands        ;; natural weapon: used when unarmed
                  #t             ;; visible: can be seen
                  sound-damage   ;; damage sound
@@ -76,9 +79,27 @@
         (ensnare-loc kspider loc)))
   (wander kspider))
 
+;; fixme: add is-paralyzed? once that's implemented
+(define (is-helpless? kchar)
+  (or (kern-char-is-asleep? kchar)
+      (is-ensnared? kchar)))
+
+(define (wood-spider-attack-helpless-foe kspider kfoe)
+  (define (attack kspider coords)
+    (display "wood-spider-attack")(newline)
+    (kern-char-attack kspider spider-melee-weapon kfoe))
+  (display "wood-spider-attack-helpless-foe")(newline)
+  (do-or-goto kspider (kern-obj-get-location kfoe) attack))
+
 (define (wood-spider-hostiles kspider foes)
   (display "wood-spider-hostiles")(newline)
-  (evade kspider foes))
+  (let ((helpless-foes (filter is-helpless? foes)))
+    (display "helpless-foes:")(display helpless-foes)(newline)
+    (if (null? helpless-foes)
+        (evade kspider foes)
+        (wood-spider-attack-helpless-foe kspider 
+                                         (closest-obj kspider 
+                                                      helpless-foes)))))
 
 (define (wood-spider-ai kspider)
   (newline)(display "spider-ai")(newline)

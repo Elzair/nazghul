@@ -337,7 +337,7 @@
                  (- (kern-place-get-width kplace) 1)))))
 
 ;; ----------------------------------------------------------------------------
-;; do-or-goto -- if the location is close enough run the proc, otherwise have
+;; do-or-goto -- if the location is adjacent then the proc, otherwise have
 ;; the char pathfind to it
 ;; ----------------------------------------------------------------------------
 (define (do-or-goto kchar coords proc)
@@ -382,3 +382,18 @@
              (kern-obj-move kchar (loc-x v) 0))
         (and (not (eq? 0 (loc-x v)))
              (kern-obj-move kchar 0 (loc-y v))))))
+
+;; ----------------------------------------------------------------------------
+;; closest-obj -- given an origin and a list of objects, return the object from
+;; the list that is closest (in city-block distance) to the origin
+;; ----------------------------------------------------------------------------
+(define (closest-obj origin lst)
+  (if (null? lst) nil
+      (foldr (lambda (a b) 
+               (if (loc-closer? (kern-obj-get-location a)
+                                (kern-obj-get-location b)
+                                origin)
+                   a
+                   b))
+               (car lst)
+               (cdr lst))))

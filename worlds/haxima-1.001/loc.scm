@@ -28,6 +28,10 @@
         (+ (abs (- (loc-x a) (loc-x b)))
            (abs (- (loc-y a) (loc-y b)))))))
 
+(define (loc-closer? a b c)
+  (< (loc-grid-distance a c)
+     (loc-grid-distance b c)))
+
 ;; Convert a location vector to "normal" form
 (define (loc-norm loc)
   (define (norm a)
@@ -59,15 +63,7 @@
 ;; place and that they have been wrapped if necessary.
 ;; ----------------------------------------------------------------------------
 (define (loc-adjacent? a b)
-  (display "loc-adjacent?")
-  (display " a=")(display a)
-  (display " b=")(display b)
-  (newline)
   (define (check dx dy)
-    (display "check")
-    (display " dx=")(display dx)
-    (display " dy=")(display dy)
-    (newline)
     (or (and (= 1 dx) (= 0 dy))
         (and (= 0 dx) (= 1 dy))))
   (let ((place (loc-place a)))
