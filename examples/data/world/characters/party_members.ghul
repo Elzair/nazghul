@@ -135,6 +135,202 @@ CHAR ch_Mesmeme {
 } // CHAR ch_Mesmeme  
 
 
+CHAR ch_grognard_warrior {
+  name      "Grognard";
+  species   human;
+  occ       fighter;
+  sprite    s_companion_fighter;
+
+  // Personal stat modifiers
+  str       +20;
+  intl      +0;
+  dex       +9;
+  
+  // Combat modifiers
+  hp_mod  +15;
+  hp_mult +2;
+  mp_mod  +0;
+  mp_mult +0;
+  hit_mod +7;
+  def_mod +5;
+  dam_mod +3;
+  arm_mod +1;
+
+  hp        360;
+  xp        3999;
+  cond      G;
+  magic     30;
+  lvl       8;
+
+  conv      c_generic;
+  readied {
+    t_long_sword;
+    t_lrg_shield;
+    t_iron_helm;
+    t_plate_boots;
+    t_plate_armor;
+  }
+} // CHAR ch_grognard_warrior
+
+
+CHAR ch_ehelor_ranger {
+  name      "Ehelor";
+  species   human;
+  occ       ranger;
+  sprite    s_companion_ranger;
+
+  // Personal stat modifiers
+  str       +5;
+  intl      +3;
+  dex       +9;
+  
+  // Combat modifiers
+  hp_mod  +5;
+  hp_mult +1;
+  mp_mod  +5;
+  mp_mult +0;
+  hit_mod +6;
+  def_mod +3;
+  dam_mod +1;
+  arm_mod +0;
+
+  hp        150;
+  xp        1500;
+  cond      G;
+  magic     60;
+  lvl       5;
+
+  conv      c_generic;
+  readied {
+    t_magic_bow;
+    t_leather_cap;
+    t_leather_boots;
+    t_leather_armor;
+  }
+} // CHAR ch_ehelor_ranger
+
+
+CHAR ch_gwydion_druid {
+  name      "Gwydion";
+  species   human;
+  occ       druid;
+  sprite    s_companion_druid;
+
+  // Personal stat modifiers
+  str       +3;
+  intl      +15;
+  dex       +3;
+  
+  // Combat modifiers
+  hp_mod  +5;
+  hp_mult +0;
+  mp_mod  +30;
+  mp_mult +5;
+  hit_mod +1;
+  def_mod +3;
+  dam_mod +0;
+  arm_mod +0;
+
+  hp        210;
+  xp        2700;
+  cond      G;
+  magic     675;
+  lvl       7;
+
+  conv      c_generic;
+  readied {
+    t_mace;
+    t_leather_cap;
+    t_leather_boots;
+    t_leather_armor;
+  }
+} // CHAR ch_gwydion_druid
+
+
+CHAR ch_axelon_paladin {
+  name      "Axelon";
+  species   human;
+  occ       fighter;  // TODO: Add paladin occ
+  sprite    s_companion_paladin;
+
+  // Personal stat modifiers
+  str       +9;
+  intl      +2;
+  dex       +5;
+  
+  // Combat modifiers
+  hp_mod  +0;
+  hp_mult +0;
+  mp_mod  +0;
+  mp_mult +0;
+  hit_mod +0;
+  def_mod +0;
+  dam_mod +0;
+  arm_mod +0;
+
+  hp        150;
+  xp        1200;
+  cond      G;
+  magic     30;
+  lvl       5;
+
+  conv      c_generic;
+  readied {
+    t_sword;
+    t_lrg_shield;
+    t_iron_helm;
+    t_plate_boots;
+    t_plate_armor;
+  }
+} // CHAR ch_axelon_paladin
+
+
+#if 0  // CHAR Template
+CHAR ch_ {
+  name      "";
+  species   human;
+  occ       wizard;
+  sprite    s_companion_wizard;
+
+  // Personal stat modifiers
+  str       +0;
+  intl      +0;
+  dex       +0;
+  
+  // Combat modifiers
+  hp_mod  +0;
+  hp_mult +0;
+  mp_mod  +0;
+  mp_mult +0;
+  hit_mod +0;
+  def_mod +0;
+  dam_mod +0;
+  arm_mod +0;
+
+  // hp = base hp + (per-level hp * level)
+  //     base hp      = (species hp_mod  + occ hp_mod  + char hp_mod)
+  //     per-level hp = (species hp_mult + occ hp_mult + char hp_mult)
+  // 
+  // magic = base magic + (per-level magic * level)
+  //     base magic      = (species mp_mod  + occ mp_mod  + char mp_mod)
+  //     per-level magic = (species mp_mult + occ mp_mult + char mp_mult)
+  hp        30;
+  xp        0;
+  cond      G;
+  magic     30;
+  lvl       1;
+
+  conv      c_generic;
+  readied {
+    t_dagger;
+    t_leather_cap;
+    t_leather_boots;
+    t_leather_armor;
+  }
+} // CHAR ch_
+#endif // CHAR Template
+
+
 #endif // party_members_ghul
 
 /* eof */

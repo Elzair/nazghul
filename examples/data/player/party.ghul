@@ -256,6 +256,10 @@ player {
     ch_Thorald_Greybeard;
     ch_Kamafuk_Axedog;
     ch_Mesmeme;
+    ch_grognard_warrior;
+    ch_ehelor_ranger;
+    ch_gwydion_druid;
+    ch_axelon_paladin;
     //    Olin_the_Ghast;
   }
 
