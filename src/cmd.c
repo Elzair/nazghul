@@ -624,7 +624,7 @@ bool cmdSearch(struct place *place, int x, int y)
 	place_describe(place, x + directionToDx(dir),
                        y + directionToDy(dir),
                        PLACE_DESCRIBE_ALL);
-        log_end(NULL);
+        log_end(".");
         Reveal = old_reveal;
 	return true;
 }
