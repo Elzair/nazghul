@@ -1658,9 +1658,9 @@ bool player_party::addFood(int amount)
                 return true;
 
         if (amount > 0)
-                consolePrint("You get %d food\n", amount);
+                log_msg("You get %d food\n", amount);
         else
-                consolePrint("You lose %d food\n", amount);
+                log_msg("You lose %d food\n", amount);
 
         food += amount;
         if (food < 0)

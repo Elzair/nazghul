@@ -634,9 +634,11 @@ void cmdGetObject(Object *actor, Object *subject)
         closure_t *handler;
 
         if (! subject->getObjectType()->canGet()) {
-                log_begin("Can't get ");
+                /* This doesn't appear to ever happen, so this clause is
+                 * untested: */
+                log_begin("can't get ");
                 subject->describe();
-                log_end(NULL);
+                log_end("!");
                 return;                
         }
                 
@@ -661,20 +663,23 @@ bool cmdGet(class Object *actor, bool scoop_all)
         x = actor->getX() + directionToDx(dir);
         y = actor->getY() + directionToDy(dir);
 
+        log_begin("Get: %s - ", directionToString(dir));
 	item = place_get_item(actor->getPlace(), x, y);
 	if (!item) {
-		log_msg("Nothing there!\n");
+		log_end("nothing to get!\n");
 		return false;
 	}
        
         cmdGetObject(actor, item);
 
 	if (scoop_all) {
-		while (NULL != (item = place_get_item(actor->getPlace(), x, y))) {
+		while (NULL != (item = place_get_item(actor->getPlace(), 
+                                                      x, y))) {
                         cmdGetObject(actor, item);
 		}
 	}
 
+        log_end("ok!");
         mapSetDirty();
         actor->decActionPoints(NAZGHUL_BASE_ACTION_POINTS);
 

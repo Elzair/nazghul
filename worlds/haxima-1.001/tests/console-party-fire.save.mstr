@@ -961,6 +961,15 @@
       (kern-mk-obj t_goblin_generator 1)
     20 20)
     (list
+      (kern-mk-obj t_mushroom 1)
+    38 22)
+    (list
+      (kern-mk-obj t_dagger 1)
+    38 22)
+    (list
+      (kern-mk-obj t_green_potion 2)
+    38 22)
+    (list
       (kern-tag 'mg-1
         (bind
           (kern-mk-obj t_moongate 1)

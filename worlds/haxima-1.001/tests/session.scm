@@ -538,6 +538,9 @@
                 (list (kern-mk-obj t_goblin_generator 1) 20 20)
                 (list (kern-tag 'mg-1 (mk-moongate 'ord)) 32 23)
                 (list (kern-tag 'mg-2 (mk-moongate 'ord)) 35 25)
+                (list (kern-mk-obj t_mushroom 1) 38 22)
+                (list (kern-mk-obj t_dagger 1) 38 22)
+                (list (kern-mk-obj t_green_potion 2) 38 22)
                 (list (mk-ship) 36 26)
                 )
                nil ; hooks
