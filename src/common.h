@@ -341,7 +341,6 @@ extern "C" {
 #define MECH_ID                 127
 #define IMAGES_ID               128
 #define FORMATION_TYPE_ID       129
-#define PLACE_ID                130
 
 /* Services (loadfile must match) */
 #define SRV_HEAL        1
