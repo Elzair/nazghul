@@ -34,13 +34,11 @@ class Cursor:public Object {
 	virtual void setRange(int range);
 	virtual void setOrigin(int x, int y);
         virtual bool is_active(void);
-        virtual void relocate(struct place *newplace, int newx, int newy);
+        virtual void relocate(struct place *newplace, int newx, int newy, bool noStep = true, struct closure *place_switch_hook = NULL);
         virtual void remove();
       protected:
 	int range, bounded, originX, originY;
         bool active;
 };
-
-extern class Cursor *Cursor;
 
 #endif // cursor_h

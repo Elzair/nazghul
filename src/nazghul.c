@@ -19,8 +19,7 @@
 // Gordon McNutt
 // gmcnutt@users.sourceforge.net
 //
-#include "lexer.h"
-#include "util.h"
+#include "foogod.h"
 #include "constants.h"
 #include "common.h"
 #include "screen.h"
@@ -33,13 +32,12 @@
 #include "player.h"
 #include "wq.h"
 #include "place.h"
-#include "conv.h"
-#include "Spell.h"
 #include "wind.h"
 #include "cmdwin.h"
 #include "formation.h"
 #include "map.h"
 #include "vmask.h"
+#include "status.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -49,17 +47,20 @@
 #include <unistd.h>
 #include <getopt.h>
 
+extern char *optarg;
+extern int optind, opterr, optopt;
+
+
 // gmcnutt: by default I'd like it on :). For one thing, printing all those
 // "Playing sound %s" messages to the console breaks all the regression tests
 // :).
 static bool useSound = true;	// SAM: Sound drivers on my dev laptop are
-				// borken...
-char *LOS = "angband";		// hack 
-int SCREEN_BPP = DEF_SCREEN_BPP;
-char *SAVEFILE = "mapfile";
-char *RecordFile = 0;
-char *PlaybackFile = 0;
-int PlaybackSpeed = 100;
+char *LOS            = "angband";
+int SCREEN_BPP       = DEF_SCREEN_BPP;
+char *SAVEFILE       = 0;
+char *RecordFile     = 0;
+char *PlaybackFile   = 0;
+int PlaybackSpeed    = 100;
 
 static char program_name[] = "nazghul";
 static int version_major = 0;
@@ -91,7 +92,7 @@ static void print_version(void)
 
 static void print_usage(void)
 {
-	printf("Usage:  %s [options] \n"
+	printf("Usage:  %s [options] <load-file>\n"
 	       "Options: \n"
                "    --help \n"
 	       "    --los <line-of-sight(floodfill|angband)> \n"
@@ -102,7 +103,8 @@ static void print_usage(void)
 	       "    --record <filename>    \n"
 	       "    --playback <filename>  \n"
 	       "    --playback_speed <ms delay> \n"
-               "    --version \n",
+               "    --version \n"
+               "<load-file> is the session to load\n",
                program_name);
 }				// print_usage()
 
@@ -112,7 +114,6 @@ static void parse_args(int argc, char **argv)
 		{"animate", 1, 0, 'a'},
 		{"bpp", 1, 0, 'b'},
 		{"circular_vision_radius", 0, 0, 'c'},
-		{"file", 1, 0, 'f'},
                 {"help", 0, 0, 'h'},
 		{"los", 1, 0, 'l'},
 		{"ShowAllTerrain", 0, 0, 'T'},
@@ -124,21 +125,18 @@ static void parse_args(int argc, char **argv)
                 {"version", 0, 0, 'v'},
 		{0, 0, 0, 0}
 	};
-	int c, optind;
+	int c = 0;
 	char *tmp;
+        int option_index = 0;
 
 	TickMilliseconds = MS_PER_TICK;
 	AnimationTicks = ANIMATION_TICKS;
 
-	while ((c = getopt_long(argc, argv, "f:w:h:l:t:a:s:b:c", long_options,
-				&optind)) != -1) {
+	while ((c = getopt_long(argc, argv, "w:h:l:t:a:s:b:c", long_options,
+				&option_index)) != -1) {
 		switch (c) {
 		case 'b':
 			SCREEN_BPP = atoi(optarg);
-			break;
-		case 'f':
-			if ((tmp = strdup(optarg)))
-				SAVEFILE = tmp;
 			break;
 		case 'l':
 			if ((tmp = strdup(optarg)))
@@ -189,11 +187,25 @@ static void parse_args(int argc, char **argv)
                 case 'h':
                         print_usage();
                         exit(0);
-		default:
+                case '?':
+                default:
 			print_usage();
 			exit(-1);
+                        break;
 		}		// switch (c)
 	}			// while (c)
+
+        // --------------------------------------------------------------------
+        // Any remaining option is assumed to be the save-file to load the game
+        // from. If there is none then abort.
+        // --------------------------------------------------------------------
+
+        if (optind < argc) {
+                SAVEFILE = argv[optind];
+        } else {
+                print_usage();
+                exit(-1);
+        }
 
 }				// parse_args()
 
@@ -225,15 +237,16 @@ static void nazghul_init_internal_libs(void)
                 { "wqInit",         wqInit         },
                 { "player_init",    player_init    },
                 { "eventInit",      eventInit      },
-                { "convInit",       convInit       },
-                { "Spell_init",     Spell_init     },
                 { "windInit",       windInit       },
                 { "formation_init", formation_init },
                 { "astar_init",     astar_init     },
                 { "cmdwin_init",    cmdwin_init    },
                 { "consoleInit",    consoleInit    },
                 { "mapInit",        mapInit        },
-                { "vmask_init",     vmask_init     }
+                { "vmask_init",     vmask_init     },
+                { "combatInit",     combatInit     },
+                { "foogodInit",     foogodInit     },
+                { "statusInit",     statusInit     },
         };
 
         int i;
@@ -259,6 +272,17 @@ int main(int argc, char **argv)
 
         if (TickMilliseconds > 0)
                 tick_thread = SDL_CreateThread(tick_fx, 0);
+
+        // -------------------------------------------------------------------
+        // This seems like an odd place for this, but it's something that only
+        // needs to be done once on startup (as opposed to once per session
+        // reload). In fact, there's a whole set of init steps that are
+        // on-startup as opposed to on-session-load. Most of them have already
+        // migrated into this file from play.c.
+        // -------------------------------------------------------------------
+
+	spriteStartAnimation(&TickWorkQueue, Tick + 1);
+
 
 	playRun();
 

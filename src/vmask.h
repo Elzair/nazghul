@@ -65,7 +65,6 @@ extern "C" {
 
         extern void vmask_invalidate(struct place *place, int x, int y, int w, int h);
 
-
 #ifdef __cplusplus
 }
 #endif

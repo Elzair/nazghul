@@ -26,9 +26,9 @@
 #ifndef list_h
 #define list_h
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "macros.h"
+
+BEGIN_DECL
 
 #define list_for_each(head,ptr) \
         for ((ptr) = (head)->next; (ptr) != (head); (ptr) = (ptr)->next)
@@ -37,44 +37,65 @@ extern "C" {
 #define list_entry(ptr,type,field) \
         ((type*)((char*)(ptr)-(unsigned long)(&((type *)0)->field)))
 
-	struct list {
-		struct list *next;
-		struct list *prev;
-	};
+struct list {
+        struct list *next;
+        struct list *prev;
+};
 
-	static inline void list_add_aux(struct list *before, struct list *after,
-					struct list *between) {
-		between->next = after;
-		between->prev = before;
-		before->next = between;
-		after->prev = between;
-	} static inline void list_add(struct list *head, struct list *ptr) {
-		list_add_aux(head, head->next, ptr);
-	}
-
-	static inline void list_add_tail(struct list *head, struct list *ptr) {
-		list_add_aux(head->prev, head, ptr);
-	}
-
-	static inline void list_remove(struct list *list) {
-		list->prev->next = list->next;
-		list->next->prev = list->prev;
-		list_init(list);
-	}
-
-        static inline void list_switch(struct list *e1, struct list *e2)
-        {
-                struct list tmp;
-
-                tmp.next = e1->next;
-                tmp.prev = e1->prev;
-
-                list_add_aux(e2->prev, e2->next, e1);
-                list_add_aux(tmp.prev, tmp.next, e2);
-        }
-
-#ifdef __cplusplus
+static inline void list_add_aux(struct list *before, struct list *after,
+                                struct list *between) 
+{
+        between->next = after;
+        between->prev = before;
+        before->next = between;
+        after->prev = between;
 }
-#endif
+
+static inline void list_add(struct list *head, struct list *ptr) 
+{
+        list_add_aux(head, head->next, ptr);
+}
+
+static inline void list_add_tail(struct list *head, struct list *ptr) 
+{
+        list_add_aux(head->prev, head, ptr);
+}
+
+static inline void list_remove(struct list *list) 
+{
+        list->prev->next = list->next;
+        list->next->prev = list->prev;
+        list_init(list);
+}
+
+static inline void list_switch_adjacent(struct list *first, 
+                                        struct list *second)
+{
+        first->prev->next = second;
+        second->prev = first->prev;
+        first->prev = second;
+        first->next = second->next;
+        second->next->prev = first;
+        second->next = first;
+}
+
+static inline void list_switch(struct list *e1, struct list *e2)
+{
+
+        if (e1 == e2) {
+                return;
+        } else if (e1->next == e2) {
+                list_switch_adjacent(e1, e2);
+        } else if (e2->next == e1) {
+                list_switch_adjacent(e2, e1);
+        } else {
+                e1->prev->next = e2;
+                e1->next->prev = e2;
+                e2->prev->next = e1;
+                e2->next->prev = e1;
+        }
+}
+
+END_DECL
 
 #endif

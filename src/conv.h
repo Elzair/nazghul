@@ -167,7 +167,6 @@ enum conv_result {
 struct conv {
 	int magic;		/* CONVERSATION_TYPE_ID */
 	char *tag;		/* used by loader */
-	struct list list;	/* used by loader */
 	int amount;		/* result of last amount prompt */
 	bool result;		/* result of last yes/no prompt or check */
 	enum conv_result consequence;	/* returned by convEnter */
@@ -176,7 +175,7 @@ struct conv {
 	int n_qr_pairs;		/* Number of "native" query-response pairs */
 	struct qr_pair *qr_pairs;	/* "Native" query-response pairs */
 	class Object *speaker;	/* who/what the player is talking to */
-	class Mech *mech;	/* hack? if this conversation is owned by a
+	class Object *mech;	/* hack? if this conversation is owned by a
 				 * mech */
 	bool done;
 	unsigned int flags[CFLAG_WORDS];
@@ -189,11 +188,20 @@ extern bool convLoadParms(struct Loader *loader);
 extern int convInit(void);
 
 // hack: expose this to Mech.cpp
-extern void execute_response_chain(struct response *resp, struct conv *conv);
-extern struct response *load_response_chain(class Loader * loader);
-extern void response_chain_destroy(struct response *resp);
+/* extern void execute_response_chain(struct response *resp, struct conv *conv); */
+/* extern struct response *load_response_chain(class Loader * loader); */
+/* extern void response_chain_destroy(struct response *resp); */
 
-int  num_responses_in_chain (struct response * resp);
-void response_debug_print (struct response * resp);
+/* int  num_responses_in_chain (struct response * resp); */
+/* void response_debug_print (struct response * resp); */
+
+/* Everything above is probably obsolete. I'll get rid of it after the new way
+ * has been sufficiently tested and I'm ready to root out all the references to
+ * it in the rest of the code. The new way is below. */
+
+/* THE NEW CONVERSATION API */
+
+extern void conv_enter(Object *npc, Object *pc);
+extern void conv_end(void);
 
 #endif

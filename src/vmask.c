@@ -48,6 +48,19 @@ static struct tree *vmask_root;
 static struct list vmask_q;
 static int vmask_n_entries;
 
+static void vmask_dump(struct vmask *vmask)
+{
+        int x, y, i = 0;
+
+        dbg("vmask_dump: %s\n", vmask_key(vmask));
+        for (y = 0; y < VMASK_H; y++) {
+                for (x = 0; x < VMASK_W; x++) {
+                        printf("%c", vmask->data[i] ? '#' : '.');
+                        i++;
+                }
+                printf("\n");
+        }
+}
 
 static void vmask_error(char *msg)
 {
@@ -60,12 +73,13 @@ static void vmask_make_key(char *key, struct place *place, int x, int y)
         snprintf(key, VMASK_MAX_KEY_LEN, "%d:%d:%s", x, y, place->name);
 }
 
+
 static struct vmask *vmask_lookup(char *key)
 {
         struct vmask *vmask;
         struct tree *tree;
 
-        //printf("vmask_lookup: %s\n", key);
+        //dbg("vmask_lookup: %s\n", key);
 
         tree = tree_s_search(vmask_root, key);
         if (NULL == tree)
@@ -77,7 +91,7 @@ static struct vmask *vmask_lookup(char *key)
 
 static void vmask_delete(struct vmask *vmask)
 {
-        //printf("vmask_delete: %s\n", vmask_key(vmask));
+        //dbg("vmask_delete: %s\n", vmask_key(vmask));
         list_remove(&vmask->list);
         tree_delete(&vmask_root, &vmask->tree);
         free(vmask->tree.key.s_key);
@@ -126,6 +140,8 @@ static void vmask_los(struct vmask *vmask, struct place *place, int center_x, in
         int end_y   = start_y + VMASK_H;
 	int index   = 0;
 
+        //dbg("vmask_los: %s\n", vmask_key(vmask));
+
 	for (y = start_y; y < end_y; y++) {
 		for (x = start_x; x < end_x; x++) {
 			LosEngine->alpha[index] = place_visibility(place, x, y);
@@ -140,13 +156,15 @@ static void vmask_los(struct vmask *vmask, struct place *place, int center_x, in
         LosEngine->r = max(VMASK_W, VMASK_H);
         LosEngine->compute(LosEngine);
         memcpy(vmask->data, LosEngine->vmask, VMASK_SZ);
+
+        //vmask_dump(vmask);
 }
 
 static struct vmask *vmask_create(char *key, struct place *place, int x, int y)
 {
         struct vmask *vmask;
 
-        //printf("vmask_create: %s\n", key);
+        //dbg("vmask_create: %s\n", key);
 
         // ---------------------------------------------------------------------
         // Remove least-recently-used vmasks if we need to make room for
@@ -244,6 +262,8 @@ char *vmask_get(struct place *place, int x, int y)
                 vmask_error("Can't create vmask");
         vmask_prioritize(vmask);
 
+        //vmask_dump(vmask);
+
         return vmask->data;
 }
 
@@ -264,18 +284,13 @@ void vmask_invalidate(struct place *place, int x, int y, int w, int h)
 {
         char key[VMASK_MAX_KEY_LEN + 1];
         struct vmask *vmask;
-#if 0
-        int start_x = place_wrap_x(place, x - MAP_TILE_W / 2);
-        int start_y = place_wrap_y(place, y - MAP_TILE_H / 2);
-        int end_x   = place_wrap_x(place, start_x + w + MAP_TILE_W);
-        int end_y   = place_wrap_y(place, start_y + h + MAP_TILE_H);
-#else
+
         int start_x = x - MAP_TILE_W / 2;
         int start_y = y - MAP_TILE_H / 2;
         int end_x   = start_x + w + MAP_TILE_W;
         int end_y   = start_y + h + MAP_TILE_H;
-#endif
-        //printf("vmask_invalidate: %s [%d %d %d %d]\n", place->name, x,  y, w, h);
+
+        //dbg("vmask_invalidate: %s [%d %d %d %d]\n", place->name, x,  y, w, h);
 
         for (y = start_y; y < end_y; y++) {
                 int wrap_y =  place_wrap_y(place, y);

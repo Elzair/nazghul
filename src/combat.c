@@ -20,6 +20,7 @@
 // gmcnutt@users.sourceforge.net
 //
 #include "combat.h"
+#include "dice.h"
 #include "Party.h"
 #include "place.h"
 #include "player.h"
@@ -37,11 +38,8 @@
 #include "Field.h"
 #include "event.h"
 #include "play.h"
-#include "Spell.h"
-#include "Trap.h"
-#include "portal.h"
+#include "Portal.h"
 #include "foogod.h"
-#include "Mech.h"
 #include "wind.h"
 #include "dup_constants.h"
 #include "cmdwin.h"
@@ -49,9 +47,9 @@
 #include "vehicle.h"
 #include "formation.h"
 #include "pinfo.h"
-#include "Loader.h"
 #include "cmd.h"
 #include "formation.h"
+#include "session.h"
 
 #include <assert.h>
 #include <stdlib.h>
@@ -66,14 +64,6 @@
 #define MAX_PLACEMENT_RECTANGLE_H 16
 #define SEARCH_QUEUE_SZ 100
 
-#define VMAP_VISIT(x,y) (Combat.vmap[place_w(Place) * (y) + (x)] = 0)
-#define VMAP_VISITED(x,y) (Combat.vmap[place_w(Place) * (y) + (x)])
-
-#define LOC_IS_SAFE(x,y,pmask) \
-    (!place_off_map(Place, x, y) && \
-     place_is_passable(Place, x, y, pmask, 0) && \
-     !place_is_occupied(Place, x, y))
-
 /* Formation pattern -- party facing north (dx=0,dy=-1), origin at the leader's
  * position */
 
@@ -85,12 +75,11 @@ enum combat_faction_status {
 };
 
 static struct {
-        struct place place;
+        struct place *place;
+        void *session_handle;
         enum combat_state state;
         char vmap[7 * 7];       // visited map (used to search for positions)
         struct list parties;
-
-        bool tmp_terrain_map;
         class Vehicle *enemy_vehicle;
         char *sound_enter;
         char *sound_defeat;
@@ -122,14 +111,14 @@ enum combat_state combat_get_state(void)
 
 void combat_set_state(enum combat_state new_state)
 {
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
         // Interesting state transitions:
         //
-        // =====================================================================
+        // ====================================================================
         // old state              | new state              | result
-        // =====================================================================
+        // ====================================================================
         // COMBAT_STATE_DONE      | COMBAT_STATE_FIGHTING  | entry to combat
-        // COMBAT_STATE_DONE      | COMBAT_STATE_LOOTING   | entry to non-hostile
+        // COMBAT_STATE_DONE      | COMBAT_STATE_LOOTING   | non-hostile
         // COMBAT_STATE_DONE      | COMBAT_STATE_CAMPING   | entry to camping
         // COMBAT_STATE_FIGHTING  | COMBAT_STATE_DONE      | defeat
         // COMBAT_STATE_FIGHTING  | COMBAT_STATE_LOOTING   | victory
@@ -137,9 +126,9 @@ void combat_set_state(enum combat_state new_state)
         // COMBAT_STATE_LOOTING   | COMBAT_STATE_DONE      | exit normally
         // COMBAT_STATE_CAMPING   | COMBAT_STATE_FIGHTING  | ambush
         // COMBAT_STATE_CAMPING   | COMBAT_STATE_DONE      | exit camping
-        // =====================================================================
+        // ====================================================================
         //
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
 
         if (Combat.state == new_state)
                 return;
@@ -235,8 +224,8 @@ void combat_attack(class Character *attacker, class ArmsType *weapon, class Char
         }
 
         // Roll to hit.
-        hit = dice_roll(2, 6) + weapon->getHit();
-        def = dice_roll(2, 6) + defender->getDefend();
+        hit = dice_roll(weapon->getToHitDice());
+        def = defender->getDefend();
         if (hit < def) {
                 consolePrint("miss!\n");
                 return;
@@ -245,7 +234,7 @@ void combat_attack(class Character *attacker, class ArmsType *weapon, class Char
         }
 
         // roll for damage
-        damage = weapon->getDamage();
+        damage = dice_roll(weapon->getDamageDice());
         armor = defender->getArmor();
         consolePrint("Rolled %d damage, %d armor ", damage, armor);
         damage -= armor;
@@ -263,6 +252,7 @@ static int location_is_safe(struct position_info *info)
         int flags = PFLAG_IGNOREBEINGS;
         int edge_x = 0, edge_y = 0;
         struct astar_search_info as_info;
+        struct terrain *terrain;
 
         // Is it passable?
         if (!place_is_passable(info->place, info->px, info->py, info->pmask, 0)) {
@@ -274,6 +264,24 @@ static int location_is_safe(struct position_info *info)
                 printf("occupied\n");
                 return -1;
         }
+
+        // I added the next two checks because a character was getting
+        // positioned over the firepit while camping, and I thought it was
+        // damaging him. Turns out firepits weren't setup to cause fire damage
+        // (oddly), and the character was just starving. I'll leave this here
+        // for now anyway.
+
+        // Is it dangerous? Hack: check for a field and dangerous terrain
+        if (place_get_object(info->place, info->px, info->py, field_layer)) {
+                printf("possibly dangerous field\n");
+                return -1;
+        }
+        terrain = place_get_terrain(info->place, info->px, info->py);
+        if (terrain->effects || terrain->effect) {
+                printf("possibly dangerous terrain\n");
+                return -1;
+        }
+        
 
         memset(&as_info, 0, sizeof (as_info));
 
@@ -514,6 +522,7 @@ static bool myPutNpc(class Character * pm, void *data)
         printf("Put '%s' at [%d %d]\n", pm->getName(), info->px, info->py);
         pm->setPlace(Place);
         place_add_object(Place, pm);
+        pm->setOnMap(true);
         info->placed++;
 
         /* Check if we need to go back to fighting */
@@ -556,7 +565,7 @@ void combat_fill_position_info(struct position_info *info, struct place *place, 
         info->dx = dx;
         info->dy = dy;
 
-        if (info->place != &Combat.place) {
+        if (info->place != Combat.place) {
                 // Occupy the same location and face the same way
                 info->x = x;
                 info->y = y;
@@ -819,7 +828,7 @@ static void combat_overlay_map(struct terrain_map *map,
         // terrain_map_print(stdout, INITIAL_INDENTATION, Place->terrain_map);
 
         // Cleanup.
-        terrain_map_destroy(map);
+        terrain_map_del(map);
 }
 
 static void myPutEnemy(class Party * foe, struct position_info *pinfo)
@@ -840,7 +849,7 @@ static bool myPositionEnemy(class Party * foe, int dx, int dy, bool defend, stru
 
         // Check for a map overlay.
         if (foe->vehicle && foe->vehicle->getObjectType()->map &&
-            Place == &Combat.place) {
+            Place == Combat.place) {
                 combat_overlay_map(foe->vehicle->getObjectType()->map, &foe->pinfo, 1);
           }
 
@@ -968,28 +977,28 @@ enum combat_faction_status combat_get_player_faction_status(void)
 
                 obj = outcast(elem, class Object, turn_list);
 
-                // -------------------------------------------------------------
+                // ------------------------------------------------------------
                 // Non-player-controlled objects (objects not in the player
                 // party) are handled by combat_get_hostile_faction_status(),
                 // not here.
-                // -------------------------------------------------------------
+                // ------------------------------------------------------------
 
                 if (! obj->isPlayerPartyMember())
                         continue;
 
-                // -------------------------------------------------------------
+                // ------------------------------------------------------------
                 // Among the player-controlled objects anything that is not
                 // hostile implies a player faction exists.
-                // -------------------------------------------------------------
+                // ------------------------------------------------------------
 
                 if (! obj->isHostile(player_party->getAlignment())) {
                         return COMBAT_FACTION_EXISTS;
                 }
 
-                // -------------------------------------------------------------
+                // ------------------------------------------------------------
                 // Among player-controlled, hostile objects, check for any that
                 // are charmed to against the player.
-                // -------------------------------------------------------------
+                // ------------------------------------------------------------
 
                 if (!found_charmed_member &&
                     !obj->isNativelyHostile(player_party->getAlignment())) {
@@ -1112,20 +1121,20 @@ void combat_analyze_results_of_last_turn()
                         combat_set_state(COMBAT_STATE_FIGHTING);
                         break;
 
-                        // -----------------------------------------------------
+                        // ----------------------------------------------------
                         // Well, both sides are all charmed. An interesting
                         // case. Again, to avoid deadlocks, uncharm the party
                         // members. To be fair I'll uncharm the hostiles, too.
-                        // -----------------------------------------------------
+                        // ----------------------------------------------------
                         combat_uncharm_all_hostiles();
                         combat_set_state(COMBAT_STATE_FIGHTING);
                         break;
 
                 case COMBAT_FACTION_GONE:
-                        // -----------------------------------------------------
+                        // ----------------------------------------------------
                         // No hostiles around. Loot at will. Uncharm or we'll
                         // definitely deadlock.
-                        // -----------------------------------------------------
+                        // ----------------------------------------------------
                         combat_set_state(COMBAT_STATE_LOOTING);
                         break;
 
@@ -1138,15 +1147,15 @@ void combat_analyze_results_of_last_turn()
 
         case COMBAT_FACTION_GONE:
 
-                // -------------------------------------------------------------
+                // ------------------------------------------------------------
                 // In all of these cases combat is over. Simple. If combat is
-                // ocurring in the special combat place then we need to clean it
-                // up by calling combat_exit().
-                // -------------------------------------------------------------
+                // ocurring in the special combat place then we need to clean
+                // it up by calling combat_exit().
+                // ------------------------------------------------------------
                 
                 combat_set_state(COMBAT_STATE_DONE);
 
-//                if (Place == &Combat.place)
+//                if (Place == Combat.place)
                 combat_exit();
 
                 break;
@@ -1156,16 +1165,16 @@ void combat_analyze_results_of_last_turn()
                 switch (hostile_faction_status) {
                         
                 case COMBAT_FACTION_EXISTS:
-                        // -----------------------------------------------------
+                        // ----------------------------------------------------
                         // Ambush!
-                        // -----------------------------------------------------                        
+                        // ----------------------------------------------------                        
                         combat_set_state(COMBAT_STATE_FIGHTING);
                         break;
 
                 case COMBAT_FACTION_GONE:
-                        // -----------------------------------------------------
+                        // ----------------------------------------------------
                         // No hostiles around. Change nothing.
-                        // -----------------------------------------------------
+                        // ----------------------------------------------------
                         break;
 
                 default:
@@ -1199,49 +1208,10 @@ int combatInit(void)
         memset(&Combat, 0, sizeof (Combat));
 
         /* Initialize the place to safe defaults */
-        list_init(&Combat.place.list);
-        list_init(&Combat.place.vehicles);
-        list_init(&Combat.place.turn_list);
-        Combat.place.type = combat_place;
-        Combat.place.name = "Combat map";
-        Combat.place.objects = hash_create(11);
         Combat.state = COMBAT_STATE_DONE;
-        Combat.place.is_wilderness_combat = true;
-        Combat.place.scale = NON_WILDERNESS_SCALE;
         list_init(&Combat.parties);
 
         return 0;
-}
-
-int combatLoad(class Loader * loader)
-{
-        if (!loader->matchToken('{'))
-                return -1;
-
-        while (!loader->matchToken('}')) {
-                if (loader->matchWord("enter")) {
-                        if (!loader->getString(&Combat.sound_enter))
-                                goto fail;
-                }
-                else if (loader->matchWord("defeat")) {
-                        if (!loader->getString(&Combat.sound_defeat))
-                                goto fail;
-                }
-                else if (loader->matchWord("victory")) {
-                        if (!loader->getString(&Combat.sound_victory))
-                                goto fail;
-                }
-                else {
-                        loader->setError("unknown field '%s'",
-                                         loader->getLexeme());
-                        goto fail;
-                }
-        }
-
-        return 0;
-
-      fail:
-        return -1;
 }
 
 #ifdef USE_OLD_MAP_FILL
@@ -1364,11 +1334,15 @@ static struct terrain_map *create_camping_map(struct place *place, int x, int y)
                 return terrain_map_clone(map);
         }
 
-        map = terrain_map_create("tmp_combat_map", COMBAT_MAP_W, COMBAT_MAP_H);
-        assert(map);            // Fails on failed malloc(), whereupon we are hosed
-
+        map = terrain_map_new("tmp_combat_map", COMBAT_MAP_W, COMBAT_MAP_H, Session->palette);
         terrain = place_get_terrain(place, x, y);
         terrain_map_fill(map, 0, 0, COMBAT_MAP_W, COMBAT_MAP_H, terrain);
+
+#if 0
+        // gmcnutt: with the new loader we no longer have a global list of
+        // terrain palettes. I don't think it matters unless we want to save
+        // the temporary combat map to a script, and if that's the case we
+        // should just create a palette on-the-fly.
 
         // Find the first palette in the global list 
         // which has an entry for this terrain:
@@ -1393,8 +1367,10 @@ static struct terrain_map *create_camping_map(struct place *place, int x, int y)
                        "  strange terrain %p (tag '%s' name '%s')\n"
                        "  was in no palette!\n",
                        terrain, terrain->tag, terrain->name);
+
                 assert(0);
         }
+#endif
 
         // terrain_map_print(stdout, INITIAL_INDENTATION, map);
         return map;
@@ -1417,9 +1393,8 @@ static struct terrain_map *create_temporary_terrain_map(struct combat_info
         // Otherwise create a map derived partially from the enemy's tile and
         // partially from the player's tile.
 
-        map = terrain_map_create("tmp_combat_map", COMBAT_MAP_W, COMBAT_MAP_H);
-        if (!map)
-                return 0;
+        map = terrain_map_new("tmp_combat_map", COMBAT_MAP_W, COMBAT_MAP_H, 0);
+        assert(map);
 
         // Determine orientation for both parties.
 
@@ -1522,11 +1497,12 @@ static bool position_player_party(struct combat_info *cinfo)
         // with a map.
         if (player_party->vehicle &&
             player_party->vehicle->getObjectType()->map &&
-            Place == &Combat.place) {
+            Place == Combat.place) {
                 combat_overlay_map(player_party->vehicle->getObjectType()->map,
                                    &player_party->pinfo,
                                    cinfo->move->npc_party != NULL);
         }
+
         // Next check if the player is OVER (on the map) but not in a vehicle
         // on the map. Note: this only applies to non-dungeon combat, and in a
         // series of dungeon combats the player party may not have a place
@@ -1561,12 +1537,10 @@ bool combat_enter(struct combat_info * info)
                 // Yes, this can happen in some rare circumstances...
                 return false;
 
-        // *** Memorize Entry State ***
-
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
         // Default to the entry point as the combat exit location for the
         // player party.
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
 
         loc.place = info->move->place;
         loc.x     = info->move->x;
@@ -1576,42 +1550,47 @@ bool combat_enter(struct combat_info * info)
 
         // *** Initialize Combat Globals ***
 
-        Combat.tmp_terrain_map = false;
         Combat.enemy_vehicle = NULL;
         Combat.round = 0;
-        Cursor->remove();
+        Session->crosshair->remove();
         list_init(&Combat.parties);
 
-        // *** Initialize the Temporary Combat Place ***
 
-        if (info->move->place->type != wilderness_place &&
-            info->move->place->type != town_place) {
-                // When not in a town or the wilderness (i.e., dungeon) use the
-                // current map for combat.
+        if (! info->move->place->wilderness) {
+
+                // ------------------------------------------------------------
+                // When not in the wilderness use the current place for combat.
+                // ------------------------------------------------------------
                 Place = info->move->place;
         }
         else {
 
-                // Town or wilderness combat uses a temporary terrain map which
-                // we create on the fly.
-                Combat.place.terrain_map = create_temporary_terrain_map(info);
-                Combat.tmp_terrain_map = true;
+                // ------------------------------------------------------------
+                // Create a temporary place for combat in the wilderness. It's
+                // parent will be the wilderness. We have to set a special flag
+                // to indicate that it's wilderness combat (used for things
+                // like exit policy).
+                // ------------------------------------------------------------
 
-                // fixme -- instead of asserting I should use a last-resort map
-                // that does not require allocation.
-                // 
-                // SAM: On the other hand, this failure only occurs due to 
-                //      malloc() failure, whereupon we are hosed anyways..
-                assert(Combat.place.terrain_map);
+                Combat.place = place_new("p_wilderness_combat", 
+                                         "Wilderness Combat",
+                                         0, // sprite
+                                         create_temporary_terrain_map(info),
+                                         0, // ! wrapping
+                                         info->move->place->underground, 
+                                         0, // ! wilderness
+                                         1  // wilderness combat
+                                         );
 
-                // fixme -- are these obsolete now?
-                Combat.place.location.place = info->move->place;
-                Combat.place.location.x = info->move->x;
-                Combat.place.location.y = info->move->y;
+                Combat.place->is_wilderness_combat = 1;
+                Combat.place->location.place = info->move->place;
+                Combat.place->location.x = info->move->px;
+                Combat.place->location.y = info->move->py;
 
-                Combat.place.underground = info->move->place->underground;
+                place_add_subplace(info->move->place, Combat.place, 
+                                   info->move->px, info->move->py);
 
-                Place = &Combat.place;
+                Place = Combat.place;
         }
 
         mapSetPlace(Place);
@@ -1627,7 +1606,8 @@ bool combat_enter(struct combat_info * info)
 
         if (info->move->npc_party) {
                 combat_set_state(COMBAT_STATE_FIGHTING);
-                if (!myPositionEnemy(info->move->npc_party, info->move->dx, info->move->dy, !info->defend, Place)) {
+                if (!myPositionEnemy(info->move->npc_party, info->move->dx, info->move->dy, 
+                                     !info->defend, Place)) {
 
                         consolePrint("\n*** FORFEIT ***\n\n");
                         consolePrint("Your opponent slips away!\n");
@@ -1732,46 +1712,64 @@ bool combatAddParty(class Party * party, int dx, int dy, bool located,
 
 void combat_exit(void)
 {
-        // ---------------------------------------------------------------------
-        // Ensure all party members are removed from the current place so they
-        // don't get destroyed below.
-        // ---------------------------------------------------------------------
-        
-        player_party->removeMembers();
-        
-        // ---------------------------------------------------------------------
-        // Clean up the temporary combat place.
-        // ---------------------------------------------------------------------
+        struct place *parent = 0;
+        int x, y;
 
-        if (Place == &Combat.place)
-                place_remove_and_destroy_all_objects(Place);
+        // ------------------------------------------------------------
+        // Ensure all party members are removed from the current place
+        // so they don't get destroyed below.
+        // ------------------------------------------------------------
+        
+        //player_party->removeMembers();
 
-        // ---------------------------------------------------------------------
-        // Relocate the player party back to the wilderness. This will handle
-        // the place switch implicitly by setting the global 'Place' pointer to
-        // the wilderness.
+        
+        // --------------------------------------------------------------------
+        // Clean up the temporary combat place, if we used one. If we started
+        // off in combat when we loaded this session then we need to remove
+        // the temp place and temp map from the session's list of objects
+        // to save. We can tell that we need to remove them if they have
+        // non-null handles (those handles are only set by the loader, if
+        // we create the tmp place during normal game play we don't set them).
         //
-        // Addendum: in some corner cases the player party has already been
-        // relocated. Specifically, if a party member casts a Gate travel spell
-        // and the moongate empties onto the wilderness, then the gate code
-        // already relocated the party.
-        // ---------------------------------------------------------------------
+        // Before destroying the place I have to memorize it's location for the
+        // next step.
+        // --------------------------------------------------------------------
 
-        if (NULL != place_get_parent(Place)) {
-                player_party->relocate(place_get_parent(Place), 
-                                       place_get_x(Place), 
-                                       place_get_y(Place));
+        if (Place->is_wilderness_combat) {
+
+                assert(! Place->handle); // should not be top-level
+                assert(place_get_parent(Place));
+
+                if (Place->terrain_map->handle)
+                        session_rm(Session, Place->terrain_map->handle);
+
+                place_remove_and_destroy_all_objects(Place);
+                parent = place_get_parent(Place);
+                x = place_get_x(Place);
+                y = place_get_y(Place);
+                place_remove_subplace(parent, Place);
+                place_del(Place); // map deleted in here
+                Combat.place = 0;
+
+                // ------------------------------------------------------------
+                // Relocate the player party back to the wilderness. This will
+                // handle the place switch implicitly by setting the global
+                // 'Place' pointer to the wilderness.
+                // ------------------------------------------------------------
+
+                player_party->relocate(parent, x, y);                
+
         }
 
         assert(NULL != player_party->getPlace());
 
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
         // Force a map update. Although the map has been marked dirty by now,
         // we will not see a repaint until the next event if we do not act
         // now. This routine is called from the context of the main play loop,
         // not the event loop.
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
 
-        mapUpdate(0);
+        //mapUpdate(0);
         
 }

@@ -26,21 +26,21 @@
 #include "list.h"
 #include "common.h"
 #include "character.h"
-#include "moongate.h"
 #include "pinfo.h"
 
-class Loader;
-
 struct GroupInfo {
+        struct list list;
 	struct species *species;
 	struct occ *occ;
 	struct sprite *sprite;
-	int n_max;
+        char *dice;
+        struct closure *ai;
 };
 
 class PartyType : public ObjectType {
       public:
 	PartyType();
+        PartyType(char *tag, char *name, struct sprite *sprite);
 	virtual ~ PartyType();
 
 
@@ -52,16 +52,16 @@ class PartyType : public ObjectType {
 	virtual struct GroupInfo *enumerateGroups();
 	virtual struct GroupInfo *getNextGroup();
 	virtual class Object *createInstance();
-	virtual bool load(class Loader * loader);
 	virtual bool isVisible();
+        virtual void addGroup(struct species *species, struct occ *occ, struct sprite *sprite, char *dice, struct closure *ai);
 
 	struct formation *formation;
         struct sprite *sleep_sprite;
 
       protected:
-	int i_group;		// group index (for silly enumeration)
-	int n_groups;
-	struct GroupInfo *groups;
+        void setup();
+        struct list *i_group;
+        struct list groups;
 	int pmask;
 	int vrad;
 	bool visible;
@@ -71,7 +71,9 @@ class Party:public Object {
       public:
 
 	Party();
+        Party(class PartyType *type, int alignment, class Vehicle *vehicle);
 	~Party();
+        void setup();
 
 	virtual bool isType(int classID);
 	virtual bool isHostile(int alignment);
@@ -92,34 +94,44 @@ class Party:public Object {
 	virtual void setAlignment(int val);
 	virtual void setFleeVector(int x, int y);
         
+        virtual bool addEffect(struct effect *effect, struct gob *gob);
         virtual bool addMember(class Character *);
         virtual bool allDead();
         virtual void burn();
 	virtual void cleanupAfterCombat(void);
 	virtual bool createMembers();
         virtual void damage(int amount);
-        virtual void describe(int count);
+        virtual void describe();
 	virtual void destroy();        
 	virtual void disembark();
         virtual void distributeMembers();
-	virtual bool enter_town(class Portal * portal);
+	//virtual bool enter_town(class Portal * portal);
 	virtual void exec(struct exec_context *cntxt);
         virtual char *getName(void);
 	virtual bool joinPlayer(void);
-	virtual void forEachMember(bool(*fx) (class Character *, void *), void *);
+        virtual bool removeEffect(struct effect *effect);
+	virtual void forEachMember(bool(*fx) (class Character *, void *), 
+                                   void *);
 	virtual void init(class Character * ch);
 	virtual void init(class PartyType * type);
-	virtual void init(int x, int y, struct place *place, class PartyType * type);
-	virtual bool load(class Loader *);
+	virtual void init(int x, int y, struct place *place, 
+                          class PartyType * type);
 	virtual MoveResult move(int dx, int dy);
 	virtual void paint(int sx, int sy);
-        virtual void poison();
-	virtual void relocate(struct place *place, int x, int y);
 	virtual void removeMember(class Character *);
+        virtual void save(struct save *save);
+        virtual void setPlace(struct place *place);
+        virtual void setX(int x);
+        virtual void setY(int y);
         virtual void sleep();
+        virtual void start();
+        virtual void startTurn();
         virtual void switchOrder(class Character *ch1, class Character *ch2);
 	virtual bool turn_vehicle();
+        virtual void applyEffect(closure_t *effect);
 
+        void enterPortal(class Portal *portal);
+        void removeMembers();
 
 	bool attack_with_ordnance(int d);
 	bool gotoSpot(int x, int y);
@@ -132,7 +144,6 @@ class Party:public Object {
 	struct position_info pinfo;
 
       protected:
-        virtual void applyExistingEffects();
 
 	int alignment;
 	int fdx, fdy;

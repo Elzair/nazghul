@@ -25,27 +25,15 @@
 #include "sprite.h"
 #include "place.h"
 #include "map.h"
-#include "moongate.h"
 #include "player.h"
 #include "wq.h"
-#include "Mech.h"
 #include "game.h"
 #include "clock.h"
+#include "session.h"
+#include "gob.h"
 
 #include <assert.h>
 #include <math.h>
-
-struct moon_info MoonInfo;
-struct moon Moons[NUM_MOONS];
-struct sun Sun;
-
-static struct sky {
-	SDL_Rect screenRect;
-} Sky;
-
-// This is a wart, and should be either in the script or made unnecessary via
-// some more general mechanism.
-#define MOON_PHASE_FULL 0
 
 // Amount by which we horizontally shift the light function to make noon
 // produce maximum light
@@ -95,7 +83,14 @@ static double SKY_WIN_OFFSET = -(double)SUNRISE_DEGREE * (double)SKY_WIN_SLOPE;
 
 #define DEGREES_TO_RADIANS(deg) (double)((deg) * 0.0174603)
 
-static int sky_get_light_from_astral_body(int arc, int max_light)
+
+//////////////////////////////////////////////////////////////////////////////
+//
+// Internal helper functions
+//
+//////////////////////////////////////////////////////////////////////////////
+
+static int sky_get_light_from_astral_body(int arc, int maxlight)
 {
         //  light
         // M |        ...................
@@ -164,7 +159,7 @@ static int sky_get_light_from_astral_body(int arc, int max_light)
         double radians = DEGREES_TO_RADIANS(degrees);
         double factor = SKY_AMPLITUDE * (sin(radians) + SKY_VERT_SHIFT);
         factor = clamp(factor, 0.0, 1.0);
-        int light = (int)(factor * max_light);
+        int light = (int)(factor * maxlight);
         light = (light < 0) ? 0 : light;
         return light;
 }
@@ -199,74 +194,8 @@ static void sky_compute_factors(void)
         SKY_AMPLITUDE = 1 / inverse;
 }
 
-
-int sun_is_up(void)
-{
-	return (Sun.arc >= SUNRISE_DEGREE) && (Sun.arc < SUNSET_DEGREE);
-}
-
-int sun_is_down(void)
-{
-	return (Sun.arc >= SUNSET_DEGREE) || (Sun.arc < SUNRISE_DEGREE);
-}
-
-int is_noon(void)
-{
-	static int noon_arc_begin = NOON_DEGREE - (DEGREES_PER_HOUR / 2);
-	static int noon_arc_end = NOON_DEGREE + (DEGREES_PER_HOUR / 2);
-	return ((Sun.arc >= noon_arc_begin) && (Sun.arc <= noon_arc_end));
-}				// is_noon()
-
-int is_midnight(void)
-{
-	static int mid_arc_begin =
-	    MIDNIGHT_DEGREE_LATE - (DEGREES_PER_HOUR / 2);
-	static int mid_arc_end = MIDNIGHT_DEGREE_EARLY + (DEGREES_PER_HOUR / 2);
-	return ((Sun.arc >= mid_arc_begin) || (Sun.arc <= mid_arc_end));
-}				// is_midnight()
-
-static void moon_adjust_light(struct moon *moon)
-{
-        int max_light;
-        int light_per_phase;
-
-        // Light waxes from the new moon, reaches a peak in the middle phase at
-        // the full moon, and wanes until the new moon again.
-        light_per_phase = MAX_MOONLIGHT/MoonInfo.phases * 2;
-
-        // Max light depends on phase
-        if (moon->phase <= MoonInfo.phases/2) {
-                max_light = light_per_phase * moon->phase;
-        } else {
-                max_light = light_per_phase * (MoonInfo.phases - moon->phase);
-        }
-
-        // Light depends on arc
-        moon->light = sky_get_light_from_astral_body(moon->arc, max_light);
-
-}
-
-static void sky_send_signal_to_obj(class Object *obj, void *data)
-{
-        class Mech *mech;
-        int sig;
-
-        if (! obj->isType(MECH_ID))
-                return;
-
-        sig = (int)data;
-        mech = (class Mech*)obj;
-
-        mech->activate(sig);
-}
-
-static bool sky_send_signal_to_place(struct place *place, void *data)
-{
-        place_for_each_object(place, sky_send_signal_to_obj, data);
-        return false;
-}
-
-static void moonPaintSunOrMoon(int arc, struct sprite *sprite)
+static void sky_paint_astral_body(struct sky *sky, int arc, 
+                                  struct sprite *sprite)
 {
 	int x;
 	int pixels;
@@ -274,176 +203,270 @@ static void moonPaintSunOrMoon(int arc, struct sprite *sprite)
         pixels = SKY_ARC_TO_PIXEL_OFFSET(arc);
         if (pixels < 0 || pixels > SKY_W + SKY_SPRITE_W)
                 return;
-	x = Sky.screenRect.x + Sky.screenRect.w - pixels;
+	x = sky->screenRect.x + sky->screenRect.w - pixels;
 
-	spritePaint(sprite, 0, x, Sky.screenRect.y);
+	spritePaint(sprite, 0, x, sky->screenRect.y);
 }
 
-int moon_is_visible(int arc)
+int astral_body_is_visible(int arc)
 {
 	// SAM:
 	// I tested somewhat before, during, after sunset,
 	// and found that the sprite for the moon "left of the sun"
 	// became not visible (out of the drawing area?) before
-	// the AT command (which calls moon_is_visible() )
+	// the AT command (which calls sky_astral_body_is_visible() )
 	// reported that a moon had set.
 	// 
 	// Why the difference in apparent "set" time?
 	if (arc < SUNRISE_DEGREE || arc > (SUNSET_DEGREE + SKY_SPRITE_W))
 		return 0;
 	return 1;
-}				// moon_is_visible()
-
-static void sky_advance_sun(void)
-{
-        int new_arc;
-        int new_light;
-
-
-        /* Change the sun's arc */
-        new_arc = clock_time_of_day() / MINUTES_PER_DEGREE;
-        if (new_arc != Sun.arc) {
-                Sun.arc = new_arc;
-
-                /* Change the sun's light */
-                new_light = sky_get_light_from_astral_body(Sun.arc, MAX_SUNLIGHT);
-                if (new_light != Sun.light) {
-                        Sun.light = new_light;
-                        player_party->updateView();
-                }
-        }
 }
 
-static void sky_advance_moons(void)
+//////////////////////////////////////////////////////////////////////////////
+//
+// Astral body api
+//
+//////////////////////////////////////////////////////////////////////////////
+
+struct astral_body *astral_body_new(char *tag, char *name, int n_phases)
 {
-	int i;
-	struct moon *moon;
-        int original_light;
-        int new_arc;
-        int new_phase;
+        struct astral_body *body;
 
-	/* Advance the moons */
-	for (i = 0; i < NUM_MOONS; i++) {
+        assert(n_phases);
+        assert(name);
 
-		moon = &Moons[i];
+        body = (struct astral_body*)calloc(1, sizeof(*body));        
+        assert(body);
 
-                /* Change the moon's arc */
-                new_arc = (clock_time() / MOON_MINUTES_PER_DEGREE);
-                new_arc += moon->initial_arc;
-                new_arc %= 360;
-                if (new_arc != moon->arc) {
-                        moon->arc = new_arc;
-                        
-                        /* Change the moon's phase */
-                        new_phase = clock_time() / moon->minutes_per_phase;
-                        new_phase += moon->initial_phase;
-                        new_phase %= MoonInfo.phases;
+        list_init(&body->list);
+        body->n_phases = n_phases;
+        body->phases = (struct phase*)calloc(body->n_phases, 
+                                             sizeof(struct phase));
+        assert(body->phases);
 
-                        if (new_phase != moon->phase) {
-                                moon->closeMoongate(moon->phase);
-                                moon->phase = new_phase;
-                                moon->openMoongate(moon->phase);
+        body->tag = strdup(tag);
+        assert(body->tag);
 
-                                /* Send the full-moon signal */
-                                if (moon->phase == MOON_PHASE_FULL) {
-                                        game_for_each_place(sky_send_signal_to_place, (void*)MECH_FULL_MOON);
-                                }
+        body->name = strdup(name);
+        assert(body->name);
 
-                                /* Change the moon's light */
-                                original_light = moon->light;
-                                moon_adjust_light(moon);                
-                                if (original_light != moon->light) {
-                                        player_party->updateView();
-                                }
-                        }
-                }
-        }
+        return body;
 }
 
-void sky_advance(void)
-{
-	sky_advance_sun();
-	sky_advance_moons();
-	skyRepaint();
-}
-
-void skyRepaint(void)
-{
-	int i;
-
-	/* Erase the moon window */
-	screenErase(&Sky.screenRect);
-
-	if (NULL != Place && !Place->underground) {
-
-		/* Redraw the sun */
-		moonPaintSunOrMoon(Sun.arc, Sun.sprite);
-
-		/* Redraw moons */
-		for (i = 0; i < NUM_MOONS; i++) {
-			struct moon *moon = &Moons[i];
-			moonPaintSunOrMoon(moon->arc,
-					   MoonInfo.sprite[moon->phase]);
-		}
-	}
-
-	screenUpdate(&Sky.screenRect);
-}
-
-void skyInit(void)
-{
-	int i;
-        struct moon *moon;
-
-
-	Sky.screenRect.w = SKY_W;
-	Sky.screenRect.x = SKY_X;
-	Sky.screenRect.y = SKY_Y;
-	Sky.screenRect.h = SKY_H;
-
-        sky_compute_factors();
-
-	Moons[0].openMoongate = moongateOpenSourceGate;
-	Moons[0].closeMoongate = moongateCloseSourceGate;
-
-	Moons[1].openMoongate = moongateOpenDestinationGate;
-	Moons[1].closeMoongate = moongateCloseDestinationGate;
-
-	for (i = 0; i < NUM_MOONS; i++) {
-
-
-		moon = &Moons[i];
-
-                /* WARNING: bug waiting to happen here. The initial_phase and
-                 * initial_arc should be saved separately from the current
-                 * phase and arc in the save file, because the clock_time()
-                 * call measures from the start of the current session, not the
-                 * start of the first session.
-                 */
-                moon->initial_phase = moon->phase;
-                moon->initial_arc = moon->arc;
-
-                moon->minutes_per_phase = (MINUTES_PER_DAY * moon->days_per_cycle) / MoonInfo.phases;
-		moon->openMoongate(moon->phase);
-                moon_adjust_light(moon);
-	}
-
-
-        Sun.arc = clock_time_of_day() / MINUTES_PER_DEGREE;;
-        Sun.light = sky_get_light_from_astral_body(Sun.arc, MAX_SUNLIGHT);
-
-	skyRepaint();
-}
-
-int sky_get_ambient_light(void)
+void astral_body_del(struct astral_body *body)
 {
         int i;
-        int light = Sun.light;
 
-	for (i = 0; i < NUM_MOONS; i++) {
-		light += Moons[i].light;
+        assert(body);
+        assert(body->tag);
+        assert(body->name);
+        assert(body->phases);
+
+        if (body->gob)
+                gob_del(body->gob);
+        free(body->tag);
+        free(body->name);
+        for (i = 0; i < body->n_phases; i++)
+                if (body->phases[i].name)
+                        free(body->phases[i].name);
+        free(body->phases);
+        free(body);
+}
+
+void astral_body_save(struct astral_body *body, struct save *save)
+{
+        int i;
+
+        if (body->gob)
+                save->enter(save, "(bind-astral-body\n");
+
+        save->enter(save, "(kern-mk-astral-body\n");        
+        save->write(save, "'%s\t; tag\n", body->tag);
+        save->write(save, "\"%s\"\t; name\n", body->name);
+        save->write(save, "%d\t; distance\n", body->distance);
+        save->write(save, "%d\t; minutes_per_phase\n", 
+                    body->minutes_per_phase);
+        save->write(save, "%d\t; minutes_per_degress\n", 
+                    body->minutes_per_degree);
+        save->write(save, "%d\t; initial_arc\n", body->initial_arc);
+        save->write(save, "%d\t; initial_phase\n", body->initial_phase);
+        //save->write(save, "%d\t; n_phases\n", body->n_phases);
+        if (body->gifc)
+                closure_save(body->gifc, save);
+        else
+                save->write(save, "nil\t; gifc\n");
+        assert(body->n_phases);
+        save->enter(save, "(list\n");
+        for (i = 0; i < body->n_phases; i++) {
+                save->write(save, "(list %s %d \"%s\")\n", 
+                            body->phases[i].sprite->tag,
+                            body->phases[i].maxlight,
+                            body->phases[i].name);
         }
+        save->exit(save, ")\n");
+        save->exit(save, ")\n");
+
+        if (body->gob) {
+                gob_save(body->gob, save);
+                save->exit(save, ") ;; bind-astral-body\n");
+        }
+}
+
+static void astral_body_advance_phase(struct astral_body *body)
+{
+        int new_phase;
+
+        assert(body->n_phases);
+
+        // Calculate the new phase
+        new_phase = 0;
+        if (body->minutes_per_phase) {
+                new_phase = clock_time() / body->minutes_per_phase;
+        }
+        new_phase += body->initial_phase;
+        new_phase %= body->n_phases;
         
+        if (new_phase == body->phase)
+                return;
+                
+        // Run the phase-change handler in the script
+        if (body->gifc)
+                closure_exec(body->gifc, "ypdd", "phase-change", 
+                             body, body->phase, new_phase);
+                
+        body->phase = new_phase;
+}
+
+static void astral_body_advance_arc(struct astral_body *body)
+{
+        int new_arc;
+        int original_light;
+        int maxlight;
+
+        // Calculate the new arc
+        new_arc = (clock_time() / body->minutes_per_degree);
+        new_arc += body->initial_arc;
+        new_arc %= 360;
+
+        if (new_arc == body->arc)
+                return;
+
+        body->arc = new_arc;
+                
+        if (body->n_phases > 0) {
+                astral_body_advance_phase(body);
+        }
+
+        // Change the body's light
+        original_light = body->light;
+        body->light = sky_get_light_from_astral_body(
+                body->arc, 
+                body->phases[body->phase].maxlight);
+        if (original_light != body->light)
+                mapSetDirty();
+}
+
+//////////////////////////////////////////////////////////////////////////////
+//
+// Public sky api
+//
+//////////////////////////////////////////////////////////////////////////////
+
+void sky_advance(struct sky *sky, int visible)
+{
+	int i;
+        struct list *elem;
+        struct astral_body *body;
+
+	screenErase(&sky->screenRect);
+
+        list_for_each(&sky->bodies, elem) {
+                body = outcast(elem, struct astral_body, list);
+                astral_body_advance_arc(body);
+                if (! visible)
+                        continue;
+                sky_paint_astral_body(sky, body->arc, 
+                                      body->phases[body->phase].sprite);
+        }
+
+	screenUpdate(&sky->screenRect);
+}
+
+void sky_init(struct sky *sky)
+{
+	sky->screenRect.w = SKY_W;
+	sky->screenRect.x = SKY_X;
+	sky->screenRect.y = SKY_Y;
+	sky->screenRect.h = SKY_H;
+
+        sky_compute_factors();
+        list_init(&sky->bodies);
+}
+
+void sky_start_session(struct sky *sky, int visible)
+{
+        sky_advance(sky, visible);
+}
+
+void sky_end_session(struct sky *sky)
+{
+        struct list *elem;
+        struct astral_body *body;
+
+        elem = sky->bodies.next;
+        while (elem != &sky->bodies) {
+                body = outcast(elem, struct astral_body, list);
+                elem = elem->next;
+                astral_body_del(body);
+        }        
+}
+
+void sky_add_astral_body(struct sky *sky, struct astral_body *body)
+{
+        // Need to keep them in order by astronomical distance, furthest to
+        // closest, so the sprites are rendered in the right order.
+        struct list *elem;
+        struct astral_body *other;
+
+        elem = sky->bodies.next;
+        while (elem != &sky->bodies) {
+                other = outcast(elem, struct astral_body, list);
+                // Find the first body closer than this one and insert this one
+                // before it.
+                if (other->distance < body->distance)
+                        break;
+                elem = elem->next;
+        }
+
+        list_add(elem->prev, &body->list);
+}
+
+int sky_get_ambient_light(struct sky *sky)
+{
+        struct list *elem;
+        struct astral_body *body;
+        int light = 0;
+
+        list_for_each(&sky->bodies, elem) {
+                body = outcast(elem, struct astral_body, list);
+                light += body->light;
+        }
+
         return clamp(light, 0, MAX_AMBIENT_LIGHT);
 }
 
+void sky_save(struct sky *sky, struct save *save)
+{
+        struct list *elem;
+        struct astral_body *body;
+
+        save->write(save, ";; ---------\n");
+        save->write(save, ";; Astronomy\n");
+        save->write(save, ";; ---------\n");
+
+        list_for_each(&sky->bodies, elem) {
+                body = outcast(elem, struct astral_body, list);
+                astral_body_save(body, save);
+        }
+}

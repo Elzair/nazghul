@@ -19,38 +19,22 @@
 // Gordon McNutt
 // gmcnutt@users.sourceforge.net
 //
-#ifndef loader_h
-#define loader_h
 
-struct lexer;
+// This file needs to be safe for both c and c++ compilation. It should also
+// contain only the most generic types of macros, stuff not really specific to
+// nazghul.
 
-class Loader {
-      public:
-	Loader();
-	bool getInt(int *);
-	bool getBool(bool *);
-	bool getWord(char **);
-	bool getString(char **);
-	bool getBitmask(int *);
-	bool getToken(char *);
-	bool getChar(char *);
-	bool getFloat(float *);
-	bool getRaw(char *, int maxlen);
+#ifndef macros_h
+#define macros_h
 
-	bool matchToken(char);
-	bool matchWord(char *);
+#ifdef __cplusplus
+#define BEGIN_DECL extern "C" {
+#define END_DECL   }
+#else
+#define BEGIN_DECL
+#define END_DECL
+#endif
 
-	bool getIntKeyValue(char *key, int *val);
-	bool getWordKeyValue(char *key, char **val);
-	bool getStringKeyValue(char *key, char **val);
-        char *getLexeme();
+#define maxstrlen(array) (sizeof((array)) - 1)
 
-	void advance();
-	void setError(char *fmt, ...);
-
-	void *(*lookupTag) (char *tag, int tid);
-	struct lexer *lexer;
-	char error[256];
-};
-
-#endif				// loader_h
+#endif

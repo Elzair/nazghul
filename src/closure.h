@@ -1,6 +1,6 @@
 //
 // nazghul - an old-school RPG engine
-// Copyright (C) 2002, 2003 Gordon McNutt
+// Copyright (C) 2004 Gordon McNutt
 //
 // This program is free software; you can redistribute it and/or modify it
 // under the terms of the GNU General Public License as published by the Free
@@ -19,25 +19,29 @@
 // Gordon McNutt
 // gmcnutt@users.sourceforge.net
 //
-#ifndef Trap_h
-#define Trap_h
+#ifndef closure_h
+#define closure_h
 
-#include "object.h"
+#include "macros.h"
+#include "scheme.h"
 
-class TrapType:public ObjectType {
-      public:
-								virtual bool isType(int classID);
-								virtual int getType();
-								TrapType();
-	 virtual ~ TrapType();
-								virtual void setEffects(int val);
-								virtual void setAmount(int val);
-								virtual int getEffects();
-								virtual int getAmount();
+BEGIN_DECL
 
-      protected:
-								int effects;
-								int amount;
-};
+typedef struct closure {
+        scheme *sc;
+        pointer env;
+        pointer code;
+        int ref;
+} closure_t;
 
-#endif				// Trap_h
+extern closure_t *closure_new(scheme *interp, pointer code);
+extern void closure_init(closure_t *closure, scheme *interp, pointer code);
+extern void closure_del(closure_t *closure);
+extern int closure_exec(closure_t *closure, char *fmt, ...);
+extern void closure_save(closure_t *closure, struct save *save);
+extern void closure_ref(closure_t *closure);
+extern void closure_unref(closure_t *closure);
+
+END_DECL
+
+#endif

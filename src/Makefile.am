@@ -23,11 +23,10 @@ nazghul_SOURCES =		\
         constants.h \
         Container.cpp \
         Container.h \
-        conv.c \
-        conv.h \
         cursor.cpp \
         cursor.h \
         debug.h \
+	debug.c \
         dup_constants.h \
         event.c \
         event.h \
@@ -38,32 +37,20 @@ nazghul_SOURCES =		\
         foogod.h \
         formation.h \
 	formation.c \
-        game.c \
-        game.h \
         hash.c \
         hash.h \
         heap.c \
         heap.h \
         images.c \
         images.h \
-        Item.cpp \
-        Item.h \
         knapsack.c \
         knapsack.h \
-        lexer.c \
-        lexer.h \
         list.h \
-        Loader.cpp \
-        Loader.h \
         los.c \
         los.h \
         Makefile \
         map.c \
         map.h \
-        Mech.cpp \
-        Mech.h \
-        moongate.c \
-        moongate.h \
         nazghul.c \
         Party.cpp \
         Party.h \
@@ -80,7 +67,8 @@ nazghul_SOURCES =		\
         player.cpp \
         player.h \
         play.h \
-        portal.h \
+        Portal.h \
+	Portal.cpp \
         Reagent.cpp \
         Reagent.h \
         sched.c \
@@ -93,8 +81,6 @@ nazghul_SOURCES =		\
         sound.h \
         species.c \
         species.h \
-        Spell.cpp \
-        Spell.h \
         sprite.c \
         sprite.h \
         status.c \
@@ -103,12 +89,8 @@ nazghul_SOURCES =		\
         terrain.h \
         terrain_map.c \
         terrain_map.h \
-        Trap.cpp \
-        Trap.h \
         tree.c \
         tree.h \
-        util.c \
-        util.h \
         vehicle.cpp \
         vehicle.h \
         wind.c \
@@ -124,4 +106,25 @@ nazghul_SOURCES =		\
 	vmask.h \
 	vmask.c \
 	ctrl.h \
-	ctrl.c
+	ctrl.c \
+	scheme.c \
+	scheme.h \
+	scheme-private.h \
+	opdefines.h \
+	macros.h \
+	session.c \
+	session.h \
+	closure.h \
+	closure.c \
+	kern.h \
+	kern.c \
+	dice.h \
+	dice.c \
+	gob.c \
+	gob.h \
+	magic.h \
+	magic.c \
+	effect.h \
+	effect.c \
+	conv.h \
+	conv.c

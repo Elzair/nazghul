@@ -23,6 +23,7 @@
 #include "cmdwin.h"
 #include "screen.h"
 #include "common.h"
+#include "session.h"
 #include "sprite.h"
 #include "console.h"
 
@@ -37,7 +38,6 @@ static struct {
 	char *mark;
 } cmdwin;
 
-struct sprite *CursorSprite = NULL;
 
 int cmdwin_init(void)
 {
@@ -112,7 +112,7 @@ void cmdwin_repaint_cursor(void)
 
 	rect.x += (cmdwin.ptr - cmdwin.buf) * ASCII_W;
 
-	spritePaint(CursorSprite, 0, rect.x, rect.y);
+	spritePaint(Session->cursor_sprite, 0, rect.x, rect.y);
 	screenUpdate(&rect);
 }
 

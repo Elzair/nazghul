@@ -20,7 +20,7 @@
 // gmcnutt@users.sourceforge.net
 //
 #include "wq.h"
-#include "util.h"
+#include "common.h"
 
 struct list TickWorkQueue;
 struct list TurnWorkQueue;
@@ -37,6 +37,9 @@ void wqAddJob(struct list *wq, struct wq_job *newJob)
 	struct list *list;
 	struct wq_job *aJob;
 
+        //dbg("wqAddJob: %08lx\n", newJob);
+
+
 	list_for_each(wq, list) {
 		aJob = outcast(list, struct wq_job, list);
 		if (aJob->tick > newJob->tick)
@@ -44,6 +47,8 @@ void wqAddJob(struct list *wq, struct wq_job *newJob)
 	}
 
 	list_add_aux(list->prev, list, &newJob->list);
+
+
 }
 
 void wqRunToTick(struct list *wq, int tick)
@@ -62,8 +67,10 @@ void wqRunToTick(struct list *wq, int tick)
 
 		tmp = list->next;
 		list_remove(list);
-		aJob->run(aJob, wq);
+                //dbg("wqRunToTick: %08lx\n", aJob);
+                aJob->run(aJob, wq);
 		list = tmp;
+
 	}
 }
 
@@ -83,7 +90,16 @@ void wqCreateJob(struct list *wq, int tick, int period, void *data,
 	job->data = data;
 	job->run = run;
 
+        //dbg("wqCreateJob: %08lx\n", job);
+
 	wqAddJob(wq, job);
+}
+
+void wqDeleteJob(struct wq_job *job)
+{
+        //dbg("wqDeleteJob: %08lx\n", job);
+        list_remove(&job->list);
+        free(job);
 }
 
 void wqReschedule(struct list *wq, struct wq_job *job)

@@ -22,20 +22,23 @@
 #ifndef ascii_h
 #define ascii_h
 
+#include "macros.h"
+
 #include <SDL.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+BEGIN_DECL
 
-	struct images;
+struct ascii {
+        struct images *images;
+        int offset;
+};
 
-	extern void asciiSetImages(struct images *images, int offset);
-	extern void asciiPaint(char c, int x, int y, SDL_Surface * surface);
-	extern void asciiInvert(void);
-	extern void asciiUninvert(void);
+struct images;
 
-#ifdef __cplusplus
-}
-#endif
+extern void asciiPaint(char c, int x, int y, SDL_Surface * surface);
+extern void asciiInvert(void);
+extern void asciiUninvert(void);
+
+END_DECL
+
 #endif

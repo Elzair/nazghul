@@ -23,19 +23,17 @@
  */
 #include "place.h"
 #include "sprite.h"
-#include "util.h"
 #include "terrain.h"
-#include "portal.h"
+#include "Portal.h"
 #include "hash.h"
 #include "screen.h"
 #include "player.h"
 #include "sky.h"
-#include "moongate.h"
 #include "console.h"
 #include "wq.h"
 #include "Field.h"
-#include "Mech.h"
 #include "vehicle.h"
+#include "session.h"
 
 // #define DEBUG
 // #undef debug_h
@@ -76,12 +74,12 @@ struct place *Place;
 struct tile {
 	struct olist hashlink;
 	struct olist objstack;
+        struct place *subplace;
 	class Vehicle *vehicle;
-	class Moongate *moongate;
 	int objects;
 	int lock;
 };
-static struct tile *tile_create(int hashkey)
+static struct tile *tile_new(int hashkey)
 {
 	struct tile *tile;
 	CREATE(tile, struct tile, 0);
@@ -90,15 +88,35 @@ static struct tile *tile_create(int hashkey)
 	tile->hashlink.key = hashkey;
 	return tile;
 }
-static void tile_destroy(struct tile *tile)
+static void tile_del(struct tile *tile)
 {
 	// Locking prevents me from destroying a tile while the place_for_each
 	// algorithm is using it.
 	if (!tile->lock) {
 		assert(!tile->objects);
 		list_remove(&tile->hashlink.list);
+                //dbg("tile_del: tile=%08lx\n", tile);
 		free(tile);
 	}
+}
+static void tile_for_each_object(struct tile *tile,
+                                 void (*fx)(class Object *obj, void *data),
+                                 void *data)
+{
+        struct list *elem;
+
+        //dbg("tile_for_each_object: tile=%08lx\n", tile);
+
+        // Dereference all objects on the tile
+        for (elem = tile->objstack.list.next; elem != &tile->objstack.list; ) {
+                class Object *obj;
+		obj = outcast(elem, Object, container_link.list);
+                elem = elem->next;
+                fx(obj, data);
+	}
+
+        if (tile->vehicle)
+                fx(tile->vehicle, data);
 }
 
 static int tile_is_transparent(struct tile *tile)
@@ -113,88 +131,242 @@ static int tile_is_transparent(struct tile *tile)
 		tmp = elem->next;
 		obj = outcast(elem, class Object, container_link.list);
 		elem = tmp;
-		if (obj->is_opaque())
+		if (obj->isOpaque())
 			return 0;
 	}
 	return 1;
 }
 
+static void tile_remove_object(struct tile *tile, class Object *object)
+{
+	if (object->isType(VEHICLE_ID)) {
+                if (tile->vehicle == object) {
+                        tile->vehicle = 0;
+                        tile->objects--;
+                }
+                // 30Jul2003 gmcnutt: otherwise this vehicle must be occupied,
+                // in which case it does not occupy the tile (it's occupant
+                // does).
+	} else {
+		list_remove(&object->container_link.list);
+                tile->objects--;
+	}
+
+
+	if (!tile->objects) {
+		tile_del(tile);
+	}
+
+        obj_dec_ref(object);
+}
+
+static void tile_add_object(struct tile *tile, class Object *object)
+{
+        obj_inc_ref(object);
+
+	if (object->isType(VEHICLE_ID)) {
+		if (tile->vehicle) {
+                        assert(0);
+                }
+		tile->vehicle = (class Vehicle *) object;
+		tile->objects++;
+                return;
+	}
+
+	olist_add(&tile->objstack, &object->container_link);
+	tile->objects++;
+}
+
+static int tile_add_subplace(struct tile *tile, struct place *place)
+{
+        if (tile->subplace)
+                return -1;
+
+        tile->subplace = place;
+        tile->objects++;
+        return 0;
+}
+
+static void tile_remove_subplace(struct tile *tile)
+{
+        if (tile->subplace) {
+                tile->subplace = 0;
+                tile->objects--;
+        }
+
+	if (!tile->objects) {
+		tile_del(tile);
+	}
+}
+
+static struct place *tile_get_subplace(struct tile *tile)
+{        
+        return tile->subplace;
+}
+
+static void tile_save(struct tile *tile, struct save *save)
+{
+        /* fixme: save everything */
+}
+
+static void tile_paint(struct tile *tile, int sx, int sy)
+{
+	struct list *l;
+	Object *obj;
+	struct sprite *sprite;
+
+        /* Check for a subplace. The temp combat place won't have a sprite. */
+        if (tile->subplace && tile->subplace->sprite) {
+                assert(tile->subplace->sprite);
+                spritePaint(tile->subplace->sprite, 0, sx, sy);
+        }
+
+	/* Check for a vehicle */
+	if (tile->vehicle) {
+		tile->vehicle->paint(sx, sy);
+	}
+
+	list_for_each(&tile->objstack.list, l) {
+		obj = outcast(l, Object, container_link.list);
+		sprite = obj->getSprite();
+		if (!sprite)
+			continue;
+
+		// Handle invisible objects and alpha-blending when
+		// invisible objects are revealed. If the global "reveal" flag
+		// is not set then do not paint invisible objects. Otherwise
+		// temporarily set the object's sprite to 'shaded' and paint
+		// it. After painting I need to clear the shaded flags in case
+		// other objects use this sprite, too.
+
+		if (!obj->isVisible()) {
+			if (!Reveal && !obj->isShaded())
+				continue;
+			sprite_fade(sprite);
+		}
+
+		obj->paint(sx, sy);
+
+		if (obj->isSelected()) {
+
+                        /* Highlight */
+                        SDL_Rect rect;
+                        rect.x = sx;
+                        rect.y = sy;
+                        rect.w = TILE_W;
+                        rect.h = TILE_H;
+                        screenHighlight(&rect);
+
+                }
+
+		if (sprite->faded)
+			sprite_unfade(sprite);
+	}
+}
+
 /*****************************************************************************/
 
-struct place *place_create(enum place_type type,
-			   struct place *parent,
-			   unsigned int x,
-			   unsigned int y,
-			   char *tag,
-			   char *name,
-			   int wraps, struct terrain_map *terrain_map)
+static void place_for_each_tile(struct place *place, 
+                                void (*fx)(struct tile *tile, void *data), 
+                                void *data);
+
+
+struct place *place_new(char *tag,
+                        char *name, 
+                        struct sprite *sprite,
+                        struct terrain_map *terrain_map,
+                        int wraps,
+                        int underground,
+                        int wilderness,
+                        int wild_combat)
+                        
 {
 	struct place *place;
 
 	CREATE(place, struct place, 0);
 
-	if (!(place->tag = strdup(tag)))
-		goto fail;
+	place->tag = strdup(tag);
+        assert(place->tag);
 
-	if (!(place->name = strdup(name)))
-		goto fail;
+	place->name = strdup(name);
+        assert(place->name);
 
-	if (!(place->objects = hash_create(31)))
-		goto fail;
+	place->objects = hash_create(31);
+        assert(place->objects);
 
-	if (!(place->terrain_map = terrain_map_clone(terrain_map)))
-		goto fail;
+        place->magic = PLACE_MAGIC;
+        place->sprite = sprite;
 
-	place->type = type;
-        place->scale = place_is_wilderness(place) ? WILDERNESS_SCALE : NON_WILDERNESS_SCALE;
-	place->location.place = parent;
-	place->location.x = x;
-	place->location.y = y;
+        /* Note: turned off cloning for now. It just hasn't shown itself to be
+         * necessary yet and it makes saving/loading simpler if I don't have to
+         * worry about the cloned map names. In the future, if you turn it back
+         * on, make the tag for the cloned map a parameter. */
+	//place->terrain_map = terrain_map_clone(terrain_map);
+
+        place->terrain_map = terrain_map;
+
+        place->scale = wilderness ? WILDERNESS_SCALE : NON_WILDERNESS_SCALE;
 	place->original_terrain_map = terrain_map;
 	place->wraps = wraps;
+        place->underground = underground;
+        place->wilderness = wilderness;
+        place->is_wilderness_combat = wild_combat;
 
 	list_init(&place->vehicles);
         list_init(&place->turn_list);
+        list_init(&place->subplaces);
+        list_init(&place->container_link);
         place->turn_elem = &place->turn_list;
 
 	return place;
-      fail:
-	place_destroy(place);
-	return 0;
 }
 
-void place_destroy_tiles(struct place *place)
+void place_del_tile_object_visitor(class Object *obj, void *data)
 {
-	int i;
-	for (i = 0; i < place->objects->n; i++) {
-		struct list *head;
-		struct list *list;
-		head = &place->objects->buckets[i].list;
-		list = head->next;
-		while (list != head) {
-			struct list *tmp;
-			struct tile *tile;
-			tmp = list->next;
-			tile = outcast(list, struct tile, hashlink.list);
-			tile_destroy(tile);
-			list = tmp;
-		}
-	}
+        // Called by tile_for_each_object()
+        struct tile *tile = (struct tile*)data;
+        tile_remove_object(tile, obj);
+        if (! obj->refcount)
+                delete obj;
 }
 
-void place_destroy(struct place *place)
+void place_del_tile_visitor(struct tile *tile, void *data)
 {
+        // Called by place_for_each_tile()
+        tile->lock++;
+        tile_for_each_object(tile, place_del_tile_object_visitor, tile);
+        if (tile->subplace) {
+                place_del(tile->subplace);
+                tile_remove_subplace(tile);
+        }
+        tile->lock--;
+        tile_del(tile);
+}
+
+void place_del(struct place *place)
+{
+        // --------------------------------------------------------------------
+        // If the place is locked then we cannot delete it now. Mark it for
+        // death so that it will be deleted when unlocked.
+        // --------------------------------------------------------------------
+
+        if (place_is_locked(place)) {
+                place_mark_for_death(place);
+                return;
+        }
+
+        // Destroy all tiles, objects and subplaces recursively.
+        place_for_each_tile(place, place_del_tile_visitor, 0);
+        hash_destroy(place->objects);
+
+        //dbg("place_del %s\n", place->tag);
+
 	if (place->tag)
 		free(place->tag);
 	if (place->name)
 		free(place->name);
-	if (place->objects) {
-		place_destroy_tiles(place);
-		hash_destroy(place->objects);
-	}
-	if (place->terrain_map) {
-		terrain_map_destroy(place->terrain_map);
-	}
+	if (place->terrain_map)
+		terrain_map_del(place->terrain_map);
 	free(place);
 }
 
@@ -203,7 +375,7 @@ int place_is_passable(struct place *place, int x, int y,
 {
 	struct terrain *terrain;
 	class Field *field;
-	class Mech *mech;
+	class Object *mech;
 	bool impassable_terrain;
 	bool no_convenient_vehicle;
 
@@ -238,8 +410,7 @@ int place_is_passable(struct place *place, int x, int y,
 
 	// Test for an impassable Mech
 	if ((flags & PFLAG_IGNOREMECHS) == 0) {
-		mech = (class Mech *) place_get_object(place, x, y, 
-                                                       mech_layer);
+		mech = place_get_object(place, x, y, mech_layer);
 		if (mech != NULL && (mech->getPmask() & pmask) == 0)
 			return 0;
 	}
@@ -267,10 +438,11 @@ static struct tile *place_lookup_tile(struct place *place, int x, int y)
 static struct tile *place_create_and_add_tile(struct place *place, int x, int y)
 {
 	struct tile *tile;
-	tile = tile_create(INDEX(x, y, place_w(place)));
+	tile = tile_new(INDEX(x, y, place_w(place)));
 	if (!tile)
 		return 0;
 	hash_add(place->objects, &tile->hashlink);
+        //dbg("place_create_and_add_tile: place=%s tile=%08lx x=%d y=%d\n", place->name, tile, x, y);
 	return tile;
 }
 
@@ -282,73 +454,16 @@ struct tile *placeGetTile(struct place *place, int x, int y)
 	return place_create_and_add_tile(place, x, y);
 }
 
-static void myPaintHighlight(Object * obj, int sx, int sy)
-{
-	SDL_Rect rect;
-#if 0
-	rect.x = sx - HIGHLIGHT_W;
-	rect.y = sy - HIGHLIGHT_H;
-	rect.w = TILE_W + 2 * HIGHLIGHT_W;
-	rect.h = TILE_H + 2 * HIGHLIGHT_H;
-	screenFill(&rect, White);
-#else
-	rect.x = sx;
-	rect.y = sy;
-	rect.w = TILE_W;
-	rect.h = TILE_H;
-        screenHighlight(&rect);
-#endif
-}
-
 void place_paint_objects(struct place *place, int mx, int my,
                          int sx, int sy)
 {
-	struct list *l;
-	Object *obj;
 	struct tile *tile;
-	struct sprite *sprite;
 
 	tile = place_lookup_tile(place, mx, my);
 	if (!tile)
 		return;
 
-	/* Check for a vehicle */
-	if (tile->vehicle) {
-		tile->vehicle->paint(sx, sy);
-	}
-
-	/* Check for a moongate (paint moongates before other objects so I can
-	 * see the player step over it) */
-	if (tile->moongate)
-		tile->moongate->paint(sx, sy);
-
-	list_for_each(&tile->objstack.list, l) {
-		obj = outcast(l, Object, container_link.list);
-		sprite = obj->getSprite();
-		if (!sprite)
-			continue;
-
-		// Handle invisible objects and alpha-blending when
-		// invisible objects are revealed. If the global "reveal" flag
-		// is not set then do not paint invisible objects. Otherwise
-		// temporarily set the object's sprite to 'shaded' and paint
-		// it. After painting I need to clear the shaded flags in case
-		// other objects use this sprite, too.
-
-		if (!obj->isVisible()) {
-			if (!Reveal && !obj->isShaded())
-				continue;
-			sprite_fade(sprite);
-		}
-
-		obj->paint(sx, sy);
-		if (obj->isSelected())
-			myPaintHighlight(obj, sx, sy);
-
-		if (sprite->faded)
-			sprite_unfade(sprite);
-	}
-
+        tile_paint(tile, sx, sy);
 }
 
 int place_visibility(struct place *place, int x, int y)
@@ -481,41 +596,6 @@ void place_get_direction_vector(struct place *place, int x0, int y0, int x1,
                 *dy = south;
 }
 
-static void tile_remove_object(struct tile *tile, class Object *object)
-{
-	if (object->isType(VEHICLE_ID)) {
-                if (tile->vehicle == object) {
-                        tile->vehicle = 0;
-                        tile->objects--;
-                }
-                // 30Jul2003 gmcnutt: otherwise this vehicle must be occupied,
-                // in which case it does not occupy the tile (it's occupant
-                // does).
-	} else {
-		list_remove(&object->container_link.list);
-                tile->objects--;
-	}
-
-	if (!tile->objects) {
-		tile_destroy(tile);
-	}
-}
-
-static void tile_add_object(struct tile *tile, class Object *object)
-{
-	if (object->isType(VEHICLE_ID)) {
-		if (tile->vehicle) {
-                        assert(0);
-                }
-		tile->vehicle = (class Vehicle *) object;
-		tile->objects++;
-                return;
-	}
-
-	olist_add(&tile->objstack, &object->container_link);
-	tile->objects++;
-}
-
 void place_move_object(struct place *place, Object * object, 
                        int newx, int newy)
 {
@@ -575,14 +655,6 @@ void place_remove_object(struct place *place, Object * object)
                 place->turn_elem = object->turn_list.next;
 
         list_remove(&object->turn_list);
-}
-
-void place_add_moongate(struct place *place, class Moongate * moongate)
-{
-	struct tile *tile =
-	    placeGetTile(place, moongate->getX(), moongate->getY());
-	tile->moongate = moongate;
-	tile->objects++;
 }
 
 Object *place_get_object(struct place *place, int x, int y, enum layer layer)
@@ -659,8 +731,7 @@ struct terrain_map *place_get_combat_terrain_map(struct place *place,
 
 static int place_pathfind_is_valid_location(struct place_pathfind_context *context, int x, int y)
 {
-	class Portal *portal;
-	class Moongate *moongate;
+	class Object *portal;
 
         //printf("Checking [%d %d]...", x, y);
 
@@ -697,23 +768,23 @@ static int place_pathfind_is_valid_location(struct place_pathfind_context *conte
                 }
         }
 
-        // ---------------------------------------------------------------------
+	// --------------------------------------------------------------------
 	// I used to penalize portals in the heuristic routine, but that was
 	// back in the day when I would pathfind for the player on a
-	// right-click. Any more pathfinding is used exclusively for NPCs and I
-	// NEVER want them to enter a portal unless they explicitly want to
-	// (and currently they never do). Likewise for open moongates.
-        // ---------------------------------------------------------------------
+	// right-click. Any more pathfinding is used exclusively for NPCs (or
+	// PC's in follow mode) and I NEVER want them to enter a portal unless
+	// they explicitly want to (and currently they never do). Likewise for
+	// open moongates.
+        //
+        // Addendum: portals are now mechs with "step" signal handlers. The
+        // code below avoids any mechanism which responds to the "step" signal,
+        // including non-portals. That's fine, because anything which responds
+        // to "step" is probably something I want to avoid.
+        // --------------------------------------------------------------------
 
-	if ((portal = place_get_portal(context->place, x, y)) &&
-	    portal->isAutomatic()) {
-                //printf("portal!\n");
-		return 0;
-        }
-
-	if ((moongate = place_get_moongate(context->place, x, y)) &&
-	    moongate->isOpen()) {
-                //printf("moongate!\n");
+	if ((portal = place_get_object(context->place, x, y, mech_layer)) &&
+	    portal->canStep()) {
+                //dbg("portal!\n");
 		return 0;
         }
 
@@ -842,11 +913,17 @@ int place_get_light(struct place *place, int x, int y)
 		light += obj->getLight();
 	}
 
-	/* Check for a moongate */
-	if (tile->moongate)
-		light += tile->moongate->getLight();
-
 	return light;
+}
+
+static void place_obj_synchronize(class Object * obj, void *data)
+{
+        obj->synchronize();
+}
+
+void place_synchronize(struct place *place)
+{
+	place_for_each_object(place, place_obj_synchronize, 0);
 }
 
 static void myResetObjectTurns(class Object * obj, void *data)
@@ -859,15 +936,6 @@ static void myResetObjectTurns(class Object * obj, void *data)
 void place_enter(struct place *place)
 {
 	place_for_each_object(place, myResetObjectTurns, 0);
-}
-
-class Moongate *place_get_moongate(struct place *place, int x, int y)
-{
-        WRAP_COORDS(place, x, y);
-	struct tile *tile = place_lookup_tile(place, x, y);
-	if (!tile)
-		return 0;
-	return tile->moongate;
 }
 
 void placeAddObject(Object * object)
@@ -897,7 +965,11 @@ int place_is_hazardous(struct place *place, int x, int y)
 {
         WRAP_COORDS(place, x, y);
 	struct terrain *t = TERRAIN(place, x, y);
-	return (t->effects != 0);
+	if (t->effects != 0)
+                return 1;        
+        if (place_get_object(place, x, y, field_layer) != NULL)
+                return 1;
+        return 0;
 }
 
 int placeGetMovementCost(int x, int y)
@@ -928,13 +1000,6 @@ struct terrain *place_get_terrain(struct place *place, int x, int y)
 	x = place_wrap_x(place, x);
 	y = place_wrap_y(place, y);
 	return TERRAIN(place, x, y);
-}
-
-Uint32 place_get_color(struct place * place, int x, int y)
-{
-        WRAP_COORDS(place, x, y);
-	struct terrain *terrain = place_get_terrain(place, x, y);
-	return (terrain == NULL ? 0 : terrain->color);
 }
 
 int placeWrapX(int x)
@@ -970,7 +1035,6 @@ static int myPlaceDescribeObjects(int x, int y, int first_thing_listed)
 	if (!tile)
 		return n_described;
         
-
         // Let's make things simple. Inefficient, but simple. Efficiency is not
         // so critical here. We'll do this in two passes. Pass one will count
         // the number of things we need to list. Pass two will print the things
@@ -981,6 +1045,16 @@ static int myPlaceDescribeObjects(int x, int y, int first_thing_listed)
 
         type = NULL;
         n_types = 0;
+
+        if (tile->subplace) {
+
+                // ------------------------------------------------------------
+                // FIXME: This has not been fully debugged. It works ok when
+                // there are no objects on the tile, but I don't think the
+                // 'ands' and commas are correct if there are.
+                // ------------------------------------------------------------
+                consolePrint(" and the entrance to %s", tile->subplace->name);
+        }
 
 	list_for_each(&tile->objstack.list, l) {
 
@@ -1012,11 +1086,6 @@ static int myPlaceDescribeObjects(int x, int y, int first_thing_listed)
         if (tile->vehicle && (tile->vehicle->isVisible() || Reveal || 
                               obj->isShaded()))
                 n_types++;
-
-        if (tile->moongate && (tile->moongate->isOpen() || Reveal || 
-                               obj->isShaded()))
-                n_types++;
-
 
         if (n_types == 0)
                 // Nothing to list so we're done.
@@ -1066,7 +1135,7 @@ static int myPlaceDescribeObjects(int x, int y, int first_thing_listed)
                                                 consolePrint(", ");
                                 }
 
-                                prev_obj->describe(n_instances);
+                                prev_obj->describe();
                                 n_described++;
                                 n_types--;
                         }
@@ -1092,7 +1161,7 @@ static int myPlaceDescribeObjects(int x, int y, int first_thing_listed)
                                 consolePrint(", ");
                 }
                 printf("### %s\n", prev_obj->getName());
-                prev_obj->describe(n_instances);
+                prev_obj->describe();
                 n_described++;
                 n_types--;
         }
@@ -1103,16 +1172,7 @@ static int myPlaceDescribeObjects(int x, int y, int first_thing_listed)
                         consolePrint(" and ");
                 else
                         consolePrint(", ");
-                tile->vehicle->describe(1);
-                n_described++;
-                n_types--;
-        }
-
-        if (tile->moongate && (tile->moongate->isOpen() || Reveal || 
-                               obj->isShaded())) {
-                assert(n_types == 1);
-                consolePrint(" and ");
-                tile->moongate->describe(1);
+                tile->vehicle->describe();
                 n_described++;
                 n_types--;
         }
@@ -1144,10 +1204,64 @@ void placeDescribe(int x, int y, int flags)
                 consolePrint(".\n");
 }
 
+void place_for_each_tile(struct place *place, 
+                         void (*fx)(struct tile *tile, void *data), void *data)
+{
+	int i;
+	struct olist *tileList, *objList;
+	struct list *tileElem, *tileTmp;
+	struct tile *tile;
+	class Object *obj;
+
+	// for each bucket
+	for (i = 0; i < place->objects->n && !Quit; i++) {
+
+		tileList = &place->objects->buckets[i];
+		tileElem = tileList->list.next;
+		assert(tileElem->prev == &tileList->list);
+
+		// for each tile
+		while (tileElem != &tileList->list && !Quit) {
+
+			tileTmp = tileElem->next;
+			tile = outcast(tileElem, struct tile, hashlink.list);
+                        
+                        // invoke the function on the tile
+                        tile->lock++;
+                        fx(tile, data);
+                        tile->lock--;
+			if (!tile->objects)
+				tile_del(tile);
+                        
+
+			tileElem = tileTmp;
+		}
+	}
+}
+
+struct forobj_tile_visitor_info {
+        void (*fx) (class Object *, void *data);
+        void *data;
+};
+
+void place_forobj_tile_visitor(struct tile *tile, void *data)
+{
+        struct forobj_tile_visitor_info *info;
+        info = (struct forobj_tile_visitor_info*)data;
+        tile_for_each_object(tile, info->fx, info->data);
+}
+
 void place_for_each_object(struct place *place, 
                            void (*fx) (class Object *, void *data),
 			   void *data)
 {
+        struct forobj_tile_visitor_info info;
+        info.fx = fx;
+        info.data = data;
+        place_for_each_tile(place, place_forobj_tile_visitor, &info);
+#if 0
+        // Old way:
+        
 	int i;
 	struct olist *tileList, *objList;
 	struct list *tileElem, *tileTmp, *objElem, *objTmp;
@@ -1182,17 +1296,25 @@ void place_for_each_object(struct place *place,
 				objElem = objTmp;
 			}
 
+                        // moongates & vehicles
+                        if (tile->vehicle)
+                                fx(tile->vehicle, data);
+
+                        // NOTE: subplaces are not objects, so they are
+                        // excused.
+
 			// Unlock the tile. One possible consequence of the
 			// above loop is that all of the objects were removed
 			// from this tile, in which case we probably tried to
 			// destroy it but were prevented by the lock.
 			tile->lock--;
 			if (!tile->objects)
-				tile_destroy(tile);
+				tile_del(tile);
 
 			tileElem = tileTmp;
 		}
 	}
+#endif
 }
 
 static void place_remove_and_destroy_object(class Object *obj, void *unused)
@@ -1208,46 +1330,89 @@ void place_remove_and_destroy_all_objects(struct place *place)
 
 void place_exec(struct place *place, struct exec_context *context)
 {
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
         // Upon entry this should always by the current place. That may change
         // while we're in the loop, but upon entry it should always be true.
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
 
         assert(Place == place);
 
+        // --------------------------------------------------------------------
+        // Lock the place to prevent destruction while running the exec loop.
+        // --------------------------------------------------------------------
 
-        // ---------------------------------------------------------------------
+        place_lock(place);
+
+        // --------------------------------------------------------------------
         // Loop over every object in the place...
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
 
         place->turn_elem = place->turn_list.next;
         while (place->turn_elem != &place->turn_list && ! Quit) {
                
-                class Object *obj;
+                class Object *obj;                
+                struct terrain *terrain;
+                class Field *field;
 
                 obj = outcast(place->turn_elem, class Object, turn_list);
                 place->turn_elem = place->turn_elem->next;
 
-                // -------------------------------------------------------------
-                // Apply any per-turn effects to each object (effects may
-                // destroy an object, so watch for that case)
-                // -------------------------------------------------------------
+                if (TimeStop) {
+                        if (obj->isPlayerControlled()) {
+                                obj->exec(context);
+                        }
+                } else {
 
-                obj->applyPerTurnEffects();
-                if (obj->isDestroyed()) {
-                        delete obj;
+                        /* apply any effects from the terrain */
+                        terrain = place_get_terrain(place, obj->getX(), obj->getY());
+                        if (terrain->effect) {
+                                obj->applyEffect(terrain->effect);
+                                if (obj->isDestroyed())
+                                        goto obj_destroyed;
+                        }
+                        
+                        /* apply any effects from other objects on the same tile
+                         * (currently only fields) */
+                        field = (class Field *)place_get_object(place, obj->getX(),
+                                                                obj->getY(), 
+                                                                field_layer);
+                        if (field && field != obj && 
+                            field->getObjectType()->effect) {
+                                obj->applyEffect(field->getObjectType()->effect);
+                                if (obj->isDestroyed())
+                                        goto obj_destroyed;
+                        }
+                        
+                        /* 'run' the object */
+                        obj->exec(context);
+
+                }
+
+                /* check if the session was reloaded while running the
+                 * object. If so, the object, this place and everything in it
+                 * has been destroyeed. Leave now. Don't touch a thing. */
+                if (Session->reloaded)
+                        return;                
+
+                /* one more time, check if the object is toast */
+                if (!obj->isDestroyed())
                         continue;
-                }
 
-                // -------------------------------------------------------------
-                // 'Run' each object
-                // -------------------------------------------------------------
+        obj_destroyed:
+                /* don't delete the player party */
+                if (obj == player_party)
+                        return;
 
-                obj->exec(context);
-                if (obj->isDestroyed()) {
-                        delete obj;
-                }
+                /* done with this object */
+                delete obj;
         }
+
+        // --------------------------------------------------------------------
+        // Note: unlocking can finalize the destruction of the place if
+        // somebody tried to destroy it in the above loop.
+        // --------------------------------------------------------------------
+
+        place_unlock(place);
 }
 
 class Party *place_random_encounter(struct place *place)
@@ -1256,7 +1421,7 @@ class Party *place_random_encounter(struct place *place)
 	class PartyType *type;
 	class Party *npc;
 
-	if (place->type != wilderness_place)
+	if (! place->wilderness)
 		// Random encounters only occur in the wilderness
 		return 0;
 
@@ -1403,4 +1568,219 @@ int place_contains_hostiles(struct place *place, int alignment)
         }
 
         return 0;
+}
+
+static void place_save_object(class Object *object, void *data)
+{
+        struct save *save;
+        save = (struct save*)data;
+        save->enter(save, "(list\n");
+        object->save(save);
+        save->exit(save, "%d %d)\n", object->getX(), object->getY());
+}
+
+void place_save(struct save *save, void *val)
+{
+        struct place *place;
+        struct list *elem;
+
+        place = (struct place *)val;
+
+        if (place->saved == save->session_id) {
+                /* Already saved once for this session, so just write the tag
+                 * to the save file. */
+                save->write(save, "%s\n", place->tag);
+                return;
+        }
+
+        place->saved = save->session_id;
+
+        save->enter(save, "(kern-mk-place '%s \"%s\"\n",
+                    place->tag, 
+                    place->name);
+        save->write(save, "%s ;; sprite\n", 
+                    place->sprite ? place->sprite->tag : "nil");
+        terrain_map_save(save, place->terrain_map);
+        save->write(save, "%s %s %s %s\n",
+                    place->wraps ? "#t" : "#f",
+                    place->underground ? "#t" : "#f",
+                    place->wilderness ? "#t" : "#f",
+                    place->is_wilderness_combat ? "#t" : "#f"
+                );
+
+        /* Save all subplaces recursively. */
+
+        save->write(save, ";; subplaces\n");
+        if (list_empty(&place->subplaces)) {
+                save->write(save, "nil\n");
+        } else {
+                save->enter(save, "(list\n");
+                list_for_each(&place->subplaces, elem) {
+                        struct place *subplace;
+                        subplace = outcast(elem, struct place, container_link);
+                        assert(subplace->location.place = place);
+                        save->enter(save, "(list\n");
+                        place_save(save, subplace);
+                        save->exit(save, "%d %d) ;; coords of %s\n", 
+                                   subplace->location.x, 
+                                   subplace->location.y,
+                                   subplace->tag);
+                }
+                save->exit(save, ") ; end of subplaces\n");
+        }
+
+        /* Save the neighbors recursively.  Subtle note: because neighborness
+         * is a symmetric relationship, and scheme does not permit forward
+         * declarations, and I don't want to use tags in lieue of recursive
+         * definitions, I don't reference neighbors that have already been
+         * saved. The neighborly relation was already recorded when the
+         * neighbor was saved, and it will be duly restored when the neighbor
+         * is loaded, so we don't need to do it here. Furthermore, we CANNOT do
+         * it here because we are probably dead smack in the middle of the save
+         * routine for that neighbor, so we can't refer to it yet.
+         */
+
+        save->write(save, ";; neighbors\n");
+        if ((! place->above || place->above->saved == save->session_id) && 
+            (! place->below || place->below->saved == save->session_id)) {
+                save->write(save, "nil\n");
+        } else {
+                save->enter(save, "(list\n");
+                if (place->above && place->above->saved != save->session_id) {
+                        save->enter(save, "(list ;; begin above neighbor\n");
+                        place_save(save, place->above);
+                        save->exit(save, "%d) ;; end above neighbor\n", UP);
+                }
+                if (place->below && place->below->saved != save->session_id) {
+                        save->enter(save, "(list ;; begin below neighbor\n");
+                        place_save(save, place->below);
+                        save->exit(save, "%d) ;; end below neighbor\n", DOWN);
+                }
+                save->exit(save, ")\n");
+        }
+
+        /* Save the contents */
+
+        save->write(save, ";; contents\n");
+        save->enter(save, "(list\n");
+        place_for_each_object(place, place_save_object, save);
+        save->exit(save, ") ;; end of objects\n");
+        save->exit(save, ") ;; end of place %s\n\n", place->tag);
+}
+
+static void place_start_object(class Object *object, void *data)
+{
+        object->start();
+}
+
+void place_start(void *val)
+{
+        struct place *place;
+        struct list *elem;
+
+        place = (struct place *)val;
+
+        // --------------------------------------------------------------------
+        // Start all subplaces recursively.
+        // --------------------------------------------------------------------
+
+        list_for_each(&place->subplaces, elem) {
+                struct place *subplace;
+                subplace = outcast(elem, struct place, container_link);
+                place_start(subplace);
+        }
+
+        // --------------------------------------------------------------------
+        // Save the contents.
+        // --------------------------------------------------------------------
+
+        place_for_each_object(place, place_start_object, NULL);
+}
+
+int place_add_subplace(struct place *place, struct place *subplace, 
+                       int x, int y)
+{
+	struct tile *tile;
+
+        if (place_off_map(place, x, y))
+                return 0;
+
+        tile = place_lookup_tile(place, x, y);
+
+	if (!tile) {
+		tile = place_create_and_add_tile(place, x, y);
+		if (!tile)
+			return -1;
+	}
+        
+        if (tile_add_subplace(tile, subplace))
+                return -1;
+
+        if (subplace->handle) {
+                session_rm(Session, subplace->handle);
+                subplace->handle = 0;
+        }
+
+        subplace->location.place = place;
+        subplace->location.x = x;
+        subplace->location.y = y;
+
+        list_add(&place->subplaces, &subplace->container_link);
+	return 0;
+}
+
+struct place *place_get_subplace(struct place *place, int x, int y)
+{
+	struct tile *tile;
+
+        WRAP_COORDS(place, x, y);
+
+	tile = place_lookup_tile(place, x, y);
+	if (!tile)
+		return 0;
+        return tile->subplace;
+}
+
+void place_remove_subplace(struct place *place, struct place *subplace)
+{
+	struct tile *tile;
+
+	tile = place_lookup_tile(place, subplace->location.x, 
+                                 subplace->location.y);
+        assert(tile);
+        tile_remove_subplace(tile);
+        list_remove(&subplace->container_link);
+        // FIXME: make it an orphan?
+}
+
+void place_for_each_object_at(struct place *place, int x, int y, void (*fx)(class Object *, void *), void *data)
+{
+        struct tile *tile;
+
+        tile = place_lookup_tile(place, x, y);
+        if (tile)
+                tile_for_each_object(tile, fx, data);
+}
+
+static void place_remove_and_destroy_temporary_object(class Object *obj, void *unused)
+{
+        if (obj->isTemporary()) {
+                obj->remove();
+                delete obj;
+        }
+}
+
+void place_exit(struct place *place)
+{
+        place_for_each_object(place, place_remove_and_destroy_temporary_object, NULL);
+}
+
+void place_unlock(struct place *place)
+{
+        assert(place->lock);
+
+        place->lock--;
+
+        if (!place->lock && place_is_marked_for_death(place))
+                place_del(place);
 }

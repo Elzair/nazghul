@@ -23,9 +23,9 @@
 #include "common.h"
 #include "ascii.h"
 #include "sprite.h"
-#include "Loader.h"
 #include "status.h"
 #include "foogod.h"
+#include "session.h"
 
 #include <unistd.h>
 #include <stdarg.h>
@@ -58,12 +58,6 @@ Uint32 Red;
 
 SDL_Color fontWhite = { 0xff, 0xff, 0xff, 0x00 };
 SDL_Color fontBlack = { 0, 0, 0, 0 };
-
-static struct {
-	int bound:1;
-	struct sprite *ulc, *urc, *llc, *lrc, *td, *tu, *tl, *tr, *tx, *horz,
-	    *vert, *endl, *endr;
-} frame_sprites;
 
 void screenInitColors(void)
 {
@@ -204,7 +198,6 @@ int screenInit(void)
 
 	SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY,
 			    SDL_DEFAULT_REPEAT_INTERVAL);
-	memset(&frame_sprites, 0, sizeof(frame_sprites));
 
         return 0;
 }
@@ -407,7 +400,7 @@ void screenPrint(SDL_Rect * rect, int flags, char *fmt, ...)
 	// image.
 	if (flags & SP_ONBORDER) {
 		for (x = rect->x; x < rect->x + rect->w; x += BORDER_W)
-			spritePaint(frame_sprites.horz, 0, x, rect->y);
+			spritePaint(Session->frame.horz, 0, x, rect->y);
 	}
 
 	if (flags & SP_CENTERED) {
@@ -432,7 +425,7 @@ void screenPrint(SDL_Rect * rect, int flags, char *fmt, ...)
 	// If painting on the border, then paint the right stub 
 	// to the left of the text.
 	if (flags & SP_ONBORDER)
-		spritePaint(frame_sprites.endr, 0, x - BORDER_W, rect->y);
+		spritePaint(Session->frame.endr, 0, x - BORDER_W, rect->y);
 
 	for (i = 0; i < len; i++) {
 		asciiPaint(buf[i], x, y, Screen);
@@ -442,7 +435,7 @@ void screenPrint(SDL_Rect * rect, int flags, char *fmt, ...)
 	// If painting on the border, then paint the left stub 
 	// to the right of the text.
 	if (flags & SP_ONBORDER)
-		spritePaint(frame_sprites.endl, 0, x, rect->y);
+		spritePaint(Session->frame.endl, 0, x, rect->y);
 
 	if (flags & SP_INVERTED)
 		asciiInvert();
@@ -461,78 +454,78 @@ void screen_repaint_frame(void)
 
 	// Draw the top bar from the top left corner to the sky window.
 	for (i = 0; i < SKY_X - BORDER_W; i += BORDER_W)
-		spritePaint(frame_sprites.horz, 0, i, 0);
+		spritePaint(Session->frame.horz, 0, i, 0);
 
 	// Draw the top bar from the sky window to the left edge of the status
 	// window's title.
 #if 1
 	for (i = SKY_X + SKY_W + BORDER_W; i < STAT_X; i += BORDER_W)
-		spritePaint(frame_sprites.horz, 0, i, 0);
+		spritePaint(Session->frame.horz, 0, i, 0);
 #else
 	for (i = SKY_X + SKY_W + BORDER_W; i < SCREEN_W; i += BORDER_W)
-		spritePaint(frame_sprites.horz, 0, i, 0);
+		spritePaint(Session->frame.horz, 0, i, 0);
 #endif				// 1
 
 	// Draw the bottom of the map from the left edge to the wind window.
 	for (i = 0; i < (int) (WIND_X - BORDER_W); i += BORDER_W)
-		spritePaint(frame_sprites.horz, 0, i, MAP_X + MAP_H);
+		spritePaint(Session->frame.horz, 0, i, MAP_X + MAP_H);
 
 	// Draw the bottom of the map from the wind window to the left edge of
 	// the console window.
 	for (i = WIND_X + WIND_W + BORDER_W; i < CONS_X - BORDER_W;
 	     i += BORDER_W)
-		spritePaint(frame_sprites.horz, 0, i, MAP_X + MAP_H);
+		spritePaint(Session->frame.horz, 0, i, MAP_X + MAP_H);
 
 	// Draw the bar across the bottom of the screen.
 	for (i = 0; i < SCREEN_W; i += BORDER_W)
-		spritePaint(frame_sprites.horz, 0, i, SCREEN_H - BORDER_H);
+		spritePaint(Session->frame.horz, 0, i, SCREEN_H - BORDER_H);
 
 	// Next draw the bottom of the status and food/gold window.
 	for (i = (MAP_X + MAP_W); i < SCREEN_W; i += BORDER_W) {
-		spritePaint(frame_sprites.horz, 0, i, STAT_Y + status_get_h());
-		spritePaint(frame_sprites.horz, 0, i,
+		spritePaint(Session->frame.horz, 0, i, STAT_Y + status_get_h());
+		spritePaint(Session->frame.horz, 0, i,
 			    foogod_get_y() + FOOGOD_H);
 	}
 
 	// Next rough in all the vertical lines.
 	for (i = 0; i < SCREEN_H; i += BORDER_H) {
-		spritePaint(frame_sprites.vert, 0, 0, i);
-		spritePaint(frame_sprites.vert, 0, MAP_X + MAP_W, i);
-		spritePaint(frame_sprites.vert, 0, SCREEN_W - BORDER_W, i);
+		spritePaint(Session->frame.vert, 0, 0, i);
+		spritePaint(Session->frame.vert, 0, MAP_X + MAP_W, i);
+		spritePaint(Session->frame.vert, 0, SCREEN_W - BORDER_W, i);
 	}
 
 	// Now paint the four corner pieces
-	spritePaint(frame_sprites.ulc, 0, 0, 0);
-	spritePaint(frame_sprites.urc, 0, SCREEN_W - BORDER_W, 0);
-	spritePaint(frame_sprites.llc, 0, 0, SCREEN_H - BORDER_H);
-	spritePaint(frame_sprites.lrc, 0, SCREEN_W - BORDER_W,
+	spritePaint(Session->frame.ulc, 0, 0, 0);
+	spritePaint(Session->frame.urc, 0, SCREEN_W - BORDER_W, 0);
+	spritePaint(Session->frame.llc, 0, 0, SCREEN_H - BORDER_H);
+	spritePaint(Session->frame.lrc, 0, SCREEN_W - BORDER_W,
 		    SCREEN_H - BORDER_H);
 
 	// Then all the right-facing tee-joints
-	spritePaint(frame_sprites.tr, 0, 0, MAP_Y + MAP_H);
-	spritePaint(frame_sprites.tr, 0, MAP_X + MAP_W,
+	spritePaint(Session->frame.tr, 0, 0, MAP_Y + MAP_H);
+	spritePaint(Session->frame.tr, 0, MAP_X + MAP_W,
 		    STAT_Y + status_get_h());
-	spritePaint(frame_sprites.tr, 0, MAP_X + MAP_W,
+	spritePaint(Session->frame.tr, 0, MAP_X + MAP_W,
 		    foogod_get_y() + FOOGOD_H);
 
 	// Then all the left-facing tee-joints
-	spritePaint(frame_sprites.tl, 0, MAP_X + MAP_W, MAP_Y + MAP_H);
-	spritePaint(frame_sprites.tl, 0, SCREEN_W - BORDER_W,
+	spritePaint(Session->frame.tl, 0, MAP_X + MAP_W, MAP_Y + MAP_H);
+	spritePaint(Session->frame.tl, 0, SCREEN_W - BORDER_W,
 		    STAT_Y + status_get_h());
-	spritePaint(frame_sprites.tl, 0, SCREEN_W - BORDER_W,
+	spritePaint(Session->frame.tl, 0, SCREEN_W - BORDER_W,
 		    foogod_get_y() + FOOGOD_H);
 
 	// Then the downward and upward-facing tee-joints
-	spritePaint(frame_sprites.td, 0, MAP_X + MAP_W, 0);
-	spritePaint(frame_sprites.tu, 0, MAP_X + MAP_W, SCREEN_H - BORDER_H);
+	spritePaint(Session->frame.td, 0, MAP_X + MAP_W, 0);
+	spritePaint(Session->frame.tu, 0, MAP_X + MAP_W, SCREEN_H - BORDER_H);
 
 	// And then the stubs around the sky section
-	spritePaint(frame_sprites.endr, 0, SKY_X - BORDER_W, 0);
-	spritePaint(frame_sprites.endl, 0, SKY_X + SKY_W, 0);
+	spritePaint(Session->frame.endr, 0, SKY_X - BORDER_W, 0);
+	spritePaint(Session->frame.endl, 0, SKY_X + SKY_W, 0);
 
 	// And finally stubs around the wind section
-	spritePaint(frame_sprites.endr, 0, WIND_X - BORDER_W, MAP_X + MAP_H);
-	spritePaint(frame_sprites.endl, 0, WIND_X + WIND_W, MAP_X + MAP_H);
+	spritePaint(Session->frame.endr, 0, WIND_X - BORDER_W, MAP_X + MAP_H);
+	spritePaint(Session->frame.endl, 0, WIND_X + WIND_W, MAP_X + MAP_H);
 
 	screenUpdate(0);
 }
@@ -735,48 +728,4 @@ void screenZoomIn(int factor)
 {
 	if (factor)
 		Zoom /= factor;
-}
-
-int screenLoadFrame(class Loader * loader)
-{
-	char *tags[] = {
-		"ulc", "llc", "urc", "lrc",
-		"horz", "vert",
-		"td", "tu", "tr", "tl", "tx",
-		"endl", "endr"
-	};
-	struct sprite **sprites[] = {
-		&frame_sprites.ulc,
-		&frame_sprites.llc,
-		&frame_sprites.urc,
-		&frame_sprites.lrc,
-		&frame_sprites.horz,
-		&frame_sprites.vert,
-		&frame_sprites.td,
-		&frame_sprites.tu,
-		&frame_sprites.tr,
-		&frame_sprites.tl,
-		&frame_sprites.tx,
-		&frame_sprites.endl,
-		&frame_sprites.endr
-	};
-	unsigned int i;
-	char *tag;
-
-	if (!loader->matchToken('{'))
-		return -1;
-
-	for (i = 0; i < array_sz(tags); i++) {
-		if (!loader->matchWord(tags[i]) || !loader->getWord(&tag))
-			return -1;
-		*sprites[i] =
-		    (struct sprite *) loader->lookupTag(tag, SPRITE_ID);
-		if (*sprites[i] == NULL) {
-			loader->setError("Error in FRAME: invalid SPRITE tag "
-					 "%s", tag);
-			return -1;
-		}
-	}
-
-	return 0;
 }

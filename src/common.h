@@ -155,7 +155,9 @@ extern "C" {
 #define MIDNIGHT_DEGREE_EARLY   (MIDNIGHT_HOUR_EARLY * DEGREES_PER_HOUR)
 
 /* Moons */
-#define NUM_MOONS                       2
+/* gmcnutt: turned off moons for new loader. Need to completely clean all that
+ * up with a rewrite. */
+#define NUM_MOONS                       0 /*2*/
 #define MOON_WINDOW_DEGREES             (HOURS_OF_SUNLIGHT * DEGREES_PER_HOUR)
 #define MOON_WINDOW_PIXELS_PER_DEGREE   1	/* needs to be an integer */
 #define MOON_WINDOW_W     (MOON_WINDOW_PIXELS_PER_DEGREE *      \
@@ -289,6 +291,7 @@ extern "C" {
 #define MECH_ID                 127
 #define IMAGES_ID               128
 #define FORMATION_TYPE_ID       129
+#define PLACE_ID                130
 
 /* Services (loadfile must match) */
 #define SRV_HEAL        1
@@ -296,13 +299,6 @@ extern "C" {
 #define SRV_RESURRECT   3
 #define SRV_MIN         SRV_HEAL
 #define SRV_MAX         SRV_RESURRECT
-
-/* Reserved activities */
-#define NONE      0             // reserved
-#define WORKING   1		// reserved
-#define SLEEPING  2		// reserved
-#define COMMUTING 3		// reserved
-#define EATING    4		// reserved
 
 /* Elevation (leveling-up) */
 #define XP_PER_ATTACK 2
@@ -313,8 +309,7 @@ extern "C" {
 
 /* Contexts */
 #define CONTEXT_WILDERNESS 1
-#define CONTEXT_COMBAT     2
-#define CONTEXT_TOWN       4	// same as dungeon
+#define CONTEXT_TOWN       2
 
 /* Spells (loadfile must match) */
 #define SPELL_TARGET_NONE              0
@@ -349,7 +344,6 @@ extern "C" {
   if (!(ptr)) \
     return (err); \
   memset((ptr), 0, sizeof(type));
-#define DICE_ROLL(sides) (random() % (sides))
 #define distance(dx,dy) (((dx)>(dy)) ? ((dx)+((dy)>>1)) : ((dy)+ (dx)>>1)))
 
 // SAM: The below are used by palette_print(), terrain_map_print(), etc.
@@ -381,7 +375,6 @@ extern int directionToDy(int dir);
 extern char *directionToString(int dir);
 extern bool isvowel(char c);
 extern bool point_in_rect(int x, int y, SDL_Rect *rect);
-extern int dice_roll(int n_dice, int n_faces);
 
 
 #define keyIsDirection(key) ((key) >= KEY_SOUTHWEST && (key) <= KEY_NORTHEAST)
@@ -398,11 +391,7 @@ extern int TickMilliseconds;
 extern bool Quit;
 extern struct los *LosEngine;
 extern char *LOS;
-extern bool Reveal;
-extern int Quicken;
-extern int TimeStop;
 extern bool TurnChanged;
-extern int MagicNegated;
 extern int ShowAllTerrain;
 extern struct sprite *CursorSprite;
 extern int SCREEN_BPP;

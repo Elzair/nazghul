@@ -35,8 +35,8 @@ class ReagentType:public ObjectType {
         virtual bool isType(int classID);
         virtual int getType();
         ReagentType();
-	 virtual ~ ReagentType();
-	virtual bool load(class Loader * loader);
+        ReagentType(char *tag, char *name, struct sprite *sprite);
+        virtual ~ReagentType();
 };
 
 #endif

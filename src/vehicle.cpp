@@ -22,7 +22,6 @@
 
 #include "vehicle.h"
 #include "sprite.h"
-#include "Loader.h"
 #include "common.h"
 #include "sound.h"
 #include "place.h"
@@ -30,22 +29,59 @@
 #include "console.h"
 #include "wind.h"
 #include "player.h"
-#include "Loader.h"
+#include "session.h"
 
 #include <unistd.h>
 
-VehicleType::VehicleType()
+// ----------------------------------------------------------------------------
+//
+// VehicleType
+//
+// ----------------------------------------------------------------------------
+
+
+VehicleType::VehicleType(char *tag, char *name, struct sprite *sprite,
+                         struct terrain_map *_map,
+                         ArmsType *_ordnance,
+                         bool _vulnerable,
+                         bool _killsOccupants,
+                         bool _mustTurn,
+                         char *_mv_desc,
+                         char *_mv_sound,
+                         int _pmask,
+                         int _tailwind_penalty,
+                         int _headwind_penalty,
+                         int _crosswind_penalty,
+                         int _max_hp,
+                         int _speed
+        )
+        : ObjectType(tag, name, sprite, vehicle_layer)
 {
-	map = 0;
-	mv_desc = 0;
-	mv_sound = 0;
-	ordnance = 0;
-	formation = 0;
-        tailwind_penalty = 1;
-        headwind_penalty = 1;
-        crosswind_penalty = 1;
-        is_vulnerable     = false;
-        kills_occupants   = false;
+        map = _map;
+        formation = NULL;
+        ordnance = _ordnance;
+        is_vulnerable = _vulnerable;
+        kills_occupants = _killsOccupants;
+        must_turn = _mustTurn;
+        mv_desc = strdup(_mv_desc);
+        assert(mv_desc);
+        mv_sound = strdup(_mv_sound);
+        assert(mv_sound);
+        pmask = _pmask;
+        tailwind_penalty = _tailwind_penalty;
+        headwind_penalty = _headwind_penalty;
+        crosswind_penalty = _crosswind_penalty;
+
+        max_hp = _max_hp; // override base class default
+        speed  = _speed;  // override base class default
+}
+
+VehicleType::~ VehicleType() 
+{
+        if (mv_sound)
+                free(mv_sound);
+        if (mv_desc)
+                free(mv_desc);
 }
 
 bool VehicleType::canFace(int facing)
@@ -58,104 +94,9 @@ bool VehicleType::canFace(int facing)
 
 class Object *VehicleType::createInstance()
 {
-	class Vehicle *obj = new Vehicle();
-	if (obj)
-		obj->init(this);
+	class Vehicle *obj = new Vehicle(this);
+        assert(obj);
 	return obj;
-}
-
-bool VehicleType::load(class Loader *loader)
-{
-        char *ordnance_tag = NULL;
-        char *map_tag = NULL;
-        bool result = false;
-
-        // Parse common fields
-        if (! ObjectType::load(loader))
-                return false;
-
-        // Parse type-specific fields
-        if (!loader->matchWord("speed") ||
-            !loader->getInt(&speed) ||
-            !loader->matchWord("pmask") ||
-            !loader->getBitmask(&pmask) ||
-            !loader->matchWord("must_turn") ||
-            !loader->getBool(&must_turn) ||
-            !loader->matchWord("mv_desc") ||
-            !loader->getWord(&mv_desc) ||
-            !loader->matchWord("mv_sound") ||
-            !loader->getString(&mv_sound) ||
-            !loader->matchWord("ordnance") ||
-            !loader->getWord(&ordnance_tag) ||
-            !loader->matchWord("max_hp") ||
-            !loader->getInt(&max_hp) ||
-            !loader->matchWord("map") ||
-            !loader->getWord(&map_tag)) {
-                goto cleanup;
-        }
-
-        // Parse optional fields
-        while (!loader->matchToken('}')) {
-                if (loader->matchWord("tailwind_penalty")) {
-                        if (!loader->getInt(&tailwind_penalty))
-                                goto cleanup;
-                }
-                else if (loader->matchWord("headwind_penalty")) {
-                        if (!loader->getInt(&headwind_penalty))
-                                goto cleanup;
-                }
-                else if (loader->matchWord("crosswind_penalty")) {
-                        if (!loader->getInt(&crosswind_penalty))
-                                goto cleanup;
-                }
-                else if (loader->matchWord("is_vulnerable")) {
-                        if (!loader->getBool(&is_vulnerable))
-                                goto cleanup;
-                }
-                else if (loader->matchWord("kills_occupants")) {
-                        if (!loader->getBool(&kills_occupants))
-                                goto cleanup;
-                }
-                else {
-                        loader->setError("Error parsing VEHICLE: %s is not a "
-                                         "valid field name", 
-                                         loader->getLexeme());
-                        goto cleanup;
-                }
-        }
-
-        // Bind the ordnance tag
-        if (strcmp(ordnance_tag, "null")) {
-                ordnance = (class ArmsType*)loader->lookupTag(ordnance_tag, 
-                                                              ARMS_TYPE_ID);
-                if (ordnance == NULL) {
-                        loader->setError("Error loading VEHICLE %s: '%s' is "
-                                         "not a valid ARMS tag", tag, 
-                                         ordnance_tag);
-                        goto cleanup;
-                }
-        }
-
-        // Bind the map tag
-        if (strcmp(map_tag, "null")) {
-                map = (struct terrain_map*)loader->lookupTag(map_tag, MAP_ID);
-                if (map == NULL) {
-                        loader->setError("Error loading VEHICLE %s: '%s' is "
-                                         "not a valid MAP tag", tag, 
-                                         map_tag);
-                        goto cleanup;
-                }
-        }
-
-        result = true;
-
- cleanup:
-        if (ordnance_tag)
-                free(ordnance_tag);
-        if (map_tag)
-                free(map_tag);
-
-        return result;
 }
 
 int VehicleType::getWindPenalty(int facing)
@@ -204,23 +145,68 @@ bool VehicleType::killsOccupants()
         return kills_occupants;
 }
 
-/*****************************************************************************/
-
-Vehicle::Vehicle()
+int VehicleType::getType() 
 {
-	occupant = 0;
+        return VEHICLE_TYPE_ID;
+}
+
+bool VehicleType::isType(int classID) 
+{ 
+        if (classID == VEHICLE_TYPE_ID)
+                return true;
+        return ObjectType::isType(classID);
+}
+
+class ArmsType *VehicleType::getOrdnance() 
+{
+        return ordnance;
+}
+
+int VehicleType::getPmask() 
+{
+        return pmask;
+}
+
+char *VehicleType::getMvDesc() 
+{
+        return mv_desc;
+}
+
+char *VehicleType::getMvSound() 
+{
+        return mv_sound;
+}
+
+// ----------------------------------------------------------------------------
+//
+// Vehicle
+//
+// ----------------------------------------------------------------------------
+
+// ----------------------------------------------------------------------------
+// The constructor used by VehicleType::createInstance()
+// ----------------------------------------------------------------------------
+Vehicle::Vehicle(VehicleType *type)
+        : Object(type)
+{
 	facing = NORTH;
-	hp = 0;
+	hp = type->getMaxHp();
+}
+
+
+// ----------------------------------------------------------------------------
+// The constructor used by kern_mk_vehicle()
+// ----------------------------------------------------------------------------
+Vehicle::Vehicle(VehicleType *type, int _facing, int _hp)
+        : Object(type)
+{
+	occupant = NULL;
+	facing = _facing;
+	hp = _hp;
 }
 
 Vehicle::~Vehicle()
 {
-}
-
-void Vehicle::init(class VehicleType * type)
-{
-	Object::init(type);
-	hp = type->getMaxHp();
 }
 
 int Vehicle::getFacing()
@@ -236,22 +222,6 @@ bool Vehicle::setFacing(int val)
 	return true;
 }
 
-bool Vehicle::load(class Loader * loader)
-{
-	bool ret = false;
-	char *facing;
-	if (!Object::load(loader) ||
-	    !loader->getWord(&facing) || !loader->getInt(&hp))
-		return false;
-	assert(facing);
-	ret = setFacing(stringToDirection(facing));
-	free(facing);
-
-	// truncate hp to max allowed by type
-	hp = min(hp, getObjectType()->getMaxHp());
-
-	return ret;
-}
 
 int Vehicle::get_facing_to_fire_weapon(int dx, int dy)
 {
@@ -362,4 +332,52 @@ void Vehicle::destroy()
                 occupant->destroy();
                 occupant = NULL;
         }
+}
+
+bool Vehicle::isType(int classID) 
+{ 
+        if (classID == VEHICLE_ID)
+                return true;
+        return Object::isType(classID);
+}
+
+int Vehicle::getType() 
+{
+        return VEHICLE_ID;
+}
+
+class VehicleType *Vehicle::getObjectType() 
+{ 
+        return (class VehicleType *) Object::getObjectType();
+}
+
+char *Vehicle::getName() 
+{
+        return getObjectType()->getName();
+}
+
+class ArmsType *Vehicle::getOrdnance() 
+{ 
+        return getObjectType()->getOrdnance();
+}
+
+int Vehicle::getPmask() 
+{
+        return getObjectType()->getPmask();
+}
+
+char *Vehicle::getMvDesc() 
+{
+        return getObjectType()->getMvDesc();
+}
+
+char *Vehicle::getMvSound() 
+{
+        return getObjectType()->getMvSound();
+}
+
+void Vehicle::save(struct save *save)
+{
+        save->write(save, "(kern-mk-vehicle %s %d %d)\n",
+                    getObjectType()->getTag(), getFacing(), getHp());
 }

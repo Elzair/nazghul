@@ -26,6 +26,7 @@
 #include "player.h"
 #include "wq.h"
 #include "combat.h"
+#include "session.h"
 #include "vehicle.h"
 
 struct {
@@ -43,7 +44,7 @@ void foogodAdvanceTurns(void)
 	foogodRepaint();
 }
 
-void foogodInit(void)
+int foogodInit(void)
 {
 	Foogod.screenRect.x = FOOGOD_X;
 	Foogod.screenRect.w = FOOGOD_W;
@@ -86,6 +87,8 @@ void foogodInit(void)
 	Foogod.combatRect.x = FOOGOD_X + FOOGOD_W - FOOGOD_W / 3;
 	Foogod.combatRect.y = foogod_get_y() + ASCII_H;
 	Foogod.combatRect.h = ASCII_H;
+
+        return 0;
 }
 
 void foogodRepaint(void)
@@ -100,23 +103,25 @@ void foogodRepaint(void)
 		screenPrint(&Foogod.hullRect, 0, "Hull: %d", player_party->vehicle->getHp());
 	}
 
-        if (TimeStop || MagicNegated || Quicken) {
-                screenPrint(&Foogod.effectsRect, 0, "Eff: %s%s%s", 
-                            (TimeStop     ? "T" : ""),
-                            (Quicken      ? "Q" : ""),
-                            (MagicNegated ? "N" : ""));
-        }
+        screenPrint(&Foogod.effectsRect, 0, "Eff: %s%s%s"
+                    , (TimeStop     ? "T" : "")
+                    , (Quicken      ? "Q" : "")
+                    , (MagicNegated ? "N" : "")
+                    , (Reveal       ? "R" : "")
+                );
 
 	screenUpdate(&Foogod.screenRect);
 }
 
 void foogod_set_y(int y)
 {
-	Foogod.screenRect.y = y;
-	Foogod.turnRect.y   = y;
-	Foogod.foodRect.y   = y + ASCII_H;
-	Foogod.goldRect.y   = y;
-	Foogod.combatRect.y = y + ASCII_H;
+	Foogod.screenRect.y  = y;
+	Foogod.turnRect.y    = y;
+	Foogod.foodRect.y    = y + ASCII_H;
+	Foogod.goldRect.y    = y;
+	Foogod.combatRect.y  = y + ASCII_H;
+        Foogod.hullRect.y    = y;
+        Foogod.effectsRect.y = y + ASCII_H;
 }
 
 int foogod_get_y(void)

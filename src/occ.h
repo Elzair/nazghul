@@ -23,6 +23,7 @@
 #define occ_h
 
 #include "list.h"
+#include "closure.h"
 
 struct typical_items {
 	int prob;
@@ -31,34 +32,46 @@ struct typical_items {
 };
 
 struct occ {
-	char *tag;
 	struct list list;
+	char *tag;
 	char *name;
 	float magic;
 
-        int hp_mod;
-        int hp_mult;
-        int mp_mod;
-        int mp_mult;
+        int hp_mod;   /* part of base hp contributed by occupation */
+        int hp_mult;  /* additional hp per-level contributed by occupation  */
+        int mp_mod;   /* similar, for mana */
+        int mp_mult;  /* similar, for mana */
 
-        int hit_mod;
-        int def_mod;
-        int dam_mod;
-        int arm_mod;
+        int hit_mod;  /* unused */
+        int def_mod;  /* unused */
+        int dam_mod;  /* unused */
+        int arm_mod;  /* unused */
         
 	class ObjectType *container;
 
-	int n_arms;
-	class ArmsType **arms;
+/* 	int n_arms; */
+/* 	class ArmsType **arms; */
 
 	int n_items;
 	struct typical_items *items;
 
 	int n_traps;
-	class TrapType **traps;
+	closure_t *traps;
 };
 
-extern struct occ *occLoad(class Loader *);
-extern void occDestroy(struct occ *occ);
+extern struct occ *occ_new(char *tag,
+                           char *name,
+                           float magic,
+                           int hp_mod,
+                           int hp_mult,
+                           int mp_mod,
+                           int mp_mult,
+                           int hit_mod,
+                           int def_mod,
+                           int dam_mod,
+                           int arm_mod,
+                           int n_arms, int n_items, int n_traps);
+
+extern void occ_del(struct occ *occ);
 
 #endif

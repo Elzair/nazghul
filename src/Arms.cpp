@@ -19,8 +19,12 @@
 // Gordon McNutt
 // gmcnutt@users.sourceforge.net
 //
+#include <assert.h>
+#include <string.h>
+
 #include "Arms.h"
 #include "character.h"
+#include "dice.h"
 #include "screen.h"
 #include "sprite.h"
 #include "map.h"
@@ -28,22 +32,69 @@
 #include "Field.h"
 #include "place.h"
 #include "Missile.h"
-#include "Loader.h"
 #include "sound.h"
 #include "player.h"
 
+ArmsType::ArmsType(char *tag, char *name, struct sprite *sprite,
+                   int slotMask,
+                   char *to_hit_dice,
+                   char *to_defend_dice,
+                   int numHands,
+                   int range,
+                   int weight,
+                   char *damage_dice,
+                   char *armor_dice,
+                   int reqActPts,
+                   bool thrown,
+                   bool ubiquitousAmmo,
+                   char *fireSound,
+                   class ArmsType *missileType,
+                   class FieldType *fieldType)
+        : ObjectType(tag, name, sprite, item_layer),
+          slotMask(slotMask),
+          numHands(numHands),
+          range(range),
+          weight(weight),
+          thrown(thrown),
+          ubiquitousAmmo(ubiquitousAmmo),          
+          fieldType(fieldType)
+{
+        toHitDice = strdup(to_hit_dice);
+        toDefendDice = strdup(to_defend_dice);
+        damageDice = strdup(damage_dice);
+        armorDice = strdup(armor_dice);
+        assert(toHitDice && toDefendDice && damageDice && armorDice);
+
+        if (fireSound) {
+                this->fire_sound = strdup(fireSound);
+                assert(fire_sound);
+        } else
+                this->fire_sound = NULL;
+
+        if (missileType) {
+                missile = new Missile(missileType);
+                assert(missile);
+        } else {
+                missile = NULL;
+        }
+
+        if (thrown) {
+                setMissileType(this);
+        }
+        
+        required_action_points = reqActPts;
+}
+
 ArmsType::ArmsType()
 {
+        // Don't ever expect to call this. Defining it to override the default
+        // one c++ automatically creates.
+        assert(false);
+
         missile        = NULL;
         thrown         = false;
-        field          = NULL;
+        fieldType      = NULL;
         weight         = 0;
-        damage[0]      = 0;
-        damage[1]      = 0;
-        defend         = 0;
-        hit            = 0;
-        armor[0]       = 0;
-        armor[1]       = 0;
         ubiquitousAmmo = false;
         layer          = item_layer;
         fire_sound     = NULL;
@@ -54,6 +105,16 @@ ArmsType::~ArmsType()
 {
 	if (missile != NULL)
 		delete missile;
+        if (fire_sound)
+                free(fire_sound);
+        if (toHitDice)
+                free(toHitDice);
+        if (toDefendDice)
+                free(toDefendDice);
+        if (damageDice)
+                free(damageDice);
+        if (armorDice)
+                free(armorDice);
 }
 
 bool ArmsType::isType(int classID) 
@@ -85,11 +146,7 @@ void ArmsType::setMissileType(class ArmsType * missileType)
 	if (missileType == NULL)
 		return;
 
-	missile = new Missile();
-	if (missile == NULL)
-		return;
-
-	missile->init(missileType);
+	missile = new Missile(missileType);
 }
 
 bool ArmsType::isMissileWeapon()
@@ -142,13 +199,13 @@ bool ArmsType::fireInDirection(struct place *place, int ox, int oy,
                 return false;
 
         consolePrint("%s hit ", getName());
-        missile->getStruck()->describe(1);
+        missile->getStruck()->describe();
         consolePrint("!\n");
-        missile->getStruck()->damage(getDamage());
+        missile->getStruck()->damage(dice_roll(damageDice));
 
         if (missile->getStruck()->isDestroyed()) {
                 consolePrint("%s destroyed ", getName());
-                missile->getStruck()->describe(1);
+                missile->getStruck()->describe();
                 consolePrint("!\n");
 
                 /* Uh... no reference counting on the player party, everybody
@@ -185,7 +242,7 @@ void ArmsType::setThrown(bool val)
 
 bool ArmsType::dropsField()
 {
-	if (field != NULL)
+	if (fieldType != NULL)
 		return true;
 	if (missile == NULL)
 		return false;
@@ -210,46 +267,25 @@ int ArmsType::getSlotMask()
         return slotMask;
 }
 
-int ArmsType::getHit()
+char * ArmsType::getToHitDice()
 {
-        return hit;
+        return toHitDice;
 }
 
-int ArmsType::getDamage()
+char * ArmsType::getDamageDice()
 {
-        return dice_roll(1, damage[1] - damage[0]) + damage[0];
+        return damageDice;
 }
 
-int ArmsType::getDamageMin()
+char * ArmsType::getToDefendDice()
 {
-        return damage[0];
+        return toDefendDice;
 }
 
-int ArmsType::getDamageMax()
+char * ArmsType::getArmorDice()
 {
-        return damage[1];
+        return armorDice;
 }
-
-int ArmsType::getDefend()
-{
-        return defend;
-}
-
-int ArmsType::getArmor()
-{
-        return dice_roll(1, armor[1] - armor[0]) + armor[0];
-}
-
-int ArmsType::getArmorMin()
-{
-        return armor[0];
-}
-
-int ArmsType::getArmorMax()
-{
-        return armor[1];
-}
-
 
 int ArmsType::getNumHands()
 {
@@ -268,12 +304,12 @@ bool ArmsType::isThrownWeapon()
 
 void ArmsType::setFieldType(class FieldType * type)
 {
-        field = type;
+        fieldType = type;
 }
 
 class FieldType *ArmsType::getFieldType()
 {
-        return field;
+        return fieldType;
 }
 
 void ArmsType::setUbiquitousAmmo(bool val)
@@ -294,122 +330,4 @@ void ArmsType::setWeight(int val)
 int ArmsType::getWeight(void) 
 {
         return weight;
-}
-
-bool ArmsType::load(class Loader *loader)
-{
-        char *sprite_tag = NULL;
-        char *missile_tag = NULL;
-        char *field_tag = NULL;
-        class ArmsType *missile_type;
-        
-        // parse required fields
-        if (!loader->getWord(&tag) ||
-            !loader->matchToken('{') ||
-            !loader->matchWord("name") ||
-            !loader->getString(&name) ||
-            !loader->matchWord("sprite") ||
-            !loader->getWord(&sprite_tag) ||
-            !loader->matchWord("hit") ||
-            !loader->getInt(&hit) ||
-            !loader->matchWord("damage_min") ||
-            !loader->getInt(&damage[0]) ||
-            !loader->matchWord("damage_max") ||
-            !loader->getInt(&damage[1]) ||
-            !loader->matchWord("defend") ||
-            !loader->getInt(&defend) ||
-            !loader->matchWord("armor_min") ||
-            !loader->getInt(&armor[0]) ||
-            !loader->matchWord("armor_max") ||
-            !loader->getInt(&armor[1]) ||
-            !loader->matchWord("slotMask") ||
-            !loader->getBitmask(&slotMask) ||
-            !loader->matchWord("numHands") ||
-            !loader->getInt(&numHands) ||
-            !loader->matchWord("range") ||
-            !loader->getInt(&range) ||
-            !loader->matchWord("missile") ||
-            !loader->getWord(&missile_tag) ||
-            !loader->matchWord("thrown") ||
-            !loader->getBool(&thrown) ||
-            !loader->matchWord("ubiquitousAmmo") ||
-            !loader->getBool(&ubiquitousAmmo) ||
-            !loader->matchWord("field") ||
-            !loader->getWord(&field_tag) ||
-            !loader->matchWord("weight") ||
-            !loader->getInt(&weight))
-                return false;
-
-        // parse optional fields
-        while (!loader->matchToken('}')) {
-                if (loader->matchWord("fire_sound")) {
-                        if (!loader->getString(&fire_sound))
-                                goto fail;
-                }
-                else if (loader->matchWord("req_act_pts")) {
-                        if (!loader->getInt(&required_action_points))
-                                goto fail;
-                }
-                else {
-                        loader->setError("Error parsing ARMS: %s is not a "
-                                         "valid field name", 
-                                         loader->getLexeme());
-                        goto fail;
-                }
-        }
-        
-        // bind tags
-        if (strcmp(sprite_tag, "null")) {
-                sprite = (struct sprite*)loader->lookupTag(sprite_tag, 
-                                                           SPRITE_ID);
-                if (!sprite) {
-                        loader->setError("Error parsing ARMS: %s is not a "
-                                         "valid SPRITE tag",
-                                         sprite_tag);
-                        free(sprite_tag);
-                        return false;
-                }
-        }
-        free(sprite_tag);
-
-        if (strcmp(missile_tag, "null")) {
-                missile_type = (class ArmsType*)loader->lookupTag(missile_tag, 
-                                                                 ARMS_TYPE_ID);
-                if (!missile_type) {
-                        loader->setError("Error parsing ARMS: %s is not a "
-                                         "valid ARMS tag for the missile",
-                                         missile_tag);
-                        free(missile_tag);
-                        return false;
-                }
-                setMissileType(missile_type);
-        }
-        free(missile_tag);
-
-        if (strcmp(field_tag, "null")) {
-                field = (class FieldType*)loader->lookupTag(field_tag, 
-                                                            FIELD_TYPE_ID);
-                if (!field) {
-                        loader->setError("Error parsing ARMS: %s is not a "
-                                         "valid FIELD tag",
-                                         field_tag);
-                        free(field_tag);
-                        return false;
-                }
-        }
-        free(field_tag);
-
-        if (thrown)
-                setMissileType(this);
-
-        return true;
-
- fail:
-        if (sprite_tag)
-                free(sprite_tag);
-        if (missile_tag)
-                free(missile_tag);
-        if (field_tag)
-                free(field_tag);
-        return false;
 }

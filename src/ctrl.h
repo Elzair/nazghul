@@ -22,12 +22,12 @@
 #ifndef ctrl_h
 #define ctrl_h
 
-// Step 1: get all the controller code separated from the objects.
-// Step 2: merge the player and npc party objects
-
 extern void ctrl_party_ui(class player_party *party);
 extern void ctrl_party_ai(class Party *party);
 extern void ctrl_character_ui(class Character *character);
 extern void ctrl_character_ai(class Character *character);
+extern void ctrl_wander(class Object *obj);
+extern void ctrl_do_attack(class Character *character, class ArmsType *weapon, 
+                           class Character *target);
 
 #endif

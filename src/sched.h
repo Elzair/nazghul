@@ -26,16 +26,27 @@
 
 #include "list.h"
 
+/* Reserved activities */
+#define NONE           0
+#define WORKING        1
+#define SLEEPING       2
+#define COMMUTING      3
+#define EATING         4
+#define NUM_ACTIVITIES 5
+
 struct appt {
         int hr, min, x, y, w, h, act;
 };
 struct sched {
-        struct list list;
+        /* struct list list; */
         char *tag;
         int n_appts;
         struct appt *appts;
 };
 
-struct sched *schedLoad(class Loader * loader);
+extern struct sched *sched_new(char *tag, int n_appts);
+extern void sched_del(struct sched*);
+extern int sched_name_to_activity(char *activity_name);
+extern char *sched_activity_to_name(int activity);
 
 #endif

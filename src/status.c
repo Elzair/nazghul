@@ -26,7 +26,6 @@
 #include "player.h"
 #include "object.h"
 #include "Arms.h"
-#include "Spell.h"
 #include "ascii.h"
 #include "console.h"
 #include "sky.h"
@@ -60,6 +59,11 @@ enum ZtatsView {
 	NumViews,
 };
 
+static bool stat_filter_arms(struct inv_entry *ie, void *cookie);
+static bool stat_filter_reagents(struct inv_entry *ie, void *cookie);
+static bool stat_filter_spells(struct inv_entry *ie, void *cookie);
+static bool stat_filter_items(struct inv_entry *ie, void *cookie);
+
 static char *ZtatsTitles[] = {
 	"Party Member",
 	"Armaments",
@@ -68,12 +72,12 @@ static char *ZtatsTitles[] = {
 	"Items",
 };
 
-static int ZtatsTypes[] = {
-	OBJECT_TYPE_ID,
-	ARMS_TYPE_ID,
-	REAGENT_TYPE_ID,
-	SPELL_TYPE_ID,
-	ITEM_TYPE_ID,
+static struct filter ZtatsFilters[] = {
+        { 0, 0 },
+        { stat_filter_arms, 0 },
+        { stat_filter_reagents, 0 },
+        { stat_filter_spells, 0 },
+        { stat_filter_items, 0 }
 };
 
 static struct status {
@@ -99,7 +103,30 @@ static struct status {
 	int n_trades;
 	struct trade_info *trades;
 
+        Container *container;
+        struct filter *filter;
+
 } Status;
+
+static bool stat_filter_arms(struct inv_entry *ie, void *cookie)
+{
+        return (ie->type->isReadyable());
+}
+
+static bool stat_filter_reagents(struct inv_entry *ie, void *cookie)
+{
+        return ie->type->isMixable();
+}
+
+static bool stat_filter_spells(struct inv_entry *ie, void *cookie)
+{
+        return ie->type->isCastable();
+}
+
+static bool stat_filter_items(struct inv_entry *ie, void *cookie)
+{
+        return ie->type->isUsable();
+}
 
 static void switch_to_tall_mode(void)
 {
@@ -109,8 +136,7 @@ static void switch_to_tall_mode(void)
 	Status.screenRect.h = TALL_H;
 	Status.numLines     = Status.screenRect.h / LINE_H;
 
-    foogod_set_y(STAT_Y + Status.screenRect.h + BORDER_H);
-    //console_set_y(foogod_get_y() + FOOGOD_H);
+        foogod_set_y(STAT_Y + Status.screenRect.h + BORDER_H);
 
 	foogodRepaint();
 	consoleRepaint();
@@ -136,7 +162,7 @@ static void switch_to_short_mode(void)
 	screen_repaint_frame();
 }
 
-void statusInit()
+int statusInit()
 {
 	memset(&Status, 0, sizeof(Status));
 
@@ -157,7 +183,7 @@ void statusInit()
 
 	Status.numLines = Status.screenRect.h / LINE_H;
 
-	statusSetMode(ShowParty);
+        return 0;
 }
 
 static void myRepaintTitle(char *title)
@@ -217,11 +243,11 @@ static void myShowMember(void)
 	rect.y += ASCII_H;
 	screenPrint(&rect, 0, "Slp:%2d", pm->getRestCredits());
 
-    // Show Movement Modes (pmask for now)
-    rect.y += ASCII_H;
-    // SAM: What is wanted here is a function to turn a pmask 
-    //      into one or more words of text (names of movement modes).
-    screenPrint(&rect, 0, "Pmask:%1d", pm->getPmask() );
+        // Show Movement Modes (pmask for now)
+        rect.y += ASCII_H;
+        // SAM: What is wanted here is a function to turn a pmask 
+        //      into one or more words of text (names of movement modes).
+        screenPrint(&rect, 0, "Pmask:%1d", pm->getPmask() );
 
 	/* Show arms */
 	rect.y += ASCII_H;
@@ -249,10 +275,9 @@ static void myShade2Lines(int line)
 	screenShade(&rect, 128);
 }
 
-static void myShowInventory(int type)
+static void stat_show_container()
 {
 	SDL_Rect rect;
-	struct list *list;
 	struct inv_entry *ie;
 	int top = Status.topLine;
 	int flags, line = 0;
@@ -261,15 +286,12 @@ static void myShowInventory(int type)
 	rect.x += TILE_W;
 	rect.h = LINE_H;
 
-	list_for_each(&player_party->inventory, list) {
+        for (ie = Status.container->first(Status.filter);
+             ie != NULL; 
+             ie = Status.container->next(ie, Status.filter)) {
 
 		int inUse = 0;
 		int avail = 0;
-		ie = outcast(list, struct inv_entry, list);
-
-		/* Check the type */
-		if (!ie->type->isType(type))
-			continue;
 
 		/* Check the scrolling window */
 		if (top) {
@@ -285,7 +307,8 @@ static void myShowInventory(int type)
 			avail -= ie->ref;
 			assert(avail >= 0);
 			if (ie->ref && 
-                            player_party->getMemberAtIndex(Status.pcIndex)->hasReadied((class ArmsType *)ie->type)) {
+                            player_party->getMemberAtIndex(Status.pcIndex)->
+                            hasReadied((class ArmsType *)ie->type)) {
 				inUse = 1;
 			}
 		}
@@ -316,14 +339,6 @@ static void myShowInventory(int type)
 			screenPrint(&rect, flags, "--%c%s",
 				    (inUse ? '*' : ' '), ie->type->getName());
 
-		if (type == ARMS_TYPE_ID) {
-			rect.w -= TILE_W;
-			screenPrint(&rect, flags | SP_RIGHTJUSTIFIED,
-				    "%ds",
-				    ((class ArmsType *) ie->type)->getWeight());
-			rect.w += TILE_W;
-		}
-
                 rect.y += (LINE_H * 3) / 4;
 
 		if (Status.selectedEntry && ie != Status.selectedEntry) {
@@ -338,69 +353,32 @@ static void myShowInventory(int type)
 		if (line >= N_LINES)
 			break;
 	}
+
 }
 
-static struct inv_entry *myGetFirstEntry(int type)
-{
-	struct list *list;
-	struct inv_entry *ie;
-
-	list_for_each(&player_party->inventory, list) {
-		ie = outcast(list, struct inv_entry, list);
-		if (!ie->type->isType(type))
-			continue;
-		if (type == ARMS_TYPE_ID && Status.mode == Ready &&
-		    ie->ref == ie->count &&
-		    !player_party->getMemberAtIndex(Status.pcIndex)->hasReadied((class ArmsType *) ie->type))
-			continue;
-		return ie;
-	}
-	return 0;
-}
-
-static struct inv_entry *myGetNextEntry(int type, int d)
-{
-	struct list *list;
-	struct inv_entry *ie;
-
-	list = &Status.selectedEntry->list;
-
-	for (;;) {
-		list = (d > 0 ? list->next : list->prev);
-		if (list == &player_party->inventory)
-			break;
-		ie = outcast(list, struct inv_entry, list);
-		if (!ie->type->isType(type))
-			continue;
-		if (type == ARMS_TYPE_ID && Status.mode == Ready &&
-		    ie->ref == ie->count &&
-		    !player_party->getMemberAtIndex(Status.pcIndex)->hasReadied((class ArmsType *) ie->type))
-			continue;
-		return ie;
-	}
-	return 0;
-}
-
-static void myScrollInventory(enum StatusScrollDir dir, int type, int nLines)
+static void stat_scroll_container(enum StatusScrollDir dir)
 {
 	struct inv_entry *tmp;
+        int n_lines;
 
-	if (!nLines)
+        n_lines = Status.container->filter_count(Status.filter);
+
+	if (!n_lines)
 		return;
 
 	switch (dir) {
 	case ScrollUp:
-		tmp = myGetNextEntry(type, -1);
+		tmp = Status.container->prev(Status.selectedEntry, Status.filter);
 		if (!tmp)
 			break;
 		Status.selectedEntry = tmp;
 		if (Status.topLine &&
-		    Status.curLine < (nLines - Status.numLines / 2))
+		    Status.curLine < (n_lines - Status.numLines / 2))
 			Status.topLine--;
 		Status.curLine--;
 		break;
 	case ScrollDown:
-		tmp = myGetNextEntry(type, 1);
+		tmp = Status.container->next(Status.selectedEntry, Status.filter);
 		if (!tmp)
 			break;
 		Status.selectedEntry = tmp;
@@ -414,41 +392,10 @@ static void myScrollInventory(enum StatusScrollDir dir, int type, int nLines)
 	}
 }
 
-static void myPaintReady(void)
-{
-	myShowInventory(ARMS_TYPE_ID);
-}
-
-static void myScrollReady(enum StatusScrollDir dir)
-{
-	myScrollInventory(dir, ARMS_TYPE_ID, player_party->nArms);
-}
-
-static void myPaintUse(void)
-{
-	myShowInventory(ITEM_TYPE_ID);
-}
-
-static void myScrollUse(enum StatusScrollDir dir)
-{
-	myScrollInventory(dir, ITEM_TYPE_ID, player_party->nItems);
-}
-
-static void myPaintMixReagents(void)
-{
-	myShowInventory(REAGENT_TYPE_ID);
-}
-
-static void myScrollMixReagents(enum StatusScrollDir dir)
-{
-	myScrollInventory(dir, REAGENT_TYPE_ID, player_party->nReagents);
-}
-
 static bool myShowPCInPartyView(class Character * pm, void *data)
 {
 	int flags;
-	char condition[32] = { 0 };
-	char *c = condition;
+	char condition[32];
 
 	// flags = (pm->getOrder() == Status.pcIndex ? SP_INVERTED : 0);
 	flags = 0;
@@ -463,24 +410,12 @@ static bool myShowPCInPartyView(class Character * pm, void *data)
 	/* Paint the name */
 	screenPrint(&Status.lineRect, flags, "%-*s", MAX_NAME_LEN,
 		    pm->getName());
+	Status.lineRect.y += ASCII_H;
 
 	/* Paint the condition */
-	condition[0] = 'G';
-	Status.lineRect.y += ASCII_H;
-	if (pm->isDead())
-		condition[0] = 'D';
-	else {
-		if (pm->isPoisoned())
-			*c++ = 'P';
-		if (pm->isAsleep())
-			*c++ = 'S';
-		if (pm->isHostile(player_party->alignment))
-			*c++ = 'C';
-	}
-
+        strncpy(condition, pm->getCondition(), array_sz(condition) - 1);
 	screenPrint(&Status.lineRect, SP_RIGHTJUSTIFIED, "%d%s",
 		    pm->getHp(), condition);
-
 	Status.lineRect.y += ASCII_H;
 
 	if (Status.pcIndex != -1 && pm->getOrder() != Status.pcIndex) {
@@ -551,25 +486,32 @@ static void myScrollZtatsHorz(int d)
 			Status.pcIndex = (d > 0 ? 0 : player_party->getSize() - 1);
 			break;
 
-		case ViewArmaments:
-			Status.maxLine = player_party->nArms - Status.numLines;
-			break;
+/* 		case ViewArmaments: */
+/*                         Status.container = &player_party->arms; */
+/* 			Status.maxLine = Status.container.numTypesContained() - Status.numLines; */
+/* 			break; */
 
-		case ViewReagents:
-			Status.maxLine =
-			    player_party->nReagents - Status.numLines;
-			break;
+/* 		case ViewReagents: */
+/*                         Status.container = &player_party->reagents; */
+/* 			Status.maxLine = Status.container.numTypesContained() - Status.numLines; */
+/* 			break; */
 
-		case ViewSpells:
-			Status.maxLine =
-			    player_party->nSpells - Status.numLines;
-			break;
+/* 		case ViewSpells: */
+/*                         Status.container = &player_party->spells; */
+/* 			Status.maxLine = Status.container.numTypesContained() - Status.numLines; */
+/* 			break; */
 
-		case ViewItems:
-			Status.maxLine = player_party->nItems - Status.numLines;
-			break;
+/* 		case ViewItems: */
+/*                         Status.container = &player_party->items; */
+/* 			Status.maxLine = Status.container.numTypesContained() - Status.numLines; */
+/*                         break; */
 
 		default:
+                        Status.container = player_party->inventory;
+                        Status.filter = &ZtatsFilters[Status.ztatsView];
+                        Status.maxLine = 
+                                Status.container->filter_count(Status.filter) -
+                                Status.numLines;
 			break;
 		}
 	}
@@ -618,7 +560,7 @@ static void myShowZtats(void)
 		myShowMember();
 		break;
 	default:
-		myShowInventory(ZtatsTypes[Status.ztatsView]);
+                stat_show_container();
 		break;
 	}
 }
@@ -898,9 +840,23 @@ static void myScrollTrade(enum StatusScrollDir dir)
 
 void statusRepaint(void)
 {
+        static int repainting = 0;
+
+        // Check if we're early in startup and haven't set the paint function
+        // yet.
+        if (! Status.paint)
+                return;
+
+        // Prevent recursive entry since it messes up the coordinate counters
+        if (repainting)
+                return;
+        repainting = 1;
+
 	screenErase(&Status.screenRect);
 	Status.paint();
 	screenUpdate(&Status.screenRect);
+
+        repainting = 0;
 }
 
 void statusFlash(int line, unsigned int color)
@@ -964,20 +920,24 @@ void statusSetMode(enum StatusMode mode)
 		myRepaintTitle(player_party->getMemberAtIndex(Status.pcIndex)->getName());
 		Status.topLine = 0;
 		Status.curLine = 0;
-		Status.maxLine = player_party->nArms - Status.numLines;
-		Status.paint = myPaintReady;
-		Status.scroll = myScrollReady;
-		Status.selectedEntry = myGetFirstEntry(ARMS_TYPE_ID);
+		Status.container = player_party->inventory;
+                Status.filter = &ZtatsFilters[ViewArmaments];
+		Status.maxLine = Status.container->filter_count(Status.filter) - Status.numLines;
+		Status.paint = stat_show_container;
+                Status.scroll = stat_scroll_container;
+		Status.selectedEntry = Status.container->first(Status.filter);
 		break;
 	case Use:
 		switch_to_tall_mode();
 		myRepaintTitle("select");
 		Status.topLine = 0;
 		Status.curLine = 0;
-		Status.maxLine = player_party->nItems - Status.numLines;
-		Status.paint = myPaintUse;
-		Status.scroll = myScrollUse;
-		Status.selectedEntry = myGetFirstEntry(ITEM_TYPE_ID);
+		Status.container = player_party->inventory;
+                Status.filter = &ZtatsFilters[ViewItems];
+		Status.maxLine = Status.container->filter_count(Status.filter) - Status.numLines;
+		Status.paint = stat_show_container;
+                Status.scroll = stat_scroll_container;
+		Status.selectedEntry = Status.container->first(Status.filter);
 		break;
 	case Page:
 		switch_to_tall_mode();
@@ -998,10 +958,12 @@ void statusSetMode(enum StatusMode mode)
 		myRepaintTitle("reagents");
 		Status.topLine = 0;
 		Status.curLine = 0;
-		Status.maxLine = player_party->nReagents - Status.numLines;
-		Status.paint = myPaintMixReagents;
-		Status.scroll = myScrollMixReagents;
-		Status.selectedEntry = myGetFirstEntry(REAGENT_TYPE_ID);
+		Status.container = player_party->inventory;
+                Status.filter = &ZtatsFilters[ViewReagents];
+		Status.maxLine = Status.container->filter_count(Status.filter) - Status.numLines;
+		Status.paint = stat_show_container;
+                Status.scroll = stat_scroll_container;
+		Status.selectedEntry = Status.container->first(Status.filter);
 		break;
 	}
 

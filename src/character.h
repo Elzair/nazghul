@@ -50,7 +50,7 @@ struct TypicalObjectInfo {
 
 
 class Character:public Object {
-      public:
+ public:
 
 	enum ReadyResult {
 		Readied,
@@ -60,14 +60,20 @@ class Character:public Object {
 	};
 
 	Character();
+        Character(char *tag, char *name, 
+                  struct sprite *sprite,
+                  struct species *species, struct occ *occ,
+                  int str, int intl,
+                  int dex, int hpmod, int hpmult, 
+                  int mpmod, int mpmult, int hitmod, int hitmult,
+                  int dammod, int dammult, int hp, int xp, int mp,
+                  int lvl);
 	virtual ~ Character();
 
         virtual int getActivity();
         virtual int getArmor();
-        virtual struct conv *getConversation();
         virtual int getDefend();
         virtual class Party * getParty();
-        virtual struct place *getPlace();
 	virtual int getType();
 	virtual char *getName();
 	virtual int getHp();
@@ -98,8 +104,7 @@ class Character:public Object {
 	virtual int getRestCredits(void);
         virtual char *get_damage_sound();
         virtual char *get_movement_sound();
-        virtual int getX();
-        virtual int getY();
+
 
         virtual bool isCharmed();
         virtual bool isCamping();
@@ -109,7 +114,6 @@ class Character:public Object {
         virtual bool isResting();
 	virtual bool isType(int classID);
 	virtual bool isDead();
-	virtual bool isPoisoned();
 	virtual bool isAsleep();
 	virtual bool isIncapacitated();
 	virtual bool isPlayerControlled();
@@ -125,19 +129,21 @@ class Character:public Object {
         virtual bool isPlayerPartyMember();
         virtual bool canWanderTo(int newx, int newy);
 
+        virtual void addDefense(int val);
 	virtual void changeArmourClass(int val);
 	virtual void changeSleep(bool val);
-	virtual void changeLight(int delta);
-	virtual void changeMana(int delta);
+	virtual void setLight(int delta);
+	virtual void addMana(int delta);
 	virtual void addRestCredits(int delta_hours);
 
         virtual void setActivity(int val);
         virtual void setControlMode(enum control_mode mode);
+        virtual void setDefaultCondition();
         virtual void setLeader(bool val);
 	virtual void setName(char *name);
+        virtual void setSchedule(struct sched *sched);
         virtual void setSolo(bool val);
 	virtual void setOrder(int order);
-	virtual void setPoison(bool val);
 	virtual void setHp(int hp);
 	virtual void setPlayerControlled(bool val);
 	virtual void setAttackTarget(class Character * target);
@@ -146,15 +152,13 @@ class Character:public Object {
 	virtual void setCombat(bool val);
 	virtual void setRestCredits(int hours);
 	virtual void setElevated(bool val);
-	virtual void setVisible(bool val);
+	//virtual void setVisible(bool val);
 
 	bool initStock(struct species * species, struct occ * occ,
 		       struct sprite * sprite, char *name, int order,
 		       int alignment);
 
-        virtual bool addToInventory(class Object *object);
         virtual void ambushWhileCamping();
-        virtual void applyExistingEffects();
 	virtual void awaken(void);
         virtual void beginCamping(int hours);
         virtual void beginGuarding(int hours);
@@ -166,7 +170,9 @@ class Character:public Object {
         virtual void endGuarding();
         virtual void endResting(void);
         virtual void exec(struct exec_context *context);
-        virtual void groupExitTo(struct place *dest_place, int dest_x, int dest_y);
+        virtual void groupExitTo(struct place *dest_place, 
+                                 int dest_x, int dest_y,
+                                 struct closure *closure);
         virtual void heal(int amount);
         virtual bool joinPlayer(void);
 	virtual void kill();
@@ -177,27 +183,33 @@ class Character:public Object {
 	virtual bool unready(class ArmsType * arms);
 	virtual enum MoveResult move(int dx, int dy);
 	virtual enum MoveResult flee();
+        enum MoveResult enterPortal(class Portal *portal);
 	virtual void attackTerrain(int x, int y);
 	virtual void useAmmo();
 	virtual void rejuvenate();
 	virtual void initItems();
 	virtual void armThyself();
 	virtual bool needToRearm();
-	virtual void cure();
 	virtual void resurrect();
 	virtual void rest(int hours);
-	virtual bool load(struct Loader *loader);
-	virtual class Character *clone(class Character *);
-	virtual void describe(int count);
-	virtual void relocate(struct place *place, int x, int y);
+	virtual class Object *clone();
+	virtual void describe();
         virtual void burn();
-        virtual void poison();
+        virtual void save(struct save *save);
         virtual void sleep();
+        virtual bool tryToRelocateToNewPlace(struct place *place, 
+                                             int x, int y,
+                                             struct closure *closure);
 
 	virtual class ArmsType *enumerateArms();
 	virtual class ArmsType *enumerateWeapons();
 
         void player_controlled_attack();
+        
+        // Inventory managemenet
+        virtual bool addFood(int quantity);
+        virtual bool add(ObjectType *type, int amount);
+        virtual bool takeOut(ObjectType *type, int amount);
 
 	char *tag;
 	struct list plist;	// party list
@@ -206,7 +218,6 @@ class Character:public Object {
 	struct species *species;
 	struct occ *occ;
 	bool is_clone;
-	int light;
 
 	struct astar_node *path;	// Added when I rewrote party
 	// rendezvous
@@ -215,26 +226,6 @@ class Character:public Object {
 	bool gotoSpot(int x, int y);
 	bool commute();
 
-      protected:
-        //bool ai_attack_target();
-        //void attack_target(class ArmsType *weapon);
-        //void ai_select_target();
-        //void enchant_target();
-	bool initCommon(void);
-	virtual bool isAttackTargetInRange();
-        void pathfind_to(class Object *target);
-        //void wander();
-        virtual void getAppointment();
-        //void execIdle();
-        //void execAutoMode();
-        
-
-	char *name;
-	int hm;
-
-        // -------------------------------------------------
-        // Custom attribute modifiers
-        // -------------------------------------------------
         int hp_mod;
         int hp_mult;
         int mp_mod;
@@ -245,18 +236,33 @@ class Character:public Object {
         int dam_mod;
         int arm_mod;
 
+        struct closure *ai; // experimental
+
+ protected:
+	bool initCommon(void);
+	virtual bool isAttackTargetInRange();
+        void pathfind_to(class Object *target);
+        virtual void getAppointment();
+
+	char *name;
+	int hm;
+
+        // -------------------------------------------------
+        // Custom attribute modifiers
+        // -------------------------------------------------
+
 
 	int xp;
 	int order;
 	bool sleeping;
-	int ac;
+	int ac; // used by spells
 	int armsIndex;
 	int str;
 	int intl;
 	int dex;
 	int mana;
 	int lvl;
-	bool poisoned;
+        int defenseBonus;
 	bool playerControlled;
 	bool solo;
 	class ArmsType *currentArms;
@@ -280,13 +286,12 @@ class Character:public Object {
 
 	int n_rest_credits;
 	bool elevated;
-	int visible;
         bool charmed;
         int charmed_alignment;
 
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
         // Stuff for resting/camping:
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
         clock_alarm_t wakeup_alarm;
         clock_alarm_t rest_alarm;
         bool resting;
@@ -298,6 +303,10 @@ class Character:public Object {
 
         bool is_leader;
         void (*ctrl)(class Character *character);
+
 };
+
+extern void char_dtor(void *val);
+extern void char_save(struct save *save, void *val);
 
 #endif

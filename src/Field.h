@@ -23,28 +23,32 @@
 #define Field_h
 
 #include "object.h"
+#include "closure.h"
 
 class FieldType:public ObjectType {
 
       public:
-        FieldType();
+        FieldType(char *tag, char *name, struct sprite *sprite, int light, 
+                  int duration, int pmask, closure_t *effect);
 	virtual ~FieldType();
 	virtual bool isType(int classID);
 	virtual int getType();
-	virtual int getEffects();
-	virtual void setEffects(int effects);
 	virtual int getLight();
 	virtual void setLight(int val);
 	virtual void setDuration(int val);
 	virtual int getDuration();
 	virtual int getPmask();
 	virtual void setPmask(int val);
+	virtual class Object *createInstance();
+
+        bool isPermanent();
+
+        closure_t *effect; /* when stepped on */
 
       protected:
-	int effects;
 	int light;
 	int duration;
-	int pmask;
+	int pmask;        
 };
 
 class Field:public Object {
@@ -52,10 +56,12 @@ class Field:public Object {
       public:
 	virtual class FieldType * getObjectType();
 	Field();
+        Field(class FieldType *type);
+        Field(class FieldType *type, int duration);
 	virtual ~ Field();
-	virtual void init(class FieldType * type);
 	virtual int getLight();
 	virtual void exec(struct exec_context *context);
+        virtual void save(struct save *save);
 
       protected:
 	int duration;

@@ -23,25 +23,40 @@
 #define Container_h
 
 #include "object.h"
+#include "closure.h"
+
+struct filter {
+        bool (*fx)(struct inv_entry *ie, void *cookie);
+        void *cookie;
+};
 
 class TrapType;
 
 class Container:public Object {
       public:
 	Container();
+        Container(class ObjectType *type);
 	virtual ~ Container();
-	virtual void add(class ObjectType * type, int quantity);
+	virtual bool add(class ObjectType * type, int quantity);
 	virtual void open();
-	virtual void subtract(class ObjectType * type, int quantity);
+	virtual bool takeOut(class ObjectType * type, int quantity);
 	virtual struct inv_entry *search(class ObjectType * type);
 	virtual bool isTrapped();
-	virtual void setTrap(class TrapType * trap);
-	virtual class TrapType *getTrap();
+	virtual void setTrap(closure_t *trap);
+	virtual closure_t *getTrap();
+        virtual void save(struct save *save);
+
+        int filter_count(struct filter *);
+	struct inv_entry *first(struct filter *);
+	struct inv_entry *next(struct inv_entry *ie, struct filter*);
+	struct inv_entry *prev(struct inv_entry *ie, struct filter*);
+
 	void forEach(void (*fx) (struct inv_entry *, void *), void *);
-	virtual bool load(class Loader * loader);
+
       protected:
+        void saveContents(struct save *save);
 	struct list contents;
-	class TrapType *trap;
+	closure_t *trap;
 };
 
 #endif

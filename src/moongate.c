@@ -40,13 +40,7 @@ extern struct list TickWorkQueue;
 struct {
 	struct wq_job openJob;
 	struct wq_job closeJob;
-	struct list *wq;
 } Moongate;
-
-void moongateSetAnimationWorkQueue(struct list *wq)
-{
-	Moongate.wq = wq;
-}
 
 static void myRunOpenJob(struct wq_job *job, struct list *wq)
 {
@@ -84,7 +78,7 @@ void moongateOpenSourceGate(int phase)
 		Moongate.openJob.run = myRunOpenJob;
 		Moongate.openJob.data = Moongates[phase];
 
-		wqAddJob(Moongate.wq, &Moongate.openJob);
+		wqAddJob(&TickWorkQueue, &Moongate.openJob);
 	}
 }
 
@@ -100,7 +94,7 @@ void moongateCloseSourceGate(int phase)
 		Moongate.closeJob.run = myRunCloseJob;
 		Moongate.closeJob.data = Moongates[phase];
 
-		wqAddJob(Moongate.wq, &Moongate.closeJob);
+		wqAddJob(&TickWorkQueue, &Moongate.closeJob);
 	}
 }
 
@@ -129,15 +123,55 @@ MoongateType::~MoongateType()
 		delete sprite;
 }
 
-bool MoongateType::init(char *tag, char *name, struct sprite *sprite,
-			int n_phases, char *enter_sound)
+MoongateType::MoongateType(char *tag, char *name, struct sprite *sprite,
+                           int numPhases, char *enterSound, int maxLight)
+        : ObjectType(tag, name, sprite, portal_layer)
 {
-	if (!ObjectType::init(tag, name, portal_layer, sprite))
-		return false;
-	this->n_phases = n_phases;
-	this->sprite = new struct sprite *[n_phases];
-	this->enter_sound = strdup(enter_sound);
-	return (this->enter_sound != 0 && this->sprite != 0);
+        this->n_phases    = numPhases;
+        this->maxLight    = maxLight;
+        this->enter_sound = strdup(enterSound);
+        this->sprites     = new struct sprite *[numPhases];
+        assert(this->enter_sound);
+        assert(this->sprites);
+}
+
+int MoongateType::getType()
+{
+        return MOONGATE_TYPE_ID;
+}
+
+bool MoongateType::isType(int classID) 
+{
+        if (classID == getType())
+                return true;
+        return ObjectType::isType(classID);
+}
+
+void MoongateType::setSprite(int phase, struct sprite *sprite) 
+{
+        assert(phase >= 0 && phase < n_phases);
+        this->sprites[phase] = sprite;
+}
+
+struct sprite *MoongateType::getSprite(int phase) 
+{
+        assert(phase >= 0 && phase < n_phases);
+        return sprites[phase];
+}
+
+char *MoongateType::getEnterSound()
+{
+        return enter_sound;
+}
+
+int MoongateType::getNumPhases()
+{
+        return n_phases;
+}
+
+int MoongateType::getMaxLight()
+{
+        return maxLight;
 }
 
 void Moongate::paint(int sx, int sy)
@@ -210,4 +244,66 @@ void Moongate::close() {
         assert(frame >= 0);
         if (frame == 0)
                 state = MOONGATE_CLOSED;
+}
+
+int Moongate::getType() 
+{
+        return MOONGATE_ID;
+}
+
+bool Moongate::isType(int classID)
+{
+        if (classID == getType())
+                return true;
+        return Object::isType(classID);
+}
+
+Moongate::Moongate():phase(0), frame(0), state(MOONGATE_CLOSED) 
+{
+}
+
+Moongate::~Moongate()
+{
+}
+
+class MoongateType *Moongate::getObjectType()
+{
+        return (class MoongateType *) Object::getObjectType();
+}
+
+struct sprite *Moongate::getSprite() 
+{
+        return getObjectType()->getSprite(frame);
+}
+
+char *Moongate::getName() 
+{
+        return "moongate";
+}
+
+bool Moongate::isOpen() 
+{
+        return (state == MOONGATE_OPENED);
+}
+
+bool Moongate::isClosed() 
+{
+        return (state == MOONGATE_CLOSED);
+}
+
+char *Moongate::getEnterSound() 
+{
+        return getObjectType()->getEnterSound();
+}
+
+int Moongate::getNumFrames() 
+{
+        return getObjectType()->getNumPhases();
+}
+
+void Moongate::init(int x, int y, struct place *place, 
+                    class MoongateType * type, int phase) 
+{
+        Object::init(x, y, place, type);
+        this->phase = phase;
 }

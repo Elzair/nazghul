@@ -19,24 +19,33 @@
 // Gordon McNutt
 // gmcnutt@users.sourceforge.net
 //
-#ifndef util_h
-#define util_h
+#ifndef portal_h
+#define portal_h
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "object.h"
 
-#include "common.h"  // Other files want common.h 
+class Portal:public Object {
+ public:
+        Portal(ObjectType * type);
+	virtual ~Portal();
+	virtual int getType();
+        virtual bool isType(int classID);
 
-	extern char *mmap_file(char *file, int *len);
+        Portal *getDestinationPortal();
+	bool isAutomatic();
+        bool isOpen();
 
-	static inline int util_point_in_rect(int px, int py, int rx, int ry,
-					     int rw, int rh) {
-		return (px >= rx && px <= (rx + rw) && py >= ry
-			&& py <= (ry + rh));
-	}
-#ifdef __cplusplus
-}
-#endif
+        void setDestinationPortal(Portal *val);
+        void setAutomatic(bool val);
+        void setOpen(bool val);
+
+        void enter(Object *obj);
+        void exit(Object *obj);
+
+ protected:
+        Portal *dest;
+        bool automatic;
+        bool open;
+};
 
 #endif

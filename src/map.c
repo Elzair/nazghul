@@ -30,6 +30,7 @@
 #include "Missile.h"
 #include "object.h"
 #include "vmask.h"
+#include "session.h"
 
 #include <SDL.h>
 #include <math.h>
@@ -93,6 +94,9 @@ static struct map {
 // larger does allow for lights outside the field of view to be processed, but
 // this makes dungeons appear too bright - I like them dark and gloomy.
 static unsigned char lmap[LMAP_SZ];
+
+// This one is used during mapMergeLightSource:
+static unsigned char tmp_lmap[VMASK_W * VMASK_H];
 
 static void myRmView(struct mview *view, void *data)
 {
@@ -235,6 +239,7 @@ static void mapMergeView(struct mview *view, void *data)
 			Map.vmask[i_dst] |= vmask[i_src];
 		}
 	}
+
 }
 
 static void myMarkAsDirty(struct mview *view, void *data)
@@ -307,18 +312,25 @@ static void mapMergeLightSource(struct light_source *light, struct mview *main_v
 
         vmask = vmask_get(Map.place, light->x, light->y);
 
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
         // For each visible tile in the vmask, calculate how much light is
         // hitting that tile from the light source. The loop optimizes by only
         // checking those tiles that are within the radius of the light source.
         // This optimization makes no difference on my fast box, haven't tested
         // it yet on my slow one.
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
 
-        int min_y = VMASK_H / 2 - radius;
-        int max_y = VMASK_H / 2 + radius;
-        int min_x = VMASK_W / 2 - radius;
-        int max_x = VMASK_W / 2 + radius;
+/*         int min_y = VMASK_H / 2 - radius; */
+/*         int max_y = VMASK_H / 2 + radius + 1; */
+/*         int min_x = VMASK_W / 2 - radius; */
+/*         int max_x = VMASK_W / 2 + radius + 1; */
+
+        int min_y = 0;
+        int max_y = VMASK_H;
+        int min_x = 0;
+        int max_x = VMASK_W;
+
+        //dbg("lightmap %d:%d:%s\n", light->x, light->y, Map.place->name);
 
         for (y = min_y; y < max_y; y++) {
 
@@ -328,27 +340,40 @@ static void mapMergeLightSource(struct light_source *light, struct mview *main_v
                 for (x = min_x; x < max_x; x++, vmask_i++) {
 
                         // skip non-visible tiles
-                        if (vmask[vmask_i] == 0)
+                        if (vmask[vmask_i] == 0) {
+                                tmp_lmap[vmask_i] = 0;
                                 continue;
+                        }
                                 
                         map_x = place_wrap_x(Map.place, tmp_view.vrect.x + x);
 
-                        D = place_flying_distance(Map.place, light->x, light->y, map_x, map_y);
+                        D = place_flying_distance(Map.place, light->x, 
+                                                  light->y, map_x, map_y);
                         D = D * D + 1;
-                        vmask[vmask_i] = min(light->light / D, 255);
+                        tmp_lmap[vmask_i] = min(light->light / D, 255);
                 }
         }
 
-        // ---------------------------------------------------------------------
+/*         vmask_i = 0; */
+/*         for (y = 0; y < VMASK_H; y++) { */
+/*                 for (x = 0; x < VMASK_W; x++) { */
+/*                         printf("%c", tmp_lmap[vmask_i] ? '#' : '.'); */
+/*                         vmask_i++; */
+/*                 } */
+/*                 printf("\n"); */
+/*         } */
+
+
+        // --------------------------------------------------------------------
         // Merge this source's lightmap (contained in the vmask we just built)
         // with the main lightmap.
         //
         // Note: try to optimize this by merging only the portion of the vmask
         // which is within the light radius. In fact, why don't I just limit
         // the vrect to the radius? Would that work?
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
 
-        mapMergeRects(&tmp_view.vrect, (unsigned char*)vmask, &main_view->vrect, lmap);
+        mapMergeRects(&tmp_view.vrect, tmp_lmap, &main_view->vrect, lmap);
 
 }
 
@@ -362,18 +387,23 @@ static void mapBuildLightMap(struct mview *view)
         int lt_i;
         int map_x;
         int map_y;
+        int ambient_light;
+
+        ambient_light = sky_get_ambient_light(&Session->sky);
 
         // Initialize the main lightmap to ambient light levels.
-        memset(lmap, (Map.place->underground ? UNLIT : Sun.light), 
+        memset(lmap, 
+               (Map.place->underground ? UNLIT : ambient_light),
                sizeof(lmap));
 
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
         // Optimization: if we're already getting max light everywhere from the
         // sun then skip further processing. Building a lightmap usually takes
         // about 1/3 of the time devoted to rendering.
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
 
-        if (! Map.place->underground && Sun.light == 255)
+        if (! Map.place->underground && 
+            ambient_light == MAX_AMBIENT_LIGHT)
                 return;
 
         // Build the list of light sources visible in the current map viewer
@@ -386,7 +416,9 @@ static void mapBuildLightMap(struct mview *view)
 		for (x = 0; x < LMAP_W; x++) {
 			int light;
 
-			map_x = place_wrap_x(Map.place, view->vrect.x + view->subrect.x +  x);
+			map_x = place_wrap_x(Map.place, 
+                                             view->vrect.x + view->subrect.x + 
+                                             x);
 
 			light = place_get_light(Map.place, map_x, map_y);
 			if (!light)
@@ -470,13 +502,12 @@ void mapForEachView(void (*fx) (struct mview *, void *), void *data)
 
 void mapSetLosStyle(char *los)
 {
-	/* fixme -- why create this here? why not just pass it in? */
-	LosEngine = los_create(los, VMASK_W, VMASK_H, map_use_circular_vision_radius ? MAX_VISION_RADIUS : -1);
-	if (!LosEngine) {
-		mapDestroyView(Map.cam_view);
-                assert(false);
-                exit(-1);
-	}
+        if (LosEngine)
+                delete LosEngine;
+	LosEngine = los_create(
+                los, VMASK_W, VMASK_H, 
+                map_use_circular_vision_radius ? MAX_VISION_RADIUS : -1);
+        assert(LosEngine);
 }
 
 int mapInit(void)
@@ -596,16 +627,6 @@ void mapCenterView(struct mview *view, int x, int y)
 	view->vrect.y = place_wrap_y(Map.place, y);
 }
 
-#if 0
-void mapRecomputeLos(struct mview *view)
-{
-	if (view == ALL_VIEWS)
-		mapForEachView(myRecomputeLos, 0);
-	else
-		myRecomputeLos(view, 0);
-}
-#endif
-
 void mapRepaintClock(void)
 {
   char * date_time_str = time_HHMM_as_string();
@@ -641,12 +662,12 @@ static void mapUpdateCursor(void)
         int x, y;
         int sx, sy;
 
-        if (!Cursor->is_active())
+        if (!Session->crosshair->is_active())
                 return;
 
         // Convert to view rect offset
-        x = Cursor->getX();
-        y = Cursor->getY();
+        x = Session->crosshair->getX();
+        y = Session->crosshair->getY();
         map_convert_point_to_vrect(&x, &y);
         if (!point_in_rect(x, y, &Map.aview->vrect)) {
                 return;
@@ -655,7 +676,7 @@ static void mapUpdateCursor(void)
         // Paint it
         sx = Map.srect.x + (x - (Map.aview->vrect.x + Map.aview->subrect.x)) * TILE_W;
         sy = Map.srect.y + (y - (Map.aview->vrect.y + Map.aview->subrect.y)) * TILE_H;
-        spritePaint(Cursor->getSprite(), 0, sx, sy);
+        spritePaint(Session->crosshair->getSprite(), 0, sx, sy);
 }
 
 static void mapPaintPlace(struct place *place, 
@@ -750,7 +771,7 @@ static void mapPaintPlace(struct place *place,
                         if (use_mask && !mask[mask_i + col]) {
                                 
                                 // No - is show all terrain in effect?
-                                if (!ShowAllTerrain) {
+                                if (!ShowAllTerrain && !XrayVision) {
 
                                         // No - skip this tile
                                         continue;
@@ -875,7 +896,7 @@ void mapRepaintView(struct mview *view, int flags)
 		t6 = SDL_GetTicks();
 	} else {
 
-                // -------------------------------------------------------------
+                // ------------------------------------------------------------
                 // Map.vmask serves as the "master" vmask. Start by zeroing it
                 // out so that by default nothing is in line-of-sight. Then
                 // iterate over all the active views (each player party member
@@ -883,11 +904,12 @@ void mapRepaintView(struct mview *view, int flags)
                 // view merge it's vmask onto the master. The result is the
                 // line-of-sight for all party members is always visible to the
                 // player.
-                // -------------------------------------------------------------
+                // ------------------------------------------------------------
 
                 memset(Map.vmask, 0, VMASK_SZ);
 		t3 = SDL_GetTicks();
 		mapForEachView(mapMergeView, 0);
+                //vmask_dump(Map.vmask);
 		t4 = SDL_GetTicks();
 		mapBuildLightMap(view);
 		t5 = SDL_GetTicks();
@@ -1112,6 +1134,8 @@ void mapPeer(bool val)
                                    Map.cam_view->subrect.w) / 2;
         Map.cam_view->subrect.y = (Map.cam_view->vrect.h - 
                                    Map.cam_view->subrect.h) / 2;
+
+        mapCenterCamera(Map.cam_x, Map.cam_y); // recenter
 }
 
 void mapTogglePeering(void)
@@ -1126,6 +1150,29 @@ void mapGetCameraFocus(struct place **place, int *x, int *y)
         *place = Map.place;
         *x = Map.cam_x;
         *y = Map.cam_y;
+}
+
+int mapIsInCameraView(struct place *place, int x, int y)
+{
+        int min;
+        int max;
+
+        if (place != Map.place)
+                return 0;
+
+        min = Map.cam_view->subrect.x + Map.cam_view->vrect.x;
+        max = min + Map.cam_view->subrect.w;
+
+        if (x < min || x >= max)
+                return 0;
+
+        min = Map.cam_view->subrect.y + Map.cam_view->vrect.y;
+        max = min + Map.cam_view->subrect.h;
+
+        if (y < min || y >= max)
+                return 0;
+        
+        return 1;
 }
 
 void mapBlackout(int val)
@@ -1389,7 +1436,8 @@ void mapUpdateTile(struct place *place, int x, int y)
 
         // ---------------------------------------------------------------------
         // If the place is not in line-of-sight then don't paint the object(s)
-        // there. Paint the terrain iff ShowAllTerrain is in effect.
+        // there. Paint the terrain iff ShowAllTerrain or XrayVision are in
+        // effect.
         // ---------------------------------------------------------------------
 
         //vmask = vmask_get(Map.place, mview_center_x(Map.aview), mview_center_y(Map.aview));
@@ -1397,7 +1445,7 @@ void mapUpdateTile(struct place *place, int x, int y)
         index = ((y - Map.aview->vrect.y) * Map.aview->vrect.w) + (x - Map.aview->vrect.x);
         terrain = place_get_terrain(place, x, y);
 
-        if (vmask[index] || ShowAllTerrain) {
+        if (vmask[index] || ShowAllTerrain || XrayVision) {
                 spritePaint(terrain->sprite, 0, rect.x, rect.y);
         }
 
@@ -1405,7 +1453,7 @@ void mapUpdateTile(struct place *place, int x, int y)
                 place_paint_objects(place, x, y, rect.x, rect.y);
         }
 
-        if (x == Cursor->getX() && y == Cursor->getY())
+        if (x == Session->crosshair->getX() && y == Session->crosshair->getY())
                 mapUpdateCursor();
 
         screenUpdate(&rect);

@@ -20,14 +20,18 @@
 // gmcnutt@users.sourceforge.net
 //
 #include "images.h"
-#include "util.h"
-#include "Loader.h"
 #include "screen.h"
+#include "common.h"
 
+#include <assert.h>
 #include <SDL_image.h>
 
-void images_destroy(struct images *images)
+void images_del(struct images *images)
 {
+        if (images->tag)
+                free(images->tag);
+        if (images->fname)
+                free(images->fname);
 	if (images->images)
 		SDL_FreeSurface(images->images);
 	if (images->faded)
@@ -35,60 +39,6 @@ void images_destroy(struct images *images)
 	delete images;
 }
 
-struct images *images_load(class Loader * loader)
-{
-	struct images *images;
-	SDL_Surface *tmp;
-	char *fname = 0;
-
-	if ((images = new struct images) == NULL)
-		return NULL;
-
-	memset(images, 0, sizeof(*images));
-
-	if (!loader->getWord(&images->tag) ||
-	    !loader->matchToken('{') ||
-	    !loader->getIntKeyValue("image_width", &images->w) ||
-	    !loader->getIntKeyValue("image_height", &images->h) ||
-	    !loader->getIntKeyValue("file_rows", &images->rows) ||
-	    !loader->getIntKeyValue("file_cols", &images->cols) ||
-	    !loader->getIntKeyValue("file_offx", &images->offx) ||
-	    !loader->getIntKeyValue("file_offy", &images->offy) ||
-	    !loader->getStringKeyValue("file", &fname) ||
-	    !loader->matchWord("sprites") || !loader->matchToken('{'))
-		goto fail;
-
-	images->images = IMG_Load(fname);
-	if (!images->images) {
-		loader->setError("IMG_Load: %s", SDL_GetError());
-		free(fname);
-		goto fail;
-	}
-	free(fname);
-
-	/* Make magenta the transparent color */
-	if (SDL_SetColorKey(images->images, SDL_SRCCOLORKEY,
-			    SDL_MapRGB(images->images->format,
-				       0xff, 0x00, 0xff)) < 0) {
-		loader->setError("SDL_SetColorKey: %s", SDL_GetError());
-		goto fail;
-	}
-
-	/* Convert to video format for faster blitting */
-	if ((tmp = SDL_DisplayFormat(images->images)) == NULL) {
-		loader->setError("SDL_DisplayFormat: %s", SDL_GetError());
-		goto fail;
-	}
-
-	SDL_FreeSurface(images->images);
-	images->images = tmp;
-
-	return images;
-
-      fail:
-	images_destroy(images);
-	return NULL;
-}
 
 int images_fade(struct images *images)
 {
@@ -106,4 +56,56 @@ int images_fade(struct images *images)
 
 	screen_fade_surface(images->faded, 1);
 	return 0;
+}
+
+struct images *images_new(char *tag, int w, int h, int rows, int cols, 
+                          int offx, int offy, char *fname)
+{
+	struct images *images;
+	SDL_Surface *tmp;
+
+	images = new struct images;
+        assert(images);
+	memset(images, 0, sizeof(*images));
+
+        images->tag     = strdup(tag);
+        assert(images->tag);
+
+        images->fname   = strdup(fname);
+        assert(images->fname);
+
+        images->w       = w;
+        images->h       = h;
+        images->offx    = offx;
+        images->offy    = offy;
+        images->rows    = rows;
+        images->cols    = cols;
+
+	images->images = IMG_Load(fname);
+	if (!images->images) {
+                err("IMG_Load: %s", SDL_GetError());
+	}
+
+	/* Make magenta the transparent color */
+	if (SDL_SetColorKey(images->images, SDL_SRCCOLORKEY,
+			    SDL_MapRGB(images->images->format,
+				       0xff, 0x00, 0xff)) < 0) {
+		err("SDL_SetColorKey: %s", SDL_GetError());
+                goto fail;
+	}
+
+	/* Convert to video format for faster blitting */
+	if ((tmp = SDL_DisplayFormat(images->images)) == NULL) {
+		err("SDL_DisplayFormat: %s", SDL_GetError());
+                goto fail;
+	}
+
+	SDL_FreeSurface(images->images);
+	images->images = tmp;
+
+	return images;
+
+      fail:
+	images_del(images);
+	return NULL;
 }

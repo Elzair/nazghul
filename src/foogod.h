@@ -22,20 +22,19 @@
 #ifndef foogod_h
 #define foogod_h
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "macros.h"
+
+BEGIN_DECL
 
 /* Food-Gold-Date window */
 
-	extern void foogodInit(void);
-	extern void foogodRepaint(void);
-	extern void foogodAdvanceTurns();
-	extern void foogod_set_y(int y);
-	extern int foogod_get_y(void);
-        extern int foogod_get_h(void);
+extern int foogodInit(void);
+extern void foogodRepaint(void);
+extern void foogodAdvanceTurns();
+extern void foogod_set_y(int y);
+extern int foogod_get_y(void);
+extern int foogod_get_h(void);
 
-#ifdef __cplusplus
-}
-#endif
+END_DECL
+
 #endif

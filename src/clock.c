@@ -26,52 +26,15 @@
 #include "sprite.h"
 #include "place.h"
 #include "map.h"
-#include "moongate.h"
 #include "player.h"
 #include "wq.h"
-#include "Mech.h"
 #include "game.h"
-#include "Loader.h"
+#include "session.h"
 
 #include <assert.h>
 #include <math.h>
 
-#define CLOCK_TICKS_PER_MINUTE TURNS_PER_MINUTE
-
-struct clock Clock;
-
-int clock_load(class Loader *loader)
-{
-        if (!loader->matchToken('{')      ||
-            !loader->matchWord("year")    ||
-            !loader->getInt(&Clock.year)  ||
-            !loader->matchWord("month")   ||
-            !loader->getInt(&Clock.month) ||
-            !loader->matchWord("week")    ||
-            !loader->getInt(&Clock.week)  ||
-            !loader->matchWord("day")     ||
-            !loader->getInt(&Clock.day)   ||
-            !loader->matchWord("hour")    ||
-            !loader->getInt(&Clock.hour)  ||
-            !loader->matchWord("minute")  ||
-            !loader->getInt(&Clock.min)   ||
-            !loader->matchToken('}')) {
-                return -1;
-        }
-
-        if (Clock.month  >= MONTHS_PER_YEAR ||
-            Clock.week   >= WEEKS_PER_MONTH ||
-            Clock.day    >= DAYS_PER_WEEK   ||
-            Clock.hour   >= HOURS_PER_DAY   ||
-            Clock.min    >= MINUTES_PER_HOUR) {
-                return -1;
-        }
-
-        Clock.total_minutes = 0;
-        Clock.tick_to_change_time = CLOCK_TICKS_PER_MINUTE;
-
-        return 0;
-}
+#define Clock (Session->clock)
 
 unsigned int clock_time_of_day(void)
 {
@@ -267,6 +230,16 @@ void clock_alarm_set(clock_alarm_t *alarm, unsigned int minutes)
 int clock_alarm_is_expired(clock_alarm_t *alarm)
 {
         return (Clock.total_minutes >= *alarm);
+}
+
+int is_noon(void)
+{
+        return (Clock.hour == 12 && Clock.min == 0);
+}
+
+int is_midnight(void)
+{
+        return (Clock.hour == 0 && Clock.min == 0);
 }
 
 #ifdef INCLUDE_UNUSED_CLOCK_ROUTINES

@@ -22,9 +22,9 @@
 #ifndef map_h
 #define map_h
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "macros.h"
+
+BEGIN_DECL
 
 /* In general, this is valid for functions which take only a 'view' arg */
 #define ALL_VIEWS ((struct mview *)-1)
@@ -33,62 +33,62 @@ extern "C" {
 #define REPAINT_IF_DIRTY 1	/* repaint iff the view is dirty */
 #define REPAINT_NO_LOS   2	/* don't apply LOS */
 
-	extern int map_use_circular_vision_radius;
+extern int map_use_circular_vision_radius;
 
-	struct mview;
-	struct place;
+struct mview;
+struct place;
 
-	extern int mapInit(void);
-	extern void mapFlash(int mdelay);
-	extern void mapSetPlace(struct place *place);
+extern int mapInit(void);
+extern void mapFlash(int mdelay);
+extern void mapSetPlace(struct place *place);
 
-	extern struct mview *mapCreateView(void);
-	extern void mapDestroyView(struct mview *view);
-	extern void mapAddView(struct mview *view);
-	extern void mapRmView(struct mview *mview);
-	extern void mapCenterView(struct mview *view, int x, int y);
-	extern void mapRecomputeLos(struct mview *view);
-	// extern void mapRepaintView(struct mview *view, int flags);
-	// extern void mapMarkAsDirty(struct mview *view);
-	extern void mapSetRadius(struct mview *view, int rad);
-	extern int mapGetRadius(struct mview *view);
-	// extern void mapSetActiveView(struct mview *view);
+extern struct mview *mapCreateView(void);
+extern void mapDestroyView(struct mview *view);
+extern void mapAddView(struct mview *view);
+extern void mapRmView(struct mview *mview);
+extern void mapCenterView(struct mview *view, int x, int y);
+extern void mapRecomputeLos(struct mview *view);
+// extern void mapRepaintView(struct mview *view, int flags);
+// extern void mapMarkAsDirty(struct mview *view);
+extern void mapSetRadius(struct mview *view, int rad);
+extern int mapGetRadius(struct mview *view);
+// extern void mapSetActiveView(struct mview *view);
 
-	// Hacked in to support missile animation:
-	extern void mapGetMapOrigin(int *x, int *y);
-	extern void mapGetScreenOrigin(int *x, int *y);
+// Hacked in to support missile animation:
+extern void mapGetMapOrigin(int *x, int *y);
+extern void mapGetScreenOrigin(int *x, int *y);
 
-	extern void mapCenterCamera(int x, int y);
-	extern void mapMoveCamera(int dx, int dy);
-	extern void mapUpdate(int flags);
-	extern void mapSetDirty(void);
+extern void mapCenterCamera(int x, int y);
+extern void mapMoveCamera(int dx, int dy);
+extern void mapUpdate(int flags);
+extern void mapSetDirty(void);
 
-        extern void mapRepaintClock(void);
-        extern void mapJitter(bool val);	// added for tremor
-        extern void mapPeer(bool val);
-        extern void mapTogglePeering(void);
+extern void mapRepaintClock(void);
+extern void mapJitter(bool val);	// added for tremor
+extern void mapPeer(bool val);
+extern void mapTogglePeering(void);
 
-        extern void mapGetCameraFocus(struct place **place, int *x, int *y);
-        
-        extern int mapTileIsWithinViewport(int x, int y);
-        extern int mapTileIsVisible(int x, int y);
+extern void mapGetCameraFocus(struct place **place, int *x, int *y);
+extern int mapIsInCameraView(struct place *place, int x, int y);
 
-        extern void mapBlackout(int val); // for sleeping in town
+extern int mapTileIsWithinViewport(int x, int y);
+extern int mapTileIsVisible(int x, int y);
 
-        // The destination (dx, dy) point is an in-out parm, upon return it
-        // points to the location where the missile actually landed (in case it
-        // was blocked in its path)
-        extern void mapAnimateProjectile(int ox, int oy, int *dx, int *dy, 
-                                         struct sprite *sprite, 
-                                         struct place *place,
-                                         class Missile *missile);
+extern void mapBlackout(int val); // for sleeping in town
 
-        extern void mapAttachCamera(class Object *subject);
-        extern void mapDetachCamera(class Object *subject);
-        extern void mapSetLosStyle(char *los);
-        extern void mapUpdateTile(struct place *place, int x, int y);
+// The destination (dx, dy) point is an in-out parm, upon return it
+// points to the location where the missile actually landed (in case it
+// was blocked in its path)
+extern void mapAnimateProjectile(int ox, int oy, int *dx, int *dy, 
+                                 struct sprite *sprite, 
+                                 struct place *place,
+                                 class Missile *missile);
 
-#ifdef __cplusplus
-}
-#endif
+extern void mapAttachCamera(class Object *subject);
+extern void mapDetachCamera(class Object *subject);
+extern void mapSetLosStyle(char *los);
+extern void mapUpdateTile(struct place *place, int x, int y);
+
+END_DECL
+
 #endif

@@ -22,33 +22,30 @@
 #ifndef wq_h
 #define wq_h
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
+#include "macros.h"
 #include "list.h"
 
-	struct wq_job {
-								struct list list;
-								int tick;
-								int period;
-								void *data;
-		void (*run) (struct wq_job *, struct list * wq);
-	};
+BEGIN_DECL
 
-	extern struct list TickWorkQueue;
-	extern struct list TurnWorkQueue;
+struct wq_job {
+        struct list list;
+        int tick;
+        int period;
+        void *data;
+        void (*run) (struct wq_job *, struct list * wq);
+};
 
-	extern int wqInit(void);
-	extern void wqAddJob(struct list *wq, struct wq_job *job);
-	extern void wqRunToTick(struct list *wq, int tick);
-	extern void wqCreateJob(struct list *wq, int tick, int period,
-				void *data, void (*run) (struct wq_job *,
-							 struct list * wq));
-	extern void wqReschedule(struct list *wq, struct wq_job *job);
+extern struct list TickWorkQueue;
+extern struct list TurnWorkQueue;
 
-#ifdef __cplusplus
-}
-#endif
+extern int wqInit(void);
+extern void wqAddJob(struct list *wq, struct wq_job *job);
+extern void wqRunToTick(struct list *wq, int tick);
+extern void wqCreateJob(struct list *wq, int tick, int period, void *data, 
+                        void (*run) (struct wq_job *, struct list * wq));
+extern void wqDeleteJob(struct wq_job *);
+extern void wqReschedule(struct list *wq, struct wq_job *job);
+
+END_DECL
 
 #endif

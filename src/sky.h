@@ -22,55 +22,61 @@
 #ifndef sky_h
 #define sky_h
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "macros.h"
 
-#include "common.h"
+BEGIN_DECL
 
-        struct moon_info {
-                int phases;
-                struct sprite **sprite;
-                int turns;
-        };
+#include "list.h"
+#include "closure.h"
+#include <SDL/SDL.h>
 
-        struct moon {
-                int phase;
-                int arc;
-                int light;
-                int initial_phase;
-                int initial_arc;
-                int minutes_per_phase;
-                int days_per_cycle;
-		void (*openMoongate) (int phase);
-		void (*closeMoongate) (int phase);
-        };
+struct phase {
+        struct sprite *sprite;
+        char *name;
+        int maxlight;
+};
 
-        struct sun {
-                int arc;
-                int light;
-                struct sprite *sprite;
-        };
+struct astral_body {
+        struct list list;
+        char *tag;
+        char *name;
+        int distance; // relative
+        int minutes_per_phase;
+        int minutes_per_degree;
+        int initial_arc;
+        int initial_phase;
+        int n_phases;
+        struct phase *phases;
+        int arc;
+        int phase;
+        int light;
+        closure_t *gifc;
+        struct gob *gob;
+};
 
-        extern struct moon_info MoonInfo;
-        extern struct moon Moons[NUM_MOONS];
-        extern struct sun Sun;
-        extern struct clock Clock;
+struct sky {
+        SDL_Rect screenRect;
+        struct list bodies;
+};
 
-        extern void skyInit(void);
-        extern void skyRepaint(void);
-        extern void sky_advance(void);
 
-        extern int sun_is_up   (void);
-        extern int sun_is_down (void);
-        extern int is_noon     (void);
-        extern int is_midnight (void);
+extern struct astral_body *astral_body_new(char *tag, char *name, int n_phases);
+extern void astral_body_del(struct astral_body *body);
 
-        extern int moon_is_visible (int arc);
-        extern int sky_get_ambient_light(void);
+void sky_init(struct sky *sky);
+extern void sky_add_astral_body(struct sky *sky, struct astral_body *body);
+extern void sky_advance(struct sky *sky, int repaint);
+extern int sky_get_ambient_light(struct sky *sky);
+extern void sky_start_session(struct sky *sky, int visible);
+extern void sky_end_session(struct sky *sky);
+extern void sky_save(struct sky *sky, struct save *save);
+extern void sky_for_each(int (*fx)(struct astral_body*, void *data), void *data);
+
+//extern int astral_body_is_up(struct astral_body *body);
+//extern int astral_body_is_down(struct astral_body *body);
+extern int astral_body_is_visible (int arc);
+
         
-#ifdef __cplusplus
-}
-#endif
+END_DECL
 
 #endif

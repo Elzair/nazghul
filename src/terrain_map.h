@@ -22,41 +22,46 @@
 #ifndef terrain_map_h
 #define terrain_map_h
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "macros.h"
+
+BEGIN_DECL
 
 #include <stdio.h>
 
 #include "list.h"
 
-        struct terrain_map {
-                struct list list;
-                char *tag;
-                int w;
-                int h;
-                struct terrain_palette * palette;
-                struct terrain **terrain;
-        };
-        
-        extern struct terrain_map *terrain_map_create(char *tag, 
-                                                      unsigned int w, 
-                                                      unsigned int h);
-        extern void terrain_map_destroy(struct terrain_map *map);
-        extern struct terrain_map *terrain_map_clone(struct terrain_map *orig);
-        extern void terrain_map_rotate(struct terrain_map *map, int degree);
-        extern void terrain_map_blit(struct terrain_map *dest, int dest_x,
-                                     int dest_y, struct terrain_map *src,
-                                     int src_x, int src_y, int w, int h);
-        extern void terrain_map_fill(struct terrain_map *map, int x, int y, 
-                                     int w, int h, struct terrain *fill);
-        extern void terrain_map_print(FILE * fp, int indent,
-                                      struct terrain_map *map);
-        extern void print_horizontal_guideline (FILE * fp, int indent, 
-                                                struct terrain_map *map);
+struct terrain_map {
+        struct list list;
+        char *tag;
+        int w;
+        int h;
+        struct terrain_palette * palette;
+        struct terrain **terrain;
 
-#ifdef __cplusplus
-}
-#endif
+        void *handle;  // pointer to session handle
+        int saved; // 1 iff already saved
+};
+        
+extern struct terrain_map *terrain_map_new(char *tag, 
+                                           unsigned int w, 
+                                           unsigned int h,
+                                           struct terrain_palette * pal);
+extern void terrain_map_del(struct terrain_map *map);
+extern struct terrain_map *terrain_map_clone(struct terrain_map *orig);
+extern void terrain_map_rotate(struct terrain_map *map, int degree);
+extern void terrain_map_blit(struct terrain_map *dest, int dest_x,
+                             int dest_y, struct terrain_map *src,
+                             int src_x, int src_y, int w, int h);
+extern void terrain_map_fill(struct terrain_map *map, int x, int y, 
+                             int w, int h, struct terrain *fill);
+extern void terrain_map_print(FILE * fp, int indent,
+                              struct terrain_map *map);
+extern void print_horizontal_guideline (FILE * fp, int indent, 
+                                        struct terrain_map *map);
+
+extern void terrain_map_save(struct save *, void *val);
+
+
+END_DECL
 
 #endif

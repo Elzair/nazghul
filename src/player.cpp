@@ -25,19 +25,15 @@
 #include "console.h"
 #include "place.h"
 #include "Party.h"
-#include "portal.h"
+#include "Portal.h"
 #include "screen.h"
 #include "sound.h"
 #include "terrain.h"
 #include "map.h"
-#include "moongate.h"
 #include "wq.h"
 #include "foogod.h"
 #include "combat.h"
 #include "wind.h"
-#include "Item.h"
-#include "Mech.h"
-#include "Mech.h"
 #include "dup_constants.h"
 #include "cmdwin.h"
 #include "vehicle.h"
@@ -47,9 +43,14 @@
 #include "event.h"
 #include "formation.h"
 #include "ctrl.h"
+#include "session.h"
 
 #include <unistd.h>
 #include <math.h>
+
+#if HARDCODE_MOONGATES
+#  include "moongate.h"
+#endif
 
 class player_party *player_party;
 
@@ -92,27 +93,6 @@ void player_party::damage(int amount)
 	/* Apply damage to all party members. If they all die then the party is
            destroyed, too. */
         forEachMember(apply_damage, &amount);
-}
-
-static bool apply_poison(class Character * pm, void *amount)
-{
-        pm->poison();
-	return false;
-}
-
-void player_party::poison() {
-        forEachMember(apply_poison, NULL);
-}
-
-static bool apply_existing(class Character * pm, void *data)
-{
-        pm->applyExistingEffects();
-	return false;
-}
-
-void player_party::applyExistingEffects()
-{
-        forEachMember(apply_existing, this);
 }
 
 static bool pc_get_first_living(class Character * pm, void *data)
@@ -181,30 +161,6 @@ static void give_rest_credit(struct wq_job *job, struct list *wq)
 	wqReschedule(wq, job);
 }
 
-void player_party::enter_moongate(class Moongate * moongate)
-{
-        // ---------------------------------------------------------------------
-	// Remove the player in case he is visible when the map is centered on
-	// the destination gate (otherwise the player will see the party while
-	// the destination gate opens).
-        //
-        // Addendum: another more important reason for doing this is that it
-        // makes sure that only the moongate's view is functional during the
-        // interim when the party is "traveling" between places.
-        // ---------------------------------------------------------------------
-	remove();
-        removeMembers();
-
-	// "Flash" the map to make the experience magical.
-	mapFlash(250);
-
-	// Show the destination gate opening
-	moongate->animateOpening();
-
-	// Move the party to the opened gate.
-	relocate(moongate->getPlace(), moongate->getX(), moongate->getY());
-}
-
 void player_party::changePlaceHook()
 {
         mapSetPlace(place);
@@ -212,32 +168,15 @@ void player_party::changePlaceHook()
         place_enter(place);
         consolePrint("Entering %s.\n", Place->name);
         
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
         // If the party is relocating to a non-wilderness place then I have to
         // break it out.
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
         
         if (! place_is_wilderness(place)) {
                 distributeMembers(place, x, y, dx, dy);
                 return;
         }
-}
-
-void player_party::relocate(struct place *place, int x, int y)
-{
-	class Mech *mech;
-
-	// Play any associated movement sound.
-	//soundPlay(get_movement_sound());
-
-        //attachCamera(true);
-	Object::relocate(place, x, y);
-
-	/* Check for a mech */
-	mech = (class Mech *) place_get_object(place, x, y, mech_layer);
-	if (mech)
-		mech->activate(MECH_STEP);
-
 }
 
 enum move_result player_party::check_move_to(struct move_info *info)
@@ -259,8 +198,7 @@ enum move_result player_party::check_move_to(struct move_info *info)
 	// occupied (this handles occupied vehicles, too)
 	if ((npc_party = place_get_Party(info->place, info->x, info->y))) {
 		if (npc_party->isHostile(alignment)) {
-			if (info->place->type == wilderness_place ||
-			    info->place->type == town_place) {
+			if (info->place->wilderness) {
 				info->npc_party = npc_party;
 			}
 			return move_enter_combat;
@@ -283,17 +221,23 @@ enum move_result player_party::check_move_to(struct move_info *info)
         // responsibility of game developers.
 	if (!info->portal &&
 	    (new_portal = place_get_portal(info->place, info->x, info->y))) {
-                if (new_portal->isAutomatic()) {
+                if (new_portal->isAutomatic() && new_portal->isOpen()) {
                         info->portal = new_portal;
                         return move_enter_auto_portal;
                 }
                 return move_ok;
 	}
 
+#if HARDCODE_MOONGATES
 	// The same rules as above apply to moongates.
 	info->moongate = place_get_moongate(info->place, info->x, info->y);
 	if (info->moongate && info->moongate->isOpen())
 		return move_enter_moongate;
+#endif
+
+        info->subplace = place_get_subplace(info->place, info->x, info->y);
+        if (info->subplace)
+                return move_enter_subplace;
 
 	// passable? I moved this check to be before a test for portals. A
 	// portal is accessible iff the player can move across the terrain it
@@ -324,11 +268,79 @@ bool player_party::turn_vehicle(void)
 		return false;
 
 	cmdwin_print("Turn %s %s", vehicle->getName(), get_dir_str(dx, dy));
-	cost *= getPlace()->scale;
-	turnAdvance(cost);
+	//cost *= getPlace()->scale;
+	//turnAdvance(cost);
 
 	return true;
 }
+
+#if HARDCODE_MOONGATES
+
+// Here's the code from the ripped-out Moongate class that did the animations:
+void Moongate::animateOpening()
+{
+	int oframe = frame;
+        
+        view = mapCreateView();
+
+        addView();
+        mapSetPlace(getPlace());
+        mapCenterCamera(getX(), getY());
+
+	enum moongate_state ostate = state;	// fixme -- necessary?
+
+	state = MOONGATE_OPENED;	// fixme -- necessary?
+
+	for (frame = 0; frame < getNumFrames(); frame++) {
+                updateView();
+                mapUpdate(0);
+		usleep(MS_PER_TICK * 1000);
+	}
+
+        rmView();
+        mapDestroyView(view);
+
+	frame = oframe;
+	state = ostate;
+}
+
+void Moongate::animateClosing()
+{
+	int oframe = frame;
+
+	for (frame = getNumFrames() - 1; frame >= 0; frame--) {
+		// mapRepaintView(0, REPAINT_ACTIVE);
+		mapUpdate(0);
+		usleep(MS_PER_TICK * 1000);
+	}
+
+	frame = oframe;
+}
+
+void player_party::enter_moongate(class Moongate * moongate)
+{
+        // --------------------------------------------------------------------
+	// Remove the player in case he is visible when the map is centered on
+	// the destination gate (otherwise the player will see the party while
+	// the destination gate opens).
+        //
+        // Addendum: another more important reason for doing this is that it
+        // makes sure that only the moongate's view is functional during the
+        // interim when the party is "traveling" between places.
+        // --------------------------------------------------------------------
+	remove();
+        removeMembers();
+
+	// "Flash" the map to make the experience magical.
+	mapFlash(250);
+
+	// Show the destination gate opening
+	moongate->animateOpening();
+
+	// Move the party to the opened gate.
+	relocate(moongate->getPlace(), moongate->getX(), moongate->getY());
+}
+
 
 enum MoveResult player_party::try_to_enter_moongate(class Moongate * src_gate)
 {
@@ -384,38 +396,43 @@ enum MoveResult player_party::try_to_enter_moongate(class Moongate * src_gate)
 	return MovedOk;
 
 }
+#endif
 
-#define FOR_EACH_MEMBER(e,c) for ((e) = members.next, (c) = list_entry((e), class Character, plist); \
-                               (e) != &members; \
-                               (e) = (e)->next, (c) = list_entry((e), class Character, plist))
+/* Note it is not safe to modify the member list within the block of the below
+ * 'iterator'  */
+#define FOR_EACH_MEMBER(e,c) \
+      for ((e) = members.next, (c) = list_entry((e), class Character, plist); \
+           (e) != &members; \
+           (e) = (e)->next, (c) = list_entry((e), class Character, plist))
 
-void player_party::distributeMembers(struct place *new_place, int new_x, int new_y, int new_dx, int new_dy)
+void player_party::distributeMembers(struct place *new_place, int new_x, 
+                                     int new_y, int new_dx, int new_dy)
 {
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
         // Remove the player party from the current place and remove its view
         // from the map viewer's consideration (instead we'll use the character
         // views, which are added as each character is placed on the map
         // below).
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
 
         remove();
 
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
         // Switch the current place to the portal destination place.
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
 
         Place = new_place;
 
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
         // Set the new destination place to be the subject of the map
         // viewer. Center the camera on the portal destination.
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
 
         mapSetPlace(new_place);
         mapCenterCamera(new_x, new_y);
         mapSetDirty();
 
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
         // Distribute all the party members centered on the portal destination
         // point. I assume this always succeeds, which means I'm relying on map
         // editors to be nice and make nice, clear areas around their portal
@@ -423,7 +440,7 @@ void player_party::distributeMembers(struct place *new_place, int new_x, int new
         //
         // For now, I'll reuse the existing combat placement algorithm. Compare
         // the code below with position_player_party() in combat.c:
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
 
         struct list *entry;
         class Character *member;
@@ -433,14 +450,14 @@ void player_party::distributeMembers(struct place *new_place, int new_x, int new
                         member->putOnMap(new_place, new_x, new_y, 2 * size);
 	}
 
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
         // Set the party mode to "follow" by default, but if hostiles are in
         // this place then set to "character" mode.
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
 
         if (place_contains_hostiles(new_place, getAlignment())) {
                 enableRoundRobinMode();
-                combat_set_state(COMBAT_STATE_FIGHTING);
+                combat_set_state(COMBAT_STATE_FIGHTING);                
         } else {
                 enableFollowMode();
                 combat_set_state(COMBAT_STATE_LOOTING);
@@ -450,29 +467,30 @@ void player_party::distributeMembers(struct place *new_place, int new_x, int new
 
 }
 
-enum MoveResult player_party::try_to_enter_town_from_edge(class Portal * portal, int dx, int dy)
+enum MoveResult player_party::try_to_enter_subplace_from_edge(
+        struct place *subplace, int dx, int dy)
 {
         int new_x;
         int new_y;
         int dir;
 
 
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
         // There should be no way to get here unless we are already in party
         // mode, which means we are in the wilderness. And the destination
         // should never be another wilderness.
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
 
         assert(place_is_wilderness(getPlace()));
-        assert(!place_is_wilderness(portal->getToPlace()));
+        assert(!place_is_wilderness(subplace));
 
-	cmdwin_print("enter %s", portal->getToPlace()->name);
+	cmdwin_print("enter %s", subplace->name);
 
-        // ---------------------------------------------------------------------
-        // Entering a town REQUIRES a direction so I know which edge of the town
-        // the party should enter from. If we don't have one then prompt the
-        // user to get one.
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
+        // Entering a subplace REQUIRES a direction so I know which edge of the
+        // subplace the party should enter from. If we don't have one then
+        // prompt the user to get one.
+        // --------------------------------------------------------------------
 
 	if (dx == 0 && dy == 0) {
 		cmdwin_print("-");
@@ -481,9 +499,9 @@ enum MoveResult player_party::try_to_enter_town_from_edge(class Portal * portal,
 		dir = vector_to_dir(dx, dy);
 	}
 
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
         // Calculate the entry coordinates based on the direction of entry.
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
 
 	switch (dir) {
 	case CANCEL:
@@ -496,20 +514,20 @@ enum MoveResult player_party::try_to_enter_town_from_edge(class Portal * portal,
 		cmdwin_print("-direction not allowed!");
 		return NoDestination;
 	case SOUTH:
-		new_x = place_w(portal->getToPlace()) / 2;
+		new_x = place_w(subplace) / 2;
 		new_y = 0;
 		break;
 	case NORTH:
-		new_x = place_w(portal->getToPlace()) / 2;
-		new_y = place_h(portal->getToPlace()) - 1;
+		new_x = place_w(subplace) / 2;
+		new_y = place_h(subplace) - 1;
 		break;
 	case WEST:
-		new_x = new_x = place_w(portal->getToPlace()) - 1;
-		new_y = place_h(portal->getToPlace()) / 2;
+		new_x = new_x = place_w(subplace) - 1;
+		new_y = place_h(subplace) / 2;
 		break;
 	case EAST:
 		new_x = 0;
-		new_y = place_h(portal->getToPlace()) / 2;
+		new_y = place_h(subplace) / 2;
 		break;
 	default:
 		assert(false);
@@ -518,42 +536,9 @@ enum MoveResult player_party::try_to_enter_town_from_edge(class Portal * portal,
         dx = directionToDx(dir);
         dy = directionToDy(dir);
 
-        relocate(portal->getToPlace(), new_x, new_y);
+        relocate(subplace, new_x, new_y);
 
         return MovedOk;
-}
-
-
-void player_party::try_to_enter_portal(class Portal * portal)
-{
-        // ---------------------------------------------------------------------
-        // There should be no way to get here unless we are already in party
-        // mode, which means we are in the wilderness.
-        // ---------------------------------------------------------------------
-
-        assert(place_is_wilderness(getPlace()));
-
-        if (place_is_wilderness(portal->getToPlace())) {
-
-                // -------------------------------------------------------------
-                // This is the simple case: wilderness-to-wilderness
-                // portalling. No mode switch is required, and relocate()
-                // handles the place-to-place handoff.
-                // -------------------------------------------------------------
-                
-                cmdwin_print("-%s-ok", portal->getName());
-                relocate(portal->getToPlace(), portal->getToX(), portal->getToY());
-                return;
-        }
-
-        // ---------------------------------------------------------------------
-        // This is the complicated case: we have to handle a mode switch as
-        // well as the place-to-place handoff. But relocate() will handle it
-        // automatically now.
-        // ---------------------------------------------------------------------
-
-        relocate(portal->getToPlace(), portal->getToX(), portal->getToY());
-
 }
 
 enum MoveResult player_party::try_to_move_off_map(struct move_info * info)
@@ -638,7 +623,8 @@ MoveResult player_party::move(int newdx, int newdy)
                 } else {
                         progress = "-very slow";
                 }
-                consolePrint("Move %s%s [%d AP]\n", directionToString(vector_to_dir(dx, dy)),
+                consolePrint("Move %s%s [%d AP]\n", 
+                             directionToString(vector_to_dir(dx, dy)),
                              progress, mv_cost);
 		return MovedOk;
         }
@@ -659,10 +645,12 @@ MoveResult player_party::move(int newdx, int newdy)
 		cmdwin_print("-impassable!");
 		return WasImpassable;
 
+#if HARDCODE_MOONGATES
 	case move_enter_moongate:
 		// An open moongate is on that tile.
 		cmdwin_print("-enter moongate");
 		return try_to_enter_moongate(info.moongate);
+#endif
 
 	case move_enter_combat:
 		// Handle combat (possible multiple combats) until we're all
@@ -671,13 +659,15 @@ MoveResult player_party::move(int newdx, int newdy)
 		memset(&cinfo, 0, sizeof(cinfo));
 		cinfo.move = &info;
 
-                // -------------------------------------------------------------
+                // ------------------------------------------------------------
                 // Enter combat on the current square, not the square we're
                 // trying to move onto.
-                // -------------------------------------------------------------
+                // ------------------------------------------------------------
 
                 info.x = getX();
                 info.y = getY();
+                info.px = getX();
+                info.py = getY();
 
 		combat_enter(&cinfo);
 
@@ -685,12 +675,12 @@ MoveResult player_party::move(int newdx, int newdy)
 		return MovedOk;
 
 	case move_enter_auto_portal:
-		// A teleporter is on that tile.
-		if (info.portal->edge_entrance) {
-			return try_to_enter_town_from_edge(info.portal, info.dx, info.dy);
-		}
-		try_to_enter_portal(info.portal);
+		enterPortal(info.portal);
                 return MovedOk;
+
+        case move_enter_subplace:
+                return try_to_enter_subplace_from_edge(info.subplace, info.dx, 
+                                                   info.dy);
 
 	default:
 		// no other results expected
@@ -756,87 +746,25 @@ char *player_party::get_movement_sound(void)
 	return mv_sound;
 }
 
-static struct inv_entry *myCreateIE(void)
+bool player_party::add(class ObjectType * type, int quantity)
 {
-	struct inv_entry *ie;
-	CREATE(ie, struct inv_entry, 0);
-	list_init(&ie->list);
-	return ie;
-}
-
-static struct inv_entry *myLookupIE(struct list *head,
-				    class ObjectType * object)
-{
-	struct list *list;
-	struct inv_entry *ie;
-
-	list_for_each(head, list) {
-		ie = outcast(list, struct inv_entry, list);
-		if (object == ie->type)
-			return ie;
-	}
-	return 0;
-}
-
-void player_party::add_to_inventory(class ObjectType * type, int quantity)
-{
-	struct inv_entry *ie;
-
 	if (!quantity)
-		return;
+		return true;
 
-	if (type->getType() == ITEM_TYPE_ID) {
-		// Put food straight into the food counter
-		class ItemType *item = (class ItemType *) type;
-		if (item->isFood()) {
-			food += quantity * item->getAmount();
-			foogodRepaint();
-			return;
-		}
-	}
+        consolePrint("You get ");
+        type->describe(quantity);
+        consolePrint("\n");
 
-	ie = myLookupIE(&inventory, type);
-	if (!ie) {
-		ie = myCreateIE();
-		if (!ie) {
-			err("Allocation failed");
-			return;
-		}
-		list_add(&inventory, &ie->list);
-
-		switch (type->getType()) {
-		case ARMS_TYPE_ID:
-			nArms++;
-			break;
-		case REAGENT_TYPE_ID:
-			nReagents++;
-			break;
-		case ITEM_TYPE_ID:
-			nItems++;
-			break;
-		case SPELL_TYPE_ID:
-			nSpells++;
-			break;
-		default:
-			break;
-		}
-	}
-
-	ie->count += quantity;
-	ie->type = type;
+        return inventory->add(type, quantity);
 }
 
-void player_party::remove_from_inventory(struct inv_entry *ie, int q)
+bool player_party::takeOut(ObjectType *type, int q)
 {
-	/* Note: for arms we should check the ref count and take corrective
-	 * action if not zero */
-	q = min(q, ie->count);
-	ie->count -= q;
-	if (!ie->count) {
-		list_remove(&ie->list);
-		assert(!ie->ref);
-		free(ie);
-	}
+        // Some types can be in more than one category, so remove from all.
+        consolePrint("You lose ");
+        type->describe(q);
+        consolePrint("\n");
+        return inventory->takeOut(type, q);
 }
 
 void player_party::enter_portal(void)
@@ -852,11 +780,8 @@ void player_party::enter_portal(void)
 		return;
 	}
 
-	if (portal->edge_entrance)
-		try_to_enter_town_from_edge(portal, 0, 0);
-	else
-		try_to_enter_portal(portal);
-
+        // Call the parent class's method
+        enterPortal(portal);
 }
 
 static bool player_member_rest_one_hour(class Character * pm, void *data)
@@ -871,6 +796,10 @@ void player_party::exec(struct exec_context *context)
 
         if (allDead())
                 return;
+
+        // NOTE: by running startTurn() after this we are skipping the party
+        // members' start-of-party-turn hooks when resting. That's probably not
+        // desirable.
 
         if (isResting()) {
 
@@ -890,8 +819,13 @@ void player_party::exec(struct exec_context *context)
 
         startTurn();
 
-        if (action_points > 0) {        
+        if (action_points > 0 && ! isDestroyed()) {        
                 ctrl(this);
+
+                if (Session->reloaded)
+                        /* Hack: this object has been destroyed with the old
+                         * session. Leave now! */
+                        return;
         }
 
         endTurn();
@@ -924,16 +858,6 @@ bool myGetBestVisionRadius(class Character * c, void *data)
 	return false;
 }
 
-#if 0
-void player_party::updateView()
-{
-        mapCenterView(getView(), x, y);
-        mapRecomputeLos(getView());
-        mapCenterCamera(x, y);
-        mapSetDirty(); // force a repaint
-}
-#endif
-
 int player_party::getLight()
 {
         struct list *entry;
@@ -961,8 +885,9 @@ int player_party::getVisionRadius()
 
 	// hack -- should replace this with a routine for getting the ambient
 	// light from the local environment (place?)
-	if (!Place->underground)
-		info.light += sky_get_ambient_light();
+        assert(getPlace());
+	if (!getPlace()->underground)
+		info.light += sky_get_ambient_light(&Session->sky);
 
 	// Set the vision radius to the minimum of the best available light
 	// radius or the best available vision radius of all party members
@@ -972,11 +897,6 @@ int player_party::getVisionRadius()
         // left off here
 
 	return min(info.vrad, MAX_VISION_RADIUS);
-}
-
-struct inv_entry *player_party::search_inventory(class ObjectType * type)
-{
-	return myLookupIE(&inventory, type);
 }
 
 player_party::player_party()
@@ -990,11 +910,6 @@ player_party::player_party()
 	mv_desc            = NULL;
 	mv_sound           = NULL;
 	leader             = NULL;
-	nArms              = 0;
-	nReagents          = 0;
-	nSpells            = 0;
-	nItems             = 0;
-	nAmmo              = 0;
 	light              = 1;
 	food               = 0;
 	view               = 0;
@@ -1011,15 +926,92 @@ player_party::player_party()
         solo_member        = NULL;
         control_mode       = PARTY_CONTROL_ROUND_ROBIN;
         ctrl               = ctrl_party_ui;
+        inventory          = NULL;
 
-	list_init(&inventory);
         clearCombatExitDestination();
 	container_link.key = being_layer;
         view = mapCreateView();
 }
 
+player_party::player_party(char *_tag,
+                           struct sprite *sprite,
+                           char *movement_desc, char *movement_sound,
+                           int _food, int _gold, int align,
+                           struct formation *_formation, 
+                           struct terrain_map *_camping_map,
+                           struct formation *_camping_formation)
+{
+        /* Do standard initialization first. */
+	dx                 = 0;
+	dy                 = -1;
+	speed              = 0;
+	vehicle            = 0;
+	turns              = 0;
+	leader             = NULL;
+	light              = 1;
+	food               = _food;
+	view               = 0;
+	alignment          = align;
+	gold               = _gold;
+	formation          = _formation;
+	campsite_map       = _camping_map;
+	campsite_formation = _camping_formation;
+	camping            = false;
+        resting            = false;
+        turn_count         = 0;
+        leader             = NULL;
+        solo_member        = NULL;
+        control_mode       = PARTY_CONTROL_ROUND_ROBIN;
+        ctrl               = ctrl_party_ui;
+        tag                = 0;
+        inventory          = NULL;
+
+        // --------------------------------------------------------------------
+        // Location (if any) will be set after construction by the loading
+        // code. Initially the party is off-map and on the orphan list.
+        // --------------------------------------------------------------------
+
+        setOnMap(false);
+
+        clearCombatExitDestination();
+	container_link.key = being_layer;
+        view = mapCreateView();
+
+        /* Now use the arguments */
+
+        if (_tag) {
+                tag = strdup(_tag);
+                assert(tag);
+        }
+        
+        this->sprite = sprite;
+        if (movement_desc) {
+                this->mv_desc = strdup(movement_desc);
+                assert(this->mv_desc);
+        } else {
+                mv_desc = 0;
+        }
+        if (movement_sound) {
+                this->mv_sound = strdup(movement_sound);
+                assert(this->mv_sound);
+        } else {
+                mv_sound = 0;
+        }
+}
+
 player_party::~player_party()
 {
+        if (mv_desc)
+                free(mv_desc);
+        if (mv_sound)
+                free(mv_sound);
+
+        if (inventory)
+                delete inventory;
+
+        /* The superclass destructor (~Party) will remove all members. */
+
+        /* fixme: need to somehow cancel those wq jobs setup by player_init? */
 }
 
 int player_init(void)
@@ -1051,7 +1043,7 @@ void player_party::board_vehicle(void)
 		cmdwin_print("Exit-%s", vehicle->getName());
 		vehicle = 0;
 		mapSetDirty();
-		turnAdvance(1);
+		//turnAdvance(1);
 		return;
 	}
 
@@ -1066,19 +1058,19 @@ void player_party::board_vehicle(void)
 	// place_remove_vehicle(Place, vehicle);
 	cmdwin_print("Board-%s", vehicle->getName());
 	mapSetDirty();
-	turnAdvance(1);
+	//turnAdvance(1);
 }
 
 static bool check_if_leader(class Character * pc, void *data)
 {
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
         // Going to add a check for sleep here to handle the case where the
         // party is in follow mode and the leader is put asleep for some
         // reason. Otherwise the engine cranks out turns until the leader wakes
         // up.
         //
         // Note: um... what about charmed?
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
 
 	if (!pc->isDead() && pc->isOnMap() && !pc->isAsleep()) {
 		player_party->setLeader(pc);
@@ -1103,43 +1095,48 @@ void player_party::removeMember(class Character *c)
 
         assert(c->party == (class Party*)this);
 
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
         // Remove all its readied arms from party inventory.
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
 
-	for (class ArmsType * weapon = c->enumerateArms(); weapon != NULL; weapon = c->getNextArms()) {
+	for (class ArmsType * weapon = c->enumerateArms(); weapon != NULL; 
+             weapon = c->getNextArms()) {
 
 		struct inv_entry *ie;
 
-		ie = search_inventory(weapon);
+		ie = inventory->search(weapon);
 		assert(ie);
 		ie->ref--;
-		remove_from_inventory(ie, 1);
+		takeOut(weapon, 1);
 	}
 
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
         // Re-order the indices of the remaining party members
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
 
-        for (entry = c->plist.next, index = c->getOrder(); entry != &members; entry = entry->next, index++) {
+        for (entry = c->plist.next, index = c->getOrder(); entry != &members; 
+             entry = entry->next, index++) {
                 next_member = outcast(entry, class Character, plist);
                 next_member->setOrder(index);
         }
 
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
         // Unhook it from the party & relinquish control.
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
 
         list_remove(&c->plist);
         c->party = NULL;
         c->setPlayerControlled(false);
         c->setControlMode(CONTROL_MODE_AUTO);
 
+        obj_dec_ref(c);
 }
 
 bool player_party::addMember(class Character * c)
 {
 	int i = 0;
+
+        obj_inc_ref(c);
 
 	// Note: this is called so early in startup that I can't touch the
 	// paint routines in here. Callers will have to update the map and
@@ -1162,6 +1159,9 @@ bool player_party::addMember(class Character * c)
         // character belongs to the player party.
         c->party = (Party*)this;
 
+        // Can't think of any reason why a char should be on the orphan list
+        assert(! c->handle);
+
         if (NULL == c->getView())
                 c->setView(mapCreateView());
 
@@ -1173,8 +1173,8 @@ bool player_party::addMember(class Character * c)
 
 		struct inv_entry *ie;
 
-		add_to_inventory(weapon, 1);
-		ie = search_inventory(weapon);
+		add(weapon, 1);
+		ie = inventory->search(weapon);
 		assert(ie);
 		ie->ref++;
 
@@ -1183,9 +1183,9 @@ bool player_party::addMember(class Character * c)
 	// Note: leave the readied arms as-is and character inventory as-is for
 	// now.
 
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
         // Reevaluate leadership with the new member added to the group.
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
 
         switch (getPartyControlMode()) {
         case PARTY_CONTROL_FOLLOW:
@@ -1228,7 +1228,7 @@ bool player_party::isVisible()
 	return true;
 }
 
-void player_party::describe(int count)
+void player_party::describe()
 {
 	consolePrint("the %s", getName());
 }
@@ -1313,17 +1313,6 @@ class Character *player_party::getMemberAtIndex(int index)
         return NULL;
 }
 
-static bool member_remove(class Character *member, void *data)
-{
-        member->remove();
-        return false;
-}
-
-void player_party::removeMembers()
-{
-        forEachMember(member_remove, NULL);
-}
-
 void player_party::setCombatExitDestination(struct location *location)
 {
         combat_exit_destination.place = location->place;
@@ -1384,7 +1373,7 @@ bool player_party::addToInventory(class Object *object)
         // implementation into here.
         // ---------------------------------------------------------------------
 
-        add_to_inventory(object->getObjectType(), 1);
+        add(object->getObjectType(), object->getCount());
         delete object;
         return true;
 }
@@ -1571,32 +1560,33 @@ bool player_party::rendezvous(struct place *place, int rx, int ry)
 
         assert(NULL != leader);
 
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
         // If any member cannot find a path at least this short than rendezvous
-        // fails.
-        // ---------------------------------------------------------------------
+        // fails
+        // --------------------------------------------------------------------
 
         max_path_len = 10;
 
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
         // Center the camera on the rendezvous point.
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
 
         mapCenterCamera(rx, ry);
         mapUpdate(0);
         consolePrint("Rendezvous...");
         consoleRepaint();
 
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
         // Have each party member find and store a path to the rendezvous
         // point.
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
 
         FOR_EACH_MEMBER(entry, member) {
 
                 struct astar_search_info as_info;
 
-                if (NULL == member || member->isDead() || !member->isOnMap() || member == leader ||
+                if (NULL == member || member->isDead() || 
+                    !member->isOnMap() || member == leader ||
                     (member->getX() == rx && member->getY() == ry))
                         continue;
 
@@ -1606,14 +1596,18 @@ bool player_party::rendezvous(struct place *place, int rx, int ry)
                 as_info.x1    = rx;
                 as_info.y1    = ry;
                 as_info.flags = PFLAG_IGNOREBEINGS;
-                member->path = place_find_path(place, &as_info, member->getPmask(), NULL);
+                member->path = place_find_path(place, &as_info, 
+                                               member->getPmask(), NULL);
 
                 if (!member->path) {
-                        consolePrint("%s cannot make the rendezvous!\n", member->getName());
+                        consolePrint("%s cannot make the rendezvous!\n", 
+                                     member->getName());
                         abort = true;
                 }
-                else if (max_path_len > 0 && member->path->len > max_path_len) {
-                        consolePrint("%s is too far away!\n", member->getName());
+                else if (max_path_len > 0 && 
+                         member->path->len > max_path_len) {
+                        consolePrint("%s is too far away!\n", 
+                                     member->getName());
                         abort = true;
                 }
         }
@@ -1682,7 +1676,7 @@ bool player_party::rendezvous(struct place *place, int rx, int ry)
 
 int player_party::getContext(void)
 {
-        return (isOnMap() ? CONTEXT_WILDERNESS : (CONTEXT_TOWN | CONTEXT_COMBAT));
+        return (isOnMap() ? CONTEXT_WILDERNESS : CONTEXT_TOWN);
 }
 
 void player_party::addView()
@@ -1690,4 +1684,170 @@ void player_party::addView()
         attachCamera(true);
         mapSetPlace(getPlace());
         Object::addView();
+}
+
+struct place *player_party::getPlaceFromMembers(void)
+{
+        struct list *elem;
+        class Character *member;
+
+        member = get_leader();
+
+        if (member)
+                return member->getPlace();
+
+        FOR_EACH_MEMBER(elem, member) {
+                if (member->isOnMap()) {
+                        return member->getPlace();
+                }
+        }
+
+        return 0;
+}
+
+void player_party::startSession(void)
+{
+        struct list *elem;
+        class Character *member;
+
+
+        if (isOnMap())
+                return;
+
+        // --------------------------------------------------------------------
+        // Not on the map, so we must be in a small-scale place. At least one
+        // of the members needs to be on the map or I can't figure out where
+        // the starting place is. Once I know, I can setup the map viewer and
+        // add all the member views.
+        // --------------------------------------------------------------------
+       
+        Place = getPlaceFromMembers();
+        assert(Place);
+        mapSetPlace(Place);
+        mapSetDirty();
+        setPlace(Place);
+        
+        FOR_EACH_MEMBER(elem, member) {
+                if (member->isOnMap()) {
+                        member->addView();
+                }
+        }
+
+        // --------------------------------------------------------------------
+        // Set the party mode to "follow" by default, but if hostiles are in
+        // this place then set to "character" mode.
+        // --------------------------------------------------------------------
+
+        if (place_contains_hostiles(getPlace(), getAlignment())) {
+                enableRoundRobinMode();
+                combat_set_state(COMBAT_STATE_FIGHTING);
+        } else {
+                enableFollowMode();
+                combat_set_state(COMBAT_STATE_LOOTING);
+        }        
+
+}
+
+void player_party::setOnMap(bool val)
+{
+        if (val == isOnMap())
+                return;
+
+        Object::setOnMap(val);
+
+        // --------------------------------------------------------------------
+        // If the party is going from off-map to on, then remove it from the
+        // orphan list. If the opposite then add it.
+        // --------------------------------------------------------------------
+
+        if (val) {
+                assert(handle);
+                session_rm_obj(Session, this);
+                handle = 0;
+        } else {
+                assert(! handle);
+                session_add_obj(Session, this, player_dtor, player_save, NULL);
+        }
+}
+
+void player_dtor(void *val)
+{
+        class player_party *party = (class player_party*)val;
+        obj_dec_ref(party);
+        if (! party->refcount)
+                delete (class player_party*)val;
+        player_party = 0; /* global */
+}
+
+void player_save(save_t *save, void *val)
+{
+        ((class player_party*)val)->save(save);
+}
+
+void player_party::save(save_t *save)
+{
+        struct list *elem;
+
+        save->enter(save, "(kern-mk-player\n");
+        if (tag)
+                save->write(save, "'%s\n", tag);
+        else
+                save->write(save, "nil\n");
+        save->write(save, "%s\n", this->sprite->tag);
+        save->write(save, "\"%s\"\n", this->mv_desc);
+        save->write(save, "\"%s\"\n", this->mv_sound);
+        save->write(save, "%d %d %d\n", this->food, this->gold,
+                this->alignment);
+        save->write(save, "%s\n", 
+                this->formation ? this->formation->tag : "nil");
+        save->write(save, "%s\n", 
+                this->campsite_map ? this->campsite_map->tag : "nil");
+        save->write(save, "%s\n", 
+                this->campsite_formation ? 
+                this->campsite_formation->tag : "nil");
+
+        if (vehicle)
+                vehicle->save(save);
+        else
+                save->write(save, "nil ; player's vehicle\n");
+
+        inventory->save(save);
+
+        if (list_empty(&this->members)) {
+                save->write(save, "nil\n");
+        } else {
+                class Character *ch;
+
+                save->enter(save, "(list\n");
+                list_for_each(&this->members, elem) {
+                        ch =  outcast(elem, class Character, plist);
+                        char_save(save, ch);
+                }
+                save->exit(save, ")\n");
+        }
+
+        save->exit(save, ")\n");
+}
+
+bool player_party::addFood(int amount)
+{
+        if (amount == 0)
+                return true;
+
+        if (amount > 0)
+                consolePrint("You get %d food\n", amount);
+        else
+                consolePrint("You lose %d food\n", amount);
+
+        food += amount;
+        if (food < 0)
+                food = 0;
+        foogodRepaint();
+
+        return true;
+}
+
+bool player_party::isPlayerControlled()
+{
+        return true;
 }

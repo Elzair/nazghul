@@ -24,46 +24,20 @@
 #ifndef debug_h
 #define debug_h
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "macros.h"
+#include <stdarg.h>
 
-#include <stdio.h>
+BEGIN_DECL
 
-#ifdef DEBUG
-#ifdef __cplusplus
-#define dbg(format, arg...) \
-    do { \
-        printf(__FILE__ " line %d: ", __LINE__); \
-        printf(format "\n" , ## arg); \
-    } while(0)
-#else
-#define dbg(format, arg...) \
-        printf(__FUNCTION__ ": " format "\n" , ## arg)
-#endif				/* __cplusplus */
-#else
-#define dbg(format, arg...) \
-         do {} while (0)
-#endif
+extern int DEBUG;
+extern int VERBOSE;
 
-#ifdef __cplusplus
-// g++ does not support the __FUNCTION__ compiler keyword
-#define err(format, arg...) \
-        fprintf(stderr, format "\n" , ## arg)
-#define info(format, arg...) \
-        printf(format "\n" , ## arg)
-#define warn(format, arg...) \
-        printf(format "\n" , ## arg)
-#else
-#define err(format, arg...) \
-        fprintf(stderr, __FUNCTION__ ": " format "\n" , ## arg)
-#define info(format, arg...) \
-        printf(__FUNCTION__ ": " format "\n" , ## arg)
-#define warn(format, arg...) \
-        printf(__FUNCTION__ ": " format "\n" , ## arg)
-#endif
+extern void dbg(char *fmt, ...);
+extern void err(char *fmt, ...);
+extern void info(char *fmt, ...);
+extern void warn(char *fmt, ...);
+extern void vwarn(char *fmt, va_list args);
 
-#ifdef __cplusplus
-}
-#endif
+END_DECL
+
 #endif

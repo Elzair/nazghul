@@ -38,11 +38,7 @@ int Tick;
 int AnimationTicks;
 int TickMilliseconds;
 // int WindDirection;
-bool Reveal;
-int Quicken;
-int TimeStop;
 bool TurnChanged;
-int MagicNegated;
 int ShowAllTerrain = 0;
 
 struct los *LosEngine;
@@ -78,13 +74,7 @@ int commonInit(void)
 {
 	Turn = 0;
 	Tick = 0;
-	Reveal = false;
-	Quicken = 0;
-	TimeStop = 0;
 	TurnChanged = false;
-	MagicNegated = 0;
-	// ShowAllTerrain = 0; set by cmdline option
-	// Quit = 0;
 	srandom(0);		// fixme: should save/load as part of
 	// record/playback
 	busywaitInit();
@@ -132,6 +122,8 @@ static int keyToDirectionTable[] = {
 
 char *directionToString(int dir)
 {
+        if (dir < 0 || dir >= array_sz(dir_str))
+                return "*** invalid direction ***";
 	return dir_str[dir];
 }
 
@@ -181,44 +173,6 @@ int vector_to_rotation(int dx, int dy)
 	return direction_to_rotation_tbl[(dy + 1) * 3 + dx + 1];
 }
 
-#if 0
-
-void windSetDirection(int dir)
-{
-	static char *dirstr[] = { "North", "East", "South", "West" };
-	WindDirection = dir;
-	screenErase(&screenWindWindow);
-	screenPrint(&screenWindWindow, SP_CENTERED, "Wind:%s", dirstr[dir]);
-	screenUpdate(&screenWindWindow);
-}
-
-void windAdvance(void)
-{
-	if (random() % 100 < WIND_CHANGE_PROBABILITY) {
-		windSetDirection(random() % NUM_PLANAR_DIRECTIONS);
-		screenUpdate(&screenWindWindow);
-	}
-}
-#endif				// 0
-
-void turnAdvance(int turns)
-{
-	TurnChanged = false;
-	if (TimeStop) {
-		TimeStop--;
-		return;
-	}
-	if (Quicken) {
-		Quicken++;
-		if (Quicken % 2)
-			return;
-	}
-
-	Turn += turns;
-	if (turns)
-		TurnChanged = true;
-}
-
 int vector_to_dir(int dx, int dy)
 {
 	int adx = abs(dx);
@@ -255,19 +209,5 @@ bool point_in_rect(int x, int y, SDL_Rect *rect)
                 x < (rect->x + rect->w) &&
                 y < (rect->y + rect->h));
 }
-
-int dice_roll(int n_dice, int n_faces)
-{
-        int val = 0;
-
-        if (n_faces == 0)
-                return 0;
-
-        while (n_dice-- > 0) {
-                val += (rand() % n_faces) + 1;
-        }
-        return val;
-}
-
 
 // eof

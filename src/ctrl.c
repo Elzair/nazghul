@@ -21,6 +21,7 @@
 //
 
 #include "ctrl.h"
+#include "dice.h"
 #include "event.h"
 #include "cmd.h"
 #include "cmdwin.h"
@@ -30,15 +31,15 @@
 #include "Party.h"
 #include "character.h"
 #include "combat.h"
-#include "portal.h"
-#include "Spell.h"
-#include "Mech.h"
+#include "Portal.h"
 #include "terrain.h"
+#include "sched.h"
+#include "session.h"
 
 int G_latency_start = 0;
 
 
-static bool ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
+static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
 {
         class player_party *party = (class player_party*)kh->data;
 
@@ -59,13 +60,22 @@ static bool ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
                 // editing.  In future, these may be enabled/disabled at
                 // compile time, or via a GhulScript keyword in the mapfile.
                 switch (key) {
-      
-                case 't':
-                        cmdTerraform(NULL);
+                        
+                case 'q':
+                        cmdQuickSave();
                         break;
 
+                case 'r':
+                        cmdReload();
+                        return true;
+                        break;
+      
                 case 's':
                         cmdSaveTerrainMap(NULL);
+                        break;
+
+                case 't':
+                        cmdTerraform(NULL);
                         break;
 
                 case 'z':
@@ -138,9 +148,11 @@ static bool ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
                 case 's':
                         cmdSearch(party->getX(), party->getY());
                         break;
-                case 't':
-                        cmdTalk(party->getX(), party->getY());
-                        break;
+                        /* To enable talking in party mode I need to prompt for
+                         * a character to do the talking. */
+/*                 case 't': */
+/*                         cmdTalk(party->getX(), party->getY()); */
+/*                         break; */
                 case 'u':
                         cmdUse(NULL, CMD_SELECT_MEMBER|CMD_PRINT_MEMBER);
                         break;
@@ -173,7 +185,7 @@ static bool ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
         return party->isTurnEnded();
 }
 
-static void ctrl_wander(class Object *object)
+void ctrl_wander(class Object *object)
 {
         // *** left off here ***
 
@@ -190,16 +202,19 @@ static void ctrl_wander(class Object *object)
                 newx = object->getX() + dx;
                 newy = object->getY() + dy;
 
-                if (object->canWanderTo(newx, newy))
+                if (! object->canWanderTo(newx, newy))
                         return;
-                // -------------------------------------------------------------
+
+                // ------------------------------------------------------------
                 // Do a quick check here if this would take the character off
                 // the map. If so, then don't do it. Can't have NPC's wandering
                 // off out of town...
-                // -------------------------------------------------------------
+                // ------------------------------------------------------------
 
-                if (place_off_map(object->getPlace(), object->getX() + dx, object->getY() + dy) ||
-                    place_is_hazardous(object->getPlace(), object->getX() + dx, object->getY() + dy))
+                if (place_off_map(object->getPlace(), object->getX() + dx, 
+                                  object->getY() + dy) ||
+                    place_is_hazardous(object->getPlace(), object->getX() + dx,
+                                       object->getY() + dy))
                         return;
 
 		object->move(dx, dy);
@@ -240,6 +255,8 @@ static void ctrl_work(class Party *party)
                 info.y = party->getY();
                 info.dx = party->getDx();
                 info.dy = party->getDy();
+                info.px = player_party->getX();
+                info.py = player_party->getY();
                 info.npc_party = party;
                 
                 if (!info.dx && !info.dy)
@@ -277,13 +294,16 @@ static void ctrl_work(class Party *party)
 	}
 }
 
-static void ctrl_do_attack(class Character *character, class ArmsType *weapon, class Character *target)
+void ctrl_do_attack(class Character *character, class ArmsType *weapon, class Character *target)
 {
         int hit;
         int def;
         int damage;
         int armor;
         bool miss;
+
+        consolePrint("%s attacks %s with %s...", character->getName(), target->getName(), 
+                     weapon->getName());
 
         miss = ! weapon->fire(target, character->getX(), character->getY());
         character->decActionPoints(weapon->getRequiredActionPoints());
@@ -295,17 +315,17 @@ static void ctrl_do_attack(class Character *character, class ArmsType *weapon, c
         }
 
         // Roll to hit.
-        hit = dice_roll(2, 6) + weapon->getHit();
-        def = dice_roll(2, 6) + target->getDefend();
+        hit = dice_roll(weapon->getToHitDice());
+        def = target->getDefend();
         if (hit < def) {
-                consolePrint("miss!\n");
+                consolePrint("barely scratched!\n");
                 return;
         } else {
                 consolePrint("hit! ");
         }
 
         // roll for damage
-        damage = weapon->getDamage();
+        damage = dice_roll(weapon->getDamageDice());
         armor = target->getArmor();
         consolePrint("Rolled %d damage, %d armor ", damage, armor);
         damage -= armor;
@@ -326,7 +346,7 @@ static void ctrl_attack_ui(class Character *character)
         class Character *near;
         class Character *target;
         struct terrain *terrain;
-        class Mech *mech;
+        class Object *mech;
         int dx_to_neighbor[] = { 0, -1, 0, 1 };
         int dy_to_neighbor[] = { -1, 0, 1, 0 };
 
@@ -420,9 +440,10 @@ static void ctrl_attack_ui(class Character *character)
                         consolePrint("%s\n", terrain->name);
 
                         /* Check for a mech */
-                        mech = (class Mech *) place_get_object(character->getPlace(), x, y, mech_layer);
+                        mech = place_get_object(character->getPlace(), x, y, 
+                                                mech_layer);
                         if (mech)
-                                mech->activate(MECH_ATTACK);
+                                mech->attack(character);
                 }
                 else if (target == character) {
 
@@ -467,25 +488,35 @@ static void ctrl_attack_ui(class Character *character)
         }
 }
 
-static bool ctrl_character_key_handler(struct KeyHandler *kh, int key, int keymod)
+static int ctrl_character_key_handler(struct KeyHandler *kh, int key, 
+                                       int keymod)
 {
         extern int G_latency_start;
         int dir;
         class Character *character = (class Character *) kh->data;
         static int unshift[] = { KEY_NORTH, KEY_SOUTH, KEY_EAST, KEY_WEST };
-        class Portal *portal;
+        class Object *portal;
         class Character *solo_member;
 
 
         G_latency_start = SDL_GetTicks();
 
-        // ---------------------------------------------------------------------
+        // -------------------------------------------------------------------
         // Process the special CTRL commands
-        // ---------------------------------------------------------------------
+        // -------------------------------------------------------------------
 
         if (keymod == KMOD_LCTRL || keymod == KMOD_RCTRL) {
 
                 switch (key) {
+      
+                case 'q':
+                        cmdQuickSave();
+                        break;
+
+                case 'r':
+                        cmdReload();
+                        return true;
+                        break;
       
                 case 't':
                         cmdTerraform(character);
@@ -504,9 +535,9 @@ static bool ctrl_character_key_handler(struct KeyHandler *kh, int key, int keymo
                 }
         }
 
-        // ---------------------------------------------------------------------
+        // -------------------------------------------------------------------
         // Process normal commands.
-        // ---------------------------------------------------------------------
+        // -------------------------------------------------------------------
 
         else {
                 switch (key) {
@@ -516,15 +547,16 @@ static bool ctrl_character_key_handler(struct KeyHandler *kh, int key, int keymo
                 case KEY_SOUTH:
                 case KEY_WEST:
 
-                        // ------------------------------------------------------
+                        // ----------------------------------------------------
                         // Move the character.
-                        // ------------------------------------------------------
+                        // ----------------------------------------------------
 
                         dir = keyToDirection(key);
 
                         consolePrint("%s-", directionToString(dir));
 
-                        switch (character->move(directionToDx(dir), directionToDy(dir))) {
+                        switch (character->move(directionToDx(dir),
+                                                directionToDy(dir))) {
                         case MovedOk:
                                 consolePrint("Ok\n");
                                 break;
@@ -560,7 +592,8 @@ static bool ctrl_character_key_handler(struct KeyHandler *kh, int key, int keymo
 			  break;
                         }
 
-                        mapCenterView(character->getView(), character->getX(), character->getY());
+                        mapCenterView(character->getView(), character->getX(),
+                                      character->getY());
                         break;
 
 
@@ -569,9 +602,9 @@ static bool ctrl_character_key_handler(struct KeyHandler *kh, int key, int keymo
                 case KEY_SHIFT_SOUTH:
                 case KEY_SHIFT_WEST:
 
-                        // ------------------------------------------------------
+                        // ----------------------------------------------------
                         // Pan the camera.
-                        // ------------------------------------------------------
+                        // ----------------------------------------------------
                         
                         key = unshift[(key - KEY_SHIFT_NORTH)];
                         dir = keyToDirection(key);
@@ -591,52 +624,41 @@ static bool ctrl_character_key_handler(struct KeyHandler *kh, int key, int keymo
 
                 case 'e':
 
-                        // ------------------------------------------------------
+                        // ----------------------------------------------------
                         // Enter a portal. For this to work a portal must exist
                         // here, the party must be in follow mode, and all the
                         // party members must be able to rendezvous at this
                         // character's position.
-                        // ------------------------------------------------------
+                        // ----------------------------------------------------
 
                         cmdwin_clear();
                         cmdwin_print("Enter-");
                         
-                        portal = place_get_portal(character->getPlace(), character->getX(), character->getY());
-                        if (!portal) {
+                        portal = place_get_object(character->getPlace(), 
+                                                  character->getX(), 
+                                                  character->getY(), 
+                                                  mech_layer);
+                        if (!portal || !portal->canEnter()) {
                                 cmdwin_print("Nothing!");
                                 break;;
                         }
                         
-                        if (player_party->getPartyControlMode() != PARTY_CONTROL_FOLLOW) {
-                                cmdwin_print("Must be in follow mode!");
-                                break;
-                        }
-                        
-                        if (!player_party->rendezvous(character->getPlace(), character->getX(), character->getY())) {
-                                cmdwin_print("Party must be together!");
-                                break;
-                        }
-                        
-                        // ------------------------------------------------------
-                        // It's safe to enter the portal.
-                        // ------------------------------------------------------
-
-                        character->groupExitTo(portal->getToPlace(), portal->getToX(), portal->getToY());
-                        cmdwin_print("Ok");
+                        portal->enter(character);
                         break;
 
 
                 case 'f':
 
-                        // ------------------------------------------------------
+                        // ----------------------------------------------------
                         // Toggle Follow mode on or off. When turning follow
                         // mode off, set all party members to player
                         // control. When turning it on, set all party member to
                         // follow mode but set the leader to player control.
-                        // ------------------------------------------------------
+                        // ----------------------------------------------------
                         
                         consolePrint("Follow mode ");
-                        if (player_party->getPartyControlMode() == PARTY_CONTROL_FOLLOW) {
+                        if (player_party->getPartyControlMode() == 
+                            PARTY_CONTROL_FOLLOW) {
                                 consolePrint("OFF\n");
                                 player_party->enableRoundRobinMode();
                         } else {
@@ -647,7 +669,10 @@ static bool ctrl_character_key_handler(struct KeyHandler *kh, int key, int keymo
                         break;
 
                 case 'g':
-                        cmdGet(character, !place_contains_hostiles(character->getPlace(), character->getAlignment()));
+                        cmdGet(character, 
+                               !place_contains_hostiles(
+                                       character->getPlace(), 
+                                       character->getAlignment()));
                         break;
                 case 'h':
                         cmdHandle(character);
@@ -665,7 +690,7 @@ static bool ctrl_character_key_handler(struct KeyHandler *kh, int key, int keymo
                         cmdReady(character, 0);
                         break;
                 case 't':
-                        cmdTalk(character->getX(), character->getY());
+                        cmdTalk(character);
                         break;
                 case 'u':
                         cmdUse(character, 0);
@@ -674,6 +699,8 @@ static bool ctrl_character_key_handler(struct KeyHandler *kh, int key, int keymo
                         consolePrint("examines around\n");
                         cmdXamine(character);
                         break;
+                case 'y':
+                        cmdYuse(character);
                 case 'z':
                         consolePrint("show status\n");
                         cmdZtats(character);
@@ -698,11 +725,12 @@ static bool ctrl_character_key_handler(struct KeyHandler *kh, int key, int keymo
                 case SDLK_8:
                 case SDLK_9:                        
 
-                        // ------------------------------------------------------
+                        // ----------------------------------------------------
                         // Put a character in solo mode.
-                        // ------------------------------------------------------
+                        // ----------------------------------------------------
                         
-                        solo_member = player_party->getMemberAtIndex(key - SDLK_1);
+                        solo_member = 
+                                player_party->getMemberAtIndex(key - SDLK_1);
                         if (solo_member != NULL             &&
                             !solo_member->isIncapacitated() &&
                             solo_member->isOnMap()) {
@@ -712,20 +740,20 @@ static bool ctrl_character_key_handler(struct KeyHandler *kh, int key, int keymo
                         break;
 
                 case SDLK_0:
-                        // ------------------------------------------------------
+                        // ----------------------------------------------------
                         // Exit solo mode.
-                        // ------------------------------------------------------
+                        // ----------------------------------------------------
                         player_party->enableRoundRobinMode();
                         character->endTurn();
                         break;
 
 
                 case '<':
-                        // ------------------------------------------------------
+                        // ----------------------------------------------------
                         // Quick exit from wilderness combat. The current place
                         // must be the special wildernss combat place and it
                         // must be empty of hostile characters or this fails.
-                        // ------------------------------------------------------
+                        // ----------------------------------------------------
 
                         if (!place_is_wilderness_combat(character->getPlace())) {
                                 consolePrint("Must use an exit!\n");
@@ -739,18 +767,18 @@ static bool ctrl_character_key_handler(struct KeyHandler *kh, int key, int keymo
                                 break;
                         }
 
-                        // -----------------------------------------------------
+                        // ----------------------------------------------------
                         // This next call is to make sure the "Victory" and
                         // "Defeated" messages are printed properly. I don't
                         // *think* it has any other interesting side-effects in
                         // this case.
-                        // -----------------------------------------------------
+                        // ----------------------------------------------------
 
                         combat_analyze_results_of_last_turn();
 
-                        // ------------------------------------------------------
+                        // ----------------------------------------------------
                         // Remove all party members.
-                        // ------------------------------------------------------
+                        // ----------------------------------------------------
 
                         player_party->removeMembers();
 
@@ -767,21 +795,26 @@ static bool ctrl_character_key_handler(struct KeyHandler *kh, int key, int keymo
         return character->isTurnEnded();
 }
 
-static void ctrl_enchant_target(class Character *character, class Character *target)
+static void ctrl_enchant_target(class Character *character, 
+                                class Character *target)
 {
-        class Spell *spell;
+        struct spell *spell;
         int i;
         int distance;
 
         if (MagicNegated)
                 return;
 
-        distance = place_flying_distance(character->getPlace(), character->getX(), character->getY(), target->getX(), target->getY());
+        distance = place_flying_distance(character->getPlace(), 
+                                         character->getX(), character->getY(),
+                                         target->getX(), target->getY());
 
-        // Enumerate all the known spells for this this
+        // Enumerate all the known spells for this species
         for (i = 0; i < character->species->n_spells; i++) {
 
-                spell = character->species->spells[i];
+                spell = magic_lookup_spell(&Session->magic, 
+                                           character->species->spells[i]);
+                assert(spell);
 
                 // Check if the THIS has enough mana
                 if (spell->cost > character->getMana()) {
@@ -790,17 +823,22 @@ static void ctrl_enchant_target(class Character *character, class Character *tar
 
                 // Check if the nearest is in range or if the range does not
                 // matter for this spell type
-                if (distance > spell->range &&
-                    ! (spell->effects & EFFECT_SUMMON)) {
+                if ((spell->flags & SPELL_RANGE_LIMITED) &&
+                    (distance > spell->range)) {
                         continue;
                 }
 
                 // Cast the spell
                 // gmcnutt: for now use the caster's coordinates, only the
                 // summoning spells currently use them.
-                consolePrint("%s casts %s on %s.\n", character->getName(), spell->getName(), target->getName());
-                spell->cast(character, target, 0, character->getX(), character->getY());
-                character->decActionPoints(spell->getRequiredActionPoints());
+                consolePrint("%s casts %s on %s.\n", character->getName(), 
+                             spell->type->getName(), target->getName());
+#if 0
+                // revisit
+                spell->cast(character, target, 0, character->getX(), 
+                            character->getY());
+#endif
+                character->decActionPoints(spell->action_points);
                 if (character->getActionPoints() <= 0)
                         return;
         }
@@ -809,7 +847,8 @@ static void ctrl_enchant_target(class Character *character, class Character *tar
 }
 
 
-static void ctrl_pathfind_between_objects(class Object *source, class Object *target)
+static void ctrl_pathfind_between_objects(class Object *source, 
+                                          class Object *target)
 {
         struct astar_node *path;
         struct astar_search_info as_info;
@@ -864,7 +903,6 @@ static bool ctrl_attack_target(class Character *character, class Character *targ
                         continue;
                 }
 
-                consolePrint("%s attacks %s with %s...", character->getName(), target->getName(), weapon->getName());
                 ctrl_do_attack(character, weapon, target);
                 attacked = true;
                 statusRepaint();
@@ -909,7 +947,10 @@ static class Character * ctrl_select_target(class Character *character)
                         continue;
 
                 /* Remember the closest target */
-                distance = place_flying_distance(character->getPlace(), character->getX(), character->getY(), obj->getX(), obj->getY());
+                distance = place_flying_distance(character->getPlace(), 
+                                                 character->getX(), 
+                                                 character->getY(), 
+                                                 obj->getX(), obj->getY());
                 if (distance < min_distance) {
                         min_distance = distance;
                         new_target = (class Character*)obj;
@@ -941,11 +982,16 @@ static void ctrl_idle(class Character *character)
 {
         class Character *target;
 
-        // ---------------------------------------------------------------------
+        if (character->ai) {
+                closure_exec(character->ai, "p", character);
+                return;
+        }
+
+        // -------------------------------------------------------------------
         // If they see an enemy they'll engage. Otherwise they just wander
         // uselessly within the rectangular area imposed by their schedule (or
         // freely if they have no schedule).
-        // ---------------------------------------------------------------------
+        // -------------------------------------------------------------------
 
         target = ctrl_select_target(character);
         if (!target) {
@@ -953,28 +999,28 @@ static void ctrl_idle(class Character *character)
                 return;
         }
         
-        // ---------------------------------------------------------------------
+        // -------------------------------------------------------------------
         // A bit confusing here next. If the NPC can't see a target I still let
         // them pathfind. Why? Because the target might be "remembered" - maybe
         // they were visible last turn and they just stepped out of LOS.
-        // ---------------------------------------------------------------------
+        // -------------------------------------------------------------------
         
         if (!character->canSee(target)) {
                 ctrl_pathfind_between_objects(character, target);
                 return;
         }
         
-        // ---------------------------------------------------------------------
+        // -------------------------------------------------------------------
         // First try magic.
-        // ---------------------------------------------------------------------
+        // -------------------------------------------------------------------
 
         ctrl_enchant_target(character, target);
         if (character->isTurnEnded())
                 return;
         
-        // ---------------------------------------------------------------------
+        // -------------------------------------------------------------------
         // Then try force.
-        // ---------------------------------------------------------------------
+        // -------------------------------------------------------------------
 
         if (!ctrl_attack_target(character, target))
                 ctrl_pathfind_between_objects(character, target);
@@ -982,22 +1028,22 @@ static void ctrl_idle(class Character *character)
 
 void ctrl_character_ai(class Character *character)
 {
-        // ---------------------------------------------------------------------
+        // -------------------------------------------------------------------
         // Fleeing overrides the current activity (maybe it should be an
         // activity?)
-        // ---------------------------------------------------------------------
+        // -------------------------------------------------------------------
 
         if (character->isFleeing()) {
                 character->flee();
                 return;
         }
         
-        // ---------------------------------------------------------------------
+        // -------------------------------------------------------------------
         // What we do in auto mode depends on the character's "activity", which
         // is set by the schedule. Character's with no schedule are always
-        // "idle", which means they wander aimlessly and act agressive toward
+        // "idle", which means they wander aimlessly and act agressively toward
         // perceived enemies. Think of them as juvenile delinquents.
-        // ---------------------------------------------------------------------
+        // -------------------------------------------------------------------
 
         switch (character->getActivity()) {
         case COMMUTING:
@@ -1017,9 +1063,9 @@ void ctrl_character_ui(class Character *character)
         kh.fx = &ctrl_character_key_handler;
         kh.data = character;
         eventPushKeyHandler(&kh);
-        mapUpdate(REPAINT_IF_DIRTY);
         eventHandle();
         eventPopKeyHandler();
+        mapUpdate(REPAINT_IF_DIRTY);
 }
 
 
@@ -1041,10 +1087,12 @@ void ctrl_party_ui(class player_party *party)
 {
         struct KeyHandler kh;
 
+        
         kh.fx = &ctrl_party_key_handler;
         kh.data = party;
         eventPushKeyHandler(&kh);
-        mapUpdate(REPAINT_IF_DIRTY);
         eventHandle();
         eventPopKeyHandler();
+        mapUpdate(REPAINT_IF_DIRTY);
+
 }

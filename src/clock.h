@@ -22,58 +22,60 @@
 #ifndef clock_h
 #define clock_h
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "macros.h"
 
-        typedef unsigned int clock_alarm_t;
+BEGIN_DECL
 
-        struct clock {
-                int year;
-                int month;
-                int week;
-                int day_w;  // Day of week (0..6)
-                int day;    // Day of month (0..27)
-                int hour;
-                int min;
-                int baseTurn;
+#define CLOCK_TICKS_PER_MINUTE TURNS_PER_MINUTE
 
-                unsigned int total_minutes;
-                int tick;
-                int tick_to_change_time;
-        };
+#define clock_alarm_save(clk,save) ((save)->write((save), "%d\n", (clk)))
 
-        extern struct clock Clock;
+typedef unsigned int clock_alarm_t;
 
-        extern void clock_advance(int ticks);
-        extern void clock_alarm_set(clock_alarm_t *alarm, unsigned int minutes);
-        extern int clock_alarm_is_expired(clock_alarm_t *alarm);
-        extern unsigned int clock_time_of_day(void);
-        extern unsigned int clock_time(void);
-        extern int clock_load(class Loader *loader);
+struct clock {
+        int year;
+        int month;
+        int week;
+        int day_w;  // Day of week (0..6)
+        int day;    // Day of month (0..27)
+        int hour;
+        int min;
+        int baseTurn;
 
-        extern char * time_HHMM_as_string       (void);
-        extern char * time_YYYY_MM_DD_as_string (void);
+        unsigned int total_minutes;
+        int tick;
+        int tick_to_change_time;
+        int set : 1;
+};
 
-        extern char * month_name (void);
-        extern char * week_name  (void);
-        extern char * day_name   (void);
+extern void clock_advance(int ticks);
+extern void clock_alarm_set(clock_alarm_t *alarm, unsigned int minutes);
+extern int clock_alarm_is_expired(clock_alarm_t *alarm);
+extern unsigned int clock_time_of_day(void);
+extern unsigned int clock_time(void);
+extern int is_noon(void);
+extern int is_midnight(void);
+
+extern char * time_HHMM_as_string       (void);
+extern char * time_YYYY_MM_DD_as_string (void);
+
+extern char * month_name (void);
+extern char * week_name  (void);
+extern char * day_name   (void);
 
 
 #ifdef INCLUDE_UNUSED_CLOCK_ROUTINES
-        extern void clock_reset(struct clock *clock);
-        extern void clock_set_alarm(struct clock *clock, struct clock *offset);
-        extern int clock_alarm_expired(struct clock *clock);
+extern void clock_reset(struct clock *clock);
+extern void clock_set_alarm(struct clock *clock, struct clock *offset);
+extern int clock_alarm_expired(struct clock *clock);
 #endif
 
 #ifdef OTHER_TIME_STRING_FUNCTIONS
-        extern char * time_YYYY_as_string (void);
-        extern char * time_MM_as_string   (void);
-        extern char * time_DD_as_string   (void);
+extern char * time_YYYY_as_string (void);
+extern char * time_MM_as_string   (void);
+extern char * time_DD_as_string   (void);
 #endif // OTHER_TIME_STRING_FUNCTIONS
         
-#ifdef __cplusplus
-}
-#endif
+END_DECL
 
 #endif

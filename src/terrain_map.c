@@ -20,55 +20,56 @@
 // gmcnutt@users.sourceforge.net
 //
 #include "terrain_map.h"
-#include "util.h"
 #include "terrain.h"
 #include "map.h"
+#include "session.h"
+#include "common.h"
 
 #include <assert.h>
 
-struct terrain_map *terrain_map_create(char *tag, unsigned int w,
-				       unsigned int h)
+struct terrain_map *terrain_map_new(char *tag, unsigned int w,
+                                    unsigned int h,
+                                    struct terrain_palette * pal)
 {
 	struct terrain_map *terrain_map;
 	CREATE(terrain_map, struct terrain_map, 0);
-	if (tag && !(terrain_map->tag = strdup(tag)))
-		goto fail;
+	if (tag) {
+                terrain_map->tag = strdup(tag);
+                assert(terrain_map->tag);
+        }
 	terrain_map->w = w;
 	terrain_map->h = h;
-	if (!(terrain_map->terrain =
-	      (struct terrain **) malloc(sizeof(struct terrain *) * w * h)))
-		goto fail;
+        terrain_map->palette = pal;
+	terrain_map->terrain =
+                (struct terrain **) malloc(sizeof(struct terrain *) * w * h);
+        assert(terrain_map->terrain);
 	memset(terrain_map->terrain, 0, sizeof(struct terrain *) * w * h);
 	return terrain_map;
-
-      fail:
-	terrain_map_destroy(terrain_map);
-	return 0;
 }
 
 struct terrain_map *terrain_map_clone(struct terrain_map *orig)
 {
 	struct terrain_map *map;
-    char * clonetag = (char *) calloc(strlen(orig->tag) + 2 + 1, sizeof(char));
-    assert(clonetag);
-    strncpy(clonetag, orig->tag, strlen(orig->tag));
-    strcat(clonetag, "_c");
+        char * clonetag = (char *) calloc(strlen(orig->tag) + 2 + 1, 
+                                          sizeof(char));
+        assert(clonetag);
+        strncpy(clonetag, orig->tag, strlen(orig->tag));
+        strcat(clonetag, "_c");
 
-	if (!(map = terrain_map_create(clonetag, orig->w, orig->h)))
-		return NULL;
-    free(clonetag);
-
+        if (!orig->palette) {
+                printf("terrain_map_clone() \n"
+                       " called to clone a map (tag '%s') without a palette,\n"
+                       " this may be or cause a problem elsewhere.\n", 
+                       orig->tag);
+                assert(0);
+        }
+        
+	map = terrain_map_new(clonetag, orig->w, orig->h, orig->palette);
+        free(clonetag);
+        
 	memcpy(map->terrain, orig->terrain,
 	       sizeof(struct terrain *) * orig->w * orig->h);
-
-    if (!orig->palette) {
-      printf("terrain_map_clone() \n"
-             "  called to clone a map (tag '%s') without a palette, \n"
-             "  this may be or cause a problem elsewhere.\n", orig->tag);
-      assert(0);
-    }
-    map->palette = orig->palette;
-
+        
 	return map;
 }
 
@@ -175,7 +176,7 @@ void terrain_map_rotate(struct terrain_map *map, int degree)
 
 }
 
-void terrain_map_destroy(struct terrain_map *terrain_map)
+void terrain_map_del(struct terrain_map *terrain_map)
 {
 	if (terrain_map->tag)
 		free(terrain_map->tag);
@@ -249,10 +250,8 @@ extern void terrain_map_print(FILE * fp, int indent, struct terrain_map *map)
     if (!palette) {
       // SAM: We will at least try to carry on...
       //      This may not be the Right Thing generally, though.
-      palette = new_terrain_palette();
-      palette->tag          = "NO_PALETTE";
+      palette = terrain_palette_new("NO_PALETTE");
       palette->widest_glyph = 1;
-      palette->num_entries  = 0;  // Should give reasonable results...
     }
 
     compact = (PREFER_COMPACT_MAPS && palette->widest_glyph == 1);
@@ -373,3 +372,73 @@ void print_horizontal_guideline (FILE * fp, int indent, struct terrain_map *map)
     }
     // TODO: width 3 and 4 palettes.
 }
+
+void terrain_map_save(struct save *save, void *val)
+{
+        struct terrain_map *map;
+        int x, y, i;
+
+        map = (struct terrain_map*)val;
+
+        if (map->saved == save->session_id) {
+                save->write(save, "%s\n", map->tag);
+                return;
+        }
+
+        save->enter(save, "(kern-mk-map '%s %d %d %s\n", map->tag, map->w,
+                map->h, map->palette->tag);
+        save->enter(save, "(list\n");
+
+        i = 0;
+        for (y = 0; y < map->h; y++) {
+                save->write(save, "\"");
+
+                for (x = 0; x < map->w; x++) {                        
+                        char *glyph;
+
+                        glyph = palette_glyph_for_terrain(map->palette,
+                                                          map->terrain[i]);
+                        if (! glyph) {
+                                err("map %s: no glyph in palette %s "\
+                                         "for terrain at [%d %d]\n", map->tag,
+                                         map->palette->tag, x, y);
+                                assert(glyph);
+                        }
+
+                        // print with no indentation (same line)
+                        fprintf(save->file, "%2s ", glyph);
+
+                        i++;
+                }
+                fprintf(save->file, "\"\n");
+        }
+        save->exit(save, ")\n");
+        save->exit(save, ")\n");
+
+        map->saved = save->session_id;
+}
+
+#if 0
+// A dbg function I used once to help find a memory-stomper. Keep it around for
+// a while just in case it comes in handy again.
+void terrain_map_check(struct terrain_map *map)
+{
+        int x, y, i;
+        static int j = 0;
+
+        if (!map)
+                return;
+
+        dbg("*** terrain_map_check %d\n", j++);
+        i  = 0;
+        for (y = 0; y < map->h; y++) {
+                for (x = 0; x < map->w; x++) {                        
+                        char *glyph;
+                        glyph = palette_glyph_for_terrain(map->palette,
+                                                          map->terrain[i]);
+                        assert(glyph);
+                        i++;
+                }
+        }        
+}
+#endif

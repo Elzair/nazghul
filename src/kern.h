@@ -19,42 +19,12 @@
 // Gordon McNutt
 // gmcnutt@users.sourceforge.net
 //
-#include "Trap.h"
 
-bool TrapType::isType(int classID)
-{
-	if (classID == TRAP_TYPE_ID)
-		return true;
-	return ObjectType::isType(classID);
-}
+#ifndef kern_h
+#define kern_h
 
-int TrapType::getType()
-{
-	return TRAP_TYPE_ID;
-}
+#include "scheme.h"
 
-TrapType::TrapType():effects(0), amount(0)
-{
-}
+scheme * kern_init(void);
 
-TrapType::~TrapType()
-{
-}
-void TrapType::setEffects(int val)
-{
-	effects = val;
-}
-void TrapType::setAmount(int val)
-{
-	amount = val;
-}
-
-int TrapType::getEffects()
-{
-	return effects;
-}
-
-int TrapType::getAmount()
-{
-	return amount;
-}
+#endif

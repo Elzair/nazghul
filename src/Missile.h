@@ -30,7 +30,7 @@
 
 class Missile:public Object {
       public:
-	Missile();
+	Missile(ArmsType*);
 	virtual ~Missile();
 	virtual class ArmsType *getObjectType();
 	virtual void animate(int Ax, int Ay, int Bx, int By, int flags);

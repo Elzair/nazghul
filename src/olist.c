@@ -20,7 +20,7 @@
 // gmcnutt@users.sourceforge.net
 //
 #include "olist.h"
-#include "util.h"
+#include "common.h"
 
 struct olist *olist_lookup(struct olist *head, int key, int first)
 {

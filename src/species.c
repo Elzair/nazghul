@@ -20,83 +20,103 @@
 // gmcnutt@users.sourceforge.net
 //
 
+#include "closure.h"
 #include "species.h"
-#include "Loader.h"
-#include "occ.h"
 #include "sprite.h"
-#include "common.h"
 
+#include <assert.h>
 #include <string.h>
 #include <stdlib.h>
 
-static class Spell **loadSpells(class Loader * loader, int *n)
+struct species_slot_elem {
+        struct list list;
+        int slot;
+};
+
+struct species_spell_elem {
+        struct list list;
+        class Spell *spell;
+};
+
+struct species *species_new(char *tag,
+                            char *name,
+                            char *damage_sound,
+                            char *movement_sound,
+                            int str,
+                            int intl,
+                            int dex,
+                            int spd,
+                            int vr,
+                            int pmask,
+                            int hp_mod,
+                            int hp_mult,
+                            int mp_mod,
+                            int mp_mult,
+                            int hit_mod,
+                            int def_mod,
+                            int dam_mod,
+                            int arm_mod,
+                            bool visible,
+                            int n_slots,
+                            int n_spells
+        )
 {
-	char *tag;
-	class Spell **set;
-	int index;
+        struct species *species = (struct species *)malloc(sizeof(*species));
+        assert(species);
+        memset(species, 0, sizeof(*species));
 
-	// base case
-	if (loader->matchToken('}')) {
-		set = new class Spell *[*n];
-		if (!set)
-			loader->setError("Memory allocation failed");
-		return set;
-	}
-	// recursive case
-	if (!loader->getWord(&tag))
-		return 0;
+        species->tag = strdup(tag);
+        assert(species->tag);
 
-	index = *n;
-	(*n)++;
+        species->name = strdup(name);
+        assert(species->name);
 
-	set = loadSpells(loader, n);
-	if (!set) {
-		free(tag);
-		return 0;
-	}
+        if (damage_sound) {
+                species->damage_sound = strdup(damage_sound);
+                assert(species->damage_sound);
+        }
 
-	set[index] = (class Spell *) loader->lookupTag(tag, SPELL_TYPE_ID);
-	if (!set[index]) {
-		loader->setError("Invalid spell type '%s'", tag);
-		free(tag);
-		delete set;
-		return 0;
-	}
+        if (movement_sound) {
+                species->movement_sound = strdup(movement_sound);
+                assert(species->movement_sound);
+        }
 
-	return set;
+        if (n_slots > 0) {
+                species->slots = (int*)calloc(n_slots, sizeof(int));
+                assert(species->slots);
+        }
+
+        if (n_spells > 0) {
+                species->spells = (char**)calloc(n_spells, 
+                                                 sizeof(char*));
+                assert(species->spells);
+        }
+
+        species->str                = str;
+        species->intl               = intl;
+        species->dex                = dex;
+        species->spd                = spd;
+        species->vr                 = vr;
+        species->pmask              = pmask;
+        species->hp_mod             = hp_mod;
+        species->hp_mult            = hp_mult;
+        species->mp_mod             = mp_mod;
+        species->mp_mult            = mp_mult;
+        species->hit_mod            = hit_mod;
+        species->def_mod            = def_mod;
+        species->dam_mod            = dam_mod;
+        species->arm_mod            = arm_mod;
+        species->visible            = visible;
+        species->n_slots            = n_slots;
+        species->n_spells           = n_spells;
+
+        return species;
 }
 
-static int *loadSlots(class Loader * loader, int *n)
+void species_del(struct species *species)
 {
-	int *set;
-	int index, slot;
+        struct list *elem;
 
-	// base case
-	if (loader->matchToken('}')) {
-		set = new int[*n];
-		if (!set)
-			loader->setError("Memory allocation failed");
-		return set;
-	}
-	// recursive case
-	if (!loader->getInt(&slot))
-		return 0;
-
-	index = *n;
-	(*n)++;
-
-	set = loadSlots(loader, n);
-	if (!set) {
-		return 0;
-	}
-
-	set[index] = slot;
-
-	return set;
-}
-
-void speciesDestroy(struct species *species)
-{
 	if (!species)
 		return;
 	if (species->tag)
@@ -104,124 +124,16 @@ void speciesDestroy(struct species *species)
 	if (species->name)
 		free(species->name);
 	if (species->slots)
-		delete species->slots;
-	if (species->spells)
-		delete species->spells;
+		free(species->slots);
+	if (species->spells) {
+                int i;
+                for (i = 0; i < species->n_spells; i++)
+                        free(species->spells[i]);
+		free(species->spells);
+        }
         if (species->damage_sound)
                 free(species->damage_sound);
         if (species->movement_sound)
                 free(species->movement_sound);
-}
-
-struct species *speciesLoad(class Loader * loader)
-{
-	struct species *species = 0;
-	char *stag = 0, *wtag = 0;
-
-	if (!(species = new struct species))
-		goto fail;
-
-	memset(species, 0, sizeof(struct species));
-
-	if (!loader->getWord(&species->tag) ||
-	    !loader->matchToken('{') ||
-	    !loader->matchWord("name") ||
-	    !loader->getString(&species->name) ||
-	    !loader->matchWord("str") ||
-	    !loader->getInt(&species->str) ||
-	    !loader->matchWord("int") ||
-	    !loader->getInt(&species->intl) ||
-	    !loader->matchWord("dex") ||
-	    !loader->getInt(&species->dex) ||
-	    !loader->matchWord("spd") ||
-	    !loader->getInt(&species->spd) ||
-	    !loader->matchWord("vr") ||
-	    !loader->getInt(&species->vr) ||
-	    !loader->matchWord("pmask") || 
-            !loader->getBitmask(&species->pmask) ||
-
-            !loader->matchWord("hp_mod") ||
-            !loader->getInt(&species->hp_mod) ||
-            !loader->matchWord("hp_mult") ||
-            !loader->getInt(&species->hp_mult) ||
-            !loader->matchWord("mp_mod") ||
-            !loader->getInt(&species->mp_mod) ||
-            !loader->matchWord("mp_mult") ||
-            !loader->getInt(&species->mp_mult) ||
-            !loader->matchWord("hit_mod") ||
-            !loader->getInt(&species->hit_mod) ||
-            !loader->matchWord("def_mod") ||
-            !loader->getInt(&species->def_mod) ||
-            !loader->matchWord("dam_mod") ||
-            !loader->getInt(&species->dam_mod) ||
-            !loader->matchWord("arm_mod") ||
-            !loader->getInt(&species->arm_mod))
-		goto fail;
-
-	if (!loader->matchWord("sleep_sprite") ||
-	    !loader->getWord(&stag) ||
-	    (strcmp(stag, "null") && 
-             !(species->sleep_sprite =
-               (struct sprite *) loader->lookupTag(stag,
-                                                   SPRITE_ID))))
-	{
-		loader->setError("Invalid sprite tag '%s'", stag);
-		goto fail;
-	}
-
-	if (!loader->matchWord("weapon") ||
-	    !loader->getWord(&wtag) ||
-	    (!(species->weapon =
-	       (class ArmsType *) loader->lookupTag(wtag, ARMS_TYPE_ID)))) {
-		loader->setError("Invalid arms tag '%s'", wtag);
-		goto fail;
-	}
-
-	if (!loader->matchWord("visible") ||
-	    !loader->getBool(&species->visible))
-		goto fail;
-
-	if (!loader->matchWord("slots") ||
-	    !loader->matchToken('{') ||
-	    !(species->slots = loadSlots(loader, &species->n_slots)) ||
-	    !loader->matchWord("spells") ||
-	    !loader->matchToken('{') ||
-	    !(species->spells = loadSpells(loader, &species->n_spells)))
-		goto fail;
-
-        // Optional fields
-
-        while (!loader->matchToken('}')) {
-
-                if (loader->matchWord("damage_sound")) {
-                        if (!loader->getString(&species->damage_sound))
-                                goto fail;
-                } else if (loader->matchWord("movement_sound")) {
-                        if (!loader->getString(&species->movement_sound))
-                                goto fail;
-                } else if (loader->matchWord("effects")) {
-                        if (!loader->getBitmask(&species->effects))
-                                goto fail;
-                } else if (loader->matchWord("immunities")) {
-                        if (!loader->getBitmask(&species->immunities))
-                                goto fail;
-                } else {
-                        loader->setError("Error in SPECIES: unknown field "
-                                         "'%s'", loader->getLexeme());
-                        goto fail;
-                }
-	}
-
-      done:
-	if (stag)
-		free(stag);
-	if (wtag)
-		free(wtag);
-
-	return species;
-
-      fail:
-	speciesDestroy(species);
-	species = 0;
-	goto done;
+        free(species);
 }

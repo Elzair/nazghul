@@ -40,10 +40,14 @@ static struct tree *found;	/* Nodes with a known path, ordered by location
 
 /* Internal ******************************************************************/
 
+#ifdef ASTAR_DBG
 #define dump_node(n) \
          dbg("%p={x=%d, y=%d, next=%p, len=%d, cost=%d, "\
          "goodness=%d, order.key=%d}", (n), (n)->x, (n)->y, (n)->next, \
          (n)->len, (n)->cost, (n)->goodness, (n)->order.key)
+#else
+#define dump_node(n)
+#endif
 
 static inline void astar_search_init(void)
 {
@@ -209,9 +213,9 @@ static void astar_dump_schedule()
 
         for (i = 0; i < schedule->num_entries; i++) {
                 node = heap_entry(schedule->entries[i], struct astar_node, goodness);
-                printf("(%d %d)", node->x, node->y);
+                dbg("(%d %d)", node->x, node->y);
         }
-        printf("\n");
+        dbg("\n");
         
 }
 

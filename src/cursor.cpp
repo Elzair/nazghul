@@ -23,8 +23,6 @@
 #include "place.h"
 #include "map.h"
 
-class Cursor *Cursor = NULL;
-
 Cursor::Cursor():range(0), bounded(0), originX(0), originY(0), active(false)
 {
 }
@@ -73,7 +71,7 @@ enum MoveResult Cursor::move(int dx, int dy)
       return OutOfRange;
     
 	// move the cursor
-	relocate(getPlace(), newx, newy);
+	relocate(getPlace(), newx, newy, true);
     
 	return MovedOk;
 }
@@ -94,9 +92,10 @@ void Cursor::setOrigin(int x, int y)
 	originY = y;
 }
 
-void Cursor::relocate(struct place *newplace, int newx, int newy)
+void Cursor::relocate(struct place *newplace, int newx, int newy, bool noStep,
+                      struct closure *place_switch_hook)
 {
-        Object::relocate(newplace, newx, newy);
+        Object::relocate(newplace, newx, newy, true, NULL);
         active = true;
 }
 

@@ -30,7 +30,7 @@ static int windDuration;
 
 void windAdvanceTurns(void)
 {
-	if (windDuration) {
+	if (windDuration > 0) {
 		windDuration--;
 		return;
 	}

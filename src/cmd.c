@@ -1,4 +1,3 @@
-//
 // nazghul - an old-school RPG engine
 // Copyright (C) 2002, 2003 Gordon McNutt
 //
@@ -21,7 +20,6 @@
 //
 
 #include "cmd.h"
-#include "util.h"
 #include "game.h"
 #include "place.h"
 #include "constants.h"
@@ -36,7 +34,6 @@
 #include "player.h"
 #include "sky.h"
 #include "map.h"
-#include "moongate.h"
 #include "wq.h"
 #include "foogod.h"
 #include "combat.h"
@@ -44,19 +41,16 @@
 #include "Arms.h"
 #include "event.h"
 #include "wind.h"
-#include "Item.h"
 #include "Container.h"
-#include "Trap.h"
-#include "conv.h"
-#include "Mech.h"
-#include "Spell.h"
-#include "Mech.h"
 #include "dup_constants.h"
 #include "cmdwin.h"
 #include "vehicle.h"
-#include "portal.h"
+#include "Portal.h"
 #include "terrain.h"
 #include "vmask.h"
+#include "session.h"
+#include "sched.h"
+#include "conv.h"
 
 #define DEBUG
 #include "debug.h"
@@ -69,24 +63,26 @@
 #include <unistd.h>     // getpid()
 #include <errno.h>
 
-bool dirkey(struct KeyHandler *kh, int key, int keymod)
+#define QUICKSAVE_FNAME "save.scm"
+
+int dirkey(struct KeyHandler *kh, int key, int keymod)
 {
 	int *dir = (int *) kh->data;
 
 	if (key >= KEY_SOUTHWEST && key <= KEY_NORTHEAST) {
 		*dir = keyToDirection(key);
-		return true;
+		return 1;
 	}
 
 	if (key == SDLK_ESCAPE) {
 		*dir = key;
-		return true;
+		return 1;
 	}
 
-	return false;
+	return 0;
 }
 
-bool yesnokey(struct KeyHandler * kh, int key, int keymod)
+int yesnokey(struct KeyHandler * kh, int key, int keymod)
 {
 	int *yesno = (int *) kh->data;
 
@@ -94,14 +90,14 @@ bool yesnokey(struct KeyHandler * kh, int key, int keymod)
 	case 'y':
 	case 'Y':
 		*yesno = 'y';
-		return true;
+		return 1;
 	case 'n':
 	case 'N':
 	case CANCEL:
 		*yesno = 'n';
-		return true;
+		return 1;
 	default:
-		return false;
+		return 0;
 	}
 }
 
@@ -127,7 +123,7 @@ static inline void getnum_erase_prompt(struct get_number_info *info)
 	}
 }
 
-bool getnum(struct KeyHandler *kh, int key, int keymod)
+int getnum(struct KeyHandler *kh, int key, int keymod)
 {
 	struct get_number_info *info;
 
@@ -139,61 +135,61 @@ bool getnum(struct KeyHandler *kh, int key, int keymod)
 			getnum_erase_prompt(info);
 			info->digit = 0;
 			info->state = GN_CANCEL;
-			return true;
+			return 1;
 		}
 		if (key == '\n') {
 			getnum_erase_prompt(info);
-			return true;
+			return 1;
 		}
 		if (key == '0') {
 			getnum_erase_prompt(info);
 			cmdwin_print("0");
 			info->digit = 0;
 			info->state = GN_ZERO;
-			return false;
+			return 0;
 		}
 		if (isdigit(key)) {
 			getnum_erase_prompt(info);
 			info->digit = info->digit * 10 + key - '0';
 			cmdwin_print("%c", key);
 			info->state = GN_SOME;
-			return false;
+			return 0;
 		}
 		break;
 	case GN_ZERO:
 		if (key == CANCEL) {
 			info->digit = 0;
 			info->state = GN_CANCEL;
-			return true;
+			return 1;
 		}
 		if (key == '\n') {
-			return true;
+			return 1;
 		}
 		if (key == '\b') {
 			cmdwin_backspace(1);
 			if (info->prompt)
 				cmdwin_print(info->prompt);
 			info->state = GN_ALL;
-			return false;
+			return 0;
 		}
 		if (key == '0')
-			return false;
+			return 0;
 		if (isdigit(key)) {
 			cmdwin_backspace(1);
 			info->digit = info->digit * 10 + key - '0';
 			cmdwin_print("%c", key);
 			info->state = GN_SOME;
-			return false;
+			return 0;
 		}
 		break;
 	case GN_SOME:
 		if (key == CANCEL) {
 			info->digit = 0;
 			info->state = GN_CANCEL;
-			return true;
+			return 1;
 		}
 		if (key == '\n') {
-			return true;
+			return 1;
 		}
 		if (key == '\b') {
 			info->digit = info->digit - (info->digit % 10);
@@ -204,20 +200,20 @@ bool getnum(struct KeyHandler *kh, int key, int keymod)
 				if (info->prompt)
 					cmdwin_print(info->prompt);
 			}
-			return false;
+			return 0;
 		}
 		if (isdigit(key)) {
 			info->digit = info->digit * 10 + key - '0';
 			cmdwin_print("%c", key);
-			return false;
+			return 0;
 		}
 		break;
 	}
 
-	return false;
+	return 0;
 }
 
-bool getdigit(struct KeyHandler * kh, int key, int keymod)
+int getdigit(struct KeyHandler * kh, int key, int keymod)
 {
         struct get_number_info *info;
 
@@ -226,7 +222,7 @@ bool getdigit(struct KeyHandler * kh, int key, int keymod)
         if (key == CANCEL) {
                 cmdwin_backspace(info->erase);
                 info->digit = 0;
-                return true;
+                return 1;
         }
 
         if (isdigit(key)) {
@@ -234,18 +230,18 @@ bool getdigit(struct KeyHandler * kh, int key, int keymod)
                 info->digit = key - '0';
                 if (info->digit != 0)
                         cmdwin_print("%c", key);
-                return true;
+                return 1;
         }
         
-        return false;
+        return 0;
 }
 
-bool anykey(struct KeyHandler * kh, int key, int keymod)
+int anykey(struct KeyHandler * kh, int key, int keymod)
 {
-	return true;
+	return 1;
 }
 
-bool scroller(struct KeyHandler * kh, int key, int keymod)
+int scroller(struct KeyHandler * kh, int key, int keymod)
 {
 	struct ScrollerContext *context;
 	context = (struct ScrollerContext *) kh->data;
@@ -276,26 +272,26 @@ bool scroller(struct KeyHandler * kh, int key, int keymod)
 			context->selection =
                                 statusGetSelected(context->selector);
 		}
-		return true;
+		return 1;
 	case SDLK_ESCAPE:
 	case 'q':
 		if (context)
-			context->abort = true;
-		return true;
+			context->abort = 1;
+		return 1;
 	case 'm':
 		if (context && context->mixing) {
-			context->done = true;
-			return true;
+			context->done = 1;
+			return 1;
 		}
 		break;
 	default:
 		break;
 	}
 
-	return false;
+	return 0;
 }
 
-bool movecursor(struct KeyHandler * kh, int key, int keymod)
+int movecursor(struct KeyHandler * kh, int key, int keymod)
 {
         // A UI mode in which the user can move the cursor 
         // with ARROW keys, select a target with 
@@ -305,25 +301,25 @@ bool movecursor(struct KeyHandler * kh, int key, int keymod)
         data = (struct cursor_movement_keyhandler *) kh->data;
   
         if (key == '\n' || key == SDLK_SPACE || key == SDLK_RETURN) {
-                return true;  // Done (target selected)
+                return 1;  // Done (target selected)
         }
   
         if (keyIsDirection(key)) {
                 int dir = keyToDirection(key);
-                Cursor->move(directionToDx(dir), directionToDy(dir));
+                Session->crosshair->move(directionToDx(dir), directionToDy(dir));
                 mapSetDirty();
-                return false;  // Keep on keyhandling
+                return 0;  // Keep on keyhandling
         }
   
         if (key == SDLK_ESCAPE) {
-                data->abort = true;
-                return true;  // Done (abort)
+                data->abort = 1;
+                return 1;  // Done (abort)
         }
   
-        return false;  // Keep on keyhandling
+        return 0;  // Keep on keyhandling
 } // movecursor()
 
-bool movecursor_and_do(struct KeyHandler * kh, int key, int keymod)
+int movecursor_and_do(struct KeyHandler * kh, int key, int keymod)
 {
         // As movecursor(), but call kh->each_point_func()
         // for each cursor move, and kh->each_target_func()
@@ -340,32 +336,32 @@ bool movecursor_and_do(struct KeyHandler * kh, int key, int keymod)
         data = (struct cursor_movement_keyhandler *) kh->data;
   
         if (key == '\n' || key == SDLK_SPACE || key == SDLK_RETURN) {
-                int x = Cursor->getX();
-                int y = Cursor->getY();
+                int x = Session->crosshair->getX();
+                int y = Session->crosshair->getY();
                 if (data->each_target_func)
                         data->each_target_func(x, y);
-                return false;  // Keep on keyhandling
+                return 0;  // Keep on keyhandling
         }
   
         if (keyIsDirection(key)) {
                 int dir = keyToDirection(key);
-                Cursor->move(directionToDx(dir), directionToDy(dir));
+                Session->crosshair->move(directionToDx(dir), directionToDy(dir));
                 mapSetDirty();
-                int x = Cursor->getX();
-                int y = Cursor->getY();
+                int x = Session->crosshair->getX();
+                int y = Session->crosshair->getY();
                 if (data->each_point_func)
                         data->each_point_func(x, y);
-                return false;  // Keep on keyhandling
+                return 0;  // Keep on keyhandling
         }
   
         if (key == SDLK_ESCAPE) {
-                data->abort = true;
-                return true;  // Done (abort)
+                data->abort = 1;
+                return 1;  // Done (abort)
         }
-        return false;  // Keep on keyhandling
+        return 0;  // Keep on keyhandling
 } // movecursor_and_do()
 
-bool terraform_movecursor_and_do(struct KeyHandler * kh, int key, int keymod)
+int terraform_movecursor_and_do(struct KeyHandler * kh, int key, int keymod)
 {
         // As movecursor_and_do(), but with additional keybindings
         // intended for cmdTerraform().
@@ -377,22 +373,22 @@ bool terraform_movecursor_and_do(struct KeyHandler * kh, int key, int keymod)
         pp   = data->palette;
   
         if (key == '\n' || key == SDLK_SPACE || key == SDLK_RETURN) {
-                int x = Cursor->getX();
-                int y = Cursor->getY();
+                int x = Session->crosshair->getX();
+                int y = Session->crosshair->getY();
                 if (data->each_target_func)
                         data->each_target_func(x, y, data);
-                return false;  // Keep on keyhandling
+                return 0;  // Keep on keyhandling
         }
 
         if (keyIsDirection(key)) {
                 int dir = keyToDirection(key);
-                Cursor->move(directionToDx(dir), directionToDy(dir));
+                Session->crosshair->move(directionToDx(dir), directionToDy(dir));
                 mapSetDirty();
-                int x = Cursor->getX();
-                int y = Cursor->getY();
+                int x = Session->crosshair->getX();
+                int y = Session->crosshair->getY();
                 if (data->each_point_func)
                         data->each_point_func(x, y, data);
-                return false;  // Keep on keyhandling
+                return 0;  // Keep on keyhandling
         }
 
         if (key == SDLK_PAGEUP) {
@@ -400,28 +396,28 @@ bool terraform_movecursor_and_do(struct KeyHandler * kh, int key, int keymod)
                 palette_prev_terrain(pp);
                 tt = palette_current_terrain(pp);
                 consolePrint("[Prev]  terrain %s '%s'\n", tt->tag, tt->name);
-                return false;  // Keep on keyhandling
+                return 0;  // Keep on keyhandling
         }
         if (key == SDLK_PAGEDOWN) {
                 // Page Down == Cycle forward through terrain in palette
                 palette_next_terrain(pp);
                 tt = palette_current_terrain(pp);
                 consolePrint("[Next]  terrain %s '%s'\n", tt->tag, tt->name);
-                return false;  // Keep on keyhandling
+                return 0;  // Keep on keyhandling
         }
         if (key == SDLK_HOME) {
                 // Home == Select first terrain in palette
                 palette_first_terrain(pp);
                 tt = palette_current_terrain(pp);
                 consolePrint("[First] terrain %s '%s'\n", tt->tag, tt->name);
-                return false;  // Keep on keyhandling
+                return 0;  // Keep on keyhandling
         }
         if (key == SDLK_END) {
                 // End == Select last terrain in palette
                 palette_last_terrain(pp);
                 tt = palette_current_terrain(pp);
                 consolePrint("[Last]  terrain %s '%s'\n", tt->tag, tt->name);
-                return false;  // Keep on keyhandling
+                return 0;  // Keep on keyhandling
         }
 
         if (key >= SDLK_0 && key <= SDLK_9) {
@@ -434,23 +430,23 @@ bool terraform_movecursor_and_do(struct KeyHandler * kh, int key, int keymod)
                         palette_set_quick_terrain(pp, qt, index);
                         tt = palette_current_terrain(pp);
                         consolePrint("[Quick %d] set to %s '%s'\n", qt, tt->tag, tt->name);
-                        return false; // Keep on keyhandling
+                        return 0; // Keep on keyhandling
                 }
                 // Plain NUM == set current terrain from quick terrain:
                 int index = palette_get_quick_terrain_index(pp, qt);
                 palette_set_current_terrain(pp, index);
                 tt = palette_current_terrain(pp);
                 consolePrint("[Quick %d] %s '%s'\n", qt, tt->tag, tt->name);
-                return false;  // Keep on keyhandling
+                return 0;  // Keep on keyhandling
         }
 
         // ...
     
         if (key == SDLK_ESCAPE) {
-                data->abort = true;
-                return true;  // Done (abort)
+                data->abort = 1;
+                return 1;  // Done (abort)
         }
-        return false;  // Keep on keyhandling
+        return 0;  // Keep on keyhandling
 } // terraform_movecursor_and_do()
 
 int num_for_key (int key)
@@ -508,7 +504,6 @@ struct inv_entry *select_item(void)
 {
 	enum StatusMode omode;
 	struct inv_entry *ie;
-	class ItemType *item;
 	struct KeyHandler kh;
 	struct ScrollerContext sc;
 
@@ -534,8 +529,7 @@ struct inv_entry *select_item(void)
 		return NULL;
 	}
 
-	item = (class ItemType *) ie->type;
-	cmdwin_print(item->getName());
+	cmdwin_print(ie->type->getName());
 
 	return ie;
 }
@@ -580,7 +574,7 @@ class Character *select_party_member(void)
 	return character;
 }
 
-void getkey(void *data, bool(*handler) (struct KeyHandler * kh, int key, int keymod))
+void getkey(void *data, int(*handler) (struct KeyHandler * kh, int key, int keymod))
 {
 	struct KeyHandler kh;
 	kh.fx = handler;
@@ -627,14 +621,27 @@ bool cmdSearch(int x, int y)
 	return true;
 }
 
+void cmdGetObject(Object *actor, Object *subject)
+{
+        closure_t *handler;
+
+        if (! subject->getObjectType()->canGet()) {
+                consolePrint("Can't get ");
+                subject->describe();
+                consolePrint("\n");
+                return;                
+        }
+                
+        subject->getObjectType()->get(subject, actor);
+
+}
+
 bool cmdGet(class Object *actor, bool scoop_all)
 {
 	class Object *item;
-	class ObjectType *type;
-	int count;
 	int dir;
-	int n_item_types;
         int x, y;
+        closure_t *handler;
 
 	cmdwin_clear();
 	cmdwin_print("Get-");
@@ -643,49 +650,24 @@ bool cmdGet(class Object *actor, bool scoop_all)
 	if (dir == CANCEL)
 		return false;
 
-	consolePrint("You get ");
-
         x = actor->getX() + directionToDx(dir);
         y = actor->getY() + directionToDy(dir);
 
 	item = place_get_item(actor->getPlace(), x, y);
 	if (!item) {
-		consolePrint("nothing!\n");
+		consolePrint("Nothing there!\n");
 		return false;
 	}
        
-	n_item_types = 1;
-	count = 1;
-	type = item->getObjectType();
-
-        place_remove_object(actor->getPlace(), item);
-        actor->addToInventory(item);
+        cmdGetObject(actor, item);
 
 	if (scoop_all) {
 		while (NULL != (item = place_get_item(actor->getPlace(), x, y))) {
-			if (item->getObjectType() != type) {
-				if (n_item_types > 1)
-					consolePrint(", ");
-				type->describe(count);
-				type = item->getObjectType();
-				count = 1;
-				n_item_types++;
-			} else {
-				count++;
-			}
-
-                        place_remove_object(actor->getPlace(), item);
-                        actor->addToInventory(item);
+                        cmdGetObject(actor, item);
 		}
 	}
 
-	if (n_item_types > 1) {
-		consolePrint(" and ");
-	}
-	type->describe(count);
-	consolePrint(".\n");
         mapSetDirty();
-
         actor->decActionPoints(NAZGHUL_BASE_ACTION_POINTS);
 
 	return true;
@@ -694,11 +676,22 @@ bool cmdGet(class Object *actor, bool scoop_all)
 bool cmdOpen(class Character * pc)
 {
 	int dir, x, y;
-	class Mech *mech;
+	class Object *mech;
 	class Container *container;
 
 	cmdwin_clear();
 	cmdwin_print("Open-");
+
+	// Get the party member who will open the container (in combat mode
+	// this is passed in as a parameter).
+	if (pc != NULL) {
+		cmdwin_print("%s", pc->getName());
+	} else {
+		pc = select_party_member();
+		if (pc == NULL) {
+			return false;
+		}
+	}
 
 	dir = ui_get_direction();
 	if (dir == CANCEL)
@@ -716,23 +709,12 @@ bool cmdOpen(class Character * pc)
 
 	/*** Open Mech ***/
 
-	mech = (class Mech *) place_get_object(Place, x, y, mech_layer);
-	if (mech != NULL) {
-		cmdwin_print("%s-", mech->getName());
-                consolePrint("Open ");
-                mech->describe(1);
-		if (mech->activate(MECH_OPEN)) {
-			cmdwin_print("ok");
-			// SAM: Should this printing be done entirely by mech
-			// scripting?
-			consolePrint(".\n");
-			mapSetDirty();
-		} else {
-                        consolePrint("-failed!\n");
-			cmdwin_print("failed!");
-		}
-		return true;
-	}
+        mech = place_get_object(pc->getPlace(), x, y, mech_layer);
+        if (mech && mech->getObjectType()->canOpen()) {
+                mech->getObjectType()->open(mech, pc);
+                mapSetDirty();
+                return true;
+        }
 
 	/*** Open Container ***/
 
@@ -744,19 +726,8 @@ bool cmdOpen(class Character * pc)
 	}
 	cmdwin_print("%s-", container->getName());
 
-	// Get the party member who will open the container (in combat mode
-	// this is passed in as a parameter).
-	if (pc != NULL) {
-		cmdwin_print("%s", pc->getName());
-	} else {
-		pc = select_party_member();
-		if (pc == NULL) {
-			return false;
-		}
-	}
-
 	consolePrint("%s opens ", pc->getName());
-	container->describe(1);
+	container->describe();
         pc->decActionPoints(NAZGHUL_BASE_ACTION_POINTS);
 
 	// Check for traps.
@@ -764,28 +735,14 @@ bool cmdOpen(class Character * pc)
 		consolePrint(".\n");
 	} else {
 
-		class TrapType *trap = container->getTrap();
-		consolePrint("...%s...", trap->getName());
+		closure_t *trap = container->getTrap();
 
 		// Roll to disarm
 		if (random() % 999 < pc->getDexterity()) {
-			consolePrint("disarmed!\n");
+			consolePrint("...disarmed a trap!\n");
 		} else {
-			consolePrint("oops!\n");
-			int effects = trap->getEffects();
-			if (effects & EFFECT_BURN) {
-				pc->damage(trap->getAmount());
-			}
-			if (effects & EFFECT_POISON && !pc->isPoisoned()) {
-				pc->setPoison(true);
-				pc->damage(trap->getAmount());
-			}
-			if (effects & EFFECT_SLEEP) {
-				pc->changeSleep(trap->getAmount());
-			}
-			// Ignoring the charm effect for now -- requires me to
-			// store an alignment with the trap.
-
+			consolePrint("...triggered a trap!\n");
+                        closure_exec(trap, "pp", pc, container);
 			consolePrint("%s %s!\n", pc->getName(),
 				     pc->getWoundDescription());
 		}
@@ -830,7 +787,7 @@ bool cmdQuit(void)
 	int yesno;
 
 	cmdwin_clear();
-	cmdwin_print("Quit Game-Y/N?");
+	cmdwin_print("Quit & Save Game-Y/N?");
 	getkey(&yesno, yesnokey);
 
 	cmdwin_backspace(4);
@@ -838,6 +795,7 @@ bool cmdQuit(void)
 	if (yesno == 'y') {
 		cmdwin_print("Yes!");
 		consolePrint("Goodbye!\n");
+                session_save(QUICKSAVE_FNAME);
 		Quit = true;
 	} else {
 		cmdwin_print("No");
@@ -872,14 +830,17 @@ void cmdAttack(void)
         // Get the npc party being attacked
         info.dx = directionToDx(dir);
         info.dy =  directionToDy(dir);;
-        info.x = player_party->getX() + info.dx;
-        info.y = player_party->getY() + info.dy;
         info.place = player_party->getPlace();
+        info.x = place_wrap_x(info.place, player_party->getX() + info.dx);
+        info.y = place_wrap_y(info.place, player_party->getY() + info.dy);
         info.npc_party = place_get_Party(info.place, info.x, info.y);
         if (info.npc_party == NULL) {
                 cmdwin_print("-nobody there!");
                 return;
-        }
+        } 
+        info.px = player_party->getX();
+        info.py = player_party->getY();
+
         cmdwin_print("-%s", info.npc_party->getName());
 
         // If the npc is not hostile then get player confirmation.
@@ -942,6 +903,11 @@ bool cmdReady(class Character * member, int flags)
 	struct ScrollerContext sc;
 	int erase;
 	char *msg = 0;
+
+        if (member->isCharmed()) {
+                consolePrint("Charmed characters can't ready arms!\n");
+                return false;
+        }
 
 	cmdwin_clear();
 	cmdwin_print("Ready-");
@@ -1034,9 +1000,9 @@ bool cmdReady(class Character * member, int flags)
 
 int select_target(int ox, int oy, int *x, int *y, int range)
 {
-        Cursor->setRange(range);
-        Cursor->setOrigin(ox, oy);
-        Cursor->relocate(Place, *x, *y);  // Remember prev target, if any
+        Session->crosshair->setRange(range);
+        Session->crosshair->setOrigin(ox, oy);
+        Session->crosshair->relocate(Place, *x, *y);  // Remember prev target, if any
         mapSetDirty();
   
         struct cursor_movement_keyhandler data;
@@ -1053,9 +1019,9 @@ int select_target(int ox, int oy, int *x, int *y, int range)
         cmdwin_backspace(strlen("<target> (ESC to cancel)"));
         eventPopKeyHandler();
   
-        *x = Cursor->getX();
-        *y = Cursor->getY();
-        Cursor->remove();
+        *x = Session->crosshair->getX();
+        *y = Session->crosshair->getY();
+        Session->crosshair->remove();
         mapSetDirty();
   
         struct cursor_movement_keyhandler * data_ret;
@@ -1085,10 +1051,10 @@ int select_target_with_doing(int ox, int oy, int *x, int *y,
         // SAM: It might be nice to return the last target,
         // in case our caller wants it, but it seems that
         // the ESC abort stomps on it.
-        Cursor->setRange(range);
-        Cursor->setViewportBounded(1);
-        Cursor->setOrigin(ox, oy);
-        Cursor->relocate(Place, *x, *y);  // Remember prev target, if any
+        Session->crosshair->setRange(range);
+        Session->crosshair->setViewportBounded(1);
+        Session->crosshair->setOrigin(ox, oy);
+        Session->crosshair->relocate(Place, *x, *y);  // Remember prev target, if any
         mapSetDirty();
 
         struct cursor_movement_keyhandler data;
@@ -1105,9 +1071,9 @@ int select_target_with_doing(int ox, int oy, int *x, int *y,
         cmdwin_backspace(strlen("<target> (ESC to exit)"));
         eventPopKeyHandler();
   
-        *x = Cursor->getX();
-        *y = Cursor->getY();
-        Cursor->remove();
+        *x = Session->crosshair->getX();
+        *y = Session->crosshair->getY();
+        Session->crosshair->remove();
         mapSetDirty();
   
         struct cursor_movement_keyhandler * data_ret;
@@ -1130,10 +1096,10 @@ int terraform_cursor_func(int ox, int oy, int *x, int *y,
         // SAM: 
         // As select_target(), select_target_with_doing(), 
         // but with additional keybindings intended for cmdTerraform().
-        Cursor->setRange(range);
-        Cursor->setViewportBounded(1);
-        Cursor->setOrigin(ox, oy);
-        Cursor->relocate(Place, *x, *y);  // Remember prev target, if any
+        Session->crosshair->setRange(range);
+        Session->crosshair->setViewportBounded(1);
+        Session->crosshair->setOrigin(ox, oy);
+        Session->crosshair->relocate(Place, *x, *y);  // Remember prev target, if any
         mapSetDirty();
   
         struct terraform_mode_keyhandler data;
@@ -1153,9 +1119,9 @@ int terraform_cursor_func(int ox, int oy, int *x, int *y,
         cmdwin_backspace(strlen("<target> (ESC to exit)"));
         eventPopKeyHandler();
   
-        *x = Cursor->getX();
-        *y = Cursor->getY();
-        Cursor->remove();
+        *x = Session->crosshair->getX();
+        *y = Session->crosshair->getY();
+        Session->crosshair->remove();
         mapSetDirty();
   
         struct terraform_mode_keyhandler * data_ret;
@@ -1211,16 +1177,22 @@ bool cmdHandle(class Character * pc)
 	if (select_target(x, y, &x, &y, 1) == -1)
 		return false;
 
-	class Mech *mech;
-	mech = (class Mech *) place_get_object(Place, x, y, mech_layer);
-	if (mech == NULL) {
-		cmdwin_print("nothing!");
-	} else {
-		cmdwin_print("%s", mech->getName());
-		consolePrint("%s handled %s\n", pc->getName(), mech->getName());
-		mech->activate(MECH_HANDLE);
-                player_party->updateView(); // FIXME: what about character mode?
-	}
+        // Try to find a mech
+	class Object *mech;
+	mech = (class Object *) place_get_object(Place, x, y, mech_layer);
+	if (! mech || ! mech->getObjectType()->canHandle()) {
+                cmdwin_print("nothing!");
+                return false;
+        }
+
+        // Handle it
+        mech->getObjectType()->handle(mech, pc);
+        mapSetDirty();
+
+        // I think the following was added to update LOS in cases where the
+        // mech changed state and changed LOS. Not sure what happens in
+        // character mode.
+        //player_party->updateView();
 
 	return true;
 }
@@ -1228,8 +1200,7 @@ bool cmdHandle(class Character * pc)
 bool cmdUse(class Character * member, int flags)
 {
 	struct inv_entry *ie;
-	class ItemType *item;
-	class Character *target;
+	class ObjectType *item;
         bool print_target;
 
 	cmdwin_clear();
@@ -1254,37 +1225,23 @@ bool cmdUse(class Character * member, int flags)
 	if (ie == NULL) {
 		return false;
         }
-	item = (class ItemType *) ie->type;
 
-	// Get the target to use the item on
-	target = member; // default
-	if (item->getTarget() == TARG_FRIEND) {
-		cmdwin_print("-");
-		target = select_party_member();
-		if (target == NULL)
-			return false;
-                print_target = true;
-	} else {
-                print_target = false;
-        }
+	item = ie->type;
+        assert(item->isUsable());
 
-	// Use it on the target
-	item->use(target);
+        consolePrint("%s uses ", member->getName());
+        item->describe(1);
+        consolePrint("\n");
+
+	item->use(member);
 	statusRepaint();
 
-        // Print console message
-        if (flags & CMD_PRINT_MEMBER) {
-                consolePrint("%s ", member->getName());
-        }
-        consolePrint("uses ");
-	item->describe(1);
-        if (print_target)
-                consolePrint(" on %s", target->getName());
-	consolePrint(".\n");
 
-	// Consume the item
-	if (item->isConsumable())
-		player_party->remove_from_inventory(ie, 1);
+        /* Hack: assume all usable items are consumable. Can't fix this until
+         * items are stored in inventory as objects, not types. That or add a
+         * consumable flag to all object types. Or pass the container to the
+         * use() method. */
+        //member->takeOut(item, 1);
 
 	return true;
 }
@@ -1328,6 +1285,8 @@ static void run_combat(bool camping, class Character * guard, int hours,
 	minfo.place = Place;
 	minfo.x = player_party->getX();
 	minfo.y = player_party->getY();
+        minfo.px = minfo.x;
+        minfo.py = minfo.y;
         minfo.npc_party = (class Party*)foe;
 
 	memset(&cinfo, 0, sizeof(cinfo));
@@ -1358,17 +1317,19 @@ static void run_combat(bool camping, class Character * guard, int hours,
 	combat_enter(&cinfo);
 }
 
-bool cmdTalk(int x, int y)
+bool cmdTalk(Object *member)
 {
 	struct conv *conv = NULL;
         class Object *obj;
+        int x = member->getX();
+        int y = member->getY();
 
 	// *** Prompt user & check if valid ***
 
 	cmdwin_clear();
 	cmdwin_print("Talk-");
 
-	if (Place->type == wilderness_place) {
+	if (Place->wilderness) {
 		cmdwin_print("not here!");
                 consolePrint("Can't talk here!\n");
 		return false;
@@ -1386,12 +1347,13 @@ bool cmdTalk(int x, int y)
                 return true;
         }
 
-        conv = obj->getConversation();
+        //conv = obj->getConversation();
+        //if (!conv) {
 
-        if (!conv) {
+        if (! obj->canTalk()) {
 		cmdwin_print("no response!");
                 consolePrint("No response from ");
-                obj->describe(1);
+                obj->describe();
                 consolePrint(".\n");
 		return true;
         }
@@ -1400,7 +1362,7 @@ bool cmdTalk(int x, int y)
 
 	consolePrint("\n\n*** CONVERSATION ***\n\n");
 	consolePrint("You meet ");
-	obj->describe(1);
+	obj->describe();
 	consolePrint(".\n");
 
 	if (obj->getActivity() == SLEEPING) {
@@ -1408,18 +1370,8 @@ bool cmdTalk(int x, int y)
 		return true;
 	}
 
-	conv->speaker = obj;
+        conv_enter(obj, member);
 
-	// *** Enter conversation ***
-
-	switch (convEnter(conv)) {
-
-	case CONV_COMBAT:
-		break;
-
-	case CONV_OK:
-		break;
-	}
 
 	mapSetDirty();
 
@@ -1613,7 +1565,7 @@ static inline void erase_spell_prompt(struct get_spell_name_data *ctx)
 	}
 }
 
-bool get_spell_name(struct KeyHandler *kh, int key, int keymod)
+int get_spell_name(struct KeyHandler *kh, int key, int keymod)
 {
 	struct get_spell_name_data *ctx;
 	char *word, letter;
@@ -1623,14 +1575,14 @@ bool get_spell_name(struct KeyHandler *kh, int key, int keymod)
 		// Done
 		erase_spell_prompt(ctx);
 		*ctx->ptr = 0;
-		return true;
+		return 1;
 	}
 
 	if (key == CANCEL) {
 		// Abort
 		erase_spell_prompt(ctx);
 		ctx->spell_name[0] = 0;
-		return true;
+		return 1;
 	}
 
 	if (key == '\b' && ctx->n) {
@@ -1638,29 +1590,29 @@ bool get_spell_name(struct KeyHandler *kh, int key, int keymod)
 		erase_spell_prompt(ctx);
 		ctx->ptr--;
 		letter = *ctx->ptr;
-		word = Spell_words[letter - 'A'];
+		word = magic_lookup_word(&Session->magic, letter);
 		cmdwin_backspace(strlen(word) + 1);
 		*ctx->ptr = 0;
 		ctx->n--;
-		return false;
+		return 0;
 	}
 
 	if (ctx->n == MAX_WORDS_IN_SPELL_NAME) {
 		// Out of space -- refuse word
-		return false;
+		return 0;
 	}
 
 	if (!isalpha(key))
 		// Not a letter
-		return false;
+		return 0;
 
 	erase_spell_prompt(ctx);
 
 	letter = toupper(key);
-	word = Spell_words[letter - 'A'];
+        word = magic_lookup_word(&Session->magic, letter);
 	if (!word)
 		// Letter does not map to a magic word
-		return false;
+		return 0;
 
 	// Accept the word and print it
 	cmdwin_print("%s ", word);
@@ -1668,7 +1620,7 @@ bool get_spell_name(struct KeyHandler *kh, int key, int keymod)
 	ctx->ptr++;
 	ctx->n++;
 
-	return false;
+	return 0;
 }
 
 int select_spell(struct get_spell_name_data *context)
@@ -1697,147 +1649,17 @@ int select_spell(struct get_spell_name_data *context)
 	return 0;
 }
 
-static class Object *target_character_for_spell(class Character * caster, class Spell * spell, int *tx,	int *ty)
+bool cmdYuse(class Character *pc)
 {
-	class Object *target;
-	class Object *ret = NULL;
-
-	if (player_party->getContext() == CONTEXT_WILDERNESS) {
-		target = select_party_member();
-		return target;
-	}
-
-	target = caster->getAttackTarget();
-	*tx = target->getX();
-	*ty = target->getY();
-
-	if (select_target(caster->getX(), caster->getY(), tx, ty,
-			  spell->range) == 0) {
-		ret =
-                        (class Object *) place_get_object(Place, *tx, *ty,
-                                                          being_layer);
-	}
-
-	if (ret == NULL)
-		cmdwin_print("none!");
-	else
-		cmdwin_print(ret->getName());
-
-	return ret;
-}
-
-static class Object *target_mech_for_spell(class Character * caster,
-					   class Spell * spell)
-{
-	int x, y;
-	class Object *ret = NULL;
-
-        x = caster->getX();
-        y = caster->getY();
-
-	if (select_target(x, y, &x, &y, spell->range) == 0) {
-		ret =
-                        (class Object *) place_get_object(Place, x, y, mech_layer);
-	}
-
-	if (ret == NULL)
-		cmdwin_print("none!");
-	else
-		cmdwin_print(ret->getName());
-
-	return ret;
-}
-
-static bool target_location_for_spell(class Character * caster,
-                                      class Object ** ret,
-                                      class Spell * spell, int *x, int *y)
-{
-	class Character *target;
-        int ox, oy;
-
-        ox = caster->getX();
-        oy = caster->getY();
-
-        if (caster->isOnMap()) {
-                target = caster->getAttackTarget();
-                *x = target->getX();
-                *y = target->getY();
-        } else {
-                *x = ox;
-                *y = oy;
-        }
-
-	if (select_target(ox, oy, x, y, spell->range) == -1)
-		return false;
-
-	// Note: cheat a bit here. If possible, grab a character from this
-	// location as the target. Currently all the location-targeting spells
-	// (magical fields) should also have the property of affecting an
-	// occupant if one exists, or simply landing on the location if one
-	// doesn't.
-	*ret = (class Object *) place_get_object(Place, *x, *y, being_layer);
-
-	return true;
-}
-
-static bool cmd_target_spell(class Spell * spell, class Character * pc, class Object ** ret, int *direction, int *x, int *y)
-{
-        bool result;
-
-	switch (spell->target) {
-	case SPELL_TARGET_NONE:
-                // The following was commented out. I don't know why. By
-                // default, the target should always be the caster, which is
-                // what SPELL_TARGET_NONE should really mean.
-		*ret = pc;
-		return true;
-        case SPELL_TARGET_CASTER_LOCATION:
-                assert(pc->isOnMap());
-                *x = pc->getX();
-                *y = pc->getY();
-                return true;
-	case SPELL_TARGET_LOCATION:
-		cmdwin_print("-");
-		result = target_location_for_spell(pc, ret, spell, x, y);
-                cmdwin_backspace(1);
-                return result;
-	case SPELL_TARGET_CHARACTER:
-		cmdwin_print("-");
-		*ret = target_character_for_spell(pc, spell, x, y);
-		break;
-	case SPELL_TARGET_MECH:
-		cmdwin_print("-");
-		*ret = target_mech_for_spell(pc, spell);
-		break;
-	case SPELL_TARGET_DIRECTION:
-		cmdwin_print("-");
-		*ret = pc;
-		*direction = ui_get_direction();
-		return (*direction != CANCEL);
-	case SPELL_TARGET_UP:
-		*direction = UP;
-		return true;
-	case SPELL_TARGET_DOWN:
-		*direction = DOWN;
-		return true;
-	case SPELL_TARGET_ALL_PARTY_MEMBERS:
-		return true;
-        case SPELL_TARGET_PARTY_MEMBER:
-                cmdwin_print("-");
-                *ret = select_party_member();
-                break;
-	default:
-		return false;
-	}
-
-	return (*ret != NULL);
+        /* Yuse a skill or special ability. */
+        return false;
 }
 
 bool cmdCastSpell(class Character * pc)
 {
 	struct get_spell_name_data context;
 	struct inv_entry *ie = NULL;
-	class Spell *spell;
+	struct spell *spell;
 	class Object *target = NULL;
 	bool mixed = false;
 	bool natural = false;
@@ -1845,6 +1667,11 @@ bool cmdCastSpell(class Character * pc)
 	int tries;
 	int max_tries;
 	int tx, ty;
+
+        if (MagicNegated) {
+                consolePrint("Magic negated!\n");
+                return false;
+        }
 
 	cmdwin_clear();
 	cmdwin_print("Cast");
@@ -1860,9 +1687,9 @@ bool cmdCastSpell(class Character * pc)
 		statusSetMode(ShowParty);
 	}
 
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
         // Make sure the PC is not asleep, dead, etc.
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
 
         if (pc->isDead() || pc->isAsleep()) {
                 cmdwin_print("-unable right now!");
@@ -1878,7 +1705,7 @@ bool cmdCastSpell(class Character * pc)
 	cmdwin_backspace(1);
 
 	// Lookup the spell
-	spell = Spell_lookup_by_code(context.spell_name);
+	spell = magic_lookup_spell(&Session->magic, context.spell_name);
 	if (!spell) {
 		cmdwin_print("-no effect!");
 		return false;
@@ -1892,7 +1719,7 @@ bool cmdCastSpell(class Character * pc)
 
 	// Check if the character comes by this spell naturally
 	for (i = 0; i < pc->species->n_spells; i++) {
-		if (pc->species->spells[i] == spell) {
+		if (! strcmp(pc->species->spells[i], spell->code)) {
 			natural = true;
 			break;
 		}
@@ -1909,7 +1736,7 @@ bool cmdCastSpell(class Character * pc)
 	}
 	// Otherwise check party inventory for a mixed spell.
 	if (!natural) {
-		ie = player_party->search_inventory(spell);
+		ie = player_party->inventory->search(spell->type);
 		if (ie && ie->count)
 			mixed = true;
 	}
@@ -1928,56 +1755,7 @@ bool cmdCastSpell(class Character * pc)
 	max_tries = 1;
 
 	for (tries = 0; tries < max_tries; tries++) {
-
-		int direction = DIRECTION_NONE;
-
-		// Select a target for the spell.
-		if (!cmd_target_spell(spell, pc, &target, &direction, &tx, &ty))
-			break;
-
-                // Console message.
-		consolePrint("%s casts %s", pc->getName(), spell->getName());
-                consolePrint("...");
-
-
-		// Cast the spell. This automatically decrements the caster's
-		// mana.
-
-                cmdwin_print("-");
-		switch (spell->cast(pc, target, direction, tx, ty)) {
-		case Spell::ok:
-			cmdwin_print("success!");
-			consolePrint("success!\n");
-			break;
-		case Spell::no_room_on_battlefield:
-			cmdwin_print("no room on battlefield!");
-			consolePrint("no room on battlefield!\n");
-			break;
-		case Spell::magic_negated:
-			cmdwin_print("magic negated!");
-			consolePrint("magic negated!\n");
-			break;
-		case Spell::missed_target:
-			cmdwin_print("miss!");
-                        consolePrint("missed!\n");
-			break;
-		case Spell::no_effect:
-			cmdwin_print("no effect!");
-                        consolePrint("no effect!\n");
-			break;
-		case Spell::teleport_failed:
-			cmdwin_print("teleport failed!");
-                        consolePrint("teleport failed!\n");
-			break;
-		case Spell::unknown_failure:
-		default:
-			cmdwin_print("fizzles!");
-                        consolePrint("fizzles!\n");
-			break;
-		}
-
-		statusRepaint();
-
+                spell->type->cast(pc);
 	}
 
 	if (tries == 0)
@@ -1985,19 +1763,25 @@ bool cmdCastSpell(class Character * pc)
 
 	// If the spell was mixed then remove it from inventory.
 	if (mixed)
-		player_party->remove_from_inventory(ie, 1);
+		player_party->takeOut(ie->type, 1);
 
+#if 0
 	// Update the character's target memory. This will automatically resort
 	// back to the character as its own target if this target is dead.
 	if (spell->target == SPELL_TARGET_CHARACTER)
 		pc->setAttackTarget((class Character *) target);
+#endif
+
+        /* Some spells have status in the foogod window, so repaint it now. */
+        foogodRepaint();
 
 	return true;
+
 }
 
 bool cmdMixReagents(void)
 {
-	class Spell *spell;
+	struct spell *spell;
 	struct get_spell_name_data context;
 	struct list reagents, *elem;
 	int quantity, max_quantity;
@@ -2014,7 +1798,7 @@ bool cmdMixReagents(void)
 		return false;
 
 	// Lookup the spell. If null then keep going and bomb when done.
-	spell = Spell_lookup_by_code(context.spell_name);
+	spell = magic_lookup_spell(&Session->magic, context.spell_name);
 	cmdwin_backspace(1);
 
 	// Prompt for reagents 
@@ -2053,7 +1837,14 @@ bool cmdMixReagents(void)
 			break;
 
 		ie = (struct inv_entry *) sc.selection;
-		assert(ie);
+                if (! ie) {
+                        /* This happens when the player has no reagents
+                         * whatsoever. */
+			cmdwin_erase_back_to_mark();
+			eventPopKeyHandler();
+			cmdwin_print("none!");
+			goto done;
+                }
 
 		if (ie->ref) {
 			// unselect
@@ -2122,15 +1913,11 @@ bool cmdMixReagents(void)
 				if (ie->type ==
 				    (class ObjectType *) spell->reagents[i]) {
 					ie->ref--;
-					player_party->remove_from_inventory(ie,
-									    quantity);
-
-					list_remove(elem);	// safe only
-					// because
-					// this is the end
-					// of the
-					// list_for_each
-					// loop!
+					player_party->takeOut(ie->type, quantity);
+                                        // The following line is safe only
+					// because this is the end of the
+					// list_for_each loop!
+					list_remove(elem);
 					found = true;
 					break;
 				}
@@ -2150,7 +1937,7 @@ bool cmdMixReagents(void)
 			list_remove(elem);
 			elem = tmp;
 			ie->ref--;
-			player_party->remove_from_inventory(ie, quantity);
+			player_party->takeOut(ie->type, quantity);
 		}
 	}
 
@@ -2161,7 +1948,7 @@ bool cmdMixReagents(void)
 	// the player.
 	if (!spell || mistake) {
 		statusSetMode(ShowParty);
-		switch (random() % 3) {
+		switch (random() % 2) {
 		case 0:
 		default:
 			cmdwin_print("oops!");
@@ -2173,19 +1960,14 @@ bool cmdMixReagents(void)
 			consolePrint("BOMB!\n");
 			player_party->damage(DAMAGE_BOMB);
 			break;
-		case 2:
-			cmdwin_print("yuck!");
-			consolePrint("GAS!\n");
-			player_party->poison();
-			break;
 		}
 
 		return true;
 	}
 	// All is well. Add the spell to player inventory.
 	cmdwin_print("ok");
-	consolePrint("%s!\n", spell->getName());
-	player_party->add_to_inventory(spell, quantity);
+	consolePrint("%s!\n", spell->type->getName());
+	player_party->add(spell->type, quantity);
 
  done:
 	// In case of cancellation I need to unselect all the reagents.
@@ -2363,7 +2145,7 @@ bool cmdAT (class Character * pc)
         consolePrint("It is %s on %s, \n"
                      "%s of %s in the year %d.\n",
                      time_HHMM_as_string(), day_name(), 
-                     week_name(), month_name(), Clock.year );
+                     week_name(), month_name(), Session->clock.year );
 
         // SAM: Is this really interesting though, I wonder?
         consolePrint("%d game turns have passed.\n", Turn);
@@ -2372,51 +2154,48 @@ bool cmdAT (class Character * pc)
                      directionToString(windGetDirection()) );
 
         if (Place->underground) {
-                consolePrint("%s is underground, and cannot see the sky.\n", who);
+                consolePrint("%s is underground, and cannot see the sky.\n", 
+                             who);
         } // underground
         else {
+                struct list *elem;
+                
                 // SAM: 
                 // This message won't be true if you are under 
                 // a roof in a town.  In future there should be 
                 // logic querying the (future) roof-ripping code here.
                 consolePrint("%s is beneath the open sky.\n", who);
 
-                // Message(s) about the sun:
-                if (sun_is_up() ) {
-                        consolePrint("The sun is up at arc %d.%s\n", Sun.arc,
-                                     is_noon() ? "  It is noon." : "");
-                }
-                if (sun_is_down() ) {
-                        consolePrint("The sun has set at arc %d.%s\n", Sun.arc,
-                                     is_midnight() ? "  It is midnight." : "");
-                }
+                // The kernel no longer has any special knowledge about which
+                // astral body is the sun, so we have to deal with all astral
+                // bodies generically now. I mean, a game may have two or even
+                // more suns. The time runs independently and isn't cued off
+                // the sun.
+                if (is_noon())
+                        consolePrint("It is noon. ");
+                else if (is_midnight())
+                        consolePrint("It is midnight. ");
 
-                // Message(s) about the moon(s):
-                int num_moons_visible = 0;
-                for (int i = 0; i < NUM_MOONS; i++) {
-                        struct moon *moon = &Moons[i];
-
-                        if (moon_is_visible(moon->arc))
-                        {
-                                num_moons_visible++;
-                                consolePrint("Moon %d is at arc %d in phase %d.\n",
-                                             i, moon->arc, moon->phase);
-                                // SAM:
-                                // In future, we shall want GhulScript for
-                                // the names of the heavenly bodies, 
-                                // and the names of their phases:
-                                // 
-                                // consolePrint("%s is %s in phase %s.\n",
-                                //              moon_name(i), 
-                                //              arc_description(moon->arc), 
-                                //              phase_name(moon->phase) );
-
+                // Report on each astral body generically.
+                list_for_each(&Session->sky.bodies, elem) {
+                        struct astral_body *body;
+                        body = outcast(elem, struct astral_body, list);
+                        if (astral_body_is_visible(body->arc)) {
+                                consolePrint("%s is up at arc %d", body->name, 
+                                             body->arc);
+                                if (body->n_phases > 1) {
+                                        char *phase_name = body->phases[body->phase].name;                                
+                                        if (phase_name)
+                                                consolePrint(" in its %s phase", 
+                                                             phase_name);
+                                        else
+                                                consolePrint(" in phase %d", 
+                                                             body->phase);
+                                }
+                                consolePrint(". ");
                         }
-                        // moon->arc,
-                        // MoonInfo.sprite[moon->phase]
                 }
-                if (num_moons_visible == 0)
-                        consolePrint("No moons can be seen now.\n");
+                consolePrint("\n");
 
         } // open air, under the sky
 
@@ -2573,6 +2352,7 @@ bool cmdSaveTerrainMap(class Character * pc)
 
 void cmdZoomIn(void)
 {
+        struct place *subplace = 0;
         // 
         // SAM: Curently no "Enter" message is printed.  It turns out to be
         // moderately complicated to do so properly, as a distinct message for
@@ -2589,6 +2369,15 @@ void cmdZoomIn(void)
                 // If standing over a portal then enter it:
                 consolePrint("Enter-%s\n", pp->getName() );
                 player_party->enter_portal();
+        } else if ((subplace = place_get_subplace(player_party->getPlace(),
+                                                  player_party->getX(),
+                                                  player_party->getY()))) {
+
+                // Standing over a subplace. Try to enter with no direction,
+                // this will prompt the player to provide a direction.
+                consolePrint("Enter-%s\n", subplace->name);
+                player_party->try_to_enter_subplace_from_edge(subplace, 0, 0);
+
         } else if (!place_is_passable(player_party->getPlace(),
                                       player_party->getX(),
                                       player_party->getY(),
@@ -2615,4 +2404,292 @@ void cmdZoomIn(void)
                 consolePrint("Enter-%s\n", tt->name);
                 run_combat(false, 0, 0, NULL);
         }
+}
+
+void cmdQuickSave(void)
+{
+        consolePrint("Saving to %s...", QUICKSAVE_FNAME);
+        consoleRepaint();
+        session_save(QUICKSAVE_FNAME);
+        consolePrint("ok!\n");
+        consoleRepaint();
+}
+
+void cmdReload(void)
+{
+        consolePrint("Loading from %s...", QUICKSAVE_FNAME);
+        consoleRepaint();
+        session_load(QUICKSAVE_FNAME);
+        Session->reloaded = 1;
+        consolePrint("ok!\n");
+}
+
+/****** New UI ******/
+
+#define MARKUP 4
+
+
+int ui_get_yes_no(char *name)
+{
+	int yesno;
+	cmdwin_clear();
+	cmdwin_print("Reply-<Y/N>");
+	getkey(&yesno, yesnokey);
+	cmdwin_backspace(strlen("<Y/N>"));
+	if (yesno == 'y') {
+		cmdwin_print("yes");
+		consolePrint("%s: Yes\n", name);
+                return 1;
+	} else {
+		cmdwin_print("no");
+		consolePrint("%s: No\n", name);
+                return 0;
+	}
+}
+
+static void buy(struct merchant *merch)
+{
+	struct KeyHandler kh;
+	struct ScrollerContext sc;
+	struct trade_info *trade;
+	int quantity, cost, max_q;
+
+	statusSetTradeInfo(merch->n_trades, merch->trades);
+	statusSetMode(Trade);
+
+	sc.selector = TradeItem;
+	kh.fx = scroller;
+	kh.data = &sc;
+
+	for (;;) {
+
+		// *** selection ***
+
+		sc.selection = NULL;
+
+		cmdwin_clear();
+		cmdwin_print("Buy-<select/ESC>");
+		eventPushKeyHandler(&kh);
+		eventHandle();
+		eventPopKeyHandler();
+		cmdwin_backspace(strlen("<select/ESC>"));
+
+		trade = (struct trade_info *) sc.selection;
+
+		if (!trade) {
+			cmdwin_print("none!");
+			break;
+		}
+
+		cmdwin_print("%s-", trade->name);
+
+		if (player_party->gold < trade->cost) {
+			int dummy;
+			cmdwin_print("not enough gold! <hit any key>");
+			getkey(&dummy, anykey);
+			continue;
+		}
+		// *** quantity ***
+
+		max_q = player_party->gold / trade->cost;
+
+		cmdwin_mark();
+		quantity = select_quantity(max_q);
+		cmdwin_erase_back_to_mark();
+
+		if (quantity == 0) {
+			cmdwin_print("none!");
+			continue;
+		}
+
+		quantity = min(quantity, max_q);
+		cmdwin_print("%d-", quantity);
+
+		cost = quantity * trade->cost;
+
+		// *** trade ***
+
+		player_party->gold -= cost;
+		player_party->add((class ObjectType *) trade->data,
+                                  quantity);
+		cmdwin_print("ok");
+		consolePrint("You buy %d %s%s for %d gold\n", quantity,
+			     trade->name, quantity > 1 ? "s" : "", cost);
+		foogodRepaint();
+	}
+
+	statusSetMode(ShowParty);
+}
+
+static bool conv_filter_trade(struct inv_entry *ie, void *cookie)
+{
+        struct trade_info *trade = (struct trade_info*)cookie;
+        return (ie->type == trade->data && ie->count > ie->ref);
+}
+
+static int fill_sell_list(struct merchant *merch, struct trade_info *trades)
+{
+	struct inv_entry *ie = NULL;
+        struct filter filter;
+	int i, j = 0;
+
+        filter.fx = conv_filter_trade;
+
+        for (i = 0; i < merch->n_trades; i++) {
+
+                if (merch->trades[i].cost / MARKUP == 0)
+                        continue;
+                
+                filter.cookie = &merch->trades[i];
+                ie = player_party->inventory->next(ie, &filter);
+                if (!ie)
+                        continue;
+
+                trades[j] = merch->trades[i];
+                trades[j].cost /= MARKUP;
+                trades[j].quantity = ie->count - ie->ref;
+                trades[j].show_quantity = 1;
+                j++;
+        }
+
+	return j;
+}
+
+static void sell(struct merchant *merch)
+{
+	// A bit trickier than the "Buy" scenario. A merchant will only buy
+	// items that it is willing to turn around and sell at a profit. When
+	// it comes time to select an item to sell the user should only see the
+	// list of items in player inventory which the merchant is willing to
+	// buy. So here we need to build that list and feed it to the status
+	// viewer.
+
+	int n_trades = 0;
+	struct trade_info *trades;
+	struct KeyHandler kh;
+	struct ScrollerContext sc;
+	struct trade_info *trade;
+
+	// Allocate the trade list.
+	trades = new struct trade_info[merch->n_trades];
+	if (!trades) {
+		consolePrint("%s: I don't need anything.\n", merch->name);
+		return;
+	}
+	// Fill out the list
+	n_trades = fill_sell_list(merch, trades);
+	statusSetTradeInfo(n_trades, trades);
+	statusSetMode(Trade);
+
+	sc.selector = TradeItem;
+	kh.fx = scroller;
+	kh.data = &sc;
+
+	for (;;) {
+
+		struct inv_entry *ie;
+		int quantity, max_q;
+
+		sc.selection = NULL;
+
+		cmdwin_clear();
+		cmdwin_print("Sell-<select or ESC>");
+		eventPushKeyHandler(&kh);
+		eventHandle();
+		eventPopKeyHandler();
+		cmdwin_backspace(strlen("<select or ESC>"));
+
+		trade = (struct trade_info *) sc.selection;
+
+		if (!trade) {
+			cmdwin_print("none!");
+			break;
+		}
+
+		cmdwin_print("%s-", trade->name);
+
+		ie = player_party->inventory->search((class ObjectType *) trade->data);
+		assert(ie);
+		assert(ie->ref < ie->count);
+
+		// quantity
+
+		max_q = ie->count - ie->ref;
+
+		cmdwin_mark();
+		quantity = select_quantity(max_q);
+		cmdwin_erase_back_to_mark();
+
+		if (quantity == 0) {
+			cmdwin_print("none!");
+			continue;
+		}
+
+		quantity = min(quantity, max_q);
+		cmdwin_print("%d-", quantity);
+
+		// make the trade
+		player_party->takeOut(ie->type, quantity);
+		player_party->gold += quantity * trade->cost;
+		foogodRepaint();
+
+		cmdwin_print("ok");
+		consolePrint("You sell %d %s%s for %d gold\n", quantity,
+			     trade->name, quantity > 1 ? "s" : "",
+			     quantity * trade->cost);
+
+		// refresh the sell list
+		n_trades = fill_sell_list(merch, trades);
+		statusSetTradeInfo(n_trades, trades);
+		statusUpdateTradeInfo(n_trades, trades);
+	}
+
+	statusSetMode(ShowParty);
+
+	delete trades;
+}
+
+static int get_buy_or_sell_key(struct KeyHandler *kh, int key, int keymod)
+{
+	int *val = (int *) kh->data;
+
+	switch (key) {
+	case 'b':
+	case 'B':
+		*val = 'b';
+		return 1;
+	case 's':
+	case 'S':
+		*val = 's';
+		return 1;
+	case CANCEL:
+		*val = 'x';
+		return 1;
+	default:
+		return 0;
+	}
+}
+
+void ui_trade(struct merchant *merch)
+{
+	int key;
+
+	for (;;) {
+		cmdwin_clear();
+		cmdwin_print("Buy or sell-<B/S/ESC>");
+		getkey(&key, get_buy_or_sell_key);
+
+		switch (key) {
+		case 'b':
+			buy(merch);
+			break;
+		case 's':
+			sell(merch);
+			break;
+		default:
+			cmdwin_backspace(strlen("<B/S>"));
+			cmdwin_print("none!");
+			return;
+		}
+	}
 }

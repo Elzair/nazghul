@@ -21,7 +21,7 @@
 //
 #include "hash.h"
 #include "olist.h"
-#include "util.h"
+#include "common.h"
 
 struct hash *hash_create(int n)
 {

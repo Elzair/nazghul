@@ -20,20 +20,20 @@
 // gmcnutt@users.sourceforge.net
 //
 #include "Party.h"
+#include "dice.h"
 #include "place.h"
-#include "portal.h"
-#include "util.h"
+#include "Portal.h"
 #include "player.h"
 #include "combat.h"
-#include "Loader.h"
 #include "species.h"
 #include "occ.h"
 #include "wind.h"
-#include "Mech.h"
 #include "vehicle.h"
 #include "console.h"
 #include "formation.h"
 #include "ctrl.h"
+#include "session.h"
+#include "sched.h"
 
 #include <stdio.h>
 
@@ -46,23 +46,44 @@
                 (coord) = 0; \
 }
 
-// -----------------------------------------------------------------------------
+// --------------------------------------------------------------------------
 //
 // PartyType
 //
-// -----------------------------------------------------------------------------
+// --------------------------------------------------------------------------
 
-PartyType::PartyType():formation(NULL), i_group(-1), n_groups(0), 
-                             groups(NULL),
-                             pmask(0), vrad(0)
+PartyType::PartyType()
 {
+        setup();
+}
+PartyType::PartyType(char *tag, char *name, struct sprite *sprite)
+        : ObjectType(tag, name, sprite, being_layer)
+{
+        setup();
+}
+
+void PartyType::setup()
+{
+        list_init(&groups);
         sleep_sprite = NULL;
+        pmask = 0xff;
+        vrad = 0;
+        visible = false;
+        speed = 0x7fffffff;
 }
 
 PartyType::~PartyType()
 {
-	if (groups != NULL)
-		delete groups;
+        i_group = groups.next;
+        while (i_group != &groups) {
+                struct GroupInfo *info = outcast(i_group, struct GroupInfo, list);
+                i_group = i_group->next;
+                if (info->dice)
+                        free(info->dice);
+                if (info->ai)
+                        closure_unref(info->ai);
+                delete info;
+        }
 }
 
 bool PartyType::init(class Character * ch)
@@ -86,15 +107,15 @@ bool PartyType::init(class Character * ch)
 
 struct GroupInfo *PartyType::enumerateGroups(void)
 {
-	i_group = -1;
+	i_group = &groups;
 	return getNextGroup();
 }
 
 struct GroupInfo *PartyType::getNextGroup(void)
 {
-	i_group++;
-	if (i_group < n_groups)
-		return &groups[i_group];
+	i_group = i_group->next;
+	if (i_group != &groups)
+                return outcast(i_group, struct GroupInfo, list);
 	return NULL;
 }
 
@@ -109,147 +130,6 @@ class Object *PartyType::createInstance()
 	return obj;
 }
 
-static struct GroupInfo *load_group_info(class Loader * loader, int *n)
-{
-	char *sptag = 0, *octag = 0, *stag = 0;
-	struct GroupInfo *groups = 0, tmp;
-	int index;
-
-	// base case
-	if (loader->matchToken('}')) {
-		groups = new struct GroupInfo[*n];
-		if (!groups)
-			loader->setError("Memory allocation failed");
-		return groups;
-	}
-	// recursive case
-	memset(&tmp, 0, sizeof(tmp));
-
-	if (!loader->getWord(&sptag) ||
-	    !loader->getWord(&octag) ||
-	    !loader->getWord(&stag) || !loader->getInt(&tmp.n_max))
-		return 0;
-
-	tmp.species = (struct species *) loader->lookupTag(sptag, SPECIES_ID);
-	if (!tmp.species) {
-		loader->setError("Invalid SPECIES tag '%s'", sptag);
-		goto done;
-	}
-
-	if (strcmp(octag, "null")) {
-		tmp.occ = (struct occ *) loader->lookupTag(octag, OCC_ID);
-		if (!tmp.occ) {
-			loader->setError("Invalid OCC tag '%s'", octag);
-			goto done;
-		}
-	}
-
-	tmp.sprite = (struct sprite *) loader->lookupTag(stag, SPRITE_ID);
-	if (!tmp.sprite) {
-		loader->setError("Invalid SPRITE tag '%s'", stag);
-		goto done;
-	}
-
-	index = *n;
-	(*n)++;
-
-	groups = load_group_info(loader, n);
-	if (groups)
-		groups[index] = tmp;
-
-      done:
-	if (sptag)
-		free(sptag);
-	if (octag)
-		free(octag);
-	if (stag)
-		free(stag);
-
-	return groups;
-
-}
-
-bool PartyType::load(class Loader * loader)
-{
-	char *tmp_tag = 0;
-
-	if (!loader->getWord(&tag) ||
-	    !loader->matchToken('{') ||
-	    !loader->matchWord("name") ||
-	    !loader->getString(&name) ||
-	    !loader->matchWord("sprite") || !loader->getWord(&tmp_tag))
-		return false;
-
-	// sprite lookup
-	sprite = (struct sprite *) loader->lookupTag(tmp_tag, SPRITE_ID);
-	if (!sprite) {
-		loader->setError("Invalid sprite tag '%s'", tmp_tag);
-		free(tmp_tag);
-		return false;
-	}
-	free(tmp_tag);
-
-	// formation parse
-	if (!loader->matchWord("formation") || !loader->getWord(&tmp_tag))
-		return false;
-
-	// formation lookup
-	if (strcmp(tmp_tag, "null")) {
-		formation = (struct formation *) loader->
-		    lookupTag(tmp_tag, FORMATION_TYPE_ID);
-		if (!formation) {
-			loader->setError("Error loading %s: invalid FORMATION "
-					 "tag %s", tag, tmp_tag);
-			free(tmp_tag);
-			return false;
-		}
-	}
-	free(tmp_tag);
-
-	if (!loader->matchWord("groups") || !loader->matchToken('{'))
-		return false;
-
-	groups = load_group_info(loader, &n_groups);
-	if (!groups)
-		return false;
-
-	if (!ObjectType::init(tag, name, being_layer, sprite))
-		return false;
-
-	pmask = 0xFFFFFFFF;
-	speed = MAX_SPEED;
-	vrad = 0;
-
-	// Default to invisible but if any species are visible then change it.
-	visible = false;
-
-	for (int i = 0; i < n_groups; i++) {
-
-		// Passability is the intersection of the set of all group
-		// passabilities
-		pmask &= groups[i].species->pmask;
-
-		// Speed is set by the slowest group
-		speed = min(speed, groups[i].species->spd);
-
-		// Vision radius is set by the farthest-seeing group
-		vrad = max(vrad, groups[i].species->vr);
-
-		// If all species are invisible then the whole party is
-		// invisible
-		if (groups[i].species->visible)
-			visible = true;
-
-                // Check if any of the groups have a sleep sprite
-                if (!sleep_sprite && groups[i].species->sleep_sprite)
-                        sleep_sprite = groups[i].species->sleep_sprite;
-	}
-
-	if (!loader->matchToken('}'))
-		return false;
-
-	return true;
-}
 
 bool PartyType::isType(int classID)
 {
@@ -276,15 +156,57 @@ bool PartyType::isVisible()
         return visible;
 }
 
+void PartyType::addGroup(struct species *species, struct occ *occ, struct sprite *sprite, char *dice, struct closure *ai)
+{
+        struct GroupInfo *group = new struct GroupInfo;
+        assert(group);
+        list_init(&group->list);
+        group->species = species;
+        group->occ = occ;
+        group->sprite = sprite;
+        group->dice = strdup(dice);
+        group->ai = ai;
+        if (ai)
+                closure_ref(ai);
+        list_add(&groups, &group->list);
+        pmask &= species->pmask;
+        vrad = max(vrad, species->vr);
+        visible = species->visible || visible;
+        speed = min(speed, species->spd);
+}
 
-// -----------------------------------------------------------------------------
+// --------------------------------------------------------------------------
 //
 // Party
 //
-// -----------------------------------------------------------------------------
+// --------------------------------------------------------------------------
 
 
 Party::Party()
+{
+        setup();
+}
+
+Party::Party(class PartyType *type, int align, class Vehicle *_vehicle)
+        : Object(type)
+{
+        setup();
+        
+        alignment = align;
+
+        // Vehicle
+        if (!_vehicle) {
+                vehicle = NULL;
+        } else {
+                vehicle = _vehicle;
+                vehicle->occupant = this;
+        }
+
+        // Create the party members.
+        createMembers();
+}
+
+void Party::setup()
 {
 	act = WORKING;
 	alignment = 0;
@@ -294,16 +216,27 @@ Party::Party()
 	isWrapper = false;
 	list_init(&members);
         n_members = 0;
-	vehicle = 0;
 	formation = NULL;
         wandering = false;
         memset(&pinfo, 0, sizeof(pinfo));
         ctrl = ctrl_party_ai;
+        vehicle = NULL;
+}
+
+static bool party_remove_member(class Character *ch, void *data)
+{
+        ((Party*)data)->removeMember(ch);
+        if (! ch->refcount)
+                delete ch;
+        return false;
 }
 
 Party::~Party()
 {
-        //printf("Destroying %s\n", this->getName());
+        /* Dereference all the members by removing them from the party. If no
+         * other container references them then they will be automatically
+         * destoyed. */
+        forEachMember(party_remove_member, this);
 }
 
 bool Party::isType(int classID)
@@ -389,6 +322,8 @@ bool Party::turn_vehicle(void)
 	return true;
 }
 
+#if 0
+// Obsolete, keep it for reference for now
 bool Party::enter_town(class Portal * portal)
 {
 	int newx, newy, max_i, dx2, dy2, i;
@@ -452,6 +387,7 @@ bool Party::enter_town(class Portal * portal)
 
 	return false;
 }
+#endif
 
 MoveResult Party::move(int dx, int dy)
 {
@@ -463,7 +399,7 @@ MoveResult Party::move(int dx, int dy)
 	int oldy;
 	class Moongate *moongate;
 	class Portal *portal;
-	class Mech *mech;
+	class Object *mech;
 
 	this->dx = dx;
 	this->dy = dy;
@@ -492,13 +428,13 @@ MoveResult Party::move(int dx, int dy)
 	if (newx == player_party->getX() && 
             newy == player_party->getY()) {
 
-                // -------------------------------------------------------------
+                // ------------------------------------------------------------
                 // Subtle: check if the player party is on the map. This
                 // catches the case where the player has just engaged another
                 // npc party in combat on this turn. I don't want this npc
                 // party to move to that spot because then when the player
                 // party exits combat they will be on top of this npc party.
-                // -------------------------------------------------------------
+                // ------------------------------------------------------------
                 
                 if (! player_party->isOnMap())
                         return WasOccupied;
@@ -515,6 +451,8 @@ MoveResult Party::move(int dx, int dy)
 			info.y = newy;
 			info.dx = dx;
 			info.dy = dy;
+                        info.px = newx;
+                        info.py = newy;
 			info.npc_party = this;
 
 			memset(&cinfo, 0, sizeof(cinfo));
@@ -556,12 +494,6 @@ MoveResult Party::move(int dx, int dy)
 		return AvoidedPortal;
 	}
 
-	/* Check for a moongate (and avoid it) */
-	moongate = place_get_moongate(newplace, newx, newy);
-	if (moongate && moongate->isOpen()) {
-		return AvoidedPortal;
-	}
-
 	/* Check passability */
 	if (!place_is_passable(oldplace, newx, newy, getPmask(),
 			       act == COMMUTING ? PFLAG_IGNOREMECHS : 0)) {
@@ -576,9 +508,9 @@ MoveResult Party::move(int dx, int dy)
 
 	// Check for a mech (not for passability, for sending the STEP
         // signal)
-	mech = (class Mech *) place_get_object(getPlace(), newx, newy, mech_layer);
-	if (mech)
-		mech->activate(MECH_STEP);
+	mech = place_get_object(getPlace(), newx, newy, mech_layer);
+        if (mech)
+                mech->step(this);
 
 	relocate(newplace, newx, newy);
 
@@ -691,12 +623,10 @@ bool Party::attack_with_ordnance(int d)
 
 
 void Party::exec(struct exec_context *cntxt)
-{
+{        
         assert(!isDestroyed());
 
-        action_points += getActionPointsPerTurn();
-        if (action_points <= 0)
-                return;
+        startTurn();
 
         while (action_points > 0 && !isDestroyed()) {
 
@@ -749,14 +679,7 @@ bool Party::createMembers(void)
 		// NPCs from that group based on its max size (need at least
 		// one). Then create that many NPC characters and add them to
 		// the party.
-#define RANDOM_NUMBER_OF_MEMBERS true
-		if (RANDOM_NUMBER_OF_MEMBERS) {
-			n = (random() % ginfo->n_max) + 1;
-		} else {
-			n = ginfo->n_max;
-		}
-
-		n = max(n, 1);
+                n = dice_roll(ginfo->dice);
 
 		while (n) {
 
@@ -773,11 +696,13 @@ bool Party::createMembers(void)
 					   alignment)))
 				return false;
 
-			list_add(&members, &c->plist);
-			c->party = this;
+                        if (ginfo->ai) {
+                                closure_ref(ginfo->ai);
+                                c->ai = ginfo->ai;
+                        }
 
+                        addMember(c);
 			order++;
-			size++;
 			n--;
 		}
 	}
@@ -785,82 +710,6 @@ bool Party::createMembers(void)
 	return true;
 }
 
-bool Party::load(class Loader * loader)
-{
-	bool hflag;
-	class Character *c;
-	class PartyType *type = getObjectType();
-        char *conv_tag;
-
-	assert(type);
-
-	if (!Object::load(loader) ||
-	    !loader->getBitmask(&alignment) || !loader->getBool(&hflag))
-		return false;
-
-        // ---------------------------------------------------------------------
-        // Parse the conversation. This is to support parties of cardboard-type
-        // npc's who all have a common conversation.
-        // ---------------------------------------------------------------------
-
-        if (! isWrapper) {
-                if (!loader->getWord(&conv_tag)) {
-                        return false;
-                }
-                if (strcmp(conv_tag, "null")) {
-                        conv = (struct conv *) loader->lookupTag(conv_tag, CONVERSATION_TYPE_ID);
-                        if (NULL == conv) {
-                                loader->setError("Invalid CONV tag '%s'", conv_tag);
-                                free(conv_tag);
-                                return false;
-                        }
-                }
-                free(conv_tag);
-        }
-
-        // ---------------------------------------------------------------------
-	// In the wilderness check for a vehicle type for the party.
-        // ---------------------------------------------------------------------
-
-	if (getPlace()->type == wilderness_place) {
-		char *vehicle_type_tag = 0;
-		class VehicleType *vehicle_type;
-
-		if (!loader->getWord(&vehicle_type_tag))
-			return false;
-
-		if (strcmp(vehicle_type_tag, "null")) {
-			vehicle_type = (class VehicleType *) loader->
-			    lookupTag(vehicle_type_tag, VEHICLE_TYPE_ID);
-			if (!vehicle_type) {
-				loader->setError("Invalid vehicle type tag "
-						 "'%s'", vehicle_type_tag);
-				free(vehicle_type_tag);
-				return false;
-			}
-
-			vehicle = (class Vehicle *) vehicle_type->
-			    createInstance();
-			vehicle->occupant = this;
-		}
-
-		free(vehicle_type_tag);
-	}
-
-        // ---------------------------------------------------------------------
-        // Create the party members. If this is a wrapper there is only the one
-        // party member and all we need is the alignment.
-        // ---------------------------------------------------------------------
-
-	if (isWrapper) {
-		assert(!list_empty(&members));
-		c = outcast(members.next, class Character, plist);
-		c->setAlignment(alignment);
-		return true;
-	}
-
-	return createMembers();
-}
 
 void Party::forEachMember(bool(*fx) (class Character *, void *), void *data)
 {
@@ -879,23 +728,30 @@ void Party::forEachMember(bool(*fx) (class Character *, void *), void *data)
 	}
 }
 
-static bool myDestroyMember(class Character * c, void *data)
+static bool party_destroy_and_remove_member(class Character * c, void *data)
 {
 	class Party *party = (class Party *) data;
 
-	party->removeMember(c);
 	c->destroy();
-	delete c;
+	party->removeMember(c);
+
+        // Note: between destroying and removing it the ref count probably
+	// dropped to zero and already deleted the object. If not, something
+	// else might have a legitimate reference to it, so don't delete.
+
+        // delete c;
 
 	return false;
 }
 
 void Party::destroy()
 {
+        // Note: this is a case of destroying an object in a container:
 	disembark();
-	Object::destroy();	// removes it
-	forEachMember(myDestroyMember, this);
+
+	forEachMember(party_destroy_and_remove_member, this);
 	assert(list_empty(&members));
+	Object::destroy();	// removes it
 }
 
 static bool myCleanupMember(class Character * c, void *data)
@@ -928,13 +784,20 @@ void Party::removeMember(class Character * c)
 	list_remove(&c->plist);
 	c->party = 0;
 	size--;
+        obj_dec_ref(c);
 }
 
 bool Party::addMember(class Character * c)
 {
+        obj_inc_ref(c);
+
         list_add(&members, &c->plist);
         c->party = this;
         size++;
+
+        // Can't think of any reason why a char should be on the orphan list
+        assert(! c->handle);
+
         return true;
 }
 
@@ -987,7 +850,14 @@ void Party::disembark()
 	if (vehicle) {
 		assert(getPlace());
 		vehicle->occupant = 0;
-		vehicle->relocate(getPlace(), getX(), getY());
+                if (vehicle->isDestroyed()) {
+                        // This happens when the vehicle has been destroyed,
+                        // and it called destroy() on us, and we then called
+                        // disambark().
+                        delete vehicle;
+                } else {
+                        vehicle->relocate(getPlace(), getX(), getY());
+                }
 		vehicle = 0;
 	}
 }
@@ -1031,12 +901,13 @@ void Party::damage(int damage)
 	// destroy the party, too.
 	if (vehicle) {
 		vehicle->damage(damage);
-		if (vehicle->isDestroyed()) {
-			delete vehicle;
-			vehicle = NULL;
-			destroy();
-		}
-		return;
+                
+                // If the vehicle was destroyed by the above damage, it has
+                // already called destroy() on its occupants (that's us right
+                // here!) and we've already disembarked. So there's really
+                // nothing to do.
+                return;
+
 	}
 
 	// Apply damage to all party members. If they all die then the party is
@@ -1051,84 +922,47 @@ void Party::damage(int damage)
 
 void Party::distributeMembers()
 {
-        // ---------------------------------------------------------------------
+        // -------------------------------------------------------------------
         // Emulate what I currently do for the player party.
-        // ---------------------------------------------------------------------
+        // -------------------------------------------------------------------
 
-        // ---------------------------------------------------------------------
+        // -------------------------------------------------------------------
         // The combat alg requires me to fill out a "position info" structure
         // based on the player party destination.
-        // ---------------------------------------------------------------------
+        // -------------------------------------------------------------------
         
         combat_fill_position_info(&pinfo, getPlace(), getX(), getY(), dx, dy, false);
 
-        // ---------------------------------------------------------------------
+        // -------------------------------------------------------------------
         // Set the party formation to a sane default.
-        // ---------------------------------------------------------------------
+        // -------------------------------------------------------------------
 
         if (NULL == pinfo.formation)
                 pinfo.formation = formation_get_default();
 
-        // ---------------------------------------------------------------------
+        // -------------------------------------------------------------------
         // Party members must be placed such that they can pathfind back to the
         // party. This minimizes the chance of a party member getting stranded
         // (which in turn will strand the whole party in that place).
-        // ---------------------------------------------------------------------
+        // -------------------------------------------------------------------
 
         pinfo.find_party = true;
 
-        // ---------------------------------------------------------------------
+        // -------------------------------------------------------------------
         // Remove the party from the current place before distributing members.
-        // ---------------------------------------------------------------------
+        // -------------------------------------------------------------------
 
         remove();
         mapSetDirty();
 
-        // ---------------------------------------------------------------------
+        // -------------------------------------------------------------------
         // Use the combat algorithm to place each member. Currently this will
         // never fail, in the degenerate case all party members will end up
         // "stranded" on top of the destination tile.
-        // ---------------------------------------------------------------------
+        // -------------------------------------------------------------------
 
         forEachMember(combat_place_character, &pinfo);
 
-}
-
-void Party::relocate(struct place *place, int x, int y)
-{
-	class Mech *mech;
-
-        // ---------------------------------------------------------------------
-        // Do the standard relocation first.
-        // ---------------------------------------------------------------------
-
-	Object::relocate(place, x, y);
-
-        // ---------------------------------------------------------------------
-        // NPC parties can trigger mechs with STEP events...
-        // ---------------------------------------------------------------------        
-
-	mech = (class Mech *) place_get_object(place, x, y, mech_layer);
-	if (mech)
-		mech->activate(MECH_STEP);
-
-        // ---------------------------------------------------------------------
-        // If the place requires parties to break up into individual members
-        // then I have to switch from party to character mode here. Otherwise
-        // I'm done.
-        // ---------------------------------------------------------------------
-
-        if (place_is_wilderness(place))
-                return;
-
-        distributeMembers();
-
-        // ---------------------------------------------------------------------
-        // Automatically end turn on mode switch or we might end up trying to
-        // exec this object again when it has no place defined.
-        // ---------------------------------------------------------------------
-
-        endTurn();
 }
 
 struct formation *Party::get_formation()
@@ -1138,12 +972,12 @@ struct formation *Party::get_formation()
 	return getObjectType()->formation;
 }
 
-void Party::describe(int count)
+void Party::describe()
 {
-        Object::describe(count);
+        Object::describe();
         if (vehicle) {
                 consolePrint(" in ");
-                vehicle->describe(1);
+                vehicle->describe();
         }
 }
 
@@ -1176,12 +1010,6 @@ static bool member_burn(class Character *member, void *data)
         return false;
 }
 
-static bool member_poison(class Character *member, void *data)
-{
-        member->poison();
-        return false;
-}
-
 static bool member_sleep(class Character *member, void *data)
 {
         member->sleep();
@@ -1190,9 +1018,6 @@ static bool member_sleep(class Character *member, void *data)
 
 static bool member_apply_existing(class Character * pm, void *data)
 {
-	if (pm->isPoisoned()) {
-                pm->damage(DAMAGE_POISON);
-	}
         if (pm->isAsleep()) {
                 if ((random() % 100) < PROB_AWAKEN) {
                         pm->awaken();
@@ -1201,24 +1026,9 @@ static bool member_apply_existing(class Character * pm, void *data)
 	return false;
 }
 
-void Party::applyExistingEffects()
-{
-        forEachMember(member_apply_existing, this);
-        if (allDead())
-                destroy();
-}
-
-
 void Party::burn()
 {
         forEachMember(member_burn, NULL);
-        if (allDead())
-                destroy();
-}
-
-void Party::poison()
-{
-        forEachMember(member_poison, NULL);
         if (allDead())
                 destroy();
 }
@@ -1258,4 +1068,142 @@ void Party::switchOrder(class Character *ch1, class Character *ch2)
 char *Party::getName()
 {
         return Object::getName();
+}
+
+#define FOR_EACH_MEMBER(e,c)                                               \
+   for ((e) = members.next, (c) = list_entry((e), class Character, plist); \
+        (e) != &members;                                                   \
+        (e) = (e)->next, (c) = list_entry((e), class Character, plist))
+
+// --------------------------------------------------------------------
+// Wherever the party is, there shall the members be also.
+// --------------------------------------------------------------------
+
+void Party::setPlace(struct place *place)
+{
+        struct list *entry;
+        class Character *member;
+        Object::setPlace(place);
+        FOR_EACH_MEMBER(entry, member) {
+                member->setPlace(place);
+        }
+}
+
+void Party::setX(int x)
+{
+        struct list *entry;
+        class Character *member;
+        Object::setX(x);
+        FOR_EACH_MEMBER(entry, member) {
+                member->setX(x);
+        }
+}
+
+void Party::setY(int y)
+{
+        struct list *entry;
+        class Character *member;
+        Object::setY(y);
+        FOR_EACH_MEMBER(entry, member) {
+                member->setY(y);
+        }
+}
+
+bool Party::addEffect(struct effect *effect, struct gob *gob)
+{
+        struct list *entry;
+        class Character *member;
+        bool result = false;
+
+        // NOTE: in the future we'll probably want to distinguish between
+        // start-of-char-turn and start-of-party-turn for characters. Also,
+        // we'll want to specify if the hook should really apply to the party
+        // object or to its members.
+        FOR_EACH_MEMBER(entry, member)
+                result = member->addEffect(effect, gob) || result;
+        
+        return result;
+}
+
+bool Party::removeEffect(struct effect *effect)
+{
+        struct list *entry;
+        class Character *member;
+        bool result = false;
+
+        FOR_EACH_MEMBER(entry, member) {
+                result = member->removeEffect(effect) || result;
+        }
+        
+        return result;
+}
+
+void Party::startTurn()
+{
+        struct list *entry;
+        class Character *member;
+
+        Object::startTurn();
+        if (isDestroyed())
+                return;
+
+        // NOTE: in the future we'll probably want to distinguish between
+        // start-of-char-turn and start-of-party-turn for characters. Also, to
+        // be authentic we really should iterate over this in proportion to the
+        // map scale.
+        FOR_EACH_MEMBER(entry, member)
+                member->runHook(OBJ_HOOK_START_OF_TURN);
+
+        if (allDead())
+                destroy();
+
+}
+
+void Party::applyEffect(closure_t *effect)
+{
+        struct list *entry;
+        class Character *member;
+
+        FOR_EACH_MEMBER(entry, member)
+                member->applyEffect(effect);
+}
+
+void Party::save(struct save *save)
+{
+        // fixme: need to add a vehicle constructor if in a vehicle
+        save->enter(save, "(kern-mk-party %s %d\n",
+                    getObjectType()->getTag(), getAlignment());
+        if (vehicle)
+                vehicle->save(save);
+        else
+                save->write(save, "nil\n");
+        save->exit(save, ")\n");
+}
+
+void Party::enterPortal(class Portal * portal)
+{
+        removeMembers();
+        portal->enter(this);
+}
+
+static bool member_remove(class Character *member, void *data)
+{
+        member->remove();
+        return false;
+}
+
+void Party::removeMembers()
+{
+        forEachMember(member_remove, NULL);
+}
+
+static bool memberStart(class Character *member, void *data)
+{
+        member->start();
+        return false;
+}
+
+void Party::start()
+{
+        forEachMember(memberStart, NULL);
 }

@@ -22,7 +22,7 @@
 #ifndef player_h
 #define player_h
 
-#include "list.h"
+#include "Container.h"
 #include "object.h"
 #include "map.h"
 #include "character.h"
@@ -31,6 +31,8 @@
 #include "place.h" // for struct location
 
 #include <string.h>
+
+#define HARDCODE_MOONGATES 0
 
 enum party_control {
         PARTY_CONTROL_ROUND_ROBIN = 0,
@@ -46,26 +48,41 @@ enum move_result {
         move_enter_combat,
         move_enter_auto_portal,
         move_impassable,
+#if HARDCODE_MOONGATES
         move_enter_moongate,
+#endif
         move_player_quit,
+        move_enter_subplace,
 };
 
 struct move_info {
         struct place *place;
         int x;
-        int y;
+        int y;        
         int dx;
         int dy;
+        int px; // parent-x for wilderness combat
+        int py; // parent-y for wilderness combat
         int turns; // consumed by movement
         class Party *npc_party;
         class Portal *portal;
+#if HARDCODE_MOONGATES
         class Moongate *moongate;
+#endif
+        struct place *subplace;
 };
 
 class player_party : public Party {
  
       public:
         player_party();
+        player_party(char *tag,
+                     struct sprite *sprite,
+                     char *mv_desc, char *mv_sound,
+                     int food, int gold, int align,
+                     struct formation *formation, 
+                     struct terrain_map *camping_map,
+                     struct formation *camping_formation);
 	virtual ~ player_party();
 
         // overloaded Object methods:
@@ -74,11 +91,9 @@ class player_party : public Party {
         virtual char *getName(void);
         virtual bool isVisible();
         virtual void clearAlignment(int alignment);
-        virtual void describe(int count);
-        virtual void relocate(struct place *place, int x, int y);
+        virtual void describe();
         virtual void exec(struct exec_context *context);
         virtual void damage(int amount);
-        virtual void poison();
         virtual int getSpeed(void);
         virtual void decActionPoints(int points);
         virtual int getAlignment();
@@ -93,14 +108,16 @@ class player_party : public Party {
         virtual void addView();
         virtual int getLight();
         virtual void changePlaceHook();
+        virtual bool isPlayerControlled();
 
-        void distributeMembers(struct place *new_place, int new_x, int new_y, int new_dx, int new_dy);
+        void startSession(void);
+        void distributeMembers(struct place *new_place, int new_x, int new_y, 
+                               int new_dx, int new_dy);
         MoveResult move(int dx, int dy);
-	void add_to_inventory(class ObjectType * data, int quantity);
-        void remove_from_inventory(struct inv_entry *ie, int quantity);
 	struct inv_entry *search_inventory(class ObjectType * type);
         void enter_portal(void);
-	enum MoveResult try_to_enter_town_from_edge(class Portal * portal, int dx, int dy);
+	enum MoveResult try_to_enter_subplace_from_edge(struct place *town,
+                                                        int dx, int dy);
         void ready_arms(struct object *object);
         bool allDead(void);
         bool immobilized(void);
@@ -111,11 +128,13 @@ class player_party : public Party {
 	virtual void removeMember(class Character *);
         virtual bool addMember(class Character *);
         void add_spell(struct spell *spell, int quantity);
-	bool enter_moongate(class Moongate * srcGate, int x, int y);
         char *get_movement_description();
         char *get_movement_sound();
+#if HARDCODE_MOONGATES
 	void enter_moongate(class Moongate * moongate);
+	bool enter_moongate(class Moongate * srcGate, int x, int y);
 	enum MoveResult try_to_enter_moongate(class Moongate * src_gate);
+#endif
         enum move_result check_move_to(struct move_info *info);
         virtual void paint(int sx, int sy);
         virtual struct formation *get_formation();
@@ -124,7 +143,6 @@ class player_party : public Party {
         void throw_out_of_bed();
         int getTurnCount();
         class Character *getMemberAtIndex(int index);
-        void removeMembers();
         void setCombatExitDestination(struct location *loc);
         void getCombatExitDestination(struct location *loc);
         void clearCombatExitDestination();
@@ -138,20 +156,20 @@ class player_party : public Party {
         void setLeader(class Character *character);
         bool rendezvous(struct place *place, int x, int y);
         int getContext(void);
+        virtual void setOnMap(bool val);        
+        virtual void save(struct save *save);
 
         struct sprite *sprite;
-        class Vehicle *vehicle;
         int turns;
         char *mv_desc;
         char *mv_sound;
 
-        struct list inventory;
-        int nArms;
-        int nReagents;
-        int nSpells;
-        int nItems;
-        int nAmmo;
-        int light;
+        /* Inventory management */
+        Container *inventory;
+        virtual bool addFood(int quantity);
+        virtual bool add(ObjectType *type, int amount);
+        virtual bool takeOut(ObjectType *type, int amount);        
+
         int food;
         bool onMap;
         int alignment;
@@ -162,13 +180,11 @@ class player_party : public Party {
         struct position_info pinfo;
 
  protected:
-        virtual void applyExistingEffects();
-
-        void try_to_enter_portal(class Portal *portal);
         enum MoveResult try_to_move_off_map(struct move_info *info);
         bool turn_vehicle(void);
         void chooseNewLeader();
         void disableCurrentMode();
+        struct place *getPlaceFromMembers();
 
         clock_alarm_t wakeup_alarm;
         clock_alarm_t rest_alarm;
@@ -190,5 +206,8 @@ class player_party : public Party {
 
 extern class player_party *player_party;
 extern int player_init(void);
+extern void player_dtor(void *val);
+extern void player_save(struct save *save, void *val);
+
 
 #endif				// player_h

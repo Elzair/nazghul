@@ -27,129 +27,88 @@
 
 class VehicleType:public ObjectType {
  public:
-	virtual int getType() {
-		return VEHICLE_TYPE_ID;
-	}
-        virtual bool isType(int classID) { 
-                if (classID == VEHICLE_TYPE_ID)
-                        return true;
-                return ObjectType::isType(classID);
-        }
-
-        VehicleType();
-	virtual ~ VehicleType() {
-	}
-	virtual bool init(char *tag, char *name, struct sprite * sprite,
-                          int speed, int pmask, char *mv_desc, char *mv_sound, 
-			  class ArmsType * ordnance, bool must_turn) {
-                if (!ObjectType::init(tag, name, vehicle_layer, sprite))
-                        return false;
-                this->speed = speed;
-                this->pmask = pmask;
-                this->mv_desc = mv_desc;
-                this->mv_sound = mv_sound;
-                this->ordnance = ordnance;
-                this->must_turn = must_turn;
-                return true;
-        }
-	virtual class ArmsType *getOrdnance() {
-		return ordnance;
-	}
-	virtual int getPmask() {
-		return pmask;
-	}
-	virtual char *getMvDesc() {
-		return mv_desc;
-	}
-	virtual char *getMvSound() {
-		return mv_sound;
-	}
+	virtual int getType();
+        virtual bool isType(int classID);
+        VehicleType(char *tag, char *name, struct sprite *sprite,
+                    struct terrain_map *map,
+                    class ArmsType *ordnance,
+                    bool vulnerable,
+                    bool killsOccupants,
+                    bool mustTurn,
+                    char *mv_desc,
+                    char *mv_sound,
+                    int pmask,
+                    int tailwind_penalty,
+                    int headwind_penalty,
+                    int crosswind_penalty,
+                    int maxHp,
+                    int speed
+                    );
+	virtual ~VehicleType();
+	virtual class ArmsType *getOrdnance();
+	virtual int getPmask();
+	virtual char *getMvDesc();
+	virtual char *getMvSound();
 	virtual bool mustTurn();
         virtual bool canFace(int facing);
         virtual class Object *createInstance();
-	virtual bool load(class Loader * loader);
         virtual int getWindPenalty(int facing);
 
         bool isVulnerable();
         bool killsOccupants();
 
-        struct terrain_map *map;
         struct formation *formation;
-
+        struct terrain_map *map;
 
  protected:
+        class ArmsType *ordnance;
         bool is_vulnerable;
         bool kills_occupants; /* on destroy */
-        int pmask;
+        bool must_turn;
         char *mv_desc;
         char *mv_sound;
-        class ArmsType *ordnance;
-        bool must_turn;
+        int pmask;
         int tailwind_penalty;
         int headwind_penalty;
         int crosswind_penalty;
+        int maxHp;
 };
 
 class Vehicle:public Object {
  public:
-        virtual bool isType(int classID) { 
-                if (classID == VEHICLE_ID)
-                        return true;
-                return Object::isType(classID);
-        }
-	virtual int getType() {
-		return VEHICLE_ID;
-	}
-
-        Vehicle();
-	virtual ~ Vehicle();
-        virtual class VehicleType *getObjectType() { 
-		return (class VehicleType *) Object::getObjectType();
-        }
-        virtual void init(int x, int y, struct place *place, 
-			  class VehicleType * type, int facing) {
-                Object::init(x, y, place, type);
-		if (!setFacing(facing))
-                        assert(0);
-        }
-	virtual void init(class VehicleType * type);
-	virtual char *getName() {
-		return getObjectType()->getName();
-	}
-        virtual class ArmsType *getOrdnance() { 
-		return getObjectType()->getOrdnance();
-	}
-	virtual int getPmask() {
-		return getObjectType()->getPmask();
-	}
-	virtual char *getMvDesc() {
-		return getObjectType()->getMvDesc();
-	}
-	virtual char *getMvSound() {
-		return getObjectType()->getMvSound();
-	}
+        virtual bool isType(int classID);
+	virtual int getType();
+        Vehicle (VehicleType*);
+        Vehicle (VehicleType*, int facing, int hp);
+	virtual ~Vehicle();
+        virtual class VehicleType *getObjectType();
+	virtual char *getName();
+        virtual int getX();
+        virtual int getY();
+        virtual class ArmsType *getOrdnance();
+	virtual int getPmask();
+	virtual char *getMvDesc();
+	virtual char *getMvSound();
 	virtual bool mustTurn();
         virtual int getFacing();
-	virtual bool load(class Loader * loader);
         virtual int get_facing_to_fire_weapon(int dx, int dy);
         virtual bool fire_weapon(int dx, int dy, class Object *user);
         virtual void paint(int sx, int sy);
         virtual struct formation *get_formation();
         virtual struct place *getPlace();
         virtual void destroy();
+        virtual void save(struct save *save);
 
         bool isVulnerable();
-
         bool turn(int dx, int dy, int *cost);
         int getMovementCostMultiplier();
         void damage(int amount);
-        virtual int getX();
-        virtual int getY();
 
         class Object *occupant;
-        int facing;
+
  protected:
-        bool setFacing(int facing);
+        bool setFacing(int);
+        int facing;
 
 };
 

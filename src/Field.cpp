@@ -21,6 +21,8 @@
 //
 
 #include "Field.h"
+#include "common.h"
+#include "session.h"
 
 bool FieldType::isType(int classID) 
 {
@@ -29,29 +31,22 @@ bool FieldType::isType(int classID)
         return ObjectType::isType(classID);
 }
 
-int  FieldType::getType()
+int FieldType::getType()
 {
         return FIELD_TYPE_ID;
 }
 
-FieldType::FieldType():effects(0), light(0)
+FieldType::FieldType(char *tag, char *name, struct sprite *sprite, 
+                     int light, int duration, int pmask, closure_t *clx)
+        : ObjectType(tag, name, sprite, field_layer), 
+          light(light), duration(duration), pmask(pmask), effect(clx)
 {
-
 }
 
 FieldType::~FieldType()
 {
-
-}
-
-int  FieldType::getEffects()
-{
-        return effects;
-}
-
-void  FieldType::setEffects(int effects)
-{
-        this->effects = effects;
+        if (effect)
+                closure_del(effect);
 }
 
 int  FieldType::getLight()
@@ -84,26 +79,41 @@ void  FieldType::setPmask(int val)
         pmask = val;
 }
 
+class Object *FieldType::createInstance()
+{
+        return new Field(this);
+}
 
 class FieldType * Field::getObjectType()
 {
         return (class FieldType *) Object::getObjectType();
 }
 
-Field::Field()
+bool FieldType::isPermanent()
 {
+        return (duration < 0);
+}
 
+//////////////////////////////////////////////////////////////////////////////
+
+Field::Field(FieldType *type)
+        : Object(type)
+{
+        duration = type->getDuration();
+}
+
+Field::Field(FieldType *type, int dur)
+        : Object(type)
+{
+        duration = dur;
+}
+
+Field::Field() : duration(0)
+{        
 }
 
 Field::~ Field()
 {
-
-}
-
-void Field::init(class FieldType * type)
-{
-        Object::init(type);
-        duration = type->getDuration();
 }
 
 int Field::getLight()
@@ -113,7 +123,21 @@ int Field::getLight()
 
 void Field::exec(struct exec_context *context)
 {
+        startTurn();
+        if (isDestroyed())
+                return;
+        
+        if (getObjectType()->isPermanent())
+                return;
+
         duration--;
+        assert(duration >= 0);
         if (duration == 0)
                 destroy();
+}
+
+void Field::save(struct save *save)
+{
+        save->write(save, "(kern-mk-field %s %d)", getObjectType()->getTag(), 
+                    duration);
 }

@@ -32,19 +32,30 @@ class ArmsType:public ObjectType {
 
 	virtual bool isType(int classID);
 	virtual int getType();
-
         ArmsType();
+        ArmsType(char *tag, char *name, struct sprite *sprite,
+                 int slotMask,
+                 char *to_hit_dice,
+                 char *to_defend_dice,
+                 int numHands,
+                 int range,
+                 int weight,
+                 char *damage_dice,
+                 char *armor_dice,
+                 int reqActPts,
+                 bool thrown,
+                 bool ubiquitousAmmo,
+                 char *fire_sound,
+                 class ArmsType *missileType,
+                 class FieldType *fieldType);
 	virtual ~ ArmsType();
 
+	virtual char * getArmorDice();
+	virtual char * getDamageDice();
 	virtual int getSlotMask();
-        virtual int getHit();
-	virtual int getDamage();
-	virtual int getDamageMin();
-	virtual int getDamageMax();
-        virtual int getDefend();
-	virtual int getArmor();
-	virtual int getArmorMin();
-	virtual int getArmorMax();
+        virtual char * getToDefendDice();
+        virtual char * getToHitDice();
+
 	virtual int getNumHands();
 	virtual int getRange();
 	virtual bool isMissileWeapon();
@@ -52,8 +63,7 @@ class ArmsType:public ObjectType {
 	virtual class ArmsType *getMissileType();
 	virtual bool fire(class Character * target, int ox, int oy);
 	virtual bool fire(struct place *place, int ox, int oy, int tx, int ty);
-        virtual bool fireInDirection(struct place *place, int ox, int oy, 
-                                     int dx, int dy, class Object *user);
+        virtual bool fireInDirection(struct place *place, int ox, int oy, int dx, int dy, class Object *user);
 	virtual bool isThrownWeapon();
 	virtual void setThrown(bool val);
 	virtual void setFieldType(class FieldType * type);
@@ -64,22 +74,21 @@ class ArmsType:public ObjectType {
 	virtual bool ammoIsUbiquitous();
 	virtual void setWeight(int val);
 	virtual int getWeight(void);
-	virtual bool load(class Loader * loader);
 
       protected:
 	int slotMask;
-	int damage[2];   // damage done when hitting
-	int armor[2];    // damage reduced when hit
-        int hit;      // chance to hit modifier
-        int defend;   // chance to defend modifier
 	int numHands;
 	int range;
-	class Missile *missile;
-	bool thrown;
-	class FieldType *field;
-	bool ubiquitousAmmo;
 	int weight;
+	bool thrown;
+	bool ubiquitousAmmo;
+        char *armorDice;
+        char *damageDice;
+        char *toDefendDice;
+        char *toHitDice;
         char *fire_sound;
+	class Missile *missile;
+	class FieldType *fieldType;
 };
 
 #endif

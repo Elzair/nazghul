@@ -30,7 +30,8 @@
 #include "place.h"
 #include "player.h"
 
-Missile::Missile()
+Missile::Missile(ArmsType*type)
+        : Object(type)
 {
 }
 
@@ -91,10 +92,9 @@ void Missile::animate(int Ax, int Ay, int Bx, int By, int _flags)
 	class FieldType *fieldType = getObjectType()->getFieldType();
 	if (fieldType == NULL)
 		return;
-	class Field *field = new Field();
+	class Field *field = new Field(fieldType);
 	if (field == NULL)
 		return;
-	field->init(fieldType);
 	field->relocate(getPlace(), Bx, By);
 }
 

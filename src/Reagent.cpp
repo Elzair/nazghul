@@ -21,7 +21,7 @@
 //
 
 #include "Reagent.h"
-#include "Loader.h"
+#include "common.h"
 
 bool ReagentType::isType(int classID)
 {
@@ -35,19 +35,15 @@ int ReagentType::getType()
 	return REAGENT_TYPE_ID;
 }
 
+ReagentType::ReagentType(char *tag, char *name, struct sprite *sprite)
+        : ObjectType(tag, name, sprite, item_layer)
+{
+}
+
 ReagentType::ReagentType()
 {
 }
 
 ReagentType::~ReagentType()
 {
-}
-
-bool ReagentType::load(class Loader * loader)
-{
-	if (!ObjectType::load(loader) || !loader->matchToken('}'))
-		return false;
-
-	layer = item_layer;
-	return true;
 }

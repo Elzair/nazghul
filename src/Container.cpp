@@ -20,8 +20,9 @@
 // gmcnutt@users.sourceforge.net
 //
 
+#include "common.h"
 #include "Container.h"
-#include "Loader.h"
+#include "session.h"
 
 static void move_to_map(struct inv_entry *ie, void *data)
 {
@@ -35,7 +36,7 @@ static void move_to_map(struct inv_entry *ie, void *data)
 		}
 		ie->count--;
 	}
-	box->subtract(ie->type, ie->count);
+	box->takeOut(ie->type, ie->count);
 }
 
 static void destroy_content(struct inv_entry *ie, void *data)
@@ -49,39 +50,45 @@ Container::Container():trap(NULL)
 	list_init(&contents);
 }
 
+Container::Container(ObjectType *type)
+        : Object(type), trap(NULL)
+{
+        list_init(&contents);
+}
+
 Container::~Container()
 {
 	forEach(destroy_content, NULL);
 }
 
-void Container::add(class ObjectType * type, int quantity)
+bool Container::add(class ObjectType * type, int quantity)
 {
 	struct inv_entry *ie;
 
 	assert(quantity > 0);
 
 	ie = search(type);
-	if (ie) {
-		ie->count += quantity;
-		return;
-	}
-
-	ie = new struct inv_entry;
-	if (ie) {
+	if (!ie) {
+                ie = new struct inv_entry;                
 		list_add(&contents, &ie->list);
 		ie->ref = 0;
-		ie->count = quantity;
+		ie->count = 0;
 		ie->type = type;
 	}
 
+        ie->count += quantity;
+
+        return true;
 }
 
-void Container::subtract(class ObjectType * type, int quantity)
+bool Container::takeOut(class ObjectType * type, int quantity)
 {
 	struct inv_entry *ie;
 
 	ie = search(type);
-	assert(ie);
+        if (!ie)
+                return false;
+
 	ie->count -= quantity;
 	assert(ie->count >= 0);
 
@@ -89,6 +96,8 @@ void Container::subtract(class ObjectType * type, int quantity)
 		list_remove(&ie->list);
 		delete ie;
 	}
+
+        return true;
 }
 
 void Container::open()
@@ -126,65 +135,121 @@ bool Container::isTrapped()
 	return trap != NULL;
 }
 
-class TrapType *Container::getTrap()
+closure_t *Container::getTrap()
 {
 	return trap;
 }
 
-void Container::setTrap(class TrapType * val)
+void Container::setTrap(closure_t * val)
 {
 	trap = val;
 }
 
-bool Container::load(class Loader *loader)
+void Container::saveContents(struct save *save)
 {
-        char *tag;
+        struct list *elem;
+        struct inv_entry *ie;
 
-        if (!Object::load(loader))
-                return false;
+        save->enter(save, "(list\n");
+        list_for_each(&contents, elem) {
+                ie = outcast(elem, struct inv_entry, list);
+                save->write(save, "(list %d %s)\n", 
+                            ie->count,
+                            ie->type->getTag());
+        }
+        save->exit(save, ")\n");
+}
 
-        if (!loader->getWord(&tag))
-                return false;
+void Container::save(struct save *save)
+{
+        assert(saved < save->session_id);
+
+        saved = save->session_id;
+
+        save->enter(save, "(kern-mk-container\n");
+
+        // The anonymous container used as the player party inventory does not
+        // have a type.
+        if (getObjectType())
+                save->write(save, "%s\n", getObjectType()->getTag());
+        else
+                save->write(save, "nil\n");
+
+        save->write(save, ";; trap\n");
+        if (!trap) {
+                save->write(save, "nil\n");
+        } else {
+                closure_save(trap, save);
+        }
+
+        save->write(save, ";; contents\n");
+        if (list_empty(&contents)) {
+                save->write(save, "nil\n");
+        } else {
+                saveContents(save);
+	}
         
-        if (strcmp(tag, "null")) {
-                class TrapType *trap;
-                trap = (class TrapType*)loader->lookupTag(tag, OBJECT_TYPE_ID);
-                if (!trap) {
-                        loader->setError("Error parsing container object: %s "
-                                         "is not a valid trap type", tag);
-                        free(tag);
-                        return false;
-                }
-                setTrap(trap);
-        }
-        free(tag);
 
+        save->exit(save, ")\n");
+}
 
-        if (!loader->matchToken('{'))
-                return false;
+int Container::filter_count(struct filter *filter)
+{
+        struct list *elem;
+        struct inv_entry *ie;
+        int q = 0;
 
-        while (!loader->matchToken('}')) {
-
-                class ObjectType *type;
-                int quantity;
-
-                if (!loader->getWord(&tag) ||
-                    !loader->getInt(&quantity))
-                        return false;
-
-                type = (class ObjectType*)loader->lookupTag(tag, 
-                                                            OBJECT_TYPE_ID);
-                if (!type) {
-                        loader->setError("Error parsing container content "
-                                         "list: %s it not a valid object "
-                                         "type tag", tag);
-                        free(tag);
-                        return false;
-                }
-
-                free(tag);
-                add(type, quantity);
+        ie = first(filter);
+        while (ie) {
+                q++;
+                ie = next(ie, filter);
         }
 
-        return true;
+        return q;
+}
+
+struct inv_entry *Container::first(struct filter *filter)
+{
+        struct list *elem;
+        struct inv_entry *ie;
+
+        elem = contents.next;
+        while (elem != &contents) {
+                ie = outcast(elem, struct inv_entry, list);
+                if (filter->fx(ie, filter->cookie))
+                        return ie;
+                elem = elem->next;
+        }
+        return NULL;
+}
+
+struct inv_entry *Container::next(struct inv_entry *ie, struct filter *filter)
+{
+        struct list *elem;
+
+        if (ie == NULL)
+                return first(filter);
+
+        elem = ie->list.next;
+        while (elem != &contents) {
+                ie = outcast(elem, struct inv_entry, list);
+                if (filter->fx(ie, filter->cookie))
+                        return ie;
+                elem = elem->next;
+        }
+        return NULL;
+}
+
+struct inv_entry *Container::prev(struct inv_entry *ie, struct filter *filter)
+{
+        struct list *elem;
+
+        elem = ie->list.prev;
+        while (elem != &contents) {
+                ie = outcast(elem, struct inv_entry, list);
+                if (filter->fx(ie, filter->cookie))
+                        return ie;
+                elem = elem->prev;
+        }
+        return NULL;
 }
