@@ -2443,6 +2443,10 @@ void look_at_XY(int x, int y)
         consolePrint("At XY=(%d,%d) you see ", x, y);
         placeDescribe(x, y, PLACE_DESCRIBE_ALL);
         return;
+    } else if (ShowAllTerrain) {
+        consolePrint("At XY=(%d,%d) you see (via xray) ", x, y);
+        placeDescribe(x, y, PLACE_DESCRIBE_TERRAIN);
+        return;
     }
     consolePrint("At XY=(%d,%d) you see nothing (out of LOS)\n", x, y);
 }
