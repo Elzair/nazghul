@@ -1103,6 +1103,26 @@
                (list
                 (list (mk-perm-gate 'p_sprite_gallery_1  9  1) 21  2)
 
+
+                (list (kern-mk-obj t_arrow          1) 01 01)
+                (list (kern-mk-obj t_warhead        1) 01 02)
+                (list (kern-mk-obj t_cannonball     1) 01 03)
+                (list (kern-mk-obj t_poison_bolt    1) 01 04)  ;; crash and lock upon pickup
+                (list (kern-mk-obj t_fireball       1) 01 05)  ;; immediate crash and exit upon pickup
+                (list (kern-mk-obj t_bow            1) 01 06)
+                (list (kern-mk-obj t_rpg            1) 01 07)
+                (list (kern-mk-obj t_oil            1) 01 08)
+                (list (kern-mk-obj t_spear          1) 01 09)
+                (list (kern-mk-obj t_thrown_boulder 1) 01 10)  ;; odd -- character can wield and throw
+                (list (kern-mk-obj t_dagger         1) 01 11)
+                (list (kern-mk-obj t_iron_helm      1) 01 12)
+                (list (kern-mk-obj t_sm_shield      1) 01 13)
+
+                (list (kern-mk-obj deathball        1) 01 15)  ;; crash and lock upon pickup
+                (list (kern-mk-obj short-sword      1) 01 16)
+                (list (kern-mk-obj wooden-buckler   1) 01 17)
+
+
                 (list large_chest 1 30)
 
                 ) ; objects

@@ -92,14 +92,14 @@
 (define missile-arms-types
   (list
    ;;    ============================================================================================================
-   ;;    tag           | name        | sprite  |       field  | damage | gifc
+   ;;    tag           | name        | sprite                     | field  | damage | gifc
    ;;    ============================================================================================================
-   (list 't_arrow        "arrow"       s_arrow         nil      "1d6"    obj-ifc)
-   (list 't_warhead      "warhead"     s_magic         F_fire   "0"      obj-ifc)
-   (list 't_cannonball   "cannonball"  s_magic         nil      "0"      obj-ifc)
-   (list 't_poison_bolt  "poison bolt" s_green_magbolt nil      "1d6"    poison-bolt-ifc)
-   (list 't_fireball     "fireball"    s_red_magbolt   nil      "2d6"    nil)
-   (list 'deathball      "deathball"   s_magic         nil      "0"      deathball-ifc)
+   (list 't_arrow        "arrow"       s_arrow_wooden               nil      "1d6"    obj-ifc)
+   (list 't_warhead      "warhead"     s_magic_ball_core_red        F_fire   "0"      obj-ifc)
+   (list 't_cannonball   "cannonball"  s_sling_bullet               nil      "0"      obj-ifc)
+   (list 't_poison_bolt  "poison bolt" s_lightning_bolt_green       nil      "1d6"    poison-bolt-ifc)
+   (list 't_fireball     "fireball"    s_lightning_bolt_red         nil      "2d6"    nil)
+   (list 'deathball      "deathball"   s_magic_ball_core_dark_grey  nil      "0"      deathball-ifc)
    ))
 
 ;; If we don't create these missile types now, we won't be able to refer to
@@ -113,18 +113,18 @@
    ;;     ===========================================================================================================
    ;;     tag   | name       | sprite     | to-hit | damage | to-def | slots       | hnds | rng | missile | ubiq
    ;;     ===========================================================================================================
-   (list 't_bow   "short bow"  s_lght_bow   "1"      "1d6"    "-2"     slot-weapon   2      6     t_arrow   #f)
-   (list 't_rpg   "RPG"        s_hvy_xbow   "1d4"    "2d20"   "-5"     slot-weapon   2      12    t_warhead #t)
+   (list 't_bow   "short bow"  s_shortbow   "1"      "1d6"    "-2"     slot-weapon   2      6     t_arrow   #f)
+   (list 't_rpg   "doom staff" s_staff_7    "1d4"    "2d20"   "-5"     slot-weapon   2      12    t_warhead #t)
    ))
 
 (define thrown-arms-types
   (list
-   ;;     ===========================================================================================================
-   ;;     tag    | name          | sprite           | to-hit | damage | to-def | slots       | hnds | rng | field
-   ;;     ===========================================================================================================
-   (list  't_oil   "flaming oil"   s_orange_potion    "0"      "1d6"    "-2"     slot-weapon   1      4     F_fire)
-   (list  't_spear "spear"         s_spear            "0"      "1d8"    "+1"     slot-weapon   2      4     nil)
-   (list  't_thrown_boulder "boulder" s_boulder       "-1"     "2d6"    "0"      slot-weapon   2      5     nil)
+   ;;     ====================================================================================================================
+   ;;     tag              | name          | sprite              | to-hit | damage | to-def | slots       | hnds | rng | field
+   ;;     ====================================================================================================================
+   (list  't_oil            "flaming oil"   s_kg_potion_red_f33_2  "0"      "1d6"    "-2"     slot-weapon   1      4     F_fire)
+   (list  't_spear          "spear"         s_spear_1              "0"      "1d8"    "+1"     slot-weapon   2      4     nil)
+   (list  't_thrown_boulder "boulder"       s_boulder              "-1"     "2d6"    "0"      slot-weapon   2      5     nil)
    ))
 
 (define melee-arms-types
@@ -134,7 +134,7 @@
    ;;     ===========================================================================================================
    (list  't_hands       "bare hands"     nil               "1d2"    "1d4"    "1d2"    slot-nil      1      1)
    (list  't_fangs       "fangs"          nil               "1d2"    "1d8"    "0"      slot-nil      1      1)
-   (list  't_dagger      "dagger"         s_dagger          "1d3"    "1d6"    "1d2"    slot-weapon   1      1)
+   (list  't_dagger      "dagger"         s_dagger_1        "1d3"    "1d6"    "1d2"    slot-weapon   1      1)
    (list  't_acid_spray  "acid spray"     nil               "1d2"     "1d8"   "0"      slot-nil      2      2)   
    (list  't_stinger     "stinger"        nil               "1d8"    "1d2-1"  "0"      slot-nil      1      1)
    (list  'short-sword   "short sword"    s_sword_short_1   "1d4"    "1d8"    "1d2"    slot-weapon   1      1)
@@ -145,23 +145,23 @@
    ;;     ===========================================================================================================
    ;;     tag             | name          | sprite           | to-hit | armor  | slots
    ;;     ===========================================================================================================
-   (list   't_iron_helm     "iron helm"      s_plate_helm       "0"      "2"      slot-helm)
+   (list   't_iron_helm     "iron helm"     s_helm_metal_1     "0"      "2"      slot-helm)
    ))
 
 (define shield-types
   (list
    ;;     ===========================================================================================================
-   ;;     tag             | name          | sprite           | to-hit | armor  | slots
+   ;;     tag             | name          | sprite                 | to-hit | armor  | slots
    ;;     ===========================================================================================================
-   (list   't_sm_shield    "small shield"  s_small_shield     "-1"     "3"      slot-shield)
-   (list   'wooden-buckler "wooden buckler" s_shield_blank_round_2 "-1" "3"     slot-shield)
+   (list   't_sm_shield    "small shield"   s_shield_blank_round_1  "-1"     "3"       slot-shield)
+   (list   'wooden-buckler "wooden buckler" s_shield_blank_round_2  "-1"     "3"       slot-shield)
    ))
 
-(map (lambda (type) (apply mk-thrown-arms-type type)) thrown-arms-types)
+(map (lambda (type) (apply mk-thrown-arms-type     type)) thrown-arms-types)
 (map (lambda (type) (apply mk-projectile-arms-type type)) projectile-arms-types)
-(map (lambda (type) (apply mk-melee-arms-type type)) melee-arms-types)
-(map (lambda (type) (apply mk-armor-type type)) armor-types)
-(map (lambda (type) (apply mk-shield-type type)) shield-types)
+(map (lambda (type) (apply mk-melee-arms-type      type)) melee-arms-types)
+(map (lambda (type) (apply mk-armor-type           type)) armor-types)
+(map (lambda (type) (apply mk-shield-type          type)) shield-types)
 
 
 ;;--------------------------------------------------------------------------
