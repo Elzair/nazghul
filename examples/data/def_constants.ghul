@@ -184,5 +184,16 @@ palette { \
         '0'    t_counter_pillar; \
 }
 
+/*****************************************************************************
+ ***   SCHEDULES   ***
+ *****************************************************************************/
+#define WORKING   0  /* reserved */
+#define SLEEPING  1  /* reserved */
+#define COMMUTING 2  /* reserved */
+#define EATING    3  /* reserved */
+#define RELAXING  4
+
+
+
 #endif // def_constants_ghul
 /* eof */

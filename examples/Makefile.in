@@ -133,7 +133,6 @@ distdir: $(DISTFILES)
 	    || cp -p $$d/$$file $(distdir)/$$file || :; \
 	  fi; \
 	done
-
 info-am:
 info: info-am
 dvi-am:
@@ -198,6 +197,7 @@ maintainer-clean-generic clean mostlyclean distclean maintainer-clean
 
 # Special rule to build the mapfile
 mapfile:
+	rm -f mapfile
 	$(MAKE) -C data
 	cp data/mapfile ./
 

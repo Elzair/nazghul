@@ -6,15 +6,8 @@
 #define all_places_ghul
 
 
-#ifdef YAUR
-#include "./yaur/yaur_world.ghul"
-#endif // YAUR
-
-
-#ifdef U4_U5
-#include "./u4_u5/u4_u5_world.ghul"
-#endif // U4_U5
-
+#include "./P_empire_city.ghul"
+#include "./P_prison_and_torture_chamber.ghul"
 
 #endif // all_places_ghul
 

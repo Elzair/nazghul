@@ -20,7 +20,7 @@ SPRITE_SET ss_mechanisms {
   file_cols     8;
   file_offx     0;
   file_offy     0;
-  file         "data/images/rune_font_32x32.png";
+  file         "data/images/mechanisms.png";
   
   sprites {
     STD_SPRITE(s_left_lever_up,         0);

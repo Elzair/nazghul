@@ -8,17 +8,9 @@
 
 player {
   
-#ifdef YAUR
-  place p_castle_adare;
-  x     0;
-  y     31;
-#endif // YAUR
-  
-#ifdef U4_U5
-  place p_u5_world;
-  x     85;
-  y     107;
-#endif // U4_U5
+  place p_empire_city;
+  x     32;
+  y     25;
   
   sprite    s_companion_wizard;
   speed     2;

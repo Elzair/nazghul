@@ -83,7 +83,7 @@ MECH_TYPE mech_R_lever {
 
 
 MECH_TYPE mech_pressure_plate {
-  name "pressure plate";
+  name "pressure plate";  /* fixme - need this? -- perhaps move to defaults ?*/
   defaults {
     sprite s_magic;
     pmask  PASS_ALL;
@@ -100,7 +100,6 @@ MECH_TYPE mech_pressure_plate {
     event      MECH_STEP;
     next_state "pressure plate";
     actions {
-      print "Click";
       send_signal MECH_SIGNAL_CHANGE;
     }
   }
@@ -132,7 +131,6 @@ MECH_TYPE mech_portcullis {
     event      MECH_SIGNAL_DOWN;
     next_state "lowered portcullis";
     actions {
-      print "The portcullis slams shut!";
       send_signal MECH_SIGNAL_DOWN;
     }
     
@@ -140,7 +138,6 @@ MECH_TYPE mech_portcullis {
     event      MECH_SIGNAL_CHANGE;
     next_state "lowered portcullis";
     actions {
-      print "The portcullis slams shut!";
       send_signal MECH_SIGNAL_DOWN;
     }
     
@@ -148,7 +145,6 @@ MECH_TYPE mech_portcullis {
     event      MECH_SIGNAL_UP;
     next_state "raised portcullis";
     actions {
-      print "The portcullis opens.";
       send_signal MECH_SIGNAL_UP;
     }
     
@@ -156,7 +152,6 @@ MECH_TYPE mech_portcullis {
     event      MECH_SIGNAL_CHANGE;
     next_state "raised portcullis";
     actions {
-      print "The portcullis opens.";
       send_signal MECH_SIGNAL_UP;
     }
   } // transitions
@@ -171,7 +166,7 @@ MECH_TYPE mech_light {
   name "light";
   defaults {
     sprite null;
-    pmask  PASS_ALL;  // SAM: Found that this is not being honored!
+    pmask  PASS_ALL;
   }
   states {
     {
@@ -189,7 +184,6 @@ MECH_TYPE mech_light {
     event      MECH_SIGNAL_DOWN;
     next_state "unlit light source";
     actions {
-      print "Click.";
       send_signal MECH_SIGNAL_DOWN;
     }
     
@@ -197,14 +191,13 @@ MECH_TYPE mech_light {
     event      MECH_SIGNAL_UP;
     next_state "lit light source";
     actions {
-      print "Click.";
       send_signal MECH_SIGNAL_UP;
     }
   }
 } // MECH_TYPE mech_light
 
 
-MECH_TYPE mech_Vdoor {
+MECH_TYPE mech_vdoor {
   name "door";
   defaults {}
   states {
@@ -212,21 +205,25 @@ MECH_TYPE mech_Vdoor {
       name   "closed door";
       sprite s_door;
       pmask  PASS_NONE;
+      opaque 1;
     }
     {
       name   "open door";
       sprite null;
       pmask  PASS_ALL;
+      opaque 0;
     }
     {
       name   "locked door";
       sprite s_door_locked;
       pmask  PASS_NONE;
+      opaque 1;
     }
     {
       name   "magically locked door";
       sprite s_door_locked;
       pmask  PASS_NONE;
+      opaque 1;
     }
   }
   
@@ -236,7 +233,6 @@ MECH_TYPE mech_Vdoor {
     event      MECH_OPEN;
     next_state "open door";
     actions {
-      print "The door opens.";
       send_signal MECH_OPEN;
       
       // After 8 turns the door should close automatically.
@@ -249,7 +245,6 @@ MECH_TYPE mech_Vdoor {
     event      MECH_CLOSE;
     next_state "closed door";
     actions {
-      print "The door closes.";
       send_signal MECH_CLOSE;
     }
     
@@ -257,7 +252,6 @@ MECH_TYPE mech_Vdoor {
     event      MECH_LOCK;
     next_state "locked door";
     actions {
-      print "Click.";
       send_signal MECH_LOCK;
     }
     
@@ -265,7 +259,6 @@ MECH_TYPE mech_Vdoor {
     event      MECH_UNLOCK;
     next_state "closed door";
     actions {
-      print "Click.";
       send_signal MECH_UNLOCK;
     }
     
@@ -273,7 +266,6 @@ MECH_TYPE mech_Vdoor {
     event      MECH_MAGIC_LOCK;
     next_state "magically locked door";
     actions {
-      print "Throom-Click!";
       send_signal MECH_MAGIC_LOCK;
     }
     
@@ -281,14 +273,13 @@ MECH_TYPE mech_Vdoor {
     event      MECH_MAGIC_UNLOCK;
     next_state "closed door";
     actions {
-      print "Throom-Click!";
       send_signal MECH_MAGIC_UNLOCK;
     }
   }
-} // MECH_TYPE mech_Vdoor
+} // MECH_TYPE mech_vdoor
 
 
-MECH_TYPE mech_Hdoor {
+MECH_TYPE mech_hdoor {
   name "door";
   defaults {}
   states {
@@ -296,21 +287,25 @@ MECH_TYPE mech_Hdoor {
       name   "closed door";
       sprite s_hdoor;
       pmask  PASS_NONE;
+      opaque 1;
     }
     {
       name   "open door";
       sprite null;
       pmask  PASS_ALL;
+      opaque 0;
     }
     {
       name   "locked door";
       sprite s_hdoor_locked;
       pmask  PASS_NONE;
+      opaque 1;
     }
     {
       name   "magically locked door";
       sprite s_hdoor_locked;
       pmask  PASS_NONE;
+      opaque 1;
     }
   }
   
@@ -320,7 +315,6 @@ MECH_TYPE mech_Hdoor {
     event      MECH_OPEN;
     next_state "open door";
     actions {
-      print "The door opens.";
       send_signal MECH_OPEN;
       
       // After 8 turns the door should close automatically.
@@ -333,7 +327,6 @@ MECH_TYPE mech_Hdoor {
     event      MECH_CLOSE;
     next_state "closed door";
     actions {
-      print "The door closes.";
       send_signal MECH_CLOSE;
     }
     
@@ -341,7 +334,6 @@ MECH_TYPE mech_Hdoor {
     event      MECH_LOCK;
     next_state "locked door";
     actions {
-      print "Click.";
       send_signal MECH_LOCK;
     }
     
@@ -349,7 +341,6 @@ MECH_TYPE mech_Hdoor {
     event      MECH_UNLOCK;
     next_state "closed door";
     actions {
-      print "Click.";
       send_signal MECH_UNLOCK;
     }
     
@@ -357,7 +348,6 @@ MECH_TYPE mech_Hdoor {
     event      MECH_MAGIC_LOCK;
     next_state "magically locked door";
     actions {
-      print "Throom-Click!";
       send_signal MECH_MAGIC_LOCK;
     }
     
@@ -365,39 +355,91 @@ MECH_TYPE mech_Hdoor {
     event      MECH_MAGIC_UNLOCK;
     next_state "closed door";
     actions {
-      print "Throom-Click!";
       send_signal MECH_MAGIC_UNLOCK;
     }
   }
-} // MECH_TYPE mech_Hdoor
+} // MECH_TYPE mech_hdoor
 
 
-MECH_TYPE mech_shrine_warp {
-  name "shrine maker";
-  defaults {
-    pmask PASS_ALL;
+//
+// Water trap
+//
+
+MAP m_WATER_TRAP_OPEN {
+  type   ascii;
+  width  5;
+  height 5;
+  STD_TERRAIN_PALETTE;
+  terrain {
+    _ _ _ _ _
+    _ _ _ _ _
+    _ _ _ _ _
+    _ _ _ _ _
+    _ _ _ _ _
   }
-  states {
-    {
-      name   "untriggered shrine gate";
-      sprite s_magic;
-    }
-    { 
-      name   "triggered shrine gate";
-      sprite null;
-    }
+} // m_WATER_TRAP_OPEN
+
+MAP m_WATER_TRAP_CLOSED {
+  type   ascii;
+  width  5;
+  height 5;
+  STD_TERRAIN_PALETTE;
+  terrain {
+    e e e e e
+    e e e e e
+    e e e e e
+    e e e e e
+    e e e e e
   }
-  transitions {
-    state      "untriggered shrine gate";
-    event      MECH_STEP;
-    next_state "triggered shrine gate";
-    actions {
-      print "Wow! A secret shrine just materialized out of nowhere!";
-      // SAM: I notice that a (forward?) reference to p_lcb1 is made here...
-      blit_map p_lcb1 12 14 m_secret_shrine 0 0 7 7 0;
-    }
-  }
-} // MECH_TYPE mech_shrine_warp
+} // m_WATER_TRAP_CLOSED
+
+#define MAKE_BLIT_MECH(_name, plc, x, y, map1, map2, w, h, open_msg, close_msg) \
+MECH_TYPE _name { \
+  name "lever"; \
+  defaults { \
+    pmask PASS_ALL; \
+  } \
+  states { \
+    { \
+      name "lever up"; \
+      sprite s_floor_lever_left; \
+    } \
+    {  \
+      name "lever down"; \
+      sprite s_floor_lever_right; \
+    } \
+  } \
+  transitions { \
+ \
+    state "lever up"; \
+    event MECH_HANDLE; \
+    next_state "lever down"; \
+    actions { \
+      print open_msg; \
+      blit_map plc x y map1 0 0 w h 0; \
+    } \
+ \
+    state "lever down"; \
+    event MECH_HANDLE; \
+    next_state "lever up"; \
+    actions { \
+      print close_msg; \
+      blit_map plc x y map2 0 0 w h 0; \
+    } \
+ \
+  } \
+}
+
+#define MAKE_WATER_TRAP(mech_name, plc, x, y, w, h) \
+    MAKE_BLIT_MECH(mech_name, plc, x, y, m_WATER_TRAP_OPEN, m_WATER_TRAP_CLOSED, w, h, "A trap door opens, revealing a watery pit!", "A trap door closes.")
+
+#define MAKE_DRAWBRIDGE(mech_name, plc, x, y) \
+    MAKE_BLIT_MECH(mech_name, plc, x, y, m_WATER_TRAP_OPEN, m_WATER_TRAP_CLOSED, 2, 1, "The drawbridge raises.", "The drawbridge lowers.")
+
+MAKE_WATER_TRAP(mech_water_trap_L_lever, p_prison_chamber, 3, 3, 2, 1);
+
+
+//MAKE_BLIT_MECH(mech_water_trap_L_lever, p_prison_chamber, 3, 3, m_WATER_TRAP_OPEN, m_WATER_TRAP_CLOSED, 2, 1, "A trap door opens, revealing a watery pit!", "A trap door closes.");
 
 
 #endif // all_mechanisms_ghul

@@ -6,9 +6,6 @@
 #ifndef portals_ghul
 #define portals_ghul
 
-
-portals {
-
 #define PORTAL_PAIR_LADDERS(from,frx,fry,to,tox,toy,auto) /**/ \
   { \
     object_type t_ladder_up; \
@@ -31,17 +28,11 @@ portals {
     auto_enter  auto; \
   }
   
-  /*** Castle ladder ***/
-  PORTAL_PAIR_LADDERS(p_lcb1,3,3, p_lcb2,3,3, 0);
-  
-  /*** Portal from castle to dark passage ***/
-  PORTAL_PAIR_LADDERS(p_passage,28,28, p_lcb1,7,2, 0);
+
+portals {
   
   /*** Portal from castle to prison chamber ***/
-  PORTAL_PAIR_LADDERS(p_prison_chamber,28,14, p_lcb1,12,27, 0);
-  
-  /*** Portal from town to dark passage ***/
-  PORTAL_PAIR_LADDERS(p_passage,1,1, p_britain,30,1, 0);
+  PORTAL_PAIR_LADDERS(p_prison_chamber, 28, 14, p_empire_city, 62, 1, 0);
   
 } // portals
 

@@ -431,6 +431,30 @@ FRAME {
   endl s_frame_endl;
   endr s_frame_endr;
 }
+SPRITE_SET ss_mechanisms {
+  image_width 32;
+  image_height 32;
+  file_rows 4;
+  file_cols 8;
+  file_offx 0;
+  file_offy 0;
+  file "data/images/mechanisms.png";
+  sprites {
+    s_left_lever_up { frames 1 index 0 style normal facings 0 };
+    s_left_lever_down { frames 1 index 1 style normal facings 0 };
+    s_top_lever_up { frames 1 index 2 style normal facings 0 };
+    s_top_lever_down { frames 1 index 3 style normal facings 0 };
+    s_right_lever_up { frames 1 index 4 style normal facings 0 };
+    s_right_lever_down { frames 1 index 5 style normal facings 0 };
+    s_bottom_lever_up { frames 1 index 6 style normal facings 0 };
+    s_bottom_lever_down { frames 1 index 7 style normal facings 0 };
+    s_floor_plate { frames 1 index 8 style normal facings 0 };
+    s_floor_lever_left { frames 1 index 10 style normal facings 0 };
+    s_floor_lever_right { frames 1 index 11 style normal facings 0 };
+    s_portcullis_down { frames 1 index 12 style normal facings 0 };
+    s_portcullis_up { frames 1 index 13 style normal facings 0 };
+  }
+}
 CURSOR ls_whirlpool;
 terrains {
   t_deep {
@@ -2401,26 +2425,6 @@ vehicle_types {
     map map_ship;
   }
 }
-MAP m_u5_world {
-  type binary;
-  file "data/world/maps/u4_u5/u5_world_map.med";
-}
-MAP m_skara {
-  type binary;
-  file "data/world/maps/u4_u5/skara.med";
-}
-MAP m_britain {
-  type binary;
-  file "data/world/maps/u4_u5/britain.med";
-}
-MAP m_lcb1 {
-  type binary;
-  file "data/world/maps/u4_u5/lcb1.med";
-}
-MAP m_lcb2 {
-  type binary;
-  file "data/world/maps/u4_u5/lcb2.med";
-}
 MAP m_forest_combat {
   type ascii;
   width 22;
@@ -2584,13 +2588,6 @@ combat_maps {
   t_grass m_grass_combat;
   t_trees m_grass_combat;
   t_forest m_forest_combat;
-}
-SCHED sched_Hawknoz {
-  0 0 29 6 1 1 1;
-  7 0 13 26 3 3 0;
-  12 0 17 3 7 1 3;
-  13 0 7 28 1 1 0;
-  19 0 29 6 1 1 1;
 }
 RESP r_greeting {
   SAY "Good day.";
@@ -2899,6 +2896,14 @@ CHAR ch_Gen {
         t_sm_shield
     }
 }
+SCHED sched_Hawknoz {
+  0 0 25 60 1 1 1;
+  7 0 11 57 10 3 0;
+  12 0 55 52 1 1 3;
+  13 0 11 57 10 3 0;
+  5 0 21 29 8 7 4;
+  19 0 25 60 1 1 1;
+}
 CHAR ch_Hawknoz {
     name "Hawknoz"
     species human
@@ -3137,7 +3142,6 @@ MECH_TYPE mech_pressure_plate {
     event 2;
     next_state "pressure plate";
     actions {
-      print "Click";
       send_signal 102;
     }
   }
@@ -3162,28 +3166,24 @@ MECH_TYPE mech_portcullis {
     event 101;
     next_state "lowered portcullis";
     actions {
-      print "The portcullis slams shut!";
       send_signal 101;
     }
     state "raised portcullis";
     event 102;
     next_state "lowered portcullis";
     actions {
-      print "The portcullis slams shut!";
       send_signal 101;
     }
     state "lowered portcullis";
     event 100;
     next_state "raised portcullis";
     actions {
-      print "The portcullis opens.";
       send_signal 100;
     }
     state "lowered portcullis";
     event 102;
     next_state "raised portcullis";
     actions {
-      print "The portcullis opens.";
       send_signal 100;
     }
   }
@@ -3209,19 +3209,17 @@ MECH_TYPE mech_light {
     event 101;
     next_state "unlit light source";
     actions {
-      print "Click.";
       send_signal 101;
     }
     state "unlit light source";
     event 100;
     next_state "lit light source";
     actions {
-      print "Click.";
       send_signal 100;
     }
   }
 }
-MECH_TYPE mech_Vdoor {
+MECH_TYPE mech_vdoor {
   name "door";
   defaults {}
   states {
@@ -3229,21 +3227,25 @@ MECH_TYPE mech_Vdoor {
       name "closed door";
       sprite s_door;
       pmask 0;
+      opaque 1;
     }
     {
       name "open door";
       sprite null;
       pmask 7;
+      opaque 0;
     }
     {
       name "locked door";
       sprite s_door_locked;
       pmask 0;
+      opaque 1;
     }
     {
       name "magically locked door";
       sprite s_door_locked;
       pmask 0;
+      opaque 1;
     }
   }
   transitions {
@@ -3251,7 +3253,6 @@ MECH_TYPE mech_Vdoor {
     event 4;
     next_state "open door";
     actions {
-      print "The door opens.";
       send_signal 4;
       set_alarm 8 5;
     }
@@ -3259,40 +3260,35 @@ MECH_TYPE mech_Vdoor {
     event 5;
     next_state "closed door";
     actions {
-      print "The door closes.";
       send_signal 5;
     }
     state "closed door";
     event 6;
     next_state "locked door";
     actions {
-      print "Click.";
       send_signal 6;
     }
     state "locked door";
     event 7;
     next_state "closed door";
     actions {
-      print "Click.";
       send_signal 7;
     }
     state "closed door";
     event 8;
     next_state "magically locked door";
     actions {
-      print "Throom-Click!";
       send_signal 8;
     }
     state "magically locked door";
     event 9;
     next_state "closed door";
     actions {
-      print "Throom-Click!";
       send_signal 9;
     }
   }
 }
-MECH_TYPE mech_Hdoor {
+MECH_TYPE mech_hdoor {
   name "door";
   defaults {}
   states {
@@ -3300,21 +3296,25 @@ MECH_TYPE mech_Hdoor {
       name "closed door";
       sprite s_hdoor;
       pmask 0;
+      opaque 1;
     }
     {
       name "open door";
       sprite null;
       pmask 7;
+      opaque 0;
     }
     {
       name "locked door";
       sprite s_hdoor_locked;
       pmask 0;
+      opaque 1;
     }
     {
       name "magically locked door";
       sprite s_hdoor_locked;
       pmask 0;
+      opaque 1;
     }
   }
   transitions {
@@ -3322,7 +3322,6 @@ MECH_TYPE mech_Hdoor {
     event 4;
     next_state "open door";
     actions {
-      print "The door opens.";
       send_signal 4;
       set_alarm 16 5;
     }
@@ -3330,149 +3329,253 @@ MECH_TYPE mech_Hdoor {
     event 5;
     next_state "closed door";
     actions {
-      print "The door closes.";
       send_signal 5;
     }
     state "closed door";
     event 6;
     next_state "locked door";
     actions {
-      print "Click.";
       send_signal 6;
     }
     state "locked door";
     event 7;
     next_state "closed door";
     actions {
-      print "Click.";
       send_signal 7;
     }
     state "closed door";
     event 8;
     next_state "magically locked door";
     actions {
-      print "Throom-Click!";
       send_signal 8;
     }
     state "magically locked door";
     event 9;
     next_state "closed door";
     actions {
-      print "Throom-Click!";
       send_signal 9;
     }
   }
 }
-MECH_TYPE mech_shrine_warp {
-  name "shrine maker";
-  defaults {
-    pmask 7;
-  }
-  states {
-    {
-      name "untriggered shrine gate";
-      sprite s_magic;
-    }
-    {
-      name "triggered shrine gate";
-      sprite null;
-    }
-  }
-  transitions {
-    state "untriggered shrine gate";
-    event 2;
-    next_state "triggered shrine gate";
-    actions {
-      print "Wow! A secret shrine just materialized out of nowhere!";
-      blit_map p_lcb1 12 14 m_secret_shrine 0 0 7 7 0;
-    }
+MAP m_WATER_TRAP_OPEN {
+  type ascii;
+  width 5;
+  height 5;
+  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; '<' t_leftwing; '>' t_rightwing; 'c' t_cobblestone; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'p' t_pillar; '1' t_wall_b; '2' t_wall_a; '3' t_wall_c; '4' t_wall_d; 'm' t_mast; 'f' t_fire_terrain; 'b' t_boulder; 'r' t_wall_rock; '+' t_ankh; ',' t_flagstones; 'e' t_deck; '?' t_secret_door; 'a' t_altar; '&' t_fireplace; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; '!' t_lava; 'x' t_wall; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_pillar; };
+  terrain {
+    _ _ _ _ _
+    _ _ _ _ _
+    _ _ _ _ _
+    _ _ _ _ _
+    _ _ _ _ _
   }
 }
-PLACE p_u5_world {
-  type wilderness;
+MAP m_WATER_TRAP_CLOSED {
+  type ascii;
+  width 5;
+  height 5;
+  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; '<' t_leftwing; '>' t_rightwing; 'c' t_cobblestone; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'p' t_pillar; '1' t_wall_b; '2' t_wall_a; '3' t_wall_c; '4' t_wall_d; 'm' t_mast; 'f' t_fire_terrain; 'b' t_boulder; 'r' t_wall_rock; '+' t_ankh; ',' t_flagstones; 'e' t_deck; '?' t_secret_door; 'a' t_altar; '&' t_fireplace; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; '!' t_lava; 'x' t_wall; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_pillar; };
+  terrain {
+    e e e e e
+    e e e e e
+    e e e e e
+    e e e e e
+    e e e e e
+  }
+}
+MECH_TYPE mech_water_trap_L_lever { name "lever"; defaults { pmask 7; } states { { name "lever up"; sprite s_floor_lever_left; } { name "lever down"; sprite s_floor_lever_right; } } transitions { state "lever up"; event 3; next_state "lever down"; actions { print "A trap door opens, revealing a watery pit!"; blit_map p_prison_chamber 3 3 m_WATER_TRAP_OPEN 0 0 2 1 0; } state "lever down"; event 3; next_state "lever up"; actions { print "A trap door closes."; blit_map p_prison_chamber 3 3 m_WATER_TRAP_CLOSED 0 0 2 1 0; } } };
+MAP m_empire_city {
+        type ascii;
+        width 64;
+        height 64;
+        one_char_per_tile 1;
+        palette {
+                '%' t_wall;
+                '-' t_cobblestone;
+                '@' t_shallow;
+                '~' t_deep;
+                'f' t_forest;
+                '.' t_grass;
+                '&' t_shoals;
+                '*' t_counter_middle;
+                '=' t_A;
+                'b' t_boulder;
+                't' t_trees;
+                ',' t_flagstones;
+                'o' t_pillar;
+                '0' t_counter_pillar;
+                'x' t_altar;
+                '!' t_lava;
+                'A' t_A;
+                'B' t_B;
+                'C' t_C;
+                'D' t_D;
+                'E' t_E;
+                'F' t_F;
+                'G' t_G;
+                'H' t_H;
+                'I' t_I;
+                'J' t_J;
+                'K' t_K;
+                'L' t_L;
+                'M' t_M;
+                'N' t_N;
+                'O' t_O;
+                'P' t_P;
+                'Q' t_Q;
+                'R' t_R;
+                'S' t_S;
+                'T' t_T;
+                'U' t_U;
+                'V' t_V;
+                'W' t_W;
+                'X' t_X;
+                'Y' t_Y;
+                'Z' t_Z;
+        }
+        terrain {
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%--%@~%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%--------------------------------%@~*,,,%..................%,,,%
+%---%%%%%%%%%%%%%%%%%%%%%%%---*--%@~%,,,%..................*,,,%
+%---*fffffffffffffffffffff*---%--%@~*,,,%..................%,,,%
+%-%*%ffffff%%%%%%%%%ffffff%%-%%--%@~%,,,%..................%%,%%
+%-%ffffffff%..,,,..%fffffft.-----.@~*,,,,-.....................%
+%-%ffffffff%..,x,..%fffffft....--.@~%,,,%-.....................%
+%-%ffffffff%..,,,..%fffffftttt.--.@~%%*%%-.....................%
+%-%fffff%%%%%..,..%%%%%fffffft.--.@~------......0SAM0..........%
+%-%fffff%...%%.,.%%...%fffffft.--.@~000%%-.....................%
+%-%fffff%....%.,.%....%fffffft.--.@~0,,,%-......0GORDON0.......%
+%-%f%%%%%...%%.,.%%...%%%%%fft.--.@~0,,,,-.....................%
+%-%f%...%%.%%..,..%%.%%...%fft.--.@~%,,,%......................%
+%-%f%....%%%...,...%%%....%fft.--.@~%%*%%......................%
+%-%f%,,,......,,,......,,,%fft.--.@~%..........................%
+%-%f%,x,,,,,,,,,,,,,,,,,x,%fft.--.@~%..........................%
+%-%f%,,,......,,,......,,,%fft.--.@~%..........................%
+%-%f%....%%%...,...%%%....%fft.--.@~%..........................%
+%-%f%...%%.%%..,..%%.%%...%fft.--.@~%..........................%
+%-%f%%%%%...%%.,.%%...%%%%%fft.--.@~%..........................%
+%-%fffff%....%.,.%....%fffffft.--.@~%..........................%
+%-%fffff%...%%.,.%%...%fffffft.--.@~%..........................%
+%-%fffff%%%%%..,..%%%%%ffffftt.--.@~%..........................%
+%-%ffffffff%...,...%ffftttttt..--.@~%%,%%..................%%,%%
+%-%ffffffff%...,...%ffft---------.@~%,,,%..................%,,,%
+%-%ffffffff%...,...%ffft---------.@~*,,,*..................*,,,%
+%-*ffffffff%%%%,%%%%ffft--ttt.....@~%,,,%..................%,,,%
+%-%*%..tffffffb.bfffffft--tfffff..@~%%*%%%%%%%%%%%%%%%%%%%%%%*%%
+%-----.tffffffb.bffff--------fff..@~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%---%-.ttttttb...btf----------ff..@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+%-*%%-............tt---tttt---tf................................
+----------------------tb&&bt------------------------------------
+----------------------t&@@&t------------------------------------
+%-*%%%%%%%%%%%%%%%%f--t&@@&t--t................tt--tt......%%*-%
+%---%T*E*M*P*L*A*R%f--tb&&bt--ft.%%%%%%%%%%%%%%%t--t......t%---%
+%---%***H*A*L*L***%f---tttt---ft.%*HOLYDAY*INN*%.--......tf%---%
+%---%-------------%f----------ft.%,,,,,,,,,,,,,%.--.....tff%---%
+%-%%%o,---------,o%ff--------fft.%*************%.--.%%%%%%%%%%-%
+%-%,,,,,,-----,,,,%fffft--tffftt.%,,,,,,,,,,,,,%t--.%*A*R*M*S%-%
+%-%,,,,,,,,-,,,,,,%tttt.--.ttt.--,,,,,,,,,,,,,,,.--.%--------%-%
+%-%,,,,,,%o-o%,,,,%.....--------t%,%%%%%-%%%%%,%t--.%********%-%
+%-%,,,,,,%,-,%,,,,%-------------.%,%ffft.tfff%,%.--t%--------%-%
+%-%,,,,,,%o-o%,,,,%-tttttttttt--.%,%fftt.ttff%,%.------------%-%
+%-%,,,,,,%,-,%,,,,%-t%%%%%%%%%--.%,%fffffffff%,%.--t%--------%-%
+%-%,,,,,,%o-o%,,,,%-t%oTRADEo%--.%,%%%%%%%%%%%,%.--.%********%-%
+%-%%%%%%%%t-t%%%%%%-t%,,,,,,,%--.%,,,,,,,,,,,,,%.--.%--------%-%
+%-%,,,,,,%----------t%,,,,,,,%--.%,,,,,,,,,,,,,%.--.%SUPPLIES%-%
+%-%,,,,,,%-.tttt...--,,,,,,,,%--.%*************%.--.%%%%%%%%%%-%
+%-%,,,,,,,-ttbfttt.-t%,,,,,,,%--.%,,,,,,%,,,,,,%.--.%*LIVELY*%-%
+%-%,,,,,,%-.ttttft.-t%oGUILDo%--.%*HEAL*%*BANK*%.--.%BARWENCH%-%
+%-%,,,,,,%-----tbt.-t%%%%%%%%%--.%%%%%%%%%%%%%%%t--.%--------%-%
+%-%%%,%%%%%%%%-ttt--------------.......t.t.....tt--.%********%-%
+%-%,,,,,,,,,,%-...-%%%%%%%%...---------------------t%--------%-%
+%-%,,,,,,,,,,%-----%,,,,,,%..t-------------------------------%-%
+%-%,,,,,,,,,,%%,,,%%,,,,,,%..tt--tt.....t-t....bbbbb%--0-0-0-%-%
+%-%,,,,,,,,,,%,,,,,%,,,,,,%...t--t...%%%%-%%%%%.....%--------%-%
+%-%,,,,,,,%,%%,,,,,%%,%%%%%....--....%---------.....%--0-0-0-%-%
+%-%%%,%%%%%,,,,,,,,,,,%,,,%....--....%--------%.....%%-------%-%
+%-%,%,,,,,%,,,,,,,,,,,,,,,%.--------.%********%......%%%%%%%%%-%
+%-%%%,,,,,%,,,,,,,,,,,%,,,%%-%%--%%-%%--------%t..........t%*%-%
+%---%,,,,,%MAGIC*GUILD%,,,%---%--%---%*STABLE*%ft..........*---%
+%---%%%%%%%%%%%%%%%%%%%%%%%---*--*---%%%%%%%%%%%%%%%%%%%%%%%---%
+%--------------------------------------------------------------%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%--%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+             }
+}
+MECH_TYPE castle_drawbridge { name "lever"; defaults { pmask 7; } states { { name "lever up"; sprite s_floor_lever_left; } { name "lever down"; sprite s_floor_lever_right; } } transitions { state "lever up"; event 3; next_state "lever down"; actions { print "The drawbridge raises."; blit_map p_empire_city 34 8 m_WATER_TRAP_OPEN 0 0 2 1 0; } state "lever down"; event 3; next_state "lever up"; actions { print "The drawbridge lowers."; blit_map p_empire_city 34 8 m_WATER_TRAP_CLOSED 0 0 2 1 0; } } };
+PLACE p_empire_city {
+  type town;
   parent null;
   x 0;
   y 0;
-  name "The Great Wild";
-  wraps 1;
-  map m_u5_world;
-  underground 0;
-  objects {
-    vt_ship 86 110 west 100;
-    t_goblin_horde 86 100 (4) 0 c_goblin null;
-    t_undead_brigade 86 120 (4) 0 null vt_ship;
-  }
-  typical_npc_parties {
-    t_goblin_horde 100 (4);
-    t_gazer_pod_with_goblin_slaves 1 (4);
-  }
-}
-PLACE p_britain {
-  type town;
-  parent p_u5_world;
-  x 82;
-  y 105;
-  name "The Ruins of Britain";
+  name "The Imperial City";
   wraps 0;
-  map m_britain;
+  map m_empire_city;
   underground 0;
   objects {
-    mech_Vdoor door_healer 8 25 "closed door";
-    mech_Hdoor door_brit_manor 26 8 "closed door";
-    t_town_guards 8 15 (2) 1 c_guard;
-    t_town_guards 17 24 (2) 1 c_guard;
-    t_town_guards 18 10 (2) 1 c_guard;
-    ch_Hawknoz 15 25 (2) 1;
-    ch_Gen 20 20 (2) 1;
-    ch_Joan 15 15 (2) 1;
-    ch_John_the_Armourer 6 8 (2) 1;
-    ch_Jeff_the_Weaponsmith 6 2 (2) 1;
-    ch_Sly_the_Thief 10 15 (2) 1;
-    ch_Golin_the_Healer 4 30 (2) 1;
+    mech_hdoor door 62 33 "closed door";
+    mech_vdoor door 30 1 "closed door";
+    mech_hdoor door 28 4 "closed door";
+    mech_hdoor door 1 30 "closed door";
+    mech_hdoor door 1 33 "closed door";
+    mech_vdoor door 4 28 "closed door";
+    mech_hdoor door 28 59 "closed door";
+    mech_hdoor door 35 59 "closed door";
+    mech_vdoor door 30 62 "closed door";
+    mech_vdoor door 33 62 "closed door";
+    castle_drawbridge west_bridge 38 11 "lever down";
+    t_town_guards 61 33 (2) 1 c_guard;
+    t_town_guards 28 2 (2) 1 c_guard;
+    t_town_guards 1 28 (2) 1 c_guard;
+    t_town_guards 2 35 (2) 1 c_guard;
+    t_town_guards 28 61 (2) 1 c_guard;
+    t_town_guards 35 61 (2) 1 c_guard;
+    ch_Hawknoz 16 57 (2) 1;
+    ch_Joan 25 36 (2) 1;
+    ch_John_the_Armourer 53 39 (2) 1;
+    ch_Jeff_the_Weaponsmith 60 39 (2) 1;
+    ch_Sly_the_Thief 31 8 (2) 1;
+    ch_Golin_the_Healer 34 48 (2) 1;
   }
   object_type t_town;
 }
-PLACE p_lcb1 {
-  type town;
-  parent p_u5_world;
-  x 86;
-  y 107;
-  name "A Castle Ruin";
-  wraps 0 ;
-  map m_lcb1;
-  underground 0;
-  objects {
-    ch_Olin_the_Ghast 15 15 (2) 1;
-    mech_shrine_warp sw 15 21 "untriggered shrine gate";
-  }
-  object_type t_town;
-}
-PLACE p_lcb2 {
-  type dungeon;
-  parent null;
-  x 0;
-  y 0;
-  name "A Castle Ruin (Second Story)";
-  wraps 0;
-  map m_lcb2;
-  underground 0;
-  objects {
-    t_note 19 7;
-  }
-}
-PLACE p_passage {
-  type dungeon;
-  parent null;
-  x 0;
-  y 0;
-  name "A Dark Passage";
-  wraps 0;
-  map m_passage;
-  underground 1;
-  objects {
-    t_goblin_horde 13 14 (8) 1 c_goblin;
-    t_goblin_horde 19 14 (16) 1 c_goblin;
-  }
+MAP m_prison_chamber {
+  type ascii;
+  width 32;
+  height 32;
+  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; '<' t_leftwing; '>' t_rightwing; 'c' t_cobblestone; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'p' t_pillar; '1' t_wall_b; '2' t_wall_a; '3' t_wall_c; '4' t_wall_d; 'm' t_mast; 'f' t_fire_terrain; 'b' t_boulder; 'r' t_wall_rock; '+' t_ankh; ',' t_flagstones; 'e' t_deck; '?' t_secret_door; 'a' t_altar; '&' t_fireplace; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; '!' t_lava; 'x' t_wall; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_pillar; };
+  terrain {
+      x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x
+      x , , , , , , , 0 . . . 0 e , , e 0 . . . 0 , , , 0 ! c ! 0 e x
+      x , - - - - , , 0 . . . 0 , , , , 0 . . . 0 , , , 0 ! c ! 0 , x
+      x , = = e - , , 0 0 , 0 0 , , , , 0 0 , 0 0 , , , , , , , , , x
+      x , - - - - , , , , , , , , , , , , , , , , , , , , , , , , , x
+      x , , , , , , , , , , , , , , , , , , , , , , , , 0 f c f 0 , x
+      x , , , , , , , , , a , , , , , , , , a , , , , , 0 f c f 0 e x
+      x x x x x x x x x x x x x x , x x x x x x x x x x x x x x x x x
+      x x x x [ T O R T U R E ] x , x [ C H A M B E R ] x x x x x x x
+      x x x x , , , , , , , , , , , , , , , , , , , , , x x x x x x x
+      x x x x , , , , , , , , , , , , , , , , , , , , , x x x x x x x
+      x x x x x x x x x x x , , p , p , , x x x x x x x x x x x x x x
+      x x x x x x x x x ! - , , , , , , , - ! x x x x x x x x x x x x
+      x x x x x x x x x - - , , p , p , , - - x x x x x x x x x x x x
+      x x x x x x x x x ! - , , , , , , , - ! x x x x x x x x , , , x
+      x x x x x x x x x - - , , p , p , , - - x x x x x x x x x x , x
+      x x x x x x x x x ! - , , , , , , , - ! x x x x x x x x x x , x
+      x x x x x x x x x x x , , p , p , , x x x x x x x x x x x x , x
+      x , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , x
+      x , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , x
+      x x x x x x x x P R I S O N @ C E L L S x x , , x x x x x x x x
+      x x x x x x x x x x x x x x x x x x x x x x , , x x x x x x x x
+      x , , , , , , , , , , , , , , , , , , , , , , , x x x x x x x x
+      x x , x x x x x x x x x x x x x x x x x x x x x x x x x x x x x
+      x x , x x x x , x , x , x x x , , , x , , , x , , , x x x x x x
+      x , , . , , , , , , , , x x x , , , x , , , x , , , x x x x x x
+      x x , [ @ @ @ @ @ @ @ ] x e x x , x x x , x x x , x x x , , , x
+      x , , , , , , , , , , , , e , , , , , , , , , , , , f , , , , x
+      x x . [ @ @ @ @ @ @ @ ] x e x x , x x x , x x x , x x x , , , x
+      x , , , , , , , , , , , x x x , , , x , , , x , , , x x x x x x
+      x , x , x x x , x , x , x x x , , , x , , , x , , , x x x x x x
+      x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x
+      }
 }
 MAP m_BOG_TRAP_OPEN {
   type ascii;
@@ -3578,56 +3681,6 @@ MECH_TYPE mech_boulder_trap_R_lever {
     }
   }
 }
-MAP m_WATER_TRAP_OPEN {
-  type ascii;
-  width 2;
-  height 1;
-  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; '<' t_leftwing; '>' t_rightwing; 'c' t_cobblestone; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'p' t_pillar; '1' t_wall_b; '2' t_wall_a; '3' t_wall_c; '4' t_wall_d; 'm' t_mast; 'f' t_fire_terrain; 'b' t_boulder; 'r' t_wall_rock; '+' t_ankh; ',' t_flagstones; 'e' t_deck; '?' t_secret_door; 'a' t_altar; '&' t_fireplace; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; '!' t_lava; 'x' t_wall; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_pillar; };
-  terrain {
-    _ _
-  }
-}
-MAP m_WATER_TRAP_CLOSED {
-  type ascii;
-  width 2;
-  height 1;
-  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; '<' t_leftwing; '>' t_rightwing; 'c' t_cobblestone; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'p' t_pillar; '1' t_wall_b; '2' t_wall_a; '3' t_wall_c; '4' t_wall_d; 'm' t_mast; 'f' t_fire_terrain; 'b' t_boulder; 'r' t_wall_rock; '+' t_ankh; ',' t_flagstones; 'e' t_deck; '?' t_secret_door; 'a' t_altar; '&' t_fireplace; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; '!' t_lava; 'x' t_wall; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_pillar; };
-  terrain {
-    = e
-  }
-}
-MECH_TYPE mech_water_trap_L_lever {
-  name "water trap lever";
-  defaults {
-    pmask 7;
-  }
-  states {
-    {
-      name "lever up";
-      sprite s_L_lever_up;
-    }
-    {
-      name "lever down";
-      sprite s_L_lever_down;
-    }
-  }
-  transitions {
-    state "lever up";
-    event 3;
-    next_state "lever down";
-    actions {
-      print "A trap door opens, revealing a watery pit!";
-      blit_map p_prison_chamber 3 3 m_WATER_TRAP_OPEN 0 0 2 1 0;
-    }
-    state "lever down";
-    event 3;
-    next_state "lever up";
-    actions {
-      print "A trap door closes.";
-      blit_map p_prison_chamber 3 3 m_WATER_TRAP_CLOSED 0 0 2 1 0;
-    }
-  }
-}
 MAP m_FLAME_BARRIER_TRAP_OPEN {
   type ascii;
   width 1;
@@ -3693,8 +3746,8 @@ PLACE p_prison_chamber {
     mech_light light_2 31 20 "unlit light source";
     CONNECT light_switch => light_1;
     CONNECT light_1 => light_2;
-    mech_Hdoor door_1 22 20 "closed door";
-    mech_Hdoor door_1 23 20 "closed door";
+    mech_hdoor door_1 22 20 "closed door";
+    mech_hdoor door_1 23 20 "closed door";
     mech_light light_3 9 20 "lit light source";
     mech_light light_4 12 20 "lit light source";
     mech_light light_5 16 20 "lit light source";
@@ -3758,8 +3811,6 @@ PLACE p_prison_chamber {
     mech_L_lever guard_trap_lever 1 25 "lever up";
   }
 }
-STACK_PLACES p_lcb2 p_lcb1;
-STACK_PLACES p_britain p_passage;
 moon_info {
   phases 8;
   {
@@ -3789,32 +3840,15 @@ moon_info {
     sprite s_sun;
   }
   moongates {
-    {
-      place p_u5_world;
-      object_type t_moongate;
-      x 89;
-      y 106;
-      phase 0;
-    }
-    {
-      place p_u5_world;
-      object_type t_moongate;
-      x 79;
-      y 104;
-      phase 1;
-    }
   }
 }
 portals {
-  { object_type t_ladder_up; from_place p_lcb1; from_x 3; from_y 3; to_place p_lcb2; to_x 3; to_y 3; auto_enter 0; } { object_type t_ladder_down; from_place p_lcb2; from_x 3; from_y 3; to_place p_lcb1; to_x 3; to_y 3; auto_enter 0; };
-  { object_type t_ladder_up; from_place p_passage; from_x 28; from_y 28; to_place p_lcb1; to_x 7; to_y 2; auto_enter 0; } { object_type t_ladder_down; from_place p_lcb1; from_x 7; from_y 2; to_place p_passage; to_x 28; to_y 28; auto_enter 0; };
-  { object_type t_ladder_up; from_place p_prison_chamber; from_x 28; from_y 14; to_place p_lcb1; to_x 12; to_y 27; auto_enter 0; } { object_type t_ladder_down; from_place p_lcb1; from_x 12; from_y 27; to_place p_prison_chamber; to_x 28; to_y 14; auto_enter 0; };
-  { object_type t_ladder_up; from_place p_passage; from_x 1; from_y 1; to_place p_britain; to_x 30; to_y 1; auto_enter 0; } { object_type t_ladder_down; from_place p_britain; from_x 30; from_y 1; to_place p_passage; to_x 1; to_y 1; auto_enter 0; };
+  { object_type t_ladder_up; from_place p_prison_chamber; from_x 28; from_y 14; to_place p_empire_city; to_x 62; to_y 1; auto_enter 0; } { object_type t_ladder_down; from_place p_empire_city; from_x 62; from_y 1; to_place p_prison_chamber; to_x 28; to_y 14; auto_enter 0; };
 }
 player {
-  place p_u5_world;
-  x 85;
-  y 107;
+  place p_empire_city;
+  x 32;
+  y 25;
   sprite s_companion_wizard;
   speed 2;
   pmask 1;

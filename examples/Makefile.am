@@ -5,6 +5,7 @@ EXTRA_DIST = data dup_constants.h
 
 # Special rule to build the mapfile
 mapfile:
+	rm -f mapfile
 	$(MAKE) -C data
 	cp data/mapfile ./
 

@@ -38,6 +38,7 @@ moon_info {
   } // sun
 
   moongates {
+#if 0
     {
       place       p_u5_world;
       object_type t_moongate;
@@ -52,6 +53,7 @@ moon_info {
       y           104;
       phase       1;
     }
+#endif
   } // moongates
 
 } // moon_info

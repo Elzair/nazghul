@@ -52,14 +52,6 @@
  ***  MAPS  ***
  *****************************************************************************/
 
-#ifdef YAUR
-#include "world/maps/yaur/all_yaur_maps.ghul"
-#endif // YAUR
-  
-#ifdef U4_U5
-#include "world/maps/u4_u5/all_ultima_maps.ghul"
-#endif // U4_U5
-
   // Some combat maps:
 #include "world/maps/terrain_combat_maps.ghul"
 
@@ -73,23 +65,6 @@ combat_maps {
   t_trees  m_grass_combat;
   t_forest m_forest_combat;
 } // combat_maps
-
-
-/*****************************************************************************
- ***   SCHEDULES   ***
- *****************************************************************************/
-#define WORKING   0  /* reserved */
-#define SLEEPING  1  /* reserved */
-#define COMMUTING 2  /* reserved */
-#define EATING    3  /* reserved */
-
-SCHED sched_Hawknoz {
-  0  0  29 6  1  1  SLEEPING;
-  7  0  13 26 3  3  WORKING;
-  12 0  17 3  7  1  EATING;
-  13 0  7  28 1  1  WORKING;
-  19 0  29 6  1  1  SLEEPING;
-}
 
 
 /*****************************************************************************
