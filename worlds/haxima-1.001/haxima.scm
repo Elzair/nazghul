@@ -194,7 +194,9 @@
   (kern-char-set-sleep ch_wanderer #f)
   (kern-player-set-follow-mode)
   (kern-log-enable #t)  
-  (kern-log-msg "...then awaken to a strange new world."))
+  (kern-log-msg "...then awaken to a strange new world.")
+  (kern-log-msg "You notice a cave to the southwest.")
+  )
 
 (define (simple-start kplayer)
   (kern-obj-put-at kplayer (list p_moongate_clearing 11 11))
@@ -208,5 +210,5 @@
 ;; To skip the extended start scene comment out this next line and uncomment
 ;; the line after it.
 ;;----------------------------------------------------------------------------
-;(kern-set-start-proc start-scene)
-(kern-set-start-proc simple-start)
+(kern-set-start-proc start-scene)
+;(kern-set-start-proc simple-start)
