@@ -108,7 +108,7 @@
  'player                     ; tag
  s_companion_fighter         ; sprite
  "Walk"                      ; movement description
- "data/sounds/walk.wav"      ; movement sound
+ sound-walking               ; movement sound
  1000                        ; food
  500                         ; gold
  (+ align-player align-town) ; alignment

@@ -9,12 +9,12 @@
 (define align-monster 4)
 
 ;; Sounds
-(define sound-damage         "data/sounds/damage.wav")
-(define sound-walking        "data/sounds/walk.wav")
-(define sound-splashing      "data/sounds/rowing.wav")
-(define sound-squishing      "data/sounds/walk.wav") ;; fixme
-(define sound-moongate-enter "data/sounds/enter_moongate.wav")
-(define sound-cannon-fire    "data/sounds/cannon.wav")
+(define sound-damage         "sounds/damage.wav")
+(define sound-walking        "sounds/walk.wav")
+(define sound-splashing      "sounds/rowing.wav")
+(define sound-squishing      "sounds/walk.wav") ;; fixme
+(define sound-moongate-enter "sounds/enter_moongate.wav")
+(define sound-cannon-fire    "sounds/cannon.wav")
 (define sound-ship-move       sound-splashing)
 
 ;; Slots
