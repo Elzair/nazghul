@@ -1248,7 +1248,8 @@ static void myNewOrder(void)
 	statusRepaint();
 }
 
-static void run_combat(bool camping, class Character * guard, int hours)
+static void run_combat(bool camping, class Character * guard, int hours,
+                       class NpcParty *foe)
 {
 	struct move_info minfo;
 	struct combat_info cinfo;
@@ -1257,14 +1258,32 @@ static void run_combat(bool camping, class Character * guard, int hours)
 	minfo.place = Place;
 	minfo.x = player_party->getX();
 	minfo.y = player_party->getY();
-	minfo.dx = player_party->dx;
-	minfo.dy = player_party->dy;
+        minfo.npc_party = foe;
 
 	memset(&cinfo, 0, sizeof(cinfo));
 	cinfo.camping = camping;
 	cinfo.guard = guard;
 	cinfo.hours = hours;
 	cinfo.move = &minfo;
+
+        // Is there an enemy?
+        if (foe) {
+                // Yes, so I assume the player party is being attacked
+                // (currently this happens as a result of conversation). To
+                // setup the proper orientation of the parties I need to get
+                // the direction vector. The direction should be from the foe
+                // to the player.
+                cinfo.defend = true;
+                place_get_direction_vector(minfo.place, 
+                                           foe->getX(), foe->getY(),
+                                           minfo.x, minfo.y, 
+                                           &minfo.dx, &minfo.dy);
+        } else {
+                // No, so we're camping or zooming in. Party values are fine
+                // here.
+                minfo.dx = player_party->dx;
+                minfo.dy = player_party->dy;
+        } 
 
 	player_party->move_to_combat(&cinfo);
 }
@@ -1318,7 +1337,7 @@ static void myTalk(void)
 	switch (convEnter(conv)) {
 
 	case CONV_COMBAT:
-		run_combat(false, 0, 0);
+		run_combat(false, 0, 0, conv->speaker);
 		break;
 
 	case CONV_OK:
@@ -1457,7 +1476,7 @@ static void hole_up_and_camp(void)
 	}
 
 	player_party->camping = true;
-	run_combat(true, guard, hours);
+	run_combat(true, guard, hours, NULL);
 	player_party->camping = false;
 }
 
@@ -2427,7 +2446,7 @@ static bool keyHandler(struct KeyHandler *kh, int key)
 					    PFLAG_IGNOREVEHICLES))
 			consolePrint("Cannot zoom-in here!\n");
 		else
-			run_combat(false, 0, 0);
+			run_combat(false, 0, 0, NULL);
 		break;
 	default:
 		turns_used = 0;

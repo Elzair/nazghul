@@ -4247,6 +4247,14 @@ FORMATION f_campsite {
         . . 10 . 6 . .
         . . . 14 . . .
 }
+FORMATION Checker_Formation {
+        w 9;
+        h 3;
+        n 9;
+        3 . 1 . 0 . 2 . 4
+        . 7 . 5 . 6 . 8 .
+        . . . . . . . . .
+}
 FORMATION f_football {
         w 9;
         h 3;
@@ -4266,7 +4274,7 @@ player {
   food 1000;
   gold 500;
   alignment (1|2);
-  formation f_football;
+  formation Checker_Formation
   campsite_map m_campsite;
   campsite_formation f_campsite;
   inventory {
