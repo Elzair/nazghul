@@ -57,14 +57,6 @@ static int playback_fd;
 static void (*eventHook) (void);
 static int (*wait_event) (SDL_Event * event, int flags);
 
-#if USE_UNICODE
-
-static char unicode_to_char[128] = {
-        0, 0, ' ', '0', '@', 'P', '`', 'p',
-        0, 0, '!', '1', 'A', 'Q', 'a', 'q',
-
-};
-
 static int mapKey(SDL_keysym * keysym)
 {
 	static int map_arrows[] = {
@@ -104,113 +96,6 @@ static int mapKey(SDL_keysym * keysym)
         /* Unsupported? fallback to the SDL sym */
 	return keysym->sym;;
 }
-
-#else /* ! USE_UNICODE */
-
-static int mapKey(SDL_keysym * keysym)
-{
-	static int map_arrows[] = {
-		KEY_NORTH, KEY_SOUTH, KEY_EAST, KEY_WEST,
-		KEY_SHIFT_NORTH, KEY_SHIFT_SOUTH, KEY_SHIFT_EAST, 
-                KEY_SHIFT_WEST
-	};
-
-	int key = keysym->sym;
-        
-        printf("sym='%c'[%d] mod=%02x unicode=%04x\n", 
-               keysym->sym,  
-               keysym->sym,
-               keysym->mod,
-               keysym->unicode);
-
-        /* If NUMLOCK is enabled then map keypad entries to numbers. This
-         * allows French keyboards, for instance, to enter numbers. */
-        if (keysym->mod & KMOD_NUM) {
-                switch (key) {
-                case SDLK_KP0: return '0';
-                case SDLK_KP1: return '1';
-                case SDLK_KP2: return '2';
-                case SDLK_KP3: return '3';
-                case SDLK_KP4: return '4';
-                case SDLK_KP5: return '5';
-                case SDLK_KP6: return '6';
-                case SDLK_KP7: return '7';
-                case SDLK_KP8: return '8';
-                case SDLK_KP9: return '9';
-                case SDLK_KP_PERIOD: return '.';
-                case SDLK_KP_DIVIDE: return '/';
-                case SDLK_KP_MULTIPLY: return '*';
-                case SDLK_KP_MINUS: return '-';
-                case SDLK_KP_PLUS: return '+';
-                case SDLK_KP_ENTER: return '\n';
-                case SDLK_KP_EQUALS: return '=';
-                }
-        }
-
-	if (keysym->mod & KMOD_SHIFT) {
-
-		switch (key) {
-		case '`':
-			return '~';
-		case '1':
-			return '!';
-		case '2':
-			return '@';
-		case '3':
-			return '#';
-		case '4':
-			return '$';
-		case '5':
-			return '%';
-		case '6':
-			return '^';
-		case '7':
-			return '&';
-		case '8':
-			return '*';
-		case '9':
-			return '(';
-		case '0':
-			return ')';
-		case '-':
-			return '_';
-		case '=':
-			return '+';
-		case '[':
-			return '{';
-		case ']':
-			return '}';
-		case '\\':
-			return '|';
-		case ';':
-			return ':';
-		case '\'':
-			return '\"';
-		case ',':
-			return '<';
-		case '.':
-			return '>';
-		case '/':
-			return '?';
-		default:
-			break;
-		}
-
-		if ((keysym->sym >= 'a') && (keysym->sym <= 'z'))
-			return toupper(keysym->sym);
-	}
-
-	if (key >= SDLK_UP && key <= SDLK_LEFT)
-		return map_arrows[key - SDLK_UP +
-				  ((keysym->mod & KMOD_SHIFT) ? 4 : 0)];
-
-	if (key == '\r')
-		return '\n';
-
-	return key;
-}
-
-#endif /* ! USE_UNICODE */
 
 static int mapButton(Uint8 button)
 {
