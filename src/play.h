@@ -51,6 +51,7 @@ extern "C" {
   extern bool getnum(struct KeyHandler *kh, int key, int keymod);
   extern void getkey(void *data, bool(*handler) (struct KeyHandler * kh,
                                                  int key, int keymod));
+  extern int num_for_key (int key);
   
   extern bool cmdUse    (class Character * pc);
   extern bool cmdHandle (class Character * pc);

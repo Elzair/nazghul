@@ -99,14 +99,16 @@ extern "C" {
                                                char *glyph);
     struct terrain * palette_current_terrain(struct terrain_palette * pp);
 
+  int palette_get_current_terrain_index(struct terrain_palette * pp);
   int palette_set_current_terrain(struct terrain_palette * pp, int n);
   int palette_prev_terrain(struct terrain_palette * pp);
   int palette_next_terrain(struct terrain_palette * pp);
   int palette_first_terrain(struct terrain_palette * pp);
   int palette_last_terrain(struct terrain_palette * pp);
 
-  int palette_set_quick_terrain(struct terrain_palette * pp, int n);
-  int palette_quick_terrain(struct terrain_palette *pp, int n);
+  int palette_get_quick_terrain_index(struct terrain_palette * pp, int qt);
+  int palette_set_quick_terrain(struct terrain_palette * pp, int qt, int index);
+  struct terrain * palette_quick_terrain(struct terrain_palette *pp, int qt);
 
 	void palette_print(FILE * fp, int indent,
                        struct terrain_palette *pp);

@@ -164,6 +164,14 @@ struct terrain *palette_terrain_for_glyph(struct terrain_palette *palette,
 struct terrain_palette * palette_contains_terrain (struct terrain_palette *pp, 
                                                    struct terrain *tt)
 {
+  // The current user of this function is 
+  // combat.c create_camping_map().
+  // It is used to find a palette (any palette)
+  // which contains a certain fill terrain.
+  // 
+  // For other uses, I wonder if returning the index 
+  // where it is found, or -1 for not found, 
+  // would be more useful?
   int i;
   assert(pp);
   assert(tt);
@@ -174,16 +182,6 @@ struct terrain_palette * palette_contains_terrain (struct terrain_palette *pp,
       return pp;
   }
   return 0;  // Did not find the terrain in pp
-}
-
-struct terrain *palette_quick_terrain(struct terrain_palette *palette, int n)
-{
-    assert(palette);
-    if (n < 0 || n >= NUM_QUICK_TERRAINS) {
-      printf("palette_quick_terrain() called with out-of-bounds arg n=%d", n);
-      return 0;
-    }
-	return palette->quick_terrain[n];
 }
 
 struct terrain * palette_current_terrain(struct terrain_palette * pp)
@@ -197,39 +195,39 @@ struct terrain * palette_current_terrain(struct terrain_palette * pp)
   // this requires that the palette pp was created with 
   // new_terrain_palette() and at least one palette_entry added,
   // such as by LTP_wrapper() + load_terrain_palette_entry().
-  int index = pp->current_terrain_index;
   assert(pp);
-
-  if (index == PAL_TERRAIN_NOT_SET) {
-    // index is not set; set and return a useful value:
-    if (palette_quick_terrain(pp, 0)) {
-      // Quick terrain zero is the default default
-      pp->current_terrain_index = PAL_TERRAIN_QUICK_DEFAULT;
-      return palette_quick_terrain(pp, 0);
-    }
-    
-    if (palette_terrain(pp, 0)) {
-      // Terrain zero is the fallback default
-      pp->current_terrain_index = 0;
-      return palette_terrain(pp, 0);
-    }
-    // No terrain zero?
-    // Perhaps we were called on a new empty palette
+  if (pp->num_entries < 1) {
+    printf("palette_current_terrain() called on an empty palette.\n");
     assert(0);  // API usage error to call on an empty palette
   }
 
-  if (index >= 0 && index < pp->num_entries && palette_terrain(pp, index)) {
-    // Current terrain index is an index in set[] (0..num_entries)
-    return palette_terrain(pp, index);
+  int index = pp->current_terrain_index;
+  if (index == PAL_TERRAIN_NOT_SET) {
+    // Set and return a useful value:
+    // Since num_entries >= 1, we know that
+    // the entry in slot zero is valid.
+    pp->current_terrain_index = 0;
+    return palette_terrain(pp, 0);
+  }
+  else if (index < 0 || index >= pp->num_entries) {
+    printf("palette_current_terrain() "
+           "called with out-of-bounds arg n=%d\n", index);
+    assert(0);
   }
 
-  if (index < 0 && index > PAL_TERRAIN_NOT_SET && palette_terrain(pp, index)) {
-    // Current terrain index is a (negative) quick terrain index (-1..-10)
-    pp->current_terrain_index = index;
-    return palette_quick_terrain(pp, -index);
+  if (!palette_terrain(pp, index)) {
+    // Somehow an entry in set[] is invalid!
+    printf("palette_current_terrain() "
+           "palette entry %d is not valid!\n", index);
+    assert(0);
   }
-  // We got some funky invalid index.
-  assert(0);
+  return palette_terrain(pp, index);
+}
+
+int palette_get_current_terrain_index(struct terrain_palette * pp)
+{
+  assert(pp);
+  return pp->current_terrain_index;
 }
 
 int palette_set_current_terrain(struct terrain_palette * pp, int n)
@@ -237,12 +235,12 @@ int palette_set_current_terrain(struct terrain_palette * pp, int n)
   assert(pp);
   if (n < 0 || n >= pp->num_entries) {
     printf("palette_set_current_terrain() called with out-of-bounds arg n=%d", n);
-    return -1;  // Invalid index
+    return PAL_TERRAIN_NOT_SET;  // Invalid index
   }
   if (!palette_terrain(pp, n)) {
     // Is this case possible?
     printf("palette_set_current_terrain() called for empty slot n=%d", n);
-    return -1;  // Invalid index
+    return PAL_TERRAIN_NOT_SET;  // Invalid index
 
   }
   pp->current_terrain_index = n;
@@ -282,18 +280,44 @@ int palette_last_terrain(struct terrain_palette * pp)
   return palette_set_current_terrain(pp, n);
 }
 
-int palette_set_quick_terrain(struct terrain_palette * pp, struct terrain * tt, int n)
+int palette_get_quick_terrain_index(struct terrain_palette * pp, int qt)
 {
   assert(pp);
-  assert(tt);
-  if (n < 0 || n >= NUM_QUICK_TERRAINS) {
-    printf("palette_set_quick_terrain() called with out-of-bounds arg n=%d", n);
-    return -1;  // Invalid index
+  if (qt < 0 || qt >= NUM_QUICK_TERRAINS) {
+    printf("palette_get_quick_terrain_index() "
+           "called with out-of-bounds arg qt=%d\n", qt);
+    return PAL_TERRAIN_NOT_SET;  // Invalid index
   }
+  return pp->quick_terrain[qt];
+}
 
-  pp->quick_terrain[n] = tt;
-  pp->current_terrain_index = -n;  // quick terrains stored as negative index
-  return n;  // Valid index
+int palette_set_quick_terrain(struct terrain_palette * pp, int qt, int index)
+{
+    assert(pp);
+    if (qt < 0 || qt >= NUM_QUICK_TERRAINS) {
+      printf("palette_quick_terrain() "
+             "called with out-of-bounds arg qt=%d\n", qt);
+      return PAL_TERRAIN_NOT_SET;  // Invalid index
+    }
+    if (index < 0 || index >= pp->num_entries) {
+      printf("palette_quick_terrain() "
+             "called with out-of-bounds arg index=%d\n", index);
+      return PAL_TERRAIN_NOT_SET;  // Invalid index
+    }
+    pp->quick_terrain[qt] = index;
+    return index;  // Valid index
+}
+
+struct terrain * palette_quick_terrain(struct terrain_palette *pp, int qt)
+{
+  assert(pp);
+  if (qt < 0 || qt >= NUM_QUICK_TERRAINS) {
+    printf("palette_quick_terrain() "
+           "called with out-of-bounds arg qt=%d\n", qt);
+    assert(0);
+  }
+  int index = palette_get_quick_terrain_index(pp, qt);
+  return palette_terrain(pp, index);
 }
 
 void palette_print(FILE * fp, int indent, struct terrain_palette *palette)

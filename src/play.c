@@ -539,22 +539,6 @@ bool terraform_movecursor_and_do(struct KeyHandler * kh, int key, int keymod)
     return false;  // Keep on keyhandling
   }
 
-  if (key == SDLK_PAGEUP) {
-    // Page Up == Cycle back through terrain in palette
-    palette_prev_terrain(pp);
-    tt = palette_current_terrain(pp);
-    consolePrint("Current terrain %s '%s'\n", tt->tag, tt->name);
-    return false;  // Keep on keyhandling
-  }
-  if (key == SDLK_PAGEDOWN) {
-    // Page Down == Cycle forward through terrain in palette
-    palette_next_terrain(pp);
-    tt = palette_current_terrain(pp);
-    consolePrint("Current terrain %s '%s'\n", tt->tag, tt->name);
-    return false;  // Keep on keyhandling
-  }
-  // ...
-  
   if (keyIsDirection(key)) {
     int dir = keyToDirection(key);
     Cursor->move(directionToDx(dir), directionToDy(dir));
@@ -565,13 +549,116 @@ bool terraform_movecursor_and_do(struct KeyHandler * kh, int key, int keymod)
       data->each_point_func(x, y, data);
     return false;  // Keep on keyhandling
   }
-  
+
+  if (key == SDLK_PAGEUP) {
+    // Page Up == Cycle back through terrain in palette
+    palette_prev_terrain(pp);
+    tt = palette_current_terrain(pp);
+    consolePrint("[Prev]  terrain %s '%s'\n", tt->tag, tt->name);
+    return false;  // Keep on keyhandling
+  }
+  if (key == SDLK_PAGEDOWN) {
+    // Page Down == Cycle forward through terrain in palette
+    palette_next_terrain(pp);
+    tt = palette_current_terrain(pp);
+    consolePrint("[Next]  terrain %s '%s'\n", tt->tag, tt->name);
+    return false;  // Keep on keyhandling
+  }
+  if (key == SDLK_HOME) {
+    // Home == Select first terrain in palette
+    palette_first_terrain(pp);
+    tt = palette_current_terrain(pp);
+    consolePrint("[First] terrain %s '%s'\n", tt->tag, tt->name);
+    return false;  // Keep on keyhandling
+  }
+  if (key == SDLK_END) {
+    // End == Select last terrain in palette
+    palette_last_terrain(pp);
+    tt = palette_current_terrain(pp);
+    consolePrint("[Last]  terrain %s '%s'\n", tt->tag, tt->name);
+    return false;  // Keep on keyhandling
+  }
+
+  if ( (key >= SDLK_0   && key <= SDLK_9)  ||
+       (key >= SDLK_KP0 && key <= SDLK_KP9) ) {
+    // Number key 0..9 == get/set quick terrain
+    int qt = num_for_key(key);
+    
+    if ((keymod && KMOD_LCTRL) || (keymod && KMOD_RCTRL)) {
+      // Control-NUM == set quick terrain to current:
+      int index = palette_get_current_terrain_index(pp);
+      palette_set_quick_terrain(pp, qt, index);
+      tt = palette_current_terrain(pp);
+      consolePrint("[Quick %d] set to %s '%s'\n", qt, tt->tag, tt->name);
+      return false; // Keep on keyhandling
+    }
+    // Plain NUM == set current terrain from quick terrain:
+    int index = palette_get_quick_terrain_index(pp, qt);
+    palette_set_current_terrain(pp, index);
+    tt = palette_current_terrain(pp);
+    consolePrint("[Quick %d] %s '%s'\n", qt, tt->tag, tt->name);
+    return false;  // Keep on keyhandling
+  }
+
+  // ...
+    
   if (key == SDLK_ESCAPE) {
     data->abort = true;
     return true;  // Done (abort)
   }
   return false;  // Keep on keyhandling
 } // terraform_movecursor_and_do()
+
+int num_for_key (int key)
+{
+  int num;
+  switch (key) {
+  case SDLK_0:
+  case SDLK_KP0:
+    num = 0;
+    break;
+  case SDLK_1:
+  case SDLK_KP1:
+    num = 1;
+    break;
+  case SDLK_2:
+  case SDLK_KP2:
+    num = 2;
+    break;
+  case SDLK_3:
+  case SDLK_KP3:
+    num = 3;
+    break;
+  case SDLK_4:
+  case SDLK_KP4:
+    num = 4;
+    break;
+  case SDLK_5:
+  case SDLK_KP5:
+    num = 5;
+    break;
+  case SDLK_6:
+  case SDLK_KP6:
+    num = 6;
+    break;
+  case SDLK_7:
+  case SDLK_KP7:
+    num = 7;
+    break;
+  case SDLK_8:
+  case SDLK_KP8:
+    num = 8;
+    break;
+  case SDLK_9:
+  case SDLK_KP9:
+    num = 9;
+    break;
+  default:
+    printf("num_for_key() IMPOSSIBLE - funky number %d\n", key);
+    assert(0);
+  } // switch(key)
+  return num;
+} // num_for_key()
 
 struct inv_entry *select_item(void)
 {
