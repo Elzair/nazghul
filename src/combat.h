@@ -29,7 +29,7 @@ class Character;
 struct place;
 
 extern int combatInit(void);
-
+extern int combatLoad(class Loader *loader);
 extern char combatGetState(void);
 extern bool combatAddNpcParty(class NpcParty * party, int dx, int dy,
 			      bool located, int x, int y);

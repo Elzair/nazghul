@@ -151,6 +151,14 @@ CROSSHAIR {
   objectType t_cursor;
 }
 
+// The optional COMBAT section is for specifying features related to
+// combat. Actually, I just needed someplace to put the sounds played for
+// entering/exiting combat.
+COMBAT {
+        enter   "data/sounds/drum_02.wav";   // played on entry to combat
+        victory "data/sounds/fanfare7.wav";  // played when victorious
+        defeat  "data/sounds/fanfare5.wav";  // played when defeated
+}
 
 #endif // world_ghul
 

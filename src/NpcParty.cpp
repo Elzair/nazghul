@@ -558,7 +558,9 @@ bool NpcParty::attack_with_ordnance(int d)
 		}
 
 		ret = vehicle->fire_weapon(dx, dy);
-		turn_cost += TURNS_TO_FIRE_VEHICLE_WEAPON;	// hack...
+		turn_cost += 
+                        place_adjust_turn_cost(getPlace(),
+                                               TURNS_TO_FIRE_VEHICLE_WEAPON);
 		assert(ret);	// to remind me if I change some assumptions
 		return true;
 	}
@@ -571,7 +573,9 @@ bool NpcParty::attack_with_ordnance(int d)
 			return true;
 		}
 		ret = vehicle->fire_weapon(dx, dy);
-		turn_cost += TURNS_TO_FIRE_VEHICLE_WEAPON;	// hack...
+		turn_cost += 
+                        place_adjust_turn_cost(getPlace(),
+                                               TURNS_TO_FIRE_VEHICLE_WEAPON);
 		assert(ret);	// to remind me if I change some assumptions
 		return true;
 	}

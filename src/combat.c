@@ -49,6 +49,7 @@
 #include "vehicle.h"
 #include "formation.h"
 #include "pinfo.h"
+#include "Loader.h"
 
 #include <assert.h>
 #include <stdlib.h>
@@ -161,6 +162,9 @@ static struct {
 	struct list summoned;
 	bool tmp_terrain_map;
 	class Vehicle *enemy_vehicle;
+        char *sound_enter;
+        char *sound_defeat;
+        char *sound_victory;
 } Combat;
 
 struct v2 {
@@ -177,7 +181,7 @@ static int q_tail;
 static void Defeat(void)
 {
 	// The NPCs have won.
-	soundPlay(SOUND_COMBAT_DEFEAT, SOUND_MAX_VOLUME);
+	soundPlay(Combat.sound_defeat, SOUND_MAX_VOLUME);
 	consolePrint("\n*** Battle is Lost! ***\n\n");
 	Combat.state = DONE;
 }
@@ -186,7 +190,7 @@ static void Victory(void)
 {
 	// The player has won. Play the triumphant music and advance to the
 	// looting phase.
-	soundPlay(SOUND_COMBAT_VICTORY, SOUND_MAX_VOLUME);
+	soundPlay(Combat.sound_victory, SOUND_MAX_VOLUME);
 	consolePrint("\n*** VICTORY! ***\n\n");
 	Combat.state = LOOTING;
 }
@@ -194,7 +198,7 @@ static void Victory(void)
 static void Retreat(void)
 {
 	// The player has escaped by fleeing.  
-	soundPlay(SOUND_COMBAT_DEFEAT, SOUND_MAX_VOLUME);
+	soundPlay(Combat.sound_defeat, SOUND_MAX_VOLUME);
 	consolePrint("\n*** Run Away! ***\n\n");
 	Combat.state = DONE;
 }
@@ -2227,6 +2231,34 @@ int combatInit(void)
 	return 0;
 }
 
+int combatLoad(class Loader *loader)
+{        
+        if (!loader->matchToken('{'))
+                return -1;
+
+        while (!loader->matchToken('}')) {
+                if (loader->matchWord("enter")) {
+                        if (!loader->getString(&Combat.sound_enter))
+                                goto fail;
+                } else if (loader->matchWord("defeat")) {
+                        if (!loader->getString(&Combat.sound_defeat))
+                                goto fail;
+                } else if (loader->matchWord("victory")) {
+                        if (!loader->getString(&Combat.sound_victory))
+                                goto fail;
+                } else {
+                        loader->setError("unknown field '%s'",
+                                         loader->getLexeme());
+                        goto fail;
+                }
+        }
+
+        return 0;
+
+ fail:
+        return -1;
+}
+
 #ifdef USE_OLD_MAP_FILL
 
 static void fill_map_half(struct terrain_map *map, int dx, int dy,
@@ -2560,7 +2592,7 @@ bool combat_enter(struct combat_info * info)
 	if (Combat.state == FIGHTING) {
 		consolePrint("\n*** Combat ***\n\n");
 		consoleRepaint();
-		soundPlay(SOUND_COMBAT_ENTER, SOUND_MAX_VOLUME);
+		soundPlay(Combat.sound_enter, SOUND_MAX_VOLUME);
 	} else if (Combat.state != CAMPING) {
 		myFollow(0);
 	}

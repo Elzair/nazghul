@@ -23,3 +23,13 @@ Changes for nazghul-0.1.2
   member it needs to calculate the distance from. Since dungeons are not party
   mode I'll probably want to reconsider how to do that.
 
+--Added a COMBAT section to the script. Currently this is only used to declare
+  the sound files used in combat for events like entry, defeat and victory.
+
+--Fixed a bug introduced when I fixed cannons firing in town. The npc code was
+  not properly incrementing turns when it fired cannons.
+
+--When npc vehicle weapons hit an npc party it was printing "You hit ", as if
+  the player was doing the firing. Changed the message from "you" to whatever
+  the name of the weapon being fired.
+

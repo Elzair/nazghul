@@ -218,11 +218,6 @@ extern "C" {
 #define TARG_SELF       1
 #define TARG_FRIEND     2
 
-/* Sounds */
-#define SOUND_COMBAT_ENTER      "sounds/drum_02.wav"
-#define SOUND_COMBAT_VICTORY    "sounds/fanfare7.wav"
-#define SOUND_COMBAT_DEFEAT     "sounds/fanfare5.wav"
-
 /* Type ID's (TIDs) */
 #define OBJECT_ID               1
 #define VEHICLE_ID              (OBJECT_ID + 1)

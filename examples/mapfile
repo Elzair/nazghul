@@ -4242,3 +4242,8 @@ player {
 CROSSHAIR {
   objectType t_cursor;
 }
+COMBAT {
+        enter "data/sounds/drum_02.wav";
+        victory "data/sounds/fanfare7.wav";
+        defeat "data/sounds/fanfare5.wav";
+}

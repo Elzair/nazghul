@@ -3065,6 +3065,17 @@ static int loadCursor(void)
 	return 0;
 }
 
+static int loadCombat(void)
+{
+	class Loader loader;
+
+	loader.lexer = Lexer;
+	loader.lookupTag = lookupTag;
+	loader.advance();
+        PARSE_ASSERT(combatLoad(&loader) == 0, "Error in COMBAT: %s\n", 
+                     loader.error);
+}
+
 static int loadFormation(void)
 {
 	class Loader loader;
@@ -3188,6 +3199,7 @@ static struct keyword keywords[] = {
 	{"FRAME", loadFrame, false},
 	{"CURSOR", loadCursor, false},
 	{"FORMATION", loadFormation, false},
+        {"COMBAT", loadCombat, false},
 };
 
 #define NUM_KEYWORDS (sizeof(keywords)/sizeof(keywords[0]))
