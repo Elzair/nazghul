@@ -1749,6 +1749,7 @@ static int kern_append_effect(struct hook_entry *entry, void *data)
                 info->tail = cell;
         }
 
+        return 0;
 }
 
 KERN_API_CALL(kern_obj_get_effects)
@@ -3947,6 +3948,14 @@ KERN_API_CALL(kern_place_set_terrain)
         }
 
         place_set_terrain(place, x, y, terrain);
+
+        /* Often changing the terrain requires us to recalculate LOS in the
+         * surrounding area. */
+        vmask_invalidate(place, x, y, 1, 1);
+
+        /* And that means the map usually needs repainting, too */
+        mapSetDirty();
+
         return sc->T;
 }
 
@@ -5287,6 +5296,29 @@ KERN_API_CALL(kern_get_ticks)
         return scm_mk_integer(sc, SDL_GetTicks());
 }
 
+#if 0
+KERN_API_CALL(kern_los_invalidate)
+{
+        struct place *place;
+        int x;
+        int y;
+        int w;
+        int h;
+
+        if (unpack_loc(sc, &args, &place, &x, &y, "kern-los-invalidate")) {
+                return sc->NIL;
+        }
+
+        if (unpack(sc, &args, "dd", &w, &h)) {
+                rt_err("kern-los-invalidate: bad args");
+                return sc->NIL;
+        }
+        
+        vmask_invalidate(place, x, y, w, h);
+        return sc->NIL;
+}
+#endif
+
 scheme *kern_init(void)
 {        
         scheme *sc;
@@ -5446,6 +5478,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-get-objects-at", kern_get_objects_at);
         API_DECL(sc, "kern-get-ticks", kern_get_ticks);
         API_DECL(sc, "kern-in-los?", kern_in_los);
+        /*API_DECL(sc, "kern-los-invalidate", kern_los_invalidate);*/
         API_DECL(sc, "kern-include", kern_include);
         API_DECL(sc, "kern-interp-error", kern_interp_error);
         API_DECL(sc, "kern-is-valid-location?", kern_is_valid_location);

@@ -1,4 +1,3 @@
-//
 // nazghul - an old-school RPG engine
 // Copyright (C) 2002, 2003 Gordon McNutt
 //
@@ -66,8 +65,8 @@ int PlaybackSpeed    = 100;
 
 static char program_name[] = "nazghul";
 static int version_major = 0;
-static int version_minor = 2;
-static int version_incr  = 1;
+static int version_minor = 3;
+static int version_incr  = 0;
 
 #define VERSION_STRLEN 8  // Length of "xx.yy.zz" == 6+2
 char * version_as_string(void)

@@ -1298,7 +1298,8 @@ void Object::hookForEach(int hook_id,
                 }
 
                 // Invoke the callback on the hook entry... this is the part
-                // that does anything interesting.
+                // that does anything interesting. If it returns non-zero then
+                // we skip running the rest of the hooks.
                 if (cb(entry, data))
                         break;
                         
@@ -1441,8 +1442,8 @@ static int object_run_hook_entry(struct hook_entry *entry, void *data)
 {
         //dbg("run entry: %p\n", entry);
         if (entry->effect->exec)
-                closure_exec(entry->effect->exec, "lp", 
-                             hook_entry_gob(entry), data);
+                return closure_exec(entry->effect->exec, "lp", 
+                                    hook_entry_gob(entry), data);
         return 0;
 }
 

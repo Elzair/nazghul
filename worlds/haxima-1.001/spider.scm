@@ -2,6 +2,14 @@
 (define spider-melee-weapon t_hands)
 (define web-spew-range      3)
 
+;; ----------------------------------------------------------------------------
+;; Trick: make a "spider corpse" container type and use it as the spider's
+;; container. When the spider dies the kernel will drop the spider's container,
+;; making it look like the spider corpse is a container.
+;; ----------------------------------------------------------------------------
+(mk-obj-type 'spider-corpse-type "spider corpse" s_dead_spider
+             layer-container nil)
+
 ;;----------------------------------------------------------------------------
 ;; Species declaration (used by the kernel)
 ;;----------------------------------------------------------------------------

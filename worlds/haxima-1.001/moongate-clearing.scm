@@ -120,25 +120,3 @@
    )
 ) ;; end of place p_moongate_clearing
 
-;;----------------------------------------------------------------------------
-;; Startup - this is a one-time only script that runs when the player starts
-;; the game for the first time (or whenever he starts over from scratch,
-;; loading the game from this file). It sets up the story a bit.
-;;
-;; The camera should center on the moongate clearing. Then, a gate should rise
-;; from the ground, pause, then sink back down, leaving the player's sleep
-;; sprite on the ground. Another pause, and then the player should wake up.
-;;----------------------------------------------------------------------------
-(define blackgate-stages
-  (list (list '()                       0)
-        (list s_moongate_quarter        32)
-        (list s_moongate_half           64)
-        (list s_moongate_three_quarters 96)
-        (list s_moongate_full           128)))
-
-(define (start-scene kplayer)
-  (moongate-animate black-gate blackgate-stages)
-  (kern-obj-put-at ch_wanderer 11 11)
-  (kern-log-msg "You awaken to a quiet clearing."))
-
-(kern-set-start-proc start-scene)

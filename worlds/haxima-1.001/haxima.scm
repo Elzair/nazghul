@@ -147,7 +147,7 @@
 
   (kern-log-msg "A dark gate rises in a quiet clearing...")
   (moongate-animate black-gate blackgate-stages)
-  (kern-sleep 30000)
+  (kern-sleep 20000)
 
   (kern-log-msg "Then closes without a trace...")
   (moongate-animate black-gate (reverse blackgate-stages))
@@ -161,7 +161,7 @@
   
   (kern-log-enable #t)
   (kern-log-msg "You lie dreaming for a while, of another life...")
-  (kern-sleep 30000)
+  (kern-sleep 20000)
 
   (kern-log-enable #f)
   (kern-char-set-sleep ch_wanderer #f)
@@ -172,5 +172,9 @@
 (define (simple-start kplayer)
   (kern-obj-put-at kplayer (list p_moongate_clearing 11 11)))
 
-;;(kern-set-start-proc start-scene)
-(kern-set-start-proc simple-start)
+;;----------------------------------------------------------------------------
+;; To skip the extended start scene comment out this next line and uncomment
+;; the line after it.
+;;----------------------------------------------------------------------------
+(kern-set-start-proc start-scene)
+;;(kern-set-start-proc simple-start)

@@ -137,4 +137,6 @@ nazghul_SOURCES =		\
 	hstack.h \
 	hstack.c \
 	Being.h \
-	Being.cpp
+	Being.cpp \
+	factions.h \
+	result.h

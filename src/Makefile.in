@@ -215,7 +215,9 @@ nazghul_SOURCES = \
 	hstack.h \
 	hstack.c \
 	Being.h \
-	Being.cpp
+	Being.cpp \
+	factions.h \
+	result.h
 
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_CLEAN_FILES = 
