@@ -213,7 +213,7 @@ void Party::setup()
 	fdy = 0;
 	size = 0;
 	isWrapper = false;
-	list_init(&members);
+	node_init(&members);
         n_members = 0;
 	formation = NULL;
         wandering = false;
@@ -608,15 +608,14 @@ bool Party::createMembers(void)
 
 void Party::forEachMember(bool(*fx) (class Character *, void *), void *data)
 {
-	struct list *elem, *tmp;
+	struct node *elem;
 
 	elem = members.next;
 	while (elem != &members) {
 		class Character *c;
 
-		tmp = elem->next;
-		c = outcast(elem, class Character, plist);
-		elem = tmp;
+		c = (class Character *)elem->ptr;
+                elem = elem->next;
 
 		if (fx(c, data))
 			return;
@@ -645,29 +644,63 @@ void Party::destroy()
 	disembark();
 
 	forEachMember(party_destroy_and_remove_member, this);
-	assert(list_empty(&members));
+	assert(node_list_empty(&members));
 	Object::destroy();	// removes it
 }
 
 void Party::removeMember(class Character * c)
 {
-	list_remove(&c->plist);
-	c->party = 0;
+        struct node *node;
+
+        /* Convenienve pointer to node */
+        node = c->plnode;
+        
+        /* Should be valid */
+        assert(node);
+
+        /* Unlink the node from the member list */
+	node_remove(node);
+
+        /* Break the link from the char back to the node */
+        c->plnode = NULL;
+
+        /* Break the link from the char back to the party */
+	c->party = NULL;
+
+        /* Reduce party size counter */
 	size--;
+
+        /* Release the node */
+        node_unref(node);
+
+        /* Release the char */
         obj_dec_ref(c);
 }
 
 bool Party::addMember(class Character * c)
 {
+        struct node *node;
+
+        /* Add ref to char to prevent destruction */
         obj_inc_ref(c);
 
-        list_add(&members, &c->plist);
-        c->party = this;
-        size++;
-        c->setBaseFaction(getBaseFaction());
+        /* Make a new list node for the member list */
+        node = node_new(c);
 
-        // Can't think of any reason why a char should be on the orphan list
-        assert(! c->handle);
+        /* Link the new member in */
+        node_add(&members, node);
+
+        /* Point the member back to its node (for fast removal) */
+        c->plnode = node;
+
+        /* Point the member back to its party */
+        c->party = this;
+
+        /* Increase the party size counter */
+        size++;
+
+        /* Make the member loyal to the party */
+        c->setBaseFaction(getBaseFaction());
 
         return true;
 }
@@ -923,7 +956,7 @@ bool Party::allDead()
 void Party::switchOrder(class Character *ch1, class Character *ch2)
 {
         int tmp;
-        list_switch(&ch1->plist, &ch2->plist);
+        node_switch(ch1->plnode, ch2->plnode);
         tmp = ch1->getOrder();
         ch1->setOrder(ch2->getOrder());
         ch2->setOrder(tmp);
@@ -934,10 +967,11 @@ char *Party::getName()
         return Object::getName();
 }
 
+/* Convenience macro for iterating over party members: */
 #define FOR_EACH_MEMBER(e,c)                                               \
-   for ((e) = members.next, (c) = list_entry((e), class Character, plist); \
+   for ((e) = members.next, (c) = (class Character *)(e)->ptr;             \
         (e) != &members;                                                   \
-        (e) = (e)->next, (c) = list_entry((e), class Character, plist))
+        (e) = (e)->next, (c) = (class Character *)(e)->ptr)
 
 // --------------------------------------------------------------------
 // Wherever the party is, there shall the members be also.
@@ -945,7 +979,7 @@ char *Party::getName()
 
 void Party::setPlace(struct place *place)
 {
-        struct list *entry;
+        struct node *entry;
         class Character *member;
         Object::setPlace(place);
         FOR_EACH_MEMBER(entry, member) {
@@ -955,7 +989,7 @@ void Party::setPlace(struct place *place)
 
 void Party::setX(int x)
 {
-        struct list *entry;
+        struct node *entry;
         class Character *member;
         Object::setX(x);
         FOR_EACH_MEMBER(entry, member) {
@@ -965,7 +999,7 @@ void Party::setX(int x)
 
 void Party::setY(int y)
 {
-        struct list *entry;
+        struct node *entry;
         class Character *member;
         Object::setY(y);
         FOR_EACH_MEMBER(entry, member) {
@@ -975,7 +1009,7 @@ void Party::setY(int y)
 
 bool Party::addEffect(struct effect *effect, struct gob *gob)
 {
-        struct list *entry;
+        struct node *entry;
         class Character *member;
         bool result = false;
 
@@ -991,7 +1025,7 @@ bool Party::addEffect(struct effect *effect, struct gob *gob)
 
 bool Party::removeEffect(struct effect *effect)
 {
-        struct list *entry;
+        struct node *entry;
         class Character *member;
         bool result = false;
 
@@ -1004,7 +1038,7 @@ bool Party::removeEffect(struct effect *effect)
 
 void Party::startTurn()
 {
-        struct list *entry;
+        struct node *entry;
         class Character *member;
 
         Object::startTurn();
@@ -1025,7 +1059,7 @@ void Party::startTurn()
 
 void Party::applyEffect(closure_t *effect)
 {
-        struct list *entry;
+        struct node *entry;
         class Character *member;
 
         FOR_EACH_MEMBER(entry, member)
@@ -1067,7 +1101,7 @@ void Party::start()
 
 int Party::getMovementCost(int pclass)
 {
-        struct list *entry;
+        struct node *entry;
         class Character *member;
         int maxCost = 0;
 
@@ -1086,7 +1120,7 @@ int Party::getMovementCost(int pclass)
 
 class Character *Party::getMemberByOrder(int order)
 {
-        struct list *entry;
+        struct node *entry;
         class Character *member;
 
         FOR_EACH_MEMBER(entry, member) {
@@ -1100,7 +1134,7 @@ class Character *Party::getMemberByOrder(int order)
 
 Object *Party::getSpeaker()
 {
-        struct list *entry;
+        struct node *entry;
         class Character *member;
         struct stat_list_entry *statlist;
         int list_sz = 0;

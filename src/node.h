@@ -38,12 +38,14 @@ struct node {
 
 #define nodelst(n) ((struct list *)(n))
 #define node_add(n1,n2) list_add(nodelst(n1), nodelst(n2))
-#define node_init(n) { list_init(nodelst(n)); (n)->ptr = NULL; }
-#define node_add_tail(n1,n2) list_add_tail(nodelst(n1), nodelst(n2))
-#define node_remove(n) list_remove(nodelst(n))
 #define node_addref(n) ((n)->ref++)
+#define node_add_tail(n1,n2) list_add_tail(nodelst(n1), nodelst(n2))
 #define node_for_each(head,ptr) \
         for ((ptr) = (head)->next; (ptr) != (head); (ptr) = (ptr)->next)
+#define node_init(n) { list_init(nodelst(n)); (n)->ptr = NULL; }
+#define node_list_empty(n) (list_empty(nodelst(n)))
+#define node_remove(n) list_remove(nodelst(n))
+#define node_switch(a,b) (list_switch(nodelst(a), nodelst(b)))
                                            
 extern struct node *node_new(void *data);
 extern void node_unref(struct node *node);

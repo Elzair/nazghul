@@ -205,7 +205,7 @@ class Character:public Being {
 		       struct sprite * sprite, char *name, int order);
 
 	char *tag;
-	struct list plist;	// party list
+        struct node *plnode; // pointer back to party list node
 	class Party *party;
 	struct species *species;
 	struct occ *occ;

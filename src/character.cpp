@@ -125,7 +125,7 @@ Character::Character(char *tag, char *name,
         this->name = strdup(name);
         assert(this->name);
 
-	list_init(&plist);
+        plnode = NULL;
 	setPlayerControlled(false);	// by default
         setBaseFaction(NIL_FACTION);
 
@@ -184,7 +184,7 @@ Character::Character():name(0), hm(0), xp(0), order(-1),
         // Character::initCommon().
         // --------------------------------------------------------------------
 
-	list_init(&plist);
+        plnode = NULL;
 	setPlayerControlled(false);	// by default
         setBaseFaction(NIL_FACTION);
 

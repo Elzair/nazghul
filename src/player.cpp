@@ -241,9 +241,9 @@ bool player_party::turn_vehicle(void)
 /* Note it is not safe to modify the member list within the block of the below
  * 'iterator'  */
 #define FOR_EACH_MEMBER(e,c) \
-      for ((e) = members.next, (c) = list_entry((e), class Character, plist); \
+      for ((e) = members.next, (c) = (class Character *)(e)->ptr; \
            (e) != &members; \
-           (e) = (e)->next, (c) = list_entry((e), class Character, plist))
+           (e) = (e)->next, (c) = (class Character *)(e)->ptr)
 
 void player_party::distributeMembers(struct place *new_place, int new_x, 
                                      int new_y, int new_dx, int new_dy)
@@ -282,7 +282,7 @@ void player_party::distributeMembers(struct place *new_place, int new_x,
         // the code below with position_player_party() in combat.c:
         // --------------------------------------------------------------------
 
-        struct list *entry;
+        struct node *entry;
         class Character *member;
 
         FOR_EACH_MEMBER(entry, member) {
@@ -676,7 +676,7 @@ bool myGetBestVisionRadius(class Character * c, void *data)
 
 int player_party::getLight()
 {
-        struct list *entry;
+        struct node *entry;
         class Character *member;
 
         light = 0;
@@ -899,7 +899,7 @@ class Character *player_party::get_leader(void)
 
 void player_party::removeMember(class Character *c)
 {
-        struct list *entry;
+        struct node *entry;
         class Character *next_member;
         int index;
 
@@ -924,41 +924,41 @@ void player_party::removeMember(class Character *c)
         // Re-order the indices of the remaining party members
         // --------------------------------------------------------------------
 
-        for (entry = c->plist.next, index = c->getOrder(); entry != &members; 
+        for (entry = c->plnode->next, index = c->getOrder(); 
+             entry != &members; 
              entry = entry->next, index++) {
-                next_member = outcast(entry, class Character, plist);
+                next_member = (class Character *)entry->ptr;
                 next_member->setOrder(index);
         }
 
         // --------------------------------------------------------------------
-        // Unhook it from the party & relinquish control.
+        // Relinquish control.
         // --------------------------------------------------------------------
 
-        list_remove(&c->plist);
-        c->party = NULL;
         c->setPlayerControlled(false);
         c->setControlMode(CONTROL_MODE_AUTO);
+        
+        // Unhook it from the party
+        Party::removeMember(c);
 
         obj_dec_ref(c);
 }
 
 bool player_party::addMember(class Character * c)
 {
-	int i = 0;
-
-        obj_inc_ref(c);
-
 	// Note: this is called so early in startup that I can't touch the
 	// paint routines in here. Callers will have to update the map and
 	// status if necessary.
 
+	int i = 0;
+
 	assert(!c->isPlayerControlled());
 
-        list_add_tail(&members, &c->plist);
-	c->setOrder(size);
-	size++;
+        // Hook it to the party
+        Party::addMember(c);
+
+        // Set special player-controlled flag
 	c->setPlayerControlled(true);
-	c->setBaseFaction(getBaseFaction());
 
         // gmcnutt: added this as a hack to support quickly determining if a
         // character belongs to the player party.
@@ -1112,7 +1112,7 @@ void player_party::decActionPoints(int points)
 
 class Character *player_party::getMemberAtIndex(int index)
 {
-        struct list *entry;
+        struct node *entry;
         class Character *member;
 
         FOR_EACH_MEMBER(entry, member) {
@@ -1179,7 +1179,7 @@ bool player_party::isCamping()
 
 void player_party::beginCamping(class Character *guard, int hours)
 {
-        struct list *entry;
+        struct node *entry;
         class Character *member;
 
         camping    = true;
@@ -1198,7 +1198,7 @@ void player_party::beginCamping(class Character *guard, int hours)
 
 void player_party::endCamping()
 {
-        struct list *entry;
+        struct node *entry;
         class Character *member;
 
         if (! isCamping())
@@ -1220,7 +1220,7 @@ void player_party::endCamping()
 
 void player_party::ambushWhileCamping()
 {
-        struct list *entry;
+        struct node *entry;
         class Character *member;
 
         camping = false;
@@ -1248,7 +1248,7 @@ void player_party::ambushWhileCamping()
 
 void player_party::endResting()
 {
-        struct list *entry;
+        struct node *entry;
         class Character *member;
 
         resting   = false;
@@ -1352,7 +1352,7 @@ bool player_party::rendezvous(struct place *place, int rx, int ry)
         bool abort = false;
         bool done;
         int max_path_len;
-        struct list *entry;
+        struct node *entry;
         class Character *member;
 
         assert(NULL != leader);
@@ -1490,7 +1490,7 @@ void player_party::addView()
 
 struct place *player_party::getPlaceFromMembers(void)
 {
-        struct list *elem;
+        struct node *elem;
         class Character *member;
 
         member = get_leader();
@@ -1509,7 +1509,7 @@ struct place *player_party::getPlaceFromMembers(void)
 
 void player_party::startSession(void)
 {
-        struct list *elem;
+        struct node *elem;
         class Character *member;
 
 
@@ -1592,8 +1592,6 @@ void player_save(save_t *save, void *val)
 
 void player_party::save(save_t *save)
 {
-        struct list *elem;
-
         save->enter(save, "(kern-mk-player\n");
         if (tag)
                 save->write(save, "'%s\n", tag);
@@ -1625,11 +1623,11 @@ void player_party::save(save_t *save)
         if (list_empty(&this->members)) {
                 save->write(save, "nil\n");
         } else {
+                struct node *elem;
                 class Character *ch;
 
                 save->enter(save, "(list\n");
-                list_for_each(&this->members, elem) {
-                        ch =  outcast(elem, class Character, plist);
+                FOR_EACH_MEMBER(elem,ch) {
                         char_save(save, ch);
                 }
                 save->exit(save, ")\n");

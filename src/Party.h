@@ -23,9 +23,10 @@
 #define Party_h
 
 #include "Being.h"
-#include "list.h"
 #include "common.h"
 #include "character.h"
+#include "list.h"
+#include "node.h"
 #include "pinfo.h"
 
 struct GroupInfo {
@@ -131,7 +132,7 @@ class Party:public Being {
 	bool gotoSpot(int x, int y);
 
 
-	struct list members;
+	struct node members; // Linked list of party members
 
 	int act;
 	int appt;
