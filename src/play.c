@@ -2488,7 +2488,7 @@ bool cmdXamine(class Character * pc)
 	}
 
     look_at_XY(x,y);  // First look at the current tile
-	if (select_target_with_doing(x, y, &x, &y, MAX_VIEWPORT_RANGE,
+	if (select_target_with_doing(x, y, &x, &y, 99,
 				     look_at_XY, detailed_examine_XY) == -1) {
 		return false;
 	}
@@ -2693,7 +2693,7 @@ bool cmdTerraform(class Character * pc)
                  terrain->tag, terrain->name);
 
     DM_XRAY_look_at_XY(x,y, NULL);  // First look at the current tile
-	if (terraform_cursor_func(x, y, &x, &y, MAX_VIEWPORT_RANGE,
+	if (terraform_cursor_func(x, y, &x, &y, 99,
                               DM_XRAY_look_at_XY, terraform_XY,
                               place) == -1) {
       return false;
