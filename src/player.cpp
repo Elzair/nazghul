@@ -372,7 +372,7 @@ bool player_party::try_to_enter_moongate(class Moongate * src_gate)
         if (src_gate) {
                 relocate(src_gate->getPlace(), src_gate->getX(), 
                          src_gate->getY());
-                mapUpdate(0);
+                mapSetDirty();
                 usleep(MS_PER_TICK * 1000);
         }
 
@@ -921,22 +921,6 @@ void player_party::for_each_member(bool(*fx) (class Character *, void *data),
 			return;
 	}
 }
-
-#if 0
-static bool player_wakeup_member(class Character *member, void *data)
-{
-        member->awaken();
-        return false;
-}
-
-void player_party::awaken()
-{
-        resting   = false;
-        for_each_member(player_wakeup_member, this);
-        mapBlackout(0);
-        mapUpdate(0);
-}
-#endif
 
 static bool party_mode_key_handler(struct KeyHandler *kh, int key, int keymod)
 {
@@ -1499,7 +1483,7 @@ void player_party::beginResting(int hours)
         clock_alarm_set(&rest_alarm, 60);
         resting   = true;
         mapBlackout(1);
-        mapUpdate(0);
+        mapSetDirty();
 }
 
 bool player_party::isResting()
@@ -1695,7 +1679,7 @@ void player_party::endResting()
         }
 
         mapBlackout(0);
-        mapUpdate(0);
+        mapSetDirty();
 }
 
 // -----------------------------------------------------------------------------
@@ -1831,14 +1815,10 @@ bool player_party::rendezvous(struct place *place, int rx, int ry)
 
                 if (!member->path) {
                         consolePrint("%s cannot make the rendezvous!\n", member->getName());
-                        mapCenterCamera(member->getX(), member->getY());
-                        mapUpdate(0);
                         abort = true;
                 }
                 else if (max_path_len > 0 && member->path->len > max_path_len) {
                         consolePrint("%s is too far away!\n", member->getName());
-                        mapCenterCamera(member->getX(), member->getY());
-                        mapUpdate(0);
                         abort = true;
                 }
         }

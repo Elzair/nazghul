@@ -1415,7 +1415,7 @@ void Character::relocate(struct place *place, int x, int y)
         if (isCameraAttached()) {
                 mapCenterView(getView(), getX(), getY());
                 mapRecomputeLos(getView());
-                mapUpdate(0);
+                mapSetDirty();
         }
 #endif
 
@@ -2131,7 +2131,7 @@ static bool character_key_handler(struct KeyHandler *kh, int key, int keymod)
                         key = unshift[(key - KEY_SHIFT_NORTH)];
                         dir = keyToDirection(key);
                         mapMoveCamera(directionToDx(dir), directionToDy(dir));
-                        mapUpdate(0);
+                        mapSetDirty();
                         break;
 
 
@@ -2775,7 +2775,7 @@ void Character::exec(struct exec_context *context)
                         pathfind_to(leader);
                         mapCenterView(getView(), getX(), getY());
                         mapRecomputeLos(getView());
-                        mapUpdate(0);
+                        mapSetDirty();
                 }
                 break;
  
@@ -2802,7 +2802,7 @@ void Character::setSolo(bool val)
                 setControlMode(CONTROL_MODE_PLAYER);
                 consolePrint("%s goes solo.\n", getName());
                 mapCenterCamera(getX(), getY());
-                mapUpdate(0);
+                mapSetDirty();
         } else {
                 attachCamera(false);
                 setControlMode(CONTROL_MODE_IDLE);
@@ -3101,7 +3101,7 @@ void Character::setLeader(bool val)
                 setControlMode(CONTROL_MODE_PLAYER);
                 consolePrint("%s is now party leader.\n", getName());
                 mapCenterCamera(getX(), getY());
-                mapUpdate(0);
+                mapSetDirty();
         }
 
         is_leader = val;

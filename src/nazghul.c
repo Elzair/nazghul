@@ -249,18 +249,19 @@ static void nazghul_init_internal_libs(void)
 
 int main(int argc, char **argv)
 {
-	SDL_Thread *tick_thread;
+	SDL_Thread *tick_thread = NULL;
 
 	parse_args(argc, argv);
 
         nazghul_init_internal_libs();
 
-
-	tick_thread = SDL_CreateThread(tick_fx, 0);
+        if (TickMilliseconds > 0)
+                tick_thread = SDL_CreateThread(tick_fx, 0);
 
 	playRun();
 
-	SDL_KillThread(tick_thread);	/* Note: don't try to wait after this */
+        if (NULL != tick_thread)
+                SDL_KillThread(tick_thread);	/* Note: don't try to wait after this */
 
 	return 0;
 }				// main()

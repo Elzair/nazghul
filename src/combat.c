@@ -802,14 +802,10 @@ bool combat_rendezvous_party(int max_path_len)
                 if (!pc->path) {
                         consolePrint("%s cannot make the rendezvous!\n",
                                      pc->getName());
-                        mapCenterCamera(pc->getX(), pc->getY());
-                        mapUpdate(0);
                         abort = true;
                 }
                 else if (max_path_len > 0 && pc->path->len > max_path_len) {
                         consolePrint("%s is too far away!\n", pc->getName());
-                        mapCenterCamera(pc->getX(), pc->getY());
-                        mapUpdate(0);
                         abort = true;
                 }
         }
@@ -1773,11 +1769,6 @@ bool combat_enter(struct combat_info * info)
                 place_for_each_object(Place, myFindAndPositionEnemy, &v2);
         }
 
-        // *** Setup the Map Viewer ***
-
-#if 0
-        mapRmView(player_party->getView());
-#endif
         player_party->for_each_member(mySetInitialCameraPosition, 0);
 
         if (combat_get_state() == COMBAT_STATE_FIGHTING) {
@@ -1789,9 +1780,6 @@ bool combat_enter(struct combat_info * info)
                 player_party->enableFollowMode();
         }
 
-#if 0
-        mapUpdate(0);
-#endif
         foogodRepaint();
 
 

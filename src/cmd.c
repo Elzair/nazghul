@@ -310,7 +310,7 @@ bool movecursor(struct KeyHandler * kh, int key, int keymod)
         if (keyIsDirection(key)) {
                 int dir = keyToDirection(key);
                 Cursor->move(directionToDx(dir), directionToDy(dir));
-                mapUpdate(0);
+                mapSetDirty();
                 return false;  // Keep on keyhandling
         }
   
@@ -349,7 +349,7 @@ bool movecursor_and_do(struct KeyHandler * kh, int key, int keymod)
         if (keyIsDirection(key)) {
                 int dir = keyToDirection(key);
                 Cursor->move(directionToDx(dir), directionToDy(dir));
-                mapUpdate(0);
+                mapSetDirty();
                 int x = Cursor->getX();
                 int y = Cursor->getY();
                 if (data->each_point_func)
@@ -386,7 +386,7 @@ bool terraform_movecursor_and_do(struct KeyHandler * kh, int key, int keymod)
         if (keyIsDirection(key)) {
                 int dir = keyToDirection(key);
                 Cursor->move(directionToDx(dir), directionToDy(dir));
-                mapUpdate(0);
+                mapSetDirty();
                 int x = Cursor->getX();
                 int y = Cursor->getY();
                 if (data->each_point_func)
@@ -1036,7 +1036,7 @@ int select_target(int ox, int oy, int *x, int *y, int range)
         Cursor->setRange(range);
         Cursor->setOrigin(ox, oy);
         Cursor->relocate(Place, *x, *y);  // Remember prev target, if any
-        mapUpdate(0);
+        mapSetDirty();
   
         struct cursor_movement_keyhandler data;
         data.each_point_func  = NULL;
@@ -1055,7 +1055,7 @@ int select_target(int ox, int oy, int *x, int *y, int range)
         *x = Cursor->getX();
         *y = Cursor->getY();
         Cursor->remove();
-        mapUpdate(0);
+        mapSetDirty();
   
         struct cursor_movement_keyhandler * data_ret;
         data_ret = (struct cursor_movement_keyhandler *) kh.data;
@@ -1088,7 +1088,7 @@ int select_target_with_doing(int ox, int oy, int *x, int *y,
         Cursor->setViewportBounded(1);
         Cursor->setOrigin(ox, oy);
         Cursor->relocate(Place, *x, *y);  // Remember prev target, if any
-        mapUpdate(0);
+        mapSetDirty();
 
         struct cursor_movement_keyhandler data;
         data.each_point_func  = each_point_func;
@@ -1107,7 +1107,7 @@ int select_target_with_doing(int ox, int oy, int *x, int *y,
         *x = Cursor->getX();
         *y = Cursor->getY();
         Cursor->remove();
-        mapUpdate(0);
+        mapSetDirty();
   
         struct cursor_movement_keyhandler * data_ret;
         data_ret = (struct cursor_movement_keyhandler *) kh.data;
@@ -1133,7 +1133,7 @@ int terraform_cursor_func(int ox, int oy, int *x, int *y,
         Cursor->setViewportBounded(1);
         Cursor->setOrigin(ox, oy);
         Cursor->relocate(Place, *x, *y);  // Remember prev target, if any
-        mapUpdate(0);
+        mapSetDirty();
   
         struct terraform_mode_keyhandler data;
         data.each_point_func  = each_point_func;
@@ -1155,7 +1155,7 @@ int terraform_cursor_func(int ox, int oy, int *x, int *y,
         *x = Cursor->getX();
         *y = Cursor->getY();
         Cursor->remove();
-        mapUpdate(0);
+        mapSetDirty();
   
         struct terraform_mode_keyhandler * data_ret;
         data_ret = (struct terraform_mode_keyhandler *) kh.data;

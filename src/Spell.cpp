@@ -794,7 +794,7 @@ enum Spell::cast_result Spell::cast(class Character * caster,
                         } else {
 				success = ok;
                         }
-                        mapUpdate(0);
+                        mapSetDirty();
 		}
 
 	} else if (effects == EFFECT_DESTROY) {
@@ -933,7 +933,7 @@ enum Spell::cast_result Spell::cast(class Character * caster,
 	if (effects & EFFECT_SHOW_TERRAIN) {
 		success = ok;
 		effectShowTerrain(getName(), duration);
-		mapUpdate(0);
+		mapSetDirty();
 	}
 	if (effects & EFFECT_TREMOR) {
 		int i;

@@ -406,25 +406,6 @@ static int play_init(struct play *play)
 
 	windSetDirection(NORTH, 1);
 
-#if 0
-	player_party->view = mapCreateView();
-	if (!player_party->view)
-		return -1;
-#endif
-        // ---------------------------------------------------------------------
-        // REVISIT: why not just relocate the player party?
-        // ---------------------------------------------------------------------
-
-        //player_party->addView();
-#if 0
-	mapAddView(player_party->view);
-	mapCenterView(player_party->view, player_party->getX(),
-		      player_party->getY());
-	player_party->recompute_los();
-	mapCenterCamera(player_party->getX(), player_party->getY());
-#endif
-	//mapUpdate(0);
-	//screenUpdate(0);
 
 	foogodRepaint();
 
@@ -450,6 +431,8 @@ static int play_init(struct play *play)
                                player_party->getX(), 
                                player_party->getY());
 
+
+        mapUpdate(REPAINT_IF_DIRTY);
 
 	return 0;
 }

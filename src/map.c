@@ -335,10 +335,7 @@ static void mapMergeLightSource(struct light_source *light,
                                 
                         map_x = place_wrap_x(Map.place, tmp_view.vrect.x + x);
 
-                        D = place_flying_distance(Map.place,
-                                                  light->x,
-                                                  light->y,
-                                                  map_x, map_y);
+                        D = place_flying_distance(Map.place, light->x, light->y, map_x, map_y);
                         D = D * D + 1;
                         tmp_view.vmask[vmask_i] = min(light->light / D, 255);
                 }
@@ -366,6 +363,15 @@ static void mapBuildLightMap(struct mview *view)
         memset(lmap, (Map.place->underground ? UNLIT : Sun.light), 
                sizeof(lmap));
 
+        // ---------------------------------------------------------------------
+        // Optimization: if we're already getting max light everywhere from the
+        // sun then skip further processing. Building a lightmap usually takes
+        // about 1/3 of the time devoted to rendering.
+        // ---------------------------------------------------------------------
+
+        if (! Map.place->underground && Sun.light == 255)
+                return;
+
         // Build the list of light sources visible in the current map viewer
         // window. (Note: might expand this to see the light from sources
         // outside the viewer window).
@@ -391,17 +397,6 @@ static void mapBuildLightMap(struct mview *view)
 		}
 	}
         
-#if 0
-        // In party mode the player is a light source that hasn't been
-        // accounted for yet (fixme -- why not? is this still true?).
-	if (player_party->context != CONTEXT_COMBAT) {
-		lights[lt_i].x = place_wrap_x(Map.place, player_party->getX());
-		lights[lt_i].y = place_wrap_y(Map.place, player_party->getY());
-		lights[lt_i].light = player_party->light;
-		lt_i++;
-	}
-#endif
-
 	// Skip further processing if there are no light sources
         if (!lt_i)
                 return;

@@ -150,7 +150,7 @@ bool ArmsType::fireInDirection(struct place *place, int ox, int oy,
                 missile->getStruck()->describe(1);
                 consolePrint("!\n");
                 delete missile->getStruck();
-                mapUpdate(0);
+                mapSetDirty();
         }
         
         user->decActionPoints(getRequiredActionPoints());
