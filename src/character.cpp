@@ -1125,8 +1125,10 @@ int Character::getRestCredits(void)
 void Character::rest(int hours)
 {
 	while (n_rest_credits && hours) {
-		changeHp(HP_RECOVERED_PER_HOUR_OF_REST);
-		changeMana(MANA_RECOVERED_PER_HOUR_OF_REST);
+                if (!isDead()) {
+                        changeHp(HP_RECOVERED_PER_HOUR_OF_REST);
+                        changeMana(MANA_RECOVERED_PER_HOUR_OF_REST);
+                }
 		n_rest_credits--;
 		hours--;
 	}
