@@ -25,16 +25,35 @@
       methods
       (append methods (parent 'vtable))))
 
+;; ----------------------------------------------------------------------------
+;; The purpose of this list is to prevent the scheme gc from harvesting the
+;; scroll interfaces which are created on-the-fly in mk-scroll. Without this
+;; I'd have to explicitly assign a variable to each ifc, which is needlessly
+;; verbose.
+;;
+;; The scheme interpreter reclaims any cells not referred to by another cell,
+;; recursively. It can't detect cells that are only referred to by kernel data
+;; structures, and will reclaim them. To prevent this, I add all ifcs to this
+;; list. The list is referred to by the scheme top-level environment, and it
+;; refers to all ifcs that are added to it.
+;; ----------------------------------------------------------------------------
+(define ifc-list '())
+
+(define (ifc-protect ifc)
+  (set! ifc-list (cons ifc ifc-list))
+  ifc)
+
 ;; Define a dispatch for a list of methods
 (define (ifc parent . methods)
   (let ((vtable (inherit parent methods)))
-    (lambda (op . args)
-      ;;(display op)(newline)
-      (cond ((eq? op 'vtable) vtable)
-            ((eq? op 'can) 
-             (begin
-               (not (eq? #f (assoc (car args) vtable)))))
-            (else (vtable-call vtable op args))))))
+    (ifc-protect 
+     (lambda (op . args)
+       ;;(display op)(newline)
+       (cond ((eq? op 'vtable) vtable)
+             ((eq? op 'can) 
+              (begin
+                (not (eq? #f (assoc (car args) vtable)))))
+             (else (vtable-call vtable op args)))))))
 
 ;; Map standard interface calls to a bitmap for fast lookup in the kernel
 (define (ifc-cap ifc)
