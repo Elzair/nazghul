@@ -5,6 +5,14 @@
 (define (terrain-effect-burn obj)
   (kern-obj-apply-damage obj "burning" 10))
 
+(define (terrain-effect-poison obj)
+  (if (> (kern-dice-roll "1d20") 10)
+      (begin
+        (kern-log-msg "Noxious fumes!")
+        (kern-obj-add-effect obj ef_poison nil)        
+        )))
+
+
 ;; ----------------------------------------------------------------------------
 ;; Terrain Table 
 ;; -------------
@@ -39,6 +47,7 @@
 ;; 
 ;;   s_tower
 
+
 (define wilderness_scale_terrains
   (list
    ;;    tag                name            pclass           sprite            t light step-on
@@ -70,7 +79,7 @@
    ;; 
    ;; For our purposes, we are interested in whether they have pclass grass, or grass+shoals,
    ;; whether they block LOS, and whether they are "poisonous" (and to what intensity).
-   (list 'T_bog             "bog"           pclass-forest    s_bog             1 0 nil)
+   (list 'T_bog             "bog"           pclass-forest    s_bog             1 0 'terrain-effect-poison)
    ;(list 'T_bog             "bog"           pclass-forest    s_bog             1 0 nil)
    ;(list 'T_bog             "bog"           pclass-forest    s_bog             1 0 nil)
 
@@ -310,7 +319,7 @@
    (list 't_rightwing       "castle wall"   pclass-wall      s_rightwing       1 0 nil)
    (list 't_cobblestone     "cobblestone"   pclass-grass     s_cobblestone     1 0 nil)
    (list 't_flagstones      "flagstones"    pclass-grass     s_flagstone       1 0 nil)
-   (list 't_bog             "bog"           pclass-forest    s_bog             1 0 nil)
+   (list 't_bog             "bog"           pclass-forest    s_bog             1 0 'terrain-effect-poison)
    (list 't_fire_terrain    "fire"          pclass-grass     s_field_fire      1 512  'burn)
    (list 't_fireplace       "fireplace"     pclass-grass     s_fireplace       1 2048 'burn)
    ;;(list 't_bridge          "bridge"        pclass-grass     s_bridge          1 0 nil)
