@@ -138,7 +138,24 @@ struct species *speciesLoad(class Loader * loader)
 	    !loader->matchWord("vr") ||
 	    !loader->getInt(&species->vr) ||
 	    !loader->matchWord("pmask") || 
-            !loader->getBitmask(&species->pmask))
+            !loader->getBitmask(&species->pmask) ||
+
+            !loader->matchWord("hp_mod") ||
+            !loader->getInt(&species->hp_mod) ||
+            !loader->matchWord("hp_mult") ||
+            !loader->getInt(&species->hp_mult) ||
+            !loader->matchWord("mp_mod") ||
+            !loader->getInt(&species->mp_mod) ||
+            !loader->matchWord("mp_mult") ||
+            !loader->getInt(&species->mp_mult) ||
+            !loader->matchWord("hit_mod") ||
+            !loader->getInt(&species->hit_mod) ||
+            !loader->matchWord("def_mod") ||
+            !loader->getInt(&species->def_mod) ||
+            !loader->matchWord("dam_mod") ||
+            !loader->getInt(&species->dam_mod) ||
+            !loader->matchWord("arm_mod") ||
+            !loader->getInt(&species->arm_mod))
 		goto fail;
 
 	if (!loader->matchWord("sleep_sprite") ||

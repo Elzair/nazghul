@@ -35,13 +35,17 @@
 // name - Used when describing generic characters to the player(e.g, "you meet
 //        a dwarf fighter").
 //
-// str  - Influences the max weight of combined armaments for a character.
+// str  - Sets the max weight of combined armaments for a character, affects
+//        roll to hit with melee weapons(*), roll to push objects (in party 
+//        mode the strongest character is assumed)(*).
 //
-// int  - ???
+// int  - Affects roll to cast spell(*).
 //
-// dex  - ???
+// dex  - Affects roll to disarm trap, roll to defend(*), roll to hit with 
+//        ranged or thrown weapon(*).
 //
-// spd  - ???
+// spd  - Affects party movement speed in towns and wilderness. A party is 
+//        limited by its slowest member.
 //
 // vr   - vision radius, used in these ways:
 //
@@ -66,6 +70,17 @@
 //
 // pmask
 //      - Specifies which terrain types are passable to this species.
+//
+// hp_mod
+// hp_mult
+// mp_mod
+// mp_mult
+// hit_mod
+// def_mod
+// dam_mod
+// arm_mod
+//      - The hit point, mana point, to-hit, to-defend, damage and armour
+//        modifiers(*).
 //
 // sleep_sprite
 //      - Optional sprite to use when a character of this species type is 
@@ -95,8 +110,16 @@
 // movement_sound (optional)
 //      - Sound file to play when a character of this species takes a step.
 //
+// (*) = that's a lie, but it is planned real soon (for 0.2.0)
+//
 //////////////////////////////////////////////////////////////////////////////
 
+//////////////////////////////////////////////////////////////////////////////
+//
+// def = species + occ + char + level + dex/25
+// hit = species + occ + char + level + str/25
+//
+//////////////////////////////////////////////////////////////////////////////
 SPECIES human {
   name    "human";
   str     20; 
@@ -105,6 +128,16 @@ SPECIES human {
   spd     2; // turns taken for easiest terrain multiplied by scale factor
   vr      8; // max AI vision radius (won't see the player beyond this range)
   pmask   (LAND);
+
+  hp_mod  20;
+  hp_mult 2;
+  mp_mod  20;
+  mp_mult 2;
+  hit_mod 0;
+  def_mod 0;
+  dam_mod 0;
+  arm_mod 0;
+
   // size 20;
   sleep_sprite s_corpse;
   weapon       t_hands;
@@ -133,6 +166,16 @@ SPECIES goblin {
   spd     2;
   vr      8;
   pmask   (LAND);
+
+  hp_mod  15;
+  hp_mult 2;
+  mp_mod  15;
+  mp_mult 2;
+  hit_mod 0;
+  def_mod 0;
+  dam_mod 0;
+  arm_mod 0;
+
   sleep_sprite s_corpse;
   weapon t_hands;
   visible 1;
@@ -160,6 +203,16 @@ SPECIES gazer {
   spd     4;
   vr      10;
   pmask   (LAND|SHOALS);
+
+  hp_mod  10;
+  hp_mult 1;
+  mp_mod  30; // natural magic-users
+  mp_mult 3;
+  hit_mod -1;
+  def_mod -1;
+  dam_mod 0;
+  arm_mod -1; // they're soft...
+
   sleep_sprite s_corpse;
   weapon t_teeth;
   visible 1;
@@ -182,12 +235,22 @@ SPECIES gazer {
 
 SPECIES skeleton {
   name    "skeleton";
-  str     15;
+  str     10;
   int     10;
-  dex     20;
+  dex     10;
   spd     2;
   vr      8;
   pmask   (LAND);
+
+  hp_mod  22; // a bit hard to kill
+  hp_mult 2;
+  mp_mod  0;
+  mp_mult 0;
+  hit_mod 0;
+  def_mod +1; // a bit hard to kill
+  dam_mod 0;
+  arm_mod 0;
+
   sleep_sprite s_corpse;
   weapon t_hands;
   visible 1
@@ -215,6 +278,16 @@ SPECIES horse {
   spd     2;
   vr      8;
   pmask   (LAND);
+
+  hp_mod  30; // largish
+  hp_mult 1;
+  mp_mod  0; // mundane
+  mp_mult 0;
+  hit_mod 0;
+  def_mod 0;
+  dam_mod 0;
+  arm_mod 0;
+
   sleep_sprite null;
   weapon       t_hooves;  // SAM: Noticed that 'null' is not valid here...
   visible 1
@@ -229,10 +302,20 @@ SPECIES snake {
   name    "snake";
   str     5;
   int     1;
-  dex     22;
+  dex     5; // ?
   spd     2;
   vr      8;
   pmask   (LAND);
+
+  hp_mod  5; // kill them with one blow from about anything
+  hp_mult 1;
+  mp_mod  0;
+  mp_mult 0;
+  hit_mod 0;
+  def_mod +2; // but a bit hard to hit
+  dam_mod 0;
+  arm_mod 0;
+
   sleep_sprite null;
   weapon t_teeth;
   visible 1
@@ -248,10 +331,20 @@ SPECIES insects {
   name    "insect swarm";
   str     1;
   int     1;
-  dex     24;
+  dex     1;
   spd     2;
   vr      8;
   pmask   (LAND);
+
+  hp_mod  1;
+  hp_mult 0;
+  mp_mod  0;
+  mp_mult 0;
+  hit_mod 0;
+  def_mod +3;
+  dam_mod 0;
+  arm_mod 0;
+
   sleep_sprite null;
   weapon       t_stinger;
   visible      1
@@ -270,6 +363,16 @@ SPECIES ghast {
   spd     2;
   vr      8;
   pmask   (LAND|WATER|SHOALS|SOLID);
+
+  hp_mod  10; // most are pretty ethereal
+  hp_mult 5;  // but high-level gets tougher
+  mp_mod  0;
+  mp_mult 0;
+  hit_mod 0;
+  def_mod +1;
+  dam_mod -1;
+  arm_mod -1;
+
   sleep_sprite s_corpse;
   weapon       t_hands;
   visible      0
@@ -296,6 +399,16 @@ SPECIES nixie {
   spd   2;
   vr    8;
   pmask (WATER|SHOALS);
+
+  hp_mod  16;
+  hp_mult 2;
+  mp_mod  16;
+  mp_mult 2;
+  hit_mod 0;
+  def_mod 0;
+  dam_mod 0;
+  arm_mod +1; // protected somewhat by water
+
   sleep_sprite s_corpse;
   weapon       t_hands;  // Should be magical water blast...
   visible      1;
@@ -319,10 +432,20 @@ SPECIES water_elemental {
   name  "water elemental";
   str   25;
   int   25;
-  dex   30;
+  dex   25;
   spd   3;
   vr    8;
   pmask (WATER|SHOALS);
+
+  hp_mod  30;
+  hp_mult 3;
+  mp_mod  25;
+  mp_mult 2;
+  hit_mod 0;
+  def_mod 0;
+  dam_mod 0;
+  arm_mod 0;
+
   sleep_sprite s_shallow;  // Looks like water when asleep...  :-)
   weapon       t_hands;  // Should be magical water blast...
   visible      1;
@@ -338,12 +461,22 @@ SPECIES water_elemental {
 
 SPECIES slime {
         name  "green slime";
-        str   1;
+        str   3;
         int   1;
-        dex   10;
+        dex   3;
         spd   2;
         vr    8;
         pmask (LAND);
+
+        hp_mod  10;
+        hp_mult 1;
+        mp_mod  0;
+        mp_mult 0;
+        hit_mod 0;
+        def_mod -2; // not too quick
+        dam_mod 0;
+        arm_mod +1; // but spongy
+
         sleep_sprite s_slime_asleep;
         weapon       t_acid_spray;
         visible      1;
@@ -359,25 +492,27 @@ SPECIES slime {
         // I got sick of writing all the boilerplate parsing code.
         effects  (EFFECT_CLONE);
 
-        // Also new, this allows some species to be completely immune to
-        // certain effects.
-        immunities (EFFECT_POISON);
+        immunities (EFFECT_POISON); // they like bogs
 }
 
 SPECIES yellow_slime {
         name  "yellow slime";
-        str   2;
-
-        // Wart alert: since mana is directly tied to intelligence, and since
-        // the ability to spawn green slimes is a spell, I need to give this
-        // rather stupid creature a modicum of intelligence. 80 is enough to
-        // cast 2 level 2 spells.
-        int   2;
-
-        dex   20;
+        str   4;
+        int   4;
+        dex   4;
         spd   2;
         vr    8;
         pmask (LAND);
+
+        hp_mod  15;
+        hp_mult 1;
+        mp_mod  15;
+        mp_mult 1;
+        hit_mod +1; // acid sprays in a bigger glob
+        def_mod -3; // still slow, and bigger
+        dam_mod +1; // acid is stronger
+        arm_mod +1; // not much spongier 
+
         sleep_sprite s_yellow_slime_asleep;
         weapon       t_acid_spray;
         visible      1;
@@ -389,8 +524,6 @@ SPECIES yellow_slime {
         STD_DAMAGE_SOUND;
         SQUISHING_SOUND;
 
-        // Also new, this allows some species to be completely immune to
-        // certain effects.
         immunities (EFFECT_POISON);
 }
 

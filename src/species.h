@@ -32,7 +32,24 @@ extern "C" {
                 char *tag;
                 struct list list;
                 char *name;
-                int str, intl, dex, spd, vr, pmask, ac;
+                int str;
+                int intl;
+                int dex;
+                int spd;
+                int vr;
+                int pmask;
+                int ac;
+
+                int hp_mod;
+                int hp_mult;
+                int mp_mod;
+                int mp_mult;
+
+                int hit_mod;
+                int def_mod;
+                int dam_mod;
+                int arm_mod;
+
                 struct sprite *sleep_sprite;
                 int n_slots;
                 int *slots;

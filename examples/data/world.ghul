@@ -60,6 +60,20 @@
 // occ mult = [5(wizards)..10(fighters)]
 // char mult = [0(nameless)..0(named npc)..n(pc)] (0 recommended)
 //
+// Mana Points
+// ===========
+//
+// Similar to hp.
+//
+// mp = base + level * mult
+//   base = species + occ + char
+//   mult = species + occ + char
+//
+// A normal human of level n should be able to cast 1 spell at level n/3. A
+// typical spellcaster at level n should be able to cast 2 level n spells
+// without having to regenerate mana.
+//
+//
 // Weapons
 // =======
 // to-hit = +/- 1 digit
