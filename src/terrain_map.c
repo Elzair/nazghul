@@ -207,3 +207,55 @@ void terrain_map_fill(struct terrain_map *map, int x, int y, int w, int h,
 		}
 	}
 }
+
+#define PREFER_COMPACT_MAPS 1
+extern void terrain_map_print(FILE * fp, int indent, struct terrain_map *map)
+{
+    int x, y, compact;
+    struct terrain_palette * palette;
+	assert(fp);
+    assert(map);
+
+	INDENT; fprintf(fp, "MAP '%s' {\n", map->tag);
+	indent += INDENTATION_FACTOR;
+
+    INDENT; fprintf(fp, "type   ascii;\n");
+    INDENT; fprintf(fp, "width  %d;\n", map->w);
+    INDENT; fprintf(fp, "height %d;\n", map->h);
+
+    palette = map->palette;
+    assert(palette);
+    compact = (PREFER_COMPACT_MAPS && palette->widest_glyph == 1);
+    if (compact) {
+      INDENT; fprintf(fp, "one_char_per_tile 1;\n");
+    }
+    // palette_print();  // SAM: upgrade to this once palettes are global scope
+    INDENT; fprintf(fp, "palette '%s' {\n", palette->tag);
+    INDENT; fprintf(fp, "// copy palette in manually for now...\n");
+    INDENT; fprintf(fp, "}\n");
+
+	INDENT;	fprintf(fp, "terrain {\n");
+	indent += INDENTATION_FACTOR;
+
+    int w = palette->widest_glyph;
+	for (y = 0; y < map->h; y++) {
+      INDENT; fprintf(fp, "\"");
+
+      for (x = 0; x < map->w; x++) {
+        int i = (y * map->w) + x;
+        struct terrain * tt = map->terrain[i];
+        char * glyph = palette_glyph_for_terrain(palette, tt);
+        fprintf(fp, "%*s%s", w, glyph, (compact) ? "" : " ");
+      } // for (x)
+
+      fprintf(fp, "\";  // %2d\n", y);
+	} // for (y)
+
+	indent -= INDENTATION_FACTOR;
+	fprintf(fp, "\n");
+	INDENT;	fprintf(fp, "} // terrain\n");
+
+	indent -= INDENTATION_FACTOR;
+	INDENT;	fprintf(fp, "} // MAP %s\n", map->tag);
+}
+

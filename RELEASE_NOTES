@@ -9,6 +9,12 @@ sglasby:
   palette non-compact maps work alike.  That is, each line is a quoted
   string like "line".
 
+--Added a map-printing function terrain_map_print() which can output
+  GhulScript for a MAP.  Work remains to be done, including making
+  sure that every terrain_map has its' palette field properly filled
+  out, and connecting the palette_print() function.  (Or better yet,
+  making palettes globally-scoped entities rather than per-map.)
+
 
 Changes between nazghul-0.1.1 and nazghul-0.1.2
 

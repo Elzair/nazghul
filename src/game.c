@@ -891,6 +891,8 @@ static struct terrain_map * game_load_ascii_terrain_map (char *tag)
     if (!(terrain_map = terrain_map_create(tag, width, height)))
         return 0;
 
+    terrain_map->palette = palette;
+
     if (one_char_per_tile) {
         // one_char_per_tile
         if (!loader.matchWord("terrain") || !loader.matchToken('{')) {
@@ -1001,6 +1003,8 @@ static struct terrain_map * game_load_ascii_terrain_map (char *tag)
     } // !one_char_per_tile
 
       cleanup:
+
+    // terrain_map_print(stdout, INITIAL_INDENTATION, terrain_map);
 
     return terrain_map;
 } // game_load_ascii_terrain_map()

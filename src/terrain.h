@@ -89,6 +89,7 @@ extern "C" {
 
 	struct terrain_palette *new_terrain_palette(void);
 	char *palette_glyph(struct terrain_palette *palette, int n);
+    char * palette_glyph_for_terrain (struct terrain_palette * pp, struct terrain * tt);
 	struct terrain *palette_terrain(struct terrain_palette *palette, int n);
 	struct terrain *palette_terrain_for_glyph(struct terrain_palette
 						  *palette, char *glyph);

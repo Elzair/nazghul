@@ -26,6 +26,8 @@
 extern "C" {
 #endif
 
+#include <stdio.h>
+
 #include "list.h"
 
         struct terrain_map {
@@ -33,6 +35,7 @@ extern "C" {
                 char *tag;
                 int w;
                 int h;
+                struct terrain_palette * palette;
                 struct terrain **terrain;
         };
         
@@ -47,6 +50,9 @@ extern "C" {
                                      int src_x, int src_y, int w, int h);
         extern void terrain_map_fill(struct terrain_map *map, int x, int y, 
                                      int w, int h, struct terrain *fill);
+        extern void terrain_map_print(FILE * fp, int indent,
+                                      struct terrain_map *map);
+
 
 #ifdef __cplusplus
 }

@@ -112,6 +112,22 @@ char *palette_glyph(struct terrain_palette *palette, int n)
 	return palette->set[n].glyph;
 }
 
+char * palette_glyph_for_terrain (struct terrain_palette * pp, struct terrain * tt)
+{
+    assert(pp);
+    assert(tt);
+    
+    int num_entries = pp->num_entries;
+    for (int i = 0; i < num_entries; i++) {
+        struct terrain * terrain = palette_terrain(pp, i);
+        if (tt == terrain) {
+            char *glyph = palette_glyph(pp, i);
+            return glyph;
+        }
+    }
+    return 0;  // Did not find the terrain
+}
+
 struct terrain *palette_terrain(struct terrain_palette *palette, int n)
 {
 	return palette->set[n].terrain;
