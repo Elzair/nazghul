@@ -111,19 +111,27 @@ bool apply_poison(class Character * pm, void *unused)
 	return false;
 }
 
-static bool apply_existing(class Character * pm, void *unused)
+static bool apply_existing(class Character * pm, void *data)
 {
+        class player_party *party = (class player_party*)data;
+
 	if (pm->isPoisoned()) {
 		int amount = DAMAGE_POISON;
 		apply_damage(pm, &amount);
 	}
         if (pm->isAsleep()) {
-                consolePrint("%s sleeping...", pm->getName());
-                if ((random() % 100) < PROB_AWAKEN) {
-                        pm->awaken();
-                        consolePrint("awakes!");
+                if (pm->getRestCredits())
+                        pm->rest(1);
+
+                // If not intentionally sleeping then roll to wakeup
+                if (! party->resting()) {
+                        consolePrint("%s sleeping...", pm->getName());
+                        if ((random() % 100) < PROB_AWAKEN) {
+                                pm->awaken();
+                                consolePrint("awakes!");
+                        }
+                        consolePrint("\n");
                 }
-                consolePrint("\n");
         }
 	return false;
 }
@@ -1116,6 +1124,12 @@ void player_party::for_each_member(bool(*fx) (class Character *, void *data),
 	}
 }
 
+static bool player_wakeup_member(class Character *member, void *data)
+{
+        member->awaken();
+        return false;
+}
+
 void player_party::advance_turns(void)
 {
 	/* Apply terrain and field affects */
@@ -1143,7 +1157,17 @@ void player_party::advance_turns(void)
 	}
 
 	/* Apply existing effects */
-	for_each_member(apply_existing, 0);
+	for_each_member(apply_existing, this);
+
+        if (resting()) {
+                hours_to_rest--;
+                assert(hours_to_rest >= 0);
+                if (!resting()) {
+                        for_each_member(player_wakeup_member, this);
+                        cmdwin_print("rested!");
+                        statusRepaint();
+                }
+        }
 }
 
 bool player_party::all_dead(void)
@@ -1234,6 +1258,7 @@ player_party::player_party()
 	campsite_map = 0;
 	campsite_formation = 0;
 	camping = false;
+        hours_to_rest = 0;
 }
 
 player_party::~player_party()
@@ -1467,4 +1492,23 @@ class Character *player_party::get_first_living_member(void)
         class Character *pc = NULL;
         for_each_member(pc_get_first_living, &pc);
         return pc;
+}
+
+static bool member_begin_resting(class Character *pc, void *data)
+{
+        pc->changeSleep(true);
+        return false;
+}
+
+void player_party::begin_resting(int hours)
+{
+        assert(hours > 0);
+        for_each_member(member_begin_resting, NULL);
+        statusRepaint();
+        hours_to_rest = hours;
+}
+
+bool player_party::resting()
+{
+        return (hours_to_rest > 0);
 }

@@ -108,6 +108,8 @@ object_types {
 #include "types/worn_items.ghul"      // 
 #include "types/useable_items.ghul"   // 
 #include "types/readable_items.ghul"  // 
+
+  GENERIC_TYPE(t_bed, "bed", s_bed, LAYER_BED);
     
 } /* object_types */
 
@@ -127,7 +129,6 @@ object_types {
 
 
 #include "types/vehicles.ghul"
-
 
 #endif // types_ghul
 

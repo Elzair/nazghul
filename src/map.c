@@ -52,6 +52,7 @@ struct mview {
 	int rad;		/* light radius */
 	int zoom;
 	int dirty:1;		/* needs repaint */
+        int blackout:1;         /* erase only on repaint */
 };
 
 static struct map {
@@ -498,6 +499,11 @@ void mapRepaintView(struct mview *view, int flags)
 
 	screenErase(&Map.srect);
 
+        if (Map.aview->blackout) {
+                // In blackout mode leave the screen erased
+                goto done_painting_place;
+        }
+
 	t2 = SDL_GetTicks();
 
 	if (Map.aview->zoom > 1) {
@@ -524,6 +530,8 @@ void mapRepaintView(struct mview *view, int flags)
 		t7 = SDL_GetTicks();
                 map_paint_cursor();
 	}
+
+ done_painting_place:
 
 	// Show the player's location. In combat mode use the leader, else use
 	// the party.
@@ -781,3 +789,7 @@ void mapGetCameraFocus(struct place **place, int *x, int *y)
         *y = Map.cam_y;
 }
 
+void mapBlackout(int val)
+{
+        Map.cam_view->blackout = !!val;
+}

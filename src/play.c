@@ -1625,7 +1625,7 @@ int select_quantity(int max)
 	return info.digit;
 }
 
-static void hole_up_and_camp(void)
+static int cmdCampInWilderness(void)
 {
 	int hours, yesno;
 	class Character *guard = 0;
@@ -1633,21 +1633,21 @@ static void hole_up_and_camp(void)
 	cmdwin_clear();
 	cmdwin_print("Camp-");
 
-	if (Place->type != wilderness_place ||
-	    place_get_portal(player_party->getPlace(), player_party->getX(),
+	if (place_get_portal(player_party->getPlace(), player_party->getX(),
 			     player_party->getY()) ||
 	    !place_is_passable(player_party->getPlace(),
 			       player_party->getX(),
 			       player_party->getY(),
-			       player_party->get_pmask(), PFLAG_IGNOREVEHICLES))
+			       player_party->get_pmask(), 
+                               PFLAG_IGNOREVEHICLES))
 	{
 		cmdwin_print("not here!");
-		return;
+		return 0;
 	}
 
 	hours = select_hours();
 	if (hours == 0)
-		return;
+		return 0;
 
 	cmdwin_print("-set a watch <y/n>-");
 	getkey(&yesno, &yesnokey);
@@ -1671,6 +1671,46 @@ static void hole_up_and_camp(void)
 	player_party->camping = true;
 	run_combat(true, guard, hours, NULL);
 	player_party->camping = false;
+        return 0; // turns advanced in run_combat() so need to add any here
+}
+
+static int cmdCampInTown(void)
+{
+        int hours;
+
+        cmdwin_clear();
+        cmdwin_print("Rest-");
+
+        // Check for an object that will serve as a bed.
+        if (place_get_object(player_party->getPlace(),
+                             player_party->getX(), player_party->getY(),
+                             bed_layer) == NULL) {
+                cmdwin_print("no bed!");
+                return 0;
+        }
+
+        // Prompt for the number of hours to sleep.
+        hours = select_hours();
+        if (hours == 0)
+                return 0;
+
+        // Put the party in "sleep" mode before returning back to the main
+        // event loop.
+        player_party->begin_resting(hours);
+        cmdwin_print(" resting...");
+        return TURNS_PER_HOUR;
+}
+
+static int cmdCamp(void)
+{
+	if (Place->type == wilderness_place)
+                return cmdCampInWilderness();
+        else if (Place->type == town_place)
+                return cmdCampInTown();
+        else {
+                cmdwin_print("not in combat mode!");
+                return 0;
+        }
 }
 
 void dead(void)
@@ -2728,251 +2768,267 @@ bool cmdSaveTerrainMap(class Character * pc)
 
 static bool keyHandler(struct KeyHandler *kh, int key, int keymod)
 {
-  // This handler is always on the bottom of the key handler stack. When
-  // it returns true the event loop exits, effectively ending the
-  // game. So return true iff the player is dead or wants to quit.
+        // This handler is always on the bottom of the key handler stack. When
+        // it returns true the event loop exits, effectively ending the
+        // game. So return true iff the player is dead or wants to quit.
 
-  // Decode and run player commands. Any commands which require further
-  // input from the player will push new key handlers on the stack and
-  // pop them upon return. I like to think that they are "closed" in some
-  // sense of the word, and don't intermingle their command input state
-  // with ours.
+        // Decode and run player commands. Any commands which require further
+        // input from the player will push new key handlers on the stack and
+        // pop them upon return. I like to think that they are "closed" in some
+        // sense of the word, and don't intermingle their command input state
+        // with ours.
 
-  int saved_turn = Turn;
-  int turns_used = 1;	// default used by most actions
+        int saved_turn = Turn;
+        int turns_used = 1;	// default used by most actions
 
-  cmdwin_clear();
-  cmdwin_repaint();
+        cmdwin_clear();
+        cmdwin_repaint();
 
-  if (keymod == KMOD_LCTRL || keymod == KMOD_RCTRL) {
-    // SAM: This seemed like a less ugly way of setting off a group
-    //      of keybindings for "DM Mode" use or the like.
-    //      If we find something more aesthetic wrt/ switch() syntax,
-    //      we will surely prefer it...
-    // 
-    // Control-key bindings for "DM Mode" commands like terrain editing.
-    // In future, these may be enabled/disabled at compile time, or via
-    // a GhulScript keyword in the mapfile.
-    switch (key) {
+        if (keymod == KMOD_LCTRL || keymod == KMOD_RCTRL) {
+                // SAM: This seemed like a less ugly way of setting off a group
+                // of keybindings for "DM Mode" use or the like.  If we find
+                // something more aesthetic wrt/ switch() syntax, we will
+                // surely prefer it...
+                // 
+                // Control-key bindings for "DM Mode" commands like terrain
+                // editing.  In future, these may be enabled/disabled at
+                // compile time, or via a GhulScript keyword in the mapfile.
+                switch (key) {
       
-    case 't':
-      cmdTerraform(NULL);
-      turns_used = 0;
-      break;
+                case 't':
+                        cmdTerraform(NULL);
+                        turns_used = 0;
+                        break;
 
-    case 's':
-      cmdSaveTerrainMap(NULL);
-      turns_used = 0;
-      break;
+                case 's':
+                        cmdSaveTerrainMap(NULL);
+                        turns_used = 0;
+                        break;
       
-	default:
-      turns_used = 0;
-      break;
-    } // switch(key)
-  } // keymod
+                default:
+                        turns_used = 0;
+                        break;
+                } // switch(key)
+        } // keymod
 
-  else {
-    // !keymod
-	switch (key) {
+        else {
+                // !keymod
+                switch (key) {
 
-	case KEY_NORTH:
-	case KEY_EAST:
-	case KEY_SOUTH:
-	case KEY_WEST:
-      {
-        int dir = keyToDirection(key);
-        player_party->move(directionToDx(dir),
-                           directionToDy(dir), false);
-        turns_used = 0;	// turns already advanced in
-        // player_party->move
-        mapSetDirty();
-      }
-      break;
+                case KEY_NORTH:
+                case KEY_EAST:
+                case KEY_SOUTH:
+                case KEY_WEST:
+                {
+                        int dir = keyToDirection(key);
+                        player_party->move(directionToDx(dir),
+                                           directionToDy(dir), false);
+                        turns_used = 0;	// turns already advanced in
+                        // player_party->move
+                        mapSetDirty();
+                }
+                break;
 
-    case 'a':
-      cmdAttack();
-      break;
-	case 'b':
-      player_party->board_vehicle();
-      break;
-	case 'c':
-      cmdCastSpell(NULL);
-      break;
-	case 'e':
-      // SAM:
-      // Perhaps this command should be merged with '>' ?
-      player_party->enter_portal();
-      break;
-	case 'f':
-      cmdFire();
-      break;
-	case 'g':
-      cmdGet(player_party->getX(), player_party->getY(), true);
-      mapSetDirty();
-      break;
-	case 'h':
-      // SAM: Adding (H)andle command...
-      cmdHandle(NULL);
-      break;
-	case 'k':
-      hole_up_and_camp();
-      break;
-	case 'l':
-      // SAM: Changing (L)ook command 
-      // from "look at 1 tile" to a "Look Mode"
-      cmdLook(player_party->getX(), player_party->getY());
-      turns_used = 0;
-      break;
-	case 'm':
-      cmdMixReagents();
-      break;
-	case 's':
-      myNewOrder();
-      break;
-	case 'o':
-      cmdOpen(NULL);
-      break;
-	case 'q':
-      cmdQuit();
-      break;
-	case 'r':
-      cmdReady(NULL);
-      break;
-	case 't':
-      myTalk();
-      break;
-	case 'u':
-      cmdUse(NULL);
-      break;
-	case 'x':
-      cmdXamine(NULL);
-      turns_used = 0;
-      break;
-	case 'z':
-      cmdZtats(NULL);
-      turns_used = 0;
-      break;
-    case '@':
-      // SAM: 'AT' command for party-centric information
-      cmdAT(NULL);
-      turns_used = 0;
-      break;
-	case ' ':
-      consolePrint("Pass\n");
-      turns_used = Place->scale;
-      break;
-	case '>':
-      // This key was chosen to be a cognate for '>' in NetHack
-      // and other roguelike games.
-      // 
-      // SAM: Curently no "Enter" message is printed.
-      //      It turns out to be moderately complicated to do so properly,
-      //      as a distinct message for each enter_combat() case might
-      //      be desired...
-      // 
-      // For now, I print a placeholder message for each case here:
-      {
-        Portal * pp = place_get_portal(player_party->getPlace(),
-                                       player_party->getX(),
-                                       player_party->getY() );
-		if (pp) {
-          //if (place_get_portal(player_party->getPlace(),
-          //                   player_party->getX(),
-          //                   player_party->getY())) {
-          // If standing over a portal then enter it:
-          consolePrint("Enter-%s\n", pp->getName() );
-          player_party->enter_portal();
-        }
-		else if (!place_is_passable(player_party->getPlace(),
-                                    player_party->getX(),
-                                    player_party->getY(),
-                                    player_party->get_pmask(),
-                                    PFLAG_IGNOREVEHICLES)) {
-          // Currently zooming in to impassable terrain is not doable;
-          // since the party might not be placeable on the default map,
-          // which would be a solid grid of that impassable terrain.
-          // Also, if somehow placed, the party could not escape unless on an edge.
-          // There would be no harm in it otherwise, however.
-          struct terrain * tt = place_get_terrain(player_party->getPlace(),
-                                                  player_party->getX(),
-                                                  player_party->getY() );
-          consolePrint("Enter-Cannot zoom-in to %s!\n", tt->name);
-        }
-		else {
-          // If standing on ordinary terrain, zoom in:
-          struct terrain * tt = place_get_terrain(player_party->getPlace(),
-                                                  player_party->getX(),
-                                                  player_party->getY() );
-          consolePrint("Enter-%s\n", tt->name);
-          run_combat(false, 0, 0, NULL);
-        }
-		break;
-      }
-	default:
-      turns_used = 0;
-      break;
-	} // switch(key)
-  } // !keymod
+                case 'a':
+                        cmdAttack();
+                        break;
+                case 'b':
+                        player_party->board_vehicle();
+                        break;
+                case 'c':
+                        cmdCastSpell(NULL);
+                        break;
+                case 'e':
+                        // SAM:
+                        // Perhaps this command should be merged with '>' ?
+                        player_party->enter_portal();
+                        break;
+                case 'f':
+                        cmdFire();
+                        break;
+                case 'g':
+                        cmdGet(player_party->getX(), player_party->getY(), 
+                               true);
+                        mapSetDirty();
+                        break;
+                case 'h':
+                        // SAM: Adding (H)andle command...
+                        cmdHandle(NULL);
+                        break;
+                case 'k':
+                        turns_used = cmdCamp();
+                        break;
+                case 'l':
+                        // SAM: Changing (L)ook command 
+                        // from "look at 1 tile" to a "Look Mode"
+                        cmdLook(player_party->getX(), player_party->getY());
+                        turns_used = 0;
+                        break;
+                case 'm':
+                        cmdMixReagents();
+                        break;
+                case 's':
+                        myNewOrder();
+                        break;
+                case 'o':
+                        cmdOpen(NULL);
+                        break;
+                case 'q':
+                        cmdQuit();
+                        break;
+                case 'r':
+                        cmdReady(NULL);
+                        break;
+                case 't':
+                        myTalk();
+                        break;
+                case 'u':
+                        cmdUse(NULL);
+                        break;
+                case 'x':
+                        cmdXamine(NULL);
+                        turns_used = 0;
+                        break;
+                case 'z':
+                        cmdZtats(NULL);
+                        turns_used = 0;
+                        break;
+                case '@':
+                        // SAM: 'AT' command for party-centric information
+                        cmdAT(NULL);
+                        turns_used = 0;
+                        break;
+                case ' ':
+                        consolePrint("Pass\n");
+                        turns_used = Place->scale;
+                        break;
+                case '>':
+                        // This key was chosen to be a cognate for '>' in
+                        // NetHack and other roguelike games.
+                        // 
+                        // SAM: Curently no "Enter" message is printed.  It
+                        // turns out to be moderately complicated to do so
+                        // properly, as a distinct message for each
+                        // enter_combat() case might be desired...
+                        // 
+                        // For now, I print a placeholder message for each case
+                        // here:
+                {
+                        Portal * pp = 
+                                place_get_portal(player_party->getPlace(),
+                                                 player_party->getX(),
+                                                 player_party->getY() );
+                        if (pp) {
 
-  cmdwin_flush_to_console();
+                                // If standing over a portal then enter it:
+                                consolePrint("Enter-%s\n", pp->getName() );
+                                player_party->enter_portal();
+                        }
+                        else if (!place_is_passable(player_party->getPlace(),
+                                                    player_party->getX(),
+                                                    player_party->getY(),
+                                                    player_party->get_pmask(),
+                                                    PFLAG_IGNOREVEHICLES)) {
+                                // Currently zooming in to impassable terrain
+                                // is not doable; since the party might not be
+                                // placeable on the default map, which would be
+                                // a solid grid of that impassable terrain.
+                                // Also, if somehow placed, the party could not
+                                // escape unless on an edge.  There would be no
+                                // harm in it otherwise, however.
+                                struct terrain * tt = 
+                                        place_get_terrain(player_party->getPlace(),
+                                                          player_party->getX(),
+                                                          player_party->getY() );
+                                consolePrint("Enter-Cannot zoom-in to %s!\n", tt->name);
+                        }
+                        else {
+                                // If standing on ordinary terrain, zoom in:
+                                struct terrain * tt = 
+                                        place_get_terrain(player_party->getPlace(),
+                                                          player_party->getX(),
+                                                          player_party->getY() );
+                                consolePrint("Enter-%s\n", tt->name);
+                                run_combat(false, 0, 0, NULL);
+                        }
+                        break;
+                }
+                default:
+                        turns_used = 0;
+                        break;
+                } // switch(key)
+        } // !keymod
+
+        cmdwin_flush_to_console();
 
 	// Quit now before advancing turns or anything of that sort. It makes
 	// life easier.
-  if (Quit)
-    return Quit;
+        if (Quit)
+                return Quit;
 
-  int first_time = 1;
+        int loops = 0;
 
 
-  // Loop at least once, and more if the party is immobilized
-  do {
+        // Loop at least once, and more if the party is immobilized (currently
+        // true if all party members are sleeping, but paralysis and other
+        // effects will eventually apply)
+        do {
 
-          if (first_time) {
-                  first_time = 0;
-          } else {
-                  statusRepaint();
-                  saved_turn = Turn;
-                  turns_used = 1;
-                  SDL_Delay(500);
-          }
+                if (loops) {
+                        statusRepaint();
+                        mapBlackout(1);
+                        mapUpdate(0);
+                        saved_turn = Turn;
+                        if (player_party->resting()) {
+                                turns_used = TURNS_PER_HOUR;
+                        } else {
+                                turns_used = 1;
+                        }
+                        SDL_Delay(500);
+                }
 
-          turnAdvance(turns_used);
+                loops++;
 
-          if (Turn != saved_turn) {
+                turnAdvance(turns_used);
 
-                  // Note: always update the clock before the turn wq. For
-                  // example, when entering a place all the NPC parties use the
-                  // wall clock time to synchronize their schedules, so it
-                  // needs to be set BEFORE calling them.
-                  clockUpdate();
+                if (Turn != saved_turn) {
 
-                  foogodAdvanceTurns();
-                  placeAdvanceTurns();
-                  player_party->advance_turns();
-                  skyAdvanceTurns();
-                  windAdvanceTurns();
+                        // Note: always update the clock before the turn wq. For
+                        // example, when entering a place all the NPC parties use the
+                        // wall clock time to synchronize their schedules, so it
+                        // needs to be set BEFORE calling them.
+                        clockUpdate();
 
-                  // Most commands burn through at least one turn. Let the
-                  // turn-based work queue catch up.
-                  wqRunToTick(&TurnWorkQueue, Turn);
-          }
+                        foogodAdvanceTurns();
+                        placeAdvanceTurns();
+                        player_party->advance_turns();
+                        skyAdvanceTurns();
+                        windAdvanceTurns();
 
-          // The player may have died as a result of executing a command or
-          // running the work queue.
-          if (player_party->all_dead()) {
-                  dead();
-                  return true;
-          }
+                        // Most commands burn through at least one turn. Let the
+                        // turn-based work queue catch up.
+                        wqRunToTick(&TurnWorkQueue, Turn);
+                }
 
-  } while (player_party->immobilized());
+                // The player may have died as a result of executing a command or
+                // running the work queue.
+                if (player_party->all_dead()) {
+                        dead();
+                        return true;
+                }
 
-  if (!first_time)
-          statusRepaint();
+        } while (player_party->immobilized());
 
-  if (!Quit)		// fixme: is this check necessary? 
-    myGenerateRandomEncounter();
+        if (loops > 1) {
+                mapBlackout(0);
+                mapUpdate(0);
+                statusRepaint();
+        }
 
-  return Quit;
+        if (!Quit)		// fixme: is this check necessary? 
+                myGenerateRandomEncounter();
+
+        return Quit;
 }
 
 static int play_init(struct play *play)

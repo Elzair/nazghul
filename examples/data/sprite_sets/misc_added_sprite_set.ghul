@@ -73,6 +73,10 @@ SPRITE_SET ss_mine {
     SPRITE(s_trees_yellow,  1, 33, normal);
     SPRITE(s_trees_purple,  1, 34, normal);
     SPRITE(s_trees_red,     1, 35, normal);
+
+    // This bed is actually taken from the Lost Dragon tileset and scaled to
+    // fit 32x32
+    SPRITE(s_bed,           1, 36, normal);
   }
 } /* SPRITE_SET ss_mine */
 

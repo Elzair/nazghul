@@ -109,6 +109,9 @@ class player_party:public Object {
         bool enter_dungeon(struct place *dungeon, int dungeon_x, 
                            int dungeon_y, int dx, int dy);
 
+        void begin_resting(int hours);
+        bool resting();
+
         int dx, dy;
         struct sprite *sprite;
         int speed;
@@ -144,6 +147,7 @@ class player_party:public Object {
         bool try_to_move_off_map(struct move_info *info);
         void move_to_wilderness_combat(struct combat_info *cinfo);
         bool turn_vehicle(void);
+        int hours_to_rest;
 };
 
 extern class player_party *player_party;

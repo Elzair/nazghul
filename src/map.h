@@ -63,14 +63,17 @@ extern "C" {
 	extern void mapUpdate(int flags);
 	extern void mapSetDirty(void);
 
-    extern void mapRepaintClock(void);
-    extern void mapJitter(bool val);	// added for tremor
-    extern void mapPeer(bool val);
+        extern void mapRepaintClock(void);
+        extern void mapJitter(bool val);	// added for tremor
+        extern void mapPeer(bool val);
+        
 
-    extern void mapGetCameraFocus(struct place **place, int *x, int *y);
+        extern void mapGetCameraFocus(struct place **place, int *x, int *y);
+        
+        extern int mapTileIsWithinViewport(int x, int y);
+        extern int mapTileIsVisible(int x, int y);
 
-    extern int mapTileIsWithinViewport(int x, int y);
-    extern int mapTileIsVisible(int x, int y);
+        extern void mapBlackout(int val); // for sleeping in town
 
 #ifdef __cplusplus
 }

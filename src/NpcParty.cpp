@@ -410,7 +410,7 @@ bool NpcParty::move(int dx, int dy)
 		}
 
 		/* Else abort the move */
-		return true;
+		return false;
 	}
 
 	/* Check if another entity is already there */
@@ -676,18 +676,26 @@ void NpcParty::work()
 	}
 }
 
-void NpcParty::commute()
+bool NpcParty::commute()
 {
 	int tx, ty;
 
 	tx = sched->appts[appt].x + sched->appts[appt].w / 2;
 	ty = sched->appts[appt].y + sched->appts[appt].h / 2;
 
-	if (gotoSpot(tx, ty) && getX() == tx && getY() == ty) {
-		// Arrived.
-		printf("%s done COMMUTING\n", getName());
-		act = sched->appts[appt].act;
-	}
+	if (!gotoSpot(tx, ty)) {
+                // No path
+                return false;
+        }
+            
+        if (getX() == tx && getY() == ty) {
+                // Arrived.
+                printf("%s done COMMUTING\n", getName());
+                act = sched->appts[appt].act;
+        }
+
+        // Made at least some progress
+        return true;
 }
 
 void NpcParty::synchronize(int turn)
@@ -754,7 +762,9 @@ void NpcParty::advanceTurn(int turn)
 
 	switch (act) {
 	case COMMUTING:
-		commute();
+		if (!commute())
+                        // Oh well, maybe next time...
+                        setTurn(turn);
 		break;
 	case SLEEPING:
 	case EATING:

@@ -41,7 +41,7 @@ MAP GreenTower_Map {
     "||rcccr||rcccr||||||||||||||ttt...tt||||||||||||x.......xttt||||";
     "||rcccr||rcccr||||||||||||||ttb.........................0ttt||||";
     "||rcccr||rcccr|||||||||||||tttt...bt||||||||||||x@@@@@@@xttt||||";
-    "||rrcrr||rrcrr|||||||||||||tttb...tt|||||||||||tx.......xtt|||||";
+    "||rrcrr||rrcrr|||||||||||||tttb...tt|||||||||||t........xtt|||||";
     "||||.||||||.||||||||||||||ttttt...tt|||||||||||txSHROOMSx|||||||";
     "||||........||||||||||||||ttttb...bt|||||||||tttxxxxxxxxx|||||||";
     "||||||||.||||||||||||||||tttttt...tt||||||||ttttx...x...x|||||||";
@@ -120,9 +120,11 @@ PLACE  GreenTower {
 
     // Shroom's Shop
     mech_vdoor shrooms_house_door 48 10 "locked";
+    mech_vdoor shrooms_counter_door 48 6 "locked";
     mech_vdoor shrooms_shop_door  48 4  "closed";
     mech_hdoor shrooms_storeroom_door 54 12 "magically locked";
     
+    t_bed 51 9;
 
   }
   object_type t_town;

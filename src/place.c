@@ -660,19 +660,6 @@ void place_remove_object(struct place *place, Object * object)
 	}
 }
 
-#if 0
-extern void place_remove_vehicle(struct place *place, class Vehicle * vehicle)
-{
-	struct tile *tile = place_lookup_tile(place, vehicle->getX(),
-					      vehicle->getY());
-	tile->vehicle = 0;
-	tile->objects--;
-	if (!tile->objects) {
-		tile_destroy(tile);
-	}
-}
-#endif				// 0
-
 Object *place_get_object(struct place *place, int x, int y, enum layer layer)
 {
 	struct olist *olist;
@@ -761,10 +748,8 @@ static int place_pathfind_is_valid_location(struct place_pathfind_context
 			       context->pflags))
 		return 0;
 
-	if (context->pflags & PFLAG_IGNOREBEINGS)
-		return 1;
-
-	if (place_is_occupied(context->place, x, y))
+	if (! (context->pflags & PFLAG_IGNOREBEINGS) &&
+            place_is_occupied(context->place, x, y))
 		return 0;
 
 #ifdef PLAYER_PARTY_NOT_AN_OBJECT

@@ -33,20 +33,17 @@
  * file */
 enum layer {			/* Proper rendering depends on keeping these in 
 				 * order! */
-	null_layer = 0,
-	mech_layer = 1,
-	portal_layer = 2,
-	vehicle_layer = 3,
-	container_layer = 4,
-	item_layer = 5,
-	field_layer = 6,	/* Make fields a higher priority than items and
-				 * containers until transparency is more
-				 * prevalent among the other sprites. This way
-				 * dropped items don't hide dangerous fields
-				 * from the user. */
-	being_layer = 7,
-	projectile_layer = 8,
-	cursor_layer = 9,
+	null_layer       = 0,
+	mech_layer       = 1,
+	portal_layer     = 2,
+	vehicle_layer    = 3,
+        bed_layer        = 4,
+	container_layer  = 5,
+	item_layer       = 6,
+	field_layer      = 7,
+	being_layer      = 8,
+	projectile_layer = 9,
+	cursor_layer     = 10,
 };
 
 struct inv_entry {

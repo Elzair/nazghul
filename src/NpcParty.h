@@ -180,7 +180,7 @@ class NpcParty:public Object {
 	virtual bool enter_town(class Portal * portal);
 	virtual void wander();
 	void work();
-	void commute();
+	bool commute();
 	bool gotoSpot(int x, int y);
 	bool attack_with_ordnance(int d);
 
