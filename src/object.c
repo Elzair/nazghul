@@ -1919,13 +1919,11 @@ void Object::setActionPoints(int amount)
 
 void obj_inc_ref(Object *obj)
 {
-        dbg("obj_inc_ref: %d %08lx %s\n", obj->refcount, obj, obj->getName());
         obj->refcount++;
 }
 
 void obj_dec_ref(Object *obj)
 {
-        dbg("obj_dec_ref: %d %08lx %s\n", obj->refcount, obj, obj->getName());
         assert((obj)->refcount >= 0);
         (obj)->refcount--;
         if (! obj->refcount)

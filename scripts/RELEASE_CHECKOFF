@@ -1,15 +1,35 @@
+PART 0: BEFORE RELEASE
+
+* Notify Tim Douglas that a release is planned and ask him to do an OSX
+  binary build.
+
+PART I: PREPARE FOR RELEASE
+
 * INSTALL is up-to-date
 * BUGS is up-to-date
-* RELEASE_NOTES is up-to-date
+* NEWS is up-to-date with differences since last version
+* AUTHORS is up-to-date with _ALL_ contributions (legal reasons)
 * Version number is correct in configure.ac
-* Ensure the SUBDIRS of Makefile.am are correct for this release
+* The SUBDIRS of Makefile.am are correct for this release
 
-        $ ./autogen.sh
-        $ make cvsclean
-        $ ./autogen.sh
-        $ make alldist
-        $ cd ~/tmp
-        $ rm -rf *
+PART II: BUILD AND TEST SOURCE DIST
+
+x Do a test build from the nazghul top-level directory:
+
+        $ ./scripts/ghul-test-install <version>
+
+  If all goes well the game should startup. The tarballs will all be built and
+  sitting in the top-level directory.
+
+* Make any changes necessary, and go back to step x.
+
+* At this point checkin any changes made so far.
+
+PART III: BUILD AND TEST WINDOWS BINARY
+
+PART IV: LABEL THE SOURCE
+
+PART V: UPLOAD TO SOURCEFORGE
 
 * upload the distro tarball
 
@@ -40,6 +60,8 @@
     Processor=Any
     File Type Update=Source.gz
   and hit Update/Refresh
+
+PART VI: PUBLICIZE
 
 * From the main Nazghul project page on SourceForge,
   submit a news item for the file release.
