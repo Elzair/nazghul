@@ -19,6 +19,8 @@
 (load "moongate-clearing.scm")
 (load "abandoned-farm.scm")
 
+(load "P_terrain_test.scm")
+
 ;;----------------------------------------------------------------------------
 ;; Characters
 ;;----------------------------------------------------------------------------
@@ -121,6 +123,8 @@
                 (list p_moongate_clearing 10 4)
                 (list p_gregors_hut       18 9)
                 (list p_abandoned_farm    18 7)
+
+                (list p_terrain_test  9  3)  ;; For test purposes
                 )
 
                nil ; neighbors
