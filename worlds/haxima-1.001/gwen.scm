@@ -1,4 +1,9 @@
 ;;----------------------------------------------------------------------------
+;; Constants
+;;----------------------------------------------------------------------------
+(define trigrave-inn-room-price 10)
+
+;;----------------------------------------------------------------------------
 ;; Schedule
 ;;
 ;; The schedule below is for the place "Trigrave"
@@ -6,10 +11,7 @@
 (kern-mk-sched 'sch_gwen
                (list 0  0  trigrave-gwens-bed        "sleeping")
                (list 8  0  trigrave-tavern-table-1a  "eating")
-               (list 9  0  trigrave-inn-room-1       "working")
-               (list 10 0  trigrave-inn-room-1       "working")
-               (list 11 0  trigrave-inn-room-1       "working")
-               (list 12 0  trigrave-inn-room-1       "working")
+               (list 9  0  trigrave-inn-counter      "working")
                (list 13 0  trigrave-tavern-table-1d  "eating")
                (list 14 0  trigrave-inn-counter      "working")
                (list 20 0  trigrave-tavern-table-1a  "eating")
@@ -40,6 +42,42 @@
   (say knpc "I have seen lands that our good Chanticleer has not even heard "
        "of! Perhaps someday we can speak of them more."))
 
+(define (gwen-room knpc kpc)
+  (let ((door (eval 'trigrave-inn-room-1-door)))
+    ;; is the room still open?
+    (if (not (door-locked? (kobj-gob door)))
+        ;; yes - remind player
+        (say knpc "Your room is still open!")
+        ;; no - ask if player needs a room
+        (begin
+          (say knpc "Do you need a room?")
+          (if (kern-conv-get-yes-no? kpc)
+              ;; yes - player wants a room
+              (begin
+                (say knpc "It will be 25 gold, "
+                     "and you may use the room as long as you are in town. "
+                     "Agreed?")
+                (if (kern-conv-get-yes-no? kpc)
+                    ;; yes - player agrees to the price
+                    (let ((gold (kern-player-get-gold)))
+                      ;; does player have enough gold?
+                      (if (>= gold trigrave-inn-room-price)
+                          ;; yes - player has enough gold
+                          (begin
+                            (kern-player-set-gold (- gold 
+                                                     trigrave-inn-room-price))
+                            (say knpc "You're in room 1. Enjoy your stay!")
+                            (send-signal knpc door 'unlock)
+                            (kern-conv-end)
+                            )
+                          ;; no - player does not have enouvh gold)
+                          (say knpc "Sorry, but you need more gold!")))
+                    ;; no - player does not agree to the price
+                    (say knpc 
+                         "You won't find a better deal in Three Corners!")))
+              ;; no - player does not want a room
+              (say knpc "Perhaps another time."))))))
+
 (define gwen-conv
   (ifc basic-conv
        ;; default if the only "keyword" which may (indeed must!) be longer than
@@ -52,11 +90,8 @@
        (method 'bye (lambda (knpc kpc) (say knpc "Goodbye.")))
        (method 'job 
                (lambda (knpc kpc) 
-                 (say knpc "I'm the innkeeper of Trigrave. "
-                      "Do you need a room?")
-                 (if (kern-conv-get-yes-no? kpc)
-                     (gwen-trade knpc kpc)
-                     (say knpc "Perhaps another time."))))
+                 (say knpc "I'm the innkeeper of Trigrave.")
+                 (gwen-room knpc kpc)))
        (method 'name (lambda (knpc kpc) (say knpc "I am Gwen.")))
        (method 'trad gwen-trade)
        (method 'join 
@@ -76,6 +111,7 @@
        (method 'news (lambda (knpc kpc)
                        (say knpc "The news lately has been rumours of trouble "
                             "with the local warlords.")))
+       (method 'room gwen-room)
        (method 'trig 
                (lambda (knpc kpc) 
                  (say knpc "This is a small town, far from civilization. "

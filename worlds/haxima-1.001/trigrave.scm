@@ -171,7 +171,7 @@
 
 (kern-load "gwen.scm")
 (bind 
- (kern-mk-char 'ch_jim ; tag
+ (kern-mk-char 'ch_gwen ; tag
                "Gwen the Innkeeper" ; name
                sp_human            ; species
                nil                 ; occ
@@ -217,12 +217,44 @@
  (list ; objects
 
   ;; characters
-  (list ch_jim 15 15)
+  (list ch_jim  15 15)
+  (list ch_gwen 15 16)
+
+  ;; Inn
+  (list (kern-tag 'trigrave-inn-room-1-door (mk-locked-door))  4 6)
+  (list (kern-tag 'trigrave-inn-room-2-door (mk-locked-door))  4 8)
+  (list (kern-tag 'trigrave-inn-room-3-door (mk-locked-door)) 10 8)
+  (list (kern-tag 'trigrave-inn-room-4-door (mk-locked-door)) 10 6)
+  (list (mk-locked-door) 1 3)
+  (list (mk-door)  4  3)
+  (list (mk-door) 10  3)
+  (list (mk-door)  7 10)
+
+  ;; General store
+  (list (mk-locked-door)  1 24)
+  (list (mk-door)         7 27)
+  
+  ;; Iron Works
+  (list (mk-door) 24 6)
+  (list (mk-locked-door) 26 9)
+  (list (kern-tag 'tiw-portcullis (mk-portcullis)) 28 9)
+  (list (mk-lever 'tiw-portcullis) 25 10)
+
+  ;; Lusty Juggs (tavern)
+  (list (mk-door) 28 24)
+  (list (kern-tag 'tlj-d-1 (mk-connected-door 'tlj-d-2)) 17 25)
+  (list (kern-tag 'tlj-d-2 (mk-connected-door 'tlj-d-1)) 17 26)
 
   )
- nil ; hooks
+ (list 'trigrave-entry) ;; hooks
  (list  ;; edge entrances
   (list south 18 0)
   (list north  12 31)
   )
  )
+
+;; ----------------------------------------------------------------------------
+;; The entry hooks must be kern-loaded from a separate file, since they are
+;; read-only and not saved with the session.
+;; ----------------------------------------------------------------------------
+(kern-load "trigrave-entry.scm")

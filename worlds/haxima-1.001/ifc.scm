@@ -85,3 +85,13 @@
 ;; Make a wrapper for kern-mk-obj-type which inserts the ifc cap info
 (define (mk-obj-type tag name sprite layer ifc)
   (kern-mk-obj-type tag name sprite layer (ifc-cap ifc) ifc))
+
+;; ----------------------------------------------------------------------------
+;; send-signal - send a signal to an object. ksender is nil or a pointer to a
+;; kernel object, tag is the tag of the target object (eg 'door-1) and sig is
+;; the symbol of the signal to send (eg 'lock). Examples:
+;;   (send-signal nil 'door-1 'lock)
+;;   (send-signal kplayer 'handle-1b 'on)
+;; ----------------------------------------------------------------------------
+(define (send-signal ksender kobj sig)
+  ((kobj-ifc kobj) sig kobj ksender))

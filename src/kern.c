@@ -5541,8 +5541,6 @@ KERN_API_CALL(kern_get_ticks)
         return scm_mk_integer(sc, SDL_GetTicks());
 }
 
-#if 1
-
 static int kern_obj_is_type(class Object *obj, struct kern_append_info *info)
 {
         return (obj->getObjectType() == (class ObjectType*)info->data);
@@ -5839,7 +5837,24 @@ KERN_API_CALL(kern_fold_rect)
         return val;
 }
 
-#endif
+KERN_API_CALL(kern_player_get_gold)
+{
+        return scm_mk_integer(sc, player_party->gold);
+}
+
+KERN_API_CALL(kern_player_set_gold)
+{
+        int val;
+
+        if (unpack(sc, &args, "d", &val)) {
+                rt_err("kern-player-set-gold: bad args");
+                return sc->F;
+        }
+
+        player_party->gold = val;
+        foogodRepaint();
+        return sc->T;
+}
 
 #if 0
 KERN_API_CALL(kern_los_invalidate)
@@ -6016,6 +6031,12 @@ scheme *kern_init(void)
         /* map api */
         API_DECL(sc, "kern-map-rotate", kern_map_rotate);
 
+        /* player api */
+        API_DECL(sc, "kern-player-get-gold", kern_player_get_gold);
+        API_DECL(sc, "kern-player-set-follow-mode", 
+                 kern_player_set_follow_mode);
+        API_DECL(sc, "kern-player-set-gold", kern_player_set_gold);
+
         /* misc api */
         API_DECL(sc, "kern-add-magic-negated", kern_add_magic_negated);
         API_DECL(sc, "kern-add-quicken", kern_add_quicken);
@@ -6036,8 +6057,6 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-include", kern_include);
         API_DECL(sc, "kern-interp-error", kern_interp_error);
         API_DECL(sc, "kern-is-valid-location?", kern_is_valid_location);
-        API_DECL(sc, "kern-player-set-follow-mode", 
-                 kern_player_set_follow_mode);
         API_DECL(sc, "kern-print", kern_print);
         API_DECL(sc, "kern-search-rect", kern_search_rect);
         API_DECL(sc, "kern-search-rect-for-terrain", 
