@@ -1,119 +1,118 @@
-;;----------------------------------------------------------------------------
-;; Palette
-;;----------------------------------------------------------------------------
-
 (kern-mk-palette 'pal_expanded
-                 (list
-                  (list "__" t_deep)
-                  (list "--" t_shallow)
-                  (list "~~" t_shoals)
-                  (list "%%" t_bog)
-                  (list ".." t_grass)
-                  (list "tt" t_trees)
-                  (list "||" t_forest)
-                  (list "{{" t_hills)
-                  (list "^^" t_mountains)
-                  (list ",," t_flagstones)
-                  (list "cc" t_cobblestone)
-                  (list "ee" t_deck)
-;                   (list "==" t_bridge)
-;                   (list "gg" t_bridge_top)
-;                   (list "hh" t_bridge_bottom)
-                  (list "o" t_mast)
-                  (list "f" t_fire_terrain)
-                  (list "!" t_lava)
-                  (list "&" t_fireplace)
-                  (list "x" t_wall)
-                  (list "xx" t_wall)
-                  (list "?" t_secret_door)
-                  (list "p" t_pillar)
-                  (list "b" t_boulder)
-                  (list "r" t_wall_rock)
-                  (list "W" t_ships_wheel)
-                  (list "x!" t_wall_torch)
-                  (list "##" t_ship_hull)
-                  (list ".A" t_A)
-                  (list ".B" t_B)
-                  (list ".C" t_C)
-                  (list ".D" t_D)
-                  (list ".E" t_E)
-                  (list ".F" t_F)
-                  (list ".G" t_G)
-                  (list ".H" t_H)
-                  (list ".I" t_I)
-                  (list ".J" t_J)
-                  (list ".K" t_K)
-                  (list ".L" t_L)
-                  (list ".M" t_M)
-                  (list ".N" t_N)
-                  (list ".O" t_O)
-                  (list ".P" t_P)
-                  (list ".Q" t_Q)
-                  (list ".R" t_R)
-                  (list ".S" t_S)
-                  (list ".T" t_T)
-                  (list ".U" t_U)
-                  (list ".V" t_V)
-                  (list ".W" t_W)
-                  (list ".X" t_X)
-                  (list ".Y" t_Y)
-                  (list ".Z" t_Z)
-                  (list ",A" t_rune_A)
-                  (list ",B" t_rune_B)
-                  (list ",C" t_rune_C)
-                  (list ",D" t_rune_D)
-                  (list ",E" t_rune_E)
-                  (list ",F" t_rune_F)
-                  (list ",G" t_rune_G)
-                  (list ",H" t_rune_H)
-                  (list ",I" t_rune_I)
-                  (list ",J" t_rune_J)
-                  (list ",K" t_rune_K)
-                  (list ",L" t_rune_L)
-                  (list ",M" t_rune_M)
-                  (list ",N" t_rune_N)
-                  (list ",O" t_rune_O)
-                  (list ",P" t_rune_P)
-                  (list ",Q" t_rune_Q)
-                  (list ",R" t_rune_R)
-                  (list ",S" t_rune_S)
-                  (list ",T" t_rune_T)
-                  (list ",U" t_rune_U)
-                  (list ",V" t_rune_V)
-                  (list ",W" t_rune_W)
-                  (list ",X" t_rune_X)
-                  (list ",Y" t_rune_Y)
-                  (list ",Z" t_rune_Z)
-                  (list ";T" t_rune_TH)
-                  (list ";E" t_rune_EE)
-                  (list ";N" t_rune_NG)
-                  (list ";A" t_rune_EA)
-                  (list ";S" t_rune_ST)
-                  (list ";D" t_rune_DOT)
-                  (list "@" t_counter_2x1_c)
-                  (list "[" t_counter_2x1_w)
-                  (list "]" t_counter_2x1_e)
-                  (list "0" t_counter_1x1)
-                  (list "+" t_ankh)
-                  (list "a" t_altar)
-                  (list "<" t_leftwing)
-                  (list ">" t_rightwing)
-                  (list "d" t_red_roses)
-                  (list "w+" t_arrow_slit)
-                  (list "ws" t_window_in_stone)
-                  (list "/0" t_trail_0)
-                  (list "/1" t_trail_1)
-                  (list "/2" t_trail_2)
-                  (list "/3" t_trail_3)
-                  (list "/4" t_trail_4)
-                  (list "/5" t_trail_5)
-                  (list "/6" t_trail_6)
-                  (list "/7" t_trail_7)
-                  (list "/8" t_trail_8)
-                  (list "/9" t_trail_9)
-                  (list "/a" t_trail_a)
-                  (list "/b" t_trail_b)
-                  (list "/c" t_trail_c)
-                  (list "/d" t_trail_d)
-                  (list "/e" t_trail_e)
-                  (list "/f" t_trail_f)))
+  (list
+    ;; There are 110 entries in this palette
+    ;; The widest glyph is 2 characters
+    (list  "__"   t_deep)               ;; "deep water"
+    (list  "--"   t_shallow)            ;; "shallow water"
+    (list  "~~"   t_shoals)             ;; "shoals"
+    (list  "%%"   t_bog)                ;; "bog"
+    (list  ".."   t_grass)              ;; "grass"
+    (list  "tt"   t_trees)              ;; "trees"
+    (list  "||"   t_forest)             ;; "forest"
+    (list  "{{"   t_hills)              ;; "hills"
+    (list  "^^"   t_mountains)          ;; "mountains"
+    (list  ",,"   t_flagstones)         ;; "flagstones"
+    (list  "cc"   t_cobblestone)        ;; "cobblestone"
+    (list  "ee"   t_deck)               ;; "deck"
+    (list  "o"    t_mast)               ;; "mast"
+    (list  "f"    t_fire_terrain)       ;; "fire"
+    (list  "!"    t_lava)               ;; "lava"
+    (list  "&"    t_fireplace)          ;; "fireplace"
+    (list  "x"    t_wall)               ;; "wall"
+    (list  "xx"   t_wall)               ;; "wall"
+    (list  "?"    t_secret_door)        ;; "secret door"
+    (list  "p"    t_pillar)             ;; "pillar"
+    (list  "b"    t_boulder)            ;; "boulder"
+    (list  "r"    t_wall_rock)          ;; "rock wall"
+    (list  "W"    t_ships_wheel)        ;; "ship's wheel"
+    (list  "x!"   t_wall_torch)         ;; "wall torch"
+    (list  "##"   t_ship_hull)          ;; "ship's hull"
+    (list  ".A"   t_a)                  ;; "an A"
+    (list  ".B"   t_b)                  ;; "a B"
+    (list  ".C"   t_c)                  ;; "a C"
+    (list  ".D"   t_d)                  ;; "a D"
+    (list  ".E"   t_e)                  ;; "an E"
+    (list  ".F"   t_f)                  ;; "an F"
+    (list  ".G"   t_g)                  ;; "a G"
+    (list  ".H"   t_h)                  ;; "an H"
+    (list  ".I"   t_i)                  ;; "an I"
+    (list  ".J"   t_j)                  ;; "a J"
+    (list  ".K"   t_k)                  ;; "a K"
+    (list  ".L"   t_l)                  ;; "an L"
+    (list  ".M"   t_m)                  ;; "an M"
+    (list  ".N"   t_n)                  ;; "an N"
+    (list  ".O"   t_o)                  ;; "an O"
+    (list  ".P"   t_p)                  ;; "a P"
+    (list  ".Q"   t_q)                  ;; "a Q"
+    (list  ".R"   t_r)                  ;; "an R"
+    (list  ".S"   t_s)                  ;; "an S"
+    (list  ".T"   t_t)                  ;; "a T"
+    (list  ".U"   t_u)                  ;; "a U"
+    (list  ".V"   t_v)                  ;; "a V"
+    (list  ".W"   t_w)                  ;; "a W"
+    (list  ".X"   t_x)                  ;; "an X"
+    (list  ".Y"   t_y)                  ;; "a Y"
+    (list  ".Z"   t_z)                  ;; "a Z"
+    (list  ",A"   t_rune_a)             ;; "a rune"
+    (list  ",B"   t_rune_b)             ;; "a rune"
+    (list  ",C"   t_rune_c)             ;; "a rune"
+    (list  ",D"   t_rune_d)             ;; "a rune"
+    (list  ",E"   t_rune_e)             ;; "a rune"
+    (list  ",F"   t_rune_f)             ;; "a rune"
+    (list  ",G"   t_rune_g)             ;; "a rune"
+    (list  ",H"   t_rune_h)             ;; "a rune"
+    (list  ",I"   t_rune_i)             ;; "a rune"
+    (list  ",J"   t_rune_j)             ;; "a rune"
+    (list  ",K"   t_rune_k)             ;; "a rune"
+    (list  ",L"   t_rune_l)             ;; "a rune"
+    (list  ",M"   t_rune_m)             ;; "a rune"
+    (list  ",N"   t_rune_n)             ;; "a rune"
+    (list  ",O"   t_rune_o)             ;; "a rune"
+    (list  ",P"   t_rune_p)             ;; "a rune"
+    (list  ",Q"   t_rune_q)             ;; "a rune"
+    (list  ",R"   t_rune_r)             ;; "a rune"
+    (list  ",S"   t_rune_s)             ;; "a rune"
+    (list  ",T"   t_rune_t)             ;; "a rune"
+    (list  ",U"   t_rune_u)             ;; "a rune"
+    (list  ",V"   t_rune_v)             ;; "a rune"
+    (list  ",W"   t_rune_w)             ;; "a rune"
+    (list  ",X"   t_rune_x)             ;; "a rune"
+    (list  ",Y"   t_rune_y)             ;; "a rune"
+    (list  ",Z"   t_rune_z)             ;; "a rune"
+    (list  ";T"   t_rune_th)            ;; "a rune"
+    (list  ";E"   t_rune_ee)            ;; "a rune"
+    (list  ";N"   t_rune_ng)            ;; "a rune"
+    (list  ";A"   t_rune_ea)            ;; "a rune"
+    (list  ";S"   t_rune_st)            ;; "a rune"
+    (list  ";D"   t_rune_dot)           ;; "a rune"
+    (list  "@"    t_counter_2x1_c)      ;; "counter"
+    (list  "["    t_counter_2x1_w)      ;; "counter"
+    (list  "]"    t_counter_2x1_e)      ;; "counter"
+    (list  "0"    t_counter_1x1)        ;; "counter"
+    (list  "+"    t_ankh)               ;; "ankh"
+    (list  "a"    t_altar)              ;; "altar"
+    (list  "<"    t_leftwing)           ;; "castle wall"
+    (list  ">"    t_rightwing)          ;; "castle wall"
+    (list  "d"    t_red_roses)          ;; "roses"
+    (list  "w+"   t_arrow_slit)         ;; "arrow slit"
+    (list  "ws"   t_window_in_stone)    ;; "window"
+    (list  "/0"   t_trail_0)            ;; "trail"
+    (list  "/1"   t_trail_1)            ;; "trail"
+    (list  "/2"   t_trail_2)            ;; "trail"
+    (list  "/3"   t_trail_3)            ;; "trail"
+    (list  "/4"   t_trail_4)            ;; "trail"
+    (list  "/5"   t_trail_5)            ;; "trail"
+    (list  "/6"   t_trail_6)            ;; "trail"
+    (list  "/7"   t_trail_7)            ;; "trail"
+    (list  "/8"   t_trail_8)            ;; "trail"
+    (list  "/9"   t_trail_9)            ;; "trail"
+    (list  "/a"   t_trail_a)            ;; "trail"
+    (list  "/b"   t_trail_b)            ;; "trail"
+    (list  "/c"   t_trail_c)            ;; "trail"
+    (list  "/d"   t_trail_d)            ;; "trail"
+    (list  "/e"   t_trail_e)            ;; "trail"
+    (list  "/f"   t_trail_f)            ;; "trail"
+
+  )
+) ;; palette pal_expanded
+
