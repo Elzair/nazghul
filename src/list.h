@@ -96,20 +96,6 @@ static inline void list_switch(struct list *e1, struct list *e2)
         list_replace(e1, &tmp);
         list_replace(e2, e1);
         list_replace(&tmp, e2);
-#if 0
-        if (e1 == e2) {
-                return;
-        } else if (e1->next == e2) {
-                list_switch_adjacent(e1, e2);
-        } else if (e2->next == e1) {
-                list_switch_adjacent(e2, e1);
-        } else {
-                e1->prev->next = e2;
-                e1->next->prev = e2;
-                e2->prev->next = e1;
-                e2->next->prev = e1;
-        }
-#endif
 }
 
 END_DECL
