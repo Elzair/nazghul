@@ -309,7 +309,8 @@ class Object {
         virtual void endTurn();
         virtual void startTurn();
         virtual void setControlMode(enum control_mode);
-        virtual bool putOnMap(struct place *place, int x, int y, int r);
+        virtual bool putOnMap(struct place *place, int x, int y, int r, 
+                              int flags /* PFLAG_* (see place.h) */);
         virtual void setView(struct mview *view);
         virtual void changePlaceHook();
         virtual MoveResult move(int dx, int dy);

@@ -819,7 +819,8 @@ static int kern_place_load_subplaces(scheme *sc, pointer *args, struct place *pl
         return 0;
 }
 
-static int kern_place_load_neighbors(scheme *sc, pointer *args, struct place *place)
+static int kern_place_load_neighbors(scheme *sc, pointer *args, 
+                                     struct place *place)
 {
         pointer neighbors;
 
@@ -841,7 +842,8 @@ static int kern_place_load_neighbors(scheme *sc, pointer *args, struct place *pl
                 neighbors = scm_cdr(sc, neighbors);
                 
                 if (unpack(sc, &cell, "pd", &neighbor, &dir)) {
-                        load_err("kern-mk-place %s: error in neighbor list", place->tag);
+                        load_err("kern-mk-place %s: error in neighbor list", 
+                                 place->tag);
                         return -1;
                 }
                 
@@ -866,7 +868,8 @@ static int kern_place_load_neighbors(scheme *sc, pointer *args, struct place *pl
         return 0;
 }
 
-static int kern_place_load_contents(scheme *sc, pointer *args, struct place *place)
+static int kern_place_load_contents(scheme *sc, pointer *args, 
+                                    struct place *place)
 {
         pointer contents;
 
@@ -877,6 +880,7 @@ static int kern_place_load_contents(scheme *sc, pointer *args, struct place *pla
         }
 
         contents = scm_car(sc, *args);
+        *args = scm_cdr(sc, *args);
 
         while (scm_is_pair(sc, contents)) {
 
@@ -900,6 +904,35 @@ static int kern_place_load_contents(scheme *sc, pointer *args, struct place *pla
                 }
 
                 obj->relocate(place, x, y, true);
+        }
+
+        return 0;
+}
+
+static int kern_place_load_hooks(scheme *sc, pointer *args, 
+                                    struct place *place)
+{
+        pointer contents;
+        pointer pre_entry_proc;
+
+        if (! scm_is_pair(sc, *args)) {
+                load_err("kern-mk-place %s: missing the hooks list",
+                         place->tag);
+                return -1;
+        }
+
+        contents = scm_car(sc, *args);
+        *args = scm_cdr(sc, *args);
+
+        if (scm_is_pair(sc, contents)) {
+                if (unpack(sc, &contents, "c", &pre_entry_proc)) {
+                        load_err("kern-mk-place %s: bad arg in hook list",
+                                 place->tag);
+                        return -1;
+                }
+
+                place->pre_entry_hook = closure_new(sc, pre_entry_proc);
+
         }
 
         return 0;
@@ -937,7 +970,8 @@ KERN_API_CALL(kern_mk_place)
 
         if (kern_place_load_subplaces(sc, &args, place) ||
             kern_place_load_neighbors(sc, &args, place) ||
-            kern_place_load_contents(sc, &args, place))
+            kern_place_load_contents(sc, &args, place)  ||
+            kern_place_load_hooks(sc, &args, place))
                 goto abort;
 
  done:

@@ -447,8 +447,37 @@ void player_party::distributeMembers(struct place *new_place, int new_x,
         class Character *member;
 
         FOR_EACH_MEMBER(entry, member) {
-                if (!member->isDead())
-                        member->putOnMap(new_place, new_x, new_y, 2 * size);
+                if (!member->isDead()) {
+
+                        int flags = 0;
+
+                        if (member->putOnMap(new_place, new_x, new_y, 
+                                             2 * size, 0))
+                                continue;
+
+                        // Try again, ignoring other objects.
+                        flags |= PFLAG_IGNOREMECHS;
+                        flags |= PFLAG_IGNOREBEINGS;
+                        if (member->putOnMap(new_place, new_x, new_y, 
+                                             2 * size, flags))
+                                continue;
+
+                        // Try again, ignoring hazards.
+                        flags |= PFLAG_IGNOREHAZARDS;
+                        flags |= PFLAG_IGNOREFIELDS;
+                        if (member->putOnMap(new_place, new_x, new_y, 
+                                             2 * size, flags))
+                                continue;
+
+                        // Try again, ignoring terrain.
+                        flags |= PFLAG_IGNORETERRAIN;
+                        if (member->putOnMap(new_place, new_x, new_y, 
+                                             2 * size, flags))
+                                continue;
+
+                        // Ok, now that should have worked!
+                        assert(0);
+                }
 	}
 
         // --------------------------------------------------------------------
@@ -680,8 +709,14 @@ MoveResult player_party::move(int newdx, int newdy)
                 return MovedOk;
 
         case move_enter_subplace:
+
+                // run the place's pre-entry hook, if applicable
+                if (info.subplace->pre_entry_hook &&
+                    ! closure_exec(info.subplace->pre_entry_hook, "p", this))
+                        return UserCanceled;
+
                 return try_to_enter_subplace_from_edge(info.subplace, info.dx, 
-                                                   info.dy);
+                                                       info.dy);
 
 	default:
 		// no other results expected

@@ -954,7 +954,8 @@ bool Object::isPassable(int pclass)
         return (getMovementCost(pclass) != PTABLE_IMPASSABLE);
 }
 
-bool Object::putOnMap(struct place *new_place, int new_x, int new_y, int r)
+bool Object::putOnMap(struct place *new_place, int new_x, int new_y, int r,
+                      int flags)
 {
         // --------------------------------------------------------------------
         // Put an object on a map. If possible, put it at (new_x, new_y). If
@@ -969,6 +970,7 @@ bool Object::putOnMap(struct place *new_place, int new_x, int new_y, int r)
         // --------------------------------------------------------------------
 
         char *visited;
+        char *queued;
         bool ret = false;
         int i;
         int rx;
@@ -978,6 +980,7 @@ bool Object::putOnMap(struct place *new_place, int new_x, int new_y, int r)
         int index;
         int q_head;
         int q_tail;
+        int q_size;
         int x_offsets[] = { -1, 1, 0, 0 };
         int y_offsets[] = { 0, 0, -1, 1 };
         
@@ -994,31 +997,48 @@ bool Object::putOnMap(struct place *new_place, int new_x, int new_y, int r)
         ry = new_y - (r / 2);
 
         // --------------------------------------------------------------------
-        // Initialize the 'visited' table and the coordinate search queues.
+        // Initialize the 'visited' table and the coordinate search queues. The
+        // queues must be large enough to hold all the tiles in the bounding
+        // box, plus an extra ring around it. The extra ring is for the case
+        // where we enqueue the neighbors of tiles that are right on the edge
+        // of the bounding box. We won't know the neighbors are bad until we
+        // pop them off the queue and check them.
         // --------------------------------------------------------------------
 
-        visited = (char*)calloc(sizeof(char), r * r);
+        q_size = r * r;
+
+        visited = (char*)calloc(sizeof(char), q_size);
         if (NULL == visited)
                 return false;
-        
-        q_x = (int*)calloc(sizeof(int), r * r);
+                
+        q_x = (int*)calloc(sizeof(int), q_size);
         if (NULL == q_x) {
                 goto free_visited;
         }
 
-        q_y = (int*)calloc(sizeof(int), r * r);
+        q_y = (int*)calloc(sizeof(int), q_size);
         if (NULL == q_y) {
                 goto free_q_x;
         }
+
+        queued = (char*)calloc(sizeof(char), q_size);
+        if (NULL == queued)
+                goto free_q_y;
 
         // --------------------------------------------------------------------
         // Enqueue the preferred location to start the search.
         // --------------------------------------------------------------------
 
-        q_head      = 0;
-        q_tail      = 0;
-        q_x[q_tail] = new_x;
-        q_y[q_tail] = new_y;
+#define INDEX(x,y) (((y)-ry) * r + ((x)-rx))
+
+        q_head        = 0;
+        q_tail        = 0;
+        q_x[q_tail]   = new_x;
+        q_y[q_tail]   = new_y;
+        index         = INDEX(new_x, new_y);
+        assert(index >= 0);
+        assert(index < q_size);
+        queued[index] = 1;
         q_tail++;
 
         // --------------------------------------------------------------------
@@ -1039,23 +1059,14 @@ bool Object::putOnMap(struct place *new_place, int new_x, int new_y, int r)
                 printf("Checking (%d,%d)...", new_x, new_y);
 
                 // ------------------------------------------------------------
-                // Is the location outside the search radius?
-                // ------------------------------------------------------------
-
-                if (new_x < rx        ||
-                    new_y < ry        ||
-                    new_x >= (rx + r) ||
-                    new_y >= (ry + r)) {
-                        printf("outside the radius\n");
-                        continue;
-                }
-
-                // ------------------------------------------------------------
                 // Has the location already been visited? (If not then mark it
                 // as visited now).
                 // ------------------------------------------------------------
                 
-                index = (new_y - ry) * r + (new_x - rx);
+                index = INDEX(new_x, new_y);
+                assert(index >= 0);
+                assert(index < q_size);
+
                 if (0 != visited[index]) {
                         printf("already checked\n");
                         continue;
@@ -1065,10 +1076,9 @@ bool Object::putOnMap(struct place *new_place, int new_x, int new_y, int r)
                 // ------------------------------------------------------------
                 // Is the location off the map or impassable?
                 // ------------------------------------------------------------
-
+                
                 if (place_off_map(new_place, new_x, new_y) ||
-                    ! place_is_passable(new_place, new_x, new_y, this, 0)) {
-                        printf("off-map or impassable\n");
+                    ! place_is_passable(new_place, new_x, new_y, this, flags)){
                         continue;
                 }
 
@@ -1076,8 +1086,10 @@ bool Object::putOnMap(struct place *new_place, int new_x, int new_y, int r)
                 // Is the location occupied or hazardous?
                 // ------------------------------------------------------------
 
-                if (place_is_occupied(new_place, new_x, new_y) ||
-                    place_is_hazardous(new_place, new_x, new_y)) {
+                if ((! (flags & PFLAG_IGNOREBEINGS) &&
+                     place_is_occupied(new_place, new_x, new_y)) ||
+                    (! (flags & PFLAG_IGNOREHAZARDS) &&
+                     place_is_hazardous(new_place, new_x, new_y))) {
 
                         printf("occupied or hazardous\n");
 
@@ -1087,10 +1099,46 @@ bool Object::putOnMap(struct place *new_place, int new_x, int new_y, int r)
                         // ----------------------------------------------------
 
                         for (i = 0; i < array_sz(x_offsets); i++) {
-                                assert(q_tail < (r * r));
-                                q_x[q_tail] = new_x + x_offsets[i];
-                                q_y[q_tail] = new_y + y_offsets[i];
+
+                                int neighbor_x;
+                                int neighbor_y;
+                                int neighbor_index;
+
+                                neighbor_x = new_x + x_offsets[i];
+                                neighbor_y = new_y + y_offsets[i];
+
+                                // --------------------------------------------
+                                // Is the neighbor outside the search radius?
+                                // --------------------------------------------
+
+                                if (neighbor_x < rx        ||
+                                    neighbor_y < ry        ||
+                                    neighbor_x >= (rx + r) ||
+                                    neighbor_y >= (ry + r)) {
+                                        continue;
+                                }
+                                
+                                // --------------------------------------------
+                                // Has the neighbor already been queued?
+                                // --------------------------------------------
+
+                                neighbor_index = INDEX(neighbor_x, neighbor_y);
+                                assert(neighbor_index >= 0);
+                                assert(neighbor_index < (q_size));
+
+                                if (queued[neighbor_index])
+                                        continue;
+
+                                // --------------------------------------------
+                                // Enqueue the neighbor
+                                // --------------------------------------------
+
+                                assert(q_tail < (q_size));
+
+                                q_x[q_tail] = neighbor_x;
+                                q_y[q_tail] = neighbor_y;
                                 q_tail++;
+                                queued[neighbor_index] = 1;
                         }
                         
                         continue;
@@ -1124,6 +1172,8 @@ bool Object::putOnMap(struct place *new_place, int new_x, int new_y, int r)
         printf("NO PLACE FOUND!\n");
 
  done:
+        free(queued);
+ free_q_y:
         free(q_y);
  free_q_x:
         free(q_x);

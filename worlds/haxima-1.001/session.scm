@@ -273,6 +273,19 @@
   "|| || || || || || || || || || || || || || || || || || || || || || || || || || || || tt tt .. .. /7 .. .. tt tt || || || || || || || || || || || || || || || || || || || || || || || || || || || "))
 
 (kern-mk-map
+ 'm_pit_of_death 8 8 pal_expanded
+ (list
+  "xx xx xx xx xx xx xx xx"
+  "xx !  !  !  !  !  !  xx"
+  "xx !  !  !  !  !  !  xx"
+  "xx !  !  !  !  !  !  xx"
+  "xx !  !  !  !  !  !  xx"
+  "xx !  !  !  !  !  !  xx"
+  "xx !  !  !  !  !  !  xx"
+  "xx xx xx xx xx xx xx xx"
+))
+
+(kern-mk-map
  'm_green_tower_lower 64 64 pal_expanded
  (list
   " r  r  r  r  r  r  r  r  r  r  r  r  r  r ~~ ~~ || || || ||  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r || || || || || || || || || "
@@ -400,6 +413,21 @@
                nil ; subplaces
                nil ; neighbors
                nil ; objects
+               nil ; hooks
+               )
+
+(kern-mk-place 'p_pit_of_death
+               "Pit of Death"
+               s_dungeon
+               m_pit_of_death
+               #f
+               #t
+               #f
+               #f
+               nil
+               nil
+               nil
+               (list 'pit-of-death-pre-entry-hook)
                )
 
 (kern-mk-place 'p_green_tower_lower
@@ -417,6 +445,7 @@
                 (list ch_olin 59 32)
                 (list (mk-ladder-up 'p_green_tower 32 32) 32 32)
                 ) ;; end of objects
+               nil ; hooks
                )
 
 (kern-mk-place 'p_green_tower
@@ -473,11 +502,12 @@
                                 (mk-tblitter 'p_green_tower 60 30 5 5 
                                              'm_campsite)) 62 32)
                 (list (mk-lever 'gt-b-1) 63 31)
-                ;;(list (mk-lever 'mg-1) 62 31)
                 (list (kern-tag 'mg-3 (mk-moongate 'ord)) 60 32)
                 (list (kern-tag 'mg-4 (mk-moongate 'ord)) 20 32)
                 (list (kern-mk-obj F_sleep_perm 1) 63 33)
+                (list (mk-teleporter 'p_pit_of_death 5 5) 60 32)
                 )
+               (list 'green-tower-pre-entry-hook)
                )
 
 (kern-mk-place 'p_wilderness
@@ -505,6 +535,7 @@
                 (list (kern-tag 'mg-2 (mk-moongate 'ord)) 35 25)
                 (list (mk-ship) 36 26)
                 )
+               nil ; hooks
                )
 
 (define hour 12)

@@ -653,8 +653,8 @@ enum MoveResult Character::move(int dx, int dy)
         }
 #endif // HARDCODE_PORTALS
 
-	relocate(getPlace(), newx, newy);
         decActionPoints(place_get_movement_cost(getPlace(), newx, newy, this));
+	relocate(getPlace(), newx, newy);
 
 	return MovedOk;
 }
@@ -1235,7 +1235,8 @@ void Character::resurrect(void)
 
         putOnMap(player_party->get_leader()->getPlace(), 
                  player_party->get_leader()->getX(),
-                 player_party->get_leader()->getY(), 4);
+                 player_party->get_leader()->getY(), 4,
+                 0);
 
         assert(isOnMap());
 

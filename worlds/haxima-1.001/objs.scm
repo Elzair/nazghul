@@ -17,3 +17,4 @@
 ;; Make a simple container (no ifc)
 (mk-obj-type 't_small_wooden_chest "small wooden chest" s_small_wooden_chest 
              layer-container nil)
+

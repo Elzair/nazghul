@@ -1,4 +1,5 @@
-(define mana-to-summon-green-slimes 3) ;; possible dup of spell table entry for kal xen nox
+(define mana-to-summon-green-slimes 3) ;; possible dup of spell table entry for
+				       ;; kal xen nox
 (define ap-to-summon-green-slimes 3) 
 (define range-of-acid-spray 2) ;; dup of arms table entry
 
@@ -17,9 +18,11 @@
          #t)))
 
 (define (yellow-slime-ai kchar)
+  (display "yellow-slime-ai")(newline)
   (let ((hostiles (all-visible-hostiles kchar)))
     (if (null? hostiles) (kern-obj-wander kchar)
         (begin
+          (display "hostiles:")(display hostiles)(newline)
           (or (summon-green-slimes kchar)
               (attack-a-target-with-acid-spray kchar hostiles)
               (pathfind-to-a-target kchar hostiles)

@@ -4450,7 +4450,12 @@ pointer scheme_call(scheme *sc, pointer func, pointer args) {
    sc->inside++;
    Eval_Cycle(sc, OP_APPLY); 
    sc->inside--;
-   return sc->code;
+
+   /* s_return puts the value in sc->value. I don't know how I got away with
+    * using sc->code for so long... maybe it depends upon the context? I hope
+    * not. */
+   /* return sc->code; */
+   return sc->value;
 } 
 
 #endif

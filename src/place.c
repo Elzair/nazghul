@@ -366,14 +366,111 @@ void place_del(struct place *place)
 		free(place->name);
 	if (place->terrain_map)
 		terrain_map_del(place->terrain_map);
+        if (place->pre_entry_hook)
+                closure_del(place->pre_entry_hook);
 	free(place);
+}
+
+static int place_generic_is_passable(int pclass, closure_t *effect, 
+                                     class Object *subject, int flags)
+{
+        // Is it passable?
+        if (subject->isPassable(pclass))
+                return 1;
+
+        // Is the caller actually trying to move the subject there?
+        if (0 == (flags & PFLAG_MOVEATTEMPT))
+                return 0;
+
+        // Is there an effect to apply on failed entry?
+        if (effect) {
+                subject->applyEffect(effect);
+        }
+
+        return 0;
+
+}
+
+static int place_terrain_is_passable(struct place *place, int x, int y,
+                                     class Object *subject, int flags)
+{
+	struct terrain *terrain;
+
+	terrain = place->terrain_map->terrain[y * place->terrain_map->w + x];
+
+        // Can we use the generic passability test?
+        if (0 == (flags & PFLAG_IGNOREVEHICLES))
+                return place_generic_is_passable(terrain_pclass(terrain),
+                                                 terrain->effect,
+                                                 subject, flags);
+
+        // Is the terrain passable?
+        if (subject->isPassable(terrain_pclass(terrain)))
+                return 1;
+
+        // Does the caller want to check for a vehicle?
+        if (0 == (flags & PFLAG_IGNOREVEHICLES))
+                return 0;
+
+        // Is there a vehicle there?
+        if (place_get_vehicle(place, x, y))
+                return 1;
+
+        // Is the caller actually trying to move the subject there?
+        if (0 == (flags & PFLAG_MOVEATTEMPT))
+                return 0;
+
+        // Does the terrain apply an effect on failed entry?
+        if (terrain->effect) {
+                subject->applyEffect(terrain->effect);
+        }
+
+        return 0;
+}
+
+static int place_field_is_passable(struct place *place, int x, int y,
+                                   class Object *subject, int flags)
+{
+	class Field *field;
+
+        // Is there a field there?
+	field = (class Field *) place_get_object(place, x, y, field_layer);
+	if (! field)
+                return 1;
+
+        return place_generic_is_passable(field->getPclass(),
+                                         field->getObjectType()->effect,
+                                         subject, flags);
+}
+
+static int place_mech_is_passable(struct place *place, int x, int y,
+                                   class Object *subject, int flags)
+{
+	class Object *mech;
+
+        // Is there a mech there?
+	mech = place_get_object(place, x, y, mech_layer);
+	if (! mech)
+                return 1;
+
+        // Is the mech passable?
+        if (subject->isPassable(mech->getPclass()))
+                return 1;
+
+        // Is the caller actually trying to move the subject there?
+        if (0 == (flags & PFLAG_MOVEATTEMPT))
+                return 0;
+
+        // Does the mech run a bump handler on failed entry?
+        if (mech->getObjectType()->canBump())
+                mech->getObjectType()->bump(mech, subject);
+
+        return 0;
 }
 
 int place_is_passable(struct place *place, int x, int y,
 		      class Object *subject, int flags)
 {
-	struct terrain *terrain;
-	class Field *field;
 	class Object *mech;
 	bool impassable_terrain;
 	bool no_convenient_vehicle;
@@ -387,40 +484,29 @@ int place_is_passable(struct place *place, int x, int y,
 		   x < 0 || x >= place->terrain_map->w)
 		return 0;
 
-	// Unless the destination terrain is passable, or a vehicle is present
-	// at the destination, return impassable. We allow movement onto
-	// impassable terrain with a vehicle, so that the vehicle can be
-	// boarded. For example, a ship on water.
-	terrain = place->terrain_map->terrain[y * place->terrain_map->w + x];
-        if (! subject->isPassable(terrain_pclass(terrain)) &&
-            ((flags & PFLAG_IGNOREVEHICLES) ||
-             ! place_get_vehicle(place, x, y))) {
-                if (flags & PFLAG_MOVEATTEMPT &&
-                    terrain->effect) {
-                        subject->applyEffect(terrain->effect);
-                }
-                return 0;
-        }
+        // Does the caller want to ignore terrain?
+        if (0 == (flags & PFLAG_IGNORETERRAIN)) {
 
-	// Test for an impassable Field
-	field = (class Field *) place_get_object(place, x, y, field_layer);
-	if (field != NULL && 
-            ! subject->isPassable(field->getPclass())) {
-                if (flags & PFLAG_MOVEATTEMPT &&
-                    field->getObjectType()->effect)
-                        subject->applyEffect(field->getObjectType()->effect);
-		return 0;
-        }
-
-	// Test for an impassable Mech
-	if ((flags & PFLAG_IGNOREMECHS) == 0) {
-		mech = place_get_object(place, x, y, mech_layer);
-		if (mech != NULL && ! subject->isPassable(mech->getPclass())) {
-                        if (flags & PFLAG_MOVEATTEMPT &&
-                            mech->getObjectType()->canBump())
-                                mech->getObjectType()->bump(mech, subject);
+                // Is the terrain passable?
+                if (! place_terrain_is_passable(place, x, y, subject, flags))
                         return 0;
-                }
+        }
+                
+        // Does the caller want to ignore fields?
+        if (0 == (flags & PFLAG_IGNOREFIELDS)) {
+
+                // Is the field passable?
+                if (! place_field_is_passable(place, x, y, subject, flags))
+                        return 0;
+
+        }
+
+	// Does the caller want to ignore mechs?
+	if (0 == (flags & PFLAG_IGNOREMECHS)) {
+                
+                // Is the mech passable?
+                if (! place_mech_is_passable(place, x, y, subject, flags))
+                        return 0;
 	}
 
 	return 1;
@@ -1563,6 +1649,14 @@ static void place_save_object(class Object *object, void *data)
         save->exit(save, "%d %d)\n", object->getX(), object->getY());
 }
 
+static void place_save_hooks(struct place *place, struct save *save)
+{
+        save->enter(save, "(list\n");
+        if (place->pre_entry_hook)
+                closure_save(place->pre_entry_hook, save);
+        save->exit(save, ")\n");
+}
+
 void place_save(struct save *save, void *val)
 {
         struct place *place;
@@ -1649,6 +1743,7 @@ void place_save(struct save *save, void *val)
         save->enter(save, "(list\n");
         place_for_each_object(place, place_save_object, save);
         save->exit(save, ") ;; end of objects\n");
+        place_save_hooks(place, save);
         save->exit(save, ") ;; end of place %s\n\n", place->tag);
 }
 

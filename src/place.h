@@ -64,6 +64,9 @@ BEGIN_DECL
 #define PFLAG_IGNOREVEHICLES   (1 << 4)
 #define PFLAG_IGNORECOMPANIONS (1 << 5)
 #define PFLAG_MOVEATTEMPT      (1 << 6)
+#define PFLAG_IGNORETERRAIN    (1 << 7) /* used by Object::putOnMap */
+#define PFLAG_IGNOREHAZARDS    (1 << 8) /* used by Object::putOnMap */
+#define PFLAG_IGNOREFIELDS     (1 << 9) /* used by Object::putOnMap */
 
 // Flags for placeDescribe:
 #define PLACE_DESCRIBE_TERRAIN (1 << 0)
@@ -129,6 +132,8 @@ struct place {
         // List hook used to put a subplace on the subplaces list of its
         // superplace.
         struct list container_link;
+
+        struct closure *pre_entry_hook;
 
         int saved;
         int lock;
