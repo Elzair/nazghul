@@ -2164,8 +2164,10 @@ static bool myPositionEnemy(class NpcParty * foe, int dx, int dy, bool defend)
 
         // Check for a map overlay.
         if (foe->vehicle && foe->vehicle->getObjectType()->map &&
-            Place == &Combat.place)
+            Place == &Combat.place) {
+                // printf("myPositionEnemy overlay, foe in vehicle\n");
                 overlay_map(foe->vehicle->getObjectType()->map, &foe->pinfo);
+          }
 
         Combat.enemy_vehicle = foe->vehicle;
         foe->disembark();
@@ -2673,9 +2675,11 @@ static bool position_player_party(struct combat_info *cinfo)
         if (player_party->vehicle &&
             player_party->vehicle->getObjectType()->map &&
             Place == &Combat.place) {
+                // VehicleType * vv        = player_party->vehicle->getObjectType();
+                // struct terrain_map * mm = vv->map;
+                // printf("party overlay, party in vehicle %p with map %p\n", vv, mm);
                 overlay_map(player_party->vehicle->getObjectType()->map,
                             &player_party->pinfo);
-
         }
         // Next check if the player is OVER (on the map) but not in a vehicle
         // on the map. Note: this only applies to non-dungeon combat, and in a
@@ -2687,11 +2691,13 @@ static bool position_player_party(struct combat_info *cinfo)
                                               player_party->getX(),
                                               player_party->getY())) &&
                  vehicle->getObjectType()->map) {
+                // printf("party overlay, party over vehicle\n");
                 overlay_map(vehicle->getObjectType()->map,
                             &player_party->pinfo);
         }
         // Finally, since there is no vehicle map check for a camping map.
         else if (cinfo->camping && player_party->campsite_map) {
+                // printf("party overlay, party is camping\n");
                 overlay_map(player_party->campsite_map, &player_party->pinfo);
         }
 

@@ -29,57 +29,64 @@
 #include "../characters/BlackBart_the_Shipwright.ghul"
 #include "../characters/Olin_the_Ghast.ghul"
 
-MAP m_empire_city {
-        type   ascii;
-        width  64;
-        height 64;
-        one_char_per_tile 1; /* optional */
-        palette pal_empire_city {
-                "%" t_wall;
-                "-"	t_cobblestone;
-                "@"	t_shallow;
-                "~"	t_deep;
-                "f"	t_forest;
-                "."	t_grass;
-                "&"	t_shoals;
-                "*"	t_counter_middle;
-                "="	t_A;
-                "b"	t_boulder;
-                "t" t_trees;
-                "," t_flagstones;
-                "o" t_pillar;
-                "0" t_counter_1x1;
-                "x" t_altar;
-                "!" t_lava; 
-                "e" t_deck;
+PALETTE pal_empire_city {
+  "~" t_deep;
+  "@" t_shallow;
+  "&" t_shoals;
 
-                "A" t_A;
-                "B" t_B; 
-                "C" t_C; 
-                "D" t_D; 
-                "E" t_E; 
-                "F" t_F; 
-                "G" t_G; 
-                "H" t_H; 
-                "I" t_I; 
-                "J" t_J; 
-                "K" t_K; 
-                "L" t_L; 
-                "M" t_M; 
-                "N" t_N; 
-                "O" t_O; 
-                "P" t_P; 
-                "Q" t_Q; 
-                "R" t_R; 
-                "S" t_S; 
-                "T" t_T; 
-                "U" t_U; 
-                "V" t_V; 
-                "W" t_W; 
-                "X" t_X; 
-                "Y" t_Y; 
-                "Z" t_Z;
-        }
+  "%" t_wall;
+  "b" t_boulder;
+  "o" t_pillar;
+  "x" t_altar;
+
+  "-" t_cobblestone;
+  "," t_flagstones;
+  "." t_grass;
+  "e" t_deck;
+
+  "f" t_forest;
+  "t" t_trees;
+
+  "*" t_counter_middle;
+  "0" t_counter_1x1;
+  "=" t_bridge;
+
+  "!" t_lava; 
+  
+  "A" t_A;
+  "B" t_B; 
+  "C" t_C; 
+  "D" t_D; 
+  "E" t_E; 
+  "F" t_F; 
+  "G" t_G; 
+  "H" t_H; 
+  "I" t_I; 
+  "J" t_J; 
+  "K" t_K; 
+  "L" t_L; 
+  "M" t_M; 
+  "N" t_N; 
+  "O" t_O; 
+  "P" t_P; 
+  "Q" t_Q; 
+  "R" t_R; 
+  "S" t_S; 
+  "T" t_T; 
+  "U" t_U; 
+  "V" t_V; 
+  "W" t_W; 
+  "X" t_X; 
+  "Y" t_Y; 
+  "Z" t_Z;
+} // PALETTE pal_empire_city
+
+MAP m_empire_city {
+        type    ascii;
+        width   64;
+        height  64;
+        one_char_per_tile 1; /* optional */
+        palette pal_empire_city;
         terrain {
 //            111111111122222222223333333333444444444455555555556666
 //  0123456789012345678901234567890123456789012345678901234567890123

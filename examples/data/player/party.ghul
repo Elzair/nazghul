@@ -26,16 +26,18 @@
 #ifndef party_ghul
 #define party_ghul
 
+PALETTE pal_campsite {
+  "%" t_boulder;
+  "." t_grass;
+  "!" t_fireplace;
+}
+
 MAP m_campsite {
-        type ascii;
-        width  7;
-        height 7;
+        type    ascii;
+        width   7;
+        height  7;
         one_char_per_tile 1;
-        palette pal_campsite {
-                "%" t_boulder;
-                "." t_grass;
-                "!" t_fireplace;
-        }
+        palette pal_campsite;
         terrain {
           "%%...%%";
           "%.....%";

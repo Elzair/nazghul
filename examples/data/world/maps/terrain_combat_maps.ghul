@@ -31,7 +31,7 @@ MAP m_forest_combat {
   type    ascii;
   width   32;
   height  32;
-  STD_TERRAIN_PALETTE;
+  palette pal_standard;
   terrain {
     "| | t . . . . . t t t . t t t . ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~";
     "| t . . . . . . . t t . t t . . . ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~";
@@ -73,7 +73,7 @@ MAP m_grass_combat {
   type    ascii;
   width   32;
   height  32;
-  STD_TERRAIN_PALETTE;
+  palette pal_standard;
   terrain {
     "r . . . . . . . . . . t t t t t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~";
     ". . . . . . . . . . . . . . t t t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~";
@@ -115,7 +115,7 @@ MAP m_water_combat {
   type    ascii;
   width   32;
   height  32;
-  STD_TERRAIN_PALETTE;
+  palette pal_standard;
   terrain {
     "- - - - - - - t t t . . . . . . . . . . . . . . - - - - - - - -";
     "- - - - - - - - t . . . . . . . - - . . . . . - - - - - - - - -";
@@ -156,7 +156,7 @@ MAP m_east_west_small_bridge_combat {
   type    ascii;
   width   32;
   height  32;
-  STD_TERRAIN_PALETTE;
+  palette pal_standard;
   terrain {
     //                     1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 3 3
     // 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1

@@ -269,6 +269,7 @@ extern "C" {
 #define PLACE_ID                121
 #define MAP_ID                  122
 
+#define TERRAIN_PALETTE_ID      124
 #define TERRAIN_ID              125
 #define MECH_TYPE_ID            126
 #define MECH_ID                 127

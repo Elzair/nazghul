@@ -49,14 +49,14 @@ struct terrain_map *terrain_map_create(char *tag, unsigned int w,
 struct terrain_map *terrain_map_clone(struct terrain_map *orig)
 {
 	struct terrain_map *map;
-
-    char * clonetag = (char *) malloc(strlen(orig->tag) + 2 + 1);
+    char * clonetag = (char *) calloc(strlen(orig->tag) + 2 + 1, sizeof(char));
     assert(clonetag);
     strncpy(clonetag, orig->tag, strlen(orig->tag));
     strcat(clonetag, "_c");
 
 	if (!(map = terrain_map_create(clonetag, orig->w, orig->h)))
 		return NULL;
+    free(clonetag);
 
 	memcpy(map->terrain, orig->terrain,
 	       sizeof(struct terrain *) * orig->w * orig->h);

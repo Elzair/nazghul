@@ -1,9 +1,9 @@
 MAP GreenTowerLower_Map {
-        type   ascii;
-        width  64;
-        height 64;
+        type    ascii;
+        width   64;
+        height  64;
         one_char_per_tile 1;
-        STD_TERRAIN_PALETTE;
+        palette pal_standard;
         terrain {
     "rrrrrrrrrrrrrr~~||||rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr|||||||||";
     "rrrrrrrrrrrrrrr~|||||rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr||||||||||";

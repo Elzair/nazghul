@@ -189,6 +189,7 @@ terrains  {
  * (one or more, for a union) palette(s).  
  * That should save memory and parse time.
  */
+#ifdef OLD_PER_MAP_PALETTES
 #define STD_TERRAIN_PALETTE \
 palette pal_standard {      \
         "_"    t_deep;      \
@@ -363,6 +364,7 @@ palette pal_expanded {       \
 \
         "d"    t_red_roses;     \
 } // palette STD_EXPANDED_PALETTE
+#endif // OLD_PER_MAP_PALETTES
 
 // SAM: This is a test of "top-level" PALETTEs:
 PALETTE pal_TEST {
@@ -370,6 +372,179 @@ PALETTE pal_TEST {
   "-"    t_shallow;
   "1234" t_rune_ST;
 }
+
+PALETTE pal_standard {
+        "_"    t_deep;
+        "-"    t_shallow;
+        "~"    t_shoals;
+        "%"    t_bog;
+        "."    t_grass;
+        "t"    t_trees;
+        "|"    t_forest;
+        "{"    t_hills;
+        "^"    t_mountains;
+
+        ","    t_flagstones;
+        "c"    t_cobblestone;
+        "e"    t_deck;
+        "="    t_bridge;
+        "g"    t_bridge_top;
+        "h"    t_bridge_bottom;
+
+        "f"    t_fire_terrain;
+        "!"    t_lava;
+        "&"    t_fireplace;
+
+        "x"    t_wall;
+        "?"    t_secret_door;
+        "p"    t_pillar;
+        "b"    t_boulder;
+        "r"    t_wall_rock;
+
+        "A"    t_A;
+        "B"    t_B;
+        "C"    t_C;
+        "D"    t_D;
+        "E"    t_E;
+        "F"    t_F;
+        "G"    t_G;
+        "H"    t_H;
+        "I"    t_I;
+        "J"    t_J;
+        "K"    t_K;
+        "L"    t_L;
+        "M"    t_M;
+        "N"    t_N;
+        "O"    t_O;
+        "P"    t_P;
+        "Q"    t_Q;
+        "R"    t_R;
+        "S"    t_S;
+        "T"    t_T;
+        "U"    t_U;
+        "V"    t_V;
+        "W"    t_W;
+        "X"    t_X;
+        "Y"    t_Y;
+        "Z"    t_Z;
+
+        "q"    t_rune_Q;
+
+        "@"    t_counter_middle;
+        "["    t_counter_left;
+        "]"    t_counter_right;
+        "0"    t_counter_1x1;
+
+        "+"    t_ankh;
+        "a"    t_altar;
+        "<"    t_leftwing;
+        ">"    t_rightwing;
+
+        "d"    t_red_roses;
+} // PALETTE pal_standard
+
+PALETTE pal_expanded {
+        "__"    t_deep;
+        "--"    t_shallow;
+        "~~"    t_shoals;
+        "%%"    t_bog;
+        ".."    t_grass;
+        "tt"    t_trees;
+        "||"    t_forest;
+        "{{"    t_hills;
+        "^^"    t_mountains;
+
+        ",,"    t_flagstones;
+        "cc"    t_cobblestone;
+        "ee"    t_deck;
+        "=="    t_bridge;
+        "gg"    t_bridge_top;
+        "hh"    t_bridge_bottom;
+
+        "f"    t_fire_terrain;
+        "!"    t_lava;
+        "&"    t_fireplace;
+
+        "x"    t_wall;
+        "xx"   t_wall;
+        "?"    t_secret_door;
+        "p"    t_pillar;
+        "b"    t_boulder;
+        "r"    t_wall_rock;
+
+        ".A"    t_A;
+        ".B"    t_B;
+        ".C"    t_C;
+        ".D"    t_D;
+        ".E"    t_E;
+        ".F"    t_F;
+        ".G"    t_G;
+        ".H"    t_H;
+        ".I"    t_I;
+        ".J"    t_J;
+        ".K"    t_K;
+        ".L"    t_L;
+        ".M"    t_M;
+        ".N"    t_N;
+        ".O"    t_O;
+        ".P"    t_P;
+        ".Q"    t_Q;
+        ".R"    t_R;
+        ".S"    t_S;
+        ".T"    t_T;
+        ".U"    t_U;
+        ".V"    t_V;
+        ".W"    t_W;
+        ".X"    t_X;
+        ".Y"    t_Y;
+        ".Z"    t_Z;
+
+        ",A"  t_rune_A;
+        ",B"  t_rune_B;
+        ",C"  t_rune_C;
+        ",D"  t_rune_D;
+        ",E"  t_rune_E;
+        ",F"  t_rune_F;
+        ",G"  t_rune_G;
+        ",H"  t_rune_H;
+        ",I"  t_rune_I;
+        ",J"  t_rune_J;
+        ",K"  t_rune_K;
+        ",L"  t_rune_L;
+        ",M"  t_rune_M;
+        ",N"  t_rune_N;
+        ",O"  t_rune_O;
+        ",P"  t_rune_P;
+        ",Q"  t_rune_Q;
+        ",R"  t_rune_R;
+        ",S"  t_rune_S;
+        ",T"  t_rune_T;
+        ",U"  t_rune_U;
+        ",V"  t_rune_V;
+        ",W"  t_rune_W;
+        ",X"  t_rune_X;
+        ",Y"  t_rune_Y;
+        ",Z"  t_rune_Z;
+
+        ";T"  t_rune_TH;
+        ";E"  t_rune_EE;
+        ";N"  t_rune_NG;
+        ";A"  t_rune_EA;
+        ";S"  t_rune_ST;
+        ";D"  t_rune_DOT;
+
+        "@"    t_counter_middle;
+        "["    t_counter_left;
+        "]"    t_counter_right;
+        "0"    t_counter_1x1;
+
+        "+"    t_ankh;
+        "a"    t_altar;
+        "<"    t_leftwing;
+        ">"    t_rightwing;
+
+        "d"    t_red_roses;
+} // PALETTE pal_expanded
 
 
 #endif // terrains_ghul

@@ -436,10 +436,10 @@ MECH_TYPE mech_hdoor {
 //
 
 MAP m_WATER_TRAP_OPEN {
-  type   ascii;
-  width  5;
-  height 5;
-  STD_TERRAIN_PALETTE;
+  type    ascii;
+  width   5;
+  height  5;
+  palette pal_standard;
   terrain {
     "_ _ _ _ _";
     "_ _ _ _ _";
@@ -453,7 +453,7 @@ MAP m_WATER_TRAP_CLOSED {
   type   ascii;
   width  5;
   height 5;
-  STD_TERRAIN_PALETTE;
+  palette pal_standard;
   terrain {
     "e e e e e";
     "e e e e e";

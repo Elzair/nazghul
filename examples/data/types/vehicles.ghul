@@ -65,26 +65,28 @@ MAP map_ship {
 #endif // FUNKY_ROTATING_SHIP
 
 
+PALETTE pal_ship {
+  "__" t_deep;
+  "--" t_shallow;
+  "~~" t_shoals;
+  
+  "##" t_ship_hull;
+  // SAM: The corner hull pieces get messed up when the map is rotated...
+  "NW" t_sh_hull_NW;  // NW corner is water
+  "SW" t_sh_hull_SW;  // SW corner is water
+  "ne" t_sh_hull_NE;  // NE corner is water
+  "se" t_sh_hull_SE;  // SE corner is water
+  
+  "o"  t_mast;
+  "|"  t_ships_wheel;
+  "."  t_deck;
+}
+
 MAP map_ship {
-  type   ascii;
-  width  17;
-  height 9;
-  palette pal_ship {
-    "__" t_deep;
-    "--" t_shallow;
-    "~~" t_shoals;
-
-    "##" t_ship_hull;
-    // SAM: The corner hull pieces get messed up when the map is rotated...
-    "NW" t_sh_hull_NW;  // NW corner is water
-    "SW" t_sh_hull_SW;  // SW corner is water
-    "ne" t_sh_hull_NE;  // NE corner is water
-    "se" t_sh_hull_SE;  // SE corner is water
-
-    "o"  t_mast;
-    "|"  t_ships_wheel;
-    "."  t_deck;
-  }
+  type    ascii;
+  width   17;
+  height  9;
+  palette pal_ship;
   terrain {
     "-- -- -- -- -- -- --  . -- --  . -- -- -- -- -- --";
     "-- -- -- -- ## ## ##  . ## ##  . ## ## ## ## -- --";

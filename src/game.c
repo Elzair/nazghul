@@ -156,8 +156,8 @@ static bool cursor_loaded;
 static int MATCH(int token)
 {
         if (lexer_lex(Lexer) != token) {
-                err("line %d: Expected token %c, got %c '%s'", Lexer->line,
-                    token, lexer_token(Lexer), lexer_lexeme(Lexer));
+                err("line %d: Expected token %c, got %c '%s'", 
+                    Lexer->line, token, lexer_token(Lexer), lexer_lexeme(Lexer));
                 exit(-1);
         }
         return 1;
@@ -167,8 +167,8 @@ static int MATCH_WORD(char *word)
 {
         MATCH(lexer_WORD);
         if (strcmp(lexer_lexeme(Lexer), word)) {
-                err("line %d: Expected %s, got %s", Lexer->line, word,
-                    lexer_lexeme(Lexer));
+                err("line %d: Expected word '%s', got '%s'", 
+                    Lexer->line, word, lexer_lexeme(Lexer));
                 exit(-1);
         }
         return 1;
@@ -353,9 +353,7 @@ static struct terrain *game_terrain_lookup(char *tag)
                         return terrain;
                 }
         }
-
         return 0;
-
 }
 
 static class OrdnanceType *lookupOrdnanceType(char *tag)
@@ -638,7 +636,7 @@ static int game_load_palette()
     return -1;
   }
   palette->tag = palette_tag;
-  palette_print(stdout, INITIAL_INDENTATION, palette);
+  // palette_print(stdout, INITIAL_INDENTATION, palette);
   list_add(&Terrain_Palettes, &palette->list);
   // Note that LTP_wrapper() already parsed the closing '}'
   
@@ -765,6 +763,13 @@ void *lookupTag(char *tag, int tid)
                 {
                         struct terrain *val = 0;
                         list_lookup_tag(&Terrains, tag, struct terrain, list,
+                                        val);
+                        return val;
+                }
+        case TERRAIN_PALETTE_ID:
+                {
+                        struct terrain_palette *val = 0;
+                        list_lookup_tag(&Terrain_Palettes, tag, struct terrain_palette, list,
                                         val);
                         return val;
                 }
@@ -913,7 +918,7 @@ static struct terrain_map *game_load_ascii_terrain_map(char *tag)
         PARSE_INT("width", width);
         PARSE_INT("height", height);
 
-        loader.lexer = Lexer;
+        loader.lexer     = Lexer;
         loader.lookupTag = lookupTag;
         loader.advance();
 
@@ -921,27 +926,24 @@ static struct terrain_map *game_load_ascii_terrain_map(char *tag)
         //      though compact and WS-padded 1-byte-wide palette maps 
         //      both exist...
         if (loader.matchWord("one_char_per_tile")) {
+                // This field is optional
                 if (!loader.getBool(&one_char_per_tile))
                         return NULL;
         }
 
-        // Palette {} block
-        if (!loader.matchWord("palette") ||
-            !loader.getWord(&palette_tag) || !loader.matchToken('{')) {
-                err("%s", loader.error);
-                return NULL;
+        // Palette
+        if ( !loader.matchWord("palette")  ||
+             !loader.getWord(&palette_tag)  ) {
+          err("%s", loader.error);
+          return NULL;
         }
-        if ((palette = LTP_wrapper(&loader)) == NULL) {
-                err("%s", loader.error);
-                return NULL;
-        }
-        palette->tag = palette_tag;
+        palette = (struct terrain_palette *) lookupTag(palette_tag, TERRAIN_PALETTE_ID);
+        PARSE_ASSERT(palette, "Map '%s' has invalid palette '%s'.\n", tag, palette_tag);
         // palette_print(stdout, INITIAL_INDENTATION, palette);
-        list_add(&Terrain_Palettes, &palette->list);
 
+        // Terrain {} block
         if (!(terrain_map = terrain_map_create(tag, width, height)))
                 return 0;
-
         terrain_map->palette = palette;
 
         if (one_char_per_tile) {

@@ -25,10 +25,10 @@
 #define P_prison_and_torture_chamber_ghul
 
 MAP m_prison_chamber {
-  type   ascii;
-  width  32;
-  height 32;
-  STD_TERRAIN_PALETTE;
+  type    ascii;
+  width   32;
+  height  32;
+  palette pal_standard;
   terrain {
     // 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
     "x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x"; // 0
@@ -67,10 +67,10 @@ MAP m_prison_chamber {
 }  /* m_prison_chamber */
 
 MAP m_BOG_TRAP_OPEN {
-  type   ascii;
-  width  3;
-  height 2;
-  STD_TERRAIN_PALETTE;
+  type    ascii;
+  width   3;
+  height  2;
+  palette pal_standard;
   terrain {
     "% % %";
     "% % %";
@@ -78,10 +78,10 @@ MAP m_BOG_TRAP_OPEN {
 } // m_BOG_TRAP_OPEN
 
 MAP m_BOG_TRAP_CLOSED {
-  type   ascii;
-  width  3;
-  height 2;
-  STD_TERRAIN_PALETTE;
+  type    ascii;
+  width   3;
+  height  2;
+  palette pal_standard;
   terrain {
     ". . .";
     ". . .";
@@ -126,10 +126,10 @@ MECH_TYPE mech_bog_trap_L_lever {
 
 
 MAP m_BOULDER_TRAP_OPEN {
-  type   ascii;
-  width  3;
-  height 2;
-  STD_TERRAIN_PALETTE;
+  type    ascii;
+  width   3;
+  height  2;
+  palette pal_standard;
   terrain {
     "b b b";
     "b b b";
@@ -137,10 +137,10 @@ MAP m_BOULDER_TRAP_OPEN {
 } // m_BOULDER_TRAP_OPEN
 
 MAP m_BOULDER_TRAP_CLOSED {
-  type   ascii;
-  width  3;
-  height 2;
-  STD_TERRAIN_PALETTE;
+  type    ascii;
+  width   3;
+  height  2;
+  palette pal_standard;
   terrain {
     ". . .";
     ". . .";
@@ -186,20 +186,20 @@ MECH_TYPE mech_boulder_trap_R_lever {
 
 
 MAP m_FLAME_BARRIER_TRAP_OPEN {
-  type   ascii;
-  width  1;
-  height 1;
-  STD_TERRAIN_PALETTE;
+  type    ascii;
+  width   1;
+  height  1;
+  palette pal_standard;
   terrain {
     "f";
   }
 } // m_FLAME_BARRIER_TRAP_OPEN
 
 MAP m_FLAME_BARRIER_TRAP_CLOSED {
-  type   ascii;
-  width  1;
-  height 1;
-  STD_TERRAIN_PALETTE;
+  type    ascii;
+  width   1;
+  height  1;
+  palette pal_standard;
   terrain {
     "c";
   }
