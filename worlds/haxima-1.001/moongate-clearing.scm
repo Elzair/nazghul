@@ -61,6 +61,7 @@
     )
    ))
 
+
 ;;----------------------------------------------------------------------------
 ;; Moongate Clearing
 ;;
@@ -76,28 +77,28 @@
     "^^ {{ {{ {{ {{ {{ tt || || || || tt || || || ^^ || ^^ {{ {{ ^^ {{ ^^ ";  //  3
     "^^ ^^ {{ {{ {{ tt || || || || tt tt tt || || || || ^^ ^^ {{ {{ {{ ^^ ";  //  4
     "^^ ^^ ^^ ^^ tt tt || || || tt tt tt tt tt tt || || || ^^ ^^ {{ ^^ ^^ ";  //  5
-    "^^ ^^ ^^ ^^ || || || || tt tt tt b tt tt tt || || || || ^^ ^^ ^^ ^^ ";  //  6
-    "^^ ^^ ^^ ^^ || || || tt tt b .. .. .. b tt tt || || || || ^^ ^^ || ";  //  7
+    "^^ ^^ ^^ ^^ || || || || tt tt tt b  tt tt tt || || || || ^^ ^^ ^^ ^^ ";  //  6
+    "^^ ^^ ^^ ^^ || || || tt tt b  .. .. .. b  tt tt || || || || ^^ ^^ || ";  //  7
     "^^ ^^ ^^ ^^ || || tt tt tt tt .. .. .. tt tt tt tt tt || || || || || ";  //  8
-    "^^ ^^ || || || || tt tt b .. .. .. .. .. b tt tt tt tt tt tt tt tt ";  //  9
+    "^^ ^^ || || || || tt tt b  .. .. .. .. .. b  tt tt tt tt tt tt tt tt ";  //  9
     "^^ || || || || || tt tt .. .. .. .. .. .. .. tt tt tt tt tt tt tt tt ";  // 10
-    "{{ || || || || || tt b .. .. .. .. .. .. .. b tt tt tt tt tt tt {{ ";  // 11
+    "{{ || || || || || tt b  .. .. .. .. .. .. .. b  tt tt tt tt tt tt {{ ";  // 11
     "{{ {{ || || || tt tt tt .. .. .. .. .. .. .. tt tt tt {{ {{ tt {{ {{ ";  // 12
-    "^^ {{ {{ {{ {{ tt tt tt b .. .. .. .. .. b tt tt {{ {{ {{ {{ {{ {{ ";  // 13
+    "^^ {{ {{ {{ {{ tt tt tt b  .. .. .. .. .. b  tt tt {{ {{ {{ {{ {{ {{ ";  // 13
     "^^ ^^ ^^ {{ {{ {{ tt tt tt tt .. .. .. tt tt tt {{ ^^ ^^ {{ {{ ^^ ^^ ";  // 14
-    "^^ ^^ ^^ ^^ {{ {{ {{ tt tt b .. .. .. b tt tt {{ ^^ ^^ ^^ {{ {{ ^^ ";  // 15
+    "^^ ^^ ^^ ^^ {{ {{ {{ tt tt b  .. .. .. b  tt tt {{ ^^ ^^ ^^ {{ {{ ^^ ";  // 15
     "^^ ^^ .. ^^ ^^ ^^ {{ {{ tt tt .. .. .. tt tt tt tt {{ ^^ ^^ {{ {{ ^^ ";  // 16
-    "^^ .. .. .. .. ^^ {{ {{ tt b .. .. .. b tt tt {{ {{ {{ {{ {{ ^^ ^^ ";  // 17
+    "^^ .. .. .. .. ^^ {{ {{ tt b  .. .. .. b  tt tt {{ {{ {{ {{ {{ ^^ ^^ ";  // 17
     "^^ .. .. .. .. ^^ {{ {{ tt tt .. .. .. tt tt tt tt tt tt {{ ^^ ^^ ^^ ";  // 18
-    "^^ .. .. .. .. ^^ {{ {{ tt b .. .. .. b tt b tt b tt tt ^^ ^^ ^^ ";  // 19
+    "^^ .. .. .. .. ^^ {{ {{ tt b  .. .. .. b  tt b  tt b  tt tt ^^ ^^ ^^ ";  // 19
     "^^ ^^ .. ^^ ^^ ^^ {{ {{ tt tt .. .. .. .. .. .. .. .. tt tt ^^ ^^ ^^ ";  // 20
-    "^^ ^^ ^^ ^^ ^^ ^^ ^^ {{ tt b .. .. .. .. .. .. .. .. b tt ^^ ^^ ^^ ";  // 21
+    "^^ ^^ ^^ ^^ ^^ ^^ ^^ {{ tt b  .. .. .. .. .. .. .. .. b  tt ^^ ^^ ^^ ";  // 21
     "^^ ^^ ,H ,A ,I ,L ^^ ^^ tt tt .. .. .. .. .. .. .. .. tt tt ^^ ^^ ^^ ";  // 22
-    "^^ .. .. .. .. .. .. ^^ tt tt b .. b tt b .. .. .. b tt tt ^^ ^^ ";  // 23
+    "^^ .. .. .. .. .. .. ^^ tt tt b  .. b  tt b  .. .. .. b  tt tt ^^ ^^ ";  // 23
     "^^ .. .. .. .. .. .. .. .. .. .. .. tt tt tt .. .. .. tt tt tt tt ^^ ";  // 24
-    "^^ .. .. .. .. .. .. ^^ tt || tt tt tt tt b .. .. .. b tt tt tt tt ";  // 25
+    "^^ .. .. .. .. .. .. ^^ tt || tt tt tt tt b  .. .. .. b  tt tt tt tt ";  // 25
     "^^ ,S ,E ,E ,K ,E ,R ^^ || || || tt tt tt .. .. .. .. .. tt tt tt tt ";  // 26
-    "^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ tt || tt tt tt b .. .. .. .. .. b tt tt tt ";  // 27
+    "^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ tt || tt tt tt b  .. .. .. .. .. b  tt tt tt ";  // 27
     )
   )
   #f #f #f #f
@@ -109,16 +110,16 @@
   ;; *** contents of the place ***
   (list
    (list (kern-tag 'black-gate (mk-moongate nil)) 11 11)
-   (list ch_gregor 1 23)
-   (list warchest 1 24)
+   (list ch_gregor  1 23)
+   (list warchest   1 24)
    (list (mk-cave-entrance 'p_slimy_cavern 8 30) 20 1)
    )
 
   nil ;; hooks
   (list  ;; edge entrances
    (list north 16 27)
-   (list east  0  11)
-   (list west 22 10)
+   (list east   0 11)
+   (list west  22 10)
    )
 ) ;; end of place p_moongate_clearing
 
