@@ -1,0 +1,80 @@
+//
+// Copyright-Only Dedication (based on United States law)
+//
+// The person or persons who have associated their work with this document (the
+// "Dedicator") hereby dedicate the entire copyright in the work of authorship
+// identified below (the "Work") to the public domain.
+//
+// Dedicator makes this dedication for the benefit of the public at large and
+// to the detriment of Dedicator's heirs and successors. Dedicator intends this
+// dedication to be an overt act of relinquishment in perpetuity of all present
+// and future rights under copyright law, whether vested or contingent, in the
+// Work. Dedicator understands that such relinquishment of all rights includes
+// the relinquishment of all rights to enforce (by lawsuit or otherwise) those
+// copyrights in the Work.
+//
+// Dedicator recognizes that, once placed in the public domain, the Work may be
+// freely reproduced, distributed, transmitted, used, modified, built upon, or
+// otherwise exploited by anyone for any purpose, commercial or non-commercial,
+// and in any way, including by methods that have not yet been invented or
+// conceived.
+//
+
+#ifndef Olin_the_Ghast_ghul
+#define Olin_the_Ghast_ghul
+
+RESP Olins_JoinResp {
+        SAY "[silently the phantom floats to your side]";
+        JOIN;
+}
+
+RESP Olins_DefaultResp {
+        SAY "[the spectre fixes you with an icy stare]";
+}
+
+RESP Olins_CryptResp {
+        SAY "[a terrible groan whispers] Hommmme....";
+}
+
+RESP Olins_WaterResp {
+        SAY "[a terrible groan whispers] Myyy... Loooove... Waaatchesss... ";
+}
+
+CONV Olins_Conv {
+        IMPORT { }
+        NATIVE {
+                DEFAULT Olins_DefaultResp;
+                JOIN    Olins_JoinResp;
+                CRYPT   Olins_CryptResp;
+                LOVE    Olins_WaterResp;
+                PARK    Olins_WaterResp;
+        }
+        
+}
+
+SCHED Olins_Sched {
+        // Specific to Empire City:
+        0  0  21 29  7  7  IDLE;  // park
+        10 0   5 57  4  3  IDLE; // crypt
+}
+
+CHAR Olin_the_Ghast {
+        name      "Olin";
+        species   ghast;
+        occ       wizard;
+        sprite    s_ghost;
+        hp        30;
+        xp        0;
+        cond      U;
+        str       25;
+        intl      130;
+        dex       25;
+        magic     150;
+        lvl       9;
+        conv      Olins_Conv;
+        sched     Olins_Sched;
+        readied {
+        }
+}
+
+#endif // Olin_the_Ghast_ghul
