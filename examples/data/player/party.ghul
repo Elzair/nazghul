@@ -155,13 +155,14 @@ player {
     50 item_sleep_potion;
   
     // Use-able Items
+    1  t_short_scroll;
+    1  t_map_editors_guide;
+    1  t_users_guide;
+
     99 t_torch;
   
     12 t_mushroom1;
-  
-    1  t_users_guide;
-    1  t_short_scroll;
-  
+
     // Reagents
     10 reagent_garlic;
     10 reagent_ginseng;

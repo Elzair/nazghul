@@ -103,6 +103,20 @@ Special commands:
 
     <ESC>....................Aborts most commands)");
 
+DOCUMENT_TYPE(t_map_editors_guide, "Nazghul Map Editors Guide", s_scroll1,
+              "Map Editing Commands:
+^S)ave Map - Save the current map and palette.
+^T)erraform - Enter map editing mode.
+
+When within map editing mode:
+<direction> move cursor
+<page up>   select previous terrain
+<page down> select next terrain
+<home>      select first terrain
+<end>       select last terrain
+[number]         Select quick terrain
+Control-[number] Set quick terrain
+");
 #endif // readable_items_ghul
 
 /* eof */
