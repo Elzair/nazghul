@@ -175,7 +175,7 @@
                "Gwen the Innkeeper" ; name
                sp_human            ; species
                nil                 ; occ
-               s_townsman          ; sprite
+               s_gray_robed_humanoid ; sprite
                faction-men         ; starting alignment
                0 10 5              ; str/int/dex
                0 0                 ; hp mod/mult
