@@ -328,6 +328,11 @@ extern "C" {
 #define DICE_ROLL(sides) (random() % (sides))
 #define distance(dx,dy) (((dx)>(dy)) ? ((dx)+((dy)>>1)) : ((dy)+ (dx)>>1)))
 
+// SAM: The below are used by palette_print(), terrain_map_print(), etc.
+#define INITIAL_INDENTATION   0
+#define INDENTATION_FACTOR    2
+#define INDENT fprintf(fp, "%*s", indent, "")
+
 /* Enums *********************************************************************/
 
 /* Structures ****************************************************************/
@@ -354,6 +359,7 @@ extern "C" {
 
 /* Global Variables **********************************************************/
 
+    extern struct list Terrain_Palettes;
 	extern struct list OrdnanceTypes;
 	extern struct list Sprites;
 	extern int Turn;

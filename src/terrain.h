@@ -65,10 +65,6 @@ extern "C" {
 
 #define LONGEST_TERRAIN_GLYPH 4
 #define NUM_QUICK_TERRAINS    10
-#define INITIAL_INDENTATION   0
-#define INDENTATION_FACTOR    2
-
-#define INDENT fprintf(fp, "%*s", indent, "")
 
 	struct terrain_palette_entry {
         char           * glyph;    // Loader::getString() will strdup()
@@ -93,6 +89,8 @@ extern "C" {
 	struct terrain *palette_terrain(struct terrain_palette *palette, int n);
 	struct terrain *palette_terrain_for_glyph(struct terrain_palette
 						  *palette, char *glyph);
+    struct terrain_palette * palette_contains_terrain (struct terrain_palette *pp, 
+                                                       struct terrain *tt);
 	struct terrain *palette_quick_terrain(struct terrain_palette *palette,
 					      int n);
 	void palette_print(FILE * fp, int indent,

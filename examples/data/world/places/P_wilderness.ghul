@@ -40,7 +40,7 @@ MAP m_wilderness {
     "________________________________________";  // 2 
     "______________________-----------_______";  // 3 
     "________---------------.........-----___";  // 4 
-    "_______--.....tttt.{{{{{{{{{{tt.....-___";  // 5 
+    "_______--.....tttt.{{{{{{{{{{tt...%{-___";  // 5 
     "___------...ttt{{{{{^^^^^^^^{{{tt...-___";  // 6 
     "___-....tttt{{{{^^^^^^^^^{{{{!{{t...--__";  // 7 
     "___-..ttt|{{{{^^^^^^^^^^^{{{{{{t.....-__";  // 8 
@@ -94,8 +94,9 @@ PLACE  p_wilderness {
 
     // npc parties:
     // tag, x, y, alignment, home, conversation, vehicle
-    t_goblin_horde   4  14   (ALIGN_MONSTER) 0 c_goblin null;
-    t_undead_brigade 2  26  (ALIGN_MONSTER) 0 null vt_ship;
+    t_goblin_horde    4 14  (ALIGN_MONSTER) 0 c_goblin null;
+    t_undead_brigade  2 26  (ALIGN_MONSTER) 0 null vt_ship;
+    t_undead_brigade 32  4  (ALIGN_MONSTER) 0 null vt_ship;
 
   }
   typical_npc_parties {

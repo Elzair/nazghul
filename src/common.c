@@ -31,6 +31,7 @@
 #include <stdlib.h>
 #include <time.h>
 
+struct list Terrain_Palettes;  // Initialized by initLoader()
 struct list OrdnanceTypes;
 int Turn;
 int Tick;

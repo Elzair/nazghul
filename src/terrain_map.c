@@ -50,11 +50,19 @@ struct terrain_map *terrain_map_clone(struct terrain_map *orig)
 {
 	struct terrain_map *map;
 
-	if (!(map = terrain_map_create(NULL, orig->w, orig->h)))
+	if (!(map = terrain_map_create(orig->tag, orig->w, orig->h)))
 		return NULL;
 
 	memcpy(map->terrain, orig->terrain,
 	       sizeof(struct terrain *) * orig->w * orig->h);
+
+    if (!orig->palette) {
+      printf("terrain_map_clone() \n"
+             "  called to clone a map (tag '%s') without a palette, \n"
+             "  this may be or cause a problem elsewhere.\n", orig->tag);
+      assert(0);
+    }
+    map->palette = orig->palette;
 
 	return map;
 }
@@ -192,6 +200,8 @@ void terrain_map_fill(struct terrain_map *map, int x, int y, int w, int h,
 		      struct terrain *fill)
 {
 	int x2, y2;
+    assert(map);
+    assert(fill);
 
 	for (y2 = y; y2 < (y + h); y2++) {
 		if (y2 < 0)
@@ -224,7 +234,15 @@ extern void terrain_map_print(FILE * fp, int indent, struct terrain_map *map)
     INDENT; fprintf(fp, "height %d;\n", map->h);
 
     palette = map->palette;
-    assert(palette);
+    // assert(palette);
+    if (!palette) {
+      // SAM: We will at least try to carry on...
+      palette = new_terrain_palette();
+      palette->tag          = "NO_PALETTE";
+      palette->widest_glyph = 1;
+      palette->num_entries  = 0;  // Should give reasonable results...
+    }
+
     compact = (PREFER_COMPACT_MAPS && palette->widest_glyph == 1);
     if (compact) {
       INDENT; fprintf(fp, "one_char_per_tile 1;\n");
@@ -238,6 +256,7 @@ extern void terrain_map_print(FILE * fp, int indent, struct terrain_map *map)
 	indent += INDENTATION_FACTOR;
 
     int w = palette->widest_glyph;
+    int unk = 0;
 	for (y = 0; y < map->h; y++) {
       INDENT; fprintf(fp, "\"");
 
@@ -245,6 +264,23 @@ extern void terrain_map_print(FILE * fp, int indent, struct terrain_map *map)
         int i = (y * map->w) + x;
         struct terrain * tt = map->terrain[i];
         char * glyph = palette_glyph_for_terrain(palette, tt);
+        if (!glyph) {
+          // SAM: 
+          // There are still circumstance(s) where this can happen.
+          // One example is a ship map blitted onto another combat map.
+          // The ship hull terrain is not in the standard palette,
+          // and each such terrain will hit this clause.
+          // 
+          // For now, this work-around will have to suffice,
+          // the alternative is to write palette-merging code and such,
+          // and that would happen at run-time, whereas any assertions
+          // due to strange GhulScript should happen at load time.
+          static char hack_glyph[LONGEST_TERRAIN_GLYPH+1];
+          snprintf(hack_glyph, w+1, "%*s", w, "?????????");
+          hack_glyph[LONGEST_TERRAIN_GLYPH] = '\0';
+          glyph = hack_glyph;  // Filled with '?' to appropriate width
+          unk = 1;  // Turn on a message below
+        }
         fprintf(fp, "%*s%s", w, glyph, (compact) ? "" : " ");
       } // for (x)
 
@@ -253,7 +289,8 @@ extern void terrain_map_print(FILE * fp, int indent, struct terrain_map *map)
 
 	indent -= INDENTATION_FACTOR;
 	fprintf(fp, "\n");
-	INDENT;	fprintf(fp, "} // terrain\n");
+	INDENT;	fprintf(fp, "} // terrain%s\n", 
+                    unk ? " (unknown glyphs found, printed as '?')" : "");
 
 	indent -= INDENTATION_FACTOR;
 	INDENT;	fprintf(fp, "} // MAP %s\n", map->tag);
