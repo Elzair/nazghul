@@ -690,7 +690,7 @@ bool Character::dropItems()
 void Character::kill()
 {
 	if (!playerControlled && getPlace()) {
-		printf("Dropping arms on %s", getPlace()->name);
+		printf("Dropping arms on %s\n", getPlace()->name);
 		dropRdyArms();
 		dropItems();
 	}
