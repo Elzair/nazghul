@@ -65,7 +65,6 @@ ObjectType::ObjectType()
 {
         assert(false);
 
-        list_init(&this->list);
         speed                  = 0;
         required_action_points = 0;
         max_hp                 = 0;

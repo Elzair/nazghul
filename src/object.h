@@ -174,7 +174,7 @@ class ObjectType {
         // This might turn out to be too vague. We'll see.
         virtual int getRequiredActionPoints();
 
-	struct list list;
+	//struct list list;
 
         bool isUsable();    // items, etc
         bool isReadyable(); // arms
