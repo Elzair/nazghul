@@ -364,6 +364,13 @@ palette pal_expanded {       \
         "d"    t_red_roses;     \
 } // palette STD_EXPANDED_PALETTE
 
+// SAM: This is a test of "top-level" PALETTEs:
+PALETTE pal_TEST {
+  "AB"   t_deep;
+  "-"    t_shallow;
+  "1234" t_rune_ST;
+}
+
 
 #endif // terrains_ghul
 

@@ -64,6 +64,11 @@
 #include <stdarg.h>
 #include <SDL/SDL.h>            // for SDL_GetTicks()
 
+// Prototypes of functions declared 'static':
+void *lookupTag(char *tag, int tid);
+static struct terrain_palette *LTP_wrapper(class Loader * loader);
+
+
 #define PARSE_INT(tag,var)         \
   if ((! MATCH_WORD((tag))) || (! MATCH(lexer_INT))) { \
     ret = -1; \
@@ -335,7 +340,7 @@ static int game_load_sprites(struct images *images)
       cleanup:
         return ret;
 }
-#endif
+#endif // 0
 
 static struct terrain *game_terrain_lookup(char *tag)
 {
@@ -525,7 +530,6 @@ static int game_load_Terrains()
                         return -1;
 
                 list_add(&Terrains, &terrain->list);
-
         }
 
         if (lexer_token(Lexer) != '}')
@@ -604,6 +608,45 @@ static struct terrain_map *game_load_binary_terrain_map(char *tag)
         return terrain_map;
 }
 #endif                          // SUPPORT_BINARY_TERRAIN_MAPS
+
+static int game_load_palette()
+{
+  // The construct we are parsing looks like:
+  // 
+  // PALETTE pal_foobar {
+  // "AB" t_foo;
+  // "x"  t_bar;
+  // }
+  // 
+  // Our caller already parsed the top-level keyword "PALETTE".
+
+  class Loader loader;
+  struct terrain_palette *palette;
+  char * palette_tag = 0;
+  int ret = 0;
+
+  lexer_lex(Lexer);
+  PARSE_TAG(palette_tag);
+  PARSE_START_OF_BLOCK();
+
+  loader.lexer     = Lexer;
+  loader.lookupTag = lookupTag;
+  loader.advance();
+  
+  if ((palette = LTP_wrapper(&loader)) == NULL) {
+    err("%s", loader.error);
+    return -1;
+  }
+  palette->tag = palette_tag;
+  palette_print(stdout, INITIAL_INDENTATION, palette);
+  list_add(&Terrain_Palettes, &palette->list);
+  // Note that LTP_wrapper() already parsed the closing '}'
+  
+ cleanup:  
+  // Do any free() activity, etc needed in failure cases here:
+  
+  return ret;
+} // game_load_palette()
 
 static void *lookupConversation(char *tag)
 {
@@ -766,7 +809,6 @@ void *lookupTag(char *tag, int tid)
 
 // SAM: Moved 'struct terrain_palette_entry' to terrain.h
 
-static struct terrain_palette *LTP_wrapper(class Loader * loader);
 static struct terrain_palette_entry *load_terrain_palette_entry(class Loader *
                                                                 loader,
                                                                 int
@@ -3083,6 +3125,7 @@ struct keyword {
 static struct keyword keywords[] = {
         {"SPRITE_SET", loadSpriteSet, false},
         {"terrains", game_load_Terrains, true},
+        {"PALETTE", game_load_palette, false},
 #ifdef OLD_MAP
         {"maps", game_load_Maps, true},
 #else
