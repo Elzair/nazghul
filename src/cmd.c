@@ -2071,7 +2071,8 @@ void terraform_XY(struct place *place, int x, int y, void * data)
         terrain_map_fill(map, x, y, 1, 1, tt);
         vmask_invalidate(place, x, y, 1, 1); // FIXME: need the place
         mapSetDirty();
-        player_party->updateView();
+        //player_party->updateView();
+        mapUpdate(0);
         consolePrint("TERRAFORM put %s '%s' at XY=(%d,%d)\n", 
                      tt->tag, tt->name, x, y);
 } // terraform_XY()
