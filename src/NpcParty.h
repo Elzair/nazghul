@@ -158,6 +158,7 @@ class NpcParty:public Object {
 	virtual void relocate(struct place *place, int x, int y);
 	virtual struct formation *get_formation();
         virtual void describe(int count);
+        virtual char *get_movement_sound();
 
 	struct list members;
 

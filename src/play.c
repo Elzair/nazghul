@@ -2258,6 +2258,7 @@ static int play_init(struct play *play)
 					 * always painted OVER the frame. */
 
 	mapInit(play->los_name);	// must be before placeEnter()
+	mapSetPlace(Place);	        // must be before placeEnter()
 	placeEnter();
 	consoleInit();
 
@@ -2266,7 +2267,6 @@ static int play_init(struct play *play)
 
 	windSetDirection(NORTH, 1);
 
-	mapSetPlace(Place);
 	player_party->view = mapCreateView();
 	if (!player_party->view)
 		return -1;

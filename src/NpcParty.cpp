@@ -1107,3 +1107,21 @@ void NpcParty::describe(int count)
                 vehicle->describe(1);
         }
 }
+
+static bool get_member_movement_sound(class Character * member, void *data)
+{
+        char **sound = (char **)data;
+	*sound = member->get_movement_sound();
+        return data != 0;
+}
+
+
+char *NpcParty::get_movement_sound()
+{
+        char *sound = 0;
+
+	if (vehicle)
+		return vehicle->get_movement_sound();
+        forEachMember(get_member_movement_sound, &sound);
+        return sound;
+}

@@ -238,7 +238,7 @@ void player_party::relocate(struct place *place, int x, int y)
 	int turns;
 
 	// Play any associated movement sound.
-	soundPlay(get_movement_sound());
+	//soundPlay(get_movement_sound());
 
 	// The one time we do not have a place is immediately after combat when
 	// we are transitioning from combat mode to party mode. In this case we
@@ -441,7 +441,7 @@ bool player_party::try_to_enter_moongate(class Moongate * src_gate)
 
 	// Now show the source gate closing.
 	src_gate->animateClosing();
-	soundPlay(src_gate->getEnterSound());
+	soundPlay(src_gate->getEnterSound(), SOUND_MAX_VOLUME);
 
 	// Pass through to the destination gate.
 	enter_moongate(dest_gate);

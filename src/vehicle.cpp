@@ -133,7 +133,7 @@ bool Vehicle::fire_weapon(int dx, int dy)
 	}
 
 	/* Start the sound of the cannon being fired */
-	soundPlay(ordnance->getFireSound());
+	soundPlay(ordnance->getFireSound(), SOUND_MAX_VOLUME);
 
 	/* Create a cannonball */
 	cannonball = new Object();

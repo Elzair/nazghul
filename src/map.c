@@ -661,3 +661,10 @@ void mapPeer(bool val)
 	screenUpdate(&Map.srect);
 #endif
 }
+
+void mapGetCameraFocus(struct place **place, int *x, int *y)
+{
+        *place = Map.place;
+        *x = Map.cam_x;
+        *y = Map.cam_y;
+}

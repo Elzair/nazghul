@@ -25,9 +25,10 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+        extern int SOUND_MAX_VOLUME;
 
 	extern void soundInit(void);
-	extern void soundPlay(char *file);
+	extern void soundPlay(char *file, int volume);
 
 #ifdef __cplusplus
 }

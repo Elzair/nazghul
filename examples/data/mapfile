@@ -2197,6 +2197,7 @@ SPECIES human {
   spells {
   }
   damage_sound "data/sounds/damage.wav";
+  movement_sound "data/sounds/walk.wav";
 }
 SPECIES goblin {
   name "goblin";
@@ -2225,6 +2226,7 @@ SPECIES goblin {
   spells {
   }
   damage_sound "data/sounds/damage.wav";
+  movement_sound "data/sounds/walk.wav";
 }
 SPECIES gazer {
   name "gazer";
@@ -2283,6 +2285,7 @@ SPECIES skeleton {
   spells {
   }
   damage_sound "data/sounds/damage.wav";
+  movement_sound "data/sounds/walk.wav";
 }
 SPECIES snake {
   name "snake";
@@ -2377,6 +2380,7 @@ SPECIES nixie {
     spell_magic_missile;
   }
   damage_sound "data/sounds/damage.wav";
+  movement_sound "data/sounds/rowing.wav";
 }
 PARTY t_goblin_horde {
   name "horde of goblins";

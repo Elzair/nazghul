@@ -43,6 +43,7 @@ extern "C" {
                 class ArmsType *weapon;
                 bool visible;
                 char *damage_sound;
+                char *movement_sound;
         };
 
         extern struct species *speciesLoad(class Loader *);

@@ -127,12 +127,15 @@ Character::~Character()
 
 	if (rdyArms != NULL)
 		free(rdyArms);
+
+        if (damage_sound)
+                free(damage_sound);
 }
 
 void Character::changeHp(int delta)
 {
 	if (delta < 0)
-		soundPlay(get_damage_sound());
+		soundPlay(get_damage_sound(), SOUND_MAX_VOLUME);
 	else {
 		delta = min(delta, getMaxHp() - hp);
 	}
@@ -1194,5 +1197,12 @@ char *Character::get_damage_sound()
                 return damage_sound;
         if (species && species->damage_sound)
                 return species->damage_sound;
+        return 0;
+}
+
+char *Character::get_movement_sound()
+{
+        if (species)
+                return species->movement_sound;
         return 0;
 }

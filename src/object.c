@@ -28,6 +28,8 @@
 #include "screen.h"
 #include "Loader.h"
 #include "console.h"
+#include "sound.h"
+#include "player.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -120,6 +122,11 @@ void Object::init(class ObjectType * type)
 
 void Object::relocate(struct place *newplace, int newx, int newy)
 {
+        int volume;
+        int distance;
+        struct place *foc_place;
+        int foc_x, foc_y;
+
 	if (getPlace())
 		place_remove_object(getPlace(), this);
 	setPlace(newplace);
@@ -127,6 +134,22 @@ void Object::relocate(struct place *newplace, int newx, int newy)
 	setY(newy);
 	place_add_object(getPlace(), this);
 	mapSetDirty();
+
+        volume = SOUND_MAX_VOLUME;
+
+        // Only apply distance attenuation in towns and wilderness.
+        if (player_party->context != CONTEXT_COMBAT) {
+                mapGetCameraFocus(&foc_place, &foc_x, &foc_y);
+                distance = place_flying_distance(foc_place, foc_x, foc_y,
+                                                 getX(), getY());
+
+                // reduce volume proportionally to distance
+                if (distance > 1)
+                        volume /= (distance/2);
+                printf("distance=%d volume=%d\n", distance, volume);
+        }
+
+        soundPlay(get_movement_sound(), volume);
 }
 
 void Object::remove()
@@ -156,4 +179,9 @@ void Object::paint(int sx, int sy)
 void Object::describe(int count)
 {
         getObjectType()->describe(count);        
+}
+
+char *Object::get_movement_sound()
+{
+        return 0;
 }

@@ -16,3 +16,10 @@ Changes for nazghul-0.1.2
   example with ship cannons) because npc party damage calls the character
   damage routines. In the examples I modified all species to play the old
   traditional damage sound.
+--Added sound attenuation with distance (hearing the nixies splash around gets
+  really annoying when you can't get away from it - need to find some better
+  sounds). I only made it apply in party mode because in combat mode it's a bit
+  trickier for the code that's playing the sound to figure out which party
+  member it needs to calculate the distance from. Since dungeons are not party
+  mode I'll probably want to reconsider how to do that.
+

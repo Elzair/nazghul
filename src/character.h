@@ -270,6 +270,7 @@ class Character:public Object {
 	virtual void describe(int count);
 	virtual void relocate(struct place *place, int x, int y);
         virtual char *get_damage_sound();
+        virtual char *get_movement_sound();
 
 	char *tag;
 	struct list plist;	// party list

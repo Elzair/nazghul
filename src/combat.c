@@ -177,7 +177,7 @@ static int q_tail;
 static void Defeat(void)
 {
 	// The NPCs have won.
-	soundPlay(SOUND_COMBAT_DEFEAT);
+	soundPlay(SOUND_COMBAT_DEFEAT, SOUND_MAX_VOLUME);
 	consolePrint("\n*** Battle is Lost! ***\n\n");
 	Combat.state = DONE;
 }
@@ -186,7 +186,7 @@ static void Victory(void)
 {
 	// The player has won. Play the triumphant music and advance to the
 	// looting phase.
-	soundPlay(SOUND_COMBAT_VICTORY);
+	soundPlay(SOUND_COMBAT_VICTORY, SOUND_MAX_VOLUME);
 	consolePrint("\n*** VICTORY! ***\n\n");
 	Combat.state = LOOTING;
 }
@@ -194,7 +194,7 @@ static void Victory(void)
 static void Retreat(void)
 {
 	// The player has escaped by fleeing.  
-	soundPlay(SOUND_COMBAT_DEFEAT);
+	soundPlay(SOUND_COMBAT_DEFEAT, SOUND_MAX_VOLUME);
 	consolePrint("\n*** Run Away! ***\n\n");
 	Combat.state = DONE;
 }
@@ -2560,7 +2560,7 @@ bool combat_enter(struct combat_info * info)
 	if (Combat.state == FIGHTING) {
 		consolePrint("\n*** Combat ***\n\n");
 		consoleRepaint();
-		soundPlay(SOUND_COMBAT_ENTER);
+		soundPlay(SOUND_COMBAT_ENTER, SOUND_MAX_VOLUME);
 	} else if (Combat.state != CAMPING) {
 		myFollow(0);
 	}

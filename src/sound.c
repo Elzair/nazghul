@@ -27,13 +27,16 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define NUM_SOUNDS 3
+#define NUM_SOUNDS 64
+
+int SOUND_MAX_VOLUME = SDL_MIX_MAXVOLUME;
 
 struct sound {
 	char *tag;
 	Uint8 *data;
 	Uint32 dpos;
 	Uint32 dlen;
+        int volume;
 } sounds[NUM_SOUNDS];
 
 static bool enableSound = false;
@@ -49,12 +52,12 @@ static void soundCB(void *unused, Uint8 * stream, int len)
 			amount = len;
 		}
 		SDL_MixAudio(stream, &sounds[i].data[sounds[i].dpos], amount,
-			     SDL_MIX_MAXVOLUME);
+			     sounds[i].volume);
 		sounds[i].dpos += amount;
 	}
 }
 
-void soundPlay(char *file)
+void soundPlay(char *file, int volume)
 {
 	int index;
 	SDL_AudioSpec wave;
@@ -101,6 +104,7 @@ void soundPlay(char *file)
 	sounds[index].data = cvt.buf;
 	sounds[index].dlen = cvt.len_cvt;
 	sounds[index].dpos = 0;
+        sounds[index].volume = volume;
 	SDL_UnlockAudio();
 }
 

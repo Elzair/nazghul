@@ -146,6 +146,10 @@ void speciesDestroy(struct species *species)
 		delete species->slots;
 	if (species->spells)
 		delete species->spells;
+        if (species->damage_sound)
+                free(species->damage_sound);
+        if (species->movement_sound)
+                free(species->movement_sound);
 }
 
 struct species *speciesLoad(class Loader * loader)
@@ -214,9 +218,11 @@ struct species *speciesLoad(class Loader * loader)
 
         while (!loader->matchToken('}')) {
 
-                // damage sound
                 if (loader->matchWord("damage_sound")) {
                         if (!loader->getString(&species->damage_sound))
+                                goto fail;
+                } else if (loader->matchWord("movement_sound")) {
+                        if (!loader->getString(&species->movement_sound))
                                 goto fail;
 
                 } else {

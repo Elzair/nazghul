@@ -268,6 +268,7 @@ class Object {
 		return false;
 	}
 	virtual void paint(int sx, int sy);
+        virtual char *get_movement_sound();
 
 	struct olist container_link;
 

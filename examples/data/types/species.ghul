@@ -26,7 +26,9 @@
 #ifndef species_ghul
 #define species_ghul
 
-#define STD_DAMAGE_SOUND damage_sound "data/sounds/damage.wav"
+#define STD_DAMAGE_SOUND damage_sound   "data/sounds/damage.wav"
+#define WALKING_SOUND    movement_sound "data/sounds/walk.wav"
+#define SPLASHING_SOUND  movement_sound "data/sounds/rowing.wav"
 
 SPECIES human {
   name    "human";
@@ -55,6 +57,7 @@ SPECIES human {
   spells {
   }
   STD_DAMAGE_SOUND;
+  WALKING_SOUND;
 }
 
 SPECIES goblin {
@@ -84,6 +87,7 @@ SPECIES goblin {
   spells {
   }
   STD_DAMAGE_SOUND;
+  WALKING_SOUND;
 }
 
 SPECIES gazer {
@@ -144,6 +148,7 @@ SPECIES skeleton {
   spells {
   }
   STD_DAMAGE_SOUND;
+  WALKING_SOUND;
 }
 
 SPECIES snake {
@@ -242,6 +247,7 @@ SPECIES nixie {
     spell_magic_missile;
   }
   STD_DAMAGE_SOUND;
+  SPLASHING_SOUND;
 }
 
 
