@@ -513,12 +513,12 @@ MECH_TYPE type_name { \
 } /* MAKE_DOORLIKE_MECH() */
 
 
+#if 0
 MAKE_DOORLIKE_MECH(mech_vdoor, "door", 8,
                    "closed",           s_door,        1,
                    "open",             null,          0,
                    "locked",           s_door_locked, 1,
                    "magically locked", s_door_locked, 1);
-
 MAKE_DOORLIKE_MECH(mech_hdoor, "door", 8,
                    "closed",           s_hdoor,        1,
                    "open",             null,           0,
@@ -537,7 +537,31 @@ MAKE_SELF_LOCKING_DOORLIKE_MECH(mech_1hr_self_locking_hdoor, "door", 8,
                    "locked",           s_hdoor_locked, 1,
                    "magically locked", s_hdoor_locked, 1,
                    TURNS_PER_HOUR);
+#else
+MAKE_DOORLIKE_MECH(mech_door_in_stone, "door", 8,
+                   "closed",           s_closed_solid_wood_door_in_stone, 1,
+                   "open",             s_open_solid_wood_door_in_stone,          0,
+                   "locked",           s_locked_solid_wood_door_in_stone, 1,
+                   "magically locked", s_magically_locked_solid_wood_door_in_stone, 1);
+MAKE_DOORLIKE_MECH(mech_door_in_rock, "door", 8,
+                   "closed",           s_closed_solid_wood_door_in_rock,        1,
+                   "open",             s_open_solid_wood_door_in_rock,           0,
+                   "locked",           s_locked_solid_wood_door_in_rock, 1,
+                   "magically locked", s_magically_locked_solid_wood_door_in_rock, 1);
 
+MAKE_DOORLIKE_MECH(mech_h_fence_gate, "gate", 8,
+                   "closed",           s_hdoor,        0,
+                   "open",             null,           0,
+                   "locked",           s_hdoor_locked, 0,
+                   "magically locked", s_hdoor_locked, 0);
+
+MAKE_SELF_LOCKING_DOORLIKE_MECH(mech_1hr_self_locking_door_in_stone, "door", 8,
+                   "closed",           s_closed_solid_wood_door_in_stone,        1,
+                   "open",             s_open_solid_wood_door_in_stone,           0,
+                   "locked",           s_locked_solid_wood_door_in_stone, 1,
+                   "magically locked", s_magically_locked_solid_wood_door_in_stone, 1,
+                   TURNS_PER_HOUR);
+#endif
 
 
 //

@@ -174,16 +174,16 @@ PLACE  p_empire_city {
     vt_ship 44 35 west 100;
 
     // doors
-    mech_hdoor door 62 33 "closed";
-    mech_vdoor door 30  1 "closed";
-    mech_hdoor door 28  4 "closed";
-    mech_hdoor door  1 30 "closed";
-    mech_hdoor door  1 33 "closed";
-    mech_vdoor door  4 28 "closed";
-    mech_hdoor door 28 59 "closed";
-    mech_hdoor door 35 59 "closed";
-    mech_vdoor door 30 62 "closed";
-    mech_vdoor door 33 62 "closed";
+    mech_door_in_stone door 62 33 "closed";
+    mech_door_in_stone door 30  1 "closed";
+    mech_door_in_stone door 28  4 "closed";
+    mech_door_in_stone door  1 30 "closed";
+    mech_door_in_stone door  1 33 "closed";
+    mech_door_in_stone door  4 28 "closed";
+    mech_door_in_stone door 28 59 "closed";
+    mech_door_in_stone door 35 59 "closed";
+    mech_door_in_stone door 30 62 "closed";
+    mech_door_in_stone door 33 62 "closed";
 
     // castle mechs
     castle_drawbridge west_bridge           38 11 "up";
@@ -205,7 +205,7 @@ PLACE  p_empire_city {
     CONNECT shipwright_exit_trigger_1 => shipwright_portcullis_1;
     CONNECT shipwright_exit_trigger_2 => shipwright_portcullis_1;
     CONNECT shipwright_exit_trigger_3 => shipwright_portcullis_1;
-    mech_vdoor door 35 32 "magically locked";
+    mech_door_in_stone door 35 32 "magically locked";
     
     // SAM: Examples of all 5 lever types:
     // 

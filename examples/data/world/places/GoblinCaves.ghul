@@ -89,31 +89,31 @@ PLACE GoblinCaves {
           //--------------------------------------------------
           // Mechs
           //--------------------------------------------------
-          mech_hdoor door1 35 12 "closed";
-          mech_hdoor door2 34 25 "closed";
-          mech_vdoor door3 31 28 "closed";
-          mech_hdoor door4 34 30 "closed";
-          mech_vdoor door5 36 29 "closed";
-          mech_hdoor door6 43 26 "closed";
-          mech_hdoor door7 44 26 "closed";
-          mech_hdoor door8 43 14 "closed";
-          mech_hdoor door9 44 14 "closed";
-          mech_vdoor door10 46 9 "closed";
-          mech_vdoor door11 19 11 "closed";
-          mech_vdoor door12 25 11 "closed";
-          mech_vdoor door13 15 6 "closed";
-          mech_hdoor door14 18 29 "closed";
-          mech_hdoor door15 19 23 "closed";
-          mech_hdoor door16 50 5 "closed";
-          mech_hdoor door17 56 19 "closed";
-          mech_hdoor door18 57 19 "closed";
-          mech_hdoor door19 47 32 "locked";
-          mech_hdoor door20 4 12 "closed";
-          mech_hdoor door21 5 12 "closed";
-          mech_hdoor door22 4 20 "closed";
-          mech_hdoor door23 5 20 "closed";
-          mech_vdoor door24 10 21 "closed";
-          mech_hdoor door25 20 35 "locked";
+          mech_door_in_stone door1 35 12 "closed";
+          mech_door_in_stone door2 34 25 "closed";
+          mech_door_in_stone door3 31 28 "closed";
+          mech_door_in_stone door4 34 30 "closed";
+          mech_door_in_stone door5 36 29 "closed";
+          mech_door_in_stone door6 43 26 "closed";
+          mech_door_in_stone door7 44 26 "closed";
+          mech_door_in_stone door8 43 14 "closed";
+          mech_door_in_stone door9 44 14 "closed";
+          mech_door_in_stone door10 46 9 "closed";
+          mech_door_in_stone door11 19 11 "closed";
+          mech_door_in_stone door12 25 11 "closed";
+          mech_door_in_stone door13 15 6 "closed";
+          mech_door_in_stone door14 18 29 "closed";
+          mech_door_in_stone door15 19 23 "closed";
+          mech_door_in_stone door16 50 5 "closed";
+          mech_door_in_stone door17 56 19 "closed";
+          mech_door_in_stone door18 57 19 "closed";
+          mech_door_in_stone door19 47 32 "locked";
+          mech_door_in_stone door20 4 12 "closed";
+          mech_door_in_stone door21 5 12 "closed";
+          mech_door_in_stone door22 4 20 "closed";
+          mech_door_in_stone door23 5 20 "closed";
+          mech_door_in_stone door24 10 21 "closed";
+          mech_door_in_stone door25 20 35 "locked";
 
           //--------------------------------------------------
           // NPC Parties

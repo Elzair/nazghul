@@ -86,6 +86,18 @@ SPRITE_SET ss_mine {
     SPRITE(s_wall_torch, 2, 46, normal);
 
     WAVE_SPRITE(s_water_elemental, 48);
+
+    SPRITE(s_closed_solid_wood_door_in_stone, 1, 49, normal);
+    SPRITE(s_open_solid_wood_door_in_stone,   1, 50, normal);
+    SPRITE(s_locked_solid_wood_door_in_stone, 1, 51, normal);
+    SPRITE(s_magically_locked_solid_wood_door_in_stone, 3, 52, normal);
+
+    SPRITE(s_closed_solid_wood_door_in_rock, 1, 56, normal);
+    SPRITE(s_open_solid_wood_door_in_rock,   1, 57, normal);
+    SPRITE(s_locked_solid_wood_door_in_rock, 1, 58, normal);
+    SPRITE(s_magically_locked_solid_wood_door_in_rock, 3, 59, normal);
+
+
   }
 } /* SPRITE_SET ss_mine */
 

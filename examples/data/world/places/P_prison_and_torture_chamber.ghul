@@ -267,8 +267,8 @@ PLACE p_prison_chamber {
     CONNECT light_1      <=> light_2;
 
     // Some ordinary doors
-    mech_hdoor door_1 22 20 "closed";
-    mech_hdoor door_1 23 20 "closed";
+    mech_door_in_stone door_1 22 20 "closed";
+    mech_door_in_stone door_1 23 20 "closed";
 
     // Prison Sign lights
     mech_light   light_3       9 20 "lit";
