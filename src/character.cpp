@@ -291,21 +291,11 @@ char *Character::getWoundDescription()
 	return desc[(getHp() * 4) / getMaxHp()];
 }
 
-static void uncharm_victims(class Object * obj, void *data)
-{
-        if (obj->isCharmed())
-                obj->unCharm();
-}
-
 void Character::groupExitTo(struct place *dest_place, int dest_x, int dest_y)
 {
-        place_for_each_object(getPlace(), uncharm_victims, NULL);
+        // Next line moved to place_enter() in place.c
+        //place_for_each_object(getPlace(), uncharm_victims, NULL);
         player_party->removeMembers();        
-#if 0
-        mapRmView(ALL_VIEWS);
-        mapAddView(player_party->view);
-        mapSetDirty();
-#endif
         player_party->relocate(dest_place, dest_x, dest_y);
         endTurn();
 }
@@ -314,6 +304,7 @@ enum Character::MoveResult Character::move(int dx, int dy)
 {
 	int newx, newy;
 	class Character *occupant;
+        class Moongate *moongate;
 
         // ---------------------------------------------------------------------
         // Let's give this next a try, in order to make the code for teleport
@@ -356,16 +347,16 @@ enum Character::MoveResult Character::move(int dx, int dy)
 
 	if (place_off_map(getPlace(), newx, newy)) {
 
-	  // -------------------------------------------------------------------
-	  // Npc characters can just step off and will be removed from
-	  // the game.
-	  // -------------------------------------------------------------------
-
-	  if (! isPlayerControlled() || isCharmed()) {
+                // -------------------------------------------------------------
+                // Npc characters can just step off and will be removed from
+                // the game.
+                // -------------------------------------------------------------
+                
+                if (! isPlayerControlled() || isCharmed()) {
                         remove();
                         destroy();
                         return ExitedMap;
-	  }
+                }
 
                 if (place_is_wilderness_combat(getPlace())) {
                         remove();
@@ -399,8 +390,6 @@ enum Character::MoveResult Character::move(int dx, int dy)
 
 	// Are the new coordinates already occupied by another character?
 	if ((occupant = (class Character *) place_get_object(getPlace(), newx, newy, being_layer))) {
-
-
                 
 
 		// Is the occupant an enemy?
@@ -472,6 +461,38 @@ enum Character::MoveResult Character::move(int dx, int dy)
 
 		return WasOccupied;
 	}
+        
+        // ---------------------------------------------------------------------
+        // Check for a moongate. NPC's and charmed PC's cannot enter and the
+        // party must be in follow mode to enter.
+        // ---------------------------------------------------------------------
+
+        moongate = place_get_moongate(getPlace(), newx, newy);
+        if (moongate) {
+
+                
+                if (! isPlayerControlled() || isCharmed()) {
+                        return WasImpassable;
+                }
+
+                if (player_party->getPartyControlMode() != PARTY_CONTROL_FOLLOW) {
+                        return NotFollowMode;
+                }
+                
+                if (!player_party->rendezvous(getPlace(), newx, newy)) {
+                        return CantRendezvous;
+                }
+
+                relocate(getPlace(), newx, newy);
+                decActionPoints(place_get_movement_cost(getPlace(), newx, newy));
+
+                player_party->try_to_enter_moongate(NULL);
+
+                endTurn();
+
+		return ExitedMap;
+                
+        }
 
 	relocate(getPlace(), newx, newy);
         decActionPoints(place_get_movement_cost(getPlace(), newx, newy));

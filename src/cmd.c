@@ -1402,7 +1402,7 @@ bool cmdTalk(int x, int y)
 
 	cmdwin_print(obj->getName());
 
-	consolePrint("\n*** CONVERSATION ***\n");
+	consolePrint("\n\n*** CONVERSATION ***\n\n");
 	consolePrint("You meet ");
 	obj->describe(1);
 	consolePrint(".\n");

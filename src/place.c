@@ -841,6 +841,8 @@ int place_get_light(struct place *place, int x, int y)
 static void myResetObjectTurns(class Object * obj, void *data)
 {
 	obj->synchronize();
+        if (obj->isCharmed())
+                obj->unCharm();
 }
 
 void place_enter(struct place *place)
