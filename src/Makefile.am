@@ -133,4 +133,6 @@ nazghul_SOURCES =		\
 	log.h \
 	log.c \
 	dtable.h \
-	dtable.c
+	dtable.c \
+	hstack.h \
+	hstack.c

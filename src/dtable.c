@@ -34,13 +34,27 @@
 struct dtable *dtable_new(int n_factions)
 {
         struct dtable *dtable;
+        int row, col, index;
 
+        /* allocate the "main" struct */
         dtable = (struct dtable*)calloc(1, sizeof(*dtable));
         assert(dtable);
-
+        
         dtable->n_factions = n_factions;
-        dtable->table = (int*)calloc(n_factions * n_factions, sizeof(int));
+
+        /* allocate the table of stack pointers */
+        dtable->table = (hstack_t**)calloc(n_factions * n_factions, 
+                                           sizeof(dtable->table[0]));
         assert(dtable->table);
+
+        /* initialize each stack ptr in the table */
+        index = 0;
+        for (row = 0; row < n_factions; row++) {
+                for (col = 0; col < n_factions; col++) {
+                        dtable->table[index] = hstack_new();
+                        index++;
+                }
+        }
 
         return dtable;        
 }
@@ -72,7 +86,13 @@ void dtable_set(struct dtable *dtable, int f1, int f2, int level)
         }
 
         index = dtable_index(dtable, f1, f2);
-        dtable->table[index] = level;
+
+        /* clear the stack */
+        while (hstack_top(dtable->table[index]))
+                hstack_pop(dtable->table[index]);
+
+        /* push the new value */
+        hstack_push(dtable->table[index], (void*)level);
 }
 
 int dtable_get(struct dtable *dtable, int f1, int f2)
@@ -90,7 +110,7 @@ int dtable_get(struct dtable *dtable, int f1, int f2)
         }
 
         index = dtable_index(dtable, f1, f2);
-        return dtable->table[index];
+        return (int)hstack_top(dtable->table[index]);
 }
 
 void dtable_change(struct dtable *dtable, int f1, int f2, int delta)
@@ -102,11 +122,34 @@ void dtable_change(struct dtable *dtable, int f1, int f2, int delta)
         dtable_set(dtable, f1, f2, level);
 }
 
+static void dtable_del_entry(hstack_t *entry)
+{
+        if (! entry)
+                return;
+
+        while (hstack_top(entry))
+                hstack_pop(entry);
+
+        hstack_del(entry);
+}
+
 void dtable_del(struct dtable *dtable)
 {
+        int row, col, index;
+
         assert(dtable);
 
-        if (dtable->table)
+        if (dtable->table) {
+
+                index = 0;
+                for (row = 0; row < dtable->n_factions; row++) {
+                        for (col = 0; col < dtable->n_factions; col++) {
+                                dtable_del_entry(dtable->table[index]);
+                                index++;
+                        }
+                }
+
                 free(dtable->table);
+        }
         free(dtable);
 }

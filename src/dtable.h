@@ -27,6 +27,8 @@
 
 BEGIN_DECL
 
+#include "hstack.h"
+
 #define FACTION_NONE               0
 #define DTABLE_DEFAULT_LOWER_BOUND -2
 #define DTABLE_DEFAULT_UPPER_BOUND 2
@@ -50,7 +52,7 @@ struct dtable {
         int allies;
         int lower_bound;
         int upper_bound;
-        int *table;
+        hstack_t **table;
 };
 
 extern struct dtable *dtable_new(int n_factions);
