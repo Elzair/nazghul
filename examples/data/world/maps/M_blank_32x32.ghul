@@ -28,7 +28,7 @@ MAP m_blank_32x32 {
   type    ascii;
   width   32;
   height  32;
-  palette pal_extended;
+  palette pal_expanded;
   terrain {
    ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..";
    ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..";
