@@ -290,6 +290,8 @@ enum Character::MoveResult Character::move(int dx, int dy)
 
 	// Is the character walking off the edge of the map?
 	if (place_off_map(getPlace(), newx, newy)) {
+                if (place_get_parent(getPlace()) == NULL)
+                        return OffMap;
 		remove();
 		return ExitedMap;
 	}

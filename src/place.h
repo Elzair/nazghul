@@ -46,6 +46,7 @@ extern "C" {
 #define place_is_town(p) ((p)->type == town_place)
 #define place_is_dungeon(p) ((p)->type == dungeon_place)
 #define place_get_item(p,x,y) place_get_object((p),(x),(y),item_layer)
+#define place_get_parent(p) ((p)->location.place)
 
 #define PFLAG_HORZ          (1 << 0) /* matches ASTAR_HORZ */
 #define PFLAG_VERT          (1 << 1) /* matches ASTAR_VERT */

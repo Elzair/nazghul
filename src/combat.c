@@ -852,10 +852,10 @@ static void myMoveNPC(class Character * c, int dx, int dy)
         case Character::ExitedMap:
                 myExitMap(c, dx, dy);
                 break;
-
         case Character::EngagedEnemy:
                 statusRepaint();
                 break;
+        case Character::OffMap:
         case Character::WasOccupied:
         case Character::WasImpassable:
         case Character::SlowProgress:
@@ -913,6 +913,10 @@ static void myMovePC(class Character * c, int dx, int dy, int verbose)
         case Character::MovedOk:
                 if (verbose)
                         consolePrint("Ok\n");
+                break;
+        case Character::OffMap:
+                if (verbose)
+                        consolePrint("No place to go!\n");
                 break;
         case Character::ExitedMap:
                 if (verbose) {

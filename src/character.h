@@ -66,6 +66,7 @@ class Character:public Object {
 		SlowProgress,
 		SwitchedOccupants,
                 CouldNotSwitchOccupants,
+                OffMap, /* and no parent map (dungeons) */
 	};
 
 	Character();
