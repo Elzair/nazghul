@@ -79,6 +79,7 @@ extern "C" {
         struct terraform_mode_keyhandler {
                 // This struct is put into the 'data' field of a 
                 // 'struct KeyHandler'.
+                // It is used by terraform_movecursor_and_do().
                 bool              abort;
                 v_funcpointer_iiv each_point_func;
                 v_funcpointer_iiv each_target_func;

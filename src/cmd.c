@@ -367,6 +367,11 @@ int movecursor_and_do(struct KeyHandler * kh, int key, int keymod)
         return 0;  // Keep on keyhandling
 } // movecursor_and_do()
 
+void emit_terraform_status (char * msg, struct terrain_palette * pp, struct terrain * tt)
+{
+    log_msg("[%s] %3d: %s '%s'", msg, pp->current_terrain_index, tt->tag, tt->name);
+} // emit_terraform_status()
+
 int terraform_movecursor_and_do(struct KeyHandler * kh, int key, int keymod)
 {
         // As movecursor_and_do(), but with additional keybindings
@@ -389,6 +394,8 @@ int terraform_movecursor_and_do(struct KeyHandler * kh, int key, int keymod)
 
         if (keyIsDirection(key)) {
                 int dir = keyToDirection(key);
+                // SAM: TODO: The Terraform cursor should not be allowed 
+                //            to go past the Viewport bounds...
                 Session->crosshair->move(directionToDx(dir), 
                                          directionToDy(dir));
                 mapSetDirty();
@@ -404,28 +411,28 @@ int terraform_movecursor_and_do(struct KeyHandler * kh, int key, int keymod)
                 // Page Up == Cycle back through terrain in palette
                 palette_prev_terrain(pp);
                 tt = palette_current_terrain(pp);
-                log_msg("[Prev] terrain %s '%s'", tt->tag, tt->name);
+                emit_terraform_status("Prev", pp, tt);
                 return 0;  // Keep on keyhandling
         }
         if (key == SDLK_PAGEDOWN) {
                 // Page Down == Cycle forward through terrain in palette
                 palette_next_terrain(pp);
                 tt = palette_current_terrain(pp);
-                log_msg("[Next] terrain %s '%s'", tt->tag, tt->name);
+                emit_terraform_status("Next", pp, tt);
                 return 0;  // Keep on keyhandling
         }
         if (key == SDLK_HOME) {
                 // Home == Select first terrain in palette
                 palette_first_terrain(pp);
                 tt = palette_current_terrain(pp);
-                log_msg("[First] terrain %s '%s'", tt->tag, tt->name);
+                emit_terraform_status("Frst", pp, tt);
                 return 0;  // Keep on keyhandling
         }
         if (key == SDLK_END) {
                 // End == Select last terrain in palette
                 palette_last_terrain(pp);
                 tt = palette_current_terrain(pp);
-                log_msg("[Last] terrain %s '%s'", tt->tag, tt->name);
+                emit_terraform_status("Last", pp, tt);
                 return 0;  // Keep on keyhandling
         }
 
@@ -438,14 +445,14 @@ int terraform_movecursor_and_do(struct KeyHandler * kh, int key, int keymod)
                         int index = palette_get_current_terrain_index(pp);
                         palette_set_quick_terrain(pp, qt, index);
                         tt = palette_current_terrain(pp);
-                        log_msg("[Quick %d] set to %s '%s'", qt, tt->tag, tt->name);
+                        log_msg("[Set Quick %d] %3d: %s '%s'", qt, pp->current_terrain_index, tt->tag, tt->name);
                         return 0; // Keep on keyhandling
                 }
                 // Plain NUM == set current terrain from quick terrain:
                 int index = palette_get_quick_terrain_index(pp, qt);
                 palette_set_current_terrain(pp, index);
                 tt = palette_current_terrain(pp);
-                log_msg("[Quick %d] %s '%s'", qt, tt->tag, tt->name);
+                log_msg("[Quick %d] %3d: %s '%s'", qt, pp->current_terrain_index, tt->tag, tt->name);
                 return 0;  // Keep on keyhandling
         }
 
@@ -2143,8 +2150,7 @@ void DM_XRAY_look_at_XY(struct place *place, int x, int y, void * data)
         // NOTE: data needs to be unused unless cmdTerraform() 
         //       itself makes such a one.
         if (!mapTileIsVisible(x, y) ) {
-                log_msg("(Out of LOS) ", x, y);
-                log_begin("At XY=(%d,%d) you see ", x, y);
+                log_begin("(Out of LOS) At XY=(%d,%d) you see ", x, y);
                 place_describe(place, x, y, PLACE_DESCRIBE_ALL);
                 log_end(NULL);
                 return;
@@ -2162,17 +2168,25 @@ void terraform_XY(struct place *place, int x, int y, void * data)
         struct terrain_palette * pp  = kh->palette;
         struct terrain         * tt  = palette_current_terrain(pp);
 
-        if (!mapTileIsVisible(x, y)) {
-                log_msg("TERRAFORM warning - XY=(%d,%d) out of LOS\n", 
-                             x, y);
-        }
+        // SAM: This section is redundant because DM_XRAY_look_at_XY()
+        //      already emits a suitable message.  Commented it out to reduce clutter.
+        // 
+        //if (!mapTileIsVisible(x, y)) {
+        //        log_msg("TERRAFORM XY=(%d,%d) is out of LOS\n", 
+        //                     x, y);
+        // }
         terrain_map_fill(map, x, y, 1, 1, tt);
         vmask_invalidate(place, x, y, 1, 1); // FIXME: need the place
         mapSetDirty();
         //player_party->updateView();
         mapUpdate(0);
-        log_msg("TERRAFORM put %s '%s' at XY=(%d,%d)", 
-                     tt->tag, tt->name, x, y);
+        // SAM: Commenting out the line below results in a less chatty 
+        //      Terraform UI, which is arguably nicer.  
+        //      On the other hand, the messages are somewhat useful.
+        //      The Right Thing (TM) is probably the status mode...
+        // 
+        // log_msg("XY=(%d,%d) now %d: %s", 
+        //         x, y, pp->current_terrain_index, tt->tag);
 } // terraform_XY()
 
 bool cmdXamine(class Object * pc)
@@ -2389,8 +2403,13 @@ bool cmdTerraform(class Character * pc)
         // That is TODO later; I have not written a new status mode before.
         // First thing is to get the map editor working.
         log_begin_group();
-        log_msg("Terraform on map %s, palette %s.", map->tag, palette->tag);
-        log_msg("Current terrain is %s '%s'.", terrain->tag, terrain->name);
+        log_msg("---Terraform---");
+        log_msg("Place %s",     place->tag  );
+        log_msg("      \"%s\"", place->name );
+        log_msg("Map   %s",     map->tag    );
+        log_msg("Palette %s",   palette->tag);
+        // log_msg("Terrain %d: %s '%s'", palette->current_terrain_index, terrain->tag, terrain->name);
+        emit_terraform_status("Trrn", palette, terrain);
 
         DM_XRAY_look_at_XY(place, x,y, NULL);  // First look at the current tile
 	if (terraform_cursor_func(x, y, &x, &y, 99,
@@ -2435,7 +2454,7 @@ bool cmdSaveTerrainMap(class Character * pc)
         palette = map->palette;
 
         // Save the palette for the current map:
-        sprintf(palette_filename, "/tmp/nazghul.pal.%s.%d.ghul", 
+        sprintf(palette_filename, "/tmp/nazghul.pal.%s.%d.scm", 
                 palette->tag, getpid() );
         palette_fp = fopen(palette_filename, "w");
         if (!palette_fp) {
@@ -2450,7 +2469,7 @@ bool cmdSaveTerrainMap(class Character * pc)
         log_msg("Saved palette as '%s'.", palette_filename);
 
         // And save the current map:
-        sprintf(map_filename, "/tmp/nazghul.map.%s.%d.ghul", 
+        sprintf(map_filename, "/tmp/nazghul.map.%s.%d.scm", 
                 map->tag, getpid() );
         map_fp = fopen(map_filename, "w");
         if (!map_fp) {
