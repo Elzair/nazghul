@@ -129,7 +129,7 @@
                                  990
                                  1
                                  t_bandit_gang
-                                 faction-monster
+                                 faction-outlaw
                                  nil)
 
 (define (mk-generator type)

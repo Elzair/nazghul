@@ -34,35 +34,35 @@
    nil ;; trap
 
    (list
-
+    
     ;; Food
     (list 10 t_mushroom)
 
     ;; Gold
     (list 100 t_gold_coins)
 
-    ;; Clothing
-    (list 6  t_clothing_rags)
-    (list 1  t_robe_red)
-    (list 1  t_robe_green)
-    (list 1  t_robe_blue)
-
     ;; Reagents
-   (list 23 sulphorous_ash)
-   (list 35 ginseng)
-   (list 32 garlic)
-   (list 20 spider_silk)
-   (list 16 blood_moss)
-   (list 12 black_pearl)
-   (list  3 nightshade)
-   (list  2 mandrake)
-   
+    (list 23 sulphorous_ash)
+    (list 35 ginseng)
+    (list 32 garlic)
+    (list 20 spider_silk)
+    (list 16 blood_moss)
+    (list 12 black_pearl)
+    (list  3 nightshade)
+    (list  2 mandrake)
+    
     ;; Items
-    (list 3 heal-potion)
+    (list 5 heal-potion)
     (list 3 cure-poison-potion)
     (list 2 poison-bolt-scroll-type)
     (list 1 death-bolt-scroll-type)
     (list 5 t_torch)
+    
+    ;; Arms
+    (list 1 t_shield_wooden_buckler)
+    (list 1 short-sword)
+    (list 1 t_sling)
+    (list 5 t_oil)
 
     ;; Hints/instructions
     (list 1 basic-survival-manual)
@@ -78,6 +78,12 @@
 
    (list
     
+    ;; Clothing
+    (list 6  t_clothing_rags)
+    (list 1  t_robe_red)
+    (list 1  t_robe_green)
+    (list 1  t_robe_blue)
+
     ;; Armor and Worn Items
     (list 3  t_ranger_cap)
     (list 2  t_leather_helm)
@@ -167,36 +173,36 @@
   s_shrine ;; sprite
   (kern-mk-map 'm_moongate_clearing 23 28 pal_expanded
     (list
-    "^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ tt tt tt tt tt ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ";  //  0
-    "^^ {{ {{ {{ ^^ ^^ ^^ ^^ tt tt tt || || ^^ ^^ ^^ {{ {{ {{ ^^ {{ {{ ^^ ";  //  1
-    "^^ {{ {{ {{ {{ ^^ tt tt tt || tt tt || || ^^ ^^ {{ ^^ {{ ^^ ^^ {{ ^^ ";  //  2
-    "^^ {{ {{ {{ {{ {{ tt || || || || tt || || || ^^ || ^^ {{ {{ ^^ {{ ^^ ";  //  3
-    "^^ ^^ {{ {{ {{ tt || || || || tt tt tt || || || || ^^ ^^ {{ {{ {{ ^^ ";  //  4
-    "^^ ^^ ^^ ^^ tt tt || || || tt tt tt tt tt tt || || || ^^ ^^ {{ ^^ ^^ ";  //  5
-    "^^ ^^ ^^ ^^ || || || || tt tt tt bb tt tt tt || || || || ^^ ^^ ^^ ^^ ";  //  6
-    "^^ ^^ ^^ ^^ || || || tt tt bb .. .. .. bb tt tt || || || || ^^ ^^ || ";  //  7
-    "^^ ^^ ^^ ^^ || || tt tt tt tt .. .. .. tt tt tt tt tt || || || || || ";  //  8
-    "^^ ^^ || || || || tt tt bb .. .. .. .. .. bb tt tt tt tt tt tt tt tt ";  //  9
-    "^^ || || || || || tt tt .. .. .. .. .. .. .. tt tt tt tt tt tt tt tt ";  // 10
-    "{{ || || || || || tt bb .. .. .. .. .. .. .. bb tt tt tt tt tt tt {{ ";  // 11
-    "{{ {{ || || || tt tt tt .. .. .. .. .. .. .. tt tt tt {{ {{ tt {{ {{ ";  // 12
-    "^^ {{ {{ {{ {{ tt tt tt bb .. .. .. .. .. bb tt tt {{ {{ {{ {{ {{ {{ ";  // 13
-    "^^ ^^ ^^ {{ {{ {{ tt tt tt tt .. .. .. tt tt tt {{ ^^ ^^ {{ {{ ^^ ^^ ";  // 14
-    "^^ ^^ ^^ ^^ {{ {{ {{ tt tt bb .. .. .. bb tt tt {{ ^^ ^^ ^^ {{ {{ ^^ ";  // 15
-    "^^ ^^ .. ^^ ^^ ^^ {{ {{ tt tt .. .. .. tt tt tt tt {{ ^^ ^^ {{ {{ ^^ ";  // 16
-    "^^ .. .. .. .. ^^ {{ {{ tt bb .. .. .. bb tt tt {{ {{ {{ {{ {{ ^^ ^^ ";  // 17
-    "^^ .. .. .. .. ^^ {{ {{ tt tt .. .. .. tt tt tt tt tt tt {{ ^^ ^^ ^^ ";  // 18
-    "^^ .. .. .. .. ^^ {{ {{ tt bb .. .. .. bb tt bb tt bb tt tt ^^ ^^ ^^ ";  // 19
-    "^^ ^^ .. ^^ ^^ ^^ {{ {{ tt tt .. .. .. .. .. .. .. .. tt tt ^^ ^^ ^^ ";  // 20
-    "^^ ^^ ^^ ^^ ^^ ^^ ^^ {{ tt bb .. .. .. .. .. .. .. .. bb tt ^^ ^^ ^^ ";  // 21
-    "^^ ^^ ,H ,A ,I ,L ^^ ^^ tt tt .. .. .. .. .. .. .. .. tt tt ^^ ^^ ^^ ";  // 22
-    "^^ .. .. .. .. .. .. ^^ tt tt bb .. bb tt bb .. .. .. bb tt tt ^^ ^^ ";  // 23
-    "^^ .. .. .. .. .. .. .. .. .. .. .. tt tt tt .. .. .. tt tt tt tt ^^ ";  // 24
-    "^^ .. .. .. .. .. .. ^^ tt || tt tt tt tt bb .. .. .. bb tt tt tt tt ";  // 25
-    "^^ ,S ,E ,E ,K ,E ,R ^^ || || || tt tt tt .. .. .. .. .. tt tt tt tt ";  // 26
-    "^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ tt || tt tt tt bb .. .. .. .. .. bb tt tt tt ";  // 27
+     "^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ tt tt tt tt tt ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ "
+     "^^ {{ {{ {{ ^^ ^^ ^^ ^^ tt tt tt || || ^^ ^^ ^^ {{ {{ {{ ^^ {{ {{ ^^ "
+     "^^ {{ {{ {{ {{ ^^ tt tt tt || tt tt || || ^^ ^^ {{ tt {{ ^^ ^^ {{ ^^ "
+     "^^ {{ {{ {{ {{ {{ tt || || || || tt || || || ^^ tt tt {{ {{ ^^ {{ ^^ "
+     "^^ ^^ {{ {{ {{ tt || || || || tt tt tt || || tt tt tt tt {{ {{ {{ ^^ "
+     "^^ ^^ ^^ ^^ tt tt || || || tt tt tt tt tt tt tt tt tt tt tt {{ ^^ ^^ "
+     "^^ ^^ ^^ ^^ || || || || tt tt tt bb tt tt tt tt tt tt || ^^ ^^ ^^ ^^ "
+     "^^ ^^ ^^ ^^ || || || tt tt bb .. .. .. bb tt tt tt || || || ^^ ^^ || "
+     "^^ ^^ ^^ ^^ || || tt tt tt tt .. .. .. tt tt tt tt tt || || || || || "
+     "^^ ^^ || || || || tt tt bb .. .. .. .. .. bb tt tt tt tt tt tt tt tt "
+     "^^ || || || || || tt tt .. .. .. .. .. .. .. tt tt tt tt tt tt tt tt "
+     "{{ || || || || || tt bb .. .. .. .. .. .. .. bb tt tt tt tt tt tt {{ "
+     "{{ {{ || || || tt tt tt .. .. .. .. .. .. .. tt tt tt {{ {{ tt {{ {{ "
+     "^^ {{ {{ {{ {{ tt tt tt bb .. .. .. .. .. bb tt tt {{ {{ {{ {{ {{ {{ "
+     "^^ ^^ ^^ {{ {{ {{ tt tt tt tt .. .. .. tt tt tt {{ ^^ ^^ {{ {{ ^^ ^^ "
+     "^^ ^^ ^^ ^^ {{ {{ {{ tt tt bb .. .. .. bb tt tt {{ ^^ ^^ ^^ {{ {{ ^^ "
+     "^^ ^^ .. ^^ ^^ ^^ {{ {{ tt tt .. .. .. tt tt tt tt {{ ^^ ^^ {{ {{ ^^ "
+     "^^ .. .. .. .. ^^ {{ {{ tt bb .. .. .. bb tt tt {{ {{ {{ {{ {{ ^^ ^^ "
+     "^^ .. .. .. .. ^^ {{ {{ tt tt .. .. .. tt tt tt tt tt tt {{ ^^ ^^ ^^ "
+     "^^ .. .. .. .. ^^ {{ {{ tt bb .. .. .. bb tt bb tt bb tt tt ^^ ^^ ^^ "
+     "^^ ^^ .. ^^ ^^ ^^ {{ {{ tt tt .. .. .. .. .. .. .. .. tt tt ^^ ^^ ^^ "
+     "^^ ^^ ^^ ^^ ^^ ^^ ^^ {{ tt bb .. .. .. .. .. .. .. .. bb tt ^^ ^^ ^^ "
+     "^^ ^^ ,H ,A ,I ,L ^^ ^^ tt tt .. .. .. .. .. .. .. .. tt tt ^^ ^^ ^^ "
+     "^^ .. .. .. .. .. .. ^^ tt tt bb .. bb tt bb .. .. .. bb tt tt ^^ ^^ "
+     "^^ .. .. .. .. .. .. .. .. .. .. .. tt tt tt .. .. .. tt tt tt tt ^^ "
+     "^^ .. .. .. .. .. .. ^^ tt || tt tt tt tt bb .. .. .. bb tt tt tt tt "
+     "^^ ,S ,E ,E ,K ,E ,R ^^ || || || tt tt tt .. .. .. .. .. tt tt tt tt "
+     "^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ tt || tt tt tt bb .. .. .. .. .. bb tt tt tt "
+     )
     )
-  )
   #f #f #f #f
   ;; subplaces
   nil
@@ -209,9 +215,9 @@
 
    (list ch_gregor  1 23)
 
-   (list war_chest        1 23)
+   ;;(list war_chest        1 23)
    (list supplies_chest   1 24)
-   (list eldritch_chest   1 25)
+   ;;(list eldritch_chest   1 25)
 
    (list (mk-cave-entrance 'p_slimy_cavern 8 30) 20 1)
    )

@@ -86,13 +86,17 @@
 
  ;; objects:
  (list
-  ;; (list player 9 9)
+
+  ;; terrain features
   (list (mk-bridge east) 30 43)
 
-  ;; goblins from the western hills
-  (list (mk-generator t_orc_generator) 1 22)
+  ;; existing npc parties
+  (list (kern-mk-party t_bandit_gang faction-monster nil) 29 28)
 
-  ;; spiders in the deep woods
+  ;; monster/ambush generators
+  (list (mk-generator t_orc_generator) 1 22)
+  (list (mk-generator t_skeleton_generator) 0 0)
+  (list (mk-generator t_bandit_generator) 30 38)
   (list (mk-wilderness-ambush-generator 
          t_queen_spider_generator ;; type
          43 ;; x
@@ -103,11 +107,6 @@
          )
         46 37)
 
-  ;; skeletons in the northern fens
-  (list (mk-generator t_skeleton_generator) 0 0)
-
-  ;; bandits beside the river
-  (list (mk-generator t_bandit_generator) 30 38)
   )
 
  nil ; hooks

@@ -107,11 +107,13 @@
    ;;    ============================================================================================================
    ;;    tag           | name        | sprite                     | damage | gifc
    ;;    ============================================================================================================
+   (list 't_slingstone   "sling stone" s_sling_stones               "1d2"    nil)
    (list 't_arrow        "arrow"       s_arrow_wooden               "1d6"    obj-ifc)
    (list 't_bolt         "bolt"        s_bolt                       "2d4"    obj-ifc)
    (list 't_warhead      "warhead"     s_magic_ball_core_red        "0"      warhead-ifc)
    (list 't_cannonball   "cannonball"  s_sling_bullet               "0"      obj-ifc)
    (list 't_poison_bolt  "poison bolt" s_lightning_bolt_green       "1d6"    poison-bolt-ifc)
+   (list 't_acid_bolt    "acid bolt"   s_magic_sphere_green         "1d2-1"  nil)
    (list 't_fireball     "fireball"    s_lightning_bolt_red         "2d6"    nil)
    (list 'deathball      "deathball"   s_magic_ball_core_dark_grey  "0"      deathball-ifc)
    ))
@@ -131,9 +133,11 @@
    ;;     ===========================================================================================================
    ;;     tag   | name       | sprite     | to-hit | damage | to-def | slots       | hnds | rng | missile | ubiq
    ;;     ===========================================================================================================
+   (list 't_sling "sling"      s_sling      "-1"     "1d2"    "-1"     slot-weapon   1      4     t_slingstone #t)
    (list 't_bow   "short bow"  s_shortbow   "1"      "1d6"    "-2"     slot-weapon   2      6     t_arrow   #f)
    (list 't_xbow  "crossbow"   s_crossbow_1 "2"      "2d4"    "-3"     slot-weapon   2      8     t_bolt    #f)
    (list 't_rpg   "doom staff" s_staff_7    "1d4"    "2d20"   "-5"     slot-weapon   2      12    t_warhead #t)
+   (list  't_acid_spray "acid spray" nil    "0"      "1d2-1"  "+0"     slot-nil      2      2     t_acid_bolt #t)   
    ))
 
 ;; ============================================================================
@@ -171,7 +175,6 @@
    (list  't_hands          "bare hands"     nil                "1d2"    "1d4"    "1d2"    slot-nil      1      1)
 
    (list  't_fangs          "fangs"          nil                "1d2"    "1d8"    "+0"     slot-nil      1      1)
-   (list  't_acid_spray     "acid spray"     nil                "1d2"    "1d1"    "+0"     slot-nil      2      2)   
    (list  't_stinger        "stinger"        nil                "1d8"    "1d2-1"  "+0"     slot-nil      1      1)
 
    (list  't_dagger         "dagger"         s_dagger_1         "1d4"    "1d6"    "1d2"    slot-weapon   1      1)

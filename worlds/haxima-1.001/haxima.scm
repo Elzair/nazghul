@@ -118,15 +118,16 @@
 ;; are hostile, positive are friendly.
 ;; ----------------------------------------------------------------------------
 (kern-mk-dtable
- ;;           none play men orks accu mons troll spid
- (dtable-row   0    0    0   0   -1   -2   -2    -2  ) ;; none
- (dtable-row   0    2    1   0   -1   -2   -2    -2  ) ;; player
- (dtable-row  -1    1    2  -1   -2   -2   -2    -2  ) ;; men
- (dtable-row  -1    0   -1   2   -1   -2    0    -2  ) ;; orks
- (dtable-row  -1   -1   -1  -1    2   -2   -1    -1  ) ;; accursed
- (dtable-row  -2   -2   -2  -2   -2    0    0     0  ) ;; monsters
- (dtable-row  -2   -2   -2   0   -1    0    2    -2  ) ;; hill trolls
- (dtable-row  -2   -2   -2  -2   -1    0   -2     2  ) ;; wood spiders
+ ;;           none play men orks accu mons troll spid outl
+ (dtable-row   0    0    0   0   -1   -2   -2    -2    0) ;; none
+ (dtable-row   0    2    1   0   -1   -2   -2    -2   -2) ;; player
+ (dtable-row  -1    1    2  -1   -2   -2   -2    -2   -2) ;; men
+ (dtable-row  -1    0   -1   2   -1   -2    0    -2   -2) ;; orks
+ (dtable-row  -1   -1   -1  -1    2   -2   -1    -1   -2) ;; accursed
+ (dtable-row  -2   -2   -2  -2   -2    0    0     0   -2) ;; monsters
+ (dtable-row  -2   -2   -2   0   -1    0    2    -2   -2) ;; hill trolls
+ (dtable-row  -2   -2   -2  -2   -1    0   -2     2   -2) ;; wood spiders
+ (dtable-row   0   -2   -2  -2   -2   -2   -2    -2    0) ;; outlaws
  )
 
 
@@ -173,8 +174,8 @@
   (kern-log-msg "...then awaken to a strange new world."))
 
 (define (simple-start kplayer)
-  ;;(kern-obj-put-at kplayer (list p_moongate_clearing 11 11)))
-  (kern-obj-put-at kplayer (list p_trigrave 15 15)))
+  (kern-obj-put-at kplayer (list p_moongate_clearing 11 11)))
+  ;;(kern-obj-put-at kplayer (list p_trigrave 15 15)))
 
 ;;----------------------------------------------------------------------------
 ;; To skip the extended start scene comment out this next line and uncomment

@@ -538,7 +538,7 @@
                  (list (kern-mk-obj F_poison 1) 34 22)
                  (list (kern-mk-obj F_sleep_perm 1) 34 24)
                  (list (kern-mk-party t_goblin_horde faction-orks (mk-ship)) 3 28)
-                 (list (kern-mk-obj t_goblin_generator 1) 20 20)
+                 (list (mk-generator t_orc_generator) 20 20)
                  (list (kern-tag 'mg-1 (mk-moongate 'ord)) 32 23)
                  (list (kern-tag 'mg-2 (mk-moongate 'ord)) 35 25)
                  (list (mk-ship) 36 26)

@@ -16,9 +16,9 @@
 
 ;; Speeds
 (define speed-yellow-slime 1)
-(define speed-human        2)
-(define speed-insect       3)
-(define speed-ship         4)
+(define speed-human        1)
+(define speed-insect       2)
+(define speed-ship         3)
 
 ;; Action Points
 (define ap-to-use-scroll speed-human)
@@ -96,6 +96,7 @@
 (define faction-monster     5)
 (define faction-hill-troll  6)
 (define faction-wood-spider 7)
+(define faction-outlaw      8)
 
 ;; Layers (must match object.h)
 (define layer-none       0)

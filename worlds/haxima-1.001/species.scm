@@ -106,7 +106,7 @@
                  "green slime"         ; name
                  2 2 2                 ; str/int/dex
                  speed-yellow-slime    ; speed
-                 4                     ; vision radius
+                 5                     ; vision radius
                  mmode-walk            ; pmask
                  10 1                  ; hp mod/mult
                  0 0                   ; mp mod/mult
@@ -206,6 +206,14 @@
 ;;----------------------------------------------------------------------------
 ;; Trigger to generate slimes
 ;;----------------------------------------------------------------------------
+(define (slime-gen-target-loc kgen)
+  (let* ((kplace (loc-place (kern-obj-get-location kgen)))
+        (gob (gob-data (kobj-gob kgen)))
+        (x (car gob))
+        (y (cadr gob)))
+    (display "gob:")(display gob)(newline)
+    (mk-loc kplace x y)))
+
 (define (slime-generator-step kgen kstepper)
   (define (mkslime)
     (kern-log-msg "A slime emerges from the ooze!")
@@ -213,7 +221,7 @@
   (let* ((kplace (loc-place (kern-obj-get-location kstepper)))
          (slimes (filter obj-is-green-slime? (kern-place-get-objects kplace))))
     (if (< (length slimes) 1)
-        (psummon (kern-obj-get-location kgen)
+        (psummon (slime-gen-target-loc kgen)
                  mkslime
                  (kern-dice-roll "1d2")))))
 
@@ -223,5 +231,18 @@
 
 (mk-obj-type 't_slime_generator nil nil layer-mechanism slime-generator-ifc)
 
-(define (mk-slime-generator)
-  (kern-mk-obj t_slime_generator 1))
+(define (mk-slime-generator x y)
+  (kern-obj-set-visible (bind (kern-mk-obj t_slime_generator 1)
+                              (list x y))
+                        #f))
+
+;;----------------------------------------------------------------------------
+;; Simple NPC constructors
+;;----------------------------------------------------------------------------
+(define (mk-bandit)
+  (kern-being-set-base-faction (kern-mk-stock-char sp_human
+                                                   oc_bandit
+                                                   s_brigand
+                                                   " a bandit" 
+                                                   nil)
+                               faction-outlaw))
