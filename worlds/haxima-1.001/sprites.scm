@@ -950,22 +950,22 @@
 
 (kern-mk-sprite 's_whip                 ss_dg_weapons 1  88 #f 0)
 
-(kern-mk-sprite 's_axe_1           ss_dg_weapons 1  96 #f 0)
-(kern-mk-sprite 's_axe_2           ss_dg_weapons 1  97 #f 0)
-(kern-mk-sprite 's_axe_3           ss_dg_weapons 1  98 #f 0)
-(kern-mk-sprite 's_axe_4           ss_dg_weapons 1  99 #f 0)
-(kern-mk-sprite 's_axe_5           ss_dg_weapons 1 100 #f 0)
+(kern-mk-sprite 's_axe_1                ss_dg_weapons 1  96 #f 0)
+(kern-mk-sprite 's_axe_2                ss_dg_weapons 1  97 #f 0)
+(kern-mk-sprite 's_axe_3                ss_dg_weapons 1  98 #f 0)
+(kern-mk-sprite 's_axe_4                ss_dg_weapons 1  99 #f 0)
+(kern-mk-sprite 's_axe_5                ss_dg_weapons 1 100 #f 0)
 
-(kern-mk-sprite 's_scythe_1        ss_dg_weapons 1 104 #f 0)
-(kern-mk-sprite 's_scythe_2        ss_dg_weapons 1 105 #f 0)
+(kern-mk-sprite 's_scythe_1             ss_dg_weapons 1 104 #f 0)
+(kern-mk-sprite 's_scythe_2             ss_dg_weapons 1 105 #f 0)
 
-(kern-mk-sprite 's_spear_1         ss_dg_weapons 1 112 #f 0)
-(kern-mk-sprite 's_spear_2         ss_dg_weapons 1 113 #f 0)
-(kern-mk-sprite 's_spear_3         ss_dg_weapons 1 114 #f 0)
-(kern-mk-sprite 's_trident_1       ss_dg_weapons 1 115 #f 0)
-(kern-mk-sprite 's_trident_2       ss_dg_weapons 1 116 #f 0)
-(kern-mk-sprite 's_trident_3       ss_dg_weapons 1 117 #f 0)
-(kern-mk-sprite 's_lance           ss_dg_weapons 1 118 #f 0)
+(kern-mk-sprite 's_spear_1              ss_dg_weapons 1 112 #f 0)
+(kern-mk-sprite 's_spear_2              ss_dg_weapons 1 113 #f 0)
+(kern-mk-sprite 's_spear_3              ss_dg_weapons 1 114 #f 0)
+(kern-mk-sprite 's_trident_1            ss_dg_weapons 1 115 #f 0)
+(kern-mk-sprite 's_trident_2            ss_dg_weapons 1 116 #f 0)
+(kern-mk-sprite 's_trident_3            ss_dg_weapons 1 117 #f 0)
+(kern-mk-sprite 's_lance                ss_dg_weapons 1 118 #f 0)
 
 (kern-mk-sprite 's_quarterstaff_1       ss_dg_weapons 1 120 #f 0)
 (kern-mk-sprite 's_quarterstaff_2       ss_dg_weapons 1 121 #f 0)
@@ -974,7 +974,58 @@
 (kern-mk-sprite 's_halberd_2            ss_dg_weapons 1 129 #f 0)
 (kern-mk-sprite 's_halberd_3            ss_dg_weapons 1 130 #f 0)
 
+(kern-mk-sprite 's_shortbow                   ss_dg_weapons 1 160 #f 0)
+(kern-mk-sprite 's_longbow_1                  ss_dg_weapons 1 161 #f 0)
+(kern-mk-sprite 's_longbow_2                  ss_dg_weapons 1 162 #f 0)
+(kern-mk-sprite 's_crossbow_1                 ss_dg_weapons 1 163 #f 0)
+(kern-mk-sprite 's_crossbow_2                 ss_dg_weapons 1 164 #f 0)
+(kern-mk-sprite 's_crossbow_3                 ss_dg_weapons 1 165 #f 0)
 
+(kern-mk-sprite 's_sling                      ss_dg_weapons 1 168 #f 0)
+(kern-mk-sprite 's_sling_bullet               ss_dg_weapons 1 169 #f 0)
+(kern-mk-sprite 's_sling_stones               ss_dg_weapons 1 170 #f 0)
+
+(kern-mk-sprite 's_dart_red                   ss_dg_weapons 1 176 #f 0)
+(kern-mk-sprite 's_dart_green_dripping        ss_dg_weapons 2 177 #f 0)
+(kern-mk-sprite 's_dart_blue_dripping         ss_dg_weapons 2 179 #f 0)
+(kern-mk-sprite 's_shuriken                   ss_dg_weapons 1 181 #f 0)
+(kern-mk-sprite 's_shuriken_spinning          ss_dg_weapons 2 181 #f 0)
+
+(kern-mk-sprite 's_arrow_wooden               ss_dg_weapons 1 192 #f 0)
+(kern-mk-sprite 's_arrow_metal                ss_dg_weapons 1 193 #f 0)
+(kern-mk-sprite 's_arrow_white                ss_dg_weapons 1 194 #f 0)
+(kern-mk-sprite 's_arrow_gold                 ss_dg_weapons 1 195 #f 0)
+
+(kern-mk-sprite 's_arrow_glowing_red          ss_dg_weapons 2 204 #f 0)
+(kern-mk-sprite 's_arrow_glowing_green        ss_dg_weapons 2 206 #f 0)
+
+(kern-mk-sprite 's_arrow_wooden_flaming       ss_dg_weapons 2 208 #f 0)
+(kern-mk-sprite 's_arrow_metal_flaming        ss_dg_weapons 2 210 #f 0)
+(kern-mk-sprite 's_arrow_wooden_acid          ss_dg_weapons 2 212 #f 0)
+(kern-mk-sprite 's_arrow_metal_acid           ss_dg_weapons 2 214 #f 0)
+(kern-mk-sprite 's_arrow_wooden_frost         ss_dg_weapons 2 216 #f 0)
+(kern-mk-sprite 's_arrow_metal_frost          ss_dg_weapons 2 218 #f 0)
+
+(kern-mk-sprite 's_arrow_glowing_blue         ss_dg_weapons 2 220 #f 0)
+(kern-mk-sprite 's_arrow_glowing_purple       ss_dg_weapons 2 222 #f 0)
+
+(kern-mk-sprite 's_bolt_wooden                ss_dg_weapons 1 224 #f 0)
+(kern-mk-sprite 's_bolt_metal                 ss_dg_weapons 1 225 #f 0)
+(kern-mk-sprite 's_bolt_white                 ss_dg_weapons 1 226 #f 0)
+(kern-mk-sprite 's_bolt_gold                  ss_dg_weapons 1 227 #f 0)
+
+(kern-mk-sprite 's_bolt_glowing_red           ss_dg_weapons 2 240 #f 0)
+(kern-mk-sprite 's_bolt_glowing_green         ss_dg_weapons 2 242 #f 0)
+
+(kern-mk-sprite 's_bolt_wooden_flaming        ss_dg_weapons 2 244 #f 0)
+(kern-mk-sprite 's_bolt_metal_flaming         ss_dg_weapons 2 246 #f 0)
+(kern-mk-sprite 's_bolt_wooden_acid           ss_dg_weapons 2 248 #f 0)
+(kern-mk-sprite 's_bolt_metal_acid            ss_dg_weapons 2 250 #f 0)
+(kern-mk-sprite 's_bolt_wooden_frost          ss_dg_weapons 2 252 #f 0)
+(kern-mk-sprite 's_bolt_metal_frost           ss_dg_weapons 2 254 #f 0)
+
+(kern-mk-sprite 's_bolt_glowing_blue          ss_dg_weapons 2 256 #f 0)
+(kern-mk-sprite 's_bolt_glowing_purple        ss_dg_weapons 2 258 #f 0)
 
 ; (kern-mk-sprite 's_       ss_dg_weapons 1   0 #f 0)
 
