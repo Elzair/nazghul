@@ -560,6 +560,7 @@
     (if (null? target) nil
         (begin
           (kern-char-resurrect target)
+          (apply-sleep target)
           #t))))
 
 (define (vas-rel-por kspell caster)

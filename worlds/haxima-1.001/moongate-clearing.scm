@@ -218,9 +218,9 @@
 
    (list ch_gregor  1 23)
 
-   ;;(list war_chest        1 23)
+   (list war_chest        1 23)
    (list supplies_chest   1 24)
-   ;;(list eldritch_chest   1 25)
+   (list eldritch_chest   1 25)
 
    (list (mk-cave-entrance 'p_slimy_cavern 8 30) 20 1)
    )
