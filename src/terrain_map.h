@@ -52,7 +52,8 @@ extern "C" {
                                      int w, int h, struct terrain *fill);
         extern void terrain_map_print(FILE * fp, int indent,
                                       struct terrain_map *map);
-
+        extern void print_horizontal_guideline (FILE * fp, int indent, 
+                                                struct terrain_map *map);
 
 #ifdef __cplusplus
 }

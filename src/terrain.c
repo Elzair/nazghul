@@ -70,25 +70,22 @@ void terrain_destroy(struct terrain *terrain)
 
 #define BOGUS_MAX_SIZE 255	// Hack, should get a constant from lexer.h or
 				// somesuch...
+// LONGEST_TERRAIN_GLYPH would be appropriate for glyph_str...
 
 void palette_entry_print(FILE * fp, int indent,
 			 struct terrain_palette_entry *entry)
 {
 	static char glyph_str[BOGUS_MAX_SIZE + 1];
-	static char   tag_str[BOGUS_MAX_SIZE + 1];
-	static char  name_str[BOGUS_MAX_SIZE + 1];
+    static char   tag_str[BOGUS_MAX_SIZE + 1];
 	assert(fp);
     assert(entry);
 
-	snprintf(glyph_str, BOGUS_MAX_SIZE, "'%s'", entry->glyph);
-	snprintf(tag_str, BOGUS_MAX_SIZE, "'%s'", entry->terrain->tag);
-	snprintf(name_str, BOGUS_MAX_SIZE, "'%s'", entry->terrain->name);
+	snprintf(glyph_str, BOGUS_MAX_SIZE, "\"%s\"", entry->glyph);
+    snprintf(tag_str,   BOGUS_MAX_SIZE, "%s;",    entry->terrain->tag);
 
 	INDENT;
-	INDENT;
-	fprintf(fp, "glyph %-6s tag %-20s name %-20s\n", glyph_str, tag_str,
-		name_str);
-}				// palette_entry_print()
+    fprintf(fp, "%-6s %s\n", glyph_str, tag_str);
+} // palette_entry_print()
 
 struct terrain_palette *new_terrain_palette(void)
 {
@@ -324,32 +321,36 @@ void palette_print(FILE * fp, int indent, struct terrain_palette *palette)
 {
 	int i;
 	assert(fp);
+
 	INDENT;
-	fprintf(fp, "palette '%s'\n", palette->tag);
+	fprintf(fp, "PALETTE %s {\n", palette->tag);
 	indent += INDENTATION_FACTOR;
 
 	INDENT;
-	fprintf(fp, "num_entries %d, widest_glyph %d \n",
-		palette->num_entries, palette->widest_glyph);
+	fprintf(fp, "// num_entries  %d;\n", palette->num_entries);
+    INDENT;
+    fprintf(fp, "// widest_glyph %d;\n", palette->widest_glyph);
 
-	INDENT;
-	fprintf(fp, "entries:\n");
 	for (i = 0; i < palette->num_entries; i++) {
 		palette_entry_print(fp, indent, &palette->set[i]);
 	}
+
 	INDENT;
-	fprintf(fp, "quick terrains:\n");
+	fprintf(fp, "// quick terrains:\n");
 	for (i = 0; i < NUM_QUICK_TERRAINS; i++) {
 		struct terrain *qt = palette_quick_terrain(palette, i);
-		char *tag = "(none)";
+		char *tag  = "(none)";
 		char *name = "(none)";
 		if (qt) {
-			tag = qt->tag;
+			tag  = qt->tag;
 			name = qt->name;
 		}
 		INDENT;
-		INDENT;
-		fprintf(fp, "%d '%s' '%s'\n", i, tag, name);
+		fprintf(fp, "// %d '%s' '%s'\n", i, tag, name);
 	}
+
+    indent -= INDENTATION_FACTOR;
+    INDENT;
+    fprintf(fp, "} // PALETTE %s\n", palette->tag);
 	fprintf(fp, "\n");
-}				// palette_print()
+} // palette_print()

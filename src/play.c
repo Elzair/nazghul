@@ -65,6 +65,9 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <ctype.h>
+// #include <sys/types.h>  // getpid()
+#include <unistd.h>     // getpid()
+#include <errno.h>
 
 enum cmdstate {
 	CMD_IDLE,
@@ -2432,7 +2435,6 @@ bool cmdXamine(class Character * pc)
 	}
 
     look_at_XY(x,y);  // First look at the current tile
-    // SAM: TODO - make the range "any in viewport" rather than 9
 	if (select_target_with_doing(x, y, &x, &y, MAX_VIEWPORT_RANGE,
 				     look_at_XY, detailed_examine_XY) == -1) {
 		return false;
@@ -2638,8 +2640,6 @@ bool cmdTerraform(class Character * pc)
                  terrain->tag, terrain->name);
 
     DM_XRAY_look_at_XY(x,y, NULL);  // First look at the current tile
-    // SAM: TODO - make the range "any in viewport" rather than 9
-    //             or perhaps even scrollable past that
 	if (terraform_cursor_func(x, y, &x, &y, MAX_VIEWPORT_RANGE,
                               DM_XRAY_look_at_XY, terraform_XY,
                               place) == -1) {
@@ -2647,6 +2647,69 @@ bool cmdTerraform(class Character * pc)
 	}
 	return true;
 } // cmdTerraform()
+
+#define BOGUS_FILENAME_LENGTH 255  // Hack, do something proper for this...
+bool cmdSaveTerrainMap(class Character * pc)
+{
+	int x, y;
+    struct place           * place;
+    struct terrain_map     * map;
+    struct terrain_palette * palette;
+    char map_filename    [BOGUS_FILENAME_LENGTH+1];
+    char palette_filename[BOGUS_FILENAME_LENGTH+1];
+    FILE * map_fp     = NULL;
+    FILE * palette_fp = NULL;
+
+	cmdwin_clear();
+	cmdwin_print("Save Map-");
+
+	if (pc) {
+		// Combat Mode
+        // Use the party member's location as the origin.
+        consolePrint("TODO - Save Map does not work in combat mode.\n");
+        return false;
+        // TODO: play.c needs a way to get at Combat from combat.c
+        // place = Combat;  // Won't work, file-scoped to combat.c
+		x = pc->getX();
+		y = pc->getY();
+	} else {
+		// Party Mode
+		// Use the player party's location as the origin.
+        place = player_party->getPlace();
+		x     = player_party->getX();
+		y     = player_party->getY();
+	}
+
+    map     = place->terrain_map;
+    palette = map->palette;
+
+    // Save the palette for the current map:
+    sprintf(palette_filename, "/tmp/nazghul.pal.%s.%d.ghul", 
+            palette->tag, getpid() );
+    palette_fp = fopen(palette_filename, "w");
+    if (!palette_fp) {
+      printf("Filed to open palette save file '%s' for writing "
+             "because '%s'.\n",
+             palette_filename, strerror(errno) );
+    }
+    palette_print(palette_fp, INITIAL_INDENTATION, palette);
+    fclose(palette_fp);
+
+    // And save the current map:
+    sprintf(map_filename, "/tmp/nazghul.map.%s.%d.ghul", 
+            map->tag, getpid() );
+    map_fp = fopen(map_filename, "w");
+    if (!map_fp) {
+      printf("Filed to open map save file '%s' for writing "
+             "because '%s'.\n",
+             map_filename, strerror(errno) );
+    }
+    terrain_map_print(map_fp, INITIAL_INDENTATION, map);
+    fclose(map_fp);
+
+
+	return true;
+} // cmdSaveTerrainMap()
 
 static bool keyHandler(struct KeyHandler *kh, int key, int keymod)
 {
@@ -2679,6 +2742,11 @@ static bool keyHandler(struct KeyHandler *kh, int key, int keymod)
       
     case 't':
       cmdTerraform(NULL);
+      turns_used = 0;
+      break;
+
+    case 's':
+      cmdSaveTerrainMap(NULL);
       turns_used = 0;
       break;
       

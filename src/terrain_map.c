@@ -266,6 +266,9 @@ extern void terrain_map_print(FILE * fp, int indent, struct terrain_map *map)
     }
     INDENT; fprintf(fp, "palette %s;\n", palette->tag);
 	INDENT;	fprintf(fp, "terrain {\n");
+
+    print_horizontal_guideline(fp, indent, map);
+
 	indent += INDENTATION_FACTOR;
 
     int w = palette->widest_glyph;
@@ -301,11 +304,77 @@ extern void terrain_map_print(FILE * fp, int indent, struct terrain_map *map)
 	} // for (y)
 
 	indent -= INDENTATION_FACTOR;
-	fprintf(fp, "\n");
-	INDENT;	fprintf(fp, "} // terrain%s\n", 
-                    unk ? " (unknown glyphs found, printed as '?')" : "");
+    print_horizontal_guideline(fp, indent, map);
+	INDENT;	
+    fprintf(fp, "} // terrain%s\n", 
+            unk ? " (unknown glyphs found, printed as '?')" : "");
 
 	indent -= INDENTATION_FACTOR;
-	INDENT;	fprintf(fp, "} // MAP %s\n", map->tag);
+	INDENT;	
+    fprintf(fp, "} // MAP %s\n", map->tag);
+	fprintf(fp, "\n");
 }
 
+
+void print_horizontal_guideline (FILE * fp, int indent, struct terrain_map *map)
+{
+    // Note that the horizontal coordinates guide-lines below
+    // will only be lined up correctly if INDENTATION_FACTOR == 2
+    struct terrain_palette * palette;
+    int compact;
+	assert(fp);
+    assert(map);
+
+    palette = map->palette;
+    compact = (PREFER_COMPACT_MAPS && palette->widest_glyph == 1);
+
+    if (compact) {
+      // These templates will suffice for maps of up to width 80
+      int w = map->w * palette->widest_glyph;
+      static char line1_template[] = 
+        "          1111111111222222222233333333334444444444555555555566666666667777777777";
+      static char line2_template[] =
+        "01234567890123456789012345678901234567890123456789012345678901234567890123456789";
+      char * line_1 = strdup(line1_template);
+      char * line_2 = strdup(line2_template);
+      if (w <= 80) {
+        line_1[w] = '\0';
+        line_2[w] = '\0';
+      }
+      INDENT; fprintf(fp, "// %s\n", line_1);
+      INDENT; fprintf(fp, "// %s\n", line_2);
+    }
+    else if (palette->widest_glyph == 1) {
+      // These templates will suffice for maps of up to width 50
+      int w = map->w * (palette->widest_glyph + 1);
+      static char line1_template[] = 
+        "                    1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 3 3 3 3 3 3 3 3 3 3 4 4 4 4 4 4 4 4 4 4 ";
+      static char line2_template[] =
+        "0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 ";
+      char * line_1 = strdup(line1_template);
+      char * line_2 = strdup(line2_template);
+      if (w <= 50*2) {
+        line_1[w] = '\0';
+        line_2[w] = '\0';
+      }
+      INDENT; fprintf(fp, "// %s\n", line_1);
+      INDENT; fprintf(fp, "// %s\n", line_2);
+    }
+    else if (palette->widest_glyph == 2) {
+      // These templates will suffice for maps of up to width 40
+      int w = map->w * (palette->widest_glyph + 1);
+      static char line1_template[] = 
+        "                               1  1  1  1  1  1  1  1  1  1  2  2  2  2  2  2  2  2  2  2  3  3  3  3  3  3  3  3  3  3  ";
+      static char line2_template[] =
+        " 0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5  6  7  8  9  ";
+      char * line_1 = strdup(line1_template);
+      char * line_2 = strdup(line2_template);
+      if (w < 40*3) {
+        line_1[w] = '\0';
+        line_2[w] = '\0';
+      }
+      INDENT; fprintf(fp, "// %s\n", line_1);
+      INDENT; fprintf(fp, "// %s\n", line_2);
+    }
+    // TODO: width 3 and 4 palettes.
+}
