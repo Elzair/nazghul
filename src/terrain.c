@@ -137,7 +137,8 @@ void terrain_palette_del(struct terrain_palette *pal)
         delete pal;
 }
 
-void terrain_palette_add(struct terrain_palette *pal, char *glyph, struct terrain *ter)
+void terrain_palette_add(struct terrain_palette *pal, char *glyph, 
+                         struct terrain *ter)
 {
         struct terrain_palette_entry *entry;
         int n = strlen(glyph);
@@ -149,7 +150,8 @@ void terrain_palette_add(struct terrain_palette *pal, char *glyph, struct terrai
                 pal->widest_glyph = n;
 }
 
-struct terrain_palette_entry *palette_entry(struct terrain_palette *palette, int n)
+struct terrain_palette_entry *palette_entry(struct terrain_palette *palette, 
+                                            int n)
 {
         struct list *elem;
 
@@ -232,6 +234,26 @@ struct terrain *palette_terrain_for_glyph(struct terrain_palette *palette,
 
         return 0;  // Did not find the terrain
 }				// palette_terrain_for_glyph()
+
+/*
+ * palette_get_terrain_index - return the index of the terrain in the palette
+ */
+int palette_get_terrain_index(struct terrain_palette *palette,
+                              struct terrain *tt)
+{
+        struct list *elem;
+        struct terrain_palette_entry *entry;
+        int index = 0;
+        
+        list_for_each(&palette->set, elem) {
+                entry = outcast(elem, struct terrain_palette_entry, list);
+                if (entry->terrain == tt)
+                        return index;
+                index++;
+        }
+
+        return -1;
+}
 
 struct terrain_palette * palette_contains_terrain (struct terrain_palette *pp, 
                                                    struct terrain *tt)

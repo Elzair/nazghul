@@ -152,7 +152,7 @@ static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
                 break;
                         
         case KEY_CTRL_T:
-                cmdTerraform(NULL);
+                cmd_terraform(NULL);
                 break;
                         
         case KEY_CTRL_Z:
@@ -593,7 +593,7 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
                 break;
 
         case KEY_CTRL_T:
-                cmdTerraform(character);
+                cmd_terraform(character);
                 break;
 
         case KEY_CTRL_Z:
@@ -1038,8 +1038,6 @@ static void ctrl_idle(class Character *character)
         if (character->getAI()) {
                 int time = SDL_GetTicks();
                 closure_exec(character->getAI(), "p", character);
-/*                 printf("%s ai: %d ms\n", character->getName(), */
-/*                        SDL_GetTicks() - time); */
                 return;
         }
 

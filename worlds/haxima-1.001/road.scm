@@ -1,3 +1,7 @@
+;;----------------------------------------------------------------------------
+;; unused - takes 1.5s to load for some strange reason
+;;----------------------------------------------------------------------------
+
 
 ;; The 'init signal is sent after the instance is created. This is our chance
 ;; to initialize fields to non-default values. Note: all the pclass values are

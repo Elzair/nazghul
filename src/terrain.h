@@ -60,11 +60,6 @@ struct terrain {
         closure_t *effect; /* when stood on */
 };
 
-/* static inline int terrain_is_passable(struct terrain *terrain, class Object *obj) */
-/* { */
-/*         return ptable_is_passable(Session->ptable, obj->getPmask(), terrain->pclass); */
-/* } */
-
 extern struct terrain *terrain_new(char *tag, char *name, 
                                    struct sprite *sprite,
                                    int pclass, 
@@ -94,7 +89,6 @@ struct terrain_palette {
         int free_index;
         int num_entries;
         struct list set;
-        //struct terrain_palette_entry *set;
         int quick_terrain[NUM_QUICK_TERRAINS];
         // "quick terrain" for quick UI access (ten number keys 0..9)
 };
@@ -115,6 +109,7 @@ struct terrain * palette_terrain_for_glyph(struct terrain_palette *pp,
                                            char *glyph);
 struct terrain * palette_current_terrain(struct terrain_palette * pp);
 
+int palette_get_terrain_index(struct terrain_palette *pp, struct terrain *tt);
 int palette_get_current_terrain_index(struct terrain_palette * pp);
 int palette_set_current_terrain(struct terrain_palette * pp, int n);
 int palette_prev_terrain(struct terrain_palette * pp);

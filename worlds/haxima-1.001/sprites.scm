@@ -1682,16 +1682,7 @@
 (kern-mk-sprite 's_gems_pale_blue                ss_dg_commodities 1 153 #f 0)
 (kern-mk-sprite 's_gems_small_round              ss_dg_commodities 1 154 #f 0)
 
-
 ;; ss_dg_potions          16 x 7
 ;; ss_dg_readable         16 x 16
-
-
-
-
-
-
-
-
 
 ;; eof
