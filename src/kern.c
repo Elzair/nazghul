@@ -5198,7 +5198,7 @@ KERN_API_CALL(kern_obj_has)
         class ObjectType *type;
         int has = 0;
 
-        object = (Object*)unpack_obj(sc, &args, "kern-object-get-base-faction");
+        object = (Object*)unpack_obj(sc, &args, "kern-obj-has");
         if (!object)
                 goto done;
 

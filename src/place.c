@@ -1573,7 +1573,9 @@ void place_exec(struct place *place)
         /* Loop over all nodes or until the player quits or dies. */
         while (place->turn_elem != &place->turn_list
                && ! Quit
-               && ! player_party->allDead()) {
+               && ! player_party->allDead()
+               && ! Reload
+                ) {
 
                 /* Keep a pointer to the object in the node */
                 obj = (class Object *)place->turn_elem->ptr;
@@ -1594,7 +1596,8 @@ void place_exec(struct place *place)
                         int t = place_timed_obj_exec(obj);
                         times += t;
                         if (t > 0)
-                                printf("%s: %d ms to exec\n", obj->getName(), t);
+                                printf("%s: %d ms to exec\n", obj->getName(),
+                                       t);
                         
                         /* Apply terrain, field and any other environmental
                          * effects. */
@@ -1603,14 +1606,6 @@ void place_exec(struct place *place)
                                  * the object may now be in a different
                                  * place! */
                                 place_apply_tile_effects(obj->getPlace(), obj);
-                }
-
-                /* check if the session was reloaded while running the
-                 * object. If so, the object, this place and everything in it
-                 * has been destroyeed. Leave now. Don't touch a thing. */
-                if (Session->reloaded) {
-                        place_unlock(place);
-                        return;         
                 }
 
                 /* Check if the object was destroyed. */

@@ -32,6 +32,9 @@
 #include "sky.h"
 #include "status.h"
 
+/* File for quick save/reload with CTRL-q and CTRL-r */
+#define QUICKSAVE_FNAME "save.scm"
+
 /* Shared between session.c and kern.c */
 #define load_err_any() (load_errs != 0)
 #define load_err_clear() (load_errs = 0)
@@ -52,6 +55,7 @@ extern int load_errs;
 extern int save_errs;
 
 /* Backwards-compatible replacements for the old global flags: */
+#define Reload (Session->reload)
 #define Reveal (Session->reveal)
 #define Quicken (Session->quicken)
 #define TimeStop (Session->time_stop)
@@ -134,6 +138,9 @@ struct session {
         char saved_combat_place : 1;
 
         int reloaded : 1; /* Old session destroyed, this one is new */
+
+        /* Flag to signal a reload has been requested and is pending */
+        int reload;
 
         /* The number of turns until the "reveal hidden" effect expires: */
         int reveal;

@@ -792,6 +792,7 @@ player_party::player_party(char *_tag,
         setTurnsToNextMeal(TURNS_PER_FOOD);
         setTurnsToNextRestCredit(TURNS_PER_REST_CREDIT);
         clearCombatExitDestination();
+        setBaseFaction(PLAYER_PARTY_FACTION);
         view = mapCreateView();
 
         /* Now use the arguments */

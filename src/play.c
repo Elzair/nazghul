@@ -156,6 +156,18 @@ static void play_print_end_of_game_prompt()
 
 int G_exec_loops = 0;
 
+static void play_reload()
+{
+        log_begin("Loading from %s...", QUICKSAVE_FNAME);
+        log_flush();
+        log_disable();
+        session_load(QUICKSAVE_FNAME);
+        log_enable();
+        log_end("ok!");
+        Reload = 0;
+        /*vmask_flush_all();*/
+}
+
 static void play_loop(void)
 {
         int times[8];
@@ -178,9 +190,14 @@ static void play_loop(void)
                 times[0] = SDL_GetTicks();
                 place_exec(Place);
 
-                if (Session->reloaded)
-                        /* Safe now. */
-                        Session->reloaded = 0;
+                // ------------------------------------------------------------
+                // Check if the player requested to reload during that last
+                // turn.
+                // ------------------------------------------------------------
+
+                if (Reload) {
+                        play_reload();
+                }
 
                 // ------------------------------------------------------------
                 // Check for changes in the combat state as a result of the

@@ -64,7 +64,6 @@
 #include <unistd.h>     // getpid()
 #include <errno.h>
 
-#define QUICKSAVE_FNAME "save.scm"
 #define MAX_SPELL_NAME_LENGTH 64 /* arbitrarily chosen */
 
 
@@ -2541,14 +2540,7 @@ void cmdQuickSave(void)
 
 void cmdReload(void)
 {
-        log_begin("Loading from %s...", QUICKSAVE_FNAME);
-        log_flush();
-        log_disable();
-        session_load(QUICKSAVE_FNAME);
-        log_enable();
-        Session->reloaded = 1;
-        log_end("ok!");
-        vmask_flush_all();
+        Reload = 1;        
 }
 
 /****** New UI ******/
