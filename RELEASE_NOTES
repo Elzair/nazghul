@@ -139,3 +139,91 @@ Changes for nazghul-0.1.2
 --Added a level beneath Green Tower (to test some spells, but I think I'll keep
   it).
 
+--Added support for the sleep effect to items (previously only spells).
+
+--Party leader is now reevaluated every time some part of the code asks about
+  it (I use to try to cache the leader, but this makes things too
+  complicated). Also, if the leader falls asleep the next in command takes
+  over.
+
+--Fixed sleep fields in combat. Looks they were never processed
+  correctly.
+
+--Removed the 'find party' and 'find edge' requirements in combat
+  placement. Not sure if this will break something or not, but I decided to do
+  this when I found that nixies could not get distributed on a bridge combat
+  map. That's just silly, and most of that placement code was written back in
+  the day when I wanted the engine to do more ass-covering for map hackers. So
+  I removed it. We'll see what happens.
+
+--Fixed the "In Lor" spell by making the caster the default spell
+  target. Apparently I commented that line of code out for some reason but I
+  don't know why. Should have left a note. This time, I did.
+
+--Bugfix: the character describe method assumed the character had an
+  occupation. Some npc characters in the example game don't have an
+  occupation. For example, insects in a swarm.
+
+--Bugfix: charmed opponents continued to attack the party. This was a bug
+  introduced some time ago when I had characters remember their previous
+  targets so that stepping out of LOS would not make them start to wander
+  aimlessly. We needed to check if we were still hostile to these remembered
+  targets.
+
+--Bugfix: npcs standing on los-blocking terrain in combat no longer blind
+
+--Bugfix: wave sprites now rendered properly when peering (zoomed out by a
+  factor of two). There were several bugs contributing to this.
+
+--Added a level beneath Green Tower (to test some spells, but I think I'll keep
+  it).
+
+--Fixed map-wrapping bug in vehicle weapon firing.
+
+--Removed derived objects examples/mapfile and examples/data/mapfile from CVS.
+
+--Added support for the sleep effect to items (previously only spells).
+
+--Party leader is now reevaluated every time some part of the code asks about
+  it (I use to try to cache the leader, but this makes things too
+  complicated). Also, if the leader falls asleep the next in command takes
+  over.
+
+--Fixed sleep fields in combat. Looks they were never processed
+  correctly.
+
+--Removed the 'find party' and 'find edge' requirements in combat
+  placement. Not sure if this will break something or not, but I decided to do
+  this when I found that nixies could not get distributed on a bridge combat
+  map. That's just silly, and most of that placement code was written back in
+  the day when I wanted the engine to do more ass-covering for map hackers. So
+  I removed it. We'll see what happens.
+
+--Fixed the "In Lor" spell by making the caster the default spell
+  target. Apparently I commented that line of code out for some reason but I
+  don't know why. Should have left a note. This time, I did.
+
+--Bugfix: the character describe method assumed the character had an
+  occupation. Some npc characters in the example game don't have an
+  occupation. For example, insects in a swarm.
+
+--Bugfix: charmed opponents continued to attack the party. This was a bug
+  introduced some time ago when I had characters remember their previous
+  targets so that stepping out of LOS would not make them start to wander
+  aimlessly. We needed to check if we were still hostile to these remembered
+  targets.
+
+--Bugfix: npcs standing on los-blocking terrain in combat no longer blind
+
+--Bugfix: wave sprites now rendered properly when peering (zoomed out by a
+  factor of two). There were several bugs contributing to this.
+
+--Added a level beneath Green Tower (to test some spells, but I think I'll keep
+  it).
+
+--Fixed map-wrapping bug in vehicle weapon firing.
+
+--Removed derived objects examples/mapfile and examples/data/mapfile from CVS.
+
+--Bugfix: x)amine los-checking did not work across map boundaries.
+

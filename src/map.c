@@ -513,17 +513,34 @@ void mapRepaintView(struct mview *view, int flags)
 int mapTileIsVisible(int x, int y)
 {       
         int index;
+        SDL_Rect *vrect = &Map.aview->vrect;
+
+        // If the view rect extends past the right side of the map, and x is
+        // left of the view rect, then convert x to be right of the view rect.
+        if ((vrect->x + vrect->w) > place_w(Map.place) && 
+            x < vrect->x) {
+                x += place_w(Map.place);
+        }
+
+        // Likewise if the view rect extends beyond the southern edge of the
+        // map, and y is less than the top of the view rect, then convert y to
+        // be south of the view rect.
+        if ((vrect->y + vrect->h) > place_h(Map.place) && 
+            y < vrect->y) {
+                y += place_h(Map.place);
+        }
+        
 
         // check if the coords are in the view rect
-        if (x < Map.aview->vrect.x ||
-            x >= (Map.aview->vrect.x + Map.aview->vrect.w) ||
-            y < Map.aview->vrect.y ||
-            y >= (Map.aview->vrect.y + Map.aview->vrect.h))
+        if (x < vrect->x ||
+            x >= (vrect->x + vrect->w) ||
+            y < vrect->y ||
+            y >= (vrect->y + vrect->h))
                 return 0;
 
         // check if the tile is marked as visible in the view rect
-        index = (y - Map.aview->vrect.y) * Map.aview->vrect.w +
-                (x - Map.aview->vrect.x);
+        index = (y - vrect->y) * vrect->w +
+                (x - vrect->x);
         
         return Map.vmask[index];
             
