@@ -213,6 +213,7 @@ combat_maps {
   t_trees   m_grass_combat;
   t_forest  m_forest_combat;
   t_bridge  m_east_west_small_bridge_combat;
+  t_hills   m_hill_combat;
 } // combat_maps
 
 
