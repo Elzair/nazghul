@@ -131,6 +131,10 @@ static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
                 party->endTurn();
                 break;
 
+        case KEY_CTRL_D:
+                cmdDumpPalette();
+                break;
+
         case KEY_CTRL_Q:
                 cmdQuickSave();
                 break;
@@ -588,6 +592,10 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
 
         case KEY_CTRL_Z:
                 mapTogglePeering();
+                break;
+
+        case KEY_CTRL_D:
+                cmdDumpPalette();
                 break;
 
         default:

@@ -2492,6 +2492,45 @@ bool cmdSaveTerrainMap(class Character * pc)
 	return true;
 } // cmdSaveTerrainMap()
 
+/*
+ * cmdDumpPalette - dump all terrain sprites as one bitmap image per frame to
+ * the current directory (intended as an assist for map editing) (thanks to
+ * Karl Garrison for this function)
+ */
+void cmdDumpPalette(void)
+{
+        struct terrain_palette * palette;
+        struct place           * place;
+        struct terrain_map     * map;
+        struct list *elem;
+	SDL_Surface *src_surface;
+	SDL_Surface *dest_surface;
+	SDL_Rect rect;
+	char filename[BOGUS_FILENAME_LENGTH+1];
+	int frame_count, frames;
+
+        place   = player_party->getPlace();
+        map     = place->terrain_map;
+        palette = map->palette;
+        list_for_each(&palette->set, elem) {
+                struct terrain_palette_entry *entry;
+                entry = outcast(elem, struct terrain_palette_entry, list);
+                src_surface = entry->terrain->sprite->images->images;
+                rect = entry->terrain->sprite->frames[0];
+                frames = entry->terrain->sprite->n_frames;
+                dest_surface = screenCreateSurface(rect.w, rect.h);
+                for (frame_count = 0; frame_count < frames; frame_count++) {
+                        rect = entry->terrain->sprite->frames[frame_count];
+                        SDL_BlitSurface(src_surface, &rect, dest_surface, 
+                                        NULL);
+                        sprintf( filename, "%s-%d.bmp", entry->terrain->tag, 
+                                 frame_count );
+                        SDL_SaveBMP(dest_surface, filename);
+                }
+                SDL_FreeSurface(dest_surface);
+	}
+}
+
 void cmdZoomIn(void)
 {
         struct place *subplace = 0;

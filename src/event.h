@@ -58,6 +58,7 @@ extern "C" {
  * Give canonical names to the UNICODE versions of the CTRL keypresses that we
  * care about.
  */
+#define KEY_CTRL_D      0x04
 #define KEY_CTRL_Q      0x11
 #define KEY_CTRL_R      0x12
 #define KEY_CTRL_S      0x13
