@@ -101,7 +101,8 @@ SPRITE_SET ss_u4 {
     SPRITE(s_wall,        1, 72, normal);
     SPRITE(s_secret_door, 1, 73, normal);
     SPRITE(s_altar,       1, 74, normal);
-    SPRITE(s_fireplace,   1, 75, normal);
+    // Use the animated fireplace in misc_added_sprite_set.ghul
+    // SPRITE(s_fireplace, 1, 75, normal);
     SPRITE(s_lava,        1, 76, wave);
     SPRITE(s_projectile,  1, 77, normal);
     SPRITE(s_magic,       1, 78, normal);
