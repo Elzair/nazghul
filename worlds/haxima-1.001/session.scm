@@ -399,6 +399,8 @@
   ))
 
 (load "gregors-hut.scm")
+(load "P_terrain_test.scm")
+
 
 ;;----------------------------------------------------------------------------
 ;; Places
@@ -528,8 +530,9 @@
                #t
                #f                 ; tmp combat place
                (list
-                (list p_green_tower 35 23)
-                (list p_gregors_hut 3 17)
+                (list p_green_tower  35 23)
+                (list p_gregors_hut   3 17)
+                (list p_terrain_test  3 15)  ;; For test purposes
                 )
                nil ; neighbors
                (append 
