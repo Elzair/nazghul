@@ -44,12 +44,13 @@
     }
 
 
-//         tag       name                sprite          effect          L    D   P 
-//         -------   ------------        --------------  -------------  ---  --- ---
-FIELD_TYPE(F_fire,   "fire field",       s_field_fire,   EFFECT_BURN,   512, 20, PASS_ALL);
-FIELD_TYPE(F_poison, "poison field",     s_field_poison, EFFECT_POISON, 256, 20, PASS_ALL);
-FIELD_TYPE(F_sleep,  "sleep field",      s_field_sleep,  EFFECT_SLEEP,  256, 20, PASS_ALL);
-FIELD_TYPE(F_protect,"protection field", s_field_energy, EFFECT_BURN,   512, 20, PASS_NONE);
+//         tag        name                sprite          effect           L    D   P 
+//         -------    ------------        --------------  -------------   ---  --- ---
+FIELD_TYPE(F_illum,   "glowing mote",     s_magic,        EFFECT_NONE,   1024,  5, PASS_ALL);
+FIELD_TYPE(F_fire,    "fire field",       s_field_fire,   EFFECT_BURN,    512, 20, PASS_ALL);
+FIELD_TYPE(F_poison,  "poison field",     s_field_poison, EFFECT_POISON,  256, 20, PASS_ALL);
+FIELD_TYPE(F_sleep,   "sleep field",      s_field_sleep,  EFFECT_SLEEP,   256, 20, PASS_ALL);
+FIELD_TYPE(F_protect, "protection field", s_field_energy, EFFECT_BURN,    512, 20, PASS_NONE);
 
 
 #endif // magical_fields_ghul
