@@ -724,6 +724,188 @@
 (kern-mk-sprite 's_road_E_end_light_green        ss_kg_roads 1 142 #f 0)
 ; Tile 143 unused
 
+
+;; David Gervais' Wearable Items 
+;; ss_dg_wearable (12 x 20)
+;; (helmets, amulets, cloaks, robes, gloves, boots, shields, armour)
+;; 
+;; TODO: Make a second pass giving DESCRIPTIVE tags like s_amulet_red rather than s_amulet_99...
+
+(kern-mk-sprite 's_helm_leather_1         ss_dg_wearable 1   0 #f 0)
+(kern-mk-sprite 's_helm_leather_2         ss_dg_wearable 1   1 #f 0)
+(kern-mk-sprite 's_helm_metal_1           ss_dg_wearable 1   2 #f 0)
+(kern-mk-sprite 's_helm_metal_2           ss_dg_wearable 1   3 #f 0)
+(kern-mk-sprite 's_helm_metal_3           ss_dg_wearable 1   4 #f 0)
+(kern-mk-sprite 's_helm_gold_horned       ss_dg_wearable 1   5 #f 0)
+(kern-mk-sprite 's_helm_metal_horned      ss_dg_wearable 1   6 #f 0)
+(kern-mk-sprite 's_hat_green_featuer      ss_dg_wearable 1   7 #f 0)
+(kern-mk-sprite 's_crown_1                ss_dg_wearable 1   8 #f 0)
+(kern-mk-sprite 's_crown_2                ss_dg_wearable 1   9 #f 0)
+(kern-mk-sprite 's_crown_3                ss_dg_wearable 1  10 #f 0)
+(kern-mk-sprite 's_crown_4                ss_dg_wearable 1  11 #f 0)
+
+(kern-mk-sprite 's_amulet_1               ss_dg_wearable 1  12 #f 0)
+(kern-mk-sprite 's_amulet_2               ss_dg_wearable 1  13 #f 0)
+(kern-mk-sprite 's_amulet_3               ss_dg_wearable 1  14 #f 0)
+(kern-mk-sprite 's_amulet_4               ss_dg_wearable 1  15 #f 0)
+(kern-mk-sprite 's_amulet_5               ss_dg_wearable 1  16 #f 0)
+(kern-mk-sprite 's_amulet_6               ss_dg_wearable 1  17 #f 0)
+(kern-mk-sprite 's_amulet_7               ss_dg_wearable 1  18 #f 0)
+(kern-mk-sprite 's_amulet_8               ss_dg_wearable 1  19 #f 0)
+(kern-mk-sprite 's_amulet_9               ss_dg_wearable 1  20 #f 0)
+(kern-mk-sprite 's_amulet_10              ss_dg_wearable 1  21 #f 0)
+
+(kern-mk-sprite 's_amulet_10              ss_dg_wearable 1  24 #f 0)
+(kern-mk-sprite 's_amulet_10              ss_dg_wearable 1  25 #f 0)
+(kern-mk-sprite 's_amulet_10              ss_dg_wearable 1  26 #f 0)
+(kern-mk-sprite 's_amulet_10              ss_dg_wearable 1  27 #f 0)
+(kern-mk-sprite 's_amulet_10              ss_dg_wearable 1  28 #f 0)
+(kern-mk-sprite 's_amulet_10              ss_dg_wearable 1  29 #f 0)
+
+(kern-mk-sprite 's_ring_1                 ss_dg_wearable 1  36 #f 0)
+(kern-mk-sprite 's_ring_2                 ss_dg_wearable 1  37 #f 0)
+(kern-mk-sprite 's_ring_3                 ss_dg_wearable 1  38 #f 0)
+(kern-mk-sprite 's_ring_4                 ss_dg_wearable 1  39 #f 0)
+(kern-mk-sprite 's_ring_5                 ss_dg_wearable 1  40 #f 0)
+(kern-mk-sprite 's_ring_6                 ss_dg_wearable 1  41 #f 0)
+(kern-mk-sprite 's_ring_7                 ss_dg_wearable 1  42 #f 0)
+(kern-mk-sprite 's_ring_8                 ss_dg_wearable 1  43 #f 0)
+(kern-mk-sprite 's_ring_9                 ss_dg_wearable 1  44 #f 0)
+(kern-mk-sprite 's_ring_10                ss_dg_wearable 1  45 #f 0)
+(kern-mk-sprite 's_ring_11                ss_dg_wearable 1  46 #f 0)
+(kern-mk-sprite 's_ring_12                ss_dg_wearable 1  47 #f 0)
+
+(kern-mk-sprite 's_ring_13                ss_dg_wearable 1  48 #f 0)
+(kern-mk-sprite 's_ring_14                ss_dg_wearable 1  49 #f 0)
+(kern-mk-sprite 's_ring_15                ss_dg_wearable 1  50 #f 0)
+(kern-mk-sprite 's_ring_16                ss_dg_wearable 1  51 #f 0)
+(kern-mk-sprite 's_ring_17                ss_dg_wearable 1  52 #f 0)
+(kern-mk-sprite 's_ring_18                ss_dg_wearable 1  53 #f 0)
+(kern-mk-sprite 's_ring_19                ss_dg_wearable 1  54 #f 0)
+(kern-mk-sprite 's_ring_20                ss_dg_wearable 1  55 #f 0)
+(kern-mk-sprite 's_ring_21                ss_dg_wearable 1  56 #f 0)
+(kern-mk-sprite 's_ring_22                ss_dg_wearable 1  57 #f 0)
+(kern-mk-sprite 's_ring_23                ss_dg_wearable 1  58 #f 0)
+(kern-mk-sprite 's_ring_24                ss_dg_wearable 1  59 #f 0)
+
+(kern-mk-sprite 's_cloak_1                ss_dg_wearable 1  60 #f 0)
+(kern-mk-sprite 's_cloak_2                ss_dg_wearable 1  61 #f 0)
+(kern-mk-sprite 's_cloak_3                ss_dg_wearable 1  62 #f 0)
+(kern-mk-sprite 's_cloak_4                ss_dg_wearable 1  63 #f 0)
+(kern-mk-sprite 's_cloak_5                ss_dg_wearable 1  64 #f 0)
+(kern-mk-sprite 's_cloak_6                ss_dg_wearable 1  65 #f 0)
+(kern-mk-sprite 's_cloak_7                ss_dg_wearable 1  66 #f 0)
+(kern-mk-sprite 's_cloak_8                ss_dg_wearable 1  67 #f 0)
+(kern-mk-sprite 's_cloak_9                ss_dg_wearable 1  68 #f 0)
+
+(kern-mk-sprite 's_robe_1                 ss_dg_wearable 1  72 #f 0)
+(kern-mk-sprite 's_robe_2                 ss_dg_wearable 1  75 #f 0)
+(kern-mk-sprite 's_robe_3                 ss_dg_wearable 1  77 #f 0)
+(kern-mk-sprite 's_robe_4                 ss_dg_wearable 1  78 #f 0)
+(kern-mk-sprite 's_robe_rags              ss_dg_wearable 1  83 #f 0)
+
+(kern-mk-sprite 's_gloves_green           ss_dg_wearable 1  84 #f 0)
+(kern-mk-sprite 's_gloves_tan             ss_dg_wearable 1  85 #f 0)
+(kern-mk-sprite 's_gloves_brown           ss_dg_wearable 1  86 #f 0)
+(kern-mk-sprite 's_gloves_grey            ss_dg_wearable 1  87 #f 0)
+(kern-mk-sprite 's_gloves_yellow          ss_dg_wearable 1  88 #f 0)
+(kern-mk-sprite 's_gloves_blue            ss_dg_wearable 1  89 #f 0)
+
+(kern-mk-sprite 's_boots_green            ss_dg_wearable 1  96 #f 0)
+(kern-mk-sprite 's_boots_tan              ss_dg_wearable 1  97 #f 0)
+(kern-mk-sprite 's_boots_brown            ss_dg_wearable 1  98 #f 0)
+(kern-mk-sprite 's_boots_metal            ss_dg_wearable 1  99 #f 0)
+(kern-mk-sprite 's_boots_yellow           ss_dg_wearable 1 100 #f 0)
+
+(kern-mk-sprite 's_shield_pattern_1       ss_dg_wearable 1 108 #f 0)
+(kern-mk-sprite 's_shield_pattern_2       ss_dg_wearable 1 109 #f 0)
+(kern-mk-sprite 's_shield_pattern_3       ss_dg_wearable 1 110 #f 0)
+(kern-mk-sprite 's_shield_pattern_4       ss_dg_wearable 1 111 #f 0)
+(kern-mk-sprite 's_shield_pattern_5       ss_dg_wearable 1 112 #f 0)
+(kern-mk-sprite 's_shield_pattern_6       ss_dg_wearable 1 113 #f 0)
+(kern-mk-sprite 's_shield_pattern_7       ss_dg_wearable 1 114 #f 0)
+(kern-mk-sprite 's_shield_blank_gold      ss_dg_wearable 1 115 #f 0)
+
+(kern-mk-sprite 's_shield_blank_wooden_1       ss_dg_wearable 1 120 #f 0)
+(kern-mk-sprite 's_shield_blank_wooden_2       ss_dg_wearable 1 121 #f 0)
+(kern-mk-sprite 's_shield_blank_round_1        ss_dg_wearable 1 122 #f 0)
+(kern-mk-sprite 's_shield_blank_round_2        ss_dg_wearable 1 123 #f 0)
+(kern-mk-sprite 's_shield_blank_round_3        ss_dg_wearable 1 124 #f 0)
+(kern-mk-sprite 's_shield_blank_heater_1       ss_dg_wearable 1 125 #f 0)
+(kern-mk-sprite 's_shield_blank_heater_2       ss_dg_wearable 1 126 #f 0)
+
+(kern-mk-sprite 's_breastplate_dragon_1        ss_dg_wearable 1 132 #f 0)
+(kern-mk-sprite 's_breastplate_dragon_2        ss_dg_wearable 1 133 #f 0)
+(kern-mk-sprite 's_breastplate_dragon_3        ss_dg_wearable 1 134 #f 0)
+(kern-mk-sprite 's_breastplate_dragon_4        ss_dg_wearable 1 135 #f 0)
+(kern-mk-sprite 's_breastplate_dragon_5        ss_dg_wearable 1 136 #f 0)
+(kern-mk-sprite 's_breastplate_dragon_6        ss_dg_wearable 1 137 #f 0)
+
+(kern-mk-sprite 's_shield_symbol_crown         ss_dg_wearable 1 144 #f 0)
+(kern-mk-sprite 's_shield_symbol_unicorn_1     ss_dg_wearable 1 145 #f 0)
+(kern-mk-sprite 's_shield_symbol_unicorn_2     ss_dg_wearable 1 146 #f 0)
+(kern-mk-sprite 's_shield_symbol_lion_rampant  ss_dg_wearable 1 147 #f 0)
+(kern-mk-sprite 's_shield_symbol_skull         ss_dg_wearable 1 148 #f 0)
+
+(kern-mk-sprite 's_armor_leather_1       ss_dg_wearable 1 156 #f 0)
+(kern-mk-sprite 's_armor_leather_2       ss_dg_wearable 1 157 #f 0)
+(kern-mk-sprite 's_armor_leather_3       ss_dg_wearable 1 158 #f 0)
+(kern-mk-sprite 's_armor_leather_4       ss_dg_wearable 1 159 #f 0)
+(kern-mk-sprite 's_armor_leather_5       ss_dg_wearable 1 160 #f 0)
+; 161 blank
+(kern-mk-sprite 's_armor_golden_1        ss_dg_wearable 1 162 #f 0)
+(kern-mk-sprite 's_armor_green_1         ss_dg_wearable 1 163 #f 0)
+
+(kern-mk-sprite 's_armor_chain_1         ss_dg_wearable 1 168 #f 0)
+(kern-mk-sprite 's_armor_chain_2         ss_dg_wearable 1 169 #f 0)
+(kern-mk-sprite 's_armor_chain_3         ss_dg_wearable 1 170 #f 0)
+(kern-mk-sprite 's_armor_chain_4         ss_dg_wearable 1 171 #f 0)
+(kern-mk-sprite 's_armor_chain_5         ss_dg_wearable 1 172 #f 0)
+(kern-mk-sprite 's_armor_chain_6         ss_dg_wearable 1 173 #f 0)
+(kern-mk-sprite 's_armor_chain_7         ss_dg_wearable 1 174 #f 0)
+(kern-mk-sprite 's_armor_chain_8         ss_dg_wearable 1 175 #f 0)
+
+(kern-mk-sprite 's_armor_plate_1         ss_dg_wearable 1 172 #f 0)
+(kern-mk-sprite 's_armor_plate_2         ss_dg_wearable 1 173 #f 0)
+(kern-mk-sprite 's_armor_plate_3         ss_dg_wearable 1 174 #f 0)
+(kern-mk-sprite 's_armor_plate_4         ss_dg_wearable 1 175 #f 0)
+(kern-mk-sprite 's_armor_plate_5         ss_dg_wearable 1 176 #f 0)
+
+(kern-mk-sprite 's_armor_dragon_1        ss_dg_wearable 1 180 #f 0)
+(kern-mk-sprite 's_armor_dragon_2        ss_dg_wearable 1 181 #f 0)
+(kern-mk-sprite 's_armor_dragon_3        ss_dg_wearable 1 182 #f 0)
+(kern-mk-sprite 's_armor_dragon_4        ss_dg_wearable 1 183 #f 0)
+(kern-mk-sprite 's_armor_dragon_5        ss_dg_wearable 1 184 #f 0)
+(kern-mk-sprite 's_armor_dragon_6        ss_dg_wearable 1 185 #f 0)
+(kern-mk-sprite 's_armor_dragon_7        ss_dg_wearable 1 186 #f 0)
+(kern-mk-sprite 's_armor_dragon_8        ss_dg_wearable 1 187 #f 0)
+
+(kern-mk-sprite 's_armor_dragon_9        ss_dg_wearable 1 192 #f 0)
+(kern-mk-sprite 's_armor_dragon_10       ss_dg_wearable 1 193 #f 0)
+(kern-mk-sprite 's_armor_dragon_11       ss_dg_wearable 1 194 #f 0)
+(kern-mk-sprite 's_armor_dragon_12       ss_dg_wearable 1 195 #f 0)
+(kern-mk-sprite 's_armor_dragon_13       ss_dg_wearable 1 196 #f 0)
+(kern-mk-sprite 's_armor_dragon_14       ss_dg_wearable 1 197 #f 0)
+(kern-mk-sprite 's_armor_dragon_15       ss_dg_wearable 1 198 #f 0)
+(kern-mk-sprite 's_armor_dragon_16       ss_dg_wearable 1 199 #f 0)
+
+
+;; ss_dg_weapons          16 x 16
+
+; (kern-mk-sprite 's_       ss_dg_weapons 1   0 #f 0)
+
+
+
+
+
+
+
+
+
+
+
+
+
 ;; David Gervais' missile sprites
 ;; TODO: The facing code does not cover the layout needed by the bolts (first 3 rows)
 ;;   Frames (0,1,2,3) are (N,NE,E,SE), then again (S,SW,W,NW)
@@ -816,6 +998,9 @@
 (kern-mk-sprite 's_arrow_metal_green             ss_dg_missiles 8 232 #f 0)
 
 
+;; ss_dg_tools            16 x 16
+
+
 ;; ss_dg_commodities (food, drink, mushrooms, coins, gems, ...)
 (kern-mk-sprite 's_food_biscuit                  ss_dg_commodities 1 0 #f 0)
 (kern-mk-sprite 's_food_bread                    ss_dg_commodities 1 1 #f 0)
@@ -866,6 +1051,10 @@
 (kern-mk-sprite 's_gems_red                      ss_dg_commodities 1 152 #f 0)
 (kern-mk-sprite 's_gems_pale_blue                ss_dg_commodities 1 153 #f 0)
 (kern-mk-sprite 's_gems_small_round              ss_dg_commodities 1 154 #f 0)
+
+
+;; ss_dg_potions          16 x 7
+;; ss_dg_readable         16 x 16
 
 
 
