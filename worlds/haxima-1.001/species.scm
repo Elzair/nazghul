@@ -165,7 +165,8 @@
 ;; Species immunities
 ;; ----------------------------------------------------------------------------
 (define (species-is-immune-to-ensnare? species)
-  (eqv? species sp_spider))
+  (or (eqv? species sp_spider)
+      (eqv? species sp_queen_spider)))
 
 (define (species-is-immune-to-paralyze? species)
   #f)

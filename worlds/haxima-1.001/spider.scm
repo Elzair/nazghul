@@ -26,35 +26,46 @@
                  nil            ;; native spells: currently unused
                  )
 
-;;----------------------------------------------------------------------------
-;; Occupation declaration (used by the kernel)
-;;----------------------------------------------------------------------------
-(kern-mk-occ 'oc_spider           ;; tag
-             "hunter"             ;; name 
-             0.0                  ;; magic 
-             +0                   ;; hp_mod 
-             +0                   ;; hp_mult 
-             0                    ;; mp_mod 
-             0                    ;; mp_mult 
-             0                    ;; hit_mod 
-             0                    ;; def_mod 
-             0                    ;; dam_mod 
-             0                    ;; arm_mod
-             nil                  ;; container (needed for items)
-             nil                  ;; typical traps on the container
-             nil                  ;; readied:
-             nil                  ;; equipment
-             )
+(kern-mk-species 'sp_queen_spider ;; tag: script variable name
+                 "queen spider"   ;; name: used to display name in the UI
+                 18             ;; strength: limits armament weight
+                 6              ;; intelligence: (just reported in stats)
+                 12             ;; dexterity: used to avoid traps on chests
+                 speed-human    ;; speed: action points per turn
+                 10             ;; vision radius: in tiles
+                 mmode-walk     ;; movement mode
+                 30             ;; base hp: hit points at level zero
+                 4              ;; hp multiplier: extra hp per level
+                 0              ;; base mp: mana points at level zero
+                 0              ;; mp multiplier: extra mana points per level
+                 s_corpse       ;; sleep sprite
+                 t_hands        ;; natural weapon: used when unarmed
+                 #t             ;; visible: can be seen
+                 sound-damage   ;; damage sound
+                 sound-walking  ;; walking sound
+                 humanoid-slots ;; slots: hands
+                 nil            ;; native spells: currently unused
+                 )
 
 ;;----------------------------------------------------------------------------
 ;; Constructor
 ;;----------------------------------------------------------------------------
 (define (mk-spider faction)
   (let ((spider (kern-mk-stock-char sp_spider 
-                                   oc_spider
-                                   s_spider ;; no spider sprite yet
-                                   "a spider" 
-                                   'wood-spider-ai)))
+                                    nil
+                                    s_spider
+                                    "a spider" 
+                                    'spider-ai)))
+    (kern-being-set-base-faction spider faction)
+    spider ;; return the kernel object
+    ))
+
+(define (mk-queen-spider faction)
+  (let ((spider (kern-mk-stock-char sp_queen_spider 
+                                    nil
+                                    s_queen_spider ;; no spider sprite yet
+                                    "a queen spider" 
+                                    'spider-ai)))
     (kern-being-set-base-faction spider faction)
     spider ;; return the kernel object
     ))
@@ -99,8 +110,8 @@
 ;; Spider AI
 ;; ----------------------------------------------------------------------------
 
-(define (wood-spider-no-hostiles kspider)
-  (display "wood-spider-no-hostiles")(newline)
+(define (spider-no-hostiles kspider)
+  (display "spider-no-hostiles")(newline)
   (let ((loc (kern-obj-get-location kspider)))
     (if (not (is-object-type-at? loc web-type))
         (ensnare-loc loc)))
@@ -111,66 +122,64 @@
       (is-ensnared? kchar)
       (is-paralyzed? kchar)))
 
-(define (wood-spider-attack-helpless-foe kspider kfoe)
+(define (spider-attack-helpless-foe kspider kfoe)
   (define (attack kspider coords)
-    (display "wood-spider-attack")(newline)
+    (display "spider-attack")(newline)
     (if (is-paralyzed? kfoe)
         (suck-hp kspider kfoe (kern-dice-roll "1d6"))
         (spider-paralyze kfoe)))
-  (display "wood-spider-attack-helpless-foe")(newline)
+  (display "spider-attack-helpless-foe")(newline)
   (do-or-goto kspider (kern-obj-get-location kfoe) attack))
 
-(define (wood-spider-can-spew-web? kspider)
-  ;; fixme: I want this to depend on the spider's level
-  #t)
+(define (spider-can-spew-web? kspider)
+  (eqv? (kern-char-get-species kspider) sp_queen_spider))
 
-(define (wood-spider-spew-web-at-foe kspider kfoe)
-  (display "wood-spider-spew-web-at-foe")(newline)
+(define (spider-spew-web-at-foe kspider kfoe)
+  (display "spider-spew-web-at-foe")(newline)
   (let* ((v (loc-diff (kern-obj-get-location kfoe)
                       (kern-obj-get-location kspider)))
          (dir (loc-to-cardinal-dir v)))
     (display "v=")(display v)(newline)
     (spew-web kspider dir)))
 
-(define (wood-spider-foe-in-range-of-web-spew? kspider kfoe)
-  (display "wood-spider-foe-in-range-of-web-spew?")(newline)
+(define (spider-foe-in-range-of-web-spew? kspider kfoe)
+  (display "spider-foe-in-range-of-web-spew?")(newline)
   (let ((v (loc-diff (kern-obj-get-location kspider)
                       (kern-obj-get-location kfoe))))
     (and (< (abs (loc-x v)) web-spew-range)
          (< (abs (loc-y v)) web-spew-range))))
 
-(define (wood-spider-pathfind-to-foe kspider kfoe)
-  (display "wood-spider-pathfind-to-foe")(newline)
+(define (spider-pathfind-to-foe kspider kfoe)
+  (display "spider-pathfind-to-foe")(newline)
   (pathfind kspider (kern-obj-get-location kfoe)))
 
-(define (wood-spider-try-to-spew-web kspider foe)
-  (display "wood-spider-try-to-spew-web")(newline)
-  (if (wood-spider-foe-in-range-of-web-spew? kspider foe)
-      (wood-spider-spew-web-at-foe kspider foe)
-      (wood-spider-pathfind-to-foe kspider foe)))
+(define (spider-try-to-spew-web kspider foe)
+  (display "spider-try-to-spew-web")(newline)
+  (if (spider-foe-in-range-of-web-spew? kspider foe)
+      (spider-spew-web-at-foe kspider foe)
+      (spider-pathfind-to-foe kspider foe)))
 
-(define (wood-spider-no-helpless-foes kspider foes)
-  (display "wood-spider-no-helpless-foes")(newline)
-  (if (wood-spider-can-spew-web? kspider)
-      (wood-spider-try-to-spew-web kspider (closest-obj 
+(define (spider-no-helpless-foes kspider foes)
+  (display "spider-no-helpless-foes")(newline)
+  (if (spider-can-spew-web? kspider)
+      (spider-try-to-spew-web kspider (closest-obj 
                                             (kern-obj-get-location kspider)
                                             foes))
       (evade kspider foes)))
 
-(define (wood-spider-hostiles kspider foes)
-  (display "wood-spider-hostiles")(newline)
+(define (spider-hostiles kspider foes)
+  (display "spider-hostiles")(newline)
   (let ((helpless-foes (filter is-helpless? foes)))
     (if (null? helpless-foes)
-        (wood-spider-no-helpless-foes kspider foes)
-        (wood-spider-attack-helpless-foe kspider 
+        (spider-no-helpless-foes kspider foes)
+        (spider-attack-helpless-foe kspider 
                                          (closest-obj 
                                           (kern-obj-get-location kspider)
                                           helpless-foes)))))
 
-(define (wood-spider-ai kspider)
+(define (spider-ai kspider)
   (newline)(display "spider-ai")(newline)
   (let ((foes (all-visible-hostiles kspider)))
-    (display "foes=")(display foes)(newline)
     (if (null? foes)
-        (wood-spider-no-hostiles kspider)
-        (wood-spider-hostiles kspider foes))))
+        (spider-no-hostiles kspider)
+        (spider-hostiles kspider foes))))
