@@ -70,6 +70,8 @@
 #include <unistd.h>     // getpid()
 #include <errno.h>
 
+#define PROFILE_PLAY_LOOP 1
+
 enum cmdstate {
 	CMD_IDLE,
 	CMD_GET,
@@ -290,6 +292,7 @@ static void play_loop(void)
 {
         struct exec_context context;
         memset(&context, 0, sizeof(context));
+        int times[8];
 
         Turn = 0;
 
@@ -306,7 +309,9 @@ static void play_loop(void)
                 // run. This includes player-controlled objects.
                 // -------------------------------------------------------------
 
+                times[0] = SDL_GetTicks();
                 place_exec(Place, &context);
+                
 
                 // -------------------------------------------------------------
                 // Check for changes in the combat state as a result of the
@@ -314,6 +319,7 @@ static void play_loop(void)
                 // to wilderness mode.
                 // -------------------------------------------------------------
                 
+                times[1] = SDL_GetTicks();
                 if (combat_get_state() != COMBAT_STATE_DONE) {
                         combat_analyze_results_of_last_turn();
                 }
@@ -327,12 +333,14 @@ static void play_loop(void)
                 // this next call.
                 // -------------------------------------------------------------
 
+                times[2] = SDL_GetTicks();
                 eventHandlePending();
 
                 // -------------------------------------------------------------
                 // Check for end-of-game conditions.
                 // -------------------------------------------------------------
 
+                times[3] = SDL_GetTicks();
                 if (player_party->allDead()) {
                         play_print_end_of_game_prompt();
                         break;
@@ -348,6 +356,7 @@ static void play_loop(void)
                 //       things take their cue from the current time.
                 // -------------------------------------------------------------
 
+                times[4] = SDL_GetTicks();
                 if (! TimeStop)
                         clock_advance(place_get_scale(Place));
                 foogodAdvanceTurns();
@@ -365,6 +374,16 @@ static void play_loop(void)
                 Turn += place_get_scale(Place);
 
                 G_exec_loops++;
+                times[5] = SDL_GetTicks();
+                
+                if (PROFILE_PLAY_LOOP) {
+                        printf("Loop time=%d\n", times[5] - times[0]);
+                        printf("      place_exec: %d\n", times[1] - times[0]);
+                        printf("     end-of-turn: %d\n", times[2] - times[1]);
+                        printf("  pending events: %d\n", times[3] - times[2]);
+                        printf("     end-of-game: %d\n", times[4] - times[3]);
+                        printf("    advance misc: %d\n", times[5] - times[4]);
+                }
                 
         }
 }

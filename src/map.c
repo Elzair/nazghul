@@ -801,15 +801,15 @@ static void mapRepaintTurnaround(void)
         extern int G_turnaround_start, G_turnaround_stop;
         static int turnaround = 0;
 
-        if (G_turnaround_start && G_turnaround_stop) {
+        if (G_turnaround_stop > G_turnaround_start) {
                 turnaround = G_turnaround_stop - G_turnaround_start;
         }
 
 	screenPrint(&Map.turnaroundRect, 0, "TA: %d", turnaround);
 
         if (G_turnaround_start && G_turnaround_stop) {
-                G_turnaround_start = 0;
-                G_turnaround_stop  = 0;
+                //G_turnaround_start = 0;
+                //G_turnaround_stop  = 0;
         }
 
 }
@@ -913,6 +913,8 @@ void mapRepaintView(struct mview *view, int flags)
         // ---------------------------------------------------------------------
 
         mapRepaintLatency();
+
+        t8 = SDL_GetTicks();
 
 	if (PROFILE_REPAINT) {
 	  printf("Total time=%d\n", t8 - t1);

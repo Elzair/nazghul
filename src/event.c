@@ -194,7 +194,7 @@ static void record_event(SDL_Event * event)
 static void event_handle_aux(int flags)
 {
 	bool done = false;
-        bool use_hook = true;
+        bool use_hook = false;
 
 	while (!done) {
 
