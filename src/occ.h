@@ -57,6 +57,8 @@ struct occ {
 
 	int n_traps;
 	closure_t *traps;
+
+        int xpval; /* reward for killing this type */
 };
 
 extern struct occ *occ_new(char *tag,

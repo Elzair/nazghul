@@ -770,9 +770,6 @@ bool cmdOpen(class Character * pc)
 		} else {
                         closure_exec(trap, "pp", pc, container);
 		}
-
-		// Give the character some experience for dealing with the trap
-		pc->addExperience(XP_PER_TRAP);
 	}
 
         // Describe the contents of the container.

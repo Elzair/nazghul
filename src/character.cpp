@@ -125,7 +125,7 @@ Character::Character(char *tag, char *name,
           rdyArms(NULL),
           fleeing(false), fleeX(0), fleeY(0), burden(0),
           inCombat(false),
-          container(NULL), sprite(sprite), n_rest_credits(0), elevated(false)
+          container(NULL), sprite(sprite), n_rest_credits(0)
 {
         if (tag) {
                 this->tag = strdup(tag);
@@ -188,8 +188,7 @@ Character::Character():name(0), hm(0), xp(0), order(-1),
                        rdyArms(NULL),
                        fleeing(false), fleeX(0), fleeY(0), burden(0),
                        inCombat(false),
-                       container(NULL), sprite(0), n_rest_credits(0), 
-                       elevated(false)
+                       container(NULL), sprite(0), n_rest_credits(0)
 {
         // --------------------------------------------------------------------
         // Note: this constructor is called by Party::createMembers(); it will
@@ -371,18 +370,18 @@ bool Character::unready(class ArmsType * arms)
 char *Character::getWoundDescription()
 {
 	static char *desc[] = {
-		"Critical!",
-		"Heavily wounded!",
-		"Moderately wounded!",
-		"Barely wounded!",
-		"Unscathed!"
+		"Critical",
+		"Heavily wounded",
+		"Moderately wounded",
+		"Barely wounded",
+		"Unscathed"
 	};
 
 	if (isDead())
-		return "Killed!";
+		return "Killed";
 
 	if (isFleeing())
-		return "Fleeing!";
+		return "Fleeing";
 
 	return desc[(getHp() * 4) / getMaxHp()];
 }
@@ -1237,6 +1236,16 @@ void Character::rest(int hours)
 	}
 }
 
+int Character::getExperienceValue()
+{
+        int xpval = 0;
+        if (species)
+                xpval += species->xpval;
+        if (occ)
+                xpval += occ->xpval;
+        return (xpval * lvl);
+}
+
 void Character::addExperience(int amount)
 {
 	double lxp;
@@ -1244,8 +1253,11 @@ void Character::addExperience(int amount)
 	xp += amount;
 	lxp = pow(2, lvl + 7);
 	if (xp >= lxp) {
-		lvl++;		// elevate to the next level
-		setElevated(true);
+		lvl++;
+                log_msg("%s gains level %d!", getName(), lvl);
+                if (isPlayerControlled()) {
+                        mapFlash(1000);
+                }
 	}
 }
 
@@ -1464,14 +1476,6 @@ void Character::setOrder(int order) {
 
 void Character::setCombat(bool val) {
         inCombat = val;
-}
-
-bool Character::wasElevated(void) {
-        return elevated;
-}
-
-void Character::setElevated(bool val) {
-        elevated = val;
 }
 
 int Character::getDefend()

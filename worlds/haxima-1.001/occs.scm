@@ -13,8 +13,9 @@
              -1                   ; def_mod 
              -1                   ; dam_mod 
              -1                   ; arm_mod
-             nil ; container 
-             nil ; typical traps 
+             nil                  ; container 
+             6                    ; xpval
+             nil                  ; typical traps 
              (list 
               t_dagger
               )
@@ -34,10 +35,11 @@
              +1                   ; def_mod 
              +1                   ; dam_mod 
              +1                   ; arm_mod
-             nil ; container 
-             nil ; typical traps 
-             nil ; typical arms
-             nil ; typical items
+             nil                  ; container 
+             16                   ; xpval
+             nil                  ; typical traps 
+             nil                  ; typical arms
+             nil                  ; typical items
              )
 
 (kern-mk-occ 'oc_druid
@@ -52,7 +54,8 @@
              0                    ; dam_mod 
              0                    ; arm_mod
              t_small_wooden_chest ; container 
-             nil ; typical traps 
+             4                    ; xpval
+             nil                  ; typical traps 
              (list 
               t_dagger
               )
@@ -73,7 +76,8 @@
              +2                   ; dam_mod 
              -1                   ; arm_mod
              t_small_wooden_chest ; container 
-             (list 'test-trap)     ; typical traps 
+             4                    ; xpval
+             (list 'test-trap)    ; typical traps 
              ;; readied:
              nil
              ;; items:
@@ -100,6 +104,7 @@
              0                    ; dam_mod 
              0                    ; arm_mod
              t_small_wooden_chest ; container 
+             4                    ; xpval
              (list 'spike-trap)   ; typical traps 
              ;; readied:
              nil

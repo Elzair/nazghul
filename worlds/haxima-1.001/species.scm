@@ -23,6 +23,7 @@
                  sound-damage      ; damage sound
                  sound-walking     ; walking sound
                  nil               ; on-death closure
+                 8                 ; xpval
                  humanoid-slots    ; slots
                  nil               ; native spells
                  )
@@ -41,6 +42,7 @@
                  sound-damage      ; damage sound
                  nil               ; walking sound
                  nil               ; on-death closure
+                 8                 ; xpval
                  humanoid-slots    ; slots
                  nil               ; native spells FIXME!!!!
                  )
@@ -59,6 +61,7 @@
                  sound-damage      ; damage sound
                  sound-walking     ; walking sound
                  nil               ; on-death closure
+                 8                 ; xpval
                  humanoid-slots    ; slots
                  nil               ; native spells
                  )
@@ -77,6 +80,7 @@
                  sound-damage      ; damage sound
                  nil               ; walking sound
                  nil               ; on-death closure
+                 4                 ; xpval
                  nil               ; slots
                  nil               ; native spells
                  )
@@ -95,6 +99,7 @@
                  sound-damage          ; damage sound
                  sound-squishing       ; walking sound
                  nil               ; on-death closure
+                 8                     ; xpval
                  nil                   ; slots
                  ;; native spells
                  (list 
@@ -115,7 +120,8 @@
                  #t                    ; visible
                  sound-damage          ; damage sound
                  sound-squishing       ; walking sound
-                 nil               ; on-death closure
+                 nil                   ; on-death closure
+                 4                     ; xpval
                  nil                   ; slots
                  nil                   ; native spells
                  )
@@ -134,6 +140,7 @@
                  sound-damage      ; damage sound
                  sound-walking     ; walking sound
                  nil               ; on-death closure
+                 8                 ; xpval
                  humanoid-slots    ; slots
                  nil               ; native spells
                  )
@@ -152,6 +159,7 @@
                  sound-damage      ; damage sound
                  sound-walking     ; walking sound
                  nil               ; on-death closure
+                 4                 ; xpval
                  nil               ; slots
                  nil               ; native spells FIXME!!!!
                  )

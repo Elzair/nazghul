@@ -44,6 +44,7 @@
                  sound-damage   ;; damage sound
                  sound-walking  ;; walking sound
                  nil            ;; on-death closure
+                 12             ;; xpval
                  humanoid-slots ;; slots: hands
                  nil            ;; native spells: currently unused
                  )
@@ -63,6 +64,7 @@
              2                    ;; dam_mod 
              -1                   ;; arm_mod
              troll-corpse-type    ;; container (needed for items)
+             4                    ;; xpval
              nil                  ;; typical traps on the container
              ;; readied:
              (list troll-ranged-weapon)

@@ -55,7 +55,7 @@ struct species {
         sound_t *movement_sound;
 
         struct closure *on_death; /* run-on-death-event script closure */
-
+        int xpval; /* reward for killing this type */
 };
 
 extern struct species *species_new(char *tag,

@@ -349,13 +349,6 @@ extern "C" {
 #define SRV_MIN         SRV_HEAL
 #define SRV_MAX         SRV_RESURRECT
 
-/* Elevation (leveling-up) */
-#define XP_PER_ATTACK 2
-#define XP_PER_DEFEND 1
-#define XP_PER_COMBAT 10
-#define XP_PER_SPELL  2
-#define XP_PER_TRAP   1
-
 /* Contexts */
 #define CONTEXT_WILDERNESS 1
 #define CONTEXT_TOWN       2

@@ -34,6 +34,7 @@
                  sound-damage   ;; damage sound
                  sound-walking  ;; walking sound
                  'spider-killed ;; on-death
+                 4              ;; xpval
                  humanoid-slots ;; slots: hands
                  nil            ;; native spells: currently unused
                  )
@@ -56,6 +57,7 @@
                  sound-damage   ;; damage sound
                  sound-walking  ;; walking sound
                  'queen-spider-killed ;; on-death closure
+                 16             ;; xpval
                  humanoid-slots ;; slots: hands
                  nil            ;; native spells: currently unused
                  )

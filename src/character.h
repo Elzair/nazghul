@@ -123,7 +123,6 @@ class Character:public Being {
 	virtual int  hasAmmo(class ArmsType * weapon);
         virtual bool hasInInventory(class ObjectType *type);
 	virtual bool isFleeing();
-	virtual bool wasElevated(void);
 	virtual bool isVisible();
 	virtual bool isShaded();
         virtual bool isPlayerPartyMember();
@@ -151,8 +150,6 @@ class Character:public Being {
 	virtual void setFleeing(bool val);
 	virtual void setCombat(bool val);
 	virtual void setRestCredits(int hours);
-	virtual void setElevated(bool val);
-	//virtual void setVisible(bool val);
         virtual void ambushWhileCamping();
 	virtual void awaken(void);
         virtual void beginCamping(int hours);
@@ -202,6 +199,7 @@ class Character:public Being {
 	void useAmmo(class ArmsType *weapon);
         bool canSee(class Object *obj);
 	bool commute();
+        int getExperienceValue();
 	bool initStock(struct species * species, struct occ * occ,
 		       struct sprite * sprite, char *name, int order);
 
@@ -269,7 +267,6 @@ class Character:public Being {
 	struct sprite *sprite;
 
 	int n_rest_credits;
-	bool elevated;
         bool charmed;
 
         // --------------------------------------------------------------------

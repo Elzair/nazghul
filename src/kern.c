@@ -1161,7 +1161,7 @@ static pointer kern_mk_species(scheme *sc, pointer args)
 {
         struct species *species;
         int str, intl, dex, spd, vr, hpmod, hpmult, argno = 1;
-        int mpmod, mpmult, visible, n_slots, n_spells, i;
+        int mpmod, mpmult, visible, n_slots, n_spells, i, xpval;
         struct sprite *sleep_sprite;
         class ArmsType *weapon;
         char *tag = TAG_UNK, *name;
@@ -1172,10 +1172,11 @@ static pointer kern_mk_species(scheme *sc, pointer args)
         struct mmode *mmode;
         pointer on_death;
 
-        if (unpack(sc, &args, "ysdddddpddddppbppc", &tag, &name, &str, 
+        if (unpack(sc, &args, "ysdddddpddddppbppcd", &tag, &name, &str, 
                    &intl, &dex, &spd, &vr, &mmode, &hpmod, &hpmult, &mpmod, 
                    &mpmult, &sleep_sprite, &weapon, 
-                   &visible, &damage_sound, &walking_sound, &on_death)) {
+                   &visible, &damage_sound, &walking_sound, &on_death,
+                   &xpval)) {
                 load_err("kern-mk-species %s: bad args", tag);
                 return sc->NIL;
         }
@@ -1211,6 +1212,7 @@ static pointer kern_mk_species(scheme *sc, pointer args)
         species->weapon = weapon;
         species->sleep_sprite = sleep_sprite;
         species->mmode = mmode;
+        species->xpval = xpval;
 
         /* Check if an on-death procedure was specified. */
         if (on_death != sc->NIL) {
@@ -1392,7 +1394,7 @@ static pointer kern_mk_occ(scheme *sc, pointer args)
 {
         struct occ *occ;
         int hpmod, hpmult, argno = 1;
-        int mpmod, mpmult, hit, def, dam, arm, i;
+        int mpmod, mpmult, hit, def, dam, arm, i, xpval;
         char *tag = TAG_UNK, *name;
         float magic;
         class ObjectType *container;
@@ -1402,9 +1404,9 @@ static pointer kern_mk_occ(scheme *sc, pointer args)
         pointer ret;
 
         /* Basic args */
-        if (unpack(sc, &args, "ysrddddddddp",
+        if (unpack(sc, &args, "ysrddddddddpd",
                    &tag, &name, &magic, &hpmod, &hpmult, &mpmod, &mpmult, &hit,
-                   &def, &dam, &arm, &container)) {
+                   &def, &dam, &arm, &container, &xpval)) {
                 load_err("kern-mk-occ %s: bad args", tag);
                 return sc->NIL;
         }
@@ -1423,6 +1425,7 @@ static pointer kern_mk_occ(scheme *sc, pointer args)
                       dam, arm, scm_len(sc, arms), scm_len(sc, items), 
                       scm_len(sc, traps));
         occ->container = container;
+        occ->xpval = xpval;
 
         /* Traps */
         i = 0;

@@ -314,6 +314,11 @@ void ctrl_do_attack(class Character *character, class ArmsType *weapon,
         target->damage(damage);
 
         log_end("%s!", target->getWoundDescription());
+
+        /* If the target was killed then add xp to the attacker */
+        if (target->isDead()) {
+                character->addExperience(target->getExperienceValue());
+        }
 }
 
 
@@ -497,10 +502,6 @@ static void ctrl_attack_ui(class Character *character)
                     false == character->hasAmmo(character->getCurrentWeapon()))
                         log_msg("%s : %s now out of ammo)\n", 
                                      character->getName(), weapon->getName());
-
-                // Once the player uses a weapon he can't cancel out of the
-                // attack and continue his round with a different command.
-                character->addExperience(XP_PER_ATTACK);
         }
 }
 
