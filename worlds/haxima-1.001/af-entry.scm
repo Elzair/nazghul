@@ -13,8 +13,6 @@
   (let ((chars (filter kern-obj-is-char? (kern-place-get-objects kplace))))
     (let ((trolls (filter char-is-troll? chars))
           (spiders (filter char-is-spider? chars)))
-      (display "trolls: ")(display (length trolls))(newline)
-      (display "spiders: ")(display (length spiders))(newline)
       (if (< (length trolls) 2)
           (psummon (mk-loc kplace 19 13)
                   mk-hill-troll
