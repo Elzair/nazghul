@@ -73,7 +73,7 @@ terrains  {
   // Effect-bearing terrains:
   TERRAIN(t_bog,          "bog",       LAND, s_bog,         3, SEE, 2, EFFECT_POISON,  0);
   TERRAIN(t_fire_terrain, "fire",      LAND, s_field_fire, 70, SEE, 1, EFFECT_BURN,  512);
-  TERRAIN(t_fireplace,    "fireplace", LAND, s_fireplace,  75, SEE, 1, EFFECT_BURN, 4096);
+  TERRAIN(t_fireplace,    "fireplace", LAND, s_fireplace,  75, SEE, 1, EFFECT_BURN, 2048);
   TERRAIN(t_lava,         "lava",      LAND, s_lava,       76, SEE, 1, EFFECT_BURN,  128);
 
   // Bridge Terrains:

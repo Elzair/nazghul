@@ -977,94 +977,6 @@ static void myMovePC(class Character * c, int dx, int dy, int verbose)
                 mapCenterCamera(c->getX(), c->getY());
 }
 
-static bool los_blocked(int Ax, int Ay, int Bx, int By)
-{
-        // Apply the bresenhaum algorithm to walk the line from (x0, y0) to
-        // (x1, y1) and check for visibility at each step. Note that the real
-        // intention here is to see if I can fire an arrow from one point to
-        // another. The missile flight code in Missile:animate() uses a test
-        // for visibility on each tile to determine if a missile is blocked in
-        // its flight path (missiles don't have a pmask...).
-
-        int steps = 0;
-
-        int Px = Ax;
-        int Py = Ay;
-
-        // Get the distance components
-        int dX = Bx - Ax;
-        int dY = By - Ay;
-        int AdX = abs(dX);
-        int AdY = abs(dY);
-
-        // Moving left?
-        int Xincr = (Ax > Bx) ? -1 : 1;
-
-        // Moving down?
-        int Yincr = (Ay > By) ? -1 : 1;
-
-        printf("Checking LOS between [%d %d] and [%d %d]\n", Ax, Ay, Bx, By);
-
-        // Walk the x-axis
-        if (AdX >= AdY) {
-
-                int dPr = AdY << 1;
-                int dPru = dPr - (AdX << 1);
-                int P = dPr - AdX;
-
-                // For each x
-                for (int i = AdX; i >= 0; i--) {
-
-                        if (steps > 1) {
-                                printf("  [%d %d]\n", Px, Py);
-                                if (!place_visibility(Place, Px, Py))
-                                        return true;
-                        }
-
-                        steps++;
-
-                        if (P > 0) {
-                                Px += Xincr;
-                                Py += Yincr;
-                                P += dPru;
-                        }
-                        else {
-                                Px += Xincr;
-                                P += dPr;
-                        }
-                }
-        }
-        // Walk the y-axis
-        else {
-                int dPr = AdX << 1;
-                int dPru = dPr - (AdY << 1);
-                int P = dPr - AdY;
-
-                // For each y
-                for (int i = AdY; i >= 0; i--) {
-
-                        if (steps > 1) {
-                                printf("  [%d %d]\n", Px, Py);
-                                if (!place_visibility(Place, Px, Py))
-                                        return true;
-                        }
-
-                        steps++;
-
-                        if (P > 0) {
-                                Px += Xincr;
-                                Py += Yincr;
-                                P += dPru;
-                        }
-                        else {
-                                Py += Yincr;
-                                P += dPr;
-                        }
-                }
-        }
-
-        return false;
-}
 
 #define MSV_IGNORESLEEPERS (1 << 0)
 #define MSV_IGNORELOS      (1 << 1)
@@ -1097,7 +1009,7 @@ static class Character *mySelectVictim(class Character * from,
                         // attacked by melee, missile or most spells. So skip
                         // it unless the caller does not care.
                         if ((flags & MSV_IGNORELOS) == 0 &&
-                            los_blocked(from->getX(), from->getY(),
+                            place_los_blocked(Place, from->getX(), from->getY(),
                                         pm->getX(), pm->getY()))
                                 continue;
 
@@ -1151,7 +1063,7 @@ static class Character *mySelectVictim(class Character * from,
                 // attacked by melee, missile or most spells. So skip
                 // it unless the caller does not care.
                 if ((flags & MSV_IGNORELOS) == 0 &&
-                    los_blocked(from->getX(), from->getY(),
+                    place_los_blocked(Place, from->getX(), from->getY(),
                                 pm->getX(), pm->getY()))
                         continue;
 

@@ -1222,7 +1222,95 @@ void place_clip_to_map(struct place *place, int *x, int *y)
 	*y = min(*y, place_h(place) - 1);
 }
 
+// fixme -- combine with mapAnimateProjectile(), use callback for animation
+int place_los_blocked(struct place *place, int Ax, int Ay, int Bx, int By)
+{
+        // Should be called from source to target. Does not test for los on
+        // target tile itself, but stops one short. So opaque tiles are visible
+        // if they are the destination.
 
+        // Apply the bresenhaum algorithm to walk the line from (x0, y0) to
+        // (x1, y1) and check for visibility at each step. Note that the real
+        // intention here is to see if I can fire an arrow from one point to
+        // another. The missile flight code in Missile:animate() uses a test
+        // for visibility on each tile to determine if a missile is blocked in
+        // its flight path (missiles don't have a pmask...).
+
+        int steps = 0;
+
+        int Px = Ax;
+        int Py = Ay;
+
+        // Get the distance components
+        int dX = Bx - Ax;
+        int dY = By - Ay;
+        int AdX = abs(dX);
+        int AdY = abs(dY);
+
+        // Moving left?
+        int Xincr = (Ax > Bx) ? -1 : 1;
+
+        // Moving down?
+        int Yincr = (Ay > By) ? -1 : 1;
+
+        // Walk the x-axis
+        if (AdX >= AdY) {
+
+                int dPr = AdY << 1;
+                int dPru = dPr - (AdX << 1);
+                int P = dPr - AdX;
+
+                // For each x
+                for (int i = AdX; i >= 0; i--) {
+
+                        if (steps > 1 && i > 0) {
+                                if (!place_visibility(place, Px, Py))
+                                        return 1;
+                        }
+
+                        steps++;
+
+                        if (P > 0) {
+                                Px += Xincr;
+                                Py += Yincr;
+                                P += dPru;
+                        }
+                        else {
+                                Px += Xincr;
+                                P += dPr;
+                        }
+                }
+        }
+        // Walk the y-axis
+        else {
+                int dPr = AdX << 1;
+                int dPru = dPr - (AdY << 1);
+                int P = dPr - AdY;
+
+                // For each y
+                for (int i = AdY; i >= 0; i--) {
+
+                        if (steps > 1 && i > 0) {
+                                if (!place_visibility(place, Px, Py))
+                                        return 1;
+                        }
+
+                        steps++;
+
+                        if (P > 0) {
+                                Px += Xincr;
+                                Py += Yincr;
+                                P += dPru;
+                        }
+                        else {
+                                Py += Yincr;
+                                P += dPr;
+                        }
+                }
+        }
+
+        return 0;
+}
 
 
 #ifdef PLACE_LOAD_CODE_REWRITTEN

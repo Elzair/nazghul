@@ -30,17 +30,15 @@
 
 #include <SDL/SDL.h>
 
-#if 0
-#define MVIEW_W  (MAP_TILE_W)
-#define MVIEW_H  (MAP_TILE_H)
-#else
 #define MVIEW_W  (MAP_TILE_W * 2 + 1)
 #define MVIEW_H  (MAP_TILE_H * 2 + 1)
-#endif
+#define LMAP_W   (MAP_TILE_W)
+#define LMAP_H   (MAP_TILE_H)
 
 #define VMASK_SZ (MVIEW_W * MVIEW_H)
 #define MVIEW_SZ (sizeof(struct mview) + VMASK_SZ)
-#define MAX_LIGHTS (MVIEW_W * MVIEW_H)
+#define LMAP_SZ (LMAP_W * LMAP_H)
+#define MAX_LIGHTS LMAP_SZ
 
 #define LIT 255
 #define UNLIT 0
@@ -77,7 +75,10 @@ static struct map {
 	char vmask[VMASK_SZ];	/* final mask used to render */
 } Map;
 
-static unsigned char lmap[MVIEW_W * MVIEW_H];	/* the light map */
+// The lightmap only needs to be as big as the map viewer window. Making it
+// larger does allow for lights outside the field of view to be processed, but
+// this makes dungeons appear too bright - I like them dark and gloomy.
+static unsigned char lmap[LMAP_SZ];
 
 static void myUpdateAlphaMask(struct mview *view)
 {
@@ -191,70 +192,76 @@ static void mySetViewLightRadius(struct mview *view, void *data)
 
 static void myBuildLightMap(struct mview *view)
 {
-	int x, y, i = 0, j, k, mx, my;
+	int x, y, i = 0, j, k, map_x, map_y;
 
-	/* Initialize the lightmap to ambient light levels. */
+	// Initialize the lightmap to ambient light levels.
 	if (Map.place->underground) {
 		memset(lmap, UNLIT, sizeof(lmap));
 	} else {
 		memset(lmap, Sun.light, sizeof(lmap));
 	}
 
-	/* Pass 1: fill out all the light sources */
-	for (y = 0; y < MVIEW_H; y++) {
-		my = view->vrect.y + y;
-		for (x = 0; x < MVIEW_W; x++) {
+	// Pass 1: fill out all the light sources
+	for (y = 0; y < LMAP_H; y++) {
+		map_y = view->vrect.y + view->subrect.y + y;
+		for (x = 0; x < LMAP_W; x++) {
 			int light;
 
-			mx = view->vrect.x + x;
-			light = place_get_light(Map.place /* Place */ , mx, 
-                                                my);
+			map_x = view->vrect.x + view->subrect.x + x;
+			light = place_get_light(Map.place, map_x, map_y);
 			if (!light)
 				continue;
 
-			/* Remember the light source */
-			lights[i].x = x;
-			lights[i].y = y;
+			// Remember the light source
+			lights[i].x = map_x;
+			lights[i].y = map_y;
 			lights[i].light = light;
 			i++;
 		}
 	}
 
-	/* Don't forget the player if this is not a small-scale map. Even if
-	 * the player has light zero, by simply adding a light source on his
-	 * location we make sure that the tile he is standing on will be lit. */
+	// Don't forget the player if this is not a small-scale map. Even if
+	// the player has light zero, by simply adding a light source on his
+	// location we make sure that the tile he is standing on will be
+	// lit.
 	if (player_party->context != CONTEXT_COMBAT) {
-		lights[i].x = place_wrap_x(Map.place,
-					   player_party->getX() -
-					   view->vrect.x);
-		lights[i].y =
-		    place_wrap_y(Map.place,
-				 player_party->getY() - view->vrect.y);
+		lights[i].x = place_wrap_x(Map.place, player_party->getX());
+		lights[i].y = place_wrap_y(Map.place, player_party->getY());
 		lights[i].light = player_party->light;
 		i++;
 	}
 
-	/* Skip further processing if there are no light sources */
+	// Skip further processing if there are no light sources
 	if (!i)
 		return;
 
-	/* Pass 2: distribute the light to all the squares */
-	for (y = 0, k = 0; y < MVIEW_H; y++) {
+	// Pass 2: distribute the light to all the squares in the lmap
+	for (y = 0, k = 0; y < LMAP_H; y++) {
+		map_y = view->vrect.y + view->subrect.y + y;
 
-		for (x = 0; x < MVIEW_W; x++, k++) {
+		for (x = 0; x < LMAP_W; x++, k++) {
+			map_x = view->vrect.x + view->subrect.x + x;
 
-			/* For each light source... */
+			// For each light source...
 			for (j = 0; j < i; j++) {
 
 				int dx, dy, D, tmp;
 
-				/* Calculate the distance squared. */
-				dx = lights[j].x - x;
-				dy = lights[j].y - y;
+                                // Check if los is blocked. This might *really* bog us
+                                // down on slow machines.
+                                if (place_los_blocked(Map.place, 
+                                                      lights[j].x, lights[j].y,
+                                                      map_x, map_y))
+                                        continue;
+
+				// Calculate the distance squared.
+                                // fixme -- need to wrap, use place fx?
+				dx = lights[j].x - map_x;
+				dy = lights[j].y - map_y;
 				D = (dx * dx) + (dy * dy) + 1;
 
-				/* Calculate the light as source luminence over
-				 * distance squared. Clamp to 255. */
+				// Calculate the light as source luminence over
+                                // distance squared. Clamp to 255.
 				tmp = lmap[k] + lights[j].light / D;
 				if (tmp > 255)
 					tmp = 255;
@@ -275,11 +282,13 @@ static void myShadeScene(SDL_Rect *subrect)
 	rect.w = TILE_W;
 	rect.h = TILE_H;
 
-        lmap_i = subrect->y * MVIEW_W + subrect->x;
+        //lmap_i = subrect->y * MVIEW_W + subrect->x;
+        lmap_i = 0;
 
-	/* Iterate over the tiles in the map window and the corresponding
-	 * values in the lightmap simultaneously */
-	for (y = 0; y < MAP_TILE_H; y++, rect.y += TILE_H, lmap_i += MVIEW_W) {
+	// Iterate over the tiles in the map window and the corresponding
+	// values in the lightmap simultaneously */
+	for (y = 0; y < MAP_TILE_H; y++, rect.y += TILE_H, 
+                     lmap_i += LMAP_W /*lmap_i += MVIEW_W*/) {
 		for (x = 0, rect.x = Map.srect.x;
 		     x < MAP_TILE_W; x++, rect.x += TILE_W) {
 

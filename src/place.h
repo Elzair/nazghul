@@ -218,6 +218,7 @@ extern "C" {
 	extern class NpcParty *place_random_encounter(struct place *);
         extern void place_paint_objects(struct place *place, int mx, int my,
                                         int sx, int sy);
+        extern int place_los_blocked(struct place *place, int ax, int ay, int bx, int by);
 
 
         // Obsolescent global place lib:
