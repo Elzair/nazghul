@@ -352,8 +352,10 @@ bool Character::unready(class ArmsType * arms)
 		// Unready the item. Recacalculate armour class.
 		rdyArms[i] = NULL;
 		burden -= arms->getWeight();
+
 		return true;
 	}
+
 
 	return false;
 }
