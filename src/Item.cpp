@@ -24,6 +24,7 @@
 #include "wq.h"
 #include "player.h"
 #include "console.h"
+#include "cmdwin.h"
 #include "place.h"
 #include "play.h"
 #include "event.h"
@@ -129,12 +130,14 @@ void ItemType::use(class Character * target)
 
 		statusSetPageText(getName(), message);
 		statusSetMode(Page);
+        cmdwin_print(" <ESC to exit>");
 
 		eventPushKeyHandler(&kh);
 		eventHandle();
 		eventPopKeyHandler();
 
 		statusSetMode(ShowParty);
+        cmdwin_backspace(strlen(" <ESC to exit>") );
 	}
 }
 
