@@ -1366,6 +1366,15 @@ bool player_party::rendezvous(struct place *place, int rx, int ry)
 
                 struct astar_search_info as_info;
 
+                // ------------------------------------------------------------
+                // If the member already has a cached path then clean it up.
+                // ------------------------------------------------------------
+                if (member->cachedPath) {
+                        astar_path_destroy(member->cachedPath);
+                        member->cachedPathPlace = NULL;
+                        member->cachedPath = NULL;
+                }
+
                 if (NULL == member || member->isDead() || 
                     !member->isOnMap() || member == leader ||
                     (member->getX() == rx && member->getY() == ry))
@@ -1377,40 +1386,40 @@ bool player_party::rendezvous(struct place *place, int rx, int ry)
                 as_info.x1    = rx;
                 as_info.y1    = ry;
                 as_info.flags = PFLAG_IGNOREBEINGS;
-                member->path = place_find_path(place, &as_info, 
+                member->cachedPath = place_find_path(place, &as_info, 
                                                member);
 
-                if (!member->path) {
+                if (!member->cachedPath) {
                         log_msg("%s cannot make the rendezvous!", 
                                      member->getName());
                         abort = true;
                 }
                 else if (max_path_len > 0 && 
-                         member->path->len > max_path_len) {
+                         member->cachedPath->len > max_path_len) {
                         log_msg("%s is too far away!", 
                                      member->getName());
                         abort = true;
                 }
         }
 
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
         // If anyone could not find a path then abort.
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
 
         if (abort) {
                 FOR_EACH_MEMBER(entry, member) {
-                        if (member->path) {
-                                astar_path_destroy(member->path);
-                                member->path = 0;
+                        if (member->cachedPath) {
+                                astar_path_destroy(member->cachedPath);
+                                member->cachedPath = 0;
                         }
                 }
                 return false;
         }
 
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
         // Otherwise everyone has a path, so have them each take turns
         // following their own path to the rendezvous point.
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
 
         done = false;
         while (!done) {
@@ -1421,16 +1430,17 @@ bool player_party::rendezvous(struct place *place, int rx, int ry)
                         struct astar_node *tmp;
 
                         // already arrived in an earlier iteration
-                        if (!member->path)
+                        if (!member->cachedPath)
                                 continue;
 
                         // should always be at least two nodes
-                        assert(member->path->next);
+                        assert(member->cachedPath->next);
 
                         // arrived
-                        if (member->path->next->x == rx && member->path->next->y == ry) {
-                                astar_node_destroy(member->path);
-                                member->path = 0;
+                        if (member->cachedPath->next->x == rx && 
+                            member->cachedPath->next->y == ry) {
+                                astar_node_destroy(member->cachedPath);
+                                member->cachedPath = 0;
                                 //member->remove();   // try this... seems ok
                                 continue;
                         }
@@ -1438,12 +1448,13 @@ bool player_party::rendezvous(struct place *place, int rx, int ry)
                         done = false;
 
                         // move one step
-                        member->move(member->path->next->x - member->getX(), 
-                                     member->path->next->y - member->getY());
+                        member->move(
+                                member->cachedPath->next->x - member->getX(), 
+                                member->cachedPath->next->y - member->getY());
 
                         // clean up used path node
-                        tmp = member->path;
-                        member->path = member->path->next;
+                        tmp = member->cachedPath;
+                        member->cachedPath = member->cachedPath->next;
                         astar_node_destroy(tmp);
 
                         // Bugfix: after rendezvous party members sometimes

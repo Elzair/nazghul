@@ -75,6 +75,8 @@ extern "C" {
          * null if no route can be found (or the alg runs out of memory before
          * finding a route).  The caller should use astar_path_destroy() when
          * done using the path, or astar_node_destroy on each node of the path.
+         *
+         * WARNING: the info struct may be modified during this call
          */
 	extern struct astar_node *astar_search(struct astar_search_info *info);
 

@@ -200,12 +200,12 @@ class Character:public Being {
         void unCharm();
 	void useAmmo(class ArmsType *weapon);
         bool canSee(class Object *obj);
-	bool gotoSpot(int x, int y);
 	bool commute();
 	bool initStock(struct species * species, struct occ * occ,
 		       struct sprite * sprite, char *name, int order);
 
         bool canBeLeader();
+        bool pathfindTo(int x, int y);
 
 	char *tag;
         struct node *plnode; // pointer back to party list node
@@ -214,20 +214,18 @@ class Character:public Being {
 	struct occ *occ;
 	bool is_clone;
 
-	struct astar_node *path;	// Added when I rewrote party
-	// rendezvous
-
         int hp_mod;
         int hp_mult;
         int mp_mod;
         int mp_mult;
 
         struct closure *ai; // experimental
+        struct astar_node *cachedPath; // for pathfinding
+        struct place *cachedPathPlace; // for pathfinding
 
  protected:
 	bool initCommon(void);
 	bool isAttackTargetInRange();
-        void pathfind_to(class Object *target);
         void getAppointment();
         
 	char *name;
@@ -290,7 +288,6 @@ class Character:public Being {
 
         int factionSwitch;
         int tmpFaction;
-
 };
 
 extern void char_dtor(void *val);

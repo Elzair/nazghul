@@ -531,7 +531,7 @@
                (append 
                 (lay-featmap road-map 3 18)
                 (list
-                 (list player 3  18)
+                 (list player 36 23)
                  (list (kern-mk-party t_skeleton_brigade faction-monster nil) 25 19)
                  (list (kern-mk-party t_slime_glob faction-monster nil) 36 20)
                  (list (kern-mk-obj F_fire 1) 34 23)
