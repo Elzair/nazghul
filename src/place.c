@@ -1210,7 +1210,7 @@ void place_exec(struct place *place, struct exec_context *context)
         // ---------------------------------------------------------------------
 
         place->turn_elem = place->turn_list.next;
-        while (place->turn_elem != &place->turn_list) {
+        while (place->turn_elem != &place->turn_list && ! Quit) {
                
                 class Object *obj;
 
