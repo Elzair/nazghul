@@ -356,7 +356,7 @@ static struct mech_state *load_states(class Loader * loader, int *n,
 				      struct mech_state *def)
 {
 	char *sprite_tag = 0;
-	struct mech_state *set;
+	struct mech_state *set = 0;
 	struct mech_state tmp;
 	int index;
 

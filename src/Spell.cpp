@@ -150,7 +150,7 @@ bool Spell_load_magic_words(class Loader * loader)
 static class Reagent **load_reagents(class Loader * loader, int *n)
 {
 	char *tag;
-	class Reagent **set;
+	class Reagent **set = 0;
 	int index;
 
 	// base case
@@ -189,7 +189,7 @@ static class Reagent **load_reagents(class Loader * loader, int *n)
 static void **load_parms_tags(class Loader * loader, int *n)
 {
 	char *tag;
-	void **set;
+	void **set = 0;
 	int index;
 
 	// base case

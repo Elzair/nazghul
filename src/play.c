@@ -801,7 +801,7 @@ bool cmdReady(class Character * pc)
 	struct KeyHandler kh;
 	struct ScrollerContext sc;
 	int erase;
-	char *msg;
+	char *msg = 0;
 
 	cmdwin_clear();
 	cmdwin_print("Ready-");
@@ -869,6 +869,9 @@ bool cmdReady(class Character * pc)
 			case Character::TooHeavy:
 				msg = "too heavy!";
 				break;
+                        default:
+                                assert(false);
+                                break;
 			}
 		}
 

@@ -61,17 +61,26 @@
     ret = -1; \
     goto cleanup; \
    } \
-  (var) = strdup(lexer_lexeme(Lexer));
+  if (0 == ((var) = strdup(lexer_lexeme(Lexer)))) { \
+    ret = -1; \
+    goto cleanup; \
+  } \
 
 #define PARSE_WORD(tag,var)         \
   if ((! MATCH_WORD((tag))) || (! MATCH(lexer_WORD))) { \
     ret = -1; \
     goto cleanup; \
    } \
-  (var) = strdup(lexer_lexeme(Lexer)); \
+  if (0 == ((var) = strdup(lexer_lexeme(Lexer)))) { \
+    ret = -1; \
+    goto cleanup; \
+  } \
 
 #define PARSE_TAG(tag) \
-  (tag) = strdup(lexer_lexeme(Lexer));
+  if (0 == ((tag) = strdup(lexer_lexeme(Lexer)))) { \
+    ret = -1; \
+    goto cleanup; \
+  }
 
 #define PARSE_START_OF_BLOCK() \
   if (! MATCH('{')) { \
@@ -703,7 +712,7 @@ void *lookupTag(char *tag, int tid)
 		}
 	case FORMATION_TYPE_ID:
 		{
-			struct formation *val;
+			struct formation *val = 0;
 			list_lookup_tag(&Formations, tag, struct formation,
 					list, val);
 			return val;
@@ -1158,7 +1167,7 @@ static int game_load_Maps()
 
 static int load_map(void)
 {
-	struct terrain_map *terrain_map;
+	struct terrain_map *terrain_map = 0;
 	char *tag = 0;
 	char *type = 0;
 	int ret = 0;
@@ -1197,7 +1206,7 @@ static int load_map(void)
 static Object *game_load_place_item(struct place *place)
 {
 	class ObjectType *type;
-	class Object *obj;
+	class Object *obj = 0;
 	class Loader loader;
 	class Character *ch;
 
@@ -1249,7 +1258,7 @@ static bool loadConnect(class Loader * loader)
 	char *left_tag = 0, *right_tag = 0;
 	bool right_to_left = false, left_to_right = false;
 	struct list *elem;
-	class Mech *left, *right;
+	class Mech *left = 0, *right = 0;
 
 	if (!loader->getWord(&left_tag))
 		return false;
@@ -1751,13 +1760,17 @@ static int loadPlayer()
 		printf("Got %s\n", Lexer->lexeme);
 		if (!strcmp(Lexer->lexeme, "formation")) {
 			MATCH(lexer_WORD);
-			formation_tag = strdup(Lexer->lexeme);
+			PARSE_ASSERT((formation_tag = strdup(Lexer->lexeme)),
+                                     "Error allocating string\n");
 		} else if (!strcmp(Lexer->lexeme, "campsite_map")) {
 			MATCH(lexer_WORD);
-			campsite_map_tag = strdup(Lexer->lexeme);
+			PARSE_ASSERT((campsite_map_tag = strdup(Lexer->lexeme)),
+                                     "Error allocating string\n");
 		} else if (!strcmp(Lexer->lexeme, "campsite_formation")) {
 			MATCH(lexer_WORD);
-			campsite_formation_tag = strdup(Lexer->lexeme);
+			PARSE_ASSERT((campsite_formation_tag = strdup(Lexer->lexeme)),
+                                     "Error allocating string\n");
+                                
 		} else {
 			PARSE_ASSERT(false, "Error loading player party: %s "
 				     "is not a valid parameter\n",
@@ -2090,7 +2103,7 @@ static class ItemType *loadItemSubType(char *tag, char *name,
 {
 	class ItemType *type;
 	int amount, duration, ret, effect, target, food, consumable;
-	char *message;
+	char *message = 0;
 
 	type = new ItemType();
 	if (!type)
@@ -2112,7 +2125,7 @@ static class ItemType *loadItemSubType(char *tag, char *name,
 	type->setTarget(target);
 	type->setFood(food != 0);
 	type->setConsumable(consumable != 0);
-	if (strlen(message))
+	if (message && strlen(message))
 		type->setMessage(message);
 
       cleanup:
@@ -2366,7 +2379,7 @@ static int loadObjectTypes()
 static class VehicleType *game_load_vehicle_type()
 {
 	class VehicleType *vt = 0;
-	class OrdnanceType *ordnance;
+	class OrdnanceType *ordnance = 0;
 	char *sprite_tag = 0;
 	struct sprite *sprite;
 	char *dir_tag = 0;
@@ -2561,8 +2574,8 @@ static int loadMoongate()
 {
 	class Moongate *moongate;
 	struct place *place;
-	int ret, x, y, phase;
-	char *type_tag;
+	int ret = 0, x, y, phase;
+	char *type_tag = 0;
 	class MoongateType *type;
 
 	moongate = new Moongate();
@@ -2653,8 +2666,8 @@ static class OrdnanceType *loadOrdnanceType()
 {
 	class OrdnanceType *vt = 0;
 	class ObjectType *ammo;
-	char *ord_tag = 0, *tag, *name, *fire_sound;
-	int ret, range, damage;
+	char *ord_tag = 0, *tag = 0, *name = 0, *fire_sound = 0;
+	int ret = 0, range, damage;
 
 	vt = new class OrdnanceType();
 	if (!vt)
@@ -2731,7 +2744,7 @@ static int loadAscii()
 
 static int loadCrosshair()
 {
-	char *tag;
+	char *tag = 0;
 	int ret = 0;
 	class ObjectType *type;
 
