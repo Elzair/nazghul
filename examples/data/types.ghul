@@ -103,7 +103,8 @@ CURSOR ls_whirlpool;  // From ss_u4
         }
 
 
-#define FIELD_TYPE(_tag, _name, _sprite, _effects, _light,_duration,_pmask) \
+#define FIELD_TYPE(_tag,     _name,  _sprite,           \
+                   _effects, _light, _duration, _pmask) \
     _tag {                  \
         name     _name      \
         sprite   _sprite    \
@@ -114,7 +115,10 @@ CURSOR ls_whirlpool;  // From ss_u4
         pmask    _pmask     \
     }
 
-#define ARMS_TYPE(_tag, _name, _sprite, _attack,_defend,_slot,_hands,_range,_missile,_T,_U,_field,_W) \
+#define ARMS_TYPE(_tag,    _name,    _sprite,         \
+                  _attack, _defend,  _slot,   _hands, \
+                  _range,  _missile, _thrown, _uAmmo, \
+                  _field,  _weight)                   \
     _tag {                      \
         name           _name    \
         sprite         _sprite  \
@@ -125,24 +129,26 @@ CURSOR ls_whirlpool;  // From ss_u4
         numHands       _hands   \
         range          _range   \
         missile        _missile \
-        thrown         _T       \
-        ubiquitousAmmo _U       \
+        thrown         _thrown  \
+        ubiquitousAmmo _uAmmo   \
         field          _field   \
-        weight         _W       \
+        weight         _weight  \
     }
 
-#define ITEM_TYPE(_tag, _name, _sprite, _effect, _amount, _duration, _target, _food, _cons, _msg) \
+#define ITEM_TYPE(_tag,    _name,   _sprite,            \
+                  _effect, _amount, _duration, _target, \
+                  _food,   _cons,   _msg)               \
     _tag {                      \
-        name     _name          \
-        sprite   _sprite        \
-        subtype  item           \
-        effect   _effect        \
-        amount   _amount        \
-        duration _duration      \
-        target   _target        \
-        food     _food          \
+        name       _name        \
+        sprite     _sprite      \
+        subtype    item         \
+        effect     _effect      \
+        amount     _amount      \
+        duration   _duration    \
+        target     _target      \
+        food       _food        \
         consumable _cons        \
-        message  _msg           \
+        message    _msg         \
     }                               
 
 #define REAGENT_TYPE(_tag, _name, _sprite) \
