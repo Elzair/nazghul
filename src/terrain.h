@@ -66,7 +66,7 @@ extern "C" {
 #define LONGEST_TERRAIN_GLYPH       4
 #define NUM_QUICK_TERRAINS         10
 #define PAL_TERRAIN_QUICK_DEFAULT -(NUM_QUICK_TERRAINS)
-#define PAL_TERRAIN_NOT_SET       -(NUM_QUICK_TERRAINS+1)
+#define PAL_TERRAIN_NOT_SET       -1
 
 	struct terrain_palette_entry {
         char           * glyph;
@@ -82,11 +82,11 @@ extern "C" {
 		int num_entries;
         int current_terrain_index;
 		struct terrain_palette_entry *set;
-		struct terrain *quick_terrain[NUM_QUICK_TERRAINS];
+        int quick_terrain[NUM_QUICK_TERRAINS];
 		// "quick terrain" for quick UI access (ten number keys 0..9)
 	};
 
-	struct terrain_palette *new_terrain_palette(void);
+	struct terrain_palette * new_terrain_palette(void);
     struct terrain_palette * palette_contains_terrain (struct terrain_palette *pp, 
                                                        struct terrain *tt);
 
@@ -97,8 +97,6 @@ extern "C" {
 	struct terrain * palette_terrain(struct terrain_palette *pp, int n);
 	struct terrain * palette_terrain_for_glyph(struct terrain_palette *pp, 
                                                char *glyph);
-	struct terrain * palette_quick_terrain(struct terrain_palette *pp,
-                                          int n);
     struct terrain * palette_current_terrain(struct terrain_palette * pp);
 
   int palette_set_current_terrain(struct terrain_palette * pp, int n);
@@ -107,7 +105,8 @@ extern "C" {
   int palette_first_terrain(struct terrain_palette * pp);
   int palette_last_terrain(struct terrain_palette * pp);
 
-  int palette_set_quick_terrain(struct terrain_palette * pp, struct terrain * tt, int n);
+  int palette_set_quick_terrain(struct terrain_palette * pp, int n);
+  int palette_quick_terrain(struct terrain_palette *pp, int n);
 
 	void palette_print(FILE * fp, int indent,
                        struct terrain_palette *pp);
