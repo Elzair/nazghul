@@ -86,12 +86,17 @@ FORMATION f_football {
 
 player {
 
+#if 1
+  place p_wilderness;
+  x     32;
+  y     23;
+#endif
 #if 0
   place p_empire_city;
   x     63;
   y     63;
 #endif
-#if 1
+#if 0
   place GreenTower;
   x     10;
   y     50;

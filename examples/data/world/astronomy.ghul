@@ -31,8 +31,8 @@ TIME {
         month   0;
         week    0;
         day     0;
-        hour   19;
-        minute 56;
+        hour   08;
+        minute 00;
 }
 
 moon_info {

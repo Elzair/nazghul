@@ -330,7 +330,6 @@ bool player_party::turn_vehicle(void)
 
 	cmdwin_print("Turn %s %s", vehicle->getName(), get_dir_str(dx, dy));
 	cost *= getPlace()->scale;
-	printf("*** player used %d turns\n", cost);
 	turnAdvance(cost);
 
 	return true;
@@ -1254,7 +1253,6 @@ void player_party::board_vehicle(void)
 		cmdwin_print("Exit-%s", vehicle->getName());
 		vehicle = 0;
 		mapSetDirty();
-		printf("*** player used 1 turns\n");
 		turnAdvance(1);
 		return;
 	}
@@ -1270,7 +1268,6 @@ void player_party::board_vehicle(void)
 	// place_remove_vehicle(Place, vehicle);
 	cmdwin_print("Board-%s", vehicle->getName());
 	mapSetDirty();
-	printf("*** player used 1 turns\n");
 	turnAdvance(1);
 }
 
