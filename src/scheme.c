@@ -1284,6 +1284,10 @@ static int file_push(scheme *sc, const char *fname) {
     sc->load_stack[sc->file_i].kind=port_file|port_input;
     sc->load_stack[sc->file_i].rep.stdio.file=fin;
     sc->load_stack[sc->file_i].rep.stdio.closeit=1;
+#if USE_FILE_AND_LINE
+    sc->load_stack[sc->file_i].rep.stdio.name = strdup(fname);
+    sc->load_stack[sc->file_i].rep.stdio.line = 0;
+#endif
     sc->nesting_stack[sc->file_i]=0;
     sc->loadport->_object._port=sc->load_stack+sc->file_i;
   }
@@ -1393,6 +1397,10 @@ static void port_close(scheme *sc, pointer p, int flag) {
   if((pt->kind & (port_input|port_output))==0) {
     if(pt->kind&port_file) {
       fclose(pt->rep.stdio.file);
+#if USE_FILE_AND_LINE
+      if (pt->rep.stdio.name)
+              free(pt->rep.stdio.name);
+#endif
     }
     pt->kind=port_free;
   }
@@ -1412,12 +1420,17 @@ static int inchar(scheme *sc) {
     }
     goto again;
   }
+#if USE_FILE_AND_LINE
+  if (c == '\n')
+          pt->rep.stdio.line++;
+#endif
   return c;
 }
 
 static int basic_inchar(port *pt) {
   if(pt->kind&port_file) {
-    return fgetc(pt->rep.stdio.file);
+          int ch = fgetc(pt->rep.stdio.file);
+          return ch;
   } else {
     if(*pt->rep.string.curr==0
        || pt->rep.string.curr==pt->rep.string.past_the_end) {
@@ -1435,6 +1448,10 @@ static void backchar(scheme *sc, int c) {
   pt=sc->inport->_object._port;
   if(pt->kind&port_file) {
     ungetc(c,pt->rep.stdio.file);
+#if USE_FILE_AND_LINE
+    if (c == '\n')
+            pt->rep.stdio.line--;
+#endif
   } else {
     if(pt->rep.string.curr!=pt->rep.string.start) {
       --pt->rep.string.curr;
@@ -3376,6 +3393,21 @@ static pointer opexe_4(scheme *sc, enum scheme_opcodes op) {
                setimmutable(car(sc->args));
           }
           putstr(sc, "Error: ");
+#if USE_FILE_AND_LINE
+          {
+                  port *pt;
+                  pt=sc->inport->_object._port;
+                  if(pt->kind&port_file &&
+                     pt->rep.stdio.name) {
+                          char linestr[16];
+                          putstr(sc, pt->rep.stdio.name);
+                          putstr(sc, " line ");
+                          snprintf(linestr, sizeof(linestr), "%d", pt->rep.stdio.line);
+                          putstr(sc, linestr);
+                          putstr(sc, ": ");
+                  }
+          }
+#endif
           putstr(sc, strvalue(car(sc->args)));
           sc->args = cdr(sc->args);
           s_goto(sc,OP_ERR1);
@@ -4384,6 +4416,28 @@ void scheme_load_file(scheme *sc, FILE *fin) {
     sc->retcode=sc->nesting!=0;
   }
 }
+#if USE_FILE_AND_LINE
+void scheme_load_named_file(scheme *sc, FILE *fin, char *fname) {
+  dump_stack_reset(sc); 
+  sc->envir = sc->global_env;
+  sc->file_i=0;
+  sc->load_stack[0].kind=port_input|port_file;
+  sc->load_stack[0].rep.stdio.file=fin;
+  sc->load_stack[0].rep.stdio.name = strdup(fname);
+  sc->load_stack[0].rep.stdio.line = 0;
+  sc->loadport=mk_port(sc,sc->load_stack);
+  sc->retcode=0;
+  if(fin==stdin) {
+    sc->interactive_repl=1;
+  }
+  sc->inport=sc->loadport;
+  Eval_Cycle(sc, OP_T0LVL);
+  typeflag(sc->loadport)=T_ATOM;
+  if(sc->retcode==0) {
+    sc->retcode=sc->nesting!=0;
+  }
+}
+#endif
 
 void scheme_load_string(scheme *sc, const char *cmd) {
   dump_stack_reset(sc); 

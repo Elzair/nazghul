@@ -2155,8 +2155,9 @@ void DM_XRAY_look_at_XY(struct place *place, int x, int y, void * data)
         //       itself makes such a one.
         if (!mapTileIsVisible(x, y) ) {
                 log_msg("(Out of LOS) ", x, y);
-                log_msg("At XY=(%d,%d) you see ", x, y);
+                log_begin("At XY=(%d,%d) you see ", x, y);
                 place_describe(place, x, y, PLACE_DESCRIBE_ALL);
+                log_end(NULL);
                 return;
         }
         log_begin("At XY=(%d,%d) you see ", x, y);

@@ -273,7 +273,7 @@ void session_load(char *filename)
 
         /* Load the file and close it. */
         t1 = SDL_GetTicks();
-        scheme_load_file(sc, file);
+        scheme_load_named_file(sc, file, filename);
         t2 = SDL_GetTicks();
         info("%d ms to load\n", (t2 - t1));
 

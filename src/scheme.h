@@ -56,6 +56,9 @@
 # define USE_REENTER 1 /* works around script->C->script return issues */
 #endif
 
+#ifndef USE_FILE_AND_LINE
+# define USE_FILE_AND_LINE 1
+#endif
 
 #ifndef USE_SERIALIZE
 # define USE_SERIALIZE 1
@@ -138,6 +141,9 @@ void scheme_set_input_port_file(scheme *sc, FILE *fin);
 void scheme_set_input_port_string(scheme *sc, char *start, char *past_the_end);
 SCHEME_EXPORT void scheme_set_output_port_file(scheme *sc, FILE *fin);
 void scheme_set_output_port_string(scheme *sc, char *start, char *past_the_end);
+#ifdef USE_FILE_AND_LINE
+SCHEME_EXPORT void scheme_load_named_file(scheme *sc, FILE *fin, char *fname);
+#endif
 SCHEME_EXPORT void scheme_load_file(scheme *sc, FILE *fin);
 SCHEME_EXPORT void scheme_load_string(scheme *sc, const char *cmd);
 void scheme_apply0(scheme *sc, const char *procname);

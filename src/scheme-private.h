@@ -18,9 +18,13 @@ enum scheme_port_kind {
 typedef struct port {
   unsigned char kind;
   union {
-    struct {
+    struct {            
       FILE *file;
       int closeit;
+#if USE_FILE_AND_LINE
+      char *name;
+      int line;
+#endif
     } stdio;
     struct {
       char *start;
