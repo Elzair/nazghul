@@ -128,7 +128,7 @@ F)ollow = Select follow mode, where the party members automatically follow the p
 
 DOCUMENT_TYPE(t_map_editors_guide, "Nazghul Map Editors Guide", s_scroll1,
               "Map Editing Commands:
-^S)ave Map - Save the current map and palette.
+^S)ave Map  - Save the current map and palette.
 ^T)erraform - Enter map editing mode.
 
 When within map editing mode:
