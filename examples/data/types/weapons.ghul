@@ -190,7 +190,7 @@ NATURAL_WPN_TYPE(t_hooves,  "hooves",     +0, +5, +12, +0, +0, +0, 2, 1, WEAPON_
 NATURAL_WPN_TYPE(t_teeth,   "fangs",      +2, +2, +5,  +0, +0, +0, 1, 1, HELM_SLOT);
 NATURAL_WPN_TYPE(t_stinger, "stinger",    +1, +1, +8,  -1, +0, +0, 2, 1, NO_SLOT);
 
-NATURAL_WPN_TYPE(t_acid_spray, "acid",    -1, +1, +8,  +0, +0, +0, 3, 2, NO_SLOT);
+NATURAL_WPN_TYPE(t_acid_spray, "acid",    -1, +1, +8,  +0, +0, +0, 2, 2, NO_SLOT);
 
 
 ///////////////////////////////////////////////////////////////////////////

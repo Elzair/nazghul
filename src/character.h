@@ -151,7 +151,6 @@ class Character:public Object {
 	virtual enum ReadyResult ready(class ArmsType * arms);
 	virtual bool unready(class ArmsType * arms);
 	virtual enum MoveResult move(int dx, int dy);
-	virtual bool attackTarget(class Character * target);
 	virtual enum Character::MoveResult flee();
 	virtual void attackTerrain(int x, int y);
 	virtual void useAmmo();

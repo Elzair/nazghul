@@ -324,7 +324,7 @@ extern "C" {
 #define max(a,b) ((a) > (b) ? (a) : (b))
 #define min(a,b) ((a) < (b) ? (a) : (b))
 #define clamp(v,a,b) ((v) = (v) < (a) ? (a) : ((v) > (b) ? (b) : (v)))
-#define array_sz(a) (sizeof((a))/sizeof((a)[0]))
+#define array_sz(a) (int)(sizeof((a))/sizeof((a)[0]))
 #define outcast(ptr,type,field) \
         ((type*)((char*)(ptr)-(unsigned long)(&((type *)0)->field)))
 #define CREATE(ptr,type,err) \

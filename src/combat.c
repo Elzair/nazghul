@@ -145,7 +145,6 @@ static struct {
         class Character *pm;    // The currently active player party membet
         int n_pcs;              /* number of PCs on the map */
         int n_npcs;             /* number of NPCs on the map */
-        int max_n_npcs;         // number of NPCs originally allocated
         class Character *npcs[N_MAX_NPCS];
         char vmap[7 * 7];       // visited map (used to search for positions)
         struct retreat_info rinfo;
@@ -165,6 +164,7 @@ static struct {
         char *sound_enter;
         char *sound_defeat;
         char *sound_victory;
+        int round;
 } Combat;
 
 struct v2 {
@@ -179,10 +179,9 @@ static int q_head;
 static int q_tail;
 
 static void combatAttack(class Character *attacker, class ArmsType *weapon,
-                    class Character *defender)
+                         class Character *defender)
 {
         weapon->fire(defender, attacker->getX(), attacker->getY());
-        //consoleRepaint();
         attacker->useAmmo();
         attacker->setAttackTarget(defender);
         consolePrint("%s\n", defender->getWoundDescription());
@@ -216,7 +215,7 @@ static void Retreat(void)
 static void myForEachNpc(bool(*fx) (class Character * npc, void *data),
                          void *data)
 {
-        for (int i = 0; i < Combat.max_n_npcs; i++) {
+        for (int i = 0; i < array_sz(Combat.npcs); i++) {
                 class Character *npc = Combat.npcs[i];
                 if (npc == NULL)
                         continue;
@@ -421,6 +420,7 @@ static bool myPutNpc(class Character * pm, void *data)
 {
         int tmp;
         struct position_info *info;
+        unsigned int i;
 
         info = (struct position_info *) data;
 
@@ -494,11 +494,17 @@ static bool myPutNpc(class Character * pm, void *data)
         pm->setX(info->px);
         pm->setY(info->py);
         printf("Put '%s' at [%d %d]\n", pm->getName(), info->px, info->py);
-
         pm->setPlace(Place);
         place_add_object(Place, pm);
-        Combat.npcs[Combat.n_npcs++] = (class Character *) pm;
+        Combat.n_npcs++;
         info->placed++;
+        for (i = 0; i < array_sz(Combat.npcs); i++) {
+                if (Combat.npcs[i] == NULL) {
+                        Combat.npcs[i] = (class Character *) pm;
+                        break;
+                }
+        }
+        assert(i < array_sz(Combat.npcs));
 
         return false;
 }
@@ -1120,7 +1126,7 @@ static class Character *mySelectVictim(class Character * from,
         }
         // *** Find NPC Combatant ***
 
-        for (int i = 0; i < Combat.max_n_npcs; i++) {
+        for (int i = 0; i < array_sz(Combat.npcs); i++) {
 
                 class Character *pm = Combat.npcs[i];
 
@@ -1249,8 +1255,10 @@ static bool myAttack(class Character * pc)
                 // logic to prevent (or require confirm of) attacking self, 
                 // party members, etc.
                 if (select_target(pc->getX(), pc->getY(), &x, &y,
-                                  weapon->getRange()) == -1)
+                                  weapon->getRange()) == -1) {
+                        consolePrint("skip\n");
                         continue;
+                }
 
                 // Find the new target under the cursor
                 target = (class Character *) place_get_object(Place, x, y,
@@ -1298,7 +1306,7 @@ static bool myAttack(class Character * pc)
 
                         cmdwin_print("%s", target->getName());
                         
-                        consolePrint("attack %s... ", target->getName());
+                        consolePrint("attack %s ", target->getName());
 
                         // Strike the target
                         combatAttack(pc, weapon, target);
@@ -1328,36 +1336,31 @@ static bool myNPCAttackNearest(class Character * npc, class Character * pc,
 {
         bool ret = false;
 
+        consolePrint("%s attacks %s:\n", npc->getName(), pc->getName());
+
         for (class ArmsType * weapon = npc->enumerateWeapons(); weapon != NULL;
              weapon = npc->getNextWeapon()) {
 
-                if (d > weapon->getRange() || !npc->hasAmmo(weapon)) {
-                        printf("%s's %s out of range [%d>%d]\n",
-                               npc->getName(), weapon->getName(),
-                               d, weapon->getRange());
+                consolePrint("[%s]: ", weapon->getName());
+
+                if (d > weapon->getRange()) {
+                        consolePrint("out of range!\n");
+                        continue;
+                }
+
+                if (!npc->hasAmmo(weapon)) {
+                        consolePrint("no ammo!\n");
                         continue;
                 }
 
                 if (d <= 1 && weapon->isMissileWeapon()) {
                         // Handle missile weapon interference
-                        printf("%s's %s interfered\n", npc->getName(),
-                               weapon->getName());
+                        consolePrint("too close!\n");
                         continue;
                 }
 
-                printf("%s attacks %s with %s\n", npc->getName(),
-                       pc->getName(), weapon->getName());
-
-                if (npc->attackTarget(pc)) {
-                        consolePrint("%s %s\n", pc->getName(),
-                                     pc->getWoundDescription());
-                }
-                else {
-                        consolePrint("%s missed!\n", pc->getName());
-                }
-
-                if (!npc->hasAmmo(weapon))
-                        consolePrint("%s out of ammo!\n", weapon->getName());
+                consolePrint("%s ", pc->getName());
+                combatAttack(npc, weapon, pc);
                 statusRepaint();
                 ret = true;
 
@@ -1586,9 +1589,6 @@ static bool myRunNpc(class Character * npc, void *data)
                 }
         }
 
-        printf("%s searching for path to %s\n", npc->getName(),
-               nearest->getName());
-
         /* Find a path to the nearest member */
         memset(&as_info, 0, sizeof (as_info));
         as_info.x0 = npc->getX();
@@ -1597,14 +1597,13 @@ static bool myRunNpc(class Character * npc, void *data)
         as_info.y1 = nearest->getY();
         path = place_find_path(Place, &as_info, npc->getPmask());
 
-        if (!path)
-                // Handle the case where no path is found by doing nothing this
-                // turn.
+        if (!path) {
+                consolePrint("No path to %s, lurking.\n", nearest->getName());
                 return false;
+        }
 
         if (path->next) {
-                // The path is more than zero steps long (should always be the
-                // case, really). Take one step along that path.
+                consolePrint("Advances toward %s\n", nearest->getName());
                 myMoveNPC(npc,
                           path->next->x - npc->getX(),
                           path->next->y - npc->getY());
@@ -2041,6 +2040,12 @@ static bool myPcCommandHandler(struct KeyHandler *kh, int key, int keymod)
                 case '<':
                         // This key was chosen to be a cognate for '<' in NetHack
                         // and other roguelike games.
+                        if (Place != &Combat.place) {
+                                consolePrint("Must use an exit!\n");
+                                consolePrint("%s: ", pc->getName());
+                                consoleRepaint();
+                                break;
+                        }
                         ret = myExitCombat();
                         break;
                 default:
@@ -2241,7 +2246,6 @@ static void combat_overlay_map(struct terrain_map *map,
 static void myPutEnemy(class NpcParty * foe, struct position_info *pinfo)
 {
         foe->forEachMember(myPutNpc, pinfo);
-        Combat.max_n_npcs = Combat.n_npcs;
         if (foe->pinfo.placed)
                 list_add(&Combat.parties, &foe->container_link.list);
 }
@@ -2332,6 +2336,9 @@ static void myEventLoop(void)
 {
         while (!Quit && Combat.state != DONE) {
                 // Loop until the player opts to quit or combat is over
+
+                if (Combat.state == FIGHTING)
+                        consolePrint("\n*** Round %d ***\n", Combat.round++);
 
                 doPlayerRound();
 
@@ -2836,11 +2843,11 @@ bool combat_enter(struct combat_info * info)
         Combat.defend = info->defend;
         Combat.n_pcs = 0;
         Combat.n_npcs = 0;
-        Combat.max_n_npcs = 0;
         Combat.followMode = false;
         Combat.turns_per_round = info->camping ? TURNS_PER_HOUR : 1;
         Combat.tmp_terrain_map = false;
         Combat.enemy_vehicle = NULL;
+        Combat.round = 0;
         Cursor->remove();
         memset(&Combat.rinfo, 0, sizeof (Combat.rinfo));
         list_init(&Combat.parties);

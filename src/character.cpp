@@ -504,21 +504,6 @@ bool Character::setSolo(bool val)
 	return solo;
 }
 
-bool Character::attackTarget(class Character * target)
-{
-	class ArmsType *weapon = getCurrentWeapon();
-
-        // gmcnutt: this needs to be a bit more sophisticated, perhaps. I used
-        // to return if fire() failed, but it can fail for a variety of
-        // reasons. But if we fail to hit the target we still want to decrement
-        // ammo, etc.
-	weapon->fire(target, getX(), getY());
-	consoleRepaint();
-	useAmmo();
-	setAttackTarget(target);
-	return true;
-}
-
 int Character::hasAmmo (class ArmsType * weapon)
 {
         // SAM: Changed this from returning bool to 

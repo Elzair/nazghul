@@ -26,6 +26,8 @@
 #ifndef party_ghul
 #define party_ghul
 
+#include "../world/characters/Olin_the_Ghast.ghul"
+
 PALETTE pal_campsite {
   "%" t_boulder;
   "." t_grass;
@@ -239,6 +241,7 @@ player {
     ch_Thorald_Greybeard;
     ch_Kamafuk_Axedog;
     ch_Mesmeme;
+    Olin_the_Ghast;
   }
 
 } // player
