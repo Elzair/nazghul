@@ -2,6 +2,12 @@ Changes between nazghul-0.1.2 and nazghul-0.1.3
 
 gmcnutt:
 
+o [engine] When you declare a container on a map you now must provide a list of
+  contents. For example:
+
+  t_chest 10 10 { }  // an empty chest
+  t_barrel 5 10 { t_sword 5 t_arrow 50 } // a barrel with a sword and arrows
+
 o [daghul] Added an enhanced conversation tree for NPC character Gen and put
   him in Green Tower. He can teach the player the rudiments of the goblin
   language.

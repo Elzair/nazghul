@@ -103,7 +103,11 @@ PLACE  p_terrain_test {
     // but I know the very next thing he'll want is the ability to add items to
     // containers :-).
 
-    t_chest1          11 29;  // Container
+    t_chest1          11 29 { };  // Container
+    t_chest1          11 30 {
+            t_sword 1; 
+            t_arrow 50;
+    }
 
     t_dagger          10 11;  // Weapon (dagger)
     t_long_sword      10 12;

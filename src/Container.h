@@ -38,6 +38,7 @@ class Container:public Object {
 	virtual void setTrap(class TrapType * trap);
 	virtual class TrapType *getTrap();
 	void forEach(void (*fx) (struct inv_entry *, void *), void *);
+	virtual bool load(class Loader * loader);
       protected:
 	struct list contents;
 	class TrapType *trap;

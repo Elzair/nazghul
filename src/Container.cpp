@@ -19,7 +19,9 @@
 // Gordon McNutt
 // gmcnutt@users.sourceforge.net
 //
+
 #include "Container.h"
+#include "Loader.h"
 
 static void move_to_map(struct inv_entry *ie, void *data)
 {
@@ -132,4 +134,39 @@ class TrapType *Container::getTrap()
 void Container::setTrap(class TrapType * val)
 {
 	trap = val;
+}
+
+bool Container::load(class Loader *loader)
+{
+        if (!Object::load(loader))
+                return false;
+
+        if (!loader->matchToken('{'))
+                return false;
+
+        while (!loader->matchToken('}')) {
+
+                class ObjectType *type;
+                char *tag;
+                int quantity;
+
+                if (!loader->getWord(&tag) ||
+                    !loader->getInt(&quantity))
+                        return false;
+
+                type = (class ObjectType*)loader->lookupTag(tag, 
+                                                            OBJECT_TYPE_ID);
+                if (!type) {
+                        loader->setError("Error parsing container content "
+                                         "list: %s it not a valid object "
+                                         "type tag", tag);
+                        free(tag);
+                        return false;
+                }
+
+                free(tag);
+                add(type, quantity);
+        }
+
+        return true;
 }
