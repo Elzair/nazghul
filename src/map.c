@@ -33,6 +33,9 @@
 #include <SDL.h>
 #include <math.h>
 
+#define PROFILE_REPAINT 0
+#define PROFILE_ANIMATE 1
+
 #define MVIEW_W  (MAP_TILE_W * 2 + 1)
 #define MVIEW_H  (MAP_TILE_H * 2 + 1)
 #define LMAP_W   (MVIEW_W)
@@ -800,7 +803,7 @@ static void mapRepaintCoordinates(void)
 
 void mapRepaintView(struct mview *view, int flags)
 {
-	int t2, t3, t4, t5, t6, t7, t8;
+	int t1, t2, t3, t4, t5, t6, t7, t8;
 
 	Map.aview = view;
 
@@ -808,29 +811,33 @@ void mapRepaintView(struct mview *view, int flags)
 		return;
 	view->dirty = 0;
 
-	int start = SDL_GetTicks();
+	t1 = SDL_GetTicks();
 
 	screenErase(&Map.srect);
+
+	t2 = SDL_GetTicks();
 
         if (Map.aview->blackout) {
                 // In blackout mode leave the screen erased
                 goto done_painting_place;
         }
 
-	t2 = SDL_GetTicks();
-        
 	if (Map.aview->zoom > 1) {
                 spriteZoomOut(Map.aview->zoom);
 		screenZoomOut(Map.aview->zoom);
+		t5 = SDL_GetTicks();
 		mapPaintPlace(Map.place, &view->vrect, &Map.srect, 
                               0/* vmask */, &view->subrect, 
                               TILE_W / Map.aview->zoom, 
                               TILE_H / Map.aview->zoom);
+		t6 = SDL_GetTicks();
 		screenZoomIn(Map.aview->zoom);
                 spriteZoomIn(Map.aview->zoom);
 	} else if (flags & REPAINT_NO_LOS) {
+                t5 = SDL_GetTicks();
 		mapPaintPlace(Map.place, &view->vrect, &Map.srect, 0, 
                               &view->subrect, TILE_W, TILE_H);
+		t6 = SDL_GetTicks();
 	} else {
 		memcpy(Map.vmask, Map.aview->vmask, VMASK_SZ);
 		t3 = SDL_GetTicks();
@@ -858,19 +865,19 @@ void mapRepaintView(struct mview *view, int flags)
 	// Show the frame rate (do this after the update above to get a better
 	// measure of the time it takes to paint the screen).
 	screenPrint(&Map.fpsRect, 0, "FPS: %d",
-		    1000 / (SDL_GetTicks() - start + 1));
+		    1000 / (SDL_GetTicks() - t1 + 1));
 	screenUpdate(&Map.fpsRect);
 
-#ifdef PROFILE
-	printf("Total time=%d\n", t8 - start);
-	printf("  Erase screen=%d\n", t2 - start);
-	printf("  memcpy=%d\n", t3 - t2);
-	printf("  merge vmasks=%d\n", t4 - t3);
-	printf("  build lightmap=%d\n", t5 - t4);
-	printf("  paint place=%d\n", t6 - t5);
-	printf("  shade=%d\n", t7 - t6);
-	printf("  update screen=%d\n", t8 - t7);
-#endif
+	if (PROFILE_REPAINT) {
+	  printf("Total time=%d\n", t8 - t1);
+	  printf("    erase screen=%d\n", t2 - t1);
+	  printf("          memcpy=%d\n", t3 - t2);
+	  printf("    merge vmasks=%d\n", t4 - t3);
+	  printf("  build lightmap=%d\n", t5 - t4);
+	  printf("     paint place=%d\n", t6 - t5);
+	  printf("           shade=%d\n", t7 - t6);
+	  printf("   update screen=%d\n", t8 - t7);
+	}
 }
 
 int mapTileIsWithinViewport(int x, int y)
@@ -1121,7 +1128,10 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
 	// (no license or copyright noted)
 	// 
 
+  int t1, t2;
         SDL_Surface * surf;	// for saving/restoring the background
+
+	t1 = SDL_GetTicks();
 
         // Get the (possible zoomed) tile dimensions.
         int tile_w;
@@ -1160,7 +1170,7 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
         int sBx;
         int sBy;
 
-        if (*Bx > Ox)
+        if (*Bx >= Ox)
                 sBx = (*Bx - Ox) * tile_w + Sx;
         else
                 sBx = (place_w(place) - Ox + *Bx) * tile_w + Sx;
@@ -1215,7 +1225,7 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
                                 }
                         }
 
-                        if (sprite)
+                        if (mapTileIsVisible(Px, Py) && sprite)
                                 mapPaintProjectile(&rect, sprite, surf);
 
 			if (P > 0) {
@@ -1248,7 +1258,7 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
                                 }
                         }
 
-                        if (sprite)
+                        if (mapTileIsVisible(Px, Py) && sprite)
                                 mapPaintProjectile(&rect, sprite, surf);
 
 			if (P > 0) {
@@ -1277,6 +1287,11 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
         *Bx = Px;
         *By = Py;
 
+	t2 = SDL_GetTicks();
+
+	if (PROFILE_ANIMATE) {
+	  printf("mapAnimateProjectile: %d msec\n", t2 - t1);
+	}
 }
 
 void mapAttachCamera(class Object *subject)

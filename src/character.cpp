@@ -1665,10 +1665,6 @@ bool Character::canSee(class Object *obj)
                 obj->isVisible());
 }
 
-#ifndef offsetof
-#define offsetof(s,f) (unsigned long)(((s*)0)->f)
-#endif
-
 void Character::ai_select_target(void)
 {
         struct list *head;
