@@ -11,14 +11,17 @@
 (define reagent-types
   (list
    (list 'sulphorous_ash "sulphorous ash" s_grayish_red_hunks)
-   (list 'garlic         "garlic"         s_gold_powder)
-   (list 'mandrake       "mandrake"       s_brown_mushroom)
-   (list 'nightshade     "nightshade"     s_black_mushroom)
-   (list 'bloodmoss      "bloodmoss"      s_red_hunks)
-   (list 'black_pearl    "black pearl"    s_ring2)
    (list 'ginseng        "ginseng"        s_brown_powder)
-   (list 'blood_moss     "blood moss"     s_red_hunks)
+   (list 'garlic         "garlic"         s_gold_powder)
    (list 'spider_silk    "spider silk"    s_spider_web_fragment)
+   (list 'blood_moss     "blood moss"     s_red_hunks)
+   (list 'black_pearl    "black pearl"    s_ring2)
+
+   (list 'nightshade     "nightshade"     s_black_mushroom)
+   (list 'mandrake       "mandrake"       s_brown_mushroom)
+
+
+;   (list 'bloodmoss      "bloodmoss"      s_red_hunks)  ;; using the old sprite set???
    ))
 
 (map (lambda (type) (apply mk-reagent-type type)) reagent-types)
