@@ -198,3 +198,4 @@
 (define (mk-door) (mk-door-full solid-wood-door-in-stone #f #f nil))
 (define (mk-locked-door) (mk-door-full solid-wood-door-in-stone #t #f nil))
 (define (mk-connected-door tag)(mk-door-full solid-wood-door-in-stone #f #f tag))
+(define (mk-windowed-door) (mk-door-full windowed-wood-door-in-rock #f #f nil))
