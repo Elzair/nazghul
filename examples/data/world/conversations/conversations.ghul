@@ -52,11 +52,16 @@ RESP r_join {
 CONV c_generic {
   IMPORT {}
   NATIVE {
-    HAIL    r_greeting;
-    DEFAULT r_default;
-    BYE     r_farewell;
-    HEAL    r_health;
-    JOIN    r_join;
+    HAIL     r_greeting;
+    DEFAULT  r_default;
+    BYE      r_farewell;
+    HEAL     r_health;
+    JOIN     r_join;
+    HI       r_greeting;
+    HOWDY    r_greeting;
+    HELLO    r_greeting;
+    SEEYA    r_farewell;
+    FAREWELL r_farewell;
   }
 }
 

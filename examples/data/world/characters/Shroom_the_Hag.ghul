@@ -146,6 +146,14 @@ RESP Shroom_hail {
         }
 }
 
+RESP Shroom_abigail {
+        SAY "One needed a child, one needed a mother. Two demand justice, one thinks they have escaped it, two await to see if one will pursue it."
+}
+
+RESP Shroom_justice {
+        SAY "It will begin with the child, the Daughter of the Forest.";
+}
+
 CONV Shrooms_Conv {
         IMPORT { 
                 c_generic;
@@ -167,6 +175,7 @@ CONV Shrooms_Conv {
                 TRUST    Shroom_trust;
                 WARDS    Shroom_wards;
                 WARS     Shroom_wars;
+                ABIGAIL  Shroom_abigail;
         }
         
 }

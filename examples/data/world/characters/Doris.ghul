@@ -59,6 +59,54 @@ RESP resp_doris_trade {
         }
 }
 
+RESP resp_doris_lodge {
+        SAY "Yep. It's all mine. It used to belong to my Daddy, God rest his soul. Most of my customers are local folk, woodsman or travellers wandering through."
+}
+
+RESP resp_doris_daddy {
+        SAY "Daddy hunted and trapped his way to a small fortune then he built this lodge. When he died, I got the lodge."
+}
+
+RESP resp_doris_local {
+        SAY "The people here are varied, odd and secretive. They are also trustworthy, competent and interesting. You will not find better friends or worse enemies then the ones you can make here."
+}
+
+RESP resp_doris_woodsman {
+        SAY "Hunters, lumberjacks and foragers usually pass through here if they are in the area. Wealthier sport hunters from the city take lodging here, but usually those who work in the woods camp in the woods. They come here for a bit of drink, company and a decent meal."
+}
+
+RESP resp_doris_travelers {
+        SAY "Yes, folk like yourself."
+}
+
+RESP resp_doris_gen {
+        SAY "An old goblin-fighter. Something of a local legend. You can find him pottering around in the woods, and he usually stops in at night for a drink."
+}
+
+RESP resp_doris_deric {
+        SAY "Yes, Deric. Well, if you've met Deric then you know Deric. He's competent enough but doesn't want to spend his life in the obscurity of a frontier post."
+}
+
+RESP resp_doris_shroom {
+        SAY "Some say she is a witch, and that she knows some goblin magic. She certainly is handy when anyone falls ill. She often takes her meals here."
+}
+
+RESP resp_doris_abe {
+        SAY "Some kind of scholar from Glasdrin. He spends all his time studying the ruins. Bookish fellow."
+}
+
+RESP resp_doris_abigail {
+        SAY "She was orphaned, so I adopted her. I always wanted a child, but that was not to be. I worry about her future... I know she belongs among her own kind but I can't bear the thought of losing her."
+}
+
+RESP resp_doris_goblins {
+        SAY "They trade with the townsfolk, I even have one as a customer from time-to-time. But they are forbidden by law to enter cities in large numbers, so they're always outnumbered. Most of them are hasty to conclude their business and get back into the woods."
+}
+
+RESP resp_doris_orphaned {
+        SAY "Shroom brought her to me when she was just a baby. Said she found her in the woods besides her dead parents. I don't know what - or who - killed them, Shroom wouldn't say. Perhaps I don't want to know."
+}
+
 CONV conv_doris {
         IMPORT { 
                 c_generic;
@@ -73,6 +121,20 @@ CONV conv_doris {
                 DORIS     resp_doris_doris;
                 BUY       resp_doris_trade;
                 INNKEEPER resp_doris_trade;
+                WHITE     resp_doris_lodge;
+                STAG      resp_doris_lodge;
+                LODGE     resp_doris_lodge;
+                DADDY     resp_doris_daddy;
+                LOCAL     resp_doris_local;
+                WOODSMAN  resp_doris_woodsman;
+                TRAVELERS resp_doris_travelers;
+                GEN       resp_doris_gen;
+                DERIC     resp_doris_deric;
+                SHROOM    resp_doris_shroom;
+                ABE       resp_doris_abe;
+                ABIGAIL   resp_doris_abigail;
+                ORPHANED  resp_doris_orphaned;
+                GOBLINS   resp_doris_goblins;
         }
 }
 
