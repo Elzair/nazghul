@@ -54,6 +54,7 @@
     (list 3 cure-poison-potion)
     (list 2 poison-bolt-scroll-type)
     (list 1 death-bolt-scroll-type)
+    (list 5 t_torch)
 
     ;; Hints/instructions
     (list 1 basic-survival-manual)
@@ -110,6 +111,7 @@
    (list (kern-tag 'black-gate (mk-moongate nil)) 11 11)
    (list ch_gregor 1 23)
    (list warchest 1 24)
+   (list (mk-cave-entrance 'p_slimy_cavern 8 30) 20 1)
    )
 
   nil ;; hooks

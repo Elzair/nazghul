@@ -102,7 +102,7 @@
                 (list (mk-door) 11 15)
                 (list (mk-door) 17 14)
                 (list (mk-door) 18 20)
-                (list (mk-bridge east) 25 26)
+                (list (mk-bridge 'east) 25 26)
 
                 )
                nil ; hooks

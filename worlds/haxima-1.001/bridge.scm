@@ -24,9 +24,13 @@
              layer-tfeat    ;; stacking layer
              bridge-ifc     ;; interface
              )
-
-
+;; ----------------------------------------------------------------------------
+;; mk-bridge -- 'dir' is the orientation, one of the four cardinal directions
+;; and should be prepended by a single tick when called, as in 'north 'south
+;; 'east and 'west
+;; ----------------------------------------------------------------------------
 (define (mk-bridge dir)
   (case dir
-    ((north south) (bind (kern-mk-obj TF_ns_bridge 1) nil))
-     (else (bind (kern-mk-obj TF_ew_bridge 1) nil))))
+    ((north) (bind (kern-mk-obj TF_ns_bridge 1) nil))
+    ((south) (bind (kern-mk-obj TF_ns_bridge 1) nil))
+    (else (bind (kern-mk-obj TF_ew_bridge 1) nil))))

@@ -85,6 +85,7 @@
 (mk-obj-type 't_trap_door   "trap door"           '()             layer-mechanism auto-portal-ifc)
 (mk-obj-type 't_teleporter  "teleporter"          s_floor_plate   layer-mechanism prompting-auto-portal-ifc)
 (mk-obj-type 't_perm_gate   "a magical gate"      s_moongate_full layer-mechanism auto-portal-ifc)
+(mk-obj-type 't_cave_entrance "cave entrance"     s_cave_entrance layer-mechanism portal-ifc)
     ; TODO: Get differently-colored moongate sprites for different purposes...
 
 ;; mk-portal -- generic helper constructor
@@ -100,3 +101,4 @@
 (define (mk-trap-door   place-tag x y) (mk-portal t_trap_door   place-tag x y))
 (define (mk-teleporter  place-tag x y) (mk-portal t_teleporter  place-tag x y))
 (define (mk-perm-gate   place-tag x y) (mk-portal t_perm_gate   place-tag x y))
+(define (mk-cave-entrance place-tag x y) (mk-portal t_cave_entrance place-tag x y))

@@ -21,7 +21,8 @@
 ;; homestead when she fled the trolls that killed her family. The quest flags
 ;; are stored in her gob.
 ;;----------------------------------------------------------------------------
-(define (ilya-mk gave-quest? finished-quest?) (list gave-quest? finished-quest?))
+(define (ilya-mk gave-quest? finished-quest?) 
+  (list gave-quest? finished-quest?))
 (define (ilya-gave-quest? ilya) (car ilya))
 (define (ilya-quest-done? ilya) (cadr ilya))
 (define (ilya-give-quest ilya) (set-car! ilya #t))

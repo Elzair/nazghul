@@ -20,7 +20,8 @@
 (define (mk-scroll tag name sprite usage)
   (let ((scroll-ifc (ifc obj-ifc 
                          (method 'use 
-                                 (lambda (ktype kuser) (use-and-remove ktype kuser usage))))))
+                                 (lambda (ktype kuser) 
+                                   (use-and-remove ktype kuser usage))))))
     (mk-obj-type tag name sprite layer-item scroll-ifc)))
 
 ;; ----------------------------------------------------------------------------
@@ -28,3 +29,4 @@
 ;; ----------------------------------------------------------------------------
 (mk-scroll 'poison-bolt-scroll-type "In Nox Por scroll" s_scroll_spell_29 in-nox-por)
 (mk-scroll 'death-bolt-scroll-type  "Xen Corp scroll"   s_scroll_spell_25 xen-corp)
+(mk-scroll 't_torch "torch" s_torch in-lor)
