@@ -61,6 +61,13 @@ PLACE p_rom_camp {
   map         m_rom_camp;
   underground 0;
   objects {
+    mech_h_fence_gate fence_gate  8 10 "closed";  // should be a gate instead...
+
+    t_horse  6  6 (ALIGN_TOWN) 1 null;
+    t_horse  8  5 (ALIGN_TOWN) 1 null;
+    t_horse  7  9 (ALIGN_TOWN) 1 null;
+    t_horse  8  9 (ALIGN_TOWN) 1 null;
+
   }
   object_type t_town;
 

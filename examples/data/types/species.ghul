@@ -151,6 +151,26 @@ SPECIES skeleton {
   WALKING_SOUND;
 }
 
+SPECIES horse {
+  name    "horse";
+  str     80;
+  int     30;
+  dex     50;
+  spd     2;
+  vr      8;
+  pmask   (LAND);
+  sleep_sprite null;
+  weapon       t_hooves;  // SAM: Noticed that 'null' is not valid here...
+  visible 1
+    occs {
+  }
+  slots {
+  }
+  spells {
+  }
+  STD_DAMAGE_SOUND;
+}
+
 SPECIES snake {
   name    "snake";
   str     50;

@@ -41,6 +41,7 @@ ARMS_TYPE(t_long_sword,"long sword",    s_long_sword,   20,  1, WEAPON_SLOT, 1, 
 ARMS_TYPE(t_2h_sword,  "2h sword",      s_2h_sword,     24,  0, WEAPON_SLOT, 2, 2, null,    0, 0, null,   25);
 ARMS_TYPE(t_oil,       "flaming oil",   s_orange_potion, 8, -1, WEAPON_SLOT, 1, 4, null,    1, 0, F_fire, 5);
 ARMS_TYPE(t_hands,     "bare hands",    s_null,          4,  1, WEAPON_SLOT, 1, 1, null,    0, 0, null,   0);
+ARMS_TYPE(t_hooves,    "hooves",        s_null,          4,  1, WEAPON_SLOT, 1, 1, null,    0, 0, null,   0);
 ARMS_TYPE(t_teeth,     "fangs",         s_null,          8,  0, HELM_SLOT,   1, 1, null,    0, 0, null,   0);
 ARMS_TYPE(t_poison_projectile, "poison projectile", s_field_poison, 3, 0, NO_SLOT, 0, 0, null, 0, 0,       null, 0);
 ARMS_TYPE(t_mace,      "mace",          s_mace,         20,  0, WEAPON_SLOT, 1, 1, null,    0, 0, null,   20);

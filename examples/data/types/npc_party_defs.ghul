@@ -79,6 +79,15 @@ PARTY t_undead_brigade {
   }
 }
 
+PARTY t_horse {
+  name      "horse";
+  sprite    s_horse;
+  formation null;
+  groups {
+    horse null s_horse 1;
+  }
+}
+
 PARTY t_insect_cloud {
   name   "cloud of insects";
   sprite s_insects;
