@@ -41,7 +41,7 @@
                0 0                   ; mp mod/mult
                0 0                   ; hit mod def mod
                0 0                   ; dam mod arm mod
-               30 0 150 9            ; hp/xp/mp/lvl
+               30 0 9 9              ; hp/xp/mp/lvl
                'shroom-conv          ; conv
                sch_shroom            ; sched
                nil                   ; special ai
@@ -59,7 +59,7 @@
               10 5                  ; mp mod/mult
               0 0                   ; hit mod def mod
               0 0                   ; dam mod arm mod
-              240 0 240 8           ; hp/xp/mp/lvl
+              240 0 8 8             ; hp/xp/mp/lvl
               nil                   ; conv
               nil                   ; sched
               nil                   ; special ai
@@ -75,8 +75,8 @@
               0 1                   ; hp mod/mult
               10 5                  ; mp mod/mult
               0 0                   ; hit mod def mod
-              0 0                   ; dam mod arm mod
-              240 0 240 8           ; hp/xp/mp/lvl
+              0 0                    ; dam mod arm mod
+              240 0 8 8             ; hp/xp/mp/lvl
               nil                   ; conv
               nil                   ; sched
               nil                   ; special ai
@@ -93,7 +93,7 @@
               10 5                  ; mp mod/mult
               0 0                   ; hit mod def mod
               0 0                   ; dam mod arm mod
-              240 0 240 8           ; hp/xp/mp/lvl
+              240 0 5 7             ; hp/xp/mp/lvl
               nil                   ; conv
               nil                   ; sched
               nil                   ; special ai
@@ -126,6 +126,9 @@
   (list
    
    ;; spells
+   (list 1 wis_an_ylem)
+   (list 1 in_an)
+   (list 1 in_mani_corp)
    (list 10 test_recur)
    (list 10 vas_rel_por)
    (list 2 an_xen_corp)

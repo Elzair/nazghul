@@ -12,3 +12,6 @@ console-examine
 console-at
 console-exit
 console-terraform
+console-party-attack
+console-board
+console-party-cast

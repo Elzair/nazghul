@@ -301,8 +301,6 @@
             ) ;; bind
           63 31)
           (list
-            (kern-mk-field f_fire 19)          63 31)
-          (list
             (bind
               (kern-mk-obj t_door 1)
               (list
@@ -350,8 +348,6 @@
             (kern-mk-obj t_mushroom 1)
           63 32)
           (list
-            (kern-mk-field f_fire 19)          62 33)
-          (list
             (bind
               (kern-mk-obj t_lever 1)
               (list
@@ -363,38 +359,6 @@
           36 31)
           (list
             (kern-mk-field f_sleep_perm -1)          63 33)
-          (list
-            (bind
-              (kern-mk-char
-                'ch_shroom
-                "Shroom"
-                sp_human
-                oc_druid
-                s_companion_druid
-                2
-                20 30 20
-                0 0
-                0 0
-                0 0
-                0 0
-                30 0
-                9 9
-                'shroom-conv
-                sch_shroom
-                nil
-                (list
-                  t_dagger
-                )
-                ;; hooks
-                (list
-                )
-              )
-              (list
-                #f
-                #f
-              )
-            ) ;; bind
-          50 9)
           (list
             (bind
               (kern-mk-obj t_door 1)
@@ -591,6 +555,38 @@
               )
             ) ;; bind
           48 6)
+          (list
+            (bind
+              (kern-mk-char
+                'ch_shroom
+                "Shroom"
+                sp_human
+                oc_druid
+                s_companion_druid
+                2
+                20 30 20
+                0 0
+                0 0
+                0 0
+                0 0
+                30 0
+                9 9
+                'shroom-conv
+                sch_shroom
+                nil
+                (list
+                  t_dagger
+                )
+                ;; hooks
+                (list
+                )
+              )
+              (list
+                #f
+                #f
+              )
+            ) ;; bind
+          61 31)
         ) ;; end of objects
         (list
           'green-tower-pre-entry-hook
@@ -694,15 +690,15 @@
         nil ;; sprite
         (kern-mk-map 'tmp_combat_map 19 19 pal_expanded
           (list
-            "|| || || || || || || || || || || || || || || || || || || "
-            "|| || || || || || || || || || || || || || || || || || || "
-            "|| || || || || || || || || || || || || || || || || || || "
-            "|| || || || || || || || || || || || || || || || || || || "
-            "|| || || || || || || || || || || || || || || || || || || "
-            "|| || || || || || || || || || || || || || || || || || || "
-            "|| || || || || || || || || || || || || || || || || || || "
-            "|| || || || || || || || || || || || || || || || || || || "
-            "|| || || || || || || || || || || || || || || || || || || "
+            ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+            ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+            ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+            ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+            ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+            ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+            ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+            ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+            ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
             ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
             ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
             ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
@@ -722,34 +718,6 @@
         nil
         ;; contents
         (list
-          (list
-            (kern-mk-char
-              'ch_thorald_greybeard
-              "Thorald Greybeard"
-              sp_human
-              oc_wizard
-              s_companion_wizard
-              3
-              20 30 22
-              0 1
-              10 5
-              0 0
-              0 0
-              39 6
-              8 8
-              nil
-              nil
-              nil
-              (list
-                t_rpg
-              )
-              ;; hooks
-              (list
-              )
-            )
-          9 11)
-          (list
-            (kern-mk-field f_fire 18)          9 8)
           (list
             (kern-mk-char
               nil
@@ -773,7 +741,7 @@
               (list
               )
             )
-          9 5)
+          10 3)
           (list
             (kern-mk-char
               'ch_slurmok
@@ -803,13 +771,39 @@
                 )
               )
             )
-          10 14)
+          10 15)
+          (list
+            (kern-mk-char
+              'ch_thorald_greybeard
+              "Thorald Greybeard"
+              sp_human
+              oc_wizard
+              s_companion_wizard
+              3
+              20 30 22
+              0 1
+              10 5
+              0 0
+              0 0
+              39 0
+              8 8
+              nil
+              nil
+              nil
+              (list
+                t_rpg
+              )
+              ;; hooks
+              (list
+              )
+            )
+          9 17)
         ) ;; end of objects
         (list
         )
       ) ;; end of place p_wilderness_combat
 
-    36 22) ;; coords of p_wilderness_combat
+    36 23) ;; coords of p_wilderness_combat
     (list
       (kern-mk-place 'p_gregors_hut "Gregor's Hut"
         s_hut ;; sprite
@@ -1071,7 +1065,7 @@
 (kern-set-cursor ls_whirlpool)
 (kern-set-crosshair t_crosshair)
 (kern-set-ascii ss_little_sprites 32)
-(kern-set-clock 0 0 0 0 13 14)
+(kern-set-clock 0 0 0 0 13 12)
 ;; ---------
 ;; Astronomy
 ;; ---------

@@ -64,6 +64,8 @@
 #include <errno.h>
 
 #define QUICKSAVE_FNAME "save.scm"
+#define MAX_SPELL_NAME_LENGTH 64 /* arbitrarily chosen */
+
 
 int dirkey(struct KeyHandler *kh, int key, int keymod)
 {
@@ -867,6 +869,11 @@ void cmdAttack(void)
                 // Make the npc party (and all its friends) hostile
                 player_party->alignment &= ~(info.npc_party->getAlignment());
         }
+
+        // Log the attack.
+        log_begin("You attack ");
+        info.npc_party->describe();
+        log_end(".");
 
         // Enter combat
         combat_enter(&cinfo);
@@ -1675,9 +1682,10 @@ bool cmdCastSpell(class Character * pc)
 	int tries;
 	int max_tries;
 	int tx, ty;
+        char spell_name[MAX_SPELL_NAME_LENGTH];
 
         if (MagicNegated) {
-                log_msg("Magic negated!\n");
+                log_msg("Cast - magic negated!\n");
                 return false;
         }
 
@@ -1712,16 +1720,26 @@ bool cmdCastSpell(class Character * pc)
 	// erase the extra ' ' left by the selection routine
 	cmdwin_backspace(1);
 
+        // The code for the spell is stored in the context, but not the full
+        // name. I want the full name for log msgs.
+        magic_spell_code_to_name(&Session->magic, spell_name, 
+                                 MAX_SPELL_NAME_LENGTH, 
+                                 context.spell_name);
+
+        log_begin("%s: %s - ", pc->getName(), spell_name);
+
 	// Lookup the spell
 	spell = magic_lookup_spell(&Session->magic, context.spell_name);
 	if (!spell) {
 		cmdwin_print("-no effect!");
+                log_end("no effect!");
 		return false;
 	}
 
 	// Check if the spell can be used in this context.
 	if (!(player_party->getContext() & spell->context)) {
 		cmdwin_print("-not here!");
+                log_end("not here!");
 		return false;
 	}
 
@@ -1740,6 +1758,7 @@ bool cmdCastSpell(class Character * pc)
         //
 	if (!natural && pc->getLevel() < spell->level) {
 		cmdwin_print("-need more experience!");
+                log_end("need more experience!");
 		return false;
 	}
 	// Otherwise check party inventory for a mixed spell.
@@ -1751,13 +1770,21 @@ bool cmdCastSpell(class Character * pc)
 
 	if (!natural && !mixed) {
 		cmdwin_print("-none mixed!");
+                log_end("none mixed!");
 		return false;
 	}
 	// Check if the character has enough mana to cast the spell.
 	if (pc->getMana() < spell->cost) {
 		cmdwin_print("-need more mana!");
+                log_end("need more mana!");
 		return false;
 	}
+
+        // Decrement caster's mana
+        pc->addMana(0 - spell->cost);
+
+        log_continue("success!");
+
 	// High-level casters get multiple tries per spell.
 	// max_tries = 1 + pc->getLevel() / 3;
 	max_tries = 1;
@@ -1782,6 +1809,8 @@ bool cmdCastSpell(class Character * pc)
 
         /* Some spells have status in the foogod window, so repaint it now. */
         foogodRepaint();
+
+        log_end(NULL);
 
 	return true;
 
@@ -2340,28 +2369,29 @@ bool cmdSaveTerrainMap(class Character * pc)
                 palette->tag, getpid() );
         palette_fp = fopen(palette_filename, "w");
         if (!palette_fp) {
-                printf("Filed to open palette save file '%s' for writing "
-                       "because '%s'.\n",
-                       palette_filename, strerror(errno) );
+                err("Filed to open palette save file '%s' for writing "
+                    "because '%s'.\n",
+                    palette_filename, strerror(errno) );
         }
         palette_print(palette_fp, INITIAL_INDENTATION, palette);
         fclose(palette_fp);
-        log_msg("Saved palette as '%s'.\n", palette_filename);
-        printf("Saved palette as '%s'.\n", palette_filename);
+
+        log_begin_group();
+        log_msg("Saved palette as '%s'.", palette_filename);
 
         // And save the current map:
         sprintf(map_filename, "/tmp/nazghul.map.%s.%d.ghul", 
                 map->tag, getpid() );
         map_fp = fopen(map_filename, "w");
         if (!map_fp) {
-                printf("Filed to open map save file '%s' for writing "
-                       "because '%s'.\n",
-                       map_filename, strerror(errno) );
+                err("Filed to open map save file '%s' for writing "
+                    "because '%s'.\n",
+                    map_filename, strerror(errno) );
         }
         terrain_map_print(map_fp, INITIAL_INDENTATION, map);
         fclose(map_fp);
-        log_msg("Saved map as '%s'.\n", map_filename);
-        printf("Saved map as '%s'.\n", map_filename);
+        log_msg("Saved map as '%s'.", map_filename);
+        log_end_group();
 
 	return true;
 } // cmdSaveTerrainMap()

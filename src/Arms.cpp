@@ -28,12 +28,12 @@
 #include "screen.h"
 #include "sprite.h"
 #include "map.h"
-#include "console.h"
 #include "Field.h"
 #include "place.h"
 #include "Missile.h"
 #include "sound.h"
 #include "player.h"
+#include "log.h"
 
 ArmsType::ArmsType(char *tag, char *name, struct sprite *sprite,
                    int slotMask,
@@ -198,15 +198,15 @@ bool ArmsType::fireInDirection(struct place *place, int ox, int oy,
         if (!missile->hitTarget() || !missile->getStruck())
                 return false;
 
-        consolePrint("%s hit ", getName());
+        log_begin("%s hit ", getName());
         missile->getStruck()->describe();
-        consolePrint("!\n");
+        log_end("!");
         missile->getStruck()->damage(dice_roll(damageDice));
 
         if (missile->getStruck()->isDestroyed()) {
-                consolePrint("%s destroyed ", getName());
+                log_begin("%s destroyed ", getName());
                 missile->getStruck()->describe();
-                consolePrint("!\n");
+                log_end("!");
 
                 /* Uh... no reference counting on the player party, everybody
                  * assumes it is always good, so don't violate that assumption

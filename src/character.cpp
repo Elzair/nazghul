@@ -1308,6 +1308,7 @@ int Character::getMaxHp()
 
 int Character::getMaxMana()
 {
+#if 0
         int base = mp_mod + species->mp_mod;
         int mult = mp_mult + species->mp_mult;
 
@@ -1317,8 +1318,8 @@ int Character::getMaxMana()
         }
 
         mult = max(0, mult);
-        
-        return (base + getLevel() * mult);
+#endif   
+        return getLevel();
 }
 
 void Character::changeArmourClass(int delta)

@@ -909,6 +909,7 @@ void player_party::board_vehicle(void)
 
 	// already in a vehicle so exit
 	if (vehicle) {
+                log_msg("You exit your %s.", vehicle->getName());
 		vehicle->occupant = 0;
 		vehicle->relocate(getPlace(), getX(), getY());
 		vehicle = 0;
@@ -920,6 +921,10 @@ void player_party::board_vehicle(void)
 	if (!vehicle) {
 		return;
 	}
+
+        log_begin("You board ");
+        vehicle->describe();
+        log_end(".");
 
 	vehicle->occupant = this;
 	vehicle->remove();

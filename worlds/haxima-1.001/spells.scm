@@ -594,12 +594,13 @@
    (list 'xen_corp     "Xen Corp spell"     s_corpse        xen-corp     "XC"  7 context-town (list nightshade black_pearl))
    (list 'in_quas_xen  "In Quas Xen spell"  s_magic         in-quas-xen  "IQX" 7 context-town (list nightshade mandrake sulphorous_ash spider_silk
                                                                                                     blood_moss ginseng))
+   (list 'kal_xen_nox      "Kal Xen Nox spell"      s_slime        kal-xen-nox      "KXN"  8 context-town (list spider_silk mandrake nightshade))
+
 
    (list 'in_flam_hur      "In Flam Hur spell"      s_field_fire   in-flam-hur      "IFH"  8 context-town (list mandrake sulphorous_ash blood_moss))
    (list 'in_vas_grav_corp "In Vas Grap Corp spell" s_field_energy in-vas-grav-corp "IVGC" 8 context-town (list mandrake sulphorous_ash nightshade))
    (list 'an_tym           "An Tym spell"           s_magic        an-tym           "AT"   8 context-any (list mandrake garlic blood_moss))
    (list 'kal_xen_corp     "Kal Xen Corp spell"     s_skeleton     kal-xen-corp     "KXC"  8 context-town (list spider_silk mandrake nightshade))
-   (list 'kal_xen_nox      "Kal Xen Nox spell"      s_slime        kal-xen-nox      "KXN"  8 context-town (list spider_silk mandrake nightshade))
    (list 'in_mani_corp     "In Mani Corp spell"     s_magic        in-mani-corp     "IMC"  8 context-any (list garlic ginseng spider_silk 
                                                                                                                sulphorous_ash blood_moss mandrake))
    (list 'vas_rel_por      "Vas Rel Por spell"      s_moongate_full vas-rel-por     "VRP"  8 context-any (list sulphorous_ash mandrake black_pearl))

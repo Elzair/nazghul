@@ -238,3 +238,28 @@ char *magic_lookup_word(struct magic *magic, char first_letter)
 
         return magic->words[index];
 }
+
+int magic_spell_code_to_name(struct magic *magic, char *buf, int len, char *code)
+{
+        int n = 0;
+
+        while (*code) {
+                char *word = magic_lookup_word(magic, *code);
+                if (! word)
+                        return -1;
+                n = snprintf(buf, len, "%s ", word); 
+                if (n < 0)
+                        return -1;
+                buf += n;
+                len -= n;
+                code++;
+        }
+        
+        // back up over the last space
+        if (! *code) {
+                buf--;
+                *buf = 0;
+        }
+
+        return 0;
+}

@@ -29,7 +29,6 @@
 #include "map.h"
 #include "hash.h"
 #include "wq.h"
-#include "console.h"
 #include "sound.h"
 #include "status.h"
 #include "cursor.h"
@@ -50,6 +49,7 @@
 #include "cmd.h"
 #include "formation.h"
 #include "session.h"
+#include "log.h"
 
 #include <assert.h>
 #include <stdlib.h>
@@ -101,7 +101,7 @@ static int q_tail;
 
 static void combat_print_banner(char *msg)
 {
-        consolePrint("\n\n*** %s ***\n\n", msg);
+        log_msg("*** %s ***", msg);
 }
 
 enum combat_state combat_get_state(void)
@@ -205,46 +205,6 @@ void combat_set_state(enum combat_state new_state)
 
         Combat.state = new_state;
 }
-
-void combat_attack(class Character *attacker, class ArmsType *weapon, class Character *defender)
-{
-        int hit;
-        int def;
-        int damage;
-        int armor;
-        bool miss;
-
-        miss = ! weapon->fire(defender, attacker->getX(), attacker->getY());
-        attacker->useAmmo();
-        attacker->setAttackTarget(defender);
-
-        if (miss) {
-                consolePrint("miss!\n");
-                return;
-        }
-
-        // Roll to hit.
-        hit = dice_roll(weapon->getToHitDice());
-        def = defender->getDefend();
-        if (hit < def) {
-                consolePrint("miss!\n");
-                return;
-        } else {
-                consolePrint("hit! ");
-        }
-
-        // roll for damage
-        damage = dice_roll(weapon->getDamageDice());
-        armor = defender->getArmor();
-        consolePrint("Rolled %d damage, %d armor ", damage, armor);
-        damage -= armor;
-        damage = max(damage, 0);
-        consolePrint("for %d total damage, ", damage);
-        defender->damage(damage);
-
-        consolePrint("%s!\n", defender->getWoundDescription());
-}
-
 
 static int location_is_safe(struct position_info *info)
 {
@@ -885,7 +845,7 @@ static void random_ambush(void)
 
         combat_set_state(COMBAT_STATE_FIGHTING);
 
-        consolePrint("\n*** Ambush ***\n\n");
+        log_msg("*** AMBUSH ***");
 
         player_party->ambushWhileCamping();
 }
@@ -1610,8 +1570,9 @@ bool combat_enter(struct combat_info * info)
                 if (!myPositionEnemy(info->move->npc_party, info->move->dx, info->move->dy, 
                                      !info->defend, Place)) {
 
-                        consolePrint("\n*** FORFEIT ***\n\n");
-                        consolePrint("Your opponent slips away!\n");
+                        log_begin("*** FORFEIT ***");
+                        log_msg("Your opponent slips away!");
+                        log_end(NULL);
                         combat_set_state(COMBAT_STATE_LOOTING);
 
                         // The npc party did not get added to the list because
@@ -1624,8 +1585,7 @@ bool combat_enter(struct combat_info * info)
         else if (info->camping) {
 
                 combat_set_state(COMBAT_STATE_CAMPING);
-                consolePrint("Zzzz...");
-                consoleRepaint();
+                log_msg("Zzzz...");
         }
         else {
                 struct v2 v2;

@@ -77,7 +77,7 @@ static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
                         cmdTerraform(NULL);
                         break;
 
-                case 'z':
+                case 'z':                        
                         mapTogglePeering();
                         break;
 

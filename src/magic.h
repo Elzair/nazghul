@@ -89,6 +89,8 @@ extern struct spell *magic_lookup_spell(struct magic *, char *code);
 /* Add another reagent to a spell mixture during session load. */
 extern int spell_add_reagent(struct spell *spell, ObjectType *reagent);
 
+extern int magic_spell_code_to_name(struct magic *magic, char *buf, int len, char *code);
+
 END_DECL
 
 #endif
