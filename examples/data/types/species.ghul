@@ -28,6 +28,75 @@
 #define SPLASHING_SOUND  movement_sound "data/sounds/rowing.wav"
 #define SQUISHING_SOUND  movement_sound "data/sounds/walk.wav"
 
+//////////////////////////////////////////////////////////////////////////////
+//
+// SPECIES
+//
+// name - Used when describing generic characters to the player(e.g, "you meet
+//        a dwarf fighter").
+//
+// str  - Influences the max weight of combined armaments for a character.
+//
+// int  - ???
+//
+// dex  - ???
+//
+// spd  - ???
+//
+// vr   - vision radius, used in these ways:
+//
+//        1) The vision radius of an npc party is the max vision radius
+//           of any species in the party, this determines how far away the
+//           npc party can see the player party and give pursuit
+//
+//        2) The vision radius of the player party is the max vision radius of
+//           any member character (and by default a member character's vision
+//           radius comes from its species). If the engine is played in 
+//           circular line-of-sight mode then this sets the radius of the los.
+//           Currently the engine is not played in circular los mode so this
+//           isn't so important.
+//
+//        3) The vision radius of a character on a combat map typically 
+//           defaults to this value, and is used for npc combatants who are
+//           looking for targets within visible range.
+//
+//        4) For player characters on a combat map this sets the radius their
+//           los, which in turn determines how much of the map is visible to
+//           the player.
+//
+// pmask
+//      - Specifies which terrain types are passable to this species.
+//
+// sleep_sprite
+//      - Optional sprite to use when a character of this species type is 
+//        asleep, dead or unconscious
+//
+// weapon
+//      - Default weapon when none is readied by a character of this species.
+//
+// visible
+//      - Zero for invisible species (e.g. some ghosts)
+//
+// slots
+//      - Armament and wearable item slots. ARMS and item types specify which
+//        slots they must go in, and determine wether or not a character can
+//        ready them by matching them against available species slots.
+//
+// spells
+//      - This is how "natural abilities" are hacked in :-). For example,
+//        snakes which spit poision naturally have a "poison" spell which they
+//        can "cast" in combat. This works ok but it means the negate-magic 
+//        effect can prevent snakes from spitting poison, so it isn't ideal.
+//        This will probably change in subsequent revisions of the engine.
+//
+// damage_sound (optional)
+//      - Sound file to play when a character of this species takes damage.
+//
+// movement_sound (optional)
+//      - Sound file to play when a character of this species takes a step.
+//
+//////////////////////////////////////////////////////////////////////////////
+
 SPECIES human {
   name    "human";
   str     20; 
@@ -58,9 +127,9 @@ SPECIES human {
 
 SPECIES goblin {
   name    "goblin";
-  str     80;
-  int     80;
-  dex     120;
+  str     18;
+  int     18;
+  dex     22;
   spd     2;
   vr      8;
   pmask   (LAND);
@@ -85,9 +154,9 @@ SPECIES goblin {
 
 SPECIES gazer {
   name    "gazer";
-  str     40;
-  int     200;
-  dex     40;
+  str     10;
+  int     30;
+  dex     10;
   spd     4;
   vr      10;
   pmask   (LAND|SHOALS);
@@ -113,9 +182,9 @@ SPECIES gazer {
 
 SPECIES skeleton {
   name    "skeleton";
-  str     110;
-  int     60;
-  dex     110;
+  str     15;
+  int     10;
+  dex     20;
   spd     2;
   vr      8;
   pmask   (LAND);
@@ -140,9 +209,9 @@ SPECIES skeleton {
 
 SPECIES horse {
   name    "horse";
-  str     80;
-  int     30;
-  dex     50;
+  str     30;
+  int     10;
+  dex     20;
   spd     2;
   vr      8;
   pmask   (LAND);
@@ -158,9 +227,9 @@ SPECIES horse {
 
 SPECIES snake {
   name    "snake";
-  str     50;
-  int     80;
-  dex     120;
+  str     5;
+  int     1;
+  dex     22;
   spd     2;
   vr      8;
   pmask   (LAND);
@@ -177,9 +246,9 @@ SPECIES snake {
 
 SPECIES insects {
   name    "insect swarm";
-  str     5;
-  int     5;
-  dex     120;
+  str     1;
+  int     1;
+  dex     24;
   spd     2;
   vr      8;
   pmask   (LAND);
@@ -195,9 +264,9 @@ SPECIES insects {
 
 SPECIES ghast {
   name    "ghast";
-  str     100;
-  int     100;
-  dex     100;
+  str     20;
+  int     20;
+  dex     20;
   spd     2;
   vr      8;
   pmask   (LAND|WATER|SHOALS|SOLID);
@@ -221,9 +290,9 @@ SPECIES ghast {
 
 SPECIES nixie {
   name  "nixie";
-  str   100;
-  int   100;
-  dex   100;
+  str   18;
+  int   18;
+  dex   18;
   spd   2;
   vr    8;
   pmask (WATER|SHOALS);
@@ -248,9 +317,9 @@ SPECIES nixie {
 
 SPECIES water_elemental {
   name  "water elemental";
-  str   200;
-  int   200;
-  dex   300;
+  str   25;
+  int   25;
+  dex   30;
   spd   3;
   vr    8;
   pmask (WATER|SHOALS);
@@ -269,8 +338,8 @@ SPECIES water_elemental {
 
 SPECIES slime {
         name  "green slime";
-        str   10;
-        int   10;
+        str   1;
+        int   1;
         dex   10;
         spd   2;
         vr    8;
@@ -297,15 +366,15 @@ SPECIES slime {
 
 SPECIES yellow_slime {
         name  "yellow slime";
-        str   10;
+        str   2;
 
         // Wart alert: since mana is directly tied to intelligence, and since
         // the ability to spawn green slimes is a spell, I need to give this
         // rather stupid creature a modicum of intelligence. 80 is enough to
         // cast 2 level 2 spells.
-        int   60;
+        int   2;
 
-        dex   10;
+        dex   20;
         spd   2;
         vr    8;
         pmask (LAND);
