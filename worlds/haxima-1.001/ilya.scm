@@ -97,8 +97,8 @@
 
         ;; no - didn't give quest yet
         (begin
-          (say knpc "Puska is my stuffed horse. But I lost him! "
-               "If you find him will you tell me?")
+          (say knpc "Puska is my stuffed horse. But I lost her! "
+               "If you find her will you tell me?")
           (if (kern-conv-get-yes-no? kpc)
               (begin
                 (say knpc "Our farm was east and south through the woods. "
@@ -197,7 +197,7 @@
        (method 'dadd (lambda (knpc kpc) (say knpc "I miss daddy. He tried to fight the trolls but "
                                                "he was just a farmer.")))
        (method 'pusk ilya-quest)
-       (method 'home (lambda (knpc kpc) (say knpc "Our farm was north and east through the woods.")))
+       (method 'home (lambda (knpc kpc) (say knpc "Our farm was north and south through the woods.")))
        (method 'spid (lambda (knpc kpc) (say knpc "There are lots of spiders in the woods around my old home.")))
        (method 'wood (lambda (knpc kpc) (say knpc "Grandpa says to stay out of the woods.")))
        (method 'fire (lambda (knpc kpc) (say knpc "Making fire is easy. Just mix black pearl and sulphos..."
