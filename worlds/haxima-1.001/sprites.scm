@@ -813,7 +813,8 @@
 (kern-mk-sprite 's_arrow_wood_red                ss_dg_missiles 8 208 #f 0) ;; 511
 (kern-mk-sprite 's_arrow_metal_red               ss_dg_missiles 8 216 #f 0)
 (kern-mk-sprite 's_arrow_wood_green              ss_dg_missiles 8 224 #f 0)
-                                        ; (Tiles 232..239 blank)
+(kern-mk-sprite 's_arrow_metal_green             ss_dg_missiles 8 232 #f 0)
+
 
 
 

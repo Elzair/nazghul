@@ -137,9 +137,10 @@
 (mk-scenery-type 't_magic_sphere_rays_purple "a magical sphere" s_magic_sphere_rays_purple)
 (mk-scenery-type 't_magic_sphere_rays_cyan   "a magical sphere" s_magic_sphere_rays_cyan)
 ;; Arrows and Bolts and such in flight:
-(mk-scenery-type 't_arrow_wood_red   "an arrow" s_arrow_wood_red)
-(mk-scenery-type 't_arrow_metal_red  "an arrow" s_arrow_metal_red)
-(mk-scenery-type 't_arrow_wood_green "an arrow" s_arrow_wood_green)
+(mk-scenery-type 't_arrow_wood_red    "an arrow" s_arrow_wood_red)
+(mk-scenery-type 't_arrow_metal_red   "an arrow" s_arrow_metal_red)
+(mk-scenery-type 't_arrow_wood_green  "an arrow" s_arrow_wood_green)
+(mk-scenery-type 't_arrow_metal_green "an arrow" s_arrow_metal_green)
 
 (kern-mk-place 'p_sprite_gallery_1 ; tag
                "Sprite Gallery 1"  ; name
@@ -237,9 +238,10 @@
                 (list (kern-mk-obj t_magic_sphere_rays_cyan   1)  9 14)
 
                 ;; Arrows and Bolts and such in flight:
-                (list (kern-mk-obj t_arrow_wood_red   1)  9 16)
-                (list (kern-mk-obj t_arrow_metal_red  1)  9 17)
-                (list (kern-mk-obj t_arrow_wood_green 1)  9 18)
+                (list (kern-mk-obj t_arrow_wood_red    1)  9 16)
+                (list (kern-mk-obj t_arrow_metal_red   1)  9 17)
+                (list (kern-mk-obj t_arrow_wood_green  1) 10 16)
+                (list (kern-mk-obj t_arrow_metal_green 1) 10 17)
                 
                 ) ; objects
                nil ; hooks
