@@ -58,12 +58,13 @@
               null, 0, 0, null, _weight)
 
 // Melee Weapons:
-MELEE_WPN_TYPE(t_dagger,    "dagger",        s_dagger,        +8, +2, 1, 1,  5);
-MELEE_WPN_TYPE(t_sword,     "short sword",   s_sword,        +20, +2, 1, 1, 15);
-MELEE_WPN_TYPE(t_long_sword,"long sword",    s_long_sword,   +20, +1, 1, 2, 20);
-MELEE_WPN_TYPE(t_2h_sword,  "2h sword",      s_2h_sword,     +24, +0, 2, 2, 25);
-MELEE_WPN_TYPE(t_mace,      "mace",          s_mace,         +20, +0, 1, 1, 20);
-MELEE_WPN_TYPE(t_2h_hammer, "2h hammer",     s_2h_hammer,    +28, -1, 1, 1, 30);
+MELEE_WPN_TYPE(t_dagger,     "dagger",      s_dagger,        +8, +2, 1, 1,  5);
+MELEE_WPN_TYPE(t_sword,      "short sword", s_sword,        +20, +2, 1, 1, 15);
+MELEE_WPN_TYPE(t_long_sword, "long sword",  s_long_sword,   +20, +1, 1, 2, 20);
+MELEE_WPN_TYPE(t_2h_sword,   "2h sword",    s_2h_sword,     +24, +0, 2, 2, 25);
+
+MELEE_WPN_TYPE(t_mace,       "mace",        s_mace,         +20, +0, 1, 1, 20);
+MELEE_WPN_TYPE(t_2h_hammer,  "2h hammer",   s_2h_hammer,    +28, -1, 1, 1, 30);
 
 
 ///////////////////////////////////////////////////////////////////////////
