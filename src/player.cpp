@@ -657,7 +657,8 @@ bool player_party::try_to_enter_town_from_edge(class Portal * portal, int dx,
 	return false;
 }
 
-bool player_party::enter_dungeon(class Portal * portal, int dx, int dy)
+bool player_party::enter_dungeon(struct place *dungeon, int dungeon_x, 
+                                 int dungeon_y, int dx, int dy)
 {
         struct combat_info cinfo;
         struct move_info move;
@@ -667,9 +668,9 @@ bool player_party::enter_dungeon(class Portal * portal, int dx, int dy)
         // so the following might fail.
 
         memset(&move, 0, sizeof(move));
-        move.place = portal->getToPlace();
-        move.x = portal->getToX();
-        move.y = portal->getToY();
+        move.place = dungeon;
+        move.x = dungeon_x;
+        move.y = dungeon_y;
         move.dx = dx;
         move.dy = dy;
 
@@ -677,6 +678,8 @@ bool player_party::enter_dungeon(class Portal * portal, int dx, int dy)
         cinfo.move = &move;
 
  retry:
+        consolePrint("\n*** D U N G E O N ***\n\n");
+        consolePrint("You enter %s...\n\n", move.place->name);
         if (!combat_enter(&cinfo)) {
                 assert(first_time);
                 return false;
@@ -721,7 +724,8 @@ bool player_party::try_to_enter_portal(class Portal * portal, int dx, int dy)
 
         // If the destination is a dungeon then enter the dungeon loop.
         if (place_is_dungeon(portal->getToPlace()))
-                return enter_dungeon(portal, dx, dy);
+                return enter_dungeon(portal->getToPlace(), portal->getToX(),
+                                     portal->getToY(), dx, dy);
 
 	// Show the destination so the player knows what he's getting himself
 	// into...

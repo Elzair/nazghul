@@ -2193,9 +2193,29 @@ int playRun(void)
 	eventPushTickHandler(&th);
 	eventAddHook(updateAfterEvent);
 
+	Quit = false;
+
+        // Major hack warning: if the game loads up with the player in a
+        // dungeon then we need to force the game into dungeon mode. The
+        // easiest way to do that is to have the player party "enter" the
+        // dungeon it's already in. The last two args are the direction vector
+        // - just fake them to "north".
+        if (place_is_dungeon(player_party->getPlace())) {
+                if (! player_party->enter_dungeon(player_party->getPlace(), 
+                                                  player_party->getX(), 
+                                                  player_party->getY(),
+                                                  0, 1)) {
+                        err("Bad starting position for party: %s [%d %d]\n",
+                            player_party->getPlace()->name,
+                            player_party->getX(), 
+                            player_party->getY());
+                        return -1;
+                }
+        }
+
+
 	// Enter the main event loop. This won't exit until the player quits or
 	// dies.
-	Quit = false;
 	eventHandle();
 
 	// Cleanup the event handlers.
