@@ -26,6 +26,7 @@
 #include "play.h"
 #include "event.h"
 #include "cmd.h" // for getkey()
+#include "foogod.h"  // for foogod_get_y()
 
 #include <string.h>
 #include <stdarg.h>
@@ -74,9 +75,12 @@ int consoleInit(void)
         int i;
 
         Console.screenRect.x = CONS_X;
-        Console.screenRect.y = CONS_Y;
         Console.screenRect.w = CONS_W;
-        Console.screenRect.h = CONS_H;
+
+        console_set_y(foogod_get_y() + FOOGOD_H);
+        // Console.screenRect.y = foogod_get_y() + FOOGOD_H;
+        // Console.screenRect.h = CONS_H;
+
         memset(Console.buf, 0, CONSOLE_MAX_MSG_SZ + 1);
         Console.cursor = Console.buf;
         Console.room = CONSOLE_MAX_MSG_SZ;
@@ -363,7 +367,7 @@ void consoleBackspace(int n)
 
 void consoleNewline(void)
 {
-        Console.line = (Console.line + 1) % CONS_LINES;
+  Console.line = (Console.line + 1) % CONS_LINES;
 
         if (Console.numLines < (CONS_LINES))
                 Console.numLines++;
@@ -425,4 +429,11 @@ void console_set_y(int y)
 int console_get_y(void)
 {
         return Console.screenRect.y;
+}
+
+int console_max_lines (void) {
+        int max_lines;
+
+        max_lines = Console.screenRect.h / ASCII_H;
+        return min(Console.numLines, max_lines);
 }

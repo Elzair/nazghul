@@ -41,7 +41,7 @@
 #define N_CHARS_PER_LINE (STAT_W / ASCII_W)
 #define Y_TO_LINE(Y) (((Y) - Status.screenRect.y) / TILE_H)
 #define N_LINES Status.numLines	/* (STAT_H / TILE_H) */
-#define SHORT_H STAT_H
+
 #define TALL_H (SCREEN_H - 4 * BORDER_H - 6 * ASCII_H)
 
 /*
@@ -107,9 +107,11 @@ static void switch_to_tall_mode(void)
 		return;
 
 	Status.screenRect.h = TALL_H;
-	Status.numLines = Status.screenRect.h / LINE_H;
-	foogod_set_y(foogod_get_y() + (TALL_H - SHORT_H));
-	console_set_y(console_get_y() + (TALL_H - SHORT_H));
+	Status.numLines     = Status.screenRect.h / LINE_H;
+
+    foogod_set_y(STAT_Y + Status.screenRect.h + BORDER_H);
+    console_set_y(foogod_get_y() + FOOGOD_H);
+
 	foogodRepaint();
 	consoleRepaint();
 	screen_repaint_frame();
@@ -117,13 +119,18 @@ static void switch_to_tall_mode(void)
 
 static void switch_to_short_mode(void)
 {
-	if (Status.screenRect.h == SHORT_H)
+  int num_in_party = player_party->getSize();
+  int party_height = (num_in_party * TILE_H);
+
+	if (Status.screenRect.h == party_height)
 		return;
 
-	Status.screenRect.h = SHORT_H;
-	Status.numLines = Status.screenRect.h / LINE_H;
-	foogod_set_y(foogod_get_y() - (TALL_H - SHORT_H));
-	console_set_y(console_get_y() - (TALL_H - SHORT_H));
+    Status.numLines     = num_in_party;
+    Status.screenRect.h = party_height;
+
+    foogod_set_y(STAT_Y + Status.screenRect.h + BORDER_H);
+    console_set_y(foogod_get_y() + FOOGOD_H);
+
 	foogodRepaint();
 	consoleRepaint();
 	screen_repaint_frame();
@@ -136,7 +143,7 @@ void statusInit()
 	Status.screenRect.x = STAT_X;
 	Status.screenRect.y = STAT_Y;
 	Status.screenRect.w = STAT_W;
-	Status.screenRect.h = SHORT_H;
+	Status.screenRect.h = player_party->getSize() * TILE_H;
 
 	Status.titleRect.x = STAT_X;
 	Status.titleRect.y = 0;

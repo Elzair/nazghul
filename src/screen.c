@@ -36,7 +36,7 @@
 #define N_SHADERS 3
 #define MAX_SHADER (N_SHADERS - 1)
 #define SHADER_W STAT_W
-#define SHADER_H STAT_H
+#define SHADER_H STAT_H_MAX
 #define HIGHLIGHT_THICKNESS 2
 
 static SDL_Surface *Screen;

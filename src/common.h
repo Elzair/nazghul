@@ -67,6 +67,7 @@ extern "C" {
 #define STAT_W  (SCREEN_W - STAT_X - BORDER_W)
 //#define STAT_H  (MAP_H - FOOGOD_H - BORDER_H)
 #define STAT_H  (3 * TILE_H)
+#define STAT_H_MAX (16 * TILE_H)
 
 #define FOOGOD_X STAT_X
 #define FOOGOD_Y (STAT_Y + STAT_H + BORDER_H)

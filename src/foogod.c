@@ -20,6 +20,7 @@
 // gmcnutt@users.sourceforge.net
 //
 #include "foogod.h"
+#include "status.h"  // for status_get_h()
 #include "screen.h"
 #include "common.h"
 #include "player.h"
@@ -45,44 +46,45 @@ void foogodAdvanceTurns(void)
 void foogodInit(void)
 {
 	Foogod.screenRect.x = FOOGOD_X;
-	Foogod.screenRect.y = FOOGOD_Y;
 	Foogod.screenRect.w = FOOGOD_W;
-	Foogod.screenRect.h = FOOGOD_H;
+	// Foogod.screenRect.y = STAT_Y + Status.screenRect.h + BORDER_H;
+	// Foogod.screenRect.h = FOOGOD_H;
+    foogod_set_y(STAT_Y + status_get_h() + BORDER_H);
 
 	// turns
 	Foogod.turnRect.x = FOOGOD_X;
-	Foogod.turnRect.y = FOOGOD_Y;
+	Foogod.turnRect.y = foogod_get_y();
 	Foogod.turnRect.w = FOOGOD_W / 3;
 	Foogod.turnRect.h = ASCII_H;
 
 	// food
 	Foogod.foodRect.x = FOOGOD_X;
-	Foogod.foodRect.y = FOOGOD_Y + ASCII_H;
+	Foogod.foodRect.y = foogod_get_y() + ASCII_H;
 	Foogod.foodRect.w = FOOGOD_W / 3;
 	Foogod.foodRect.h = ASCII_H;
 
 	// hull
 	Foogod.hullRect.x = FOOGOD_X + FOOGOD_W / 3;
-	Foogod.hullRect.y = FOOGOD_Y;
+	Foogod.hullRect.y = foogod_get_y();
 	Foogod.hullRect.w = FOOGOD_W / 3;
 	Foogod.hullRect.h = ASCII_H;
 
         // effects
 	Foogod.effectsRect.x = FOOGOD_X + FOOGOD_W / 3;
-	Foogod.effectsRect.y = FOOGOD_Y + ASCII_H;
+	Foogod.effectsRect.y = foogod_get_y() + ASCII_H;
 	Foogod.effectsRect.w = FOOGOD_W / 3;
 	Foogod.effectsRect.h = ASCII_H;
 
 	// gold
 	Foogod.goldRect.w = FOOGOD_W / 3;
 	Foogod.goldRect.x = FOOGOD_X + FOOGOD_W - FOOGOD_W / 3;
-	Foogod.goldRect.y = FOOGOD_Y;
+	Foogod.goldRect.y = foogod_get_y();
 	Foogod.goldRect.h = ASCII_H;
 
 	// mode
 	Foogod.combatRect.w = FOOGOD_W / 3;
 	Foogod.combatRect.x = FOOGOD_X + FOOGOD_W - FOOGOD_W / 3;
-	Foogod.combatRect.y = FOOGOD_Y + ASCII_H;
+	Foogod.combatRect.y = foogod_get_y() + ASCII_H;
 	Foogod.combatRect.h = ASCII_H;
 }
 
