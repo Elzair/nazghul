@@ -1029,16 +1029,198 @@
 (kern-mk-sprite 's_bolt_glowing_blue          ss_dg_weapons 2 252 #f 0)  ;; TODO: fix this sprite
 (kern-mk-sprite 's_bolt_glowing_purple        ss_dg_weapons 2 254 #f 0)  ;; TODO: fix this sprite
 
-; (kern-mk-sprite 's_       ss_dg_weapons 1   0 #f 0)
+
+;; ss_dg_tools
+(kern-mk-sprite 's_chest_small_wooden_closed   ss_dg_tools 1   0 #f 0)
+(kern-mk-sprite 's_chest_large_wooden_closed   ss_dg_tools 1   1 #f 0)
+(kern-mk-sprite 's_chest_small_metal_1_closed  ss_dg_tools 1   2 #f 0)
+(kern-mk-sprite 's_chest_large_metal_1_closed  ss_dg_tools 1   3 #f 0)
+(kern-mk-sprite 's_chest_small_metal_2_closed  ss_dg_tools 1   4 #f 0)
+(kern-mk-sprite 's_chest_small_metal_2_closed  ss_dg_tools 1   5 #f 0)
+(kern-mk-sprite 's_chest_wooden_broken         ss_dg_tools 1   6 #f 0)
+
+(kern-mk-sprite 's_metal_spike       ss_dg_tools 1   7 #f 0)
+
+(kern-mk-sprite 's_pickaxe_1         ss_dg_tools 1   8 #f 0)
+(kern-mk-sprite 's_pickaxe_2         ss_dg_tools 1   9 #f 0)
+(kern-mk-sprite 's_pickaxe_3         ss_dg_tools 1  10 #f 0)
+(kern-mk-sprite 's_pickaxe_4         ss_dg_tools 1  11 #f 0)
+
+(kern-mk-sprite 's_shovel_1          ss_dg_tools 1  12 #f 0)
+(kern-mk-sprite 's_shovel_2          ss_dg_tools 1  13 #f 0)
+(kern-mk-sprite 's_shovel_3          ss_dg_tools 1  14 #f 0)
+(kern-mk-sprite 's_shovel_4          ss_dg_tools 1  15 #f 0)
+
+(kern-mk-sprite 's_lamp_1_unlit      ss_dg_tools 1  16 #f 0)
+(kern-mk-sprite 's_lamp_1_lit        ss_dg_tools 3  17 #f 0)
+(kern-mk-sprite 's_lamp_2_unlit      ss_dg_tools 1  20 #f 0)
+(kern-mk-sprite 's_lamp_2_lit        ss_dg_tools 2  21 #f 0)
+(kern-mk-sprite 's_torch_unlit       ss_dg_tools 1  24 #f 0)
+(kern-mk-sprite 's_torch_lit         ss_dg_tools 3  25 #f 0)
+
+(kern-mk-sprite 's_rod_1             ss_dg_tools 1  48 #f 0)
+(kern-mk-sprite 's_rod_2             ss_dg_tools 1  49 #f 0)
+(kern-mk-sprite 's_rod_3             ss_dg_tools 1  50 #f 0)
+(kern-mk-sprite 's_rod_4             ss_dg_tools 1  51 #f 0)
+(kern-mk-sprite 's_rod_5             ss_dg_tools 1  52 #f 0)
+(kern-mk-sprite 's_rod_6             ss_dg_tools 1  53 #f 0)
+(kern-mk-sprite 's_rod_7             ss_dg_tools 1  54 #f 0)
+(kern-mk-sprite 's_rod_8             ss_dg_tools 1  55 #f 0)
+(kern-mk-sprite 's_rod_9             ss_dg_tools 1  56 #f 0)
+
+(kern-mk-sprite 's_wand_1            ss_dg_tools 1  64 #f 0)
+(kern-mk-sprite 's_wand_2            ss_dg_tools 1  65 #f 0)
+(kern-mk-sprite 's_wand_3            ss_dg_tools 1  66 #f 0)
+(kern-mk-sprite 's_wand_4            ss_dg_tools 1  67 #f 0)
+(kern-mk-sprite 's_wand_5            ss_dg_tools 1  68 #f 0)
+(kern-mk-sprite 's_wand_6            ss_dg_tools 1  69 #f 0)
+(kern-mk-sprite 's_wand_7            ss_dg_tools 1  70 #f 0)
+(kern-mk-sprite 's_wand_8            ss_dg_tools 1  71 #f 0)
+(kern-mk-sprite 's_wand_9            ss_dg_tools 1  72 #f 0)
+
+(kern-mk-sprite 's_staff_1           ss_dg_tools 1  80 #f 0)
+(kern-mk-sprite 's_staff_2           ss_dg_tools 1  81 #f 0)
+(kern-mk-sprite 's_staff_3           ss_dg_tools 1  82 #f 0)
+(kern-mk-sprite 's_staff_4           ss_dg_tools 1  83 #f 0)
+(kern-mk-sprite 's_staff_5           ss_dg_tools 1  84 #f 0)
+(kern-mk-sprite 's_staff_6           ss_dg_tools 1  85 #f 0)
+(kern-mk-sprite 's_staff_7           ss_dg_tools 1  86 #f 0)
 
 
+;; ss_dg_readable (scrolls, books, maps, etc)
+(kern-mk-sprite 's_scroll_magic_1            ss_dg_readable 1   0 #f 0)
+(kern-mk-sprite 's_scroll_magic_2            ss_dg_readable 1   1 #f 0)
+(kern-mk-sprite 's_scroll_magic_3            ss_dg_readable 1   2 #f 0)
+(kern-mk-sprite 's_scroll_magic_4            ss_dg_readable 1   3 #f 0)
+(kern-mk-sprite 's_scroll_magic_5            ss_dg_readable 1   4 #f 0)
+(kern-mk-sprite 's_scroll_magic_6            ss_dg_readable 1   5 #f 0)
+(kern-mk-sprite 's_scroll_magic_7            ss_dg_readable 1   6 #f 0)
+(kern-mk-sprite 's_scroll_magic_8            ss_dg_readable 1   7 #f 0)
+
+(kern-mk-sprite 's_scroll_spell_1            ss_dg_readable 1  16 #f 0)
+(kern-mk-sprite 's_scroll_spell_2            ss_dg_readable 1  17 #f 0)
+(kern-mk-sprite 's_scroll_spell_3            ss_dg_readable 1  18 #f 0)
+(kern-mk-sprite 's_scroll_spell_4            ss_dg_readable 1  19 #f 0)
+(kern-mk-sprite 's_scroll_spell_5            ss_dg_readable 1  20 #f 0)
+(kern-mk-sprite 's_scroll_spell_6            ss_dg_readable 1  21 #f 0)
+(kern-mk-sprite 's_scroll_spell_7            ss_dg_readable 1  22 #f 0)
+(kern-mk-sprite 's_scroll_spell_8            ss_dg_readable 1  23 #f 0)
+(kern-mk-sprite 's_scroll_spell_9            ss_dg_readable 1  24 #f 0)
+(kern-mk-sprite 's_scroll_spell_10           ss_dg_readable 1  25 #f 0)
+(kern-mk-sprite 's_scroll_spell_11           ss_dg_readable 1  26 #f 0)
+(kern-mk-sprite 's_scroll_spell_12           ss_dg_readable 1  27 #f 0)
+(kern-mk-sprite 's_scroll_spell_13           ss_dg_readable 1  28 #f 0)
+(kern-mk-sprite 's_scroll_spell_14           ss_dg_readable 1  29 #f 0)
+(kern-mk-sprite 's_scroll_spell_15           ss_dg_readable 1  30 #f 0)
+(kern-mk-sprite 's_scroll_spell_16           ss_dg_readable 1  31 #f 0)
+
+(kern-mk-sprite 's_scroll_spell_17           ss_dg_readable 1  32 #f 0)
+(kern-mk-sprite 's_scroll_spell_18           ss_dg_readable 1  33 #f 0)
+(kern-mk-sprite 's_scroll_spell_19           ss_dg_readable 1  34 #f 0)
+(kern-mk-sprite 's_scroll_spell_20           ss_dg_readable 1  35 #f 0)
+(kern-mk-sprite 's_scroll_spell_21           ss_dg_readable 1  36 #f 0)
+(kern-mk-sprite 's_scroll_spell_22           ss_dg_readable 1  37 #f 0)
+(kern-mk-sprite 's_scroll_spell_23           ss_dg_readable 1  38 #f 0)
+(kern-mk-sprite 's_scroll_spell_24           ss_dg_readable 1  39 #f 0)
+(kern-mk-sprite 's_scroll_spell_25           ss_dg_readable 1  40 #f 0)
+(kern-mk-sprite 's_scroll_spell_26           ss_dg_readable 1  41 #f 0)
+(kern-mk-sprite 's_scroll_spell_27           ss_dg_readable 1  42 #f 0)
+(kern-mk-sprite 's_scroll_spell_28           ss_dg_readable 1  43 #f 0)
+(kern-mk-sprite 's_scroll_spell_29           ss_dg_readable 1  44 #f 0)
+(kern-mk-sprite 's_scroll_spell_30           ss_dg_readable 1  45 #f 0)
+(kern-mk-sprite 's_scroll_spell_31           ss_dg_readable 1  46 #f 0)
+(kern-mk-sprite 's_scroll_spell_32           ss_dg_readable 1  47 #f 0)
+
+(kern-mk-sprite 's_scroll_spell_33           ss_dg_readable 1  48 #f 0)
+(kern-mk-sprite 's_scroll_spell_34           ss_dg_readable 1  49 #f 0)
+(kern-mk-sprite 's_scroll_spell_35           ss_dg_readable 1  50 #f 0)
+(kern-mk-sprite 's_scroll_spell_36           ss_dg_readable 1  51 #f 0)
+(kern-mk-sprite 's_scroll_spell_37           ss_dg_readable 1  52 #f 0)
+(kern-mk-sprite 's_scroll_spell_38           ss_dg_readable 1  53 #f 0)
+(kern-mk-sprite 's_scroll_spell_39           ss_dg_readable 1  54 #f 0)
+(kern-mk-sprite 's_scroll_spell_40           ss_dg_readable 1  55 #f 0)
+(kern-mk-sprite 's_scroll_spell_41           ss_dg_readable 1  56 #f 0)
+(kern-mk-sprite 's_scroll_spell_42           ss_dg_readable 1  57 #f 0)
+
+(kern-mk-sprite 's_book_red_1                ss_dg_readable 1  64 #f 0)
+(kern-mk-sprite 's_book_red_2                ss_dg_readable 1  65 #f 0)
+(kern-mk-sprite 's_book_red_3                ss_dg_readable 1  66 #f 0)
+(kern-mk-sprite 's_book_red_4                ss_dg_readable 1  67 #f 0)
+
+(kern-mk-sprite 's_book_red_glowing_1        ss_dg_readable 2  68 #f 0)
+(kern-mk-sprite 's_book_red_glowing_2        ss_dg_readable 2  70 #f 0)
+(kern-mk-sprite 's_book_red_glowing_3        ss_dg_readable 2  72 #f 0)
+(kern-mk-sprite 's_book_red_glowing_4        ss_dg_readable 2  74 #f 0)
+(kern-mk-sprite 's_book_red_glowing_5        ss_dg_readable 2  76 #f 0)
+
+(kern-mk-sprite 's_book_grey_1               ss_dg_readable 1  80 #f 0)
+(kern-mk-sprite 's_book_grey_2               ss_dg_readable 1  81 #f 0)
+(kern-mk-sprite 's_book_grey_3               ss_dg_readable 1  82 #f 0)
+(kern-mk-sprite 's_book_grey_4               ss_dg_readable 1  83 #f 0)
+
+(kern-mk-sprite 's_book_grey_glowing_1       ss_dg_readable 2  84 #f 0)
+(kern-mk-sprite 's_book_grey_glowing_2       ss_dg_readable 2  86 #f 0)
+(kern-mk-sprite 's_book_grey_glowing_3       ss_dg_readable 2  88 #f 0)
+(kern-mk-sprite 's_book_grey_glowing_4       ss_dg_readable 2  90 #f 0)
+(kern-mk-sprite 's_book_grey_glowing_5       ss_dg_readable 2  92 #f 0)
+
+(kern-mk-sprite 's_book_blue_1               ss_dg_readable 1  96 #f 0)
+(kern-mk-sprite 's_book_blue_2               ss_dg_readable 1  97 #f 0)
+(kern-mk-sprite 's_book_blue_3               ss_dg_readable 1  98 #f 0)
+(kern-mk-sprite 's_book_blue_4               ss_dg_readable 1  99 #f 0)
+
+(kern-mk-sprite 's_book_blue_glowing_1       ss_dg_readable 2 100 #f 0)
+(kern-mk-sprite 's_book_blue_glowing_2       ss_dg_readable 2 102 #f 0)
+(kern-mk-sprite 's_book_blue_glowing_3       ss_dg_readable 2 104 #f 0)
+(kern-mk-sprite 's_book_blue_glowing_4       ss_dg_readable 2 106 #f 0)
+(kern-mk-sprite 's_book_blue_glowing_5       ss_dg_readable 2 108 #f 0)
+
+(kern-mk-sprite 's_book_green_1              ss_dg_readable 1 112 #f 0)
+(kern-mk-sprite 's_book_green_2              ss_dg_readable 1 113 #f 0)
+(kern-mk-sprite 's_book_green_3              ss_dg_readable 1 114 #f 0)
+(kern-mk-sprite 's_book_green_4              ss_dg_readable 1 115 #f 0)
+
+(kern-mk-sprite 's_book_green_glowing_1      ss_dg_readable 2 116 #f 0)
+(kern-mk-sprite 's_book_green_glowing_2      ss_dg_readable 2 118 #f 0)
+(kern-mk-sprite 's_book_green_glowing_3      ss_dg_readable 2 120 #f 0)
+(kern-mk-sprite 's_book_green_glowing_4      ss_dg_readable 2 122 #f 0)
+(kern-mk-sprite 's_book_green_glowing_5      ss_dg_readable 2 124 #f 0)
+
+(kern-mk-sprite 's_book_orange_1             ss_dg_readable 1 128 #f 0)
+(kern-mk-sprite 's_book_orange_2             ss_dg_readable 1 129 #f 0)
+(kern-mk-sprite 's_book_orange_3             ss_dg_readable 1 130 #f 0)
+(kern-mk-sprite 's_book_orange_4             ss_dg_readable 1 131 #f 0)
+
+(kern-mk-sprite 's_book_orange_glowing_1     ss_dg_readable 2 132 #f 0)
+(kern-mk-sprite 's_book_orange_glowing_2     ss_dg_readable 2 134 #f 0)
+(kern-mk-sprite 's_book_orange_glowing_3     ss_dg_readable 2 136 #f 0)
+(kern-mk-sprite 's_book_orange_glowing_4     ss_dg_readable 2 138 #f 0)
+(kern-mk-sprite 's_book_orange_glowing_5     ss_dg_readable 2 140 #f 0)
+
+(kern-mk-sprite 's_book_lite_blue_1          ss_dg_readable 1 144 #f 0)
+(kern-mk-sprite 's_book_lite_blue_2          ss_dg_readable 1 145 #f 0)
+(kern-mk-sprite 's_book_lite_blue_3          ss_dg_readable 1 146 #f 0)
+(kern-mk-sprite 's_book_lite_blue_4          ss_dg_readable 1 147 #f 0)
+
+(kern-mk-sprite 's_book_lite_blue_glowing_1  ss_dg_readable 2 148 #f 0)
+(kern-mk-sprite 's_book_lite_blue_glowing_2  ss_dg_readable 2 150 #f 0)
+(kern-mk-sprite 's_book_lite_blue_glowing_3  ss_dg_readable 2 152 #f 0)
+(kern-mk-sprite 's_book_lite_blue_glowing_4  ss_dg_readable 2 154 #f 0)
+(kern-mk-sprite 's_book_lite_blue_glowing_5  ss_dg_readable 2 156 #f 0)
+
+(kern-mk-sprite 's_book_pink_1               ss_dg_readable 1 160 #f 0)
+(kern-mk-sprite 's_book_pink_2               ss_dg_readable 1 161 #f 0)
+(kern-mk-sprite 's_book_pink_3               ss_dg_readable 1 162 #f 0)
+(kern-mk-sprite 's_book_pink_4               ss_dg_readable 1 163 #f 0)
+
+(kern-mk-sprite 's_book_pink_glowing_1       ss_dg_readable 2 164 #f 0)
+(kern-mk-sprite 's_book_pink_glowing_2       ss_dg_readable 2 166 #f 0)
+(kern-mk-sprite 's_book_pink_glowing_3       ss_dg_readable 2 168 #f 0)
+(kern-mk-sprite 's_book_pink_glowing_4       ss_dg_readable 2 170 #f 0)
+(kern-mk-sprite 's_book_pink_glowing_5       ss_dg_readable 2 172 #f 0)
 
 
-
-
-
-
-
+; (kern-mk-sprite 's_       ss_dg_ 1   0 #f 0)
 
 
 

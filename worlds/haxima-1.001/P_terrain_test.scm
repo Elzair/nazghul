@@ -3,7 +3,7 @@
 
 
 (kern-mk-map 
- 'm_sprite_gallery_1 19 58 pal_expanded
+ 'm_sprite_gallery_1 19 92 pal_expanded
   ;                               1  1  1  1  1  1  1  1  1
   ; 0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5  6  7  8
  (list
@@ -65,6 +65,39 @@
   "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
   "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
   "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .T .O .O .L .S .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .R .E .A .D .A .B .L .E .. .. .I .T .E .M .S xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx xx "
   "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
   "xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx "
   ))
@@ -466,6 +499,196 @@
                 (list (kern-mk-obj t_bolt_glowing_green   1) 14 46)  ;; TODO: fix sprite (moving 1 px L/R)
                 (list (kern-mk-obj t_bolt_glowing_blue    1) 15 46)  ;; TODO: fix sprite (color)
                 (list (kern-mk-obj t_bolt_glowing_purple  1) 16 46)  ;; TODO: fix sprite (color, moving)
+
+
+                ;; ss_dg_tools
+                (list (kern-mk-obj t_chest_small_wooden_closed  1) 1 55)
+                (list (kern-mk-obj t_chest_large_wooden_closed  1) 2 55)
+                (list (kern-mk-obj t_chest_small_metal_1_closed 1) 3 55)
+                (list (kern-mk-obj t_chest_large_metal_1_closed 1) 4 55)
+                (list (kern-mk-obj t_chest_small_metal_2_closed 1) 5 55)
+                (list (kern-mk-obj t_chest_small_metal_2_closed 1) 6 55)
+                (list (kern-mk-obj t_chest_wooden_broken        1) 7 55)
+
+                (list (kern-mk-obj t_metal_spike                1) 9 55)
+
+                (list (kern-mk-obj t_pickaxe_1    1)  1 56)
+                (list (kern-mk-obj t_pickaxe_2    1)  2 56)
+                (list (kern-mk-obj t_pickaxe_3    1)  3 56)
+                (list (kern-mk-obj t_pickaxe_4    1)  4 56)
+
+                (list (kern-mk-obj t_shovel_1     1)  6 56)
+                (list (kern-mk-obj t_shovel_2     1)  7 56)
+                (list (kern-mk-obj t_shovel_3     1)  8 56)
+                (list (kern-mk-obj t_shovel_4     1)  9 56)
+
+                (list (kern-mk-obj t_lamp_1_unlit 1) 11 56)
+                (list (kern-mk-obj t_lamp_1_lit   1) 12 56)
+                (list (kern-mk-obj t_lamp_2_unlit 1) 13 56)
+                (list (kern-mk-obj t_lamp_2_lit   1) 14 56)
+                (list (kern-mk-obj t_torch_unlit  1) 15 56)
+                (list (kern-mk-obj t_torch_lit    1) 16 56)
+
+                (list (kern-mk-obj t_rod_1   1) 1 57)
+                (list (kern-mk-obj t_rod_2   1) 2 57)
+                (list (kern-mk-obj t_rod_3   1) 3 57)
+                (list (kern-mk-obj t_rod_4   1) 4 57)
+                (list (kern-mk-obj t_rod_5   1) 5 57)
+                (list (kern-mk-obj t_rod_6   1) 6 57)
+                (list (kern-mk-obj t_rod_7   1) 7 57)
+                (list (kern-mk-obj t_rod_8   1) 8 57)
+                (list (kern-mk-obj t_rod_9   1) 9 57)
+
+                (list (kern-mk-obj t_wand_1  1) 1 58)
+                (list (kern-mk-obj t_wand_2  1) 2 58)
+                (list (kern-mk-obj t_wand_3  1) 3 58)
+                (list (kern-mk-obj t_wand_4  1) 4 58)
+                (list (kern-mk-obj t_wand_5  1) 5 58)
+                (list (kern-mk-obj t_wand_6  1) 6 58)
+                (list (kern-mk-obj t_wand_7  1) 7 58)
+                (list (kern-mk-obj t_wand_8  1) 8 58)
+                (list (kern-mk-obj t_wand_9  1) 9 58)
+
+                (list (kern-mk-obj t_staff_1 1) 1 59)
+                (list (kern-mk-obj t_staff_2 1) 2 59)
+                (list (kern-mk-obj t_staff_3 1) 3 59)
+                (list (kern-mk-obj t_staff_4 1) 4 59)
+                (list (kern-mk-obj t_staff_5 1) 5 59)
+                (list (kern-mk-obj t_staff_6 1) 6 59)
+                (list (kern-mk-obj t_staff_7 1) 7 59)
+
+
+                ;; ss_dg_readable
+                (list (kern-mk-obj t_scroll_magic_1  1)  1  73)
+                (list (kern-mk-obj t_scroll_magic_2  1)  2  73)
+                (list (kern-mk-obj t_scroll_magic_3  1)  3  73)
+                (list (kern-mk-obj t_scroll_magic_4  1)  4  73)
+                (list (kern-mk-obj t_scroll_magic_5  1)  5  73)
+                (list (kern-mk-obj t_scroll_magic_6  1)  6  73)
+                (list (kern-mk-obj t_scroll_magic_7  1)  7  73)
+                (list (kern-mk-obj t_scroll_magic_8  1)  8  73)
+
+                (list (kern-mk-obj t_scroll_spell_1  1)  1  74)
+                (list (kern-mk-obj t_scroll_spell_2  1)  2  74)
+                (list (kern-mk-obj t_scroll_spell_3  1)  3  74)
+                (list (kern-mk-obj t_scroll_spell_4  1)  4  74)
+                (list (kern-mk-obj t_scroll_spell_5  1)  5  74)
+                (list (kern-mk-obj t_scroll_spell_6  1)  6  74)
+                (list (kern-mk-obj t_scroll_spell_7  1)  7  74)
+                (list (kern-mk-obj t_scroll_spell_8  1)  8  74)
+                (list (kern-mk-obj t_scroll_spell_9  1)  9  74)
+                (list (kern-mk-obj t_scroll_spell_10 1) 10  74)
+                (list (kern-mk-obj t_scroll_spell_11 1) 11  74)
+                (list (kern-mk-obj t_scroll_spell_12 1) 12  74)
+                (list (kern-mk-obj t_scroll_spell_13 1) 13  74)
+                (list (kern-mk-obj t_scroll_spell_14 1) 14  74)
+                (list (kern-mk-obj t_scroll_spell_15 1) 15  74)
+                (list (kern-mk-obj t_scroll_spell_16 1) 16  74)
+
+                (list (kern-mk-obj t_scroll_spell_17 1)  1  75)
+                (list (kern-mk-obj t_scroll_spell_18 1)  2  75)
+                (list (kern-mk-obj t_scroll_spell_19 1)  3  75)
+                (list (kern-mk-obj t_scroll_spell_20 1)  4  75)
+                (list (kern-mk-obj t_scroll_spell_21 1)  5  75)
+                (list (kern-mk-obj t_scroll_spell_22 1)  6  75)
+                (list (kern-mk-obj t_scroll_spell_23 1)  7  75)
+                (list (kern-mk-obj t_scroll_spell_24 1)  8  75)
+                (list (kern-mk-obj t_scroll_spell_25 1)  9  75)
+                (list (kern-mk-obj t_scroll_spell_26 1) 10  75)
+                (list (kern-mk-obj t_scroll_spell_27 1) 11  75)
+                (list (kern-mk-obj t_scroll_spell_28 1) 12  75)
+                (list (kern-mk-obj t_scroll_spell_29 1) 13  75)
+                (list (kern-mk-obj t_scroll_spell_30 1) 14  75)
+                (list (kern-mk-obj t_scroll_spell_31 1) 15  75)
+                (list (kern-mk-obj t_scroll_spell_32 1) 16  75)
+
+                (list (kern-mk-obj t_scroll_spell_33 1)  1  76)
+                (list (kern-mk-obj t_scroll_spell_34 1)  2  76)
+                (list (kern-mk-obj t_scroll_spell_35 1)  3  76)
+                (list (kern-mk-obj t_scroll_spell_36 1)  4  76)
+                (list (kern-mk-obj t_scroll_spell_37 1)  5  76)
+                (list (kern-mk-obj t_scroll_spell_38 1)  6  76)
+                (list (kern-mk-obj t_scroll_spell_39 1)  7  76)
+                (list (kern-mk-obj t_scroll_spell_40 1)  8  76)
+                (list (kern-mk-obj t_scroll_spell_41 1)  9  76)
+                (list (kern-mk-obj t_scroll_spell_42 1) 10  76)
+
+                (list (kern-mk-obj t_book_red_1 1)  1  77)
+                (list (kern-mk-obj t_book_red_2 1)  2  77)
+                (list (kern-mk-obj t_book_red_3 1)  3  77)
+                (list (kern-mk-obj t_book_red_4 1)  4  77)
+
+                (list (kern-mk-obj t_book_red_glowing_1 1)  6  77)
+                (list (kern-mk-obj t_book_red_glowing_2 1)  7  77)
+                (list (kern-mk-obj t_book_red_glowing_3 1)  8  77)
+                (list (kern-mk-obj t_book_red_glowing_4 1)  9  77)
+                (list (kern-mk-obj t_book_red_glowing_5 1) 10  77)
+
+                (list (kern-mk-obj t_book_grey_1 1)  1  78)
+                (list (kern-mk-obj t_book_grey_2 1)  2  78)
+                (list (kern-mk-obj t_book_grey_3 1)  3  78)
+                (list (kern-mk-obj t_book_grey_4 1)  4  78)
+
+                (list (kern-mk-obj t_book_grey_glowing_1 1)  6  78)
+                (list (kern-mk-obj t_book_grey_glowing_2 1)  7  78)
+                (list (kern-mk-obj t_book_grey_glowing_3 1)  8  78)
+                (list (kern-mk-obj t_book_grey_glowing_4 1)  9  78)
+                (list (kern-mk-obj t_book_grey_glowing_5 1) 10  78)
+
+                (list (kern-mk-obj t_book_blue_1 1)  1  79)
+                (list (kern-mk-obj t_book_blue_2 1)  2  79)
+                (list (kern-mk-obj t_book_blue_3 1)  3  79)
+                (list (kern-mk-obj t_book_blue_4 1)  4  79)
+
+                (list (kern-mk-obj t_book_blue_glowing_1 1)  6  79)
+                (list (kern-mk-obj t_book_blue_glowing_2 1)  7  79)
+                (list (kern-mk-obj t_book_blue_glowing_3 1)  8  79)
+                (list (kern-mk-obj t_book_blue_glowing_4 1)  9  79)
+                (list (kern-mk-obj t_book_blue_glowing_5 1) 10  79)
+
+                (list (kern-mk-obj t_book_green_1 1)  1  80)
+                (list (kern-mk-obj t_book_green_2 1)  2  80)
+                (list (kern-mk-obj t_book_green_3 1)  3  80)
+                (list (kern-mk-obj t_book_green_4 1)  4  80)
+
+                (list (kern-mk-obj t_book_green_glowing_1 1)  6  80)
+                (list (kern-mk-obj t_book_green_glowing_2 1)  7  80)
+                (list (kern-mk-obj t_book_green_glowing_3 1)  8  80)
+                (list (kern-mk-obj t_book_green_glowing_4 1)  9  80)
+                (list (kern-mk-obj t_book_green_glowing_5 1) 10  80)
+
+                (list (kern-mk-obj t_book_orange_1 1)  1  81)
+                (list (kern-mk-obj t_book_orange_2 1)  2  81)
+                (list (kern-mk-obj t_book_orange_3 1)  3  81)
+                (list (kern-mk-obj t_book_orange_4 1)  4  81)
+
+                (list (kern-mk-obj t_book_orange_glowing_1 1)  6  81)
+                (list (kern-mk-obj t_book_orange_glowing_2 1)  7  81)
+                (list (kern-mk-obj t_book_orange_glowing_3 1)  8  81)
+                (list (kern-mk-obj t_book_orange_glowing_4 1)  9  81)
+                (list (kern-mk-obj t_book_orange_glowing_5 1) 10  81)
+
+                (list (kern-mk-obj t_book_lite_blue_1 1)  1  82)
+                (list (kern-mk-obj t_book_lite_blue_2 1)  2  82)
+                (list (kern-mk-obj t_book_lite_blue_3 1)  3  82)
+                (list (kern-mk-obj t_book_lite_blue_4 1)  4  82)
+
+                (list (kern-mk-obj t_book_lite_blue_glowing_1 1)  6  82)
+                (list (kern-mk-obj t_book_lite_blue_glowing_2 1)  7  82)
+                (list (kern-mk-obj t_book_lite_blue_glowing_3 1)  8  82)
+                (list (kern-mk-obj t_book_lite_blue_glowing_4 1)  9  82)
+                (list (kern-mk-obj t_book_lite_blue_glowing_5 1) 10  82)
+
+                (list (kern-mk-obj t_book_pink_1 1)  1  83)
+                (list (kern-mk-obj t_book_pink_2 1)  2  83)
+                (list (kern-mk-obj t_book_pink_3 1)  3  83)
+                (list (kern-mk-obj t_book_pink_4 1)  4  83)
+
+                (list (kern-mk-obj t_book_pink_glowing_1 1)  6  83)
+                (list (kern-mk-obj t_book_pink_glowing_2 1)  7  83)
+                (list (kern-mk-obj t_book_pink_glowing_3 1)  8  83)
+                (list (kern-mk-obj t_book_pink_glowing_4 1)  9  83)
+                (list (kern-mk-obj t_book_pink_glowing_5 1) 10  83)
 
 
                 

@@ -378,3 +378,200 @@
 
 (mk-scenery-type 't_bolt_glowing_blue   "glowing blue bolt"   s_bolt_glowing_blue)   ;; fix sprite
 (mk-scenery-type 't_bolt_glowing_purple "glowing purple bolt" s_bolt_glowing_purple) ;; fix sprite
+
+
+;; ss_dg_tools
+(mk-scenery-type 't_chest_small_wooden_closed   "small wooden chest (closed)"  s_chest_small_wooden_closed)
+(mk-scenery-type 't_chest_large_wooden_closed   "large wooden chest (closed)"  s_chest_large_wooden_closed)
+(mk-scenery-type 't_chest_small_metal_1_closed  "small metal chest (closed)"   s_chest_small_metal_1_closed)
+(mk-scenery-type 't_chest_large_metal_1_closed  "large metal chest (closed)"   s_chest_large_metal_1_closed)
+(mk-scenery-type 't_chest_small_metal_2_closed  "small metal chest (closed)"   s_chest_small_metal_2_closed)
+(mk-scenery-type 't_chest_small_metal_2_closed  "small metal chest (closed)"   s_chest_small_metal_2_closed)
+(mk-scenery-type 't_chest_wooden_broken         "broken wooden chest"          s_chest_wooden_broken)
+
+(mk-scenery-type 't_metal_spike   "metal spike" s_metal_spike)
+
+(mk-scenery-type 't_pickaxe_1     "pickaxe" s_pickaxe_1)
+(mk-scenery-type 't_pickaxe_2     "pickaxe" s_pickaxe_2)
+(mk-scenery-type 't_pickaxe_3     "pickaxe" s_pickaxe_3)
+(mk-scenery-type 't_pickaxe_4     "pickaxe" s_pickaxe_4)
+
+(mk-scenery-type 't_shovel_1      "shovel"  s_shovel_1)
+(mk-scenery-type 't_shovel_2      "shovel"  s_shovel_2)
+(mk-scenery-type 't_shovel_3      "shovel"  s_shovel_3)
+(mk-scenery-type 't_shovel_4      "shovel"  s_shovel_4)
+
+(mk-scenery-type 't_lamp_1_unlit  "lamp (unlit)"  s_lamp_1_unlit)
+(mk-scenery-type 't_lamp_1_lit    "lamp (lit)"    s_lamp_1_lit)
+(mk-scenery-type 't_lamp_2_unlit  "lamp (unlit)"  s_lamp_2_unlit)
+(mk-scenery-type 't_lamp_2_lit    "lamp (lit)"    s_lamp_2_lit)
+(mk-scenery-type 't_torch_unlit   "torch (unlit)" s_torch_unlit)
+(mk-scenery-type 't_torch_lit     "torch (lit)"   s_torch_lit)
+
+(mk-scenery-type 't_rod_1  "rod" s_rod_1)
+(mk-scenery-type 't_rod_2  "rod" s_rod_2)
+(mk-scenery-type 't_rod_3  "rod" s_rod_3)
+(mk-scenery-type 't_rod_4  "rod" s_rod_4)
+(mk-scenery-type 't_rod_5  "rod" s_rod_5)
+(mk-scenery-type 't_rod_6  "rod" s_rod_6)
+(mk-scenery-type 't_rod_7  "rod" s_rod_7)
+(mk-scenery-type 't_rod_8  "rod" s_rod_8)
+(mk-scenery-type 't_rod_9  "rod" s_rod_9)
+
+(mk-scenery-type 't_wand_1  "wand" s_wand_1)
+(mk-scenery-type 't_wand_2  "wand" s_wand_2)
+(mk-scenery-type 't_wand_3  "wand" s_wand_3)
+(mk-scenery-type 't_wand_4  "wand" s_wand_4)
+(mk-scenery-type 't_wand_5  "wand" s_wand_5)
+(mk-scenery-type 't_wand_6  "wand" s_wand_6)
+(mk-scenery-type 't_wand_7  "wand" s_wand_7)
+(mk-scenery-type 't_wand_8  "wand" s_wand_8)
+(mk-scenery-type 't_wand_9  "wand" s_wand_9)
+
+(mk-scenery-type 't_staff_1  "staff" s_staff_1)
+(mk-scenery-type 't_staff_2  "staff" s_staff_2)
+(mk-scenery-type 't_staff_3  "staff" s_staff_3)
+(mk-scenery-type 't_staff_4  "staff" s_staff_4)
+(mk-scenery-type 't_staff_5  "staff" s_staff_5)
+(mk-scenery-type 't_staff_6  "staff" s_staff_6)
+(mk-scenery-type 't_staff_7  "staff" s_staff_7)
+
+
+;; ss_dg_readable
+(mk-scenery-type 't_scroll_magic_1  "scroll"       s_scroll_magic_1)
+(mk-scenery-type 't_scroll_magic_2  "scroll"       s_scroll_magic_2)
+(mk-scenery-type 't_scroll_magic_3  "scroll"       s_scroll_magic_3)
+(mk-scenery-type 't_scroll_magic_4  "scroll"       s_scroll_magic_4)
+(mk-scenery-type 't_scroll_magic_5  "scroll"       s_scroll_magic_5)
+(mk-scenery-type 't_scroll_magic_6  "scroll"       s_scroll_magic_6)
+(mk-scenery-type 't_scroll_magic_7  "scroll"       s_scroll_magic_7)
+(mk-scenery-type 't_scroll_magic_8  "scroll"       s_scroll_magic_8)
+
+(mk-scenery-type 't_scroll_spell_1  "spell scroll" s_scroll_spell_1)
+(mk-scenery-type 't_scroll_spell_2  "spell scroll" s_scroll_spell_2)
+(mk-scenery-type 't_scroll_spell_3  "spell scroll" s_scroll_spell_3)
+(mk-scenery-type 't_scroll_spell_4  "spell scroll" s_scroll_spell_4)
+(mk-scenery-type 't_scroll_spell_5  "spell scroll" s_scroll_spell_5)
+(mk-scenery-type 't_scroll_spell_6  "spell scroll" s_scroll_spell_6)
+(mk-scenery-type 't_scroll_spell_7  "spell scroll" s_scroll_spell_7)
+(mk-scenery-type 't_scroll_spell_8  "spell scroll" s_scroll_spell_8)
+(mk-scenery-type 't_scroll_spell_9  "spell scroll" s_scroll_spell_9)
+(mk-scenery-type 't_scroll_spell_10 "spell scroll" s_scroll_spell_10)
+(mk-scenery-type 't_scroll_spell_11 "spell scroll" s_scroll_spell_11)
+(mk-scenery-type 't_scroll_spell_12 "spell scroll" s_scroll_spell_12)
+(mk-scenery-type 't_scroll_spell_13 "spell scroll" s_scroll_spell_13)
+(mk-scenery-type 't_scroll_spell_14 "spell scroll" s_scroll_spell_14)
+(mk-scenery-type 't_scroll_spell_15 "spell scroll" s_scroll_spell_15)
+(mk-scenery-type 't_scroll_spell_16 "spell scroll" s_scroll_spell_16)
+
+(mk-scenery-type 't_scroll_spell_17 "spell scroll" s_scroll_spell_17)
+(mk-scenery-type 't_scroll_spell_18 "spell scroll" s_scroll_spell_18)
+(mk-scenery-type 't_scroll_spell_19 "spell scroll" s_scroll_spell_19)
+(mk-scenery-type 't_scroll_spell_20 "spell scroll" s_scroll_spell_20)
+(mk-scenery-type 't_scroll_spell_21 "spell scroll" s_scroll_spell_21)
+(mk-scenery-type 't_scroll_spell_22 "spell scroll" s_scroll_spell_22)
+(mk-scenery-type 't_scroll_spell_23 "spell scroll" s_scroll_spell_23)
+(mk-scenery-type 't_scroll_spell_24 "spell scroll" s_scroll_spell_24)
+(mk-scenery-type 't_scroll_spell_25 "spell scroll" s_scroll_spell_25)
+(mk-scenery-type 't_scroll_spell_26 "spell scroll" s_scroll_spell_26)
+(mk-scenery-type 't_scroll_spell_27 "spell scroll" s_scroll_spell_27)
+(mk-scenery-type 't_scroll_spell_28 "spell scroll" s_scroll_spell_28)
+(mk-scenery-type 't_scroll_spell_29 "spell scroll" s_scroll_spell_29)
+(mk-scenery-type 't_scroll_spell_30 "spell scroll" s_scroll_spell_30)
+(mk-scenery-type 't_scroll_spell_31 "spell scroll" s_scroll_spell_31)
+(mk-scenery-type 't_scroll_spell_32 "spell scroll" s_scroll_spell_32)
+
+(mk-scenery-type 't_scroll_spell_33 "spell scroll" s_scroll_spell_33)
+(mk-scenery-type 't_scroll_spell_34 "spell scroll" s_scroll_spell_34)
+(mk-scenery-type 't_scroll_spell_35 "spell scroll" s_scroll_spell_35)
+(mk-scenery-type 't_scroll_spell_36 "spell scroll" s_scroll_spell_36)
+(mk-scenery-type 't_scroll_spell_37 "spell scroll" s_scroll_spell_37)
+(mk-scenery-type 't_scroll_spell_38 "spell scroll" s_scroll_spell_38)
+(mk-scenery-type 't_scroll_spell_39 "spell scroll" s_scroll_spell_39)
+(mk-scenery-type 't_scroll_spell_40 "spell scroll" s_scroll_spell_40)
+(mk-scenery-type 't_scroll_spell_41 "spell scroll" s_scroll_spell_41)
+(mk-scenery-type 't_scroll_spell_42 "spell scroll" s_scroll_spell_42)
+
+(mk-scenery-type 't_book_red_1 "book" s_book_red_1)
+(mk-scenery-type 't_book_red_2 "book" s_book_red_2)
+(mk-scenery-type 't_book_red_3 "book" s_book_red_3)
+(mk-scenery-type 't_book_red_4 "book" s_book_red_4)
+
+(mk-scenery-type 't_book_red_glowing_1 "magical book" s_book_red_glowing_1)
+(mk-scenery-type 't_book_red_glowing_2 "magical book" s_book_red_glowing_2)
+(mk-scenery-type 't_book_red_glowing_3 "magical book" s_book_red_glowing_3)
+(mk-scenery-type 't_book_red_glowing_4 "magical book" s_book_red_glowing_4)
+(mk-scenery-type 't_book_red_glowing_5 "magical book" s_book_red_glowing_5)
+
+(mk-scenery-type 't_book_grey_1 "book" s_book_grey_1)
+(mk-scenery-type 't_book_grey_2 "book" s_book_grey_2)
+(mk-scenery-type 't_book_grey_3 "book" s_book_grey_3)
+(mk-scenery-type 't_book_grey_4 "book" s_book_grey_4)
+
+(mk-scenery-type 't_book_grey_glowing_1 "magical book" s_book_grey_glowing_1)
+(mk-scenery-type 't_book_grey_glowing_2 "magical book" s_book_grey_glowing_2)
+(mk-scenery-type 't_book_grey_glowing_3 "magical book" s_book_grey_glowing_3)
+(mk-scenery-type 't_book_grey_glowing_4 "magical book" s_book_grey_glowing_4)
+(mk-scenery-type 't_book_grey_glowing_5 "magical book" s_book_grey_glowing_5)
+
+(mk-scenery-type 't_book_blue_1 "book" s_book_blue_1)
+(mk-scenery-type 't_book_blue_2 "book" s_book_blue_2)
+(mk-scenery-type 't_book_blue_3 "book" s_book_blue_3)
+(mk-scenery-type 't_book_blue_4 "book" s_book_blue_4)
+
+(mk-scenery-type 't_book_blue_glowing_1 "magical book" s_book_blue_glowing_1)
+(mk-scenery-type 't_book_blue_glowing_2 "magical book" s_book_blue_glowing_2)
+(mk-scenery-type 't_book_blue_glowing_3 "magical book" s_book_blue_glowing_3)
+(mk-scenery-type 't_book_blue_glowing_4 "magical book" s_book_blue_glowing_4)
+(mk-scenery-type 't_book_blue_glowing_5 "magical book" s_book_blue_glowing_5)
+
+(mk-scenery-type 't_book_green_1 "book" s_book_green_1)
+(mk-scenery-type 't_book_green_2 "book" s_book_green_2)
+(mk-scenery-type 't_book_green_3 "book" s_book_green_3)
+(mk-scenery-type 't_book_green_4 "book" s_book_green_4)
+
+(mk-scenery-type 't_book_green_glowing_1 "magical book" s_book_green_glowing_1)
+(mk-scenery-type 't_book_green_glowing_2 "magical book" s_book_green_glowing_2)
+(mk-scenery-type 't_book_green_glowing_3 "magical book" s_book_green_glowing_3)
+(mk-scenery-type 't_book_green_glowing_4 "magical book" s_book_green_glowing_4)
+(mk-scenery-type 't_book_green_glowing_5 "magical book" s_book_green_glowing_5)
+
+(mk-scenery-type 't_book_orange_1 "book" s_book_orange_1)
+(mk-scenery-type 't_book_orange_2 "book" s_book_orange_2)
+(mk-scenery-type 't_book_orange_3 "book" s_book_orange_3)
+(mk-scenery-type 't_book_orange_4 "book" s_book_orange_4)
+
+(mk-scenery-type 't_book_orange_glowing_1 "magical book" s_book_orange_glowing_1)
+(mk-scenery-type 't_book_orange_glowing_2 "magical book" s_book_orange_glowing_2)
+(mk-scenery-type 't_book_orange_glowing_3 "magical book" s_book_orange_glowing_3)
+(mk-scenery-type 't_book_orange_glowing_4 "magical book" s_book_orange_glowing_4)
+(mk-scenery-type 't_book_orange_glowing_5 "magical book" s_book_orange_glowing_5)
+
+(mk-scenery-type 't_book_lite_blue_1 "book" s_book_lite_blue_1)
+(mk-scenery-type 't_book_lite_blue_2 "book" s_book_lite_blue_2)
+(mk-scenery-type 't_book_lite_blue_3 "book" s_book_lite_blue_3)
+(mk-scenery-type 't_book_lite_blue_4 "book" s_book_lite_blue_4)
+
+(mk-scenery-type 't_book_lite_blue_glowing_1 "magical book" s_book_lite_blue_glowing_1)
+(mk-scenery-type 't_book_lite_blue_glowing_2 "magical book" s_book_lite_blue_glowing_2)
+(mk-scenery-type 't_book_lite_blue_glowing_3 "magical book" s_book_lite_blue_glowing_3)
+(mk-scenery-type 't_book_lite_blue_glowing_4 "magical book" s_book_lite_blue_glowing_4)
+(mk-scenery-type 't_book_lite_blue_glowing_5 "magical book" s_book_lite_blue_glowing_5)
+
+(mk-scenery-type 't_book_pink_1 "book" s_book_pink_1)
+(mk-scenery-type 't_book_pink_2 "book" s_book_pink_2)
+(mk-scenery-type 't_book_pink_3 "book" s_book_pink_3)
+(mk-scenery-type 't_book_pink_4 "book" s_book_pink_4)
+
+(mk-scenery-type 't_book_pink_glowing_1 "magical book" s_book_pink_glowing_1)
+(mk-scenery-type 't_book_pink_glowing_2 "magical book" s_book_pink_glowing_2)
+(mk-scenery-type 't_book_pink_glowing_3 "magical book" s_book_pink_glowing_3)
+(mk-scenery-type 't_book_pink_glowing_4 "magical book" s_book_pink_glowing_4)
+(mk-scenery-type 't_book_pink_glowing_5 "magical book" s_book_pink_glowing_5)
+
+
+
+
+
+
+;; eof
