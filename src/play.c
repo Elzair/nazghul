@@ -2180,7 +2180,7 @@ bool cmdCastSpell(class Character * pc)
 			cmdwin_print("no effect!");
 			break;
 		case Spell::teleport_failed:
-			cmdwin_print("qfailed!");
+			cmdwin_print("teleport failed!");
 			break;
 		case Spell::unknown_failure:
 		default:
