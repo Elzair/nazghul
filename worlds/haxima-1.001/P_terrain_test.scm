@@ -3,7 +3,7 @@
 
 
 (kern-mk-map 
- 'm_sprite_gallery_1 19 110 pal_expanded
+ 'm_sprite_gallery_1 19 128 pal_expanded
   ;                               1  1  1  1  1  1  1  1  1
   ; 0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5  6  7  8
  (list
@@ -115,6 +115,24 @@
   "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
   "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
   "xx .. .. .C .O .M .M .O .D .I .T .I .E .S .. .. .. .. xx "
+  "xx xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+  "xx .. .. .P .O .T .I .O .N .S .. .. .. .. .. .. .. .. xx "
   "xx xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx xx "
   "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
   "xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx "
@@ -757,6 +775,249 @@
                 (list (kern-mk-obj t_gems_red        1)  9 95)
                 (list (kern-mk-obj t_gems_blue       1) 10 95)
                 (list (kern-mk-obj t_gems_assorted   1) 11 95)
+
+
+                ;; ss_kg_potions_1 (empty flasks, bubbling potions)
+                (list (kern-mk-obj t_kg_potion_empty_1 1) 01 109)
+                (list (kern-mk-obj t_kg_potion_empty_2 1) 02 109)
+                (list (kern-mk-obj t_kg_potion_empty_3 1) 03 109)
+                (list (kern-mk-obj t_kg_potion_empty_4 1) 04 109)
+                (list (kern-mk-obj t_kg_potion_empty_5 1) 05 109)
+                (list (kern-mk-obj t_kg_potion_empty_6 1) 06 109)
+
+                (list (kern-mk-obj t_kg_potion_bubbling_pink   1) 01 110)
+                (list (kern-mk-obj t_kg_potion_bubbling_red    1) 02 110)
+                (list (kern-mk-obj t_kg_potion_bubbling_purple 1) 03 110)
+                (list (kern-mk-obj t_kg_potion_bubbling_yellow 1) 04 110)
+                (list (kern-mk-obj t_kg_potion_bubbling_green  1) 05 110)
+                (list (kern-mk-obj t_kg_potion_bubbling_blue   1) 06 110)
+
+
+                ;; ss_kg_potions_2 (6 shapes, 7 colors, full/partial/dregs, plus dull colors)
+                                        ; pink
+                (list (kern-mk-obj t_kg_potion_pink_f33_1 1) 01 111)
+                (list (kern-mk-obj t_kg_potion_pink_f23_1 1) 02 111)
+                (list (kern-mk-obj t_kg_potion_pink_f13_1 1) 03 111)
+
+                (list (kern-mk-obj t_kg_potion_pink_f33_2 1) 04 111)
+                (list (kern-mk-obj t_kg_potion_pink_f23_2 1) 05 111)
+                (list (kern-mk-obj t_kg_potion_pink_f13_2 1) 06 111)
+
+                (list (kern-mk-obj t_kg_potion_pink_f33_3 1) 07 111)
+                (list (kern-mk-obj t_kg_potion_pink_f23_3 1) 08 111)
+                (list (kern-mk-obj t_kg_potion_pink_f13_3 1) 09 111)
+
+                (list (kern-mk-obj t_kg_potion_pink_f33_4 1) 10 111)
+                (list (kern-mk-obj t_kg_potion_pink_f23_4 1) 11 111)
+                (list (kern-mk-obj t_kg_potion_pink_f13_4 1) 12 111)
+
+                (list (kern-mk-obj t_kg_potion_pink_f33_5 1) 13 111)
+                (list (kern-mk-obj t_kg_potion_pink_f23_5 1) 14 111)
+                (list (kern-mk-obj t_kg_potion_pink_f13_5 1) 15 111)
+
+                (list (kern-mk-obj t_kg_potion_pink_f33_6 1) 16 111)
+                (list (kern-mk-obj t_kg_potion_pink_f23_6 1) 17 111)
+                (list (kern-mk-obj t_kg_potion_pink_f13_6 1) 18 111)
+
+                                        ; red
+                (list (kern-mk-obj t_kg_potion_red_f33_1 1) 01 112)
+                (list (kern-mk-obj t_kg_potion_red_f23_1 1) 02 112)
+                (list (kern-mk-obj t_kg_potion_red_f13_1 1) 03 112)
+
+                (list (kern-mk-obj t_kg_potion_red_f33_2 1) 04 112)
+                (list (kern-mk-obj t_kg_potion_red_f23_2 1) 05 112)
+                (list (kern-mk-obj t_kg_potion_red_f13_2 1) 06 112)
+
+                (list (kern-mk-obj t_kg_potion_red_f33_3 1) 07 112)
+                (list (kern-mk-obj t_kg_potion_red_f23_3 1) 08 112)
+                (list (kern-mk-obj t_kg_potion_red_f13_3 1) 09 112)
+
+                (list (kern-mk-obj t_kg_potion_red_f33_4 1) 10 112)
+                (list (kern-mk-obj t_kg_potion_red_f23_4 1) 11 112)
+                (list (kern-mk-obj t_kg_potion_red_f13_4 1) 12 112)
+
+                (list (kern-mk-obj t_kg_potion_red_f33_5 1) 13 112)
+                (list (kern-mk-obj t_kg_potion_red_f23_5 1) 14 112)
+                (list (kern-mk-obj t_kg_potion_red_f13_5 1) 15 112)
+
+                (list (kern-mk-obj t_kg_potion_red_f33_6 1) 16 112)
+                (list (kern-mk-obj t_kg_potion_red_f23_6 1) 17 112)
+                (list (kern-mk-obj t_kg_potion_red_f13_6 1) 18 112)
+
+                                        ; green
+                (list (kern-mk-obj t_kg_potion_green_f33_1 1) 01 113)
+                (list (kern-mk-obj t_kg_potion_green_f23_1 1) 02 113)
+                (list (kern-mk-obj t_kg_potion_green_f13_1 1) 03 113)
+
+                (list (kern-mk-obj t_kg_potion_green_f33_2 1) 04 113)
+                (list (kern-mk-obj t_kg_potion_green_f23_2 1) 05 113)
+                (list (kern-mk-obj t_kg_potion_green_f13_2 1) 06 113)
+
+                (list (kern-mk-obj t_kg_potion_green_f33_3 1) 07 113)
+                (list (kern-mk-obj t_kg_potion_green_f23_3 1) 08 113)
+                (list (kern-mk-obj t_kg_potion_green_f13_3 1) 09 113)
+
+                (list (kern-mk-obj t_kg_potion_green_f33_4 1) 10 113)
+                (list (kern-mk-obj t_kg_potion_green_f23_4 1) 11 113)
+                (list (kern-mk-obj t_kg_potion_green_f13_4 1) 12 113)
+
+                (list (kern-mk-obj t_kg_potion_green_f33_5 1) 13 113)
+                (list (kern-mk-obj t_kg_potion_green_f23_5 1) 14 113)
+                (list (kern-mk-obj t_kg_potion_green_f13_5 1) 15 113)
+
+                (list (kern-mk-obj t_kg_potion_green_f33_6 1) 16 113)
+                (list (kern-mk-obj t_kg_potion_green_f23_6 1) 17 113)
+                (list (kern-mk-obj t_kg_potion_green_f13_6 1) 18 113)
+
+                                        ; deep_blue
+                (list (kern-mk-obj t_kg_potion_deep_blue_f33_1 1) 01 114)
+                (list (kern-mk-obj t_kg_potion_deep_blue_f23_1 1) 02 114)
+                (list (kern-mk-obj t_kg_potion_deep_blue_f13_1 1) 03 114)
+
+                (list (kern-mk-obj t_kg_potion_deep_blue_f33_2 1) 04 114)
+                (list (kern-mk-obj t_kg_potion_deep_blue_f23_2 1) 05 114)
+                (list (kern-mk-obj t_kg_potion_deep_blue_f13_2 1) 06 114)
+
+                (list (kern-mk-obj t_kg_potion_deep_blue_f33_3 1) 07 114)
+                (list (kern-mk-obj t_kg_potion_deep_blue_f23_3 1) 08 114)
+                (list (kern-mk-obj t_kg_potion_deep_blue_f13_3 1) 09 114)
+
+                (list (kern-mk-obj t_kg_potion_deep_blue_f33_4 1) 10 114)
+                (list (kern-mk-obj t_kg_potion_deep_blue_f23_4 1) 11 114)
+                (list (kern-mk-obj t_kg_potion_deep_blue_f13_4 1) 12 114)
+
+                (list (kern-mk-obj t_kg_potion_deep_blue_f33_5 1) 13 114)
+                (list (kern-mk-obj t_kg_potion_deep_blue_f23_5 1) 14 114)
+                (list (kern-mk-obj t_kg_potion_deep_blue_f13_5 1) 15 114)
+
+                (list (kern-mk-obj t_kg_potion_deep_blue_f33_6 1) 16 114)
+                (list (kern-mk-obj t_kg_potion_deep_blue_f23_6 1) 17 114)
+                (list (kern-mk-obj t_kg_potion_deep_blue_f13_6 1) 18 114)
+
+                                        ; light_blue
+                (list (kern-mk-obj t_kg_potion_light_blue_f33_1 1) 01 115)
+                (list (kern-mk-obj t_kg_potion_light_blue_f23_1 1) 02 115)
+                (list (kern-mk-obj t_kg_potion_light_blue_f13_1 1) 03 115)
+
+                (list (kern-mk-obj t_kg_potion_light_blue_f33_2 1) 04 115)
+                (list (kern-mk-obj t_kg_potion_light_blue_f23_2 1) 05 115)
+                (list (kern-mk-obj t_kg_potion_light_blue_f13_2 1) 06 115)
+
+                (list (kern-mk-obj t_kg_potion_light_blue_f33_3 1) 07 115)
+                (list (kern-mk-obj t_kg_potion_light_blue_f23_3 1) 08 115)
+                (list (kern-mk-obj t_kg_potion_light_blue_f13_3 1) 09 115)
+
+                (list (kern-mk-obj t_kg_potion_light_blue_f33_4 1) 10 115)
+                (list (kern-mk-obj t_kg_potion_light_blue_f23_4 1) 11 115)
+                (list (kern-mk-obj t_kg_potion_light_blue_f13_4 1) 12 115)
+
+                (list (kern-mk-obj t_kg_potion_light_blue_f33_5 1) 13 115)
+                (list (kern-mk-obj t_kg_potion_light_blue_f23_5 1) 14 115)
+                (list (kern-mk-obj t_kg_potion_light_blue_f13_5 1) 15 115)
+
+                (list (kern-mk-obj t_kg_potion_light_blue_f33_6 1) 16 115)
+                (list (kern-mk-obj t_kg_potion_light_blue_f23_6 1) 17 115)
+                (list (kern-mk-obj t_kg_potion_light_blue_f13_6 1) 18 115)
+
+                                        ; yellow
+                (list (kern-mk-obj t_kg_potion_yellow_f33_1 1) 01 116)
+                (list (kern-mk-obj t_kg_potion_yellow_f23_1 1) 02 116)
+                (list (kern-mk-obj t_kg_potion_yellow_f13_1 1) 03 116)
+
+                (list (kern-mk-obj t_kg_potion_yellow_f33_2 1) 04 116)
+                (list (kern-mk-obj t_kg_potion_yellow_f23_2 1) 05 116)
+                (list (kern-mk-obj t_kg_potion_yellow_f13_2 1) 06 116)
+
+                (list (kern-mk-obj t_kg_potion_yellow_f33_3 1) 07 116)
+                (list (kern-mk-obj t_kg_potion_yellow_f23_3 1) 08 116)
+                (list (kern-mk-obj t_kg_potion_yellow_f13_3 1) 09 116)
+
+                (list (kern-mk-obj t_kg_potion_yellow_f33_4 1) 10 116)
+                (list (kern-mk-obj t_kg_potion_yellow_f23_4 1) 11 116)
+                (list (kern-mk-obj t_kg_potion_yellow_f13_4 1) 12 116)
+
+                (list (kern-mk-obj t_kg_potion_yellow_f33_5 1) 13 116)
+                (list (kern-mk-obj t_kg_potion_yellow_f23_5 1) 14 116)
+                (list (kern-mk-obj t_kg_potion_yellow_f13_5 1) 15 116)
+
+                (list (kern-mk-obj t_kg_potion_yellow_f33_6 1) 16 116)
+                (list (kern-mk-obj t_kg_potion_yellow_f23_6 1) 17 116)
+                (list (kern-mk-obj t_kg_potion_yellow_f13_6 1) 18 116)
+
+                                        ; blue
+                (list (kern-mk-obj t_kg_potion_blue_f33_1 1) 01 117)
+                (list (kern-mk-obj t_kg_potion_blue_f23_1 1) 02 117)
+                (list (kern-mk-obj t_kg_potion_blue_f13_1 1) 03 117)
+
+                (list (kern-mk-obj t_kg_potion_blue_f33_2 1) 04 117)
+                (list (kern-mk-obj t_kg_potion_blue_f23_2 1) 05 117)
+                (list (kern-mk-obj t_kg_potion_blue_f13_2 1) 06 117)
+
+                (list (kern-mk-obj t_kg_potion_blue_f33_3 1) 07 117)
+                (list (kern-mk-obj t_kg_potion_blue_f23_3 1) 08 117)
+                (list (kern-mk-obj t_kg_potion_blue_f13_3 1) 09 117)
+
+                (list (kern-mk-obj t_kg_potion_blue_f33_4 1) 10 117)
+                (list (kern-mk-obj t_kg_potion_blue_f23_4 1) 11 117)
+                (list (kern-mk-obj t_kg_potion_blue_f13_4 1) 12 117)
+
+                (list (kern-mk-obj t_kg_potion_blue_f33_5 1) 13 117)
+                (list (kern-mk-obj t_kg_potion_blue_f23_5 1) 14 117)
+                (list (kern-mk-obj t_kg_potion_blue_f13_5 1) 15 117)
+
+                (list (kern-mk-obj t_kg_potion_blue_f33_6 1) 16 117)
+                (list (kern-mk-obj t_kg_potion_blue_f23_6 1) 17 117)
+                (list (kern-mk-obj t_kg_potion_blue_f13_6 1) 18 117)
+
+                                        ; dull purple
+                (list (kern-mk-obj t_kg_potion_dull_purple_1 1) 01 118)
+                (list (kern-mk-obj t_kg_potion_dull_purple_2 1) 02 118)
+                (list (kern-mk-obj t_kg_potion_dull_purple_3 1) 03 118)
+                (list (kern-mk-obj t_kg_potion_dull_purple_4 1) 04 118)
+                (list (kern-mk-obj t_kg_potion_dull_purple_5 1) 05 118)
+                (list (kern-mk-obj t_kg_potion_dull_purple_6 1) 06 118)
+                                        ; brown
+                (list (kern-mk-obj t_kg_potion_brown_1 1) 01 119)
+                (list (kern-mk-obj t_kg_potion_brown_2 1) 02 119)
+                (list (kern-mk-obj t_kg_potion_brown_3 1) 03 119)
+                (list (kern-mk-obj t_kg_potion_brown_4 1) 04 119)
+                (list (kern-mk-obj t_kg_potion_brown_5 1) 05 119)
+                (list (kern-mk-obj t_kg_potion_brown_6 1) 06 119)
+                                        ; dull green
+                (list (kern-mk-obj t_kg_potion_dull_green_1 1) 01 120)
+                (list (kern-mk-obj t_kg_potion_dull_green_2 1) 02 120)
+                (list (kern-mk-obj t_kg_potion_dull_green_3 1) 03 120)
+                (list (kern-mk-obj t_kg_potion_dull_green_4 1) 04 120)
+                (list (kern-mk-obj t_kg_potion_dull_green_5 1) 05 120)
+                (list (kern-mk-obj t_kg_potion_dull_green_6 1) 06 120)
+                                        ; dull dark_blue
+                (list (kern-mk-obj t_kg_potion_dull_dark_blue_1 1) 01 121)
+                (list (kern-mk-obj t_kg_potion_dull_dark_blue_2 1) 02 121)
+                (list (kern-mk-obj t_kg_potion_dull_dark_blue_3 1) 03 121)
+                (list (kern-mk-obj t_kg_potion_dull_dark_blue_4 1) 04 121)
+                (list (kern-mk-obj t_kg_potion_dull_dark_blue_5 1) 05 121)
+                (list (kern-mk-obj t_kg_potion_dull_dark_blue_6 1) 06 121)
+                                        ; dull light_blue
+                (list (kern-mk-obj t_kg_potion_dull_light_blue_1 1) 01 122)
+                (list (kern-mk-obj t_kg_potion_dull_light_blue_2 1) 02 122)
+                (list (kern-mk-obj t_kg_potion_dull_light_blue_3 1) 03 122)
+                (list (kern-mk-obj t_kg_potion_dull_light_blue_4 1) 04 122)
+                (list (kern-mk-obj t_kg_potion_dull_light_blue_5 1) 05 122)
+                (list (kern-mk-obj t_kg_potion_dull_light_blue_6 1) 06 122)
+                                        ; dull yellow
+                (list (kern-mk-obj t_kg_potion_dull_yellow_1 1) 01 123)
+                (list (kern-mk-obj t_kg_potion_dull_yellow_2 1) 02 123)
+                (list (kern-mk-obj t_kg_potion_dull_yellow_3 1) 03 123)
+                (list (kern-mk-obj t_kg_potion_dull_yellow_4 1) 04 123)
+                (list (kern-mk-obj t_kg_potion_dull_yellow_5 1) 05 123)
+                (list (kern-mk-obj t_kg_potion_dull_yellow_6 1) 06 123)
+                                        ; dull blue
+                (list (kern-mk-obj t_kg_potion_dull_blue_1 1) 01 124)
+                (list (kern-mk-obj t_kg_potion_dull_blue_2 1) 02 124)
+                (list (kern-mk-obj t_kg_potion_dull_blue_3 1) 03 124)
+                (list (kern-mk-obj t_kg_potion_dull_blue_4 1) 04 124)
+                (list (kern-mk-obj t_kg_potion_dull_blue_5 1) 05 124)
+                (list (kern-mk-obj t_kg_potion_dull_blue_6 1) 06 124)
 
 
 

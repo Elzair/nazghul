@@ -38,4 +38,4 @@
 (kern-mk-sprite-set 'ss_kg_roads         32 32    8  4   0 0   "images/kgabbert/new_roads.png")
 (kern-mk-sprite-set 'ss_kg_terrains      32 32   32  8   0 0   "images/kgabbert/new_terrains.png")
 (kern-mk-sprite-set 'ss_kg_potions_1     32 32    8  6   0 0   "images/kgabbert/kg_potions_1.trans.png")
-(kern-mk-sprite-set 'ss_kg_potions_2     32 32   18 14   0 0   "images/kgabbert/kg_potions_2.trans.png")
+(kern-mk-sprite-set 'ss_kg_potions_2     32 32   14 18   0 0   "images/kgabbert/kg_potions_2.trans.png")

@@ -1275,8 +1275,247 @@
 (kern-mk-sprite 's_gems_assorted    ss_dg_commodities 1 154 #f 0)
 
 
-; (kern-mk-sprite 's_       ss_dg_ 1   0 #f 0)
+;; ss_kg_potions_1 (empty flasks, bubbling potions)
+(kern-mk-sprite 's_kg_potion_empty_1          ss_kg_potions_1 1   0 #f 0)
+(kern-mk-sprite 's_kg_potion_empty_2          ss_kg_potions_1 1   1 #f 0)
+(kern-mk-sprite 's_kg_potion_empty_3          ss_kg_potions_1 1   2 #f 0)
+(kern-mk-sprite 's_kg_potion_empty_4          ss_kg_potions_1 1   3 #f 0)
+(kern-mk-sprite 's_kg_potion_empty_5          ss_kg_potions_1 1   4 #f 0)
+(kern-mk-sprite 's_kg_potion_empty_6          ss_kg_potions_1 1   5 #f 0)
 
+(kern-mk-sprite 's_kg_potion_bubbling_pink    ss_kg_potions_1 3  12 #f 0)
+(kern-mk-sprite 's_kg_potion_bubbling_red     ss_kg_potions_1 3  18 #f 0)
+(kern-mk-sprite 's_kg_potion_bubbling_purple  ss_kg_potions_1 3  24 #f 0)
+(kern-mk-sprite 's_kg_potion_bubbling_yellow  ss_kg_potions_1 3  30 #f 0)
+(kern-mk-sprite 's_kg_potion_bubbling_green   ss_kg_potions_1 3  36 #f 0)
+(kern-mk-sprite 's_kg_potion_bubbling_blue    ss_kg_potions_1 3  42 #f 0)
+
+
+;; ss_kg_potions_2 (6 shapes, 7 colors, fullness(3/3, 2/3, 1/3), plus dull colors)
+; pink
+(kern-mk-sprite 's_kg_potion_pink_f33_1    ss_kg_potions_2 1   0 #f 0)
+(kern-mk-sprite 's_kg_potion_pink_f23_1    ss_kg_potions_2 1   1 #f 0)
+(kern-mk-sprite 's_kg_potion_pink_f13_1    ss_kg_potions_2 1   2 #f 0)
+
+(kern-mk-sprite 's_kg_potion_pink_f33_2    ss_kg_potions_2 1   3 #f 0)
+(kern-mk-sprite 's_kg_potion_pink_f23_2    ss_kg_potions_2 1   4 #f 0)
+(kern-mk-sprite 's_kg_potion_pink_f13_2    ss_kg_potions_2 1   5 #f 0)
+
+(kern-mk-sprite 's_kg_potion_pink_f33_3    ss_kg_potions_2 1   6 #f 0)
+(kern-mk-sprite 's_kg_potion_pink_f23_3    ss_kg_potions_2 1   7 #f 0)
+(kern-mk-sprite 's_kg_potion_pink_f13_3    ss_kg_potions_2 1   8 #f 0)
+
+(kern-mk-sprite 's_kg_potion_pink_f33_4    ss_kg_potions_2 1   9 #f 0)
+(kern-mk-sprite 's_kg_potion_pink_f23_4    ss_kg_potions_2 1  10 #f 0)
+(kern-mk-sprite 's_kg_potion_pink_f13_4    ss_kg_potions_2 1  11 #f 0)
+
+(kern-mk-sprite 's_kg_potion_pink_f33_5    ss_kg_potions_2 1  12 #f 0)
+(kern-mk-sprite 's_kg_potion_pink_f23_5    ss_kg_potions_2 1  13 #f 0)
+(kern-mk-sprite 's_kg_potion_pink_f13_5    ss_kg_potions_2 1  14 #f 0)
+
+(kern-mk-sprite 's_kg_potion_pink_f33_6    ss_kg_potions_2 1  15 #f 0)
+(kern-mk-sprite 's_kg_potion_pink_f23_6    ss_kg_potions_2 1  16 #f 0)
+(kern-mk-sprite 's_kg_potion_pink_f13_6    ss_kg_potions_2 1  17 #f 0)
+
+; red
+(kern-mk-sprite 's_kg_potion_red_f33_1     ss_kg_potions_2 1  18 #f 0)
+(kern-mk-sprite 's_kg_potion_red_f23_1     ss_kg_potions_2 1  19 #f 0)
+(kern-mk-sprite 's_kg_potion_red_f13_1     ss_kg_potions_2 1  20 #f 0)
+
+(kern-mk-sprite 's_kg_potion_red_f33_2     ss_kg_potions_2 1  21 #f 0)
+(kern-mk-sprite 's_kg_potion_red_f23_2     ss_kg_potions_2 1  22 #f 0)
+(kern-mk-sprite 's_kg_potion_red_f13_2     ss_kg_potions_2 1  23 #f 0)
+
+(kern-mk-sprite 's_kg_potion_red_f33_3     ss_kg_potions_2 1  24 #f 0)
+(kern-mk-sprite 's_kg_potion_red_f23_3     ss_kg_potions_2 1  25 #f 0)
+(kern-mk-sprite 's_kg_potion_red_f13_3     ss_kg_potions_2 1  26 #f 0)
+
+(kern-mk-sprite 's_kg_potion_red_f33_4     ss_kg_potions_2 1  27 #f 0)
+(kern-mk-sprite 's_kg_potion_red_f23_4     ss_kg_potions_2 1  28 #f 0)
+(kern-mk-sprite 's_kg_potion_red_f13_4     ss_kg_potions_2 1  29 #f 0)
+
+(kern-mk-sprite 's_kg_potion_red_f33_5     ss_kg_potions_2 1  30 #f 0)
+(kern-mk-sprite 's_kg_potion_red_f23_5     ss_kg_potions_2 1  31 #f 0)
+(kern-mk-sprite 's_kg_potion_red_f13_5     ss_kg_potions_2 1  32 #f 0)
+
+(kern-mk-sprite 's_kg_potion_red_f33_6     ss_kg_potions_2 1  33 #f 0)
+(kern-mk-sprite 's_kg_potion_red_f23_6     ss_kg_potions_2 1  34 #f 0)
+(kern-mk-sprite 's_kg_potion_red_f13_6     ss_kg_potions_2 1  35 #f 0)
+
+; green
+(kern-mk-sprite 's_kg_potion_green_f33_1     ss_kg_potions_2 1  36 #f 0)
+(kern-mk-sprite 's_kg_potion_green_f23_1     ss_kg_potions_2 1  37 #f 0)
+(kern-mk-sprite 's_kg_potion_green_f13_1     ss_kg_potions_2 1  38 #f 0)
+
+(kern-mk-sprite 's_kg_potion_green_f33_2     ss_kg_potions_2 1  39 #f 0)
+(kern-mk-sprite 's_kg_potion_green_f23_2     ss_kg_potions_2 1  40 #f 0)
+(kern-mk-sprite 's_kg_potion_green_f13_2     ss_kg_potions_2 1  41 #f 0)
+
+(kern-mk-sprite 's_kg_potion_green_f33_3     ss_kg_potions_2 1  42 #f 0)
+(kern-mk-sprite 's_kg_potion_green_f23_3     ss_kg_potions_2 1  43 #f 0)
+(kern-mk-sprite 's_kg_potion_green_f13_3     ss_kg_potions_2 1  44 #f 0)
+
+(kern-mk-sprite 's_kg_potion_green_f33_4     ss_kg_potions_2 1  45 #f 0)
+(kern-mk-sprite 's_kg_potion_green_f23_4     ss_kg_potions_2 1  46 #f 0)
+(kern-mk-sprite 's_kg_potion_green_f13_4     ss_kg_potions_2 1  47 #f 0)
+
+(kern-mk-sprite 's_kg_potion_green_f33_5     ss_kg_potions_2 1  48 #f 0)
+(kern-mk-sprite 's_kg_potion_green_f23_5     ss_kg_potions_2 1  49 #f 0)
+(kern-mk-sprite 's_kg_potion_green_f13_5     ss_kg_potions_2 1  50 #f 0)
+
+(kern-mk-sprite 's_kg_potion_green_f33_6     ss_kg_potions_2 1  51 #f 0)
+(kern-mk-sprite 's_kg_potion_green_f23_6     ss_kg_potions_2 1  52 #f 0)
+(kern-mk-sprite 's_kg_potion_green_f13_6     ss_kg_potions_2 1  53 #f 0)
+
+; deep_blue
+(kern-mk-sprite 's_kg_potion_deep_blue_f33_1     ss_kg_potions_2 1  54 #f 0)
+(kern-mk-sprite 's_kg_potion_deep_blue_f23_1     ss_kg_potions_2 1  55 #f 0)
+(kern-mk-sprite 's_kg_potion_deep_blue_f13_1     ss_kg_potions_2 1  56 #f 0)
+
+(kern-mk-sprite 's_kg_potion_deep_blue_f33_2     ss_kg_potions_2 1  57 #f 0)
+(kern-mk-sprite 's_kg_potion_deep_blue_f23_2     ss_kg_potions_2 1  58 #f 0)
+(kern-mk-sprite 's_kg_potion_deep_blue_f13_2     ss_kg_potions_2 1  59 #f 0)
+
+(kern-mk-sprite 's_kg_potion_deep_blue_f33_3     ss_kg_potions_2 1  60 #f 0)
+(kern-mk-sprite 's_kg_potion_deep_blue_f23_3     ss_kg_potions_2 1  61 #f 0)
+(kern-mk-sprite 's_kg_potion_deep_blue_f13_3     ss_kg_potions_2 1  62 #f 0)
+
+(kern-mk-sprite 's_kg_potion_deep_blue_f33_4     ss_kg_potions_2 1  63 #f 0)
+(kern-mk-sprite 's_kg_potion_deep_blue_f23_4     ss_kg_potions_2 1  64 #f 0)
+(kern-mk-sprite 's_kg_potion_deep_blue_f13_4     ss_kg_potions_2 1  65 #f 0)
+
+(kern-mk-sprite 's_kg_potion_deep_blue_f33_5     ss_kg_potions_2 1  66 #f 0)
+(kern-mk-sprite 's_kg_potion_deep_blue_f23_5     ss_kg_potions_2 1  67 #f 0)
+(kern-mk-sprite 's_kg_potion_deep_blue_f13_5     ss_kg_potions_2 1  68 #f 0)
+
+(kern-mk-sprite 's_kg_potion_deep_blue_f33_6     ss_kg_potions_2 1  69 #f 0)
+(kern-mk-sprite 's_kg_potion_deep_blue_f23_6     ss_kg_potions_2 1  70 #f 0)
+(kern-mk-sprite 's_kg_potion_deep_blue_f13_6     ss_kg_potions_2 1  71 #f 0)
+
+; light_blue
+(kern-mk-sprite 's_kg_potion_light_blue_f33_1     ss_kg_potions_2 1  72 #f 0)
+(kern-mk-sprite 's_kg_potion_light_blue_f23_1     ss_kg_potions_2 1  73 #f 0)
+(kern-mk-sprite 's_kg_potion_light_blue_f13_1     ss_kg_potions_2 1  74 #f 0)
+
+(kern-mk-sprite 's_kg_potion_light_blue_f33_2     ss_kg_potions_2 1  75 #f 0)
+(kern-mk-sprite 's_kg_potion_light_blue_f23_2     ss_kg_potions_2 1  76 #f 0)
+(kern-mk-sprite 's_kg_potion_light_blue_f13_2     ss_kg_potions_2 1  77 #f 0)
+
+(kern-mk-sprite 's_kg_potion_light_blue_f33_3     ss_kg_potions_2 1  78 #f 0)
+(kern-mk-sprite 's_kg_potion_light_blue_f23_3     ss_kg_potions_2 1  79 #f 0)
+(kern-mk-sprite 's_kg_potion_light_blue_f13_3     ss_kg_potions_2 1  80 #f 0)
+
+(kern-mk-sprite 's_kg_potion_light_blue_f33_4     ss_kg_potions_2 1  81 #f 0)
+(kern-mk-sprite 's_kg_potion_light_blue_f23_4     ss_kg_potions_2 1  82 #f 0)
+(kern-mk-sprite 's_kg_potion_light_blue_f13_4     ss_kg_potions_2 1  83 #f 0)
+
+(kern-mk-sprite 's_kg_potion_light_blue_f33_5     ss_kg_potions_2 1  84 #f 0)
+(kern-mk-sprite 's_kg_potion_light_blue_f23_5     ss_kg_potions_2 1  85 #f 0)
+(kern-mk-sprite 's_kg_potion_light_blue_f13_5     ss_kg_potions_2 1  86 #f 0)
+
+(kern-mk-sprite 's_kg_potion_light_blue_f33_6     ss_kg_potions_2 1  87 #f 0)
+(kern-mk-sprite 's_kg_potion_light_blue_f23_6     ss_kg_potions_2 1  88 #f 0)
+(kern-mk-sprite 's_kg_potion_light_blue_f13_6     ss_kg_potions_2 1  89 #f 0)
+
+; yellow
+(kern-mk-sprite 's_kg_potion_yellow_f33_1     ss_kg_potions_2 1  90 #f 0)
+(kern-mk-sprite 's_kg_potion_yellow_f23_1     ss_kg_potions_2 1  91 #f 0)
+(kern-mk-sprite 's_kg_potion_yellow_f13_1     ss_kg_potions_2 1  92 #f 0)
+
+(kern-mk-sprite 's_kg_potion_yellow_f33_2     ss_kg_potions_2 1  93 #f 0)
+(kern-mk-sprite 's_kg_potion_yellow_f23_2     ss_kg_potions_2 1  94 #f 0)
+(kern-mk-sprite 's_kg_potion_yellow_f13_2     ss_kg_potions_2 1  95 #f 0)
+
+(kern-mk-sprite 's_kg_potion_yellow_f33_3     ss_kg_potions_2 1  96 #f 0)
+(kern-mk-sprite 's_kg_potion_yellow_f23_3     ss_kg_potions_2 1  97 #f 0)
+(kern-mk-sprite 's_kg_potion_yellow_f13_3     ss_kg_potions_2 1  98 #f 0)
+
+(kern-mk-sprite 's_kg_potion_yellow_f33_4     ss_kg_potions_2 1  99 #f 0)
+(kern-mk-sprite 's_kg_potion_yellow_f23_4     ss_kg_potions_2 1 100 #f 0)
+(kern-mk-sprite 's_kg_potion_yellow_f13_4     ss_kg_potions_2 1 101 #f 0)
+
+(kern-mk-sprite 's_kg_potion_yellow_f33_5     ss_kg_potions_2 1 102 #f 0)
+(kern-mk-sprite 's_kg_potion_yellow_f23_5     ss_kg_potions_2 1 103 #f 0)
+(kern-mk-sprite 's_kg_potion_yellow_f13_5     ss_kg_potions_2 1 104 #f 0)
+
+(kern-mk-sprite 's_kg_potion_yellow_f33_6     ss_kg_potions_2 1 105 #f 0)
+(kern-mk-sprite 's_kg_potion_yellow_f23_6     ss_kg_potions_2 1 106 #f 0)
+(kern-mk-sprite 's_kg_potion_yellow_f13_6     ss_kg_potions_2 1 107 #f 0)
+
+; blue
+(kern-mk-sprite 's_kg_potion_blue_f33_1     ss_kg_potions_2 1 108 #f 0)
+(kern-mk-sprite 's_kg_potion_blue_f23_1     ss_kg_potions_2 1 109 #f 0)
+(kern-mk-sprite 's_kg_potion_blue_f13_1     ss_kg_potions_2 1 110 #f 0)
+
+(kern-mk-sprite 's_kg_potion_blue_f33_2     ss_kg_potions_2 1 111 #f 0)
+(kern-mk-sprite 's_kg_potion_blue_f23_2     ss_kg_potions_2 1 112 #f 0)
+(kern-mk-sprite 's_kg_potion_blue_f13_2     ss_kg_potions_2 1 113 #f 0)
+
+(kern-mk-sprite 's_kg_potion_blue_f33_3     ss_kg_potions_2 1 114 #f 0)
+(kern-mk-sprite 's_kg_potion_blue_f23_3     ss_kg_potions_2 1 115 #f 0)
+(kern-mk-sprite 's_kg_potion_blue_f13_3     ss_kg_potions_2 1 116 #f 0)
+
+(kern-mk-sprite 's_kg_potion_blue_f33_4     ss_kg_potions_2 1 117 #f 0)
+(kern-mk-sprite 's_kg_potion_blue_f23_4     ss_kg_potions_2 1 118 #f 0)
+(kern-mk-sprite 's_kg_potion_blue_f13_4     ss_kg_potions_2 1 119 #f 0)
+
+(kern-mk-sprite 's_kg_potion_blue_f33_5     ss_kg_potions_2 1 120 #f 0)
+(kern-mk-sprite 's_kg_potion_blue_f23_5     ss_kg_potions_2 1 121 #f 0)
+(kern-mk-sprite 's_kg_potion_blue_f13_5     ss_kg_potions_2 1 122 #f 0)
+
+(kern-mk-sprite 's_kg_potion_blue_f33_6     ss_kg_potions_2 1 123 #f 0)
+(kern-mk-sprite 's_kg_potion_blue_f23_6     ss_kg_potions_2 1 124 #f 0)
+(kern-mk-sprite 's_kg_potion_blue_f13_6     ss_kg_potions_2 1 125 #f 0)
+
+; dull purple
+(kern-mk-sprite 's_kg_potion_dull_purple_1      ss_kg_potions_2 1 126 #f 0)
+(kern-mk-sprite 's_kg_potion_dull_purple_2      ss_kg_potions_2 1 129 #f 0)
+(kern-mk-sprite 's_kg_potion_dull_purple_3      ss_kg_potions_2 1 132 #f 0)
+(kern-mk-sprite 's_kg_potion_dull_purple_4      ss_kg_potions_2 1 135 #f 0)
+(kern-mk-sprite 's_kg_potion_dull_purple_5      ss_kg_potions_2 1 138 #f 0)
+(kern-mk-sprite 's_kg_potion_dull_purple_6      ss_kg_potions_2 1 141 #f 0)
+; brown
+(kern-mk-sprite 's_kg_potion_brown_1            ss_kg_potions_2 1 144 #f 0)
+(kern-mk-sprite 's_kg_potion_brown_2            ss_kg_potions_2 1 147 #f 0)
+(kern-mk-sprite 's_kg_potion_brown_3            ss_kg_potions_2 1 150 #f 0)
+(kern-mk-sprite 's_kg_potion_brown_4            ss_kg_potions_2 1 153 #f 0)
+(kern-mk-sprite 's_kg_potion_brown_5            ss_kg_potions_2 1 156 #f 0)
+(kern-mk-sprite 's_kg_potion_brown_6            ss_kg_potions_2 1 159 #f 0)
+; dull green
+(kern-mk-sprite 's_kg_potion_dull_green_1       ss_kg_potions_2 1 162 #f 0)
+(kern-mk-sprite 's_kg_potion_dull_green_2       ss_kg_potions_2 1 165 #f 0)
+(kern-mk-sprite 's_kg_potion_dull_green_3       ss_kg_potions_2 1 168 #f 0)
+(kern-mk-sprite 's_kg_potion_dull_green_4       ss_kg_potions_2 1 171 #f 0)
+(kern-mk-sprite 's_kg_potion_dull_green_5       ss_kg_potions_2 1 174 #f 0)
+(kern-mk-sprite 's_kg_potion_dull_green_6       ss_kg_potions_2 1 177 #f 0)
+; dull dark_blue
+(kern-mk-sprite 's_kg_potion_dull_dark_blue_1   ss_kg_potions_2 1 180 #f 0)
+(kern-mk-sprite 's_kg_potion_dull_dark_blue_2   ss_kg_potions_2 1 183 #f 0)
+(kern-mk-sprite 's_kg_potion_dull_dark_blue_3   ss_kg_potions_2 1 186 #f 0)
+(kern-mk-sprite 's_kg_potion_dull_dark_blue_4   ss_kg_potions_2 1 189 #f 0)
+(kern-mk-sprite 's_kg_potion_dull_dark_blue_5   ss_kg_potions_2 1 192 #f 0)
+(kern-mk-sprite 's_kg_potion_dull_dark_blue_6   ss_kg_potions_2 1 195 #f 0)
+; dull light_blue
+(kern-mk-sprite 's_kg_potion_dull_light_blue_1  ss_kg_potions_2 1 198 #f 0)
+(kern-mk-sprite 's_kg_potion_dull_light_blue_2  ss_kg_potions_2 1 201 #f 0)
+(kern-mk-sprite 's_kg_potion_dull_light_blue_3  ss_kg_potions_2 1 204 #f 0)
+(kern-mk-sprite 's_kg_potion_dull_light_blue_4  ss_kg_potions_2 1 207 #f 0)
+(kern-mk-sprite 's_kg_potion_dull_light_blue_5  ss_kg_potions_2 1 210 #f 0)
+(kern-mk-sprite 's_kg_potion_dull_light_blue_6  ss_kg_potions_2 1 213 #f 0)
+; dull yellow
+(kern-mk-sprite 's_kg_potion_dull_yellow_1      ss_kg_potions_2 1 216 #f 0)
+(kern-mk-sprite 's_kg_potion_dull_yellow_2      ss_kg_potions_2 1 219 #f 0)
+(kern-mk-sprite 's_kg_potion_dull_yellow_3      ss_kg_potions_2 1 222 #f 0)
+(kern-mk-sprite 's_kg_potion_dull_yellow_4      ss_kg_potions_2 1 225 #f 0)
+(kern-mk-sprite 's_kg_potion_dull_yellow_5      ss_kg_potions_2 1 228 #f 0)
+(kern-mk-sprite 's_kg_potion_dull_yellow_6      ss_kg_potions_2 1 231 #f 0)
+; dull blue
+(kern-mk-sprite 's_kg_potion_dull_blue_1        ss_kg_potions_2 1 234 #f 0)
+(kern-mk-sprite 's_kg_potion_dull_blue_2        ss_kg_potions_2 1 237 #f 0)
+(kern-mk-sprite 's_kg_potion_dull_blue_3        ss_kg_potions_2 1 240 #f 0)
+(kern-mk-sprite 's_kg_potion_dull_blue_4        ss_kg_potions_2 1 243 #f 0)
+(kern-mk-sprite 's_kg_potion_dull_blue_5        ss_kg_potions_2 1 246 #f 0)
+(kern-mk-sprite 's_kg_potion_dull_blue_6        ss_kg_potions_2 1 249 #f 0)
 
 
 

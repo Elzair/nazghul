@@ -620,6 +620,249 @@
 (mk-scenery-type 't_gems_assorted   "gems"     s_gems_assorted)
 
 
+;; ss_kg_potions_1 (empty flasks, bubbling potions)
+(mk-scenery-type 't_kg_potion_empty_1 "empty flask" s_kg_potion_empty_1)
+(mk-scenery-type 't_kg_potion_empty_2 "empty flask" s_kg_potion_empty_2)
+(mk-scenery-type 't_kg_potion_empty_3 "empty flask" s_kg_potion_empty_3)
+(mk-scenery-type 't_kg_potion_empty_4 "empty flask" s_kg_potion_empty_4)
+(mk-scenery-type 't_kg_potion_empty_5 "empty flask" s_kg_potion_empty_5)
+(mk-scenery-type 't_kg_potion_empty_6 "empty flask" s_kg_potion_empty_6)
+
+(mk-scenery-type 't_kg_potion_bubbling_pink   "bubbling potion" s_kg_potion_bubbling_pink)
+(mk-scenery-type 't_kg_potion_bubbling_red    "bubbling potion" s_kg_potion_bubbling_red)
+(mk-scenery-type 't_kg_potion_bubbling_purple "bubbling potion" s_kg_potion_bubbling_purple)
+(mk-scenery-type 't_kg_potion_bubbling_yellow "bubbling potion" s_kg_potion_bubbling_yellow)
+(mk-scenery-type 't_kg_potion_bubbling_green  "bubbling potion" s_kg_potion_bubbling_green)
+(mk-scenery-type 't_kg_potion_bubbling_blue   "bubbling potion" s_kg_potion_bubbling_blue)
+
+
+;; ss_kg_potions_2 (6 shapes, 7 colors, full/partial/dregs, plus dull colors)
+; pink
+(mk-scenery-type 't_kg_potion_pink_f33_1  "potion (3/3)" s_kg_potion_pink_f33_1)
+(mk-scenery-type 't_kg_potion_pink_f23_1  "potion (2/3)" s_kg_potion_pink_f23_1)
+(mk-scenery-type 't_kg_potion_pink_f13_1  "potion (1/3)" s_kg_potion_pink_f13_1)
+
+(mk-scenery-type 't_kg_potion_pink_f33_2  "potion (3/3)" s_kg_potion_pink_f33_2)
+(mk-scenery-type 't_kg_potion_pink_f23_2  "potion (2/3)" s_kg_potion_pink_f23_2)
+(mk-scenery-type 't_kg_potion_pink_f13_2  "potion (1/3)" s_kg_potion_pink_f13_2)
+
+(mk-scenery-type 't_kg_potion_pink_f33_3  "potion (3/3)" s_kg_potion_pink_f33_3)
+(mk-scenery-type 't_kg_potion_pink_f23_3  "potion (2/3)" s_kg_potion_pink_f23_3)
+(mk-scenery-type 't_kg_potion_pink_f13_3  "potion (1/3)" s_kg_potion_pink_f13_3)
+
+(mk-scenery-type 't_kg_potion_pink_f33_4  "potion (3/3)" s_kg_potion_pink_f33_4)
+(mk-scenery-type 't_kg_potion_pink_f23_4  "potion (2/3)" s_kg_potion_pink_f23_4)
+(mk-scenery-type 't_kg_potion_pink_f13_4  "potion (1/3)" s_kg_potion_pink_f13_4)
+
+(mk-scenery-type 't_kg_potion_pink_f33_5  "potion (3/3)" s_kg_potion_pink_f33_5)
+(mk-scenery-type 't_kg_potion_pink_f23_5  "potion (2/3)" s_kg_potion_pink_f23_5)
+(mk-scenery-type 't_kg_potion_pink_f13_5  "potion (1/3)" s_kg_potion_pink_f13_5)
+
+(mk-scenery-type 't_kg_potion_pink_f33_6  "potion (3/3)" s_kg_potion_pink_f33_6)
+(mk-scenery-type 't_kg_potion_pink_f23_6  "potion (2/3)" s_kg_potion_pink_f23_6)
+(mk-scenery-type 't_kg_potion_pink_f13_6  "potion (1/3)" s_kg_potion_pink_f13_6)
+
+; red
+(mk-scenery-type 't_kg_potion_red_f33_1  "potion (3/3)" s_kg_potion_red_f33_1)
+(mk-scenery-type 't_kg_potion_red_f23_1  "potion (2/3)" s_kg_potion_red_f23_1)
+(mk-scenery-type 't_kg_potion_red_f13_1  "potion (1/3)" s_kg_potion_red_f13_1)
+
+(mk-scenery-type 't_kg_potion_red_f33_2  "potion (3/3)" s_kg_potion_red_f33_2)
+(mk-scenery-type 't_kg_potion_red_f23_2  "potion (2/3)" s_kg_potion_red_f23_2)
+(mk-scenery-type 't_kg_potion_red_f13_2  "potion (1/3)" s_kg_potion_red_f13_2)
+
+(mk-scenery-type 't_kg_potion_red_f33_3  "potion (3/3)" s_kg_potion_red_f33_3)
+(mk-scenery-type 't_kg_potion_red_f23_3  "potion (2/3)" s_kg_potion_red_f23_3)
+(mk-scenery-type 't_kg_potion_red_f13_3  "potion (1/3)" s_kg_potion_red_f13_3)
+
+(mk-scenery-type 't_kg_potion_red_f33_4  "potion (3/3)" s_kg_potion_red_f33_4)
+(mk-scenery-type 't_kg_potion_red_f23_4  "potion (2/3)" s_kg_potion_red_f23_4)
+(mk-scenery-type 't_kg_potion_red_f13_4  "potion (1/3)" s_kg_potion_red_f13_4)
+
+(mk-scenery-type 't_kg_potion_red_f33_5  "potion (3/3)" s_kg_potion_red_f33_5)
+(mk-scenery-type 't_kg_potion_red_f23_5  "potion (2/3)" s_kg_potion_red_f23_5)
+(mk-scenery-type 't_kg_potion_red_f13_5  "potion (1/3)" s_kg_potion_red_f13_5)
+
+(mk-scenery-type 't_kg_potion_red_f33_6  "potion (3/3)" s_kg_potion_red_f33_6)
+(mk-scenery-type 't_kg_potion_red_f23_6  "potion (2/3)" s_kg_potion_red_f23_6)
+(mk-scenery-type 't_kg_potion_red_f13_6  "potion (1/3)" s_kg_potion_red_f13_6)
+
+; green
+(mk-scenery-type 't_kg_potion_green_f33_1  "potion (3/3)" s_kg_potion_green_f33_1)
+(mk-scenery-type 't_kg_potion_green_f23_1  "potion (2/3)" s_kg_potion_green_f23_1)
+(mk-scenery-type 't_kg_potion_green_f13_1  "potion (1/3)" s_kg_potion_green_f13_1)
+
+(mk-scenery-type 't_kg_potion_green_f33_2  "potion (3/3)" s_kg_potion_green_f33_2)
+(mk-scenery-type 't_kg_potion_green_f23_2  "potion (2/3)" s_kg_potion_green_f23_2)
+(mk-scenery-type 't_kg_potion_green_f13_2  "potion (1/3)" s_kg_potion_green_f13_2)
+
+(mk-scenery-type 't_kg_potion_green_f33_3  "potion (3/3)" s_kg_potion_green_f33_3)
+(mk-scenery-type 't_kg_potion_green_f23_3  "potion (2/3)" s_kg_potion_green_f23_3)
+(mk-scenery-type 't_kg_potion_green_f13_3  "potion (1/3)" s_kg_potion_green_f13_3)
+
+(mk-scenery-type 't_kg_potion_green_f33_4  "potion (3/3)" s_kg_potion_green_f33_4)
+(mk-scenery-type 't_kg_potion_green_f23_4  "potion (2/3)" s_kg_potion_green_f23_4)
+(mk-scenery-type 't_kg_potion_green_f13_4  "potion (1/3)" s_kg_potion_green_f13_4)
+
+(mk-scenery-type 't_kg_potion_green_f33_5  "potion (3/3)" s_kg_potion_green_f33_5)
+(mk-scenery-type 't_kg_potion_green_f23_5  "potion (2/3)" s_kg_potion_green_f23_5)
+(mk-scenery-type 't_kg_potion_green_f13_5  "potion (1/3)" s_kg_potion_green_f13_5)
+
+(mk-scenery-type 't_kg_potion_green_f33_6  "potion (3/3)" s_kg_potion_green_f33_6)
+(mk-scenery-type 't_kg_potion_green_f23_6  "potion (2/3)" s_kg_potion_green_f23_6)
+(mk-scenery-type 't_kg_potion_green_f13_6  "potion (1/3)" s_kg_potion_green_f13_6)
+
+; deep_blue
+(mk-scenery-type 't_kg_potion_deep_blue_f33_1  "potion (3/3)" s_kg_potion_deep_blue_f33_1)
+(mk-scenery-type 't_kg_potion_deep_blue_f23_1  "potion (2/3)" s_kg_potion_deep_blue_f23_1)
+(mk-scenery-type 't_kg_potion_deep_blue_f13_1  "potion (1/3)" s_kg_potion_deep_blue_f13_1)
+
+(mk-scenery-type 't_kg_potion_deep_blue_f33_2  "potion (3/3)" s_kg_potion_deep_blue_f33_2)
+(mk-scenery-type 't_kg_potion_deep_blue_f23_2  "potion (2/3)" s_kg_potion_deep_blue_f23_2)
+(mk-scenery-type 't_kg_potion_deep_blue_f13_2  "potion (1/3)" s_kg_potion_deep_blue_f13_2)
+
+(mk-scenery-type 't_kg_potion_deep_blue_f33_3  "potion (3/3)" s_kg_potion_deep_blue_f33_3)
+(mk-scenery-type 't_kg_potion_deep_blue_f23_3  "potion (2/3)" s_kg_potion_deep_blue_f23_3)
+(mk-scenery-type 't_kg_potion_deep_blue_f13_3  "potion (1/3)" s_kg_potion_deep_blue_f13_3)
+
+(mk-scenery-type 't_kg_potion_deep_blue_f33_4  "potion (3/3)" s_kg_potion_deep_blue_f33_4)
+(mk-scenery-type 't_kg_potion_deep_blue_f23_4  "potion (2/3)" s_kg_potion_deep_blue_f23_4)
+(mk-scenery-type 't_kg_potion_deep_blue_f13_4  "potion (1/3)" s_kg_potion_deep_blue_f13_4)
+
+(mk-scenery-type 't_kg_potion_deep_blue_f33_5  "potion (3/3)" s_kg_potion_deep_blue_f33_5)
+(mk-scenery-type 't_kg_potion_deep_blue_f23_5  "potion (2/3)" s_kg_potion_deep_blue_f23_5)
+(mk-scenery-type 't_kg_potion_deep_blue_f13_5  "potion (1/3)" s_kg_potion_deep_blue_f13_5)
+
+(mk-scenery-type 't_kg_potion_deep_blue_f33_6  "potion (3/3)" s_kg_potion_deep_blue_f33_6)
+(mk-scenery-type 't_kg_potion_deep_blue_f23_6  "potion (2/3)" s_kg_potion_deep_blue_f23_6)
+(mk-scenery-type 't_kg_potion_deep_blue_f13_6  "potion (1/3)" s_kg_potion_deep_blue_f13_6)
+
+; light_blue
+(mk-scenery-type 't_kg_potion_light_blue_f33_1  "potion (3/3)" s_kg_potion_light_blue_f33_1)
+(mk-scenery-type 't_kg_potion_light_blue_f23_1  "potion (2/3)" s_kg_potion_light_blue_f23_1)
+(mk-scenery-type 't_kg_potion_light_blue_f13_1  "potion (1/3)" s_kg_potion_light_blue_f13_1)
+
+(mk-scenery-type 't_kg_potion_light_blue_f33_2  "potion (3/3)" s_kg_potion_light_blue_f33_2)
+(mk-scenery-type 't_kg_potion_light_blue_f23_2  "potion (2/3)" s_kg_potion_light_blue_f23_2)
+(mk-scenery-type 't_kg_potion_light_blue_f13_2  "potion (1/3)" s_kg_potion_light_blue_f13_2)
+
+(mk-scenery-type 't_kg_potion_light_blue_f33_3  "potion (3/3)" s_kg_potion_light_blue_f33_3)
+(mk-scenery-type 't_kg_potion_light_blue_f23_3  "potion (2/3)" s_kg_potion_light_blue_f23_3)
+(mk-scenery-type 't_kg_potion_light_blue_f13_3  "potion (1/3)" s_kg_potion_light_blue_f13_3)
+
+(mk-scenery-type 't_kg_potion_light_blue_f33_4  "potion (3/3)" s_kg_potion_light_blue_f33_4)
+(mk-scenery-type 't_kg_potion_light_blue_f23_4  "potion (2/3)" s_kg_potion_light_blue_f23_4)
+(mk-scenery-type 't_kg_potion_light_blue_f13_4  "potion (1/3)" s_kg_potion_light_blue_f13_4)
+
+(mk-scenery-type 't_kg_potion_light_blue_f33_5  "potion (3/3)" s_kg_potion_light_blue_f33_5)
+(mk-scenery-type 't_kg_potion_light_blue_f23_5  "potion (2/3)" s_kg_potion_light_blue_f23_5)
+(mk-scenery-type 't_kg_potion_light_blue_f13_5  "potion (1/3)" s_kg_potion_light_blue_f13_5)
+
+(mk-scenery-type 't_kg_potion_light_blue_f33_6  "potion (3/3)" s_kg_potion_light_blue_f33_6)
+(mk-scenery-type 't_kg_potion_light_blue_f23_6  "potion (2/3)" s_kg_potion_light_blue_f23_6)
+(mk-scenery-type 't_kg_potion_light_blue_f13_6  "potion (1/3)" s_kg_potion_light_blue_f13_6)
+
+; yellow
+(mk-scenery-type 't_kg_potion_yellow_f33_1  "potion (3/3)" s_kg_potion_yellow_f33_1)
+(mk-scenery-type 't_kg_potion_yellow_f23_1  "potion (2/3)" s_kg_potion_yellow_f23_1)
+(mk-scenery-type 't_kg_potion_yellow_f13_1  "potion (1/3)" s_kg_potion_yellow_f13_1)
+
+(mk-scenery-type 't_kg_potion_yellow_f33_2  "potion (3/3)" s_kg_potion_yellow_f33_2)
+(mk-scenery-type 't_kg_potion_yellow_f23_2  "potion (2/3)" s_kg_potion_yellow_f23_2)
+(mk-scenery-type 't_kg_potion_yellow_f13_2  "potion (1/3)" s_kg_potion_yellow_f13_2)
+
+(mk-scenery-type 't_kg_potion_yellow_f33_3  "potion (3/3)" s_kg_potion_yellow_f33_3)
+(mk-scenery-type 't_kg_potion_yellow_f23_3  "potion (2/3)" s_kg_potion_yellow_f23_3)
+(mk-scenery-type 't_kg_potion_yellow_f13_3  "potion (1/3)" s_kg_potion_yellow_f13_3)
+
+(mk-scenery-type 't_kg_potion_yellow_f33_4  "potion (3/3)" s_kg_potion_yellow_f33_4)
+(mk-scenery-type 't_kg_potion_yellow_f23_4  "potion (2/3)" s_kg_potion_yellow_f23_4)
+(mk-scenery-type 't_kg_potion_yellow_f13_4  "potion (1/3)" s_kg_potion_yellow_f13_4)
+
+(mk-scenery-type 't_kg_potion_yellow_f33_5  "potion (3/3)" s_kg_potion_yellow_f33_5)
+(mk-scenery-type 't_kg_potion_yellow_f23_5  "potion (2/3)" s_kg_potion_yellow_f23_5)
+(mk-scenery-type 't_kg_potion_yellow_f13_5  "potion (1/3)" s_kg_potion_yellow_f13_5)
+
+(mk-scenery-type 't_kg_potion_yellow_f33_6  "potion (3/3)" s_kg_potion_yellow_f33_6)
+(mk-scenery-type 't_kg_potion_yellow_f23_6  "potion (2/3)" s_kg_potion_yellow_f23_6)
+(mk-scenery-type 't_kg_potion_yellow_f13_6  "potion (1/3)" s_kg_potion_yellow_f13_6)
+
+; blue
+(mk-scenery-type 't_kg_potion_blue_f33_1  "potion (3/3)" s_kg_potion_blue_f33_1)
+(mk-scenery-type 't_kg_potion_blue_f23_1  "potion (2/3)" s_kg_potion_blue_f23_1)
+(mk-scenery-type 't_kg_potion_blue_f13_1  "potion (1/3)" s_kg_potion_blue_f13_1)
+
+(mk-scenery-type 't_kg_potion_blue_f33_2  "potion (3/3)" s_kg_potion_blue_f33_2)
+(mk-scenery-type 't_kg_potion_blue_f23_2  "potion (2/3)" s_kg_potion_blue_f23_2)
+(mk-scenery-type 't_kg_potion_blue_f13_2  "potion (1/3)" s_kg_potion_blue_f13_2)
+
+(mk-scenery-type 't_kg_potion_blue_f33_3  "potion (3/3)" s_kg_potion_blue_f33_3)
+(mk-scenery-type 't_kg_potion_blue_f23_3  "potion (2/3)" s_kg_potion_blue_f23_3)
+(mk-scenery-type 't_kg_potion_blue_f13_3  "potion (1/3)" s_kg_potion_blue_f13_3)
+
+(mk-scenery-type 't_kg_potion_blue_f33_4  "potion (3/3)" s_kg_potion_blue_f33_4)
+(mk-scenery-type 't_kg_potion_blue_f23_4  "potion (2/3)" s_kg_potion_blue_f23_4)
+(mk-scenery-type 't_kg_potion_blue_f13_4  "potion (1/3)" s_kg_potion_blue_f13_4)
+
+(mk-scenery-type 't_kg_potion_blue_f33_5  "potion (3/3)" s_kg_potion_blue_f33_5)
+(mk-scenery-type 't_kg_potion_blue_f23_5  "potion (2/3)" s_kg_potion_blue_f23_5)
+(mk-scenery-type 't_kg_potion_blue_f13_5  "potion (1/3)" s_kg_potion_blue_f13_5)
+
+(mk-scenery-type 't_kg_potion_blue_f33_6  "potion (3/3)" s_kg_potion_blue_f33_6)
+(mk-scenery-type 't_kg_potion_blue_f23_6  "potion (2/3)" s_kg_potion_blue_f23_6)
+(mk-scenery-type 't_kg_potion_blue_f13_6  "potion (1/3)" s_kg_potion_blue_f13_6)
+
+; dull purple
+(mk-scenery-type 't_kg_potion_dull_purple_1 "potion" s_kg_potion_dull_purple_1)
+(mk-scenery-type 't_kg_potion_dull_purple_2 "potion" s_kg_potion_dull_purple_2)
+(mk-scenery-type 't_kg_potion_dull_purple_3 "potion" s_kg_potion_dull_purple_3)
+(mk-scenery-type 't_kg_potion_dull_purple_4 "potion" s_kg_potion_dull_purple_4)
+(mk-scenery-type 't_kg_potion_dull_purple_5 "potion" s_kg_potion_dull_purple_5)
+(mk-scenery-type 't_kg_potion_dull_purple_6 "potion" s_kg_potion_dull_purple_6)
+; brown
+(mk-scenery-type 't_kg_potion_brown_1 "potion" s_kg_potion_brown_1)
+(mk-scenery-type 't_kg_potion_brown_2 "potion" s_kg_potion_brown_2)
+(mk-scenery-type 't_kg_potion_brown_3 "potion" s_kg_potion_brown_3)
+(mk-scenery-type 't_kg_potion_brown_4 "potion" s_kg_potion_brown_4)
+(mk-scenery-type 't_kg_potion_brown_5 "potion" s_kg_potion_brown_5)
+(mk-scenery-type 't_kg_potion_brown_6 "potion" s_kg_potion_brown_6)
+; dull green
+(mk-scenery-type 't_kg_potion_dull_green_1 "potion" s_kg_potion_dull_green_1)
+(mk-scenery-type 't_kg_potion_dull_green_2 "potion" s_kg_potion_dull_green_2)
+(mk-scenery-type 't_kg_potion_dull_green_3 "potion" s_kg_potion_dull_green_3)
+(mk-scenery-type 't_kg_potion_dull_green_4 "potion" s_kg_potion_dull_green_4)
+(mk-scenery-type 't_kg_potion_dull_green_5 "potion" s_kg_potion_dull_green_5)
+(mk-scenery-type 't_kg_potion_dull_green_6 "potion" s_kg_potion_dull_green_6)
+; dull dark blue
+(mk-scenery-type 't_kg_potion_dull_dark_blue_1 "potion" s_kg_potion_dull_dark_blue_1)
+(mk-scenery-type 't_kg_potion_dull_dark_blue_2 "potion" s_kg_potion_dull_dark_blue_2)
+(mk-scenery-type 't_kg_potion_dull_dark_blue_3 "potion" s_kg_potion_dull_dark_blue_3)
+(mk-scenery-type 't_kg_potion_dull_dark_blue_4 "potion" s_kg_potion_dull_dark_blue_4)
+(mk-scenery-type 't_kg_potion_dull_dark_blue_5 "potion" s_kg_potion_dull_dark_blue_5)
+(mk-scenery-type 't_kg_potion_dull_dark_blue_6 "potion" s_kg_potion_dull_dark_blue_6)
+; dull light blue
+(mk-scenery-type 't_kg_potion_dull_light_blue_1 "potion" s_kg_potion_dull_light_blue_1)
+(mk-scenery-type 't_kg_potion_dull_light_blue_2 "potion" s_kg_potion_dull_light_blue_2)
+(mk-scenery-type 't_kg_potion_dull_light_blue_3 "potion" s_kg_potion_dull_light_blue_3)
+(mk-scenery-type 't_kg_potion_dull_light_blue_4 "potion" s_kg_potion_dull_light_blue_4)
+(mk-scenery-type 't_kg_potion_dull_light_blue_5 "potion" s_kg_potion_dull_light_blue_5)
+(mk-scenery-type 't_kg_potion_dull_light_blue_6 "potion" s_kg_potion_dull_light_blue_6)
+; dull yellow
+(mk-scenery-type 't_kg_potion_dull_yellow_1 "potion" s_kg_potion_dull_yellow_1)
+(mk-scenery-type 't_kg_potion_dull_yellow_2 "potion" s_kg_potion_dull_yellow_2)
+(mk-scenery-type 't_kg_potion_dull_yellow_3 "potion" s_kg_potion_dull_yellow_3)
+(mk-scenery-type 't_kg_potion_dull_yellow_4 "potion" s_kg_potion_dull_yellow_4)
+(mk-scenery-type 't_kg_potion_dull_yellow_5 "potion" s_kg_potion_dull_yellow_5)
+(mk-scenery-type 't_kg_potion_dull_yellow_6 "potion" s_kg_potion_dull_yellow_6)
+; dull blue
+(mk-scenery-type 't_kg_potion_dull_blue_1 "potion" s_kg_potion_dull_blue_1)
+(mk-scenery-type 't_kg_potion_dull_blue_2 "potion" s_kg_potion_dull_blue_2)
+(mk-scenery-type 't_kg_potion_dull_blue_3 "potion" s_kg_potion_dull_blue_3)
+(mk-scenery-type 't_kg_potion_dull_blue_4 "potion" s_kg_potion_dull_blue_4)
+(mk-scenery-type 't_kg_potion_dull_blue_5 "potion" s_kg_potion_dull_blue_5)
+(mk-scenery-type 't_kg_potion_dull_blue_6 "potion" s_kg_potion_dull_blue_6)
+
+
 
 
 
