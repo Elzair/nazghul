@@ -1889,6 +1889,8 @@ static bool myPcCommandHandler(struct KeyHandler *kh, int key)
 		break;
 	}
 
+        cmdwin_flush_to_console();
+
 	return ret;
 }
 

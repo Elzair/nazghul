@@ -76,3 +76,5 @@ Changes for nazghul-0.1.2
 --Replaced the u4 moon sprites with my own, since mine are 16x16 and u4 is
   only 8x16. Makes the full moons look full.
 
+--The final contents of the cmdwin are now shown on the main console.
+

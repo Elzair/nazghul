@@ -24,6 +24,7 @@
 #include "screen.h"
 #include "common.h"
 #include "sprite.h"
+#include "console.h"
 
 #include <stdarg.h>
 
@@ -49,7 +50,8 @@ int cmdwin_init(void)
 	cmdwin.buf = (char *) malloc(cmdwin.blen);
 	if (!cmdwin.buf)
 		return -1;
-	cmdwin_clear();
+
+        cmdwin_clear();
 	return 0;
 }
 
@@ -133,4 +135,11 @@ void cmdwin_erase_back_to_mark(void)
 	n = cmdwin.ptr - cmdwin.mark;
 	if (n > 0)
 		cmdwin_backspace(n);
+}
+
+void cmdwin_flush_to_console(void)
+{
+        consolePrint("%s\n", cmdwin.buf);
+        //cmdwin_clear();
+        //cmdwin_repaint();
 }
