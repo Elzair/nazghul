@@ -404,10 +404,14 @@ enum Character::MoveResult Character::move(int dx, int dy)
 
 		return WasOccupied;
 	}
-	// Roll for movement cost
-	if ((placeGetMovementCost(newx, newy) > 0) &&
-	    (random() % 100) > (100 / placeGetMovementCost(newx, newy)))
-		return SlowProgress;
+
+        if (CONFIG_MOVEMENT_COST_FOR_CHARACTERS) {
+                // gmcnutt: turned this off because it is plain annoying.
+                // Roll for movement cost
+                if ((placeGetMovementCost(newx, newy) > 0) &&
+                    (random() % 100) > (100 / placeGetMovementCost(newx, newy)))
+                        return SlowProgress;
+        }
 
 	// Ok, you can move.
 	relocate(getPlace(), newx, newy);

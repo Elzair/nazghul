@@ -26,10 +26,12 @@
 #ifndef p_wilderness_ghul
 #define p_wilderness_ghul
 
+#ifdef CONFIG_WILDERNESS_GOBLIN_GENERATOR
 MAKE_NPC_PARTY_GENERATOR_MECH(t_wilderness_goblin_generator, "goblin cave", 
                               t_goblin_horde, (ALIGN_MONSTER),
                               p_wilderness, 25, 15, 1, 1, 
                               0.01);
+#endif
 
 // A mandrake patch is kind of special-purpose, so no macro for now...
 MECH_TYPE mech_mandrake_patch {
@@ -56,96 +58,112 @@ MECH_TYPE mech_mandrake_patch {
 }
 
 MAP m_wilderness {
-  type    ascii;
-  width   40;
-  height  40;
-  one_char_per_tile 1;
-  palette pal_standard;
-  terrain {
-  //           111111111122222222223333333333
-  // 0123456789012345678901234567890123456789
-    "________________________________________";  //  0
-    "________________________________________";  //  1
-    "________________________________________";  //  2
-    "______________________-----------_______";  //  3
-    "________---------------.........-----___";  //  4
-    "_______--.....tttt.{{{{{{{{{{tt...%{-___";  //  5
-    "___------...ttt{{{{{^^^^^^^^{{{tt...-___";  //  6
-    "___-....tttt{{{{^^^^^^^^^{{{{!{{t...--._";  //  7
-    "___-..ttt|{{{{^^^^^^^^^^^{{{{{{t.....-..";  //  8
-    ".__-..tt{{{^^^^^{{{^{{{{{{^^^^{{t....-..";  //  9
-    ".__-.tt|{^^^^^{{{^{{{tttt{{{{{{{t....=..";  // 10
-    ".__-..tt{{^^^^{^^{{{{ttt.............-..";  // 11
-    ".---....t{{{{{{^^^^^{{{{{{{{tttt.....--.";  // 12
-    "_-.......tt{{{^^^^^^^^^{{^^{{{{t......-.";  // 13
-    "_-........{{^^^^{---^^^^^^^^^{{t......-_";  // 14
-    "_-....{{{{{^^^^{{~--{{{^^^^{{{tt......-_";  // 15
-    "_-....{^^^^^^^^{~~~-^^^^{{{{ttt......--_";  // 16
-    "_-....{{{{^~~~~^~{{^^^{{{{ttt.......--__";  // 17
-    "--.......{{~^^~~~{^^{{ttttt.........--__";  // 18
-    "tttttt.ttt~~{{^^^{^^{{tt....ttttttttt---";  // 19
-    "||||tt..~~~t.{{{^^^{{{{tt..tt||||ttttt~t";  // 20
-    "|||||tt.==.....{{{^^^^{{t..t||||||tttt~~";  // 21
-    "~~~||~~~~~tttt...{{^{{{....t|||btbttt||~";  // 22
-    "||~~~~ttt~~~~---..{{{---...tt||ttt||||~~";  // 23
-    "||||tttt.%%~~-_--.....--....t||btb|||~~|";  // 24
-    "|||tttt...%%~-__----..---...t||||||||=||";  // 25
-    "----tt...%.%%-_____-----....tttttttt----";  // 26
-    "___-...%%.%%~-_________--........----___";  // 27
-    "___--~%%~%%~--_________-----------______";  // 28
-    "_____---~~~~--__________________________";  // 29
-    "_____---%%%%--__^^^_____________________";  // 30
-    "______---...------^--___________________";  // 31
-    "_______---^{^{{{^-^^^--_________________";  // 32
-    "_________--{{{^{^-{{^^--_____-^^^_______";  // 33
-    "_______________^^-^^^^--_____--!^^^^-___";  // 34
-    "________________---^^^^^^^^^^^^!!!^!--__";  // 35
-    "__________________-^^^^^^^^^^^^^^!!!^-__";  // 36
-    "______________________________^!!^^^^___";  // 37
-    "______________________________^!^^______";  // 38
-    "_____________________________----_______";  // 39
-  //           111111111122222222223333333333
-  // 0123456789012345678901234567890123456789
-  } // terrain
+        type    ascii;
+        width   40;
+        height  40;
+        one_char_per_tile 1;
+        palette pal_standard;
+        terrain {
+                //           111111111122222222223333333333
+                // 0123456789012345678901234567890123456789
+                "________________________________________";  //  0
+                "________________________________________";  //  1
+                "________________________________________";  //  2
+                "______________________-----------_______";  //  3
+                "________---------------.........-----___";  //  4
+                "_______--.....tttt.{{{{{{{{{{tt...%{-___";  //  5
+                "___------...ttt{{{{{{^^^^^^^{{{tt...-___";  //  6
+                "___-....tttt{{{{^^^^{{^^^^^^^^{{t...--._";  //  7
+                "___-..ttt|{{{{^^^^^^^{{^^^^^^^{t.....-..";  //  8
+                ".__-..tt{{{^^^^^^^^^{{{{{{^^^{{{t....-..";  //  9
+                ".__-.tt{{^^^^^^^{{{{{{ttt{{{{{{{t....=..";  // 10
+                ".__-..tt{{^^^^{{{^^{{ttt.............-..";  // 11
+                ".---....t{{{{{{^^^^^{{{{{{{{tttt.....--.";  // 12
+                "_-.......tt{{{^^^^^^^^^{{^^{{{{t......-.";  // 13
+                "_-........{{^^^^^^^^^^^^^^^^^{{t......-_";  // 14
+                "_-....{{{{{^^^^^^^^^^^^^^^^{{{tt......-_";  // 15
+                "_-...{{^^^^^^^^^^^^^^^^^{{{{ttt......--_";  // 16
+                "_-....{{{{^^^^^^^^^^^^{{{{ttt.......--__";  // 17
+                "--.......{{{^^^^^^^^{{ttttt....ttt.t--__";  // 18
+                "--tttt.ttt{{{{^^^^^^{{tt....tttt||.||---";  // 19
+                "|~||tt..tttt.{{{^^^^^{{tt..tt|||||..||~t";  // 20
+                "|~~||t..tt.....{{{^^^^{{t..t|||||||.||~~";  // 21
+                "..=....ttttttt...{{^{{{....t|||btbt.t||~";  // 22
+                ".|~~||tttt~~~---..{{{---...tt||tt..|.|~~";  // 23
+                ".||~tttt.%%~~-_--.....--....t||btbt.|~~.";  // 24
+                "|||~ttt...%%~-__----..---...t||||||..=..";  // 25
+                "|||~tt...%.%%-_____-----....ttt|||||---|";  // 26
+                "|||~...%%.%%~-_________--.....ttt----_--";  // 27
+                "-|--~~%%~%%~--_________-----------_____-";  // 28
+                "---__---~~~~--__________________________";  // 29
+                "_____---%%%%--__^^^_____________________";  // 30
+                "______---...------^--___________________";  // 31
+                "_______---^{^{{{^-^^^--_________________";  // 32
+                "_________--{{{^{^-{{^^--_____-^^^_______";  // 33
+                "_______________^^-^^^^--_____--!^^^^-___";  // 34
+                "________________---^^^^^^^^^^^^!!!^!--__";  // 35
+                "__________________-^^^^^^^^^^^^^^!!!^-__";  // 36
+                "______________________________^!!^^^^___";  // 37
+                "______________________________^!^^______";  // 38
+                "_____________________________----_______";  // 39
+                //           111111111122222222223333333333
+                // 0123456789012345678901234567890123456789
+        } // terrain
 } // MAP m_wilderness_c
 
 
 PLACE  p_wilderness {
-  type        wilderness;
-  parent      null;
-  x           0;
-  y           0;
-  name        "The Great Wild";
-  wraps       1;
-  map         m_wilderness;
-  underground 0;
-  objects {          
+        type        wilderness;
+        parent      null;
+        x           0;
+        y           0;
+        name        "The Great Wild";
+        wraps       1;
+        map         m_wilderness;
+        underground 0;
+        objects {          
+                
+                //--------------------------------------------------
+                // vehicles:
+                //--------------------------------------------------
+                //vt_ship 0 0 west 100;
+                
+                //--------------------------------------------------
+                // npc parties:
+                //--------------------------------------------------
+                // tag, x, y, alignment, home, conversation, vehicle
+                //t_goblin_horde    4 14  (ALIGN_MONSTER) 0 c_goblin null;
+                //t_undead_brigade  2 26  (ALIGN_MONSTER) 0 null vt_ship;
+                //t_undead_brigade 32  4  (ALIGN_MONSTER) 0 null vt_ship;
+                
+                
+                //--------------------------------------------------
+                // mechs
+                //--------------------------------------------------
+                
+#ifdef CONFIG_WILDERNESS_GOBLIN_GENERATOR
+                // goblin generator
+                t_turn_trigger                goblin_cave_trigger 0  0  "active";
+                t_wilderness_goblin_generator goblin_cave         15 25 "active";
+                CONNECT goblin_cave_trigger => goblin_cave;
+#endif
+                
+                // mandrake patch
+                mech_mandrake_patch           mandrake_patch      37 21 "growing";
 
-    // vehicles:
-    //vt_ship 0 0 west 100;
-
-    // npc parties:
-    // tag, x, y, alignment, home, conversation, vehicle
-    t_goblin_horde    4 14  (ALIGN_MONSTER) 0 c_goblin null;
-    t_undead_brigade  2 26  (ALIGN_MONSTER) 0 null vt_ship;
-    t_undead_brigade 32  4  (ALIGN_MONSTER) 0 null vt_ship;
-
-
-    // mechs
-    t_turn_trigger                goblin_cave_trigger 0  0  "active";
-    t_wilderness_goblin_generator goblin_cave         15 25 "active";
-    CONNECT goblin_cave_trigger => goblin_cave;
-    mech_mandrake_patch           mandrake_patch      37 21 "growing";
-
-
-  }
-  typical_npc_parties {
-    // party_type chance (alignment)
-    //     chance is n * 0.01% 
-    t_goblin_horde                 10  (ALIGN_MONSTER);
-    t_gazer_pod_with_goblin_slaves 1   (ALIGN_MONSTER);
-    t_nixies                       100 (ALIGN_MONSTER);
-  }
+                
+        }
+        
+        // gmcnutt: typical_npc_parties is obsolescent. Npc party generation should
+        // be done by mechs. However, for camping ambushes we still need this.
+        typical_npc_parties {
+                // party_type chance (alignment)
+                //     chance is n * 0.01% 
+                t_goblin_horde                 10  (ALIGN_MONSTER);
+                t_gazer_pod_with_goblin_slaves 1   (ALIGN_MONSTER);
+                t_nixies                       10 (ALIGN_MONSTER);
+        }
+        
 } // PLACE  p_wilderness
 
 // Make castle level 1 be precisely below castle level 2

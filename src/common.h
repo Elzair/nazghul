@@ -313,6 +313,9 @@ extern "C" {
 #define SPELL_TARGET_ALL_PARTY_MEMBERS 7
 #define SPELL_TARGET_CASTER_LOCATION   8
 
+// Compile-time configuration parameters
+#define CONFIG_MOVEMENT_COST_FOR_CHARACTERS false
+
 /* Macros ********************************************************************/
 
 #define perror_sdl(msg) err("%s: %s\n", (msg), SDL_GetError())

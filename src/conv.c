@@ -39,7 +39,7 @@
 
 #define MARKUP 4
 
-#define MAX_KEYWORD_SZ 4
+#define MAX_KEYWORD_SZ 16
 
 /* Reserved parameter IDs */
 #define PID_AMOUNT   -1

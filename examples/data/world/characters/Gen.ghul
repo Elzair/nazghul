@@ -1,0 +1,195 @@
+//
+// Copyright-Only Dedication (based on United States law)
+//
+// The person or persons who have associated their work with this document (the
+// "Dedicator") hereby dedicate the entire copyright in the work of authorship
+// identified below (the "Work") to the public domain.
+//
+// Dedicator makes this dedication for the benefit of the public at large and
+// to the detriment of Dedicator's heirs and successors. Dedicator intends this
+// dedication to be an overt act of relinquishment in perpetuity of all present
+// and future rights under copyright law, whether vested or contingent, in the
+// Work. Dedicator understands that such relinquishment of all rights includes
+// the relinquishment of all rights to enforce (by lawsuit or otherwise) those
+// copyrights in the Work.
+//
+// Dedicator recognizes that, once placed in the public domain, the Work may be
+// freely reproduced, distributed, transmitted, used, modified, built upon, or
+// otherwise exploited by anyone for any purpose, commercial or non-commercial,
+// and in any way, including by methods that have not yet been invented or
+// conceived.
+//
+
+#ifndef Gen_ghul
+#define Gen_ghul
+
+#include "../conversations/C_green_tower.ghul"
+
+object_types {
+        DOCUMENT_TYPE(t_goblin_lexicon, "Goblin Lexicon", s_scroll1,
+                      "A Goblin Lexicon
+
+I compiled these notes as an aid to others trying to learn the goblin language. I hope it is of some small use.
+--Gen
+
+Da.....Abode, World
+Gu.....Spirit, Ancestor
+Ru.....Ancient, Primordal, Deep, Cave
+No.....Name
+Me.....Duty, Job, Destiny
+Ki.....Health, Life-Force, Power
+Hi.....Magic
+Cho....Mankind
+Nu.....Give Birth, Create, Begin
+Ka.....Kill, Destroy, End
+Ha.....Good, Yes, Skillful
+Tu.....Bad, No, Useless
+Bo.....My, Myself
+Na.....Yours, Yourself
+To.....Individual
+Ma.....Forest, Hidden Ways
+Zu.....Watch, Seek
+Eh.....'What?'
+");
+}
+
+
+RESP Gen_name     { SAY "I am Gen." }
+RESP Gen_woodsman { SAY "Yes, some call me the Woodsman." }
+RESP Gen_job      { SAY "Once I was a Ranger, but my duty now is done. I wander 'midst the woods for my own reasons." }
+RESP Gen_reasons  { SAY "My reasons are my own." }
+RESP Gen_captain  { 
+        SAY "Captain Deric commands the Rangers of Green Tower. Have you met him?";
+        GET_YES_NO {
+                SAY "A decent man, if somewhat ambitious.";
+        }{
+                SAY "You can find him in the Tower. His office is on the second floor.";
+        }
+}
+
+RESP Gen_ambitious   { SAY "In peace there's nothing so becomes a man as modest stillness and humility." }
+RESP Gen_shakespeare { SAY "Very good! Some interesting conversation at last."; }
+RESP Gen_ranger      { SAY "Rangers fought in these woods during the Goblin Wars. Now they maintain a token presence."; }
+
+RESP Gen_wars        { SAY "Yes, I fought as a Ranger in the goblin wars. That was a generation ago, and people forget. They see the goblins as lesser beings, defeated and worthy of slow extinction."; }
+
+RESP Gen_goblin      { SAY "An interesting species. They have their own language, but no writing. They are much like men, but more savage, more primal. Their warriors are beserkers, their shamans are ecstatic mystics."; }
+
+RESP Gen_primal      { SAY "You can tell I admire them? But in the wars I fought them, not understanding what they were. I have friends among the wild forest goblins, now. The cave goblins, though, they are another story..." }
+
+RESP Gen_cave        { SAY "The cave goblins, who are larger and stronger than their forest cousins, prefer to live in the deeps of the world. Their dark god demands living sacrifices. Beware them if you explore the caves, they burn with hatred for humankind." }
+
+RESP Gen_language    {
+        SAY "Yes, I can speak a few words of goblin. Would you like to learn?";
+        GET_YES_NO {
+                CHECK_FLAG GAVE_ITEM {
+                        SAY "Study the notes I gave you, and then practice on me.";
+                }{
+                        SAY "Here are some notes I have made on their language. You may keep it.";
+                        GIVE_ITEM t_goblin_lexicon 1;
+                        SET_FLAG GAVE_ITEM;
+                }
+        }{
+                SAY "Perhaps another time.";
+        }
+}
+RESP Gen_practice { SAY "If you want to practice speaking goblin, just ask me something in goblin!" }
+RESP Gen_join {
+        CHECK_FLAG WILL_JOIN {
+                SAY "Yes, I will join you. Once more unto the breach, dear friends!";
+                JOIN;
+        }{
+                SAY "No, for the woods call my name.";
+        }
+}
+
+RESP Gen_Da { SAY "Ha! Da-Ma-To means forest goblin." }
+RESP Gen_Gu { SAY "Ha! Da-Gu means world." }
+RESP Gen_Ru { SAY "Ha! Da-Ru-To means cave goblin." }
+RESP Gen_No { SAY "Bo-No-Gen. But the goblins call me Ma-Zu-To." }
+RESP Gen_Me { SAY "Bo-Ma-Zu. I watch the forest, or I seek the hidden ways." }
+RESP Gen_Ki { SAY "Bo-Ha-Ki! I am healthy." }
+RESP Gen_Hi { SAY "Ha! Hi-Ma-To is the word for 'shaman'." }
+RESP Gen_Cho { SAY "Ha! Cho-To means 'a man'." }
+RESP Gen_Nu { SAY "Ha! Nu-Ki is the goblin word for 'food'" }
+RESP Gen_Ka { SAY "Ha! Ka-Ha-To means warrior." }
+RESP Gen_Ha { SAY "Yes, Ha is a general affirmative term." }
+RESP Gen_Tu { SAY "Right, Tu is a general negative term." }
+RESP Gen_Bo { SAY "Yes, Bo-Gu means your spirit self, which is your altar ego in the spirit world." }
+RESP Gen_Na { SAY "Yes, Bo-Na means 'us', or 'tribe'. Bo-Na-Ma refers to forest goblins in general." }
+RESP Gen_To { SAY "Right, To is a general suffix meaning person." }
+RESP Gen_Ma { SAY "Yes, and Ka-Ma-To is their term for lumberjack." }
+RESP Gen_Zu { SAY "Good! And Zu-To means seeker." }
+RESP Gen_Eh { SAY "Eh?" }
+RESP Gen_BoTuMa { 
+        SAY "Excellent! That is the goblin word for friend. You have come far in mastering their language.";
+        SET_FLAG WILL_JOIN;
+}
+
+CONV Gen_Conv {
+        IMPORT { c_generic }
+        NATIVE {
+
+                ADMI Gen_primal;
+                AMBI Gen_ambitious;
+                CAPT Gen_captain;
+                CAVE Gen_cave;
+                GOBL Gen_goblin;
+                JOB  Gen_job;
+                JOIN Gen_join;
+                LANG Gen_language;
+                NAME Gen_name;                 
+                PRIM Gen_primal;
+                PRAC Gen_practice;
+                RANG Gen_ranger;
+                REAS Gen_reasons;
+                SAVA Gen_primal;
+                SHAK Gen_shakespeare;
+                WARS Gen_wars;
+                WOOD Gen_woodsman;
+                FORE Gen_job;
+
+                BO   Gen_Bo;
+                CHO  Gen_Cho;
+                DA   Gen_Da;
+                EH   Gen_Eh;
+                GU   Gen_Gu;
+                HA   Gen_Ha;
+                HI   Gen_Hi;
+                KA   Gen_Ka;
+                KI   Gen_Ki;
+                ME   Gen_Me;
+                MA   Gen_Ma;
+                NA   Gen_Na;
+                NO   Gen_No;
+                NU   Gen_Nu;
+                RU   Gen_Ru;
+                TO   Gen_To;
+                TU   Gen_Tu;
+                ZU   Gen_Zu;
+
+                BOTUMA Gen_BoTuMa;
+        }
+}
+
+CHAR Gen {
+        name     "Gen";
+        species  human;
+        occ      ranger;
+        sprite   s_companion_ranger;
+        hp       120;
+        xp       256;
+        cond     G;
+        str      120;
+        intl     100;
+        dex      120;
+        magic    10;
+        lvl      3;
+        conv     Gen_Conv;
+        readied {
+                t_sword;
+                t_sm_shield;
+        }
+}
+
+#endif

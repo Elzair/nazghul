@@ -50,20 +50,45 @@
 #define ALIGN_BLUE_GOBLIN 16
 #endif // GOBLIN_WAR
 
-/*** Reserved parameter id's ***/
+//----------------------------------------------------------------------------
+// *** Reserved parameter ID's ***
+//
+// This is an exhaustive list of all known parameter id's which are reserved by
+// the engine. They are all negative to prevent conflicts with the game-defined
+// parameter ID's listed below.
+//----------------------------------------------------------------------------
 #define AMOUNT   -1
 #define GOLD     -2
 #define FOOD     -3
 #define ACTIVITY -4
 
-/*** Game parameter id's ***/
+//----------------------------------------------------------------------------
+// *** Global Parameters ID's ***
+//
+// These parameter ID's are confined to the range 0 - 63. They are accessible
+// from all conversation and mechanism scriptlets via the CHANGE_PARM and
+// CHECK_PARM constructs.
+//----------------------------------------------------------------------------
 #define HONOR     0
 #define SACRIFICE 1
 
-/*** Global flags ***/
+//----------------------------------------------------------------------------
+// *** Global flags ***
+//
+// These flags are confined to the range 128 - 383. They are accessible from
+// all conversation and mechanism scriptlets via the SET_FLAG, CLEAR_FLAG and
+// CHECK_FLAG constructs.
+//----------------------------------------------------------------------------
 #define HELPED_JOAN_OF_MYRE 129
 
-/*** Conversation flags ***/
+//----------------------------------------------------------------------------
+// *** Per-conversation Flags ***
+//
+// These flags are confined to the range 0 - 127. They are local to each
+// conversation, and persistent across multiple sessios of the same 
+// conversation. Use the SET_FLAG, CLEAR_FLAG and CHECK_FLAG constructs to
+// manipulate them from within conversation and mechanism scriptlets.
+//----------------------------------------------------------------------------
 #define TELL_RUNE 1
 #define GAVE_ITEM 2
 #define WILL_JOIN 3

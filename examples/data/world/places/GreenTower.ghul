@@ -25,6 +25,8 @@
 
 #include "../characters/Shroom_the_Hag.ghul"
 #include "../characters/char_doris.ghul"
+#include "../characters/Gen.ghul"
+
 
 MAP GreenTower_Map {
   type    ascii;
@@ -155,6 +157,7 @@ PLACE  GreenTower {
     // Characters
     Shroom_the_Hag  40 11 (ALIGN_TOWN) 1;
     char_doris      59 59 (ALIGN_TOWN) 1;   
+    Gen             32 32 (ALIGN_TOWN) 1;
 
   }
   object_type t_town;

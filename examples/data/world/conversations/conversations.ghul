@@ -295,38 +295,6 @@ CONV c_guard {
   }
 }
 
-
-/*** Gen the huntsman ***/
-RESP r_Gen_name { SAY "I am Gen the Huntsman." }
-RESP r_Gen_job { 
-  SAY "I hunt the wilds for dangerous beasts and monsters. Do you hunt the orcs, too?";
-  GET_YES_NO {
-    SAY "If you like, I would join you in the hunt.";
-    SET_FLAG WILL_JOIN;
-  }{
-    SAY "Foul creatures. They have their own language but cannot read or write.";
-  }
-}
-
-RESP r_Gen_join {
-  CHECK_FLAG WILL_JOIN {
-    SAY "Let's hunt some orc!";
-    JOIN;
-  }{
-    SAY "Sorry, but I am drawn to the wilds.";
-  }
-}
-
-CONV c_Gen {
-  IMPORT { c_generic }
-  NATIVE {
-    NAME r_Gen_name;
-    JOB  r_Gen_job;
-    JOIN r_Gen_join;
-  }
-}
-
-
 /*** GOBLINESE ***/
 RESP r_goblin_greeting {
   SAY "OHA";
