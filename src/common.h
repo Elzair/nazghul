@@ -114,21 +114,36 @@ extern "C" {
 #define CANCEL    SDLK_ESCAPE
 #define NUM_WIND_DIRECTIONS 4
 
-/* Time */
-#define HOURS_PER_DAY           24
-#define MINUTES_PER_HOUR        60
+/* Time -- In future, these likely come from GhulScript */
 #define TURNS_PER_MINUTE        60
+#define MINUTES_PER_HOUR        60
+#define HOURS_PER_DAY           24
 #define TURNS_PER_HOUR          (TURNS_PER_MINUTE * MINUTES_PER_HOUR)
-#define TURNS_PER_DAY           (TURNS_PER_HOUR * HOURS_PER_DAY)
+#define TURNS_PER_DAY           (TURNS_PER_HOUR   * HOURS_PER_DAY)
+
+#define DAYS_PER_WEEK           7
+#define WEEKS_PER_MONTH         4
+#define MONTHS_PER_YEAR         13
+#define DAYS_PER_MONTH          (DAYS_PER_WEEK  * WEEKS_PER_MONTH)
+#define DAYS_PER_YEAR           (DAYS_PER_MONTH * MONTHS_PER_YEAR)
+#define TURNS_PER_WEEK          (DAYS_PER_WEEK  * TURNS_PER_DAY)
+#define TURNS_PER_MONTH         (DAYS_PER_MONTH * TURNS_PER_DAY)
+#define TURNS_PER_YEAR          (DAYS_PER_YEAR  * TURNS_PER_DAY)
+
 #define HOURS_OF_NIGHT          8
 #define HOURS_OF_SUNLIGHT       (HOURS_PER_DAY - HOURS_OF_NIGHT)
 #define SUNRISE_HOUR            4
 #define SUNSET_HOUR             (SUNRISE_HOUR + HOURS_OF_SUNLIGHT)
 #define NOON_HOUR               12
-#define DEGREES_PER_HOUR        (360  / HOURS_PER_DAY)
+#define MIDNIGHT_HOUR_LATE      24
+#define MIDNIGHT_HOUR_EARLY     0
+
+#define DEGREES_PER_HOUR        (360 / HOURS_PER_DAY)
 #define SUNRISE_DEGREE          (SUNRISE_HOUR * DEGREES_PER_HOUR)
-#define SUNSET_DEGREE           (SUNSET_HOUR * DEGREES_PER_HOUR)
-#define NOON_DEGREE             (NOON_HOUR * DEGREES_PER_HOUR)
+#define SUNSET_DEGREE           (SUNSET_HOUR  * DEGREES_PER_HOUR)
+#define NOON_DEGREE             (NOON_HOUR    * DEGREES_PER_HOUR)
+#define MIDNIGHT_DEGREE_LATE    (MIDNIGHT_HOUR_LATE  * DEGREES_PER_HOUR)
+#define MIDNIGHT_DEGREE_EARLY   (MIDNIGHT_HOUR_EARLY * DEGREES_PER_HOUR)
 
 /* Moons */
 #define NUM_MOONS                       2

@@ -52,11 +52,12 @@ extern "C" {
   extern void getkey(void *data, bool(*handler) (struct KeyHandler * kh,
                                                  int key));
   
-  extern bool cmdUse(class Character * pc);
-  extern bool cmdHandle(class Character * pc);
-  extern bool cmdReady(class Character * pc);
-  extern bool cmdZtats(class Character * pc);
+  extern bool cmdUse    (class Character * pc);
+  extern bool cmdHandle (class Character * pc);
+  extern bool cmdReady  (class Character * pc);
+  extern bool cmdZtats  (class Character * pc);
   extern bool cmdXamine (class Character * pc);
+  extern bool cmdAT     (class Character * pc);
   extern bool cmdGet(int x, int y, bool scoop_all);
   extern bool cmdOpen(class Character * pc);
   extern bool cmdCastSpell(class Character * pc);
@@ -73,6 +74,8 @@ extern "C" {
   extern void effectShowTerrain(char *name, int duration);
   
   extern int select_target(int ox, int oy, int *x, int *y, int range);
+
+  extern char * name_of_context (void);
 
   // SAM: This typedef also exists in event.h
   typedef void (*v_funcpointer_ii) (int x, int y);

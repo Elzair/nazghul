@@ -1816,6 +1816,10 @@ static bool myPcCommandHandler(struct KeyHandler *kh, int key)
 	case 'z':
 		ret = cmdZtats(pc);
 		break;
+    case '@':
+        // SAM: 'AT' command for party-centric information
+        ret = cmdAT(pc);
+        break;
 	case ' ':
 		cmdwin_print("Pass");
 		ret = true;

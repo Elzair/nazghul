@@ -20,6 +20,7 @@
 // gmcnutt@users.sourceforge.net
 //
 #include "map.h"
+#include "sky.h"  // For time/date functions
 #include "screen.h"
 #include "place.h"
 #include "player.h"
@@ -423,17 +424,13 @@ void mapRecomputeLos(struct mview *view)
 
 void mapRepaintClock(void)
 {
-	int hr = Clock.hour;
-
-	// Show the clock time.
-	screenErase(&Map.clkRect);
-	hr = hr > 12 ? hr - 12 : hr;
-	hr = hr == 0 ? 12 : hr;
-	screenPrint(&Map.clkRect, 0, "%2d:%02d%s", hr, Clock.min,
-		    Clock.hour >= 12 ? "PM" : "AM");
-
-	screenUpdate(&Map.clkRect);
-}
+  char * date_time_str = time_HHMM_as_string();
+  
+  // Show the clock time:
+  screenErase(&Map.clkRect);
+  screenPrint(&Map.clkRect, 0, "%s", date_time_str);
+  screenUpdate(&Map.clkRect);
+} // mapRepaintClock()
 
 void mapRepaintView(struct mview *view, int flags)
 {

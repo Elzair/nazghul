@@ -2088,7 +2088,158 @@ bool cmdXamine(class Character * pc)
 		return false;
 	}
 	return true;
-}				// cmdXamine()
+} // cmdXamine()
+
+char * name_of_context (void)
+{
+  // SAM: Perhaps this function belongs in common.c?
+  int context = player_party->context;
+  switch (context) {
+  case CONTEXT_WILDERNESS:
+    return "Wilderness Mode";
+  case CONTEXT_COMBAT:
+    return "Combat Mode";
+  case CONTEXT_TOWN:
+    return "Town Mode";
+  default: assert(0);
+  }
+} // name_of_context()
+
+bool cmdAT (class Character * pc)
+{
+	int x, y;
+    char * who = "";
+    char * place_name = "";
+
+	cmdwin_clear();
+
+    // Should I check player_party->context
+    // for the context info below, 
+    // rather than the current method?
+	if (pc) {
+		// A party member was specified as a parameter, so this must be
+		// combat mode. Use the party member's location as the origin.
+        who = pc->getName();
+        place_name = "a combat map";  // Hack
+        // SAM: The below won't work. 
+        //      'Combat' is declared static in combat.c ...
+        // place_name = Combat.place.name;
+		x = pc->getX();
+		y = pc->getY();
+	}
+    else {
+		// Must be party mode. 
+		// Use the player party's location as the origin.
+        who = "The party";
+        place_name = player_party->getPlace()->name;
+        x = player_party->getX();
+        y = player_party->getY();
+	}
+    // SAM: Why is this line not safe in combat mode?
+    //      Would it be The Right Thing (TM) 
+    //      for it to be made safe in all contexts?
+    // place_name = player_party->getPlace()->name;
+    
+    consolePrint("This is %s\n", name_of_context() );
+    consolePrint("%s is at %s (%d,%d)\n", who, place_name, x, y);
+
+    consolePrint("It is %s on %s, \n"
+                 "%s of %s in the year %d.\n",
+                 time_HHMM_as_string(), day_name(), 
+                 week_name(), month_name(), Clock.year );
+
+    // SAM: Is this really interesting though, I wonder?
+    consolePrint("%d game turns have passed.\n", Turn);
+
+    consolePrint("The wind is blowing from the %s.\n",
+                 directionToString(windGetDirection()) );
+
+    if (Place->underground) {
+      consolePrint("%s is underground, and cannot see the sky.\n", who);
+    } // underground
+    else {
+      // SAM: 
+      // This message won't be true if you are under 
+      // a roof in a town.  In future there should be 
+      // logic querying the (future) roof-ripping code here.
+      consolePrint("%s is beneath the open sky.\n", who);
+
+      // Message(s) about the sun:
+      if (sun_is_up() ) {
+        consolePrint("The sun is up.%s\n",
+                     is_noon() ? "  It is noon." : "");
+      }
+      if (sun_is_down() ) {
+        consolePrint("The sun has set.%s\n",
+                     is_midnight() ? "  It is midnight." : "");
+      }
+
+      // Message(s) about the moon(s):
+      int num_moons_visible = 0;
+      for (int i = 0; i < NUM_MOONS; i++) {
+        struct moon *moon = &Moons[i];
+
+        if (moon_is_visible(moon->arc))
+          {
+            num_moons_visible++;
+            consolePrint("Moon %d is at arc %d in phase %d.\n",
+                         i, moon->arc, moon->phase);
+            // SAM:
+            // In future, we shall want GhulScript for
+            // the names of the heavenly bodies, 
+            // and the names of their phases:
+            // 
+            // consolePrint("%s is %s in phase %s.\n",
+            //              moon_name(i), 
+            //              arc_description(moon->arc), 
+            //              phase_name(moon->phase) );
+
+          }
+        // moon->arc,
+        // MoonInfo.sprite[moon->phase]
+      }
+      if (num_moons_visible == 0)
+        consolePrint("No moons can be seen now.\n");
+
+    } // open air, under the sky
+
+    if (player_party->vehicle) {
+      consolePrint("%s is %s a %s.\n", 
+                   who, "using", player_party->vehicle->getName() );
+      // SAM:
+      // In future, we shall want GhulScript to specify 
+      // whether one is to be
+      //     "riding" "driving" "piloting" "sailing"
+      // a particular vehicle type.
+      // The existing 'mv_desc' field (Ride, Sail)
+      // is related, but we need the gerund of the verb.
+    }
+    else {
+      // SAM: Not true for a party of Gazers or Nixies.
+      // Similar GhulScript for party / character movement mode
+      // descriptions and gerunds?
+      consolePrint("%s is on foot.\n", who);
+    }
+    
+
+    /*
+      Information reported shall include:
+      X the current place,X,Y
+      X the in-game time in game time units (HH:MM, YYYY/MM/DD)
+      X the in-game time in elapased turns (this is of less interest)
+      X the current weather status (wind)
+      X the current astronomy (day/night, sun, moons)
+      X the UI mode of the party (Wilderness,Town,Dungeon,Combat)
+      X whether the party is on foot or in a vehicle (and what type)
+      . the number of party members, names, order, and basic vital stats
+      . global party stats such as food and gold
+      . any special effects (buffs/nerfs) currently affecting the party,
+      . such as haste/quickness/slow, time stop, protection, etc.
+      . Xamine type information about the tile the party is standing on.
+    */
+
+	return true;
+} // cmdAT()
 
 static bool keyHandler(struct KeyHandler *kh, int key)
 {
@@ -2177,6 +2328,10 @@ static bool keyHandler(struct KeyHandler *kh, int key)
 	case 'z':
 		cmdZtats(NULL);
 		break;
+    case '@':
+      // SAM: 'AT' command for party-centric information
+      cmdAT(NULL);
+      break;
 	case ' ':
 		consolePrint("Pass\n");
 		turns_used = Place->scale;

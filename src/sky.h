@@ -53,7 +53,14 @@ extern "C" {
         };
 
         struct clock {
-                int hour, min, day, baseTurn;
+                int year;
+                int month;
+                int week;
+                int day_w;  // Day of week (0..6)
+                int day;    // Day of month (0..27)
+                int hour;
+                int min;
+                int baseTurn;
         };
 
         extern struct moon_info MoonInfo;
@@ -67,6 +74,26 @@ extern "C" {
 
         extern void clockSet(void);
         extern void clockUpdate(void);
+
+        extern char * time_HHMM_as_string       (void);
+        extern char * time_YYYY_MM_DD_as_string (void);
+
+#ifdef OTHER_TIME_STRING_FUNCTIONS
+  extern char * time_YYYY_as_string (void);
+  extern char * time_MM_as_string   (void);
+  extern char * time_DD_as_string   (void);
+#endif // OTHER_TIME_STRING_FUNCTIONS
+
+        extern char * month_name (void);
+        extern char * week_name  (void);
+        extern char * day_name   (void);
+
+        extern int sun_is_up   (void);
+        extern int sun_is_down (void);
+        extern int is_noon     (void);
+        extern int is_midnight (void);
+
+        extern int moon_is_visible (int arc);
 
 #ifdef __cplusplus
 }
