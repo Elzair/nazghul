@@ -1232,6 +1232,8 @@ void Character::describe(int count)
 	consolePrint("%s", species->name);
         if (occ && occ->name)
                 consolePrint(" %s", occ->name);
+        if (!isVisible())
+                consolePrint(" (invisible)");
 }
 
 void Character::relocate(struct place *place, int x, int y)

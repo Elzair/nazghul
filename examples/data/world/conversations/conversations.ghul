@@ -166,7 +166,7 @@ RESP r_beggar_baby {
       GET_AMOUNT;
       CHECK_PARM AMOUNT > 0 {
         SAY "Oh thank you! In return I will tell thee of the rune!";
-        SET_FLAG TELL_RUNE;
+        SET_FLAG TELL_SECRET;
         SET_FLAG HELPED_JOAN_OF_MYRE;
         TAKE GOLD;
         CHECK_PARM GOLD = 0 {
@@ -189,7 +189,7 @@ RESP r_beggar_baby {
       } {
         SAY "I have no claim to thy gold, but I know not what I shall do... [she turns away and sobs quietly].";
         CHANGE_PARM SACRIFICE -1;
-        CLEAR_FLAG TELL_RUNE;
+        CLEAR_FLAG TELL_SECRET;
         TURN_AWAY;
       }
     }
@@ -197,7 +197,7 @@ RESP r_beggar_baby {
 }
 
 RESP r_beggar_rune {
-  CHECK_FLAG TELL_RUNE {
+  CHECK_FLAG TELL_SECRET {
     SAY "There is no rune!";
   }{
     SAY "I trust you not.";

@@ -22,8 +22,8 @@
 #ifndef combat_h
 #define combat_h
 
-#define COMBAT_MAP_W    32
-#define COMBAT_MAP_H    32
+#define COMBAT_MAP_W    19
+#define COMBAT_MAP_H    19
 
 class Character;
 struct place;

@@ -19,10 +19,7 @@
 // and in any way, including by methods that have not yet been invented or
 // conceived.
 //
-/* species.ghul
- *
- * Defines species which beings may belong to.
- */
+
 #ifndef species_ghul
 #define species_ghul
 
@@ -33,12 +30,13 @@
 
 SPECIES human {
   name    "human";
-  str     100;
-  int     100;
-  dex     100;
-  spd     2;
-  vr      8;
+  str     20; 
+  int     20;
+  dex     20;
+  spd     2; // turns taken for easiest terrain multiplied by scale factor
+  vr      8; // max AI vision radius (won't see the player beyond this range)
   pmask   (LAND);
+  // size 20;
   sleep_sprite s_corpse;
   weapon       t_hands;
   visible      1;

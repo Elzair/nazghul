@@ -1059,7 +1059,7 @@ static int myPlaceDescribeObjects(int x, int y, int first_thing_listed)
 
                         // This is the first type of thing we need to list.
 			type = obj->getObjectType();
-                        if (obj->isVisible() || Reveal)
+                        if (obj->isVisible() || Reveal || obj->isShaded())
                                 n_types++;
 
 		} else if (obj->getObjectType() != type) {
@@ -1067,16 +1067,18 @@ static int myPlaceDescribeObjects(int x, int y, int first_thing_listed)
                         // We just found a new type of thing (we know because
                         // it's different from the last type of thing).
 			type = obj->getObjectType();
-                        if (obj->isVisible() || Reveal)
+                        if (obj->isVisible() || Reveal || obj->isShaded())
                                 n_types++;
 
 		}
 	}
 
-        if (tile->vehicle && (tile->vehicle->isVisible() || Reveal))
+        if (tile->vehicle && (tile->vehicle->isVisible() || Reveal || 
+                              obj->isShaded()))
                 n_types++;
 
-        if (tile->moongate && (tile->moongate->isOpen() || Reveal))
+        if (tile->moongate && (tile->moongate->isOpen() || Reveal || 
+                               obj->isShaded()))
                 n_types++;
 
 
@@ -1117,7 +1119,8 @@ static int myPlaceDescribeObjects(int x, int y, int first_thing_listed)
                         // can print the last type of thing since we know how
                         // many there are of it.
 
-                        if (prev_obj->isVisible() || Reveal) {
+                        if (prev_obj->isVisible() || Reveal || 
+                            prev_obj->isShaded()) {
                                 if (first_thing_listed) {
                                         first_thing_listed = 0;
                                 } else {
@@ -1144,7 +1147,8 @@ static int myPlaceDescribeObjects(int x, int y, int first_thing_listed)
 	}
 
         // Now we have to print the last object in the stack.
-        if (prev_obj && (prev_obj->isVisible()  || Reveal)) {
+        if (prev_obj && (prev_obj->isVisible()  || Reveal || 
+                         prev_obj->isShaded())) {
                 if (!first_thing_listed) {
                         if (n_types == 1)
                                 consolePrint(" and ");
@@ -1157,7 +1161,8 @@ static int myPlaceDescribeObjects(int x, int y, int first_thing_listed)
                 n_types--;
         }
 
-        if (tile->vehicle && (tile->vehicle->isVisible() || Reveal)) {
+        if (tile->vehicle && (tile->vehicle->isVisible() || Reveal || 
+                              obj->isShaded())) {
                 if (n_types == 1)
                         consolePrint(" and ");
                 else
@@ -1167,7 +1172,8 @@ static int myPlaceDescribeObjects(int x, int y, int first_thing_listed)
                 n_types--;
         }
 
-        if (tile->moongate && (tile->moongate->isOpen() || Reveal)) {
+        if (tile->moongate && (tile->moongate->isOpen() || Reveal || 
+                               obj->isShaded())) {
                 assert(n_types == 1);
                 consolePrint(" and ");
                 tile->moongate->describe(1);

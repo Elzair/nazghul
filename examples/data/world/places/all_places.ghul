@@ -19,27 +19,36 @@
 // and in any way, including by methods that have not yet been invented or
 // conceived.
 //
-/* all_places.ghul
- *
- * Defines all the place objects which form the game world.
- */
+// all_places.ghul
+//
+// Defines all the place objects which form the game world.
+//
 #ifndef all_places_ghul
 #define all_places_ghul
 
 // Order matters: wilderness must be before any towns which refer to it as a
 // parent
 #include "./P_wilderness.ghul"
-#include "./P_empire_city.ghul"
-#include "./P_prison_and_torture_chamber.ghul"
+
+//----------------------------------------------------------------------------
+// gmcnutt: old test/dev places, or places which are still in development
+//----------------------------------------------------------------------------
+//#include "./P_empire_city.ghul"
+//#include "./P_prison_and_torture_chamber.ghul"
+//#include "./P_terrain_test.ghul"
+//#include "./P_rom_camp.ghul"
+//#include "./Glasdrin.ghul"
+//#include "./P_cavernous_troll_deeps.ghul"
+
+//----------------------------------------------------------------------------
+// Places which will definitely be included in the 0.2.0 game
+//----------------------------------------------------------------------------
 #include "./GreenTower.ghul"
 #include "./GreenTowerLower.ghul"
-#include "./P_terrain_test.ghul"
-
-#include "./P_cavernous_troll_deeps.ghul"
-#include "./P_rom_camp.ghul"
 #include "./P_slime_cave.ghul"
-#include "./Glasdrin.ghul"
 #include "./ForestCave.ghul"
+#include "./MidWorld.ghul"
+#include "./GoblinCaves.ghul"
 
 STACK_PLACES GreenTower GreenTowerLower
 

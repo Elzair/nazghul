@@ -82,8 +82,6 @@ G)et-<dir> = Get an object from the ground
 
 H)andle-<member>-<target> = Activate a switch or lever
 
-L)ook-<dir> = Describe an adjacent tile
-
 N)ew-order-<member>-<member> = Switch two party members
 
 O)pen-<dir> = Open a container or door

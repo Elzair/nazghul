@@ -1958,11 +1958,6 @@ static bool myPcCommandHandler(struct KeyHandler *kh, int key, int keymod)
                 case 'h':
                         ret = cmdHandle(pc);
                         break;
-                case 'l':
-                        // SAM: Changing (L)ook command 
-                        // from "look at 1 tile" to a "Look Mode"
-                        ret = cmdLook(pc->getX(), pc->getY());
-                        break;
                 case 'o':
                         ret = cmdOpen(pc);
                         break;
@@ -2178,27 +2173,29 @@ static void combat_overlay_map(struct terrain_map *map,
         // Position the map against the boundary dividing the map.
         if (pinfo->dx < 0) {
                 // facing west, shift map west toward edge
-                x = place_w(Place) / 2;
+                x = (place_w(Place) + 1) / 2;
                 y = (place_h(Place) - map->h) / 2;
         }
         else if (pinfo->dx > 0) {
                 // facing east, shift map east toward edge
-                x = place_w(Place) / 2 - map->w;
+                x = (place_w(Place) + 1) / 2 - map->w;
                 y = (place_h(Place) - map->h) / 2;
         }
         else if (pinfo->dy < 0) {
                 // facing north, shift map north toward edge
                 x = (place_w(Place) - map->w) / 2;
-                y = place_h(Place) / 2;
+                y = (place_h(Place) + 1) / 2;
         }
         else if (pinfo->dy > 0) {
                 // facing south, shift map south toward edge
                 x = (place_w(Place) - map->w) / 2;
-                y = place_h(Place) / 2 - map->h;
+                y = (place_h(Place) + 1) / 2 - map->h;
         }
         // Adjust the party's starting position to be centered on the overlap
         // map.
-        set_party_initial_position(pinfo, x + map->w / 2, y + map->h / 2);
+        set_party_initial_position(pinfo, 
+                                   x + (map->w + 1) / 2, 
+                                   y + (map->h + 1) / 2);
 
         // Blit the rotated map centered on the given coordinates.
         terrain_map_blit(Place->terrain_map, x, y, map, 0, 0, map->w, map->h);
@@ -2510,7 +2507,7 @@ static void fill_temporary_terrain_map(struct terrain_map *map,
                 dst_y = 0;
                 src_x = 0;
                 src_y = 0;
-                src_w = map->w / 2;
+                src_w = (map->w + 1) / 2;
                 src_h = map->h;
 
         }
@@ -2521,7 +2518,7 @@ static void fill_temporary_terrain_map(struct terrain_map *map,
                 dst_y = 0;
                 src_x = map->w / 2;
                 src_y = 0;
-                src_w = map->w / 2;
+                src_w = (map->w + 1) / 2;
                 src_h = map->h;
 
         }
@@ -2533,7 +2530,7 @@ static void fill_temporary_terrain_map(struct terrain_map *map,
                 src_x = 0;
                 src_y = 0;
                 src_w = map->w;
-                src_h = map->h / 2;
+                src_h = (map->h + 1) / 2;
 
         }
         else if (dy > 0) {
@@ -2544,7 +2541,7 @@ static void fill_temporary_terrain_map(struct terrain_map *map,
                 src_x = 0;
                 src_y = map->h / 2;
                 src_w = map->w;
-                src_h = map->h / 2;
+                src_h = (map->h + 1)/ 2;
         }
 
         tile_map = place_get_combat_terrain_map(place, x, y);

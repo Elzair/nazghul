@@ -466,6 +466,8 @@ void Mech::describe(int count)
         }
 
         consolePrint(name);
+        if (!isVisible())
+                consolePrint(" (invisible)");
 }
 
 void Mech::advanceTurn(int turn)

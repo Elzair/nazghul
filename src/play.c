@@ -763,24 +763,6 @@ int ui_get_direction(void)
 	return dir;
 }
 
-bool cmdLook(int x, int y)
-{
-	int dir;
-
-	cmdwin_clear();
-	cmdwin_print("Look-");
-
-	dir = ui_get_direction();
-	if (dir == CANCEL)
-		return false;
-
-	consolePrint("You see ");
-	placeDescribe(placeWrapX(x + directionToDx(dir)),
-		      placeWrapY(y + directionToDy(dir)),
-                      PLACE_DESCRIBE_ALL);
-	return true;
-}
-
 bool cmdSearch(int x, int y)
 {
 	int dir;
@@ -2902,12 +2884,6 @@ static bool keyHandler(struct KeyHandler *kh, int key, int keymod)
                         break;
                 case 'k':
                         turns_used = cmdCamp();
-                        break;
-                case 'l':
-                        // SAM: Changing (L)ook command 
-                        // from "look at 1 tile" to a "Look Mode"
-                        cmdLook(player_party->getX(), player_party->getY());
-                        turns_used = 0;
                         break;
                 case 'm':
                         cmdMixReagents();

@@ -29,7 +29,8 @@
 
 OCC ranger {
     name        "ranger";
-    magic       0.5;
+    magic       0.5; // mana_int_mult
+    // per_level_mana
     container   t_small_wooden_chest;
     traps {
       t_burn_trap;
@@ -39,13 +40,15 @@ OCC ranger {
       t_bow;
       t_dagger;
     }
+    // typical items that npc's will carry and wield in combat (and drop as
+    // corpse loot)
     items {
       t_bow          50  1;
       t_arrow        50  20;
       t_sword        75  1;
       t_torch        50  5;
       t_mushroom1    50  5;
-      t_cure_potion 50  2;
+      t_cure_potion  50  2;
     }
 }
 

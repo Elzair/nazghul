@@ -24,6 +24,10 @@
 #ifndef P_prison_and_torture_chamber_ghul
 #define P_prison_and_torture_chamber_ghul
 
+MAKE_WATER_TRAP(mech_water_trap_L_lever, p_prison_chamber, 3, 3, 2, 1);
+
+//MAKE_BLIT_MECH(mech_water_trap_L_lever, p_prison_chamber, 3, 3, m_WATER_TRAP_OPEN, m_WATER_TRAP_CLOSED, 2, 1, "A trap door opens, revealing a watery pit!", "A trap door closes.");
+
 MAP m_prison_chamber {
   type    ascii;
   width   32;

@@ -29,8 +29,8 @@
 
 #include <SDL/SDL.h>
 
-#define MVIEW_W  MAP_TILE_W
-#define MVIEW_H  MAP_TILE_H
+#define MVIEW_W  (MAP_TILE_W)
+#define MVIEW_H  (MAP_TILE_H)
 #define VMASK_SZ (MVIEW_W * MVIEW_H)
 #define MVIEW_SZ (sizeof(struct mview) + VMASK_SZ)
 #define MAX_LIGHTS (MVIEW_W * MVIEW_H)
@@ -199,7 +199,8 @@ static void myBuildLightMap(struct mview *view)
 			int light;
 
 			mx = view->vrect.x + x;
-			light = place_get_light(Map.place /* Place */ , mx, my);
+			light = place_get_light(Map.place /* Place */ , mx, 
+                                                my);
 			if (!light)
 				continue;
 
@@ -337,9 +338,15 @@ int mapInit(char *los)
 	Map.peering = false;
 
 	/* fixme -- why create this here? why not just pass it in? */
+#if 1
 	LosEngine = los_create(los, MAP_TILE_W, MAP_TILE_H,
 			       map_use_circular_vision_radius ?
 			       MAX_VISION_RADIUS : -1);
+#else
+	LosEngine = los_create(los, MVIEW_W, MVIEW_H,
+			       map_use_circular_vision_radius ?
+			       MAX_VISION_RADIUS : -1);
+#endif
 	if (!LosEngine) {
 		mapDestroyView(Map.cam_view);
 		return -1;
@@ -364,14 +371,14 @@ void mapSetPlace(struct place *place)
 		Map.cam_max_x = place_w(place) - MAP_TILE_W / 2 - 1;
 		Map.cam_min_x = MAP_TILE_W / 2;
 	} else {
-		Map.cam_min_x = Map.cam_max_x = place_w(place) / 2 - 1;
+		Map.cam_min_x = Map.cam_max_x = (place_w(place) + 1)/ 2 - 1;
 	}
 
 	if (place_h(place) > MAP_TILE_W) {
 		Map.cam_max_y = place_h(place) - MAP_TILE_H / 2 - 1;
 		Map.cam_min_y = MAP_TILE_H / 2;
 	} else {
-		Map.cam_min_y = Map.cam_max_y = place_h(place) / 2 - 1;
+		Map.cam_min_y = Map.cam_max_y = (place_h(place) + 1) / 2 - 1;
 	}
 }
 
@@ -735,7 +742,8 @@ void mapPeer(bool val)
 void mapTogglePeering(void)
 {
         mapPeer(!Map.peering);
-        mapUpdate(0);
+        mapCenterCamera(player_party->getX(), player_party->getY());
+        //mapUpdate(0);
         mapUpdate(0); // BUG: for some reason this is necessary in the
                       // wilderness or the map remains black until the next
                       // animation tick

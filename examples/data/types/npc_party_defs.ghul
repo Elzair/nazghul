@@ -19,11 +19,7 @@
 // and in any way, including by methods that have not yet been invented or
 // conceived.
 //
-/* npc_party_defs.ghul
- *
- * Defines the composition of NPC parties which may be found
- * in the wilderness, towns, etc.
- */
+
 #ifndef npc_party_defs_ghul
 #define npc_party_defs_ghul
 

@@ -32,17 +32,19 @@
   
 
 portals {
-  
-  /*** Portal from castle to prison chamber ***/
-  PORTAL_PAIR_LADDERS(p_prison_chamber, 28, 14, p_empire_city, 62, 1, 0);
-
-  // Portal from prison chamber to dark passage
-  PORTAL_PAIR_LADDERS(p_prison_chamber, 29, 27, DarkPassage_Place, 28, 28, 0);
-
-  PORTAL_PAIR_LADDERS(p_prison_chamber,  28, 26, p_empire_city, 61, 25, 0);
-  PORTAL_PAIR_LADDERS(DarkPassage_Place,  3,  3, p_empire_city, 38, 25, 0);
-
-  PORTAL_PAIR_LADDERS(p_slime_cave, 7, 1, ForestCave, 11, 20, 0);
+        
+        /*** Portal from castle to prison chamber ***/
+        //  PORTAL_PAIR_LADDERS(p_prison_chamber, 28, 14, p_empire_city, 62, 1, 0);
+        // Portal from prison chamber to dark passage
+        //  PORTAL_PAIR_LADDERS(p_prison_chamber, 29, 27, DarkPassage_Place, 28, 28, 0);
+        //PORTAL_PAIR_LADDERS(p_prison_chamber,  28, 26, p_empire_city, 61, 25, 0);
+        //PORTAL_PAIR_LADDERS(DarkPassage_Place,  3,  3, p_empire_city, 38, 25, 0);
+        
+        PORTAL_PAIR_LADDERS(p_slime_cave, 7, 1, ForestCave, 11, 20, 0);
+        PORTAL_PAIR_LADDERS(GreenTowerLower, 32, 32, GreenTower, 32, 32, 0);
+        PORTAL_PAIR_LADDERS(GoblinCaves, 31, 12, GreenTowerLower, 41, 24, 0);
+        PORTAL_PAIR_LADDERS(MidWorld, 15, 15, GoblinCaves, 22, 19, 0);
+        
 
 } // portals
 

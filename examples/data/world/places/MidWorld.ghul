@@ -1,0 +1,82 @@
+//
+// Copyright-Only Dedication (based on United States law)
+//
+// The person or persons who have associated their work with this document (the
+// "Dedicator") hereby dedicate the entire copyright in the work of authorship
+// identified below (the "Work") to the public domain.
+//
+// Dedicator makes this dedication for the benefit of the public at large and
+// to the detriment of Dedicator's heirs and successors. Dedicator intends this
+// dedication to be an overt act of relinquishment in perpetuity of all present
+// and future rights under copyright law, whether vested or contingent, in the
+// Work. Dedicator understands that such relinquishment of all rights includes
+// the relinquishment of all rights to enforce (by lawsuit or otherwise) those
+// copyrights in the Work.
+//
+// Dedicator recognizes that, once placed in the public domain, the Work may be
+// freely reproduced, distributed, transmitted, used, modified, built upon, or
+// otherwise exploited by anyone for any purpose, commercial or non-commercial,
+// and in any way, including by methods that have not yet been invented or
+// conceived.
+//
+
+#ifndef MidWorld_ghul
+#define MidWorld_ghul
+
+MAP MidWorld_Map {
+        type   ascii;
+        width  32;
+        height 32;
+        palette pal_expanded;
+        terrain {
+        "^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ";
+        "^^ ^^ ^^ ^^ -- -- -- -- {{ {{ ^^ ^^ ^^ ^^ ^^ .. ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ -- -- -- ^^ ^^ ^^ ^^ ";
+        "^^ ^^ ^^ -- -- __ -- {{ {{ {{ {{ ^^ ^^ ^^ {{ ,, {{ ^^ ^^ {{ ^^ ^^ -- ^^ -- -- -- ^^ ^^ ^^ ^^ ^^ ";
+        "^^ ^^ -- -- __ __ -- -- {{ -- {{ {{ ^^ {{ ^^ ,, ^^ ^^ {{ {{ {{ -- -- -- -- __ -- -- ^^ -- ^^ ^^ ";
+        "^^ -- -- __ __ __ __ -- -- -- -- -- {{ .. .. ,, .. {{ .. {{ {{ {{ -- __ __ __ __ -- -- -- -- ^^ ";
+        "^^ -- __ __ __ __ __ __ __ __ __ -- -- .. .. ,, .. .. -- -- {{ -- -- __ __ __ __ __ -- -- .. ^^ ";
+        "^^ -- __ __ __ __ __ __ __ __ __ __ -- -- .. ,, -- -- -- -- -- -- __ __ __ __ -- -- -- .. .. ^^ ";
+        "^^ -- -- __ __ __ __ __ __ __ __ __ __ -- -- ee -- __ __ __ __ __ __ __ -- -- -- .. .. tt tt ^^ ";
+        "^^ ^^ -- -- __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ -- .. .. .. .. tt || ^^ ";
+        "^^ ^^ ^^ -- __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ -- .. .. .. tt || || ^^ ";
+        "^^ ^^ ^^ -- __ __ __ __ __ __ __ __ __ -- -- ee -- -- __ __ __ __ __ __ -- .. .. tt || || || ^^ ";
+        "^^ ^^ {{ -- -- -- __ __ __ __ __ __ -- -- .. ,, .. -- -- __ __ __ __ __ -- -- .. tt || || || ^^ ";
+        "r  r  r  r  r  -- __ __ __ __ __ -- -- .. b  ,, b  .. -- -- __ __ __ __ __ -- .. tt tt || || ^^ ";
+        "r  .. .. .. r  -- -- __ __ __ -- -- .. .. tt ,, tt tt .. -- -- __ __ __ __ -- -- .. tt tt || ^^ ";
+        "r  .. .. .. r  r  -- __ __ __ -- .. b  tt tt ,, tt tt b  .. -- __ __ __ __ -- .. .. .. .. || ^^ ";
+        "r  .. .. ,, ,, ,, ee __ __ __ ee ,, ,, ,, ,, .. ,, ,, ,, ,, ee __ __ __ __ ee ,, .. .. .. || ^^ ";
+        "r  .. .. .. r  r  -- __ __ __ -- .. b  tt tt ,, tt tt b  .. -- __ __ __ __ -- .. .. .. tt || ^^ ";
+        "r  .. .. .. r  -- -- __ __ __ -- -- .. .. tt ,, tt .. .. -- -- __ __ __ __ -- -- .. tt || || ^^ ";
+        "r  r  r  r  r  -- __ __ __ __ __ -- -- .. b  ,, b  .. -- -- __ __ __ __ __ __ -- .. tt tt || ^^ ";
+        "^^ ^^ ^^ -- -- -- __ __ __ __ __ __ -- -- .. ,, .. -- -- __ __ __ __ __ __ __ -- -- -- tt tt ^^ ";
+        "^^ ^^ ^^ -- __ __ __ __ __ __ __ __ __ -- -- ee -- -- __ __ __ __ __ __ __ __ __ __ -- -- -- ^^ ";
+        "^^ ^^ ^^ -- __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ -- ^^ ";
+        "^^ ^^ -- -- __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ -- ^^ ";
+        "^^ -- -- __ __ __ __ __ -- -- -- -- -- __ __ -- -- -- __ -- -- __ __ __ __ __ __ __ __ __ -- ^^ ";
+        "^^ -- __ __ __ __ __ __ -- %% -- %% -- -- -- -- %% -- -- %% -- -- -- -- __ __ __ __ __ __ -- ^^ ";
+        "^^ -- __ __ __ __ __ __ -- -- %% %% %% %% -- ,, %% %% -- %% %% -- %% -- -- __ __ __ __ __ -- ^^ ";
+        "^^ -- __ __ __ __ __ __ %% -- -- -- %% %% %% ,, %% -- %% %% -- -- -- %% -- -- __ __ __ __ -- ^^ ";
+        "^^ -- -- __ __ __ __ -- -- %% %% %% -- %% %% %% %% %% %% %% -- %% %% -- %% -- __ __ __ -- -- ^^ ";
+        "^^ ^^ -- -- __ __ __ -- %% -- %% %% %% %% %% ,, %% %% %% -- %% %% ^^ ^^ -- -- __ __ -- -- ^^ ^^ ";
+        "^^ ^^ ^^ -- -- __ -- -- %% ^^ ^^ %% %% %% .. .. .. %% %% %% %% %% ^^ ^^ %% -- __ -- -- ^^ ^^ ^^ ";
+        "^^ ^^ ^^ ^^ -- -- -- %% ^^ ^^ ^^ ^^ ^^ .. .. .. .. .. ^^ ^^ ^^ ^^ ^^ ^^ ^^ -- -- -- ^^ ^^ ^^ ^^ ";
+        "^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ";
+        }
+}
+
+PLACE MidWorld {
+        type        wilderness;
+        parent      null;
+        x           0;
+        y           0;
+        name        "The Middle World";
+        wraps       0;
+        map         MidWorld_Map;
+        underground 1;
+        objects {          
+        }
+        typical_npc_parties {
+        }
+}
+
+#endif

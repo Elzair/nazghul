@@ -178,7 +178,9 @@ void Object::paint(int sx, int sy)
 
 void Object::describe(int count)
 {
-        getObjectType()->describe(count);        
+        getObjectType()->describe(count);
+        if (!isVisible())
+                consolePrint(" (invisible)");
 }
 
 char *Object::get_movement_sound()

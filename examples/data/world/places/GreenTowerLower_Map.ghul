@@ -4,69 +4,73 @@ MAP GreenTowerLower_Map {
         height  64;
         palette pal_expanded;
         terrain {
-    "r  r  r  r  r  r  r  r  r  r  r  r  r  r  ~~ ~~ || || || || r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  || || || || || || || || || ";
-    "r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  ~~ || || || || || r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  || || || || || || || || || || ";
-    "r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  ~~ || || || || r  r  r  r  r  r  r  xx xx xx xx x! xx xx x! xx xx xx xx r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  xx tt xx tt tt || || || || || ";
-    "r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  ~~ || || || || r  r  r  r  r  r  r  xx cc cc xx cc cc cc cc xx cc cc xx r  r  r  r  r  r  r  r  r  r  r  r  r  r  .. .. .. xx tt tt tt || || || || ";
-    "r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  ~~ ~~ || || || r  r  r  r  r  r  r  xx cc cc cc cc cc cc cc cc cc cc xx r  r  r  r  r  r  r  r  r  r  r  r  r  .. .. .. .. tt tt tt tt || || || || ";
-    "r  r  r  r  r  r  r  r  r  r  r  r  r  r  || || ~~ || || || r  r  r  r  r  r  r  xx cc cc xx cc cc cc cc xx cc cc xx r  r  r  r  r  r  r  r  r  r  r  r  r  @  tt @  tt xx tt tt tt || || || || ";
-    "r  r  r  r  r  r  r  r  r  r  r  r  r  r  || || ~~ || || || r  r  r  r  r  r  r  xx xx xx x! cc cc cc cc x! xx xx xx r  r  r  r  r  r  r  r  r  r  r  r  .. .. .. .. .. xx tt tt || || || || || ";
-    "r  r  r  r  r  r  r  r  r  r  r  r  r  r  || || ~~ || || || r  r  r  r  r  r  r  xx cc cc xx cc cc cc cc xx cc cc xx r  r  r  r  r  r  r  r  r  r  r  tt tt tt tt tt tt xx || || || || || || || ";
-    "r  r  r  r  r  r  r  r  r  r  r  r  r  r  || || ~~ ~~ || || r  r  r  r  r  r  r  xx cc cc cc cc cc cc cc cc cc cc xx r  r  r  r  r  r  r  r  r  r  r  xx xx xx xx tt xx xx || || || || || || || ";
-    "r  r  r  r  r  r  r  r  r  r  r  r  r  r  || || || ~~ || || r  r  r  r  r  r  r  xx cc cc xx cc cc cc cc xx cc cc xx r  r  r  r  r  r  r  r  r  r  .. .. .. xx .. .. .. xx || || || || || || || ";
-    "r  r  r  r  r  r  r  r  r  r  r  r  r  r  || || || ~~ || || r  r  r  r  r  r  r  xx xx xx x! cc cc cc cc x! xx xx xx r  r  r  r  r  r  r  tt tt .. .. .. .. ?  .. .. .. ?  tt tt tt tt tt tt tt ";
-    "r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  .. .. ~~ ~~ ~~ r  r  r  r  r  r  r  xx cc cc xx cc cc cc cc xx cc cc xx r  r  r  r  r  r  || || tt xx .. .. .. xx .. .. .. xx || || || || || || || ";
-    "r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  || || || || ~~ r  r  r  r  r  r  r  xx cc cc cc cc cc cc cc cc cc cc xx || r  r  r  r  r  xx xx tt xx xx tt xx xx xx .. xx xx || || || || || || || ";
-    "r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  || || || || ~~ r  r  r  r  r  r  r  xx cc cc xx cc cc cc cc xx cc cc xx tt r  ~~ ~~ ~~ ~~ ~~ || tt || || || || || || || || || || || || || || || || ";
-    "r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  || || || ~~ ~~ r  r  r  r  r  r  r  xx xx xx xx x! cc cc x! xx xx xx xx xx xx ~~ xx xx -- ~~ ~~ .. || || || || || || || || || || || || || || || || ";
-    "r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  || || ~~ || .. || tt ~~ ~~ ~~ .. .. .. .. xx cc cc cc cc xx ~~ ~~ ~~ -- __ __ __ xx -- -- ~~ ~~ || || || || || || || || || || || || || || || || ";
-    "r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  || ~~ ~~ || .. || tt ~~ tt ~~ .. .. ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ -- __ __ __ xx __ -- ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ || || || ~~ ~~ ~~ ~~ || || ";
-    "r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  || ~~ tt b  .. b  .. ~~ tt ~~ .. .. ~~ tt xx cc cc cc cc xx cc cc ~~ -- __ __ __ xx __ -- ~~ ~~ || || || || || || ~~ || || || ~~ || || ~~ ~~ || ";
-    "r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  ~~ ~~ .. .. .. .. ~~ .. ~~ ~~ ~~ ~~ tt xx x! cc cc x! xx cc cc ~~ -- -- -- -- xx -- ~~ ~~ tt tt || || || || || ~~ || || || ~~ || || || ~~ ~~ ";
-    "r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  || ~~ ~~ ~~ ~~ ~~ ~~ .. .. .. .. .. .. xx cc cc cc cc xx cc cc ~~ ~~ ~~ ~~ ~~ xx ~~ ~~ .. || tt || || || || || ~~ ~~ ~~ ~~ ~~ || || || || || ";
-    "r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  .. .. .. .. .. .. .. .. r  r  r  xx cc cc cc cc cc cc cc cc cc cc cc cc xx .. .. .. tt tt || || || || || || || || || || || || || || || ";
-    "r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  xx cc cc cc cc xx cc cc cc cc cc cc cc x! .. .. .. b  tt || || || || || || || || || || || || || || || ";
-    "r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  xx x! cc cc x! xx .C .I .S .T .E .R .N xx .. .. .. tt tt || || || || || || || || || || || || || || || ";
-    "r  r  r  r  r  r  r  r  r  r  r  xx xx xx xx xx xx xx xx xx xx r  r  r  r  r  r  xx xx xx xx cc cc cc cc xx xx xx xx xx xx xx xx xx .. .. .. b  tt || || || || || || || || || || r  r  r  r  r  ";
-    "r  r  r  r  r  r  r  r  r  r  r  xx .B .A .R .R .A .C .K .S xx r  r  r  r  xx xx xx cc cc xx cc cc cc cc xx cc cc xx xx xx cc cc xx .. .. .. tt tt || || || || || || || || || || r  cc cc cc r  ";
-    "r  r  r  r  r  r  r  r  r  r  r  x! cc cc cc cc cc cc cc cc x! r  r  xx xx xx cc cc cc cc xx cc cc cc cc xx cc cc cc cc xx xx xx xx .. .. .. b  tt || || tt r  r  r  r  r  r  r  r  cc cc cc r  ";
-    "r  r  r  r  r  r  r  r  r  r  r  xx cc cc cc cc cc cc cc cc xx r  r  xx cc cc cc cc cc cc xx cc cc cc cc xx cc cc cc cc cc cc xx xx .. .. .. tt tt || || tt r  cc cc cc cc cc cc cc cc cc cc r  ";
-    "r  r  r  r  r  r  r  r  r  r  r  xx cc cc cc cc cc cc cc cc xx r  xx xx cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc xx xx .. .. .. tt tt || || tt r  cc r  r  r  r  r  r  cc cc cc r  ";
-    "r  r  r  r  r  r  r  r  r  r  r  xx cc cc cc cc cc cc cc cc xx r  xx cc cc cc cc cc cc cc xx cc cc cc cc xx cc cc cc cc cc cc cc xx xx xx x! xx xx xx x! xx xx cc r  r  r  r  r  r  r  r  r  r  ";
-    "r  r  r  r  r  r  r  r  r  r  r  xx cc cc cc cc cc cc cc cc xx r  xx cc cc cc cc cc cc cc xx cc cc cc cc xx cc cc cc cc cc cc cc xx xx .C .O .U .N .C .I .L xx cc r  r  r  r  r  r  r  r  r  r  ";
-    "r  r  r  r  r  r  r  r  r  r  r  xx cc cc cc cc cc cc cc cc xx r  xx xx xx xx cc xx xx xx x! cc cc cc cc x! xx xx xx cc xx xx xx xx xx cc cc cc cc cc cc cc xx cc r  r  r  r  r  r  r  r  r  r  ";
-    "r  r  r  r  r  r  r  r  r  r  r  xx xx x! xx cc cc xx x! xx xx xx x! cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc x! cc cc cc cc cc cc cc x! cc r  r  r  r  r  r  r  r  r  r  ";
-    "r  r  r  r  r  r  r  r  r  r  r  xx cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc 0  0  0  cc cc xx cc r  r  r  r  r  r  r  r  r  r  ";
-    "r  r  r  r  r  r  r  r  r  r  r  xx cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc 0  0  0  cc cc xx cc r  r  r  r  r  r  r  r  r  r  ";
-    "r  r  r  r  r  r  r  r  r  r  r  xx xx x! xx cc cc xx x! xx xx xx x! cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc x! cc cc cc cc cc cc cc x! cc r  r  r  r  r  r  r  r  r  r  ";
-    "r  r  r  r  r  r  r  r  r  r  r  xx cc cc cc cc cc cc cc cc xx r  xx xx xx xx cc xx xx xx x! cc cc cc cc x! xx xx xx cc xx xx xx xx xx cc cc cc cc cc cc &  xx cc r  r  r  r  r  r  r  r  r  r  ";
-    "r  r  r  r  r  r  r  r  r  r  r  x! cc cc cc cc cc cc cc cc x! r  xx cc cc cc cc cc cc cc xx cc cc cc cc xx cc cc cc cc cc cc cc xx xx xx x! xx xx xx x! xx xx cc r  r  r  r  r  r  r  r  r  r  ";
-    "r  r  r  r  r  r  r  r  r  r  r  xx cc cc cc cc cc cc cc cc xx r  xx cc cc cc cc cc cc cc xx cc cc cc cc xx cc cc cc cc cc cc cc xx cc cc cc cc cc cc cc cc cc cc r  r  r  r  r  r  r  r  r  r  ";
-    "r  r  r  r  r  r  r  r  r  r  r  x! cc cc cc cc cc cc cc cc x! r  xx xx cc cc cc cc cc cc xx cc cc cc cc xx cc cc cc cc cc cc xx xx r  r  r  r  r  r  r  r  cc r  r  r  r  r  r  r  r  r  r  r  ";
-    "r  r  r  r  r  r  r  r  r  r  r  xx cc cc cc cc cc cc cc cc xx r  r  xx cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc xx r  r  r  r  r  r  r  r  r  cc r  r  r  r  r  r  r  r  r  r  r  ";
-    "r  r  r  r  r  r  r  r  r  r  r  xx .T .R .A .I .N .I .N .G xx r  r  xx xx xx cc cc cc cc xx cc cc cc cc xx cc cc cc cc xx xx xx r  r  r  r  r  r  r  r  r  cc r  r  r  r  r  r  r  r  r  r  r  ";
-    "r  r  r  r  r  r  r  r  r  r  r  xx xx xx xx xx xx xx xx xx xx r  r  r  r  xx xx xx cc cc xx cc cc cc cc xx cc cc xx xx xx r  r  r  r  r  r  r  r  r  r  r  cc r  r  r  r  r  r  r  r  r  r  r  ";
-    "r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  xx xx xx xx cc cc cc cc xx xx xx xx r  r  r  r  r  r  r  r  r  r  r  r  r  cc r  r  r  r  r  r  r  r  r  r  r  ";
-    "r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  xx xx xx xx x! cc cc x! xx xx xx xx xx xx xx xx xx xx r  r  r  r  r  r  r  cc r  r  r  r  r  r  r  r  r  r  r  ";
-    "r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  xx cc cc cc cc cc cc cc cc cc cc cc xx [  @  @  ]  xx r  r  r  r  r  r  r  cc r  r  r  r  r  r  r  r  r  r  r  ";
-    "r  .. .. .. .. .. .. r  .. .. .. .. .. .. .. .. .. .. .. r  .. .. .. .. .. r  r  x! cc cc cc cc cc cc cc cc cc cc cc x! cc cc cc cc xx xx r  r  r  r  r  r  cc r  r  r  r  r  r  r  r  r  r  r  ";
-    "r  .. .. .. .. .. .. r  .. .. .. .. .. .. .. .. .. .. .. r  .. .. .. .. .. r  r  xx cc cc 0  cc cc 0  cc cc 0  cc cc cc cc cc cc cc &  xx r  r  r  r  r  r  cc r  r  r  r  r  r  r  r  r  r  r  ";
-    "r  .. .. .. .. .. .. r  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. r  r  xx cc cc 0  cc cc 0  cc cc 0  cc cc cc cc cc cc cc &  xx r  r  r  r  r  r  cc r  r  r  r  r  r  r  r  r  r  r  ";
-    "r  .. r  r  r  r  r  r  .. .. .. .. .. .. .. .. .. .. .. r  .. .. .. .. .. r  r  xx cc cc 0  cc cc 0  cc cc 0  cc cc cc cc cc cc cc &  xx r  r  r  r  r  r  cc r  r  r  r  r  r  r  r  r  r  r  ";
-    "r  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. r  .. .. .. .. .. r  r  x! cc cc cc cc cc cc cc cc cc cc cc x! cc cc cc cc &  xx r  r  r  r  r  r  cc r  r  r  r  r  r  r  r  r  r  r  ";
-    "r  .. p  .. p  .. p  .. p  .. p  .. p  .. p  .. p  .. .. r  r  r  r  r  r  r  r  xx cc cc cc cc cc cc cc cc cc cc cc xx cc cc cc cc xx xx r  r  r  r  r  r  cc r  cc cc cc cc cc cc r  r  r  r  ";
-    "r  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. r  r  r  r  r  r  r  r  xx .D .I .N .I .N .G @  .H .A .L .L xx [  @  @  ]  xx r  r  r  r  r  r  r  r  r  cc cc cc cc cc cc r  r  r  r  ";
-    "r  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. r  r  r  r  r  r  r  r  xx xx x! xx xx xx x! xx xx xx x! xx xx xx xx xx xx xx r  r  r  r  r  r  r  r  r  cc cc cc cc cc cc r  r  r  r  ";
-    "r  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  cc cc cc cc cc cc r  r  r  r  ";
-    "r  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  cc cc cc cc cc cc r  r  r  r  ";
-    "r  .. p  .. p  .. p  .. p  .. p  .. p  .. p  .. p  .. .. r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  cc cc cc cc cc cc r  r  r  r  ";
-    "r  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. r  .. .. .. .. .. r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  cc cc cc cc cc cc r  r  r  r  ";
-    "r  .. r  r  r  r  r  r  .. .. .. .. .. .. .. .. .. .. .. r  .. .. .. .. .. r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  cc cc cc cc cc cc r  r  r  r  ";
-    "r  .. .. .. .. .. .. r  .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  cc cc cc cc cc cc r  r  r  r  ";
-    "r  .. .. .. .. .. .. r  .. .. .. .. .. .. .. .. .. .. .. r  .. .. .. .. .. r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  cc cc cc cc cc cc r  r  r  r  ";
-    "r  .. .. .. .. .. .. r  .. .. .. .. .. .. .. .. .. .. .. r  .. .. .. .. .. r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  cc cc cc cc cc cc r  r  r  r  ";
-    "r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  ";
-    "r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  ";
-    "r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  ";
+  //                                1  1  1  1  1  1  1  1  1  1  2  2  2  2  2  2  2  2  2  2  3  3  3  3  3  3  3  3  3  3  
+  //  0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5  6  7  8  9  
+    " r  r  r  r  r  r  r  r  r  r  r  r  r  r ~~ ~~ || || || ||  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r || || || || || || || || || ";  //  0
+    " r  r  r  r  r  r  r  r  r  r  r  r  r  r  r ~~ || || || || ||  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r || || || || || || || || || || ";  //  1
+    " r  r  r  r  r  r  r  r  r  r  r  r  r  r  r ~~ || || || ||  r  r  r  r  r  r  r  x  x  x  x x!  x  x x!  x  x  x  x  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  x tt  x tt tt || || || || || ";  //  2
+    " r  r  r  r  r  r  r  r  r  r  r  r  r  r  r ~~ || || || ||  r  r  r  r  r  r  r  x cc cc  x cc cc cc cc  x cc cc  x  r  r  r  r  r  r  r  r  r  r  r  r  r  r .. .. ..  x tt tt tt || || || || ";  //  3
+    " r  r  r  r  r  r  r  r  r  r  r  r  r  r  r ~~ ~~ || || ||  r  r  r  r  r  r  r  x cc cc cc cc cc cc cc cc cc cc  x  r  r  r  r  r  r  r  r  r  r  r  r  r .. .. .. .. tt tt tt tt || || || || ";  //  4
+    " r  r  r  r  r  r  r  r  r  r  r  r  r  r || || ~~ || || ||  r  r  r  r  r  r  r  x cc cc  x cc cc cc cc  x cc cc  x  r  r  r  r  r  r  r  r  r  r  r  r  r  @ tt  @ tt  x tt tt tt || || || || ";  //  5
+    " r  r  r  r  r  r  r  r  r  r  r  r  r  r || || ~~ || || ||  r  r  r  r  r  r  r  x  x  x x! cc cc cc cc x!  x  x  x  r  r  r  r  r  r  r  r  r  r  r  r .. .. .. .. ..  x tt tt || || || || || ";  //  6
+    " r  r  r  r  r  r  r  r  r  r  r  r  r  r || || ~~ || || ||  r  r  r  r  r  r  r  x cc cc  x cc cc cc cc  x cc cc  x  r  r  r  r  r  r  r  r  r  r  r tt tt tt tt tt tt  x || || || || || || || ";  //  7
+    " r  r  r  r  r  r  r  r  r  r  r  r  r  r || || ~~ ~~ || ||  r  r  r  r  r  r  r  x cc cc cc cc cc cc cc cc cc cc  x  r  r  r  r  r  r  r  r  r  r  r  x  x  x  x tt  x  x || || || || || || || ";  //  8
+    " r  r  r  r  r  r  r  r  r  r  r  r  r  r || || || ~~ || ||  r  r  r  r  r  r  r  x cc cc  x cc cc cc cc  x cc cc  x  r  r  r  r  r  r  r  r  r  r .. .. ..  x .. .. ..  x || || || || || || || ";  //  9
+    " r  r  r  r  r  r  r  r  r  r  r  r  r  r || || || ~~ || ||  r  r  r  r  r  r  r  x  x  x x! cc cc cc cc x!  x  x  x  r  r  r  r  r  r  r tt tt .. .. .. ..  ? .. .. ..  ? tt tt tt tt tt tt tt ";  // 10
+    " r  r  r  r  r  r  r  r  r  r  r  r  r  r  r .. .. ~~ ~~ ~~  r  r  r  r  r  r  r  x cc cc  x cc cc cc cc  x cc cc  x  r  r  r  r  r  r || || tt  x .. .. ..  x .. .. ..  x || || || || || || || ";  // 11
+    " r  r  r  r  r  r  r  r  r  r  r  r  r  r  r || || || || ~~  r  r  r  r  r  r  r  x cc cc cc cc cc cc cc cc cc cc  ? ||  r  r  r  r  r  x  x tt  x  x tt  x  x  x ..  x  x || || || || || || || ";  // 12
+    " r  r  r  r  r  r  r  r  r  r  r  r  r  r  r || || || || ~~  r  r  r  r  r  r  r  x cc cc  x cc cc cc cc  x cc cc  x tt  r ~~ ~~ ~~ ~~ ~~ || tt || || || || || || || || || || || || || || || || ";  // 13
+    " r  r  r  r  r  r  r  r  r  r  r  r  r  r  r || || || ~~ ~~  r  r  r  r  r  r  r  x  x  x  x x! cc cc x!  x  x  x  x  x  x ~~  x  x -- ~~ ~~ .. || || || || || || || || || || || || || || || || ";  // 14
+    " r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r || || ~~ || .. || tt ~~ ~~ ~~ .. .. .. ..  x cc cc cc cc  x ~~ ~~ ~~ -- __ __ __  x -- -- ~~ ~~ || || || || || || || || || || || || || || || || ";  // 15
+    " r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r || ~~ ~~ || .. || tt ~~ tt ~~ .. .. ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ -- __ __ __  x __ -- ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ || || || ~~ ~~ ~~ ~~ || || ";  // 16
+    " r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r || ~~ tt  b ..  b .. ~~ tt ~~ .. .. ~~ tt  x cc cc cc cc  x cc cc ~~ -- __ __ __  x __ -- ~~ ~~ || || || || || || ~~ || || || ~~ || || ~~ ~~ || ";  // 17
+    " r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r ~~ ~~ .. .. .. .. ~~ .. ~~ ~~ ~~ ~~ tt  x x! cc cc x!  x cc cc ~~ -- -- -- --  x -- ~~ ~~ tt tt || || || || || == || || || ~~ || || tt ~~ ~~ ";  // 18
+    " r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r || ~~ ~~ ~~ ~~ ~~ ~~ .. .. .. .. .. ..  x cc cc cc cc  x cc cc ~~ ~~ ~~ ~~ ~~  x ~~ ~~ .. || tt || || || || || ~~ ~~ ~~ ~~ ~~ || tt tt tt || ";  // 19
+    " r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r .. .. .. .. .. .. .. ..  r  r  r  x cc cc cc cc cc cc cc cc cc cc cc cc  x .. .. .. tt tt || || || || || || || || || || || || tt || || ";  // 20
+    " r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  x cc cc cc cc  x cc cc cc cc cc cc cc x! .. .. ..  b tt || || || || || || tt || || || || || || || || ";  // 21
+    " r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  x x! cc cc x!  x ,C ,I ,S ,T ,E ,R ,N  x .. .. .. tt tt || tt || || || tt tt tt || || || || || || || ";  // 22
+    " r  r  r  r  r  r  r  r  r  r  r  x  x  x  x  x  x  x  x  x  x  r  r  r  r  r  r  x  x  x  x cc cc cc cc  x  x  x  x  x  x  x  x  x .. .. ..  b tt tt tt tt || || || tt || || ||  r ||  r  r  r ";  // 23
+    " r  r  r  r  r  r  r  r  r  r  r  x ,B ,A ,R ,R ,A ,C ,K ,S  x  r  r  r  r  x  x  x cc cc  x cc cc cc cc  x cc cc  x  x  x cc cc  ? .. .. .. tt tt || tt || || || || || || || ||  r tt tt cc  r ";  // 24
+    " r  r  r  r  r  r  r  r  r  r  r x! cc cc cc cc cc cc cc cc x!  r  r  x  x  x cc cc cc cc  x cc cc cc cc  x cc cc cc cc  x  x  x  x .. .. ..  b tt || || tt  r  r  r  r  r  r  r  r cc cc cc  r ";  // 25
+    " r  r  r  r  r  r  r  r  r  r  r  x cc cc cc cc cc cc cc cc  x  r  r  x cc cc cc cc cc cc  x cc cc cc cc  x cc cc cc cc cc cc  x  x .. .. .. tt tt || || tt  r cc cc cc cc cc cc cc cc cc cc  r ";  // 26
+    " r  r  r  r  r  r  r  r  r  r  r  x cc cc cc cc cc cc cc cc  x  r  x  x cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc  x  x .. .. .. tt tt || || tt  r cc  r  r  r  r  r  r cc cc cc  r ";  // 27
+    " r  r  r  r  r  r  r  r  r  r  r  x cc cc cc cc cc cc cc cc  x  r  x cc cc cc cc cc cc cc  x cc cc cc cc  x cc cc cc cc cc cc cc  x  x  x x!  x  x  x x!  x  x cc  r  r  r  r  r  r  r  r  r  r ";  // 28
+    " r  r  r  r  r  r  r  r  r  r  r  x cc cc cc cc cc cc cc cc  x  r  x cc cc cc cc cc cc cc  x cc cc cc cc  x cc cc cc cc cc cc cc  x  x ,C ,O ,U ,N ,C ,I ,L  x cc  r  r  r  r  r  r  r  r  r  r ";  // 29
+    " r  r  r  r  r  r  r  r  r  r  r  x cc cc cc cc cc cc cc cc  x  r  x  x  x  x cc  x  x  x x! cc cc cc cc x!  x  x  x cc  x  x  x  x  x cc cc cc cc cc cc cc  x cc  r  r  r  r  r  r  r  r  r  r ";  // 30
+    " r  r  r  r  r  r  r  r  r  r  r  x  x x!  x cc cc  x x!  x  x  x x! cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc x! cc cc cc cc cc cc cc x! cc  r  r  r  r  r  r  r  r  r  r ";  // 31
+    " r  r  r  r  r  r  r  r  r  r  r  x cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc  0  0  0 cc cc  x cc  r  r  r  r  r  r  r  r  r  r ";  // 32
+    " r  r  r  r  r  r  r  r  r  r  r  x cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc  0  0  0 cc cc  x cc  r  r  r  r  r  r  r  r  r  r ";  // 33
+    " r  r  r  r  r  r  r  r  r  r  r  x  x x!  x cc cc  x x!  x  x  x x! cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc x! cc cc cc cc cc cc cc x! cc  r  r  r  r  r  r  r  r  r  r ";  // 34
+    " r  r  r  r  r  r  r  r  r  r  r  x cc cc cc cc cc cc cc cc  x  r  x  x  x  x cc  x  x  x x! cc cc cc cc x!  x  x  x cc  x  x  x  x  x cc cc cc cc cc cc &   x cc  r  r  r  r  r  r  r  r  r  r ";  // 35
+    " r  r  r  r  r  r  r  r  r  r  r x! cc cc cc cc cc cc cc cc x!  r  x cc cc cc cc cc cc cc  x cc cc cc cc  x cc cc cc cc cc cc cc  x  x  x x!  x  x  x x! xx  x cc  r  r  r  r  r  r  r  r  r  r ";  // 36
+    " r  r  r  r  r  r  r  r  r  r  r  x cc cc cc cc cc cc cc cc  x  r  x cc cc cc cc cc cc cc  x cc cc cc cc  x cc cc cc cc cc cc cc  ? cc cc cc cc cc cc cc cc cc cc  r  r  r  r  r  r  r  r  r  r ";  // 37
+    " r  r  r  r  r  r  r  r  r  r  r x! cc cc cc cc cc cc cc cc x!  r  x  x cc cc cc cc cc cc  x cc cc cc cc  x cc cc cc cc cc cc  x  x  r  r  r  r  r  r  r  r cc  r  r  r  r  r  r  r  r  r  r  r ";  // 38
+    " r  r  r  r  r  r  r  r  r  r  r  x cc cc cc cc cc cc cc cc  x  r  r  x cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc  x  r  r  r  r  r  r  r  r  r cc  r  r  r  r  r  r  r  r  r  r  r ";  // 39
+    " r  r  r  r  r  r  r  r  r  r  r  x ,T ,R ,A ,I ,N ,I ,N ,G  x  r  r  x  x  x cc cc cc cc  x cc cc cc cc  x cc cc cc cc  x  x  x  r  r  r  r  r  r  r  r  r cc  r  r  r  r  r  r  r  r  r  r  r ";  // 40
+    " r  r  r  r  r  r  r  r  r  r  r  x  x  x  x  x  x  x  x  x  x  r  r  r  r  x  x  x cc cc  x cc cc cc cc  x cc cc  x  x  x  r  r  r  r  r  r  r  r  r  r  r cc  r  r  r  r  r  r  r  r  r  r  r ";  // 41
+    " r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  x  x  x  x cc cc cc cc  x  x  x  x  r  r  r  r  r  r  r  r  r  r  r  r  r cc  r  r  r  r  r  r  r  r  r  r  r ";  // 42
+    " r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  x  x  x  x x! cc cc x!  x  x  x  x  x  x  x  x  x  x  r  r  r  r  r  r  r cc  r  r  r  r  r  r  r  r  r  r  r ";  // 43
+    " r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  x cc cc cc cc cc cc cc cc cc cc cc  x  [  @  @  ]  x  r  r  r  r  r  r  r cc  r  r  r  r  r  r  r  r  r  r  r ";  // 44
+    " r .. .. .. .. .. ..  r .. .. .. .. .. .. .. .. .. .. ..  r .. .. .. .. ..  r  r x! cc cc cc cc cc cc cc cc cc cc cc x! cc cc cc cc  x  x  r  r  r  r  r  r cc  r  r  r  r  r  r  r  r  r  r  r ";  // 45
+    " r .. .. .. .. .. ..  r .. .. .. .. .. .. .. .. .. .. ..  r .. .. .. .. ..  r  r  x cc cc  0 cc cc  0 cc cc  0 cc cc cc cc cc cc cc  &  x  r  r  r  r  r  r cc  r  r  r  r  r  r  r  r  r  r  r ";  // 46
+    " r .. .. .. .. .. ..  r .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  r  r  x cc cc  0 cc cc  0 cc cc  0 cc cc cc cc cc cc cc  &  x  r  r  r  r  r  r cc  r  r  r  r  r  r  r  r  r  r  r ";  // 47
+    " r ..  r  r  r  r  r  r .. .. .. .. .. .. .. .. .. .. ..  r .. .. .. .. ..  r  r  x cc cc  0 cc cc  0 cc cc  0 cc cc cc cc cc cc cc  &  x  r  r  r  r  r  r cc  r  r  r  r  r  r  r  r  r  r  r ";  // 48
+    " r .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  r .. .. .. .. ..  r  r x! cc cc cc cc cc cc cc cc cc cc cc x! cc cc cc cc  &  x  r  r  r  r  r  r cc  r ,C ,R ,Y ,P ,T  r  r  r  r  r ";  // 49
+    " r ..  p ..  p ..  p ..  p ..  p ..  p ..  p ..  p .. ..  r  r  r  r  r  r  r  r  x cc cc cc cc cc cc cc cc cc cc cc  x cc cc cc cc  x  x  r  r  r  r  r cc cc cc cc cc cc cc cc cc  r  r  r  r ";  // 50
+    " r .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  r  r  r  r  r  r  r  r  x ,D ,I ,N ,I ,N ,G  @ ,H ,A ,L ,L  x  [  @  @  ]  x  r  r  r  r  r  r cc  r  r cc cc cc cc cc cc cc  r  r  r ";  // 51
+    " r .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  r  r  r  r  r  r  r  r  x  x x!  x  x  x x!  x  x  x x!  x  x  x  x  x  x  x  r  r  r  r  r  r cc  r cc cc cc cc cc cc cc  r  r  r  r ";  // 52
+    " r .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r cc  r  r cc  r  r  r cc  r  r  r  r  r ";  // 53
+    " r .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r cc  r cc cc cc  r cc cc cc  r  r  r  r ";  // 54
+    " r ..  p ..  p ..  p ..  p ..  p ..  p ..  p ..  p .. ..  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r cc  r  r cc  r  r  r cc  r  r  r  r  r ";  // 55
+    " r .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  r .. .. .. .. ..  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r cc  r cc cc cc  r cc cc cc  r  r  r  r ";  // 56
+    " r ..  r  r  r  r  r  r .. .. .. .. .. .. .. .. .. .. ..  r .. .. .. .. ..  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r cc  r  r cc  r  r  r cc  r  r  r  r  r ";  // 57
+    " r .. .. .. .. .. ..  r .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc  r cc cc cc  r cc cc cc  r  r  r  r ";  // 58
+    " r .. .. .. .. .. ..  r .. .. .. .. .. .. .. .. .. .. ..  r .. .. .. .. ..  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r cc  r  r  r cc  r  r  r  r  r ";  // 59
+    " r .. .. .. .. .. ..  r .. .. .. .. .. .. .. .. .. .. ..  r .. .. .. .. ..  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r cc cc cc  r cc cc cc  r  r  r  r ";  // 60
+    " r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r cc  r  r  r cc  r  r  r  r  r ";  // 61
+    " r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r ";  // 62
+    " r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r ";  // 63
+  //                                1  1  1  1  1  1  1  1  1  1  2  2  2  2  2  2  2  2  2  2  3  3  3  3  3  3  3  3  3  3  
+  //  0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5  6  7  8  9  
     }
 }

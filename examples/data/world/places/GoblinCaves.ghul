@@ -1,0 +1,133 @@
+//
+// Copyright-Only Dedication (based on United States law)
+//
+// The person or persons who have associated their work with this document (the
+// "Dedicator") hereby dedicate the entire copyright in the work of authorship
+// identified below (the "Work") to the public domain.
+//
+// Dedicator makes this dedication for the benefit of the public at large and
+// to the detriment of Dedicator's heirs and successors. Dedicator intends this
+// dedication to be an overt act of relinquishment in perpetuity of all present
+// and future rights under copyright law, whether vested or contingent, in the
+// Work. Dedicator understands that such relinquishment of all rights includes
+// the relinquishment of all rights to enforce (by lawsuit or otherwise) those
+// copyrights in the Work.
+//
+// Dedicator recognizes that, once placed in the public domain, the Work may be
+// freely reproduced, distributed, transmitted, used, modified, built upon, or
+// otherwise exploited by anyone for any purpose, commercial or non-commercial,
+// and in any way, including by methods that have not yet been invented or
+// conceived.
+//
+
+MAP GoblinCaves_Map {
+  type    ascii;
+  width   64;
+  height  39;
+  palette pal_expanded;
+  terrain {
+  //                                1  1  1  1  1  1  1  1  1  1  2  2  2  2  2  2  2  2  2  2  3  3  3  3  3  3  3  3  3  3  
+  //  0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5  6  7  8  9  
+    " r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  x  x  x  x  x  x  x  x  r ";  //  0
+    " r  x  x  r ..  r  r .. ..  r  r  r  r  r  r  r  r  r  r %%  r  r  r  r  r  r  r  r  r  r  r .. .. ..  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r .. ..  r  r  r  x ,L ,A ,R ,D ,E ,R  x  r ";  //  1
+    " r  x cc cc .. .. .. .. .. ..  [  @  ]  r  r  r  r  r  r ..  r  r  r  r  r  r  r  r  r .. .. .. .. ..  r  r  r .. ..  r  r .. ..  r  r  r  r  r .. .. .. .. ..  r  r  x ,, ,, ,, ,, ,, ,,  x  r ";  //  2
+    " r  r cc cc .. .. .. .. .. .. .. .. .. .. ..  r  r  r .. .. ..  r  r  r  r  r  r  r .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  r  r  r .. .. .. .. .. ..  r  r  x ,, ,, ,, ,, ,, ,,  x  r ";  //  3
+    " r .. .. .. .. .. .. .. .. .. .. .. .. .. ..  r  r  r .. .. .. .. ..  r  r  r .. .. .. .. .. ..  r .. .. .. .. .. .. .. .. .. .. .. ..  r  r  r .. .. .. ..  b  r  r  x ,, ,, ,, ,, ,, ,,  x  r ";  //  4
+    " r .. .. .. .. .. .. .. .. .. ..  & .. .. ..  r .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  r .. .. .. ..  r .. .. .. .. .. .. ..  r  r  r  r  r ..  r  r  r  r  x  x  x ,, ,,  x  x  x  r ";  //  5
+    " r .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  r  r .. ..  r  r .. .. .. .. .. .. ..  r  r  r ,, ,, ,, ,, ,,  r  x  x  x  x ,, ,,  x  x  x  r ";  //  6
+    " r .. .. .. .. .. .. .. .. ..  b ..  b .. ..  r .. .. .. ..  x  x  x  x  x .. .. .. .. .. ..  r  r  r  r  r  r  r .. .. .. .. .. .. ..  r  r ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,,  x  r ";  //  7
+    " r  r .. .. .. ..  & .. .. .. .. .. .. .. ..  r  r  x  x  x .. .X .. .O ..  x  x  x .. ..  r  r  r  r  r  r  r .. .. .. ..  r  r .. ..  r  r ,, ,,  p ,,  p ,, ,, ,, ,, ,, ,, ,, ,, ,, ,,  x  r ";  //  8
+    " r  r  r .. .. .. .. .. .. .. .. %% %%  r  r  x  x  r  r  x ,, ,, ,, ,, ,,  x ,, ,,  x  x ..  r  r  r  r  r .. ,, ,, ,, ,,  r  r ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,,  x  r ";  //  9
+    " r  r  r .. .. .. .. .. .. %% %% %%  r  r  x  r  r ,, ,,  x ,, ,, ,, ,, ,,  x ,, ,, ,, ,,  x .. .. ..  r .. ,, ,,  r .. .. .. .. .. ..  r  r .. ,,  p ,,  p ,, ,, ,, ,, ,, ,, ,, ,, ,, ,,  x  r ";  // 10
+    " r  r  r .. .. .. .. ..  r  r ~~ ~~  r  x  r ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, cc ,, ,, ,, ,, ,, ,,  r  r  r .. .. .. .. ..  r  r ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,,  x  r ";  // 11
+    " r  r  r  r .. ..  r  r  r  r -- --  x  r ,, ,, ,, ,,  r  r  r ,, ,, ,, ,,  x ,, ,, ,, ,, ,, ,,  x ..  r ..  r  r  r  r .. .. .. .. ..  r  r  r ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,,  x  r ";  // 12
+    " r  r  r  r .. ..  r  r  r  r  r  r  x ,, ,, ,, ,,  r  r  r  r  r ,, ,, ,,  r  r  r ,, ,, ,,  r  x  r .. .. .. ..  r  r .. .. .. .. ..  r  r  r  r  r  r  r  r  x  x  x ,, ,,  x  x  x  x  x  r ";  // 13
+    " r  r  r .. .. ..  r  r  r  r  r  x  r ,, ,, ,, ,,  r  r  r  r  r  r ,, ,,  r  r  r  r ,, ,,  r  r  x .. .. .. ..  r  r  r ..  r .. ..  r  r  r  r  r  r  r  r  x  x  x ,, ,,  x  x  x  x  r  r ";  // 14
+    " r  r  r .. .. .. ..  r  r  r  r  x  r ,, ,, ,, ,,  r  r  r  r tt tt ,, ,,  r  r  r  r ,, ,,  r  r  x  r .. .. ..  r  r  r  r  r .. ..  r  r cc cc cc cc  r  r  x ,, ,, ,, ,, ,, ,,  x  x  r  r ";  // 15
+    " r  r  r .. .. .. ..  r  r  r  r  x  r  r  r  &  r  r  r  r tt .. .. .. ,,  r  r  r  r ,, ,, ,,  r  x  r  r .. .. ..  r  r  r  r .. .. ,, cc cc cc cc cc cc  r  x ,, ,, ,, ,, ,, ,,  x  x  r  r ";  // 16
+    " r  r  r .. .. ..  r  r  r  r  x  r  r  r  r  r  r  r  r tt  x  x  x  x  x ..  r  r  r  r ,, ,, ,, ,,  x  r .. .. .. ..  r  r  r .. .. ,, cc cc  0  0 cc cc  r  x ,, ,, ,, ,, ,, ,,  x  x  r  r ";  // 17
+    " r  r  r .. .. ..  r  r  r  r  x  r  r ,, ,, ,,  r  r  r  r  x ,, ,, ,,  x  b  r  r  r ,, ,, ,, ,, ,,  x .. .. .. .. ..  r  r  r .. ..  p cc cc  0  0 cc cc  r  x  x  x ,, ,,  x  x  x  x  r  r ";  // 18
+    " r  r  r  r .. ..  r  r  r  r  x  r ,, ,,  r ,,  r  r  r  r  x ,, .. ,,  x ..  r  r  r ,, ,, ,, ,, ,,  x .. .. .. .. ..  b  r  & .. .. ,, cc cc  0  0 cc cc  r  x  x  x ,, ,,  x  x  x  x  r  r ";  // 19
+    " r  r  r  r .. ..  r  r  r  r  x ,, ..  r ,, .. ,,  r  r ,,  x  r ,, ,,  r  r  r ,, ,, ,, ,, ,, .. ,,  x .. .. .. .. .. ..  r  & .. .. ,, cc cc  0  0 cc cc  r  r  d tt .. .. .. tt tt tt  r  r ";  // 20
+    " r  r  r  r .. .. ..  r  r .. .. ,, .. ,, ,, ,, ,, ,, ,, ,,  x  x  x  x  x ,, ,, ,, ,, ,, ,, ..  b ..  x .. .. .. ..  & ..  r  & .. .. ,, cc cc  0  0 cc cc  r  r tt ..  b .. .. ..  b tt  d  r ";  // 21
+    " r  r .. .. .. .. .. .. .. ..  x ,, ,, .. ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,,  r  r  r  r ,, ,, ..  x .. .. .. .. .. ..  r  r  r .. ..  p cc cc  0  0 cc cc  r tt  d .. .. tt  b .. .. tt tt  r ";  // 22
+    " r  r .. .. .. .. .. .. .. .. ..  x  r ,, ,,  r  r  r  r ,,  r  r  r ,, ,, ,,  r  r  r  r  r  r ,,  x .. .. ..  b .. ..  r  r  r .. .. ,, cc cc cc cc cc cc  r  d ..  b .. .. .. ..  d tt  r  r ";  // 23
+    " r .. .. ..  b .. .. .. .. .. ..  x  r  r  r  r  r  r ,, ,, ,, ,,  r  r  r  r  r  r  r  r  r  r  r  x .. .. .. ..  r  r  r  r  r .. .. ,, cc cc cc cc cc  r  r  r tt tt .. ..  b tt tt  r  r  r ";  // 24
+    " r .. .. .. .. .. .. ..  b .. ..  r  x  r  r  r  b ,, ,, ,, .. ,,  r  r  r  r  r ,, ,, ,,  r  x  x  r ..  r  r  r  r  r  r  r  r .. ..  r  r  b cc cc  r  r  r  r  r  r tt .. ..  r  r  r  r  r ";  // 25
+    " r  r .. .. .. .. .. .. .. .. ..  r  x  r  r  r ,, ,, ,, ..  b .. ,,  r  r  r ,, ,, ,, ,, ,,  r  x .. ..  r  r  r  r  r  r ..  r .. ..  r  r  r  r  r  r  r  r  r  r  r ..  b ..  r  r  r  r  r ";  // 26
+    " r  r .. .. .. .. .. .. .. ..  r  r  r  x  r  r ,, ,, ,, ,, .. ,, ,,  r  r ,, ,, ,, ,, ,, ,,  x .. .. .. ..  r  r .. .. .. .. .. .. .. .. .. .. ..  b  r  r  r  r  r  r .. .. ..  r  r  r  r  r ";  // 27
+    " r  r  r .. .. .. .. ..  r  r  r  r  r  r  x ,, ,, ,, ,, ,, ,, ,,  r  r  r ,, ,,  & ,, ,, ,, .. .. .. .. ..  r .. .. .. .. .. .. .. .. .. .. .. .. ..  b  r  r ,R  r .. .. .. ..  r ;S  r  r  r ";  // 28
+    " r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  x  x  r ,,  r  r  r  r  r  r  r ,, ,, .. .. ..  r  r .. .. .. .. .. ..  r  r  r  r  r  b .. ..  & .. .. ..  r  r  b tt ..  b .. .. %%  b  r  r  r ";  // 29
+    " r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  x ..  x ,, ,,  r  r  r  x  x .. .. ..  r  r  r  r ..  r  r  r  r  r .. .. ..  r  r .. .. .. .. .. ..  r  r .. .. .. ..  b .. %% %%  b  r  r ";  // 30
+    " r  r  r  r .. .. ..  r  r  r  r  r  r  r  r  r .. .. .. .. .. ..  x  x  x  r  r ..  r  r  r  r  r .. ..  r  r  r  r .. .. ..  & ..  r .. .. .. .. ..  r  r  b .. ..  b .. .. %% %%  d %% ;T  r ";  // 31
+    " r  r  r .. .. .. .. .. .. ..  r  r ..  r  r  r .. .. .. .. .. .. ..  r  r  r  r  r  r  r  r  r  r .. ..  r  r  r  r .. .. .. .. ..  r  x  x ,,  x  x  r  r  b ..  b tt tt .. __ __ __ __  r  r ";  // 32
+    " r  r .. .. .. .. .. .. .. .. .. .. .. ..  r  r  r .. .. .. .. .. ..  r  r  r  r  r  r  r .. ..  r .. .. .. .. .. .. .. .. .. ..  r  r  x ,, ,, ,,  x  r ;A %% .. .. ..  d .. .. __ __ __ __  r ";  // 33
+    " r  r .. .. .. .. .. .. .. .. .. .. .. ..  r  r  r  r  r .. .. ..  r  r  r  r  r .. .. .. .. .. .. .. .. .. .. .. .. ..  r  r  r  r  r  x ,, ,, ,,  x  r  r  r  b ..  b .. .. .. == .. .. __  r ";  // 34
+    " r  r  r .. .. .. .. ..  r  r  r .. ..  r  r  r  r  r  r  r ..  r  r  r  r  r  r .. .. .. .. .. .. .. ..  r  r ..  r  r  r  r  r  r  r  b ,, ,, ,,  x  r  r  r  r  d %% __ __  b __ __ __ __  r ";  // 35
+    " r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r ..  r  r  r  r  r  r  r .. .. .. .. ..  r  r  r  r .. .. .. ..  r  r  r  r  x  b  x  x  x  r  r  r ,Q %% __ __ __ __ __ __  b  r  r ";  // 36
+    " r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  !  r  r  r  r  r  r  r  r .. ..  r  r  r  r  r  r .. .. .. .. ..  r  r  r  r  r  r  r  r  r  r  r  r  r  b __ __ __ __  b ,P  r  r ";  // 37
+    " r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r ";  // 38
+  //                                1  1  1  1  1  1  1  1  1  1  2  2  2  2  2  2  2  2  2  2  3  3  3  3  3  3  3  3  3  3  
+  //  0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5  6  7  8  9  
+  }
+}
+
+
+
+
+PLACE GoblinCaves {
+  type        dungeon;
+  parent      null;
+  x           0;
+  y           0;
+  name        "cavernous deeps";
+  wraps       0;
+  map         GoblinCaves_Map;
+  underground 1;
+  objects {
+
+          //--------------------------------------------------
+          // Mechs
+          //--------------------------------------------------
+          mech_hdoor door1 35 12 "closed";
+          mech_hdoor door2 34 25 "closed";
+          mech_vdoor door3 31 28 "closed";
+          mech_hdoor door4 34 30 "closed";
+          mech_vdoor door5 36 29 "closed";
+          mech_hdoor door6 43 26 "closed";
+          mech_hdoor door7 44 26 "closed";
+          mech_hdoor door8 43 14 "closed";
+          mech_hdoor door9 44 14 "closed";
+          mech_vdoor door10 46 9 "closed";
+          mech_vdoor door11 19 11 "closed";
+          mech_vdoor door12 25 11 "closed";
+          mech_vdoor door13 15 6 "closed";
+          mech_hdoor door14 18 29 "closed";
+          mech_hdoor door15 19 23 "closed";
+          mech_hdoor door16 50 5 "closed";
+          mech_hdoor door17 56 19 "closed";
+          mech_hdoor door18 57 19 "closed";
+          mech_hdoor door19 47 32 "locked";
+          mech_hdoor door20 4 12 "closed";
+          mech_hdoor door21 5 12 "closed";
+          mech_hdoor door22 4 20 "closed";
+          mech_hdoor door23 5 20 "closed";
+          mech_vdoor door24 10 21 "closed";
+          mech_hdoor door25 20 35 "locked";
+
+          //--------------------------------------------------
+          // NPC Parties
+          //--------------------------------------------------
+          t_goblin_horde 15 14 (ALIGN_CAVE_GOBLINS) 1 c_goblin;
+          t_goblin_horde 11  4 (ALIGN_CAVE_GOBLINS) 1 c_goblin;
+          t_goblin_horde  6  7 (ALIGN_CAVE_GOBLINS) 1 c_goblin;
+          t_goblin_horde 38 20 (ALIGN_CAVE_GOBLINS) 1 c_goblin;
+          t_goblin_horde 28 28 (ALIGN_CAVE_GOBLINS) 1 c_goblin;
+          t_goblin_horde 41 32 (ALIGN_CAVE_GOBLINS) 1 c_goblin;
+          t_goblin_horde 47 28 (ALIGN_CAVE_GOBLINS) 1 c_goblin;
+          t_goblin_horde 46 20 (ALIGN_CAVE_GOBLINS) 1 c_goblin;
+          t_goblin_horde 58  9 (ALIGN_CAVE_GOBLINS) 1 c_goblin;
+  }
+//  object_type t_town;
+
+} // PLACE p_cavernous_troll_deeps
