@@ -347,8 +347,9 @@ static void ctrl_attack_ui(class Character *character)
 
         // If in follow mode, when the leader attacks automatically switch to
         // turn-based mode.
-        if (player_party->getPartyControlMode() == PARTY_CONTROL_FOLLOW) {
-                log_msg("Switching from follow to combat mode.\n");
+        if (player_party->getPartyControlMode() == PARTY_CONTROL_FOLLOW &&
+            player_party->getSize() > 1) {
+                log_msg("Switching from Follow to Round Robin Mode.\n");
                 player_party->enableRoundRobinMode();
         }
 
