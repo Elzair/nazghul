@@ -138,7 +138,7 @@
 (kern-mk-sprite 's_null           ss_u4 1 126 #f 0 )
 (kern-mk-sprite 's_wall_stone     ss_u4 1 127 #f 0 )
 
-(kern-mk-sprite 's_pirate_left    ss_u4 1 128 #f 0 )
+0(kern-mk-sprite 's_pirate_left    ss_u4 1 128 #f 0 )
 (kern-mk-sprite 's_pirate_front   ss_u4 1 129 #f 0 )
 (kern-mk-sprite 's_pirate_right   ss_u4 1 130 #f 0 )
 (kern-mk-sprite 's_pirate_back    ss_u4 1 131 #f 0 )
@@ -723,5 +723,103 @@
 (kern-mk-sprite 's_road_WE_section_light_green   ss_kg_roads 1 141 #f 0)
 (kern-mk-sprite 's_road_E_end_light_green        ss_kg_roads 1 142 #f 0)
 ; Tile 143 unused
+
+;; David Gervais' missile sprites
+;; TODO: The facing code does not cover the layout needed by the bolts (first 3 rows)
+;;   Frames (0,1,2,3) are (N,NE,E,SE), then again (S,SW,W,NW)
+;;   Facing '511' means all 8, but wants 8 frames...
+
+;; Lightning bolts:
+(kern-mk-sprite 's_lightning_bolt_red         ss_dg_missiles 4   0 #f 0)  ;; change facing later...
+(kern-mk-sprite 's_lightning_bolt_green       ss_dg_missiles 4   4 #f 0)
+(kern-mk-sprite 's_lightning_bolt_blue        ss_dg_missiles 4   8 #f 0)
+(kern-mk-sprite 's_lightning_bolt_cyan        ss_dg_missiles 4  12 #f 0)
+(kern-mk-sprite 's_lightning_bolt_purple      ss_dg_missiles 4  16 #f 0)
+(kern-mk-sprite 's_lightning_bolt_yellow      ss_dg_missiles 4  20 #f 0)
+(kern-mk-sprite 's_lightning_bolt_brown       ss_dg_missiles 4  24 #f 0)
+(kern-mk-sprite 's_lightning_bolt_orange      ss_dg_missiles 4  28 #f 0)
+(kern-mk-sprite 's_lightning_bolt_white       ss_dg_missiles 4  32 #f 0)
+(kern-mk-sprite 's_lightning_bolt_grey        ss_dg_missiles 4  36 #f 0)
+(kern-mk-sprite 's_lightning_bolt_dark_grey   ss_dg_missiles 4  40 #f 0)
+(kern-mk-sprite 's_lightning_bolt_chromatic   ss_dg_missiles 4  44 #f 0)
+;; Magic ball (fireball core or similar):
+(kern-mk-sprite 's_magic_ball_core_red        ss_dg_missiles 2  48 #f 0)
+(kern-mk-sprite 's_magic_ball_core_green      ss_dg_missiles 2  50 #f 0)
+(kern-mk-sprite 's_magic_ball_core_blue       ss_dg_missiles 2  52 #f 0)
+(kern-mk-sprite 's_magic_ball_core_cyan       ss_dg_missiles 2  54 #f 0)
+(kern-mk-sprite 's_magic_ball_core_purple     ss_dg_missiles 2  56 #f 0)
+(kern-mk-sprite 's_magic_ball_core_yellow     ss_dg_missiles 2  58 #f 0)
+(kern-mk-sprite 's_magic_ball_core_brown      ss_dg_missiles 2  60 #f 0)
+(kern-mk-sprite 's_magic_ball_core_orange     ss_dg_missiles 2  62 #f 0)
+(kern-mk-sprite 's_magic_ball_core_white      ss_dg_missiles 2  64 #f 0)
+(kern-mk-sprite 's_magic_ball_core_grey       ss_dg_missiles 2  66 #f 0)
+(kern-mk-sprite 's_magic_ball_core_dark_grey  ss_dg_missiles 2  68 #f 0)
+(kern-mk-sprite 's_magic_ball_core_chromatic  ss_dg_missiles 2  70 #f 0)
+                                        ; (Tiles 71..79 blank)
+;; Magic burst/bloom/aura/field (5 ball lightnings in one tile):
+(kern-mk-sprite 's_magic_field_red            ss_dg_missiles 2  80 #f 0)
+(kern-mk-sprite 's_magic_field_green          ss_dg_missiles 2  82 #f 0)
+(kern-mk-sprite 's_magic_field_blue           ss_dg_missiles 2  84 #f 0)
+(kern-mk-sprite 's_magic_field_cyan           ss_dg_missiles 2  86 #f 0)
+(kern-mk-sprite 's_magic_field_purple         ss_dg_missiles 2  88 #f 0)
+(kern-mk-sprite 's_magic_field_yellow         ss_dg_missiles 2  90 #f 0)
+(kern-mk-sprite 's_magic_field_brown          ss_dg_missiles 2  92 #f 0)
+(kern-mk-sprite 's_magic_field_orange         ss_dg_missiles 2  94 #f 0)
+(kern-mk-sprite 's_magic_field_white          ss_dg_missiles 2  96 #f 0)
+(kern-mk-sprite 's_magic_field_grey           ss_dg_missiles 2  98 #f 0)
+(kern-mk-sprite 's_magic_field_dark_grey      ss_dg_missiles 2 100 #f 0)
+(kern-mk-sprite 's_magic_field_blue_2         ss_dg_missiles 2 102 #f 0)
+(kern-mk-sprite 's_magic_field_red_pulsed     ss_dg_missiles 2 104 #f 0)
+(kern-mk-sprite 's_magic_field_green_pulsed   ss_dg_missiles 2 106 #f 0)
+(kern-mk-sprite 's_magic_field_blue_pulsed    ss_dg_missiles 2 108 #f 0)
+(kern-mk-sprite 's_magic_field_white_pulsed   ss_dg_missiles 2 110 #f 0)
+(kern-mk-sprite 's_magic_field_purple_pulsed  ss_dg_missiles 2 112 #f 0)
+(kern-mk-sprite 's_magic_field_brown_pulsed   ss_dg_missiles 2 114 #f 0)
+(kern-mk-sprite 's_magic_field_blue_2_pulsed  ss_dg_missiles 2 116 #f 0)
+                                        ; (Tiles 118,119 blank)
+;; Chromatic ball lightning (8 frames):
+(kern-mk-sprite 's_magic_field_chromatic_pulsed  ss_dg_missiles 8 120 #f 0)
+;; Lightning discharges:
+(kern-mk-sprite 's_lightning_discharge_red       ss_dg_missiles 4 128 #f 0)
+(kern-mk-sprite 's_lightning_discharge_green     ss_dg_missiles 4 132 #f 0)
+(kern-mk-sprite 's_lightning_discharge_blue      ss_dg_missiles 4 136 #f 0)
+(kern-mk-sprite 's_lightning_discharge_black     ss_dg_missiles 4 140 #f 0)
+;; Lightning discharges in cloud:
+(kern-mk-sprite 's_lightning_cloud_blue_red      ss_dg_missiles 4 144 #f 0)
+(kern-mk-sprite 's_lightning_cloud_blue_green    ss_dg_missiles 4 148 #f 0)
+(kern-mk-sprite 's_lightning_cloud_blue_blue     ss_dg_missiles 4 152 #f 0)
+                                        ; (Tiles 156..159 blank)
+(kern-mk-sprite 's_lightning_cloud_blue_purple   ss_dg_missiles 4 160 #f 0)
+(kern-mk-sprite 's_lightning_cloud_blue_yellow   ss_dg_missiles 4 164 #f 0)
+(kern-mk-sprite 's_lightning_cloud_blue_orange   ss_dg_missiles 4 168 #f 0)
+                                        ; (Tiles 172..175 blank)
+;; Magical spheres:
+(kern-mk-sprite 's_magic_sphere_red              ss_dg_missiles 2 176 #f 0)
+(kern-mk-sprite 's_magic_sphere_green            ss_dg_missiles 2 178 #f 0)
+(kern-mk-sprite 's_magic_sphere_blue             ss_dg_missiles 2 180 #f 0)
+(kern-mk-sprite 's_magic_sphere_yellow           ss_dg_missiles 2 182 #f 0)
+(kern-mk-sprite 's_magic_sphere_purple           ss_dg_missiles 2 184 #f 0)
+(kern-mk-sprite 's_magic_sphere_cyan             ss_dg_missiles 2 186 #f 0)
+                                        ; (Tiles 188..191 blank)
+;; Magical spheres with light rays:
+(kern-mk-sprite 's_magic_sphere_rays_red         ss_dg_missiles 2 192 #f 0)
+(kern-mk-sprite 's_magic_sphere_rays_green       ss_dg_missiles 2 194 #f 0)
+(kern-mk-sprite 's_magic_sphere_rays_blue        ss_dg_missiles 2 196 #f 0)
+(kern-mk-sprite 's_magic_sphere_rays_yellow      ss_dg_missiles 2 198 #f 0)
+(kern-mk-sprite 's_magic_sphere_rays_purple      ss_dg_missiles 2 200 #f 0)
+(kern-mk-sprite 's_magic_sphere_rays_cyan        ss_dg_missiles 2 202 #f 0)
+                                        ; (Tiles 204..207 blank)
+;; Arrows and Bolts and such in flight:
+(kern-mk-sprite 's_arrow_wood_red                ss_dg_missiles 8 208 #f 0) ;; 511
+(kern-mk-sprite 's_arrow_metal_red               ss_dg_missiles 8 216 #f 0)
+(kern-mk-sprite 's_arrow_wood_green              ss_dg_missiles 8 224 #f 0)
+                                        ; (Tiles 232..239 blank)
+
+
+
+
+
+
+
 
 ;; eof
