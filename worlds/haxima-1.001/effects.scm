@@ -47,53 +47,6 @@
   (kern-char-set-sleep kchar #f))
 
 ;; ----------------------------------------------------------------------------
-;; ensnare
-;;
-;; The ensnare effect rolls against a character's strength each turn. If the
-;; roll fails, the character loses its turn. If it succeeds, the effect removes
-;; itself from the character. Also treat a natural roll of 20 as success.
-;; ----------------------------------------------------------------------------
-(define (can-ensnare? kobj)
-  (and (kern-obj-is-char? kobj)
-       (not (species-is-immune-to-ensnare? (kern-char-get-species kobj)))))
-
-(define (ensnare-apply fgob kobj)
-  (kern-log-msg (kern-obj-get-name kobj) " stuck in web!"))
-
-(define (destroy-webs-at loc)
-  (define (destroy-web web)
-    (kern-obj-remove web)
-    (kern-obj-destroy web))
-  (map destroy-web (find-object-types-at loc web-type)))
-
-(define (ensnare-exec fgob kchar)
-  (let ((droll (kern-dice-roll "1d20")))
-    (if (or (= droll 20)
-            (> (+ (kern-char-get-strength kchar) 
-                  droll)
-               dc-escape-ensnare))
-        (begin
-          (kern-log-msg (kern-obj-get-name kchar) " breaks free of web!")
-          (kern-obj-remove-effect kchar ef_ensnare)
-          (destroy-webs-at (kern-obj-get-location kchar))
-          #t)
-        (begin
-          (kern-log-msg (kern-obj-get-name kchar) " struggles in the web!")
-          (kern-obj-set-ap kchar 0)
-          #f))))
-
-(mk-effect 'ef_ensnare 'ensnare-exec 'ensnare-apply nil "keystroke-hook" 
-           "E" 0 #f 15)
-
-(define (is-ensnared? kobj)
-  (in-list? ef_ensnare (kern-obj-get-effects kobj)))
-
-(define (ensnare kobj)
-  (if (can-ensnare? kobj)
-      (begin
-        (kern-obj-add-effect kobj ef_ensnare nil))))
-
-;; ----------------------------------------------------------------------------
 ;; paralyze
 ;;
 ;; The paralyze effect rolls to expire each turn. If the roll fails, the
@@ -130,6 +83,55 @@
   (if (can-paralyze? kobj)
       (begin
         (kern-obj-add-effect kobj ef_paralyze nil))))
+
+;; ----------------------------------------------------------------------------
+;; ensnare
+;;
+;; The ensnare effect rolls against a character's strength each turn. If the
+;; roll fails, the character loses its turn. If it succeeds, the effect removes
+;; itself from the character. Also treat a natural roll of 20 as success.
+;; ----------------------------------------------------------------------------
+(define (can-ensnare? kobj)
+  (and (kern-obj-is-char? kobj)
+       (not (species-is-immune-to-ensnare? (kern-char-get-species kobj)))))
+
+(define (ensnare-apply fgob kobj)
+  (kern-log-msg (kern-obj-get-name kobj) " stuck in web!"))
+
+(define (destroy-webs-at loc)
+  (define (destroy-web web)
+    (kern-obj-remove web)
+    (kern-obj-destroy web))
+  (map destroy-web (find-object-types-at loc web-type)))
+
+(define (ensnare-exec fgob kchar)
+  (let ((droll (kern-dice-roll "1d20")))
+    ;; special case -- paralysis prevents struggling against the ensnare
+    (if (not (is-paralyzed? kchar))
+        (if (or (= droll 20)
+                (> (+ (kern-char-get-strength kchar) 
+                      droll)
+                   dc-escape-ensnare))
+            (begin
+              (kern-log-msg (kern-obj-get-name kchar) " breaks free of web!")
+              (kern-obj-remove-effect kchar ef_ensnare)
+              (destroy-webs-at (kern-obj-get-location kchar))
+              #t)
+            (begin
+              (kern-log-msg (kern-obj-get-name kchar) " struggles in the web!")
+              (kern-obj-set-ap kchar 0)
+              #f)))))
+
+(mk-effect 'ef_ensnare 'ensnare-exec 'ensnare-apply nil "keystroke-hook" 
+           "E" 0 #f 15)
+
+(define (is-ensnared? kobj)
+  (in-list? ef_ensnare (kern-obj-get-effects kobj)))
+
+(define (ensnare kobj)
+  (if (can-ensnare? kobj)
+      (begin
+        (kern-obj-add-effect kobj ef_ensnare nil))))
 
 ;; ----------------------------------------------------------------------------
 ;; light

@@ -136,8 +136,8 @@
        (kern-char-is-hostile? kchar kobj)
        (let ((charloc (kern-obj-get-location kchar))
              (objloc (kern-obj-get-location kobj)))
-         (display "is-visible-hostile? charloc=")(display charloc)
-         (display " objloc=")(display objloc)(newline)
+         ;; BUG: objloc intermittently comes back 'bad'
+         ;;(display " objloc=")(display objloc)(newline)
          (and (<= (kern-get-distance charloc objloc)
                   (kern-obj-get-vision-radius kchar))
               (kern-in-los? charloc objloc)
