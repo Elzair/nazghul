@@ -379,6 +379,7 @@ extern "C" {
 #define NAZGHUL_BASE_ACTION_POINTS  1
 
 /* Factions */
+#define INVALID_HANDLE      -1
 #define INVALID_FACTION     -1
 #define NIL_FACTION          0
 #define PLAYER_PARTY_FACTION 1

@@ -1,0 +1,198 @@
+;; save.scm -- a nazghul session file
+;; Load the standard definitions file
+(load "naz.scm")
+
+(kern-load "game.scm")
+
+(kern-mk-map 'm_ship 9 17 pal_expanded
+  (list
+    "-- -- -- -- -- -- -- -- -- "
+    "-- -- -- -- ## -- -- -- -- "
+    "-- -- -- ## ## ## -- -- -- "
+    "-- -- ## ## ee ## ## -- -- "
+    "-- ## ## ee ee ee ## ## -- "
+    "-- ## ee ee  o ee ee ## -- "
+    "ee ee ee ee ee ee ee ee ee "
+    "-- ## ee ee ee ee ee ## -- "
+    "-- ## ee ee ee ee ee ## -- "
+    "-- ## ee ee ee ee ee ## -- "
+    "ee ee ee ee ee ee ee ee ee "
+    "-- ## ee ee  o ee ee ## -- "
+    "-- ## ee ee  W ee ee ## -- "
+    "-- ## ee ee ee ee ee ## -- "
+    "-- ## ## ee ee ee ## ## -- "
+    "-- -- ## ## ## ## ## -- -- "
+    "-- -- -- -- -- -- -- -- -- "
+  )
+)
+(kern-mk-place 'p_test "Test Place"
+  nil ;; sprite
+  (kern-mk-map 'm_test_1 19 19 pal_expanded
+    (list
+      ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ~~ .. .. .. "
+      ".. .. .. ^^ ^^ ^^ .. {{ {{ {{ .. %% %% %% .. ~~ .. .. .. "
+      ".. .. .. ^^ ^^ ^^ .. {{ {{ {{ .. %% %% %% .. ~~ .. .. .. "
+      ".. .. .. ^^ ^^ ^^ .. {{ {{ {{ .. %% %% %% .. ~~ .. .. .. "
+      ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ~~ .. .. .. "
+      ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ~~ .. .. .. "
+      ".. .. .. tt tt tt .. || || || .. .. .. .. .. ~~ .. .. .. "
+      ".. .. .. tt tt tt .. || || || .. .. .. .. .. ~~ .. .. .. "
+      ".. .. .. tt tt tt .. || || || .. .. .. .. ~~ ~~ .. .. .. "
+      ".. .. .. .. .. .. .. .. .. .. .. .. .. .. ~~ .. .. .. .. "
+      ".. .. .. .. .. .. .. .. .. .. .. .. .. .. ~~ .. .. .. .. "
+      ".. .. ..  x ..  x .. .. .. .. .. .. .. .. ~~ .. .. .. .. "
+      ".. .. ..  x .. .. .. .. .. .. .. .. .. ~~ ~~ .. .. .. .. "
+      ".. .. ..  x  x  x .. .. .. .. .. .. .. ~~ .. .. .. .. .. "
+      ".. .. .. .. .. .. .. .. .. .. .. .. .. ~~ .. .. .. .. .. "
+      ".. .. .. .. .. .. .. .. .. .. .. .. .. ~~ .. .. .. .. .. "
+      ".. .. .. .. .. .. .. .. .. .. .. .. .. ~~ .. .. .. .. .. "
+      ".. .. .. .. .. .. .. .. .. .. .. .. ~~ ~~ .. .. .. .. .. "
+      ".. .. .. .. .. .. .. .. .. .. .. .. ~~ .. .. .. .. .. .. "
+    )
+  )
+  #f #f #t #f
+  ;; subplaces
+  nil
+  ;; neighbors
+  nil
+  ;; contents
+  (list
+    (list
+      (kern-mk-player
+        'player
+        s_companion_fighter
+        "Walk"
+        "sounds/walk.wav"
+        1000 500 3
+        nil
+        nil
+        nil
+        nil ; player's vehicle
+        (kern-mk-container
+          nil
+          ;; trap
+          nil
+          ;; contents
+          (list
+            (list 2 t_dagger)
+          )
+        )
+        (list
+          (kern-mk-char
+            'ch_olin
+            "Olin the Ghast"
+            sp_ghast
+            nil
+            s_ghost
+            3
+            20 30 22
+            0 1
+            10 5
+            0 0
+            0 0
+            58 0
+            8 8
+            nil
+            nil
+            nil
+            nil
+            ;; hooks
+            (list
+            )
+            ;; factions
+            (list (list 0 1 ) (list 1 7 ) )             
+          )
+          (kern-mk-char
+            'ch_shroom
+            "Shroom"
+            sp_human
+            oc_druid
+            s_companion_druid
+            3
+            20 30 20
+            0 0
+            0 0
+            0 0
+            0 0
+            30 0
+            9 9
+            nil
+            nil
+            nil
+            (list
+              t_dagger
+            )
+            ;; hooks
+            (list
+            )
+            ;; factions
+            (list (list 0 1 ) (list 2 3 ) (list 1 5 ) )             
+          )
+          (kern-mk-char
+            'ch_broom
+            "Broom"
+            sp_human
+            oc_druid
+            s_companion_druid
+            3
+            20 30 20
+            0 0
+            0 0
+            0 0
+            0 0
+            30 0
+            9 9
+            nil
+            nil
+            nil
+            (list
+              t_dagger
+            )
+            ;; hooks
+            (list
+            )
+            ;; factions
+            (list )             
+          )
+        )
+      )
+    9 9)
+  ) ;; end of objects
+  (list
+  )
+) ;; end of place p_test
+
+;;--------------
+;; Miscellaneous
+;;--------------
+(kern-set-frame s_frame_ulc s_frame_urc s_frame_llc s_frame_lrc s_frame_td s_frame_tu s_frame_tl s_frame_tr s_null s_frame_horz s_frame_vert s_frame_endl s_frame_endr)
+(kern-set-cursor ls_whirlpool)
+(kern-set-crosshair t_crosshair)
+(kern-set-ascii ss_little_sprites 32)
+(kern-set-clock 0 0 0 0 12 45)
+(kern-mk-dtable
+  (list (list (list 0 -2 ) ) (list (list 0 -1 ) ) (list (list 0 0 ) ) )
+  (list (list (list 0 1 ) ) (list (list 0 2 ) ) (list (list 0 1 ) ) )
+  (list (list (list 0 0 ) ) (list (list 0 -1 ) ) (list (list 0 -2 ) ) )
+)
+;; ---------
+;; Astronomy
+;; ---------
+(kern-mk-astral-body
+  'sun	; tag
+  "Fyer (the sun)"	; name
+  1	; distance
+  1	; minutes_per_phase
+  4	; minutes_per_degress
+  0	; initial_arc
+  0	; initial_phase
+  nil	; gifc
+  (list
+    (list s_sun 255 "full")
+  )
+)
+(kern-add-reveal 0)
+(kern-add-quicken 0)
+(kern-add-time-stop 0)
+(kern-add-magic-negated 0)
+(kern-add-xray-vision 0)

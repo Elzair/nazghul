@@ -4702,6 +4702,116 @@ KERN_API_CALL(kern_party_add_member)
         return sc->F;
 }
 
+KERN_API_CALL(kern_being_push_faction)
+{
+        class Being *being;
+        int faction;
+        int handle = INVALID_HANDLE;
+
+        being = (Being*)unpack_obj(sc, &args, "kern-being-push-faction");
+        if (!being)
+                goto done;
+
+        if (unpack(sc, &args, "d", &faction)) {
+                rt_err("kern-being-push-faction:<faction>: bad arg");
+                goto done;
+        }
+
+        handle = being->pushFaction(faction);
+ done:
+        return scm_mk_integer(sc, handle);
+}
+
+KERN_API_CALL(kern_being_pop_faction)
+{
+        class Being *being;
+
+        being = (Being*)unpack_obj(sc, &args, "kern-being-pop-faction");
+        if (!being)
+                goto done;
+
+        being->popFaction();
+ done:
+        return sc->NIL;
+}
+
+KERN_API_CALL(kern_being_rm_faction)
+{
+        class Being *being;
+        int handle = INVALID_HANDLE;
+
+        being = (Being*)unpack_obj(sc, &args, "kern-being-rm-faction");
+        if (!being)
+                goto done;
+
+        if (unpack(sc, &args, "d", &handle)) {
+                rt_err("kern-being-rm-faction:<handle>: bad arg");
+                goto done;
+        }
+
+        being->rmFaction(handle);
+ done:
+        return sc->NIL;
+}
+
+KERN_API_CALL(kern_being_set_faction)
+{
+        class Being *being;
+        int faction;
+        int handle = INVALID_HANDLE;
+
+        being = (Being*)unpack_obj(sc, &args, "kern-being-set-faction");
+        if (!being)
+                goto done;
+
+        if (unpack(sc, &args, "d", &faction)) {
+                rt_err("kern-being-set-faction:<faction>: bad arg");
+                goto done;
+        }
+
+        handle = being->setFaction(faction);
+ done:
+        return scm_mk_integer(sc, handle);
+
+}
+
+KERN_API_CALL(kern_being_get_faction)
+{
+        class Being *being;
+        int faction = INVALID_FACTION;
+
+        being = (Being*)unpack_obj(sc, &args, "kern-being-get-faction");
+        if (!being)
+                goto done;
+
+        faction = being->getFaction();
+ done:
+        return scm_mk_integer(sc, faction);
+}
+
+KERN_API_CALL(kern_being_has_faction)
+{
+        class Being *being;
+
+        being = (Being*)unpack_obj(sc, &args, "kern-being-has-faction?");
+        if (!being)
+                return sc->F;
+
+        return being->hasFaction() ? sc->T : sc->F;
+}
+
+KERN_API_CALL(kern_being_bottom_faction)
+{
+        class Being *being;
+
+        being = (Being*)unpack_obj(sc, &args, "kern-being-bottom-faction?");
+        if (!being)
+                return sc->F;
+
+        return being->bottomFaction() ? sc->T : sc->F;
+
+}
+
 scheme *kern_init(void)
 {        
         scheme *sc;
@@ -4894,6 +5004,15 @@ scheme *kern_init(void)
         /* kern-party-api */
         scm_define_proc(sc, "kern-party-add-member", kern_party_add_member);
         
+        /* kern-being-api */
+        scm_define_proc(sc, "kern-being-push-faction", kern_being_push_faction);
+        scm_define_proc(sc, "kern-being-pop-faction", kern_being_pop_faction);
+        scm_define_proc(sc, "kern-being-rm-faction", kern_being_rm_faction);
+        scm_define_proc(sc, "kern-being-set-faction", kern_being_set_faction);
+        scm_define_proc(sc, "kern-being-get-faction", kern_being_get_faction);
+        scm_define_proc(sc, "kern-being-has-faction?", kern_being_has_faction);
+        scm_define_proc(sc, "kern-being-bottom-faction?", kern_being_bottom_faction);
+
         /* Revisit: probably want to provide some kind of custom port here. */
         scheme_set_output_port_file(sc, stderr);
 
