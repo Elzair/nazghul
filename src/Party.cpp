@@ -206,6 +206,29 @@ Party::Party(class PartyType *type, int faction, class Vehicle *_vehicle)
         createMembers();
 }
 
+Party::Party(struct closure *clxFactory, int faction, class Vehicle *_vehicle)
+        : Being(type)
+{
+        /* WARN: still need a party type for some things; this change is in
+         * progress. */
+        assert(false);
+
+        setup();
+        
+        setBaseFaction(faction);
+
+        // Vehicle
+        if (!_vehicle) {
+                vehicle = NULL;
+        } else {
+                vehicle = _vehicle;
+                vehicle->occupant = this;
+        }
+
+        // Create the party members.
+        createMembers();
+}
+
 void Party::setup()
 {
 	act = WORKING;
@@ -220,6 +243,7 @@ void Party::setup()
         memset(&pinfo, 0, sizeof(pinfo));
         ctrl = ctrl_party_ai;
         vehicle = NULL;
+        factory = NULL;
 }
 
 static bool party_remove_member(class Character *ch, void *data)
@@ -235,6 +259,7 @@ Party::~Party()
          * other container references them then they will be automatically
          * destoyed. */
         forEachMember(party_remove_member, this);
+        closure_unref_safe(factory);
 }
 
 bool Party::isType(int classID)

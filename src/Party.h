@@ -72,6 +72,7 @@ class Party:public Being {
 
 	Party();
         Party(class PartyType *type, int faction, class Vehicle *vehicle);
+        Party(struct closure *factory, int faction, class Vehicle *vehicle);
 	virtual ~Party();
         void setup();
 
@@ -150,6 +151,7 @@ class Party:public Being {
         bool wandering;
         void (*ctrl)(class Party*);
         int n_members;
+        struct closure *factory; /* for lazy party instantiation */
 };
 
 #endif

@@ -1703,6 +1703,36 @@ static pointer kern_mk_party(scheme *sc, pointer args)
         return scm_mk_ptr(sc, obj);
 }
 
+/*
+ * kern_mk_lazy_party - create a party which uses a script closure to generate
+ * its members instead of a party type
+ */
+static pointer kern_mk_lazy_party(scheme *sc, pointer args)
+{
+        class Party *obj;
+        int faction;
+        class Vehicle *vehicle;
+        pointer factory;
+
+        if (unpack(sc, &args, "cdp", &factory, &faction, &vehicle)) {
+                load_err("kern-mk-lazy-party: bad args");
+                return sc->NIL;
+        }
+
+        if (factory == sc->NIL) {
+                load_err("kern-mk-lazy-party: nil factory");
+                return sc->NIL;
+        }
+
+        obj = new Party(closure_new(sc, factory), faction, vehicle);
+        assert(obj);
+
+        /* LEFT OFF HERE - dangerous to make a party without a type; some info
+         * is still expected from the type... update the plan. */
+
+        return scm_mk_ptr(sc, obj);
+}
+
 static pointer kern_obj_put_at(scheme *sc, pointer args)
 {
         class Object *obj;

@@ -4007,6 +4007,10 @@ static void Eval_Cycle(scheme *sc, enum scheme_opcodes op) {
   
   sc->op = op;
   for (;;) {
+
+    /* special debug hack */
+    //assert((sc->oblist+1+(356/2))->_object._cons._cdr->_flag & T_IMMUTABLE);
+
     op_code_info *pcd=dispatch_table+sc->op;
     if (pcd->name!=0) { /* if built-in function, check arguments */
       char msg[512];

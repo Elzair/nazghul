@@ -28,8 +28,8 @@
 #include "terrain.h"
 #include "place.h"
 #include "images.h"
-#include "Party.h"c
-#Include "ptable.h"
+#include "Party.h"
+#include "ptable.h"
 #include "common.h"
 #include "player.h"
 #include "sky.h"
