@@ -35,11 +35,12 @@
 
 // Define a new type of mechanism: a simple lever that could be used to send a
 // signal to, say, open a door.
-#define MAKE_LEVER_MECH(type_name, m_name, s1_nm, s1_spr, s2_nm, s2_spr) \
+#define MAKE_LEVER_MECH(type_name, m_name, _invisible, s1_nm, s1_spr, s2_nm, s2_spr) \
 MECH_TYPE type_name { \
   name m_name;        \
   defaults {          \
-    pmask PASS_ALL;   \
+    pmask     PASS_ALL;   \
+    invisible _invisible; \
   }                   \
   states {            \
     {                 \
@@ -67,21 +68,24 @@ MECH_TYPE type_name { \
   }   \
 }
 
-MAKE_LEVER_MECH(mech_L_lever,  "lever", 
+MAKE_LEVER_MECH(mech_L_lever, "lever", 0,
                 "up",    s_left_lever_up,    
                 "down",  s_left_lever_down);
-MAKE_LEVER_MECH(mech_R_lever,  "lever", 
+MAKE_LEVER_MECH(mech_R_lever,  "lever", 0,
                 "up",    s_right_lever_up,   
                 "down",  s_right_lever_down);
-MAKE_LEVER_MECH(mech_T_lever,  "lever", 
+MAKE_LEVER_MECH(mech_T_lever, "lever", 0,
                 "left",  s_top_lever_left,   
                 "right", s_top_lever_right);
-MAKE_LEVER_MECH(mech_B_lever,  "lever", 
+MAKE_LEVER_MECH(mech_B_lever, "lever", 0,
                 "left",  s_bottom_lever_left,
                 "right", s_bottom_lever_right);
-MAKE_LEVER_MECH(mech_C_lever,  "lever", 
+MAKE_LEVER_MECH(mech_C_lever, "lever", 0,
                 "left",  s_floor_lever_left, 
                 "right", s_floor_lever_right);
+MAKE_LEVER_MECH(mech_hidden_lever, "lever", 1,
+                "up",    s_left_lever_up, 
+                "down",  s_left_lever_down);
 
 
 #define MAKE_SIMPLE_STEP_TRIGGER(type_name, _name, _state, _sprite, _sig, _invisible) \

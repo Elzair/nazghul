@@ -110,7 +110,7 @@ PLACE  p_terrain_test {
 
     t_cannonball 4 25;  // Ammo (cannonball)
 
-    // Note sure these are ever "placed" objects.
+    // Not sure these are ever "placed" objects.
     // All the better reason to test them...
     M_fire       4 26;  // Temporary projectiles
     M_protect    4 27;
@@ -123,6 +123,10 @@ PLACE  p_terrain_test {
     vt_ship  2 12 east 100;  // Vehicle (ship)
     vt_horse 2 15 east 100;  // Vehicle (horse)
 
+    // To place a mechanism, use a line like the below:
+    // mech_type_tag this_mech_name x y "initial state name";
+    mech_L_lever      left_lever   1 20 "up";
+    mech_hidden_lever hidden_lever 1 21 "up";  // This one is invisible
   }
   object_type t_town;
 
