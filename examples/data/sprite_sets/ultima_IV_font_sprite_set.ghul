@@ -70,6 +70,7 @@ SPRITE_SET ss_little_sprites {
     SPRITE    (ls_vbar_bottom,           1, 17, rotate);
     STD_SPRITE(ls_blank_one ,               18);
     STD_SPRITE(ls_dot_dot_dot ,             19);
+#ifdef USE_ULTIMA_IV_MOON_SPRITES
     STD_SPRITE(s_wax_quarter_moon ,         20);
     STD_SPRITE(s_wax_half_moon ,            21);
     STD_SPRITE(s_wax_three_quarter_moon ,   22);
@@ -78,6 +79,7 @@ SPRITE_SET ss_little_sprites {
     STD_SPRITE(s_wane_half_moon ,           25);
     STD_SPRITE(s_wane_quarter_moon ,        26);
     STD_SPRITE(s_new_moon ,                 27);
+#endif
     SPRITE    (ls_whirlpool,             4, 28, normal);
     STD_SPRITE(ls_blank_three,              32);
     

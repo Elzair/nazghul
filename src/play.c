@@ -2493,7 +2493,6 @@ static int play_init(struct play *play)
 				 */
 	foogodInit();		/* before painting the frame for the first time 
 				 */
-	screen_repaint_frame();
 
 	statusSetMode(ShowParty);	/* note: must do this after painting
 					 * the frame because the title is
@@ -2506,6 +2505,11 @@ static int play_init(struct play *play)
 
 	moongateSetAnimationWorkQueue(&TickWorkQueue);
 	skyInit();
+
+	screen_repaint_frame(); // after skyInit (otherwise one of the
+                                // astronomical sprites might get painted over
+                                // the frame on the right side of the sky
+                                // window)
 
 	windSetDirection(NORTH, 1);
 

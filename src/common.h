@@ -96,6 +96,7 @@ extern "C" {
 #define SKY_Y   0
 #define SKY_W   MOON_WINDOW_W
 #define SKY_H   BORDER_H
+#define SKY_SPRITE_W (TILE_W/2)
 
 /* Directions */
 #define DIRECTION_NONE -1
@@ -193,18 +194,20 @@ extern "C" {
 #define MAX_WORDS_IN_SPELL_NAME  4
 
 /* The maximum intensity of ambient sunlight. No point making it more than 255
-	* because the lightmap only allows tiles to have a max value of 255.*/
+ * because the lightmap only allows tiles to have a max value of 255.*/
+#define MAX_AMBIENT_LIGHT       255
 #define MAX_SUNLIGHT            255
+#define MAX_MOONLIGHT           128
 
 /* The minimum amount of light the player generates. This is so that the user
 	* can at least see the player icon in total darkness. */
 #define MIN_PLAYER_LIGHT        128
 
-// The sun sprite is CHAR_W pixels wide, and it advances
+// The sun sprite is SKY_SPRITE_W pixels wide, and it advances
 // MOON_WINDOW_PIXELS_PER_DEGREE every time it moves, and I want its luminence
 // to drop to zero by the time it passes out of sight of the sky window.
 #define DELTA_SUNLIGHT          (MAX_SUNLIGHT / \
-                                 (ASCII_W * MOON_WINDOW_PIXELS_PER_DEGREE))
+                                 (SKY_SPRITE_W * MOON_WINDOW_PIXELS_PER_DEGREE))
 
 #define TURNS_PER_FOOD          (TURNS_PER_DAY/3)
 #define MAX_SPEED               100

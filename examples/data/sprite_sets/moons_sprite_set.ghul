@@ -39,6 +39,16 @@ SPRITE_SET ss_moons {
   file "data/images/moons-16x16.png";
   
   sprites {
+#ifndef  USE_ULTIMA_IV_MOON_SPRITES
+    STD_SPRITE(s_full_moon ,                0);
+    STD_SPRITE(s_wane_three_quarter_moon ,  1);
+    STD_SPRITE(s_wane_half_moon ,           2);
+    STD_SPRITE(s_wane_quarter_moon ,        3);
+    STD_SPRITE(s_new_moon ,                 4);
+    STD_SPRITE(s_wax_quarter_moon ,         5);
+    STD_SPRITE(s_wax_half_moon ,            6);
+    STD_SPRITE(s_wax_three_quarter_moon ,   7);
+#endif // ! USE_ULTIMA_IV_MOON_SPRITES
     SPRITE(s_sun, 1, 8, normal);
   }
 } /* SPRITE_SET ss_moons */

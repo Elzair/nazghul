@@ -30,14 +30,14 @@
 moon_info {
   phases 8;  // SAM: is this needed given that the below is in a {} block?
   {       
-    sprite s_full_moon;
-    sprite s_wane_three_quarter_moon;
-    sprite s_wane_half_moon;
-    sprite s_wane_quarter_moon;
     sprite s_new_moon;
     sprite s_wax_quarter_moon;
     sprite s_wax_half_moon;
     sprite s_wax_three_quarter_moon;
+    sprite s_full_moon;
+    sprite s_wane_three_quarter_moon;
+    sprite s_wane_half_moon;
+    sprite s_wane_quarter_moon;
   } // phases
 
   moons {
@@ -47,7 +47,7 @@ moon_info {
       arc             100;
     }
     {
-      phase           1;
+      phase           4;
       days_per_cycle  2;
       arc             200;
     }
@@ -59,7 +59,7 @@ moon_info {
     // Noon is 180, Sunrise(4AM) = 60, Sunset(8PM) = 300
     // 15 degrees per hour after midnight
     // (These numbers based on values in common.h)
-    arc    61;
+    arc    285;
     sprite s_sun;
   } // sun
 
@@ -76,7 +76,7 @@ moon_info {
       object_type t_moongate;
       x           19;
       y           33;
-      phase       1;
+      phase       4;
     }
   } // moongates
 

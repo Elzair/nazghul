@@ -41,6 +41,7 @@ extern "C" {
                 int arc; /* 0 to 360 */
                 int days_per_cycle;
                 int turns_per_phase;
+                int light;
 		void (*openMoongate) (int phase);
 		void (*closeMoongate) (int phase);
         };
@@ -94,6 +95,7 @@ extern "C" {
         extern int is_midnight (void);
 
         extern int moon_is_visible (int arc);
+        extern int sky_get_ambient_light(void);
 
 #ifdef __cplusplus
 }

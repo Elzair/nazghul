@@ -32,7 +32,7 @@
 #include "map.h"
 #include "terrain_map.h"
 
-
+#if 0 // debug
 static void dump_state(struct mech_state *state)
 {
         printf("  name=%s\n",   state->name);
@@ -40,7 +40,7 @@ static void dump_state(struct mech_state *state)
         printf(" light=%d\n",   state->light);
         printf("opaque=%d\n",   state->opaque);
 }
-
+#endif
 
 struct mech_transition *MechType::load_transitions(class Loader * loader,
 						   int *n)

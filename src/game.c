@@ -922,7 +922,16 @@ static struct terrain_map * game_load_ascii_terrain_map (char *tag)
             //      (The current code palette_terrain_for_glyph()
             //      does not leave us with a meaningful 'j' like
             //      the original code did...)
-            int j = 0;  // No meaningful value available...
+            //
+            // gmcnutt: it looks like the new code completely breaks the
+            // original optimization. This is not a BIG deal since loading
+            // palettes doesn't really take a lot of time. When we do the new
+            // loader for 0.4 I plan to do profiling and if warranted I'll put
+            // the optimization back in then. Frankly, a better strategy for
+            // optimizing would be to do the obvious thing and store palettes
+            // in a hash table instead of a linked list.
+            //
+            int j = 0;  // No meaningful value available...            
             char * prev_glyph = palette_glyph(palette, j);
             if (!strncmp(prev_glyph, glyph, 1)) {
               terrain_map->terrain[i] = palette_terrain(palette, j);
@@ -985,6 +994,11 @@ static struct terrain_map * game_load_ascii_terrain_map (char *tag)
             //      (The current code palette_terrain_for_glyph()
             //      does not leave us with a meaningful 'j' like
             //      the original code did...)
+            //
+            // gmcnutt: same notes as above in the one-char-per-tile
+            // section. And yes, for 0.4 we need to get rid of having two code
+            // sections doing the same thing.
+            //
             int j = 0;  // No meaningful value available...
             char * prev_glyph = palette_glyph(palette, j);
             if (!strcmp(prev_glyph, glyph)) {

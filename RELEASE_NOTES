@@ -62,3 +62,17 @@ Changes for nazghul-0.1.2
   can. Note that they still aren't smart enough to pathfind through impassable
   mechanisms, so a door is enough to hold them off.
 
+--Fixed some issues with sunrise/sunset. The sun now begins to appear in the
+  sky window at sunrise, and is completely gone by sunset. The light fades in
+  and out over the space of the first hour after sunrise and before sunset,
+  respectively. The code to calculate sunlight now uses a single consistent
+  forumula, and does so for the moons as well as the sun (more on that below).
+
+--The moons now provide light depending on their arc and phase. They can
+  provide at most 128 light units, whereas the sun can provide 255 (max is 255
+  due to the way the lightmap gets built in map.c). So even with a full moon
+  things are a bit dim.
+
+--Replaced the u4 moon sprites with my own, since mine are 16x16 and u4 is
+  only 8x16. Makes the full moons look full.
+

@@ -29,40 +29,39 @@ extern "C" {
 #include "list.h"
 #include "common.h"
 
-  struct sprite;
+	struct sprite;
 
 #define terrain_combat_map(t) ((t)->combat_map)
 
-  /* Terrain effects */
+	/* Terrain effects */
 #define TERRAIN_NEUTRAL 0
 #define TERRAIN_POISON  EFFECT_POISON
 #define TERRAIN_BURN    EFFECT_BURN
 
-  struct terrain {
-    struct list list;
-    char *tag;
-    char *name;
-    struct sprite *sprite;
-    struct terrain_map *combat_map;
-    unsigned char alpha;
-    unsigned int pmask;  // passability mask (sea, air land)
-    int movement_cost;   // should not exceed PLAYER_MAX_PROGRESS
-    char effects;
-    int light;
-    Uint32 color;
+	struct terrain {
+		struct list list;
+		char *tag;
+		char *name;
+		struct sprite *sprite;
+		struct terrain_map *combat_map;
+		unsigned char alpha;
+		unsigned int pmask;	// passability mask (sea, air land)
+		int movement_cost;	// should not exceed
+					// PLAYER_MAX_PROGRESS
+		char effects;
+		int light;
+		Uint32 color;
 
-    int id;      // Used for binary maps, obsolescent
-  };
+		int id;		// Used for binary maps, obsolescent
+	};
 
-  extern struct terrain *terrain_create(char *tag,
-                                        char *name, 
-                                        unsigned int pmask,
-                                        struct sprite *sprite, 
-                                        int  id, 
-                                        unsigned char alpha);
+	extern struct terrain *terrain_create(char *tag,
+					      char *name,
+					      unsigned int pmask,
+					      struct sprite *sprite,
+					      int id, unsigned char alpha);
 
-  extern void terrain_destroy(struct terrain *terrain);
-
+	extern void terrain_destroy(struct terrain *terrain);
 
 #define MAX_TERRAIN_PALETTE_ENTRY_SYMBOL_SZ 4
 #define NUM_QUICK_TERRAINS                  10
@@ -71,32 +70,33 @@ extern "C" {
 
 #define INDENT fprintf(fp, "%*s", indent, "")
 
-  struct terrain_palette_entry {
-	char             glyph[MAX_TERRAIN_PALETTE_ENTRY_SYMBOL_SZ + 2];
-	struct terrain * terrain;
-  };
-  void palette_entry_print (FILE * fp, int indent, struct terrain_palette_entry * entry);
+	struct terrain_palette_entry {
+		char glyph[MAX_TERRAIN_PALETTE_ENTRY_SYMBOL_SZ + 2];
+		struct terrain *terrain;
+	};
+	void palette_entry_print(FILE * fp, int indent,
+				 struct terrain_palette_entry *entry);
 
-  struct terrain_palette {
-    char * tag;
-    int    widest_glyph;
-    int    num_entries;
-    struct terrain_palette_entry * set;
-    struct terrain               * quick_terrain[NUM_QUICK_TERRAINS];
-    // "quick terrain" for quick UI access (ten number keys 0..9)
-  };
+	struct terrain_palette {
+		char *tag;
+		int widest_glyph;
+		int num_entries;
+		struct terrain_palette_entry *set;
+		struct terrain *quick_terrain[NUM_QUICK_TERRAINS];
+		// "quick terrain" for quick UI access (ten number keys 0..9)
+	};
 
-  struct terrain_palette * new_terrain_palette (void);
-  char *           palette_glyph             (struct terrain_palette * palette, int n);
-  struct terrain * palette_terrain           (struct terrain_palette * palette, int n);
-  struct terrain * palette_terrain_for_glyph (struct terrain_palette * palette, char * glyph);
-  struct terrain * palette_quick_terrain     (struct terrain_palette * palette, int n);
-  void palette_print (FILE * fp, int indent, struct terrain_palette * palette);
-
-
+	struct terrain_palette *new_terrain_palette(void);
+	char *palette_glyph(struct terrain_palette *palette, int n);
+	struct terrain *palette_terrain(struct terrain_palette *palette, int n);
+	struct terrain *palette_terrain_for_glyph(struct terrain_palette
+						  *palette, char *glyph);
+	struct terrain *palette_quick_terrain(struct terrain_palette *palette,
+					      int n);
+	void palette_print(FILE * fp, int indent,
+			   struct terrain_palette *palette);
 
 #ifdef __cplusplus
 }
 #endif
-
 #endif

@@ -1120,7 +1120,7 @@ void player_party::recompute_los(void)
 	// hack -- should replace this with a routine for getting the ambient
 	// light from the local environment (place?)
 	if (!Place->underground)
-		info.light += Sun.light;
+		info.light += sky_get_ambient_light();
 
 	// Set the vision radius to the minimum of the best available light
 	// radius or the best available vision radius of all party members

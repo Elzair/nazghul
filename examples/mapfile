@@ -379,6 +379,14 @@ SPRITE_SET ss_moons {
   file_offy 0;
   file "data/images/moons-16x16.png";
   sprites {
+    s_full_moon { frames 1; index 0; style normal; facings 0; };
+    s_wane_three_quarter_moon { frames 1; index 1; style normal; facings 0; };
+    s_wane_half_moon { frames 1; index 2; style normal; facings 0; };
+    s_wane_quarter_moon { frames 1; index 3; style normal; facings 0; };
+    s_new_moon { frames 1; index 4; style normal; facings 0; };
+    s_wax_quarter_moon { frames 1; index 5; style normal; facings 0; };
+    s_wax_half_moon { frames 1; index 6; style normal; facings 0; };
+    s_wax_three_quarter_moon { frames 1; index 7; style normal; facings 0; };
     s_sun { frames 1; index 8; style normal; facings 0; };
   }
 }
@@ -438,14 +446,6 @@ SPRITE_SET ss_little_sprites {
     ls_vbar_bottom { frames 1; index 17; style rotate; facings 0; };
     ls_blank_one { frames 1; index 18; style normal; facings 0; };
     ls_dot_dot_dot { frames 1; index 19; style normal; facings 0; };
-    s_wax_quarter_moon { frames 1; index 20; style normal; facings 0; };
-    s_wax_half_moon { frames 1; index 21; style normal; facings 0; };
-    s_wax_three_quarter_moon { frames 1; index 22; style normal; facings 0; };
-    s_full_moon { frames 1; index 23; style normal; facings 0; };
-    s_wane_three_quarter_moon { frames 1; index 24; style normal; facings 0; };
-    s_wane_half_moon { frames 1; index 25; style normal; facings 0; };
-    s_wane_quarter_moon { frames 1; index 26; style normal; facings 0; };
-    s_new_moon { frames 1; index 27; style normal; facings 0; };
     ls_whirlpool { frames 4; index 28; style normal; facings 0; };
     ls_blank_three { frames 1; index 32; style normal; facings 0; };
   }
@@ -543,107 +543,107 @@ SPRITE_SET ss_rune_font_8x16 {
 }
 CURSOR ls_whirlpool;
 terrains {
-  t_deep { name "deep water" pmask 4 sprite s_deep glyph X id 0 alpha 1 movement_cost 1 effects 0 light 0 };
-  t_shallow { name "shallow water" pmask 4 sprite s_shallow glyph X id 1 alpha 1 movement_cost 1 effects 0 light 0 };
-  t_shoals { name "shoals" pmask 8 sprite s_shoals glyph X id 2 alpha 1 movement_cost 1 effects 0 light 0 };
-  t_grass { name "grass" pmask 2 sprite s_grass glyph X id 4 alpha 1 movement_cost 1 effects 0 light 0 };
-  t_trees { name "trees" pmask 2 sprite s_trees glyph X id 5 alpha 1 movement_cost 1 effects 0 light 0 };
-  t_forest { name "forest" pmask 2 sprite s_forest glyph X id 6 alpha 0 movement_cost 2 effects 0 light 0 };
-  t_hills { name "hills" pmask 2 sprite s_hills glyph X id 7 alpha 1 movement_cost 2 effects 0 light 0 };
-  t_mountains { name "mountains" pmask 1 sprite s_mountains glyph X id 8 alpha 0 movement_cost 2 effects 0 light 0 };
-  t_leftwing { name "castle wall" pmask 1 sprite s_leftwing glyph X id 13 alpha 1 movement_cost 1 effects 0 light 0 };
-  t_rightwing { name "castle wall" pmask 1 sprite s_rightwing glyph X id 15 alpha 1 movement_cost 1 effects 0 light 0 };
-  t_cobblestone { name "cobblestone" pmask 2 sprite s_cobblestone glyph X id 22 alpha 1 movement_cost 1 effects 0 light 0 };
-  t_flagstones { name "flagstones" pmask 2 sprite s_flagstone glyph X id 62 alpha 1 movement_cost 1 effects 0 light 0 };
-  t_bog { name "bog" pmask 2 sprite s_bog glyph X id 3 alpha 1 movement_cost 2 effects 1 light 0 };
-  t_fire_terrain { name "fire" pmask 2 sprite s_field_fire glyph X id 70 alpha 1 movement_cost 1 effects 2 light 512 };
-  t_fireplace { name "fireplace" pmask 2 sprite s_fireplace glyph X id 75 alpha 1 movement_cost 1 effects 2 light 4096 };
-  t_lava { name "lava" pmask 2 sprite s_lava glyph X id 76 alpha 1 movement_cost 1 effects 2 light 128 };
-  t_bridge { name "bridge" pmask 14 sprite s_bridge glyph X id 23 alpha 1 movement_cost 1 effects 0 light 0 };
-  t_bridge_top { name "bridge" pmask 14 sprite s_bridge_top glyph X id 25 alpha 1 movement_cost 1 effects 0 light 0 };
-  t_bridge_bottom { name "bridge" pmask 14 sprite s_bridge_bottom glyph X id 26 alpha 1 movement_cost 1 effects 0 light 0 };
-  t_ship_hull { name "ship's hull" pmask 1 sprite s_wall glyph X id 72 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_sh_hull_NE { name "ship's hull" pmask 1 sprite s_wall_b glyph X id 49 alpha 1 movement_cost 1 effects 0 light 0 };
-  t_sh_hull_NW { name "ship's hull" pmask 1 sprite s_wall_a glyph X id 50 alpha 1 movement_cost 1 effects 0 light 0 };
-  t_sh_hull_SE { name "ship's hull" pmask 1 sprite s_wall_c glyph X id 51 alpha 1 movement_cost 1 effects 0 light 0 };
-  t_sh_hull_SW { name "ship's hull" pmask 1 sprite s_wall_d glyph X id 52 alpha 1 movement_cost 1 effects 0 light 0 };
-  t_mast { name "mast" pmask 1 sprite s_mast glyph X id 53 alpha 1 movement_cost 1 effects 0 light 0 };
-  t_ships_wheel { name "ship's wheel" pmask 1 sprite s_ships_wheel glyph X id 54 alpha 1 movement_cost 1 effects 0 light 0 };
-  t_deck { name "deck" pmask 2 sprite s_deck glyph X id 63 alpha 1 movement_cost 1 effects 0 light 0 };
-  t_wall_rock { name "rock wall" pmask 1 sprite s_wall_rock glyph X id 57 alpha 0 movement_cost 1 effects 0 light 0 };
-  t_wall { name "wall" pmask 1 sprite s_wall_stone glyph X id 127 alpha 0 movement_cost 1 effects 0 light 0 };
-  t_secret_door { name "secret door" pmask 2 sprite s_secret_door glyph X id 73 alpha 0 movement_cost 1 effects 0 light 0 };
-  t_sea_wall { name "sea wall" pmask 1 sprite s_wall glyph X id 72 alpha 0 movement_cost 0 effects 0 light 0 };
-  t_sea_wall_NE { name "sea wall" pmask 1 sprite s_wall_b glyph X id 49 alpha 0 movement_cost 1 effects 0 light 0 };
-  t_sea_wall_NW { name "sea wall" pmask 1 sprite s_wall_a glyph X id 50 alpha 0 movement_cost 1 effects 0 light 0 };
-  t_sea_wall_SE { name "sea wall" pmask 1 sprite s_wall_c glyph X id 51 alpha 0 movement_cost 1 effects 0 light 0 };
-  t_sea_wall_SW { name "sea wall" pmask 1 sprite s_wall_d glyph X id 52 alpha 0 movement_cost 1 effects 0 light 0 };
-  t_boulder { name "boulder" pmask 1 sprite s_boulder glyph X id 55 alpha 1 movement_cost 1 effects 0 light 0 };
-  t_ankh { name "ankh" pmask 0 sprite s_ankh glyph X id 61 alpha 1 movement_cost 1 effects 0 light 0 };
-  t_altar { name "altar" pmask 0 sprite s_altar glyph X id 74 alpha 1 movement_cost 1 effects 0 light 0 };
-  t_pillar { name "pillar" pmask 1 sprite s_pillar glyph X id 48 alpha 1 movement_cost 1 effects 0 light 0 };
-  t_counter_middle { name "counter" pmask 1 sprite s_counter_middle glyph X id 122 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_counter_right { name "counter" pmask 1 sprite s_counter_right glyph X id 123 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_counter_left { name "counter" pmask 1 sprite s_counter_left glyph X id 124 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_counter_1x1 { name "counter" pmask 1 sprite s_counter_1x1 glyph X id 125 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_A { name "an A" pmask 1 sprite s_A glyph X id 96 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_B { name "a B" pmask 1 sprite s_B glyph X id 97 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_C { name "a C" pmask 1 sprite s_C glyph X id 98 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_D { name "a D" pmask 1 sprite s_D glyph X id 99 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_E { name "an E" pmask 1 sprite s_E glyph X id 100 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_F { name "an F" pmask 1 sprite s_F glyph X id 101 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_G { name "a G" pmask 1 sprite s_G glyph X id 102 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_H { name "an H" pmask 1 sprite s_H glyph X id 103 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_I { name "an I" pmask 1 sprite s_I glyph X id 104 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_J { name "a J" pmask 1 sprite s_J glyph X id 105 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_K { name "a K" pmask 1 sprite s_K glyph X id 106 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_L { name "an L" pmask 1 sprite s_L glyph X id 107 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_M { name "an M" pmask 1 sprite s_M glyph X id 108 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_N { name "an N" pmask 1 sprite s_N glyph X id 109 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_O { name "an O" pmask 1 sprite s_O glyph X id 110 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_P { name "a P" pmask 1 sprite s_P glyph X id 111 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_Q { name "a Q" pmask 1 sprite s_Q glyph X id 112 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_R { name "an R" pmask 1 sprite s_R glyph X id 113 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_S { name "an S" pmask 1 sprite s_S glyph X id 114 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_T { name "a T" pmask 1 sprite s_T glyph X id 115 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_U { name "a U" pmask 1 sprite s_U glyph X id 116 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_V { name "a V" pmask 1 sprite s_V glyph X id 117 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_W { name "a W" pmask 1 sprite s_W glyph X id 118 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_X { name "an X" pmask 1 sprite s_X glyph X id 119 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_Y { name "a Y" pmask 1 sprite s_Y glyph X id 120 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_Z { name "a Z" pmask 1 sprite s_Z glyph X id 121 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_rune_A { name "a rune" pmask 1 sprite s_rune_A glyph X id 131 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_rune_B { name "a rune" pmask 1 sprite s_rune_B glyph X id 132 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_rune_C { name "a rune" pmask 1 sprite s_rune_C glyph X id 133 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_rune_D { name "a rune" pmask 1 sprite s_rune_D glyph X id 134 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_rune_E { name "a rune" pmask 1 sprite s_rune_E glyph X id 135 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_rune_F { name "a rune" pmask 1 sprite s_rune_F glyph X id 136 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_rune_G { name "a rune" pmask 1 sprite s_rune_G glyph X id 137 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_rune_H { name "a rune" pmask 1 sprite s_rune_H glyph X id 138 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_rune_I { name "a rune" pmask 1 sprite s_rune_I glyph X id 139 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_rune_J { name "a rune" pmask 1 sprite s_rune_J glyph X id 140 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_rune_K { name "a rune" pmask 1 sprite s_rune_K glyph X id 141 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_rune_L { name "a rune" pmask 1 sprite s_rune_L glyph X id 142 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_rune_M { name "a rune" pmask 1 sprite s_rune_M glyph X id 143 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_rune_N { name "a rune" pmask 1 sprite s_rune_N glyph X id 144 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_rune_O { name "a rune" pmask 1 sprite s_rune_O glyph X id 145 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_rune_P { name "a rune" pmask 1 sprite s_rune_P glyph X id 146 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_rune_Q { name "a rune" pmask 1 sprite s_rune_Q glyph X id 147 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_rune_R { name "a rune" pmask 1 sprite s_rune_R glyph X id 148 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_rune_S { name "a rune" pmask 1 sprite s_rune_S glyph X id 149 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_rune_T { name "a rune" pmask 1 sprite s_rune_T glyph X id 150 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_rune_U { name "a rune" pmask 1 sprite s_rune_U glyph X id 151 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_rune_V { name "a rune" pmask 1 sprite s_rune_V glyph X id 152 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_rune_W { name "a rune" pmask 1 sprite s_rune_W glyph X id 153 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_rune_X { name "a rune" pmask 1 sprite s_rune_X glyph X id 154 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_rune_Y { name "a rune" pmask 1 sprite s_rune_Y glyph X id 155 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_rune_Z { name "a rune" pmask 1 sprite s_rune_Z glyph X id 156 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_rune_TH { name "a rune" pmask 1 sprite s_rune_TH glyph X id 157 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_rune_EE { name "a rune" pmask 1 sprite s_rune_EE glyph X id 158 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_rune_NG { name "a rune" pmask 1 sprite s_rune_NG glyph X id 159 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_rune_EA { name "a rune" pmask 1 sprite s_rune_EA glyph X id 160 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_rune_ST { name "a rune" pmask 1 sprite s_rune_ST glyph X id 161 alpha 1 movement_cost 0 effects 0 light 0 };
-  t_rune_DOT { name "a rune" pmask 1 sprite s_rune_DOTSEP glyph X id 162 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_deep { name "deep water" pmask 4 sprite s_deep id 0 alpha 1 movement_cost 1 effects 0 light 0 };
+  t_shallow { name "shallow water" pmask 4 sprite s_shallow id 1 alpha 1 movement_cost 1 effects 0 light 0 };
+  t_shoals { name "shoals" pmask 8 sprite s_shoals id 2 alpha 1 movement_cost 1 effects 0 light 0 };
+  t_grass { name "grass" pmask 2 sprite s_grass id 4 alpha 1 movement_cost 1 effects 0 light 0 };
+  t_trees { name "trees" pmask 2 sprite s_trees id 5 alpha 1 movement_cost 1 effects 0 light 0 };
+  t_forest { name "forest" pmask 2 sprite s_forest id 6 alpha 0 movement_cost 2 effects 0 light 0 };
+  t_hills { name "hills" pmask 2 sprite s_hills id 7 alpha 1 movement_cost 2 effects 0 light 0 };
+  t_mountains { name "mountains" pmask 1 sprite s_mountains id 8 alpha 0 movement_cost 2 effects 0 light 0 };
+  t_leftwing { name "castle wall" pmask 1 sprite s_leftwing id 13 alpha 1 movement_cost 1 effects 0 light 0 };
+  t_rightwing { name "castle wall" pmask 1 sprite s_rightwing id 15 alpha 1 movement_cost 1 effects 0 light 0 };
+  t_cobblestone { name "cobblestone" pmask 2 sprite s_cobblestone id 22 alpha 1 movement_cost 1 effects 0 light 0 };
+  t_flagstones { name "flagstones" pmask 2 sprite s_flagstone id 62 alpha 1 movement_cost 1 effects 0 light 0 };
+  t_bog { name "bog" pmask 2 sprite s_bog id 3 alpha 1 movement_cost 2 effects 1 light 0 };
+  t_fire_terrain { name "fire" pmask 2 sprite s_field_fire id 70 alpha 1 movement_cost 1 effects 2 light 512 };
+  t_fireplace { name "fireplace" pmask 2 sprite s_fireplace id 75 alpha 1 movement_cost 1 effects 2 light 4096 };
+  t_lava { name "lava" pmask 2 sprite s_lava id 76 alpha 1 movement_cost 1 effects 2 light 128 };
+  t_bridge { name "bridge" pmask 14 sprite s_bridge id 23 alpha 1 movement_cost 1 effects 0 light 0 };
+  t_bridge_top { name "bridge" pmask 14 sprite s_bridge_top id 25 alpha 1 movement_cost 1 effects 0 light 0 };
+  t_bridge_bottom { name "bridge" pmask 14 sprite s_bridge_bottom id 26 alpha 1 movement_cost 1 effects 0 light 0 };
+  t_ship_hull { name "ship's hull" pmask 1 sprite s_wall id 72 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_sh_hull_NE { name "ship's hull" pmask 1 sprite s_wall_b id 49 alpha 1 movement_cost 1 effects 0 light 0 };
+  t_sh_hull_NW { name "ship's hull" pmask 1 sprite s_wall_a id 50 alpha 1 movement_cost 1 effects 0 light 0 };
+  t_sh_hull_SE { name "ship's hull" pmask 1 sprite s_wall_c id 51 alpha 1 movement_cost 1 effects 0 light 0 };
+  t_sh_hull_SW { name "ship's hull" pmask 1 sprite s_wall_d id 52 alpha 1 movement_cost 1 effects 0 light 0 };
+  t_mast { name "mast" pmask 1 sprite s_mast id 53 alpha 1 movement_cost 1 effects 0 light 0 };
+  t_ships_wheel { name "ship's wheel" pmask 1 sprite s_ships_wheel id 54 alpha 1 movement_cost 1 effects 0 light 0 };
+  t_deck { name "deck" pmask 2 sprite s_deck id 63 alpha 1 movement_cost 1 effects 0 light 0 };
+  t_wall_rock { name "rock wall" pmask 1 sprite s_wall_rock id 57 alpha 0 movement_cost 1 effects 0 light 0 };
+  t_wall { name "wall" pmask 1 sprite s_wall_stone id 127 alpha 0 movement_cost 1 effects 0 light 0 };
+  t_secret_door { name "secret door" pmask 2 sprite s_secret_door id 73 alpha 0 movement_cost 1 effects 0 light 0 };
+  t_sea_wall { name "sea wall" pmask 1 sprite s_wall id 72 alpha 0 movement_cost 0 effects 0 light 0 };
+  t_sea_wall_NE { name "sea wall" pmask 1 sprite s_wall_b id 49 alpha 0 movement_cost 1 effects 0 light 0 };
+  t_sea_wall_NW { name "sea wall" pmask 1 sprite s_wall_a id 50 alpha 0 movement_cost 1 effects 0 light 0 };
+  t_sea_wall_SE { name "sea wall" pmask 1 sprite s_wall_c id 51 alpha 0 movement_cost 1 effects 0 light 0 };
+  t_sea_wall_SW { name "sea wall" pmask 1 sprite s_wall_d id 52 alpha 0 movement_cost 1 effects 0 light 0 };
+  t_boulder { name "boulder" pmask 1 sprite s_boulder id 55 alpha 1 movement_cost 1 effects 0 light 0 };
+  t_ankh { name "ankh" pmask 0 sprite s_ankh id 61 alpha 1 movement_cost 1 effects 0 light 0 };
+  t_altar { name "altar" pmask 0 sprite s_altar id 74 alpha 1 movement_cost 1 effects 0 light 0 };
+  t_pillar { name "pillar" pmask 1 sprite s_pillar id 48 alpha 1 movement_cost 1 effects 0 light 0 };
+  t_counter_middle { name "counter" pmask 1 sprite s_counter_middle id 122 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_counter_right { name "counter" pmask 1 sprite s_counter_right id 123 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_counter_left { name "counter" pmask 1 sprite s_counter_left id 124 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_counter_1x1 { name "counter" pmask 1 sprite s_counter_1x1 id 125 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_A { name "an A" pmask 1 sprite s_A id 96 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_B { name "a B" pmask 1 sprite s_B id 97 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_C { name "a C" pmask 1 sprite s_C id 98 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_D { name "a D" pmask 1 sprite s_D id 99 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_E { name "an E" pmask 1 sprite s_E id 100 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_F { name "an F" pmask 1 sprite s_F id 101 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_G { name "a G" pmask 1 sprite s_G id 102 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_H { name "an H" pmask 1 sprite s_H id 103 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_I { name "an I" pmask 1 sprite s_I id 104 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_J { name "a J" pmask 1 sprite s_J id 105 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_K { name "a K" pmask 1 sprite s_K id 106 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_L { name "an L" pmask 1 sprite s_L id 107 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_M { name "an M" pmask 1 sprite s_M id 108 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_N { name "an N" pmask 1 sprite s_N id 109 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_O { name "an O" pmask 1 sprite s_O id 110 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_P { name "a P" pmask 1 sprite s_P id 111 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_Q { name "a Q" pmask 1 sprite s_Q id 112 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_R { name "an R" pmask 1 sprite s_R id 113 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_S { name "an S" pmask 1 sprite s_S id 114 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_T { name "a T" pmask 1 sprite s_T id 115 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_U { name "a U" pmask 1 sprite s_U id 116 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_V { name "a V" pmask 1 sprite s_V id 117 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_W { name "a W" pmask 1 sprite s_W id 118 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_X { name "an X" pmask 1 sprite s_X id 119 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_Y { name "a Y" pmask 1 sprite s_Y id 120 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_Z { name "a Z" pmask 1 sprite s_Z id 121 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_A { name "a rune" pmask 1 sprite s_rune_A id 131 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_B { name "a rune" pmask 1 sprite s_rune_B id 132 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_C { name "a rune" pmask 1 sprite s_rune_C id 133 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_D { name "a rune" pmask 1 sprite s_rune_D id 134 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_E { name "a rune" pmask 1 sprite s_rune_E id 135 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_F { name "a rune" pmask 1 sprite s_rune_F id 136 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_G { name "a rune" pmask 1 sprite s_rune_G id 137 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_H { name "a rune" pmask 1 sprite s_rune_H id 138 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_I { name "a rune" pmask 1 sprite s_rune_I id 139 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_J { name "a rune" pmask 1 sprite s_rune_J id 140 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_K { name "a rune" pmask 1 sprite s_rune_K id 141 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_L { name "a rune" pmask 1 sprite s_rune_L id 142 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_M { name "a rune" pmask 1 sprite s_rune_M id 143 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_N { name "a rune" pmask 1 sprite s_rune_N id 144 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_O { name "a rune" pmask 1 sprite s_rune_O id 145 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_P { name "a rune" pmask 1 sprite s_rune_P id 146 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_Q { name "a rune" pmask 1 sprite s_rune_Q id 147 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_R { name "a rune" pmask 1 sprite s_rune_R id 148 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_S { name "a rune" pmask 1 sprite s_rune_S id 149 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_T { name "a rune" pmask 1 sprite s_rune_T id 150 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_U { name "a rune" pmask 1 sprite s_rune_U id 151 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_V { name "a rune" pmask 1 sprite s_rune_V id 152 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_W { name "a rune" pmask 1 sprite s_rune_W id 153 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_X { name "a rune" pmask 1 sprite s_rune_X id 154 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_Y { name "a rune" pmask 1 sprite s_rune_Y id 155 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_Z { name "a rune" pmask 1 sprite s_rune_Z id 156 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_TH { name "a rune" pmask 1 sprite s_rune_TH id 157 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_EE { name "a rune" pmask 1 sprite s_rune_EE id 158 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_NG { name "a rune" pmask 1 sprite s_rune_NG id 159 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_EA { name "a rune" pmask 1 sprite s_rune_EA id 160 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_ST { name "a rune" pmask 1 sprite s_rune_ST id 161 alpha 1 movement_cost 0 effects 0 light 0 };
+  t_rune_DOT { name "a rune" pmask 1 sprite s_rune_DOTSEP id 162 alpha 1 movement_cost 0 effects 0 light 0 };
 }
 object_types {
   t_cursor { name "cursor" sprite s_crosshair subtype null layer 9 };
@@ -2233,7 +2233,7 @@ MAP map_ship {
   type ascii;
   width 17;
   height 9;
-  palette {
+  palette pal_ship {
     '__' t_deep;
     '--' t_shallow;
     '~~' t_shoals;
@@ -2297,7 +2297,7 @@ MAP m_forest_combat {
   type ascii;
   width 32;
   height 32;
-  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; ',' t_flagstones; 'c' t_cobblestone; 'e' t_deck; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; 'q' t_rune_Q; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
+  palette pal_standard { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; ',' t_flagstones; 'c' t_cobblestone; 'e' t_deck; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; 'q' t_rune_Q; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
   terrain {
       | | t . . . . . t t t . t t t . ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
       | t . . . . . . . t t . t t . . . ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -2337,7 +2337,7 @@ MAP m_grass_combat {
   type ascii;
   width 32;
   height 32;
-  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; ',' t_flagstones; 'c' t_cobblestone; 'e' t_deck; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; 'q' t_rune_Q; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
+  palette pal_standard { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; ',' t_flagstones; 'c' t_cobblestone; 'e' t_deck; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; 'q' t_rune_Q; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
   terrain {
       r . . . . . . . . . . t t t t t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
       . . . . . . . . . . . . . . t t t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -2377,7 +2377,7 @@ MAP m_water_combat {
   type ascii;
   width 32;
   height 32;
-  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; ',' t_flagstones; 'c' t_cobblestone; 'e' t_deck; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; 'q' t_rune_Q; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
+  palette pal_standard { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; ',' t_flagstones; 'c' t_cobblestone; 'e' t_deck; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; 'q' t_rune_Q; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
   terrain {
       - - - - - - - t t t . . . . . . . . . . . . . . - - - - - - - -
       - - - - - - - - t . . . . . . . - - . . . . . - - - - - - - - -
@@ -2417,7 +2417,7 @@ MAP m_east_west_small_bridge_combat {
   type ascii;
   width 32;
   height 32;
-  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; ',' t_flagstones; 'c' t_cobblestone; 'e' t_deck; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; 'q' t_rune_Q; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
+  palette pal_standard { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; ',' t_flagstones; 'c' t_cobblestone; 'e' t_deck; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; 'q' t_rune_Q; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
   terrain {
       . % ~ ~ ~ ~ ~ ~ ~ ~ - - - - - - _ _ _ _ - - - - - - - - - ~ ~ .
       . % ~ % % ~ ~ ~ ~ ~ ~ - - - - - _ _ _ - - - - - - - - - ~ ~ ~ .
@@ -2457,7 +2457,7 @@ MAP m_passage {
   type ascii;
   width 32;
   height 32;
-  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; ',' t_flagstones; 'c' t_cobblestone; 'e' t_deck; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; 'q' t_rune_Q; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
+  palette pal_standard { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; ',' t_flagstones; 'c' t_cobblestone; 'e' t_deck; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; 'q' t_rune_Q; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
   terrain {
       x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x
       x , , , , , , x x x x x x x x x x x x x x x x x x ~ ~ x x x x x
@@ -2497,7 +2497,7 @@ MAP m_secret_shrine {
   type ascii;
   width 7;
   height 7;
-  palette {
+  palette pal_secret_shrine {
     '.' t_grass;
     'A' t_altar;
     'S' t_boulder;
@@ -3199,7 +3199,7 @@ MAP m_WATER_TRAP_OPEN {
   type ascii;
   width 5;
   height 5;
-  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; ',' t_flagstones; 'c' t_cobblestone; 'e' t_deck; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; 'q' t_rune_Q; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
+  palette pal_standard { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; ',' t_flagstones; 'c' t_cobblestone; 'e' t_deck; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; 'q' t_rune_Q; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
   terrain {
     _ _ _ _ _
     _ _ _ _ _
@@ -3212,7 +3212,7 @@ MAP m_WATER_TRAP_CLOSED {
   type ascii;
   width 5;
   height 5;
-  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; ',' t_flagstones; 'c' t_cobblestone; 'e' t_deck; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; 'q' t_rune_Q; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
+  palette pal_standard { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; ',' t_flagstones; 'c' t_cobblestone; 'e' t_deck; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; 'q' t_rune_Q; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
   terrain {
     e e e e e
     e e e e e
@@ -3227,7 +3227,7 @@ MAP m_wilderness {
   width 40;
   height 40;
   one_char_per_tile 1;
-  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; ',' t_flagstones; 'c' t_cobblestone; 'e' t_deck; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; 'q' t_rune_Q; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
+  palette pal_standard { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; ',' t_flagstones; 'c' t_cobblestone; 'e' t_deck; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; 'q' t_rune_Q; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
   terrain {
       ________________________________________
       ________________________________________
@@ -3392,7 +3392,7 @@ MAP m_empire_city {
         width 64;
         height 64;
         one_char_per_tile 1;
-        palette {
+        palette pal_empire_city {
                 '%' t_wall;
                 '-' t_cobblestone;
                 '@' t_shallow;
@@ -3566,7 +3566,7 @@ MAP m_prison_chamber {
   type ascii;
   width 32;
   height 32;
-  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; ',' t_flagstones; 'c' t_cobblestone; 'e' t_deck; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; 'q' t_rune_Q; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
+  palette pal_standard { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; ',' t_flagstones; 'c' t_cobblestone; 'e' t_deck; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; 'q' t_rune_Q; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
   terrain {
       x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x
       x , , , , , , , 0 . . . 0 e , , e 0 . . . 0 , , , 0 ! c ! 0 e x
@@ -3606,7 +3606,7 @@ MAP m_BOG_TRAP_OPEN {
   type ascii;
   width 3;
   height 2;
-  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; ',' t_flagstones; 'c' t_cobblestone; 'e' t_deck; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; 'q' t_rune_Q; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
+  palette pal_standard { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; ',' t_flagstones; 'c' t_cobblestone; 'e' t_deck; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; 'q' t_rune_Q; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
   terrain {
     % % %
     % % %
@@ -3616,7 +3616,7 @@ MAP m_BOG_TRAP_CLOSED {
   type ascii;
   width 3;
   height 2;
-  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; ',' t_flagstones; 'c' t_cobblestone; 'e' t_deck; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; 'q' t_rune_Q; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
+  palette pal_standard { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; ',' t_flagstones; 'c' t_cobblestone; 'e' t_deck; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; 'q' t_rune_Q; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
   terrain {
     . . .
     . . .
@@ -3658,7 +3658,7 @@ MAP m_BOULDER_TRAP_OPEN {
   type ascii;
   width 3;
   height 2;
-  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; ',' t_flagstones; 'c' t_cobblestone; 'e' t_deck; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; 'q' t_rune_Q; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
+  palette pal_standard { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; ',' t_flagstones; 'c' t_cobblestone; 'e' t_deck; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; 'q' t_rune_Q; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
   terrain {
     b b b
     b b b
@@ -3668,7 +3668,7 @@ MAP m_BOULDER_TRAP_CLOSED {
   type ascii;
   width 3;
   height 2;
-  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; ',' t_flagstones; 'c' t_cobblestone; 'e' t_deck; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; 'q' t_rune_Q; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
+  palette pal_standard { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; ',' t_flagstones; 'c' t_cobblestone; 'e' t_deck; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; 'q' t_rune_Q; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
   terrain {
     . . .
     . . .
@@ -3710,7 +3710,7 @@ MAP m_FLAME_BARRIER_TRAP_OPEN {
   type ascii;
   width 1;
   height 1;
-  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; ',' t_flagstones; 'c' t_cobblestone; 'e' t_deck; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; 'q' t_rune_Q; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
+  palette pal_standard { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; ',' t_flagstones; 'c' t_cobblestone; 'e' t_deck; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; 'q' t_rune_Q; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
   terrain {
     f
   }
@@ -3719,7 +3719,7 @@ MAP m_FLAME_BARRIER_TRAP_CLOSED {
   type ascii;
   width 1;
   height 1;
-  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; ',' t_flagstones; 'c' t_cobblestone; 'e' t_deck; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; 'q' t_rune_Q; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
+  palette pal_standard { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; ',' t_flagstones; 'c' t_cobblestone; 'e' t_deck; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; 'q' t_rune_Q; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
   terrain {
     c
   }
@@ -3841,7 +3841,7 @@ MAP GreenTower_Map {
         width 64;
         height 64;
         one_char_per_tile 1;
-        palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; ',' t_flagstones; 'c' t_cobblestone; 'e' t_deck; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; 'q' t_rune_Q; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
+        palette pal_standard { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; ',' t_flagstones; 'c' t_cobblestone; 'e' t_deck; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; 'q' t_rune_Q; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
         terrain {
     |||||||||||||||||||||||||||||tb...bt||||||||||||||||||||||||||||
     |||||||||||||||||||||||||||||tt...tt||||||||||||||||||||||||||||
@@ -3926,7 +3926,7 @@ MAP m_terrain_test {
   type ascii;
   width 24;
   height 32;
-  palette { '__' t_deep; '--' t_shallow; '~~' t_shoals; '%%' t_bog; '..' t_grass; 'tt' t_trees; '||' t_forest; '{{' t_hills; '^^' t_mountains; ',,' t_flagstones; 'cc' t_cobblestone; 'ee' t_deck; '==' t_bridge; 'gg' t_bridge_top; 'hh' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; '.A' t_A; '.B' t_B; '.C' t_C; '.D' t_D; '.E' t_E; '.F' t_F; '.G' t_G; '.H' t_H; '.I' t_I; '.J' t_J; '.K' t_K; '.L' t_L; '.M' t_M; '.N' t_N; '.O' t_O; '.P' t_P; '.Q' t_Q; '.R' t_R; '.S' t_S; '.T' t_T; '.U' t_U; '.V' t_V; '.W' t_W; '.X' t_X; '.Y' t_Y; '.Z' t_Z; ',A' t_rune_A; ',B' t_rune_B; ',C' t_rune_C; ',D' t_rune_D; ',E' t_rune_E; ',F' t_rune_F; ',G' t_rune_G; ',H' t_rune_H; ',I' t_rune_I; ',J' t_rune_J; ',K' t_rune_K; ',L' t_rune_L; ',M' t_rune_M; ',N' t_rune_N; ',O' t_rune_O; ',P' t_rune_P; ',Q' t_rune_Q; ',R' t_rune_R; ',S' t_rune_S; ',T' t_rune_T; ',U' t_rune_U; ',V' t_rune_V; ',W' t_rune_W; ',X' t_rune_X; ',Y' t_rune_Y; ',Z' t_rune_Z; ';T' t_rune_TH; ';E' t_rune_EE; ';N' t_rune_NG; ';A' t_rune_EA; ';S' t_rune_ST; ';D' t_rune_DOT; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
+  palette pal_expanded { '__' t_deep; '--' t_shallow; '~~' t_shoals; '%%' t_bog; '..' t_grass; 'tt' t_trees; '||' t_forest; '{{' t_hills; '^^' t_mountains; ',,' t_flagstones; 'cc' t_cobblestone; 'ee' t_deck; '==' t_bridge; 'gg' t_bridge_top; 'hh' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; '.A' t_A; '.B' t_B; '.C' t_C; '.D' t_D; '.E' t_E; '.F' t_F; '.G' t_G; '.H' t_H; '.I' t_I; '.J' t_J; '.K' t_K; '.L' t_L; '.M' t_M; '.N' t_N; '.O' t_O; '.P' t_P; '.Q' t_Q; '.R' t_R; '.S' t_S; '.T' t_T; '.U' t_U; '.V' t_V; '.W' t_W; '.X' t_X; '.Y' t_Y; '.Z' t_Z; ',A' t_rune_A; ',B' t_rune_B; ',C' t_rune_C; ',D' t_rune_D; ',E' t_rune_E; ',F' t_rune_F; ',G' t_rune_G; ',H' t_rune_H; ',I' t_rune_I; ',J' t_rune_J; ',K' t_rune_K; ',L' t_rune_L; ',M' t_rune_M; ',N' t_rune_N; ',O' t_rune_O; ',P' t_rune_P; ',Q' t_rune_Q; ',R' t_rune_R; ',S' t_rune_S; ',T' t_rune_T; ',U' t_rune_U; ',V' t_rune_V; ',W' t_rune_W; ',X' t_rune_X; ',Y' t_rune_Y; ',Z' t_rune_Z; ';T' t_rune_TH; ';E' t_rune_EE; ';N' t_rune_NG; ';A' t_rune_EA; ';S' t_rune_ST; ';D' t_rune_DOT; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
   terrain {
    xx xx xx .. .. xx xx xx .. .. xx .. .. .. xx .. .. xx xx xx .. .. xx xx
    xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx
@@ -3978,14 +3978,14 @@ PLACE p_terrain_test {
 moon_info {
   phases 8;
   {
-    sprite s_full_moon;
-    sprite s_wane_three_quarter_moon;
-    sprite s_wane_half_moon;
-    sprite s_wane_quarter_moon;
     sprite s_new_moon;
     sprite s_wax_quarter_moon;
     sprite s_wax_half_moon;
     sprite s_wax_three_quarter_moon;
+    sprite s_full_moon;
+    sprite s_wane_three_quarter_moon;
+    sprite s_wane_half_moon;
+    sprite s_wane_quarter_moon;
   }
   moons {
     {
@@ -3994,13 +3994,13 @@ moon_info {
       arc 100;
     }
     {
-      phase 1;
+      phase 4;
       days_per_cycle 2;
       arc 200;
     }
   }
   sun {
-    arc 61;
+    arc 285;
     sprite s_sun;
   }
   moongates {
@@ -4016,7 +4016,7 @@ moon_info {
       object_type t_moongate;
       x 19;
       y 33;
-      phase 1;
+      phase 4;
     }
   }
 }
@@ -4024,7 +4024,7 @@ MAP DarkPassage_Map {
   type ascii;
   width 32;
   height 32;
-  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; ',' t_flagstones; 'c' t_cobblestone; 'e' t_deck; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; 'q' t_rune_Q; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
+  palette pal_standard { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; ',' t_flagstones; 'c' t_cobblestone; 'e' t_deck; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'f' t_fire_terrain; '!' t_lava; '&' t_fireplace; 'x' t_wall; '?' t_secret_door; 'p' t_pillar; 'b' t_boulder; 'r' t_wall_rock; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; 'q' t_rune_Q; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_1x1; '+' t_ankh; 'a' t_altar; '<' t_leftwing; '>' t_rightwing; };
   terrain {
       x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x
       x , , , , , , x x x x x x x x x x x x x x x x x x ~ ~ x x x x x
@@ -4083,7 +4083,7 @@ MAP m_campsite {
         width 7;
         height 7;
         one_char_per_tile 1;
-        palette {
+        palette pal_campsite {
                 '%' t_boulder;
                 '.' t_grass;
                 '!' t_fireplace;
