@@ -71,7 +71,7 @@ class player_party : public Party {
         // overloaded Object methods:
         virtual bool addToInventory(class Object *object);
         virtual struct sprite *getSprite(void);
-        virtual char *getName();
+        virtual char *getName(void);
         virtual bool isVisible();
         virtual void clearAlignment(int alignment);
         virtual void describe(int count);

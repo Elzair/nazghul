@@ -30,6 +30,7 @@
 #include "Missile.h"
 #include "Loader.h"
 #include "sound.h"
+#include "player.h"
 
 ArmsType::ArmsType()
 {
@@ -149,7 +150,14 @@ bool ArmsType::fireInDirection(struct place *place, int ox, int oy,
                 consolePrint("%s destroyed ", getName());
                 missile->getStruck()->describe(1);
                 consolePrint("!\n");
-                delete missile->getStruck();
+
+                /* Uh... no reference counting on the player party, everybody
+                 * assumes it is always good, so don't violate that assumption
+                 * here. We need to figure out how to handle the destruction of
+                 * player-controlled objects.  */
+                if (missile->getStruck() != player_party)
+                        delete missile->getStruck();
+
                 mapSetDirty();
         }
         

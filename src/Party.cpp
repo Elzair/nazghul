@@ -303,7 +303,7 @@ Party::Party()
 
 Party::~Party()
 {
-        printf("Destroying %s\n", getName());
+        //printf("Destroying %s\n", this->getName());
 }
 
 bool Party::isType(int classID)
@@ -1253,4 +1253,9 @@ void Party::switchOrder(class Character *ch1, class Character *ch2)
         tmp = ch1->getOrder();
         ch1->setOrder(ch2->getOrder());
         ch2->setOrder(tmp);
+}
+
+char *Party::getName()
+{
+        return Object::getName();
 }

@@ -70,27 +70,23 @@ static bool apply_damage(class Character * pm, void *amount)
         pm->damage(*((int *)amount));
 	return false;
 }
-static bool kill_member(class Character * member, void *data)
+
+void player_party::damage(int amount)
 {
-	member->kill();
-	return false;
-}
-
-
-void player_party::damage(int amount) {
-
 	/* First apply damage to the vehicle. If the vehicle is destroyed then
            destroy the party, too. */
-	if (vehicle) {
+	if (vehicle && vehicle->isVulnerable()) {
 		vehicle->damage(amount);
 		mapFlash(0);
 		foogodRepaint();
+
+                /* If the vehicle is destroyed then we are dead. */
 		if (vehicle->isDestroyed()) {
 			delete vehicle;
-			vehicle = NULL;
-			forEachMember(kill_member, NULL);
+			vehicle = NULL;   
 		}
-		return;
+
+                return;
 	}
 
 	/* Apply damage to all party members. If they all die then the party is

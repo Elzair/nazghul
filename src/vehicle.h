@@ -70,10 +70,16 @@ class VehicleType:public ObjectType {
 	virtual bool load(class Loader * loader);
         virtual int getWindPenalty(int facing);
 
+        bool isVulnerable();
+        bool killsOccupants();
+
         struct terrain_map *map;
         struct formation *formation;
 
+
  protected:
+        bool is_vulnerable;
+        bool kills_occupants; /* on destroy */
         int pmask;
         char *mv_desc;
         char *mv_sound;
@@ -130,6 +136,9 @@ class Vehicle:public Object {
         virtual void paint(int sx, int sy);
         virtual struct formation *get_formation();
         virtual struct place *getPlace();
+        virtual void destroy();
+
+        bool isVulnerable();
 
         bool turn(int dx, int dy, int *cost);
         int getMovementCostMultiplier();

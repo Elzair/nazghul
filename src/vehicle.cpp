@@ -44,6 +44,8 @@ VehicleType::VehicleType()
         tailwind_penalty = 1;
         headwind_penalty = 1;
         crosswind_penalty = 1;
+        is_vulnerable     = false;
+        kills_occupants   = false;
 }
 
 bool VehicleType::canFace(int facing)
@@ -98,12 +100,20 @@ bool VehicleType::load(class Loader *loader)
                         if (!loader->getInt(&tailwind_penalty))
                                 goto cleanup;
                 }
-                if (loader->matchWord("headwind_penalty")) {
+                else if (loader->matchWord("headwind_penalty")) {
                         if (!loader->getInt(&headwind_penalty))
                                 goto cleanup;
                 }
-                if (loader->matchWord("crosswind_penalty")) {
+                else if (loader->matchWord("crosswind_penalty")) {
                         if (!loader->getInt(&crosswind_penalty))
+                                goto cleanup;
+                }
+                else if (loader->matchWord("is_vulnerable")) {
+                        if (!loader->getBool(&is_vulnerable))
+                                goto cleanup;
+                }
+                else if (loader->matchWord("kills_occupants")) {
+                        if (!loader->getBool(&kills_occupants))
                                 goto cleanup;
                 }
                 else {
@@ -182,6 +192,16 @@ int VehicleType::getWindPenalty(int facing)
 bool VehicleType::mustTurn()
 {
         return must_turn;
+}
+
+bool VehicleType::isVulnerable()
+{
+        return is_vulnerable;
+}
+
+bool VehicleType::killsOccupants()
+{
+        return kills_occupants;
 }
 
 /*****************************************************************************/
@@ -325,4 +345,21 @@ int Vehicle::getY()
 bool Vehicle::mustTurn()
 {
         return getObjectType()->mustTurn();   
+}
+
+bool Vehicle::isVulnerable()
+{
+        return getObjectType()->isVulnerable();
+        
+}
+
+void Vehicle::destroy()
+{
+        Object::destroy();
+
+        if (occupant != NULL &&
+            getObjectType()->killsOccupants()) {                
+                occupant->destroy();
+                occupant = NULL;
+        }
 }

@@ -135,6 +135,8 @@ VEHICLE vt_ship {
     ordnance  t_cannon;
     max_hp    100;
     map       map_ship;
+    is_vulnerable 1;
+    kills_occupants 1;
 
     // Wind-based movement penalties.
     tailwind_penalty   ACT_PTS_TAILWIND_DIVISOR;

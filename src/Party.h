@@ -42,6 +42,8 @@ class PartyType : public ObjectType {
       public:
 	PartyType();
 	virtual ~ PartyType();
+
+
 	virtual bool isType(int classID);
 	virtual int getType();
 	virtual bool init(class Character * ch);
@@ -89,7 +91,7 @@ class Party:public Object {
 
 	virtual void setAlignment(int val);
 	virtual void setFleeVector(int x, int y);
-
+        
         virtual bool addMember(class Character *);
         virtual bool allDead();
         virtual void burn();
@@ -102,6 +104,7 @@ class Party:public Object {
         virtual void distributeMembers();
 	virtual bool enter_town(class Portal * portal);
 	virtual void exec(struct exec_context *cntxt);
+        virtual char *getName(void);
 	virtual bool joinPlayer(void);
 	virtual void forEachMember(bool(*fx) (class Character *, void *), void *);
 	virtual void init(class Character * ch);
