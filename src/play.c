@@ -2048,16 +2048,24 @@ bool cmdMixReagents(void)
 
 void look_at_XY(int x, int y)
 {
-        consolePrint("%d\n", mapTileIsVisible(x, y));
-	consolePrint("At XY=(%d,%d) you see ", x, y);
-	placeDescribe(x, y);
+    if ( mapTileIsVisible(x, y) ) {
+        consolePrint("At XY=(%d,%d) you see ", x, y);
+        placeDescribe(x, y);
+        return;
+    }
+    consolePrint("At XY=(%d,%d) you see nothing (out of LOS)\n", x, y);
 }
+
 void detailed_examine_XY(int x, int y)
 {
 	// SAM: 
 	// Hmmm...how best to print more info about
 	// the objects on this tile?
-	consolePrint("TARGET XY=(%d,%d)\n", x, y);
+    if ( mapTileIsVisible(x, y) ) {
+        consolePrint("DETAIL XY=(%d,%d) TODO - print detailed view\n", x, y);
+        return;
+    }
+    consolePrint("DETAIL XY=(%d,%d) out of LOS\n", x, y);
 }
 
 bool cmdXamine(class Character * pc)
