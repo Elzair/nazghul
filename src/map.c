@@ -34,8 +34,8 @@
 #include <SDL.h>
 #include <math.h>
 
-#define PROFILE_REPAINT 1
-#define PROFILE_ANIMATE 1
+#define PROFILE_REPAINT 0
+#define PROFILE_ANIMATE 0
 
 #define LMAP_W     (VMASK_W)
 #define LMAP_H     (VMASK_H)
@@ -402,9 +402,6 @@ static void mapBuildLightMap(struct mview *view)
         if (!lt_i)
                 return;
 
-        printf("merge %d=", lt_i);
-        int t1 = SDL_GetTicks();
-
 
         // For each light source build a lightmap centered on that source and
         // merge it into the main lightmap.
@@ -412,7 +409,6 @@ static void mapBuildLightMap(struct mview *view)
                 mapMergeLightSource(&lights[lt_i], view);
         }
 
-        printf("%d\n", SDL_GetTicks() - t1);
 }
 
 

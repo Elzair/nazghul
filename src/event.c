@@ -194,6 +194,7 @@ static void record_event(SDL_Event * event)
 static void event_handle_aux(int flags)
 {
 	bool done = false;
+        bool use_hook = true;
 
 	while (!done) {
 
@@ -211,8 +212,12 @@ static void event_handle_aux(int flags)
 			{
 				struct TickHandler *tickh;
 				tickh = getHandler(&TickHandlers, struct TickHandler);
-				if (tickh && tickh->fx(tickh))
-					done = true;
+				if (tickh) {
+                                        use_hook = true;
+                                        if (tickh->fx(tickh)) {
+                                                done = true;
+                                        }
+                                }
 			}
 			break;
 
@@ -223,8 +228,12 @@ static void event_handle_aux(int flags)
 
 				keyh = getHandler(&KeyHandlers, struct KeyHandler);
                                 mapped_key = mapKey(&event.key.keysym);
-				if (keyh && keyh->fx(keyh, mapped_key, event.key.keysym.mod))
-					done = true;
+				if (keyh) {
+                                        use_hook = true;
+                                        if (keyh->fx(keyh, mapped_key, event.key.keysym.mod)) {
+                                                done = true;
+                                        }
+                                }
 			}
 			break;
 
@@ -256,7 +265,7 @@ static void event_handle_aux(int flags)
 			break;
 		}
 
-		if (eventHook)
+		if (use_hook && eventHook)
 			eventHook();
 	}
 }
