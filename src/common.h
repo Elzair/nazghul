@@ -188,6 +188,7 @@ extern "C" {
 // the map viewer, and if we let the LOS alg exceed these dimensions it will
 // produce artifacts on the vmask.
 #define MAX_VISION_RADIUS       (MAP_TILE_W / 2)
+#define MAX_VIEWPORT_RANGE      (MAX_VISION_RADIUS + (MAX_VISION_RADIUS / 2))
 
 #define FRAME_IMAGE             "images/frame.bmp"
 #define SPLASH_IMAGE            "images/splash.bmp"

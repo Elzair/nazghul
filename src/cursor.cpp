@@ -67,7 +67,7 @@ bool Cursor::move(int dx, int dy)
     // Is the new location out of the current viewport (without scrolling)?
     if (bounded && !mapTileIsWithinViewport(newx,newy))
       return false;
-    
+
 	// Is the new location out of range?
 	if (d > range)
       return false;

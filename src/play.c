@@ -2433,7 +2433,7 @@ bool cmdXamine(class Character * pc)
 
     look_at_XY(x,y);  // First look at the current tile
     // SAM: TODO - make the range "any in viewport" rather than 9
-	if (select_target_with_doing(x, y, &x, &y, 99,
+	if (select_target_with_doing(x, y, &x, &y, MAX_VIEWPORT_RANGE,
 				     look_at_XY, detailed_examine_XY) == -1) {
 		return false;
 	}
@@ -2640,7 +2640,7 @@ bool cmdTerraform(class Character * pc)
     DM_XRAY_look_at_XY(x,y, NULL);  // First look at the current tile
     // SAM: TODO - make the range "any in viewport" rather than 9
     //             or perhaps even scrollable past that
-	if (terraform_cursor_func(x, y, &x, &y, 999,
+	if (terraform_cursor_func(x, y, &x, &y, MAX_VIEWPORT_RANGE,
                               DM_XRAY_look_at_XY, terraform_XY,
                               place) == -1) {
       return false;
