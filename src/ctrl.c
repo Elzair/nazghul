@@ -514,13 +514,31 @@ static void ctrl_attack_ui(class Character *character)
 
 static void ctrl_move_character(class Character *character, int dir)
 {
+        enum MoveResult move_result;
         char *result = NULL;
         char *dirstr = directionToString(dir);
+        int dx;
+        int dy;
+
+        dx = directionToDx(dir);
+        dy = directionToDy(dir);
+
+        /* try to move */
+        move_result = character->move(dx, dy);
+
+        /* recenter (harmless if move failed) */
+        mapCenterView(character->getView(), character->getX(),
+                      character->getY());
+
+        /* if moved ok then no message to print */
+        if (MovedOk == move_result) {
+                return;
+        }
         
-        switch (character->move(directionToDx(dir),
-                                directionToDy(dir))) {
-        case MovedOk:
-                break;
+        /* otherwise we'll print something */
+        log_begin("");
+
+        switch (move_result) {
         case OffMap:
                 result = "no place to go!";
                 break;
@@ -535,7 +553,29 @@ static void ctrl_move_character(class Character *character, int dir)
                 result = "occupied!";
                 break;
         case WasImpassable:
-                result = "impassable!";
+        {
+                /* If the move failed because something impassable is there
+                 * then check for a mech and try to handle it. This is good
+                 * enough to automatically open unlocked doors.
+                 */
+
+                class Object *mech;
+                int newx, newy;
+                
+                newx = character->getX() + dx;
+                newy = character->getY() + dy;
+                
+                mech = place_get_object(character->getPlace(), newx, newy, 
+                                        mech_layer);
+                
+                if (mech && mech->getObjectType()->canHandle()) {
+                        mech->getObjectType()->handle(mech, character);
+                        mapSetDirty();
+                        result = "handled!";
+                } else {                
+                        result = "impassable!";
+                }
+        }
                 break;
         case SlowProgress:
                 result = "slow progress!";
@@ -554,16 +594,9 @@ static void ctrl_move_character(class Character *character, int dir)
                 break;
         }
 
-        /* If something interesting happened... */
-        if (result) {
+        log_continue("%s: %s - %s", character->getName(), dirstr, result);
+        log_end("");
 
-                /* Log unusual results to the console */
-                log_msg("%s: %s - %s", character->getName(), dirstr,
-                             result);
-        }
-
-        mapCenterView(character->getView(), character->getX(),
-                      character->getY());
 }
 
 static int ctrl_character_key_handler(struct KeyHandler *kh, int key, 
@@ -575,6 +608,7 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
         static int unshift[] = { KEY_NORTH, KEY_SOUTH, KEY_EAST, KEY_WEST };
         class Object *portal;
         class Character *solo_member;
+        enum MoveResult move_result;
 
         G_latency_start = SDL_GetTicks();
 
