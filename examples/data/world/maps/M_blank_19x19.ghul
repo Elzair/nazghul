@@ -1,0 +1,60 @@
+//
+// Copyright-Only Dedication (based on United States law)
+//
+// The person or persons who have associated their work with this document (the
+// "Dedicator") hereby dedicate the entire copyright in the work of authorship
+// identified below (the "Work") to the public domain.
+//
+// Dedicator makes this dedication for the benefit of the public at large and
+// to the detriment of Dedicator's heirs and successors. Dedicator intends this
+// dedication to be an overt act of relinquishment in perpetuity of all present
+// and future rights under copyright law, whether vested or contingent, in the
+// Work. Dedicator understands that such relinquishment of all rights includes
+// the relinquishment of all rights to enforce (by lawsuit or otherwise) those
+// copyrights in the Work.
+//
+// Dedicator recognizes that, once placed in the public domain, the Work may be
+// freely reproduced, distributed, transmitted, used, modified, built upon, or
+// otherwise exploited by anyone for any purpose, commercial or non-commercial,
+// and in any way, including by methods that have not yet been invented or
+// conceived.
+//
+
+#ifndef M_blank_19x19_ghul
+#define M_blank_19x19_ghul
+
+
+MAP m_blank_19x19 {
+  type    ascii;
+  width   19;
+  height  19;
+  palette pal_expanded;
+  terrain {
+  //                                1  1  1  1  1  1  1  1  1
+  //  0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5  6  7  8
+    ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..";  // 0
+    ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..";  // 1
+    ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..";  // 2
+    ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..";  // 3
+    ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..";  // 4
+    ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..";  // 5
+    ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..";  // 6
+    ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..";  // 7
+    ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..";  // 8
+    ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..";  // 9
+    ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..";  // 10
+    ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..";  // 11
+    ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..";  // 12
+    ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..";  // 13
+    ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..";  // 14
+    ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..";  // 15
+    ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..";  // 16
+    ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..";  // 17
+    ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..";  // 18
+  //                                1  1  1  1  1  1  1  1  1
+  //  0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5  6  7  8
+  }
+} // m_grass_combat
+
+
+#endif // M_blank_19x19_ghul
