@@ -22,9 +22,14 @@
 (define (gregor-dead knpc kpc)
   (say knpc "Aye, it's a shame. My daughter and her husband both - "
        "killed by trolls."))
+
 (define (gregor-charcoal knpc kpc)
   (say knpc "I take charcoal into town and sell it, "
        "and some folks come by my place to buy it."))
+
+(define (gregor-hut knpc kpc)
+  (say knpc "My hut's in the forest to the east. "
+       "Just myself and my grandaughter living there now."))
 
 ;;----------------------------------------------------------------------------
 ;; Conv
@@ -75,6 +80,7 @@
                                              "Why the trolls attacked I don't know. "
                                              "Maybe they were driven out of the hills "
                                              "by something else.")))
+       (method 'hut gregor-hut)
        (method 'ilya (lambda (knpc kpc) (say knpc "Yep. She lives at my place now "
                                              "that her parents are dead.")))
        (method 'lake (lambda (knpc kpc) (say knpc "Exit this shrine and ye'll find yourself in a "
@@ -85,8 +91,7 @@
                                              "and in the past some have done great good, "
                                              "so folks leave stuff in good will for the next one.")))
        (method 'pare gregor-dead)
-       (method 'plac (lambda (knpc kpc) (say knpc "My hut's in the forest to the east. "
-                                             "Just myself and my grandaughter living there now.")))
+       (method 'plac gregor-hut)
        (method 'shar (lambda (knpc kpc) (say knpc "That's what we call this land, Wanderer.")))
        (method 'shri (lambda (knpc kpc) (say knpc "This shrine is for those who come through the gate. "
                                              "Wanderers like yourself. "
