@@ -1,0 +1,115 @@
+//
+// Copyright-Only Dedication (based on United States law)
+//
+// The person or persons who have associated their work with this document (the
+// "Dedicator") hereby dedicate the entire copyright in the work of authorship
+// identified below (the "Work") to the public domain.
+//
+// Dedicator makes this dedication for the benefit of the public at large and
+// to the detriment of Dedicator's heirs and successors. Dedicator intends this
+// dedication to be an overt act of relinquishment in perpetuity of all present
+// and future rights under copyright law, whether vested or contingent, in the
+// Work. Dedicator understands that such relinquishment of all rights includes
+// the relinquishment of all rights to enforce (by lawsuit or otherwise) those
+// copyrights in the Work.
+//
+// Dedicator recognizes that, once placed in the public domain, the Work may be
+// freely reproduced, distributed, transmitted, used, modified, built upon, or
+// otherwise exploited by anyone for any purpose, commercial or non-commercial,
+// and in any way, including by methods that have not yet been invented or
+// conceived.
+//
+
+// IMPORTANT: the images referred to by this sprite set have the following
+// README associated with it.
+/*
+  Welcome to the humongous Lost Dragon PCX
+  tile-art give-away!
+  
+  Date: 4/11/2000
+  
+  These pcx files are free for use on
+  any commercial or non-commercial (shareware,
+  freeware, give-away-ware, or otherwise) game 
+  provided that:
+  
+  1)  You tell me what you're using the graphics for.
+  2)  You give me (DeBray Bailey) credit somewhere 
+  in the final version of your game distribution.
+  3)  Lost Dragon cannot appear as a character in your 
+  game as I reserve that trademark for myself.  I'd
+  also appreciate it if you didn't replicate my 
+  game world either (which you don't really have 
+  access to anyway ;).
+  
+  Distributors and webmasters:
+  
+  This distribution must be kept together.  Do not
+  split it, rename it, or call it your own.
+  
+  Users:
+
+  There are hundreds upon hundreds of graphics
+  for you to choose from as I spent years drawing
+  this collection.  Unfortunately, by the time
+  I got done drawing, I no longer had time to put
+  into creating my ultimate adventure.  It was
+  time well spent though - and I have no regrets.
+
+  Here are further facts to keep you happy:
+  
+  Dave Hernandez is one of the great shareware authors
+  of all time as far as I'm concerned.
+  
+  They tiles files are 256 color at 640x480.  
+  
+  The tiles themselves are 24 pixels wide and 35 pixels 
+  tall.  Yes, you may modify the graphics for your own 
+  use.
+  
+  The outline color (you'll see it in npc and object 
+  tiles) which appears to be black is actually: 
+  R:8 G:8 B:8 The pink color is r:255 g:0 b:255 - 
+  a color I call programmer pink.
+  
+  Some of the icons in this pack were based on the 
+  original FRUA icon work by Autery.  A few were based
+  on FRUA work by Trent Troop (all icons were altered 
+  with permission).
+  
+  There are some duplicates in the tile files, but you
+  can filter them out as you like.  Good luck folks!  
+  I hope to see graphical versions of the rogue-likes 
+  now...
+  
+  Lost Dragon
+  aka DeBray Bailey
+  lostdragon@worldnet.att.net
+  http://www.lostdragon.com/
+  
+  If all else fails, you can try to reach me at: 
+  silicon_avatar@hotmail.com but that email address is
+  infrequently checked.
+*/
+
+#ifndef lost_dragon_sprite_set_ghul
+#define lost_dragon_sprite_set_ghul
+
+
+SPRITE_SET ss_lost_dragon {
+  
+        image_width  32;
+        image_height 32;
+        file_rows    8;
+        file_cols    8;
+        file_offx    0;
+        file_offy    0;
+        file "data/images/lost_dragon.png";
+  
+        sprites {
+                STD_SPRITE(s_dresser, 0);
+                STD_SPRITE(s_chair,   1);
+        }
+}
+
+#endif
