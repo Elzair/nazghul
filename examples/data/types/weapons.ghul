@@ -184,7 +184,7 @@ PROJ_WPN_TYPE(t_crossbow,  "crossbow",  s_hvy_xbow, +1, +3, +8, -3, +0, +0, 8, 2
               _a_min, _a_max, _slot, _hands, _range,                      \
               null, 0, 0, null, 0)
 
-// Natural weapons:  (melee)
+// Natural weapons:
 NATURAL_WPN_TYPE(t_hands,   "bare hands", +2, +1, +4,  +2, +0, +0, 1, 1, WEAPON_SLOT);
 NATURAL_WPN_TYPE(t_hooves,  "hooves",     +0, +5, +12, +0, +0, +0, 2, 1, WEAPON_SLOT);
 NATURAL_WPN_TYPE(t_teeth,   "fangs",      +2, +2, +5,  +0, +0, +0, 1, 1, HELM_SLOT);

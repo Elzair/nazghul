@@ -96,7 +96,7 @@ player {
   y     56;
 #endif
 
-  sprite    s_companion_wizard;
+  sprite    s_companion_fighter;
   speed     2;
   mv_desc   Walk;
   mv_sound  "data/sounds/walk.wav";

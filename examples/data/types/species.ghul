@@ -126,7 +126,7 @@ SPECIES human {
   int     20;
   dex     20;
   spd     2; // turns taken for easiest terrain multiplied by scale factor
-  vr      8; // max AI vision radius (won't see the player beyond this range)
+  vr      13; // max AI vision radius (won't see the player beyond this range)
   pmask   (LAND);
 
   hp_mod  20;
@@ -164,7 +164,7 @@ SPECIES goblin {
   int     18;
   dex     22;
   spd     2;
-  vr      8;
+  vr      14;
   pmask   (LAND);
 
   hp_mod  15;
@@ -201,7 +201,7 @@ SPECIES gazer {
   int     30;
   dex     10;
   spd     4;
-  vr      10;
+  vr      19;
   pmask   (LAND|SHOALS);
 
   hp_mod  10;
@@ -304,7 +304,7 @@ SPECIES snake {
   int     1;
   dex     5; // ?
   spd     2;
-  vr      8;
+  vr      6;
   pmask   (LAND);
 
   hp_mod  5; // kill them with one blow from about anything
@@ -333,7 +333,7 @@ SPECIES insects {
   int     1;
   dex     1;
   spd     2;
-  vr      8;
+  vr      4;
   pmask   (LAND);
 
   hp_mod  5;
@@ -397,7 +397,7 @@ SPECIES nixie {
   int   18;
   dex   18;
   spd   2;
-  vr    8;
+  vr    10;
   pmask (WATER|SHOALS);
 
   hp_mod  16;
@@ -434,7 +434,7 @@ SPECIES water_elemental {
   int   25;
   dex   25;
   spd   3;
-  vr    8;
+  vr    10;
   pmask (WATER|SHOALS);
 
   hp_mod  30;
