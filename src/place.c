@@ -786,7 +786,7 @@ static int place_pathfind_is_valid_location(struct place_pathfind_context
 	class Portal *portal;
 	class Moongate *moongate;
 
-	/* I used to check this after passability, but it really belongs first. 
+	/* I used to check this after passability, but it really belongs first.
 	 * In several cases the target location may not be passable but if the
 	 * seeker can get adjacent to it that will be good enough. */
 	if (x == context->target_x && y == context->target_y)
@@ -813,8 +813,8 @@ static int place_pathfind_is_valid_location(struct place_pathfind_context
 	/* I used to penalize portals in the heuristic routine, but that was
 	 * back in the day when I would pathfind for the player on a
 	 * right-click. Any more pathfinding is used exclusively for NPCs and I
-	 * NEVER want them to enter a portal unless they explicitly want to (and 
-	 * * currently they never do). Likewise for open moongates. */
+	 * NEVER want them to enter a portal unless they explicitly want to
+	 * (and currently they never do). Likewise for open moongates. */
 	if ((portal = place_get_portal(context->place, x, y)) &&
 	    portal->isAutomatic())
 		return 0;
@@ -1000,6 +1000,13 @@ int place_get_movement_cost(struct place *place, int x, int y)
         WRAP_COORDS(place, x, y);
 	struct terrain *t = TERRAIN(place, x, y);
 	return (place->scale * (t ? t->movement_cost : 0));
+}
+
+int place_is_hazardous(struct place *place, int x, int y)
+{
+        WRAP_COORDS(place, x, y);
+	struct terrain *t = TERRAIN(place, x, y);
+	return (t->effects != 0);
 }
 
 int place_adjust_turn_cost(struct place *place, int turns)

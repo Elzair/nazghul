@@ -440,6 +440,11 @@ bool NpcParty::move(int dx, int dy)
 		return false;
 	}
 
+	// Check for terrain hazards
+	if (place_is_hazardous(newplace, newx, newy))
+                return false;
+
+
 	// Check for a mech (not for passability, for sending the STEP
         // signal)
 	mech = (class Mech *) place_get_object(Place, newx, newy, mech_layer);

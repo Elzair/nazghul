@@ -1883,6 +1883,26 @@ OCC wizard {
     t_blue_potion 50 2;
   }
 }
+OCC druid {
+  name "druid";
+  magic 2.0;
+  container t_chest1;
+  traps {
+    t_poison_trap;
+  }
+  arms {
+    t_dagger;
+    t_oil;
+  }
+  items {
+    t_dagger 100 1;
+    t_oil 50 10;
+    t_light_potion 50 5;
+    t_green_potion 50 2;
+    t_red_potion 75 5;
+    t_blue_potion 50 2;
+  }
+}
 OCC merchant {
   name "merchant";
   magic 0.0;
@@ -3937,7 +3957,7 @@ SCHED Shrooms_Sched {
 CHAR Shroom_the_Hag {
         name "Shroom";
         species human;
-        occ merchant;
+        occ druid;
         sprite s_companion_druid;
         hp 30;
         xp 10000;

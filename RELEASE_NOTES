@@ -85,3 +85,10 @@ Changes for nazghul-0.1.2
 
 --Added a new character to Green Tower. Shroom the Hag owns the reagent shop.
 
+--Added a druid class.
+
+--Npc parties in wander mode no longer walk over hazardous terrain. I was
+  getting concerned about Shroom walking around in the firepit at the White
+  Stag Lodge. :-)
+
+
