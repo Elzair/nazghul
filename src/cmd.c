@@ -2424,20 +2424,19 @@ void cmdZoomIn(void)
 
 void cmdQuickSave(void)
 {
-        log_msg("Saving to %s...", QUICKSAVE_FNAME);
-        consoleRepaint();
+        log_begin("Saving to %s...", QUICKSAVE_FNAME);
         session_save(QUICKSAVE_FNAME);
-        log_msg("ok!\n");
-        consoleRepaint();
+        log_end("ok!");
 }
 
 void cmdReload(void)
 {
-        log_msg("Loading from %s...", QUICKSAVE_FNAME);
-        consoleRepaint();
+        log_begin("Loading from %s...", QUICKSAVE_FNAME);
+        log_disable();
         session_load(QUICKSAVE_FNAME);
+        log_enable();
         Session->reloaded = 1;
-        consolePrint("ok!\n");
+        log_end("ok!");
 }
 
 /****** New UI ******/

@@ -173,7 +173,7 @@ void player_party::changePlaceHook()
         mapSetPlace(place);
         Place = place;
         place_enter(place);
-        consolePrint("Entering %s.\n", Place->name);
+        log_msg("Entering %s.", Place->name);
         
         // --------------------------------------------------------------------
         // If the party is relocating to a non-wilderness place then I have to
@@ -635,9 +635,9 @@ bool player_party::add(class ObjectType * type, int quantity)
 bool player_party::takeOut(ObjectType *type, int q)
 {
         // Some types can be in more than one category, so remove from all.
-        consolePrint("You lose ");
+        log_begin("You lose ");
         type->describe(q);
-        consolePrint("\n");
+        log_end(NULL);
         return inventory->takeOut(type, q);
 }
 

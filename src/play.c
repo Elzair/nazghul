@@ -52,6 +52,7 @@
 #include "terrain.h"
 #include "cmd.h"
 #include "debug.h"
+#include "log.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -362,15 +363,18 @@ int playRun(void)
         // Load a new session from a saved file.
         // -------------------------------------------------------------------
 
+        log_disable();
+
 	session_load(SAVEFILE);
         if (! Session) {
 		err("Error loading game from '%s'", SAVEFILE);
 		return -1;
 	}
 
-        mapUpdate(REPAINT_IF_DIRTY);
+        log_enable();
+	log_msg("Welcome to Nazghul version %s.", version_as_string() );
 
-	consolePrint("Welcome to Nazghul version %s\n", version_as_string() );
+        mapUpdate(REPAINT_IF_DIRTY);
 
 	// Setup all the event handlers.
 	qh.fx = quitHandler;

@@ -110,7 +110,8 @@ static int console_handle_repeated_msg(void)
 
         // Is this a repeat?
         if (strchr(console_scratch_buf, '\n') == 0 ||
-            strcmp(console_scratch_buf, console_last_msg) != 0) {
+            (strcmp(console_scratch_buf, console_last_msg) != 0) ||
+            (strcmp(console_scratch_buf, "\n") == 0)) {
 
                 // No. Was the previous message a repeat?
                 if (Console.repeat != 0) {

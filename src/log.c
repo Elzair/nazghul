@@ -13,6 +13,7 @@
 static struct list log_q;
 static struct list log_stk;
 static int log_group;
+static int log_disabled;
 
 struct log_entry {
         struct list q_hook;
@@ -44,6 +45,18 @@ static void log_entry_print(struct log_entry *entry, char *fmt, va_list args)
                 entry->ptr += wrote;
         } else {
                 entry->room = 0;
+        }
+
+        /* If this entry is already at the head of the queue then flush it to
+         * the console now. */
+        if (&entry->q_hook == log_q.next) {
+                if (entry->ptr != entry->buf) {
+                        consolePrint(entry->buf);
+                        consoleRepaint();
+                        memset(entry->buf, 0, sizeof(entry->buf));
+                        entry->ptr = entry->buf;
+                        entry->room = sizeof(entry->buf);
+                }
         }
 }
 
@@ -90,11 +103,15 @@ void log_init(void)
         list_init(&log_q);
         list_init(&log_stk);
         log_group = 0;
+        log_disabled = 0;
 }
 
 void log_begin(char *fmt, ...)
 {
         va_list args;
+
+        if (log_disabled)
+                return;
 
         struct log_entry *entry = log_entry_new();
         log_push(entry);
@@ -108,6 +125,9 @@ void log_continue(char *fmt, ...)
         va_list args;
         struct log_entry *entry;
 
+        if (log_disabled)
+                return;
+
         assert(! list_empty(&log_stk));
         entry = outcast(log_stk.next, struct log_entry, stk_hook);
         va_start(args, fmt);
@@ -119,6 +139,9 @@ void log_end(char *fmt, ...)
 {
         va_list args;
         struct log_entry *entry;
+
+        if (log_disabled)
+                return;
 
         assert(! list_empty(&log_stk));
         entry = outcast(log_stk.next, struct log_entry, stk_hook);
@@ -133,6 +156,9 @@ void log_msg(char *fmt, ...)
         va_list args;
         struct log_entry *entry = log_entry_new();
 
+        if (log_disabled)
+                return;
+
         log_push(entry);
         va_start(args, fmt);
         log_entry_print(entry, fmt, args);
@@ -142,12 +168,28 @@ void log_msg(char *fmt, ...)
 
 void log_begin_group()
 {
+        if (log_disabled)
+                return;
+
         log_group++;
 }
 
 void log_end_group()
 {
+        if (log_disabled)
+                return;
+
         log_group--;
         if (log_group == 0)
                 consolePrint("\n");
+}
+
+void log_disable()
+{
+        log_disabled++;
+}
+
+void log_enable()
+{
+        log_disabled--;
 }
