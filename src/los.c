@@ -27,11 +27,11 @@
 #define los_NUMALGS sizeof(algs)/sizeof(algs[0])
 
 extern int FLOODFILL_Init(struct los *los);
+extern int ANGBAND_Init(struct los *los);
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-extern int ANGBAND_Init(struct los *los);
 #ifdef __cplusplus
 }
 #endif
