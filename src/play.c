@@ -835,6 +835,59 @@ bool cmdQuit(void)
 	return Quit;
 }
 
+void cmdAttack(void)
+{
+        int dir;
+        struct move_info info;
+        struct combat_info cinfo;
+
+        // Initialize data structures.
+        memset(&info, 0, sizeof(info));
+        memset(&cinfo, 0, sizeof(cinfo));
+        cinfo.move = &info;
+        cinfo.defend = false;
+        
+        // Get the direction
+	cmdwin_clear();
+	cmdwin_print("Attack-<direction>");
+	getkey(&dir, dirkey);
+	cmdwin_backspace(strlen("<direction>"));
+	if (dir == CANCEL) {
+		cmdwin_print("none!");
+		return;
+	}
+	cmdwin_print("%s", directionToString(dir));
+
+        // Get the npc party being attacked
+        info.dx = directionToDx(dir);
+        info.dy =  directionToDy(dir);;
+        info.x = player_party->getX() + info.dx;
+        info.y = player_party->getY() + info.dy;
+        info.place = player_party->getPlace();
+        info.npc_party = place_get_NpcParty(info.place, info.x, info.y);
+        if (info.npc_party == NULL) {
+                cmdwin_print("-nobody there!");
+                return;
+        }
+        cmdwin_print("-%s", info.npc_party->getName());
+
+        // If the npc is not hostile then get player confirmation.
+        if (!info.npc_party->isHostile(player_party->alignment)) {
+                int yesno;
+                cmdwin_print("-attack non-hostile-<y/n>");
+                getkey(&yesno, yesnokey);
+                cmdwin_backspace(strlen("<y/n>"));
+                if (yesno == 'n') {
+                        cmdwin_print("no");
+                        return;
+                }
+                cmdwin_print("yes");
+        }
+
+        // Enter combat
+        player_party->move_to_combat(&cinfo);
+}
+
 void cmdFire(void)
 {
 	int dir;
@@ -2284,6 +2337,9 @@ static bool keyHandler(struct KeyHandler *kh, int key)
 		}
 		break;
 
+        case 'a':
+                cmdAttack();
+                break;
 	case 'b':
 		player_party->board_vehicle();
 		break;
@@ -2343,11 +2399,11 @@ static bool keyHandler(struct KeyHandler *kh, int key)
 		cmdZtats(NULL);
 		turns_used = 0;
         break;
-    case '@':
-      // SAM: 'AT' command for party-centric information
-      cmdAT(NULL);
-      turns_used = 0;
-      break;
+        case '@':
+                // SAM: 'AT' command for party-centric information
+                cmdAT(NULL);
+                turns_used = 0;
+                break;
 	case ' ':
 		consolePrint("Pass\n");
 		turns_used = Place->scale;

@@ -51,3 +51,5 @@ Changes for nazghul-0.1.2
 
 --Added start of a new town: Green Tower
 
+--Added the (a)ttack command for towns and wilderness. If the target is
+  non-hostile it prompts the player for confirmation.

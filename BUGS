@@ -4,20 +4,12 @@
 * Frame sometimes gets messed up and needs a repaint (really? or only during
   debug sessions?)
 
-* Can't attack in town
-
-* Show last line of command window on the console
-
-* Have repetitive messages show repeat counts
-
 * Quoted (Sam favors single quote for glyph conservation purposes) map terrain
   lines for sane syntax highlighting
 
-* Named palettes, palette unions (abort on conflicts)
-
-* soundPlay for mechs
-
 * spaceship the lightswitch in the dungeon => crash when handled
+
+* Converse with guards, let them attack => no guards on combat map
 
 Known BUGS in release 0.1.1
 
