@@ -1016,18 +1016,18 @@
 (kern-mk-sprite 's_bolt_white                 ss_dg_weapons 1 226 #f 0)
 (kern-mk-sprite 's_bolt_gold                  ss_dg_weapons 1 227 #f 0)
 
-(kern-mk-sprite 's_bolt_glowing_red           ss_dg_weapons 2 240 #f 0)
-(kern-mk-sprite 's_bolt_glowing_green         ss_dg_weapons 2 242 #f 0)
+(kern-mk-sprite 's_bolt_glowing_red           ss_dg_weapons 2 236 #f 0)
+(kern-mk-sprite 's_bolt_glowing_green         ss_dg_weapons 2 238 #f 0)
 
-(kern-mk-sprite 's_bolt_wooden_flaming        ss_dg_weapons 2 244 #f 0)
-(kern-mk-sprite 's_bolt_metal_flaming         ss_dg_weapons 2 246 #f 0)
-(kern-mk-sprite 's_bolt_wooden_acid           ss_dg_weapons 2 248 #f 0)
-(kern-mk-sprite 's_bolt_metal_acid            ss_dg_weapons 2 250 #f 0)
-(kern-mk-sprite 's_bolt_wooden_frost          ss_dg_weapons 2 252 #f 0)
-(kern-mk-sprite 's_bolt_metal_frost           ss_dg_weapons 2 254 #f 0)
+(kern-mk-sprite 's_bolt_wooden_flaming        ss_dg_weapons 2 240 #f 0)
+(kern-mk-sprite 's_bolt_metal_flaming         ss_dg_weapons 2 242 #f 0)
+(kern-mk-sprite 's_bolt_wooden_acid           ss_dg_weapons 2 244 #f 0)
+(kern-mk-sprite 's_bolt_metal_acid            ss_dg_weapons 2 246 #f 0)
+(kern-mk-sprite 's_bolt_wooden_frost          ss_dg_weapons 2 248 #f 0)
+(kern-mk-sprite 's_bolt_metal_frost           ss_dg_weapons 2 250 #f 0)
 
-(kern-mk-sprite 's_bolt_glowing_blue          ss_dg_weapons 2 256 #f 0)  ;; TODO: fix this sprite
-(kern-mk-sprite 's_bolt_glowing_purple        ss_dg_weapons 2 258 #f 0)  ;; TODO: fix this sprite
+(kern-mk-sprite 's_bolt_glowing_blue          ss_dg_weapons 2 252 #f 0)  ;; TODO: fix this sprite
+(kern-mk-sprite 's_bolt_glowing_purple        ss_dg_weapons 2 254 #f 0)  ;; TODO: fix this sprite
 
 ; (kern-mk-sprite 's_       ss_dg_weapons 1   0 #f 0)
 

@@ -438,36 +438,34 @@
                 (list (kern-mk-obj t_arrow_white          1)  3 45)
                 (list (kern-mk-obj t_arrow_gold           1)  4 45)
 
-                (list (kern-mk-obj t_arrow_glowing_red    1)  6 45)
-                (list (kern-mk-obj t_arrow_glowing_green  1)  7 45)
+                (list (kern-mk-obj t_arrow_wooden_flaming 1)  6 45)
+                (list (kern-mk-obj t_arrow_metal_flaming  1)  7 45)
+                (list (kern-mk-obj t_arrow_wooden_acid    1)  8 45)
+                (list (kern-mk-obj t_arrow_metal_acid     1)  9 45)
+                (list (kern-mk-obj t_arrow_wooden_frost   1) 10 45)
+                (list (kern-mk-obj t_arrow_metal_frost    1) 11 45)
 
-                (list (kern-mk-obj t_arrow_wooden_flaming 1)  9 45)
-                (list (kern-mk-obj t_arrow_metal_flaming  1) 10 45)
-                (list (kern-mk-obj t_arrow_wooden_acid    1) 11 45)
-                (list (kern-mk-obj t_arrow_metal_acid     1) 12 45)
-                (list (kern-mk-obj t_arrow_wooden_frost   1) 13 45)
-                (list (kern-mk-obj t_arrow_metal_frost    1) 14 45)
-
-                (list (kern-mk-obj t_arrow_glowing_blue   1) 16 45)
-                (list (kern-mk-obj t_arrow_glowing_purple 1) 17 45)
+                (list (kern-mk-obj t_arrow_glowing_red    1) 13 45)  ;; TODO: fix sprite
+                (list (kern-mk-obj t_arrow_glowing_green  1) 14 45)  ;; TODO: fix sprite
+                (list (kern-mk-obj t_arrow_glowing_blue   1) 15 45)
+                (list (kern-mk-obj t_arrow_glowing_purple 1) 16 45)
 
                 (list (kern-mk-obj t_bolt_wooden          1)  1 46)
                 (list (kern-mk-obj t_bolt_metal           1)  2 46)
                 (list (kern-mk-obj t_bolt_white           1)  3 46)
                 (list (kern-mk-obj t_bolt_gold            1)  4 46)
 
-                (list (kern-mk-obj t_bolt_glowing_red     1)  6 46)
-                (list (kern-mk-obj t_bolt_glowing_red     1)  7 46)
+                (list (kern-mk-obj t_bolt_wooden_flaming  1)  6 46)
+                (list (kern-mk-obj t_bolt_metal_flaming   1)  7 46)
+                (list (kern-mk-obj t_bolt_wooden_acid     1)  8 46)
+                (list (kern-mk-obj t_bolt_metal_acid      1)  9 46)
+                (list (kern-mk-obj t_bolt_wooden_frost    1) 10 46)
+                (list (kern-mk-obj t_bolt_metal_frost     1) 11 46)
 
-                (list (kern-mk-obj t_bolt_wooden_flaming  1)  9 46)
-                (list (kern-mk-obj t_bolt_metal_flaming   1) 10 46)
-                (list (kern-mk-obj t_bolt_wooden_acid     1) 11 46)
-                (list (kern-mk-obj t_bolt_metal_acid      1) 12 46)
-                (list (kern-mk-obj t_bolt_wooden_frost    1) 13 46)
-                (list (kern-mk-obj t_bolt_metal_frost     1) 14 46)
-
-                (list (kern-mk-obj t_bolt_glowing_blue    1) 16 46)
-                (list (kern-mk-obj t_bolt_glowing_purple  1) 17 46)
+                (list (kern-mk-obj t_bolt_glowing_red     1) 13 46)
+                (list (kern-mk-obj t_bolt_glowing_red     1) 14 46)
+                (list (kern-mk-obj t_bolt_glowing_blue    1) 15 46)  ;; TODO: fix sprite
+                (list (kern-mk-obj t_bolt_glowing_purple  1) 16 46)  ;; TODO: fix sprite
 
 
                 
