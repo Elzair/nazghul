@@ -5,7 +5,9 @@
 #ifndef all_places_ghul
 #define all_places_ghul
 
-
+// Order matters: wilderness must be before any towns which refer to it as a
+// parent
+#include "./P_wilderness.ghul"
 #include "./P_empire_city.ghul"
 #include "./P_prison_and_torture_chamber.ghul"
 
