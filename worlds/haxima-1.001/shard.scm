@@ -87,7 +87,6 @@
                 (list p_trigrave          33 43)
                 )
 
-                ;; (list p_trigrave          33 43)
                 ;; (list p_enchanters_tower  19 13)
                 ;; (list p_wivernscross       4 50)
 
@@ -97,6 +96,16 @@
                (list
                 ;; (list player 9 9)
                 (list (mk-bridge east) 30 43)
+
+                ;; goblins from the western hills
+                (list (kern-mk-obj t_orc_generator 1) 1 22)
+
+                ;; spiders in the deep woods
+                (list (kern-mk-obj t_spider_generator 1) 46 37)
+                (list (kern-mk-obj t_queen_spider_generator 1) 56 43)
+
+                ;; skeletons in the northern fens
+                (list (kern-mk-obj t_skeleton_generator 1) 0 0)
                 )
 
                nil ; hooks
