@@ -129,6 +129,9 @@ extern "C" {
                                                   int x0, int y0, 
                                                   int x1, int y1);
 
+        void place_get_direction_vector(struct place *place, int x1, int y1, 
+                                        int x2, int y2, int *dx, int *dy);
+
 	extern class Portal *place_get_portal(struct place *place,
 					      int x, int y);
 

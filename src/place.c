@@ -570,18 +570,86 @@ unsigned int place_flying_distance(struct place *place,
 	int dy;
 
 	if (place->wraps) {
-		dx = WRAP_DISTANCE(min(x0, x1), max(x0, x1),
-				   place->terrain_map->w);
-		dy = WRAP_DISTANCE(min(y0, y1), max(y0, y1),
-				   place->terrain_map->h);
+		dx = WRAP_DISTANCE(x1, x0, place->terrain_map->w);
+		dy = WRAP_DISTANCE(y1, y0, place->terrain_map->h);
 	} else {
-		dx = max(x0, x1) - min(x0, x1);
-		dy = max(y0, y1) - min(y0, y1);
+		dx = x1 - x0;
+		dy = y1 - y0;
 	}
 
 	// This approx comes from the angband LOS source, and overestimates
 	// about one tile per fifteen tiles of distance.
 	return ((dy > dx) ? (dy + (dx >> 1)) : (dx + (dy >> 1)));
+}
+
+void place_get_direction_vector(struct place *place, int x0, int y0, int x1, 
+                               int y1, int *dx, int *dy)
+{
+        int east, west, north, south;
+
+        if (! place->wraps) {
+                *dx = x1 - x0;
+                *dy = y1 - y0;
+                return;
+        }
+
+        // Four possibilities for dx:
+        //
+        // |    x0-->x1    | (a) direct east
+        // |<--x0     x1<--| (b) west across map boundary
+        // |    x1<--x0    | (c) direct west
+        // |-->x1     x0-->| (d) east across map boundary
+        //
+        // Note that since west is always to the left, it is a negative vector.
+        // We compute it as a positive value to make it easy to compare against
+        // east, but convert it to negative before returning it as dx.
+
+        if (x1 > x0) {
+                east = x1 - x0;
+                west = x0 + place->terrain_map->w - x1;
+        } else {
+                west = x0 - x1;
+                east = x1 + place->terrain_map->w - x0;
+        }
+
+        if (west < east)
+                *dx = -west;
+        else
+                *dx = east;
+
+        // Four possibilities for dy:
+        //
+        // ---------------
+        //      ^       |
+        // y0   |   y1  v
+        // |    y0  ^   y1
+        // v        |
+        // y1       y0
+        //      y1      y0
+        //      ^       |
+        //      |       V
+        // ---------------
+        // (a) (b) (c) (d)
+        //
+        // (a) direct south
+        // (b) north across map boundary
+        // (c) direct north
+        // (d) south across map boundary
+        //
+        // Note that north is always a negative vector.
+
+        if (y1 > y0) {
+                south = y1 - y0;
+                north = y0 + place->terrain_map->h - y1;
+        } else {
+                north = y0 - y1;
+                south = y1 + place->terrain_map->h - y0;
+        }
+
+        if (north < south)
+                *dy = -north;
+        else
+                *dy = south;
 }
 
 int place_add_object(struct place *place, Object * object)

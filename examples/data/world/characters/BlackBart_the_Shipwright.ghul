@@ -34,9 +34,9 @@ RESP BB_job_resp {
         SAY "HEE-NAY ...ship! Bart make ship! Good ship.";
 }
 RESP BB_ship_resp {
-        SAY "Ship 200 gold. Good ship.";
+        SAY "Ship 200 gold. Good ship. Don't sink.";
         CHECK_PARM GOLD > 200 {
-                SAY "HEE-NAY CHO-DIE? Want ship? Very good ship. Don't sink.";
+                SAY "HEE-NAY CHO-DIE? Want ship?";
                 GET_YES_NO {
                         CHANGE_PARM AMOUNT 200;
                         TAKE GOLD;

@@ -534,10 +534,13 @@ bool NpcParty::attack_with_ordnance(int d)
 		return false;
 	}
 	// Get the normalized vector to the player.
-	dx = player_party->getX() - getX();
-	dy = player_party->getY() - getY();
+        place_get_direction_vector(getPlace(),
+                                   getX(), getY(), 
+                                   player_party->getX(), player_party->getY(),
+                                   &dx, &dy);
 	clamp(dx, -1, 1);
 	clamp(dy, -1, 1);
+        printf("%s -> player: [%d %d]\n", getName(), dx, dy);
 
 	// Check if the player is on a major axes (assumes we must fire in a
 	// straight line -- always true for now).
