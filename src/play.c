@@ -2074,6 +2074,7 @@ static int play_init(struct play *play)
 					 * the frame because the title is
 					 * always painted OVER the frame. */
 
+	mapInit(play->los_name); // must be before placeEnter()
 	placeEnter();
 	consoleInit();
 
@@ -2082,7 +2083,6 @@ static int play_init(struct play *play)
 
 	windSetDirection(NORTH, 1);
 
-	mapInit(play->los_name);
 	mapSetPlace(Place);
 	player_party->view = mapCreateView();
 	if (!player_party->view)
