@@ -581,6 +581,37 @@ void NpcParty::work()
 		return;
 	}
 
+        /* Check if the player is _on this spot_. Yes, this can happen under
+         * current game rules. If a player enters a portal and an npc is on the
+         * destination then... */
+	if (getX() == player_party->getX() && getY() == player_party->getY()) {
+                
+                struct move_info info;
+                struct combat_info cinfo;
+
+                memset(&info, 0, sizeof(info));
+                info.place = getPlace();
+                info.x = getX();
+                info.y = getY();
+                info.dx = dx;
+                info.dy = dy;
+                info.npc_party = this;
+                
+                if (!dx && !dy)
+                        info.dx = 1;
+                else if (dx && dy)
+                        info.dy = 0;
+
+                memset(&cinfo, 0, sizeof(cinfo));
+                cinfo.defend = true;
+                cinfo.move = &info;
+                
+                player_party->move_to_combat(&cinfo);
+		return;
+	}
+
+        
+
 	/* Check if the player is in visible range */
 	d = place_walking_distance(Place,
 				   getX(), getY(),

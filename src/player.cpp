@@ -253,7 +253,8 @@ void player_party::relocate(struct place *place, int x, int y)
 	mapCenterView(view, x, y);
 	recompute_los();
 	mapCenterCamera(x, y);
-	mapSetDirty();
+        mapUpdate(0); // force a repaint
+	//mapSetDirty();
 }
 
 enum move_result player_party::check_move_to(struct move_info *info)
@@ -287,25 +288,36 @@ enum move_result player_party::check_move_to(struct move_info *info)
 	if (vehicle && place_get_vehicle(info->place, info->x, info->y))
 		return move_occupied;
 
+        // I give automatic portals higher priority than passability. This is
+        // mainly to allow ships to have access to towns which are placed on
+        // land but which may have a port. Passability should be determined by
+        // checking the town map to see if it allows entrance, not by checking
+        // the terrain the tile is on.
+        //
+        // Note that this - as written now - will allow the party to enter
+        // portals with impassable destinations. That's fine, see
+        // doc/GAME_RULES Design Discussion #3: sane portal linkages are the
+        // responsibility of game developers.
+	if (!info->portal &&
+	    (new_portal = place_get_portal(info->place, info->x, info->y))) {
+                if (new_portal->isAutomatic()) {
+                        info->portal = new_portal;
+                        return move_enter_auto_portal;
+                }
+                return move_ok;
+	}
+
+	// The same rules as above apply to moongates.
+	info->moongate = place_get_moongate(info->place, info->x, info->y);
+	if (info->moongate && info->moongate->isOpen())
+		return move_enter_moongate;
+
 	// passable? I moved this check to be before a test for portals. A
 	// portal is accessible iff the player can move across the terrain it
 	// is placed on. The "ladder in the lake to the ladder on land" test
 	// case just plain looks counterintuitive without it.
 	if (!place_is_passable(info->place, info->x, info->y, get_pmask(), 0))
 		return move_impassable;
-
-	// automatic portal? only detect the first one to prevent endlessly
-	// looping through cyclic portals.
-	if (!info->portal &&
-	    (new_portal = place_get_portal(info->place, info->x, info->y)) &&
-	    new_portal->isAutomatic()) {
-		info->portal = new_portal;
-		return move_enter_auto_portal;
-	}
-	// moongate?
-	info->moongate = place_get_moongate(info->place, info->x, info->y);
-	if (info->moongate && info->moongate->isOpen())
-		return move_enter_moongate;
 
 	return move_ok;
 }
@@ -363,6 +375,14 @@ bool player_party::try_to_enter_moongate(class Moongate * src_gate)
 		info.x = dest_gate->getX();
 		info.y = dest_gate->getY();
 
+#if CHECK_MOONGATE_DESTINATION
+                // See Design Discussion #3 in GAME_RULES. Sane portal linkages
+                // (including moongates) are the responsibility of the game
+                // developer, not the engine.
+                //
+                // One exception _might_ be to check for an npc party on the
+                // other side. But the engine can handle stacking npc parties,
+                // so it might be simplest just to allow it.
 		switch (check_move_to(&info)) {
 
 		case move_ok:	// great
@@ -386,7 +406,7 @@ bool player_party::try_to_enter_moongate(class Moongate * src_gate)
 		default:	// no other cases expected
 			assert(false);
 		}
-
+#endif
 	}
 
 	cmdwin_print("-ok");
@@ -633,6 +653,7 @@ bool player_party::try_to_enter_portal(class Portal * portal, int dx, int dy)
 
 	cmdwin_print("-%s", portal->getName());
 
+#ifdef CHECK_PORTAL_DESINATION
 	switch (check_move_to(&info)) {
 
 	case move_ok:
@@ -671,34 +692,53 @@ bool player_party::try_to_enter_portal(class Portal * portal, int dx, int dy)
 		assert(false);
 		return false;
 	}
+#else // ! CHECK_PORTAL_DESTINATION
+
+        cmdwin_print("-ok");
+
+	// Show the destination so the player knows what he's getting himself
+	// into...
+	mapSetPlace(info.place);
+	mapCenterCamera(info.x, info.y);
+	mapCenterView(view, info.x, info.y);
+	mapRecomputeLos(view);
+	mapUpdate(0);
+	usleep(MS_PER_TICK * 2000);
+
+
+        relocate(info.place, info.x, info.y);
+        return true;
+#endif // ! CHECK_PORTAL_DESTINATION
 }
 
 bool player_party::try_to_move_off_map(struct move_info * info)
 {
-	// Switch to the parent place and run through the loop
-	// again.
-	info->x = info->place->location.x;
-	info->y = info->place->location.y;
-	info->place = info->place->location.place;
+         
+        // Yes, I'm making the following unconditional with no further checks.
+        // The parent tile is _always_ and _unconditionally_ passable.
+        // Consider everything that could make that tile impassable:
+        //   --Terrain on parent map... don't care
+        //   --Autoportals leading elsewhere... ignore them
+        //   --Npc's... they aren't allowed on town tiles in the wilderness,
+        //     and if one sneaks through ignore it
+        //   --Fields... unlikely, and don't care
+        //   --Vehicles (when player is already in one)... ignore them (and
+        //     don't allow player to abandon a vehicle over a town, otherwise
+        //     we can leak vehicles since consecutive abandonments will 
+        //     clobber previous ones)
+        // See notes on the ship problem in discussion #1 of doc/GAME_RULES
 
-	switch (check_move_to(info)) {
-
-	case move_ok:
-	case move_enter_moongate:
-	case move_enter_auto_portal:
-		cmdwin_print("-ok");
-		relocate(info->place, info->x, info->y);
-		return true;
-
-	case move_null_place:
+        if (! info->place->location.place) {
 		cmdwin_print("-no place to go!");
-		return false;
+                return false;
+        }
 
-	default:
-		assert(false);
-		return false;
+        cmdwin_print("-ok");
+        relocate(info->place->location.place, 
+                 info->place->location.x, 
+                 info->place->location.y);
 
-	}
+        return true;
 }
 
 bool player_party::move(int newdx, int newdy, bool teleport)
