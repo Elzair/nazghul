@@ -840,13 +840,13 @@ static void mapRepaintLatency(void)
         extern int G_latency_start;
         static int latency = 0;
 
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
         // G_latency_start is set when the user presses a key in
         // character_key_handler (character.cpp) and party_mode_key_handler
         // (player.cpp).
         //
         // G_exec_loops is set in the main loop in play.c.
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
 
         if (G_latency_start) {
                 latency = SDL_GetTicks() - G_latency_start;

@@ -1563,7 +1563,7 @@ void place_exec(struct place *place)
         while (place->turn_elem != &place->turn_list
                && ! Quit
                && ! player_party->allDead()) {
-                
+
                 /* Keep a pointer to the object in the node */
                 obj = (class Object *)place->turn_elem->ptr;
 
@@ -1581,7 +1581,7 @@ void place_exec(struct place *place)
                 } else {
                         /* 'run' the object */
                         obj->exec();
-
+                        
                         /* Apply terrain, field and any other environmental
                          * effects. */
                         if (obj->isOnMap())
@@ -1611,6 +1611,7 @@ void place_exec(struct place *place)
                         /* Destroy the object. */
                         delete obj;
                 }
+
         }
 
         /* Allow the place to be destroyed. */

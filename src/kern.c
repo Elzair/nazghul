@@ -3664,6 +3664,12 @@ static void kern_append_object(Object *obj, void *data)
         }
 }
 
+static void kern_filter_and_append_being(Object *obj, void *data)
+{
+        if (obj->getLayer() == being_layer)
+                kern_append_object(obj, data);
+}
+
 KERN_API_CALL(kern_get_objects_at)
 {
         struct place *place;
@@ -3748,6 +3754,34 @@ KERN_API_CALL(kern_char_get_mana)
                 return sc->NIL;
 
         return scm_mk_integer(sc, ch->getMana());
+}
+
+KERN_API_CALL(kern_place_get_beings)
+{
+        struct place *place;
+        int x, y;
+        struct kern_append_info info;
+
+        /* unpack the place */
+        if (unpack(sc, &args, "p", &place)) {
+                rt_err("kern-place-get-beings: bad args");
+                return sc->NIL;
+        }
+        if (! place) {
+                rt_err("kern-place-get-beings: null place");
+                return sc->NIL;
+        }
+
+        /* initialize the context used by the callback to append objects */
+        info.sc = sc;
+        info.head = sc->NIL;
+        info.tail = sc->NIL;
+
+        /* build a scheme list of the objects */
+        place_for_each_object(place, kern_filter_and_append_being, &info);
+
+        /* return the scheme list */
+        return info.head;
 }
 
 KERN_API_CALL(kern_place_get_objects)
@@ -5453,6 +5487,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-astral-body-set-gob", kern_astral_body_set_gob);
 
         /* kern-place api */
+        API_DECL(sc, "kern-place-get-beings", kern_place_get_beings);
         API_DECL(sc, "kern-place-get-height", kern_place_get_height);
         API_DECL(sc, "kern-place-get-name", kern_place_get_name);
         API_DECL(sc, "kern-place-get-neighbor", kern_place_get_neighbor);

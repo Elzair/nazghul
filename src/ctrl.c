@@ -38,6 +38,8 @@
 #include "factions.h"
 
 int G_latency_start = 0;
+int G_turnaround_start = 0;
+int G_turnaround_stop  = 0;
 
 
 static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
@@ -1046,7 +1048,10 @@ static void ctrl_idle(class Character *character)
         class Character *target;
 
         if (character->ai) {
+                int time = SDL_GetTicks();
                 closure_exec(character->ai, "p", character);
+                printf("%s ai: %d ms\n", character->getName(),
+                       SDL_GetTicks() - time);
                 return;
         }
 
@@ -1125,7 +1130,11 @@ void ctrl_character_ui(class Character *character)
         kh.fx = &ctrl_character_key_handler;
         kh.data = character;
         eventPushKeyHandler(&kh);
+        G_turnaround_stop = SDL_GetTicks();
+        printf("*** turnaround: %d ms\n\n", 
+               G_turnaround_stop - G_turnaround_start);
         eventHandle();
+        G_turnaround_start = SDL_GetTicks();
         eventPopKeyHandler();
         mapUpdate(REPAINT_IF_DIRTY);
 }
@@ -1155,8 +1164,11 @@ void ctrl_party_ui(class player_party *party)
         kh.fx = &ctrl_party_key_handler;
         kh.data = party;
         eventPushKeyHandler(&kh);
+        G_turnaround_stop = SDL_GetTicks();
+        printf("turnaround: %d ms\n\n", 
+               G_turnaround_stop - G_turnaround_start);
         eventHandle();
+        G_turnaround_start = SDL_GetTicks();
         eventPopKeyHandler();
         mapUpdate(REPAINT_IF_DIRTY);
-
 }
