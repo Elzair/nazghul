@@ -1145,10 +1145,12 @@ static int myPlaceDescribeObjects(int x, int y, int first_thing_listed)
 
         // Now we have to print the last object in the stack.
         if (prev_obj && (prev_obj->isVisible()  || Reveal)) {
-                if (n_types == 1)
-                        consolePrint(" and ");
-                else
-                        consolePrint(", ");
+                if (!first_thing_listed) {
+                        if (n_types == 1)
+                                consolePrint(" and ");
+                        else
+                                consolePrint(", ");
+                }
                 printf("### %s\n", prev_obj->getName());
                 prev_obj->describe(n_instances);
                 n_described++;

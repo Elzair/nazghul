@@ -72,6 +72,7 @@
 #include "sprite_sets/rune_font_sprite_set_32x32.ghul"
 #include "sprite_sets/rune_font_sprite_set_8x16.ghul"
 
+#include "sprite_sets/lost_dragon.ghul"
 
 CURSOR ls_whirlpool;  // From ss_u4
 

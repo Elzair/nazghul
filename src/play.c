@@ -974,8 +974,16 @@ bool cmdOpen(class Character * pc)
 	// Open the container (automagically spills all the contents onto the
 	// map).
 	container->open();
-	container->remove();
-	delete container;
+
+        // Delete container automatically on the combat map because if
+        // containers are stacked (and they frequently are) then the top one
+        // always gets selected and the player can't get at the ones
+        // underneath. On the other hand, in towns I don't want to delete
+        // people's furniture.
+        if (player_party->context == CONTEXT_COMBAT) {
+                container->remove();
+                delete container;
+        }
         consolePrint("You find ");
 	placeDescribe(x, y, PLACE_DESCRIBE_OBJECTS);
 

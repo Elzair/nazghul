@@ -33,5 +33,7 @@
 
 
 GENERIC_TYPE(t_bed, "bed", s_bed, LAYER_BED);
+GENERIC_TYPE(t_dresser, "dresser", s_dresser, LAYER_CONTAINER)
+FURNITURE_TYPE(t_chair, "chair", s_chair);
 
 #endif

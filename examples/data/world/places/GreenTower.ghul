@@ -163,8 +163,10 @@ PLACE  GreenTower {
           //--------------------------------------------------
           mech_vdoor gens_house_door 7 13 "closed";
           t_bed 2 13;
+          t_dresser 3 14 null { }
           t_large_wooden_chest 4 11 null {
-                  
+                  t_arrow 100;
+                  t_bow   1;
           }
 
           //--------------------------------------------------
