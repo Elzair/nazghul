@@ -38,7 +38,7 @@ void gob_save(struct gob *gob, struct save *save)
 
 void gob_unref(struct gob *gob)
 {
-        assert(gob->refcount);
+        assert(gob->refcount > 0);
         gob->refcount--;
         if (! gob->refcount)
                 gob_del(gob);

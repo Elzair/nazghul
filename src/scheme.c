@@ -1269,15 +1269,10 @@ static void gc(scheme *sc, pointer a, pointer b) {
 
 static void finalize_cell(scheme *sc, pointer a) {
 #if USE_PROTECT
-        /* I think we sometimes hit this assert "spuriously" -- a cell which
-         * has never been protected sometimes has a negative pref value. If we
-         * had decremented that pref in unprotect we would have asserted
-         * there. In one case, breakpoints showed I never protected the cell
-         * and here it had a pref of -65536 (0xffff0000) and NULL list
-         * pointers. I suspect scheme plays fast-and-loose with freed cells,
-         * and this might have been scribbled on. But then why are we
-         * finalizing it? */
-        assert(! a->pref);
+        /* At one point I had an assert(!a->pref) in here but I kept hitting it
+         * with ridiculous values for a->pred. I think all this proved is that
+         * I can't rely on the interpreter to keep the a->pref field clear on
+         * freed cells. So I took it out. */
 #endif
   if(is_string(a)) {
     sc->free(strvalue(a));

@@ -570,8 +570,16 @@ void Object::setup()
                 visible = 1;
 }
 
+static int object_delete_hook_entry(struct hook_entry *entry, void *data)
+{
+        list_remove(&entry->list);
+        hook_entry_del(entry);
+}
+
 Object::~Object()
 {
+        int i;
+
         assert(! refcount);
 
         if (handle) {
@@ -592,6 +600,16 @@ Object::~Object()
                 setView(NULL);                
         }                
 
+        // For each type of hook...
+        for (i = 0; i < OBJ_NUM_HOOKS; i++) {
+
+                // Shouldn't be destroying the object while one of its hook
+                // lists is locked.
+                assert(! hook_list_locked(&hooks[i]));
+
+                // Destroy each hook entry on the hook list.
+                hookForEach(i, object_delete_hook_entry, this);
+        }
 }
 
 int Object::getX()
