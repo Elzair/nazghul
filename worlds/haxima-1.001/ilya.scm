@@ -40,8 +40,8 @@
   (ifc '()
        (method 'get (lambda (kobj getter)
                       (kern-log-msg "Some child probably misses this toy!")
-                      (kern-obj-remove kobj)
-                      (kern-obj-put-into kobj getter)))))
+                      (kobj-get kobj getter)))))
+
 (mk-obj-type 't_puska "stuffed toy horse" s_toy_horse layer-item puska-ifc)
 
 ;;----------------------------------------------------------------------------

@@ -191,23 +191,23 @@ bool ArmsType::fireInDirection(struct place *place, int ox, int oy,
         log_begin("%s hit ", getName());
         missile->getStruck()->describe();
         log_end("!");
+        
+        // Reference the object while damaging it, since damage can remove it
+        // from the map.
+        obj_inc_ref(missile->getStruck());
+
         missile->getStruck()->damage(dice_roll(damageDice));
 
         if (missile->getStruck()->isDestroyed()) {
                 log_begin("%s destroyed ", getName());
                 missile->getStruck()->describe();
                 log_end("!");
-
-                /* Uh... no reference counting on the player party, everybody
-                 * assumes it is always good, so don't violate that assumption
-                 * here. We need to figure out how to handle the destruction of
-                 * player-controlled objects.  */
-                if (missile->getStruck() != player_party)
-                        delete missile->getStruck();
-
                 mapSetDirty();
         }
         
+        // Release the reference
+        obj_dec_ref(missile->getStruck());
+
         user->decActionPoints(getRequiredActionPoints());
 
         return true;

@@ -1890,9 +1890,7 @@ static pointer kern_obj_put_into(scheme *sc, pointer args)
                 return sc->NIL;
         }
 
-        if (container->add(obj->getObjectType(), obj->getCount())) {
-                delete obj;
-        } else {
+        if (! container->add(obj->getObjectType(), obj->getCount())) {
                 rt_err("kern-obj-put-into: '%s' not a container type", 
                        container->getName());
         }
@@ -1900,6 +1898,11 @@ static pointer kern_obj_put_into(scheme *sc, pointer args)
         return sc->NIL;
 }
 
+/*
+ * kern_obj_remove - remove an object from the map. Note that this implicitly
+ * destroys most objects automatically, unless the object has another reference
+ * count. Use kern_obj_inc_ref to prevent destruction during this call.
+ */
 static pointer kern_obj_remove(scheme *sc, pointer args)
 {
         class Object *obj;
@@ -1913,6 +1916,11 @@ static pointer kern_obj_remove(scheme *sc, pointer args)
         return sc->NIL;
 }
 
+#if 0
+/*
+ * kern_obj_destroy - obsolete explicit destructor. Try to use kern_obj_dec_ref
+ * instead, wait and see if we really need this.
+ */
 static pointer kern_obj_destroy(scheme *sc, pointer args)
 {
         class Object *obj;
@@ -1923,6 +1931,40 @@ static pointer kern_obj_destroy(scheme *sc, pointer args)
 
         delete obj;
 
+        return sc->NIL;
+}
+#endif
+
+static pointer kern_obj_inc_ref(scheme *sc, pointer args)
+{
+        class Object *obj;
+
+        if (!(obj=unpack_obj(sc, &args, "kern-obj-inc-ref"))) {
+                return sc->NIL;
+        }
+
+        obj_inc_ref(obj);
+
+        return scm_mk_ptr(sc, obj);
+}
+
+static pointer kern_obj_dec_ref(scheme *sc, pointer args)
+{
+        class Object *obj;
+        int refcount;
+
+        if (!(obj=unpack_obj(sc, &args, "kern-obj-dec-ref"))) {
+                return sc->NIL;
+        }
+
+        refcount = obj->refcount;
+        obj_dec_ref(obj);
+        
+        if (refcount > 1)
+                /* object was not destroyed - return it */
+                return scm_mk_ptr(sc, obj);
+
+        /* object was destroyed - return NIL */
         return sc->NIL;
 }
 
@@ -2053,11 +2095,12 @@ KERN_API_CALL(kern_mk_player)
          * now I have no way of canceling). */
 
         if (player_party) {
+                obj_inc_ref(player_party);
                 if (player_party->isOnMap()) // hack!
                         player_party->remove(); // hack!
-                while (player_party->refcount) // hack!
+                while (player_party->refcount > 1) // hack!
                         obj_dec_ref(player_party); // hack!
-                delete player_party;
+                obj_dec_ref(player_party);
         }
 
         if (unpack(sc, &args, "ypspdddppppp", 
@@ -2086,7 +2129,7 @@ KERN_API_CALL(kern_mk_player)
                                               food, gold, form, 
                                               campsite, 
                                               camp_form);
-        player_party->inventory = inventory;
+        player_party->setInventoryContainer(inventory);
         player_party->setTurnsToNextMeal(ttnm);
 
         /* Load the members. */
@@ -6418,7 +6461,8 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-obj-clone", kern_obj_clone);
         API_DECL(sc, "kern-obj-dec-ap", kern_obj_dec_ap);
         API_DECL(sc, "kern-obj-dec-light", kern_obj_dec_light);
-        API_DECL(sc, "kern-obj-destroy", kern_obj_destroy);
+        API_DECL(sc, "kern-obj-dec-ref", kern_obj_dec_ref);
+        /*API_DECL(sc, "kern-obj-destroy", kern_obj_destroy);*/
         API_DECL(sc, "kern-obj-find-path", kern_obj_find_path);
         API_DECL(sc, "kern-obj-get-activity", kern_obj_get_activity);
         API_DECL(sc, "kern-obj-get-ap", kern_obj_get_ap);
@@ -6436,6 +6480,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-obj-has?", kern_obj_has);
         API_DECL(sc, "kern-obj-heal", kern_obj_heal);
         API_DECL(sc, "kern-obj-inc-light", kern_obj_inc_light);
+        API_DECL(sc, "kern-obj-inc-ref", kern_obj_inc_ref);
         API_DECL(sc, "kern-obj-is-being?", kern_obj_is_being);
         API_DECL(sc, "kern-obj-is-char?", kern_obj_is_char);
         API_DECL(sc, "kern-obj-is-visible?", kern_obj_is_visible);

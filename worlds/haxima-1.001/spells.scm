@@ -236,8 +236,7 @@
                 (let ((fields (filter is-field? (kern-get-objects-at loc))))
                   (cond ((null? fields) nil)
                         (else
-                         (kern-obj-remove (car fields))
-                         (kern-obj-destroy (car fields)))))))
+                         (kern-obj-remove (car fields)))))))
           (define (doline line)
             (map (lambda (loc)
                    (map proc (kern-get-objects-at loc)))
@@ -364,7 +363,6 @@
           (else 
            (kern-print "Dispelled field!\n")
            (kern-obj-remove field)
-           (kern-obj-destroy field)
            (kern-map-repaint)
            ))))
 
@@ -563,8 +561,7 @@
 (define (vas-rel-por kspell caster)
   (define (rmgate kobj)
     (moongate-close gate)
-    (kern-obj-remove gate)
-    (kern-obj-destroy gate))
+    (kern-obj-remove gate))
   (let ((loc (kern-ui-target (kern-obj-get-location caster) 1)))
     (if (null? loc) nil
         (let ((gate (summon-moongate 'ord)))

@@ -36,8 +36,7 @@
   (set-car! (cdddr gate) open?))
 
 (define (moongate-destroy kgate)
-  (kern-obj-remove kgate)
-  (kern-obj-destroy kgate))
+  (kern-obj-remove kgate))
 
 ;; ----------------------------------------------------------------------------
 ;; Moongate cut scene

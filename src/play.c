@@ -99,58 +99,6 @@ static bool quitHandler(struct QuitHandler *kh)
 	return Quit;
 }
 
-#if 0
-static void myGenerateRandomEncounter(void)
-{
-	int x, y, dir;
-	class Party *npc;
-
-	npc = place_random_encounter(Place);
-
-	if (!npc)
-		return;
-
-	// Roll to pick a direction
-	dir = random() % 4;
-
-	// Convert to map coordinates
-	switch (dir) {
-	case 0:
-		x = player_party->getX();
-		y = player_party->getY() - MAP_TILE_H / 2;
-		break;
-	case 1:
-		x = player_party->getX() + MAP_TILE_W / 2;
-		y = player_party->getY();
-		break;
-	case 2:
-		x = player_party->getX();
-		y = player_party->getY() + MAP_TILE_H / 2;
-		break;
-	case 3:
-		x = player_party->getX() - MAP_TILE_W / 2;
-		y = player_party->getY();
-		break;
-	default:
-		assert(0);
-		break;
-	}
-
-	// Wrap
-	x = place_wrap_x(Place, x);
-	y = place_wrap_y(Place, y);
-
-	// Check for passability
-	if (!place_is_passable(Place, x, y, npc->getPmask(), 0)) {
-		delete npc;
-		return;
-	}
-	// Generate an NPC party
-	npc->relocate(Place, x, y);
-	// place_add_object(Place, npc);
-}
-#endif
-
 static void play_print_end_of_game_prompt()
 {
 	consolePrint("\n\n*** YOU HAVE DIED ***\n\n");

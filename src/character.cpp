@@ -236,8 +236,7 @@ Character::~Character()
 	if (name)
 		free(name);
 
-	if (container)
-		delete container;
+        obj_dec_ref_safe(container);
 
 	if (rdyArms != NULL)
 		free(rdyArms);
@@ -257,6 +256,11 @@ Character::~Character()
          * are factoried; the traps won't be kept as part of occ any more. */
         if (occ)
                 occ_unref(occ);
+
+        // subtle: use setAttackTarget to unref the target; it will do so
+        // safely even if 'this' is the target
+        if (target)
+                setAttackTarget(NULL);
 }
 
 void Character::damage(int amount)
@@ -623,6 +627,7 @@ enum MoveResult Character::move(int dx, int dy)
 
 void Character::remove()
 {
+        obj_inc_ref(this);
 	Object::remove();
 	setAttackTarget(this);
         mapSetDirty();
@@ -638,6 +643,7 @@ void Character::remove()
                 assert(isPlayerControlled());
                 player_party->enableFollowMode();
         }
+        obj_dec_ref(this);
 }
 
 class ArmsType *Character::enumerateWeapons(void)
@@ -953,10 +959,7 @@ bool Character::dropItems()
 	if (container == NULL)
 		return false;
 	container->relocate(getPlace(), getX(), getY());
-
-	// I have to set this to NULL so that we don't double-delete the
-	// container: once when the Character destructor calls and once when
-	// the player opens the container or exits the map.
+        obj_dec_ref(container);
 	container = NULL;
 
 	return true;
@@ -1381,7 +1384,13 @@ void Character::setPlayerControlled(bool val) {
 
 void Character::setAttackTarget(class Character * newtarget) 
 {
+        if (target && target != this)
+                obj_dec_ref(target);
+
         target = newtarget;
+
+        if (target && target != this)
+                obj_inc_ref(target);
 }
 
 class ArmsType *Character::getCurrentWeapon() {
@@ -2360,10 +2369,12 @@ void Character::setInventoryContainer(class Container *val)
         // Blow away the old one
         if (container) {
                 assert(container->isEmpty());
-                delete container;
+                obj_dec_ref(container);
         }
 
         container = val;
+        if (container)
+                obj_inc_ref(container);
 }
 
 void Character::setAI(struct closure *val)

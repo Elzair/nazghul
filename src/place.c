@@ -484,9 +484,6 @@ void place_del_tile_object_visitor(class Object *obj, void *data)
         // Called by tile_for_each_object()
         struct tile *tile = (struct tile*)data;
         tile_remove_object(tile, obj);
-        if (! obj->refcount) {
-                delete obj;
-        }
 }
 
 void place_del_tile_visitor(struct tile *tile, void *data)
@@ -888,8 +885,10 @@ void place_move_object(struct place *place, Object * object,
                 assert(new_tile);
 	}
         
+        obj_inc_ref(object);
         tile_remove_object(old_tile, object);
         tile_add_object(new_tile, object);
+        obj_dec_ref(object);
 }
 
 int place_add_object(struct place *place, Object * object)
@@ -916,8 +915,11 @@ void place_remove_object(struct place *place, Object * object)
 					      object->getY());
 	assert(tile);
 
+        obj_inc_ref(object);
         tile_remove_object(tile, object);
         place_remove_from_turn_list(place, object);
+        obj_dec_ref(object);
+
 }
 
 Object *place_get_object(struct place *place, int x, int y, enum layer layer)
@@ -1502,8 +1504,9 @@ void place_for_each_object(struct place *place,
 
 static void place_remove_and_destroy_object(class Object *obj, void *unused)
 {
+        obj_inc_ref(obj);
         obj->remove();
-        delete obj;
+        obj_dec_ref(obj);
 }
 
 void place_remove_and_destroy_all_objects(struct place *place)
@@ -1591,6 +1594,7 @@ void place_exec(struct place *place)
 
                 /* Keep a pointer to the object in the node */
                 obj = (class Object *)place->turn_elem->ptr;
+                obj_inc_ref(obj);
 
                 /* Advance the node pointer now in case we need to remove the
                  * object while running it. */
@@ -1606,10 +1610,6 @@ void place_exec(struct place *place)
                 } else {
                         /* 'run' the object */
                         int t = place_timed_obj_exec(obj);
-/*                         times += t; */
-/*                         if (t > 0) */
-/*                                 printf("%s: %d ms to exec\n", obj->getName(), */
-/*                                        t); */
                         
                         /* Apply terrain, field and any other environmental
                          * effects. */
@@ -1633,10 +1633,12 @@ void place_exec(struct place *place)
                         /* Make sure the object was already removed. */
                         assert(! obj->isOnMap());
 
-                        /* Destroy the object. */
-                        delete obj;
+                        /* Used to destroy the object explicitly here with
+                         * delete. Now rely on the unref at the bottom of the
+                         * loop to destory it. */
                 }
 
+                obj_dec_ref(obj);
         }
 
         /*printf("*** place_exec: total=%d\n", times);*/
@@ -1987,17 +1989,18 @@ void place_for_each_object_at(struct place *place, int x, int y,
                 tile_for_each_object(tile, fx, data);
 }
 
-static void place_remove_and_destroy_temporary_object(class Object *obj, void *unused)
+static void place_remove_and_destroy_temporary_object(class Object *obj, 
+                                                      void *unused)
 {
         if (obj->isTemporary()) {
-                obj->remove();
-                delete obj;
+                place_remove_and_destroy_object(obj, unused);
         }
 }
 
 void place_exit(struct place *place)
 {
-        place_for_each_object(place, place_remove_and_destroy_temporary_object, NULL);
+        place_for_each_object(place, place_remove_and_destroy_temporary_object,
+                              NULL);
 }
 
 void place_unlock(struct place *place)

@@ -192,6 +192,7 @@ Party::Party(class PartyType *type, int faction, class Vehicle *_vehicle)
         } else {
                 vehicle = _vehicle;
                 vehicle->occupant = this;
+                obj_inc_ref(vehicle);
         }
 
         // Create the party members.
@@ -241,7 +242,6 @@ void Party::setup()
 static bool party_remove_member(class Character *ch, void *data)
 {
         ((Party*)data)->removeMember(ch);
-        if (! ch->refcount) delete ch;
         return false;
 }
 
@@ -638,12 +638,6 @@ static bool party_destroy_and_remove_member(class Character * c, void *data)
 	c->destroy();
 	party->removeMember(c);
 
-        // Note: between destroying and removing it the ref count probably
-	// dropped to zero and already deleted the object. If not, something
-	// else might have a legitimate reference to it, so don't delete.
-
-        // delete c;
-
 	return false;
 }
 
@@ -761,15 +755,11 @@ void Party::disembark()
 	if (vehicle) {
 		assert(getPlace());
 		vehicle->occupant = 0;
-                if (vehicle->isDestroyed()) {
-                        // This happens when the vehicle has been destroyed,
-                        // and it called destroy() on us, and we then called
-                        // disambark().
-                        delete vehicle;
-                } else {
+                if (!vehicle->isDestroyed()) {
                         vehicle->relocate(getPlace(), getX(), getY());
                 }
-		vehicle = 0;
+                obj_dec_ref(vehicle);
+		vehicle = NULL;
 	}
 }
 
@@ -795,7 +785,6 @@ static bool damage_member(class Character * member, void *data)
 	// check if dead and remove from party
 	if (member->isDead()) {
 		member->party->removeMember(member);
-		delete member;
 		return false;
 	}
 	// otherwise at least one still alive

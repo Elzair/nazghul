@@ -241,7 +241,7 @@ void session_del(struct session *session)
         }
 
         if (session->crosshair)
-                delete session->crosshair;
+                obj_dec_ref(session->crosshair);
         sky_end_session(&session->sky);
         magic_end_session(&session->magic);
         if (session->ptable)
@@ -334,6 +334,7 @@ void session_load(char *filename)
         } else {
                 Session->crosshair = new Cursor();
                 Session->crosshair->init(Session->crosshair_type);
+                obj_inc_ref(Session->crosshair);
         }
         if (! Session->frame.llc) {
                 load_err("no frame sprites (use kern-set-frame)");

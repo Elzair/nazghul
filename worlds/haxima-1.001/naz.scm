@@ -113,14 +113,13 @@
   (display "psummon")(newline)
   (define (run-loop n)
     (if (= n 0) nil
-        (let* ((critter (mk-critter))
+        (let* ((critter (kern-obj-inc-ref (mk-critter)))
                (loc (pick-loc origin critter)))
-          (cond ((null? loc) 
-                 (kern-obj-destroy critter) 
-                 nil)
-                (else
-                 (kern-obj-put-at critter loc)
-                 (run-loop (- n 1)))))))
+          (cond ((null? loc) (kern-obj-dec-ref critter))
+               (else
+                (kern-obj-put-at critter loc)
+                (kern-obj-dec-ref critter)
+                (run-loop (- n 1)))))))
   (run-loop count))
 
 ;; check if klooker can see kobj
@@ -348,9 +347,11 @@
 ;; ----------------------------------------------------------------------------
 ;; kobj-get -- remove an object from the map and put it into another object
 ;; ----------------------------------------------------------------------------
-(define (kobj-get kchar kobj)
+(define (kobj-get kobj kchar)
+  (kern-obj-inc-ref kobj)
   (kern-obj-remove kobj)
   (kern-obj-put-into kobj kchar)
+  (kern-obj-dec-ref kobj)
   (kern-map-repaint))
 
 ;; ----------------------------------------------------------------------------
@@ -359,7 +360,7 @@
 (define (kobj-get-at kchar loc ktype)
   (let ((objs (find-object-types-at loc ktype)))
     (if (notnull? objs)
-        (kobj-get kchar (car objs)))))
+        (kobj-get (car objs) kchar))))
 
 ;; ----------------------------------------------------------------------------
 ;; place-random-corner -- randomly select a corner and return it as a location

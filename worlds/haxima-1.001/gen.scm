@@ -83,9 +83,6 @@
           (say gen "Study the notes I gave you, and then practice on me.")
           (begin
             (say gen "Here are some notes I have made on their language. You may keep it.")
-            ;; Note: following api call does not exist; closest is
-            ;; kern-obj-put-into which puts an object into another object. Here
-            ;; we need to put a type into a container.
             (kern-obj-add-to-inventory player the-goblin-lexicon 1)
             (gen-set-gave-notes! gen #t)))
       (say gen "Perhaps another time.")))

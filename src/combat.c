@@ -797,57 +797,43 @@ static void myPutEnemy(class Party * foe, struct position_info *pinfo)
         foe->forEachMember(myPutNpc, pinfo);
 }
 
-static bool myPositionEnemy(class Party * foe, int dx, int dy, bool defend, struct place *place)
+/*
+ * combat_position_enemy - put an NPC party on the combat map
+ */
+static int combat_position_enemy(class Party * foe, int dx, int dy, 
+                                 int defend, 
+                                 struct place *place)
 {
+        int positioned = 0;
+
         assert(foe->getSize());
 
-        combat_fill_position_info(&foe->pinfo, place, foe->getX(), foe->getY(), dx, dy, defend);
+        combat_fill_position_info(&foe->pinfo, place, foe->getX(), foe->getY(),
+                                  dx, dy, defend);
         foe->pinfo.formation = foe->get_formation();
         if (!foe->pinfo.formation)
                 foe->pinfo.formation = formation_get_default();
 
-        // Check for a map overlay.
+        /* Check for a map overlay. */
         if (foe->vehicle && foe->vehicle->getObjectType()->map &&
             Place == Combat.place) {
-                combat_overlay_map(foe->vehicle->getObjectType()->map, &foe->pinfo, 1);
+                combat_overlay_map(foe->vehicle->getObjectType()->map, 
+                                   &foe->pinfo, 1);
           }
 
         Combat.enemy_vehicle = foe->vehicle;
+
         foe->disembark();
+        obj_inc_ref(foe);
         foe->remove();
         myPutEnemy(foe, &foe->pinfo);
-        return (foe->pinfo.placed != 0);
+        positioned = foe->pinfo.placed;
+
+        obj_dec_ref(foe);
+
+        return positioned;
 }
 
-#if 0
-static void random_ambush(void)
-{
-        class Party *foe;
-        int dir;
-
-        foe = place_random_encounter(Place->location.place);
-        if (!foe)
-                return;
-
-        // Roll to pick a direction
-        dir = ((random() % 4) + 1) * 2 - 1;
-
-        // Try to place the enemy party. This can fail. For example, the place
-        // might randomly generate a party of nixies as the npc party while the
-        // player is camped on dry land.
-        if (!myPositionEnemy(foe, directionToDx(dir), directionToDy(dir), false)) {
-                dbg("ambush failed for %s\n", foe->getName());
-                // I think the party will get cleaned up on exit...
-                return;
-        }
-
-        combat_set_state(COMBAT_STATE_FIGHTING);
-
-        log_msg("*** AMBUSH ***");
-
-        player_party->ambushWhileCamping();
-}
-#endif
 
 /*****************************************************************************
  * combat_npc_status_visitor - determine the status of the npc faction(s)
@@ -1130,7 +1116,11 @@ void combat_analyze_results_of_last_turn()
 
 }
 
-static void myFindAndPositionEnemy(class Object * obj, void *data)
+/*
+ * combat_find_and_position_enemy - if this object is a hostile NPC party then
+ * place it on the combat map
+ */
+static void combat_find_and_position_enemy(class Object * obj, void *data)
 {
         struct v2 *info;
 
@@ -1140,8 +1130,9 @@ static void myFindAndPositionEnemy(class Object * obj, void *data)
         info = (struct v2 *) data;
         assert(obj_is_being(obj));
         if (are_hostile((Being*)obj, player_party))
-                combat_set_state(COMBAT_STATE_FIGHTING);
-        myPositionEnemy((class Party *) obj, info->dx, info->dy, false, info->place);
+                combat_set_state(COMBAT_STATE_FIGHTING);        
+        combat_position_enemy((class Party *) obj, info->dx, info->dy, false, 
+                        info->place);
 }
 
 int combatInit(void)
@@ -1511,14 +1502,24 @@ bool combat_enter(struct combat_info * info)
 
         if (info->move->npc_party) {
                 combat_set_state(COMBAT_STATE_FIGHTING);
-                if (!myPositionEnemy(info->move->npc_party, info->move->dx, info->move->dy, 
-                                     !info->defend, Place)) {
 
+                /* combat_position_enemy() will decrement most of the refcounts
+                 * ont he party, keep it alive until we're done */
+                obj_inc_ref(info->move->npc_party);
+
+                if (!combat_position_enemy(info->move->npc_party, 
+                                           info->move->dx, info->move->dy, 
+                                           !info->defend, Place)) {
                         log_begin("*** FORFEIT ***");
                         log_msg("Your opponent slips away!");
                         log_end(NULL);
                         combat_set_state(COMBAT_STATE_LOOTING);
                 }
+
+                /* done with it now */
+                obj_dec_ref(info->move->npc_party);
+                info->move->npc_party = NULL;
+
         }
         else if (info->camping) {
 
@@ -1531,7 +1532,8 @@ bool combat_enter(struct combat_info * info)
                 v2.dy = info->move->dy;
                 v2.place = Place;
                 combat_set_state(COMBAT_STATE_LOOTING);
-                place_for_each_object(Place, myFindAndPositionEnemy, &v2);
+                place_for_each_object(Place, combat_find_and_position_enemy,
+                                      &v2);
         }
 
         player_party->forEachMember(mySetInitialCameraPosition, 0);
@@ -1583,14 +1585,21 @@ char combatGetState(void)
 int combat_add_party(class Party * party, int dx, int dy, int located,
                      struct place *place, int x, int y)
 {
+        int added = 0;
+
+        obj_inc_ref(party);
+
         if (!located) {
                 // Caller has not specified a location so use the normal
                 // procedure.
-                return myPositionEnemy(party, dx, dy, false, place);
+                added = combat_position_enemy(party, dx, dy, false, place);
+                obj_dec_ref(party);
+                return added;
         }
+
         // Special case: caller wants to put the party at (x, y). Duplicate the
-        // code in myPositionEnemy except fill out the position info based on
-        // caller's request.
+        // code in combat_position_enemy except fill out the position info
+        // based on caller's request.
         party->disembark();
         party->remove();
 
@@ -1606,7 +1615,13 @@ int combat_add_party(class Party * party, int dx, int dy, int located,
                 party->pinfo.formation = formation_get_default();
         set_party_initial_position(&party->pinfo, x, y);
         myPutEnemy(party, &party->pinfo);
-        return (party->pinfo.placed != 0);
+
+        added = party->pinfo.placed;
+
+        obj_dec_ref(party);
+
+        return added;
+
 }
 
 void combat_exit(void)

@@ -153,6 +153,7 @@ class player_party : public Party {
 
         /* Inventory management */
         Container *inventory;
+        void setInventoryContainer(Container *val);
         virtual bool addFood(int quantity);
         virtual bool addGold(int quantity);
         virtual bool add(ObjectType *type, int amount);

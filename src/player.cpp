@@ -85,15 +85,17 @@ void player_party::damage(int amount)
                 // there you go. It works and I don't care to fool with it.
                 class Vehicle *vehptr = vehicle;
 
+                obj_inc_ref(vehicle);
 		vehicle->damage(amount);
 		mapFlash(0);
 		foogodRepaint();
 
                 /* If the vehicle is destroyed then we are dead. */
 		if (vehptr->isDestroyed()) {
-			delete vehptr;
 			vehicle = NULL;   
 		}
+
+                obj_dec_ref(vehptr);
 
                 return;
 	}
@@ -809,10 +811,7 @@ player_party::~player_party()
         if (mv_desc)
                 free(mv_desc);
 
-        if (inventory)
-                delete inventory;
-
-        /* The superclass destructor (~Party) will remove all members. */
+        obj_dec_ref_safe(inventory);
 
         /* fixme: need to somehow cancel those wq jobs setup by player_init? */
 }
@@ -836,7 +835,8 @@ void player_party::board_vehicle(void)
                 log_msg("You exit your %s.", vehicle->getName());
 		vehicle->occupant = 0;
 		vehicle->relocate(getPlace(), getX(), getY());
-		vehicle = 0;
+                obj_dec_ref(vehicle);
+		vehicle = NULL;
 		mapSetDirty();
 		return;
 	}
@@ -845,6 +845,8 @@ void player_party::board_vehicle(void)
 	if (!vehicle) {
 		return;
 	}
+
+        obj_inc_ref(vehicle);
 
         log_begin("You board ");
         vehicle->describe();
@@ -906,8 +908,6 @@ void player_party::removeMember(class Character *c)
         
         // Unhook it from the party
         Party::removeMember(c);
-
-        obj_dec_ref(c);
 }
 
 bool player_party::addMember(class Character * c)
@@ -1123,7 +1123,7 @@ bool player_party::addToInventory(class Object *object)
         // ---------------------------------------------------------------------
 
         add(object->getObjectType(), object->getCount());
-        delete object;
+        obj_dec_ref(object);
         return true;
 }
 
@@ -1686,4 +1686,13 @@ void player_party::setTurnsToNextMeal(int turns)
 bool player_party::hasInInventory(class ObjectType *type)
 {
         return inventory->search(type) != NULL;
+}
+
+void player_party::setInventoryContainer(Container *val)
+{
+        assert(!inventory);
+        assert(val);
+
+        inventory = val;
+        obj_inc_ref(inventory);
 }

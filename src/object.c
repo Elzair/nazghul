@@ -294,6 +294,7 @@ bool Object::tryToRelocateToNewPlace(struct place *newplace,
                                      int newx, int newy,
                                      struct closure *cutscene)
 {
+        obj_inc_ref(this);
         place_remove_object(getPlace(), this);
 
         if (cutscene) {
@@ -307,6 +308,7 @@ bool Object::tryToRelocateToNewPlace(struct place *newplace,
         setX(newx);
         setY(newy);
         place_add_object(getPlace(), this);
+        obj_dec_ref(this);
         changePlaceHook();
         return true;
 }
@@ -343,6 +345,7 @@ void Object::relocate(struct place *newplace, int newx, int newy, bool noStep,
                                 mapUpdate(0);
                                 setOnMap(false);
                                 rmView();
+                                obj_inc_ref(this);
                                 place_remove_object(getPlace(), this);
 
                                 closure_exec(place_switch_hook, NULL);
@@ -351,6 +354,7 @@ void Object::relocate(struct place *newplace, int newx, int newy, bool noStep,
                                 setX(newx);
                                 setY(newy);
                                 place_add_object(newplace, this);
+                                obj_dec_ref(this);
                                 setOnMap(true);
                                 addView();
 
@@ -464,6 +468,7 @@ void Object::setOnMap(bool val)
 
 void Object::remove()
 {
+        obj_inc_ref(this);
 	if (isOnMap()) {
                 setOnMap(false);
                 rmView();
@@ -471,6 +476,7 @@ void Object::remove()
 	}
         endTurn();
         attachCamera(false);
+        obj_dec_ref(this);
 }
 
 void Object::paint(int sx, int sy)
@@ -1905,4 +1911,17 @@ void Object::resetActionPoints()
 void Object::setActionPoints(int amount)
 {
         action_points = amount;
+}
+
+void obj_inc_ref(Object *obj)
+{
+        obj->refcount++;
+}
+
+void obj_dec_ref(Object *obj)
+{
+        assert((obj)->refcount >= 0);
+        (obj)->refcount--;
+        if (! obj->refcount)
+                delete obj;
 }

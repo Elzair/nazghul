@@ -31,15 +31,6 @@
 
 #include <assert.h>
 
-// Macros to manage an object's reference count and to destroy it when it has
-// no more references.
-#define obj_inc_ref(obj) ((obj)->refcount++)
-#define obj_dec_ref(obj)                                                      \
-        do {                                                                  \
-                assert((obj)->refcount >= 0);                                 \
-                (obj)->refcount--;                                            \
-        } while (0)
-
 
 // Wrappers for session_add() and session_rm() that do the ref-counting.
 #define session_add_obj(session, obj, dtor, save, start)                      \
@@ -437,5 +428,14 @@ class Object {
         // For fields, mechs and other objects that affect passability:
         int pclass;
 };
+
+#include "macros.h"
+BEGIN_DECL
+
+extern void obj_inc_ref(Object *obj);
+extern void obj_dec_ref(Object *obj);
+#define obj_dec_ref_safe(obj) do { if ((obj)) obj_dec_ref(obj); } while (0)
+
+END_DECL
 
 #endif				// object_h

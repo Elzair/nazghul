@@ -108,7 +108,7 @@
 
                 ;; troll victims
                 (list (mk-troll) 11 12)
-                (list (kern-mk-obj troll-corpse-type 1) 7 15)
+                (list (kern-mk-container troll-corpse-type nil nil) 7 15)
 
                 ;; puska
                 (list (kern-mk-obj t_puska 1) 10 18)

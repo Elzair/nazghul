@@ -4,11 +4,12 @@
 (define food-ifc
   (ifc '()
        (method 'get (lambda (kobj getter)
+                      (kern-obj-inc-ref kobj)
                       (kern-obj-remove kobj)
                       (kern-obj-add-food getter
                                          (* ((kobj-ifc kobj) 'food-amount)
                                             (kern-obj-get-count kobj)))
-                      (kern-obj-destroy kobj)))))
+                      (kern-obj-dec-ref kobj)))))
 
  (define mushroom-ifc
    (ifc food-ifc

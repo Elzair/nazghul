@@ -180,7 +180,7 @@
    (list  't_dagger         "dagger"         s_dagger_1         "1d4"    "1d4"    "1d2"    slot-weapon   1      1)
    (list  'short-sword      "short sword"    s_sword_short_1    "1d3"    "1d6"    "1d2"    slot-weapon   1      1)
    (list  't_longsword      "long sword"     s_sword_long_1     "1d2"    "1d8"    "1d2"    slot-weapon   1      2)
-   (list  't_2H_sword       "2H sword"       s_sword_zweihander "0"      "2d8"    "+0"     slot-weapon   2      3)
+   (list  't_2H_sword       "2H sword"       s_sword_zweihander "0"      "2d8-1"    "+0"     slot-weapon   2      2)
 
    (list  't_eldritch_blade "eldritch blade" s_sword_eldritch   "2"      "2d8+5"  "+0"     slot-weapon   2      3)
    (list  't_mystic_sword   "mystic sword"   s_sword_mystic     "+3"     "1d10+1" "+2"     slot-weapon   1      2)
@@ -194,7 +194,7 @@
    (list  't_war_axe        "war axe"        s_axe_4            "+0"     "2d4+2"   "-2"    slot-weapon   2      2)
 
    (list  't_spear          "short spear"    s_spear_1          "1d4+2"  "1d6"     "+0"    slot-weapon   1      1)
-   (list  't_halberd        "halberd"        s_halberd_2        "1d4+2"  "2d6"     "+1"    slot-weapon   2      1)
+   (list  't_halberd        "halberd"        s_halberd_2        "1d4+2"  "2d8-2"     "+1"    slot-weapon   2      3)
 
    (list  't_quarterstaff   "quarterstaff"   s_quarterstaff_1   "1d4"    "1d6"    "1d4"    slot-weapon   2      2)
    (list  't_bo_staff       "bo staff"       s_quarterstaff_2   "1d6"    "1d4"    "1d6"    slot-weapon   2      2)

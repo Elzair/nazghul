@@ -687,7 +687,8 @@ bool cmdGet(class Object *actor, bool scoop_all)
         x = actor->getX() + directionToDx(dir);
         y = actor->getY() + directionToDy(dir);
 
-	item = place_get_filtered_object(actor->getPlace(), x, y, cmdGetFilter);
+	item = place_get_filtered_object(actor->getPlace(), x, y, 
+                                         cmdGetFilter);
 	if (!item) {
                 log_msg("Get - nothing there!");
 		return false;
@@ -698,8 +699,9 @@ bool cmdGet(class Object *actor, bool scoop_all)
         item->getObjectType()->get(item, actor);
 
 	if (scoop_all) {
-		while (NULL != (item = place_get_filtered_object(actor->getPlace(), 
-                                                               x, y, cmdGetFilter))) {
+		while (NULL != (item = place_get_filtered_object(
+                                        actor->getPlace(), 
+                                        x, y, cmdGetFilter))) {
                         item->getObjectType()->get(item, actor);
 		}
 	}
@@ -870,7 +872,6 @@ bool cmdOpen(class Character * pc)
         // --------------------------------------------------------------------
 
         container->remove();
-        delete container;
 
         log_end_group();
 
