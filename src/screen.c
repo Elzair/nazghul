@@ -641,7 +641,7 @@ void screenHighlight(SDL_Rect * area)
         // ---------------------------------------------------------------------
 
         edge.x = area->x;
-        edge.y = area->y + area->h - HIGHLIGHT_THICKNESS;
+        edge.y = area->y + (area->h/Zoom) - HIGHLIGHT_THICKNESS;
         edge.w = area->w;
         edge.h = HIGHLIGHT_THICKNESS;
 
@@ -662,7 +662,7 @@ void screenHighlight(SDL_Rect * area)
         // Right edge
         // ---------------------------------------------------------------------
 
-        edge.x = area->x + area->w - HIGHLIGHT_THICKNESS;
+        edge.x = area->x + (area->w/Zoom) - HIGHLIGHT_THICKNESS;
         edge.y = area->y;
         edge.w = HIGHLIGHT_THICKNESS;
         edge.h = area->h;

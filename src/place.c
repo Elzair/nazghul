@@ -247,7 +247,6 @@ static void tile_paint(struct tile *tile, int sx, int sy)
 		obj->paint(sx, sy);
 
 		if (obj->isSelected()) {
-
                         /* Highlight */
                         SDL_Rect rect;
                         rect.x = sx;
@@ -255,7 +254,6 @@ static void tile_paint(struct tile *tile, int sx, int sy)
                         rect.w = TILE_W;
                         rect.h = TILE_H;
                         screenHighlight(&rect);
-
                 }
 
 		if (sprite->faded)
@@ -967,7 +965,7 @@ struct astar_node *place_find_path(struct place *place,
 	/* Run the pathfinding alg */
         t1 = SDL_GetTicks();
 	path = astar_search(info);
-        dbg("place_find_path: %d msecs\n", SDL_GetTicks() - t1);
+        //dbg("place_find_path: %d msecs\n", SDL_GetTicks() - t1);
 
 	return path;
 

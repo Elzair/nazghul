@@ -863,6 +863,8 @@ void mapRepaintView(struct mview *view, int flags)
 
 	Map.aview = view;
 
+        //dbg("mapRepaintView: aview=[%d %d]\n", Map.aview->vrect.x, Map.aview->vrect.y);
+
 	if (flags & REPAINT_IF_DIRTY && !view->dirty)
 		return;
 	view->dirty = 0;
@@ -1061,6 +1063,7 @@ void mapGetTileDimensions(int *w, int *h)
 void mapSetActiveView(struct mview *view)
 {
 	Map.aview = view;
+        //dbg("mapSetActiveView: aview=[%d %d]\n", Map.aview->vrect.x, Map.aview->vrect.y);
 }
 
 void mapCenterCamera(int x, int y)
@@ -1404,6 +1407,9 @@ void mapUpdateTile(struct place *place, int x, int y)
         int index;
         char *vmask;
         SDL_Rect rect;
+        struct mview *view;
+
+        //dbg("mapUpdateTile %d:%d:%s\n", x, y, place->name);
 
         if (NULL == Map.aview)
                 return;
@@ -1418,48 +1424,64 @@ void mapUpdateTile(struct place *place, int x, int y)
         if (place != Map.place)
                 return;
 
-        rect.x = (x - (Map.aview->vrect.x + Map.aview->subrect.x)) * TILE_W + Map.srect.x;
-        if (rect.x < Map.srect.x || rect.x > (Map.srect.x + Map.srect.w - TILE_W))
+        rect.x = (x - (Map.aview->vrect.x + Map.aview->subrect.x)) * TILE_W/Map.aview->zoom + Map.srect.x;
+        if (rect.x < Map.srect.x || rect.x > (Map.srect.x + Map.srect.w - TILE_W/Map.aview->zoom))
                 return;
 
-        rect.y = (y - (Map.aview->vrect.y + Map.aview->subrect.y)) * TILE_H + Map.srect.y;
-        if (rect.y < Map.srect.y || rect.y > (Map.srect.y + Map.srect.h - TILE_H))
+        rect.y = (y - (Map.aview->vrect.y + Map.aview->subrect.y)) * TILE_H/Map.aview->zoom + Map.srect.y;
+        if (rect.y < Map.srect.y || rect.y > (Map.srect.y + Map.srect.h - TILE_H/Map.aview->zoom))
                 return;
 
         // ---------------------------------------------------------------------
         // Erase the tile.
         // ---------------------------------------------------------------------
 
-        rect.w = TILE_W;
-        rect.h = TILE_H;
+        rect.w = TILE_W/Map.aview->zoom;
+        rect.h = TILE_H/Map.aview->zoom;
         screenErase(&rect);
 
-        // ---------------------------------------------------------------------
-        // If the place is not in line-of-sight then don't paint the object(s)
-        // there. Paint the terrain iff ShowAllTerrain or XrayVision are in
-        // effect.
-        // ---------------------------------------------------------------------
-
-        //vmask = vmask_get(Map.place, mview_center_x(Map.aview), mview_center_y(Map.aview));
-        vmask = Map.vmask;
-        index = ((y - Map.aview->vrect.y) * Map.aview->vrect.w) + (x - Map.aview->vrect.x);
         terrain = place_get_terrain(place, x, y);
 
-        if (vmask[index] || ShowAllTerrain || XrayVision) {
-                spritePaint(terrain->sprite, 0, rect.x, rect.y);
-        }
+        if (Map.aview->zoom > 1) {
 
-        if (vmask[index]) {
+                // ------------------------------------------------------------
+                // When zoomed ignore LOS. The vmasks aren't big enough to
+                // cover the area viewed.
+                // ------------------------------------------------------------
+                
+                spriteZoomOut(Map.aview->zoom);
+		screenZoomOut(Map.aview->zoom);
+                spritePaint(terrain->sprite, 0, rect.x, rect.y);
                 place_paint_objects(place, x, y, rect.x, rect.y);
+                spriteZoomIn(Map.aview->zoom);
+		screenZoomIn(Map.aview->zoom);
+
+        } else {
+
+                // ------------------------------------------------------------
+                // If the place is not in line-of-sight then don't paint the
+                // object(s) there. Paint the terrain iff ShowAllTerrain or
+                // XrayVision are in effect.
+                // ------------------------------------------------------------
+
+                vmask = Map.vmask;
+                index = ((y - Map.aview->vrect.y) * Map.aview->vrect.w) + (x - Map.aview->vrect.x);
+
+                if (vmask[index] || ShowAllTerrain || XrayVision) {
+                        spritePaint(terrain->sprite, 0, rect.x, rect.y);
+                }
+
+                if (vmask[index]) {
+                        place_paint_objects(place, x, y, rect.x, rect.y);
+                }
         }
 
         if (x == Session->crosshair->getX() && y == Session->crosshair->getY())
                 mapUpdateCursor();
 
         screenUpdate(&rect);
-        
-}
 
+}
 
 #if 0
 	// This is the original peering code which used one pixel per
