@@ -193,4 +193,7 @@ extern void execute_response_chain(struct response *resp, struct conv *conv);
 extern struct response *load_response_chain(class Loader * loader);
 extern void response_chain_destroy(struct response *resp);
 
+int  num_responses_in_chain (struct response * resp);
+void response_debug_print (struct response * resp);
+
 #endif

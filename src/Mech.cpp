@@ -32,8 +32,11 @@
 #include "map.h"
 #include "terrain_map.h"
 #include "vmask.h"
+#include "sprite.h"  // SAM: for MechType::debug_print()
 
-#if 0 // debug
+#define DEBUG_MECH_LOADING 1
+
+#if DEBUG_MECH_LOADING
 static void dump_state(struct mech_state *state)
 {
         printf("  name=%s\n",   state->name);
@@ -41,7 +44,7 @@ static void dump_state(struct mech_state *state)
         printf(" light=%d\n",   state->light);
         printf("opaque=%d\n",   state->opaque);
 }
-#endif
+#endif // DEBUG_MECH_LOADING
 
 struct mech_transition *MechType::load_transitions(class Loader * loader,
 						   int *n)
@@ -197,7 +200,9 @@ static struct mech_state *load_states(class Loader * loader, int *n,
 	if (!load_state(loader, &tmp))
 		goto fail;
 
+#if DEBUG_MECH_LOADING
     // dump_state(def);  // For debug purposes
+#endif
 
 	index = *n;
 	(*n)++;
@@ -280,6 +285,10 @@ bool MechType::load(class Loader * loader)
 
 	this->layer = mech_layer;
 
+#if DEBUG_MECH_LOADING
+    this->debug_print();
+#endif
+
 	return true;
 }
 
@@ -287,13 +296,23 @@ bool MechType::bindTags(class Loader * loader)
 {
         int i;
         
-        printf("%s binding tags\n", tag);
+#if DEBUG_MECH_LOADING
+        printf("%s binding transition tags:\n", tag);
+#endif
 
         // for each transition...
         for (i = 0; i < n_transitions; i++) {
 
                 // bind all actions...
                 struct response *action = transitions[i].actions;
+
+#if DEBUG_MECH_LOADING
+                printf("  from '%s' to '%s'\n",
+                       transitions[i].from->name, 
+                       transitions[i].to->name
+                       );
+#endif
+
                 while (action) {
                         if (action->bind && !action->bind(action, loader)) {
                                 return false;
@@ -303,6 +322,52 @@ bool MechType::bindTags(class Loader * loader)
         }
         return true;
 }
+
+void MechType::debug_print (void) {
+  int i;
+
+  printf("MECH_TYPE \n"
+         "    tag  '%s'\n"
+         "    name '%s'\n"
+         "    layer %d\n"
+         "    speed %d\n"
+         "    required_action_points %d\n"
+         "    max_hp %d\n",
+         tag, name,
+         layer, speed, required_action_points, max_hp
+         );
+
+  printf("    Mech states:  (%d states)\n", n_states);
+  for (i = 0; i < n_states; i++) {
+    struct mech_state * state = &states[i];
+    printf("        name '%s'\n"
+           "          sprite tag '%s'\n"
+           "          pmask     %d\n"
+           "          light     %d\n"
+           "          opaque    %d\n"
+           "          invisible %d\n",
+           state->name,
+           state->sprite ? state->sprite->tag : "",
+           state->pmask,
+           state->light,
+           state->opaque,
+           state->invisible
+           );
+  }
+
+  printf("    Mech transitions:  (%d transitions)\n", n_transitions);
+  for (i = 0; i < n_transitions; i++) {
+    struct mech_transition * trans = &transitions[i];
+    printf("        signal %d: (from '%s' to '%s') %d responses/actions\n",
+           trans->method,
+           trans->from->name, 
+           trans->to->name,
+           num_responses_in_chain(trans->actions)
+           );
+    response_debug_print(trans->actions);
+  }
+  printf("\n");
+} // MechType::debug_print()
 
 /*****************************************************************************/
 

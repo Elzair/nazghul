@@ -59,6 +59,9 @@ class MechType:public ObjectType {
 
 	struct mech_transition *MechType::load_transitions(class Loader *
 							   loader, int *n);
+
+    void MechType::debug_print (void);  // SAM
+
 	int n_states;
 	struct mech_state *states;
 	int n_transitions;

@@ -1898,3 +1898,65 @@ bool convLoadParms(struct Loader * loader)
 	}
 	return true;
 }
+
+int num_responses_in_chain (struct response * resp) {
+  if (!resp)
+    return 0;  // Base case
+
+  if (!resp->next)
+    return 1;  // Base case
+
+  // Recurse:
+  return 1 + num_responses_in_chain(resp->next);
+}
+
+void response_debug_print (struct response * resp) {
+
+  printf("RESPONSE %p\n"
+         "  magic      %d\n"
+         "  tag       '%s'\n"
+         // "  list\n"
+         "  next       %p\n"
+         "  execute fx %p\n"
+         "  bind fx    %p\n"
+         "  dtor fx    %p\n"
+         "  --old common fields style parms --\n"
+         "  msg        '%s'\n"
+         "  n_trades   %d\n"
+         "  trades     %p\n"
+         "  result     %d\n"
+         "  amount     %d\n"
+         "  parm_id    %d\n"
+         "  flag_id    %d\n"
+         "  item       %p\n"
+         "  --new union style parms--\n"
+         "  parms %p\n"
+         "\n",
+
+         resp,
+         resp->magic, resp->tag, resp->next, 
+         resp->fx, resp->bind, resp->dtor,
+         // SAM: 
+         // Perhaps I should hand-code a table of 
+         //     { "fx_name", &function }
+         // for API functions such as these, 
+         // so that I can print function names?
+         // 
+         // In future, save code will need such a table anyways;
+         // the alternative is rummaging through the call table
+         // which means no stripped binaries, and is not portable 
+         // in any event.
+
+         resp->msg, resp->n_trades, resp->trades, 
+         resp->result, resp->amount, 
+         resp->parm_id, resp->flag_id, 
+         resp->item,
+
+         resp->parms
+         );
+
+  // Follow the response chain:
+  if (resp->next)
+    response_debug_print(resp->next);
+
+} // response_debug_print()
