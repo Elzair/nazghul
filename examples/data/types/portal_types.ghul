@@ -59,6 +59,12 @@ t_ladder_down {
   subtype null;
   layer   LAYER_PORTAL;
 }
+t_standing_portal {
+  name    "portal";
+  sprite  s_moongate_full;
+  subtype null;
+  layer   LAYER_PORTAL;
+}
 
 t_moongate {
   name        "moongate";
