@@ -50,7 +50,7 @@ struct terrain_map *terrain_map_clone(struct terrain_map *orig)
 {
 	struct terrain_map *map;
 
-    char * clonetag = malloc(strlen(orig->tag) + 2 + 1);
+    char * clonetag = (char *) malloc(strlen(orig->tag) + 2 + 1);
     assert(clonetag);
     strncpy(clonetag, orig->tag, strlen(orig->tag));
     strcat(clonetag, "_c");
