@@ -169,7 +169,7 @@ static void kern_run_wq_job(struct wq_job *job, struct list *wq)
         //dbg("kjob_run: %08lx\n", kjob);
         closure_exec(kjob->clx, "p", kjob->data);
         kjob_del(kjob);
-        wqDeleteJob(job);
+        wq_job_del(job);
 }
 /*****************************************************************************/
 
@@ -1822,7 +1822,7 @@ static pointer kern_mk_container(scheme *sc, pointer args)
 
 KERN_API_CALL(kern_mk_player)
 {
-        int food, gold;
+        int food, gold, ttnrc, ttnm;
         char *mv_desc, *mv_sound, *tag;
         struct sprite *sprite;
         struct terrain_map *campsite;
@@ -1852,11 +1852,11 @@ KERN_API_CALL(kern_mk_player)
                 delete player_party;
         }
 
-        if (unpack(sc, &args, "ypssddppppp", 
+        if (unpack(sc, &args, "ypssddddppppp", 
                    &tag,
                    &sprite,
                    &mv_desc, &mv_sound,
-                   &food, &gold,
+                   &food, &gold, &ttnm, &ttnrc,
                    &form, &campsite, &camp_form, 
                    &vehicle, 
                    &inventory)) {
@@ -1879,6 +1879,8 @@ KERN_API_CALL(kern_mk_player)
                                               campsite, 
                                               camp_form);
         player_party->inventory = inventory;
+        player_party->setTurnsToNextMeal(ttnm);
+        player_party->setTurnsToNextRestCredit(ttnrc);
 
         /* Load the members. */
         while (scm_is_pair(sc, members)) {

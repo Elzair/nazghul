@@ -30,13 +30,6 @@ extern "C" {
 #endif
 
         extern int playRun(void);
-        extern void effectLight(char *name, int amount, int duration, 
-                                class Character * target);
-        extern void effectReveal(char *name, int duration);
-        extern void effectQuicken(char *name, int duration);
-        extern void effectTimeStop(char *name, int duration);
-        extern void effectNegateMagic(char *name, int duration);
-        extern void effectShowTerrain(char *name, int duration);        
 
 
 #ifdef __cplusplus

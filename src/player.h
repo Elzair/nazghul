@@ -142,6 +142,9 @@ class player_party : public Party {
         virtual void save(struct save *save);
 
         void chooseNewLeader();
+        void advanceTurns(int turns);
+        void setTurnsToNextMeal(int turns);
+        void setTurnsToNextRestCredit(int turns);
 
         struct sprite *sprite;
         int turns;
@@ -184,6 +187,8 @@ class player_party : public Party {
         class Character *solo_member;
         class Character *active_member;
         void (*ctrl)(class player_party*);
+        int turns_to_next_rest_credit;
+        int turns_to_next_meal;
 };
 
 extern class player_party *player_party;

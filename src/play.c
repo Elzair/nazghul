@@ -81,88 +81,6 @@ enum cmdstate {
 bool Quit;
 
 
-static void myExpireRevealEffect(struct wq_job *job, struct list *wq)
-{
-	char *cause = (char *) job->data;
-	Reveal = false;
-	consolePrint("%s expired\n", cause);
-	free(job);
-}
-
-void effectReveal(char *name, int duration)
-{
-	Reveal = true;
-	wqCreateJob(&TurnWorkQueue, Turn + duration,
-		    0, name, myExpireRevealEffect);
-}
-
-static void myExpireQuickenEffect(struct wq_job *job, struct list *wq)
-{
-	char *cause = (char *) job->data;
-	Quicken = 0;
-	consolePrint("%s expired\n", cause);
-        foogodRepaint();
-	free(job);
-}
-
-void effectQuicken(char *name, int duration)
-{
-	Quicken = 2;
-	wqCreateJob(&TurnWorkQueue, Turn + duration, 0, name, 
-                    myExpireQuickenEffect);
-        foogodRepaint();
-}
-
-
-static void myExpireTimeStopEffect(struct wq_job *job, struct list *wq)
-{
-	char *cause = (char *) job->data;
-	TimeStop = 0;
-	consolePrint("%s expired\n", cause);
-        foogodRepaint();
-	free(job);
-}
-
-void effectTimeStop(char *name, int duration)
-{
-	TimeStop = 1;
-	wqCreateJob(&TurnWorkQueue, Turn + duration, 0, name, 
-                    myExpireTimeStopEffect);
-        foogodRepaint();
-}
-
-static void myExpireNegateMagicEffect(struct wq_job *job, struct list *wq)
-{
-	char *cause = (char *) job->data;
-	MagicNegated--;
-	consolePrint("%s expired\n", cause);
-        foogodRepaint();
-	free(job);
-}
-
-void effectNegateMagic(char *name, int duration)
-{
-	MagicNegated++;
-	wqCreateJob(&TurnWorkQueue, Turn + duration, 0, name, 
-                    myExpireNegateMagicEffect);
-        foogodRepaint();
-}
-
-static void myExpireShowTerrainEffect(struct wq_job *job, struct list *wq)
-{
-	char *cause = (char *) job->data;
-	ShowAllTerrain--;
-	consolePrint("%s expired\n", cause);
-	free(job);
-}
-
-void effectShowTerrain(char *name, int duration)
-{
-	ShowAllTerrain++;
-	wqCreateJob(&TurnWorkQueue, Turn + duration,
-		    0, name, myExpireShowTerrainEffect);
-}
-
 static bool tickHandler(struct TickHandler *th)
 {
 	Tick++;
@@ -310,14 +228,16 @@ static void play_loop(void)
 
                 times[4] = SDL_GetTicks();
 
-                /* Safely decrement the special global effect counters: */
-                dec_reveal(place_get_scale(Place));
                 dec_time_stop(place_get_scale(Place));
-                dec_quicken(place_get_scale(Place));
-                dec_magic_negated(place_get_scale(Place));
-                dec_xray(place_get_scale(Place));
 
                 if (! TimeStop) {
+
+                        dec_reveal(place_get_scale(Place));
+                        dec_quicken(place_get_scale(Place));
+                        dec_magic_negated(place_get_scale(Place));
+                        dec_xray(place_get_scale(Place));
+                        
+                        player_party->advanceTurns(place_get_scale(Place));
                         clock_advance(place_get_scale(Place));
                         foogodAdvanceTurns();
                         sky_advance(&Session->sky, 

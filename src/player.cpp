@@ -29,7 +29,6 @@
 #include "sound.h"
 #include "terrain.h"
 #include "map.h"
-#include "wq.h"
 #include "foogod.h"
 #include "combat.h"
 #include "wind.h"
@@ -153,19 +152,6 @@ static bool give_pc_rest_credit(class Character * pm, void *data)
 	if (!pm->isAsleep())
 		pm->addRestCredits(1);
 	return false;
-}
-
-static void eat_food(struct wq_job *job, struct list *wq)
-{
-	player_party->forEachMember(pc_eat_food, 0);
-	foogodRepaint();
-	wqReschedule(wq, job);
-}
-
-static void give_rest_credit(struct wq_job *job, struct list *wq)
-{
-	player_party->forEachMember(give_pc_rest_credit, 0);
-	wqReschedule(wq, job);
 }
 
 void player_party::changePlaceHook()
@@ -758,6 +744,8 @@ player_party::player_party()
         ctrl               = ctrl_party_ui;
         inventory          = NULL;
 
+        setTurnsToNextMeal(TURNS_PER_FOOD);
+        setTurnsToNextRestCredit(TURNS_PER_REST_CREDIT);
         setBaseFaction(PLAYER_PARTY_FACTION);
         clearCombatExitDestination();
 	container_link.key = being_layer;
@@ -803,6 +791,8 @@ player_party::player_party(char *_tag,
 
         setOnMap(false);
 
+        setTurnsToNextMeal(TURNS_PER_FOOD);
+        setTurnsToNextRestCredit(TURNS_PER_REST_CREDIT);
         clearCombatExitDestination();
 	container_link.key = being_layer;
         view = mapCreateView();
@@ -850,14 +840,6 @@ int player_init(void)
 		err("Failed to allocate player_party");
 		return -1;
 	}
-
-	/* Eat 3 meals a day */
-	wqCreateJob(&TurnWorkQueue, Turn + TURNS_PER_FOOD, TURNS_PER_FOOD,
-		    0, eat_food);
-
-	/* Sleep up to 9 hours a day */
-	wqCreateJob(&TurnWorkQueue, Turn + TURNS_PER_REST_CREDIT,
-		    TURNS_PER_REST_CREDIT, 0, give_rest_credit);
 
 	return 0;
 }
@@ -1617,6 +1599,10 @@ void player_party::save(save_t *save)
         save->write(save, "\"%s\"\n", this->mv_desc);
         save->write(save, "\"%s\"\n", this->mv_sound);
         save->write(save, "%d %d\n", food, gold);
+        save->write(save, "%d ;; turns to next meal\n", 
+                    turns_to_next_meal);
+        save->write(save, "%d ;; turns to next rest credit\n", 
+                    turns_to_next_rest_credit);
         save->write(save, "%s\n", 
                 this->formation ? this->formation->tag : "nil");
         save->write(save, "%s\n", 
@@ -1669,4 +1655,32 @@ bool player_party::addFood(int amount)
 bool player_party::isPlayerControlled()
 {
         return true;
+}
+
+void player_party::advanceTurns(int turns)
+{
+        // Check if its time to eat
+        turns_to_next_meal -= turns;
+        if (turns_to_next_meal <= 0) {
+                forEachMember(pc_eat_food, 0);
+                foogodRepaint();
+                turns_to_next_meal += TURNS_PER_FOOD;
+        }
+
+        // Give the party some rest credits
+        turns_to_next_rest_credit -= turns;
+        if (turns_to_next_rest_credit <= 0) {
+                forEachMember(give_pc_rest_credit, 0);
+                turns_to_next_rest_credit += TURNS_PER_REST_CREDIT;
+        }
+}
+
+void player_party::setTurnsToNextMeal(int turns)
+{
+        turns_to_next_meal = turns;
+}
+
+void player_party::setTurnsToNextRestCredit(int turns)
+{
+        turns_to_next_rest_credit = turns;
 }

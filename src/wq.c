@@ -22,16 +22,6 @@
 #include "wq.h"
 #include "common.h"
 
-struct list TickWorkQueue;
-struct list TurnWorkQueue;
-
-int wqInit(void)
-{
-	list_init(&TickWorkQueue);
-	list_init(&TurnWorkQueue);
-        return 0;
-}
-
 void wqAddJob(struct list *wq, struct wq_job *newJob)
 {
 	struct list *list;
@@ -95,9 +85,8 @@ void wqCreateJob(struct list *wq, int tick, int period, void *data,
 	wqAddJob(wq, job);
 }
 
-void wqDeleteJob(struct wq_job *job)
+void wq_job_del(struct wq_job *job)
 {
-        //dbg("wqDeleteJob: %08lx\n", job);
         list_remove(&job->list);
         free(job);
 }

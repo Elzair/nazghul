@@ -76,6 +76,11 @@ extern int save_errs;
 /* Access to global session diplomacy table: */
 #define session_dtable() (Session->dtable)
 
+/* Backwards-compatible replacements for the old global work queues: */
+#define TickWorkQueue (Session->tickq)
+#define TurnWorkQueue (Session->turnq)
+
+
 struct session {
 
         // This list keeps track of all loaded object types. It's private to
@@ -151,6 +156,10 @@ struct session {
 
         /* The diplomacy table */
         struct dtable *dtable;
+
+        /* The turn/tick work queues */
+        struct list turnq;
+        struct list tickq;
 };
 
 // Callback table for saving objects

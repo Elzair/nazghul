@@ -30,7 +30,6 @@
 #include "images.h"
 #include "sprite.h"
 #include "player.h"
-#include "wq.h"
 #include "place.h"
 #include "wind.h"
 #include "cmdwin.h"
@@ -66,7 +65,7 @@ int PlaybackSpeed    = 100;
 static char program_name[] = "nazghul";
 static int version_major = 0;
 static int version_minor = 2;
-static int version_incr  = 0;
+static int version_incr  = 1;
 
 #define VERSION_STRLEN 8  // Length of "xx.yy.zz" == 6+2
 char * version_as_string(void)
@@ -235,7 +234,6 @@ static void nazghul_init_internal_libs(void)
                 { "commonInit",     commonInit     },
                 { "screenInit",     screenInit     },
                 { "spriteInit",     spriteInit     },
-                { "wqInit",         wqInit         },
                 { "player_init",    player_init    },
                 { "eventInit",      eventInit      },
                 { "windInit",       windInit       },
@@ -275,17 +273,6 @@ int main(int argc, char **argv)
 
         if (TickMilliseconds > 0)
                 tick_thread = SDL_CreateThread(tick_fx, 0);
-
-        // -------------------------------------------------------------------
-        // This seems like an odd place for this, but it's something that only
-        // needs to be done once on startup (as opposed to once per session
-        // reload). In fact, there's a whole set of init steps that are
-        // on-startup as opposed to on-session-load. Most of them have already
-        // migrated into this file from play.c.
-        // -------------------------------------------------------------------
-
-	spriteStartAnimation(&TickWorkQueue, Tick + 1);
-
 
 	playRun();
 
