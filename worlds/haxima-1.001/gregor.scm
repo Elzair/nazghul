@@ -15,9 +15,16 @@
 (define (gregor-mk) nil)
 
 
+;;----------------------------------------------------------------------------
+;; The following are responses that are invoked by more than one keyword in the
+;; conversation table.
+;;----------------------------------------------------------------------------
 (define (gregor-dead knpc kpc)
   (say knpc "Aye, it's a shame. My daughter and her husband both - "
        "killed by trolls."))
+(define (gregor-charcoal knpc kpc)
+  (say knpc "I take charcoal into town and sell it, "
+       "and some folks come by my place to buy it."))
 
 ;;----------------------------------------------------------------------------
 ;; Conv
@@ -36,16 +43,25 @@
        (method 'join (lambda (knpc kpc) (say knpc "Nope. Already got a job.")))
        (method 'name (lambda (knpc kpc) (say knpc "Gregor's my name.")))
 
-       (method 'accu (lambda (knpc kpc) (say knpc "The Accursed trade their souls for power, "
-                                             "and care naught for anything or anyone else. "
-                                             "If not for the Wise they would overrun the Shard.")))
-       (method 'char (lambda (knpc kpc) (say knpc "I take charcoal into town and sell it, "
-                                             "and some folks come by my place to buy it.")))
+       (method 'accu (lambda (knpc kpc) 
+                       (say knpc "The Accursed trade their souls for power, "
+                            "and care naught for anything or anyone else. "
+                            "If not for the Wise they would overrun the Shard.")))     
+       (method 'angr (lambda (knpc kpc) (say knpc "Angriss is a local legend: "
+                                             "the mother of the giant wood spiders. Just a story.")))
+       (method 'band (lambda (knpc kpc) (say knpc "A band of rogues has been raiding the shrine "
+                                             "when I'm not around. They haven't attacked me, "
+                                             "so they're probably just vagabonds, "
+                                             "afraid of an old man's cudgel.")))
+       (method 'burn gregor-charcoal)
+       (method 'char gregor-charcoal)
        (method 'daug (lambda (knpc kpc) (say knpc "Aye, she was a near-witch like her mother. "
                                              "Had the knack, but not enough to be among the Wise.")))
        (method 'dead gregor-dead)
        (method 'folk (lambda (knpc kpc) (say knpc "There's homesteads scattered about in "
                                              "the woods and the foothills.")))
+       (method 'fore (lambda (knpc kpc) (say knpc "Stay out of the deep woods. "
+                                               "Bandits, spiders and worse live there.")))
        (method 'gate (lambda (knpc kpc) (say knpc "No one can predict when it will open, "
                                              "or if anything will come through if it does. "
                                              "I've heard of other gates in other parts of the land, "
@@ -76,6 +92,8 @@
                                              "Wanderers like yourself. "
                                              "Folks leave simple offerings here to help you on "
                                              "your journey.")))
+       (method 'spid (lambda (knpc kpc) (say knpc "Some of the brutes in the deep part of the woods are "
+                                             "big as oxen. Children of Angriss, we call those big monsters.")))
        (method 'town (lambda (knpc kpc) (say knpc "Trigrave is the closest town. Follow the "
                                              "road south and you can't miss it.")))
        (method 'trol (lambda (knpc kpc) (say knpc "Trolls eat folks. Even crack the "
