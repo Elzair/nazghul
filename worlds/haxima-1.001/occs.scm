@@ -26,10 +26,10 @@
 (kern-mk-occ 'oc_wanderer         ; tag
              "wanderer"           ; name 
              2.0                  ; magic 
-             +5                   ; hp_mod 
-             +10                  ; hp_mult 
-             +10                  ; mp_mod 
-             +10                  ; mp_mult 
+             +5                   ; base hp 
+             +2                   ; hp per level 
+             +5                   ; base mp
+             +2                   ; mp per level 
              +1                   ; hit_mod 
              +1                   ; def_mod 
              +1                   ; dam_mod 

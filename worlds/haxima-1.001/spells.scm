@@ -617,12 +617,3 @@
 ;; ----------------------------------------------------------------------------
 
 (map (lambda (spell) (apply mk-spell spell)) spells)
-
-
-;; Code to test the script->C->script recursion problem:
-(define (test-reentry)
-  #t)
-(define (test-spell kspell caster)
-  (kern-test-recursion test-reentry)
-  (kern-test-recursion test-reentry))
-(mk-spell 'test_recur "Test spell" s_magic test-spell "IBW" 1 context-any nil)

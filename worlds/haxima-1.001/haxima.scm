@@ -32,7 +32,7 @@
  0 10 2                ; str/int/dex
  0 1                   ; hp mod/mult
  10 5                  ; mp mod/mult
- 24 0 3 3              ; hp/xp/mp/lvl
+ 29 0 3 1              ; hp/xp/mp/lvl
  nil                   ; conv
  nil                   ; sched
  nil                   ; special ai

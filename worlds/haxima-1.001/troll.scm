@@ -35,13 +35,13 @@
 (kern-mk-occ 'oc_troll            ;; tag
              "raider"             ;; name 
              0.0                  ;; magic 
-             +2                   ;; hp_mod 
-             +2                   ;; hp_mult 
-             -10                  ;; mp_mod 
-             -5                   ;; mp_mult 
-             +2                   ;; hit_mod 
+             2                    ;; base hp
+             2                    ;; hp per level 
+             0                    ;; base mp
+             0                    ;; mp per level 
+             2                    ;; hit_mod 
              -1                   ;; def_mod 
-             +2                   ;; dam_mod 
+             2                    ;; dam_mod 
              -1                   ;; arm_mod
              t_small_wooden_chest ;; container (needed for items)
              nil                  ;; typical traps on the container

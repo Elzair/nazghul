@@ -13,8 +13,10 @@
                  speed-human       ; speed
                  13                ; vision radius
                  mmode-walk        ; passability
-                 20 2              ; hp mod/mult
-                 10 10             ; mp mod/mult
+                 20                ; base hp
+                 2                 ; hp per level
+                 10                ; base mp
+                 2                 ; mp per level
                  s_corpse          ; sleep sprite
                  t_hands           ; natural (unarmed) weapon
                  #t                ; visible

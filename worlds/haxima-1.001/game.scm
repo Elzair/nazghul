@@ -190,6 +190,7 @@
 (load "moon.scm")
 
 (load "spells.scm")
+(load "scrolls.scm")
 
 ;; Miscellaneous crap
 (mk-obj-type 't_crosshair "crosshair" s_crosshair layer-crosshair nil)
