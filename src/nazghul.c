@@ -37,12 +37,13 @@
 #include "Spell.h"
 #include "wind.h"
 #include "cmdwin.h"
+#include "formation.h"
+#include "map.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
-#include <SDL/SDL_ttf.h>
 #include <SDL/SDL_thread.h>
 #include <unistd.h>
 #include <getopt.h>
@@ -64,10 +65,18 @@ static int version_major = 0;
 static int version_minor = 1;
 static int version_incr  = 3;
 
+#define VERSION_STRLEN 8  // Length of "xx.yy.zz" == 6+2
+char * version_as_string(void)
+{
+  static char version_string[VERSION_STRLEN+1];
+  snprintf(version_string, VERSION_STRLEN, "%d.%d.%d", 
+           version_major, version_minor, version_incr);
+  return version_string;
+}
+
 static void print_version(void)
 {
-        printf("%s %d.%d.%d\n", program_name, version_major, version_minor, 
-               version_incr);
+        printf("%s %s\n", program_name, version_as_string() );
         printf("Copyright (C) 2003 Gordon McNutt, Sam Glasby\n"
                "%s comes with NO WARRANTY,\n"
                "to the extent permitted by law.\n"
@@ -201,32 +210,51 @@ int tick_fx(void *data)
 	}
 }				// tick_fx()
 
+static void nazghul_init_internal_libs(void)
+{
+        struct lib_entry {
+                char *name;
+                int (*init)(void);
+        };
+
+        struct lib_entry libs[] = {
+                { "commonInit",     commonInit     },
+                { "screenInit",     screenInit     },
+                { "spriteInit",     spriteInit     },
+                { "wqInit",         wqInit         },
+                { "player_init",    player_init    },
+                { "eventInit",      eventInit      },
+                { "convInit",       convInit       },
+                { "Spell_init",     Spell_init     },
+                { "windInit",       windInit       },
+                { "formation_init", formation_init },
+                { "astar_init",     astar_init     },
+                { "cmdwin_init",    cmdwin_init    },
+                { "consoleInit",    consoleInit    },
+                { "mapInit",        mapInit        }
+        };
+
+        int i;
+
+        for (i = 0; i < array_sz(libs); i++) {
+                if (libs[i].init() < 0) {
+                        err("Error in %s\n", libs[i].name);
+                        exit(-1);
+                }
+        }
+
+	if (useSound)
+		soundInit();
+}
+
 int main(int argc, char **argv)
 {
 	SDL_Thread *tick_thread;
 
 	parse_args(argc, argv);
 
-	commonInit();
-	screenInit();
-	wqInit();
-	combatInit();
-	spriteInit();
-	if (player_init())
-		exit(-1);
-	if (eventInit())
-		exit(-1);
-	placeInit();
-	convInit();
-	Spell_init();
-	windInit();
-	if (cmdwin_init() < 0) {
-		err("Error initializing command window\n");
-		exit(-1);
-	}
+        nazghul_init_internal_libs();
 
-	if (useSound)
-		soundInit();
 
 	tick_thread = SDL_CreateThread(tick_fx, 0);
 

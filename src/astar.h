@@ -38,7 +38,7 @@ extern "C" {
 		int y1;
 		int flags;
 		int (*is_valid_location) (void *context, int x, int y);
-		int (*heuristic) (struct astar_search_info * info);
+		void (*heuristic) (struct astar_search_info * info, int *goodness, int *cost);
 		unsigned int width;
 		unsigned int height;
 		int wraps;

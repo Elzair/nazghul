@@ -67,6 +67,7 @@ struct place_pathfind_context {
 	int target_y;
 	unsigned char pmask;
 	int pflags;
+        class Object *requestor;
 };
 
 struct place *Place;
@@ -145,14 +146,16 @@ struct place *place_create(enum place_type type,
 		goto fail;
 
 	place->type = type;
+        place->scale = place_is_wilderness(place) ? WILDERNESS_SCALE : NON_WILDERNESS_SCALE;
 	place->location.place = parent;
 	place->location.x = x;
 	place->location.y = y;
 	place->original_terrain_map = terrain_map;
 	place->wraps = wraps;
-	place->scale = type == wilderness_place ? WILDERNESS_SCALE : 1;
 
 	list_init(&place->vehicles);
+        list_init(&place->turn_list);
+        place->turn_elem = &place->turn_list;
 
 	return place;
       fail:
@@ -237,10 +240,6 @@ int place_is_passable(struct place *place, int x, int y,
 	if ((flags & PFLAG_IGNOREMECHS) == 0) {
 		mech = (class Mech *) place_get_object(place, x, y, 
                                                        mech_layer);
-                if (mech) {
-                        // dbg
-                        printf("*** 0x%x 0x%x\n", pmask, mech->getPmask());
-                }
 		if (mech != NULL && (mech->getPmask() & pmask) == 0)
 			return 0;
 	}
@@ -286,11 +285,19 @@ struct tile *placeGetTile(struct place *place, int x, int y)
 static void myPaintHighlight(Object * obj, int sx, int sy)
 {
 	SDL_Rect rect;
+#if 0
 	rect.x = sx - HIGHLIGHT_W;
 	rect.y = sy - HIGHLIGHT_H;
 	rect.w = TILE_W + 2 * HIGHLIGHT_W;
 	rect.h = TILE_H + 2 * HIGHLIGHT_H;
 	screenFill(&rect, White);
+#else
+	rect.x = sx;
+	rect.y = sy;
+	rect.w = TILE_W;
+	rect.h = TILE_H;
+        screenHighlight(&rect);
+#endif
 }
 
 void place_paint_objects(struct place *place, int mx, int my,
@@ -321,7 +328,7 @@ void place_paint_objects(struct place *place, int mx, int my,
 		if (!sprite)
 			continue;
 
-		// hack: handle invisible objects and alpha-blending when
+		// Handle invisible objects and alpha-blending when
 		// invisible objects are revealed. If the global "reveal" flag
 		// is not set then do not paint invisible objects. Otherwise
 		// temporarily set the object's sprite to 'shaded' and paint
@@ -334,9 +341,9 @@ void place_paint_objects(struct place *place, int mx, int my,
 			sprite_fade(sprite);
 		}
 
+		obj->paint(sx, sy);
 		if (obj->isSelected())
 			myPaintHighlight(obj, sx, sy);
-		obj->paint(sx, sy);
 
 		if (sprite->faded)
 			sprite_unfade(sprite);
@@ -386,7 +393,7 @@ unsigned int place_walking_distance(struct place *place,
 	return dx + dy;
 }
 
-unsigned int place_flying_distance(struct place *place,
+int place_flying_distance(struct place *place,
 				   int x0, int y0, int x1, int y1)
 {
 	int dx;
@@ -474,6 +481,65 @@ void place_get_direction_vector(struct place *place, int x0, int y0, int x1,
                 *dy = south;
 }
 
+static void tile_remove_object(struct tile *tile, class Object *object)
+{
+	if (object->isType(VEHICLE_ID)) {
+                if (tile->vehicle == object) {
+                        tile->vehicle = 0;
+                        tile->objects--;
+                }
+                // 30Jul2003 gmcnutt: otherwise this vehicle must be occupied,
+                // in which case it does not occupy the tile (it's occupant
+                // does).
+	} else {
+		list_remove(&object->container_link.list);
+                tile->objects--;
+	}
+
+	if (!tile->objects) {
+		tile_destroy(tile);
+	}
+}
+
+static void tile_add_object(struct tile *tile, class Object *object)
+{
+	if (object->isType(VEHICLE_ID)) {
+		if (tile->vehicle) {
+                        assert(0);
+                }
+		tile->vehicle = (class Vehicle *) object;
+		tile->objects++;
+                return;
+	}
+
+	olist_add(&tile->objstack, &object->container_link);
+	tile->objects++;
+}
+
+void place_move_object(struct place *place, Object * object, 
+                       int newx, int newy)
+{
+	struct tile *old_tile;
+        struct tile *new_tile;
+
+        if (newx == object->getX() &&
+            newy == object->getY())
+                return;
+
+        old_tile = place_lookup_tile(place, object->getX(), object->getY());
+	assert(old_tile);
+
+        new_tile = place_lookup_tile(place, newx, newy);
+
+	if (!new_tile) {
+		new_tile = place_create_and_add_tile(place, newx, newy);
+                assert(new_tile);
+	}
+        
+        tile_remove_object(old_tile, object);
+        tile_add_object(new_tile, object);
+}
+
 int place_add_object(struct place *place, Object * object)
 {
 	struct tile *tile = place_lookup_tile(place, object->getX(),
@@ -486,25 +552,10 @@ int place_add_object(struct place *place, Object * object)
 			return -1;
 	}
 
-	if (object->isType(VEHICLE_ID)) {
-		if (tile->vehicle)
-			return -1;
-		tile->vehicle = (class Vehicle *) object;
-		tile->objects++;
-		return 0;
-	}
-
-	olist_add(&tile->objstack, &object->container_link);
-	tile->objects++;
+        tile_add_object(tile, object);
+        list_add(&place->turn_list, &object->turn_list);
+        mapSetDirty();
 	return 0;
-}
-
-void place_add_moongate(struct place *place, class Moongate * moongate)
-{
-	struct tile *tile =
-	    placeGetTile(place, moongate->getX(), moongate->getY());
-	tile->moongate = moongate;
-	tile->objects++;
 }
 
 void place_remove_object(struct place *place, Object * object)
@@ -513,23 +564,25 @@ void place_remove_object(struct place *place, Object * object)
 					      object->getY());
 	assert(tile);
 
-	if (object->isType(VEHICLE_ID)) {
-                if (tile->vehicle == object) {
-                        tile->vehicle = 0;
-                        tile->objects--;
-                }
-                // 30Jul2003 gmcnutt: otherwise this vehicle must be occupied,
-                // in which case it does not occupy the tile (it's occupant
-                // does).
-	} else {
-		list_remove(&object->container_link.list);
-		list_init(&object->container_link.list);
-                tile->objects--;
-	}
+        tile_remove_object(tile, object);
 
-	if (!tile->objects) {
-		tile_destroy(tile);
-	}
+        /* Note: this is a bit subtle. If it just so happens that we are in the
+         * process of running place_exec, there is a chance that the object we
+         * are removing here is the next object to be processed in the
+         * turn_list. In this special case we must setup the next object after
+         * this to be processed instead. */
+        if (place->turn_elem == &object->turn_list)
+                place->turn_elem = object->turn_list.next;
+
+        list_remove(&object->turn_list);
+}
+
+void place_add_moongate(struct place *place, class Moongate * moongate)
+{
+	struct tile *tile =
+	    placeGetTile(place, moongate->getX(), moongate->getY());
+	tile->moongate = moongate;
+	tile->objects++;
 }
 
 Object *place_get_object(struct place *place, int x, int y, enum layer layer)
@@ -604,42 +657,52 @@ struct terrain_map *place_get_combat_terrain_map(struct place *place,
 
 /* Pathfinding ***************************************************************/
 
-static int place_pathfind_is_valid_location(struct place_pathfind_context
-					    *context, int x, int y)
+static int place_pathfind_is_valid_location(struct place_pathfind_context *context, int x, int y)
 {
 	class Portal *portal;
 	class Moongate *moongate;
 
-	/* I used to check this after passability, but it really belongs first.
-	 * In several cases the target location may not be passable but if the
-	 * seeker can get adjacent to it that will be good enough. */
-	if (x == context->target_x && y == context->target_y)
+        // ---------------------------------------------------------------------
+	// I used to check this after passability, but it really belongs first.
+	// In several cases the target location may not be passable but if the
+	// seeker can get adjacent to it that will be good enough.
+        // ---------------------------------------------------------------------
+
+	if (x == context->target_x && 
+            y == context->target_y)
 		return 1;
 
 	if (!place_is_passable(context->place, x, y, context->pmask,
 			       context->pflags))
 		return 0;
 
-	if (! (context->pflags & PFLAG_IGNOREBEINGS) &&
-            place_is_occupied(context->place, x, y))
-		return 0;
+        // ---------------------------------------------------------------------
+        // Check if the caller is blocked by an occupant on this tile.
+        // ---------------------------------------------------------------------
 
-#ifdef PLAYER_PARTY_NOT_AN_OBJECT
-	/* I added a check for the player so that NPCs will pathfind around the
-	 * player when commuting. */
-	if (player_party->context != CONTEXT_COMBAT &&
-	    player_party->getX() == x && player_party->getY() == y)
-		return 0;
-#endif
+	if (0 == (context->pflags & PFLAG_IGNOREBEINGS)) {
+                class Object *occupant;
+                occupant = place_get_object(context->place, x, y, being_layer);
+                if (occupant != NULL) {
+                        if (0 == (context->pflags & PFLAG_IGNORECOMPANIONS) ||
+                            ! context->requestor->isCompanionOf(occupant)) {
+                                return 0;
+                        }
+                }
+        }
 
-	/* I used to penalize portals in the heuristic routine, but that was
-	 * back in the day when I would pathfind for the player on a
-	 * right-click. Any more pathfinding is used exclusively for NPCs and I
-	 * NEVER want them to enter a portal unless they explicitly want to
-	 * (and currently they never do). Likewise for open moongates. */
+        // ---------------------------------------------------------------------
+	// I used to penalize portals in the heuristic routine, but that was
+	// back in the day when I would pathfind for the player on a
+	// right-click. Any more pathfinding is used exclusively for NPCs and I
+	// NEVER want them to enter a portal unless they explicitly want to
+	// (and currently they never do). Likewise for open moongates.
+        // ---------------------------------------------------------------------
+
 	if ((portal = place_get_portal(context->place, x, y)) &&
 	    portal->isAutomatic())
 		return 0;
+
 	if ((moongate = place_get_moongate(context->place, x, y)) &&
 	    moongate->isOpen())
 		return 0;
@@ -647,65 +710,64 @@ static int place_pathfind_is_valid_location(struct place_pathfind_context
 	return 1;
 }
 
-static int place_pathfind_heuristic(struct astar_search_info *info)
+static void place_pathfind_heuristic(struct astar_search_info *info,
+                                    int *goodness, int *cost)
 {
-	int cost = 0;
 	struct terrain *terrain;
 	struct place_pathfind_context *context;
 
 	context = (struct place_pathfind_context *) info->context;
 
-	/* The basic cost is walking distance. Duplicate that algorithm except
-	 * pay attention to the info->flags. */
+	/* The basic goodness is walking distance. Duplicate that algorithm
+	 * except pay attention to the info->flags. */
 
-	if (info->flags & ASTAR_HORZ == 0) {
+	if ((info->flags & ASTAR_HORZ) == 0) {
 		// Yes, we are interested in the x coordinate of the
 		// destination.
 		if (context->place->wraps) {
-			cost += WRAP_DISTANCE(min(info->x0, info->x1),
-					      max(info->x0, info->x1),
-					      context->place->terrain_map->w);
+			*goodness -= WRAP_DISTANCE(min(info->x0, info->x1),
+                                                  max(info->x0, info->x1),
+                                               context->place->terrain_map->w);
 		} else {
-			cost += max(info->x0, info->x1) - min(info->x0,
-							      info->x1);
+			*goodness -= max(info->x0, info->x1) - 
+                                min(info->x0, info->x1);
 		}
 	}
 
-	if (info->flags & ASTAR_VERT == 0) {
+	if ((info->flags & ASTAR_VERT) == 0) {
 		// Yes, we are interested in the y coordinate of the
 		// destination.
 		if (context->place->wraps) {
-			cost += WRAP_DISTANCE(min(info->y0, info->y1),
-					      max(info->y0, info->y1),
-					      context->place->terrain_map->h);
+			*goodness -= WRAP_DISTANCE(min(info->y0, info->y1),
+                                                  max(info->y0, info->y1),
+                                               context->place->terrain_map->h);
 		} else {
-			cost += max(info->y0, info->y1) -
-			    min(info->y0, info->y1);
+			*goodness -= max(info->y0, info->y1) -
+                                min(info->y0, info->y1);
 		}
 	}
+
+        /* Add the terrain cost. */
+        *cost += place_get_movement_cost(context->place, info->x0, info->y0);
 
 	/* And I penalize tiles with portals to encourage the pathfinding
 	 * algorithm to route around them. Make them cost a little bit more
 	 * than walking all the way around them. */
 	if (place_get_portal(context->place, info->x0, info->y0))
-		cost += 9;
+		*cost += 9;
 
 	/* And penalize tiles with hazards on them. I really should assign
 	 * different penalties to different hazerds. */
 	terrain = place_get_terrain(context->place, info->x0, info->y0);
 	if (terrain->effects)
-		cost += 2;
+		*cost += 9;
 
 	if (place_get_object(context->place, info->x0, info->y0,
 			     field_layer) != NULL)
-		cost += 20;
-
-	return cost;
+		*cost += 9;
 }
 
-struct astar_node *place_find_path(struct place *place,
-				   struct astar_search_info *info,
-				   unsigned char pmask)
+struct astar_node *place_find_path(struct place *place, struct astar_search_info *info, unsigned char pmask, class Object *requestor)
 {
 	struct astar_node *path;
 	struct place_pathfind_context context;
@@ -716,6 +778,7 @@ struct astar_node *place_find_path(struct place *place,
 	context.target_y = info->y1;
 	context.pmask = pmask;
 	context.pflags = info->flags;
+        context.requestor = requestor;
 
 	/* Fill out the search information */
 	info->is_valid_location =
@@ -775,21 +838,14 @@ int place_get_light(struct place *place, int x, int y)
 	return light;
 }
 
-void placeExit(void)
-{
-
-}
-
 static void myResetObjectTurns(class Object * obj, void *data)
 {
-	obj->synchronize(Turn);
-	// obj->setTurn(Turn);
+	obj->synchronize();
 }
 
-void placeEnter(void)
+void place_enter(struct place *place)
 {
-	placeForEachObject(myResetObjectTurns, 0);
-	// placeDumpObjects(); // For debugging output
+	place_for_each_object(place, myResetObjectTurns, 0);
 }
 
 class Moongate *place_get_moongate(struct place *place, int x, int y)
@@ -821,7 +877,7 @@ int place_get_movement_cost(struct place *place, int x, int y)
 {
         WRAP_COORDS(place, x, y);
 	struct terrain *t = TERRAIN(place, x, y);
-	return (place->scale * (t ? t->movement_cost : 0));
+	return (t ? t->movement_cost : 0);
 }
 
 int place_is_hazardous(struct place *place, int x, int y)
@@ -829,11 +885,6 @@ int place_is_hazardous(struct place *place, int x, int y)
         WRAP_COORDS(place, x, y);
 	struct terrain *t = TERRAIN(place, x, y);
 	return (t->effects != 0);
-}
-
-int place_adjust_turn_cost(struct place *place, int turns)
-{
-        return place->scale * turns;
 }
 
 int placeGetMovementCost(int x, int y)
@@ -1057,12 +1108,6 @@ static int myPlaceDescribeObjects(int x, int y, int first_thing_listed)
 
 }				// myPlaceDescribeObjects()
 
-static void myDumpObject(class Object * obj, void *data)
-{
-	printf("\t%p %s [%d,%d]\n", obj, obj->getName(), obj->getX(),
-	       obj->getY());
-}
-
 void placeDescribe(int x, int y, int flags)
 {
         int count = 0;
@@ -1086,8 +1131,8 @@ void placeDescribe(int x, int y, int flags)
                 consolePrint(".\n");
 }
 
-void place_for_each_object(struct place *place, void (*fx) (class Object *,
-							    void *data),
+void place_for_each_object(struct place *place, 
+                           void (*fx) (class Object *, void *data),
 			   void *data)
 {
 	int i;
@@ -1097,14 +1142,14 @@ void place_for_each_object(struct place *place, void (*fx) (class Object *,
 	class Object *obj;
 
 	// for each bucket
-	for (i = 0; i < place->objects->n; i++) {
+	for (i = 0; i < place->objects->n && !Quit; i++) {
 
 		tileList = &place->objects->buckets[i];
 		tileElem = tileList->list.next;
 		assert(tileElem->prev == &tileList->list);
 
 		// for each tile
-		while (tileElem != &tileList->list) {
+		while (tileElem != &tileList->list && !Quit) {
 
 			tileTmp = tileElem->next;
 			tile = outcast(tileElem, struct tile, hashlink.list);
@@ -1114,7 +1159,7 @@ void place_for_each_object(struct place *place, void (*fx) (class Object *,
 			objElem = objList->list.next;
 
 			// for each object
-			while (objElem != &objList->list) {
+			while (objElem != &objList->list && !Quit) {
 
 				objTmp = objElem->next;
 				obj = outcast(objElem, class Object,
@@ -1137,55 +1182,61 @@ void place_for_each_object(struct place *place, void (*fx) (class Object *,
 	}
 }
 
-void placeForEachObject(void (*fx) (class Object *, void *data), void *data)
+static void place_remove_and_destroy_object(class Object *obj, void *unused)
 {
-	place_for_each_object(Place, fx, data);
+        obj->remove();
+        delete obj;
 }
 
-static void myAdvanceObjectTurns(class Object * obj, void *data)
+void place_remove_and_destroy_all_objects(struct place *place)
 {
-	// Bugfix: check for Quit in this loop. If an npc party attacks the
-	// player over a town and the player quits combat then the npc party
-	// remains in town, but we want to stop processing any more turn points
-	// it might have.
-	while (obj->getTurn() < Turn && !Quit) {
-
-		obj->advanceTurn(Turn);
-
-		if (obj->isDestroyed()) {
-			// placeRemoveObject(obj);
-			delete obj;
-			return;
-		}
-	}
+        place_for_each_object(place, place_remove_and_destroy_object, NULL);
 }
 
-void placeAdvanceTurns(void)
+void place_exec(struct place *place, struct exec_context *context)
 {
-	placeForEachObject(myAdvanceObjectTurns, 0);
-}
+        printf("--- %s exec ---\n", place->name);
 
-static void myAdvanceCombatTurn(class Object * obj, void *data)
-{
-	obj->advanceTurn(Turn);
-	if (obj->isDestroyed()) {
-		delete obj;
-	}
-}
+        // ---------------------------------------------------------------------
+        // Upon entry this should always by the current place. That may change
+        // while we're in the loop, but upon entry it should always be true.
+        // ---------------------------------------------------------------------
 
-void placeAdvanceCombatTurn(void)
-{
-	placeForEachObject(myAdvanceCombatTurn, 0);
-}
+        assert(Place == place);
 
-void placeInit(void)
-{
-}
 
-void placeDumpObjects(void)
-{
-	printf("Objects in %s:\n", Place->name);
-	placeForEachObject(myDumpObject, 0);
+        // ---------------------------------------------------------------------
+        // Loop over every object in the place...
+        // ---------------------------------------------------------------------
+
+        place->turn_elem = place->turn_list.next;
+        while (place->turn_elem != &place->turn_list) {
+               
+                class Object *obj;
+
+                obj = outcast(place->turn_elem, class Object, turn_list);
+                place->turn_elem = place->turn_elem->next;
+
+                // -------------------------------------------------------------
+                // Apply any per-turn effects to each object (effects may
+                // destroy an object, so watch for that case)
+                // -------------------------------------------------------------
+
+                obj->applyPerTurnEffects();
+                if (obj->isDestroyed()) {
+                        delete obj;
+                        continue;
+                }
+
+                // -------------------------------------------------------------
+                // 'Run' each object
+                // -------------------------------------------------------------
+
+                obj->exec(context);
+                if (obj->isDestroyed()) {
+                        delete obj;
+                }
+        }
 }
 
 class NpcParty *place_random_encounter(struct place *place)
@@ -1208,7 +1259,6 @@ class NpcParty *place_random_encounter(struct place *place)
 			if (!npc)
 				return 0;
 			npc->init(type);
-			npc->setTurn(Turn);
 			npc->setAlignment(place->typ_npc_parties[i].align);
 			npc->createMembers();
 			return npc;
@@ -1325,194 +1375,21 @@ int place_los_blocked(struct place *place, int Ax, int Ay, int Bx, int By)
         return 0;
 }
 
-
-#ifdef PLACE_LOAD_CODE_REWRITTEN
-// started rewriting all the code to load places, almost done but don't want to
-// bother debugging it.
-static struct typ_npc_party_info *load_typ_npc_parties(class Loader * loader,
-						       int *n)
+struct list *place_get_all_objects(struct place *place)
 {
-	struct typ_npc_party_info *info, tmp;
-	int index;
-	char *tag = 0;
-
-	// base case
-	if (loader->matchToken('}')) {
-		info = new struct typ_npc_party_info[*n];
-		if (info)
-			memset(info, 0, *n * sizeof(struct typ_npc_party_info));
-		return info;
-	}
-	// recursive case
-	if (!loader->getWord(&tag))
-		return 0;
-
-	if (!(tmp.type = loader->lookupTag(tag, NPCPARTY_TYPE_ID))) {
-		loader->setError("Invalid NPCPARTY tag '%s'", tag);
-		free(tag);
-		return 0;
-	}
-	free(tag);
-
-	if (!loader->getInt(&tmp.prob))
-		return 0;
-
-	index = *n;
-	(*n)++;
-
-	if (!(info = load_typ_npc_parties(loader, n)))
-		return 0;
-
-	info[index] = tmp;
-
-	return info;
-
+        return &place->turn_list;
 }
 
-struct place *placeLoad(class Loader * loader)
+int place_contains_hostiles(struct place *place, int alignment)
 {
-	struct place *place;
-	char *ptag = 0, *mtag = 0, *otag = 0, *ttag = 0;
-	class ObjectType *type;
-	class Object *obj;
-	class Character *ch;
+        struct list *elem;
+        class Object *obj;
+        
+        list_for_each(&place->turn_list, elem) {
+                obj = outcast(elem, class Object, turn_list);
+                if (obj->isHostile(alignment))
+                        return 1;
+        }
 
-	place = new struct place;
-	if (!place)
-		return 0;
-	memset(place, 0, sizeof(*place));
-
-	// *** Parse Parameters ***
-
-	if (!loader->matchWord("type") ||
-	    !loader->getInt(&place->type) ||
-	    !loader->matchWord("parent") ||
-	    !loader->getWord(&ptag) ||
-	    !loader->matchWord("x") ||
-	    !loader->getInt(&place->location.x) ||
-	    !loader->matchWord("y") ||
-	    !loader->getInt(&place->location.y) ||
-	    !loader->getWord("name") ||
-	    !loader->getString(&place->name) ||
-	    !loader->matchWord("wraps") ||
-	    !loader->getBool(&place->wraps) ||
-	    !loader->matchWord("map") ||
-	    !loader->getWord(&mtag) ||
-	    !loader->matchWord("underground") ||
-	    !loader->getBool(&place->underground))
-		goto fail;
-
-	// *** Bind Parameters ***
-
-	// parent place
-	if (strcmp(ptag, "null")) {
-		if (!(place->parent = loader->lookupTag(ptag, PLACE_ID))) {
-			loader->setError("Invalid PLACE tag '%s'", ptag);
-			goto fail;
-		}
-	} else if (place->type != wilderness_type) {
-		loader->setError("Any non-wilderness PLACE must have "
-				 "a non-null parent PLACE");
-		goto fail;
-	}
-	// terrain map
-	if (!(place->terrain_map = loader->lookupTag(mtag, MAP_ID))) {
-		loader->setError("Invalid MAP tag '%s'", mtag);
-		goto fail;
-	}
-	// *** Parse and Bind Object List ***
-
-	if (!loader->matchWord("objects") || !loader->matchToken('{'))
-		goto fail;
-
-	while (!loader->matchToken('}')) {
-
-		// Get the type tag
-		if (!loader->getWord(&otag))
-			goto fail;
-
-		// Check for basic object or NPC party types
-		if ((type = loader->lookupTag(otag, OBJECT_ID)) ||
-		    (type = loader->lookupTag(otag, NPCPARTY_TYPE_ID))) {
-			if (!(obj = type->createInstance())) {
-				loader->setError("Memory allocation failed");
-				goto fail;
-			}
-
-		}
-		// Check for an NPC character
-		else if ((ch = loader->lookupTag(otag, CHARACTER_ID))) {
-			if (!(obj = new NpcParty())) {
-				loader->setError("Memory allocation failed");
-				goto fail;
-			}
-			((class NpcParty *) obj)->init((class Character *) ch);
-		} else {
-			loader->setError("Invalid type tag '%s'", otag);
-			goto fail;
-		}
-
-		free(otag);
-		otag = 0;
-
-		obj->setPlace(place);
-
-		// Have the object parse its own fields
-		if (!obj->load(loader)) {
-			delete obj;
-			goto fail;
-		}
-
-		if (place_add_object(place, obj)) {
-			loader->setError("Failed to add object %s to place "
-					 "%s (hint: if the object is a "
-					 "vehicle then only one vehicle may "
-					 "occupy a tile)", object->getName(),
-					 place->name);
-			delete obj;
-		}
-	}
-
-	// *** Parse and Bind NPC Party List ***
-
-	if (place->type == wilderness_place &&
-	    (!loader->matchWord("typical_npc_parties") ||
-	     !loader->matchToken('{') ||
-	     (!(place->typ_npc_parties =
-		load_typ_npc_parties(loader, &place - n_typ_npc_parties)))))
-		goto fail;
-
-	while (!loader->matchToken('}')) {
-		assert(0);
-	}
-
-	// *** Bind Town Object
-
-	if (place->type == town_place) {
-
-		if (!loader->matchWord("object_type") ||
-		    !loader->getWord(&ttag))
-			goto fail;
-
-		if (!(type = loader->lookupTag(ttag, OBJECT_ID))) {
-			loader->setError goto fail;
-		}
-
-		if (!(portal = new Portal()))
-			}
-
-		      cleanup:
-			if (ptag)
-				free(ptag);
-		if (mtag)
-			free(mtag);
-
-		return place;
-
-	      fail:
-		place_destroy(place);
-		place = 0;
-		goto cleanup;
-	}
+        return 0;
 }
-#endif				// PLACE_LOAD_CODE_REWRITTEN

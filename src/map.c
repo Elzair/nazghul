@@ -28,6 +28,7 @@
 #include "cursor.h"
 #include "terrain.h"
 #include "Missile.h"
+#include "object.h"
 
 #include <SDL/SDL.h>
 #include <math.h>
@@ -74,6 +75,7 @@ static struct map {
 	struct mview *aview;	/* active view */
 	struct list views;	/* list of all views */
 	struct mview *cam_view;
+        class Object *subject;
 	int cam_x, cam_y, cam_max_x, cam_max_y, cam_min_x, cam_min_y;
 	bool peering;
 	char vmask[VMASK_SZ];	/* final mask used to render */
@@ -110,6 +112,9 @@ static void myRmView(struct mview *view, void *data)
 
 static void myRecomputeLos(struct mview *view, void *data)
 {
+        if (NULL == LosEngine)
+                return;
+
 	myUpdateAlphaMask(view);
 	if (LosEngine->r > 0)
 		LosEngine->r = view->rad;
@@ -383,6 +388,7 @@ static void mapBuildLightMap(struct mview *view)
 		}
 	}
         
+#if 0
         // In party mode the player is a light source that hasn't been
         // accounted for yet (fixme -- why not? is this still true?).
 	if (player_party->context != CONTEXT_COMBAT) {
@@ -391,6 +397,7 @@ static void mapBuildLightMap(struct mview *view)
 		lights[lt_i].light = player_party->light;
 		lt_i++;
 	}
+#endif
 
 	// Skip further processing if there are no light sources
         if (!lt_i)
@@ -460,7 +467,26 @@ void mapForEach(void (*fx) (struct mview *, void *), void *data)
 	}
 }
 
-int mapInit(char *los)
+void mapSetLosStyle(char *los)
+{
+	/* fixme -- why create this here? why not just pass it in? */
+#if 0
+	LosEngine = los_create(los, MAP_TILE_W, MAP_TILE_H,
+			       map_use_circular_vision_radius ?
+			       MAX_VISION_RADIUS : -1);
+#else
+	LosEngine = los_create(los, MVIEW_W, MVIEW_H,
+			       map_use_circular_vision_radius ?
+			       MAX_VISION_RADIUS : -1);
+#endif
+	if (!LosEngine) {
+		mapDestroyView(Map.cam_view);
+                assert(false);
+                exit(-1);
+	}
+}
+
+int mapInit(void)
 {
 
 	memset(&Map, 0, sizeof(Map));
@@ -490,21 +516,7 @@ int mapInit(char *los)
 
 	list_init(&Map.views);
 	Map.peering = false;
-
-	/* fixme -- why create this here? why not just pass it in? */
-#if 0
-	LosEngine = los_create(los, MAP_TILE_W, MAP_TILE_H,
-			       map_use_circular_vision_radius ?
-			       MAX_VISION_RADIUS : -1);
-#else
-	LosEngine = los_create(los, MVIEW_W, MVIEW_H,
-			       map_use_circular_vision_radius ?
-			       MAX_VISION_RADIUS : -1);
-#endif
-	if (!LosEngine) {
-		mapDestroyView(Map.cam_view);
-		return -1;
-	}
+        LosEngine = NULL;
 
 	return 0;
 }
@@ -645,10 +657,6 @@ static void map_paint_cursor(void)
                 TILE_W;
         sy = Map.srect.y + (y - (Map.aview->vrect.y + Map.aview->subrect.y)) * 
                 TILE_H;
-        printf("[%d %d %d %d] [%d %d] [%d %d]\n", 
-               Map.aview->vrect.x, Map.aview->vrect.y, 
-               Map.aview->vrect.w, Map.aview->vrect.h,
-               x, y, sx, sy);
         spritePaint(Cursor->getSprite(), 0, sx, sy);
 }
 
@@ -779,6 +787,17 @@ static void mapPaintPlace(struct place *place,
 }
 
 
+static void mapRepaintCoordinates(void)
+{
+        if (player_party->isOnMap()) {
+                screenPrint(&Map.locRect, 0, "[%d,%d]", player_party->getX(), player_party->getY());
+                return;
+        }
+        
+        if (NULL != Map.subject)
+                screenPrint(&Map.locRect, 0, "[%d,%d]", Map.subject->getX(), Map.subject->getY());
+}
+
 void mapRepaintView(struct mview *view, int flags)
 {
 	int t2, t3, t4, t5, t6, t7, t8;
@@ -830,16 +849,7 @@ void mapRepaintView(struct mview *view, int flags)
 
  done_painting_place:
 
-	// Show the player's location. In combat mode use the leader, else use
-	// the party.
-	class Character *leader = player_party->get_leader();
-	if (leader)
-		screenPrint(&Map.locRect, 0, "[%d,%d]", leader->getX(),
-			    leader->getY());
-	else
-		screenPrint(&Map.locRect, 0, "[%d,%d]", player_party->getX(),
-			    player_party->getY());
-
+        mapRepaintCoordinates();
 	mapRepaintClock();	// since we erased it above
 
 	screenUpdate(&Map.srect);
@@ -1000,7 +1010,8 @@ void mapUpdate(int flags)
 
 void mapSetDirty(void)
 {
-	Map.cam_view->dirty = 1;
+        if (Map.cam_view != NULL)
+                Map.cam_view->dirty = 1;
 }
 
 void mapJitter(bool val)
@@ -1141,7 +1152,7 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
                 Ax = (Ax - Ox) * tile_w + Sx;
         else
                 Ax = (place_w(place) - Ox + Ax)  * tile_w + Sx;
-        if (Ay > Oy)
+        if (Ay >= Oy)
                 Ay = (Ay - Oy) * tile_h + Sy;
         else
                 Ay = (place_h(place) - Oy + Ay)  * tile_h + Sy;
@@ -1153,7 +1164,7 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
                 sBx = (*Bx - Ox) * tile_w + Sx;
         else
                 sBx = (place_w(place) - Ox + *Bx) * tile_w + Sx;
-        if (*By > Oy)
+        if (*By >= Oy)
                 sBy = (*By - Oy) * tile_h + Sy;
         else
                 sBy = (place_h(place) - Oy + *By)  * tile_h + Sy;
@@ -1266,6 +1277,16 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
         *Bx = Px;
         *By = Py;
 
+}
+
+void mapAttachCamera(class Object *subject)
+{
+        Map.subject = subject;
+}
+
+void mapDetachCamera(class Object *subject)
+{
+        Map.subject = NULL;
 }
 
 

@@ -30,12 +30,22 @@
 #include "console.h"
 #include "sound.h"
 #include "player.h"
+#include "terrain.h"
+#include "Field.h"
 
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
 /*****************************************************************************/
+
+ObjectType::ObjectType()
+{
+        list_init(&this->list);
+        speed                  = 0;
+        required_action_points = 0;
+        max_hp                 = 0;
+}
 
 ObjectType::~ObjectType()
 {
@@ -113,11 +123,6 @@ int ObjectType::getType()
         return OBJECT_TYPE_ID;
 }
 
-ObjectType::ObjectType()
-{
-        list_init(&this->list);
-}
-
 char *ObjectType::getTag()
 {
         return tag;
@@ -148,15 +153,29 @@ bool ObjectType::isVisible()
         return true;
 }
 
+int ObjectType::getSpeed()
+{
+        return speed;
+}
+
+int ObjectType::getRequiredActionPoints()
+{
+        return required_action_points;
+}
+
+int ObjectType::getMaxHp()
+{
+        return max_hp;
+}
 /*****************************************************************************/
 
 void Object::init(int x, int y, struct place *place, class ObjectType * type)
 {
+	this->type = type;
 	setX(x);
 	setY(y);
 	container_link.key = type->getLayer();
 	setPlace(place);
-	this->type = type;
 }
 
 void Object::init(class ObjectType * type)
@@ -172,36 +191,63 @@ void Object::relocate(struct place *newplace, int newx, int newy)
         struct place *foc_place;
         int foc_x, foc_y;
 
-	if (getPlace())
+        if (!getPlace()) {
+                setPlace(newplace);
+                setX(newx);
+                setY(newy);
+                place_add_object(getPlace(), this);
+                addView();
+                changePlaceHook();
+        } else if (newplace == getPlace()) {
+                place_move_object(newplace, this, newx, newy);
+                setX(newx);
+                setY(newy);
+        } else {
 		place_remove_object(getPlace(), this);
-	setPlace(newplace);
-	setX(newx);
-	setY(newy);
-	place_add_object(getPlace(), this);
-	mapSetDirty();
+                setPlace(newplace);
+                setX(newx);
+                setY(newy);
+                place_add_object(getPlace(), this);
+                changePlaceHook();
+        }
 
         volume = SOUND_MAX_VOLUME;
 
-        // Only apply distance attenuation in towns and wilderness.
-        if (player_party->context != CONTEXT_COMBAT) {
-                mapGetCameraFocus(&foc_place, &foc_x, &foc_y);
-                distance = place_flying_distance(foc_place, foc_x, foc_y,
-                                                 getX(), getY());
+        // ---------------------------------------------------------------------
+        // Attenuate movement sound based on distance from the camera's focal
+        // point.
+        // ---------------------------------------------------------------------
 
-                // reduce volume proportionally to distance
+        mapGetCameraFocus(&foc_place, &foc_x, &foc_y);
+        if (foc_place == getPlace()) {
+                distance = place_flying_distance(foc_place, foc_x, foc_y, getX(), getY());
                 if (distance > 1)
                         volume /= (distance/2);
+                soundPlay(get_movement_sound(), volume);
         }
 
-        soundPlay(get_movement_sound(), volume);
+        // ---------------------------------------------------------------------
+        // If the camera is attached to this object then update it to focus on
+        // the object's new location.
+        // ---------------------------------------------------------------------
+
+        if (isCameraAttached()) {
+                mapCenterCamera(getX(), getY());
+        }
+                
+        updateView();
+
 }
 
 void Object::remove()
 {
-	if (getPlace()) {
+	if (isOnMap()) {
 		place_remove_object(getPlace(), this);
 		setPlace(0);
+                rmView();
 	}
+        endTurn();
+        attachCamera(false);
 }
 
 bool Object::load(class Loader * loader)
@@ -260,17 +306,35 @@ int Object::getType()
         return OBJECT_ID;
 }
 
-Object::Object():type(NULL), x(0), y(0), place(NULL), selected(false),
-                 destroyed(false), turn(0) 
+Object::Object()
 {
-        list_init(&this->container_link.list);
-        script_tag = 0;
+        setup();
 }
 
 Object::Object(class ObjectType * type) 
 {
         this->type = type;
+        setup();
+}
+
+void Object::setup()
+{
         list_init(&this->container_link.list);
+        list_init(&this->turn_list);
+
+        x               = -1;
+        y               = -1;
+        place           = NULL;
+        selected        = false;
+        destroyed       = false;
+        script_tag      = 0;
+        action_points   = 0; /* FIXME: assumes no debt */
+        control_mode    = CONTROL_MODE_AUTO;
+        camera_attached = false;
+        hp              = 0;
+        is_on_map       = false;
+        conv            = NULL;
+        view            = NULL;
 }
 
 Object::~Object()
@@ -317,11 +381,6 @@ class ObjectType *Object::getObjectType()
         return type;
 }
 
-int Object::getTurn(void)
-{
-        return turn;
-}
-
 bool Object::isDestroyed()
 {
         return destroyed;
@@ -351,11 +410,17 @@ void Object::changeY(int dy)
 void Object::setPlace(struct place *place)
 {
         this->place = place;
+        is_on_map = (place != NULL);
+
+        if (place &&
+            0 == strcmp(place->name, "The Great Wild"))
+                printf("Set %s to place %s\n", getName(), place ? place->name : "null");
 }
 
 void Object::select(bool val)
 {
         selected = val;
+        mapUpdate(0);
 }
 
 void Object::destroy()
@@ -369,24 +434,12 @@ int Object::getLight()
         return 0;
 }
 
-void Object::setTurn(int turn)
+void Object::exec(struct exec_context *context)
 {
-        this->turn = turn;
 }
 
-void Object::advanceTurn(int turn)
+void Object::synchronize()
 {
-        setTurn(turn);
-}
-
-void Object::changeTurn(int delta)
-{
-        turn += delta;
-}
-
-void Object::synchronize(int turn)
-{
-        setTurn(turn);
 }
 
 bool Object::isVisible()
@@ -419,12 +472,467 @@ int Object::getActivity()
         return 0;
 }
 
-struct conv *Object::getConversation()
+int Object::getActionPointsPerTurn()
 {
-        return NULL;
+        // ---------------------------------------------------------------------
+        // If 'Quicken' is in effect then give player-controlled objects bonus
+        // action points per turn.
+        // ---------------------------------------------------------------------
+
+        if (Quicken > 0 && isPlayerControlled()) {
+                return getSpeed() * Quicken;
+        }
+
+        // ---------------------------------------------------------------------
+        // If 'TimeStop' is in effect then give action points ONLY to
+        // player-controlled objects.
+        // ---------------------------------------------------------------------
+
+        if (TimeStop && ! isPlayerControlled()) {
+                return 0;
+        }
+
+        return getSpeed();
 }
 
-void Object::hitByOrdnance(class ArmsType *ordnance)
+void Object::applyPerTurnEffects()
 {
+	struct terrain *terrain;
+        class Field *field;
+        int effects = 0;
+
+        /* apply any pre-existing effects */
+        applyExistingEffects();
+
+        if (isDead())
+                return;
+
+        /* collect terrain effects */
+	terrain = place_get_terrain(getPlace(), getX(), getY());
+        effects |= terrain->effects;
+
+        /* collect field effects */
+        field = (class Field *)place_get_object(getPlace(), getX(),
+                                                getY(), field_layer);
+        if (field != NULL)
+                effects |= field->getObjectType()->getEffects();
+
+        /* apply the collected effects */
+        if (effects & TERRAIN_BURN) {
+                burn();
+        }
+        if (effects & TERRAIN_POISON) {
+                poison();
+        }
+        if (effects & EFFECT_SLEEP) {
+                sleep();
+        }
+
+}
+
+void Object::burn()
+{
+}
+
+void Object::poison()
+{
+}
+
+void Object::sleep()
+{
+}
+
+void Object::damage(int amount)
+{
+}
+
+void Object::applyExistingEffects()
+{
+}
+
+int Object::getActionPoints()
+{
+        return action_points;
+}
+
+void Object::decActionPoints(int points)
+{
+        action_points -= points;
+}
+
+void Object::endTurn()
+{
+        if (action_points > 0)
+                action_points = 0;
+}
+
+void Object::startTurn()
+{
+        action_points += getActionPointsPerTurn();
+}
+
+int Object::getSpeed()
+{
+        return getObjectType()->getSpeed();
+}
+
+int Object::getRequiredActionPoints()
+{
+        return getObjectType()->getRequiredActionPoints();
+}
+
+bool Object::isOnMap()
+{
+        return is_on_map;
+}
+
+bool Object::isDead()
+{
+        return false;
+}
+
+bool Object::isHostile(int alignment)
+{
+        return false;
+}
+
+enum control_mode Object::getControlMode()
+{
+        return control_mode;
+}
+
+void Object::setControlMode(enum control_mode mode)
+{
+        control_mode = mode;
+}
+
+void Object::attachCamera(bool val)
+{
+        if (camera_attached == val)
+                return;
+
+        camera_attached = val;
+
+        if (val)
+                mapAttachCamera(this);
+        else
+                mapDetachCamera(this);
+}
+
+bool Object::isCameraAttached()
+{
+        return camera_attached;
+}
+
+bool Object::isTurnEnded()
+{
+        return (getActionPoints() <= 0 ||
+                isDead() ||
+                Quit);
+}
+
+void Object::charm(int alignment)
+{
+
+}
+
+bool Object::isCharmed()
+{
+        return false;
+}
+
+bool Object::isNativelyHostile(int alignment)
+{
+        return false;
+}
+
+bool Object::isPlayerPartyMember()
+{
+        return false;
+}
+
+void Object::unCharm()
+{
+
+}
+
+bool Object::addToInventory(class Object *object)
+{
+        return false;
+}
+
+void Object::heal(int amount)
+{
+        amount = min(amount, getMaxHp() - hp);
+        hp += amount;
+}
+
+bool Object::isPlayerControlled()
+{
+        return false;
+}
+
+int Object::getMaxHp()
+{
+        return getObjectType()->getMaxHp();
+}
+
+int Object::getHp()
+{
+        return hp;
+}
+
+bool Object::isCompanionOf(class Object *other)
+{
+        return false;
+}
+
+struct conv *Object::getConversation()
+{
+        return conv;
+}
+
+void Object::clearAlignment(int alignment)
+{
+}
+
+int Object::getPmask(void)
+{
+        return 0;
+}
+
+bool Object::putOnMap(struct place *new_place, int new_x, int new_y, int r)
+{
+        // ---------------------------------------------------------------------
+        // Put an object on a map. If possible, put it at (new_x, new_y). If
+        // that's not possible then put it at some other (x, y) such that:
+        // 
+        // o (x, y) is with radius r of (new_x, new_y)
+        //
+        // o The object can find a path from (x, y) to (new_x, new_y)
+        //
+        // If no such (x, y) exists then return false without placing the
+        // object.
+        // ---------------------------------------------------------------------
+
+        char *visited;
+        bool ret = false;
+        int i;
+        int rx;
+        int ry;
+        int *q_x;
+        int *q_y;
+        int index;
+        int q_head;
+        int q_tail;
+        int x_offsets[] = { -1, 1, 0, 0 };
+        int y_offsets[] = { 0, 0, -1, 1 };
         
+        printf("Putting %s near (%d %d)\n", getName(), new_x, new_y);
+
+        // ---------------------------------------------------------------------
+        // Althouth the caller specified a radius, internally I use a bounding
+        // box. Assign the upper left corner in place coordinates. I don't
+        // *think* I have to worry about wrapping coordinates because all the
+        // place_* methods should do that internally.
+        // ---------------------------------------------------------------------
+
+        rx = new_x - (r / 2);
+        ry = new_y - (r / 2);
+
+        // ---------------------------------------------------------------------
+        // Initialize the 'visited' table and the coordinate search queues.
+        // ---------------------------------------------------------------------
+
+        visited = (char*)calloc(sizeof(char), r * r);
+        if (NULL == visited)
+                return false;
+        
+        q_x = (int*)calloc(sizeof(int), r * r);
+        if (NULL == q_x) {
+                goto free_visited;
+        }
+
+        q_y = (int*)calloc(sizeof(int), r * r);
+        if (NULL == q_y) {
+                goto free_q_x;
+        }
+
+        // ---------------------------------------------------------------------
+        // Enqueue the preferred location to start the search.
+        // ---------------------------------------------------------------------
+
+        q_head      = 0;
+        q_tail      = 0;
+        q_x[q_tail] = new_x;
+        q_y[q_tail] = new_y;
+        q_tail++;
+
+        // ---------------------------------------------------------------------
+        // Run through the search queue until it is exhausted or a safe
+        // position has been found.
+        // ---------------------------------------------------------------------
+
+        while (q_head != q_tail) {
+
+                // -------------------------------------------------------------
+                // Dequeue the next location to check.
+                // -------------------------------------------------------------
+
+                new_x = q_x[q_head];
+                new_y = q_y[q_head];
+                q_head++;
+
+                printf("Checking (%d,%d)...", new_x, new_y);
+
+                // -------------------------------------------------------------
+                // Is the location outside the search radius?
+                // -------------------------------------------------------------
+
+                if (new_x < rx        ||
+                    new_y < ry        ||
+                    new_x >= (rx + r) ||
+                    new_y >= (ry + r)) {
+                        printf("outside the radius\n");
+                        continue;
+                }
+
+                // -------------------------------------------------------------
+                // Has the location already been visited? (If not then mark it
+                // as visited now).
+                // -------------------------------------------------------------
+                
+                index = (new_y - ry) * r + (new_x - rx);
+                if (0 != visited[index]) {
+                        printf("already checked\n");
+                        continue;
+                }
+                visited[index] = 1;
+
+                // -------------------------------------------------------------
+                // Is the location off the map or impassable?
+                // -------------------------------------------------------------
+
+                if (place_off_map(new_place, new_x, new_y) ||
+                    ! place_is_passable(new_place, new_x, new_y, getPmask(), 0)) {
+                        printf("off-map or impassable\n");
+                        continue;
+                }
+
+                // -------------------------------------------------------------
+                // Is the location occupied or hazardous?
+                // -------------------------------------------------------------
+
+                if (place_is_occupied(new_place, new_x, new_y) ||
+                    place_is_hazardous(new_place, new_x, new_y)) {
+
+                        printf("occupied or hazardous\n");
+
+                        // -----------------------------------------------------
+                        // This place is not suitable, but its neighbors might
+                        // be. Put them on the queue.
+                        // -----------------------------------------------------
+
+                        for (i = 0; i < array_sz(x_offsets); i++) {
+                                assert(q_tail < (r * r));
+                                q_x[q_tail] = new_x + x_offsets[i];
+                                q_y[q_tail] = new_y + y_offsets[i];
+                                q_tail++;
+                        }
+                        
+                        continue;
+                }
+
+                // -------------------------------------------------------------
+                // I've found a good spot, and I know that I can pathfind back
+                // to the preferred location from here because of the manner in
+                // which I found it.
+                //
+                // REVISIT: Would relocate() work just as well in place of the
+                //          following code?
+                //
+                // -------------------------------------------------------------
+
+                printf("OK!\n");
+
+#if 0
+                setX(new_x);
+                setY(new_y);
+                setPlace(new_place);
+                place_add_object(place, this);
+
+                if (isPlayerControlled()) {
+                        mapAddView(getView());
+                        mapCenterView(getView(), getX(), getY());
+                        mapSetRadius(getView(), min(getVisionRadius(), MAX_VISION_RADIUS));;
+                        mapRecomputeLos(getView());
+                }
+#else
+                relocate(new_place, new_x, new_y);
+#endif
+                ret = true;
+
+                goto done;
+        }
+
+        // ---------------------------------------------------------------------
+        // Didn't find anyplace suitable. Return false. If the caller wants to
+        // force placement I'll leave it to their discretion.
+        // ---------------------------------------------------------------------
+
+        printf("NO PLACE FOUND!\n");
+
+ done:
+        free(q_y);
+ free_q_x:
+        free(q_x);
+ free_visited:
+        free(visited);
+
+        return ret;
+
+}
+
+struct mview *Object::getView()
+{
+        return view;
+}
+
+int Object::getVisionRadius()
+{
+        return 0;
+}
+
+void Object::addView()
+{
+        if (NULL != getView()) {
+                mapAddView(getView());
+                updateView();
+        }
+}
+
+void Object::rmView()
+{
+        if (NULL != getView()) {
+                mapRmView(getView());
+        }
+}
+
+void Object::updateView()
+{
+        if (NULL != getView()) {
+                mapCenterView(getView(), getX(), getY());
+                mapSetRadius(getView(), min(getVisionRadius(), MAX_VISION_RADIUS));
+                mapRecomputeLos(getView());
+                mapSetDirty();
+        }
+}
+
+void Object::setView(struct mview *new_view)
+{
+        view = new_view;
+}
+
+void Object::changePlaceHook()
+{
 }

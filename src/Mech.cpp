@@ -470,8 +470,8 @@ void Mech::describe(int count)
                 consolePrint(" (invisible)");
 }
 
-void Mech::advanceTurn(int turn)
+void Mech::exec(struct exec_context *cntxt)
 {
         activate(MECH_TURN);
-        Object::advanceTurn(turn);
+        Object::exec(cntxt);
 }

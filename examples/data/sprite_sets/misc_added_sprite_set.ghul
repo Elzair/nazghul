@@ -36,7 +36,7 @@ SPRITE_SET ss_mine {
   
   image_width  32;
   image_height 32;
-  file_rows    8;
+  file_rows    16
   file_cols    8;
   file_offx    0;
   file_offy    0;
@@ -99,6 +99,23 @@ SPRITE_SET ss_mine {
     SPRITE(s_arrow_slit,                     1, 62, normal);
     SPRITE(s_window_in_stone,                1, 63, normal);
 
+    // Trail-on-grass
+    SPRITE(s_trail_0, 1, 64, normal);
+    SPRITE(s_trail_1, 1, 65, normal);
+    SPRITE(s_trail_2, 1, 66, normal);
+    SPRITE(s_trail_3, 1, 67, normal);
+    SPRITE(s_trail_4, 1, 72, normal);
+    SPRITE(s_trail_5, 1, 73, normal);
+    SPRITE(s_trail_6, 1, 74, normal);
+    SPRITE(s_trail_7, 1, 75, normal);
+    SPRITE(s_trail_8, 1, 80, normal);
+    SPRITE(s_trail_9, 1, 81, normal);
+    SPRITE(s_trail_a, 1, 82, normal);
+    SPRITE(s_trail_b, 1, 83, normal);
+    SPRITE(s_trail_c, 1, 88, normal);
+    SPRITE(s_trail_d, 1, 89, normal);
+    SPRITE(s_trail_e, 1, 90, normal);
+    SPRITE(s_trail_f, 1, 91, normal);
   }
 } /* SPRITE_SET ss_mine */
 

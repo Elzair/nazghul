@@ -65,7 +65,7 @@ extern "C" {
                                            struct images *images,
                                            int n_facings, int facings);
         extern void spriteDestroy(struct sprite *sprite);
-        extern void spriteInit(void);
+        extern int spriteInit(void);
         extern void spriteAdd(struct sprite *sprite);
         extern struct sprite *spriteLookup(char *tag);
         extern void spritePaint(struct sprite *sprite, int frame, int x, int y);

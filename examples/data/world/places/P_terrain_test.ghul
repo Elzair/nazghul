@@ -142,7 +142,7 @@ PLACE  p_terrain_test {
 
     // To place a vehicle, use a line like the below:
     // vehicle_type x y facing vehicle_HP;
-    vt_ship  2 12 east 100;  // Vehicle (ship)
+    //vt_ship  2 12 east 100;  // Vehicle (ship)
     vt_horse 2 15 east 100;  // Vehicle (horse)
 
     // To place a mechanism, use a line like the below:

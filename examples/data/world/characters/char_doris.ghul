@@ -66,6 +66,7 @@ CONV conv_doris {
         }
         NATIVE {
                 NAME      resp_doris_name;
+                ROOM      resp_doris_trade;
                 DEFAULT   resp_doris_default;
                 JOB       resp_doris_trade;
                 JOIN      resp_doris_join;
@@ -80,7 +81,6 @@ SCHED sched_doris {
      // hr mn x  y  w  h  act
         0  0  58 61 1  1  SLEEPING;
         8  0  47 59 10 1  WORKING;
-        24 0  58 61 1  1  SLEEPING;
 }
 
 CHAR char_doris {

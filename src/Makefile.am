@@ -32,10 +32,12 @@ nazghul_SOURCES =		\
         event.c \
         event.h \
         Field.h \
+	Field.cpp \
         floodfill.c \
         foogod.c \
         foogod.h \
         formation.h \
+	formation.c \
         game.c \
         game.h \
         hash.c \
@@ -116,4 +118,6 @@ nazghul_SOURCES =		\
 	Missile.cpp \
 	Missile.h \
 	cmd.c \
-	cmd.h
+	cmd.h \
+	clock.c \
+	clock.h 

@@ -171,7 +171,7 @@ PLACE  p_empire_city {
   underground 0;
   objects {
 
-    vt_ship 44 35 west 100;
+    // vt_ship 44 35 west 100;
 
     // doors
     mech_door_in_stone door 62 33 "closed";
@@ -223,8 +223,8 @@ PLACE  p_empire_city {
     t_town_guards              28 61 (ALIGN_TOWN) 1 c_guard;
     t_town_guards              35 61 (ALIGN_TOWN) 1 c_guard;
 
-    t_nixies                   33 29 (ALIGN_MONSTER) 1 null;
-    t_water_elemental          34 29 (ALIGN_TOWN)    1 c_water_elemental;
+    t_nixies                   33 29 (ALIGN_TOWN) 1 null;
+    t_water_elemental          34 29 (ALIGN_TOWN) 1 null;
 
     // special characters
     ch_Hawknoz                 16 57 (ALIGN_TOWN) 1;

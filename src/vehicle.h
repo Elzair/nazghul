@@ -58,32 +58,30 @@ class VehicleType:public ObjectType {
 	virtual int getPmask() {
 		return pmask;
 	}
-	virtual int getSpeed() {
-		return speed;
-	}
 	virtual char *getMvDesc() {
 		return mv_desc;
 	}
 	virtual char *getMvSound() {
 		return mv_sound;
 	}
-	virtual bool mustTurn() {
-		return must_turn;
-	}
+	virtual bool mustTurn();
         virtual bool canFace(int facing);
         virtual class Object *createInstance();
+	virtual bool load(class Loader * loader);
+        virtual int getWindPenalty(int facing);
 
-        int max_hp;
         struct terrain_map *map;
         struct formation *formation;
 
  protected:
-        int speed;
         int pmask;
         char *mv_desc;
         char *mv_sound;
         class ArmsType *ordnance;
         bool must_turn;
+        int tailwind_penalty;
+        int headwind_penalty;
+        int crosswind_penalty;
 };
 
 class Vehicle:public Object {
@@ -124,27 +122,23 @@ class Vehicle:public Object {
 	virtual char *getMvSound() {
 		return getObjectType()->getMvSound();
 	}
-	virtual bool mustTurn() {
-		return getObjectType()->mustTurn();
-	}
+	virtual bool mustTurn();
         virtual int getFacing();
 	virtual bool load(class Loader * loader);
         virtual int get_facing_to_fire_weapon(int dx, int dy);
-        virtual bool fire_weapon(int dx, int dy);
+        virtual bool fire_weapon(int dx, int dy, class Object *user);
         virtual void paint(int sx, int sy);
         virtual struct formation *get_formation();
         virtual struct place *getPlace();
 
         bool turn(int dx, int dy, int *cost);
-        int getSpeed();
+        int getMovementCostMultiplier();
         void damage(int amount);
-        void repair();
         virtual int getX();
         virtual int getY();
 
         class Object *occupant;
         int facing;
-        int hp;
  protected:
         bool setFacing(int facing);
 

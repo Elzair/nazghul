@@ -26,14 +26,11 @@
 #define COMBAT_MAP_H    19
 
 class Character;
-struct place;
 
 extern int combatInit(void);
 extern int combatLoad(class Loader *loader);
 extern char combatGetState(void);
-extern bool combatAddNpcParty(class NpcParty * party, int dx, int dy,
-			      bool located, int x, int y);
-//extern void combatKIA(class Character *killed);
+extern bool combatAddNpcParty(class NpcParty * party, int dx, int dy, bool located, struct place *place, int x, int y);
 
 /* This is needed for walking around while zoomed out. Currently only the
    special ^Z command (which is intended for map editing) uses it. */
@@ -49,6 +46,20 @@ struct combat_info {
 	struct move_info *move;
 };
 
+enum combat_state {
+        COMBAT_STATE_FIGHTING,
+        COMBAT_STATE_LOOTING,
+        COMBAT_STATE_CAMPING,
+        COMBAT_STATE_DONE,
+};
+
+extern enum combat_state combat_get_state(void);
+extern void combat_set_state(enum combat_state);
 extern bool combat_enter(struct combat_info *info);
+extern bool combat_rendezvous_party(int max_path_len);
+extern void combat_exit(void);
+extern void combat_analyze_results_of_last_turn(void);
+extern void combat_fill_position_info(struct position_info *info, struct place *place, int x, int y, int dx, int dy, bool defend);
+extern bool combat_place_character(class Character * pm, void *data);
 
 #endif

@@ -38,7 +38,7 @@ extern "C" {
 	struct mview;
 	struct place;
 
-	extern int mapInit(char *los);
+	extern int mapInit(void);
 	extern void mapFlash(int mdelay);
 	extern void mapSetPlace(struct place *place);
 
@@ -82,6 +82,10 @@ extern "C" {
                                          struct sprite *sprite, 
                                          struct place *place,
                                          class Missile *missile);
+
+        void mapAttachCamera(class Object *subject);
+        void mapDetachCamera(class Object *subject);
+        extern void mapSetLosStyle(char *los);
 
 #ifdef __cplusplus
 }

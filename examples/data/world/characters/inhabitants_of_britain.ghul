@@ -31,7 +31,7 @@ SCHED sched_Hawknoz {
   7  0  11 57 10 3  WORKING;
   12 0  55 52 1  1  EATING;
   13 0  11 57 10 3  WORKING;
-  5  0  21 29 8  7  RELAXING;
+  17 0  21 29 8  7  RELAXING;
   19 0  25 60 1  1  SLEEPING;
 }
 

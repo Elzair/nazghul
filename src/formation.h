@@ -36,4 +36,7 @@ struct formation {
 	struct formation_entry *entry;
 };
 
+extern int formation_init(void);
+extern struct formation *formation_get_default(void);
+
 #endif

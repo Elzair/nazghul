@@ -22,42 +22,55 @@
 #ifndef pinfo_h
 #define pinfo_h
 
+// -----------------------------------------------------------------------------
+// The ugly position_info struct is used by the algorithm which places party
+// members on a map. It unsightly, but not wholly foul, and will likely live on
+// for a while until the placement algorithm is completely revisited.
+// -----------------------------------------------------------------------------
+
 struct position_info {
 
-        // The coordinates of the 'party'; the center of the placement
-        // rectangle for a party.
-        int x, y;
+        struct place *place; // The place where the members are getting
+                             // distributed.
 
-        // The direction vector for the party.
-        int dx, dy;
+        int x, y;            // The "home position". The placement rectangle
+                             // (see below) will be centered on this
+                             // location. If the placement algorithm fails to
+                             // find a safe place to put a member (due to
+                             // passability, etc) it will put the member
+                             // here. In extreme cases the whole party may get
+                             // stacked on this one location.
 
-        // The placement rectangle. Upon entry to combat all party members must
-        // be placed somewhere in this rectangle or they will not be placed at
-        // all.
-        int rx, ry, rw, rh;
+        int dx, dy;          // The orientation vector (most formations are
+                             // directional). Typically set to the last
+                             // direction the party was travelling in.
 
-        // When running the placement algorithm, the initial preferred location
-        // of a party member.
-        int px, py;
+        int rx, ry, rw, rh;  // The placement rectangle.
 
-        // When running the placement algorithm, the pmask of the party member
-        // being placed.
-        int pmask;
+        int px, py;          // The initial preferred location of a party member
+                             // (this is set just before running the placement
+                             // algorithm on a member). This depends on the
+                             // "order" of the member in the party, the
+                             // formation, and the direction vector.
 
-        // When running the placement algorithm, true iff the party member must
-        // be able to pathfind back to the edge.
-        bool find_edge;
+        int pmask;           // The passability mask of the member being placed.
 
-        // When running the placement algorithm, true iff the party member
-        // must be able to pathfind back to the party coordinates.
-        bool find_party;
+        bool find_edge;      // When running the placement algorithm, true iff
+                             // the party member must be able to pathfind back
+                             // to the edge.
 
-        // Count of the number of party members actually placed. Used to detect
-        // when none of a party found a location.
-        int placed;
 
-        // The formation to use when placing party members.
-        struct formation *formation;
+        bool find_party;     // When running the placement algorithm, true iff
+                             // the party member must be able to pathfind back
+                             // to the party coordinates.
+
+        int placed;          // Count of the number of party members actually
+                             // placed. Used to detect when none of a party
+                             // found a location.
+
+        struct formation *formation;     // The formation to use when placing
+                                         // party members.
+
 
 };
 

@@ -34,6 +34,7 @@ struct {
 	SDL_Rect combatRect;
 	SDL_Rect goldRect;
 	SDL_Rect hullRect;
+        SDL_Rect effectsRect;
 } Foogod;
 
 void foogodAdvanceTurns(void)
@@ -66,6 +67,12 @@ void foogodInit(void)
 	Foogod.hullRect.w = FOOGOD_W / 3;
 	Foogod.hullRect.h = ASCII_H;
 
+        // effects
+	Foogod.effectsRect.x = FOOGOD_X + FOOGOD_W / 3;
+	Foogod.effectsRect.y = FOOGOD_Y + ASCII_H;
+	Foogod.effectsRect.w = FOOGOD_W / 3;
+	Foogod.effectsRect.h = ASCII_H;
+
 	// gold
 	Foogod.goldRect.w = FOOGOD_W / 3;
 	Foogod.goldRect.x = FOOGOD_X + FOOGOD_W - FOOGOD_W / 3;
@@ -82,17 +89,21 @@ void foogodInit(void)
 void foogodRepaint(void)
 {
 	screenErase(&Foogod.screenRect);
-	screenPrint(&Foogod.turnRect, 0, "Turn: %d", Turn);
+	screenPrint(&Foogod.turnRect, 0, "Turn: %d", player_party->getTurnCount());
 	screenPrint(&Foogod.foodRect, 0, "Food: %d", player_party->food);
-	screenPrint(&Foogod.goldRect, SP_RIGHTJUSTIFIED, "Gold: %d",
-		    player_party->gold);
-	screenPrint(&Foogod.combatRect, SP_RIGHTJUSTIFIED, "Combat: %c",
-		    combatGetState());
+	screenPrint(&Foogod.goldRect, SP_RIGHTJUSTIFIED, "Gold: %d",  player_party->gold);
+	screenPrint(&Foogod.combatRect, SP_RIGHTJUSTIFIED, "Combat: %c", combatGetState());
 
 	if (player_party->vehicle) {
-		screenPrint(&Foogod.hullRect, 0, "Hull: %d",
-			    player_party->vehicle->hp);
+		screenPrint(&Foogod.hullRect, 0, "Hull: %d", player_party->vehicle->getHp());
 	}
+
+        if (TimeStop || MagicNegated || Quicken) {
+                screenPrint(&Foogod.effectsRect, 0, "Eff: %s%s%s", 
+                            (TimeStop     ? "T" : ""),
+                            (Quicken      ? "Q" : ""),
+                            (MagicNegated ? "N" : ""));
+        }
 
 	screenUpdate(&Foogod.screenRect);
 }

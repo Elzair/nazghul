@@ -26,14 +26,13 @@
 #include "player.h"
 #include "combat.h"
 #include "Loader.h"
-#include "conv.h"
 #include "species.h"
 #include "occ.h"
-#include "sched.h"
 #include "wind.h"
 #include "Mech.h"
 #include "vehicle.h"
 #include "console.h"
+#include "formation.h"
 
 #include <stdio.h>
 
@@ -50,7 +49,7 @@
 
 NpcPartyType::NpcPartyType():formation(NULL), i_group(-1), n_groups(0), 
                              groups(NULL),
-                             pmask(0), vrad(0), speed(0)
+                             pmask(0), vrad(0)
 {
         sleep_sprite = NULL;
 }
@@ -249,19 +248,17 @@ bool NpcPartyType::load(class Loader * loader)
 
 NpcParty::NpcParty()
 {
-	sched = 0;
 	act = WORKING;
 	alignment = 0;
 	fdx = 0;
 	fdy = 0;
-	home = 0;
 	size = 0;
-	conv = 0;
 	isWrapper = false;
 	list_init(&members);
 	vehicle = 0;
-	formation = 0;
-        destroy_on_combat_exit = true;
+	formation = NULL;
+        wandering = false;
+        memset(&pinfo, 0, sizeof(pinfo));
 }
 
 NpcParty::~NpcParty()
@@ -272,8 +269,6 @@ NpcParty::~NpcParty()
 bool NpcParty::turn_vehicle(void)
 {
 	int cost = 0;
-
-        printf("turn_vehicle\n");
 
 	// Three possible outcomes:
 	// 
@@ -289,8 +284,7 @@ bool NpcParty::turn_vehicle(void)
 	if (!vehicle || !vehicle->turn(dx, dy, &cost) || !vehicle->mustTurn())
 		return false;
 
-	cost *= getPlace()->scale;
-	turn_cost += cost;
+        action_points -= cost;
 
 	return true;
 }
@@ -371,8 +365,6 @@ bool NpcParty::move(int dx, int dy)
 	class Portal *portal;
 	class Mech *mech;
 
-        printf("move\n");
-
 	this->dx = dx;
 	this->dy = dy;
 
@@ -397,7 +389,19 @@ bool NpcParty::move(int dx, int dy)
 	}
 
 	/* Check if the player is there. */
-	if (newx == player_party->getX() && newy == player_party->getY()) {
+	if (newx == player_party->getX() && 
+            newy == player_party->getY()) {
+
+                // -------------------------------------------------------------
+                // Subtle: check if the player party is on the map. This
+                // catches the case where the player has just engaged another
+                // npc party in combat on this turn. I don't want this npc
+                // party to move to that spot because then when the player
+                // party exits combat they will be on top of this npc party.
+                // -------------------------------------------------------------
+                
+                if (! player_party->isOnMap())
+                        return false;
 
 		/* If this party is hostile to the player then begin combat */
 		if (isHostile(player_party->alignment)) {
@@ -417,13 +421,12 @@ bool NpcParty::move(int dx, int dy)
 			cinfo.defend = true;
 			cinfo.move = &info;
 
-                        this->destroy_on_combat_exit = false;
-
-			player_party->move_to_combat(&cinfo);
+			player_party->move_to_wilderness_combat(&cinfo);
+                        endTurn();
                         return true;
 		}
 
-                if (player_party->resting()) {
+                if (player_party->isResting()) {
 
                         /* If the player is sleeping then kick him out of
                          * bed */
@@ -465,57 +468,23 @@ bool NpcParty::move(int dx, int dy)
 		return false;
 	}
 
-	// Check for terrain hazards
-	if (place_is_hazardous(newplace, newx, newy))
+        /* When wandering, don't wander over terrain hazards. When pathfinding,
+         * assume that braving the hazard is the best course. */
+	if (wandering && place_is_hazardous(newplace, newx, newy))
                 return false;
 
 
 	// Check for a mech (not for passability, for sending the STEP
         // signal)
-	mech = (class Mech *) place_get_object(Place, newx, newy, mech_layer);
+	mech = (class Mech *) place_get_object(getPlace(), newx, newy, mech_layer);
 	if (mech)
 		mech->activate(MECH_STEP);
 
 	relocate(newplace, newx, newy);
 
-	turn_cost = place_get_movement_cost(getPlace(), getX(), getY());
-	turn_cost *= getSpeed();
+	action_points -= place_get_movement_cost(getPlace(), getX(), getY());
 
         return true;
-}
-
-void NpcParty::wander()
-{
-	int dx = 0, dy = 0;
-
-        printf("wander\n");
-
-	loitering = true;
-
-	/* Roll for direction */
-	dx = random() % 3 - 1;
-	if (!dx)
-		dy = random() % 3 - 1;
-
-	if (dx || dy) {
-
-		// If this party is on a schedule then limit wandering to the
-		// area specied in the current appt.
-		if (sched) {
-			int newx, newy;
-			newx = getX() + dx;
-			newy = getY() + dy;
-			if (newx < sched->appts[appt].x ||
-			    newx > (sched->appts[appt].x +
-				    sched->appts[appt].w - 1) ||
-			    newy < sched->appts[appt].y ||
-			    newy > (sched->appts[appt].y +
-				    sched->appts[appt].h) - 1)
-				return;
-		}
-
-		move(dx, dy);
-	}
 }
 
 bool NpcParty::gotoSpot(int mx, int my)
@@ -528,8 +497,6 @@ bool NpcParty::gotoSpot(int mx, int my)
 	int dy;
         bool ret = true;
 
-        printf("gotoSpot\n");
-
 	/* Look for a path. */
 	memset(&as_info, 0, sizeof(as_info));
 	as_info.x0 = getX();
@@ -537,10 +504,12 @@ bool NpcParty::gotoSpot(int mx, int my)
 	as_info.x1 = mx;
 	as_info.y1 = my;
 	as_info.flags = PFLAG_IGNOREMECHS;
-	path = place_find_path(Place, &as_info, getPmask());
+	path = place_find_path(Place, &as_info, getPmask(), NULL);
 
 	if (!path)
 		return false;
+
+        //dump_path(path);
 
 	/* The first node in the path is the starting location. Get the next
 	 * step. */
@@ -582,7 +551,6 @@ bool NpcParty::attack_with_ordnance(int d)
                                    &dx, &dy);
 	clamp(dx, -1, 1);
 	clamp(dy, -1, 1);
-        printf("%s -> player: [%d %d]\n", getName(), dx, dy);
 
 	// Check if the player is on a major axes (assumes we must fire in a
 	// straight line -- always true for now).
@@ -595,14 +563,11 @@ bool NpcParty::attack_with_ordnance(int d)
 		    vehicle->getFacing() != SOUTH) {
 			int cost;
 			vehicle->turn(0, 1, &cost);
-			turn_cost += cost;
+			action_points -= cost;
 			return true;
 		}
 
-		ret = vehicle->fire_weapon(dx, dy);
-		turn_cost += 
-                        place_adjust_turn_cost(getPlace(),
-                                               TURNS_TO_FIRE_VEHICLE_WEAPON);
+		ret = vehicle->fire_weapon(dx, dy, this);
 		assert(ret);	// to remind me if I change some assumptions
 		return true;
 	}
@@ -614,27 +579,33 @@ bool NpcParty::attack_with_ordnance(int d)
 			vehicle->turn(1, 0, &cost);
 			return true;
 		}
-		ret = vehicle->fire_weapon(dx, dy);
-		turn_cost += 
-                        place_adjust_turn_cost(getPlace(),
-                                               TURNS_TO_FIRE_VEHICLE_WEAPON);
+		ret = vehicle->fire_weapon(dx, dy, this);
 		assert(ret);	// to remind me if I change some assumptions
 		return true;
 	}
 	// In range but no lined up on an axis. For now just return and let out
 	// strategy be to close with the player's ship. In future I might want
 	// to try and go to find and move toward the nearest axis point.
-	printf("%s: not lined up to fire\n", getName());
 	return false;
+}
+
+void NpcParty::wander()
+{
+	int dx = 0, dy = 0;
+
+	/* Roll for direction */
+	dx = random() % 3 - 1;
+	if (!dx)
+		dy = random() % 3 - 1;
+
+	if (dx || dy) {
+		move(dx, dy);
+	}
 }
 
 void NpcParty::work()
 {
 	int d;
-
-        printf("work\n");
-
-	loitering = false;
 
 	if (getAlignment() & player_party->alignment) {
 		// This party is friendly to the player, so just wander for now
@@ -677,9 +648,8 @@ void NpcParty::work()
                 cinfo.defend = true;
                 cinfo.move = &info;
                 
-                this->destroy_on_combat_exit = false;
-
-                player_party->move_to_combat(&cinfo);
+                player_party->move_to_wilderness_combat(&cinfo);
+                endTurn();
 		return;
 	}
 
@@ -705,114 +675,39 @@ void NpcParty::work()
 	}
 }
 
-bool NpcParty::commute()
+void NpcParty::exec(struct exec_context *cntxt)
 {
-	int tx, ty;
-
-	tx = sched->appts[appt].x + sched->appts[appt].w / 2;
-	ty = sched->appts[appt].y + sched->appts[appt].h / 2;
-
-	if (!gotoSpot(tx, ty)) {
-                // No path
-                return false;
-        }
-            
-        if (getX() == tx && getY() == ty) {
-                // Arrived.
-                printf("%s done COMMUTING\n", getName());
-                act = sched->appts[appt].act;
-        }
-
-        // Made at least some progress
-        return true;
-}
-
-void NpcParty::synchronize(int turn)
-{
-	int hr, min;
-
-	setTurn(turn);
-
-	if (!sched || sched->n_appts == 0)
-		return;
-
-	for (appt = 0; appt < sched->n_appts; appt++) {
-		hr = sched->appts[appt].hr;
-		min = sched->appts[appt].min;
-
-		if (hr > Clock.hour || (Clock.hour == hr && min > Clock.min)) {
-			break;
-		}
-	}
-
-	// The loader must ensure that the first appt in every schedule starts
-	// at hour zero.
-	assert(appt);
-
-	// Back up to the previous appt.
-	appt--;
-
-	relocate(getPlace(),
-		 sched->appts[appt].x + sched->appts[appt].w / 2,
-		 sched->appts[appt].y + sched->appts[appt].h / 2);
-
-	act = sched->appts[appt].act;
-}
-
-void NpcParty::advanceTurn(int turn)
-{
-        printf("advanceTurn\n");
-
         assert(!isDestroyed());
 
-	turn_cost = 0;
+        printf("%s exec [%d %d]\n", getName(), getX(), getY());
 
-	// If this npc is on a schedule then check if it's time to commute to
-	// the next appointment.
-	if (sched) {
-		int nextAppt = appt + 1;
+        action_points += getActionPointsPerTurn();
+        if (action_points <= 0)
+                return;
 
-		// Special case: the last appointment of the day is over when
-		// the clock rolls over at midnight. We can detect clock
-		// rollover by checking if the time is BEFORE the start of the
-		// current appt.
-		if (nextAppt == sched->n_appts) {
-			if (Clock.hour < sched->appts[appt].hr) {
-				act = COMMUTING;
-				appt = 0;
-			}
-		}
-		// Normal case: check if the clock time exceeds the start time
-		// of our next appt.
-		else if (Clock.hour >= sched->appts[nextAppt].hr &&
-			 Clock.min >= sched->appts[nextAppt].min) {
-			act = COMMUTING;
-			appt = nextAppt;
-			printf("%s COMMUTING to appt %d.\n", getName(), appt);
-		}
+        while (action_points > 0 && !isDestroyed()) {
+
+                int initial_points = action_points;
+
+                switch (act) {
+                case SLEEPING:
+                case EATING:
+                        break;
+                default:
+                case WORKING:
+                        work();
+                        break;
+                }
+
+                /* If we didn't use any action points then we're idle and need
+                 * to break to prevent an endless loop. */
+                if (action_points == initial_points)
+                        break;
 	}
 
-	switch (act) {
-	case COMMUTING:
-		if (!commute())
-                        // Oh well, maybe next time...
-                        setTurn(turn);
-		break;
-	case SLEEPING:
-	case EATING:
-		// For now do nothing.
-		setTurn(turn);
-		break;
-        default:
-	case WORKING:
-		work();
-		if (loitering)
-			setTurn(turn);
-		break;
-	}
-
-	// printf("%s used %d turns\n", getName(), turn_cost);
-	changeTurn(turn_cost);
+        /* Objects cannot save action points (but they can be in debt). */
+        if (action_points > 0)
+                action_points = 0;
 }
 
 void NpcParty::init(class NpcPartyType * type)
@@ -832,8 +727,6 @@ void NpcParty::init(class Character * ch)
 	ch->party = this;
 	list_add(&members, &ch->plist);
 	size = 1;
-	conv = ch->conv;
-	sched = ch->sched;
 	alignment = ch->getAlignment();
 }
 
@@ -861,8 +754,6 @@ bool NpcParty::createMembers(void)
 		}
 
 		n = max(n, 1);
-                printf("Generated %d out of possible %d %s\n", n, ginfo->n_max,
-                       ginfo->species->name);
 
 		while (n) {
 
@@ -895,42 +786,39 @@ bool NpcParty::load(class Loader * loader)
 {
 	bool hflag;
 	class Character *c;
-	char *conv_tag = 0;
 	class NpcPartyType *type = getObjectType();
+        char *conv_tag;
 
-	assert(place);
 	assert(type);
-
-	// *** Load Party Parameters ***
 
 	if (!Object::load(loader) ||
 	    !loader->getBitmask(&alignment) || !loader->getBool(&hflag))
 		return false;
 
-	if (hflag)
-		home = getPlace();
+        // ---------------------------------------------------------------------
+        // Parse the conversation. This is to support parties of cardboard-type
+        // npc's who all have a common conversation.
+        // ---------------------------------------------------------------------
 
-	// Note: conv may already be definied if this is a wrapper party. In
-	// this case there should NOT be a conv tag.
-	if (!isWrapper) {
-		if (!loader->getWord(&conv_tag))
-			return false;
+        if (! isWrapper) {
+                if (!loader->getWord(&conv_tag)) {
+                        return false;
+                }
+                if (strcmp(conv_tag, "null")) {
+                        conv = (struct conv *) loader->lookupTag(conv_tag, CONVERSATION_TYPE_ID);
+                        if (NULL == conv) {
+                                loader->setError("Invalid CONV tag '%s'", conv_tag);
+                                free(conv_tag);
+                                return false;
+                        }
+                }
+                free(conv_tag);
+        }
 
-		if (strcmp(conv_tag, "null")) {
-			conv = (struct conv *) 
-                                loader->lookupTag(conv_tag,
-                                                  CONVERSATION_TYPE_ID);
-			if (!conv) {
-				loader->setError("Invalid CONV tag '%s'",
-						 conv_tag);
-				free(conv_tag);
-				return false;
-			}
-		}
-
-		free(conv_tag);
-	}
+        // ---------------------------------------------------------------------
 	// In the wilderness check for a vehicle type for the party.
+        // ---------------------------------------------------------------------
+
 	if (getPlace()->type == wilderness_place) {
 		char *vehicle_type_tag = 0;
 		class VehicleType *vehicle_type;
@@ -955,12 +843,13 @@ bool NpcParty::load(class Loader * loader)
 
 		free(vehicle_type_tag);
 	}
-	// *** Create Party Members ***
+
+        // ---------------------------------------------------------------------
+        // Create the party members. If this is a wrapper there is only the one
+        // party member and all we need is the alignment.
+        // ---------------------------------------------------------------------
 
 	if (isWrapper) {
-
-		// Only one party member and all we need is alignment.
-
 		assert(!list_empty(&members));
 		c = outcast(members.next, class Character, plist);
 		c->setAlignment(alignment);
@@ -1038,13 +927,21 @@ void NpcParty::removeMember(class Character * c)
 	size--;
 }
 
+bool NpcParty::addMember(class Character * c)
+{
+        list_add(&members, &c->plist);
+        c->party = this;
+        size++;
+        return true;
+}
+
 static bool add_to_player_party(class Character * c, void *data)
 {
 	// Note: I'll leave the party set as-is. It does no harm and might do
 	// some good later.  Note: The order will be forgotten (changed to
 	// match player party order).
 
-	if (!player_party->add_to_party(c))
+	if (!c->joinPlayer())
 		assert(false);
 	return false;
 }
@@ -1056,11 +953,6 @@ bool NpcParty::joinPlayer(void)
 	remove();
 	forEachMember(add_to_player_party, 0);
 	return true;
-}
-
-struct conv *NpcParty::getConversation()
-{
-	return conv;
 }
 
 int NpcParty::getPmask()
@@ -1116,7 +1008,7 @@ static bool damage_member(class Character * member, void *data)
 	struct damage_member_info *dm_info = (struct damage_member_info *) data;
 
 	// apply damage
-	member->changeHp(dm_info->damage);
+	member->damage(dm_info->damage);
 
 	// check if dead and remove from party
 	if (member->isDead()) {
@@ -1130,14 +1022,14 @@ static bool damage_member(class Character * member, void *data)
 	return false;
 }
 
-void NpcParty::hitByOrdnance(class ArmsType * ordnance)
+void NpcParty::damage(int damage)
 {
 	struct damage_member_info dm_info;
 
 	// First apply damage to the vehicle. If the vehicle is destroyed then
 	// destroy the party, too.
 	if (vehicle) {
-		vehicle->damage(ordnance->getDamage());
+		vehicle->damage(damage);
 		if (vehicle->isDestroyed()) {
 			delete vehicle;
 			vehicle = NULL;
@@ -1145,27 +1037,97 @@ void NpcParty::hitByOrdnance(class ArmsType * ordnance)
 		}
 		return;
 	}
+
 	// Apply damage to all party members. If they all die then the party is
 	// destroyed, too.
-	dm_info.damage = 0 - ordnance->getDamage();
+	dm_info.damage = damage;
 	dm_info.any_alive = false;
 	forEachMember(damage_member, &dm_info);
 	if (!dm_info.any_alive) {
-		printf("%s destroyed by %s\n", getName(), ordnance->getName());
 		destroy();
 	}
+}
+
+void NpcParty::distributeMembers()
+{
+        // ---------------------------------------------------------------------
+        // Emulate what I currently do for the player party.
+        // ---------------------------------------------------------------------
+
+        // ---------------------------------------------------------------------
+        // The combat alg requires me to fill out a "position info" structure
+        // based on the player party destination.
+        // ---------------------------------------------------------------------
+        
+        combat_fill_position_info(&pinfo, getPlace(), getX(), getY(), dx, dy, false);
+
+        // ---------------------------------------------------------------------
+        // Set the party formation to a sane default.
+        // ---------------------------------------------------------------------
+
+        if (NULL == pinfo.formation)
+                pinfo.formation = formation_get_default();
+
+        // ---------------------------------------------------------------------
+        // Party members must be placed such that they can pathfind back to the
+        // party. This minimizes the chance of a party member getting stranded
+        // (which in turn will strand the whole party in that place).
+        // ---------------------------------------------------------------------
+
+        pinfo.find_party = true;
+
+        // ---------------------------------------------------------------------
+        // Remove the party from the current place before distributing members.
+        // ---------------------------------------------------------------------
+
+        remove();
+        mapSetDirty();
+
+        // ---------------------------------------------------------------------
+        // Use the combat algorithm to place each member. Currently this will
+        // never fail, in the degenerate case all party members will end up
+        // "stranded" on top of the destination tile.
+        // ---------------------------------------------------------------------
+
+        forEachMember(combat_place_character, &pinfo);
+
 }
 
 void NpcParty::relocate(struct place *place, int x, int y)
 {
 	class Mech *mech;
 
+        // ---------------------------------------------------------------------
+        // Do the standard relocation first.
+        // ---------------------------------------------------------------------
+
 	Object::relocate(place, x, y);
+
+        // ---------------------------------------------------------------------
+        // NPC parties can trigger mechs with STEP events...
+        // ---------------------------------------------------------------------        
 
 	mech = (class Mech *) place_get_object(place, x, y, mech_layer);
 	if (mech)
 		mech->activate(MECH_STEP);
 
+        // ---------------------------------------------------------------------
+        // If the place requires parties to break up into individual members
+        // then I have to switch from party to character mode here. Otherwise
+        // I'm done.
+        // ---------------------------------------------------------------------
+
+        if (place_is_wilderness(place))
+                return;
+
+        distributeMembers();
+
+        // ---------------------------------------------------------------------
+        // Automatically end turn on mode switch or we might end up trying to
+        // exec this object again when it has no place defined.
+        // ---------------------------------------------------------------------
+
+        endTurn();
 }
 
 struct formation *NpcParty::get_formation()
@@ -1205,4 +1167,80 @@ char *NpcParty::get_movement_sound()
 int NpcParty::getActivity()
 {
         return act;
+}
+
+static bool member_burn(class Character *member, void *data)
+{
+        member->burn();
+        return false;
+}
+
+static bool member_poison(class Character *member, void *data)
+{
+        member->poison();
+        return false;
+}
+
+static bool member_sleep(class Character *member, void *data)
+{
+        member->sleep();
+        return false;
+}
+
+static bool member_apply_existing(class Character * pm, void *data)
+{
+	if (pm->isPoisoned()) {
+                pm->damage(DAMAGE_POISON);
+	}
+        if (pm->isAsleep()) {
+                if ((random() % 100) < PROB_AWAKEN) {
+                        pm->awaken();
+                }
+        }
+	return false;
+}
+
+void NpcParty::applyExistingEffects()
+{
+        forEachMember(member_apply_existing, this);
+        if (allDead())
+                destroy();
+}
+
+
+void NpcParty::burn()
+{
+        forEachMember(member_burn, NULL);
+        if (allDead())
+                destroy();
+}
+
+void NpcParty::poison()
+{
+        forEachMember(member_poison, NULL);
+        if (allDead())
+                destroy();
+}
+
+void NpcParty::sleep()
+{
+        forEachMember(member_sleep, NULL);
+        if (allDead())
+                destroy();
+}
+
+static bool member_check_if_alive(class Character *member, void *data)
+{
+        if (!member->isDead()) {
+                *((bool*)data) = false;
+                return true;
+        }
+        return false;
+}
+
+bool NpcParty::allDead()
+{
+        bool dead = true;
+        forEachMember(member_check_if_alive, &dead);
+        return dead;
 }

@@ -51,6 +51,7 @@
 #include "pinfo.h"
 #include "Loader.h"
 #include "cmd.h"
+#include "formation.h"
 
 #include <assert.h>
 #include <stdlib.h>
@@ -75,91 +76,20 @@
 
 /* Formation pattern -- party facing north (dx=0,dy=-1), origin at the leader's
  * position */
-static struct formation_entry default_formation_entries[] = {
-        {0, 0},
-        {1, 1},
-        {-1, 1},
-        {2, 2},
-        {0, 2},
-        {-2, 2},
-        {3, 3},
-        {1, 3},
-        {-1, 3},
-        {-3, 3},
-        {4, 4},
-        {2, 4},
-        {0, 4},
-        {-2, 4},
-        {-4, 4},
-        {5, 5},
-        {3, 5},
-        {1, 5},
-        {-1, 5},
-        {-3, 5},
-        {-5, 5},
-        {6, 6},
-        {4, 6},
-        {2, 6},
-        {0, 6},
-        {-2, 6},
-        {-4, 6},
-        {-6, 6},                /* 28 */
-};
 
-static struct formation default_formation;
-
-// The combat state machine:
-//
-//          a-> VICTORY d-> LOOTING c-> 
-// FIGHTING b-> DEFEAT e--------------> DONE
-//          c-> RETREAT f------------->
-//
-// a - Last NPC killed or fled the map
-// b - Last PC killed
-// c - Last PC fled the map
-// d - Victory declared
-// e - Defeat declared
-// f - Retreat declared
-enum CombatState {
-        FIGHTING,
-        DEFEAT,                 // All PCs dead or fled
-        VICTORY,                // All NPCs dead or fled
-        RETREAT,                // Last PC fled
-        LOOTING,                // VICTORY was declared
-        CAMPING,
-        DONE,                   // Last PC exited after LOOTING
-};
-
-struct retreat_info {
-        enum RetreatType {
-                NO_RETREAT = 0,
-                EDGE_RETREAT,
-                PORTAL_RETREAT
-        } type;
-        int x, y, dx, dy;
+enum combat_faction_status {
+        COMBAT_FACTION_EXISTS,
+        COMBAT_FACTION_GONE,
+        COMBAT_FACTION_CHARMED,
+        COMBAT_FACTION_CAMPING
 };
 
 static struct {
-        struct place place;     // The temporary combat place used for
-                                // wilderness combat
-        enum CombatState state;
-        class Character *pm;    // The currently active player party membet
-        int n_pcs;              /* number of PCs on the map */
-        int n_npcs;             /* number of NPCs on the map */
-        class Character *npcs[N_MAX_NPCS];
+        struct place place;
+        enum combat_state state;
         char vmap[7 * 7];       // visited map (used to search for positions)
-        struct retreat_info rinfo;
-        bool followMode;
-        bool defend;            /* 1 iff the player was attacked */
-
-        // The list of npc parties in combat.
         struct list parties;
 
-        int turns_per_round;
-        int end_of_camping_turn;
-        class Character *guard;
-        bool rested;
-        struct list summoned;
         bool tmp_terrain_map;
         class Vehicle *enemy_vehicle;
         char *sound_enter;
@@ -169,6 +99,7 @@ static struct {
 } Combat;
 
 struct v2 {
+        struct place *place;
         int dx, dy;
 };
 
@@ -179,8 +110,114 @@ static int y_q[SEARCH_QUEUE_SZ];
 static int q_head;
 static int q_tail;
 
-static void combatAttack(class Character *attacker, class ArmsType *weapon,
-                         class Character *defender)
+static void combat_print_banner(char *msg)
+{
+        consolePrint("\n\n*** %s ***\n\n", msg);
+}
+
+enum combat_state combat_get_state(void)
+{
+        return Combat.state;
+}
+
+void combat_set_state(enum combat_state new_state)
+{
+        // ---------------------------------------------------------------------
+        // Interesting state transitions:
+        //
+        // =====================================================================
+        // old state              | new state              | result
+        // =====================================================================
+        // COMBAT_STATE_DONE      | COMBAT_STATE_FIGHTING  | entry to combat
+        // COMBAT_STATE_DONE      | COMBAT_STATE_LOOTING   | entry to non-hostile
+        // COMBAT_STATE_DONE      | COMBAT_STATE_CAMPING   | entry to camping
+        // COMBAT_STATE_FIGHTING  | COMBAT_STATE_DONE      | defeat
+        // COMBAT_STATE_FIGHTING  | COMBAT_STATE_LOOTING   | victory
+        // COMBAT_STATE_LOOTING   | COMBAT_STATE_FIGHTING  | hostiles entered
+        // COMBAT_STATE_LOOTING   | COMBAT_STATE_DONE      | exit normally
+        // COMBAT_STATE_CAMPING   | COMBAT_STATE_FIGHTING  | ambush
+        // COMBAT_STATE_CAMPING   | COMBAT_STATE_DONE      | exit camping
+        // =====================================================================
+        //
+        // ---------------------------------------------------------------------
+
+        if (Combat.state == new_state)
+                return;
+
+
+        switch (Combat.state) {
+
+        case COMBAT_STATE_DONE:
+                switch (new_state) {
+                case COMBAT_STATE_FIGHTING:
+                        combat_print_banner("COMBAT");
+                        soundPlay(Combat.sound_enter, SOUND_MAX_VOLUME);
+                        break;
+                case COMBAT_STATE_LOOTING:
+                        break;
+                case COMBAT_STATE_CAMPING:
+                        combat_print_banner("CAMPING");
+                        break;
+                default:
+                        assert(false);
+                        break;
+                }
+                break;
+
+        case COMBAT_STATE_FIGHTING:
+                switch (new_state) {
+                case COMBAT_STATE_LOOTING:
+                        combat_print_banner("VICTORY");
+                        soundPlay(Combat.sound_victory, SOUND_MAX_VOLUME);
+                        break;
+                case COMBAT_STATE_DONE:
+                        combat_print_banner("DEFEAT");
+                        soundPlay(Combat.sound_defeat, SOUND_MAX_VOLUME);
+                        break;
+                default:
+                        assert(false);
+                        break;
+                }
+                break;
+
+        case COMBAT_STATE_LOOTING:
+                switch (new_state) {
+                case COMBAT_STATE_FIGHTING:
+                        combat_print_banner("COMBAT");
+                        soundPlay(Combat.sound_enter, SOUND_MAX_VOLUME);
+                        break;
+                case COMBAT_STATE_DONE:
+                        break;
+                default:
+                        assert(false);
+                        break;
+                }
+                break;
+
+        case COMBAT_STATE_CAMPING:
+                switch (new_state) {
+                case COMBAT_STATE_FIGHTING:
+                        combat_print_banner("COMBAT");
+                        soundPlay(Combat.sound_enter, SOUND_MAX_VOLUME);
+                        break;
+                case COMBAT_STATE_LOOTING:
+                case COMBAT_STATE_DONE:
+                        break;
+                default:
+                        assert(false);
+                        break;
+                }
+                break;
+
+        default:
+                assert(false);
+                break;
+        }
+
+        Combat.state = new_state;
+}
+
+void combat_attack(class Character *attacker, class ArmsType *weapon, class Character *defender)
 {
         int hit;
         int def;
@@ -214,57 +251,11 @@ static void combatAttack(class Character *attacker, class ArmsType *weapon,
         damage -= armor;
         damage = max(damage, 0);
         consolePrint("for %d total damage, ", damage);
-        defender->changeHp(-damage);
+        defender->damage(damage);
 
         consolePrint("%s!\n", defender->getWoundDescription());
 }
 
-static void Defeat(void)
-{
-        // The NPCs have won.
-        soundPlay(Combat.sound_defeat, SOUND_MAX_VOLUME);
-        consolePrint("\n*** Battle is Lost! ***\n\n");
-        Combat.state = DONE;
-}
-
-static void Victory(void)
-{
-        // The player has won. Play the triumphant music and advance to the
-        // looting phase.
-        soundPlay(Combat.sound_victory, SOUND_MAX_VOLUME);
-        consolePrint("\n*** VICTORY! ***\n\n");
-        Combat.state = LOOTING;
-}
-
-static void Retreat(void)
-{
-        // The player has escaped by fleeing.  
-        soundPlay(Combat.sound_defeat, SOUND_MAX_VOLUME);
-        consolePrint("\n*** Run Away! ***\n\n");
-        Combat.state = DONE;
-}
-
-static void myForEachNpc(bool(*fx) (class Character * npc, void *data),
-                         void *data)
-{
-        for (int i = 0; i < array_sz(Combat.npcs); i++) {
-                class Character *npc = Combat.npcs[i];
-                if (npc == NULL)
-                        continue;
-                if (fx(npc, data))
-                        return;
-        }
-}
-
-static bool myCheckIfHostile(class Character * npc, void *data)
-{
-        if (npc->isOnMap() && !npc->isDead() &&
-            npc->party->isHostile(player_party->alignment)) {
-                *((bool *) data) = false;
-                return true;
-        }
-        return false;
-}
 
 static int location_is_safe(struct position_info *info)
 {
@@ -274,12 +265,12 @@ static int location_is_safe(struct position_info *info)
         struct astar_search_info as_info;
 
         // Is it passable?
-        if (!place_is_passable(Place, info->px, info->py, info->pmask, 0)) {
+        if (!place_is_passable(info->place, info->px, info->py, info->pmask, 0)) {
                 printf("impassable\n");
                 return -1;
         }
         // Is it occupied?
-        if (place_is_occupied(Place, info->px, info->py)) {
+        if (place_is_occupied(info->place, info->px, info->py)) {
                 printf("occupied\n");
                 return -1;
         }
@@ -295,7 +286,7 @@ static int location_is_safe(struct position_info *info)
 
                 if (info->dx < 0) {
                         // facing west, find path back to east edge
-                        edge_x = place_w(Place) - 1;
+                        edge_x = place_w(info->place) - 1;
                         flags |= PFLAG_VERT;
                         printf("east ");
                 }
@@ -307,7 +298,7 @@ static int location_is_safe(struct position_info *info)
                 }
                 else if (info->dy < 0) {
                         // facing north, find path back to south edge
-                        edge_y = place_h(Place) - 1;
+                        edge_y = place_h(info->place) - 1;
                         flags |= PFLAG_HORZ;
                         printf("north ");
                 }
@@ -326,7 +317,7 @@ static int location_is_safe(struct position_info *info)
                 as_info.y1 = edge_y;
                 as_info.flags = flags;
 
-                path = place_find_path(Place, &as_info, info->pmask);
+                path = place_find_path(info->place, &as_info, info->pmask, NULL);
 
                 if (!path)
                         printf("no path back to edge\n");
@@ -346,7 +337,7 @@ static int location_is_safe(struct position_info *info)
                 as_info.limit_depth = true;
                 as_info.max_depth = 5;
 
-                path = place_find_path(Place, &as_info, info->pmask);
+                path = place_find_path(info->place, &as_info, info->pmask, NULL);
 
                 if (!path)
                         printf("no path back to party\n");
@@ -364,7 +355,7 @@ static int location_is_safe(struct position_info *info)
         return -1;
 }
 
-static int search_for_safe_position(struct position_info *info)
+static int combat_search_for_safe_position(struct position_info *info)
 {
         unsigned int i;
         int index;
@@ -389,7 +380,7 @@ static int search_for_safe_position(struct position_info *info)
                 printf("outside the placement area\n");
                 return -1;      // outside the placement rect
         }
-        if (place_off_map(Place, info->px, info->py)) {
+        if (place_off_map(info->place, info->px, info->py)) {
                 printf("off-map\n");
                 // return -1; // off map
                 goto enqueue_neighbors;
@@ -416,7 +407,7 @@ static int search_for_safe_position(struct position_info *info)
         return -1;
 }
 
-static int myFindSafePosition(struct position_info *info)
+static int combat_find_safe_position(struct position_info *info)
 {
         // Here's my new definition of a safe place: a safe place is a tile
         // within the placement rectangle which is passable to the character in
@@ -441,7 +432,7 @@ static int myFindSafePosition(struct position_info *info)
                 q_head++;
 
                 // If it is ok then we're done.
-                if (search_for_safe_position(info) == 0)
+                if (combat_search_for_safe_position(info) == 0)
                         return 0;
         }
 
@@ -452,18 +443,13 @@ static bool myPutNpc(class Character * pm, void *data)
 {
         int tmp;
         struct position_info *info;
-        unsigned int i;
+
 
         info = (struct position_info *) data;
 
         if (pm->isDead())
                 return false;
 
-        if (Combat.n_npcs == N_MAX_NPCS) {
-                // Filled up the npc buffer so abort.
-                printf("Can't fit any more NPCs on the map!\n");
-                return true;
-        }
         // In the case where there is more than one NPC party entering combat
         // this might be called more than once for an NPC. I want to ignore all
         // but the first call, so check if the NPC is already on the map.
@@ -517,7 +503,7 @@ static bool myPutNpc(class Character * pm, void *data)
 
         printf("Placing %s\n", pm->getName());
 
-        if (myFindSafePosition(info) == -1) {
+        if (combat_find_safe_position(info) == -1) {
                 // If I can't place a member then I can't place it.
                 printf("*** Can't place %s ***\n", pm->getName());
                 return false;
@@ -528,27 +514,18 @@ static bool myPutNpc(class Character * pm, void *data)
         printf("Put '%s' at [%d %d]\n", pm->getName(), info->px, info->py);
         pm->setPlace(Place);
         place_add_object(Place, pm);
-        Combat.n_npcs++;
         info->placed++;
-        for (i = 0; i < array_sz(Combat.npcs); i++) {
-                if (Combat.npcs[i] == NULL) {
-                        Combat.npcs[i] = (class Character *) pm;
-                        break;
-                }
-        }
-        assert(i < array_sz(Combat.npcs));
 
         /* Check if we need to go back to fighting */
-        if (Combat.state != FIGHTING &&
+        if (combat_get_state() != COMBAT_STATE_FIGHTING &&
             pm->party->isHostile(player_party->alignment)) {
-                Combat.state = FIGHTING;
+                combat_set_state(COMBAT_STATE_FIGHTING);
         }
 
         return false;
 }
 
-static void set_party_initial_position(struct position_info *pinfo, int x,
-                                       int y)
+static void set_party_initial_position(struct position_info *pinfo, int x, int y)
 {
         pinfo->x = x;
         pinfo->y = y;
@@ -565,8 +542,7 @@ static void set_party_initial_position(struct position_info *pinfo, int x,
 
 }
 
-static void myFillPositionInfo(struct position_info *info, int x, int y,
-                               int dx, int dy, bool defend)
+void combat_fill_position_info(struct position_info *info, struct place *place, int x, int y, int dx, int dy, bool defend)
 {
         // 
         // This function will:
@@ -576,10 +552,11 @@ static void myFillPositionInfo(struct position_info *info, int x, int y,
         // * set the flags for the placement algorithm
         // 
 
+        info->place = place;
         info->dx = dx;
         info->dy = dy;
 
-        if (Place != &Combat.place) {
+        if (info->place != &Combat.place) {
                 // Occupy the same location and face the same way
                 info->x = x;
                 info->y = y;
@@ -597,28 +574,28 @@ static void myFillPositionInfo(struct position_info *info, int x, int y,
                 // Occupy an edge facing the opponent
                 if (dx < 0) {
                         // facing west, occupy east half
-                        info->x = place_w(Place) - place_w(Place) / 4;
+                        info->x = place_w(info->place) - place_w(info->place) / 4;
                 }
                 else if (dx > 0) {
                         // facing east, occupy west half
-                        info->x = place_w(Place) / 4;
+                        info->x = place_w(info->place) / 4;
                 }
                 else {
                         // facing north or south, center on east-west
-                        info->x = place_w(Place) / 2;
+                        info->x = place_w(info->place) / 2;
                 }
 
                 if (dy < 0) {
                         // facing north, occupy south
-                        info->y = place_h(Place) - place_h(Place) / 4;
+                        info->y = place_h(info->place) - place_h(info->place) / 4;
                 }
                 else if (dy > 0) {
                         // facing south, occupy north
-                        info->y = place_h(Place) / 4;
+                        info->y = place_h(info->place) / 4;
                 }
                 else {
                         // facing east or west, center on north-south
-                        info->y = place_h(Place) / 2;
+                        info->y = place_h(info->place) / 2;
                 }
         }
 
@@ -628,59 +605,10 @@ static void myFillPositionInfo(struct position_info *info, int x, int y,
         info->pmask = 0;
         memset(rmap, 0, sizeof (rmap));
 
-#if 0
-        // If this is the special combat map then the attackers must be able to
-        // flee back the way they came. Defenders are placed in the center, so
-        // this requirement does not apply. If this is NOT the special combat
-        // map then all combatants must be able to rendezvous at their original
-        // party location. It isn't that I'm concerned so much with
-        // rendezvous. What I'm worried about is placing a combatant in a
-        // position which he cannot pathfind to from the party's starting
-        // location. Such combatants could be stranded by impassable terrain,
-        // preventing the player from exiting the map.
-        // 
-        // Note: vehicles make this an exception. Rather than check for a
-        // vehicle I'm going to loosen the above requirement by generalizing
-        // this to all wilderness combat. Which completely nullifies the
-        // requirement since that's the only time we use the special combat
-        // map.
-#define FIND_EDGE_REQUIREMENT false
-        info->find_edge = false;
-        info->find_party = false;
-        if (Place == &Combat.place && FIND_EDGE_REQUIREMENT) {
-                if (!defend)
-                        info->find_edge = true;
-        }
-        else {
-                info->find_party = true;
-        }
-#else
-        // I'm not sure I really care about any of the above concerns any
-        // more. I think my big concern was that the player be able to
-        // flee. But these days I don't relly think that's a concern of the
-        // game engine. Map hackers should take the responsibility for that
-        // kind of thing. I made this change when I found that nixies were not
-        // getting distributed on bridge combat maps.
-        info->find_edge = false;
-
-        // gmcnutt: addendum to the above comment. When I remove the find_party
-        //requirement I get situations where party members (player and
-        //otherwise) get plopped down on the other side of impassable
-        //barriers. For the player this is bad because a member might get
-        //stuck, thus deadlocking the game. For npcs this is bad because
-        //sometimes the player can't complete combat because he can't attack
-        //the lost enemy members. The problem with the nixies should be
-        //resolved another way: the party location should be someplace
-        //passable, and the engine should be willing to search half the map to
-        //find such a place if necessary.
-        //
-        //info->find_party = false;
-        info->find_party = true;
-#endif
         info->placed = 0;
 }
 
-static bool myPutPC(class Character * pm, void *data)
+bool combat_place_character(class Character * pm, void *data)
 {
         // Put a party member on the combat map
 
@@ -733,7 +661,7 @@ static bool myPutPC(class Character * pm, void *data)
         info->py = pm->getY();
         printf("Placing %s\n", pm->getName());
 
-        if (myFindSafePosition(info) == -1) {
+        if (combat_find_safe_position(info) == -1) {
 
                 // Ok, so that didn't work. This can happen when the party
                 // leader is right on the map border facing towards the map
@@ -758,17 +686,10 @@ static bool myPutPC(class Character * pm, void *data)
                 class Character *leader = player_party->get_leader();
 
                 if (!leader) {
-#ifdef POSITION_CAN_FAIL
-                        // No party leader => nobody can be placed
-                        consolePrint("No place to put %s on the combat map!\n",
-                                     pm->getName());
-                        return false;
-#else                           // ! POSITION_CAN_FAIL
                         printf("Putting %s on start location [%d %d]\n",
                                pm->getName(), info->x, info->y);
                         info->px = info->x;
                         info->py = info->y;
-#endif                          // ! POSITION_CAN_FAIL
                 }
                 else {
                         // init the position info to search again
@@ -777,48 +698,44 @@ static bool myPutPC(class Character * pm, void *data)
                         info->py = leader->getY();
                         printf("Retrying %s\n", pm->getName());
 
-                        if (myFindSafePosition(info) == -1) {
-#ifdef POSITION_CAN_FAIL
-                                consolePrint("No place to put %s on the "
-                                             "combat map!\n", pm->getName());
-                                return false;
-#else                           // ! POSITION_CAN_FAIL
+                        if (combat_find_safe_position(info) == -1) {
                                 printf("Putting %s on start location "
                                        "[%d %d]\n",
                                        pm->getName(), info->x, info->y);
                                 info->px = info->x;
                                 info->py = info->y;
-#endif                          // ! POSITION_CAN_FAIL
                         }
                 }
         }
 
+#if 0
         pm->setX(info->px);
         pm->setY(info->py);
 
-        pm->setPlace(Place);
-        mapAddView(pm->getView());
+        pm->setPlace(info->place);
 
-        place_add_object(Place, pm);
+        place_add_object(info->place, pm);
 
-        /* Initialize the pc's map view */
-        mapCenterView(pm->getView(), pm->getX(), pm->getY());
+        if (pm->isPlayerControlled()) {
+                mapAddView(pm->getView());
 
-        // Set the PC's light radius based on ambient light and personal light
-        // sources. Fixme: should not assume the sun is visible.
-        // int lrad = (int)sqrt(pm->getLight() + Sun.light);
-        mapSetRadius(pm->getView(), min(pm->getVisionRadius(),
-                                        MAX_VISION_RADIUS));;
-        mapRecomputeLos(pm->getView());
-
+                /* Initialize the pc's map view */
+                mapCenterView(pm->getView(), pm->getX(), pm->getY());
+                
+                // Set the PC's light radius based on ambient light and personal light
+                // sources. Fixme: should not assume the sun is visible.
+                // int lrad = (int)sqrt(pm->getLight() + Sun.light);
+                mapSetRadius(pm->getView(), min(pm->getVisionRadius(), MAX_VISION_RADIUS));;
+                mapRecomputeLos(pm->getView());
+        }
+                
         /* Do some one-time init */
-        pm->setPlace(Place);
-        // pm->setKilledNotifier(myCharacterKilledNotifier);
-        pm->setAlignment(player_party->alignment);
+        //pm->setAlignment(player_party->alignment);
         pm->setCombat(true);
-
-        Combat.n_pcs++;
-
+#else
+        pm->relocate(info->place, info->px, info->py);
+#endif
+        
         return false;
 }
 
@@ -831,793 +748,6 @@ static bool mySetInitialCameraPosition(class Character * pm, void *data)
         return false;
 }
 
-static void mySelectPC(class Character * c)
-{
-        if (Combat.pm != NULL)
-                Combat.pm->select(false);
-        Combat.pm = c;
-        c->select(true);
-
-        if (Combat.n_pcs == 1 || Combat.pm->isSolo() || Combat.followMode)
-                mapCenterCamera(Combat.pm->getX(), Combat.pm->getY());
-
-        mapUpdate(0);
-}
-
-static void myExitMap(class Character * c, int dx, int dy)
-{
-        c->remove();
-        if (c->isPlayerControlled()) {
-
-                Combat.n_pcs--;
-
-                // If combat is still raging than the PC has fled; if combat is
-                // over then it has simply left the map.
-                if (Combat.state == FIGHTING) {
-                        if (Combat.n_pcs == 0)
-                                // Handle the case where the last PC has left
-                                // the map.
-                                Retreat();
-                }
-                else {
-                        if (Combat.n_pcs == 0)
-                                Combat.state = DONE;
-                }
-
-                return;
-        }
-        else {
-                consolePrint("%s escapes!\n", c->getName());
-                Combat.n_npcs--;
-                bool victory = true;
-                myForEachNpc(myCheckIfHostile, &victory);
-                if (victory)
-                        Combat.state = VICTORY;
-                c->party->setFleeVector(dx, dy);
-        }
-}
-
-static void myMoveNPC(class Character * c, int dx, int dy)
-{
-        switch (c->move(dx, dy)) {
-
-        case Character::ExitedMap:
-                myExitMap(c, dx, dy);
-                break;
-        case Character::EngagedEnemy:
-                statusRepaint();
-                break;
-        case Character::OffMap:
-        case Character::WasOccupied:
-        case Character::WasImpassable:
-        case Character::SlowProgress:
-        case Character::MovedOk:
-        case Character::SwitchedOccupants:
-        case Character::CouldNotSwitchOccupants:
-                break;
-        }
-
-}
-
-static bool myCanRetreat(int x, int y, int dx, int dy)
-{
-#ifdef NO_RETREAT
-        if (Place == &Combat.place)
-                return true;
-#endif
-        if (Combat.rinfo.type == retreat_info::NO_RETREAT)
-                return true;
-
-        if (Combat.rinfo.type == retreat_info::EDGE_RETREAT &&
-            Combat.rinfo.dx == dx && Combat.rinfo.dy == dy)
-                return true;
-
-        return false;
-}
-
-static bool myExitSoloMode(class Character * pc)
-{
-        if (!pc->isSolo())
-                return false;
-        consolePrint("Revert to party mode\n");
-        pc->setSolo(false);
-        return true;
-}
-
-static void myMovePC(class Character * c, int dx, int dy, int verbose)
-{
-        int is_leader = (c == player_party->get_leader());
-
-        if (verbose)
-                consolePrint("%s-", directionToString(vector_to_dir(dx, dy)));
-
-        if (place_off_map(Place, c->getX() + dx, c->getY() + dy) &&
-            !myCanRetreat(c->getX(), c->getY(), dx, dy)) {
-                if (verbose) {
-                        consolePrint("Denied!\n");
-                        consolePrint("All party members must exit the same "
-                                     "way!\n");
-                }
-                return;
-        }
-
-        switch (c->move(dx, dy)) {
-        case Character::MovedOk:
-                if (verbose)
-                        consolePrint("Ok\n");
-                break;
-        case Character::OffMap:
-                if (verbose)
-                        consolePrint("No place to go!\n");
-                break;
-        case Character::ExitedMap:
-                if (verbose) {
-                        class Character *new_leader;
-                        consolePrint("Exit!\n");
-                        new_leader = player_party->get_leader();
-                        if (new_leader) {
-                                consolePrint("%s is the new party leader\n",
-                                             new_leader->getName());
-                        }
-                }
-                myExitMap(c, dx, dy);
-
-                // The first member to exit from a town map sets the exit: the
-                // other members must all leave the same way.
-                if (
-#ifdef NO_RETREAT
-                        Place != &Combat.place &&
-#endif
-                        Combat.rinfo.type == retreat_info::NO_RETREAT) {
-                        Combat.rinfo.type = retreat_info::EDGE_RETREAT;
-                        Combat.rinfo.dx = dx;
-                        Combat.rinfo.dy = dy;
-                }
-
-                break;
-        case Character::EngagedEnemy:
-                break;
-        case Character::WasOccupied:
-                // Normally I don't print this message in follow mode unless
-                // this is the leader because otherwise I see it all the time
-                // as the other party members bump into each other.
-                if (!Combat.followMode || is_leader) {
-                        if (verbose) {
-                                consolePrint("Occupied!\n");
-                        }
-                }
-                break;
-        case Character::WasImpassable:
-                if (verbose)
-                        consolePrint("Impassable!\n");
-                break;
-        case Character::SlowProgress:
-                if (verbose)
-                        consolePrint("Slow progress!\n");
-                break;
-        case Character::SwitchedOccupants:
-                if (verbose)
-                        consolePrint("Switch!\n");
-                break;
-        }
-
-        mapCenterView(c->getView(), c->getX(), c->getY());
-        mapRecomputeLos(c->getView());
-
-        if (Combat.n_pcs == 1 || c->isSolo() ||
-            (Combat.followMode && c == player_party->get_leader()))
-                mapCenterCamera(c->getX(), c->getY());
-}
-
-
-#define MSV_IGNORESLEEPERS (1 << 0)
-#define MSV_IGNORELOS      (1 << 1)
-
-static class Character *mySelectVictim(class Character * from,
-                                       unsigned int *min, int flags)
-{
-        *min = (unsigned int) -1;       // initialize to max possible value
-        class Character *victim = NULL, *remember = NULL;
-        unsigned int d;
-
-        // *** Find Player Combatant ***
-
-        if (from->isHostile(player_party->alignment)) {
-
-                // By far the most common case. Iterate over the player array
-                // and search for the minimum distance to an active party
-                // member.
-
-                for (int j = 0; j < player_party->n_pc; j++) {
-
-                        class Character *pm;
-
-                        pm = player_party->pc[j];
-                        if (!pm || !pm->isOnMap() || pm->isDead() ||
-                            pm == from || !pm->isVisible())
-                                continue;
-
-                        // If LOS is blocked then this victim cannot be
-                        // attacked by melee, missile or most spells. So skip
-                        // it unless the caller does not care.
-                        if ((flags & MSV_IGNORELOS) == 0 &&
-                            place_los_blocked(Place, from->getX(), from->getY(),
-                                        pm->getX(), pm->getY()))
-                                continue;
-
-                        if (!pm->isHostile(from->getAlignment()))
-                                // Normally we don't want to attack charmed PCs
-                                // because they're helping us. But if we can't
-                                // find another target then remember this one
-                                // and kill him/her off when all the other
-                                // targets are gone.
-                                remember = pm;
-
-                        d = place_flying_distance(Place,
-                                                  from->getX(), from->getY(),
-                                                  pm->getX(), pm->getY());
-
-                        if (d < *min) {
-                                *min = d;
-                                victim = pm;
-                        }
-                }
-
-                if (!victim && remember) {
-                        // Handle cases where there is no uncharmed target and
-                        // resort to attcking a charmed target that we remember
-                        // from the search. Need to recompute the distance.
-                        victim = remember;
-                        *min = place_flying_distance(Place,
-                                                     from->getX(),
-                                                     from->getY(),
-                                                     victim->getX(),
-                                                     victim->getY());
-                }
-                // Now fall through and check if there's an even closer target
-                // among the NPC combatants. This way a charmed npc is not
-                // igored by its former companions.
-        }
-        // *** Find NPC Combatant ***
-
-        for (int i = 0; i < array_sz(Combat.npcs); i++) {
-
-                class Character *pm = Combat.npcs[i];
-
-                if (pm == NULL ||
-                    pm == from ||
-                    pm->isDead() ||
-                    !pm->isOnMap() ||
-                    ((flags & MSV_IGNORESLEEPERS) && pm->isAsleep()))
-                        continue;
-
-                // If LOS is blocked then this victim cannot be
-                // attacked by melee, missile or most spells. So skip
-                // it unless the caller does not care.
-                if ((flags & MSV_IGNORELOS) == 0 &&
-                    place_los_blocked(Place, from->getX(), from->getY(),
-                                pm->getX(), pm->getY()))
-                        continue;
-
-                if (!pm->isHostile(from->getAlignment())) {
-                        if (!pm->party->isHostile(from->getAlignment()))
-                                continue;
-                        // This particular PC is not currently hostile (perhaps
-                        // due to a charm spell) but his party is, so remember
-                        // him as a victim of last resort if we can't find
-                        // someone better.
-                        remember = pm;
-                }
-
-                d = place_flying_distance(Place,
-                                          from->getX(), from->getY(),
-                                          pm->getX(), pm->getY());
-
-                if (d < *min) {
-                        *min = d;
-                        victim = pm;
-                }
-        }
-
-        if (!victim && remember) {
-                // Handle cases where there is no uncharmed target and
-                // resort to attcking a charmed target that we remember
-                // from the search. Need to recompute the distance.
-                victim = remember;
-                *min = place_flying_distance(Place,
-                                             from->getX(), from->getY(),
-                                             victim->getX(), victim->getY());
-        }
-
-        return victim;
-}
-
-static bool myAttack(class Character * pc)
-{
-        bool committed = false;
-        int x, y;
-
-        consolePrint("Attack!\n");
-
-        // If in follow mode, when the leader attacks automatically switch to
-        // turn-based mode.
-        if (Combat.followMode) {
-                consolePrint("Switching from follow to combat mode\n");
-                Combat.followMode = false;
-        }
-
-        // Loop over all readied weapons
-        for (class ArmsType * weapon = pc->enumerateWeapons();
-             weapon != NULL; weapon = pc->getNextWeapon()) {
-
-                cmdwin_clear();
-                cmdwin_print("%s:", pc->getName());
-
-                consolePrint("[%s]: ", weapon->getName());
-                consoleRepaint();
-
-                // Check ammo
-                if (!pc->hasAmmo(weapon)) {
-                        consolePrint("no ammo!\n");
-                        continue;
-                }
-                // Get the target. It's important to do this every time through
-                // the loop because the last iteration may have killed the
-                // previous target. The getAttackTarget routine will reevaluate
-                // the current target.
-                class Character *target = pc->getAttackTarget();
-
-                if (weapon->isMissileWeapon()) {
-                        // Check for interference from any nearby
-                        // hostiles.
-                        unsigned int d;
-                        class Character *near;
-
-                        // I really only need to check adjacent squares here...
-                        near = mySelectVictim(pc, &d, MSV_IGNORESLEEPERS);
-                        if (near != NULL && d <= 1) {
-                                consolePrint("%s interferes!\n",
-                                             near->getName());
-                                committed = true;
-                                continue;
-                        }
-                }
-                // prompt the user
-                cmdwin_clear();
-                if (weapon->isMissileWeapon()) {
-                        // SAM: It would be nice to get ammo name, too...
-                        cmdwin_print("Attack-Fire %s (range %d, %d ammo)-",
-                                     weapon->getName(), weapon->getRange(), 
-                                     pc->hasAmmo(weapon));
-                }
-                else if (weapon->isThrownWeapon()) {
-                        // SAM: It would be nice to get ammo name, too...
-                        cmdwin_print("Attack-Throw %s (range %d, %d left)-",
-                                     weapon->getName(), weapon->getRange(),
-                                     pc->hasAmmo(weapon));
-                }
-                else {
-                        cmdwin_print("Attack-With %s (reach %d)-", 
-                                     weapon->getName(), weapon->getRange() );
-                }
-
-                // select the target location
-                x = target->getX();
-                y = target->getY();
-                // SAM:
-                // select_target() might be a more elegant place to put
-                // logic to prevent (or require confirm of) attacking self, 
-                // party members, etc.
-                if (select_target(pc->getX(), pc->getY(), &x, &y,
-                                  weapon->getRange()) == -1) {
-                        consolePrint("skip\n");
-                        continue;
-                }
-
-                // Find the new target under the cursor
-                target = (class Character *) place_get_object(Place, x, y,
-                                                              being_layer);
-                if (target == NULL) {
-                        // Use the terrain as the target.
-                        struct terrain *t;
-                        t = placeGetTerrain(x, y);
-                        pc->attackTerrain(x, y);
-                        cmdwin_print("%s", t->name);
-                        
-                        consolePrint("%s\n", t->name);
-
-                        /* Check for a mech */
-                        class Mech *mech;
-                        mech = (class Mech *) place_get_object(Place, x, y,
-                                                               mech_layer);
-                        if (mech)
-                                mech->activate(MECH_ATTACK);
-                }
-                else if (target == pc) {
-                        // Don't allow targeting self, unless perhaps with
-                        // comfirmation.
-                        int yesno;
-                        cmdwin_print("Confirm Attack Self-Y/N?");
-                        getkey(&yesno, yesnokey);
-                        cmdwin_backspace(4);
-                        if (yesno == 'y') {
-                                cmdwin_print("Yes!");
-                                goto confirmed_attack_self;
-                        }
-                        else {
-                                cmdwin_print("No!");
-                                continue;
-                        }
-                }               // confirm attack self
-                else {
-                      confirmed_attack_self:
-                        // confirmed_attack_ally:
-
-                        // in combat all npc parties and the player party
-                        // should be removed, so only characters reside at the
-                        // being layer
-                        assert(target->isType(CHARACTER_ID));
-
-                        cmdwin_print("%s", target->getName());
-                        
-                        consolePrint("attack %s...", target->getName());
-
-                        // Strike the target
-                        combatAttack(pc, weapon, target);
-
-                        // If we hit a party member then show their new hit
-                        // points in the status window
-                        if (target->isPlayerControlled())
-                                statusRepaint();
-                }
-
-                // Warn the user if out of ammo
-                if (!pc->hasAmmo(pc->getCurrentWeapon()))
-                        consolePrint("(%s now out of ammo)\n",
-                                     weapon->getName());
-
-                // Once the player uses a weapon he can't cancel out of the
-                // attack and continue his round with a different command.
-                committed = true;
-                pc->addExperience(XP_PER_ATTACK);
-        }                       // for (loop over all readied weapons)
-
-        return committed;
-}                               // myAttack()
-
-static bool myNPCAttackNearest(class Character * npc, class Character * pc,
-                               int d)
-{
-        bool ret = false;
-
-        for (class ArmsType * weapon = npc->enumerateWeapons(); weapon != NULL;
-             weapon = npc->getNextWeapon()) {
-
-                if (d > weapon->getRange()) {
-                        continue;
-                }
-
-                if (!npc->hasAmmo(weapon)) {
-                        continue;
-                }
-
-                if (d <= 1 && weapon->isMissileWeapon()) {
-                        // Handle missile weapon interference
-                        continue;
-                }
-
-                consolePrint("%s attacks %s with %s...", npc->getName(),
-                             pc->getName(), weapon->getName());
-                combatAttack(npc, weapon, pc);
-                statusRepaint();
-                ret = true;
-
-                if (pc->isDead())
-                        break;
-        }
-
-        if (ret && ((class Character *) npc)->needToRearm())
-                ((class Character *) npc)->armThyself();
-
-        return ret;
-}
-
-static bool myNPCEnchantNearest(class Character * npc, class Character * pc,
-                                int d)
-{
-        class Spell *spell;
-        int i;
-
-        // Enumerate all the known spells for this npc
-        for (i = 0; i < npc->species->n_spells; i++) {
-
-                spell = npc->species->spells[i];
-
-                // Check if the NPC has enough mana
-                if (spell->cost > npc->getMana()) {
-                        continue;
-                }
-
-                // Check if the nearest is in range or if the range does not
-                // matter for this spell type
-                if (d > spell->range &&
-                    ! (spell->effects & EFFECT_SUMMON)) {
-                        continue;
-                }
-
-                // Cast the spell
-                // gmcnutt: for now use the caster's coordinates, only the
-                // summoning spells currently use them.
-                consolePrint("%s casts %s\n", npc->getName(), 
-                             spell->getName());
-                spell->cast(npc, pc, 0, npc->getX(), npc->getY());
-                return true;
-        }
-
-        return false;
-}
-
-static void myApplyGenericEffects(class Character * c, int effects)
-{
-        if (effects & TERRAIN_BURN) {
-                c->changeHp(-DAMAGE_FIRE * Combat.turns_per_round);
-                consolePrint("%s burning-%s!\n", c->getName(),
-                             c->getWoundDescription());
-                consoleRepaint();
-        }
-        if (effects & TERRAIN_POISON && !c->isPoisoned()) {
-                c->setPoison(true);
-                if (c->isPoisoned()) {
-                        c->changeHp(-DAMAGE_POISON * Combat.turns_per_round);
-                        consolePrint("%s poisoned-%s!\n", c->getName(),
-                                     c->getWoundDescription());
-                        consoleRepaint();
-                }
-        }
-        if (effects & EFFECT_SLEEP && !c->isAsleep()) {
-                c->changeSleep(true);
-                consolePrint("%s sleeping!\n", c->getName());
-                consoleRepaint();
-        }
-}
-
-static void myApplyExistingEffects(class Character * c)
-{
-        if (c->isPoisoned()) {
-                c->changeHp(-DAMAGE_POISON * Combat.turns_per_round);
-                consolePrint("%s poisoned-%s\n", c->getName(),
-                             c->getWoundDescription());
-        }
-        if (c->isAsleep()) {
-
-                if (Combat.state != CAMPING) {
-                        consolePrint("%s sleeping...", c->getName());
-                        if ((random() % 100) < PROB_AWAKEN) {
-                                c->awaken();
-                                consolePrint("awakes!");
-                        }
-                        consolePrint("\n");
-                }
-                else {
-                        // Hack: set the "rested" flag if anybody actually gets
-                        // any rest...
-                        if (!Combat.rested && c->getRestCredits())
-                                Combat.rested = true;
-                        c->rest(Combat.turns_per_round / TURNS_PER_HOUR);
-                }
-        }
-}
-
-static bool doApplyCombatEffects(class Character * c, void *data)
-{
-        if (!c->isOnMap())
-                // Handle the case where the character is a PC which has fled
-                return false;
-
-        // Apply lingering effects like poison, sleep, etc.
-        myApplyExistingEffects(c);
-
-        if (c->isDead())
-                // Handle cases where the character dies as a result of
-                // existing effects.
-                return false;
-
-        int effects = 0;
-
-        // Get the terrain effects.
-        struct terrain *terrain = placeGetTerrain(c->getX(), c->getY());
-        effects |= terrain->effects;
-
-        // Get any field effects. Note that only the topmost field at this
-        // tile (if any) is used.
-        class Field *field;
-        field = (class Field *) place_get_object(c->getPlace(), c->getX(),
-                                                 c->getY(), field_layer);
-        if (field != NULL)
-                effects |= field->getObjectType()->getEffects();
-
-        // Apply the combined effects once per character per round.
-        myApplyGenericEffects(c, effects);
-        return false;
-}
-
-static bool myRunNpc(class Character * npc, void *data)
-{
-        unsigned int min = (unsigned int) -1;   /* max possible */
-        class Character *nearest = 0;
-        struct astar_node *path;
-        struct astar_search_info as_info;
-
-        // fixme: this logic probably belongs in the NPC class. But as long as
-        // I'm allowing the NPC to directly access the PC array in order to
-        // hunt for targets I'll leave things here.
-
-        if (Combat.state == DEFEAT) {
-                // Handle the case where a previous NPC ended combat by killing
-                // the last PC.
-                Defeat();
-                return false;   // fixme -- return true 
-        }
-
-        if (npc->isIncapacitated())
-                // Handle the case where the NPC fled, is sleeping, etc.
-                return false;
-
-        if (npc->isFleeing()) {
-                // Handle the case where the NPC is still fleeing.
-                if (npc->flee() == Character::ExitedMap) {
-                        myExitMap(npc, npc->getFleeDx(), npc->getFleeDy());
-                }
-                return false;
-        }
-        // First check for a victim within LOS.
-        nearest = mySelectVictim(npc, &min, 0);
-        if (!nearest) {
-                // Maybe the victim just stepped out of sight. In this case I
-                // want the npc to continue pursuit.
-                nearest = npc->quarry;
-
-                // But maybe the reason we couldn't find a victim in LOS is
-                // because we were just charmed! So doublecheck the quarry's
-                // alignment.
-                if (nearest &&
-                    npc->isHostile(nearest->getAlignment()) &&
-                    nearest != npc &&
-                    nearest->isOnMap() &&
-                    !nearest->isDead() && nearest->isVisible()) {
-                        min = place_flying_distance(Place,
-                                                    npc->getX(), npc->getY(),
-                                                    nearest->getX(),
-                                                    nearest->getY());
-                }
-                else {
-                        npc->quarry = 0;
-                        return false;
-                }
-        }
-
-        npc->quarry = nearest;
-
-        // Don't allow NPCs to attack characters they can't see (this gives
-        // their bowmen an unfair advantage).
-        if (min <= (unsigned int) npc->getVisionRadius()) {
-                // Check if there are any spells this NPC can cast on the
-                // nearest PC.
-                if (myNPCEnchantNearest(npc, nearest, min)) {
-                        return false;
-                }
-                // Check if the nearest PC is already in weapon range and, if
-                // so, attack. If the nearest was attacked then this NPCs turn
-                // is over.
-                if (myNPCAttackNearest(npc, nearest, min)) {
-                        return false;
-                }
-        }
-
-        /* Find a path to the nearest member */
-        memset(&as_info, 0, sizeof (as_info));
-        as_info.x0 = npc->getX();
-        as_info.y0 = npc->getY();
-        as_info.x1 = nearest->getX();
-        as_info.y1 = nearest->getY();
-        path = place_find_path(Place, &as_info, npc->getPmask());
-
-        if (!path) {
-                return false;
-        }
-
-        if (path->next) {
-                myMoveNPC(npc,
-                          path->next->x - npc->getX(),
-                          path->next->y - npc->getY());
-
-        }
-        // Destroy the path. This is not very efficient since often we
-        // could reuse this path on the next round. FIXME.
-        astar_path_destroy(path);
-
-        return false;
-}
-
-static void doNpcRound(void)
-{
-        if (Combat.state == FIGHTING)
-                consolePrint("\n*** NPC round %d ***\n", Combat.round);
-
-        myForEachNpc((bool(*)(class Character *, void *)) doApplyCombatEffects,
-                     NULL);
-
-        if (Combat.state == VICTORY) {
-                // Handle the case where combat effects killed off the last of
-                // the NPCs.
-                Victory();
-                return;
-        }
-
-        enum CombatState original_state = Combat.state;
-
-        myForEachNpc(myRunNpc, NULL);
-
-        if (Combat.state == DEFEAT) {
-                // Handle the case where the last NPC killed the last PC.
-                Defeat();
-        }
-        else if (Combat.state == VICTORY) {
-                // Handle the case where the last NPC just escaped
-                Victory();
-        }
-
-        if (Combat.state == FIGHTING &&
-            original_state != FIGHTING) {
-                /* Re-entered combat */
-                consolePrint("\n*** Combat ***\n\n");
-                soundPlay(Combat.sound_enter, SOUND_MAX_VOLUME);
-        }
-}
-
-static bool myEnterSoloMode(class Character * pc, int index)
-{
-        if (index >= player_party->n_pc)
-                return false;
-
-        class Character *newpc = player_party->pc[index];
-        if (newpc == NULL || !newpc->setSolo(true))
-                return false;
-
-        if (newpc != pc)
-                // Switching solo mode from one pc to another.
-                pc->setSolo(false);
-
-        Combat.followMode = false;
-        consolePrint("Switch to %s\n", newpc->getName());
-        mySelectPC(newpc);
-        return true;
-}
-
-static bool pc_end_combat(class Character * pc, void *data)
-{
-        pc->remove();
-        pc->setCombat(false);
-        if (pc->isOnMap() && !pc->isDead())
-                pc->addExperience(XP_PER_COMBAT);
-        if (pc->wasElevated()) {
-                consolePrint("%s was elevated to level %d!\n", pc->getName(),
-                             pc->getLevel());
-                pc->setElevated(false);
-        }
-
-        /* Bugfix: if ambushed while camping without a guard - or even if just
-         * enchanted by a sleep spell - a character might be asleep on exit
-         * from combat. I don't really want to allow this since in non-combat
-         * mode I don't periodically roll to wake up sleepers like I do every
-         * turn in combat. */
-        if (pc->isAsleep()) {
-                pc->awaken();
-                statusRepaint();
-        }
-
-        return false;
-}
 
 // Automatically pathfind and move all the party members to the party leader's
 // position.
@@ -1626,7 +756,7 @@ static bool pc_end_combat(class Character * pc, void *data)
 //
 // returns true if everyony can find a path in max_path_len steps, false
 // otherwise.
-static bool combat_rendezvous_party(int max_path_len)
+bool combat_rendezvous_party(int max_path_len)
 {
         int i, rx, ry;
         bool abort = false;
@@ -1654,7 +784,10 @@ static bool combat_rendezvous_party(int max_path_len)
                 struct astar_search_info as_info;
                 class Character *pc = player_party->pc[i];
 
-                if (!pc || pc->isDead() || !pc->isOnMap() || pc == leader ||
+                if (NULL == pc             ||
+                    pc->isDead()           ||
+                    false == pc->isOnMap() ||
+                    pc->isAsleep()         ||
                     (pc->getX() == rx && pc->getY() == ry))
                         continue;
 
@@ -1664,7 +797,7 @@ static bool combat_rendezvous_party(int max_path_len)
                 as_info.x1 = rx;
                 as_info.y1 = ry;
                 as_info.flags = PFLAG_IGNOREBEINGS;
-                pc->path = place_find_path(Place, &as_info, pc->getPmask());
+                pc->path = place_find_path(Place, &as_info, pc->getPmask(), NULL);
 
                 if (!pc->path) {
                         consolePrint("%s cannot make the rendezvous!\n",
@@ -1737,402 +870,9 @@ static bool combat_rendezvous_party(int max_path_len)
         }
 
         consolePrint("Ok!\n");
-        Combat.state = DONE;
+        combat_set_state(COMBAT_STATE_DONE);
         return true;
 
-}
-
-static bool combat_enter_portal(class Character * c)
-{
-        // First of all, note that this is the only way - other than casting a
-        // teleportal spell - to exit a dungeon. I have some special rules to
-        // apply here. These rules enforce the principle that all the members
-        // of the player party must be in the same place. This means that if
-        // one party member exits a dungeon, all others must exit the same
-        // way. And since party members may have different passability masks,
-        // and map terrains can be changed at runtime, exiting a dungeon must
-        // be "atomic". Everybody has to do it at the same time, or nobody does
-        // it all.
-        //
-        // So, here are the rules.
-        //
-        // #1. The party must be in follow mode
-        // #2. All party members must be able to rendezvous in n steps
-        //
-        // If entry succeeds then the members all rendezvous and the party
-        // exits the dungeon via the portal. Otherwise we complain to the user
-        // and reject the entry.
-
-
-        class Portal *portal;
-
-        cmdwin_clear();
-        cmdwin_print("Enter-");
-
-        // Check for a portal
-        portal = place_get_portal(Place, c->getX(), c->getY());
-        if (!portal) {
-                cmdwin_print("Nothing!");
-                return false;
-        }
-
-        // fixme: instead of asserting here we should add code to the loader to
-        // remove any portals to terrain combat maps.
-        assert(Place != &Combat.place);
-
-        // Check if in follow mode
-        if (!Combat.followMode) {
-                cmdwin_print("Must be in follow mode!");
-                return false;
-        }
-
-        // Ok, check for rendezvous. Not too sure if this next provides enough
-        // steps or not. Feel free to tune it.
-        if (!combat_rendezvous_party(Combat.n_pcs * 2)) {
-                cmdwin_print("Party must be together!");
-                return false;
-        }
-
-        // Great, it worked. Setup to exit combat.
-        cmdwin_print("Ok");
-        assert(Combat.rinfo.type == retreat_info::NO_RETREAT);
-        Combat.rinfo.type = retreat_info::PORTAL_RETREAT;
-        Combat.rinfo.x = c->getX();
-        Combat.rinfo.y = c->getY();
-
-
-        // This all we need to do. Upon exit from combat we'll move the player
-        // party to the place at the end of the portal.
-        myExitMap(c, 0, 0);
-        return true;
-}
-
-
-static bool myExitCombat(void)
-{
-        // The player has hit the ESC key.
-
-        if (Combat.state != LOOTING) {
-                // Combat must be over.
-                consolePrint("Not while foes remain!\n");
-                return false;
-        }
-
-        if (Place != &Combat.place) {
-                // Can't escape from towns or dungeons -- have to use
-                // an exit.  return false;
-                return combat_rendezvous_party(-1);
-        }
-
-        consolePrint("Exit Combat!\n");
-        Combat.state = DONE;
-        return true;
-}
-
-static bool myFollow(class Character * pc)
-{
-        consolePrint("Follow mode ");
-        if (Combat.followMode) {
-                consolePrint("OFF\n");
-                Combat.followMode = false;
-                return true;
-        }
-
-        consolePrint("ON\n");
-        consolePrint("%s is the leader\n", 
-                     player_party->get_leader()->getName());
-        Combat.followMode = true;
-        if (pc)
-                myExitSoloMode(pc);
-        return true;
-}
-
-static bool myPcCommandHandler(struct KeyHandler *kh, int key, int keymod)
-{
-        int dir;
-        bool ret = false;
-        class Character *pc = (class Character *) kh->data;
-        static int unshift[] = { KEY_NORTH, KEY_SOUTH, KEY_EAST, KEY_WEST };
-
-
-        if (keymod == KMOD_LCTRL || keymod == KMOD_RCTRL) {
-
-                // SAM: This seemed like a less ugly way of setting off a group
-                // of keybindings for "DM Mode" use or the like.  If we find
-                // something more aesthetic wrt/ switch() syntax, we will
-                // surely prefer it...
-                // 
-                // Control-key bindings for "DM Mode" commands like terrain
-                // editing.  In future, these may be enabled/disabled at
-                // compile time, or via a GhulScript keyword in the mapfile.
-                switch (key) {
-      
-                case 't':
-                        cmdTerraform(pc);
-                        break;
-
-                case 's':
-                        cmdSaveTerrainMap(pc);
-                        break;
-
-                case 'z':
-                        mapTogglePeering();
-                        break;
-
-                default:
-                        break;
-                } // switch(key)
-        } // keymod
-
-        else {
-                switch (key) {
-                case KEY_NORTH:
-                case KEY_EAST:
-                case KEY_SOUTH:
-                case KEY_WEST:
-                        dir = keyToDirection(key);
-                        myMovePC(pc, directionToDx(dir), directionToDy(dir), 
-                                 1);
-                        ret = true;
-                        break;
-                case KEY_SHIFT_NORTH:
-                case KEY_SHIFT_EAST:
-                case KEY_SHIFT_SOUTH:
-                case KEY_SHIFT_WEST:
-                        key = unshift[(key - KEY_SHIFT_NORTH)];
-                        dir = keyToDirection(key);
-                        mapMoveCamera(directionToDx(dir), directionToDy(dir));
-                        mapUpdate(0);
-                        ret = false;
-                        break;
-                case 'a':
-                        ret = myAttack(pc);
-                        break;
-                case 'c':
-                        ret = cmdCastSpell(pc); // myCastSpell(pc);
-                        break;
-                case 'e':
-                        ret = combat_enter_portal(pc);
-                        break;
-                case 'f':
-                        ret = myFollow(pc);
-                        break;
-                case 'g':
-                        cmdGet(pc->getX(), pc->getY(), Combat.state == LOOTING);
-                        ret = true;
-                        break;
-                case 'h':
-                        ret = cmdHandle(pc);
-                        break;
-                case 'o':
-                        ret = cmdOpen(pc);
-                        break;
-                case 'q':
-                        ret = cmdQuit();
-                        break;
-                case 'r':
-                        ret = cmdReady(pc, 0);
-                        break;
-                case 't':
-                        ret = cmdTalk(pc->getX(), pc->getY());
-                        break;
-                case 'u':
-                        ret = cmdUse(pc, 0);
-                        break;
-                case 'x':
-                        consolePrint("examines around\n");
-                        ret = cmdXamine(pc);    // SAM: 1st step towards new
-                                                // (L)ook cmd...
-                        break;
-                case 'z':
-                        consolePrint("show status\n");
-                        ret = cmdZtats(pc);
-                        break;
-                case '@':
-                        consolePrint("skylarks a bit");
-                        // SAM: 'AT' command for party-centric information
-                        ret = cmdAT(pc);
-                        break;
-                case ' ':
-                        cmdwin_print("Pass");
-                        consolePrint("Pass\n");
-                        ret = true;
-                        break;
-                case SDLK_1:
-                case SDLK_2:
-                case SDLK_3:
-                case SDLK_4:
-                case SDLK_5:
-                case SDLK_6:
-                case SDLK_7:
-                case SDLK_8:
-                case SDLK_9:
-                        ret = myEnterSoloMode(pc, key - SDLK_1);
-                        break;
-                case SDLK_0:
-                        ret = myExitSoloMode(pc);
-                        break;
-                case '<':
-                        // This key was chosen to be a cognate for '<' in NetHack
-                        // and other roguelike games.
-                        if (Place != &Combat.place) {
-                                consolePrint("Must use an exit!\n");
-                                consolePrint("%s: ", pc->getName());
-                                consoleRepaint();
-                                break;
-                        }
-                        ret = myExitCombat();
-                        break;
-                default:
-                        ret = false;
-                        break;
-                }
-
-        }
-        //cmdwin_flush_to_console();
-
-        return ret;
-}
-
-static bool myRunPc(class Character * pc, void *data)
-{
-        if (Quit || !pc->isOnMap() || pc->isDead() || pc->isAsleep() ||
-            Combat.state == DONE)
-                return false;
-
-        if (Combat.pm != NULL && Combat.pm->isSolo() && Combat.pm != pc)
-                // Handle the case where a previous PC selected solo
-                // mode in this round
-                return false;
-
-        // *** Charmed ***
-
-        if (pc->isHostile(player_party->alignment)) {
-                if (pc->isSolo()) {
-                        // Make sure we switch back to party mode!
-                        myExitSoloMode((class Character *) pc);
-                }
-                myRunNpc(pc, data);
-                return false;
-        }
-        // *** Follow Mode ***
-
-        class Character *leader;
-        if (Combat.followMode && 
-            ((leader = player_party->get_leader()) != pc)) {
-
-                struct astar_node *path;
-                struct astar_search_info as_info;
-                int d;
-
-                d = place_flying_distance(Place, pc->getX(), pc->getY(),
-                                          leader->getX(), leader->getY());
-                if (d < 2)
-                        return false;
-
-                memset(&as_info, 0, sizeof (as_info));
-                as_info.x0 = pc->getX();
-                as_info.y0 = pc->getY();
-                as_info.x1 = leader->getX();
-                as_info.y1 = leader->getY();
-                as_info.flags = PFLAG_IGNOREBEINGS;
-                path = place_find_path(Place, &as_info, pc->getPmask());
-                if (!path)
-                        return false;
-
-                if (path->next) {
-                        myMovePC(pc,
-                                 path->next->x - pc->getX(),
-                                 path->next->y - pc->getY(), 0);
-                }
-
-                astar_path_destroy(path);
-
-                return false;
-        }
-        // *** Normal Turn ***
-
-        // Highlight the selected PC and shows its name and weapons
-        mySelectPC((class Character *) pc);
-        cmdwin_clear();
-        cmdwin_print("%s:", pc->getName());
-
-        consolePrint("\n%s: ", pc->getName());
-        consoleRepaint();
-
-        enum CombatState original_state = Combat.state;
-
-        struct KeyHandler kh;
-        kh.fx = myPcCommandHandler;
-        kh.data = pc;
-        eventPushKeyHandler(&kh);
-        eventHandle();
-        eventPopKeyHandler();
-
-        // *** Analyze Outcome ***
-
-        if (Combat.state == VICTORY) {
-                // This PC just killed the last NPC.
-                Victory();
-        }
-        else if (Combat.state == RETREAT) {
-                // This PC was the last PC and it just left the map.
-                Retreat();
-        }
-
-        if (Combat.state == FIGHTING &&
-            original_state != FIGHTING) {
-                /* Re-entered combat */
-                consolePrint("\n*** Combat ***\n\n");
-                soundPlay(Combat.sound_enter, SOUND_MAX_VOLUME);
-        }
-
-
-        return false;
-}
-
-static void doPlayerRound(void)
-{
-        if (Combat.state == FIGHTING)
-                consolePrint("\n*** Player round %d ***\n", Combat.round);
-
-
-        if (Combat.state == CAMPING) {
-                // Show "Zzz..."
-                consolePrint(".");
-                consoleRepaint();
-        }
-        // At the start of the player's round I apply all "passive" effects to
-        // each PC.
-        player_party->for_each_member(doApplyCombatEffects, NULL);
-
-        if (Combat.state == DEFEAT) {
-                // The last PC was killed by combat effects.
-                Defeat();
-                return;
-        }
-
-        if (Combat.state == CAMPING) {
-                return;
-        }
-
-        if (Combat.pm != NULL && Combat.pm->isSolo()) {
-                // Handle the case where the player has selected a single PC to
-                // run in "solo" mode. In this case we don't iterate over the
-                // other PCs.
-
-                if (Combat.pm->isIncapacitated()) {
-                        // Automatically exit solo mode if something happens to
-                        // the solo mode PC.
-                        myExitSoloMode(Combat.pm);
-                }
-                else {
-                        myRunPc(Combat.pm, NULL);
-                        return;
-                }
-        }
-
-        player_party->for_each_member(myRunPc, NULL);
 }
 
 static void combat_overlay_map(struct terrain_map *map, 
@@ -2151,29 +891,28 @@ static void combat_overlay_map(struct terrain_map *map,
         }
         // Rotate the map so that north faces the opponent.
         if (broadside) {
-                terrain_map_rotate(map, vector_to_rotation(pinfo->dy, 
-                                                           pinfo->dx));
+                terrain_map_rotate(map, vector_to_rotation(pinfo->dy, pinfo->dx));
 
                 // Position the map against the boundary dividing the map.
                 if (pinfo->dx < 0) {
                         // facing west, shift map west toward edge
-                        x = (place_w(Place) + 1) / 2;
+                        x = (place_w(Place)) / 2;
                         y = (place_h(Place) - map->h) / 2;
                 }
                 else if (pinfo->dx > 0) {
                         // facing east, shift map east toward edge
-                        x = (place_w(Place) + 1) / 2 - map->w;
+                        x = (place_w(Place)) / 2 - map->w;
                         y = (place_h(Place) - map->h) / 2;
                 }
                 else if (pinfo->dy < 0) {
                         // facing north, shift map north toward edge
                         x = (place_w(Place) - map->w) / 2;
-                        y = (place_h(Place) + 1) / 2;
+                        y = (place_h(Place)) / 2;
                 }
                 else if (pinfo->dy > 0) {
                         // facing south, shift map south toward edge
                         x = (place_w(Place) - map->w) / 2;
-                        y = (place_h(Place) + 1) / 2 - map->h;
+                        y = (place_h(Place)) / 2 - map->h;
                 }
         }
         else {
@@ -2190,8 +929,8 @@ static void combat_overlay_map(struct terrain_map *map,
         // Adjust the party's starting position to be centered on the overlap
         // map.
         set_party_initial_position(pinfo, 
-                                   x + (map->w + 1) / 2, 
-                                   y + (map->h + 1) / 2);
+                                   x + (map->w /*+ 1*/) / 2, 
+                                   y + (map->h /*+ 1*/) / 2);
 
         // Blit the rotated map centered on the given coordinates.
         terrain_map_blit(Place->terrain_map, x, y, map, 0, 0, map->w, map->h);
@@ -2208,22 +947,19 @@ static void myPutEnemy(class NpcParty * foe, struct position_info *pinfo)
                 list_add(&Combat.parties, &foe->container_link.list);
 }
 
-static bool myPositionEnemy(class NpcParty * foe, int dx, int dy, bool defend)
+static bool myPositionEnemy(class NpcParty * foe, int dx, int dy, bool defend, struct place *place)
 {
         assert(foe->getSize());
 
-        myFillPositionInfo(&foe->pinfo, foe->getX(), foe->getY(), dx, dy,
-                           defend);
+        combat_fill_position_info(&foe->pinfo, place, foe->getX(), foe->getY(), dx, dy, defend);
         foe->pinfo.formation = foe->get_formation();
         if (!foe->pinfo.formation)
-                foe->pinfo.formation = &default_formation;
+                foe->pinfo.formation = formation_get_default();
 
         // Check for a map overlay.
         if (foe->vehicle && foe->vehicle->getObjectType()->map &&
             Place == &Combat.place) {
-                // printf("myPositionEnemy overlay, foe in vehicle\n");
-                combat_overlay_map(foe->vehicle->getObjectType()->map, 
-                                   &foe->pinfo, 1);
+                combat_overlay_map(foe->vehicle->getObjectType()->map, &foe->pinfo, 1);
           }
 
         Combat.enemy_vehicle = foe->vehicle;
@@ -2233,31 +969,7 @@ static bool myPositionEnemy(class NpcParty * foe, int dx, int dy, bool defend)
         return (foe->pinfo.placed != 0);
 }
 
-static bool pc_wakeup_after_camping(class Character * pc, void *data)
-{
-        pc->awaken();
-        return false;
-}
-
-static bool pc_wakeup_for_ambush(class Character * pc, void *data)
-{
-        class Character *guard = (class Character *) data;
-        if (pc->isAsleep()) {
-                if (guard ||
-                    pc->getRestCredits() == 0 ||
-                    (random() % 100) < PROB_AWAKEN) {
-                        pc->awaken();
-                        if (guard)
-                                consolePrint("%s wakes up %s\n",
-                                             guard->getName(), pc->getName());
-                        else
-                                consolePrint("%s wakes up!\n", pc->getName());
-                }
-        }
-
-        return false;
-}
-
+#if 0
 static void random_ambush(void)
 {
         class NpcParty *foe;
@@ -2273,142 +985,317 @@ static void random_ambush(void)
         // Try to place the enemy party. This can fail. For example, the place
         // might randomly generate a party of nixies as the npc party while the
         // player is camped on dry land.
-        if (!myPositionEnemy(foe, directionToDx(dir), directionToDy(dir),
-                             false)) {
+        if (!myPositionEnemy(foe, directionToDx(dir), directionToDy(dir), false)) {
                 printf("ambush failed for %s\n", foe->getName());
                 // I think the party will get cleaned up on exit...
                 return;
         }
 
-        Combat.state = FIGHTING;
-        Combat.turns_per_round = 1;
+        combat_set_state(COMBAT_STATE_FIGHTING);
 
         consolePrint("\n*** Ambush ***\n\n");
 
-        // Roll to wakeup party members
-        player_party->for_each_member(pc_wakeup_for_ambush, Combat.guard);
-
+        player_party->ambushWhileCamping();
 }
+#endif
 
-static bool combat_undo_charm(class Character *character, void *data)
+enum combat_faction_status combat_get_hostile_faction_status(void)
 {
-        if (character->isHostile(player_party->alignment)) {
-                character->setAlignment(player_party->alignment);
-        }
-        return false;
-}
+        // ---------------------------------------------------------------------
+        // Search the list of all objects in the current place. For each object
+        // that is not a member of the player party check its native and
+        // charmed alignment.
+        //
+        // ==================================================
+        // Native   | Charmed  | Result
+        // ==================================================
+        // hostile  | n/a      | [1] hostile
+        // hostile  | friendly | [2] friendly
+        // hostile  | hostile  | [1] hostile
+        // friendly | n/a      | [3] friendly
+        // friendly | friendly | [3] friendly
+        // friendly | hostile  | [1] hostile
+        // ==================================================
+        //
+        // o If any cases of [1] exist, then a hostile faction exists.
+        //
+        // o Otherwise if any cases of [2] exist then only a charmed faction
+        //   exists.
+        //
+        // o Otherwise no hostile faction exists.
+        //
+        // ---------------------------------------------------------------------
 
-static bool combat_player_can_continue(class Character *character, void *data)
-{
-        if (!character->isDead() && character->isOnMap() &&
-            !character->isHostile(player_party->alignment)) {
-                *(int*)data = 1;
-                return true;
-        }
-        return false;
-}
-
-static void myEventLoop(void)
-{
-        while (!Quit && Combat.state != DONE) {
-
-                // Loop until the player opts to quit or combat is over
-
-
-                // Special case: the only combatant(s) left on the battlefield
-                // are charmed party members. Miraculously cure them.
-                if (Combat.n_npcs == 0) {
-                        int ok = 0;
-                        player_party->for_each_member(combat_player_can_continue, &ok);
-                        if (!ok) {
-                                player_party->for_each_member(combat_undo_charm, NULL);
-                        }
-                }
+        struct list *head;
+        struct list *elem;
+        class Object *obj;
+        bool found_charmed_hostile;
 
 
-                if (Combat.state == FIGHTING)
-                        Combat.round++;
+        found_charmed_hostile = false;
 
-                doPlayerRound();
+        head = place_get_all_objects(Place);
+        list_for_each(head, elem) {
+                obj = outcast(elem, class Object, turn_list);
 
-                turnAdvance(Combat.turns_per_round);
+                // -------------------------------------------------------------
+                // Player-controlled objects (objects in the player party) are
+                // handled by combat_get_player_faction_status(), not here.
+                // -------------------------------------------------------------
 
-                if (!TurnChanged)
-                        // This handles Quicken and Time Stop...
+                if (obj->isPlayerPartyMember())
                         continue;
 
-                if (!Quit && Combat.state != DONE)
-                        // Handle the case where combat did not finish during
-                        // the player's round.
-                        doNpcRound();
+                // -------------------------------------------------------------
+                // Among the non-player controlled objects anything that is
+                // simply hostile implies a hostile faction exists.
+                // -------------------------------------------------------------
 
-                if (Combat.state == CAMPING) {
-
-                        SDL_Event event;
-
-                        SDL_Delay(500);
-
-                        // Hack: drain the backlog of tick events. The tick
-                        // thread just posted a bunch of them while we were in
-                        // the delay. By handling them now I can make animation
-                        // appear somewhat normal. If I don't then they pile up
-                        // on the event queue and the next time I go to check
-                        // it I end up doing all the pent-up sprite animations
-                        // at once, which makes the animated sprites dance like
-                        // electrocuted puppets.
-                        while (SDL_PollEvent(&event)) {
-                                if (event.type != SDL_USEREVENT)
-                                        continue;
-                                Tick++;
-                                wqRunToTick(&TickWorkQueue, Tick);
-                                mapUpdate(REPAINT_IF_DIRTY);
-                        }
-
-                        // If the player is camping while aboard a vehicle and
-                        // a watch is on guard then the vehicle will regain 10%
-                        // of its hit points per hour.
-                        if (player_party->vehicle && Combat.guard) {
-                                player_party->vehicle->repair();
-                        }
-                        // Check for the end of camping.
-                        if (Turn >= Combat.end_of_camping_turn) {
-                                consoleNewline();
-                                Combat.state = DONE;
-                                player_party->
-                                    for_each_member(pc_wakeup_after_camping, 0);
-                                if (Combat.rested)
-                                        consolePrint("Party rested!\n");
-                                else
-                                        consolePrint("No effect...\n");
-                        }
-                        else {
-                                random_ambush();
-                        }
+                if (obj->isHostile(player_party->getAlignment())) {
+                        return COMBAT_FACTION_EXISTS;
                 }
-                // Note: always update the clock before the turn wq. For
-                // example, when entering a place all the NPC parties use the
-                // wall clock time to synchronize their schedules, so it needs
-                // to be set BEFORE calling them.
-                clockUpdate();
 
-                if (!Quit && Combat.state != DONE)
-                        placeAdvanceCombatTurn();
+                // -------------------------------------------------------------
+                // Among non-player controlled, non-hostile objects, check for
+                // any that are charmed to side with the player.
+                // -------------------------------------------------------------
 
-                foogodAdvanceTurns();
-                // playerAdvanceTurns();
-                skyAdvanceTurns();
-                windAdvanceTurns();
+                if (!found_charmed_hostile &&
+                    obj->isNativelyHostile(player_party->getAlignment())) {
+                        found_charmed_hostile = true;
+                }
+        }
 
-                wqRunToTick(&TurnWorkQueue, Turn);
+        if (found_charmed_hostile)
+                return COMBAT_FACTION_CHARMED;
 
-                mapUpdate(REPAINT_IF_DIRTY);
+        return COMBAT_FACTION_GONE;
+}
+
+enum combat_faction_status combat_get_player_faction_status(void)
+{
+        struct list *head;
+        struct list *elem;
+        class Object *obj;
+        bool found_charmed_member;
+
+        found_charmed_member = false;
+        head                 = place_get_all_objects(Place);
+
+        list_for_each(head, elem) {
+
+                obj = outcast(elem, class Object, turn_list);
+
+                // -------------------------------------------------------------
+                // Non-player-controlled objects (objects not in the player
+                // party) are handled by combat_get_hostile_faction_status(),
+                // not here.
+                // -------------------------------------------------------------
+
+                if (! obj->isPlayerPartyMember())
+                        continue;
+
+                // -------------------------------------------------------------
+                // Among the player-controlled objects anything that is not
+                // hostile implies a player faction exists.
+                // -------------------------------------------------------------
+
+                if (! obj->isHostile(player_party->getAlignment())) {
+                        return COMBAT_FACTION_EXISTS;
+                }
+
+                // -------------------------------------------------------------
+                // Among player-controlled, hostile objects, check for any that
+                // are charmed to against the player.
+                // -------------------------------------------------------------
+
+                if (!found_charmed_member &&
+                    !obj->isNativelyHostile(player_party->getAlignment())) {
+                        found_charmed_member = true;
+                }
+        }
+
+        if (found_charmed_member)
+                return COMBAT_FACTION_CHARMED;
+
+        return COMBAT_FACTION_GONE;
+        
+}
+
+static void combat_uncharm_all_hostiles()
+{
+        struct list *head;
+        struct list *elem;
+        class Object *obj;
+
+        head = place_get_all_objects(Place);
+        list_for_each(head, elem) {
+
+                obj = outcast(elem, class Object, turn_list);
+
+                if (obj->isNativelyHostile(player_party->getAlignment()) &&
+                    !obj->isHostile(player_party->getAlignment())) {
+                        obj->unCharm();
+                }
         }
 }
 
-static void myCleanupObject(class Object * object, void *data)
+void combat_analyze_results_of_last_turn()
 {
-        object->remove();
-        delete object;
+
+        enum combat_faction_status hostile_faction_status;
+        enum combat_faction_status player_faction_status;
+
+        // ---------------------------------------------------------------------
+        // Now check for changes in the combat state as a result of the last
+        // turn. Check the status of the hostile party or parties and the
+        // player party. The following table shows the outcome with all
+        // possible combinations of status:
+        //
+        // =====================================================
+        // hostiles | player party | result
+        // ===================================================== 
+        // exist    | exist        | continue combat
+        // exist    | gone         | exit combat
+        // exist    | charmed      | uncharm, continue combat
+        // gone     | exist        | looting
+        // gone     | gone         | exit combat
+        // gone     | charmed      | uncharm, looting
+        // charmed  | exist        | continue combat
+        // charmed  | gone         | exit combat
+        // charmed  | charmed      | uncharm, continue combat
+        // =====================================================
+        //
+        // ---------------------------------------------------------------------
+        
+        hostile_faction_status = combat_get_hostile_faction_status();
+        player_faction_status  = combat_get_player_faction_status();
+                        
+        switch (player_faction_status) {
+                
+        case COMBAT_FACTION_EXISTS:
+                
+                switch (hostile_faction_status) {
+                        
+                case COMBAT_FACTION_EXISTS:
+                        // -----------------------------------------------------
+                        // Both factions exist. Continue or restart fighting.
+                        // -----------------------------------------------------                        
+                        combat_set_state(COMBAT_STATE_FIGHTING);
+                        break;
+
+                case COMBAT_FACTION_CHARMED:
+                        // -----------------------------------------------------
+                        // The hostile faction are all charmed. Tough luck for
+                        // them. Make sure we are fighting.
+                        // -----------------------------------------------------
+                        combat_set_state(COMBAT_STATE_FIGHTING);
+                        break;
+
+                case COMBAT_FACTION_GONE:
+                        // -----------------------------------------------------
+                        // No hostiles around. Loot at will.
+                        // -----------------------------------------------------
+                        combat_set_state(COMBAT_STATE_LOOTING);
+                        break;
+
+                default:
+                        assert(false);
+                        break;
+                }
+                
+                break;
+
+        case COMBAT_FACTION_CHARMED:
+
+                // -------------------------------------------------------------
+                // In all of these cases I uncharm the party members. If I
+                // don't, then I'm risking a deadlock situation where the
+                // hostiles can't or won't finish off the charmed members, in
+                // which case the game gets stuck running all the npc's forever
+                // while the player helplessly watches.
+                // -------------------------------------------------------------
+
+                player_party->unCharmMembers();
+
+                switch (hostile_faction_status) {
+                        
+                case COMBAT_FACTION_EXISTS:
+                        // -----------------------------------------------------
+                        // All party members charmed and hostiles are closing
+                        // in. Uncharm the party members to avoid deadlocks
+                        // where the hostiles can't or won't finish off the
+                        // charmed party members.
+                        // -----------------------------------------------------
+                        combat_set_state(COMBAT_STATE_FIGHTING);
+                        break;
+
+                        // -----------------------------------------------------
+                        // Well, both sides are all charmed. An interesting
+                        // case. Again, to avoid deadlocks, uncharm the party
+                        // members. To be fair I'll uncharm the hostiles, too.
+                        // -----------------------------------------------------
+                        combat_uncharm_all_hostiles();
+                        combat_set_state(COMBAT_STATE_FIGHTING);
+                        break;
+
+                case COMBAT_FACTION_GONE:
+                        // -----------------------------------------------------
+                        // No hostiles around. Loot at will. Uncharm or we'll
+                        // definitely deadlock.
+                        // -----------------------------------------------------
+                        combat_set_state(COMBAT_STATE_LOOTING);
+                        break;
+
+                default:
+                        assert(false);
+                        break;
+                }
+
+                break;
+
+        case COMBAT_FACTION_GONE:
+
+                // -------------------------------------------------------------
+                // In all of these cases combat is over. Simple. If combat is
+                // ocurring in the special combat place then we need to clean it
+                // up by calling combat_exit().
+                // -------------------------------------------------------------
+                
+                combat_set_state(COMBAT_STATE_DONE);
+
+//                if (Place == &Combat.place)
+                combat_exit();
+
+                break;
+                
+        case COMBAT_FACTION_CAMPING:
+
+                switch (hostile_faction_status) {
+                        
+                case COMBAT_FACTION_EXISTS:
+                        // -----------------------------------------------------
+                        // Ambush!
+                        // -----------------------------------------------------                        
+                        combat_set_state(COMBAT_STATE_FIGHTING);
+                        break;
+
+                case COMBAT_FACTION_GONE:
+                        // -----------------------------------------------------
+                        // No hostiles around. Change nothing.
+                        // -----------------------------------------------------
+                        break;
+
+                default:
+                        assert(false);
+                        break;
+                }
+
+                break;
+
+        }
+        
+
 }
 
 static void myFindAndPositionEnemy(class Object * obj, void *data)
@@ -2420,19 +1307,8 @@ static void myFindAndPositionEnemy(class Object * obj, void *data)
 
         info = (struct v2 *) data;
         if (((class NpcParty *) obj)->isHostile(player_party->alignment))
-                Combat.state = FIGHTING;
-        myPositionEnemy((class NpcParty *) obj, info->dx, info->dy, false);
-}
-
-static bool pc_camp(class Character * pc, void *data)
-{
-        struct combat_info *info;
-
-        info = (struct combat_info *) data;
-        if (pc == info->guard)
-                return false;
-        pc->changeSleep(info->hours * TURNS_PER_HOUR);
-        return false;
+                combat_set_state(COMBAT_STATE_FIGHTING);
+        myPositionEnemy((class NpcParty *) obj, info->dx, info->dy, false, info->place);
 }
 
 int combatInit(void)
@@ -2440,20 +1316,17 @@ int combatInit(void)
         // This is called once at the beginning of the game
         memset(&Combat, 0, sizeof (Combat));
 
-        // srandom(0/*time(0)*/); done in common.c
-
         /* Initialize the place to safe defaults */
         list_init(&Combat.place.list);
         list_init(&Combat.place.vehicles);
+        list_init(&Combat.place.turn_list);
         Combat.place.type = combat_place;
         Combat.place.name = "Combat map";
         Combat.place.objects = hash_create(11);
-        Combat.state = DONE;
+        Combat.state = COMBAT_STATE_DONE;
+        Combat.place.is_wilderness_combat = true;
+        Combat.place.scale = NON_WILDERNESS_SCALE;
         list_init(&Combat.parties);
-
-        default_formation.n = sizeof (default_formation_entries) /
-            sizeof (default_formation_entries[0]);
-        default_formation.entry = default_formation_entries;
 
         return 0;
 }
@@ -2547,7 +1420,7 @@ static void fill_temporary_terrain_map(struct terrain_map *map,
                 dst_y = 0;
                 src_x = map->w / 2;
                 src_y = 0;
-                src_w = (map->w + 1) / 2;
+                src_w = (map->w) / 2;
                 src_h = map->h;
 
         }
@@ -2570,7 +1443,7 @@ static void fill_temporary_terrain_map(struct terrain_map *map,
                 src_x = 0;
                 src_y = map->h / 2;
                 src_w = map->w;
-                src_h = (map->h + 1)/ 2;
+                src_h = (map->h)/ 2;
         }
 
         tile_map = place_get_combat_terrain_map(place, x, y);
@@ -2754,12 +1627,14 @@ static bool position_player_party(struct combat_info *cinfo)
 {
         class Vehicle *vehicle;
 
-        myFillPositionInfo(&player_party->pinfo, cinfo->move->x,
-                           cinfo->move->y,
-                           cinfo->move->dx, cinfo->move->dy, cinfo->defend);
+        combat_fill_position_info(&player_party->pinfo, Place,
+                                  cinfo->move->x, cinfo->move->y,
+                                  cinfo->move->dx, cinfo->move->dy, 
+                                  cinfo->defend);
+
         player_party->pinfo.formation = player_party->get_formation();
         if (!player_party->pinfo.formation)
-                player_party->pinfo.formation = &default_formation;
+                player_party->pinfo.formation = formation_get_default();
 
         // Check for map overlays. First check if the player is in a vehicle
         // with a map.
@@ -2792,56 +1667,38 @@ static bool position_player_party(struct combat_info *cinfo)
         }
 
         player_party->remove();
-        player_party->for_each_member(myPutPC, &player_party->pinfo);
-
-        // Check if entrance was blocked. If so then briefly show the part of
-        // the combat map where the player party would have been placed so that
-        // the user can see why combat failed.
-        if (!player_party->get_leader() ||
-            !player_party->get_leader()->isOnMap()) {
-                consolePrint("\n*** ABORT ***\n\n");
-                consolePrint("Combat aborted (battlefield impassable)\n");
-                mapCenterCamera(player_party->pinfo.x, player_party->pinfo.y);
-                mapRmView(ALL_VIEWS);
-                mapUpdate(REPAINT_NO_LOS);
-                SDL_Delay(500);
-                mapAddView(player_party->view);
-                return false;
-        }
-
-        player_party->context = CONTEXT_COMBAT;
+        player_party->for_each_member(combat_place_character, &player_party->pinfo);
         return true;
 }
 
 bool combat_enter(struct combat_info * info)
 {
-        class Character *leader;
-        int rx, ry, original_context;
-        struct list *pelem;
+        struct location loc;
 
-        if (player_party->all_dead())
+        if (player_party->allDead())
                 // Yes, this can happen in some rare circumstances...
                 return false;
 
         // *** Memorize Entry State ***
 
-        original_context = player_party->context;
+        // ---------------------------------------------------------------------
+        // Default to the entry point as the combat exit location for the
+        // player party.
+        // ---------------------------------------------------------------------
+
+        loc.place = info->move->place;
+        loc.x     = info->move->x;
+        loc.y     = info->move->y;
+        player_party->setCombatExitDestination(&loc);
+
 
         // *** Initialize Combat Globals ***
 
-        Combat.defend = info->defend;
-        Combat.n_pcs = 0;
-        Combat.n_npcs = 0;
-        Combat.followMode = false;
-        Combat.turns_per_round = info->camping ? TURNS_PER_HOUR : 1;
         Combat.tmp_terrain_map = false;
         Combat.enemy_vehicle = NULL;
         Combat.round = 0;
         Cursor->remove();
-        memset(&Combat.rinfo, 0, sizeof (Combat.rinfo));
         list_init(&Combat.parties);
-
-        // *** Position parties (not members - just the parties) ***
 
         // *** Initialize the Temporary Combat Place ***
 
@@ -2887,13 +1744,12 @@ bool combat_enter(struct combat_info * info)
         // *** Position the Enemy Party Members ***
 
         if (info->move->npc_party) {
-                Combat.state = FIGHTING;
-                if (!myPositionEnemy(info->move->npc_party, info->move->dx,
-                                     info->move->dy, !info->defend)) {
-                        //if (Combat.n_npcs == 0) {
+                combat_set_state(COMBAT_STATE_FIGHTING);
+                if (!myPositionEnemy(info->move->npc_party, info->move->dx, info->move->dy, !info->defend, Place)) {
+
                         consolePrint("\n*** FORFEIT ***\n\n");
                         consolePrint("Your opponent slips away!\n");
-                        Combat.state = LOOTING;
+                        combat_set_state(COMBAT_STATE_LOOTING);
 
                         // The npc party did not get added to the list because
                         // myPositionEnemy() failed. Add it to the list so that
@@ -2903,12 +1759,8 @@ bool combat_enter(struct combat_info * info)
                 }
         }
         else if (info->camping) {
-                player_party->for_each_member(pc_camp, info);
-                Combat.end_of_camping_turn =
-                    Turn + info->hours * TURNS_PER_HOUR;
-                Combat.state = CAMPING;
-                Combat.guard = info->guard;
-                Combat.rested = false;
+
+                combat_set_state(COMBAT_STATE_CAMPING);
                 consolePrint("Zzzz...");
                 consoleRepaint();
         }
@@ -2916,130 +1768,36 @@ bool combat_enter(struct combat_info * info)
                 struct v2 v2;
                 v2.dx = info->move->dx;
                 v2.dy = info->move->dy;
-                Combat.state = LOOTING;
-                placeForEachObject(myFindAndPositionEnemy, &v2);
+                v2.place = Place;
+                combat_set_state(COMBAT_STATE_LOOTING);
+                place_for_each_object(Place, myFindAndPositionEnemy, &v2);
         }
 
         // *** Setup the Map Viewer ***
 
-        mapRmView(player_party->view);
+#if 0
+        mapRmView(player_party->getView());
+#endif
         player_party->for_each_member(mySetInitialCameraPosition, 0);
-        mapUpdate(0);
-        foogodRepaint();
 
-        if (Combat.state == FIGHTING) {
+        if (combat_get_state() == COMBAT_STATE_FIGHTING) {
+                player_party->enableRoundRobinMode();
                 consolePrint("\n*** Combat ***\n\n");
                 soundPlay(Combat.sound_enter, SOUND_MAX_VOLUME);
         }
-        else if (Combat.state != CAMPING) {
-                myFollow(0);
-        }
-        // *** Main Combat Loop ***
-
-        myEventLoop();
-
-        // *** Process Player Exit Conditions ***
-
-        leader = player_party->get_leader();
-        if (leader) {
-                rx = leader->getX();
-                ry = leader->getY();
-        }
-        else {
-                rx = info->move->x;
-                ry = info->move->y;
+        else if (combat_get_state() != COMBAT_STATE_CAMPING) {
+                player_party->enableFollowMode();
         }
 
-        player_party->for_each_member(pc_end_combat, NULL);
-        player_party->onMap = true;
+#if 0
+        mapUpdate(0);
+#endif
+        foogodRepaint();
 
-        switch (Combat.rinfo.type) {
-        case retreat_info::NO_RETREAT:
-                printf("no retreat\n");
-                if (Place != &Combat.place) {
-                        info->move->x = rx;
-                        info->move->y = ry;
-                }
-                break;
-        case retreat_info::EDGE_RETREAT:
-                printf("edge retreat\n");
-                info->move->place = Place->location.place;
-                // Edge retreats which result in relocating the player are just
-                // too problematic. If the tile is impassable in that direction
-                // I have no good way of dealing with it. So just forget it.
-                info->move->x = Place->location.x;      // + Combat.rinfo.dx;
-                info->move->y = Place->location.y;      // + Combat.rinfo.dy;
-                info->move->dx = Combat.rinfo.dx;
-                info->move->dy = Combat.rinfo.dy;
-                break;
-        case retreat_info::PORTAL_RETREAT:
-                printf("portal retreat\n");
-                class Portal *portal = place_get_portal(Place, Combat.rinfo.x,
-                                                        Combat.rinfo.y);
-                info->move->place = portal->getToPlace();
-                info->move->x = portal->getToX();
-                info->move->y = portal->getToY();
-                break;
-        }
 
-        // If the player retreats or dies then destroy the enemy npc party's
-        // vehicle
-        if (Combat.enemy_vehicle &&
-            (Combat.rinfo.type != retreat_info::NO_RETREAT || !leader)) {
-                Combat.enemy_vehicle->remove();
-                Combat.enemy_vehicle->destroy();
-                delete Combat.enemy_vehicle;
-        }
-        // Special case: if the party was in follow mode and the leader left
-        // then the next-in-command was made leader. This should only be a
-        // temporary assignment until the party is all together again, at which
-        // point the "real" leader should resume his/her role. By setting the
-        // leader to NULL on exit I'll force a reevalution of the leader the
-        // next time somebody wants to know who it is.
-        player_party->leader = NULL;
-
-        // *** Process NPC Party Exit Conditions ***
-
-        pelem = Combat.parties.next;
-        while (pelem != &Combat.parties) {
-
-                class NpcParty *party;
-                struct list *tmp;
-
-                tmp = pelem->next;
-                party = outcast(pelem, class NpcParty, container_link.list);
-                list_remove(pelem);
-                pelem = tmp;
-
-                printf("cleaning up %s\n", party->getName());
-                party->cleanupAfterCombat();
-                party->destroy();
-
-                // If the party was summoned or brought as an ambush then we
-                // need to delete it now.
-                if (party->destroy_on_combat_exit) {
-                        printf("Destroying party %s\n", party->getName());
-                        delete party;
-                }
-        }
-
-        memset(Combat.npcs, 0, sizeof (Combat.npcs));
-        list_init(&Combat.parties);
-        if (Place == &Combat.place)
-                place_for_each_object(Place, myCleanupObject, 0);
-
-        if (Combat.tmp_terrain_map)
-                terrain_map_destroy(Combat.place.terrain_map);
-
-        // *** Restore Map Viewer **
-
-        mapRmView(ALL_VIEWS);
-        mapAddView(player_party->view);
-
-        player_party->context = original_context;
-
-        printf("moving party to %s [%d %d]\n", info->move->place->name,
-               info->move->x, info->move->y);
+        // ---------------------------------------------------------------------
+        // Return to the main loop. Combat will continue from there.
+        // ---------------------------------------------------------------------
 
         return true;
 }
@@ -3047,21 +1805,16 @@ bool combat_enter(struct combat_info * info)
 char combatGetState(void)
 {
         switch (Combat.state) {
-        case FIGHTING:
+        case COMBAT_STATE_FIGHTING:
                 return 'Y';
                 break;
-        case DONE:
+        case COMBAT_STATE_DONE:
                 return 'N';
                 break;
-        case RETREAT:
-        case DEFEAT:
-                return 'D';
-                break;
-        case VICTORY:
-        case LOOTING:
+        case COMBAT_STATE_LOOTING:
                 return 'V';
                 break;
-        case CAMPING:
+        case COMBAT_STATE_CAMPING:
                 return 'K';
                 break;
         }
@@ -3069,34 +1822,13 @@ char combatGetState(void)
         return 'N';
 }
 
-void combatKIA(class Character * c)
-{
-        assert(Combat.state != DONE);
-
-        if (c->isPlayerControlled()) {
-                Combat.n_pcs--;
-                if (Combat.n_pcs == 0) {
-                        // Handle the case where the last PC is killed by an
-                        // NPC.
-                        Combat.state = DEFEAT;
-                }
-        }
-        else {
-                bool victory = true;
-                Combat.n_npcs--;
-                myForEachNpc(myCheckIfHostile, &victory);
-                if (victory)
-                        Combat.state = VICTORY;
-        }
-}
-
 bool combatAddNpcParty(class NpcParty * party, int dx, int dy, bool located,
-                       int x, int y)
+                       struct place *place, int x, int y)
 {
         if (!located) {
                 // Caller has not specified a location so use the normal
                 // procedure.
-                return myPositionEnemy(party, dx, dy, false);
+                return myPositionEnemy(party, dx, dy, false, place);
         }
         // Special case: caller wants to put the party at (x, y). Duplicate the
         // code in myPositionEnemy except fill out the position info based on
@@ -3105,6 +1837,7 @@ bool combatAddNpcParty(class NpcParty * party, int dx, int dy, bool located,
         party->remove();
 
         memset(&party->pinfo, 0, sizeof (party->pinfo));
+        party->pinfo.place = place;
         party->pinfo.x = x;
         party->pinfo.y = y;
         party->pinfo.dx = dx;
@@ -3112,8 +1845,44 @@ bool combatAddNpcParty(class NpcParty * party, int dx, int dy, bool located,
         party->pinfo.formation = party->get_formation();
         party->pinfo.find_party = true;
         if (!party->pinfo.formation)
-                party->pinfo.formation = &default_formation;
+                party->pinfo.formation = formation_get_default();
         set_party_initial_position(&party->pinfo, x, y);
         myPutEnemy(party, &party->pinfo);
         return (party->pinfo.placed != 0);
+}
+
+void combat_exit(void)
+{
+        // ---------------------------------------------------------------------
+        // Ensure all party members are removed from the current place so they
+        // don't get destroyed below.
+        // ---------------------------------------------------------------------
+        
+        player_party->removeMembers();
+        
+        // ---------------------------------------------------------------------
+        // Clean up the temporary combat place.
+        // ---------------------------------------------------------------------
+
+        if (Place == &Combat.place)
+                place_remove_and_destroy_all_objects(Place);
+
+        // ---------------------------------------------------------------------
+        // Relocate the player party back to the wilderness. This will handle
+        // the place switch implicitly by setting the global 'Place' pointer to
+        // the wilderness.
+        //
+        // Addendum: in some corner cases the player party has already been
+        // relocated. Specifically, if a party member casts a Gate travel spell
+        // and the moongate empties onto the wilderness, then the gate code
+        // already relocated the party.
+        // ---------------------------------------------------------------------
+
+        if (NULL != place_get_parent(Place)) {
+                player_party->relocate(place_get_parent(Place), 
+                                       place_get_x(Place), 
+                                       place_get_y(Place));
+        }
+        
+        assert(NULL != player_party->getPlace());
 }

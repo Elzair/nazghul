@@ -39,7 +39,7 @@ extern "C" {
 	extern struct list TickWorkQueue;
 	extern struct list TurnWorkQueue;
 
-	extern void wqInit(void);
+	extern int wqInit(void);
 	extern void wqAddJob(struct list *wq, struct wq_job *job);
 	extern void wqRunToTick(struct list *wq, int tick);
 	extern void wqCreateJob(struct list *wq, int tick, int period,

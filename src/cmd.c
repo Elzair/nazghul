@@ -626,20 +626,14 @@ bool cmdSearch(int x, int y)
 	return true;
 }
 
-static void myGetAux(Object * item)
-{
-	place_remove_object(Place, item);
-	player_party->add_to_inventory(item->getObjectType(), 1);
-	delete(item);
-}
-
-bool cmdGet(int x, int y, bool scoop_all)
+bool cmdGet(class Object *actor, bool scoop_all)
 {
 	class Object *item;
 	class ObjectType *type;
 	int count;
 	int dir;
 	int n_item_types;
+        int x, y;
 
 	cmdwin_clear();
 	cmdwin_print("Get-");
@@ -650,24 +644,24 @@ bool cmdGet(int x, int y, bool scoop_all)
 
 	consolePrint("You get ");
 
-	x = placeWrapX(x + directionToDx(dir));
-	y = placeWrapY(y + directionToDy(dir));
+        x = actor->getX() + directionToDx(dir);
+        y = actor->getY() + directionToDy(dir);
 
-	item = place_get_item(Place, x, y);
+	item = place_get_item(actor->getPlace(), x, y);
 	if (!item) {
 		consolePrint("nothing!\n");
-		return true;
+		return false;
 	}
-
+       
 	n_item_types = 1;
 	count = 1;
 	type = item->getObjectType();
 
-	myGetAux(item);
+        place_remove_object(actor->getPlace(), item);
+        actor->addToInventory(item);
 
 	if (scoop_all) {
-		while ((item = place_get_item(Place, x, y)) != NULL) {
-
+		while (NULL != (item = place_get_item(actor->getPlace(), x, y))) {
 			if (item->getObjectType() != type) {
 				if (n_item_types > 1)
 					consolePrint(", ");
@@ -679,7 +673,8 @@ bool cmdGet(int x, int y, bool scoop_all)
 				count++;
 			}
 
-			myGetAux(item);
+                        place_remove_object(actor->getPlace(), item);
+                        actor->addToInventory(item);
 		}
 	}
 
@@ -688,6 +683,9 @@ bool cmdGet(int x, int y, bool scoop_all)
 	}
 	type->describe(count);
 	consolePrint(".\n");
+        mapSetDirty();
+
+        actor->decActionPoints(NAZGHUL_BASE_ACTION_POINTS);
 
 	return true;
 }
@@ -720,15 +718,16 @@ bool cmdOpen(class Character * pc)
 	mech = (class Mech *) place_get_object(Place, x, y, mech_layer);
 	if (mech != NULL) {
 		cmdwin_print("%s-", mech->getName());
+                consolePrint("Open ");
+                mech->describe(1);
 		if (mech->activate(MECH_OPEN)) {
 			cmdwin_print("ok");
 			// SAM: Should this printing be done entirely by mech
 			// scripting?
-			consolePrint("Opened ");
-			mech->describe(1);
 			consolePrint(".\n");
 			mapSetDirty();
 		} else {
+                        consolePrint("-failed!\n");
 			cmdwin_print("failed!");
 		}
 		return true;
@@ -737,9 +736,8 @@ bool cmdOpen(class Character * pc)
 	/*** Open Container ***/
 
 	// Get the container.
-	container = (class Container *) place_get_object(Place, x, y,
-							 container_layer);
-	if (!container) {
+	container = (class Container *) place_get_object(Place, x, y, container_layer);
+	if (NULL == container) {
 		cmdwin_print("nothing!");
 		return false;
 	}
@@ -758,6 +756,7 @@ bool cmdOpen(class Character * pc)
 
 	consolePrint("%s opens ", pc->getName());
 	container->describe(1);
+        pc->decActionPoints(NAZGHUL_BASE_ACTION_POINTS);
 
 	// Check for traps.
 	if (!container->isTrapped()) {
@@ -774,11 +773,11 @@ bool cmdOpen(class Character * pc)
 			consolePrint("oops!\n");
 			int effects = trap->getEffects();
 			if (effects & EFFECT_BURN) {
-				pc->changeHp(-trap->getAmount());
+				pc->damage(trap->getAmount());
 			}
 			if (effects & EFFECT_POISON && !pc->isPoisoned()) {
 				pc->setPoison(true);
-				pc->changeHp(-trap->getAmount());
+				pc->damage(trap->getAmount());
 			}
 			if (effects & EFFECT_SLEEP) {
 				pc->changeSleep(trap->getAmount());
@@ -798,15 +797,25 @@ bool cmdOpen(class Character * pc)
 	// map).
 	container->open();
 
+        // ---------------------------------------------------------------------
         // Delete container automatically on the combat map because if
         // containers are stacked (and they frequently are) then the top one
         // always gets selected and the player can't get at the ones
         // underneath. On the other hand, in towns I don't want to delete
         // people's furniture.
-        if (player_party->context == CONTEXT_COMBAT) {
-                container->remove();
-                delete container;
-        }
+        //
+        // Addendum: everything stated above still holds, but now corpse loot
+        // can also get dropped on town maps outside, so I can no longer decide
+        // whether or not to delete a container based on context. Furthermore,
+        // I want all containers to behave the same way as much as
+        // possible. This is an open issue and it may take some time and user
+        // feedback to decide what best to do, so for now I'll simply always
+        // remove containers after opening them.
+        // ---------------------------------------------------------------------
+
+        container->remove();
+        delete container;
+
         consolePrint("You find ");
 	placeDescribe(x, y, PLACE_DESCRIBE_OBJECTS);
 
@@ -889,7 +898,7 @@ void cmdAttack(void)
         }
 
         // Enter combat
-        player_party->move_to_combat(&cinfo);
+        player_party->move_to_wilderness_combat(&cinfo);
 }
 
 void cmdFire(void)
@@ -908,8 +917,7 @@ void cmdFire(void)
 		return;
 	}
 
-	cmdwin_print(" %s-<direction>",
-		     player_party->vehicle->getOrdnance()->getName());
+	cmdwin_print(" %s-<direction>", player_party->vehicle->getOrdnance()->getName());
 	getkey(&dir, dirkey);
 	cmdwin_backspace(strlen("<direction>"));
 
@@ -919,14 +927,10 @@ void cmdFire(void)
 	}
 
 	cmdwin_print("%s", directionToString(dir));
-	if (! player_party->vehicle->fire_weapon(directionToDx(dir),
-                                                 directionToDy(dir))) {
+	if (! player_party->vehicle->fire_weapon(directionToDx(dir), directionToDy(dir), player_party)) {
 		cmdwin_print("-Not a broadside!");
 		return;
         }
-
-	turnAdvance(place_adjust_turn_cost(player_party->getPlace(),
-                                           TURNS_TO_FIRE_VEHICLE_WEAPON));
 }
 
 bool cmdReady(class Character * member, int flags)
@@ -1021,6 +1025,7 @@ bool cmdReady(class Character * member, int flags)
                         consolePrint("%s ", member->getName());
                 }
                 consolePrint("readies arms.\n");
+                member->decActionPoints(NAZGHUL_BASE_ACTION_POINTS);
         }
 
 	return committed;
@@ -1084,7 +1089,7 @@ int select_target_with_doing(int ox, int oy, int *x, int *y,
         Cursor->setOrigin(ox, oy);
         Cursor->relocate(Place, *x, *y);  // Remember prev target, if any
         mapUpdate(0);
-  
+
         struct cursor_movement_keyhandler data;
         data.each_point_func  = each_point_func;
         data.each_target_func = each_target_func;
@@ -1213,12 +1218,7 @@ bool cmdHandle(class Character * pc)
 		cmdwin_print("%s", mech->getName());
 		consolePrint("%s handled %s\n", pc->getName(), mech->getName());
 		mech->activate(MECH_HANDLE);
-		mapRecomputeLos(player_party->view);	// Often necessary when 
-							// 
-		// 
-		// mechs
-		// change surrounding terrain.
-		mapSetDirty();
+                player_party->updateView(); // FIXME: what about character mode?
 	}
 
 	return true;
@@ -1358,7 +1358,7 @@ static void run_combat(bool camping, class Character * guard, int hours,
                 minfo.dy = player_party->dy;
         } 
 
-	player_party->move_to_combat(&cinfo);
+	player_party->move_to_wilderness_combat(&cinfo);
 }
 
 bool cmdTalk(int x, int y)
@@ -1418,8 +1418,6 @@ bool cmdTalk(int x, int y)
 	switch (convEnter(conv)) {
 
 	case CONV_COMBAT:
-                if (player_party->context != CONTEXT_COMBAT)
-                        run_combat(false, 0, 0, conv->speaker);
 		break;
 
 	case CONV_OK:
@@ -1516,7 +1514,7 @@ int select_quantity(int max)
 	return info.digit;
 }
 
-static int cmdCampInWilderness(void)
+static int cmdCampInWilderness(class Object *camper)
 {
 	int hours, yesno;
 	class Character *guard = 0;
@@ -1524,14 +1522,8 @@ static int cmdCampInWilderness(void)
 	cmdwin_clear();
 	cmdwin_print("Camp-");
 
-	if (place_get_portal(player_party->getPlace(), player_party->getX(),
-			     player_party->getY()) ||
-	    !place_is_passable(player_party->getPlace(),
-			       player_party->getX(),
-			       player_party->getY(),
-			       player_party->get_pmask(), 
-                               PFLAG_IGNOREVEHICLES))
-	{
+	if (place_get_portal(camper->getPlace(), camper->getX(), camper->getY()) ||
+	    !place_is_passable(camper->getPlace(), camper->getX(), camper->getY(), camper->getPmask(), PFLAG_IGNOREVEHICLES)) {
 		cmdwin_print("not here!");
 		return 0;
 	}
@@ -1559,13 +1551,14 @@ static int cmdCampInWilderness(void)
 		cmdwin_print("no watch");
 	}
 
-	player_party->camping = true;
+	player_party->beginCamping(guard, hours);
+        camper->endTurn();
 	run_combat(true, guard, hours, NULL);
-	player_party->camping = false;
-        return 0; // turns advanced in run_combat() so need to add any here
+
+        return 0;
 }
 
-static int cmdCampInTown(void)
+static int cmdCampInTown(class Object *camper)
 {
         int hours;
 
@@ -1573,10 +1566,13 @@ static int cmdCampInTown(void)
         cmdwin_print("Rest-");
 
         // Check for an object that will serve as a bed.
-        if (place_get_object(player_party->getPlace(),
-                             player_party->getX(), player_party->getY(),
-                             bed_layer) == NULL) {
+        if (place_get_object(camper->getPlace(), camper->getX(), camper->getY(),  bed_layer) == NULL) {
                 cmdwin_print("no bed!");
+                return 0;
+        }
+
+        // Rendezvous the party around the bed.
+        if (! player_party->rendezvous(camper->getPlace(), camper->getX(), camper->getY())) {
                 return 0;
         }
 
@@ -1587,17 +1583,18 @@ static int cmdCampInTown(void)
 
         // Put the party in "sleep" mode before returning back to the main
         // event loop.
-        player_party->begin_resting(hours);
+        player_party->beginResting(hours);
+        camper->endTurn();
         cmdwin_print(" resting...");
         return TURNS_PER_HOUR;
 }
 
-int cmdCamp(void)
+int cmdCamp(class Object *camper)
 {
-	if (Place->type == wilderness_place)
-                return cmdCampInWilderness();
-        else if (Place->type == town_place)
-                return cmdCampInTown();
+	if (place_is_wilderness(camper->getPlace()))
+                return cmdCampInWilderness(camper);
+        else if (place_is_town(camper->getPlace()))
+                return cmdCampInTown(camper);
         else {
                 cmdwin_print("not in combat mode!");
                 return 0;
@@ -1703,14 +1700,12 @@ int select_spell(struct get_spell_name_data *context)
 	return 0;
 }
 
-static class Object *target_character_for_spell(class Character * caster,
-						class Spell * spell, int *tx,
-						int *ty)
+static class Object *target_character_for_spell(class Character * caster, class Spell * spell, int *tx,	int *ty)
 {
 	class Object *target;
 	class Object *ret = NULL;
 
-	if (player_party->context != CONTEXT_COMBAT) {
+	if (player_party->getContext() == CONTEXT_WILDERNESS) {
 		target = select_party_member();
 		return target;
 	}
@@ -1740,13 +1735,8 @@ static class Object *target_mech_for_spell(class Character * caster,
 	int x, y;
 	class Object *ret = NULL;
 
-	if (player_party->context == CONTEXT_COMBAT) {
-		x = caster->getX();
-		y = caster->getY();
-	} else {
-		x = player_party->getX();
-		y = player_party->getY();
-	}
+        x = caster->getX();
+        y = caster->getY();
 
 	if (select_target(x, y, &x, &y, spell->range) == 0) {
 		ret =
@@ -1761,23 +1751,23 @@ static class Object *target_mech_for_spell(class Character * caster,
 	return ret;
 }
 
-static bool
-target_location_for_spell(class Character * caster,
-			  class Object ** ret,
-			  class Spell * spell, int *x, int *y)
+static bool target_location_for_spell(class Character * caster,
+                                      class Object ** ret,
+                                      class Spell * spell, int *x, int *y)
 {
 	class Character *target;
         int ox, oy;
 
-        if (player_party->context == CONTEXT_COMBAT) {
+        ox = caster->getX();
+        oy = caster->getY();
+
+        if (caster->isOnMap()) {
                 target = caster->getAttackTarget();
                 *x = target->getX();
                 *y = target->getY();
-                ox = caster->getX();
-                oy = caster->getY();
         } else {
-                *x = ox = player_party->getX();
-                *y = oy = player_party->getY();
+                *x = ox;
+                *y = oy;
         }
 
 	if (select_target(ox, oy, x, y, spell->range) == -1)
@@ -1793,9 +1783,7 @@ target_location_for_spell(class Character * caster,
 	return true;
 }
 
-static bool
-target_spell(class Spell * spell, class Character * pc,
-	     class Object ** ret, int *direction, int *x, int *y)
+static bool cmd_target_spell(class Spell * spell, class Character * pc, class Object ** ret, int *direction, int *x, int *y)
 {
         bool result;
 
@@ -1837,6 +1825,10 @@ target_spell(class Spell * spell, class Character * pc,
 		return true;
 	case SPELL_TARGET_ALL_PARTY_MEMBERS:
 		return true;
+        case SPELL_TARGET_PARTY_MEMBER:
+                cmdwin_print("-");
+                *ret = select_party_member();
+                break;
 	default:
 		return false;
 	}
@@ -1870,6 +1862,16 @@ bool cmdCastSpell(class Character * pc)
 		}
 		statusSetMode(ShowParty);
 	}
+
+        // ---------------------------------------------------------------------
+        // Make sure the PC is not asleep, dead, etc.
+        // ---------------------------------------------------------------------
+
+        if (pc->isDead() || pc->isAsleep()) {
+                cmdwin_print("-unable right now!");
+                return false;
+        }
+
 	// Prompt to select a spell
 	cmdwin_print("-");
 	if (select_spell(&context) == -1)
@@ -1884,16 +1886,13 @@ bool cmdCastSpell(class Character * pc)
 		cmdwin_print("-no effect!");
 		return false;
 	}
+
 	// Check if the spell can be used in this context.
-	if (!(player_party->context & spell->context)) {
+	if (!(player_party->getContext() & spell->context)) {
 		cmdwin_print("-not here!");
 		return false;
 	}
-	// Check if the caster is of sufficient level
-	if (pc->getLevel() < spell->level) {
-		cmdwin_print("-need more experience!");
-		return false;
-	}
+
 	// Check if the character comes by this spell naturally
 	for (i = 0; i < pc->species->n_spells; i++) {
 		if (pc->species->spells[i] == spell) {
@@ -1902,6 +1901,15 @@ bool cmdCastSpell(class Character * pc)
 		}
 	}
 
+        //Check if the caster is of sufficient level
+        //
+        // FIXME: what if the spell is natural? cast An Xen Exe on a snake and
+	// try to cast In Nox Por to see what I mean...
+        //
+	if (!natural && pc->getLevel() < spell->level) {
+		cmdwin_print("-need more experience!");
+		return false;
+	}
 	// Otherwise check party inventory for a mixed spell.
 	if (!natural) {
 		ie = player_party->search_inventory(spell);
@@ -1927,7 +1935,7 @@ bool cmdCastSpell(class Character * pc)
 		int direction = DIRECTION_NONE;
 
 		// Select a target for the spell.
-		if (!target_spell(spell, pc, &target, &direction, &tx, &ty))
+		if (!cmd_target_spell(spell, pc, &target, &direction, &tx, &ty))
 			break;
 
                 // Console message.
@@ -2156,25 +2164,22 @@ bool cmdMixReagents(void)
 	// the player.
 	if (!spell || mistake) {
 		statusSetMode(ShowParty);
-		int damage;
 		switch (random() % 3) {
 		case 0:
 		default:
 			cmdwin_print("oops!");
 			consolePrint("ACID!\n");
-			damage = DAMAGE_ACID;
-			player_party->for_each_member(apply_damage, &damage);
+			player_party->damage(DAMAGE_ACID);
 			break;
 		case 1:
 			cmdwin_print("ouch!");
 			consolePrint("BOMB!\n");
-			damage = DAMAGE_BOMB;
-			player_party->for_each_member(apply_damage, &damage);
+			player_party->damage(DAMAGE_BOMB);
 			break;
 		case 2:
 			cmdwin_print("yuck!");
 			consolePrint("GAS!\n");
-			player_party->for_each_member(apply_poison, NULL);
+			player_party->poison();
 			break;
 		}
 
@@ -2267,7 +2272,7 @@ void terraform_XY(int x, int y, void * data)
                 consolePrint("TERRAFORM warning - XY=(%d,%d) out of LOS\n", x, y);
         }
         terrain_map_fill(map, x, y, 1, 1, tt);
-        player_party->recompute_los();
+        player_party->updateView();
         consolePrint("TERRAFORM put %s '%s' at XY=(%d,%d)\n", 
                      tt->tag, tt->name, x, y);
 } // terraform_XY()
@@ -2310,15 +2315,13 @@ bool cmdXamine(class Character * pc)
 char * name_of_context (void)
 {
         // SAM: Perhaps this function belongs in common.c?
-        int context = player_party->context;
-        switch (context) {
+        switch (player_party->getContext()) {
         case CONTEXT_WILDERNESS:
-                return "Wilderness Mode";
-        case CONTEXT_COMBAT:
-                return "Combat Mode";
-        case CONTEXT_TOWN:
-                return "Town Mode";
-        default: assert(0);
+                return "Party Context";
+                break;
+        default:
+                return "Character Context";
+                break;
         }
 } // name_of_context()
 
@@ -2590,7 +2593,7 @@ void cmdZoomIn(void)
         } else if (!place_is_passable(player_party->getPlace(),
                                       player_party->getX(),
                                       player_party->getY(),
-                                      player_party->get_pmask(),
+                                      player_party->getPmask(),
                                       PFLAG_IGNOREVEHICLES)) {
 
                 // Currently zooming in to impassable terrain is not doable;

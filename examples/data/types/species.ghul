@@ -44,8 +44,9 @@
 // dex  - Affects roll to disarm trap, roll to defend(*), roll to hit with 
 //        ranged or thrown weapon(*).
 //
-// spd  - Affects party movement speed in towns and wilderness. A party is 
-//        limited by its slowest member.
+// spd - Affects party movement speed in towns and wilderness. A party is
+//       limited by its slowest member. Speed is the number of action points 
+//       given to a party each turn.
 //
 // vr   - vision radius, used in these ways:
 //
@@ -125,7 +126,7 @@ SPECIES human {
   str     20; 
   int     20;
   dex     20;
-  spd     2; // turns taken for easiest terrain multiplied by scale factor
+  spd     SPD_HUMAN;
   vr      13; // max AI vision radius (won't see the player beyond this range)
   pmask   (LAND);
 
@@ -163,7 +164,7 @@ SPECIES goblin {
   str     18;
   int     18;
   dex     22;
-  spd     2;
+  spd     SPD_GOBLIN;
   vr      14;
   pmask   (LAND);
 
@@ -200,7 +201,7 @@ SPECIES gazer {
   str     10;
   int     30;
   dex     10;
-  spd     4;
+  spd     SPD_GAZER;
   vr      19;
   pmask   (LAND|SHOALS);
 
@@ -238,8 +239,8 @@ SPECIES skeleton {
   str     10;
   int     10;
   dex     10;
-  spd     2;
-  vr      8;
+  spd     SPD_SKELETON;
+  vr      6;
   pmask   (LAND);
 
   hp_mod  22; // a bit hard to kill
@@ -275,7 +276,7 @@ SPECIES horse {
   str     30;
   int     10;
   dex     20;
-  spd     2;
+  spd     SPD_HORSE;
   vr      8;
   pmask   (LAND);
 
@@ -303,7 +304,7 @@ SPECIES snake {
   str     5;
   int     1;
   dex     5; // ?
-  spd     2;
+  spd     SPD_SNAKE;
   vr      6;
   pmask   (LAND);
 
@@ -332,7 +333,7 @@ SPECIES insects {
   str     1;
   int     1;
   dex     1;
-  spd     2;
+  spd     SPD_INSECTS;
   vr      4;
   pmask   (LAND);
 
@@ -360,7 +361,7 @@ SPECIES ghast {
   str     20;
   int     20;
   dex     20;
-  spd     2;
+  spd     SPD_GHAST;
   vr      8;
   pmask   (LAND|WATER|SHOALS|SOLID);
 
@@ -396,7 +397,7 @@ SPECIES nixie {
   str   18;
   int   18;
   dex   18;
-  spd   2;
+  spd   SPD_NIXIE;
   vr    10;
   pmask (WATER|SHOALS);
 
@@ -433,7 +434,7 @@ SPECIES water_elemental {
   str   25;
   int   25;
   dex   25;
-  spd   3;
+  spd   SPD_WTR_ELEM;
   vr    10;
   pmask (WATER|SHOALS);
 
@@ -464,8 +465,8 @@ SPECIES slime {
         str   3;
         int   1;
         dex   3;
-        spd   2;
-        vr    8;
+        spd   SPD_SLIME;
+        vr    6;
         pmask (LAND);
 
         hp_mod  10;
@@ -500,8 +501,8 @@ SPECIES yellow_slime {
         str   4;
         int   4;
         dex   4;
-        spd   2;
-        vr    8;
+        spd   SPD_SLIME;
+        vr    6;
         pmask (LAND);
 
         hp_mod  15;

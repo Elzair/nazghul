@@ -31,7 +31,7 @@ struct mech_state {
 	char *name;              // identifies and describes this state
 	struct sprite *sprite;   // shown when rendered
 	int pmask;               // passability to travelers
-	int light;               // amount radiated (for lamps or things that glow)
+	int light;           // amount radiated (for lamps or things that glow)
 	bool opaque;             // blocks line-of-sight
         bool invisible;          // is not shown or described
 };
@@ -89,7 +89,7 @@ class Mech:public Object {
 	virtual bool is_opaque();
 	virtual bool isVisible();
 	virtual void describe(int count);
-	virtual void advanceTurn(int turn);
+	virtual void exec(struct exec_context *context);
 
 	class Mech *port;
 	struct mech_state *state;

@@ -116,11 +116,16 @@ extern "C" {
 #define NUM_WIND_DIRECTIONS 4
 
 /* Time -- In future, these likely come from GhulScript */
-#define TURNS_PER_MINUTE        60
+#define TURNS_PER_MINUTE        6
 #define MINUTES_PER_HOUR        60
 #define HOURS_PER_DAY           24
 #define TURNS_PER_HOUR          (TURNS_PER_MINUTE * MINUTES_PER_HOUR)
 #define TURNS_PER_DAY           (TURNS_PER_HOUR   * HOURS_PER_DAY)
+
+#define MINUTES_PER_DAY         (MINUTES_PER_HOUR * HOURS_PER_DAY)
+#define MINUTES_PER_WEEK        (MINUTES_PER_DAY * DAYS_PER_WEEK)
+#define MINUTES_PER_MONTH       (MINUTES_PER_WEEK * WEEKS_PER_MONTH)
+#define MINUTES_PER_YEAR        (MINUTES_PER_MONTH * MONTHS_PER_YEAR)
 
 #define DAYS_PER_WEEK           7
 #define WEEKS_PER_MONTH         4
@@ -140,6 +145,8 @@ extern "C" {
 #define MIDNIGHT_HOUR_EARLY     0
 
 #define DEGREES_PER_HOUR        (360 / HOURS_PER_DAY)
+#define DEGREES_PER_MINUTE      (360 / MINUTES_PER_DAY)
+#define MINUTES_PER_DEGREE      (MINUTES_PER_DAY / 360)
 #define SUNRISE_DEGREE          (SUNRISE_HOUR * DEGREES_PER_HOUR)
 #define SUNSET_DEGREE           (SUNSET_HOUR  * DEGREES_PER_HOUR)
 #define NOON_DEGREE             (NOON_HOUR    * DEGREES_PER_HOUR)
@@ -154,6 +161,8 @@ extern "C" {
                                          MOON_WINDOW_DEGREES)
 #define MOON_HOURS_PER_REVOLUTION       (HOURS_PER_DAY - 1)
 #define MOON_DEGREES_PER_HOUR           (360 / MOON_HOURS_PER_REVOLUTION)
+#define MOON_DEGREES_PER_MINUTE         (MOON_DEGREES_PER_HOUR * 60)
+#define MOON_MINUTES_PER_DEGREE         ((MOON_HOURS_PER_REVOLUTION * 60) / 360)
 #define MOON_PIXELS_PER_HOUR            (MOON_DEGREES_PER_HOUR *              \
                                          MOON_WINDOW_PIXELS_PER_DEGREE)
 #define TURNS_PER_MOON_CYCLE            (TURNS_PER_DAY * 30)
@@ -215,10 +224,11 @@ extern "C" {
 #define TURNS_PER_FOOD          (TURNS_PER_DAY/3)
 #define MAX_SPEED               100
 #define WILDERNESS_SCALE        32
+#define NON_WILDERNESS_SCALE     1
 #define MAX_N_REAGENTS          32
 
 /* Resting */
-#define HP_RECOVERED_PER_HOUR_OF_REST   10
+#define HP_RECOVERED_PER_HOUR_OF_REST   3
 #define MANA_RECOVERED_PER_HOUR_OF_REST 10
 #define MAX_USEFUL_REST_HOURS_PER_DAY   9
 #define TURNS_PER_REST_CREDIT     (TURNS_PER_DAY/MAX_USEFUL_REST_HOURS_PER_DAY)
@@ -315,9 +325,13 @@ extern "C" {
 #define SPELL_TARGET_DOWN              6
 #define SPELL_TARGET_ALL_PARTY_MEMBERS 7
 #define SPELL_TARGET_CASTER_LOCATION   8
+#define SPELL_TARGET_PARTY_MEMBER      9
 
 // Compile-time configuration parameters
 #define CONFIG_MOVEMENT_COST_FOR_CHARACTERS false
+
+/* Action point values (temporary - should be moved to the load file) */
+#define NAZGHUL_BASE_ACTION_POINTS  1
 
 /* Macros ********************************************************************/
 
@@ -348,7 +362,9 @@ extern "C" {
 
 /* Global Functions **********************************************************/
 
-extern void commonInit(void);
+char * version_as_string(void);  // From nazghul.c
+
+extern int commonInit(void);
 extern char *get_dir_str(int dx, int dy);
 extern void turnAdvance(int turns);
 // extern void windSetDirection(int dir);

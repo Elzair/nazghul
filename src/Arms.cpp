@@ -46,6 +46,7 @@ ArmsType::ArmsType()
         ubiquitousAmmo = false;
         layer          = item_layer;
         fire_sound     = NULL;
+        required_action_points = 1;
 }
 
 ArmsType::~ArmsType()
@@ -120,7 +121,7 @@ bool ArmsType::fire(struct place * place, int ox, int oy, int tx, int ty)
 }
 
 bool ArmsType::fireInDirection(struct place *place, int ox, int oy, 
-                               int dx, int dy)
+                               int dx, int dy, class Object *user)
 {
         if (!isMissileWeapon() && !isThrownWeapon())
                 return false;
@@ -142,7 +143,7 @@ bool ArmsType::fireInDirection(struct place *place, int ox, int oy,
         consolePrint("%s hit ", getName());
         missile->getStruck()->describe(1);
         consolePrint("!\n");
-        missile->getStruck()->hitByOrdnance(this);
+        missile->getStruck()->damage(getDamage());
 
         if (missile->getStruck()->isDestroyed()) {
                 consolePrint("%s destroyed ", getName());
@@ -152,6 +153,8 @@ bool ArmsType::fireInDirection(struct place *place, int ox, int oy,
                 mapUpdate(0);
         }
         
+        user->decActionPoints(getRequiredActionPoints());
+
         return true;
 }
 
@@ -333,6 +336,10 @@ bool ArmsType::load(class Loader *loader)
         while (!loader->matchToken('}')) {
                 if (loader->matchWord("fire_sound")) {
                         if (!loader->getString(&fire_sound))
+                                goto fail;
+                }
+                else if (loader->matchWord("req_act_pts")) {
+                        if (!loader->getInt(&required_action_points))
                                 goto fail;
                 }
                 else {

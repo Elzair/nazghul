@@ -28,7 +28,6 @@
 #include "cmd.h" // for getkey()
 
 #include <string.h>
-#include <SDL/SDL_ttf.h>
 #include <stdarg.h>
 #include <assert.h>
 #include <ctype.h>
@@ -70,7 +69,7 @@ static int consolePage(void)
         return yesno == 'y';
 }
 
-void consoleInit(void)
+int consoleInit(void)
 {
         int i;
 
@@ -100,6 +99,8 @@ void consoleInit(void)
         if (Console.log == NULL) {
                 perror(".console");
         }
+
+        return 0;
 }
 
 static int console_handle_repeated_msg(void)

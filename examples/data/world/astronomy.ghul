@@ -26,6 +26,14 @@
 #ifndef astronomy_ghul
 #define astronomy_ghul
 
+TIME {
+        year    0;
+        month   0;
+        week    0;
+        day     0;
+        hour   12;
+        minute 56;
+}
 
 moon_info {
   phases 8;  // SAM: is this needed given that the below is in a {} block?
@@ -56,29 +64,66 @@ moon_info {
   } // moons
 
   sun {
-    // Arc is measured from the horizon in degrees.
-    // Midnight is 0 == 360
-    // Noon is 180, Sunrise(4AM) = 60, Sunset(8PM) = 300
-    // 15 degrees per hour after midnight
-    // (These numbers based on values in common.h)
-    arc    360;
+    /* Note: arc of the sun now derived from TIME */
     sprite s_sun;
-  } // sun
+  }
 
   moongates {
     {
-      place       p_wilderness;
-      object_type t_moongate;
-      x           32;
-      y           23;
-      phase       0;
+            place       p_wilderness;
+            object_type t_moongate;
+            x           32;
+            y           23;
+            phase       0;
     }
     {
-      place       p_wilderness;
-      object_type t_moongate;
-      x           19;
-      y           33;
-      phase       4;
+            place       p_empire_city;
+            object_type t_moongate;
+            x           15;
+            y           15;
+            phase       1;
+    }
+    {
+            place       GreenTowerLower
+            object_type t_moongate;
+            x           22;
+            y           47;
+            phase       2;
+    }
+    {
+            place       Glasdrin;
+            object_type t_moongate;
+            x           10;
+            y           22;
+            phase       3;
+    }
+    {
+            place       p_wilderness;
+            object_type t_moongate;
+            x           19;
+            y           33;
+            phase       4;
+    }
+    {
+            place       MidWorld;
+            object_type t_moongate;
+            x           29;
+            y           14;
+            phase       5;
+    }
+    {
+            place       p_wilderness;
+            object_type t_moongate;
+            x            4;
+            y           14;
+            phase       6;
+    }
+    {
+            place       GreenTower;
+            object_type t_moongate;
+            x            9;
+            y           51;
+            phase       7;
     }
   } // moongates
 

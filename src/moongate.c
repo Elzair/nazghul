@@ -150,16 +150,25 @@ void Moongate::paint(int sx, int sy)
 void Moongate::animateOpening()
 {
 	int oframe = frame;
+        
+        view = mapCreateView();
+
+        addView();
+        mapSetPlace(getPlace());
+        mapCenterCamera(getX(), getY());
 
 	enum moongate_state ostate = state;	// fixme -- necessary?
 
 	state = MOONGATE_OPENED;	// fixme -- necessary?
 
 	for (frame = 0; frame < getNumFrames(); frame++) {
-		mapRecomputeLos(player_party->view);
-		mapUpdate(0);
+                updateView();
+                mapUpdate(0);
 		usleep(MS_PER_TICK * 1000);
 	}
+
+        rmView();
+        mapDestroyView(view);
 
 	frame = oframe;
 	state = ostate;
@@ -183,4 +192,22 @@ int Moongate::getLight()
 	// Return the light intensity of the moongate in its current state
 	int lightPerFrame = getObjectType()->getMaxLight() / getNumFrames();
 	return lightPerFrame * frame;
+}
+
+void Moongate::open()
+{
+        state = MOONGATE_OPENING;
+        frame++;
+        assert(frame <= getNumFrames());
+        if (frame == (getNumFrames() - 1))
+                state = MOONGATE_OPENED;
+        
+}
+
+void Moongate::close() {
+        state = MOONGATE_CLOSING;
+        frame--;
+        assert(frame >= 0);
+        if (frame == 0)
+                state = MOONGATE_CLOSED;
 }

@@ -21,6 +21,7 @@
 //
 #include "sched.h"
 #include "Loader.h"
+#include "common.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -57,6 +58,17 @@ struct appt *load_appts(class Loader * loader, int *n)
 				 "at hour zero, minute zero");
 		return 0;
 	}
+
+        /* Check that the start time is within the time supported by the
+         * day. */
+        if (tmp.min >= MINUTES_PER_HOUR ||
+            tmp.hr >= HOURS_PER_DAY) {
+                loader->setError("Error in SCHED appointment %d: %02d:%02d is not a valid time.\n"
+                                 "Valid times are from 00:00 to %02d:%02d",
+                                 index + 1, tmp.hr, tmp.min, HOURS_PER_DAY - 1, MINUTES_PER_HOUR - 1);
+                return 0;
+                                 
+        }
 
 	if (!(set = load_appts(loader, n)))
 		return 0;

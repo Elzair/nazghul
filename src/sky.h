@@ -36,32 +36,20 @@ extern "C" {
 
         struct moon {
                 int phase;
-                int next_arc_turn;
-                int next_phase_turn;
-                int arc; /* 0 to 360 */
-                int days_per_cycle;
-                int turns_per_phase;
+                int arc;
                 int light;
+                int initial_phase;
+                int initial_arc;
+                int minutes_per_phase;
+                int days_per_cycle;
 		void (*openMoongate) (int phase);
 		void (*closeMoongate) (int phase);
         };
 
         struct sun {
-                int next_arc_turn;
                 int arc;
-                struct sprite *sprite;
                 int light;
-        };
-
-        struct clock {
-                int year;
-                int month;
-                int week;
-                int day_w;  // Day of week (0..6)
-                int day;    // Day of month (0..27)
-                int hour;
-                int min;
-                int baseTurn;
+                struct sprite *sprite;
         };
 
         extern struct moon_info MoonInfo;
@@ -71,23 +59,7 @@ extern "C" {
 
         extern void skyInit(void);
         extern void skyRepaint(void);
-        extern void skyAdvanceTurns(void);
-
-        extern void clockSet(void);
-        extern void clockUpdate(void);
-
-        extern char * time_HHMM_as_string       (void);
-        extern char * time_YYYY_MM_DD_as_string (void);
-
-#ifdef OTHER_TIME_STRING_FUNCTIONS
-  extern char * time_YYYY_as_string (void);
-  extern char * time_MM_as_string   (void);
-  extern char * time_DD_as_string   (void);
-#endif // OTHER_TIME_STRING_FUNCTIONS
-
-        extern char * month_name (void);
-        extern char * week_name  (void);
-        extern char * day_name   (void);
+        extern void sky_advance(void);
 
         extern int sun_is_up   (void);
         extern int sun_is_down (void);
@@ -96,7 +68,7 @@ extern "C" {
 
         extern int moon_is_visible (int arc);
         extern int sky_get_ambient_light(void);
-
+        
 #ifdef __cplusplus
 }
 #endif

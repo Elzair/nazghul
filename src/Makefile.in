@@ -102,10 +102,12 @@ nazghul_SOURCES = \
         event.c \
         event.h \
         Field.h \
+	Field.cpp \
         floodfill.c \
         foogod.c \
         foogod.h \
         formation.h \
+	formation.c \
         game.c \
         game.h \
         hash.c \
@@ -186,7 +188,9 @@ nazghul_SOURCES = \
 	Missile.cpp \
 	Missile.h \
 	cmd.c \
-	cmd.h
+	cmd.h \
+	clock.c \
+	clock.h 
 
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_CLEAN_FILES = 
@@ -198,13 +202,13 @@ CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 nazghul_OBJECTS =  angband.o Arms.o ascii.o astar.o character.o cmdwin.o \
-combat.o common.o console.o Container.o conv.o cursor.o event.o \
-floodfill.o foogod.o game.o hash.o heap.o images.o Item.o knapsack.o \
-lexer.o Loader.o los.o map.o Mech.o moongate.o nazghul.o NpcParty.o \
-object.o occ.o olist.o place.o play.o player.o Reagent.o sched.o \
-screen.o sky.o sound.o species.o Spell.o sprite.o status.o terrain.o \
-terrain_map.o Trap.o tree.o util.o vehicle.o wind.o wq.o Missile.o \
-cmd.o
+combat.o common.o console.o Container.o conv.o cursor.o event.o Field.o \
+floodfill.o foogod.o formation.o game.o hash.o heap.o images.o Item.o \
+knapsack.o lexer.o Loader.o los.o map.o Mech.o moongate.o nazghul.o \
+NpcParty.o object.o occ.o olist.o place.o play.o player.o Reagent.o \
+sched.o screen.o sky.o sound.o species.o Spell.o sprite.o status.o \
+terrain.o terrain_map.o Trap.o tree.o util.o vehicle.o wind.o wq.o \
+Missile.o cmd.o clock.o
 nazghul_LDADD = $(LDADD)
 nazghul_DEPENDENCIES = 
 nazghul_LDFLAGS = 

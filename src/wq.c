@@ -25,10 +25,11 @@
 struct list TickWorkQueue;
 struct list TurnWorkQueue;
 
-void wqInit(void)
+int wqInit(void)
 {
 	list_init(&TickWorkQueue);
 	list_init(&TurnWorkQueue);
+        return 0;
 }
 
 void wqAddJob(struct list *wq, struct wq_job *newJob)

@@ -193,6 +193,7 @@ ARMS t_cannon {
         field          null;
         weight         100;
         fire_sound     "data/sounds/cannon.wav";
+        req_act_pts    ACT_PTS_FIRE_CANNON;
 }
 
 ///////////////////////////////////////////////////////////////////////////

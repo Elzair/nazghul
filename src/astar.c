@@ -32,7 +32,7 @@
 
 #define COORD_TO_INDEX(x,y,w) ((y)*(w)+(x))
 
-#define MIN_GOODNESS -100	/* hack to limit search time on large places */
+#define MAX_DEPTH 100	/* hack to limit search time on large places */
 
 static struct heap *schedule;	/* Priority queue of nodes to explore */
 static struct tree *found;	/* Nodes with a known path, ordered by location 
@@ -51,7 +51,7 @@ static inline void astar_search_init(void)
 }
 
 static inline struct astar_node *astar_node_create(int x, int y, int cost,
-						   int distance,
+						   int goodness,
 						   struct astar_node *next,
 						   int location)
 {
@@ -62,12 +62,10 @@ static inline struct astar_node *astar_node_create(int x, int y, int cost,
 		return 0;
 	memset(node, 0, sizeof(struct astar_node));
 
-        printf("astar: allocated node 0x%p\n", node);
-
 	node->x = x;
 	node->y = y;
 	node->cost = cost;
-	node->goodness = 0 - (cost + distance);
+	node->goodness = goodness;
 	node->next = next;
 	node->order.key = location;
 
@@ -77,8 +75,6 @@ static inline struct astar_node *astar_node_create(int x, int y, int cost,
 
 void astar_node_destroy(struct astar_node *node)
 {
-        printf("astar: destroying node 0x%p\n", node);
-	dump_node(node);
 	free(node);
 }
 
@@ -90,7 +86,7 @@ static struct astar_node *astar_path_reverse_aux(struct astar_node *node,
 	dump_node(node);
 
 	node->len = prev->len + 1;
-	assert(node->len < 100);	/* debug */
+	assert(node->len < 1000);	/* debug */
 	if (node->next)
 		ret = astar_path_reverse_aux(node->next, node);
 	else
@@ -130,6 +126,7 @@ static inline int astar_schedule(struct astar_node *node)
 
 	/* Insert it in the tree of nodes with known paths. */
 	tree_insert(&found, &node->order);
+
 	return 0;
 }
 
@@ -205,44 +202,74 @@ static inline void astar_replace_route(struct astar_node *node, int x, int y,
 }
 
 static inline void
-astar_schedule_neighbor(struct astar_node *node, struct astar_search_info *info)
+astar_schedule_neighbor(struct astar_node *node, 
+                        struct astar_search_info *info)
 {
 	struct astar_node *ptr;
-	int distance;
-	int cost;
-	int goodness;
 	int location;
 
-	cost = node->cost + 1;
+        /* 'cost' is an attribute of the path leading to this node. When we
+         * find two paths leading to the same node, cost helps us decide which
+         * path to take. */
+	int cost = 0;
+
+        /* 'goodness' is an attribute both of a node and of the path leading to
+         * that node. It is important because it allows us to prioritize nodes,
+         * so we can search the more promising nodes first. */
+	int goodness = 0;
+
+        /* cost is no longer a measure of path length. Should use length for
+         * that, but need to make sure we don't mess up the reversal functions
+         * if we do. */
+	/* Safety check the search depth. */
+        if (cost > MAX_DEPTH)
+                return;
 
 	/* Check if this path has grown too long. */
 	if (info->limit_depth && cost > info->max_depth)
 		return;
 
-	distance = info->heuristic(info);
-	goodness = 0 - (distance + cost);
+	info->heuristic(info, &goodness, &cost);
+
+        /* Cost is cumulative along a path, so add the parent node's cost. */
+        cost += node->cost;
+
+        /* Nodes with cheaper paths leading to them are better than nodes with
+         * costlier paths. */
+        goodness -= cost;
+
+#if 0
+        /* 03Aug2003 gmcnutt: bugfix: goodness needs to be cumulative for the
+         * whole path. When it isn't, an inferior but shorter path will
+         * supersede a superior but longer path. A longer path can be superior
+         * if it doesn't lead through hazardous terrain. The heuristice invoked
+         * knows this and computes it as part of what we misleadingly call
+         * 'distance'. That part of the information needs to be considered part
+         * of the path, not just part of this particular node. */
+        goodness = node->goodness - (distance + cost);
+#endif
 	location = COORD_TO_INDEX(info->x0, info->y0, info->width);
 
 	/* Safety check the search depth. */
-	if (goodness <= MIN_GOODNESS)
-		return;
+	//if (goodness <= MIN_GOODNESS)
+        //return;
 
 	/* Check if we already have a route to this location. */
 	if ((ptr = astar_old_route(location))) {
 
 		/* If the old route is better than skip this neighbor. */
-		if (ptr->goodness >= goodness)
+		if (goodness < ptr->goodness)
 			return;
 
-		/* If the new route is better than replace the old with the new 
+		/* If the new route is better than replace the old with the new
 		 * and reschedule. */
-		astar_replace_route(ptr, info->x0, info->y0, cost, distance,
+		astar_replace_route(ptr, info->x0, info->y0, cost, goodness,
 				    node, location);
 		return;
 	}
 
 	/* This is a new route. */
-	ptr = astar_node_create(info->x0, info->y0, cost, distance, node,
+	ptr = astar_node_create(info->x0, info->y0, cost, goodness, node,
 				location);
 	if (!ptr) {
 		err("Allocation failed");
@@ -268,13 +295,15 @@ struct astar_node *astar_search(struct astar_search_info *info)
 	struct astar_node *node;
 	int row;
 	int col;
+        int cost = 0;
+        int goodness = 0;
 
 	astar_search_init();
 
-	node = astar_node_create(info->x0, info->y0, 0,
-				 info->heuristic(info),
-				 0, COORD_TO_INDEX(info->x0, info->y0,
-						   info->width));
+        info->heuristic(info, &goodness, &cost);
+	node = astar_node_create(info->x0, info->y0, cost, goodness, NULL, 
+                                 COORD_TO_INDEX(info->x0, info->y0, 
+                                                info->width));
 
 	astar_schedule(node);
 

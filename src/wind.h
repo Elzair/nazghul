@@ -26,7 +26,7 @@
 extern "C" {
 #endif
         
-        extern void windInit(void);
+        extern int windInit(void);
         extern void windSetDirection(int dir, int duration);
         extern int windGetDirection(void);
         extern void windAdvanceTurns(void);

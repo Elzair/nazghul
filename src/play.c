@@ -92,22 +92,21 @@ struct play {
 	enum cmdstate cmdstate;
 };
 
-struct play *Play;		/* hack */
-
-bool Quit;
-
 struct LightEffectContext {
 	char *name;
 	int amount;
 	class Character *owner;
 };
 
+struct play *Play;		/* hack */
+bool Quit;
+
 static void myExpireLightEffect(struct wq_job *job, struct list *wq)
 {
 	struct LightEffectContext *context;
 	context = (struct LightEffectContext *) job->data;
 	context->owner->changeLight(-context->amount);
-	player_party->recompute_los();
+	player_party->updateView();
 	consolePrint("Light from %s expired\n", context->name);
 	delete context;
 	free(job);		// fixme -- use delete
@@ -128,7 +127,7 @@ void effectLight(char *name, int amount, int duration, class Character * target)
 			// is invalid, and where everything relates to
 			// the individual party members and not the
 			// party as a whole.
-			player_party->recompute_los();
+			player_party->updateView();
 		wqCreateJob(&TurnWorkQueue,
 			    Turn + duration, 0, context, myExpireLightEffect);
 	}
@@ -154,16 +153,32 @@ static void myExpireQuickenEffect(struct wq_job *job, struct list *wq)
 	char *cause = (char *) job->data;
 	Quicken = 0;
 	consolePrint("%s expired\n", cause);
+        foogodRepaint();
 	free(job);
 }
 
 void effectQuicken(char *name, int duration)
 {
-	Quicken = 2;		// Setting it to a multiple of two will make
-	// sure that the
-	// player sees the effects right away
-	wqCreateJob(&TurnWorkQueue, Turn + duration,
-		    0, name, myExpireQuickenEffect);
+	Quicken = 2;
+	wqCreateJob(&TurnWorkQueue, Turn + duration, 0, name, myExpireQuickenEffect);
+        foogodRepaint();
+}
+
+
+static void myExpireTimeStopEffect(struct wq_job *job, struct list *wq)
+{
+	char *cause = (char *) job->data;
+	TimeStop = 0;
+	consolePrint("%s expired\n", cause);
+        foogodRepaint();
+	free(job);
+}
+
+void effectTimeStop(char *name, int duration)
+{
+	TimeStop = 1;
+	wqCreateJob(&TurnWorkQueue, Turn + duration, 0, name, myExpireTimeStopEffect);
+        foogodRepaint();
 }
 
 static void myExpireNegateMagicEffect(struct wq_job *job, struct list *wq)
@@ -171,14 +186,15 @@ static void myExpireNegateMagicEffect(struct wq_job *job, struct list *wq)
 	char *cause = (char *) job->data;
 	MagicNegated--;
 	consolePrint("%s expired\n", cause);
+        foogodRepaint();
 	free(job);
 }
 
 void effectNegateMagic(char *name, int duration)
 {
 	MagicNegated++;
-	wqCreateJob(&TurnWorkQueue, Turn + duration,
-		    0, name, myExpireNegateMagicEffect);
+	wqCreateJob(&TurnWorkQueue, Turn + duration, 0, name, myExpireNegateMagicEffect);
+        foogodRepaint();
 }
 
 static void myExpireShowTerrainEffect(struct wq_job *job, struct list *wq)
@@ -196,13 +212,6 @@ void effectShowTerrain(char *name, int duration)
 		    0, name, myExpireShowTerrainEffect);
 }
 
-void dead(void)
-{
-	consolePrint("\n*** YOU HAVE DIED ***\n\n");
-	consolePrint("Press any key to exit.\n");
-	getkey(NULL, anykey);
-}
-
 static bool tickHandler(struct TickHandler *th)
 {
 	Tick++;
@@ -216,6 +225,7 @@ static bool quitHandler(struct QuitHandler *kh)
 	return Quit;
 }
 
+#if 0
 static void myGenerateRandomEncounter(void)
 {
 	int x, y, dir;
@@ -265,226 +275,94 @@ static void myGenerateRandomEncounter(void)
 	npc->relocate(Place, x, y);
 	// place_add_object(Place, npc);
 }
+#endif
 
-static bool keyHandler(struct KeyHandler *kh, int key, int keymod)
+static void play_print_end_of_game_prompt()
 {
-        // This handler is always on the bottom of the key handler stack. When
-        // it returns true the event loop exits, effectively ending the
-        // game. So return true iff the player is dead or wants to quit.
+	consolePrint("\n\n*** YOU HAVE DIED ***\n\n");
+	consolePrint("Press any key to exit.\n");
+	getkey(NULL, anykey);
+}
 
-        // Decode and run player commands. Any commands which require further
-        // input from the player will push new key handlers on the stack and
-        // pop them upon return. I like to think that they are "closed" in some
-        // sense of the word, and don't intermingle their command input state
-        // with ours.
+static void play_loop(void)
+{
+        struct exec_context context;
+        memset(&context, 0, sizeof(context));
 
-        int saved_turn = Turn;
-        int turns_used = 1;	// default used by most actions
+        Turn = 0;
 
-        cmdwin_clear();
-        cmdwin_repaint();
+        // ---------------------------------------------------------------------
+        // Enter the main game loop. Do not exit until the player is dead or
+        // wants to quit.
+        // ---------------------------------------------------------------------
 
-        if (keymod == KMOD_LCTRL || keymod == KMOD_RCTRL) {
+        while (true) {
 
-                turns_used = 0;
+                // -------------------------------------------------------------
+                // "Execute" the current place. This will loop through all
+                // objects in the current place and give them a chance to
+                // run. This includes player-controlled objects.
+                // -------------------------------------------------------------
 
-                // SAM: This seemed like a less ugly way of setting off a group
-                // of keybindings for "DM Mode" use or the like.  If we find
-                // something more aesthetic wrt/ switch() syntax, we will
-                // surely prefer it...
-                // 
-                // Control-key bindings for "DM Mode" commands like terrain
-                // editing.  In future, these may be enabled/disabled at
-                // compile time, or via a GhulScript keyword in the mapfile.
-                switch (key) {
-      
-                case 't':
-                        cmdTerraform(NULL);
-                        break;
+                place_exec(Place, &context);
 
-                case 's':
-                        cmdSaveTerrainMap(NULL);
-                        break;
-
-                case 'z':
-                        mapTogglePeering();
-                        break;
-
-                default:
-                        break;
-                } // switch(key)
-        } // keymod
-
-        else {
-                // !keymod
-                switch (key) {
-
-                case KEY_NORTH:
-                case KEY_EAST:
-                case KEY_SOUTH:
-                case KEY_WEST:
-                {
-                        int dir = keyToDirection(key);
-                        player_party->move(directionToDx(dir),
-                                           directionToDy(dir), false);
-                        turns_used = 0;	// turns already advanced in
-                        // player_party->move
-                        mapSetDirty();
-                }
-                break;
-
-                case 'a':
-                        cmdAttack();
-                        break;
-                case 'b':
-                        player_party->board_vehicle();
-                        break;
-                case 'c':
-                        cmdCastSpell(NULL);
-                        break;
-                case 'e':
-                        // SAM:
-                        // Perhaps this command should be merged with '>' ?
-                        player_party->enter_portal();
-                        break;
-                case 'f':
-                        cmdFire();
-                        break;
-                case 'g':
-                        cmdGet(player_party->getX(), player_party->getY(), 
-                               true);
-                        mapSetDirty();
-                        break;
-                case 'h':
-                        // SAM: Adding (H)andle command...
-                        cmdHandle(NULL);
-                        break;
-                case 'k':
-                        turns_used = cmdCamp();
-                        break;
-                case 'm':
-                        cmdMixReagents();
-                        break;
-                case 'n':
-                        cmdNewOrder();
-                        break;
-                case 'o':
-                        cmdOpen(NULL);
-                        break;
-                case 'q':
-                        cmdQuit();
-                        break;
-                case 'r':
-                        cmdReady(NULL, CMD_SELECT_MEMBER|CMD_PRINT_MEMBER);
-                        break;
-                case 's':
-                        cmdSearch(player_party->getX(), player_party->getY());
-                        break;
-                case 't':
-                        cmdTalk(player_party->getX(), player_party->getY());
-                        break;
-                case 'u':
-                        cmdUse(NULL, CMD_SELECT_MEMBER|CMD_PRINT_MEMBER);
-                        break;
-                case 'x':
-                        cmdXamine(NULL);
-                        turns_used = 0;
-                        break;
-                case 'z':
-                        cmdZtats(NULL);
-                        turns_used = 0;
-                        break;
-                case '@':
-                        // SAM: 'AT' command for party-centric information
-                        cmdAT(NULL);
-                        turns_used = 0;
-                        break;
-                case ' ':
-                        consolePrint("Pass\n");
-                        turns_used = Place->scale;
-                        break;
-                case '>':
-                        // This key was chosen to be a cognate for '>' in
-                        // NetHack and other roguelike games.
-                        cmdZoomIn();
-                        break;
-                default:
-                        turns_used = 0;
-                        break;
-                } // switch(key)
-        } // !keymod
-
-        //cmdwin_flush_to_console();
-
-	// Quit now before advancing turns or anything of that sort. It makes
-	// life easier.
-        if (Quit)
-                return Quit;
-
-        int loops = 0;
-
-
-        // Loop at least once, and more if the party is immobilized (currently
-        // true if all party members are sleeping, but paralysis and other
-        // effects will eventually apply)
-        do {
-
-                if (loops) {
-                        statusRepaint();
-                        mapBlackout(1);
-                        mapUpdate(0);
-                        saved_turn = Turn;
-                        if (player_party->resting()) {
-                                turns_used = TURNS_PER_HOUR;
-                        } else {
-                                turns_used = 1;
-                        }
-                        SDL_Delay(500);
+                // -------------------------------------------------------------
+                // Check for changes in the combat state as a result of the
+                // last turn. This check might force a transition from combat
+                // to wilderness mode.
+                // -------------------------------------------------------------
+                
+                if (combat_get_state() != COMBAT_STATE_DONE) {
+                        combat_analyze_results_of_last_turn();
                 }
 
-                loops++;
+                // -------------------------------------------------------------
+                // Do a non-blocking check to see if any non-user events need
+                // to run (e.g., animation ticks). Normally these events get
+                // run in place_exec() when the game waits for player input,
+                // but if the player party is resting (for example) then that
+                // does not happen. To keep animation looking smooth I added
+                // this next call.
+                // -------------------------------------------------------------
 
-                turnAdvance(turns_used);
+                eventHandlePending();
 
-                if (Turn != saved_turn) {
+                // -------------------------------------------------------------
+                // Check for end-of-game conditions.
+                // -------------------------------------------------------------
 
-                        // Note: always update the clock before the turn
-                        // wq. For example, when entering a place all the NPC
-                        // parties use the wall clock time to synchronize their
-                        // schedules, so it needs to be set BEFORE calling
-                        // them.
-                        clockUpdate();
-
-                        foogodAdvanceTurns();
-                        placeAdvanceTurns();
-                        player_party->advance_turns();
-                        skyAdvanceTurns();
-                        windAdvanceTurns();
-
-                        // Most commands burn through at least one turn. Let
-                        // the turn-based work queue catch up.
-                        wqRunToTick(&TurnWorkQueue, Turn);
+                if (player_party->allDead()) {
+                        play_print_end_of_game_prompt();
+                        break;
                 }
 
-                // The player may have died as a result of executing a command
-                // or running the work queue.
-                if (player_party->all_dead()) {
-                        dead();
-                        return true;
-                }
+                if (Quit)
+                        break;
 
-        } while (player_party->immobilized());
+                // -------------------------------------------------------------
+                // Run all the non-object stuff in the game world.
+                //
+                // NOTE: you should keep the clock update first since most
+                //       things take their cue from the current time.
+                // -------------------------------------------------------------
 
-        if (loops > 1) {
-                mapBlackout(0);
-                mapUpdate(0);
-                statusRepaint();
+                if (! TimeStop)
+                        clock_advance(place_get_scale(Place));
+                foogodAdvanceTurns();
+                sky_advance();
+                windAdvanceTurns();
+                wqRunToTick(&TurnWorkQueue, Turn);
+
+                // -------------------------------------------------------------
+                // Update the "Turn" counter. This drives the TurnWorkQueue,
+                // which is still used for scheduled things like torches
+                // burning out and doors closing. 
+                // -------------------------------------------------------------
+
+                //Turn += place_get_scale(player_party->getPlace());
+                Turn += place_get_scale(Place);
+                
         }
-
-        if (!Quit)		// fixme: is this check necessary? 
-                myGenerateRandomEncounter();
-
-        return Quit;
 }
 
 static int play_init(struct play *play)
@@ -503,19 +381,20 @@ static int play_init(struct play *play)
 		return -1;
 	}
 
-	statusInit();		/* before painting the frame for the first time 
+	statusInit();		/* before painting the frame for the first time
 				 */
-	foogodInit();		/* before painting the frame for the first time 
+	foogodInit();		/* before painting the frame for the first time
 				 */
 
 	statusSetMode(ShowParty);	/* note: must do this after painting
 					 * the frame because the title is
 					 * always painted OVER the frame. */
 
-	mapInit(play->los_name);	// must be before placeEnter()
-	mapSetPlace(Place);	        // must be before placeEnter()
-	consoleInit();                  // must be before placeEnter()
-	placeEnter();
+	mapSetLosStyle(play->los_name);	// must be before placeEnter()
+	//mapSetPlace(Place);	        // must be before placeEnter()
+	//consoleInit();	                // must be before placeEnter()
+        combatInit();
+	//place_enter(Place);
 
 	moongateSetAnimationWorkQueue(&TickWorkQueue);
 	skyInit();
@@ -527,22 +406,27 @@ static int play_init(struct play *play)
 
 	windSetDirection(NORTH, 1);
 
+#if 0
 	player_party->view = mapCreateView();
 	if (!player_party->view)
 		return -1;
+#endif
+        // ---------------------------------------------------------------------
+        // REVISIT: why not just relocate the player party?
+        // ---------------------------------------------------------------------
+
+        //player_party->addView();
+#if 0
 	mapAddView(player_party->view);
 	mapCenterView(player_party->view, player_party->getX(),
 		      player_party->getY());
 	player_party->recompute_los();
 	mapCenterCamera(player_party->getX(), player_party->getY());
-	mapUpdate(0);
-	screenUpdate(0);
+#endif
+	//mapUpdate(0);
+	//screenUpdate(0);
 
 	foogodRepaint();
-
-	/* Setup the astar pathfinding lib */
-	if (astar_init())
-		return -1;
 
 	/* Clear the message window */
 	consoleRepaint();
@@ -553,6 +437,19 @@ static int play_init(struct play *play)
 	spriteStartAnimation(&TickWorkQueue, Tick + 1);
 
 	play->cmdstate = CMD_IDLE;
+
+
+        // ---------------------------------------------------------------------
+        // Hack: force a party relocation. This will ensure that if the party
+        // starts out in a town or dungeon then it will get broken out into
+        // character mode.
+        // ---------------------------------------------------------------------
+
+        //Place = NULL;
+        player_party->relocate(Place,
+                               player_party->getX(), 
+                               player_party->getY());
+
 
 	return 0;
 }
@@ -585,7 +482,6 @@ static void updateAfterEvent(void)
 
 int playRun(void)
 {
-	struct KeyHandler kh;
 	struct QuitHandler qh;
 	struct TickHandler th;
 
@@ -596,43 +492,25 @@ int playRun(void)
 	if (play_init(play) < 0)
 		return -1;
 
-	consolePrint("Welcome to nazghul v0.1\n");
+	consolePrint("Welcome to Nazghul version %s\n", version_as_string() );
 
 	// Setup all the event handlers.
-	kh.fx = keyHandler;
 	qh.fx = quitHandler;
 	th.fx = tickHandler;
-	eventPushKeyHandler(&kh);
 	eventPushQuitHandler(&qh);
 	eventPushTickHandler(&th);
 	eventAddHook(updateAfterEvent);
 
 	Quit = false;
 
-	// Major hack warning: if the game loads up with the player in a
-	// dungeon then we need to force the game into dungeon mode. The
-	// easiest way to do that is to have the player party "enter" the
-	// dungeon it's already in. The last two args are the direction vector
-	// - just fake them to "north".
-	if (place_is_dungeon(player_party->getPlace())) {
-		if (!player_party->enter_dungeon(player_party->getPlace(),
-						 player_party->getX(),
-						 player_party->getY(), 0, 1)) {
-			err("Bad starting position for party: %s [%d %d]\n",
-			    player_party->getPlace()->name,
-			    player_party->getX(), player_party->getY());
-			return -1;
-		}
-	}
-
 	// Enter the main event loop. This won't exit until the player quits or
 	// dies.
-	eventHandle();
+        play_loop();
 
 	// Cleanup the event handlers.
 	eventPopTickHandler();
 	eventPopQuitHandler();
-	eventPopKeyHandler();
+	//eventPopKeyHandler();
 
 	return 1;
 }

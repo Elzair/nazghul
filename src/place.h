@@ -47,12 +47,17 @@ extern "C" {
 #define place_is_dungeon(p) ((p)->type == dungeon_place)
 #define place_get_item(p,x,y) place_get_object((p),(x),(y),item_layer)
 #define place_get_parent(p) ((p)->location.place)
+#define place_get_scale(p) ((p)->scale)
+#define place_get_x(p) ((p)->location.x)
+#define place_get_y(p) ((p)->location.y)
+#define place_is_wilderness_combat(p) ((p)->is_wilderness_combat)
 
-#define PFLAG_HORZ          (1 << 0) /* matches ASTAR_HORZ */
-#define PFLAG_VERT          (1 << 1) /* matches ASTAR_VERT */
-#define PFLAG_IGNOREMECHS   (1 << 2)
-#define PFLAG_IGNOREBEINGS  (1 << 3)
-#define PFLAG_IGNOREVEHICLES (1 << 4)
+#define PFLAG_HORZ             (1 << 0) /* matches ASTAR_HORZ */
+#define PFLAG_VERT             (1 << 1) /* matches ASTAR_VERT */
+#define PFLAG_IGNOREMECHS      (1 << 2)
+#define PFLAG_IGNOREBEINGS     (1 << 3)
+#define PFLAG_IGNOREVEHICLES   (1 << 4)
+#define PFLAG_IGNORECOMPANIONS (1 << 5)
 
 // Flags for placeDescribe:
 #define PLACE_DESCRIBE_TERRAIN (1 << 0)
@@ -74,8 +79,8 @@ extern "C" {
 
         struct location {
                 struct place *place;
-                unsigned int x;
-                unsigned int y;
+                int x;
+                int y;
         };
 
         struct typ_npc_party_info {
@@ -86,6 +91,8 @@ extern "C" {
 
         struct place {
                 struct list list;
+                struct list turn_list;
+                struct list *turn_elem;
                 enum place_type type;
                 struct location location;
                 struct place *above, *below;
@@ -101,6 +108,7 @@ extern "C" {
                 bool wraps;
                 bool dirty;
                 bool underground;
+                bool is_wilderness_combat;
         };
 
         extern struct place *Place;
@@ -127,9 +135,7 @@ extern "C" {
                 int x0, 
 						   int y0, int x1, int y1);
 
-        extern unsigned int place_flying_distance(struct place *place, 
-                                                  int x0, int y0, 
-                                                  int x1, int y1);
+        extern int place_flying_distance(struct place *place, int x0, int y0, int x1, int y1);
 
         void place_get_direction_vector(struct place *place, int x1, int y1, 
                                         int x2, int y2, int *dx, int *dy);
@@ -146,12 +152,15 @@ extern "C" {
 	extern int place_eval_path(struct place *place,
 				   int x0, int y0, int x1, int y1);
 
+        extern void place_move_object(struct place *place, 
+                                      class Object *object, int newx, 
+                                      int newy);
 	extern int place_add_object(struct place *place, Object * object);
 
 	extern void place_remove_object(struct place *place, Object * object);
 
-	extern Object *place_get_object(struct place *place,
-					int x, int y, enum layer layer);
+	extern Object *place_get_object(struct place *place, int x, int y, enum layer layer);
+        extern struct list *place_get_all_objects(struct place *place);
         extern void place_add_moongate(struct place *place, 
 				       class Moongate * moongate);
 
@@ -165,12 +174,18 @@ extern "C" {
 									  NpcParty)
                 );
                 
-	/* Caller needs to zero out the info struct and fill in the following
-	 * fields: x0, y0, x1, y1, pmask, flags. Optionally if the caller wants 
-	 * to limit the depth of the search he should fill out the limit_depth
-	 * and max_depth fields. */
-	extern struct astar_node *place_find_path(struct place *place, struct astar_search_info
-						  *info, unsigned char pmask);
+                
+                // -------------------------------------------------------------
+                // Caller needs to zero out the info struct and fill in the
+                // following fields: x0, y0, x1, y1, pmask, flags. Optionally
+                // if the caller wants to limit the depth of the search he
+                // should fill out the limit_depth and max_depth fields.
+                //
+                // Note: the requestor needs to be non-null if and only if the
+                //       PFLAG_IGNORECOMPANIONS flag is set.
+                // -------------------------------------------------------------
+                extern struct astar_node *place_find_path(struct place *place, struct astar_search_info
+                                                          *info, unsigned char pmask, class Object *requestor);
                 
 	extern struct terrain_map *place_get_combat_terrain_map(struct place
 								*place, int x,
@@ -200,30 +215,24 @@ extern "C" {
                 return y;
         }
 
-        extern void place_for_each_object(struct place *place, 
-					  void (*fx) (class Object *,
-						      void *data), void *data);
-
+        extern void place_for_each_object(struct place *place, void (*fx) (class Object *, void *data), void *data);
         extern int place_get_light(struct place *place, int x, int y);
-        
-        extern void place_set_terrain(struct place *place, int x, int y, 
-                                      struct terrain *terrain);
-	extern struct terrain *place_get_terrain(struct place *place, int x, 
-                                                 int y);
+        extern void place_set_terrain(struct place *place, int x, int y, struct terrain *terrain);
+	extern struct terrain *place_get_terrain(struct place *place, int x, int y);
         extern Uint32 place_get_color(struct place *place, int x, int y);
         extern int place_get_movement_cost(struct place *place, int x, int y);
         extern int place_adjust_turn_cost(struct place *place, int turns);
         extern int place_is_hazardous(struct place *place, int x, int y);
-
 	extern class NpcParty *place_random_encounter(struct place *);
-        extern void place_paint_objects(struct place *place, int mx, int my,
-                                        int sx, int sy);
+        extern void place_paint_objects(struct place *place, int mx, int my, int sx, int sy);
         extern int place_los_blocked(struct place *place, int ax, int ay, int bx, int by);
-
+        extern void place_exec(struct place *place, struct exec_context *cntxt);
+        extern int place_contains_hostiles(struct place *place, int alignment);
+        extern void place_enter(struct place *place);
+        extern void place_remove_and_destroy_all_objects(struct place *place);
 
         // Obsolescent global place lib:
         extern void placeExit(void);
-        extern void placeEnter(void);
 	extern class Moongate *place_get_moongate(struct place *, int x, int y);
 	extern void placeAddObject(Object * object);
 	extern void placeRemoveObject(Object * object);
@@ -234,14 +243,7 @@ extern "C" {
         extern int placeWrapX(int x);
         extern int placeWrapY(int y);
         extern void placeDescribe(int x, int y, int flags);
-	extern void placeForEachObject(void (*fx) (class Object *, void *data),
-                                       void *data);
-        extern void placeInit(void);
-        extern void placeAdvanceCombatTurn(void);
-        // combat
         extern void placeDumpObjects(void);
-//extern struct place *placeLoad(class Loader *loader);
-        extern void placeAdvanceTurns(void);
 
 
 #ifdef __cplusplus

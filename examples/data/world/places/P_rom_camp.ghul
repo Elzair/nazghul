@@ -63,10 +63,14 @@ PLACE p_rom_camp {
   objects {
     mech_h_fence_gate fence_gate  8 10 "closed";
 
+    t_town_guards 10 10 (ALIGN_TOWN) 1 c_guard;
+
+#if 0
     t_horse  6  6 (ALIGN_TOWN) 1 null;
     t_horse  8  5 (ALIGN_TOWN) 1 null;
     t_horse  7  9 (ALIGN_TOWN) 1 null;
     t_horse  8  9 (ALIGN_TOWN) 1 null;
+#endif
 
   }
   object_type t_town;

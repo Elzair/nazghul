@@ -28,9 +28,12 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-#define getHandler(stack,type) (list_empty((stack))?NULL:(type*)(stack)->next)
-#define pushHandler(stack,handler) (list_add((stack),&(handler)->list))
-#define popHandler(stack) if(!list_empty((stack)))list_remove((stack)->next)
+#define EVENT_NONBLOCK   (1 << 0)
+#define EVENT_NOPLAYBACK (1 << 1)
+
+#define getHandler(stack,type) (list_empty((stack)) ? NULL : (type*)(stack)->next)
+#define pushHandler(stack,handler) (list_add((stack), &(handler)->list))
+#define popHandler(stack) if (!list_empty((stack))) list_remove((stack)->next)
 
 // These are in nazghul.c
 extern char *RecordFile;
@@ -48,7 +51,7 @@ static bool playback_events;
 static int playback_fd;
 
 static void (*eventHook) (void);
-static int (*wait_event) (SDL_Event * event);
+static int (*wait_event) (SDL_Event * event, int flags);
 
 static int mapKey(SDL_keysym * keysym)
 {
@@ -135,13 +138,26 @@ static int mapButton(Uint8 button)
 	}
 }
 
-static int playback_event(SDL_Event * event)
+static int event_get_next_event(SDL_Event *event, int flags)
+{
+        if (flags & EVENT_NONBLOCK)
+                return SDL_PollEvent(event);
+        else
+                return SDL_WaitEvent(event);
+}
+
+static int playback_event(SDL_Event * event, int flags)
 {
 	// For now use the expedient but non-portable technique of reading the
 	// binary data straight to the file.
 	int n;
 	int len = sizeof(SDL_Event);
 	char *ptr = (char *) event;
+
+        if (flags & EVENT_NOPLAYBACK)
+                return 0;
+
+
 	while (len) {
 		n = read(playback_fd, ptr, len);
 		if (n == -1) {
@@ -154,7 +170,7 @@ static int playback_event(SDL_Event * event)
 
 	SDL_Delay(PlaybackSpeed);
 
-	return 0;
+	return 1;
 }
 
 static void record_event(SDL_Event * event)
@@ -175,39 +191,7 @@ static void record_event(SDL_Event * event)
 	}
 }
 
-int eventInit(void)
-{
-	list_init(&KeyHandlers);
-	list_init(&TickHandlers);
-	list_init(&QuitHandlers);
-	list_init(&MouseHandlers);
-	eventHook = NULL;
-	wait_event = SDL_WaitEvent;
-
-	if (RecordFile != NULL) {
-		record_events = true;
-		record_fd = open(RecordFile, O_WRONLY | O_CREAT, 00666);
-		if (record_fd == -1) {
-			perror(RecordFile);
-			return -1;
-		}
-	}
-
-	if (PlaybackFile != NULL) {
-		playback_events = true;
-		playback_fd = open(PlaybackFile, O_RDONLY, 00666);
-		if (playback_fd == -1) {
-			perror(PlaybackFile);
-			return -1;
-		}
-		// Override the normal wait_event routine
-		wait_event = playback_event;
-	}
-
-	return 0;
-}
-
-void eventHandle(void)
+static void event_handle_aux(int flags)
 {
 	bool done = false;
 
@@ -215,7 +199,9 @@ void eventHandle(void)
 
 		SDL_Event event;
 
-		wait_event(&event);
+		if (!wait_event(&event, flags))
+                        return;
+
 		if (record_events)
 			record_event(&event);
 
@@ -224,9 +210,7 @@ void eventHandle(void)
 		case SDL_USEREVENT:
 			{
 				struct TickHandler *tickh;
-				tickh =
-				    getHandler(&TickHandlers,
-					       struct TickHandler);
+				tickh = getHandler(&TickHandlers, struct TickHandler);
 				if (tickh && tickh->fx(tickh))
 					done = true;
 			}
@@ -235,14 +219,11 @@ void eventHandle(void)
 		case SDL_KEYDOWN:
 			{
 				struct KeyHandler *keyh;
-                int mapped_key;
+                                int mapped_key;
+
 				keyh = getHandler(&KeyHandlers, struct KeyHandler);
-                // SAM: Adding the SDL key modifier as well...
-                mapped_key = mapKey(&event.key.keysym);
-                // printf("sym '%d' mod '%d'\n", event.key.keysym.sym, event.key.keysym.mod);
-                // printf("mapKey(%d) --> %d\n", event.key.keysym.sym, mapped_key);
-				if (keyh && keyh->fx(keyh, mapped_key, 
-                                     event.key.keysym.mod))
+                                mapped_key = mapKey(&event.key.keysym);
+				if (keyh && keyh->fx(keyh, mapped_key, event.key.keysym.mod))
 					done = true;
 			}
 			break;
@@ -278,6 +259,48 @@ void eventHandle(void)
 		if (eventHook)
 			eventHook();
 	}
+}
+
+int eventInit(void)
+{
+	list_init(&KeyHandlers);
+	list_init(&TickHandlers);
+	list_init(&QuitHandlers);
+	list_init(&MouseHandlers);
+	eventHook = NULL;
+	wait_event = event_get_next_event;
+
+	if (RecordFile != NULL) {
+		record_events = true;
+		record_fd = open(RecordFile, O_WRONLY | O_CREAT, 00666);
+		if (record_fd == -1) {
+			perror(RecordFile);
+			return -1;
+		}
+	}
+
+	if (PlaybackFile != NULL) {
+		playback_events = true;
+		playback_fd = open(PlaybackFile, O_RDONLY, 00666);
+		if (playback_fd == -1) {
+			perror(PlaybackFile);
+			return -1;
+		}
+		// Override the normal wait_event routine
+		wait_event = playback_event;
+	}
+
+	return 0;
+}
+
+void eventHandle(void)
+{
+        event_handle_aux(0);
+}
+
+void eventHandlePending(void)
+{
+        event_handle_aux(EVENT_NONBLOCK|EVENT_NOPLAYBACK);
 }
 
 void eventPushKeyHandler(struct KeyHandler *keyh)

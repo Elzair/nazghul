@@ -106,7 +106,7 @@ void ItemType::use(class Character * target)
 			target->awaken();
         }
 	if (effect & EFFECT_HEAL) {
-		target->changeHp(getAmount());
+		target->heal(getAmount());
         }
 	if (effect & EFFECT_RESTORE) {
 		target->changeMana(getAmount());

@@ -30,6 +30,7 @@
 #include "console.h"
 #include "wind.h"
 #include "player.h"
+#include "Loader.h"
 
 #include <unistd.h>
 
@@ -40,6 +41,9 @@ VehicleType::VehicleType()
 	mv_sound = 0;
 	ordnance = 0;
 	formation = 0;
+        tailwind_penalty = 1;
+        headwind_penalty = 1;
+        crosswind_penalty = 1;
 }
 
 bool VehicleType::canFace(int facing)
@@ -58,6 +62,128 @@ class Object *VehicleType::createInstance()
 	return obj;
 }
 
+bool VehicleType::load(class Loader *loader)
+{
+        char *ordnance_tag = NULL;
+        char *map_tag = NULL;
+        bool result = false;
+
+        // Parse common fields
+        if (! ObjectType::load(loader))
+                return false;
+
+        // Parse type-specific fields
+        if (!loader->matchWord("speed") ||
+            !loader->getInt(&speed) ||
+            !loader->matchWord("pmask") ||
+            !loader->getBitmask(&pmask) ||
+            !loader->matchWord("must_turn") ||
+            !loader->getBool(&must_turn) ||
+            !loader->matchWord("mv_desc") ||
+            !loader->getWord(&mv_desc) ||
+            !loader->matchWord("mv_sound") ||
+            !loader->getString(&mv_sound) ||
+            !loader->matchWord("ordnance") ||
+            !loader->getWord(&ordnance_tag) ||
+            !loader->matchWord("max_hp") ||
+            !loader->getInt(&max_hp) ||
+            !loader->matchWord("map") ||
+            !loader->getWord(&map_tag)) {
+                goto cleanup;
+        }
+
+        // Parse optional fields
+        while (!loader->matchToken('}')) {
+                if (loader->matchWord("tailwind_penalty")) {
+                        if (!loader->getInt(&tailwind_penalty))
+                                goto cleanup;
+                }
+                if (loader->matchWord("headwind_penalty")) {
+                        if (!loader->getInt(&headwind_penalty))
+                                goto cleanup;
+                }
+                if (loader->matchWord("crosswind_penalty")) {
+                        if (!loader->getInt(&crosswind_penalty))
+                                goto cleanup;
+                }
+                else {
+                        loader->setError("Error parsing VEHICLE: %s is not a "
+                                         "valid field name", 
+                                         loader->getLexeme());
+                        goto cleanup;
+                }
+        }
+
+        // Bind the ordnance tag
+        if (strcmp(ordnance_tag, "null")) {
+                ordnance = (class ArmsType*)loader->lookupTag(ordnance_tag, 
+                                                              ARMS_TYPE_ID);
+                if (ordnance == NULL) {
+                        loader->setError("Error loading VEHICLE %s: '%s' is "
+                                         "not a valid ARMS tag", tag, 
+                                         ordnance_tag);
+                        goto cleanup;
+                }
+        }
+
+        // Bind the map tag
+        if (strcmp(map_tag, "null")) {
+                map = (struct terrain_map*)loader->lookupTag(map_tag, MAP_ID);
+                if (map == NULL) {
+                        loader->setError("Error loading VEHICLE %s: '%s' is "
+                                         "not a valid MAP tag", tag, 
+                                         map_tag);
+                        goto cleanup;
+                }
+        }
+
+        result = true;
+
+ cleanup:
+        if (ordnance_tag)
+                free(ordnance_tag);
+        if (map_tag)
+                free(map_tag);
+
+        return result;
+}
+
+int VehicleType::getWindPenalty(int facing)
+{
+	int vdx, vdy, wdx, wdy, base_speed;
+
+	base_speed = getSpeed();
+
+	if (!mustTurn())
+                return 1;
+
+	vdx = directionToDx(facing);
+	vdy = directionToDy(facing);
+	wdx = directionToDx(windGetDirection());
+	wdy = directionToDy(windGetDirection());
+
+	// take the vector dot product
+	switch (vdx * wdx + vdy * wdy) {
+	case -1:
+                // with the wind
+		return tailwind_penalty;
+	case 0:
+		// tacking across the wind
+		return crosswind_penalty;
+	case 1:
+		// against the wind
+		return headwind_penalty;
+	default:
+		assert(false);
+		return 0;
+	}
+}
+
+bool VehicleType::mustTurn()
+{
+        return must_turn;
+}
+
 /*****************************************************************************/
 
 Vehicle::Vehicle()
@@ -74,7 +200,7 @@ Vehicle::~Vehicle()
 void Vehicle::init(class VehicleType * type)
 {
 	Object::init(type);
-	hp = type->max_hp;
+	hp = type->getMaxHp();
 }
 
 int Vehicle::getFacing()
@@ -102,7 +228,7 @@ bool Vehicle::load(class Loader * loader)
 	free(facing);
 
 	// truncate hp to max allowed by type
-	hp = min(hp, getObjectType()->max_hp);
+	hp = min(hp, getObjectType()->getMaxHp());
 
 	return ret;
 }
@@ -116,7 +242,7 @@ int Vehicle::get_facing_to_fire_weapon(int dx, int dy)
 	return -1;
 }
 
-bool Vehicle::fire_weapon(int dx, int dy)
+bool Vehicle::fire_weapon(int dx, int dy, class Object *user)
 {
 	class ArmsType *ordnance;
 
@@ -130,81 +256,8 @@ bool Vehicle::fire_weapon(int dx, int dy)
 		return false;
 	}
 
-        ordnance->fireInDirection(getPlace(), getX(), getY(), dx, dy);
+        ordnance->fireInDirection(getPlace(), getX(), getY(), dx, dy, user);
         return true;
-#if 0
-	int i;
-	Object *cannonball;
-
-	/* Start the sound of the cannon being fired */
-	soundPlay(ordnance->getFireSound(), SOUND_MAX_VOLUME);
-
-	/* Create a cannonball */
-	cannonball = new Object();
-	cannonball->init(occupant->getX(), occupant->getY(),
-			 occupant->getPlace(), ordnance->getAmmo());
-	if (!cannonball) {
-		err("object_create failed");
-		return true;
-	}
-
-	usleep(50000);		/* Hack */
-
-	/* Move the cannonball */
-	for (i = 0; i <= ordnance->getRange(); i++) {
-
-		class NpcParty *npc;
-
-		/* paint the cannonball */
-		placeAddObject(cannonball);
-		mapUpdate(0);
-		usleep(50000);	/* Hack */
-
-		/* remember any npc party standing where the cannonball is */
-		npc = placeGetNPC(cannonball->getX(), cannonball->getY());
-
-		/* remove the cannonball */
-		placeRemoveObject(cannonball);
-
-		/* check if we hit an npc party (suicide doesn't count) */
-		if (npc && npc != occupant) {
-			consolePrint("%s hit ", ordnance->getName());
-                        npc->describe(1);
-                        consolePrint("!\n");
-			npc->hit_by_ordnance(ordnance);
-			if (npc->isDestroyed()) {
-				consolePrint("%s destroyed ", 
-                                             ordnance->getName());
-				npc->describe(1);
-				consolePrint("!\n");
-				delete npc;
-				mapUpdate(0);
-			}
-			break;
-		}
-		// check if we hit the player party (awful hack, but I need to
-		// do a lot more work merging the player and npc party code
-		// together before I can resort to a single method)
-		else if (occupant != player_party &&
-			 cannonball->getX() == player_party->getX() &&
-			 cannonball->getY() == player_party->getY()) {
-			player_party->hit_by_ordnance(ordnance);
-			break;
-		}
-
-		/* move the cannonball */
-		cannonball->setX(place_wrap_x(getPlace(), 
-                                              cannonball->getX() + dx));
-		cannonball->setY(place_wrap_y(getPlace(),
-                                              cannonball->getY() + dy));
-	}
-
-	delete(cannonball);
-
-	mapUpdate(0);
-
-	return true;
-#endif
 }
 
 void Vehicle::paint(int sx, int sy)
@@ -228,52 +281,19 @@ bool Vehicle::turn(int dx, int dy, int *cost)
 	return true;
 }
 
-int Vehicle::getSpeed()
+int Vehicle::getMovementCostMultiplier()
 {
-	int vdx, vdy, wdx, wdy, base_speed;
-
-	base_speed = getObjectType()->getSpeed();
-
-	if (!mustTurn())
-		return base_speed;
-
-	vdx = directionToDx(getFacing());
-	vdy = directionToDy(getFacing());
-	wdx = directionToDx(windGetDirection());
-	wdy = directionToDy(windGetDirection());
-
-	// take the vector dot product
-	switch (vdx * wdx + vdy * wdy) {
-	case -1:
-		// with the wind
-		return base_speed * 2;
-	case 0:
-		// tacking across the wind
-		return base_speed;
-	case 1:
-		// against the wind
-		return base_speed * 4;
-	default:
-		assert(false);
-		return 0;
-	}
-
+        return getObjectType()->getWindPenalty(getFacing());
 }
 
 void Vehicle::damage(int amount)
 {
 	hp -= amount;
 	hp = max(0, hp);
-	hp = min(hp, getObjectType()->max_hp);
+	hp = min(hp, getObjectType()->getMaxHp());
 
 	if (hp == 0)
 		destroy();
-}
-
-void Vehicle::repair(void)
-{
-	// Assume one hour of repairs, which is 10% of max.
-	damage(-getObjectType()->max_hp / 10);
 }
 
 struct formation *Vehicle::get_formation()
@@ -300,4 +320,9 @@ int Vehicle::getY()
         if (occupant != NULL)
                 return occupant->getY();
         return Object::getY();
+}
+
+bool Vehicle::mustTurn()
+{
+        return getObjectType()->mustTurn();   
 }

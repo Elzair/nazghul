@@ -37,9 +37,17 @@
 #define MAX_SHADER (N_SHADERS - 1)
 #define SHADER_W STAT_W
 #define SHADER_H STAT_H
+#define HIGHLIGHT_THICKNESS 2
 
 static SDL_Surface *Screen;
 static SDL_Surface *Shaders[N_SHADERS];
+
+// ---------------------------------------------------------
+// The Highlight surface is used to highlight specific tiles.
+// ---------------------------------------------------------
+
+static SDL_Surface *Highlight;
+
 static int Zoom;
 
 Uint32 Black;
@@ -144,7 +152,6 @@ void screen_fade_surface(SDL_Surface * surf, int fade_level)
 
 static SDL_Surface *create_shader(int fade_level)
 {
-#if 1
 	SDL_Surface *shader;
 
 	shader = screenCreateSurface(SHADER_W, SHADER_H);
@@ -160,36 +167,6 @@ static SDL_Surface *create_shader(int fade_level)
 	}
 
 	return shader;
-#else
-	SDL_Surface *tmp;
-	SDL_Surface *shader;
-
-	tmp = SDL_CreateRGBSurface(SDL_SWSURFACE, SHADER_W, SHADER_H,
-				   Screen->format->BitsPerPixel,
-				   0x0000F000, 0x00000F00, 0x000000F0,
-				   0x000000FF);
-	if (!tmp) {
-		perror_sdl("SDL_CreateRGBSurface");
-		exit(-1);
-	}
-
-	shader = SDL_DisplayFormat(tmp);
-	SDL_FreeSurface(tmp);
-
-	if (shader->format->palette == NULL) {
-		SDL_FillRect(shader, NULL,
-			     SDL_MapRGBA(shader->format, 0, 0, 0, 0));
-	} else {
-		SDL_FillRect(shader, NULL, SDL_MapRGB(shader->format, 0, 0, 0));
-		SDL_SetColorKey(shader, SDL_SRCCOLORKEY,
-				SDL_MapRGB(shader->format, 0xFF, 0x00, 0xFF));
-		SDL_LockSurface(shader);
-		screen_fade_surface(shader, fade_level);
-		SDL_UnlockSurface(shader);
-	}
-
-	return shader;
-#endif				// 1
 }
 
 void screenInitShader(void)
@@ -203,16 +180,33 @@ void screenInitShader(void)
 	}
 }
 
-void screenInit(void)
+void screenInitHighlight(void)
+{
+	Highlight = screenCreateSurface(SHADER_W, SHADER_H);
+        assert(Highlight != NULL);
+
+	SDL_FillRect(Highlight, NULL, SDL_MapRGBA(Highlight->format, 255, 255, 255, 0));
+
+	if (Highlight->format->palette != NULL) {
+		SDL_LockSurface(Highlight);
+		screen_fade_surface(Highlight, 4);
+		SDL_UnlockSurface(Highlight);
+	}
+}
+
+int screenInit(void)
 {
 	screenInitScreen();
 	screenInitColors();
 	screenInitShader();
+        screenInitHighlight();
 	Zoom = 1;
 
 	SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY,
 			    SDL_DEFAULT_REPEAT_INTERVAL);
 	memset(&frame_sprites, 0, sizeof(frame_sprites));
+
+        return 0;
 }
 
 void screenErase(SDL_Rect * rect)
@@ -625,6 +619,63 @@ void screenShade(SDL_Rect * area, unsigned char amount)
 		SDL_SetAlpha(shade, SDL_SRCALPHA, amount);
 	}
 	screenBlit(shade, NULL, area);
+}
+
+void screenHighlight(SDL_Rect * area)
+{
+#if 0
+	assert(area->w <= SHADER_W);
+	assert(area->h <= SHADER_H);
+
+        SDL_SetAlpha(Highlight, SDL_SRCALPHA, 128);
+	screenBlit(Highlight, NULL, area);
+#else
+        SDL_Rect edge;
+
+        // ---------------------------------------------------------------------
+        // Top edge
+        // ---------------------------------------------------------------------
+
+        edge.x = area->x;
+        edge.y = area->y;
+        edge.w = area->w;
+        edge.h = HIGHLIGHT_THICKNESS;
+
+        screenFill(&edge, White);
+
+        // ---------------------------------------------------------------------
+        // Bottom edge
+        // ---------------------------------------------------------------------
+
+        edge.x = area->x;
+        edge.y = area->y + area->h - HIGHLIGHT_THICKNESS;
+        edge.w = area->w;
+        edge.h = HIGHLIGHT_THICKNESS;
+
+        screenFill(&edge, White);
+
+        // ---------------------------------------------------------------------
+        // Left edge
+        // ---------------------------------------------------------------------
+
+        edge.x = area->x;
+        edge.y = area->y;
+        edge.w = HIGHLIGHT_THICKNESS;
+        edge.h = area->h;
+
+        screenFill(&edge, White);
+
+        // ---------------------------------------------------------------------
+        // Right edge
+        // ---------------------------------------------------------------------
+
+        edge.x = area->x + area->w - HIGHLIGHT_THICKNESS;
+        edge.y = area->y;
+        edge.w = HIGHLIGHT_THICKNESS;
+        edge.h = area->h;
+
+        screenFill(&edge, White);
+#endif
 }
 
 int screenLock()

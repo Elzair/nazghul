@@ -30,6 +30,7 @@
 #include "wq.h"
 #include "Mech.h"
 #include "game.h"
+#include "clock.h"
 
 #include <assert.h>
 #include <math.h>
@@ -37,7 +38,6 @@
 struct moon_info MoonInfo;
 struct moon Moons[NUM_MOONS];
 struct sun Sun;
-struct clock Clock;
 
 static struct sky {
 	SDL_Rect screenRect;
@@ -200,24 +200,6 @@ static void sky_compute_factors(void)
 }
 
 
-static void myAdvanceSun(void)
-{
-	/* Advance the sun */
-	while (Turn > Sun.next_arc_turn) {
-
-		/* Move across the sky */
-		Sun.arc = (Sun.arc + 1) % 360;
-		Sun.next_arc_turn += SUN_TURNS_PER_DEGREE;
-
-                int new_light = sky_get_light_from_astral_body(Sun.arc, 
-                                                               MAX_SUNLIGHT);
-                if (new_light != Sun.light) {
-                        Sun.light = new_light;
-                        player_party->recompute_los();
-                }
-	}
-}
-
 int sun_is_up(void)
 {
 	return (Sun.arc >= SUNRISE_DEGREE) && (Sun.arc < SUNSET_DEGREE);
@@ -284,231 +266,6 @@ static bool sky_send_signal_to_place(struct place *place, void *data)
         return false;
 }
 
-static void myAdvanceMoons(void)
-{
-	int i;
-	struct moon *moon;
-        int original_light;
-
-	/* Advance the moons */
-	for (i = 0; i < NUM_MOONS; i++) {
-
-		moon = &Moons[i];
-
-		/* Change the moon arc */
-		while (Turn > moon->next_arc_turn) {
-			moon->arc = (moon->arc + 1) % 360;
-			moon->next_arc_turn += MOON_TURNS_PER_DEGREE;
-
-		}
-
-		/* Change the moon phase */
-		while (Turn > moon->next_phase_turn) {
-
-			moon->closeMoongate(moon->phase);
-			moon->phase = (moon->phase + 1) % MoonInfo.phases;
-			moon->openMoongate(moon->phase);
-			moon->next_phase_turn += moon->turns_per_phase;
-
-                        // Wart: if the moon is now full then send a signal to
-                        // all mechanisms in the game
-                        if (moon->phase == MOON_PHASE_FULL) {
-                                game_for_each_place(sky_send_signal_to_place,
-                                                    (void*)MECH_FULL_MOON);
-                        }
-		}
-
-                // Adjust light coming from moon.
-                original_light = moon->light;
-                moon_adjust_light(moon);                
-
-                // Update LOS if lighting changed
-                if (original_light != moon->light) {
-                        player_party->recompute_los();
-                }
-
-	}
-        
-}
-
-void clockSet(void)
-{
-	// Set the initial time of day from the location of the sun. Only done
-	// once at load time.
-
-	int arc;
-
-	arc = Sun.arc;
-
-	// SAM: In future, when GhulScript exists to specify the 
-	// current day, we will also load week, month, year.
-	Clock.year = 0;
-	Clock.month = 0;
-	Clock.week = 0;
-	Clock.day_w = 0;	// Day of week (0..6)
-	Clock.day = 0;		// Day of month (0..27)
-	Clock.hour = (arc / DEGREES_PER_HOUR);
-	Clock.min = (arc % DEGREES_PER_HOUR) * 60 / DEGREES_PER_HOUR;
-
-	Clock.baseTurn =
-	    (Clock.min * TURNS_PER_MINUTE) +
-	    (Clock.hour * TURNS_PER_HOUR) +
-	    (Clock.day_w * TURNS_PER_DAY) +
-	    (Clock.week * TURNS_PER_WEEK) +
-	    (Clock.month * TURNS_PER_MONTH) + (Clock.year * TURNS_PER_YEAR);
-}
-
-void clockUpdate(void)
-{
-	// Update the time of day clock to match the Turn counter.
-	int turn = Turn + Clock.baseTurn;
-
-	Clock.year = turn / TURNS_PER_YEAR;
-	Clock.month = (turn % TURNS_PER_YEAR) / TURNS_PER_MONTH;
-	Clock.week = (turn % TURNS_PER_MONTH) / TURNS_PER_WEEK;
-	Clock.day_w = (turn % TURNS_PER_WEEK) / TURNS_PER_DAY;
-	Clock.day = (turn % TURNS_PER_MONTH) / TURNS_PER_DAY;
-	Clock.hour = (turn % TURNS_PER_DAY) / TURNS_PER_HOUR;
-	Clock.min = (turn % TURNS_PER_HOUR) / TURNS_PER_MINUTE;
-
-	mapRepaintClock();
-}
-
-char *time_HHMM_as_string(void)
-{
-	static char str[] = "HH:MMPM";
-	static int maxlen = strlen("HH:MMPM") + 1;
-	int hr = Clock.hour;
-	int min = Clock.min;
-	int n;
-
-	hr = (hr > 12) ? (hr - 12) : hr;
-	hr = (hr == 0) ? 12 : hr;
-
-	n = snprintf(str, maxlen, "%2d:%02d%2s",
-		     hr, min, (Clock.hour >= 12) ? "PM" : "AM");
-	assert(n != -1);
-	return str;
-}				// time_HHMM_as_string()
-
-char *time_YYYY_MM_DD_as_string(void)
-{
-	static char str[] = "YYYY/MM/DD";
-	static int maxlen = strlen("YYYY/MM/DD") + 1;
-	int n = snprintf(str, maxlen, "%04d/%02d/%02d",
-			 Clock.year, Clock.month, Clock.day);
-	assert(n != -1);
-	return str;
-}				// time_YYYY_MM_DD_as_string()
-
-#ifdef OTHER_TIME_STRING_FUNCTIONS
-char *time_YYYY_as_string(void)
-{
-	static char str[] = "YYYY";
-	static int maxlen = strlen("YYYY") + 1;
-	int n = snprintf(str, maxlen, "%4d", Clock.year);
-	assert(n != -1);
-	return str;
-}
-
-char *time_MM_as_string(void)
-{
-	static char str[] = "MM";
-	static int maxlen = strlen("MM") + 1;
-	int n = snprintf(str, maxlen, "%2d", Clock.month);
-	assert(n != -1);
-	return str;
-}
-
-char *time_DD_as_string(void)
-{
-	static char str[] = "DD";
-	static int maxlen = strlen("DD") + 1;
-	int n = snprintf(str, maxlen, "%2d", Clock.day);
-	assert(n != -1);
-	return str;
-}
-#endif				// OTHER_TIME_STRING_FUNCTIONS
-
-// SAM: 
-// A proper implementation of 
-// month_name(), week_name(), day_name()
-// will wait until we have GhulScript
-// for week and month names and such.
-// 
-char *month_name(void)
-{
-	int month = Clock.month;
-	switch (month) {
-	case 0:
-		return "1st Month";
-	case 1:
-		return "2nd Month";
-	case 2:
-		return "3rd Month";
-	case 3:
-		return "4th Month";
-	case 4:
-		return "5th Month";
-	case 5:
-		return "6th Month";
-	case 6:
-		return "7th Month";
-	case 7:
-		return "8th Month";
-	case 8:
-		return "9th Month";
-	case 9:
-		return "10th Month";
-	case 10:
-		return "11th Month";
-	case 11:
-		return "12th Month";
-	default:
-		assert(0);
-	}
-}				// month_name()
-
-char *week_name(void)
-{
-	int week = Clock.week;
-	switch (week) {
-	case 0:
-		return "1st Week";
-	case 1:
-		return "2nd Week";
-	case 2:
-		return "3rd Week";
-	case 3:
-		return "4th Week";
-	default:
-		assert(0);
-	}
-}				// week_name()
-
-char *day_name(void)
-{
-	int day = Clock.day;
-	switch (day) {
-	case 0:
-		return "1st Day";
-	case 1:
-		return "2nd Day";
-	case 2:
-		return "3rd Day";
-	case 3:
-		return "4th Day";
-	case 4:
-		return "5th Day";
-	case 5:
-		return "6th Day";
-	case 6:
-		return "7th Day";
-	default:
-		assert(0);
-	}
-}				// day_name()
-
 static void moonPaintSunOrMoon(int arc, struct sprite *sprite)
 {
 	int x;
@@ -537,10 +294,76 @@ int moon_is_visible(int arc)
 	return 1;
 }				// moon_is_visible()
 
-void skyAdvanceTurns(void)
+static void sky_advance_sun(void)
 {
-	myAdvanceSun();
-	myAdvanceMoons();
+        int new_arc;
+        int new_light;
+
+
+        /* Change the sun's arc */
+        new_arc = clock_time_of_day() / MINUTES_PER_DEGREE;
+        if (new_arc != Sun.arc) {
+                Sun.arc = new_arc;
+
+                /* Change the sun's light */
+                new_light = sky_get_light_from_astral_body(Sun.arc, MAX_SUNLIGHT);
+                if (new_light != Sun.light) {
+                        Sun.light = new_light;
+                        player_party->updateView();
+                }
+        }
+}
+
+static void sky_advance_moons(void)
+{
+	int i;
+	struct moon *moon;
+        int original_light;
+        int new_arc;
+        int new_phase;
+
+	/* Advance the moons */
+	for (i = 0; i < NUM_MOONS; i++) {
+
+		moon = &Moons[i];
+
+                /* Change the moon's arc */
+                new_arc = (clock_time() / MOON_MINUTES_PER_DEGREE);
+                new_arc += moon->initial_arc;
+                new_arc %= 360;
+                if (new_arc != moon->arc) {
+                        moon->arc = new_arc;
+                        
+                        /* Change the moon's phase */
+                        new_phase = clock_time() / moon->minutes_per_phase;
+                        new_phase += moon->initial_phase;
+                        new_phase %= MoonInfo.phases;
+
+                        if (new_phase != moon->phase) {
+                                moon->closeMoongate(moon->phase);
+                                moon->phase = new_phase;
+                                moon->openMoongate(moon->phase);
+
+                                /* Send the full-moon signal */
+                                if (moon->phase == MOON_PHASE_FULL) {
+                                        game_for_each_place(sky_send_signal_to_place, (void*)MECH_FULL_MOON);
+                                }
+
+                                /* Change the moon's light */
+                                original_light = moon->light;
+                                moon_adjust_light(moon);                
+                                if (original_light != moon->light) {
+                                        player_party->updateView();
+                                }
+                        }
+                }
+        }
+}
+
+void sky_advance(void)
+{
+	sky_advance_sun();
+	sky_advance_moons();
 	skyRepaint();
 }
 
@@ -551,7 +374,7 @@ void skyRepaint(void)
 	/* Erase the moon window */
 	screenErase(&Sky.screenRect);
 
-	if (!Place->underground) {
+	if (NULL != Place && !Place->underground) {
 
 		/* Redraw the sun */
 		moonPaintSunOrMoon(Sun.arc, Sun.sprite);
@@ -570,6 +393,8 @@ void skyRepaint(void)
 void skyInit(void)
 {
 	int i;
+        struct moon *moon;
+
 
 	Sky.screenRect.w = SKY_W;
 	Sky.screenRect.x = SKY_X;
@@ -585,18 +410,26 @@ void skyInit(void)
 	Moons[1].closeMoongate = moongateCloseDestinationGate;
 
 	for (i = 0; i < NUM_MOONS; i++) {
-		struct moon *moon;
+
 
 		moon = &Moons[i];
-		moon->turns_per_phase = moon->days_per_cycle * TURNS_PER_DAY /
-		    MoonInfo.phases;
-		moon->next_phase_turn = Turn + moon->turns_per_phase;
-		moon->next_arc_turn = Turn + MOON_TURNS_PER_DEGREE;
+
+                /* WARNING: bug waiting to happen here. The initial_phase and
+                 * initial_arc should be saved separately from the current
+                 * phase and arc in the save file, because the clock_time()
+                 * call measures from the start of the current session, not the
+                 * start of the first session.
+                 */
+                moon->initial_phase = moon->phase;
+                moon->initial_arc = moon->arc;
+
+                moon->minutes_per_phase = (MINUTES_PER_DAY * moon->days_per_cycle) / MoonInfo.phases;
 		moon->openMoongate(moon->phase);
                 moon_adjust_light(moon);
 	}
 
 
+        Sun.arc = clock_time_of_day() / MINUTES_PER_DEGREE;;
         Sun.light = sky_get_light_from_astral_body(Sun.arc, MAX_SUNLIGHT);
 
 	skyRepaint();
@@ -613,3 +446,4 @@ int sky_get_ambient_light(void)
         
         return clamp(light, 0, MAX_AMBIENT_LIGHT);
 }
+

@@ -22,6 +22,15 @@
 
 #ifndef Glasrin_ghul
 #define Glasrin_ghul
+
+// -----------------------------------------------------------------------------
+// Declare a mech that will spawn undead in Glasdrin.
+// -----------------------------------------------------------------------------
+MAKE_NPC_PARTY_GENERATOR_MECH(t_glasdrin_undead_gen, "undead gen", 
+                              t_undead_brigade, (ALIGN_MONSTER),
+                              Glasdrin, 16, 0, 1, 1,              
+                              0.10);
+
 MAP Glasdrin_Map {
         type   ascii;
         width  64;
@@ -41,7 +50,7 @@ MAP Glasdrin_Map {
                 "...x,,x,,,,,cccccccccccccccccccccccccccccccccccccc.x,,,,,x,,x...";
                 "...x,,x,,,,,x.c..................................c.x@@@@@x,,x...";
                 "...x,,x,,,,,x.c.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.c.x,,,,,x,,x...";
-                "...x,,x,,,,,x.c.xKIT,HENxDINING@HALLx@BARRA,KS@x.cc,,,,,,x,,x...";
+                "...x,,x,,,,,x.c.xKITCHENxDINING@HALLx@BARRACKS@x.cc,,,,,,x,,x...";
                 "...x,,x,,,,,x.c.x,,,,,,,x,,,,,,,,,,,x,,,,,,,,,,x.c.x,,0,,x,,x...";
                 "...x,,xxx,xxx.c.x,,,,,,,x,,,,,,,,,,,x,,,,,,,,,,x.c.x,,0,,x,,x...";
                 "...x,,x,,,,,x.c.x,,,,,,,,,,,,,,,,,,,x,,,,,,,,,,x.c.x,,0,,x,,x...";
@@ -79,7 +88,7 @@ MAP Glasdrin_Map {
                 "...x,,x.....b.c.......tttx,,,,,cc,,,,,xttt...ccccc....t||x,,x...";
                 "...x,,xtt...b.c.........tx,,,,,cc,,,,,xt.....c.......tt||x,,x...";
                 "...x,,x||...b.ccccc......x,,,,,cc,,,,,x......c.xxxxxxxxxxx,,x...";
-                "...x,,x||...b.c...c......xxxxxxccxxxxxx......c.xMAGI,x,,,x,,x...";
+                "...x,,x||...b.c...c......xxxxxxccxxxxxx......c.xMAGICx,,,x,,x...";
                 "...x,,xxx,xxxx,xx.c............cc............c.x,,,,,,,,,x,,x...";
                 "...x,,x,,,,,,,,,,cccccccccccccccccccccccccccccc,,,,,,x,,,x,,x...";
                 "...x,,x,,,,,,,,,xt.............cc.............tx,,,,,xx,xx,,x...";
@@ -106,6 +115,27 @@ PLACE  Glasdrin {
   map         Glasdrin_Map;
   underground 0;
   objects {
+
+    // -------------------------------------------------------------------------
+    // Instantiate and wire up the undead generator to a turn trigger.
+    // -------------------------------------------------------------------------
+    t_turn_trigger        glasdrin_turn_trigger 0 0 "active";
+    t_glasdrin_undead_gen glasdrin_undead_gen   0 0 "active";
+    CONNECT glasdrin_turn_trigger => glasdrin_undead_gen;
+
+    // Town guards
+    t_town_guards 28 5  (ALIGN_TOWN) 1 c_guard;    
+    t_town_guards 35 5  (ALIGN_TOWN) 1 c_guard;    
+    t_town_guards 58 5  (ALIGN_TOWN) 1 c_guard;    
+    t_town_guards 58 28 (ALIGN_TOWN) 1 c_guard;    
+    t_town_guards 58 36 (ALIGN_TOWN) 1 c_guard;    
+    t_town_guards 58 58 (ALIGN_TOWN) 1 c_guard;    
+    t_town_guards 35 58 (ALIGN_TOWN) 1 c_guard;    
+    t_town_guards 28 58 (ALIGN_TOWN) 1 c_guard;    
+    t_town_guards 5  58 (ALIGN_TOWN) 1 c_guard;    
+    t_town_guards 5  5  (ALIGN_TOWN) 1 c_guard;    
+    t_town_guards 5  28 (ALIGN_TOWN) 1 c_guard;    
+    t_town_guards 5  36 (ALIGN_TOWN) 1 c_guard;    
   }
   object_type t_town;
 }

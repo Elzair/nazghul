@@ -46,12 +46,26 @@ enum layer {
 	cursor_layer     = 10,
 };
 
+enum control_mode {
+        CONTROL_MODE_AUTO = 0,
+        CONTROL_MODE_PLAYER,
+        CONTROL_MODE_IDLE,
+        CONTROL_MODE_FOLLOW,
+};
+
 struct inv_entry {
 	struct list list;
 	struct list auxlist;
 	int count;
 	int ref;
 	class ObjectType *type;
+};
+
+struct exec_context {
+        struct place *place;
+        int combat:1;
+        int quicken:1;
+        int time_stop:1;
 };
 
 class Loader;
@@ -74,6 +88,11 @@ class ObjectType {
 	virtual bool bindTags(class Loader * loader);
 	virtual bool isVisible();
 	virtual void describe(int count);
+        virtual int getSpeed();
+        virtual int getMaxHp();
+
+        // This might turn out to be too vague. We'll see.
+        virtual int getRequiredActionPoints();
 
 	struct list list;
 
@@ -82,6 +101,9 @@ class ObjectType {
 	char *name;
 	struct sprite *sprite;
 	enum layer layer;
+        int speed;
+        int required_action_points;
+        int max_hp;
 };
 
 class Object {
@@ -97,35 +119,59 @@ class Object {
 			  class ObjectType * type);
 	virtual void init(class ObjectType * type);
 
-	virtual int getX();
-	virtual int getY();
-	virtual struct place *getPlace();
-	virtual struct sprite *getSprite();
-	virtual bool isSelected();
+        virtual char *get_movement_sound();
+        virtual int getActivity();
+        virtual int getAlignment();
+        virtual enum control_mode getControlMode();
+        virtual struct conv *getConversation();
+        virtual int getHp();
 	virtual enum layer getLayer(void);
+	virtual int getLight();
+        virtual int getMaxHp();
 	virtual char *getName(void);
 	virtual class ObjectType *getObjectType();
-	virtual int getTurn(void);
-	virtual int getLight();
-        virtual char *get_movement_sound();
-        virtual int getAlignment();
-        virtual int getActivity();
-        virtual struct conv *getConversation();
+	virtual struct place *getPlace();
+        virtual int getPmask();
+        virtual int getRequiredActionPoints();
+        virtual int getSpeed();
+	virtual struct sprite *getSprite();
+        virtual struct mview *getView();
+	virtual int getVisionRadius();
+	virtual int getX();
+	virtual int getY();
 
+
+        virtual bool isCompanionOf(class Object *other);
 	virtual bool isDestroyed();
 	virtual bool is_opaque();
+        virtual bool isOnMap();
+        virtual bool isDead();
+        virtual bool isHostile(int alignment);
+	virtual bool isSelected();
+        virtual bool isTurnEnded();
+        virtual bool isCameraAttached();
+        virtual bool isCharmed();
+        virtual bool isNativelyHostile(int alignment);
+        virtual bool isPlayerPartyMember();
+        virtual bool isPlayerControlled();
 
+        virtual void addView();
+        virtual void rmView();
+        virtual void updateView();
+        virtual void applyExistingEffects();
+        virtual bool addToInventory(class Object *object);
+        virtual void attachCamera(bool val);
+        virtual void charm(int alignment);
+        virtual void clearAlignment(int alignment);
+	virtual void heal(int amount);
 	virtual void setX(int x);
 	virtual void setY(int y);
 	virtual void changeX(int dx);
 	virtual void changeY(int dy);
 	virtual void setPlace(struct place *place);
 	virtual void select(bool val);
+        virtual void unCharm();
 	virtual void destroy();
-	virtual void setTurn(int turn);
-	virtual void advanceTurn(int turn);
-	virtual void changeTurn(int delta);
-	virtual void synchronize(int turn);
 	virtual void relocate(struct place *newplace, int newx, int newy);
 	virtual void remove();
 	virtual bool load(class Loader * loader);
@@ -135,21 +181,47 @@ class Object {
 	virtual void paint(int sx, int sy);
         virtual class Object *clone();
 	virtual bool joinPlayer(void);     
-        virtual void hitByOrdnance(class ArmsType *ordnance);
+	virtual void synchronize();
+        virtual void exec(struct exec_context *context);
+        virtual int getActionPointsPerTurn();
+        virtual void applyPerTurnEffects();
+        virtual int getActionPoints();
+        virtual void burn();
+        virtual void poison();
+        virtual void sleep();
+        virtual void damage(int amount);
+        virtual void decActionPoints(int points);
+        virtual void endTurn();
+        virtual void startTurn();
+        virtual void setControlMode(enum control_mode);
+        virtual bool putOnMap(struct place *place, int x, int y, int r);
+        virtual void setView(struct mview *view);
+        virtual void changePlaceHook();
 
 	struct olist container_link;
 
 	char *script_tag;
 	struct list list;	// for the loader, not the place
+        struct list turn_list; /* for processing each object in a turn */
 
       protected:
+        virtual void setup();
+
+
 	class ObjectType * type;
 	int x;
 	int y;
 	struct place *place;
 	bool selected;
 	bool destroyed;
-	int turn;
+        int action_points;
+        enum control_mode control_mode;
+        bool camera_attached;
+	int hp;
+        bool is_on_map;
+	struct conv *conv;
+        struct mview *view;
+
 };
 
 

@@ -41,7 +41,7 @@ void windAdvanceTurns(void)
 	}
 }
 
-void windInit(void)
+int windInit(void)
 {
 	windRect.w = WIND_W;
 	windRect.x = WIND_X;
@@ -49,6 +49,8 @@ void windInit(void)
 	windRect.h = WIND_H;
 
 	windDirection = NORTH;
+
+        return 0;
 }
 
 void windSetDirection(int dir, int dur)

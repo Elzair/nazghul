@@ -54,63 +54,65 @@ extern "C" {
 #define KEY_SHIFT_EAST  (SDLK_LAST + 3)
 #define KEY_SHIFT_WEST  (SDLK_LAST + 4)
 
+
 	struct TickHandler {
 		struct list list;
-		 bool(*fx) (struct TickHandler * handler);
+                bool(*fx) (struct TickHandler * handler);
 		void *data;
 	};
 
 
-  // SAM: Using this typedef below, and in play.[ch]
-  typedef void (*v_funcpointer_ii)  (int x, int y);
-  typedef void (*v_funcpointer_iiv) (int x, int y, void * v);
+        // SAM: Using this typedef below, and in play.[ch]
+        typedef void (*v_funcpointer_ii)  (int x, int y);
+        typedef void (*v_funcpointer_iiv) (int x, int y, void * v);
   
-  struct cursor_movement_keyhandler {
-    // This struct is put into the 'data' field of a 
-    // 'struct KeyHandler'.
-    // It is used by movecursor() and movecursor_and_do().
-    bool             abort;
-    v_funcpointer_ii each_point_func;
-    v_funcpointer_ii each_target_func;
-  };
+        struct cursor_movement_keyhandler {
+                // This struct is put into the 'data' field of a 
+                // 'struct KeyHandler'.
+                // It is used by movecursor() and movecursor_and_do().
+                bool             abort;
+                v_funcpointer_ii each_point_func;
+                v_funcpointer_ii each_target_func;
+        };
 
-  struct terraform_mode_keyhandler {
-    // This struct is put into the 'data' field of a 
-    // 'struct KeyHandler'.
-    bool              abort;
-    v_funcpointer_iiv each_point_func;
-    v_funcpointer_iiv each_target_func;
+        struct terraform_mode_keyhandler {
+                // This struct is put into the 'data' field of a 
+                // 'struct KeyHandler'.
+                bool              abort;
+                v_funcpointer_iiv each_point_func;
+                v_funcpointer_iiv each_target_func;
 
-    struct place           * place;  // needed?
-    struct terrain_map     * map;
-    struct terrain_palette * palette;
-  };
+                struct place           * place;  // needed?
+                struct terrain_map     * map;
+                struct terrain_palette * palette;
+        };
 
-  struct KeyHandler {
-    struct list list;
-    bool(*fx) (struct KeyHandler * handler, int key, int keymod);
-    void *data;  
-    // The data field should always be filled with a struct, 
-    // rather than a scalar such as bool or int,
-    // to facilitate expansions to two or more subfields
-    // For example, the 'struct cursor_movement_keyhandler' above.
-  };
+        struct KeyHandler {
+                struct list list;
+                bool(*fx) (struct KeyHandler * handler, int key, int keymod);
+                void *data;  
+                // The data field should always be filled with a struct, 
+                // rather than a scalar such as bool or int,
+                // to facilitate expansions to two or more subfields
+                // For example, the 'struct cursor_movement_keyhandler' above.
+        };
 
 	struct QuitHandler {
 		struct list list;
-		 bool(*fx) (struct QuitHandler * handler);
+                bool(*fx) (struct QuitHandler * handler);
 		void *data;
 	};
 
 	struct MouseHandler {
 		struct list list;
-		 bool(*fx) (struct MouseHandler * handler, int button, int x,
-			    int y);
+                bool(*fx) (struct MouseHandler * handler, int button, int x,
+                           int y);
 		void *data;
 	};
 
 	extern int eventInit(void);
 	extern void eventHandle(void);
+        extern void eventHandlePending(void); /* non-blocking version of eventHandle */
 	extern void eventPushKeyHandler(struct KeyHandler *keyh);
 	extern void eventPopKeyHandler(void);
 	extern void eventPushTickHandler(struct TickHandler *keyh);

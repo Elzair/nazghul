@@ -87,7 +87,7 @@ static void attack(struct response *resp, struct conv *conv)
 {
 	conv->consequence = CONV_COMBAT;
 	conv->done = true;
-	player_party->alignment &= ~(conv->speaker->getAlignment());
+	player_party->clearAlignment(conv->speaker->getAlignment());
 }
 
 static void prompt_amount(struct response *resp, struct conv *conv)
@@ -429,7 +429,7 @@ static void service(struct response *resp, struct conv *conv)
 		switch ((int) trade->data) {
 		case SRV_HEAL:
                         assert(pc != NULL);
-			pc->heal();
+			pc->heal(pc->getMaxHp());
 			break;
 		case SRV_CURE:
                         assert(pc != NULL);
@@ -1407,9 +1407,6 @@ static void api_create_object(struct response *resp, struct conv *conv)
                 if (!obj)
                         return;
                 
-                // set the turns so it doesn't get a bunch of extra ones
-                obj->setTurn(Turn);
-                
                 // place the object
                 obj->relocate(parms->place, parms->x, parms->y);
         }
@@ -1525,39 +1522,24 @@ static void api_create_npc_party(struct response *resp, struct conv *conv)
         if ((rand() % (int)(1 / parms->prob)))
                 return;
 
-        // for each object
+        // ---------------------------------------------------------------------
+        // Allocate the new party
+        // ---------------------------------------------------------------------
 
-        // create the npc party
         party = (class NpcParty *)parms->obj_type->createInstance();
         assert(party);
+
+        // ---------------------------------------------------------------------
+        // Initialize the new party.
+        // ---------------------------------------------------------------------
+
         party->setAlignment(parms->align);
         party->createMembers();
 
-        // Combat is special
-        if (player_party->context == CONTEXT_COMBAT) {
-                
-                int dx = 0;
-                int dy = 0;
-                
-                // randomly pick a direction of travel
-                do {
-                        dx = random() % 3 - 1;
-                        if (!dx)
-                                dy = random() % 3 - 1;
-                } while (!dx && !dy);
-                
-                // add the party to combat
-                if (!combatAddNpcParty(party, dx, dy, true, 
-                                       parms->x, parms->y)) {
-                        delete party;
-                }          
-                return;
-        }
+        // ---------------------------------------------------------------------
+        // Add it to the specified place.
+        // ---------------------------------------------------------------------
 
-        // set the turns so it doesn't get a bunch of extra ones
-        party->setTurn(Turn);
-
-        // place the object
         party->relocate(parms->place, parms->x, parms->y);
 }
 

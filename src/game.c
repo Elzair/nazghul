@@ -55,6 +55,7 @@
 #include "formation.h"
 #include "combat.h"
 #include "Container.h"
+#include "clock.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -1166,6 +1167,20 @@ static void game_load_place_item(struct place *place)
         if ((type = game_object_type_lookup(Lexer->lexeme)) ||
             (type = lookupNpcPartyType(Lexer->lexeme))) {
 
+
+                // -------------------------------------------------------------
+                // If the type is a vehicle and the map is small-scale then
+                // disallow it. This will remain in effect until the problem of
+                // vehicles in town is fully addressed.
+                // -------------------------------------------------------------
+
+                if (type->isType(VEHICLE_TYPE_ID) &&
+                    !place_is_wilderness(place)) {
+                        PARSE_ASSERT(false, "Cannot place vehicle '%s' in non-wilderness place '%s':"\
+                                     " vehicles may only be placed in the wilderness\n",
+                                     type->getName(), place->name);                        
+                }
+
                 // gmcnutt: big glaring HACK. If this object type occupies the
                 // container layer then allocate it specifically as a
                 // Container.
@@ -1187,6 +1202,11 @@ static void game_load_place_item(struct place *place)
 
         }
         else if ((ch = lookupCharacter(Lexer->lexeme))) {
+
+                // -------------------------------------------------------------
+                // Ugh. Wrapper parties need to go. Too tired right now.
+                // -------------------------------------------------------------
+
                 // This is an NPC character so create a wrapper party to hold
                 // it.
                 obj = new NpcParty();
@@ -1199,9 +1219,11 @@ static void game_load_place_item(struct place *place)
                 PARSE_ASSERT(type, "Invalid type tag '%s'\n", Lexer->lexeme);
         }
 
-        // Must do this BEFORE calling load() because NPC parties will check
-        // the 'home' flag as they load and assign the current place as their
-        // home.  
+        // ---------------------------------------------------------------------
+        // Must do this before calling obj->load(), which depends on the object
+        // having a set place.
+        // ---------------------------------------------------------------------
+
         obj->setPlace(place);
 
         loader.lexer = Lexer;
@@ -1251,6 +1273,19 @@ static void game_load_place_item(struct place *place)
                         assert(false);
                 }
 
+                // -------------------------------------------------------------
+                // HACK: when putting a party into a place I need to break it
+                // into individual party members. I call this a hack because I
+                // really want this to be done automatically as a result of
+                // adding it to the place, but I don't want the place logic
+                // polluted with knowledge of NPC party details. Something to
+                // keep in mind for a refactor of the object system.
+                // -------------------------------------------------------------
+
+                if (! place_is_wilderness(place) && 
+                    obj->isType(NPCPARTY_ID)) 
+                        ((class NpcParty*)obj)->distributeMembers();
+
                 quantity--;
                 if (!quantity)
                         break;
@@ -1292,7 +1327,7 @@ static bool loadConnect(class Loader * loader)
                                  "or <=>");
                 return false;
         }
-        // left off here -- parse right name && bind && connect
+
         if (!loader->getWord(&right_tag))
                 return false;
 
@@ -1684,7 +1719,7 @@ static int loadPartyMember(void)
         c = (class Character *) lookupTag(Lexer->lexeme, CHARACTER_ID);
         PARSE_ASSERT(c, "Invalid CHAR tag '%s'\n", Lexer->lexeme);
         c->setRestCredits(MAX_USEFUL_REST_HOURS_PER_DAY);
-        if (!player_party->add_to_party(c)) {
+        if (!player_party->addMember(c)) {
                 PARSE_ASSERT(false, "Failed to add %s to party\n",
                              c->getName());
         }
@@ -1750,11 +1785,8 @@ static int loadPlayer()
         PARSE_START_OF_BLOCK();
         PARSE_WORD("place", place_tag);
         PARSE_INT("x", x);
-        player_party->setX(x);
         PARSE_INT("y", y);
-        player_party->setY(y);
         PARSE_WORD("sprite", sprite_tag);
-        PARSE_INT("speed", player_party->speed);
         //PARSE_INT("pmask", player_party->pmask); obsolete
         PARSE_WORD("mv_desc", player_party->mv_desc);
         PARSE_STRING("mv_sound", player_party->mv_sound);
@@ -1797,9 +1829,22 @@ static int loadPlayer()
 
         Place = game_place_lookup(place_tag);
         PARSE_ASSERT(Place, "invalid place tag %s", place_tag);
+        if (place_off_map(Place, x, y)) {
+                PARSE_ASSERT(false, "Cannot place party: [%d %d] are not on the map for place %s\n",
+                             x, y, Place->name);
+        }
+        player_party->setX(place_wrap_x(Place, x));
+        player_party->setY(place_wrap_y(Place, y));
+#if 0
+        if (place_off_map(Place, x, y)) {
+                PARSE_ASSERT(false, "Cannot place party: [%d %d] are not on the map for place %s\n",
+                             x, y, Place->name);
+        }
         player_party->setPlace(Place);
+        player_party->setX(place_wrap_x(Place, x));
+        player_party->setY(place_wrap_y(Place, y));
         place_add_object(Place, player_party);
-
+#endif
         player_party->sprite = spriteLookup(sprite_tag);
         PARSE_ASSERT(player_party->sprite, "invalid sprite tag %s", sprite_tag);
 
@@ -1828,11 +1873,6 @@ static int loadPlayer()
                              "player party campsite formation: %s is not a "
                              "valid formation tag\n", campsite_formation_tag);
         }
-
-        if (Place->type == wilderness_place)
-                player_party->context = CONTEXT_WILDERNESS;
-        else
-                player_party->context = CONTEXT_TOWN;
 
       cleanup:
         if (place_tag)
@@ -1906,6 +1946,40 @@ static int loadArmsType()
                 PARSE_ASSERT(false, "Error loading ARMS: %s\n", loader.error);
 
         list_add(&ObjectTypes, &arms_type->list);
+
+        return 0;
+}
+
+static int loadVehicleType()
+{
+        class VehicleType *vehicle_type;
+        class Loader loader;
+
+        vehicle_type = new VehicleType();
+        assert(vehicle_type);
+
+        loader.lexer = Lexer;
+        loader.lookupTag = lookupTag;
+        loader.advance();
+        if (!vehicle_type->load(&loader))
+                PARSE_ASSERT(false, "Error loading VEHICLE: %s\n", 
+                             loader.error);
+
+        list_add(&ObjectTypes, &vehicle_type->list);
+
+        return 0;
+}
+
+static int loadTime()
+{
+        class Loader loader;
+
+        loader.lexer = Lexer;
+        loader.lookupTag = lookupTag;
+        loader.advance();
+
+        if (clock_load(&loader) < 0)
+                PARSE_ASSERT(false, "Error loading TIME: %s\n", loader.error);
 
         return 0;
 }
@@ -2105,6 +2179,7 @@ static int loadObjectTypes()
         return 0;
 }
 
+#if 0
 static class VehicleType *game_load_vehicle_type()
 {
         class VehicleType *vt = 0;
@@ -2200,6 +2275,7 @@ static int game_load_vehicle_types()
 
         return 0;
 }
+#endif
 
 static int game_bind_combat_map()
 {
@@ -2287,15 +2363,12 @@ static void loadMoon(struct moon *moon)
 
 static void loadSun()
 {
-        int ret;
         char *tag = 0;
+
         MATCH_WORD("sun");
         MATCH('{');
-        PARSE_INT("arc", Sun.arc);
         loadSprite(&Sun.sprite);
         MATCH('}');
-        clockSet();
-      cleanup:
         if (tag)
                 free(tag);
 }
@@ -2838,7 +2911,7 @@ static struct keyword keywords[] = {
         {"player", loadPlayer, true},
         {"object_types", loadObjectTypes, true},
         {"combat_maps", game_bind_combat_maps, true},
-        {"vehicle_types", game_load_vehicle_types, true},
+        //{"vehicle_types", game_load_vehicle_types, true},
         {"moon_info", loadMoonInfo, true},
         {"ascii", loadAscii, true},
         {"CROSSHAIR", loadCrosshair, true},
@@ -2861,6 +2934,8 @@ static struct keyword keywords[] = {
         {"COMBAT", loadCombat, false},
         {"CONNECT", loadConnectAux, false},
         {"ARMS", loadArmsType, false},
+        {"VEHICLE", loadVehicleType, false},
+        {"TIME", loadTime, false},
 };
 
 #define NUM_KEYWORDS (sizeof(keywords)/sizeof(keywords[0]))

@@ -154,7 +154,56 @@
 #define RELAXING  5
 #define IDLE      6
 
+/*****************************************************************************
+ * Movement Speeds / Passability Costs
+ *
+ * The idea is NOT to list the speeds for every species and vehicle here, as I
+ * currently am. The idea is to list classes of speeds. But it may take some
+ * time to figure out what the right balance is and to identify the classes of
+ * speeds that seem to fit naturally. Until we figure that balance out I'll
+ * explicitly list all the individual speeds until the pattern starts to
+ * emerge.
+ *
+ * Speed equates exactly to action points per turn.
+ * 
+ * Passability cost equates exactly to action points consumed when the terrain
+ * is crossed. Ships are a bit special because different costs apply due to
+ * wind penalties (e.g., ACT_PTS_HEADWIND_DIVISOR).
+ *
+ * 1. A man crossing grass should consume one turn.
+ *
+ * 2. A man walking on a road should consume half a turn (this encourages the
+ *    pathfinding algorithm to make townspeople use the roads in town, which
+ *    looks good).
+ *
+ * 3. A ship moving against the wind is slower than a man walking, and should
+ *    take at least two turns. A ship tacking across the wind is faster than a
+ *    horse running, and may move several times in one turn.
+ *
+ *****************************************************************************/
+#define SPD_INSECTS   1
+#define SPD_SLIME     1
+#define SPD_SNAKE     1
+#define SPD_GAZER     2
+#define SPD_GOBLIN    2
+#define SPD_HUMAN     2
+#define SPD_NIXIE     2
+#define SPD_SKELETON  2
+#define SPD_GHAST     2
+#define SPD_WTR_ELEM  2
+#define SPD_HORSE     3
 
+#define SPD_SHIP      4
+
+#define PASS_VERY_SLOW   4 /* thickets */
+#define PASS_SLOW        3 /* hills, brushy */
+#define PASS_MEDIUM      2 /* grass */
+#define PASS_FAST        1 /* roads */
+
+#define ACT_PTS_FIRE_CANNON       2
+#define ACT_PTS_CROSSWIND_DIVISOR 1
+#define ACT_PTS_TAILWIND_DIVISOR  2
+#define ACT_PTS_HEADWIND_DIVISOR  4 
 
 #endif // def_constants_ghul
 /* eof */

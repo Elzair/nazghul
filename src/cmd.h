@@ -54,7 +54,7 @@ extern "C" {
 #define CMD_PRINT_MEMBER  (1 << 1)
   
         extern void cmdAttack(void);
-        extern int cmdCamp(void);
+        extern int cmdCamp(class Object *camper);
         extern void cmdFire(void);
         extern bool cmdMixReagents(void);
         extern void cmdNewOrder(void);
@@ -67,7 +67,7 @@ extern "C" {
         extern bool cmdZtats(class Character * pc);
         extern bool cmdXamine (class Character * pc);
         extern bool cmdAT(class Character * pc);
-        extern bool cmdGet(int x, int y, bool scoop_all);
+        extern bool cmdGet(class Object *actor, bool scoop_all);
         extern bool cmdOpen(class Character * pc);
         extern bool cmdCastSpell(class Character * pc);
         extern bool cmdQuit(void);

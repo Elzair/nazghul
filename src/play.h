@@ -34,6 +34,7 @@ extern "C" {
                                 class Character * target);
         extern void effectReveal(char *name, int duration);
         extern void effectQuicken(char *name, int duration);
+        extern void effectTimeStop(char *name, int duration);
         extern void effectNegateMagic(char *name, int duration);
         extern void effectShowTerrain(char *name, int duration);        
 

@@ -55,9 +55,6 @@ class NpcPartyType:public ObjectType {
 	int getVisionRadius() {
 		return vrad;
 	}
-	int getSpeed() {
-		return speed;
-	}
 	virtual struct GroupInfo *enumerateGroups();
 	virtual struct GroupInfo *getNextGroup();
 	virtual class Object *createInstance();
@@ -75,7 +72,6 @@ class NpcPartyType:public ObjectType {
 	struct GroupInfo *groups;
 	int pmask;
 	int vrad;
-	int speed;
 	bool visible;
 };
 
@@ -109,8 +105,7 @@ class NpcParty:public Object {
 	}
 	virtual void init(class Character * ch);
 	virtual void init(class NpcPartyType * type);
-	virtual void advanceTurn(int turn);
-	virtual void synchronize(int turn);
+	virtual void exec(struct exec_context *cntxt);
 	virtual bool move(int dx, int dy);
 	virtual int getAlignment() {
 		return alignment;
@@ -132,70 +127,58 @@ class NpcParty:public Object {
 		*y = fdy;
 	}
 
-	virtual bool isHome(struct place *place) {
-		return (place == home);
-	}
-
-	virtual void setHome(struct place *place) {
-		home = place;
-	}
-
 	virtual int getSize(void) {
 		return size;
 	}
 
 	virtual void forEachMember(bool(*fx) (class Character *, void *),
 				   void *);
-	virtual void destroy();
+	virtual void destroy();        
 	virtual void cleanupAfterCombat(void);
 	virtual void removeMember(class Character *);
-	virtual struct conv *getConversation();
+        virtual bool addMember(class Character *);
 	virtual bool joinPlayer(void);
 	virtual bool createMembers();
 	virtual void paint(int sx, int sy);
 	virtual void disembark();
 	virtual bool turn_vehicle();
-	virtual void hitByOrdnance(class ArmsType * ordnance);
 	virtual void relocate(struct place *place, int x, int y);
 	virtual struct formation *get_formation();
         virtual void describe(int count);
         virtual char *get_movement_sound();
         virtual struct sprite *getSprite();
         virtual int getActivity();
+        virtual void burn();
+        virtual void poison();
+        virtual void sleep();
+        virtual bool allDead();
+        virtual void damage(int amount);
+        virtual void distributeMembers();
 
 	struct list members;
 
-	struct sched *sched;
 	int act;
 	int appt;
 	class Vehicle *vehicle;
 	int dx, dy;
 	struct position_info pinfo;
 
-        // This special flag is for npc parties created during combat (for
-        // example summoned parties or parties that randomly cause an ambush).
-        // By default I assume this is true. But if an npc party initiates
-        // combat by attacking the player then I set it to false and delete the
-        // npc party in the placeAdvanceTurns() code.
-        bool destroy_on_combat_exit;
-
       protected:
+        virtual void applyExistingEffects();
 	virtual bool enter_town(class Portal * portal);
-	virtual void wander();
+        void wander();
 	void work();
-	bool commute();
 	bool gotoSpot(int x, int y);
 	bool attack_with_ordnance(int d);
 
 	int alignment;
 	int fdx, fdy;
-	struct place *home;
 	int size;
-	struct conv *conv;
 	bool isWrapper;
 	int turn_cost;
 	bool loitering;
 	struct formation *formation;
+        bool wandering;
 };
 
 #endif

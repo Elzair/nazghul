@@ -76,6 +76,7 @@ Spell::Spell()
 	reagents = 0;
 	n_parms = 0;
 	parms = 0;
+        required_action_points = 1;
 }
 
 bool Spell::isType(int id)
@@ -118,10 +119,10 @@ static bool Spell_insert(class Spell * spell)
 	return true;
 }
 
-bool Spell_init(void)
+int Spell_init(void)
 {
 	memset(Spell_words, 0, sizeof(Spell_words));
-	return true;
+	return 0;
 }
 
 bool Spell_load_magic_words(class Loader * loader)
@@ -530,7 +531,7 @@ static void Spell_apply_tremor(class Object * obj, void *data)
 	// damage.
 	if (!(random() % 4)) {
 		character->changeSleep(true);
-		character->changeHp(-info->spell->strength);
+		character->damage(info->spell->strength);
 	}
 }
 
@@ -614,7 +615,7 @@ static void Spell_cast_wind(int x, int y, class FieldType * type, int direction)
 					if (effects &
 					    (EFFECT_BURN | EFFECT_DAMAGE))
 						character->
-						    changeHp(-DAMAGE_FIRE);
+						    damage(DAMAGE_FIRE);
 					continue;
 				}
 
@@ -680,7 +681,7 @@ static void Spell_cast_wind(int x, int y, class FieldType * type, int direction)
 					if (effects &
 					    (EFFECT_BURN | EFFECT_DAMAGE))
 						character->
-						    changeHp(-DAMAGE_FIRE);
+						    damage(DAMAGE_FIRE);
 					continue;
 				}
 
@@ -718,12 +719,11 @@ enum Spell::cast_result Spell::cast(class Character * caster,
 	}
 	// Charge the caster.
 	caster->changeMana(-cost);
+        caster->decActionPoints(getRequiredActionPoints());
 
 	if (missile &&
 	    (this->target == SPELL_TARGET_CHARACTER ||
 	     this->target == SPELL_TARGET_LOCATION)) {
-
-		int ox, oy;
 
 		// Fire the missile. Field types are attributes of the missile,
 		// so this method also takes care of dropping a field on the
@@ -734,16 +734,16 @@ enum Spell::cast_result Spell::cast(class Character * caster,
 			ty = target->getY();
 		}
 
-		if (player_party->context == CONTEXT_COMBAT) {
-			ox = caster->getX();
-			oy = caster->getY();
-		} else {
-			ox = player_party->getX();
-			oy = player_party->getY();
-		}
+                // -------------------------------------------------------------
+                // Next I have to decide which location the missile should
+                // originate from. This is simple, right? Just use the caster's
+                // coordinates. But what if the caster's party is in party mode
+                // in the wilderness?  Then I have to use the party coordinates.
+                // -------------------------------------------------------------
+
 
 		missile->setPlace(Place);
-		missile->animate(ox, oy, tx, ty, 0);
+		missile->animate(caster->getX(), caster->getY(), tx, ty, 0);
 		if (!missile->hitTarget())
 			return missed_target;
                 success = ok;
@@ -763,7 +763,6 @@ enum Spell::cast_result Spell::cast(class Character * caster,
 		for (i = 0; i < n_parms; i++) {
 			class NpcParty *party;
 			class NpcPartyType *type;
-                        bool position;
 
 			type = (class NpcPartyType *) parms[i];
 			party = (class NpcParty *) type->createInstance();
@@ -779,15 +778,17 @@ enum Spell::cast_result Spell::cast(class Character * caster,
 					dy = random() % 3 - 1;
 			} while (!dx && !dy);
 
-			// Add the party to combat. For spells which specify a
-			// location tell the combat system where to put the
-			// party.
-                        position = ((this->target == SPELL_TARGET_LOCATION) ||
-                                    (this->target == 
-                                     SPELL_TARGET_CASTER_LOCATION));
+                        // -----------------------------------------------------
+                        // If the spell does not specify a target then default
+                        // to the caster's location.
+                        // -----------------------------------------------------
+
+                        if (this->target != SPELL_TARGET_LOCATION) {
+                                tx = caster->getX();
+                                ty = caster->getY();
+                        }
                         
-                        if (!combatAddNpcParty(party, dx, dy,
-                                               position, tx, ty)) {
+                        if (!combatAddNpcParty(party, dx, dy, true, caster->getPlace(), tx, ty)) {
 				success = no_room_on_battlefield;
                                 delete party;
                         } else {
@@ -815,7 +816,7 @@ enum Spell::cast_result Spell::cast(class Character * caster,
 			}
 		}
 	} else if (effects == EFFECT_WIND &&
-		   player_party->context == CONTEXT_COMBAT) {
+		   player_party->getContext() & CONTEXT_COMBAT) {
 		class FieldType *field;
 		field = (class FieldType *) parms[0];
 		if (field) {
@@ -827,12 +828,7 @@ enum Spell::cast_result Spell::cast(class Character * caster,
 
 	if (effects & EFFECT_TELEPORT) {
 		if (direction == UP || direction == DOWN) {
-			// I flatly refuse vertical teleportation except in
-			// party mode, I don't care how the scripter defines
-			// the spell.
-			if (player_party->context != CONTEXT_COMBAT) {
-				teleport_vertically(caster, direction);
-			}
+                        teleport_vertically(caster, direction);
 		} else {
 			teleport_horizontally(caster, direction);
 		}
@@ -864,11 +860,11 @@ enum Spell::cast_result Spell::cast(class Character * caster,
 	}
 	if (effects & EFFECT_CHARM && character) {
 		success = ok;
-		character->setAlignment(caster->getAlignment());
+		character->charm(caster->getAlignment());
 	}
 	if (effects & (EFFECT_DAMAGE | EFFECT_BURN) && character) {
 		success = ok;
-		character->changeHp(-strength * caster->getLevel());
+		character->damage(strength * caster->getLevel());
 	}
 	if (effects & EFFECT_LIGHT && character) {
 		success = ok;
@@ -885,7 +881,7 @@ enum Spell::cast_result Spell::cast(class Character * caster,
 	if (effects & EFFECT_HEAL && character &&
 	    character->getHp() < character->getMaxHp()) {
 		success = ok;
-		character->changeHp(strength);
+		character->heal(strength);
 	}
 	if (effects & EFFECT_RESTORE && character &&
 	    character->getMana() < character->getMaxMana()) {
@@ -918,7 +914,7 @@ enum Spell::cast_result Spell::cast(class Character * caster,
 	}
 	if (effects & EFFECT_LOCATE) {
 		success = ok;
-		if (player_party->context == CONTEXT_COMBAT)
+		if (player_party->getContext() & CONTEXT_COMBAT)
 			consolePrint("Location is %s [%d %d]\n", Place->name,
 				     caster->getX(), caster->getY());
 		else
@@ -969,22 +965,29 @@ enum Spell::cast_result Spell::cast(class Character * caster,
 		mapUpdate(0);
 		success = ok;
 	}
-	if (effects & EFFECT_CLONE && character &&
-	    player_party->context == CONTEXT_COMBAT) {
+	if ((effects & EFFECT_CLONE) && 
+            character                &&
+	    player_party->getContext() & CONTEXT_COMBAT) {
 		class Character *clone = character->clone(character);
 		if (clone) {
 			class NpcParty *party = new NpcParty();
 			if (!party) {
 				delete clone;
 			} else {
-				// party->setAlignment(caster->getAlignment());
 				clone->setAlignment(caster->getAlignment());
+
+                                // ---------------------------------------------
+                                // Clones need to be reworked a bit in order to
+                                // put them under player control, so just leave
+                                // them in auto mode.
+                                // ---------------------------------------------
+
 				party->init(clone);
-				if (!combatAddNpcParty(party, 0, 0, true, tx, 
-                                                       ty)) {
+				if (!combatAddNpcParty(party, 0, 0, true, caster->getPlace(), tx, ty)) {
                                         delete party;
                                         success = no_room_on_battlefield;
                                 }
+                                mapSetDirty();
 				success = ok;
 			}
 		}
@@ -994,18 +997,18 @@ enum Spell::cast_result Spell::cast(class Character * caster,
 		if (info) {
 			character->setVisible(false);
 			if (!character->isVisible()) {
+                                mapSetDirty();
 				info->caster = character;
 				info->spell = this;
 				success = ok;
-				wqCreateJob(&TurnWorkQueue, Turn + duration, 0,
-					    info, Spell_expire_invisibility);
+				wqCreateJob(&TurnWorkQueue, Turn + duration, 0, info, Spell_expire_invisibility);
 			} else {
 				delete info;
 			}
 		}
 	}
 	if (effects & EFFECT_TIME_STOP) {
-		TimeStop += duration;
+                effectTimeStop(getName(), duration);
 		success = ok;
 	}
 	if (effects & EFFECT_RESURRECT && character) {
@@ -1047,35 +1050,22 @@ void Spell::teleport_horizontally(class Character * caster, int direction)
 	// Don't allow teleporting off the edge of a map.
 	if (!Place->wraps) {
 		int oldx, oldy, newx, newy;
-		if (player_party->context == CONTEXT_COMBAT) {
-			oldx = caster->getX();
-			oldy = caster->getY();
-		} else {
-			oldx = player_party->getX();
-			oldy = player_party->getY();
-		}
+
+                oldx = caster->getX();
+                oldy = caster->getY();
 
 		newx = oldx + dx;
 		newy = oldy + dy;
-		place_clip_to_map(Place, &newx, &newy);
+		place_clip_to_map(caster->getPlace(), &newx, &newy);
 		dx = newx - oldx;
 		dy = newy - oldy;
 	}
 
-	if (player_party->context == CONTEXT_COMBAT) {
-		if (caster->move(dx, dy) == Character::MovedOk) {
-			success = ok;
-			mapCenterView(caster->getView(),
-				      caster->getX(), caster->getY());
-			mapRecomputeLos(caster->getView());
-		}
-	} else {
-		if (player_party->move(dx, dy, true))
-			success = ok;
-		else
-			success = teleport_failed;
-	}
-
+        if (caster->move(dx, dy) == Character::MovedOk) {
+                success = ok;
+        } else {
+                success = teleport_failed;
+        }
 }
 
 void Spell::teleport_vertically(class Character * caster, int direction)
@@ -1086,27 +1076,34 @@ void Spell::teleport_vertically(class Character * caster, int direction)
 	memset(&minfo, 0, sizeof(minfo));
 
 	if (direction == UP) {
-		minfo.place = Place->above;
+		minfo.place = caster->getPlace()->above;
 	} else {
-		minfo.place = Place->below;
+		minfo.place = caster->getPlace()->below;
 	}
 
-	minfo.x = player_party->getX();
-	minfo.y = player_party->getY();
+	minfo.x = caster->getX();
+	minfo.y = caster->getY();
 
 	switch (player_party->check_move_to(&minfo)) {
 
 	case move_ok:
 	case move_enter_auto_portal:
 	case move_enter_moongate:
+                player_party->removeMembers();
+#if 0
+                mapRmView(ALL_VIEWS);
+                mapAddView(player_party->view);
+                mapSetDirty();
+#endif
 		player_party->relocate(minfo.place, minfo.x, minfo.y);
 		success = ok;
 		break;
 
 	case move_enter_combat:
+                player_party->removeMembers();
 		memset(&cinfo, 0, sizeof(cinfo));
 		cinfo.move = &minfo;
-		player_party->move_to_combat(&cinfo);
+		player_party->move_to_wilderness_combat(&cinfo);
 		success = ok;
 		break;
 

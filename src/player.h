@@ -27,10 +27,18 @@
 #include "map.h"
 #include "character.h"
 #include "pinfo.h"
+#include "clock.h" /* for alarm clock */
+#include "place.h" // for struct location
 
 #include <string.h>
 
 #define MAX_N_PC 8
+
+enum party_control {
+        PARTY_CONTROL_ROUND_ROBIN = 0,
+        PARTY_CONTROL_FOLLOW,
+        PARTY_CONTROL_SOLO
+};
 
 enum move_result {
         move_ok = 0,
@@ -63,60 +71,80 @@ class player_party:public Object {
 	virtual ~ player_party();
 
         // overloaded Object methods:
+        virtual bool addToInventory(class Object *object);
         virtual struct sprite *getSprite(void);
         virtual char *getName();
         virtual bool isVisible();
+        virtual void clearAlignment(int alignment);
         virtual void describe(int count);
         virtual void relocate(struct place *place, int x, int y);
+        virtual void exec(struct exec_context *context);
+        virtual void damage(int amount);
+        virtual void poison();
+        virtual int getSpeed(void);
+        virtual void decActionPoints(int points);
+        virtual int getAlignment();
+        virtual void beginResting(int hours);
+        virtual bool isResting();
+        virtual void beginCamping(class Character *guard, int hours);
+        virtual void endCamping();
+        virtual void ambushWhileCamping();
+        virtual void endResting();
+        virtual int getPmask(void);
+	virtual int getVisionRadius();
+        virtual void addView();
+        virtual int getLight();
+        virtual void changePlaceHook();
 
-        unsigned char get_pmask(void);
+        void distributeMembers(struct place *new_place, int new_x, int new_y, int new_dx, int new_dy);
         bool move(int dx, int dy, bool teleport);
 	void add_to_inventory(class ObjectType * data, int quantity);
         void remove_from_inventory(struct inv_entry *ie, int quantity);
 	struct inv_entry *search_inventory(class ObjectType * type);
         void enter_portal(void);
 	bool try_to_enter_town_from_edge(class Portal * portal, int dx, int dy);
-        int get_speed(void);
         void ready_arms(struct object *object);
-        bool all_dead(void);
+        bool allDead(void);
         bool immobilized(void);
 	void for_each_member(bool(*fx) (class Character *, void *data),
 			     void *data);
-        void recompute_los(void);
         void board_vehicle(void);
         class Character *get_leader(void);
-	bool add_to_party(class Character * c);
+	virtual void removeMember(class Character *);
+        virtual bool addMember(class Character *);
         int get_room_in_party(void);
-        void advance_turns(void);
         void add_spell(struct spell *spell, int quantity);
 	bool enter_moongate(class Moongate * srcGate, int x, int y);
         char *get_movement_description();
         char *get_movement_sound();
-	// enum move_result move_to(struct move_info *info);
-	// enum move_result enter_moongate(struct move_info *info);
 	void enter_moongate(class Moongate * moongate);
-        void move_to_combat(struct combat_info *info);
 	bool try_to_enter_moongate(class Moongate * src_gate);
         enum move_result check_move_to(struct move_info *info);
-
         virtual void paint(int sx, int sy);
-	virtual void hitByOrdnance(class ArmsType * ordnance);
         virtual struct formation *get_formation();
-
         int get_num_living_members(void);
         class Character *get_first_living_member(void);
-
-        bool enter_dungeon(struct place *dungeon, int dungeon_x, 
-                           int dungeon_y, int dx, int dy);
-
-        void begin_resting(int hours);
-        bool resting();
-        void awaken();
         void throw_out_of_bed();
+        int getTurnCount();
+        class Character *getMemberAtIndex(int index);
+        void removeMembers();
+        void setCombatExitDestination(struct location *loc);
+        void getCombatExitDestination(struct location *loc);
+        void clearCombatExitDestination();
+        void unCharmMembers();
+        void setCamping(bool val);
+        bool isCamping();
+        void move_to_wilderness_combat(struct combat_info *cinfo);
+        enum party_control getPartyControlMode();
+        void enableFollowMode();
+        void enableRoundRobinMode();
+        void enableSoloMode(class Character *solo);
+        void setLeader(class Character *character);
+        bool rendezvous(struct place *place, int x, int y);
+        int getContext(void);
 
         int dx, dy;
         struct sprite *sprite;
-        int speed;
         //unsigned char pmask; obsolete
         class Vehicle *vehicle;
         int turns;
@@ -124,7 +152,6 @@ class player_party:public Object {
         char *mv_sound;
         int n_pc;
         class Character *pc[MAX_N_PC];
-        class Character *leader;
         struct list inventory;
         int nArms;
         int nReagents;
@@ -133,30 +160,41 @@ class player_party:public Object {
         int nAmmo;
         int light;
         int food;
-        struct mview *view;
         bool onMap;
         int alignment;
         int gold;
-        int context;
         struct formation *formation;
         struct terrain_map *campsite_map;
         struct formation *campsite_formation;
-        bool camping;
         struct position_info pinfo;
 
  protected:
-        bool try_to_enter_portal(class Portal *portal, int dx, int dy);
+        virtual void applyExistingEffects();
+
+        void try_to_enter_portal(class Portal *portal);
         bool try_to_move_off_map(struct move_info *info);
-        void move_to_wilderness_combat(struct combat_info *cinfo);
         bool turn_vehicle(void);
-        int hours_to_rest;
+        void chooseNewLeader();
+        void disableCurrentMode();
+
+        clock_alarm_t wakeup_alarm;
+        clock_alarm_t rest_alarm;
+        bool          resting;
+        int           speed;
+        int           turn_count;
+
+        struct location combat_exit_destination;
+
+        bool camping;
+        class Character *camp_guard;
+
+        enum party_control control_mode;
+        class Character *leader;
+        class Character *solo_member;
+        class Character *active_member;
 };
 
 extern class player_party *player_party;
 extern int player_init(void);
-
-// useful fxs for playerForEach:
-extern bool apply_damage(class Character * pm, void *amount);
-extern bool apply_poison(class Character * pm, void *unused);
 
 #endif				// player_h

@@ -27,7 +27,6 @@ extern "C" {
 #endif
 
 #include <SDL/SDL.h>
-#include <SDL/SDL_ttf.h>
 
 #define MAX_SHADE 0
 #define MIN_SHADE 255
@@ -38,7 +37,6 @@ extern "C" {
         extern Uint32 Green;
         extern Uint32 Red;
 
-        extern TTF_Font *Font;
         extern SDL_Color fontWhite;
         extern SDL_Color fontBlack;
 
@@ -47,7 +45,7 @@ extern "C" {
 #define SP_RIGHTJUSTIFIED (1 << 2)
 #define SP_ONBORDER (1 << 4)
 
-        extern void screenInit(void);
+        extern int screenInit(void);
 	extern void screenErase(SDL_Rect * rect);
 	extern void screenUpdate(SDL_Rect * rect);
 	extern void screenFill(SDL_Rect * rect, Uint32 color);
@@ -63,6 +61,7 @@ extern "C" {
 	extern void screenCopy(SDL_Rect * from, SDL_Rect * to,
 			       SDL_Surface * dest);
 	extern void screenShade(SDL_Rect * area, unsigned char amount);
+	extern void screenHighlight(SDL_Rect * area);
 
         // Added for peer effect
         extern int screenLock();

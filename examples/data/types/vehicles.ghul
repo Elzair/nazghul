@@ -111,32 +111,36 @@ MAP map_ship {
   }
 } // MAP map_ship
 
-vehicle_types {
-  vt_horse {
+VEHICLE vt_horse {
     name      "horse";
     sprite    s_horse;
-    speed     1;
-    pmask     LAND;
+    speed     SPD_HORSE;
+    pmask     (LAND);
     must_turn 0;
     mv_desc   Ride;
     mv_sound  "data/sounds/horse.wav";
     ordnance   null;
     max_hp    50;
     map       null;
-  }
-  vt_ship {
+}
+
+VEHICLE vt_ship {
     name      "ship";
     sprite    s_ship;
-    speed     1;
-    pmask     WATER;
+    speed     SPD_SHIP;
+    pmask     (WATER);
     must_turn 1;
     mv_desc   Sail;
     mv_sound  "data/sounds/rowing.wav";
     ordnance  t_cannon;
     max_hp    100;
     map       map_ship;
-  }
-} /* vehicle_types */
+
+    // Wind-based movement penalties.
+    tailwind_penalty   ACT_PTS_TAILWIND_DIVISOR;
+    headwind_penalty   ACT_PTS_HEADWIND_DIVISOR;
+    crosswind_penalty  1; // no penalty (default)
+}
 
 
 #endif // vehicles_ghul

@@ -122,22 +122,9 @@ class Moongate:public Object {
 	}
 
 	virtual int getLight();
-
 	virtual void paint(int sx, int sy);
-
-	virtual void open() {
-		state = MOONGATE_OPENING;
-		frame++;
-		if (frame == (getNumFrames() - 1))
-			state = MOONGATE_OPENED;
-	}
-
-	virtual void close() {
-		state = MOONGATE_CLOSING;
-		frame--;
-		if (frame == 0)
-			state = MOONGATE_CLOSED;
-	}
+	virtual void open();
+	virtual void close();
 
 	virtual void animateOpening();
 	virtual void animateClosing();

@@ -399,9 +399,10 @@ void spriteStartAnimation(struct list *wq, int tick)
 	wqAddJob(wq, &Sprite.animationJob);
 }
 
-void spriteInit(void)
+int spriteInit(void)
 {
 	list_init(&Sprite.list);
+        return 0;
 }
 
 void spriteAdd(struct sprite *sprite)

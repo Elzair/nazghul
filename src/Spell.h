@@ -87,7 +87,7 @@ public:
 extern class Spell *SpellTree;
 extern char *Spell_words[MAX_SPELL_WORDS];
 
-extern bool Spell_init(void);
+extern int Spell_init(void);
 extern class Spell *Spell_lookup_by_code(char *code);
 extern bool Spell_load_magic_words(class Loader *loader);
 

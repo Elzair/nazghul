@@ -74,7 +74,7 @@ void busywait(int msec)
 	while (cycles--) ;
 }				// busywait()
 
-void commonInit(void)
+int commonInit(void)
 {
 	Turn = 0;
 	Tick = 0;
@@ -88,6 +88,7 @@ void commonInit(void)
 	srandom(0);		// fixme: should save/load as part of
 	// record/playback
 	busywaitInit();
+        return 0;
 }				// commonInit()
 
 // fixme -- obsolete, use the next one
