@@ -325,8 +325,8 @@ class Object {
                                            void *data),
                                  void *data);
         virtual bool addEffect(struct effect *effect, struct gob *gob);
-        virtual void restoreEffect(struct effect *effect, struct gob *gob, int flags, clock_alarm_t expiration);
-                                   
+        virtual void restoreEffect(struct effect *effect, struct gob *gob, 
+                                   int flags, clock_alarm_t expiration);
         virtual void runHook(int hook_id);
         virtual void saveHooks(struct save *save);
         virtual bool removeEffect(struct effect *effect);

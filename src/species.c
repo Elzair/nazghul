@@ -125,5 +125,8 @@ void species_del(struct species *species)
                 free(species->damage_sound);
         if (species->movement_sound)
                 free(species->movement_sound);
+        if (species->on_death)
+                closure_unref(species->on_death);
+
         free(species);
 }

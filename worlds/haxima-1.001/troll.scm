@@ -34,6 +34,7 @@
                  #t             ;; visible: can be seen
                  sound-damage   ;; damage sound
                  sound-walking  ;; walking sound
+                 nil               ; on-death closure
                  humanoid-slots ;; slots: hands
                  nil            ;; native spells: currently unused
                  )

@@ -18,7 +18,7 @@
    (list 'black_pearl    "black pearl"    s_ring2)
    (list 'ginseng        "ginseng"        s_brown_powder)
    (list 'blood_moss     "blood moss"     s_red_hunks)
-   (list 'spider_silk    "spider silk"    s_spider_web)
+   (list 'spider_silk    "spider silk"    s_spider_web_fragment)
    ))
 
 (map (lambda (type) (apply mk-reagent-type type)) reagent-types)

@@ -22,6 +22,7 @@
                  #t                ; visible
                  sound-damage      ; damage sound
                  sound-walking     ; walking sound
+                 nil               ; on-death closure
                  humanoid-slots    ; slots
                  nil               ; native spells
                  )
@@ -39,6 +40,7 @@
                  #f                ; visible
                  sound-damage      ; damage sound
                  nil               ; walking sound
+                 nil               ; on-death closure
                  humanoid-slots    ; slots
                  nil               ; native spells FIXME!!!!
                  )
@@ -56,6 +58,7 @@
                  #t                ; visible
                  sound-damage      ; damage sound
                  sound-walking     ; walking sound
+                 nil               ; on-death closure
                  humanoid-slots    ; slots
                  nil               ; native spells
                  )
@@ -73,6 +76,7 @@
                  #t                ; visible
                  sound-damage      ; damage sound
                  nil               ; walking sound
+                 nil               ; on-death closure
                  nil               ; slots
                  nil               ; native spells
                  )
@@ -90,6 +94,7 @@
                  #t                    ; visible
                  sound-damage          ; damage sound
                  sound-squishing       ; walking sound
+                 nil               ; on-death closure
                  nil                   ; slots
                  ;; native spells
                  (list 
@@ -110,6 +115,7 @@
                  #t                    ; visible
                  sound-damage          ; damage sound
                  sound-squishing       ; walking sound
+                 nil               ; on-death closure
                  nil                   ; slots
                  nil                   ; native spells
                  )
@@ -127,6 +133,7 @@
                  #t                ; visible
                  sound-damage      ; damage sound
                  sound-walking     ; walking sound
+                 nil               ; on-death closure
                  humanoid-slots    ; slots
                  nil               ; native spells
                  )
@@ -144,6 +151,7 @@
                  #t                ; visible
                  sound-damage      ; damage sound
                  sound-walking     ; walking sound
+                 nil               ; on-death closure
                  nil               ; slots
                  nil               ; native spells FIXME!!!!
                  )

@@ -968,6 +968,12 @@ void Character::kill()
 	}
 
 	hp = 0;
+
+        /* Run the species on-death procedure (must do this _before_ calling
+         * remove()) */
+        if (species && species->on_death)
+                closure_exec(species->on_death, "p", this);
+
 	remove();
 }
 

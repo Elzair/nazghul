@@ -52,6 +52,9 @@ struct species {
         bool visible;
         char *damage_sound;
         char *movement_sound;
+
+        struct closure *on_death; /* run-on-death-event script closure */
+
 };
 
 extern struct species *species_new(char *tag,

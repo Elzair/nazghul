@@ -2,14 +2,6 @@
 (define spider-melee-weapon t_hands)
 (define web-spew-range      3)
 
-;; ----------------------------------------------------------------------------
-;; Trick: make a "spider corpse" container type and use it as the spider's
-;; container. When the spider dies the kernel will drop the spider's container,
-;; making it look like the spider corpse is a container.
-;; ----------------------------------------------------------------------------
-(mk-obj-type 'spider-corpse-type "spider corpse" s_dead_spider
-             layer-container nil)
-
 ;;----------------------------------------------------------------------------
 ;; Species declaration (used by the kernel)
 ;;----------------------------------------------------------------------------
@@ -30,6 +22,7 @@
                  #t             ;; visible: can be seen
                  sound-damage   ;; damage sound
                  sound-walking  ;; walking sound
+                 'spider-killed ;; on-death
                  humanoid-slots ;; slots: hands
                  nil            ;; native spells: currently unused
                  )
@@ -51,9 +44,29 @@
                  #t             ;; visible: can be seen
                  sound-damage   ;; damage sound
                  sound-walking  ;; walking sound
+                 nil            ;; on-death closure
                  humanoid-slots ;; slots: hands
                  nil            ;; native spells: currently unused
                  )
+
+;; ----------------------------------------------------------------------------
+;; spider-killed -- called when a spider is killed, the character is passed as
+;; an arg. Drops a spider corpse object with a random amount of spider silk
+;; inside.
+;; ----------------------------------------------------------------------------
+(mk-obj-type 'spider-corpse-type "spider corpse" s_dead_spider
+             layer-container nil)
+
+(define (mk-spider-corpse)
+  (kern-mk-container spider-corpse-type
+                     nil
+                     (list 
+                      (list (kern-dice-roll "1d3") spider_silk)
+                      )))
+
+(define (spider-killed kspider)
+  (kern-obj-put-at (mk-spider-corpse)
+                   (kern-obj-get-location kspider)))
 
 ;;----------------------------------------------------------------------------
 ;; Constructor

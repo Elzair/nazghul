@@ -1123,11 +1123,12 @@ static pointer kern_mk_species(scheme *sc, pointer args)
         pointer spells;
         pointer ret;
         struct mmode *mmode;
+        pointer on_death;
 
-        if (unpack(sc, &args, "ysdddddpddddppbss", &tag, &name, &str, 
+        if (unpack(sc, &args, "ysdddddpddddppbssc", &tag, &name, &str, 
                    &intl, &dex, &spd, &vr, &mmode, &hpmod, &hpmult, &mpmod, 
                    &mpmult, &sleep_sprite, &weapon, 
-                   &visible, &damage_sound, &walking_sound)) {
+                   &visible, &damage_sound, &walking_sound, &on_death)) {
                 load_err("kern-mk-species %s: bad args", tag);
                 return sc->NIL;
         }
@@ -1163,6 +1164,12 @@ static pointer kern_mk_species(scheme *sc, pointer args)
         species->weapon = weapon;
         species->sleep_sprite = sleep_sprite;
         species->mmode = mmode;
+
+        /* Check if an on-death procedure was specified. */
+        if (on_death != sc->NIL) {
+                species->on_death = closure_new(sc, on_death);
+                closure_ref(species->on_death);
+        }
 
         /* Load the list of slots. */
         i = 0;
