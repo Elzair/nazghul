@@ -12,6 +12,23 @@
 (define (loc-distance a b)
   (kern-get-distance a b))
 
+;; ----------------------------------------------------------------------------
+;; loc-adjacent? -- check if two locations are adjacent neighbors in one of the
+;; four cardinal directions. This assumes that the locations are in the same
+;; place and that they have been wrapped if necessary.
+;; ----------------------------------------------------------------------------
+(define (loc-adjacent? a b)
+  (define (check dx dy)
+    (or (and (= 1 dx) (= 0 dy))
+        (and (= 0 dx) (= 1 dy))))
+  (let ((place (loc-place a)))
+    (if (kern-place-is-wrapping? place)
+        (let ((w (kern-place-get-width place)))
+          (check (mdist (loc-x a) (loc-x b) w)
+                 (mdist (loc-y a) (loc-y b) w)))
+        (check (abs (- (loc-x a) (loc-x b)))
+               (abs (- (loc-y a) (loc-y b)))))))
+
 ;; Convert a location vector to "normal" form
 (define (loc-norm loc)
   (define (norm a)

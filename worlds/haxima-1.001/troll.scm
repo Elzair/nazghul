@@ -9,16 +9,16 @@
 (kern-mk-species 'sp_troll      ;; tag: script variable name
                  "troll"        ;; name: used to display name in the UI
                  20             ;; strength: limits armament weight
-                 0              ;; intelligence: unused by kernel (just reported in stats)
+                 0              ;; intelligence: (just reported in stats)
                  0              ;; dexterity: used to avoid traps on chests
                  speed-human    ;; speed: action points per turn
                  10             ;; vision radius: in tiles
-                 mmode-walk     ;; movement mode: determines passability and cost of travel
+                 mmode-walk     ;; movement mode
                  troll-base-hp  ;; base hp: hit points at level zero
                  2              ;; hp multiplier: extra hp per level
                  0              ;; base mp: mana points at level zero
                  0              ;; mp multiplier: extra mana points per level
-                 s_corpse       ;; sleep sprite: shown when sleeping/dead/unconscious
+                 s_corpse       ;; sleep sprite
                  t_hands        ;; natural weapon: used when unarmed
                  #t             ;; visible: can be seen
                  sound-damage   ;; damage sound
@@ -167,7 +167,8 @@
 (define (troll-pathfind-foe ktroll foes)
   (let ((ktarg (troll-pick-target ktroll foes)))
     (if (notnull? ktarg)
-        (pathfind ktroll (kern-obj-get-location (troll-pick-target ktroll foes))))))
+        (pathfind ktroll (kern-obj-get-location (troll-pick-target ktroll 
+                                                                   foes))))))
 
 (define (troll-attack ktroll karms foes)
   (kern-char-attack ktroll 
@@ -190,13 +191,16 @@
   (display " foes=")(display foes)
   (newline)
   (let* ((tloc (kern-obj-get-location ktroll))
-         (v (loc-norm (foldr (lambda (a b) (loc-sum a (loc-diff tloc (kern-obj-get-location b))))
+         (v (loc-norm (foldr (lambda (a b) 
+                               (loc-sum a 
+                                        (loc-diff tloc 
+                                                  (kern-obj-get-location b))))
                              (mk-loc (loc-place tloc) 0 0)
                              foes))))
     (display "troll-evade:v=")(display v)(newline)
     (define (evade-on-normal)
       (and (or (eq? 0 (loc-x v))
-               (eq? 0 (loc-y v)))
+              (eq? 0 (loc-y v)))
            (kern-obj-move ktroll (loc-x v) (loc-y v))))
     (or (evade-on-normal)
         (and (not (eq? 0 (loc-y v)))
@@ -210,7 +214,7 @@
 
 ;; Given an "origin" location and a list of locations, find the location in the
 ;; list closest to the coordinates.
-(define (loc-closest? origin lst)
+(define (loc-closest origin lst)
   (if (null? lst) nil
       (foldr (lambda (a b) (if (loc-closer? a b origin) a b))
              (car lst)
@@ -225,11 +229,21 @@
                                (* 2 rad)
                                (* 2 rad)
                                t_boulder)))
-    (if (null? coords)
-        nil
-        (foldr (lambda (a b) (if (loc-closer? a b loc) a b))
-               (car coords)
-               (cdr coords)))))
+    (loc-closest loc coords)))
+
+;;
+;; NOTE: find-objects not completely implemented yet
+;;
+(define (troll-find-nearest-loose-ammo ktroll)
+  (let* ((loc (kern-obj-get-location ktroll))
+         (rad (kern-obj-get-vision-radius ktroll))
+         (coords (find-objects (loc-place loc)
+                               (- (loc-x loc) rad)
+                               (- (loc-y loc) rad)
+                               (* 2 rad)
+                               (* 2 rad)
+                               t_thrown_boulder)))
+    (loc-closest loc coords)))
 
 (define (troll-stronger? ktroll foes)
   (> (kern-char-get-strength ktroll)
@@ -245,16 +259,20 @@
   (display "troll-get-terrain-ammo")(newline)
   (kern-obj-add-to-inventory ktroll troll-ranged-weapon 1)
   (kern-place-set-terrain coords t_grass)
-  #t)
+  )
 
-(define (troll-get-loose-ammo ktroll)
-  #f)
-
-(define (troll-find-nearest-loose-ammo ktroll)
-  nil)
+(define (troll-get-loose-ammo ktroll coords)
+  (display "troll-get-loose-ammo")
+  (newline)
+  (let ((ammo (filter (lambda (a) (eqv? (kern-obj-get-type a) 
+                                        troll-ranged-weapon))
+                      (kern-place-get-objects-at coords))))
+    (display "ammo=")(display ammo)(newline)
+    (kern-obj-remove (car ammo))
+    (kern-obj-add-to-inventory ktroll troll-ranged-weapon 1)))
 
 (define (kchar-get-or-goto kchar coords getproc)
-  (if (adjacent? (kern-obj-get-location kchar) coords)
+  (if (loc-adjacent? (kern-obj-get-location kchar) coords)
       (getproc kchar coords)
       (pathfind kchar coords)))
 
@@ -262,17 +280,20 @@
   (let ((lac (troll-find-nearest-loose-ammo ktroll))
         (tac (troll-find-nearest-terrain-ammo ktroll))
         (kloc (kern-obj-get-location ktroll)))
+    (display "lac=")(display lac)(newline)
+    (display "tac=")(display tac)(newline)
     (if (null? lac)
         (if (null? tac)
             #f
             (begin
               (kchar-get-or-goto ktroll tac troll-get-terrain-ammo)
               #t))
-        (begin
-          (if (closer? lac tac kloc)
-              (kchar-get-or-goto ktroll lac troll-get-loose-ammo)
-              (kchar-get-or-goto ktroll tac troll-get-terrain-ammo))
-          #t))))
+        (if (null? tac)
+            (kchar-get-or-goto ktroll lac troll-get-loose-ammo)
+            (if (loc-closer? lac tac kloc)
+                (kchar-get-or-goto ktroll lac troll-get-loose-ammo)
+                (kchar-get-or-goto ktroll tac troll-get-terrain-ammo)))
+        #t)))
 
 (define (troll-ai ktroll)
   (newline)(display "troll-ai")(newline)
@@ -288,14 +309,17 @@
               (newline)
               (if (null? melee-targs)
                   (if (troll-has-ranged-weapon? ktroll)
-                      (let ((ranged-foes (troll-foes-in-weapon-range ktroll
-                                                                     troll-ranged-weapon
-                                                                     foes)))
+                      (let 
+                          ((ranged-foes 
+                            (troll-foes-in-weapon-range ktroll
+                                                        troll-ranged-weapon
+                                                        foes)))
                         (display "troll-ai:ranged-foes=")(display ranged-foes)
                         (newline)
                         (if (null? ranged-foes)
                             (troll-pathfind-foe ktroll foes)
-                            (troll-attack ktroll troll-ranged-weapon ranged-foes)))
+                            (troll-attack ktroll troll-ranged-weapon 
+                                          ranged-foes)))
                       (or (troll-hunt-for-ammo ktroll)
                           (troll-pathfind-foe ktroll foes)))
                   (if (troll-stronger? ktroll melee-targs)

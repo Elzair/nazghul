@@ -251,8 +251,57 @@
         (cond ((null? coords) (find-terrain kplace x (+ y 1) w (- h 1) kter))
               (else (append coords (find-terrain kplace x (+ y 1) w (- h 1) kter)))))))
 
-(define (adjacent? a b)
-  (< (kern-get-distance a b) 2))
+;;
+;; find-objects -- return a list of locations with the given object on them
+;;
+;; Get this working then refactor it with kern-terrain above into a common
+;; procedure.
+;;
+(define (find-objects kplace x y w h ktype)
+  ;;(display "find-objects")
+  ;;(display " x=")(display x)
+  ;;(display " y=")(display y)
+  ;;(display " w=")(display w)
+  ;;(display " h=")(display h)
+  ;;(display " ktype=")(display ktype)
+  ;;(newline)
+  (define (find-in-row x w)
+    ;;(display "find-objects:find-in-row")
+    ;;(display " x=")(display x)
+    ;;(display " w=")(display w)
+    ;;(newline)
+    (define (check)
+      ;;(display "find-objects:find-in-row:check")
+      ;;(display " x=")(display x)
+      ;;(display " w=")(display w)
+      ;;(newline)
+      ;;
+      ;; NOTE: need to implement kern-place-get-objects-at in the kernel.
+      ;;
+      (define (scanobjlst lst)
+        (foldr (lambda (a b) 
+                 (or a (eqv? (kern-obj-get-type b) ktype)))
+               #f
+               lst))
+      (if (scanobjlst (kern-place-get-objects-at (mk-loc kplace x y)))
+          (mk-loc kplace x y)
+          nil))
+    (if (= 0 w)
+        nil
+        (let ((coord (check)))
+          (cond ((null? coord) (find-in-row (+ x 1) (- w 1)))
+                (else (cons coord (find-in-row (+ x 1) (- w 1))))))))
+  (if (= 0 h)
+      nil
+      (let ((coords (find-in-row x w)))
+        (cond ((null? coords) (find-objects kplace x (+ y 1) w (- h 1) ktype))
+              (else (append coords 
+                            (find-objects kplace 
+                                          x 
+                                          (+ y 1) 
+                                          w 
+                                          (- h 1) 
+                                          ktype)))))))
 
 (define (in-inventory? kchar ktype)
   (define (hasit? item inv)
@@ -263,3 +312,18 @@
           ((eqv? item (car (car inv))) #t)
           (else (hasit? item (cdr inv)))))
   (hasit? ktype (kern-char-get-inventory kchar)))
+
+;;============================================================================
+;; Modulo system procedures -- useful on wrapping maps
+;;============================================================================
+(define (madd a b R) (modulo (+ a b) R))
+(define (msub a b R) (modulo (- a b) R))
+(define (minc a R) (modulo (+ a 1) R))
+(define (mdec a R) (modulo (- a 1) R))
+
+;;----------------------------------------------------------------------------
+;; mdist - find the distance between two numbers in a modulo system. There are
+;; always 2 distances (additive and subtractive). This picks the shortest
+;; distance..
+;;----------------------------------------------------------------------------
+(define (mdist a b R) (min (msub a b R) (msub b a R)))
