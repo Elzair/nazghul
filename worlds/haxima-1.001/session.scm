@@ -632,9 +632,9 @@
 (kern-mk-dtable
  ;;           none play men orks accu mons
  (dtable-row  0    0    0   0   -1    -2) ;; none
- (dtable-row  0    2    1   0   -1    -2) ;; player
+ (dtable-row  0    2    1  -2   -1    -2) ;; player
  (dtable-row -1    1    2  -1   -2    -2) ;; men
- (dtable-row -1    0   -1   2   -1    -2) ;; orks
+ (dtable-row -1   -2   -1   2   -1    -2) ;; orks
  (dtable-row -1   -1   -1  -1    2    -2) ;; accursed
  (dtable-row -2   -2   -2  -2   -2     0) ;; monsters
  )

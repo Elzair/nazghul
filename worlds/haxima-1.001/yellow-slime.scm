@@ -25,5 +25,5 @@
           (display "hostiles:")(display hostiles)(newline)
           (or (summon-green-slimes kchar)
               (attack-a-target-with-acid-spray kchar hostiles)
-              (pathfind-to-a-target kchar hostiles)
+              ;;(pathfind-to-a-target kchar hostiles)
               (kern-obj-wander kchar))))))

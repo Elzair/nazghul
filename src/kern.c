@@ -1776,6 +1776,7 @@ KERN_API_CALL(kern_obj_get_effects)
         info.sc = sc;
         info.head = sc->NIL;
         info.tail = sc->NIL;
+        info.filter = NULL;
 
         /* for each effect hook on the object */
         for (i = 0; i < OBJ_NUM_HOOKS; i++) {
@@ -3759,6 +3760,7 @@ KERN_API_CALL(kern_get_objects_at)
         info.sc = sc;
         info.head = sc->NIL;
         info.tail = sc->NIL;
+        info.filter = NULL;
 
         /* build a scheme list of the objects at that location */
         place_for_each_object_at(place, x, y, kern_append_object, &info);
@@ -3909,6 +3911,7 @@ KERN_API_CALL(kern_place_get_objects)
         info.sc = sc;
         info.head = sc->NIL;
         info.tail = sc->NIL;
+        info.filter = NULL;
 
         /* build a scheme list of the objects */
         place_for_each_object(place, kern_append_object, &info);
@@ -4129,7 +4132,7 @@ KERN_API_CALL(kern_obj_set_temporary)
         if (!obj)
                 return sc->NIL;
 
-        if (unpack(sc, &args, "`b", &val)) {
+        if (unpack(sc, &args, "b", &val)) {
                 rt_err("kern-obj-set-temporary: bad value arg");
                 return scm_mk_ptr(sc, obj);
         }
@@ -5202,6 +5205,7 @@ KERN_API_CALL(kern_obj_find_path)
         int x, y;
         struct astar_node *path = NULL;
         struct astar_search_info as_info;
+        pointer sc_path;
 
         memset(&as_info, 0, sizeof (as_info));
 
@@ -5209,7 +5213,8 @@ KERN_API_CALL(kern_obj_find_path)
         if (!object)
                 return sc->NIL;
 
-        if (unpack_loc(sc, &args, &place, &as_info.x1, &as_info.y1, "kern-obj-find-path")) {
+        if (unpack_loc(sc, &args, &place, &as_info.x1, &as_info.y1, 
+                       "kern-obj-find-path")) {
                 return sc->NIL;
         }
 
@@ -5220,12 +5225,15 @@ KERN_API_CALL(kern_obj_find_path)
         /* find the path */
         as_info.x0 = object->getX();
         as_info.y0 = object->getY();
+        printf("%d: begin pathfinding\n", SDL_GetTicks());
         path = place_find_path(place, &as_info, object);
+        printf("%d: end pathfinding\n", SDL_GetTicks());
         if (! path)
                 return sc->NIL;
 
         /* convert the path to a scheme list */
-        return kern_astar_path_to_scheme_list(sc, path);
+        sc_path = kern_astar_path_to_scheme_list(sc, path);
+        return sc_path;
 }
 
 static pointer kern_build_weapon_list(scheme *sc, 

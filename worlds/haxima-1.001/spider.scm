@@ -4,11 +4,14 @@
 
 ;; Remapped display and newline to local procs so they can be disabled/enabled
 ;; for debug more conveniently
-(define (spider-display . args) 
-  (display (kern-get-ticks))
-  (display ":")
-  (apply display args))
-(define (spider-newline) (newline))
+; (define (spider-display . args) 
+;   (display (kern-get-ticks))
+;   (display ":")
+;   (apply display args))
+; (define (spider-newline) (newline))
+
+(define (spider-display . args) )
+(define (spider-newline) )
 
 ;;----------------------------------------------------------------------------
 ;; Species declaration (used by the kernel)
@@ -290,7 +293,7 @@
                                           helpless-foes)))))
 
 (define (spider-ai kspider)
-  (spider-newline)(spider-display "spider-ai")(spider-newline)
+  (spider-display "spider-ai")(spider-newline)
   (let ((foes (all-visible-hostiles kspider)))
     (if (null? foes)
         (spider-no-hostiles kspider)

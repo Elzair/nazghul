@@ -5,7 +5,13 @@
 (define troll-speed         speed-human)
 (define troll-ripup-boulder-ap (* 2 troll-speed))
 
-(define (troll-display .) )
+; (define (troll-display . args)
+;   (display (kern-get-ticks))
+;   (display ":")
+;   (apply display args))
+; (define (troll-newline) (newline))
+
+(define (troll-display . args) )
 (define (troll-newline) )
 
 ;; ----------------------------------------------------------------------------
@@ -91,8 +97,13 @@
 (define (troll-is-critical? ktroll)
   (< (kern-char-get-hp ktroll) troll-critical-hp))
 
-(define (troll-wander ktroll) (wander ktroll))
-(define (troll-flee ktroll) (flee ktroll))
+(define (troll-wander ktroll) 
+  (troll-display "troll-wander")(troll-newline)
+  (wander ktroll))
+
+(define (troll-flee ktroll) 
+  (troll-display "troll-flee")(troll-newline)
+  (flee ktroll))
 
 (define (troll-foes-in-weapon-range ktroll karms kfoes)
   (troll-display "troll-foes-in-weapon-range")(troll-newline)
@@ -104,6 +115,7 @@
   (< (kern-char-get-hp a) (kern-char-get-hp b)))
 
 (define (troll-pick-target ktroll foes)
+  (troll-display "troll-pick-target")(troll-newline)
   (foldr (lambda (a b) (if (weaker? a b) a b))
          (car foes) 
          (cdr foes)))
@@ -112,10 +124,10 @@
   (troll-display "troll-pathfind-foe")(troll-newline)
   (let ((ktarg (troll-pick-target ktroll foes)))
     (if (notnull? ktarg)
-        (pathfind ktroll (kern-obj-get-location (troll-pick-target ktroll 
-                                                                   foes))))))
+        (pathfind ktroll (kern-obj-get-location ktarg)))))
 
 (define (troll-attack ktroll karms foes)
+  (troll-display "troll-attack")(troll-newline)
   (kern-char-attack ktroll 
                     karms
                     (troll-pick-target ktroll 
@@ -152,6 +164,7 @@
 ;; it to the th character
 ;; ----------------------------------------------------------------------------
 (define (troll-get-loose-ammo ktroll loc)
+  (troll-display "troll-get-loose-ammo")(troll-newline)
   (kobj-get-at ktroll loc troll-ranged-weapon))
 
 ;; ----------------------------------------------------------------------------
@@ -166,6 +179,7 @@
 ;; with terrain that can be converted to ammo objects.
 ;; ----------------------------------------------------------------------------
 (define (troll-find-nearest-ammo ktroll)
+  (troll-display "troll-find-nearest-ammo")(troll-newline)
   (define (check loc)
     (define (scanobjlst lst)
       (foldr (lambda (a b) 
@@ -202,6 +216,7 @@
 ;; or pick it up. Returns false iff none available.
 ;; ----------------------------------------------------------------------------
 (define (troll-hunt-for-ammo2 ktroll)
+  (troll-display "troll-hunt-for-ammo")(troll-newline)
   (let ((nearest (profile troll-find-nearest-ammo ktroll))
         (kloc (kern-obj-get-location ktroll)))
     (troll-display "nearest=")(troll-display nearest)(troll-newline)
@@ -219,38 +234,45 @@
         (troll-display " ")
         (troll-display-objs (cdr lst)))))
 
+(define (troll-no-hostiles ktroll)
+  (troll-display "troll-no-hostiles")(troll-newline)
+  (troll-wander ktroll))
+
+(define (troll-hostiles ktroll foes)
+  (troll-display "troll-hostiles")(troll-newline)
+  (if (troll-is-critical? ktroll) 
+      (troll-flee ktroll)
+      (let ((melee-targs (troll-foes-in-weapon-range ktroll 
+                                                     troll-melee-weapon 
+                                                     foes)))
+        (troll-display "troll-ai:melee-targs=")(troll-display melee-targs)
+        (troll-newline)
+        (if (null? melee-targs)
+            (if (troll-has-ranged-weapon? ktroll)
+                (let 
+                    ((ranged-foes 
+                      (troll-foes-in-weapon-range ktroll
+                                                  troll-ranged-weapon
+                                                  foes)))
+                  (troll-display "troll-ai:ranged-foes=")(troll-display ranged-foes)
+                  (troll-newline)
+                  (if (null? ranged-foes)
+                      (troll-pathfind-foe ktroll foes)
+                      (troll-attack ktroll troll-ranged-weapon 
+                                    ranged-foes)))
+                (or (troll-hunt-for-ammo2 ktroll)
+                    (troll-pathfind-foe ktroll foes)))
+            (if (troll-stronger? ktroll melee-targs)
+                (troll-attack ktroll troll-melee-weapon melee-targs)
+                (evade ktroll melee-targs))))))
+
 ;; ----------------------------------------------------------------------------
 ;; troll-ai -- combat ai for a troll npc. Called repeatedly by the kernel on
 ;; the troll's turn until the troll is out of ap.
 ;; ----------------------------------------------------------------------------
 (define (troll-ai ktroll)
-  (troll-newline)(troll-display "troll-ai")(troll-newline)
+  (troll-display "troll-ai")(troll-newline)
   (let ((foes (all-visible-hostiles ktroll)))
-    (troll-display "foes: ")(troll-display-objs foes)
     (if (null? foes)
         (troll-wander ktroll)
-        (if (troll-is-critical? ktroll) 
-            (troll-flee ktroll)
-            (let ((melee-targs (troll-foes-in-weapon-range ktroll 
-                                                           troll-melee-weapon 
-                                                           foes)))
-              (troll-display "troll-ai:melee-targs=")(troll-display melee-targs)
-              (troll-newline)
-              (if (null? melee-targs)
-                  (if (troll-has-ranged-weapon? ktroll)
-                      (let 
-                          ((ranged-foes 
-                            (troll-foes-in-weapon-range ktroll
-                                                        troll-ranged-weapon
-                                                        foes)))
-                        (troll-display "troll-ai:ranged-foes=")(troll-display ranged-foes)
-                        (troll-newline)
-                        (if (null? ranged-foes)
-                            (troll-pathfind-foe ktroll foes)
-                            (troll-attack ktroll troll-ranged-weapon 
-                                          ranged-foes)))
-                      (or (troll-hunt-for-ammo2 ktroll)
-                          (troll-pathfind-foe ktroll foes)))
-                  (if (troll-stronger? ktroll melee-targs)
-                      (troll-attack ktroll troll-melee-weapon melee-targs)
-                      (evade ktroll melee-targs))))))))
+        (troll-hostiles ktroll foes))))
