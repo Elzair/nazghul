@@ -47,26 +47,18 @@ struct terrain_map *terrain_map_new(char *tag, unsigned int w,
 	return terrain_map;
 }
 
-struct terrain_map *terrain_map_clone(struct terrain_map *orig)
+struct terrain_map *terrain_map_clone(struct terrain_map *orig, char *tag)
 {
 	struct terrain_map *map;
-        char * clonetag = (char *) calloc(strlen(orig->tag) + 2 + 1, 
-                                          sizeof(char));
-        assert(clonetag);
-        strncpy(clonetag, orig->tag, strlen(orig->tag));
-        strcat(clonetag, "_c");
 
         if (!orig->palette) {
-                printf("terrain_map_clone() \n"
-                       " called to clone a map (tag '%s') without a palette,\n"
-                       " this may be or cause a problem elsewhere.\n", 
-                       orig->tag);
-                assert(0);
+                err("terrain_map_clone() \n"
+                    " called to clone a map (tag '%s') without a palette,\n"
+                    " this may be or cause a problem elsewhere.\n", 
+                    orig->tag);
         }
         
-	map = terrain_map_new(clonetag, orig->w, orig->h, orig->palette);
-        free(clonetag);
-        
+	map = terrain_map_new(tag, orig->w, orig->h, orig->palette);        
 	memcpy(map->terrain, orig->terrain,
 	       sizeof(struct terrain *) * orig->w * orig->h);
         
@@ -384,8 +376,12 @@ void terrain_map_save(struct save *save, void *val)
                 return;
         }
 
-        save->enter(save, "(kern-mk-map '%s %d %d %s\n", map->tag, map->w,
-                map->h, map->palette->tag);
+        save->enter(save, "(kern-mk-map\n");
+        if (map->tag)
+                save->write(save, "'%s ", map->tag);
+        else
+                save->write(save, "nil ");
+        save->write(save, "%d %d %s\n", map->w, map->h, map->palette->tag);
         save->enter(save, "(list\n");
 
         i = 0;

@@ -811,10 +811,14 @@ static pointer kern_mk_map(scheme *sc, pointer args)
                 }
         }
 
-        map->handle = session_add(Session, map, terrain_map_dtor, 
-                                  terrain_map_save, NULL);
+        map->handle = session_add(Session, map, terrain_map_dtor, NULL, NULL);
         ret = scm_mk_ptr(sc, map);
-        scm_define(sc, tag, ret);
+
+        /* Embedded maps (those defined within and used exclusively for) place
+         * constructors may not have and do not need tags. */
+        if (tag)
+                scm_define(sc, tag, ret);
+
         return ret;
 
  abort:

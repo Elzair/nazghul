@@ -736,7 +736,7 @@ static void combat_overlay_map(struct terrain_map *map,
         assert(!pinfo->dx || !pinfo->dy);
 
         // Clone the map so we can make a rotated copy.
-        map = terrain_map_clone(map);
+        map = terrain_map_clone(map, "combat_overlay_map");
         if (!map) {
                 err("Failed to allocate temporary terrain map");
                 return;
@@ -1263,7 +1263,8 @@ static void fill_temporary_terrain_map(struct terrain_map *map,
 
 #endif                          // ! USE_OLD_MAP_FILL
 
-static struct terrain_map *create_camping_map(struct place *place, int x, int y)
+static struct terrain_map *create_camping_map(struct place *place, int x, 
+                                              int y)
 {
         struct terrain_map *map;
         struct terrain *terrain;
@@ -1272,48 +1273,14 @@ static struct terrain_map *create_camping_map(struct place *place, int x, int y)
         map = place_get_combat_terrain_map(place, x, y);
         if (map) {
                 // terrain_map_print(stdout, INITIAL_INDENTATION, map);
-                return terrain_map_clone(map);
+                return terrain_map_clone(map, "combat_camping_map");
         }
 
-        map = terrain_map_new("tmp_combat_map", COMBAT_MAP_W, COMBAT_MAP_H, Session->palette);
+        map = terrain_map_new("tmp_combat_map", COMBAT_MAP_W, COMBAT_MAP_H, 
+                              Session->palette);
         terrain = place_get_terrain(place, x, y);
         terrain_map_fill(map, 0, 0, COMBAT_MAP_W, COMBAT_MAP_H, terrain);
 
-#if 0
-        // gmcnutt: with the new loader we no longer have a global list of
-        // terrain palettes. I don't think it matters unless we want to save
-        // the temporary combat map to a script, and if that's the case we
-        // should just create a palette on-the-fly.
-
-        // Find the first palette in the global list 
-        // which has an entry for this terrain:
-        // (Not ideal, but the camping map is temporary anyways.)
-        list_for_each(&Terrain_Palettes, elem) {
-                struct terrain_palette *pp =
-                    list_entry(elem, struct terrain_palette, list);
-
-                if (palette_contains_terrain(pp, terrain)) {
-                        map->palette = pp;
-                        break;
-                }
-        }
-        if (!map->palette) {
-                // We did not find 'terrain' defined in any palette!
-                // For 'terrain' to have been passed to this function,
-                // it had to appear on a map, and that map should have
-                // had a palette.  Therefore, this error case should
-                // be impossible, and is at the least unlikely or 
-                // a sign that things are badly screwed up.
-                dbg("create_camping_map() IMPOSSIBLE (OK, improbable...)\n"
-                       "  strange terrain %p (tag '%s' name '%s')\n"
-                       "  was in no palette!\n",
-                       terrain, terrain->tag, terrain->name);
-
-                assert(0);
-        }
-#endif
-
-        // terrain_map_print(stdout, INITIAL_INDENTATION, map);
         return map;
 }
 

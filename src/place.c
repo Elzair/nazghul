@@ -437,7 +437,8 @@ struct place *place_new(char *tag,
                         
 {
 	struct place *place;
-
+        char *maptag;
+        
 	CREATE(place, struct place, 0);
 
 	place->tag = strdup(tag);
@@ -452,13 +453,9 @@ struct place *place_new(char *tag,
         place->magic = PLACE_MAGIC;
         place->sprite = sprite;
 
-        /* Note: turned off cloning for now. It just hasn't shown itself to be
-         * necessary yet and it makes saving/loading simpler if I don't have to
-         * worry about the cloned map names. In the future, if you turn it back
-         * on, make the tag for the cloned map a parameter. */
-	//place->terrain_map = terrain_map_clone(terrain_map);
-
-        place->terrain_map = terrain_map;
+        /* Give the place its own copy of the original map so it can modify it
+         * at run-time (a clever implementation would do copy-on-write...) */
+	place->terrain_map = terrain_map_clone(terrain_map, NULL);
 
         place->scale = wilderness ? WILDERNESS_SCALE : NON_WILDERNESS_SCALE;
 	place->original_terrain_map = terrain_map;

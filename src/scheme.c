@@ -327,6 +327,7 @@ static int file_push(scheme *sc, const char *fname);
 static void file_pop(scheme *sc);
 static int file_interactive(scheme *sc);
 static INLINE int is_one_of(char *s, int c);
+static void nomem(scheme *sc);
 static int alloc_cellseg(scheme *sc, int n);
 static long binary_decode(const char *s);
 static INLINE pointer get_cell(scheme *sc, pointer a, pointer b);
@@ -388,6 +389,11 @@ static void assign_proc(scheme *sc, enum scheme_opcodes, char *name);
 
 #define num_ivalue(n)       (n.is_fixnum?(n).value.ivalue:(long)(n).value.rvalue)
 #define num_rvalue(n)       (!n.is_fixnum?(n).value.rvalue:(double)(n).value.ivalue)
+
+static void nomem(scheme *sc)
+{
+        sc->no_memory = 1;
+}
 
 static num num_add(num a, num b) {
  num ret;
@@ -645,7 +651,7 @@ static pointer _get_cell(scheme *sc, pointer a, pointer b) {
 	|| sc->free_cell == sc->NIL) {
       /* if only a few recovered, get more to avoid fruitless gc's */
       if (!alloc_cellseg(sc,1) && sc->free_cell == sc->NIL) {
-	sc->no_memory=1;
+        nomem(sc);
 	return sc->sink;
       }
     }
@@ -675,14 +681,14 @@ static pointer get_consecutive_cells(scheme *sc, int n) {
     if (x == sc->NIL) {
       /* If there still aren't, try getting more heap */
       if (!alloc_cellseg(sc,1)) {
-	sc->no_memory=1;
+        nomem(sc);
 	return sc->sink;
       }
     }
     x=find_consecutive_cells(sc,n);
     if (x == sc->NIL) {
       /* If all fail, report failure */
-      sc->no_memory=1;
+      nomem(sc);
       return sc->sink;
     }
   }
@@ -886,7 +892,7 @@ static char *store_string(scheme *sc, int len_str, const char *str, char fill) {
      
      q=(char*)sc->malloc(len_str+1);
      if(q==0) {
-          sc->no_memory=1;
+          nomem(sc);
           return sc->strbuff;
      }
      if(str!=0) {
@@ -4271,7 +4277,7 @@ int scheme_init_custom_alloc(scheme *sc, func_alloc malloc, func_dealloc free) {
   sc->interactive_repl=0;
   
   if (alloc_cellseg(sc,FIRST_CELLSEGS) != FIRST_CELLSEGS) {
-    sc->no_memory=1;
+    nomem(sc);
     return 0;
   }
   sc->gc_verbose = 0;

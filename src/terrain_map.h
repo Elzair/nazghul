@@ -40,6 +40,7 @@ struct terrain_map {
 
         void *handle;  // pointer to session handle
         int saved; // 1 iff already saved
+        int refcount;
 };
         
 extern struct terrain_map *terrain_map_new(char *tag, 
@@ -47,7 +48,8 @@ extern struct terrain_map *terrain_map_new(char *tag,
                                            unsigned int h,
                                            struct terrain_palette * pal);
 extern void terrain_map_del(struct terrain_map *map);
-extern struct terrain_map *terrain_map_clone(struct terrain_map *orig);
+extern struct terrain_map *terrain_map_clone(struct terrain_map *orig, 
+                                             char *tag);
 extern void terrain_map_rotate(struct terrain_map *map, int degree);
 extern void terrain_map_blit(struct terrain_map *dest, int dest_x,
                              int dest_y, struct terrain_map *src,
