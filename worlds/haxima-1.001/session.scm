@@ -500,7 +500,7 @@
 
                 ;; Misc
                 (list (kern-mk-obj t_dagger 1) 63 32)
-                (list (kern-mk-obj t_green_potion 2) 63 32)
+                (list (kern-mk-obj cure-poison-potion 2) 63 32)
                 (list (kern-mk-obj t_mushroom 1) 63 32)
                 (list (kern-tag 'gt-b-1 
                                 (mk-tblitter 'p_green_tower 60 30 5 5 
