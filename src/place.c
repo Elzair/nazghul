@@ -399,7 +399,7 @@ static int place_terrain_is_passable(struct place *place, int x, int y,
 	terrain = place->terrain_map->terrain[y * place->terrain_map->w + x];
 
         // Can we use the generic passability test?
-        if (0 == (flags & PFLAG_IGNOREVEHICLES))
+        if (flags & PFLAG_IGNOREVEHICLES)
                 return place_generic_is_passable(terrain_pclass(terrain),
                                                  terrain->effect,
                                                  subject, flags);
@@ -407,10 +407,6 @@ static int place_terrain_is_passable(struct place *place, int x, int y,
         // Is the terrain passable?
         if (subject->isPassable(terrain_pclass(terrain)))
                 return 1;
-
-        // Does the caller want to check for a vehicle?
-        if (0 == (flags & PFLAG_IGNOREVEHICLES))
-                return 0;
 
         // Is there a vehicle there?
         if (place_get_vehicle(place, x, y))
