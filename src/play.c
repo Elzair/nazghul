@@ -246,17 +246,17 @@ static void play_loop(void)
 
                 times[4] = SDL_GetTicks();
 
-                dec_time_stop(place_get_scale(Place));
+                dec_time_stop(session_ticks_per_turn());
 
                 if (! TimeStop) {
 
-                        dec_reveal(place_get_scale(Place));
-                        dec_quicken(place_get_scale(Place));
-                        dec_magic_negated(place_get_scale(Place));
-                        dec_xray(place_get_scale(Place));
+                        dec_reveal(session_ticks_per_turn());
+                        dec_quicken(session_ticks_per_turn());
+                        dec_magic_negated(session_ticks_per_turn());
+                        dec_xray(session_ticks_per_turn());
                         
-                        player_party->advanceTurns(place_get_scale(Place));
-                        clock_advance(place_get_scale(Place));
+                        player_party->advanceTurns(session_ticks_per_turn());
+                        clock_advance(session_ticks_per_turn());
                         foogodAdvanceTurns();
                         sky_advance(&Session->sky, 
                                     NULL != Place && ! Place->underground);
@@ -268,7 +268,7 @@ static void play_loop(void)
                         // TurnWorkQueue, which is still used for scheduled
                         // things like torches burning out and doors closing.
                         // ----------------------------------------------------
-                        Turn += place_get_scale(Place);
+                        Turn += session_ticks_per_turn();
                 }
 
                 G_exec_loops++;

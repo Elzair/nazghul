@@ -48,6 +48,8 @@
 #include <unistd.h>
 #include <math.h>
 
+#define CAMPING_TIME_ACCELERATION (MINUTES_PER_HOUR)
+
 
 class player_party *player_party;
 
@@ -1061,6 +1063,9 @@ void player_party::beginResting(int hours)
 
         mapBlackout(1);
         mapSetDirty();
+
+        // Accelerate time while resting.
+        session_set_time_accel(CAMPING_TIME_ACCELERATION * WILDERNESS_SCALE);
 }
 
 bool player_party::isResting()
@@ -1169,7 +1174,8 @@ void player_party::beginCamping(class Character *guard, int hours)
                         member->beginCamping(hours);
 	}
 
-
+        // Accelerate time while camping.
+        session_set_time_accel(CAMPING_TIME_ACCELERATION);
 }
 
 void player_party::endCamping()
@@ -1181,6 +1187,9 @@ void player_party::endCamping()
                 return;
 
         camping    = false;
+
+        // Un-accelerate time when done camping.
+        session_set_time_accel(1);
 
         if (NULL != camp_guard) {
                 camp_guard->endGuarding();
@@ -1203,18 +1212,18 @@ void player_party::ambushWhileCamping()
 
         FOR_EACH_MEMBER(entry, member) {
 
-                // -------------------------------------------------------------
+                // ------------------------------------------------------------
                 // If there's a guard then he/she/it will wake everybody else
                 // up.
-                // -------------------------------------------------------------
+                // ------------------------------------------------------------
                 
                 if (camp_guard != NULL) {
                         member->awaken();
                 }
 
-                // -------------------------------------------------------------
+                // ------------------------------------------------------------
                 // Since there is no guard each member will roll to wake up.
-                // -------------------------------------------------------------
+                // ------------------------------------------------------------
 
                 else {
                         member->ambushWhileCamping();
@@ -1228,6 +1237,9 @@ void player_party::endResting()
         class Character *member;
 
         resting   = false;
+
+        // Un-accelerate time when done resting.
+        session_set_time_accel(1);
 
         log_begin_group();
         FOR_EACH_MEMBER(entry, member) {

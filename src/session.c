@@ -202,6 +202,12 @@ static void session_save_clock(save_t *save, struct session *session)
                 session->clock.min);
 }
 
+static void session_save_time_accel(save_t *save, struct session *session)
+{
+        save->write(save, "(kern-set-time-accel %d)\n",
+                    Session->time_accel);
+}
+
 struct session *session_new(void *interp)
 {
         struct session *session = (struct session*)calloc(1, sizeof(*session));
@@ -214,6 +220,7 @@ struct session *session_new(void *interp)
         magic_init(&session->magic);
         list_init(&session->tickq);
         list_init(&session->turnq);
+        session->time_accel = 1;
         return session;
 }
 
@@ -518,6 +525,7 @@ void session_save(char *fname)
         session_save_crosshair(save, Session);
         session_save_ascii(save, Session);
         session_save_clock(save, Session);
+        session_save_time_accel(save, Session);
         dtable_save(Session->dtable, save);
         sky_save(&Session->sky, save);
 

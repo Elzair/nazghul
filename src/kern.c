@@ -4407,6 +4407,19 @@ KERN_API_CALL(kern_add_quicken)
         return sc->T;
 }
 
+KERN_API_CALL(kern_set_time_accel)
+{
+        int val;
+
+        if (unpack(sc, &args, "d", &val)) {
+                rt_err("kern-set-time-acceln: bad args");
+                return sc->F;
+        }
+
+        session_set_time_accel(val);
+        return sc->T;
+}
+
 KERN_API_CALL(kern_add_reveal)
 {
         int val;
@@ -6090,6 +6103,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-set-spell-words", kern_set_spell_words);
         API_DECL(sc, "kern-set-start-proc", kern_set_start_proc);
         API_DECL(sc, "kern-set-wind", kern_set_wind);
+        API_DECL(sc, "kern-set-time-accel", kern_set_time_accel);
         API_DECL(sc, "kern-sleep", kern_sleep);
         API_DECL(sc, "kern-sound-play", kern_sound_play);
         API_DECL(sc, "kern-tag", kern_tag);

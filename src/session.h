@@ -80,6 +80,9 @@ extern int save_errs;
 /* Access to global session diplomacy table: */
 #define session_dtable() (Session->dtable)
 
+#define session_ticks_per_turn() (place_get_scale(Place) * Session->time_accel)
+#define session_set_time_accel(val) (Session->time_accel = (val))
+
 /* Backwards-compatible replacements for the old global work queues: */
 #define TickWorkQueue (Session->tickq)
 #define TurnWorkQueue (Session->turnq)
@@ -169,6 +172,10 @@ struct session {
 
         /* Startup script */
         struct closure *start_proc;
+
+        /* A multiplier for temporarily speeding up time (used when the player
+         * is camping or resting) */
+        int time_accel;
 };
 
 // Callback table for saving objects
