@@ -26,6 +26,10 @@
 ;;
 ;;----------------------------------------------------------------------------
 
+;; Make the default number of required action points the same as the number of
+;; turns a human gets per round.
+(define default-rap speed-human) 
+
 ;;--------------------------------------------------------------------------
 ;; Curried constructors
 ;;
@@ -35,23 +39,23 @@
 ;;--------------------------------------------------------------------------
 
 (define obj-ifc-cap (ifc-cap obj-ifc))
- 
+
 (define (mk-melee-arms-type tag name sprite to-hit-bonus damage deflect slots 
                             num-hands range)
   (kern-mk-arms-type tag name sprite to-hit-bonus damage deflect "0"  slots 
-                     num-hands range 1 nil #f #f nil 0 nil obj-ifc-cap obj-ifc))
+                     num-hands range default-rap nil #f #f nil 0 nil obj-ifc-cap obj-ifc))
 
 ;; Curried constructor: missile weapon (add missile, ubiq flag to melee)
 (define (mk-projectile-arms-type tag name sprite to-hit-bonus damage deflect 
                                  slots num-hands range missile ubiq)
   (kern-mk-arms-type tag name sprite to-hit-bonus damage deflect "0"  slots 
-                     num-hands range 1 missile #f ubiq nil 0 nil obj-ifc-cap obj-ifc))
+                     num-hands range default-rap missile #f ubiq nil 0 nil obj-ifc-cap obj-ifc))
 
 ;; Curried constructor: thrown weapon (add field to melee)
 (define (mk-thrown-arms-type tag name sprite to-hit-bonus damage deflect slots 
                              num-hands range field)
   (kern-mk-arms-type tag name sprite to-hit-bonus damage deflect "0" slots 
-                     num-hands range 1 nil #t #f field 0 nil obj-ifc-cap obj-ifc))
+                     num-hands range default-rap nil #t #f field 0 nil obj-ifc-cap obj-ifc))
 
 (define (mk-missile-arms-type tag name sprite field damage ifc)
   (kern-mk-arms-type tag name sprite "0" damage "0" "0" slot-nil 0 0 0 nil #f #f 

@@ -58,7 +58,8 @@
 ;;----------------------------------------------------------------------------
 (kern-load "gregors-hut-zones.scm")
 
-(load "ilya.scm")
+(kern-load "ilya.scm")
+
 (bind 
  (kern-mk-char 'ch_ilya ; tag
                "Ilya"              ; name

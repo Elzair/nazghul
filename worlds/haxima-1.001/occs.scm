@@ -26,8 +26,8 @@
 (kern-mk-occ 'oc_wanderer         ; tag
              "wanderer"           ; name 
              2.0                  ; magic 
-             -5                   ; hp_mod 
-             +10                   ; hp_mult 
+             +5                   ; hp_mod 
+             +10                  ; hp_mult 
              +10                  ; mp_mod 
              +10                  ; mp_mult 
              +1                   ; hit_mod 

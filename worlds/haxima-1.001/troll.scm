@@ -7,7 +7,7 @@
                  0              ;; intelligence: unused by kernel (just reported in stats)
                  0              ;; dexterity: used to avoid traps on chests
                  speed-human    ;; speed: action points per turn
-                 4              ;; vision radius: in tiles
+                 6              ;; vision radius: in tiles
                  mmode-walk     ;; movement mode: determines passability and cost of travel
                  20             ;; base hp: hit points at level zero
                  2              ;; hp multiplier: extra hp per level
