@@ -165,7 +165,9 @@ void Container::saveContents(struct save *save)
         int count;
 
         save->enter(save, "(list\n");
-        list_for_each(&contents, elem) {
+
+        // Iterate backwards to save/reload in the same order
+        for (elem = contents.prev; elem != &contents; elem = elem->prev) {
                 ie = outcast(elem, struct inv_entry, list);
                 count = ie->count - ie->ref;
                 if (count) {
