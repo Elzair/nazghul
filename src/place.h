@@ -147,6 +147,42 @@ extern struct place *place_new(char *tag,
                                int wilderness_combat
                                );
 
+#ifdef MAP_REGIONS
+
+/* The new region api */
+
+typedef struct region {
+        char *tag;
+        char *name;
+        struct location loc;
+        struct terrain_map *map;
+        struct list objects;
+        struct list subplaces;
+} region_t;
+
+typedef struct region_map {
+        int w;
+        int h;
+        region_t *map;
+} region_map_t;
+
+extern region_t *region_new(char *tag, char *name, struct terrain_map *map);
+extern void region_del(region_t*);
+extern int region_add_object(region_t *, Object *, int x, int y);
+extern int region_rm_object(region_t *, Object *);
+extern int region_add_subplace(region_t *, struct place*, int x int y);
+extern int region_rm_subplace(region_t *, struct place*);
+extern void region_paste_to_place(region_t*, struct place*, int x, int y);
+extern void region_copy_from_place(region_t*, struct place*, int x, int y);
+extern int regions_are_compatible(region_t *a, region_t *b);
+extern struct place *place_new(char *tag,char *name, struct sprite *sprite,
+                               region_map_t *rmap,
+                               int wraps,
+                               int underground,
+                               int wilderness,
+                               int wilderness_combat);
+#endif
+
 extern void place_del(struct place *place);
 
 extern int place_is_passable(struct place *place, int x, int y,
@@ -256,6 +292,7 @@ extern void place_unlock(struct place *place);
 extern void place_describe(struct place *place, int x, int y, int flags);
 extern int place_get_edge_entrance(struct place *place, int dir, int *x, int *y);
 extern int place_set_edge_entrance(struct place *place, int dir, int x, int y);
+extern class Object *place_get_filtered_object(struct place *place, int x, int y, int (*filter)(class Object*));
 
 END_DECL
 

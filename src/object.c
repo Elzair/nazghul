@@ -1624,7 +1624,7 @@ bool ObjectType::canEnter()
 bool ObjectType::canGet()
 {
         // Hack: arms types not converted over to use gifc's yet
-        return (isType(ARMS_TYPE_ID) || gifc_cap & GIFC_CAN_GET);
+        return (gifc_cap & GIFC_CAN_GET);
 }
 
 bool ObjectType::canOpen()

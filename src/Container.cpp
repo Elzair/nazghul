@@ -27,15 +27,15 @@
 static void move_to_map(struct inv_entry *ie, void *data)
 {
 	class Container *box = (class Container *) data;
-	while (ie->count) {
-		class Object *obj = new Object();
-		if (obj) {
-			obj->init(ie->type);
-			obj->relocate(box->getPlace(), box->getX(),
-				      box->getY());
-		}
-		ie->count--;
-	}
+        assert(ie->count);
+
+        class Object *obj = new Object();
+        assert(obj);
+
+        obj->init(ie->type);
+        obj->setCount(ie->count);
+        obj->relocate(box->getPlace(), box->getX(), box->getY());
+
 	box->takeOut(ie->type, ie->count);
 }
 

@@ -109,9 +109,6 @@ static void tile_for_each_object(struct tile *tile,
 {
         struct list *elem;
 
-        //dbg("tile_for_each_object: tile=%08lx\n", tile);
-
-        // Dereference all objects on the tile
         for (elem = tile->objstack.list.next; elem != &tile->objstack.list; ) {
                 class Object *obj;
 		obj = outcast(elem, Object, container_link.list);
@@ -121,6 +118,24 @@ static void tile_for_each_object(struct tile *tile,
 
         if (tile->vehicle)
                 fx(tile->vehicle, data);
+}
+
+static Object *tile_get_filtered_object(struct tile *tile, int (*filter)(Object*))
+{
+        struct list *elem;
+
+        for (elem = tile->objstack.list.next; elem != &tile->objstack.list; ) {
+                class Object *obj;
+		obj = outcast(elem, Object, container_link.list);
+                elem = elem->next;
+                if (filter(obj))
+                        return obj;
+	}
+
+        if (tile->vehicle && filter(tile->vehicle))
+                return tile->vehicle;
+
+        return NULL;
 }
 
 static int tile_is_transparent(struct tile *tile)
@@ -830,6 +845,20 @@ Object *place_get_object(struct place *place, int x, int y, enum layer layer)
 	return outcast(olist, Object, container_link);
 }
 
+Object *place_get_filtered_object(struct place *place, int x, int y, int (*filter)(Object*))
+{
+	struct olist *olist;
+	struct tile *tile;
+
+        WRAP_COORDS(place, x, y);
+
+	tile = place_lookup_tile(place, x, y);
+	if (!tile)
+		return 0;
+
+        return tile_get_filtered_object(tile, filter);
+}
+
 class Party *place_get_Party(struct place * place, int x, int y)
 {
 	Object *object;
@@ -1240,7 +1269,7 @@ static int place_describe_objects(struct place *place, int x, int y,
                         // list. Don't print it until we find out how many
                         // there are.
 			type = obj->getObjectType();
-                        n_instances = 1;
+                        n_instances = obj->getCount();
 
 		} else if (obj->getObjectType() != type) {
 
@@ -1266,11 +1295,11 @@ static int place_describe_objects(struct place *place, int x, int y,
                         }
 
 			type = obj->getObjectType();
-                        n_instances = 1;
+                        n_instances = obj->getCount();
 
 		} else {
                         // More of the same.
-                        n_instances++;
+                        n_instances += obj->getCount();
                 }
 
                 prev_obj = obj;
@@ -1961,3 +1990,145 @@ int place_set_edge_entrance(struct place *place, int dir, int x, int y)
 
         return 0;
 }
+
+#ifdef MAP_REGIONS
+
+static void place_merge_region_terrain_maps(struct place *place)
+{
+        int x, y, i;
+        int tmap_w, tmap_h;
+        struct terrain_palette *tmap_pal;
+        int dx, dy;
+
+        struct terrain_map *map;
+
+        tmap_w   = place->rmap->w * place->rmap->map[0]->map->w;
+        tmap_h   = place->rmap->h * place->rmap->map[0]->map->h;
+        tmap_pal = place->rmap->map[0]->map->palette;
+
+        place->terrain_map = terrain_map_new(NULL, tmap_w, tmap_h, tmap_pal);
+
+        for (dy = 0, dx = 0, i = 0, y = 0; y < place->rmap->h; y++, dy += tmap_h) {
+                for (x = 0; x < place->rmap->w; x++, i++, dx += tmap_w) {
+                        terrain_map_blit(place->terrain_map, dx, dy, 
+                                         place->rmap->map[i]->map, 0, 0, 
+                                         tmap_w, tmap_h);
+                }
+        }
+}
+
+static void place_merge_region_objects(struct place *place, region_t *region)
+{
+        struct list *elem;
+
+        elem = region->objects.next;
+        while (elem != &region->objects) {
+                Object *obj = outcast(elem, Object, container_link.key);
+                obj->relocate(region->loc.place, region->loc.x, region->loc.y);
+        }
+}
+
+static int regions_map_is_compatible(region_map_t *rmap)
+{
+        int x;
+        int y;
+        int i;
+
+        for (i= 0, y = 0; r < rmap->h; y++) {
+                for (x = 0; x < rmap->w; x++, i++) {
+                        if (! regions_are_compatible(rmap[0], rmap[i]))
+                                return 0;
+                }
+        }
+
+        return 1;
+}
+
+static void place_bind_rmap(struct place *place, region_map_t *rmap)
+{
+        int x;
+        int y;
+        int i;
+        int w;
+        int h;
+
+        place->rmap = rmap;
+
+        w = region_w(rmap->map[0]);
+        h = region_h(rmap->map[0]);
+
+        for (i= 0, y = 0; r < rmap->h; y++) {
+                for (x = 0; x < rmap->w; x++, i++) {
+                        region_t *region = rmap->map[i];
+                        region->loc.place = place;
+                        region->loc.x     = x * w;
+                        region->loc.y     = y * h;
+                }
+        }
+}
+
+int regions_are_compatible(region_t *a, region_t *b)
+{
+        if (terrain_map_palette(region_map(a)) !=
+            terrain_map_palette(region_map(b)))
+                return 0;
+
+        if (region_w(a) != region_w(b))
+                return 0;
+
+        if (region_h(a) != region_h(b))
+                return 0;
+        
+        return 1;
+}
+
+struct place *place_new(char *tag,char *name, struct sprite *sprite,
+                        region_map_t *rmap,
+                        int wraps,
+                        int underground,
+                        int wilderness,
+                        int wilderness_combat)
+{
+	struct place *place;
+
+        assert(region_map_is_compatible(rmap));
+
+	CREATE(place, struct place, 0);
+
+	place->tag = strdup(tag);
+        assert(place->tag);
+
+	place->name = strdup(name);
+        assert(place->name);
+
+	place->objects = hash_create(31);
+        assert(place->objects);
+
+        place->magic = PLACE_MAGIC;
+        place->sprite = sprite;
+
+        place->scale = wilderness ? WILDERNESS_SCALE : NON_WILDERNESS_SCALE;
+	place->original_terrain_map = terrain_map;
+	place->wraps = wraps;
+        place->underground = underground;
+        place->wilderness = wilderness;
+        place->is_wilderness_combat = wild_combat;
+
+	list_init(&place->vehicles);
+        list_init(&place->turn_list);
+        list_init(&place->subplaces);
+        list_init(&place->container_link);
+        place->turn_elem = &place->turn_list;
+
+        place_set_default_edge_entrance(place);
+
+        place_bind_rmap(place, rmap);
+        place_merge_region_terrain_maps(place);
+        place_merge_region_objects(place);
+        
+
+	return place;
+
+}
+
+#endif /* MAP_REGIONS */

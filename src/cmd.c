@@ -632,21 +632,10 @@ bool cmdSearch(struct place *place, int x, int y)
 	return true;
 }
 
-void cmdGetObject(Object *actor, Object *subject)
+static int cmdGetFilter(class Object *obj)
 {
-        closure_t *handler;
-
-        if (! subject->getObjectType()->canGet()) {
-                /* This doesn't appear to ever happen, so this clause is
-                 * untested: */
-                log_begin("can't get ");
-                subject->describe();
-                log_end("!");
-                return;                
-        }
-                
-        subject->getObjectType()->get(subject, actor);
-
+        return (int)(obj->getObjectType() && 
+                     obj->getObjectType()->canGet());
 }
 
 bool cmdGet(class Object *actor, bool scoop_all)
@@ -666,7 +655,7 @@ bool cmdGet(class Object *actor, bool scoop_all)
         x = actor->getX() + directionToDx(dir);
         y = actor->getY() + directionToDy(dir);
 
-	item = place_get_item(actor->getPlace(), x, y);
+	item = place_get_filtered_object(actor->getPlace(), x, y, cmdGetFilter);
 	if (!item) {
                 log_msg("Get - nothing there!");
 		return false;
@@ -674,12 +663,12 @@ bool cmdGet(class Object *actor, bool scoop_all)
                
         log_begin_group();
 
-        cmdGetObject(actor, item);
+        item->getObjectType()->get(item, actor);
 
 	if (scoop_all) {
-		while (NULL != (item = place_get_item(actor->getPlace(), 
-                                                      x, y))) {
-                        cmdGetObject(actor, item);
+		while (NULL != (item = place_get_filtered_object(actor->getPlace(), 
+                                                               x, y, cmdGetFilter))) {
+                        item->getObjectType()->get(item, actor);
 		}
 	}
 
