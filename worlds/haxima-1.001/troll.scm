@@ -210,8 +210,8 @@
              (kern-obj-move ktroll 0 (loc-y v))))))
   
 (define (loc-closer? a b c)
-  (< (loc-distance a c)
-     (loc-distance b c)))
+  (< (loc-grid-distance a c)
+     (loc-grid-distance b c)))
 
 ;; Given an "origin" location and a list of locations, find the location in the
 ;; list closest to the coordinates.
@@ -249,7 +249,7 @@
 ;; otherwise have the char pathfind to it
 ;; ----------------------------------------------------------------------------
 (define (kchar-get-or-goto kchar coords getproc)
-  ;;(display "kchar-get-or-goto")(newline)
+  (display "kchar-get-or-goto")(newline)
   (if (or (loc-adjacent? (kern-obj-get-location kchar) coords)
           (eq? coords (kern-obj-get-location kchar)))
       (getproc kchar coords)

@@ -28,9 +28,9 @@
   "|| || || || || || || || || || || || || tt tt .. .. .. tt tt tt || || || || tt || tt tt tt tt || "
   "|| || || tt tt || || || || || tt tt tt tt tt .. .. .. tt tt tt tt tt || tt tt || || || tt tt tt "
   "|| || || tt tt tt tt tt tt tt tt .. .. .. .. .. .. tt tt tt tt tt tt tt tt || || || tt tt  b tt "
-  "|| || || tt tt tt tt tt tt tt .. ..  b  b  b  b  b  b  b  b  b tt tt tt tt tt tt || || tt tt tt "
+  "|| || || tt tt tt tt tt tt tt .. ..  b  b  b  b  b  b  b  b .. tt tt tt tt tt tt || || tt tt tt "
   "|| || tt tt .. .. .. .. .. .. ..  b .. .. .. .. .. .. tt tt tt .. tt  b tt tt tt tt || || tt || "
-  "|| || tt tt .. ..  r  r ws  r  r  r .. .. .. .. .. .. ..  b .. .. .. tt  b tt tt tt || || || || "
+  "|| || tt tt ..  b  r  r ws  r  r  r .. .. .. .. .. .. .. .. .. .. .. tt  b tt tt tt || || || || "
   "|| || tt tt ..  r .. cc cc cc cc  r .. .. .. .. .. .. .. .. ..  & .. ..  b tt tt tt || || || || "
   "|| tt tt tt ..  r cc cc cc cc cc  r .. .. .. .. .. .. .. .. .. .. .. ..  b tt  b tt || || || || "
   "tt tt tt tt .. ws cc cc cc cc cc ws .. .. .. .. .. .. .. .. ..  b .. tt  b tt tt .. .. .. || || "
@@ -39,12 +39,12 @@
   ".. .. .. .. ..  r  r  r cc  r  r  b  r cc  r .. .. .. .. .. .. .. .. ..  b .. .. tt  b tt .. .. "
   "tt .. .. .. ..  r cc cc cc cc cc cc .. cc  r .. .. .. .. .. .. .. .. ..  b .. tt tt tt tt tt tt "
   "tt tt .. .. .. ws cc cc cc cc cc cc cc cc  r .. .. .. .. .. .. .. .. ..  b .. tt tt tt tt tt  b "
-  "tt tt tt .. ..  r cc cc cc cc cc .. cc cc  r  r  r  r ws  r  r ..  r  b .. .. tt tt tt tt tt tt "
-  "tt tt tt .. .. cc cc cc cc  [  @  ] cc cc  r cc cc cc cc cc .. ..  r .. .. tt tt || || || tt tt "
-  "|| || tt tt ..  r cc cc cc cc cc cc cc cc  r cc cc cc cc cc cc cc  r .. tt tt || || || || || tt "
-  "|| || tt tt .. ws cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc ws .. tt || || || || || || tt "
+  "tt tt tt .. ..  r cc cc cc cc cc .. cc cc  r  r  r  r ws  r  r  b  r  b .. .. tt tt tt tt tt tt "
+  "tt tt tt .. ..  r cc cc cc  [  @  ] cc cc  r cc cc cc cc cc .. ..  r .. .. tt tt || || || tt tt "
+  "|| || tt tt .. ws cc cc cc cc cc cc cc cc  r cc cc cc cc cc cc cc  r .. tt tt || || || || || tt "
+  "|| || tt tt ..  r cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc ws .. tt || || || || || || tt "
   "|| || || tt ..  r  r  r cc cc cc cc cc cc  r cc cc cc cc cc cc ..  r tt tt || || || tt || || || "
-  "|| || || tt ..  r cc cc cc cc cc  [  @  ]  r cc cc cc cc cc .. .. tt tt tt || || || || || || || "
+  "|| || || tt ..  r cc cc cc cc cc  [  @  ]  r cc cc cc cc cc .. ..  b tt tt || || || || || || || "
   "|| || || tt ..  r  r  r  r ws  r  r  r  r  r  r  r  r ws  r  r  r  r tt tt || || || || || || tt "
   "|| || || tt .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. tt tt tt tt || || || || || tt tt "
   "|| || tt tt tt tt tt tt tt tt tt tt tt tt .. .. .. .. .. tt tt tt tt tt tt tt || || || || tt tt "
@@ -54,19 +54,21 @@
   )
  )
 
-(kern-mk-place 'p_abandoned_farm     ; tag
-               "Abandoned Farm"     ; name
+(kern-mk-place 'p_abandoned_farm  ; tag
+               "Abandoned Farm"   ; name
                s_hut              ; sprite
-               m_abandoned_farm      ; map
+               m_abandoned_farm   ; map
                #f                 ; wraps
                #f                 ; underground
                #f                 ; large-scale (wilderness)
                #f                 ; tmp combat place
-               nil ; subplaces
-               nil ; neighbors
-               ;;objects
+               nil                ; subplaces
+               nil                ; neighbors
+               ;; objects
                (list
-                ;;(list (mk-troll faction-monster) 20 13)
+                (list (mk-wood-spider) 9 22)
+                (list (mk-door) 13 17)
+                (list (mk-locked-door) 7 25)
                 )
                (list 'af-entry) ; hooks
                nil ; edge entrances

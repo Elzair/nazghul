@@ -13,6 +13,21 @@
 (define (loc-distance a b)
   (kern-get-distance a b))
 
+;; ----------------------------------------------------------------------------
+;; loc-grid-distance -- return the distance needed to walk between two points
+;;
+;; REVISIT: this has a form almost identical to the loc-adjacent? proc below
+;;
+;; ----------------------------------------------------------------------------
+(define (loc-grid-distance a b)
+  (let ((place (loc-place a)))
+    (if (kern-place-is-wrapping? place)
+        (let ((w (kern-place-get-width place)))
+          (+ (mdist (loc-x a) (loc-x b) w)
+             (mdist (loc-y a) (loc-y b) w)))
+        (+ (abs (- (loc-x a) (loc-x b)))
+           (abs (- (loc-y a) (loc-y b)))))))
+
 ;; Convert a location vector to "normal" form
 (define (loc-norm loc)
   (define (norm a)
@@ -44,7 +59,15 @@
 ;; place and that they have been wrapped if necessary.
 ;; ----------------------------------------------------------------------------
 (define (loc-adjacent? a b)
+  (display "loc-adjacent?")
+  (display " a=")(display a)
+  (display " b=")(display b)
+  (newline)
   (define (check dx dy)
+    (display "check")
+    (display " dx=")(display dx)
+    (display " dy=")(display dy)
+    (newline)
     (or (and (= 1 dx) (= 0 dy))
         (and (= 0 dx) (= 1 dy))))
   (let ((place (loc-place a)))
