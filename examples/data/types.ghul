@@ -95,13 +95,6 @@ CURSOR ls_whirlpool;  // From ss_u4
         layer   _layer  \
     }
 
-#define REAGENT_TYPE(_tag, _name, _sprite) \
-    _tag {                      \
-        name     _name          \
-        sprite   _sprite        \
-        subtype  reagent        \
-    }                           \
-
 object_types {
   // This is needed later for CROSSHAIR
   GENERIC_TYPE(t_cursor, "cursor", s_crosshair, LAYER_CURSOR);
