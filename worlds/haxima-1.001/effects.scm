@@ -36,13 +36,21 @@
 ;; ensnare
 ;;
 ;; The ensnare effect rolls against a character's strength each turn. If the
-;; roll fails, the character loses all action points for the turn. If it
-;; succeeds, the effect removes itself from the character. Also treat a natural
-;; roll of 20 as success.
+;; roll fails, the character loses its turn. If it succeeds, the effect removes
+;; itself from the character. Also treat a natural roll of 20 as success.
 ;; ----------------------------------------------------------------------------
 (define (can-ensnare? kobj)
   (and (kern-obj-is-char? kobj)
        (not (species-is-immune-to-ensnare? (kern-char-get-species kobj)))))
+
+(define (ensnare-apply fgob kobj)
+  (kern-log-msg (kern-obj-get-name kobj) " stuck in web!"))
+
+(define (destroy-webs-at loc)
+  (define (destroy-web web)
+    (kern-obj-remove web)
+    (kern-obj-destroy web))
+  (map destroy-web (find-object-types-at loc web-type)))
 
 (define (ensnare-exec fgob kchar)
   (let ((droll (kern-dice-roll "1d20")))
@@ -53,8 +61,10 @@
         (begin
           (kern-log-msg (kern-obj-get-name kchar) " breaks free of web!")
           (kern-obj-remove-effect kchar ef_ensnare)
+          (destroy-webs-at (kern-obj-get-location kchar))
           #t)
         (begin
+          (kern-log-msg (kern-obj-get-name kchar) " struggles in the web!")
           (kern-obj-set-ap kchar 0)
           #f))))
 
@@ -165,7 +175,7 @@
    (list 'ef_charm                     nil                   'charm-apply        'charm-rm        "start-of-turn-hook" "C" 0   #f  10)
    (list 'ef_invisibility              nil                   'invisibility-apply 'invisibility-rm "start-of-turn-hook" "N" 0   #t  10)
    (list 'ef_slime_split               'slime-split-exec     nil                 nil              "on-damage-hook"     ""  0   #f  -1)
-   (list 'ef_ensnare                   'ensnare-exec         nil                 nil              "keystroke-hook"     "E" 0   #f  15)
+   (list 'ef_ensnare                   'ensnare-exec         'ensnare-apply      nil              "keystroke-hook"     "E" 0   #f  15)
    ))
 
 (map (lambda (effect) (apply mk-effect effect)) effects)
@@ -192,7 +202,6 @@
 (define (ensnare kobj)
   (if (can-ensnare? kobj)
       (begin
-        (kern-log-msg (kern-obj-get-name kobj) " stuck in web!")
         (kern-obj-add-effect kobj ef_ensnare nil))))
 
 ;; ----------------------------------------------------------------------------

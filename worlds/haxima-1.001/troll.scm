@@ -211,6 +211,14 @@
           (do-or-goto ktroll nearest troll-get-ammo)
           #t))))
 
+(define (display-objs lst)
+  (if (null? lst)
+      (newline)
+      (begin
+        (display (kern-obj-get-name (car lst)))
+        (display " ")
+        (display-objs (cdr lst)))))
+
 ;; ----------------------------------------------------------------------------
 ;; troll-ai -- combat ai for a troll npc. Called repeatedly by the kernel on
 ;; the troll's turn until the troll is out of ap.
@@ -218,7 +226,7 @@
 (define (troll-ai ktroll)
   (newline)(display "troll-ai")(newline)
   (let ((foes (all-visible-hostiles ktroll)))
-    (display "foes=")(display foes)(newline)
+    (display "foes: ")(display-objs foes)
     (if (null? foes)
         (troll-wander ktroll)
         (if (troll-is-critical? ktroll) 
