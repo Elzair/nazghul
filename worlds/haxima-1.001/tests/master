@@ -1,0 +1,5 @@
+#!/bin/sh
+cd ..
+nazghul --record tests/$1.rec tests/$1.scm 2> tests/$1.err > tests/$1.out
+mv save.scm tests/$1.save.mstr
+echo "Mastered $1"

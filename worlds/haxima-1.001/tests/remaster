@@ -1,0 +1,4 @@
+#!/bin/sh
+
+mv $1.save $1.save.mstr
+echo "Remastered $1"
