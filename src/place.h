@@ -45,6 +45,7 @@ BEGIN_DECL
 #define place_is_wilderness(p) ((p)->wilderness)
 #define place_is_town(p) (!(p)->wilderness)
 #define place_is_dungeon(p) (! (p)->wilderness)
+#define place_is_wrapping(p) ((p)->wraps)
 #define place_get_item(p,x,y) place_get_object((p),(x),(y),item_layer)
 #define place_get_parent(p) ((p)->location.place)
 #define place_get_scale(p) ((p)->scale)

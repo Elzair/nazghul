@@ -1933,7 +1933,8 @@ void place_remove_subplace(struct place *place, struct place *subplace)
         // FIXME: make it an orphan?
 }
 
-void place_for_each_object_at(struct place *place, int x, int y, void (*fx)(class Object *, void *), void *data)
+void place_for_each_object_at(struct place *place, int x, int y, 
+                              void (*fx)(class Object *, void *), void *data)
 {
         struct tile *tile;
 

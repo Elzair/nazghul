@@ -99,7 +99,7 @@
                                   (sc)->vptr->mk_symbol(sc, (sym)), \
                                   (val))
 
-#define scm_define_proc(sc, sym, val) \
+#define API_DECL(sc, sym, val) \
         scm_define(sc, sym, scm_mk_ptr(sc, val))
 
 #define scm_define_int(sc, sym, val) \
@@ -275,6 +275,7 @@ static int unpack(scheme *sc, pointer *cell, char *fmt, ...)
         expect = strlen(fmt);
 
         va_start(args, fmt);
+
         while (*fmt && scm_is_pair(sc, *cell)) {
 
                 count++;
@@ -427,6 +428,11 @@ static int unpack_loc(scheme *sc, pointer *args, struct place **place, int *x,
 
         if (unpack(sc, &loc, "pdd", place, x, y)) {
                 rt_err("%s: bad location list", func);
+                return -1;
+        }
+
+        if (!place) {
+                rt_err("%s: null place", func);
                 return -1;
         }
 
@@ -3513,6 +3519,23 @@ KERN_API_CALL(kern_place_is_wilderness)
         return place_is_wilderness(place) ? sc->T : sc->F;
 }
 
+KERN_API_CALL(kern_place_is_wrapping)
+{
+        struct place *place;
+
+        if (unpack(sc, &args, "p", &place)) {
+                rt_err("kern-place-is-wrapping: bad args");
+                return sc->F;
+        }
+
+        if (!place) {
+                rt_err("kern-place-is-wrapping: null place");
+                return sc->F;
+        }
+
+        return place_is_wrapping(place) ? sc->T : sc->F;
+}
+
 KERN_API_CALL(kern_obj_heal)
 {
         Object *obj;
@@ -3572,7 +3595,7 @@ KERN_API_CALL(kern_get_objects_at)
         info.head = sc->NIL;
         info.tail = sc->NIL;
 
-        /* build a scheme list of the objects */
+        /* build a scheme list of the objects at that location */
         place_for_each_object_at(place, x, y, kern_append_object, &info);
 
         /* return the scheme list */
@@ -3666,6 +3689,28 @@ KERN_API_CALL(kern_place_get_objects)
 
         /* build a scheme list of the objects */
         place_for_each_object(place, kern_append_object, &info);
+
+        /* return the scheme list */
+        return info.head;
+}
+
+KERN_API_CALL(kern_place_get_objects_at)
+{
+        struct place *place;
+        int x, y;
+        struct kern_append_info info;
+
+        /* unpack the location*/
+        if (unpack_loc(sc, &args, &place, &x, &y, "kern-place-get-objects-at"))
+                return sc->NIL;
+
+        /* initialize the context used by the callback to append objects */
+        info.sc = sc;
+        info.head = sc->NIL;
+        info.tail = sc->NIL;
+
+        /* build a scheme list of the objects */
+        place_for_each_object_at(place, x, y, kern_append_object, &info);
 
         /* return the scheme list */
         return info.head;
@@ -4198,7 +4243,7 @@ KERN_API_CALL(kern_get_distance)
             unpack_loc(sc, &args, &p2, &x2, &y2, "kern-get-distance"))
                 return sc->NIL;
 
-        warn("p1=%s x1=%d y1=%d x2=%d y2=%d\n", p1->name, x1, y1, x2, y2);
+        /* warn("p1=%s x1=%d y1=%d x2=%d y2=%d\n", p1->name, x1, y1, x2, y2); */
 
         if (p1 != p2) {
                 rt_err("kern-get-distance: place %s different from %s",
@@ -5134,17 +5179,28 @@ KERN_API_CALL(kern_obj_move)
 {
         class Object *object;
         int dx, dy;
+        enum MoveResult result;
 
         object = (Object*)unpack_obj(sc, &args, "kern-obj-move");
         if (!object)
-                return sc->NIL;
+                return sc->F;
 
         if (unpack(sc, &args, "dd", &dx, &dy)) {
                 rt_err("kern-obj-move: bad args");
-                return sc->NIL;
+                return sc->F;
         }
         
-        return object->move(dx, dy) == MovedOk ? sc->T : sc->F;
+        result = object->move(dx, dy);
+
+        switch (result) {
+        case MovedOk:
+        case ExitedMap:
+        case SwitchedOccupants:
+                return sc->T;
+                break;
+        default:
+                return sc->F;
+        }
 }
 
 scheme *kern_init(void)
@@ -5166,207 +5222,209 @@ scheme *kern_init(void)
         /* Setup the script-to-kernel API */
 
         /* kern-mk api */
-        scm_define_proc(sc, "kern-mk-arms-type", kern_mk_arms_type);
-        scm_define_proc(sc, "kern-mk-astral-body", kern_mk_astral_body);
-        scm_define_proc(sc, "kern-mk-char", kern_mk_char);
-        scm_define_proc(sc, "kern-mk-container", kern_mk_container);
-        scm_define_proc(sc, "kern-mk-effect", kern_mk_effect);
-        scm_define_proc(sc, "kern-mk-field", kern_mk_field);
-        scm_define_proc(sc, "kern-mk-field-type", kern_mk_field_type);
-        scm_define_proc(sc, "kern-mk-map", kern_mk_map);
-        scm_define_proc(sc, "kern-mk-mmode", kern_mk_mmode);
-        scm_define_proc(sc, "kern-mk-obj", kern_mk_obj);
-        scm_define_proc(sc, "kern-mk-obj-type", kern_mk_obj_type);
-        scm_define_proc(sc, "kern-mk-occ", kern_mk_occ);
-        scm_define_proc(sc, "kern-mk-palette", kern_mk_palette);
-        scm_define_proc(sc, "kern-mk-party", kern_mk_party);
-        scm_define_proc(sc, "kern-mk-party-type", kern_mk_party_type);
-        scm_define_proc(sc, "kern-mk-place", kern_mk_place);
-        scm_define_proc(sc, "kern-mk-player", kern_mk_player);
-        scm_define_proc(sc, "kern-mk-ptable", kern_mk_ptable);
-        scm_define_proc(sc, "kern-mk-sched", kern_mk_sched);
-        scm_define_proc(sc, "kern-mk-species", kern_mk_species);
-        scm_define_proc(sc, "kern-mk-sprite", kern_mk_sprite);
-        scm_define_proc(sc, "kern-mk-sprite-set", kern_mk_sprite_set);
-        scm_define_proc(sc, "kern-mk-stock-char", kern_mk_stock_char);
-        scm_define_proc(sc, "kern-mk-terrain", kern_mk_terrain);
-        scm_define_proc(sc, "kern-mk-vehicle", kern_mk_vehicle);
-        scm_define_proc(sc, "kern-mk-vehicle-type", kern_mk_vehicle_type);
+        API_DECL(sc, "kern-mk-arms-type", kern_mk_arms_type);
+        API_DECL(sc, "kern-mk-astral-body", kern_mk_astral_body);
+        API_DECL(sc, "kern-mk-char", kern_mk_char);
+        API_DECL(sc, "kern-mk-container", kern_mk_container);
+        API_DECL(sc, "kern-mk-effect", kern_mk_effect);
+        API_DECL(sc, "kern-mk-field", kern_mk_field);
+        API_DECL(sc, "kern-mk-field-type", kern_mk_field_type);
+        API_DECL(sc, "kern-mk-map", kern_mk_map);
+        API_DECL(sc, "kern-mk-mmode", kern_mk_mmode);
+        API_DECL(sc, "kern-mk-obj", kern_mk_obj);
+        API_DECL(sc, "kern-mk-obj-type", kern_mk_obj_type);
+        API_DECL(sc, "kern-mk-occ", kern_mk_occ);
+        API_DECL(sc, "kern-mk-palette", kern_mk_palette);
+        API_DECL(sc, "kern-mk-party", kern_mk_party);
+        API_DECL(sc, "kern-mk-party-type", kern_mk_party_type);
+        API_DECL(sc, "kern-mk-place", kern_mk_place);
+        API_DECL(sc, "kern-mk-player", kern_mk_player);
+        API_DECL(sc, "kern-mk-ptable", kern_mk_ptable);
+        API_DECL(sc, "kern-mk-sched", kern_mk_sched);
+        API_DECL(sc, "kern-mk-species", kern_mk_species);
+        API_DECL(sc, "kern-mk-sprite", kern_mk_sprite);
+        API_DECL(sc, "kern-mk-sprite-set", kern_mk_sprite_set);
+        API_DECL(sc, "kern-mk-stock-char", kern_mk_stock_char);
+        API_DECL(sc, "kern-mk-terrain", kern_mk_terrain);
+        API_DECL(sc, "kern-mk-vehicle", kern_mk_vehicle);
+        API_DECL(sc, "kern-mk-vehicle-type", kern_mk_vehicle_type);
 
         /* kern-arms-type api */
-        scm_define_proc(sc, "kern-arms-type-get-ammo-type", kern_arms_type_get_ammo_type);
-        scm_define_proc(sc, "kern-arms-type-get-range",     kern_arms_type_get_range);
+        API_DECL(sc, "kern-arms-type-get-ammo-type", kern_arms_type_get_ammo_type);
+        API_DECL(sc, "kern-arms-type-get-range",     kern_arms_type_get_range);
 
         /* kern-set api */
-        scm_define_proc(sc, "kern-set-crosshair", kern_set_crosshair);
-        scm_define_proc(sc, "kern-set-cursor", kern_set_cursor);
-        scm_define_proc(sc, "kern-set-frame", kern_set_frame);
-        scm_define_proc(sc, "kern-set-ascii", kern_set_ascii);
-        scm_define_proc(sc, "kern-set-clock", kern_set_clock);
+        API_DECL(sc, "kern-set-crosshair", kern_set_crosshair);
+        API_DECL(sc, "kern-set-cursor", kern_set_cursor);
+        API_DECL(sc, "kern-set-frame", kern_set_frame);
+        API_DECL(sc, "kern-set-ascii", kern_set_ascii);
+        API_DECL(sc, "kern-set-clock", kern_set_clock);
 
         /* kern-obj api */
-        scm_define_proc(sc, "kern-obj-add-food", kern_obj_add_food);
-        scm_define_proc(sc, "kern-obj-add-effect", kern_obj_add_effect);
-        scm_define_proc(sc, "kern-obj-add-to-inventory", kern_obj_add_to_inventory);
-        scm_define_proc(sc, "kern-obj-apply-damage", kern_obj_apply_damage);
-        scm_define_proc(sc, "kern-obj-clone", kern_obj_clone);
-        scm_define_proc(sc, "kern-obj-dec-ap", kern_obj_dec_ap);
-        scm_define_proc(sc, "kern-obj-dec-light", kern_obj_dec_light);
-        scm_define_proc(sc, "kern-obj-destroy", kern_obj_destroy);
-        scm_define_proc(sc, "kern-obj-find-path", kern_obj_find_path);
-        scm_define_proc(sc, "kern-obj-get-activity", kern_obj_get_activity);
-        scm_define_proc(sc, "kern-obj-get-ap", kern_obj_get_ap);
-        scm_define_proc(sc, "kern-obj-get-gob", kern_obj_get_gob);
-        scm_define_proc(sc, "kern-obj-get-light", kern_obj_get_light);
-        scm_define_proc(sc, "kern-obj-get-location", kern_obj_get_location);
-        scm_define_proc(sc, "kern-obj-get-mmode", kern_obj_get_mmode);
-        scm_define_proc(sc, "kern-obj-get-sprite", kern_obj_get_sprite);
-        scm_define_proc(sc, "kern-obj-get-type", kern_obj_get_type);
-        scm_define_proc(sc, "kern-obj-get-vision-radius", kern_obj_get_vision_radius);
-        scm_define_proc(sc, "kern-obj-has?", kern_obj_has);
-        scm_define_proc(sc, "kern-obj-heal", kern_obj_heal);
-        scm_define_proc(sc, "kern-obj-inc-light", kern_obj_inc_light);
-        scm_define_proc(sc, "kern-obj-is-char?", kern_obj_is_char);
-        scm_define_proc(sc, "kern-obj-is-visible?", kern_obj_is_visible);
-        scm_define_proc(sc, "kern-obj-move", kern_obj_move);
-        scm_define_proc(sc, "kern-obj-put-at", kern_obj_put_at);
-        scm_define_proc(sc, "kern-obj-put-into", kern_obj_put_into);
-        scm_define_proc(sc, "kern-obj-relocate", kern_obj_relocate);
-        scm_define_proc(sc, "kern-obj-remove", kern_obj_remove);
-        scm_define_proc(sc, "kern-obj-remove-effect", kern_obj_remove_effect);
-        scm_define_proc(sc, "kern-obj-remove-from-inventory", kern_obj_remove_from_inventory);
-        scm_define_proc(sc, "kern-obj-set-gob", kern_obj_set_gob);
-        scm_define_proc(sc, "kern-obj-set-light", kern_obj_set_light);
-        scm_define_proc(sc, "kern-obj-set-opacity", kern_obj_set_opacity);
-        scm_define_proc(sc, "kern-obj-set-pclass", kern_obj_set_pclass);
-        scm_define_proc(sc, "kern-obj-set-sprite", kern_obj_set_sprite);
-        scm_define_proc(sc, "kern-obj-set-temporary", kern_obj_set_temporary);
-        scm_define_proc(sc, "kern-obj-set-visible", kern_obj_set_visible);
-        scm_define_proc(sc, "kern-obj-wander", kern_obj_wander);
+        API_DECL(sc, "kern-obj-add-food", kern_obj_add_food);
+        API_DECL(sc, "kern-obj-add-effect", kern_obj_add_effect);
+        API_DECL(sc, "kern-obj-add-to-inventory", kern_obj_add_to_inventory);
+        API_DECL(sc, "kern-obj-apply-damage", kern_obj_apply_damage);
+        API_DECL(sc, "kern-obj-clone", kern_obj_clone);
+        API_DECL(sc, "kern-obj-dec-ap", kern_obj_dec_ap);
+        API_DECL(sc, "kern-obj-dec-light", kern_obj_dec_light);
+        API_DECL(sc, "kern-obj-destroy", kern_obj_destroy);
+        API_DECL(sc, "kern-obj-find-path", kern_obj_find_path);
+        API_DECL(sc, "kern-obj-get-activity", kern_obj_get_activity);
+        API_DECL(sc, "kern-obj-get-ap", kern_obj_get_ap);
+        API_DECL(sc, "kern-obj-get-gob", kern_obj_get_gob);
+        API_DECL(sc, "kern-obj-get-light", kern_obj_get_light);
+        API_DECL(sc, "kern-obj-get-location", kern_obj_get_location);
+        API_DECL(sc, "kern-obj-get-mmode", kern_obj_get_mmode);
+        API_DECL(sc, "kern-obj-get-sprite", kern_obj_get_sprite);
+        API_DECL(sc, "kern-obj-get-type", kern_obj_get_type);
+        API_DECL(sc, "kern-obj-get-vision-radius", kern_obj_get_vision_radius);
+        API_DECL(sc, "kern-obj-has?", kern_obj_has);
+        API_DECL(sc, "kern-obj-heal", kern_obj_heal);
+        API_DECL(sc, "kern-obj-inc-light", kern_obj_inc_light);
+        API_DECL(sc, "kern-obj-is-char?", kern_obj_is_char);
+        API_DECL(sc, "kern-obj-is-visible?", kern_obj_is_visible);
+        API_DECL(sc, "kern-obj-move", kern_obj_move);
+        API_DECL(sc, "kern-obj-put-at", kern_obj_put_at);
+        API_DECL(sc, "kern-obj-put-into", kern_obj_put_into);
+        API_DECL(sc, "kern-obj-relocate", kern_obj_relocate);
+        API_DECL(sc, "kern-obj-remove", kern_obj_remove);
+        API_DECL(sc, "kern-obj-remove-effect", kern_obj_remove_effect);
+        API_DECL(sc, "kern-obj-remove-from-inventory", kern_obj_remove_from_inventory);
+        API_DECL(sc, "kern-obj-set-gob", kern_obj_set_gob);
+        API_DECL(sc, "kern-obj-set-light", kern_obj_set_light);
+        API_DECL(sc, "kern-obj-set-opacity", kern_obj_set_opacity);
+        API_DECL(sc, "kern-obj-set-pclass", kern_obj_set_pclass);
+        API_DECL(sc, "kern-obj-set-sprite", kern_obj_set_sprite);
+        API_DECL(sc, "kern-obj-set-temporary", kern_obj_set_temporary);
+        API_DECL(sc, "kern-obj-set-visible", kern_obj_set_visible);
+        API_DECL(sc, "kern-obj-wander", kern_obj_wander);
 
         /* kern-char api */
-        scm_define_proc(sc, "kern-char-add-defense", kern_char_add_defense);
-        scm_define_proc(sc, "kern-char-attack", kern_char_attack);
-        scm_define_proc(sc, "kern-char-dec-mana", kern_char_dec_mana);
-        scm_define_proc(sc, "kern-char-charm", kern_char_charm);
-        scm_define_proc(sc, "kern-char-get-hp", kern_char_get_hp);
-        scm_define_proc(sc, "kern-char-get-inventory", kern_char_get_inventory);
-        scm_define_proc(sc, "kern-char-get-mana", kern_char_get_mana);
-        scm_define_proc(sc, "kern-char-get-party", kern_char_get_party);
-        scm_define_proc(sc, "kern-char-get-species", kern_char_get_species);
-        scm_define_proc(sc, "kern-char-get-strength", kern_char_get_strength);
-        scm_define_proc(sc, "kern-char-get-weapons", kern_char_get_weapons);
-        scm_define_proc(sc, "kern-char-kill", kern_char_kill);
-        scm_define_proc(sc, "kern-char-resurrect", kern_char_resurrect);
-        scm_define_proc(sc, "kern-char-set-sleep", kern_char_set_sleep);
-        scm_define_proc(sc, "kern-char-set-fleeing", kern_char_set_fleeing);
-        scm_define_proc(sc, "kern-char-is-asleep?", kern_char_is_asleep);
-        scm_define_proc(sc, "kern-char-is-hostile?", kern_char_is_hostile);
-        scm_define_proc(sc, "kern-char-uncharm", kern_char_uncharm);
+        API_DECL(sc, "kern-char-add-defense", kern_char_add_defense);
+        API_DECL(sc, "kern-char-attack", kern_char_attack);
+        API_DECL(sc, "kern-char-dec-mana", kern_char_dec_mana);
+        API_DECL(sc, "kern-char-charm", kern_char_charm);
+        API_DECL(sc, "kern-char-get-hp", kern_char_get_hp);
+        API_DECL(sc, "kern-char-get-inventory", kern_char_get_inventory);
+        API_DECL(sc, "kern-char-get-mana", kern_char_get_mana);
+        API_DECL(sc, "kern-char-get-party", kern_char_get_party);
+        API_DECL(sc, "kern-char-get-species", kern_char_get_species);
+        API_DECL(sc, "kern-char-get-strength", kern_char_get_strength);
+        API_DECL(sc, "kern-char-get-weapons", kern_char_get_weapons);
+        API_DECL(sc, "kern-char-kill", kern_char_kill);
+        API_DECL(sc, "kern-char-resurrect", kern_char_resurrect);
+        API_DECL(sc, "kern-char-set-sleep", kern_char_set_sleep);
+        API_DECL(sc, "kern-char-set-fleeing", kern_char_set_fleeing);
+        API_DECL(sc, "kern-char-is-asleep?", kern_char_is_asleep);
+        API_DECL(sc, "kern-char-is-hostile?", kern_char_is_hostile);
+        API_DECL(sc, "kern-char-uncharm", kern_char_uncharm);
 
         /* kern-astral-body api */
-        scm_define_proc(sc, "kern-astral-body-get-gob", kern_astral_body_get_gob);
-        scm_define_proc(sc, "kern-astral-body-get-phase", kern_astral_body_get_phase);
-        scm_define_proc(sc, "kern-astral-body-set-gob", kern_astral_body_set_gob);
+        API_DECL(sc, "kern-astral-body-get-gob", kern_astral_body_get_gob);
+        API_DECL(sc, "kern-astral-body-get-phase", kern_astral_body_get_phase);
+        API_DECL(sc, "kern-astral-body-set-gob", kern_astral_body_set_gob);
 
         /* kern-place api */
-        scm_define_proc(sc, "kern-place-get-height", kern_place_get_height);
-        scm_define_proc(sc, "kern-place-get-name", kern_place_get_name);
-        scm_define_proc(sc, "kern-place-get-neighbor", kern_place_get_neighbor);
-        scm_define_proc(sc, "kern-place-get-objects", kern_place_get_objects);
-        scm_define_proc(sc, "kern-place-get-terrain", kern_place_get_terrain);
-        scm_define_proc(sc, "kern-place-get-width", kern_place_get_width);
-        scm_define_proc(sc, "kern-place-is-passable", kern_place_is_passable);
-        scm_define_proc(sc, "kern-place-is-wilderness?", kern_place_is_wilderness);
-        scm_define_proc(sc, "kern-place-map", kern_place_map);
-        scm_define_proc(sc, "kern-place-set-terrain", kern_place_set_terrain);
-        scm_define_proc(sc, "kern-place-synch", kern_place_synch);
+        API_DECL(sc, "kern-place-get-height", kern_place_get_height);
+        API_DECL(sc, "kern-place-get-name", kern_place_get_name);
+        API_DECL(sc, "kern-place-get-neighbor", kern_place_get_neighbor);
+        API_DECL(sc, "kern-place-get-objects", kern_place_get_objects);
+        API_DECL(sc, "kern-place-get-objects-at", kern_place_get_objects_at);
+        API_DECL(sc, "kern-place-get-terrain", kern_place_get_terrain);
+        API_DECL(sc, "kern-place-get-width", kern_place_get_width);
+        API_DECL(sc, "kern-place-is-passable", kern_place_is_passable);
+        API_DECL(sc, "kern-place-is-wrapping?", kern_place_is_wrapping);
+        API_DECL(sc, "kern-place-is-wilderness?", kern_place_is_wilderness);
+        API_DECL(sc, "kern-place-map", kern_place_map);
+        API_DECL(sc, "kern-place-set-terrain", kern_place_set_terrain);
+        API_DECL(sc, "kern-place-synch", kern_place_synch);
 
         /* kern-type api */
-        scm_define_proc(sc, "kern-type-get-gifc", kern_type_get_gifc);
+        API_DECL(sc, "kern-type-get-gifc", kern_type_get_gifc);
 
         /* misc api */
-        scm_define_proc(sc, "kern-add-magic-negated", kern_add_magic_negated);
-        scm_define_proc(sc, "kern-add-quicken", kern_add_quicken);
-        scm_define_proc(sc, "kern-add-reveal", kern_add_reveal);
-        scm_define_proc(sc, "kern-add-spell", kern_add_spell);
-        scm_define_proc(sc, "kern-add-tick-job", kern_add_tick_job);
-        scm_define_proc(sc, "kern-add-time-stop", kern_add_time_stop);
-        scm_define_proc(sc, "kern-add-xray-vision", kern_add_xray_vision);
-        scm_define_proc(sc, "kern-blit-map", kern_blit_map);
-        scm_define_proc(sc, "kern-dice-roll", kern_dice_roll);
-        scm_define_proc(sc, "kern-fire-missile", kern_fire_missile);
-        scm_define_proc(sc, "kern-get-distance", kern_get_distance);
-        scm_define_proc(sc, "kern-get-objects-at", kern_get_objects_at);
-        scm_define_proc(sc, "kern-in-los?", kern_in_los);
-        scm_define_proc(sc, "kern-include", kern_include);
-        scm_define_proc(sc, "kern-interp-error", kern_interp_error);
-        scm_define_proc(sc, "kern-is-valid-location?", kern_is_valid_location);
-        scm_define_proc(sc, "kern-player-set-follow-mode", kern_player_set_follow_mode);
-        scm_define_proc(sc, "kern-print", kern_print);
-        scm_define_proc(sc, "kern-set-spell-words", kern_set_spell_words);
-        scm_define_proc(sc, "kern-set-start-proc", kern_set_start_proc);
-        scm_define_proc(sc, "kern-set-wind", kern_set_wind);
-        scm_define_proc(sc, "kern-sleep", kern_sleep);
-        scm_define_proc(sc, "kern-sound-play", kern_sound_play);
-        scm_define_proc(sc, "kern-tag", kern_tag);
-        scm_define_proc(sc, "kern-test-recursion", kern_test_recursion);
+        API_DECL(sc, "kern-add-magic-negated", kern_add_magic_negated);
+        API_DECL(sc, "kern-add-quicken", kern_add_quicken);
+        API_DECL(sc, "kern-add-reveal", kern_add_reveal);
+        API_DECL(sc, "kern-add-spell", kern_add_spell);
+        API_DECL(sc, "kern-add-tick-job", kern_add_tick_job);
+        API_DECL(sc, "kern-add-time-stop", kern_add_time_stop);
+        API_DECL(sc, "kern-add-xray-vision", kern_add_xray_vision);
+        API_DECL(sc, "kern-blit-map", kern_blit_map);
+        API_DECL(sc, "kern-dice-roll", kern_dice_roll);
+        API_DECL(sc, "kern-fire-missile", kern_fire_missile);
+        API_DECL(sc, "kern-get-distance", kern_get_distance);
+        API_DECL(sc, "kern-get-objects-at", kern_get_objects_at);
+        API_DECL(sc, "kern-in-los?", kern_in_los);
+        API_DECL(sc, "kern-include", kern_include);
+        API_DECL(sc, "kern-interp-error", kern_interp_error);
+        API_DECL(sc, "kern-is-valid-location?", kern_is_valid_location);
+        API_DECL(sc, "kern-player-set-follow-mode", kern_player_set_follow_mode);
+        API_DECL(sc, "kern-print", kern_print);
+        API_DECL(sc, "kern-set-spell-words", kern_set_spell_words);
+        API_DECL(sc, "kern-set-start-proc", kern_set_start_proc);
+        API_DECL(sc, "kern-set-wind", kern_set_wind);
+        API_DECL(sc, "kern-sleep", kern_sleep);
+        API_DECL(sc, "kern-sound-play", kern_sound_play);
+        API_DECL(sc, "kern-tag", kern_tag);
+        API_DECL(sc, "kern-test-recursion", kern_test_recursion);
         
         /* ui api */
-        scm_define_proc(sc, "kern-ui-direction", kern_ui_direction);
-        scm_define_proc(sc, "kern-ui-select-party-member", 
+        API_DECL(sc, "kern-ui-direction", kern_ui_direction);
+        API_DECL(sc, "kern-ui-select-party-member", 
                         kern_ui_select_party_member);
-        scm_define_proc(sc, "kern-ui-target", kern_ui_target);
-        scm_define_proc(sc, "kern-ui-waitkey", kern_ui_waitkey);
-        scm_define_proc(sc, "kern-ui-page-text", kern_ui_page_text);
-        scm_define_proc(sc, "kern-ui-select-from-list", kern_ui_select_from_list);
+        API_DECL(sc, "kern-ui-target", kern_ui_target);
+        API_DECL(sc, "kern-ui-waitkey", kern_ui_waitkey);
+        API_DECL(sc, "kern-ui-page-text", kern_ui_page_text);
+        API_DECL(sc, "kern-ui-select-from-list", kern_ui_select_from_list);
 
         /* conv api */
-        scm_define_proc(sc, "kern-conv-end", kern_conv_end);
-        scm_define_proc(sc, "kern-conv-say", kern_conv_say);
-        scm_define_proc(sc, "kern-conv-get-yes-no?", kern_conv_get_yes_no);
-        scm_define_proc(sc, "kern-conv-trade", kern_conv_trade);
-        scm_define_proc(sc, "kern-conv-get-reply", kern_conv_get_reply);
+        API_DECL(sc, "kern-conv-end", kern_conv_end);
+        API_DECL(sc, "kern-conv-say", kern_conv_say);
+        API_DECL(sc, "kern-conv-get-yes-no?", kern_conv_get_yes_no);
+        API_DECL(sc, "kern-conv-trade", kern_conv_trade);
+        API_DECL(sc, "kern-conv-get-reply", kern_conv_get_reply);
 
         /* kern-map api */
-        scm_define_proc(sc, "kern-map-center-camera", kern_map_center_camera);
-        scm_define_proc(sc, "kern-map-flash", kern_map_flash);
-        scm_define_proc(sc, "kern-map-repaint", kern_map_repaint);
-        scm_define_proc(sc, "kern-map-set-dirty", kern_map_set_dirty);
-        scm_define_proc(sc, "kern-map-set-jitter", kern_map_set_jitter);
-        scm_define_proc(sc, "kern-map-set-peering", kern_map_set_peering);
-        scm_define_proc(sc, "kern-map-view-create", kern_map_view_create);
-        scm_define_proc(sc, "kern-map-view-destroy", kern_map_view_destroy);
-        scm_define_proc(sc, "kern-map-view-center", kern_map_view_center);
-        scm_define_proc(sc, "kern-map-view-add", kern_map_view_add);
-        scm_define_proc(sc, "kern-map-view-rm", kern_map_view_rm);
+        API_DECL(sc, "kern-map-center-camera", kern_map_center_camera);
+        API_DECL(sc, "kern-map-flash", kern_map_flash);
+        API_DECL(sc, "kern-map-repaint", kern_map_repaint);
+        API_DECL(sc, "kern-map-set-dirty", kern_map_set_dirty);
+        API_DECL(sc, "kern-map-set-jitter", kern_map_set_jitter);
+        API_DECL(sc, "kern-map-set-peering", kern_map_set_peering);
+        API_DECL(sc, "kern-map-view-create", kern_map_view_create);
+        API_DECL(sc, "kern-map-view-destroy", kern_map_view_destroy);
+        API_DECL(sc, "kern-map-view-center", kern_map_view_center);
+        API_DECL(sc, "kern-map-view-add", kern_map_view_add);
+        API_DECL(sc, "kern-map-view-rm", kern_map_view_rm);
 
         /* kern-log api */
-        scm_define_proc(sc, "kern-log-msg", kern_log_msg);
-        scm_define_proc(sc, "kern-log-enable", kern_log_enable);
+        API_DECL(sc, "kern-log-msg", kern_log_msg);
+        API_DECL(sc, "kern-log-enable", kern_log_enable);
 
         /* kern-dtable api */
-        scm_define_proc(sc, "kern-mk-dtable", kern_mk_dtable);
-        scm_define_proc(sc, "kern-dtable-change", kern_dtable_change);
-        scm_define_proc(sc, "kern-dtable-get", kern_dtable_get);
-        scm_define_proc(sc, "kern-dtable-pop", kern_dtable_pop);
-        scm_define_proc(sc, "kern-dtable-push", kern_dtable_push);
-        scm_define_proc(sc, "kern-dtable-set", kern_dtable_set);
+        API_DECL(sc, "kern-mk-dtable", kern_mk_dtable);
+        API_DECL(sc, "kern-dtable-change", kern_dtable_change);
+        API_DECL(sc, "kern-dtable-get", kern_dtable_get);
+        API_DECL(sc, "kern-dtable-pop", kern_dtable_pop);
+        API_DECL(sc, "kern-dtable-push", kern_dtable_push);
+        API_DECL(sc, "kern-dtable-set", kern_dtable_set);
 
         /* kern-party-api */
-        scm_define_proc(sc, "kern-party-add-member", kern_party_add_member);
+        API_DECL(sc, "kern-party-add-member", kern_party_add_member);
         
         /* kern-being-api */
-        scm_define_proc(sc, "kern-being-get-base-faction", kern_being_get_base_faction);
-        scm_define_proc(sc, "kern-being-get-current-faction", kern_being_get_current_faction);
-        scm_define_proc(sc, "kern-being-set-base-faction", kern_being_set_base_faction);
+        API_DECL(sc, "kern-being-get-base-faction", kern_being_get_base_faction);
+        API_DECL(sc, "kern-being-get-current-faction", kern_being_get_current_faction);
+        API_DECL(sc, "kern-being-set-base-faction", kern_being_set_base_faction);
 
 
         /* Revisit: probably want to provide some kind of custom port here. */
         scheme_set_output_port_file(sc, stderr);
 
         /* Implemented but untested:
-           scm_define_proc(sc, "kern-ui-handle-events", kern_ui_handle_events);
+           API_DECL(sc, "kern-ui-handle-events", kern_ui_handle_events);
         */
 
         return sc;

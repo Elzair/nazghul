@@ -482,11 +482,13 @@ enum MoveResult Character::move(int dx, int dy)
                 if (! isPlayerControlled() || isCharmed()) {
                         remove();
                         destroy();
+                        endTurn();
                         return ExitedMap;
                 }
 
                 if (place_is_wilderness_combat(getPlace())) {
                         remove();
+                        endTurn();
                         return ExitedMap;
                 }
 
@@ -512,6 +514,7 @@ enum MoveResult Character::move(int dx, int dy)
                             place_get_x(getPlace()), place_get_y(getPlace()),
                             NULL);
 
+                endTurn();
 		return ExitedMap;
 	}
 
@@ -1848,7 +1851,7 @@ void Character::exec(struct exec_context *context)
                 // -----------------------------------------------------------
 
                 points_last_loop = 0;
-                while (! isTurnEnded() > 0 &&
+                while (! isTurnEnded() &&
                        getActionPoints() != points_last_loop) {
                         
                         points_last_loop = action_points;
