@@ -83,7 +83,16 @@ struct images *images_new(char *tag, int w, int h, int rows, int cols,
 
 	images->images = IMG_Load(fname);
 	if (!images->images) {
-                err("IMG_Load: %s", SDL_GetError());
+        // BUG: Mac OS X fails to load PNG images here, but GIF works OK.
+        //      This could be a libPNG, libSDL, or libSDL_Image bug.
+        // In the meantime, better error logging is helpful.
+        printf("IMG_Load() failed to load file '%s' because '%s'.\n", fname, SDL_GetError() );
+        // err("IMG_Load: %s", SDL_GetError());  
+        // The err() macro acted strangely, emitting different error text 
+        // than the above would indicate.  Perhaps that is a clue to the bug?
+        // 
+        // Perhaps the err() macro, or the call above, 
+        // differ from the nazghul-0.2.0 release and recent CVS?
 	}
 
 	/* Make magenta the transparent color */
