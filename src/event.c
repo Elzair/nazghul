@@ -57,13 +57,38 @@ static int mapKey(SDL_keysym * keysym)
 {
 	static int map_arrows[] = {
 		KEY_NORTH, KEY_SOUTH, KEY_EAST, KEY_WEST,
-		KEY_SHIFT_NORTH, KEY_SHIFT_SOUTH, KEY_SHIFT_EAST, KEY_SHIFT_WEST
+		KEY_SHIFT_NORTH, KEY_SHIFT_SOUTH, KEY_SHIFT_EAST, 
+                KEY_SHIFT_WEST
 	};
 
 	int key = keysym->sym;
 
         printf("sym='%c'[%d] mod=%02x\n", keysym->sym,  keysym->sym,
                keysym->mod);
+
+        /* If NUMLOCK is enabled then map keypad entries to numbers. This
+         * allows French keyboards, for instance, to enter numbers. */
+        if (keysym->mod & KMOD_NUM) {
+                switch (key) {
+                case SDLK_KP0: return '0';
+                case SDLK_KP1: return '1';
+                case SDLK_KP2: return '2';
+                case SDLK_KP3: return '3';
+                case SDLK_KP4: return '4';
+                case SDLK_KP5: return '5';
+                case SDLK_KP6: return '6';
+                case SDLK_KP7: return '7';
+                case SDLK_KP8: return '8';
+                case SDLK_KP9: return '9';
+                case SDLK_KP_PERIOD: return '.';
+                case SDLK_KP_DIVIDE: return '/';
+                case SDLK_KP_MULTIPLY: return '*';
+                case SDLK_KP_MINUS: return '-';
+                case SDLK_KP_PLUS: return '+';
+                case SDLK_KP_ENTER: return '\n';
+                case SDLK_KP_EQUALS: return '=';
+                }
+        }
 
 	if (keysym->mod & KMOD_SHIFT) {
 
