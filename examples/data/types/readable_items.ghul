@@ -54,7 +54,7 @@ DOCUMENT_TYPE(t_short_scroll, "scroll", s_scroll1,
 DOCUMENT_TYPE(t_users_guide, "The Users Guide to Nazghul", s_scroll1,
           "PLAYER COMMANDS
 
-General syntax:
+*** General syntax ***
 
 <dir>    = one of the four arrow keys
 <member> = a party member, selected from a list by scrolling with the arrow keys and pressing <enter> or <space>
@@ -64,44 +64,67 @@ General syntax:
 <target> = a combat target, selected by moving the crosshairs and pressing <enter> or <space>
 <*>      = varies depending on context (see the C)ast command)
 
-General commands:
+*** General commands ***
 
-  <dir>......................Move in that direction
-  B)oard.....................Board/exit a vehicle like a ship or horse
-  C)ast-<member>-<spell>-<*>...Cast a spell (the last argument depends on the spell)
-  E)nter.....................Enter a portal, including up or down ladders
-  F)ire-<dir>................Fire vehicle's weapon (e.g., ship cannon)
-  G)et-<dir>.................Get an object from the ground
-  H)andle-<member>-<target>..Activate a switch or lever
-  L)ook-<dir>................Describe an adjacent tile
-  O)pen-<dir>................Open a container or door
-  Q)uit......................Quits the game
-  R)eady-<member>-<item>.....Ready an armament like a weapon, shield, etc.
-  S)witch-<member>-<member>...Swap order of two party members
-  T)alk-<target>.............Talk to an NPC
-  U)se-<member>-<item>.......Use an item like a torch or potion
-  Z)tats.....................Show party stats like inventory, armaments, etc
-  X)amine....................Examine map files within view
-  @)AT.......................Information about where the party is AT, etc
-  <space>....................Pass one turn
+<dir> = Move in that direction
 
+A)ttack-<dir> = Initiate combat
 
-Wilderness-only commands:
+B)oard = Board/exit a vehicle like a ship or horse
 
-    K)amp-<0-9>-<y/n>-<player>...Camp in the wilderness (to heal and recover mana) or aboprd ship (to repair hull damage)
+C)ast-<member>-<spell>-<*> = Cast a spell (the last argument depends on the spell)
 
+E)nter = Enter a portal, including up or down ladders
 
-Combat-only commands:
+F)ire-<dir> = Fire vehicle's weapon (e.g., ship cannon)
 
-    A)ttack-<target>.........Attack the specified target
-    C)ast-<spell>-<*>........Cast a spell
-    F)ollow..................Select follow mode, where the party members automatically follow the party leader.
-    [1-9]....................Select a party member for solo mode.
-    [0]......................Select turn-based party mode, where each party member takes directions one at a time.
+G)et-<dir> = Get an object from the ground
+
+H)andle-<member>-<target> = Activate a switch or lever
+
+L)ook-<dir> = Describe an adjacent tile
+
+N)ew-order-<member>-<member> = Switch two party members
+
+O)pen-<dir> = Open a container or door
+
+Q)uit = Quit the game (saving games currently unimplemented!)
+
+R)eady-<member>-<item> = Ready an armament like a weapon, shield, etc.
+
+S)earch-<dir> = Look carefully
+
+T)alk-<target> = Talk to an NPC
+
+U)se-<member>-<item> = Use an item like a torch or potion
+
+Z)tats-<member> = Show party stats like inventory, armaments, etc
+
+X)amine-<target> = Examine map files within view
+
+@)AT = Information about where the party is
+
+<space> = Pass one turn
+
+*** Wilderness-only commands ***
+
+K)amp-<0-9>-<y/n>-<player> = Camp in the wilderness (to heal and recover mana) or aboprd ship (to repair hull damage)
+
+*** Combat-only commands ***
+
+A)ttack-<target> = Attack the specified target
+
+C)ast-<spell>-<*> = Cast a spell
+
+F)ollow = Select follow mode, where the party members automatically follow the party leader.
+
+[1-9] = Select a party member for solo mode.
+
+[0] = Select turn-based party mode, where each party member takes directions one at a time.
     
-Special commands:
+*** Special commands ***
 
-    <ESC>....................Aborts most commands)");
+<ESC> = Aborts most commands");
 
 DOCUMENT_TYPE(t_map_editors_guide, "Nazghul Map Editors Guide", s_scroll1,
               "Map Editing Commands:

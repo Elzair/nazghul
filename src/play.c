@@ -777,7 +777,28 @@ bool cmdLook(int x, int y)
 	consolePrint("You see ");
 	placeDescribe(placeWrapX(x + directionToDx(dir)),
 		      placeWrapY(y + directionToDy(dir)));
-	return false;		// SAM: Should this be true?
+	return true;
+}
+
+bool cmdSearch(int x, int y)
+{
+	int dir;
+        bool old_reveal;
+
+	cmdwin_clear();
+	cmdwin_print("Search-");
+
+	dir = ui_get_direction();
+	if (dir == CANCEL)
+		return false;
+
+	consolePrint("You find ");
+        old_reveal = Reveal;
+        Reveal = true;
+	placeDescribe(placeWrapX(x + directionToDx(dir)),
+		      placeWrapY(y + directionToDy(dir)));
+        Reveal = old_reveal;
+	return true;
 }
 
 static void myGetAux(Object * item)
@@ -2867,7 +2888,7 @@ static bool keyHandler(struct KeyHandler *kh, int key, int keymod)
                 case 'm':
                         cmdMixReagents();
                         break;
-                case 's':
+                case 'n':
                         myNewOrder();
                         break;
                 case 'o':
@@ -2878,6 +2899,9 @@ static bool keyHandler(struct KeyHandler *kh, int key, int keymod)
                         break;
                 case 'r':
                         cmdReady(NULL);
+                        break;
+                case 's':
+                        cmdSearch(player_party->getX(), player_party->getY());
                         break;
                 case 't':
                         myTalk();
