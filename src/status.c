@@ -58,6 +58,7 @@ enum ZtatsView {
 	ViewReagents,
 	ViewSpells,
 	ViewItems,
+        ViewMisc,
 	NumViews,
 };
 
@@ -66,13 +67,15 @@ static bool stat_filter_ready_arms(struct inv_entry *ie, void *cookie);
 static bool stat_filter_reagents(struct inv_entry *ie, void *cookie);
 static bool stat_filter_spells(struct inv_entry *ie, void *cookie);
 static bool stat_filter_items(struct inv_entry *ie, void *cookie);
+static bool stat_filter_misc(struct inv_entry *ie, void *cookie);
 
 static char *ZtatsTitles[] = {
 	"Party Member",
 	"Armaments",
 	"Reagents",
 	"Spells",
-	"Items",
+	"Usable Items",
+        "Misc"
 };
 
 static struct filter ZtatsFilters[] = {
@@ -80,7 +83,8 @@ static struct filter ZtatsFilters[] = {
         { stat_filter_arms, 0 },
         { stat_filter_reagents, 0 },
         { stat_filter_spells, 0 },
-        { stat_filter_items, 0 }
+        { stat_filter_items, 0 },
+        { stat_filter_misc, 0 },
 };
 
 static struct filter stat_ready_arms_filter = {
@@ -155,6 +159,15 @@ static bool stat_filter_spells(struct inv_entry *ie, void *cookie)
 static bool stat_filter_items(struct inv_entry *ie, void *cookie)
 {
         return ie->type->isUsable();
+}
+
+static bool stat_filter_misc(struct inv_entry *ie, void *cookie)
+{
+        /* Things that don't fall into any of the other categories */
+        return (! ie->type->isReadyable()
+                && ! ie->type->isMixable()
+                && ! ie->type->isCastable()
+                && ! ie->type->isUsable());
 }
 
 static void switch_to_tall_mode(void)
@@ -527,26 +540,6 @@ static void myScrollZtatsHorz(int d)
 		case ViewMember:
 			Status.pcIndex = (d > 0 ? 0 : player_party->getSize() - 1);
 			break;
-
-/* 		case ViewArmaments: */
-/*                         Status.container = &player_party->arms; */
-/* 			Status.maxLine = Status.container.numTypesContained() - Status.numLines; */
-/* 			break; */
-
-/* 		case ViewReagents: */
-/*                         Status.container = &player_party->reagents; */
-/* 			Status.maxLine = Status.container.numTypesContained() - Status.numLines; */
-/* 			break; */
-
-/* 		case ViewSpells: */
-/*                         Status.container = &player_party->spells; */
-/* 			Status.maxLine = Status.container.numTypesContained() - Status.numLines; */
-/* 			break; */
-
-/* 		case ViewItems: */
-/*                         Status.container = &player_party->items; */
-/* 			Status.maxLine = Status.container.numTypesContained() - Status.numLines; */
-/*                         break; */
 
 		default:
                         Status.container = player_party->inventory;
