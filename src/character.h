@@ -206,7 +206,6 @@ class Character:public Being {
 
 	char *tag;
 	struct list plist;	// party list
-	struct list llist;	// load list
 	class Party *party;
 	struct species *species;
 	struct occ *occ;

@@ -126,7 +126,6 @@ Character::Character(char *tag, char *name,
         assert(this->name);
 
 	list_init(&plist);
-	list_init(&llist);
 	setPlayerControlled(false);	// by default
         setBaseFaction(NIL_FACTION);
 
@@ -186,7 +185,6 @@ Character::Character():name(0), hm(0), xp(0), order(-1),
         // --------------------------------------------------------------------
 
 	list_init(&plist);
-	list_init(&llist);
 	setPlayerControlled(false);	// by default
         setBaseFaction(NIL_FACTION);
 
