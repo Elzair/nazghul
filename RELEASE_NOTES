@@ -1,4 +1,6 @@
-Changes for nazghul-0.1.2
+Changes between nazghul-0.1.1 and nazghul-0.1.2
+
+gmcnutt:
 
 --Fixed the bug Sam reported about firing cannons in town. Whenever the cannon
   was fired the turns were updates as if the party was in the wilderness, not
@@ -85,7 +87,7 @@ Changes for nazghul-0.1.2
 
 --Added a new character to Green Tower. Shroom the Hag owns the reagent shop.
 
---Added a druid class.
+--Added a druid class to the example.
 
 --Npc parties in wander mode no longer walk over hazardous terrain. I was
   getting concerned about Shroom walking around in the firepit at the White
@@ -96,9 +98,9 @@ Changes for nazghul-0.1.2
   wildernesses. Before that change combat just occurred in town so I didn't
   need to setup the npc party in the combat map.
 
---Bugfix: circular mech activation now has some crude
-  (over)protection. Connecting two lights spaceship-style in no longer causes
-  the engine to crash on stack overflow.
+--Bugfix: circular mech activation now has some crude (over)
+  protection. Connecting two lights spaceship-style no longer causes the engine
+  to crash on stack overflow.
 
 --Added support for the sleep effect to items (previously only spells).
 
@@ -226,4 +228,17 @@ Changes for nazghul-0.1.2
 --Removed derived objects examples/mapfile and examples/data/mapfile from CVS.
 
 --Bugfix: x)amine los-checking did not work across map boundaries.
+
+sglasby:
+
+--Rearranged terrain and terrain palette stuff in examples/ Everything
+   pertaining to terrain has generally been polished, etc.  Added the
+   STD_EXPANDED_PALETTE which uses the 32x32 Runic signs, and fixed up all the
+   supporting GhulScript so everything fit together.  Worked towards a better
+   ship map, with a couple of caveats (Ship Map bugs)
+
+--Extended how terrain palettes work, which should be invisible to end-users
+  and to GhulScript hackers alike.  Obsoleted 'glyph' in terrain definitions,
+  only GhulScript hackers who fiddled with the TERRAIN macro would have
+  noticed.
 

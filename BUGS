@@ -1,15 +1,32 @@
+Known bugs in release 0.1.2
+
 --Nixie attacks sometimes start combat with wrong orientation (hard to
   reproduce)
 
 --Frame sometimes gets messed up and needs a repaint (really? or only during
   debug sessions?)
 
---spaceship the lightswitch in the dungeon => crash when handled.
-
 --NPC combat behaviour on maps with lots of los-blocking terrain still looks
   weird. NPCs need to be a bit more aggressive, blocked missiles need to be
   reported better; in general I think the user just needs more feedback to
   understand what's going on.
+
+--Bridge-nixie problem: nixie's don't get placed because their party is placed
+  on impassable terrain and the party members can't pathfind back to the
+  party. So I removed find_party as a restriction. Now if the player party
+  enters  dungeon one of the members can get placed in a cell where they are
+  trapped. Proper solution: restore find-party restriction, make party
+  placement more flexible (search at least half the map for a passable location
+  for the party), and permit stacking.
+
+--Entering the sotheast ladder of the castle section of Empire City will place
+  one of your party members into a prison cell, effectively deadlocking the
+  game. This is an unexpected side-effect of removing the find_party
+  requirement for combat entry.
+
+--Ship-to-shore combat can look funny, especially when the bridge terrain is
+  involved.
+
 
 Known BUGS in release 0.1.1
 
