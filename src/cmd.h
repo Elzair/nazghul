@@ -26,7 +26,8 @@
 #include "event.h" /* for v_funcpointer_ii */
 
 class Character;
-
+class Object;
+class Party;
 
 BEGIN_DECL;
 
@@ -55,7 +56,8 @@ extern int num_for_key (int key);
 #define CMD_PRINT_MEMBER  (1 << 1)
   
 extern void cmdAttack(void);
-extern int cmdCamp(class Object *camper);
+extern int cmdCampInTown(class Character *camper);
+extern int cmdCampInWilderness(class Party *camper);
 extern void cmdFire(void);
 extern bool cmdMixReagents(void);
 extern void cmdNewOrder(void);

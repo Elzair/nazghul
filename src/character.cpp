@@ -1775,13 +1775,20 @@ void Character::exec(struct exec_context *context)
                 }
 
                 if (clock_alarm_is_expired(&wakeup_alarm)) {
-                        endResting();
 
-                        if (isPlayerPartyMember()) {
+                        if (! isPlayerPartyMember()) {
+                                endResting();
+                        } else {
+                                log_begin_group();
+                                log_msg("Done resting...");
+                                endResting();
+
                                 if (player_party->isCamping())
                                         player_party->endCamping();
                                 else if (player_party->isResting())
                                         player_party->endResting();
+
+                                log_end_group();
                         }
                 }
 

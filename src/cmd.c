@@ -1543,7 +1543,7 @@ int select_quantity(int max)
 	return info.digit;
 }
 
-static int cmdCampInWilderness(class Object *camper)
+int cmdCampInWilderness(class Party *camper)
 {
 	int hours, yesno;
 	class Character *guard = 0;
@@ -1596,21 +1596,35 @@ static int cmdCampInWilderness(class Object *camper)
         return 0;
 }
 
-static int cmdCampInTown(class Object *camper)
+int cmdCampInTown(class Character *camper)
 {
         int hours;
 
         cmdwin_clear();
         cmdwin_print("Rest-");
 
+        // Party must be in follow mode.
+        if (player_party->getPartyControlMode() != PARTY_CONTROL_FOLLOW) {
+                cmdwin_print("must be in follow mode!");
+                log_begin_group();
+                log_msg("Kamp - party not in follow mode!");
+                log_msg("(Hint: hit 'f' to enter follow mode)");
+                log_end_group();
+                return 0;
+        }
+                
         // Check for an object that will serve as a bed.
-        if (place_get_object(camper->getPlace(), camper->getX(), camper->getY(),  bed_layer) == NULL) {
+        if (place_get_object(camper->getPlace(), camper->getX(), 
+                             camper->getY(),  bed_layer) == NULL) {
                 cmdwin_print("no bed!");
+                log_msg("Kamp - no bed here!");
                 return 0;
         }
 
         // Rendezvous the party around the bed.
-        if (! player_party->rendezvous(camper->getPlace(), camper->getX(), camper->getY())) {
+        if (! player_party->rendezvous(camper->getPlace(), camper->getX(), 
+                                       camper->getY())) {
+                log_msg("Kamp - party can't rendezvous!");
                 return 0;
         }
 
@@ -1621,22 +1635,11 @@ static int cmdCampInTown(class Object *camper)
 
         // Put the party in "sleep" mode before returning back to the main
         // event loop.
+        cmdwin_print(" resting...");
         player_party->beginResting(hours);
         camper->endTurn();
-        cmdwin_print(" resting...");
-        return TURNS_PER_HOUR;
-}
 
-int cmdCamp(class Object *camper)
-{
-	if (place_is_wilderness(camper->getPlace()))
-                return cmdCampInWilderness(camper);
-        else if (place_is_town(camper->getPlace()))
-                return cmdCampInTown(camper);
-        else {
-                cmdwin_print("not in combat mode!");
-                return 0;
-        }
+        return TURNS_PER_HOUR;
 }
 
 struct get_spell_name_data {

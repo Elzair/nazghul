@@ -120,8 +120,7 @@ static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
                         cmdHandle(NULL);
                         break;
                 case 'k':
-                        cmdCamp(party);
-                        party->endTurn();
+                        cmdCampInWilderness(party);
                         break;
                 case 'm':
                         cmdMixReagents();
@@ -698,10 +697,10 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
                         log_begin("Follow mode ");
                         if (player_party->getPartyControlMode() == 
                             PARTY_CONTROL_FOLLOW) {
-                                log_end("OFF\n");
+                                log_end("OFF");
                                 player_party->enableRoundRobinMode();
                         } else {
-                                log_end("ON\n");
+                                log_end("ON");
                                 player_party->enableFollowMode();
                         }
                         character->endTurn();
@@ -717,7 +716,10 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
                         cmdHandle(character);
                         break;
                 case 'k':
-                        cmdCamp(character);
+                        cmdCampInTown(character);
+                        break;
+                case 'm':
+                        cmdMixReagents();
                         break;
                 case 'n':
                         cmdNewOrder();

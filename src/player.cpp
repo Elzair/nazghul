@@ -1090,11 +1090,17 @@ void player_party::beginResting(int hours)
 {
         assert(hours > 0);
 
+        log_begin_group();
+        log_msg("Begin resting...");
         forEachMember(member_begin_resting, &hours);
+        log_end_group();
+
         statusRepaint();
+
         clock_alarm_set(&wakeup_alarm, hours * 60);
         clock_alarm_set(&rest_alarm, 60);
         resting   = true;
+
         mapBlackout(1);
         mapSetDirty();
 }
@@ -1282,9 +1288,12 @@ void player_party::endResting()
 
         resting   = false;
 
+        log_begin_group();
         FOR_EACH_MEMBER(entry, member) {
                 member->endResting();
         }
+        enableFollowMode();
+        log_end_group();
 
         mapBlackout(0);
         mapSetDirty();
