@@ -167,7 +167,7 @@ extern "C" {
 #define NUM_WIND_DIRECTIONS 4
 
 /* Time -- In future, these likely come from GhulScript */
-#define TURNS_PER_MINUTE        6
+#define TURNS_PER_MINUTE        60
 #define MINUTES_PER_HOUR        60
 #define HOURS_PER_DAY           24
 #define TURNS_PER_HOUR          (TURNS_PER_MINUTE * MINUTES_PER_HOUR)
