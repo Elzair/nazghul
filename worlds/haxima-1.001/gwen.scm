@@ -79,10 +79,7 @@
        (method 'riva (lambda (knpc kpc)
                        (say knpc "Lord Froederick's rivals are Lords Clovis and "
                             "Bruce. I fear the day we fall under the yoke of "
-                            "either. Travelers from the west tell me Lord Bruce "
-                            "has taken the pass through the Ork hills, and news "
-                            "from the east speaks of spies from Lord Clovis "
-                            "disguised as bandits in the woods.")))
+                            "either.")))
        (method 'bruc (lambda (knpc kpc)
                        (say knpc "Travelers from the west tell me Lord Bruce "
                             "has taken the pass through the Ork hills. Once his "
