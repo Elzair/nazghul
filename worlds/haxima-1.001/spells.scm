@@ -558,7 +558,7 @@
 
 (define (kal-xen-nox kspell caster)
   (define (mk-aligned-slime)
-    (mk-slime (kern-being-get-current-faction caster)))
+    (mk-green-slime (kern-being-get-current-faction caster)))
   (cast-summon-spell (kern-obj-get-location caster) 
                      mk-aligned-slime
                      (kern-dice-roll "1d4")))

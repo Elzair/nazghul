@@ -186,7 +186,7 @@
     (kern-obj-add-effect slime ef_slime_split nil)
     (kern-obj-add-effect slime ef_poison_immunity nil))
   
-(define (mk-slime faction)
+(define (mk-green-slime faction)
   (let ((slime (kern-mk-stock-char sp_green_slime 
                                    nil
                                    s_slime
@@ -197,4 +197,31 @@
     slime
     ))
 
+(define (obj-is-green-slime? kobj)
+  (and (kern-obj-is-char? kobj)
+       (eqv? (kern-char-get-species kobj) sp_green_slime)))
+
 (load "yellow-slime.scm")
+
+;;----------------------------------------------------------------------------
+;; Trigger to generate slimes
+;;----------------------------------------------------------------------------
+(define (slime-generator-step kgen kstepper)
+  (define (mkslime)
+    (kern-log-msg "A slime emerges from the ooze!")
+    (mk-green-slime faction-monster))
+  (let* ((kplace (loc-place (kern-obj-get-location kstepper)))
+         (slimes (filter obj-is-green-slime? (kern-place-get-objects kplace))))
+    (if (< (length slimes) 1)
+        (psummon (kern-obj-get-location kgen)
+                 mkslime
+                 (kern-dice-roll "1d2")))))
+
+(define slime-generator-ifc
+  (ifc '()
+       (method 'step slime-generator-step)))
+
+(mk-obj-type 't_slime_generator nil nil layer-mechanism slime-generator-ifc)
+
+(define (mk-slime-generator)
+  (kern-mk-obj t_slime_generator 1))

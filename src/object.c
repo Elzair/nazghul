@@ -79,8 +79,10 @@ ObjectType::ObjectType(char *tag, char *name, struct sprite *sprite,
 	this->tag = strdup(tag);
         assert(this->tag);
 
-	this->name = strdup(name);
-        assert(this->name);
+        if (name) {
+                this->name = strdup(name);
+                assert(this->name);
+        }
 
 	this->layer = layer;
 

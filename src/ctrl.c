@@ -683,7 +683,7 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
                                                   character->getY(), 
                                                   mech_layer);
                         if (!portal || !portal->canEnter()) {
-                                break;;
+                                break;
                         }
                         
                         log_begin_group();

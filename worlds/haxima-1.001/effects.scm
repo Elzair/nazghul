@@ -214,7 +214,9 @@
           (if (> (kern-dice-roll "2d20") 20)
               (let ((clone (kern-obj-clone kobj)))
                 (kern-print "Slime divides!\n")
-                (kern-being-set-base-faction clone (kern-obj-get-base-faction kobj))
+                (kern-being-set-base-faction 
+                 clone 
+                 (kern-being-get-base-faction kobj))
                 (slime-init clone)
                 (kern-obj-put-at clone (pick-loc loc clone)))
               (begin (display "roll failed")(newline))

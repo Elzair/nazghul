@@ -108,6 +108,7 @@
 
 ;; Like summon but the beings are permanent, not temporary.
 (define (psummon origin mk-critter count)
+  (display "psummon")(newline)
   (define (run-loop n)
     (if (= n 0) nil
         (let* ((critter (mk-critter))
