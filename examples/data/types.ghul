@@ -95,22 +95,6 @@ CURSOR ls_whirlpool;  // From ss_u4
         layer   _layer  \
     }
 
-#define ITEM_TYPE(_tag,    _name,   _sprite,            \
-                  _effect, _amount, _duration, _target, \
-                  _food,   _cons,   _msg)               \
-    _tag {                      \
-        name       _name        \
-        sprite     _sprite      \
-        subtype    item         \
-        effect     _effect      \
-        amount     _amount      \
-        duration   _duration    \
-        target     _target      \
-        food       _food        \
-        consumable _cons        \
-        message    _msg         \
-    }                               
-
 #define REAGENT_TYPE(_tag, _name, _sprite) \
     _tag {                      \
         name     _name          \

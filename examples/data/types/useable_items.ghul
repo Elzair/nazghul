@@ -27,24 +27,66 @@
 #define useable_items_ghul
 
 
+///////////////////////////////////////////////////////////////////////////
+
+#define ITEM_TYPE(_tag,    _name,   _sprite,            \
+                  _effect, _amount, _duration, _target, \
+                  _food,   _cons,   _msg)               \
+    _tag {                      \
+        name       _name        \
+        sprite     _sprite      \
+        subtype    item         \
+        effect     _effect      \
+        amount     _amount      \
+        duration   _duration    \
+        target     _target      \
+        food       _food        \
+        consumable _cons        \
+        message    _msg         \
+    }                               
+
+
+///////////////////////////////////////////////////////////////////////////
+
+#define POTION_TYPE(_tag, _name, _sprite,                 \
+                    _effect, _amount, _duration, _target) \
+    ITEM_TYPE(_tag,    _name,   _sprite,            \
+              _effect, _amount, _duration, _target, \
+              0, 1, "")
+
 // Potions
-ITEM_TYPE(t_green_potion,   "green potion",   s_green_potion,   EFFECT_CURE,   0,    0,   TARG_SELF, FALSE, 1, "");
-ITEM_TYPE(t_light_potion,   "white potion",   s_white_potion,   EFFECT_LIGHT,  4080, 500, TARG_SELF, FALSE, 1, "");
-ITEM_TYPE(t_red_potion,     "red potion",     s_red_potion,     EFFECT_HEAL,   25,   0,   TARG_SELF, FALSE, 1, "");
-ITEM_TYPE(t_blue_potion,    "blue potion",    s_blue_potion,    EFFECT_AWAKEN, 0,    0,   TARG_FRIEND, FALSE, 1, "");
-ITEM_TYPE(item_sleep_potion,"purple potion",  s_purple_potion,  EFFECT_SLEEP,  0,    0,   TARG_SELF, FALSE, 1, "");
+POTION_TYPE(t_green_potion,    "green potion",  s_green_potion,  
+            EFFECT_CURE,   0,    0,   TARG_SELF);
+
+POTION_TYPE(t_light_potion,    "white potion",  s_white_potion,  
+            EFFECT_LIGHT,  4080, 500, TARG_SELF);
+
+POTION_TYPE(t_red_potion,      "red potion",    s_red_potion,    
+            EFFECT_HEAL,   25,   0,   TARG_SELF);
+
+POTION_TYPE(item_sleep_potion, "purple potion", s_purple_potion, 
+            EFFECT_SLEEP,  0,    0,   TARG_SELF);
+
+POTION_TYPE(t_blue_potion,     "blue potion",   s_blue_potion,   
+            EFFECT_AWAKEN, 0,    0,   TARG_FRIEND);
+
+
+///////////////////////////////////////////////////////////////////////////
 
 // Light Sources
-ITEM_TYPE(t_torch,          "torch",          s_torch,          EFFECT_LIGHT,  4096, 1000, TARG_SELF, FALSE, 1, "");
+ITEM_TYPE(t_torch, "torch", s_torch, 
+          EFFECT_LIGHT, 4096, 5000, TARG_SELF, FALSE, 1, "");
 
 
-// This mushroom is malfunctioning?  Does not appear in inventory or the USE
-// items list...  
-//
-// gmcnutt: no, it's edible. Edible items don't appear in inventory, they
-// increment the party food count and disappear.
-ITEM_TYPE(t_mushroom1,      "edible mushroom", s_mushroom1,      EFFECT_NONE,   10,   0,   TARG_NONE, TRUE, 1, "");
+// Edible Items:
+//     NOTE:
+// Edible items do not appear in any inventory list,
+// but are converted to food/rations upon being picked up.
+ITEM_TYPE(t_mushroom1, "edible mushroom", s_mushroom1, 
+          EFFECT_NONE, 10, 0, TARG_NONE, TRUE, 1, "");
 
+
+///////////////////////////////////////////////////////////////////////////
 
 #endif // useable_items_ghul
 
