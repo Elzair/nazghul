@@ -284,28 +284,14 @@ MECH_TYPE mech_portcullis {
 
   transitions {
     state      "raised";
-    event      MECH_SIGNAL_DOWN;
-    next_state "lowered";
-    actions {
-      send_signal MECH_SIGNAL_DOWN;
-    }
-    
-    state      "raised";
-    event      MECH_SIGNAL_CHANGE;
+    any_event_among (MECH_SIGNAL_DOWN, MECH_SIGNAL_CHANGE);
     next_state "lowered";
     actions {
       send_signal MECH_SIGNAL_DOWN;
     }
     
     state      "lowered";
-    event      MECH_SIGNAL_UP;
-    next_state "raised";
-    actions {
-      send_signal MECH_SIGNAL_UP;
-    }
-    
-    state      "lowered";
-    event      MECH_SIGNAL_CHANGE;
+    any_event_among (MECH_SIGNAL_UP, MECH_SIGNAL_CHANGE,);
     next_state "raised";
     actions {
       send_signal MECH_SIGNAL_UP;

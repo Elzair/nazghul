@@ -38,7 +38,8 @@ struct mech_state {
 
 struct mech_transition {
 	struct mech_state *from;
-	int method;		// fixme: rename as 'event'
+    int   n_signal_events;
+	int * signal_events;
 	struct mech_state *to;
 	struct response *actions;
 };
@@ -82,7 +83,7 @@ class Mech:public Object {
 	Mech();
 	~Mech();
 	virtual bool load(class Loader * loader);
-	virtual bool activate(int method);
+	virtual bool activate(int signal_event);
 	virtual struct sprite *getSprite();
 #ifdef USE_OLD_MECH_GETNAME
 	virtual char *getName();

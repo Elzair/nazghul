@@ -46,13 +46,63 @@ static void dump_state(struct mech_state *state)
 }
 #endif // DEBUG_MECH_LOADING
 
+static int transition_responds_to_signal (struct mech_transition * trans, int sig_num) {
+  int ii;
+  for (ii = 0; ii < trans->n_signal_events; ii++) {
+    if (sig_num == trans->signal_events[ii])
+      return 1;
+  }
+  return 0;
+}
+
+static bool transition_event_recursive_helper(int n_found, 
+                                              class Loader * loader, 
+                                              struct mech_transition * tmp) {
+  // Our caller already parsed the leading '('.
+  // We insist on finding at least 1 integer, 
+  // and allow optional commas between elements (trailing comma OK).
+  // We consume the trailing ')' and return 1 for success, 0 for failure.
+  // 
+  //   Valid inputs:  (123) (1,2,3) and so forth
+  // Invalid inputs:  () (,) and various junk
+  int sig_num, success;
+  if (!loader->getInt(&sig_num) ) {
+    return n_found;  // Failure for an empty list (n_found == 0)
+  }
+  n_found++;
+  loader->matchToken(',');  // Optional comma between elements
+  
+  if (loader->matchToken(')') ) {
+    // End of tail recursion:
+    // sig_num contains the last signal in the list, 
+    // and n_found is how many signals were in the list.
+    tmp->signal_events = (int *) malloc(sizeof(int) * n_found);
+    if (!tmp->signal_events) {
+      loader->setError("Memory allocation failed");
+      return 0;  // Failure
+    }
+    tmp->n_signal_events          = n_found;
+    tmp->signal_events[n_found-1] = sig_num;
+    return 1;
+  }
+
+  success = transition_event_recursive_helper(n_found, loader, tmp);
+  if (!success)
+    return 0;  // Failure, bubbling up from recursion
+
+  // On our way back up the recursion stack, 
+  // we store the signal numbers we found on the way down:    
+  tmp->signal_events[n_found-1] = sig_num;
+  return 1;
+}
+
 struct mech_transition *MechType::load_transitions(class Loader * loader,
 						   int *n)
 {
 	char *from_tag = 0, *to_tag = 0;
 	struct mech_transition *set = 0;
 	struct mech_transition tmp;
-	int index, state;
+	int index, state, tmp_event;
 
 	// *** base case ***
 
@@ -68,12 +118,29 @@ struct mech_transition *MechType::load_transitions(class Loader * loader,
 
 	memset(&tmp, 0, sizeof(tmp));
 	if (!loader->matchWord("state") ||
-	    !loader->getString(&from_tag) ||
-	    !loader->matchWord("event") ||
-	    !loader->getInt(&tmp.method) ||
-	    !loader->matchWord("next_state") || !loader->getString(&to_tag))
-		goto fail;
-
+	    !loader->getString(&from_tag) )
+      goto fail;
+    
+    // SAM: Allow (event_a, event_b) expressions here:
+    if (loader->matchWord("event") &&
+        loader->getInt(&tmp_event) ) {
+      // A single signal for this transition, OK.
+      tmp.n_signal_events  = 1;
+      tmp.signal_events    = (int *) malloc(sizeof(int) * 1);
+      tmp.signal_events[0] = tmp_event;
+    }
+    else if (loader->matchWord("any_event_among") && loader->matchToken('(') ) {
+      // Multiple signals which invoke this transition:
+      int success = transition_event_recursive_helper(0, loader, &tmp);
+      if (!success)
+        goto fail;
+    }
+    else
+      goto fail;
+    
+    if (!loader->matchWord("next_state") || !loader->getString(&to_tag) )
+      goto fail;
+    
 	// bind the "from" state
 	for (state = 0; state < n_states; state++) {
 		if (!strcmp(from_tag, states[state].name)) {
@@ -237,8 +304,10 @@ MechType::~MechType()
 	if (states)
 		delete states;
 	if (transitions) {
-		for (int i = 0; i < n_transitions; i++)
+      for (int i = 0; i < n_transitions; i++) {
 			response_chain_destroy(transitions[i].actions);
+            free(transitions[i].signal_events);
+      }
 		delete transitions;
 	}
 }
@@ -324,7 +393,7 @@ bool MechType::bindTags(class Loader * loader)
 }
 
 void MechType::debug_print (void) {
-  int i;
+  int i, j;
 
   printf("MECH_TYPE \n"
          "    tag  '%s'\n"
@@ -358,8 +427,13 @@ void MechType::debug_print (void) {
   printf("    Mech transitions:  (%d transitions)\n", n_transitions);
   for (i = 0; i < n_transitions; i++) {
     struct mech_transition * trans = &transitions[i];
-    printf("        signal %d: (from '%s' to '%s') %d responses/actions\n",
-           trans->method,
+      printf("        %d signals (", trans->n_signal_events);
+    for (j = 0; j < trans->n_signal_events; j++) {
+      printf("%d", trans->signal_events[j] );
+      if (j < (trans->n_signal_events-1))
+        printf(",");  // Comma after all but the last element
+    }
+    printf(") cause transition from '%s' to '%s' (%d action lines invoked)\n",
            trans->from->name, 
            trans->to->name,
            num_responses_in_chain(trans->actions)
@@ -425,19 +499,19 @@ bool Mech::load(class Loader * loader)
 	return true;
 }
 
-bool Mech::activate(int method)
+bool Mech::activate(int signal_event)
 {
 	int i;
 	class MechType *type;
 	bool recompute;
 
-	// printf("activate %s %d\n", getName(), method);
+	// printf("activate %s %d\n", getName(), signal_event);
 
 	type = getObjectType();
 
 	for (i = 0; i < type->n_transitions; i++) {
 		struct mech_transition *trans = &type->transitions[i];
-		if (trans->from == state && trans->method == method) {
+		if (trans->from == state && transition_responds_to_signal(trans, signal_event)) {
 
                         if (activating) {
                                 printf("%s: circular loop detected!\n",
