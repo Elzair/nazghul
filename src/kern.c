@@ -1267,7 +1267,7 @@ static pointer kern_mk_arms_type(scheme *sc, pointer args)
         int gifc_cap;
 
         if (unpack(sc, &args, "yspssssddddpbbdpdo", &tag, &name, &sprite, 
-                   &hit, &damage, &defend, &armor, &slots, &hands, 
+                   &hit, &damage, &armor, &defend, &slots, &hands, 
                    &range, &rap, &missile, &thrown, &ubiq, &weight, 
                    &fire_sound, &gifc_cap, &gifc)) {
                 load_err("kern-mk-arms-type %s: bad args", tag);

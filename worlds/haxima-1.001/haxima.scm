@@ -199,15 +199,15 @@
   (kern-player-set-follow-mode)
   (kern-log-enable #t)  
   (kern-log-msg "...then awaken to a strange new world.")
-  (kern-log-msg "You notice a cave to the southwest.")
+  (kern-log-msg "To the southwest you see a cave.")
   )
 
 (define (simple-start kplayer)
-  (kern-obj-put-at kplayer (list p_moongate_clearing 11 11)))
+;  (kern-obj-put-at kplayer (list p_moongate_clearing 11 11)))
   ;(kern-log-msg "You notice a cave to the southwest."))
   ;(kern-obj-put-at kplayer (list p_slimy_cavern 13 2))
 ;  (kern-obj-put-at kplayer (list p_trigrave 15 15)))
-;  (kern-obj-put-at kplayer (list p_shard 20 13)))
+  (kern-obj-put-at kplayer (list p_shard 20 13)))
                   
 ;;----------------------------------------------------------------------------
 ;; To skip the extended start scene comment out this next line and uncomment

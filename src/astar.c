@@ -32,7 +32,7 @@
 
 #define COORD_TO_INDEX(x,y,w) ((y)*(w)+(x))
 
-#define MAX_DEPTH 100	/* hack to limit search time on large places */
+#define MAX_DEPTH 1000	/* hack to limit search time on large places */
 
 static struct heap *schedule;	/* Priority queue of nodes to explore */
 static struct tree *found;	/* Nodes with a known path, ordered by location 

@@ -30,6 +30,20 @@
              16                   ; xpval
              )
 
+(kern-mk-occ 'oc_ranger ;;..........tag
+             "ranger" ;;............name 
+             1.0 ;;.................magic 
+             +1 ;;..................base hp 
+             +1 ;;..................hp per level 
+             +1 ;;..................base mp
+             +0 ;;..................mp per level 
+             +1 ;;..................hit_mod 
+             +1 ;;..................def_mod 
+             +0 ;;..................dam_mod 
+             +0 ;;..................arm_mod
+             4  ;;..................xpval
+             )
+
 (kern-mk-occ 'oc_druid
              "wizard"             ; name 
              2.0                  ; magic 

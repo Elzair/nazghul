@@ -135,6 +135,7 @@
    ;;     ===========================================================================================================
    (list 't_sling "sling"      s_sling      "-1"     "1d2"    "-1"     slot-weapon   1      4     t_slingstone #t)
    (list 't_bow   "short bow"  s_shortbow   "1"      "1d4"    "-2"     slot-weapon   2      6     t_arrow   #f)
+   (list 't_lngbw "long bow"   s_longbow_1  "1"      "1d8"    "-3"     slot-weapon   2      12    t_arrow   #f)
    (list 't_xbow  "crossbow"   s_crossbow_1 "2"      "2d3"    "-3"     slot-weapon   2      5     t_bolt    #f)
    (list 't_rpg   "doom staff" s_staff_7    "1d4"    "2d20"   "-5"     slot-weapon   2      12    t_warhead #t)
    (list 't_acid_spray "acid spray" nil     "0"      "1d2-1"  "+0"     slot-nil      2      2     t_acid_bolt #t)   

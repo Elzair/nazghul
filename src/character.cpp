@@ -88,10 +88,14 @@ static void myConsiderArms(struct inv_entry *ie, void *data)
 	class ArmsType *arms = (class ArmsType *) ie->type;
 	int val = dice_average(arms->getDamageDice()) * arms->getRange() +
 	    dice_average(arms->getArmorDice());
-	for (int i = 0; i < ie->count; i++, ks->n_items++) {
-		ks->item[ks->n_items] = arms;
-		ks->value[ks->n_items] = val;
-	}
+        if (val) {
+                for (int i = 0; 
+                     i < ie->count && ks->n_items < MAX_N_ITEMS; 
+                     i++, ks->n_items++) {
+                        ks->item[ks->n_items] = arms;
+                        ks->value[ks->n_items] = val;
+                }
+        }
 }
 
 Character::Character(char *tag, char *name, 
@@ -1069,7 +1073,7 @@ void Character::armThyself(void)
 			continue;
 		class ArmsType *arms = (class ArmsType *) ks.item[i];
 		if (ready(arms) != Character::Readied)
-			assert(0);
+			continue;
 		container->takeOut(arms, 1);
 	}
 
