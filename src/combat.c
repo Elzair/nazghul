@@ -506,6 +506,12 @@ static bool myPutNpc(class Character * pm, void *data)
         }
         assert(i < array_sz(Combat.npcs));
 
+        /* Check if we need to go back to fighting */
+        if (Combat.state != FIGHTING &&
+            pm->party->isHostile(player_party->alignment)) {
+                Combat.state = FIGHTING;
+        }
+
         return false;
 }
 
@@ -1630,6 +1636,8 @@ static void doNpcRound(void)
                 return;
         }
 
+        enum CombatState original_state = Combat.state;
+
         myForEachNpc(myRunNpc, NULL);
 
         if (Combat.state == DEFEAT) {
@@ -1641,6 +1649,12 @@ static void doNpcRound(void)
                 Victory();
         }
 
+        if (Combat.state == FIGHTING &&
+            original_state != FIGHTING) {
+                /* Re-entered combat */
+                consolePrint("\n*** Combat ***\n\n");
+                soundPlay(Combat.sound_enter, SOUND_MAX_VOLUME);
+        }
 }
 
 static bool myEnterSoloMode(class Character * pc, int index)
@@ -2125,6 +2139,8 @@ static bool myRunPc(class Character * pc, void *data)
         consolePrint("%s: ", pc->getName());
         consoleRepaint();
 
+        enum CombatState original_state = Combat.state;
+
         struct KeyHandler kh;
         kh.fx = myPcCommandHandler;
         kh.data = pc;
@@ -2142,6 +2158,14 @@ static bool myRunPc(class Character * pc, void *data)
                 // This PC was the last PC and it just left the map.
                 Retreat();
         }
+
+        if (Combat.state == FIGHTING &&
+            original_state != FIGHTING) {
+                /* Re-entered combat */
+                consolePrint("\n*** Combat ***\n\n");
+                soundPlay(Combat.sound_enter, SOUND_MAX_VOLUME);
+        }
+
 
         return false;
 }
@@ -2938,7 +2962,6 @@ bool combat_enter(struct combat_info * info)
 
         if (Combat.state == FIGHTING) {
                 consolePrint("\n*** Combat ***\n\n");
-                consoleRepaint();
                 soundPlay(Combat.sound_enter, SOUND_MAX_VOLUME);
         }
         else if (Combat.state != CAMPING) {
