@@ -1,3 +1,21 @@
+Changes between nazghul-0.1.4 and nazghul-0.1.5
+
+o Bugfix: with animation off, on entry to wilderness combat the map was not
+  being updated properly. (Thanks to Sam for finding this).
+
+o Bugfix: with animation off, in Character Mode, if the current character quits
+  the game then in some cases the game will not quit, and will prompt the
+  player to move the next character, until the turn is over.
+
+o Bugfix: with animation off, after fleeing from wilderness combat the screen
+  remained blank until the user pressed a key to cause a map repaint. (Thanks
+  to Sam for finding this).
+
+o Bugfix: with animation off, npc's sometimes appeared to "jump" a
+  space. Needed to add conditional repaints of the map before prompting the
+  user for input, this way the user is always looking at an up-to-date map when
+  they decide what to do next.
+
 Changes between nazghul-0.1.4 and nazghul0.1.3
 
 o Towns now work like dungeons and combat, as opposed to working like the

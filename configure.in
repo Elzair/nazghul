@@ -1,78 +1,145 @@
-dnl Process this file with autoconf to produce a configure script.
+dnl Process this file with autoconf to produce a configure script.  
+
+dnl ----------------------------------------------------------------------------
+dnl 1. Boilerplate
+dnl      This section should include standard boilerplate code, such as the call 
+dnl      to AC_INIT (which must be first), AM_INIT_AUTOMAKE, AC_CONFIG_HEADER, 
+dnl      and perhaps AC_REVISION.
+dnl ----------------------------------------------------------------------------
+
+dnl AC_INIT(filename) 
+dnl   This macro performs essential initialization for the
+dnl   generated `configure' script. An optional argument may provide the name of a
+dnl   file from the source directory to ensure that the directory has been 
+dnl   specified correctly.
 AC_INIT(README)
 
-dnl Detect the canonical target build environment
+dnl AC_CANONICAL_HOST
+dnl   This macro determines the type of the host system and sets the output 
+dnl   variable `host', as well as other more obscure variables.
 AC_CANONICAL_HOST
+
+dnl AC_CANONICAL_TARGET
+dnl   I'm not certain what this is. The automake book refers to 
+dnl   AC_CANONICAL_SYSTEM, but not AC_CANONICAL_TARGET. A Google search only 
+dnl   yields scads of mailing list reports about people having weird problems 
+dnl   with this,
 AC_CANONICAL_TARGET
 
-dnl Setup for automake
+dnl AM_INIT_AUTOMAKE(package, version, [nodefine])
+dnl   This macro is used to do all the standard initialization required by 
+dnl   Automake. It has two required arguments: the package name and the version 
+dnl   number. This macro sets and calls AC_SUBST on the shell variables PACKAGE 
+dnl   and VERSION. By default it also defines these variables (via 
+dnl   AC_DEFINE_UNQUOTED). However, this macro also accepts an optional third 
+dnl   argument which, if not empty, means that the AC_DEFINE_UNQUOTED calls for 
+dnl   PACKAGE and VERSION should be suppressed.
 AM_INIT_AUTOMAKE(nazghul, 0.1.4)
 
-dnl Check for tools
+dnl ----------------------------------------------------------------------------
+dnl 2. Options
+dnl      The next section should include macros which add command-line options 
+dnl      to configure, such as AC_ARG_ENABLE. It is typical to put support code
+dnl      for the option in this section as well, if it is short enough.
+dnl ----------------------------------------------------------------------------
 
+dnl ----------------------------------------------------------------------------
+dnl 3. Programs
+dnl      Next it is traditional to check for programs that are either needed by
+dnl      the configure process, the build process, or by one of the programs 
+dnl      being built. This usually involves calls to macros like AC_CHECK_PROG
+dnl      and AC_PATH_TOOL.
+dnl ----------------------------------------------------------------------------
+
+dnl AC_PROG_MAKE_SET
+dnl   Some versions of make need to have the `Makefile' variable MAKE set in 
+dnl   `Makefile' in order for recursive builds to work. This macro checks whether 
+dnl   this is needed, and, if so, it sets the `Makefile' variable SET_MAKE to the 
+dnl   result. AM_INIT_AUTOMAKE calls this macro, so if you are using Automake, you 
+dnl   don't need to call it or use SET_MAKE in `Makefile.am'.
 AC_PROG_MAKE_SET
+
+dnl AC_PROG_CC
+dnl   This checks for the C compiler to use and sets the shell variable CC to the 
+dnl   value. If the GNU C compiler is being used, this sets the shell variable GCC 
+dnl   to `yes'. This macro sets the shell variable CFLAGS if it has not already 
+dnl   been set. It also calls AC_SUBST on CC and CFLAGS.
 AC_PROG_CC
+
+dnl AC_PROG_CXX
+dnl   This is like AC_PROG_CC, but it checks for the C++ compiler, and sets the
+dnl   variables CXX, 
 AC_PROG_CXX
-dnl AC_PROG_RANLIB
+
+dnl AC_PROG_LIBTOOL
+dnl   This macro is the primary way to integrate Libtool support into `configure'.
+dnl   If you are using Libtool, you should call this macro in `configure.in'. Among
+dnl    other things, it adds support for the `--enable-shared' configure flag.
 AC_PROG_LIBTOOL
+
+dnl AC_PROG_INSTALL
+dnl   This looks for an install program and sets the output variables INSTALL, 
+dnl   INSTALL_DATA, INSTALL_PROGRAM, and INSTALL_SCRIPT. This macro assumes that if
+dnl   an install program cannot be found on the system, your package will have 
+dnl   `install-sh' available in the directory chosen by AC_CONFIG_AUX_DIR.
 AC_PROG_INSTALL
 
-dnl The alpha architecture needs special flags for binary portability
-case "$target" in
-    alpha*-*-linux*)
-        CFLAGS="$CFLAGS -mcpu=ev4 -Wa,-mall"
-        ;;
-esac
-
-
- 
-
-for top_builddir in . .. ../.. $ac_auxdir $ac_auxdir/..; do
-  test -f $top_builddir/configure && break
-done
-
+dnl ----------------------------------------------------------------------------
+dnl 4. Libraries
+dnl      Checks for libraries come before checks for other objects visible to C
+dnl      (or C++, or anything else). This is necessary because some other checks
+dnl      work by trying to link or run a program; by checking for libraries
+dnl      first you ensure that the resulting programs can be linked.
+dnl ----------------------------------------------------------------------------
 
 dnl Check for SDL
-SDL_VERSION=1.2.0
+SDL_VERSION=1.2.4
 AM_PATH_SDL($SDL_VERSION,
             :,
-            AC_MSG_ERROR([*** SDL version $SDL_VERSION not found!])
+	    AC_MSG_ERROR([*** SDL version $SDL_VERSION not found!])
 )
 
-CFLAGS="$CFLAGS $SDL_CFLAGS -Wall"
+dnl Add in the SDL CFLAGS
+CFLAGS="$CFLAGS $SDL_CFLAGS"
 
-# gmcnutt: hack - how do I add a check for the SDL_image lib?
-LIBS="$LIBS $SDL_LIBS  -lSDL_image"
+dnl Use the same flags for c++ as for c
+CXXFLAGS="$CFLAGS"
 
-dnl Add the include directories for the object libraries
-CFLAGS="$CFLAGS -I\$(top_srcdir)/src"
+dnl Set the compiler to c++ (for now)
+CC="$CXX"
 
-# gmcnutt: Force the compiler to c++ (is this the right way to do this?)
-CC=g++
-CXX=g++
+dnl Hack in SDL_image -- how do I test for it? Can't find any examples...
+LIBS="$SDL_LIBS $LIBS -lSDL_image"
 
-dnl Set up the game data install directory
-case "$target" in
-    *-*-mingw32*)
-        GAME_INSTALLDIR="."
-	ICONOBJ="ico.o"
-        ;;
-    *-*-beos*)
-        ac_default_prefix=/boot/beos
-        GAME_INSTALLDIR="\$(prefix)/games/$PACKAGE"
-        ;;
-    *)
-        GAME_INSTALLDIR="\$(prefix)/games/$PACKAGE"
-        ;;
-esac
-AC_SUBST(GAME_INSTALLDIR)
-CFLAGS="$CFLAGS"
+dnl ----------------------------------------------------------------------------
+dnl 5. Headers
+dnl      Next come checks for existence of headers.
+dnl ----------------------------------------------------------------------------
 
-dnl C++ flags are the same as the C flags
-CXXFLAGS="$CXXFLAGS $CFLAGS"
+dnl ----------------------------------------------------------------------------
+dnl 6. Typedefs and structures
+dnl    We do checks for typedefs after checking for headers for the simple
+dnl    reason that typedefs appear in headers, and we need to know which headers
+dnl    we can use before we look inside them.
+dnl ----------------------------------------------------------------------------
+
+dnl ----------------------------------------------------------------------------
+dnl 7. Functions
+dnl      Finally we check for functions. These come last because functions have
+dnl      dependencies on the preceding items: when searching for functions,
+dnl      libraries are needed in order to correctly link, headers are needed in
+dnl      order to find prototypes (this is especially important for C++, which
+dnl      has stricter prototyping rules than C), and typedefs are needed for
+dnl      those functions which use or return types which are not built in.
+dnl ----------------------------------------------------------------------------
+
+dnl ----------------------------------------------------------------------------
+dnl 8. Output
+dnl      This is done by invoking AC_OUTPUT.
+dnl ----------------------------------------------------------------------------
 
 dnl Exclude CVS directories when creating tarball
-TAR="$TAR --exclude CVS"
+dnl TAR="$TAR --exclude CVS"
 
 # Finally create all the generated files
 AC_OUTPUT([
