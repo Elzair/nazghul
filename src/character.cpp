@@ -994,17 +994,17 @@ void Character::initItems()
 	// Check if this occupation traps their containers. If so then randomly
 	// choose one of the traps from the list.
 	if (occ->n_traps) {
-		int roll = random() % occ->n_traps;
+		int roll = rand() % occ->n_traps;
 		container->setTrap(&occ->traps[roll]);
 	}
 	// Enumerate all the items this occupation tends to carry and roll to
 	// include it (and how many of it to include) in the container.
 	for (int i = 0; i < occ->n_items; i++) {
 
-		if ((random() % 100) > occ->items[i].prob)
+		if ((rand() % 100) > occ->items[i].prob)
 			continue;
 
-		int n = random() % occ->items[i].n_max + 1;
+		int n = rand() % occ->items[i].n_max + 1;
 		container->add(occ->items[i].type, n);
 	}
 }
@@ -2149,7 +2149,7 @@ void Character::ambushWhileCamping()
         if (!isAsleep())
                 return;
 
-        if ((random() % 100) < PROB_AWAKEN) {
+        if ((rand() % 100) < PROB_AWAKEN) {
                 endCamping();
         }
 

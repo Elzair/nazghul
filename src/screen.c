@@ -375,7 +375,8 @@ void screenFlash(SDL_Rect * rect, int mdelay, Uint32 color)
 {
 	screenFill(rect, color);
 	screenUpdate(rect);
-	usleep(mdelay * 1000);
+	//usleep(mdelay * 1000);
+        SDL_Delay(mdelay);
 }
 
 void screenPrint(SDL_Rect * rect, int flags, char *fmt, ...)

@@ -63,7 +63,7 @@
 #include <time.h>
 #include <SDL_image.h>
 #include <unistd.h>
-#include <sys/mman.h>
+//#include <sys/mman.h>
 #include <stdarg.h>
 #include <SDL.h>            // for SDL_GetTicks()
 

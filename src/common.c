@@ -75,7 +75,7 @@ int commonInit(void)
 	Turn = 0;
 	Tick = 0;
 	TurnChanged = false;
-	srandom(0);		// fixme: should save/load as part of
+	srand(0);		// fixme: should save/load as part of
 	// record/playback
 	busywaitInit();
         return 0;

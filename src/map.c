@@ -1102,8 +1102,8 @@ void mapJitter(bool val)
 	Map.srect.h = MAP_H;
 
 	if (val) {
-		Map.srect.x += (random() % 5) - 2;
-		Map.srect.y += (random() % 5) - 2;
+		Map.srect.x += (rand() % 5) - 2;
+		Map.srect.y += (rand() % 5) - 2;
 	}
 }
 

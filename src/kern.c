@@ -75,7 +75,6 @@
 #include <time.h>
 #include <SDL_image.h>
 #include <unistd.h>
-#include <sys/mman.h>
 #include <stdarg.h>
 #include <SDL.h>            // for SDL_GetTicks()
 
@@ -3145,7 +3144,8 @@ KERN_API_CALL(kern_sleep)
                 rt_err("kern-sleep: bad args");
                 return sc->F;
         }
-        usleep(MS_PER_TICK * msecs);
+        //usleep(MS_PER_TICK * msecs);
+        SDL_Delay(msecs);
         return sc->T;
 }
 

@@ -16,7 +16,11 @@
 
 #ifndef _MSC_VER 
 # define USE_STRCASECMP 1 
-# define USE_STRLWR 1 
+# ifndef WIN32 /* needed for Cygwin */
+#  define USE_STRLWR 1 
+# else
+#  define USE_STRLWR 0
+# endif
 # define SCHEME_EXPORT
 #else 
 # define USE_STRCASECMP 0 

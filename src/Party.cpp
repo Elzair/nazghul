@@ -571,7 +571,7 @@ bool Party::createMembers(void)
 
 		int n;
 
-		// For each group in the party, randomly generate the number of
+		// For each group in the party, randly generate the number of
 		// NPCs from that group based on its max size (need at least
 		// one). Then create that many NPC characters and add them to
 		// the party.
@@ -919,7 +919,7 @@ static bool member_sleep(class Character *member, void *data)
 static bool member_apply_existing(class Character * pm, void *data)
 {
         if (pm->isAsleep()) {
-                if ((random() % 100) < PROB_AWAKEN) {
+                if ((rand() % 100) < PROB_AWAKEN) {
                         pm->awaken();
                 }
         }

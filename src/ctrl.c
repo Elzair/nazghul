@@ -189,9 +189,9 @@ void ctrl_wander(class Object *object)
 	int dx = 0, dy = 0;
 
 	/* Roll for direction */
-	dx = random() % 3 - 1;
+	dx = rand() % 3 - 1;
 	if (!dx)
-		dy = random() % 3 - 1;
+		dy = rand() % 3 - 1;
 
 	if (dx || dy) {
 

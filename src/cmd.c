@@ -754,7 +754,7 @@ bool cmdOpen(class Character * pc)
 		closure_t *trap = container->getTrap();
 
 		// Roll to disarm
-		if (random() % 999 < pc->getDexterity()) {
+		if (rand() % 999 < pc->getDexterity()) {
 			log_msg("You disarm a trap!");
 		} else {
                         closure_exec(trap, "pp", pc, container);

@@ -224,7 +224,9 @@ int tick_fx(void *data)
 	tick_event.user.code = TICK_EVENT;
 
 	for (;;) {
-		usleep(tick_usecs);
+                /* usleep is not standard: */
+  		/*usleep(tick_usecs);*/
+                SDL_Delay(TickMilliseconds);
 		SDL_PushEvent(&tick_event);
 	}
 }				// tick_fx()

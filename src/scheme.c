@@ -81,6 +81,7 @@ static int stricmp(const char *s1, const char *s2)
 #endif /* macintosh */
 
 #if USE_STRLWR
+#ifndef strlwr
 static const char *strlwr(char *s) {
   const char *p=s;
   while(*s) {
@@ -89,6 +90,7 @@ static const char *strlwr(char *s) {
   }
   return p;
 }
+#endif
 #endif
 
 #ifndef prompt

@@ -35,8 +35,8 @@ void windAdvanceTurns(void)
 		return;
 	}
 
-	if (random() % 100 < WIND_CHANGE_PROBABILITY) {
-		windSetDirection(random() % NUM_WIND_DIRECTIONS, 10);
+	if (rand() % 100 < WIND_CHANGE_PROBABILITY) {
+		windSetDirection(rand() % NUM_WIND_DIRECTIONS, 10);
 		screenUpdate(&windRect);
 	}
 }
