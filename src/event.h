@@ -60,11 +60,18 @@ extern "C" {
 		void *data;
 	};
 
-	struct KeyHandler {
-		struct list list;
-		 bool(*fx) (struct KeyHandler * handler, int key);
-		void *data;
-	};
+
+// SAM: Using this typedef below, and in play.c
+typedef void (*v_funcpointer_ii) (int x, int y);
+
+  struct KeyHandler {
+    struct list list;
+    bool(*fx) (struct KeyHandler * handler, int key);
+    void *data;
+    // SAM: I hope this is not a butchery...
+    v_funcpointer_ii each_point_func;
+    v_funcpointer_ii each_target_func;
+  };
 
 	struct QuitHandler {
 		struct list list;

@@ -43,39 +43,47 @@ extern "C" {
         };
 
 // these are defined in play.c
-        extern bool dirkey(struct KeyHandler *kh, int key);
-        extern bool yesnokey(struct KeyHandler *kh, int key);
-        extern bool anykey(struct KeyHandler *kh, int key);
-        extern bool scroller(struct KeyHandler *kh, int key);
-        extern bool movecursor(struct KeyHandler *kh, int key);
-        extern bool getnum(struct KeyHandler *kh, int key);
-	extern void getkey(void *data, bool(*handler) (struct KeyHandler * kh,
-                                                     int key));
+  extern bool dirkey(struct KeyHandler *kh, int key);
+  extern bool yesnokey(struct KeyHandler *kh, int key);
+  extern bool anykey(struct KeyHandler *kh, int key);
+  extern bool scroller(struct KeyHandler *kh, int key);
+  extern bool movecursor(struct KeyHandler *kh, int key);
+  extern bool getnum(struct KeyHandler *kh, int key);
+  extern void getkey(void *data, bool(*handler) (struct KeyHandler * kh,
+                                                 int key));
+  
+  extern bool cmdUse(class Character * pc);
+  extern bool cmdHandle(class Character * pc);
+  extern bool cmdReady(class Character * pc);
+  extern bool cmdZtats(class Character * pc);
+  extern bool cmdXamine (class Character * pc);
+  extern bool cmdGet(int x, int y, bool scoop_all);
+  extern bool cmdOpen(class Character * pc);
+  extern bool cmdCastSpell(class Character * pc);
+  extern bool cmdQuit(void);
+  extern bool cmdLook(int x, int y);
+  
+  extern class Character *select_party_member(void);
+  
+  extern void effectLight(char *name, int amount, int duration, 
+                          class Character * target);
+  extern void effectReveal(char *name, int duration);
+  extern void effectQuicken(char *name, int duration);
+  extern void effectNegateMagic(char *name, int duration);
+  extern void effectShowTerrain(char *name, int duration);
+  
+  extern int select_target(int ox, int oy, int *x, int *y, int range);
 
-	extern bool cmdUse(class Character * pc);
-	extern bool cmdHandle(class Character * pc);
-	extern bool cmdReady(class Character * pc);
-	extern bool cmdZtats(class Character * pc);
-        extern bool cmdGet(int x, int y, bool scoop_all);
-	extern bool cmdOpen(class Character * pc);
-	extern bool cmdCastSpell(class Character * pc);
-        extern bool cmdQuit(void);
-        extern bool cmdLook(int x, int y);
-
-        extern class Character *select_party_member(void);
-
-        extern void effectLight(char *name, int amount, int duration, 
-				class Character * target);
-        extern void effectReveal(char *name, int duration);
-        extern void effectQuicken(char *name, int duration);
-        extern void effectNegateMagic(char *name, int duration);
-        extern void effectShowTerrain(char *name, int duration);
-
-        extern int select_target(int ox, int oy, int *x, int *y, int range);
-        extern int select_quantity(int max);
-
-        // the new ui api
-        extern int ui_get_direction(void);
+  // SAM: This typedef also exists in event.h
+  typedef void (*v_funcpointer_ii) (int x, int y);
+  extern int select_target_with_doing (int ox, int oy, int *x, int *y, 
+                                       int range, 
+                                       v_funcpointer_ii each_point_func,
+                                       v_funcpointer_ii each_target_func);
+  extern int select_quantity(int max);
+  
+  // the new ui api
+  extern int ui_get_direction(void);
 
 #ifdef __cplusplus
 }

@@ -39,6 +39,33 @@ void Cursor::init(class ObjectType * type)
 
 bool Cursor::move(int dx, int dy)
 {
+  // SAM: Found a few things, noted below.
+  // 
+  // If the cursor is moved out of LOS, it is not drawn.
+  // That is not desirable, methinks.
+  // 
+  // Currently, it is possible to specify a cursor range 
+  // via Cursor::setRange() which is compared with d (calculated below).
+  // This allows specification of a roughly circular area
+  // within range of cursor selection.
+  // 
+  // Another common use case (for Look, and such) however, is
+  // to be able to specify "any range within the viewport".
+  // I see no means of setting such a range currently.
+  // 
+  // It is desirable in combat to be able to select a point,
+  // within range, but outside of the viewport.
+  // (automatically scrolling as this is done would be nice)
+  // That can be done today (the range, not the scrolling).
+  // 
+  // Perhaps, then, the answer is another function
+  //     Cursor::setViewportOnly()
+  // which when set, disallows cursor movement past the viewport.
+  // This would allow for both uses, with the "any range within viewport"
+  // either setting a range of 999 or similar, or perhaps 
+  // the special value -1, to be tested for below as in:
+  //     if ( (range != -1) && (d > range) ) {
+  // 
 	int newx = getX() + dx;
 	int newy = getY() + dy;
 
