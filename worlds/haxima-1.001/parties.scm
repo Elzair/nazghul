@@ -69,3 +69,12 @@
   (list sp_queen_spider nil s_queen_spider "1" 'spider-ai)
   ))
  
+(kern-mk-party-type
+ 't_bandit_gang        ;; tag
+ "gang of bandits"     ;; name
+ s_brigand             ;; sprite
+ nil                   ;; formation
+ (list                 ;; members
+  (list sp_human oc_bandit s_brigand "1d4" nil)
+  ))
+ 

@@ -90,7 +90,7 @@
   (list (mk-bridge east) 30 43)
 
   ;; goblins from the western hills
-  (list (kern-mk-obj t_orc_generator 1) 1 22)
+  (list (mk-generator t_orc_generator) 1 22)
 
   ;; spiders in the deep woods
   (list (mk-wilderness-ambush-generator 
@@ -104,7 +104,10 @@
         46 37)
 
   ;; skeletons in the northern fens
-  (list (kern-mk-obj t_skeleton_generator 1) 0 0)
+  (list (mk-generator t_skeleton_generator) 0 0)
+
+  ;; bandits beside the river
+  (list (mk-generator t_bandit_generator) 30 38)
   )
 
  nil ; hooks

@@ -123,6 +123,7 @@ void ObjectType::setSprite(struct sprite *sprite)
 void ObjectType::describe(int count)
 {
 	char *name = getName();
+
 	if (count == 1) {
 		if (isvowel(name[0]))
 			log_continue("an ");
@@ -1237,7 +1238,7 @@ int Object::getDy()
 }
 bool Object::canWanderTo(int newx, int newy)
 {
-        return false;
+        return true;
 }
 enum MoveResult Object::move(int dx, int dy)
 {

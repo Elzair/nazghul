@@ -79,7 +79,10 @@
 (define (mk-missile-ifc hit)
   (ifc '()
        (method 'hit-loc (lambda (kmissile kplace x y)
-                          (let ((targets (filter kern-obj-is-char? (kern-get-objects-at (mk-loc kplace x y)))))
+                          (let ((targets (filter kern-obj-is-char? 
+                                                 (kern-get-objects-at (mk-loc kplace 
+                                                                              x 
+                                                                              y)))))
                             (if (notnull? targets)
                                 (hit (car targets))))))))
 
@@ -105,6 +108,7 @@
    ;;    tag           | name        | sprite                     | damage | gifc
    ;;    ============================================================================================================
    (list 't_arrow        "arrow"       s_arrow_wooden               "1d6"    obj-ifc)
+   (list 't_bolt         "bolt"        s_bolt                       "2d4"    obj-ifc)
    (list 't_warhead      "warhead"     s_magic_ball_core_red        "0"      warhead-ifc)
    (list 't_cannonball   "cannonball"  s_sling_bullet               "0"      obj-ifc)
    (list 't_poison_bolt  "poison bolt" s_lightning_bolt_green       "1d6"    poison-bolt-ifc)
@@ -128,6 +132,7 @@
    ;;     tag   | name       | sprite     | to-hit | damage | to-def | slots       | hnds | rng | missile | ubiq
    ;;     ===========================================================================================================
    (list 't_bow   "short bow"  s_shortbow   "1"      "1d6"    "-2"     slot-weapon   2      6     t_arrow   #f)
+   (list 't_xbow  "crossbow"   s_crossbow_1 "2"      "2d4"    "-3"     slot-weapon   2      8     t_bolt    #f)
    (list 't_rpg   "doom staff" s_staff_7    "1d4"    "2d20"   "-5"     slot-weapon   2      12    t_warhead #t)
    ))
 

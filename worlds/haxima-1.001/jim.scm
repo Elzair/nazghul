@@ -10,7 +10,7 @@
                (list 12 0  trigrave-tavern-table-1a  "eating")
                (list 7  0  trigrave-forge            "working")
                (list 18 0  trigrave-tavern-hall      "idle")
-               (list 12 0  trigrave-jims-bed        "sleeping")
+               (list 22 0  trigrave-jims-bed         "sleeping")
                )
 
 ;;----------------------------------------------------------------------------

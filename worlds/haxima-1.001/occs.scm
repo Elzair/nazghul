@@ -87,3 +87,33 @@
               (list t_iron_helm 50 1)
               )
              )
+
+(kern-mk-occ 'oc_bandit           ; tag
+             "bandit"             ; name 
+             0.0                  ; magic 
+             0                    ; hp_mod 
+             0                    ; hp_mult 
+             0                    ; mp_mod 
+             0                    ; mp_mult 
+             +1                   ; hit_mod 
+             -1                   ; def_mod 
+             0                    ; dam_mod 
+             0                    ; arm_mod
+             t_small_wooden_chest ; container 
+             (list 'spike-trap)   ; typical traps 
+             ;; readied:
+             nil
+             ;; items:
+             (list
+              (list t_dagger        75 1)
+              (list short-sword     50 1)
+              (list t_oil           25 10)
+              (list t_mace          50 1)
+              (list t_bolt          50 20)
+              (list t_xbow          25 1)
+              (list t_sm_shield     75 1)
+              (list t_armor_leather 90 1)
+              (list t_leather_helm  90 1)
+              (list t_gold_coins    50 10)
+              )
+             )

@@ -65,7 +65,7 @@
 (define (mk-wilderness-monster-generator tag threshold max party faction 
                                          vehicle)
   (mk-obj-type tag                                  ;; tag
-               "monster generator"                  ;; name
+               nil                                  ;; name
                nil                                  ;; sprite
                layer-none                           ;; layer
                (mk-wilderness-monster-generator-ifc threshold  ;; ifc
@@ -80,7 +80,7 @@
 ;; ----------------------------------------------------------------------------
 (define (mk-wilderness-ambush-generator-type tag threshold party faction)
   (mk-obj-type tag                ;; tag
-               "ambush generator" ;; name
+               nil                ;; name
                nil                ;; sprite
                layer-none         ;; layer
                (mk-wilderness-ambush-generator-ifc threshold  ;; ifc
@@ -93,7 +93,7 @@
 ;; generator type which monitors the given rectangle
 ;; ----------------------------------------------------------------------------
 (define (mk-wilderness-ambush-generator type x y w h msg)
-  (bind (kern-mk-obj type 1)
+  (bind (kern-obj-set-visible (kern-mk-obj type 1) #f)
         (mk-ambush-gob x y w h msg)))
 
 ;; ----------------------------------------------------------------------------
@@ -124,6 +124,16 @@
                                  2
                                  t_skeleton_brigade
                                  faction-monster nil)
+
+(mk-wilderness-monster-generator 't_bandit_generator
+                                 990
+                                 1
+                                 t_bandit_gang
+                                 faction-monster
+                                 nil)
+
+(define (mk-generator type)
+  (kern-obj-set-visible (kern-mk-obj type 1) #f))
 
 ;; ----------------------------------------------------------------------------
 ;; A monster type is a convenient collection of all the attributes needed to

@@ -2661,7 +2661,7 @@ static pointer kern_obj_set_visible(scheme *sc, pointer args)
 
         obj->setVisible(val);
 
-        return sc->NIL;
+        return scm_mk_ptr(sc, obj);
 }
 
 static pointer kern_obj_set_pclass(scheme *sc, pointer args)

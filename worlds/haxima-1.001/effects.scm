@@ -292,6 +292,10 @@
   (kern-log-msg "Lightning trap!")
   (apply-lightning actor))
 
+(define (spike-trap actor subject)
+  (kern-log-msg "Spike trap!")
+  (kern-obj-apply-damage actor "ouch" (kern-dice-roll "1d6")))
+
 ;; Explosion trap - shakes the screen and damages all surrounding objects
 
 ;; Burst trap - splatters the surrounding scene with dangerous fields
