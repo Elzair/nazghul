@@ -181,11 +181,7 @@ Character::Character():name(0), hm(0), xp(0), order(-1),
                        inCombat(false),
                        container(NULL), sprite(0)
 {
-        // --------------------------------------------------------------------
-        // Note: this constructor is called by Party::createMembers(); it will
-        // call Character::initStock() after we return, which will call
-        // Character::initCommon().
-        // --------------------------------------------------------------------
+        // This method is probably obsolete now
 
         plnode = NULL;
 	setPlayerControlled(false);	// by default
@@ -985,39 +981,6 @@ void Character::kill()
 	remove();
 }
 
-void Character::initItems()
-{
-	assert(!isPlayerControlled());
-
-	// If the character's occupation does not carry a container then this
-	// character will not have any items.
-	if (!occ || !occ->container)
-		return;
-
-	// Allocate a container to hold the items. (Note: the occupation keeps
-	// the container TYPE, here we are allocating an instance of one and
-	// initializing it to that type).
-	container = new Container(occ->container);
-        assert(container);
-
-	// Check if this occupation traps their containers. If so then randomly
-	// choose one of the traps from the list.
-	if (occ->n_traps) {
-		int roll = rand() % occ->n_traps;
-		container->setTrap(&occ->traps[roll]);
-	}
-	// Enumerate all the items this occupation tends to carry and roll to
-	// include it (and how many of it to include) in the container.
-	for (int i = 0; i < occ->n_items; i++) {
-
-		if ((rand() % 100) > occ->items[i].prob)
-			continue;
-
-		int n = rand() % occ->items[i].n_max + 1;
-		container->add(occ->items[i].type, n);
-	}
-}
-
 void Character::useAmmo(class ArmsType *weapon)
 {
 	if (weapon->ammoIsUbiquitous())
@@ -1140,9 +1103,7 @@ bool Character::initCommon(void)
 bool Character::initStock(struct species * species, struct occ * occ,
 			  struct sprite * sprite, char *name, int order)
 {
-	// This is to initialize characters being automatically generated to
-	// fill out an NPC party. I think of them as "stock" characters since
-	// they don't have much in the way of individual personality.
+	// This method is now only used to initialize cloned characters.
 
 	this->species = species;        
 	this->occ = occ;
@@ -1166,9 +1127,6 @@ bool Character::initStock(struct species * species, struct occ * occ,
 
         defenseBonus = 0;
         
-	initItems();
-	armThyself();
-
 	return true;
 }
 
@@ -1288,9 +1246,16 @@ class Object *Character::clone()
 	if (!clone)
 		return NULL;
 
-	snprintf(buf, sizeof(buf), "clone of %s", getName());
+        if (is_clone)
+                snprintf(buf, sizeof(buf), "%s", getName());
+        else
+                snprintf(buf, sizeof(buf), "%s (clone)", getName());
+
 	clone->initStock(species, occ, sprite, buf, 0);
 	clone->is_clone = true;
+
+        // FIXME: clones have nothing, should possible clone inventory as well.
+
 	return clone;
 }
 

@@ -598,28 +598,9 @@ bool Party::createMembers(void)
 
 			// Create and initialize a new "stock" character.
                         class Character *c;
-#ifdef OLD_WAY
-			c = new class Character();
-			if (!c)
-				break;
-			snprintf(name, sizeof(name), "%s %s %d",
-				 ginfo->species->name,
-				 ginfo->occ ? ginfo->occ->name : "",
-				 instance++);
-
-			if (!(c->initStock(ginfo->species, ginfo->occ,
-					   ginfo->sprite, name, order)))
-				return false;
-
-                        if (ginfo->ai) {
-                                c->setAI(ginfo->ai);
-                        }
-#else
                         assert(ginfo->factory);
                         c = (class Character*)closure_exec(ginfo->factory, 
                                                            NULL);
-
-#endif
                         if (! c) {
                                 warn("Failed to create character");
                         } else {

@@ -170,7 +170,6 @@ class Character:public Being {
 	virtual enum MoveResult move(int dx, int dy);
 	virtual enum MoveResult flee();
 	virtual void attackTerrain(int x, int y);
-	virtual void initItems();
 	virtual void armThyself();
 	virtual bool needToRearm();
 	virtual void resurrect();

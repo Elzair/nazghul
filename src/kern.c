@@ -4257,31 +4257,6 @@ KERN_API_CALL(kern_place_get_name)
         return scm_mk_string(sc, place->name);
 }
 
-KERN_API_CALL(kern_mk_stock_char)
-{
-        class Character *character;
-        struct species *species;
-        struct occ *occ;
-        struct sprite *sprite;
-        char *name;
-        pointer ai;
-
-        if (unpack(sc, &args, "pppsc", &species, &occ, &sprite, &name, 
-                   &ai)) {
-                rt_err("kern-mk-stock-char: bad args");
-                return sc->NIL;
-        }
-
-        character = new class Character();
-        assert(character);
-        character->initStock(species, occ, sprite, name, 0);
-        if (ai != sc->NIL) {
-                character->setAI(closure_new(sc, ai));
-        }
-
-        return scm_mk_ptr(sc, character);
-}
-
 KERN_API_CALL(kern_place_is_passable)
 {
         struct place *place;
@@ -6429,7 +6404,6 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-mk-species", kern_mk_species);
         API_DECL(sc, "kern-mk-sprite", kern_mk_sprite);
         API_DECL(sc, "kern-mk-sprite-set", kern_mk_sprite_set);
-        API_DECL(sc, "kern-mk-stock-char", kern_mk_stock_char);
         API_DECL(sc, "kern-mk-terrain", kern_mk_terrain);
         API_DECL(sc, "kern-mk-vehicle", kern_mk_vehicle);
         API_DECL(sc, "kern-mk-vehicle-type", kern_mk_vehicle_type);

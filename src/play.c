@@ -195,8 +195,8 @@ static void play_loop(void)
                 // ------------------------------------------------------------
 
                 if (player_party->isCamping() && Session->camping_proc) {
-                        closure_exec(Session->camping_proc, "pp", player_party, 
-                                     Place);
+                        closure_exec(Session->camping_proc, "pp", 
+                                     player_party, Place);
                         if (player_party->allDead()) {
                                 play_print_end_of_game_prompt();
                                 break;
