@@ -301,6 +301,12 @@
 (define (mani kspell caster)
   (cast-heal-spell caster "2d20"))
 
+(define (sanct-nox kspell caster)
+  (let ((target (kern-ui-select-party-member)))
+    (if (not (null? target))
+        (kern-obj-add-effect target ef_temporary_poison_immunity nil))))
+  
+
 (define (an-sanct kspell caster)
   (let ((loc (kern-obj-get-location caster)))
     (cast-signal-spell caster 'unlock (ui-target loc 1 (mk-ifc-query 'unlock)))))
@@ -598,6 +604,7 @@
    (list 'in_lor      "In Lor spell"      s_torch         in-lor      "IL"  1 context-any  (list sulphorous_ash))
    (list 'mani        "Mani spell"        s_red_potion    mani        "M"   1 context-any  (list ginseng spider_silk))
 
+   (list 'sanct_nox   "Sanct Nox spell"   s_yellow_potion sanct-nox   "SN"  2 context-any  (list nightshade garlic))
    (list 'an_sanct    "An Sanct spell"    s_door          an-sanct    "AS"  2 context-town (list sulphorous_ash blood_moss))
    (list 'sanct       "Sanct spell"       s_door_locked   sanct       "S"   2 context-town (list sulphorous_ash spider_silk))
    (list 'an_xen_corp "An Xen Corp spell" s_skeleton      an-xen-corp "AXC" 2 context-town (list garlic sulphorous_ash))

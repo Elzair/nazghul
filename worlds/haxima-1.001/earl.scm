@@ -65,9 +65,8 @@
                          (list ginseng                 2)
                          (list garlic                  2)
                          (list spider_silk             8)
-                         (list blood_moss              8)
+                         (list blood_moss              12)
                          (list black_pearl             16)
-                         (list nightshade              32)
                          (list mandrake                32)
                          
                          )
