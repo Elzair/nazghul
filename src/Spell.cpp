@@ -37,6 +37,7 @@
 #include "Field.h"
 #include "Mech.h"
 #include "dup_constants.h"
+#include "Missile.h"
 
 struct spell_info {
 	class Spell *spell;

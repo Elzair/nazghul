@@ -298,12 +298,7 @@ enum Character::MoveResult Character::move(int dx, int dy)
 							     being_layer))) {
 		// Is the occupant an enemy?
 		if (!(getAlignment() & occupant->getAlignment())) {
-#ifdef RAM_ATTACK
-			meleeAttack(occupant);
-			return EngagedEnemy;
-#else
 			return WasImpassable;
-#endif
 		}
 		// *** Switch ***
 

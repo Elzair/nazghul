@@ -24,6 +24,8 @@
 
 #include "object.h"
 
+class Missile;
+
 class ArmsType:public ObjectType {
 
       public:
@@ -68,21 +70,6 @@ class ArmsType:public ObjectType {
 	class FieldType *field;
 	bool ubiquitousAmmo;
 	int weight;
-};
-
-class Missile:public Object {
-      public:
-	Missile();
-	virtual ~ Missile();
-	virtual class ArmsType *getObjectType() {
-		return (class ArmsType *) Object::getObjectType();
-	}
-	virtual void animate(int Ax, int Ay, int Bx, int By);
-	virtual void paint(SDL_Rect * rect);
-	virtual bool hitTarget();
-      protected:
-	SDL_Surface * surf;	// for saving/restoring the background
-	bool hit;
 };
 
 #endif

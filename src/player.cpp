@@ -1067,48 +1067,6 @@ void player_party::enter_portal(void)
 	else
 		try_to_enter_portal(portal, 0, 0);
 
-#ifdef OLD_ENTER_PORTAL
-	cmdwin_print("%s", portal->getName());
-
-	struct move_info mv_info;
-	memset(&mv_info, 0, sizeof(mv_info));
-	mv_info.place = portal->getToPlace();
-	mv_info.x = portal->getToX();
-	mv_info.y = portal->getToY();
-	mv_info.turns = 1;
-	mv_info.dx = dx;
-	mv_info.dy = dy;
-
-	switch (check_move_to(&mv_info)) {
-	case move_ok:
-		cmdwin_print("-ok");
-		printf("*** player used %d turns\n", mv_info.turns);
-		turnAdvance(mv_info.turns);
-		break;
-	case move_null_place:
-		cmdwin_print("-no place to go!");
-		break;
-	case move_occupied:
-		cmdwin_print("-occupied!");
-		break;
-	case move_impassable:
-		cmdwin_print("-impassable!");
-		break;
-	case move_enter_moongate:
-		cmdwin_print("-enter moongate");
-		printf("*** player used %d turns\n", mv_info.turns);
-		turnAdvance(mv_info.turns);
-		break;
-	case move_moongate_blocked:
-		cmdwin_print("-enter moongate failed!");
-		break;
-	case move_player_quit:
-		break;
-	default:
-		// no other results expected
-		assert(false);
-	}
-#endif				/* OLD_ENTER_PORTAL */
 }
 
 void player_party::for_each_member(bool(*fx) (class Character *, void *data),
@@ -1332,23 +1290,11 @@ static bool check_if_leader(class Character * pc, void *data)
 
 class Character *player_party::get_leader(void)
 {
-#ifdef CACHE_LEADER // false
-        // Going to add a check for sleep here to handle the case where the
-        // party is in follow mode and the leader is put asleep for some
-        // reason. Otherwise the engine cranks out turns until the leader wakes
-        // up.
-	if (!leader || leader->isDead() || !leader->isOnMap() 
-            || leader->isAsleep()) {
-		leader = NULL;
-		for_each_member(check_if_leader, 0);
-	}
-#else
         // Force a reevaluation every time. For example, say Thorald is the
         // leader. Then he goes to sleep. Now Kama should be the leader. But as
         // soon as Thorald wakes up I want leadership to revert back to him.
         leader = NULL;
         for_each_member(check_if_leader, 0);
-#endif
 	return leader;
 }
 

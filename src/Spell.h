@@ -26,6 +26,8 @@
 #include "object.h"
 #include "list.h"
 
+class Missile;
+
 #define MAX_SPELL_WORDS 26
 
 // Note: Spell must descend from ObjectType to go into player inventory.
