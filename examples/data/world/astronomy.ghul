@@ -54,7 +54,12 @@ moon_info {
   } // moons
 
   sun {
-    arc    150;    /* 105=7:00 am (sunrise) */
+    // Arc is measured from the horizon in degrees.
+    // Midnight is 0 == 360
+    // Noon is 180, Sunrise(4AM) = 60, Sunset(8PM) = 300
+    // 15 degrees per hour after midnight
+    // (These numbers based on values in common.h)
+    arc    61;
     sprite s_sun;
   } // sun
 
