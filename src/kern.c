@@ -2937,6 +2937,7 @@ static pointer kern_astral_body_set_gob(scheme *sc, pointer  args)
 static pointer kern_type_get_gifc(scheme *sc, pointer  args)
 {
         ObjectType *cptr;
+        closure_t *gifc;
 
         if (unpack(sc, &args, "p", &cptr)) {
                 rt_err("kern-type-get-gifc: bad args");
@@ -2950,9 +2951,9 @@ static pointer kern_type_get_gifc(scheme *sc, pointer  args)
                 return sc->NIL;
         }
 
-        // The closure code field is already a scheme pointer so just return it
-        // directly
-        return cptr->getGifc()->code;
+        gifc = cptr->getGifc();
+
+        return gifc ? gifc->code : sc->NIL;
 }
 
 static pointer kern_add_tick_job(scheme *sc, pointer args)
