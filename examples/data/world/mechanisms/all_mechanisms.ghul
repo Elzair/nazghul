@@ -278,177 +278,25 @@ MECH_TYPE type_name { \
   } \
 } /* MAKE_DOORLIKE_MECH() */
 
-MAKE_DOORLIKE_MECH(mech_h_fence_gate, "gate", 8, 
-                   "closed",           s_hdoor,        0,  
-                   "open",             null,           0, 
-                   "locked",           s_hdoor_locked, 0, 
+MAKE_DOORLIKE_MECH(mech_vdoor, "door", 8,
+                   "closed",           s_door,        1,
+                   "open",             null,          0,
+                   "locked",           s_door_locked, 1,
+                   "magically locked", s_door_locked, 1);
+
+MAKE_DOORLIKE_MECH(mech_hdoor, "door", 8,
+                   "closed",           s_hdoor,        1,
+                   "open",             null,           0,
+                   "locked",           s_hdoor_locked, 1,
+                   "magically locked", s_hdoor_locked, 1);
+
+MAKE_DOORLIKE_MECH(mech_h_fence_gate, "gate", 8,
+                   "closed",           s_hdoor,        0,
+                   "open",             null,           0,
+                   "locked",           s_hdoor_locked, 0,
                    "magically locked", s_hdoor_locked, 0);
 
 
-
-
-MECH_TYPE mech_vdoor {
-  name "door";
-  defaults {}
-  states {
-    {
-      name   "closed";
-      sprite s_door;
-      pmask  SOLID;
-      opaque 1;
-    }
-    {
-      name   "open door";
-      sprite null;
-      pmask  PASS_ALL;
-      opaque 0;
-    }
-    {
-      name   "locked";
-      sprite s_door_locked;
-      pmask  SOLID;
-      opaque 1;
-    }
-    {
-      name   "magically locked";
-      sprite s_door_locked;
-      pmask  SOLID;
-      opaque 1;
-    }
-  }
-  
-  transitions {
-    
-    state      "closed";
-    event      MECH_OPEN;
-    next_state "open door";
-    actions {
-      send_signal MECH_OPEN;
-      
-      // After 8 turns the door should close automatically.
-      // This next line sets an alarm to send the "close"
-      // signal to the door after 8 turns.
-      set_alarm 8 MECH_CLOSE;
-    }
-    
-    state      "open door";
-    event      MECH_CLOSE;
-    next_state "closed";
-    actions {
-      send_signal MECH_CLOSE;
-    }
-    
-    state      "closed";
-    event      MECH_LOCK;
-    next_state "locked";
-    actions {
-      send_signal MECH_LOCK;
-    }
-    
-    state      "locked";
-    event      MECH_UNLOCK;
-    next_state "closed";
-    actions {
-      send_signal MECH_UNLOCK;
-    }
-    
-    state      "closed";
-    event      MECH_MAGIC_LOCK;
-    next_state "magically locked";
-    actions {
-      send_signal MECH_MAGIC_LOCK;
-    }
-    
-    state      "magically locked";
-    event      MECH_MAGIC_UNLOCK;
-    next_state "closed";
-    actions {
-      send_signal MECH_MAGIC_UNLOCK;
-    }
-  }
-} // MECH_TYPE mech_vdoor
-
-
-MECH_TYPE mech_hdoor {
-  name "door";
-  defaults {}
-  states {
-    {
-      name   "closed";
-      sprite s_hdoor;
-      pmask  SOLID;
-      opaque 1;
-    }
-    {
-      name   "open";
-      sprite null;
-      pmask  PASS_ALL;
-      opaque 0;
-    }
-    {
-      name   "locked";
-      sprite s_hdoor_locked;
-      pmask  SOLID;
-      opaque 1;
-    }
-    {
-      name   "magically locked";
-      sprite s_hdoor_locked;
-      pmask  SOLID;
-      opaque 1;
-    }
-  }
-  
-  transitions {
-    
-    state      "closed";
-    event      MECH_OPEN;
-    next_state "open";
-    actions {
-      send_signal MECH_OPEN;
-      
-      // After 8 turns the door should close automatically.
-      // This next line sets an alarm to send the "close"
-      // signal to the door after 8 turns.
-      set_alarm 16 MECH_CLOSE;
-    }
-    
-    state      "open";
-    event      MECH_CLOSE;
-    next_state "closed";
-    actions {
-      send_signal MECH_CLOSE;
-    }
-    
-    state      "closed";
-    event      MECH_LOCK;
-    next_state "locked";
-    actions {
-      send_signal MECH_LOCK;
-    }
-    
-    state      "locked";
-    event      MECH_UNLOCK;
-    next_state "closed";
-    actions {
-      send_signal MECH_UNLOCK;
-    }
-    
-    state      "closed";
-    event      MECH_MAGIC_LOCK;
-    next_state "magically locked";
-    actions {
-      send_signal MECH_MAGIC_LOCK;
-    }
-    
-    state      "magically locked";
-    event      MECH_MAGIC_UNLOCK;
-    next_state "closed";
-    actions {
-      send_signal MECH_MAGIC_UNLOCK;
-    }
-  }
-} // MECH_TYPE mech_hdoor
 
 
 //
