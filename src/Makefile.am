@@ -114,4 +114,6 @@ nazghul_SOURCES =		\
         wq.c \
         wq.h \
 	Missile.cpp \
-	Missile.h
+	Missile.h \
+	cmd.c \
+	cmd.h

@@ -50,6 +50,7 @@
 #include "formation.h"
 #include "pinfo.h"
 #include "Loader.h"
+#include "cmd.h"
 
 #include <assert.h>
 #include <stdlib.h>
@@ -1534,7 +1535,8 @@ static bool myRunNpc(class Character * npc, void *data)
 
 static void doNpcRound(void)
 {
-        consolePrint("---\n");
+        if (Combat.state == FIGHTING)
+                consolePrint("*** NPC round %d ***\n", Combat.round);
 
         myForEachNpc((bool(*)(class Character *, void *)) doApplyCombatEffects,
                      NULL);
@@ -2082,6 +2084,10 @@ static bool myRunPc(class Character * pc, void *data)
 
 static void doPlayerRound(void)
 {
+        if (Combat.state == FIGHTING)
+                consolePrint("\n*** Player round %d ***\n", Combat.round);
+
+
         if (Combat.state == CAMPING) {
                 // Show "Zzz..."
                 consolePrint(".");
@@ -2303,7 +2309,7 @@ static void myEventLoop(void)
 
 
                 if (Combat.state == FIGHTING)
-                        consolePrint("\n*** Round %d ***\n", Combat.round++);
+                        Combat.round++;
 
                 doPlayerRound();
 

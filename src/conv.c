@@ -33,6 +33,7 @@
 #include "wq.h"
 #include "lexer.h"		// for parse error msgs
 #include "combat.h"
+#include "cmd.h"
 
 #include <ctype.h>
 #include <stdio.h>

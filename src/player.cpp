@@ -42,7 +42,7 @@
 #include "cmdwin.h"
 #include "vehicle.h"
 #include "sprite.h"
-#include "play.h"		// for ui_get_direction()
+#include "cmd.h"             // for ui_get_direction()
 #include "Field.h"
 
 #include <unistd.h>

@@ -123,11 +123,6 @@ static void mapMergeRects(SDL_Rect *src_rect, unsigned char *src,
 	int r_dst, r_dst_start, c_dst, c_dst_start, i_dst;
 	int tmp;
 
-        printf("src=(%d %d %d %d)\n", src_rect->x, src_rect->y, src_rect->w,
-               src_rect->h);
-        printf("dst=(%d %d %d %d)\n", dst_rect->x, dst_rect->y, dst_rect->w,
-               dst_rect->h);
-
 	// skip identical merges (yes, it happens)
 	if (src == dst)
 		return;

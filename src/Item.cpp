@@ -26,8 +26,9 @@
 #include "console.h"
 #include "cmdwin.h"
 #include "place.h"
-#include "play.h"
 #include "event.h"
+#include "cmd.h"
+#include "play.h"
 
 bool ItemType::isType(int classID)
 {

@@ -25,6 +25,7 @@
 #include "sprite.h"
 #include "play.h"
 #include "event.h"
+#include "cmd.h" // for getkey()
 
 #include <string.h>
 #include <SDL/SDL_ttf.h>

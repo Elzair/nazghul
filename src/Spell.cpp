@@ -27,6 +27,7 @@
 #include "character.h"
 #include "Arms.h"		// for class Missile
 #include "common.h"
+#include "cmd.h"
 #include "play.h"
 #include "place.h"
 #include "player.h"

@@ -184,7 +184,9 @@ nazghul_SOURCES = \
         wq.c \
         wq.h \
 	Missile.cpp \
-	Missile.h
+	Missile.h \
+	cmd.c \
+	cmd.h
 
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_CLEAN_FILES = 
@@ -201,7 +203,8 @@ floodfill.o foogod.o game.o hash.o heap.o images.o Item.o knapsack.o \
 lexer.o Loader.o los.o map.o Mech.o moongate.o nazghul.o NpcParty.o \
 object.o occ.o olist.o place.o play.o player.o Reagent.o sched.o \
 screen.o sky.o sound.o species.o Spell.o sprite.o status.o terrain.o \
-terrain_map.o Trap.o tree.o util.o vehicle.o wind.o wq.o Missile.o
+terrain_map.o Trap.o tree.o util.o vehicle.o wind.o wq.o Missile.o \
+cmd.o
 nazghul_LDADD = $(LDADD)
 nazghul_DEPENDENCIES = 
 nazghul_LDFLAGS = 
