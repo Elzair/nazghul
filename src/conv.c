@@ -310,7 +310,7 @@ static void sell(struct response *resp, struct conv *conv)
 	delete trades;
 }
 
-static bool get_buy_or_sell_key(struct KeyHandler *kh, int key)
+static bool get_buy_or_sell_key(struct KeyHandler *kh, int key, int keymod)
 {
 	int *val = (int *) kh->data;
 
@@ -549,7 +549,7 @@ static void join(struct response *resp, struct conv *conv)
 		conv->done = true;
 }
 
-static bool get_player_query(struct KeyHandler *kh, int key)
+static bool get_player_query(struct KeyHandler *kh, int key, int keymod)
 {
 	if (key == CANCEL) {
 		while (C_ptr > C_query) {

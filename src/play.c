@@ -192,7 +192,7 @@ void effectShowTerrain(char *name, int duration)
 		    0, name, myExpireShowTerrainEffect);
 }
 
-bool dirkey(struct KeyHandler *kh, int key)
+bool dirkey(struct KeyHandler *kh, int key, int keymod)
 {
 	int *dir = (int *) kh->data;
 
@@ -209,7 +209,7 @@ bool dirkey(struct KeyHandler *kh, int key)
 	return false;
 }
 
-bool yesnokey(struct KeyHandler * kh, int key)
+bool yesnokey(struct KeyHandler * kh, int key, int keymod)
 {
 	int *yesno = (int *) kh->data;
 
@@ -250,7 +250,7 @@ static inline void getnum_erase_prompt(struct get_number_info *info)
 	}
 }
 
-bool getnum(struct KeyHandler *kh, int key)
+bool getnum(struct KeyHandler *kh, int key, int keymod)
 {
 	struct get_number_info *info;
 
@@ -372,7 +372,7 @@ return false;
 }
 #endif				/* 0 */
 
-bool getdigit(struct KeyHandler * kh, int key)
+bool getdigit(struct KeyHandler * kh, int key, int keymod)
 {
 	struct get_number_info *info;
 
@@ -395,12 +395,12 @@ bool getdigit(struct KeyHandler * kh, int key)
 	return false;
 }
 
-bool anykey(struct KeyHandler * kh, int key)
+bool anykey(struct KeyHandler * kh, int key, int keymod)
 {
 	return true;
 }
 
-bool scroller(struct KeyHandler * kh, int key)
+bool scroller(struct KeyHandler * kh, int key, int keymod)
 {
 	struct ScrollerContext *context;
 	context = (struct ScrollerContext *) kh->data;
@@ -450,7 +450,7 @@ bool scroller(struct KeyHandler * kh, int key)
 	return false;
 }
 
-bool movecursor(struct KeyHandler * kh, int key)
+bool movecursor(struct KeyHandler * kh, int key, int keymod)
 {
   // A UI mode in which the user can move the cursor 
   // with ARROW keys, select a target with 
@@ -478,7 +478,7 @@ bool movecursor(struct KeyHandler * kh, int key)
   return false;  // Keep on keyhandling
 } // movecursor()
 
-bool movecursor_and_do(struct KeyHandler * kh, int key)
+bool movecursor_and_do(struct KeyHandler * kh, int key, int keymod)
 {
   // As movecursor(), but call kh->each_point_func()
   // for each cursor move, and kh->each_target_func()
@@ -519,6 +519,40 @@ bool movecursor_and_do(struct KeyHandler * kh, int key)
   }
   return false;  // Keep on keyhandling
 } // movecursor_and_do()
+
+bool terraform_movecursor_and_do(struct KeyHandler * kh, int key, int keymod)
+{
+  // As movecursor_and_do(), but with additional keybindings
+  // intended for cmdTerraform().
+  struct cursor_movement_keyhandler * data;
+  assert(kh);
+  data = (struct cursor_movement_keyhandler *) kh->data;
+  
+  if (key == '\n' || key == SDLK_SPACE || key == SDLK_RETURN) {
+    int x = Cursor->getX();
+    int y = Cursor->getY();
+    if (data->each_target_func)
+      data->each_target_func(x, y);
+    return false;  // Keep on keyhandling
+  }
+  
+  if (keyIsDirection(key)) {
+    int dir = keyToDirection(key);
+    Cursor->move(directionToDx(dir), directionToDy(dir));
+    mapUpdate(0);
+    int x = Cursor->getX();
+    int y = Cursor->getY();
+    if (data->each_point_func)
+      data->each_point_func(x, y);
+    return false;  // Keep on keyhandling
+  }
+  
+  if (key == SDLK_ESCAPE) {
+    data->abort = true;
+    return true;  // Done (abort)
+  }
+  return false;  // Keep on keyhandling
+} // terraform_movecursor_and_do()
 
 struct inv_entry *select_item(void)
 {
@@ -596,7 +630,7 @@ class Character *select_party_member(void)
 	return character;
 }
 
-void getkey(void *data, bool(*handler) (struct KeyHandler * kh, int key))
+void getkey(void *data, bool(*handler) (struct KeyHandler * kh, int key, int keymod))
 {
 	struct KeyHandler kh;
 	kh.fx = handler;
@@ -1108,6 +1142,49 @@ int select_target_with_doing(int ox, int oy, int *x, int *y,
   return 0;
 } // select_target_with_doing()
 
+int terraform_cursor_func(int ox, int oy, int *x, int *y,
+                             int range,
+                             v_funcpointer_ii each_point_func,
+                             v_funcpointer_ii each_target_func)
+{
+  // SAM: 
+  // As select_target(), select_target_with_doing(), 
+  // but with additional keybindings intended for cmdTerraform().
+  Cursor->setRange(range);
+  Cursor->setOrigin(ox, oy);
+  Cursor->relocate(Place, *x, *y);  // Remember prev target, if any
+  mapUpdate(0);
+  
+  struct cursor_movement_keyhandler data;
+  data.each_point_func  = each_point_func;
+  data.each_target_func = each_target_func;
+  data.abort            = false;
+  struct KeyHandler kh;
+  kh.fx   = movecursor_and_do;
+  kh.data = &data;
+  
+  eventPushKeyHandler(&kh);
+  cmdwin_print("<target> (ESC to exit)");
+  eventHandle();
+  cmdwin_backspace(strlen("<target> (ESC to exit)"));
+  eventPopKeyHandler();
+  
+  *x = Cursor->getX();
+  *y = Cursor->getY();
+  Cursor->remove();
+  mapUpdate(0);
+  
+  struct cursor_movement_keyhandler * data_ret;
+  data_ret = (struct cursor_movement_keyhandler *) kh.data;
+  if (data_ret->abort) {
+    cmdwin_print("Done.");
+    return -1;  // Aborted, no target
+  }
+  
+  // Target has been selected, (x,y) contain where
+  return 0;
+} // terraform_cursor_func()
+
 bool cmdHandle(class Character * pc)
 {
 	// SAM: Adding (H)andle command...
@@ -1567,7 +1644,7 @@ static inline void erase_spell_prompt(struct get_spell_name_data *ctx)
 	}
 }
 
-bool get_spell_name(struct KeyHandler *kh, int key)
+bool get_spell_name(struct KeyHandler *kh, int key, int keymod)
 {
 	struct get_spell_name_data *ctx;
 	char *word, letter;
@@ -2182,6 +2259,25 @@ void detailed_examine_XY(int x, int y)
     consolePrint("DETAIL XY=(%d,%d) out of LOS\n", x, y);
 }
 
+void DM_XRAY_look_at_XY(int x, int y)
+{
+    // Like look_at_XY() but unconditionally reports what is there.
+    // For use by cmdTerraform and similar.
+    if (!mapTileIsVisible(x, y) ) {
+        consolePrint("(Out of LOS) ", x, y);
+    }
+    consolePrint("At XY=(%d,%d) you see ", x, y);
+    placeDescribe(x, y);
+}
+
+void terraform_XY(int x, int y)
+{
+    if (!mapTileIsVisible(x, y)) {
+      consolePrint("TERRAFORM warning - XY=(%d,%d) out of LOS\n", x, y);
+    }
+    consolePrint("TERRAFORM XY=(%d,%d) TODO - edit terrain here\n", x, y);
+} // terraform_XY()
+
 bool cmdXamine(class Character * pc)
 {
 	// SAM: Working on an improved (L)ook command,
@@ -2210,6 +2306,7 @@ bool cmdXamine(class Character * pc)
 	}
 
     look_at_XY(x,y);  // First look at the current tile
+    // SAM: TODO - make the range "any in viewport" rather than 9
 	if (select_target_with_doing(x, y, &x, &y, 9,
 				     look_at_XY, detailed_examine_XY) == -1) {
 		return false;
@@ -2370,122 +2467,175 @@ bool cmdAT (class Character * pc)
     return true;
 } // cmdAT()
 
-static bool keyHandler(struct KeyHandler *kh, int key)
+bool cmdTerraform(class Character * pc)
 {
-	// This handler is always on the bottom of the key handler stack. When
-	// it returns true the event loop exits, effectively ending the
-	// game. So return true iff the player is dead or wants to quit.
+	int x, y;
 
-	// Decode and run player commands. Any commands which require further
-	// input from the player will push new key handlers on the stack and
-	// pop them upon return. I like to think that they are "closed" in some
-	// sense of the word, and don't intermingle their command input state
-	// with ours.
+	cmdwin_clear();
+	cmdwin_print("Terraform-");
 
-	int saved_turn = Turn;
-	int turns_used = 1;	// default used by most actions
+	if (pc) {
+		// Combat Mode
+        // Use the party member's location as the origin.
+		x = pc->getX();
+		y = pc->getY();
+	} else {
+		// Party Mode
+		// Use the player party's location as the origin.
+		x = player_party->getX();
+		y = player_party->getY();
+	}
 
-        cmdwin_clear();
-        cmdwin_repaint();
+    DM_XRAY_look_at_XY(x,y);  // First look at the current tile
+    // SAM: TODO - make the range "any in viewport" rather than 9
+    //             or perhaps even scrollable past that
+	if (terraform_cursor_func(x, y, &x, &y, 9,
+                              DM_XRAY_look_at_XY, terraform_XY) == -1) {
+		return false;
+	}
+	return true;
+} // cmdTerraform()
 
+static bool keyHandler(struct KeyHandler *kh, int key, int keymod)
+{
+  // This handler is always on the bottom of the key handler stack. When
+  // it returns true the event loop exits, effectively ending the
+  // game. So return true iff the player is dead or wants to quit.
+
+  // Decode and run player commands. Any commands which require further
+  // input from the player will push new key handlers on the stack and
+  // pop them upon return. I like to think that they are "closed" in some
+  // sense of the word, and don't intermingle their command input state
+  // with ours.
+
+  int saved_turn = Turn;
+  int turns_used = 1;	// default used by most actions
+
+  cmdwin_clear();
+  cmdwin_repaint();
+
+  if (keymod == KMOD_LCTRL || keymod == KMOD_RCTRL) {
+    // SAM: This seemed like a less ugly way of setting off a group
+    //      of keybindings for "DM Mode" use or the like.
+    //      If we find something more aesthetic wrt/ switch() syntax,
+    //      we will surely prefer it...
+    // 
+    // Control-key bindings for "DM Mode" commands like terrain editing.
+    // In future, these may be enabled/disabled at compile time, or via
+    // a GhulScript keyword in the mapfile.
+    switch (key) {
+      
+    case 't':
+      cmdTerraform(NULL);
+      turns_used = 0;
+      break;
+      
+	default:
+      turns_used = 0;
+      break;
+    } // switch(key)
+  } // keymod
+
+  else {
+    // !keymod
 	switch (key) {
 
 	case KEY_NORTH:
 	case KEY_EAST:
 	case KEY_SOUTH:
 	case KEY_WEST:
-		{
-			int dir = keyToDirection(key);
-			player_party->move(directionToDx(dir),
-					   directionToDy(dir), false);
-			turns_used = 0;	// turns already advanced in
-			// player_party->move
-			mapSetDirty();
-		}
-		break;
+      {
+        int dir = keyToDirection(key);
+        player_party->move(directionToDx(dir),
+                           directionToDy(dir), false);
+        turns_used = 0;	// turns already advanced in
+        // player_party->move
+        mapSetDirty();
+      }
+      break;
 
-        case 'a':
-                cmdAttack();
-                break;
+    case 'a':
+      cmdAttack();
+      break;
 	case 'b':
-		player_party->board_vehicle();
-		break;
+      player_party->board_vehicle();
+      break;
 	case 'c':
-		cmdCastSpell(NULL);
-		break;
+      cmdCastSpell(NULL);
+      break;
 	case 'e':
-        // SAM:
-        // Perhaps this command should be merged with '>' ?
-		player_party->enter_portal();
-		break;
+      // SAM:
+      // Perhaps this command should be merged with '>' ?
+      player_party->enter_portal();
+      break;
 	case 'f':
-		cmdFire();
-		break;
+      cmdFire();
+      break;
 	case 'g':
-		cmdGet(player_party->getX(), player_party->getY(), true);
-		mapSetDirty();
-		break;
+      cmdGet(player_party->getX(), player_party->getY(), true);
+      mapSetDirty();
+      break;
 	case 'h':
-		// SAM: Adding (H)andle command...
-		cmdHandle(NULL);
-		break;
+      // SAM: Adding (H)andle command...
+      cmdHandle(NULL);
+      break;
 	case 'k':
-		hole_up_and_camp();
-		break;
+      hole_up_and_camp();
+      break;
 	case 'l':
-		// SAM: Changing (L)ook command 
-		// from "look at 1 tile" to a "Look Mode"
-		cmdLook(player_party->getX(), player_party->getY());
-		turns_used = 0;
-        break;
+      // SAM: Changing (L)ook command 
+      // from "look at 1 tile" to a "Look Mode"
+      cmdLook(player_party->getX(), player_party->getY());
+      turns_used = 0;
+      break;
 	case 'm':
-		cmdMixReagents();
-		break;
+      cmdMixReagents();
+      break;
 	case 's':
-		myNewOrder();
-		break;
+      myNewOrder();
+      break;
 	case 'o':
-		cmdOpen(NULL);
-		break;
+      cmdOpen(NULL);
+      break;
 	case 'q':
-		cmdQuit();
-		break;
+      cmdQuit();
+      break;
 	case 'r':
-		cmdReady(NULL);
-		break;
+      cmdReady(NULL);
+      break;
 	case 't':
-		myTalk();
-		break;
+      myTalk();
+      break;
 	case 'u':
-		cmdUse(NULL);
-		break;
+      cmdUse(NULL);
+      break;
 	case 'x':
-		cmdXamine(NULL);
-		turns_used = 0;
-        break;
+      cmdXamine(NULL);
+      turns_used = 0;
+      break;
 	case 'z':
-		cmdZtats(NULL);
-		turns_used = 0;
-        break;
-        case '@':
-                // SAM: 'AT' command for party-centric information
-                cmdAT(NULL);
-                turns_used = 0;
-                break;
+      cmdZtats(NULL);
+      turns_used = 0;
+      break;
+    case '@':
+      // SAM: 'AT' command for party-centric information
+      cmdAT(NULL);
+      turns_used = 0;
+      break;
 	case ' ':
-		consolePrint("Pass\n");
-		turns_used = Place->scale;
-		break;
+      consolePrint("Pass\n");
+      turns_used = Place->scale;
+      break;
 	case '>':
-        // This key was chosen to be a cognate for '>' in NetHack
-        // and other roguelike games.
-        // 
-        // SAM: Curently no "Enter" message is printed.
-        //      It turns out to be moderately complicated to do so properly,
-        //      as a distinct message for each enter_combat() case might
-        //      be desired...
-        // 
-        // For now, I print a placeholder message for each case here:
+      // This key was chosen to be a cognate for '>' in NetHack
+      // and other roguelike games.
+      // 
+      // SAM: Curently no "Enter" message is printed.
+      //      It turns out to be moderately complicated to do so properly,
+      //      as a distinct message for each enter_combat() case might
+      //      be desired...
+      // 
+      // For now, I print a placeholder message for each case here:
       {
         Portal * pp = place_get_portal(player_party->getPlace(),
                                        player_party->getX(),
@@ -2494,82 +2644,83 @@ static bool keyHandler(struct KeyHandler *kh, int key)
           //if (place_get_portal(player_party->getPlace(),
           //                   player_party->getX(),
           //                   player_party->getY())) {
-            // If standing over a portal then enter it:
-            consolePrint("Enter-%s\n", pp->getName() );
-            player_party->enter_portal();
+          // If standing over a portal then enter it:
+          consolePrint("Enter-%s\n", pp->getName() );
+          player_party->enter_portal();
         }
 		else if (!place_is_passable(player_party->getPlace(),
                                     player_party->getX(),
                                     player_party->getY(),
                                     player_party->get_pmask(),
                                     PFLAG_IGNOREVEHICLES)) {
-            // Currently zooming in to impassable terrain is not doable;
-            // since the party might not be placeable on the default map,
-            // which would be a solid grid of that impassable terrain.
-            // Also, if somehow placed, the party could not escape unless on an edge.
-            // There would be no harm in it otherwise, however.
-            struct terrain * tt = place_get_terrain(player_party->getPlace(),
-                                                    player_party->getX(),
-                                                    player_party->getY() );
-			consolePrint("Enter-Cannot zoom-in to %s!\n", tt->name);
+          // Currently zooming in to impassable terrain is not doable;
+          // since the party might not be placeable on the default map,
+          // which would be a solid grid of that impassable terrain.
+          // Also, if somehow placed, the party could not escape unless on an edge.
+          // There would be no harm in it otherwise, however.
+          struct terrain * tt = place_get_terrain(player_party->getPlace(),
+                                                  player_party->getX(),
+                                                  player_party->getY() );
+          consolePrint("Enter-Cannot zoom-in to %s!\n", tt->name);
         }
 		else {
-            // If standing on ordinary terrain, zoom in:
-            struct terrain * tt = place_get_terrain(player_party->getPlace(),
-                                                    player_party->getX(),
-                                                    player_party->getY() );
-            consolePrint("Enter-%s\n", tt->name);
-			run_combat(false, 0, 0, NULL);
+          // If standing on ordinary terrain, zoom in:
+          struct terrain * tt = place_get_terrain(player_party->getPlace(),
+                                                  player_party->getX(),
+                                                  player_party->getY() );
+          consolePrint("Enter-%s\n", tt->name);
+          run_combat(false, 0, 0, NULL);
         }
 		break;
       }
 	default:
-		turns_used = 0;
-		break;
-	}
+      turns_used = 0;
+      break;
+	} // switch(key)
+  } // !keymod
 
-        cmdwin_flush_to_console();
+  cmdwin_flush_to_console();
 
 	// Quit now before advancing turns or anything of that sort. It makes
 	// life easier.
-	if (Quit)
-		return Quit;
+  if (Quit)
+    return Quit;
 
-	turnAdvance(turns_used);
+  turnAdvance(turns_used);
 
-	if (Turn != saved_turn) {
+  if (Turn != saved_turn) {
 
-		// Sigh. Time has definitely grown into a wearisome hack. There
-		// must be a better way.
+    // Sigh. Time has definitely grown into a wearisome hack. There
+    // must be a better way.
 
-		// Note: always update the clock before the turn wq. For
-		// example, when entering a place all the NPC parties use the
-		// wall clock time to synchronize their schedules, so it needs
-		// to be set BEFORE calling them.
+    // Note: always update the clock before the turn wq. For
+    // example, when entering a place all the NPC parties use the
+    // wall clock time to synchronize their schedules, so it needs
+    // to be set BEFORE calling them.
 
-		clockUpdate();
+    clockUpdate();
 
-		foogodAdvanceTurns();
-		placeAdvanceTurns();
-		player_party->advance_turns();
-		skyAdvanceTurns();
-		windAdvanceTurns();
+    foogodAdvanceTurns();
+    placeAdvanceTurns();
+    player_party->advance_turns();
+    skyAdvanceTurns();
+    windAdvanceTurns();
 
-		// Most commands burn through at least one turn. Let the
-		// turn-based work queue catch up.
-		wqRunToTick(&TurnWorkQueue, Turn);
-	}
-	// The player may have died as a result of executing a command or
-	// running the work queue.
-	if (player_party->all_dead()) {
-		dead();
-		return true;
-	}
+    // Most commands burn through at least one turn. Let the
+    // turn-based work queue catch up.
+    wqRunToTick(&TurnWorkQueue, Turn);
+  }
+  // The player may have died as a result of executing a command or
+  // running the work queue.
+  if (player_party->all_dead()) {
+    dead();
+    return true;
+  }
 
-	if (!Quit)		// fixme: is this check necessary? 
-		myGenerateRandomEncounter();
+  if (!Quit)		// fixme: is this check necessary? 
+    myGenerateRandomEncounter();
 
-	return Quit;
+  return Quit;
 }
 
 static int play_init(struct play *play)

@@ -75,7 +75,8 @@ extern "C" {
 
   struct KeyHandler {
     struct list list;
-    bool(*fx) (struct KeyHandler * handler, int key);
+    // SAM: I plan to make fx also take an SDL key modifier...
+    bool(*fx) (struct KeyHandler * handler, int key, int keymod);
     void *data;  
     // The data field should always be filled with a struct, 
     // rather than a scalar such as bool or int,

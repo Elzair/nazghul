@@ -1857,7 +1857,7 @@ static bool myFollow(class Character * pc)
         return true;
 }
 
-static bool myPcCommandHandler(struct KeyHandler *kh, int key)
+static bool myPcCommandHandler(struct KeyHandler *kh, int key, int keymod)
 {
         int dir;
         bool ret;

@@ -43,14 +43,14 @@ extern "C" {
         };
 
 // these are defined in play.c
-  extern bool dirkey(struct KeyHandler *kh, int key);
-  extern bool yesnokey(struct KeyHandler *kh, int key);
-  extern bool anykey(struct KeyHandler *kh, int key);
-  extern bool scroller(struct KeyHandler *kh, int key);
-  extern bool movecursor(struct KeyHandler *kh, int key);
-  extern bool getnum(struct KeyHandler *kh, int key);
+  extern bool dirkey(struct KeyHandler *kh, int key, int keymod);
+  extern bool yesnokey(struct KeyHandler *kh, int key, int keymod);
+  extern bool anykey(struct KeyHandler *kh, int key, int keymod);
+  extern bool scroller(struct KeyHandler *kh, int key, int keymod);
+  extern bool movecursor(struct KeyHandler *kh, int key, int keymod);
+  extern bool getnum(struct KeyHandler *kh, int key, int keymod);
   extern void getkey(void *data, bool(*handler) (struct KeyHandler * kh,
-                                                 int key));
+                                                 int key, int keymod));
   
   extern bool cmdUse    (class Character * pc);
   extern bool cmdHandle (class Character * pc);
