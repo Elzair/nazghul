@@ -1687,3 +1687,8 @@ void player_party::setTurnsToNextRestCredit(int turns)
 {
         turns_to_next_rest_credit = turns;
 }
+
+bool player_party::hasInInventory(class ObjectType *type)
+{
+        return inventory->search(type) != NULL;
+}

@@ -264,6 +264,7 @@ class Object {
         virtual void rmView();
         virtual void updateView();
         virtual bool addToInventory(class Object *object);
+        virtual bool hasInInventory(class ObjectType *type);
         virtual void attachCamera(bool val);
 	virtual void heal(int amount);
         virtual void save(struct save *save);

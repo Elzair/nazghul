@@ -178,4 +178,3 @@
     ))
 
 (load "yellow-slime.scm")
-

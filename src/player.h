@@ -78,6 +78,7 @@ class player_party : public Party {
 
         // overloaded Object methods:
         virtual bool addToInventory(class Object *object);
+        virtual bool hasInInventory(class ObjectType *type);
         virtual struct sprite *getSprite(void);
         virtual char *getName(void);
         virtual bool isVisible();

@@ -764,6 +764,16 @@ int Character::hasAmmo (class ArmsType * weapon)
 	}
 } // Character::hasAmmo()
 
+bool Character::hasInInventory (class ObjectType *type)
+{
+	if (isPlayerControlled()) {
+                return player_party->hasInInventory(type);
+	} else {
+		return (container != NULL &&
+                        container->search(type) != NULL);
+	}
+}
+
 void Character::setLight(int val)
 {
 	light = max(val, MIN_PLAYER_LIGHT);

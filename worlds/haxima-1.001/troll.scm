@@ -53,7 +53,7 @@
                                    oc_troll
                                    s_troll ;; no troll sprite yet
                                    "a troll" 
-                                   nil)))
+                                   'generic-ai)))
     (kern-being-set-base-faction troll faction)
     troll ;; return the kernel object
     ))
@@ -63,3 +63,75 @@
 
 (define (char-is-troll? kchar)
   (eqv? (kern-char-get-species kchar) sp_troll))
+
+;;----------------------------------------------------------------------------
+;; Generic AI used by kernel, reproduced here as a starting point
+;;----------------------------------------------------------------------------
+(define (ai-select-target kchar)
+  (display "ai-select-target")(newline)
+  (nearest-obj kchar (all-visible-hostiles kchar)))
+
+(define (ai-wander kchar)
+  (display "ai-wander")(newline)
+  (kern-obj-wander kchar))
+
+(define (in-range? karms dist)
+  (display "in-range?")(newline)
+  (<= dist (kern-arms-type-get-range karms)))
+
+(define (has-ammo? kchar karms)
+  (display "has-ammo?")(newline)
+  (or (not (arms-type-needs-ammo? karms))
+      (let ((ammo-type (kern-arms-type-get-ammo-type karms)))
+        (display "has-ammo?: ammo-type=")(display ammo-type)(newline)
+        (or (null? ammo-type)
+            (kern-obj-has? kchar ammo-type)))))
+
+(define (weapon-blocked? karms dist)
+  (display "weapon-blocked?")(newline)
+  (and (< dist 2)
+       (arms-type-is-blockable? karms)))
+
+(define (ai-select-weapon katt kdef)  
+  (let ((defdist (distance katt kdef)))
+  (display "ai-select-weapon:defdist=")(display defdist)(newline)
+    (define (weapon-ok? karms)
+      (display "ai-select-weapon:weapon-ok?")(newline)
+      (and (in-range? karms defdist)
+           (has-ammo? katt karms)
+           (not (weapon-blocked? karms defdist))))
+    (define (scan-weapons wlist)
+      (display "ai-select-weapon:scan-weapons")(newline)
+      (if (null? wlist) nil
+          (let ((karms (car wlist)))
+            (if (weapon-ok? karms)
+                karms
+                (scan-weapons (cdr wlist))))))
+    (scan-weapons (kern-char-get-weapons katt))))
+
+(define (ai-attack-target kchar ktarg)
+  (display "ai-attack-target")(newline)
+  (define (do-attack-loop retval)
+    (let ((kweap (ai-select-weapon kchar ktarg)))
+      (display "ai-attack-target:kweap=")(display kweap)(newline)
+      (if (null? kweap) retval
+          (begin
+            (kern-char-attack kchar kweap ktarg)
+            (if (and (is-alive? ktarg)
+                     (has-ap? kchar))
+                (do-attack-loop #t)
+                #t)))))
+  (do-attack-loop #f))
+
+(define (ai-pathfind-to-target kchar ktarg)
+  (display "ai-pathfind-to-target")(newline)
+  (pathfind kchar (kern-obj-get-location ktarg)))
+
+(define (generic-ai kchar)
+  (display "generic-ai")(newline)
+  (let ((ktarg (ai-select-target kchar)))
+    (display "generic-ai: ktarg=")(display ktarg)(newline)
+    (if (null? ktarg)
+        (ai-wander kchar)
+        (or (ai-attack-target kchar ktarg)
+            (ai-pathfind-to-target kchar ktarg)))))

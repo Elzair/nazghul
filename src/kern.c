@@ -4865,6 +4865,197 @@ KERN_API_CALL(kern_player_set_follow_mode)
         return sc->NIL;
 }
 
+KERN_API_CALL(kern_obj_has)
+{
+        class Object *object;
+        class ObjectType *type;
+        int has = 0;
+
+        object = (Object*)unpack_obj(sc, &args, "kern-object-get-base-faction");
+        if (!object)
+                goto done;
+
+        if (unpack(sc, &args, "p", &type)) {
+                rt_err("kern-obj-has?");
+                goto done;
+        }
+
+        has = object->hasInInventory(type);
+ done:
+        return has ? sc->T : sc->F;
+}
+
+static pointer kern_astar_path_to_scheme_list(scheme *sc, struct astar_node *path)
+{
+        pointer head;
+        pointer cell;
+
+        /* base case - end of path */
+        if (!path)
+                return sc->NIL;
+
+        /* create a scheme pair (x, y) */
+        cell = _cons(sc, 
+                     scm_mk_integer(sc, path->x), 
+                     scm_mk_integer(sc, path->y),
+                     0);
+
+        /* recursively build a scheme list of pairs */
+        head = _cons(sc, 
+                     cell, 
+                     kern_astar_path_to_scheme_list(sc, path->next), 
+                     0);
+
+        /* cleanup the node */
+        astar_node_destroy(path);
+
+        return head;
+}
+
+KERN_API_CALL(kern_obj_find_path)
+{
+        class Object *object;
+        struct place *place;
+        int x, y;
+        struct astar_node *path = NULL;
+        struct astar_search_info as_info;
+
+        memset(&as_info, 0, sizeof (as_info));
+
+        object = (Object*)unpack_obj(sc, &args, "kern-obj-find-path");
+        if (!object)
+                return sc->NIL;
+
+        if (unpack_loc(sc, &args, &place, &as_info.x1, &as_info.y1, "kern-obj-find-path")) {
+                return sc->NIL;
+        }
+
+        /* can't pathfind between places */
+        if (object->getPlace() != place)
+                return sc->NIL;
+
+        /* find the path */
+        as_info.x0 = object->getX();
+        as_info.y0 = object->getY();
+        path = place_find_path(place, &as_info, object);
+        if (! path)
+                return sc->NIL;
+
+        /* convert the path to a scheme list */
+        return kern_astar_path_to_scheme_list(sc, path);
+}
+
+static pointer kern_build_weapon_list(scheme *sc, 
+                                      class Character *character, 
+                                      class ArmsType *weapon)
+{
+        /* base case */
+        if (! weapon)
+                return sc->NIL;
+        
+        /* recursive case */
+        return _cons(sc, 
+                     scm_mk_ptr(sc, weapon), 
+                     kern_build_weapon_list(sc, 
+                                            character, 
+                                            character->getNextWeapon()), 
+                     0);
+}
+
+KERN_API_CALL(kern_char_get_weapons)
+{
+        class Character *character;
+        pointer lst;
+
+        /* unpack the character */
+        character = (class Character*)unpack_obj(sc, &args, "kern-char-get-weapons");
+        if (!character)
+                return sc->NIL;
+
+        /* recursively enumerate the character's available weapons into a
+         * scheme list */
+        return kern_build_weapon_list(sc, 
+                                      character, 
+                                      character->enumerateWeapons());
+}
+
+KERN_API_CALL(kern_char_get_hp)
+{
+        class Character *character;
+        pointer lst;
+
+        /* unpack the character */
+        character = (class Character*)unpack_obj(sc, &args, "kern-char-get-hp");
+        if (!character)
+                return sc->NIL;
+
+        return scm_mk_integer(sc, character->getHp());
+}
+
+KERN_API_CALL(kern_obj_get_ap)
+{
+        class Object *object;
+        pointer lst;
+
+        /* unpack the object */
+        object = (class Object*)unpack_obj(sc, &args, "kern-obj-get-ap");
+        if (!object)
+                return sc->NIL;
+
+        return scm_mk_integer(sc, object->getActionPoints());
+}
+
+
+KERN_API_CALL(kern_arms_type_get_range)
+{
+        class ArmsType *type;
+
+        /* unpack the type (should be an arms type, but no way to safely
+         * tell) */
+        if (unpack(sc, &args, "p", &type)) {
+                rt_err("kern-char-arms-type");
+                return sc->NIL;
+        }
+
+        /* get the range */
+        return scm_mk_integer(sc, type->getRange());
+}
+
+KERN_API_CALL(kern_arms_type_get_ammo_type)
+{
+        class ArmsType *type, *ammo;
+
+        /* unpack the type (should be an arms type, but no way to safely
+         * tell) */
+        if (unpack(sc, &args, "p", &type)) {
+                rt_err("kern-char-arms-type");
+                return sc->NIL;
+        }
+
+        /* get the ammo type */
+        ammo = type->getAmmoType();
+
+        /* return it, if any */
+        return ammo ? scm_mk_ptr(sc, ammo) : sc->NIL;
+}
+
+KERN_API_CALL(kern_obj_move)
+{
+        class Object *object;
+        int dx, dy;
+
+        object = (Object*)unpack_obj(sc, &args, "kern-obj-move");
+        if (!object)
+                return sc->NIL;
+
+        if (unpack(sc, &args, "dd", &dx, &dy)) {
+                rt_err("kern-obj-move: bad args");
+                return sc->NIL;
+        }
+        
+        return object->move(dx, dy) == MovedOk ? sc->T : sc->F;
+}
+
 scheme *kern_init(void)
 {        
         scheme *sc;
@@ -4911,6 +5102,10 @@ scheme *kern_init(void)
         scm_define_proc(sc, "kern-mk-vehicle", kern_mk_vehicle);
         scm_define_proc(sc, "kern-mk-vehicle-type", kern_mk_vehicle_type);
 
+        /* kern-arms-type api */
+        scm_define_proc(sc, "kern-arms-type-get-ammo-type", kern_arms_type_get_ammo_type);
+        scm_define_proc(sc, "kern-arms-type-get-range",     kern_arms_type_get_range);
+
         /* kern-set api */
         scm_define_proc(sc, "kern-set-crosshair", kern_set_crosshair);
         scm_define_proc(sc, "kern-set-cursor", kern_set_cursor);
@@ -4927,7 +5122,9 @@ scheme *kern_init(void)
         scm_define_proc(sc, "kern-obj-dec-ap", kern_obj_dec_ap);
         scm_define_proc(sc, "kern-obj-dec-light", kern_obj_dec_light);
         scm_define_proc(sc, "kern-obj-destroy", kern_obj_destroy);
+        scm_define_proc(sc, "kern-obj-find-path", kern_obj_find_path);
         scm_define_proc(sc, "kern-obj-get-activity", kern_obj_get_activity);
+        scm_define_proc(sc, "kern-obj-get-ap", kern_obj_get_ap);
         scm_define_proc(sc, "kern-obj-get-gob", kern_obj_get_gob);
         scm_define_proc(sc, "kern-obj-get-light", kern_obj_get_light);
         scm_define_proc(sc, "kern-obj-get-location", kern_obj_get_location);
@@ -4935,10 +5132,12 @@ scheme *kern_init(void)
         scm_define_proc(sc, "kern-obj-get-sprite", kern_obj_get_sprite);
         scm_define_proc(sc, "kern-obj-get-type", kern_obj_get_type);
         scm_define_proc(sc, "kern-obj-get-vision-radius", kern_obj_get_vision_radius);
+        scm_define_proc(sc, "kern-obj-has?", kern_obj_has);
         scm_define_proc(sc, "kern-obj-heal", kern_obj_heal);
         scm_define_proc(sc, "kern-obj-inc-light", kern_obj_inc_light);
         scm_define_proc(sc, "kern-obj-is-char?", kern_obj_is_char);
         scm_define_proc(sc, "kern-obj-is-visible?", kern_obj_is_visible);
+        scm_define_proc(sc, "kern-obj-move", kern_obj_move);
         scm_define_proc(sc, "kern-obj-put-at", kern_obj_put_at);
         scm_define_proc(sc, "kern-obj-put-into", kern_obj_put_into);
         scm_define_proc(sc, "kern-obj-relocate", kern_obj_relocate);
@@ -4959,9 +5158,11 @@ scheme *kern_init(void)
         scm_define_proc(sc, "kern-char-attack", kern_char_attack);
         scm_define_proc(sc, "kern-char-dec-mana", kern_char_dec_mana);
         scm_define_proc(sc, "kern-char-charm", kern_char_charm);
+        scm_define_proc(sc, "kern-char-get-hp", kern_char_get_hp);
         scm_define_proc(sc, "kern-char-get-mana", kern_char_get_mana);
         scm_define_proc(sc, "kern-char-get-party", kern_char_get_party);
         scm_define_proc(sc, "kern-char-get-species", kern_char_get_species);
+        scm_define_proc(sc, "kern-char-get-weapons", kern_char_get_weapons);
         scm_define_proc(sc, "kern-char-kill", kern_char_kill);
         scm_define_proc(sc, "kern-char-resurrect", kern_char_resurrect);
         scm_define_proc(sc, "kern-char-set-sleep", kern_char_set_sleep);

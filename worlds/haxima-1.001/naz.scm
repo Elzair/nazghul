@@ -68,6 +68,12 @@
       (set-car! x val)
       (list-set-ref! (cdr x) (- k 1) val)))
 
+;; Check if a list contains an element.
+(define (in-list? elem lst)
+  (foldr (lambda (a b) (or a (eqv? b elem))) 
+         #f 
+         lst))
+
 ;; Check if a location is passable to a character
 (define (passable? loc char)
   (kern-place-is-passable loc char))
@@ -126,6 +132,7 @@
           (kern-place-get-objects (loc-place (kern-obj-get-location kchar)))))
 
 (define (is-visible-hostile? kchar kobj)  
+  (display "is-visible-hostile?kchar=")(display kchar)(display " kobj=")(display kobj)(newline)
   (and (kern-obj-is-char? kobj)
        (kern-char-is-hostile? kchar kobj)
        (<= (kern-get-distance (kern-obj-get-location kchar) 
@@ -136,6 +143,7 @@
        (kern-obj-is-visible? kobj)))
 
 (define (all-visible-hostiles kchar)
+  (display "all-visible-hostiles")(newline)
   (filter (lambda (kobj) (is-visible-hostile? kchar kobj))
           (kern-place-get-objects (loc-place (kern-obj-get-location kchar)))))
 
@@ -146,10 +154,45 @@
   (map dtable-col cols))
 
 (define (distance kobj-a kobj-b)
-  (kern-get-distance (kern-obj-get-location kobj-a)
-                     (kern-obj-get-location kobj-b)))
+  (let ((loc-a (kern-obj-get-location kobj-a))
+        (loc-b (kern-obj-get-location kobj-b)))
+  (display "distance:loc-a=")(display loc-a)(display " loc-b=")(display loc-b)(newline)
+  (kern-get-distance loc-a loc-b)))
 
 ;; Result codes
 (define result-ok          0)
 (define result-no-target   1)
 (define result-no-effect   2)
+
+;; Inefficient code to find nearest obj from a list
+(define (nearest-obj kobj klist)
+  (display "nearest-obj")(newline)
+  (if (null? klist) nil
+      (foldr (lambda (a b) (if (< (distance kobj a) (distance kobj b)) a b))
+             (car klist) (cdr klist))))
+
+;; Move an object one step along a path to a destination.
+(define (pathfind kobj dest)
+  (display "pathfind")(newline)
+  (define (follow-path path)
+    (if (not (null? path))
+        (let ((coords (car path))
+              (origin (kern-obj-get-location kobj)))
+          (display "pathfind:coords=")(display coords)(newline)
+          (let ((dx (- (car coords) (loc-x origin)))
+                (dy (- (cdr coords) (loc-y origin))))
+            (display "pathfind:dx=")(display dx)(display " y=")(display dy)(newline)
+            (kern-obj-move kobj dx dy)))))
+  (let ((path (kern-obj-find-path kobj dest)))
+    (display "pathfind:path=")(display path)(newline)
+    (if (not (null? path))
+        ;; skip the first location in the path
+        (follow-path (cdr path)))))
+
+(define (notnull? val) (not (null? val)))
+
+(define (is-alive? kchar)
+  (> (kern-char-get-hp kchar) 0))
+
+(define (has-ap? kobj) 
+  (> (kern-obj-get-ap kobj) 0))

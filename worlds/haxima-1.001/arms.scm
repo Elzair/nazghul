@@ -192,3 +192,22 @@
                    )
                    
 (display t_cannon)(newline)
+
+;;----------------------------------------------------------------------------
+;; This list of "blockable" arms types is used by combat ai. An arms type is
+;; "blockable" is an adjacent enemy can interfere with its usage.
+;;----------------------------------------------------------------------------
+(define blockable-arms-types
+  (list t_bow
+        t_spear
+        t_thrown_boulder))
+
+(define arms-types-needing-ammo
+  (list t_bow))
+
+(define (arms-type-is-blockable? karms)
+  (display "arms-type-is-bloackable?")(newline)
+  (in-list? karms blockable-arms-types))
+
+(define (arms-type-needs-ammo? karms)
+  (in-list? karms arms-types-needing-ammo))

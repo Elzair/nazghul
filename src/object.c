@@ -867,6 +867,11 @@ bool Object::addToInventory(class Object *object)
         return false;
 }
 
+bool Object::hasInInventory(class ObjectType *object)
+{
+        return false;
+}
+
 void Object::heal(int amount)
 {
         amount = min(amount, getMaxHp() - hp);

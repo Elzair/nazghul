@@ -119,6 +119,7 @@ class Character:public Being {
 	virtual bool hasReadied(class ArmsType * arms);
 	virtual bool isSolo();
 	virtual int  hasAmmo(class ArmsType * weapon);
+        virtual bool hasInInventory(class ObjectType *type);
 	virtual bool isFleeing();
 	virtual bool wasElevated(void);
 	virtual bool isVisible();
