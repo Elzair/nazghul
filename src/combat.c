@@ -1172,16 +1172,19 @@ static bool myAttack(class Character * pc)
                 cmdwin_clear();
                 if (weapon->isMissileWeapon()) {
                         // SAM: It would be nice to get ammo name, too...
-                        cmdwin_print("Attack-Fire %s (%d ammo)-",
-                                     weapon->getName(), pc->hasAmmo(weapon));
+                        cmdwin_print("Attack-Fire %s (range %d, %d ammo)-",
+                                     weapon->getName(), weapon->getRange(), 
+                                     pc->hasAmmo(weapon));
                 }
                 else if (weapon->isThrownWeapon()) {
                         // SAM: It would be nice to get ammo name, too...
-                        cmdwin_print("Attack-Throw %s (%d left)-",
-                                     weapon->getName(), pc->hasAmmo(weapon));
+                        cmdwin_print("Attack-Throw %s (range %d, %d left)-",
+                                     weapon->getName(), weapon->getRange(),
+                                     pc->hasAmmo(weapon));
                 }
                 else {
-                        cmdwin_print("Attack-With %s-", weapon->getName());
+                        cmdwin_print("Attack-With %s (reach %d)-", 
+                                     weapon->getName(), weapon->getRange() );
                 }
 
                 // select the target location
