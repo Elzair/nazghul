@@ -67,6 +67,7 @@ static char program_name[] = "nazghul";
 static int version_major = 0;
 static int version_minor = 3;
 static int version_incr  = 1;
+static char *NAZGHUL_SPLASH_IMAGE_FILENAME = "images/gmcnutt/splash.png";
 
 #define VERSION_STRLEN 8  // Length of "xx.yy.zz" == 6+2
 char * version_as_string(void)
@@ -271,6 +272,30 @@ static void nazghul_init_internal_libs(void)
 		soundInit();
 }
 
+static void nazghul_splash(void)
+{
+        SDL_Surface *splash;
+        SDL_Rect rect;
+
+        /* Load the image from the well-known filename */
+        splash = IMG_Load(NAZGHUL_SPLASH_IMAGE_FILENAME);
+        if (! splash) {
+                warn("IMG_Load failed: %s", SDL_GetError());
+                return;
+        }
+        
+        /* Fill out the screen destination rect */
+        rect.x = max(0, (screenWidth() - splash->w) / 2);
+        rect.y = max(0, (screenHeight() - splash->h) / 2);
+        rect.w = min(splash->w, screenWidth());
+        rect.h = min(splash->h, screenHeight());
+
+        screenBlit(splash, NULL, &rect);
+        screenUpdate(&rect);
+
+        SDL_FreeSurface(splash);
+}
+
 int main(int argc, char **argv)
 {
 	SDL_Thread *tick_thread = NULL;
@@ -278,6 +303,9 @@ int main(int argc, char **argv)
 	parse_args(argc, argv);
 
         nazghul_init_internal_libs();
+
+        /* Show the splash screen on startup */
+        nazghul_splash();
 
         if (TickMilliseconds > 0) {
                 tick_thread = SDL_CreateThread(tick_fx, 0);
