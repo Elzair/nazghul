@@ -6,14 +6,14 @@
   "-- -- -- ## ## ## -- -- --";
   "-- -- ## ## ee ## ## -- --";
   "-- ## ## ee ee ee ## ## --";
-  "-- ## ee ee  o ee ee ## --";
+  "-- ## ee ee oo ee ee ## --";
   "ee ee ee ee ee ee ee ee ee";
   "-- ## ee ee ee ee ee ## --";
   "-- ## ee ee ee ee ee ## --";
   "-- ## ee ee ee ee ee ## --";
   "ee ee ee ee ee ee ee ee ee";
-  "-- ## ee ee  o ee ee ## --";
-  "-- ## ee ee  W ee ee ## --";
+  "-- ## ee ee oo ee ee ## --";
+  "-- ## ee ee WW ee ee ## --";
   "-- ## ee ee ee ee ee ## --";
   "-- ## ## ee ee ee ## ## --";
   "-- -- ## ## ## ## ## -- --";

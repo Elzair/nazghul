@@ -306,25 +306,33 @@
   (list
    ;;    tag                name            pclass           sprite            t light step-on
    ;;    =================  ==============  =============    ==============    = ===== =======
-   (list 't_lava            "lava"          pclass-grass     s_lava            1 128 'burn)
    (list 't_deep            "deep water"    pclass-deep      s_deep            1 0 nil)
    (list 't_shallow         "shallow water" pclass-deep      s_shallow         1 0 nil)
    (list 't_shoals          "shoals"        pclass-shoals    s_shoals          1 0 nil)
+
    (list 't_grass           "grass"         pclass-grass     s_grass           1 0 nil)
+
    (list 't_trees           "trees"         pclass-trees     s_trees           1 0 nil)
+   (list 't_red_roses       "roses"         pclass-forest    s_trees_red       1 0 nil)
+   (list 't_forest_v        "forest"        pclass-forest    s_forest          1 0 nil)
    (list 't_forest          "forest"        pclass-forest    s_forest          0 0 nil)
+
    (list 't_hills           "hills"         pclass-forest    s_hills           1 0 nil)
+   (list 't_mountains_v     "mountains"     pclass-mountains s_mountains       1 0 nil)
    (list 't_mountains       "mountains"     pclass-mountains s_mountains       0 0 nil)
-   (list 't_leftwing        "castle wall"   pclass-wall      s_leftwing        1 0 nil)
-   (list 't_rightwing       "castle wall"   pclass-wall      s_rightwing       1 0 nil)
+
+   (list 't_bog             "bog"           pclass-forest    s_bog             1 0 'terrain-effect-poison)
+
+   (list 't_lava            "lava"          pclass-grass     s_lava            1  128 'burn)
+   (list 't_fire_terrain    "fire"          pclass-grass     s_field_fire      1  512 'burn)
+   (list 't_fireplace       "fireplace"     pclass-grass     s_fireplace       1 2048 'burn)
+
    (list 't_cobblestone     "cobblestone"   pclass-grass     s_cobblestone     1 0 nil)
    (list 't_flagstones      "flagstones"    pclass-grass     s_flagstone       1 0 nil)
-   (list 't_bog             "bog"           pclass-forest    s_bog             1 0 'terrain-effect-poison)
-   (list 't_fire_terrain    "fire"          pclass-grass     s_field_fire      1 512  'burn)
-   (list 't_fireplace       "fireplace"     pclass-grass     s_fireplace       1 2048 'burn)
-   ;;(list 't_bridge          "bridge"        pclass-grass     s_bridge          1 0 nil)
-   ;;(list 't_bridge_top      "bridge"        pclass-grass     s_bridge_top      1 0 nil)
-   ;;(list 't_bridge_bottom   "bridge"        pclass-grass     s_bridge_bottom   1 0 nil)
+
+   (list 't_leftwing        "castle wall"   pclass-wall      s_leftwing        1 0 nil)
+   (list 't_rightwing       "castle wall"   pclass-wall      s_rightwing       1 0 nil)
+
    (list 't_ship_hull       "ship's hull"   pclass-wall      s_wall            1 0 nil)
    (list 't_sh_hull_NE      "ship's hull"   pclass-wall      s_wall_b          1 0 nil)
    (list 't_sh_hull_NW      "ship's hull"   pclass-wall      s_wall_a          1 0 nil)
@@ -333,23 +341,38 @@
    (list 't_mast            "mast"          pclass-wall      s_mast            1 0 nil)
    (list 't_ships_wheel     "ship's wheel"  pclass-wall      s_ships_wheel     1 0 nil)
    (list 't_deck            "deck"          pclass-grass     s_deck            1 0 nil)
+
+   (list 't_boulder         "boulder"       pclass-wall      s_boulder         1 0 nil)
+
+   (list 't_wall_rock_v     "rock wall"     pclass-wall      s_wall_rock       1 0 nil)
    (list 't_wall_rock       "rock wall"     pclass-wall      s_wall_rock       0 0 nil)
+
+   (list 't_wall_v          "wall"          pclass-wall      s_wall_stone      1 0 nil)
    (list 't_wall            "wall"          pclass-wall      s_wall_stone      0 0 nil)
+
    (list 't_wall_torch      "wall torch"    pclass-wall      s_wall_torch      0 512 'burn)
+   (list 't_arrow_slit      "arrow slit"    pclass-wall      s_arrow_slit      1 0 nil)
+   (list 't_window_in_stone "window"        pclass-wall      s_window_in_stone 1 0 nil)
+
    (list 't_secret_door     "secret door"   pclass-grass     s_secret_door     0 0 nil)
+
+   (list 't_sea_wall_v      "sea wall"      pclass-wall      s_wall            1 0 nil)
    (list 't_sea_wall        "sea wall"      pclass-wall      s_wall            0 0 nil)
+
    (list 't_sea_wall_NE     "sea wall"      pclass-wall      s_wall_b          0 0 nil)
    (list 't_sea_wall_NW     "sea wall"      pclass-wall      s_wall_a          0 0 nil)
    (list 't_sea_wall_SE     "sea wall"      pclass-wall      s_wall_c          0 0 nil)
    (list 't_sea_wall_SW     "sea wall"      pclass-wall      s_wall_d          0 0 nil)
-   (list 't_boulder         "boulder"       pclass-wall      s_boulder         1 0 nil)
+
    (list 't_ankh            "ankh"          pclass-wall      s_ankh            1 0 nil)
    (list 't_altar           "altar"         pclass-wall      s_altar           1 0 nil)
    (list 't_pillar          "pillar"        pclass-wall      s_pillar          1 0 nil)
+
    (list 't_counter_2x1_w   "counter"       pclass-wall      s_counter_2x1_w   1 0 nil)
    (list 't_counter_2x1_c   "counter"       pclass-wall      s_counter_2x1_c   1 0 nil)
    (list 't_counter_2x1_e   "counter"       pclass-wall      s_counter_2x1_e   1 0 nil)
    (list 't_counter_1x1     "counter"       pclass-wall      s_counter_1x1     1 0 nil)
+
    (list 't_trail_0         "trail"         pclass-grass     s_trail_0         1 0 nil)
    (list 't_trail_1         "trail"         pclass-grass     s_trail_1         1 0 nil)
    (list 't_trail_2         "trail"         pclass-grass     s_trail_2         1 0 nil)
@@ -366,6 +389,7 @@
    (list 't_trail_d         "trail"         pclass-grass     s_trail_d         1 0 nil)
    (list 't_trail_e         "trail"         pclass-grass     s_trail_e         1 0 nil)
    (list 't_trail_f         "trail"         pclass-grass     s_trail_f         1 0 nil)
+
    (list 't_A               "an A"          pclass-wall      s_A               1 0 nil)
    (list 't_B               "a B"           pclass-wall      s_B               1 0 nil)
    (list 't_C               "a C"           pclass-wall      s_C               1 0 nil)
@@ -392,6 +416,7 @@
    (list 't_X               "an X"          pclass-wall      s_X               1 0 nil)
    (list 't_Y               "a Y"           pclass-wall      s_Y               1 0 nil)
    (list 't_Z               "a Z"           pclass-wall      s_Z               1 0 nil)
+
    (list 't_rune_A          "a rune"        pclass-wall      s_rune_A          1 0 nil)
    (list 't_rune_B          "a rune"        pclass-wall      s_rune_B          1 0 nil)
    (list 't_rune_C          "a rune"        pclass-wall      s_rune_C          1 0 nil)
@@ -424,9 +449,7 @@
    (list 't_rune_EA         "a rune"        pclass-wall      s_rune_EA         1 0 nil)
    (list 't_rune_ST         "a rune"        pclass-wall      s_rune_ST         1 0 nil)
    (list 't_rune_DOT        "a rune"        pclass-wall      s_rune_DOTSEP     1 0 nil)
-   (list 't_red_roses       "roses"         pclass-forest    s_trees_red       1 0 nil)
-   (list 't_arrow_slit      "arrow slit"    pclass-wall      s_arrow_slit      1 0 nil)
-   (list 't_window_in_stone "window"        pclass-wall      s_window_in_stone 1 0 nil)
+
    ))
 
 (map (lambda (terrain) (apply kern-mk-terrain terrain)) terrains)

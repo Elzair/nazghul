@@ -2,31 +2,52 @@
   (list
     ;; There are 110 entries in this palette
     ;; The widest glyph is 2 characters
+    ;; 
+    ;; Note: 
+    ;; It is best if all glyphs in a palette are of the same width,
+    ;; so all glyphs in this palette should be 2 characters wide, 
+    ;; like "xx" rather than "x".
+    ;; 
+    ;; This constraint makes it easier to edit maps via search & replace,
+    ;; and makes it easier to change the palette.
+    ;; 
     (list  "__"   t_deep)               ;; "deep water"
     (list  "--"   t_shallow)            ;; "shallow water"
     (list  "~~"   t_shoals)             ;; "shoals"
     (list  "%%"   t_bog)                ;; "bog"
     (list  ".."   t_grass)              ;; "grass"
     (list  "tt"   t_trees)              ;; "trees"
+
     (list  "||"   t_forest)             ;; "forest"
+    (list  "|."   t_forest_v)           ;; "forest"  (non-LOS-blocking)
+
     (list  "{{"   t_hills)              ;; "hills"
+
     (list  "^^"   t_mountains)          ;; "mountains"
+    (list  "^."   t_mountains_v)        ;; "mountains" (non-LOS-blocking)
+
     (list  ",,"   t_flagstones)         ;; "flagstones"
     (list  "cc"   t_cobblestone)        ;; "cobblestone"
     (list  "ee"   t_deck)               ;; "deck"
-    (list  "o"    t_mast)               ;; "mast"
-    (list  "f"    t_fire_terrain)       ;; "fire"
-    (list  "!"    t_lava)               ;; "lava"
-    (list  "&"    t_fireplace)          ;; "fireplace"
-    (list  "x"    t_wall)               ;; "wall"
+    (list  "oo"   t_mast)               ;; "mast"
+    (list  "ff"   t_fire_terrain)       ;; "fire"
+    (list  "!!"   t_lava)               ;; "lava"
+    (list  "&&"   t_fireplace)          ;; "fireplace"
+
     (list  "xx"   t_wall)               ;; "wall"
-    (list  "?"    t_secret_door)        ;; "secret door"
-    (list  "p"    t_pillar)             ;; "pillar"
-    (list  "b"    t_boulder)            ;; "boulder"
-    (list  "r"    t_wall_rock)          ;; "rock wall"
-    (list  "W"    t_ships_wheel)        ;; "ship's wheel"
+    (list  "x."   t_wall_v)             ;; "wall"  (non-LOS-blocking)
+
+    (list  "??"   t_secret_door)        ;; "secret door"
+    (list  "pp"   t_pillar)             ;; "pillar"
+    (list  "bb"   t_boulder)            ;; "boulder"
+
+    (list  "rr"   t_wall_rock)          ;; "rock wall"
+    (list  "r."   t_wall_rock_v)        ;; "rock wall"  (non-LOS-blocking)
+
+    (list  "WW"   t_ships_wheel)        ;; "ship's wheel"
     (list  "x!"   t_wall_torch)         ;; "wall torch"
     (list  "##"   t_ship_hull)          ;; "ship's hull"
+
     (list  ".A"   t_a)                  ;; "an A"
     (list  ".B"   t_b)                  ;; "a B"
     (list  ".C"   t_c)                  ;; "a C"
@@ -53,6 +74,7 @@
     (list  ".X"   t_x)                  ;; "an X"
     (list  ".Y"   t_y)                  ;; "a Y"
     (list  ".Z"   t_z)                  ;; "a Z"
+
     (list  ",A"   t_rune_a)             ;; "a rune"
     (list  ",B"   t_rune_b)             ;; "a rune"
     (list  ",C"   t_rune_c)             ;; "a rune"
@@ -85,17 +107,20 @@
     (list  ";A"   t_rune_ea)            ;; "a rune"
     (list  ";S"   t_rune_st)            ;; "a rune"
     (list  ";D"   t_rune_dot)           ;; "a rune"
-    (list  "@"    t_counter_2x1_c)      ;; "counter"
-    (list  "["    t_counter_2x1_w)      ;; "counter"
-    (list  "]"    t_counter_2x1_e)      ;; "counter"
-    (list  "0"    t_counter_1x1)        ;; "counter"
-    (list  "+"    t_ankh)               ;; "ankh"
-    (list  "a"    t_altar)              ;; "altar"
-    (list  "<"    t_leftwing)           ;; "castle wall"
-    (list  ">"    t_rightwing)          ;; "castle wall"
-    (list  "d"    t_red_roses)          ;; "roses"
+
+    (list  "@@"   t_counter_2x1_c)      ;; "counter"
+    (list  "[["   t_counter_2x1_w)      ;; "counter"
+    (list  "]]"   t_counter_2x1_e)      ;; "counter"
+    (list  "00"   t_counter_1x1)        ;; "counter"
+
+    (list  "++"   t_ankh)               ;; "ankh"
+    (list  "aa"   t_altar)              ;; "altar"
+    (list  "<<"   t_leftwing)           ;; "castle wall"
+    (list  ">>"   t_rightwing)          ;; "castle wall"
+    (list  "dd"   t_red_roses)          ;; "roses"
     (list  "w+"   t_arrow_slit)         ;; "arrow slit"
     (list  "ws"   t_window_in_stone)    ;; "window"
+
     (list  "/0"   t_trail_0)            ;; "trail"
     (list  "/1"   t_trail_1)            ;; "trail"
     (list  "/2"   t_trail_2)            ;; "trail"
@@ -112,7 +137,6 @@
     (list  "/d"   t_trail_d)            ;; "trail"
     (list  "/e"   t_trail_e)            ;; "trail"
     (list  "/f"   t_trail_f)            ;; "trail"
-
   )
 ) ;; palette pal_expanded
 
