@@ -1,5 +1,24 @@
 Known bugs in release 0.1.3
 
+o Some combinations of (terrain + terrain) or (terrain + terrain + vehicle)
+  result in sub-optimal combat maps.  This may be largely fixed/worked around
+  by means of better maps in examples/data/world/maps/terrain_combat_maps.ghul
+
+o LOS code has been re-written to use new algorithms and looks mush
+  better, including circular LOS radii greater than 9.  Some LOS
+  behaviors are still imperfect, such as the view through a window
+  when aligned perfectly on a diagonal line.  This might be fixed by manually
+  tweaking the generated table for the 1.0 slope.
+
+o The in-game map editor (^Terraform and ^Save Map commands) is very
+  useful, but only saves "maps" (grids of terrain), as distinct from
+  "places" (map + mechanisms, NPCs, objects, ...).  This will remain
+  so until the new lexer + parser is in place, as such functionality
+  requires the ability to save arbitrary data.
+
+  Also, the "terrain palette" saved also saves the "quick terrains",
+  but only as comments in the GhulScript.  Adding support to load
+  quick terrains is trivial, and will be done in future.
 
 
 Known bugs in release 0.1.2

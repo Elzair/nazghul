@@ -1,10 +1,45 @@
 Changes between nazghul-0.1.2 and nazghul-0.1.3
 
+sglasby:
+
+o [daghul]
+  new spell "IN BET LOR", part of a set of new spells planned for the initial
+  (example) game.
+
+o [daghul]
+  new armor types
+
+o [engine]
+  several UI changes pertaining to weapon prompts in combat mode.
+
+o [engine]
+  New command '@' (AT) which displays contextual information about the party
+  (or current character)'s location, etc.
+
+sglasby and gmcnutt:
+
+o [both]
+  Weapons and armor and such are now defined with more information, on
+  topics such as their attack/defense values, damage and armor value
+  ranges.  The basic combat rule is 
+      attack  = 2d6 roll + attack value
+      defense = 2d6 roll + defense value
+  attack is matched with defense, attack >= defense results in a hit.
+
+  Damage is expressed as a value 1dX+Y and an Armor Points value
+  (which is the sum of 1dX+Y for each armor piece) is subtracted from
+  damage done.
+
+  Likewise, Hit Points are calculated via values per- species, class,
+  and individual being.
+
+  The balance/playability of the current numbers is conjectural, and
+  the game system framework will have more added to it in future.
+
 gmcnutt:
 
 o [both] The damage and armor fields of ARMS are now a range of integers. This
-  simulates a single dice with a modifier. Currently only the max end of the
-  range is actually used by the engine.
+  simulates a single dice with a modifier (1dX+Y).
 
 o [engine] Added EFFECT_RESTORE to support mana restoration potions. Had to
   sacrifice EFFECT_NATURAL because the effects bitmask is out of bits. Turns
