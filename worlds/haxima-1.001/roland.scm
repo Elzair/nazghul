@@ -9,9 +9,11 @@
 ;;
 ;; Quest flags, etc, go here.
 ;;----------------------------------------------------------------------------
-(define (roland-mk free?) (list free?))
+(define (roland-mk free? joined?) (list free? joined?))
 (define (roland-is-free? knpc) (car (kobj-gob-data knpc)))
+(define (roland-joined? knpc) (cadr (kobj-gob-data knpc)))
 (define (roland-set-free! knpc) (set-car! (kobj-gob-data knpc) #t))
+(define (roland-set-joined! knpc) (set-car! (cdr (kobj-gob-data knpc)) #t))
 
 ;;----------------------------------------------------------------------------
 ;; Custom AI
@@ -44,6 +46,12 @@
   (or (roland-is-free? knpc)
       (can-pathfind? knpc (roland-exit-point knpc))))
 
+(define (roland-join-player knpc)
+  (or (roland-joined? knpc)
+      (begin
+        (join-player knpc)
+        (roland-set-joined! knpc #t))))
+
 ;;----------------------------------------------------------------------------
 ;; Conv
 ;;
@@ -51,23 +59,26 @@
 ;; cave.
 ;;----------------------------------------------------------------------------
 (define (roland-join knpc kpc)
-  (if (roland-is-or-can-be-free? knpc)
-      ;; yes - will the player accept his continued allegiance to Froederick?
-      (begin
-        (say knpc "I thank you for freeing me! I have sworn fealty to Lord "
-             "Froederick. But if you swear not to raise your hand against "
-             "him, I will join you. What say you?")
-        (if (kern-conv-get-yes-no? kpc)
-            (begin
-              (say knpc "I am honored to join you! Those vile rogues took my "
-                   "iron chest which contains my equipment. It should be "
-                   "around here somewhere.")
-              (join-player knpc))
-            (say knpc "[sadly] As you will. May our swords never cross.")))
-      (say knpc "But I am locked in this cell! Free me from this dishonour, "
-           "and you will gain an ally. I might even JOIN you if you are "
-           "willing.")))
-
+  (if (roland-joined? knpc)
+      (say knpc "Yes, I am still with you. Lead on!")
+      (if (roland-is-or-can-be-free? knpc)
+          ;; yes - will the player accept his continued allegiance to
+          ;; Froederick?
+          (begin
+            (say knpc "I thank you for freeing me! I have sworn fealty to Lord "
+                 "Froederick. But if you swear not to raise your hand against "
+                 "him, I will join you. What say you?")
+            (if (kern-conv-get-yes-no? kpc)
+                (begin
+                  (say knpc "I am honored to join you! Those vile rogues took my "
+                       "iron chest which contains my equipment. It should be "
+                       "around here somewhere.")
+                  (roland-join-player knpc))
+                (say knpc "[sadly] As you will. May our swords never cross.")))
+          (say knpc "I am locked in this cell! Free me from this dishonour, "
+               "and you will gain an ally. I might even JOIN you if you are "
+               "willing."))))
+  
 (define roland-conv
   (ifc basic-conv
        ;; default if the only "keyword" which may (indeed must!) be longer than
@@ -77,7 +88,12 @@
        (method 'default 
                (lambda (knpc kpc) 
                  (say knpc "I'm afraid I can't help you with that.")))
-       (method 'hail (lambda (knpc kpc) (say knpc "Well met.")))
+       (method 'hail 
+               (lambda (knpc kpc) 
+                 (if (roland-joined? knpc)
+                     (say knpc "I will aid thee any way I can.")
+                     (roland-join knpc kpc))))
+
        (method 'bye (lambda (knpc kpc) (say knpc "Farewell.")))
        (method 'job 
                (lambda (knpc kpc) 
@@ -118,4 +134,4 @@
                  nil                 ; container
                  nil                 ; readied
                  )
-   (roland-mk #f)))
+   (roland-mk #f #f)))

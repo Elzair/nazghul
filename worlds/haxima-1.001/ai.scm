@@ -74,3 +74,34 @@
           (taunt kchar ktarg)
           (or (ai-attack-target kchar ktarg)
               (ai-pathfind-to-target kchar ktarg))))))
+
+;; Bandit AI --------------------------------------------------
+
+(define bandit-taunts 
+  (list 
+   "Yer money or yer life!"
+   "Have at 'cher!"
+   "Yer a dead man, ye are!"
+   "Oy!  You!  Gerrout!"
+   "'Ave at 'im, boys!"
+   "Circle round, we've got a dead one!"
+   "Dibs on 'is boots!"
+   "Stranger, meetcha couple my friends..."
+   ))
+
+(define (bandit-taunted? kbandit)
+  (car (kobj-gob-data kbandit)))
+
+(define (bandit-taunt kbandit ktarg)
+  (taunt kbandit ktarg bandit-taunts)
+  (set-car! (kobj-gob-data kbandit) #t))
+
+(define (bandit-ai kchar)
+  (let ((ktarg (ai-select-target kchar)))
+    (if (null? ktarg)
+        (ai-wander kchar)
+        (begin
+          (or (bandit-taunted? kchar)
+              (bandit-taunt kchar ktarg))
+          (or (ai-attack-target kchar ktarg)
+              (ai-pathfind-to-target kchar ktarg))))))

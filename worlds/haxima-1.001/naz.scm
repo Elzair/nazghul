@@ -227,24 +227,11 @@
 ;;============================================================================
 ;; taunt
 ;;============================================================================
-(define taunts 
-  (list 
-   "Yer money or yer life!"
-   "Have at 'cher!"
-   "Yer a dead man, ye are!"
-   "Oy!  You!  Gerrout!"
-   "'Ave at 'im, boys!"
-   "Circle round, we've got a dead one!"
-   "Dibs on 'is boots!"
-   "Stranger, meetcha couple my friends..."
-   ))
-
 (define (random-select list)
   (list-ref list (modulo (random-next) (length list))))
 
-(define (taunt kchar ktarg)
-  (if (> (kern-dice-roll "1d20") 16)
-      (say kchar (random-select taunts))))
+(define (taunt kchar ktarg taunts)
+  (say kchar (random-select taunts)))
 
 ;; ----------------------------------------------------------------------------
 ;; search-rect -- apply a procedure to every location in a rectangular region

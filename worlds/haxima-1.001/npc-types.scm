@@ -82,6 +82,12 @@
 (define (mk-readied-items . items)
   items)
 
+(define (mk-bandit-gob)
+  (list #f))
+
+(define (mk-troll-gob)
+  (list #f))
+
 ;;----------------------------------------------------------------------------
 ;; NPC Type Constructors
 ;;----------------------------------------------------------------------------
@@ -172,7 +178,7 @@
           faction-monster ;;....faction
           nil ;;................custom ai (optional)   
           nil ;;................container (and contents)
-          nil ;;................readied arms (in addition to container contents)
+          nil ;;................readied arms (in addition to container)
           nil ;;................effects
           )))
     (kern-obj-add-effect slime ef_slime_split nil)
@@ -208,49 +214,53 @@
   )
 
 (define (mk-bandit)
-  (kern-char-arm-self
-   (mk-stock-char
-    " a bandit" ;;......name
-    sp_human ;;.........species
-    oc_bandit ;;........occupation
-    s_brigand ;;........sprite
-    faction-outlaw ;;...faction
-    nil ;;..............custom ai (optional)
+  (bind
+   (kern-char-arm-self
+    (mk-stock-char
+     " a bandit" ;;......name
+     sp_human ;;.........species
+     oc_bandit ;;........occupation
+     s_brigand ;;........sprite
+     faction-outlaw ;;...faction
+     'bandit-ai ;;.......custom ai (optional)
     
-    ;;..................container (and contents, used to arm char)
-    (mk-small-wooden-chest 
-     'spike-trap
-     (mk-contents 
-      (roll-to-add 50  "1"    heal-potion)
-      (roll-to-add 75  "1"    t_dagger)
-      (roll-to-add 50  "1"    short-sword)
-      (roll-to-add 10  "1d2"  t_oil)
-      (roll-to-add 50  "1"    t_mace)
-      (roll-to-add 50  "1d20" t_bolt)
-      (roll-to-add 25  "1"    t_xbow)
-      (roll-to-add 75  "1"    t_sm_shield)
-      (roll-to-add 90  "1"    t_armor_leather)
-      (roll-to-add 90  "1"    t_leather_helm)
-      (roll-to-add 100 "1d10" t_gold_coins)
-      (roll-to-add 50  "1d3"  t_picklock)
-      ))
-    
-    nil ;;...............readied arms (in addition to container contents)
-    nil ;;...............effects
-    )))
+     ;;..................container (and contents, used to arm char)
+     (mk-small-wooden-chest 
+      'spike-trap
+      (mk-contents 
+       (roll-to-add 50  "1"    heal-potion)
+       (roll-to-add 75  "1"    t_dagger)
+       (roll-to-add 50  "1"    short-sword)
+       (roll-to-add 10  "1d2"  t_oil)
+       (roll-to-add 50  "1"    t_mace)
+       (roll-to-add 50  "1d20" t_bolt)
+       (roll-to-add 25  "1"    t_xbow)
+       (roll-to-add 75  "1"    t_sm_shield)
+       (roll-to-add 90  "1"    t_armor_leather)
+       (roll-to-add 90  "1"    t_leather_helm)
+       (roll-to-add 100 "1d10" t_gold_coins)
+       (roll-to-add 50  "1d3"  t_picklock)
+       ))
+     
+     nil ;;...............readied arms (in addition to container contents)
+     nil ;;...............effects
+     ))
+   (mk-bandit-gob)))
 
 (define (mk-troll)
-  (mk-stock-char
-   "a troll " ;;................name
+  (bind
+   (mk-stock-char
+    "a troll " ;;................name
     sp_troll ;;.................species
     oc_troll ;;.................occupation
     s_troll ;;..................sprite
     faction-hill-troll ;;.......faction
     'troll-ai ;;................custom ai (optional)
-
+    
     ;;..........................container (and contents, used to arm char)
     (mk-small-wooden-chest nil nil)
-
+    
     nil ;;......................readied arms (in addition to container)
     nil ;;......................effects
-    ))
+    )
+   (mk-troll-gob)))

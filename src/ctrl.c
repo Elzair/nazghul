@@ -604,6 +604,60 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
                 cmdDumpPalette();
                 break;
 
+        case 'f':
+
+                // ----------------------------------------------------
+                // Toggle Follow mode on or off. When turning follow
+                // mode off, set all party members to player
+                // control. When turning it on, set all party member to
+                // follow mode but set the leader to player control.
+                // ----------------------------------------------------
+                        
+                log_begin("Follow mode ");
+                if (player_party->getPartyControlMode() == 
+                    PARTY_CONTROL_FOLLOW) {
+                        log_end("OFF");
+                        player_party->enableRoundRobinMode();
+                } else {
+                        log_end("ON");
+                        player_party->enableFollowMode();
+                }
+                if (! character->isLeader())
+                        character->endTurn();
+                break;
+
+        case SDLK_1:
+        case SDLK_2:
+        case SDLK_3:
+        case SDLK_4:
+        case SDLK_5:
+        case SDLK_6:
+        case SDLK_7:
+        case SDLK_8:
+        case SDLK_9:                        
+
+                // ----------------------------------------------------
+                // Put a character in solo mode.
+                // ----------------------------------------------------
+                        
+                solo_member = 
+                        player_party->getMemberAtIndex(key - SDLK_1);
+                if (solo_member != NULL             &&
+                    !solo_member->isIncapacitated() &&
+                    solo_member->isOnMap()) {
+                        player_party->enableSoloMode(solo_member);
+                        character->endTurn();
+                }
+                break;
+
+        case SDLK_0:
+                // ----------------------------------------------------
+                // Exit solo mode.
+                // ----------------------------------------------------
+                player_party->enableRoundRobinMode();
+                character->endTurn();
+                break;
+
         default:
                 break;
         }
@@ -678,28 +732,6 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
                 break;
 
 
-        case 'f':
-
-                // ----------------------------------------------------
-                // Toggle Follow mode on or off. When turning follow
-                // mode off, set all party members to player
-                // control. When turning it on, set all party member to
-                // follow mode but set the leader to player control.
-                // ----------------------------------------------------
-                        
-                log_begin("Follow mode ");
-                if (player_party->getPartyControlMode() == 
-                    PARTY_CONTROL_FOLLOW) {
-                        log_end("OFF");
-                        player_party->enableRoundRobinMode();
-                } else {
-                        log_end("ON");
-                        player_party->enableFollowMode();
-                }
-                if (! character->isLeader())
-                        character->endTurn();
-                break;
-
         case 'g':
                 cmdGet(character, 
                        !place_contains_hostiles(character->getPlace(), 
@@ -756,39 +788,6 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
         case '?':
                 cmdHelp();
                 break;
-
-        case SDLK_1:
-        case SDLK_2:
-        case SDLK_3:
-        case SDLK_4:
-        case SDLK_5:
-        case SDLK_6:
-        case SDLK_7:
-        case SDLK_8:
-        case SDLK_9:                        
-
-                // ----------------------------------------------------
-                // Put a character in solo mode.
-                // ----------------------------------------------------
-                        
-                solo_member = 
-                        player_party->getMemberAtIndex(key - SDLK_1);
-                if (solo_member != NULL             &&
-                    !solo_member->isIncapacitated() &&
-                    solo_member->isOnMap()) {
-                        player_party->enableSoloMode(solo_member);
-                        character->endTurn();
-                }
-                break;
-
-        case SDLK_0:
-                // ----------------------------------------------------
-                // Exit solo mode.
-                // ----------------------------------------------------
-                player_party->enableRoundRobinMode();
-                character->endTurn();
-                break;
-
 
         case '<':
                 // ----------------------------------------------------
