@@ -86,6 +86,7 @@ combat_maps {
   t_grass   m_grass_combat;
   t_trees   m_grass_combat;
   t_forest  m_forest_combat;
+  t_bridge  m_east_west_small_bridge_combat;
 
 #if WATER_COMBAT_MAP
   t_shoals  m_water_combat;
