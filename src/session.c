@@ -50,8 +50,8 @@
 #include "clock.h"
 #include "wind.h"
 #include "foogod.h"
-
 #include "terrain_map.h" // dbg
+#include "dtable.h"
 
 #include <assert.h>
 #include <ctype.h>              // isspace()
@@ -201,6 +201,25 @@ static void session_save_clock(save_t *save, struct session *session)
                 session->clock.min);
 }
 
+static void session_save_dtable(struct save *save, struct session *session)
+{
+        int rows;
+        int cols;
+
+        save->enter(save, "(kern-mk-dtable\n");
+
+        for (rows = 0; rows < session->dtable->n_factions; rows++) {
+                save->write(save, "(list ");
+                for (cols = 0; cols < session->dtable->n_factions; cols++) {
+                        save->write(save, "%d ", 
+                                    dtable_get(session->dtable, rows, cols));
+                }
+                save->write(save, ")\n");
+        }
+
+        save->exit(save, ")\n");
+}
+
 struct session *session_new(void *interp)
 {
         struct session *session = (struct session*)calloc(1, sizeof(*session));
@@ -234,6 +253,8 @@ void session_del(struct session *session)
         magic_end_session(&session->magic);
         if (session->ptable)
                 ptable_del(session->ptable);
+        if (session->dtable)
+                dtable_del(session->dtable);
 
         free(session);
 }
@@ -307,6 +328,12 @@ void session_load(char *filename)
         }
         if (! Session->clock.set) {
                 load_err("clock not set (use kern-set-clock)");
+        }
+        if (! Session->ptable) {
+                load_err("passability table ont set (use kern-set-ptable)");
+        }
+        if (! Session->dtable) {
+                load_err("diplomacy table not set (use kern-set-dtable)");
         }
 
         /* Check for any errors. If there are any then destroy the new session
@@ -470,6 +497,7 @@ void session_save(char *fname)
         session_save_crosshair(save, Session);
         session_save_ascii(save, Session);
         session_save_clock(save, Session);
+        session_save_dtable(save, Session);
         sky_save(&Session->sky, save);
 
         /* Save the flags */
@@ -479,6 +507,7 @@ void session_save(char *fname)
         save->write(save, "(kern-add-magic-negated %d)\n", 
                     Session->magic_negated);
         save->write(save, "(kern-add-xray-vision %d)\n", Session->xray);
+
         save_del(save);
         fclose(file);                
 }

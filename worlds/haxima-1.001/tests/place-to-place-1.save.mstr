@@ -25,6 +25,39 @@
     "-- -- -- -- -- -- -- -- -- "
   )
 )
+(kern-mk-place 'p_test2 "Underplace"
+  nil ;; sprite
+  (kern-mk-map 'm_grass_map 5 5 pal_expanded
+    (list
+      " x  x .. .. .. "
+      " x .. .. .. .. "
+      ".. .. .. .. .. "
+      ".. .. .. .. .. "
+      ".. .. .. .. .. "
+    )
+  )
+  #f #t #f #f
+  ;; subplaces
+  nil
+  ;; neighbors
+  nil
+  ;; contents
+  (list
+    (list
+      (bind
+        (kern-mk-obj t_ladder_up 1)
+        (list
+          'p_test
+          4
+          12
+        )
+      ) ;; bind
+    2 2)
+  ) ;; end of objects
+  (list
+  )
+) ;; end of place p_test2
+
 (kern-mk-place 'p_test "Test Place"
   nil ;; sprite
   (kern-mk-map 'm_test_1 19 19 pal_expanded
@@ -59,56 +92,6 @@
   (list
     (list
       (kern-mk-char
-        'ch_olin
-        "Olin the Ghast"
-        sp_ghast
-        nil
-        s_ghost
-        3
-        20 30 22
-        0 1
-        10 5
-        0 0
-        0 0
-        28 2
-        8 8
-        nil
-        nil
-        nil
-        nil
-        ;; hooks
-        (list
-        )
-      )
-    4 10)
-    (list
-      (kern-tag 'portcullis-1
-        (bind
-          (kern-mk-obj t_portcullis 1)
-          (list
-            #f
-            '()
-            #f
-            '()
-          )
-        ) ;; bind
-      ) ;; kern-tag
-    5 12)
-    (list
-      (bind
-        (kern-mk-obj t_door 1)
-        (list
-          #t
-          5
-          '()
-          #f
-          #f
-          #f
-        )
-      ) ;; bind
-    4 11)
-    (list
-      (kern-mk-char
         'ch_shroom
         "Shroom"
         sp_human
@@ -132,18 +115,67 @@
         (list
         )
       )
-    4 11)
+    4 10)
     (list
       (bind
-        (kern-mk-obj t_lever 1)
+        (kern-mk-obj t_ladder_down 1)
         (list
-          #f
-          'portcullis-1
-          #f
-          '()
+          'p_test2
+          2
+          2
         )
       ) ;; bind
-    6 11)
+    4 12)
+    (list
+      (bind
+        (kern-mk-obj t_door 1)
+        (list
+          #f
+          0
+          '()
+          #f
+          #f
+          #f
+        )
+      ) ;; bind
+    5 12)
+    (list
+      (kern-mk-char
+        'ch_olin
+        "Olin the Ghast"
+        sp_ghast
+        nil
+        s_ghost
+        3
+        20 30 22
+        0 1
+        10 5
+        0 0
+        0 0
+        58 0
+        8 8
+        nil
+        nil
+        nil
+        nil
+        ;; hooks
+        (list
+        )
+      )
+    4 9)
+    (list
+      (bind
+        (kern-mk-obj t_door 1)
+        (list
+          #t
+          2
+          '()
+          #f
+          #f
+          #f
+        )
+      ) ;; bind
+    4 11)
   ) ;; end of objects
   (list
   )
@@ -165,9 +197,6 @@
     nil
     ;; contents
     (list
-      (list 8 t_spear)
-      (list 2 t_sm_shield)
-      (list 2 t_iron_helm)
       (list 1 t_dagger)
     )
   )

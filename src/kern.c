@@ -63,6 +63,7 @@
 #include "conv.h"
 #include "mmode.h"
 #include "log.h"
+#include "dtable.h"
 
 #include <assert.h>
 #include <ctype.h>              // isspace()
@@ -4426,6 +4427,95 @@ KERN_API_CALL(kern_mk_ptable)
         return sc->NIL;
 }
 
+KERN_API_CALL(kern_mk_dtable)
+{
+        int n_factions;
+        int r_faction;
+        struct dtable *dtable;
+        pointer row;
+        pointer col;
+
+        /* The dtable table is a list of lists. Each row corresponds to a
+         * passability class (a property of terrain, and objects which affect
+         * passability onto a tile). Each column corresponds to a movement
+         * mode. */
+
+        if (! scm_is_pair(sc, args)) {
+                load_err("kern-mk-dtable: arg 0 not a list");
+                return sc->NIL;
+        }
+
+        /* count the number of factions given in the table */
+        row = args;
+        col = scm_car(sc, args);
+        n_factions = scm_len(sc, row);
+        if (n_factions != scm_len(sc, col)) {
+                load_err("kern-mk-dtable: # of rows and columns must be same");
+                return sc->NIL;
+        }
+        if (n_factions <= 0) {
+                load_err("kern-mk-dtable: 0 factions given");
+                return sc->NIL;
+        }
+
+        /* allocate the kernel table */
+        dtable = dtable_new(n_factions);
+
+        /* For now, hardcode the table limits and settings. Note that we must
+         * set the upper and lower bounds before poking any entries into the
+         * table. */
+        dtable_set_hostile(dtable, -2);
+        dtable_set_allies(dtable, 2);
+        dtable_set_upper_bound(dtable, 2);
+        dtable_set_lower_bound(dtable, -2);
+        
+        /* for each row */
+        for (r_faction = 0; r_faction < n_factions; r_faction++) {
+
+                int c_faction;
+
+                col = scm_car(sc, row);
+                row = scm_cdr(sc, row);
+
+                if (scm_len(sc, col) < n_factions) {
+                        load_err("kern-mk-dtable: row %d has only %d columns "
+                                 "(expected %d)",
+                                 r_faction, scm_len(sc, col),
+                                 n_factions);
+                        goto abort;
+                }
+
+                /* for each column up to the limit */
+                for (c_faction = 0; c_faction < n_factions; c_faction++) {
+
+                        int level;
+
+                        /* get the level */
+                        if (unpack(sc, &col, "d", &level)) {
+                                load_err("kern-mk-dtable: row %d col %d bad "
+                                         "arg",
+                                         r_faction, c_faction);
+                                goto abort;
+                        }
+
+                        /* insert it into the diplomacy table (both ways) */
+                        dtable_set(dtable, r_faction, c_faction, level);
+                }
+        }
+
+        /* associate the session with the new table */
+        if (Session->dtable) {
+                dtable_del(Session->dtable);
+        }
+        Session->dtable = dtable;
+
+        return scm_mk_ptr(sc, dtable);
+
+ abort:
+        dtable_del(dtable);
+        return sc->NIL;
+}
+
 scheme *kern_init(void)
 {        
         scheme *sc;
@@ -4576,7 +4666,8 @@ scheme *kern_init(void)
         scm_define_proc(sc, "kern-sleep", kern_sleep);
         scm_define_proc(sc, "kern-sound-play", kern_sound_play);
         scm_define_proc(sc, "kern-tag", kern_tag);
-        scm_define_proc(sc, "kern-test-recursion", kern_test_recursion);        
+        scm_define_proc(sc, "kern-test-recursion", kern_test_recursion);
+        
 
         /* ui api */
         scm_define_proc(sc, "kern-ui-direction", kern_ui_direction);
@@ -4607,6 +4698,9 @@ scheme *kern_init(void)
 
         /* kern-log api */
         scm_define_proc(sc, "kern-log-msg", kern_log_msg);
+
+        /* kern-dtable api */
+        scm_define_proc(sc, "kern-mk-dtable", kern_mk_dtable);
 
         /* Revisit: probably want to provide some kind of custom port here. */
         scheme_set_output_port_file(sc, stderr);

@@ -209,7 +209,9 @@ nazghul_SOURCES = \
 	mmode.c \
 	mmode.h \
 	log.h \
-	log.c
+	log.c \
+	dtable.h \
+	dtable.c
 
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_CLEAN_FILES = 
@@ -236,7 +238,8 @@ vehicle.$(OBJEXT) wind.$(OBJEXT) wq.$(OBJEXT) Missile.$(OBJEXT) \
 cmd.$(OBJEXT) clock.$(OBJEXT) vmask.$(OBJEXT) ctrl.$(OBJEXT) \
 scheme.$(OBJEXT) session.$(OBJEXT) closure.$(OBJEXT) kern.$(OBJEXT) \
 dice.$(OBJEXT) gob.$(OBJEXT) magic.$(OBJEXT) effect.$(OBJEXT) \
-conv.$(OBJEXT) ptable.$(OBJEXT) mmode.$(OBJEXT) log.$(OBJEXT)
+conv.$(OBJEXT) ptable.$(OBJEXT) mmode.$(OBJEXT) log.$(OBJEXT) \
+dtable.$(OBJEXT)
 nazghul_LDADD = $(LDADD)
 nazghul_DEPENDENCIES = 
 nazghul_LDFLAGS = 

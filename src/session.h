@@ -73,6 +73,9 @@ extern int save_errs;
 /* Access to global session passability table: */
 #define session_ptable() (Session->ptable)
 
+/* Access to global session diplomacy table: */
+#define session_dtable() (Session->dtable)
+
 struct session {
 
         // This list keeps track of all loaded object types. It's private to
@@ -145,6 +148,9 @@ struct session {
 
         /* The passability table */
         struct ptable *ptable;
+
+        /* The diplomacy table */
+        struct dtable *dtable;
 };
 
 // Callback table for saving objects

@@ -131,4 +131,6 @@ nazghul_SOURCES =		\
 	mmode.c \
 	mmode.h \
 	log.h \
-	log.c
+	log.c \
+	dtable.h \
+	dtable.c

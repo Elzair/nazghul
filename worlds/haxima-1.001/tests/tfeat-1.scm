@@ -1090,3 +1090,17 @@
 (kern-add-time-stop 0)
 (kern-add-magic-negated 0)
 (kern-add-xray-vision 0)
+
+;; ----------------------------------------------------------------------------
+;; The diplomacy table. Each entry defines the attitude of the row to the
+;; column. Note that attitudes are not necessarily symmetric. Negative values
+;; are hostile, positive are friendly.
+;; ----------------------------------------------------------------------------
+(kern-mk-dtable
+ ;;    none play men orks accu
+ (list  0    0    0   0   -1   ) ;; none
+ (list  0    2    1   0   -1   ) ;; play
+ (list -1    1    2  -1   -2   ) ;; men
+ (list -1    0   -1   2   -1   ) ;; orks
+ (list -1   -1   -1  -1    2   ) ;; accu
+ )

@@ -94,6 +94,14 @@
  (list cant   cant  cant   cant   cant   cant  ) ;; energy fields
  )
 
+;; Factions. The diplomacy table (which defines the relationship between
+;; factions) must be defined in the session file, because it changes over time.
+(define faction-none     0)
+(define faction-player   1)
+(define faction-men      2)
+(define faction-orks     3)
+(define faction-accursed 4)
+
 ;; Layers (must match object.h)
 (define layer-none       0)
 (define layer-tfeat      1)
@@ -147,6 +155,7 @@
 (load "terrains.scm")
 (load "palette.scm")
 (load "fields.scm")
+(load "scenery.scm")
 
 ;; Object types
 (load "objs.scm")

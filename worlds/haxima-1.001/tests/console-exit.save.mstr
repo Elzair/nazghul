@@ -1035,6 +1035,13 @@
 (kern-set-crosshair t_crosshair)
 (kern-set-ascii ss_little_sprites 32)
 (kern-set-clock 0 0 0 0 13 50)
+(kern-mk-dtable
+  (list   0   0   0   0   -1   )
+  (list   0   2   1   0   -1   )
+  (list   -1   1   2   -1   -2   )
+  (list   -1   0   -1   2   -1   )
+  (list   -1   -1   -1   -1   2   )
+)
 ;; ---------
 ;; Astronomy
 ;; ---------

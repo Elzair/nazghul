@@ -36,6 +36,284 @@
     " b  b .. .. ..  b  b "
   )
 )
+(kern-mk-place 'p_sprite_gallery_1 "Sprite Gallery 1"
+  s_moongate_full ;; sprite
+  (kern-mk-map 'm_sprite_gallery_1 19 40 pal_expanded
+    (list
+      " x  [ .S .P .R .I .T .E  @  @ .G .A .L .L .E .R .Y  ]  x "
+      " x .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x "
+      " x .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x "
+      " x .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x "
+      " x .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x "
+      " x .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x "
+      " x .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x "
+      " x .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x "
+      " x .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x "
+      " x .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x "
+      " x .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x "
+      " x .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x "
+      " x .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x "
+      " x .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x "
+      " x .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x "
+      " x .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x "
+      " x .. .. .M .I .S .S .I .L .E .S .. .. .. .. .. .. ..  x "
+      " x .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x "
+      " x  x .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x  x "
+      " x .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x "
+      " x .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x "
+      " x .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x "
+      " x .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x "
+      " x .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x "
+      " x .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x "
+      " x .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x "
+      " x .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x "
+      " x .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x "
+      " x .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x "
+      " x .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x "
+      " x .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x "
+      " x .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x "
+      " x .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x "
+      " x .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x "
+      " x .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x "
+      " x .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x "
+      " x  x .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x  x "
+      " x .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x "
+      " x .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x "
+      " x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x "
+    )
+  )
+  #f #f #f #f
+  ;; subplaces
+  nil
+  ;; neighbors
+  nil
+  ;; contents
+  (list
+    (list
+      (kern-mk-obj t_magic_field_green 1)
+    5 3)
+    (list
+      (kern-mk-obj t_fireball_brown 1)
+    3 8)
+    (list
+      (kern-mk-obj t_lightning_bolt_chromatic 1)
+    1 13)
+    (list
+      (kern-mk-obj t_magic_sphere_purple 1)
+    11 6)
+    (list
+      (kern-mk-obj t_lightning_cloud_yellow 1)
+    9 11)
+    (list
+      (kern-mk-obj t_magic_field_green_pulsed 1)
+    7 3)
+    (list
+      (kern-mk-obj t_magic_field_brown 1)
+    5 8)
+    (list
+      (kern-mk-obj t_fireball_chromatic 1)
+    3 13)
+    (list
+      (kern-mk-obj t_lightning_bolt_cyan 1)
+    1 5)
+    (list
+      (kern-mk-obj t_magic_sphere_rays_blue 1)
+    11 11)
+    (list
+      (kern-mk-obj t_lightning_discharge_green 1)
+    9 3)
+    (list
+      (kern-mk-obj t_magic_field_brown_pulsed 1)
+    7 8)
+    (list
+      (kern-mk-obj t_magic_field_blue_2 1)
+    5 13)
+    (list
+      (kern-mk-obj t_fireball_cyan 1)
+    3 5)
+    (list
+      (kern-mk-obj t_lightning_bolt_white 1)
+    1 10)
+    (list
+      (kern-mk-obj t_magic_sphere_green 1)
+    11 3)
+    (list
+      (kern-mk-obj t_lightning_cloud_green 1)
+    9 8)
+    (list
+      (kern-mk-obj t_magic_field_cyan 1)
+    5 5)
+    (list
+      (kern-mk-obj t_fireball_white 1)
+    3 10)
+    (list
+      (kern-mk-obj t_lightning_bolt_red 1)
+    1 2)
+    (list
+      (kern-mk-obj t_arrow_metal_red 1)
+    13 3)
+    (list
+      (kern-mk-obj t_magic_field_white_pulsed 1)
+    7 5)
+    (list
+      (kern-mk-obj t_magic_field_white 1)
+    5 10)
+    (list
+      (kern-mk-obj t_fireball_red 1)
+    3 2)
+    (list
+      (kern-mk-obj t_lightning_bolt_yellow 1)
+    1 7)
+    (list
+      (kern-mk-obj t_magic_sphere_rays_purple 1)
+    11 13)
+    (list
+      (kern-mk-obj t_lightning_discharge_black 1)
+    9 5)
+    (list
+      (kern-mk-obj t_magic_field_chromatic_pulsed 1)
+    7 10)
+    (list
+      (kern-mk-obj t_magic_field_red 1)
+    5 2)
+    (list
+      (kern-mk-obj t_fireball_yellow 1)
+    3 7)
+    (list
+      (kern-mk-obj t_lightning_bolt_dark_grey 1)
+    1 12)
+    (list
+      (kern-mk-obj t_magic_sphere_yellow 1)
+    11 5)
+    (list
+      (kern-mk-obj t_lightning_cloud_purple 1)
+    9 10)
+    (list
+      (kern-mk-obj t_magic_field_red_pulsed 1)
+    7 2)
+    (list
+      (kern-mk-obj t_magic_field_yellow 1)
+    5 7)
+    (list
+      (kern-mk-obj t_fireball_dark_grey 1)
+    3 12)
+    (list
+      (kern-mk-obj t_lightning_bolt_blue 1)
+    1 4)
+    (list
+      (kern-mk-obj t_arrow_metal_green 1)
+    13 5)
+    (list
+      (kern-mk-obj t_magic_sphere_rays_green 1)
+    11 10)
+    (list
+      (kern-mk-obj t_lightning_discharge_red 1)
+    9 2)
+    (list
+      (kern-mk-obj t_magic_field_purple_pulsed 1)
+    7 7)
+    (list
+      (kern-mk-obj t_magic_field_dark_grey 1)
+    5 12)
+    (list
+      (kern-mk-obj t_fireball_blue 1)
+    3 4)
+    (list
+      (kern-mk-obj t_lightning_bolt_orange 1)
+    1 9)
+    (list
+      (kern-mk-obj t_magic_sphere_red 1)
+    11 2)
+    (list
+      (kern-mk-obj t_lightning_cloud_red 1)
+    9 7)
+    (list
+      (kern-mk-obj t_magic_field_blue 1)
+    5 4)
+    (list
+      (kern-mk-obj t_fireball_orange 1)
+    3 9)
+    (list
+      (kern-mk-obj t_arrow_wood_red 1)
+    13 2)
+    (list
+      (kern-mk-obj t_magic_sphere_cyan 1)
+    11 7)
+    (list
+      (kern-mk-obj t_lightning_cloud_orange 1)
+    9 12)
+    (list
+      (kern-mk-obj t_magic_field_blue_pulsed 1)
+    7 4)
+    (list
+      (kern-mk-obj t_magic_field_orange 1)
+    5 9)
+    (list
+      (kern-mk-obj t_lightning_bolt_purple 1)
+    1 6)
+    (list
+      (kern-mk-obj t_magic_sphere_rays_yellow 1)
+    11 12)
+    (list
+      (kern-mk-obj t_lightning_discharge_blue 1)
+    9 4)
+    (list
+      (kern-mk-obj t_magic_field_blue_2_pulsed 1)
+    7 9)
+    (list
+      (kern-mk-obj t_fireball_purple 1)
+    3 6)
+    (list
+      (kern-mk-obj t_lightning_bolt_grey 1)
+    1 11)
+    (list
+      (kern-mk-obj t_magic_sphere_blue 1)
+    11 4)
+    (list
+      (kern-mk-obj t_lightning_cloud_blue 1)
+    9 9)
+    (list
+      (kern-mk-obj t_magic_field_purple 1)
+    5 6)
+    (list
+      (kern-mk-obj t_fireball_grey 1)
+    3 11)
+    (list
+      (kern-mk-obj t_lightning_bolt_green 1)
+    1 3)
+    (list
+      (kern-mk-obj t_arrow_wood_green 1)
+    13 4)
+    (list
+      (kern-mk-obj t_magic_sphere_rays_red 1)
+    11 9)
+    (list
+      (bind
+        (kern-mk-obj t_perm_gate 1)
+        (list
+          'p_terrain_test
+          21
+          2
+        )
+      ) ;; bind
+    9 1)
+    (list
+      (kern-mk-obj t_magic_field_grey 1)
+    5 11)
+    (list
+      (kern-mk-obj t_fireball_green 1)
+    3 3)
+    (list
+      (kern-mk-obj t_lightning_bolt_brown 1)
+    1 8)
+    (list
+      (kern-mk-obj t_magic_sphere_rays_cyan 1)
+    11 14)
+  ) ;; end of objects
+  (list
+  )
+) ;; end of place p_sprite_gallery_1
+
 (kern-mk-place 'p_dark_passage "A Dark Passage"
   s_dungeon ;; sprite
   (kern-mk-map 'm_dark_passage 32 32 pal_expanded
@@ -135,7 +413,7 @@
       " r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r || || ~~ || .. || tt ~~ ~~ ~~ .. .. .. ..  x cc cc cc cc  x ~~ ~~ ~~ -- __ __ __  x -- -- ~~ ~~ || || || || || || || || || || || || || || || || "
       " r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r || ~~ ~~ || .. || tt ~~ tt ~~ .. .. ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ -- __ __ __  x __ -- ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ || || || ~~ ~~ ~~ ~~ || || "
       " r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r || ~~ tt  b ..  b .. ~~ tt ~~ .. .. ~~ tt  x cc cc cc cc  x cc cc ~~ -- __ __ __  x __ -- ~~ ~~ || || || || || || ~~ || || || ~~ || || ~~ ~~ || "
-      " r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r ~~ ~~ .. .. .. .. ~~ .. ~~ ~~ ~~ ~~ tt  x x! cc cc x!  x cc cc ~~ -- -- -- --  x -- ~~ ~~ tt tt || || || || || ~~ || || || ~~ || || tt ~~ ~~ "
+      " r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r ~~ ~~ .. .. .. .. ~~ .. ~~ ~~ ~~ ~~ tt  x x! cc cc x!  x cc cc ~~ -- -- -- --  x -- ~~ ~~ tt tt || || || || || || || || || ~~ || || tt ~~ ~~ "
       " r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r || ~~ ~~ ~~ ~~ ~~ ~~ .. .. .. .. .. ..  x cc cc cc cc  x cc cc ~~ ~~ ~~ ~~ ~~  x ~~ ~~ .. || tt || || || || || ~~ ~~ ~~ ~~ ~~ || tt tt tt || "
       " r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r .. .. .. .. .. .. .. ..  r  r  r  x cc cc cc cc cc cc cc cc cc cc cc cc  x .. .. .. tt tt || || || || || || || || || || || || tt || || "
       " r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  x cc cc cc cc  x cc cc cc cc cc cc cc x! .. .. ..  b tt || || || || || || tt || || || || || || || || "
@@ -455,9 +733,9 @@
                 (kern-mk-obj t_moongate 1)
                 (list
                   'ord
-                  #f
+                  #t
                   '()
-                  #f
+                  #t
                   #f
                 )
               ) ;; bind
@@ -689,6 +967,124 @@
   ;; subplaces
   (list
     (list
+      (kern-mk-place 'p_terrain_test "Terrain Test"
+        s_dungeon ;; sprite
+        (kern-mk-map 'm_terrain_test 24 32 pal_expanded
+          (list
+            " x  x  x .. ..  x  x  x .. ..  x .. .. ..  x .. ..  x  x  x .. ..  x  x "
+            " x .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x "
+            " x .. .A .B .C .D .E .F .G .H .. .I .J .K .L .M .N .O .P .. .. .. .. .. "
+            ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+            ".. .. ,A ,B ,C ,D ,E ,F ,G ,H .. ,I ,J ,K ,L ,M ,N ,O ,P .. .. .. .. .. "
+            " x .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x "
+            " x .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x "
+            " x .. .Q .R .S .T .U .V .W .X .. .Y .Z  [  @  @  @  @  ] .. .. .. ..  x "
+            ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+            ".. .. ,Q ,R ,S ,T ,U ,V ,W ,X .. ,Y ,Z ;T ;E ;N ;A ;S ;D .. .. .. .. .. "
+            " x .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x "
+            " x .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x "
+            " x .. __ __ __ .. %% %% %% .. {{ {{ {{ .. .. .. .. .. .. .. .. .. ..  x "
+            ".. .. __ __ .. .. %% %% .. .. {{ {{ .. .. .. .. .. .. .. .. .. .. .. .. "
+            ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+            ".. .. -- -- -- .. tt tt tt .. ^^ ^^ ^^ .. .. .. .. .. .. .. .. .. .. .. "
+            ".. .. -- -- .. .. tt tt .. .. ^^ ^^ .. .. .. .. .. .. .. .. .. .. .. .. "
+            ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+            ".. .. ~~ ~~ ~~ .. || || || ..  !  !  ! .. .. .. .. .. .. .. .. .. .. .. "
+            ".. .. ~~ ~~ .. .. || || .. ..  !  ! .. .. .. .. .. .. .. .. .. .. .. .. "
+            " x .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x "
+            " x .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x "
+            " x .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x "
+            ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+            ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+            " x .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x "
+            " x .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x "
+            " x .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x "
+            ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+            ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+            " x .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x "
+            " x  x  x .. ..  x  x  x .. ..  x .. .. ..  x .. ..  x  x  x .. ..  x  x "
+          )
+        )
+        #f #f #f #f
+        ;; subplaces
+        nil
+        ;; neighbors
+        nil
+        ;; contents
+        (list
+          (list
+            (kern-mk-char
+              'ch_slurmok
+              "Slurmok"
+              sp_yellow_slime
+              oc_wizard
+              s_yellow_slime
+              3
+              4 14 3
+              0 1
+              10 5
+              0 0
+              0 0
+              24 0
+              5 7
+              nil
+              nil
+              nil
+              nil
+              ;; hooks
+              (list
+                (list
+                  ef_poison_immunity
+                  '()
+                  2
+                  0
+                )
+              )
+            )
+          21 3)
+          (list
+            (kern-mk-char
+              'ch_thorald_greybeard
+              "Thorald Greybeard"
+              sp_human
+              oc_wizard
+              s_companion_wizard
+              3
+              20 30 22
+              0 1
+              10 5
+              0 0
+              0 0
+              39 0
+              8 8
+              nil
+              nil
+              nil
+              (list
+                t_rpg
+              )
+              ;; hooks
+              (list
+              )
+            )
+          20 2)
+          (list
+            (bind
+              (kern-mk-obj t_perm_gate 1)
+              (list
+                'p_sprite_gallery_1
+                9
+                1
+              )
+            ) ;; bind
+          21 2)
+        ) ;; end of objects
+        (list
+        )
+      ) ;; end of place p_terrain_test
+
+    3 15) ;; coords of p_terrain_test
+    (list
       (kern-mk-place 'p_gregors_hut "Gregor's Hut"
         s_hut ;; sprite
         (kern-mk-map 'm_gregors_hut 32 32 pal_expanded
@@ -833,12 +1229,47 @@
   ;; contents
   (list
     (list
+      (bind
+        (kern-mk-obj tf_road_1x3_c 1)
+        '()
+      ) ;; bind
+    6 20)
+    (list
       (kern-mk-field f_sleep_perm -1)    34 24)
+    (list
+      (kern-mk-party t_goblin_horde 4
+        (kern-mk-vehicle t_ship 1 100)
+      )
+    3 28)
+    (list
+      (bind
+        (kern-mk-obj tf_road_1x3_c 1)
+        '()
+      ) ;; bind
+    6 21)
+    (list
+      (bind
+        (kern-mk-obj tf_road_3x3_sw 1)
+        '()
+      ) ;; bind
+    3 18)
     (list
       (kern-mk-party t_skeleton_brigade 4
         nil
       )
     25 19)
+    (list
+      (bind
+        (kern-mk-obj tf_road_3x1_c 1)
+        '()
+      ) ;; bind
+    4 18)
+    (list
+      (bind
+        (kern-mk-obj tf_road_3x1_c 1)
+        '()
+      ) ;; bind
+    5 18)
     (list
       (kern-tag 'mg-2
         (bind
@@ -855,47 +1286,57 @@
     35 25)
     (list
       (bind
-        (kern-mk-obj t_lever 1)
-        (list
-          #f
-          'bridge-1
-          #f
-          '()
-        )
+        (kern-mk-obj tf_road_3x3_ne 1)
+        '()
       ) ;; bind
-    35 25)
-    (list
-      (kern-mk-party t_goblin_horde 4
-        (kern-mk-vehicle t_ship 3 100)
-      )
-    0 29)
+    6 18)
     (list
       (kern-mk-obj t_goblin_generator 1)
     20 20)
     (list
-      (kern-tag 'bridge-1
-        (bind
-          (kern-mk-obj tf_drawbridge 1)
-          (list
-            #f
-            '()
-            #f
-            's_ew_bridge
-          )
-        ) ;; bind
-      ) ;; kern-tag
+      (bind
+        (kern-mk-obj tf_ew_bridge 1)
+        '()
+      ) ;; bind
+    2 22)
+    (list
+      (bind
+        (kern-mk-obj tf_ew_bridge 1)
+        '()
+      ) ;; bind
     37 25)
     (list
-      (kern-mk-field f_poison 10)    34 22)
+      (bind
+        (kern-mk-obj tf_road_3x1_c 1)
+        '()
+      ) ;; bind
+    3 22)
     (list
-      (kern-mk-obj t_mushroom 1)
-    38 22)
+      (kern-mk-field f_poison 7)    34 22)
     (list
-      (kern-mk-obj t_dagger 1)
-    38 22)
+      (bind
+        (kern-mk-obj tf_road_3x1_c 1)
+        '()
+      ) ;; bind
+    4 22)
     (list
-      (kern-mk-obj t_green_potion 2)
-    38 22)
+      (bind
+        (kern-mk-obj tf_road_3x1_c 1)
+        '()
+      ) ;; bind
+    5 22)
+    (list
+      (bind
+        (kern-mk-obj tf_road_3x3_se 1)
+        '()
+      ) ;; bind
+    6 22)
+    (list
+      (bind
+        (kern-mk-obj tf_road_1x3_c 1)
+        '()
+      ) ;; bind
+    6 19)
     (list
       (kern-tag 'mg-1
         (bind
@@ -911,127 +1352,75 @@
       ) ;; kern-tag
     32 23)
     (list
-      (kern-mk-player
-        'player
-        s_companion_fighter
-        "Walk"
-        "sounds/walk.wav"
-        1000 500 3
-        nil
-        m_campsite
-        nil
-        nil ; player's vehicle
-        (kern-mk-container
-          nil
-          ;; trap
-          nil
-          ;; contents
-          (list
-            (list 1 t_rpg)
-            (list 1 the-goblin-lexicon)
-            (list 1 t_poison_immunity_potion)
-            (list 10 mandrake)
-            (list 10 nightshade)
-            (list 10 blood_moss)
-            (list 10 sulphorous_ash)
-            (list 10 black_pearl)
-            (list 10 spider_silk)
-            (list 10 ginseng)
-            (list 10 garlic)
-            (list 25 t_oil)
-            (list 100 t_arrow)
-            (list 1 t_dagger)
-            (list 1 in_vas_por_ylem)
-            (list 1 in_flam_hur)
-            (list 1 sanct_lor)
-            (list 3 in_sanct)
-            (list 3 vas_lor)
-            (list 10 in_lor)
-            (list 1 in_zu)
-            (list 2 an_xen_exe)
-            (list 2 sanct)
-            (list 2 an_sanct)
-            (list 2 in_nox_por)
-            (list 2 kal_xen)
-            (list 2 an_xen_corp)
-            (list 10 vas_rel_por)
-            (list 10 test_recur)
-            (list 1 in_mani_corp)
-            (list 1 in_an)
-            (list 1 wis_an_ylem)
-          )
-        )
-        (list
-          (kern-mk-char
-            'ch_thorald_greybeard
-            "Thorald Greybeard"
-            sp_human
-            oc_wizard
-            s_companion_wizard
-            3
-            20 30 22
-            0 1
-            10 5
-            0 0
-            0 0
-            39 0
-            8 8
-            nil
-            nil
-            nil
-            (list
-              t_rpg
-            )
-            ;; hooks
-            (list
-            )
-          )
-          (kern-mk-char
-            'ch_slurmok
-            "Slurmok"
-            sp_yellow_slime
-            oc_wizard
-            s_yellow_slime
-            3
-            4 14 3
-            0 1
-            10 5
-            0 0
-            0 0
-            24 0
-            5 7
-            nil
-            nil
-            nil
-            nil
-            ;; hooks
-            (list
-              (list
-                ef_poison_immunity
-                '()
-                2
-                0
-              )
-            )
-          )
-        )
-      )
-    36 26)
-    (list
       (kern-mk-vehicle t_ship 1 100)
     36 26)
     (list
-      (kern-mk-field f_fire 10)    34 23)
+      (kern-mk-field f_fire 7)    34 23)
     (list
       (kern-mk-party t_slime_glob 4
         nil
       )
-    36 23)
+    36 20)
   ) ;; end of objects
   (list
   )
 ) ;; end of place p_wilderness
 
+(kern-mk-player
+  'player
+  s_companion_fighter
+  "Walk"
+  "sounds/walk.wav"
+  1000 500 3
+  nil
+  m_campsite
+  nil
+  nil ; player's vehicle
+  (kern-mk-container
+    nil
+    ;; trap
+    nil
+    ;; contents
+    (list
+      (list 1 t_rpg)
+      (list 1 the-goblin-lexicon)
+      (list 1 t_poison_immunity_potion)
+      (list 10 mandrake)
+      (list 10 nightshade)
+      (list 10 blood_moss)
+      (list 10 sulphorous_ash)
+      (list 10 black_pearl)
+      (list 10 spider_silk)
+      (list 10 ginseng)
+      (list 10 garlic)
+      (list 25 t_oil)
+      (list 100 t_arrow)
+      (list 1 t_dagger)
+      (list 1 in_mani_corp)
+      (list 1 in_vas_por_ylem)
+      (list 1 in_flam_hur)
+      (list 1 sanct_lor)
+      (list 3 in_sanct)
+      (list 3 vas_lor)
+      (list 10 in_lor)
+      (list 1 in_zu)
+      (list 2 an_xen_exe)
+      (list 2 sanct)
+      (list 2 an_sanct)
+      (list 2 in_nox_por)
+      (list 2 kal_xen)
+      (list 2 an_xen_corp)
+      (list 10 vas_rel_por)
+      (list 10 test_recur)
+      (list 1 wis_an_ylem)
+      (list 1 in_an)
+    )
+  )
+  (list
+    ch_slurmok
+    ch_thorald_greybeard
+  )
+)
 ;;--------------
 ;; Miscellaneous
 ;;--------------
@@ -1039,7 +1428,7 @@
 (kern-set-cursor ls_whirlpool)
 (kern-set-crosshair t_crosshair)
 (kern-set-ascii ss_little_sprites 32)
-(kern-set-clock 0 0 0 0 13 33)
+(kern-set-clock 0 0 0 0 14 12)
 (kern-mk-dtable
   (list   0   0   0   0   -1   )
   (list   0   2   1   0   -1   )

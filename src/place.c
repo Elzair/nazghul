@@ -1488,7 +1488,10 @@ void place_exec(struct place *place, struct exec_context *context)
                         /* Apply terrain, field and any other environmental
                          * effects. */
                         if (obj->isOnMap())
-                                place_apply_tile_effects(place, obj);
+                                /* Bugfix: as a result of executing its turn,
+                                 * the object may now be in a different
+                                 * place! */
+                                place_apply_tile_effects(obj->getPlace(), obj);
                             
 
                 }
