@@ -8,7 +8,7 @@
                (list 6  0  trigrave-tavern-table-1a  "eating")
                (list 7  0  trigrave-forge            "working")
                (list 12 0  trigrave-tavern-table-1a  "eating")
-               (list 7  0  trigrave-forge            "working")
+               (list 13 0  trigrave-forge            "working")
                (list 18 0  trigrave-tavern-hall      "idle")
                (list 22 0  trigrave-jims-bed         "sleeping")
                )
@@ -34,7 +34,8 @@
 (define (jim-trade knpc kpc)
   (if (not (string=? "working" (kern-obj-get-activity knpc)))
       (say knpc "Come by my shop when I'm open. "
-           "It's the Iron Works in the northeast corner.")
+           "It's the Iron Works in the northeast corner. "
+           "I'm open for business from 7:00AM til 6:00PM.")
       (begin
         (kern-conv-trade knpc kpc
                          (list t_dagger         10)

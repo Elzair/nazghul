@@ -36,7 +36,8 @@
 (define (earl-trade knpc kpc)
   (if (not (string=? "working" (kern-obj-get-activity knpc)))
       (say knpc "Come by my shop when I'm open. "
-           "It's the Dry Goods store in the southwest corner.")
+           "It's the Dry Goods store in the southwest corner, "
+           "open from 6:00AM to 6:00PM.")
       (begin
         (kern-conv-trade knpc kpc
 

@@ -42,7 +42,8 @@
 (define (gwen-trade knpc kpc)
   (if (not (string=? "working" (kern-obj-get-activity knpc)))
       (say knpc "Come by my shop when I'm open. "
-           "It's the Quiet Inn in the northwest corner of town.")
+           "It's the Quiet Inn in the northwest corner of town. "
+           "I open at 9:00AM and close the counter at midnight.")
       (let ((door (eval 'trigrave-inn-room-1-door)))
         ;; is the room still open?
         (if (not (door-locked? (kobj-gob door)))
