@@ -55,6 +55,14 @@
         weight         _weight  \
     }
 
+// SAM: This macro seems unused...(moved it from types.ghul)
+#define AMMO_TYPE(_tag, _name, _sprite) \
+    _tag {              \
+        name    _name   \
+        sprite  _sprite \
+        subtype ammo    \
+        }
+
 
 // Temporary Missiles (for spells and such)
 PROJECTILE_TYPE(M_fire,     "fire missile",   s_field_fire,   F_fire,   0);
