@@ -2,7 +2,8 @@
 * BUGS is up-to-date
 * RELEASE_NOTES is up-to-date
 * Version number is correct in Configure.in and nazghul.c
-* Test the distribution: ~/bin/ghul-test-install
+* Ensure the SUBDIRS of Makefile.am are correct for this release
+* Test the distribution: ~/bin/ghul-test-install <version>
 * upload the distro tarball
 
   ncftp -u anonymous upload.sourceforge.net
@@ -11,8 +12,9 @@
   put nazghul-$version.tar.gz
   bye  
 
-* On sourceforge goto the admin->File Releases page and scroll to the
-  bottom. Click "Add Release" next to "nazghul-devel". 
+* On sourceforge at http://sourceforge.net/projects/nazghul/ goto the
+  admin->File Releases page and scroll to the bottom. Click "Add Release" next
+  to "nazghul-devel".
 
   Fill out the form:
     For "New release name" put something like "nazghul-0.1.3"
@@ -28,7 +30,9 @@
   and hit Submit/Refresh
 
   Fill out the "Step 3:   Edit Files In This Release" form
-  and hit Submit/Refresh
+    Processor=Any
+    File Type Update=Source.gz
+  and hit Update/Refresh
 
 * From the main Nazghul project page on SourceForge,
   submit a news item for the file release.

@@ -27,7 +27,6 @@
 #include "map.h"
 #include "player.h"
 #include "wq.h"
-#include "game.h"
 #include "clock.h"
 #include "session.h"
 #include "gob.h"

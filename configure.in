@@ -1,11 +1,11 @@
 dnl Process this file with autoconf to produce a configure script.  
 
-dnl ----------------------------------------------------------------------------
+dnl ---------------------------------------------------------------------------
 dnl 1. Boilerplate
 dnl      This section should include standard boilerplate code, such as the call 
 dnl      to AC_INIT (which must be first), AM_INIT_AUTOMAKE, AC_CONFIG_HEADER, 
 dnl      and perhaps AC_REVISION.
-dnl ----------------------------------------------------------------------------
+dnl ---------------------------------------------------------------------------
 
 dnl AC_INIT(filename) 
 dnl   This macro performs essential initialization for the
@@ -34,22 +34,22 @@ dnl   and VERSION. By default it also defines these variables (via
 dnl   AC_DEFINE_UNQUOTED). However, this macro also accepts an optional third 
 dnl   argument which, if not empty, means that the AC_DEFINE_UNQUOTED calls for 
 dnl   PACKAGE and VERSION should be suppressed.
-AM_INIT_AUTOMAKE(nazghul, 0.1.4)
+AM_INIT_AUTOMAKE(nazghul, 0.2.0)
 
-dnl ----------------------------------------------------------------------------
+dnl ---------------------------------------------------------------------------
 dnl 2. Options
 dnl      The next section should include macros which add command-line options 
 dnl      to configure, such as AC_ARG_ENABLE. It is typical to put support code
 dnl      for the option in this section as well, if it is short enough.
-dnl ----------------------------------------------------------------------------
+dnl ---------------------------------------------------------------------------
 
-dnl ----------------------------------------------------------------------------
+dnl ---------------------------------------------------------------------------
 dnl 3. Programs
 dnl      Next it is traditional to check for programs that are either needed by
 dnl      the configure process, the build process, or by one of the programs 
 dnl      being built. This usually involves calls to macros like AC_CHECK_PROG
 dnl      and AC_PATH_TOOL.
-dnl ----------------------------------------------------------------------------
+dnl ---------------------------------------------------------------------------
 
 dnl AC_PROG_MAKE_SET
 dnl   Some versions of make need to have the `Makefile' variable MAKE set in 
@@ -84,13 +84,13 @@ dnl   an install program cannot be found on the system, your package will have
 dnl   `install-sh' available in the directory chosen by AC_CONFIG_AUX_DIR.
 AC_PROG_INSTALL
 
-dnl ----------------------------------------------------------------------------
+dnl ---------------------------------------------------------------------------
 dnl 4. Libraries
 dnl      Checks for libraries come before checks for other objects visible to C
 dnl      (or C++, or anything else). This is necessary because some other checks
 dnl      work by trying to link or run a program; by checking for libraries
 dnl      first you ensure that the resulting programs can be linked.
-dnl ----------------------------------------------------------------------------
+dnl ---------------------------------------------------------------------------
 
 dnl Check for SDL
 SDL_VERSION=1.2.3
@@ -111,19 +111,19 @@ CC="$CXX"
 dnl Hack in SDL_image -- how do I test for it? Can't find any examples...
 LIBS="$SDL_LIBS $LIBS -lSDL_image"
 
-dnl ----------------------------------------------------------------------------
+dnl ---------------------------------------------------------------------------
 dnl 5. Headers
 dnl      Next come checks for existence of headers.
-dnl ----------------------------------------------------------------------------
+dnl ---------------------------------------------------------------------------
 
-dnl ----------------------------------------------------------------------------
+dnl ---------------------------------------------------------------------------
 dnl 6. Typedefs and structures
 dnl    We do checks for typedefs after checking for headers for the simple
 dnl    reason that typedefs appear in headers, and we need to know which headers
 dnl    we can use before we look inside them.
-dnl ----------------------------------------------------------------------------
+dnl ---------------------------------------------------------------------------
 
-dnl ----------------------------------------------------------------------------
+dnl ---------------------------------------------------------------------------
 dnl 7. Functions
 dnl      Finally we check for functions. These come last because functions have
 dnl      dependencies on the preceding items: when searching for functions,
@@ -131,12 +131,12 @@ dnl      libraries are needed in order to correctly link, headers are needed in
 dnl      order to find prototypes (this is especially important for C++, which
 dnl      has stricter prototyping rules than C), and typedefs are needed for
 dnl      those functions which use or return types which are not built in.
-dnl ----------------------------------------------------------------------------
+dnl ---------------------------------------------------------------------------
 
-dnl ----------------------------------------------------------------------------
+dnl ---------------------------------------------------------------------------
 dnl 8. Output
 dnl      This is done by invoking AC_OUTPUT.
-dnl ----------------------------------------------------------------------------
+dnl ---------------------------------------------------------------------------
 
 dnl Exclude CVS directories when creating tarball
 dnl TAR="$TAR --exclude CVS"
@@ -145,5 +145,5 @@ dnl TAR="$TAR --exclude CVS"
 AC_OUTPUT([
 Makefile
 src/Makefile
-examples/Makefile
+worlds/Makefile
 ])

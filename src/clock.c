@@ -28,7 +28,6 @@
 #include "map.h"
 #include "player.h"
 #include "wq.h"
-#include "game.h"
 #include "session.h"
 
 #include <assert.h>

@@ -25,7 +25,6 @@
 #include "foogod.h"
 #include "play.h"
 #include "session.h"
-#include "game.h"
 #include "place.h"
 #include "constants.h"
 #include "images.h"

@@ -1,3 +1,10 @@
+Changes between nazghul-0.1.5 and nazghul-0.2.0
+
+o Script language changed the original ad-hoc script language sometimes
+  referred to as "ghulscript" to Scheme.
+
+o Players can save the game.
+
 Changes between nazghul-0.1.4 and nazghul-0.1.5
 
 o Bugfix: with animation off, on entry to wilderness combat the map was not

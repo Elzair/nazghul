@@ -19,10 +19,26 @@ nazghul-0.x.0
 First, see the nazghul-0.x.0/INSTALL instructions in the top-level of the
 nazghul distribution for instructions on setting up and installing the game.
 
-Next, to play the example that comes with the game cd to nazghul-0.x.0/examples
-and run the command nazghul. If your installation worked correctly the game
-should fire up.
+Next, to play the example that comes with the game cd to nazghul-0.x.0/world/haxima-1.001
+and run the command:
 
+    $ nazghul session.scm
+
+If your installation worked correctly the game should fire up.
+
+
+
+                                SAVING THE GAME
+
+You can save a snapshot at any time with Ctrl-S (S is for "save"). This will save to a file
+called save.scm. Later during play, you can reload the snapshot with Ctrl-R (R
+is for "restore").
+
+When you quit the game with the Q)uit command, it will automatically save to
+save.scm. To pick up where you left off later, start the game with the save.scm
+file:
+
+    $ nazghul save.scm
 
 
                                   ORIENTATION
@@ -109,7 +125,7 @@ Status Window
 
     In the top right you have a general-purpose window for viewing and
     selecting lists of things. Normally it shows some basic party stats, but
-    its contents change as required by used commands. For example, (R)eady will
+    its contents change as required by user commands. For example, (R)eady will
     turn it into a selection list.
 
 Foogod Window
@@ -157,7 +173,7 @@ General commands:
     H)andle-<member>-<target>..Activate a switch or lever
     N)ew-order-<member>-<member>...Swap order of two party members
     O)pen-<dir>................Open a container or door
-    Q)uit......................Quits the game
+    Q)uit......................Quits & saves the game
     R)eady-<member>-<item>.....Ready an armament like a weapon, shield, etc.
     S)earch-<dir>..............Look carefully
     T)alk-<target>.............Talk to an NPC
@@ -166,7 +182,8 @@ General commands:
     Z)tats.....................Show party stats like inventory, armaments, etc
     @)AT.......................Information about where the party is AT, etc
     <space>....................Pass one turn
-
+    CTRL-S)ave.................Save the game
+    CTRL-R)estore..............Reload the last saved game
 
 Wilderness-only commands:
 
@@ -212,7 +229,7 @@ Solo Mode (combat/dungeons)
     bored. Enter Solo Mode by pressing the number key associated with the
     party member's order in the list. 1 is the first member in the list.
 
-    NOTE: Follow mode can be very useful if one of your party members has
+    NOTE: Solo mode can be very useful if one of your party members has
           greater passability then the others. In the example game Mesmeme the
           gazer can cross water unaided because he floats. This gives him the
           ability to scout places the other members don't normally have access,
@@ -348,7 +365,7 @@ Vas Rel Por      | Gate Travel    | SA, MA, BP             | P
 ============================================================================
 
 [1] In Towns and Dungeons teleport spells that can move the party from one
-    place to another will fail unless combat is over and the party if in Follow
+    place to another will fail unless combat is over and the party is in Follow
     Mode.
 
 
@@ -369,22 +386,22 @@ them).
                              APPENDIX: MAP HACKING
 
 
-Like many games, "nazghul" is separated into an engine and a data file. In this
-case the default data file is called 'mapfile' in the example directory. This
-file is built from the files in the subdirectories beneath by invoking the
-'make' command from within examples. I encourage people to experiment with
-modifying the examples file or even using it as a basis to create their own
-games. The example script code is all committed to the public domain. The image
-and sound files come from various sources - see the COPYING file in the top
-nazghul directory for details on where they came from.
+Like many games, "nazghul" is separated into an engine and some data files. In this
+case the data files are written in the Scheme programmming language. If you
+examine the default start file 'session.scm' you will see that it is a scheme
+file which loads the game types from other files and then defines the starting
+game variables.
+
+I encourage people to experiment with modifying the example files or even using
+them as a basis to create their own games. The example script code is all
+committed to the public domain. The image and sound files come from various
+sources - see the COPYING file in the top nazghul directory for details on
+where they came from.
 
 If you want to make a proprietary game you may use the example script files,
 but you will probably need to make your own image and sound resource files as
 the ones in the examples directory come from other open-source or freeware
 projects and their copyright holders might object to proprietary use.
-
-A more detailed guide to map hacking is under development in the
-MAP_HACKERS_GUIDE in this same directory.
 
 
 --gmcnutt (gmcnutt@cableone.net)

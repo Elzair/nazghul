@@ -1,6 +1,6 @@
 
 
-SUBDIRS = src examples
+SUBDIRS = src worlds
 
 DIST_SUBDIRS = $(SUBDIRS)
 

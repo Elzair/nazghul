@@ -1,4 +1,4 @@
-Known bugs in release 0.1.4
+Known bugs in release 0.2.0
 
 o Some combinations of (terrain + terrain) or (terrain + terrain + vehicle)
   result in sub-optimal combat maps.  This may be largely fixed/worked around

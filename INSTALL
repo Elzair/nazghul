@@ -22,8 +22,8 @@ PATH.
 
 STARTING THE GAME
 
-    cd examples
-    nazghul
+    cd world/haxima-1.001
+    nazghul session.scm
 
 
 TIPS FOR SLOW COMPUTERS
