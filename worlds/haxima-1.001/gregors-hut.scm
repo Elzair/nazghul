@@ -38,7 +38,7 @@
 
 (kern-mk-place 'p_gregors_hut     ; tag
                "Gregor's Hut"     ; name
-               s_hamlet           ; sprite
+               s_hut              ; sprite
                m_gregors_hut      ; map
                #f                 ; wraps
                #f                 ; underground
