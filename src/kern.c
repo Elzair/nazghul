@@ -38,7 +38,6 @@
 #include "place.h"
 #include "ptable.h"
 #include "images.h"
-#include "Portal.h"
 #include "Party.h"
 #include "common.h"
 #include "player.h"
@@ -250,11 +249,6 @@ static void field_type_dtor(void *val)
 static void obj_type_dtor(void *val)
 {
         delete (class ObjectType *)val;
-}
-
-static void portal_dtor(void *val)
-{
-        delete (class Portal*)val;
 }
 
 static void vehicle_type_dtor(void *val)

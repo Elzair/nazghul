@@ -104,14 +104,12 @@ class Party:public Object {
 	virtual void destroy();        
 	virtual void disembark();
         virtual void distributeMembers();
-	//virtual bool enter_town(class Portal * portal);
 	virtual void exec(struct exec_context *cntxt);
         virtual char *getName(void);
 	virtual bool joinPlayer(void);
         virtual bool removeEffect(struct effect *effect);
 	virtual void forEachMember(bool(*fx) (class Character *, void *), 
                                    void *);
-	//virtual void init(class Character * ch);
 	virtual void init(class PartyType * type);
 	virtual void init(int x, int y, struct place *place, 
                           class PartyType * type);
@@ -129,7 +127,6 @@ class Party:public Object {
 	virtual bool turn_vehicle();
         virtual void applyEffect(closure_t *effect);
 
-        void enterPortal(class Portal *portal);
         void removeMembers();
 
 	bool attack_with_ordnance(int d);

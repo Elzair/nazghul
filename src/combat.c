@@ -37,7 +37,6 @@
 #include "Field.h"
 #include "event.h"
 #include "play.h"
-#include "Portal.h"
 #include "foogod.h"
 #include "wind.h"
 #include "dup_constants.h"

@@ -24,7 +24,6 @@
 #include "place.h"
 #include "sprite.h"
 #include "terrain.h"
-#include "Portal.h"
 #include "hash.h"
 #include "screen.h"
 #include "player.h"
@@ -771,19 +770,6 @@ Object *place_get_object(struct place *place, int x, int y, enum layer layer)
 	return outcast(olist, Object, container_link);
 }
 
-class Portal *place_get_portal(struct place * place, int x, int y)
-{
-	Object *object;
-
-        WRAP_COORDS(place, x, y);
-
-	object = place_get_object(place, x, y, portal_layer);
-	if (!object)
-		return 0;
-
-	return (class Portal *) object;
-}
-
 class Party *place_get_Party(struct place * place, int x, int y)
 {
 	Object *object;
@@ -927,12 +913,6 @@ static void place_pathfind_heuristic(struct astar_search_info *info,
         /* Add the terrain cost. */
         *cost += place_get_movement_cost(context->place, info->x0, info->y0, 
                                          context->requestor);
-
-	/* And I penalize tiles with portals to encourage the pathfinding
-	 * algorithm to route around them. Make them cost a little bit more
-	 * than walking all the way around them. */
-	if (place_get_portal(context->place, info->x0, info->y0))
-		*cost += 9;
 
 	/* And penalize tiles with hazards on them. I really should assign
 	 * different penalties to different hazerds. */

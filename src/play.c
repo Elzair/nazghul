@@ -48,7 +48,6 @@
 #include "dup_constants.h"
 #include "cmdwin.h"
 #include "vehicle.h"
-#include "Portal.h"
 #include "terrain.h"
 #include "cmd.h"
 #include "debug.h"

@@ -28,7 +28,6 @@
 #include "terrain.h"
 #include "place.h"
 #include "images.h"
-#include "Portal.h"
 #include "Party.h"
 #include "ptable.h"
 #include "common.h"

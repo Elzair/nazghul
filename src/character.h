@@ -183,7 +183,6 @@ class Character:public Object {
 	virtual bool unready(class ArmsType * arms);
 	virtual enum MoveResult move(int dx, int dy);
 	virtual enum MoveResult flee();
-        enum MoveResult enterPortal(class Portal *portal);
 	virtual void attackTerrain(int x, int y);
 	virtual void useAmmo();
 	virtual void rejuvenate();

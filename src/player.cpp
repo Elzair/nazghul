@@ -25,7 +25,6 @@
 #include "console.h"
 #include "place.h"
 #include "Party.h"
-#include "Portal.h"
 #include "screen.h"
 #include "sound.h"
 #include "terrain.h"
@@ -188,7 +187,6 @@ void player_party::changePlaceHook()
 
 enum move_result player_party::check_move_to(struct move_info *info)
 {
-	class Portal *new_portal;
 	class Party *npc_party;
 
 	// null place?
@@ -215,26 +213,6 @@ enum move_result player_party::check_move_to(struct move_info *info)
 	// another vehicle?
 	if (vehicle && place_get_vehicle(info->place, info->x, info->y))
 		return move_occupied;
-
-        // I give automatic portals higher priority than passability. This is
-        // mainly to allow ships to have access to towns which are placed on
-        // land but which may have a port. Passability should be determined by
-        // checking the town map to see if it allows entrance, not by checking
-        // the terrain the tile is on.
-        //
-        // Note that this - as written now - will allow the party to enter
-        // portals with impassable destinations. That's fine, see
-        // doc/GAME_RULES Design Discussion #3: sane portal linkages are the
-        // responsibility of game developers.
-	if (!info->portal &&
-	    (new_portal = place_get_portal(info->place, info->x, info->y))) {
-                if (new_portal->isAutomatic() && new_portal->isOpen()) {
-                        info->portal = new_portal;
-                        return move_enter_auto_portal;
-                }
-                return move_ok;
-	}
-
 
         info->subplace = place_get_subplace(info->place, info->x, info->y);
         if (info->subplace)
@@ -560,10 +538,6 @@ MoveResult player_party::move(int newdx, int newdy)
                 endTurn();
 		return MovedOk;
 
-	case move_enter_auto_portal:
-		enterPortal(info.portal);
-                return MovedOk;
-
         case move_enter_subplace:
 
                 // run the place's pre-entry hook, if applicable
@@ -639,21 +613,6 @@ bool player_party::takeOut(ObjectType *type, int q)
         type->describe(q);
         log_end(NULL);
         return inventory->takeOut(type, q);
-}
-
-void player_party::enter_portal(void)
-{
-	class Portal *portal;
-
-	cmdwin_clear();
-
-	portal = place_get_portal(Place, x, y);
-	if (!portal) {
-		return;
-	}
-
-        // Call the parent class's method
-        enterPortal(portal);
 }
 
 static bool player_member_rest_one_hour(class Character * pm, void *data)

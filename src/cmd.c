@@ -44,7 +44,6 @@
 #include "dup_constants.h"
 #include "cmdwin.h"
 #include "vehicle.h"
-#include "Portal.h"
 #include "terrain.h"
 #include "vmask.h"
 #include "session.h"
@@ -1484,9 +1483,7 @@ static int cmdCampInWilderness(class Object *camper)
 	cmdwin_clear();
 	cmdwin_print("Camp-");
 
-	if (place_get_portal(camper->getPlace(), camper->getX(), 
-                             camper->getY()) ||
-	    !place_is_passable(camper->getPlace(), camper->getX(), 
+	if (!place_is_passable(camper->getPlace(), camper->getX(), 
                                camper->getY(), camper, PFLAG_IGNOREVEHICLES)) {
 		cmdwin_print("not here!");
 		return 0;
@@ -2406,16 +2403,7 @@ void cmdZoomIn(void)
         // 
         // For now, I print a placeholder message for each case here:
         
-        Portal * pp = 
-                place_get_portal(player_party->getPlace(),
-                                 player_party->getX(),
-                                 player_party->getY() );
-        if (pp) {
-
-                // If standing over a portal then enter it:
-                log_msg("Enter-%s\n", pp->getName() );
-                player_party->enter_portal();
-        } else if ((subplace = place_get_subplace(player_party->getPlace(),
+        if ((subplace = place_get_subplace(player_party->getPlace(),
                                                   player_party->getX(),
                                                   player_party->getY()))) {
 

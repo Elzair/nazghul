@@ -145,8 +145,6 @@ nazghul_SOURCES = \
         player.cpp \
         player.h \
         play.h \
-        Portal.h \
-	Portal.cpp \
         Reagent.cpp \
         Reagent.h \
         sched.c \
@@ -231,9 +229,9 @@ foogod.$(OBJEXT) formation.$(OBJEXT) hash.$(OBJEXT) heap.$(OBJEXT) \
 images.$(OBJEXT) knapsack.$(OBJEXT) los.$(OBJEXT) map.$(OBJEXT) \
 nazghul.$(OBJEXT) Party.$(OBJEXT) object.$(OBJEXT) occ.$(OBJEXT) \
 olist.$(OBJEXT) place.$(OBJEXT) play.$(OBJEXT) player.$(OBJEXT) \
-Portal.$(OBJEXT) Reagent.$(OBJEXT) sched.$(OBJEXT) screen.$(OBJEXT) \
-sky.$(OBJEXT) sound.$(OBJEXT) species.$(OBJEXT) sprite.$(OBJEXT) \
-status.$(OBJEXT) terrain.$(OBJEXT) terrain_map.$(OBJEXT) tree.$(OBJEXT) \
+Reagent.$(OBJEXT) sched.$(OBJEXT) screen.$(OBJEXT) sky.$(OBJEXT) \
+sound.$(OBJEXT) species.$(OBJEXT) sprite.$(OBJEXT) status.$(OBJEXT) \
+terrain.$(OBJEXT) terrain_map.$(OBJEXT) tree.$(OBJEXT) \
 vehicle.$(OBJEXT) wind.$(OBJEXT) wq.$(OBJEXT) Missile.$(OBJEXT) \
 cmd.$(OBJEXT) clock.$(OBJEXT) vmask.$(OBJEXT) ctrl.$(OBJEXT) \
 scheme.$(OBJEXT) session.$(OBJEXT) closure.$(OBJEXT) kern.$(OBJEXT) \

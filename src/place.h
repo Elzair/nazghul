@@ -76,9 +76,7 @@ BEGIN_DECL
 
 struct location;
 struct place;
-class Portal;
 struct hash;
-class Moongate;
 
 struct location {
         struct place *place;
@@ -170,9 +168,6 @@ extern int place_flying_distance(struct place *place, int x0, int y0, int x1, in
 
 void place_get_direction_vector(struct place *place, int x1, int y1, 
                                 int x2, int y2, int *dx, int *dy);
-
-extern class Portal *place_get_portal(struct place *place,
-                                      int x, int y);
 
 extern class Party *place_get_Party(struct place *place,
                                     int x, int y);

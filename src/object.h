@@ -119,7 +119,6 @@ enum MoveResult {
         CantRendezvous,
         NotApplicable,
         ChangedFacing,
-        AvoidedPortal,
         AvoidedHazard,
         OutOfRange,
         NoDestination,

@@ -22,7 +22,6 @@
 #include "Party.h"
 #include "dice.h"
 #include "place.h"
-#include "Portal.h"
 #include "player.h"
 #include "combat.h"
 #include "species.h"
@@ -318,73 +317,6 @@ bool Party::turn_vehicle(void)
 	return true;
 }
 
-#if 0
-// Obsolete, keep it for reference for now
-bool Party::enter_town(class Portal * portal)
-{
-	int newx, newy, max_i, dx2, dy2, i;
-	struct place *newplace;
-
-	// Cannot enter town in vehicles (disembark?)
-	if (vehicle)
-		return false;
-
-	newplace = portal->getToPlace();
-
-	switch (vector_to_dir(dx, dy)) {
-	case SOUTH:
-		newx = place_w(newplace) / 2;
-		newy = 0;
-		max_i = place_w(newplace);
-		dy2 = 0;
-		dx2 = 1;
-		break;
-	case NORTH:
-		newx = place_w(newplace) / 2;
-		newy = place_h(newplace) - 1;
-		max_i = place_w(newplace);
-		dy2 = 0;
-		dx2 = 1;
-		break;
-	case WEST:
-		newx = newx = place_w(newplace) - 1;
-		newy = place_h(newplace) / 2;
-		max_i = place_h(newplace);
-		dy2 = 1;
-		dx2 = 0;
-		break;
-	case EAST:
-		newx = 0;
-		newy = place_h(newplace) / 2;
-		max_i = place_h(newplace);
-		dy2 = 1;
-		dx2 = 0;
-		break;
-	default:
-		assert(false);
-	}
-
-	for (i = 0; i < max_i; i++) {
-
-		if (!place_is_occupied(newplace, newx, newy) &&
-		    place_is_passable(newplace, newx, newy, this, 0)) {
-			relocate(newplace, newx, newy);
-			consolePrint("%s enters %s\n", getName(),
-				     newplace->name);
-			return true;
-		}
-
-		newx += i * dx2;
-		newy += i * dy2;
-
-		dx2 *= -1;
-		dy2 *= -1;
-	}
-
-	return false;
-}
-#endif
-
 MoveResult Party::move(int dx, int dy)
 {
 	struct place *newplace;
@@ -394,7 +326,6 @@ MoveResult Party::move(int dx, int dy)
 	int oldx;
 	int oldy;
 	class Moongate *moongate;
-	class Portal *portal;
 	class Object *mech;
 
 	this->dx = dx;
@@ -482,12 +413,6 @@ MoveResult Party::move(int dx, int dy)
 	class Vehicle *veh = place_get_vehicle(newplace, newx, newy);
 	if (veh && (vehicle || veh->occupant)) {
 		return WasOccupied;
-	}
-
-	/* Check for an automatic portal (and avoid it) */
-	portal = place_get_portal(newplace, newx, newy);
-	if (portal && portal->isAutomatic()) {
-		return AvoidedPortal;
 	}
 
 	/* Check passability */
@@ -1170,12 +1095,6 @@ void Party::save(struct save *save)
         else
                 save->write(save, "nil\n");
         save->exit(save, ")\n");
-}
-
-void Party::enterPortal(class Portal * portal)
-{
-        removeMembers();
-        portal->enter(this);
 }
 
 static bool member_remove(class Character *member, void *data)

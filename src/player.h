@@ -32,8 +32,6 @@
 
 #include <string.h>
 
-#define HARDCODE_MOONGATES 0
-
 enum party_control {
         PARTY_CONTROL_ROUND_ROBIN = 0,
         PARTY_CONTROL_FOLLOW,
@@ -48,9 +46,6 @@ enum move_result {
         move_enter_combat,
         move_enter_auto_portal,
         move_impassable,
-#if HARDCODE_MOONGATES
-        move_enter_moongate,
-#endif
         move_player_quit,
         move_enter_subplace,
 };
@@ -65,10 +60,6 @@ struct move_info {
         int py; // parent-y for wilderness combat
         int turns; // consumed by movement
         class Party *npc_party;
-        class Portal *portal;
-#if HARDCODE_MOONGATES
-        class Moongate *moongate;
-#endif
         struct place *subplace;
 };
 
@@ -114,7 +105,6 @@ class player_party : public Party {
                                int new_dx, int new_dy);
         MoveResult move(int dx, int dy);
 	struct inv_entry *search_inventory(class ObjectType * type);
-        void enter_portal(void);
 	enum MoveResult try_to_enter_subplace_from_edge(struct place *town,
                                                         int dx, int dy);
         void ready_arms(struct object *object);
@@ -129,11 +119,6 @@ class player_party : public Party {
         void add_spell(struct spell *spell, int quantity);
         char *get_movement_description();
         char *get_movement_sound();
-#if HARDCODE_MOONGATES
-	void enter_moongate(class Moongate * moongate);
-	bool enter_moongate(class Moongate * srcGate, int x, int y);
-	enum MoveResult try_to_enter_moongate(class Moongate * src_gate);
-#endif
         enum move_result check_move_to(struct move_info *info);
         virtual void paint(int sx, int sy);
         virtual struct formation *get_formation();

@@ -42,7 +42,6 @@
 #include "terrain.h"
 #include "cmd.h"
 #include "event.h"
-#include "Portal.h"
 #include "vehicle.h"
 #include "foogod.h"
 #include "ctrl.h"
@@ -432,7 +431,6 @@ enum MoveResult Character::move(int dx, int dy)
 {
 	int newx, newy;
 	class Character *occupant;
-        class Portal *portal;
 
         // ------------------------------------------------------------------
         // Let's give this next a try, in order to make the code for teleport
@@ -604,55 +602,6 @@ enum MoveResult Character::move(int dx, int dy)
 
 		return WasOccupied;
 	}
-
-#ifdef HARDCODE_PORTALS     
-        // ------------------------------------------------------------------
-        // Check for an automatic portal to another place. NPC's and charmed
-        // PC's cannot enter and the party must be in follow mode to enter.
-        // ------------------------------------------------------------------
-
-        portal = place_get_portal(getPlace(), newx, newy);
-        if (portal && 
-            portal->isOpen() && 
-            portal->isAutomatic() && 
-            portal->getDestinationPortal() &&
-            portal->getDestinationPortal()->getPlace() != getPlace()) {
-
-                ////////////////////////////////////////////////////////
-                //
-                // FIXME: stop referencing player_party in here, and use
-                // getParty() instead.
-                //
-                ////////////////////////////////////////////////////////
-                
-                if (! isPlayerControlled() || isCharmed()) {
-                        return WasImpassable;
-                }
-
-                if (player_party->getPartyControlMode() != 
-                    PARTY_CONTROL_FOLLOW) {
-                        return NotFollowMode;
-                }
-                
-                if (!player_party->rendezvous(getPlace(), newx, newy)) {
-                        return CantRendezvous;
-                }
-
-                player_party->enterPortal(portal);
-
-                //relocate(getPlace(), newx, newy);
-
-                decActionPoints(place_get_movement_cost(getPlace(), 
-                                                        newx, 
-                                                        newy,
-                                                        this));
-
-                endTurn();
-
-		return ExitedMap;
-                
-        }
-#endif // HARDCODE_PORTALS
 
         decActionPoints(place_get_movement_cost(getPlace(), newx, newy, this));
 	relocate(getPlace(), newx, newy);

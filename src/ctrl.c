@@ -31,7 +31,6 @@
 #include "Party.h"
 #include "character.h"
 #include "combat.h"
-#include "Portal.h"
 #include "terrain.h"
 #include "sched.h"
 #include "session.h"
@@ -109,11 +108,6 @@ static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
                         break;
                 case 'c':
                         cmdCastSpell(NULL);
-                        break;
-                case 'e':
-                        // SAM:
-                        // Perhaps this command should be merged with '>' ?
-                        party->enter_portal();
                         break;
                 case 'f':
                         cmdFire();
