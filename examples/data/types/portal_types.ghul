@@ -48,13 +48,13 @@ t_dungeon {
   layer   LAYER_PORTAL;
 }
 t_ladder_up {
-  name    "a ladder leading up";
+  name    "ladder leading up";
   sprite  s_ladder_up;
   subtype null;
   layer   LAYER_PORTAL;
 }
 t_ladder_down {
-  name    "a ladder leading down";
+  name    "ladder leading down";
   sprite  s_ladder_down;
   subtype null;
   layer   LAYER_PORTAL;

@@ -315,12 +315,12 @@ SPRITE_SET ss_mine {
   file_offy 0;
   file "data/images/mine-32x32.png";
   sprites {
-    s_crosshair { frames 1 index 0 style normal facings 0 };;
-    s_arrow { frames 1 index 1 style normal facings 170 };;
-    s_horse { frames 1 index 5 style normal facings 40 };;
-    s_happy_monster_face { frames 1 index 7 style normal facings 0 };;
-    s_ship { frames 1 index 8 style normal facings 170 };;
-    s_bolt { frames 1 index 12 style normal facings 170 };;
+    s_crosshair { frames 1 index 0 style normal facings 0 };
+    s_arrow { frames 1 index 1 style normal facings 170 };
+    s_horse { frames 1 index 5 style normal facings 40 };
+    s_happy_monster_face { frames 1 index 7 style normal facings 0 };
+    s_ship { frames 1 index 8 style normal facings 170 };
+    s_bolt { frames 1 index 12 style normal facings 170 };
     s_hdoor { frames 1 index 19 style normal facings 0 };
     s_hdoor_locked { frames 1 index 20 style normal facings 0 };
     s_portcullis_down { frames 1 index 21 style normal facings 0 };
@@ -866,7 +866,7 @@ terrains {
   }
 }
 object_types {
-  t_cursor { name "cursor" sprite s_crosshair subtype null layer 10 };
+  t_cursor { name "cursor" sprite s_crosshair subtype null layer 9 };
 t_shrine {
   name "shrine entrance";
   sprite s_shrine;
@@ -886,13 +886,13 @@ t_dungeon {
   layer 2;
 }
 t_ladder_up {
-  name "a ladder leading up";
+  name "ladder leading up";
   sprite s_ladder_up;
   subtype null;
   layer 2;
 }
 t_ladder_down {
-  name "a ladder leading down";
+  name "ladder leading down";
   sprite s_ladder_down;
   subtype null;
   layer 2;
@@ -2548,6 +2548,46 @@ MAP m_grass_combat {
       . . . . . . . . . . . . . . . . t t ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
   }
 }
+MAP m_water_combat {
+  type ascii;
+  width 32;
+  height 32;
+  palette { '_' t_deep; '-' t_shallow; '~' t_shoals; '%' t_bog; '.' t_grass; 't' t_trees; '|' t_forest; '{' t_hills; '^' t_mountains; '<' t_leftwing; '>' t_rightwing; 'c' t_cobblestone; '=' t_bridge; 'g' t_bridge_top; 'h' t_bridge_bottom; 'p' t_pillar; '1' t_wall_b; '2' t_wall_a; '3' t_wall_c; '4' t_wall_d; 'm' t_mast; 'f' t_fire_terrain; 'b' t_boulder; 'r' t_wall_rock; '+' t_ankh; ',' t_flagstones; 'e' t_deck; '?' t_secret_door; 'a' t_altar; '&' t_fireplace; 'A' t_A; 'B' t_B; 'C' t_C; 'D' t_D; 'E' t_E; 'F' t_F; 'G' t_G; 'H' t_H; 'I' t_I; 'J' t_J; 'K' t_K; 'L' t_L; 'M' t_M; 'N' t_N; 'O' t_O; 'P' t_P; 'Q' t_Q; 'R' t_R; 'S' t_S; 'T' t_T; 'U' t_U; 'V' t_V; 'W' t_W; 'X' t_X; 'Y' t_Y; 'Z' t_Z; '!' t_lava; 'x' t_wall; '@' t_counter_middle; '[' t_counter_left; ']' t_counter_right; '0' t_counter_pillar; };
+  terrain {
+      - - - - - - - t t t . . . . . . . . . . . . . . - - - - - - - -
+      - - - - - - - - t . . . . . . . - - . . . . . - - - - - - - - -
+      - - - - - - - . . . . . . . b . - - - - - - - - - - - - - - - -
+      - - - - - - . . . . . . . . . . . - - - - - - - - - - - - - - -
+      t - - - - - - - . . . . . . t - - - - - - - - - - - - - - - - -
+      t - - - - - - - - - . - . . - - - - - - - - - - - - - - - - - -
+      t t - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      t . - - - - - - - - - - - - - - - - - - - - - - - - - - - - - .
+      . . - . . - - - - - - - - - - - - - - - - - - - - - - - - - . .
+      . . . . . . - - - - - - - - - - - - - - - - - - - - - - - - . .
+      . . . . . . - - - - - - - - - - - - - - - - - - - - - - - . . .
+      b . . . . . - - - - - - - - - - - - - - - - - - - - - - - . . .
+      . . . - - - - - - - - - - - - - - - - - - - - - - - - - . . . .
+      . . . - - - - - - - - - - - - - - - - - - - - - - - - - . . . .
+      . . . . - - - - - - - - - - - - - - - - - - - - - - - - . . . .
+      . - t t - - - - - - - - - - - - - - - - - - - - - - - - - . . .
+      . - t t - - - - - - - - - - - - - - - - - - - - - - - - - - . .
+      . . - - - - - - - - - - - - - - - - - - - - - - - - - - - - . .
+      . . - - - - - - - - - - - - - - - - - - - - - - - - - - - - . .
+      . . - - - - - - - - - - - - - - - - - - - - - - - - - - - - - .
+      - . - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      - - - - - - - - - - . . . - - - - - - - - - - - - - - - - - - -
+      - - - - - - - - . . . . . . . - - - - - - - - - - - - - - - - -
+      - - - - - - . . . . . . . . t . - - - - - - - - - - - - - - - -
+      - - - - - . . . . b . . . t t t . - - - - - - - - - - - - - - -
+      - - - - - . . . . . . . . t t . . - - - - - - - - - - - - - - -
+      - - - - - - . . . . . . . t t . . . - - - - - - - - - - - - - -
+      - - - - - - . . . . . . . t t . . . - - - - - - - - - - - - - -
+      - - - - - . . . . . . . . t t . . . . . . - - - - - - - - - - -
+      - - - - . . . . . . . . . t t . . . . . . . . - - - - - - - - -
+  }
+}
 MAP m_passage {
   type ascii;
   width 32;
@@ -3631,7 +3671,7 @@ PLACE p_empire_city {
     mech_vdoor door 33 62 "closed door";
     castle_drawbridge west_bridge 38 11 "lever up";
     mech_portcullis castle_bay_portcullis 49 27 "lowered portcullis";
-    mech_B_lever castle_bay_lever 56 26 "lever left";
+    mech_B_lever castle_bay_lever 56 26 "lever right";
     CONNECT castle_bay_lever <=> castle_bay_portcullis;
     mech_portcullis shipwright_portcullis_1 46 35 "lowered portcullis";
     mech_portcullis shipwright_portcullis_2 46 36 "lowered portcullis";

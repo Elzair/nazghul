@@ -1521,57 +1521,14 @@ static bool pc_end_combat(class Character * pc, void *data)
 	return false;
 }
 
-static bool myEnter(class Character * c)
-{
-	class Portal *portal;
-
-	cmdwin_clear();
-	cmdwin_print("Enter-");
-
-	// Check for a portal
-	portal = place_get_portal(Place, c->getX(), c->getY());
-	if (!portal) {
-		cmdwin_print("Nothing!");
-		return false;
-	}
-	// fixme: instead of asserting here we should add code to the loader to
-	// remove any portals to terrain combat maps.
-	assert(Place != &Combat.place);
-
-	// Check if okay to leave combat that way
-	switch (Combat.rinfo.type) {
-	case retreat_info::NO_RETREAT:
-		Combat.rinfo.type = retreat_info::PORTAL_RETREAT;
-		Combat.rinfo.x = c->getX();
-		Combat.rinfo.y = c->getY();
-		break;
-	case retreat_info::EDGE_RETREAT:
-		if (Place != &Combat.place) {
-			cmdwin_print("Failed!");
-			consolePrint("All party members must exit the same "
-				     "way!\n");
-			return false;
-		}
-		break;
-	case retreat_info::PORTAL_RETREAT:
-		if (Combat.rinfo.x != c->getX() || Combat.rinfo.y != c->getY()) {
-			cmdwin_print("Failed!");
-			consolePrint("All party members must exit the same "
-				     "way!\n");
-			return false;
-		}
-		break;
-	}
-
-	cmdwin_print("Ok");
-
-	// This all we need to do. Upon exit from combat we'll move the player
-	// party to the place at the end of the portal.
-	myExitMap(c, 0, 0);
-	return true;
-}
-
-static bool rendezvous_party(void)
+// Automatically pathfind and move all the party members to the party leader's
+// position.
+//
+// max_path_len - max number of steps to allow for a path, or -1 for no limit
+//
+// returns true if everyony can find a path in max_path_len steps, false
+// otherwise.
+static bool combat_rendezvous_party(int max_path_len)
 {
 	int i, rx, ry;
 	bool abort = false;
@@ -1617,7 +1574,13 @@ static bool rendezvous_party(void)
 			mapCenterCamera(pc->getX(), pc->getY());
 			mapUpdate(0);
 			abort = true;
-		}
+		} else if (max_path_len > 0 && 
+                           pc->path->len > max_path_len) {
+                        consolePrint("%s is too far away!\n", pc->getName());
+			mapCenterCamera(pc->getX(), pc->getY());
+			mapUpdate(0);
+			abort = true;
+                }
 	}
 
 	// If anyone could not find a path then abort.
@@ -1681,7 +1644,71 @@ static bool rendezvous_party(void)
 
 }
 
-#define OLD_RENDEZVOUS false
+static bool combat_enter_portal(class Character * c)
+{
+        // First of all, note that this is the only way - other than casting a
+        // teleportal spell - to exit a dungeon. I have some special rules to
+        // apply here. These rules enforce the principle that all the members
+        // of the player party must be in the same place. This means that if
+        // one party member exits a dungeon, all others must exit the same
+        // way. And since party members may have different passability masks,
+        // and map terrains can be changed at runtime, exiting a dungeon must
+        // be "atomic". Everybody has to do it at the same time, or nobody does
+        // it all.
+        //
+        // So, here are the rules.
+        //
+        // #1. The party must be in follow mode
+        // #2. All party members must be able to rendezvous in n steps
+        //
+        // If entry succeeds then the members all rendezvous and the party
+        // exits the dungeon via the portal. Otherwise we complain to the user
+        // and reject the entry.
+
+
+	class Portal *portal;
+
+	cmdwin_clear();
+	cmdwin_print("Enter-");
+
+	// Check for a portal
+	portal = place_get_portal(Place, c->getX(), c->getY());
+	if (!portal) {
+		cmdwin_print("Nothing!");
+		return false;
+	}
+
+	// fixme: instead of asserting here we should add code to the loader to
+	// remove any portals to terrain combat maps.
+	assert(Place != &Combat.place);
+
+        // Check if in follow mode
+        if (! Combat.followMode) {
+                cmdwin_print("Must be in follow mode!");
+                return false;
+        }
+
+        // Ok, check for rendezvous. Not too sure if this next provides enough
+        // steps or not. Feel free to tune it.
+        if (! combat_rendezvous_party(Combat.n_pcs * 2)) {
+                cmdwin_print("Party must be together!");
+                return false;
+        }
+
+	// Great, it worked. Setup to exit combat.
+	cmdwin_print("Ok");
+        assert(Combat.rinfo.type == retreat_info::NO_RETREAT);
+        Combat.rinfo.type = retreat_info::PORTAL_RETREAT;
+        Combat.rinfo.x = c->getX();
+        Combat.rinfo.y = c->getY();
+
+
+	// This all we need to do. Upon exit from combat we'll move the player
+	// party to the place at the end of the portal.
+	myExitMap(c, 0, 0);
+	return true;
+}
+
 
 static bool myExitCombat(void)
 {
@@ -1693,120 +1720,15 @@ static bool myExitCombat(void)
 		return false;
 	}
 
-	if (!OLD_RENDEZVOUS) {
+        if (Place != &Combat.place) {
+                // Can't escape from towns or dungeons -- have to use
+                // an exit.  return false;
+                return combat_rendezvous_party(-1);
+        }
 
-		if (Place != &Combat.place) {
-			// Can't escape from towns or dungeons -- have to use
-			// an exit.  return false;
-			return rendezvous_party();
-		}
-
-		consolePrint("Exit!\n");
-		Combat.state = DONE;
-		return true;
-
-	} else {
-		if (Place != &Combat.place)
-			// Can't escape from towns or dungeons -- have to use
-			// an exit.  return false;
-			goto rendezvous;
-
-		consolePrint("Exit!\n");
-		Combat.state = DONE;
-		return true;
-
-	      rendezvous:
-
-		int i, rx, ry;
-		bool done = false;
-		class Character *leader;
-
-		// This is town combat. Although combat is over the PMs are
-		// potentially scattered to far corners of the map. In order to
-		// exit combat and go back to party mode they all need to
-		// converge on the party's original location.
-
-		// Rendezvous on the party leader's current location
-		leader = player_party->get_leader();
-		assert(leader);
-		rx = leader->getX();
-		ry = leader->getY();
-
-		mapCenterCamera(rx, ry);
-		mapUpdate(0);
-		consolePrint("Rendezvous...");
-		consoleRepaint();
-
-		while (!done) {
-
-			// Loop until all the PMs have rendezvouzed or one
-			// cannot find a path to the rendezvouz point.
-
-			consolePrint(".");
-			consoleRepaint();
-
-			for (i = 0; i < player_party->n_pc; i++) {
-				struct astar_node *path;
-				struct astar_search_info as_info;
-				class Character *pc;
-
-				pc = player_party->pc[i];
-				if (!pc || pc->isDead() || !pc->isOnMap())
-					continue;
-
-				memset(&as_info, 0, sizeof(as_info));
-				as_info.x0 = pc->getX();
-				as_info.y0 = pc->getY();
-				as_info.x1 = rx;
-				as_info.y1 = ry;
-				as_info.flags = PFLAG_IGNOREBEINGS;
-				path = place_find_path(Place, &as_info,
-						       pc->getPmask());
-
-				if (!path) {
-					consolePrint("%s cannot make the "
-						     "rendezvous!\n",
-						     pc->getName());
-					mapCenterCamera(pc->getX(), pc->getY());
-					mapUpdate(0);
-					goto abort;
-				}
-
-				if (path->next) {
-					pc->move(path->next->x - pc->getX(),
-						 path->next->y - pc->getY());
-				}
-
-				astar_path_destroy(path);
-
-				mapUpdate(0);
-			}
-
-			// All the PMs have had a chance to move and they all
-			// found a path to the rendezvous point. So do a quick
-			// check to see if they are close enough to call it
-			// good.
-			done = true;
-			for (i = 0; i < player_party->n_pc; i++) {
-				class Character *pc;
-
-				pc = player_party->pc[i];
-				if (!pc || pc->isDead() || !pc->isOnMap())
-					continue;
-
-				if (abs(pc->getX() - rx) > 2 ||
-				    abs(pc->getY() - ry) > 2)
-					done = false;
-			}
-		}
-
-		consolePrint("Ok!\n");
-		Combat.state = DONE;
-		// player_party->for_each_member(myRemovePc, NULL);
-
-	      abort:
-		return true;
-	}			/* OLD_RENDEZVOUS */
+        consolePrint("Exit!\n");
+        Combat.state = DONE;
+        return true;
 }
 
 static bool myFollow(class Character * pc)
@@ -1855,7 +1777,7 @@ static bool myPcCommandHandler(struct KeyHandler *kh, int key)
 		ret = cmdCastSpell(pc);	// myCastSpell(pc);
 		break;
 	case 'e':
-		ret = myEnter(pc);
+		ret = combat_enter_portal(pc);
 		break;
 	case 'f':
 		ret = myFollow(pc);
@@ -1868,15 +1790,15 @@ static bool myPcCommandHandler(struct KeyHandler *kh, int key)
 		ret = cmdHandle(pc);
 		break;
 	case 'l':
-      // SAM: Changing (L)ook command 
-      // from "look at 1 tile" to a "Look Mode"
+                // SAM: Changing (L)ook command 
+                // from "look at 1 tile" to a "Look Mode"
 		ret = cmdLook(pc->getX(), pc->getY());
 		break;
 	case 'o':
 		ret = cmdOpen(pc);
 		break;
 	case 'q':
-		ret = cmdQuit();	// myQuit();
+		ret = cmdQuit();
 		break;
 	case 'r':
 		ret = cmdReady(pc);
@@ -1884,9 +1806,9 @@ static bool myPcCommandHandler(struct KeyHandler *kh, int key)
 	case 'u':
 		ret = cmdUse(pc);
 		break;
-    case 'x':
-        ret = cmdXamine(pc);  // SAM: 1st step towards new (L)ook cmd...
-        break;
+        case 'x':
+                ret = cmdXamine(pc); // SAM: 1st step towards new (L)ook cmd...
+                break;
 	case 'z':
 		ret = cmdZtats(pc);
 		break;

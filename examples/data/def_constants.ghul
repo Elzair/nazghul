@@ -119,10 +119,13 @@
  */
 #define LAYER_MECHANISM  1
 #define LAYER_PORTAL     2
+#define LAYER_VEHICLE    3
 #define LAYER_CONTAINER  4
+#define LAYER_ITEM       5
 #define LAYER_FIELD      6
-#define LAYER_BEING      9
-#define LAYER_CURSOR     10
+#define LAYER_BEING      7
+#define LAYER_PROJECTILE 8
+#define LAYER_CURSOR     9
 
 
 /* 

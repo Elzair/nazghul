@@ -326,10 +326,31 @@ enum Character::MoveResult Character::move(int dx, int dy)
 
                         // Wait - first have to check if the other character
                         // can occupy this tile (may have different
-                        // passability)
+                        // passability). If this fails then go ahead and
+                        // approve the move without switching. Stacking members
+                        // of the same party is permitted in order to resolve
+                        // certain corner cases which could be very unpleasant
+                        // or confusing for the user. (For example: the party
+                        // leader is a gazer, the party enters a dungeon, the
+                        // portal destination is surrounded by water, the gazer
+                        // steps onto the water... oops! Either we allow the
+                        // gazer to stack back onto the party or we require the
+                        // user to figure out how to switch the party order
+                        // just to pick a new leader just to get out of this
+                        // mess...)
                         if (!place_is_passable(getPlace(), getX(), getY(),
                                                occupant->getPmask(), 0)) {
-                                return CouldNotSwitchOccupants;
+                                // Roll for movement cost
+                                if ((placeGetMovementCost(newx, newy) > 0) &&
+                                    (random() % 100) > 
+                                    (100 / placeGetMovementCost(newx, newy)))
+                                        return SlowProgress;
+
+                                // Ok, you can move.
+                                relocate(getPlace(), newx, newy);
+                                
+                                return MovedOk;
+        
                         }
 
 
