@@ -320,6 +320,8 @@ CONV c_goblin {
 
 // TODO: Conversation trees for other creatures such as skeletons, etc...
 
+#include "./C_misc_npcs.ghul"
+
 
 #endif // conversations_ghul
 
