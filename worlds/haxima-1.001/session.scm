@@ -416,6 +416,7 @@
                nil ; neighbors
                nil ; objects
                nil ; hooks
+               nil ; edge entrances
                )
 
 (kern-mk-place 'p_pit_of_death
@@ -430,6 +431,7 @@
                nil
                nil
                (list 'pit-of-death-pre-entry-hook)
+               nil ; edge entrances
                )
 
 (kern-mk-place 'p_green_tower_lower
@@ -448,6 +450,7 @@
                 (list (mk-ladder-up 'p_green_tower 32 32) 32 32)
                 ) ;; end of objects
                nil ; hooks
+               nil ; edge entrances
                )
 
 (kern-mk-place 'p_green_tower
@@ -510,6 +513,7 @@
                 (list (mk-teleporter 'p_pit_of_death 5 5) 60 32)
                 )
                (list 'green-tower-pre-entry-hook)
+               nil ; edge entrances
                )
 
 (define road-map
@@ -552,6 +556,7 @@
                  ))
 
                nil ; hooks
+               nil ; edge entrances
                )
 
 (define hour 12)

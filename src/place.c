@@ -273,6 +273,45 @@ static void place_for_each_tile(struct place *place,
                                 void *data);
 
 
+static void place_set_default_edge_entrance(struct place *place)
+{
+        /* Northwest: lower right corner */
+        place->edge_entrance[NORTHWEST][0] = place_w(place) - 1;
+        place->edge_entrance[NORTHWEST][1] = place_h(place) - 1;
+
+        /* North: lower center */
+        place->edge_entrance[NORTH][0] = place_w(place) / 2;
+        place->edge_entrance[NORTH][1] = place_h(place) - 1;
+
+        /* Northeast: lower left corner */
+        place->edge_entrance[NORTHEAST][0] = 0;
+        place->edge_entrance[NORTHEAST][1] = place_h(place) - 1;
+
+        /* West: right center */
+        place->edge_entrance[WEST][0] = place_w(place) - 1;
+        place->edge_entrance[WEST][1] = place_h(place) / 2;
+
+        /* Here: center */
+        place->edge_entrance[HERE][0] = place_w(place) / 2;
+        place->edge_entrance[HERE][1] = place_h(place) / 2;
+
+        /* East: left center */
+        place->edge_entrance[EAST][0] = 0;
+        place->edge_entrance[EAST][1] = place_h(place) / 2;
+
+        /* Southwest: upper right corner */
+        place->edge_entrance[SOUTHWEST][0] = place_w(place) - 1;
+        place->edge_entrance[SOUTHWEST][1] = 0;
+
+        /* South: upper center */
+        place->edge_entrance[SOUTH][0] = place_w(place) / 2;
+        place->edge_entrance[SOUTH][1] = 0;
+
+        /* Southeast: upper left corner */
+        place->edge_entrance[SOUTHEAST][0] = 0;
+        place->edge_entrance[SOUTHEAST][1] = 0;
+}
+
 struct place *place_new(char *tag,
                         char *name, 
                         struct sprite *sprite,
@@ -319,6 +358,9 @@ struct place *place_new(char *tag,
         list_init(&place->subplaces);
         list_init(&place->container_link);
         place->turn_elem = &place->turn_list;
+
+        place_set_default_edge_entrance(place);
+        
 
 	return place;
 }
@@ -1672,6 +1714,20 @@ static void place_save_hooks(struct place *place, struct save *save)
         save->exit(save, ")\n");
 }
 
+static void place_save_edge_entrances(struct place *place, struct save *save)
+{
+        int dir;
+
+        save->enter(save, "(list ;; edge entrances\n");
+        for (dir = 0; dir < NUM_PLANAR_DIRECTIONS; dir++) {
+                save->write(save, "(list %d %d %d) ;; %s\n", dir,
+                            place->edge_entrance[dir][0],
+                            place->edge_entrance[dir][1],
+                            directionToString(dir));
+        }
+        save->exit(save, ")\n");
+}
+
 void place_save(struct save *save, void *val)
 {
         struct place *place;
@@ -1759,6 +1815,7 @@ void place_save(struct save *save, void *val)
         place_for_each_object(place, place_save_object, save);
         save->exit(save, ") ;; end of objects\n");
         place_save_hooks(place, save);
+        place_save_edge_entrances(place, save);
         save->exit(save, ") ;; end of place %s\n\n", place->tag);
 }
 
@@ -1877,4 +1934,30 @@ void place_unlock(struct place *place)
 
         if (!place->lock && place_is_marked_for_death(place))
                 place_del(place);
+}
+
+int place_get_edge_entrance(struct place *place, int dir, int *x, int *y)
+{
+        if (dir < 0 || dir >= NUM_PLANAR_DIRECTIONS)
+                return -1;
+
+        *x = place->edge_entrance[dir][0];
+        *y = place->edge_entrance[dir][1];
+
+        return 0;
+}
+
+int place_set_edge_entrance(struct place *place, int dir, int x, int y)
+{
+        if (dir < 0 || dir >= NUM_PLANAR_DIRECTIONS)
+                return -1;
+
+        if (x < 0 || x >= place_w(place) ||
+            y < 0 || y >= place_h(place))
+                return -1;
+
+        place->edge_entrance[dir][0] = x;
+        place->edge_entrance[dir][1] = y;
+
+        return 0;
 }

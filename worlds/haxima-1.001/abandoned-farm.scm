@@ -68,4 +68,5 @@
                 (list (mk-troll faction-monster) 20 13)
                 )
                nil ; hooks
+               nil ; edge entrances
                )

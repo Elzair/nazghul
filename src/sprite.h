@@ -59,7 +59,6 @@ extern int spriteInit(void);
 extern void spriteAdd(struct sprite *sprite);
 extern struct sprite *spriteLookup(char *tag);
 extern void spritePaint(struct sprite *sprite, int frame, int x, int y);
-extern void spriteStartAnimation(struct list *wq, int start_tick);
 
 extern void spriteAdvanceFrames(void);
 extern int spriteSetFacing(struct sprite *sprite, int direction);
@@ -68,6 +67,7 @@ extern int sprite_fade(struct sprite *sprite);
 extern void sprite_unfade(struct sprite *sprite);
 extern void spriteZoomOut(int factor);
 extern void spriteZoomIn(int factor);
+extern void spriteAdvanceTicks(int ticks);
 
 END_DECL
 

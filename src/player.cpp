@@ -367,7 +367,7 @@ enum MoveResult player_party::try_to_enter_subplace_from_edge(
 	}
 
         // --------------------------------------------------------------------
-        // Calculate the entry coordinates based on the direction of entry.
+        // Get the entry coordinates from the subplace.
         // --------------------------------------------------------------------
 
 	switch (dir) {
@@ -379,24 +379,10 @@ enum MoveResult player_party::try_to_enter_subplace_from_edge(
 	case SOUTHEAST:
 	case HERE:
 		return NoDestination;
-	case SOUTH:
-		new_x = place_w(subplace) / 2;
-		new_y = 0;
-		break;
-	case NORTH:
-		new_x = place_w(subplace) / 2;
-		new_y = place_h(subplace) - 1;
-		break;
-	case WEST:
-		new_x = new_x = place_w(subplace) - 1;
-		new_y = place_h(subplace) / 2;
-		break;
-	case EAST:
-		new_x = 0;
-		new_y = place_h(subplace) / 2;
-		break;
 	default:
-		assert(false);
+                if (place_get_edge_entrance(subplace, dir, &new_x, &new_y))
+                        return NoDestination;
+                break;
 	}
 
         dx = directionToDx(dir);

@@ -936,6 +936,44 @@ static int kern_place_load_hooks(scheme *sc, pointer *args,
         return 0;
 }
 
+static int kern_place_load_entrances(scheme *sc, pointer *args, 
+                                     struct place *place)
+{
+        pointer entrances;
+
+        if (! scm_is_pair(sc, *args)) {
+                load_err("kern-mk-place %s: missing the entrances list",
+                         place->tag);
+                return -1;
+        }
+
+        entrances = scm_car(sc, *args);
+        *args = scm_cdr(sc, *args);
+
+        while (scm_is_pair(sc, entrances)) {
+
+                int dir, x, y;
+                pointer cell;
+
+                cell = scm_car(sc, entrances);
+                entrances = scm_cdr(sc, entrances);
+
+                if (unpack(sc, &cell, "ddd", &dir, &x, &y)) {
+                        load_err("kern-mk-place %s: bad arg in entrances list",
+                                 place->tag);
+                        return -1;
+                }
+
+                if (place_set_edge_entrance(place, dir, x, y)) {
+                        load_err("kern-mk-place %s: failed to set entrance for "\
+                                 "direction %d to [%d %d]", place->tag, dir, x, y);
+                        return -1;
+                }
+        }
+
+        return 0;
+}
+
 KERN_API_CALL(kern_mk_place)
 {
         int wild, wraps, underground, combat, argno = 1;
@@ -969,7 +1007,8 @@ KERN_API_CALL(kern_mk_place)
         if (kern_place_load_subplaces(sc, &args, place) ||
             kern_place_load_neighbors(sc, &args, place) ||
             kern_place_load_contents(sc, &args, place)  ||
-            kern_place_load_hooks(sc, &args, place))
+            kern_place_load_hooks(sc, &args, place)     ||
+            kern_place_load_entrances(sc, &args, place))
                 goto abort;
 
  done:

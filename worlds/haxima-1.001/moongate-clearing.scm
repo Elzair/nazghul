@@ -41,4 +41,9 @@
   nil
   (list
   )
+  (list  ;; edge entrances
+   (list north 16 27)
+   (list east  0  11)
+   (list west 22 10)
+   )
 ) ;; end of place p_moongate_clearing

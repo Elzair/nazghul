@@ -694,6 +694,7 @@
                 
                 ) ; objects
                nil ; hooks
+               nil ; edge entrances
                )
 
 
@@ -761,6 +762,7 @@
 
                 ) ; objects
                nil ; hooks
+               nil ; edge entrances
                )
 
 

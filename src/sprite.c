@@ -36,7 +36,7 @@
 
 struct {
 	struct list list;
-	struct wq_job animationJob;
+        int ticks_to_next_animation;
 } Sprite;
 
 static int sprite_zoom_factor = 1;
@@ -135,16 +135,6 @@ void sprite_del(struct sprite *sprite)
 	delete sprite;
 }
 
-static void myRunAnimationJob(struct wq_job *job, struct list *wq)
-{
-	spriteAdvanceFrames();
-	// consoleRepaintCursor();
-	cmdwin_repaint_cursor();
-	statusRepaint();
-	// mapRepaintView(NULL, REPAINT_ACTIVE);
-	wqReschedule(wq, job);
-}
-
 void spritePaint(struct sprite *sprite, int frame, int x, int y)
 {
         if (sprite->wave) {
@@ -154,17 +144,21 @@ void spritePaint(struct sprite *sprite, int frame, int x, int y)
 	}
 }
 
-void spriteStartAnimation(struct list *wq, int tick)
+void spriteAdvanceTicks(int ticks)
 {
-	Sprite.animationJob.tick = tick;
-	Sprite.animationJob.period = ANIMATION_TICKS;
-	Sprite.animationJob.run = myRunAnimationJob;
-	wqAddJob(wq, &Sprite.animationJob);
+        Sprite.ticks_to_next_animation -= ticks;
+        if (ticks <= 0) {
+                spriteAdvanceFrames();
+                cmdwin_repaint_cursor();
+                statusRepaint();
+                Sprite.ticks_to_next_animation += ticks;                
+        }
 }
 
 int spriteInit(void)
 {
 	list_init(&Sprite.list);
+        Sprite.ticks_to_next_animation = 0;
         return 0;
 }
 
@@ -176,16 +170,6 @@ void spriteAdd(struct sprite *sprite)
 void spriteAdvanceFrames(void)
 {
         sprite_ticks++;
-#if 0
-	struct list *elem;
-
-	list_for_each(&Sprite.list, elem) {
-		struct sprite *sprite = list_entry(elem, struct sprite, list);
-		myAdvanceFrame(sprite);
-	}
-
-	// mapMarkAsDirty(ALL_VIEWS);
-#endif
 	mapSetDirty();
 
 }

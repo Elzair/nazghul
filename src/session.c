@@ -383,9 +383,6 @@ void session_load(char *filename)
                 }
         }        
 
-        /* Start the animation cycles */
-	spriteStartAnimation(&Session->tickq, Tick + 1);
-
         /* Paint all the windows for the first time in the new session. */
 	screen_repaint_frame();
 	foogodRepaint();
