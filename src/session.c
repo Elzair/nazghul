@@ -439,7 +439,9 @@ void session_save(char *fname)
 
         /* Save the header. */
         save->write(save, ";; %s -- a nazghul session file\n", fname);
-        save->write(save, ";; Created %s\n", ctime(&timep));
+        /* Note: below does not work, and causes false negs with regression
+         * tests: */
+        /* save->write(save, ";; Created %s\n", ctime(&timep)); */
 
         /* Save the standard file. */
         save->write(save, ";; Load the standard definitions file\n");
