@@ -31,14 +31,17 @@ BEGIN_DECL
 struct node {
         struct node *next;
         struct node *prev;
+        int key; /* for nodes in ordered lists */
         void *ptr;
         int ref;
 };
 
 
 #define nodelst(n) ((struct list *)(n))
+#define nodekeyedlst(n) ((struct olist *)(n))
 #define node_add(n1,n2) list_add(nodelst(n1), nodelst(n2))
 #define node_addref(n) ((n)->ref++)
+#define node_add_keyed(n1, n2) olist_add(nodekeyedlst(n1), nodekeyedlst(n2))
 #define node_add_tail(n1,n2) list_add_tail(nodelst(n1), nodelst(n2))
 #define node_for_each(head,ptr) \
         for ((ptr) = (head)->next; (ptr) != (head); (ptr) = (ptr)->next)
@@ -46,8 +49,10 @@ struct node {
 #define node_list_empty(n) (list_empty(nodelst(n)))
 #define node_remove(n) list_remove(nodelst(n))
 #define node_switch(a,b) (list_switch(nodelst(a), nodelst(b)))
-                                           
+#define node_lookup(n, key) (struct node*)(olist_lookup(nodekeyedlst(n),(key), 0))
+
 extern struct node *node_new(void *data);
+extern struct node *node_new_keyed(void *data, int key);
 extern void node_unref(struct node *node);
 extern void node_foldr(struct node *node,
                        void (*fx)(struct node *node, void *data),

@@ -37,6 +37,7 @@ class Being:public Object {
         int getBaseFaction();
         void setBaseFaction(int faction);
         virtual int getCurrentFaction();
+	virtual enum layer getLayer();
 
       protected:
         int baseFaction;

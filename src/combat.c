@@ -21,6 +21,7 @@
 //
 #include "combat.h"
 #include "dice.h"
+#include "node.h"
 #include "Party.h"
 #include "place.h"
 #include "player.h"
@@ -80,7 +81,6 @@ static struct {
         void *session_handle;
         enum combat_state state;
         char vmap[7 * 7];       // visited map (used to search for positions)
-        struct list parties;
         class Vehicle *enemy_vehicle;
         char *sound_enter;
         char *sound_defeat;
@@ -795,8 +795,6 @@ static void combat_overlay_map(struct terrain_map *map,
 static void myPutEnemy(class Party * foe, struct position_info *pinfo)
 {
         foe->forEachMember(myPutNpc, pinfo);
-        if (foe->pinfo.placed)
-                list_add(&Combat.parties, &foe->container_link.list);
 }
 
 static bool myPositionEnemy(class Party * foe, int dx, int dy, bool defend, struct place *place)
@@ -1153,7 +1151,6 @@ int combatInit(void)
 
         /* Initialize the place to safe defaults */
         Combat.state = COMBAT_STATE_DONE;
-        list_init(&Combat.parties);
 
         return 0;
 }
@@ -1497,8 +1494,6 @@ bool combat_enter(struct combat_info * info)
         Combat.enemy_vehicle = NULL;
         Combat.round = 0;
         Session->crosshair->remove();
-        list_init(&Combat.parties);
-
 
         if (! info->move->place->wilderness) {
 
@@ -1557,12 +1552,6 @@ bool combat_enter(struct combat_info * info)
                         log_msg("Your opponent slips away!");
                         log_end(NULL);
                         combat_set_state(COMBAT_STATE_LOOTING);
-
-                        // The npc party did not get added to the list because
-                        // myPositionEnemy() failed. Add it to the list so that
-                        // it gets cleaned up in the normal way.
-                        list_add(&Combat.parties, 
-                                 &info->move->npc_party->container_link.list);
                 }
         }
         else if (info->camping) {

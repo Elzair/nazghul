@@ -365,7 +365,7 @@ class Object {
         virtual void setPclass(int val);
         virtual int getPclass();
         
-	struct olist container_link;
+        struct node *clink; // points back to node in container's list
 
 	char *tag;
 	struct list list;	// for the loader, not the place

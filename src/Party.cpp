@@ -696,6 +696,9 @@ bool Party::addMember(class Character * c)
         /* Point the member back to its party */
         c->party = this;
 
+        /* Set the character's order in the party */
+        c->setOrder(size);
+
         /* Increase the party size counter */
         size++;
 

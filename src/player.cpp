@@ -747,7 +747,6 @@ player_party::player_party()
         setTurnsToNextRestCredit(TURNS_PER_REST_CREDIT);
         setBaseFaction(PLAYER_PARTY_FACTION);
         clearCombatExitDestination();
-	container_link.key = being_layer;
         view = mapCreateView();
 }
 
@@ -793,7 +792,6 @@ player_party::player_party(char *_tag,
         setTurnsToNextMeal(TURNS_PER_FOOD);
         setTurnsToNextRestCredit(TURNS_PER_REST_CREDIT);
         clearCombatExitDestination();
-	container_link.key = being_layer;
         view = mapCreateView();
 
         /* Now use the arguments */

@@ -28,3 +28,9 @@ int Being::getCurrentFaction()
 {
         return baseFaction;
 }
+
+enum layer Being::getLayer()
+{
+        return being_layer;
+}
+

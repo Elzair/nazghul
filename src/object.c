@@ -276,13 +276,11 @@ void Object::init(int x, int y, struct place *place, class ObjectType * type)
 	this->type = type;
 	setX(x);
 	setY(y);
-	container_link.key = type->getLayer();
 	setPlace(place);
 }
 
 void Object::init(class ObjectType * type)
 {
-	container_link.key = type->getLayer();
 	this->type = type;
 }
 
@@ -526,15 +524,14 @@ Object::Object(class ObjectType * type)
 {
         this->type = type;
         setup();
-        container_link.key = type->getLayer();
 }
 
 void Object::setup()
 {
         int i;
 
-        list_init(&container_link.list);
-        turn_list       = NULL;
+        clink     = NULL;
+        turn_list = NULL;
 
         for (i = 0; i < OBJ_NUM_HOOKS; i++) {
                 hook_list_init(&hooks[i]);
@@ -619,7 +616,7 @@ bool Object::isSelected()
 
 enum layer Object::getLayer(void)
 {
-        return (enum layer) container_link.key;
+        return getObjectType()->getLayer();
 }
 
 char *Object::getName(void)

@@ -1118,15 +1118,6 @@ bool Character::needToRearm()
 
 bool Character::initCommon(void)
 {
-	// *** Basic ***
-
-	// Normally Object::init() does this but it takes the layer from the
-	// type and Character's have no special ObjectType.
-
-	container_link.key = being_layer;
-
-	// *** Slots ***
-
 	rdyArms = new class ArmsType *[species->n_slots];
         assert(rdyArms);
 	memset(rdyArms, 0, species->n_slots * sizeof(class ArmsType *));

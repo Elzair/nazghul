@@ -76,7 +76,7 @@ struct place *Place;
 /* Tile API ******************************************************************/
 struct tile {
 	struct olist hashlink;
-	struct olist objstack;
+	struct node objstack;
         struct place *subplace;
 	class Vehicle *vehicle;
 	int objects;
@@ -87,8 +87,8 @@ static struct tile *tile_new(int hashkey)
 	struct tile *tile;
 	CREATE(tile, struct tile, 0);
 	olist_init(&tile->hashlink);
-	olist_init(&tile->objstack);
 	tile->hashlink.key = hashkey;
+	node_init(&tile->objstack);
 	return tile;
 }
 static void tile_del(struct tile *tile)
@@ -106,11 +106,11 @@ static void tile_for_each_object(struct tile *tile,
                                  void (*fx)(class Object *obj, void *data),
                                  void *data)
 {
-        struct list *elem;
+        struct node *elem;
+        class Object *obj;
 
-        for (elem = tile->objstack.list.next; elem != &tile->objstack.list; ) {
-                class Object *obj;
-		obj = outcast(elem, Object, container_link.list);
+        for (elem = tile->objstack.next; elem != &tile->objstack; ) {
+		obj = (class Object *)elem->ptr;
                 elem = elem->next;
                 fx(obj, data);
 	}
@@ -121,11 +121,11 @@ static void tile_for_each_object(struct tile *tile,
 
 static Object *tile_get_filtered_object(struct tile *tile, int (*filter)(Object*))
 {
-        struct list *elem;
+        struct node *elem;
+        class Object *obj;
 
-        for (elem = tile->objstack.list.next; elem != &tile->objstack.list; ) {
-                class Object *obj;
-		obj = outcast(elem, Object, container_link.list);
+        for (elem = tile->objstack.next; elem != &tile->objstack; ) {
+		obj = (class Object *)elem->ptr;
                 elem = elem->next;
                 if (filter(obj))
                         return obj;
@@ -137,36 +137,70 @@ static Object *tile_get_filtered_object(struct tile *tile, int (*filter)(Object*
         return NULL;
 }
 
+static Object *tile_get_top_object_at_layer(struct tile *tile, enum layer layer)
+{
+        struct node *node;
+
+        node = node_lookup(&tile->objstack, layer);
+        if (node)
+                return (Object*)node->ptr;
+        
+        return NULL;
+}
+
+static int tile_get_light(struct tile *tile)
+{
+        struct node *node = NULL;
+        int light = 0;
+        class Object *obj = NULL;
+
+	/* Check for a vehicle */
+	if (tile->vehicle)
+		light += tile->vehicle->getLight();
+
+	/* Check all objects */
+	node_for_each(&tile->objstack, node) {
+		obj = (class Object *)node->ptr;
+		light += obj->getLight();
+	}
+
+        return light;
+}
+
 static int tile_is_transparent(struct tile *tile)
 {
-	struct list *list, *elem, *tmp;
+	struct node *elem;
 	class Object *obj;
 
-	list = &tile->objstack.list;
-	elem = list->next;
-
-	while (elem != list) {
-		tmp = elem->next;
-		obj = outcast(elem, class Object, container_link.list);
-		elem = tmp;
-		if (obj->isOpaque())
-			return 0;
+        for (elem = tile->objstack.next; elem != &tile->objstack; ) {
+		obj = (class Object *)elem->ptr;
+                elem = elem->next;
+                if (obj->isOpaque())
+                        return 0;
 	}
+
 	return 1;
 }
 
 static void tile_remove_object(struct tile *tile, class Object *object)
 {
+        struct node *node;
+
 	if (object->isType(VEHICLE_ID)) {
                 if (tile->vehicle == object) {
                         tile->vehicle = 0;
                         tile->objects--;
                 }
-                // 30Jul2003 gmcnutt: otherwise this vehicle must be occupied,
-                // in which case it does not occupy the tile (it's occupant
-                // does).
+                /* 30Jul2003 gmcnutt: otherwise this vehicle must be occupied,
+                 * in which case it does not occupy the tile (it's occupant
+                 * does). */
 	} else {
-		list_remove(&object->container_link.list);
+                /* Splice out the object's container link node and release
+                 * it. */
+                assert(object->clink);
+                node_remove(object->clink);
+                node_unref(object->clink);
+                object->clink = NULL;
                 tile->objects--;
 	}
 
@@ -191,7 +225,12 @@ static void tile_add_object(struct tile *tile, class Object *object)
                 return;
 	}
 
-	olist_add(&tile->objstack, &object->container_link);
+        /* Create a new container link node for the object and add it to the
+         * tile's object stack. */
+        assert(!object->clink);
+        object->clink = node_new_keyed(object, object->getLayer());
+        node_add_keyed(&tile->objstack, object->clink);
+
 	tile->objects++;
 }
 
@@ -229,7 +268,7 @@ static void tile_save(struct tile *tile, struct save *save)
 
 static void tile_paint(struct tile *tile, int sx, int sy)
 {
-	struct list *l;
+	struct node *node;
 	Object *obj;
 	struct sprite *sprite;
 
@@ -244,8 +283,8 @@ static void tile_paint(struct tile *tile, int sx, int sy)
 		tile->vehicle->paint(sx, sy);
 	}
 
-	list_for_each(&tile->objstack.list, l) {
-		obj = outcast(l, Object, container_link.list);
+	node_for_each(&tile->objstack, node) {
+		obj = (Object*)node->ptr;
 		sprite = obj->getSprite();
 		if (!sprite)
 			continue;
@@ -887,12 +926,8 @@ Object *place_get_object(struct place *place, int x, int y, enum layer layer)
 	tile = place_lookup_tile(place, x, y);
 	if (!tile)
 		return 0;
-	olist =
-	    olist_lookup(&tile->objstack, layer, 0 /* find the top object */ );
-	if (!olist)
-		return 0;
 
-	return outcast(olist, Object, container_link);
+        return tile_get_top_object_at_layer(tile, layer);
 }
 
 Object *place_get_filtered_object(struct place *place, int x, int y, int (*filter)(Object*))
@@ -1121,16 +1156,7 @@ int place_get_light(struct place *place, int x, int y)
 	tile = place_lookup_tile(place, x, y);
 	if (!tile)
 		return light;
-
-	/* Check for a vehicle */
-	if (tile->vehicle)
-		light += tile->vehicle->getLight();
-
-	/* Check all objects */
-	list_for_each(&tile->objstack.list, l) {
-		obj = outcast(l, Object, container_link.list);
-		light += obj->getLight();
-	}
+        light += tile_get_light(tile);
 
 	return light;
 }
@@ -1229,7 +1255,7 @@ static int place_describe_objects(struct place *place, int x, int y,
                                   int first_thing_listed)
 {
 
-	struct list *l;
+	struct node *l;
 	struct tile *tile;
 	Object *obj = NULL, *prev_obj = NULL;
 	class ObjectType *type = NULL;
@@ -1262,11 +1288,11 @@ static int place_describe_objects(struct place *place, int x, int y,
                 log_continue(" and the entrance to %s", tile->subplace->name);
         }
 
-	list_for_each(&tile->objstack.list, l) {
+	node_for_each(&tile->objstack, l) {
 
-		obj = outcast(l, Object, container_link.list);
+		obj = (Object *)l->ptr;
 
-		if (obj->container_link.key == cursor_layer)
+		if (obj->getLayer() == cursor_layer)
                         // Special case: don't describe the cursor
                         continue;
 
@@ -1305,11 +1331,11 @@ static int place_describe_objects(struct place *place, int x, int y,
         type = NULL;
         prev_obj = NULL;
 
-	list_for_each(&tile->objstack.list, l) {
+	node_for_each(&tile->objstack, l) {
 
-		obj = outcast(l, Object, container_link.list);
+		obj = (Object *)l->ptr;
 
-		if (obj->container_link.key == cursor_layer)
+		if (obj->getLayer() == cursor_layer)
                         // Special case: don't describe the cursor
                         continue;
 
@@ -1460,62 +1486,6 @@ void place_for_each_object(struct place *place,
         info.fx = fx;
         info.data = data;
         place_for_each_tile(place, place_forobj_tile_visitor, &info);
-#if 0
-        // Old way:
-        
-	int i;
-	struct olist *tileList, *objList;
-	struct list *tileElem, *tileTmp, *objElem, *objTmp;
-	struct tile *tile;
-	class Object *obj;
-
-	// for each bucket
-	for (i = 0; i < place->objects->n && !Quit; i++) {
-
-		tileList = &place->objects->buckets[i];
-		tileElem = tileList->list.next;
-		assert(tileElem->prev == &tileList->list);
-
-		// for each tile
-		while (tileElem != &tileList->list && !Quit) {
-
-			tileTmp = tileElem->next;
-			tile = outcast(tileElem, struct tile, hashlink.list);
-			tile->lock++;
-
-			objList = &tile->objstack;
-			objElem = objList->list.next;
-
-			// for each object
-			while (objElem != &objList->list && !Quit) {
-
-				objTmp = objElem->next;
-				obj = outcast(objElem, class Object,
-					      container_link.list);
-				fx(obj, data);
-
-				objElem = objTmp;
-			}
-
-                        // moongates & vehicles
-                        if (tile->vehicle)
-                                fx(tile->vehicle, data);
-
-                        // NOTE: subplaces are not objects, so they are
-                        // excused.
-
-			// Unlock the tile. One possible consequence of the
-			// above loop is that all of the objects were removed
-			// from this tile, in which case we probably tried to
-			// destroy it but were prevented by the lock.
-			tile->lock--;
-			if (!tile->objects)
-				tile_del(tile);
-
-			tileElem = tileTmp;
-		}
-	}
-#endif
 }
 
 static void place_remove_and_destroy_object(class Object *obj, void *unused)

@@ -30,8 +30,19 @@ struct node *node_new(void *data)
         struct node *node;
 
         node = (struct node *)calloc(1, sizeof(*node));
+        assert(node);
         node->ptr = data;
         node->ref = 1;
+        return node;
+}
+
+struct node *node_new_keyed(void *data, int key)
+{
+        struct node *node;
+
+        node = node_new(data);
+        node->key = key;
+
         return node;
 }
 
