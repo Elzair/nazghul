@@ -2241,10 +2241,41 @@ static void random_ambush(void)
 
 }
 
+static bool combat_undo_charm(class Character *character, void *data)
+{
+        if (character->isHostile(player_party->alignment)) {
+                character->setAlignment(player_party->alignment);
+        }
+        return false;
+}
+
+static bool combat_player_can_continue(class Character *character, void *data)
+{
+        if (!character->isDead() && character->isOnMap() &&
+            !character->isHostile(player_party->alignment)) {
+                *(int*)data = 1;
+                return true;
+        }
+        return false;
+}
+
 static void myEventLoop(void)
 {
         while (!Quit && Combat.state != DONE) {
+
                 // Loop until the player opts to quit or combat is over
+
+
+                // Special case: the only combatant(s) left on the battlefield
+                // are charmed party members. Miraculously cure them.
+                if (Combat.n_npcs == 0) {
+                        int ok = 0;
+                        player_party->for_each_member(combat_player_can_continue, &ok);
+                        if (!ok) {
+                                player_party->for_each_member(combat_undo_charm, NULL);
+                        }
+                }
+
 
                 if (Combat.state == FIGHTING)
                         consolePrint("\n*** Round %d ***\n", Combat.round++);
