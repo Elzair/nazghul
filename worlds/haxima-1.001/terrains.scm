@@ -343,7 +343,7 @@
    (list 't_ships_wheel     "ship's wheel"  pclass-wall      s_ships_wheel     1 0 nil)
    (list 't_deck            "deck"          pclass-grass     s_deck            1 0 nil)
 
-   (list 't_boulder         "boulder"       pclass-wall      s_boulder         1 0 nil)
+   (list 't_boulder         "boulder"       pclass-boulder   s_boulder         1 0 'slip)
 
    (list 't_wall_rock_v     "rock wall"     pclass-wall      s_wall_rock       1 0 nil)
    (list 't_wall_rock       "rock wall"     pclass-wall      s_wall_rock       0 0 nil)

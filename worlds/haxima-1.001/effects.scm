@@ -284,6 +284,18 @@
 (define (burn obj)
   (kern-obj-apply-damage obj "burning" (kern-dice-roll "2d3+2")))
 
+(define (slip obj)
+  (let ((mmode (kern-obj-get-mmode obj)))
+    (if (eqv? mmode mmode-walk)
+        (if (< (kern-dice-roll "1d20") 5)
+            (let ((dir (kern-obj-get-dir obj)))
+              (if (not (and (= 0 (car dir))
+                            (= 0 (cadr dir))))
+                  (begin
+                    (kern-obj-move obj (- (car dir)) (- (cadr dir)))
+                    (kern-log-msg "Slipped!")
+                    (kern-obj-apply-damage obj "slipped" (kern-dice-roll "1d4")))))))))
+
 (define (apply-lightning obj)
   (kern-obj-apply-damage obj "shocked" (kern-dice-roll "2d8")))
 

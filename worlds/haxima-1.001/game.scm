@@ -58,6 +58,7 @@
 (define pclass-repel     8) ;; energy shield blocks all
 (define pclass-bridge    pclass-grass)
 (define pclass-road      pclass-grass)
+(define pclass-boulder   pclass-forest)
 
 ;; Movement modes
 (define mmodes

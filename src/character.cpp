@@ -432,6 +432,9 @@ enum MoveResult Character::move(int dx, int dy)
 	int newx, newy;
 	class Character *occupant;
 
+        this->dx = dx;
+        this->dy = dy;
+
         // ------------------------------------------------------------------
         // Let's give this next a try, in order to make the code for teleport
         // spells simpler. If a teleport spell says to teleport the caster,

@@ -72,6 +72,13 @@
  (list
 
   (list (mk-generator t_dungeon_troll_generator) 11 6)
+  (list (mk-generator t_dungeon_troll_generator) 28 28)
+  (list (mk-generator t_dungeon_troll_generator) 38 21)
+  (list (mk-generator t_dungeon_troll_generator) 41 32)
+  (list (mk-generator t_dungeon_troll_generator) 48 30)
+  (list (mk-generator t_dungeon_spider_generator) 15 28)
+  (list (mk-slime-generator 11 9) 10 8)
+  (list (mk-slime-generator 60 30) 57 31)
   
   ;; terrain features
   (list (mk-ladder-up 'p_shard 46 12) 1 4)

@@ -180,6 +180,8 @@
                                  nil)
 
 (mk-monster-generator 't_dungeon_troll_generator 990 5 mk-troll char-is-troll?)
+(mk-monster-generator 't_dungeon_spider_generator 990 3 mk-queen-spider 
+                      is-queen-spider?)
 
 (define (mk-generator type)
   (kern-obj-set-visible (kern-mk-obj type 1) #f))

@@ -1770,6 +1770,22 @@ static pointer kern_obj_get_location(scheme *sc, pointer args)
         return pack(sc, "pdd", place, x, y);
 }
 
+static pointer kern_obj_get_dir(scheme *sc, pointer args)
+{
+        class Object *obj;
+        int dx, dy;
+
+        if (!(obj = unpack_obj(sc, &args, "kern-obj-get-dir"))) {
+                assert(false);
+                return sc->NIL;
+        }
+
+        dx = obj->getDx();
+        dy = obj->getDy();
+
+        return pack(sc, "dd", dx, dy);
+}
+
 static pointer kern_place_get_location(scheme *sc, pointer args)
 {
         class Object *obj;
@@ -6409,6 +6425,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-obj-get-activity", kern_obj_get_activity);
         API_DECL(sc, "kern-obj-get-ap", kern_obj_get_ap);
         API_DECL(sc, "kern-obj-get-count", kern_obj_get_count);
+        API_DECL(sc, "kern-obj-get-dir", kern_obj_get_dir);
         API_DECL(sc, "kern-obj-get-effects", kern_obj_get_effects);
         API_DECL(sc, "kern-obj-get-gob", kern_obj_get_gob);
         API_DECL(sc, "kern-obj-get-light", kern_obj_get_light);

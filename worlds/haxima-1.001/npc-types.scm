@@ -22,6 +22,10 @@
 ;; Local Procedures
 ;;----------------------------------------------------------------------------
 
+;; All npc type constructors should create gobs where the first data element is
+;; reserved as the tag for their spawnpoint.
+(define (set-spawnpoint! npc-gob spawnpoint) (set-car! npc-gob spawnpoint))
+
 (define (max-hp sp occ lvl mod mult)
   (+ (kern-species-get-hp-mod sp)
      (if (null? occ) 0 (kern-occ-get-hp-mod occ))

@@ -149,7 +149,7 @@
  (dtable-row  -1    0   -1   2   -1   -2    0    -2   -2) ;; orks
  (dtable-row  -1   -1   -1  -1    2   -2   -1    -1   -2) ;; accursed
  (dtable-row  -2   -2   -2  -2   -2    0    0     0   -2) ;; monsters
- (dtable-row  -2   -2   -2   0   -1    0    2    -2   -2) ;; hill trolls
+ (dtable-row  -2   -2   -2   0   -1   -1    2    -2   -2) ;; hill trolls
  (dtable-row  -2   -2   -2  -2   -1    0   -2     2   -2) ;; wood spiders
  (dtable-row   0   -2   -2  -2   -2   -2   -2    -2    0) ;; outlaws
  )
