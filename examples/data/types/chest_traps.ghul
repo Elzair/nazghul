@@ -27,6 +27,15 @@
 #define chest_traps_ghul
 
 
+#define TRAP_TYPE(_tag, _name, _effects, _amount) \
+    _tag {                      \
+        name     _name          \
+        sprite   null           \
+        subtype  trap           \
+        effects  _effects       \
+        amount   _amount        \
+    }
+
 //        tag            name           effects        amount
 //        -----------    -----------    -----------    ------
 TRAP_TYPE(t_burn_trap,   "burn trap",   EFFECT_BURN,   10);

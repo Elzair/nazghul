@@ -145,15 +145,6 @@ CURSOR ls_whirlpool;  // From ss_u4
         subtype  reagent        \
     }                           \
 
-#define TRAP_TYPE(_tag, _name, _effects, _amount) \
-    _tag {                      \
-        name     _name          \
-        sprite   null           \
-        subtype  trap           \
-        effects  _effects       \
-        amount   _amount        \
-    }
-
 object_types {
   // This is needed later for CROSSHAIR
   GENERIC_TYPE(t_cursor, "cursor", s_crosshair, LAYER_CURSOR);
