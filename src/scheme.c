@@ -61,24 +61,9 @@
 
 #include <string.h>
 #include <stdlib.h>
-#ifndef macintosh
+#ifndef __APPLE__
 # include <malloc.h>
-#else
-static int stricmp(const char *s1, const char *s2)
-{
-  unsigned char c1, c2;
-  do {
-    c1 = tolower(*s1);
-    c2 = tolower(*s2);
-    if (c1 < c2)
-      return -1;
-    else if (c1 > c2)
-      return 1;
-    s1++, s2++;
-  } while (c1 != 0);
-  return 0;
-}
-#endif /* macintosh */
+#endif /* __APPLE__ */
 
 #if USE_STRLWR
 #ifndef strlwr
