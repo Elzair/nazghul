@@ -392,3 +392,14 @@
                    b))
                (car lst)
                (cdr lst))))
+
+;; ----------------------------------------------------------------------------
+;; blit-maps -- blit multiple maps to a single target map
+(;; ----------------------------------------------------------------------------
+define (blit-maps kmap . blits)
+  (define (blit dstx dsty srcmap srcx srcy w h)
+    (kern-blit-map kmap dstx dsty srcmap srcx srcy w h))
+  (foldr (lambda (a b) (apply blit b))
+         kmap
+         blits))
+        

@@ -12,6 +12,9 @@
 ;;
 ;; This is the terrain map for the place. It may be altered at run-time so it
 ;; must be saved and loaded with every session.
+;;
+;; This is a "composite" map. The individual building maps are defined
+;; separately and then blitted onto the terrain map.
 ;;----------------------------------------------------------------------------
 (kern-mk-map
  'm_lusty_juggs 14 10 pal_expanded
@@ -62,41 +65,58 @@
   )
  )
 
+(kern-mk-map
+ 'm_dry_goods 7 10 pal_expanded
+ (list
+  "  x  x  x  x  x  x  x "
+  "  x  @ .D .R .Y  @  x "
+  "  x .G .O .O .D .S  x "
+  " cc cc cc cc cc cc ws "
+  "  x  @  @  @  @  @  x "
+  "  x cc cc cc cc cc  x "
+  "  x cc cc cc cc cc cc "
+  "  x cc cc cc cc cc  x "
+  "  x cc cc cc cc cc ws "
+  "  x  x  x  x  x  x  x "
+  )
+ )
+
+
 (kern-mk-map 
  'm_trigrave 32 32 pal_expanded
  (list
-  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  b .. .. ..  b .. .. .. .. .. .. .. .. .. .. .. "
+  "tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt  b .. .. ..  b tt tt tt tt tt tt tt tt tt tt tt "
+  "tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt .. .. .. tt tt tt tt tt tt tt tt tt tt tt tt "
+  "tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt  b .. .. ..  b tt tt tt tt tt tt tt tt tt tt tt "
+  "tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt .. .. .. tt tt tt tt tt tt tt tt tt tt tt tt "
+  "tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt  b .. .. ..  b tt tt tt tt tt tt tt tt tt tt tt "
+  "tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt .. .. .. .. ..  b tt tt tt tt tt tt tt tt tt "
+  "tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt  b .. .. .. .. .. .. .. tt tt tt tt tt tt tt tt "
+  "tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt .. .. .. .. ..  b tt tt tt tt tt tt tt tt tt "
+  "tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt  b .. .. ..  b tt tt tt tt tt tt tt tt tt tt tt "
+  "tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt .. .. .. tt tt tt tt tt tt tt tt tt tt tt tt "
+  "tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt  b .. .. ..  b tt tt tt tt tt tt tt tt tt tt tt "
+  "tt tt tt tt tt tt tt .. tt tt tt tt tt tt tt tt tt .. .. .. tt tt tt tt tt tt tt tt tt tt tt tt "
+  "tt tt tt tt tt tt  b ..  b tt tt tt tt tt tt tt  b .. .. ..  b tt tt tt tt tt tt tt tt tt tt tt "
+  "tt tt tt tt tt tt .. .. .. tt tt tt tt tt tt tt .. .. .. .. .. tt tt tt tt tt tt tt tt tt tt tt "
+  " b tt  b tt  b .. .. .. .. ..  b tt  b tt  b .. .. .. .. .. .. ..  b tt  b tt  b tt  b tt  b tt "
   ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
-  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  b .. .. ..  b .. .. .. .. .. .. .. .. .. .. .. "
-  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
-  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  b .. .. ..  b .. .. .. .. .. .. .. .. .. .. .. "
-  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  b .. .. .. .. .. .. .. .. .. "
-  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  b .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
-  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  b .. .. .. .. .. .. .. .. .. "
-  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  b .. .. ..  b .. .. .. .. .. .. .. .. .. .. .. "
-  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
-  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  b .. .. ..  b .. .. .. .. .. .. .. .. .. .. .. "
-  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
-  ".. .. .. .. .. ..  b ..  b .. .. .. .. .. .. ..  b .. .. ..  b .. .. .. .. .. .. .. .. .. .. .. "
-  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
-  " b ..  b ..  b .. .. .. .. ..  b ..  b ..  b .. .. .. .. .. .. ..  b ..  b ..  b ..  b ..  b .. "
   ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
   ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
-  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
-  " b ..  b ..  b ..  b ..  b .. .. .. .. .. .. ..  b ..  b ..  b ..  b ..  b ..  b ..  b ..  b .. "
-  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
-  ".. .. .. .. .. .. .. .. .. ..  b .. .. ..  b .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
-  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
-  ".. .. .. .. .. .. .. .. .. ..  b .. .. ..  b .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
-  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
-  ".. .. .. .. .. .. .. .. .. ..  b .. .. .. .. ..  b .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
-  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
-  ".. .. .. .. .. .. .. .. .. ..  b .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
-  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  b .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
-  ".. .. .. .. .. .. .. .. .. ..  b .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
-  ".. .. .. .. .. .. .. .. .. .. .. .. .. ..  b .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
-  ".. .. .. .. .. .. .. .. .. ..  b .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
-  ".. .. .. .. .. .. .. .. .. .. .. .. .. ..  b .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+  " b tt  b tt  b tt  b tt  b .. .. .. .. .. .. ..  b tt  b tt  b tt  b tt  b tt  b tt  b tt  b tt "
+  "tt tt tt tt tt tt tt tt tt tt .. .. .. .. .. tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt "
+  "tt tt tt tt tt tt tt tt tt tt  b .. .. ..  b tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt "
+  "tt tt tt tt tt tt tt tt tt tt tt .. .. .. tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt "
+  "tt tt tt tt tt tt tt tt tt tt  b .. .. ..  b tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt "
+  "tt tt tt tt tt tt tt tt tt tt tt .. .. .. .. tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt "
+  "tt tt tt tt tt tt tt tt tt tt  b .. .. .. .. ..  b tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt "
+  "tt tt tt tt tt tt tt tt tt tt tt .. .. .. .. .. .. tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt "
+  "tt tt tt tt tt tt tt tt  b .. .. .. .. .. .. .. .. tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt "
+  "tt tt tt tt tt tt tt tt .. .. .. .. .. .. .. ..  b tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt "
+  "tt tt tt tt tt tt tt tt  b .. .. .. .. .. .. tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt "
+  "tt tt tt tt tt tt tt tt tt tt tt .. .. ..  b tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt "
+  "tt tt tt tt tt tt tt tt tt tt  b .. .. .. tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt "
+  "tt tt tt tt tt tt tt tt tt tt tt .. .. ..  b tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt "
   )
  )
 
@@ -120,7 +140,7 @@
 ;; needs to reload the given file. Think of the zone file as read-only data,
 ;; whereas this file contains read/write data.
 ;;----------------------------------------------------------------------------
-;;(kern-load "trigrave-zones.scm")
+(kern-load "trigrave-zones.scm")
 
 ;;----------------------------------------------------------------------------
 ;; NPCs
@@ -129,25 +149,26 @@
 ;; definition file (this file includes their conversation, schedule,
 ;; constructor, etc). Step 2 is to call kern-mk-char to instantiate them.
 ;;----------------------------------------------------------------------------
-;(kern-load "ilya.scm")
-; (bind 
-;  (kern-mk-char 'ch_ilya ; tag
-;                "Ilya"              ; name
-;                sp_human            ; species
-;                nil                 ; occ
-;                s_child             ; sprite
-;                faction-men         ; starting alignment
-;                0 10 5              ; str/int/dex
-;                0 0                 ; hp mod/mult
-;                0 0                 ; mp mod/mult
-;                30 0 9 9            ; hp/xp/mp/lvl
-;                'ilya-conv          ; conv
-;                sch_ilya           ; sched
-;                nil                 ; special ai
-;                nil                 ; container
-;                nil                 ; readied
-;                )
-;  (ilya-mk #f #f))
+(kern-load "john_iron.scm")
+(bind 
+ (kern-mk-char 'ch_john ; tag
+               "John Iron"         ; name
+               sp_human            ; species
+               nil                 ; occ
+               s_townsman          ; sprite
+               faction-men         ; starting alignment
+               0 10 5              ; str/int/dex
+               0 0                 ; hp mod/mult
+               0 0                 ; mp mod/mult
+               30 0 9 9            ; hp/xp/mp/lvl
+               'john-conv          ; conv
+               sch_john           ; sched
+               nil                 ; special ai
+               nil                 ; container
+               nil                 ; readied
+               )
+ (john-mk))
+
 
 ;;----------------------------------------------------------------------------
 ;; Place
@@ -157,18 +178,16 @@
 (kern-mk-place 
  'p_trigrave     ; tag
  "Trigrave"      ; name
- s_town           ; sprite
+ s_town          ; sprite
 
- ;; Use a composite map. Blit the buildings over the basic terrain map. This
- ;; makes it easy to move the buildings.
- (kern-blit-map 
-  (kern-blit-map 
-   (kern-blit-map 
-    m_trigrave 17 21 
-    m_lusty_juggs 0 0 14 10)
-   24 1
-   m_johns_irony 0 0 7 12)
-  1 1 m_quiet_inn 0 0 13 10)
+ ;; Blit the buildings over the basic terrain map.
+ (if #f
+     m_trigrave
+     (blit-maps m_trigrave
+                (list 17 21 m_lusty_juggs 0 0 14 10)
+                (list 24 1  m_johns_irony 0 0 7  12)
+                (list 1  1  m_quiet_inn   0 0 13 10)
+                (list 1 21  m_dry_goods   0 0 7  10)))
  
  #f              ; wraps
  #f              ; underground
@@ -176,7 +195,12 @@
  #f              ; tmp combat place
  nil ; subplaces
  nil ; neighbors
- nil ; objects
+ (list ; objects
+
+  ;; characters
+  (list ch_john 15 15)
+
+  )
  nil ; hooks
  (list  ;; edge entrances
   (list south 18 0)
