@@ -297,13 +297,6 @@ void ctrl_do_attack(class Character *character, class ArmsType *weapon,
                   , target->getName()
                 );
 
-        //struct attack_form *form;
-        // form = log_begin_entry();
-        // form_set_type(form, FORM_CHARACTER_ATTACK);
-        // form_set_subject(form, character->getName());
-        // form_set_verb(form, armstype_get_usage_desc(weapon));
-        // form_set_dirobj_art(form, form_gender_to_pcharacter->getGender());
-
         miss = ! weapon->fire(target, character->getX(), character->getY());
         character->decActionPoints(weapon->getRequiredActionPoints());
         character->useAmmo(weapon);
@@ -314,8 +307,12 @@ void ctrl_do_attack(class Character *character, class ArmsType *weapon,
         }
 
         // Roll to hit.
-        hit = dice_roll(weapon->getToHitDice());
+        hit = dice_roll("1d20") + dice_roll(weapon->getToHitDice());
         def = target->getDefend();
+
+        dbg("%s to-hit: %d\n", character->getName(), hit);
+        dbg("%s to-def: %d\n", target->getName(), def);
+
         if (hit < def) {
                 log_end("barely scratched!");
                 return;
