@@ -154,6 +154,7 @@ class player_party : public Party {
         /* Inventory management */
         Container *inventory;
         virtual bool addFood(int quantity);
+        virtual bool addGold(int quantity);
         virtual bool add(ObjectType *type, int amount);
         virtual bool takeOut(ObjectType *type, int amount);        
 

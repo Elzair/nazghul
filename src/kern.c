@@ -1924,6 +1924,29 @@ static pointer kern_obj_add_food(scheme *sc, pointer args)
         return sc->NIL;
 }
 
+static pointer kern_obj_add_gold(scheme *sc, pointer args)
+{
+        class Object *obj;
+        int quantity;
+
+        if (unpack(sc, &args, "pd", &obj, &quantity)) {
+                load_err("kern-obj-add-gold: bad args");
+                return sc->NIL;
+        }
+
+        if (!obj) {
+                rt_err("kern-obj-add-gold: null obj");
+                return sc->NIL;
+        }
+
+        if (! obj->addGold(quantity)) {
+                rt_err("kern-obj-add-gold: '%s' does not use gold",
+                       obj->getName());
+        }
+
+        return sc->NIL;
+}
+
 static pointer kern_mk_container(scheme *sc, pointer args)
 {
         class Container *container;
@@ -5942,6 +5965,7 @@ scheme *kern_init(void)
 
         /* kern-obj api */
         API_DECL(sc, "kern-obj-add-food", kern_obj_add_food);
+        API_DECL(sc, "kern-obj-add-gold", kern_obj_add_gold);
         API_DECL(sc, "kern-obj-add-effect", kern_obj_add_effect);
         API_DECL(sc, "kern-obj-add-to-inventory", kern_obj_add_to_inventory);
         API_DECL(sc, "kern-obj-apply-damage", kern_obj_apply_damage);

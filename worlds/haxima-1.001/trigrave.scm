@@ -229,6 +229,7 @@
   (list (mk-door)  4  3)
   (list (mk-door) 10  3)
   (list (mk-door)  7 10)
+  (list (mk-bed)   2  5)
 
   ;; General store
   (list (mk-locked-door)  1 24)

@@ -2215,6 +2215,15 @@ bool Character::addFood(int quantity)
         return false;
 }
 
+bool Character::addGold(int quantity)
+{
+        if (isPlayerPartyMember()) {
+                player_party->addGold(quantity);
+                return true;
+        }
+        return false;
+}
+
 void Character::beginResting(int hours)
 {
         assert(hours > 0);

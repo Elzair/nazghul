@@ -192,6 +192,7 @@ class Character:public Being {
 	virtual class ArmsType *enumerateArms();
 	virtual class ArmsType *enumerateWeapons();
         virtual bool addFood(int quantity);
+        virtual bool addGold(int quantity);
         virtual bool add(ObjectType *type, int amount);
         virtual bool takeOut(ObjectType *type, int amount);
         virtual int getCurrentFaction();

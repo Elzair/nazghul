@@ -38,6 +38,9 @@
     ;; Food
     (list 10 t_mushroom)
 
+    ;; Gold
+    (list 100 t_gold_coins)
+
     ;; Clothing
     (list 6  t_clothing_rags)
     (list 1  t_robe_red)

@@ -43,40 +43,45 @@
        "of! Perhaps someday we can speak of them more."))
 
 (define (gwen-room knpc kpc)
-  (let ((door (eval 'trigrave-inn-room-1-door)))
-    ;; is the room still open?
-    (if (not (door-locked? (kobj-gob door)))
-        ;; yes - remind player
-        (say knpc "Your room is still open!")
-        ;; no - ask if player needs a room
-        (begin
-          (say knpc "Do you need a room?")
-          (if (kern-conv-get-yes-no? kpc)
-              ;; yes - player wants a room
-              (begin
-                (say knpc "It will be 25 gold, "
-                     "and you may use the room as long as you are in town. "
-                     "Agreed?")
-                (if (kern-conv-get-yes-no? kpc)
-                    ;; yes - player agrees to the price
-                    (let ((gold (kern-player-get-gold)))
-                      ;; does player have enough gold?
-                      (if (>= gold trigrave-inn-room-price)
-                          ;; yes - player has enough gold
-                          (begin
-                            (kern-player-set-gold (- gold 
-                                                     trigrave-inn-room-price))
-                            (say knpc "You're in room 1. Enjoy your stay!")
-                            (send-signal knpc door 'unlock)
-                            (kern-conv-end)
-                            )
-                          ;; no - player does not have enouvh gold)
-                          (say knpc "Sorry, but you need more gold!")))
-                    ;; no - player does not agree to the price
+  (if (not (string=? "working" (kern-obj-get-activity knpc)))
+      (say knpc "Come by my shop when I'm open. "
+           "It's the Quiet Inn in the northwest corner of town.")
+      (let ((door (eval 'trigrave-inn-room-1-door)))
+        ;; is the room still open?
+        (if (not (door-locked? (kobj-gob door)))
+            ;; yes - remind player
+            (say knpc "Your room is still open!")
+            ;; no - ask if player needs a room
+            (begin
+              (say knpc "Do you need a room?")
+              (if (kern-conv-get-yes-no? kpc)
+                  ;; yes - player wants a room
+                  (begin
                     (say knpc 
-                         "You won't find a better deal in Three Corners!")))
-              ;; no - player does not want a room
-              (say knpc "Perhaps another time."))))))
+                         "It will be 25 gold, and you may use the room as "
+                         "long as you are in town. Agreed?")
+                    (if (kern-conv-get-yes-no? kpc)
+                        ;; yes - player agrees to the price
+                        (let ((gold (kern-player-get-gold)))
+                          ;; does player have enough gold?
+                          (if (>= gold trigrave-inn-room-price)
+                              ;; yes - player has enough gold
+                              (begin
+                                (kern-player-set-gold 
+                                 (- gold 
+                                    trigrave-inn-room-price))
+                                (say knpc "You're in room 1. Enjoy your stay!")
+                                (send-signal knpc door 'unlock)
+                                (kern-conv-end)
+                                )
+                              ;; no - player does not have enouvh gold)
+                              (say knpc "Sorry, but you need more gold!")))
+                        ;; no - player does not agree to the price
+                        (say knpc 
+                             "You won't find a better deal in Three "
+                             "Corners!")))
+                  ;; no - player does not want a room
+                  (say knpc "Perhaps another time.")))))))
 
 (define gwen-conv
   (ifc basic-conv

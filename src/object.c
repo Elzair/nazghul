@@ -1779,6 +1779,11 @@ bool Object::addFood(int amount)
         return false; // subclasses will overload
 }
 
+bool Object::addGold(int amount)
+{
+        return false; // subclasses will overload
+}
+
 void Object::setGob(struct gob *g)
 {
         gob = g;

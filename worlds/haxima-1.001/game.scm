@@ -160,6 +160,8 @@
 (load "arms.scm")
 (load "items.scm")
 (load "vehicles.scm")
+(load "beds.scm")
+(load "money.scm")
 
 (load "species.scm")
 (load "occs.scm")

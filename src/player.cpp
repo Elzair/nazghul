@@ -1654,6 +1654,24 @@ bool player_party::addFood(int amount)
         return true;
 }
 
+bool player_party::addGold(int amount)
+{
+        if (amount == 0)
+                return true;
+
+        if (amount > 0)
+                log_msg("You get %d gold.", amount);
+        else
+                log_msg("You lose %d gold.", amount);
+
+        gold += amount;
+        if (gold < 0)
+                gold = 0;
+        foogodRepaint();
+
+        return true;
+}
+
 bool player_party::isPlayerControlled()
 {
         return true;
