@@ -2324,6 +2324,9 @@ static bool keyHandler(struct KeyHandler *kh, int key)
 	int saved_turn = Turn;
 	int turns_used = 1;	// default used by most actions
 
+        cmdwin_clear();
+        cmdwin_repaint();
+
 	switch (key) {
 
 	case KEY_NORTH:

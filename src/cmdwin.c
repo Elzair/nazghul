@@ -139,7 +139,8 @@ void cmdwin_erase_back_to_mark(void)
 
 void cmdwin_flush_to_console(void)
 {
-        consolePrint("%s\n", cmdwin.buf);
+        if (strlen(cmdwin.buf))
+                consolePrint("%s\n", cmdwin.buf);
         //cmdwin_clear();
         //cmdwin_repaint();
 }

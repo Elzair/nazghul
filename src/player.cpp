@@ -247,9 +247,9 @@ void player_party::relocate(struct place *place, int x, int y)
 	if (getPlace()) {
 		turns = get_speed() * place_get_movement_cost(place, x, y);
 		if (turns > 4 * getPlace()->scale)
-			consolePrint("Very slow progress!\n");
+			cmdwin_print("-very slow!");
 		else if (turns > 2 * getPlace()->scale)
-			consolePrint("Slow progress!\n");
+			cmdwin_print("-slow!");
 		turnAdvance(turns);
 	}
 

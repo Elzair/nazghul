@@ -78,3 +78,8 @@ Changes for nazghul-0.1.2
 
 --The final contents of the cmdwin are now shown on the main console.
 
+--New feature in the console. If a message is a repeat of the last one then
+  instead of printing it again the console will print a notice of how many time
+  the message has repeated so far. Also changed the way "slow progress" and
+  friends are reported so that it takes advantage of this feature.
+
