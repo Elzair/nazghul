@@ -920,6 +920,10 @@ int mapTileIsVisible(int x, int y)
             y >= (vrect->y + vrect->h))
                 return 0;
 
+        // If zoomed out then don't bother checking the vmask.
+        if (Map.aview->zoom > 1)
+                return 1;
+
         // check if the tile is marked as visible in the view rect
         index = (y - vrect->y) * vrect->w +
                 (x - vrect->x);

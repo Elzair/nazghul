@@ -179,7 +179,7 @@ void Character::changeHp(int delta)
 	} else {
 		/* To simplify things, if the character is in a party whose
 		 * home is the current place then do not flee. */
-		if (!isDead() &&
+		if (!isDead() && inCombat &&
 		    getHp() < (getMaxHp() / 4) && party->isHome(getPlace()))
 			setFleeing(true);
 	}
@@ -574,6 +574,7 @@ void Character::setFleeing(bool val)
 		fleeX = fleeY = 0;
 		return;
 	}
+
 	// Pick a direction to flee. Don't bother pathfinding, just look for
 	// the nearest edge and move toward it. After all, the Character is
 	// supposed to be fleeing in a panic so it doesn't have to be too smart
