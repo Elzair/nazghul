@@ -301,6 +301,7 @@ class Object {
         virtual int getActionPointsPerTurn();
         virtual void applyEffect(closure_t *effect);
         virtual int getActionPoints();
+        virtual void resetActionPoints();
         virtual void burn();
         virtual void sleep();
         virtual void damage(int amount);

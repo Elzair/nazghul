@@ -1845,3 +1845,8 @@ Object *Object::getSpeaker()
 {
         return this;
 }
+
+void Object::resetActionPoints()
+{
+        action_points = 0;
+}

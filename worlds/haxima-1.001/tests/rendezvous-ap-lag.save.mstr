@@ -25,6 +25,53 @@
     "-- -- -- -- -- -- -- -- -- "
   )
 )
+(kern-mk-place 'p_test2 "Underplace"
+  nil ;; sprite
+  (kern-mk-map 'm_grass_map 19 19 pal_expanded
+    (list
+      " x  x .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x  x "
+      " x .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x "
+      ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+      ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+      ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+      ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+      ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+      ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+      ".. .. .. .. .. .. .. .. .. tt .. .. .. .. .. .. .. .. .. "
+      ".. .. .. .. .. .. .. .. tt tt tt .. .. .. .. .. .. .. .. "
+      ".. .. .. .. .. .. .. .. .. tt .. .. .. .. .. .. .. .. .. "
+      ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+      ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+      ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+      ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+      ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+      ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+      " x .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x "
+      " x  x .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..  x  x "
+    )
+  )
+  #f #t #f #f
+  ;; subplaces
+  nil
+  ;; neighbors
+  nil
+  ;; contents
+  (list
+    (list
+      (bind
+        (kern-mk-obj t_ladder_up 1)
+        (list
+          'p_test
+          4
+          12
+        )
+      ) ;; bind
+    9 9)
+  ) ;; end of objects
+  (list
+  )
+) ;; end of place p_test2
+
 (kern-mk-place 'p_test "Test Place"
   nil ;; sprite
   (kern-mk-map 'm_test_1 19 19 pal_expanded
@@ -58,35 +105,28 @@
   ;; contents
   (list
     (list
-      (kern-mk-char
-        'ch_olin
-        "Olin the Ghast"
-        sp_ghast
-        nil
-        s_ghost
-        3
-        20 30 22
-        0 1
-        10 5
-        0 0
-        0 0
-        58 0
-        8 8
-        nil
-        nil
-        nil
-        nil
-        ;; hooks
+      (bind
+        (kern-mk-obj t_ladder_down 1)
         (list
-          (list
-            ef_temporary_poison_immunity
-            '()
-            2
-            825
-          )
+          'p_test2
+          9
+          9
         )
-      )
-    8 9)
+      ) ;; bind
+    4 12)
+    (list
+      (bind
+        (kern-mk-obj t_door 1)
+        (list
+          #t
+          2
+          '()
+          #f
+          #f
+          #f
+        )
+      ) ;; bind
+    5 12)
     (list
       (kern-mk-char
         'ch_shroom
@@ -112,7 +152,44 @@
         (list
         )
       )
-    9 9)
+    5 12)
+    (list
+      (kern-mk-char
+        'ch_olin
+        "Olin the Ghast"
+        sp_ghast
+        nil
+        s_ghost
+        3
+        20 30 22
+        0 1
+        10 5
+        0 0
+        0 0
+        58 0
+        8 8
+        nil
+        nil
+        nil
+        nil
+        ;; hooks
+        (list
+        )
+      )
+    6 12)
+    (list
+      (bind
+        (kern-mk-obj t_door 1)
+        (list
+          #f
+          0
+          '()
+          #f
+          #f
+          #f
+        )
+      ) ;; bind
+    4 11)
   ) ;; end of objects
   (list
   )
@@ -135,7 +212,6 @@
     ;; contents
     (list
       (list 1 t_dagger)
-      (list 1 the-goblin-lexicon)
     )
   )
   (list
@@ -150,7 +226,7 @@
 (kern-set-cursor ls_whirlpool)
 (kern-set-crosshair t_crosshair)
 (kern-set-ascii ss_little_sprites 32)
-(kern-set-clock 0 0 0 0 12 45)
+(kern-set-clock 0 0 0 0 12 52)
 ;; ---------
 ;; Astronomy
 ;; ---------

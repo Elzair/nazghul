@@ -226,7 +226,7 @@
 (kern-set-cursor ls_whirlpool)
 (kern-set-crosshair t_crosshair)
 (kern-set-ascii ss_little_sprites 32)
-(kern-set-clock 0 0 0 0 12 48)
+(kern-set-clock 0 0 0 0 12 47)
 ;; ---------
 ;; Astronomy
 ;; ---------

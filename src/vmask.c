@@ -112,10 +112,10 @@ static void vmask_purge(void)
 
         //printf("vmask_purge\n");
 
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
         // Remove and destroy the least-recently-used vmasks until we are down
         // to the low-water mark.
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
 
         while(vmask_n_entries > VMASK_LO_WATER) {
                 tail = vmask_q.prev;
@@ -124,13 +124,14 @@ static void vmask_purge(void)
         }
 }
 
-static void vmask_los(struct vmask *vmask, struct place *place, int center_x, int center_y)
+static void vmask_los(struct vmask *vmask, struct place *place, 
+                      int center_x, int center_y)
 {
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
         // First, build an "alpha mask", which is a grid corresponding to the
         // surrounding tiles. Each cell in the grid indicates if a tile blocks
         // line-of-sight or lets it pass.
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
 
 	int x;
         int y;
@@ -149,9 +150,9 @@ static void vmask_los(struct vmask *vmask, struct place *place, int center_x, in
 		}
 	}
         
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
         // Next invoke the los engine and copy the results into the new vmask;
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
 
         LosEngine->r = max(VMASK_W, VMASK_H);
         LosEngine->compute(LosEngine);
@@ -166,19 +167,19 @@ static struct vmask *vmask_create(char *key, struct place *place, int x, int y)
 
         //dbg("vmask_create: %s\n", key);
 
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
         // Remove least-recently-used vmasks if we need to make room for
         // a new one.
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
 
         if (vmask_n_entries >= VMASK_HI_WATER) {
                 vmask_purge();
         }
 
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
         // Allocate and initialize a new vmask structure. Setup the tree to
         // use the given string key.
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
 
         vmask = (struct vmask*)calloc(1, sizeof(struct vmask) + VMASK_SZ);
         if (NULL == vmask)
@@ -193,11 +194,11 @@ static struct vmask *vmask_create(char *key, struct place *place, int x, int y)
                 return NULL;
         }
 
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
         // Finally, fill out the vmask based on the line-of-sight
         // characteristics of the given location, and then insert it into the
         // tree and the priority list.
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
 
         vmask_los(vmask, place, x, y);
         vmask_insert(vmask);
@@ -208,24 +209,24 @@ static struct vmask *vmask_create(char *key, struct place *place, int x, int y)
 
 static void vmask_prioritize(struct vmask *vmask)
 {
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
         // Move the vmask from wherever it was in the least-recently-used queue
         // up to the front.
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
 
         list_remove(&vmask->list);
         list_add(&vmask_q, &vmask->list);
 }
 
-// -----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 //
 //                                Public API
 //
-// -----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
-// -----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 // Call this once to initialize the library on startup.
-// -----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
 int vmask_init(void)
 {
@@ -237,13 +238,13 @@ int vmask_init(void)
 }
 
 
-// -----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 // Fetch the vmask corresponding to the given location. The vmask is gauranteed
 // to be valid until the next call to vmask_get(), at which point all bets are
 // off. I expect the typical usage will be for callers to only use one at a
 // time, and to make their own copy in the rare cases where they need to deal
 // with more than one at a time.
-// -----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
 char *vmask_get(struct place *place, int x, int y)
 {
@@ -268,7 +269,7 @@ char *vmask_get(struct place *place, int x, int y)
 }
 
 
-// -----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 // Invalidate all vmasks in the area surrounding the given location. You should
 // call this whenever you do something that will change the line-of-sight
 // properties of a tile. It will force the surrounding vmasks to recompute
@@ -278,7 +279,7 @@ char *vmask_get(struct place *place, int x, int y)
 // property have changed. For a single tile they would each be 1. Don't worry
 // about trying to evaluate the extent of the damage: the function will
 // automatically figure out which vmasks are affected.
-// -----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
 void vmask_invalidate(struct place *place, int x, int y, int w, int h)
 {
@@ -290,12 +291,13 @@ void vmask_invalidate(struct place *place, int x, int y, int w, int h)
         int end_x   = start_x + w + MAP_TILE_W;
         int end_y   = start_y + h + MAP_TILE_H;
 
-        //dbg("vmask_invalidate: %s [%d %d %d %d]\n", place->name, x,  y, w, h);
+       //dbg("vmask_invalidate: %s [%d %d %d %d]\n", place->name, x,  y, w, h);
 
         for (y = start_y; y < end_y; y++) {
                 int wrap_y =  place_wrap_y(place, y);
                 for (x = start_x; x < end_x; x++) {
-                        vmask_make_key(key, place, place_wrap_x(place, x), wrap_y);
+                        vmask_make_key(key, place, place_wrap_x(place, x), 
+                                       wrap_y);
                         vmask = vmask_lookup(key);
                         if (NULL != vmask) {
                                 vmask_delete(vmask);

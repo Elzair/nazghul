@@ -1405,8 +1405,6 @@ bool player_party::rendezvous(struct place *place, int rx, int ry)
 
         mapCenterCamera(rx, ry);
         mapUpdate(0);
-        //consolePrint("Rendezvous...");
-        //consoleRepaint();
 
         // --------------------------------------------------------------------
         // Have each party member find and store a path to the rendezvous
@@ -1495,6 +1493,12 @@ bool player_party::rendezvous(struct place *place, int rx, int ry)
                         tmp = member->path;
                         member->path = member->path->next;
                         astar_node_destroy(tmp);
+
+                        // Bugfix: after rendezvous party members sometimes
+                        // have a heavy action point debt, penalizing them in
+                        // the new place. Zero out the debt during rendezvous
+                        // to prevent that.
+                        member->resetActionPoints();
 
                         mapUpdate(0);
                 }

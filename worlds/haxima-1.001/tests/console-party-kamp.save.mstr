@@ -455,9 +455,9 @@
                 (kern-mk-obj t_moongate 1)
                 (list
                   'ord
-                  #t
+                  #f
                   '()
-                  #t
+                  #f
                   #f
                 )
               ) ;; bind
@@ -891,7 +891,7 @@
       ) ;; kern-tag
     37 25)
     (list
-      (kern-mk-field f_poison 17)    34 22)
+      (kern-mk-field f_poison 18)    34 22)
     (list
       (kern-mk-obj t_mushroom 1)
     38 22)
@@ -919,7 +919,7 @@
       (kern-mk-vehicle t_ship 1 100)
     36 26)
     (list
-      (kern-mk-field f_fire 17)    34 23)
+      (kern-mk-field f_fire 18)    34 23)
     (list
       (kern-mk-player
         'player
@@ -1039,7 +1039,7 @@
 (kern-set-cursor ls_whirlpool)
 (kern-set-crosshair t_crosshair)
 (kern-set-ascii ss_little_sprites 32)
-(kern-set-clock 0 0 0 0 14 1)
+(kern-set-clock 0 0 0 0 13 55)
 ;; ---------
 ;; Astronomy
 ;; ---------
