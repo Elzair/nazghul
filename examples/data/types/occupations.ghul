@@ -30,7 +30,7 @@
 OCC ranger {
     name        "ranger";
     magic       0.5;
-    container   t_chest1;
+    container   t_small_wooden_chest;
     traps {
       t_burn_trap;
     }
@@ -52,7 +52,7 @@ OCC ranger {
 OCC fighter {
   name        "fighter";
   magic       0.0;
-  container   t_chest1;
+  container   t_small_wooden_chest;
   traps {}
   arms {
     t_dagger;
@@ -87,7 +87,7 @@ OCC fighter {
 OCC wizard {
   name        "wizard";
   magic       2.0;
-  container   t_chest1;
+  container   t_small_wooden_chest;
   traps {
     t_poison_trap;
   }
@@ -113,7 +113,7 @@ OCC wizard {
 OCC druid {
   name        "druid";
   magic       2.0;
-  container   t_chest1;
+  container   t_small_wooden_chest;
   traps {
     t_poison_trap;
   }
@@ -134,7 +134,7 @@ OCC druid {
 OCC merchant {
   name        "merchant";
   magic       0.0;
-  container   t_chest1;
+  container   t_small_wooden_chest;
   traps {}
   arms {
     t_dagger;
@@ -156,7 +156,7 @@ OCC beggar {
 OCC soldier {
   name        "soldier";
   magic       0.0;
-  container   t_chest1;
+  container   t_small_wooden_chest;
   traps {}
   arms {
     t_long_sword;
@@ -176,7 +176,7 @@ OCC soldier {
 OCC raider {
   name        "raider";
   magic       0.0;
-  container   t_chest1;
+  container   t_small_wooden_chest;
   traps {}
   arms {
     t_spear;

@@ -29,7 +29,12 @@
 #define containers_ghul
 
 
-GENERIC_TYPE(t_chest1, "small wooden chest", s_chest1, LAYER_CONTAINER) /* small wood */;
+GENERIC_TYPE(t_small_wooden_chest, "small wooden chest", s_small_wooden_chest, LAYER_CONTAINER)
+GENERIC_TYPE(t_large_wooden_chest, "large wooden chest", s_large_wooden_chest, LAYER_CONTAINER)
+GENERIC_TYPE(t_small_iron_chest, "small iron chest",     s_small_gray_chest,   LAYER_CONTAINER)
+GENERIC_TYPE(t_large_iron_chest, "large iron chest",     s_large_gray_chest,   LAYER_CONTAINER)
+GENERIC_TYPE(t_small_silver_chest, "small silver chest", s_small_silver_chest, LAYER_CONTAINER)
+GENERIC_TYPE(t_large_silver_chest, "large silver chest", s_large_silver_chest, LAYER_CONTAINER)
 
 
 #endif // containers_ghul

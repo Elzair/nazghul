@@ -26,6 +26,8 @@
 #ifndef p_wilderness_ghul
 #define p_wilderness_ghul
 
+#define CONFIG_WILDERNESS_GOBLIN_GENERATOR
+
 #ifdef CONFIG_WILDERNESS_GOBLIN_GENERATOR
 MAKE_NPC_PARTY_GENERATOR_MECH(t_wilderness_goblin_generator, "goblin cave", 
                               t_goblin_horde, (ALIGN_MONSTER),

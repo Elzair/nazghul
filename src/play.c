@@ -776,7 +776,8 @@ bool cmdLook(int x, int y)
 
 	consolePrint("You see ");
 	placeDescribe(placeWrapX(x + directionToDx(dir)),
-		      placeWrapY(y + directionToDy(dir)));
+		      placeWrapY(y + directionToDy(dir)),
+                      PLACE_DESCRIBE_ALL);
 	return true;
 }
 
@@ -796,7 +797,8 @@ bool cmdSearch(int x, int y)
         old_reveal = Reveal;
         Reveal = true;
 	placeDescribe(placeWrapX(x + directionToDx(dir)),
-		      placeWrapY(y + directionToDy(dir)));
+		      placeWrapY(y + directionToDy(dir)),
+                      PLACE_DESCRIBE_ALL);
         Reveal = old_reveal;
 	return true;
 }
@@ -974,6 +976,9 @@ bool cmdOpen(class Character * pc)
 	container->open();
 	container->remove();
 	delete container;
+        consolePrint("You find ");
+	placeDescribe(x, y, PLACE_DESCRIBE_OBJECTS);
+
 
 	mapSetDirty();
 	return true;
@@ -2421,7 +2426,7 @@ void look_at_XY(int x, int y)
 {
     if ( mapTileIsVisible(x, y) ) {
         consolePrint("At XY=(%d,%d) you see ", x, y);
-        placeDescribe(x, y);
+        placeDescribe(x, y, PLACE_DESCRIBE_ALL);
         return;
     }
     consolePrint("At XY=(%d,%d) you see nothing (out of LOS)\n", x, y);
@@ -2462,11 +2467,11 @@ void DM_XRAY_look_at_XY(int x, int y, void * data)
     if (!mapTileIsVisible(x, y) ) {
       consolePrint("(Out of LOS) ", x, y);
       consolePrint("At XY=(%d,%d) you see ", x, y);
-      placeDescribe(x, y);
+      placeDescribe(x, y, PLACE_DESCRIBE_ALL);
       return;
     }
     consolePrint("At XY=(%d,%d) you see ", x, y);
-    placeDescribe(x, y);
+    placeDescribe(x, y, PLACE_DESCRIBE_ALL);
 }
 
 void terraform_XY(int x, int y, void * data)

@@ -139,6 +139,9 @@ PLACE  GreenTower {
           //--------------------------------------------------
           mech_vdoor gens_house_door 7 13 "closed";
           t_bed 2 13;
+          t_large_wooden_chest 4 11 {
+                  
+          }
 
           //--------------------------------------------------
           // White Stag Lodge

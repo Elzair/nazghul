@@ -90,13 +90,14 @@ SPRITE_SET ss_angband {
     STD_SPRITE(s_necklace3, 152); /* pearls? */
     
     /* Some chests */
-    STD_SPRITE(s_chest1, 153); /* small wood   */
-    STD_SPRITE(s_chest2, 154); /* big wood     */
-    STD_SPRITE(s_chest3, 155); /* small iron   */
-    STD_SPRITE(s_chest4, 156); /* big iron     */
-    STD_SPRITE(s_chest5, 157); /* small silver */
-    STD_SPRITE(s_chest6, 158); /* big silver   */
-    STD_SPRITE(s_chest7, 159); /* not sure what this it */
+    STD_SPRITE(s_small_wooden_chest, 153); /* small wood   */
+    STD_SPRITE(s_large_wooden_chest, 154); /* big wood     */
+    STD_SPRITE(s_small_gray_chest, 155); /* small iron   */
+    STD_SPRITE(s_large_gray_chest, 156); /* big iron     */
+    STD_SPRITE(s_small_silver_chest, 157); /* small silver */
+    STD_SPRITE(s_large_silver_chest, 158); /* big silver   */
+
+    STD_SPRITE(s_junk_pile, 159); /* not sure what this */
     
     /* Potions */
     STD_SPRITE(s_white_potion,   160);

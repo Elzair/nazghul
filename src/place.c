@@ -1016,10 +1016,10 @@ int placeWrapY(int y)
 static void myPlaceDescribeTerrain(int x, int y)
 {
 	struct terrain *t = placeGetTerrain(x, y);
-	consolePrint("%s", t->name);
+	consolePrint("%s", t->name);        
 }
 
-static void myPlaceDescribeObjects(int x, int y)
+static int myPlaceDescribeObjects(int x, int y, int first_thing_listed)
 {
 
 	struct list *l;
@@ -1028,10 +1028,11 @@ static void myPlaceDescribeObjects(int x, int y)
 	class ObjectType *type = NULL;
 	int n_instances;
         int n_types;
+        int n_described = 0;
 
 	tile = place_lookup_tile(Place, x, y);
 	if (!tile)
-		return;
+		return n_described;
         
 
         // Let's make things simple. Inefficient, but simple. Efficiency is not
@@ -1081,7 +1082,7 @@ static void myPlaceDescribeObjects(int x, int y)
 
         if (n_types == 0)
                 // Nothing to list so we're done.
-                return;
+                return n_described;
 
 
         // Step 2: now we actually list the things, using the count to help us
@@ -1117,13 +1118,17 @@ static void myPlaceDescribeObjects(int x, int y)
                         // many there are of it.
 
                         if (prev_obj->isVisible() || Reveal) {
-                                if (n_types == 1)
-                                        consolePrint(" and ");
-                                else
-                                        consolePrint(", ");
+                                if (first_thing_listed) {
+                                        first_thing_listed = 0;
+                                } else {
+                                        if (n_types == 1)
+                                                consolePrint(" and ");
+                                        else
+                                                consolePrint(", ");
+                                }
 
-                                printf(">>> %s\n", prev_obj->getName());
                                 prev_obj->describe(n_instances);
+                                n_described++;
                                 n_types--;
                         }
 
@@ -1146,6 +1151,7 @@ static void myPlaceDescribeObjects(int x, int y)
                         consolePrint(", ");
                 printf("### %s\n", prev_obj->getName());
                 prev_obj->describe(n_instances);
+                n_described++;
                 n_types--;
         }
 
@@ -1155,6 +1161,7 @@ static void myPlaceDescribeObjects(int x, int y)
                 else
                         consolePrint(", ");
                 tile->vehicle->describe(1);
+                n_described++;
                 n_types--;
         }
 
@@ -1162,8 +1169,11 @@ static void myPlaceDescribeObjects(int x, int y)
                 assert(n_types == 1);
                 consolePrint(" and ");
                 tile->moongate->describe(1);
+                n_described++;
                 n_types--;
         }
+
+        return n_described;
 
 }				// myPlaceDescribeObjects()
 
@@ -1173,17 +1183,27 @@ static void myDumpObject(class Object * obj, void *data)
 	       obj->getY());
 }
 
-void placeDescribe(int x, int y)
+void placeDescribe(int x, int y, int flags)
 {
+        int count = 0;
+
         WRAP_COORDS(Place, x, y);
 
 	if (place_off_map(Place, x, y)) {
-		consolePrint("Nothing!");
+		consolePrint("nothing!");
 		return;
 	}
-	myPlaceDescribeTerrain(x, y);
-	myPlaceDescribeObjects(x, y);
-	consolePrint(".\n");
+        if (flags & PLACE_DESCRIBE_TERRAIN) {
+                myPlaceDescribeTerrain(x, y);
+                count = 1;
+        }
+        if (flags & PLACE_DESCRIBE_OBJECTS)
+                count += myPlaceDescribeObjects(x, y, 
+                                       (flags & PLACE_DESCRIBE_TERRAIN) == 0);
+        if (!count)
+                consolePrint("nothing!\n");
+        else
+                consolePrint(".\n");
 }
 
 void place_for_each_object(struct place *place, void (*fx) (class Object *,

@@ -53,6 +53,11 @@ extern "C" {
 #define PFLAG_IGNOREBEINGS  (1 << 3)
 #define PFLAG_IGNOREVEHICLES (1 << 4)
 
+// Flags for placeDescribe:
+#define PLACE_DESCRIBE_TERRAIN (1 << 0)
+#define PLACE_DESCRIBE_OBJECTS (1 << 1)
+#define PLACE_DESCRIBE_ALL     (~0)
+
         struct location;
         struct place;
         class Portal;
@@ -229,7 +234,7 @@ extern "C" {
         extern struct terrain *placeGetTerrain(int x, int y);
         extern int placeWrapX(int x);
         extern int placeWrapY(int y);
-        extern void placeDescribe(int x, int y);
+        extern void placeDescribe(int x, int y, int flags);
 	extern void placeForEachObject(void (*fx) (class Object *, void *data),
                                        void *data);
         extern void placeInit(void);

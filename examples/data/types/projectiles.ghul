@@ -72,8 +72,8 @@ PROJECTILE_TYPE(M_sleep,    "sleep missile",  s_field_sleep,  F_sleep,  0);
 PROJECTILE_TYPE(M_fireball, "fire ball",      s_lava,         null,     0);
 
 // Ammunition Objects (can be found in inventory)
-PROJECTILE_TYPE(t_arrow,    "arrows",         s_arrow,        null, 1);
-PROJECTILE_TYPE(t_bolt,     "bolts",          s_bolt,         null, 1);
+PROJECTILE_TYPE(t_arrow,    "arrow",         s_arrow,        null, 1);
+PROJECTILE_TYPE(t_bolt,     "bolt",          s_bolt,         null, 1);
 PROJECTILE_TYPE(t_rock,     "rock",           s_boulder,      null, 1);
 
 // Ordnance Ammunition (for vehicle weapons)
