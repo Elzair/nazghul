@@ -20,6 +20,25 @@
 (load "abandoned-farm.scm")
 
 ;;----------------------------------------------------------------------------
+;; Characters
+;;----------------------------------------------------------------------------
+(kern-mk-char 
+ 'ch_wanderer
+ "The Wanderer"        ; name
+ sp_human              ; species
+ oc_wanderer           ; occ
+ s_companion_ranger    ; sprite
+ faction-player        ; starting alignment
+ 0 10 2                ; str/int/dex
+ 0 1                   ; hp mod/mult
+ 10 5                  ; mp mod/mult
+ 24 0 3 3              ; hp/xp/mp/lvl
+ nil                   ; conv
+ nil                   ; sched
+ nil                   ; special ai
+ nil)                  ; readied
+ 
+;;----------------------------------------------------------------------------
 ;; Player Party
 ;;----------------------------------------------------------------------------
 (kern-mk-player
