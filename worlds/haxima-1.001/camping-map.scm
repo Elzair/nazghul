@@ -19,6 +19,7 @@
 ;;   kplace = camping place
 ;;----------------------------------------------------------------------------
 (define (camping-proc kplayer kplace)
+  (display "camping")(newline)
   (if (> (kern-dice-roll "1d20") 16)
       (let ((loc (kern-place-get-location kplace)))
         (define (nearest a b)

@@ -175,9 +175,9 @@
   (kern-log-msg "...then awaken to a strange new world."))
 
 (define (simple-start kplayer)
-  ;;(kern-obj-put-at kplayer (list p_moongate_clearing 11 11)))
+  (kern-obj-put-at kplayer (list p_moongate_clearing 11 11)))
   ;;(kern-obj-put-at kplayer (list p_trigrave 15 15)))
-  (kern-obj-put-at kplayer (list p_slimy_cavern 13 2)))
+  ;;(kern-obj-put-at kplayer (list p_slimy_cavern 13 2)))
 
 ;;----------------------------------------------------------------------------
 ;; To skip the extended start scene comment out this next line and uncomment

@@ -30,9 +30,6 @@
 ;;
 ;; Gwen is the innkeeper for Trigrave. She is a gracious, mysterious woman.
 ;;----------------------------------------------------------------------------
-(define (gwen-trade knpc kpc)
-  (say knpc "I'm afraid that part of my script is missing right now"))
-
 (define (gwen-sea knpc kpc)
   (say knpc "Follow the road south to reach the shores of "
        "the Gray Sea. Across it lies the Greater Shard, where "
@@ -42,7 +39,7 @@
   (say knpc "I have seen lands that our good Chanticleer has not even heard "
        "of! Perhaps someday we can speak of them more."))
 
-(define (gwen-room knpc kpc)
+(define (gwen-trade knpc kpc)
   (if (not (string=? "working" (kern-obj-get-activity knpc)))
       (say knpc "Come by my shop when I'm open. "
            "It's the Quiet Inn in the northwest corner of town.")
@@ -96,7 +93,7 @@
        (method 'job 
                (lambda (knpc kpc) 
                  (say knpc "I'm the innkeeper of Trigrave.")
-                 (gwen-room knpc kpc)))
+                 (gwen-trade knpc kpc)))
        (method 'name (lambda (knpc kpc) (say knpc "I am Gwen.")))
        (method 'trad gwen-trade)
        (method 'join 
@@ -158,7 +155,7 @@
                  (say knpc "Lord Froederick's rivals are Lords Clovis and "
                       "Bruce. I fear the day we fall under the yoke of "
                       "either.")))
-       (method 'room gwen-room)
+       (method 'room gwen-trade)
        (method 'sea gwen-sea)
        (method 'sham 
                (lambda (knpc kpc) (say knpc "That is not your business.")))

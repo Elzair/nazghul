@@ -30,3 +30,4 @@
 (mk-obj-type 't_large_iron_chest 
              "large iron chest"   s_chest_large_metal_1_closed
              layer-container nil)
+

@@ -79,7 +79,7 @@ int closure_exec(closure_t *closure, char *fmt, ...)
         va_list ap;
         void *ptr;
         pointer old_dump;
-        int ret = 0;
+        int ret = 1;
 
         closure_ref(closure);
 

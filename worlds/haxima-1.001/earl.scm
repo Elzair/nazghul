@@ -39,6 +39,8 @@
            "It's the Dry Goods store in the southwest corner.")
       (begin
         (kern-conv-trade knpc kpc
+
+                         ;; weapons & arms
                          (list t_oil                   20)
                          (list t_arrow                 1)
                          (list t_bolt                  2)
@@ -50,7 +52,22 @@
                          (list t_armor_leather         20)
                          (list t_shield_wooden_buckler 10)
                          (list t_sm_shield             10)
+
+                         ;; usable stuff
                          (list t_torch                 5)
+                         (list heal-potion             20)
+                         (list cure-poison-potion      20)
+
+                         ;; reagents
+                         (list sulphorous_ash          4)
+                         (list ginseng                 2)
+                         (list garlic                  2)
+                         (list spider_silk             8)
+                         (list blood_moss              8)
+                         (list black_pearl             16)
+                         (list nightshade              32)
+                         (list mandrake                32)
+                         
                          )
         (say knpc "Remember, your life depends on your gear."))))
 

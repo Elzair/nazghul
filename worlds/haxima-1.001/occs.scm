@@ -110,6 +110,7 @@
              nil
              ;; items:
              (list
+              (list heal-potion     50 1)
               (list t_dagger        75 1)
               (list short-sword     50 1)
               (list t_oil           25 10)
