@@ -1,0 +1,36 @@
+This directory contains world-building notes.  
+
+As such, this directory (and its' contents) should not be part of a
+non-developer release, since it contains materials which would
+constitute spoilers for ordinary players.
+
+Each file is named "yyyy.mm.dd.major_subject.txt" to keep some
+pretense of organization (and which came first), though it will
+probably begin as, become, and remain quite a mess.
+
+Subjects covered include any world-building topic, including but not
+limited to:
+
+- Lists of game object types and object instances
+
+- Discussion of implementation of interesting features within the
+  Haxima engine (notes on designing/extending the game engine belong
+  in the doc/ subdirectory of the repository/tarball/distribution)
+
+- Lists of, or planning notes for, large-scale and small-scale maps
+
+- Background information about the world 
+  - geography
+  - sentient beings and their cultures + worldview
+  - overall technological (and magical) level
+  - flora and fauna
+  - astronomy and weather
+
+- time and movement in the game world (transportation, distances, ...)
+
+- RPG mechanics (combat, character advancement, ...)
+
+- lists of (and organizational notes for) creation/selection of media
+  (2D tile graphics media, sound media, ...)
+
+- anything else pertaining to world-building
