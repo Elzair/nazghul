@@ -44,9 +44,6 @@ static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
         class player_party *party = (class player_party*)kh->data;
 
         cmdwin_flush();
-        //cmdwin_clear();
-        //cmdwin_repaint();
-        
         
         G_latency_start = SDL_GetTicks();
 
@@ -296,7 +293,8 @@ static void ctrl_work(class Party *party)
 	}
 }
 
-void ctrl_do_attack(class Character *character, class ArmsType *weapon, class Character *target)
+void ctrl_do_attack(class Character *character, class ArmsType *weapon, 
+                    class Character *target)
 {
         int hit;
         int def;
@@ -304,15 +302,17 @@ void ctrl_do_attack(class Character *character, class ArmsType *weapon, class Ch
         int armor;
         bool miss;
 
-        consolePrint("%s attacks %s with %s...", character->getName(), target->getName(), 
-                     weapon->getName());
+        consolePrint("%s: %s - %s ", character->getName()
+                     , weapon->getName()
+                     , target->getName()
+                );
 
         miss = ! weapon->fire(target, character->getX(), character->getY());
         character->decActionPoints(weapon->getRequiredActionPoints());
         character->useAmmo();
 
         if (miss) {
-                consolePrint("miss!\n");
+                consolePrint("missed!\n");
                 return;
         }
 
@@ -322,56 +322,94 @@ void ctrl_do_attack(class Character *character, class ArmsType *weapon, class Ch
         if (hit < def) {
                 consolePrint("barely scratched!\n");
                 return;
-        } else {
-                consolePrint("hit! ");
         }
 
         // roll for damage
         damage = dice_roll(weapon->getDamageDice());
         armor = target->getArmor();
-        consolePrint("Rolled %d damage, %d armor ", damage, armor);
+        dbg("Rolled %d damage, %d armor ", damage, armor);
         damage -= armor;
         damage = max(damage, 0);
-        consolePrint("for %d total damage, ", damage);
+        dbg("for %d total damage, ", damage);
         target->damage(damage);
 
         consolePrint("%s!\n", target->getWoundDescription());
 }
 
 
+static class Character *
+ctrl_get_interfering_hostile(class Character *character)
+{
+        static int dx_to_neighbor[] = { 0, -1, 0, 1 };
+        static int dy_to_neighbor[] = { -1, 0, 1, 0 };
+        class Character *near;
+        int i;
+
+        for (i = 0; i < 4; i++) {
+                near = (class Character*)place_get_object(
+                        character->getPlace(), 
+                        character->getX() + dx_to_neighbor[i], 
+                        character->getY() + dy_to_neighbor[i], 
+                        being_layer);
+                
+                if (near &&
+                    near->isHostile(character->getAlignment()) &&
+                    !near->isIncapacitated()) {
+                        return near;
+                }
+        }
+
+        return NULL;
+}
+
 static void ctrl_attack_ui(class Character *character)
 {
         int x;
         int y;
-        int i;
         class ArmsType *weapon;
-        class Character *near;
         class Character *target;
         struct terrain *terrain;
         class Object *mech;
-        int dx_to_neighbor[] = { 0, -1, 0, 1 };
-        int dy_to_neighbor[] = { -1, 0, 1, 0 };
-
-        consolePrint("Attack!\n");
 
         // If in follow mode, when the leader attacks automatically switch to
         // turn-based mode.
         if (player_party->getPartyControlMode() == PARTY_CONTROL_FOLLOW) {
-                consolePrint("Switching from follow to combat mode\n");
+                consolePrint("Switching from follow to combat mode.\n");
                 player_party->enableRoundRobinMode();
         }
 
         // Loop over all readied weapons
-        for (weapon = character->enumerateWeapons(); weapon != NULL; weapon = character->getNextWeapon()) {
+        for (weapon = character->enumerateWeapons(); weapon != NULL; 
+             weapon = character->getNextWeapon()) {
+                
 
+                // prompt the user
                 cmdwin_clear();
                 cmdwin_print("%s:", character->getName());
-                consolePrint("[%s]: ", weapon->getName());
-                consoleRepaint();
+                if (weapon->isMissileWeapon()) {
+                        // SAM: It would be nice to get ammo name, too...
+                        cmdwin_print("fire %s (range %d, %d ammo)-", 
+                                     weapon->getName(), weapon->getRange(), 
+                                     character->hasAmmo(weapon));
+                }
+                else if (weapon->isThrownWeapon()) {
+                        // SAM: It would be nice to get ammo name, too...
+                        cmdwin_print("throw %s (range %d, %d left)-",
+                                     weapon->getName(), weapon->getRange(), 
+                                     character->hasAmmo(weapon));
+                }
+                else {
+                        cmdwin_print("attack with %s (reach %d)-", 
+                                     weapon->getName(), weapon->getRange() );
+                }
+
 
                 // Check ammo
                 if (!character->hasAmmo(weapon)) {
-                        consolePrint("no ammo!\n");
+                        cmdwin_print("no ammo!\n");
+                        consolePrint("%s: %s - no ammo!\n",
+                                     character->getName(),
+                                     weapon->getName());
                         continue;
                 }
 
@@ -386,33 +424,16 @@ static void ctrl_attack_ui(class Character *character)
                 /* Check the four adjacent tiles for hostiles who will
                  * interfere with a missile weapon */
                 if (weapon->isMissileWeapon()) {
-                        for (i = 0; i < 4; i++) {
-                                near = (class Character*)place_get_object(character->getPlace(), 
-                                                                          character->getX() + dx_to_neighbor[i], 
-                                                                          character->getY() + dy_to_neighbor[i], 
-                                                                          being_layer);
-                                if (near &&
-                                    near->isHostile(character->getAlignment()) &&
-                                    !near->isIncapacitated()) {
-                                        consolePrint("%s interferes!\n", near->getName());
-                                        return;
-                                }
+                        class Character *near;
+                        near = ctrl_get_interfering_hostile(character);
+                        if (near) {
+                                cmdwin_print("blocked!");
+                                consolePrint("%s: %s - blocked by %s!\n",
+                                             character->getName(),
+                                             weapon->getName(),
+                                             near->getName());
+                                continue;
                         }
-
-                }
-
-                // prompt the user
-                cmdwin_clear();
-                if (weapon->isMissileWeapon()) {
-                        // SAM: It would be nice to get ammo name, too...
-                        cmdwin_print("Attack-Fire %s (range %d, %d ammo)-", weapon->getName(), weapon->getRange(), character->hasAmmo(weapon));
-                }
-                else if (weapon->isThrownWeapon()) {
-                        // SAM: It would be nice to get ammo name, too...
-                        cmdwin_print("Attack-Throw %s (range %d, %d left)-", weapon->getName(), weapon->getRange(), character->hasAmmo(weapon));
-                }
-                else {
-                        cmdwin_print("Attack-With %s (reach %d)-", weapon->getName(), weapon->getRange() );
                 }
 
                 // select the target location
@@ -425,13 +446,16 @@ static void ctrl_attack_ui(class Character *character)
                 // select_target() might be a more elegant place to put
                 // logic to prevent (or require confirm of) attacking self, 
                 // party members, etc.
-                if (select_target(character->getX(), character->getY(), &x, &y, weapon->getRange()) == -1) {
-                        consolePrint("skip\n");
+                if (select_target(character->getX(), character->getY(), &x, &y,
+                                  weapon->getRange()) == -1) {
+                        cmdwin_print("abort!");
                         continue;
                 }
 
                 // Find the new target under the cursor
-                target = (class Character *) place_get_object(character->getPlace(), x, y, being_layer);
+                target = (class Character *) 
+                        place_get_object(character->getPlace(), x, y, 
+                                         being_layer);
                 character->setAttackTarget(target);
                 if (target == NULL) {
 
@@ -440,7 +464,6 @@ static void ctrl_attack_ui(class Character *character)
                                                     x, y);
                         character->attackTerrain(x, y);
                         cmdwin_print("%s", terrain->name);
-                        consolePrint("%s\n", terrain->name);
 
                         /* Check for a mech */
                         mech = place_get_object(character->getPlace(), x, y, 
@@ -450,13 +473,13 @@ static void ctrl_attack_ui(class Character *character)
                 }
                 else if (target == character) {
 
-                        // -----------------------------------------------------
+                        // ----------------------------------------------------
                         // Don't allow attacking self. This results in a nested
                         // enumerateArms() call when we call getDefend() on
                         // ourself, which messes up the loop we're in right
                         // now. If we really want to support suicide then we'll
                         // need to rework the enumeration code.
-                        // -----------------------------------------------------
+                        // ----------------------------------------------------
 
                         goto prompt_for_target;
                 }               // confirm attack self
@@ -468,8 +491,7 @@ static void ctrl_attack_ui(class Character *character)
                         // being layer
                         assert(target->isType(CHARACTER_ID));
 
-                        cmdwin_print("%s", target->getName());                        
-                        consolePrint("attack %s...", target->getName());
+                        cmdwin_print("%s", target->getName());
 
                         // Strike the target
                         ctrl_do_attack(character, weapon, target);
@@ -483,12 +505,72 @@ static void ctrl_attack_ui(class Character *character)
                 // Warn the user if out of ammo
                 if (NULL == character->getCurrentWeapon() ||
                     false == character->hasAmmo(character->getCurrentWeapon()))
-                        consolePrint("(%s now out of ammo)\n", weapon->getName());
+                        consolePrint("%s : %s now out of ammo)\n", 
+                                     character->getName(), weapon->getName());
 
                 // Once the player uses a weapon he can't cancel out of the
                 // attack and continue his round with a different command.
                 character->addExperience(XP_PER_ATTACK);
         }
+}
+
+static void ctrl_move_character(class Character *character, int dir)
+{
+        char *result = NULL;
+        char *dirstr = directionToString(dir);
+        
+        cmdwin_print("move %s-", dirstr);
+
+        switch (character->move(directionToDx(dir),
+                                directionToDy(dir))) {
+        case MovedOk:
+                cmdwin_print("ok");
+                break;
+        case OffMap:
+                result = "no place to go!";
+                break;
+        case ExitedMap:
+                result = "exit!";
+                character->endTurn();
+                break;
+        case EngagedEnemy:
+                cmdwin_print("combat");
+                break;
+        case WasOccupied:
+                result = "occupied!";
+                break;
+        case WasImpassable:
+                result = "impassable!";
+                break;
+        case SlowProgress:
+                result = "slow progress!";
+                break;
+        case SwitchedOccupants:
+                result = "switch!";
+                break;
+        case NotFollowMode:
+                result = "must be in follow mode!";
+                break;
+        case CantRendezvous:
+                result = "party can't rendezvous!";
+                break;
+        case CouldNotSwitchOccupants:
+                result = "can't switch places!";
+                break;
+        }
+
+        /* If something interesting happened... */
+        if (result) {
+
+                cmdwin_print("%s", result);
+
+                /* Log unusual results to the console */
+                consolePrint("%s: %s - %s\n", character->getName(), dirstr,
+                             result);
+        }
+
+        mapCenterView(character->getView(), character->getX(),
+                      character->getY());
 }
 
 static int ctrl_character_key_handler(struct KeyHandler *kh, int key, 
@@ -500,7 +582,6 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
         static int unshift[] = { KEY_NORTH, KEY_SOUTH, KEY_EAST, KEY_WEST };
         class Object *portal;
         class Character *solo_member;
-
 
         G_latency_start = SDL_GetTicks();
 
@@ -550,53 +631,8 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
                 case KEY_SOUTH:
                 case KEY_WEST:
 
-                        // ----------------------------------------------------
-                        // Move the character.
-                        // ----------------------------------------------------
-
                         dir = keyToDirection(key);
-
-                        consolePrint("%s-", directionToString(dir));
-
-                        switch (character->move(directionToDx(dir),
-                                                directionToDy(dir))) {
-                        case MovedOk:
-                                consolePrint("Ok\n");
-                                break;
-                        case OffMap:
-                                consolePrint("No place to go!\n");
-                                break;
-                        case ExitedMap:
-                                consolePrint("Exit!\n");
-                                character->endTurn();
-                                break;
-                        case EngagedEnemy:
-                                break;
-                        case WasOccupied:
-                                consolePrint("Occupied!\n");
-                                break;
-                        case WasImpassable:
-                                consolePrint("Impassable!\n");
-                                break;
-                        case SlowProgress:
-                                consolePrint("Slow progress!\n");
-                                break;
-                        case SwitchedOccupants:
-                                consolePrint("Switch!\n");
-                                break;
-                        case NotFollowMode:
-                                consolePrint("Must be in Follow Mode!\n");
-                                break;
-                        case CantRendezvous:
-                                consolePrint("Party can't rendezvous!\n");
-                                break;
-			case CouldNotSwitchOccupants:
-			  consolePrint("Can't switch!\n");
-			  break;
-                        }
-
-                        mapCenterView(character->getView(), character->getX(),
-                                      character->getY());
+                        ctrl_move_character(character, dir);
                         break;
 
 
@@ -758,14 +794,17 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
                         // must be empty of hostile characters or this fails.
                         // ----------------------------------------------------
 
-                        if (!place_is_wilderness_combat(character->getPlace())) {
+                        if (!place_is_wilderness_combat(character->getPlace()))
+                        {
                                 consolePrint("Must use an exit!\n");
                                 consolePrint("%s: ", character->getName());
                                 consoleRepaint();
                                 break;
                         }
 
-                        if (place_contains_hostiles(character->getPlace(), character->getAlignment())) {
+                        if (place_contains_hostiles(character->getPlace(), 
+                                                    character->getAlignment()))
+                        {
                                 consolePrint("Not while foes remain!\n");
                                 break;
                         }
@@ -793,6 +832,12 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
                         break;
                 }
 
+        }
+
+        cmdwin_clear();
+
+        if (!character->isTurnEnded()) {
+                cmdwin_print("%s:", character->getName());
         }
 
         return character->isTurnEnded();
@@ -1068,6 +1113,13 @@ void ctrl_character_ai(class Character *character)
 void ctrl_character_ui(class Character *character)
 {
         struct KeyHandler kh;
+
+        /* Setup cmdwin prompt for first entry to the control loop */
+        cmdwin_clear();
+        cmdwin_print("%s:", character->getName());
+
+        /* Push the key handler and enter the event loop until character is
+         * done with turn */
         kh.fx = &ctrl_character_key_handler;
         kh.data = character;
         eventPushKeyHandler(&kh);

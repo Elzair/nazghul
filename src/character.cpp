@@ -1931,9 +1931,9 @@ void Character::exec(struct exec_context *context)
 
                 cmdwin_clear();
                 cmdwin_print("%s:", getName());
-                consolePrint("\n%s: ", getName());
-                consoleRepaint();
-                
+//                 consolePrint("\n%s: ", getName());
+//                 consoleRepaint();
+
                 /* Hand control over to the player */
                 ctrl(this);
 

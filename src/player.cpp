@@ -48,9 +48,6 @@
 #include <unistd.h>
 #include <math.h>
 
-#if HARDCODE_MOONGATES
-#  include "moongate.h"
-#endif
 
 class player_party *player_party;
 
@@ -228,12 +225,6 @@ enum move_result player_party::check_move_to(struct move_info *info)
                 return move_ok;
 	}
 
-#if HARDCODE_MOONGATES
-	// The same rules as above apply to moongates.
-	info->moongate = place_get_moongate(info->place, info->x, info->y);
-	if (info->moongate && info->moongate->isOpen())
-		return move_enter_moongate;
-#endif
 
         info->subplace = place_get_subplace(info->place, info->x, info->y);
         if (info->subplace)
@@ -275,129 +266,6 @@ bool player_party::turn_vehicle(void)
 	return true;
 }
 
-#if HARDCODE_MOONGATES
-
-// Here's the code from the ripped-out Moongate class that did the animations:
-void Moongate::animateOpening()
-{
-	int oframe = frame;
-        
-        view = mapCreateView();
-
-        addView();
-        mapSetPlace(getPlace());
-        mapCenterCamera(getX(), getY());
-
-	enum moongate_state ostate = state;	// fixme -- necessary?
-
-	state = MOONGATE_OPENED;	// fixme -- necessary?
-
-	for (frame = 0; frame < getNumFrames(); frame++) {
-                updateView();
-                mapUpdate(0);
-		usleep(MS_PER_TICK * 1000);
-	}
-
-        rmView();
-        mapDestroyView(view);
-
-	frame = oframe;
-	state = ostate;
-}
-
-void Moongate::animateClosing()
-{
-	int oframe = frame;
-
-	for (frame = getNumFrames() - 1; frame >= 0; frame--) {
-		// mapRepaintView(0, REPAINT_ACTIVE);
-		mapUpdate(0);
-		usleep(MS_PER_TICK * 1000);
-	}
-
-	frame = oframe;
-}
-
-void player_party::enter_moongate(class Moongate * moongate)
-{
-        // --------------------------------------------------------------------
-	// Remove the player in case he is visible when the map is centered on
-	// the destination gate (otherwise the player will see the party while
-	// the destination gate opens).
-        //
-        // Addendum: another more important reason for doing this is that it
-        // makes sure that only the moongate's view is functional during the
-        // interim when the party is "traveling" between places.
-        // --------------------------------------------------------------------
-	remove();
-        removeMembers();
-
-	// "Flash" the map to make the experience magical.
-	mapFlash(250);
-
-	// Show the destination gate opening
-	moongate->animateOpening();
-
-	// Move the party to the opened gate.
-	relocate(moongate->getPlace(), moongate->getX(), moongate->getY());
-}
-
-
-enum MoveResult player_party::try_to_enter_moongate(class Moongate * src_gate)
-{
-	class Moongate *dest_gate;
-
-	// Get the current destination moongate.
-	dest_gate = moongateGetDestinationGate();
-	if (!dest_gate) {
-
-		if (src_gate) {
-			// Currently there is no destination gate so default to
-			// the source gate.
-			dest_gate = src_gate;
-		} else {
-			// No src gate means we probably got in here via a
-			// spell or other effect.
-			return NoDestination;
-		}
-
-	} else {
-
-		// Check if the destination is blocked, impassable, etc.
-		struct move_info info;
-		memset(&info, 0, sizeof(info));
-		info.place = dest_gate->getPlace();
-		info.x = dest_gate->getX();
-		info.y = dest_gate->getY();
-
-	}
-
-	cmdwin_print("-ok");
-
-	// Briefly move the player party over the open source gate if one is
-	// specified (for spells it won't be)
-        if (src_gate) {
-                relocate(src_gate->getPlace(), src_gate->getX(), 
-                         src_gate->getY());
-                mapSetDirty();
-                usleep(MS_PER_TICK * 1000);
-        }
-
-	// Take the player party off the scene.
-	remove();
-
-	// Now show the source gate closing.
-        if (src_gate)
-                src_gate->animateClosing();
-
-	soundPlay(dest_gate->getEnterSound(), SOUND_MAX_VOLUME);
-
-	// Pass through to the destination gate.
-	enter_moongate(dest_gate);
-	return MovedOk;
-
-}
-#endif
 
 /* Note it is not safe to modify the member list within the block of the below
  * 'iterator'  */
@@ -677,12 +545,6 @@ MoveResult player_party::move(int newdx, int newdy)
 		cmdwin_print("-impassable!");
 		return WasImpassable;
 
-#if HARDCODE_MOONGATES
-	case move_enter_moongate:
-		// An open moongate is on that tile.
-		cmdwin_print("-enter moongate");
-		return try_to_enter_moongate(info.moongate);
-#endif
 
 	case move_enter_combat:
 		// Handle combat (possible multiple combats) until we're all
