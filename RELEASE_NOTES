@@ -2,6 +2,11 @@ Changes between nazghul-0.1.2 and nazghul-0.1.3
 
 gmcnutt:
 
+--Bugfix: cursor was being shaded according to lighting conditions, but it
+  should always be bright and clearly visible. I fixed this by changing the way
+  the cursor is rendered so that now it is simply accepted as a special
+  case. This allowed me to remove one or two unsightly hacks in the process.
+
 --Bugfix: if you zoomed in while sailing the vehicle map was oriented
   wrong. This was because zoom-in is handled by combat and combat always
   rotated the vehicle maps so that ships were broadside to one another. I fixed

@@ -355,35 +355,6 @@ static void place_paint_objects(struct place *place, int mx, int my,
 
 }
 
-static void place_paint_always_visible_objects(struct place *place, int mx,
-					       int my, int sx, int sy)
-{
-	// Something of a hack: I always want to paint the cursor, and the
-	// cursor is an object, so after considering various alternatives I
-	// decided on this. The only real downside to this is that we end up
-	// doing a tile lookup on every tile when repainting, whereas before I
-	// always skipped non-visible tiles. It doesn't seem to hurt fps any on
-	// my fast machine.
-
-	struct list *l;
-	Object *obj;
-	struct tile *tile;
-	struct sprite *sprite;
-
-	tile = place_lookup_tile(place, mx, my);
-	if (!tile)
-		return;
-
-	list_for_each(&tile->objstack.list, l) {
-		obj = outcast(l, Object, container_link.list);
-		if (obj->container_link.key == cursor_layer) {
-			sprite = obj->getSprite();
-			spritePaint(sprite, 0, sx, sy);
-			return;
-		}
-	}
-}
-
 void placePaint(struct place *place, SDL_Rect * region, SDL_Rect * dest,
 		unsigned char *mask, int tile_h, int tile_w)
 {
@@ -498,18 +469,12 @@ void placePaint(struct place *place, SDL_Rect * region, SDL_Rect * dest,
 			sx = j * tile_w + dest->x;
 
 			if (use_mask && !mask[j]) {
-				place_paint_always_visible_objects(place,
-								   mx, my,
-								   sx, sy);
 				continue;
 			}
 
 			/* Paint the objects */
 			place_paint_objects(place, mx, my, sx, sy);
 
-			/* hack: paint the cursor over the player */
-			place_paint_always_visible_objects(place,
-							   mx, my, sx, sy);
 		}
 	}
 

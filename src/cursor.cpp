@@ -25,7 +25,7 @@
 
 class Cursor *Cursor = NULL;
 
-Cursor::Cursor():range(0), bounded(0), originX(0), originY(0)
+Cursor::Cursor():range(0), bounded(0), originX(0), originY(0), active(false)
 {
 }
 
@@ -92,4 +92,21 @@ void Cursor::setOrigin(int x, int y)
 {
 	originX = x;
 	originY = y;
+}
+
+void Cursor::relocate(struct place *newplace, int newx, int newy)
+{
+        Object::relocate(newplace, newx, newy);
+        active = true;
+}
+
+void Cursor::remove()
+{
+        Object::remove();
+        active = false;
+}
+
+bool Cursor::is_active(void)
+{
+        return active;
 }

@@ -341,21 +341,23 @@ extern "C" {
 
 /* Global Functions **********************************************************/
 
-	extern void commonInit(void);
-	extern char *get_dir_str(int dx, int dy);
-	extern void turnAdvance(int turns);
+extern void commonInit(void);
+extern char *get_dir_str(int dx, int dy);
+extern void turnAdvance(int turns);
 // extern void windSetDirection(int dir);
-	extern void busywait(int msec);
-	extern int vector_to_dir(int dx, int dy);
-	extern int vector_to_facing(int dx, int dy);
-	extern int vector_to_rotation(int dx, int dy);
+extern void busywait(int msec);
+extern int vector_to_dir(int dx, int dy);
+extern int vector_to_facing(int dx, int dy);
+extern int vector_to_rotation(int dx, int dy);
 
-	extern int stringToDirection(char *str);
-	extern int keyToDirection(int key);
-	extern int directionToDx(int dir);
-	extern int directionToDy(int dir);
-	extern char *directionToString(int dir);
-	extern bool isvowel(char c);
+extern int stringToDirection(char *str);
+extern int keyToDirection(int key);
+extern int directionToDx(int dir);
+extern int directionToDy(int dir);
+extern char *directionToString(int dir);
+extern bool isvowel(char c);
+extern bool point_in_rect(int x, int y, SDL_Rect *rect);
+
 
 #define keyIsDirection(key) ((key) >= KEY_SOUTHWEST && (key) <= KEY_NORTHEAST)
 

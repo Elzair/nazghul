@@ -25,6 +25,7 @@
 #include "place.h"
 #include "player.h"
 #include "sprite.h"
+#include "cursor.h"
 
 #include <SDL/SDL.h>
 
@@ -434,6 +435,52 @@ void mapRepaintClock(void)
   screenUpdate(&Map.clkRect);
 } // mapRepaintClock()
 
+static void map_convert_point_to_vrect(int *x, int *y)
+{
+        SDL_Rect *vrect = &Map.aview->vrect;
+  
+        // If the view rect extends past the right side of the map, and x is
+        // left of the view rect, then convert x to be right of the view rect.
+        if ((vrect->x + vrect->w) > place_w(Map.place) && 
+            *x < vrect->x) {
+                *x += place_w(Map.place);
+        }
+        
+        // Likewise if the view rect extends beyond the southern edge of the
+        // map, and y is less than the top of the view rect, then convert y to
+        // be south of the view rect.
+        if ((vrect->y + vrect->h) > place_h(Map.place) && 
+            *y < vrect->y) {
+                *y += place_h(Map.place);
+        }
+}
+
+static void map_paint_cursor(void)
+{
+        int x, y;
+        int sx, sy;
+
+        if (!Cursor->is_active())
+                return;
+
+        // Convert to view rect offset
+        x = Cursor->getX();
+        y = Cursor->getY();
+        map_convert_point_to_vrect(&x, &y);
+        if (!point_in_rect(x, y, &Map.aview->vrect)) {
+                return;
+        }
+
+        // Paint it
+        sx = Map.srect.x + (x - Map.aview->vrect.x) * TILE_W;
+        sy = Map.srect.y + (y - Map.aview->vrect.y) * TILE_H;
+        printf("[%d %d %d %d] [%d %d] [%d %d]\n", 
+               Map.aview->vrect.x, Map.aview->vrect.y, 
+               Map.aview->vrect.w, Map.aview->vrect.h,
+               x, y, sx, sy);
+        spritePaint(Cursor->getSprite(), 0, sx, sy);
+}
+
 void mapRepaintView(struct mview *view, int flags)
 {
 	int t2, t3, t4, t5, t6, t7, t8;
@@ -475,6 +522,7 @@ void mapRepaintView(struct mview *view, int flags)
 		t6 = SDL_GetTicks();
 		myShadeScene();
 		t7 = SDL_GetTicks();
+                map_paint_cursor();
 	}
 
 	// Show the player's location. In combat mode use the leader, else use

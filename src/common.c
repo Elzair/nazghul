@@ -247,4 +247,12 @@ bool isvowel(char c)
 		c == 'u' || c == 'U' || c == 'y' || c == 'Y');
 }
 
+bool point_in_rect(int x, int y, SDL_Rect *rect)
+{
+        return (x >= rect->x && 
+                y >= rect->y &&
+                x < (rect->x + rect->w) &&
+                y < (rect->y + rect->h));
+}
+
 // eof
