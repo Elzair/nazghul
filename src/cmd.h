@@ -66,7 +66,7 @@ extern bool cmdTalk(Object *member);
 extern void cmdZoomIn(void);
 extern bool cmdUse(class Character * pc, int flags);
 extern bool cmdHandle(class Character * pc);
-extern bool cmdReady(class Character * pc, int flags);
+extern bool cmdReady(class Character * pc);
 extern bool cmdZtats(class Character * pc);
 extern bool cmdXamine (class Object *examiner);
 extern bool cmdYuse(class Character *pc);

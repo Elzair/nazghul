@@ -922,7 +922,7 @@ void cmdFire(void)
         log_end("hits away!");
 }
 
-bool cmdReady(class Character * member, int flags)
+bool cmdReady(class Character * member)
 {
 	bool committed = false;
 	struct inv_entry *ie;
@@ -935,7 +935,7 @@ bool cmdReady(class Character * member, int flags)
 	cmdwin_print("Ready-");
 
         // Select user
-        if (flags & CMD_SELECT_MEMBER) {
+        if (! member) {
                 member = select_party_member();
                 if (member == NULL)
                         return false;       
@@ -947,6 +947,9 @@ bool cmdReady(class Character * member, int flags)
 
                 cmdwin_print("-");
         }
+
+        log_begin_group();
+        log_msg("%s readies arms:", member->getName());
 
 	statusSelectCharacter(member->getOrder());
 
@@ -976,6 +979,7 @@ bool cmdReady(class Character * member, int flags)
 		class ArmsType *arms = (class ArmsType *) ie->type;
 
 		cmdwin_print("%s-", arms->getName());
+                log_begin("%s - ", arms->getName());
 
 		if (ie->ref && member->unready(arms)) {
 			msg = "unreadied!";
@@ -1005,6 +1009,7 @@ bool cmdReady(class Character * member, int flags)
 		}
 
 		cmdwin_print(msg);
+                log_end(msg);
 		erase = strlen(arms->getName()) + strlen(msg) + 1;
 	}
 
@@ -1012,12 +1017,10 @@ bool cmdReady(class Character * member, int flags)
 	statusSetMode(ShowParty);
 
         if (committed) {
-                if (flags & CMD_PRINT_MEMBER) {
-                        log_msg("%s ", member->getName());
-                }
-                log_msg("readies arms.\n");
                 member->decActionPoints(NAZGHUL_BASE_ACTION_POINTS);
         }
+
+        log_end_group();
 
 	return committed;
 }

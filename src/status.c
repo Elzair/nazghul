@@ -61,6 +61,7 @@ enum ZtatsView {
 };
 
 static bool stat_filter_arms(struct inv_entry *ie, void *cookie);
+static bool stat_filter_ready_arms(struct inv_entry *ie, void *cookie);
 static bool stat_filter_reagents(struct inv_entry *ie, void *cookie);
 static bool stat_filter_spells(struct inv_entry *ie, void *cookie);
 static bool stat_filter_items(struct inv_entry *ie, void *cookie);
@@ -79,6 +80,10 @@ static struct filter ZtatsFilters[] = {
         { stat_filter_reagents, 0 },
         { stat_filter_spells, 0 },
         { stat_filter_items, 0 }
+};
+
+static struct filter stat_ready_arms_filter = {
+        stat_filter_ready_arms, 0
 };
 
 static struct status {
@@ -112,6 +117,26 @@ static struct status {
 static bool stat_filter_arms(struct inv_entry *ie, void *cookie)
 {
         return (ie->type->isReadyable());
+}
+
+static bool stat_filter_ready_arms(struct inv_entry *ie, void *cookie)
+{
+        if (! ie->type->isReadyable()) {
+                return false;
+        }
+                
+        /* Are any available? */
+        if (ie->count > ie->ref)
+                return true;
+                
+        /* Is one already readied by the current party member? */
+        if (ie->ref && 
+            player_party->getMemberAtIndex(Status.pcIndex)->
+            hasReadied((class ArmsType *)ie->type)) {
+                return true;
+        }
+
+        return false;
 }
 
 static bool stat_filter_reagents(struct inv_entry *ie, void *cookie)
@@ -912,7 +937,8 @@ void statusSetMode(enum StatusMode mode)
 		break;
 	case Ztats:
 		switch_to_tall_mode();
-		myRepaintTitle(player_party->getMemberAtIndex(Status.pcIndex)->getName());
+		myRepaintTitle(player_party->
+                               getMemberAtIndex(Status.pcIndex)->getName());
 		Status.ztatsView = ViewMember;
 		Status.selectedEntry = 0;
 		Status.topLine = 0;
@@ -921,14 +947,18 @@ void statusSetMode(enum StatusMode mode)
 		break;
 	case Ready:
 		switch_to_tall_mode();
-		myRepaintTitle(player_party->getMemberAtIndex(Status.pcIndex)->getName());
+		myRepaintTitle(player_party->
+                               getMemberAtIndex(Status.pcIndex)->getName());
 		Status.topLine = 0;
 		Status.curLine = 0;
 		Status.container = player_party->inventory;
-                Status.filter = &ZtatsFilters[ViewArmaments];
-		Status.maxLine = Status.container->filter_count(Status.filter) - Status.numLines;
+                //Status.filter = &ZtatsFilters[ViewArmaments];
+                Status.filter = &stat_ready_arms_filter;
+		Status.maxLine = Status.container->
+                        filter_count(Status.filter) - Status.numLines;
 		Status.paint = stat_show_container;
                 Status.scroll = stat_scroll_container;
+		//Status.selectedEntry = stat_first_ready_arms_entry();
 		Status.selectedEntry = Status.container->first(Status.filter);
 		break;
 	case Use:
@@ -938,7 +968,8 @@ void statusSetMode(enum StatusMode mode)
 		Status.curLine = 0;
 		Status.container = player_party->inventory;
                 Status.filter = &ZtatsFilters[ViewItems];
-		Status.maxLine = Status.container->filter_count(Status.filter) - Status.numLines;
+		Status.maxLine = Status.container->
+                        filter_count(Status.filter) - Status.numLines;
 		Status.paint = stat_show_container;
                 Status.scroll = stat_scroll_container;
 		Status.selectedEntry = Status.container->first(Status.filter);

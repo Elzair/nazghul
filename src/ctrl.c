@@ -136,7 +136,7 @@ static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
                         cmdQuit();
                         break;
                 case 'r':
-                        cmdReady(NULL, CMD_SELECT_MEMBER|CMD_PRINT_MEMBER);
+                        cmdReady(NULL);
                         break;
                 case 's':
                         cmdSearch(party->getPlace(),
@@ -725,7 +725,7 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
                         cmdQuit();
                         break;
                 case 'r':
-                        cmdReady(character, 0);
+                        cmdReady(character);
                         break;
                 case 't':
                         cmdTalk(character);
