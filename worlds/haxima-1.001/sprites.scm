@@ -1225,6 +1225,56 @@
 (kern-mk-sprite 's_book_pink_glowing_5       ss_dg_readable 2 172 #f 0)
 
 
+;; ss_dg_commodities
+(kern-mk-sprite 's_dg_biscuit     ss_dg_commodities 1   0 #f 0)
+(kern-mk-sprite 's_dg_bread       ss_dg_commodities 1   1 #f 0)
+(kern-mk-sprite 's_dg_jerky       ss_dg_commodities 1   2 #f 0)
+(kern-mk-sprite 's_dg_ham         ss_dg_commodities 1   3 #f 0)
+(kern-mk-sprite 's_dg_chicken     ss_dg_commodities 1   4 #f 0)
+(kern-mk-sprite 's_dg_moldy_meat  ss_dg_commodities 1   5 #f 0)
+
+(kern-mk-sprite 's_dg_booze_jug   ss_dg_commodities 1  16 #f 0)
+(kern-mk-sprite 's_dg_beer_mug    ss_dg_commodities 1  17 #f 0)
+(kern-mk-sprite 's_dg_wine_flask  ss_dg_commodities 1  18 #f 0)
+
+(kern-mk-sprite 's_dg_mushroom_black       ss_dg_commodities 1  32 #f 0)
+(kern-mk-sprite 's_dg_mushroom_white       ss_dg_commodities 1  33 #f 0)
+(kern-mk-sprite 's_dg_mushroom_grey        ss_dg_commodities 1  34 #f 0)
+(kern-mk-sprite 's_dg_mushroom_orange      ss_dg_commodities 1  35 #f 0)
+(kern-mk-sprite 's_dg_mushroom_red         ss_dg_commodities 1  36 #f 0)
+(kern-mk-sprite 's_dg_mushroom_green       ss_dg_commodities 1  37 #f 0)
+(kern-mk-sprite 's_dg_mushroom_blue        ss_dg_commodities 1  38 #f 0)
+(kern-mk-sprite 's_dg_mushroom_brown       ss_dg_commodities 1  39 #f 0)
+(kern-mk-sprite 's_dg_mushroom_grey_2      ss_dg_commodities 1  40 #f 0)
+(kern-mk-sprite 's_dg_mushroom_white_2     ss_dg_commodities 1  41 #f 0)
+(kern-mk-sprite 's_dg_mushroom_purple      ss_dg_commodities 1  42 #f 0)
+(kern-mk-sprite 's_dg_mushroom_yellow_2    ss_dg_commodities 1  43 #f 0)
+(kern-mk-sprite 's_dg_mushroom_red_2       ss_dg_commodities 1  44 #f 0)
+(kern-mk-sprite 's_dg_mushroom_green_2     ss_dg_commodities 1  45 #f 0)
+(kern-mk-sprite 's_dg_mushroom_light_blue  ss_dg_commodities 1  46 #f 0)
+(kern-mk-sprite 's_dg_mushroom_tan         ss_dg_commodities 1  47 #f 0)
+
+(kern-mk-sprite 's_dg_mushroom_bunch_grey           ss_dg_commodities 1  48 #f 0)
+(kern-mk-sprite 's_dg_mushroom_bunch_green          ss_dg_commodities 1  49 #f 0)
+(kern-mk-sprite 's_dg_mushroom_bunch_tan            ss_dg_commodities 1  50 #f 0)
+(kern-mk-sprite 's_dg_mushroom_bunch_pink           ss_dg_commodities 1  51 #f 0)
+(kern-mk-sprite 's_dg_mushroom_bunch_purple         ss_dg_commodities 1  52 #f 0)
+(kern-mk-sprite 's_dg_mushroom_bunch_black          ss_dg_commodities 1  53 #f 0)
+(kern-mk-sprite 's_dg_mushroom_bunch_glowing_green  ss_dg_commodities 3  54 #f 0)
+
+(kern-mk-sprite 's_coins_copper     ss_dg_commodities 1 144 #f 0)
+(kern-mk-sprite 's_coins_silver     ss_dg_commodities 1 145 #f 0)
+(kern-mk-sprite 's_coins_gold       ss_dg_commodities 1 146 #f 0)
+(kern-mk-sprite 's_coins_blue_1     ss_dg_commodities 1 147 #f 0)
+(kern-mk-sprite 's_coins_blue_2     ss_dg_commodities 1 148 #f 0)
+(kern-mk-sprite 's_crystals_green   ss_dg_commodities 1 149 #f 0)
+(kern-mk-sprite 's_crystals_blue    ss_dg_commodities 1 150 #f 0)
+(kern-mk-sprite 's_crystals_purple  ss_dg_commodities 1 151 #f 0)
+(kern-mk-sprite 's_gems_red         ss_dg_commodities 1 152 #f 0)
+(kern-mk-sprite 's_gems_blue        ss_dg_commodities 1 153 #f 0)
+(kern-mk-sprite 's_gems_assorted    ss_dg_commodities 1 154 #f 0)
+
+
 ; (kern-mk-sprite 's_       ss_dg_ 1   0 #f 0)
 
 

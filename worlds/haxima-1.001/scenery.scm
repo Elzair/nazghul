@@ -570,6 +570,56 @@
 (mk-scenery-type 't_book_pink_glowing_5 "magical book" s_book_pink_glowing_5)
 
 
+;; ss_dg_commodities
+(mk-scenery-type 't_dg_biscuit    "biscuit"    s_dg_biscuit)
+(mk-scenery-type 't_dg_bread      "bread"      s_dg_bread)
+(mk-scenery-type 't_dg_jerky      "jerky"      s_dg_jerky)
+(mk-scenery-type 't_dg_ham        "ham"        s_dg_ham)
+(mk-scenery-type 't_dg_chicken    "chicken"    s_dg_chicken)
+(mk-scenery-type 't_dg_moldy_meat "moldy meat" s_dg_moldy_meat)
+
+(mk-scenery-type 't_dg_booze_jug  "jug of booze"  s_dg_booze_jug)
+(mk-scenery-type 't_dg_beer_mug   "mug of beer"   s_dg_beer_mug)
+(mk-scenery-type 't_dg_wine_flask "flask of wine" s_dg_wine_flask)
+
+(mk-scenery-type 't_dg_mushroom_black      "mushroom" s_dg_mushroom_black)
+(mk-scenery-type 't_dg_mushroom_white      "mushroom" s_dg_mushroom_white)
+(mk-scenery-type 't_dg_mushroom_grey       "mushroom" s_dg_mushroom_grey)
+(mk-scenery-type 't_dg_mushroom_orange     "mushroom" s_dg_mushroom_orange)
+(mk-scenery-type 't_dg_mushroom_red        "mushroom" s_dg_mushroom_red)
+(mk-scenery-type 't_dg_mushroom_green      "mushroom" s_dg_mushroom_green)
+(mk-scenery-type 't_dg_mushroom_blue       "mushroom" s_dg_mushroom_blue)
+(mk-scenery-type 't_dg_mushroom_brown      "mushroom" s_dg_mushroom_brown)
+(mk-scenery-type 't_dg_mushroom_grey_2     "mushroom" s_dg_mushroom_grey_2)
+(mk-scenery-type 't_dg_mushroom_white_2    "mushroom" s_dg_mushroom_white_2)
+(mk-scenery-type 't_dg_mushroom_purple     "mushroom" s_dg_mushroom_purple)
+(mk-scenery-type 't_dg_mushroom_yellow_2   "mushroom" s_dg_mushroom_yellow_2)
+(mk-scenery-type 't_dg_mushroom_red_2      "mushroom" s_dg_mushroom_red_2)
+(mk-scenery-type 't_dg_mushroom_green_2    "mushroom" s_dg_mushroom_green_2)
+(mk-scenery-type 't_dg_mushroom_light_blue "mushroom" s_dg_mushroom_light_blue)
+(mk-scenery-type 't_dg_mushroom_tan        "mushroom" s_dg_mushroom_tan)
+
+(mk-scenery-type 't_dg_mushroom_bunch_grey   "mushrooms" s_dg_mushroom_bunch_grey)
+(mk-scenery-type 't_dg_mushroom_bunch_green  "mushrooms" s_dg_mushroom_bunch_green)
+(mk-scenery-type 't_dg_mushroom_bunch_tan    "mushrooms" s_dg_mushroom_bunch_tan)
+(mk-scenery-type 't_dg_mushroom_bunch_pink   "mushrooms" s_dg_mushroom_bunch_pink)
+(mk-scenery-type 't_dg_mushroom_bunch_purple "mushrooms" s_dg_mushroom_bunch_purple)
+(mk-scenery-type 't_dg_mushroom_bunch_black  "mushrooms" s_dg_mushroom_bunch_black)
+(mk-scenery-type 't_dg_mushroom_bunch_glowing_green "glowing mushrooms" s_dg_mushroom_bunch_glowing_green)
+
+(mk-scenery-type 't_coins_copper    "coins"    s_coins_copper)
+(mk-scenery-type 't_coins_silver    "coins"    s_coins_silver)
+(mk-scenery-type 't_coins_gold      "coins"    s_coins_gold)
+(mk-scenery-type 't_coins_blue_1    "coins"    s_coins_blue_1)
+(mk-scenery-type 't_coins_blue_2    "coins"    s_coins_blue_2)
+(mk-scenery-type 't_crystals_green  "crystals" s_crystals_green)
+(mk-scenery-type 't_crystals_blue   "crystals" s_crystals_blue)
+(mk-scenery-type 't_crystals_purple "crystals" s_crystals_purple)
+(mk-scenery-type 't_gems_red        "gems"     s_gems_red)
+(mk-scenery-type 't_gems_blue       "gems"     s_gems_blue)
+(mk-scenery-type 't_gems_assorted   "gems"     s_gems_assorted)
+
+
 
 
 

@@ -3,7 +3,7 @@
 
 
 (kern-mk-map 
- 'm_sprite_gallery_1 19 92 pal_expanded
+ 'm_sprite_gallery_1 19 110 pal_expanded
   ;                               1  1  1  1  1  1  1  1  1
   ; 0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5  6  7  8
  (list
@@ -97,6 +97,24 @@
   "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
   "xx .. .. .R .E .A .D .A .B .L .E .. .. .I .T .E .M .S xx "
   "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
+  "xx .. .. .C .O .M .M .O .D .I .T .I .E .S .. .. .. .. xx "
   "xx xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx xx "
   "xx .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx "
   "xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx "
@@ -689,6 +707,58 @@
                 (list (kern-mk-obj t_book_pink_glowing_3 1)  8  83)
                 (list (kern-mk-obj t_book_pink_glowing_4 1)  9  83)
                 (list (kern-mk-obj t_book_pink_glowing_5 1) 10  83)
+
+
+                ;; ss_dg_commodities
+                (list (kern-mk-obj t_dg_biscuit    1) 1 91)
+                (list (kern-mk-obj t_dg_bread      1) 2 91)
+                (list (kern-mk-obj t_dg_jerky      1) 3 91)
+                (list (kern-mk-obj t_dg_ham        1) 4 91)
+                (list (kern-mk-obj t_dg_chicken    1) 5 91)
+                (list (kern-mk-obj t_dg_moldy_meat 1) 6 91)
+
+                (list (kern-mk-obj t_dg_booze_jug  1) 1 92)
+                (list (kern-mk-obj t_dg_beer_mug   1) 2 92)
+                (list (kern-mk-obj t_dg_wine_flask 1) 3 92)
+
+                (list (kern-mk-obj t_dg_mushroom_black      1)  1 93)
+                (list (kern-mk-obj t_dg_mushroom_white      1)  2 93)
+                (list (kern-mk-obj t_dg_mushroom_grey       1)  3 93)
+                (list (kern-mk-obj t_dg_mushroom_orange     1)  4 93)
+                (list (kern-mk-obj t_dg_mushroom_red        1)  5 93)
+                (list (kern-mk-obj t_dg_mushroom_green      1)  6 93)
+                (list (kern-mk-obj t_dg_mushroom_blue       1)  7 93)
+                (list (kern-mk-obj t_dg_mushroom_brown      1)  8 93)
+                (list (kern-mk-obj t_dg_mushroom_grey_2     1)  9 93)
+                (list (kern-mk-obj t_dg_mushroom_white_2    1) 10 93)
+                (list (kern-mk-obj t_dg_mushroom_purple     1) 11 93)
+                (list (kern-mk-obj t_dg_mushroom_yellow_2   1) 12 93)
+                (list (kern-mk-obj t_dg_mushroom_red_2      1) 13 93)
+                (list (kern-mk-obj t_dg_mushroom_green_2    1) 14 93)
+                (list (kern-mk-obj t_dg_mushroom_light_blue 1) 15 93)
+                (list (kern-mk-obj t_dg_mushroom_tan        1) 16 93)
+
+                (list (kern-mk-obj t_dg_mushroom_bunch_grey          1) 1 94)
+                (list (kern-mk-obj t_dg_mushroom_bunch_green         1) 2 94)
+                (list (kern-mk-obj t_dg_mushroom_bunch_tan           1) 3 94)
+                (list (kern-mk-obj t_dg_mushroom_bunch_pink          1) 4 94)
+                (list (kern-mk-obj t_dg_mushroom_bunch_purple        1) 5 94)
+                (list (kern-mk-obj t_dg_mushroom_bunch_black         1) 6 94)
+                (list (kern-mk-obj t_dg_mushroom_bunch_glowing_green 1) 7 94)
+
+                (list (kern-mk-obj t_coins_copper    1)  1 95)
+                (list (kern-mk-obj t_coins_silver    1)  2 95)
+                (list (kern-mk-obj t_coins_gold      1)  3 95)
+                (list (kern-mk-obj t_coins_blue_1    1)  4 95)
+                (list (kern-mk-obj t_coins_blue_2    1)  5 95)
+                (list (kern-mk-obj t_crystals_green  1)  6 95)
+                (list (kern-mk-obj t_crystals_blue   1)  7 95)
+                (list (kern-mk-obj t_crystals_purple 1)  8 95)
+                (list (kern-mk-obj t_gems_red        1)  9 95)
+                (list (kern-mk-obj t_gems_blue       1) 10 95)
+                (list (kern-mk-obj t_gems_assorted   1) 11 95)
+
+
 
 
                 
