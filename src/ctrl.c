@@ -224,19 +224,13 @@ static void ctrl_work(class Party *party)
 {
 	int d;
 
-	if (party->getAlignment() & player_party->alignment) {
+        /* Check if this party is friendly to the player or if the player is
+         * not around */
+	if (party->getAlignment() & player_party->alignment ||
+            Place != party->getPlace()) {
 		// This party is friendly to the player, so just wander for now
 		// (later I'll add schedules).
 		ctrl_wander(party);
-		return;
-	}
-
-	/* Check if the player is on this map */
-	if (Place != party->getPlace()) {
-		ctrl_wander(party);
-		// Workaround: this is really to handle the case where
-		// wandering can't consume any turns because the party is
-		// stranded somewhere surrounded by impassable terrain.
 		return;
 	}
 

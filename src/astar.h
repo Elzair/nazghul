@@ -55,6 +55,7 @@ extern "C" {
 		int len;
 		int x;
 		int y;
+                int depth;
 		unsigned char scheduled:1;
 	};
 

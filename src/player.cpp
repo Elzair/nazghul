@@ -74,13 +74,22 @@ void player_party::damage(int amount)
 	/* First apply damage to the vehicle. If the vehicle is destroyed then
            destroy the party, too. */
 	if (vehicle && vehicle->isVulnerable()) {
+
+                // Subtle: save a pointer to the vehicle. If vehicle->damage()
+                // actually destroys the vehicle, then in a roundabout way by
+                // the time that call returns we will have disembarked (meaning
+                // our usual vehicle pointrer will be NULL). But we still bear
+                // responsibility hear for destroying the vehicle. Messy, but
+                // there you go. It works and I don't care to fool with it.
+                class Vehicle *vehptr = vehicle;
+
 		vehicle->damage(amount);
 		mapFlash(0);
 		foogodRepaint();
 
                 /* If the vehicle is destroyed then we are dead. */
-		if (vehicle->isDestroyed()) {
-			delete vehicle;
+		if (vehptr->isDestroyed()) {
+			delete vehptr;
 			vehicle = NULL;   
 		}
 

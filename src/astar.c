@@ -74,6 +74,9 @@ static inline struct astar_node *astar_node_create(int x, int y, int cost,
         node->order.key_type  = tree_i_key;
 	node->order.key.i_key = location;
 
+        if (next)
+                node->depth = next->depth + 1;
+
 	dump_node(node);
 	return node;
 }
@@ -236,17 +239,6 @@ astar_schedule_neighbor(struct astar_node *node,
          * so we can search the more promising nodes first. */
 	int goodness = 0;
 
-        /* cost is no longer a measure of path length. Should use length for
-         * that, but need to make sure we don't mess up the reversal functions
-         * if we do. */
-	/* Safety check the search depth. */
-        if (cost > MAX_DEPTH)
-                return;
-
-	/* Check if this path has grown too long. */
-	if (info->limit_depth && cost > info->max_depth)
-		return;
-
 	info->heuristic(info, &goodness, &cost);
 
         /* Cost is cumulative along a path, so add the parent node's cost. */
@@ -355,6 +347,11 @@ struct astar_node *astar_search(struct astar_search_info *info)
 
 			goto done;
 		}
+
+                /* Check if this node is at max depth */
+                if (node->depth == MAX_DEPTH ||
+                    info->limit_depth && node->depth == info->max_depth)
+                        continue;
 
 		/* Check the four non-diagonal neighbors of this node */
 		for (row = 0, info->y0 = node->y - 1; row < 3;

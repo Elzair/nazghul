@@ -1430,7 +1430,9 @@ void place_exec(struct place *place, struct exec_context *context)
         // --------------------------------------------------------------------
 
         place->turn_elem = place->turn_list.next;
-        while (place->turn_elem != &place->turn_list && ! Quit) {
+        while (place->turn_elem != &place->turn_list 
+               && ! Quit
+               && ! player_party->allDead()) {
                
                 class Object *obj;                
                 struct terrain *terrain;
@@ -1486,7 +1488,7 @@ void place_exec(struct place *place, struct exec_context *context)
                  * object. If so, the object, this place and everything in it
                  * has been destroyeed. Leave now. Don't touch a thing. */
                 if (Session->reloaded)
-                        return;                
+                        return;                                
 
                 /* one more time, check if the object is toast */
                 if (!obj->isDestroyed())
