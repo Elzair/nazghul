@@ -35,6 +35,8 @@
 #include "./GreenTowerLower.ghul"
 #include "./P_terrain_test.ghul"
 
+#include "./P_cavernous_troll_deeps.ghul"
+
 STACK_PLACES GreenTower GreenTowerLower
 
 #endif // all_places_ghul

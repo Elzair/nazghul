@@ -81,6 +81,71 @@ t_moongate {
   }
 }
 
+#define PORTAL_PAIR_LADDERS(from,frx,fry,to,tox,toy,auto) /**/ \
+  { \
+    object_type t_ladder_up; \
+    from_place  from; \
+    from_x      frx;  \
+    from_y      fry;  \
+    to_place    to;   \
+    to_x        tox;  \
+    to_y        toy;  \
+    auto_enter  auto; \
+  } \
+  { \
+    object_type t_ladder_down; \
+    from_place  to;   \
+    from_x      tox;  \
+    from_y      toy;  \
+    to_place    from; \
+    to_x        frx;  \
+    to_y        fry;  \
+    auto_enter  auto; \
+  }
+
+#define PORTAL_PAIR_PORTALS(from,frx,fry,to,tox,toy,auto) /**/ \
+  { \
+    object_type t_standing_portal; \
+    from_place  from; \
+    from_x      frx;  \
+    from_y      fry;  \
+    to_place    to;   \
+    to_x        tox;  \
+    to_y        toy;  \
+    auto_enter  auto; \
+  } \
+  { \
+    object_type t_standing_portal; \
+    from_place  to;   \
+    from_x      tox;  \
+    from_y      toy;  \
+    to_place    from; \
+    to_x        frx;  \
+    to_y        fry;  \
+    auto_enter  auto; \
+  }
+
+#define DUNGEON_ENTRANCE_TO_LADDER(from,frx,fry,to,tox,toy,auto) /**/ \
+  { \
+    object_type t_ladder_up; \
+    from_place  from; \
+    from_x      frx;  \
+    from_y      fry;  \
+    to_place    to;   \
+    to_x        tox;  \
+    to_y        toy;  \
+    auto_enter  auto; \
+  } \
+  { \
+    object_type t_dungeon; \
+    from_place  to;   \
+    from_x      tox;  \
+    from_y      toy;  \
+    to_place    from; \
+    to_x        frx;  \
+    to_y        fry;  \
+    auto_enter  auto; \
+  }
 
 #endif // portal_types_ghul
 

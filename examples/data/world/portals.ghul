@@ -29,27 +29,6 @@
 
 #include "places/DarkPassage.ghul"
 
-#define PORTAL_PAIR_LADDERS(from,frx,fry,to,tox,toy,auto) /**/ \
-  { \
-    object_type t_ladder_up; \
-    from_place  from; \
-    from_x      frx;  \
-    from_y      fry;  \
-    to_place    to;   \
-    to_x        tox;  \
-    to_y        toy;  \
-    auto_enter  auto; \
-  } \
-  { \
-    object_type t_ladder_down; \
-    from_place  to;   \
-    from_x      tox;  \
-    from_y      toy;  \
-    to_place    from; \
-    to_x        frx;  \
-    to_y        fry;  \
-    auto_enter  auto; \
-  }
   
 
 portals {
@@ -62,7 +41,7 @@ portals {
 
   PORTAL_PAIR_LADDERS(p_prison_chamber,  28, 26, p_empire_city, 61, 25, 0);
   PORTAL_PAIR_LADDERS(DarkPassage_Place,  3,  3, p_empire_city, 38, 25, 0);
-  
+
 } // portals
 
 
