@@ -2508,7 +2508,10 @@ static bool keyHandler(struct KeyHandler *kh, int key)
             // which would be a solid grid of that impassable terrain.
             // Also, if somehow placed, the party could not escape unless on an edge.
             // There would be no harm in it otherwise, however.
-			consolePrint("Cannot zoom-in here!\n");
+            struct terrain * tt = place_get_terrain(player_party->getPlace(),
+                                                    player_party->getX(),
+                                                    player_party->getY() );
+			consolePrint("Enter-Cannot zoom-in to %s!\n", tt->name);
         }
 		else {
             // If standing on ordinary terrain, zoom in:
