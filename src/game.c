@@ -786,6 +786,10 @@ static struct terrain_palette *load_terrain_palette(int *n,
 	    !loader->matchToken('\'') || !loader->getWord(&terrain_tag))
 		return NULL;
 
+    // SAM:
+    // Add code here for terrain_palette to accept a 'null' entry.
+    // Hmmm...perhaps terrain should accept binding a null terrain?
+    // That would mean that here, it is not a special case...
 	entry.terrain = (struct terrain *) loader->lookupTag(terrain_tag,
 							     TERRAIN_ID);
 	if (entry.terrain == NULL) {
@@ -831,6 +835,10 @@ static struct terrain_palette *load_terrain_palette(int *n,
 
 	entry.symbol[len - 1] = 0;
 
+    // SAM:
+    // Add code here for terrain_palette to accept a 'null' entry.
+    // Hmmm...perhaps terrain should accept binding a null terrain?
+    // That would mean that here, it is not a special case...
 	entry.terrain = (struct terrain *) loader->lookupTag(terrain_tag,
 							     TERRAIN_ID);
 	if (entry.terrain == NULL) {
@@ -1122,7 +1130,7 @@ static struct terrain_map *load_xpm_terrain_map(char *tag)
 	delete palette;
 	return NULL;
 }
-#endif				/* SUPPORT_XPM_TERRAIN_MAPS */
+#endif // SUPPORT_XPM_TERRAIN_MAPS
 
 #ifdef OLD_MAP
 
@@ -1144,10 +1152,10 @@ static struct terrain_map *game_load_terrain_map()
 		terrain_map = game_load_binary_terrain_map(tag);
 		PARSE_END_OF_BLOCK();
 
-#ifdef  SUPPORT_XPM_TERRAIN_MAPS
+#ifdef SUPPORT_XPM_TERRAIN_MAPS
 	} else if (strcmp(type, "xpm") == 0) {
 		terrain_map = load_xpm_terrain_map(tag);
-#endif				/* SUPPORT_XPM_TERRAIN_MAPS */
+#endif // SUPPORT_XPM_TERRAIN_MAPS
 
 	} else {
 		err("line %d: unknown terrain_map type %s", Lexer->line, type);
@@ -1184,7 +1192,7 @@ static int game_load_Maps()
       fail:
 	return -1;
 }
-#else				/* OLD_MAP */
+#else // OLD_MAP
 
 static int load_map(void)
 {
@@ -1222,7 +1230,7 @@ static int load_map(void)
 	return 0;
 }
 
-#endif
+#endif // OLD_MAP
 
 static Object *game_load_place_item(struct place *place)
 {
