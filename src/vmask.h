@@ -32,24 +32,24 @@
 extern "C" {
 #endif
 
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
         // Call this once to initialize the library on startup.
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
 
         extern int vmask_init(void);
 
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
         // Fetch the vmask corresponding to the given location. The vmask is
         // gauranteed to be valid until the next call to vmask_get(), at which
         // point all bets are off. I expect the typical usage will be for
         // callers to only use one at a time, and to make their own copy in the
         // rare cases where they need to deal with more than one at a time. 
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
 
         extern char *vmask_get(struct place *place, int x, int y);
 
 
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
         // Invalidate all vmasks in the area surrounding the given
         // location. You should call this whenever you do something that will
         // change the line-of-sight properties of a tile. It will force the
@@ -61,7 +61,7 @@ extern "C" {
         // each be 1. Don't worry about trying to evaluate the extent of the
         // damage: the function will automatically figure out which vmasks are
         // affected.
-        // ---------------------------------------------------------------------
+        // --------------------------------------------------------------------
 
         extern void vmask_invalidate(struct place *place, int x, int y, int w, int h);
 

@@ -49,6 +49,7 @@
 #include "formation.h"
 #include "session.h"
 #include "log.h"
+#include "vmask.h"
 
 #include <assert.h>
 #include <stdlib.h>
@@ -1708,6 +1709,19 @@ void combat_exit(void)
                 x = place_get_x(Place);
                 y = place_get_y(Place);
                 place_remove_subplace(parent, Place);
+
+                // ------------------------------------------------------------
+                // Bugfix: Invalidate the entire map from the vmask cache. If
+                // you don't do this, then the next time the player enters
+                // combat and we start looking up vmasks we will find old,
+                // stale ones from this place, resulting in LOS bugs. That's
+                // because the keys used by the vmask are built from the name
+                // of the place, and for the combat map it is always the same
+                // name.
+                // ------------------------------------------------------------
+
+                vmask_invalidate(Place, 0, 0, place_w(Place), place_h(Place));
+
                 place_del(Place); // map deleted in here
                 Combat.place = 0;
 
