@@ -719,6 +719,9 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
                 case 'k':
                         cmdCamp(character);
                         break;
+                case 'n':
+                        cmdNewOrder();
+                        break;
                 case 'o':
                         cmdOpen(character);
                         break;

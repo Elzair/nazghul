@@ -143,6 +143,8 @@ class player_party : public Party {
         virtual void setOnMap(bool val);        
         virtual void save(struct save *save);
 
+        void chooseNewLeader();
+
         struct sprite *sprite;
         int turns;
         char *mv_desc;
@@ -166,7 +168,6 @@ class player_party : public Party {
  protected:
         enum MoveResult try_to_move_off_map(struct move_info *info);
         bool turn_vehicle(void);
-        void chooseNewLeader();
         void disableCurrentMode();
         struct place *getPlaceFromMembers();
 

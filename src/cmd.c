@@ -1273,6 +1273,17 @@ bool cmdUse(class Character * member, int flags)
 	return true;
 }
 
+/* Helper function called by cmdNewOrder: */
+static void cmd_switch_party_leader(class Character *old_leader,
+                                    class Character *new_leader)
+{
+        new_leader->setLeader(true);
+        old_leader->setLeader(false);
+        old_leader->endTurn();
+        old_leader->setControlMode(CONTROL_MODE_FOLLOW);
+        player_party->setLeader(new_leader);
+}
+
 void cmdNewOrder(void)
 {
 	class Character *pc1, *pc2;
@@ -1319,6 +1330,14 @@ void cmdNewOrder(void)
 
 	log_msg("New Order: %s switched with %s\n", pc1->getName(),
 		     pc2->getName());
+
+        // If one of the switched members was the party leader then make the
+        // other one the new leader.
+        if (pc1->isLeader()) {
+                cmd_switch_party_leader(pc1, pc2);
+        } else if (pc2->isLeader()) {
+                cmd_switch_party_leader(pc2, pc1);
+        }
 
 	statusRepaint();
 }
