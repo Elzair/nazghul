@@ -5,14 +5,14 @@
 (define troll-speed         speed-human)
 (define troll-ripup-boulder-ap (* 2 troll-speed))
 
-(define (troll-display . args)
-  (display (kern-get-ticks))
-  (display ":")
-  (apply display args))
-(define (troll-newline) (newline))
+; (define (troll-display . args)
+;   (display (kern-get-ticks))
+;   (display ":")
+;   (apply display args))
+; (define (troll-newline) (newline))
 
-;(define (troll-display . args) )
-;(define (troll-newline) )
+(define (troll-display . args) )
+(define (troll-newline) )
 
 ;; ----------------------------------------------------------------------------
 ;; Trick: make a "troll corpse" container type and use it as the troll's

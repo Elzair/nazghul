@@ -25,7 +25,7 @@
 (define (ilya-gave-quest? ilya) (car ilya))
 (define (ilya-quest-done? ilya) (cadr ilya))
 (define (ilya-give-quest ilya) (set-car! ilya #t))
-(define (ilya-finish-quest ilya) (set-cadr! ilya #t))
+(define (ilya-finish-quest ilya) (set-car! (cdr ilya) #t))
 
 ;;----------------------------------------------------------------------------
 ;; Puska
@@ -51,6 +51,7 @@
 ;;----------------------------------------------------------------------------
 (define (ilya-quest knpc kpc)
   (let ((ilya (kobj-gob-data knpc)))
+    (display ilya)(newline)
     (if (ilya-gave-quest? ilya)
 
         ;; yes - gave quest already
@@ -71,7 +72,9 @@
                             ;; yes - player has puska
                             (begin
                               (kern-obj-remove-from-inventory kpc t_puska 1)
-                              (say knpc "There, there, puska. You're safe with me."))
+                              (say knpc "There, there, puska. "
+                                   "You're safe with me.")
+                              (ilya-finish-quest ilya))
 
                             ;; no - puska not in player inventory
                             (begin

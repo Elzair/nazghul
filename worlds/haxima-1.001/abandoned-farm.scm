@@ -69,7 +69,7 @@
                (list
                 (list (mk-wood-spider) 9 22)
                 (list (mk-door) 13 17)
-                (list (mk-locked-door) 7 25)
+                (list (mk-door) 7 25)
                 (list (mk-queen-spider faction-wood-spider) 9 23)
                 (list (mk-ladder-down 'p_abandoned_cellar 6 25) 6 25)
                 )
