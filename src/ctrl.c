@@ -160,7 +160,7 @@ static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
                         break;
                 case ' ':
                         party->endTurn();
-                        log_msg("Pass\n");
+                        log_msg("Pass");
                         break;
                 case '>':
                         // This key was chosen to be a cognate for '>' in
