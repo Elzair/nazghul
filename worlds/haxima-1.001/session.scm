@@ -525,7 +525,7 @@
                 )
                nil ; neighbors
                (list
-                (list player 3 18)
+                (list player 36 23)
                 (list (kern-mk-party t_skeleton_brigade align-monster nil) 25 19)
                 (list (kern-mk-party t_slime_glob align-monster nil) 36 20)
                 (list (kern-mk-obj F_fire 1) 34 23)
