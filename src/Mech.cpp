@@ -285,12 +285,20 @@ bool MechType::load(class Loader * loader)
 bool MechType::bindTags(class Loader * loader)
 {
         int i;
+        
+        printf("%s binding tags\n", tag);
 
+        // for each transition...
         for (i = 0; i < n_transitions; i++) {
-                if (transitions[i].actions->bind &&
-                    !transitions[i].actions->bind(transitions[i].actions, 
-                                                  loader))
-                        return false;
+
+                // bind all actions...
+                struct response *action = transitions[i].actions;
+                while (action) {
+                        if (action->bind && !action->bind(action, loader)) {
+                                return false;
+                        }
+                        action = action->next;
+                }
         }
         return true;
 }

@@ -3061,6 +3061,18 @@ static int loadCombat(void)
         return 0;
 }
 
+static int loadConnectAux(void)
+{
+        class Loader loader;
+
+        loader.lexer = Lexer;
+        loader.lookupTag = lookupTag;
+        loader.advance();
+        PARSE_ASSERT(loadConnect(&loader), "Error in CONNECT: %s\n",
+                     loader.error);
+        return 0;
+}
+
 static int loadFormation(void)
 {
         class Loader loader;
@@ -3186,6 +3198,7 @@ static struct keyword keywords[] = {
         {"CURSOR", loadCursor, false},
         {"FORMATION", loadFormation, false},
         {"COMBAT", loadCombat, false},
+        {"CONNECT", loadConnectAux, false},
 };
 
 #define NUM_KEYWORDS (sizeof(keywords)/sizeof(keywords[0]))

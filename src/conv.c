@@ -867,13 +867,12 @@ static bool api_parse_set_mech_alarm(class Loader * loader,
 	return true;
 }
 
+// api_blit_map --------------------------------------------------------------
+
 static void api_blit_map(struct response *resp, struct conv *conv)
 {
 	struct api_blit_map_parms *parms = &resp->parms.blit_map;
 
-	// note: tmp hack, default to current place at runtime until I can bind
-	// the place at load time
-	parms->dst = Place;
 	terrain_map_blit(parms->dst->terrain_map,
 			 parms->dst_x,
 			 parms->dst_y,
@@ -884,28 +883,108 @@ static void api_blit_map(struct response *resp, struct conv *conv)
 
 static void api_destroy_blit_map(struct response *resp)
 {
-	// nothing
+	struct api_blit_map_parms *parms = &resp->parms.blit_map;
+        if (parms->place_tag) {
+                free(parms->place_tag);
+                parms->place_tag = 0;
+        }
+        if (parms->map_tag) {
+                free(parms->map_tag);
+                parms->map_tag = 0;
+        }
 }
+
+static bool api_bind_blit_map(struct response *resp, class Loader *loader)
+{
+	struct api_blit_map_parms *parms = &resp->parms.blit_map;
+        SDL_Rect rect;
+
+        // bind the place tag
+        parms->dst = (struct place*)loader->lookupTag(parms->place_tag, 
+                                                        PLACE_ID);
+        if (!parms->dst) {
+                loader->setError("Error binding blit_map: '%s' is not "
+                                 "a valid PLACE tag\n", 
+                                 parms->place_tag);
+                return false;
+        }
+
+        // bind the map tag
+        parms->src = 
+                (struct terrain_map*)loader->lookupTag(parms->map_tag, 
+                                                     MAP_ID);
+        if (!parms->src) {
+                loader->setError("Error binding blit_map: '%s' is not "
+                                 "a valid MAP tag\n",
+                                 parms->map_tag);
+                return false;
+        }
+
+        // check if the src rect is within the map
+        rect.x = 0;
+        rect.y = 0;
+        rect.w = parms->src->w;
+        rect.h = parms->src->h;
+        if (!point_in_rect(parms->src_x, parms->src_y, &rect)) {
+                loader->setError("Error binding blit_map: upper left "
+                                 "corner (%d, %d) not in MAP %s\n", 
+                                 parms->src_x, parms->src_y, parms->map_tag);
+                return false;
+        }
+        if (!point_in_rect(parms->src_x + parms->w - 1, 
+                           parms->src_y + parms->h - 1, 
+                           &rect)) {
+                loader->setError("Error binding blit_map: lower right "
+                                 "corner (%d, %d) not in MAP %s\n", 
+                                 parms->src_x + parms->w - 1, 
+                                 parms->src_y + parms->h - 1, 
+                                 parms->map_tag);
+                return false;
+        }
+
+        // check if the dst rect is within the place
+        rect.x = 0;
+        rect.y = 0;
+        rect.w = place_w(parms->dst);
+        rect.h = place_h(parms->dst);
+        if (!point_in_rect(parms->dst_x, parms->dst_y, &rect)) {
+                loader->setError("Error binding blit_map: upper left "
+                                 "corner (%d, %d) not in PLACE %s\n", 
+                                 parms->dst_x, parms->dst_y, parms->place_tag);
+                return false;
+        }
+        if (!point_in_rect(parms->dst_x + parms->w - 1, 
+                           parms->dst_y + parms->h - 1, 
+                           &rect)) {
+                loader->setError("Error binding blit_map: lower right "
+                                 "corner (%d, %d) not in PLACE %s\n", 
+                                 parms->dst_x + parms->w - 1,
+                                 parms->dst_y + parms->h - 1, 
+                                 parms->place_tag);
+                return false;
+        }
+
+        return true;
+}
+
 
 static bool api_parse_blit_map(class Loader * loader, struct response *resp)
 {
 	struct api_blit_map_parms *parms = &resp->parms.blit_map;
-	char *ptag = 0;
-	char *mtag = 0;
 
 	// parse
-	if (!loader->getWord(&ptag) ||
+	if (!loader->getWord(&parms->place_tag) ||
 	    !loader->getInt(&parms->dst_x) ||
 	    !loader->getInt(&parms->dst_y) ||
-	    !loader->getWord(&mtag) ||
+	    !loader->getWord(&parms->map_tag) ||
 	    !loader->getInt(&parms->src_x) ||
 	    !loader->getInt(&parms->src_y) ||
 	    !loader->getInt(&parms->w) ||
 	    !loader->getInt(&parms->h) || !loader->getInt(&parms->rot))
 		goto fail;
 
-	// bind tags
-
+	// bind tags later
+#if 0
 #ifdef LATE_BIND_BLIT_MAP
 	// note: have to do a two-pass bind to get the place, since places are
 	// usually specified after mechs. For now default to the current place
@@ -922,22 +1001,20 @@ static bool api_parse_blit_map(class Loader * loader, struct response *resp)
 				 "valid MAP tag", mtag);
 		goto fail;
 	}
+#endif
 
 	resp->fx = api_blit_map;
 	resp->dtor = api_destroy_blit_map;
-
-	free(ptag);
-	free(mtag);
+        resp->bind = api_bind_blit_map;
 
 	return true;
 
       fail:
-	if (ptag)
-		free(ptag);
-	if (mtag)
-		free(mtag);
+        api_destroy_blit_map(resp);
 	return false;
 }
+
+// api_send_signal -----------------------------------------------------------
 
 static void api_send_signal(struct response *resp, struct conv *conv)
 {
@@ -1270,10 +1347,12 @@ static bool api_bind_create_object(struct response *resp, class Loader *loader)
                                  parms->x, parms->y, parms->place_tag);
                 return false;
         }
-        if (!point_in_rect(parms->x + parms->w, parms->y + parms->h, &rect)) {
+        if (!point_in_rect(parms->x + parms->w - 1, 
+                           parms->y + parms->h - 1, &rect)) {
                 loader->setError("Error binding create_object: lower right "
                                  "corner (%d, %d) not in place %s\n", 
-                                 parms->x + parms->w, parms->y + parms->h, 
+                                 parms->x + parms->w - 1, 
+                                 parms->y + parms->h - 1, 
                                  parms->place_tag);
                 return false;
         }

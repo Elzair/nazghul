@@ -143,7 +143,7 @@ MECH_TYPE _tag {             \
 
 // Define a new type of mechanism: a simple lever that could be used to send a
 // signal to, say, open a door.
-#define MAKE_LEVER_MECH(type_name, m_name, _invisible, s1_nm, s1_spr, s2_nm, s2_spr) \
+#define MAKE_LEVER_MECH(type_name, m_name, _invisible, s1_nm, s1_spr, sig1, s2_nm, s2_spr, sig2) \
 MECH_TYPE type_name { \
   name m_name;        \
   defaults {          \
@@ -165,35 +165,38 @@ MECH_TYPE type_name { \
     event      MECH_HANDLE; \
     next_state s2_nm;       \
     actions {               \
-      send_signal MECH_SIGNAL_DOWN; \
+      send_signal sig1;     \
     }                       \
     state      s2_nm;       \
     event      MECH_HANDLE; \
     next_state s1_nm;       \
     actions {               \
-      send_signal MECH_SIGNAL_UP; \
+      send_signal sig2;     \
     } \
   }   \
 }
 
 MAKE_LEVER_MECH(mech_L_lever, "lever", 0,
-                "up",    s_left_lever_up,    
-                "down",  s_left_lever_down);
+                "up",    s_left_lever_up,      MECH_SIGNAL_DOWN,   
+                "down",  s_left_lever_down,    MECH_SIGNAL_UP);
 MAKE_LEVER_MECH(mech_R_lever,  "lever", 0,
-                "up",    s_right_lever_up,   
-                "down",  s_right_lever_down);
+                "up",    s_right_lever_up,     MECH_SIGNAL_DOWN,   
+                "down",  s_right_lever_down,   MECH_SIGNAL_UP);
 MAKE_LEVER_MECH(mech_T_lever, "lever", 0,
-                "left",  s_top_lever_left,   
-                "right", s_top_lever_right);
+                "left",  s_top_lever_left,     MECH_SIGNAL_DOWN,   
+                "right", s_top_lever_right,    MECH_SIGNAL_UP);
 MAKE_LEVER_MECH(mech_B_lever, "lever", 0,
-                "left",  s_bottom_lever_left,
-                "right", s_bottom_lever_right);
+                "left",  s_bottom_lever_left,  MECH_SIGNAL_DOWN,
+                "right", s_bottom_lever_right, MECH_SIGNAL_UP);
 MAKE_LEVER_MECH(mech_C_lever, "lever", 0,
-                "left",  s_floor_lever_left, 
-                "right", s_floor_lever_right);
+                "left",  s_floor_lever_left,   MECH_SIGNAL_DOWN,
+                "right", s_floor_lever_right,  MECH_SIGNAL_UP);
 MAKE_LEVER_MECH(mech_hidden_lever, "lever", 1,
-                "up",    s_left_lever_up, 
-                "down",  s_left_lever_down);
+                "up",    s_left_lever_up,      MECH_SIGNAL_DOWN,
+                "down",  s_left_lever_down,    MECH_SIGNAL_UP);
+MAKE_LEVER_MECH(mech_handling_C_lever, "lever", 0,
+                "left",  s_floor_lever_left,   MECH_HANDLE,
+                "right", s_floor_lever_right,  MECH_HANDLE);
 
 #define MAKE_GENERIC_TRIGGER(type_name, _name, _state, _sprite, _sig, _invisible, _event) \
 MECH_TYPE type_name { \
@@ -612,6 +615,7 @@ MECH_TYPE _name { \
                    "A trap door opens, revealing a watery pit!", \
                    "A trap door closes.")
 
+// Make an east-west oriented drawbridge
 #define MAKE_DRAWBRIDGE(mech_name, plc, x, y) \
     MAKE_BLIT_MECH(mech_name, plc, x, y, \
                    m_WATER_TRAP_OPEN, m_WATER_TRAP_CLOSED, 2, 1, \

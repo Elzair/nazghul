@@ -27,7 +27,6 @@
 
 #include "GreenTowerLower_Map.ghul"
 
-
 PLACE  GreenTowerLower {
   type        town;
   parent      null;
@@ -38,6 +37,10 @@ PLACE  GreenTowerLower {
   map         GreenTowerLower_Map;
   underground 0;
   objects {
+
+          // Mechs
+          mech_portcullis prison_portcullis_A 32 18 "lowered";
+          mech_portcullis prison_portcullis_B 33 18 "lowered";
   }
   object_type t_town;
 

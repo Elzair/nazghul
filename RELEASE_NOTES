@@ -2,6 +2,20 @@ Changes between nazghul-0.1.2 and nazghul-0.1.3
 
 gmcnutt:
 
+o The blit_map api call now works on places besides the one the mech is located
+  in. Previously it took a place parm but ignored it, defaulting to the current
+  place. Now it works as originally intended.
+
+o The CONNECT construct can now be used outside of the object {} block of a
+  PLACE definition, allowing mechs in different places to be more easily wired
+  together.
+
+o Mostly for demonstration purposes I added two levers in the middle of Green
+  Tower. One lever activates a portcullis in Green Tower Lower (the
+  underground, a different place) by means of the new global CONNECT
+  construct. The other lever activates a drawbridge in Green Tower Lower by
+  means of the newly corrected 'place' parm of blit map.
+
 o Added a mandrake patch to the wilderness. This required a fair amount of new,
   special-case engine support, which annoys me: a MECH_FULL_MOON signal is
   supported by the engine and delivered to every mech in the game whenever

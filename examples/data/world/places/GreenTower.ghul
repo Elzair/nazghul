@@ -109,6 +109,9 @@ MAKE_OBJECT_GENERATOR_MECH(mech_mandrake_generator, "mandrake altar",
                            GreenTower, 9, 53, 1, 1, 
                            1.0);
 
+// This drawbridge mech actually affects a differnt place
+MAKE_DRAWBRIDGE(prison_drawbridge, GreenTowerLower, 32, 16);
+
 PLACE  GreenTower {
   type        town;
   parent      p_wilderness;
@@ -142,6 +145,12 @@ PLACE  GreenTower {
     
     // ruins
     mech_mandrake_generator altar_mandrake_gen 9 53 "active";
+
+    // Tower 
+    // This lever will be connected to the prison portcullis in
+    // GreenTowerLower:
+    mech_C_lever prison_portcullis_lever      30 30 "right";
+    prison_drawbridge prison_drawbridge_lever 35 30 "down";
 
     // Characters
     Shroom_the_Hag  40 11 (ALIGN_TOWN) 1;

@@ -71,9 +71,11 @@ struct api_set_mech_alarm_parms {
 };
 
 struct api_blit_map_parms {
+        char *place_tag;
 	struct place *dst;
 	int dst_x;
 	int dst_y;
+        char *map_tag;
 	struct terrain_map *src;
 	int src_x;
 	int src_y;
