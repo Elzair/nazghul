@@ -428,7 +428,6 @@ struct place *place_new(char *tag,
         place->wilderness = wilderness;
         place->is_wilderness_combat = wild_combat;
 
-	list_init(&place->vehicles);
         place_init_turn_list(place);
         list_init(&place->subplaces);
         list_init(&place->container_link);

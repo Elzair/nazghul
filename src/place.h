@@ -96,10 +96,9 @@ struct place {
         // the script.
         int magic;
 
-        struct node turn_list;   /* objects that run each turn in place_exec */
+        struct node turn_list;   /* list of objects to exec each turn */
         struct node *turn_elem;  /* iterator over above list */
 
-        struct list list;
         struct location location;
         struct place *above, *below;
         char *tag;
@@ -108,7 +107,6 @@ struct place {
         struct terrain_map *original_terrain_map;
         struct terrain_map *terrain_map;
         struct hash *objects;
-        struct list vehicles;
         int scale;
         bool wraps;
         bool dirty;
@@ -120,14 +118,8 @@ struct place {
         // loading it from a game that saved during combat.
         void *handle;
 
-        // List of subplaces. Allows me to save subplaces in a separate block
-        // from the other tile objects. The only reason for doing that is to
-        // make the save file easier to read.
-        struct list subplaces;
-
-        // List hook used to put a subplace on the subplaces list of its
-        // superplace.
-        struct list container_link;
+        struct list subplaces;      /* list of subplaces */
+        struct list container_link; /* list hook for a subplace */
 
         struct closure *pre_entry_hook;
 
