@@ -152,6 +152,7 @@
 (load "palette.scm")
 (load "fields.scm")
 (load "scenery.scm")
+(load "combat-maps.scm")
 
 ;; Object types
 (load "objs.scm")

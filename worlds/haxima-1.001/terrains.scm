@@ -24,8 +24,9 @@
 ;;   sprite: animated image
 ;;        t: transparency to line-of-sight (0 == opaque, 1 == transparent)
 ;;    light: radiated light strength
-;;  step-on: nil, or a procedure to run when an object is placed on the terrain,
-;;           which takes the object as it's first argument (2nd is success/failed movement?)
+;;  step-on: nil, or a procedure to run when an object is placed on the
+;;           terrain, which takes the object as it's first argument (2nd is
+;;           success/failed movement?)
 ;; ----------------------------------------------------------------------------
 
 ;; TODO: 

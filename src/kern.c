@@ -4584,6 +4584,26 @@ KERN_API_CALL(kern_terrain_get_pclass)
         return scm_mk_integer(sc, terrain_pclass(terrain));
 }
 
+KERN_API_CALL(kern_terrain_set_combat_map)
+{
+        struct terrain *terrain;
+        struct terrain_map *map;
+
+        if (unpack(sc, &args, "pp", &terrain, &map)) {
+                rt_err("kern-terrain-set-combat-map: bad args");
+                return sc->NIL;
+        }
+
+        if(! terrain) {
+                rt_err("kern-terrain-set-combat-map: null terrain");
+                return sc->NIL;
+        }
+
+        terrain->combat_map = map;
+
+        return scm_mk_ptr(sc, terrain);
+}
+
 KERN_API_CALL(kern_place_get_width)
 {
         struct place *place;
@@ -6022,6 +6042,7 @@ scheme *kern_init(void)
 
         /* kern-terrain api */
         API_DECL(sc, "kern-terrain-get-pclass", kern_terrain_get_pclass);
+        API_DECL(sc, "kern-terrain-set-combat-map", kern_terrain_set_combat_map);
 
         /* kern-obj api */
         API_DECL(sc, "kern-obj-add-food", kern_obj_add_food);
