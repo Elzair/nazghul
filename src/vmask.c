@@ -264,16 +264,23 @@ void vmask_invalidate(struct place *place, int x, int y, int w, int h)
 {
         char key[VMASK_MAX_KEY_LEN + 1];
         struct vmask *vmask;
+#if 0
         int start_x = place_wrap_x(place, x - MAP_TILE_W / 2);
         int start_y = place_wrap_y(place, y - MAP_TILE_H / 2);
         int end_x   = place_wrap_x(place, start_x + w + MAP_TILE_W);
         int end_y   = place_wrap_y(place, start_y + h + MAP_TILE_H);
-
+#else
+        int start_x = x - MAP_TILE_W / 2;
+        int start_y = y - MAP_TILE_H / 2;
+        int end_x   = start_x + w + MAP_TILE_W;
+        int end_y   = start_y + h + MAP_TILE_H;
+#endif
         //printf("vmask_invalidate: %s [%d %d %d %d]\n", place->name, x,  y, w, h);
 
         for (y = start_y; y < end_y; y++) {
+                int wrap_y =  place_wrap_y(place, y);
                 for (x = start_x; x < end_x; x++) {
-                        vmask_make_key(key, place, x, y);
+                        vmask_make_key(key, place, place_wrap_x(place, x), wrap_y);
                         vmask = vmask_lookup(key);
                         if (NULL != vmask) {
                                 vmask_delete(vmask);
