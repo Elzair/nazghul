@@ -30,12 +30,13 @@ class Cursor:public Object {
 	virtual ~ Cursor();
 	virtual void init(class ObjectType * type);
 	virtual bool move(int dx, int dy);
+    virtual void setViewportBounded(int bounded);
 	virtual void setRange(int range);
 	virtual void setOrigin(int x, int y);
       protected:
-	int range, originX, originY;
+	int range, bounded, originX, originY;
 };
 
 extern class Cursor *Cursor;
 
-#endif
+#endif // cursor_h

@@ -69,7 +69,8 @@ extern "C" {
 
     extern void mapGetCameraFocus(struct place **place, int *x, int *y);
 
-        extern int mapTileIsVisible(int x, int y);
+    extern int mapTileIsWithinViewport(int x, int y);
+    extern int mapTileIsVisible(int x, int y);
 
 #ifdef __cplusplus
 }

@@ -510,6 +510,35 @@ void mapRepaintView(struct mview *view, int flags)
 #endif
 }
 
+int mapTileIsWithinViewport(int x, int y)
+{
+  SDL_Rect *vrect = &Map.aview->vrect;
+  
+  // If the view rect extends past the right side of the map, and x is
+  // left of the view rect, then convert x to be right of the view rect.
+  if ((vrect->x + vrect->w) > place_w(Map.place) && 
+      x < vrect->x) {
+    x += place_w(Map.place);
+  }
+  
+  // Likewise if the view rect extends beyond the southern edge of the
+  // map, and y is less than the top of the view rect, then convert y to
+  // be south of the view rect.
+  if ((vrect->y + vrect->h) > place_h(Map.place) && 
+      y < vrect->y) {
+    y += place_h(Map.place);
+  }
+  
+  // check if the coords are in the view rect
+  if (x < vrect->x ||
+      x >= (vrect->x + vrect->w) ||
+      y < vrect->y ||
+      y >= (vrect->y + vrect->h))
+    return 0;
+
+  return 1;  
+}
+
 int mapTileIsVisible(int x, int y)
 {       
         int index;

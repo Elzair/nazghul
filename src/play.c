@@ -579,8 +579,7 @@ bool terraform_movecursor_and_do(struct KeyHandler * kh, int key, int keymod)
     return false;  // Keep on keyhandling
   }
 
-  if ( (key >= SDLK_0   && key <= SDLK_9)  ||
-       (key >= SDLK_KP0 && key <= SDLK_KP9) ) {
+  if (key >= SDLK_0 && key <= SDLK_9) {
     // Number key 0..9 == get/set quick terrain
     int qt = num_for_key(key);
     
@@ -1214,6 +1213,7 @@ int select_target_with_doing(int ox, int oy, int *x, int *y,
   // in case our caller wants it, but it seems that
   // the ESC abort stomps on it.
   Cursor->setRange(range);
+  Cursor->setViewportBounded(1);
   Cursor->setOrigin(ox, oy);
   Cursor->relocate(Place, *x, *y);  // Remember prev target, if any
   mapUpdate(0);
@@ -1258,6 +1258,7 @@ int terraform_cursor_func(int ox, int oy, int *x, int *y,
   // As select_target(), select_target_with_doing(), 
   // but with additional keybindings intended for cmdTerraform().
   Cursor->setRange(range);
+  Cursor->setViewportBounded(1);
   Cursor->setOrigin(ox, oy);
   Cursor->relocate(Place, *x, *y);  // Remember prev target, if any
   mapUpdate(0);
@@ -2432,7 +2433,7 @@ bool cmdXamine(class Character * pc)
 
     look_at_XY(x,y);  // First look at the current tile
     // SAM: TODO - make the range "any in viewport" rather than 9
-	if (select_target_with_doing(x, y, &x, &y, 9,
+	if (select_target_with_doing(x, y, &x, &y, 99,
 				     look_at_XY, detailed_examine_XY) == -1) {
 		return false;
 	}
@@ -2639,7 +2640,7 @@ bool cmdTerraform(class Character * pc)
     DM_XRAY_look_at_XY(x,y, NULL);  // First look at the current tile
     // SAM: TODO - make the range "any in viewport" rather than 9
     //             or perhaps even scrollable past that
-	if (terraform_cursor_func(x, y, &x, &y, 9,
+	if (terraform_cursor_func(x, y, &x, &y, 999,
                               DM_XRAY_look_at_XY, terraform_XY,
                               place) == -1) {
       return false;

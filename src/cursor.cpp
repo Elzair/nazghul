@@ -21,10 +21,11 @@
 //
 #include "cursor.h"
 #include "place.h"
+#include "map.h"
 
 class Cursor *Cursor = NULL;
 
-Cursor::Cursor():range(0), originX(0), originY(0)
+Cursor::Cursor():range(0), bounded(0), originX(0), originY(0)
 {
 }
 
@@ -41,53 +42,45 @@ bool Cursor::move(int dx, int dy)
 {
   // SAM: Found a few things, noted below.
   // 
+  // -- Cursor sometimes not drawn:
   // If the cursor is moved out of LOS, it is not drawn.
   // That is not desirable, methinks.
   // 
-  // Currently, it is possible to specify a cursor range 
-  // via Cursor::setRange() which is compared with d (calculated below).
-  // This allows specification of a roughly circular area
-  // within range of cursor selection.
-  // 
-  // Another common use case (for Look, and such) however, is
-  // to be able to specify "any range within the viewport".
-  // I see no means of setting such a range currently.
-  // 
-  // It is desirable in combat to be able to select a point,
-  // within range, but outside of the viewport.
-  // (automatically scrolling as this is done would be nice)
-  // That can be done today (the range, not the scrolling).
-  // 
-  // Perhaps, then, the answer is another function
-  //     Cursor::setViewportOnly()
-  // which when set, disallows cursor movement past the viewport.
-  // This would allow for both uses, with the "any range within viewport"
-  // either setting a range of 999 or similar, or perhaps 
-  // the special value -1, to be tested for below as in:
-  //     if ( (range != -1) && (d > range) ) {
-  // 
+  // -- Cursor range "any range within viewport"
+  // Cursor::setViewportBounded() makes this possible.
+  // The caller need only set the range to some large value,
+  // and turn on 'bounded'.
 	int newx = getX() + dx;
 	int newy = getY() + dy;
 
-        newx = place_wrap_x(getPlace(), newx);
-        newy = place_wrap_y(getPlace(), newy);
-
-        // this works on wrapping maps
-        int d = place_flying_distance(getPlace(), originX, originY, newx, 
-                                      newy);
-
+    newx = place_wrap_x(getPlace(), newx);
+    newy = place_wrap_y(getPlace(), newy);
+    
+    // this works on wrapping maps
+    int d = place_flying_distance(getPlace(), originX, originY, newx, 
+                                  newy);
+    
 	// Is the new location off the map?
 	if (place_off_map(getPlace(), newx, newy))
-		return false;
-
+      return false;
+    
+    // Is the new location out of the current viewport (without scrolling)?
+    if (bounded && !mapTileIsWithinViewport(newx,newy))
+      return false;
+    
 	// Is the new location out of range?
 	if (d > range)
-		return false;
-
+      return false;
+    
 	// move the cursor
 	relocate(getPlace(), newx, newy);
-
+    
 	return true;
+}
+
+void Cursor::setViewportBounded(int bounded)
+{
+  this->bounded = !!bounded;
 }
 
 void Cursor::setRange(int range)
