@@ -77,6 +77,7 @@ class Character:public Being {
 	virtual int getType();
 	virtual char *getName();
 	virtual int getHp();
+        class Container *getInventory();
 	virtual int getMaxHp();
 	virtual int getOrder();
 	virtual void addExperience(int delta);

@@ -147,6 +147,12 @@
   (filter (lambda (kobj) (is-visible-hostile? kchar kobj))
           (kern-place-get-objects (loc-place (kern-obj-get-location kchar)))))
 
+(define (all-in-range origin radius objlst)
+  (filter (lambda (kobj) (<= (kern-get-distance origin 
+                                                (kern-obj-get-location kobj))
+                             radius))
+          objlst))
+
 ;; Convenience proc for rolling dtables by hand
 (define (dtable-row . cols)
   (define (dtable-col val)
@@ -196,3 +202,61 @@
 
 (define (has-ap? kobj) 
   (> (kern-obj-get-ap kobj) 0))
+
+(define (flee kchar)
+  (display "flee")(newline)
+  (kern-char-set-fleeing kchar #t))
+
+(define (wander kchar)
+  (kern-obj-wander kchar))
+
+(define (weakest kchar-a kchar-b)
+  (if (< (kern-char-get-hp kchar-a)
+         (kern-char-get-hp kchar-b))
+      a
+      b))
+
+;; Return a list of locations with matching terrain
+(define (find-terrain kplace x y w h kter)
+  ;;(display "find-terrain:x=")(display x)
+  ;;(display " y=")(display y)
+  ;;(display " w=")(display w)
+  ;;(display " h=")(display h)
+  ;;(newline)
+  (define (find-in-row x w)
+    ;;(display "find-terrain:find-in-row")
+    ;;(display " x=")(display x)
+    ;;(display " w=")(display w)
+    ;;(newline)
+    (define (check)
+      ;;(display "find-terrain:find-in-row:check")
+      ;;(display " x=")(display x)
+      ;;(display " w=")(display w)
+      ;;(newline)
+      (if (eqv? (kern-place-get-terrain (mk-loc kplace x y)) kter)
+          (mk-loc kplace x y)
+          nil))
+    (if (= 0 w)
+        nil
+        (let ((coord (check)))
+          (cond ((null? coord) (find-in-row (+ x 1) (- w 1)))
+                (else (cons coord (find-in-row (+ x 1) (- w 1))))))))
+  (if (= 0 h)
+      nil
+      (let ((coords (find-in-row x w)))
+        (cond ((null? coords) (find-terrain kplace x (+ y 1) w (- h 1) kter))
+              (else (append coords (find-terrain kplace x (+ y 1) w (- h 1) kter)))))))
+
+(define (adjacent? a b)
+  (< (kern-get-distance a b) 2))
+
+(define (in-inventory? kchar ktype)
+  (define (hasit? item inv)
+    (display "in-inventory:hasit")
+    (display " inv=")(display inv)
+    (newline)
+    (cond ((null? inv) #f)
+          ((eqv? item (car (car inv))) #t)
+          (else (hasit? item (cdr inv)))))
+  (hasit? ktype (kern-char-get-inventory kchar)))
+  

@@ -2078,6 +2078,8 @@ bool Character::add(ObjectType *type, int amount)
 {
         if (isPlayerPartyMember()) {
                 return player_party->add(type, amount);
+        } else if (container) {
+                container->add(type, amount);
         }
 
         return false;
@@ -2423,4 +2425,10 @@ int Character::getCurrentFaction()
                 return tmpFaction;
 
         return getBaseFaction();
+}
+
+class Container* Character::getInventory()
+{
+        /* for player-controlled maybe return party inventory? */
+        return container;
 }

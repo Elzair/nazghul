@@ -3808,6 +3808,38 @@ KERN_API_CALL(kern_place_is_passable)
         return place_is_passable(place, x, y, obj, 0) ? sc->T : sc->F;
 }
 
+KERN_API_CALL(kern_place_set_terrain)
+{
+        struct place *place;
+        int x, y;
+        struct terrain *terrain;
+
+        if (unpack_loc(sc, &args, &place, &x, &y, "kern-place-set-terrain"))
+                return sc->F;
+
+        if (unpack(sc, &args, "p", &terrain)) {
+                rt_err("kern-place-set-terrain: bad args");
+                return sc->F;
+        }
+
+        place_set_terrain(place, x, y, terrain);
+        return sc->T;
+}
+
+KERN_API_CALL(kern_place_get_terrain)
+{
+        struct place *place;
+        int x, y;
+        struct terrain *terrain;
+
+        if (unpack_loc(sc, &args, &place, &x, &y, "kern-place-get-terrain"))
+                return sc->F;
+
+        terrain = place_get_terrain(place, x, y);
+
+        return terrain ? scm_mk_ptr(sc, terrain) : sc->NIL;
+}
+
 KERN_API_CALL(kern_obj_set_temporary)
 {
         class Object *obj;
@@ -3817,7 +3849,7 @@ KERN_API_CALL(kern_obj_set_temporary)
         if (!obj)
                 return sc->NIL;
 
-        if (unpack(sc, &args, "b", &val)) {
+        if (unpack(sc, &args, "`b", &val)) {
                 rt_err("kern-obj-set-temporary: bad value arg");
                 return scm_mk_ptr(sc, obj);
         }
@@ -4979,10 +5011,53 @@ KERN_API_CALL(kern_char_get_weapons)
                                       character->enumerateWeapons());
 }
 
+static pointer kern_build_container_list(scheme *sc,
+                                         class Container *container,
+                                         struct inv_entry *ie)
+{
+        pointer cell;
+
+        /* base case */
+        if (! ie)
+                return sc->NIL;
+        
+        /* make a type/count pair */
+        cell = _cons(sc, 
+                     scm_mk_ptr(sc, ie->type),
+                     scm_mk_integer(sc, ie->count),
+                     0);
+
+        /* recursively build a list of such pairs */
+        return _cons(sc, 
+                     cell,
+                     kern_build_container_list(sc, 
+                                               container, 
+                                               container->next(ie, NULL)), 
+                     0);
+}
+
+KERN_API_CALL(kern_char_get_inventory)
+{
+        class Container *container;
+        class Character *character;
+
+        /* unpack the character */
+        character = (class Character*)unpack_obj(sc, &args, "kern-char-get-hp");
+        if (!character)
+                return sc->NIL;
+
+        /* grab it's inventory container */
+        container = character->getInventory();
+        if (!container)
+                return sc->NIL;
+
+        /* enumerate its contents into a scheme list */
+        return kern_build_container_list(sc, container, container->first(NULL));
+}
+
 KERN_API_CALL(kern_char_get_hp)
 {
         class Character *character;
-        pointer lst;
 
         /* unpack the character */
         character = (class Character*)unpack_obj(sc, &args, "kern-char-get-hp");
@@ -4992,10 +5067,21 @@ KERN_API_CALL(kern_char_get_hp)
         return scm_mk_integer(sc, character->getHp());
 }
 
+KERN_API_CALL(kern_char_get_strength)
+{
+        class Character *character;
+
+        /* unpack the character */
+        character = (class Character*)unpack_obj(sc, &args, "kern-char-get-strength");
+        if (!character)
+                return sc->NIL;
+
+        return scm_mk_integer(sc, character->getStrength());
+}
+
 KERN_API_CALL(kern_obj_get_ap)
 {
         class Object *object;
-        pointer lst;
 
         /* unpack the object */
         object = (class Object*)unpack_obj(sc, &args, "kern-obj-get-ap");
@@ -5159,9 +5245,11 @@ scheme *kern_init(void)
         scm_define_proc(sc, "kern-char-dec-mana", kern_char_dec_mana);
         scm_define_proc(sc, "kern-char-charm", kern_char_charm);
         scm_define_proc(sc, "kern-char-get-hp", kern_char_get_hp);
+        scm_define_proc(sc, "kern-char-get-inventory", kern_char_get_inventory);
         scm_define_proc(sc, "kern-char-get-mana", kern_char_get_mana);
         scm_define_proc(sc, "kern-char-get-party", kern_char_get_party);
         scm_define_proc(sc, "kern-char-get-species", kern_char_get_species);
+        scm_define_proc(sc, "kern-char-get-strength", kern_char_get_strength);
         scm_define_proc(sc, "kern-char-get-weapons", kern_char_get_weapons);
         scm_define_proc(sc, "kern-char-kill", kern_char_kill);
         scm_define_proc(sc, "kern-char-resurrect", kern_char_resurrect);
@@ -5181,10 +5269,12 @@ scheme *kern_init(void)
         scm_define_proc(sc, "kern-place-get-name", kern_place_get_name);
         scm_define_proc(sc, "kern-place-get-neighbor", kern_place_get_neighbor);
         scm_define_proc(sc, "kern-place-get-objects", kern_place_get_objects);
+        scm_define_proc(sc, "kern-place-get-terrain", kern_place_get_terrain);
         scm_define_proc(sc, "kern-place-get-width", kern_place_get_width);
         scm_define_proc(sc, "kern-place-is-passable", kern_place_is_passable);
         scm_define_proc(sc, "kern-place-is-wilderness?", kern_place_is_wilderness);
         scm_define_proc(sc, "kern-place-map", kern_place_map);
+        scm_define_proc(sc, "kern-place-set-terrain", kern_place_set_terrain);
         scm_define_proc(sc, "kern-place-synch", kern_place_synch);
 
         /* kern-type api */

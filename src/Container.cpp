@@ -216,7 +216,8 @@ struct inv_entry *Container::first(struct filter *filter)
         elem = contents.next;
         while (elem != &contents) {
                 ie = outcast(elem, struct inv_entry, list);
-                if (filter->fx(ie, filter->cookie))
+                if (!filter ||
+                    filter->fx(ie, filter->cookie))
                         return ie;
                 elem = elem->next;
         }
@@ -233,7 +234,8 @@ struct inv_entry *Container::next(struct inv_entry *ie, struct filter *filter)
         elem = ie->list.next;
         while (elem != &contents) {
                 ie = outcast(elem, struct inv_entry, list);
-                if (filter->fx(ie, filter->cookie))
+                if (!filter ||
+                    filter->fx(ie, filter->cookie))
                         return ie;
                 elem = elem->next;
         }
@@ -247,7 +249,8 @@ struct inv_entry *Container::prev(struct inv_entry *ie, struct filter *filter)
         elem = ie->list.prev;
         while (elem != &contents) {
                 ie = outcast(elem, struct inv_entry, list);
-                if (filter->fx(ie, filter->cookie))
+                if (!filter ||
+                    filter->fx(ie, filter->cookie))
                         return ie;
                 elem = elem->prev;
         }
