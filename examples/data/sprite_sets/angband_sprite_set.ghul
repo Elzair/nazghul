@@ -192,11 +192,19 @@ SPRITE_SET ss_angband {
     // Melee Weapons
     STD_SPRITE(s_dagger,      334);
     STD_SPRITE(s_sword,       345);
+    STD_SPRITE(s_hand_axe,    368);
     STD_SPRITE(s_long_sword, 1708);
     STD_SPRITE(s_2h_sword,  1709);
 
     STD_SPRITE(s_2h_hammer, 352);
     STD_SPRITE(s_mace,      353);
+    STD_SPRITE(s_staff,     354);
+    STD_SPRITE(s_iron_handled_morning_star, 355);
+    STD_SPRITE(s_wood_handled_morning_star, 356);
+    STD_SPRITE(s_fat_knife,  357);
+    STD_SPRITE(s_ball_and_chain, 358);
+    STD_SPRITE(s_red_handled_morning_star, 359);
+    STD_SPRITE(s_ruby_mace, 360);
 
     // Thrown Weapons
     STD_SPRITE(s_spear,     361);

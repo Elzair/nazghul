@@ -138,8 +138,27 @@ void Container::setTrap(class TrapType * val)
 
 bool Container::load(class Loader *loader)
 {
+        char *tag;
+
         if (!Object::load(loader))
                 return false;
+
+        if (!loader->getWord(&tag))
+                return false;
+        
+        if (strcmp(tag, "null")) {
+                class TrapType *trap;
+                trap = (class TrapType*)loader->lookupTag(tag, OBJECT_TYPE_ID);
+                if (!trap) {
+                        loader->setError("Error parsing container object: %s "
+                                         "is not a valid trap type", tag);
+                        free(tag);
+                        return false;
+                }
+                setTrap(trap);
+        }
+        free(tag);
+
 
         if (!loader->matchToken('{'))
                 return false;
@@ -147,7 +166,6 @@ bool Container::load(class Loader *loader)
         while (!loader->matchToken('}')) {
 
                 class ObjectType *type;
-                char *tag;
                 int quantity;
 
                 if (!loader->getWord(&tag) ||

@@ -42,17 +42,17 @@ MAP GreenTower_Map {
     "||rrrrr||rrrrr|||||||||||||||tb...bt||||||||||||xxxxxxxxxtt|||||";  //  2
     "||rcccr||rcccr||||||||||||||ttt...tt||||||||||||x.......xttt||||";  //  3
     "||rcccr||rcccr||||||||||||||ttb.........................0ttt||||";  //  4
-    "||rcccr||rcccr|||||||||||||tttt...bt||||||||||||x@@@@@@@xttt||||";  //  5
-    "||rrcrr||rrcrr|||||||||||||tttb...tt|||||||||||t........xtt|||||";  //  6
-    "||||.||||||.||||||||||||||ttttt...tt|||||||||||txSHROOMSx|||||||";  //  7
-    "||||........||||||||||||||ttttb...bt|||||||||tttxxxxxxxxx|||||||";  //  8
-    "||||||||.||||||||||||||||tttttt...tt||||||||ttttx...x...x|||||||";  //  9
-    "|||rrr||.||||||||||||||||tttttb...bt||||||||tttt....?...?ttttttt";  // 10
-    "||rrcrr|.............||||tttttt...tt||||ttttt||tx...x...x|||||||";  // 11
-    "|rrcccrr.|||||||||||.||||tttttb...bt||||t.ttt||txx0xxx.xx|||||||";  // 12
-    "|rcccccc.||||||||t||.|||ttttttt...tt|tttt..t|||t||||||||||||||||";  // 13
-    "|rrcccrr|||||t||ttt|.|||ttttttb...bt|t||ttttttt.||||||||||||||||";  // 14
-    "||rr&rr|t|||ttb||t||.|ttttttttt...tt|t|||||||||.||||||||||||||||";  // 15
+    "||rcccr||rcccr|||||||||||||tttt...bt||||||||||.tx@@@@@@@xttt||||";  //  5
+    "||rrcrr||rrcrr|||||||||||||tttb...tt||||||||||..........xtt|||||";  //  6
+    "||||.||||||.||||||||||||||ttttt...tt||||||||||.txSHROOMSx|||||||";  //  7
+    "||||........||||||||||||||ttttb...bt|||||||||t.txxxxxxxxx|||||||";  //  8
+    "||||||||.||||||||||||||||tttttt...tt||||||||tt.tx...x...x|||||||";  //  9
+    "|||rrr||.||||||||||||||||tttttb...bt||||||||tt......?...?ttttttt";  // 10
+    "||rrcrr|.............||||tttttt...tt||||ttttttttx..tx...x|||||||";  // 11
+    "|rrcccrr.|||||||||||.||||tttttb...bt||||t.ttt|||xx0xxx.xx|||||||";  // 12
+    "|rcccccc.||||||||t||.|||ttttttt...tt|tttt..t||||||||||||||||||||";  // 13
+    "|rrcccrr|||||t||ttt|.|||ttttttb...bt|t||tttt||||||||||||||||||||";  // 14
+    "||rr&rr|t|||ttb||t||.|ttttttttt...tt|t||||||||||||||||||||||||||";  // 15
     "|||rrr|ttt|tt.tt||||.|ttttttttb...bttttttttttttt||||||||||||||||";  // 16
     "|||t||||t|tt...tt|tb.b.btbtbtb.....tbtbttbtbtbtt||||||||||||||||";  // 17
     "||ttt||||||tt.tt||t............................tt|||||||||||||||";  // 18
@@ -133,7 +133,7 @@ PLACE  GreenTower {
           mech_vdoor shrooms_shop_door  48 4  "closed";
           mech_hdoor shrooms_storeroom_door 54 12 "magically locked";
           t_bed 51 9;
-          t_large_iron_chest 53 9 {
+          t_large_iron_chest 53 9 t_burn_trap {
                   reagent_sulphorous_ash 50;
                   reagent_garlic         50;
                   reagent_ginseng        50;
@@ -143,7 +143,7 @@ PLACE  GreenTower {
                   reagent_mandrake       50;
                   reagent_nightshade     50;
           }
-          t_large_iron_chest 54 9 {
+          t_large_wooden_chest 54 9 t_poison_trap {
                   t_cure_potion         10;
                   t_light_potion        10;
                   t_heal_potion         10;
@@ -151,13 +151,12 @@ PLACE  GreenTower {
                   t_awaken_potion       10;
                   t_restore_potion      10;
           }
-          t_large_iron_chest 55 9 {
-          }
-          t_large_iron_chest 53 10 {
-          }
-          t_large_iron_chest 54 10 {
-          }
-          t_large_iron_chest 53 11 {
+          t_large_iron_chest 55 9 t_sleep_trap {
+                  t_leather_armor  1;
+                  t_hand_axe       1;
+                  t_sm_shield      1;
+                  t_leather_boots  1;
+                  t_leather_cap    1;
           }
 
           //--------------------------------------------------
@@ -165,7 +164,7 @@ PLACE  GreenTower {
           //--------------------------------------------------
           mech_vdoor gens_house_door 7 13 "closed";
           t_bed 2 13;
-          t_large_wooden_chest 4 11 {
+          t_large_wooden_chest 4 11 null {
                   
           }
 

@@ -38,11 +38,11 @@
 
 //        tag            name           effects        amount
 //        -----------    -----------    -----------    ------
-TRAP_TYPE(t_burn_trap,   "burn trap",   EFFECT_BURN,   10);
-TRAP_TYPE(t_poison_trap, "poison trap", EFFECT_POISON, 0);
-TRAP_TYPE(t_charm_trap,  "charm trap",  EFFECT_CHARM,  5);
-TRAP_TYPE(t_sleep_trap,  "sleep trap",  EFFECT_SLEEP,  5);
-
+TRAP_TYPE(t_burn_trap,   "burn trap",   EFFECT_BURN,   45);
+TRAP_TYPE(t_poison_trap, "poison trap", EFFECT_POISON, 15);
+TRAP_TYPE(t_charm_trap,  "charm trap",  EFFECT_CHARM,  0);
+TRAP_TYPE(t_sleep_trap,  "sleep trap",  EFFECT_SLEEP,  15);
+TRAP_TYPE(t_death_trap,  "death trap",  EFFECT_BURN,   240);
 
 #endif // chest_traps_ghul
 

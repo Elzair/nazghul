@@ -945,7 +945,7 @@ bool cmdOpen(class Character * pc)
 		consolePrint("...%s...", trap->getName());
 
 		// Roll to disarm
-		if (random() % 100 < pc->getDexterity()) {
+		if (random() % 999 < pc->getDexterity()) {
 			consolePrint("disarmed!\n");
 		} else {
 			consolePrint("oops!\n");

@@ -65,7 +65,7 @@ MELEE_WPN_TYPE(t_2h_sword,   "2h sword",    s_2h_sword,     +24, +0, 2, 2, 25);
 
 MELEE_WPN_TYPE(t_mace,       "mace",        s_mace,         +20, +0, 1, 1, 20);
 MELEE_WPN_TYPE(t_2h_hammer,  "2h hammer",   s_2h_hammer,    +28, -1, 1, 1, 30);
-
+MELEE_WPN_TYPE(t_hand_axe,   "hand axe",    s_hand_axe,     +20, +0, 1, 1, 10);
 
 ///////////////////////////////////////////////////////////////////////////
 
