@@ -146,12 +146,13 @@
 /*****************************************************************************
  ***   SCHEDULES   ***
  *****************************************************************************/
-#define WORKING   0  /* reserved */
-#define SLEEPING  1  /* reserved */
-#define COMMUTING 2  /* reserved */
-#define EATING    3  /* reserved */
-#define RELAXING  4
-#define IDLE      5
+#define NONE      0  /* reserved */
+#define WORKING   1  /* reserved */
+#define SLEEPING  2  /* reserved */
+#define COMMUTING 3  /* reserved */
+#define EATING    4  /* reserved */
+#define RELAXING  5
+#define IDLE      6
 
 
 

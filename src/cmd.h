@@ -59,7 +59,7 @@ extern "C" {
         extern bool cmdMixReagents(void);
         extern void cmdNewOrder(void);
         extern bool cmdSearch(int x, int y);
-        extern void cmdTalk(void);
+        extern bool cmdTalk(int x, int y);
         extern void cmdZoomIn(void);
         extern bool cmdUse(class Character * pc, int flags);
         extern bool cmdHandle(class Character * pc);

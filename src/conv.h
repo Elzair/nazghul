@@ -175,7 +175,7 @@ struct conv {
 	struct conv **imports;	/* Pointers to "imported" conversations */
 	int n_qr_pairs;		/* Number of "native" query-response pairs */
 	struct qr_pair *qr_pairs;	/* "Native" query-response pairs */
-	class NpcParty *speaker;	/* NPC the player is talking to */
+	class Object *speaker;	/* who/what the player is talking to */
 	class Mech *mech;	/* hack? if this conversation is owned by a
 				 * mech */
 	bool done;

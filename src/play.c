@@ -381,7 +381,7 @@ static bool keyHandler(struct KeyHandler *kh, int key, int keymod)
                         cmdSearch(player_party->getX(), player_party->getY());
                         break;
                 case 't':
-                        cmdTalk();
+                        cmdTalk(player_party->getX(), player_party->getY());
                         break;
                 case 'u':
                         cmdUse(NULL, CMD_SELECT_MEMBER|CMD_PRINT_MEMBER);

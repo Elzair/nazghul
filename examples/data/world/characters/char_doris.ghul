@@ -65,11 +65,13 @@ CONV conv_doris {
                 GreenTower_Common_Conv;
         }
         NATIVE {
-                NAME    resp_doris_name;
-                DEFAULT resp_doris_default;
-                JOIN    resp_doris_join;
-                DORIS   resp_doris_doris;
-                BUY     resp_doris_trade;
+                NAME      resp_doris_name;
+                DEFAULT   resp_doris_default;
+                JOB       resp_doris_trade;
+                JOIN      resp_doris_join;
+                DORIS     resp_doris_doris;
+                BUY       resp_doris_trade;
+                INNKEEPER resp_doris_trade;
         }
 }
 

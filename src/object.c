@@ -103,6 +103,51 @@ void ObjectType::describe(int count)
 	}
 }
 
+bool ObjectType::isType(int classID) 
+{
+        return (classID == OBJECT_TYPE_ID);
+}
+
+int ObjectType::getType()
+{
+        return OBJECT_TYPE_ID;
+}
+
+ObjectType::ObjectType()
+{
+        list_init(&this->list);
+}
+
+char *ObjectType::getTag()
+{
+        return tag;
+}
+
+char *ObjectType::getName()
+{
+        return name;
+}
+
+struct sprite *ObjectType::getSprite()
+{
+        return sprite;
+}
+
+enum layer ObjectType::getLayer()
+{
+        return layer;
+}
+
+bool ObjectType::bindTags(class Loader * loader)
+{
+        return true;
+}
+
+bool ObjectType::isVisible()
+{
+        return true;
+}
+
 /*****************************************************************************/
 
 void Object::init(int x, int y, struct place *place, class ObjectType * type)
@@ -202,4 +247,179 @@ class Object *Object::clone()
         // FIXME: should assign the new object a unique script tag
 
         return obj;
+}
+
+//////////////////////////////////////////////////
+
+bool Object::isType(int classID) 
+{
+        return (classID == OBJECT_ID);
+}
+int Object::getType() 
+{
+        return OBJECT_ID;
+}
+
+Object::Object():type(NULL), x(0), y(0), place(NULL), selected(false),
+                 destroyed(false), turn(0) 
+{
+        list_init(&this->container_link.list);
+        script_tag = 0;
+}
+
+Object::Object(class ObjectType * type) 
+{
+        this->type = type;
+        list_init(&this->container_link.list);
+}
+
+Object::~Object()
+{
+}
+
+int Object::getX()
+{
+        return x;
+}
+
+int Object::getY()
+{
+        return y;
+}
+
+struct place *Object::getPlace()
+{
+        return place;
+}
+
+struct sprite *Object::getSprite()
+{
+        return type->getSprite();
+}
+
+bool Object::isSelected()
+{
+        return selected;
+}
+
+enum layer Object::getLayer(void)
+{
+        return (enum layer) container_link.key;
+}
+
+char *Object::getName(void)
+{
+        return type->getName();
+}
+
+class ObjectType *Object::getObjectType()
+{
+        return type;
+}
+
+int Object::getTurn(void)
+{
+        return turn;
+}
+
+bool Object::isDestroyed()
+{
+        return destroyed;
+}
+
+
+void Object::setX(int x)
+{
+        this->x = x;
+}
+
+void Object::setY(int y)
+{
+        this->y = y;
+}
+
+void Object::changeX(int dx)
+{
+        this->x += dx;
+}
+
+void Object::changeY(int dy)
+{
+        this->y += dy;
+}
+
+void Object::setPlace(struct place *place)
+{
+        this->place = place;
+}
+
+void Object::select(bool val)
+{
+        selected = val;
+}
+
+void Object::destroy()
+{
+        destroyed = true;
+        remove();
+}
+
+int Object::getLight()
+{
+        return 0;
+}
+
+void Object::setTurn(int turn)
+{
+        this->turn = turn;
+}
+
+void Object::advanceTurn(int turn)
+{
+        setTurn(turn);
+}
+
+void Object::changeTurn(int delta)
+{
+        turn += delta;
+}
+
+void Object::synchronize(int turn)
+{
+        setTurn(turn);
+}
+
+bool Object::isVisible()
+{
+        return getObjectType()->isVisible();
+}
+
+bool Object::isShaded()
+{
+        return false;
+}
+
+bool Object::is_opaque()
+{
+        return false;
+}
+
+int Object::getAlignment()
+{
+        return 0;
+}
+
+bool Object::joinPlayer()
+{
+        return false;
+}
+
+int Object::getActivity()
+{
+        return 0;
+}
+
+struct conv *Object::getConversation()
+{
+        return NULL;
 }

@@ -1189,3 +1189,8 @@ char *NpcParty::get_movement_sound()
         forEachMember(get_member_movement_sound, &sound);
         return sound;
 }
+
+int NpcParty::getActivity()
+{
+        return act;
+}

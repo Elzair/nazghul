@@ -161,6 +161,7 @@ class NpcParty:public Object {
         virtual void describe(int count);
         virtual char *get_movement_sound();
         virtual struct sprite *getSprite();
+        virtual int getActivity();
 
 	struct list members;
 

@@ -1320,16 +1320,18 @@ void cmdNewOrder(void)
 }
 
 static void run_combat(bool camping, class Character * guard, int hours,
-                       class NpcParty *foe)
+                       class Object *foe)
 {
 	struct move_info minfo;
 	struct combat_info cinfo;
+
+        assert(!foe || foe->isType(NPCPARTY_ID));
 
 	memset(&minfo, 0, sizeof(minfo));
 	minfo.place = Place;
 	minfo.x = player_party->getX();
 	minfo.y = player_party->getY();
-        minfo.npc_party = foe;
+        minfo.npc_party = (class NpcParty*)foe;
 
 	memset(&cinfo, 0, sizeof(cinfo));
 	cinfo.camping = camping;
@@ -1359,11 +1361,10 @@ static void run_combat(bool camping, class Character * guard, int hours,
 	player_party->move_to_combat(&cinfo);
 }
 
-void cmdTalk(void)
+bool cmdTalk(int x, int y)
 {
-	struct conv *conv;
-	class NpcParty *npc;
-	int x, y;
+	struct conv *conv = NULL;
+        class Object *obj;
 
 	// *** Prompt user & check if valid ***
 
@@ -1372,43 +1373,53 @@ void cmdTalk(void)
 
 	if (Place->type == wilderness_place) {
 		cmdwin_print("not here!");
-		return;
+                consolePrint("Can't talk here!\n");
+		return false;
 	}
 
-	x = player_party->getX();
-	y = player_party->getY();
 	if (select_target(x, y, &x, &y, 4) == -1) {
-		return;
+		return false;
 	}
 
-	npc = (class NpcParty *) place_get_object(Place, x, y, being_layer);
+	obj = place_get_object(Place, x, y, being_layer);
 
-	if (!npc || !npc->isType(NPCPARTY_ID)
-	    || !(conv = npc->getConversation())) {
+	if (!obj) {
+                cmdwin_print("nobody there!");
+                consolePrint("Try talking to a PERSON.\n");
+                return true;
+        }
+
+        conv = obj->getConversation();
+
+        if (!conv) {
 		cmdwin_print("no response!");
-		return;
-	}
+                consolePrint("No response from ");
+                obj->describe(1);
+                consolePrint(".\n");
+		return true;
+        }
 
-	cmdwin_print(npc->getName());
+	cmdwin_print(obj->getName());
 
 	consolePrint("\n*** CONVERSATION ***\n");
-	consolePrint("You meet a ");
-	npc->describe(1);
+	consolePrint("You meet ");
+	obj->describe(1);
 	consolePrint(".\n");
 
-	if (npc->act == SLEEPING) {
+	if (obj->getActivity() == SLEEPING) {
 		consolePrint("Zzzz...\n");
-		return;
+		return true;
 	}
-	// conv = npc->getConversation();
-	conv->speaker = npc;
+
+	conv->speaker = obj;
 
 	// *** Enter conversation ***
 
 	switch (convEnter(conv)) {
 
 	case CONV_COMBAT:
-		run_combat(false, 0, 0, conv->speaker);
+                if (player_party->context != CONTEXT_COMBAT)
+                        run_combat(false, 0, 0, conv->speaker);
 		break;
 
 	case CONV_OK:
@@ -1416,6 +1427,8 @@ void cmdTalk(void)
 	}
 
 	mapSetDirty();
+
+        return true;
 }
 
 bool cmdZtats(class Character * pc)

@@ -29,10 +29,10 @@
 
 #include <assert.h>
 
-/* Note: if you change the layer's you'll probably need to change the save
- * file */
-enum layer {			/* Proper rendering depends on keeping these in 
-				 * order! */
+// Note: if you change the layers you'll probably need to change the save
+//       file
+// Proper rendering depends on keeping these in order!
+enum layer {
 	null_layer       = 0,
 	mech_layer       = 1,
 	portal_layer     = 2,
@@ -48,9 +48,7 @@ enum layer {			/* Proper rendering depends on keeping these in
 
 struct inv_entry {
 	struct list list;
-	struct list auxlist;	// temporary auxiliary list (e.g., when
-	// building
-	// the list of reagents in a spell mixture)
+	struct list auxlist;
 	int count;
 	int ref;
 	class ObjectType *type;
@@ -61,41 +59,20 @@ class Loader;
 class ObjectType {
 
       public:
-	virtual bool isType(int classID) {
-		return (classID == OBJECT_TYPE_ID);
-	}
-	virtual int getType() {
-		return OBJECT_TYPE_ID;
-	}
-
-	ObjectType() {
-		list_init(&this->list);
-	}
-	virtual ~ ObjectType();
+	virtual bool isType(int classID);
+	virtual int getType();
+	ObjectType();
+	virtual ~ObjectType();
 	virtual bool init(char *tag, char *name, enum layer layer,
 			  struct sprite * sprite);
-	virtual char *getTag() {
-		return tag;
-	}
-	virtual char *getName() {
-		return name;
-	}
-	virtual struct sprite *getSprite() {
-		return sprite;
-	}
-	virtual enum layer getLayer() {
-		return layer;
-	}
-
+	virtual char *getTag();
+	virtual char *getName();
+	virtual struct sprite *getSprite();
+	virtual enum layer getLayer();
 	virtual class Object *createInstance();
-
 	virtual bool load(class Loader * loader);
-	virtual bool bindTags(class Loader * loader) {
-		return true;
-	}
-	virtual bool isVisible() {
-		return true;
-	}
+	virtual bool bindTags(class Loader * loader);
+	virtual bool isVisible();
 	virtual void describe(int count);
 
 	struct list list;
@@ -106,6 +83,74 @@ class ObjectType {
 	struct sprite *sprite;
 	enum layer layer;
 };
+
+class Object {
+
+      public:
+	virtual bool isType(int classID);
+	virtual int getType();
+
+        Object();
+	Object(class ObjectType * type);
+	virtual ~Object();
+	virtual void init(int x, int y, struct place *place,
+			  class ObjectType * type);
+	virtual void init(class ObjectType * type);
+
+	virtual int getX();
+	virtual int getY();
+	virtual struct place *getPlace();
+	virtual struct sprite *getSprite();
+	virtual bool isSelected();
+	virtual enum layer getLayer(void);
+	virtual char *getName(void);
+	virtual class ObjectType *getObjectType();
+	virtual int getTurn(void);
+	virtual int getLight();
+        virtual char *get_movement_sound();
+        virtual int getAlignment();
+        virtual int getActivity();
+        virtual struct conv *getConversation();
+
+	virtual bool isDestroyed();
+	virtual bool is_opaque();
+
+	virtual void setX(int x);
+	virtual void setY(int y);
+	virtual void changeX(int dx);
+	virtual void changeY(int dy);
+	virtual void setPlace(struct place *place);
+	virtual void select(bool val);
+	virtual void destroy();
+	virtual void setTurn(int turn);
+	virtual void advanceTurn(int turn);
+	virtual void changeTurn(int delta);
+	virtual void synchronize(int turn);
+	virtual void relocate(struct place *newplace, int newx, int newy);
+	virtual void remove();
+	virtual bool load(class Loader * loader);
+	virtual bool isVisible();
+	virtual bool isShaded();
+	virtual void describe(int count);
+	virtual void paint(int sx, int sy);
+        virtual class Object *clone();
+	virtual bool joinPlayer(void);       
+
+	struct olist container_link;
+
+	char *script_tag;
+	struct list list;	// for the loader, not the place
+
+      protected:
+	class ObjectType * type;
+	int x;
+	int y;
+	struct place *place;
+	bool selected;
+	bool destroyed;
+	int turn;
+};
+
 
 class OrdnanceType:public ObjectType {
       public:
@@ -155,132 +200,5 @@ class OrdnanceType:public ObjectType {
 	class ObjectType *ammo;
 };
 
-class Object {
-
-      public:
-	virtual bool isType(int classID) {
-		return (classID == OBJECT_ID);
-	}
-	virtual int getType() {
-		return OBJECT_ID;
-	}
-
-      Object():type(NULL), x(0), y(0), place(NULL), selected(false),
-	    destroyed(false), turn(0) {
-		list_init(&this->container_link.list);
-		script_tag = 0;
-	}
-	Object(class ObjectType * type) {
-		this->type = type;
-		list_init(&this->container_link.list);
-	}
-	virtual ~ Object() {
-	}
-	virtual void init(int x, int y, struct place *place,
-			  class ObjectType * type);
-	virtual void init(class ObjectType * type);
-
-	virtual int getX() {
-		return x;
-	}
-	virtual int getY() {
-		return y;
-	}
-	virtual struct place *getPlace() {
-		return place;
-	}
-	virtual struct sprite *getSprite() {
-		return type->getSprite();
-	}
-	virtual bool isSelected() {
-		return selected;
-	}
-	virtual enum layer getLayer(void) {
-		return (enum layer) container_link.key;
-	}
-	virtual char *getName(void) {
-		return type->getName();
-	}
-	virtual class ObjectType *getObjectType() {
-		return type;
-	}
-	virtual int getTurn(void) {
-		return turn;
-	}
-	virtual bool isDestroyed() {
-		return destroyed;
-	}
-
-	virtual void setX(int x) {
-		this->x = x;
-	}
-	virtual void setY(int y) {
-		this->y = y;
-	}
-	virtual void changeX(int dx) {
-		this->x += dx;
-	}
-	virtual void changeY(int dy) {
-		this->y += dy;
-	}
-	virtual void setPlace(struct place *place) {
-		this->place = place;
-	}
-	virtual void select(bool val) {
-		selected = val;
-	}
-	virtual void destroy() {
-		destroyed = true;
-		remove();
-	}
-	virtual int getLight() {
-		return 0;
-	}
-	virtual void setTurn(int turn) {
-		this->turn = turn;
-	}
-	virtual void advanceTurn(int turn) {
-		setTurn(turn);
-	}
-	virtual void changeTurn(int delta) {
-		turn += delta;
-	}
-	virtual void synchronize(int turn) {
-		setTurn(turn);
-	}
-
-	virtual void relocate(struct place *newplace, int newx, int newy);
-	virtual void remove();
-	virtual bool load(class Loader * loader);
-	virtual bool isVisible() {
-		return getObjectType()->isVisible();
-	}
-	virtual bool isShaded() {
-		return false;
-	}
-
-	virtual void describe(int count);
-
-	virtual bool is_opaque() {
-		return false;
-	}
-	virtual void paint(int sx, int sy);
-        virtual char *get_movement_sound();
-        virtual class Object *clone();
-
-	struct olist container_link;
-
-	char *script_tag;
-	struct list list;	// for the loader, not the place
-
-      protected:
-	class ObjectType * type;
-	int x;
-	int y;
-	struct place *place;
-	bool selected;
-	bool destroyed;
-	int turn;
-};
 
 #endif				// object_h

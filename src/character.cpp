@@ -1466,3 +1466,15 @@ int Character::getArmor()
         return armor;
 
 }
+
+class NpcParty *Character::getParty()
+{
+        return party;
+}
+
+struct conv * Character::getConversation()
+{
+        if (conv)
+                return conv;
+        return party->getConversation();
+}

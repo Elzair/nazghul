@@ -89,6 +89,14 @@ RESP Deric_afraid {
         SAY "Of course not! Fear is the hobgoblin of little minds. Or is it hobgoblins are the fear of little minds? Damn, I can never remember that silly saying."
 }
 
+RESP Deric_prison {
+        SAY "Yes. Very secure. We currently only have one prisoner, a forest goblin we caught skulking around here. A quite vicious-looking brute, I must say. Not that I am afraid of him. Ahem.";
+}
+
+RESP Deric_brute {
+        SAY "Very suspicious. He obviously did not come to trade, for he carried no merchandise. And he speaks not a lick of Common. In fact, he refuses to say anything! Well, some time spent underground should loosen his tongue. I'll find out what he's scheming.";
+}
+
 CONV Deric_Conv {
         IMPORT { 
                 c_generic;
@@ -99,6 +107,8 @@ CONV Deric_Conv {
                 AFRAID     Deric_afraid;
                 AMBITIONS  Deric_ambition;
                 ASPIRE     Deric_ambition;
+                BRUTE      Deric_brute;
+                COMMAND    Deric_rangers;
                 DIE        Deric_ambition;
                 GEN        Deric_gen;
                 HAUNTED    Deric_haunted;
@@ -106,10 +116,13 @@ CONV Deric_Conv {
                 JOB        Deric_job;
                 NAME       Deric_name;
                 NATIVE     Deric_native;
+                PRISON     Deric_prison;
                 PROMOTED   Deric_ambition;
+                PROMOTION  Deric_ambition;
                 RANGERS    Deric_rangers;
                 SECRET     Deric_secret;
                 SHROOM     Deric_shroom;
+                SKULKING   Deric_brute;
                 STORIES    Deric_two;
                 TOWER      Deric_tower;
                 TWO        Deric_two;

@@ -73,7 +73,9 @@ class Character:public Object {
 	virtual ~ Character();
 
         virtual int getArmor();
+        virtual struct conv *getConversation();
         virtual int getDefend();
+        virtual class NpcParty * getParty();
 	virtual int getType();
 	virtual char *getName();
 	virtual int getHp();

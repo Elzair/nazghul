@@ -1536,7 +1536,7 @@ static bool myRunNpc(class Character * npc, void *data)
 static void doNpcRound(void)
 {
         if (Combat.state == FIGHTING)
-                consolePrint("*** NPC round %d ***\n", Combat.round);
+                consolePrint("\n*** NPC round %d ***\n", Combat.round);
 
         myForEachNpc((bool(*)(class Character *, void *)) doApplyCombatEffects,
                      NULL);
@@ -1926,6 +1926,9 @@ static bool myPcCommandHandler(struct KeyHandler *kh, int key, int keymod)
                         break;
                 case 'r':
                         ret = cmdReady(pc, 0);
+                        break;
+                case 't':
+                        ret = cmdTalk(pc->getX(), pc->getY());
                         break;
                 case 'u':
                         ret = cmdUse(pc, 0);

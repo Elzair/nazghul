@@ -287,10 +287,11 @@ extern "C" {
 #define SRV_MAX         SRV_RESURRECT
 
 /* Reserved activities */
-#define WORKING   0		// reserved
-#define SLEEPING  1		// reserved
-#define COMMUTING 2		// reserved
-#define EATING    3		// reserved
+#define NONE      0             // reserved
+#define WORKING   1		// reserved
+#define SLEEPING  2		// reserved
+#define COMMUTING 3		// reserved
+#define EATING    4		// reserved
 
 /* Elevation (leveling-up) */
 #define XP_PER_ATTACK 2

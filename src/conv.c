@@ -24,7 +24,7 @@
 #include "Loader.h"
 #include "common.h"
 #include "console.h"
-#include "NpcParty.h"
+//#include "NpcParty.h"
 #include "event.h"
 #include "player.h"
 #include "foogod.h"
@@ -34,6 +34,7 @@
 #include "lexer.h"		// for parse error msgs
 #include "combat.h"
 #include "cmd.h"
+#include "object.h"
 
 #include <ctype.h>
 #include <stdio.h>
@@ -1222,7 +1223,7 @@ static void api_check_parm(struct response *resp, struct conv *conv)
 		val = player_party->food;
 		break;
 	case PID_ACTIVITY:
-		val = conv->speaker->act;
+		val = conv->speaker->getActivity();
 		break;
 	default:
 		val = C_parms[parms->id];
