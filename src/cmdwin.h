@@ -32,5 +32,6 @@ extern void cmdwin_repaint(void);
 extern void cmdwin_mark(void);
 extern void cmdwin_erase_back_to_mark(void);
 extern void cmdwin_flush_to_console(void);
+extern void cmdwin_flush(void);
 
 #endif

@@ -27,6 +27,7 @@
 #include "sprite.h"
 #include "console.h"
 
+#include <errno.h>
 #include <stdarg.h>
 
 static struct {
@@ -38,6 +39,7 @@ static struct {
 	char *mark;
 } cmdwin;
 
+static FILE *log = NULL;
 
 int cmdwin_init(void)
 {
@@ -50,6 +52,13 @@ int cmdwin_init(void)
 	cmdwin.buf = (char *) malloc(cmdwin.blen);
 	if (!cmdwin.buf)
 		return -1;
+
+
+        log = fopen(".cmdwin", "w+");
+        if (!log) {
+                err(strerror(errno));
+                return -1;
+        }
 
         cmdwin_clear();
 	return 0;
@@ -139,8 +148,23 @@ void cmdwin_erase_back_to_mark(void)
 
 void cmdwin_flush_to_console(void)
 {
-        if (strlen(cmdwin.buf))
-                consolePrint("%s\n", cmdwin.buf);
+        if (!strlen(cmdwin.buf))
+                return;
+
+        consolePrint("%s\n", cmdwin.buf);
+        fprintf(log, "%s\n", cmdwin.buf);
         //cmdwin_clear();
         //cmdwin_repaint();
+}
+
+void cmdwin_flush(void)
+{
+        if (!strlen(cmdwin.buf))
+                return;
+
+        consolePrint("%s\n", cmdwin.buf);
+        consoleRepaint();
+        fprintf(log, "%s\n", cmdwin.buf);
+        cmdwin_clear();
+        cmdwin_repaint();
 }

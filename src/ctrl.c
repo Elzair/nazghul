@@ -43,8 +43,9 @@ static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
 {
         class player_party *party = (class player_party*)kh->data;
 
-        cmdwin_clear();
-        cmdwin_repaint();
+        cmdwin_flush();
+        //cmdwin_clear();
+        //cmdwin_repaint();
         
         
         G_latency_start = SDL_GetTicks();

@@ -653,9 +653,11 @@ MoveResult player_party::move(int newdx, int newdy)
                 } else {
                         progress = "-very slow";
                 }
-                consolePrint("Move %s%s [%d AP]\n", 
-                             directionToString(vector_to_dir(dx, dy)),
-                             progress, mv_cost);
+
+//                 consolePrint("Move %s%s [%d AP]\n", 
+//                              directionToString(vector_to_dir(dx, dy)),
+//                              progress, mv_cost);
+
 		return MovedOk;
         }
 
