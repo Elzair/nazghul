@@ -106,6 +106,8 @@
                 (list (mk-spider-egg) 10 16)
                 (list (mk-spider-egg) 11 18)
                       
+                ;; puska
+                (list (kern-mk-obj t_puska 1) 10 18)
 
                 )
                nil ; hooks

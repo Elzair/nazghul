@@ -28,6 +28,22 @@
 (define (ilya-finish-quest ilya) (set-cadr! ilya #t))
 
 ;;----------------------------------------------------------------------------
+;; Puska
+;;
+;; Puska -- ilya's stuffed horse toy -- is a quest item. Nothing special about
+;; it really but it is unique and needs its own object type. The object itself
+;; is declared in the p_abandoned_cellar constructor. But the type declaration
+;; needs to be in a file that is reloaded, so here is as good a place as any.
+;;----------------------------------------------------------------------------
+(define puska-ifc
+  (ifc '()
+       (method 'get (lambda (kobj getter)
+                      (kern-log-msg "Some child probably misses this toy!")
+                      (kern-obj-remove kobj)
+                      (kern-obj-put-into kobj getter)))))
+(mk-obj-type 't_puska "stuffed toy horse" s_toy_horse layer-item puska-ifc)
+
+;;----------------------------------------------------------------------------
 ;; Quest
 ;;
 ;; This is a single response in Ilya's conversation. I've called it our here
@@ -50,11 +66,11 @@
                     (if (kern-conv-get-yes-no? kpc)
 
                         ;; yes - ilya may have puska
-                        (if (kern-obj-in-inventory? kpc t_stuffed_animal)
+                        (if (kern-obj-has? kpc t_puska)
 
                             ;; yes - player has puska
                             (begin
-                              (kern-obj-remove-from-inventory kpc 1 k_stuffed_animal)
+                              (kern-obj-remove-from-inventory kpc t_puska 1)
                               (say knpc "There, there, puska. You're safe with me."))
 
                             ;; no - puska not in player inventory
@@ -77,13 +93,12 @@
 
         ;; no - didn't give quest yet
         (begin
-          (say knpc "I think I left Puska back at home. If you find her will you give her to me?")
+          (say knpc "Puska is my stuffed horse. But I lost him! "
+               "If you find him will you tell me?")
           (if (kern-conv-get-yes-no? kpc)
               (begin
                 (say knpc "Our farm was east and south through the woods. "
-                     "Watch out for the trolls! They throw big rocks. "
-                     "Oh, and the spiders have probably moved in by now, too. "
-                     "Stay out of their webs.")
+                     "Watch out for the trolls!")
                 (ilya-give-quest ilya))
               (begin
                 (say knpc "If you keep her I will find you when I grow up.")
@@ -177,7 +192,7 @@
                                                "She burned up one of the trolls when they attacked!")))
        (method 'dadd (lambda (knpc kpc) (say knpc "I miss daddy. He tried to fight the trolls but "
                                                "he was just a farmer.")))
-       (method 'pusk (lambda (knpc kpc) (say knpc "Puska is my stuffed horse. But now I can't find her!")))
+       (method 'pusk ilya-quest)
        (method 'home (lambda (knpc kpc) (say knpc "Our farm was north and east through the woods.")))
        (method 'spid (lambda (knpc kpc) (say knpc "There are lots of spiders in the woods around my old home.")))
        (method 'wood (lambda (knpc kpc) (say knpc "Grandpa says to stay out of the woods.")))
@@ -186,6 +201,5 @@
                                              "And say Vas Flam!")))
        (method 'greg (lambda (knpc kpc) (say knpc "He's my grandpa.")))
        (method 'join ilya-join)
-       (method 'find ilya-quest)
        ))
 
