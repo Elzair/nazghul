@@ -4,6 +4,30 @@
 ;;----------------------------------------------------------------------------
 
 
+;;----------------------------------------------------------------------------
+;; Characters
+;;----------------------------------------------------------------------------
+(kern-load "roland.scm")
+(bind 
+ (kern-mk-char 'ch_roland          ; tag
+               "Roland"            ; name
+               sp_human            ; species
+               nil                 ; occ
+               s_knight            ; sprite
+               faction-men         ; starting alignment
+               0 10 5              ; str/int/dex
+               0 0                 ; hp mod/mult
+               0 0                 ; mp mod/mult
+               30 0 9 9            ; hp/xp/mp/lvl
+               'roland-conv        ; conv
+               nil                 ; sched
+               nil                 ; special ai
+               nil                 ; container
+               nil                 ; readied
+               )
+ (roland-mk))
+
+
 ;; ----------------------------------------------------------------------------
 ;; Map
 ;; ----------------------------------------------------------------------------
@@ -74,6 +98,7 @@
                 (list (mk-bandit) 5 4)
                 (list (mk-bandit) 9 4)
                 (list (mk-bandit) 9 2)                
+                (list ch_roland  14 1)
 
                 )
                (list 'slimy-cavern-entry) ; hooks
