@@ -28,11 +28,25 @@
 #include "Field.h"
 #include "place.h"
 #include "Missile.h"
+#include "Loader.h"
 
-ArmsType::ArmsType():missile(NULL), thrown(false), field(NULL), ubiquitousAmmo(false),
-                     weight(0) 
+ArmsType::ArmsType()
 {
+        missile = NULL;
+        thrown  = false;
+        field   = NULL;
+        weight  = 0;
+        damage  = 0;
+        defend  = 0;
+        hit     = 0;
+        armor   = 0;
+        ubiquitousAmmo = false;
+}
 
+ArmsType::~ArmsType()
+{
+	if (missile != NULL)
+		delete missile;
 }
 
 bool ArmsType::isType(int classID) 
@@ -45,12 +59,6 @@ bool ArmsType::isType(int classID)
 int ArmsType::getType() 
 {
         return ARMS_TYPE_ID;
-}
-
-ArmsType::~ArmsType()
-{
-	if (missile != NULL)
-		delete missile;
 }
 
 bool ArmsType::init(char *tag, char *name, struct sprite * sprite,
@@ -220,3 +228,75 @@ int ArmsType::getWeight(void)
         return weight;
 }
 
+bool ArmsType::load(class Loader *loader)
+{
+        char *sprite_tag;
+        char *missile_tag;
+        char *field_tag;
+        class ArmsType *missile_type;
+        
+        if (!loader->getWord(&tag) ||
+            !loader->matchToken('{') ||
+            !loader->matchWord("name") ||
+            !loader->getString(&name) ||
+            !loader->matchWord("sprite") ||
+            !loader->getWord(&sprite_tag) ||
+            !loader->matchWord("damage") ||
+            !loader->getInt(&damage) ||
+            !loader->matchWord("armor") ||
+            !loader->getInt(&armor) ||
+            !loader->matchWord("slotMask") ||
+            !loader->getBitmask(&slotMask) ||
+            !loader->matchWord("numHands") ||
+            !loader->getInt(&numHands) ||
+            !loader->matchWord("range") ||
+            !loader->getInt(&range) ||
+            !loader->matchWord("missile") ||
+            !loader->getWord(&missile_tag) ||
+            !loader->matchWord("thrown") ||
+            !loader->getBool(&thrown) ||
+            !loader->matchWord("ubiquitousAmmo") ||
+            !loader->getBool(&ubiquitousAmmo) ||
+            !loader->matchWord("field") ||
+            !loader->getWord(&field_tag) ||
+            !loader->matchWord("weight") ||
+            !loader->getInt(&weight) ||
+            !loader->matchToken('}'))
+                return false;
+        
+        if (strcmp(sprite_tag, "null")) {
+                sprite = (struct sprite*)loader->lookupTag(sprite_tag, SPRITE_ID);
+                if (!sprite) {
+                        loader->setError("Error parsing ARMS: %s is not a valid SPRITE tag",
+                                         sprite_tag);
+                        free(sprite_tag);
+                        return false;
+                }
+        }
+        free(sprite_tag);
+
+        if (strcmp(missile_tag, "null")) {
+                missile_type = (class ArmsType*)loader->lookupTag(missile_tag, ARMS_TYPE_ID);
+                if (!missile_type) {
+                        loader->setError("Error parsing ARMS: %s is not a valid ARMS tag for the missile",
+                                         missile_tag);
+                        free(missile_tag);
+                        return false;
+                }
+                setMissileType(missile_type);
+        }
+        free(missile_tag);
+
+        if (strcmp(field_tag, "null")) {
+                field = (class FieldType*)loader->lookupTag(field_tag, FIELD_TYPE_ID);
+                if (!field) {
+                        loader->setError("Error parsing ARMS: %s is not a valid FIELD tag",
+                                         field_tag);
+                        free(field_tag);
+                        return false;
+                }
+        }
+        free(field_tag);
+
+        return true;
+}

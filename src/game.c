@@ -425,25 +425,6 @@ class ObjectType *game_object_type_lookup(char *tag)
         return 0;
 }
 
-static class ObjectType *parseObjectType(char *field, int typeId)
-{
-        class ObjectType *type = NULL;
-        char *tag = 0;
-        int ret;
-
-        PARSE_WORD(field, tag);
-        if (tag && strcmp("null", tag)) {
-                type = game_object_type_lookup(tag);
-                PARSE_ASSERT(type != NULL, "Invalid object type tag '%s'", tag);
-                PARSE_ASSERT(type->isType(typeId), "Object is wrong type");
-        }
-
-      cleanup:
-        if (tag)
-                free(tag);
-        return type;
-}
-
 static struct sprite *parseSprite(char *field)
 {
         struct sprite *sprite = NULL;
@@ -1916,30 +1897,30 @@ static int loadSpriteSet()
         return 0;
 }
 
-#if 0
-static int game_load_sprite_sets()
-{
-        if (!MATCH('{'))
-                return -1;
-
-        while (lexer_lex(Lexer) != '}') {
-                if (game_load_sprite_set() < 0)
-                        return -1;
-        }
-
-        return 0;
-}
-#endif
-
 #define PARSE_ERROR(exp) \
         err("line %d: expected keyword %s, got '%s'", \
             Lexer->line,exp,lexer_lexeme(Lexer)); \
         ret = -1;     \
         goto cleanup;
 
-static class ArmsType *loadArmsSubType(char *tag, char *name,
-                                       struct sprite *sprite)
+static int loadArmsType()
 {
+        class ArmsType *arms_type;
+        class Loader loader;
+
+        arms_type = new ArmsType();
+        PARSE_ASSERT(arms_type, "Memory allocation error loading ARMS\n");
+
+        loader.lexer = Lexer;
+        loader.lookupTag = lookupTag;
+        loader.advance();
+        if (!arms_type->load(&loader))
+                PARSE_ASSERT(false, "Error loading ARMS: %s\n", loader.error);
+
+        list_add(&ObjectTypes, &arms_type->list);
+
+        return 0;
+#if 0
         class ArmsType *type;
         int damage, armor, numHands, range, slotMask, thrown = 0, U =
             0, weight;
@@ -1994,151 +1975,8 @@ static class ArmsType *loadArmsSubType(char *tag, char *name,
         if (fieldTag != NULL)
                 free(fieldTag);
         return type;
-}
-
-#if 0
-static class CharacterType *loadCharacterSubType(char *tag, char *name,
-                                                 struct sprite *sprite)
-{
-        class CharacterType *type;
-        int vision_radius, speed, pmask, maxhp, baseArmourClass, baseMana;
-        int ret;
-        char *naturalWeaponTag = NULL;
-        class ArmsType *naturalWeapon;
-        int n_slots;
-        int *slot_info = NULL;
-        int numTypicalItems;
-        struct TypicalObjectInfo *typicalItems;
-        char *typicalItemsTag = NULL;
-        char *itemContainerTypeTag = NULL;
-        class ItemType *itemContainerType;
-        int hasItems;
-        int numSpells;
-        struct ready_spell *spells;
-        char *spellTypeTag = 0;
-        int trappedContainerProbability;
-        int numTypicalTraps;
-        struct TypicalObjectInfo *typicalTraps;
-        int baseStrength;
-
-        type = new class CharacterType();
-        if (!type)
-                return 0;
-
-        PARSE_INT("vision_radius", vision_radius);
-        PARSE_INT("speed", speed);
-        PARSE_INT("pmask", pmask);
-        PARSE_INT("maxhp", maxhp);
-        PARSE_INT("baseArmourClass", baseArmourClass);
-        PARSE_INT("baseMana", baseMana);
-        PARSE_INT("baseStrength", baseStrength);
-
-        // 
-        // Natural weapons
-        // 
-        PARSE_WORD("naturalWeapon", naturalWeaponTag);
-        naturalWeapon = (class ArmsType *)
-            game_object_type_lookup(naturalWeaponTag);
-        PARSE_ASSERT(naturalWeapon, "Invalid object type tag '%s'",
-                     naturalWeaponTag);
-
-        // 
-        // Slots
-        // 
-        PARSE_INT("n_slots", n_slots);
-        slot_info = new int[n_slots];
-        PARSE_ASSERT(slot_info, "Memory allocation failed");
-        MATCH('{');
-        for (int i = 0; i < n_slots; i++) {
-                PARSE_INT("mask", slot_info[i]);
-        }
-        MATCH('}');
-
-        // 
-        // Container info
-        // 
-        PARSE_INT("hasItems", hasItems);
-        PARSE_WORD("itemContainerType", itemContainerTypeTag);
-        itemContainerType = (class ItemType *)
-            game_object_type_lookup(itemContainerTypeTag);
-        PARSE_ASSERT(itemContainerType, "Invalid object type tag '%s'",
-                     itemContainerTypeTag);
-        PARSE_INT("trappedContainerProbability", trappedContainerProbability);
-        PARSE_INT("numTypicalContainerTraps", numTypicalTraps);
-        typicalTraps = new struct TypicalObjectInfo[numTypicalTraps];
-        PARSE_ASSERT(typicalTraps, "Memory allocation failed");
-        MATCH('{');
-        for (int i = 0; i < numTypicalTraps; i++) {
-                typicalTraps[i].type = parseObjectType("object_type",
-                                                       TRAP_TYPE_ID);
-                PARSE_INT("probability", typicalTraps[i].probability);
-        }
-        MATCH('}');
-
-        // 
-        // Typical Items
-        // 
-        PARSE_INT("numTypicalItems", numTypicalItems);
-        typicalItems = new struct TypicalObjectInfo[numTypicalItems];
-        PARSE_ASSERT(typicalItems, "Memory allocation failed");
-        MATCH('{');
-        for (int i = 0; i < numTypicalItems; i++) {
-                PARSE_WORD("object_type", typicalItemsTag);
-                typicalItems[i].type = (class ItemType *)
-                    game_object_type_lookup(typicalItemsTag);
-                PARSE_ASSERT(typicalItems[i].type,
-                             "Invalid object type tag '%s'", typicalItemsTag);
-                free(typicalItemsTag);
-                typicalItemsTag = 0;
-                PARSE_INT("probability", typicalItems[i].probability);
-                PARSE_INT("n_max", typicalItems[i].n_max);
-        }
-        MATCH('}');
-
-        // 
-        // Natural Spells/Abilities
-        // 
-        PARSE_INT("numSpells", numSpells);
-        spells = new struct ready_spell[numSpells];
-        PARSE_ASSERT(spells, "Memory allocation failed");
-        MATCH('{');
-        for (int i = 0; i < numSpells; i++) {
-                PARSE_WORD("spell_type", spellTypeTag);
-                spells[i].spell = (class SpellType *)
-                    game_object_type_lookup(spellTypeTag);
-                PARSE_ASSERT(spells[i].spell, "Invalid spell type tag '%s'",
-                             spellTypeTag);
-                free(spellTypeTag);
-                spellTypeTag = 0;
-        }
-        MATCH('}');
-
-        if (!type->init(tag, name, sprite, vision_radius, speed, pmask, maxhp,
-                        baseArmourClass, n_slots, slot_info,
-                        numTypicalItems, typicalItems, itemContainerType,
-                        hasItems)) {
-                delete type;
-                type = 0;
-        }
-
-        type->setNaturalWeapon(naturalWeapon);
-        type->setSpells(numSpells, spells);
-        type->setSleepSprite(parseSprite("sleepSprite"));
-        type->setBaseMana(baseMana);
-        type->setTrappedContainerInfo(trappedContainerProbability,
-                                      numTypicalTraps, typicalTraps);
-        type->setBaseStrength(baseStrength);
-
-      cleanup:
-        if (naturalWeaponTag)
-                free(naturalWeaponTag);
-        if (typicalItemsTag)
-                free(typicalItems);
-        if (spellTypeTag)
-                free(spellTypeTag);
-        return type;
-}
 #endif
+}
 
 static class ItemType *loadItemSubType(char *tag, char *name,
                                        struct sprite *sprite)
@@ -2226,57 +2064,6 @@ static class MoongateType *loadMoongateSubType(char *tag, char *name,
         return type;
 }
 
-#if 0
-static class NpcPartyType *loadNpcPartySubType(char *tag, char *name,
-                                               struct sprite *sprite)
-{
-        class NpcPartyType *type = NULL;
-        int n_groups, ret;
-        struct GroupInfo *groups;
-        char *groupTag = NULL;
-
-        type = new NpcPartyType();
-        PARSE_ASSERT(type, "Failed to allocate new NpcPartyType");
-
-        PARSE_INT("n_groups", n_groups);
-        groups = new struct GroupInfo[n_groups];
-        PARSE_ASSERT(groups != NULL, "Failed to allocate GroupInfo");
-
-        MATCH('{');
-        for (int i = 0; i < n_groups; i++) {
-
-                PARSE_WORD("object_type", groupTag);
-                groups[i].type =
-                    (class CharacterType *) game_object_type_lookup(groupTag);
-                PARSE_ASSERT(groups[i].type, "Invalid object type tag '%s'",
-                             groupTag);
-
-                free(groupTag);
-                groupTag = 0;
-
-                PARSE_INT("n_max", groups[i].n_max);
-        }
-        MATCH('}');
-
-        if (!type->init(tag, name, sprite, n_groups, groups))
-                goto cleanup;
-
-        goto done;
-
-      cleanup:
-        if (groupTag)
-                free(groupTag);
-        if (groups)
-                delete groups;
-        if (type) {
-                delete type;
-                type = NULL;
-        }
-      done:
-        return type;
-}
-#endif // 0
-
 static class FieldType *loadFieldSubType(char *tag, char *name,
                                          struct sprite *sprite)
 {
@@ -2297,32 +2084,6 @@ static class FieldType *loadFieldSubType(char *tag, char *name,
       cleanup:
         return type;
 }
-
-#if 0
-static class SpellType *loadSpellSubType(char *tag, char *name,
-                                         struct sprite *sprite)
-{
-        class SpellType *type;
-        int effect, ret, range, manaCost, val;
-        class ArmsType *missile;
-
-        type = new class SpellType();
-        PARSE_ASSERT(type != NULL, "Failed to allocate SpellType");
-        type->init(tag, name, null_layer, sprite);
-        PARSE_INT("manaCost", manaCost);
-        type->setManaCost(manaCost);
-        PARSE_INT("range", range);
-        type->setRange(range);
-        missile = (class ArmsType *) parseObjectType("missile", ARMS_TYPE_ID);
-        type->setMissileType(missile);
-        PARSE_INT("effect", effect);
-        type->setEffect(effect);
-        PARSE_INT("amount", val);
-        type->setAmount(val);
-      cleanup:
-        return type;
-}
-#endif // 0
 
 static class TrapType *loadTrapSubType(char *tag, char *name,
                                        struct sprite *sprite)
@@ -2357,9 +2118,7 @@ static class ObjectType *loadObjectType()
         sprite = parseSprite("sprite");
         PARSE_WORD("subtype", subtype_tag);
 
-        if (strcmp(subtype_tag, "arms") == 0)
-                ot = loadArmsSubType(tag, name, sprite);
-        else if (strcmp(subtype_tag, "item") == 0)
+        if (strcmp(subtype_tag, "item") == 0)
                 ot = loadItemSubType(tag, name, sprite);
         else if (strcmp(subtype_tag, "moongate") == 0)
                 ot = loadMoongateSubType(tag, name, sprite);
@@ -3228,6 +2987,7 @@ static struct keyword keywords[] = {
         {"FORMATION", loadFormation, false},
         {"COMBAT", loadCombat, false},
         {"CONNECT", loadConnectAux, false},
+        {"ARMS", loadArmsType, false},
 };
 
 #define NUM_KEYWORDS (sizeof(keywords)/sizeof(keywords[0]))

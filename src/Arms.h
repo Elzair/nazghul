@@ -58,11 +58,14 @@ class ArmsType:public ObjectType {
 	virtual bool ammoIsUbiquitous();
 	virtual void setWeight(int val);
 	virtual int getWeight(void);
+	virtual bool load(class Loader * loader);        
 
       protected:
 	int slotMask;
-	int damage;
-	int armor;
+	int damage;   // damage done when hitting
+	int armor;    // damage reduced when hit
+        int hit;      // chance to hit modifier
+        int defend;   // chance to defend modifier
 	int numHands;
 	int range;
 	class Missile *missile;

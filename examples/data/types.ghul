@@ -103,13 +103,12 @@ CURSOR ls_whirlpool;  // From ss_u4
                   _damage, _armor,   _slot,   _hands, \
                   _range,  _missile, _thrown, _uAmmo, \
                   _field,  _weight)                   \
-    _tag {                      \
+    ARMS _tag {                      \
         name           _name    \
         sprite         _sprite  \
-        subtype        arms     \
         damage         _damage  \
         armor          _armor   \
-        slotMask       _slot    \
+        slotMask       (_slot)  \
         numHands       _hands   \
         range          _range   \
         missile        _missile \
@@ -119,18 +118,21 @@ CURSOR ls_whirlpool;  // From ss_u4
         weight         _weight  \
     }
 
+object_types {
+#include "types/magical_fields.ghul"  // Must be before spells & arms
+}
+
+#include "types/projectiles.ghul"     // Must be before weapons and spells
+#include "types/weapons.ghul"         // 
+#include "types/worn_items.ghul"      // 
 
 object_types {
   // This is needed later for CROSSHAIR
   GENERIC_TYPE(t_cursor, "cursor", s_crosshair, LAYER_CURSOR);
 
 #include "types/portal_types.ghul"    // Must be before places
-#include "types/magical_fields.ghul"  // Must be before spells
 #include "types/containers.ghul"      // Must be before occupations
 #include "types/chest_traps.ghul"     // Must be before occupations
-#include "types/projectiles.ghul"     // Must be before weapons and spells
-#include "types/weapons.ghul"         // 
-#include "types/worn_items.ghul"      // 
 #include "types/useable_items.ghul"   // 
 #include "types/readable_items.ghul"  // 
 #include "types/furniture.ghul"
