@@ -687,8 +687,10 @@ bool Party::addMember(class Character * c)
         /* Make a new list node for the member list */
         node = node_new(c);
 
-        /* Link the new member in */
-        node_add(&members, node);
+        /* Link the new member in at the END of the list (otherwise, in the
+         * case of the player party, the order shown in status gets screwed
+         * up) */
+        node_add_tail(&members, node);
 
         /* Point the member back to its node (for fast removal) */
         c->plnode = node;

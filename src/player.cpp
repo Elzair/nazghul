@@ -980,6 +980,13 @@ bool player_party::addMember(class Character * c)
                 break;
         }
 
+        // Call statusSetMode() to force it to re-evaluate the necessary screen
+        // size for showing the party.
+        statusSetMode(ShowParty);
+
+        // Force a repaint on the status window.
+        statusRepaint();
+
 	return true;
 
 }
