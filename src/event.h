@@ -61,16 +61,26 @@ extern "C" {
 	};
 
 
-// SAM: Using this typedef below, and in play.c
-typedef void (*v_funcpointer_ii) (int x, int y);
+  // SAM: Using this typedef below, and in play.[ch]
+  typedef void (*v_funcpointer_ii) (int x, int y);
+  
+  struct cursor_movement_keyhandler {
+    // This struct is put into the 'data' field of a 
+    // 'struct KeyHandler'.
+    // It is used by movecursor() and movecursor_and_do().
+    bool             abort;
+    v_funcpointer_ii each_point_func;
+    v_funcpointer_ii each_target_func;
+  };
 
   struct KeyHandler {
     struct list list;
     bool(*fx) (struct KeyHandler * handler, int key);
-    void *data;
-    // SAM: I hope this is not a butchery...
-    v_funcpointer_ii each_point_func;
-    v_funcpointer_ii each_target_func;
+    void *data;  
+    // The data field should always be filled with a struct, 
+    // rather than a scalar such as bool or int,
+    // to facilitate expansions to two or more subfields
+    // For example, the 'struct cursor_movement_keyhandler' above.
   };
 
 	struct QuitHandler {

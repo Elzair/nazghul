@@ -1794,8 +1794,8 @@ static bool myPcCommandHandler(struct KeyHandler *kh, int key)
 		ret = cmdHandle(pc);
 		break;
 	case 'l':
-                // SAM: Changing (L)ook command 
-                // from "look at 1 tile" to a "Look Mode"
+        // SAM: Changing (L)ook command 
+        // from "look at 1 tile" to a "Look Mode"
 		ret = cmdLook(pc->getX(), pc->getY());
 		break;
 	case 'o':
@@ -1811,8 +1811,8 @@ static bool myPcCommandHandler(struct KeyHandler *kh, int key)
 		ret = cmdUse(pc);
 		break;
         case 'x':
-                ret = cmdXamine(pc); // SAM: 1st step towards new (L)ook cmd...
-                break;
+        ret = cmdXamine(pc); // SAM: 1st step towards new (L)ook cmd...
+        break;
 	case 'z':
 		ret = cmdZtats(pc);
 		break;

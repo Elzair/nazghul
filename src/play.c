@@ -450,70 +450,73 @@ bool scroller(struct KeyHandler * kh, int key)
 
 bool movecursor(struct KeyHandler * kh, int key)
 {
-	if (key == '\n' || key == SDLK_SPACE || key == SDLK_RETURN) {
-		return true;	// Done (target selected)
-	}
-
-	if (keyIsDirection(key)) {
-		int dir = keyToDirection(key);
-		Cursor->move(directionToDx(dir), directionToDy(dir));
-		mapUpdate(0);
-		return false;	// Keep on keyhandling
-	}
-
-	if (key == SDLK_ESCAPE) {
-		*((bool *) kh->data) = true;
-		return true;	// Done (abort)
-	}
-
-	return false;		// Keep on keyhandling
-}				// movecursor()
+  // A UI mode in which the user can move the cursor 
+  // with ARROW keys, select a target with 
+  // (ENTER | RETURN | SPACE), or cancel with ESCAPE.
+  struct cursor_movement_keyhandler * data;
+  assert(kh);
+  data = (struct cursor_movement_keyhandler *) kh->data;
+  
+  if (key == '\n' || key == SDLK_SPACE || key == SDLK_RETURN) {
+    return true;  // Done (target selected)
+  }
+  
+  if (keyIsDirection(key)) {
+    int dir = keyToDirection(key);
+    Cursor->move(directionToDx(dir), directionToDy(dir));
+    mapUpdate(0);
+    return false;  // Keep on keyhandling
+  }
+  
+  if (key == SDLK_ESCAPE) {
+    data->abort = true;
+    return true;  // Done (abort)
+  }
+  
+  return false;  // Keep on keyhandling
+} // movecursor()
 
 bool movecursor_and_do(struct KeyHandler * kh, int key)
 {
-	// As movecursor(), but call kh->each_point_func()
-	// for each cursor move, and kh->each_target_func()
-	// for each point selected with (ENTER, SPACE, RETURN).
-	// Unlike movecursor(), multiple targets can be selected.
-	// We expect that eventually the user will exit 
-	// this UI mode with ESCAPE.
-	// 
-	// It might be better for this functionality to be added to 
-	// eventHandle(), if this UI idiom is common.
-	// (In a sense, this has been done now, with the changes
-	// to struct KeyHandler.)
-	// 
-	// Right now, I am just hoping that I have not butchered
-	// the KeyHandler API...Whoo-Hoo! It works! It is cool!
-
-	if (key == '\n' || key == SDLK_SPACE || key == SDLK_RETURN) {
-		int x = Cursor->getX();
-		int y = Cursor->getY();
-		if (kh->each_target_func)
-			kh->each_target_func(x, y);
-		return false;	// Keep on keyhandling
-	}
-
-	if (keyIsDirection(key)) {
-		int dir = keyToDirection(key);
-		Cursor->move(directionToDx(dir), directionToDy(dir));
-		mapUpdate(0);
-		int x = Cursor->getX();
-		int y = Cursor->getY();
-		if (kh->each_point_func)
-			kh->each_point_func(x, y);
-		return false;	// Keep on keyhandling
-	}
-
-	if (key == SDLK_ESCAPE) {
-		// SAM: Hmmm...how about func_to_call_on_abort() ???
-		*((bool *) kh->data) = true;
-		return true;	// Done (abort)
-	}
-	// SAM: And perhaps func_to_call_for_other_keys() ?
-	// Maybe not...
-	return false;		// Keep on keyhandling
-}				// movecursor_and_do()
+  // As movecursor(), but call kh->each_point_func()
+  // for each cursor move, and kh->each_target_func()
+  // for each point selected with (ENTER, SPACE, RETURN).
+  // 
+  // Unlike movecursor(), multiple targets can be selected.
+  // We expect that eventually the user will exit 
+  // this UI mode with ESCAPE.
+  // 
+  // Also unlike movecursor(), we don't return the (last) target 
+  // selected, as the ESC to exit this UI mode stomps on that info.
+  struct cursor_movement_keyhandler * data;
+  assert(kh);
+  data = (struct cursor_movement_keyhandler *) kh->data;
+  
+  if (key == '\n' || key == SDLK_SPACE || key == SDLK_RETURN) {
+    int x = Cursor->getX();
+    int y = Cursor->getY();
+    if (data->each_target_func)
+      data->each_target_func(x, y);
+    return false;  // Keep on keyhandling
+  }
+  
+  if (keyIsDirection(key)) {
+    int dir = keyToDirection(key);
+    Cursor->move(directionToDx(dir), directionToDy(dir));
+    mapUpdate(0);
+    int x = Cursor->getX();
+    int y = Cursor->getY();
+    if (data->each_point_func)
+      data->each_point_func(x, y);
+    return false;  // Keep on keyhandling
+  }
+  
+  if (key == SDLK_ESCAPE) {
+    data->abort = true;
+    return true;  // Done (abort)
+  }
+  return false;  // Keep on keyhandling
+} // movecursor_and_do()
 
 struct inv_entry *select_item(void)
 {
@@ -958,81 +961,91 @@ bool cmdReady(class Character * pc)
 
 int select_target(int ox, int oy, int *x, int *y, int range)
 {
-	Cursor->setRange(range);
-	Cursor->setOrigin(ox, oy);
-	Cursor->relocate(Place, *x, *y);	// Remember prev target, if any
-	mapUpdate(0);
-
-	bool abort = false;
-	struct KeyHandler kh;
-	kh.fx = movecursor;
-	kh.data = &abort;
-	eventPushKeyHandler(&kh);
-	cmdwin_print("<target>");
-	eventHandle();
-	cmdwin_backspace(strlen("<target>"));
-	eventPopKeyHandler();
-
-	*x = Cursor->getX();
-	*y = Cursor->getY();
-	Cursor->remove();
-	mapUpdate(0);
-
-	if (abort) {
-		cmdwin_print("none!");
-		return -1;	// Aborted, no target
-	}
-
-	return 0;		// Target has been selected, (x,y) contain
-				// where
-}				// select_target()
+  Cursor->setRange(range);
+  Cursor->setOrigin(ox, oy);
+  Cursor->relocate(Place, *x, *y);  // Remember prev target, if any
+  mapUpdate(0);
+  
+  struct cursor_movement_keyhandler data;
+  data.each_point_func  = NULL;
+  data.each_target_func = NULL;
+  data.abort            = false;
+  struct KeyHandler kh;
+  kh.fx   = movecursor;
+  kh.data = &data;
+  
+  eventPushKeyHandler(&kh);
+  cmdwin_print("<target>");
+  eventHandle();
+  cmdwin_backspace(strlen("<target>"));
+  eventPopKeyHandler();
+  
+  *x = Cursor->getX();
+  *y = Cursor->getY();
+  Cursor->remove();
+  mapUpdate(0);
+  
+  struct cursor_movement_keyhandler * data_ret;
+  data_ret = (struct cursor_movement_keyhandler *) kh.data;
+  if (data_ret->abort) {
+    cmdwin_print("none!");
+    return -1;  // Aborted, no target
+  }
+  
+  // Target has been selected, (x,y) contain where
+  return 0;  
+} // select_target()
 
 int select_target_with_doing(int ox, int oy, int *x, int *y,
-			     int range,
-			     v_funcpointer_ii each_point_func,
-			     v_funcpointer_ii each_target_func)
+                             int range,
+                             v_funcpointer_ii each_point_func,
+                             v_funcpointer_ii each_target_func)
 {
-	// SAM: 
-	// As select_target(), but each_point_func() 
-	// will be called at each point cursored over,
-	// and each_target_func() will be called at each point
-	// selected as a target.
-	// 
-	// Eventually, the user will abort with ESC.
-	// 
-	// SAM: It might be nice to return the last target,
-	// in case our caller wants it, but it seems that
-	// the ESC abort stomps on it.
-	Cursor->setRange(range);
-	Cursor->setOrigin(ox, oy);
-	Cursor->relocate(Place, *x, *y);	// Remember prev target, if any
-	mapUpdate(0);
-
-	bool abort = false;
-	struct KeyHandler kh;
-	kh.fx = movecursor_and_do;
-	kh.data = &abort;
-	kh.each_point_func = each_point_func;
-	kh.each_target_func = each_target_func;
-	eventPushKeyHandler(&kh);
-	cmdwin_print("<target>");
-	eventHandle();
-	cmdwin_backspace(strlen("<target>"));
-	eventPopKeyHandler();
-
-	*x = Cursor->getX();
-	*y = Cursor->getY();
-	Cursor->remove();
-	mapUpdate(0);
-
-	if (abort) {
-		cmdwin_print("none!");
-		return -1;	// Aborted, no target
-	}
-
-	return 0;		// Target has been selected, (x,y) contain
-				// where
-}				// select_target_with_doing()
+  // SAM: 
+  // As select_target(), but each_point_func() 
+  // will be called at each point cursored over,
+  // and each_target_func() will be called at each point
+  // selected as a target.
+  // 
+  // Eventually, the user will abort with ESC.
+  // 
+  // SAM: It might be nice to return the last target,
+  // in case our caller wants it, but it seems that
+  // the ESC abort stomps on it.
+  Cursor->setRange(range);
+  Cursor->setOrigin(ox, oy);
+  Cursor->relocate(Place, *x, *y);  // Remember prev target, if any
+  mapUpdate(0);
+  
+  struct cursor_movement_keyhandler data;
+  data.each_point_func  = each_point_func;
+  data.each_target_func = each_target_func;
+  data.abort            = false;
+  struct KeyHandler kh;
+  kh.fx   = movecursor_and_do;
+  kh.data = &data;
+  
+  eventPushKeyHandler(&kh);
+  cmdwin_print("<target>");
+  eventHandle();
+  cmdwin_backspace(strlen("<target>"));
+  eventPopKeyHandler();
+  
+  *x = Cursor->getX();
+  *y = Cursor->getY();
+  Cursor->remove();
+  mapUpdate(0);
+  
+  struct cursor_movement_keyhandler * data_ret;
+  data_ret = (struct cursor_movement_keyhandler *) kh.data;
+  if (data_ret->abort) {
+    cmdwin_print("none!");
+    return -1;  // Aborted, no target
+  }
+  
+  // Target has been selected, (x,y) contain where
+  return 0;
+} // select_target_with_doing()
 
 bool cmdHandle(class Character * pc)
 {
