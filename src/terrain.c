@@ -26,22 +26,34 @@
 #include <stdlib.h>
 
 struct terrain *terrain_create(char *tag,
-			       char *name,
-			       unsigned int pmask,
-			       struct sprite *sprite,
-			       char glyph, int id, unsigned char alpha)
+                               char *name,
+                               unsigned int pmask,
+                               struct sprite *sprite,
+                               char glyph, 
+                               int  id, 
+                               unsigned char alpha)
 {
 	struct terrain *terrain;
 
 	CREATE(terrain, struct terrain, 0);
 
-	terrain->tag = strdup(tag);
-	terrain->name = strdup(name);
-	terrain->pmask = pmask;
+	terrain->tag    = strdup(tag);
+	terrain->name   = strdup(name);
+	terrain->pmask  = pmask;
 	terrain->sprite = sprite;
-	terrain->glyph = glyph;
-	terrain->id = id;
-	terrain->alpha = alpha;
+	terrain->glyph  = glyph;
+	terrain->id     = id;
+	terrain->alpha  = alpha;
+
+    // SAM: I notice that some fields are not initialized:
+    //      How/where do these get set?
+    //      Investigation finds these:
+    //   list           // game.c list_add(&Terrains, &terrain->list);
+    //   combat_map     // game.c terrain_combat_map(terrain) = terrain_map;
+    //   movement_cost  // game.c PARSE_INT("movement_cost", terrain->movement_cost);
+    //   effects        // game.c PARSE_INT("effects", terrain->effects);
+    //   light          // game.c PARSE_INT("light", terrain->light);
+    //   color          // game.c terrain->color = screenMapRGB(red, grn, blu);
 
 	return terrain;
 }
