@@ -142,6 +142,12 @@
                  (kern-obj-put-at (kern-mk-obj F_fire 1) 
                                   (mk-loc kplace x y))))))
 
+(define thrown-boulder-ifc
+  (ifc obj-ifc
+       (method 'hit-loc 
+               (lambda (kmissile kplace x y)
+                 (kern-place-set-terrain (mk-loc kplace x y) t_boulder)))))
+
 (define thrown-arms-types
   (list
    ;;     ====================================================================================================================
@@ -149,7 +155,7 @@
    ;;     ====================================================================================================================
    (list  't_oil            "flaming oil"   s_kg_potion_red_f33_2  "-1"     "1d6"    "-2"     slot-weapon   1      4     flaming-oil-ifc)
    (list  't_spear          "spear"         s_spear_1              "-1"     "1d8"    "+1"     slot-weapon   2      4     obj-ifc)
-   (list  't_thrown_boulder "boulder"       s_boulder              "-2"     "2d6"    "-2"     slot-weapon   2      5     obj-ifc)
+   (list  't_thrown_boulder "boulder"       s_boulder              "-2"     "2d6"    "-2"     slot-weapon   2      5     thrown-boulder-ifc)
    ))
 
 (define melee-arms-types
