@@ -1,12 +1,12 @@
 ;; portals.scm
 
 
-;; A portal is simply a Scheme list of (place x y).
+;; A portal destination is simply a Scheme list of (place x y).
 ;; 
 ;; Here are some convenience functions for:
-;; - creating a portal:    portal-mk
-;; - inquiring the place:  portal-place
-;; - inquiring the (x y):  portal-coords
+;; - creating a destination:  portal-mk
+;; - inquiring the place:     portal-place
+;; - inquiring the (x y):     portal-coords
 (define (portal-mk     place x y) (list place x y))
 (define (portal-place  portal)    (safe-eval (car portal)))
 (define (portal-coords portal)    (cons (portal-place portal) (cdr portal)))
@@ -80,10 +80,12 @@
 ;;     Instances of such objects are placed on the appropriate map on the "mechanisms" layer.
 ;;     These object "types" specify a name/label, sprite, and a portal "interface" behavior.
 ;;     Instances are created by "portal constructor" functions such as those below.
-(mk-obj-type 't_ladder_down "ladder leading down" s_ladder_down layer-mechanism portal-ifc)
-(mk-obj-type 't_ladder_up   "ladder leading up"   s_ladder_up   layer-mechanism portal-ifc)
-(mk-obj-type 't_trap_door   "trap door"           '()           layer-mechanism auto-portal-ifc)
-(mk-obj-type 't_teleporter  "teleporter"          s_floor_plate layer-mechanism prompting-auto-portal-ifc)
+(mk-obj-type 't_ladder_down "ladder leading down" s_ladder_down   layer-mechanism portal-ifc)
+(mk-obj-type 't_ladder_up   "ladder leading up"   s_ladder_up     layer-mechanism portal-ifc)
+(mk-obj-type 't_trap_door   "trap door"           '()             layer-mechanism auto-portal-ifc)
+(mk-obj-type 't_teleporter  "teleporter"          s_floor_plate   layer-mechanism prompting-auto-portal-ifc)
+(mk-obj-type 't_perm_gate   "a magical gate"      s_moongate_full layer-mechanism auto-portal-ifc)
+    ; TODO: Get differently-colored moongate sprites for different purposes...
 
 ;; mk-portal -- generic helper constructor
 (define (mk-portal type place-tag x y)
@@ -97,3 +99,4 @@
 (define (mk-ladder-up   place-tag x y) (mk-portal t_ladder_up   place-tag x y))
 (define (mk-trap-door   place-tag x y) (mk-portal t_trap_door   place-tag x y))
 (define (mk-teleporter  place-tag x y) (mk-portal t_teleporter  place-tag x y))
+(define (mk-perm-gate   place-tag x y) (mk-portal t_perm_gate   place-tag x y))
