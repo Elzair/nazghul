@@ -33,13 +33,26 @@
 #define readable_items_ghul
 
 
-ITEM_TYPE(t_short_scroll, "scroll", s_scroll1,
-          EFFECT_NONE, 0, 0, TARG_NONE, 0, 0,
+#define DOCUMENT_TYPE(_tag, _name, _sprite, _msg) \
+    _tag {                      \
+        name       _name        \
+        sprite     _sprite      \
+        subtype    item         \
+        effect     EFFECT_NONE  \
+        amount     0            \
+        duration   0            \
+        target     TARG_NONE    \
+        food       0            \
+        consumable 0            \
+        message    _msg         \
+    }                               
+
+
+DOCUMENT_TYPE(t_short_scroll, "scroll", s_scroll1,
           "This is a short document.");
 
-ITEM_TYPE(t_users_guide, "The Users Guide to Nazghul", s_scroll1,
-          EFFECT_NONE, 0, 0, TARG_NONE, 0, 0,
-          "                                PLAYER COMMANDS
+DOCUMENT_TYPE(t_users_guide, "The Users Guide to Nazghul", s_scroll1,
+          "PLAYER COMMANDS
 
 General syntax:
 
