@@ -28,7 +28,7 @@ extern "C" {
 
 #include "list.h"
 
-#include <SDL/SDL.h>
+#include <SDL.h>
 
 #define SPRITE_DEF_FACING -1
 

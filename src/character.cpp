@@ -1665,6 +1665,10 @@ bool Character::canSee(class Object *obj)
                 obj->isVisible());
 }
 
+#ifndef offsetof
+#define offsetof(s,f) (unsigned long)(((s*)0)->f)
+#endif
+
 void Character::ai_select_target(void)
 {
         struct list *head;
@@ -1680,7 +1684,7 @@ void Character::ai_select_target(void)
         /* Walk the list, looking for the nearest hostile character. */
         list_for_each(head, elem) {
                 
-                obj = outcast(elem, class Object, turn_list);
+	  obj = outcast(elem, class Object, turn_list);
 
                 /* Skip invalid targets */
                 if (obj == this ||
@@ -2109,6 +2113,9 @@ static bool character_key_handler(struct KeyHandler *kh, int key, int keymod)
                         case Character::CantRendezvous:
                                 consolePrint("Party can't rendezvous!\n");
                                 break;
+			case Character::CouldNotSwitchOccupants:
+			  consolePrint("Can't switch!\n");
+			  break;
                         }
 
                         mapCenterView(character->getView(), character->getX(), character->getY());
@@ -2364,6 +2371,9 @@ bool Character::gotoSpot(int mx, int my)
                 case Character::OffMap:
                 case Character::WasOccupied:
                 case Character::WasImpassable:
+		case Character::NotFollowMode:
+		case Character::CouldNotSwitchOccupants:
+		case Character::CantRendezvous:
                         ret = false;
                         break;
                 }                        

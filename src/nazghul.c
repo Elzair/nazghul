@@ -42,9 +42,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <SDL/SDL.h>
-#include <SDL/SDL_image.h>
-#include <SDL/SDL_thread.h>
+#include <SDL.h>
+#include <SDL_image.h>
+#include <SDL_thread.h>
 #include <unistd.h>
 #include <getopt.h>
 

@@ -24,7 +24,6 @@
 #include "screen.h"
 #include "common.h"
 
-#include <SDL/SDL.h>
 #include <assert.h>
 
 static struct {

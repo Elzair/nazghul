@@ -28,7 +28,7 @@ extern "C" {
 
 #include "list.h"
 
-#include <SDL/SDL.h>
+#include <SDL.h>
 
 	struct images {
 		struct list list;

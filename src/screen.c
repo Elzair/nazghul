@@ -31,7 +31,7 @@
 #include <stdarg.h>
 #include <assert.h>
 
-#include <SDL/SDL_image.h>
+#include <SDL_image.h>
 
 #define N_SHADERS 3
 #define MAX_SHADER (N_SHADERS - 1)

@@ -26,7 +26,7 @@
 extern "C" {
 #endif
 
-#include <SDL/SDL.h>
+#include <SDL.h>
 
 #define MAX_SHADE 0
 #define MIN_SHADE 255

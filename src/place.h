@@ -36,7 +36,7 @@ extern "C" {
 #include "common.h"
 #include "sky.h"
 
-#include <SDL/SDL.h>
+#include <SDL.h>
 
 #define place_w(p) ((p)->terrain_map->w)
 #define place_h(p) ((p)->terrain_map->h)

@@ -30,7 +30,7 @@
 #include "Missile.h"
 #include "object.h"
 
-#include <SDL/SDL.h>
+#include <SDL.h>
 #include <math.h>
 
 #define MVIEW_W  (MAP_TILE_W * 2 + 1)

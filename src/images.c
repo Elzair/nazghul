@@ -24,7 +24,7 @@
 #include "Loader.h"
 #include "screen.h"
 
-#include <SDL/SDL_image.h>
+#include <SDL_image.h>
 
 void images_destroy(struct images *images)
 {

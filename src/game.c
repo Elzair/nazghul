@@ -60,11 +60,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>              // isspace()
-#include <SDL/SDL_image.h>
+#include <SDL_image.h>
 #include <unistd.h>
 #include <sys/mman.h>
 #include <stdarg.h>
-#include <SDL/SDL.h>            // for SDL_GetTicks()
+#include <SDL.h>            // for SDL_GetTicks()
 
 // Prototypes of functions declared 'static':
 void *lookupTag(char *tag, int tid);

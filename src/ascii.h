@@ -22,7 +22,7 @@
 #ifndef ascii_h
 #define ascii_h
 
-#include <SDL/SDL.h>
+#include <SDL.h>
 
 #ifdef __cplusplus
 extern "C" {
