@@ -4,6 +4,8 @@ SUBDIRS = src examples
 
 DIST_SUBDIRS = $(SUBDIRS)
 
+EXTRA_DIST = doc
+
 # Rule to build tar-gzipped distribution package
 $(PACKAGE)-$(VERSION).tar.gz: dist
 
