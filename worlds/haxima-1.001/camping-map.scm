@@ -40,3 +40,5 @@
         (let ((kparty (choose-npc-party))) 
           (if (not (null? kparty))
               (kern-ambush-while-camping kparty kplace))))))
+
+(kern-set-camping-proc camping-proc)

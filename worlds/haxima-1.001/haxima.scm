@@ -188,4 +188,3 @@
 ;;----------------------------------------------------------------------------
 ;(kern-set-start-proc start-scene)
 (kern-set-start-proc simple-start)
-(kern-set-camping-proc camping-proc)
