@@ -643,7 +643,7 @@ SPELL spell_protection_field {
 
 SPELL spell_protection {
   name     "In Sanct (protection)";
-  sprite   s_shield2;
+  sprite   s_large_shield;
   code     IS;
   cost     SPELL_COST_LEVEL_4;
   range    4;

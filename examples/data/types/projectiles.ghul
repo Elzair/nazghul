@@ -37,52 +37,25 @@
 #ifndef projectiles_ghul
 #define projectiles_ghul
 
-#define PROJECTILE_TYPE(_tag, _name, _sprite, _field, _weight) \
-    ARMS_TYPE(_tag, _name, _sprite, 0, 0, NO_SLOT, 0, 0, \
-              null, 0, 0, _field, _weight)
-#if 0
-    _tag {                      \
-        name           _name    \
-        sprite         _sprite  \
-        subtype        arms     \
-        attackValue    0        \
-        defendValue    0        \
-        slotMask       NO_SLOT  \
-        numHands       0        \
-        range          0        \
-        missile        null     \
-        thrown         0        \
-        ubiquitousAmmo 0        \
-        field          _field   \
-        weight         _weight  \
-    }
-#endif
-
-// SAM: This macro seems unused...(moved it from types.ghul)
-#define AMMO_TYPE(_tag, _name, _sprite) \
-    _tag {              \
-        name    _name   \
-        sprite  _sprite \
-        subtype ammo    \
-        }
-
+#define PROJECTILE_TYPE(_tag, _name, _sprite, _field)                \
+    ARMS_TYPE(_tag, _name, _sprite, 0, 0, 0, 0, 0, 0, NO_SLOT, 0, 0, \
+              null, 0, 0, _field, 0)
 
 // Temporary Missiles (for spells and such)
-//PROJECTILE_TYPE(M_illum,    "glowing mote",   s_magic,        F_illum,  0);
-PROJECTILE_TYPE(M_illum,    "glowing mote",   null,        F_illum,  0);
-PROJECTILE_TYPE(M_fire,     "fire missile",   s_field_fire,   F_fire,   0);
-PROJECTILE_TYPE(M_protect,  "protect missile",s_field_energy, F_protect,0);
-PROJECTILE_TYPE(M_poison,   "poison missile", s_field_poison, F_poison, 0);
-PROJECTILE_TYPE(M_sleep,    "sleep missile",  s_field_sleep,  F_sleep,  0);
-PROJECTILE_TYPE(M_fireball, "fire ball",      s_lava,         null,     0);
+PROJECTILE_TYPE(M_illum,    "glowing mote",   null,           F_illum);
+PROJECTILE_TYPE(M_fire,     "fire missile",   s_field_fire,   F_fire);
+PROJECTILE_TYPE(M_protect,  "protect missile",s_field_energy, F_protect);
+PROJECTILE_TYPE(M_poison,   "poison missile", s_field_poison, F_poison);
+PROJECTILE_TYPE(M_sleep,    "sleep missile",  s_field_sleep,  F_sleep);
+PROJECTILE_TYPE(M_fireball, "fire ball",      s_lava,         null);
 
 // Ammunition Objects (can be found in inventory)
-PROJECTILE_TYPE(t_arrow,    "arrow",         s_arrow,        null, 1);
-PROJECTILE_TYPE(t_bolt,     "bolt",          s_bolt,         null, 1);
-PROJECTILE_TYPE(t_rock,     "rock",           s_boulder,      null, 1);
+PROJECTILE_TYPE(t_arrow,    "arrow",         s_arrow,        null);
+PROJECTILE_TYPE(t_bolt,     "bolt",          s_bolt,         null);
+PROJECTILE_TYPE(t_rock,     "rock",          s_boulder,      null);
 
 // Ordnance Ammunition (for vehicle weapons)
-PROJECTILE_TYPE(t_cannonball, "cannonball",   s_magic,        null, 50);
+PROJECTILE_TYPE(t_cannonball, "cannonball",  s_magic,        null);
 
 #endif // projectiles_ghul
 

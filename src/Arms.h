@@ -35,9 +35,7 @@ class ArmsType:public ObjectType {
 
         ArmsType();
 	virtual ~ ArmsType();
-	virtual bool init(char *tag, char *name, struct sprite * sprite,
-			  int slotMask, int damage, int defendValue,
-			  int numHands, int range);
+
 	virtual int getSlotMask();
 	virtual int getDamage();
 	virtual int getArmor();
@@ -62,8 +60,8 @@ class ArmsType:public ObjectType {
 
       protected:
 	int slotMask;
-	int damage;   // damage done when hitting
-	int armor;    // damage reduced when hit
+	int damage[2];   // damage done when hitting
+	int armor[2];    // damage reduced when hit
         int hit;      // chance to hit modifier
         int defend;   // chance to defend modifier
 	int numHands;

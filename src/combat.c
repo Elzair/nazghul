@@ -1885,7 +1885,7 @@ static bool myFollow(class Character * pc)
 static bool myPcCommandHandler(struct KeyHandler *kh, int key, int keymod)
 {
         int dir;
-        bool ret;
+        bool ret = false;
         class Character *pc = (class Character *) kh->data;
         static int unshift[] = { KEY_NORTH, KEY_SOUTH, KEY_EAST, KEY_WEST };
 

@@ -45,15 +45,37 @@
 // ========================================================
 // item        | to-hit | damage | defense | armor  | range
 // ========================================================
+// --------------------------------------------------------
+// natural
+// --------------------------------------------------------
+// hands       | +2     | d4     | +2      | +0     | 1
+// hooves      | +0     | d8+4   | +0      | +0     | 2
+// teeth       | +2     | d4+1   | +0      | +0     | 1
+// stinger     | +1     | d8     | -1      | +0     | 2
+// acid spray  | -1     | d8     | +0      | +0     | 3
+// --------------------------------------------------------
+// melee
+// --------------------------------------------------------
 // club        | +0     | d6+2   | +0      | +0     | 1
 // short sword | +1     | d6+2   | +1      | +0     | 1
+// mace        | +1     | d4+4   | +0      | +0     | 1
+// hand axe    | +0     | d4+3   | +0      | +0     | 1
 // long sword  | +2     | d8+2   | +1      | +0     | 2
 // dagger      | +3     | d6     | +2      | +0     | 1
 // 2h sword    | +1     | d12+4  | -1      | +0     | 2
 // 2h club     | +0     | d10+5  | -2      | +0     | 2
+// --------------------------------------------------------
+// projectile
+// --------------------------------------------------------
+// sling       | -1     | d4     | +0      | +0     | 5
 // short bow   | +1     | d6     | -2      | +0     | 6
-// long bow    | +1     | d8     | -2      | +0     | 9
+// long bow    | +1     | d8     | -3      | +0     | 9
+// crossbow    | +1     | d6+2   | -3      | +0     | 8
+// --------------------------------------------------------
+// thrown
+// --------------------------------------------------------
 // flaming oil | +0     | d6     | -2      | +0     | 4
+// spear       | -1     | d6     | +1      | +0     | 4
 // --------------------------------------------------------
 // armour
 // --------------------------------------------------------
@@ -82,29 +104,31 @@
 
 ///////////////////////////////////////////////////////////////////////////
 
-#define MELEE_WPN_TYPE(_tag, _name, _sprite,                \
-                       _att, _def, _hands, _range, _weight) \
-    ARMS_TYPE(_tag, _name, _sprite, _att, _def, \
-              WEAPON_SLOT, _hands, _range,      \
+#define MELEE_WPN_TYPE(_tag,   _name,  _sprite,                         \
+                       _hit,   _d_min, _d_max, _defend, _a_min, _a_max, \
+                       _range, _hands, _weight)                         \
+    ARMS_TYPE(_tag, _name, _sprite, _hit, _d_min, _d_max, _defend,      \
+              _a_min, _a_max, WEAPON_SLOT, _hands, _range,              \
               null, 0, 0, null, _weight)
 
 // Melee Weapons:
-MELEE_WPN_TYPE(t_dagger,     "dagger",      s_dagger,        +8, +2, 1, 1,  5);
-MELEE_WPN_TYPE(t_sword,      "short sword", s_sword,        +20, +2, 1, 1, 15);
-MELEE_WPN_TYPE(t_long_sword, "long sword",  s_long_sword,   +20, +1, 1, 2, 20);
-MELEE_WPN_TYPE(t_2h_sword,   "2h sword",    s_2h_sword,     +24, +0, 2, 2, 25);
+MELEE_WPN_TYPE(t_dagger,     "dagger",      s_dagger,     +3, +1, +6,  +2, +0, +0, 1, 1, 1);
+MELEE_WPN_TYPE(t_hand_axe,   "hand axe",    s_hand_axe,   +1, +4, +7,  +0, +0, +0, 1, 1, 2);
+MELEE_WPN_TYPE(t_sword,      "short sword", s_sword,      +1, +3, +8,  +1, +0, +0, 1, 1, 3);
+MELEE_WPN_TYPE(t_mace,       "mace",        s_mace,       +0, +5, +8,  +0, +0, +0, 1, 1, 4);
 
-MELEE_WPN_TYPE(t_mace,       "mace",        s_mace,         +20, +0, 1, 1, 20);
-MELEE_WPN_TYPE(t_2h_hammer,  "2h hammer",   s_2h_hammer,    +28, -1, 1, 1, 30);
-MELEE_WPN_TYPE(t_hand_axe,   "hand axe",    s_hand_axe,     +20, +0, 1, 1, 10);
+MELEE_WPN_TYPE(t_long_sword, "long sword",  s_long_sword, +2, +3, +10, +1, +0, +0, 2, 1, 5);
+MELEE_WPN_TYPE(t_2h_sword,   "2h sword",    s_2h_sword,   +1, +5, +16, -1, +0, +0, 2, 2, 6);
+MELEE_WPN_TYPE(t_2h_hammer,  "2h hammer",   s_2h_hammer,  +0, +6, +15, -2, +0, +0, 2, 2, 7);
 
 ///////////////////////////////////////////////////////////////////////////
 
-#define THROWN_WPN_TYPE(_tag,   _name,  _sprite, _att, _def, \
-                        _hands, _range, _weight)             \
-    ARMS_TYPE(_tag, _name, _sprite, _att, _def, \
-              WEAPON_SLOT, _hands,  _range,     \
-              null, 1, 0,  null,    _weight)
+#define THROWN_WPN_TYPE(_tag,   _name,  _sprite,                         \
+                       _hit,   _d_min, _d_max, _defend, _a_min, _a_max, \
+                       _range, _hands, _weight)                         \
+    ARMS_TYPE(_tag, _name, _sprite, _hit, _d_min, _d_max, _defend,      \
+              _a_min, _a_max, WEAPON_SLOT, _hands, _range,              \
+              null, 1, 0, null, _weight)
 
 // SAM: It would be desirable if this weapon type 
 //      remained on the battlefield for later recovery.
@@ -119,58 +143,61 @@ MELEE_WPN_TYPE(t_hand_axe,   "hand axe",    s_hand_axe,     +20, +0, 1, 1, 10);
 // just stabbed with them.
 
 // Thrown Weapons:
-THROWN_WPN_TYPE(t_spear,      "spear",       s_spear, +20, +1, 1, 6, 8);
+THROWN_WPN_TYPE(t_spear, "spear", s_spear, -1, +1, +6, +1, +0, +0, 4, 1, 2)
 
 
 ///////////////////////////////////////////////////////////////////////////
 
-#define THROWN_SPLASH_WPN_TYPE(_tag,   _name,  _sprite, _att, _def, \
-                               _hands, _range, _field, _weight)     \
-    ARMS_TYPE(_tag, _name, _sprite, _att, _def, \
-              WEAPON_SLOT, _hands,  _range,     \
-              null, 1, 0,  _field,  _weight)
+#define THROWN_SPLASH_WPN_TYPE(_tag,   _name,   _sprite,                 \
+                       _hit,   _d_min, _d_max,  _defend, _a_min, _a_max, \
+                       _range, _hands, _weight, _field)                  \
+    ARMS_TYPE(_tag, _name, _sprite, _hit, _d_min, _d_max, _defend,       \
+              _a_min, _a_max, WEAPON_SLOT, _hands, _range,               \
+              null, 1, 0, _field, _weight)
 
 // Thrown Grenade-like Weapons:
-THROWN_SPLASH_WPN_TYPE(t_oil, "flaming oil", s_orange_potion, +8, -1, 1, 4, F_fire, 5);
+THROWN_SPLASH_WPN_TYPE(t_oil, "flaming oil", s_orange_potion, +0, +1, +6, -2, +0, +0, 4, 1, 1, F_fire);
 
 
 ///////////////////////////////////////////////////////////////////////////
 
-#define PROJ_WPN_TYPE(_tag, _name, _sprite,                 \
-                       _att, _def, _hands, _range, _ammo_obj, _inf_ammo, _weight) \
-    ARMS_TYPE(_tag, _name, _sprite, _att, _def, \
-              WEAPON_SLOT, _hands, _range,      \
-              _ammo_obj, 0, _inf_ammo, null, _weight)
+#define PROJ_WPN_TYPE(_tag,   _name,   _sprite,                         \
+                      _hit,   _d_min, _d_max,  _defend, _a_min, _a_max, \
+                      _range, _hands, _weight, _ammo,   _ubiq)          \
+    ARMS_TYPE(_tag, _name, _sprite, _hit, _d_min, _d_max, _defend,      \
+              _a_min, _a_max, WEAPON_SLOT, _hands, _range,              \
+              _ammo, 0, _ubiq, null, _weight)
 
 // Projectile Weapons:  (use ammo)
-PROJ_WPN_TYPE(t_sling,     "sling",     s_sling,     +8, -1, 1,  6, t_rock,  1,  2);
-PROJ_WPN_TYPE(t_bow,       "bow",       s_lght_bow, +20, -2, 2,  8, t_arrow, 0, 10);
-PROJ_WPN_TYPE(t_crossbow,  "crossbow",  s_hvy_xbow, +24, -2, 2, 13, t_bolt,  0, 15);
-PROJ_WPN_TYPE(t_magic_bow, "magic bow", s_hvy_bow,  +32, +0, 2,  8, t_arrow, 0,  5);
+PROJ_WPN_TYPE(t_sling,     "sling",     s_sling,    -1, +1, +4, +0, +0, +0, 5, 1, 1, t_rock,  1);
+PROJ_WPN_TYPE(t_bow,       "short bow", s_lght_bow, +1, +1, +6, -2, +0, +0, 6, 2, 2, t_arrow, 0);
+PROJ_WPN_TYPE(t_magic_bow, "long bow",  s_hvy_bow,  +1, +1, +8, -3, +0, +0, 9, 2, 3, t_arrow, 0);
+PROJ_WPN_TYPE(t_crossbow,  "crossbow",  s_hvy_xbow, +1, +3, +8, -3, +0, +0, 8, 2, 5, t_bolt,  0);
 
 
 ///////////////////////////////////////////////////////////////////////////
 
-#define NATURAL_WPN_TYPE(_tag, _name, _sprite,                \
-                         _att, _def, _slot, _hands, _range) \
-    ARMS_TYPE(_tag,  _name,  _sprite, _att, _def, \
-              _slot, _hands, _range,      \
+#define NATURAL_WPN_TYPE(_tag,   _name,                                   \
+                         _hit,   _d_min, _d_max, _defend, _a_min, _a_max, \
+                         _range, _hands, _slot)                           \
+    ARMS_TYPE(_tag, _name, null, _hit, _d_min, _d_max, _defend,           \
+              _a_min, _a_max, _slot, _hands, _range,                      \
               null, 0, 0, null, 0)
 
 // Natural weapons:  (melee)
-NATURAL_WPN_TYPE(t_hands,     "bare hands",    s_null, +4, +1, WEAPON_SLOT, 1, 1);
-NATURAL_WPN_TYPE(t_hooves,    "hooves",        s_null, +4, +1, WEAPON_SLOT, 1, 1);
-NATURAL_WPN_TYPE(t_teeth,     "fangs",         s_null, +8, +0, HELM_SLOT,   1, 1);
-NATURAL_WPN_TYPE(t_stinger,   "stinger",       s_null, +4, +0, NO_SLOT,     0, 1);
+NATURAL_WPN_TYPE(t_hands,   "bare hands", +2, +1, +4,  +2, +0, +0, 1, 1, WEAPON_SLOT);
+NATURAL_WPN_TYPE(t_hooves,  "hooves",     +0, +5, +12, +0, +0, +0, 2, 1, WEAPON_SLOT);
+NATURAL_WPN_TYPE(t_teeth,   "fangs",      +2, +2, +5,  +0, +0, +0, 1, 1, HELM_SLOT);
+NATURAL_WPN_TYPE(t_stinger, "stinger",    +1, +1, +8,  -1, +0, +0, 2, 1, NO_SLOT);
 
-NATURAL_WPN_TYPE(t_acid_spray,   "acid",       s_null, +10, +0, NO_SLOT,     0, 2);
+NATURAL_WPN_TYPE(t_acid_spray, "acid",    -1, +1, +8,  +0, +0, +0, 3, 2, NO_SLOT);
 
 
 ///////////////////////////////////////////////////////////////////////////
 
 // Misc:  (t_poison_projectile used by the spell "IN NOX POR" / poison bolt.)
 ARMS_TYPE(t_poison_projectile, "poison projectile", s_field_poison, 
-          +3, +0, NO_SLOT, 0, 0, null, 0, 0, null, 0);
+          +0, +1, +4, +0, +0, +0, 0, 0, 0, null, 0, 0, null, 0);
 
 ///////////////////////////////////////////////////////////////////////////
 

@@ -134,28 +134,28 @@ SPRITE_SET ss_angband {
     STD_SPRITE(s_sandy_mushroom, 190);
     
     /* Hats, helms and the occasional crown */
-    STD_SPRITE(s_helm1,  248);  // Leather cap
-    STD_SPRITE(s_helm2,  249);
-    STD_SPRITE(s_helm3,  250);
-    STD_SPRITE(s_helm4,  251);
-    STD_SPRITE(s_helm5,  252);
-    STD_SPRITE(s_helm6,  253);
-    STD_SPRITE(s_helm7,  254);
-    STD_SPRITE(s_helm8,  255);
-    STD_SPRITE(s_helm9,  256);  // Metal helm
-    STD_SPRITE(s_helm10, 257);
-    STD_SPRITE(s_helm11, 258);
-    STD_SPRITE(s_helm12, 259);
-    STD_SPRITE(s_helm13, 260);
-    STD_SPRITE(s_helm14, 261);
-    STD_SPRITE(s_helm15, 262);
-    STD_SPRITE(s_helm16, 263);
-    STD_SPRITE(s_helm17, 264);
-    STD_SPRITE(s_helm18, 265);
-    STD_SPRITE(s_helm19, 266);
-    STD_SPRITE(s_helm20, 267);
-    STD_SPRITE(s_helm21, 268);
-    STD_SPRITE(s_helm22, 269);
+    STD_SPRITE(s_leather_hood,  248);
+    STD_SPRITE(s_chain_coif,    249);
+    STD_SPRITE(s_helm3,         250);
+    STD_SPRITE(s_helm4,         251);
+    STD_SPRITE(s_helm5,         252);
+    STD_SPRITE(s_helm6,         253);
+    STD_SPRITE(s_helm7,         254);
+    STD_SPRITE(s_spiked_helm,   255);
+    STD_SPRITE(s_plate_helm,    256);
+    STD_SPRITE(s_helm10,        257);
+    STD_SPRITE(s_helm11,        258);
+    STD_SPRITE(s_helm12,        259);
+    STD_SPRITE(s_helm13,        260);
+    STD_SPRITE(s_helm14,        261);
+    STD_SPRITE(s_helm15,        262);
+    STD_SPRITE(s_helm16,        263);
+    STD_SPRITE(s_helm17,        264);
+    STD_SPRITE(s_helm18,        265);
+    STD_SPRITE(s_helm19,        266);
+    STD_SPRITE(s_helm20,        267);
+    STD_SPRITE(s_helm21,        268);
+    STD_SPRITE(s_helm22,        269);
     
     // Footwear
     STD_SPRITE(s_shoes,         270);
@@ -168,26 +168,26 @@ SPRITE_SET ss_angband {
     STD_SPRITE(s_black_gauntlets,   275);
 
     // Shields
-    STD_SPRITE(s_shield1,  276);  // Bronze small round shield
-    STD_SPRITE(s_shield2,  277);  // Bronze large triangular shield
-    STD_SPRITE(s_shield3,  278);
-    STD_SPRITE(s_shield4,  279);
-    STD_SPRITE(s_shield5,  280);
-    STD_SPRITE(s_shield6,  281);
-    STD_SPRITE(s_shield7,  282);
-    STD_SPRITE(s_shield8,  283);
-    STD_SPRITE(s_shield9,  284);
-    STD_SPRITE(s_shield10, 285);
-    STD_SPRITE(s_shield11, 286);
-    STD_SPRITE(s_shield12, 287);
-    STD_SPRITE(s_shield13, 288);
-    STD_SPRITE(s_shield14, 289);
-    STD_SPRITE(s_shield15, 290);
-    STD_SPRITE(s_shield16, 291);
-    STD_SPRITE(s_shield17, 292);
-    STD_SPRITE(s_shield18, 293);
-    STD_SPRITE(s_shield19, 294);
-    STD_SPRITE(s_shield20, 295);
+    STD_SPRITE(s_small_shield,  276);  // Bronze small round shield
+    STD_SPRITE(s_large_shield,  277);  // Bronze large triangular shield
+    STD_SPRITE(s_shield3,       278);
+    STD_SPRITE(s_shield4,       279);
+    STD_SPRITE(s_shield5,       280);
+    STD_SPRITE(s_spiked_shield, 281);
+    STD_SPRITE(s_shield7,       282);
+    STD_SPRITE(s_shield8,       283);
+    STD_SPRITE(s_shield9,       284);
+    STD_SPRITE(s_shield10,      285);
+    STD_SPRITE(s_shield11,      286);
+    STD_SPRITE(s_shield12,      287);
+    STD_SPRITE(s_shield13,      288);
+    STD_SPRITE(s_shield14,      289);
+    STD_SPRITE(s_shield15,      290);
+    STD_SPRITE(s_shield16,      291);
+    STD_SPRITE(s_shield17,      292);
+    STD_SPRITE(s_shield18,      293);
+    STD_SPRITE(s_shield19,      294);
+    STD_SPRITE(s_shield20,      295);
     
     // Melee Weapons
     STD_SPRITE(s_dagger,      334);

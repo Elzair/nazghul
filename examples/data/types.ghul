@@ -99,23 +99,29 @@ CURSOR ls_whirlpool;  // From ss_u4
 // gmcnutt: This is needed for projectiles, weapons and armor. It was in
 // weapons.ghul, but I wanted to use it in projectils.ghul and that must come
 // before weapons.ghul
-#define ARMS_TYPE(_tag,    _name,    _sprite,         \
-                  _damage, _armor,   _slot,   _hands, \
-                  _range,  _missile, _thrown, _uAmmo, \
-                  _field,  _weight)                   \
-    ARMS _tag {                      \
-        name           _name    \
-        sprite         _sprite  \
-        damage         _damage  \
-        armor          _armor   \
-        slotMask       (_slot)  \
-        numHands       _hands   \
-        range          _range   \
-        missile        _missile \
-        thrown         _thrown  \
-        ubiquitousAmmo _uAmmo   \
-        field          _field   \
-        weight         _weight  \
+#define ARMS_TYPE(_tag,     _name,    _sprite, \
+                  _hit,     _d_min,   _d_max,  \
+                  _defend,  _a_min,   _a_max,  \
+                  _slot,    _hands,   _range,  \
+                  _missile, _thrown,  _uAmmo,  \
+                  _field,   _weight)           \
+    ARMS _tag {                                \
+        name           _name                   \
+        sprite         _sprite                 \
+        hit            _hit                    \
+        damage_min     _d_min                  \
+        damage_max     _d_max                  \
+        defend         _defend                 \
+        armor_min      _a_min                  \
+        armor_max      _a_max                  \
+        slotMask       (_slot)                 \
+        numHands       _hands                  \
+        range          _range                  \
+        missile        _missile                \
+        thrown         _thrown                 \
+        ubiquitousAmmo _uAmmo                  \
+        field          _field                  \
+        weight         _weight                 \
     }
 
 object_types {

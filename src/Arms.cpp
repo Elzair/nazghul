@@ -32,14 +32,16 @@
 
 ArmsType::ArmsType()
 {
-        missile = NULL;
-        thrown  = false;
-        field   = NULL;
-        weight  = 0;
-        damage  = 0;
-        defend  = 0;
-        hit     = 0;
-        armor   = 0;
+        missile        = NULL;
+        thrown         = false;
+        field          = NULL;
+        weight         = 0;
+        damage[0]      = 0;
+        damage[1]      = 0;
+        defend         = 0;
+        hit            = 0;
+        armor[0]       = 0;
+        armor[1]       = 0;
         ubiquitousAmmo = false;
 }
 
@@ -59,20 +61,6 @@ bool ArmsType::isType(int classID)
 int ArmsType::getType() 
 {
         return ARMS_TYPE_ID;
-}
-
-bool ArmsType::init(char *tag, char *name, struct sprite * sprite,
-                    int slotMask, int damage, int armor,
-                    int numHands, int range) 
-{
-        if (!ObjectType::init(tag, name, item_layer, sprite))
-                return false;
-        this->slotMask = slotMask;
-        this->damage = damage;
-        this->armor = armor;
-        this->numHands = numHands;
-        this->range = range;
-        return true;
 }
 
 class ArmsType *ArmsType::getMissileType()
@@ -175,12 +163,12 @@ int ArmsType::getSlotMask()
 
 int ArmsType::getDamage()
 {
-        return damage;
+        return damage[1];
 }
 
 int ArmsType::getArmor()
 {
-        return armor;
+        return armor[1];
 }
 
 int ArmsType::getNumHands()
@@ -241,10 +229,18 @@ bool ArmsType::load(class Loader *loader)
             !loader->getString(&name) ||
             !loader->matchWord("sprite") ||
             !loader->getWord(&sprite_tag) ||
-            !loader->matchWord("damage") ||
-            !loader->getInt(&damage) ||
-            !loader->matchWord("armor") ||
-            !loader->getInt(&armor) ||
+            !loader->matchWord("hit") ||
+            !loader->getInt(&hit) ||
+            !loader->matchWord("damage_min") ||
+            !loader->getInt(&damage[0]) ||
+            !loader->matchWord("damage_max") ||
+            !loader->getInt(&damage[1]) ||
+            !loader->matchWord("defend") ||
+            !loader->getInt(&defend) ||
+            !loader->matchWord("armor_min") ||
+            !loader->getInt(&armor[0]) ||
+            !loader->matchWord("armor_max") ||
+            !loader->getInt(&armor[1]) ||
             !loader->matchWord("slotMask") ||
             !loader->getBitmask(&slotMask) ||
             !loader->matchWord("numHands") ||
@@ -265,9 +261,11 @@ bool ArmsType::load(class Loader *loader)
                 return false;
         
         if (strcmp(sprite_tag, "null")) {
-                sprite = (struct sprite*)loader->lookupTag(sprite_tag, SPRITE_ID);
+                sprite = (struct sprite*)loader->lookupTag(sprite_tag, 
+                                                           SPRITE_ID);
                 if (!sprite) {
-                        loader->setError("Error parsing ARMS: %s is not a valid SPRITE tag",
+                        loader->setError("Error parsing ARMS: %s is not a "
+                                         "valid SPRITE tag",
                                          sprite_tag);
                         free(sprite_tag);
                         return false;
@@ -276,9 +274,11 @@ bool ArmsType::load(class Loader *loader)
         free(sprite_tag);
 
         if (strcmp(missile_tag, "null")) {
-                missile_type = (class ArmsType*)loader->lookupTag(missile_tag, ARMS_TYPE_ID);
+                missile_type = (class ArmsType*)loader->lookupTag(missile_tag, 
+                                                                 ARMS_TYPE_ID);
                 if (!missile_type) {
-                        loader->setError("Error parsing ARMS: %s is not a valid ARMS tag for the missile",
+                        loader->setError("Error parsing ARMS: %s is not a "
+                                         "valid ARMS tag for the missile",
                                          missile_tag);
                         free(missile_tag);
                         return false;
@@ -288,9 +288,11 @@ bool ArmsType::load(class Loader *loader)
         free(missile_tag);
 
         if (strcmp(field_tag, "null")) {
-                field = (class FieldType*)loader->lookupTag(field_tag, FIELD_TYPE_ID);
+                field = (class FieldType*)loader->lookupTag(field_tag, 
+                                                            FIELD_TYPE_ID);
                 if (!field) {
-                        loader->setError("Error parsing ARMS: %s is not a valid FIELD tag",
+                        loader->setError("Error parsing ARMS: %s is not a "
+                                         "valid FIELD tag",
                                          field_tag);
                         free(field_tag);
                         return false;

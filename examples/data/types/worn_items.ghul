@@ -27,52 +27,109 @@
 #ifndef worn_items_ghul
 #define worn_items_ghul
 
+// Typical values:
+// ========================================================
+// item        | to-hit | damage | defense | armor  | range
+// ========================================================
+// --------------------------------------------------------
+// armour
+// --------------------------------------------------------
+// leather     | +0     | +0     | +0      | d4-2   | 0
+// chain       | +0     | +0     | -1      | d3-1   | 0
+// plate       | -1     | +0     | -2      | d3+1   | 0
+// --------------------------------------------------------
+// helm
+// --------------------------------------------------------
+// leather     | +0     | +0     | +0      | d3-2   | 0
+// chain       | +0     | +0     | -1      | d3-1   | 0
+// plate       | +0     | +0     | -1      | 2      | 0
+// spiked helm | +0     | d3-1   | -1      | d3-1   | 1
+// --------------------------------------------------------
+// boots
+// --------------------------------------------------------
+// leather     | +0     | +0     | +0      | d6-4   | 0
+// plate       | +0     | +0     | +0      | d3-1   | 0
+// --------------------------------------------------------
+// shields
+// --------------------------------------------------------
+// small       | +0     | +0     | +2      | 1      | 0
+// large       | +0     | +0     | +3      | 2      | 0
+// spiked      | +0     | d4+1   | +1      | 1      | 1
+// ========================================================
 
 ///////////////////////////////////////////////////////////////////////////
 
-#define HELM_TYPE(_tag, _name, _sprite, _att, _def, _weight) \
-    ARMS_TYPE(_tag, _name, _sprite, _att, _def, HELM_SLOT,   \
-              0, 1, null, 0, 0, null, _weight)
+#define HELM_TYPE(_tag,    _name,  _sprite, \
+                  _hit,    _d_min, _d_max,  \
+                  _defend, _a_min, _a_max,  \
+                  _range, _weight)          \
+    ARMS_TYPE(_tag,      _name,  _sprite,   \
+              _hit,      _d_min, _d_max,    \
+              _defend,   _a_min, _a_max,    \
+              HELM_SLOT, 1,      _range,    \
+              null,      0,      0,         \
+              null,      _weight)
 
 // Helms
-HELM_TYPE(t_leather_cap, "leather cap", s_helm1, +0, +1,  2);
-HELM_TYPE(t_iron_helm,   "iron helm",   s_helm9, +0, +4, 12);
-
+HELM_TYPE(t_leather_cap, "leather cap", s_leather_hood, +0, +0, +0, +0, -1, +1, 0, 1);
+HELM_TYPE(t_chain_coif,  "chain coif",  s_chain_coif,   +0, +0, +0, -1, +0, +2, 0, 2);
+HELM_TYPE(t_iron_helm,   "plate helm",  s_plate_helm,   +0, +0, +0, -1, +2, +2, 0, 3);
+HELM_TYPE(t_spiked_helm, "spiked helm", s_spiked_helm,  +0, +0, +2, -1, +0, +2, 1, 3);
 
 ///////////////////////////////////////////////////////////////////////////
 
-#define SHIELD_TYPE(_tag, _name, _sprite, _att, _def, _weight) \
-    ARMS_TYPE(_tag, _name, _sprite, _att, _def, SHIELD_SLOT,   \
-              1, 1, null, 0, 0, null, _weight)
+#define SHIELD_TYPE(_tag,    _name,  _sprite, \
+                    _hit,    _d_min, _d_max,  \
+                    _defend, _a_min, _a_max,  \
+                    _range, _weight)          \
+    ARMS_TYPE(_tag,      _name,  _sprite,     \
+              _hit,      _d_min, _d_max,      \
+              _defend,   _a_min, _a_max,      \
+              SHIELD_SLOT, 1,    _range,      \
+              null,      0,      0,           \
+              null,      _weight)
 
 // Shields
-SHIELD_TYPE(t_sm_shield,  "small shield", s_shield1,   +0, +2, 20);
-SHIELD_TYPE(t_lrg_shield, "large shield", s_shield2,   +0, +4, 30);
+SHIELD_TYPE(t_sm_shield,     "small shield",  s_small_shield,  +0, +0, +0, +2, +1, +1, 0, 2);
+SHIELD_TYPE(t_spiked_shield, "spiked shield", s_spiked_shield, +0, +2, +5, +1, +1, +1, 1, 3);
+SHIELD_TYPE(t_lrg_shield,    "large shield",  s_large_shield,  +0, +0, +0, +3, +2, +2, 0, 4);
 
 
 ///////////////////////////////////////////////////////////////////////////
 
-#define ARMOUR_TYPE(_tag, _name, _sprite, _att, _def, _weight) \
-    ARMS_TYPE(_tag, _name, _sprite, _att, _def, ARMOUR_SLOT,   \
-              0, 1, null, 0, 0, null, _weight)
+#define ARMOR_TYPE(_tag,    _name,  _sprite, \
+                   _hit,                     \
+                   _defend, _a_min, _a_max,  \
+                   _weight)                  \
+    ARMS_TYPE(_tag,        _name,  _sprite,  \
+              _hit,        0,      0,        \
+              _defend,     _a_min, _a_max,   \
+              ARMOUR_SLOT, 0,    0,          \
+              null,        0,    0,          \
+              null,        _weight)
 
 // Body Armour
-ARMOUR_TYPE(t_leather_armor, "hard leather", s_hard_leather, +0, +2, 15);
-ARMOUR_TYPE(t_ring_mail,     "ring mail",    s_ring_mail,    -1, +4, 30);
-ARMOUR_TYPE(t_plate_armor,   "plate armor",  s_plate_armor,  -2, +8, 60);
+ARMOR_TYPE(t_leather_armor, "hard leather", s_hard_leather, +0, +0, -1, +2, 5);
+ARMOR_TYPE(t_ring_mail,     "ring mail",    s_ring_mail,    +0, -1, +0, +2, 10);
+ARMOR_TYPE(t_plate_armor,   "plate armor",  s_plate_armor,  -1, -2, +2, +4, 15);
 
 
 ///////////////////////////////////////////////////////////////////////////
 
 // Boots
 
-#define BOOTS_TYPE(_tag, _name, _sprite, _att, _def, _weight) \
-    ARMS_TYPE(_tag, _name, _sprite, _att, _def, BOOT_SLOT,    \
-              0, 1, null, 0, 0, null, _weight)
+#define BOOTS_TYPE(_tag,    _name,  _sprite, \
+                   _a_min, _a_max,  _weight) \
+    ARMS_TYPE(_tag,        _name,  _sprite,  \
+              0,           0,      0,        \
+              0,           _a_min, _a_max,   \
+              BOOT_SLOT,   0,    0,          \
+              null,        0,    0,          \
+              null,        _weight)
 
-BOOTS_TYPE(t_shoes,         "shoes",         s_shoes,         +0, +0, 2);
-BOOTS_TYPE(t_leather_boots, "leather boots", s_leather_boots, +0, +1, 3);
-BOOTS_TYPE(t_plate_boots,   "plate boots",   s_plate_boots,   +0, +2, 6);
+BOOTS_TYPE(t_shoes,         "shoes",         s_shoes,         +0, +0, 0);
+BOOTS_TYPE(t_leather_boots, "leather boots", s_leather_boots, -3, +2, 1);
+BOOTS_TYPE(t_plate_boots,   "plate boots",   s_plate_boots,   +0, +2, 3);
 
 
 ///////////////////////////////////////////////////////////////////////////
