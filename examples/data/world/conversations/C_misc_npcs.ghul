@@ -1,0 +1,339 @@
+//
+// Copyright-Only Dedication (based on United States law)
+//
+// The person or persons who have associated their work with this document (the
+// "Dedicator") hereby dedicate the entire copyright in the work of authorship
+// identified below (the "Work") to the public domain.
+//
+// Dedicator makes this dedication for the benefit of the public at large and
+// to the detriment of Dedicator's heirs and successors. Dedicator intends this
+// dedication to be an overt act of relinquishment in perpetuity of all present
+// and future rights under copyright law, whether vested or contingent, in the
+// Work. Dedicator understands that such relinquishment of all rights includes
+// the relinquishment of all rights to enforce (by lawsuit or otherwise) those
+// copyrights in the Work.
+//
+// Dedicator recognizes that, once placed in the public domain, the Work may be
+// freely reproduced, distributed, transmitted, used, modified, built upon, or
+// otherwise exploited by anyone for any purpose, commercial or non-commercial,
+// and in any way, including by methods that have not yet been invented or
+// conceived.
+//
+
+/* C_misc_npcs.ghul
+ *
+ * Defines texts which NPCs can respond with in conversation.
+ * TODO: Split this up further, will require some -I being passed to cpp.
+ */
+#ifndef C_misc_npcs_ghul
+#define C_misc_npcs_ghul
+
+
+RESP r_water_elemental_default {
+  SAY "[You hear water splashing, and then it subsides.]";
+}
+
+RESP r_water_elemental_greeting {
+  SAY "[Blurb] Greetings...land...creature... [Blurb]";
+}
+
+RESP r_water_elemental_farewell {
+  SAY "[Blurb] Farewell...land...creature... [Blurb]";
+}
+
+CONV c_water_elemental {
+  IMPORT {}
+  NATIVE {
+    DEFAULT r_water_elemental_default;
+
+    HAIL    r_water_elemental_greeting;
+    BYE     r_water_elemental_farewell;
+  }
+} // CONV c_water_elemental
+
+
+
+
+
+
+
+#if 0
+/*** Generic ***/
+RESP r_greeting {
+  SAY "Good day.";
+}
+
+
+CONV c_generic {
+  IMPORT {}
+  NATIVE {
+    HAIL    r_greeting;
+    DEFAULT r_default;
+    BYE     r_farewell;
+    HEAL    r_health;
+    JOIN    r_join;
+  }
+}
+
+
+/*** Armourer ***/
+RESP r_armourer_hail {
+        SAY "Well met, traveler. Can I interest you in some armour?";
+        GET_YES_NO {
+                TRADE {
+                        t_iron_helm  80;
+                        t_sm_shield  40;
+                        t_lrg_shield 80;
+                        t_ring_mail  160;
+                }
+                SAY "Have a nice day.";
+        }{
+                SAY "Hrumph.";
+        }   
+        TURN_AWAY;
+}
+
+CONV c_armourer {
+        IMPORT { c_generic }
+        NATIVE {
+                HAIL r_armourer_hail;
+        }
+}
+
+
+/*** Weaponsmith ***/
+RESP r_weaponsmith_hail {
+  SAY "Hail, friend. Need to trade in weaponry?";
+  GET_YES_NO {
+    SAY "Excellent!";
+    TRADE {
+      t_arrow      1;
+      t_bolt       2;
+      t_dagger     10;
+      t_sling      14;
+      t_bow        144;
+      t_crossbow   176;
+      t_magic_bow  256;
+      t_spear      5;
+      t_sword      22;
+      t_long_sword 42;
+      t_2h_sword   48;
+      t_oil        10;
+      t_mace       20;
+      t_2h_hammer  27;
+    }
+    SAY "Have a nice day.";
+  }{
+    SAY "Hrumph.";
+  }   
+  TURN_AWAY;
+}
+
+CONV c_weaponsmith {
+  IMPORT { c_generic }
+  NATIVE {
+    HAIL r_weaponsmith_hail;
+  }
+}
+
+
+/*** Healer ***/
+RESP r_healer_hail {
+  SAY "Welcome, friend. Are you in need of healing?";
+  GET_YES_NO {
+    SERVICE {
+      SRV_HEAL "Heal"              100;
+      SRV_CURE "Cure Poison"       150;
+      SRV_RESURRECT "Resurrect"    500;
+    }
+    SAY "Be well.";
+  }{
+    SAY "That is good.";
+  }   
+  TURN_AWAY;
+}
+
+CONV c_healer {
+  IMPORT { c_generic }
+     NATIVE {
+       HAIL r_healer_hail;
+     }
+}
+
+
+/*** Beggar ***/
+RESP r_beggar_name {
+  SAY "I am a Joan of Myre.";
+}
+
+RESP r_beggar_job {
+  SAY "None will hire me. I beg for money so I can feed my baby.";
+}
+
+RESP r_beggar_baby {
+  
+  CHECK_PARM GOLD = 0 {
+    SAY "If only I had the gold to pay the healer...";
+  } {
+    SAY "Oh please, sir, won't you help my baby?";
+    GET_YES_NO {
+      SAY "How much?";
+      GET_AMOUNT;
+      CHECK_PARM AMOUNT > 0 {
+        SAY "Oh thank you! In return I will tell thee of the rune!";
+        SET_FLAG TELL_RUNE;
+        SET_FLAG HELPED_JOAN_OF_MYRE;
+        TAKE GOLD;
+        CHECK_PARM GOLD = 0 {
+          CHANGE_PARM SACRIFICE +3;
+        } {
+          CHANGE_PARM SACRIFICE +1;
+        }
+      } {
+        CHECK_PARM GOLD = 0 {
+          SAY "I know thou wouldst help me if thou couldst.";
+        } {
+          SAY "It is cruel to tease me in my misery, sir.";
+          CHANGE_PARM HONOR     -1;
+          CHANGE_PARM SACRIFICE -1;
+        }
+      }
+    } {
+      CHECK_PARM GOLD = 0 {
+        SAY "Perhaps we could both use some good fortune.";
+      } {
+        SAY "I have no claim to thy gold, but I know not what I shall do... [she turns away and sobs quietly].";
+        CHANGE_PARM SACRIFICE -1;
+        CLEAR_FLAG TELL_RUNE;
+        TURN_AWAY;
+      }
+    }
+  }
+}
+
+RESP r_beggar_rune {
+  CHECK_FLAG TELL_RUNE {
+    SAY "There is no rune!";
+  }{
+    SAY "I trust you not.";
+  }
+}
+
+CONV c_Joan {
+  IMPORT { c_generic }
+  NATIVE {
+    NAME r_beggar_name;
+    JOB  r_beggar_job;
+    BABY r_beggar_baby;
+    RUNE r_beggar_rune;
+  }
+}
+
+
+/*** Hawknoz ***/
+RESP r_hawknoz_name   { SAY "I am Hawknoz, the Wizard." }
+RESP r_hawknoz_job    { 
+  CHECK_PARM ACTIVITY = EATING {
+    SAY "[Mouth full] Mrmph rormph... [he swallows and takes a drink]. And that's how to turn rocks into gold. Now don't ask me again or I'll turn you into a toad and feed you to a nest of griffin kittenchicks.";
+  }{
+    SAY "Not much.";
+  }
+}
+RESP r_hawknoz_hail   {
+  CHECK_MEMBER ch_Gen {
+    SAY "Ah, I see that Gen has joined your travels. He has protected us well from the orcs!";
+  }{        
+  }
+  CHECK_FLAG HELPED_JOAN_OF_MYRE {
+    CHECK_FLAG GAVE_ITEM {
+      SAY "Hail, friend of the troubled.";
+    }{
+      SAY "I saw what you did for Joan the beggar. Here, take these potions. They will serve you well in dark times.";
+      GIVE_ITEM t_light_potion 2;
+      SET_FLAG GAVE_ITEM;
+    }
+  }{
+    SAY "Well met, stranger.";
+  }
+}
+
+CONV c_Hawknoz {
+  IMPORT { c_generic }
+  NATIVE { 
+    HAIL    r_hawknoz_hail;
+    NAME    r_hawknoz_name;
+    JOB     r_hawknoz_job;
+  }
+}
+
+
+/*** Thief ***/
+RESP r_thief_name { SAY "Sliwan. [he tips his cap]" }
+RESP r_thief_job {
+  SAY "Fingersmith.";
+  CHECK_ITEM t_spear > 0 {
+    TAKE_ITEM t_spear 1;
+  }{
+    CHANGE_PARM AMOUNT 50;
+    TAKE GOLD;
+  }
+}
+
+CONV c_thief {
+  IMPORT { c_generic }
+  NATIVE {
+    NAME   r_thief_name;
+    JOB    r_thief_job;
+  }
+}
+
+
+/*** Guardsmen ***/
+RESP r_guard_name   { SAY "I am the commander of this troop." }
+RESP r_guard_health { SAY "Excellent." }
+RESP r_guard_job    { 
+  SAY "To keep the peace. Do you intend to cause trouble?";
+  GET_YES_NO {
+    SAY "Then I shall bring it to you! On guard, knave!";
+    ATTACK;
+  }{
+    SAY "Wise of you.";
+  }
+}
+
+CONV c_guard {
+  IMPORT { c_generic }
+  NATIVE {
+    NAME   r_guard_name;
+    HEALTH r_guard_health;
+    JOB    r_guard_job;
+  }
+}
+
+/*** GOBLINESE ***/
+RESP r_goblin_greeting {
+  SAY "OHA";
+}
+
+RESP r_goblin_default {
+  SAY "[grunt] NAN BAKA?";
+}
+
+RESP r_goblin_farewell {
+  SAY "JA";
+}
+
+CONV c_goblin {
+  IMPORT {}
+  NATIVE {
+    HAIL    r_goblin_greeting;
+    DEFAULT r_goblin_default;
+    BYE     r_goblin_farewell;
+  }
+}
+
+#endif // 0
+
+#endif // C_misc_npcs_ghul
+
+/* eof */
