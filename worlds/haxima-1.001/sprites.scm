@@ -537,9 +537,11 @@
 (kern-mk-sprite 's_black_magbolt  ss_angband 1 508 #f 170)
 (kern-mk-sprite 's_gold_explosion ss_angband 1 558 #f 0)
 
-(kern-mk-sprite 's_stone_lantern_on  ss_features_1 2 0 #f 0 )
-(kern-mk-sprite 's_stone_lantern_off ss_features_1 1 2 #f 0 )
-(kern-mk-sprite 's_hut               ss_features_1 1 3 #f 0 )
+(kern-mk-sprite 's_stone_lantern_on  ss_features_1 2  0 #f 0)
+(kern-mk-sprite 's_stone_lantern_off ss_features_1 1  2 #f 0)
+(kern-mk-sprite 's_hut               ss_features_1 1  3 #f 0)
+(kern-mk-sprite 's_mine_entrance     ss_features_1 1 11 #f 0)
+(kern-mk-sprite 's_cave_entrance     ss_features_1 1 19 #f 0)
 
 ; (kern-mk-sprite 's_counter_1x2_n   ss_features_1 1 4 #f 0)
 ; (kern-mk-sprite 's_counter_3x3_nw  ss_features_1 1 5 #f 0)
