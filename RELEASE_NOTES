@@ -1,3 +1,29 @@
+Changes 2003/06/25
+sglasby:
+-- Implemented a terrain-editing command (^T)erraform.
+
+   The command is bound to CONTROL-T, and invokes a UI cursoring mode
+   in which PageUp/PageDown cycle through terrain to draw with (in the
+   current terrain_palette) and (SPACE | ENTER | RETURN) alters terrain.
+
+   The next step is more UI refinements, and a command which saves the
+   current map and palette.
+
+   Lots went on under the hood with the terrain, terrain_map, and 
+   terrain_palette structs, with event handling in event.[ch],
+   and in GhulScript in game.c to make this possible.
+   Most of that won't be visible to end-users, and only a little 
+   to GhulScript hackers.
+
+   Among the stuff visible to GhulScript hackers:
+   o New top-level keyword PALETTE which defines a terrain palette
+     as a tagged entity
+   o MAP now wants a field 'palette palette_tag_here;' rather than
+     a palette {} block
+   o types/terrain/terrains.ghul now defines a few PALETTEs, 
+     rather than #define-ing palette {} blocks
+
+
 Changes 2003/06/19
 sglasby:
 
