@@ -107,10 +107,10 @@
 (define projectile-arms-types
   (list
    ;;     ===========================================================================================================
-   ;;     tag    | name       | sprite     | to-hit | damage | to-def | slots       | hnds | rng | missile | ubiq
+   ;;     tag   | name       | sprite     | to-hit | damage | to-def | slots       | hnds | rng | missile | ubiq
    ;;     ===========================================================================================================
-   (list 't_bow    "short bow"  s_lght_bow   "1"      "1d6"    "-2"     slot-weapon   2      6     t_arrow   #f)
-   (list 't_rpg    "RPG"        s_hvy_xbow   "1d4"    "2d20"   "-5"     slot-weapon   2     12     t_warhead #t)
+   (list 't_bow   "short bow"  s_lght_bow   "1"      "1d6"    "-2"     slot-weapon   2      6     t_arrow   #f)
+   (list 't_rpg   "RPG"        s_hvy_xbow   "1d4"    "2d20"   "-5"     slot-weapon   2      12    t_warhead #t)
    ))
 
 (define thrown-arms-types
@@ -120,6 +120,7 @@
    ;;     ===========================================================================================================
    (list  't_oil   "flaming oil"   s_orange_potion    "0"      "1d6"    "-2"     slot-weapon   1      4     F_fire)
    (list  't_spear "spear"         s_spear            "0"      "1d8"    "+1"     slot-weapon   2      4     nil)
+   (list  't_thrown_boulder "boulder" s_boulder       "-1"     "2d6"    "0"      slot-weapon   2      5     nil)
    ))
 
 (define melee-arms-types
@@ -130,7 +131,7 @@
    (list  't_hands       "bare hands"     nil               "1d2"    "1d4"    "1d2"    slot-nil      1      1)
    (list  't_fangs       "fangs"          nil               "1d2"    "1d8"    "0"      slot-nil      1      1)
    (list  't_dagger      "dagger"         s_dagger          "1d3"    "1d6"    "1d2"    slot-weapon   1      1)
-   (list  't_acid_spray  "acid spray"     nil               "1d2"     "1d8"    "0"      slot-nil      2      2)   
+   (list  't_acid_spray  "acid spray"     nil               "1d2"     "1d8"   "0"      slot-nil      2      2)   
    (list  't_stinger     "stinger"        nil               "1d8"    "1d2-1"  "0"      slot-nil      1      1)
    ))
 

@@ -65,6 +65,7 @@
                nil ; neighbors
                ;;objects
                (list
+                (list (mk-troll faction-monster) 20 13)
                 )
                nil ; hooks
                )

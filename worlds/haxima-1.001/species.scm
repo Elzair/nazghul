@@ -146,27 +146,11 @@
                  nil               ; native spells FIXME!!!!
                  )
 
-(kern-mk-species 'sp_troll      ;; tag: script variable name
-                 "troll"        ;; name: used to display name in the UI
-                 5              ;; strength: limits armament weight
-                 1              ;; intelligence: unused by kernel (just reported in stats)
-                 5              ;; dexterity: used to avoid traps on chests
-                 speed-human    ;; speed: action points per turn
-                 6              ;; vision radius: in tiles
-                 mmode-walk     ;; movement mode: determines passability and cost of travel
-                 5              ;; base hp: hit points at level zero
-                 1              ;; hp multiplier: extra hp per level
-                 20             ;; base mp: mana points at level zero
-                 10             ;; mp multiplier: extra mana points per level
-                 nil               ; sleep sprite
-                 t_fangs           ; natural (unarmed) weapon
-                 #t                ; visible
-                 sound-damage      ; damage sound
-                 sound-walking     ; walking sound
-                 nil               ; slots
-                 nil               ; native spells FIXME!!!!
-                 )
+(load "troll.scm")
 
+;;----------------------------------------------------------------------------
+;; This list of the undead species is used by spells which affect the undead.
+;;----------------------------------------------------------------------------
 (define undead-species-tags
   (list sp_skeleton))
 
@@ -174,7 +158,9 @@
   (foldr (lambda (x undead) (or x (eqv? species undead)))
          #f undead-species-tags))
 
-;; A slime constructor which attaches the native effects:
+;;----------------------------------------------------------------------------
+;; This slime constructor attaches the native effects:
+;;----------------------------------------------------------------------------
 (define (slime-init slime)
     (kern-obj-add-effect slime ef_slime_split nil)
     (kern-obj-add-effect slime ef_poison_immunity nil))
@@ -191,3 +177,4 @@
     ))
 
 (load "yellow-slime.scm")
+
