@@ -1,17 +1,47 @@
 #!/bin/sh
-# -kr = Kernighan & Ritchie style
-# -i8 = indent eight spaces
-# -ts8 = tab is eight spaces
-# -sob = swallow (discard) optional blank lines
-# -l80 = right margin 80 spaces
-# -ss = space special (semicolon on one-line for/while loops)
-# -br = braces right (of expression)
-# -ce = cuddle elses
-# -saf = space after for
-# -saw = space after while
-# -sai = space after if
-# -brs = braces on struct declaration line
-# -fca = format all comments
-# -sc = start comments with star
+# 
+# -kr   = Kernighan & Ritchie style
+# -i8   = indent eight spaces
+# -ts8  = tab is eight spaces
+# -sob  = swallow (discard) optional blank lines
+# -l80  = right margin 80 spaces
+# -ss   = space special (semicolon on one-line for/while loops)
+# -br   = braces right (of expression)
+# -brs  = braces on struct declaration line
+# -ce   = cuddle elses
+# -saf  = space after for
+# -sai  = space after if
+# -saw  = space after while
+# -fca  = format all comments
+# -sc   = start comments with star
 # -npcs = no space between called procedure name and '('
-indent -kr -i8 -ts8 -sob -l80 -ss -br -ce -saf -saw -sai -brs -fca -sc -npcs "$@"
+# -nut  = no tabs; use spaces instead of tabs
+# 
+# indent -kr -i8 -ts8 -sob -l80 -ss -br -brs -ce -saf -sai -saw -fca -sc -npcs "$@"
+
+indent                                   \
+    --k-and-r-style                      \
+    -nut                                 \
+    --indent-level8                      \
+    --tab-size8                          \
+    --leave-optional-blank-lines         \
+    --line-length80                      \
+    --space-special-semicolon            \
+    --braces-on-if-line                  \
+    --braces-on-struct-decl-line         \
+    --cuddle-do-while                    \
+    --dont-cuddle-else                   \
+    --space-after-for                    \
+    --space-after-if                     \
+    --space-after-while                  \
+    --dont-format-comments               \
+    --start-left-side-of-comments        \
+    --no-space-after-function-call-names \
+    --blank-lines-after-procedures       \
+    --blank-before-sizeof                \
+    --space-after-cast                   \
+    --leave-preprocessor-space           \
+    --break-after-boolean-operator       \
+    "$@"
+
+# eof
