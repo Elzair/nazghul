@@ -2,6 +2,14 @@ Changes between nazghul-0.1.2 and nazghul-0.1.3
 
 gmcnutt:
 
+--Added slimes. Hacked in a cloning effect to make them work, and added an
+  immunities field to species to make them immune to poison. I actually had
+  about 50% of a new effects system implemented when I gave up because of all
+  the boring parsing code boilerplate, and it was going into overtime
+  tonight. I saved my protoype header file for the effects system in the
+  GHULSCRIPT documentation. Cloning is not really the ideal effect to start
+  with anyway.
+
 --Bugfix: field effects never worked outside of combat. Added support for
   them. Also modified the main game loop so that the player cannot give
   commands until somebody in the party is not asleep. If everyone is sleeping

@@ -29,6 +29,7 @@
 #define STD_DAMAGE_SOUND damage_sound   "data/sounds/damage.wav"
 #define WALKING_SOUND    movement_sound "data/sounds/walk.wav"
 #define SPLASHING_SOUND  movement_sound "data/sounds/rowing.wav"
+#define SQUISHING_SOUND  movement_sound "data/sounds/walk.wav"
 
 SPECIES human {
   name    "human";
@@ -270,6 +271,34 @@ SPECIES nixie {
   SPLASHING_SOUND;
 }
 
+SPECIES slime {
+        name  "slime";
+        str   10;
+        int   10;
+        dex   10;
+        spd   2;
+        vr    8;
+        pmask (LAND);
+        sleep_sprite null;
+        weapon       t_acid_spray;
+        visible      1;
+        occs {}
+        slots {}
+        spells {}
+        STD_DAMAGE_SOUND;
+        SQUISHING_SOUND;
+
+        // New and somewhat experimental, this section lists the set of effects
+        // which members of this species automatically acquire.
+        // Hack: I was 50% of the way through implementing effects
+        // when, knowing that it would all be thrown away after 0.2.0,
+        // I got sick of writing all the boilerplate parsing code.
+        effects  (EFFECT_CLONE);
+
+        // Also new, this allows some species to be completely immune to
+        // certain effects.
+        immunities (EFFECT_POISON);
+}
 
 #endif // species_ghul
 

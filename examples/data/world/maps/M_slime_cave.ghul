@@ -1,0 +1,29 @@
+MAP m_slime_cave {
+  type    ascii;
+  width   16;
+  height  16;
+  palette pal_expanded;
+  terrain {
+  //                                1  1  1  1  1  1 
+  //  0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5 
+    "%% %% %% %%  r  r  r  r  r  r  r ^^ ^^ ^^ {{ {{ ";  //  0
+    "%% %% %%  r  r tt .. .. .. tt  r  r {{ {{ {{ {{ ";  //  1
+    "%% %%  r  r || .. .. .. .. .. ||  r  r tt tt {{ ";  //  2
+    "%% %%  r tt %%  b .. .. ..  b %% ||  r .. tt tt ";  //  3
+    "%% %%  r %% %% %% %% .. .. %% %% tt  r .. tt tt ";  //  4
+    " r  r  r tt %%  b %% .. ..  b %% %%  r .. .. tt ";  //  5
+    " r .. || || %% %% .. .. .. %% %% %%  r .. .. .. ";  //  6
+    " r ..  r || %%  b .. %% %%  b %% %%  r .. .. .. ";  //  7
+    " r tt  r tt %% .. .. .. %% %% tt tt  r .. .. tt ";  //  8
+    " r tt  r %% %%  b .. .. ..  b || ||  r .. .. tt ";  //  9
+    " r tt  r  r tt %% .. .. .. tt ||  r  r .. tt tt ";  // 10
+    " r .. tt  r  r  r .. .. ..  r  r  r .. .. tt tt ";  // 11
+    " r .. .. ..  &  r  r ..  r  r .. .. .. tt tt tt ";  // 12
+    " r .. .. .. .. ..  r  r  r .. .. .. tt tt tt || ";  // 13
+    " r  r tt .. ..  r  r .. .. .. .. .. tt tt tt || ";  // 14
+    "..  r  r  r  r  r tt .. .. .. tt tt tt tt || || ";  // 15
+  //                                1  1  1  1  1  1 
+  //  0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5 
+  } // terrain
+} // MAP m_slime_cave
+

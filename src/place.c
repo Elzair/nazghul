@@ -837,7 +837,7 @@ static int place_pathfind_heuristic(struct astar_search_info *info)
 	 * different penalties to different hazerds. */
 	terrain = place_get_terrain(context->place, info->x0, info->y0);
 	if (terrain->effects)
-		cost += 20;
+		cost += 2;
 
 	if (place_get_object(context->place, info->x0, info->y0,
 			     field_layer) != NULL)

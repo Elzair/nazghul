@@ -44,6 +44,8 @@ extern "C" {
                 bool visible;
                 char *damage_sound;
                 char *movement_sound;
+                int effects;
+                int immunities;
         };
 
         extern struct species *speciesLoad(class Loader *);

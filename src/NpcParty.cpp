@@ -65,7 +65,8 @@ bool NpcPartyType::init(class Character * ch)
 	char name[64];
 
 	// Use the species and occupation as the name of the party.
-	snprintf(name, sizeof(name), "%s %s", ch->species->name, ch->occ->name);
+	snprintf(name, sizeof(name), "%s %s", ch->species->name, 
+                 ch->occ ? ch->occ->name : "");
 
 	if (!ObjectType::init("fake_tag", name, being_layer, ch->getSprite()))
 		return false;
@@ -810,7 +811,7 @@ bool NpcParty::createMembers(void)
 		// NPCs from that group based on its max size (need at least
 		// one). Then create that many NPC characters and add them to
 		// the party.
-#define RANDOM_NUMBER_OF_MEMBERS true
+#define RANDOM_NUMBER_OF_MEMBERS false
 		if (RANDOM_NUMBER_OF_MEMBERS) {
 			n = (random() % ginfo->n_max) + 1;
 		} else {
@@ -818,6 +819,8 @@ bool NpcParty::createMembers(void)
 		}
 
 		n = max(n, 1);
+                printf("Generated %d out of possible %d %s\n", n, ginfo->n_max,
+                       ginfo->species->name);
 
 		while (n) {
 

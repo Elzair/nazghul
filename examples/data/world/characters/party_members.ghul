@@ -42,7 +42,11 @@ CHAR ch_Thorald_Greybeard {
   lvl       8;
   conv      c_generic;
   readied {
-    t_magic_bow;
+    t_long_sword;
+    t_dagger;
+    t_leather_cap;
+    t_leather_boots;
+    t_leather_armor;
   }
 } // CHAR ch_Thorald_Greybeard
 
@@ -62,8 +66,11 @@ CHAR ch_Kamafuk_Axedog {
   lvl       8;
   conv      c_generic;
   readied {
-    t_ring_mail;
-    t_crossbow;
+    t_plate_armor;
+    t_plate_boots;
+    t_iron_helm;
+    t_long_sword;
+    t_mace;
   }
 } // CHAR ch_Kamafuk_Axedog
 

@@ -118,6 +118,11 @@ class Character:public Object {
 		return ac;
 	}
 	virtual void setPoison(bool val) {
+                if (val && 
+                    species->immunities & EFFECT_POISON) {
+                        consolePrint("%s resists poison\n", getName());
+                        return;
+                }
 		poison = val;
 	}
 	virtual void setHp(int hp) {

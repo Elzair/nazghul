@@ -1374,10 +1374,12 @@ static void myApplyGenericEffects(class Character * c, int effects)
         }
         if (effects & TERRAIN_POISON && !c->isPoisoned()) {
                 c->setPoison(true);
-                c->changeHp(-DAMAGE_POISON * Combat.turns_per_round);
-                consolePrint("%s poisoned-%s!\n", c->getName(),
-                             c->getWoundDescription());
-                consoleRepaint();
+                if (c->isPoisoned()) {
+                        c->changeHp(-DAMAGE_POISON * Combat.turns_per_round);
+                        consolePrint("%s poisoned-%s!\n", c->getName(),
+                                     c->getWoundDescription());
+                        consoleRepaint();
+                }
         }
         if (effects & EFFECT_SLEEP && !c->isAsleep()) {
                 c->changeSleep(true);
@@ -2157,7 +2159,8 @@ static void myPutEnemy(class NpcParty * foe, struct position_info *pinfo)
 {
         foe->forEachMember(myPutNpc, pinfo);
         Combat.max_n_npcs = Combat.n_npcs;
-        list_add(&Combat.parties, &foe->container_link.list);
+        if (foe->pinfo.placed)
+                list_add(&Combat.parties, &foe->container_link.list);
 }
 
 static bool myPositionEnemy(class NpcParty * foe, int dx, int dy, bool defend)
@@ -2963,8 +2966,6 @@ bool combat_enter(struct combat_info * info)
                                 }
                                 continue;
                         }
-
-
                 }
 
                 if (!keep) {

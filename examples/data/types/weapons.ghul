@@ -131,6 +131,8 @@ NATURAL_WPN_TYPE(t_hooves,    "hooves",        s_null, +4, +1, WEAPON_SLOT, 1, 1
 NATURAL_WPN_TYPE(t_teeth,     "fangs",         s_null, +8, +0, HELM_SLOT,   1, 1);
 NATURAL_WPN_TYPE(t_stinger,   "stinger",       s_null, +4, +0, NO_SLOT,     0, 1);
 
+NATURAL_WPN_TYPE(t_acid_spray,   "acid",       s_null, +10, +0, NO_SLOT,     0, 2);
+
 
 ///////////////////////////////////////////////////////////////////////////
 

@@ -488,7 +488,7 @@ Mech        | Signal       | INT             |
 Object      | Glow         | INT             |
 Object      | Location     | (TAG, INT, INT) | Meaning (place, x, y)
 Object      | LocationDelt | (TAG, INT, INT) | 
-Objects     | Visible      | BOOL            | Applies to particular object
+Object      | Visible      | BOOL            | Applies to particular object
 Object      | Existence    | BOOL            | Used to destroy an object
 Object      | Type         | TAG             | Morph an object
 Object      | Edibility    | BOOL            | Turn something into food
@@ -520,7 +520,7 @@ Subject Metatype | Operations
 ============================================================================
 scaler           | assign, add, subtract, multiply
 vector           | assign, add, subtract, multiply
-tag              | assign,
+tag              | assign, instantiate, destroy(?)
 bool             | assign, invert
 set              | assign, intersect, union, invert
 ============================================================================
@@ -676,56 +676,119 @@ Examples:
         duration is indefinite the engine does not decrement the duration
         counter.
 
-                
-       
-        
+Effects which create objects are a bit different then what is discussed
+above. Such an effect has no subject, as it is not changing an existing
+object's attributes. Instead it is creating a new subject.
 
-EFFECT_POISON
-        Poisons a character. When a character is poisoned it loses hit points
-        each turn. The cure effect unpoisons a character.
-        Residual; Affects Characters
+There are several ways to carry out object creation. First of all, we must
+unfortunately distinguish between characters and other object types. The reason
+is that most objects have a type, and this type specifies the default values
+for an object. But characters do not have a single type. Instead they have a
+species, an occupation, a schedule and a conversation. Perhaps they should have
+a type which combines all these elements. The downside is you end up with a lot
+of character types which will only have a single instance because the type info
+is so specific to a single character, which is why I deviated from the rule a
+bit. Anyway, besides that distinction we must also recognize that sometimes we
+want to create a new object from scratch and sometimes we want to clone an
+existing object.
 
-EFFECT_BURN
-        Burns an object, damaging it. If the object catches on fire then it
-        will continue to burn, taking damage on each turn. While burning an
-        object emits a glow. If the object is associated with a character then
-        it adds to the characters glow. If the object is in inventory then it
-        has no glowing effect.
-        Affects Objects; Potentially Residual
+EFFECT SlimeCloneWhenDamaged {
+        target_type   Character;
+        target_method Effected;
+        subject       Existence;
+        hook          HpReduced;
+        source        ();
+        value         new;
+        probability   0.25;
+}
 
-EFFECT_SLEEP
-        Puts a character to sleep. Characters forfeit their turns during combat
-        rounds while they are asleep. The awaken effect removes the sleep
-        effect.
-        Residual, Affects Characters
 
-EFFECT_LIGHT
-        Makes an object glow.
 
-EFFECT_CURE         
-EFFECT_HEAL         
-EFFECT_AWAKEN       
-EFFECT_CHARM        
-EFFECT_DAMAGE       
-EFFECT_UNLOCK       
-EFFECT_REPEL        
-EFFECT_LOCATE       
-EFFECT_SUMMON       
-EFFECT_WIND_CHANGE  
-EFFECT_TELEPORT     
-EFFECT_DESTROY      
-EFFECT_ARMOUR       
-EFFECT_REVEAL       
-EFFECT_QUICK        
-EFFECT_NEGATE       
-EFFECT_TREMOR       
-EFFECT_CONFUSE      
-EFFECT_SHOW_TERRAIN 
-EFFECT_WIND         
-EFFECT_PEER         
-EFFECT_CLONE        
-EFFECT_INVISIBLE    
-EFFECT_TIME_STOP    
-EFFECT_RESURRECT    
-EFFECT_GATE_TRAVEL  
-EFFECT_NATURAL
+Prototype header file:
+
+        // What the effect applies to.
+        enum effect_target_type {
+                effect_target_type_none = 0,
+        };
+
+        // How to pick what the effect applies to.
+        enum effect_target_method {
+                effect_target_method_none = 0,
+                effect_target_method_affected,
+        };
+
+        // What is being changed about the thing the effect applies to?
+        enum effect_subject {
+                effect_subject_none = 0,
+                effect_subject_affected,
+        };
+
+        // List of subject value types.
+        enum effect_value_type {
+                effect_value_none = 0,
+                effect_value_tag,
+                effect_value_bool,
+                effect_value_int,
+                effect_value_float,
+        };
+
+        // How is the value of the subject going to be changed?
+        struct effect_value {
+                enum effect_value_type type;
+                union value {
+                        char *tag;
+                        int _bool:1;
+                        int _int;
+                        float _float;
+                };
+        };
+
+        // List of events which invoke an effect ("hooks" an effect is attached
+        // to)
+        enum effect_hook {
+                effect_hook_none = 0,
+                effect_hook_hp_reduced,
+        };
+
+        // List of ways to specify a target for an effect.
+        enum effect_target_method {
+                effect_target_none = 0,
+                effect_target_effected,  // whatever the effect is attached to
+        };
+
+        // List of operators applied to the subject
+        enum effect_operator {
+                effect_operator_none     = 0,
+                effect_operator_assign   = '=',
+                effect_operator_new      = 'n',
+                effect_operator_delete   = 'd',
+                effect_operator_clone    = 'c', // the subject
+                effect_operator_add      = '+', // w/ assignment to subject
+                effect_operator_subtract = '-', // w/ assignment to subject
+                effect_operator_multiply = '*', // w/ assignment to subject
+                effect_operator_divide   = '/', // w/ assignment to subject
+        };
+
+        // The effect data structure.
+        struct effect {
+                char *tag;
+                struct list list;
+                enum effect_target_type type;
+                enum effect_target_method target_method;
+                enum effect_subject subject;
+                enum effect_hook hook;
+                enum effect_source source;
+                enum effect_operator operator;
+                struct effect_value value;
+                float probability;
+        };
+
+        // Create and initialize an effect structure from ghulscript.
+        extern struct effect *effect_load(class Loader *);
+
+        // Apply an effect (attempt to, anyway).
+        extern int effect_apply(struct effect *effect, class Object *affected);
+
+        // Properly deallocate an effect structure.
+        extern void effect_destroy(structeffect *effect);
+

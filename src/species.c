@@ -224,7 +224,12 @@ struct species *speciesLoad(class Loader * loader)
                 } else if (loader->matchWord("movement_sound")) {
                         if (!loader->getString(&species->movement_sound))
                                 goto fail;
-
+                } else if (loader->matchWord("effects")) {
+                        if (!loader->getBitmask(&species->effects))
+                                goto fail;
+                } else if (loader->matchWord("immunities")) {
+                        if (!loader->getBitmask(&species->immunities))
+                                goto fail;
                 } else {
                         loader->setError("Error in SPECIES: unknown field "
                                          "'%s'", loader->getLexeme());

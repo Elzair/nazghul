@@ -19,28 +19,26 @@
 // and in any way, including by methods that have not yet been invented or
 // conceived.
 //
-/* all_places.ghul
- *
- * Defines all the place objects which form the game world.
- */
-#ifndef all_places_ghul
-#define all_places_ghul
 
-// Order matters: wilderness must be before any towns which refer to it as a
-// parent
-#include "./P_wilderness.ghul"
-#include "./P_empire_city.ghul"
-#include "./P_prison_and_torture_chamber.ghul"
-#include "./GreenTower.ghul"
-#include "./GreenTowerLower.ghul"
-#include "./P_terrain_test.ghul"
+#include "../maps/M_slime_cave.ghul"
 
-#include "./P_cavernous_troll_deeps.ghul"
-#include "./P_rom_camp.ghul"
-#include "./P_slime_cave.ghul"
+PLACE p_slime_cave {
+  type        dungeon;
+  parent      null;
+  x           0;
+  y           0;
+  name        "Slime Cave";
+  wraps       0;
+  map         m_slime_cave;
+  underground 1;
+  objects {
+          //mech_h_fence_gate fence_gate  8 10 "closed";
+          t_slimes  7  4 (ALIGN_MONSTER) 1 null;
+  }
 
-STACK_PLACES GreenTower GreenTowerLower
+} // PLACE p_slime_cave
 
-#endif // all_places_ghul
+portals {
+  DUNGEON_ENTRANCE_TO_LADDER(p_slime_cave, 7, 12, p_wilderness, 19, 18, 0);
+}
 
-/* eof */

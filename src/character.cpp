@@ -37,6 +37,7 @@
 #include "species.h"
 #include "sched.h"
 #include "Mech.h"
+#include "combat.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -134,8 +135,31 @@ Character::~Character()
 
 void Character::changeHp(int delta)
 {
-	if (delta < 0)
+	if (delta < 0) {
 		soundPlay(get_damage_sound(), SOUND_MAX_VOLUME);
+
+                // Hack: add a clone effect for slimes
+                if (player_party->context == CONTEXT_COMBAT &&
+                    species->effects & EFFECT_CLONE &&
+                    (rand() % 4) == 0) {
+                        printf("Cloning %s\n", getName());
+                        class Character *copy = clone(this);
+                        assert(copy);
+                        class NpcParty *copy_party = new NpcParty();
+                        assert(copy_party);
+                        copy->setAlignment(this->getAlignment());
+                        copy_party->init(copy);
+                        if (!combatAddNpcParty(copy_party, 0, 0, true, getX(), 
+                                               getY())) {
+                                delete copy_party;
+                                delete copy;                                
+                        } else {
+                                consolePrint("%s cloned at [%d %d]...", 
+                                             getName(),
+                                             copy->getX(), copy->getY());
+                        }
+                }
+        }
 	else {
 		delta = min(delta, getMaxHp() - hp);
 	}
@@ -143,6 +167,7 @@ void Character::changeHp(int delta)
 	hp += delta;
 	if (hp <= 0)
 		kill();
+
 
 	if (playerControlled && delta) {
 		statusFlash(getOrder(), (delta < 0) ? Red : Blue);

@@ -115,6 +115,14 @@ PARTY t_nixies {
   }
 }
 
+PARTY t_slimes {
+        name "puddle of slimes";
+        sprite s_slime;
+        formation null;
+        groups {
+                slime null s_slime 10;
+        }
+}
 
 #endif // npc_party_defs_ghul
 
