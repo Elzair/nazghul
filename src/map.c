@@ -557,11 +557,6 @@ static void mapPaintPlace(struct place *place,
            +-----------------------------------------------------------------+
         */
 
-        /* 
-         * Paint the terrain.
-         */
-
-
 	use_mask = (mask != NULL);
 	map_y = region->y + subrect->y;
         mask_i = (subrect->y * region->w) + subrect->x;
@@ -634,53 +629,6 @@ static void mapPaintPlace(struct place *place,
 	}
 
 	place->dirty = 0;
-
-#if 0
-        /* 
-         * Paint the objects
-         * fixme: why is this not done in the same loop as terrain?
-         */
-        
-
-	my = region->y;
-
-	for (i = 0; i < region->h; i++, my++, mask += region->w) {
-
-		if (place->wraps) {
-			my = place_wrap_y(place, my);
-		} else if (my < 0) {
-			continue;
-		} else if (my >= place->terrain_map->h) {
-			break;
-		}
-
-		sy = i * tile_h + dest->y;
-
-		mx = region->x;
-
-		for (j = 0; j < region->w; j++, mx++) {
-
-			if (place->wraps) {
-				mx = place_wrap_x(place, mx);
-			} else if (mx < 0) {
-				continue;
-			} else if (mx >= place->terrain_map->w) {
-				break;
-			}
-
-			sx = j * tile_w + dest->x;
-
-			if (use_mask && !mask[j]) {
-				continue;
-			}
-
-			/* Paint the objects */
-			place_paint_objects(place, mx, my, sx, sy);
-
-		}
-	}
-	place->dirty = 0;
-#endif
 }
 
 
@@ -866,6 +814,12 @@ void mapGetScreenOrigin(int *x, int *y)
 	*y = Map.srect.y;
 }
 
+void mapGetTileDimensions(int *w, int *h)
+{
+        *w = TILE_W / Map.aview->zoom;
+        *h = TILE_H / Map.aview->zoom;
+}
+
 void mapSetActiveView(struct mview *view)
 {
 	Map.aview = view;
@@ -963,6 +917,176 @@ void mapBlackout(int val)
         Map.cam_view->blackout = !!val;
 }
 
+static void mapPaintProjectile(SDL_Rect *rect, struct sprite *sprite,
+                               SDL_Surface *surf)
+{
+	// The rect coordinates are in SCREEN coordinates (not map) so I need
+	// to do some clipping here to make sure we don't paint off the map
+	// viewer.
+	if (rect->x < MAP_X || rect->y < MAP_Y ||
+	    ((rect->x + rect->w) > (MAP_X + MAP_W)) ||
+	    ((rect->y + rect->h) > (MAP_Y + MAP_H)))
+		return;
+
+	// Save the backdrop of the new location
+	screenCopy(rect, NULL, surf);
+
+	// Paint the missile at the new location
+        spriteZoomOut(Map.aview->zoom);
+        screenZoomOut(Map.aview->zoom);
+	spritePaint(sprite, 0, rect->x, rect->y);
+        spriteZoomIn(Map.aview->zoom);
+        screenZoomIn(Map.aview->zoom);
+
+	screenUpdate(rect);
+
+	// Pause. Doing nothing is too fast, usleep and SDL_Delay are both too
+	// slow, so use the custom calibrated busywait.
+	busywait(1);
+
+	// Erase the missile by blitting the background
+	screenBlit(surf, NULL, rect);
+	screenUpdate(rect);
+}
+
+void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By, 
+                          struct sprite *sprite, struct place *place)
+{
+	// 
+	// Derived from Kenny Hoff's Bresenhaum impl at
+	// http://www.cs.unc.edu/~hoff/projects/comp235/bresline/breslin1.txt
+	// (no license or copyright noted)
+	// 
+
+        SDL_Surface * surf;	// for saving/restoring the background
+
+        // Get the (possible zoomed) tile dimensions.
+        int tile_w;
+        int tile_h;
+        mapGetTileDimensions(&tile_w, &tile_h);
+
+	// Create a scratch surface for saving/restoring the background
+        surf = screenCreateSurface(tile_w, tile_h);
+        assert(surf);
+
+	// Get the map coordinates of the view origin (upper left corner)
+	int Ox, Oy;
+	mapGetMapOrigin(&Ox, &Oy);
+
+	// Get the screen coordinates of the map viewer origin
+	int Sx, Sy;
+	mapGetScreenOrigin(&Sx, &Sy);
+
+	// Copy the place coordinates of the origin of flight. I'll walk these
+	// along as the missile flies and check for obstructions.
+	int Px, Py;
+	Px = Ax;
+	Py = Ay;
+
+	// Convert to screen coordinates. (I need to keep the original
+	// B-coordinates for field effects at the bottom of this routine).
+	Ax = (Ax - Ox) * tile_w + Sx;
+	Ay = (Ay - Oy) * tile_h + Sy;
+	int sBx = (*Bx - Ox) * tile_w + Sx;
+	int sBy = (*By - Oy) * tile_h + Sy;
+
+	// Create the rect which bounds the missile's sprite (used to update
+	// that portion of the screen after blitting the sprite).
+	SDL_Rect rect;
+	rect.x = Ax;
+	rect.y = Ay;
+	rect.w = TILE_W;
+	rect.h = TILE_H;
+
+	// Get the distance components
+	int dX = sBx - rect.x;
+	int dY = sBy - rect.y;
+	int AdX = abs(dX);
+	int AdY = abs(dY);
+
+	// Select the sprite orientation based on direction of travel
+        if (sprite) {
+                spriteSetFacing(sprite, vector_to_dir(dX, dY));
+        }
+
+	// Moving left?
+	int Xincr = (rect.x > sBx) ? -1 : 1;
+
+	// Moving down?
+	int Yincr = (rect.y > sBy) ? -1 : 1;
+
+	// Walk the x-axis?
+	if (AdX >= AdY) {
+
+		int dPr = AdY << 1;
+		int dPru = dPr - (AdX << 1);
+		int P = dPr - AdX;
+
+		// For each x
+		for (int i = AdX; i >= 0; i--) {
+
+			Px = ((rect.x - Sx) / tile_w + Ox);
+			Py = ((rect.y - Sy) / tile_h + Oy);
+			if (!place_visibility(place, Px, Py))
+				goto done;
+
+                        if (sprite)
+                                mapPaintProjectile(&rect, sprite, surf);
+
+			if (P > 0) {
+				rect.x += Xincr;
+				rect.y += Yincr;
+				P += dPru;
+			} else {
+				rect.x += Xincr;
+				P += dPr;
+			}
+		}
+	}
+	// Walk the y-axis
+	else {
+		int dPr = AdX << 1;
+		int dPru = dPr - (AdY << 1);
+		int P = dPr - AdY;
+
+		// For each y
+		for (int i = AdY; i >= 0; i--) {
+
+			Px = ((rect.x - Sx) / tile_w + Ox);
+			Py = ((rect.y - Sy) / tile_h + Oy);
+			if (!place_visibility(place, Px, Py))
+				goto done;
+
+                        if (sprite)
+                                mapPaintProjectile(&rect, sprite, surf);
+
+			if (P > 0) {
+				rect.x += Xincr;
+				rect.y += Yincr;
+				P += dPru;
+			} else {
+				rect.y += Yincr;
+				P += dPr;
+			}
+		}
+	}
+
+      done:
+	// erase the missile
+	// mapRepaintView(NULL, REPAINT_ACTIVE);
+	mapUpdate(0);
+
+	// restore the missile sprite to the default facing
+        if (sprite)
+                spriteSetFacing(sprite, SPRITE_DEF_FACING);
+
+	if (surf != NULL)
+		SDL_FreeSurface(surf);
+
+        *Bx = Px;
+        *By = Py;
+
+}
 
 
 #if 0

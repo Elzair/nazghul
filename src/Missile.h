@@ -31,10 +31,8 @@ class Missile:public Object {
 	virtual ~Missile();
 	virtual class ArmsType *getObjectType();
 	virtual void animate(int Ax, int Ay, int Bx, int By);
-	virtual void paint(SDL_Rect * rect);
 	virtual bool hitTarget();
       protected:
-	SDL_Surface * surf;	// for saving/restoring the background
 	bool hit;
 };
 

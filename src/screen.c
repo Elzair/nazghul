@@ -343,12 +343,26 @@ void screenBlit(SDL_Surface * source, SDL_Rect * from, SDL_Rect * to)
 	/* Clipping is really only needed for wave sprites right now. If the
 	 * following proves to be too expensive on slow machines... */
 	if (to) {
-		SDL_Rect tmp = *to;
-		SDL_SetClipRect(Screen, &tmp);
-		if (Zoom > 1)
-			scaled_blit(source, from, Screen, &tmp);
-		else {
-			if (SDL_BlitSurface(source, from, Screen, &tmp) < 0)
+		SDL_Rect _to = *to;
+		SDL_SetClipRect(Screen, &_to);
+		if (Zoom > 1) {
+
+                        // Clients are allowed to pass a NULL from rect,
+                        // indicating they want to blit the whole source
+                        // area. But the scaled blits require a non-NULL
+                        // from rect.
+                        SDL_Rect _from;
+                        if (from == NULL) {
+                                _from.x = 0;
+                                _from.y = 0;
+                                _from.w = source->w;
+                                _from.h = source->h;
+                                from = &_from;
+                        }
+
+			scaled_blit(source, from, Screen, &_to);
+                } else {
+			if (SDL_BlitSurface(source, from, Screen, &_to) < 0)
 				perror_sdl("SDL_BlitSurface");
 		}
 		SDL_SetClipRect(Screen, 0);
@@ -568,6 +582,30 @@ void screenCopy(SDL_Rect * from, SDL_Rect * to, SDL_Surface * dest)
 {
 	if (SDL_BlitSurface(Screen, from, dest, to) < 0)
 		perror_sdl("SDL_BlitSurface");
+
+        assert(from);
+        assert(dest);
+
+        SDL_Rect _from = *from;
+
+        if (Zoom > 1) {
+                // Clients are allowed to pass a NULL 'to' rect,
+                // indicating they want to blit the whole dest
+                // area. But the scaled blits require a non-NULL
+                // 'to' rect.
+                SDL_Rect _to;
+                if (to == NULL) {
+                        _to.x = 0;
+                        _to.y = 0;
+                        _to.w = dest->w;
+                        _to.h = dest->h;
+                        to = &_to;
+                }
+                scaled_blit(Screen, &_from, dest, to);
+        } else {
+                if (SDL_BlitSurface(Screen, &_from, dest, to) < 0)
+                        perror_sdl("SDL_BlitSurface");
+        }
 }
 
 void screenShade(SDL_Rect * area, unsigned char amount)

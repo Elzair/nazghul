@@ -75,6 +75,13 @@ extern "C" {
 
         extern void mapBlackout(int val); // for sleeping in town
 
+        // The destination (dx, dy) point is an in-out parm, upon return it
+        // points to the location where the missile actually landed (in case it
+        // was blocked in its path)
+        extern void mapAnimateProjectile(int ox, int oy, int *dx, int *dy, 
+                                         struct sprite *sprite, 
+                                         struct place *place);
+
 #ifdef __cplusplus
 }
 #endif

@@ -56,8 +56,7 @@ CHAR ch_Thorald_Greybeard {
 
   conv      c_generic;
   readied {
-    t_long_sword;
-    t_dagger;
+    t_magic_bow;
     t_leather_cap;
     t_leather_boots;
     t_leather_armor;
