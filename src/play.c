@@ -2368,6 +2368,19 @@ void detailed_examine_XY(int x, int y)
 	// the objects on this tile?
     if ( mapTileIsVisible(x, y) ) {
         consolePrint("DETAIL XY=(%d,%d) TODO - print detailed view\n", x, y);
+        // For each object/terrain on the tile, print
+        // the name (and perhaps show the sprite in a Status Window mode),
+        // and also show:
+        //     o whether this object blocks LOS (alpha)
+        //     o whether this object blocks movement (pmask)
+        //     o whether this object causes some effect when stepped upon
+        //       (hazardous terrain effects, pressure plate triggers)
+        //     o information specific to the object type, such as:
+        //       o Triggers: current state, and perhaps what it is connected to?
+        //       o NpcParties: alignment/hostility, movement mode (pmask), ...
+        //       o Vehicles: movement mode, armament, current HP
+        //       o Portable items: weapon/armor stats, (U)se effects, etc...
+        // Hmmm...what else?
         return;
     }
     consolePrint("DETAIL XY=(%d,%d) out of LOS\n", x, y);
