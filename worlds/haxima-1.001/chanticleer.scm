@@ -129,7 +129,7 @@
                  "\n"
                  "[stops playing] If you simply MUST go investigate, "
                  "travel northeast through the woods and find the "
-                 "entrance in a nook in the mounains."
+                 "entrance in a nook in the mountains."
                )))))
 
 (define chant-conv

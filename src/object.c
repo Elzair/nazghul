@@ -592,7 +592,10 @@ Object::~Object()
 {
         int i;
 
-        assert(! refcount);
+        if (refcount) {
+                dbg("refcount=%d\n", refcount);
+                assert(! refcount);
+        }
 
         dbg("destroying %d %08lx %s\n", refcount, this, getName());
 

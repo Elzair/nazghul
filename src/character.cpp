@@ -1560,37 +1560,22 @@ bool Character::commute()
 void Character::synchronize()
 {
 	int hr, min;
+        struct appt *cur_appt = 0;
 
 	if (!sched || sched->n_appts == 0)
 		return;
 
-	for (appt = 0; appt < sched->n_appts; appt++) {
-		hr = sched->appts[appt].hr;
-		min = sched->appts[appt].min;
+        cur_appt = sched_get_appointment(sched, Session->clock.hour,
+                                         Session->clock.min);
 
-		if (hr > Session->clock.hour || 
-                    (Session->clock.hour == hr && min > Session->clock.min)) {
-			break;
-		}
-	}
-
-	// The loader must ensure that the first appt in every schedule starts
-	// at hour zero.
-	assert(appt);
-
-	// Back up to the previous appt.
-	appt--;
-
-        // -------------------------------------------------------------------
         // Drop the character in the upper left corner of their roaming
         // rectangle. The ULC is better than the center because it's more
         // obvious to the schedule designer that the ULC needs to be passable
         // terrain.
-        // -------------------------------------------------------------------
+	relocate(cur_appt->place, cur_appt->x, cur_appt->y);
+	setActivity(cur_appt->act);
 
-	relocate(getPlace(), sched->appts[appt].x, sched->appts[appt].y);
-
-	setActivity(sched->appts[appt].act);
+        appt = cur_appt->index;
 }
 
 void Character::getAppointment()

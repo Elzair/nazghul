@@ -21,6 +21,7 @@
 //
 #include "sched.h"
 #include "common.h"
+#include "scheme-private.h"
 
 #include <assert.h>
 #include <string.h>
@@ -56,6 +57,7 @@ char *sched_activity_to_name(int activity)
 struct sched *sched_new(char *tag, int n_appts)
 {
         struct sched *sched;
+        int i;
 
         sched = (struct sched*)calloc(1, sizeof(*sched));
         assert(sched);
@@ -66,6 +68,9 @@ struct sched *sched_new(char *tag, int n_appts)
         sched->n_appts = n_appts;
         sched->appts = (struct appt*)calloc(n_appts, sizeof(struct appt));
         assert(sched->appts);
+
+        for (i = 0; i < n_appts; i++)
+                sched->appts[i].index = i;
 
         return sched;
 }
@@ -79,4 +84,46 @@ void sched_del(struct sched *sched)
 	if (sched->appts)
 		free(sched->appts);
         free(sched);
+}
+
+static struct place *sched_scheme_sym_to_place(scheme *sc, pointer sym)
+{
+        pointer pair;
+
+        assert(sym);
+        assert(sc);
+        assert(sc->vptr->is_symbol(sym));
+
+        pair = sc->vptr->find_slot_in_env(sc, sc->envir, sym, 1);
+        assert(sc->vptr->is_pair(pair));
+
+        return (struct place*)sc->vptr->pair_car(sc->vptr->pair_cdr(pair));
+}
+
+struct appt *sched_get_appointment(struct sched *sched, int hr, int min)
+{
+        int i = 0;
+        struct appt *appt = 0;
+
+        assert(hr >= 0);
+        assert(hr <= 23);
+
+        for (i = 0; i < sched->n_appts; i++) {
+                if (hr < sched->appts[i].hr)
+                        break;
+        }
+
+        assert(i);
+        assert(i <= sched->n_appts);
+
+        appt = &sched->appts[i-1];
+
+        /* resolve the place symbol to a place */
+        if (! appt->place) {
+                appt->place = sched_scheme_sym_to_place(sched->sc, 
+                                                        appt->place_sym);
+                assert(appt->place);
+        }
+
+        return appt;
 }

@@ -1,69 +1,121 @@
 PART 0: BEFORE RELEASE
 
-* Notify Tim Douglas that a release is planned and ask him to do an OSX
+(1) Notify Tim Douglas that a release is planned and ask him to do an OSX
   binary build.
 
 PART I: PREPARE FOR RELEASE
 
-* INSTALL is up-to-date
-* BUGS is up-to-date
-* NEWS is up-to-date with differences since last version
-* AUTHORS is up-to-date with _ALL_ contributions (legal reasons)
-* Version number is correct in configure.ac
-* The SUBDIRS of Makefile.am are correct for this release
+(1) INSTALL is up-to-date
+(2) BUGS is up-to-date
+(3) NEWS is up-to-date with differences since last version
+(4) AUTHORS is up-to-date with _ALL_ contributions (legal reasons)
+(5) Version number is correct in configure.ac
+(6) The SUBDIRS of Makefile.am are correct for this release
 
 PART II: BUILD AND TEST SOURCE DIST
 
-x Do a test build from the nazghul top-level directory:
+(1) Do a test build from the nazghul top-level directory:
 
         $ ./scripts/ghul-test-install <version>
 
   If all goes well the game should startup. The tarballs will all be built and
   sitting in the top-level directory.
 
-* Make any changes necessary, and go back to step x.
-
-* At this point checkin any changes made so far.
+(2) Make any changes necessary, and go back to PART II step (1)
+(3) At this point checkin any changes made so far.
 
 PART III: BUILD AND TEST WINDOWS BINARY
 
+Note: this assumes Cygwin
+
+(1) ftp nazghul-0.4.0.tar.gz to a cygwin session
+(2) untar, configure and build the nazghul.exe:
+
+        $ tar -xvzf nazghul-0.4.0.tar.gz
+        $ cd nazghul-0.4.0
+        # this next step is because of where I have installed SDL_image on my
+        environment... may not be necessary for other people:
+        $ export LDFLAGS=-L/usr/local/lib
+        $ ./configure
+        $ make
+
+(3) Make a new release dir:
+
+        $ cd ../release
+        $ mkdir ../release/nazghul-0.4.0
+        $ cp src/nazghul.exe ../release/nazghul-0.4.0
+        $ cp -R worlds/haxima-1.001 ../release/nazghul-0.4.0/
+        $ cd ../release/nazghul-0.4.0
+        $ cp ../common/* ./
+
+(4) Test the release dir under windows by double-clicking on haxima.bat in an
+    explorer window.
+
+(5) If all is well then zip up the release:
+
+        $ cd ..
+        $ tar -cvzf nazghul-0.4.0-win32.tar.zip nazghul-0.4.0/
+
+(6) ftp it to another windows box without cygwin and test it out
+
 PART IV: LABEL THE SOURCE
+
+(1) Once everything has been tested and you know that you have what you want,
+    label the source code with the release. On linux cd to the nazghul top dir
+    under CVS and...
+
+    $ cvs -q tag release_0_4_0
+
+    Note: post-release bugfixes should be done on a branch rooted at this
+    label, made like this:
+
+                $ cvs update -r release_0_4_0
+                $ cvs -q tag -b release_0_4_0_maint
+
+    (I haven't tried this yet, so I hope it works!)
 
 PART V: UPLOAD TO SOURCEFORGE
 
-* upload the distro tarball
+(1) upload the distro tarballs to the sourceforge site:
 
-  ncftp -u anonymous upload.sourceforge.net
-  bin
-  cd /incoming
-  put nazghul-$version.tar.gz
-  bye  
+        $ ncftp -u anonymous upload.sourceforge.net
+        > bin
+        > cd /incoming
+        > put nazghul-0.4.0.tar.gz
+        > put nazghul-0.4.0-win32.tar.gz
+        > bye  
 
-* On sourceforge at http://sourceforge.net/projects/nazghul/ goto the
-  admin->File Releases page and scroll to the bottom. Click "Add Release" next
-  to "nazghul-devel".
+(2) On sourceforge at http://sourceforge.net/projects/nazghul/ goto the
+    admin->File Releases page and scroll to the bottom. Click "Add Release"
+    next to "nazghul-devel" (or "nazghul" for stable releases).
 
-  Fill out the form:
-    For "New release name" put something like "nazghul-0.1.3"
-    For "Of which package" keep "nazghul-devel"
-  Click on "Create this release"
+    (a) Fill out the form:
+        ...For "New release name" put something like "nazghul-0.4.0"
+        ...For "Of which package" keep "nazghul-devel" (or "nazghul" for a
+           stable release)
+        ...Click on "Create this release"
 
-  Fill out the "Step 1:   Edit Existing Release" form:
-    For "Upload Release Notes" browse to the file RELEASE_NOTES.
-    For "Upload Change Log" nothing is needed (unless we add such a file)
-    Press "Submit/Refresh"
+    (b) Fill out the "Step 1:   Edit Existing Release" form:
+        ...For "Upload Release Notes" browse to the file NEWS
+        ...For "Upload Change Log" nothing is needed (unless we add such a
+           file)
+        ...Press "Submit/Refresh"
 
-  Fill out the "Step 2:   Add Files To This Release" form
-  and hit Submit/Refresh
+    (c)  Fill out the "Step 2:   Add Files To This Release" form and hit
+         Submit/Refresh
 
-  Fill out the "Step 3:   Edit Files In This Release" form
-    Processor=Any
-    File Type Update=Source.gz
-  and hit Update/Refresh
+    (d) Fill out the "Step 3:   Edit Files In This Release" form
+        ...Processor=Any
+        ...File Type Update=Source.gz
+        ...hit Update/Refresh
 
 PART VI: PUBLICIZE
 
-* From the main Nazghul project page on SourceForge,
-  submit a news item for the file release.
+(1) From the main Nazghul project page on SourceForge submit a news item for
+    the file release.
 
-* Done
+(2) Go to the freshmeat account and announce there, too
+
+    freshmeat: http://www.freshmeat.net
+        uname: gmcnutt
+       passwd: f00z]3

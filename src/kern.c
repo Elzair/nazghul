@@ -2180,12 +2180,14 @@ static pointer kern_mk_sched(scheme *sc, pointer args)
 
         /* alloc the schedule */
         sched = sched_new(tag, n_appts);
+        sched->sc = sc;
         
         /* loop, adding the appointments to the schedule */
         for (i = 0; i < n_appts; i++) {
                 struct appt *appt = &sched->appts[i];
                 pointer p = scm_car(sc, args);
                 pointer rect;
+                pointer dummy;
                 args = scm_cdr(sc, args);
 
                 if (unpack(sc, &p, "dd", &appt->hr, &appt->min, &activity)) {
@@ -2197,8 +2199,9 @@ static pointer kern_mk_sched(scheme *sc, pointer args)
                 rect = scm_car(sc, p);
                 p = scm_cdr(sc, p);
 
-                if (unpack(sc, &rect, "dddd", &appt->x, &appt->y, &appt->w, 
-                           &appt->h)) {
+                if (unpack(sc, &rect, "cdddd", &appt->place_sym, 
+                           &appt->x, &appt->y, 
+                           &appt->w, &appt->h)) {
                         load_err("kern-mk-sched %s: bad args in appt %d rect",
                                  tag, i);
                         goto abort;

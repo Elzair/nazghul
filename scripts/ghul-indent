@@ -30,7 +30,7 @@ indent                                   \
     --braces-on-if-line                  \
     --braces-on-struct-decl-line         \
     --cuddle-do-while                    \
-    --dont-cuddle-else                   \
+    --cuddle-else                        \
     --space-after-for                    \
     --space-after-if                     \
     --space-after-while                  \
