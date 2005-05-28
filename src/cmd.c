@@ -28,7 +28,6 @@
 #include "astar.h"
 #include "common.h"
 #include "screen.h"
-//#include "console.h"
 #include "status.h"
 #include "player.h"
 #include "sky.h"
@@ -60,11 +59,34 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <ctype.h>
-// #include <sys/types.h>  // getpid()
 #include <unistd.h>     // getpid()
 #include <errno.h>
 
 #define MAX_SPELL_NAME_LENGTH 64 /* arbitrarily chosen */
+
+// SAM: Using this typedef below
+typedef void (*v_funcpointer_ii)  (struct place *, int x, int y);
+typedef void (*v_funcpointer_iiv) (struct place *, int x, int y, void * v);
+
+struct cursor_movement_keyhandler {
+        v_funcpointer_ii each_tile_func;
+        v_funcpointer_ii each_target_func;
+        char abort : 1;   /* command was aborted */
+        char multi : 1;   /* select multiple targets */
+};
+
+struct terraform_mode_keyhandler {
+        // This struct is put into the 'data' field of a 
+        // 'struct KeyHandler'.
+        // It is used by terraform_movecursor_and_do().
+        bool              abort;
+        v_funcpointer_iiv each_tile_func;
+        v_funcpointer_iiv each_target_func;
+        
+        struct place           * place;  // needed?
+        struct terrain_map     * map;
+        struct terrain_palette * palette;
+};
 
 
 int dirkey(struct KeyHandler *kh, int key, int keymod)
@@ -323,78 +345,50 @@ int scroller(struct KeyHandler * kh, int key, int keymod)
 	return 0;
 }
 
+/**
+ * movecursor - move the crosshair around, possibly running a function on each
+ * tile entered by the crosshair or on each tile selected
+ */
 int movecursor(struct KeyHandler * kh, int key, int keymod)
 {
-        // A UI mode in which the user can move the cursor 
-        // with ARROW keys, select a target with 
-        // (ENTER | RETURN | SPACE), or cancel with ESCAPE.
-        struct cursor_movement_keyhandler * data;
-        assert(kh);
-        data = (struct cursor_movement_keyhandler *) kh->data;
+        struct cursor_movement_keyhandler * data
+                = (struct cursor_movement_keyhandler *) kh->data;
   
+        /* target selected? */
         if (key == '\n' || key == SDLK_SPACE || key == SDLK_RETURN) {
-                return 1;  // Done (target selected)
-        }
-  
-        if (keyIsDirection(key)) {
-                int dir = keyToDirection(key);
-                Session->crosshair->move(directionToDx(dir), directionToDy(dir));
-                mapSetDirty();
-                return 0;  // Keep on keyhandling
-        }
-  
-        if (key == SDLK_ESCAPE) {
-                data->abort = 1;
-                return 1;  // Done (abort)
-        }
-  
-        return 0;  // Keep on keyhandling
-} // movecursor()
-
-int movecursor_and_do(struct KeyHandler * kh, int key, int keymod)
-{
-        // As movecursor(), but call kh->each_point_func()
-        // for each cursor move, and kh->each_target_func()
-        // for each point selected with (ENTER, SPACE, RETURN).
-        // 
-        // Unlike movecursor(), multiple targets can be selected.
-        // We expect that eventually the user will exit 
-        // this UI mode with ESCAPE.
-        // 
-        // Also unlike movecursor(), we don't return the (last) target 
-        // selected, as the ESC to exit this UI mode stomps on that info.
-        struct cursor_movement_keyhandler * data;
-        assert(kh);
-        data = (struct cursor_movement_keyhandler *) kh->data;
-  
-        if (key == '\n' || key == SDLK_SPACE || key == SDLK_RETURN) {
-                int x = Session->crosshair->getX();
-                int y = Session->crosshair->getY();
-                if (data->each_target_func)
+                if (data->each_target_func) {
                         data->each_target_func(Session->crosshair->getPlace(),
-                                               x, y);
-                return 0;  // Keep on keyhandling
+                                               Session->crosshair->getX(),
+                                               Session->crosshair->getY());
+                }
+
+                return ! data->multi;   /* done unless multiple targets */
+
         }
   
+        /* crosshairs moved? */
         if (keyIsDirection(key)) {
                 int dir = keyToDirection(key);
                 Session->crosshair->move(directionToDx(dir), 
                                          directionToDy(dir));
                 mapSetDirty();
-                int x = Session->crosshair->getX();
-                int y = Session->crosshair->getY();
-                if (data->each_point_func)
-                        data->each_point_func(Session->crosshair->getPlace(),
-                                              x, y);
-                return 0;  // Keep on keyhandling
+                if (data->each_tile_func) {
+                        data->each_tile_func(Session->crosshair->getPlace(),
+                                             Session->crosshair->getX(),
+                                             Session->crosshair->getY());
+                }
+
+                return 0;   /* not done */
         }
   
+        /* abort? */
         if (key == SDLK_ESCAPE) {
                 data->abort = 1;
-                return 1;  // Done (abort)
+                return 1;   /* done */
         }
-        return 0;  // Keep on keyhandling
-} // movecursor_and_do()
+
+        return 0;   /* not done */
+}
 
 /*
  * emit_terraform_status - print the active terrain palette entry to the
@@ -466,12 +460,12 @@ int cmd_terraform_movecursor_and_do(struct KeyHandler * kh, int key,
                 mapSetDirty();
                 int x = Session->crosshair->getX();
                 int y = Session->crosshair->getY();
-                if (data->each_point_func)
-                        data->each_point_func(Session->crosshair->getPlace(),
+                if (data->each_tile_func)
+                        data->each_tile_func(Session->crosshair->getPlace(),
                                               x, y, data);
 
                 /* If the CTRL key is held down then also run the target
-                 * function to point the tile. */
+                 * function to paint the tile. */
                 if (keymod & KMOD_CTRL &&
                     data->each_target_func)
                         data->each_target_func(Session->crosshair->getPlace(),
@@ -1138,16 +1132,16 @@ bool cmdReady(class Character * member)
 
 int select_target(int ox, int oy, int *x, int *y, int range)
 {
+        struct cursor_movement_keyhandler data;
+        struct KeyHandler kh;
+
         Session->crosshair->setRange(range);
         Session->crosshair->setOrigin(ox, oy);
-        Session->crosshair->relocate(Place, *x, *y);  // Remember prev target, if any
+        Session->crosshair->relocate(Place, *x, *y);   /* previous target */
         mapSetDirty();
   
-        struct cursor_movement_keyhandler data;
-        data.each_point_func  = NULL;
-        data.each_target_func = NULL;
-        data.abort            = false;
-        struct KeyHandler kh;
+        memset(&data, 0, sizeof(data));
+
         kh.fx   = movecursor;
         kh.data = &data;
   
@@ -1162,24 +1156,21 @@ int select_target(int ox, int oy, int *x, int *y, int range)
         Session->crosshair->remove();
         mapSetDirty();
   
-        struct cursor_movement_keyhandler * data_ret;
-        data_ret = (struct cursor_movement_keyhandler *) kh.data;
-        if (data_ret->abort) {
+        if (data.abort) {
                 cmdwin_print("none!");
-                return -1;  // Aborted, no target
+                return -1;
         }
   
-        // Target has been selected, (x,y) contain where
         return 0;  
-} // select_target()
+}
 
 int select_target_with_doing(int ox, int oy, int *x, int *y,
                              int range,
-                             v_funcpointer_ii each_point_func,
+                             v_funcpointer_ii each_tile_func,
                              v_funcpointer_ii each_target_func)
 {
         // SAM: 
-        // As select_target(), but each_point_func() 
+        // As select_target(), but each_tile_func() 
         // will be called at each point cursored over,
         // and each_target_func() will be called at each point
         // selected as a target.
@@ -1189,18 +1180,21 @@ int select_target_with_doing(int ox, int oy, int *x, int *y,
         // SAM: It might be nice to return the last target,
         // in case our caller wants it, but it seems that
         // the ESC abort stomps on it.
+        struct cursor_movement_keyhandler data;
+        struct KeyHandler kh;
+
         Session->crosshair->setRange(range);
         Session->crosshair->setViewportBounded(1);
         Session->crosshair->setOrigin(ox, oy);
-        Session->crosshair->relocate(Place, *x, *y);  // Remember prev target, if any
+        Session->crosshair->relocate(Place, *x, *y); /* previous target */
         mapSetDirty();
 
-        struct cursor_movement_keyhandler data;
-        data.each_point_func  = each_point_func;
+        memset(&data, 0, sizeof(data));
+        data.each_tile_func   = each_tile_func;
         data.each_target_func = each_target_func;
-        data.abort            = false;
-        struct KeyHandler kh;
-        kh.fx   = movecursor_and_do;
+        data.multi            = 1;
+
+        kh.fx   = movecursor;
         kh.data = &data;
   
         eventPushKeyHandler(&kh);
@@ -1214,26 +1208,26 @@ int select_target_with_doing(int ox, int oy, int *x, int *y,
         Session->crosshair->remove();
         mapSetDirty();
   
-        struct cursor_movement_keyhandler * data_ret;
-        data_ret = (struct cursor_movement_keyhandler *) kh.data;
-        if (data_ret->abort) {
+        if (data.abort) {
                 cmdwin_print("Done.");
-                return -1;  // Aborted, no target
+                return -1;
         }
   
-        // Target has been selected, (x,y) contain where
         return 0;
-} // select_target_with_doing()
+}
 
-/*
+/**
  * cmd_terraform_cursor_func - 
  */
 static int cmd_terraform_cursor_func(int ox, int oy, int *x, int *y,
                                      int range,
-                                     v_funcpointer_iiv each_point_func,
+                                     v_funcpointer_iiv each_tile_func,
                                      v_funcpointer_iiv each_target_func,
                                      struct place * place)
 {
+        struct terraform_mode_keyhandler data;
+        struct KeyHandler kh;
+
         /* Position the cursor */
         Session->crosshair->setRange(range);
         Session->crosshair->setViewportBounded(1);
@@ -1242,14 +1236,12 @@ static int cmd_terraform_cursor_func(int ox, int oy, int *x, int *y,
         mapSetDirty();
   
         /* Setup the key handler */
-        struct terraform_mode_keyhandler data;
-        data.each_point_func  = each_point_func;
+        data.each_tile_func   = each_tile_func;
         data.each_target_func = each_target_func;
         data.abort            = false;
         data.map              = place->terrain_map;
         data.palette          = place->terrain_map->palette;
 
-        struct KeyHandler kh;
         kh.fx   = cmd_terraform_movecursor_and_do;
         kh.data = &data;
   
@@ -2272,7 +2264,7 @@ void detailed_examine_XY(struct place *place, int x, int y)
         log_msg("DETAIL XY=(%d,%d) out of LOS\n", x, y);
 }
 
-/*
+/**
  * cmd_dm_xray_look_at_xy - like look_at_XY() but unconditionally reports what
  * is there.
  */
@@ -2329,7 +2321,7 @@ bool cmdXamine(class Object * pc)
                 log_msg("You examine around...");
 
         look_at_XY(pc->getPlace(), x,y);  // First look at the current tile
-	if (select_target_with_doing(x, y, &x, &y, 99,
+	if (select_target_with_doing(x, y, &x, &y, pc->getVisionRadius(),
 				     look_at_XY, detailed_examine_XY) == -1) {
 		ret = false;
 	}
@@ -2485,31 +2477,17 @@ bool cmdAT (class Character * pc)
         return true;
 } // cmdAT()
 
-/*
+/**
  * cmd_terraform - edit terrain interactively
  */
-bool cmd_terraform(class Character * pc)
+bool cmd_terraform(struct place *place, int x, int y)
 {
-	int x, y;
-        struct place           * place;
         struct terrain_map     * map;
         struct terrain_palette * palette;
         struct terrain         * terrain;
 
 	cmdwin_clear();
 	cmdwin_print("Terraform-");
-
-	if (pc) {
-                /* Use the party member's location as the origin. */
-                place = Place;
-		x = pc->getX();
-		y = pc->getY();
-	} else {
-		/* Use the player party's location as the origin. */
-                place = player_party->getPlace();
-		x     = player_party->getX();
-		y     = player_party->getY();
-	}
 
         map     = place->terrain_map;
         palette = map->palette;

@@ -78,7 +78,7 @@ extern bool cmdOpen(class Character * pc);
 extern bool cmdCastSpell(class Character * pc);
 extern bool cmdQuit(void);
 extern bool cmdLook(int x, int y);
-extern bool cmd_terraform(class Character * pc);
+extern bool cmd_terraform(struct place *place, int x, int y);
 extern bool cmdSaveTerrainMap(class Character * pc);
   
 extern class Character *select_party_member(void);
@@ -87,11 +87,6 @@ extern int select_target(int ox, int oy, int *x, int *y, int range);
 
 extern char * name_of_context (void);
 
-// SAM: This typedef also exists in event.h
-extern int select_target_with_doing (int ox, int oy, int *x, int *y, 
-                                     int range, 
-                                     v_funcpointer_ii each_point_func,
-                                     v_funcpointer_ii each_target_func);
 extern int ui_get_quantity(int max);
   
 // the new ui api

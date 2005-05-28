@@ -152,7 +152,7 @@ static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
                 break;
                         
         case KEY_CTRL_T:
-                cmd_terraform(NULL);
+                cmd_terraform(party->getPlace(), party->getX(), party->getY());
                 break;
                         
         case KEY_CTRL_Z:
@@ -631,7 +631,8 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
                 break;
 
         case KEY_CTRL_T:
-                cmd_terraform(character);
+                cmd_terraform(character->getPlace(), character->getX(),
+                              character->getY());
                 break;
 
         case KEY_CTRL_Z:

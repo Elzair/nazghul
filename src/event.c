@@ -185,7 +185,8 @@ static void event_handle_aux(int flags)
 		case SDL_USEREVENT:
 			{
 				struct TickHandler *tickh;
-				tickh = getHandler(&TickHandlers, struct TickHandler);
+				tickh = getHandler(&TickHandlers,
+                                                   struct TickHandler);
 				if (tickh) {
                                         use_hook = true;
                                         if (tickh->fx(tickh)) {
@@ -202,11 +203,13 @@ static void event_handle_aux(int flags)
 				struct KeyHandler *keyh;
                                 int mapped_key;
 
-				keyh = getHandler(&KeyHandlers, struct KeyHandler);
+				keyh = getHandler(&KeyHandlers, 
+                                                  struct KeyHandler);
                                 mapped_key = mapKey(&event.key.keysym);
 				if (keyh) {
                                         use_hook = true;
-                                        if (keyh->fx(keyh, mapped_key, event.key.keysym.mod)) {
+                                        if (keyh->fx(keyh, mapped_key, 
+                                                     event.key.keysym.mod)) {
                                                 done = true;
                                         }
                                 }
