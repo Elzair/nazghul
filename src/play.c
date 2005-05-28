@@ -226,7 +226,17 @@ static void play_loop(void)
                         dec_xray(session_ticks_per_turn());
                         
                         player_party->advanceTurns(session_ticks_per_turn());
+
+                        int oldHour = Session->clock.hour;
                         clock_advance(session_ticks_per_turn());
+
+                        // On each change of the hour check characters with
+                        // multi-place schedules to see if they need to be
+                        // introduced to the current place.
+                        if (oldHour != Session->clock.hour) {
+                                session_intro_sched_chars(Session);
+                        }
+
                         foogodAdvanceTurns();
                         sky_advance(&Session->sky, 
                                     NULL != Place && ! Place->underground);

@@ -1172,30 +1172,14 @@ int place_get_light(struct place *place, int x, int y)
 	return light;
 }
 
-static void place_obj_synchronize(class Object * obj, void *data)
-{
-        obj->synchronize();
-}
-
 void place_synchronize(struct place *place)
 {
-	place_for_each_object(place, place_obj_synchronize, 0);
-}
-
-static void myResetObjectTurns(class Object * obj, void *data)
-{
-	obj->synchronize();
-
-        if (obj->isType(CHARACTER_ID)) {
-                class Character *ch = (class Character*)obj;
-                if (ch->isCharmed())
-                        ch->unCharm();
-        }
+        session_synch_sched_chars(Session);
 }
 
 void place_enter(struct place *place)
 {
-	place_for_each_object(place, myResetObjectTurns, 0);
+        place_synchronize(place);
 }
 
 int place_get_movement_cost(struct place *place, int x, int y, 

@@ -117,7 +117,8 @@ Character::Character(char *tag, char *name,
           rdyArms(NULL),
           fleeing(false), fleeX(0), fleeY(0), burden(0),
           inCombat(false),
-          container(NULL), sprite(sprite)
+          container(NULL), sprite(sprite),
+          sched_chars_node(0)
 {
         if (tag) {
                 this->tag = strdup(tag);
@@ -183,7 +184,8 @@ Character::Character():name(0), hm(0), xp(0), order(-1),
                        rdyArms(NULL),
                        fleeing(false), fleeX(0), fleeY(0), burden(0),
                        inCombat(false),
-                       container(NULL), sprite(0)
+                       container(NULL), sprite(0),
+                       sched_chars_node(0)
 {
         // This method is probably obsolete now
 
@@ -265,6 +267,11 @@ Character::~Character()
         // safely even if 'this' is the target
         if (target)
                 setAttackTarget(NULL);
+
+        /* remove self from session's special list for chars with multi-place
+         * schedules */
+        if (sched_chars_node)
+                session_rm_sched_char(sched_chars_node);
 }
 
 void Character::damage(int amount)
@@ -1511,6 +1518,15 @@ bool Character::canSee(class Object *obj)
 bool Character::commute()
 {
 	int tx, ty;
+        struct appt *curAppt = &sched->appts[appt];
+        struct place *apptPlace = sched_appt_get_place(sched, curAppt);
+
+        if (getPlace() != apptPlace) {
+                // If the destination is off-place then just teleport out for
+                // now
+                relocate(curAppt->place, curAppt->x, curAppt->y);
+                setActivity(curAppt->act);
+        }
 
         // -------------------------------------------------------------------
         // Search for an open place in the appointed rectangle where the
@@ -1574,8 +1590,24 @@ void Character::synchronize()
         // terrain.
 	relocate(cur_appt->place, cur_appt->x, cur_appt->y);
 	setActivity(cur_appt->act);
-
         appt = cur_appt->index;
+}
+
+void Character::introduce()
+{
+        assert(sched);
+
+        struct appt *newAppt = sched_get_appointment(sched, 
+                                                     Session->clock.hour,
+                                                     Session->clock.min);
+        if (getPlace() != newAppt->place) {
+                // Introduce a character into the place as part of its
+                // schedule. For now, just drop it on its location as in
+                // synchronize().
+                relocate(newAppt->place, newAppt->x, newAppt->y);
+                setActivity(newAppt->act);
+                appt = newAppt->index;
+        }
 }
 
 void Character::getAppointment()
@@ -2277,7 +2309,11 @@ void Character::save(struct save *save)
 
 void Character::setSchedule(struct sched *val)
 {
+
         sched = val;
+
+        if (sched)
+                sched_chars_node = session_add_sched_char(Session, this);
 }
 
 bool Character::tryToRelocateToNewPlace(struct place *newplace, 
@@ -2390,3 +2426,4 @@ void Character::setDead(bool val)
 {
         dead = val;
 }
+

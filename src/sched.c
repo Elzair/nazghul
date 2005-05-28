@@ -127,3 +127,14 @@ struct appt *sched_get_appointment(struct sched *sched, int hr, int min)
 
         return appt;
 }
+
+struct place *sched_appt_get_place(struct sched *sched,
+                                         struct appt *appt)
+{
+        if (! appt->place) {
+                appt->place = sched_scheme_sym_to_place(sched->sc, 
+                                                        appt->place_sym);
+                assert(appt->place);
+        }
+        return appt->place;
+}

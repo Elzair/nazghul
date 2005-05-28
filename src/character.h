@@ -203,6 +203,7 @@ class Character:public Being {
         void setAI(struct closure *val);
         struct closure *getAI();
         void setDead(bool val);
+        void introduce();
 
 	char *tag;
         struct node *plnode; // pointer back to party list node
@@ -282,6 +283,8 @@ class Character:public Being {
         bool ambushedWhileCamping;
         struct closure *ai; // should be moved up to Being...
         bool dead;
+
+        struct node *sched_chars_node;   /* for chars with multiplace scheds */
 };
 
 extern void char_dtor(void *val);

@@ -220,6 +220,7 @@ struct session *session_new(void *interp)
         magic_init(&session->magic);
         list_init(&session->tickq);
         list_init(&session->turnq);
+        node_init(&session->sched_chars);
         session->time_accel = 1;
         return session;
 }
@@ -229,6 +230,7 @@ void session_del(struct session *session)
         struct list *elem;
         struct data_obj_entry *entry;
         struct include_file *inc;
+        struct node *node;
 
         elem = session->data_objects.next;
         int count = 0;
@@ -263,6 +265,15 @@ void session_del(struct session *session)
                 struct wq_job *job = list_entry(elem, struct wq_job, list);
                 elem = elem->next;
                 wq_job_del(job);
+        }
+
+        /* clean up the sched_chars list */
+        node = session->sched_chars.next;
+        while (node != &session->sched_chars) {
+                struct node *tmp = node->next;
+                node_remove(node);
+                node_unref(node);
+                node = tmp;
         }
 
         /* Clean up the closures */
@@ -596,4 +607,41 @@ void session_run_start_proc(struct session *session)
         if (session->start_proc) {
                 closure_exec(session->start_proc, "p", player_party);
         }
+}
+
+struct node *session_add_sched_char(struct session *session,
+                                    class Character *npc)
+{
+        struct node *node = node_new(npc);
+        node_add(&session->sched_chars, node);
+        return node;
+}
+
+void session_rm_sched_char(struct node *node)
+{
+        /* beware of doing this while iterationg over the sched_chars list */
+        node_remove(node);
+        node_unref(node);
+}
+
+void session_synch_sched_chars(struct session *session)
+{
+        struct node *node = session->sched_chars.next;
+        while (node != &session->sched_chars) {
+                class Character *npc = (class Character*)node->ptr;
+                node = node->next;
+                npc->synchronize();
+                if (npc->isCharmed())
+                        npc->unCharm();
+        }
+}
+
+void session_intro_sched_chars(struct session *session)
+{
+        struct node *node = session->sched_chars.next;
+        while (node != &session->sched_chars) {
+                class Character *npc = (class Character*)node->ptr;
+                npc->introduce();
+                node = node->next;
+        }        
 }

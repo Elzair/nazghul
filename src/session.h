@@ -31,6 +31,7 @@
 #include "screen.h"
 #include "sky.h"
 #include "status.h"
+#include "node.h"
 
 /* File for quick save/reload with CTRL-q and CTRL-r */
 #define QUICKSAVE_FNAME "save.scm"
@@ -180,6 +181,8 @@ struct session {
         /* Optional script to run every turn the player is camping in the
          * wilderness */
         struct closure *camping_proc;
+
+        struct node sched_chars;   /* characters with multi-place schedules */
 };
 
 // Callback table for saving objects
@@ -241,6 +244,11 @@ extern void session_run_start_proc(struct session *session);
 extern void session_set_camping_proc(struct session *session, 
                                      struct closure *proc);
 extern void save_err(char *fmt, ...);
+extern struct node *session_add_sched_char(struct session *session,
+                                           class Character *npc);
+extern void session_rm_sched_char(struct node *node);
+extern void session_synch_sched_chars(struct session *session);
+extern void session_intro_sched_chars(struct session *session);
 
 // Global session object.
 extern struct session *Session;
