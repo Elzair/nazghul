@@ -7,6 +7,8 @@
 (define (mk-zone x y w h) (list 'p_enchanters_tower x y w h))
 (define enchtwr-main-entrance    (mk-zone 31 40 10   8))
 (define enchtwr-dining-room      (mk-zone 28 23  8   5))
+(define enchtwr-dining-room-1    (mk-zone 29 26  1   1))
+(define enchtwr-dining-room-2    (mk-zone 31 26  1   1))
 (define enchtwr-kitchen          (mk-zone 30 18  4   3))
 (define enchtwr-pantry           (mk-zone 31 14  3   2))
 (define enchtwr-fountain         (mk-zone 38 29  6   6))

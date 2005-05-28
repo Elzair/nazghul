@@ -1,3 +1,5 @@
+(kern-load "moongate-clearing-zones.scm")
+
 ;;----------------------------------------------------------------------------
 ;; Gregor
 ;;
@@ -18,7 +20,7 @@
                30 0 9 9            ; hp/xp/mp/lvl
                #f                  ; dead
                'gregor-conv        ; conv
-               nil ;sch_gregor     ; sched
+               sch_gregor          ; sched
                nil                 ; special ai
                nil                 ; container
                nil                 ; readied

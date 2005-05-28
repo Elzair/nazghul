@@ -1518,6 +1518,10 @@ bool Character::canSee(class Object *obj)
 bool Character::commute()
 {
 	int tx, ty;
+
+#if 0
+        // This turned out to be unnecessary because introduce() gets called
+        // before we get a chance to start commuting.
         struct appt *curAppt = &sched->appts[appt];
         struct place *apptPlace = sched_appt_get_place(sched, curAppt);
 
@@ -1527,6 +1531,7 @@ bool Character::commute()
                 relocate(curAppt->place, curAppt->x, curAppt->y);
                 setActivity(curAppt->act);
         }
+#endif
 
         // -------------------------------------------------------------------
         // Search for an open place in the appointed rectangle where the
@@ -1603,8 +1608,18 @@ void Character::introduce()
         if (getPlace() != newAppt->place) {
                 // Introduce a character into the place as part of its
                 // schedule. For now, just drop it on its location as in
-                // synchronize().
-                relocate(newAppt->place, newAppt->x, newAppt->y);
+                // synchronize(). DO NOT try to use object::relocate(). It's
+                // seriously overextended and has a bunch of logic that will
+                // prevent NPC's from relocating.
+                obj_inc_ref(this);
+                if (getPlace()) {
+                        place_remove_object(getPlace(), this);
+                }
+                setPlace(newAppt->place);
+                setX(newAppt->x);
+                setY(newAppt->y);
+                place_add_object(newAppt->place, this);
+                obj_dec_ref(this);
                 setActivity(newAppt->act);
                 appt = newAppt->index;
         }

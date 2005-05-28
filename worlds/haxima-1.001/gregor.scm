@@ -6,6 +6,12 @@
 ;;
 ;; The schedule below is for...
 ;;----------------------------------------------------------------------------
+(kern-mk-sched 'sch_gregor
+               (list 0  0  gh-gregors-bed   "sleeping")
+               (list 6  7  gh-graveyard     "idle")
+               (list 7  0  mgc-roadbend     "idle")
+               (list 13 0  gh-kitchen       "eating")
+               )
 
 ;;----------------------------------------------------------------------------
 ;; Gob

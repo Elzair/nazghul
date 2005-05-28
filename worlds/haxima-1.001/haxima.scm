@@ -109,7 +109,7 @@
 ;; Time
 ;;----------------------------------------------------------------------------
 (define hour 12)
-(define minutes 45)
+(define minutes 59)
 (define time-in-minutes (+ (* hour 60) minutes))
 
 (kern-set-clock 
@@ -204,9 +204,10 @@
 
 (define (simple-start kplayer)
 ;  (kern-obj-put-at kplayer (list p_moongate_clearing 11 11)))
+  (kern-obj-put-at kplayer (list p_gregors_hut 11 11)))
   ;(kern-log-msg "You notice a cave to the southwest."))
   ;(kern-obj-put-at kplayer (list p_slimy_cavern 13 2))
-  (kern-obj-put-at kplayer (list p_trigrave 15 15)))
+;  (kern-obj-put-at kplayer (list p_enchanters_tower 32 32)))
 ;  (kern-obj-put-at kplayer (list p_shard 20 13)))
                   
 ;;----------------------------------------------------------------------------
