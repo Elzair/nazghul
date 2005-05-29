@@ -27,18 +27,30 @@
 class Cursor:public Object {
       public:
 	Cursor();
+
 	virtual ~ Cursor();
 	virtual void init(class ObjectType * type);
 	virtual enum MoveResult move(int dx, int dy);
-        virtual void setViewportBounded(int bounded);
-	virtual void setRange(int range);
-	virtual void setOrigin(int x, int y);
-        virtual bool is_active(void);
-        virtual void relocate(struct place *newplace, int newx, int newy, bool noStep = true, struct closure *place_switch_hook = NULL);
+        virtual void relocate(struct place *newplace, int newx, int newy, 
+                              bool noStep = true, 
+                              struct closure *place_switch_hook = NULL);
         virtual void remove();
+
+        bool is_active(void);
+        void setViewportBounded(int bounded);
+	void setRange(int range);
+        int getRange();
+	void setOrigin(int x, int y);
+        int getOriginX();
+        int getOriginY();
+        bool inRange(int x, int y);
+        void shadeRange(bool val);
+        bool isRangeShaded();
+
       protected:
 	int range, bounded, originX, originY;
         bool active;
+        bool shade;
 };
 
 #endif // cursor_h

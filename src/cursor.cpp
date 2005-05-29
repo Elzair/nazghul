@@ -36,44 +36,49 @@ void Cursor::init(class ObjectType * type)
 	Object::init(type);
 }
 
+bool Cursor::inRange(int x, int y)
+{
+        // this works on wrapping maps
+        int d = place_flying_distance(getPlace(), originX, originY, x, y);
+        
+        // Is the new location out of range?
+        return (d <= range); 
+}
+
 enum MoveResult Cursor::move(int dx, int dy)
 {
-  // SAM: Found a few things, noted below.
-  // 
-  // -- Cursor sometimes not drawn:
-  // If the cursor is moved out of LOS, it is not drawn.
-  // That is not desirable, methinks.
-  // 
-  // -- Cursor range "any range within viewport"
-  // Cursor::setViewportBounded() makes this possible.
-  // The caller need only set the range to some large value,
-  // and turn on 'bounded'.
+        // SAM: Found a few things, noted below.
+        // 
+        // -- Cursor sometimes not drawn:
+        // If the cursor is moved out of LOS, it is not drawn.
+        // That is not desirable, methinks.
+        // 
+        // -- Cursor range "any range within viewport"
+        // Cursor::setViewportBounded() makes this possible.
+        // The caller need only set the range to some large value,
+        // and turn on 'bounded'.
 	int newx = getX() + dx;
 	int newy = getY() + dy;
-
-    newx = place_wrap_x(getPlace(), newx);
-    newy = place_wrap_y(getPlace(), newy);
-    
-    // this works on wrapping maps
-    int d = place_flying_distance(getPlace(), originX, originY, newx, 
-                                  newy);
-    
-	// Is the new location off the map?
-	if (place_off_map(getPlace(), newx, newy))
-      return OffMap;
-    
-    // Is the new location out of the current viewport (without scrolling)?
-    if (bounded && !mapTileIsWithinViewport(newx,newy))
-      return OutOfRange;
-
-	// Is the new location out of range?
-	if (d > range)
-      return OutOfRange;
-    
-	// move the cursor
-	relocate(getPlace(), newx, newy, true);
-    
-	return MovedOk;
+        
+        newx = place_wrap_x(getPlace(), newx);
+        newy = place_wrap_y(getPlace(), newy);
+        
+        // Is the new location off the map?
+        if (place_off_map(getPlace(), newx, newy))
+            return OffMap;
+        
+        // Is the new location out of the current viewport (without scrolling)?
+        if (bounded && !mapTileIsWithinViewport(newx,newy))
+                return OutOfRange;
+        
+        // Is the new location out of range?
+        if (! inRange(newx, newy))
+                return OutOfRange;
+        
+        // move the cursor
+        relocate(getPlace(), newx, newy, true);
+        
+        return MovedOk;
 }
 
 void Cursor::setViewportBounded(int bounded)
@@ -108,4 +113,29 @@ void Cursor::remove()
 bool Cursor::is_active(void)
 {
         return active;
+}
+
+int Cursor::getRange()
+{
+        return range;
+}
+
+int Cursor::getOriginX()
+{
+        return originX;
+}
+
+int Cursor::getOriginY()
+{
+        return originY;
+}
+
+void Cursor::shadeRange(bool val)
+{
+        shade = val;
+}
+
+bool Cursor::isRangeShaded()
+{
+        return shade;
 }

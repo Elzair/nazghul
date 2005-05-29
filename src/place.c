@@ -1143,6 +1143,50 @@ struct astar_node *place_find_path(struct place *place,
 
 }
 
+/**
+ *  Calls place_find_path with the search info setup to seek a map edge.x
+ */
+struct astar_node *place_find_path_to_edge(struct place *place, int x0, int y0,
+                                           int edgedir, int pflags,
+                                           class Object *requestor)
+{
+        struct astar_search_info info;
+	struct astar_node *path;
+
+        info.x0 = x0;
+        info.y0 = y0;
+        info.flags = pflags;
+        
+        /* setup search info to seek the map edge */
+        switch (edgedir) {
+        case NORTH:
+                info.x1 = 0;
+                info.y1 = 0;
+                info.flags |= ASTAR_HORZ;
+                break;
+        case SOUTH:
+                info.x1 = 0;
+                info.y1 = place_h(place)-1;
+                info.flags |= ASTAR_HORZ;
+                break;
+        case EAST:
+                info.x1 = place_w(place)-1;
+                info.y1 = 0;
+                info.flags |= ASTAR_VERT;
+                break;
+        case WEST:
+                info.x1 = 0;
+                info.y1 = place_h(place)-1;
+                info.flags |= ASTAR_VERT;
+                break;
+        default:
+                return 0;
+        }
+
+        return place_find_path(place, &info, requestor);
+
+}
+
 int place_get_light(struct place *place, int x, int y)
 {
 	int light;

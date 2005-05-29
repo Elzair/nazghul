@@ -56,6 +56,16 @@
 #define mview_center_x(mview) (mview_x(mview) + mview_w(mview) / 2)
 #define mview_center_y(mview) (mview_y(mview) + mview_h(mview) / 2)
 
+
+/**
+ *  Convert map coords to screen coords 
+ */
+#define MX_TO_SX(x) \
+    (Map.srect.x+((x)-(Map.aview->vrect.x+Map.aview->subrect.x))*TILE_W)
+#define MY_TO_SY(y) \
+    (Map.srect.y+((y)-(Map.aview->vrect.y+Map.aview->subrect.y))*TILE_H)
+
+
 /* Global flag changeble by command-line parameters. */
 int map_use_circular_vision_radius = 0;
 
@@ -637,6 +647,9 @@ void mapRepaintClock(void)
   screenUpdate(&Map.clkRect);
 } // mapRepaintClock()
 
+/**
+ *  converts points so they appear correctly on wrapping maps 
+ */
 static void map_convert_point_to_vrect(int *x, int *y)
 {
         SDL_Rect *vrect = &Map.aview->vrect;
@@ -657,15 +670,81 @@ static void map_convert_point_to_vrect(int *x, int *y)
         }
 }
 
-static void mapUpdateCursor(void)
+/**
+ *  Shade the given map coordinates (works but unused)
+ */
+static void map_shade_tile(int x, int y)
+{
+        map_convert_point_to_vrect(&x, &y);
+        if (point_in_rect(x, y, &Map.aview->vrect)) {
+                SDL_Rect rect;
+                rect.x = MX_TO_SX(x);
+                rect.y = MY_TO_SY(y);
+                rect.w = TILE_W;
+                rect.h = TILE_H;
+                screenShade(&rect, 128);
+        }
+}
+
+/**
+ *  Helper for map_shade_circle() (works but unused)
+ */
+static void map_shade_circle_points(int cx, int cy, int x, int y)
+{
+        if (x == 0) {
+                map_shade_tile(cx, cy + y);
+                map_shade_tile(cx, cy - y);
+                map_shade_tile(cx + y, cy);
+                map_shade_tile(cx - y, cy);
+        } else if (x == y) {
+                map_shade_tile(cx + x, cy + y);
+                map_shade_tile(cx - x, cy + y);
+                map_shade_tile(cx + x, cy - y);
+                map_shade_tile(cx - x, cy - y);
+        } else if (x < y) {
+                map_shade_tile(cx + x, cy + y);
+                map_shade_tile(cx - x, cy + y);
+                map_shade_tile(cx + x, cy - y);
+                map_shade_tile(cx - x, cy - y);
+                map_shade_tile(cx + y, cy + x);
+                map_shade_tile(cx - y, cy + x);
+                map_shade_tile(cx + y, cy - x);
+                map_shade_tile(cx - y, cy - x);
+        }
+}
+
+/**
+ *  Shade the tiles on the edge of the circle (works but unused). This code is
+ *  lifted from http://www.cs.unc.edu/~mcmillan/comp136/Lecture7/circle.html,
+ *  which is a very nice tutorial on the subject.
+ */
+static void map_shade_circle(int cx, int cy, int radius)
+{
+        int x = 0;
+        int y = radius;
+        int p = (5 - radius*4)/4;
+
+        map_shade_circle_points(cx, cy, x, y);
+        while (x < y) {
+                x++;
+                if (p < 0) {
+                        p += 2*x+1;
+                } else {
+                        y--;
+                        p += 2*(x-y)+1;
+                }
+                map_shade_circle_points(cx, cy, x, y);
+        }
+}
+
+static void map_paint_cursor(void)
 {
         int x, y;
-        int sx, sy;
 
         if (!Session->crosshair->is_active())
                 return;
 
-        // Convert to view rect offset
+        /* Convert to view rect offset */
         x = Session->crosshair->getX();
         y = Session->crosshair->getY();
         map_convert_point_to_vrect(&x, &y);
@@ -673,10 +752,10 @@ static void mapUpdateCursor(void)
                 return;
         }
 
-        // Paint it
-        sx = Map.srect.x + (x - (Map.aview->vrect.x + Map.aview->subrect.x)) * TILE_W;
-        sy = Map.srect.y + (y - (Map.aview->vrect.y + Map.aview->subrect.y)) * TILE_H;
-        spritePaint(Session->crosshair->getSprite(), 0, sx, sy);
+        /* Paint it */
+        spritePaint(Session->crosshair->getSprite(), 0, 
+                    MX_TO_SX(x), MY_TO_SY(y));
+
 }
 
 static void mapPaintPlace(struct place *place, 
@@ -799,6 +878,19 @@ static void mapPaintPlace(struct place *place,
 			sprite = terrain->sprite;
 			spritePaint(sprite, 0, scr_x, scr_y);
                         place_paint_objects(place, map_x, map_y, scr_x, scr_y);
+
+                        // If the crosshair is active but this tile is not in
+                        // range then shade it.
+                        if (Session->crosshair->is_active() &&
+                            Session->crosshair->isRangeShaded() &&
+                            ! Session->crosshair->inRange(map_x, map_y)) {
+                                SDL_Rect shade_rect;
+                                shade_rect.x = scr_x;
+                                shade_rect.y = scr_y;
+                                shade_rect.w = TILE_W;
+                                shade_rect.h = TILE_H;
+                                screenShade(&shade_rect, 128);
+                        }
 		}
 	}
 
@@ -921,7 +1013,7 @@ void mapRepaintView(struct mview *view, int flags)
 		t6 = SDL_GetTicks();
 		myShadeScene(&view->subrect);
 		t7 = SDL_GetTicks();
-                mapUpdateCursor();
+                map_paint_cursor();
 	}
 
  done_painting_place:
@@ -1488,7 +1580,7 @@ void mapUpdateTile(struct place *place, int x, int y)
         }
 
         if (x == Session->crosshair->getX() && y == Session->crosshair->getY())
-                mapUpdateCursor();
+                map_paint_cursor();
 
         screenUpdate(&rect);
 

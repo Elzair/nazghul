@@ -233,6 +233,11 @@ extern struct astar_node *place_find_path(struct place *place,
                                           struct astar_search_info *info,
                                           class Object *requestor);
 
+extern struct astar_node *place_find_path_to_edge(struct place *place, int x0,
+                                                  int y0, int edgedir,
+                                                  int pflags,
+                                                  class Object *requestor);
+
 extern struct terrain_map *place_get_combat_terrain_map(struct place
                                                         *place, int x,
                                                         int y);

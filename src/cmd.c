@@ -378,6 +378,9 @@ int movecursor(struct KeyHandler * kh, int key, int keymod)
                                              Session->crosshair->getY());
                 }
 
+                /* turn on range shading after the first move */
+                Session->crosshair->shadeRange(true);
+
                 return 0;   /* not done */
         }
   
@@ -1138,6 +1141,11 @@ int select_target(int ox, int oy, int *x, int *y, int range)
         Session->crosshair->setRange(range);
         Session->crosshair->setOrigin(ox, oy);
         Session->crosshair->relocate(Place, *x, *y);   /* previous target */
+
+        /* initially don't shade the range unless the previous target is the
+         * same as the origin (implying that there is no previous target) */
+        Session->crosshair->shadeRange((*x==ox)&&(*y==oy));
+
         mapSetDirty();
   
         memset(&data, 0, sizeof(data));
