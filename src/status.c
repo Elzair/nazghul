@@ -378,8 +378,11 @@ static void stat_show_container()
 		if (!avail && !inUse)
 			continue;
 
-		spritePaint(ie->type->getSprite(), 0, Status.screenRect.x,
-			    rect.y);
+                if (ie->type->getSprite()) {
+                        spritePaint(ie->type->getSprite(), 0, 
+                                    Status.screenRect.x,
+                                    rect.y);
+                }
 
                 rect.y += LINE_H / 4;
 
