@@ -159,6 +159,7 @@ void combat_set_state(enum combat_state new_state)
                 case COMBAT_STATE_LOOTING:
                         combat_print_banner("VICTORY");
                         sound_play(Combat.sound_victory, SOUND_MAX_VOLUME);
+                        player_party->addExperience(COMBAT_VICTORY_XP);
                         break;
                 case COMBAT_STATE_DONE:
                         combat_print_banner("DEFEAT");

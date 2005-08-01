@@ -1472,7 +1472,9 @@ void Object::restoreEffect(struct effect *effect, struct gob *gob, int flags,
 
         // Note: do NOT run the "apply" procedure of the effect here (already
         // tried this - causes script recursion while loading which as we know
-        // aborts the load prematurely).
+        // aborts the load prematurely). Instead the "restart" procedure will
+        // be run as part of our start() method, called on all objects near the
+        // end of session_load().
 
         entry = hook_entry_new(effect, gob);
         entry->flags = flags;

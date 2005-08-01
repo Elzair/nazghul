@@ -1519,25 +1519,11 @@ bool Character::commute()
 {
 	int tx, ty;
 
-#if 0
-        // This turned out to be unnecessary because introduce() gets called
-        // before we get a chance to start commuting.
-        struct appt *curAppt = &sched->appts[appt];
-        struct place *apptPlace = sched_appt_get_place(sched, curAppt);
+        // Note: this could be improved a bit by caching the results of the
+        // rectangle search below. Since the path is cached I'm not sure how
+        // big of a gain it would be.
 
-        if (getPlace() != apptPlace) {
-                // If the destination is off-place then just teleport out for
-                // now
-                relocate(curAppt->place, curAppt->x, curAppt->y);
-                setActivity(curAppt->act);
-        }
-#endif
-
-        // -------------------------------------------------------------------
-        // Search for an open place in the appointed rectangle where the
-        // character can go to.
-        // -------------------------------------------------------------------
-
+        // Search for an open place in the appointment rectangle
         for (ty = sched->appts[appt].y; 
              ty < sched->appts[appt].y + sched->appts[appt].h; 
              ty++) {
@@ -1551,20 +1537,17 @@ bool Character::commute()
                             place_is_hazardous(getPlace(), tx, ty))
                                 continue;
                         
+                        // try to go there
                         if (!pathfindTo(getPlace(), tx, ty)) {
                                 continue;
                         }
                         
-                        // ----------------------------------------------------
                         // Check if the commute is over.
-                        // ----------------------------------------------------
-
                         if (getX() == tx && getY() == ty) {
                                 setActivity(sched->appts[appt].act);
                         }
 
                         return true;
-                        
                 }
         }
 
@@ -1727,8 +1710,11 @@ void Character::exec()
                 if (clock_alarm_is_expired(&rest_alarm)) {
                         if (isPlayerControlled() &&
                             player_party->vehicle &&
-                            player_party->vehicle->getHp() < player_party->vehicle->getMaxHp()) {
-                                player_party->vehicle->heal(player_party->vehicle->getMaxHp() / 10);
+                            player_party->vehicle->getHp() < 
+                            player_party->vehicle->getMaxHp()) {
+                                player_party->vehicle->heal(
+                                        player_party->vehicle->getMaxHp() / 
+                                        10);
                                 foogodRepaint();
                                 consolePrint("%s repairs ", getName());
                                 player_party->vehicle->describe();
@@ -1772,27 +1758,32 @@ void Character::exec()
                 
         case CONTROL_MODE_AUTO:
 
-                // -----------------------------------------------------------
                 // Lookup this character's schedule (do it outside the loop
                 // because we only need to do it once per turn - the clock
                 // won't change in the loop).
-                // -----------------------------------------------------------
-
                 if (sched)
                         getAppointment();
 
-                // -----------------------------------------------------------
                 // Loop until the turn is over or the character stops using
                 // action points.
-                // -----------------------------------------------------------
-
                 points_last_loop = 0;
                 while (! isTurnEnded() &&
                        getActionPoints() != points_last_loop) {
-                        
                         points_last_loop = action_points;
-                        ctrl(this);
 
+                        switch (getActivity()) {
+                        case COMMUTING:
+                                // pathfind to next appointment
+                                commute();
+                                break;
+                        case EATING:
+                                // do nothing
+                                break;
+                        default:
+                                // call the AI
+                                ctrl(this);
+                                break;
+                        }
                 }
                 break;
 

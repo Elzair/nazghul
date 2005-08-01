@@ -77,6 +77,7 @@ class player_party : public Party {
 	virtual ~ player_party();
 
         // overloaded Object methods:
+	virtual void addExperience(int delta);
         virtual bool addToInventory(class Object *object);
         virtual bool hasInInventory(class ObjectType *type);
         virtual struct sprite *getSprite(void);

@@ -1116,33 +1116,11 @@ static void ctrl_idle(class Character *character)
 
 void ctrl_character_ai(class Character *character)
 {
-        // -------------------------------------------------------------------
-        // Fleeing overrides the current activity (maybe it should be an
-        // activity?)
-        // -------------------------------------------------------------------
-
         if (character->isFleeing()) {
                 character->flee();
                 return;
         }
-        
-        // -------------------------------------------------------------------
-        // What we do in auto mode depends on the character's "activity", which
-        // is set by the schedule. Character's with no schedule are always
-        // "idle", which means they wander aimlessly and act agressively toward
-        // perceived enemies. Think of them as juvenile delinquents.
-        // -------------------------------------------------------------------
-
-        switch (character->getActivity()) {
-        case COMMUTING:
-                character->commute();
-                break;
-        case EATING:
-                break;
-        default:
-                ctrl_idle(character);
-                break;
-        }
+        ctrl_idle(character);
 }
 
 void ctrl_character_ui(class Character *character)

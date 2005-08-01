@@ -1696,3 +1696,15 @@ void player_party::setInventoryContainer(Container *val)
         inventory = val;
         obj_inc_ref(inventory);
 }
+
+void player_party::addExperience(int val)
+{
+        struct node *entry;
+        class Character *member;
+
+        FOR_EACH_MEMBER(entry, member) {
+                if (!member->isDead()) {
+                        member->addExperience(val);
+                }
+        }
+}
