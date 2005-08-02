@@ -203,8 +203,8 @@
   )
 
 (define (simple-start kplayer)
-;  (kern-obj-put-at kplayer (list p_moongate_clearing 11 11)))
-  (kern-obj-put-at kplayer (list p_gregors_hut 11 11)))
+  (kern-obj-put-at kplayer (list p_moongate_clearing 11 11)))
+  ;(kern-obj-put-at kplayer (list p_gregors_hut 11 11)))
   ;(kern-log-msg "You notice a cave to the southwest."))
   ;(kern-obj-put-at kplayer (list p_slimy_cavern 13 2))
 ;  (kern-obj-put-at kplayer (list p_enchanters_tower 32 32)))

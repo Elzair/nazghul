@@ -601,7 +601,12 @@ bool Party::createMembers(void)
                         assert(ginfo->factory);
                         c = (class Character*)closure_exec(ginfo->factory, 
                                                            NULL);
-                        if (! c) {
+
+                        // Note: closure_exec may return a non-zero but invalid
+                        // pointer if the scheme script has a bug in it. It
+                        // seems to return 0x1 in this case, so watch for
+                        // it. Otherwise we'll crash in addMember.
+                        if (! c || c == (class Character*)0x1) {
                                 warn("Failed to create character");
                         } else {
                                 addMember(c);

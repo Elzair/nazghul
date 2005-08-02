@@ -110,9 +110,8 @@
     (mk-chest
      nil
      (mk-contents (roll-to-add 75  "1"     t_dagger)
-                  (roll-to-add 50  "1"     t_hatchet)
+                  (roll-to-add 50  "1"     t_sword)
                   (roll-to-add 25  "1d3-1" t_spear)
-                  (roll-to-add 100 "1d2-1" t_mushroom)
                   (roll-to-add 50  "1"     t_shield)
                   (roll-to-add 25  "1"     t_bow)
                   (roll-to-add 50  "1d20"  t_arrow)
@@ -137,7 +136,7 @@
     ;;...................container (and contents)
     (mk-chest
      nil
-     (mk-contents (roll-to-add 50  "1"     t_war_axe)
+     (mk-contents (roll-to-add 50  "1"     t_2h_axe)
                   (roll-to-add 25  "1"     t_halberd)
                   (roll-to-add 50  "1"     t_sword)
                   (roll-to-add 25  "1"     t_2H_sword)
@@ -226,7 +225,7 @@
      oc_bandit ;;........occupation
      s_brigand ;;........sprite
      faction-outlaw ;;...faction
-     'bandit-ai ;;.......custom ai (optional)
+     nil ; 'bandit-ai ;;.......custom ai (optional)
     
      ;;..................container (and contents, used to arm char)
      (mk-chest
