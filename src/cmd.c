@@ -499,10 +499,12 @@ int cmd_terraform_movecursor_and_do(struct KeyHandler * kh, int key,
                         ot = place_get_terrain(Session->crosshair->getPlace(),
                                                Session->crosshair->getX(),
                                                Session->crosshair->getY());
-                        cmd_terraform_fill(tt, ot,
-                                           Session->crosshair->getPlace(),
-                                           Session->crosshair->getX(),
-                                           Session->crosshair->getY());
+                        if (tt != ot) {
+                                cmd_terraform_fill(tt, ot,
+                                                   Session->crosshair->getPlace(),
+                                                   Session->crosshair->getX(),
+                                                   Session->crosshair->getY());
+                        }
                         mapUpdate(0);
                 }
                 return 0;
