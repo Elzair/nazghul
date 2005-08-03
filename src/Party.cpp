@@ -608,6 +608,7 @@ bool Party::createMembers(void)
                         // it. Otherwise we'll crash in addMember.
                         if (! c || c == (class Character*)0x1) {
                                 warn("Failed to create character");
+                                return false;
                         } else {
                                 addMember(c);
                                 order++;

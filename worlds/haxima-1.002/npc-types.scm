@@ -144,8 +144,6 @@
                   (roll-to-add 25  "1"     t_bow)
                   (roll-to-add 50  "1d20"  t_arrow)
                   (roll-to-add 50  "1"     t_iron_helm)
-                  (roll-to-add 10  "1"     t_ancient_helm)
-                  (roll-to-add 1   "1"     t_silver_crown)
                   (roll-to-add 50  "1"     t_armor_leather)
                   (roll-to-add 25  "1"     t_armor_leather)
                   (roll-to-add 10  "1"     t_armor_chain)

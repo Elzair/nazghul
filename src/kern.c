@@ -828,6 +828,99 @@ static pointer kern_mk_map(scheme *sc, pointer args)
         return sc->NIL;
 }
 
+
+
+static pointer kern_mk_composite_map(scheme *sc, pointer args)
+{
+        int width, height, x = 0, y = 0, i = 0;
+        char *tag = TAG_UNK;
+        struct terrain_map *map, *submap;
+        pointer ret, p;        
+
+        /* parse supermap tag and dimensions */
+        if (unpack(sc, &args, "ydd", &tag, &width, &height)) {
+                load_err("kern-mk-composite-map %s: bad args", tag);
+                return sc->NIL;
+        }
+
+        /* unpack the first submap */
+        if (unpack(sc, &args, "p", &submap)) {
+                load_err("kern-mk-composite-map %s: first submap invalid", tag);
+                goto abort;
+        }
+        
+        /* create the supermap, inferring the submap dimensions and palette
+         * from the first submap */
+        map = terrain_map_new(tag, width * submap->w, height * submap->h, 
+                              submap->palette);
+
+        /* set the supermap info */
+        map->submap_w = submap->w;
+        map->submap_h = submap->h;
+        map->composite = 1;
+        
+        /* blit the first submap onto the supermap in the upper left-hand
+         * corner */
+        terrain_map_blit(map, 0, 0, submap, 0, 0, submap->w, submap->h);
+
+        /* for each remaining submap in the list... */
+        for (y = 0; y < height; y++) {
+
+                for (x = 0; x < width; x++) {
+
+                        /* except the first one... */
+                        if (x == 0 && y == 0)
+                                continue;
+
+                        /* unpack it */
+                        if (unpack(sc, &args, "p", &submap)) {
+                                load_err("kern-mk-composite-map %s: submap "\
+                                         "%d invalid", tag, i);
+                                goto abort;
+                        }
+                        
+                        /* check its palette and dimensions */
+                        if (map->palette != submap->palette) {
+                                load_err("kern-mk-composite-map %s: submap %d "\
+                                         "palette doesn't match first submap "\
+                                         "palette", tag, i);
+                                goto abort;
+                        }
+                        if (map->submap_w != submap->w) {
+                                load_err("kern-mk-composite-map %s: submap %d "\
+                                         "width doesn't match first submap "\
+                                         "width", tag, i);
+                                goto abort;
+                        }
+                        if (map->submap_h != submap->h) {
+                                load_err("kern-mk-composite-map %s: submap %d "\
+                                         "height doesn't match first submap "\
+                                         "height", tag, i);
+                                goto abort;
+                        }
+                        
+                        /* blit the submap onto the supermap */
+                        terrain_map_blit(map, x * map->submap_w, y * map->submap_h, 
+                                         submap, 0, 0, 
+                                         map->submap_w, map->submap_h);
+                }
+        }
+
+        /* add it to the session */
+        map->handle = session_add(Session, map, terrain_map_dtor, NULL, NULL);
+        ret = scm_mk_ptr(sc, map);
+
+        /* define its tag (if specified) */
+        if (tag)
+                scm_define(sc, tag, ret);
+
+        return ret;
+
+ abort:
+        terrain_map_del(map);
+        return sc->NIL;
+}
+
 static int kern_place_load_subplaces(scheme *sc, pointer *args, struct place *place)
 {
         pointer subplaces;
@@ -6371,6 +6464,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-mk-field", kern_mk_field);
         API_DECL(sc, "kern-mk-field-type", kern_mk_field_type);
         API_DECL(sc, "kern-mk-map", kern_mk_map);
+        API_DECL(sc, "kern-mk-composite-map", kern_mk_composite_map);
         API_DECL(sc, "kern-mk-mmode", kern_mk_mmode);
         API_DECL(sc, "kern-mk-obj", kern_mk_obj);
         API_DECL(sc, "kern-mk-obj-type", kern_mk_obj_type);

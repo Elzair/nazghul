@@ -61,6 +61,10 @@ struct terrain_map *terrain_map_clone(struct terrain_map *orig, char *tag)
 	map = terrain_map_new(tag, orig->w, orig->h, orig->palette);        
 	memcpy(map->terrain, orig->terrain,
 	       sizeof(struct terrain *) * orig->w * orig->h);
+
+        map->composite = orig->composite;
+        map->submap_w = orig->submap_w;
+        map->submap_h = orig->submap_h;
         
 	return map;
 }
@@ -364,6 +368,70 @@ void print_horizontal_guideline (FILE * fp, int indent, struct terrain_map *map)
     // TODO: width 3 and 4 palettes.
 }
 
+
+static void terrain_map_composite_save(struct save *save, struct terrain_map *map)
+{
+        int x, y, w, h, sub_y, sub_x;
+
+        map->saved = save->session_id;
+
+        /* write the composite map constructor */
+        save->enter(save, "(kern-mk-composite-map\n");
+        if (map->tag)
+                save->write(save, "'%s ", map->tag);
+        else
+                save->write(save, "nil ");
+        w = map->w/map->submap_w;
+        h = map->h/map->submap_h;
+        save->write(save, "%d %d\n", w, h);
+
+        /* for each submap */
+        for (y = 0; y < h; y++) {
+                for (x = 0; x < w; x++) {
+
+                        /* write the submap constructor */
+                        save->enter(save, "(kern-mk-map nil %d %d %s\n",
+                                    map->submap_w, map->submap_h, 
+                                    map->palette->tag);
+
+                        /* write the submap terrain list */
+                        save->enter(save, "(list\n");
+
+                        for (sub_y = y*map->submap_h; 
+                             sub_y < y*map->submap_h+map->submap_h; 
+                             sub_y++) {
+
+                                save->write(save, "\"");
+
+                                for (sub_x = x*map->submap_w; 
+                                     sub_x < x*map->submap_w+map->submap_w; 
+                                     sub_x++) {                        
+                                        char *glyph;
+                                        
+                                        glyph = palette_glyph_for_terrain(
+                                                map->palette,
+                                                map->terrain[sub_y*map->w+sub_x]);
+                                        if (! glyph) {
+                                                err("map %s: no glyph in palette %s "\
+                                                    "for terrain at [%d %d]\n", map->tag,
+                                                    map->palette->tag, sub_x, sub_y);
+                                                assert(glyph);
+                                        }
+                                        
+                                        // print with no indentation (same line)
+                                        fprintf(save->file, "%2s ", glyph);
+                                }
+                                fprintf(save->file, "\"\n");
+                        }
+                        
+                        save->exit(save, ")\n");
+                        save->exit(save, ")\n");
+                }
+        }
+        
+        save->exit(save, ")\n");
+}
+
 void terrain_map_save(struct save *save, void *val)
 {
         struct terrain_map *map;
@@ -373,6 +441,11 @@ void terrain_map_save(struct save *save, void *val)
 
         if (map->saved == save->session_id) {
                 save->write(save, "%s\n", map->tag);
+                return;
+        }
+
+        if (map->composite) {
+                terrain_map_composite_save(save, map);
                 return;
         }
 

@@ -75,18 +75,18 @@
             "|| || || || || || || || || || || || || tt tt .. .. .. tt tt tt || || || || tt || tt tt tt tt || "
             "|| || || tt tt || || || || || tt tt tt tt tt .. .. .. tt tt tt tt tt || tt tt || || || tt tt tt "
             "|| || || tt tt tt tt tt tt tt tt .. .. .. .. .. .. tt tt tt tt tt tt tt tt || || || tt tt bb tt "
-            "|| || || tt tt tt tt tt tt tt .. .. .. .. .. .. .. .. .. .. .. tt tt tt tt tt tt || || tt tt tt "
-            "|| || tt tt .. .. .. .. .. .. .. .. .. .. .. .. .. .. tt tt tt .. tt .. tt tt tt tt || || tt || "
-            "|| || tt tt .. bb rr rr ws rr rr rr .. .. .. .. .. .. .. .. .. .. .. tt .. tt tt tt || || || || "
-            "|| || tt tt .. rr .. cc cc cc cc rr .. .. .. .. .. .. .. .. .. && .. .. .. tt tt tt || || || || "
-            "|| tt tt tt .. rr cc cc cc cc cc rr .. .. .. .. .. .. .. .. .. .. .. .. .. tt .. tt || || || || "
-            "tt tt tt tt .. ws cc cc cc cc cc ws .. .. .. .. .. .. .. .. .. .. .. tt .. tt tt .. .. .. || || "
-            ".. tt tt .. .. rr cc cc cc cc cc rr .. .. .. .. .. .. .. .. .. .. .. .. .. tt .. .. .. .. .. || "
-            ".. .. .. .. .. rr cc cc cc cc cc rr .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. tt .. .. .. "
-            ".. .. .. .. .. rr rr rr cc rr rr bb rr cc rr .. .. .. .. .. .. .. .. .. .. .. .. tt bb tt .. .. "
-            "tt .. .. .. .. rr cc cc cc cc cc cc .. cc rr .. .. .. .. .. .. .. .. .. .. .. tt tt tt tt tt tt "
-            "tt tt .. .. .. ws cc cc cc cc cc cc cc cc rr .. .. .. .. .. .. .. .. .. .. .. tt tt tt tt tt bb "
-            "tt tt tt .. .. rr cc cc cc cc cc .. cc cc rr rr rr rr ws rr rr .. rr .. .. .. tt tt tt tt tt tt "
+            "|| || || tt tt tt tt tt tt tt .. .. bb bb bb bb bb bb bb bb .. tt tt tt tt tt tt || || tt tt tt "
+            "|| || tt tt .. .. .. .. .. .. .. bb .. .. .. .. .. .. tt tt tt .. tt bb tt tt tt tt || || tt || "
+            "|| || tt tt .. bb rr rr ws rr rr rr .. .. .. .. .. .. .. .. .. .. .. tt bb tt tt tt || || || || "
+            "|| || tt tt .. rr .. cc cc cc cc rr .. .. .. .. .. .. .. .. .. && .. .. bb tt tt tt || || || || "
+            "|| tt tt tt .. rr cc cc cc cc cc rr .. .. .. .. .. .. .. .. .. .. .. .. bb tt bb tt || || || || "
+            "tt tt tt tt .. ws cc cc cc cc cc ws .. .. .. .. .. .. .. .. .. bb .. tt bb tt tt .. .. .. || || "
+            ".. tt tt .. .. rr cc cc cc cc cc rr .. .. .. .. .. .. .. .. .. .. .. .. bb tt .. .. .. .. .. || "
+            ".. .. .. .. .. rr cc cc cc cc cc rr .. .. .. .. .. .. .. .. .. .. .. .. bb .. .. .. tt .. .. .. "
+            ".. .. .. .. .. rr rr rr cc rr rr bb rr cc rr .. .. .. .. .. .. .. .. .. bb .. .. tt bb tt .. .. "
+            "tt .. .. .. .. rr cc cc cc cc cc cc .. cc rr .. .. .. .. .. .. .. .. .. bb .. tt tt tt tt tt tt "
+            "tt tt .. .. .. ws cc cc cc cc cc cc cc cc rr .. .. .. .. .. .. .. .. .. bb .. tt tt tt tt tt bb "
+            "tt tt tt .. .. rr cc cc cc cc cc .. cc cc rr rr rr rr ws rr rr bb rr bb .. .. tt tt tt tt tt tt "
             "tt tt tt .. .. rr cc cc cc [[ @@ ]] cc cc rr cc cc cc cc cc .. .. rr .. .. tt tt || || || tt tt "
             "|| || tt tt .. ws cc cc cc cc cc cc cc cc rr cc cc cc cc cc cc cc rr .. tt tt || || || || || tt "
             "|| || tt tt .. rr cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc ws .. tt || || || || || || tt "
@@ -108,10 +108,6 @@
         ;; contents
         (list
           (list
-            (kern-mk-field web-type 42)          0 0)
-          (list
-            (kern-mk-field web-type 108)          13 18)
-          (list
             (kern-mk-char
               nil
               " a wood spider"
@@ -119,7 +115,7 @@
               nil
               s_spider
               7
-              0 6 14
+              0 12 28
               0 0
               0 0
               14 0
@@ -134,17 +130,7 @@
               (list
               )
             )
-          13 18)
-          (list
-            (kern-mk-field web-type 106)          12 19)
-          (list
-            (kern-mk-field web-type 94)          11 20)
-          (list
-            (kern-mk-field web-type 42)          9 22)
-          (list
-            (kern-mk-field web-type 43)          8 23)
-          (list
-            (kern-mk-field web-type 75)          8 23)
+          9 22)
           (list
             (bind
               (kern-mk-obj t_ladder_down 1)
@@ -156,25 +142,17 @@
             ) ;; bind
           6 25)
           (list
-            (kern-mk-field web-type 43)          0 1)
-          (list
-            (kern-mk-field web-type 105)          13 19)
-          (list
-            (kern-mk-field web-type 93)          12 20)
-          (list
-            (kern-mk-field web-type 42)          10 22)
-          (list
             (kern-mk-char
               nil
-              " a wood spider"
-              sp_spider
+              " a queen spider"
+              sp_queen_spider
               nil
-              s_spider
+              s_queen_spider
               7
-              0 6 14
+              0 12 24
               0 0
               0 0
-              14 0
+              34 0
               0 1
               #f ;; dead?
               nil
@@ -186,13 +164,7 @@
               (list
               )
             )
-          10 22)
-          (list
-            (kern-mk-field web-type 42)          9 23)
-          (list
-            (kern-mk-field web-type 48)          8 24)
-          (list
-            (kern-mk-field web-type 75)          8 24)
+          9 23)
           (list
             (bind
               (kern-mk-obj t_door 1)
@@ -229,557 +201,6 @@
             ) ;; bind
           7 25)
           (list
-            (kern-mk-field web-type 45)          1 1)
-          (list
-            (kern-mk-field web-type 87)          0 2)
-          (list
-            (kern-mk-field web-type 91)          13 20)
-          (list
-            (kern-mk-field web-type 80)          12 21)
-          (list
-            (kern-mk-field web-type 64)          11 22)
-          (list
-            (kern-mk-field web-type 43)          10 23)
-          (list
-            (kern-mk-field web-type 46)          9 24)
-          (list
-            (kern-mk-field web-type 75)          9 24)
-          (list
-            (kern-mk-field web-type 49)          8 25)
-          (list
-            (kern-mk-field web-type 47)          2 1)
-          (list
-            (kern-mk-field web-type 86)          1 2)
-          (list
-            (kern-mk-field web-type 89)          0 3)
-          (list
-            (kern-mk-field web-type 85)          13 21)
-          (list
-            (kern-mk-field web-type 64)          12 22)
-          (list
-            (kern-mk-field web-type 43)          11 23)
-          (list
-            (kern-mk-field web-type 45)          10 24)
-          (list
-            (kern-mk-field web-type 50)          2 2)
-          (list
-            (kern-mk-field web-type 84)          1 3)
-          (list
-            (kern-mk-field web-type 104)          0 4)
-          (list
-            (kern-mk-field web-type 66)          13 22)
-          (list
-            (kern-mk-field web-type 44)          11 24)
-          (list
-            (kern-mk-field web-type 52)          3 2)
-          (list
-            (kern-mk-field web-type 78)          2 3)
-          (list
-            (kern-mk-field web-type 106)          1 4)
-          (list
-            (kern-mk-field web-type 138)          0 5)
-          (list
-            (kern-mk-field web-type 71)          13 23)
-          (list
-            (kern-mk-field web-type 54)          4 2)
-          (list
-            (kern-mk-field web-type 76)          3 3)
-          (list
-            (kern-mk-field web-type 107)          2 4)
-          (list
-            (kern-mk-field web-type 134)          1 5)
-          (list
-            (kern-mk-field web-type 163)          0 6)
-          (list
-            (kern-mk-field web-type 72)          14 23)
-          (list
-            (kern-mk-field web-type 76)          13 24)
-          (list
-            (kern-mk-field web-type 56)          4 3)
-          (list
-            (kern-mk-field web-type 74)          3 4)
-          (list
-            (kern-mk-field web-type 132)          2 5)
-          (list
-            (kern-mk-field web-type 166)          1 6)
-          (list
-            (kern-mk-field web-type 74)          15 23)
-          (list
-            (kern-mk-field web-type 58)          5 3)
-          (list
-            (kern-mk-field web-type 70)          4 4)
-          (list
-            (kern-mk-field web-type 168)          2 6)
-          (list
-            (kern-mk-field web-type 75)          16 23)
-          (list
-            (kern-mk-field web-type 60)          5 4)
-          (list
-            (kern-mk-field web-type 69)          4 5)
-          (list
-            (kern-mk-field web-type 169)          3 6)
-          (list
-            (kern-mk-field web-type 77)          19 21)
-          (list
-            (kern-mk-field web-type 75)          17 23)
-          (list
-            (kern-mk-field web-type 62)          6 4)
-          (list
-            (kern-mk-field web-type 67)          5 5)
-          (list
-            (kern-mk-field web-type 170)          3 7)
-          (list
-            (kern-mk-field web-type 173)          2 8)
-          (list
-            (kern-mk-field web-type 176)          1 9)
-          (list
-            (kern-mk-field web-type 179)          0 10)
-          (list
-            (kern-mk-field web-type 78)          20 21)
-          (list
-            (kern-mk-field web-type 77)          19 22)
-          (list
-            (kern-mk-field web-type 76)          18 23)
-          (list
-            (kern-mk-field web-type 65)          6 5)
-          (list
-            (kern-mk-field web-type 171)          3 8)
-          (list
-            (kern-mk-field web-type 174)          2 9)
-          (list
-            (kern-mk-field web-type 177)          1 10)
-          (list
-            (kern-mk-field web-type 183)          0 11)
-          (list
-            (kern-mk-field web-type 76)          19 23)
-          (list
-            (kern-mk-field web-type 186)          1 11)
-          (list
-            (kern-mk-field web-type 237)          0 12)
-          (list
-            (kern-mk-char
-              nil
-              " a wood spider"
-              sp_spider
-              nil
-              s_spider
-              7
-              0 6 14
-              0 0
-              0 0
-              14 0
-              0 1
-              #f ;; dead?
-              nil
-              nil
-              'spider-ai
-              nil ;; inventory
-              nil
-              ;; hooks
-              (list
-              )
-            )
-          0 12)
-          (list
-            (kern-mk-field web-type 80)          20 23)
-          (list
-            (kern-mk-field web-type 83)          19 24)
-          (list
-            (kern-mk-field web-type 187)          2 11)
-          (list
-            (kern-mk-field web-type 209)          1 12)
-          (list
-            (kern-mk-field web-type 223)          0 13)
-          (list
-            (kern-mk-field web-type 79)          21 23)
-          (list
-            (kern-mk-field web-type 81)          20 24)
-          (list
-            (kern-mk-field web-type 84)          19 25)
-          (list
-            (kern-mk-field web-type 188)          3 11)
-          (list
-            (kern-mk-field web-type 202)          2 12)
-          (list
-            (kern-mk-field web-type 211)          1 13)
-          (list
-            (kern-mk-field web-type 222)          0 14)
-          (list
-            (kern-mk-field web-type 86)          21 24)
-          (list
-            (kern-mk-field web-type 84)          20 25)
-          (list
-            (kern-mk-field web-type 189)          4 11)
-          (list
-            (kern-mk-field web-type 200)          3 12)
-          (list
-            (kern-mk-field web-type 212)          2 13)
-          (list
-            (kern-mk-field web-type 218)          1 14)
-          (list
-            (kern-mk-field web-type 85)          21 25)
-          (list
-            (kern-mk-field web-type 197)          4 12)
-          (list
-            (kern-mk-field web-type 213)          3 13)
-          (list
-            (kern-mk-field web-type 215)          2 14)
-          (list
-            (kern-mk-field web-type 194)          22 25)
-          (list
-            (kern-mk-field web-type 215)          19 28)
-          (list
-            (kern-mk-field web-type 214)          3 14)
-          (list
-            (kern-mk-field web-type 214)          20 28)
-          (list
-            (kern-mk-field web-type 217)          19 29)
-          (list
-            (kern-mk-field web-type 213)          21 28)
-          (list
-            (kern-mk-field web-type 218)          20 29)
-          (list
-            (bind
-              (kern-mk-char
-                nil
-                "a troll "
-                sp_troll
-                oc_troll
-                s_troll
-                6
-                0 6 12
-                0 0
-                0 0
-                26 0
-                0 1
-                #f ;; dead?
-                nil
-                nil
-                'troll-ai
-                nil ;; inventory
-                nil
-                ;; hooks
-                (list
-                )
-              )
-              (list
-                #t
-              )
-            ) ;; bind
-          17 2)
-          (list
-            (kern-mk-field web-type 208)          22 28)
-          (list
-            (kern-mk-field web-type 212)          21 29)
-          (list
-            (kern-mk-field web-type 245)          20 30)
-          (list
-            (kern-mk-field web-type 207)          23 28)
-          (list
-            (kern-mk-field web-type 210)          22 29)
-          (list
-            (kern-mk-field web-type 247)          21 30)
-          (list
-            (kern-mk-field web-type 255)          20 31)
-          (list
-            (kern-mk-char
-              nil
-              " a wood spider"
-              sp_spider
-              nil
-              s_spider
-              7
-              0 24 56
-              0 0
-              0 0
-              12 0
-              0 1
-              #f ;; dead?
-              nil
-              nil
-              'spider-ai
-              nil ;; inventory
-              nil
-              ;; hooks
-              (list
-              )
-            )
-          20 31)
-          (list
-            (kern-mk-field web-type 206)          24 28)
-          (list
-            (kern-mk-field web-type 249)          22 30)
-          (list
-            (kern-mk-field web-type 253)          21 31)
-          (list
-            (kern-mk-field web-type 252)          22 31)
-          (list
-            (kern-mk-field web-type 63)          6 20)
-          (list
-            (kern-mk-field web-type 98)          8 19)
-          (list
-            (kern-mk-field web-type 63)          7 20)
-          (list
-            (bind
-              (kern-mk-obj spider-egg-type 1)
-              (list
-                2
-              )
-            ) ;; bind
-          6 21)
-          (list
-            (kern-mk-field web-type 63)          6 21)
-          (list
-            (kern-mk-char
-              nil
-              " a queen spider"
-              sp_queen_spider
-              nil
-              s_queen_spider
-              7
-              0 24 48
-              0 0
-              0 0
-              34 0
-              0 1
-              #f ;; dead?
-              nil
-              nil
-              'spider-ai
-              nil ;; inventory
-              nil
-              ;; hooks
-              (list
-              )
-            )
-          6 21)
-          (list
-            (kern-mk-char
-              nil
-              " a wood spider"
-              sp_spider
-              nil
-              s_spider
-              7
-              0 6 14
-              0 0
-              0 0
-              14 0
-              0 1
-              #f ;; dead?
-              nil
-              nil
-              'spider-ai
-              nil ;; inventory
-              nil
-              ;; hooks
-              (list
-              )
-            )
-          6 21)
-          (list
-            (kern-mk-char
-              nil
-              " a wood spider"
-              sp_spider
-              nil
-              s_spider
-              7
-              0 6 14
-              0 0
-              0 0
-              14 0
-              0 1
-              #f ;; dead?
-              nil
-              nil
-              'spider-ai
-              nil ;; inventory
-              nil
-              ;; hooks
-              (list
-              )
-            )
-          6 21)
-          (list
-            (kern-mk-char
-              nil
-              " a wood spider"
-              sp_spider
-              nil
-              s_spider
-              7
-              0 6 14
-              0 0
-              0 0
-              14 0
-              0 1
-              #f ;; dead?
-              nil
-              nil
-              'spider-ai
-              nil ;; inventory
-              nil
-              ;; hooks
-              (list
-              )
-            )
-          6 21)
-          (list
-            (kern-mk-char
-              nil
-              " a wood spider"
-              sp_spider
-              nil
-              s_spider
-              7
-              0 6 14
-              0 0
-              0 0
-              14 0
-              0 1
-              #f ;; dead?
-              nil
-              nil
-              'spider-ai
-              nil ;; inventory
-              nil
-              ;; hooks
-              (list
-              )
-            )
-          6 21)
-          (list
-            (kern-mk-char
-              nil
-              " a wood spider"
-              sp_spider
-              nil
-              s_spider
-              7
-              0 6 14
-              0 0
-              0 0
-              14 0
-              0 1
-              #f ;; dead?
-              nil
-              nil
-              'spider-ai
-              nil ;; inventory
-              nil
-              ;; hooks
-              (list
-              )
-            )
-          6 21)
-          (list
-            (kern-mk-char
-              nil
-              " a wood spider"
-              sp_spider
-              nil
-              s_spider
-              7
-              0 6 14
-              0 0
-              0 0
-              14 0
-              0 1
-              #f ;; dead?
-              nil
-              nil
-              'spider-ai
-              nil ;; inventory
-              nil
-              ;; hooks
-              (list
-              )
-            )
-          6 21)
-          (list
-            (kern-mk-char
-              nil
-              " a wood spider"
-              sp_spider
-              nil
-              s_spider
-              7
-              0 6 14
-              0 0
-              0 0
-              14 0
-              0 1
-              #f ;; dead?
-              nil
-              nil
-              'spider-ai
-              nil ;; inventory
-              nil
-              ;; hooks
-              (list
-              )
-            )
-          6 21)
-          (list
-            (kern-mk-char
-              nil
-              " a wood spider"
-              sp_spider
-              nil
-              s_spider
-              7
-              0 6 14
-              0 0
-              0 0
-              14 0
-              0 1
-              #f ;; dead?
-              nil
-              nil
-              'spider-ai
-              nil ;; inventory
-              nil
-              ;; hooks
-              (list
-              )
-            )
-          6 21)
-          (list
-            (kern-mk-field web-type 75)          4 23)
-          (list
-            (kern-mk-field web-type 75)          3 24)
-          (list
-            (kern-mk-field web-type 97)          9 19)
-          (list
-            (kern-mk-field web-type 63)          8 20)
-          (list
-            (kern-mk-field web-type 63)          7 21)
-          (list
-            (kern-mk-field web-type 54)          6 22)
-          (list
-            (kern-mk-field web-type 63)          6 22)
-          (list
-            (kern-mk-field web-type 75)          6 22)
-          (list
-            (kern-mk-field web-type 107)          11 18)
-          (list
-            (kern-mk-field web-type 96)          10 19)
-          (list
-            (kern-mk-field web-type 63)          9 20)
-          (list
-            (kern-mk-field web-type 63)          8 21)
-          (list
-            (kern-mk-field web-type 53)          7 22)
-          (list
-            (kern-mk-field web-type 63)          7 22)
-          (list
-            (kern-mk-field web-type 75)          7 22)
-          (list
-            (kern-mk-field web-type 45)          6 23)
-          (list
-            (kern-mk-field web-type 75)          6 23)
-          (list
             (bind
               (kern-mk-obj t_door 1)
               (list
@@ -814,18 +235,6 @@
               )
             ) ;; bind
           13 17)
-          (list
-            (kern-mk-field web-type 108)          12 18)
-          (list
-            (kern-mk-field web-type 106)          11 19)
-          (list
-            (kern-mk-field web-type 95)          10 20)
-          (list
-            (kern-mk-field web-type 100)          8 22)
-          (list
-            (kern-mk-field web-type 44)          7 23)
-          (list
-            (kern-mk-field web-type 75)          7 23)
         ) ;; end of objects
         (list
           'af-entry
@@ -924,7 +333,7 @@
           oc_troll
           s_troll
           6
-          0 24 48
+          0 12 24
           0 0
           0 0
           26 0
@@ -1093,7 +502,7 @@
           oc_bandit
           s_brigand
           8
-          0 40 40
+          0 20 20
           0 0
           0 0
           22 0
@@ -1110,10 +519,10 @@
             (list
               (list 1 t_heal_potion)
               (list 4 t_gold_coins)
-              (list 3 t_leather_helm)
-              (list 3 t_mace)
-              (list 3 t_dagger)
-              (list 3 t_armor_leather)
+              (list 1 t_leather_helm)
+              (list 1 t_mace)
+              (list 1 t_dagger)
+              (list 1 t_armor_leather)
             )
           )
           (list
@@ -1154,7 +563,7 @@
           oc_bandit
           s_brigand
           8
-          0 40 40
+          0 20 20
           0 0
           0 0
           22 0
@@ -1173,10 +582,10 @@
               (list 1 t_shield)
               (list 6 t_gold_coins)
               (list 2 t_picklock)
-              (list 3 t_leather_helm)
-              (list 3 t_mace)
-              (list 3 t_dagger)
-              (list 3 t_armor_leather)
+              (list 1 t_leather_helm)
+              (list 1 t_mace)
+              (list 1 t_dagger)
+              (list 1 t_armor_leather)
             )
           )
           (list
@@ -1203,7 +612,7 @@
           oc_bandit
           s_brigand
           8
-          0 40 40
+          0 20 20
           0 0
           0 0
           22 0
@@ -1222,10 +631,10 @@
               (list 18 t_bolt)
               (list 1 t_shield)
               (list 6 t_gold_coins)
-              (list 3 t_leather_helm)
-              (list 3 t_mace)
-              (list 3 t_oil)
-              (list 3 t_armor_leather)
+              (list 1 t_leather_helm)
+              (list 1 t_mace)
+              (list 1 t_oil)
+              (list 1 t_armor_leather)
             )
           )
           (list
@@ -1268,7 +677,7 @@
           nil
           s_knight
           2
-          0 50 45
+          0 30 25
           0 0
           0 0
           26 0
@@ -1481,66 +890,151 @@
 
 (kern-mk-place 'p_shard "The Shard Surface"
   nil ;; sprite
-  (kern-mk-map
-    nil     57 57 pal_expanded
-    (list
-      ".. .. .. .. .. .. .. .. .. .. %% %% %% %% %% %% %% %% %% %% %% %% .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
-      ".. .. .. .. .. .. .. .. .. %% %% %% -- %% %% %% %% %% %% %% %% %% .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
-      ".. .. .. .. .. .. .. .. .. %% %% -- __ -- %% %% %% %% %% %% %% %% .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
-      ".. .. .. .. .. .. .. .. .. %% %% %% -- %% %% %% %% %% %% %% %% .. .. .. .. {{ {{ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ "
-      ".. .. .. .. .. .. .. .. .. .. %% %% %% %% %% %% %% %% %% %% %% %% %% .. .. {{ {{ {{ {{ {{ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ {{ {{ {{ {{ ^^ ^^ ^^ ^^ {{ {{ ^^ ^^ ^^ {{ {{ {{ ^^ ^^ ^^ "
-      ".. .. .. .. .. .. .. .. .. .. .. %% %% %% %% %% %% ~~ %% %% %% %% %% %% .. .. {{ {{ {{ {{ {{ ^^ ^^ ^^ ^^ {{ {{ {{ {{ {{ {{ {{ {{ {{ ^^ {{ {{ {{ {{ ^^ {{ {{ {{ {{ {{ ^^ ^^ "
-      ".. .. .. .. .. .. .. .. .. .. %% %% %% %% %% %% %% %% %% %% %% -- %% %% %% .. {{ {{ {{ {{ {{ ^^ ^^ ^^ ^^ {{ {{ {{ {{ ^^ ^^ {{ {{ {{ {{ {{ {{ {{ {{ {{ {{ {{ {{ {{ {{ {{ ^^ "
-      ".. .. .. .. .. .. %% %% %% .. %% %% %% %% %% %% %% %% %% %% -- __ -- %% %% .. .. {{ {{ {{ {{ {{ ^^ ^^ ^^ ^^ {{ {{ ^^ ^^ ^^ ^^ {{ {{ {{ {{ {{ {{ {{ {{ {{ {{ {{ {{ {{ {{ ^^ "
-      ".. .. .. .. .. %% %% %% %% %% %% %% %% %% %% %% -- %% %% %% %% -- %% %% %% .. .. .. {{ {{ {{ {{ {{ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ {{ {{ {{ {{ {{ {{ {{ {{ {{ {{ ^^ ^^ "
-      ".. .. .. .. %% %% %% -- %% %% %% %% %% %% %% -- __ -- %% %% %% %% %% %% .. .. .. .. {{ {{ {{ {{ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ {{ {{ {{ {{ ^^ ^^ ^^ "
-      ".. .. .. .. %% %% -- __ -- %% %% %% %% %% %% %% -- %% %% %% %% %% %% .. .. .. .. .. {{ {{ {{ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ {{ ^^ ^^ ^^ ^^ ^^ "
-      ".. .. .. .. %% %% %% -- %% %% %% %% %% %% %% %% %% %% %% .. %% %% %% .. .. .. {{ {{ {{ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ {{ ^^ ^^ ^^ ^^ ^^ "
-      ".. .. .. .. .. %% %% %% %% %% %% %% %% %% %% %% %% %% .. .. .. .. .. .. .. {{ {{ {{ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ {{ ^^ ^^ ^^ ^^ {{ ^^ ^^ ^^ ^^ ^^ "
-      ".. .. .. .. .. .. %% %% %% %% %% %% %% %% %% %% %% %% .. .. .. .. .. .. {{ {{ {{ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ {{ ^^ ^^ ^^ ^^ {{ {{ {{ ^^ ^^ ^^ "
-      ".. .. .. .. .. .. .. %% %% %% %% %% ~~ %% %% %% .. .. .. .. .. .. .. .. .. {{ {{ {{ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ {{ {{ {{ ^^ ^^ ^^ ^^ ^^ {{ ^^ ^^ ^^ "
-      "{{ .. .. .. .. .. .. .. %% %% ~~ ~~ ~~ ~~ ~~ %% .. .. .. .. .. .. .. .. .. .. ^^ {{ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ {{ {{ {{ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ "
-      "{{ {{ .. .. .. .. .. .. %% ~~ ~~ -- -- -- ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ .. .. .. .. ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ {{ {{ {{ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ "
-      "^^ {{ {{ {{ .. .. .. .. .. ~~ -- -- __ -- -- ~~ ~~ -- -- -- -- ~~ .. .. .. .. ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ {{ {{ {{ {{ {{ {{ ^^ ^^ ^^ ^^ ^^ ^^ ^^ "
-      "^^ ^^ {{ {{ {{ {{ .. .. .. ~~ -- __ __ __ -- ~~ -- -- __ __ -- ~~ ~~ .. .. .. ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ {{ {{ {{ {{ {{ {{ {{ {{ {{ ^^ ^^ ^^ ^^ ^^ ^^ "
-      "^^ ^^ ^^ ^^ {{ {{ {{ .. .. ~~ -- -- __ -- -- ~~ -- __ __ __ __ -- ~~ .. .. ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ {{ {{ {{ .. .. .. .. .. {{ {{ {{ {{ ^^ ^^ ^^ ^^ "
-      "^^ ^^ ^^ ^^ ^^ ^^ {{ {{ .. ~~ ~~ -- -- -- ~~ ~~ -- __ __ __ __ -- ~~ .. .. ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ {{ {{ {{ {{ .. .. .. .. .. .. .. {{ {{ {{ ^^ ^^ ^^ ^^ "
-      "^^ ^^ ^^ ^^ ^^ ^^ ^^ {{ .. .. ~~ ~~ ~~ ~~ ~~ ~~ -- -- __ __ -- -- ~~ .. .. ^^ ^^ {{ tt {{ tt {{ ^^ ^^ ^^ {{ ^^ ^^ {{ {{ {{ .. .. .. .. tt tt .. .. .. .. {{ {{ {{ {{ ^^ ^^ "
-      "^^ ^^ {{ {{ {{ ^^ ^^ {{ {{ .. .. .. .. .. .. ~~ ~~ -- -- -- -- ~~ ~~ .. .. ^^ ^^ tt .. .. .. tt ^^ ^^ {{ {{ {{ ^^ {{ {{ .. .. .. .. tt tt tt tt .. .. .. .. {{ {{ {{ ^^ ^^ "
-      "^^ {{ {{ .. {{ {{ ^^ ^^ {{ .. .. .. .. .. .. .. ~~ ~~ -- -- ~~ ~~ ~~ .. .. ^^ ^^ {{ .. .. .. {{ ^^ ^^ ^^ {{ {{ {{ {{ .. .. .. tt tt tt tt tt tt tt tt .. .. .. {{ {{ ^^ ^^ "
-      "^^ {{ .. .. .. {{ ^^ ^^ {{ .. .. .. .. .. .. .. .. ~~ ~~ ~~ ~~ .. ~~ .. .. .. ^^ tt .. /3 .. tt ^^ ^^ ^^ ^^ {{ {{ .. .. .. tt tt tt tt || || tt tt tt .. .. .. {{ {{ {{ ^^ "
-      "^^ {{ {{ .. {{ {{ ^^ ^^ {{ .. .. .. .. .. .. .. .. .. .. .. .. .. ~~ .. .. .. ^^ {{ tt /7 tt {{ ^^ ^^ ^^ {{ {{ .. .. .. tt tt tt tt tt || || || tt tt tt .. .. .. {{ {{ ^^ "
-      "^^ ^^ {{ {{ {{ ^^ ^^ {{ {{ .. .. .. .. .. .. .. .. .. .. .. .. .. ~~ ~~ .. .. ^^ ^^ ^^ /7 ^^ ^^ ^^ ^^ {{ {{ .. .. .. tt tt tt tt tt tt tt || || || tt tt .. .. .. {{ {{ {{ "
-      "^^ ^^ ^^ {{ {{ {{ ^^ {{ .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ~~ .. .. tt ^^ ^^ /7 ^^ ^^ {{ {{ {{ .. .. .. tt tt tt || || tt tt tt tt || || tt tt tt .. .. .. {{ {{ "
-      "^^ ^^ ^^ ^^ {{ {{ {{ {{ .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ~~ ~~ .. .. tt {{ /7 {{ {{ {{ .. .. .. .. .. tt tt tt || || || tt tt tt tt tt tt tt tt tt .. .. {{ {{ "
-      "^^ ^^ ^^ ^^ {{ .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ~~ .. .. .. .. /7 .. .. .. .. .. .. tt tt tt tt tt tt || || || tt tt tt tt tt tt tt tt .. .. .. .. "
-      "^^ ^^ ^^ ^^ {{ .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ~~ ~~ ~~ ~~ tt /7 .. .. .. .. || tt tt tt tt tt tt tt tt || || || tt tt || || || tt tt .. .. .. .. "
-      "^^ ^^ ^^ ^^ {{ .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. %% ~~ tt /8 /d /d /2 || tt tt || || || tt tt tt || || || || || || || || || tt tt tt tt .. .. "
-      "^^ ^^ ^^ ^^ {{ .. .. .. .. .. .. .. .. .. .. .. .. tt tt tt tt tt .. tt tt tt tt ~~ || tt tt tt /7 || tt tt tt || || || tt || || || || || || || || || || tt tt tt tt .. .. "
-      "^^ ^^ ^^ {{ {{ .. .. .. .. .. .. .. .. .. .. .. tt tt tt tt tt tt tt tt || || || ~~ || || || tt /7 tt tt || || || || || || || || || || || || || || || || || || tt tt .. .. "
-      "^^ ^^ ^^ {{ .. .. .. .. .. .. .. .. .. .. .. tt tt tt || || || tt tt tt || || || ~~ || || || tt /7 tt || || || || || || || || || || || || || || || || || || || tt tt tt .. "
-      "^^ ^^ {{ {{ .. .. .. .. .. .. .. .. .. .. tt tt tt || || || || || tt tt tt || || ~~ ~~ || || tt /7 tt || || || || || || || || || || || || || || || || tt || || || tt tt .. "
-      "^^ ^^ {{ .. .. .. .. .. .. .. .. .. .. .. tt tt || || || || || || || tt tt tt || || ~~ || || || /8 /2 tt || || tt || || || || || || || || || || || tt tt tt || || tt tt tt "
-      "^^ ^^ {{ {{ .. .. .. .. .. .. .. .. .. .. tt tt || || || || || || || tt tt tt || || ~~ || || || || /7 tt tt tt tt tt || || || || || || || || || || || tt || || || || tt tt "
-      "^^ ^^ ^^ {{ .. .. .. .. .. .. .. .. .. .. tt tt || || || || || || || tt tt tt || || ~~ || || || || /7 tt || tt tt tt || || || || || || || || || || || || || || || || tt tt "
-      "^^ ^^ ^^ {{ .. .. .. .. .. .. .. .. .. .. tt tt tt || || || || || tt tt tt tt || || ~~ || || || || /7 || || tt tt tt tt tt tt || || || || || || || || || || || || || || || "
-      "^^ ^^ ^^ {{ .. .. .. .. .. .. .. .. .. .. .. tt tt tt || || || tt tt tt tt tt || || ~~ || || || tt /7 tt || || tt tt tt tt tt || || || || || || || || || || || || || || || "
-      "^^ ^^ ^^ {{ {{ .. .. .. .. .. .. .. .. .. .. .. tt tt tt tt tt tt tt .. tt tt || || ~~ ~~ ~~ || tt /7 tt tt || || tt tt tt tt tt || || || || || || || || || || || || || || "
-      "^^ ^^ ^^ ^^ {{ .. .. .. .. .. .. .. .. .. .. .. .. tt tt tt tt tt .. .. tt tt tt || tt tt ~~ tt .. /7 .. tt tt || || tt tt tt tt tt || || || || || || || || || || || || || "
-      "^^ ^^ ^^ ^^ {{ {{ .. .. .. .. .. .. .. .. .. .. .. .. .. /0 /d /d /d /d /d /d /d /d /d /d == /d /d .. /d /d /d /d /d /d /d /d /d /2 || || || || || || || || || || || || || "
-      "^^ ^^ ^^ ^^ ^^ {{ {{ {{ .. .. .. .. .. .. .. .. .. .. .. /7 .. .. .. .. .. .. tt tt tt tt ~~ tt .. /7 .. tt tt || || || tt tt tt /7 tt || || || || || || || || || || || || "
-      "^^ ^^ ^^ ^^ ^^ ^^ ^^ {{ {{ .. .. .. .. .. .. .. .. .. .. /7 .. .. .. .. .. .. tt tt ~~ ~~ ~~ tt tt /7 tt tt || || || || tt tt tt /7 tt tt tt tt || || || || || || || || || "
-      "^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ {{ .. .. .. .. .. .. .. .. .. .. /7 .. .. .. .. .. .. tt tt ~~ tt tt tt tt /7 tt || || || || tt tt tt .. /7 tt tt tt tt tt tt || || || || || || || "
-      "^^ ^^ ^^ ^^ ^^ ^^ ^^ {{ {{ .. .. .. .. .. .. .. .. .. .. /7 .. .. .. .. .. .. .. tt ~~ tt tt tt tt /7 || || || || tt tt tt .. .. /8 /d /d /d /d /d /d /d /d /d /d /d /d /d "
-      "{{ {{ ^^ ^^ ^^ ^^ {{ {{ .. .. .. .. .. .. .. .. .. .. .. /7 .. .. .. .. .. .. .. tt ~~ tt tt tt tt /7 || || || tt tt tt .. .. .. .. .. .. tt tt tt tt tt tt tt tt tt tt tt "
-      ".. {{ {{ {{ ^^ {{ {{ .. .. .. .. .. .. .. .. .. .. .. .. /7 .. .. .. .. .. .. .. tt ~~ ~~ ~~ ~~ tt /7 || tt tt tt tt .. .. .. .. .. .. .. .. tt tt tt tt tt tt tt tt tt tt "
-      ".. .. {{ {{ {{ /d /d /d /d /d /d /d /d /d /d /d /d /d /d /a .. .. .. .. .. .. tt tt tt tt tt ~~ tt /8 /d /2 tt tt .. .. .. .. .. .. .. .. .. .. tt tt tt tt tt tt tt tt tt "
-      ".. .. {{ {{ ^^ {{ {{ .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. tt tt .. tt tt ~~ tt tt tt /7 tt .. .. .. .. .. .. .. .. .. .. .. tt tt tt tt tt tt tt tt tt "
-      ".. .. .. {{ ^^ ^^ {{ {{ {{ .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. tt ~~ ~~ ~~ tt /7 .. .. .. .. .. .. .. .. .. .. .. .. .. tt tt tt tt tt tt tt || "
-      ".. .. .. ^^ ^^ ^^ ^^ ^^ {{ .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. tt tt tt ~~ tt /7 .. .. .. .. .. .. .. .. .. .. .. .. .. tt tt tt tt tt || || || "
-      ".. .. .. ^^ ^^ ^^ ^^ ^^ {{ {{ .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. tt tt ~~ tt /7 .. .. .. .. .. .. .. .. .. .. .. .. .. .. tt tt tt || || || || "
-      ".. .. .. ^^ ^^ ^^ ^^ ^^ ^^ {{ .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. tt ~~ tt /7 .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. tt tt tt || || || "
-      ".. .. .. ^^ ^^ ^^ ^^ ^^ ^^ {{ .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. tt ~~ tt /7 .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. tt tt tt || "
+  (kern-mk-composite-map
+    nil     2 2
+    (kern-mk-map nil 32 32 pal_expanded
+      (list
+        ".. .. .. .. .. .. .. .. .. .. %% %% %% %% %% %% %% %% %% %% %% %% .. .. .. .. .. .. .. .. .. .. "
+        ".. .. .. .. .. .. .. .. .. %% %% %% -- %% %% %% %% %% %% %% %% %% .. .. .. .. .. .. .. .. .. .. "
+        ".. .. .. .. .. .. .. .. .. %% %% -- __ -- %% %% %% %% %% %% %% %% .. .. .. .. .. .. .. .. .. .. "
+        ".. .. .. .. .. .. .. .. .. %% %% %% -- %% %% %% %% %% %% %% %% .. .. .. .. {{ {{ ^^ ^^ ^^ ^^ ^^ "
+        ".. .. .. .. .. .. .. .. .. .. %% %% %% %% %% %% %% %% %% %% %% %% %% .. .. {{ {{ {{ {{ {{ ^^ ^^ "
+        ".. .. .. .. .. .. .. .. .. .. .. %% %% %% %% %% %% ~~ %% %% %% %% %% %% .. .. {{ {{ {{ {{ {{ ^^ "
+        ".. .. .. .. .. .. .. .. .. .. %% %% %% %% %% %% %% %% %% %% %% -- %% %% %% .. {{ {{ {{ {{ {{ ^^ "
+        ".. .. .. .. .. .. %% %% %% .. %% %% %% %% %% %% %% %% %% %% -- __ -- %% %% .. .. {{ {{ {{ {{ {{ "
+        ".. .. .. .. .. %% %% %% %% %% %% %% %% %% %% %% -- %% %% %% %% -- %% %% %% .. .. .. {{ {{ {{ {{ "
+        ".. .. .. .. %% %% %% -- %% %% %% %% %% %% %% -- __ -- %% %% %% %% %% %% .. .. .. .. {{ {{ {{ {{ "
+        ".. .. .. .. %% %% -- __ -- %% %% %% %% %% %% %% -- %% %% %% %% %% %% .. .. .. .. .. {{ {{ {{ ^^ "
+        ".. .. .. .. %% %% %% -- %% %% %% %% %% %% %% %% %% %% %% .. %% %% %% .. .. .. {{ {{ {{ ^^ ^^ ^^ "
+        ".. .. .. .. .. %% %% %% %% %% %% %% %% %% %% %% %% %% .. .. .. .. .. .. .. {{ {{ {{ ^^ ^^ ^^ ^^ "
+        ".. .. .. .. .. .. %% %% %% %% %% %% %% %% %% %% %% %% .. .. .. .. .. .. {{ {{ {{ ^^ ^^ ^^ ^^ ^^ "
+        ".. .. .. .. .. .. .. %% %% %% %% %% ~~ %% %% %% .. .. .. .. .. .. .. .. .. {{ {{ {{ ^^ ^^ ^^ ^^ "
+        "{{ .. .. .. .. .. .. .. %% %% ~~ ~~ ~~ ~~ ~~ %% .. .. .. .. .. .. .. .. .. .. ^^ {{ ^^ ^^ ^^ ^^ "
+        "{{ {{ .. .. .. .. .. .. %% ~~ ~~ -- -- -- ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ .. .. .. .. ^^ ^^ ^^ ^^ ^^ ^^ "
+        "^^ {{ {{ {{ .. .. .. .. .. ~~ -- -- __ -- -- ~~ ~~ -- -- -- -- ~~ .. .. .. .. ^^ ^^ ^^ ^^ ^^ ^^ "
+        "^^ ^^ {{ {{ {{ {{ .. .. .. ~~ -- __ __ __ -- ~~ -- -- __ __ -- ~~ ~~ .. .. .. ^^ ^^ ^^ ^^ ^^ ^^ "
+        "^^ ^^ ^^ ^^ {{ {{ {{ .. .. ~~ -- -- __ -- -- ~~ -- __ __ __ __ -- ~~ .. .. ^^ ^^ ^^ ^^ ^^ ^^ ^^ "
+        "^^ ^^ ^^ ^^ ^^ ^^ {{ {{ .. ~~ ~~ -- -- -- ~~ ~~ -- __ __ __ __ -- ~~ .. .. ^^ ^^ ^^ ^^ ^^ ^^ ^^ "
+        "^^ ^^ ^^ ^^ ^^ ^^ ^^ {{ .. .. ~~ ~~ ~~ ~~ ~~ ~~ -- -- __ __ -- -- ~~ .. .. ^^ ^^ {{ tt {{ tt {{ "
+        "^^ ^^ {{ {{ {{ ^^ ^^ {{ {{ .. .. .. .. .. .. ~~ ~~ -- -- -- -- ~~ ~~ .. .. ^^ ^^ tt .. .. .. tt "
+        "^^ {{ {{ .. {{ {{ ^^ ^^ {{ .. .. .. .. .. .. .. ~~ ~~ -- -- ~~ ~~ ~~ .. .. ^^ ^^ {{ .. .. .. {{ "
+        "^^ {{ .. .. .. {{ ^^ ^^ {{ .. .. .. .. .. .. .. .. ~~ ~~ ~~ ~~ .. ~~ .. .. .. ^^ tt .. /3 .. tt "
+        "^^ {{ {{ .. {{ {{ ^^ ^^ {{ .. .. .. .. .. .. .. .. .. .. .. .. .. ~~ .. .. .. ^^ {{ tt /7 tt {{ "
+        "^^ ^^ {{ {{ {{ ^^ ^^ {{ {{ .. .. .. .. .. .. .. .. .. .. .. .. .. ~~ ~~ .. .. ^^ ^^ ^^ /7 ^^ ^^ "
+        "^^ ^^ ^^ {{ {{ {{ ^^ {{ .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ~~ .. .. tt ^^ ^^ /7 ^^ ^^ "
+        "^^ ^^ ^^ ^^ {{ {{ {{ {{ .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ~~ ~~ .. .. tt {{ /7 {{ {{ "
+        "^^ ^^ ^^ ^^ {{ .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ~~ .. .. .. .. /7 .. .. "
+        "^^ ^^ ^^ ^^ {{ .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ~~ ~~ ~~ ~~ tt /7 .. .. "
+        "^^ ^^ ^^ ^^ {{ .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. %% ~~ tt /8 /d /d "
+      )
+    )
+    (kern-mk-map nil 32 32 pal_expanded
+      (list
+        ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+        ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+        ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+        "^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ .. .. .. .. .. .. .. "
+        "^^ ^^ ^^ ^^ ^^ ^^ {{ {{ {{ {{ ^^ ^^ ^^ ^^ {{ {{ ^^ ^^ ^^ {{ {{ {{ ^^ ^^ ^^ .. .. .. .. .. .. .. "
+        "^^ ^^ ^^ {{ {{ {{ {{ {{ {{ {{ {{ {{ ^^ {{ {{ {{ {{ ^^ {{ {{ {{ {{ {{ ^^ ^^ .. .. .. .. .. .. .. "
+        "^^ ^^ ^^ {{ {{ {{ {{ ^^ ^^ {{ {{ {{ {{ {{ {{ {{ {{ {{ {{ {{ {{ {{ {{ {{ ^^ .. .. .. .. .. .. .. "
+        "^^ ^^ ^^ ^^ {{ {{ ^^ ^^ ^^ ^^ {{ {{ {{ {{ {{ {{ {{ {{ {{ {{ {{ {{ {{ {{ ^^ .. .. .. .. .. .. .. "
+        "{{ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ {{ {{ {{ {{ {{ {{ {{ {{ {{ {{ ^^ ^^ .. .. .. .. .. .. .. "
+        "^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ {{ {{ {{ {{ ^^ ^^ ^^ .. .. .. .. .. .. .. "
+        "^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ {{ ^^ ^^ ^^ ^^ ^^ .. .. .. .. .. .. .. "
+        "^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ {{ ^^ ^^ ^^ ^^ ^^ .. .. .. .. .. .. .. "
+        "^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ {{ ^^ ^^ ^^ ^^ {{ ^^ ^^ ^^ ^^ ^^ .. .. .. .. .. .. .. "
+        "^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ {{ ^^ ^^ ^^ ^^ {{ {{ {{ ^^ ^^ ^^ .. .. .. .. .. .. .. "
+        "^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ {{ {{ {{ ^^ ^^ ^^ ^^ ^^ {{ ^^ ^^ ^^ .. .. .. .. .. .. .. "
+        "^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ {{ {{ {{ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ .. .. .. .. .. .. .. "
+        "^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ {{ {{ {{ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ .. .. .. .. .. .. .. "
+        "^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ {{ {{ {{ {{ {{ {{ ^^ ^^ ^^ ^^ ^^ ^^ ^^ .. .. .. .. .. .. .. "
+        "^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ {{ {{ {{ {{ {{ {{ {{ {{ {{ ^^ ^^ ^^ ^^ ^^ ^^ .. .. .. .. .. .. .. "
+        "^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ {{ {{ {{ .. .. .. .. .. {{ {{ {{ {{ ^^ ^^ ^^ ^^ .. .. .. .. .. .. .. "
+        "^^ ^^ ^^ ^^ ^^ ^^ ^^ {{ {{ {{ {{ .. .. .. .. .. .. .. {{ {{ {{ ^^ ^^ ^^ ^^ .. .. .. .. .. .. .. "
+        "^^ ^^ ^^ {{ ^^ ^^ {{ {{ {{ .. .. .. .. tt tt .. .. .. .. {{ {{ {{ {{ ^^ ^^ .. .. .. .. .. .. .. "
+        "^^ ^^ {{ {{ {{ ^^ {{ {{ .. .. .. .. tt tt tt tt .. .. .. .. {{ {{ {{ ^^ ^^ .. .. .. .. .. .. .. "
+        "^^ ^^ ^^ {{ {{ {{ {{ .. .. .. tt tt tt tt tt tt tt tt .. .. .. {{ {{ ^^ ^^ .. .. .. .. .. .. .. "
+        "^^ ^^ ^^ ^^ {{ {{ .. .. .. tt tt tt tt || || tt tt tt .. .. .. {{ {{ {{ ^^ .. .. .. .. .. .. .. "
+        "^^ ^^ ^^ {{ {{ .. .. .. tt tt tt tt tt || || || tt tt tt .. .. .. {{ {{ ^^ .. .. .. .. .. .. .. "
+        "^^ ^^ {{ {{ .. .. .. tt tt tt tt tt tt tt || || || tt tt .. .. .. {{ {{ {{ .. .. .. .. .. .. .. "
+        "{{ {{ {{ .. .. .. tt tt tt || || tt tt tt tt || || tt tt tt .. .. .. {{ {{ .. .. .. .. .. .. .. "
+        "{{ .. .. .. .. .. tt tt tt || || || tt tt tt tt tt tt tt tt tt .. .. {{ {{ .. .. .. .. .. .. .. "
+        ".. .. .. .. tt tt tt tt tt tt || || || tt tt tt tt tt tt tt tt .. .. .. .. .. .. .. .. .. .. .. "
+        ".. .. || tt tt tt tt tt tt tt tt || || || tt tt || || || tt tt .. .. .. .. .. .. .. .. .. .. .. "
+        "/2 || tt tt || || || tt tt tt || || || || || || || || || tt tt tt tt .. .. .. .. .. .. .. .. .. "
+      )
+    )
+    (kern-mk-map nil 32 32 pal_expanded
+      (list
+        "^^ ^^ ^^ ^^ {{ .. .. .. .. .. .. .. .. .. .. .. .. tt tt tt tt tt .. tt tt tt tt ~~ || tt tt tt "
+        "^^ ^^ ^^ {{ {{ .. .. .. .. .. .. .. .. .. .. .. tt tt tt tt tt tt tt tt || || || ~~ || || || tt "
+        "^^ ^^ ^^ {{ .. .. .. .. .. .. .. .. .. .. .. tt tt tt || || || tt tt tt || || || ~~ || || || tt "
+        "^^ ^^ {{ {{ .. .. .. .. .. .. .. .. .. .. tt tt tt || || || || || tt tt tt || || ~~ ~~ || || tt "
+        "^^ ^^ {{ .. .. .. .. .. .. .. .. .. .. .. tt tt || || || || || || || tt tt tt || || ~~ || || || "
+        "^^ ^^ {{ {{ .. .. .. .. .. .. .. .. .. .. tt tt || || || || || || || tt tt tt || || ~~ || || || "
+        "^^ ^^ ^^ {{ .. .. .. .. .. .. .. .. .. .. tt tt || || || || || || || tt tt tt || || ~~ || || || "
+        "^^ ^^ ^^ {{ .. .. .. .. .. .. .. .. .. .. tt tt tt || || || || || tt tt tt tt || || ~~ || || || "
+        "^^ ^^ ^^ {{ .. .. .. .. .. .. .. .. .. .. .. tt tt tt || || || tt tt tt tt tt || || ~~ || || || "
+        "^^ ^^ ^^ {{ {{ .. .. .. .. .. .. .. .. .. .. .. tt tt tt tt tt tt tt .. tt tt || || ~~ ~~ ~~ || "
+        "^^ ^^ ^^ ^^ {{ .. .. .. .. .. .. .. .. .. .. .. .. tt tt tt tt tt .. .. tt tt tt || tt tt ~~ tt "
+        "^^ ^^ ^^ ^^ {{ {{ .. .. .. .. .. .. .. .. .. .. .. .. .. /0 /d /d /d /d /d /d /d /d /d /d == /d "
+        "^^ ^^ ^^ ^^ ^^ {{ {{ {{ .. .. .. .. .. .. .. .. .. .. .. /7 .. .. .. .. .. .. tt tt tt tt ~~ tt "
+        "^^ ^^ ^^ ^^ ^^ ^^ ^^ {{ {{ .. .. .. .. .. .. .. .. .. .. /7 .. .. .. .. .. .. tt tt ~~ ~~ ~~ tt "
+        "^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ {{ .. .. .. .. .. .. .. .. .. .. /7 .. .. .. .. .. .. tt tt ~~ tt tt tt "
+        "^^ ^^ ^^ ^^ ^^ ^^ ^^ {{ {{ .. .. .. .. .. .. .. .. .. .. /7 .. .. .. .. .. .. .. tt ~~ tt tt tt "
+        "{{ {{ ^^ ^^ ^^ ^^ {{ {{ .. .. .. .. .. .. .. .. .. .. .. /7 .. .. .. .. .. .. .. tt ~~ tt tt tt "
+        ".. {{ {{ {{ ^^ {{ {{ .. .. .. .. .. .. .. .. .. .. .. .. /7 .. .. .. .. .. .. .. tt ~~ ~~ ~~ ~~ "
+        ".. .. {{ {{ {{ /d /d /d /d /d /d /d /d /d /d /d /d /d /d /a .. .. .. .. .. .. tt tt tt tt tt ~~ "
+        ".. .. {{ {{ ^^ {{ {{ .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. tt tt .. tt tt ~~ "
+        ".. .. .. {{ ^^ ^^ {{ {{ {{ .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. tt ~~ "
+        ".. .. .. ^^ ^^ ^^ ^^ ^^ {{ .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. tt tt "
+        ".. .. .. ^^ ^^ ^^ ^^ ^^ {{ {{ .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. tt "
+        ".. .. .. ^^ ^^ ^^ ^^ ^^ ^^ {{ .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+        ".. .. .. ^^ ^^ ^^ ^^ ^^ ^^ {{ .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+        ".. .. .. ^^ ^^ ^^ ^^ ^^ ^^ {{ .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+        ".. .. .. ^^ ^^ ^^ ^^ ^^ ^^ {{ .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+        ".. .. .. ^^ ^^ ^^ ^^ ^^ ^^ {{ .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+        ".. .. .. ^^ ^^ ^^ ^^ ^^ ^^ {{ .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+        ".. .. .. ^^ ^^ ^^ ^^ ^^ ^^ {{ .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+        ".. .. .. ^^ ^^ ^^ ^^ ^^ ^^ {{ .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+        ".. .. .. ^^ ^^ ^^ ^^ ^^ ^^ {{ .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+      )
+    )
+    (kern-mk-map nil 32 32 pal_expanded
+      (list
+        "/7 || tt tt tt || || || tt || || || || || || || || || || tt tt tt tt .. .. .. .. .. .. .. .. .. "
+        "/7 tt tt || || || || || || || || || || || || || || || || || || tt tt .. .. .. .. .. .. .. .. .. "
+        "/7 tt || || || || || || || || || || || || || || || || || || || tt tt tt .. .. .. .. .. .. .. .. "
+        "/7 tt || || || || || || || || || || || || || || || || tt || || || tt tt .. .. .. .. .. .. .. .. "
+        "/8 /2 tt || || tt || || || || || || || || || || || tt tt tt || || tt tt tt .. .. .. .. .. .. .. "
+        "|| /7 tt tt tt tt tt || || || || || || || || || || || tt || || || || tt tt .. .. .. .. .. .. .. "
+        "|| /7 tt || tt tt tt || || || || || || || || || || || || || || || || tt tt .. .. .. .. .. .. .. "
+        "|| /7 || || tt tt tt tt tt tt || || || || || || || || || || || || || || || .. .. .. .. .. .. .. "
+        "tt /7 tt || || tt tt tt tt tt || || || || || || || || || || || || || || || .. .. .. .. .. .. .. "
+        "tt /7 tt tt || || tt tt tt tt tt || || || || || || || || || || || || || || .. .. .. .. .. .. .. "
+        ".. /7 .. tt tt || || tt tt tt tt tt || || || || || || || || || || || || || .. .. .. .. .. .. .. "
+        "/d .. /d /d /d /d /d /d /d /d /d /2 || || || || || || || || || || || || || .. .. .. .. .. .. .. "
+        ".. /7 .. tt tt || || || tt tt tt /7 tt || || || || || || || || || || || || .. .. .. .. .. .. .. "
+        "tt /7 tt tt || || || || tt tt tt /7 tt tt tt tt || || || || || || || || || .. .. .. .. .. .. .. "
+        "tt /7 tt || || || || tt tt tt .. /7 tt tt tt tt tt tt || || || || || || || .. .. .. .. .. .. .. "
+        "tt /7 || || || || tt tt tt .. .. /8 /d /d /d /d /d /d /d /d /d /d /d /d /d .. .. .. .. .. .. .. "
+        "tt /7 || || || tt tt tt .. .. .. .. .. .. tt tt tt tt tt tt tt tt tt tt tt .. .. .. .. .. .. .. "
+        "tt /7 || tt tt tt tt .. .. .. .. .. .. .. .. tt tt tt tt tt tt tt tt tt tt .. .. .. .. .. .. .. "
+        "tt /8 /d /2 tt tt .. .. .. .. .. .. .. .. .. .. tt tt tt tt tt tt tt tt tt .. .. .. .. .. .. .. "
+        "tt tt tt /7 tt .. .. .. .. .. .. .. .. .. .. .. tt tt tt tt tt tt tt tt tt .. .. .. .. .. .. .. "
+        "~~ ~~ tt /7 .. .. .. .. .. .. .. .. .. .. .. .. .. tt tt tt tt tt tt tt || .. .. .. .. .. .. .. "
+        "tt ~~ tt /7 .. .. .. .. .. .. .. .. .. .. .. .. .. tt tt tt tt tt || || || .. .. .. .. .. .. .. "
+        "tt ~~ tt /7 .. .. .. .. .. .. .. .. .. .. .. .. .. .. tt tt tt || || || || .. .. .. .. .. .. .. "
+        "tt ~~ tt /7 .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. tt tt tt || || || .. .. .. .. .. .. .. "
+        "tt ~~ tt /7 .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. tt tt tt || .. .. .. .. .. .. .. "
+        "tt ~~ tt /7 .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. tt tt tt || .. .. .. .. .. .. .. "
+        "tt ~~ tt /7 .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. tt tt tt || .. .. .. .. .. .. .. "
+        "tt ~~ tt /7 .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. tt tt tt || .. .. .. .. .. .. .. "
+        "tt ~~ tt /7 .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. tt tt tt || .. .. .. .. .. .. .. "
+        "tt ~~ tt /7 .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. tt tt tt || .. .. .. .. .. .. .. "
+        "tt ~~ tt /7 .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. tt tt tt || .. .. .. .. .. .. .. "
+        "tt ~~ tt /7 .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. tt tt tt || .. .. .. .. .. .. .. "
+      )
     )
   )
   #f #f #t #f
@@ -1613,6 +1107,37 @@
               ) ;; bind
             ) ;; kern-tag
           11 11)
+          (list
+            (kern-mk-container
+              t_chest
+              ;; trap
+              nil
+              ;; contents
+              (list
+                (list 10 t_food)
+                (list 100 t_gold_coins)
+                (list 23 sulphorous_ash)
+                (list 35 ginseng)
+                (list 32 garlic)
+                (list 20 spider_silk)
+                (list 16 blood_moss)
+                (list 12 black_pearl)
+                (list 3 nightshade)
+                (list 2 mandrake)
+                (list 5 t_heal_potion)
+                (list 3 t_cure_potion)
+                (list 1 t_xen_corp_scroll)
+                (list 1 t_in_mani_corp_scroll)
+                (list 5 t_torch)
+                (list 3 t_picklock)
+                (list 1 t_shield)
+                (list 1 t_sword)
+                (list 1 t_sling)
+                (list 5 t_oil)
+                (list 1 t_manual)
+              )
+            )
+          1 24)
         ) ;; end of objects
         (list
         )
@@ -1677,36 +1202,6 @@
         nil
         ;; contents
         (list
-          (list
-            (bind
-              (kern-mk-char
-                'ch_ilya
-                "Ilya"
-                sp_human
-                nil
-                s_child
-                2
-                0 50 45
-                0 0
-                0 0
-                30 0
-                9 9
-                #f ;; dead?
-                'ilya-conv
-                sch_ilya
-                nil
-                nil ;; inventory
-                nil
-                ;; hooks
-                (list
-                )
-              )
-              (list
-                #f
-                #f
-              )
-            ) ;; bind
-          21 10)
           (list
             (bind
               (kern-mk-obj t_door 1)
@@ -1814,6 +1309,12 @@
           18 20)
           (list
             (bind
+              (kern-mk-obj tf_ew_bridge 1)
+              '()
+            ) ;; bind
+          25 26)
+          (list
+            (bind
               (kern-mk-char
                 'ch_gregor
                 "Gregor"
@@ -1821,7 +1322,7 @@
                 nil
                 s_townsman
                 2
-                0 50 45
+                0 30 25
                 0 0
                 0 0
                 30 0
@@ -1838,13 +1339,7 @@
               )
               '()
             ) ;; bind
-          10 10)
-          (list
-            (bind
-              (kern-mk-obj tf_ew_bridge 1)
-              '()
-            ) ;; bind
-          25 26)
+          7 15)
           (list
             (bind
               (kern-mk-obj t_door 1)
@@ -1880,6 +1375,36 @@
               )
             ) ;; bind
           9 16)
+          (list
+            (bind
+              (kern-mk-char
+                'ch_ilya
+                "Ilya"
+                sp_human
+                nil
+                s_child
+                2
+                0 30 25
+                0 0
+                0 0
+                30 0
+                9 9
+                #f ;; dead?
+                'ilya-conv
+                sch_ilya
+                nil
+                nil ;; inventory
+                nil
+                ;; hooks
+                (list
+                )
+              )
+              (list
+                #f
+                #f
+              )
+            ) ;; bind
+          7 18)
           (list
             (bind
               (kern-mk-obj t_door 1)
@@ -2147,6 +1672,33 @@
             )
           25 11)
           (list
+            (bind
+              (kern-mk-char
+                'ch_jim
+                "Jim"
+                sp_human
+                nil
+                s_townsman
+                2
+                0 30 25
+                0 0
+                0 0
+                30 0
+                9 9
+                #f ;; dead?
+                'jim-conv
+                sch_jim
+                nil
+                nil ;; inventory
+                nil
+                ;; hooks
+                (list
+                )
+              )
+              '()
+            ) ;; bind
+          25 11)
+          (list
             (kern-tag 'tiw-portcullis
               (bind
                 (kern-mk-obj t_portcullis 1)
@@ -2198,35 +1750,6 @@
             (kern-mk-obj t_bed 1)
           2 6)
           (list
-            (bind
-              (kern-mk-char
-                'ch_chant
-                "Chanticleer"
-                sp_human
-                nil
-                s_chanticleer
-                2
-                0 50 45
-                0 0
-                0 0
-                30 0
-                9 9
-                #f ;; dead?
-                'chant-conv
-                sch_chant
-                nil
-                nil ;; inventory
-                nil
-                ;; hooks
-                (list
-                )
-              )
-              (list
-                0
-              )
-            ) ;; bind
-          18 23)
-          (list
             (kern-tag 'trigrave-inn-room-1-door
               (bind
                 (kern-mk-obj t_door 1)
@@ -2265,6 +1788,33 @@
           4 7)
           (list
             (kern-mk-obj t_bed 1)
+          2 9)
+          (list
+            (bind
+              (kern-mk-char
+                'ch_earl
+                "Earl"
+                sp_human
+                nil
+                s_townsman
+                2
+                0 30 25
+                0 0
+                0 0
+                30 0
+                9 9
+                #f ;; dead?
+                'earl-conv
+                sch_earl
+                nil
+                nil ;; inventory
+                nil
+                ;; hooks
+                (list
+                )
+              )
+              '()
+            ) ;; bind
           2 9)
           (list
             (kern-tag 'tlj-d-1
@@ -2378,6 +1928,9 @@
             ) ;; kern-tag
           4 9)
           (list
+            (kern-mk-obj t_bed 1)
+          12 2)
+          (list
             (bind
               (kern-mk-char
                 'ch_gwen
@@ -2386,7 +1939,7 @@
                 nil
                 s_gwen
                 2
-                0 50 45
+                0 30 25
                 0 0
                 0 0
                 30 0
@@ -2403,9 +1956,6 @@
               )
               '()
             ) ;; bind
-          21 23)
-          (list
-            (kern-mk-obj t_bed 1)
           12 2)
           (list
             (bind
@@ -2442,6 +1992,35 @@
               )
             ) ;; bind
           10 4)
+          (list
+            (bind
+              (kern-mk-char
+                'ch_chant
+                "Chanticleer"
+                sp_human
+                nil
+                s_chanticleer
+                2
+                0 30 25
+                0 0
+                0 0
+                30 0
+                9 9
+                #f ;; dead?
+                'chant-conv
+                sch_chant
+                nil
+                nil ;; inventory
+                nil
+                ;; hooks
+                (list
+                )
+              )
+              (list
+                0
+              )
+            ) ;; bind
+          0 15)
           (list
             (kern-tag 'trigrave-inn-room-4-door
               (bind
@@ -2627,60 +2206,6 @@
               )
             ) ;; bind
           1 24)
-          (list
-            (bind
-              (kern-mk-char
-                'ch_earl
-                "Earl"
-                sp_human
-                nil
-                s_townsman
-                2
-                0 50 45
-                0 0
-                0 0
-                30 0
-                9 9
-                #f ;; dead?
-                'earl-conv
-                sch_earl
-                nil
-                nil ;; inventory
-                nil
-                ;; hooks
-                (list
-                )
-              )
-              '()
-            ) ;; bind
-          2 24)
-          (list
-            (bind
-              (kern-mk-char
-                'ch_jim
-                "Jim"
-                sp_human
-                nil
-                s_townsman
-                2
-                0 50 45
-                0 0
-                0 0
-                30 0
-                9 9
-                #f ;; dead?
-                'jim-conv
-                sch_jim
-                nil
-                nil ;; inventory
-                nil
-                ;; hooks
-                (list
-                )
-              )
-              '()
-            ) ;; bind
-          25 4)
           (list
             (bind
               (kern-mk-obj t_door 1)
@@ -3042,7 +2567,7 @@
                 oc_ranger
                 s_companion_ranger
                 2
-                1 41 41
+                1 21 21
                 0 0
                 0 0
                 30 0
@@ -3063,10 +2588,10 @@
                     (list 5 t_torch)
                     (list 5 t_cure_potion)
                     (list 5 t_heal_potion)
-                    (list 3 t_leather_helm)
-                    (list 3 t_sword)
-                    (list 3 t_dagger)
-                    (list 3 t_armor_leather)
+                    (list 1 t_leather_helm)
+                    (list 1 t_sword)
+                    (list 1 t_dagger)
+                    (list 1 t_armor_leather)
                   )
                 )
                 (list
@@ -3356,26 +2881,6 @@
       (kern-mk-obj t_skeleton_generator 1)
     0 0)
     (list
-      (kern-mk-party t_goblin_horde 5
-        nil
-      )
-    1 23)
-    (list
-      (kern-mk-obj t_orc_generator 1)
-    1 22)
-    (list
-      (bind
-        (kern-mk-obj t_queen_spider_generator 1)
-        (list
-          43
-          34
-          5
-          6
-          "A nest of spiders!"
-        )
-      ) ;; bind
-    46 37)
-    (list
       (bind
         (kern-mk-obj t_dungeon 1)
         (list
@@ -3389,13 +2894,16 @@
       (kern-mk-obj t_bandit_generator 1)
     30 38)
     (list
+      (kern-mk-obj t_orc_generator 1)
+    1 22)
+    (list
       (kern-mk-player
         'player
         s_companion_fighter
         "Walk"
         sound-walking
-        109 100
-        25497 ;; turns to next meal
+        9 0
+        21991 ;; turns to next meal
         nil
         m_campsite
         nil
@@ -3405,25 +2913,7 @@
           ;; trap
           nil
           ;; contents
-          (list
-            (list 23 sulphorous_ash)
-            (list 35 ginseng)
-            (list 32 garlic)
-            (list 20 spider_silk)
-            (list 16 blood_moss)
-            (list 12 black_pearl)
-            (list 3 nightshade)
-            (list 2 mandrake)
-            (list 5 t_heal_potion)
-            (list 3 t_cure_potion)
-            (list 1 t_xen_corp_scroll)
-            (list 1 t_in_mani_corp_scroll)
-            (list 5 t_torch)
-            (list 3 t_picklock)
-            (list 1 t_sling)
-            (list 5 t_oil)
-            (list 1 t_manual)
-          )
+          nil
         )
         (list
           (kern-mk-char
@@ -3433,39 +2923,58 @@
             oc_wanderer
             s_companion_ranger
             1
-            0 50 42
+            0 30 22
             0 1
             10 5
-            27 0
+            29 0
             3 1
             #f ;; dead?
             nil
             nil
             nil
             nil ;; inventory
-            (list
-              t_sword
-              t_shield
-            )
+            nil
             ;; hooks
             (list
             )
           )
         )
       )
-    50 35)
+    61 25)
+    (list
+      (kern-mk-party t_goblin_horde 5
+        nil
+      )
+    1 25)
+    (list
+      (kern-mk-party t_bandit_gang 8
+        nil
+      )
+    35 42)
+    (list
+      (bind
+        (kern-mk-obj t_queen_spider_generator 1)
+        (list
+          43
+          34
+          5
+          6
+          "A nest of spiders!"
+        )
+      ) ;; bind
+    46 37)
   ) ;; end of objects
   (list
   )
   (list ;; edge entrances
-    (list 0 56 56) ;; Northwest
-    (list 1 28 56) ;; North
-    (list 2 0 56) ;; Northeast
-    (list 3 56 28) ;; West
-    (list 4 28 28) ;; Here
-    (list 5 0 28) ;; East
-    (list 6 56 0) ;; Southwest
-    (list 7 28 0) ;; South
+    (list 0 63 63) ;; Northwest
+    (list 1 32 63) ;; North
+    (list 2 0 63) ;; Northeast
+    (list 3 63 32) ;; West
+    (list 4 32 32) ;; Here
+    (list 5 0 32) ;; East
+    (list 6 63 0) ;; Southwest
+    (list 7 32 0) ;; South
     (list 8 0 0) ;; SoutheastUp
   )
 ) ;; end of place p_shard
@@ -3477,7 +2986,7 @@
 (kern-set-cursor ls_whirlpool)
 (kern-set-crosshair t_crosshair)
 (kern-set-ascii ss_u4_charset 32)
-(kern-set-clock 0 0 0 0 13 52)
+(kern-set-clock 0 0 0 0 14 51)
 (kern-set-time-accel 1)
 (kern-mk-dtable
   (list    0    0   -1   -1   -1   -2   -2   -2    0 )

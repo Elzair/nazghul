@@ -38,9 +38,14 @@ struct terrain_map {
         struct terrain_palette * palette;
         struct terrain **terrain;
 
-        void *handle;  // pointer to session handle
-        int saved; // 1 iff already saved
+        void *handle;  /* pointer to session handle */
+        int saved;     /* 1 iff already saved       */
         int refcount;
+
+        /* added to support composite maps */
+        int submap_w;        /* submap width      */
+        int submap_h;        /* submap height     */
+        char composite : 1;  /* save as composite */
 };
         
 extern struct terrain_map *terrain_map_new(char *tag, 
