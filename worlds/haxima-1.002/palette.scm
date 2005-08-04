@@ -11,6 +11,7 @@
     ;; This constraint makes it easier to edit maps via search & replace,
     ;; and makes it easier to change the palette.
     ;; 
+    (list  "**"   t_stars)              ;; "stars"
     (list  "__"   t_deep)               ;; "deep water"
     (list  "--"   t_shallow)            ;; "shallow water"
     (list  "~~"   t_shoals)             ;; "shoals"

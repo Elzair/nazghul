@@ -54,6 +54,7 @@
 (define pclass-trees     6)
 (define pclass-forest    7)
 (define pclass-repel     8) ;; energy shield blocks all
+(define pclass-space     9)
 (define pclass-bridge    pclass-grass)
 (define pclass-road      pclass-grass)
 (define pclass-boulder   pclass-forest)
@@ -83,6 +84,7 @@
  (list hard   hard  cant   norm   norm   cant  ) ;; trees  
  (list vhard  vhard cant   norm   norm   cant  ) ;; forest/hills/bog
  (list cant   cant  cant   cant   cant   cant  ) ;; energy fields
+ (list cant   cant  cant   cant   norm   cant  ) ;; space
  )
 
 ;; Factions. The diplomacy table (which defines the relationship between

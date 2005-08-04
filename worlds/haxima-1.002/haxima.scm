@@ -203,12 +203,12 @@
   )
 
 (define (simple-start kplayer)
-  (kern-obj-put-at kplayer (list p_moongate_clearing 11 11)))
+  ;(kern-obj-put-at kplayer (list p_moongate_clearing 11 11)))
   ;(kern-obj-put-at kplayer (list p_gregors_hut 11 11)))
   ;(kern-log-msg "You notice a cave to the southwest."))
   ;(kern-obj-put-at kplayer (list p_slimy_cavern 13 2))
 ;  (kern-obj-put-at kplayer (list p_enchanters_tower 32 32)))
-;  (kern-obj-put-at kplayer (list p_shard 20 13)))
+  (kern-obj-put-at kplayer (list p_shard 42 18)))
                   
 ;;----------------------------------------------------------------------------
 ;; To skip the extended start scene comment out this next line and uncomment

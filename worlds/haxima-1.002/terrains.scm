@@ -16,6 +16,7 @@
   (list
    ;;    tag                name            pclass           sprite            t light step-on
    ;;    =================  ==============  =============    ==============    = ===== =======
+   (list 't_stars           "stars"         pclass-space     s_stars           1 0 nil)
    (list 't_deep            "deep water"    pclass-deep      s_deep            1 0 nil)
    (list 't_shallow         "shallow water" pclass-deep      s_shallow         1 0 nil)
    (list 't_shoals          "shoals"        pclass-shoals    s_shoals          1 0 nil)
