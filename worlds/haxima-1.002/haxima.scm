@@ -25,7 +25,7 @@
 (load "trigrave.scm")
 (load "lost-halls.scm")
 (load "enchanters-tower.scm")
-
+(load "green-tower.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Characters
@@ -206,9 +206,10 @@
   ;(kern-obj-put-at kplayer (list p_moongate_clearing 11 11)))
   ;(kern-obj-put-at kplayer (list p_gregors_hut 11 11)))
   ;(kern-log-msg "You notice a cave to the southwest."))
-  ;(kern-obj-put-at kplayer (list p_slimy_cavern 13 2))
+  ;(kern-obj-put-at kplayer (list p_slimy_cavern 13 2)
   ; (kern-obj-put-at kplayer (list p_enchanters_tower 32 32)))
-  (kern-obj-put-at kplayer (list p_shard 51 46)))
+  ;(kern-obj-put-at kplayer (list p_shard 51 46)))
+  (kern-obj-put-at kplayer (list p_shard 80 60)))
   ;(kern-obj-put-at kplayer (list p_test 15 15)))
                   
 ;;----------------------------------------------------------------------------

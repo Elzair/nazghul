@@ -598,6 +598,7 @@
   (list p_abandoned_farm    62 50)
   (list p_trigrave          29 51)
   (list p_enchanters_tower  29 21)
+  (list p_green_tower       80 59)
   )
 
  ;; (list p_wivernscross       4 50)

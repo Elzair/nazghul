@@ -323,6 +323,18 @@
   (kern-log-msg "Spike trap!")
   (kern-obj-apply-damage actor "ouch" (kern-dice-roll "1d6")))
 
+(define (burn-trap actor subject)
+  (kern-log-msg "Fire trap!")
+  (burn actor))
+
+(define (poison-trap actor subject)
+  (kern-log-msg "Poison trap!")
+  (apply-poison actor))
+
+(define (sleep-trap actor subject)
+  (kern-log-msg "Sleep trap!")
+  (apply-sleep actor))
+
 ;; Explosion trap - shakes the screen and damages all surrounding objects
 
 ;; Burst trap - splatters the surrounding scene with dangerous fields
