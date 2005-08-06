@@ -1,23 +1,30 @@
-;; gen.scm - an old ranger who has befriended the goblins, his former enemies
-;; from the Goblin Wars
-
+;;----------------------------------------------------------------------------
+;; Schedule
+;;----------------------------------------------------------------------------
+(define (mk-zone x y w h) (list 'p_green_tower x y w h))
 (kern-mk-sched 'sch_gen
-               (list 0  0  2  13 1  1  "sleeping")
-               (list 4  0  3  12 3  3  "eating")
-               (list 5  0  7  20 5  5  "idle")
-               (list 10 0  26 27 2  12 "idle")
-               (list 12 0  49 54 1  1  "eating")
-               (list 13 0  49 3  7  2  "idle")
-               (list 14 0  7  20 5  5  "idle")
-               (list 18 0  49 54 1  1  "eating")
-               (list 19 0  3  12 3  3  "idle")
-               (list 0  0  2  13 1  1  "sleeping")
+               (list 0  0  (mk-zone 2  13 1  1)  "sleeping")
+               (list 4  0  (mk-zone 3  12 3  3)  "eating")
+               (list 5  0  (mk-zone 7  20 5  5)  "idle")
+               (list 10 0  (mk-zone 26 27 2  12) "idle")
+               (list 12 0  (mk-zone 49 54 1  1)  "eating")
+               (list 13 0  (mk-zone 49 3  7  2)  "idle")
+               (list 14 0  (mk-zone 7  20 5  5)  "idle")
+               (list 18 0  (mk-zone 49 54 1  1)  "eating")
+               (list 19 0  (mk-zone 3  12 3  3)  "idle")
+               (list 0  0  (mk-zone 2  13 1  1)  "sleeping")
                )
 
-;; Need to add kern-page-text:
-(define (goblin-lexicon-use lexicon user)
-  (kern-page-text
-   "I compiled these notes to help others learn the goblin language. I hope it is useful."
+;; ----------------------------------------------------------------------------
+;; Gen's Goblin Lexicon
+;; ----------------------------------------------------------------------------
+(mk-reusable-item 
+ 't_goblin_lexicon "Goblin Lexicon" s_lexicon 1
+ (lambda (klexicon kuser)
+   (kern-ui-page-text
+   "Goblin Lexicon"
+   "I compiled these notes to help others learn the goblin language. "
+   "I hope they are useful."
    "--Gen"
    ""
    "Bo.....My, Myself"
@@ -38,20 +45,23 @@
    "To.....Individual"
    "Tu.....Bad, No, Useless"
    "Zu.....Watch, Seek"
-   ))
+   )))
 
-(define goblin-lexicon-ifc
-  (ifc obj-ifc
-       (method 'use goblin-lexicon-use)))
-
-(mk-obj-type 'the-goblin-lexicon "A Goblin Lexicon" s_scroll1 layer-item goblin-lexicon-ifc)
-
-(define (mk-gen will-join? gave-notes?) (list will-join? gave-notes?))
+;;----------------------------------------------------------------------------
+;; Gob
+;;----------------------------------------------------------------------------
+(define (gen-mk will-join? gave-notes?) (list will-join? gave-notes?))
 (define (gen-will-join? gen) (car gen))
 (define (gen-gave-notes? gen) (cadr gen))
-(define (gen-set-will-join gen val) (set-car! gen val))
-(define (gen-set-gave-notes gen val) (set-cadr! gen val))
+(define (gen-set-will-join! gen val) (set-car! gen val))
+(define (gen-set-gave-notes! gen val) (set-car! (cdr gen) val))
 
+;;----------------------------------------------------------------------------
+;; Conv
+;;----------------------------------------------------------------------------
+(define (gen-hail gen player) (say gen "Hail, Wanderer"))
+(define (gen-bye gen player) (say gen "Farewell"))
+(define (gen-default gen player) (say gen "I can't help you with that"))
 (define (gen-name gen player) (say gen "I am Gen." ))
 (define (gen-woodsman gen player) (say gen "Yes, some call me the Woodsman." ))
 (define (gen-job gen player) (say gen "Once I was a Ranger, but my duty now is done. I wander 'midst the woods for my own reasons." ))
@@ -76,26 +86,27 @@
 (define (gen-cave gen player) (say gen "The cave goblins, who are larger and stronger than their forest cousins, prefer to live in the deeps of the world. "
                                  "Their dark god demands living sacrifices. Beware them if you explore the caves, they burn with hatred for humankind." ))
 
-(define (gen-language gen player)
-  (say gen "Yes, I can speak a few words of goblin. Would you like to learn?")
-  (if (kern-conv-get-yes-no? player)
-      (if (gen-gave-notes? gen)
-          (say gen "Study the notes I gave you, and then practice on me.")
-          (begin
-            (say gen "Here are some notes I have made on their language. You may keep it.")
-            (kern-obj-add-to-inventory player the-goblin-lexicon 1)
-            (gen-set-gave-notes! gen #t)))
-      (say gen "Perhaps another time.")))
-}
+(define (gen-language kgen player)
+  (let ((gen (kobj-gob-data kgen)))
+    (say kgen "Yes, I can speak a few words of goblin. Would you like to learn?")
+    (if (kern-conv-get-yes-no? player)
+        (if (gen-gave-notes? gen)
+            (say kgen "Study the notes I gave you, and then practice on me.")
+            (begin
+              (say kgen "Here are some notes I have made on their language. You may keep it.")
+              (kern-obj-add-to-inventory player t_goblin_lexicon 1)
+              (gen-set-gave-notes! gen #t)))
+        (say kgen "Perhaps another time."))))
+
 
 (define (gen-practice gen player) (say gen "If you want to practice speaking goblin, just ask me something in goblin!" ))
 
 (define (gen-join gen player)
-  (if (gen-will-join? gen)
+  (if (gen-will-join? (kobj-gob-data gen))
       (begin
         (say gen "Yes, I will join you. Once more unto the breach, dear friends!")
         ;; Note: need to add kern-party-add-char and kern-party-rm-char
-        (kern-party-add-char (kern-char-get-party player) gen))
+        (join-player gen))
       (say gen "No, for the woods call my name.")))
 
 (define (gen-da gen player) (say gen "Ha! Da-Ma-To means forest goblin." ))
@@ -118,7 +129,7 @@
 (define (gen-eh gen player) (say gen "Eh?" ))
 (define (gen-bonaha gen player) 
   (say gen "Excellent! That is the goblin word for friend. You have come far in mastering their language.")
-  (gen-set-will-join! #t))
+  (gen-set-will-join! (kobj-gob-data gen) #t))
 
 (define (gen-shroom gen player) (say gen "She is an old friend. Can you believe she was a war-maiden in the Goblin Wars?"))
 (define (gen-maiden gen player) (say gen "It's true! I can still remember her hand-axe flashing in the moonlight "
@@ -148,10 +159,13 @@
        (method 'admi gen-primal)
        (method 'ambi gen-ambitious)
        (method 'bona gen-bonaha)
+       (method 'bye  gen-bye)
        (method 'capt gen-captain)
+       (method 'default gen-default)
        (method 'cave gen-cave)
        (method 'fore gen-job)
        (method 'gobl gen-goblin)
+       (method 'hail gen-hail)
        (method 'job gen-job)
        (method 'join gen-join)
        (method 'lang gen-language)
@@ -167,3 +181,27 @@
        (method 'wars gen-wars)
        (method 'wood gen-woodsman)
        ))
+
+;;----------------------------------------------------------------------------
+;; First-time constructor
+;;----------------------------------------------------------------------------
+(define (mk-gen tag)
+  (bind 
+   (kern-mk-char tag                 ; tag
+                 "Gen"               ; name
+                 sp_human            ; species
+                 oc_ranger           ; occ
+                 s_companion_ranger  ; sprite
+                 faction-men         ; starting alignment
+                 12 10 12            ; str/int/dex
+                 0 0                 ; hp mod/mult
+                 0 0                 ; mp mod/mult
+                 90 0 9 3            ; hp/xp/mp/lvl
+                 #f                  ; dead
+                 'gen-conv           ; conv
+                 sch_gen             ; sched
+                 nil                 ; special ai
+                 nil                 ; container
+                 nil                 ; readied
+                 )
+   (gen-mk #f #f)))

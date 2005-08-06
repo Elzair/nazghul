@@ -102,6 +102,9 @@
 (kern-load "shroom.scm")
 (mk-shroom 'ch_shroom)
 
+(kern-load "gen.scm")
+(mk-gen 'ch_gen)
+
 ;;----------------------------------------------------------------------------
 ;; Place
 ;;----------------------------------------------------------------------------
@@ -115,6 +118,7 @@
 
   ;; characters:
   (put ch_shroom  14 1)
+  (put ch_gen     0 0)
 
   ;; Shroom's Shop
   (put (mk-locked-door) 48 10)

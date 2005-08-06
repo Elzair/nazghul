@@ -7,38 +7,6 @@
 (kern-mk-sprite 's_lexicon ss_books 1 0 #f 0)
 (kern-mk-sprite 's_manual  ss_books 1 0 #f 0)
 
-;; ----------------------------------------------------------------------------
-;; Gen's Goblin Lexicon
-;; ----------------------------------------------------------------------------
-(mk-reusable-item 
- 't_goblin_lexicon "A Goblin Lexicon" s_lexicon 1
- (lambda (klexicon kuser)
-   (kern-ui-page-text
-   "Goblin Lexicon"
-   "I compiled these notes to help others learn the goblin language. "
-   "I hope they are useful."
-   "--Gen"
-   ""
-   "Bo.....My, Myself"
-   "Cho....Mankind"
-   "Da.....Abode, World"
-   "Eh.....'What?'"
-   "Gu.....Spirit, Ancestor"
-   "Ha.....Good, Yes, Skillful"
-   "Hi.....Magic"
-   "Ka.....Kill, Destroy, End"
-   "Ki.....Health, Life-Force, Power"
-   "Ma.....Forest, Hidden Ways"
-   "Me.....Duty, Job, Destiny"
-   "Na.....Yours, Yourself"
-   "Nu.....Give Birth, Create, Begin"
-   "No.....Name"
-   "Ru.....Ancient, Primordal, Deep, Cave"
-   "To.....Individual"
-   "Tu.....Bad, No, Useless"
-   "Zu.....Watch, Seek"
-   )))
-
 ;;----------------------------------------------------------------------------
 ;; Player manual
 ;;----------------------------------------------------------------------------
