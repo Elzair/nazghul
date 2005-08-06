@@ -24,6 +24,7 @@
 (define (shroom-gave-quest? shroom) (car shroom))
 (define (shroom-quest-done? shroom) (cadr shroom))
 (define (shroom-give-quest shroom) (set-car! shroom #t))
+(define (shroom-set-quest-done! shroom) (set-car! (cdr shroom) #t))
 
 ;;----------------------------------------------------------------------------
 ;; Conv
@@ -57,12 +58,14 @@
 ;; Shroom's mushroom quest
 (define (shroom-wards knpc kpc)
   (let ((shroom (kobj-gob-data knpc)))
-    (display "shroom-wards")(newline)
     (if (shroom-gave-quest? shroom)
+        ;; gave quest
         (if (shroom-quest-done? shroom)
+            ;; quest already done
             (say knpc "I've forgotten all the others. But long ago the "
                  "librarian from Glasdrin had me teach him and he wrote them "
                  "all down. Check with him.")
+            ;; quest NOT yet done
             (begin
               (say knpc "Bring me the mushrooms and I will teach ye the ward "
                    "of panic. "
@@ -70,10 +73,8 @@
               (if (kern-conv-get-yes-no? kpc)
                   (say knpc "Well...")
                   (say knpc "[sigh] Perhaps ye should write this down. "
-                       "Leave town and take the path north to the open plain "
-                       "and travel west until ye reach the mountains. "
-                       "Nearby will be the cave entrance. "
-                       "In the cave ye will find the mushrooms."))))
+                       "Leave town and go south to the mountains by the sea. "
+                       "There you will find the cave entrance."))))
         (begin
           (say knpc "In my time I knew many battle wards. "
                "Be wanting me to teach ye, now, won't ye?")
@@ -84,8 +85,8 @@
                      "yes?")
                 (if (kern-conv-get-yes-no? kpc)
                     (begin
-                      (say knpc "In a cave to the west in the mountains grows "
-                           "a purple mushroom. Bring me four. Agreed?")
+                      (say knpc "In a cave to the south grows "
+                           "a purple mushroom. Bring me one. Agreed?")
                       (if (kern-conv-get-yes-no? kpc)
                           (begin
                             (say knpc "Good. A colony of slimes infests that "
@@ -96,6 +97,32 @@
               (say knpc "Of course, a skillfull warrior such as you has "
                    "nothing to learn from an old witch like me."))))))
                                
+(define (shroom-hail knpc kpc)
+  (let ((shroom (kobj-gob-data knpc)))
+    (display "shroom: ")
+    (display shroom)(newline)
+    (if (shroom-gave-quest? shroom)
+        ;; gave quest
+        (if (shroom-quest-done? shroom)
+            ;; quest done
+            (say knpc "Hello again, young wanderer. Come visit a bit with old "
+               "Shroom.")
+            ;; quest not done yet
+            (if (in-inventory? kpc t_royal_cape)
+                (begin
+                  ;; player has shrooms
+                  (say knpc "Ah, ye have the mushroom, as I requested!")
+                  (kern-obj-remove-from-inventory kpc t_royal_cape 1)
+                  (shroom-set-quest-done! shroom)
+                  (say knpc "Now for your reward. The battle ward is called "
+                       "In Quas Corp, of the seventh circle. Mix nightshade, "
+                       "mandrake and garlic. Cast it in battle and your "
+                       "enemies will flee in terror!"))
+                ;; player does NOT have shrooms yet
+                (say knpc "No purple mushroom yet, I see. No rush, dear. "
+                      "But I would like it before I die.")))
+        ;; has NOT given quest yet
+        (say knpc "Hello and well met."))))
 
 (define shroom-conv
   (ifc basic-conv
@@ -105,7 +132,7 @@
        ;; on the other hand, is a feature of the ifc mechanism (see ifc.scm).
        (method 'default (lambda (knpc kpc) (say knpc "Long ago I might have "
                                                 "known about that.")))
-       (method 'hail (lambda (knpc kpc) (say knpc "Hello, dearie")))
+       (method 'hail shroom-hail)
        (method 'bye (lambda (knpc kpc) (say knpc "Toodaloo!")))
        (method 'job (lambda (knpc kpc) (say knpc "I sell potions, reagents "
                                             "and the like.")))
@@ -173,4 +200,4 @@
                  nil                 ; container
                  nil                 ; readied
                  )
-   (roland-mk #f #f #f)))
+   (shroom-mk #f #f)))

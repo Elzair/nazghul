@@ -1,4 +1,4 @@
-(kern-mk-sprite-set 'ss_reagents 32 32 1 8 0 0 "reagents.png")
+(kern-mk-sprite-set 'ss_reagents 32 32 1 9 0 0 "reagents.png")
 
 (kern-mk-sprite 's_spider_silk ss_reagents    1 0 #f 0)
 (kern-mk-sprite 's_sulphorous_ash ss_reagents 1 1 #f 0)
@@ -8,6 +8,7 @@
 (kern-mk-sprite 's_black_pearl ss_reagents    1 5 #f 0)
 (kern-mk-sprite 's_nightshade ss_reagents     1 6 #f 0)
 (kern-mk-sprite 's_mandrake ss_reagents       1 7 #f 0)
+(kern-mk-sprite 's_royal_cape ss_reagents 1 8 #f 0)
 
 
 ;; Extend the basic object interface to support mixing. Currently mix does
@@ -30,9 +31,7 @@
    (list 'black_pearl    "black pearl"    s_black_pearl)
    (list 'nightshade     "nightshade"     s_nightshade)
    (list 'mandrake       "mandrake"       s_mandrake)
-
-
-;   (list 'bloodmoss      "bloodmoss"      s_red_hunks)  ;; using the old sprite set???
+   (list 't_royal_cape     "royal cape mushroom" s_royal_cape)
    ))
 
 (map (lambda (type) (apply mk-reagent-type type)) reagent-types)

@@ -291,6 +291,7 @@
 
 (define (in-inventory? kchar ktype)
   (define (hasit? item inv)
+    (display "inv: ")(display inv)(newline)
     (cond ((null? inv) #f)
           ((eqv? item (car (car inv))) #t)
           (else (hasit? item (cdr inv)))))

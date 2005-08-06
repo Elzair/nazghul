@@ -4845,8 +4845,10 @@ KERN_API_CALL(kern_in_los)
                 return sc->F;
 
         if (p1 != p2) {
-                rt_err("kern-in-los?: place %s different from %s",
-                       p1->tag, p2->tag);
+                /* happens sometimes when player exits a place and NPC's
+                 * looking for him in the same round */
+                warn("kern-in-los?: place %s different from %s",
+                     p1->tag, p2->tag);
                 return sc->F;
         }
 

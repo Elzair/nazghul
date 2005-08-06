@@ -27,6 +27,7 @@
 (load "enchanters-tower.scm")
 (load "green-tower.scm")
 (load "green-tower-lower.scm")
+(load "mushroom-cave.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Characters
@@ -209,8 +210,8 @@
   ;(kern-log-msg "You notice a cave to the southwest."))
   ;(kern-obj-put-at kplayer (list p_slimy_cavern 13 2)
   ; (kern-obj-put-at kplayer (list p_enchanters_tower 32 32)))
-  ;(kern-obj-put-at kplayer (list p_shard 51 46)))
-  (kern-obj-put-at kplayer (list p_green_tower 45 18)))
+  (kern-obj-put-at kplayer (list p_shard 79 74)))
+  ;(kern-obj-put-at kplayer (list p_green_tower 45 18)))
   ;(kern-obj-put-at kplayer (list p_test 15 15)))
                   
 ;;----------------------------------------------------------------------------

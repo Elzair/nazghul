@@ -2392,6 +2392,8 @@ int Character::getCurrentFaction()
 class Container* Character::getInventoryContainer()
 {
         /* for player-controlled maybe return party inventory? */
+        if (isPlayerControlled())
+                return player_party->inventory;
         return container;
 }
 

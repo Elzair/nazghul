@@ -179,6 +179,9 @@
 (mk-monster-generator 't_dungeon_troll_generator 990 5 mk-troll char-is-troll?)
 (mk-monster-generator 't_dungeon_spider_generator 990 3 mk-queen-spider 
                       is-queen-spider?)
+(mk-monster-generator 't_yellow_slime_generator 500 1 mk-yellow-slime
+                      is-yellow-slime?)
 
-(define (mk-generator type)
-  (kern-obj-set-visible (kern-mk-obj type 1) #f))
+;; Make an instance of one of the above monster generators
+(define (mk-generator generator-type)
+  (kern-obj-set-visible (kern-mk-obj generator-type 1) #f))

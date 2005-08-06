@@ -264,6 +264,12 @@
 ;;----------------------------------------------------------------------------
 ;; Species Queries
 ;;----------------------------------------------------------------------------
+(define (is-species? kchar species)
+  (eqv? (kern-char-get-species kchar) species))
+
+(define (is-yellow-slime? kchar)
+  (is-species? kchar sp_yellow_slime))
+
 (define (obj-is-green-slime? kobj)
   (and (obj-is-char? kobj)
        (eqv? (kern-char-get-species kobj) sp_green_slime)))

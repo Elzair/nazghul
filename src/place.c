@@ -1335,7 +1335,13 @@ static int place_describe_objects(struct place *place, int x, int y,
                         // Special case: don't describe the cursor
                         continue;
 
-
+                if (! obj->isVisible() && ! Reveal && ! obj->isShaded())
+                        continue;
+                
+                // hack: objects without names are assumed to be invisible
+                if (! obj->getName())
+                        continue;
+                
 		if (type == NULL) {
 
                         // This is the first type of thing we need to list.
@@ -1378,6 +1384,13 @@ static int place_describe_objects(struct place *place, int x, int y,
                         // Special case: don't describe the cursor
                         continue;
 
+                if (! obj->isVisible() && ! Reveal && ! obj->isShaded())
+                        continue;
+
+                // hack: objects without names are assumed to be invisible
+                if (! obj->getName())
+                        continue;
+                
 		if (prev_obj == NULL) {
 
                         // This is the first type of thing we need to
