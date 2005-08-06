@@ -1429,7 +1429,14 @@ static int place_describe_objects(struct place *place, int x, int y,
                         else
                                 log_continue(", ");
                 }
-                prev_obj->describe();
+
+                // Bugfix: multiple chests on one tile are 1 each, need to pass
+                // in the instance; Characters, however, have no type, so this
+                // is not a general solution
+                if (prev_obj->getObjectType())
+                        prev_obj->getObjectType()->describe(n_instances);
+                else
+                        prev_obj->describe();
                 n_described++;
                 n_types--;
         }

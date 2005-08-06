@@ -100,10 +100,10 @@
 ;; This drawbridge mech actually affects a differnt place
 ;;MAKE_DRAWBRIDGE(prison_drawbridge, GreenTowerLower, 32, 16);
 
-(define (put obj x y) (list obj x y))
-
 (kern-mk-place 
- 'p_green_tower "Green Tower" s_town m_green_tower #f #f #f #f nil nil
+ 'p_green_tower "Green Tower" s_town m_green_tower #f #f #f #f 
+ nil ;; subplaces
+ nil ;; neighbors
 
  ;; objects:
  (list
@@ -139,6 +139,46 @@
                               (add-content 1 t_shield)
                               (add-content 1 t_leather_helm)))
        55 9)
+
+
+  ;; Gen's Hut
+  (put (mk-door) 7 13)
+  (put (mk-bed) 2 13)
+  (put (mk-chest nil 
+                 (mk-contents (add-content 100 t_arrow)
+                              (add-content 1 t_bow)))
+       4 11)
+                
+  ;; Deric's Hut
+  (put (mk-door) 11 6)
+  (put (mk-door) 16 6)
+  (put (mk-bed) 17 4)
+  (put (mk-chest 'burn-trap
+                 (mk-contents (add-content 100 t_bolt)
+                              (add-content 1 t_crossbow)
+                              (add-content 1 t_shield)
+                              (add-content 2 t_cure_potion)
+                              (add-content 5 t_heal_potion)))
+       17 6)
+  
+  ;; White Stag Lodge
+  (put (mk-door) 51 49)
+  (put (mk-door) 52 49)
+  (put (mk-door) 57 59)
+  (put (kern-tag 'white-stag-inn-room-door (mk-locked-door)) 44 58)
+  (put (mk-bed) 43 61)
+  (put (mk-bed) 58 61)
+  (put (mk-locked-door) 59 58)
+  
+  ;; Tower 
+  (put (mk-lever 'gtl-drawbridge-1) 35 29)
+  (put (mk-lever 'gtl-portcullis-1) 29 29)
+  (put (mk-ladder-down 'p_green_tower_lower 32 32) 32 32)
+  (put (mk-door) 32 22)
+  (put (mk-door) 41 32)
+  (put (mk-door) 32 42)
+  (put (mk-door) 23 32)
+  
   )
  nil   ; hooks
  nil   ; edge entrances

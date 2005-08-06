@@ -17,6 +17,10 @@
 (mk-obj-type 't_portcullis "portcullis" nil layer-mechanism portcullis-ifc)
 
 ;; Define a constructor
-(define (mk-portcullis)
+(define (mk-connected-portcullis dest-tag)
   (bind (kern-mk-obj t_portcullis 1) 
-        (bim-mk #f nil nil)))
+        (bim-mk #f dest-tag nil)))
+  
+(define (mk-portcullis) 
+  (mk-connected-portcullis nil))
+

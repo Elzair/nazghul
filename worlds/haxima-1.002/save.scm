@@ -876,6 +876,953 @@
 
 (kern-load "zane.scm")
 
+(kern-mk-place 'p_green_tower_lower "Beneath Green Tower"
+  nil ;; sprite
+  (kern-mk-map
+    nil     64 64 pal_expanded
+    (list
+      "rr rr rr rr rr rr rr rr rr rr rr rr rr rr ~~ ~~ || || || || rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr || || || || || || || || || "
+      "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr ~~ || || || || || rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr || || || || || || || || || || "
+      "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr ~~ || || || || rr rr rr rr rr rr rr xx xx xx xx x! xx xx x! xx xx xx xx rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr xx tt xx tt tt || || || || || "
+      "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr ~~ || || || || rr rr rr rr rr rr rr xx cc cc xx cc cc cc cc xx cc cc xx rr rr rr rr rr rr rr rr rr rr rr rr rr rr .. .. .. xx tt tt tt || || || || "
+      "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr ~~ ~~ || || || rr rr rr rr rr rr rr xx cc cc cc cc cc cc cc cc cc cc xx rr rr rr rr rr rr rr rr rr rr rr rr rr .. .. .. .. tt tt tt tt || || || || "
+      "rr rr rr rr rr rr rr rr rr rr rr rr rr rr || || ~~ || || || rr rr rr rr rr rr rr xx cc cc xx cc cc cc cc xx cc cc xx rr rr rr rr rr rr rr rr rr rr rr rr rr @@ tt @@ tt xx tt tt tt || || || || "
+      "rr rr rr rr rr rr rr rr rr rr rr rr rr rr || || ~~ || || || rr rr rr rr rr rr rr xx xx xx x! cc cc cc cc x! xx xx xx rr rr rr rr rr rr rr rr rr rr rr rr .. .. .. .. .. xx tt tt || || || || || "
+      "rr rr rr rr rr rr rr rr rr rr rr rr rr rr || || ~~ || || || rr rr rr rr rr rr rr xx cc cc xx cc cc cc cc xx cc cc xx rr rr rr rr rr rr rr rr rr rr rr tt tt tt tt tt tt xx || || || || || || || "
+      "rr rr rr rr rr rr rr rr rr rr rr rr rr rr || || ~~ ~~ || || rr rr rr rr rr rr rr xx cc cc cc cc cc cc cc cc cc cc xx rr rr rr rr rr rr rr rr rr rr rr xx xx xx xx tt xx xx || || || || || || || "
+      "rr rr rr rr rr rr rr rr rr rr rr rr rr rr || || || ~~ || || rr rr rr rr rr rr rr xx cc cc xx cc cc cc cc xx cc cc xx rr rr rr rr rr rr rr rr rr rr .. .. .. xx .. .. .. xx || || || || || || || "
+      "rr rr rr rr rr rr rr rr rr rr rr rr rr rr || || || ~~ || || rr rr rr rr rr rr rr xx xx xx x! cc cc cc cc x! xx xx xx rr rr rr rr rr rr rr tt tt .. .. .. .. ?? .. .. .. ?? tt tt tt tt tt tt tt "
+      "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr .. .. ~~ ~~ ~~ rr rr rr rr rr rr rr xx cc cc xx cc cc cc cc xx cc cc xx rr rr rr rr rr rr || || tt xx .. .. .. xx .. .. .. xx || || || || || || || "
+      "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr || || || || ~~ rr rr rr rr rr rr rr xx cc cc cc cc cc cc cc cc cc cc ?? || rr rr rr rr rr xx xx tt xx xx tt xx xx xx .. xx xx || || || || || || || "
+      "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr || || || || ~~ rr rr rr rr rr rr rr xx cc cc xx cc cc cc cc xx cc cc xx tt rr ~~ ~~ ~~ ~~ ~~ || tt || || || || || || || || || || || || || || || || "
+      "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr || || || ~~ ~~ rr rr rr rr rr rr rr xx xx xx xx x! cc cc x! xx xx xx xx xx xx ~~ xx xx -- ~~ ~~ .. || || || || || || || || || || || || || || || || "
+      "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr || || ~~ || .. || tt ~~ ~~ ~~ .. .. .. .. xx cc cc cc cc xx ~~ ~~ ~~ -- __ __ __ xx -- -- ~~ ~~ || || || || || || || || || || || || || || || || "
+      "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr || ~~ ~~ || .. || tt ~~ tt ~~ .. .. ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ -- __ __ __ xx __ -- ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ || || || ~~ ~~ ~~ ~~ || || "
+      "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr || ~~ tt bb .. bb .. ~~ tt ~~ .. .. ~~ tt xx cc cc cc cc xx cc cc ~~ -- __ __ __ xx __ -- ~~ ~~ || || || || || || ~~ || || || ~~ || || ~~ ~~ || "
+      "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr ~~ ~~ .. .. .. .. ~~ .. ~~ ~~ ~~ ~~ tt xx x! cc cc x! xx cc cc ~~ -- -- -- -- xx -- ~~ ~~ tt tt || || || || || == || || || ~~ || || tt ~~ ~~ "
+      "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr || ~~ ~~ ~~ ~~ ~~ ~~ .. .. .. .. .. .. xx cc cc cc cc xx cc cc ~~ ~~ ~~ ~~ ~~ xx ~~ ~~ .. || tt || || || || || ~~ ~~ ~~ ~~ ~~ || tt tt tt || "
+      "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr .. .. .. .. .. .. .. .. rr rr rr xx cc cc cc cc cc cc cc cc cc cc cc cc xx .. .. .. tt tt || || || || || || || || || || || || tt || || "
+      "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr xx cc cc cc cc xx cc cc cc cc cc cc cc x! .. .. .. bb tt || || || || || || tt || || || || || || || || "
+      "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr xx x! cc cc x! xx ,C ,I ,S ,T ,E ,R ,N xx .. .. .. tt tt || tt || || || tt tt tt || || || || || || || "
+      "rr rr rr rr rr rr rr rr rr rr rr xx xx xx xx xx xx xx xx xx xx rr rr rr rr rr rr xx xx xx xx cc cc cc cc xx xx xx xx xx xx xx xx xx .. .. .. bb tt tt tt tt || || || tt || || || rr || rr rr rr "
+      "rr rr rr rr rr rr rr rr rr rr rr xx ,B ,A ,R ,R ,A ,C ,K ,S xx rr rr rr rr xx xx xx cc cc xx cc cc cc cc xx cc cc xx xx xx cc cc ?? .. .. .. tt tt || tt || || || || || || || || rr tt tt cc rr "
+      "rr rr rr rr rr rr rr rr rr rr rr x! cc cc cc cc cc cc cc cc x! rr rr xx xx xx cc cc cc cc xx cc cc cc cc xx cc cc cc cc xx xx xx xx .. .. .. bb tt || || tt rr rr rr rr rr rr rr rr cc cc cc rr "
+      "rr rr rr rr rr rr rr rr rr rr rr xx cc cc cc cc cc cc cc cc xx rr rr xx cc cc cc cc cc cc xx cc cc cc cc xx cc cc cc cc cc cc xx xx .. .. .. tt tt || || tt rr cc cc cc cc cc cc cc cc cc cc rr "
+      "rr rr rr rr rr rr rr rr rr rr rr xx cc cc cc cc cc cc cc cc xx rr xx xx cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc xx xx .. .. .. tt tt || || tt rr cc rr rr rr rr rr rr cc cc cc rr "
+      "rr rr rr rr rr rr rr rr rr rr rr xx cc cc cc cc cc cc cc cc xx rr xx cc cc cc cc cc cc cc xx cc cc cc cc xx cc cc cc cc cc cc cc xx xx xx x! xx xx xx x! xx xx cc rr rr rr rr rr rr rr rr rr rr "
+      "rr rr rr rr rr rr rr rr rr rr rr xx cc cc cc cc cc cc cc cc xx rr xx cc cc cc cc cc cc cc xx cc cc cc cc xx cc cc cc cc cc cc cc xx xx ,C ,O ,U ,N ,C ,I ,L xx cc rr rr rr rr rr rr rr rr rr rr "
+      "rr rr rr rr rr rr rr rr rr rr rr xx cc cc cc cc cc cc cc cc xx rr xx xx xx xx cc xx xx xx x! cc cc cc cc x! xx xx xx cc xx xx xx xx xx cc cc cc cc cc cc cc xx cc rr rr rr rr rr rr rr rr rr rr "
+      "rr rr rr rr rr rr rr rr rr rr rr xx xx x! xx cc cc xx x! xx xx xx x! cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc x! cc cc cc cc cc cc cc x! cc rr rr rr rr rr rr rr rr rr rr "
+      "rr rr rr rr rr rr rr rr rr rr rr xx cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc 00 00 00 cc cc xx cc rr rr rr rr rr rr rr rr rr rr "
+      "rr rr rr rr rr rr rr rr rr rr rr xx cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc 00 00 00 cc cc xx cc rr rr rr rr rr rr rr rr rr rr "
+      "rr rr rr rr rr rr rr rr rr rr rr xx xx x! xx cc cc xx x! xx xx xx x! cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc x! cc cc cc cc cc cc cc x! cc rr rr rr rr rr rr rr rr rr rr "
+      "rr rr rr rr rr rr rr rr rr rr rr xx cc cc cc cc cc cc cc cc xx rr xx xx xx xx cc xx xx xx x! cc cc cc cc x! xx xx xx cc xx xx xx xx xx cc cc cc cc cc cc && xx cc rr rr rr rr rr rr rr rr rr rr "
+      "rr rr rr rr rr rr rr rr rr rr rr x! cc cc cc cc cc cc cc cc x! rr xx cc cc cc cc cc cc cc xx cc cc cc cc xx cc cc cc cc cc cc cc xx xx xx x! xx xx xx x! xx xx cc rr rr rr rr rr rr rr rr rr rr "
+      "rr rr rr rr rr rr rr rr rr rr rr xx cc cc cc cc cc cc cc cc xx rr xx cc cc cc cc cc cc cc xx cc cc cc cc xx cc cc cc cc cc cc cc ?? cc cc cc cc cc cc cc cc cc cc rr rr rr rr rr rr rr rr rr rr "
+      "rr rr rr rr rr rr rr rr rr rr rr x! cc cc cc cc cc cc cc cc x! rr xx xx cc cc cc cc cc cc xx cc cc cc cc xx cc cc cc cc cc cc xx xx rr rr rr rr rr rr rr rr cc rr rr rr rr rr rr rr rr rr rr rr "
+      "rr rr rr rr rr rr rr rr rr rr rr xx cc cc cc cc cc cc cc cc xx rr rr xx cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc xx rr rr rr rr rr rr rr rr rr cc rr rr rr rr rr rr rr rr rr rr rr "
+      "rr rr rr rr rr rr rr rr rr rr rr xx ,T ,R ,A ,I ,N ,I ,N ,G xx rr rr xx xx xx cc cc cc cc xx cc cc cc cc xx cc cc cc cc xx xx xx rr rr rr rr rr rr rr rr rr cc rr rr rr rr rr rr rr rr rr rr rr "
+      "rr rr rr rr rr rr rr rr rr rr rr xx xx xx xx xx xx xx xx xx xx rr rr rr rr xx xx xx cc cc xx cc cc cc cc xx cc cc xx xx xx rr rr rr rr rr rr rr rr rr rr rr cc rr rr rr rr rr rr rr rr rr rr rr "
+      "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr xx xx xx xx cc cc cc cc xx xx xx xx rr rr rr rr rr rr rr rr rr rr rr rr rr cc rr rr rr rr rr rr rr rr rr rr rr "
+      "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr xx xx xx xx x! cc cc x! xx xx xx xx xx xx xx xx xx xx rr rr rr rr rr rr rr cc rr rr rr rr rr rr rr rr rr rr rr "
+      "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr xx cc cc cc cc cc cc cc cc cc cc cc xx [[ @@ @@ ]] xx rr rr rr rr rr rr rr cc rr rr rr rr rr rr rr rr rr rr rr "
+      "rr .. .. .. .. .. .. rr .. .. .. .. .. .. .. .. .. .. .. rr .. .. .. .. .. rr rr x! cc cc cc cc cc cc cc cc cc cc cc x! cc cc cc cc xx xx rr rr rr rr rr rr cc rr rr rr rr rr rr rr rr rr rr rr "
+      "rr .. .. .. .. .. .. rr .. .. .. .. .. .. .. .. .. .. .. rr .. .. .. .. .. rr rr xx cc cc 00 cc cc 00 cc cc 00 cc cc cc cc cc cc cc && xx rr rr rr rr rr rr cc rr rr rr rr rr rr rr rr rr rr rr "
+      "rr .. .. .. .. .. .. rr .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. rr rr xx cc cc 00 cc cc 00 cc cc 00 cc cc cc cc cc cc cc && xx rr rr rr rr rr rr cc rr rr rr rr rr rr rr rr rr rr rr "
+      "rr .. rr rr rr rr rr rr .. .. .. .. .. .. .. .. .. .. .. rr .. .. .. .. .. rr rr xx cc cc 00 cc cc 00 cc cc 00 cc cc cc cc cc cc cc && xx rr rr rr rr rr rr cc rr rr rr rr rr rr rr rr rr rr rr "
+      "rr .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. rr .. .. .. .. .. rr rr x! cc cc cc cc cc cc cc cc cc cc cc x! cc cc cc cc && xx rr rr rr rr rr rr cc rr ,C ,R ,Y ,P ,T rr rr rr rr rr "
+      "rr .. pp .. pp .. pp .. pp .. pp .. pp .. pp .. pp .. .. rr rr rr rr rr rr rr rr xx cc cc cc cc cc cc cc cc cc cc cc xx cc cc cc cc xx xx rr rr rr rr rr cc cc cc cc cc cc cc cc cc rr rr rr rr "
+      "rr .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. rr rr rr rr rr rr rr rr xx ,D ,I ,N ,I ,N ,G @@ ,H ,A ,L ,L xx [[ @@ @@ ]] xx rr rr rr rr rr rr cc rr rr cc cc cc cc cc cc cc rr rr rr "
+      "rr .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. rr rr rr rr rr rr rr rr xx xx x! xx xx xx x! xx xx xx x! xx xx xx xx xx xx xx rr rr rr rr rr rr cc rr cc cc cc cc cc cc cc rr rr rr rr "
+      "rr .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr cc rr rr cc rr rr rr cc rr rr rr rr rr "
+      "rr .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr cc rr cc cc cc rr cc cc cc rr rr rr rr "
+      "rr .. pp .. pp .. pp .. pp .. pp .. pp .. pp .. pp .. .. rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr cc rr rr cc rr rr rr cc rr rr rr rr rr "
+      "rr .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. rr .. .. .. .. .. rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr cc rr cc cc cc rr cc cc cc rr rr rr rr "
+      "rr .. rr rr rr rr rr rr .. .. .. .. .. .. .. .. .. .. .. rr .. .. .. .. .. rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr cc rr rr cc rr rr rr cc rr rr rr rr rr "
+      "rr .. .. .. .. .. .. rr .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc rr cc cc cc rr cc cc cc rr rr rr rr "
+      "rr .. .. .. .. .. .. rr .. .. .. .. .. .. .. .. .. .. .. rr .. .. .. .. .. rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr cc rr rr rr cc rr rr rr rr rr "
+      "rr .. .. .. .. .. .. rr .. .. .. .. .. .. .. .. .. .. .. rr .. .. .. .. .. rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr cc cc cc rr cc cc cc rr rr rr rr "
+      "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr cc rr rr rr cc rr rr rr rr rr "
+      "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
+      "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
+    )
+  )
+  #f #t #f #f
+  ;; subplaces
+  nil
+  ;; neighbors
+  (list
+    (list ;; begin above neighbor
+      (kern-mk-place 'p_green_tower "Green Tower"
+        s_town ;; sprite
+        (kern-mk-map
+          nil           64 64 pal_expanded
+          (list
+            "|| || || || || || || || || || || || || || || || || || || || || || || || || || || || || tt bb .. /7 .. bb tt || || || || || || || || || || || || || || || || || || || || || || || || || || || || "
+            "|| || || || || || || || || || || || rr rr rr rr rr rr rr || || || || || || || || || || tt tt .. /7 .. tt tt || || || || || || || || || || || || || || || || || || || || || || || || || || || || "
+            "|| || rr rr rr rr rr || || || rr rr rr && cc cc cc cc rr || || || || || || || || || || tt bb .. /7 .. bb tt || || || || || || || || || || || || xx xx xx xx xx xx xx xx xx tt tt || || || || || "
+            "|| || rr cc cc cc rr || || || rr cc rr cc cc cc cc cc rr || || || || || || || || || tt tt tt .. /7 .. tt tt || || || || || || || || || || || || xx .. .. .. .. .. .. .. xx tt tt tt || || || || "
+            "|| || rr cc cc cc rr || || || rr cc cc cc cc cc cc cc rr || || || || || || || || || tt tt bb .. /4 /d /d /d /d /d /d /d /d /d /d /d /d /d /1 /d .. .. .. .. .. .. .. .. ws tt tt tt || || || || "
+            "|| || rr cc cc cc rr || || || rr cc rr cc cc cc rr rr rr || || || || || || || || tt tt tt tt .. /7 .. bb tt || || || || || || || || || || /7 tt xx @@ @@ @@ @@ @@ @@ @@ xx tt tt tt || || || || "
+            "|| || rr rr cc rr rr || || || rr cc rr cc cc cc cc cc rr || || || || || || || || tt tt tt bb .. /7 .. tt tt || || || || || || || || || || /7 .. .. .. .. .. .. .. .. .. xx tt tt || || || || || "
+            "|| || || || /7 || || || || || || /7 rr rr rr rr rr rr rr || || || || || || || tt tt tt tt tt .. /7 .. tt tt || || || || || || || || || || /7 tt xx .S .H .R .O .O .M .S xx || || || || || || || "
+            "|| || || || /8 /d /d /d /1 /d /d /a || || || || || || || || || || || || || || tt tt tt tt bb .. /7 .. bb tt || || || || || || || || || tt /7 tt xx xx xx xx xx xx xx xx xx || || || || || || || "
+            "|| || || || || || || || /7 || || || || || || || || || || || || || || || || tt tt tt tt tt tt .. /7 .. tt tt || || || || || || || || tt tt /7 tt xx .. .. .. xx .. .. .. xx || || || || || || || "
+            "|| || || rr rr rr || || /7 || || || || || || || || || || || || || || || || tt tt tt tt tt bb .. /7 .. bb tt || || || || || || || || tt tt /8 /d .. .. .. .. ?? .. .. .. ?? tt tt tt tt tt tt tt "
+            "|| rr rr rr cc rr rr || /4 /d /d /d /d /d /d /d /d /d /d /2 || || || || tt tt tt tt tt tt tt .. /7 .. tt tt || || || || tt tt tt tt tt tt tt tt xx .. .. tt xx .. .. .. xx || || || || || || || "
+            "|| rr cc cc cc cc rr rr /7 || || || || || || || || || || /7 || || || || tt tt tt tt tt tt bb .. /7 .. bb tt || || || || tt .. tt tt tt || || || xx xx ws xx xx xx .. xx xx || || || || || || || "
+            "|| rr cc cc cc cc cc cc /a || || || || || || || || tt || /7 || || || tt tt tt tt tt tt tt tt .. /7 .. tt tt || tt tt tt tt .. .. tt || || || || || || || || || || || || || || || || || || || || "
+            "|| rr rr cc cc cc rr rr || || || || || tt || || tt tt tt /7 || || || tt tt tt tt tt tt tt bb .. /7 .. bb tt || tt || || tt tt tt tt || || || || || || || || || || || || || || || || || || || || "
+            "|| || rr rr && rr rr || tt || || || tt tt bb || || tt || /7 || tt tt tt tt tt tt tt tt tt tt .. /7 .. tt tt || tt || || || || || || || || || || || || || || || || || || || || || || || || || || "
+            "|| || || rr rr rr || tt tt tt || tt tt .. tt || || tt bb /7 bb .. bb tt bb tt bb tt bb tt .. .. /7 .. .. tt bb tt bb tt tt bb tt bb tt bb tt tt || || || || || || || || || || || || || || || || "
+            "|| || || tt || || || || tt || tt tt .. .. .. tt || tt .. /7 .. .. .. .. .. .. .. .. .. .. .. .. /7 .. .. .. .. .. .. .. .. .. .. .. .. .. .. tt tt || || || || || || || || || || || || || || || "
+            "|| || tt tt tt || || || || || || tt tt .. tt || || bb .. /4 /d /d /d /d /d /d /d /d /d /d /d /d /5 /d /d /d /d /d /d /d /d /d /d /d /d /2 .. || tt || || || || || || || || || || || || || || || "
+            "|| || || tt || || || || || tt tt tt tt tt tt || || tt .. /7 .. .. .. .. .. .. .. .. .. .. .. .. /7 .. .. .. .. .. .. .. .. .. .. .. .. /7 .. tt tt || || || || || || || || || || || || || || || "
+            "|| || || || || || || tt tt tt tt tt tt tt || || || bb .. /7 .. .. .. bb tt bb tt bb tt .. .. .. /7 .. .. .. bb tt tt bb tt bb tt .. .. /7 .. bb tt || || || || || || || || || || || || || || || "
+            "|| || || || || || tt tt tt .. tt tt tt || || || || tt .. /7 .. .. tt tt tt tt tt tt tt bb .. .. /7 .. .. bb tt tt tt tt tt tt bb tt .. /7 .. tt tt || || || || || || || || || || || || || || || "
+            "|| || || || || bb tt tt .. .. .. tt tt tt || || || bb .. /7 .. bb tt || || || || || tt xx w+ xx cc xx w+ xx tt || || || || || tt tt .. /7 .. bb tt || || || || || || || || || || || || || || || "
+            "|| || || || || tt tt .. .. .. .. .. tt tt || || || || .. /7 .. tt tt || || || || xx w+ xx cc cc cc cc cc xx xx xx || || || || tt bb .. /7 .. tt tt || || || || || || || || || || || || || || || "
+            "|| || || || || tt tt tt .. .. .. tt tt tt || || || bb .. /7 .. bb tt || || xx xx xx cc cc cc cc cc cc cc cc cc xx xx xx || || tt tt .. /7 .. bb tt || || || || || || || || || || || || || || || "
+            "|| || || || || tt tt tt tt .. tt tt tt || || || || || .. /7 .. tt tt || xx xx cc cc cc cc cc cc cc cc cc cc cc cc cc xx xx || tt bb .. /7 .. tt tt || || || || || || || || || || || || || || || "
+            "|| || tt tt tt tt || tt tt tt tt bb || || tt tt || bb .. /7 .. bb tt || xx cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc xx || tt tt .. /7 .. tt tt || || || || || || || || || || || || || || || "
+            "|| || tt || || || || || tt tt tt || || || || || || tt .. /7 .. tt tt xx xx cc cc cc xx x! xx xx cc xx xx x! xx cc cc cc xx xx tt bb .. /7 .. bb tt || || || || || || || || || || || || || || tt "
+            "tt tt tt || || || || || || || || || || || || || tt bb .. /7 .. bb tt xx cc cc cc xx xx || tt .. cc .. tt || xx xx cc cc cc xx tt tt .. /7 .. tt tt || || || || || || || || || || || || || || tt "
+            "bb tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt .. .. /7 .. tt bb xx cc cc cc x! || tt .. .. cc .. .. tt || x! cc cc cc xx bb .. .. /7 .. bb tt || || || || || || || || || || || || || || tt "
+            ".. .. bb tt bb tt bb tt bb tt bb tt bb tt bb bb .. .. .. /7 .. .. .. w+ cc cc cc xx tt .. bb .. cc .. bb .. tt xx cc cc cc w+ .. .. .. /7 .. tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt "
+            ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. /7 .. .. .. xx cc cc cc xx .. .. .. .. cc .. .. .. .. xx cc cc cc xx .. .. .. /7 .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+            "/d /d /d /d /d /d /d /d /d /d /d /d /d /d /d /d /d /d /d /5 /d /d /d cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc /d /d /d /5 /d /d /d /d /d /d /d /d /d /d /d /d /d /d /d /d /d /d "
+            ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. /7 .. .. .. xx cc cc cc xx .. .. .. .. cc .. .. .. .. xx cc cc cc xx .. .. .. /7 .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+            ".. .. bb tt bb tt bb tt bb tt bb tt bb tt tt tt bb .. .. /7 .. .. .. w+ cc cc cc xx tt .. bb .. cc .. bb .. tt xx cc cc cc w+ .. .. .. /7 .. tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt "
+            "bb tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt .. /7 .. .. bb xx cc cc cc x! || tt .. .. cc .. .. tt || x! cc cc cc xx bb .. .. /7 .. bb tt || || || || || || || || || || || tt tt tt tt "
+            "tt tt || || || || tt tt tt tt tt tt tt tt || || tt tt .. /7 .. .. tt xx cc cc cc xx xx || tt .. cc .. tt || xx xx cc cc cc xx tt .. .. /7 .. tt tt || || || || || || || || || || || || || || tt "
+            "tt tt || || || || tt tt tt tt tt tt tt tt || || tt bb .. /7 .. bb tt xx xx cc cc cc xx x! xx xx cc xx xx x! xx cc cc cc xx xx tt bb .. /7 .. bb tt || || || || || || || || || || || || || || || "
+            "|| || || || || || || tt tt tt tt tt tt tt || || tt tt .. /7 .. tt tt || xx cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc xx || tt tt .. /7 .. tt tt || || || || || || || || || || || || || || || "
+            "|| || || || || || || || tt tt tt tt tt tt || || tt bb .. /7 .. bb tt || xx xx cc cc cc cc cc cc cc cc cc cc cc cc cc xx xx || tt bb .. /7 .. bb tt || || || || || || || || || || || || || || || "
+            "|| || || || || || || || || || || || || || || || tt tt .. /7 .. tt tt || || xx xx xx cc cc cc cc cc cc cc cc cc xx xx xx || || tt tt .. /7 .. tt tt || || || || || || || || || || || || || || || "
+            "|| || || || || || || || || || || || || || || || tt bb .. /7 .. bb tt || || || || xx w+ xx cc cc cc cc cc xx xx xx || || || || tt bb .. /7 .. bb tt || || || || || || || || || || || || || || || "
+            "|| || || || || || || || || || || || || || rr rr tt tt .. /7 .. tt tt || || || || || tt xx w+ xx cc xx w+ xx tt || || || || tt tt tt .. /7 .. tt tt || || || || || || || || || || || || || || || "
+            "|| || || || || || || || || || || || || || || || tt bb .. /7 .. bb tt tt tt tt tt tt tt bb .. .. /7 .. .. bb tt tt tt tt tt tt tt bb .. /7 .. bb tt tt tt tt tt tt tt || || || || || || || || || "
+            "|| || || || || || || tt tt tt tt || || || || || tt tt .. /7 .. .. tt bb tt bb tt bb .. .. .. .. /7 .. .. .. .. bb tt bb tt bb tt .. .. /7 .. .. tt bb tt bb tt bb tt || || || || || || || || || "
+            "|| || || || || tt rr tt rr rr tt rr rr || || || tt bb .. /7 .. .. .. .. .. .. .. .. .. .. .. .. /7 .. .. .. .. .. .. .. .. .. .. .. .. /7 .. .. .. .. .. .. .. tt tt || || || || || || || || || "
+            "|| || || rr rr tt tt tt || || tt tt rr rr rr || tt tt .. /8 /d /d /d /d /d /d /d /d /d /d /d /d /5 /d /d /d /d /d /d /d /d /d /d /d /d /9 /d /d /d /d /d /2 .. bb tt || || || || || || || || || "
+            "|| || || rr || || || tt tt tt || tt tt || rr || || bb .. .. .. .. .. .. .. .. .. .. .. .. .. .. /7 .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. /7 .. tt tt || || || || || || || || || "
+            "|| || || || tt tt tt tt .. .. tt || tt tt || rr rr || || tt bb tt bb tt bb tt bb tt bb tt bb .. /7 .. tt bb tt bb tt bb tt bb tt bb tt bb tt bb tt tt bb /4 /2 bb tt || || || || || || || || || "
+            "|| rr rr || tt tt || .. .. bb .. tt tt tt tt || rr rr || tt tt tt tt tt tt tt tt tt tt tt tt .. /7 .. tt tt tt tt tt tt tt tt tt tt tt xx xx xx xx ws xx cc cc xx ws xx xx xx xx || || || || || "
+            "|| || || || tt tt .. .. .. .. .. tt .. tt tt || || rr || || || || || || || || || || || || tt .. /7 .. tt || || || || || || || || || || xx cc cc cc cc cc cc cc cc cc cc cc cc xx || || || || || "
+            "|| tt tt tt tt .. .. .. .. .. .. .. .. .. tt tt || tt tt || || || || || || || || || || || tt .. /7 .. tt || || || || || || || || || || xx cc cc cc cc cc cc cc cc cc cc cc cc xx || || || || || "
+            "|| tt tt tt .. bb .. .. .. .. .. .. .. bb .. tt .. tt tt tt tt tt tt || || || || || || || tt .. /7 .. tt || || || || || || || || || || xx cc cc 00 cc cc cc cc cc cc 00 cc cc xx || || || || || "
+            "|| || || tt .. .. .. .. .. aa .. .. .. .. .. tt || rr || || || || tt || || || || || || || tt .. /7 .. tt || || || || || || || || || || xx cc cc 00 cc cc && && cc cc 00 cc cc xx || || || || || "
+            "|| rr || tt tt tt tt .. .. .. .. .. .. tt tt || || rr || || || || tt || || || || || || || tt .. /7 .. tt || || || || || || || || xx xx xx cc cc 00 cc cc cc cc cc cc 00 cc cc xx xx xx || || || "
+            "|| rr || || || .. tt .. .. .. .. .. .. tt tt || rr || || || rr rr tt rr rr || || || || tt tt .. /7 .. tt || || || || || || || || xx cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc xx || || || "
+            "|| rr rr || tt tt tt bb .. .. .. bb .. tt tt || rr || || rr rr tt tt tt rr rr || || || tt tt .. /7 .. tt || || || || || || || || xx cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc xx || || || "
+            "|| || rr || tt tt tt tt tt .. .. .. .. tt || rr rr || || rr tt tt || tt || rr || || || tt tt .. /7 .. tt || || || || || || || || xx cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc xx || || || "
+            "|| || || || || || || || tt tt tt tt tt || tt rr || || || rr tt || || || || rr || || || tt tt .. /7 .. || || || || || || || || xx xx cc xx xx @@ @@ @@ @@ @@ @@ @@ @@ @@ @@ xx xx cc xx xx || || "
+            "|| || || rr rr || || || tt tt tt || tt tt || rr || || || rr tt tt || || || rr || || || tt tt .. /7 .. tt || || || || || || || xx cc cc cc xx cc cc cc cc cc cc cc cc cc cc cc cc cc cc xx || || "
+            "|| || || || rr rr || rr rr rr || rr rr rr rr || || || || rr rr || || || tt rr || || || tt tt .. /7 .. tt || || || || || || || xx cc cc cc xx .W .H .I .T .E @@ .S .T .A .G xx cc cc cc xx || || "
+            "|| || || || || || || || || || || || || || || || || || || || rr rr rr rr tt || || || tt tt tt .. /7 .. tt || || || || || || || xx cc cc cc xx xx xx xx xx xx xx xx xx xx xx xx cc cc cc xx || || "
+            "|| || || || || || || || || || || || || || || || || || || || || || || || || || || || tt tt tt .. /7 .. tt tt || || || || || || xx xx xx xx xx || || || || || || || || || || xx xx xx xx xx || || "
+            "|| || || || || || || || || || || || || || || || || || || || || || || || || || || || tt tt .. .. /7 .. .. tt tt || || || || || || || || || || || || || || || || || || || || || || || || || || || "
+          )
+        )
+        #f #f #f #f
+        ;; subplaces
+        nil
+        ;; neighbors
+        nil
+        ;; contents
+        (list
+          (list
+            (bind
+              (kern-mk-obj t_lever 1)
+              (list
+                #t
+                'gtl-drawbridge-1
+                #f
+                '()
+              )
+            ) ;; bind
+          35 29)
+          (list
+            (bind
+              (kern-mk-obj t_door 1)
+              (list
+                #f
+                0
+                '()
+                #f
+                #f
+                #f
+                (list
+                  (list
+                    's_closed_solid_wood_door_in_stone
+                    #t
+                    5
+                  )
+                  (list
+                    's_open_door_in_stone
+                    #f
+                    0
+                  )
+                  (list
+                    's_locked_solid_wood_door_in_stone
+                    #t
+                    5
+                  )
+                  (list
+                    's_magically_locked_solid_wood_door_in_stone
+                    #t
+                    5
+                  )
+                )
+              )
+            ) ;; bind
+          7 13)
+          (list
+            (bind
+              (kern-mk-obj t_ladder_down 1)
+              (list
+                'p_green_tower_lower
+                32
+                32
+              )
+            ) ;; bind
+          32 32)
+          (list
+            (kern-tag 'white-stag-inn-room-door
+              (bind
+                (kern-mk-obj t_door 1)
+                (list
+                  #f
+                  0
+                  '()
+                  #f
+                  #t
+                  #f
+                  (list
+                    (list
+                      's_closed_solid_wood_door_in_stone
+                      #t
+                      5
+                    )
+                    (list
+                      's_open_door_in_stone
+                      #f
+                      0
+                    )
+                    (list
+                      's_locked_solid_wood_door_in_stone
+                      #t
+                      5
+                    )
+                    (list
+                      's_magically_locked_solid_wood_door_in_stone
+                      #t
+                      5
+                    )
+                  )
+                )
+              ) ;; bind
+            ) ;; kern-tag
+          44 58)
+          (list
+            (bind
+              (kern-mk-obj t_door 1)
+              (list
+                #f
+                0
+                '()
+                #f
+                #t
+                #f
+                (list
+                  (list
+                    's_closed_solid_wood_door_in_stone
+                    #t
+                    5
+                  )
+                  (list
+                    's_open_door_in_stone
+                    #f
+                    0
+                  )
+                  (list
+                    's_locked_solid_wood_door_in_stone
+                    #t
+                    5
+                  )
+                  (list
+                    's_magically_locked_solid_wood_door_in_stone
+                    #t
+                    5
+                  )
+                )
+              )
+            ) ;; bind
+          48 10)
+          (list
+            (kern-mk-obj t_bed 1)
+          51 9)
+          (list
+            (kern-mk-container
+              t_chest
+              ;; trap
+              'burn-trap
+              ;; contents
+              (list
+                (list 50 sulphorous_ash)
+                (list 50 garlic)
+                (list 50 ginseng)
+                (list 50 blood_moss)
+                (list 50 black_pearl)
+                (list 50 spider_silk)
+                (list 50 mandrake)
+                (list 50 nightshade)
+              )
+            )
+          53 9)
+          (list
+            (kern-mk-container
+              t_chest
+              ;; trap
+              'poison-trap
+              ;; contents
+              (list
+                (list 10 t_cure_potion)
+                (list 10 t_heal_potion)
+                (list 10 t_mana_potion)
+                (list 10 t_poison_immunity_potion)
+                (list 1 t_inv_potion)
+              )
+            )
+          54 9)
+          (list
+            (kern-mk-obj t_bed 1)
+          43 61)
+          (list
+            (kern-mk-container
+              t_chest
+              ;; trap
+              'sleep-trap
+              ;; contents
+              (list
+                (list 1 t_armor_leather)
+                (list 1 t_sword)
+                (list 1 t_shield)
+                (list 1 t_leather_helm)
+              )
+            )
+          55 9)
+          (list
+            (bind
+              (kern-mk-obj t_door 1)
+              (list
+                #f
+                0
+                '()
+                #f
+                #f
+                #f
+                (list
+                  (list
+                    's_closed_solid_wood_door_in_stone
+                    #t
+                    5
+                  )
+                  (list
+                    's_open_door_in_stone
+                    #f
+                    0
+                  )
+                  (list
+                    's_locked_solid_wood_door_in_stone
+                    #t
+                    5
+                  )
+                  (list
+                    's_magically_locked_solid_wood_door_in_stone
+                    #t
+                    5
+                  )
+                )
+              )
+            ) ;; bind
+          41 32)
+          (list
+            (bind
+              (kern-mk-obj t_door 1)
+              (list
+                #f
+                0
+                '()
+                #f
+                #f
+                #f
+                (list
+                  (list
+                    's_closed_solid_wood_door_in_stone
+                    #t
+                    5
+                  )
+                  (list
+                    's_open_door_in_stone
+                    #f
+                    0
+                  )
+                  (list
+                    's_locked_solid_wood_door_in_stone
+                    #t
+                    5
+                  )
+                  (list
+                    's_magically_locked_solid_wood_door_in_stone
+                    #t
+                    5
+                  )
+                )
+              )
+            ) ;; bind
+          32 22)
+          (list
+            (bind
+              (kern-mk-obj t_door 1)
+              (list
+                #f
+                0
+                '()
+                #f
+                #f
+                #t
+                (list
+                  (list
+                    's_closed_solid_wood_door_in_stone
+                    #t
+                    5
+                  )
+                  (list
+                    's_open_door_in_stone
+                    #f
+                    0
+                  )
+                  (list
+                    's_locked_solid_wood_door_in_stone
+                    #t
+                    5
+                  )
+                  (list
+                    's_magically_locked_solid_wood_door_in_stone
+                    #t
+                    5
+                  )
+                )
+              )
+            ) ;; bind
+          54 12)
+          (list
+            (bind
+              (kern-mk-obj t_door 1)
+              (list
+                #f
+                0
+                '()
+                #f
+                #t
+                #f
+                (list
+                  (list
+                    's_closed_solid_wood_door_in_stone
+                    #t
+                    5
+                  )
+                  (list
+                    's_open_door_in_stone
+                    #f
+                    0
+                  )
+                  (list
+                    's_locked_solid_wood_door_in_stone
+                    #t
+                    5
+                  )
+                  (list
+                    's_magically_locked_solid_wood_door_in_stone
+                    #t
+                    5
+                  )
+                )
+              )
+            ) ;; bind
+          59 58)
+          (list
+            (bind
+              (kern-mk-obj t_door 1)
+              (list
+                #f
+                0
+                '()
+                #f
+                #f
+                #f
+                (list
+                  (list
+                    's_closed_solid_wood_door_in_stone
+                    #t
+                    5
+                  )
+                  (list
+                    's_open_door_in_stone
+                    #f
+                    0
+                  )
+                  (list
+                    's_locked_solid_wood_door_in_stone
+                    #t
+                    5
+                  )
+                  (list
+                    's_magically_locked_solid_wood_door_in_stone
+                    #t
+                    5
+                  )
+                )
+              )
+            ) ;; bind
+          57 59)
+          (list
+            (bind
+              (kern-mk-obj t_door 1)
+              (list
+                #f
+                0
+                '()
+                #f
+                #f
+                #f
+                (list
+                  (list
+                    's_closed_solid_wood_door_in_stone
+                    #t
+                    5
+                  )
+                  (list
+                    's_open_door_in_stone
+                    #f
+                    0
+                  )
+                  (list
+                    's_locked_solid_wood_door_in_stone
+                    #t
+                    5
+                  )
+                  (list
+                    's_magically_locked_solid_wood_door_in_stone
+                    #t
+                    5
+                  )
+                )
+              )
+            ) ;; bind
+          11 6)
+          (list
+            (bind
+              (kern-mk-obj t_door 1)
+              (list
+                #f
+                0
+                '()
+                #f
+                #f
+                #f
+                (list
+                  (list
+                    's_closed_solid_wood_door_in_stone
+                    #t
+                    5
+                  )
+                  (list
+                    's_open_door_in_stone
+                    #f
+                    0
+                  )
+                  (list
+                    's_locked_solid_wood_door_in_stone
+                    #t
+                    5
+                  )
+                  (list
+                    's_magically_locked_solid_wood_door_in_stone
+                    #t
+                    5
+                  )
+                )
+              )
+            ) ;; bind
+          32 42)
+          (list
+            (kern-mk-obj t_bed 1)
+          17 4)
+          (list
+            (bind
+              (kern-mk-obj t_door 1)
+              (list
+                #f
+                0
+                '()
+                #f
+                #f
+                #f
+                (list
+                  (list
+                    's_closed_solid_wood_door_in_stone
+                    #t
+                    5
+                  )
+                  (list
+                    's_open_door_in_stone
+                    #f
+                    0
+                  )
+                  (list
+                    's_locked_solid_wood_door_in_stone
+                    #t
+                    5
+                  )
+                  (list
+                    's_magically_locked_solid_wood_door_in_stone
+                    #t
+                    5
+                  )
+                )
+              )
+            ) ;; bind
+          48 4)
+          (list
+            (bind
+              (kern-mk-obj t_lever 1)
+              (list
+                #f
+                'green-tower-lower-portcullis-1
+                #f
+                '()
+              )
+            ) ;; bind
+          29 29)
+          (list
+            (bind
+              (kern-mk-obj t_door 1)
+              (list
+                #f
+                0
+                '()
+                #f
+                #f
+                #f
+                (list
+                  (list
+                    's_closed_solid_wood_door_in_stone
+                    #t
+                    5
+                  )
+                  (list
+                    's_open_door_in_stone
+                    #f
+                    0
+                  )
+                  (list
+                    's_locked_solid_wood_door_in_stone
+                    #t
+                    5
+                  )
+                  (list
+                    's_magically_locked_solid_wood_door_in_stone
+                    #t
+                    5
+                  )
+                )
+              )
+            ) ;; bind
+          23 32)
+          (list
+            (bind
+              (kern-mk-obj t_door 1)
+              (list
+                #f
+                0
+                '()
+                #f
+                #f
+                #f
+                (list
+                  (list
+                    's_closed_solid_wood_door_in_stone
+                    #t
+                    5
+                  )
+                  (list
+                    's_open_door_in_stone
+                    #f
+                    0
+                  )
+                  (list
+                    's_locked_solid_wood_door_in_stone
+                    #t
+                    5
+                  )
+                  (list
+                    's_magically_locked_solid_wood_door_in_stone
+                    #t
+                    5
+                  )
+                )
+              )
+            ) ;; bind
+          51 49)
+          (list
+            (kern-mk-obj t_bed 1)
+          58 61)
+          (list
+            (kern-mk-container
+              t_chest
+              ;; trap
+              nil
+              ;; contents
+              (list
+                (list 100 t_arrow)
+                (list 1 t_bow)
+              )
+            )
+          4 11)
+          (list
+            (bind
+              (kern-mk-obj t_door 1)
+              (list
+                #f
+                0
+                '()
+                #f
+                #f
+                #f
+                (list
+                  (list
+                    's_closed_solid_wood_door_in_stone
+                    #t
+                    5
+                  )
+                  (list
+                    's_open_door_in_stone
+                    #f
+                    0
+                  )
+                  (list
+                    's_locked_solid_wood_door_in_stone
+                    #t
+                    5
+                  )
+                  (list
+                    's_magically_locked_solid_wood_door_in_stone
+                    #t
+                    5
+                  )
+                )
+              )
+            ) ;; bind
+          52 49)
+          (list
+            (bind
+              (kern-mk-obj t_door 1)
+              (list
+                #f
+                0
+                '()
+                #f
+                #f
+                #f
+                (list
+                  (list
+                    's_closed_solid_wood_door_in_stone
+                    #t
+                    5
+                  )
+                  (list
+                    's_open_door_in_stone
+                    #f
+                    0
+                  )
+                  (list
+                    's_locked_solid_wood_door_in_stone
+                    #t
+                    5
+                  )
+                  (list
+                    's_magically_locked_solid_wood_door_in_stone
+                    #t
+                    5
+                  )
+                )
+              )
+            ) ;; bind
+          16 6)
+          (list
+            (kern-mk-obj t_bed 1)
+          2 13)
+          (list
+            (kern-mk-container
+              t_chest
+              ;; trap
+              'burn-trap
+              ;; contents
+              (list
+                (list 100 t_bolt)
+                (list 1 t_crossbow)
+                (list 1 t_shield)
+                (list 2 t_cure_potion)
+                (list 5 t_heal_potion)
+              )
+            )
+          17 6)
+          (list
+            (bind
+              (kern-mk-obj t_door 1)
+              (list
+                #f
+                0
+                '()
+                #f
+                #f
+                #f
+                (list
+                  (list
+                    's_closed_solid_wood_door_in_stone
+                    #t
+                    5
+                  )
+                  (list
+                    's_open_door_in_stone
+                    #f
+                    0
+                  )
+                  (list
+                    's_locked_solid_wood_door_in_stone
+                    #t
+                    5
+                  )
+                  (list
+                    's_magically_locked_solid_wood_door_in_stone
+                    #t
+                    5
+                  )
+                )
+              )
+            ) ;; bind
+          48 6)
+        ) ;; end of objects
+        (list
+        )
+        (list ;; edge entrances
+          (list 0 63 63) ;; Northwest
+          (list 1 32 63) ;; North
+          (list 2 0 63) ;; Northeast
+          (list 3 63 32) ;; West
+          (list 4 32 32) ;; Here
+          (list 5 0 32) ;; East
+          (list 6 63 0) ;; Southwest
+          (list 7 32 0) ;; South
+          (list 8 0 0) ;; SoutheastUp
+        )
+      ) ;; end of place p_green_tower
+
+    9) ;; end above neighbor
+  )
+  ;; contents
+  (list
+    (list
+      (kern-tag 'gtl-drawbridge-1
+        (bind
+          (kern-mk-obj tf_drawbridge 1)
+          (list
+            #t
+            '()
+            #f
+            's_ns_bridge
+          )
+        ) ;; bind
+      ) ;; kern-tag
+    32 16)
+    (list
+      (bind
+        (kern-mk-obj t_ladder_up 1)
+        (list
+          'p_green_tower
+          32
+          32
+        )
+      ) ;; bind
+    32 32)
+    (list
+      (kern-tag 'green-tower-lower-portcullis-1
+        (bind
+          (kern-mk-obj t_portcullis 1)
+          (list
+            #f
+            'green-tower-lower-portcullis-2
+            #f
+            '()
+          )
+        ) ;; bind
+      ) ;; kern-tag
+    32 18)
+    (list
+      (kern-tag 'green-tower-lower-portcullis-2
+        (bind
+          (kern-mk-obj t_portcullis 1)
+          (list
+            #f
+            '()
+            #f
+            '()
+          )
+        ) ;; bind
+      ) ;; kern-tag
+    33 18)
+    (list
+      (kern-mk-char
+        'ch_wanderer
+        "The Wanderer"
+        sp_human
+        oc_wanderer
+        s_companion_ranger
+        1
+        0 20 12
+        0 1
+        10 5
+        29 0
+        3 1
+        #f ;; dead?
+        nil
+        nil
+        nil
+        nil ;; inventory
+        nil
+        ;; hooks
+        (list
+        )
+      )
+    32 23)
+  ) ;; end of objects
+  (list
+  )
+  (list ;; edge entrances
+    (list 0 63 63) ;; Northwest
+    (list 1 32 63) ;; North
+    (list 2 0 63) ;; Northeast
+    (list 3 63 32) ;; West
+    (list 4 32 32) ;; Here
+    (list 5 0 32) ;; East
+    (list 6 63 0) ;; Southwest
+    (list 7 32 0) ;; South
+    (list 8 0 0) ;; SoutheastUp
+  )
+) ;; end of place p_green_tower_lower
+
 (kern-mk-place 'p_shard "The Shard Surface"
   nil ;; sprite
   (kern-mk-composite-map
@@ -1317,267 +2264,7 @@
   ;; subplaces
   (list
     (list
-      (kern-mk-place 'p_green_tower "Green Tower"
-        s_town ;; sprite
-        (kern-mk-map
-          nil           64 64 pal_expanded
-          (list
-            "|| || || || || || || || || || || || || || || || || || || || || || || || || || || || || tt bb .. /7 .. bb tt || || || || || || || || || || || || || || || || || || || || || || || || || || || || "
-            "|| || || || || || || || || || || || rr rr rr rr rr rr rr || || || || || || || || || || tt tt .. /7 .. tt tt || || || || || || || || || || || || || || || || || || || || || || || || || || || || "
-            "|| || rr rr rr rr rr || || || rr rr rr && cc cc cc cc rr || || || || || || || || || || tt bb .. /7 .. bb tt || || || || || || || || || || || || xx xx xx xx xx xx xx xx xx tt tt || || || || || "
-            "|| || rr cc cc cc rr || || || rr cc rr cc cc cc cc cc rr || || || || || || || || || tt tt tt .. /7 .. tt tt || || || || || || || || || || || || xx .. .. .. .. .. .. .. xx tt tt tt || || || || "
-            "|| || rr cc cc cc rr || || || rr cc cc cc cc cc cc cc rr || || || || || || || || || tt tt bb .. /4 /d /d /d /d /d /d /d /d /d /d /d /d /d /1 /d .. .. .. .. .. .. .. .. ws tt tt tt || || || || "
-            "|| || rr cc cc cc rr || || || rr cc rr cc cc cc rr rr rr || || || || || || || || tt tt tt tt .. /7 .. bb tt || || || || || || || || || || /7 tt xx @@ @@ @@ @@ @@ @@ @@ xx tt tt tt || || || || "
-            "|| || rr rr cc rr rr || || || rr cc rr cc cc cc cc cc rr || || || || || || || || tt tt tt bb .. /7 .. tt tt || || || || || || || || || || /7 .. .. .. .. .. .. .. .. .. xx tt tt || || || || || "
-            "|| || || || /7 || || || || || || /7 rr rr rr rr rr rr rr || || || || || || || tt tt tt tt tt .. /7 .. tt tt || || || || || || || || || || /7 tt xx .S .H .R .O .O .M .S xx || || || || || || || "
-            "|| || || || /8 /d /d /d /1 /d /d /a || || || || || || || || || || || || || || tt tt tt tt bb .. /7 .. bb tt || || || || || || || || || tt /7 tt xx xx xx xx xx xx xx xx xx || || || || || || || "
-            "|| || || || || || || || /7 || || || || || || || || || || || || || || || || tt tt tt tt tt tt .. /7 .. tt tt || || || || || || || || tt tt /7 tt xx .. .. .. xx .. .. .. xx || || || || || || || "
-            "|| || || rr rr rr || || /7 || || || || || || || || || || || || || || || || tt tt tt tt tt bb .. /7 .. bb tt || || || || || || || || tt tt /8 /d .. .. .. .. ?? .. .. .. ?? tt tt tt tt tt tt tt "
-            "|| rr rr rr cc rr rr || /4 /d /d /d /d /d /d /d /d /d /d /2 || || || || tt tt tt tt tt tt tt .. /7 .. tt tt || || || || tt tt tt tt tt tt tt tt xx .. .. tt xx .. .. .. xx || || || || || || || "
-            "|| rr cc cc cc cc rr rr /7 || || || || || || || || || || /7 || || || || tt tt tt tt tt tt bb .. /7 .. bb tt || || || || tt .. tt tt tt || || || xx xx ws xx xx xx .. xx xx || || || || || || || "
-            "|| rr cc cc cc cc cc cc /a || || || || || || || || tt || /7 || || || tt tt tt tt tt tt tt tt .. /7 .. tt tt || tt tt tt tt .. .. tt || || || || || || || || || || || || || || || || || || || || "
-            "|| rr rr cc cc cc rr rr || || || || || tt || || tt tt tt /7 || || || tt tt tt tt tt tt tt bb .. /7 .. bb tt || tt || || tt tt tt tt || || || || || || || || || || || || || || || || || || || || "
-            "|| || rr rr && rr rr || tt || || || tt tt bb || || tt || /7 || tt tt tt tt tt tt tt tt tt tt .. /7 .. tt tt || tt || || || || || || || || || || || || || || || || || || || || || || || || || || "
-            "|| || || rr rr rr || tt tt tt || tt tt .. tt || || tt bb /7 bb .. bb tt bb tt bb tt bb tt .. .. /7 .. .. tt bb tt bb tt tt bb tt bb tt bb tt tt || || || || || || || || || || || || || || || || "
-            "|| || || tt || || || || tt || tt tt .. .. .. tt || tt .. /7 .. .. .. .. .. .. .. .. .. .. .. .. /7 .. .. .. .. .. .. .. .. .. .. .. .. .. .. tt tt || || || || || || || || || || || || || || || "
-            "|| || tt tt tt || || || || || || tt tt .. tt || || bb .. /4 /d /d /d /d /d /d /d /d /d /d /d /d /5 /d /d /d /d /d /d /d /d /d /d /d /d /2 .. || tt || || || || || || || || || || || || || || || "
-            "|| || || tt || || || || || tt tt tt tt tt tt || || tt .. /7 .. .. .. .. .. .. .. .. .. .. .. .. /7 .. .. .. .. .. .. .. .. .. .. .. .. /7 .. tt tt || || || || || || || || || || || || || || || "
-            "|| || || || || || || tt tt tt tt tt tt tt || || || bb .. /7 .. .. .. bb tt bb tt bb tt .. .. .. /7 .. .. .. bb tt tt bb tt bb tt .. .. /7 .. bb tt || || || || || || || || || || || || || || || "
-            "|| || || || || || tt tt tt .. tt tt tt || || || || tt .. /7 .. .. tt tt tt tt tt tt tt bb .. .. /7 .. .. bb tt tt tt tt tt tt bb tt .. /7 .. tt tt || || || || || || || || || || || || || || || "
-            "|| || || || || bb tt tt .. .. .. tt tt tt || || || bb .. /7 .. bb tt || || || || || tt xx w+ xx cc xx w+ xx tt || || || || || tt tt .. /7 .. bb tt || || || || || || || || || || || || || || || "
-            "|| || || || || tt tt .. .. .. .. .. tt tt || || || || .. /7 .. tt tt || || || || xx w+ xx cc cc cc cc cc xx xx xx || || || || tt bb .. /7 .. tt tt || || || || || || || || || || || || || || || "
-            "|| || || || || tt tt tt .. .. .. tt tt tt || || || bb .. /7 .. bb tt || || xx xx xx cc cc cc cc cc cc cc cc cc xx xx xx || || tt tt .. /7 .. bb tt || || || || || || || || || || || || || || || "
-            "|| || || || || tt tt tt tt .. tt tt tt || || || || || .. /7 .. tt tt || xx xx cc cc cc cc cc cc cc cc cc cc cc cc cc xx xx || tt bb .. /7 .. tt tt || || || || || || || || || || || || || || || "
-            "|| || tt tt tt tt || tt tt tt tt bb || || tt tt || bb .. /7 .. bb tt || xx cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc xx || tt tt .. /7 .. tt tt || || || || || || || || || || || || || || || "
-            "|| || tt || || || || || tt tt tt || || || || || || tt .. /7 .. tt tt xx xx cc cc cc xx x! xx xx cc xx xx x! xx cc cc cc xx xx tt bb .. /7 .. bb tt || || || || || || || || || || || || || || tt "
-            "tt tt tt || || || || || || || || || || || || || tt bb .. /7 .. bb tt xx cc cc cc xx xx || tt .. cc .. tt || xx xx cc cc cc xx tt tt .. /7 .. tt tt || || || || || || || || || || || || || || tt "
-            "bb tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt .. .. /7 .. tt bb xx cc cc cc x! || tt .. .. cc .. .. tt || x! cc cc cc xx bb .. .. /7 .. bb tt || || || || || || || || || || || || || || tt "
-            ".. .. bb tt bb tt bb tt bb tt bb tt bb tt bb bb .. .. .. /7 .. .. .. w+ cc cc cc xx tt .. bb .. cc .. bb .. tt xx cc cc cc w+ .. .. .. /7 .. tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt "
-            ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. /7 .. .. .. xx cc cc cc xx .. .. .. .. cc .. .. .. .. xx cc cc cc xx .. .. .. /7 .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
-            "/d /d /d /d /d /d /d /d /d /d /d /d /d /d /d /d /d /d /d /5 /d /d /d cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc /d /d /d /5 /d /d /d /d /d /d /d /d /d /d /d /d /d /d /d /d /d /d "
-            ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. /7 .. .. .. xx cc cc cc xx .. .. .. .. cc .. .. .. .. xx cc cc cc xx .. .. .. /7 .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
-            ".. .. bb tt bb tt bb tt bb tt bb tt bb tt tt tt bb .. .. /7 .. .. .. w+ cc cc cc xx tt .. bb .. cc .. bb .. tt xx cc cc cc w+ .. .. .. /7 .. tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt "
-            "bb tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt .. /7 .. .. bb xx cc cc cc x! || tt .. .. cc .. .. tt || x! cc cc cc xx bb .. .. /7 .. bb tt || || || || || || || || || || || tt tt tt tt "
-            "tt tt || || || || tt tt tt tt tt tt tt tt || || tt tt .. /7 .. .. tt xx cc cc cc xx xx || tt .. cc .. tt || xx xx cc cc cc xx tt .. .. /7 .. tt tt || || || || || || || || || || || || || || tt "
-            "tt tt || || || || tt tt tt tt tt tt tt tt || || tt bb .. /7 .. bb tt xx xx cc cc cc xx x! xx xx cc xx xx x! xx cc cc cc xx xx tt bb .. /7 .. bb tt || || || || || || || || || || || || || || || "
-            "|| || || || || || || tt tt tt tt tt tt tt || || tt tt .. /7 .. tt tt || xx cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc xx || tt tt .. /7 .. tt tt || || || || || || || || || || || || || || || "
-            "|| || || || || || || || tt tt tt tt tt tt || || tt bb .. /7 .. bb tt || xx xx cc cc cc cc cc cc cc cc cc cc cc cc cc xx xx || tt bb .. /7 .. bb tt || || || || || || || || || || || || || || || "
-            "|| || || || || || || || || || || || || || || || tt tt .. /7 .. tt tt || || xx xx xx cc cc cc cc cc cc cc cc cc xx xx xx || || tt tt .. /7 .. tt tt || || || || || || || || || || || || || || || "
-            "|| || || || || || || || || || || || || || || || tt bb .. /7 .. bb tt || || || || xx w+ xx cc cc cc cc cc xx xx xx || || || || tt bb .. /7 .. bb tt || || || || || || || || || || || || || || || "
-            "|| || || || || || || || || || || || || || rr rr tt tt .. /7 .. tt tt || || || || || tt xx w+ xx cc xx w+ xx tt || || || || tt tt tt .. /7 .. tt tt || || || || || || || || || || || || || || || "
-            "|| || || || || || || || || || || || || || || || tt bb .. /7 .. bb tt tt tt tt tt tt tt bb .. .. /7 .. .. bb tt tt tt tt tt tt tt bb .. /7 .. bb tt tt tt tt tt tt tt || || || || || || || || || "
-            "|| || || || || || || tt tt tt tt || || || || || tt tt .. /7 .. .. tt bb tt bb tt bb .. .. .. .. /7 .. .. .. .. bb tt bb tt bb tt .. .. /7 .. .. tt bb tt bb tt bb tt || || || || || || || || || "
-            "|| || || || || tt rr tt rr rr tt rr rr || || || tt bb .. /7 .. .. .. .. .. .. .. .. .. .. .. .. /7 .. .. .. .. .. .. .. .. .. .. .. .. /7 .. .. .. .. .. .. .. tt tt || || || || || || || || || "
-            "|| || || rr rr tt tt tt || || tt tt rr rr rr || tt tt .. /8 /d /d /d /d /d /d /d /d /d /d /d /d /5 /d /d /d /d /d /d /d /d /d /d /d /d /9 /d /d /d /d /d /2 .. bb tt || || || || || || || || || "
-            "|| || || rr || || || tt tt tt || tt tt || rr || || bb .. .. .. .. .. .. .. .. .. .. .. .. .. .. /7 .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. /7 .. tt tt || || || || || || || || || "
-            "|| || || || tt tt tt tt .. .. tt || tt tt || rr rr || || tt bb tt bb tt bb tt bb tt bb tt bb .. /7 .. tt bb tt bb tt bb tt bb tt bb tt bb tt bb tt tt bb /4 /2 bb tt || || || || || || || || || "
-            "|| rr rr || tt tt || .. .. bb .. tt tt tt tt || rr rr || tt tt tt tt tt tt tt tt tt tt tt tt .. /7 .. tt tt tt tt tt tt tt tt tt tt tt xx xx xx xx ws xx cc cc xx ws xx xx xx xx || || || || || "
-            "|| || || || tt tt .. .. .. .. .. tt .. tt tt || || rr || || || || || || || || || || || || tt .. /7 .. tt || || || || || || || || || || xx cc cc cc cc cc cc cc cc cc cc cc cc xx || || || || || "
-            "|| tt tt tt tt .. .. .. .. .. .. .. .. .. tt tt || tt tt || || || || || || || || || || || tt .. /7 .. tt || || || || || || || || || || xx cc cc cc cc cc cc cc cc cc cc cc cc xx || || || || || "
-            "|| tt tt tt .. bb .. .. .. .. .. .. .. bb .. tt .. tt tt tt tt tt tt || || || || || || || tt .. /7 .. tt || || || || || || || || || || xx cc cc 00 cc cc cc cc cc cc 00 cc cc xx || || || || || "
-            "|| || || tt .. .. .. .. .. aa .. .. .. .. .. tt || rr || || || || tt || || || || || || || tt .. /7 .. tt || || || || || || || || || || xx cc cc 00 cc cc && && cc cc 00 cc cc xx || || || || || "
-            "|| rr || tt tt tt tt .. .. .. .. .. .. tt tt || || rr || || || || tt || || || || || || || tt .. /7 .. tt || || || || || || || || xx xx xx cc cc 00 cc cc cc cc cc cc 00 cc cc xx xx xx || || || "
-            "|| rr || || || .. tt .. .. .. .. .. .. tt tt || rr || || || rr rr tt rr rr || || || || tt tt .. /7 .. tt || || || || || || || || xx cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc xx || || || "
-            "|| rr rr || tt tt tt bb .. .. .. bb .. tt tt || rr || || rr rr tt tt tt rr rr || || || tt tt .. /7 .. tt || || || || || || || || xx cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc xx || || || "
-            "|| || rr || tt tt tt tt tt .. .. .. .. tt || rr rr || || rr tt tt || tt || rr || || || tt tt .. /7 .. tt || || || || || || || || xx cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc xx || || || "
-            "|| || || || || || || || tt tt tt tt tt || tt rr || || || rr tt || || || || rr || || || tt tt .. /7 .. || || || || || || || || xx xx cc xx xx @@ @@ @@ @@ @@ @@ @@ @@ @@ @@ xx xx cc xx xx || || "
-            "|| || || rr rr || || || tt tt tt || tt tt || rr || || || rr tt tt || || || rr || || || tt tt .. /7 .. tt || || || || || || || xx cc cc cc xx cc cc cc cc cc cc cc cc cc cc cc cc cc cc xx || || "
-            "|| || || || rr rr || rr rr rr || rr rr rr rr || || || || rr rr || || || tt rr || || || tt tt .. /7 .. tt || || || || || || || xx cc cc cc xx .W .H .I .T .E @@ .S .T .A .G xx cc cc cc xx || || "
-            "|| || || || || || || || || || || || || || || || || || || || rr rr rr rr tt || || || tt tt tt .. /7 .. tt || || || || || || || xx cc cc cc xx xx xx xx xx xx xx xx xx xx xx xx cc cc cc xx || || "
-            "|| || || || || || || || || || || || || || || || || || || || || || || || || || || || tt tt tt .. /7 .. tt tt || || || || || || xx xx xx xx xx || || || || || || || || || || xx xx xx xx xx || || "
-            "|| || || || || || || || || || || || || || || || || || || || || || || || || || || || tt tt .. .. /7 .. .. tt tt || || || || || || || || || || || || || || || || || || || || || || || || || || || "
-          )
-        )
-        #f #f #f #f
-        ;; subplaces
-        nil
-        ;; neighbors
-        nil
-        ;; contents
-        (list
-          (list
-            (bind
-              (kern-mk-obj t_door 1)
-              (list
-                #f
-                0
-                '()
-                #f
-                #t
-                #f
-                (list
-                  (list
-                    's_closed_solid_wood_door_in_stone
-                    #t
-                    5
-                  )
-                  (list
-                    's_open_door_in_stone
-                    #f
-                    0
-                  )
-                  (list
-                    's_locked_solid_wood_door_in_stone
-                    #t
-                    5
-                  )
-                  (list
-                    's_magically_locked_solid_wood_door_in_stone
-                    #t
-                    5
-                  )
-                )
-              )
-            ) ;; bind
-          48 10)
-          (list
-            (kern-mk-obj t_bed 1)
-          51 9)
-          (list
-            (kern-mk-char
-              'ch_wanderer
-              "The Wanderer"
-              sp_human
-              oc_wanderer
-              s_companion_ranger
-              1
-              0 20 12
-              0 1
-              10 5
-              22 0
-              3 1
-              #f ;; dead?
-              nil
-              nil
-              nil
-              nil ;; inventory
-              nil
-              ;; hooks
-              (list
-              )
-            )
-          58 10)
-          (list
-            (bind
-              (kern-mk-obj t_door 1)
-              (list
-                #f
-                0
-                '()
-                #f
-                #f
-                #t
-                (list
-                  (list
-                    's_closed_solid_wood_door_in_stone
-                    #t
-                    5
-                  )
-                  (list
-                    's_open_door_in_stone
-                    #f
-                    0
-                  )
-                  (list
-                    's_locked_solid_wood_door_in_stone
-                    #t
-                    5
-                  )
-                  (list
-                    's_magically_locked_solid_wood_door_in_stone
-                    #t
-                    5
-                  )
-                )
-              )
-            ) ;; bind
-          54 12)
-          (list
-            (bind
-              (kern-mk-obj t_door 1)
-              (list
-                #f
-                0
-                '()
-                #f
-                #t
-                #f
-                (list
-                  (list
-                    's_closed_solid_wood_door_in_stone
-                    #t
-                    5
-                  )
-                  (list
-                    's_open_door_in_stone
-                    #f
-                    0
-                  )
-                  (list
-                    's_locked_solid_wood_door_in_stone
-                    #t
-                    5
-                  )
-                  (list
-                    's_magically_locked_solid_wood_door_in_stone
-                    #t
-                    5
-                  )
-                )
-              )
-            ) ;; bind
-          48 4)
-          (list
-            (bind
-              (kern-mk-obj t_door 1)
-              (list
-                #f
-                0
-                '()
-                #f
-                #t
-                #f
-                (list
-                  (list
-                    's_closed_solid_wood_door_in_stone
-                    #t
-                    5
-                  )
-                  (list
-                    's_open_door_in_stone
-                    #f
-                    0
-                  )
-                  (list
-                    's_locked_solid_wood_door_in_stone
-                    #t
-                    5
-                  )
-                  (list
-                    's_magically_locked_solid_wood_door_in_stone
-                    #t
-                    5
-                  )
-                )
-              )
-            ) ;; bind
-          48 6)
-        ) ;; end of objects
-        (list
-        )
-        (list ;; edge entrances
-          (list 0 63 63) ;; Northwest
-          (list 1 32 63) ;; North
-          (list 2 0 63) ;; Northeast
-          (list 3 63 32) ;; West
-          (list 4 32 32) ;; Here
-          (list 5 0 32) ;; East
-          (list 6 63 0) ;; Southwest
-          (list 7 32 0) ;; South
-          (list 8 0 0) ;; SoutheastUp
-        )
-      ) ;; end of place p_green_tower
-
+      p_green_tower
     80 59) ;; coords of p_green_tower
     (list
       (kern-mk-place 'p_enchanters_tower "Enchanters Tower"
@@ -3139,33 +3826,6 @@
           10 10)
           (list
             (bind
-              (kern-mk-char
-                'ch_gregor
-                "Gregor"
-                sp_human
-                nil
-                s_townsman
-                2
-                0 20 15
-                0 0
-                0 0
-                30 0
-                9 9
-                #f ;; dead?
-                'gregor-conv
-                sch_gregor
-                nil
-                nil ;; inventory
-                nil
-                ;; hooks
-                (list
-                )
-              )
-              '()
-            ) ;; bind
-          10 10)
-          (list
-            (bind
               (kern-mk-obj tf_ew_bridge 1)
               '()
             ) ;; bind
@@ -3337,6 +3997,33 @@
         (list
           (list
             (bind
+              (kern-mk-char
+                'ch_gregor
+                "Gregor"
+                sp_human
+                nil
+                s_townsman
+                2
+                0 20 15
+                0 0
+                0 0
+                30 0
+                9 9
+                #f ;; dead?
+                'gregor-conv
+                sch_gregor
+                nil
+                nil ;; inventory
+                nil
+                ;; hooks
+                (list
+                )
+              )
+              '()
+            ) ;; bind
+          10 20)
+          (list
+            (bind
               (kern-mk-obj t_dungeon 1)
               (list
                 'p_slimy_cavern
@@ -3482,7 +4169,7 @@
   "Walk"
   sound-walking
   9 0
-  25064 ;; turns to next meal
+  28770 ;; turns to next meal
   nil
   m_campsite
   nil
@@ -3492,25 +4179,7 @@
     ;; trap
     nil
     ;; contents
-    (list
-      (list 1 t_armor_leather)
-      (list 1 t_sword)
-      (list 1 t_shield)
-      (list 1 t_leather_helm)
-      (list 50 sulphorous_ash)
-      (list 50 garlic)
-      (list 50 ginseng)
-      (list 50 blood_moss)
-      (list 50 black_pearl)
-      (list 50 spider_silk)
-      (list 50 mandrake)
-      (list 50 nightshade)
-      (list 10 t_cure_potion)
-      (list 10 t_heal_potion)
-      (list 10 t_mana_potion)
-      (list 10 t_poison_immunity_potion)
-      (list 1 t_inv_potion)
-    )
+    nil
   )
   (list
     ch_wanderer
@@ -3523,7 +4192,7 @@
 (kern-set-cursor ls_whirlpool)
 (kern-set-crosshair t_crosshair)
 (kern-set-ascii ss_u4_charset 32)
-(kern-set-clock 0 0 0 0 14 1)
+(kern-set-clock 0 0 0 0 12 59)
 (kern-set-time-accel 1)
 (kern-mk-dtable
   (list    0    0   -1   -1   -1   -2   -2   -2    0 )

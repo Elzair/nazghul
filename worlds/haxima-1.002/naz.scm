@@ -477,3 +477,4 @@ define (blit-maps kmap . blits)
   (display (kern-get-ticks))(display " loading ")(display file)(newline)
   (original-load file))
 
+(define (put obj x y) (list obj x y))
