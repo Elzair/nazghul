@@ -151,7 +151,7 @@
                  nil                 ; occ
                  s_knight            ; sprite
                  faction-men         ; starting alignment
-                 0 10 5              ; str/int/dex
+                 16 10 16            ; str/int/dex
                  0 0                 ; hp mod/mult
                  0 0                 ; mp mod/mult
                  30 0 9 3            ; hp/xp/mp/lvl

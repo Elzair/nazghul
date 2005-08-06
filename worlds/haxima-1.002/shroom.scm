@@ -1,21 +1,33 @@
 ;; shroom.scm - an old hag with an interesting history who lives in the
 ;; northeast corner of green tower.
 
+;;----------------------------------------------------------------------------
+;; Schedule
+;;----------------------------------------------------------------------------
+(define (mk-zone x y w h) (list 'p_green_tower x y w h))
 (kern-mk-sched 'sch_shroom
-               (list 0  0  (list 51 9  1  1)  "sleeping")
-               (list 8  0  (list 40 11 3  3)  "idle")
-               (list 9  0  (list 49 6  7  1)  "working")
-               (list 12 0  (list 50 9  1  1)  "eating")
-               (list 13 0  (list 49 6  7  1)  "working")
-               (list 18 0  (list 56 54 1  1)  "eating")
-               (list 19 0  (list 53 50 4  7)  "idle")
-               (list 21 0  (list 51 9  1  1)  "sleeping"))
+               (list 0  0  (mk-zone 51 9  1  1)  "sleeping")
+               (list 8  0  (mk-zone 40 11 3  3)  "idle")
+               (list 9  0  (mk-zone 49 6  7  1)  "working")
+               (list 12 0  (mk-zone 50 9  1  1)  "eating")
+               (list 13 0  (mk-zone 49 6  7  1)  "working")
+               (list 18 0  (mk-zone 56 54 1  1)  "eating")
+               (list 19 0  (mk-zone 53 50 4  7)  "idle")
+               (list 21 0  (mk-zone 51 9  1  1)  "sleeping"))
 
+
+;;----------------------------------------------------------------------------
+;; Gob
+;;----------------------------------------------------------------------------
 (define (shroom-mk gave-quest? finished-quest?) (list gave-quest? 
                                                       finished-quest?))
 (define (shroom-gave-quest? shroom) (car shroom))
 (define (shroom-quest-done? shroom) (cadr shroom))
 (define (shroom-give-quest shroom) (set-car! shroom #t))
+
+;;----------------------------------------------------------------------------
+;; Conv
+;;----------------------------------------------------------------------------
 
 ;; Shroom's merchant procedure
 (define (shroom-trade knpc kpc)
@@ -30,15 +42,16 @@
             (begin
               ;; Trading!
               (kern-conv-trade knpc kpc
-                               (list sulphorous_ash 2)
-                               (list garlic         2)
-                               (list ginseng        2)
+                               (list sulphorous_ash 6)
+                               (list garlic         4)
+                               (list ginseng        4)
                                (list blood_moss     8)
-                               (list black_pearl    8)
-                               (list spider_silk    8)
-                               (list mandrake       16)
-                               (list nightshade     16)
-                               (list t_sleep_potion 10))
+                               (list black_pearl    16)
+                               (list spider_silk    5)
+                               (list nightshade     34)
+                               (list t_heal_potion  16)
+                               (list t_mana_potion  20)
+                               )
               (say knpc "Be careful with those."))))))
 
 ;; Shroom's mushroom quest
@@ -101,9 +114,15 @@
        (method 'shro (lambda (knpc kpc) (say knpc "Mushrooms are my "
                                                 "specialty. That's why they "
                                                 "call me Shroom.")))
+       (method 'maid (lambda (knpc) (say knpc "[she grins with crooked "
+                                           "teeth] Is it so hard to believe I "
+                                           "was once a fair war-maiden? [she "
+                                           "cackles obscenely]")))
        (method 'mush shroom-trade)
        (method 'trad shroom-trade)
        (method 'sell shroom-trade)
+       (method 'reag shroom-trade)
+       (method 'poti shroom-trade)
        (method 'join (lambda (knpc) (say knpc "You're too young for me, "
                                          "sweetie!")))
        (method 'gen (lambda (knpc) (say knpc "Aye, a handsome young man he "
@@ -129,9 +148,29 @@
                                           "place!")))
        (method 'wars (lambda (knpc) (say knpc "Ha! Yes, I fought the goblins. "
                                          "Long ago that was. People forget.")))
-       (method 'maid (lambda (knpc) (say knpc "[she grins with crooked "
-                                           "teeth] Is it so hard to believe I "
-                                           "was once a fair war-maiden? [she "
-                                           "cackles obscenely]")))
        (method 'ward shroom-wards)
        ))
+
+;;----------------------------------------------------------------------------
+;; First-time constructor
+;;----------------------------------------------------------------------------
+(define (mk-shroom tag)
+  (bind 
+   (kern-mk-char tag                 ; tag
+                 "Shroom"            ; name
+                 sp_human            ; species
+                 nil                 ; occ
+                 s_companion_druid   ; sprite
+                 faction-men         ; starting alignment
+                 8 14 8            ; str/int/dex
+                 0 0                 ; hp mod/mult
+                 0 0                 ; mp mod/mult
+                 30 0 9 3            ; hp/xp/mp/lvl
+                 #f                  ; dead
+                 'shroom-conv        ; conv
+                 sch_shroom          ; sched
+                 nil                 ; special ai
+                 nil                 ; container
+                 nil                 ; readied
+                 )
+   (roland-mk #f #f #f)))

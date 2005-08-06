@@ -53,6 +53,7 @@
 #include "debug.h"
 #include "log.h"
 #include "tick.h"
+#include "vmask.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -119,7 +120,7 @@ static void play_reload()
         log_end("ok!");
         Reload = 0;
         tick_run();
-        /*vmask_flush_all();*/
+        vmask_flush_all();
 }
 
 static void play_loop(void)

@@ -319,13 +319,6 @@ void vmask_flush_all(void)
         struct vmask *vmask;
         struct list *tail;
 
-        //printf("vmask_purge\n");
-
-        // --------------------------------------------------------------------
-        // Remove and destroy the least-recently-used vmasks until we are down
-        // to the low-water mark.
-        // --------------------------------------------------------------------
-
         while(vmask_n_entries) {
                 tail = vmask_q.prev;
                 vmask = list_entry(tail, struct vmask, list);

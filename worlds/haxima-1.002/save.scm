@@ -115,7 +115,7 @@
               nil
               s_spider
               7
-              0 6 14
+              0 42 98
               0 0
               0 0
               14 0
@@ -149,7 +149,7 @@
               nil
               s_queen_spider
               7
-              0 6 12
+              0 42 84
               0 0
               0 0
               34 0
@@ -333,7 +333,7 @@
           oc_troll
           s_troll
           6
-          0 6 12
+          0 42 84
           0 0
           0 0
           26 0
@@ -502,7 +502,7 @@
           oc_bandit
           s_brigand
           8
-          0 10 10
+          0 70 70
           0 0
           0 0
           22 0
@@ -519,6 +519,10 @@
             (list
               (list 1 t_heal_potion)
               (list 4 t_gold_coins)
+              (list 6 t_leather_helm)
+              (list 6 t_mace)
+              (list 6 t_dagger)
+              (list 6 t_armor_leather)
             )
           )
           (list
@@ -559,7 +563,7 @@
           oc_bandit
           s_brigand
           8
-          0 10 10
+          0 70 70
           0 0
           0 0
           22 0
@@ -578,6 +582,10 @@
               (list 1 t_shield)
               (list 6 t_gold_coins)
               (list 2 t_picklock)
+              (list 6 t_leather_helm)
+              (list 6 t_mace)
+              (list 6 t_dagger)
+              (list 6 t_armor_leather)
             )
           )
           (list
@@ -604,7 +612,7 @@
           oc_bandit
           s_brigand
           8
-          0 10 10
+          0 70 70
           0 0
           0 0
           22 0
@@ -623,6 +631,10 @@
               (list 18 t_bolt)
               (list 1 t_shield)
               (list 6 t_gold_coins)
+              (list 6 t_leather_helm)
+              (list 6 t_mace)
+              (list 6 t_oil)
+              (list 6 t_armor_leather)
             )
           )
           (list
@@ -665,7 +677,7 @@
           nil
           s_knight
           2
-          0 20 15
+          16 80 86
           0 0
           0 0
           26 0
@@ -876,6 +888,8 @@
 
 (kern-load "zane.scm")
 
+(kern-load "shroom.scm")
+
 (kern-mk-place 'p_green_tower_lower "Beneath Green Tower"
   nil ;; sprite
   (kern-mk-map
@@ -1035,7 +1049,7 @@
             (bind
               (kern-mk-obj t_lever 1)
               (list
-                #t
+                #f
                 'gtl-drawbridge-1
                 #f
                 '()
@@ -1077,6 +1091,37 @@
               )
             ) ;; bind
           7 13)
+          (list
+            (bind
+              (kern-mk-char
+                'ch_shroom
+                "Shroom"
+                sp_human
+                nil
+                s_companion_druid
+                2
+                8 84 78
+                0 0
+                0 0
+                26 0
+                9 3
+                #f ;; dead?
+                'shroom-conv
+                sch_shroom
+                nil
+                nil ;; inventory
+                nil
+                ;; hooks
+                (list
+                )
+              )
+              (list
+                #t
+                #f
+                #f
+              )
+            ) ;; bind
+          53 6)
           (list
             (bind
               (kern-mk-obj t_ladder_down 1)
@@ -1464,8 +1509,8 @@
             (bind
               (kern-mk-obj t_door 1)
               (list
-                #f
-                0
+                #t
+                3
                 '()
                 #f
                 #f
@@ -1500,7 +1545,7 @@
               (kern-mk-obj t_lever 1)
               (list
                 #f
-                'green-tower-lower-portcullis-1
+                'gtl-portcullis-1
                 #f
                 '()
               )
@@ -1665,6 +1710,30 @@
             (kern-mk-obj t_bed 1)
           2 13)
           (list
+            (kern-mk-char
+              'ch_wanderer
+              "The Wanderer"
+              sp_human
+              oc_wanderer
+              s_companion_ranger
+              1
+              0 80 72
+              0 1
+              10 5
+              29 0
+              3 1
+              #f ;; dead?
+              nil
+              nil
+              nil
+              nil ;; inventory
+              nil
+              ;; hooks
+              (list
+              )
+            )
+          52 4)
+          (list
             (kern-mk-container
               t_chest
               ;; trap
@@ -1739,7 +1808,7 @@
         (bind
           (kern-mk-obj tf_drawbridge 1)
           (list
-            #t
+            #f
             '()
             #f
             's_ns_bridge
@@ -1758,12 +1827,12 @@
       ) ;; bind
     32 32)
     (list
-      (kern-tag 'green-tower-lower-portcullis-1
+      (kern-tag 'gtl-portcullis-1
         (bind
           (kern-mk-obj t_portcullis 1)
           (list
             #f
-            'green-tower-lower-portcullis-2
+            'gtl-portcullis-2
             #f
             '()
           )
@@ -1771,7 +1840,7 @@
       ) ;; kern-tag
     32 18)
     (list
-      (kern-tag 'green-tower-lower-portcullis-2
+      (kern-tag 'gtl-portcullis-2
         (bind
           (kern-mk-obj t_portcullis 1)
           (list
@@ -1783,30 +1852,6 @@
         ) ;; bind
       ) ;; kern-tag
     33 18)
-    (list
-      (kern-mk-char
-        'ch_wanderer
-        "The Wanderer"
-        sp_human
-        oc_wanderer
-        s_companion_ranger
-        1
-        0 20 12
-        0 1
-        10 5
-        29 0
-        3 1
-        #f ;; dead?
-        nil
-        nil
-        nil
-        nil ;; inventory
-        nil
-        ;; hooks
-        (list
-        )
-      )
-    32 23)
   ) ;; end of objects
   (list
   )
@@ -2574,7 +2619,7 @@
                 oc_ranger
                 s_companion_ranger
                 2
-                1 11 11
+                1 71 71
                 0 0
                 0 0
                 30 0
@@ -2595,6 +2640,10 @@
                     (list 5 t_torch)
                     (list 5 t_cure_potion)
                     (list 5 t_heal_potion)
+                    (list 6 t_leather_helm)
+                    (list 6 t_sword)
+                    (list 6 t_dagger)
+                    (list 6 t_armor_leather)
                   )
                 )
                 (list
@@ -2609,7 +2658,7 @@
               )
               '()
             ) ;; bind
-          29 26)
+          20 29)
           (list
             (bind
               (kern-mk-obj t_door 1)
@@ -3105,40 +3154,13 @@
           (list
             (bind
               (kern-mk-char
-                'ch_gwen
-                "Gwen"
-                sp_human
-                nil
-                s_gwen
-                2
-                0 20 15
-                0 0
-                0 0
-                30 0
-                9 9
-                #f ;; dead?
-                'gwen-conv
-                sch_gwen
-                nil
-                nil ;; inventory
-                nil
-                ;; hooks
-                (list
-                )
-              )
-              '()
-            ) ;; bind
-          5 4)
-          (list
-            (bind
-              (kern-mk-char
                 'ch_chant
                 "Chanticleer"
                 sp_human
                 nil
                 s_chanticleer
                 2
-                0 20 15
+                0 80 75
                 0 0
                 0 0
                 30 0
@@ -3198,33 +3220,6 @@
           (list
             (kern-mk-obj t_bed 1)
           2 9)
-          (list
-            (bind
-              (kern-mk-char
-                'ch_jim
-                "Jim"
-                sp_human
-                nil
-                s_townsman
-                2
-                0 20 15
-                0 0
-                0 0
-                30 0
-                9 9
-                #f ;; dead?
-                'jim-conv
-                sch_jim
-                nil
-                nil ;; inventory
-                nil
-                ;; hooks
-                (list
-                )
-              )
-              '()
-            ) ;; bind
-          19 23)
           (list
             (kern-tag 'tlj-d-1
               (bind
@@ -3337,6 +3332,33 @@
             ) ;; kern-tag
           4 9)
           (list
+            (bind
+              (kern-mk-char
+                'ch_gwen
+                "Gwen"
+                sp_human
+                nil
+                s_gwen
+                2
+                0 80 75
+                0 0
+                0 0
+                30 0
+                9 9
+                #f ;; dead?
+                'gwen-conv
+                sch_gwen
+                nil
+                nil ;; inventory
+                nil
+                ;; hooks
+                (list
+                )
+              )
+              '()
+            ) ;; bind
+          21 23)
+          (list
             (kern-mk-obj t_bed 1)
           12 2)
           (list
@@ -3374,33 +3396,6 @@
               )
             ) ;; bind
           10 4)
-          (list
-            (bind
-              (kern-mk-char
-                'ch_earl
-                "Earl"
-                sp_human
-                nil
-                s_townsman
-                2
-                0 20 15
-                0 0
-                0 0
-                30 0
-                9 9
-                #f ;; dead?
-                'earl-conv
-                sch_earl
-                nil
-                nil ;; inventory
-                nil
-                ;; hooks
-                (list
-                )
-              )
-              '()
-            ) ;; bind
-          19 27)
           (list
             (kern-tag 'trigrave-inn-room-4-door
               (bind
@@ -3588,6 +3583,60 @@
           1 24)
           (list
             (bind
+              (kern-mk-char
+                'ch_earl
+                "Earl"
+                sp_human
+                nil
+                s_townsman
+                2
+                0 80 75
+                0 0
+                0 0
+                30 0
+                9 9
+                #f ;; dead?
+                'earl-conv
+                sch_earl
+                nil
+                nil ;; inventory
+                nil
+                ;; hooks
+                (list
+                )
+              )
+              '()
+            ) ;; bind
+          2 24)
+          (list
+            (bind
+              (kern-mk-char
+                'ch_jim
+                "Jim"
+                sp_human
+                nil
+                s_townsman
+                2
+                0 80 75
+                0 0
+                0 0
+                30 0
+                9 9
+                #f ;; dead?
+                'jim-conv
+                sch_jim
+                nil
+                nil ;; inventory
+                nil
+                ;; hooks
+                (list
+                )
+              )
+              '()
+            ) ;; bind
+          25 4)
+          (list
+            (bind
               (kern-mk-obj t_door 1)
               (list
                 #f
@@ -3689,6 +3738,36 @@
         nil
         ;; contents
         (list
+          (list
+            (bind
+              (kern-mk-char
+                'ch_ilya
+                "Ilya"
+                sp_human
+                nil
+                s_child
+                2
+                0 80 75
+                0 0
+                0 0
+                30 0
+                9 9
+                #f ;; dead?
+                'ilya-conv
+                sch_ilya
+                nil
+                nil ;; inventory
+                nil
+                ;; hooks
+                (list
+                )
+              )
+              (list
+                #f
+                #f
+              )
+            ) ;; bind
+          21 10)
           (list
             (bind
               (kern-mk-obj t_door 1)
@@ -3797,20 +3876,20 @@
           (list
             (bind
               (kern-mk-char
-                'ch_ilya
-                "Ilya"
+                'ch_gregor
+                "Gregor"
                 sp_human
                 nil
-                s_child
+                s_townsman
                 2
-                0 20 15
+                0 80 75
                 0 0
                 0 0
                 30 0
                 9 9
                 #f ;; dead?
-                'ilya-conv
-                sch_ilya
+                'gregor-conv
+                sch_gregor
                 nil
                 nil ;; inventory
                 nil
@@ -3818,10 +3897,7 @@
                 (list
                 )
               )
-              (list
-                #f
-                #f
-              )
+              '()
             ) ;; bind
           10 10)
           (list
@@ -3997,33 +4073,6 @@
         (list
           (list
             (bind
-              (kern-mk-char
-                'ch_gregor
-                "Gregor"
-                sp_human
-                nil
-                s_townsman
-                2
-                0 20 15
-                0 0
-                0 0
-                30 0
-                9 9
-                #f ;; dead?
-                'gregor-conv
-                sch_gregor
-                nil
-                nil ;; inventory
-                nil
-                ;; hooks
-                (list
-                )
-              )
-              '()
-            ) ;; bind
-          10 20)
-          (list
-            (bind
               (kern-mk-obj t_dungeon 1)
               (list
                 'p_slimy_cavern
@@ -4169,7 +4218,7 @@
   "Walk"
   sound-walking
   9 0
-  28770 ;; turns to next meal
+  27978 ;; turns to next meal
   nil
   m_campsite
   nil
@@ -4192,7 +4241,7 @@
 (kern-set-cursor ls_whirlpool)
 (kern-set-crosshair t_crosshair)
 (kern-set-ascii ss_u4_charset 32)
-(kern-set-clock 0 0 0 0 12 59)
+(kern-set-clock 0 0 0 0 13 10)
 (kern-set-time-accel 1)
 (kern-mk-dtable
   (list    0    0   -1   -1   -1   -2   -2   -2    0 )
