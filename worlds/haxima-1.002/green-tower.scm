@@ -103,6 +103,9 @@
 (kern-load "doris.scm")
 (mk-doris 'ch_doris)
 
+(kern-load "deric.scm")
+(mk-deric 'ch_deric)
+
 ;;----------------------------------------------------------------------------
 ;; Place
 ;;----------------------------------------------------------------------------
@@ -118,6 +121,7 @@
   (put ch_shroom  14 1)
   (put ch_gen     0 0)
   (put ch_doris   0 0)
+  (put ch_deric   0 0)
 
   ;; Shroom's Shop
   (put (mk-locked-door) 48 10)
