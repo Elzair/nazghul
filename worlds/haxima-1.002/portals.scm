@@ -85,7 +85,7 @@
 (mk-obj-type 't_ladder_up   "ladder leading up"   s_ladder_up     layer-mechanism portal-ifc)
 (mk-obj-type 't_trap_door   "trap door"           '()             layer-mechanism auto-portal-ifc)
 (mk-obj-type 't_teleporter  "teleporter"          s_floor_plate   layer-mechanism prompting-auto-portal-ifc)
-(mk-obj-type 't_dungeon "dungeon" s_dungeon layer-mechanism portal-ifc)
+(mk-obj-type 't_dungeon "dungeon" s_dungeon layer-mechanism       auto-portal-ifc)
 
 ;; mk-portal -- generic helper constructor
 (define (mk-portal type place-tag x y)

@@ -509,30 +509,65 @@ enum MoveResult Character::move(int dx, int dy)
                         return ExitedMap;
                 }
 
-                if (place_get_parent(getPlace()) == NULL)
-                        return OffMap;
+                if (place_get_parent(getPlace()) != NULL) {
                 
-                if (player_party->getSize() == 1) {
-                        // Force to follow mode to avoid the annoying case
-                        // where only one member is in the party and the player
-                        // wants to leave a combat map.
-                        player_party->enableFollowMode();
+                        if (player_party->getSize() == 1) {
+                                // Force to follow mode to avoid the annoying
+                                // case where only one member is in the party
+                                // and the player wants to leave a combat map.
+                                player_party->enableFollowMode();
+                        }
+
+                        if (player_party->getPartyControlMode() != PARTY_CONTROL_FOLLOW) {
+                                return NotFollowMode;
+                        }
+                        
+                        if (!player_party->rendezvous(getPlace(), getX(), getY())) {
+                                return CantRendezvous;
+                        }
+                        
+                        groupExitTo(place_get_parent(getPlace()),
+                                    place_get_x(getPlace()), place_get_y(getPlace()),
+                                    NULL);
+                        
+                        endTurn();
+                        return ExitedMap;
                 }
 
-                if (player_party->getPartyControlMode() != PARTY_CONTROL_FOLLOW) {
-                        return NotFollowMode;
-                }
-                
-                if (!player_party->rendezvous(getPlace(), getX(), getY())) {
-                        return CantRendezvous;
+                // Look for a neighbor in that direction
+                int dir = vector_to_dir(dx, dy);
+                struct place *dest_place = place_get_neighbor(getPlace(), dir);
+                if (dest_place != NULL) {
+                        
+                        int dest_x, dest_y;
+
+                        // Check if the neighbor has an edge entrance
+                        if (place_get_edge_entrance(dest_place, dir, &dest_x, &dest_y)) {
+                                return NoDestination;
+                        }
+
+                        // For parties of size 1, force to follow mode
+                        if (player_party->getSize() == 1) {
+                                player_party->enableFollowMode();
+                        }
+
+                        // Ensure in follow mode
+                        if (player_party->getPartyControlMode() != PARTY_CONTROL_FOLLOW) {
+                                return NotFollowMode;
+                        }
+                        
+                        // Rendezvous other party members or abort
+                        if (!player_party->rendezvous(getPlace(), getX(), getY())) {
+                                return CantRendezvous;
+                        }
+                        
+                        // Goto neighbor
+                        groupExitTo(dest_place, dest_x, dest_y, NULL);                        
+                        endTurn();
+                        return ExitedMap;
                 }
 
-                groupExitTo(place_get_parent(getPlace()),
-                            place_get_x(getPlace()), place_get_y(getPlace()),
-                            NULL);
-
-                endTurn();
-		return ExitedMap;
+                return OffMap;
 	}
 
         // ------------------------------------------------------------------

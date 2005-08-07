@@ -100,7 +100,7 @@ struct place {
         struct node *turn_elem;  /* iterator over above list */
 
         struct location location;
-        struct place *above, *below;
+        struct place *neighbors[NUM_DIRECTIONS];
         char *tag;
         char *name;
         struct sprite *sprite;
@@ -295,6 +295,7 @@ extern void place_describe(struct place *place, int x, int y, int flags);
 extern int place_get_edge_entrance(struct place *place, int dir, int *x, int *y);
 extern int place_set_edge_entrance(struct place *place, int dir, int x, int y);
 extern class Object *place_get_filtered_object(struct place *place, int x, int y, int (*filter)(class Object*));
+extern struct place *place_get_neighbor(struct place *place, int dir);
 
 END_DECL
 

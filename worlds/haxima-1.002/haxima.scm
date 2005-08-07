@@ -28,6 +28,7 @@
 (load "green-tower.scm")
 (load "green-tower-lower.scm")
 (load "mushroom-cave.scm")
+(load "kurpolis.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Characters
@@ -37,7 +38,7 @@
  "The Wanderer"        ; name
  sp_human              ; species
  oc_wanderer           ; occ
- s_companion_ranger    ; sprite
+ s_wanderer    ; sprite
  faction-player        ; starting alignment
  0 10 2                ; str/int/dex
  0 1                   ; hp mod/mult
@@ -75,7 +76,7 @@
 ;;----------------------------------------------------------------------------
 (kern-mk-player
  'player                     ; tag
- s_companion_fighter         ; sprite
+ s_wanderer         ; sprite
  "Walk"                      ; movement description
  sound-walking               ; movement sound
  10                          ; food
@@ -210,7 +211,7 @@
   ;(kern-log-msg "You notice a cave to the southwest."))
   ;(kern-obj-put-at kplayer (list p_slimy_cavern 13 2)
   ; (kern-obj-put-at kplayer (list p_enchanters_tower 32 32)))
-  (kern-obj-put-at kplayer (list p_shard 79 74)))
+  (kern-obj-put-at kplayer (list p_shard 39 76)))
   ;(kern-obj-put-at kplayer (list p_green_tower 45 18)))
   ;(kern-obj-put-at kplayer (list p_test 15 15)))
                   

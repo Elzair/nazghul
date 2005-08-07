@@ -162,9 +162,11 @@ extern "C" {
 #define SOUTHEAST 8
 #define UP        9
 #define DOWN      10
+#define NUM_DIRECTIONS 11
 #define NUM_PLANAR_DIRECTIONS 9
-#define CANCEL    SDLK_ESCAPE
 #define NUM_WIND_DIRECTIONS 4
+
+#define CANCEL    SDLK_ESCAPE
 
 /* Time -- In future, these likely come from GhulScript */
 #define TURNS_PER_MINUTE        60

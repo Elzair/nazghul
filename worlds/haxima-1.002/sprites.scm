@@ -324,6 +324,7 @@
 (kern-mk-sprite 's_trail_e  ss_addon 1 90 #f 0 )
 (kern-mk-sprite 's_trail_f  ss_addon 1 91 #f 0 )
 (kern-mk-sprite 's_female_townsman ss_addon 2 92 #f 0)
+(kern-mk-sprite 's_wanderer ss_addon 2 94 #f 0)
 
 (kern-mk-sprite 's_full_moon                ss_moons 1 0 #f 0 )
 (kern-mk-sprite 's_wane_three_quarter_moon  ss_moons 1 1 #f 0 )

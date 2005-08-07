@@ -50,11 +50,5 @@
   )
 
  nil ;; hooks
- (list  ;; edge entrances
-  (list north  7 12)
-  (list south  7 12)
-  (list east   7 12)
-  (list west   7 12)
-  )
- 
- )
+ nil ;; edge entrances
+)

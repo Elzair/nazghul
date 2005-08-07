@@ -987,7 +987,7 @@ static int kern_place_load_neighbors(scheme *sc, pointer *args,
         *args = scm_cdr(sc, *args);
 
         while (scm_is_pair(sc, neighbors)) {
-                int dir;
+                int dir, opdir;
                 struct place *neighbor;
                 pointer cell;
 
@@ -1000,22 +1000,51 @@ static int kern_place_load_neighbors(scheme *sc, pointer *args,
                         return -1;
                 }
                 
+                /* check direction and get opposite direction */
                 switch(dir) {
+                case NORTH:
+                        opdir = SOUTH;
+                        break;
+                case SOUTH:
+                        opdir = NORTH;
+                        break;
+                case EAST:
+                        opdir = WEST;
+                        break;
+                case WEST:
+                        opdir = EAST;
+                        break;
                 case UP:
-                        place->above = neighbor;
-                        neighbor->below = place;
+                        opdir = DOWN;
                         break;
                 case DOWN:
-                        place->below = neighbor;
-                        neighbor->above = place;
+                        opdir = UP;
                         break;
                 default:
-                        load_err("kern-mk-place %s: invalid direction in "\
-                                 "neighbor list: %s", place->tag, 
-                                 directionToString(dir));
+                        load_err("kern-mk-place %s: invalid direction for "\
+                                 "neighbor: %d\n", place->tag, dir);
                         return -1;
-                        break;
                 }
+
+                /* check for existing neighbors */
+                if (place->neighbors[dir]) {
+                        load_err("kern-mk-place %s: already has %s as a "\
+                                 "neighbor in direction %d\n",
+                                 place->tag, place->neighbors[dir]->tag, dir);
+                        return -1;
+                }
+
+                if (neighbor->neighbors[opdir]) {
+                        load_err("kern-mk-place %s: already has %s as a "\
+                                 "neighbor in direction %d\n",
+                                 neighbor->tag, 
+                                 neighbor->neighbors[opdir]->tag, opdir);
+                        return -1;
+                }
+
+                /* finally, hook them up */
+                place->neighbors[dir] = neighbor;
+                neighbor->neighbors[opdir] = place;
         }
 
         return 0;
@@ -4500,22 +4529,8 @@ KERN_API_CALL(kern_place_get_neighbor)
                 return sc->NIL;
         }
 
-        switch (dir) {
-        case UP:
-                neighbor = place->above;
-                break;
-        case DOWN:
-                neighbor = place->below;
-                break;
-        default:
-                /* If you want to use this call to get east/west/north/south
-                 * neighboring places (in the event that I someday implement
-                 * Sam's request) then carefully revisit the usage in the
-                 * script. */
-                neighbor = NULL;
-                break;
-        }
-
+        /* lookup neighbor */
+        neighbor = place_get_neighbor(place, dir);
         if (neighbor)
                 return scm_mk_ptr(sc, neighbor);
         else

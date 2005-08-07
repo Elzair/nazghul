@@ -1860,6 +1860,7 @@ void place_save(struct save *save, void *val)
 {
         struct place *place;
         struct list *elem;
+        int i;
 
         place = (struct place *)val;
 
@@ -1916,22 +1917,28 @@ void place_save(struct save *save, void *val)
          * it here because we are probably dead smack in the middle of the save
          * routine for that neighbor, so we can't refer to it yet.
          */
-
         save->write(save, ";; neighbors\n");
-        if ((! place->above || place->above->saved == save->session_id) && 
-            (! place->below || place->below->saved == save->session_id)) {
+
+        /* first check if there are any unsaved neighbors */
+        for (i = 0; i < array_sz(place->neighbors); i++) {
+                if (place->neighbors[i] && 
+                    place->neighbors[i]->saved != save->session_id)
+                        break;
+        }
+
+        if (i == array_sz(place->neighbors)) {
+                /* nope */
                 save->write(save, "nil\n");
         } else {
+                /* yep */
                 save->enter(save, "(list\n");
-                if (place->above && place->above->saved != save->session_id) {
-                        save->enter(save, "(list ;; begin above neighbor\n");
-                        place_save(save, place->above);
-                        save->exit(save, "%d) ;; end above neighbor\n", UP);
-                }
-                if (place->below && place->below->saved != save->session_id) {
-                        save->enter(save, "(list ;; begin below neighbor\n");
-                        place_save(save, place->below);
-                        save->exit(save, "%d) ;; end below neighbor\n", DOWN);
+                for (i = 0; i < array_sz(place->neighbors); i++) {
+                        if (place->neighbors[i] && 
+                            place->neighbors[i]->saved != save->session_id) {
+                                save->enter(save, "(list\n");
+                                place_save(save, place->neighbors[i]);
+                                save->exit(save, "%d)\n", i);
+                        }
                 }
                 save->exit(save, ")\n");
         }
@@ -2091,6 +2098,24 @@ int place_set_edge_entrance(struct place *place, int dir, int x, int y)
 
         return 0;
 }
+
+struct place *place_get_neighbor(struct place *place, int dir)
+{
+        /* check direction */
+        switch(dir) {
+        case NORTH:
+        case SOUTH:
+        case EAST:
+        case WEST:
+        case UP:
+        case DOWN:
+                return place->neighbors[dir];
+                break;
+        default:
+                return NULL;
+        }
+}
+
 
 #ifdef MAP_REGIONS
 
