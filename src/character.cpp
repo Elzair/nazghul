@@ -2190,6 +2190,8 @@ bool Character::joinPlayer(void)
                 old_party->addMember(this);
         }
 
+        setSchedule(NULL);
+
         return false;
 }
 
@@ -2320,6 +2322,15 @@ void Character::setSchedule(struct sched *val)
 
         if (sched)
                 sched_chars_node = session_add_sched_char(Session, this);
+
+        // Bugfix: if an npc with a schedule is added to the player party
+        // either during the game or on reload, and it has a schedule, then the
+        // next time the player enters a town the scheduling code will mess
+        // with the party member.
+        if (! sched && sched_chars_node) {
+                session_rm_sched_char(sched_chars_node);
+                sched_chars_node = 0;
+        }
 }
 
 bool Character::tryToRelocateToNewPlace(struct place *newplace, 

@@ -104,9 +104,11 @@
 (define (gen-join gen player)
   (if (gen-will-join? (kobj-gob-data gen))
       (begin
-        (say gen "Yes, I will join you. Once more unto the breach, dear friends!")
-        ;; Note: need to add kern-party-add-char and kern-party-rm-char
-        (join-player gen))
+        (say gen "Yes, I will join you. "
+             "I'll need my equipment from my chest, "
+             "so let's go to my hut in the west part of town. "
+             "Once more unto the breach, dear friends!")
+             (join-player gen))
       (say gen "No, for the woods call my name.")))
 
 (define (gen-da gen player) (say gen "Ha! Da-Ma-To means forest goblin." ))

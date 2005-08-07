@@ -923,6 +923,9 @@ bool player_party::addMember(class Character * c)
         // Hook it to the party
         Party::addMember(c);
 
+        // Make sure it's not going to try and run a schedule
+        c->setSchedule(NULL);
+
         // Set special player-controlled flag
 	c->setPlayerControlled(true);
 
