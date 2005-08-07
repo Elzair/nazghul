@@ -38,7 +38,7 @@
 ;;----------------------------------------------------------------------------
 ;; Other dungeon rooms
 ;;----------------------------------------------------------------------------
-(load "grey-goblin-village.scm")
+(load "goblin-battle.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Place
@@ -55,7 +55,7 @@
  nil                    ; subplaces
 
  ;; neighbors
- (list (list p_grey_goblin_village east))
+ (list (list p_goblin_battle east))
  
  ;; objects
  (list

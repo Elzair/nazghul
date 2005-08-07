@@ -181,6 +181,8 @@
                       is-queen-spider?)
 (mk-monster-generator 't_yellow_slime_generator 500 1 mk-yellow-slime
                       is-yellow-slime?)
+(mk-monster-generator 't_goblin_hunter_generator 100 5 mk-goblin-hunter char-is-goblin?)
+(mk-monster-generator 't_goblin_raider_generator 100 5 mk-goblin-raider char-is-goblin?)
 
 ;; Make an instance of one of the above monster generators
 (define (mk-generator generator-type)

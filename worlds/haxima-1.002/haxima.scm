@@ -148,11 +148,11 @@
 ;; are hostile, positive are friendly.
 ;; ----------------------------------------------------------------------------
 (kern-mk-dtable
- ;;           none play men orks accu mons troll spid outl
+ ;;           none play men orks accu mons troll spid outl 
  (dtable-row   0    0    0   0   -1   -2   -2    -2    0) ;; none
- (dtable-row   0    2    1   0   -1   -2   -2    -2   -2) ;; player
+ (dtable-row   0    2    1  -2   -1   -2   -2    -2   -2) ;; player
  (dtable-row  -1    1    2  -1   -2   -2   -2    -2   -2) ;; men
- (dtable-row  -1    0   -1   2   -1   -2    0    -2   -2) ;; orks
+ (dtable-row  -1   -2   -1   2   -1   -2    0    -2   -2) ;; orks
  (dtable-row  -1   -1   -1  -1    2   -2   -1    -1   -2) ;; accursed
  (dtable-row  -2   -2   -2  -2   -2    0    0     0   -2) ;; monsters
  (dtable-row  -2   -2   -2   0   -1   -1    2    -2   -2) ;; hill trolls
@@ -211,10 +211,10 @@
   ;(kern-log-msg "You notice a cave to the southwest."))
   ;(kern-obj-put-at kplayer (list p_slimy_cavern 13 2)
   ; (kern-obj-put-at kplayer (list p_enchanters_tower 32 32)))
-  (kern-obj-put-at kplayer (list p_shard 39 76)))
+  ;(kern-obj-put-at kplayer (list p_shard 39 76)))
   ;(kern-obj-put-at kplayer (list p_green_tower 45 18)))
   ;(kern-obj-put-at kplayer (list p_test 15 15)))
-                  
+  (kern-obj-put-at kplayer (list p_grey_goblin_village 0 9)))                  
 ;;----------------------------------------------------------------------------
 ;; To skip the extended start scene comment out this next line and uncomment
 ;; the line after it.

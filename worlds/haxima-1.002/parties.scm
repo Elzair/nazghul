@@ -22,7 +22,7 @@
  s_orc ;;...............sprite (used in wilderness)
  nil ;;.................formation (optional)
  ;;.....................sub-groups that comprise the party
- (mk-groups (mk-group sp_goblin s_orc "1d6" 'mk-orc-raider))
+ (mk-groups (mk-group sp_goblin s_orc "1d6" 'mk-goblin-raider))
  )
 
 (kern-mk-party-type

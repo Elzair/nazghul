@@ -98,6 +98,7 @@
 (define faction-hill-troll  6)
 (define faction-wood-spider 7)
 (define faction-outlaw      8)
+(define faction-cave-gobin  9)
 
 ;; Layers (must match object.h)
 (define layer-none       0)

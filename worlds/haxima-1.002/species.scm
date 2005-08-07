@@ -285,6 +285,9 @@
 (define (char-is-troll? kchar)
   (eqv? (kern-char-get-species kchar) sp_troll))
 
+(define (char-is-goblin? kchar)
+  (is-species? kchar sp_goblin))
+
 ;;----------------------------------------------------------------------------
 ;; Trigger to generate slimes
 ;;----------------------------------------------------------------------------
