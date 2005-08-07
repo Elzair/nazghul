@@ -15,7 +15,6 @@
                (list 19 0  (mk-zone 53 50 4  7)  "idle")
                (list 21 0  (mk-zone 51 9  1  1)  "sleeping"))
 
-
 ;;----------------------------------------------------------------------------
 ;; Gob
 ;;----------------------------------------------------------------------------
@@ -189,7 +188,7 @@
                  nil                 ; occ
                  s_companion_druid   ; sprite
                  faction-men         ; starting alignment
-                 8 14 8            ; str/int/dex
+                 8 14 8              ; str/int/dex
                  0 0                 ; hp mod/mult
                  0 0                 ; mp mod/mult
                  30 0 9 3            ; hp/xp/mp/lvl

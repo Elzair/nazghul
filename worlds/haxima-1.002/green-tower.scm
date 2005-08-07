@@ -20,11 +20,6 @@
 ;; conceived.
 ;;
 
-;;#include "../characters/Shroom_the_Hag.ghul"
-;;#include "../characters/Doris.ghul"
-;;#include "../characters/Gen.ghul"
-;;#include "../characters/Deric.ghul"
-
 (kern-mk-map 
  'm_green_tower 64 64 pal_expanded
  (list
@@ -105,6 +100,9 @@
 (kern-load "gen.scm")
 (mk-gen 'ch_gen)
 
+(kern-load "doris.scm")
+(mk-doris 'ch_doris)
+
 ;;----------------------------------------------------------------------------
 ;; Place
 ;;----------------------------------------------------------------------------
@@ -119,6 +117,7 @@
   ;; characters:
   (put ch_shroom  14 1)
   (put ch_gen     0 0)
+  (put ch_doris   0 0)
 
   ;; Shroom's Shop
   (put (mk-locked-door) 48 10)
@@ -175,7 +174,7 @@
   (put (mk-door) 51 49)
   (put (mk-door) 52 49)
   (put (mk-door) 57 59)
-  (put (kern-tag 'white-stag-inn-room-door (mk-locked-door)) 44 58)
+  (put (kern-tag 'white-stag-door (mk-locked-door)) 44 58)
   (put (mk-bed) 43 61)
   (put (mk-bed) 58 61)
   (put (mk-locked-door) 59 58)
