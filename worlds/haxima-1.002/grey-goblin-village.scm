@@ -30,6 +30,11 @@
 ;;----------------------------------------------------------------------------
 
 ;;----------------------------------------------------------------------------
+;; Other dungeon rooms
+;;----------------------------------------------------------------------------
+(load "troll-den.scm")
+
+;;----------------------------------------------------------------------------
 ;; Place
 ;;----------------------------------------------------------------------------
 (kern-mk-place 
@@ -42,12 +47,14 @@
  #f                     ; large-scale (wilderness)
  #f                     ; tmp combat place
  nil                    ; subplaces
- nil                    ; neighbors
+ 
+ ;; neighbors
+ (list (list p_troll_den south))
  
  ;; objects
  (list
-  (put (mk-generator t_goblin_hunter_generator) 8 4)
-  (put (mk-generator t_goblin_raider_generator) 9 9)
+  (put (mk-mongen t_goblin_hunter_gen 100 10) 8 4)
+  (put (mk-mongen t_goblin_raider_gen 100 10) 9 9)
   )
 
  nil ; hooks

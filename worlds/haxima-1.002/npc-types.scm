@@ -279,7 +279,7 @@
     faction-hill-troll ;;.......faction
     'troll-ai ;;................custom ai (optional)
     
-    nil ;;..........................container (and contents, used to arm char)
+    (mk-chest nil nil) ;;.......container (and contents, used to arm char)
     
     nil ;;......................readied arms (in addition to container)
     nil ;;......................effects

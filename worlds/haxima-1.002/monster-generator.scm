@@ -181,9 +181,54 @@
                       is-queen-spider?)
 (mk-monster-generator 't_yellow_slime_generator 500 1 mk-yellow-slime
                       is-yellow-slime?)
-(mk-monster-generator 't_goblin_hunter_generator 100 5 mk-goblin-hunter char-is-goblin?)
-(mk-monster-generator 't_goblin_raider_generator 100 5 mk-goblin-raider char-is-goblin?)
 
 ;; Make an instance of one of the above monster generators
 (define (mk-generator generator-type)
   (kern-obj-set-visible (kern-mk-obj generator-type 1) #f))
+
+;;----------------------------------------------------------------------------
+;; New, improved monster generator
+;;----------------------------------------------------------------------------
+(define (mongen-mk thresh max)
+  (list thresh max))
+(define (mongen-thresh gen) (car gen))
+(define (mongen-max gen) (cadr gen))
+
+(define (mk-mongen-ifc mk-monster is-monster?)
+  (define (mongen-exec kgen)
+    (let ((gen (kobj-gob-data kgen)))
+      (define (roll-to-encounter)
+        (>= (modulo (random-next) 1000) (mongen-thresh gen)))
+      (define (not-too-many?)
+        (< (length (filter is-monster?
+                           (kern-place-get-beings (loc-place 
+                                                   (kern-obj-get-location 
+                                                    kgen)))))
+           (mongen-max gen)))
+      (define (player-out-of-sight?)
+        (define (can-see? members)
+          (if (null? members)
+              #f
+              (or (kern-in-los? (kern-obj-get-location (car members))
+                                (kern-obj-get-location kgen))
+                  (can-see? (cdr members)))))
+        (not (can-see? (kern-party-get-members (kern-get-player)))))
+      (if (and (roll-to-encounter)
+               (not-too-many?)
+               (player-out-of-sight?))
+          (kern-obj-put-at (mk-monster)
+                           (kern-obj-get-location kgen)))))
+  (ifc nil
+       (method 'exec mongen-exec)))
+
+(define (mk-mongen-type tag mk-monster is-monster?)
+  (mk-obj-type tag "monster generator" nil layer-none
+               (mk-mongen-ifc mk-monster is-monster?)))
+
+(mk-mongen-type 't_goblin_hunter_gen mk-goblin-hunter char-is-goblin?)
+(mk-mongen-type 't_goblin_raider_gen mk-goblin-raider char-is-goblin?)
+(mk-mongen-type 't_troll_gen mk-troll char-is-troll?)
+
+(define (mk-mongen type thresh max)
+  (bind (kern-obj-set-visible (kern-mk-obj type 1) #f)
+        (mongen-mk thresh max)))

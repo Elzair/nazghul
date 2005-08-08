@@ -1,11 +1,11 @@
-; (define (troll-display . args)
-;   (display (kern-get-ticks))
-;   (display ":")
-;   (apply display args))
-; (define (troll-newline) (newline))
+ (define (troll-display . args)
+   (display (kern-get-ticks))
+   (display ":")
+   (apply display args))
+ (define (troll-newline) (newline))
 
-(define (troll-display . args) )
-(define (troll-newline) )
+;(define (troll-display . args) )
+;(define (troll-newline) )
 
 
 ;;----------------------------------------------------------------------------

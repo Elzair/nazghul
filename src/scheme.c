@@ -4575,6 +4575,9 @@ static void serialize(scheme *sc, pointer p, struct save *save, int flags)
                 }
         } else if (is_symbol(p)) {
                 save->write(save, "'%s\n", symname(p));
+        } else if (is_closure(p)) {
+                fprintf(stderr, "can't serialize closures\n");
+                assert(0);
         } else {
                 assert(0);
         }

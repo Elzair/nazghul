@@ -169,7 +169,10 @@
   (ifc obj-ifc
        (method 'hit-loc 
                (lambda (kmissile kplace x y)
-                 (kern-place-set-terrain (mk-loc kplace x y) t_boulder)))))
+                 ;(kern-place-set-terrain (mk-loc kplace x y) t_boulder)
+                 (kern-obj-put-at kmissile
+                                  (mk-loc kplace x y))
+                 ))))
 
 (define thrown-arms-types
   (list

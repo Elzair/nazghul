@@ -58,8 +58,8 @@
  
  ;; objects
  (list
-  (put (mk-generator t_goblin_hunter_generator) 18 8)
-  (put (mk-generator t_goblin_raider_generator) 18 10)
+  (put (mk-mongen t_goblin_hunter_gen 250 5) 18 8)
+  (put (mk-mongen t_goblin_raider_gen 500 5) 18 10)
   )
 
  nil ; hooks
