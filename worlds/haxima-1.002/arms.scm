@@ -165,23 +165,14 @@
                  (kern-obj-put-at (kern-mk-obj F_fire 1) 
                                   (mk-loc kplace x y))))))
 
-(define thrown-boulder-ifc
-  (ifc obj-ifc
-       (method 'hit-loc 
-               (lambda (kmissile kplace x y)
-                 ;(kern-place-set-terrain (mk-loc kplace x y) t_boulder)
-                 (kern-obj-put-at kmissile
-                                  (mk-loc kplace x y))
-                 ))))
-
 (define thrown-arms-types
   (list
    ;;     ==========================================================================================================================================
-   ;;     tag              | name          | sprite              | to-hit | damage | to-def | slots       | hnds | rng | ifc                | weight
+   ;;     tag              | name          | sprite              | to-hit | damage | to-def | slots       | hnds | rng | ifc             | weight
    ;;     ==========================================================================================================================================
-   (list  't_oil            "flaming oil"   s_flaming_oil          "-1"     "1d6"    "-2"     slot-weapon   1      4     flaming-oil-ifc      1)
-   (list  't_spear          "spear"         s_spear                "-1"     "1d8"    "+1"     slot-weapon   2      4     obj-ifc              2)
-   (list  't_thrown_boulder "loose boulder" s_thrown_boulder       "-2"     "2d6"    "-2"     slot-weapon   2      5     thrown-boulder-ifc   10)
+   (list  't_oil            "flaming oil"   s_flaming_oil          "-1"     "1d6"    "-2"     slot-weapon   1      4     flaming-oil-ifc  1)
+   (list  't_spear          "spear"         s_spear                "-1"     "1d8"    "+1"     slot-weapon   2      4     obj-ifc          2)
+   (list  't_thrown_boulder "loose boulder" s_thrown_boulder       "-2"     "2d6"    "-2"     slot-weapon   2      5     obj-ifc          10)
    ))
 
 (kern-mk-sprite 's_dagger         ss_arms 1 32 #f 0)

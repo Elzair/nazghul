@@ -279,7 +279,13 @@
     faction-hill-troll ;;.......faction
     'troll-ai ;;................custom ai (optional)
     
-    (mk-chest nil nil) ;;.......container (and contents, used to arm char)
+    ;;.......container (and contents, used to arm char)
+    (mk-chest nil 
+              (mk-contents
+               (roll-to-add 100 "1d3"    t_thrown_boulder)
+               (roll-to-add 25  "1"      t_mace)
+               (roll-to-add 100 "1d25-1" t_gold_coins)
+               ))
     
     nil ;;......................readied arms (in addition to container)
     nil ;;......................effects
