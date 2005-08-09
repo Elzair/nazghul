@@ -14,8 +14,11 @@
 
 (kern-load "camping-map.scm")
 
+
+(kern-load "zones.scm")
+
 ;;----------------------------------------------------------------------------
-;; Maps
+;; Placees
 ;;----------------------------------------------------------------------------
 (load "gregors-hut.scm")
 (load "moongate-clearing.scm")
@@ -29,6 +32,7 @@
 (load "green-tower-lower.scm")
 (load "mushroom-cave.scm")
 (load "kurpolis.scm")
+(load "bole.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Characters
@@ -212,9 +216,9 @@
   ;(kern-obj-put-at kplayer (list p_slimy_cavern 13 2)
   ; (kern-obj-put-at kplayer (list p_enchanters_tower 32 32)))
   ;(kern-obj-put-at kplayer (list p_shard 39 76)))
-  ;(kern-obj-put-at kplayer (list p_green_tower 45 18)))
+  (kern-obj-put-at kplayer (list p_shard 85 41)))
   ;(kern-obj-put-at kplayer (list p_test 15 15)))
-  (kern-obj-put-at kplayer (list p_grey_goblin_village 0 9)))                  
+  ;(kern-obj-put-at kplayer (list p_grey_goblin_village 0 9)))                  
 ;;----------------------------------------------------------------------------
 ;; To skip the extended start scene comment out this next line and uncomment
 ;; the line after it.

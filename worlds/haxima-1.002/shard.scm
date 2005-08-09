@@ -599,7 +599,7 @@
   (list p_trigrave          29 51)
   (list p_enchanters_tower  29 21)
   (list p_green_tower       80 59)
-  (list p_mushroom_cave     78 74)
+  (list p_bole              86 40)
   )
 
  ;; (list p_wivernscross       4 50)
