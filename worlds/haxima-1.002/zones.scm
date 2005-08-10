@@ -1,4 +1,10 @@
-;; Bole Zones
+;; Enchanter's Tower
+(define (mk-zone x y w h) (list 'p_enchanters_tower x y w h))
+(define enchtwr-campsite         (mk-zone  0  0  5   5))
+(define enchtwr-dining-room-1    (mk-zone  0  0  5   5))
+(define enchtwr-dining-room      (mk-zone  0  0  5   5))
+
+;; Bole
 (define (mk-zone x y w h) (list 'p_bole x y w h))
 (define bole-bed-kathryn  (mk-zone 31 18  1  1))
 (define bole-bedroom-thud (mk-zone 31 17  2  2))
