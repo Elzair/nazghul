@@ -34,6 +34,7 @@
 (load "kurpolis.scm")
 (load "bole.scm")
 (load "glasdrin.scm")
+(load "oparine.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Characters
@@ -217,7 +218,7 @@
   ;(kern-obj-put-at kplayer (list p_slimy_cavern 13 2)
   ; (kern-obj-put-at kplayer (list p_enchanters_tower 32 32)))
   ;(kern-obj-put-at kplayer (list p_shard 39 76)))
-  (kern-obj-put-at kplayer (list p_shard 52 33)))
+  (kern-obj-put-at kplayer (list p_shard 12 77)))
   ;(kern-obj-put-at kplayer (list p_test 15 15)))
   ;(kern-obj-put-at kplayer (list p_grey_goblin_village 0 9)))                  
 ;;----------------------------------------------------------------------------
