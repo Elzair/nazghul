@@ -284,6 +284,9 @@ void Character::damage(int amount)
 
         sound_play(get_damage_sound(), SOUND_MAX_VOLUME);
 
+        // setHP() might call kill(), which calls remove(), which will destroy
+        // most objects
+        obj_inc_ref(this);
         setHp(hp - amount);
 
 	if (isPlayerControlled()) {
@@ -292,6 +295,8 @@ void Character::damage(int amount)
 		if (!isDead() && inCombat && getHp() < (getMaxHp() / 4))
 			setFleeing(true);
 	}
+        obj_dec_ref(this);
+
 }
 enum Character::ReadyResult Character::ready(class ArmsType * arms)
 {

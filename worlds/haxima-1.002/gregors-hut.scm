@@ -104,7 +104,9 @@
                 (list (mk-door) 17 14)
                 (list (mk-door) 18 20)
                 (list (mk-bridge 'east) 25 26)
-
+                (put (mk-bed) 7 18)
+                (put (mk-bed) 7 16)
+                
                 )
                nil ; hooks
                nil ; edge entrances

@@ -116,7 +116,6 @@
        (method 'wise (lambda (knpc kpc) (say knpc "The Wise are both strong and - mostly - good. "
                                              "They help the land, as they can, and keep the Accursed "
                                              "at bay.")))
-       (method 'witc (lambda (knpc kpc) (say knpc "Don't know of any witches in these parts any more. "
-                                             "Used to be one south of the lake.")))
+       (method 'witc (lambda (knpc kpc) (say knpc "Don't know of any witches in these parts any more.")))
        ))
 

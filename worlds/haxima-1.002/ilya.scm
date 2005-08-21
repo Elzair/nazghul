@@ -93,7 +93,7 @@
                     (say knpc "Do you remember where our farm was?")
                     (if (kern-conv-get-yes-no? kpc)
                         (say knpc "She must be there somewhere!")
-                        (say knpc "East and south, not far from the hills."))))))
+                        (say knpc "West through the pass, then north against the hills."))))))
 
         ;; no - didn't give quest yet
         (begin
@@ -198,7 +198,7 @@
                                                "he was just a farmer.")))
        (method 'pusk ilya-quest)
        (method 'home (lambda (knpc kpc) (say knpc "Our farm was north and south through the woods.")))
-       (method 'spid (lambda (knpc kpc) (say knpc "There are lots of spiders in the woods around my old home.")))
+       (method 'spid (lambda (knpc kpc) (say knpc "There are lots of spiders in the woods around here.")))
        (method 'wood (lambda (knpc kpc) (say knpc "Grandpa says to stay out of the woods.")))
        (method 'fire (lambda (knpc kpc) (say knpc "Making fire is easy. Just mix black pearl and sulphos..."
                                              "surephous... that ashy stuff you know? "

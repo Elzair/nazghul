@@ -318,6 +318,10 @@ void ctrl_do_attack(class Character *character, class ArmsType *weapon,
         armor = target->getArmor();
         damage -= armor;
         damage = max(damage, 0);
+
+        // the damage() method may destroy the target, so bump the refcount
+        // since we still need the target through the end of this function
+        obj_inc_ref(target);
         target->damage(damage);
 
         log_end("%s!", target->getWoundDescription());
@@ -326,6 +330,8 @@ void ctrl_do_attack(class Character *character, class ArmsType *weapon,
         if (target->isDead()) {
                 character->addExperience(target->getExperienceValue());
         }
+
+        obj_dec_ref(target);
 }
 
 
