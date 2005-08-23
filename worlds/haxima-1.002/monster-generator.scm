@@ -232,3 +232,49 @@
 (define (mk-mongen type thresh max)
   (bind (kern-obj-set-visible (kern-mk-obj type 1) #f)
         (mongen-mk thresh max)))
+
+;;----------------------------------------------------------------------------
+;; Newer, improveder monster generator
+;;----------------------------------------------------------------------------
+(define (mongen2-mk thresh max is-monster-tag mk-monster-tag mk-args)
+  (list thresh max is-monster-tag mk-monster-tag mk-args))
+(define (mongen2-thresh gen) (car gen))
+(define (mongen2-max gen) (cadr gen))
+(define (mongen2-mk-monster gen)
+  (apply (eval (cadddr gen)) (list-ref gen 4)))
+
+(define (mongen2-exec kgen)
+  (let ((gen (kobj-gob-data kgen)))
+    (define (roll-to-encounter)
+      (>= (modulo (random-next) 1000) (mongen-thresh gen)))
+    (define (not-too-many?)
+      ;;(display "not-too-many?")(newline)
+      (< (length (filter (eval (caddr gen))
+                         (kern-place-get-beings (loc-place 
+                                                 (kern-obj-get-location 
+                                                  kgen)))))
+         (mongen-max gen)))
+    (define (player-out-of-sight?)
+      ;;(display "player-out-of-sight?")(newline)
+      (define (can-see? members)
+        (if (null? members)
+            #f
+            (or (kern-in-los? (kern-obj-get-location (car members))
+                              (kern-obj-get-location kgen))
+                (can-see? (cdr members)))))
+      (not (can-see? (kern-party-get-members (kern-get-player)))))
+    (if (and (roll-to-encounter)
+             (not-too-many?)
+             (player-out-of-sight?))
+        (kern-obj-put-at (mongen2-mk-monster gen)
+                         (kern-obj-get-location kgen)))))
+
+(define mongen2-ifc
+  (ifc nil
+       (method 'exec mongen2-exec)))
+
+(mk-obj-type 't_mongen2 "monster generator v2" nil layer-none mongen2-ifc)
+
+(define (mk-mongen2 thresh max is-monster? mk-monster mk-args)
+  (bind (kern-obj-set-visible (kern-mk-obj t_mongen2 1) #f)
+        (mongen2-mk thresh max is-monster? mk-monster mk-args)))

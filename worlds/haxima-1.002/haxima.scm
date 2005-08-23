@@ -218,7 +218,7 @@
   ;(kern-obj-put-at kplayer (list p_slimy_cavern 13 2)
   ; (kern-obj-put-at kplayer (list p_enchanters_tower 32 32)))
   ;(kern-obj-put-at kplayer (list p_shard 39 76)))
-  (kern-obj-put-at kplayer (list p_shard 62 51)))
+  (kern-obj-put-at kplayer (list p_shard 28 21)))
   ;(kern-obj-put-at kplayer (list p_test 15 15)))
   ;(kern-obj-put-at kplayer (list p_grey_goblin_village 0 9)))                  
 ;;----------------------------------------------------------------------------

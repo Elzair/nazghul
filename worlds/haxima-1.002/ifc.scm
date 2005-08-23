@@ -68,7 +68,7 @@
 (define (gob-mk kobj members) (list kobj members))
 (define (gob-kobj gob) (car gob))
 (define (gob-ifc gob) (kobj-ifc (gob-kobj gob)))
-(define (gob-data gob) (cadr gob))
+(define (gob-data gob) (if (null? gob) nil (cadr gob)))
 
 ;; Bind a kernel object to a gob and initialize it
 (define (bind kobj gob-data)

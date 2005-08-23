@@ -115,8 +115,13 @@
    
 
    )
+
  nil ; hooks
- nil ; edge entrances
+
+ (list ;; edge entrances
+  (list north 21 47)
+  )
+
  )
 
 ;; (list (mk-cave-entrance 'p_cave_level_1 1 30) 44 1) 

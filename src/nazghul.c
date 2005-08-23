@@ -65,10 +65,7 @@ char *PlaybackFile   = 0;
 int PlaybackSpeed    = 100;
 
 static char program_name[] = "nazghul";
-static int version_major = 0;
-static int version_minor = 4;
-static int version_incr  = 0;
-static char *NAZGHUL_SPLASH_IMAGE_FILENAME = "images/gmcnutt/splash.png";
+static char *NAZGHUL_SPLASH_IMAGE_FILENAME = "splash.png";
 
 static void print_version(void)
 {
@@ -251,7 +248,7 @@ static void nazghul_splash(void)
         /* Load the image from the well-known filename */
         splash = IMG_Load(NAZGHUL_SPLASH_IMAGE_FILENAME);
         if (! splash) {
-                warn("IMG_Load failed: %s", SDL_GetError());
+                warn("IMG_Load failed: %s\n", SDL_GetError());
                 return;
         }
         

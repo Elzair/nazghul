@@ -184,6 +184,7 @@
 (load "door.scm")
 (load "portcullis.scm")
 (load "lever.scm")
+(load "timer.scm")
 (load "tblit.scm")
 (load "portals.scm")
 (load "moongate.scm")

@@ -417,6 +417,7 @@ void session_load(char *filename)
         }        
 
         /* Paint all the windows for the first time in the new session. */
+        screenErase(0);
 	screen_repaint_frame();
 	foogodRepaint();
 	consoleRepaint();

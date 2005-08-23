@@ -26,7 +26,7 @@
 (kern-mk-sprite 's_deep          ss_u4_shapes 1  0 #t 0 )
 (kern-mk-sprite 's_shallow       ss_u4_shapes 1  1 #t 0 )
 (kern-mk-sprite 's_shoals        ss_u4_shapes 1  2 #t 0 )
-(kern-mk-sprite 's_bog           ss_u4_shapes 1  3 #t 0 )
+(kern-mk-sprite 's_bog           ss_u4_shapes 1  3 #f 0 )
 (kern-mk-sprite 's_grass         ss_u4_shapes 1  4 #f 0 )
 (kern-mk-sprite 's_trees         ss_u4_shapes 1  5 #f 0 )
 (kern-mk-sprite 's_forest        ss_u4_shapes 1  6 #f 0 )

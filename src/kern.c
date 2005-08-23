@@ -2988,7 +2988,6 @@ static pointer kern_obj_get_gob(scheme *sc, pointer  args)
         }
 
         if (obj->getGob() == NULL) {
-                rt_err("kern-obj-get-gob: no gob for %s", obj->getName());
                 return sc->NIL;
         }
 

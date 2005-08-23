@@ -37,7 +37,7 @@
        "I know you are trouble, but I welcome thee."))
 
 (define (may-job knpc kpc)
-  (say knpc "I run the tavern with my husband here in the Last Hollow"))
+  (say knpc "I run the tavern with my husband here in the Bole"))
 
 (define (may-husband knpc kpc)
   (say knpc "My husband Melvin is a worthless drunk and a coward "
@@ -94,11 +94,6 @@
   (say knpc "Hackle is a crazy but harmless old hedge-witch who lives across "
        "the stream. She has a knack for the healing arts but hasn't the wits "
        "for much else."))
-
-(define (may-last-hollow knpc kpc)
-  (say knpc "They call this the Last Hollow because it's the last hollow in "
-       "the woods at the end of the road. A trail leads further on a little "
-       "ways but it ends at the mountain."))
 
 (define (may-room knpc kpc)
   (if (not (string=? "working" (kern-obj-get-activity knpc)))
@@ -170,10 +165,8 @@
        (method 'comp may-companion)
        (method 'gues may-guests)
        (method 'hack may-hackle)
-       (method 'holl may-last-hollow)
        (method 'husb may-husband)
        (method 'inn may-tavern)
-       (method 'last may-last-hollow)
        (method 'melv may-husband)
        (method 'other may-other-husbands)
        (method 'run may-tavern)

@@ -24,7 +24,7 @@
 
 ;; helpers
 (define (bim-send-signal kobj sig)
-  (display "bim-send-signal ")(display sig)(newline)
+  ;;(display "bim-send-signal ")(display sig)(newline)
   (let ((bim (gob-data (kobj-gob kobj))))
     (if (not (bim-active? bim))
         (let ((port (bim-port bim)))
@@ -36,11 +36,11 @@
                 (bim-set-active! bim #f)))))))
 
 (define (bim-change-state kobj khandler on?)
-  (display "bim-change-state")(newline)
+  ;;(display "bim-change-state")(newline)
   (let ((bim (gob-data (kobj-gob kobj))))
     (bim-set-on! bim on?)
     (let ((state ((kobj-ifc kobj) 'state on? kobj)))
-      (display "state:")(display state)(newline)
+      ;;(display "state:")(display state)(newline)
       (kern-obj-set-sprite kobj (state-sprite state))
       (kern-obj-set-opacity kobj (state-opacity state))
       (kern-obj-set-pclass kobj (state-pclass state))
@@ -49,7 +49,7 @@
 
 ;; handlers
 (define (bim-on kobj khandler) 
-  (display "bim-on")(newline)
+  ;;(display "bim-on")(newline)
   (bim-change-state kobj khandler #t 'on)
   (bim-send-signal kobj 'on)
   )
@@ -61,7 +61,7 @@
   )
 
 (define (bim-toggle kobj khandler)
-  (display "bim-toggle")(newline)
+  ;;(display "bim-toggle")(newline)
   (let ((bim (gob-data (kobj-gob kobj))))
     (if (bim-on? bim) 
         (bim-off kobj khandler)
@@ -73,6 +73,10 @@
         (bim-on kobj '())
         (bim-off kobj '()))))
 
+(define (bim-is-on? kobj)
+  (let ((bim (kobj-gob-data kobj)))
+    (bim-on? bim)))
+
 ;; ifc - extensions must add a 'state message handler
 (define bim-ifc
   (ifc '()
@@ -80,5 +84,6 @@
        (method 'off bim-off)
        (method 'toggle bim-toggle)
        (method 'init bim-init)
+       (method 'is-on? bim-is-on?)
        ))
 

@@ -84,7 +84,7 @@
   (if (kern-conv-get-yes-no? kpc)
       (do-join)
       (begin
-        (say knpc "[She becomes unusually nice] Oh, please won't you help me! "
+        (say knpc "[She becomes plaintive] Oh, please won't you help me! "
              "My masters are powerful and cruel! If I don't return with the "
              "item they seek there will be nowhere I can hide in this life "
              "or the next! Won't you please join me?")

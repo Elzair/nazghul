@@ -11,11 +11,11 @@
             "tt .. .. .. .. .. bb || || tt %% %% %% .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. %% "
             "bb .. .. .. .. .. .. tt || || %% %% %% bb .. .. .. bb .. bb .. bb .. bb .. bb .. .. .. bb %% "
             "|| .. .. .. .. .. .. .. bb || tt %% %% %% .. .. .. %% %% %% %% %% %% %% %% %% %% .. .. .. %% "
-            "|| bb .. .. .. .. .. .. .. || || %% %% xx w+ cc w+ xx %% tt tt tt tt tt %% %% %% bb .. bb %% "
-            "|| || .. .. .. .. && .. .. tt || xx xx xx ,, cc ,, xx xx xx || || || tt tt %% %% .. .. .. %% "
-            "tt bb .. .. bb .. .. .. .. xx w+ xx && xx ,, cc ,, xx && xx xx xx || || tt tt %% bb .. bb %% "
-            "%% .. .. || || .. .. .. xx xx ,, ,, ,, xx x! cc x! xx ,, ,, xx xx ?? || || tt %% .. .. .. %% "
-            "%% bb .. bb || tt .. xx xx ,, ,, ,, ,, xx ,, cc ,, ,, ,, ,, xx ,, ?? xx || tt %% bb .. bb %% "
+            "|| bb .. .. .. .. .. .. .. || || %% %% xx w+ cc w+ xx %% tt tt tt tt tt tt %% %% bb .. bb %% "
+            "|| || .. .. .. .. && .. .. tt || xx xx xx ,, cc ,, xx xx xx || || || tt tt tt %% .. .. .. %% "
+            "tt bb .. .. bb .. .. .. .. xx w+ xx && xx ,, cc ,, xx && xx xx xx || || || tt %% bb .. bb %% "
+            "%% .. .. || || .. .. .. xx xx ,, ,, ,, xx x! cc x! xx ,, ,, xx xx ?? xx || tt %% .. .. .. %% "
+            "%% bb .. bb || tt .. xx xx ,, ,, ,, ,, xx ,, cc ,, ,, ,, ,, xx ,, ,, xx || tt %% bb .. bb %% "
             "%% .. .. || || tt tt xx ,, ,, 00 ,, ,, xx ,, cc ,, xx xx xx xx xx xx xx || tt %% .. .. .. %% "
             "%% bb .. bb || || xx xx ,, ,, 00 ,, ,, xx ,, cc ,, xx ,, ,, ,, ,, ,, xx xx %% %% bb .. bb %% "
             "%% .. .. %% tt || xx ,, ,, ,, ,, ,, ,, ,, ,, cc ,, ,, ,, ,, ,, ,, ,, && xx %% %% .. .. .. %% "
@@ -47,6 +47,8 @@
 (kern-load "zane.scm")
 (mk-zane-first-time 'ch_zane)
 
+(kern-load "gate-guard.scm")
+
 ;;(kern-load "enchanter.scm")
 ;;(mk-enchanter-first-time 'ch_enchanter)
 
@@ -73,13 +75,45 @@
   ;; characters
   (list ch_zane 0 0) 
 
-  (put (mk-portcullis) 5 15)
-  (put (mk-portcullis) 25 15)
-  (put (mk-portcullis) 15 27)
-  (put (mk-portcullis) 15 5)
+  ;;(put (mk-mongen t_mage_guard_gen 0 1) 8 15)
 
-  (put (mk-portcullis) 13 15)
-  (put (mk-portcullis) 17 15)
+  ;; west guardhouse
+  (put (mk-gate-guard 'enchtwr-lever-west) 6 14)
+  (put (mk-gate-guard-gen 'char-is-gate-guard? 
+                          'mk-gate-guard 
+                          'enchtwr-lever-west) 6 14)
+  (put (kern-tag 'enchtwr-port-west (mk-portcullis)) 5 15)
+  (put (kern-tag 'enchtwr-lever-west (mk-lever 'enchtwr-port-west)) 7 14)
+
+  ;; east guardhouse
+  (put (mk-gate-guard 'enchtwr-lever-east) 24 14)
+  (put (mk-gate-guard-gen 'char-is-gate-guard? 
+                          'mk-gate-guard 
+                          'enchtwr-lever-east) 24 14)
+  (put (kern-tag 'enchtwr-port-east (mk-portcullis)) 25 15)
+  (put (kern-tag 'enchtwr-lever-east (mk-lever 'enchtwr-port-east)) 23 14)
+
+  ;; south guardhouse
+  (put (mk-gate-guard 'enchtwr-lever-south) 16 26)
+  (put (mk-gate-guard-gen 'char-is-gate-guard? 
+                          'mk-gate-guard 
+                          'enchtwr-lever-south) 16 26)
+  (put (kern-tag 'enchtwr-port-south (mk-portcullis)) 15 27)
+  (put (kern-tag 'enchtwr-lever-south (mk-lever 'enchtwr-port-south)) 16 25)
+
+  ;; north guardhouse
+  (put (mk-gate-guard 'enchtwr-lever-north) 16 6)
+  (put (mk-gate-guard-gen 'char-is-gate-guard? 
+                          'mk-gate-guard 
+                          'enchtwr-lever-north) 16 6)
+  (put (kern-tag 'enchtwr-port-north (mk-portcullis)) 15 5)
+  (put (kern-tag 'enchtwr-lever-north (mk-lever 'enchtwr-port-north)) 16 7)
+
+  ;; portcullis's & levers for off-limit supply rooms
+  (put (kern-tag 'enchtwr-port-4 (mk-portcullis)) 13 15)
+  (put (kern-tag 'enchtwr-port-5 (mk-portcullis)) 17 15)
+  (put (mk-lever 'enchtwr-port-4) 21 9)
+  (put (mk-lever 'enchtwr-port-5) 22 9)
 
   (put (mk-door) 15  8)
   (put (mk-door) 15 24)

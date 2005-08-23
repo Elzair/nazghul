@@ -22,10 +22,6 @@
 ;; Local Procedures
 ;;----------------------------------------------------------------------------
 
-;; All npc type constructors should create gobs where the first data element is
-;; reserved as the tag for their spawnpoint.
-(define (set-spawnpoint! npc-gob spawnpoint) (set-car! npc-gob spawnpoint))
-
 (define (max-hp sp occ lvl mod mult)
   (+ (kern-species-get-hp-mod sp)
      (if (null? occ) 0 (kern-occ-get-hp-mod occ))
@@ -50,7 +46,7 @@
 ;; character is a monster, guard or similar cannon-fodder NPC, with no
 ;; interesting conversation, no schedule of appointments, etc.
 (define (mk-stock-char name species occupation sprite faction ai container 
-                       arms)
+                       arms conv)
   (kern-mk-char
    nil ;;..........tag
    name ;;.........name
@@ -70,7 +66,7 @@
    (max-mp species occupation default-level 0 0) ;;.current magic points
    default-level  ;;............current level
    #f ;;...........dead?
-   nil ;;..........conversation (optional)
+   conv ;;.........conversation (optional)
    nil ;;..........schedule (optional)
    ai ;;...........custom ai (optional)
    container ;;....container (and contents)
@@ -81,7 +77,7 @@
 ;; Curried version of mk-stock-char for characters without an occupation, ai,
 ;; container or armamenets
 (define (mk-animal name species sprite faction)
-  (mk-stock-char name species nil sprite faction nil nil nil))
+  (mk-stock-char name species nil sprite faction nil nil nil nil))
 
 (define (mk-readied-items . items)
   items)
@@ -118,6 +114,7 @@
 
     nil ;;...............readied arms (in addition to container contents)
     nil ;;...............effects
+    nil ;;...............conversation
     )))
 
 (define (mk-goblin-hunter)
@@ -142,6 +139,7 @@
 
     nil ;;...............readied arms (in addition to container contents)
     nil ;;...............effects
+    nil ;;...............conversation
     )))
 
 (define (mk-skeletal-warrior)
@@ -172,6 +170,7 @@
 
     nil ;;...............readied arms (in addition to container contents)
     nil ;;...............effects
+    nil ;;...............conversation
     )))
 
 (define (mk-yellow-slime)
@@ -186,6 +185,7 @@
           nil ;;...............container (and contents)
           nil ;;...............readied arms (in addition to container contents)
           nil ;;...............effects
+          nil ;;...............conversation
           )))
     (kern-obj-add-effect slime ef_poison_immunity nil)
     slime))
@@ -202,6 +202,7 @@
           nil ;;................container (and contents)
           nil ;;................readied arms (in addition to container)
           nil ;;................effects
+          nil ;;...............conversation
           )))
     (kern-obj-add-effect slime ef_slime_split nil)
     (kern-obj-add-effect slime ef_poison_immunity nil)
@@ -218,6 +219,7 @@
    nil ;;.......................container (and contents)
    nil ;;.......................readied arms (in addition to container)
    nil ;;.......................effects
+   nil ;;...............conversation
    )
   )
 
@@ -232,6 +234,7 @@
    nil ;;.......................container (and contents)
    nil ;;.......................readied arms (in addition to container)
    nil ;;........................effects
+   nil ;;...............conversation
    )
   )
 
@@ -266,6 +269,7 @@
      
      nil ;;...............readied arms (in addition to container contents)
      nil ;;...............effects
+     nil ;;...............conversation
      ))
    (mk-bandit-gob)))
 
@@ -289,8 +293,10 @@
     
     nil ;;......................readied arms (in addition to container)
     nil ;;......................effects
+    nil ;;...............conversation
     )
    (mk-troll-gob)))
+
 
 ;;----------------------------------------------------------------------------
 ;; Type queries
