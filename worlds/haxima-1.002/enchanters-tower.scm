@@ -115,6 +115,9 @@
   (put (mk-lever 'enchtwr-port-4) 21 9)
   (put (mk-lever 'enchtwr-port-5) 22 9)
 
+  ;; slimes invade the south
+  (put (mk-mongen2 900 3 'is-green-slime? 'mk-green-slime nil) 4 22)
+
   (put (mk-door) 15  8)
   (put (mk-door) 15 24)
   (put (mk-door) 22 17)

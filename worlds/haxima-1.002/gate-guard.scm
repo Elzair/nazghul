@@ -64,13 +64,25 @@
 (define (gate-is-open? kgate)
   (signal-kobj kgate 'is-on? kgate nil))
 
+(define (hostiles-visible? kguard)
+  (notnull? (all-visible-hostiles kguard)))
+
+(define (guard-close-gate! guard kgate)
+  (signal-kobj kgate 'off kgate nil)
+  (gate-guard-set-gate-timer! guard 0)
+  (kern-log-msg "The guard closes the gate")
+  )
+
 (define (gate-guard-ai kchar)
   (let* ((guard (kobj-gob-data kchar))
          (kgate (eval (gate-guard-gate-tag guard))))
-    (if (guard-is-holding-gate-open? guard)
-        (guard-dec-gate-timer! guard)
-        (if (gate-is-open? kgate)
-            (guard-start-gate-timer! guard)))))
+    (if (and (hostiles-visible? kchar)
+             (gate-is-open? kgate))
+        (guard-close-gate! guard kgate)
+        (if (guard-is-holding-gate-open? guard)
+            (guard-dec-gate-timer! guard)
+            (if (gate-is-open? kgate)
+                (guard-start-gate-timer! guard))))))
 
 ;;----------------------------------------------------------------------------
 ;; Constructor
