@@ -176,7 +176,7 @@
                                  faction-outlaw
                                  nil)
 
-(mk-monster-generator 't_dungeon_troll_generator 990 5 mk-troll char-is-troll?)
+(mk-monster-generator 't_dungeon_troll_generator 990 5 mk-troll is-troll?)
 (mk-monster-generator 't_dungeon_spider_generator 990 3 mk-queen-spider 
                       is-queen-spider?)
 (mk-monster-generator 't_yellow_slime_generator 500 1 mk-yellow-slime
@@ -225,9 +225,9 @@
   (mk-obj-type tag "monster generator" nil layer-none
                (mk-mongen-ifc mk-monster is-monster?)))
 
-(mk-mongen-type 't_goblin_hunter_gen mk-goblin-hunter char-is-goblin?)
-(mk-mongen-type 't_goblin_raider_gen mk-goblin-raider char-is-goblin?)
-(mk-mongen-type 't_troll_gen mk-troll char-is-troll?)
+(mk-mongen-type 't_goblin_hunter_gen mk-goblin-hunter is-goblin?)
+(mk-mongen-type 't_goblin_raider_gen mk-goblin-raider is-goblin?)
+(mk-mongen-type 't_troll_gen mk-troll is-troll?)
 
 (define (mk-mongen type thresh max)
   (bind (kern-obj-set-visible (kern-mk-obj type 1) #f)

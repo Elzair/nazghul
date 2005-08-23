@@ -1,5 +1,5 @@
 ;; ----------------------------------------------------------------------------
-;; slimy-cave-entry.scm
+;; slimy-cavern-entry.scm
 ;;
 ;; This file defines the on-entry procedure executed whenever the player enters
 ;; the slimy cave. The purpose of this proc is to respawn some monsters in the
@@ -8,7 +8,7 @@
 
 (define (slimy-cavern-entry kplace kplayer)
   (display "slimy-cavern-entry")(newline)
-  (let ((slimes (filter obj-is-green-slime? (kern-place-get-objects kplace))))
+  (let ((slimes (filter is-green-slime? (kern-place-get-beings kplace))))
     (if (< (length slimes) 1)
         (psummon (mk-loc kplace 10 20)
                  mk-hill-troll

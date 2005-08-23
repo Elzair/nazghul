@@ -270,22 +270,17 @@
 (define (is-yellow-slime? kchar)
   (is-species? kchar sp_yellow_slime))
 
-(define (obj-is-green-slime? kobj)
-  (and (obj-is-char? kobj)
-       (eqv? (kern-char-get-species kobj) sp_green_slime)))
-
-(define (char-is-spider? kchar)
-  (eqv? (kern-char-get-species kchar) sp_spider))
+(define (is-green-slime? kchar)
+  (is-species? kchar sp_green_slime))
 
 (define (is-spider? kchar)
-  (let ((species (kern-char-get-species kchar)))
-    (or (eqv? species sp_spider)
-        (eqv? species sp_queen_spider))))
+  (or (is-species? kchar sp_spider)
+      (is-species? kchar sp_queen_spider)))
 
-(define (char-is-troll? kchar)
-  (eqv? (kern-char-get-species kchar) sp_troll))
+(define (is-troll? kchar)
+  (is-species? kchar sp_troll))
 
-(define (char-is-goblin? kchar)
+(define (is-goblin? kchar)
   (is-species? kchar sp_goblin))
 
 ;;----------------------------------------------------------------------------
@@ -304,7 +299,7 @@
     (kern-log-msg "A slime emerges from the ooze!")
     (mk-green-slime))
   (let* ((kplace (loc-place (kern-obj-get-location kstepper)))
-         (slimes (filter obj-is-green-slime? (kern-place-get-objects kplace))))
+         (slimes (filter is-green-slime? (kern-place-get-beings kplace))))
     (if (< (length slimes) 1)
         (psummon (slime-gen-target-loc kgen)
                  mkslime
