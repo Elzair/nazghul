@@ -3959,39 +3959,6 @@ KERN_API_CALL(kern_obj_heal)
         return sc->NIL;
 }
 
-static int kern_in_los_internal(struct place *p1, int x1, int y1,
-                                struct place *p2, int x2, int y2)
-{
-        char *vmask;
-        int x3, y3;
-
-        /* Get the vmask for the origin (viewer's coords) */
-        vmask = vmask_get(p1, x1, y1);
-
-        /* Translate (x2, y2) into vmask coordinates. Notationally, let:
-
-              a = vector from place origin to (x1, y1)
-              b = vector from place origin to (x2, y2)
-              o = vector from place origin to vmask origin
-
-           We already know a, b and (a - o) = (VMASK_W/2, VMASK_H/2). We need
-           to solve for (b - o) and then wrap if the place supports wrapping.
-
-              b - a + (a - o) = b - o
-        */
-
-        x3 = place_wrap_x(p1, x2 - x1 + VMASK_W/2);
-        y3 = place_wrap_y(p1, y2 - y1 + VMASK_H/2);
-
-        if (x3 < 0 ||
-            y3 < 0 ||
-            x3 >= VMASK_W ||
-            y3 >= VMASK_H)
-                return 0;
-
-        return vmask[x3 + y3 * VMASK_W];
-}
-
 static int kern_filter_being(Object *obj, struct kern_append_info *info)
 {
         return (obj->getLayer() == being_layer);
@@ -4014,7 +3981,7 @@ static int kern_filter_visible_hostile(Object *obj,
                 return 0;
 
         /* Filter out objects not in los of the subject */
-        if (! kern_in_los_internal(subj->getPlace(),subj->getX(),subj->getY(),
+        if (! place_in_los(subj->getPlace(),subj->getX(),subj->getY(),
                                    obj->getPlace(),obj->getX(),obj->getY()))
                 return 0;
 
@@ -4866,7 +4833,7 @@ KERN_API_CALL(kern_in_los)
                 return sc->F;
         }
 
-        return kern_in_los_internal(p1, x1, y1, p2, x2, y2) ? sc->T : sc->F;
+        return place_in_los(p1, x1, y1, p2, x2, y2) ? sc->T : sc->F;
 }
 
 KERN_API_CALL(kern_map_set_peering)

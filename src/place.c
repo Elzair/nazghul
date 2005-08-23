@@ -34,6 +34,7 @@
 #include "session.h"
 #include "log.h"
 #include "factions.h"
+#include "vmask.h"
 
 // #define DEBUG
 // #undef debug_h
@@ -2116,145 +2117,35 @@ struct place *place_get_neighbor(struct place *place, int dir)
         }
 }
 
-
-#ifdef MAP_REGIONS
-
-static void place_merge_region_terrain_maps(struct place *place)
+int place_in_los(struct place *p1, int x1, int y1,
+                   struct place *p2, int x2, int y2)
 {
-        int x, y, i;
-        int tmap_w, tmap_h;
-        struct terrain_palette *tmap_pal;
-        int dx, dy;
+        char *vmask;
+        int x3, y3;
 
-        struct terrain_map *map;
+        /* Get the vmask for the origin (viewer's coords) */
+        vmask = vmask_get(p1, x1, y1);
 
-        tmap_w   = place->rmap->w * place->rmap->map[0]->map->w;
-        tmap_h   = place->rmap->h * place->rmap->map[0]->map->h;
-        tmap_pal = place->rmap->map[0]->map->palette;
+        /* Translate (x2, y2) into vmask coordinates. Notationally, let:
 
-        place->terrain_map = terrain_map_new(NULL, tmap_w, tmap_h, tmap_pal);
+              a = vector from place origin to (x1, y1)
+              b = vector from place origin to (x2, y2)
+              o = vector from place origin to vmask origin
 
-        for (dy = 0, dx = 0, i = 0, y = 0; y < place->rmap->h; y++, dy += tmap_h) {
-                for (x = 0; x < place->rmap->w; x++, i++, dx += tmap_w) {
-                        terrain_map_blit(place->terrain_map, dx, dy, 
-                                         place->rmap->map[i]->map, 0, 0, 
-                                         tmap_w, tmap_h);
-                }
-        }
-}
+           We already know a, b and (a - o) = (VMASK_W/2, VMASK_H/2). We need
+           to solve for (b - o) and then wrap if the place supports wrapping.
 
-static void place_merge_region_objects(struct place *place, region_t *region)
-{
-        struct list *elem;
+              b - a + (a - o) = b - o
+        */
 
-        elem = region->objects.next;
-        while (elem != &region->objects) {
-                Object *obj = outcast(elem, Object, container_link.key);
-                obj->relocate(region->loc.place, region->loc.x, region->loc.y);
-        }
-}
+        x3 = place_wrap_x(p1, x2 - x1 + VMASK_W/2);
+        y3 = place_wrap_y(p1, y2 - y1 + VMASK_H/2);
 
-static int regions_map_is_compatible(region_map_t *rmap)
-{
-        int x;
-        int y;
-        int i;
-
-        for (i= 0, y = 0; r < rmap->h; y++) {
-                for (x = 0; x < rmap->w; x++, i++) {
-                        if (! regions_are_compatible(rmap[0], rmap[i]))
-                                return 0;
-                }
-        }
-
-        return 1;
-}
-
-static void place_bind_rmap(struct place *place, region_map_t *rmap)
-{
-        int x;
-        int y;
-        int i;
-        int w;
-        int h;
-
-        place->rmap = rmap;
-
-        w = region_w(rmap->map[0]);
-        h = region_h(rmap->map[0]);
-
-        for (i= 0, y = 0; r < rmap->h; y++) {
-                for (x = 0; x < rmap->w; x++, i++) {
-                        region_t *region = rmap->map[i];
-                        region->loc.place = place;
-                        region->loc.x     = x * w;
-                        region->loc.y     = y * h;
-                }
-        }
-}
-
-int regions_are_compatible(region_t *a, region_t *b)
-{
-        if (terrain_map_palette(region_map(a)) !=
-            terrain_map_palette(region_map(b)))
+        if (x3 < 0 ||
+            y3 < 0 ||
+            x3 >= VMASK_W ||
+            y3 >= VMASK_H)
                 return 0;
 
-        if (region_w(a) != region_w(b))
-                return 0;
-
-        if (region_h(a) != region_h(b))
-                return 0;
-        
-        return 1;
+        return vmask[x3 + y3 * VMASK_W];
 }
-
-struct place *place_new(char *tag,char *name, struct sprite *sprite,
-                        region_map_t *rmap,
-                        int wraps,
-                        int underground,
-                        int wilderness,
-                        int wilderness_combat)
-{
-	struct place *place;
-
-        assert(region_map_is_compatible(rmap));
-
-	CREATE(place, struct place, 0);
-
-	place->tag = strdup(tag);
-        assert(place->tag);
-
-	place->name = strdup(name);
-        assert(place->name);
-
-	place->objects = hash_create(31);
-        assert(place->objects);
-
-        place->magic = PLACE_MAGIC;
-        place->sprite = sprite;
-
-        place->scale = wilderness ? WILDERNESS_SCALE : NON_WILDERNESS_SCALE;
-	place->original_terrain_map = terrain_map;
-	place->wraps = wraps;
-        place->underground = underground;
-        place->wilderness = wilderness;
-        place->is_wilderness_combat = wild_combat;
-
-	list_init(&place->vehicles);
-        place_init_turn_list(&place->turn_list);
-        list_init(&place->subplaces);
-        list_init(&place->container_link);
-        place->turn_elem = &place->turn_list;
-
-        place_set_default_edge_entrance(place);
-
-        place_bind_rmap(place, rmap);
-        place_merge_region_terrain_maps(place);
-        place_merge_region_objects(place);
-        
-
-	return place;
-
-}
-
-#endif /* MAP_REGIONS */
