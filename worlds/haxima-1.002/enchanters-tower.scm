@@ -78,7 +78,7 @@
   ;;(put (mk-mongen t_mage_guard_gen 0 1) 8 15)
 
   ;; west guardhouse
-  (put (mk-gate-guard 'enchtwr-lever-west) 6 14)
+  (put (mk-gate-guard 'enchtwr-lever-west) 9 16)
   (put (mk-gate-guard-gen 'char-is-gate-guard? 
                           'mk-gate-guard 
                           'enchtwr-lever-west) 6 14)
