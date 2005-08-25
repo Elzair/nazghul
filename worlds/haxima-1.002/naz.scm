@@ -97,10 +97,13 @@
 
 ;; Generic proc to summon other beings. Used by spells and some special
 ;; effects.
-(define (summon origin mk-critter count)
+(define (summon origin mk-critter faction count)
   (define (run-loop n)
     (if (= n 0) nil
-        (let* ((critter (kern-obj-set-temporary (mk-critter) #t))
+        (let* ((critter (kern-obj-set-temporary (kern-being-set-base-faction 
+                                                 (mk-critter) 
+                                                 faction) 
+                                                #t))
                (loc (pick-loc origin critter)))
           (cond ((null? loc) nil)
                 (else
@@ -145,21 +148,42 @@
 
 ;; Check if an object is hostile toward a character
 (define (is-hostile? kbeing kobj)
-  (and (kern-obj-is-being? kobj)
-       (kern-being-is-hostile? kbeing kobj)))
+  (kern-being-is-hostile? kbeing kobj))
+
+;; Check if an object is allied with a character
+(define (is-ally? kbeing kobj)
+  (kern-being-is-ally? kbeing kobj))
 
 ;; Find all characters hostile to the given character
 (define (all-hostiles kchar)
   (filter (lambda (kobj) (is-hostile? kchar kobj))
-          (kern-place-get-objects (loc-place (kern-obj-get-location kchar)))))
+          (kern-place-get-beings (loc-place (kern-obj-get-location kchar)))))
+
+;; Find all friendlies
+(define (all-allies kchar)
+  (filter (lambda (kobj) (is-ally? kchar kobj))
+          (kern-place-get-beings (loc-place (kern-obj-get-location kchar)))))
+  
+
+;; Count the number of hostiles
+(define (num-hostiles kchar)
+  (length (all-hostiles kchar)))
+
+;; Count the number of friendlies
+(define (num-allies kchar)
+  (length (all-allies kchar)))
 
 ;; Find all beings hostile 
 (define (all-visible-hostiles kbeing)
   (kern-being-get-visible-hostiles kbeing))
 
+;; Find all allies
+(define (all-visible-allies kbeing)
+  (kern-being-get-visible-allies kbeing))
+
 ;; Find all the characters in a place
 (define (all-chars kplace)
-  (filter obj-is-char? (kern-place-get-objects kplace)))
+  (kern-place-get-beings kplace))
 
 (define (all-in-range origin radius objlst)
   (filter (lambda (kobj) (<= (kern-get-distance origin 
@@ -479,3 +503,36 @@ define (blit-maps kmap . blits)
   (original-load file))
 
 (define (put obj x y) (list obj x y))
+
+;; lookup-spell-by-handler -- find a spell in the list of all spells
+(define (lookup-spell handler)
+  (define (search-spells slist)
+    (if (null? slist)
+        nil
+        (let ((spell (car slist)))
+          (if (eqv? (spell-handler spell)
+                    handler)
+              spell
+              (search-spells (cdr slist))))))
+  (search-spells spells))
+
+;; can-cast -- check if a char has enough mana to cast a spell
+(define (can-cast? kchar handler)
+  (let ((spell (lookup-spell handler)))
+    (if (null? spell)
+        #f
+        (and (>= (kern-char-get-mana kchar)
+                 (spell-cost spell))
+             (>= (kern-char-get-level kchar)
+                 (spell-level spell))))))
+  
+;; cast - cast a spell which requires no args if possible, assumes kchar has
+;; enough mana
+(define (cast0 kchar spell)
+  (apply (spell-handler spell) (list kchar))
+  (kern-char-dec-mana kchar (spell-cost spell))
+  (kern-obj-dec-ap kchar (spell-ap spell))
+  (kern-log-msg (kern-obj-get-name kchar) 
+                " casts " 
+                (spell-name spell)))
+  

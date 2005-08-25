@@ -1,7 +1,7 @@
 ;;----------------------------------------------------------------------------
 ;; Constants
 ;;----------------------------------------------------------------------------
-(define zane-start-lvl 3)
+(define zane-start-lvl 8)
 
 ;;----------------------------------------------------------------------------
 ;; Schedule
@@ -174,10 +174,10 @@
      s_companion_ranger ;;..sprite
      faction-men ;;..faction
      +1 ;;...........custom strength modifier
-     +1 ;;...........custom intelligence modifier
+     0 ;;...........custom intelligence modifier
      +1 ;;...........custom dexterity modifier
-     0 ;;............custom base hp modifier
-     0 ;;............custom hp multiplier (per-level)
+     +1 ;;............custom base hp modifier
+     +1 ;;............custom hp multiplier (per-level)
      0 ;;............custom base mp modifier
      0 ;;............custom mp multiplier (per-level)
      (max-hp sp_human oc_ranger zane-start-lvl 0 0) ;;..current hit points

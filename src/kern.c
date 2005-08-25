@@ -3998,6 +3998,40 @@ static int kern_filter_visible_hostile(Object *obj,
         return 1;
 }
 
+static int kern_filter_visible_allies(Object *obj, 
+                                      struct kern_append_info *info)
+{
+        class Being *subj;
+
+        /* Extract a pointer to the subject looking for hostiles */
+        subj = (class Being *)info->data;
+
+        /* Filter out non-beings */
+        if (obj->getLayer() != being_layer)
+                return 0;
+
+        /* Filter out non-allies */
+        if (! are_allies(subj, (class Being*)obj))
+                return 0;
+
+        /* Filter out objects not in los of the subject */
+        if (! place_in_los(subj->getPlace(),subj->getX(),subj->getY(),
+                                   obj->getPlace(),obj->getX(),obj->getY()))
+                return 0;
+
+        /* Filter out object not in the vision radius of the subject */
+        if (place_flying_distance(subj->getPlace(),subj->getX(),subj->getY(),
+                                  obj->getX(),obj->getY())
+            > subj->getVisionRadius())
+                return 0;
+
+        /* Filter out invisible objects */
+        if (! obj->isVisible())
+                return 0;
+
+        return 1;
+}
+
 static void kern_append_object(Object *obj, void *data)
 {
         pointer cell;
@@ -4222,6 +4256,25 @@ KERN_API_CALL(kern_being_get_visible_hostiles)
 
         return kern_place_for_each_object(sc, subj->getPlace(), 
                                           kern_filter_visible_hostile,
+                                          subj);
+}
+
+KERN_API_CALL(kern_being_get_visible_allies)
+{
+        Object *subj;
+
+        /* Unpack the subject */
+        subj = unpack_obj(sc, &args, "kern-place-get-visible-allies");
+        if (!subj)
+                return sc->NIL;
+
+        if (! subj->getPlace()) {
+                rt_err("kern-place-get-visible-allies: null place");
+                return sc->NIL;
+        }
+
+        return kern_place_for_each_object(sc, subj->getPlace(), 
+                                          kern_filter_visible_allies,
                                           subj);
 }
 
@@ -4618,6 +4671,23 @@ KERN_API_CALL(kern_being_is_hostile)
         }
 
         return are_hostile(one, another) ? sc->T : sc->F;
+}
+
+KERN_API_CALL(kern_being_is_ally)
+{
+        class Being *one, *another;
+
+        if (unpack(sc, &args, "pp", &one, &another)) {
+                rt_err("kern-being-is-ally: bad args");
+                return sc->F;
+        }
+
+        if (! one || ! another) {
+                rt_err("kern-being-is-ally: null character");
+                return sc->F;                
+        }
+
+        return are_allies(one, another) ? sc->T : sc->F;
 }
 
 KERN_API_CALL(kern_add_xray_vision)
@@ -5672,6 +5742,18 @@ KERN_API_CALL(kern_char_get_hp)
         return scm_mk_integer(sc, character->getHp());
 }
 
+KERN_API_CALL(kern_char_get_level)
+{
+        class Character *character;
+
+        /* unpack the character */
+        character = (class Character*)unpack_obj(sc, &args, "kern-char-get-level");
+        if (!character)
+                return sc->NIL;
+
+        return scm_mk_integer(sc, character->getLevel());
+}
+
 KERN_API_CALL(kern_char_get_strength)
 {
         class Character *character;
@@ -6409,7 +6491,9 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-being-get-base-faction", kern_being_get_base_faction);
         API_DECL(sc, "kern-being-get-current-faction", kern_being_get_current_faction);
         API_DECL(sc, "kern-being-get-visible-hostiles", kern_being_get_visible_hostiles);
+        API_DECL(sc, "kern-being-get-visible-allies", kern_being_get_visible_allies);
         API_DECL(sc, "kern-being-is-hostile?", kern_being_is_hostile);
+        API_DECL(sc, "kern-being-is-ally?", kern_being_is_ally);
         API_DECL(sc, "kern-being-pathfind-to", kern_being_pathfind_to);
         API_DECL(sc, "kern-being-set-base-faction", kern_being_set_base_faction);
 
@@ -6421,6 +6505,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-char-charm", kern_char_charm);
         API_DECL(sc, "kern-char-get-hp", kern_char_get_hp);
         API_DECL(sc, "kern-char-get-inventory", kern_char_get_inventory);
+        API_DECL(sc, "kern-char-get-level", kern_char_get_level);
         API_DECL(sc, "kern-char-get-mana", kern_char_get_mana);
         API_DECL(sc, "kern-char-get-party", kern_char_get_party);
         API_DECL(sc, "kern-char-get-species", kern_char_get_species);

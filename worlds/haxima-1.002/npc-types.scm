@@ -92,6 +92,31 @@
 ;; NPC Type Constructors
 ;;----------------------------------------------------------------------------
 
+(define (mk-ranger)
+  (kern-char-arm-self
+   (mk-stock-char
+    "a ranger" ;;........name
+    sp_human ;;........species
+    oc_archer ;;........occupation
+    s_companion_ranger ;;............sprite
+    faction-men ;;.....faction
+    nil ;;..............custom ai (optional)
+    
+    ;;..................container (and contents, used to arm char)
+    (mk-chest
+     nil
+     (mk-contents (roll-to-add 100 "1"     t_sword)
+                  (roll-to-add 50  "1"     t_bow)
+                  (roll-to-add 50  "1d20"  t_arrow)
+                  (roll-to-add 100 "1"     t_leather_helm)
+                  (roll-to-add 100 "1"     t_armor_leather)
+                  (roll-to-add 100 "1d3-1" t_heal_potion)))
+
+    nil ;;...............readied arms (in addition to container contents)
+    nil ;;...............effects
+    nil ;;...............conversation
+    )))
+
 (define (mk-goblin-raider)
   (kern-char-arm-self
    (mk-stock-char

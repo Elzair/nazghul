@@ -75,6 +75,7 @@
           (or (ai-attack-target kchar ktarg)
               (ai-pathfind-to-target kchar ktarg))))))
 
+
 ;; Bandit AI --------------------------------------------------
 
 (define bandit-taunts 

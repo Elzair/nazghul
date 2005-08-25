@@ -44,10 +44,49 @@
        (method 'hail gate-guard-hail)
        ))
 
+;;----------------------------------------------------------------------------
+;; Mage Guard AI
+;;
+;; FIXME: when and if mundane gate guards are added don't hardcode the
+;; gate-guard AI to use this "sub"-AI
+;;----------------------------------------------------------------------------
+(define (need-more-troops? kchar)
+  (> (length (all-visible-hostiles kchar)) 
+     (length (all-visible-allies kchar))))
+
+(define (mguard-cast-spell kchar ktarg)
+  (if (and (need-more-troops? kchar)
+           (> (kern-char-get-mana kchar) 4))
+      (begin
+        (kern-log-msg "The mage guard summons help!")
+        (summon (kern-obj-get-location ktarg) 
+                mk-ranger
+                (kern-being-get-current-faction kchar)
+                (kern-dice-roll "1d3"))
+        (kern-char-dec-mana kchar 4)
+        (kern-obj-dec-ap kchar 4)
+        #t)
+      ;; don't need or can't summon more troops
+      (if (and (is-undead? ktarg)
+               (can-cast? kchar an-xen-corp))
+          (begin
+            (cast0 kchar (lookup-spell an-xen-corp))
+            #t)
+          ;; don't need or can't repel undead
+          #f)))
+
+(define (mguard-ai kchar)
+  (let ((ktarg (ai-select-target kchar)))
+    (if (null? ktarg)
+        (ai-wander kchar)
+        (or (mguard-cast-spell kchar ktarg)
+            (ai-attack-target kchar ktarg)
+            (ai-pathfind-to-target kchar ktarg)))))
 
 ;;----------------------------------------------------------------------------
 ;; AI
 ;;----------------------------------------------------------------------------
+
 (define (guard-is-holding-gate-open? guard)
   (> (gate-guard-gate-timer guard) 0))
 
@@ -83,13 +122,17 @@
          (kgate (eval (gate-guard-gate-tag guard))))
     (if (guard-too-far-from-gate? kchar kgate)
         (guard-return-to-post kchar kgate)
-        (if (and (hostiles-visible? kchar)
-                 (gate-is-open? kgate))
-            (guard-close-gate! guard kgate)
+        (if (hostiles-visible? kchar)
+            (if (gate-is-open? kgate)
+                (guard-close-gate! guard kgate)
+                ;; FIXME: shouldn't assume gate-guard is a mage, fetch "sub"-AI
+                ;; from gob
+                (mguard-ai kchar))
             (if (guard-is-holding-gate-open? guard)
                 (guard-dec-gate-timer! guard)
                 (if (gate-is-open? kgate)
-                    (guard-start-gate-timer! guard)))))))
+                    (guard-start-gate-timer! guard)
+                    ))))))
 
 ;;----------------------------------------------------------------------------
 ;; Constructor

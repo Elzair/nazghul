@@ -7,8 +7,8 @@
              2.0                  ; magic 
              -5                   ; hp_mod 
              +0                   ; hp_mult 
-             +30                  ; mp_mod 
-             +15                  ; mp_mult 
+             +3                   ; mp_mod 
+             +2                   ; mp_mult 
              -1                   ; hit_mod 
              -1                   ; def_mod 
              -1                   ; dam_mod 
@@ -49,8 +49,8 @@
              2.0                  ; magic 
              -1                   ; hp_mod 
              +0                   ; hp_mult 
-             +20                  ; mp_mod 
-             +10                  ; mp_mult 
+             +1                   ; mp_mod 
+             +1                   ; mp_mult 
              0                    ; hit_mod 
              0                    ; def_mod 
              0                    ; dam_mod 
@@ -63,8 +63,8 @@
              0.0                  ; magic 
              +2                   ; hp_mod 
              +2                   ; hp_mult 
-             -10                  ; mp_mod 
-             -5                   ; mp_mult 
+             0                    ; mp_mod 
+             0                    ; mp_mult 
              +2                   ; hit_mod 
              -1                   ; def_mod 
              +2                   ; dam_mod 
@@ -77,7 +77,7 @@
              0.0                  ; magic 
              +1                   ; hp_mod 
              +1                   ; hp_mult 
-             0                   ; mp_mod 
+             0                    ; mp_mod 
              0                    ; mp_mult 
              +1                   ; hit_mod 
              -1                   ; def_mod 

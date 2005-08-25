@@ -1766,7 +1766,7 @@ void ObjectType::use(Object *user)
 
 int ObjectType::cast(Object *caster)
 {
-        return closure_exec(gifc, "ypp", "cast", this, caster);
+        return closure_exec(gifc, "yp", "cast", caster);
 }
 
 void ObjectType::get(Object *obj, Object *getter)

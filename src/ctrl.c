@@ -1,4 +1,3 @@
-//
 // nazghul - an old-school RPG engine
 // Copyright (C) 2002, 2003 Gordon McNutt
 //
@@ -917,7 +916,76 @@ static int ctrl_pathfind_between_objects(class Object *source,
         return 1;
 }
 
+static int ctrl_too_close_to_target(class Character *character, 
+                                    class Character *target)
+{
+        int distance;
 
+        distance = place_flying_distance(character->getPlace(), 
+                                         character->getX(), character->getY(), 
+                                         target->getX(), target->getY());
+
+        for (class ArmsType * weapon = character->enumerateWeapons(); 
+             weapon != NULL; weapon = character->getNextWeapon()) {
+
+                if (distance <= 1 &&
+                    character->hasAmmo(weapon) &&
+                    weapon->isMissileWeapon()) {
+                        return 1;
+                }
+        }
+
+        return 0;
+}
+
+static int ctrl_try_move_toward(class Character *character, int dx, int dy)
+{
+        int x = character->getX() + dx;
+        int y = character->getY() + dy;
+        
+        if (place_is_passable(character->getPlace(), x, y, character, 0)) {
+                character->move(dx, dy);
+                return 1;
+        }
+
+        return 0;
+}
+
+static int ctrl_move_away_from_target(class Character *character, 
+                                      class Character *target)
+{
+        /* first try moving directly away from the target */
+        int dx = character->getX() - target->getX();
+        int dy = character->getY() - target->getY();
+        int x, y;
+
+        /* normalize vector */
+        dx = dx > 0 ? 1 : (dx < 0 ? -1 : 0);
+        dy = dy > 0 ? 1 : (dy < 0 ? -1 : 0);
+
+        /* disallow diagonal moves */
+        if (dx == 0 || dy == 0) {
+                if (ctrl_try_move_toward(character, dx, dy))
+                        return 1;
+        }
+
+        /* try another vector */
+        if (dx != 0) {
+                if (ctrl_try_move_toward(character, 0, 1))
+                        return 1;
+                if (ctrl_try_move_toward(character, 0, -1))
+                        return 1;
+        }
+
+        if (dy != 0) {
+                if (ctrl_try_move_toward(character, 1, 0))
+                        return 1;
+                if (ctrl_try_move_toward(character, -1, 0))
+                        return 1;
+        }
+
+        return 0;
+}
 
 static bool ctrl_attack_target(class Character *character, 
                                class Character *target)
@@ -1111,6 +1179,12 @@ static void ctrl_idle(class Character *character)
                 return;
         }
         
+        if (ctrl_too_close_to_target(character, target)) {
+                if (! ctrl_move_away_from_target(character, target))
+                        ctrl_wander(character);
+                return;
+        }
+
         // -------------------------------------------------------------------
         // Then try force.
         // -------------------------------------------------------------------

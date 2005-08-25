@@ -45,7 +45,7 @@ BEGIN_DECL
 #define dtable_set_upper_bound(tab,lvl) ((tab)->upper_bound = (lvl))
 
 #define dtable_hostile(tab)             ((tab)->hostile)
-#define dtable_allies(tab)              ((tab)->hostile)
+#define dtable_allies(tab)              ((tab)->allies)
 
 struct dtable {
         int n_factions;

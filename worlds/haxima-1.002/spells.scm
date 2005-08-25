@@ -125,17 +125,6 @@
          nil)
         (else ((kobj-ifc target) signal target caster))))
 
-(define (cast-summon-spell origin mk-critter count)
-  (define (run-loop n)
-    (if (= n 0) nil
-        (let* ((critter (kern-obj-set-temporary (mk-critter) #t))
-               (loc (pick-loc origin critter)))
-          (cond ((null? loc) nil)
-                (else
-                 (kern-obj-put-at critter loc)
-                 (run-loop (- n 1)))))))
-  (run-loop count))
-
 (define (cast-bimodal caster proc)
   (define (cast-it target)
     (cond ((null? target) nil)
@@ -275,47 +264,47 @@
 ;; get called whenever a spell is cast.
 ;; ----------------------------------------------------------------------------
 
-(define (an-nox kspell caster)
+(define (an-nox  caster)
   (let ((target (kern-ui-select-party-member)))
     (if (not (null? target))
         (kern-obj-remove-effect target ef_poison))))
 
-(define (an-zu kspell caster)
+(define (an-zu  caster)
   (let ((target (kern-ui-select-party-member)))
     (if (not (null? target))
         (begin
           (kern-obj-remove-effect target ef_sleep)
           (kern-char-set-sleep target #f)))))
 
-(define (grav-por kspell caster)
+(define (grav-por  caster)
   (cast-missile-spell caster 8 t_arrow))
 
-(define (in-lor kspell caster)
+(define (in-lor  caster)
   (kern-obj-add-effect caster ef_light nil)
   result-ok)
 
-(define (an-xen-bet kspell caster)
+(define (an-xen-bet  caster)
   (kern-obj-add-effect caster ef_spider_calm nil)
   result-ok)
 
-(define (mani kspell caster)
+(define (mani  caster)
   (cast-heal-spell caster "2d20"))
 
-(define (sanct-nox kspell caster)
+(define (sanct-nox  caster)
   (let ((target (kern-ui-select-party-member)))
     (if (not (null? target))
         (kern-obj-add-effect target ef_temporary_poison_immunity nil))))
   
 
-(define (an-sanct kspell caster)
+(define (an-sanct  caster)
   (let ((loc (kern-obj-get-location caster)))
     (cast-signal-spell caster 'unlock (ui-target loc 1 (mk-ifc-query 'unlock)))))
   
-(define (sanct kspell caster)
+(define (sanct  caster)
   (let ((loc (kern-obj-get-location caster)))
     (cast-signal-spell caster 'lock (ui-target loc 1 (mk-ifc-query 'lock)))))
 
-(define (an-xen-corp kspell caster)
+(define (an-xen-corp  caster)
   (define (is-undead-char? kobj)
     (and (obj-is-char? kobj)
          (species-is-undead? (kern-char-get-species kobj))))
@@ -330,42 +319,43 @@
                         (else (map repel all-undead-combatants)))))))
   #t) ;; always succeeds
 
-(define (in-wis kspell caster)
+(define (in-wis  caster)
   (let ((loc (kern-obj-get-location caster)))
     (kern-print "You are in " (kern-place-get-name (car loc)) ":lat=" (cadr loc) " long=" (caddr loc) "\n")))
 
-(define (kal-xen kspell caster)
-  (cast-summon-spell (kern-obj-get-location caster)
-                     (lambda () (mk-animal " a snake"
-                                           sp_snake 
-                                           s_snake 
-                                           faction-player))
-                     (kern-dice-roll "1d4")))
+(define (kal-xen  caster)
+  (summon (kern-obj-get-location caster)
+          (lambda () (mk-animal " a snake"
+                                sp_snake 
+                                s_snake 
+                                faction-player))
+          (kern-being-get-current-faction caster)
+          (kern-dice-roll "1d4")))
 
-(define (rel-hur kspell caster)
+(define (rel-hur  caster)
   (let ((dir (ui-get-direction)))
     (cond ((null? dir) nil)
           (else (kern-set-wind dir (kern-dice-roll "20d6"))))))
 
-(define (in-nox-por kspell caster)
+(define (in-nox-por  caster)
   (cast-missile-spell caster 8 t_poison_bolt))
   
-(define (in-flam-grav kspell caster)
+(define (in-flam-grav  caster)
   (cast-field-spell caster F_fire))
 
-(define (in-nox-grav kspell caster)
+(define (in-nox-grav  caster)
   (cast-field-spell caster F_poison))
 
-(define (in-zu-grav kspell caster)
+(define (in-zu-grav  caster)
   (cast-field-spell caster F_sleep))
 
-(define (vas-flam kspell caster)
+(define (vas-flam  caster)
   (cast-missile-spell caster 8 t_fireball))
 
-(define (vas-lor kspell caster)
+(define (vas-lor  caster)
   (kern-obj-add-effect caster ef_great_light nil))
 
-(define (an-grav kspell caster)
+(define (an-grav  caster)
   (define (is-field? kobj)
     (is-field-type? (kern-obj-get-type kobj)))
   (let ((field (ui-get-adjacent (kern-obj-get-location caster) is-field?)))
@@ -376,60 +366,61 @@
            (kern-map-repaint)
            ))))
 
-(define (uus-por kspell caster)
+(define (uus-por  caster)
   (cast-teleport-spell caster up))
 
-(define (des-por kspell caster)
+(define (des-por  caster)
   (cast-teleport-spell caster down))
 
-(define (in-sanct-grav kspell caster)
+(define (in-sanct-grav  caster)
   (cast-field-spell caster F_energy))
 
-(define (in-sanct kspell caster)
+(define (in-sanct  caster)
   (let ((party (kern-char-get-party caster)))
     (if (null? party) (kern-obj-add-effect caster ef_protection nil)
         (kern-obj-add-effect party ef_protection nil))))
 
-(define (wis-quas kspell caster)
+(define (wis-quas  caster)
   (kern-add-reveal 50))
 
-(define (in-ex-por kspell caster)
+(define (in-ex-por  caster)
   (let ((loc (kern-obj-get-location caster)))
     (display "in-ex-por")(newline)
     (cast-signal-spell caster 'magic-unlock (ui-target loc 1 (mk-ifc-query 'magic-unlock)))))
   
-(define (an-ex-por kspell caster)
+(define (an-ex-por  caster)
   (let ((loc (kern-obj-get-location caster)))
     (cast-signal-spell caster 'magic-lock (ui-target loc 1 (mk-ifc-query 'magic-lock)))))
 
-(define (in-bet-xen kspell caster)
-  (cast-summon-spell (kern-obj-get-location caster)
-                     (lambda () (mk-animal "an insect swarm"
-                                           sp_insect 
-                                           s_insects
-                                           faction-player))
-                     (kern-dice-roll "1d6")))
+(define (in-bet-xen  caster)
+  (summon (kern-obj-get-location caster)
+          (lambda () (mk-animal "an insect swarm"
+                                sp_insect 
+                                s_insects
+                                faction-player))
+          (kern-being-get-current-faction caster)
+          (kern-dice-roll "1d6")))
 
-(define (in-zu kspell caster)
+(define (in-zu  caster)
   (let ((hostiles (all-hostiles caster)))
     (cond ((null? hostiles) 
            (kern-print "No hostiles here!\n"))
           (else (map apply-sleep hostiles)))))
 
-(define (vas-mani kspell caster)
+(define (vas-mani  caster)
   (cast-heal-spell caster "4d20+20"))
 
-(define (rel-tym kspell caster)
+(define (rel-tym  caster)
   (kern-add-quicken (kern-dice-roll "3d6")))
 
 ;; ----------------------------------------------------------------------------
 ;; Sixth Circle
 ;; ----------------------------------------------------------------------------
-(define (in-an kspell caster) (kern-add-magic-negated (kern-dice-roll "3d6")))
+(define (in-an  caster) (kern-add-magic-negated (kern-dice-roll "3d6")))
 
-(define (wis-an-ylem kspell caster) (kern-add-xray-vision (kern-dice-roll "3d6")))
+(define (wis-an-ylem  caster) (kern-add-xray-vision (kern-dice-roll "3d6")))
 
-(define (an-xen-exe kspell caster)
+(define (an-xen-exe  caster)
    (let ((target (ui-target (kern-obj-get-location caster) 
                             8 
                             (lambda (kobj) (obj-is-char? kobj)))))
@@ -441,7 +432,7 @@
              result-ok
              result-no-effect))))
 
-(define (in-vas-por-ylem kspell caster)
+(define (in-vas-por-ylem  caster)
   (define (tremor kchar)
     (display "tremor")(newline)
     (cond ((kern-char-is-asleep? kchar) (kern-char-set-sleep kchar #f))
@@ -466,7 +457,7 @@
     (kern-map-set-jitter #f)
     (map wakeup foes)))
 
-(define (quas-an-wis kspell caster)
+(define (quas-an-wis  caster)
   (define (confuse kchar)
     (if (> (kern-dice-roll "2d20") 16)
         (kern-obj-add-effect kchar ef_charm (charm-mk faction-none))))
@@ -480,7 +471,7 @@
 ;; Seventh Circle
 ;; ----------------------------------------------------------------------------
 
-(define (in-nox-hur kspell caster)
+(define (in-nox-hur  caster)
   (define (poison-foe kobj)
     (if (is-hostile? caster kobj)
         (apply-poison kobj)))
@@ -488,7 +479,7 @@
                    poison-foe
                    F_poison))
 
-(define (in-zu-hur kspell caster)
+(define (in-zu-hur  caster)
   (define (lullaby-foe kobj)
     (if (is-hostile? caster kobj)
         (apply-sleep kobj)))
@@ -496,7 +487,7 @@
                    lullaby-foe
                    F_sleep))
 
-(define (in-quas-corp kspell caster)
+(define (in-quas-corp  caster)
   (define (repel kchar)
     (kern-char-set-fleeing kchar #t))
   (let ((foes (all-hostiles caster)))
@@ -505,7 +496,7 @@
            (map repel foes)))))
   
 
-(define (in-quas-wis kspell caster)
+(define (in-quas-wis  caster)
   (kern-map-set-peering #t)
   (kern-map-repaint)
   (kern-print "Hit a key when done gazing...\n")
@@ -513,12 +504,12 @@
   (kern-map-set-peering #f)
   (kern-map-repaint))
 
-(define (sanct-lor kspell caster)
+(define (sanct-lor  caster)
   (define (hide target)
     (kern-obj-add-effect target ef_invisibility nil))
   (cast-bimodal caster hide))
   
-(define (in-quas-xen kspell caster)
+(define (in-quas-xen  caster)
   (let ((target (ui-target (kern-obj-get-location caster) 1 obj-is-char?)))
     (if (null? target) nil
         (let* ((clone (kern-obj-clone target))
@@ -531,7 +522,7 @@
 ;; Eighth Circle
 ;; ----------------------------------------------------------------------------
 
-(define (in-flam-hur kspell caster)
+(define (in-flam-hur  caster)
   (define (flambe-foe kobj)
     (if (is-hostile? caster kobj)
         (burn kobj)))
@@ -539,7 +530,7 @@
                    flambe-foe
                    F_fire))
 
-(define (in-vas-grav-corp kspell caster)
+(define (in-vas-grav-corp  caster)
   (define (energize-foe kobj)
     (if (is-hostile? caster kobj)
         (burn kobj)))
@@ -547,21 +538,20 @@
                    energize-foe
                    F_energy))
 
-(define (an-tym kspell caster)
+(define (an-tym  caster)
   (kern-add-time-stop 512))
 
-(define (kal-xen-corp kspell caster)
-  (define (mk-skeleton)
-    (kern-being-set-base-faction (mk-skeletal-warrior) faction-player))
-  (cast-summon-spell (kern-obj-get-location caster)
-                     mk-skeleton
-                     (kern-dice-roll "1d4"))
+(define (kal-xen-corp  caster)
+  (summon (kern-obj-get-location caster)
+          mk-skeletal-warrior
+          (kern-being-get-current-faction caster)
+          (kern-dice-roll "1d4"))
   result-ok)
 
-(define (xen-corp kspell caster)
+(define (xen-corp  caster)
   (cast-missile-spell caster 6 deathball))
 
-(define (in-mani-corp kspell caster)
+(define (in-mani-corp  caster)
   (let ((target (kern-ui-select-party-member)))
     (if (null? target) nil
         (begin
@@ -569,7 +559,7 @@
           (apply-sleep target)
           #t))))
 
-(define (vas-rel-por kspell caster)
+(define (vas-rel-por  caster)
   (define (rmgate kobj)
     (moongate-close gate)
     (kern-obj-remove gate))
@@ -579,13 +569,20 @@
           (kern-obj-put-at gate loc)
           (moongate-open gate)))))
 
-(define (kal-xen-nox kspell caster)
-  (define (mk-aligned-slime)
-    (kern-being-set-base-faction (mk-green-slime) 
-                                 (kern-being-get-current-faction caster)))
-  (cast-summon-spell (kern-obj-get-location caster) 
-                     mk-aligned-slime
-                     (kern-dice-roll "1d4")))
+(define (kal-xen-nox  caster)
+  (summon (kern-obj-get-location caster) 
+          mk-green-slime
+          (kern-being-get-current-faction caster)
+          (kern-dice-roll "1d4")))
+
+;;----------------------------------------------------------------------------
+;; Spell accessors
+;;----------------------------------------------------------------------------
+(define (spell-name spell) (cadr spell))
+(define (spell-handler spell) (caddr spell))
+(define (spell-level spell) (list-ref spell 4))
+(define (spell-cost spell) (spell-level spell))
+(define (spell-ap spell) (spell-level spell))
 
 ;; ----------------------------------------------------------------------------
 ;; This is the table of spells.
@@ -607,7 +604,7 @@
    (list 'sanct_nox   "Sanct Nox spell"   sanct-nox   "SN"  2 context-any  (list nightshade garlic))
    (list 'an_sanct    "An Sanct spell"    an-sanct    "AS"  2 context-town (list sulphorous_ash blood_moss))
    (list 'sanct       "Sanct spell"       sanct       "S"   2 context-town (list sulphorous_ash spider_silk))
-   (list 'an_xen_corp "An Xen Corp spell" an-xen-corp "AXC" 2 context-town (list garlic sulphorous_ash))
+   (list 'an_xen_corp "An Xen Corp spell" an-xen-corp "AXC" 1 context-town (list garlic sulphorous_ash))
    (list 'in_wis      "In Wis spell"      in-wis      "IW"  2 context-any  (list nightshade))
    (list 'kal_xen     "Kal Xen spell"     kal-xen     "KX"  2 context-town (list spider_silk mandrake))
    (list 'rel_hur     "Rel Hur spell"     rel-hur     "RH"  2 context-any  (list sulphorous_ash blood_moss))

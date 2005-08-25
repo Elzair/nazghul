@@ -23,8 +23,8 @@
                  mmode-walk        ; passability
                  20                ; base hp
                  2                 ; hp per level
-                 10                ; base mp
-                 2                 ; mp per level
+                 0                 ; base mp
+                 1                 ; mp per level
                  s_corpse          ; sleep sprite
                  t_hands           ; natural (unarmed) weapon
                  #t                ; visible
@@ -43,7 +43,7 @@
                  8                 ; vision radius
                  mmode-phase       ; passability
                  10 5              ; hp mod/mult
-                 10 10             ; mp mod/mult
+                 3  1              ; mp mod/mult
                  s_corpse          ; sleep sprite
                  t_hands           ; natural (unarmed) weapon
                  #f                ; visible
@@ -62,7 +62,7 @@
                  14                ; vision radius
                  mmode-walk        ; passability
                  15 2              ; hp mod/mult
-                 10 10             ; mp mod/mult
+                 0 1               ; mp mod/mult
                  s_corpse          ; sleep sprite
                  t_hands           ; natural (unarmed) weapon
                  #t                ; visible
@@ -100,7 +100,7 @@
                  6                     ; vision radius
                  mmode-walk            ; pmask
                  15 1                  ; hp mod/mult
-                 20 20                 ; mp mod/mult
+                 8 0                   ; mp mod/mult
                  s_yellow_slime_asleep ; sleep sprite
                  t_acid_spray          ; unarmed weapon
                  #t                    ; visible
@@ -160,7 +160,7 @@
                  6                 ; vision radius
                  mmode-walk        ; passability
                  5 1               ; hp mod/mult
-                 20 10             ; mp mod/mult
+                 0 0               ; mp mod/mult
                  nil               ; sleep sprite
                  t_fangs           ; natural (unarmed) weapon
                  #t                ; visible
@@ -251,6 +251,9 @@
   (foldr (lambda (x undead) (or x (eqv? species undead)))
          #f undead-species-tags))
 
+(define (is-undead? kchar)
+  (species-is-undead? (kern-char-get-species kchar)))
+
 ;; ----------------------------------------------------------------------------
 ;; Species immunities
 ;; ----------------------------------------------------------------------------
@@ -282,6 +285,9 @@
 
 (define (is-goblin? kchar)
   (is-species? kchar sp_goblin))
+
+(define (is-skeleton? kchar)
+  (is-species? kchar sp_skeleton))
 
 ;;----------------------------------------------------------------------------
 ;; Trigger to generate slimes
