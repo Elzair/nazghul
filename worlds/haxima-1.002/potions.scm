@@ -23,7 +23,7 @@
 ;; mana (blue) potion
 (mk-potion 't_mana_potion "mana potion" s_mana_potion 
            (lambda (kpotion kuser)
-             (kern-char-dec-mana kuser (0 - (kern-dice-roll "2d10")))))
+             (kern-char-dec-mana kuser (- 0 (kern-dice-roll "2d10")))))
 
 ;; cure (green) potion
 (mk-potion 't_cure_potion "cure potion" s_cure_potion
@@ -38,4 +38,4 @@
 ;; invisibility (black) potion
 (mk-potion 't_inv_potion "invisibility potion" s_invisibility_potion
            (lambda (kpotion kuser)
-             (kern-obj-add-effect target ef_invisibility nil)))
+             (kern-obj-add-effect kuser ef_invisibility nil)))

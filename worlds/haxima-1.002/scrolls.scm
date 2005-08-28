@@ -4,10 +4,10 @@
 
 (kern-mk-sprite-set 'ss_scrolls 32 32 3 4 0 0 "scrolls.png")
 
-(kern-mk-sprite 's_an_tym_scroll          ss_scrolls 1 0 #f 0)
-(kern-mk-sprite 's_in_mani_corp_scroll    ss_scrolls 1 1 #f 0)
-(kern-mk-sprite 's_vas_rel_por_scroll     ss_scrolls 1 2 #f 0)
-(kern-mk-sprite 's_xen_corp_scroll        ss_scrolls 1 3 #f 0)
+(kern-mk-sprite 's_an_tym_scroll          ss_scrolls 1 0 #f 0) ;; stop time
+(kern-mk-sprite 's_in_mani_corp_scroll    ss_scrolls 1 1 #f 0) ;; resurrect
+(kern-mk-sprite 's_vas_rel_por_scroll     ss_scrolls 1 2 #f 0) ;; gate travel
+(kern-mk-sprite 's_xen_corp_scroll        ss_scrolls 1 3 #f 0) ;; kill
 
 (kern-mk-sprite 's_sanct_lor_scroll       ss_scrolls 1 4 #f 0)
 (kern-mk-sprite 's_in_quas_xen_scroll     ss_scrolls 1 5 #f 0) ;; clone
@@ -20,8 +20,9 @@
 (kern-mk-sprite 's_wis_quas_scroll        ss_scrolls 1 11 #f 0) ;; reveal
 
 (define (mk-scroll tag name sprite spell)
-  (mk-usable-item tag name sprite 1 spell))
-
+  (mk-usable-item tag name sprite 1 
+                  (lambda (kscrolltype kuser)
+                    (apply spell (list kuser)))))
 (mk-scroll 't_an_tym_scroll "An Tym scroll" s_an_tym_scroll an-tym)
 (mk-scroll 't_in_mani_corp_scroll "In Mani Corp scroll" s_in_mani_corp_scroll in-mani-corp)
 (mk-scroll 't_vas_rel_por_scroll "Vas Rel Por scroll" s_vas_rel_por_scroll vas-rel-por)

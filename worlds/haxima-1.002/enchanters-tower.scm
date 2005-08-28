@@ -21,7 +21,7 @@
             "%% .. .. %% tt || xx ,, ,, ,, ,, ,, ,, ,, ,, cc ,, ,, ,, ,, ,, ,, ,, && xx %% %% .. .. .. %% "
             "%% bb .. bb %% xx xx xx xx xx xx xx xx xx ,, cc ,, xx xx xx xx xx xx xx xx xx %% bb .. bb %% "
             ".. .. .. .. .. w+ ,, ,, ,, ,, xx ,, ,, x! ,, cc ,, x! ,, ,, xx ,, ,, ,, ,, w+ .. .. .. .. .. "
-            ".. .. .. .. .. cc cc cc cc ,, xx ,, ,, ,, ,, cc ,, ,, ,, ,, xx ,, cc cc cc cc .. .. .. .. .. "
+            ".. .. .. .. .. cc cc cc cc ,, xx ,, ,, ,, ,, cc ,, xx ,, ,, xx ,, cc cc cc cc .. .. .. .. .. "
             ".. .. .. .. .. w+ ,, ,, cc ,, xx ,, ,, xx ,, cc ,, xx ,, ,, xx ,, cc ,, ,, w+ .. .. .. .. .. "
             "%% bb .. bb %% xx xx x! cc x! xx xx xx xx ,, cc ,, xx xx xx xx x! cc x! xx xx %% bb .. bb %% "
             "%% %% %% %% %% %% w+ ,, cc ,, ,, ,, ,, ,, ,, cc ,, ,, ,, ,, ,, ,, cc ,, w+ tt %% %% %% %% %% "
@@ -49,8 +49,8 @@
 
 (kern-load "gate-guard.scm")
 
-;;(kern-load "enchanter.scm")
-;;(mk-enchanter-first-time 'ch_enchanter)
+(kern-load "enchanter.scm")
+(mk-enchanter-first-time 'ch_enchanter)
 
 ;;----------------------------------------------------------------------------
 ;; Place
@@ -75,51 +75,55 @@
   ;; characters
   (list ch_zane 0 0) 
 
-  ;;(put (mk-mongen t_mage_guard_gen 0 1) 8 15)
+  ;; magically locked doors at all entrances
+  (put (mk-magic-locked-door) 5 15)
+  (put (mk-magic-locked-door) 25 15)
+  (put (mk-magic-locked-door) 15 5)
+  (put (mk-magic-locked-door) 15 27)
+  
+  ;; dbg hack
+  ;; (put (kern-mk-obj t_poison_immunity_potion 1) 14 4)
+  ;; (put (kern-mk-obj t_in_ex_por_scroll 1) 16 4)
 
-  ;; west guardhouse
-  (put (mk-gate-guard 'enchtwr-lever-west) 9 16)
-  (put (mk-gate-guard-gen 'char-is-gate-guard? 
-                          'mk-gate-guard 
-                          'enchtwr-lever-west) 6 14)
-  (put (kern-tag 'enchtwr-port-west (mk-portcullis)) 5 15)
-  (put (kern-tag 'enchtwr-lever-west (mk-lever 'enchtwr-port-west)) 7 14)
-
-  ;; east guardhouse
-  (put (mk-gate-guard 'enchtwr-lever-east) 24 14)
-  (put (mk-gate-guard-gen 'char-is-gate-guard? 
-                          'mk-gate-guard 
-                          'enchtwr-lever-east) 24 14)
-  (put (kern-tag 'enchtwr-port-east (mk-portcullis)) 25 15)
-  (put (kern-tag 'enchtwr-lever-east (mk-lever 'enchtwr-port-east)) 23 14)
-
-  ;; south guardhouse
-  (put (mk-gate-guard 'enchtwr-lever-south) 16 26)
-  (put (mk-gate-guard-gen 'char-is-gate-guard? 
-                          'mk-gate-guard 
-                          'enchtwr-lever-south) 16 26)
-  (put (kern-tag 'enchtwr-port-south (mk-portcullis)) 15 27)
-  (put (kern-tag 'enchtwr-lever-south (mk-lever 'enchtwr-port-south)) 16 25)
-
-  ;; north guardhouse
-  (put (mk-gate-guard 'enchtwr-lever-north) 16 6)
-  (put (mk-gate-guard-gen 'char-is-gate-guard? 
-                          'mk-gate-guard 
-                          'enchtwr-lever-north) 16 6)
-  (put (kern-tag 'enchtwr-port-north (mk-portcullis)) 15 5)
-  (put (kern-tag 'enchtwr-lever-north (mk-lever 'enchtwr-port-north)) 16 7)
-
-  ;; portcullis's & levers for off-limit supply rooms
+  ;; portcullis's & levers for west store room
   (put (kern-tag 'enchtwr-port-4 (mk-portcullis)) 13 15)
-  (put (kern-tag 'enchtwr-port-5 (mk-portcullis)) 17 15)
   (put (mk-lever 'enchtwr-port-4) 21 9)
-  (put (mk-lever 'enchtwr-port-5) 22 9)
 
-  ;; slimes invade the south
-  (put (mk-mongen2 990 3 'is-green-slime? 'mk-green-slime nil) 4 16)
-  (put (mk-mongen2 990 3 'is-skeleton? 'mk-skeletal-warrior nil) 16 0)
+  ;; treasure in west store room
+  (put (mk-chest 
+        'burn-trap
+        (mk-contents (add-content 10 sulphorous_ash)
+                     (add-content 10 ginseng)
+                     (add-content 10 garlic)
+                     (add-content 10 spider_silk)
+                     (add-content 10 blood_moss)
+                     (add-content 10 black_pearl)
+                     (add-content 10 nightshade)
+                     (add-content 10 mandrake)))
+       11 14)
+  (put (mk-chest
+        'spike-trap
+        (mk-contents (add-content 10 t_heal_potion)
+                     (add-content 10 t_mana_potion)
+                     (add-content 5 t_cure_potion)
+                     (add-content 5 t_poison_immunity_potion)
+                     (add-content 1 t_inv_potion)))
+       11 15)
+  (put (mk-chest
+        'lightning-trap
+        (mk-contents (add-content 100 t_gold_coins)))
+       11 16)
 
-  (put (mk-green-slime) 30 30)
+  ;; treasure in east store room
+  (put (kern-mk-obj t_doom_staff 1) 19 14)
+  (put (kern-mk-obj t_xen_corp_scroll 1) 19 15)
+  (put (kern-mk-obj t_an_tym_scroll 1) 19 16)
+  (put (kern-mk-obj t_vas_rel_por_scroll 1) 18 14)
+  (put (kern-mk-obj t_in_vas_por_ylem_scroll 1) 18 15)
+  (put (kern-mk-obj t_gold_coins 500) 18 16)
+
+  (put (mk-bed) 21 11)
+  (put (mk-bed) 19 8)
 
   (put (mk-door) 15  8)
   (put (mk-door) 15 24)

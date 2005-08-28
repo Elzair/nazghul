@@ -36,7 +36,7 @@
           (foldr nearest
                  nil
                  (filter willattack?
-                         (kern-place-get-objects (loc-place loc)))))
+                         (kern-place-get-beings (loc-place loc)))))
         (let ((kparty (choose-npc-party))) 
           (if (not (null? kparty))
               (kern-ambush-while-camping kparty kplace))))))

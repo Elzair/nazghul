@@ -9,15 +9,16 @@
 ;; The schedule below is for the place "Enchanter's Tower Ground Floor"
 ;;----------------------------------------------------------------------------
 (kern-mk-sched 'sch_zane
-               (list 0  0  enchtwr-campsite        "sleeping")
+               (list 0  0  enchtwr-zane-bed        "sleeping")
                (list 6  0  enchtwr-campsite        "idle")
                (list 8  0  enchtwr-dining-room-1   "eating")
                (list 9  0  enchtwr-campsite        "idle")
                (list 12 0  enchtwr-dining-room-1   "eating")
-               (list 13 0  enchtwr-campsite        "idle")
+               (list 13 0  enchtwr-hall            "idle")
                (list 19 0  enchtwr-dining-room-1   "eating")
                (list 20 0  enchtwr-dining-room     "idle")
-               (list 22 0  enchtwr-campsite        "idle")
+               (list 21 0  enchtwr-campsite        "idle")
+               (list 22 0  enchtwr-zane-bed        "sleeping")
                )
 
 ;;----------------------------------------------------------------------------
@@ -65,52 +66,16 @@
        (method 'join (lambda (knpc kpc) 
                        (say knpc "Nay, my allegiance is to the wilds.")))
        
-       (method 'citi
-               (lambda (knpc kpc) 
-                 (say knpc "You will find cities to the south. I know little "
-                      "of them, save that Warlords perpetually squabble over "
-                      "them.")))
-       (method 'warl
-               (lambda (knpc kpc)
-                 (say knpc "Warlords come and go, but the Rangers are sworn "
-                      "forever to protect the Shard.")))
-       (method 'shar
-               (lambda (knpc kpc)
-                 (say knpc "The Shard is broken, and doomed. I will suffer "
-                      "its fate. If you do not wish to do the same then I "
-                      "suggest you find a way to leave.")))
-       (method 'brok
-               (lambda (knpc kpc)
-                 (say knpc "I have been north across the mountains and seen "
-                      "the stars where they do not belong. Go there, "
-                      "if you would understand.")))
-       (method 'doom
-               (lambda (knpc kpc)
-                 (say knpc "The land dies a slow death. The end is gradual, "
-                      "but it began long ago with the Sundering of the "
-                      "World.")))
-       (method 'sund
-               (lambda (knpc kpc)
-                 (say knpc "Ask the Enchanter of the Sundering. "
-                      "It is something known only to the Wise.")))
-       (method 'evil
-               (lambda (knpc kpc)
-                 (say knpc "The Fens spawn evil creatures. This Tower guards "
-                      "the passage to the Shrine and the cities of the "
-                      "south.")))
-       (method 'shrine
-               (lambda (knpc kpc)
-                 (say knpc "The Shrine houses a magical gate. Of that you "
-                      "know full well, for I can see you are a Pilgrim.")))
        (method 'ench
                (lambda (knpc kpc)
-                 (say knpc "The Enchanter is one of the Wise, and has little "
-                      "time or patience for uninvited guests. His mind is "
-                      "ever on the defense of the north.")))
+                 (say knpc "The Enchanter is one of the Wise, and has "
+                      "little time or patience for uninvited guests. His "
+                      "mind is ever on the defense of the north.")))
        (method 'fens
                (lambda (knpc kpc)
                  (say knpc "The Fens are a vast bog to the northwest. They "
-                      "are dangerous to travel unless one knows the way.")))
+                      "are dangerous to travel unless one knows the "
+                      "way.")))
        (method 'way
                (lambda (knpc kps)
                  (say knpc "I know many ways in and through the Fens. If you "
@@ -122,8 +87,8 @@
                       "creatures. Do you intend to travel them?")
                  (if (kern-conv-get-yes-no? kpc)
                      (begin
-                       (say knpc "Do you know how to make the poison immunity "
-                            "spell?")
+                       (say knpc "Do you know how to make the poison "
+                            "immunity spell?")
                        (if (kern-conv-get-yes-no? kpc)
                            (say knpc "Good. If you need the reagents I can "
                                 "sell them to you.")
@@ -140,16 +105,17 @@
                       "poison.")))
        (method 'poti
                (lambda (knpc kpc)
-                 (say knpc "I have some potions and reagents which I can sell "
-                      "you if you are in need.")))
+                 (say knpc "I have some potions and reagents which I can "
+                      "sell you if you are in need.")))
        (method 'coun
                (lambda (knpc kpc)
-                 (say knpc "If you travel the Fens take extra potions and be "
-                      "prepared to deal with monsters, even the undead.")))
+                 (say knpc "If you travel the Fens take extra potions and "
+                      "be prepared to deal with monsters, even the "
+                      "undead.")))
        (method 'mons
                (lambda (knpc kpc)
-                 (say knpc "Monsters from the Fen sometimes attack even here. "
-                      "This tower guards the passage south to the cities.")))
+                 (say knpc "The Fen is crawling with slimes, bandits and the "
+                      "undead. ")))
        (method 'reag
                (lambda (knpc kpc)
                  (say knpc "Many magical ingredients grow in the Fens, some "

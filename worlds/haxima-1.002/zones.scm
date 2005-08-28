@@ -1,8 +1,13 @@
 ;; Enchanter's Tower
 (define (mk-zone x y w h) (list 'p_enchanters_tower x y w h))
-(define enchtwr-campsite         (mk-zone  0  0  5   5))
-(define enchtwr-dining-room-1    (mk-zone  0  0  5   5))
-(define enchtwr-dining-room      (mk-zone  0  0  5   5))
+(define enchtwr-campsite         (mk-zone  4  4  5   5))
+(define enchtwr-dining-room-1    (mk-zone  9 11  1   1))
+(define enchtwr-dining-room-2    (mk-zone 11 11  1   1))
+(define enchtwr-dining-room      (mk-zone  8  8  5   5))
+(define enchtwr-bedroom-1        (mk-zone 18 11  5   2))
+(define enchtwr-hall             (mk-zone 11 18  9   6))
+(define enchtwr-ench-bed         (mk-zone 21 11  1   1))
+(define enchtwr-zane-bed         (mk-zone  7  6  1   1))
 
 ;; Bole
 (define (mk-zone x y w h) (list 'p_bole x y w h))
