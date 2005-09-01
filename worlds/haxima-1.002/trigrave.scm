@@ -222,6 +222,15 @@
                 (add-content 1 t_armor_plate)
                 (add-content 1 t_iron_helm))))
 
+(define jims-other-chest
+  (mk-chest
+   'bomb-trap ;; trap
+   (mk-contents (add-content 100 t_gold_coins)
+                (add-content 3 t_dagger)
+                (add-content 3 t_mace)
+                (add-content 3 t_sword)
+                )))
+
 (define earls-chest
   (make-invisible
    (mk-chest
@@ -290,8 +299,10 @@
   (list (mk-door)                                  24 6)
   (list (mk-locked-door)                           26 9)
   (list (kern-tag 'tiw-portcullis (mk-portcullis)) 28 9)
-  (list (mk-lever 'tiw-portcullis)                 25 10)
-  (list jims-chest                                 25 11)
+  (list (mk-lever 'tiw-portcullis)                 25 11)
+  (list (mk-bed)                                   25 10)
+  (put jims-chest                                  28 11)
+  (put jims-other-chest                            29 11)
 
   ;; Lusty Juggs (tavern)
   (list (mk-door) 28 24)

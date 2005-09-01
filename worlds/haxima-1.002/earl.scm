@@ -71,14 +71,14 @@
        (method 'batt
                (lambda (knpc kpc)
                  (say knpc "Yep. I fought with Lord Calvin against the "
-                      "Orkish Horde!")))
+                      "Goblin Horde!")))
        (method 'calv
                (lambda (knpc kpc)
                  (say knpc "Now there was a warlord! Calvin conquered "
                       "everything from the Gray Sea to the Northern Rim!")))
        (method 'hord
                (lambda (knpc kpc)
-                 (say knpc "In those days the Orks were united under one "
+                 (say knpc "In those days the Goblins were united under one "
                       "chieftain, and threatened the whole Peninsula! By the "
                       "time Lord Calvin was done with them they were scattered "
                       "and hiding in the hills. They've never recovered!")))

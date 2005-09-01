@@ -345,6 +345,22 @@
   (kern-log-msg "Sleep trap!")
   (apply-sleep actor))
 
+(define (bomb-trap actor subject)
+  (define (hit loc)
+    (map burn (kern-get-objects-at loc))
+    (if (terrain-ok-for-field? loc)
+        (kern-obj-put-at (kern-mk-obj F_fire 1) loc)))
+  (kern-log-msg "Bomb trap!")
+  (burn actor)
+  (shake-map 10)
+  (map hit (get-8-neighboring-tiles (kern-obj-get-location subject)))
+  (kern-obj-remove subject))
+
+(define (self-destruct-trap actor subject)
+  (shake-map 5)
+  (kern-log-msg "Self-destruct trap!")
+  (kern-obj-remove subject))
+
 ;; Explosion trap - shakes the screen and damages all surrounding objects
 
 ;; Burst trap - splatters the surrounding scene with dangerous fields

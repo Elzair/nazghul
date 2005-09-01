@@ -536,3 +536,41 @@ define (blit-maps kmap . blits)
                 " casts " 
                 (spell-name spell)))
   
+;; ----------------------------------------------------------------------------
+;; terrain-ok-for-field? -- check if the terrain at a given location will allow
+;; a field to be dropped on it. Terrains with passability class equivalent to
+;; Grass, trees and forest are ok, everything else is not.
+;; ----------------------------------------------------------------------------
+(define (terrain-ok-for-field? loc)
+  (let ((pclass (kern-terrain-get-pclass (kern-place-get-terrain loc))))
+    (display "pclass=")(display pclass)(newline)
+    (foldr (lambda (a b) (or a (= pclass b)))
+           #f
+           (list pclass-grass pclass-trees pclass-forest))))
+
+(define (get-8-neighboring-tiles loc)
+  (let ((kplace (loc-place loc))
+        (x (loc-x loc))
+        (y (loc-y loc)))
+    (filter kern-is-valid-location?
+            (map (lambda (offset) (mk-loc kplace 
+                                          (+ (car offset) x)
+                                          (+ (cdr offset) y)))
+                 (list (cons -1 -1)
+                       (cons  0 -1)
+                       (cons  1 -1)
+                       (cons -1  0)
+                       (cons  1  0)
+                       (cons -1  1)
+                       (cons  0  1)
+                       (cons  1  1))))))
+
+(define (shake-map dur)
+  (if (> dur 0)
+      (begin
+        (kern-map-set-jitter #t)
+        (kern-map-repaint)
+        (shake-map (- dur 1)))
+      (begin
+        (kern-map-set-jitter #f)
+        (kern-map-repaint))))
