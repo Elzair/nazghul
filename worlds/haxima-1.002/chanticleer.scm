@@ -119,7 +119,7 @@
           (begin
             (chant-dec-gold! knpc)
             (say knpc 
-                 "THE LOST HALLS\n"
+                 "KURPOLIS\n"
                  "\n"
                  "Delving ever deeper,\n"
                  "They woke the ancient sleeper,\n"
@@ -128,9 +128,18 @@
                  "So I won't bore you with detail!\n"
                  "\n"
                  "[stops playing] If you simply MUST go investigate, "
-                 "travel northeast through the woods and find the "
-                 "entrance in a nook in the mountains."
-               )))))
+                 "search the southern coast between mountain and sea.")))))
+
+(define (chant-thie knpc kpc)
+  (if (isdrunk? knpc)
+      (say knpc 
+           "Hey diddle riddle,\n"
+           "You're in the middle!\n"
+           "When Kalcifax jumped through moon\n"
+           "The Necromage laughed to see such sport\n"
+           "And the Thief ran away with the Rune!")
+      (say knpc "So Enchy has you looking too? The thief must have avoided this "
+           "town, but travelers may have crossed his path. Ask Gwen.")))
 
 (define chant-conv
   (ifc basic-conv
@@ -206,7 +215,7 @@
                           "orders, while Chant has to make the rounds!")
                      (say knpc 
                           "My travels sometimes take me to the "
-                          "Enchanters Tower."))))
+                          "Enchanter's Tower."))))
        (method 'gwen
                (lambda (knpc kpc)
                  (if (isdrunk? knpc)
@@ -251,6 +260,8 @@
                      (say knpc "[Hissing] THEM! The Enemy of the Wise! Shhh!")
                      (say knpc "[Looking at you with mock suspicion] "
                           "Are you sure you're not paranoid?"))))
+       (method 'thie chant-thie)
+       
        (method 'towe
                (lambda (knpc kpc)
                  (if (isdrunk? knpc)

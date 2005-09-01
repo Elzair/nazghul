@@ -8,11 +8,23 @@
   (kern-conv-say knpc "Farewell")
   (kern-conv-end))
 
+(define (basic-ench knpc kpc)
+  (say knpc "The Enchanter is the Wise Wizard. He lives in a tower in the Fens of the northwest."))
+
+(define (basic-trig knpc kpc)
+  (say knpc "Trigrave is a small town in the west settled where two rivers meet."))
+
+(define (basic-gree knpc kpc)
+  (say knpc "Green Tower, home of the Rangers, lies deep in the Great Forest."))
+
 (define basic-conv
   (ifc '()
        (method 'hail generic-hail)
        (method 'default generic-unknown)
        (method 'bye generic-bye)
+       
+       (method 'ench basic-ench)
+       (method 'trig basic-trig)
        ))
 
 ;; Helper

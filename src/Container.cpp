@@ -208,6 +208,7 @@ void Container::save(struct save *save)
                 saveContents(save);
 	}
         
+        Object::saveHooks(save);
 
         save->exit(save, ")\n");
 }

@@ -100,12 +100,14 @@
 
 (define poison-bolt-ifc (mk-missile-ifc apply-poison))
 (define deathball-ifc   (mk-missile-ifc kern-char-kill))
+(define stunball-ifc (mk-missile-ifc paralyze))
 (define warhead-ifc
   (ifc nil
        (method 'hit-loc 
                (lambda (kmissile kplace x y)
                  (kern-obj-put-at (kern-mk-obj F_fire 1) 
                                   (mk-loc kplace x y))))))
+
 
 (define missile-arms-types
   (list
@@ -121,6 +123,7 @@
    (list 't_acid_bolt    "acid bolt"   s_acid_bolt    "1d2-1"  nil)
    (list 't_fireball     "fireball"    s_fireball     "2d6"    nil)
    (list 'deathball      "deathball"   s_deathball    "0"      deathball-ifc)
+   (list 't_stunball     "stunball"    s_projectile   "1d30"   stunball-ifc)
    ))
 
 ;; If we don't create these missile types now, we won't be able to refer to
@@ -137,6 +140,7 @@
 (kern-mk-sprite 's_bow        ss_arms 1 25 #f 0)
 (kern-mk-sprite 's_crossbow   ss_arms 1 26 #f 0)
 (kern-mk-sprite 's_doom_staff ss_arms 1 27 #f 0)
+(kern-mk-sprite 's_stun_wand  ss_arms 1 28 #f 0)
 
 (define projectile-arms-types
   (list
@@ -146,8 +150,9 @@
    (list 't_sling      "sling"      s_sling      "-1"     "1d2"    "-1"     slot-weapon   1      4     t_slingstone #t      0)
    (list 't_bow        "bow"        s_bow        "1"      "1d4"    "-2"     slot-weapon   2      6     t_arrow      #f      2)
    (list 't_crossbow   "crossbow"   s_crossbow   "2"      "2d3"    "-3"     slot-weapon   2      5     t_bolt       #f      3)
-   (list 't_doom_staff "doom staff" s_doom_staff "1d4"    "2d20"   "-5"     slot-weapon   2      12    t_warhead    #t      2)
+   (list 't_doom_staff "doom staff" s_doom_staff "1d4"    "2d20"   "+2"     slot-weapon   2      12    t_warhead    #t      2)
    (list 't_acid_spray "acid spray" nil          "0"      "1d2-1"  "+0"     slot-nil      2      2     t_acid_bolt  #t      0)
+   (list 't_stun_wand  "stun wand"  s_stun_wand  "-2"     "1d20"   "-1"     slot-weapon   1      8     t_stunball   #t      2)
    ))
 
 ;; ============================================================================
@@ -197,15 +202,15 @@
    (list  't_stinger        "stinger"        nil              "1d8"    "1d2-1"  "+0"     slot-nil      1      1      0)
    (list  't_dagger         "dagger"         s_dagger         "1d4"    "1d4"    "1d2"    slot-weapon   1      1      0)
    (list  't_mace           "mace"           s_mace           "1d3"    "1d6+1"  "+0"     slot-weapon   1      1      3)
-   (list  't_sword          "sword"          s_sword          "1d2"    "1d8"    "1d2"    slot-weapon   1      2      2)
-   (list  't_2H_axe         "2H axe"         s_2h_axe         "+0"     "2d4+2"  "-2"     slot-weapon   2      2      4)
-   (list  't_2H_sword       "2H sword"       s_2h_sword       "0"      "2d8-1"  "+0"     slot-weapon   2      2      4)
-   (list  't_morning_star   "morning star"   s_morning_star   "1d3+3"  "1d6+1"  "-1"     slot-weapon   2      2      3)
-   (list  't_halberd        "halberd"        s_halberd        "1d4+2"  "2d8-2"  "+1"     slot-weapon   2      3      4)
-   (list  't_staff          "staff"          s_staff          "1d6"    "1d4"    "1d6"    slot-weapon   2      2      2)
-   (list  't_eldritch_blade "eldritch blade" s_eldritch_blade "2"      "2d8+5"  "+0"     slot-weapon   2      3      2)
-   (list  't_mystic_sword   "mystic sword"   s_mystic_sword   "+3"     "1d10+1" "+2"     slot-weapon   1      2      1)
-   (list  't_flaming_sword  "flaming sword"  s_flaming_sword  "1d2"    "1d10+3" "1d2"    slot-weapon   1      2      2)
+   (list  't_sword          "sword"          s_sword          "1d2"    "1d8"    "1d2"    slot-weapon   1      1      2)
+   (list  't_2H_axe         "2H axe"         s_2h_axe         "+0"     "2d4+2"  "-2"     slot-weapon   2      1      4)
+   (list  't_2H_sword       "2H sword"       s_2h_sword       "0"      "2d8-1"  "-1"     slot-weapon   2      1      4)
+   (list  't_morning_star   "morning star"   s_morning_star   "1d3+3"  "1d6+1"  "-1"     slot-weapon   1      2      3)
+   (list  't_halberd        "halberd"        s_halberd        "1d4+2"  "2d8-2"  "+0"     slot-weapon   2      2      4)
+   (list  't_staff          "staff"          s_staff          "1d6"    "1d4"    "1d3"    slot-weapon   2      2      2)
+   (list  't_eldritch_blade "eldritch blade" s_eldritch_blade "2"      "2d8+5"  "+0"     slot-weapon   2      1      2)
+   (list  't_mystic_sword   "mystic sword"   s_mystic_sword   "+3"     "1d10+1" "+2"     slot-weapon   1      1      1)
+   (list  't_flaming_sword  "flaming sword"  s_flaming_sword  "1d2"    "1d10+3" "1d2"    slot-weapon   1      1      2)
    ))
 
 (kern-mk-sprite 's_leather_helm  ss_arms 1 48 #f 0)

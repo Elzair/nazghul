@@ -9,7 +9,7 @@
 (kern-mk-sprite 's_vas_rel_por_scroll     ss_scrolls 1 2 #f 0) ;; gate travel
 (kern-mk-sprite 's_xen_corp_scroll        ss_scrolls 1 3 #f 0) ;; kill
 
-(kern-mk-sprite 's_sanct_lor_scroll       ss_scrolls 1 4 #f 0)
+(kern-mk-sprite 's_sanct_lor_scroll       ss_scrolls 1 4 #f 0) ;; invisibility
 (kern-mk-sprite 's_in_quas_xen_scroll     ss_scrolls 1 5 #f 0) ;; clone
 (kern-mk-sprite 's_in_vas_por_ylem_scroll ss_scrolls 1 6 #f 0) ;; tremor
 (kern-mk-sprite 's_an_xen_exe_scroll      ss_scrolls 1 7 #f 0) ;; charm

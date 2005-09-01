@@ -1091,34 +1091,6 @@ static int kern_place_load_contents(scheme *sc, pointer *args,
         return 0;
 }
 
-static int kern_place_load_hooks(scheme *sc, pointer *args, 
-                                    struct place *place)
-{
-        pointer contents;
-        pointer pre_entry_proc;
-
-        if (! scm_is_pair(sc, *args)) {
-                load_err("kern-mk-place %s: missing the hooks list",
-                         place->tag);
-                return -1;
-        }
-
-        contents = scm_car(sc, *args);
-        *args = scm_cdr(sc, *args);
-
-        if (scm_is_pair(sc, contents)) {
-                if (unpack(sc, &contents, "c", &pre_entry_proc)) {
-                        load_err("kern-mk-place %s: bad arg in hook list",
-                                 place->tag);
-                        return -1;
-                }
-
-                place->pre_entry_hook = closure_new_ref(sc, pre_entry_proc);
-        }
-
-        return 0;
-}
-
 static int kern_place_load_entrances(scheme *sc, pointer *args, 
                                      struct place *place)
 {
@@ -1152,6 +1124,34 @@ static int kern_place_load_entrances(scheme *sc, pointer *args,
                                  "direction %d to [%d %d]", place->tag, dir, x, y);
                         return -1;
                 }
+        }
+
+        return 0;
+}
+
+static int kern_place_load_hooks(scheme *sc, pointer *args, 
+                                    struct place *place)
+{
+        pointer contents;
+        pointer pre_entry_proc;
+
+        if (! scm_is_pair(sc, *args)) {
+                load_err("kern-mk-place %s: missing the hooks list",
+                         place->tag);
+                return -1;
+        }
+
+        contents = scm_car(sc, *args);
+        *args = scm_cdr(sc, *args);
+
+        if (scm_is_pair(sc, contents)) {
+                if (unpack(sc, &contents, "c", &pre_entry_proc)) {
+                        load_err("kern-mk-place %s: bad arg in hook list",
+                                 place->tag);
+                        return -1;
+                }
+
+                place->pre_entry_hook = closure_new_ref(sc, pre_entry_proc);
         }
 
         return 0;
@@ -1548,6 +1548,39 @@ static pointer kern_mk_occ(scheme *sc, pointer args)
         return sc->NIL;
 }
 
+static int kern_load_hooks(scheme *sc, pointer hook_tbl, Object *obj)
+{
+        while (scm_is_pair(sc, hook_tbl)) {
+
+                struct effect *effect;
+                int flags;
+                pointer gobcell;
+                pointer hook_entry;
+                struct gob *gob = NULL;
+                clock_alarm_t clk;
+
+                hook_entry = scm_car(sc, hook_tbl);
+                hook_tbl = scm_cdr(sc, hook_tbl);
+
+                if (unpack(sc, &hook_entry, "pldd", &effect, &gobcell, &flags, 
+                           &clk)) {
+                        return -1;
+                }
+
+                /* Note: even if gobcell is sc->NIL we want to wrap it. I once
+                 * tried to use a NULL gob instead but if we pass that back
+                 * into scheme as an arg and the gc tries to mark it we'll
+                 * crash. */
+                gob = gob_new(sc, gobcell);
+                gob->flags |= GOB_SAVECAR;
+                
+                obj->restoreEffect(effect, gob, flags, clk);
+        }
+
+        return 0;
+}
+
+
 static pointer kern_mk_char(scheme *sc, pointer args)
 {
         class Character *character;
@@ -1559,9 +1592,9 @@ static pointer kern_mk_char(scheme *sc, pointer args)
         struct sprite *sprite;
         pointer conv;
         pointer readied;
-        pointer hook_tbl;
         pointer ret;
         pointer ai;
+        pointer hook_tbl;
         int base_faction;
         struct sched *sched;
         pointer factions;
@@ -1616,33 +1649,11 @@ static pointer kern_mk_char(scheme *sc, pointer args)
         /* Load the hooks. */
         hook_tbl = scm_car(sc, args);
         args = scm_cdr(sc, args);
-        while (scm_is_pair(sc, hook_tbl)) {
-
-                struct effect *effect;
-                int flags;
-                pointer gobcell;
-                pointer hook_entry;
-                struct gob *gob = NULL;
-                clock_alarm_t clk;
-
-                hook_entry = scm_car(sc, hook_tbl);
-                hook_tbl = scm_cdr(sc, hook_tbl);
-
-                if (unpack(sc, &hook_entry, "pldd", &effect, &gobcell, &flags, 
-                           &clk)) {
-                        load_err("kern-mk-char %s: bad hook entry", tag);
-                        goto abort;
-                }
-
-                /* Note: even if gobcell is sc->NIL we want to wrap it. I once
-                 * tried to use a NULL gob instead but if we pass that back
-                 * into scheme as an arg and the gc tries to mark it we'll
-                 * crash. */
-                gob = gob_new(sc, gobcell);
-                gob->flags |= GOB_SAVECAR;
-                
-                character->restoreEffect(effect, gob, flags, clk);
+        if (kern_load_hooks(sc, hook_tbl, character)) {
+                load_err("kern-mk-char %s: bad hook entry", tag);
+                goto abort;
         }
+
 
         ret = scm_mk_ptr(sc, character);
         
@@ -2126,8 +2137,8 @@ static pointer kern_mk_container(scheme *sc, pointer args)
                 return sc->NIL;
         }
 
-        // The container used as the player party's inventory does not have a
-        // type.
+        /* The container used as the player party's inventory does not have a
+         * type. */
         if (type)
                 container = new Container(type);
         else
@@ -2137,8 +2148,9 @@ static pointer kern_mk_container(scheme *sc, pointer args)
                 container->setTrap(closure_new(sc, trap));
         }
 
+        /* contents */
         contents = scm_car(sc, args);
-
+        args = scm_cdr(sc, args);
         while (contents != sc->NIL) {
 
                 int num;
@@ -2161,6 +2173,13 @@ static pointer kern_mk_container(scheme *sc, pointer args)
 
                 container->add(type, num);
         }
+
+        /* hooks */
+        if (kern_load_hooks(sc, scm_car(sc, args), container)) {
+                load_err("kern-mk-container: error in hook list");
+                goto abort;
+        }
+        args = scm_cdr(sc, args);
 
         return scm_mk_ptr(sc, container);
         

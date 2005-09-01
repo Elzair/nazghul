@@ -795,6 +795,14 @@ bool cmdOpen(class Character * pc)
          container = (class Container *) place_get_object(Place, x, y, 
                                                           container_layer);
 
+         /* ignore invisible objects unless Reveal is in effect */
+         if (! Reveal) {
+                 if (mech && ! mech->isVisible())
+                         mech = 0;
+                 if (container && ! container->isVisible())
+                         container = 0;
+         }
+
          /* If both are present the user must select one */
          if (mech && mech->getObjectType()->canOpen() && container) {
 

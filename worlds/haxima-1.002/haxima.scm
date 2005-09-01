@@ -65,11 +65,11 @@
  sp_human              ; species
  oc_wizard             ; occ
  s_companion_wizard    ; sprite
- faction-player          ; starting alignment
+ faction-player        ; starting alignment
  0 10 2                ; str/int/dex
  0 1                   ; hp mod/mult
  10 5                  ; mp mod/mult
- 240 0 8 8           ; hp/xp/mp/lvl
+ 240 0 8 8             ; hp/xp/mp/lvl
  #f                    ; dead
  nil                   ; conv
  nil                   ; sched
@@ -96,8 +96,9 @@
  (kern-mk-container
   nil ;; type
   nil ;; trap
-  nil ;; contents
-  )
+  ;; contents:
+  (mk-contents (add-content 1 t_wis_quas_scroll)
+               (add-content 1 t_sanct_lor_scroll)))
 
  nil ;; party members (should be nil for initial load file)
  )
@@ -218,7 +219,7 @@
   ;(kern-obj-put-at kplayer (list p_slimy_cavern 13 2)
   ; (kern-obj-put-at kplayer (list p_enchanters_tower 32 32)))
   ;(kern-obj-put-at kplayer (list p_shard 39 76)))
-  (kern-obj-put-at kplayer (list p_shard 28 21)))
+  (kern-obj-put-at kplayer (list p_shard 28 51)))
   ;(kern-obj-put-at kplayer (list p_test 15 15)))
   ;(kern-obj-put-at kplayer (list p_grey_goblin_village 0 9)))                  
 ;;----------------------------------------------------------------------------

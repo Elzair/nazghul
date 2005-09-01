@@ -31,7 +31,7 @@
                  sound-damage      ; damage sound
                  sound-walking     ; walking sound
                  nil               ; on-death closure
-                 8                 ; xpval
+                 2                 ; xpval
                  humanoid-slots    ; slots
                  nil               ; native spells
                  )
@@ -50,7 +50,7 @@
                  sound-damage      ; damage sound
                  nil               ; walking sound
                  nil               ; on-death closure
-                 8                 ; xpval
+                 2                 ; xpval
                  humanoid-slots    ; slots
                  nil               ; native spells FIXME!!!!
                  )
@@ -69,7 +69,7 @@
                  sound-damage      ; damage sound
                  sound-walking     ; walking sound
                  nil               ; on-death closure
-                 8                 ; xpval
+                 2                 ; xpval
                  humanoid-slots    ; slots
                  nil               ; native spells
                  )
@@ -88,7 +88,7 @@
                  sound-damage      ; damage sound
                  nil               ; walking sound
                  nil               ; on-death closure
-                 4                 ; xpval
+                 1                 ; xpval
                  nil               ; slots
                  nil               ; native spells
                  )
@@ -107,7 +107,7 @@
                  sound-damage          ; damage sound
                  sound-squishing       ; walking sound
                  nil               ; on-death closure
-                 8                     ; xpval
+                 2                     ; xpval
                  nil                   ; slots
                  ;; native spells
                  (list 
@@ -129,7 +129,7 @@
                  sound-damage          ; damage sound
                  sound-squishing       ; walking sound
                  nil                   ; on-death closure
-                 4                     ; xpval
+                 1                     ; xpval
                  nil                   ; slots
                  nil                   ; native spells
                  )
@@ -148,7 +148,7 @@
                  sound-damage      ; damage sound
                  sound-walking     ; walking sound
                  nil               ; on-death closure
-                 8                 ; xpval
+                 2                 ; xpval
                  humanoid-slots    ; slots
                  nil               ; native spells
                  )
@@ -167,7 +167,7 @@
                  sound-damage      ; damage sound
                  sound-walking     ; walking sound
                  nil               ; on-death closure
-                 4                 ; xpval
+                 1                 ; xpval
                  nil               ; slots
                  nil               ; native spells FIXME!!!!
                  )
@@ -190,7 +190,7 @@
                  sound-damage   ;; damage sound
                  sound-walking  ;; walking sound
                  'spider-killed ;; on-death
-                 4              ;; xpval
+                 1              ;; xpval
                  humanoid-slots ;; slots: hands
                  nil            ;; native spells: currently unused
                  )
@@ -213,7 +213,7 @@
                  sound-damage   ;; damage sound
                  sound-walking  ;; walking sound
                  'queen-spider-killed ;; on-death closure
-                 16             ;; xpval
+                 4              ;; xpval
                  humanoid-slots ;; slots: hands
                  nil            ;; native spells: currently unused
                  )
@@ -236,7 +236,7 @@
                  sound-damage   ;; damage sound
                  sound-walking  ;; walking sound
                  nil            ;; on-death closure
-                 12             ;; xpval
+                 3              ;; xpval
                  humanoid-slots ;; slots: hands
                  nil            ;; native spells: currently unused
                  )

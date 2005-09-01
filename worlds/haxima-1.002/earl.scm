@@ -40,37 +40,16 @@
            "open from 6:00AM to 6:00PM.")
       (begin
         (kern-conv-trade knpc kpc
-
-                         ;; weapons & arms
-                         (list t_oil                   20)
-                         (list t_arrow                 1)
-                         (list t_bolt                  2)
-                         (list t_bow                   50)
-                         (list t_crossbow                  100)
-                         (list t_spear                 15)
-                         (list t_quarterstaff          20)
-                         (list t_leather_helm          20)
-                         (list t_armor_leather         20)
-                         (list t_shield 10)
-                         (list t_shield             10)
-
-                         ;; usable stuff
-                         (list t_torch                  5)
-                         (list t_heal_potion              20)
-                         (list t_cure_potion       20)
-                         (list resurrection-scroll-type 200)
-
-                         ;; reagents
-                         (list sulphorous_ash          4)
-                         (list ginseng                 2)
-                         (list garlic                  2)
-                         (list spider_silk             8)
-                         (list blood_moss              12)
-                         (list black_pearl             16)
-                         (list mandrake                32)
-                         
+                         (list t_torch             10)
+                         (list t_heal_potion       20)
+                         (list t_cure_potion       30)
+                         (list t_mana_potion       40)
+                         (list t_food              2)
+                         (list t_sling             20)
+                         (list t_staff             50)
+                         (list t_arrow             2)
                          )
-        (say knpc "Remember, your life depends on your gear."))))
+        (say knpc "Your life depends on your gear!"))))
 
 (define earl-conv
   (ifc basic-conv
@@ -105,9 +84,12 @@
                       "and hiding in the hills. They've never recovered!")))
        (method 'mage
                (lambda (knpc kpc)
-                 (say knpc "I've forgotten all my magic. I even lost my staff. "
+                 (say knpc "I've forgotten all my magic. I even lost my wand! "
                       "I once knew spells that would slay whole armies.")))
        (method 'spel
                (lambda (knpc kpc) 
                  (say knpc "I was a battle mage once. Long ago.")))
+       (method 'thie
+               (lambda (knpc kpc)
+                 (say knpc "I saw a stranger fleeing west! No, south! No... Oh, drat, I can't remember.")))
        ))

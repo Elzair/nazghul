@@ -64,6 +64,7 @@
 (define (paralyze-exec fgob kchar)
   (display "paralyze-exec")(newline)
   (let ((droll (kern-dice-roll "1d20")))
+    (display "droll=")(display droll)(newline)
     (if (or (= droll 20)
             (> droll
                dc-escape-paralyze))
@@ -195,12 +196,12 @@
 ;; increments/decrements a visibility counter, naturally handling cumulative
 ;; invisibility effects.
 ;; ----------------------------------------------------------------------------
-(define (invisibility-rm fgob kchar)
-  (kern-obj-remove-effect kchar ef_invisibility)
-  (kern-obj-set-visible kchar #t))
+(define (invisibility-rm fgob kobj)
+  (kern-obj-remove-effect kobj ef_invisibility)
+  (kern-obj-set-visible kobj #t))
 
-(define (invisibility-apply fgob kchar)
-  (kern-obj-set-visible kchar #f))
+(define (invisibility-apply fgob kobj)
+  (kern-obj-set-visible kobj #f))
 
 ;; ----------------------------------------------------------------------------
 ;; Slime Split
@@ -255,6 +256,7 @@
    (list 'ef_protection                nil                   'protection-apply   'protection-rm   'protection-apply   "start-of-turn-hook" "P" 0   #t  10)
    (list 'ef_charm                     nil                   'charm-apply        'charm-rm        'charm-apply        "start-of-turn-hook" "C" 0   #f  10)
    (list 'ef_invisibility              nil                   'invisibility-apply 'invisibility-rm 'invisibility-apply "start-of-turn-hook" "N" 0   #t  10)
+   (list 'ef_permanent_invisibility    nil                   'invisibility-apply 'invisibility-rm 'invisibility-apply "start-of-turn-hook" "N" 0   #t  -1)
    (list 'ef_slime_split               'slime-split-exec     nil                 nil              'slime-split-exec   "on-damage-hook"     ""  0   #f  -1)
    (list 'ef_spider_calm               nil                   'spider-calm-apply  'spider-calm-rm  nil                 "start-of-turn-hook" ""  0   #f  60) 
    ))
@@ -267,18 +269,26 @@
 
 ;; Used by spells:
 (define (apply-poison obj)
-  (kern-obj-add-effect obj ef_poison nil))
+  (kern-obj-add-effect obj ef_poison nil)
+  obj)
 
 ;; Used by species that are inherently immune:
 (define (apply-poison-immunity kobj)
-  (kern-obj-add-effect kobj ef_poison_immunity nil))
+  (kern-obj-add-effect kobj ef_poison_immunity nil)
+  kobj)
 
 (define (apply-sleep kobj)
   (kern-char-set-sleep kobj #t)
-  (kern-obj-add-effect kobj ef_sleep nil))
+  (kern-obj-add-effect kobj ef_sleep nil)
+  kobj)
 
 (define (apply-slime-split kobj)
-  (kern-obj-add-effect kobj ef_slime_split nil))
+  (kern-obj-add-effect kobj ef_slime_split nil)
+  kobj)
+
+(define (make-invisible kobj)
+  (kern-obj-add-effect kobj ef_permanent_invisibility nil)
+  kobj)
 
 ;; ----------------------------------------------------------------------------
 ;; Container traps
