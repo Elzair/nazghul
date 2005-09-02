@@ -44,7 +44,6 @@
                          (list t_heal_potion       20)
                          (list t_cure_potion       30)
                          (list t_mana_potion       40)
-                         (list t_food              2)
                          (list t_sling             20)
                          (list t_staff             50)
                          (list t_arrow             2)

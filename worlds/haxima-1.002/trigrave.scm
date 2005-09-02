@@ -267,6 +267,8 @@
  nil ; neighbors
  (list ; objects
 
+  (put (kern-mk-obj t_beer 10) 15 15)
+
   ;; characters
   (list ch_jim   15 15)
   (list ch_gwen  15 15)
@@ -308,6 +310,7 @@
   (list (mk-door) 28 24)
   (list (kern-tag 'tlj-d-1 (mk-connected-door 'tlj-d-2)) 17 25)
   (list (kern-tag 'tlj-d-2 (mk-connected-door 'tlj-d-1)) 17 26)
+  (put (mk-bed) 27 22)
 
   )
  (list 'trigrave-entry) ;; hooks

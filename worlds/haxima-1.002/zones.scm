@@ -40,7 +40,7 @@
 (define trigrave-jims-bed        (mk-zone 25 11   1  1))
 (define trigrave-tavern-hall     (mk-zone 18 23   8  6))
 (define trigrave-tavern-kitchen  (mk-zone 27 25   3  5))
-(define trigrave-tavern-bed      (mk-zone 27 22   1  1))
+(define trigrave-miggs-bed       (mk-zone 27 22   1  1))
 (define trigrave-tavern-table-1a (mk-zone 19 23   1  1)) 
 (define trigrave-tavern-table-1d (mk-zone 21 23   1  1)) 
 (define trigrave-tavern-table-3a (mk-zone 19 27   1  1)) 

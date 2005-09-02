@@ -565,6 +565,20 @@ define (blit-maps kmap . blits)
                        (cons  0  1)
                        (cons  1  1))))))
 
+(define (get-4-neighboring-tiles loc)
+  (let ((kplace (loc-place loc))
+        (x (loc-x loc))
+        (y (loc-y loc)))
+    (filter kern-is-valid-location?
+            (map (lambda (offset) (mk-loc kplace 
+                                          (+ (car offset) x)
+                                          (+ (cdr offset) y)))
+                 (list (cons  0 -1)
+                       (cons -1  0)
+                       (cons  1  0)
+                       (cons  0  1)
+                       )))))
+
 (define (shake-map dur)
   (if (> dur 0)
       (begin
@@ -574,3 +588,30 @@ define (blit-maps kmap . blits)
       (begin
         (kern-map-set-jitter #f)
         (kern-map-repaint))))
+
+(define (push kobj dx dy dist)
+  (display "push:")(display dx)(display dy)(display dist)(newline)
+  (let* ((loc (loc-sum (kern-obj-get-location kobj)
+                       (mk-loc nil dx dy))))
+    (display "loc:")(display loc)(newline)
+    (if (kern-place-is-passable loc kobj)
+        (begin 
+          (kern-obj-relocate kobj loc nil)
+          #t)
+        #f)))
+
+(define (stagger kchar)
+  (display "stagger")(newline)
+  (let ((vdir (random-select (list (cons -1 0) 
+                                   (cons 1 0) 
+                                   (cons 0 -1) 
+                                   (cons 0 1)))))
+  (push kchar (car vdir) (cdr vdir) 1)))
+
+(define (end-turn kobj)(kern-obj-set-ap kobj 0))
+
+(define (add-effect-multiple kobj keff fgob q)
+  (if (> q 0)
+      (begin
+        (kern-obj-add-effect kobj keff fgob)
+        (add-effect-multiple kobj keff fgob (- q 1)))))

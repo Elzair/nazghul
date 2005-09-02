@@ -62,9 +62,7 @@
   (kern-log-msg (kern-obj-get-name kobj) " paralyzed!"))
 
 (define (paralyze-exec fgob kchar)
-  (display "paralyze-exec")(newline)
   (let ((droll (kern-dice-roll "1d20")))
-    (display "droll=")(display droll)(newline)
     (if (or (= droll 20)
             (> droll
                dc-escape-paralyze))
@@ -239,6 +237,27 @@
                    faction-wood-spider)
   (kern-log-msg (kern-obj-get-name kchar) " makes spiders seem friendlier"))
 
+;;----------------------------------------------------------------------------
+;; Drunk
+;;
+;; Every keystroke at start-of-turn, roll to make the victim move in a random
+;; direction as if staggering. If roll succeeds end the victim's turn. Ending
+;; the turn prevents cumulative drinks from causing more than one "stagger" per
+;; turn.
+;;----------------------------------------------------------------------------
+(define (drunk-exec fgob kchar)
+  (if (> (kern-dice-roll "1d20") 16)
+      (if (stagger kchar)
+          (begin
+            (kern-log-msg (kern-obj-get-name kchar) " staggers!")
+            (end-turn kchar)))))
+
+(define (drunk-apply fgob kchar)
+  (kern-log-msg (kern-obj-get-name kchar) " feels tipsy!"))
+
+(define (drunk-rm fgob kchar)
+  (kern-log-msg (kern-obj-get-name kchar) " feels less inebriated"))
+
 ;; ----------------------------------------------------------------------------
 ;; Effects Table
 ;; ----------------------------------------------------------------------------
@@ -259,6 +278,7 @@
    (list 'ef_permanent_invisibility    nil                   'invisibility-apply 'invisibility-rm 'invisibility-apply "start-of-turn-hook" "N" 0   #t  -1)
    (list 'ef_slime_split               'slime-split-exec     nil                 nil              'slime-split-exec   "on-damage-hook"     ""  0   #f  -1)
    (list 'ef_spider_calm               nil                   'spider-calm-apply  'spider-calm-rm  nil                 "start-of-turn-hook" ""  0   #f  60) 
+   (list 'ef_drunk                     'drunk-exec           'drunk-apply        'drunk-rm        nil                 "keystroke-hook"     "A" 0   #t  60)
    ))
 
 (map (lambda (effect) (apply mk-effect effect)) effects)
