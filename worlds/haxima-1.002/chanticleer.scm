@@ -11,6 +11,7 @@
                (list 0  0  trigrave-east-west-road   "drunk")
                (list 2  0  trigrave-chants-bed       "sleeping")
                (list 12 0  trigrave-tavern-hall      "working")
+               (list 23 0  trigrave-east-west-road   "drunk")               
                )
 
 ;;----------------------------------------------------------------------------

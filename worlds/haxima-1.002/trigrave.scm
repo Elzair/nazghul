@@ -212,6 +212,9 @@
                )
  (earl-mk))
 
+(kern-load "miggs.scm")
+(mk-miggs 'ch_miggs)
+
 ;;----------------------------------------------------------------------------
 ;; Special Objects
 ;;----------------------------------------------------------------------------
@@ -267,13 +270,12 @@
  nil ; neighbors
  (list ; objects
 
-  (put (kern-mk-obj t_beer 10) 15 15)
-
   ;; characters
   (list ch_jim   15 15)
   (list ch_gwen  15 15)
   (list ch_chant 15 15)
   (list ch_earl  15 15)
+  (put ch_miggs 15 15)
 
   ;; Inn
   (list (kern-tag 'trigrave-inn-room-1-door (mk-locked-door))  4 7)
