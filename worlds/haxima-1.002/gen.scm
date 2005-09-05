@@ -138,6 +138,11 @@
                                    "as she hacked her way through goblin war parties, chanting a battle-ward "
                                    "with ragged breath! She was a sight to see."))
 
+(define (gen-thie knpc kpc)
+  (say knpc "I've seen no one odd around here, but the goblins who live in "
+       "the north wood recently saw a lone man traveling northeast toward "
+       "Bole."))
+
 (define gen-conv
   (ifc basic-conv
        (method 'bo gen-bo)
@@ -180,6 +185,7 @@
        (method 'sava gen-primal)
        (method 'shak gen-shakespeare)
        (method 'shro gen-shroom)
+       (method 'thie gen-thie)
        (method 'wars gen-wars)
        (method 'wood gen-woodsman)
        ))

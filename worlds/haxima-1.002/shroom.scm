@@ -123,6 +123,9 @@
         ;; has NOT given quest yet
         (say knpc "Hello and well met."))))
 
+(define (shroom-thie knpc kpc)
+  (say knpc "I've seen no one strange about here."))
+
 (define shroom-conv
   (ifc basic-conv
        ;; default if the only "keyword" which may (indeed must!) be longer than
@@ -168,6 +171,7 @@
                                             "even speak a little. Know some "
                                             "of their magic. But I never "
                                             "trust them.")))
+       (method 'thie shroom-thie)
        (method 'trus (lambda (knpc) (say knpc "The goblins will turn on us "
                                           "when their opportunity comes. I "
                                           "would do the same in their "

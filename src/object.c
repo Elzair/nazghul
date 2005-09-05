@@ -1278,8 +1278,10 @@ void Object::save(struct save *save)
         }
 
         // Save the object constructor call
-        save->write(save, "(kern-mk-obj %s %d)\n", getObjectType()->getTag(), 
+        save->enter(save, "(kern-mk-obj %s %d\n", getObjectType()->getTag(), 
                     getCount());
+        saveHooks(save);
+        save->exit(save, ")\n");
 
         if (getGob()) {
 

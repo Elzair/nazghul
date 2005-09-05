@@ -35,6 +35,16 @@
 
 #define Clock (Session->clock)
 
+int clock_hour(void)
+{
+        return Clock.hour;
+}
+
+int clock_minute(void)
+{
+        return Clock.min;
+}
+
 unsigned int clock_time_of_day(void)
 {
         return (Clock.hour * 60 + Clock.min);

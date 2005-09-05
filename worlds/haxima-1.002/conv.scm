@@ -17,13 +17,19 @@
 (define (basic-gree knpc kpc)
   (say knpc "Green Tower, home of the Rangers, lies deep in the Great Forest."))
 
+(define (basic-bole knpc kpc)
+  (say knpc "The hamlet of Bole sits in a canyon in the mountains north of "
+       "the Great Wood."))
+
 (define basic-conv
   (ifc '()
        (method 'hail generic-hail)
        (method 'default generic-unknown)
        (method 'bye generic-bye)
        
+       (method 'bole basic-bole)
        (method 'ench basic-ench)
+       (method 'gree basic-gree)
        (method 'trig basic-trig)
        ))
 

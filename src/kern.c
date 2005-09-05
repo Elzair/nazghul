@@ -1699,6 +1699,12 @@ static pointer kern_mk_obj(scheme *sc, pointer args)
         assert(obj);
         obj->setCount(count);
 
+        if (kern_load_hooks(sc, scm_car(sc, args), obj)) {
+                load_err("kern-mk-obj: error in hook list");
+                goto abort;
+        }
+        args = scm_cdr(sc, args);
+
         // Objects aren't added to the session the way types are. Every object
         // will end up in some type of container; objects should always be
         // loaded as part of a container's contents; and the container should
@@ -1712,6 +1718,10 @@ static pointer kern_mk_obj(scheme *sc, pointer args)
         // propogate.
 
         return scm_mk_ptr(sc, obj);
+        
+ abort:
+        delete obj;
+        return sc->NIL;
 }
 
 static pointer kern_mk_field(scheme *sc, pointer args)
@@ -4659,6 +4669,7 @@ KERN_API_CALL(kern_add_reveal)
         }
 
         add_reveal(val);
+        foogodRepaint();
         return sc->T;
 }
 
@@ -5457,6 +5468,14 @@ static bool wrap_kern_append_obj(class Character *c, void *v)
 {
         kern_append_object(c, v);
         return false;
+}
+
+KERN_API_CALL(kern_get_time)
+{
+        return _cons(sc, 
+                     scm_mk_integer(sc, clock_hour()),
+                     scm_mk_integer(sc, clock_minute()),
+                     0);
 }
 
 KERN_API_CALL(kern_party_get_members)
@@ -6686,6 +6705,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-get-objects-at", kern_get_objects_at);
         API_DECL(sc, "kern-get-player", kern_get_player);
         API_DECL(sc, "kern-get-ticks", kern_get_ticks);
+        API_DECL(sc, "kern-get-time", kern_get_time);
         API_DECL(sc, "kern-in-los?", kern_in_los);
         /*API_DECL(sc, "kern-los-invalidate", kern_los_invalidate);*/
         API_DECL(sc, "kern-include", kern_include);
@@ -6693,8 +6713,10 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-is-valid-location?", kern_is_valid_location);
         API_DECL(sc, "kern-print", kern_print);
         API_DECL(sc, "kern-search-rect", kern_search_rect);
-        API_DECL(sc, "kern-search-rect-for-terrain", kern_search_rect_for_terrain);
-        API_DECL(sc, "kern-search-rect-for-obj-type", kern_search_rect_for_obj_type);
+        API_DECL(sc, "kern-search-rect-for-terrain", 
+                 kern_search_rect_for_terrain);
+        API_DECL(sc, "kern-search-rect-for-obj-type", 
+                 kern_search_rect_for_obj_type);
         API_DECL(sc, "kern-set-camping-proc", kern_set_camping_proc);
         API_DECL(sc, "kern-set-spell-words", kern_set_spell_words);
         API_DECL(sc, "kern-set-start-proc", kern_set_start_proc);

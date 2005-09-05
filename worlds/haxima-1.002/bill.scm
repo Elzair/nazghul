@@ -10,9 +10,9 @@
                (list 0  0  bole-bed-bill "sleeping")
                (list 6  0  bole-table-1  "idle")
                (list 7  0  bole-n-woods  "working")
-               (list 12 0  bole-table-1  "eating")
+               (list 12 0  bole-table-2  "eating")
                (list 13 0  bole-n-woods  "working")
-               (list 18 0  bole-table-1  "eating")
+               (list 18 0  bole-table-2  "eating")
                (list 19 0  bole-dining-hall "idle")
                (list 21 0  bole-bills-hut "idle")
                (list 22 0  bole-bed-bill "sleeping")
@@ -67,6 +67,14 @@
        "Well, no sooner had muh axe bit into the bark "
        "but it wakes up!"))
 
+(define (bill-thie knpc kpc)
+  (say knpc "There wuz a right nervous feller at the tavern not long ago. "
+       "He had some words with the pretty lady. I think they got in uh "
+       "argument over somethin'. I saw him go into the hills in the "
+       "northeast cornah uh town, you know? And he never came out. I "
+       "don' know where he went! Them hills is uh dead-end! Plumb strange "
+       "if'n you ask me."))
+
 (define bill-conv
   (ifc nil
        (method 'default (lambda (knpc kpc) (say knpc "[He shrugs]")))
@@ -115,6 +123,7 @@
                       "damn. Ladies don' lak that, you know.")))
        (method 'scar bill-scared)
        (method 'sell bill-trade)
+       (method 'thie bill-thie)
        (method 'torc bill-goods)
        (method 'town bill-bole)
        (method 'trade bill-trade)

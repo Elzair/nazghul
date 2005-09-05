@@ -73,7 +73,7 @@
                   (say knpc "Perhaps another time.")))))))
 
 (define (gwen-thie knpc kpc)
-  (say knpc "Some recent travelers from Green Tower met a man in great haste heading east through the pass."))
+  (say knpc "Some recent travelers from Green Tower met a man in great haste heading east through the pass. You might try asking around in Green Tower."))
 
 (define gwen-conv
   (ifc basic-conv

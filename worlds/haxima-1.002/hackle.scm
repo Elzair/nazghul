@@ -1,0 +1,214 @@
+;;----------------------------------------------------------------------------
+;; Schedule
+;;
+;; The schedule below is for the place "Trigrave"
+;;----------------------------------------------------------------------------
+(kern-mk-sched 'sch_hackle
+               (list 0  0  bole-hackles-hut "idle")
+               (list 6  0  bole-bed-hackle "sleeping")
+               (list 14 0  bole-hackles-hut "idle")
+               (list 20 0  bole-hackles-yard "idle")
+               )
+
+;;----------------------------------------------------------------------------
+;; Gob
+;;
+;; Quest flags, etc, go here.
+;;----------------------------------------------------------------------------
+(define (hackle-mk) nil)
+
+;;----------------------------------------------------------------------------
+;; Conv
+;;
+;; Hackle is the tavern-keeper.
+;;----------------------------------------------------------------------------
+(define (hackle-trade knpc kpc)
+  (say knpc "She can heal it, or one of its friends. She requires a piece of "
+       "gold for each piece of life! Does it agree?")
+  (define (hackle-heal)
+    (say knpc "Which shall she heal?")
+    (let ((kchar (kern-ui-select-party-member)))
+      (if (null? kchar)
+          (say knpc "How else can she help it?")
+          (let* ((gold (kern-player-get-gold))
+                 (pts (- (kern-char-get-max-hp kchar)
+                         (kern-char-get-hp kchar))))
+            (if (= 0 gold)
+                (say knpc "No gold, no life! It is the law of the world!")
+                (begin
+                  (if (= 0 pts)
+                      (say knpc "It is well! She can do nothing for it!")
+                      (let ((n (min gold pts)))
+                        (say knpc "She heals it!")
+                        (kern-obj-heal kchar n)
+                        (kern-player-set-gold (- gold n))))
+                  (hackle-heal)))))))
+  (if (kern-conv-get-yes-no? kpc)
+      (hackle-heal)
+      (say knpc "Have it its way!")))
+                   
+              
+        
+
+;; basics...
+(define (hackle-default knpc kpc)
+  (say knpc "She cannot help it with that"))
+
+(define (hackle-hail knpc kpc)
+  (say knpc "[You meet a disheveled, middle-aged woman] It comes to her! "
+       "It wants something!"))
+
+(define (hackle-name knpc kpc)
+  (say knpc "She is Hackle."))
+
+(define (hackle-job knpc kpc)
+  (say knpc "She is mad! But she can heal it!"))
+
+(define (hackle-join knpc kpc)
+  (say knpc "She cannot join it! She must mind her sheep!"))
+
+(define (hackle-bye knpc kpc)
+  (say knpc "She bids it farewell, but knows it will return!"))
+
+
+;; other characters & town...
+(define (hackle-may knpc kpc)
+  (say knpc "It is a hard woman, hard but kind to Hackle!"))
+
+(define (hackle-kath knpc kpc)
+  (say knpc "It is a fiend! A fiend fleshed in woman!"))
+
+(define (hackle-bill knpc kpc)
+  (say knpc "It is careless. Yes, the wood gods will have it for supper one "
+       "day."))
+
+(define (hackle-thud knpc kpc)
+  (say knpc "[She laughs, a surprising, golden sound] That is no toy! They "
+       "called for a servant, but summoned a demon!"))
+
+(define (hackle-melv knpc kpc)
+  (say knpc "It is a good soul."))
+
+(define (hackle-bole knpc kpc)
+  (say knpc "Not Bole! Hole! The keyhole to the deep! She knows it!"))
+
+;; misc...
+(define (hackle-shee knpc kpc)
+  (say knpc "The sheep hides in wolf's clothing! How it howls when it "
+       "bleats!"))
+
+(define (hackle-wood knpc kpc)
+  (say knpc "She has seen them sleeping in the old oaks. She wakes them "
+       "not! They do not like us, they do not like anyone! The goblins "
+       "appease them but she does not know the words."))
+
+(define (hackle-mad knpc kpc)
+  (say knpc "The gazers caught her as a girl! She escaped, but her mind did "
+       "not!"))
+
+(define (hackle-gaze knpc kpc)
+  (say knpc "If it meets one, it should kill one without question! They know "
+       "the answer to any question, and in the answer lies bondage!"))
+
+;; thief quest...
+(define (hackle-thie knpc kpc)
+  (say knpc "It is a Mighty Rogue indeed that robs two Mighty Wizards!"))
+
+(define (hackle-migh knpc kpc)
+  (say knpc "They disagree, their old argument must be resolved by another."))
+
+(define (hackle-anot knpc kpc)
+  (say knpc "Perhaps something will Wander into their Argument. Yes, she "
+       "thinks it will."))
+
+(define (hackle-robs knpc kpc)
+  (say knpc "It robs and runs, down it's little mouse-hole!"))
+
+(define (hackle-hole knpc kpc)
+  (say knpc "Does it like riddles?\n"
+       "  An 'o' has a hole!\n"
+       "  And hole has an 'o'!\n"
+       "  And a mouse has both!\n"
+       "  When the moon is full\n"
+       "  Down it will go!\n"
+       "Does it know what REVEALS?")
+  (if (kern-conv-get-yes-no? kpc)
+      (say knpc "Then let it REVEAL and understand my riddle!")
+      (begin
+        (say knpc "Wis Quas! The Red Bitch has a scroll, but not the "
+             "understanding.")))
+  (say knpc "The Bill-boy knows where the mouse disappeared! O, there let "
+       "it reveal!"))
+
+(define (hackle-rogu knpc kpc)
+  (say knpc "The clever mouse plays the cats against one another!"))
+
+(define (hackle-cats knpc kpc)
+  (say knpc "One licks its fur, one prowls the night. They smugly purr, "
+       "and waste their might!"))
+
+(define hackle-conv
+  (ifc basic-conv
+       ;; default if the only "keyword" which may (indeed must!) be longer than
+       ;; 4 characters. The 4-char limit arises from the kernel's practice of
+       ;; truncating all player queries to the first four characters. Default,
+       ;; on the other hand, is a feature of the ifc mechanism (see ifc.scm).
+       (method 'default hackle-default)
+       (method 'hail hackle-hail)
+       (method 'bye hackle-bye)
+       (method 'job hackle-job)       
+       (method 'name hackle-name)
+       (method 'join hackle-join)
+
+       (method 'trad hackle-trade)
+       (method 'buy hackle-trade)
+       (method 'sell hackle-trade)
+
+       (method 'bill hackle-bill)
+       (method 'kath hackle-kath)
+       (method 'may  hackle-may)
+       (method 'melv hackle-melv)
+       (method 'thud hackle-thud)
+       
+       (method 'anot hackle-anot)
+       (method 'bole hackle-bole)
+       (method 'cat  hackle-cats)
+       (method 'cats hackle-cats)
+       (method 'gaze hackle-gaze)
+       (method 'god  hackle-wood)
+       (method 'gods hackle-wood)
+       (method 'hole hackle-hole)
+       (method 'mad  hackle-mad)
+       (method 'migh hackle-migh)
+       (method 'mous hackle-hole)
+       (method 'rob  hackle-robs)
+       (method 'robs hackle-robs)
+       (method 'rogu hackle-rogu)
+       (method 'shee hackle-shee)
+       (method 'thie hackle-thie)
+       (method 'wood hackle-wood)
+       ))
+
+;;----------------------------------------------------------------------------
+;; First-time constructor
+;;----------------------------------------------------------------------------
+(define (mk-hackle)
+  (bind 
+   (kern-mk-char 'ch_hackle          ; tag
+                 "Hackle"            ; name
+                 sp_human            ; species
+                 nil                 ; occ
+                 s_beggar             ; sprite
+                 faction-men         ; starting alignment
+                 10 10 10            ; str/int/dex
+                 0 0                 ; hp mod/mult
+                 0 0                 ; mp mod/mult
+                 30 0 0 6            ; hp/xp/mp/lvl
+                 #f                  ; dead
+                 'hackle-conv        ; conv
+                 sch_hackle          ; sched
+                 nil                 ; special ai
+                 nil                 ; container
+                 nil                 ; readied
+                 )
+   (hackle-mk)))

@@ -55,6 +55,8 @@ extern unsigned int clock_time_of_day(void);
 extern unsigned int clock_time(void);
 extern int is_noon(void);
 extern int is_midnight(void);
+extern int clock_hour(void);
+extern int clock_minute(void);
 
 extern char * time_HHMM_as_string       (void);
 extern char * time_YYYY_MM_DD_as_string (void);

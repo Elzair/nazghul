@@ -880,7 +880,24 @@ bool cmdOpen(class Character * pc)
 		if (rand() % 999 < pc->getDexterity()) {
 			log_msg("You disarm a trap!");
 		} else {
+                        // Trigger the trap. Traps may destroy containers, so
+                        // use the refcount to find out if this happened.
+                        int oldref = container->refcount;
+                        int abort = 0;
+
+                        obj_inc_ref(container);
                         closure_exec(trap, "pp", pc, container);
+                        if (container->refcount == 1) {
+                                log_msg("The %s was destroyed!", container->getName());
+                                abort = 1;
+                        }
+                        obj_dec_ref(container);
+
+                        if (abort) {
+                                cmdwin_print("can't!");
+                                log_end_group();
+                                return false;
+                        }
 		}
 	}
 

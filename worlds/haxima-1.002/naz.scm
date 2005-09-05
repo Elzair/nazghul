@@ -615,3 +615,7 @@ define (blit-maps kmap . blits)
       (begin
         (kern-obj-add-effect kobj keff fgob)
         (add-effect-multiple kobj keff fgob (- q 1)))))
+
+;; time procs for use with return value from kern-get-time:
+(define (time-hour time)(car time))
+(define (time-minute time) (cdr time))

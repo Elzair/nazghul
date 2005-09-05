@@ -128,6 +128,11 @@
 (define (doris-default knpc kpc)
   (say knpc "Can't help you there"))
 
+(define (doris-thie knpc kpc)
+  (say knpc "I haven't had any odd guests lately. Check with Deric, who gets "
+       "reports from ranger patrols. And Gen may have seen something in his "
+       "wanderings, too."))
+
 (define doris-conv
   (ifc basic-conv
        (method 'hail      doris-hail)
@@ -155,6 +160,7 @@
        (method 'abig      doris-abigail)
        (method 'orph      doris-orphaned)
        (method 'gobl      doris-goblins)
+       (method 'thie      doris-thie)
        ))
 
 ;;----------------------------------------------------------------------------

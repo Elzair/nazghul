@@ -148,6 +148,12 @@
 (define (deric-bye knpc kpc)
   (say knpc "Until next time"))
 
+(define (deric-thie knpc kpc)
+  (say knpc "Hm. The goblin brute we have locked up below may be a thief. But "
+       "he's been in our prison for some time. Now, our rangers did report "
+       "a lone man traveling north through the forest, but we know not "
+       "whence."))
+
 (define deric-conv
   (ifc basic-conv
        (method 'abe        deric-abe)
@@ -173,6 +179,7 @@
        (method 'shro       deric-shroom)
        (method 'skul       deric-brute)
        (method 'stor       deric-two)
+       (method 'thie       deric-thie)
        (method 'towe       deric-tower)
        (method 'two        deric-two)
 ))                

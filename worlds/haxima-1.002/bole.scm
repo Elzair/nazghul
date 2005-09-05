@@ -70,6 +70,12 @@
 (kern-load "bill.scm")
 (mk-bill)
 
+(kern-load "melvin.scm")
+(mk-melvin)
+
+(kern-load "hackle.scm")
+(mk-hackle)
+
 ;;----------------------------------------------------------------------------
 ;; Place
 ;;----------------------------------------------------------------------------
@@ -106,14 +112,22 @@
    (list (mk-locked-door) 19 15)
    (list (mk-bed) 23 19)
 
+   ;; Hackle's hut
    (list (mk-bed) 5 8)
+   (list (mk-windowed-door) 7 13)
+   (list (mk-windowed-door) 10 10)
 
+   ;; Thief's door
+   (put (mk-thief-door 'p_bole 15 15) 45 5)
+
+   ;; npc's
    (list ch_may   44 17)
    (list ch_kathryn 31 18)
    (list ch_thud 32 18)
    (list ch_bill  22 8)
+   (put ch_melvin 44 17)
+   (put ch_hackle 0 0)
    
-
    )
 
  nil ; hooks

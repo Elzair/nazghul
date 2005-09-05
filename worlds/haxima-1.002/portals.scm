@@ -100,3 +100,21 @@
 (define (mk-trap-door   place-tag x y) (mk-portal t_trap_door   place-tag x y))
 (define (mk-teleporter  place-tag x y) (mk-portal t_teleporter  place-tag x y))
 (define (mk-dungeon place-tag x y) (mk-portal t_dungeon place-tag x y))
+
+;; Special portal -- entrance to thief's cave near Bole. Invisible, but under
+;; reveal it shows the letter 'O'. When stepped on at midnight the player is
+;; transported to the Traps I dungeon.
+(define (thief-door-step kportal kchar)
+  (let ((time (kern-get-time)))
+    (if (and (= (time-hour time) 0)
+             (= (time-minute time) 0))
+        (portal-step kportal kchar))))
+
+(define thief-door-ifc
+  (ifc '()
+       (method 'step thief-door-step)))
+
+(mk-obj-type 't_thief_door "strange mark" s_O layer-mechanism thief-door-ifc)
+
+(define (mk-thief-door place-tag x y)
+  (make-invisible (mk-portal t_thief_door place-tag x y)))

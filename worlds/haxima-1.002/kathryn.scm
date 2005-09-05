@@ -84,7 +84,7 @@
   (if (kern-conv-get-yes-no? kpc)
       (do-join)
       (begin
-        (say knpc "[She becomes plaintive] Oh, please won't you help me! "
+        (say knpc "[She becomes distressed] Oh, please won't you help me! "
              "My masters are powerful and cruel! If I don't return with the "
              "item they seek there will be nowhere I can hide in this life "
              "or the next! Won't you please join me?")
@@ -118,12 +118,12 @@
        "forest. Why don't you go give him a hand?"))
 
 (define (kathryn-hackle knpc kpc)
-  (say knpc "Crazy bitch? Lives across the creek? I'm afraid she doesn't have "
-       "any herbs that cure ugly. Sorry."))
+  (say knpc "Crazy bitch? Lives across the creek? I'm afraid she can't cure "
+       "ugly. Sorry."))
 
 (define (kathryn-may knpc kpc)
   (say knpc "The innkeeper? Nosy old crone. Obviously you don't have money, "
-       "or I'd warn you to sleep with it under your pillow."))
+       "but if you did I'd warn you to sleep with it under your pillow."))
 
 (define (kathryn-melvin knpc kpc)
   (say knpc "The cook? A dirty old man and a drunk."))

@@ -103,7 +103,7 @@ void foogodRepaint(void)
 		screenPrint(&Foogod.hullRect, 0, "Hull: %d", player_party->vehicle->getHp());
 	}
 
-        screenPrint(&Foogod.effectsRect, 0, "Eff: %s%s%s"
+        screenPrint(&Foogod.effectsRect, 0, "Eff: %s%s%s%s"
                     , (TimeStop     ? "T" : "")
                     , (Quicken      ? "Q" : "")
                     , (MagicNegated ? "N" : "")
