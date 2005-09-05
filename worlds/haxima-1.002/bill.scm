@@ -75,6 +75,10 @@
        "don' know where he went! Them hills is uh dead-end! Plumb strange "
        "if'n you ask me."))
 
+(define (bill-mous knpc kpc)
+  (say knpc "Therez mice all over. Jus' the other day I saw a man what "
+       "scurried lak a mouse!"))
+
 (define bill-conv
   (ifc nil
        (method 'default (lambda (knpc kpc) (say knpc "[He shrugs]")))
@@ -124,6 +128,9 @@
        (method 'scar bill-scared)
        (method 'sell bill-trade)
        (method 'thie bill-thie)
+       (method 'mous bill-mous)
+       (method 'man  bill-thie)
+       (method 'scur bill-thie)
        (method 'torc bill-goods)
        (method 'town bill-bole)
        (method 'trade bill-trade)

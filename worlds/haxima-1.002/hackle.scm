@@ -76,7 +76,7 @@
   (say knpc "It is a hard woman, hard but kind to Hackle!"))
 
 (define (hackle-kath knpc kpc)
-  (say knpc "It is a fiend! A fiend fleshed in woman!"))
+  (say knpc "A woman clothed in red! A fiend clothed in woman!"))
 
 (define (hackle-bill knpc kpc)
   (say knpc "It is careless. Yes, the wood gods will have it for supper one "
@@ -129,7 +129,7 @@
        "  An 'o' has a hole!\n"
        "  And hole has an 'o'!\n"
        "  And a mouse has both!\n"
-       "  When the moon is full\n"
+       "  In the middle of the night\n"
        "  Down it will go!\n"
        "Does it know what REVEALS?")
   (if (kern-conv-get-yes-no? kpc)
@@ -137,8 +137,11 @@
       (begin
         (say knpc "Wis Quas! The Red Bitch has a scroll, but not the "
              "understanding.")))
-  (say knpc "The Bill-boy knows where the mouse disappeared! O, there let "
-       "it reveal!"))
+  )
+
+(define (hackle-reve knpc kpc)
+  (say knpc "The Bill-boy knows where the mouse disappeared! "
+       "Let it REVEAL there!"))
 
 (define (hackle-rogu knpc kpc)
   (say knpc "The clever mouse plays the cats against one another!"))
@@ -166,6 +169,8 @@
 
        (method 'bill hackle-bill)
        (method 'kath hackle-kath)
+       (method 'red  hackle-kath)
+       (method 'bitc hackle-kath)
        (method 'may  hackle-may)
        (method 'melv hackle-melv)
        (method 'thud hackle-thud)
@@ -181,6 +186,7 @@
        (method 'mad  hackle-mad)
        (method 'migh hackle-migh)
        (method 'mous hackle-hole)
+       (method 'reve hackle-reve)
        (method 'rob  hackle-robs)
        (method 'robs hackle-robs)
        (method 'rogu hackle-rogu)

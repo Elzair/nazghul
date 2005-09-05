@@ -118,8 +118,8 @@
 ;;----------------------------------------------------------------------------
 ;; Time
 ;;----------------------------------------------------------------------------
-(define hour 23)
-(define minutes 59)
+(define hour 12)
+(define minutes 00)
 (define time-in-minutes (+ (* hour 60) minutes))
 
 (kern-set-clock 
@@ -219,9 +219,9 @@
   ;(kern-obj-put-at kplayer (list p_slimy_cavern 13 2)
   ;(kern-obj-put-at kplayer (list p_enchanters_tower 32 32)))
   ;(kern-obj-put-at kplayer (list p_shard 39 76)))
-  ;(kern-obj-put-at kplayer (list p_shard 28 51)))
+  (kern-obj-put-at kplayer (list p_shard 86 41)))
   ;(kern-obj-put-at kplayer (list p_test 15 15)))
-  (kern-obj-put-at kplayer (list p_bole 44 5)))
+  ;(kern-obj-put-at kplayer (list p_bole 44 5)))
   ;(kern-obj-put-at kplayer (list p_grey_goblin_village 0 9)))                  
 ;;----------------------------------------------------------------------------
 ;; To skip the extended start scene comment out this next line and uncomment
