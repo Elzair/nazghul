@@ -118,3 +118,68 @@
 
 (define (mk-thief-door place-tag x y)
   (make-invisible (mk-portal t_thief_door place-tag x y)))
+
+;;----------------------------------------------------------------------------
+;; Clue Trigger -- make a mechanism which will provide a clue when stepped
+;; on. Technically not a portal, but it doesn't really fit anywhere else,
+;; either.
+;;----------------------------------------------------------------------------
+(define (clue-mk msg) msg)
+(define (clue-msg clue) clue)
+(define (clue-trigger clue)
+  (apply kern-log-msg (clue-msg clue)))
+
+(define (clue-step kmech kchar)
+  (clue-trigger (kobj-gob-data kmech)))
+
+(define clue-step-ifc
+  (ifc '()
+       (method 'step clue-step)))
+
+(mk-obj-type 't_step_clue nil nil layer-mechanism clue-step-ifc)
+
+(define (mk-step-clue . msg)
+  (bind (kern-mk-obj t_step_clue 1)
+        (clue-mk msg)))
+
+;;----------------------------------------------------------------------------
+;; The riddle machine -- fills region with given terrain when answered
+;; incorrectly
+;;----------------------------------------------------------------------------
+(define (riddle-mk ans kter x y w h msg)
+  (list ans kter x y w h msg))
+(define (riddle-ans riddle) (car riddle))
+(define (riddle-terrain riddle) (cadr riddle))
+(define (riddle-x riddle) (caddr riddle))
+(define (riddle-y riddle) (list-ref riddle 3))
+(define (riddle-w riddle) (list-ref riddle 4))
+(define (riddle-h riddle) (list-ref riddle 5))
+(define (riddle-msg riddle) (list-ref riddle 6))
+
+(define (riddle-step kmech kchar)
+  (if (is-player-party-member? kchar)
+      (let ((riddle (kobj-gob-data kmech)))
+        (apply kern-log-msg (riddle-msg riddle))
+        (let ((guess (kern-conv-get-reply kchar)))
+          (if (eq? guess (riddle-ans riddle))
+              (kern-log-msg "YOU MAY PASS!")
+              (begin
+                (kern-log-msg "WRONG!")
+                (shake-map 10)
+                (fill-terrain (riddle-terrain riddle)
+                              (loc-place (kern-obj-get-location kmech))
+                              (riddle-x riddle)
+                              (riddle-y riddle)
+                              (riddle-w riddle)
+                              (riddle-h riddle))))
+          (kern-obj-remove kmech)))))
+
+(define riddle-step-ifc
+  (ifc '()
+       (method 'step riddle-step)))
+
+(mk-obj-type 't_step_riddle nil nil layer-mechanism riddle-step-ifc)
+
+(define (mk-riddle ans kter x y w h . msg)
+  (bind (kern-mk-obj t_step_riddle 1)
+        (riddle-mk ans kter x y w h msg)))

@@ -470,6 +470,16 @@ define (blit-maps kmap . blits)
          kmap
          blits))
 
+(define (fill-terrain kter kplace ox oy ow oh)
+  (define (fill x y w h)
+    (if (> h 0)
+        (if (> w 0)
+            (begin
+              (kern-place-set-terrain (list kplace x y) kter)
+              (fill (+ x 1) y (- w 1) h))
+            (fill ox (+ y 1) ow (- h 1)))))
+  (fill ox oy ow oh))
+
 ;;============================================================================
 ;; rect 
 ;;============================================================================
@@ -590,10 +600,8 @@ define (blit-maps kmap . blits)
         (kern-map-repaint))))
 
 (define (push kobj dx dy dist)
-  (display "push:")(display dx)(display dy)(display dist)(newline)
   (let* ((loc (loc-sum (kern-obj-get-location kobj)
                        (mk-loc nil dx dy))))
-    (display "loc:")(display loc)(newline)
     (if (kern-place-is-passable loc kobj)
         (begin 
           (kern-obj-relocate kobj loc nil)
@@ -619,3 +627,7 @@ define (blit-maps kmap . blits)
 ;; time procs for use with return value from kern-get-time:
 (define (time-hour time)(car time))
 (define (time-minute time) (cdr time))
+
+(define (is-player-party-member? kchar)
+  (in-list? kchar 
+            (kern-party-get-members (kern-get-player))))
