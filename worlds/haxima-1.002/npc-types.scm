@@ -326,3 +326,30 @@
 ;;----------------------------------------------------------------------------
 ;; Type queries
 ;;----------------------------------------------------------------------------
+(define (is-species? kchar species)
+  (eqv? (kern-char-get-species kchar) species))
+
+(define (is-occ? kchar occ)
+  (eqv? (kern-char-get-occ kchar) occ))
+
+(define (is-yellow-slime? kchar)
+  (is-species? kchar sp_yellow_slime))
+
+(define (is-green-slime? kchar)
+  (is-species? kchar sp_green_slime))
+
+(define (is-spider? kchar)
+  (or (is-species? kchar sp_spider)
+      (is-species? kchar sp_queen_spider)))
+
+(define (is-troll? kchar)
+  (is-species? kchar sp_troll))
+
+(define (is-goblin? kchar)
+  (is-species? kchar sp_goblin))
+
+(define (is-skeleton? kchar)
+  (is-species? kchar sp_skeleton))
+
+(define (is-bandit? kchar)
+  (is-occ? kchar oc_bandit))

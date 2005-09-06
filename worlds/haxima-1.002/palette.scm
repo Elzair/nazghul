@@ -33,10 +33,12 @@
     (list  "oo"   t_mast)               ;; "mast"
     (list  "ff"   t_fire_terrain)       ;; "fire"
     (list  "!!"   t_lava)               ;; "lava"
+    (list  "~!"   t_fake_lava)
     (list  "&&"   t_fireplace)          ;; "fireplace"
 
     (list  "xx"   t_wall)               ;; "wall"
     (list  "x."   t_wall_v)             ;; "wall"  (non-LOS-blocking)
+    (list  "~x"   t_fake_wall)
 
     (list  "??"   t_secret_door)        ;; "secret door"
     (list  "pp"   t_pillar)             ;; "pillar"
@@ -64,6 +66,7 @@
     (list  ".M"   t_m)                  ;; "an M"
     (list  ".N"   t_n)                  ;; "an N"
     (list  ".O"   t_o)                  ;; "an O"
+    (list  "~O"   t_fake_o)
     (list  ".P"   t_p)                  ;; "a P"
     (list  ".Q"   t_q)                  ;; "a Q"
     (list  ".R"   t_r)                  ;; "an R"

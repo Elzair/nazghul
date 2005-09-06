@@ -34,6 +34,7 @@
    (list 't_bog             "bog"           pclass-forest    s_bog             1 0 'terrain-effect-poison)
 
    (list 't_lava            "lava"          pclass-grass     s_lava            1  128 'burn)
+   (list 't_fake_lava       "lava"          pclass-grass     s_lava            1  128 nil)
    (list 't_fire_terrain    "fire"          pclass-grass     s_field_fire      1  512 'burn)
    (list 't_fireplace       "fireplace"     pclass-grass     s_fireplace       1 2048 'burn)
 
@@ -59,6 +60,7 @@
 
    (list 't_wall_v          "wall"          pclass-wall      s_wall_stone      1 0 nil)
    (list 't_wall            "wall"          pclass-wall      s_wall_stone      0 0 nil)
+   (list 't_fake_wall       "wall"          pclass-forest    s_wall_stone      0 0 nil)
 
    (list 't_wall_torch      "wall torch"    pclass-wall      s_wall_torch      0 512 'burn)
    (list 't_arrow_slit      "arrow slit"    pclass-wall      s_arrow_slit      1 0 nil)
@@ -118,6 +120,7 @@
    (list 't_M               "an M"          pclass-wall      s_M               1 0 nil)
    (list 't_N               "an N"          pclass-wall      s_N               1 0 nil)
    (list 't_O               "an O"          pclass-wall      s_O               1 0 nil)
+   (list 't_fake_O          "an O"          pclass-forest    s_O               1 0 nil)
    (list 't_P               "a P"           pclass-wall      s_P               1 0 nil)
    (list 't_Q               "a Q"           pclass-wall      s_Q               1 0 nil)
    (list 't_R               "an R"          pclass-wall      s_R               1 0 nil)

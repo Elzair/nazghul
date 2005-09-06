@@ -265,31 +265,6 @@
   #f)
 
 ;;----------------------------------------------------------------------------
-;; Species Queries
-;;----------------------------------------------------------------------------
-(define (is-species? kchar species)
-  (eqv? (kern-char-get-species kchar) species))
-
-(define (is-yellow-slime? kchar)
-  (is-species? kchar sp_yellow_slime))
-
-(define (is-green-slime? kchar)
-  (is-species? kchar sp_green_slime))
-
-(define (is-spider? kchar)
-  (or (is-species? kchar sp_spider)
-      (is-species? kchar sp_queen_spider)))
-
-(define (is-troll? kchar)
-  (is-species? kchar sp_troll))
-
-(define (is-goblin? kchar)
-  (is-species? kchar sp_goblin))
-
-(define (is-skeleton? kchar)
-  (is-species? kchar sp_skeleton))
-
-;;----------------------------------------------------------------------------
 ;; Trigger to generate slimes
 ;;----------------------------------------------------------------------------
 (define (slime-gen-target-loc kgen)

@@ -9,6 +9,8 @@
 
 (define portcullis-ifc
   (ifc bim-ifc
+       (method 'open bim-on)
+       (method 'close bim-off)
        (method 'signal bim-toggle)
        (method 'state portcullis-state)
        ))
@@ -24,3 +26,6 @@
 (define (mk-portcullis) 
   (mk-connected-portcullis nil))
 
+(define (mk-open-portcullis)
+  (bind (kern-mk-obj t_portcullis 1) 
+        (bim-mk #t nil nil)))

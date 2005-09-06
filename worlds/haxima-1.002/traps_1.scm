@@ -66,6 +66,7 @@
                   "All who would pass must answer the riddle:\n\n"
                   "  I know a word of letters three.\n"
                   "  Add two, and fewer there will be.") 14 14)
+  (put (mk-ladder-down 'p_traps_2 9 15) 9 2)
   )
  nil ; hooks
  nil ; edge entrances

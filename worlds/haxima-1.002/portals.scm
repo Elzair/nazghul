@@ -101,9 +101,11 @@
 (define (mk-teleporter  place-tag x y) (mk-portal t_teleporter  place-tag x y))
 (define (mk-dungeon place-tag x y) (mk-portal t_dungeon place-tag x y))
 
+;;----------------------------------------------------------------------------
 ;; Special portal -- entrance to thief's cave near Bole. Invisible, but under
 ;; reveal it shows the letter 'O'. When stepped on at midnight the player is
 ;; transported to the Traps I dungeon.
+;;----------------------------------------------------------------------------
 (define (thief-door-step kportal kchar)
   (let ((time (kern-get-time)))
     (if (and (= (time-hour time) 0)
@@ -118,6 +120,13 @@
 
 (define (mk-thief-door place-tag x y)
   (make-invisible (mk-portal t_thief_door place-tag x y)))
+
+;;----------------------------------------------------------------------------
+;; Secret Path -- visible only when Reveal is in effect
+;;----------------------------------------------------------------------------
+(mk-obj-type 't_secret_path "secret path" s_cobblestone layer-none nil)
+(define (mk-secret-path)
+  (make-invisible (kern-mk-obj t_secret_path 1)))
 
 ;;----------------------------------------------------------------------------
 ;; Clue Trigger -- make a mechanism which will provide a clue when stepped
