@@ -76,6 +76,9 @@
   (put (mk-door) 14 8)
   (put (mk-door) 4 8)
 
+  ;; true ladder down
+  (put (mk-ladder-down 'p_traps_3 9 9) 9 9)
+
   )
  nil ; hooks
  nil ; edge entrances

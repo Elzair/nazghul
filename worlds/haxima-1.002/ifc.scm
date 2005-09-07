@@ -72,6 +72,7 @@
 
 ;; Bind a kernel object to a gob and initialize it
 (define (bind kobj gob-data)
+  ;;(display "bind: ")(display gob-data)(newline)s
   (kern-obj-set-gob kobj (gob-mk kobj gob-data))
   (let ((ifc (kobj-ifc kobj)))
     (cond ((null? ifc) '())

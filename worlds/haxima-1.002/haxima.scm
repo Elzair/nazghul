@@ -37,6 +37,7 @@
 (load "oparine.scm")
 (load "traps_1.scm")
 (load "traps_2.scm")
+(load "traps_3.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Characters
@@ -100,7 +101,10 @@
   nil ;; trap
   ;; contents:
   (mk-contents (add-content 1 t_wis_quas_scroll)
-               (add-content 1 t_sanct_lor_scroll)))
+               (add-content 1 t_sanct_lor_scroll)
+               (add-content 1 t_armor_plate)
+               (add-content 1 t_iron_helm)
+               (add-content 1 t_halberd)))
 
  nil ;; party members (should be nil for initial load file)
  )
@@ -221,7 +225,7 @@
   ;(kern-obj-put-at kplayer (list p_slimy_cavern 13 2)
   ;(kern-obj-put-at kplayer (list p_enchanters_tower 32 32)))
   ;(kern-obj-put-at kplayer (list p_shard 39 76)))
-  (kern-obj-put-at kplayer (list p_traps_1 9 4)))
+  (kern-obj-put-at kplayer (list p_traps_3 9 9)))
   ;(kern-obj-put-at kplayer (list p_test 15 15)))
   ;(kern-obj-put-at kplayer (list p_bole 44 5)))
   ;(kern-obj-put-at kplayer (list p_grey_goblin_village 0 9)))                  

@@ -24,7 +24,6 @@
 
 ;; helpers
 (define (bim-send-signal kobj sig)
-  ;;(display "bim-send-signal ")(display sig)(newline)
   (let ((bim (gob-data (kobj-gob kobj))))
     (if (not (bim-active? bim))
         (let ((port (bim-port bim)))
@@ -49,13 +48,13 @@
 
 ;; handlers
 (define (bim-on kobj khandler) 
-  (display "bim-on")(newline)
+  ;(display "bim-on")(newline)
   (bim-change-state kobj khandler #t 'on)
   (bim-send-signal kobj 'on)
   )
 
 (define (bim-off kobj khandler) 
-  (display "bim-off")(newline)
+  ;(display "bim-off")(newline)
   (bim-change-state kobj khandler #f 'on)
   (bim-send-signal kobj 'off)
   )

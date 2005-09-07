@@ -15,3 +15,7 @@
 (define (mk-lever dest-tag)
   (bind (kern-mk-obj t_lever 1)
         (bim-mk #f dest-tag nil)))
+
+(define (mk-lever-with-id dest-tag id)
+  (bind (kern-mk-obj t_lever 1)
+         (bim-mk #f dest-tag id)))
