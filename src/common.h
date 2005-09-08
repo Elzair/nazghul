@@ -374,6 +374,10 @@ extern "C" {
 /* Hard-coded experience point values */
 #define COMBAT_VICTORY_XP 5
 
+/* Hard-coded drop probabilities */
+#define ITEM_DROP_PROB    25   /* 25% chance to drop readied items */
+#define CHEST_DROP_PROB   25   /* 25% chance to drop container     */
+
 /* Macros ********************************************************************/
 
 #define perror_sdl(msg) err("%s: %s\n", (msg), SDL_GetError())

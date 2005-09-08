@@ -1343,21 +1343,15 @@ static int place_describe_objects(struct place *place, int x, int y,
                 if (! obj->getName())
                         continue;
                 
-		if (type == NULL) {
-
-                        // This is the first type of thing we need to list.
-			type = obj->getObjectType();
-                        if (obj->isVisible() || Reveal || obj->isShaded())
-                                n_types++;
-
-		} else if (obj->getObjectType() != type) {
-
+                if(obj->getObjectType() != type
+                   || ! obj->getObjectType()) {
+                        
                         // We just found a new type of thing (we know because
                         // it's different from the last type of thing).
 			type = obj->getObjectType();
                         if (obj->isVisible() || Reveal || obj->isShaded())
                                 n_types++;
-
+                        
 		}
 	}
 
@@ -1400,7 +1394,8 @@ static int place_describe_objects(struct place *place, int x, int y,
 			type = obj->getObjectType();
                         n_instances = obj->getCount();
 
-		} else if (obj->getObjectType() != type) {
+		} else if (obj->getObjectType() != type
+                           || !obj->getObjectType()) {
 
                         // We just found a new type of thing (we know because
                         // it's different from the last type of thing). Now we
@@ -1418,7 +1413,12 @@ static int place_describe_objects(struct place *place, int x, int y,
                                                 log_continue(", ");
                                 }
 
-                                prev_obj->getObjectType()->describe(n_instances);
+                                if (prev_obj->getObjectType())
+                                        prev_obj->getObjectType()->
+                                                describe(n_instances);
+                                else
+                                        prev_obj->describe();
+
                                 n_described++;
                                 n_types--;
                         }

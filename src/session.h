@@ -102,6 +102,9 @@ struct session {
         // The cursor sprite is used by cmdwin.c
         struct sprite *cursor_sprite;
 
+        // The damage sprite is used in mapPaintDamage
+        struct sprite *damage_sprite;
+
         // The frame sprites are used by screen.c
         struct frame frame;
 

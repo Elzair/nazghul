@@ -990,6 +990,10 @@ void Character::dropRdyArms()
 		if (rdyArms[i] == NULL)
 			continue;
 
+                // roll to drop
+                if ((rand() % 100) > ITEM_DROP_PROB)
+                        continue;
+
 		// Create an object of this type and drop it on the map
 		class Object *object = new Object();
 		if (!object)
@@ -1009,7 +1013,11 @@ bool Character::dropItems()
 
 	if (container == NULL)
 		return false;
-	container->relocate(getPlace(), getX(), getY());
+
+        // roll to drop if not empty
+        if (!container->isEmpty() 
+            && (rand() % 100) <= CHEST_DROP_PROB)
+                container->relocate(getPlace(), getX(), getY());
         obj_dec_ref(container);
 	container = NULL;
 

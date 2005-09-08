@@ -72,6 +72,20 @@
              4                    ; xpval
              )
 
+(kern-mk-occ 'oc_warrior          ; tag
+             "warrior"            ; name 
+             0.0                  ; magic 
+             +2                   ; hp_mod 
+             +2                   ; hp_mult 
+             -1                   ; mp_mod 
+             -1                   ; mp_mult 
+             +2                   ; hit_mod 
+             +2                   ; def_mod 
+             +2                   ; dam_mod 
+             +2                   ; arm_mod
+             6                    ; xpval
+             )
+
 (kern-mk-occ 'oc_archer           ; tag
              "archer"             ; name 
              0.0                  ; magic 

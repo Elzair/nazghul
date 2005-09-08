@@ -823,6 +823,7 @@ void Object::sleep()
 
 void Object::damage(int amount)
 {
+        mapPaintDamage(getX(), getY());        
         runHook(OBJ_HOOK_DAMAGE);
 }
 

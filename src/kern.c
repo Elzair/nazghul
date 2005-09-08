@@ -2419,6 +2419,13 @@ static pointer kern_set_cursor(scheme *sc, pointer args)
         return sc->NIL;
 }
 
+static pointer kern_set_damage_sprite(scheme *sc, pointer args)
+{
+        if (unpack(sc, &args, "p", &Session->damage_sprite)) {
+                load_err("kern-set-damage-sprite: bad args");
+        }
+        return sc->NIL;
+}
 
 static pointer kern_set_frame(scheme *sc, pointer args)
 {
@@ -3013,6 +3020,11 @@ static pointer kern_obj_get_gob(scheme *sc, pointer  args)
 
         if (unpack(sc, &args, "p", &obj)) {
                 rt_err("kern-obj-get-gob: bad args");
+                return sc->NIL;
+        }
+
+        if (!obj) {
+                rt_err("kern-obj-get-gob: null obj");
                 return sc->NIL;
         }
 
@@ -4239,6 +4251,17 @@ KERN_API_CALL(kern_char_get_species)
                 return sc->NIL;
 
         return scm_mk_ptr(sc, ch->species);
+}
+
+KERN_API_CALL(kern_char_get_occ)
+{
+        class Character *ch;
+
+        ch = (class Character*)unpack_obj(sc, &args, "kern-char-get-occ");
+        if (!ch)
+                return sc->NIL;
+
+        return scm_mk_ptr(sc, ch->occ);
 }
 
 KERN_API_CALL(kern_char_get_mana)
@@ -6545,6 +6568,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-char-get-inventory", kern_char_get_inventory);
         API_DECL(sc, "kern-char-get-level", kern_char_get_level);
         API_DECL(sc, "kern-char-get-mana", kern_char_get_mana);
+        API_DECL(sc, "kern-char-get-occ", kern_char_get_occ);
         API_DECL(sc, "kern-char-get-party", kern_char_get_party);
         API_DECL(sc, "kern-char-get-species", kern_char_get_species);
         API_DECL(sc, "kern-char-get-strength", kern_char_get_strength);
@@ -6670,6 +6694,7 @@ scheme *kern_init(void)
         /* kern-set api */
         API_DECL(sc, "kern-set-crosshair", kern_set_crosshair);
         API_DECL(sc, "kern-set-cursor", kern_set_cursor);
+        API_DECL(sc, "kern-set-damage-sprite", kern_set_damage_sprite);
         API_DECL(sc, "kern-set-frame", kern_set_frame);
         API_DECL(sc, "kern-set-ascii", kern_set_ascii);
         API_DECL(sc, "kern-set-clock", kern_set_clock);

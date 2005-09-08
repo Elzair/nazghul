@@ -164,6 +164,12 @@ static void session_save_cursor(save_t *save, struct session *session)
                     session->cursor_sprite->tag);
 }
 
+static void session_save_damage_sprite(save_t *save, struct session *session)
+{
+        save->write(save, "(kern-set-damage-sprite %s)\n", 
+                    session->damage_sprite->tag);
+}
+
 static void session_save_frame(save_t *save, struct session *session)
 {
         save->write(save, "(kern-set-frame %s %s %s %s "\
@@ -356,6 +362,9 @@ void session_load(char *filename)
         if (! Session->cursor_sprite) {
                 load_err("no cursor sprite (use kern-set-cursor)");
         }
+        if (! Session->damage_sprite) {
+                load_err("no damage sprite (use kern-set-cursor)");
+        }
         if (! Session->clock.set) {
                 load_err("clock not set (use kern-set-clock)");
         }
@@ -546,6 +555,7 @@ void session_save(char *fname)
         save->write(save, ";;--------------\n");
         session_save_frame(save, Session);
         session_save_cursor(save, Session);
+        session_save_damage_sprite(save, Session);
         session_save_crosshair(save, Session);
         session_save_ascii(save, Session);
         session_save_clock(save, Session);

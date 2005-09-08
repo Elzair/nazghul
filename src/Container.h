@@ -42,6 +42,7 @@ class Container:public Object {
         bool isEmpty();
 	bool isTrapped();
 	void setTrap(closure_t *trap);
+
 	closure_t *getTrap();
 
         // Virtual methods from base class

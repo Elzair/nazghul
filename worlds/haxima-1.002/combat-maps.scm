@@ -538,4 +538,3 @@
 (kern-terrain-set-combat-map t_trail_e m_trail_e_combat)
 
 (kern-terrain-set-combat-map t_bridge_WE  m_bridge_WE_combat)
-

@@ -273,7 +273,7 @@
   (ifc nil
        (method 'exec mongen2-exec)))
 
-(mk-obj-type 't_mongen2 "monster generator v2" nil layer-none mongen2-ifc)
+(mk-obj-type 't_mongen2 nil nil layer-none mongen2-ifc)
 
 (define (mk-mongen2 thresh max is-monster? mk-monster mk-args)
   (bind (kern-obj-set-visible (kern-mk-obj t_mongen2 1) #f)

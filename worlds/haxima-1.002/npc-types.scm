@@ -180,7 +180,7 @@
     ;;...................container (and contents)
     (mk-chest
      nil
-     (mk-contents (roll-to-add 50  "1"     t_2h_axe)
+     (mk-contents (roll-to-add 25  "1"     t_2h_axe)
                   (roll-to-add 25  "1"     t_halberd)
                   (roll-to-add 50  "1"     t_sword)
                   (roll-to-add 25  "1"     t_2H_sword)
@@ -197,6 +197,85 @@
     nil ;;...............effects
     nil ;;...............conversation
     )))
+
+(define (mk-death-knight)
+  (kern-char-arm-self
+   (mk-stock-char
+    "a death knight" ;;.....name
+    sp_skeleton ;;.......species
+    oc_warrior ;;.........occupation
+    s_knight ;;........sprite
+    faction-monster ;;...faction
+    nil ;;...............custom ai (optional)
+    ;;...................container (and contents)
+    (mk-chest
+     nil
+     (mk-contents (roll-to-add 100  "1"      t_2h_axe)
+                  (roll-to-add 100 "1"       t_iron_helm)
+                  (roll-to-add 100 "1"       t_armor_plate)
+                  (roll-to-add 75  "1d30"  t_gold_coins)
+                  ))
+
+    nil ;;...............readied arms (in addition to container contents)
+    nil ;;...............effects
+    nil ;;...............conversation
+    )))
+
+(define (mk-halberdier)
+  (bind
+   (kern-char-arm-self
+    (mk-stock-char
+     "a guard" ;;.....name
+     sp_human ;;.......species
+     oc_warrior ;;.........occupation
+     s_guard ;;........sprite
+     faction-men ;;...faction
+     nil ;;...............custom ai (optional)
+     ;;...................container (and contents)
+     (mk-chest
+     nil
+     (mk-contents (roll-to-add 100 "1"     t_halberd)
+                  (roll-to-add 100 "1"     t_chain_coif)
+                  (roll-to-add 100 "1"     t_armor_chain)
+                  (roll-to-add 75  "1d2"   t_heal_potion)
+                  (roll-to-add 10  "1"     t_vas_mani_scroll)
+                  (roll-to-add 10  "1"     t_in_an_scroll)
+                  (roll-to-add 50  "1d5"   t_food)
+                  ))
+     nil ;;...............readied arms (in addition to container contents)
+     nil ;;...............effects
+     nil ;;...............conversation
+     ))
+   'halberdier))
+
+(define (mk-crossbowman)
+  (bind
+   (kern-char-arm-self
+    (mk-stock-char
+     "a guard" ;;.....name
+     sp_human ;;.......species
+     oc_warrior ;;.........occupation
+     s_guard ;;........sprite
+     faction-men ;;...faction
+     nil ;;...............custom ai (optional)
+     ;;...................container (and contents)
+     (mk-chest
+     nil
+     (mk-contents (roll-to-add 100 "1"     t_crossbow)
+                  (roll-to-add 100 "1d100" t_bolt)
+                  (roll-to-add 100 "1"     t_chain_coif)
+                  (roll-to-add 100 "2"     t_dagger)
+                  (roll-to-add 100 "1"     t_armor_chain)
+                  (roll-to-add 75  "1d2"   t_heal_potion)
+                  (roll-to-add 10  "1"     t_vas_mani_scroll)
+                  (roll-to-add 10  "1"     t_in_an_scroll)
+                  (roll-to-add 50  "1d5"   t_food)
+                  ))
+     nil ;;...............readied arms (in addition to container contents)
+     nil ;;...............effects
+     nil ;;...............conversation
+     ))
+   'crossbowman))
 
 (define (mk-yellow-slime)
   (let ((slime
@@ -351,5 +430,17 @@
 (define (is-skeleton? kchar)
   (is-species? kchar sp_skeleton))
 
+(define (is-death-knight? kchar)
+  (and (is-species? kchar sp_skeleton)
+       (is-occ? kchar oc_warrior)))
+
 (define (is-bandit? kchar)
   (is-occ? kchar oc_bandit))
+
+(define (is-halberdier? kchar)
+  (eq? (kobj-gob-data kchar)
+       'halberdier))
+
+(define (is-crossbowman? kchar)
+  (eq? (kobj-gob-data kchar)
+       'crossbowman))

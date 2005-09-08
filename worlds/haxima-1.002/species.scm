@@ -138,7 +138,7 @@
                  "skeleton"        ; name
                  12 8 12          ; str/int/dex
                  speed-human       ; speed
-                 6                 ; vision radius
+                 10                ; vision radius
                  mmode-walk        ; passability
                  22 2              ; hp mod/mult
                  0  0              ; mp mod/mult

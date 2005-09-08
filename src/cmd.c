@@ -1351,6 +1351,8 @@ bool cmdHandle(class Character * pc)
         }
 
         // Handle it
+        cmdwin_print("%s", mech->getName());
+        log_msg("%s handles %s", pc->getName(), mech->getName()); 
         mech->getObjectType()->handle(mech, pc);
         mapSetDirty();
 

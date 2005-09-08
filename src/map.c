@@ -98,6 +98,7 @@ static struct map {
 	int cam_x, cam_y, cam_max_x, cam_max_y, cam_min_x, cam_min_y;
 	bool peering;
 	char vmask[VMASK_SZ];	/* final mask used to render */
+        SDL_Surface *tile_scratch_surf;
 } Map;
 
 // The lightmap only needs to be as big as the map viewer window. Making it
@@ -557,6 +558,9 @@ int mapInit(void)
 
 	Map.peering   = false;
         LosEngine     = NULL;
+
+        Map.tile_scratch_surf = screenCreateSurface(TILE_W, TILE_H);
+        assert(Map.tile_scratch_surf);
 
 	return 0;
 }
@@ -1276,7 +1280,7 @@ void mapBlackout(int val)
 }
 
 static void mapPaintProjectile(SDL_Rect *rect, struct sprite *sprite,
-                               SDL_Surface *surf)
+                               SDL_Surface *surf, int dur)
 {
 	// The rect coordinates are in SCREEN coordinates (not map) so I need
 	// to do some clipping here to make sure we don't paint off the map
@@ -1300,12 +1304,32 @@ static void mapPaintProjectile(SDL_Rect *rect, struct sprite *sprite,
 
 	// Pause. Doing nothing is too fast, SDL_Delay is too slow, so use the
 	// custom calibrated busywait.
-	busywait(1);
+	busywait(dur);
 
 	// Erase the missile by blitting the background
 	screenBlit(surf, NULL, rect);
 	screenUpdate(rect);
 }
+
+void mapPaintDamage(int x, int y)
+{
+        int tile_w, tile_h;
+        SDL_Rect rect;
+        SDL_Rect *vrect = &Map.aview->vrect;
+
+        if (!mapTileIsVisible(x, y))
+                return;
+
+        mapGetTileDimensions(&tile_w, &tile_h);
+        rect.w = tile_w;
+        rect.h = tile_h;
+        rect.x = MX_TO_SX(x);
+        rect.y = MY_TO_SY(y);
+
+        mapPaintProjectile(&rect, Session->damage_sprite, 
+                           Map.tile_scratch_surf, 100);
+}
+
 
 void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By, 
                           struct sprite *sprite, struct place *place,
@@ -1322,13 +1346,13 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
 
 	t1 = SDL_GetTicks();
 
-        // Get the (possible zoomed) tile dimensions.
+        // Get tile dimensions
         int tile_w;
         int tile_h;
         mapGetTileDimensions(&tile_w, &tile_h);
 
 	// Create a scratch surface for saving/restoring the background
-        surf = screenCreateSurface(tile_w, tile_h);
+        surf = Map.tile_scratch_surf;
         assert(surf);
 
 	// Get the map coordinates of the view origin (upper left corner)
@@ -1426,7 +1450,7 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
                         }
 
                         if (mapTileIsVisible(Px, Py) && sprite)
-                                mapPaintProjectile(&rect, sprite, surf);
+                                mapPaintProjectile(&rect, sprite, surf, 1);
 
 			if (P > 0) {
 				rect.x += Xincr;
@@ -1459,7 +1483,7 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
                         }
 
                         if (mapTileIsVisible(Px, Py) && sprite)
-                                mapPaintProjectile(&rect, sprite, surf);
+                                mapPaintProjectile(&rect, sprite, surf, 1);
 
 			if (P > 0) {
 				rect.x += Xincr;
@@ -1481,8 +1505,9 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
         if (sprite)
                 spriteSetFacing(sprite, SPRITE_DEF_FACING);
 
-	if (surf != NULL)
-		SDL_FreeSurface(surf);
+        // Not anymore, now that we keep it in Map.tile_scratch_surf
+	//if (surf != NULL)
+	//	SDL_FreeSurface(surf);
 
         *Bx = Px;
         *By = Py;

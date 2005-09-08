@@ -2,6 +2,14 @@
 ;; tblit.scm - a terrain-blitting mech
 ;;----------------------------------------------------------------------------
 
+;; Some convenient maps for blitting
+(kern-mk-map
+ 'm_hall_section 3 1 pal_expanded
+ (list
+  ",, ,, ,,"
+  )
+)
+
 ;; A curried wrapper for kern-blit-map
 (define (blit-map place x y w h map)
   (kern-blit-map (kern-place-map place) x y map 0 0 w h))

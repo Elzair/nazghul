@@ -38,6 +38,7 @@
 (load "traps_1.scm")
 (load "traps_2.scm")
 (load "traps_3.scm")
+(load "great_hall.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Characters
@@ -225,7 +226,7 @@
   ;(kern-obj-put-at kplayer (list p_slimy_cavern 13 2)
   ;(kern-obj-put-at kplayer (list p_enchanters_tower 32 32)))
   ;(kern-obj-put-at kplayer (list p_shard 39 76)))
-  (kern-obj-put-at kplayer (list p_traps_3 9 9)))
+  (kern-obj-put-at kplayer (list p_great_hall 9 9)))
   ;(kern-obj-put-at kplayer (list p_test 15 15)))
   ;(kern-obj-put-at kplayer (list p_bole 44 5)))
   ;(kern-obj-put-at kplayer (list p_grey_goblin_village 0 9)))                  
