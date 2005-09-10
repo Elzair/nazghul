@@ -1151,8 +1151,10 @@ static void ctrl_idle(class Character *character)
 
         if (character->getAI()) {
                 int time = SDL_GetTicks();
-                closure_exec(character->getAI(), "p", character);
-                return;
+                /* closure returns true if it handled the turn, otherwise fall
+                 * through to standard AI */
+                if (closure_exec(character->getAI(), "p", character))
+                        return;
         }
 
         // -------------------------------------------------------------------

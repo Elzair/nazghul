@@ -4,6 +4,13 @@
 (define (loc-x loc) (cadr loc))
 (define (loc-y loc) (caddr loc))
 
+;; eval-loc -- given a loc where the place is a tag, return one where the place
+;; is bound to the kernel object referred to by the tag
+(define (eval-loc loc)
+  (mk-loc (eval (loc-place loc))
+          (loc-x loc) 
+          (loc-y loc)))
+
 (define (loc-op a b op)
   (mk-loc (loc-place a)
           (op (loc-x a) (loc-x b))
@@ -26,10 +33,6 @@
 (define (loc-to-cardinal-dir loc)
   (let ((x (loc-x loc))
         (y (loc-y loc)))
-    (display "loc-to-cardinal-dir")
-    (display " x=")(display x)
-    (display " y=")(display y)
-    (newline)
     (if (> x 0)
         ;; eastern half
         (if (> y 0)

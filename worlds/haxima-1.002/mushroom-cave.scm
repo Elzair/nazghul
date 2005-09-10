@@ -44,7 +44,14 @@
 
  ;; objects
  (list
-  (put (mk-generator t_yellow_slime_generator) 7 7)
+  (put (mk-step-gen 600 
+                    1 
+                    'is-yellow-slime? 
+                    'mk-yellow-slime-verbose 
+                    (list "A yellow slime rises from the ooze!")
+                    (list 'p_mushroom_cave 7 7)) 
+       7 
+       9)
   (put (mk-ladder-up 'p_shard 78 74) 7 12)
   (put (kern-mk-obj t_royal_cape 1) 4 14)
   )

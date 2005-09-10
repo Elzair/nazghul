@@ -132,7 +132,8 @@
                 (guard-dec-gate-timer! guard)
                 (if (gate-is-open? kgate)
                     (guard-start-gate-timer! guard)
-                    ))))))
+                    ))))
+    #t))
 
 ;;----------------------------------------------------------------------------
 ;; Constructor

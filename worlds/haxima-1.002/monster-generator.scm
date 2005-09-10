@@ -236,26 +236,32 @@
 ;;----------------------------------------------------------------------------
 ;; Newer, improveder monster generator
 ;;----------------------------------------------------------------------------
-(define (mongen2-mk thresh max is-monster-tag mk-monster-tag mk-args)
-  (list thresh max is-monster-tag mk-monster-tag mk-args))
+(define (mongen2-mk thresh max is-monster-tag mk-monster-tag mk-args
+                    out-of-sight-only? targ-loc)
+  (list thresh max is-monster-tag mk-monster-tag mk-args out-of-sight-only?
+        targ-loc))
 (define (mongen2-thresh gen) (car gen))
 (define (mongen2-max gen) (cadr gen))
 (define (mongen2-mk-monster gen)
   (apply (eval (cadddr gen)) (list-ref gen 4)))
+(define (mongen2-out-of-sight-only? gen) (list-ref gen 5))
+(define (mongen2-targ-loc gen) 
+  (let ((tag-loc (list-ref gen 6)))
+    (if (null? tag-loc)
+        nil
+        (eval-loc tag-loc))))
 
 (define (mongen2-exec kgen)
   (let ((gen (kobj-gob-data kgen)))
     (define (roll-to-encounter)
       (>= (modulo (random-next) 1000) (mongen-thresh gen)))
     (define (not-too-many?)
-      ;;(display "not-too-many?")(newline)
       (< (length (filter (eval (caddr gen))
                          (kern-place-get-beings (loc-place 
                                                  (kern-obj-get-location 
                                                   kgen)))))
          (mongen-max gen)))
     (define (player-out-of-sight?)
-      ;;(display "player-out-of-sight?")(newline)
       (define (can-see? members)
         (if (null? members)
             #f
@@ -265,9 +271,13 @@
       (not (can-see? (kern-party-get-members (kern-get-player)))))
     (if (and (roll-to-encounter)
              (not-too-many?)
-             (player-out-of-sight?))
-        (kern-obj-put-at (mongen2-mk-monster gen)
-                         (kern-obj-get-location kgen)))))
+             (or (not (mongen2-out-of-sight-only? gen))
+                 (player-out-of-sight?)))
+        (let ((targ-loc (mongen2-targ-loc gen)))
+          (kern-obj-put-at (mongen2-mk-monster gen)
+                           (if (null? targ-loc)
+                               (kern-obj-get-location kgen)
+                               targ-loc))))))
 
 (define mongen2-ifc
   (ifc nil
@@ -277,4 +287,16 @@
 
 (define (mk-mongen2 thresh max is-monster? mk-monster mk-args)
   (bind (kern-obj-set-visible (kern-mk-obj t_mongen2 1) #f)
-        (mongen2-mk thresh max is-monster? mk-monster mk-args)))
+        (mongen2-mk thresh max is-monster? mk-monster mk-args #t nil)))
+
+;; same, only triggers when player steps on it and doesn't care if player is in
+;; sight
+(define step-gen-ifc
+  (ifc nil
+       (method 'step mongen2-exec)))
+
+(mk-obj-type 't_step_gen nil nil layer-mechanism step-gen-ifc)
+
+(define (mk-step-gen thresh max is-monster? mk-monster mk-args targ-loc)
+  (bind (kern-obj-set-visible (kern-mk-obj t_step_gen 1) #f)
+        (mongen2-mk thresh max is-monster? mk-monster mk-args #f targ-loc)))

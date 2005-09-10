@@ -294,6 +294,10 @@
     (kern-obj-add-effect slime ef_poison_immunity nil)
     slime))
 
+(define (mk-yellow-slime-verbose msg)
+  (kern-log-msg msg)
+  (mk-yellow-slime))
+
 (define (mk-green-slime)
   (let ((slime 
          (mk-stock-char

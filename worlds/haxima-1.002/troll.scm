@@ -275,4 +275,5 @@
   (let ((foes (all-visible-hostiles ktroll)))
     (if (null? foes)
         (troll-wander ktroll)
-        (troll-hostiles ktroll foes))))
+        (troll-hostiles ktroll foes))
+    #t))

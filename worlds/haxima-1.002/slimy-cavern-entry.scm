@@ -7,7 +7,6 @@
 ;; ----------------------------------------------------------------------------
 
 (define (slimy-cavern-entry kplace kplayer)
-  (display "slimy-cavern-entry")(newline)
   (let ((slimes (filter is-green-slime? (kern-place-get-beings kplace))))
     (if (< (length slimes) 1)
         (psummon (mk-loc kplace 10 20)

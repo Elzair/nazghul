@@ -212,4 +212,5 @@
   (let ((foes (all-visible-hostiles kspider)))
     (if (null? foes)
         (spider-no-hostiles kspider)
-        (spider-hostiles kspider foes))))
+        (spider-hostiles kspider foes))
+    #t))
