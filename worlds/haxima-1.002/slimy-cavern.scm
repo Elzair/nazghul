@@ -119,7 +119,9 @@
                 (list (mk-door-full windowed-wood-door-in-rock #t #f nil) 13 3)
 
                 ;; monster generators
-                (list (mk-slime-generator 9 17) 11 17)
+                (put (mk-step-gen 0 3 'is-green-slime? 'mk-green-slime-verbose
+                                  (list "A slime oozes up from its foul bed!")
+                                  (list 'p_slimy_cavern 9 17)) 11 17)
 
                 ;; existing npc's
                 (list (mk-bandit) 5 4)

@@ -316,6 +316,10 @@
     (kern-obj-add-effect slime ef_poison_immunity nil)
     slime))
 
+(define (mk-green-slime-verbose msg)
+  (kern-log-msg msg)
+  (mk-green-slime))
+
 (define (mk-wood-spider)
   (mk-stock-char
    " a wood spider" ;;..........name

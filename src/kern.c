@@ -2537,17 +2537,17 @@ static pointer kern_obj_add_effect(scheme *sc, pointer args)
 
         if (unpack(sc, &args, "ppl", &obj, &effect, &gobcell)) {
                 rt_err("kern-obj-add-effect: bad args");
-                return result;
+                return sc->F;
         }
 
         if (!obj) {
                 rt_err("kern-obj-add-effect: null object");
-                return sc->NIL;
+                return sc->F;
         }
 
         if (! is_effect(effect)) {
                 rt_err("kern-obj-remove-effect: wrong type for effect!");
-                return sc->NIL;
+                return sc->F;
         }
 
         /* Note: even if gobcell is sc->NIL we want to wrap it. I once tried to
@@ -2556,9 +2556,7 @@ static pointer kern_obj_add_effect(scheme *sc, pointer args)
         gob = gob_new(sc, gobcell);
         gob->flags |= GOB_SAVECAR;
 
-        result = obj->addEffect(effect, gob) ? sc->T : sc->F;
-
-        return sc->NIL;
+        return obj->addEffect(effect, gob) ? sc->T : sc->F;
 }
 
 static pointer kern_obj_remove_effect(scheme *sc, pointer args)

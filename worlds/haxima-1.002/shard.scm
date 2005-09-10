@@ -457,8 +457,6 @@
   (list p_oparine           12 78)
   )
 
- ;; (list p_wivernscross       4 50)
-
  nil ; neighbors
 
  ;; objects:
@@ -476,10 +474,8 @@
   (list (kern-mk-party t_bandit_gang faction-monster nil) 29 28)
 
   ;; monster/ambush generators
-  (list (mk-generator t_orc_generator) 1 22)
-  (list (mk-generator t_skeleton_generator) 0 0)
-  (list (mk-generator t_bandit_generator) 30 38)
-  (list (mk-wilderness-ambush-generator t_queen_spider_generator 43 34 5 6 "A nest of spiders!") 46 37)
+  (list (mk-wilderness-ambush-generator t_queen_spider_generator 
+                                        43 34 5 6 "A nest of spiders!") 46 37)
   )
 
  nil ; hooks

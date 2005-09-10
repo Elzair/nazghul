@@ -56,7 +56,7 @@
 
  ;; objects
  (list
-  (put (mk-mongen t_troll_gen 500 3) 16 10)
+  (put (mk-mongen2 500 3 'is-troll? 'mk-troll nil) 16 10)
   )
 
  nil ; hooks
