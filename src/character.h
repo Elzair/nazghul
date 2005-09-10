@@ -86,7 +86,8 @@ class Character:public Being {
 	virtual unsigned char getStrength();
 	virtual unsigned char getIntelligence();
 	virtual unsigned char getDexterity();
-	virtual unsigned char getLevel();
+	int getLevel();
+        void setLevel(int level);
         virtual struct mmode *getMovementMode();
 	virtual int getArmourClass();
 	virtual char *getWoundDescription();

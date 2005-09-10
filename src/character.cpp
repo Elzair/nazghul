@@ -1337,11 +1337,12 @@ bool Character::isShaded()
 
 void Character::describe()
 {
-	if (isvowel(species->name[0]))
-		log_continue("an ");
-	else
-		log_continue("a ");
-	log_continue("%s", species->name);
+        log_continue(" a level %d %s", getLevel(), species->name);
+// 	if (isvowel(species->name[0]))
+// 		log_continue("an ");
+// 	else
+// 		log_continue("a ");
+// 	log_continue("%s", species->name);
         if (occ && occ->name)
                 log_continue(" %s", occ->name);
         if (!isVisible())
@@ -1401,8 +1402,13 @@ unsigned char Character::getDexterity() {
         return (species->dex + dex);
 }
 
-unsigned char Character::getLevel() {
+int Character::getLevel() {
         return lvl;
+}
+
+void Character::setLevel(int val) {
+        assert(val>0);
+        lvl = val;
 }
 
 bool Character::isDead() {

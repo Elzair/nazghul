@@ -221,6 +221,10 @@
     nil ;;...............conversation
     )))
 
+(define (mk-death-knight-at-level lvl-dice)
+  (kern-char-set-level (mk-death-knight)
+                       (kern-dice-roll lvl-dice)))
+
 (define (mk-halberdier)
   (bind
    (kern-char-arm-self

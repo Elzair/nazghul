@@ -5813,6 +5813,25 @@ KERN_API_CALL(kern_char_get_level)
         return scm_mk_integer(sc, character->getLevel());
 }
 
+KERN_API_CALL(kern_char_set_level)
+{
+        class Character *character;
+        int val = 0;
+
+        /* unpack the character */
+        character = (class Character*)unpack_obj(sc, &args, "kern-char-set-level");
+        if (!character)
+                return sc->NIL;
+
+        if (unpack(sc, &args, "d", &val)) {
+                rt_err("kern-char-set-level: bad args");
+                return sc->NIL;
+        }
+
+        character->setLevel(val);
+        return scm_mk_ptr(sc, character);
+}
+
 KERN_API_CALL(kern_char_get_strength)
 {
         class Character *character;
@@ -6577,6 +6596,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-char-set-ai", kern_char_set_ai);
         API_DECL(sc, "kern-char-set-sleep", kern_char_set_sleep);
         API_DECL(sc, "kern-char-set-fleeing", kern_char_set_fleeing);
+        API_DECL(sc, "kern-char-set-level", kern_char_set_level);
         API_DECL(sc, "kern-char-is-asleep?", kern_char_is_asleep);
         API_DECL(sc, "kern-char-uncharm", kern_char_uncharm);
 
