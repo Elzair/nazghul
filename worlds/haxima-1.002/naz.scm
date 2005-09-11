@@ -185,11 +185,19 @@
 (define (all-chars kplace)
   (kern-place-get-beings kplace))
 
+;; Filter objects out of range
 (define (all-in-range origin radius objlst)
-  (filter (lambda (kobj) (<= (kern-get-distance origin 
-                                                (kern-obj-get-location kobj))
-                             radius))
+  (filter (lambda (kobj) 
+            (<= (kern-get-distance origin 
+                                   (kern-obj-get-location kobj))
+                radius))
           objlst))
+
+;; Return a list of all hostiles in the given range
+(define (get-hostiles-in-range kchar range)
+  (all-in-range (kern-obj-get-location kchar)
+                range
+                (kern-being-get-visible-hostiles kchar)))
 
 ;; Convenience proc for rolling dtables by hand
 (define (dtable-row . cols) cols)
@@ -320,6 +328,14 @@
           ((eqv? item (car (car inv))) #t)
           (else (hasit? item (cdr inv)))))
   (hasit? ktype (kern-char-get-inventory kchar)))
+
+(define (use-item-from-inventory-on-self kchar ktype)
+  (kern-obj-remove-from-inventory kchar ktype 1)
+  (display "using")(newline)
+  (apply (kern-type-get-gifc ktype) (list 'use ktype kchar))
+  (kern-log-msg (kern-obj-get-name kchar)
+                " uses a(n) "
+                (kern-type-get-name ktype)))
 
 ;;============================================================================
 ;; Modulo system procedures -- useful on wrapping maps
@@ -536,7 +552,7 @@ define (blit-maps kmap . blits)
              (>= (kern-char-get-level kchar)
                  (spell-level spell))))))
   
-;; cast - cast a spell which requires no args if possible, assumes kchar has
+;; cast0 - cast a spell which requires no args if possible, assumes kchar has
 ;; enough mana
 (define (cast0 kchar spell)
   (apply (spell-handler spell) (list kchar))
@@ -545,6 +561,20 @@ define (blit-maps kmap . blits)
   (kern-log-msg (kern-obj-get-name kchar) 
                 " casts " 
                 (spell-name spell)))
+
+;; cast1 - cast a spell which requires one arg if possible, assumes kchar has
+;; enough mana
+(define (cast1 kchar spell ktarg)
+  (display "cast1: ")(display spell)(newline)
+  (apply (spell-handler spell) (list kchar ktarg))
+  (kern-char-dec-mana kchar (spell-cost spell))
+  (kern-obj-dec-ap kchar (spell-ap spell))
+  (kern-log-msg (kern-obj-get-name kchar) 
+                " casts " 
+                (spell-name spell)
+                " on "
+                (kern-obj-get-name ktarg)
+                "!"))
   
 ;; ----------------------------------------------------------------------------
 ;; terrain-ok-for-field? -- check if the terrain at a given location will allow

@@ -198,22 +198,88 @@
     nil ;;...............conversation
     )))
 
+;; Death knights can use Vampiric Touch at L3 and Disease at L6
+(define vampiric-touch-min-level 3)
+(define vampiric-touch-mana-cost vampiric-touch-min-level)
+
+(define disease-min-level 6)
+(define disease-mana-cost disease-min-level)
+
+(define (can-use-vampiric-touch? kchar)
+  (can-use-ability? vampiric-touch kchar))
+
+(define (can-use-disease? kchar)
+  (can-use-ability? disease-touch kchar))
+
+(define (want-healing? kchar)
+  (display "hp: ")(display (kern-char-get-hp kchar))
+  (display "/")(display (kern-char-get-max-hp kchar))
+  (newline)
+  (<= (kern-char-get-hp kchar)
+      (/ (kern-char-get-max-hp kchar) 2)))
+
+(define (want-mana? kchar)
+  (display "mana: ")(display (kern-char-get-mana kchar))
+  (display "/")(display (kern-char-get-max-mana kchar))
+  (newline)
+  (<= (kern-char-get-mana kchar)
+      (/ (kern-char-get-max-mana kchar) 2)))
+
+(define (has-mana-potion? kchar)
+  (in-inventory? kchar t_mana_potion))
+
+(define (drink-mana-potion kchar)
+  (display "drink-mana-potion")(newline)
+  (use-item-from-inventory-on-self kchar t_mana_potion))
+
+(define (use-vampiric-touch kchar ktarg)
+  (use-ability vampiric-touch kchar ktarg))
+
+(define (use-disease kchar ktarg)
+  (use-ability disease-touch kchar ktarg))
+
+(define (death-knight-ai kchar)
+  (if (and (want-mana? kchar)
+           (has-mana-potion? kchar))
+      (begin
+        (drink-mana-potion kchar)
+        #t)
+      (let ((vt (can-use-vampiric-touch? kchar))
+            (dis (can-use-disease? kchar)))
+        (if (not (or vt dis))
+            #f
+            (let ((victims (get-hostiles-in-range kchar 1)))
+                                        ;(display "victims: ")(display victims)
+              (if (null? victims)
+                  #f
+                  (if (want-healing? kchar)
+                      (begin
+                                        ;(display "want healing")(newline)
+                        (use-vampiric-touch kchar (car victims))
+                        #t)
+                      (if (>= (kern-dice-roll "1d20") 16)
+                          (begin
+                            (use-disease kchar (car victims))
+                            #t)
+                          #f))))))))
+
 (define (mk-death-knight)
   (kern-char-arm-self
    (mk-stock-char
-    "a death knight" ;;.....name
+    "a death knight" ;;..name
     sp_skeleton ;;.......species
-    oc_warrior ;;.........occupation
-    s_knight ;;........sprite
+    oc_undead_warrior ;;.occupation
+    s_knight ;;..........sprite
     faction-monster ;;...faction
-    nil ;;...............custom ai (optional)
+    'death-knight-ai ;;..custom ai (optional)
     ;;...................container (and contents)
     (mk-chest
      nil
      (mk-contents (roll-to-add 100  "1"      t_2h_axe)
                   (roll-to-add 100 "1"       t_iron_helm)
                   (roll-to-add 100 "1"       t_armor_plate)
-                  (roll-to-add 75  "1d30"  t_gold_coins)
+                  (roll-to-add 75  "1d30"    t_gold_coins)
+                  (roll-to-add 100  "1d3"     t_mana_potion)
                   ))
 
     nil ;;...............readied arms (in addition to container contents)
@@ -222,8 +288,17 @@
     )))
 
 (define (mk-death-knight-at-level lvl-dice)
-  (kern-char-set-level (mk-death-knight)
-                       (kern-dice-roll lvl-dice)))
+  (let ((dk (mk-death-knight))
+        (lvl (kern-dice-roll lvl-dice)))
+    (kern-char-set-level dk lvl)
+    (kern-char-set-hp dk 
+                      (max-hp (kern-char-get-species dk)
+                              (kern-char-get-occ dk)
+                              lvl 0 0))
+    (kern-char-set-mana dk
+                        (max-mp (kern-char-get-species dk)
+                                (kern-char-get-occ dk)
+                                lvl 0 0))))
 
 (define (mk-halberdier)
   (bind

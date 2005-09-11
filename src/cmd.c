@@ -2026,7 +2026,7 @@ bool cmdCastSpell(class Character * pc)
                 return false;
         case RESULT_NO_EFFECT:
                 log_end("no effect!");
-                return false;
+                break;
         default:
                 assert(false);
                 break;

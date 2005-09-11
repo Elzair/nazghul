@@ -77,7 +77,11 @@ class Character:public Being {
         virtual class Party * getParty();
 	virtual int getType();
 	virtual char *getName();
-	virtual int getHp();
+	int getHp();
+	void setHp(int hp);
+	int getMana();
+        void setMana(int mana);
+	int getMaxMana();
         class Container *getInventoryContainer();
 	virtual int getMaxHp();
 	virtual int getOrder();
@@ -98,8 +102,6 @@ class Character:public Being {
 	virtual int getLight();
 	virtual int getVisionRadius();
 	virtual int getSpeed();
-	virtual int getMana();
-	virtual int getMaxMana();
 	virtual struct sprite *getSprite();
 	virtual int getFleeDx();
 	virtual int getFleeDy();
@@ -143,7 +145,6 @@ class Character:public Being {
         virtual void setSchedule(struct sched *sched);
         virtual void setSolo(bool val);
 	virtual void setOrder(int order);
-	virtual void setHp(int hp);
 	virtual void setPlayerControlled(bool val);
 	virtual void setAttackTarget(class Character * target);
 	virtual void setFleeing(bool val);

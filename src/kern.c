@@ -2567,23 +2567,21 @@ static pointer kern_obj_remove_effect(scheme *sc, pointer args)
 
         if (unpack(sc, &args, "pp", &obj, &effect)) {
                 load_err("kern-obj-remove-effect: bad args");
-                return sc->NIL;
+                return sc->F;
         }
 
         if (!obj) {
                 rt_err("kern-obj-remove-effect: null object");
-                return sc->NIL;
+                return sc->F;
         }
 
         if (! is_effect(effect)) {
                 rt_err("kern-obj-remove-effect: wrong type for effect!");
-                return sc->NIL;
+                return sc->F;
         }
 
         /* Just remove one per call */
-        obj->removeEffect(effect);
-
-        return sc->NIL;
+        return obj->removeEffect(effect) ? sc->T : sc->F;
 }
 
 static pointer kern_print(scheme *sc,  pointer args)
@@ -3140,6 +3138,45 @@ static pointer kern_type_get_gifc(scheme *sc, pointer  args)
         return gifc ? gifc->code : sc->NIL;
 }
 
+static pointer kern_type_get_name(scheme *sc, pointer  args)
+{
+        ObjectType *cptr;
+
+        if (unpack(sc, &args, "p", &cptr)) {
+                rt_err("kern-type-get-name: bad args");
+                return sc->NIL;
+        }
+
+        if (cptr == NULL) {
+                /* This is not necessarily an error. Some objects (like
+                 * characters) have no type, which can result in us getting
+                 * here. */
+                return sc->NIL;
+        }
+
+        return scm_mk_string(sc, cptr->getName());
+}
+
+static pointer kern_type_describe(scheme *sc, pointer  args)
+{
+        ObjectType *cptr;
+
+        if (unpack(sc, &args, "p", &cptr)) {
+                rt_err("kern-type-get-name: bad args");
+                return sc->NIL;
+        }
+
+        if (cptr == NULL) {
+                /* This is not necessarily an error. Some objects (like
+                 * characters) have no type, which can result in us getting
+                 * here. */
+                return sc->NIL;
+        }
+
+        cptr->describe(1);
+        return sc->NIL;
+}
+
 static pointer kern_add_tick_job(scheme *sc, pointer args)
 {
         int tick;
@@ -3163,7 +3200,9 @@ static pointer kern_ui_select_party_member(scheme *sc, pointer args)
 {
         class Character *member;
 
+        cmdwin_print("-");
         member = select_party_member();
+        cmdwin_backspace(1);
         if (! member)
                 return sc->NIL;
         return scm_mk_ptr(sc, member);
@@ -3603,10 +3642,10 @@ KERN_API_CALL(kern_add_spell)
                 return sc->NIL;
         }
 
-        if (! scm_is_pair(sc, args)) {
-                load_err("kern-add-spell: no reagents listed");
-                return sc->NIL;
-        }
+/*         if (! scm_is_pair(sc, args)) { */
+/*                 load_err("kern-add-spell: no reagents listed"); */
+/*                 return sc->NIL; */
+/*         } */
 
         reagents = scm_car(sc, args);
         args = scm_cdr(sc, args);
@@ -3668,6 +3707,42 @@ KERN_API_CALL(kern_char_set_sleep)
                 ch->awaken();
 
         return sc->T;
+}
+
+KERN_API_CALL(kern_char_set_hp)
+{
+        class Character *ch;
+        int val;
+
+        ch = (class Character*)unpack_obj(sc, &args, "kern-char-set-hp");
+        if (!ch)
+                return sc->NIL;
+
+        if (unpack(sc, &args, "d", &val)) {
+                rt_err("kern-char-set-hp: bad args");
+        } else {
+                ch->setHp(val);
+        }
+
+        return scm_mk_ptr(sc, ch);;
+}
+
+KERN_API_CALL(kern_char_set_mana)
+{
+        class Character *ch;
+        int val;
+
+        ch = (class Character*)unpack_obj(sc, &args, "kern-char-set-mana");
+        if (!ch)
+                return sc->NIL;
+
+        if (unpack(sc, &args, "d", &val)) {
+                rt_err("kern-char-set-mana: bad args");
+        } else {
+                ch->setMana(val);
+        }
+
+        return scm_mk_ptr(sc, ch);;
 }
 
 /* 
@@ -5801,6 +5876,32 @@ KERN_API_CALL(kern_char_get_hp)
         return scm_mk_integer(sc, character->getHp());
 }
 
+KERN_API_CALL(kern_char_get_max_hp)
+{
+        class Character *character;
+
+        /* unpack the character */
+        character = (class Character*)unpack_obj(sc, &args, 
+                                                 "kern-char-get-max-hp");
+        if (!character)
+                return sc->NIL;
+
+        return scm_mk_integer(sc, character->getMaxHp());
+}
+
+KERN_API_CALL(kern_char_get_max_mana)
+{
+        class Character *character;
+
+        /* unpack the character */
+        character = (class Character*)unpack_obj(sc, &args, 
+                                                 "kern-char-get-max-mana");
+        if (!character)
+                return sc->NIL;
+
+        return scm_mk_integer(sc, character->getMaxMana());
+}
+
 KERN_API_CALL(kern_char_get_level)
 {
         class Character *character;
@@ -6586,18 +6687,22 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-char-get-level", kern_char_get_level);
         API_DECL(sc, "kern-char-get-mana", kern_char_get_mana);
         API_DECL(sc, "kern-char-get-occ", kern_char_get_occ);
+        API_DECL(sc, "kern-char-get-max-hp", kern_char_get_max_hp);
+        API_DECL(sc, "kern-char-get-max-mana", kern_char_get_max_mana);
         API_DECL(sc, "kern-char-get-party", kern_char_get_party);
         API_DECL(sc, "kern-char-get-species", kern_char_get_species);
         API_DECL(sc, "kern-char-get-strength", kern_char_get_strength);
         API_DECL(sc, "kern-char-get-weapons", kern_char_get_weapons);
+        API_DECL(sc, "kern-char-is-asleep?", kern_char_is_asleep);
         API_DECL(sc, "kern-char-join-player", kern_char_join_player);
         API_DECL(sc, "kern-char-kill", kern_char_kill);
         API_DECL(sc, "kern-char-resurrect", kern_char_resurrect);
         API_DECL(sc, "kern-char-set-ai", kern_char_set_ai);
-        API_DECL(sc, "kern-char-set-sleep", kern_char_set_sleep);
         API_DECL(sc, "kern-char-set-fleeing", kern_char_set_fleeing);
+        API_DECL(sc, "kern-char-set-hp", kern_char_set_hp);
         API_DECL(sc, "kern-char-set-level", kern_char_set_level);
-        API_DECL(sc, "kern-char-is-asleep?", kern_char_is_asleep);
+        API_DECL(sc, "kern-char-set-mana", kern_char_set_mana);
+        API_DECL(sc, "kern-char-set-sleep", kern_char_set_sleep);
         API_DECL(sc, "kern-char-uncharm", kern_char_uncharm);
 
         /* kern-map api */
@@ -6728,7 +6833,9 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-terrain-set-combat-map", kern_terrain_set_combat_map);
 
         /* kern-type api */
+        API_DECL(sc, "kern-type-describe", kern_type_describe);
         API_DECL(sc, "kern-type-get-gifc", kern_type_get_gifc);
+        API_DECL(sc, "kern-type-get-name", kern_type_get_name);
 
         /* misc api */
         API_DECL(sc, "kern-add-magic-negated", kern_add_magic_negated);

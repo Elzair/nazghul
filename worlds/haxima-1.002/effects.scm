@@ -85,6 +85,20 @@
       (begin
         (kern-obj-add-effect kobj ef_paralyze nil))))
 
+;;----------------------------------------------------------------------------
+;; disease
+;;
+;; Drains life until victim is near death
+;;----------------------------------------------------------------------------
+(define (disease-exec fgob kchar)
+  (if (> (kern-dice-roll "1d10")
+         (kern-char-get-hp kchar))
+      (begin
+        (kern-log-msg (kern-obj-get-name kchar)
+                      " fights off Disease")
+        (kern-obj-remove-effect kchar ef_disease))
+      (kern-obj-apply-damage kchar "disease" (kern-dice-roll "1d5"))))
+
 ;; ----------------------------------------------------------------------------
 ;; ensnare
 ;;
@@ -279,6 +293,7 @@
    (list 'ef_slime_split               'slime-split-exec     nil                 nil              'slime-split-exec   "on-damage-hook"     ""  0   #f  -1)
    (list 'ef_spider_calm               nil                   'spider-calm-apply  'spider-calm-rm  nil                 "start-of-turn-hook" ""  0   #f  60) 
    (list 'ef_drunk                     'drunk-exec           'drunk-apply        'drunk-rm        nil                 "keystroke-hook"     "A" 0   #t  60)
+   (list 'ef_disease                   'disease-exec         nil                 nil              nil                 "start-of-turn-hook" "D" 0   #f  -1)
    ))
 
 (map (lambda (effect) (apply mk-effect effect)) effects)

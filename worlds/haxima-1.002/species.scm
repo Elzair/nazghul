@@ -141,7 +141,7 @@
                  10                ; vision radius
                  mmode-walk        ; passability
                  22 2              ; hp mod/mult
-                 0  0              ; mp mod/mult
+                 1  1              ; mp mod/mult
                  s_corpse          ; sleep sprite
                  t_hands           ; natural (unarmed) weapon
                  #t                ; visible

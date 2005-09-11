@@ -167,6 +167,7 @@
 (load "reagents.scm")
 (load "food.scm")
 (load "arms.scm")
+(load "ability.scm")
 (load "spells.scm")
 (load "items.scm")
 (load "vehicles.scm")

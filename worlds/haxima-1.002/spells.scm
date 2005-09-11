@@ -6,30 +6,30 @@
 
 (kern-set-spell-words "An"
                       "Bet"
-                       "Corp"
-                       "Des"
-                       "Ex"
-                       "Flam"
-                       "Grav"                       
-                       "Hur"
-                       "In"
-                       "Jux"
-                       "Kal"
-                       "Lor"
-                       "Mani"
-                       "Nox"
-                       "Ort"
-                       "Por"
-                       "Quas"
-                       "Rel"
-                       "Sanct"
-                       "Tym"
-                       "Uus"
-                       "Vas"
-                       "Wis"
-                       "Xen"
-                       "Ylem"
-                       "Zu")
+                      "Corp"
+                      "Des"
+                      "Ex"
+                      "Flam"
+                      "Grav"                       
+                      "Hur"
+                      "In"
+                      "Jux"
+                      "Kal"
+                      "Lor"
+                      "Mani"
+                      "Nox"
+                      "Ort"
+                      "Por"
+                      "Quas"
+                      "Rel"
+                      "Sanct"
+                      "Tym"
+                      "Uus"
+                      "Vas"
+                      "Wis"
+                      "Xen"
+                      "Ylem"
+                      "Zu")
 
 ;; ----------------------------------------------------------------------------
 ;; The only purpose of this list is to prevent the scheme gc from harvesting
@@ -45,7 +45,6 @@
 ;; prevent the gc from getting it, registers a new object type for the spell
 ;; with the kernel, and then adds it to the list of spells known to the kernel.
 ;; ----------------------------------------------------------------------------
-
 (define (mk-spell tag name cast-handler magic-words level context 
                   reagents)
   (let ((spell-ifc (ifc '() (method 'cast cast-handler))))
@@ -258,23 +257,39 @@
           (else
            (map doline (cdr lines))
            (kern-map-repaint)))))
-  
+
+;;----------------------------------------------------------------------------
+;; Core actions behind spells, special abilities, etc. No UI prompting, no mana
+;; or level checking, no mana decrementing -- that all needs to be handled by
+;; the callers. All of these calls must return #t on success or #f on
+;; failure. No further details as to cause of failure are required.
+;;----------------------------------------------------------------------------
+(define (cure-poison ktarg)
+  (kern-obj-remove-effect ktarg ef_poison))
+
+(define (awaken ktarg)
+  (and (kern-obj-remove-effect ktarg ef_sleep)
+       (or (kern-char-set-sleep ktarg #f)
+           #t)))
+
 ;; ----------------------------------------------------------------------------
 ;; All the spell cast handlers are listed here. These are the procedures that
 ;; get called whenever a spell is cast.
 ;; ----------------------------------------------------------------------------
 
+(define (cast-on-party-member spell)
+  (let ((ktarg (kern-ui-select-party-member)))
+    (if (null? ktarg)
+        result-no-target
+        (if (spell ktarg)
+            result-ok
+            result-no-effect))))
+
 (define (an-nox  caster)
-  (let ((target (kern-ui-select-party-member)))
-    (if (not (null? target))
-        (kern-obj-remove-effect target ef_poison))))
+  (cast-on-party-member cure-poison))
 
 (define (an-zu  caster)
-  (let ((target (kern-ui-select-party-member)))
-    (if (not (null? target))
-        (begin
-          (kern-obj-remove-effect target ef_sleep)
-          (kern-char-set-sleep target #f)))))
+  (cast-on-party-member awaken))
 
 (define (grav-por  caster)
   (cast-missile-spell caster 8 t_arrow))
@@ -655,6 +670,7 @@
    (list 'in_mani_corp     "In Mani Corp spell"     in-mani-corp     "IMC"  8 context-any (list garlic ginseng spider_silk 
                                                                                                                sulphorous_ash blood_moss mandrake))
    (list 'vas_rel_por      "Vas Rel Por spell"      vas-rel-por     "VRP"  8 context-any (list sulphorous_ash mandrake black_pearl))
+
    ))
 
 ;; ----------------------------------------------------------------------------
