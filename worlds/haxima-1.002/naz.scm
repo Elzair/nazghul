@@ -113,7 +113,7 @@
 
 ;; Like summon but the beings are permanent, not temporary.
 (define (psummon origin mk-critter count)
-  (display "psummon")(newline)
+  ;(display "psummon")(newline)
   (define (run-loop n)
     (if (= n 0) nil
         (let* ((critter (kern-obj-inc-ref (mk-critter)))
@@ -267,7 +267,7 @@
   (< (kern-obj-get-ap kobj) 0))
 
 (define (flee kchar)
-  (display "flee")(newline)
+  ;(display "flee")(newline)
   (kern-char-set-fleeing kchar #t))
 
 (define (wander kchar)
@@ -282,9 +282,6 @@
 (define (join-player kchar)
   (kern-char-join-player kchar))
 
-;;============================================================================
-;; taunt
-;;============================================================================
 (define (random-select list)
   (list-ref list (modulo (random-next) (length list))))
 
@@ -333,7 +330,7 @@
 
 (define (in-inventory? kchar ktype)
   (define (hasit? item inv)
-    (display "inv: ")(display inv)(newline)
+    ;(display "inv: ")(display inv)(newline)
     (cond ((null? inv) #f)
           ((eqv? item (car (car inv))) #t)
           (else (hasit? item (cdr inv)))))
@@ -341,7 +338,7 @@
 
 (define (use-item-from-inventory-on-self kchar ktype)
   (kern-obj-remove-from-inventory kchar ktype 1)
-  (display "using")(newline)
+  ;(display "using")(newline)
   (apply (kern-type-get-gifc ktype) (list 'use ktype kchar))
   (kern-log-msg (kern-obj-get-name kchar)
                 " uses 1 "
@@ -436,7 +433,7 @@
 ;; the char pathfind to it
 ;; ----------------------------------------------------------------------------
 (define (do-or-goto kchar coords proc)
-  (display "do-or-goto")(newline)
+  ;(display "do-or-goto")(newline)
   (if (or (loc-adjacent? (kern-obj-get-location kchar) coords)
           (eq? coords (kern-obj-get-location kchar)))
       (proc kchar coords)
@@ -584,7 +581,7 @@ define (blit-maps kmap . blits)
 ;; cast1 - cast a spell which requires one arg if possible, assumes kchar has
 ;; enough mana
 (define (cast1 kchar spell ktarg)
-  (display "cast1: ")(display spell)(newline)
+  ;(display "cast1: ")(display spell)(newline)
   (apply (spell-handler spell) (list kchar ktarg))
   (kern-char-dec-mana kchar (spell-cost spell))
   (kern-obj-dec-ap kchar (spell-ap spell))
@@ -602,7 +599,7 @@ define (blit-maps kmap . blits)
 ;; ----------------------------------------------------------------------------
 (define (terrain-ok-for-field? loc)
   (let ((pclass (kern-terrain-get-pclass (kern-place-get-terrain loc))))
-    (display "pclass=")(display pclass)(newline)
+    ;(display "pclass=")(display pclass)(newline)
     (foldr (lambda (a b) (or a (= pclass b)))
            #f
            (list pclass-grass pclass-trees pclass-forest))))
@@ -658,7 +655,7 @@ define (blit-maps kmap . blits)
         #f)))
 
 (define (stagger kchar)
-  (display "stagger")(newline)
+  ;(display "stagger")(newline)
   (let ((vdir (random-select (list (cons -1 0) 
                                    (cons 1 0) 
                                    (cons 0 -1) 
@@ -702,3 +699,16 @@ define (blit-maps kmap . blits)
 ;; drink-heal-potion -- use a heal potion from inventory
 (define (drink-heal-potion kchar)
   (use-item-from-inventory-on-self kchar t_heal_potion))
+
+;; set-level -- set character to level and max out hp and mana (intended for
+;; new npc creation)
+(define (set-level kchar lvl)
+  (kern-char-set-level kchar lvl)
+  (kern-char-set-hp kchar 
+                    (max-hp (kern-char-get-species kchar)
+                            (kern-char-get-occ kchar)
+                            lvl 0 0))
+  (kern-char-set-mana kchar
+                      (max-mp (kern-char-get-species kchar)
+                              (kern-char-get-occ kchar)
+                              lvl 0 0)))

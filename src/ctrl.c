@@ -286,9 +286,9 @@ void ctrl_do_attack(class Character *character, class ArmsType *weapon,
          * factions */
         harm_relations(character, target);
 
-        log_begin("%s: %s - %s ", character->getName()
-                  , weapon->getName()
+        log_begin("%s attacks %s with %s: ", character->getName()
                   , target->getName()
+                  , weapon->getName()
                 );
 
         miss = ! weapon->fire(target, character->getX(), character->getY());
@@ -304,19 +304,27 @@ void ctrl_do_attack(class Character *character, class ArmsType *weapon,
         hit = dice_roll("1d20") + dice_roll(weapon->getToHitDice());
         def = target->getDefend();
 
-        dbg("%s to-hit: %d\n", character->getName(), hit);
-        dbg("%s to-def: %d\n", target->getName(), def);
-
+        log_continue("\n");
+        log_continue(" to-hit rolls %d\n", hit);
+        log_continue(" to-defend rolls %d\n", def);
         if (hit < def) {
-                log_end("barely scratched!");
+                log_end("deflected!");
                 return;
         }
 
         // roll for damage
         damage = dice_roll(weapon->getDamageDice());
         armor = target->getArmor();
+        log_continue(" damage roll %d\n", damage);
+        log_continue(" armor roll %d\n", armor);
+
         damage -= armor;
         damage = max(damage, 0);
+
+        if (damage <= 0) {
+                log_end("blocked!");
+                return;
+        }
 
         // the damage() method may destroy the target, so bump the refcount
         // since we still need the target through the end of this function
@@ -1150,10 +1158,13 @@ static void ctrl_idle(class Character *character)
         class Character *target;
 
         if (character->getAI()) {
-                int time = SDL_GetTicks();
+
                 /* closure returns true if it handled the turn, otherwise fall
                  * through to standard AI */
                 if (closure_exec(character->getAI(), "p", character))
+                        return;
+
+                if (character->getActionPoints() <= 0)
                         return;
         }
 

@@ -77,8 +77,8 @@
              0.0                  ; magic 
              +2                   ; hp_mod 
              +2                   ; hp_mult 
-             -1                   ; mp_mod 
-             -1                   ; mp_mult 
+             0                    ; mp_mod 
+             0                    ; mp_mult 
              +2                   ; hit_mod 
              +2                   ; def_mod 
              +2                   ; dam_mod 

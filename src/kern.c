@@ -3709,6 +3709,57 @@ KERN_API_CALL(kern_char_set_sleep)
         return sc->T;
 }
 
+KERN_API_CALL(kern_char_unready)
+{
+        class Character *ch;
+        class ArmsType *type;
+
+        ch = (class Character*)unpack_obj(sc, &args, "kern-char-unready");
+        if (!ch)
+                return sc->F;
+
+        if (unpack(sc, &args, "p", &type)) {
+                rt_err("kern-char-unready: bad args");
+                return sc->F;
+        }
+
+        return ch->unready(type) ? sc->T : sc->F;
+}
+
+KERN_API_CALL(kern_char_get_readied_weapons)
+{
+        class Character *ch;
+        class ArmsType *weapon;
+        pointer head = sc->NIL;
+        pointer tail = sc->NIL;
+
+        ch = (class Character*)unpack_obj(sc, &args, "kern-char-unready");
+        if (!ch)
+                return sc->F;
+
+        for (weapon = ch->enumerateWeapons(); weapon != NULL; 
+             weapon = ch->getNextWeapon()) {
+                    
+                /* skip "natural" weapons that are not really readied */
+                if (ch->species &&
+                    weapon == ch->species->weapon)
+                        continue;
+
+                pointer cell = scm_mk_ptr(sc, weapon);
+                cell = _cons(sc, cell, sc->NIL, 0);
+
+                if (head == sc->NIL) {
+                        head = cell;
+                        tail = cell;
+                } else {
+                        tail->_object._cons._cdr = cell;
+                        tail = cell;
+                }
+        }
+
+        return head;
+}
+
 KERN_API_CALL(kern_char_set_hp)
 {
         class Character *ch;
@@ -6690,6 +6741,8 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-char-get-max-hp", kern_char_get_max_hp);
         API_DECL(sc, "kern-char-get-max-mana", kern_char_get_max_mana);
         API_DECL(sc, "kern-char-get-party", kern_char_get_party);
+        API_DECL(sc, "kern-char-get-readied-weapons", 
+                 kern_char_get_readied_weapons);
         API_DECL(sc, "kern-char-get-species", kern_char_get_species);
         API_DECL(sc, "kern-char-get-strength", kern_char_get_strength);
         API_DECL(sc, "kern-char-get-weapons", kern_char_get_weapons);
@@ -6704,6 +6757,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-char-set-mana", kern_char_set_mana);
         API_DECL(sc, "kern-char-set-sleep", kern_char_set_sleep);
         API_DECL(sc, "kern-char-uncharm", kern_char_uncharm);
+        API_DECL(sc, "kern-char-unready", kern_char_unready);
 
         /* kern-map api */
         API_DECL(sc, "kern-map-rotate", kern_map_rotate);

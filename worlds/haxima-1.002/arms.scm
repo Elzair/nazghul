@@ -225,12 +225,12 @@
    ;;     =============================================================================================================
    ;;     tag             | name          |  sprite           |  to-hit | armor  | slots      | weight
    ;;     =============================================================================================================
-   (list   't_leather_helm  "leather helm"   s_leather_helm      "0"      "1"      slot-helm    0)
-   (list   't_chain_coif    "chain coif"     s_chain_coif        "0"      "2"      slot-helm    1)
-   (list   't_iron_helm     "iron helm"      s_iron_helm         "0"      "3"      slot-helm    2)
-   (list   't_armor_leather "leather armor"  s_leather_armor     "+0"     "2"      slot-armor   2)
-   (list   't_armor_chain   "chain armor"    s_chain_armor       "-1"     "4"      slot-armor   4)
-   (list   't_armor_plate   "plate armor"    s_plate_armor       "-2"     "8"      slot-armor   8)
+   (list   't_leather_helm  "leather helm"   s_leather_helm      "0"      "1d2"      slot-helm    0)
+   (list   't_chain_coif    "chain coif"     s_chain_coif        "0"      "1d2+1"    slot-helm    1)
+   (list   't_iron_helm     "iron helm"      s_iron_helm         "0"      "1d2+2"    slot-helm    2)
+   (list   't_armor_leather "leather armor"  s_leather_armor     "+0"     "1d2+2"    slot-armor   2)
+   (list   't_armor_chain   "chain armor"    s_chain_armor       "-1"     "1d3+3"    slot-armor   4)
+   (list   't_armor_plate   "plate armor"    s_plate_armor       "-2"     "1d4+4"    slot-armor   8)
    ))
 
 (kern-mk-sprite 's_shield            ss_arms 1 54 #f 0)

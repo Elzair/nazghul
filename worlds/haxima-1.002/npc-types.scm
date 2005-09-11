@@ -254,6 +254,12 @@
     nil ;;...............conversation
     )))
 
+(define (mk-at-level ctor-tag lvl-dice . args)
+  (display "mk-at-level args: ")(list args)(newline)
+  (set-level (apply (eval ctor-tag) args) 
+             (kern-dice-roll lvl-dice)))
+
+
 (define (mk-death-knight-at-level lvl-dice)
   (let ((dk (mk-death-knight))
         (lvl (kern-dice-roll lvl-dice)))
@@ -267,6 +273,21 @@
                                 (kern-char-get-occ dk)
                                 lvl 0 0))))
 
+(define (guard-ai kchar)
+  (if (and (wants-healing? kchar)
+           (has-heal-potion? kchar))
+      (begin
+        (drink-heal-potion kchar)
+        #t)
+      (if (can-use-ability? disarm kchar)
+          (let ((victims (get-hostiles-in-range kchar 1)))
+            ;(display "victims:")(display victims)(newline)
+            (and (not (null? victims))
+                 (>= (kern-dice-roll "1d20") 16)
+                 (or (use-ability disarm kchar (car victims))
+                     #t)))
+          #f)))
+
 (define (mk-halberdier)
   (bind
    (kern-char-arm-self
@@ -276,7 +297,7 @@
      oc_warrior ;;.........occupation
      s_guard ;;........sprite
      faction-men ;;...faction
-     nil ;;...............custom ai (optional)
+     'guard-ai ;;...............custom ai (optional)
      ;;...................container (and contents)
      (mk-chest
      nil
@@ -303,7 +324,7 @@
      oc_warrior ;;.........occupation
      s_guard ;;........sprite
      faction-men ;;...faction
-     nil ;;...............custom ai (optional)
+     'guard-ai ;;...............custom ai (optional)
      ;;...................container (and contents)
      (mk-chest
      nil

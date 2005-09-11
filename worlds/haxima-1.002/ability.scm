@@ -18,9 +18,10 @@
            (ability-level-required ability))))
 
 (define (use-ability ability kchar . args)
-  (apply (ability-proc ability) (cons kchar args))
   (kern-char-dec-mana kchar (ability-mana-cost ability))
-  (kern-obj-dec-ap kchar (ability-ap-cost ability)))
+  (kern-obj-dec-ap kchar (ability-ap-cost ability))
+  (apply (ability-proc ability) (cons kchar args)))
+
 
 ;;----------------------------------------------------------------------------
 ;; Ability procedures
@@ -44,9 +45,27 @@
                     (kern-obj-get-name ktarg)
                     " with Disease!")))
 
+(define (disarm kchar ktarg)
+  (if (> (+ (kern-dice-roll "1d3")
+            (kern-char-get-level kchar))
+         (kern-char-get-level ktarg))
+      (let ((readied (kern-char-get-readied-weapons ktarg)))
+        (if (null? readied)
+            #f
+            (let ((ktype (random-select readied)))
+              (kern-log-msg (kern-obj-get-name kchar)
+                            " disarms "
+                            (kern-obj-get-name ktarg))
+              (kern-char-unready ktarg ktype)
+              (kern-obj-remove-from-inventory ktarg ktype 1)
+              (kern-obj-add-to-inventory kchar ktype 1)
+              #t)))
+      #f))
+
 ;;----------------------------------------------------------------------------
 ;; Ability declarations
 ;;----------------------------------------------------------------------------
 
-(define vampiric-touch (mk-ability "vampiric touch" 3 3 3 vampiric-touch-proc))
-(define disease-touch (mk-ability "disease touch" 6 6 2 disease-touch-proc))
+(define vampiric-touch (mk-ability "vampiric touch" 3 3 2 vampiric-touch-proc))
+(define disease-touch (mk-ability "disease touch" 6 6 1 disease-touch-proc))
+(define disarm (mk-ability "disarm" 4 0 2 disarm))
