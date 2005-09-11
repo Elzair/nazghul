@@ -711,7 +711,8 @@ class ArmsType *Character::getNextWeapon(void)
 {
 	do {
 		getNextArms();
-	} while (currentArms != NULL && dice_average(currentArms->getDamageDice()) <= 0);
+	} while (currentArms != NULL 
+                 && dice_average(currentArms->getDamageDice()) <= 0);
 	return currentArms;
 }
 
@@ -1523,6 +1524,20 @@ int Character::getDefend()
         defend += defenseBonus;
 
         return defend;
+}
+
+int Character::getToHitPenalty()
+{
+        int penalty = 0;
+
+        for (class ArmsType * arms = enumerateArms();
+             arms != NULL; arms = getNextArms()) {
+                int roll = dice_roll(arms->getToHitDice());
+                if (roll < 0)
+                        penalty += roll;
+        }
+        
+        return penalty;
 }
 
 int Character::getArmor()

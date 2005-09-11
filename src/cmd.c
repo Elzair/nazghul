@@ -1343,7 +1343,10 @@ bool cmdHandle(class Character * pc)
         // Try to find a mech
 	class Object *mech;
 	mech = place_get_object(Place, x, y, mech_layer);
-	if (! mech || ! mech->getObjectType()->canHandle()) {
+	if (! mech 
+            || ! mech->getObjectType()->canHandle()
+            || (! mech->isVisible()            
+                && ! Reveal)) {
                 cmdwin_print("nothing!");
                 log_msg("Handle - nothing there!");
                 return false;

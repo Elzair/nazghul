@@ -342,7 +342,8 @@
   (apply (kern-type-get-gifc ktype) (list 'use ktype kchar))
   (kern-log-msg (kern-obj-get-name kchar)
                 " uses 1 "
-                (kern-type-get-name ktype)))
+                (kern-type-get-name ktype))
+  #t)
 
 ;;============================================================================
 ;; Modulo system procedures -- useful on wrapping maps

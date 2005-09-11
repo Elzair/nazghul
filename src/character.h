@@ -72,8 +72,9 @@ class Character:public Being {
 	virtual ~ Character();
 
         virtual int getActivity();
-        virtual int getArmor();
-        virtual int getDefend();
+        int getArmor();
+        int getDefend();
+        int getToHitPenalty();
         virtual class Party * getParty();
 	virtual int getType();
 	virtual char *getName();

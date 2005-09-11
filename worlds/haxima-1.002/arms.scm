@@ -147,11 +147,11 @@
    ;;     ========================================================================================================================
    ;;     tag         | name       | sprite     | to-hit | damage | to-def | slots       | hnds | rng | missile    | ubiq | weight
    ;;     ========================================================================================================================
-   (list 't_sling      "sling"      s_sling      "-1"     "1d2"    "-1"     slot-weapon   1      4     t_slingstone #t      0)
-   (list 't_bow        "bow"        s_bow        "1"      "1d4"    "-2"     slot-weapon   2      6     t_arrow      #f      2)
-   (list 't_crossbow   "crossbow"   s_crossbow   "2"      "2d3"    "-3"     slot-weapon   2      5     t_bolt       #f      3)
+   (list 't_sling      "sling"      s_sling      "-1"     "1d3"    "-1"     slot-weapon   1      4     t_slingstone #t      0)
+   (list 't_bow        "bow"        s_bow        "1"      "2d5"    "-2"     slot-weapon   2      6     t_arrow      #f      2)
+   (list 't_crossbow   "crossbow"   s_crossbow   "2"      "4d3"    "-3"     slot-weapon   2      4     t_bolt       #f      3)
    (list 't_doom_staff "doom staff" s_doom_staff "1d4"    "2d20"   "+2"     slot-weapon   2      12    t_warhead    #t      2)
-   (list 't_acid_spray "acid spray" nil          "0"      "1d2-1"  "+0"     slot-nil      2      2     t_acid_bolt  #t      0)
+   (list 't_acid_spray "acid spray" nil          "0"      "1d2"    "+0"     slot-nil      2      2     t_acid_bolt  #t      0)
    (list 't_stun_wand  "stun wand"  s_stun_wand  "-2"     "1d20"   "-1"     slot-weapon   1      8     t_stunball   #t      2)
    ))
 
@@ -203,7 +203,7 @@
    (list  't_dagger         "dagger"         s_dagger         "1d4"    "1d4"    "1d2"    slot-weapon   1      1      0)
    (list  't_mace           "mace"           s_mace           "1d3"    "1d6+1"  "+0"     slot-weapon   1      1      3)
    (list  't_sword          "sword"          s_sword          "1d2"    "1d8"    "1d2"    slot-weapon   1      1      2)
-   (list  't_2H_axe         "2H axe"         s_2h_axe         "+0"     "2d4+2"  "-2"     slot-weapon   2      1      4)
+   (list  't_2H_axe         "2H axe"         s_2h_axe         "0"      "2d4+2"  "-2"     slot-weapon   2      1      4)
    (list  't_2H_sword       "2H sword"       s_2h_sword       "0"      "2d8-1"  "-1"     slot-weapon   2      1      4)
    (list  't_morning_star   "morning star"   s_morning_star   "1d3+3"  "1d6+1"  "-1"     slot-weapon   1      2      3)
    (list  't_halberd        "halberd"        s_halberd        "1d4+2"  "2d8-2"  "+0"     slot-weapon   2      2      4)
@@ -225,12 +225,12 @@
    ;;     =============================================================================================================
    ;;     tag             | name          |  sprite           |  to-hit | armor  | slots      | weight
    ;;     =============================================================================================================
-   (list   't_leather_helm  "leather helm"   s_leather_helm      "0"      "1d2"      slot-helm    0)
-   (list   't_chain_coif    "chain coif"     s_chain_coif        "0"      "1d2+1"    slot-helm    1)
-   (list   't_iron_helm     "iron helm"      s_iron_helm         "0"      "1d2+2"    slot-helm    2)
-   (list   't_armor_leather "leather armor"  s_leather_armor     "+0"     "1d2+2"    slot-armor   2)
-   (list   't_armor_chain   "chain armor"    s_chain_armor       "-1"     "1d3+3"    slot-armor   4)
-   (list   't_armor_plate   "plate armor"    s_plate_armor       "-2"     "1d4+4"    slot-armor   8)
+   (list   't_leather_helm  "leather helm"   s_leather_helm      "0"      "1"      slot-helm    0)
+   (list   't_chain_coif    "chain coif"     s_chain_coif        "0"      "2"    slot-helm      1)
+   (list   't_iron_helm     "iron helm"      s_iron_helm         "0"      "3"    slot-helm      2)
+   (list   't_armor_leather "leather armor"  s_leather_armor     "-1"     "4"    slot-armor     2)
+   (list   't_armor_chain   "chain armor"    s_chain_armor       "-2"     "6"    slot-armor     4)
+   (list   't_armor_plate   "plate armor"    s_plate_armor       "-4"     "8"    slot-armor     8)
    ))
 
 (kern-mk-sprite 's_shield            ss_arms 1 54 #f 0)

@@ -199,37 +199,30 @@
     )))
 
 ;; Death knights can use Vampiric Touch at L3 and Disease at L6
+(define (use-potion? kchar)
+  (or (and (wants-healing? kchar)
+           (has-heal-potion? kchar)
+           (drink-heal-potion kchar))
+      (and (wants-mana? kchar)
+           (has-mana-potion? kchar)
+           (drink-mana-potion kchar))))
+
 (define (death-knight-ai kchar)
-  (if (and (wants-healing? kchar)
-           (has-heal-potion? kchar))
-      (begin
-        (drink-heal-potion kchar)
-        #t)
-      (if (and (wants-mana? kchar)
-               (has-mana-potion? kchar))
-          (begin
-            (drink-mana-potion kchar)
-            #t)
-          (let ((vt (can-use-ability? vampiric-touch kchar))
-                (dis (can-use-ability? disease-touch kchar)))
-            (if (not (or vt dis))
-                #f
-                (let ((victims (get-hostiles-in-range kchar 1)))
-                                        ;(display "victims: ")(display victims)
-                  (if (null? victims)
-                      #f
-                      (if (wants-healing? kchar)
-                          (begin
-                                        ;(display "want healing")(newline)
-                            (use-ability vampiric-touch kchar (car victims))
-                            #t)
-                          (if (and dis
-                                   (>= (kern-dice-roll "1d20") 16))
-                              (begin
-                                (use-ability disease-touch kchar (car victims))
-                                #t)
-                              #f)))))))))
-  
+  (or (use-potion? kchar)
+      (let ((vt (can-use-ability? vampiric-touch kchar))
+            (dis (can-use-ability? disease-touch kchar)))
+        (if (not (or vt dis))
+            #f
+            (let ((victims (get-hostiles-in-range kchar 1)))
+              (if (null? victims)
+                  #f
+                  (if (wants-healing? kchar)
+                      (use-ability vampiric-touch kchar (car victims))
+                      (if (and dis
+                               (>= (kern-dice-roll "1d20") 16))
+                          (use-ability disease-touch kchar (car victims))
+                          #f))))))))
+
 (define (mk-death-knight)
   (kern-char-arm-self
    (mk-stock-char
@@ -255,7 +248,7 @@
     )))
 
 (define (mk-at-level ctor-tag lvl-dice . args)
-  (display "mk-at-level args: ")(list args)(newline)
+  ;(display "mk-at-level args: ")(list args)(newline)
   (set-level (apply (eval ctor-tag) args) 
              (kern-dice-roll lvl-dice)))
 
@@ -274,14 +267,9 @@
                                 lvl 0 0))))
 
 (define (guard-ai kchar)
-  (if (and (wants-healing? kchar)
-           (has-heal-potion? kchar))
-      (begin
-        (drink-heal-potion kchar)
-        #t)
+  (or (use-potion? kchar)
       (if (can-use-ability? disarm kchar)
           (let ((victims (get-hostiles-in-range kchar 1)))
-            ;(display "victims:")(display victims)(newline)
             (and (not (null? victims))
                  (>= (kern-dice-roll "1d20") 16)
                  (or (use-ability disarm kchar (car victims))
@@ -305,6 +293,7 @@
                   (roll-to-add 100 "1"     t_chain_coif)
                   (roll-to-add 100 "1"     t_armor_chain)
                   (roll-to-add 75  "1d2"   t_heal_potion)
+                  (roll-to-add 75  "1d2"   t_mana_potion)
                   (roll-to-add 10  "1"     t_vas_mani_scroll)
                   (roll-to-add 10  "1"     t_in_an_scroll)
                   (roll-to-add 50  "1d5"   t_food)
@@ -334,6 +323,7 @@
                   (roll-to-add 100 "2"     t_dagger)
                   (roll-to-add 100 "1"     t_armor_chain)
                   (roll-to-add 75  "1d2"   t_heal_potion)
+                  (roll-to-add 75  "1d2"   t_mana_potion)
                   (roll-to-add 10  "1"     t_vas_mani_scroll)
                   (roll-to-add 10  "1"     t_in_an_scroll)
                   (roll-to-add 50  "1d5"   t_food)

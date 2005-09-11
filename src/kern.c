@@ -3863,7 +3863,8 @@ KERN_API_CALL(kern_char_attack)
                 return sc->F;
         }
 
-        ctrl_do_attack(attacker, weapon, defender);
+        ctrl_do_attack(attacker, weapon, defender, 
+                       attacker->getToHitPenalty());
         return sc->T;
 }
 

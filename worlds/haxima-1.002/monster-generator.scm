@@ -41,7 +41,7 @@
   (define (player-in-rect? kgen)
     (let ((loc (kern-obj-get-location (kern-get-player)))
           (gob (gob-data (kobj-gob kgen))))
-      (display "gob:")(display gob)(newline)
+      ;(display "gob:")(display gob)(newline)
       (and (>= (loc-x loc) (ambush-x gob))
            (<  (loc-x loc) (+ (ambush-x gob) (ambush-w gob)))
            (>= (loc-y loc) (ambush-y gob))
@@ -241,6 +241,11 @@
 (define (mk-mongen2 thresh max is-monster? mk-monster mk-args)
   (bind (kern-obj-set-visible (kern-mk-obj t_mongen2 1) #f)
         (mongen2-mk thresh max is-monster? mk-monster mk-args #t nil)))
+
+;; same, only doesn't care if player is in sight
+(define (mk-edge-gen thresh max is-monster? mk-monster mk-args)
+  (bind (kern-obj-set-visible (kern-mk-obj t_mongen2 1) #f)
+        (mongen2-mk thresh max is-monster? mk-monster mk-args #f nil)))
 
 ;; same, only triggers when player steps on it and doesn't care if player is in
 ;; sight

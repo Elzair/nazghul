@@ -274,7 +274,7 @@ static void ctrl_work(class Party *party)
 }
 
 void ctrl_do_attack(class Character *character, class ArmsType *weapon, 
-                    class Character *target)
+                    class Character *target, int to_hit_penalty)
 {
         int hit;
         int def;
@@ -300,9 +300,14 @@ void ctrl_do_attack(class Character *character, class ArmsType *weapon,
                 return;
         }
 
-        // Roll to hit.
+        /* Roll to hit. */
         hit = dice_roll("1d20") + dice_roll(weapon->getToHitDice());
+        hit += to_hit_penalty;
         def = target->getDefend();
+
+        /* Add level bonuses */
+        hit += character->getLevel();
+        def += target->getLevel();
 
         log_continue("\n");
         log_continue(" to-hit rolls %d\n", hit);
@@ -312,7 +317,7 @@ void ctrl_do_attack(class Character *character, class ArmsType *weapon,
                 return;
         }
 
-        // roll for damage
+        /* roll for damage */
         damage = dice_roll(weapon->getDamageDice());
         armor = target->getArmor();
         log_continue(" damage roll %d\n", damage);
@@ -371,6 +376,7 @@ static void ctrl_attack_ui(class Character *character)
 {
         int x;
         int y;
+        int penalty;
         class ArmsType *weapon;
         class Character *target;
         struct terrain *terrain;
@@ -383,6 +389,11 @@ static void ctrl_attack_ui(class Character *character)
                 log_msg("Switching from Follow to Round Robin Mode.\n");
                 player_party->enableRoundRobinMode();
         }
+
+        /* Have to calculate to-hit penalty before looping over weapons. If we
+         * wait to do it in the ctrl_do_attack() function we'll enumeratue
+         * WITHIN the enumeration and screw it all up. */
+        penalty = character->getToHitPenalty();
 
         // Loop over all readied weapons
         for (weapon = character->enumerateWeapons(); weapon != NULL; 
@@ -509,7 +520,7 @@ static void ctrl_attack_ui(class Character *character)
                         cmdwin_print("%s", target->getName());
 
                         // Strike the target
-                        ctrl_do_attack(character, weapon, target);
+                        ctrl_do_attack(character, weapon, target, penalty);
 
                         // If we hit a party member then show their new hit
                         // points in the status window
@@ -517,10 +528,12 @@ static void ctrl_attack_ui(class Character *character)
                                 statusRepaint();
                 }
 
-                // Warn the user if out of ammo
-                if (NULL == character->getCurrentWeapon() ||
-                    false == character->hasAmmo(character->getCurrentWeapon()))
-                        log_msg("%s : %s now out of ammo)\n", 
+                /* Warn the user if out of ammo. Originally this code used
+                 * character->getCurrentWeapon() instead of weapon, that may
+                 * still be okay now that getToHitPenalty() is outside of this
+                 * loop, but not sure why it' would be preferred. */
+                if (! character->hasAmmo(weapon))
+                        log_msg("%s : %s now out of ammo\n", 
                                      character->getName(), weapon->getName());
         }
 }
@@ -1000,16 +1013,15 @@ static bool ctrl_attack_target(class Character *character,
 {
         int distance;
         bool attacked = false;
-        int hit;
-        int def;
-        int damage;
-        int armor;
+        int penalty;
         bool miss;
 
 
         distance = place_flying_distance(character->getPlace(), 
                                          character->getX(), character->getY(), 
                                          target->getX(), target->getY());
+
+        penalty = character->getToHitPenalty();
 
         for (class ArmsType * weapon = character->enumerateWeapons(); 
              weapon != NULL; weapon = character->getNextWeapon()) {
@@ -1027,7 +1039,7 @@ static bool ctrl_attack_target(class Character *character,
                         continue;
                 }
 
-                ctrl_do_attack(character, weapon, target);
+                ctrl_do_attack(character, weapon, target, penalty);
                 attacked = true;
                 statusRepaint();
 
