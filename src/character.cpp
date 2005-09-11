@@ -2083,6 +2083,8 @@ bool Character::takeOut(ObjectType *type, int amount)
 {
         if (isPlayerPartyMember()) {
                 return player_party->takeOut(type, amount);
+        } else if(container) {
+                return container->takeOut(type, amount);                
         }
         return false;
 
@@ -2346,7 +2348,8 @@ void Character::save(struct save *save)
                 container->save(save);
         }
 
-        // Readied items
+        // Readied items. Subtle: if this character has a container then these
+        // items have already been saved.
 	arms = this->enumerateArms();
         if (! arms) {
                 save->write(save, "nil\n");

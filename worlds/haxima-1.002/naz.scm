@@ -199,6 +199,13 @@
                 range
                 (kern-being-get-visible-hostiles kchar)))
 
+;; Return a list of beings within the given range
+(define (get-beings-in-range kobj range)
+  (let ((loc (kern-obj-get-location kobj)))
+  (all-in-range loc
+                range
+                (kern-place-get-beings (loc-place loc)))))
+
 ;; Convenience proc for rolling dtables by hand
 (define (dtable-row . cols) cols)
 
@@ -255,6 +262,9 @@
 
 (define (has-ap? kobj) 
   (> (kern-obj-get-ap kobj) 0))
+
+(define (has-ap-debt? kobj)
+  (< (kern-obj-get-ap kobj) 0))
 
 (define (flee kchar)
   (display "flee")(newline)
@@ -334,7 +344,7 @@
   (display "using")(newline)
   (apply (kern-type-get-gifc ktype) (list 'use ktype kchar))
   (kern-log-msg (kern-obj-get-name kchar)
-                " uses a(n) "
+                " uses 1 "
                 (kern-type-get-name ktype)))
 
 ;;============================================================================
@@ -380,16 +390,25 @@
   (foldr (lambda (a b) (or a (eqv? (kern-obj-get-type b) ktype)))
          #f
          (kern-get-objects-at loc)))
-  
+
+;; is-player-party-member? -- #t iff kchar is in player party  
+(define (is-player-party-member? kchar)
+  (in-list? kchar 
+            (kern-party-get-members (kern-get-player))))
 
 ;; ----------------------------------------------------------------------------
 ;; kobj-get -- remove an object from the map and put it into another object
 ;; ----------------------------------------------------------------------------
 (define (kobj-get kobj kchar)
+  (if (not (is-player-party-member? kchar))
+           (kern-log-msg (kern-obj-get-name kchar)
+                         " gets "
+                         (kern-obj-get-name kobj)))
   (kern-obj-inc-ref kobj)
   (kern-obj-remove kobj)
   (kern-obj-put-into kobj kchar)
   (kern-obj-dec-ref kobj)
+  (kern-obj-dec-ap kchar 1)
   (kern-map-repaint))
 
 ;; ----------------------------------------------------------------------------
@@ -658,6 +677,28 @@ define (blit-maps kmap . blits)
 (define (time-hour time)(car time))
 (define (time-minute time) (cdr time))
 
-(define (is-player-party-member? kchar)
-  (in-list? kchar 
-            (kern-party-get-members (kern-get-player))))
+;; wants-healing? -- check if a char is <= 50% max hp
+(define (wants-healing? kchar)
+  (<= (kern-char-get-hp kchar)
+      (/ (kern-char-get-max-hp kchar) 2)))
+
+;; wants-mana? -- check if a char is <= 50% max mana
+(define (wants-mana? kchar)
+  (<= (kern-char-get-mana kchar)
+      (/ (kern-char-get-max-mana kchar) 2)))
+
+;; has-mana-potion? -- check if a char has a mana potion in inventory
+(define (has-mana-potion? kchar)
+  (in-inventory? kchar t_mana_potion))
+
+;; drink-mana-potion -- use a mana potion from inventory
+(define (drink-mana-potion kchar)
+  (use-item-from-inventory-on-self kchar t_mana_potion))
+
+;; has-heal-potion? -- check if a char has a heal potion in inventory
+(define (has-heal-potion? kchar)
+  (in-inventory? kchar t_heal_potion))
+
+;; drink-heal-potion -- use a heal potion from inventory
+(define (drink-heal-potion kchar)
+  (use-item-from-inventory-on-self kchar t_heal_potion))

@@ -14,16 +14,23 @@
 (define (mk-potion tag name sprite drink-proc)
   (mk-usable-item tag name sprite 1 drink-proc
                   (lambda (kpotion kuser)(drink-proc kpotion kuser))))
-             
+
+;; mk-clingy-potion -- utility for making potion types that automatically cause
+;; npc's that want them to get them
+(define (mk-clingy-potion tag name sprite drink-proc wants-it?)
+  (mk-usable-clingy-item tag name sprite 1 drink-proc wants-it?))
+
 ;; healing (red) potion     
-(mk-potion 't_heal_potion "healing potion" s_healing_potion 
-           (lambda (kpotion kuser)
-             (kern-obj-heal kuser (kern-dice-roll "2d10"))))
+(mk-clingy-potion 't_heal_potion "healing potion" s_healing_potion 
+                  (lambda (kpotion kuser)
+                    (kern-obj-heal kuser (kern-dice-roll "2d10")))
+                  wants-healing?)
 
 ;; mana (blue) potion
-(mk-potion 't_mana_potion "mana potion" s_mana_potion 
-           (lambda (kpotion kuser)
-             (kern-char-dec-mana kuser (- 0 (kern-dice-roll "2d10")))))
+(mk-clingy-potion 't_mana_potion "mana potion" s_mana_potion 
+                  (lambda (kpotion kuser)
+                    (kern-char-dec-mana kuser (- 0 (kern-dice-roll "2d10"))))
+                  wants-mana?)
 
 ;; cure (green) potion
 (mk-potion 't_cure_potion "cure potion" s_cure_potion

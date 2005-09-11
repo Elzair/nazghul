@@ -11,6 +11,7 @@
 (define (ability-proc ability) (list-ref ability 4))
 
 (define (can-use-ability? ability kchar)
+  (display "can-use-ability?")(display ability)(newline)
   (and (>= (kern-char-get-mana kchar)
            (ability-mana-cost ability))
        (>= (kern-char-get-level kchar)
@@ -26,8 +27,9 @@
 ;;----------------------------------------------------------------------------
 
 (define (vampiric-touch-proc kchar ktarg)
-  (let ((amount (* (kern-dice-roll "1d3")
-                   (kern-char-get-level kchar))))
+  (let ((amount (min (* (kern-dice-roll "1d3")
+                        (kern-char-get-level kchar))
+                     (kern-char-get-hp ktarg))))
     (kern-obj-apply-damage ktarg "life drained" amount)
     (kern-obj-heal kchar amount)
     (kern-log-msg (kern-obj-get-name kchar)

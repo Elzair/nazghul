@@ -1642,7 +1642,7 @@ static pointer kern_mk_char(scheme *sc, pointer args)
                         load_err("kern-mk-char %s: error in arms list", tag);
                         goto abort;
                 }
-                character->add(arms, 1);
+                /*character->add(arms, 1);*/
                 character->ready(arms);
         }
 

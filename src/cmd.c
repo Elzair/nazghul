@@ -738,7 +738,6 @@ bool cmdGet(class Object *actor, bool scoop_all)
         log_end_group();
 
         mapSetDirty();
-        actor->decActionPoints(NAZGHUL_BASE_ACTION_POINTS);
 
 	return true;
 }
