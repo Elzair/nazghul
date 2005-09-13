@@ -597,7 +597,7 @@ Object::~Object()
                 assert(! refcount);
         }
 
-        dbg("destroying %d %08lx %s\n", refcount, this, getName());
+        //dbg("destroying %d %08lx %s\n", refcount, this, getName());
 
         if (handle) {
                 session_rm(Session, handle);

@@ -37,4 +37,4 @@
 
 (mk-obj-type 't_food "food" s_food layer-item food-ifc)
 (mk-obj-type 't_beer "beer" s_beer layer-item alcohol-ifc)
-(mk-obj-type 't_wine "wine" s_food layer-item alcohol-ifc)
+(mk-obj-type 't_wine "wine" s_wine layer-item alcohol-ifc)

@@ -51,6 +51,7 @@
 #include "log.h"
 #include "factions.h"
 #include "result.h"
+#include "dice.h"
 
 #define DEBUG
 #include "debug.h"

@@ -255,8 +255,8 @@
 ;;----------------------------------------------------------------------------
 ;; Spiked Armor
 ;;----------------------------------------------------------------------------
-(kern-mk-sprite 's_spiked_helm    ss_arms 1 45 #f 0)
-(kern-mk-sprite 's_spiked_shield  ss_arms 1 46 #f 0)
+(kern-mk-sprite 's_spiked_helm    ss_arms 1 46 #f 0)
+(kern-mk-sprite 's_spiked_shield  ss_arms 1 47 #f 0)
 
 (kern-mk-arms-type 't_spiked_helm "spiked helm" s_spiked_helm
                    "0" "1d4" "3" "0"
