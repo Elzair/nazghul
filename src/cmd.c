@@ -876,7 +876,9 @@ bool cmdOpen(class Character * pc)
 		closure_t *trap = container->getTrap();
 
 		// Roll to disarm
-		if (rand() % 999 < pc->getDexterity()) {
+		if (20 <= (dice_roll("1d20") 
+                           + log2(pc->getDexterity())
+                           + log2(pc->getLevel()))) {
 			log_msg("You disarm a trap!");
 		} else {
                         // Trigger the trap. Traps may destroy containers, so
@@ -887,7 +889,8 @@ bool cmdOpen(class Character * pc)
                         obj_inc_ref(container);
                         closure_exec(trap, "pp", pc, container);
                         if (container->refcount == 1) {
-                                log_msg("The %s was destroyed!", container->getName());
+                                log_msg("The %s was destroyed!", 
+                                        container->getName());
                                 abort = 1;
                         }
                         obj_dec_ref(container);

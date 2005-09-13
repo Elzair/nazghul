@@ -38,7 +38,7 @@
 
    (list 't_cobblestone     "cobblestone"   pclass-grass     s_cobblestone     1 0 nil)
    (list 't_flagstones      "flagstones"    pclass-grass     s_flagstone       1 0 nil)
-
+   (list 't_inv_wall        "flagstones"    pclass-repel     s_flagstone       1 0 'burn)
    (list 't_leftwing        "castle wall"   pclass-wall      s_leftwing        1 0 nil)
    (list 't_rightwing       "castle wall"   pclass-wall      s_rightwing       1 0 nil)
 
@@ -77,6 +77,7 @@
    (list 't_ankh            "ankh"          pclass-wall      s_ankh            1 0 nil)
    (list 't_altar           "altar"         pclass-wall      s_altar           1 0 nil)
    (list 't_pillar          "pillar"        pclass-wall      s_pillar          1 0 nil)
+   (list 't_false_pillar    "pillar"        pclass-grass     s_pillar          1 0 nil)
 
    (list 't_counter_2x1_w   "counter"       pclass-wall      s_counter_2x1_w   1 0 nil)
    (list 't_counter_2x1_c   "counter"       pclass-wall      s_counter_2x1_c   1 0 nil)

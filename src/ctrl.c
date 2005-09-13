@@ -319,16 +319,23 @@ void ctrl_do_attack(class Character *character, class ArmsType *weapon,
 
         /* roll for damage */
         damage = dice_roll(weapon->getDamageDice());
-        armor = target->getArmor();
         log_continue(" damage roll %d\n", damage);
-        log_continue(" armor roll %d\n", armor);
+
+        /* roll for critical hit */
+        if (20 <= (dice_roll("1d20") + log2(character->getLevel()))) {
+                log_continue("Critical hit!\n");
+                armor = 0;
+        } else {
+                armor = target->getArmor();
+                log_continue(" armor roll %d\n", armor);
+        }
 
         damage -= armor;
         damage = max(damage, 0);
-
+        
         if (damage <= 0) {
                 log_end("blocked!");
-                return;
+                        return;
         }
 
         // the damage() method may destroy the target, so bump the refcount

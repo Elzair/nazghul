@@ -42,7 +42,7 @@
 ;;----------------------------------------------------------------------------
 (kern-mk-place 
  'p_traps_2 ; tag
- "The Thief's Ladder II"   ; name
+ "The Choice"   ; name
  nil              ; sprite
  m_traps_2  ; map
  #f               ; wraps
@@ -78,6 +78,7 @@
 
   ;; true ladder down
   (put (mk-ladder-down 'p_traps_3 9 9) 9 9)
+  (put (mk-ladder-up 'p_traps_1 14 2) 9 15)
 
   )
  nil ; hooks

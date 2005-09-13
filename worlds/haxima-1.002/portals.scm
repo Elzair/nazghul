@@ -168,10 +168,11 @@
 (define (riddle-step kmech kchar)
   (if (is-player-party-member? kchar)
       (let ((riddle (kobj-gob-data kmech)))
+        (kern-log-msg "*** STENTORIAN VOICE ***")
         (apply kern-log-msg (riddle-msg riddle))
         (let ((guess (kern-conv-get-reply kchar)))
           (if (eq? guess (riddle-ans riddle))
-              (kern-log-msg "YOU MAY PASS!")
+              (kern-log-msg "YOU MAY PASS")
               (begin
                 (kern-log-msg "WRONG!")
                 (shake-map 10)

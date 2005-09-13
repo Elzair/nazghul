@@ -28,6 +28,7 @@
     (list  "^."   t_mountains_v)        ;; "mountains" (non-LOS-blocking)
 
     (list  ",,"   t_flagstones)         ;; "flagstones"
+    (list  "~,"   t_inv_wall)
     (list  "cc"   t_cobblestone)        ;; "cobblestone"
     (list  "ee"   t_deck)               ;; "deck"
     (list  "oo"   t_mast)               ;; "mast"
@@ -42,6 +43,7 @@
 
     (list  "??"   t_secret_door)        ;; "secret door"
     (list  "pp"   t_pillar)             ;; "pillar"
+    (list  "~p"   t_false_pillar)
     (list  "bb"   t_boulder)            ;; "boulder"
 
     (list  "rr"   t_wall_rock)          ;; "rock wall"

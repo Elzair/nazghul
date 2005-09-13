@@ -445,7 +445,7 @@ extern struct sprite *CursorSprite;
 extern int SCREEN_BPP;
 // #define SAVEFILE "mapfile"
 extern char *SAVEFILE;	/* nazghul.c */
-
+extern int log2(int val);
 
 #ifdef __cplusplus
 }

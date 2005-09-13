@@ -43,7 +43,7 @@
 ;;----------------------------------------------------------------------------
 (kern-mk-place 
  'p_traps_3 ; tag
- "The Thief's Ladder III"   ; name
+ "Fun with Levers"   ; name
  nil              ; sprite
  m_traps_3  ; map
  #f               ; wraps
@@ -110,6 +110,7 @@
 
   ;; ladder back up
   (put (mk-ladder-up 'p_traps_2 9 9) 9 9)
+  (put (mk-ladder-down 'p_traps_4 9 9) 9 3)
 
   )
  nil ; hooks

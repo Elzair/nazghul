@@ -208,4 +208,19 @@ bool point_in_rect(int x, int y, SDL_Rect *rect)
                 y < (rect->y + rect->h));
 }
 
-// eof
+int log2(int val)
+{
+        int ret = 0;
+
+        if (val<=0)
+                return 0; /* incorrect but safe */
+
+        val -= 1;
+
+        while (val) {
+                val>>=1;
+                ret++;
+        }
+
+        return ret;
+}

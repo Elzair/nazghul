@@ -109,7 +109,7 @@
    (list (mk-windowed-door) 10 10)
 
    ;; Thief's door
-   (put (mk-thief-door 'p_traps_1 9 16) 43 6)
+   (put (mk-thief-door 'p_traps_1 4 16) 43 6)
 
    ;; npc's
    (list ch_may   44 17)

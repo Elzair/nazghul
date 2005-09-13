@@ -38,6 +38,7 @@
 (load "traps_1.scm")
 (load "traps_2.scm")
 (load "traps_3.scm")
+(load "traps_4.scm")
 (load "great_hall.scm")
 
 ;;----------------------------------------------------------------------------
@@ -103,9 +104,10 @@
   ;; contents:
   (mk-contents (add-content 1 t_wis_quas_scroll)
                (add-content 1 t_sanct_lor_scroll)
-               (add-content 1 t_armor_plate)
-               (add-content 1 t_iron_helm)
-               (add-content 1 t_halberd)))
+               (add-content 1 t_armor_leather)
+               (add-content 1 t_leather_helm)
+               (add-content 5 t_torch)
+               (add-content 1 t_sword)))
 
  nil ;; party members (should be nil for initial load file)
  )
@@ -226,7 +228,7 @@
   ;(kern-obj-put-at kplayer (list p_slimy_cavern 13 2)
   ;(kern-obj-put-at kplayer (list p_enchanters_tower 32 32)))
   ;(kern-obj-put-at kplayer (list p_shard 79 74)))
-  (kern-obj-put-at kplayer (list p_great_hall 9 9)))
+  (kern-obj-put-at kplayer (list p_traps_1 4 16)))
   ;(kern-obj-put-at kplayer (list p_test 15 15)))
   ;(kern-obj-put-at kplayer (list p_bole 44 5)))
   ;(kern-obj-put-at kplayer (list p_troll_den 9 0)))                  
