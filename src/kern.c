@@ -1998,25 +1998,22 @@ static pointer kern_obj_put_into(scheme *sc, pointer args)
 
         if (unpack(sc, &args, "pp", &obj,  &container)) {
                 load_err("kern-obj-put: bad args");
-                return sc->NIL;
+                return sc->F;
         }
 
         if (!obj) {
                 rt_err("kern-obj-put: null obj");
-                return sc->NIL;
+                return sc->F;
         }
 
         if (!container) {
                 rt_err("kern-obj-put: null container");
-                return sc->NIL;
+                return sc->F;
         }
 
-        if (! container->add(obj->getObjectType(), obj->getCount())) {
-                rt_err("kern-obj-put-into: '%s' not a container type", 
-                       container->getName());
-        }
+        return container->add(obj->getObjectType(), 
+                              obj->getCount()) ? sc->T : sc->F;
 
-        return sc->NIL;
 }
 
 /*
@@ -2032,7 +2029,10 @@ static pointer kern_obj_remove(scheme *sc, pointer args)
                 return sc->NIL;
         }
 
-        place_remove_object(obj->getPlace(), obj);
+        /* Bugfix: don't use place_remove_object() because it doesn't call
+           setOnMap(false). */
+        //place_remove_object(obj->getPlace(), obj);
+        obj->remove();
 
         return sc->NIL;
 }
@@ -3810,6 +3810,19 @@ KERN_API_CALL(kern_char_join_player)
         if (ch->joinPlayer())
                 return sc->T;
         return sc->F;
+}
+
+KERN_API_CALL(kern_char_leave_player)
+{
+        class Character *ch;
+
+        ch = (class Character*)unpack_obj(sc, &args, "kern-char-leave-player");
+        if (!ch)
+                return sc->NIL;
+
+        ch->leavePlayer();
+
+        return scm_mk_ptr(sc, ch);
 }
 
 /* 
@@ -6750,6 +6763,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-char-is-asleep?", kern_char_is_asleep);
         API_DECL(sc, "kern-char-join-player", kern_char_join_player);
         API_DECL(sc, "kern-char-kill", kern_char_kill);
+        API_DECL(sc, "kern-char-leave-player", kern_char_leave_player);
         API_DECL(sc, "kern-char-resurrect", kern_char_resurrect);
         API_DECL(sc, "kern-char-set-ai", kern_char_set_ai);
         API_DECL(sc, "kern-char-set-fleeing", kern_char_set_fleeing);

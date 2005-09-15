@@ -164,7 +164,8 @@ class Character:public Being {
                                  int dest_x, int dest_y,
                                  struct closure *closure);
         virtual void heal(int amount);
-        virtual bool joinPlayer(void);
+        bool joinPlayer(void);
+        void leavePlayer(void);
 	virtual void kill();
 	virtual void remove();
 	virtual enum ReadyResult ready(class ArmsType * arms);

@@ -2272,6 +2272,11 @@ bool Character::joinPlayer(void)
         return false;
 }
 
+void Character::leavePlayer(void)
+{
+        player_party->removeMember(this);
+}
+
 int Character::getActivity()
 {
         return activity;

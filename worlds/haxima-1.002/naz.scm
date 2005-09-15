@@ -402,12 +402,13 @@
            (kern-log-msg (kern-obj-get-name kchar)
                          " gets "
                          (kern-obj-get-name kobj)))
-  (kern-obj-inc-ref kobj)
-  (kern-obj-remove kobj)
-  (kern-obj-put-into kobj kchar)
-  (kern-obj-dec-ref kobj)
-  (kern-obj-dec-ap kchar 1)
-  (kern-map-repaint))
+  (if (kern-obj-put-into kobj kchar)
+      (begin
+        (kern-obj-inc-ref kobj)
+        (kern-obj-remove kobj)
+        (kern-obj-dec-ref kobj)
+        (kern-obj-dec-ap kchar 1)
+        (kern-map-repaint))))
 
 ;; ----------------------------------------------------------------------------
 ;; kobj-get-at -- get an object of a specific type from the location

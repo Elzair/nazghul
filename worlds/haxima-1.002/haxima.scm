@@ -227,7 +227,7 @@
   ;(kern-obj-put-at kplayer (list p_slimy_cavern 13 2)
   ;(kern-obj-put-at kplayer (list p_enchanters_tower 32 32)))
   ;(kern-obj-put-at kplayer (list p_shard 79 74)))
-  (kern-obj-put-at kplayer (list p_traps_4 10 7)))
+  (kern-obj-put-at kplayer (list p_thiefs_den 3 4)))
   ;(kern-obj-put-at kplayer (list p_test 15 15)))
   ;(kern-obj-put-at kplayer (list p_bole 44 5)))
   ;(kern-obj-put-at kplayer (list p_troll_den 9 0)))                  
