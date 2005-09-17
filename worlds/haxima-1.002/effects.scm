@@ -42,7 +42,13 @@
 ;; resting, which is managed entirely by the kernel.
 ;; ----------------------------------------------------------------------------
 (define (sleep-exec fgob kchar)
-  (kern-char-set-sleep kchar #t))
+  (if (> (kern-dice-roll "1d20")
+          19)
+      (begin
+        (kern-log-msg (kern-obj-get-name kchar)
+                      " wakes up!")
+        (kern-obj-remove-effect kchar ef_sleep))
+      (kern-char-set-sleep kchar #t)))
 
 (define (sleep-rm fgob kchar)
   (kern-char-set-sleep kchar #f))

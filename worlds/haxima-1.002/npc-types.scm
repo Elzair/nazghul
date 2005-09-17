@@ -199,13 +199,6 @@
     )))
 
 ;; Death knights can use Vampiric Touch at L3 and Disease at L6
-(define (use-potion? kchar)
-  (or (and (wants-healing? kchar)
-           (has-heal-potion? kchar)
-           (drink-heal-potion kchar))
-      (and (wants-mana? kchar)
-           (has-mana-potion? kchar)
-           (drink-mana-potion kchar))))
 
 (define (death-knight-ai kchar)
   (or (use-potion? kchar)

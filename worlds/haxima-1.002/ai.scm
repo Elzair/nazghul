@@ -12,8 +12,8 @@
   (ai-display "ai-wander")(ai-newline)
   (kern-obj-wander kchar))
 
-(define (in-range? karms dist)
-  (ai-display "in-range?")(ai-newline)
+(define (in-range-of-arms? karms dist)
+  (ai-display "in-range-of-arms?")(ai-newline)
   (<= dist (kern-arms-type-get-range karms)))
 
 (define (has-ammo? kchar karms)
@@ -34,7 +34,7 @@
   (ai-display "ai-select-weapon:defdist=")(ai-display defdist)(ai-newline)
     (define (weapon-ok? karms)
       (ai-display "ai-select-weapon:weapon-ok?")(ai-newline)
-      (and (in-range? karms defdist)
+      (and (in-range-of-arms? karms defdist)
            (has-ammo? katt karms)
            (not (weapon-blocked? karms defdist))))
     (define (scan-weapons wlist)
@@ -106,3 +106,12 @@
               (bandit-taunt kchar ktarg))
           (or (ai-attack-target kchar ktarg)
               (ai-pathfind-to-target kchar ktarg))))))
+
+;; A spell-sword is an aggressive, selfish fighter that uses magic for combat.
+(define (spell-sword-ai kchar)
+  ;;(display "spell-sword-ai")(newline)
+  (or (use-potion? kchar)
+      (use-spell-on-self? kchar)
+      (use-melee-spell-on-foes? kchar)
+      (use-ranged-spell-on-foes? kchar)))
+

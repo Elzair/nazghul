@@ -51,6 +51,7 @@
     
   (define (warp-in kchar loc dir)
     (display "warp-in")(newline)
+    (kern-char-set-schedule kchar nil)
     (kern-obj-inc-ref kchar)
     (kern-obj-remove kchar)
     (kern-obj-relocate kchar loc nil)
@@ -249,7 +250,7 @@
      1 ;;............custom base mp modifier
      1 ;;............custom mp multiplier (per-level)
      (max-hp sp_human nil mouse-start-lvl 0 0) ;;..current hit points
-     10000 ;;...........current experience points
+     0 ;;...........current experience points
      (max-mp sp_human nil mouse-start-lvl 0 0) ;;..current magic points
      mouse-start-lvl  ;;..current level
      #f ;;...........dead?

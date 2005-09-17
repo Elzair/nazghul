@@ -1,7 +1,7 @@
 ;;----------------------------------------------------------------------------
 ;; Constants
 ;;----------------------------------------------------------------------------
-(define thud-start-lvl  4)
+(define thud-start-lvl  6)
 
 ;;----------------------------------------------------------------------------
 ;; Schedule
@@ -89,11 +89,11 @@
   (bind 
    (kern-char-arm-self
     (kern-mk-char 
-     'ch_thud ;;..tag
-     "Thud" ;;....name
+     'ch_thud ;;.....tag
+     "Thud" ;;.......name
      sp_troll ;;.....species
-     nil ;;..........occupation
-     s_troll ;;.....sprite
+     oc_warrior ;;...occupation
+     s_troll ;;......sprite
      faction-men ;;..faction
      4 ;;............custom strength modifier
      0 ;;............custom intelligence modifier
@@ -102,21 +102,21 @@
      1 ;;............custom hp multiplier (per-level)
      0 ;;............custom base mp modifier
      0 ;;............custom mp multiplier (per-level)
-     (max-hp sp_troll nil thud-start-lvl 0 0) ;;..current hit points
+     (max-hp sp_troll oc_warrior thud-start-lvl 0 0) ;;..current hit points
      0  ;;...........current experience points
-     (max-mp sp_troll nil thud-start-lvl 0 0) ;;..current magic points
+     (max-mp sp_troll oc_warrior thud-start-lvl 0 0) ;;..current magic points
      thud-start-lvl  ;;..current level
      #f ;;...........dead?
      'thud-conv ;;...conversation (optional)
      sch_thud ;;.....schedule (optional)
      nil ;;..........custom ai (optional)
      nil ;;..........container (and contents)
+     ;;.........readied arms (in addition to the container contents)
      (list
       t_2h_axe
       t_iron_helm
       t_armor_plate
       )
-     nil ;;.........readied arms (in addition to the container contents)
      nil ;;..........hooks in effect
      ))
    (thud-mk)))

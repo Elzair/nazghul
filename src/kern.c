@@ -3799,6 +3799,24 @@ KERN_API_CALL(kern_char_set_mana)
         return scm_mk_ptr(sc, ch);;
 }
 
+KERN_API_CALL(kern_char_set_schedule)
+{
+        class Character *ch;
+        struct sched *val;
+
+        ch = (class Character*)unpack_obj(sc, &args, "kern-char-set-schedule");
+        if (!ch)
+                return sc->NIL;
+
+        if (unpack(sc, &args, "p", &val)) {
+                rt_err("kern-char-set-schedule: bad args");
+        } else {
+                ch->setSchedule(val);
+        }
+
+        return scm_mk_ptr(sc, ch);
+}
+
 /* 
  * kern_char_join_player -- wrapper for Character::joinPlayer
  */
@@ -6044,7 +6062,7 @@ KERN_API_CALL(kern_arms_type_get_range)
         /* unpack the type (should be an arms type, but no way to safely
          * tell) */
         if (unpack(sc, &args, "p", &type)) {
-                rt_err("kern-char-arms-type");
+                rt_err("kern-arms-type-get-range");
                 return scm_mk_integer(sc, 0);
         }
 
@@ -6773,6 +6791,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-char-set-hp", kern_char_set_hp);
         API_DECL(sc, "kern-char-set-level", kern_char_set_level);
         API_DECL(sc, "kern-char-set-mana", kern_char_set_mana);
+        API_DECL(sc, "kern-char-set-schedule", kern_char_set_schedule);
         API_DECL(sc, "kern-char-set-sleep", kern_char_set_sleep);
         API_DECL(sc, "kern-char-uncharm", kern_char_uncharm);
         API_DECL(sc, "kern-char-unready", kern_char_unready);

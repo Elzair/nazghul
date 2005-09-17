@@ -1,7 +1,7 @@
 ;;----------------------------------------------------------------------------
 ;; Constants
 ;;----------------------------------------------------------------------------
-(define kathryn-start-lvl  4)
+(define kathryn-start-lvl  6)
 
 ;;----------------------------------------------------------------------------
 ;; Schedule
@@ -176,7 +176,7 @@
      'ch_kathryn ;;..tag
      "Kathryn" ;;....name
      sp_human ;;.....species
-     nil ;;..........occupation
+     oc_wizard ;;....occupation
      s_wizard ;;.....sprite
      faction-men ;;..faction
      0 ;;............custom strength modifier
@@ -184,18 +184,21 @@
      0 ;;............custom dexterity modifier
      2 ;;............custom base hp modifier
      1 ;;............custom hp multiplier (per-level)
-     4 ;;............custom base mp modifier
-     1 ;;............custom mp multiplier (per-level)
-     (max-hp sp_human nil kathryn-start-lvl 0 0) ;;..current hit points
+     8 ;;............custom base mp modifier
+     2 ;;............custom mp multiplier (per-level)
+     (max-hp sp_human oc_wizard kathryn-start-lvl 0 0) ;;..current hit points
      0  ;;...........current experience points
-     (max-mp sp_human nil kathryn-start-lvl 0 0) ;;..current magic points
+     (max-mp sp_human oc_wizard kathryn-start-lvl 0 0) ;;..current magic points
      kathryn-start-lvl  ;;..current level
      #f ;;...........dead?
      'kathryn-conv ;;...conversation (optional)
      sch_kathryn ;;.....schedule (optional)
-     nil ;;..........custom ai (optional)
+     'spell-sword-ai ;;...custom ai (optional)
      nil ;;..........container (and contents)
-     nil ;;.........readied arms (in addition to the container contents)
+     ;;..........readied arms (in addition to the container contents)
+     (list
+      t_staff
+      )
      nil ;;..........hooks in effect
      ))
    (kathryn-mk)))

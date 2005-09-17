@@ -282,6 +282,8 @@ void Character::damage(int amount)
         // This will run the "on-damage-hook":
         Object::damage(amount);
 
+        // Paint the red "*" damage symbol over the character's icon on the map
+        mapPaintDamage(getX(), getY());        
         sound_play(get_damage_sound(), SOUND_MAX_VOLUME);
 
         // setHP() might call kill(), which calls remove(), which will destroy
@@ -2403,8 +2405,14 @@ void Character::setSchedule(struct sched *val)
 
         sched = val;
 
-        if (sched)
+        if (sched) {
                 sched_chars_node = session_add_sched_char(Session, this);
+        } else {
+                // Bugfix: if a character is eating and the schedule is set to
+                // NULL then the character will be stuck eating (and doing
+                // nothing else!).
+                setActivity(NULL);
+        }
 
         // Bugfix: if an npc with a schedule is added to the player party
         // either during the game or on reload, and it has a schedule, then the

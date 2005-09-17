@@ -113,7 +113,7 @@
 
 ;; Like summon but the beings are permanent, not temporary.
 (define (psummon origin mk-critter count)
-  ;(display "psummon")(newline)
+  ;;;(display "psummon")(newline)
   (define (run-loop n)
     (if (= n 0) nil
         (let* ((critter (kern-obj-inc-ref (mk-critter)))
@@ -185,6 +185,20 @@
 (define (all-chars kplace)
   (kern-place-get-beings kplace))
 
+;; Check if an object is in the given range of the origin point
+(define (in-range? origin radius kobj)
+  ;;(display "in-range?")(newline)
+  (<= (kern-get-distance origin
+                         (kern-obj-get-location kobj))
+      radius))
+
+;; Check if a character's target is in range
+(define (can-hit? kchar ktarg range)
+  ;;(display "can-hit? ");;(display range)(newline)
+  (in-range? (kern-obj-get-location kchar)
+             range
+             ktarg))
+
 ;; Filter objects out of range
 (define (all-in-range origin radius objlst)
   (filter (lambda (kobj) 
@@ -227,18 +241,18 @@
 
 ;; Move an object one step along a path to a destination.
 (define (old-pathfind kobj dest)
-  ;;(display "pathfind")(newline)
+  ;;;;(display "pathfind")(newline)
   (define (follow-path path)
     (if (not (null? path))
         (let ((coords (car path))
               (origin (kern-obj-get-location kobj)))
-          ;;(display "pathfind:coords=")(display coords)(newline)
+          ;;;;(display "pathfind:coords=");;(display coords)(newline)
           (let ((dx (- (car coords) (loc-x origin)))
                 (dy (- (cdr coords) (loc-y origin))))
-            ;;(display "pathfind:dx=")(display dx)(display " y=")(display dy)(newline)
+            ;;;;(display "pathfind:dx=");;(display dx);;(display " y=");;(display dy)(newline)
             (kern-obj-move kobj dx dy)))))
   (let ((path (kern-obj-find-path kobj dest)))
-    ;;(display "pathfind:path=")(display path)(newline)
+    ;;;;(display "pathfind:path=");;(display path)(newline)
     (if (not (null? path))
         ;; skip the first location in the path
         (follow-path (cdr path)))))
@@ -267,7 +281,7 @@
   (< (kern-obj-get-ap kobj) 0))
 
 (define (flee kchar)
-  ;(display "flee")(newline)
+  ;;;(display "flee")(newline)
   (kern-char-set-fleeing kchar #t))
 
 (define (wander kchar)
@@ -283,7 +297,10 @@
   (kern-char-join-player kchar))
 
 (define (random-select list)
-  (list-ref list (modulo (random-next) (length list))))
+  (if (or (null? list)
+          (= 0 (length list)))
+      nil
+      (list-ref list (modulo (random-next) (length list)))))
 
 (define (taunt kchar ktarg taunts)
   (say kchar (random-select taunts)))
@@ -330,7 +347,7 @@
 
 (define (in-inventory? kchar ktype)
   (define (hasit? item inv)
-    ;(display "inv: ")(display inv)(newline)
+    ;;;(display "inv: ");;(display inv)(newline)
     (cond ((null? inv) #f)
           ((eqv? item (car (car inv))) #t)
           (else (hasit? item (cdr inv)))))
@@ -338,7 +355,7 @@
 
 (define (use-item-from-inventory-on-self kchar ktype)
   (kern-obj-remove-from-inventory kchar ktype 1)
-  ;(display "using")(newline)
+  ;;;(display "using")(newline)
   (apply (kern-type-get-gifc ktype) (list 'use ktype kchar))
   (kern-log-msg (kern-obj-get-name kchar)
                 " uses 1 "
@@ -369,7 +386,7 @@
 (define (profile proc . args)
   (let ((t (kern-get-ticks))
         (result (apply proc args)))
-    (display "*** TIME: ")(display (- (kern-get-ticks) t)) (display " ms")
+    ;;(display "*** TIME: ");;(display (- (kern-get-ticks) t)) ;;(display " ms")
     (newline)
     result))
 
@@ -435,7 +452,7 @@
 ;; the char pathfind to it
 ;; ----------------------------------------------------------------------------
 (define (do-or-goto kchar coords proc)
-  ;(display "do-or-goto")(newline)
+  ;;;(display "do-or-goto")(newline)
   (if (or (loc-adjacent? (kern-obj-get-location kchar) coords)
           (eq? coords (kern-obj-get-location kchar)))
       (proc kchar coords)
@@ -456,6 +473,7 @@
 ;; vector(s).
 ;; ----------------------------------------------------------------------------
 (define (evade kchar foes)
+  ;;(display "evade")(newline)
   (let* ((tloc (kern-obj-get-location kchar))
          (v (loc-norm (foldr (lambda (a b) 
                                (loc-sum a 
@@ -464,9 +482,11 @@
                              (mk-loc (loc-place tloc) 0 0)
                              foes))))
     (define (move dx dy)
-      ;; Note: stepping on impassable terrain can have bad side effects, so
-      ;; avoid it
-      (if (kern-place-is-passable (loc-sum (mk-loc (loc-place tloc) dx dy) tloc) kchar)
+      (if (kern-place-is-passable (loc-sum (mk-loc (loc-place tloc)
+                                                   dx 
+                                                   dy) 
+                                           tloc) 
+                                  kchar)
           (kern-obj-move kchar dx dy)
           #f))
     (define (evade-on-normal)
@@ -543,7 +563,7 @@ define (blit-maps kmap . blits)
 
 (define original-load load)  
 (define (load file)
-  (display (kern-get-ticks))(display " loading ")(display file)(newline)
+  ;;(display (kern-get-ticks));;(display " loading ");;(display file)(newline)
   (original-load file))
 
 (define (put obj x y) (list obj x y))
@@ -583,7 +603,7 @@ define (blit-maps kmap . blits)
 ;; cast1 - cast a spell which requires one arg if possible, assumes kchar has
 ;; enough mana
 (define (cast1 kchar spell ktarg)
-  ;(display "cast1: ")(display spell)(newline)
+  ;;;(display "cast1: ");;(display spell)(newline)
   (apply (spell-handler spell) (list kchar ktarg))
   (kern-char-dec-mana kchar (spell-cost spell))
   (kern-obj-dec-ap kchar (spell-ap spell))
@@ -601,7 +621,7 @@ define (blit-maps kmap . blits)
 ;; ----------------------------------------------------------------------------
 (define (terrain-ok-for-field? loc)
   (let ((pclass (kern-terrain-get-pclass (kern-place-get-terrain loc))))
-    ;(display "pclass=")(display pclass)(newline)
+    ;;;(display "pclass=");;(display pclass)(newline)
     (foldr (lambda (a b) (or a (= pclass b)))
            #f
            (list pclass-grass pclass-trees pclass-forest))))
@@ -657,7 +677,7 @@ define (blit-maps kmap . blits)
         #f)))
 
 (define (stagger kchar)
-  ;(display "stagger")(newline)
+  ;;;(display "stagger")(newline)
   (let ((vdir (random-select (list (cons -1 0) 
                                    (cons 1 0) 
                                    (cons 0 -1) 
@@ -680,6 +700,11 @@ define (blit-maps kmap . blits)
 (define (wants-healing? kchar)
   (<= (kern-char-get-hp kchar)
       (/ (kern-char-get-max-hp kchar) 2)))
+
+;; wants-healing? -- check if a char is <= 25% max hp
+(define (wants-great-healing? kchar)
+  (<= (kern-char-get-hp kchar)
+      (/ (kern-char-get-max-hp kchar) 4)))
 
 ;; wants-mana? -- check if a char is <= 50% max mana
 (define (wants-mana? kchar)
@@ -714,3 +739,76 @@ define (blit-maps kmap . blits)
                       (max-mp (kern-char-get-species kchar)
                               (kern-char-get-occ kchar)
                               lvl 0 0)))
+
+;; use-potion? -- use potion on self if desired and available
+(define (use-potion? kchar)
+  (or (and (wants-healing? kchar)
+           (has-heal-potion? kchar)
+           (drink-heal-potion kchar))
+      (and (wants-mana? kchar)
+           (has-mana-potion? kchar)
+           (drink-mana-potion kchar))))
+
+(define (use-heal-spell-on-self? kchar)
+  ;;;;(display "use-heal-spell-on-self?")(newline)
+  (and (wants-healing? kchar)
+       (can-use-ability? heal-ability kchar)
+       (use-ability heal-ability kchar kchar)))
+
+(define (use-great-heal-spell-on-self? kchar)
+  ;;;;(display "use-great-heal-spell-on-self?")(newline)
+  (and (wants-great-healing? kchar)
+       (can-use-ability? great-heal-ability kchar)
+       (use-ability great-heal-ability kchar kchar)))
+
+(define (use-spell-on-self? kchar)
+  ;;;;(display "use-spell-on-self?")(newline)
+  (or (use-great-heal-spell-on-self? kchar)
+      (use-heal-spell-on-self? kchar)))
+
+(define (avoid-melee? kchar)
+  ;;;;(display "avoid-melee? kchar")(newline)
+  (let ((nearby-foes (get-hostiles-in-range kchar 1)))
+    (if (null? nearby-foes)
+        #f
+        (evade kchar nearby-foes))))
+
+;; use-melee-spell-on-foe? -- randomly select from a list of melee spells and
+;; return #t iff the spell is used
+(define (use-melee-spell-on-foe? kchar ktarg)
+  (let ((spell (random-select (filter (lambda (spell)
+                                        (can-use-ability? spell kchar))
+                                      melee-spells))))
+    (if (null? spell)
+        #f
+        (use-ability spell kchar ktarg))))
+
+(define (use-melee-spell-on-foes? kchar)
+  ;;(display "use-melee-spell-on-foes?")(newline)
+  (foldr (lambda (val ktarg)
+           (or val
+               (use-melee-spell-on-foe? kchar ktarg)))
+         #f 
+         (get-hostiles-in-range kchar 1)))
+
+
+(define (use-ranged-spell-on-foe? kchar ktarg)
+  (let ((spell-range (random-select (filter (lambda (spell-range)
+                                        (and (can-use-ability? (car spell-range)
+                                                               kchar)
+                                             (can-hit? kchar 
+                                                       ktarg 
+                                                       (cdr spell-range))))
+                                      ranged-spells))))
+    (if (null? spell-range)
+        #f
+        (use-ability (car spell-range) kchar ktarg))))
+
+(define (use-ranged-spell-on-foes? kchar)
+  ;;(display "use-ranged-spell-on-foes?")(newline)
+  (foldr (lambda (val ktarg)
+           ;;(display "ktarg=");;(display ktarg)(newline)
+           (or val
+               (use-ranged-spell-on-foe? kchar ktarg)))
+         #f 
+         (all-visible-hostiles kchar)))
