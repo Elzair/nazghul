@@ -1637,7 +1637,7 @@ bool player_party::addFood(int amount)
         if (amount > 0)
                 log_msg("You get %d food.", amount);
         else
-                log_msg("You lose %d food.", amount);
+                log_msg("You lose %d food.", -amount);
 
         food += amount;
         if (food < 0)
@@ -1655,7 +1655,7 @@ bool player_party::addGold(int amount)
         if (amount > 0)
                 log_msg("You get %d gold.", amount);
         else
-                log_msg("You lose %d gold.", amount);
+                log_msg("You lose %d gold.", -amount);
 
         gold += amount;
         if (gold < 0)

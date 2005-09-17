@@ -2128,6 +2128,9 @@ static pointer kern_obj_add_gold(scheme *sc, pointer args)
         }
 
         if (! obj->addGold(quantity)) {
+                /* NPC's can't add gold (not even if they have containers)
+                 * because gold is not an object! Gold coins are, but that's
+                 * not what gets passed in here, is it? */
                 rt_err("kern-obj-add-gold: '%s' does not use gold",
                        obj->getName());
         }

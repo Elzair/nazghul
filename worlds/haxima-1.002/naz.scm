@@ -398,12 +398,12 @@
 ;; kobj-get -- remove an object from the map and put it into another object
 ;; ----------------------------------------------------------------------------
 (define (kobj-get kobj kchar)
-  (if (not (is-player-party-member? kchar))
-           (kern-log-msg (kern-obj-get-name kchar)
-                         " gets "
-                         (kern-obj-get-name kobj)))
   (if (kern-obj-put-into kobj kchar)
       (begin
+        (if (not (is-player-party-member? kchar))        
+            (kern-log-msg (kern-obj-get-name kchar)
+                          " gets "
+                          (kern-obj-get-name kobj)))
         (kern-obj-inc-ref kobj)
         (kern-obj-remove kobj)
         (kern-obj-dec-ref kobj)

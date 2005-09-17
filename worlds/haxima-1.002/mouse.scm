@@ -130,172 +130,87 @@
   (let ((mouse (kobj-gob-data knpc)))
     (if (mouse-first-meeting? mouse)
         (mouse-meet-first-time knpc kpc)
-        (say knpc "Hello again, Wanderer."))))
+        (say knpc "Ah, hello. Heh."))))
 
 (define (mouse-default knpc kpc)
   (say knpc "Got me there."))
 
 (define (mouse-name knpc kpc)
-  (say knpc "I'm The Mouse."))
+  (say knpc "I'm the Mouse."))
 
 (define (mouse-join knpc kpc)
-  (say knpc "I prefer to work alone."))
+  (say knpc "Sorry, I'm not a team player. Heh."))
 
 (define (mouse-job knpc kpc)
-  (say knpc "I... collect things."))
+  (say knpc "I... uh... collect things."))
 
 
 (define (mouse-coll knpc kpc)
-  (say knpc "Some would even call me a thief."))
+  (say knpc "Some might even call me a thief."))
 
 (define (mouse-thie knpc kpc)
-  (say knpc "Well, you caught me. Let me guess, the Enchanter sent you, right?")
-  (if (kern-conv-get-yes-no? kpc)
-      ;; yes, enchanter sent player
-      (begin
-        (say knpc "[Chuckling] Leave it to Enchy to get the first Wanderer in "
-             "500 years to be his errand boy! Let me guess again, he didn't "
-             "tell you what's missing, right? He probably referred to it as an "
-             "item?")
-        (if (kern-conv-get-yes-no? kpc)
-            ;; yes, enchanter didn't tell about item
-            (begin
-              (say knpc "I knew it! It's just like the old fart. The Enchanter "
-                   "never gives you the whole story. Well, my friend, this item "
-                   "you're looking for is a rune stone. In fact, its one of eight "
-                   "very special rune stones. Do you know which eight I'm "
-                   "referring to?")
-              (if (kern-conv-get-yes-no? kpc)
-                  ;; yes, knows about the eight runes
-                  (say knpc "Good! Then you know that as long as the Enchanter "
-                       "and some of the other Mighty have control of "
-                       "their own rune stones we'll never be able to open the "
-                       "Demon Gate again.")
-                  ;; no, doesn't know about the eight runes
-                  (begin
-                    (say knpc "The eight keys to the Demon Gate! Do you know "
-                         "what that is?")
-                    (if (kern-conv-get-yes-no? kpc)
-                        ;; yes, knows what demon gate is
-                        (say knpc "Whew! I was starting to think I'd been caught "
-                             "by a fool! That would be bad for my self-esteem.")
-                        ;; no, doesn't know what demon gate is
-                        (say knpc "You need to get around more. The Demon Gate "
-                             "is a door to other worlds. Long ago the Mighty "
-                             "of that age locked it shut. Opinions differ as to "
-                             "why, but it has remained locked ever since.")
-                        ))))
-            ;; no, enchanter told about item
-            (say knpc "That's not like him. He must be getting lax in his old "
-                 "age. So, you know that he was careless enough to allow one "
-                 "of his casual enemies to take one of the eight locks to the "
-                 "Demon Gate right out from under his nose. Frankly, I don't "
-                 "think he's responsible enough to take care of a rune stone.")))
-      ;; no, enchanter did not send player
-      (say knpc "Oh. Well, welcome to my humble abode! Bit of a mess, sorry. "
-           "Have some food and wine, take a rest. It's a long climb back up, "
-           "and I'm sure a busy Wanderer like yourself has places to go and "
-           "evil to fight!")))
-                  
-(define (mouse-migh knpc kpc)
-  (say knpc "The Mighty are the so-called greatest Warriors, Wizards, Wrights "
-       "and Wrogues in the land. We get together for barbecues, play golf, "
-       "that sort of thing."))
+  (say knpc "Until recently it was a good business. Somebody wants "
+       "something, they pay me to get it. But then I was hired by this "
+       "strange lady in red."))
 
-(define (mouse-demo knpc kpc)
-  (say knpc "The Mighty are divided. Some, like the Enchanter, believe that "
-       "the Demon Gate must remain locked forever. Others, like myself, "
-       "believe it should be re-opened. Will you help me re-open it?")
-  (if (kern-conv-get-yes-no? kpc)
-      ;; yes -- he will help
-      (begin
-        (say knpc "Excellent! We will need to gather all the Runes from the "
-             "other Mighty. Seek the Alchemist.")
-        (if (in-inventory? knpc t_rune_f)
-            (begin
-              ;; thief still has his rune, give to player
-              (say knpc "You will be the keeper of the runes, and as a "
-                   "sign of trust I will give you mine. Don't betray me on "
-                   "this, I don't often give things away. By this you know I "
-                   "am serious.")
-              (kern-obj-remove-from-inventory knpc t_rune_f 1)
-              (kern-obj-add-to-inventory kpc t_rune_f 1))))
-      ;; no -- he will not help
-      (say knpc "A pity. Perhaps you will reconsider after you have traveled "
-           "more widely.")))
-      
-(define (mouse-evil knpc kpc)
-  (say knpc "I'm not an expert. I try to stay out of philosophical debates. "
-       "Ask the Enchanter or the Necromancer about that, they'll talk your "
-       "ear off."))
+(define (mouse-lady knpc kpc)
+  (say knpc "The lady hired me to get something and then meet her to "
+       "exchange it for payment. All very typical, you know? But instead "
+       "of paying me, she tried to kill me!"))
 
-(define (mouse-ench knpc kpc)
-  (say knpc "Crusty old fart. And a bit preachy, too. He's perfectly situated "
-       "in a tower by a gassy old bog."))
-
-(define (mouse-necr knpc kpc)
-  (say knpc "Creepy fellow, what with all the dead things hanging about, but "
-       "nice enough. I don't know why he sticks around in Absalot, though."))
+(define (mouse-kill knpc kpc)
+  (say knpc "That red lady and her brute were relentless! I can't thank you "
+       "enough for getting rid of them, but I have a bad feeling they weren't "
+       "working alone. I'll be hunted for the rest of my life unless I can "
+       "get rid of this stupid rune!"))
 
 (define (mouse-rune knpc kpc)
-  (if (in-inventory? knpc t_rune_k)
+  (if (not (in-inventory? knpc t_rune_k))
+      (say knpc "It's your problem now, buddy!")
       (begin
-        (say knpc "Hm. Yes. I suppose you'll be wanting to take the Enchanter's Rune "
-             "back to him. Well, I guess I can always steal it back later.")
-        (kern-obj-remove-from-inventory knpc t_rune_k 1)
-        (kern-obj-add-to-inventory kpc t_rune_k 1))
-      (say knpc "I already gave it to you! If you lost it don't blame me!")))
 
-(define (mouse-absa knpc kpc)
-  (say knpc "Absalot was a fun town. 'Til they destroyed it."))
-
-(define (mouse-dest knpc kpc)
-  (say knpc "A coalition led by the city of Glasdrin destroyed Absalot and "
-       "sealed off the passage to it. You'll hear that it was destroyed for "
-       "its sins, or whatever, but it was destroyed by men, plain and "
-       "simple."))
-
-(define (mouse-sins knpc kpc)
-  (say knpc "Absalot was indeed a sinful city. People did whatever they "
-       "wanted, and had no rulers to speak of. Talk about depraved!"))
-
-(define (mouse-pers knpc kpc)
-  (say knpc "You're the first to make it down here."))
-
-(define (mouse-mous knpc kpc)
-  (say knpc "Since I'm technically one of the Mighty, I thought it would "
-       "be fun to call myself the Mighty Mouse. You don't find that amusing, "
-       "either? Nobody does. I don't understand why."))
-
-(define (mouse-glas knpc kpc)
-  (say knpc "Self-righteous city of paladins. Say, do you know what a paladin is?")
-  (if (kern-conv-get-yes-no? kpc)
-      (say knpc "I guess you've heard that one.")
-      (say knpc "A paladin is someone who wakes up in the middle of the night afraid "
-           "that somebody, somewhere, is having a good time.")
-      ))
-
-(define (mouse-know knpc kpc)
-  (say knpc "The Rune of Knowledge? Better ask the Enchanter what its good "
-       "for, other than keeping the Demon Gate shut."))
-
-(define (mouse-free knpc kpc)
-  (say knpc "The Rune of Freedom? I suppose you'll want to hear the sermon?")
-  (if (kern-conv-get-yes-no? kpc)
-      (say knpc "[He recites in a bored voice]:\n"
-           "Freedom is the state of a man who is able and willing to choose. "
-           "This condition cannot be given to a man, nor can it be taken away "
-           "from him. The only way to control a free man is to take away his "
-           "choices, or to prevent him from seeing that they are there for the "
-           "making.")
-      (say knpc "Good. My predecessor made me memorize that before he gave me "
-           "the rune. Each rune is useless unless the one who holds it can "
-           "recite the corresponding nugget of wisdom. I think a dirty "
-           "limmerick would have worked just as well, but apparently the "
-           "Mighty of Old lacked a sense of humor.")))
-
+        (define (give-rune gold)
+          (let* ((pgold (kern-player-get-gold)))
+            (if (> pgold gold)
+                (kern-obj-add-gold kpc (- 0 gold))
+                (let ((price (min pgold gold)))
+                  (say knpc "You don't have enough! Oh well, I'll just take "
+                       "whatever you can give me for it.")
+                  (kern-obj-add-gold kpc (- 0 price)))))
+          (kern-obj-remove-from-inventory knpc t_rune_k 1)
+          (kern-obj-add-to-inventory kpc t_rune_k 1))
+        
+        (say knpc "This rune has been nothing but trouble since I first "
+             "heard of it. I don't even know what it's good for! I'll give "
+             "you a really good deal on it. Say, 500 gold?")
+        (if (kern-conv-get-yes-no? kpc)
+            (give-rune 500)
+            (begin
+              (say knpc "Well, I guess I do owe you for saving me from "
+                   "that red lady. How about 250 gold?")
+              (if (kern-conv-get-yes-no? kpc)
+                  (give-rune 250)
+                  (begin
+                    (say knpc "You drive a hard bargain, buddy. 100 gold?")
+                    (if (kern-conv-get-yes-no? kpc)
+                        (give-rune 100)
+                        (begin
+                          (say knpc "50?")
+                          (if (kern-conv-get-yes-no? kpc)
+                              (give-rune 50)
+                              (begin
+                                (say knpc "Look, just take it ok?")
+                                (if (kern-conv-get-yes-no? kpc)
+                                    (give-rune 0)
+                                    (begin
+                                      (say knpc "I'm desperate! Here, "
+                                           "I'll pay YOU to take it! "
+                                           "Just get it away from me!")
+                                      (give-rune (- 0 100))))))
+                          )))))))))
+      
 (define (mouse-bye knpc kpc)
-  (say knpc "Say high to the Enchanter for me!"))
+  (say knpc "No offense, but I hope we never meet again."))
 
 (define mouse-conv
   (ifc nil
@@ -306,25 +221,11 @@
        (method 'name mouse-name)
        (method 'join mouse-join)
 
-       (method 'absa mouse-absa)
        (method 'coll mouse-coll)
-       (method 'demo mouse-demo)
-       (method 'dest mouse-dest)
-       (method 'ench mouse-ench)
-       (method 'evil mouse-evil)
-       (method 'free mouse-free)
-       (method 'glas mouse-glas)
-       (method 'know mouse-know)
-       (method 'migh mouse-migh)
-       (method 'mous mouse-mous)
-       (method 'necr mouse-necr)
-       (method 'pers mouse-pers)
-       (method 'prid mouse-sins)
+       (method 'kill mouse-kill)
+       (method 'lady mouse-lady)
        (method 'rune mouse-rune)
-       (method 'sins mouse-sins)
-       (method 'they mouse-dest)
        (method 'thie mouse-thie)
-       (method 'thin mouse-coll)
        ))
 
 ;;----------------------------------------------------------------------------
