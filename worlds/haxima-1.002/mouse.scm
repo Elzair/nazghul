@@ -22,13 +22,16 @@
   (define (mouse-disappear)
     (say knpc "Oh, bother. Not again!")
     (kern-obj-add-effect knpc ef_invisibility nil)
-    (kern-conv-end kpc))
+    (kern-conv-end kpc)
+    (kern-log-msg "<Hit any key to continue>")
+    (kern-ui-waitkey)
+    )
     
   (define (betray-player kchar)
     (kern-char-leave-player kchar)
     (kern-being-set-base-faction kchar faction-monster))
 
-  (define (kathryn-in-party)
+  (define (kathryn-alive-in-party)
     (betray-player ch_kathryn)
     (if (and (defined? 'ch_thud)
              (is-alive? ch_thud))
@@ -110,22 +113,6 @@
 
 ;;----------------------------------------------------------------------------
 ;; Conv
-;;
-;; Main Points
-;;
-;; 1. Must cast doubt on Enchanter's Gate Theory
-;; 2. Must return the Enchanter's Rune
-;; 3. Will give the Rune if player agrees to seek the other Runes and unlock
-;;    the Demon Gate
-;;
-;; The Thief is one of a cadre of the Mighty who want to re-open the Gate. If
-;; the player agrees to help their cause they will give him their Runes. If he
-;; disagrees they will not. The Enchanter, when the player returns, will ask
-;; him to seek out all the Runes from these dissenters so they can be kept
-;; under lock and key. There are three ways to get the Thief's Rune:
-;; 1. Agree to open the Gate
-;; 2. Kill him (should be extremely tough to do so)
-;; 3. Pickpocket it from him (should also be tough)
 ;;----------------------------------------------------------------------------
 (define (mouse-hail knpc kpc)
   (let ((mouse (kobj-gob-data knpc)))
@@ -181,9 +168,10 @@
           (kern-obj-remove-from-inventory knpc t_rune_k 1)
           (kern-obj-add-to-inventory kpc t_rune_k 1))
         
-        (say knpc "This rune has been nothing but trouble since I first "
-             "heard of it. I don't even know what it's good for! I'll give "
-             "you a really good deal on it. Say, 500 gold?")
+        (say knpc "This rune I got for the red lady has been nothing but "
+             "trouble since I first heard of it. I don't even know what "
+             "it's good for! I'll give you a really good deal on it. Say, "
+             "500 gold?")
         (if (kern-conv-get-yes-no? kpc)
             (give-rune 500)
             (begin
@@ -234,41 +222,43 @@
 ;;----------------------------------------------------------------------------
 (define (mk-mouse)
   (bind 
-   (kern-char-arm-self
-    (kern-mk-char 
-     'ch_mouse ;;..tag
-     "Mouse" ;;....name
-     sp_human ;;.....species
-     nil ;;..........occupation
-     s_brigand ;;.....sprite
-     faction-men ;;..faction
-     0 ;;............custom strength modifier
-     0 ;;............custom intelligence modifier
-     10 ;;............custom dexterity modifier
-     2 ;;............custom base hp modifier
-     2 ;;............custom hp multiplier (per-level)
-     1 ;;............custom base mp modifier
-     1 ;;............custom mp multiplier (per-level)
-     (max-hp sp_human nil mouse-start-lvl 0 0) ;;..current hit points
-     0 ;;...........current experience points
-     (max-mp sp_human nil mouse-start-lvl 0 0) ;;..current magic points
-     mouse-start-lvl  ;;..current level
-     #f ;;...........dead?
-     'mouse-conv ;;...conversation (optional)
-     nil ;;..........schedule (optional)
-     nil ;;..........custom ai (optional)
-
-     ;;..........container (and contents)
-     (mk-chest nil
-               (mk-contents (add-content 1 t_rune_f)
-                            (add-content 1 t_rune_k)
-                            (add-content 1 t_armor_leather)
-                            (add-content 1 t_leather_helm)
-                            (add-content 1 t_sword)
-                            (add-content 1 t_bow)
-                            (add-content 50 t_arrow)))
-
-     nil ;;..........readied arms (in addition to the container contents)
-     nil ;;..........hooks in effect
-     ))
+   (kern-char-force-drop
+    (kern-char-arm-self
+     (kern-mk-char 
+      'ch_mouse ;;..tag
+      "Mouse" ;;....name
+      sp_human ;;.....species
+      nil ;;..........occupation
+      s_brigand ;;.....sprite
+      faction-men ;;..faction
+      0 ;;............custom strength modifier
+      0 ;;............custom intelligence modifier
+      10 ;;............custom dexterity modifier
+      2 ;;............custom base hp modifier
+      2 ;;............custom hp multiplier (per-level)
+      1 ;;............custom base mp modifier
+      1 ;;............custom mp multiplier (per-level)
+      (max-hp sp_human nil mouse-start-lvl 0 0) ;;..current hit points
+      0 ;;...........current experience points
+      (max-mp sp_human nil mouse-start-lvl 0 0) ;;..current magic points
+      mouse-start-lvl  ;;..current level
+      #f ;;...........dead?
+      'mouse-conv ;;...conversation (optional)
+      nil ;;..........schedule (optional)
+      nil ;;..........custom ai (optional)
+      
+      ;;..........container (and contents)
+      (mk-chest nil
+                (mk-contents (add-content 1 t_rune_f)
+                             (add-content 1 t_rune_k)
+                             (add-content 1 t_armor_leather)
+                             (add-content 1 t_leather_helm)
+                             (add-content 1 t_sword)
+                             (add-content 1 t_bow)
+                             (add-content 50 t_arrow)))
+      
+      nil ;;..........readied arms (in addition to the container contents)
+      nil ;;..........hooks in effect
+      ))
+    #t)
    (mouse-mk)))

@@ -118,7 +118,8 @@ Character::Character(char *tag, char *name,
           fleeing(false), fleeX(0), fleeY(0), burden(0),
           inCombat(false),
           container(NULL), sprite(sprite),
-          sched_chars_node(0)
+          sched_chars_node(0),
+          forceContainerDrop(false)
 {
         if (tag) {
                 this->tag = strdup(tag);
@@ -185,7 +186,8 @@ Character::Character():name(0), hm(0), xp(0), order(-1),
                        fleeing(false), fleeX(0), fleeY(0), burden(0),
                        inCombat(false),
                        container(NULL), sprite(0),
-                       sched_chars_node(0)
+                       sched_chars_node(0),
+                       forceContainerDrop(false)
 {
         // This method is probably obsolete now
 
@@ -1017,9 +1019,12 @@ bool Character::dropItems()
 	if (container == NULL)
 		return false;
 
-        // roll to drop if not empty
-        if (!container->isEmpty() 
-            && (rand() % 100) <= CHEST_DROP_PROB)
+        if (container->isEmpty())
+                return true;
+
+        if (! container->isEmpty()
+            && (forceContainerDrop
+                || (rand() % 100) <= CHEST_DROP_PROB))
                 container->relocate(getPlace(), getX(), getY());
         obj_dec_ref(container);
 	container = NULL;
@@ -2537,3 +2542,12 @@ void Character::setDead(bool val)
         dead = val;
 }
 
+bool Character::getForceContainerDrop()
+{
+        return forceContainerDrop;
+}
+
+void Character::setForceContainerDrop(bool val)
+{
+        forceContainerDrop = val;
+}

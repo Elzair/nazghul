@@ -53,7 +53,7 @@
  nil ;; neighbors 
  ;; objects
  (list
-  (put (mk-riddle 'egg t_lava 3 5 3 9 
+  (put (mk-riddle 'egg 't_lava 3 5 3 9 
                   "All who would pass must answer the riddle:\n\n"
                   "  In a marble hall white as milk\n"
                   "  Lined with skin soft as silk\n"
@@ -62,11 +62,11 @@
                   "  No doors there are to this stronghold\n"
                   "  Yet thieves break in to steal its gold.\n"
                   ) 4 14)
-  (put (mk-riddle 'few t_lava 8 5 3 9
+  (put (mk-riddle 'few 't_lava 8 5 3 9
                   "All who would pass must answer the riddle:\n\n"
                   "  I know a word of letters three.\n"
                   "  Add two, and fewer there will be.") 9 4)
-  (put (mk-riddle 'eye t_lava 13 5 3 9
+  (put (mk-riddle 'eye 't_lava 13 5 3 9
                   "All who would pass must answer the riddle:\n\n"
                   "  Pronounced as one letter,\n"
                   "  but written with three.\n"

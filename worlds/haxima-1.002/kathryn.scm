@@ -18,6 +18,21 @@
                )
 
 ;;----------------------------------------------------------------------------
+;; Special objects
+;;----------------------------------------------------------------------------
+(mk-reusable-item 
+ 't_kathryns_letter "Letter" s_scroll 1
+ (lambda (kletter kuser)
+   (kern-ui-page-text
+   "Letter"
+   "K,"
+   "The Enchanter has one of the Runes. Acquire "
+   "it by any means necessary, and leave no one "
+   "to tell the tale. Not even a ghost."
+   "--N")))
+
+
+;;----------------------------------------------------------------------------
 ;; Gob
 ;;
 ;; Quest flags, etc, go here.
@@ -77,9 +92,9 @@
     (kern-char-join-player knpc)
     (kern-conv-end))
   (say knpc "It seems we have a common goal. Join us, and when we catch the "
-       "villian we'll all return the item. You can keep your reward, Thud and "
-       "I require no reward. Knowing that we have done the right thing will "
-       "be reward enough for us. What do you say, tough guy, will you join "
+       "villian we'll all return the item. You can keep any reward. "
+       "Knowing that we have done the right thing will "
+       "be enough for me and Thud. What do you say, tough guy, will you join "
        "us?")
   (if (kern-conv-get-yes-no? kpc)
       (do-join)
@@ -171,34 +186,50 @@
 ;;----------------------------------------------------------------------------
 (define (mk-kathryn)
   (bind 
-   (kern-char-arm-self
-    (kern-mk-char 
-     'ch_kathryn ;;..tag
-     "Kathryn" ;;....name
-     sp_human ;;.....species
-     oc_wizard ;;....occupation
-     s_wizard ;;.....sprite
-     faction-men ;;..faction
-     0 ;;............custom strength modifier
-     4 ;;............custom intelligence modifier
-     0 ;;............custom dexterity modifier
-     2 ;;............custom base hp modifier
-     1 ;;............custom hp multiplier (per-level)
-     8 ;;............custom base mp modifier
-     2 ;;............custom mp multiplier (per-level)
-     (max-hp sp_human oc_wizard kathryn-start-lvl 0 0) ;;..current hit points
-     0  ;;...........current experience points
-     (max-mp sp_human oc_wizard kathryn-start-lvl 0 0) ;;..current magic points
-     kathryn-start-lvl  ;;..current level
-     #f ;;...........dead?
-     'kathryn-conv ;;...conversation (optional)
-     sch_kathryn ;;.....schedule (optional)
-     'spell-sword-ai ;;...custom ai (optional)
-     nil ;;..........container (and contents)
-     ;;..........readied arms (in addition to the container contents)
-     (list
-      t_staff
-      )
-     nil ;;..........hooks in effect
-     ))
+   (kern-char-force-drop
+    (kern-char-arm-self
+     (kern-mk-char 
+      'ch_kathryn ;;..tag
+      "Kathryn" ;;....name
+      sp_human ;;.....species
+      oc_wizard ;;....occupation
+      s_wizard ;;.....sprite
+      faction-men ;;..faction
+      0 ;;............custom strength modifier
+      4 ;;............custom intelligence modifier
+      0 ;;............custom dexterity modifier
+      2 ;;............custom base hp modifier
+      1 ;;............custom hp multiplier (per-level)
+      8 ;;............custom base mp modifier
+      2 ;;............custom mp multiplier (per-level)
+      (max-hp sp_human oc_wizard kathryn-start-lvl 0 0) ;; current hit points
+      0  ;;...........current experience points
+      (max-mp sp_human oc_wizard kathryn-start-lvl 0 0) ;; current magic points
+      kathryn-start-lvl  ;;..current level
+      #f ;;...........dead?
+      'kathryn-conv ;;conversation (optional)
+      sch_kathryn ;;..schedule (optional)
+      'spell-sword-ai ;;...custom ai (optional)
+      ;;..............container (and contents)
+      (mk-chest
+       nil
+       (mk-contents
+        (add-content 1 t_kathryns_letter)
+        (add-content 100 t_gold_coins)
+        (add-content 5 sulphorous_ash )
+        (add-content 5 ginseng )
+        (add-content 5 garlic )
+        (add-content 3 spider_silk )
+        (add-content 3 blood_moss )
+        (add-content 2 black_pearl )
+        (add-content 1 nightshade )
+        (add-content 1 mandrake )
+        ))
+      ;;..............readied arms (in addition to the container contents)
+      (list
+       t_staff
+       )
+      nil ;;..........hooks in effect
+      ))
+    #t)
    (kathryn-mk)))

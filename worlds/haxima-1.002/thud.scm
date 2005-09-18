@@ -36,7 +36,7 @@
   (say knpc "Thud no like you."))
 
 (define (thud-join knpc kpc)
-  (if (in-player-party? ch_kathryn)
+  (if (is-player-party-member? ch_kathryn)
       (begin
         (say knpc "[Seeing Kathryn with you, he grunts his assent]")
         (kern-char-join-player knpc)

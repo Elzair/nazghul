@@ -2,10 +2,11 @@
 ;; books.scm -- reading material
 ;; ----------------------------------------------------------------------------
 
-(kern-mk-sprite-set 'ss_books 32 32 1 2 0 0 "books.png")
+(kern-mk-sprite-set 'ss_books 32 32 2 2 0 0 "books.png")
 
 (kern-mk-sprite 's_lexicon ss_books 1 0 #f 0)
-(kern-mk-sprite 's_manual  ss_books 1 0 #f 0)
+(kern-mk-sprite 's_manual  ss_books 1 1 #f 0)
+(kern-mk-sprite 's_scroll  ss_books 1 2 #f 0)
 
 ;;----------------------------------------------------------------------------
 ;; Player manual

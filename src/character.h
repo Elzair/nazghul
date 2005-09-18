@@ -208,6 +208,8 @@ class Character:public Being {
         struct closure *getAI();
         void setDead(bool val);
         void introduce();
+        void setForceContainerDrop(bool val);
+        bool getForceContainerDrop();
 
 	char *tag;
         struct node *plnode; // pointer back to party list node
@@ -289,6 +291,7 @@ class Character:public Being {
         bool dead;
 
         struct node *sched_chars_node;   /* for chars with multiplace scheds */
+        bool forceContainerDrop; // ensure the container is dropped on death
 };
 
 extern void char_dtor(void *val);

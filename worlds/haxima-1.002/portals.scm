@@ -155,10 +155,10 @@
 ;; The riddle machine -- fills region with given terrain when answered
 ;; incorrectly
 ;;----------------------------------------------------------------------------
-(define (riddle-mk ans kter x y w h msg)
-  (list ans kter x y w h msg))
+(define (riddle-mk ans ter-tag x y w h msg)
+  (list ans ter-tag x y w h msg))
 (define (riddle-ans riddle) (car riddle))
-(define (riddle-terrain riddle) (cadr riddle))
+(define (riddle-terrain riddle) (eval (cadr riddle)))
 (define (riddle-x riddle) (caddr riddle))
 (define (riddle-y riddle) (list-ref riddle 3))
 (define (riddle-w riddle) (list-ref riddle 4))
@@ -175,6 +175,7 @@
               (kern-log-msg "YOU MAY PASS")
               (begin
                 (kern-log-msg "WRONG!")
+                ;(display "riddle-step:")(display riddle)(newline)
                 (shake-map 10)
                 (fill-terrain (riddle-terrain riddle)
                               (loc-place (kern-obj-get-location kmech))
@@ -190,6 +191,6 @@
 
 (mk-obj-type 't_step_riddle nil nil layer-mechanism riddle-step-ifc)
 
-(define (mk-riddle ans kter x y w h . msg)
+(define (mk-riddle ans ter-tag x y w h . msg)
   (bind (kern-mk-obj t_step_riddle 1)
-        (riddle-mk ans kter x y w h msg)))
+        (riddle-mk ans ter-tag x y w h msg)))
