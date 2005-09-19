@@ -4826,6 +4826,26 @@ KERN_API_CALL(kern_char_add_defense)
         return sc->NIL;
 }
 
+KERN_API_CALL(kern_char_add_experience)
+{
+        int val;
+        class Character *ch;
+
+        ch = (class Character*)unpack_obj(sc, &args, 
+                                          "kern-char-add-experience");
+        if (!ch)
+                return sc->NIL;
+
+        if (unpack(sc, &args, "d", &val)) {
+                rt_err("kern-char-add-experience: bad args");
+                goto done;
+        }
+        
+        ch->addExperience(val);
+ done:
+        return scm_mk_ptr(sc, ch);
+}
+
 KERN_API_CALL(kern_add_magic_negated)
 {
         int val;
@@ -6788,6 +6808,7 @@ scheme *kern_init(void)
 
         /* kern-char api */
         API_DECL(sc, "kern-char-add-defense", kern_char_add_defense);
+        API_DECL(sc, "kern-char-add-experience", kern_char_add_experience);
         API_DECL(sc, "kern-char-arm-self", kern_char_arm_self);
         API_DECL(sc, "kern-char-attack", kern_char_attack);
         API_DECL(sc, "kern-char-dec-mana", kern_char_dec_mana);

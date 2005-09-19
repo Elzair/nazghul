@@ -812,3 +812,7 @@ define (blit-maps kmap . blits)
                (use-ranged-spell-on-foe? kchar ktarg)))
          #f 
          (all-visible-hostiles kchar)))
+
+(define (prompt-for-key)
+  (kern-log-msg "<Hit any key to continue>")
+  (kern-ui-waitkey))

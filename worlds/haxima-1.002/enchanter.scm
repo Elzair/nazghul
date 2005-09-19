@@ -23,16 +23,22 @@
 ;;
 ;; Quest flags, etc, go here.
 ;;----------------------------------------------------------------------------
-(define (enchanter-mk) 
-  (list #f #f #f))
+(define (mk-quest) (list #f #f #f))
+(define (quest-offered? qst) (car qst))
+(define (quest-accepted? qst) (cadr qst))
+(define (quest-done? qst) (caddr qst))
+(define (quest-offered! qst val) (set-car! qst val))
+(define (quest-accepted! qst val) (set-car! (cdr qst) val))
+(define (quest-done! qst val) (set-car! (cddr qst) val))
 
+(define (enchanter-mk)
+  (list #f 
+        (mk-quest)
+        (mk-quest)))
 (define (ench-met? gob) (car gob))
-(define (ench-quest? gob) (cadr gob))
-(define (ench-quest-done? gob) (caddr gob))
-
+(define (ench-first-quest gob) (cadr gob))
+(define (ench-second-quest gob) (caddr gob))
 (define (ench-met! gob val) (set-car! gob val))
-(define (ench-quest! gob val) (set-car! (cdr gob) val))
-(define (ench-quest-done! gob val) (set-car! (cddr gob) val))
 
 ;;----------------------------------------------------------------------------
 ;; Conv
@@ -42,31 +48,96 @@
 ;; not specific about what), this is the CrOOAK quest which I was going to do
 ;; as a standalone episode.
 ;;----------------------------------------------------------------------------
-(define (conv-update-quest knpc kpc)
-  (if (kern-obj-has? kpc t_wise_wizard_rune)
-      (begin
-        (say knpc "[He sags with relief] You have recovered my Rune! I "
-             "cannot begin to thank you enough. If that had fallen into the "
-             "wrong hands... it is unthinkable. I owe you a very great debt.")
-        (kern-obj-remove-from-inventory kpc t_wise_wizard_rune 1)
-        (kern-obj-add-to-inventory kpc t_gold 500))
-      (say knpc "[He looks worried] No luck finding my stolen item yet, I "
-           "see. Keep searching. It is very important.")))
-
 (define (conv-hail knpc kpc)
   (let ((ench (kobj-gob-data knpc)))
+
+    (define (second-quest-spurned)
+      (say knpc "It is the duty of all good men to stand up to evil. I "
+           "don't have time for sluggards or cynics. Now give me my rune, "
+           "take your reward and get out!")
+      (kern-obj-remove-from-inventory kpc t_rune_k 1)
+      (kern-obj-add-to-inventory knpc t_rune_k 1)
+      (quest-accepted! (ench-second-quest ench) #f)
+      (kern-conv-end))
+
+    (define (start-second-quest)
+      (quest-accepted! (ench-second-quest ench) #t)
+      (say knpc "Good for you! First, keep my rune. "
+           "If you encounter any of the other Wise ask them of it. "
+           "Try the Alchemist near Oparine. "
+           "Although obscenely greedy, "
+           "he knows things even I do not.")
+      (prompt-for-key)
+      (say knpc "Second, seek the other runes. "
+           "I know not their full number nor their resting places. "
+           "One, I know, hangs about the neck of the Warritrix. "
+           "Seek her in Glasdrin.")
+      (prompt-for-key)
+      (say knpc "Third, find out what you can of the Accursed. "
+           "They grow bold. I sense a new leadership is guiding them. "
+           "And beware! For they surely know of you by know.")
+      (prompt-for-key)
+      (say knpc "Well, get to it! Come back when you have the other Runes.")
+      (kern-conv-end)
+      )
+
+    (define (offer-second-quest-again)
+      (say knpc "You're back. Perhaps you've had an attack of conscience. "
+           "It happens to the worst of us. "
+           "Now, are you ready to help me thwart the Accursed?")
+      (if (kern-conv-get-yes-no? kpc)
+          (begin
+            (kern-obj-remove-from-inventory knpc t_rune_k 1)
+            (kern-obj-add-to-inventory kpc t_rune_k 1)
+            (start-second-quest))
+          (begin
+            (say knpc "Like a pig to the trough, "
+                 "a fool returns to his own folly. "
+                 "Go back to filling your belly!")
+            (kern-conv-end))))
+
+
+    (define (finish-first-quest)
+      (say knpc "Ah, I see you found my Rune!")
+      (kern-obj-add-gold kpc 200)
+      (kern-char-add-experience kpc 100)
+      (say knpc "Perhaps your are not completely useless. "
+           "Did you encounter any... resistance?")      
+      (kern-conv-get-yes-no? kpc)
+      (say knpc "The Accursed were behind this theft, why I do not know. But "
+           "if they are seeking this rune, they are probably seeking the "
+           "others as well. And their intentions, whatever they are, will "
+           "not be good. We must stop them. Will you help?")
+      (quest-offered! (ench-second-quest ench) #t)
+      (if (kern-conv-get-yes-no? kpc)
+          (start-second-quest)
+          (second-quest-spurned)))
+
+    (define (check-second-quest)
+      ;; FIXME: need more better stuff here...
+      (say knpc "I see the Accursed haven't killed you yet. "
+           "I guess that's something."))
+
+    (define (check-first-quest)
+      (if (in-inventory? kpc t_rune_k)
+          (finish-first-quest)
+          (say knpc "Hmph. I see you still haven't found my item yet. "
+               "[He mutters something about Wanderers and thieves]")))
+      
     (if (ench-met? ench)
-        (if (ench-quest? ench)
-            (if (ench-quest-done? ench)
-                (say knpc "Welcome back, friend of the Wise.")
-                (conv-update-quest knpc kpc))
-            (say knpc "Welcome back, Wanderer."))
-        (begin
-          (say knpc "[This ageless mage looks a bit startled to see you] "
-               "A Wanderer! I haven't met one of your kind in ages... "
-               "this is most unexpected... [he recovers his composure] "
-               "Forgive me! And welcome, Wanderer.")
-          (ench-met! #t)))))
+        (if (quest-done? (ench-second-quest ench))
+            (say knpc "Welcome, friend of the Wise")
+            (if (quest-offered? (ench-second-quest ench))
+                (if (quest-accepted? (ench-second-quest ench))
+                    (check-second-quest)
+                    (offer-second-quest-again))
+                (if (quest-offered? (ench-first-quest ench))
+                    (check-first-quest)
+                    (say knpc "Yes, what is it this time?"))))
+        (say knpc "[This ageless mage looks unsurprised to see you] "
+             "I was wondering when you would get here, Wanderer. "
+             "It took you long enough!")
+        (ench-met! #t))))
 
 (define (conv-name knpc kpc)
   (say knpc "I am known as the Enchanter."))
@@ -78,7 +149,7 @@
   (say knpc "I cannot help you with that"))
 
 (define (conv-bye knpc kpc)
-  (say knpc "Keep to the Way"))
+  (say knpc "Beware the Accursed!"))
 
 (define (conv-join knpc kpc)
   (say knpc "No, I belong here. Seek the Warritrix if you desire a powerful "
@@ -88,14 +159,14 @@
 (define (conv-warr knpc kpc)
   (say knpc "The Warritrix is Wise and fierce, "
        "and like yourself prone to Wandering. "
-       "In fact, at the moment I don't know where she is."))
+       "In fact, at the moment I don't know where she is. "
+       "Try Glasdrin."))
 
 (define (conv-wand knpc kpc)
-  (say knpc "I know that you come from the Gate of the Shrine, "
-       "and that you are from another dimension. "
-       "But as to whether you are good or evil, that depends upon you."))
+  (say knpc "Yes, I've met your type before. Unpredictable. "
+       "And as to whether you are good or evil, that depends upon you."))
 
-(define (conv-offer-quest knpc kpc)
+(define (conv-offer-first-quest knpc kpc)
   (say knpc "I do not quibble over definitions of good and evil. "
        "They are easily recognized when encountered. "
        "Do you intend to do good while you are here?")
@@ -108,16 +179,17 @@
         (if (kern-conv-get-yes-no? kpc)
             ;; yes - player is ready to be tested
             (begin
-              (say knpc "Very well. An item of extreme importance was recently "
-                   "stolen from me. I need someone to find the thief, "
+              (say knpc "Very well. An item was recently stolen from me. "
+                   "I need someone to find the thief, "
                    "recover the item and return it to me. Are you willing?")
               (if (kern-conv-get-yes-no? kpc)
                   ;; yes -- player is willing
                   (begin
-                    (say knpc "Good! Rangers have tracked the thief south and "
-                         "east to Trigrave. Go there and inquire if anyone has "
-                         "seen the thief.")
-                    (ench-quest! (kobj-gob-data knpc) #t))
+                    (say knpc "Good! Rangers have tracked the thief to "
+                         "Trigrave. Go there and inquire if anyone has seen "
+                         "the thief.")
+                    (quest-accepted! (ench-first-quest (kobj-gob-data knpc)
+                                                           #t)))
                   ;; no -- player is not willing
                   (say knpc "Perhaps I misjudged you.")))
             ;; no -- player is not ready
@@ -125,33 +197,31 @@
                  "BE good without DOING good.")))
       ;; no -- player does not intend to do good
       (say knpc "We shall see. Evil men can do good without meaning to, "
-           "and men who would be callous find they can't ignore their conscience. "
-           "I sense that you are good, whether you know it or not.")))
+           "and men who would be callous find they can't ignore their "
+           "conscience.")))
 
 (define (conv-good knpc kpc)
-  (if (ench-quest? (kobj-gob-data knpc))
+  (if (quest-accepted? (ench-first-quest (kobj-gob-data knpc)))
       (say knpc "The wicked flee when no one pursues, but the righteous are "
            "bold as dragons.")
-      (conv-offer-quest knpc kpc)))
+      (conv-offer-first-quest knpc kpc)))
 
 (define (conv-gate knpc kpc)
   (say knpc "There are many gates in the land which connect to "
        "one another and appear with the moons. "
-       "But there are two gates that connect to other worlds: "
-       "the Shrine Gate and the Demon Gate. "
-       ))
-
-(define (conv-migh knpc kpc)
-  (say knpc "The Mighty are the most powerful Warriors, Wizards, Wrights and "
-       "Wrogues in the land. There has always been two of each, one Wise and "
-       "one Accursed."))
+       "But the Shrine Gate is the only one I know of that connects with "
+       "other worlds."))
 
 (define (conv-wise knpc kpc)
-  (say knpc "The Wise seek the good of all."))
+  (say knpc "The Wise are the most powerful Warriors, Wizards, Wrights and "
+       "Wrogues in the land. Although they function to protect the Shard, "
+       "they are not all good."))
 
 (define (conv-accu knpc kpc)
-  (say knpc "The Accursed seek only to gratify themselves. They are powerful "
-       "and dangerous enemies of the Wise."))
+  (say knpc "The Accursed are an evil secret society, responsible for many "
+       "crimes and atrocities. With the destruction of Absalot I thought "
+       "they were finished. I was wrong. I fear now their number and "
+       "strength is greater than ever before."))
 
 (define (conv-moon knpc kpc)
   (say knpc "Ask Kalcifax the Traveler of moongates. "
@@ -162,28 +232,12 @@
        "Those who enter never return, "
        "and those who emerge are strangers and Wanderers like yourself."))
 
-(define (conv-demo knpc kpc)
-  (say knpc "The Demon Gate opens on other worlds. "
-       "The mighty wizards of old would visit them, "
-       "and demons from the other worlds would visit ours. "
-       "But the gate has been sealed."))
-
-(define (conv-seal knpc kpc)
-  (say knpc "One of the worlds through the Demon Gate began to conquer the others, "
-       "using the gate to move its armies. "
-       "The Shard would have suffered the same fate, "
-       "but the Mighty of old shut the gate shut from our side and sealed it with eight locks. "
-       "Now, none may pass."))
-
-(define (conv-lock knpc kpc)
-  (say knpc "Each lock on the Demon Gate was sealed with a Rune, "
-       "each Rune was given to one and only one of the Mighty. "
-       "They vowed to never reassamble the Runes in one place, "
-       "so that the Gate could never be re-opened."))
-
 (define (conv-rune knpc kpc)
-  (say knpc "The Runes were passed down through generations. "
-       "I know where some of them are, but not all."))
+  (say knpc "The rune was passed to me by my master long ago. "
+       "He did not know what it was for, and for all my research I never "
+       "found its purpose, either. I decided it was an unimportant old relic. "
+       "Why else would it not be mentioned in any of the arcane tomes or "
+       "histories?"))
 
 (define (conv-wiza knpc kpc)
   (say knpc "The Warrior, Wright and Wrogue all derive some power from their "
@@ -196,36 +250,30 @@
        "opened the Eye perceive causes and effects invisible to others."))
 
 (define (conv-wrog knpc kpc)
-  (say knpc "The Wisest of Wrogues is The MAN, who is known to sometimes "
-       "frequent Glasdrin. I suggest you ask around there."))
+  (say knpc "The Wisest of Wrogues is The MAN, who comes and goes as if on "
+       "the wind. If the MAN has a home, it is well-hidden. Ask around, "
+       "perhaps your enquiries will prompt a meeting."))
 
 (define (conv-wrig knpc kpc)
   (say knpc "The Wisest Wright prefers to work in isolation. You may find him "
        "if your are persistent, but not in any city."))
 
 (define (conv-necr knpc kpc)
-  (say knpc "The most evil of all the Accursed, my nemesis the Necromancer "
-       "abides in the ruins of Absalot. He is powerful, deceitful and corrupt "
-       "beyond redemption."))
+  (say knpc "The most depraved and wicked of all the Wise, "
+       "my nemesis the Necromancer abides somewhere in the underworld. "
+       "He is powerful, deceitful and corrupt beyond redemption."))
 
 (define (conv-alch knpc kpc)
-  (say knpc "The Alchemist keeps a lab in the underworld. He is the least "
-       "troublesome of the Accursed, but he is greedy and unafraid to sacrifice "
-       "others to serve his own ends."))
-
-(define (conv-assa knpc kpc)
-  (say knpc "The Assassin is the Accursed Warrior. I don't know who or where he "
-       "is. He strikes unexpectedly and disappears. A most bothersome fellow."))
-
-(define (conv-rat knpc kpc)
-  (say knpc "The Rat is the Accursed Wrogue. Although not very dangerous, "
-       "he is a cunning, slippery and most inconvenient pest. Needless to say "
-       "I don't know where he is."))
+  (say knpc "The Alchemist keeps a lab near Oparine. "
+       "He is greedy and very cunning, so be wary of him."))
 
 (define (conv-thie knpc kpc)
-  (say knpc "The thief who stole my item must be very clever. The rangers "
-       "lost his trail in Trigrave. Inquire among everyone there if they "
-       "have seen the THIEF."))
+  (if (quest-done? (ench-first-quest (kobj-gob-data knpc)))
+      (say knpc "Although a nuisance, he was only a middleman. "
+           "I hope you did not treat him too harshly.")
+      (say knpc "The thief who stole my item must be very clever. The rangers "
+           "lost his trail in Trigrave. Inquire among everyone there if they "
+           "have seen the THIEF."))
 
 (define enchanter-conv
   (ifc nil
@@ -238,19 +286,13 @@
        
        (method 'accu conv-accu)
        (method 'alch conv-alch)
-       (method 'assa conv-assa)
-       (method 'demo conv-demo)
        (method 'evil conv-good)
        (method 'gate conv-gate)
        (method 'good conv-good)
        (method 'know conv-know)
-       (method 'lock conv-lock)
-       (method 'migh conv-migh)
        (method 'moon conv-moon)
        (method 'necr conv-necr)
-       (method 'rat conv-rat)
        (method 'rune conv-rune)
-       (method 'seal conv-seal)
        (method 'shri conv-shri)
        (method 'thie conv-thie)
        (method 'wand conv-wand)

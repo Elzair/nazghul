@@ -21,16 +21,25 @@
   (say knpc "The hamlet of Bole sits in a canyon in the mountains north of "
        "the Great Wood."))
 
+(define (basic-absa knpc kpc)
+  (say knpc "Absalot, a great and wicked city, was destroyed for its sins."))
+
+(define (basic-opar knpc kpc)
+  (say knpc "The city of Oparine can be found in the southwest by a "
+       "deep harbor."))
+
 (define basic-conv
   (ifc '()
        (method 'hail generic-hail)
        (method 'default generic-unknown)
        (method 'bye generic-bye)
        
+       (method 'absa basic-absa)
        (method 'bole basic-bole)
        (method 'ench basic-ench)
        (method 'gree basic-gree)
        (method 'trig basic-trig)
+       (method 'opar basic-opar)
        ))
 
 ;; Helper
