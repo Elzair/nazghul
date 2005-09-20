@@ -273,7 +273,7 @@
            "I hope you did not treat him too harshly.")
       (say knpc "The thief who stole my item must be very clever. The rangers "
            "lost his trail in Trigrave. Inquire among everyone there if they "
-           "have seen the THIEF."))
+           "have seen the THIEF.")))
 
 (define enchanter-conv
   (ifc nil

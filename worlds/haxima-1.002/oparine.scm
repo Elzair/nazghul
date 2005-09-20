@@ -53,21 +53,21 @@
             ".. .. .. .. .. xx xx xx xx [[ @@ @@ @@ ]] xx xx ,, xx .. .. .. bb .. cc .. .. .. .. ~~ -- -- -- -- __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ "
             ".. .. .. .. .. xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx .. .. .. .. .. cc .. bb .. .. ~~ -- -- -- -- -- __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ "
             ".. .. .. .. .. ws ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ws .. .. .. .. .. cc .. .. .. .. ~~ ~~ -- -- -- -- -- __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ "
-            ".. .. .. .. xx xx @@ @@ @@ ,, ,, ,, ,, ,, @@ @@ @@ xx xx .. .. bb .. cc .. .. .. .. .. ~~ -- -- -- -- -- -- -- __ __ __ __ __ __ __ __ __ __ __ __ -- -- -- -- -- -- -- -- -- -- -- -- __ __ __ "
-            ".. .. .. .. xx && ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, && xx .. .. .. .. cc .. bb .. .. .. ~~ ~~ -- -- -- -- -- -- -- -- -- __ __ __ __ __ __ __ __ -- -- -- -- -- -- -- -- -- -- -- -- -- -- __ __ "
-            ".. .. .. .. xx && ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, && xx .. .. .. .. cc .. .. .. .. .. .. ~~ ~~ -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ -- -- -- -- -- __ "
-            ".. .. .. .. xx xx @@ @@ @@ ,, ,, ,, ,, ,, @@ @@ @@ xx xx .. .. bb .. cc .. .. .. .. .. tt tt ~~ ~~ ~~ ~~ ~~ -- -- -- -- -- -- -- -- -- -- ~~ ~~ ~~ tt tt tt tt tt tt tt tt ~~ ~~ ~~ ~~ -- -- __ "
-            ".. .. .. .. .. ws ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ws .. .. .. .. .. cc .. bb .. .. tt tt tt tt tt tt tt ~~ ~~ -- -- -- ~~ -- -- ~~ ~~ ~~ ~~ tt tt tt tt tt tt tt tt tt tt tt tt tt ~~ -- -- -- "
-            ".. .. .. .. .. xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx .. .. .. .. .. cc tt .. .. .. tt tt tt tt tt tt tt tt ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ tt tt tt tt xx xx xx ws xx xx xx ws xx xx xx tt ~~ -- -- -- "
-            ".. .. .. .. .. xx xx xx ws xx xx ,, xx xx ws xx xx xx .. .. bb .. .. cc tt tt tt tt tt tt tt tt tt tt tt tt tt tt ~~ ~~ bb ~~ tt tt tt tt tt tt xx .S .E .A @@ .W .I .T .C .H xx tt ~~ ~~ -- -- "
-            ".. .. .. .. .. .. .. .. .. tt tt cc tt tt .. .. .. .. .. .. .. .. tt cc tt tt bb tt tt tt tt tt tt tt tt tt tt tt tt ~~ ~~ ~~ tt tt tt tt tt tt xx ,, ,, ,, ,, ,, ,, ,, ,, ,, xx tt tt ~~ -- -- "
-            ".. .. .. .. .. .. .. .. .. .. tt cc tt .. .. .. .. .. .. .. .. tt tt cc .. .. .. .. .. bb tt tt tt tt tt tt tt tt tt tt ~~ ~~ ~~ ~~ tt tt .. .. ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ws tt tt ~~ -- -- "
-            "tt .. .. .. .. .. .. .. .. .. .. cc cc cc cc cc cc cc cc cc cc cc cc cc tt tt tt tt .. .. .. .. .. bb tt tt tt bb tt tt tt ~~ bb ~~ tt bb .. tt xx ,, ,, [[ @@ @@ @@ ]] ,, ,, xx tt tt ~~ -- -- "
-            "tt .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. tt tt cc tt tt bb tt tt tt tt bb .. .. .. .. .. .. .. .. .. == .. ~~ tt .. .. tt xx xx xx ,, ,, ,, ,, ,, xx xx xx tt tt ~~ -- -- "
-            "tt tt tt .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. bb .. tt cc tt .. tt tt tt tt tt tt tt tt tt tt tt bb tt ~~ ~~ ~~ .. == .. .. bb tt tt tt xx xx xx ,, xx xx xx tt tt tt tt ~~ -- -- "
-            "tt tt tt tt tt tt .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. cc .. .. .. .. tt tt tt tt tt tt tt tt tt tt tt ~~ bb ~~ ~~ ~~ tt tt tt tt tt tt xx ,, ,, ,, ,, ,, xx tt tt tt tt ~~ -- -- "
-            "tt tt tt tt tt tt tt tt .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. cc .. bb .. .. .. tt tt tt tt tt tt tt tt tt tt ~~ ~~ ~~ bb ~~ tt tt tt tt tt tt xx ,, ,, ,, ,, ,, ws tt tt tt tt ~~ -- -- "
-            "tt tt tt tt tt tt tt tt .. .. .. .. .. .. .. .. .. .. .. .. .. bb .. cc .. .. .. .. .. .. tt tt tt tt tt tt tt tt tt tt ~~ ~~ ~~ ~~ tt tt tt tt tt tt xx xx xx ,, xx xx xx tt tt tt ~~ ~~ -- -- "
+            ".. xx xx xx xx xx @@ @@ @@ ,, ,, ,, ,, ,, @@ @@ @@ xx xx .. .. bb .. cc .. .. .. .. .. ~~ -- -- -- -- -- -- -- __ __ __ __ __ __ __ __ __ __ __ __ -- -- -- -- -- -- -- -- -- -- -- -- __ __ __ "
+            ".. xx ,, ,, xx && ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, && xx .. .. .. .. cc .. bb .. .. .. ~~ ~~ -- -- -- -- -- -- -- -- -- __ __ __ __ __ __ __ __ -- -- -- -- -- -- -- -- -- -- -- -- -- -- __ __ "
+            ".. xx ,, ,, xx && ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, && xx .. .. .. .. cc .. .. .. .. .. .. ~~ ~~ -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ -- -- -- -- -- __ "
+            ".. xx xx ~x xx xx @@ @@ @@ ,, ,, ,, ,, ,, @@ @@ @@ xx xx .. .. bb .. cc .. .. .. .. .. tt tt ~~ ~~ ~~ ~~ ~~ -- -- -- -- -- -- -- -- -- -- ~~ ~~ ~~ tt tt tt tt tt tt tt tt ~~ ~~ ~~ ~~ -- -- __ "
+            ".. xx ,, ,, ,, xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ws .. .. .. .. .. cc .. bb .. .. tt tt tt tt tt tt tt ~~ ~~ -- -- -- ~~ -- -- ~~ ~~ ~~ ~~ tt tt tt tt tt tt tt tt tt tt tt tt tt ~~ -- -- -- "
+            ".. xx ,, ,, ,, xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx .. .. .. .. .. cc tt .. .. .. tt tt tt tt tt tt tt tt ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ tt tt tt tt xx xx xx ws xx xx xx ws xx xx xx tt ~~ -- -- -- "
+            ".. xx ,, xx xx xx xx xx xx xx xx ,, xx xx ws xx xx xx .. .. bb .. .. cc tt tt tt tt tt tt tt tt tt tt tt tt tt tt ~~ ~~ bb ~~ tt tt tt tt tt tt xx .S .E .A @@ .W .I .T .C .H xx tt ~~ ~~ -- -- "
+            ".. xx ,, xx ,A ,L ,K ,E ,M ,Y xx cc tt tt .. .. .. .. .. .. .. .. tt cc tt tt bb tt tt tt tt tt tt tt tt tt tt tt tt ~~ ~~ ~~ tt tt tt tt tt tt xx ,, ,, ,, ,, ,, ,, ,, ,, ,, xx tt tt ~~ -- -- "
+            ".. xx ,, ,, ,, ,, ,, ,, ,, ,, ws cc tt .. .. .. .. .. .. .. .. tt tt cc .. .. .. .. .. bb tt tt tt tt tt tt tt tt tt tt ~~ ~~ ~~ ~~ tt tt .. .. ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ws tt tt ~~ -- -- "
+            "tt xx xx xx ,, ,, ,, ,, ,, ,, ,, cc cc cc cc cc cc cc cc cc cc cc cc cc tt tt tt tt .. .. .. .. .. bb tt tt tt bb tt tt tt ~~ bb ~~ tt bb .. tt xx ,, ,, [[ @@ @@ @@ ]] ,, ,, xx tt tt ~~ -- -- "
+            "tt .. .. xx ,, ,, ,, ,, ,, ,, ws .. .. .. .. .. .. .. .. .. .. tt tt cc tt tt bb tt tt tt tt bb .. .. .. .. .. .. .. .. .. == .. ~~ tt .. .. tt xx xx xx ,, ,, ,, ,, ,, xx xx xx tt tt ~~ -- -- "
+            "tt tt tt xx @@ @@ ,, ,, @@ @@ xx .. .. .. .. .. .. .. .. .. bb .. tt cc tt .. tt tt tt tt tt tt tt tt tt tt tt bb tt ~~ ~~ ~~ .. == .. .. bb tt tt tt xx xx xx ,, xx xx xx tt tt tt tt ~~ -- -- "
+            "tt tt tt xx xx xx && && xx xx xx .. .. .. .. .. .. .. .. .. .. .. .. cc .. .. .. .. tt tt tt tt tt tt tt tt tt tt tt ~~ bb ~~ ~~ ~~ tt tt tt tt tt tt xx ,, ,, ,, ,, ,, xx tt tt tt tt ~~ -- -- "
+            "tt tt tt tt tt xx xx xx xx tt tt .. .. .. .. .. .. .. .. .. .. .. .. cc .. bb .. .. .. tt tt tt tt tt tt tt tt tt tt ~~ ~~ ~~ bb ~~ tt tt tt tt tt tt xx ,, ,, ,, ,, ,, ws tt tt tt tt ~~ -- -- "
+            "tt tt tt tt tt tt tt tt tt tt tt .. .. .. .. .. .. .. .. .. .. bb .. cc .. .. .. .. .. .. tt tt tt tt tt tt tt tt tt tt ~~ ~~ ~~ ~~ tt tt tt tt tt tt xx xx xx ,, xx xx xx tt tt tt ~~ ~~ -- -- "
             "tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt .. .. .. .. .. .. .. .. cc .. .. .. .. .. .. tt tt tt tt tt tt tt tt ~~ ~~ ~~ -- ~~ ~~ tt tt tt tt tt tt tt tt tt .. tt tt tt tt tt tt ~~ ~~ -- -- "
             "tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt .. .. .. .. .. .. .. .. cc .. bb .. .. .. tt tt tt tt tt tt tt tt ~~ ~~ -- -- -- -- ~~ ~~ tt tt tt tt tt tt tt .. .. .. tt tt tt ~~ ~~ ~~ ~~ -- -- "
             "tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt .. .. .. .. .. .. .. cc .. .. .. .. tt tt tt tt tt tt tt ~~ ~~ ~~ -- -- -- -- -- -- ~~ ~~ ~~ tt tt tt tt .. .. .. .. .. tt ~~ ~~ ~~ ~~ -- -- -- "
@@ -125,6 +125,10 @@
   (put (mk-windowed-door) 45 15)
   (put (mk-locked-door) 45 17)
 
+
+  ;; Alkemysts
+  (put (mk-door) 10 52)
+  (put (mk-magic-locked-door) 3 51)
   )
 
 
