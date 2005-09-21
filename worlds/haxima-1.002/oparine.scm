@@ -61,14 +61,14 @@
             ".. xx ,, ,, ,, xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx .. .. .. .. .. cc tt .. .. .. tt tt tt tt tt tt tt tt ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ tt tt tt tt xx xx xx ws xx xx xx ws xx xx xx tt ~~ -- -- -- "
             ".. xx ,, xx xx xx xx xx xx xx xx ,, xx xx ws xx xx xx .. .. bb .. .. cc tt tt tt tt tt tt tt tt tt tt tt tt tt tt ~~ ~~ bb ~~ tt tt tt tt tt tt xx .S .E .A @@ .W .I .T .C .H xx tt ~~ ~~ -- -- "
             ".. xx ,, xx ,A ,L ,K ,E ,M ,Y xx cc tt tt .. .. .. .. .. .. .. .. tt cc tt tt bb tt tt tt tt tt tt tt tt tt tt tt tt ~~ ~~ ~~ tt tt tt tt tt tt xx ,, ,, ,, ,, ,, ,, ,, ,, ,, xx tt tt ~~ -- -- "
-            ".. xx ,, ,, ,, ,, ,, ,, ,, ,, ws cc tt .. .. .. .. .. .. .. .. tt tt cc .. .. .. .. .. bb tt tt tt tt tt tt tt tt tt tt ~~ ~~ ~~ ~~ tt tt .. .. ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ws tt tt ~~ -- -- "
-            "tt xx xx xx ,, ,, ,, ,, ,, ,, ,, cc cc cc cc cc cc cc cc cc cc cc cc cc tt tt tt tt .. .. .. .. .. bb tt tt tt bb tt tt tt ~~ bb ~~ tt bb .. tt xx ,, ,, [[ @@ @@ @@ ]] ,, ,, xx tt tt ~~ -- -- "
-            "tt .. .. xx ,, ,, ,, ,, ,, ,, ws .. .. .. .. .. .. .. .. .. .. tt tt cc tt tt bb tt tt tt tt bb .. .. .. .. .. .. .. .. .. == .. ~~ tt .. .. tt xx xx xx ,, ,, ,, ,, ,, xx xx xx tt tt ~~ -- -- "
-            "tt tt tt xx @@ @@ ,, ,, @@ @@ xx .. .. .. .. .. .. .. .. .. bb .. tt cc tt .. tt tt tt tt tt tt tt tt tt tt tt bb tt ~~ ~~ ~~ .. == .. .. bb tt tt tt xx xx xx ,, xx xx xx tt tt tt tt ~~ -- -- "
-            "tt tt tt xx xx xx && && xx xx xx .. .. .. .. .. .. .. .. .. .. .. .. cc .. .. .. .. tt tt tt tt tt tt tt tt tt tt tt ~~ bb ~~ ~~ ~~ tt tt tt tt tt tt xx ,, ,, ,, ,, ,, xx tt tt tt tt ~~ -- -- "
-            "tt tt tt tt tt xx xx xx xx tt tt .. .. .. .. .. .. .. .. .. .. .. .. cc .. bb .. .. .. tt tt tt tt tt tt tt tt tt tt ~~ ~~ ~~ bb ~~ tt tt tt tt tt tt xx ,, ,, ,, ,, ,, ws tt tt tt tt ~~ -- -- "
-            "tt tt tt tt tt tt tt tt tt tt tt .. .. .. .. .. .. .. .. .. .. bb .. cc .. .. .. .. .. .. tt tt tt tt tt tt tt tt tt tt ~~ ~~ ~~ ~~ tt tt tt tt tt tt xx xx xx ,, xx xx xx tt tt tt ~~ ~~ -- -- "
-            "tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt .. .. .. .. .. .. .. .. cc .. .. .. .. .. .. tt tt tt tt tt tt tt tt ~~ ~~ ~~ -- ~~ ~~ tt tt tt tt tt tt tt tt tt .. tt tt tt tt tt tt ~~ ~~ -- -- "
+            ".. xx ,, xx ,, ,, ,, ,, ,, ,, xx cc tt .. .. .. .. .. .. .. .. tt tt cc .. .. .. .. .. bb tt tt tt tt tt tt tt tt tt tt ~~ ~~ ~~ ~~ tt tt .. .. ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ws tt tt ~~ -- -- "
+            "tt xx ,, ,, ,, ,, ,, ,, ,, ,, ,, cc cc cc cc cc cc cc cc cc cc cc cc cc tt tt tt tt .. .. .. .. .. bb tt tt tt bb tt tt tt ~~ bb ~~ tt bb .. tt xx ,, ,, [[ @@ @@ @@ ]] ,, ,, xx tt tt ~~ -- -- "
+            "tt xx xx xx ,, ,, ,, ,, ,, ,, xx .. .. .. .. .. .. .. .. .. .. tt tt cc tt tt bb tt tt tt tt bb .. .. .. .. .. .. .. .. .. == .. ~~ tt .. .. tt xx xx xx ,, ,, ,, ,, ,, xx xx xx tt tt ~~ -- -- "
+            "tt tt tt xx ,, ,, aa && ,, ,, xx .. .. .. .. .. .. .. .. .. bb .. tt cc tt .. tt tt tt tt tt tt tt tt tt tt tt bb tt ~~ ~~ ~~ .. == .. .. bb tt tt tt xx xx xx ,, xx xx xx tt tt tt tt ~~ -- -- "
+            "tt tt tt xx ,, ,, ,, ,, ,, ,, xx .. .. .. .. .. .. .. .. .. .. .. .. cc .. .. .. .. tt tt tt tt tt tt tt tt tt tt tt ~~ bb ~~ ~~ ~~ tt tt tt tt tt tt xx ,, ,, ,, ,, ,, xx tt tt tt tt ~~ -- -- "
+            "tt tt tt xx ,, ,, ,, ,, ,, ,, xx .. .. .. .. .. .. .. .. .. .. .. .. cc .. bb .. .. .. tt tt tt tt tt tt tt tt tt tt ~~ ~~ ~~ bb ~~ tt tt tt tt tt tt xx ,, ,, ,, ,, ,, ws tt tt tt tt ~~ -- -- "
+            "tt tt tt xx @@ @@ @@ @@ @@ @@ xx .. .. .. .. .. .. .. .. .. .. bb .. cc .. .. .. .. .. .. tt tt tt tt tt tt tt tt tt tt ~~ ~~ ~~ ~~ tt tt tt tt tt tt xx xx xx ,, xx xx xx tt tt tt ~~ ~~ -- -- "
+            "tt tt tt xx xx xx xx xx xx xx xx tt tt tt tt .. .. .. .. .. .. .. .. cc .. .. .. .. .. .. tt tt tt tt tt tt tt tt ~~ ~~ ~~ -- ~~ ~~ tt tt tt tt tt tt tt tt tt .. tt tt tt tt tt tt ~~ ~~ -- -- "
             "tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt .. .. .. .. .. .. .. .. cc .. bb .. .. .. tt tt tt tt tt tt tt tt ~~ ~~ -- -- -- -- ~~ ~~ tt tt tt tt tt tt tt .. .. .. tt tt tt ~~ ~~ ~~ ~~ -- -- "
             "tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt .. .. .. .. .. .. .. cc .. .. .. .. tt tt tt tt tt tt tt ~~ ~~ ~~ -- -- -- -- -- -- ~~ ~~ ~~ tt tt tt tt .. .. .. .. .. tt ~~ ~~ ~~ ~~ -- -- -- "
             "tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt .. .. .. .. .. bb .. cc .. .. .. tt tt tt tt tt tt tt ~~ ~~ -- -- -- -- -- -- -- -- -- -- ~~ ~~ ~~ ~~ ~~ ~~ bb ~~ bb ~~ ~~ ~~ -- -- -- -- -- -- "
@@ -79,6 +79,8 @@
 ;;----------------------------------------------------------------------------
 ;; Characters
 ;;----------------------------------------------------------------------------
+(kern-load "alchemist.scm")
+(mk-alchemist)
 
 ;;----------------------------------------------------------------------------
 ;; Place
@@ -96,6 +98,9 @@
  nil ; neighbors
 
  (list ; objects
+
+  ;; npc's
+  (put ch_alchemist 0 0)
 
   ;; inn
   (put (mk-locked-door) 9 8)
@@ -128,7 +133,7 @@
 
   ;; Alkemysts
   (put (mk-door) 10 52)
-  (put (mk-magic-locked-door) 3 51)
+  (put (mk-magic-locked-door) 3 52)
   )
 
 

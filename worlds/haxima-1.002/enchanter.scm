@@ -23,14 +23,6 @@
 ;;
 ;; Quest flags, etc, go here.
 ;;----------------------------------------------------------------------------
-(define (mk-quest) (list #f #f #f))
-(define (quest-offered? qst) (car qst))
-(define (quest-accepted? qst) (cadr qst))
-(define (quest-done? qst) (caddr qst))
-(define (quest-offered! qst val) (set-car! qst val))
-(define (quest-accepted! qst val) (set-car! (cdr qst) val))
-(define (quest-done! qst val) (set-car! (cddr qst) val))
-
 (define (enchanter-mk)
   (list #f 
         (mk-quest)

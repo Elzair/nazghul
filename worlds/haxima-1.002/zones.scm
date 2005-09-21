@@ -58,7 +58,7 @@
 
 ;; Oparine
 (define (mk-zone x y w h) (list 'p_oparine x y w h))
-(define alkemist-ship    (mk-zone  4 52  4  3))
+(define alkemist-shop    (mk-zone  4 51  6  6))
 (define alkemist-bed     (mk-zone  4 47  1  1))
 (define alkemist-bedroom (mk-zone  2 47  3  2))
 (define bilge-water-counter    (mk-zone  9 39  5  1))

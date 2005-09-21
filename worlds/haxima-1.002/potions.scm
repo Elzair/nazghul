@@ -2,13 +2,16 @@
 ;; potions.scm -- potion object types. Potions work on the drinker.
 ;; ----------------------------------------------------------------------------
 
-(kern-mk-sprite-set 'ss_potions 32 32 1 8 0 0 "potions.png")
+(kern-mk-sprite-set 'ss_potions 32 32 2 8 0 0 "potions.png")
 
-(kern-mk-sprite 's_healing_potion      ss_potions 1 0 #f 0)
-(kern-mk-sprite 's_mana_potion         ss_potions 1 1 #f 0)
-(kern-mk-sprite 's_immunity_potion     ss_potions 1 2 #f 0)
-(kern-mk-sprite 's_cure_potion         ss_potions 1 3 #f 0)
-(kern-mk-sprite 's_invisibility_potion ss_potions 1 4 #f 0)
+(kern-mk-sprite 's_healing_potion       ss_potions 1 0 #f 0)
+(kern-mk-sprite 's_mana_potion          ss_potions 1 1 #f 0)
+(kern-mk-sprite 's_immunity_potion      ss_potions 1 2 #f 0)
+(kern-mk-sprite 's_cure_potion          ss_potions 1 3 #f 0)
+(kern-mk-sprite 's_invisibility_potion  ss_potions 1 4 #f 0)
+(kern-mk-sprite 's_red_bubbly_potion    ss_potions 1 5 #f 0)
+(kern-mk-sprite 's_green_bubbly_potion  ss_potions 1 6 #f 0)
+(kern-mk-sprite 's_yellow_bubbly_potion ss_potions 1 7 #f 0)
 
 ;; mk-potion -- utility for making potion types
 (define (mk-potion tag name sprite drink-proc)
@@ -46,3 +49,18 @@
 (mk-potion 't_inv_potion "invisibility potion" s_invisibility_potion
            (lambda (kpotion kuser)
              (kern-obj-add-effect kuser ef_invisibility nil)))
+
+;; FIXME: the following "blood" potions need to do stuff
+
+;; dragon's blood -- turn arrows into flaming arrows?
+(mk-obj-type 't_dragons_blood "dragon's blood" s_red_bubbly_potion
+                  layer-item obj-ifc)
+
+;; hydra's blood -- turn arrows into poisoned arrows?
+(mk-obj-type 't_hydras_blood "hydra's blood" s_green_bubbly_potion
+                  layer-item obj-ifc)
+
+;; lich's blood -- turn arrows into diseased arrows?
+(mk-obj-type 't_lichs_blood "lich's blood" s_yellow_bubbly_potion
+                  layer-item obj-ifc)
+

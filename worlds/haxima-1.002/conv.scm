@@ -12,7 +12,8 @@
   (say knpc "The Enchanter is the Wise Wizard. He lives in a tower in the Fens of the northwest."))
 
 (define (basic-trig knpc kpc)
-  (say knpc "Trigrave is a small town in the west settled where two rivers meet."))
+  (say knpc "Trigrave is a small town in the west, "
+       "settled where two rivers meet."))
 
 (define (basic-gree knpc kpc)
   (say knpc "Green Tower, home of the Rangers, lies deep in the Great Forest."))
@@ -44,6 +45,18 @@
 
 ;; Helper
 (define (say knpc . msg) (kern-conv-say knpc msg))
+
+;;----------------------------------------------------------------------------
+;; Quests
+;;----------------------------------------------------------------------------
+(define (mk-quest) (list #f #f #f))
+(define (quest-offered? qst) (car qst))
+(define (quest-accepted? qst) (cadr qst))
+(define (quest-done? qst) (caddr qst))
+(define (quest-offered! qst val) (set-car! qst val))
+(define (quest-accepted! qst val) (set-car! (cdr qst) val))
+(define (quest-done! qst val) (set-car! (cddr qst) val))
+
 
 ;;----------------------------------------------------------------------------
 ;; Ranger Conversation
