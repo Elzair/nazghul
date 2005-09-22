@@ -64,6 +64,7 @@
 (define bilge-water-counter    (mk-zone  9 39  5  1))
 (define bilge-water-storage    (mk-zone  6 37  2  3))
 (define bilge-water-bedroom    (mk-zone 15 37  2  5))
+(define bilge-water-bed        (mk-zone 15 37  1  1))
 (define bilge-water-hall       (mk-zone  9 41  5  6))
 (define bilge-water-seat-1     (mk-zone  6 42  1  1))
 (define bilge-water-seat-2     (mk-zone  7 42  1  1))

@@ -141,6 +141,8 @@
   (say knpc "The sea witch is very beautiful but keeps to herself. "
        "She'd ignores me, of course."))
 
+(define (oscar-henr knpc kpc)
+  (say knpc "There's a real sailor. I'll never be like him."))
 
 (define oscar-conv
   (ifc basic-conv
@@ -170,6 +172,7 @@
        (method 'alch oscar-alch)
        (method 'gher oscar-gher)
        (method 'ghas oscar-gher)
+       (method 'henr oscar-henr)
        (method 'bart oscar-bart)
        (method 'sea  oscar-seaw)
        (method 'witc oscar-seaw)

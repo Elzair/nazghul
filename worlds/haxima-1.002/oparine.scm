@@ -85,6 +85,9 @@
 (kern-load "oscar.scm")
 (mk-oscar)
 
+(kern-load "henry.scm")
+(mk-henry)
+
 ;;----------------------------------------------------------------------------
 ;; Place
 ;;----------------------------------------------------------------------------
@@ -105,6 +108,7 @@
   ;; npc's
   (put ch_alchemist 0 0)
   (put ch_oscar 0 0)
+  (put ch_henry 0 0)
 
   ;; inn
   (put (mk-locked-door) 9 8)
