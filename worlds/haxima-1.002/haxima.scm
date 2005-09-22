@@ -14,6 +14,7 @@
 (kern-load "camping-map.scm")
 (kern-load "zones.scm")
 (kern-load "runes.scm")
+(kern-load "prices.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Placees
@@ -90,7 +91,7 @@
  "Walk"                      ; movement description
  sound-walking               ; movement sound
  10                          ; food
- 0                           ; gold
+ 100                         ; gold
  0                           ; turns to next meal
  nil                         ; formation
  m_campsite                  ; campsite map
@@ -126,7 +127,7 @@
 ;;----------------------------------------------------------------------------
 ;; Time
 ;;----------------------------------------------------------------------------
-(define hour 12)
+(define hour 14)
 (define minutes 00)
 (define time-in-minutes (+ (* hour 60) minutes))
 

@@ -22,7 +22,7 @@
             ".. .. .. .. .. .. .. tt tt xx [[ @@ @@ @@ @@ @@ @@ ]] xx tt bb .. tt cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc ee ee ee ee ee ee ee ee ee ee ee "
             ".. .. .. .. .. .. .. .. tt xx ,, ,, ,, ,, ,, ,, ,, ,, xx tt tt tt tt cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc ee ee ee ee ee ee ee ee ee ee ee "
             ".. .. .. .. .. .. .. .. .. ws ,, ,, ,, ,, ,, ,, ,, ,, ,, cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc oo [[ .D .O .C .K .S ]] oo ee ee "
-            ".. .. .. .. .. .. .. .. .. xx xx xx xx ,, ,, xx xx xx xx tt tt tt tt cc .. .. .. .. .. xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx ws xx xx cc cc cc xx xx xx xx xx xx xx xx xx ee ee "
+            ".. .. .. .. .. .. .. .. .. xx xx xx x! ,, ,, x! xx xx xx tt tt tt tt cc .. .. .. .. .. xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx ws xx xx cc cc cc xx xx xx xx xx xx xx xx xx ee ee "
             ".. .. .. .. .. .. .. .. .. xx ,, ,, xx ,, ,, ,, ,, ,, xx tt bb .. tt cc tt .. .. .. tt xx @@ @@ .B .L .A .C .K @@ .B .A .R .T .S @@ @@ xx ,, ,, ,, xx cc cc cc ee ee ee ee ee ee ee ee ee ee ee "
             ".. .. .. .. .. .. .. .. .. ws ,, ,, ,, ,, ,, xx ,, ,, ws .. .. .. .. cc tt tt bb tt tt xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx ,, ,, ,, ws cc cc cc ee ee ee ee ee ee ee ee ee ee ee "
             ".. .. .. .. .. .. .. .. .. xx xx xx xx ,, ,, xx xx xx xx .. .. .. .. cc cc cc cc cc cc ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx .. .. .. .. ~~ ~~ ~~ ~~ ~~ -- -- -- -- __ "
@@ -82,6 +82,9 @@
 (kern-load "alchemist.scm")
 (mk-alchemist)
 
+(kern-load "oscar.scm")
+(mk-oscar)
+
 ;;----------------------------------------------------------------------------
 ;; Place
 ;;----------------------------------------------------------------------------
@@ -101,15 +104,21 @@
 
   ;; npc's
   (put ch_alchemist 0 0)
+  (put ch_oscar 0 0)
 
   ;; inn
   (put (mk-locked-door) 9 8)
-  (put (mk-locked-door) 12 14)
+  (put (kern-tag 'oparine-inn-room-1-door (mk-locked-door)) 12 14)
   (put (mk-locked-door) 12 17)
   (put (mk-magic-locked-door) 14 18)
   (put (mk-locked-door) 15 16)
   (put (mk-locked-door) 15 13)
   (put (mk-windowed-door) 18 11)
+  (put (mk-bed) 10 13)
+  (put (mk-bed) 10 16)
+  (put (mk-bed) 13 19)
+  (put (mk-bed) 17 16)
+  (put (mk-bed) 17 13)
 
   ;; tavern
   (put (mk-locked-door) 16 40)

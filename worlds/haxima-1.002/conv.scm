@@ -1,3 +1,4 @@
+;; fundamentals
 (define (generic-hail knpc kpc)
   (kern-conv-say knpc "Well met"))
 
@@ -8,9 +9,12 @@
   (kern-conv-say knpc "Farewell")
   (kern-conv-end))
 
+
+;; wise
 (define (basic-ench knpc kpc)
   (say knpc "The Enchanter is the Wise Wizard. He lives in a tower in the Fens of the northwest."))
 
+;; towns
 (define (basic-trig knpc kpc)
   (say knpc "Trigrave is a small town in the west, "
        "settled where two rivers meet."))
@@ -29,18 +33,36 @@
   (say knpc "The city of Oparine can be found in the southwest by a "
        "deep harbor."))
 
+;; quests
+(define (basic-thie knpc kpc)
+  (say knpc "No, I don't know anything about a thief."))
+
+(define (basic-rune knpc kpc)
+  (say knpc "I don't know much about runes."))
+
 (define basic-conv
   (ifc '()
+       ;; fundamentals
        (method 'hail generic-hail)
        (method 'default generic-unknown)
        (method 'bye generic-bye)
        
+       ;; wise
+       (method 'ench basic-ench)
+
+       ;; towns
        (method 'absa basic-absa)
        (method 'bole basic-bole)
-       (method 'ench basic-ench)
        (method 'gree basic-gree)
        (method 'trig basic-trig)
        (method 'opar basic-opar)
+
+       ;; quests
+       (method 'thie basic-thie)
+       (method 'rune basic-rune)
+
+       ;; monsters
+
        ))
 
 ;; Helper
