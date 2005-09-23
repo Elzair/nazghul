@@ -97,6 +97,9 @@
 (kern-load "fing.scm")
 (mk-fing)
 
+(kern-load "ghertie.scm")
+(mk-ghertie)
+
 ;;----------------------------------------------------------------------------
 ;; Place
 ;;----------------------------------------------------------------------------
@@ -121,6 +124,7 @@
   (put ch_bart 0 0)
   (put ch_lia 0 0)
   (put ch_fing 63 63)
+  (put ch_ghertie 0 0)
 
   ;; inn
   (put (mk-locked-door) 9 8)

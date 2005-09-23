@@ -146,7 +146,7 @@
                  0 0 0               ; str/int/dex
                  0 0                 ; hp mod/mult
                  0 0                 ; mp mod/mult
-                 30 0 0 1            ; hp/xp/mp/lvl
+                 30 0 0 6            ; hp/xp/mp/lvl
                  #f                  ; dead
                  'henry-conv         ; conv
                  sch_henry           ; sched
