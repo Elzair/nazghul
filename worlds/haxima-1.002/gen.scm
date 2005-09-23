@@ -36,6 +36,7 @@
    "Hi.....Magic"
    "Ka.....Kill, Destroy, End"
    "Ki.....Health, Life-Force, Power"
+   "Lu.....Change, Metamorphosis, Transformation"
    "Ma.....Forest, Hidden Ways"
    "Me.....Duty, Job, Destiny"
    "Na.....Yours, Yourself"

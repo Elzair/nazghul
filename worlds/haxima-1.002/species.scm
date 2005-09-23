@@ -36,6 +36,27 @@
                  nil               ; native spells
                  )
 
+(kern-mk-species 'sp_nixie         ; tag
+                 "nixie"           ; name
+                 10 10 10          ; str/int/dex
+                 speed-human       ; speed
+                 9                 ; vision radius
+                 mmode-fish        ; passability
+                 20                ; base hp
+                 2                 ; hp per level
+                 0                 ; base mp
+                 1                 ; mp per level
+                 s_shoals          ; sleep sprite
+                 t_hands           ; natural (unarmed) weapon
+                 #t                ; visible
+                 sound-damage      ; damage sound
+                 sound-splashing   ; walking sound
+                 nil               ; on-death closure
+                 2                 ; xpval
+                 humanoid-slots    ; slots
+                 nil               ; native spells
+                 )
+
 (kern-mk-species 'sp_ghast         ; tag
                  "ghast"           ; name
                  10 10 10          ; str/int/dex

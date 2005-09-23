@@ -24,6 +24,7 @@
                (list 13  0  alkemist-shop "working")
                (list 17  0  bilge-water-seat-9 "eating")
                (list 18  0  bilge-water-hall "idle")
+               (list 19  0  sea-witch-shop   "idle")
                (list 20  0  alkemist-shop "idle")
                )
 
@@ -263,6 +264,12 @@
   (say knpc "The so-called Accursed are a secret society blamed for "
        "many heinous deeds, but who can say how much of that is rumour?"))
 
+;; Townsfolk
+(define (alch-lia knpc kpc)
+  (say knpc "A bewitching creature! "
+       "If I could, I would break her curse. In fact, I would do it for free. "
+       "Call me an old fool!"))
+
 (define alch-conv
   (ifc basic-conv
        (method 'default alch-default)
@@ -295,6 +302,8 @@
        (method 'lich alch-lich)
 
        (method 'accu alch-accu)
+
+       (method 'lia alch-lia)
 
        ))
 

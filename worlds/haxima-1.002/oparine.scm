@@ -91,6 +91,12 @@
 (kern-load "bart.scm")
 (mk-bart)
 
+(kern-load "lia.scm")
+(mk-lia)
+
+(kern-load "fing.scm")
+(mk-fing)
+
 ;;----------------------------------------------------------------------------
 ;; Place
 ;;----------------------------------------------------------------------------
@@ -113,6 +119,8 @@
   (put ch_oscar 0 0)
   (put ch_henry 0 0)
   (put ch_bart 0 0)
+  (put ch_lia 0 0)
+  (put ch_fing 63 63)
 
   ;; inn
   (put (mk-locked-door) 9 8)

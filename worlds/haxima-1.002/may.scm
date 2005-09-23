@@ -186,7 +186,7 @@
      "May" ;;.......name
      sp_human ;;.....species
      nil ;;..........occupation
-     s_female_townsman ;;...sprite
+     s_townswoman ;;...sprite
      faction-men ;;..faction
      0 ;;............custom strength modifier
      0 ;;............custom intelligence modifier

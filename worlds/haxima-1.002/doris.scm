@@ -172,7 +172,7 @@
                  "Doris"             ; name
                  sp_human            ; species
                  nil                 ; occ
-                 s_female_townsman   ; sprite
+                 s_townswoman   ; sprite
                  faction-men         ; starting alignment
                  0 0 0               ; str/int/dex
                  0 0                 ; hp mod/mult

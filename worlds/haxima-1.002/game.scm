@@ -68,23 +68,24 @@
    (list 'mmode-phase "phasing"  3)
    (list 'mmode-fly   "flying"   4)
    (list 'mmode-skiff "rowing"   5)
+   (list 'mmode-fish  "swimming" 6)
    ))
 (map (lambda (mmode) (apply kern-mk-mmode mmode)) mmodes)
 
 ;; Movement cost table
 (kern-mk-ptable
-  ;;   walk   hover ship   phase  fly    skiff
-  ;;   ====== ===== ====== =====  ====== ======
- (list 0      0     0      0      0      0     ) ;; none
- (list norm   norm  cant   norm   norm   cant  ) ;; grass/paving
- (list cant   cant  norm   cant   norm   vhard ) ;; deep
- (list cant   hard  cant   cant   norm   norm  ) ;; shoals
- (list cant   cant  cant   cant   vhard  cant  ) ;; mountains
- (list cant   cant  cant   norm   cant   cant  ) ;; wall (w/ ceiling)
- (list hard   hard  cant   norm   norm   cant  ) ;; trees  
- (list vhard  vhard cant   norm   norm   cant  ) ;; forest/hills/bog
- (list cant   cant  cant   cant   cant   cant  ) ;; energy fields
- (list cant   cant  cant   cant   norm   cant  ) ;; space
+  ;;   walk   hover ship   phase  fly    skiff  fish
+  ;;   ====== ===== ====== =====  ====== ====== ====
+ (list 0      0     0      0      0      0      0   ) ;; none
+ (list norm   norm  cant   norm   norm   cant   cant) ;; grass/paving
+ (list cant   cant  norm   cant   norm   vhard  norm) ;; deep
+ (list cant   hard  cant   cant   norm   norm   norm) ;; shoals
+ (list cant   cant  cant   cant   vhard  cant   cant) ;; mountains
+ (list cant   cant  cant   norm   cant   cant   cant) ;; wall (w/ ceiling)
+ (list hard   hard  cant   norm   norm   cant   cant) ;; trees  
+ (list vhard  vhard cant   norm   norm   cant   cant) ;; forest/hills/bog
+ (list cant   cant  cant   cant   cant   cant   cant) ;; energy fields
+ (list cant   cant  cant   cant   norm   cant   cant) ;; space
  )
 
 ;; Factions. The diplomacy table (which defines the relationship between
