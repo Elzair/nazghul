@@ -816,3 +816,11 @@ define (blit-maps kmap . blits)
 (define (prompt-for-key)
   (kern-log-msg "<Hit any key to continue>")
   (kern-ui-waitkey))
+
+(define (ship-at? loc) (not (null? (kern-place-get-vehicle loc))))
+
+(define (take-player-gold q)
+  (kern-player-set-gold (- (kern-player-get-gold) q)))
+
+(define (player-has-gold? q)
+  (>= (kern-player-get-gold) q))

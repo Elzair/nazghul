@@ -5104,6 +5104,25 @@ KERN_API_CALL(kern_place_get_width)
         return scm_mk_integer(sc, place_w(place));
 }
 
+KERN_API_CALL(kern_place_get_vehicle)
+{
+        struct place *place;
+        int x, y;
+        class Vehicle *veh;
+
+        if (unpack_loc(sc, &args, &place, &x, &y, "kern-place-get-vehicle"))
+                return sc->NIL;
+
+        if (!place) {
+                rt_err("kern-place-get-vehicle: null place");
+                return sc->NIL;
+        }
+
+        veh = place_get_vehicle(place, x, y);
+        
+        return veh ? scm_mk_ptr(sc, veh) : sc->NIL;
+}
+
 KERN_API_CALL(kern_place_get_height)
 {
         struct place *place;
@@ -6937,6 +6956,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-place-get-neighbor", kern_place_get_neighbor);
         API_DECL(sc, "kern-place-get-objects", kern_place_get_objects);
         API_DECL(sc, "kern-place-get-terrain", kern_place_get_terrain);
+        API_DECL(sc, "kern-place-get-vehicle", kern_place_get_vehicle);       
         API_DECL(sc, "kern-place-get-width", kern_place_get_width);
         API_DECL(sc, "kern-place-is-passable", kern_place_is_passable);
         API_DECL(sc, "kern-place-is-hazardous", kern_place_is_hazardous);

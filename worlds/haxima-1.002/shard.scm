@@ -463,8 +463,8 @@
  (list
 
   ;; dungeons
-  (put (mk-dungeon p_kurpolis 9 9) 39 75)
-  (put (mk-dungeon p_mushroom_cave 7 12) 78 74)
+  (put (mk-dungeon 'p_kurpolis 9 9) 39 75)
+  (put (mk-dungeon 'p_mushroom_cave 7 12) 78 74)
 
   ;; terrain features
   (list (mk-bridge east) 33 52)

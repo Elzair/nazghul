@@ -88,6 +88,9 @@
 (kern-load "henry.scm")
 (mk-henry)
 
+(kern-load "bart.scm")
+(mk-bart)
+
 ;;----------------------------------------------------------------------------
 ;; Place
 ;;----------------------------------------------------------------------------
@@ -109,6 +112,7 @@
   (put ch_alchemist 0 0)
   (put ch_oscar 0 0)
   (put ch_henry 0 0)
+  (put ch_bart 0 0)
 
   ;; inn
   (put (mk-locked-door) 9 8)
