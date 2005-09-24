@@ -268,6 +268,9 @@
 
 (define (notnull? val) (not (null? val)))
 
+(define (being-at? loc)
+  (not (null? (filter kern-obj-is-being? (kern-get-objects-at loc)))))
+
 (define (is-alive? kchar)
   (> (kern-char-get-hp kchar) 0))
 

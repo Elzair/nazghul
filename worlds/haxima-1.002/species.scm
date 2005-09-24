@@ -25,7 +25,7 @@
                  2                 ; hp per level
                  0                 ; base mp
                  1                 ; mp per level
-                 s_corpse          ; sleep sprite
+                 s_asleep          ; sleep sprite
                  t_hands           ; natural (unarmed) weapon
                  #t                ; visible
                  sound-damage      ; damage sound
@@ -65,7 +65,7 @@
                  mmode-phase       ; passability
                  10 5              ; hp mod/mult
                  3  1              ; mp mod/mult
-                 s_corpse          ; sleep sprite
+                 s_asleep          ; sleep sprite
                  t_hands           ; natural (unarmed) weapon
                  #f                ; visible
                  sound-damage      ; damage sound
@@ -84,7 +84,7 @@
                  mmode-walk        ; passability
                  15 2              ; hp mod/mult
                  0 1               ; mp mod/mult
-                 s_corpse          ; sleep sprite
+                 s_asleep          ; sleep sprite
                  t_hands           ; natural (unarmed) weapon
                  #t                ; visible
                  sound-damage      ; damage sound
@@ -163,7 +163,7 @@
                  mmode-walk        ; passability
                  22 2              ; hp mod/mult
                  1  1              ; mp mod/mult
-                 s_corpse          ; sleep sprite
+                 s_asleep          ; sleep sprite
                  t_hands           ; natural (unarmed) weapon
                  #t                ; visible
                  sound-damage      ; damage sound
@@ -205,7 +205,7 @@
                  4              ;; hp multiplier: extra hp per level
                  0              ;; base mp: mana points at level zero
                  0              ;; mp multiplier: extra mana points per level
-                 s_corpse       ;; sleep sprite
+                 s_asleep       ;; sleep sprite
                  t_hands        ;; natural weapon: used when unarmed
                  #t             ;; visible: can be seen
                  sound-damage   ;; damage sound
@@ -228,7 +228,7 @@
                  4              ;; hp multiplier: extra hp per level
                  0              ;; base mp: mana points at level zero
                  0              ;; mp multiplier: extra mana points per level
-                 s_corpse       ;; sleep sprite
+                 s_asleep       ;; sleep sprite
                  t_hands        ;; natural weapon: used when unarmed
                  #t             ;; visible: can be seen
                  sound-damage   ;; damage sound
@@ -251,7 +251,7 @@
                  2              ;; hp multiplier: extra hp per level
                  0              ;; base mp: mana points at level zero
                  0              ;; mp multiplier: extra mana points per level
-                 s_corpse       ;; sleep sprite
+                 s_asleep       ;; sleep sprite
                  t_hands        ;; natural weapon: used when unarmed
                  #t             ;; visible: can be seen
                  sound-damage   ;; damage sound
