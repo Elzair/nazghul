@@ -3205,9 +3205,11 @@ static pointer kern_ui_select_party_member(scheme *sc, pointer args)
 
         cmdwin_print("-");
         member = select_party_member();
-        cmdwin_backspace(1);
-        if (! member)
+        if (! member) {
+                cmdwin_backspace(1);
                 return sc->NIL;
+        }
+        cmdwin_backspace(1+strlen(member->getName()));
         return scm_mk_ptr(sc, member);
 }
 
@@ -5029,7 +5031,7 @@ KERN_API_CALL(kern_char_resurrect)
 
         ch->resurrect();
 
-        return sc->NIL;
+        return scm_mk_ptr(sc, ch);
 }
 
 KERN_API_CALL(kern_is_valid_location)

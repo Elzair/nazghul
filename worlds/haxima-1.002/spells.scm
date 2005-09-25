@@ -272,6 +272,10 @@
        (or (kern-char-set-sleep ktarg #f)
            #t)))
 
+(define (resurrect kchar)
+  (kern-char-resurrect kchar)
+  #t)
+
 ;; ----------------------------------------------------------------------------
 ;; All the spell cast handlers are listed here. These are the procedures that
 ;; get called whenever a spell is cast.
@@ -353,7 +357,8 @@
           (else (kern-set-wind dir (kern-dice-roll "20d6"))))))
 
 (define (in-nox-por  caster)
-  (cast-missile-spell caster 8 t_poison_bolt))
+  (cast-missile-spell caster 8 t_poison_bolt)
+  result-ok)
   
 (define (in-flam-grav  caster)
   (cast-field-spell caster F_fire))
@@ -570,7 +575,7 @@
   (let ((target (kern-ui-select-party-member)))
     (if (null? target) nil
         (begin
-          (kern-char-resurrect target)
+          (resurrect target)
           (apply-sleep target)
           #t))))
 

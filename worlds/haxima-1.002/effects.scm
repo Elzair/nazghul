@@ -20,6 +20,7 @@
 (define (poison-exec fgob obj)
   (kern-obj-apply-damage obj "poisoned" 1))
 
+
 ;; ----------------------------------------------------------------------------
 ;; Poison Immunity
 ;;
@@ -82,9 +83,6 @@
 
 (mk-effect 'ef_paralyze 'paralyze-exec 'paralyze-apply nil 'paralyze-apply 
            "keystroke-hook" "Z" 0 #f 15)
-
-(define (is-paralyzed? kobj)
-  (in-list? ef_paralyze (kern-obj-get-effects kobj)))
 
 (define (paralyze kobj)
   (if (can-paralyze? kobj)
@@ -303,6 +301,19 @@
    ))
 
 (map (lambda (effect) (apply mk-effect effect)) effects)
+
+;;----------------------------------------------------------------------------
+;; Effect Test Procedures
+;;----------------------------------------------------------------------------
+
+(define (is-poisoned? kobj)
+  (in-list? ef_poison (kern-obj-get-effects kobj)))
+
+(define (is-paralyzed? kobj)
+  (in-list? ef_paralyze (kern-obj-get-effects kobj)))
+
+(define (is-diseased? kobj)
+  (in-list? ef_paralyze kern-obj-get-effects kobj))
 
 ;; ----------------------------------------------------------------------------
 ;; Effect Application Procedures

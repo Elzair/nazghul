@@ -274,7 +274,7 @@
 (define (is-alive? kchar)
   (> (kern-char-get-hp kchar) 0))
 
-(define (dead? kchar)
+(define (is-dead? kchar)
   (not (is-alive? kchar)))
 
 (define (has-ap? kobj) 
@@ -583,6 +583,14 @@ define (blit-maps kmap . blits)
               (search-spells (cdr slist))))))
   (search-spells spells))
 
+;; generic lookup
+(define (lookup this? slist)
+  (if (null? slist)
+      nil
+      (if (this? (car slist))
+          (car slist)
+          (lookup this? (cdr slist)))))
+
 ;; can-cast -- check if a char has enough mana to cast a spell
 (define (can-cast? kchar handler)
   (let ((spell (lookup-spell handler)))
@@ -730,6 +738,10 @@ define (blit-maps kmap . blits)
 (define (drink-heal-potion kchar)
   (use-item-from-inventory-on-self kchar t_heal_potion))
 
+(define (set-max-hp kchar)
+  (kern-char-set-hp kchar 
+                    (kern-char-get-max-hp kchar)))
+
 ;; set-level -- set character to level and max out hp and mana (intended for
 ;; new npc creation)
 (define (set-level kchar lvl)
@@ -827,3 +839,115 @@ define (blit-maps kmap . blits)
 
 (define (player-has-gold? q)
   (>= (kern-player-get-gold) q))
+
+;; services -- used with trade-service below
+(define (svc-mk name price proc) (list name price proc))
+(define (svc-name svc) (car svc))
+(define (svc-price svc) (cadr svc))
+(define (svc-proc svc) (caddr svc))
+
+;; some standard healer services
+(define (heal-service kchar knpc)
+  (display "heal-service")(newline)
+  (let ((hp (- (kern-char-get-max-hp kchar)
+               (kern-char-get-hp kchar))))
+    (if (> hp 0)
+        (begin
+          (say knpc "VAS MANI! Be healed, "
+               (kern-obj-get-name kchar))
+          (kern-map-flash hp)
+          (kern-obj-heal kchar hp)
+          #t)
+        (begin
+          (say knpc (kern-obj-get-name kchar)
+               " is not wounded!")
+          (prompt-for-key)
+          #f))))
+  
+(define (cure-service kchar knpc)
+  (display "cure-service")(newline)
+  (if (is-poisoned? kchar)
+      (begin
+        (say knpc "AN NOX! You are cured, "
+             (kern-obj-get-name kchar))
+        (kern-map-flash 1)
+        (cure-poison kchar))
+      (begin
+        (say knpc (kern-obj-get-name kchar)
+             " is not poisoned!")
+        (prompt-for-key)
+        #f)))
+
+(define (resurrect-service kchar knpc)
+  (display "resurrect-service")(newline)
+  (if (is-dead? kchar)
+      (begin
+       (say knpc "IN MANI CORP! Arise, "
+            (kern-obj-get-name kchar))
+       (kern-map-flash 500)
+       (resurrect kchar)
+       (kern-obj-heal kchar 10))
+      (begin
+        (say knpc (kern-obj-get-name kchar)
+             " is not dead!")
+        (prompt-for-key)
+        #f)))
+
+;; trade-services -- take a list of services which operate on a party member
+;; and prompt the player, check prices, and otherwise handle the transaction
+(define (trade-services knpc kpc services)
+
+  (define (list-services)
+    (map (lambda (svc)
+           (string-append (svc-name svc) 
+                          "..." 
+                          (number->string (svc-price svc))
+                          " gold"))
+         services))
+
+  ;; line-name - convert a string like "Heal...30 gold" to "Heal"
+  (define (line-name line)
+    (define (extract l)
+      (if (null? l)
+          nil
+          (if (char=? (car l) #\.)
+              nil
+              (cons (car l) (extract (cdr l))))))
+    (if (null? line)
+        nil
+        (list->string (extract (string->list line)))))
+
+  (define (lookup-svc line)
+    (let ((name (line-name line)))
+      (if (null? name)        
+          nil
+          (lookup (lambda (svc) 
+                    (string=? name
+                              (svc-name svc)))
+                  services))))
+
+  (define (choose-svc)
+    (lookup-svc (apply kern-ui-select-from-list (list-services))))
+
+  (let ((svc (choose-svc)))
+
+    (define (can-pay?)
+      (if (player-has-gold? (svc-price svc))
+          #t
+          (begin
+            (say knpc "You don't have enough gold!")
+            #f)))
+
+    (define (apply-svc)
+      (let ((kchar (kern-ui-select-party-member)))
+        (if (null? kchar)
+            #f
+            (if (apply (svc-proc svc) (list kchar knpc))
+                (begin 
+                  (take-player-gold (svc-price svc))
+                  #t)))))
+    
+    (and (not (null? svc))
+         (can-pay?)
+         (apply-svc))))
+                 

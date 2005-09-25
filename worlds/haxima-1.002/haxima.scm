@@ -109,6 +109,8 @@
                (add-content 5 t_torch)
                (add-content 1 t_sword)
                (add-content 10 t_picklock)
+               (add-content 1 t_xen_corp_scroll)
+               (add-content 1 in_nox_por)
                ))
 
  nil ;; party members (should be nil for initial load file)
@@ -118,7 +120,7 @@
 ;; Party members
 ;;----------------------------------------------------------------------------
 (kern-party-add-member player ch_wanderer)
-;(kern-party-add-member player ch_thorald_greybeard)
+(kern-party-add-member player ch_thorald_greybeard)
 
 
 ;;----------------------------------------------------------------------------
@@ -229,10 +231,8 @@
   ;(kern-log-msg "You notice a cave to the southwest."))
   ;(kern-obj-put-at kplayer (list p_slimy_cavern 13 2)
   ;(kern-obj-put-at kplayer (list p_enchanters_tower 32 32)))
-  ;(kern-obj-put-at kplayer (list p_shard 79 74)))
+  (kern-obj-put-at kplayer (list p_shard 51 31)))
   ;(kern-obj-put-at kplayer (list p_thiefs_den 3 4)))
-  ;(kern-obj-put-at kplayer (list p_test 15 15)))
-  (kern-obj-put-at kplayer (list p_keep_crypt 9 5)))
   ;(kern-obj-put-at kplayer (list p_troll_den 9 0)))                  
 ;;----------------------------------------------------------------------------
 ;; To skip the extended start scene comment out this next line and uncomment

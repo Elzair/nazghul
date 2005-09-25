@@ -113,3 +113,44 @@
 (define black-barts-ship  (mk-zone 36 24  3  5))
 (define black-barts-broom (mk-zone 46 17  3  5))
 (define black-barts-bed   (mk-zone 46 19  1  1))
+
+;;----------------------------------------------------------------------------
+;; Glasdrin
+(define (mk-zone x y w h) (list 'p_glasdrin x y w h))
+
+;; hospital
+(define gh-ward (mk-zone 15 37 8 4))
+(define gh-storage (mk-zone 12 36 2 5))
+
+;; shrine
+(define g-shrine (mk-zone 11 48 7 7))
+
+;; citadel
+(define gc-hall (mk-zone 38 38 8 8))
+(define gc-train (mk-zone 32 32 5 5))
+
+;; axe-n-shielf
+(define gas-counter (mk-zone 33 16 8 1))
+
+;; holy grail
+(define ghg-counter (mk-zone 52 9 5 1))
+(define ghg-s1 (mk-zone 53 13 1 1))
+(define ghg-s2 (mk-zone 53 14 1 1))
+(define ghg-s3 (mk-zone 53 15 1 1))
+(define ghg-s4 (mk-zone 55 13 1 1))
+(define ghg-s5 (mk-zone 55 14 1 1))
+(define ghg-s6 (mk-zone 55 15 1 1))
+(define ghg-s7 (mk-zone 54 12 1 1))
+(define ghg-s8 (mk-zone 54 16 1 1))
+(define ghg-entry (mk-zone 53 21 3 2))
+(define ghg-hall (mk-zone 52 11 5 7))
+
+;; doc patch's hut
+(define gdp-hut (mk-zone 8 38 3 3))
+(define gdp-bed (mk-zone 8 39 1 1))
+
+;; palisade inn
+(define gpi-counter (mk-zone 10 15 10 1))
+
+;; fountain
+(define g-fountain (mk-zone 22 26 7 7))

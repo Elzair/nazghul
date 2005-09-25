@@ -610,6 +610,10 @@ class Character *select_party_member(void)
 	enum StatusMode omode;
 	class Character *character;
 
+        if (1 == player_party->getSize()) {
+                return player_party->getMemberByOrder(0);
+        }
+
 	omode = statusGetMode();
 	statusSetMode(SelectCharacter);
 
