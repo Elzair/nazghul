@@ -152,5 +152,7 @@
 ;; palisade inn
 (define gpi-counter (mk-zone 10 15 10 1))
 
+(define ga-bed (mk-zone 10 15 1 1))
+
 ;; fountain
 (define g-fountain (mk-zone 22 26 7 7))

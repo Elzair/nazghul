@@ -91,7 +91,7 @@
  "Walk"                      ; movement description
  sound-walking               ; movement sound
  10                          ; food
- 1000                         ; gold
+ 39                           ; gold
  0                           ; turns to next meal
  nil                         ; formation
  m_campsite                  ; campsite map

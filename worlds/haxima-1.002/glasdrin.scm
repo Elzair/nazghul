@@ -74,6 +74,7 @@
 ;; Characters
 ;;----------------------------------------------------------------------------
 (kern-load "patch.scm")
+(kern-load "angela.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Place
@@ -94,6 +95,7 @@
 
   ;; npcs
   (put (mk-patch) 0 0)
+  (put (mk-angela) 0 0)
 
   ;; lower right wall entrance
   (put (mk-locked-door) 55 57)
@@ -129,10 +131,14 @@
   ;; inn
   (put (mk-door) 21 20)
   (put (mk-locked-door) 9 15)
-  (put (mk-locked-door) 10 21)
+  (put (kern-tag 'gir-door (mk-locked-door)) 10 21)
   (put (mk-locked-door) 13 21)
   (put (mk-locked-door) 16 21)
   (put (mk-locked-door) 19 21)
+  (put (mk-bed) 9 23)
+  (put (mk-bed) 12 23)
+  (put (mk-bed) 16 23)
+  (put (mk-bed) 19 23)
 
   ;; weapon shop
   (put (mk-windowed-door) 32 19)

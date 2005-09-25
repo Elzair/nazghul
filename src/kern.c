@@ -2708,7 +2708,7 @@ static pointer kern_conv_get_reply(scheme *sc,  pointer args)
 {
         char buf[32];
 
-        Object *pc = unpack_obj(sc, &args, "kern-conv-get-line");
+        Object *pc = unpack_obj(sc, &args, "kern-conv-get-reply");
         if (NULL == pc)
                 return sc->F;
 
@@ -2720,6 +2720,20 @@ static pointer kern_conv_get_reply(scheme *sc,  pointer args)
         buf[4] = 0;
 
         return scm_mk_symbol(sc, buf);
+}
+
+static pointer kern_conv_get_string(scheme *sc,  pointer args)
+{
+        char buf[32];
+
+        Object *pc = unpack_obj(sc, &args, "kern-conv-get-string");
+        if (NULL == pc)
+                return sc->F;
+
+        ui_getline(buf, sizeof(buf));
+        log_msg("%s: %s", pc->getName(), buf);
+
+        return scm_mk_string(sc, buf);
 }
 
 static pointer kern_conv_trade(scheme *sc, pointer args)
@@ -7051,6 +7065,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-conv-get-yes-no?", kern_conv_get_yes_no);
         API_DECL(sc, "kern-conv-trade", kern_conv_trade);
         API_DECL(sc, "kern-conv-get-reply", kern_conv_get_reply);
+        API_DECL(sc, "kern-conv-get-string", kern_conv_get_string);
 
         /* kern-map api */
         API_DECL(sc, "kern-map-center-camera", kern_map_center_camera);
