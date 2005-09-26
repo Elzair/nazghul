@@ -384,7 +384,7 @@
 ;; Turn on/off verbose scheme garbage collection. Useful if you think scheme is
 ;; gc'ing some of your code behind your back.
 ;; ----------------------------------------------------------------------------
-;; (gc-verbose #t)
+(gc-verbose #t)
 
 (define (profile proc . args)
   (let ((t (kern-get-ticks))

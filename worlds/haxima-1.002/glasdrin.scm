@@ -13,17 +13,17 @@
             "xx ,, ,, ,, ,, ,, ,, ,, w+ cc tt .. .. .. .. .. .. .. .. .. .. .. .. .. tt tt tt tt tt tt tt cc cc cc tt tt tt tt tt tt tt .. .. .. .. .. .. .. tt .. tt xx xx xx xx xx xx xx tt cc xx ,, ,, xx "
             "xx ,, ,, xx ,, ,, ,, ,, xx cc tt .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. cc cc cc .. .. .. .. .. .. .. .. .. .. .. .. .. .. tt .. tt xx .H .O .L .Y ]] xx tt cc xx ,, ,, xx "
             "xx ,, ,, xx xx xx ,, xx xx cc tt .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. cc cc cc cc cc cc cc .. .. .. .. .. .. .. .. .. .. .. .. .. .. tt .. tt xx .G .R .A .I .L xx tt cc xx ,, ,, xx "
-            "xx ,, ,, xx cc cc cc cc cc cc tt .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. cc cc cc cc cc cc cc .. .. .. .. .. .. .. .. .. .. .. .. .. .. tt .. .. ,, ,, ,, ,, ,, ,, xx tt cc xx ,, ,, xx "
-            "xx ,, ,, xx cc tt tt tt tt tt tt .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. cc cc cc cc cc cc cc .. .. .. .. .. .. .. .. .. .. .. .. .. .. tt tt tt xx [[ @@ @@ @@ ]] xx tt cc xx ,, ,, xx "
-            "xx ,, ,, xx cc tt .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. cc cc cc .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx ,, ,, ,, ,, ,, xx tt cc xx ,, ,, xx "
-            "xx ,, ,, xx cc tt .. .. .. xx xx xx xx xx xx xx xx xx xx xx xx .. .. .. .. .. .. cc cc cc .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. xx ,, ,, ,, ,, ,, xx tt cc xx ,, ,, xx "
-            "xx ,, ,, xx cc tt .. .. .. xx [[ .P .A .L .I .S .A .D .E ]] xx .. .. .. .. .. .. cc cc cc .. .. xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx .. .. .. xx ,, ,, 00 ,, ,, xx tt cc xx ,, ,, xx "
+            "xx ,, ,, xx cc cc cc cc cc cc tt .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. cc cc cc cc cc cc cc .. .. .. xx xx xx xx xx xx xx xx xx xx xx tt .. .. ,, ,, ,, ,, ,, ,, xx tt cc xx ,, ,, xx "
+            "xx ,, ,, xx cc tt tt tt tt tt tt .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. cc cc cc cc cc cc cc .. .. .. xx ,, ,, ,, xx ,, xx ,, ,, ,, xx tt tt tt xx [[ @@ @@ @@ ]] xx tt cc xx ,, ,, xx "
+            "xx ,, ,, xx cc tt .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. cc cc cc .. .. .. .. .. .. .. ws ,, ,, ,, ,, ,, ,, ,, ,, ,, ws .. .. .. xx ,, ,, ,, ,, ,, xx tt cc xx ,, ,, xx "
+            "xx ,, ,, xx cc tt .. .. .. xx xx xx xx xx xx xx xx xx xx xx xx .. .. .. .. .. .. cc cc cc .. .. .. .. .. .. .. xx ,, ,, ,, xx ,, xx ,, ,, ,, xx .. .. .. xx ,, ,, ,, ,, ,, xx tt cc xx ,, ,, xx "
+            "xx ,, ,, xx cc tt .. .. .. xx [[ .P .A .L .I .S .A .D .E ]] xx .. .. .. .. .. .. cc cc cc .. .. xx xx xx xx xx xx xx xx xx xx ,, xx xx xx xx xx .. .. .. xx ,, ,, 00 ,, ,, xx tt cc xx ,, ,, xx "
             "xx ,, ,, xx cc tt .. .. .. xx [[ @@ @@ .I .N .N @@ @@ @@ ]] xx .. .. .. .. .. .. cc cc cc .. .. xx .A .X .E @@ @@ .A .N .D xx ,, xx ,, ,, ,, xx .. .. .. xx ,, ,, 00 ,, ,, xx tt cc xx ,, ,, xx "
-            "xx ,, ,, xx cc tt .. .. .. ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx .. .. .. .. .. .. cc cc cc .. .. xx [[ .S .H .I .E .L .D ]] xx ,, ,, ,, ,, ,, xx .. .. .. xx ,, ,, 00 ,, ,, xx tt cc xx ,, ,, xx "
+            "xx ,, ,, xx cc tt .. .. .. ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx .. .. .. .. .. .. cc cc cc .. .. xx [[ .S .H .I .E .L .D ]] xx ,, ,, ,, ,, ,, ws .. .. .. xx ,, ,, 00 ,, ,, xx tt cc xx ,, ,, xx "
             "xx ,, ,, xx cc tt .. .. .. xx [[ @@ @@ @@ @@ @@ @@ @@ @@ ]] xx xx pp ,, ,, ,, pp cc cc cc .. .. xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx ,, ,, ,, xx .. .. .. xx ,, ,, ,, ,, ,, xx tt cc xx ,, ,, xx "
             "xx ,, ,, xx cc tt .. .. .. xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx xx tt tt tt tt ,, cc cc cc .. .. xx [[ @@ @@ @@ @@ @@ @@ ]] xx ,, xx xx xx xx xx .. .. .. xx ,, ,, ,, ,, ,, xx tt cc xx ,, ,, xx "
             "xx ,, ,, xx cc tt .. .. xx x! ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, x! xx tt ~~ ~~ tt ,, cc cc cc tt tt xx ,, ,, ,, ,, ,, ,, ,, ,, xx ,, xx ,, ,, ,, xx .. .. .. xx xx ,, ,, ,, xx xx tt cc xx ,, ,, xx "
-            "xx ,, ,, xx cc tt .. .. xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx tt tt tt tt pp cc cc cc cc cc ,, ,, ,, ,, ,, ,, ,, ,, ,, xx ,, ,, ,, ,, ,, xx .. .. .. .. xx xx ,, xx xx .. tt cc xx ,, ,, xx "
+            "xx ,, ,, xx cc tt .. .. xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx tt tt tt tt pp cc cc cc cc cc ,, ,, ,, ,, ,, ,, ,, ,, ,, xx ,, ,, ,, ,, ,, ws .. .. .. .. xx xx ,, xx xx .. tt cc xx ,, ,, xx "
             "xx ,, ,, xx cc tt .. .. xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, cc cc cc cc cc cc cc cc tt tt xx ,, ,, ,, ,, ,, ,, ,, ,, xx ,, xx ,, ,, ,, xx .. .. .. .. xx xx ,, xx xx .. tt cc xx ,, ,, xx "
             "xx ,, ,, xx cc tt .. .. xx xx ,, xx xx ,, xx xx ,, xx xx ,, xx xx tt tt tt tt pp cc cc cc .. .. xx xx xx ws xx xx ws xx xx xx ,, xx xx xx xx xx .. .. .. xx xx ,, ,, ,, xx xx tt cc xx ,, ,, xx "
             "xx ,, ,, xx cc tt .. .. xx ,, ,, xx ,, ,, xx xx ,, ,, xx ,, ,, xx tt ~~ ~~ tt ,, cc cc cc .. .. .. .. tt tt tt tt tt tt .. tt .. tt .. .. .. .. .. .. .. xx ,, ,, ,, ,, ,, xx tt cc xx ,, ,, xx "
@@ -68,13 +68,14 @@
             "xx ,, ,, ,, xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, w+ cc cc cc w+ ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx ,, ,, ,, xx "
             "xx ,, ,, ,, xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx cc cc cc xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx ,, ,, ,, xx "
             "xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx cc cc cc xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx "
-          ))
+            ))
 
 ;;----------------------------------------------------------------------------
 ;; Characters
 ;;----------------------------------------------------------------------------
 (kern-load "patch.scm")
 (kern-load "angela.scm")
+(kern-load "jess.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Place
@@ -96,6 +97,7 @@
   ;; npcs
   (put (mk-patch) 0 0)
   (put (mk-angela) 0 0)
+  (put (mk-jess) 0 0)
 
   ;; lower right wall entrance
   (put (mk-locked-door) 55 57)
@@ -127,6 +129,14 @@
   ;; doc's hut
   (put (mk-bed) 8 39)
   (put (mk-door) 10 37)
+
+  ;; apartments
+  (put (mk-bed) 46 10)
+  (put (mk-bed) 46 14)
+  (put (mk-bed) 46 18)
+  (put (mk-bed) 38 12)
+  (put (mk-door) 41 11)
+  (put (mk-door) 43 11)
 
   ;; inn
   (put (mk-door) 21 20)
