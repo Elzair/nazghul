@@ -32,6 +32,7 @@ BEGIN_DECL
 /* Flags for mapRepaintView() */
 #define REPAINT_IF_DIRTY 1	/* repaint iff the view is dirty */
 #define REPAINT_NO_LOS   2	/* don't apply LOS */
+#define REPAINT_IF_OLD   4      /* repaint iff last repaint < tick ms ago */
 
 extern int map_use_circular_vision_radius;
 

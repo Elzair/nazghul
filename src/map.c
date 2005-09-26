@@ -86,8 +86,8 @@ struct mview {
 
 static struct map {
 	SDL_Rect srect;		/* screen coords of viewer */
-	SDL_Rect latencyRect;	/* screen coords of FPS counter */
-	SDL_Rect turnaroundRect; /* screen coords of FPS counter */
+	SDL_Rect latencyRect;	/* screen coords of latency time */
+	SDL_Rect turnaroundRect; /* screen coords of turnaroud time */
 	SDL_Rect locRect;	/* screen coords of locater */
 	SDL_Rect clkRect;	/* screen coords of clock */
 	struct place *place;	/* subject being viewed */
@@ -99,6 +99,7 @@ static struct map {
 	bool peering;
 	char vmask[VMASK_SZ];	/* final mask used to render */
         SDL_Surface *tile_scratch_surf;
+        Uint32 last_repaint;
 } Map;
 
 // The lightmap only needs to be as big as the map viewer window. Making it
@@ -915,42 +916,20 @@ static void mapRepaintCoordinates(void)
 
 static void mapRepaintTurnaround(void)
 {
-        extern int G_turnaround_start, G_turnaround_stop;
-        static int turnaround = 0;
-
-        if (G_turnaround_stop > G_turnaround_start) {
-                turnaround = G_turnaround_stop - G_turnaround_start;
-        }
-
-	screenPrint(&Map.turnaroundRect, 0, "TA: %d", turnaround);
-
-        if (G_turnaround_start && G_turnaround_stop) {
-                //G_turnaround_start = 0;
-                //G_turnaround_stop  = 0;
-        }
-
+        extern int G_turnaround;
+	screenPrint(&Map.turnaroundRect, 0, "TA: %d", G_turnaround);
 }
 
+extern int G_latency_start;
 static void mapRepaintLatency(void)
 {
-        extern int G_latency_start;
         static int latency = 0;
 
-        // --------------------------------------------------------------------
-        // G_latency_start is set when the user presses a key in
-        // character_key_handler (character.cpp) and party_mode_key_handler
-        // (player.cpp).
-        //
-        // G_exec_loops is set in the main loop in play.c.
-        // --------------------------------------------------------------------
+        latency = SDL_GetTicks() - G_latency_start;
 
-        if (G_latency_start) {
-                latency = SDL_GetTicks() - G_latency_start;
-        }
-
+        //printf("repaint: %d\n", latency);
         screenPrint(&Map.latencyRect, 0, "LAT: %d", latency);
         screenUpdate(&Map.latencyRect);
-        G_latency_start = 0;
 }
 
 void mapRepaintView(struct mview *view, int flags)
@@ -959,11 +938,18 @@ void mapRepaintView(struct mview *view, int flags)
 
 	Map.aview = view;
 
-        //dbg("mapRepaintView: aview=[%d %d]\n", Map.aview->vrect.x, Map.aview->vrect.y);
-
 	if (flags & REPAINT_IF_DIRTY && !view->dirty)
 		return;
+
+        if (flags & REPAINT_IF_OLD
+            && (SDL_GetTicks() - Map.last_repaint) < TickMilliseconds
+            && (Map.last_repaint < SDL_GetTicks()))
+                return;
+
+        Map.last_repaint = SDL_GetTicks();
 	view->dirty = 0;
+
+        G_latency_start = SDL_GetTicks();
 
 	t1 = SDL_GetTicks();
 

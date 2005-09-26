@@ -1662,7 +1662,9 @@ void place_exec(struct place *place)
                         /* 'run' the object */
                         int t = place_timed_obj_exec(obj);
                         char *name = obj->getName();
-                        /*printf("%20s: %3d ms\n", name ? name : "null", t);*/
+/*                         if (t > 1) */
+/*                                 printf("%20s: %3d ms\n",  */
+/*                                        name ? name : "null", t); */
                         times += t;
 
                         /* Apply terrain, field and any other environmental
@@ -1695,7 +1697,7 @@ void place_exec(struct place *place)
                 obj_dec_ref(obj);
         }
 
-        /*printf("*** place_exec: total=%d\n", times);*/
+        //printf("*** place_exec: total=%d\n", times);
 
         /* Allow the place to be destroyed. */
         place_unlock(place);

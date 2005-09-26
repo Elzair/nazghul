@@ -269,7 +269,7 @@ static void play_loop(void)
 
 static void updateAfterEvent(void)
 {
-	mapUpdate(REPAINT_IF_DIRTY);
+	mapUpdate(REPAINT_IF_DIRTY|REPAINT_IF_OLD);
 }
 
 int playRun(void)

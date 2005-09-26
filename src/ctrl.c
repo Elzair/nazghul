@@ -38,7 +38,7 @@
 
 int G_latency_start = 0;
 int G_turnaround_start = 0;
-int G_turnaround_stop  = 0;
+int G_turnaround  = 0;
 
 
 static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
@@ -1248,9 +1248,7 @@ void ctrl_character_ui(class Character *character)
         kh.fx = &ctrl_character_key_handler;
         kh.data = character;
         eventPushKeyHandler(&kh);
-        G_turnaround_stop = SDL_GetTicks();
-/*         printf("*** turnaround: %d ms\n\n",  */
-/*                G_turnaround_stop - G_turnaround_start); */
+        G_turnaround = SDL_GetTicks() - G_turnaround_start;
         eventHandle();
         G_turnaround_start = SDL_GetTicks();
         eventPopKeyHandler();
@@ -1282,9 +1280,7 @@ void ctrl_party_ui(class player_party *party)
         kh.fx = &ctrl_party_key_handler;
         kh.data = party;
         eventPushKeyHandler(&kh);
-        G_turnaround_stop = SDL_GetTicks();
-/*         printf("turnaround: %d ms\n\n",  */
-/*                G_turnaround_stop - G_turnaround_start); */
+        G_turnaround = SDL_GetTicks() - G_turnaround_start;
         eventHandle();
         G_turnaround_start = SDL_GetTicks();
         eventPopKeyHandler();
