@@ -25,9 +25,12 @@
 
 ;; Basics...
 (define (jess-hail knpc kpc)
-  (say knpc "[You meet an otherwise attractive young woman with a hideous "
-       "scar on one side of her face]. Relax, gentlemen, you've finally "
-       "found the Holy Grail!"))
+  (if (string=? "working" (kern-obj-get-activity knpc))
+      (say knpc "[You meet an otherwise attractive young woman with a hideous "
+           "scar on one side of her face]. Relax, gentlemen, you've finally "
+           "found the Holy Grail!")
+      (say knpc "[You meet an otherwise attractive young woman with a hideous "
+           "scar on one side of her face]. Nice day, isn't it?")))
 
 (define (jess-default knpc kpc)
   (say knpc "Hm... I don't know."))
