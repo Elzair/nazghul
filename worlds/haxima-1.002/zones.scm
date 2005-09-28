@@ -156,6 +156,7 @@
 (define ga-bed (mk-zone 38 12 1 1))
 (define gj-bed (mk-zone 46 10 1 1))
 (define gc-bed (mk-zone 46 14 1 1))
+(define gv-bed (mk-zone 38 38 1 1))
 
 ;; fountain
 (define g-fountain (mk-zone 22 26 7 7))

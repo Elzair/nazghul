@@ -151,7 +151,7 @@
                  "Patch"             ; name
                  sp_human            ; species
                  oc_wizard           ; occ
-                 s_townsman         ; sprite
+                 s_companion_wizard  ; sprite
                  faction-men         ; starting alignment
                  0 0 0               ; str/int/dex
                  0 0                 ; hp mod/mult
