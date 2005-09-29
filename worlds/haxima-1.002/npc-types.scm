@@ -88,6 +88,11 @@
 (define (mk-troll-gob)
   (list #f))
 
+(define (mk-at-level ctor-tag lvl-dice . args)
+  ;(display "mk-at-level args: ")(list args)(newline)
+  (set-level (apply (eval ctor-tag) args) 
+             (kern-dice-roll lvl-dice)))
+
 ;;----------------------------------------------------------------------------
 ;; NPC Type Constructors
 ;;----------------------------------------------------------------------------
@@ -240,12 +245,6 @@
     nil ;;...............conversation
     )))
 
-(define (mk-at-level ctor-tag lvl-dice . args)
-  ;(display "mk-at-level args: ")(list args)(newline)
-  (set-level (apply (eval ctor-tag) args) 
-             (kern-dice-roll lvl-dice)))
-
-
 (define (mk-death-knight-at-level lvl-dice)
   (let ((dk (mk-death-knight))
         (lvl (kern-dice-roll lvl-dice)))
@@ -259,15 +258,51 @@
                                 (kern-char-get-occ dk)
                                 lvl 0 0))))
 
+;;----------------------------------------------------------------------------
+;; Guards
+;;----------------------------------------------------------------------------
+(define (guard-mk type post)
+  (list type post))
+(define (guard-type guard) (car guard))
+(define (guard-post guard) (cadr guard))
+(define (guard-has-post? guard) (not (null? (guard-post guard))))
+(define (guard-set-post! guard post) (set-car! (cdr guard) post))
+(define (is-guard-type? kchar type)
+  (let ((gob (kobj-gob-data kchar)))
+    (and (pair? gob)
+         (eq? (guard-type gob)
+              type))))
+
 (define (guard-ai kchar)
+
+  (define (try-to-use-ability)
+    ;;(display "try-to-use-ability")(newline)
+    (if (can-use-ability? disarm kchar)
+        (let ((victims (get-hostiles-in-range kchar 1)))
+          (and (not (null? victims))
+               (>= (kern-dice-roll "1d20") 16)
+               (or (use-ability disarm kchar (car victims))
+                   #t)))
+        #f))
+
+  (define (goto-post)
+    ;;(display "goto-post")(newline)
+    (let ((guard (kobj-gob-data kchar)))
+      (if (guard-has-post? guard)
+          (let ((post (cons (loc-place (kern-obj-get-location kchar))
+                            (guard-post guard))))
+            ;;(display "post:")(display post)(newline)
+            (pathfind kchar post)))))
+
   (or (use-potion? kchar)
-      (if (can-use-ability? disarm kchar)
-          (let ((victims (get-hostiles-in-range kchar 1)))
-            (and (not (null? victims))
-                 (>= (kern-dice-roll "1d20") 16)
-                 (or (use-ability disarm kchar (car victims))
-                     #t)))
-          #f)))
+      (if (any-visible-hostiles? kchar)
+          (try-to-use-ability)
+          (goto-post))))
+
+(define (post-guard kguard x y)
+  (guard-set-post! (kobj-gob-data kguard)
+                   (list x y))
+  kguard)
 
 (define (mk-halberdier)
   (bind
@@ -295,7 +330,7 @@
      nil ;;...............effects
      nil ;;...............conversation
      ))
-   'halberdier))
+   (guard-mk 'halberdier nil)))
 
 (define (mk-crossbowman)
   (bind
@@ -325,7 +360,11 @@
      nil ;;...............effects
      nil ;;...............conversation
      ))
-   'crossbowman))
+   (guard-mk 'crossbowman nil)))
+
+;;----------------------------------------------------------------------------
+;; Slimes
+;;----------------------------------------------------------------------------
 
 (define (mk-yellow-slime)
   (let ((slime
@@ -496,9 +535,7 @@
   (is-occ? kchar oc_bandit))
 
 (define (is-halberdier? kchar)
-  (eq? (kobj-gob-data kchar)
-       'halberdier))
+  (is-guard-type? kchar 'halberdier))
 
 (define (is-crossbowman? kchar)
-  (eq? (kobj-gob-data kchar)
-       'crossbowman))
+  (is-guard-type? kchar 'crossbowman))

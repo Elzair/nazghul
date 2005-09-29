@@ -177,6 +177,9 @@
 (define (all-visible-hostiles kbeing)
   (kern-being-get-visible-hostiles kbeing))
 
+(define (any-visible-hostiles? kchar)
+  (> (length (all-visible-hostiles kchar)) 0))
+
 ;; Find all allies
 (define (all-visible-allies kbeing)
   (kern-being-get-visible-allies kbeing))
@@ -950,4 +953,14 @@ define (blit-maps kmap . blits)
     (and (not (null? svc))
          (can-pay?)
          (apply-svc))))
-                 
+
+;; player-out-of-sight -- no LOS between kobj and any party member
+(define (player-out-of-sight? kobj)
+  (define (can-see? members)
+    (if (null? members)
+        #f
+        (or (kern-in-los? (kern-obj-get-location (car members))
+                          (kern-obj-get-location kobj))
+            (can-see? (cdr members)))))
+  (not (can-see? (kern-party-get-members (kern-get-player)))))
+

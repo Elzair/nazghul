@@ -11,7 +11,7 @@
 (define (ability-proc ability) (list-ref ability 4))
 
 (define (can-use-ability? ability kchar)
-  (display "can-use-ability?")(display ability)(newline)
+  ;;(display "can-use-ability?")(display ability)(newline)
   (and (>= (kern-char-get-mana kchar)
            (ability-mana-cost ability))
        (>= (kern-char-get-level kchar)

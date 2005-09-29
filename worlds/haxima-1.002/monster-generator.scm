@@ -214,18 +214,10 @@
                                                  (kern-obj-get-location 
                                                   kgen)))))
          (mongen2-max gen)))
-    (define (player-out-of-sight?)
-      (define (can-see? members)
-        (if (null? members)
-            #f
-            (or (kern-in-los? (kern-obj-get-location (car members))
-                              (kern-obj-get-location kgen))
-                (can-see? (cdr members)))))
-      (not (can-see? (kern-party-get-members (kern-get-player)))))
     (if (and (roll-to-encounter)
              (not-too-many?)
              (or (not (mongen2-out-of-sight-only? gen))
-                 (player-out-of-sight?)))
+                 (player-out-of-sight? kgen)))
         (let ((targ-loc (mongen2-targ-loc gen)))
           (kern-obj-put-at (mongen2-mk-monster gen)
                            (if (null? targ-loc)
@@ -258,3 +250,75 @@
 (define (mk-step-gen thresh max is-monster? mk-monster mk-args targ-loc)
   (bind (kern-obj-set-visible (kern-mk-obj t_step_gen 1) #f)
         (mongen2-mk thresh max is-monster? mk-monster mk-args #f targ-loc)))
+
+;;----------------------------------------------------------------------------
+;; Guard Generator
+;;
+;; Monitors a list of posts (x y) and guards. If a post is empty it creates
+;; a new guard and assigns it to that post.
+;;----------------------------------------------------------------------------
+(define (ggen-mk freq is-guard-tag? mk-guard-tag posts)
+  (list freq is-guard-tag? mk-guard-tag posts))
+(define (ggen-freq ggen) (car ggen))
+(define (ggen-get-is-guard-tag ggen) (cadr ggen))
+(define (ggen-get-mk-guard-tag ggen) (caddr ggen))
+(define (ggen-posts ggen) (cadddr ggen))
+
+(define (ggen-exec kgen)
+
+  ;;(display "ggen-exec")(newline)
+
+  (let ((ggen (kobj-gob-data kgen)))
+
+    (define (time-to-check?)
+      ;;(display "time-to-check")(newline)
+      (< (modulo (random-next)
+                 100)
+         (ggen-freq ggen)))
+
+    (define (fill-empty-posts)
+      ;;(display "fill-empty-posts")(newline)
+      (let ((guards (filter (eval (ggen-get-is-guard-tag ggen))
+                            (kern-place-get-beings (loc-place 
+                                                    (kern-obj-get-location 
+                                                     kgen))))))
+        ;;(display "guard:")(display guards)(newline)
+
+        (define (post-filled? post)
+          ;;(display "post-filled?:")(display post)(newline)
+          (foldr (lambda (a kguard) 
+                   (or a
+                       (equal? post
+                               (guard-post (kobj-gob-data kguard)))))
+                 #f
+                 guards))
+
+        (define (fill-post post)
+          ;;(display "fill-post:")(display post)(newline)
+          (let ((kguard (post-guard (apply (eval (ggen-get-mk-guard-tag ggen))
+                                           nil)
+                                    (car post)
+                                    (cadr post)))
+                (loc (kern-obj-get-location kgen)))
+            (kern-obj-put-at kguard loc)))
+
+        (map (lambda (post)
+               (if (not (post-filled? post))
+                   (fill-post post)))
+             (ggen-posts ggen))))
+
+    (if (and (time-to-check?)
+             (player-out-of-sight? kgen))
+        (fill-empty-posts))))
+
+(define ggen-ifc
+  (ifc nil
+       (method 'exec ggen-exec)))
+
+(mk-obj-type 't_ggen nil nil layer-none ggen-ifc)
+
+(define (mk-post x y) (list x y))
+
+(define (mk-ggen freq is-guard? mk-guard posts)
+  (bind (kern-obj-set-visible (kern-mk-obj t_ggen 1) #f)
+        (ggen-mk freq is-guard? mk-guard posts)))
