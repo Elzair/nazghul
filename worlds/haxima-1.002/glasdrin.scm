@@ -78,6 +78,7 @@
 (kern-load "jess.scm")
 (kern-load "chester.scm")
 (kern-load "steward.scm")
+(kern-load "ini.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Place
@@ -102,6 +103,7 @@
   (put (mk-jess) 0 0)
   (put (mk-chester) 0 0)
   (put (mk-steward) 0 0)
+  (put (mk-ini) 0 0)
 
   ;; lower right wall entrance
   (put (mk-locked-door) 55 57)

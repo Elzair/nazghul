@@ -124,6 +124,7 @@
 
 ;; shrine
 (define g-shrine (mk-zone 11 48 7 7))
+(define gs-altar (mk-zone 14 51 1 1))
 
 ;; citadel
 (define gc-hall (mk-zone 38 38 8 8))
@@ -156,7 +157,8 @@
 (define ga-bed (mk-zone 38 12 1 1))
 (define gj-bed (mk-zone 46 10 1 1))
 (define gc-bed (mk-zone 46 14 1 1))
-(define gv-bed (mk-zone 38 38 1 1))
+(define gv-bed (mk-zone 38 38 1 1)) ;; fixme!
+(define gi-bed (mk-zone 11 48 1 1)) ;; fixme!
 
 ;; fountain
 (define g-fountain (mk-zone 22 26 7 7))
