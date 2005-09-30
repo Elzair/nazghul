@@ -60,6 +60,7 @@
 #define GIFC_CAN_CAST         512
 #define GIFC_CAN_BUMP         1024
 #define GIFC_CAN_HIT_LOCATION 2048
+#define GIFC_CAN_BUY          4096
 
 ObjectType::ObjectType()
 {
@@ -1701,6 +1702,11 @@ bool ObjectType::canGet()
         return (gifc_cap & GIFC_CAN_GET);
 }
 
+bool ObjectType::canBuy()
+{
+        return (gifc_cap & GIFC_CAN_BUY);
+}
+
 bool ObjectType::canOpen()
 {
         return (gifc_cap & GIFC_CAN_OPEN);
@@ -1774,6 +1780,11 @@ int ObjectType::cast(Object *caster)
 void ObjectType::get(Object *obj, Object *getter)
 {
         closure_exec(gifc, "ypp", "get", obj, getter);
+}
+
+void ObjectType::buy(Object *buyer, int q)
+{
+        closure_exec(gifc, "ypd", "buy", buyer, q);
 }
 
 

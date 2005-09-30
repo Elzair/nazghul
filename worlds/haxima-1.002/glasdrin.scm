@@ -79,6 +79,7 @@
 (kern-load "chester.scm")
 (kern-load "steward.scm")
 (kern-load "ini.scm")
+(kern-load "jeffreys.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Place
@@ -104,6 +105,7 @@
   (put (mk-chester) 0 0)
   (put (mk-steward) 0 0)
   (put (mk-ini) 0 0)
+  (put (mk-jeffreys) 0 0)
 
   ;; guard generators
   (put (mk-ggen 10 'is-halberdier? 'mk-halberdier

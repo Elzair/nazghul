@@ -174,6 +174,7 @@ class ObjectType {
         bool canEnter();
         bool canBump(); // attempted entry onto same tile
         bool canHitLocation(); // weapon hitting a target location
+        bool canBuy(); // has a hook for 'buy'
 
         void use(Object *user);
         void exec(Object *obj);
@@ -186,6 +187,7 @@ class ObjectType {
         int cast(Object *caster);
         void bump(Object *obj, Object *bumper);
         void hitLocation(Object *obj, struct place *place, int x, int y);
+        void buy(Object *buyer, int q);
         closure_t *getGifc();
         void setGifc(closure_t *gifc, int cap);
 

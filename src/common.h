@@ -169,7 +169,7 @@ extern "C" {
 #define CANCEL    SDLK_ESCAPE
 
 /* Time -- In future, these likely come from GhulScript */
-#define TURNS_PER_MINUTE        60
+#define TURNS_PER_MINUTE        20
 #define MINUTES_PER_HOUR        60
 #define HOURS_PER_DAY           24
 #define TURNS_PER_HOUR          (TURNS_PER_MINUTE * MINUTES_PER_HOUR)

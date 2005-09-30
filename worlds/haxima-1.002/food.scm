@@ -30,7 +30,8 @@
                       (kern-obj-add-effect getter ef_drunk nil)
                       (kern-obj-dec-ref kobj)))
        (method 'buy (lambda (kbuyer q)
-                      (kern-obj-add-effect kgetter ef_drunk nil)
+                      (display "buy")(newline)
+                      (kern-obj-add-effect kbuyer ef_drunk nil)
                       (kern-obj-add-food kbuyer (* alcohol-value q))))
        ))
 

@@ -68,7 +68,7 @@
 ;; Holy Grail
 (define (jess-grai knpc kpc)
   (say knpc "According to legend, a Wanderer suggested the title. "
-       "It was based on a legend popular in his home-world."))
+       "It was based on a popular story in his home-world."))
 
 ;; Scar
 (define (jess-scar knpc kpc)
