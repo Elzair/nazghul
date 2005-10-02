@@ -200,6 +200,7 @@
    ;;     ===============================================================================================================
    (list  't_hands          "bare hands"     nil              "1d2"    "1d2"    "1d2"    slot-nil      1      1      0)
    (list  't_fangs          "fangs"          nil              "1d2"    "1d6"    "+0"     slot-nil      1      1      0)
+   (list  't_horns          "horns"          nil              "1d2"    "1d8"    "1d2"    slot-nil      1      1      0)
    (list  't_stinger        "stinger"        nil              "1d8"    "1d2"    "+0"     slot-nil      1      1      0)
    (list  't_dagger         "dagger"         s_dagger         "1d4"    "1d4"    "1d2"    slot-weapon   1      1      0)
    (list  't_dagger_4       "+4 dagger"      s_dagger         "1d4+4"  "1d4+4"  "1d2+4"  slot-weapon   1      1      0)

@@ -235,7 +235,7 @@
   ;(kern-log-msg "You notice a cave to the southwest."))
   ;(kern-obj-put-at kplayer (list p_slimy_cavern 13 2)
   ;(kern-obj-put-at kplayer (list p_enchanters_tower 32 32)))
-  (kern-obj-put-at kplayer (list p_shard 99 29)))
+  (kern-obj-put-at kplayer (list p_shard 51 7)))
   ;(kern-obj-put-at kplayer (list p_mans_hideout 9 18)))
   ;(kern-obj-put-at kplayer (list p_troll_den 9 0)))                  
 ;;----------------------------------------------------------------------------

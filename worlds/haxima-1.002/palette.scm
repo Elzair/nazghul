@@ -127,6 +127,7 @@
     (list  "ws"   t_window_in_stone)    ;; "window"
 
     (list  "=="   t_bridge_WE)          ;; "east-west bridge"
+    (list  "=|"   t_bridge_NS)          ;; "east-west bridge"
     (list  "vv"   t_chasm)              ;; "chasm"
 
     (list  "/0"   t_trail_0)            ;; "trail"

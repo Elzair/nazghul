@@ -43,3 +43,4 @@
 
 (define (mk-ship)
   (kern-mk-vehicle t_ship north 100))
+

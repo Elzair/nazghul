@@ -76,8 +76,8 @@
 
 ;; Curried version of mk-stock-char for characters without an occupation, ai,
 ;; container or armamenets
-(define (mk-animal name species sprite faction)
-  (mk-stock-char name species nil sprite faction nil nil nil nil))
+(define (mk-animal name species sprite)
+  (mk-stock-char name species nil sprite faction-none nil nil nil nil))
 
 (define (mk-readied-items . items)
   items)
@@ -498,6 +498,13 @@
     )
    (mk-troll-gob)))
 
+
+;;----------------------------------------------------------------------------
+;; Animals
+;;----------------------------------------------------------------------------
+(define (mk-bull)
+  (mk-animal "bull" sp_bull s_bull))
+  
 
 ;;----------------------------------------------------------------------------
 ;; Type queries
