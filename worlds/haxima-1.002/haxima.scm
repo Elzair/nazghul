@@ -44,6 +44,7 @@
 (load "old-absalot.scm")
 (load "engineers-hut.scm")
 (load "mans-hideout.scm")
+(load "necromancers-lair.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Characters
@@ -235,8 +236,8 @@
   ;(kern-log-msg "You notice a cave to the southwest."))
   ;(kern-obj-put-at kplayer (list p_slimy_cavern 13 2)
   ;(kern-obj-put-at kplayer (list p_enchanters_tower 32 32)))
-  (kern-obj-put-at kplayer (list p_shard 51 7)))
-  ;(kern-obj-put-at kplayer (list p_mans_hideout 9 18)))
+  ;(kern-obj-put-at kplayer (list p_shard 51 7)))
+  (kern-obj-put-at kplayer (list p_necromancers_lair 9 9)))
   ;(kern-obj-put-at kplayer (list p_troll_den 9 0)))                  
 ;;----------------------------------------------------------------------------
 ;; To skip the extended start scene comment out this next line and uncomment
