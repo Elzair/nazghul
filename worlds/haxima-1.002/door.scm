@@ -200,3 +200,5 @@
 (define (mk-connected-door tag)(mk-door-full solid-wood-door-in-stone #f #f tag))
 (define (mk-windowed-door) (mk-door-full windowed-wood-door-in-rock #f #f nil))
 (define (mk-magic-locked-door) (mk-door-full solid-wood-door-in-stone #f #t nil))
+(define (mk-locked-windowed-door) 
+  (mk-door-full windowed-wood-door-in-rock #t #f nil))

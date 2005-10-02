@@ -61,7 +61,12 @@
  #f              ; tmp combat place
  nil ; subplaces
  nil ; neighbors
- nil ; objects
+
+ (list ; objects
+
+  (put (mk-ladder-down 'p_old_absalot 11 27) 2 2)
+  )
+
  nil ; hooks
 
  (list  ;; edge entrances
