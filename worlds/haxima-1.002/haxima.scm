@@ -116,6 +116,7 @@
                (add-content 10 t_picklock)
                (add-content 1 t_xen_corp_scroll)
                (add-content 1 in_nox_por)
+               (add-content 1 t_shovel)
                ))
 
  nil ;; party members (should be nil for initial load file)
@@ -237,7 +238,7 @@
   ;(kern-obj-put-at kplayer (list p_slimy_cavern 13 2)
   ;(kern-obj-put-at kplayer (list p_enchanters_tower 32 32)))
   ;(kern-obj-put-at kplayer (list p_shard 51 7)))
-  (kern-obj-put-at kplayer (list p_necromancers_lair 9 9)))
+  (kern-obj-put-at kplayer (list p_trigrave 15 15)))
   ;(kern-obj-put-at kplayer (list p_troll_den 9 0)))                  
 ;;----------------------------------------------------------------------------
 ;; To skip the extended start scene comment out this next line and uncomment
