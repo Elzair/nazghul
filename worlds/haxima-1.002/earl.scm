@@ -47,6 +47,7 @@
                          (list t_sling             20)
                          (list t_staff             50)
                          (list t_arrow             2)
+                         (list t_shovel            70)
                          )
         (say knpc "Your life depends on your gear!"))))
 
