@@ -17,7 +17,7 @@
 (kern-load "prices.scm")
 
 ;;----------------------------------------------------------------------------
-;; Placees
+;; Places
 ;;----------------------------------------------------------------------------
 (load "gregors-hut.scm")
 (load "moongate-clearing.scm")
@@ -40,6 +40,8 @@
 (load "traps_4.scm")
 (load "thiefs_den.scm")
 (load "keep.scm")
+(load "absalot.scm")
+(load "old-absalot.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Characters
@@ -231,8 +233,8 @@
   ;(kern-log-msg "You notice a cave to the southwest."))
   ;(kern-obj-put-at kplayer (list p_slimy_cavern 13 2)
   ;(kern-obj-put-at kplayer (list p_enchanters_tower 32 32)))
-  (kern-obj-put-at kplayer (list p_shard 51 31)))
-  ;(kern-obj-put-at kplayer (list p_thiefs_den 3 4)))
+  ;(kern-obj-put-at kplayer (list p_shard 51 31)))
+  (kern-obj-put-at kplayer (list p_old_absalot 15 15)))
   ;(kern-obj-put-at kplayer (list p_troll_den 9 0)))                  
 ;;----------------------------------------------------------------------------
 ;; To skip the extended start scene comment out this next line and uncomment
