@@ -362,6 +362,9 @@
 (define (burn obj)
   (kern-obj-apply-damage obj "burning" (kern-dice-roll "2d3+2")))
 
+(define (great-burn obj)
+  (kern-obj-apply-damage obj "burning" (kern-dice-roll "10d8+20")))
+
 (define (slip obj)
   (let ((mmode (kern-obj-get-mmode obj)))
     (if (eqv? mmode mmode-walk)

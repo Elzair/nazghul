@@ -303,6 +303,7 @@
 (kern-mk-sprite 's_spider_web                                 ss_addon 1 70 #f 0)
 (kern-mk-sprite 's_corpse                                     ss_addon 1 71 #f 0)
 (kern-mk-sprite 's_magically_locked_windowed_wood_door_in_rock ss_addon 3 76 #f 0 )
+(kern-mk-sprite 's_deep_lava                                   ss_addon 1 79 #t 0)
 (kern-mk-sprite 's_golden_skeleton_key  ss_addon 1 77 #f 0)
 (kern-mk-sprite 's_arrow_slit       ss_addon 1 62 #f 0 )
 (kern-mk-sprite 's_window_in_stone  ss_addon 1 63 #f 0 )

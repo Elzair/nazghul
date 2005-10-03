@@ -35,6 +35,7 @@
     (list  "ff"   t_fire_terrain)       ;; "fire"
     (list  "!!"   t_lava)               ;; "lava"
     (list  "~!"   t_fake_lava)
+    (list  "!_"   t_deep_lava)
     (list  "&&"   t_fireplace)          ;; "fireplace"
 
     (list  "xx"   t_wall)               ;; "wall"
