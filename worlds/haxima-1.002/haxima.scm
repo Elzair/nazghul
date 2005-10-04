@@ -47,6 +47,7 @@
 (load "necromancers-lair.scm")
 (load "fire_sea.scm")
 (load "void-temple.scm")
+(load "merciful-death.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Characters
@@ -98,7 +99,7 @@
  "Walk"                      ; movement description
  sound-walking               ; movement sound
  10                          ; food
- 39                           ; gold
+ 1000                           ; gold
  0                           ; turns to next meal
  nil                         ; formation
  m_campsite                  ; campsite map
@@ -121,6 +122,9 @@
                (add-content 1 t_shovel)
                (add-content 1 t_in_ex_por_scroll)
                (add-content 20 an_grav)
+               (add-content 1 mandrake)
+               (add-content 1 black_pearl)
+               (add-content 1 spider_silk)
                ))
 
  nil ;; party members (should be nil for initial load file)
@@ -141,7 +145,7 @@
 ;;----------------------------------------------------------------------------
 ;; Time
 ;;----------------------------------------------------------------------------
-(define hour 19)
+(define hour 14)
 (define minutes 00)
 (define time-in-minutes (+ (* hour 60) minutes))
 
@@ -241,7 +245,7 @@
   ;(kern-log-msg "You notice a cave to the southwest."))
   ;(kern-obj-put-at kplayer (list p_slimy_cavern 13 2)
   ;(kern-obj-put-at kplayer (list p_enchanters_tower 32 32)))
-  (kern-obj-put-at kplayer (list p_shard 16 46)))
+  (kern-obj-put-at kplayer (list p_shard 121 86)))
   ;(kern-obj-put-at kplayer (list p_void_temple 9 18)))
   ;(kern-obj-put-at kplayer (list p_troll_den 9 0)))                  
 ;;----------------------------------------------------------------------------

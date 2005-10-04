@@ -43,7 +43,8 @@
    (list 't_leftwing        "castle wall"   pclass-wall      s_leftwing        1 0 nil)
    (list 't_rightwing       "castle wall"   pclass-wall      s_rightwing       1 0 nil)
 
-   (list 't_ship_hull       "ship's hull"   pclass-wall      s_wall            1 0 nil)
+   (list 't_ship_hull       "ship's bulwark"   pclass-wall      s_wall         1 0 nil)
+   (list 't_ship_hull2      "ship's hull"   pclass-wall      s_wall            0 0 nil)
    (list 't_sh_hull_NE      "ship's hull"   pclass-wall      s_wall_b          1 0 nil)
    (list 't_sh_hull_NW      "ship's hull"   pclass-wall      s_wall_a          1 0 nil)
    (list 't_sh_hull_SE      "ship's hull"   pclass-wall      s_wall_c          1 0 nil)

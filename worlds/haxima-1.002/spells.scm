@@ -487,6 +487,19 @@
            (map confuse foes))))
   result-ok)
 
+;; special spell which raises a sunken ship
+(define (vas-uus-ylem kcaster)
+  (let ((loc (kern-ui-target (kern-obj-get-location kcaster) 1)))
+    (if (null? loc)
+        result-no-target
+        (let ((kobjs (filter can-raise-vessel? 
+                             (kern-get-objects-at loc))))
+          (if (null? kobjs)
+              result-no-effect
+              (let ((kgen (car kobjs)))                
+                (signal-kobj kgen 'raise kgen kcaster)
+                result-ok))))))
+
 ;; ----------------------------------------------------------------------------
 ;; Seventh Circle
 ;; ----------------------------------------------------------------------------
@@ -656,6 +669,7 @@
    (list 'an_xen_exe      "An Xen Exe spell"      an-xen-exe      "AXE"  6 context-town (list black_pearl nightshade spider_silk))
    (list 'in_vas_por_ylem "In Vas Por Ylem spell" in-vas-por-ylem "IVPY" 6 context-town (list mandrake blood_moss sulphorous_ash))
    (list 'quas_an_wis     "Quas An Wis spell"     quas-an-wis     "QAW"  6 context-town (list mandrake nightshade))
+   (list 'vas_uus_ylem    "Vas Uus Ylem spell"    vas-uus-ylem    "VUY"  6 context-wilderness (list mandrake black_pearl spider_silk))
 
    (list 'in_nox_hur   "In Nox Hur spell"   in-nox-hur   "INH" 7 context-town (list nightshade sulphorous_ash blood_moss))
    (list 'in_zu_hur    "In Zu Hur spell"    in-zu-hur    "IZH" 7 context-town (list mandrake ginseng blood_moss))

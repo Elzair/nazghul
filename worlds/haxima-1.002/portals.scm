@@ -86,6 +86,7 @@
 (mk-obj-type 't_trap_door   "trap door"           '()             layer-mechanism auto-portal-ifc)
 (mk-obj-type 't_teleporter  "teleporter"          s_floor_plate   layer-mechanism prompting-auto-portal-ifc)
 (mk-obj-type 't_dungeon "dungeon" s_dungeon layer-mechanism       auto-portal-ifc)
+(mk-obj-type 't_ship_relic "ship relic" s_ship layer-mechanism auto-portal-ifc)
 
 ;; mk-portal -- generic helper constructor
 (define (mk-portal type place-tag x y)
@@ -100,6 +101,7 @@
 (define (mk-trap-door   place-tag x y) (mk-portal t_trap_door   place-tag x y))
 (define (mk-teleporter  place-tag x y) (mk-portal t_teleporter  place-tag x y))
 (define (mk-dungeon place-tag x y) (mk-portal t_dungeon place-tag x y))
+(define (mk-ship-relic place-tag x y) (mk-portal t_ship_relic place-tag x y))
 
 ;;----------------------------------------------------------------------------
 ;; Special portal -- entrance to thief's cave near Bole. Invisible, but under

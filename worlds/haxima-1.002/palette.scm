@@ -53,6 +53,7 @@
     (list  "WW"   t_ships_wheel)        ;; "ship's wheel"
     (list  "x!"   t_wall_torch)         ;; "wall torch"
     (list  "##"   t_ship_hull)          ;; "ship's hull"
+    (list  "#>"   t_ship_hull2)          ;; "ship's hull (LOS-blocking)"
 
     (list  ".A"   t_a)                  ;; "an A"
     (list  ".B"   t_b)                  ;; "a B"

@@ -173,35 +173,43 @@
     )))
 
 (define (mk-skeletal-warrior)
-  (kern-char-arm-self
-   (mk-stock-char
-    " a skeleton" ;;.....name
-    sp_skeleton ;;.......species
-    oc_raider ;;.........occupation
-    s_skeleton ;;........sprite
-    faction-monster ;;...faction
-    nil ;;...............custom ai (optional)
-    
-    ;;...................container (and contents)
-    (mk-chest
-     nil
-     (mk-contents (roll-to-add 25  "1"     t_2h_axe)
-                  (roll-to-add 25  "1"     t_halberd)
-                  (roll-to-add 50  "1"     t_sword)
-                  (roll-to-add 25  "1"     t_2H_sword)
-                  (roll-to-add 50  "1"     t_shield)
-                  (roll-to-add 25  "1"     t_bow)
-                  (roll-to-add 50  "1d20"  t_arrow)
-                  (roll-to-add 50  "1"     t_iron_helm)
-                  (roll-to-add 50  "1"     t_armor_leather)
-                  (roll-to-add 25  "1"     t_armor_leather)
-                  (roll-to-add 10  "1"     t_armor_chain)
-                  (roll-to-add 2   "1"     t_armor_plate)))
+  (bind (kern-char-arm-self
+         (mk-stock-char
+          " a skeleton" ;;.....name
+          sp_skeleton ;;.......species
+          oc_raider ;;.........occupation
+          s_skeleton ;;........sprite
+          faction-monster ;;...faction
+          nil ;;...............custom ai (optional)
+          
+          ;;...................container (and contents)
+          (mk-chest
+           nil
+           (mk-contents (roll-to-add 25  "1"     t_2h_axe)
+                        (roll-to-add 25  "1"     t_halberd)
+                        (roll-to-add 50  "1"     t_sword)
+                        (roll-to-add 25  "1"     t_2H_sword)
+                        (roll-to-add 50  "1"     t_shield)
+                        (roll-to-add 25  "1"     t_bow)
+                        (roll-to-add 50  "1d20"  t_arrow)
+                        (roll-to-add 50  "1"     t_iron_helm)
+                        (roll-to-add 50  "1"     t_armor_leather)
+                        (roll-to-add 25  "1"     t_armor_leather)
+                        (roll-to-add 10  "1"     t_armor_chain)
+                        (roll-to-add 2   "1"     t_armor_plate)))
+          
+          nil ;;...............readied arms (in addition to container contents)
+          nil ;;...............effects
+          nil ;;...............conversation
+          ))
+        (list 'skeletal-warrior)))
 
-    nil ;;...............readied arms (in addition to container contents)
-    nil ;;...............effects
-    nil ;;...............conversation
-    )))
+(define (is-skeletal-warrior? kchar)
+  (let ((gob (kobj-gob-data kchar)))
+    (and (not (null? gob))
+         (eq? (car gob)
+              'skeletal-warrior))))
+        
 
 ;; Death knights can use Vampiric Touch at L3 and Disease at L6
 

@@ -1499,7 +1499,8 @@ static pointer kern_mk_obj_type(scheme *sc, pointer args)
 
         if (unpack(sc, &args, "yspddo", &tag, &name, &sprite, &layer, 
                    &gifc_cap, &gifc)) {
-                load_err("kern-mk-obj-type %s: bad args", tag);
+                load_err("kern-mk-obj-type %s: bad args (did you mean to use "\
+                         "kern-mk-obj instead?)", tag);
                 return sc->NIL;
         }
 
@@ -4703,6 +4704,30 @@ KERN_API_CALL(kern_place_set_terrain)
         return sc->T;
 }
 
+KERN_API_CALL(kern_place_set_subplace)
+{
+        struct place *place, *subplace;
+        int x, y;
+
+        if (unpack(sc, &args, "p", &subplace)) {
+                rt_err("kern-place-set-subplace: bad args");
+                return sc->NIL;
+        }
+
+        if (! subplace) {
+                rt_err("kern-place-set-subplace: nil subplace");
+                return sc->NIL;
+        }
+
+        if (unpack_loc(sc, &args, &place, &x, &y, "kern-place-set-subplace"))
+                return sc->NIL;
+
+
+        place_add_subplace(place, subplace, x, y);
+
+        return scm_mk_ptr(sc, subplace);
+}
+
 KERN_API_CALL(kern_place_get_terrain)
 {
         struct place *place;
@@ -6965,6 +6990,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-occ-get-mp-mult", kern_occ_get_mp_mult);
 
         /* kern-place api */
+        API_DECL(sc, "kern-place-set-subplace", kern_place_set_subplace);
         API_DECL(sc, "kern-place-get-beings", kern_place_get_beings);
         API_DECL(sc, "kern-place-get-height", kern_place_get_height);
         API_DECL(sc, "kern-place-get-location", kern_place_get_location);
