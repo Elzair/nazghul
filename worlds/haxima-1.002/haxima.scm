@@ -15,6 +15,7 @@
 (kern-load "zones.scm")
 (kern-load "runes.scm")
 (kern-load "prices.scm")
+(kern-load "special.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Places
@@ -48,6 +49,7 @@
 (load "fire_sea.scm")
 (load "void-temple.scm")
 (load "merciful-death.scm")
+(load "angriss-lair.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Characters
@@ -245,7 +247,7 @@
   ;(kern-log-msg "You notice a cave to the southwest."))
   ;(kern-obj-put-at kplayer (list p_slimy_cavern 13 2)
   ;(kern-obj-put-at kplayer (list p_enchanters_tower 32 32)))
-  (kern-obj-put-at kplayer (list p_shard 121 86)))
+  (kern-obj-put-at kplayer (list p_shard 67 42)))
   ;(kern-obj-put-at kplayer (list p_void_temple 9 18)))
   ;(kern-obj-put-at kplayer (list p_troll_den 9 0)))                  
 ;;----------------------------------------------------------------------------

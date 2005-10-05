@@ -23,16 +23,17 @@
 (kern-mk-field-type 'F_poison "poison field" s_field_poison   256  20 pclass-none  'apply-poison)
 (kern-mk-field-type 'F_sleep  "sleep field"  s_field_sleep    256  20 pclass-none  'apply-sleep)
 (kern-mk-field-type 'F_energy "energy field" s_field_energy   512  20 pclass-repel 'apply-lightning)
-(kern-mk-field-type 'web-type "spider web"   s_spider_web     0    256 pclass-none 'ensnare)
+(kern-mk-field-type 'web-type "spider web"   s_spider_web     0    20 pclass-none 'ensnare)
 
 (kern-mk-field-type 'F_poison_perm "poison field" s_field_poison 256 -1 pclass-none  'apply-poison)
 (kern-mk-field-type 'F_sleep_perm  "sleep field"  s_field_sleep  256 -1 pclass-none  'apply-sleep)
 (kern-mk-field-type 'F_energy_perm "energy field" s_field_energy 256 -1 pclass-repel 'apply-lightning)
 (kern-mk-field-type 'F_fire_perm   "fire field"   s_field_fire   512 -1 pclass-none  'burn)
+(kern-mk-field-type 'F_web_perm    "spider web"   s_spider_web   0   -1 pclass-none  'ensnare)
 
 (define field-tags
   (list F_fire F_poison F_sleep F_energy web-type
-        F_fire_perm F_poison_perm F_sleep_perm F_energy_perm))
+        F_fire_perm F_poison_perm F_sleep_perm F_energy_perm F_web_perm))
 
 (define (is-field-type? ktype)
   (foldr (lambda (x tag) (or x (eqv? ktype tag)))

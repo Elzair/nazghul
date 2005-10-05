@@ -22,24 +22,6 @@
 ;; Local Procedures
 ;;----------------------------------------------------------------------------
 
-(define (max-hp sp occ lvl mod mult)
-  (+ (kern-species-get-hp-mod sp)
-     (if (null? occ) 0 (kern-occ-get-hp-mod occ))
-     mod
-     (* lvl
-        (+ (kern-species-get-hp-mult sp)
-           (if (null? occ) 0 (kern-occ-get-hp-mult occ))
-           mult))))
-
-(define (max-mp sp occ lvl mod mult)
-  (+ (kern-species-get-mp-mod sp)
-     (if (null? occ) 0 (kern-occ-get-mp-mod occ))
-     mod
-     (* lvl
-        (+ (kern-species-get-mp-mult sp)
-           (if (null? occ) 0 (kern-occ-get-mp-mult occ))
-           mult))))
-  
 
 ;; mk-stock-char -- convenience wrapper for kern-mk-char. Handles the
 ;; boilerplate associated with first-time "stock" character creations. A stock

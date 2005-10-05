@@ -81,7 +81,8 @@
   (define (generate gen)
     (if (and (roll-to-encounter)
              (not-too-many gen)
-             (player-out-of-sight? gen))
+             (player-out-of-sight? gen)
+             (not (occupied? (kern-obj-get-location gen))))
         (kern-obj-put-at (mk-monster)
                          (kern-obj-get-location gen))))
   (ifc '() 
@@ -216,6 +217,7 @@
          (mongen2-max gen)))
     (if (and (roll-to-encounter)
              (not-too-many?)
+             (not (occupied? kern-obj-get-location kgen))
              (or (not (mongen2-out-of-sight-only? gen))
                  (player-out-of-sight? kgen)))
         (let ((targ-loc (mongen2-targ-loc gen)))
@@ -308,7 +310,8 @@
              (ggen-posts ggen))))
 
     (if (and (time-to-check?)
-             (player-out-of-sight? kgen))
+             (player-out-of-sight? kgen)
+             (not (occupied? (kern-obj-get-location kgen))))
         (fill-empty-posts))))
 
 (define ggen-ifc

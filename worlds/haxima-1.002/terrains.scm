@@ -16,10 +16,12 @@
    ;;    =================  ==============  =============    ==============    = ===== =======
    (list 't_stars           "stars"         pclass-space     s_stars           1 0 nil)
    (list 't_deep            "deep water"    pclass-deep      s_deep            1 0 nil)
+   (list 't_sunlit_deep     "deep water"    pclass-deep      s_deep            1 64 nil)
    (list 't_shallow         "shallow water" pclass-deep      s_shallow         1 0 nil)
    (list 't_shoals          "shoals"        pclass-shoals    s_shoals          1 0 nil)
 
    (list 't_grass           "grass"         pclass-grass     s_grass           1 0 nil)
+   (list 't_sunlit_grass    "grass"         pclass-grass     s_grass           1 64 nil)
 
    (list 't_trees           "trees"         pclass-trees     s_trees           1 0 nil)
    (list 't_forest_v        "forest"        pclass-forest    s_forest          1 0 nil)

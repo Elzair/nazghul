@@ -127,6 +127,9 @@
 ;; ----------------------------------------------------------------------------
 ;; Spider AI
 ;; ----------------------------------------------------------------------------
+(define (spider-is-aggressive? kspider)
+  (> (kern-char-get-hp kspider)
+     (/ (kern-char-get-max-hp kspider) 2)))
 
 (define (is-queen-spider? kspider)
   (eqv? (kern-char-get-species kspider) sp_queen_spider))
@@ -195,7 +198,12 @@
       (spider-try-to-spew-web kspider (closest-obj 
                                             (kern-obj-get-location kspider)
                                             foes))
-      (evade kspider foes)))
+      (if (spider-is-aggressive? kspider)
+          (spider-attack-helpless-foe kspider 
+                                      (closest-obj 
+                                       (kern-obj-get-location kspider)
+                                       foes))
+          (evade kspider foes))))
 
 (define (spider-hostiles kspider foes)
   (spider-display "spider-hostiles")(spider-newline)

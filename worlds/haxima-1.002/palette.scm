@@ -13,10 +13,12 @@
     ;; 
     (list  "**"   t_stars)              ;; "stars"
     (list  "__"   t_deep)               ;; "deep water"
+    (list  "_!"   t_sunlit_deep)               ;; "deep water"
     (list  "--"   t_shallow)            ;; "shallow water"
     (list  "~~"   t_shoals)             ;; "shoals"
     (list  "%%"   t_bog)                ;; "bog"
     (list  ".."   t_grass)              ;; "grass"
+    (list  ".!"   t_sunlit_grass)              ;; "grass"
     (list  "tt"   t_trees)              ;; "trees"
 
     (list  "||"   t_forest)             ;; "forest"

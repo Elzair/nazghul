@@ -745,6 +745,27 @@ define (blit-maps kmap . blits)
   (kern-char-set-hp kchar 
                     (kern-char-get-max-hp kchar)))
 
+;; max-hp -- calc max hp given species, level and occ
+(define (max-hp sp occ lvl mod mult)
+  (+ (kern-species-get-hp-mod sp)
+     (if (null? occ) 0 (kern-occ-get-hp-mod occ))
+     mod
+     (* lvl
+        (+ (kern-species-get-hp-mult sp)
+           (if (null? occ) 0 (kern-occ-get-hp-mult occ))
+           mult))))
+
+;; max-mp -- calc max mp given species, level and occ
+(define (max-mp sp occ lvl mod mult)
+  (+ (kern-species-get-mp-mod sp)
+     (if (null? occ) 0 (kern-occ-get-mp-mod occ))
+     mod
+     (* lvl
+        (+ (kern-species-get-mp-mult sp)
+           (if (null? occ) 0 (kern-occ-get-mp-mult occ))
+           mult))))
+  
+
 ;; set-level -- set character to level and max out hp and mana (intended for
 ;; new npc creation)
 (define (set-level kchar lvl)

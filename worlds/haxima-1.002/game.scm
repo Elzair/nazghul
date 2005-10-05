@@ -192,8 +192,8 @@
 (load "moongate.scm")
 (load "bridge.scm")
 (load "drawbridge.scm")
-
 (load "conv.scm") ;; basic conversation
+(load "step.scm")
 
 ;; Astronomy
 (load "moon.scm")
