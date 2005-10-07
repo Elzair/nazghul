@@ -137,7 +137,8 @@
 ;; child - I'm not sure how I want to play that one out yet.
 ;;----------------------------------------------------------------------------
 (define (ilya-animals knpc kpc)
-  (say knpc "We have some sheep, and Charm the cat, and some chickens. Do you like animals?")
+  (say knpc "We have some sheep, and Charm the cat, and some chickens. "
+       "Do you like animals?")
   (if (kern-conv-get-yes-no? kpc)
 
       ;; yes - the player likes animals
@@ -148,11 +149,13 @@
 
               ;; yes - the player's favorite animal is spiders
               (begin
-                (say knpc "Mine too! I know how to make them harmless. Want me to teach you?")
+                (say knpc "Mine too! I know how to make them harmless. "
+                     "Want me to teach you?")
                 (if (kern-conv-get-yes-no? kpc)
 
                     ;; yes - the player wants to learn the spider ward
-                    (say knpc "It's easy! Mix spider silk and garlic, and chant An Xen Bet.")
+                    (say knpc "It's easy! Mix spider silk and garlic, "
+                         "and chant An Xen Bet.")
 
                     ;; no - the player does not want to learn the spider ward
                     (say knpc "Ok, but they sometimes attack people.")))

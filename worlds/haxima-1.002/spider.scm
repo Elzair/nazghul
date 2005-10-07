@@ -34,6 +34,7 @@
 (define (spider-egg-disturbed kegg)
   (spider-display "spider-egg-disturbed")(spider-newline)
   (define (check val loc)
+    (display "loc:")(display loc)(newline)
     (or val
         (foldr (lambda (a b) (or a
                                  (and (obj-is-char? b)

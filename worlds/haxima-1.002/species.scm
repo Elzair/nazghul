@@ -200,11 +200,11 @@
                  14              ;; dexterity: used to avoid traps on chests
                  speed-insect   ;; speed: action points per turn
                  10              ;; vision radius: in tiles
-                 mmode-walk     ;; movement mode
+                 mmode-crawl    ;; movement mode
                  10             ;; base hp: hit points at level zero
                  4              ;; hp multiplier: extra hp per level
-                 0              ;; base mp: mana points at level zero
-                 0              ;; mp multiplier: extra mana points per level
+                 1              ;; base mp: mana points at level zero
+                 1              ;; mp multiplier: extra mana points per level
                  s_asleep       ;; sleep sprite
                  t_hands        ;; natural weapon: used when unarmed
                  #t             ;; visible: can be seen
@@ -223,7 +223,7 @@
                  12             ;; dexterity: used to avoid traps on chests
                  speed-human    ;; speed: action points per turn
                  10             ;; vision radius: in tiles
-                 mmode-walk     ;; movement mode
+                 mmode-crawl    ;; movement mode
                  30             ;; base hp: hit points at level zero
                  4              ;; hp multiplier: extra hp per level
                  0              ;; base mp: mana points at level zero

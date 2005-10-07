@@ -146,6 +146,10 @@
   (can-see-any? knpc 
                 (kern-party-get-members (kern-get-player))))
 
+(define (num-player-party-members)
+  (display "num-player-party-members")(newline)
+  (length (kern-party-get-members (kern-get-player))))
+
 ;; Check if an object is hostile toward a character
 (define (is-hostile? kbeing kobj)
   (kern-being-is-hostile? kbeing kobj))
@@ -985,3 +989,10 @@ define (blit-maps kmap . blits)
             (can-see? (cdr members)))))
   (not (can-see? (kern-party-get-members (kern-get-player)))))
 
+(define (improve-relations kb1 kb2)
+  (kern-dtable-inc (kern-being-get-current-faction kb1)
+                   (kern-being-get-current-faction kb2)))
+
+(define (harm-relations kb1 kb2)
+  (kern-dtable-dec (kern-being-get-current-faction kb1)
+                   (kern-being-get-current-faction kb2)))

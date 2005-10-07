@@ -313,7 +313,10 @@
   (in-list? ef_paralyze (kern-obj-get-effects kobj)))
 
 (define (is-diseased? kobj)
-  (in-list? ef_paralyze kern-obj-get-effects kobj))
+  (in-list? ef_paralyze (kern-obj-get-effects kobj)))
+
+(define (is-asleep? kobj)
+  (in-list? ef_sleep (kern-obj-get-effects kobj)))
 
 ;; ----------------------------------------------------------------------------
 ;; Effect Application Procedures

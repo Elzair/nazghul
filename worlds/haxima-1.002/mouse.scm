@@ -39,7 +39,7 @@
           (say ch_kathryn "The fool has led us right to the Thief! "
                "Quickly, Thud! Kill them all!")
           (betray-player ch_thud))
-        (say ch_kathryn "Fool! Now the Thief is mine!"))
+        (say ch_kathryn "Fool! Now the thief is mine!"))
     (mouse-disappear))
 
   (define (open-moongate loc)
@@ -249,7 +249,7 @@
       
       ;;..........container (and contents)
       (mk-chest nil
-                (mk-contents (add-content 1 t_rune_f)
+                (mk-contents
                              (add-content 1 t_rune_k)
                              (add-content 1 t_armor_leather)
                              (add-content 1 t_leather_helm)

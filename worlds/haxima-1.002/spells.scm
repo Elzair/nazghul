@@ -165,6 +165,7 @@
     (define (get-lines x y n h)
       (if (< h 0) nil
           (cons (filter (lambda (a) (and (kern-in-los? origin a)
+                                         (kern-is-valid-location? a)
                                          (terrain-ok-for-field? a)))
                         (get-line (mk-loc place x y) east n))
                 (get-lines (if (= x 0) 0 (- x 1))
@@ -181,6 +182,7 @@
     (define (get-lines x y n h)
       (if (< h 0) nil
           (cons (filter (lambda (a) (and (kern-in-los? origin a)
+                                         (kern-is-valid-location? a)
                                          (terrain-ok-for-field? a)))
                         (get-line (mk-loc place x y) east n))
                 (get-lines (+ x dx)

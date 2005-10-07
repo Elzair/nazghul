@@ -139,6 +139,24 @@
                 (kern-obj-get-name ktarg))
   (cast-missile-proc kchar ktarg t_deathball))
 
+(define (web-spew-proc kchar ktarg)
+  (kern-log-msg (kern-obj-get-name kchar)
+                " spews web at "
+                (kern-obj-get-name ktarg))
+  (define (spew-in-dir dir)
+    (define (ensnare-loc loc)
+      (kern-obj-put-at (kern-mk-obj web-type 1) loc))
+    (let ((loc (kern-obj-get-location kchar)))
+      (cast-wind-spell2 loc
+                        ensnare-loc
+                        dir
+                        (kern-char-get-level kchar))))
+  (let* ((v (loc-diff (kern-obj-get-location ktarg)
+                      (kern-obj-get-location kchar)))
+         (dir (loc-to-cardinal-dir v)))
+    (spew-in-dir dir)))
+
+
 ;;----------------------------------------------------------------------------
 ;; Ability declarations
 ;;----------------------------------------------------------------------------
@@ -165,6 +183,7 @@
                                        cast-fireball-proc))
 (define cast-kill (mk-ability "cast kill" 7 7 2
                                        cast-kill-proc))
+(define web-spew (mk-ability "spew web" 4 4 2 web-spew-proc))
 
 ;;----------------------------------------------------------------------------
 ;; Abilities listed by various attributes
