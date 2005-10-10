@@ -1021,3 +1021,55 @@ define (blit-maps kmap . blits)
               (ctor loc)
               (put-random-stuff place rect pred? ctor (- n 1)))
             (put-random-stuff place rect pred? ctor n)))))
+
+;; mk-dungeon-room -- make a 19x19 dungeon room (simplified form of
+;; kern-mk-place)
+(define (mk-dungeon-room tag name terrain . objects)
+  (display "objects:")(display objects)(newline)
+  (kern-mk-place tag
+                 name
+                 nil     ; sprite
+                 (kern-mk-map nil 19 19 pal_expanded terrain)
+                 #f      ; wraps
+                 #t      ; underground
+                 #f      ; large-scale (wilderness)
+                 #f      ; tmp combat place
+                 nil     ; subplaces
+                 nil     ; neighbors
+                 objects ; objects
+                 nil     ; hooks
+                 nil     ; edge entrances
+                 ))
+
+;; mk-dungeon-level -- given a 2d list of rooms, connect them up as neighbors
+(define (mk-dungeon-level . rooms)
+  (define (bind-east west-room east-room)
+    (if (and (not (null? west-room))
+             (not (null? east-room)))
+        (kern-place-set-neighbor east west-room east-room)))
+  (define (bind-south north-room south-room)
+    (if (and (not (null? north-room))
+             (not (null? south-room)))
+        (kern-place-set-neighbor south north-room south-room)))
+  (define (bind-row top bot)
+    (if (not (null? top))
+        (begin
+          (if (not (null? (cdr top)))
+              (bind-east (car top) (cadr top)))
+          (if (null? bot)
+              (bind-row (cdr top) nil)
+              (begin
+                (bind-south (car top) (car bot))
+                (bind-row (cdr top) (cdr bot)))))))
+  (define (bind-rooms rooms)
+    (display "bind-rooms:")(display rooms)(newline)
+    (if (not (null? rooms))
+        (begin
+          (bind-row (car rooms) 
+                    (if (null? (cdr rooms))
+                        nil
+                        (cadr rooms)))
+          (bind-rooms (cdr rooms)))))
+  (bind-rooms rooms))
+
+
