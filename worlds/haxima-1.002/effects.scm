@@ -120,7 +120,9 @@
 (define (destroy-webs-at loc)
   (define (destroy-web web)
     (kern-obj-remove web))
-  (map destroy-web (find-object-types-at loc web-type)))
+  (map destroy-web (find-object-types-at loc web-type))
+  (map destroy-web (find-object-types-at loc F_web_perm))
+  )
 
 (define (ensnare-exec fgob kchar)
   (display "ensnare-exec")(newline)

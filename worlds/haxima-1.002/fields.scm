@@ -31,11 +31,14 @@
 (kern-mk-field-type 'F_fire_perm   "fire field"   s_field_fire   512 -1 pclass-none  'burn)
 (kern-mk-field-type 'F_web_perm    "spider web"   s_spider_web   0   -1 pclass-none  'ensnare)
 
-(define field-tags
+(define all-field-types
   (list F_fire F_poison F_sleep F_energy web-type
         F_fire_perm F_poison_perm F_sleep_perm F_energy_perm F_web_perm))
 
 (define (is-field-type? ktype)
-  (foldr (lambda (x tag) (or x (eqv? ktype tag)))
+  (foldr (lambda (x field-type) (or x (eqv? ktype field-type)))
          #f 
-         field-tags))
+         all-field-types))
+
+(define (is-field? kobj)
+  (is-field-type? (kern-obj-get-type kobj)))

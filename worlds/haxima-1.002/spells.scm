@@ -150,7 +150,6 @@
 ;; ----------------------------------------------------------------------------
 (define (terrain-ok-for-field? loc)
   (let ((pclass (kern-terrain-get-pclass (kern-place-get-terrain loc))))
-    (display "pclass=")(display pclass)(newline)
     (foldr (lambda (a b) (or a (= pclass b)))
            #f
            (list pclass-grass pclass-trees pclass-forest))))
@@ -220,10 +219,10 @@
           (define (dropfield loc)
             (if (kern-is-valid-location? loc)
                 (kern-obj-put-at (kern-mk-obj field-type 1) loc)))
-          (define (is-field? kobj) (eqv? field-type (kern-obj-get-type kobj)))
+          (define (is-my-field? kobj) (eqv? field-type (kern-obj-get-type kobj)))
           (define (rmfield loc)
             (if (> (kern-dice-roll "2d20") 16)
-                (let ((fields (filter is-field? (kern-get-objects-at loc))))
+                (let ((fields (filter is-my-field? (kern-get-objects-at loc))))
                   (cond ((null? fields) nil)
                         (else
                          (kern-obj-remove (car fields)))))))
@@ -247,7 +246,6 @@
 ;;   o applies caller-specified proc to each location
 ;; (Note: currently used for the spider's web-spew "spell")
 (define (cast-wind-spell2 origin proc dir depth)
-  (display "cast-wind-spell2")(newline)
   (define (dropfield loc)
     (if (kern-is-valid-location? loc)
         (proc loc)))
@@ -378,8 +376,6 @@
   (kern-obj-add-effect caster ef_great_light nil))
 
 (define (an-grav  caster)
-  (define (is-field? kobj)
-    (is-field-type? (kern-obj-get-type kobj)))
   (let ((field (ui-get-adjacent (kern-obj-get-location caster) is-field?)))
     (cond ((null? field) nil)
           (else 

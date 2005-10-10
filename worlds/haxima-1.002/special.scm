@@ -11,7 +11,7 @@
 (define angriss-lair-loc (list 'p_shard 66 41))
 (define (mk-angriss-lair kbeing)
   (if (eqv? kbeing 
-           (kern-get-player))
+            (kern-get-player))
       (begin
         (kern-log-msg "You find the entrance to Angriss's Lair!")
         (kern-place-set-subplace p_angriss_lair 

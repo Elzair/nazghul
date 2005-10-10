@@ -1,17 +1,16 @@
 ;; Local variables
 (define spider-melee-weapon t_hands)
-(define web-spew-range      3)
 
 ;; Remapped display and newline to local procs so they can be disabled/enabled
 ;; for debug more conveniently
-; (define (spider-display . args) 
-;   (display (kern-get-ticks))
-;   (display ":")
-;   (apply display args))
-; (define (spider-newline) (newline))
+ (define (spider-display . args) 
+   (display (kern-get-ticks))
+   (display ":")
+   (apply display args))
+ (define (spider-newline) (newline))
 
-(define (spider-display . args) )
-(define (spider-newline) )
+;(define (spider-display . args) )
+;(define (spider-newline) )
 
 ;; ----------------------------------------------------------------------------
 ;; Spider Egg
@@ -34,7 +33,7 @@
 (define (spider-egg-disturbed kegg)
   (spider-display "spider-egg-disturbed")(spider-newline)
   (define (check val loc)
-    (display "loc:")(display loc)(newline)
+    ;;(display "loc:")(display loc)(newline)
     (or val
         (foldr (lambda (a b) (or a
                                  (and (obj-is-char? b)
@@ -115,14 +114,6 @@
   (spider-display "ensnare-loc")(spider-newline)
   (kern-obj-put-at (kern-mk-obj web-type 1) loc))
 
-(define (spew-web kspider dir)
-  (spider-display "spew-web:dir=")(spider-display dir)(spider-newline)
-  (let ((loc (kern-obj-get-location kspider)))
-    (spider-display "mark")(spider-newline)
-    (cast-wind-spell2 loc
-                      ensnare-loc
-                      dir
-                      web-spew-range)))
 
 
 ;; ----------------------------------------------------------------------------
@@ -165,23 +156,11 @@
   (spider-display "spider-attack-helpless-foe")(spider-newline)
   (do-or-goto kspider (kern-obj-get-location kfoe) attack))
 
-(define (spider-can-spew-web? kspider)
-  (eqv? (kern-char-get-species kspider) sp_queen_spider))
-
-(define (spider-spew-web-at-foe kspider kfoe)
-  (spider-display "spider-spew-web-at-foe")(spider-newline)
-  (let* ((v (loc-diff (kern-obj-get-location kfoe)
-                      (kern-obj-get-location kspider)))
-         (dir (loc-to-cardinal-dir v)))
-    (spider-display "v=")(spider-display v)(spider-newline)
-    (spew-web kspider dir)))
-
 (define (spider-foe-in-range-of-web-spew? kspider kfoe)
   (spider-display "spider-foe-in-range-of-web-spew?")(spider-newline)
-  (let ((v (loc-diff (kern-obj-get-location kspider)
-                      (kern-obj-get-location kfoe))))
-    (and (< (abs (loc-x v)) web-spew-range)
-         (< (abs (loc-y v)) web-spew-range))))
+  (< (kern-get-distance (kern-obj-get-location kspider)
+                        (kern-obj-get-location kfoe))
+     (kern-char-get-level kspider)))
 
 (define (spider-pathfind-to-foe kspider kfoe)
   (spider-display "spider-pathfind-to-foe")(spider-newline)
@@ -189,9 +168,10 @@
 
 (define (spider-try-to-spew-web kspider foe)
   (spider-display "spider-try-to-spew-web")(spider-newline)
-  (if (spider-foe-in-range-of-web-spew? kspider foe)
-      (spider-spew-web-at-foe kspider foe)
-      (spider-pathfind-to-foe kspider foe)))
+  (if (and (can-use-ability? web-spew kspider)
+           (spider-foe-in-range-of-web-spew? kspider foe))
+      (use-ability web-spew kspider foe)
+      (spider-attack-helpless-foe kspider foe)))
 
 (define (spider-no-helpless-foes kspider foes)
   (spider-display "spider-no-helpless-foes")(spider-newline)
@@ -216,10 +196,54 @@
                                           (kern-obj-get-location kspider)
                                           helpless-foes)))))
 
+(define spider-bad-fields
+  (filter (lambda (x) (and (not (eqv? x web-type))
+                           (not (eqv? x F_web_perm))))
+          all-field-types))
+
+(define (get-off-bad-tile kchar)
+  ;;(display "get-off-bad-tile")(newline)
+  
+  (define (is-bad-loc? loc)
+    ;;(display "is-bad-loc?")(newline)
+    (or (is-bad-terrain-at? loc)
+        (any-object-types-at? loc spider-bad-fields)))
+
+  (define (choose-good-tile tiles)
+    ;;(display "choose-good-tile")(newline)
+    (define (is-good-tile? tile)
+      ;;(display "is-good-tile?")(newline)
+      (and (passable? tile kchar)
+           (not (occupied? tile))
+           (not (is-bad-loc? tile))))
+    (if (null? tiles)
+        nil
+        (if (is-good-tile? (car tiles))
+            (car tiles)
+            (choose-good-tile (cdr tiles)))))
+
+  (define (move-to-good-tile)
+    ;;(display "move-to-good-tile")(newline)
+    (let* ((curloc (kern-obj-get-location kchar))
+           (tiles (get-4-neighboring-tiles curloc))
+           (newloc (choose-good-tile tiles)))
+      (if (null? newloc)
+          #f
+          (begin
+            ;;(display "moving")(newline)
+            (kern-obj-move kchar 
+                           (- (loc-x newloc) (loc-x curloc))
+                           (- (loc-y newloc) (loc-y curloc)))
+            #t))))
+
+  (and (is-bad-loc? (kern-obj-get-location kchar))
+       (move-to-good-tile)))
+
 (define (spider-ai kspider)
   (spider-display "spider-ai")(spider-newline)
-  (let ((foes (all-visible-hostiles kspider)))
-    (if (null? foes)
-        (spider-no-hostiles kspider)
-        (spider-hostiles kspider foes))
-    #t))
+  (or (get-off-bad-tile kspider)
+      (let ((foes (all-visible-hostiles kspider)))
+        (if (null? foes)
+            (spider-no-hostiles kspider)
+            (spider-hostiles kspider foes))
+        #t)))

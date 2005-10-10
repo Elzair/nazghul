@@ -48,15 +48,15 @@
   (put (mk-ladder-down 'p_angriss_lair_l2 6 9) 6 9)
   (put (mk-ladder-down 'p_angriss_lair_l2 15 4) 15 4)
 
-  (put (mk-edge-gen 995 2 'is-queen-spider? 'mk-at-level 
-                    (list 'mk-queen-spider "1d3+4")) 6 9)
-  (put (mk-edge-gen 995 2 'is-queen-spider? 'mk-at-level 
-                    (list 'mk-queen-spider "1d3+4")) 15 4)
-  (put (mk-edge-gen 995 5 'is-spider? 'mk-at-level 
+  (put (mk-edge-gen 990 2 'is-spider? 'mk-at-level 
+                    (list 'mk-wood-spider "1d3+4")) 6 9)
+  (put (mk-edge-gen 990 2 'is-spider? 'mk-at-level 
+                    (list 'mk-wood-spider "1d3+4")) 15 4)
+  (put (mk-edge-gen 990 5 'is-spider? 'mk-at-level 
                     (list 'mk-wood-spider "1d3+4")) 7 4)
-  (put (mk-mongen2 995 5 'is-spider? 'mk-at-level 
+  (put (mk-mongen2 990 5 'is-spider? 'mk-at-level 
                     (list 'mk-wood-spider "1d3+4")) 6 13)
-  (put (mk-mongen2 995 5 'is-spider? 'mk-at-level 
+  (put (mk-mongen2 990 5 'is-spider? 'mk-at-level 
                     (list 'mk-wood-spider "1d3+4")) 14 12)
 
   )
@@ -71,25 +71,25 @@
   (kern-mk-map
     'm_angriss_lair_l3 19 19 pal_expanded
     (list
-            "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-            "rr rr rr .. .. .. .. .. .. .. .. .. .. .. .. .. rr rr rr "
-            "rr rr .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. rr rr "
-            "rr .. .. .. .. .. .. bb .. bb bb bb .. .. .. .. .. .. rr "
-            "rr .. .. .. .. bb bb .. .. .. .. .. bb bb .. .. .. .. rr "
-            "rr .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. rr "
-            "rr .. .. .. bb .. .. .. .. .. .. .. .. .. bb .. .. .. rr "
-            "rr .. .. .. bb .. .. .. .. .. .. .. .. .. .. bb .. .. rr "
-            "rr .. .. .. bb .. .. .. .. .. .. .. .. .. bb .. .. .. rr "
-            "rr .. .. bb .. .. .. .. .. .. .. .. .. .. bb .. .. .. rr "
-            "rr .. .. bb .. .. .. .. .. .. .. .. .. .. .. bb .. .. rr "
-            "rr .. .. bb .. .. .. .. .. .. .. .. .. .. .. bb .. .. rr "
-            "rr .. .. .. bb .. .. .. .. .. .. .. .. .. bb .. .. .. rr "
-            "rr .. .. .. bb .. .. .. .. .. .. .. .. .. bb .. .. .. rr "
-            "rr bb .. .. .. bb bb .. .. .. .. .. bb bb .. .. .. .. rr "
-            "rr bb bb .. .. .. .. bb bb bb bb bb .. .. .. .. .. .. rr "
-            "rr bb .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. bb rr "
-            "rr bb bb .. bb .. .. .. .. .. .. .. .. .. .. .. bb bb rr "
-            "rr rr rr rr rr rr rr .. .. .. .. .. rr rr rr rr rr rr rr "
+      "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
+      "rr rr rr .. .. .. .. .. .. .. .. .. .. .. .. .. rr rr rr "
+      "rr rr .. .. .. .. bb .. .. .. .. .. .. .. .. .. .. rr rr "
+      "rr .. .. .. .. .. bb bb .. bb bb bb .. .. .. .. .. .. rr "
+      "rr .. .. .. .. bb .. bb bb bb .. bb bb .. .. .. .. .. rr "
+      "rr .. .. .. bb bb .. .. .. .. bb bb bb bb .. .. .. .. rr "
+      "rr .. .. .. bb .. .. bb bb .. .. bb bb .. bb .. .. .. rr "
+      "rr .. .. bb .. .. bb .. .. .. .. .. bb .. bb bb .. .. rr "
+      "rr .. .. bb .. bb .. .. .. .. .. bb .. .. bb .. .. .. rr "
+      "rr .. .. bb .. .. bb .. .. .. .. .. bb .. bb .. .. .. rr "
+      "rr .. .. bb bb .. bb .. .. .. .. .. bb bb .. bb .. .. rr "
+      "rr .. .. .. .. .. bb bb .. .. .. bb bb .. .. bb .. .. rr "
+      "rr .. .. .. bb bb bb .. bb .. bb .. .. bb bb .. .. .. rr "
+      "rr .. .. .. bb bb bb bb bb bb bb .. bb bb bb .. .. .. rr "
+      "rr bb .. .. .. bb .. bb bb .. bb .. .. bb .. .. .. .. rr "
+      "rr bb bb .. .. .. bb bb bb bb .. bb .. .. .. .. .. .. rr "
+      "rr bb .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. bb rr "
+      "rr bb bb .. bb .. .. .. .. .. .. .. .. .. .. .. bb bb rr "
+      "rr rr rr rr rr rr rr .. .. .. .. .. rr rr rr rr rr rr rr "
     )
   )
 
@@ -116,11 +116,76 @@
  ;; objects
  (list
   (put (mk-angriss) 9 9)
+
+  (put (kern-mk-obj F_web_perm 1) 9  6)
+  (put (kern-mk-obj F_web_perm 1) 10 6)
+
+  (put (kern-mk-obj F_web_perm 1) 7  7)
+  (put (kern-mk-obj F_web_perm 1) 8  7)
+  (put (kern-mk-obj F_web_perm 1) 9  7)
+  (put (kern-mk-obj F_web_perm 1) 10 7)
+  (put (kern-mk-obj F_web_perm 1) 11 7)
+
+  (put (kern-mk-obj F_web_perm 1) 6  8)
+  (put (kern-mk-obj F_web_perm 1) 7  8)
+  (put (kern-mk-obj F_web_perm 1) 8  8)
+  (put (kern-mk-obj F_web_perm 1) 9  8)
+  (put (kern-mk-obj F_web_perm 1) 10 8)
+
+  (put (kern-mk-obj F_web_perm 1) 7  9)
+  (put (kern-mk-obj F_web_perm 1) 8  9)
+  (put (kern-mk-obj F_web_perm 1) 9  9)
+  (put (kern-mk-obj F_web_perm 1) 10 9)
+  (put (kern-mk-obj F_web_perm 1) 11 9)
+
+  (put (kern-mk-obj F_web_perm 1) 7  10)
+  (put (kern-mk-obj F_web_perm 1) 8  10)
+  (put (kern-mk-obj F_web_perm 1) 9  10)
+  (put (kern-mk-obj F_web_perm 1) 10 10)
+  (put (kern-mk-obj F_web_perm 1) 11 10)
+
+  (put (kern-mk-obj F_web_perm 1) 8  11)
+  (put (kern-mk-obj F_web_perm 1) 9  11)
+  (put (kern-mk-obj F_web_perm 1) 10 11)
+
+  (put (kern-mk-obj F_web_perm 1) 9  12)
+
+  (put (kern-mk-obj F_web_perm 1) 11 12)
+  (put (kern-mk-obj F_web_perm 1) 11 13)
+  (put (kern-mk-obj F_web_perm 1) 11 14)
+  (put (kern-mk-obj F_web_perm 1) 12 14)
+  (put (kern-mk-obj F_web_perm 1) 5 6)
+  
   )
 
  nil ; hooks
  nil ; edge entrances
  )
+
+;; corpse & treasure heaps
+(put-random-stuff p_angriss_lair_l3
+                  (mk-rect 0 0 19 19)
+                  (lambda (loc)
+                    (eqv? (kern-place-get-terrain loc)
+                          t_grass))
+                  (lambda (loc)
+                    (map (lambda (kobj)
+                           (kern-obj-put-at kobj loc))
+                         (mk-treasure-heap (+ 1
+                                              (modulo (random-next)
+                                                      3))))
+                    (kern-obj-put-at (mk-corpse) loc))
+                  50)
+
+;; spider eggs
+(put-random-stuff p_angriss_lair_l3
+                  (mk-rect 6 6 7 7)
+                  (lambda (loc) #t)
+                  (lambda (loc)
+                    (kern-obj-put-at (mk-spider-egg) loc))
+                  20)
+
+
 
 ;; ----------------------------------------------------------------------------
 ;; Map
@@ -176,13 +241,11 @@
   (put (mk-ladder-up 'p_angriss_lair 15 4) 15 4)
 
   (put (mk-edge-gen 995 2 'is-queen-spider? 'mk-at-level 
-                    (list 'mk-queen-spider "1d3+5")) 9 0)
-  (put (mk-edge-gen 995 5 'is-spider? 'mk-at-level 
-                    (list 'mk-wood-spider "1d3+5")) 15 4)
-  (put (mk-mongen2 995 5 'is-spider? 'mk-at-level 
-                    (list 'mk-wood-spider "1d3+5")) 15 15)
-  (put (mk-mongen2 995 5 'is-spider? 'mk-at-level 
-                    (list 'mk-wood-spider "1d3+5")) 1 17)
+                    (list 'mk-queen-spider "1d3+2")) 9 0)
+  (put (mk-mongen2 995 5 'is-queen-spider? 'mk-at-level 
+                    (list 'mk-queen-spider "1d3+2")) 15 15)
+  (put (mk-mongen2 995 5 'is-queen-spider? 'mk-at-level 
+                    (list 'mk-queen-spider "1d3+2")) 1 17)
 
   ;; meat locker
   (put (mk-corpse) 15 1)

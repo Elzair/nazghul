@@ -3234,6 +3234,40 @@ static pointer kern_conv_end(scheme *sc, pointer args)
         return sc->T;
 }
 
+
+static pointer kern_conv_begin(scheme *sc, pointer args)
+{
+        class Character *npc, *member;
+        struct closure *conv;
+
+        if (unpack(sc, &args, "p", &npc)) {
+                rt_err("kern-conv-begin: bad args");
+                return sc->F;
+        }
+
+        conv = npc->getConversation();
+        if (! conv) {
+                rt_err("kern-conv-begin: npc has no conv!");
+                return sc->F;                
+        }
+
+        member = player_party->get_leader();
+        if (! member) {
+                rt_err("kern-conv-begin: no player party leader!");
+                return sc->F;                
+        }
+
+	log_msg("*** CONVERSATION ***");
+
+	log_begin("You are accosted by ");
+	npc->describe();
+	log_end(".");
+
+        conv_enter(npc, member, conv);
+
+        return sc->T;
+}
+
 static pointer kern_map_set_dirty(scheme *sc, pointer args)
 {
         mapSetDirty();
@@ -6514,7 +6548,7 @@ KERN_API_CALL(kern_fold_rect)
                                               _cons(sc, loc, sc->NIL, 0), 0);
 
                         /* done with allocations, so val does not need
-                         * protectiong any more */
+                         * protection any more */
                         scm_unprotect(sc, val);
 
                         /* call the procedure, storing the return val for
@@ -7085,6 +7119,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-ui-select-from-list", kern_ui_select_from_list);
 
         /* conv api */
+        API_DECL(sc, "kern-conv-begin", kern_conv_begin);
         API_DECL(sc, "kern-conv-end", kern_conv_end);
         API_DECL(sc, "kern-conv-say", kern_conv_say);
         API_DECL(sc, "kern-conv-get-amount", kern_conv_get_amount);

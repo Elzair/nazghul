@@ -353,3 +353,58 @@
 (define (mk-raise-listener proc-tag args)
   (bind (kern-mk-obj t_raise_listener 1)
         (raise-mk proc-tag args)))
+
+;;----------------------------------------------------------------------------
+;; Random treasure drops
+;;----------------------------------------------------------------------------
+(define (treasure-prob tr) (car tr))
+(define (treasure-type tr) (cadr tr))
+(define (treasure-quan tr) (caddr tr))
+
+(define treasure-list
+  (list
+   (list 32 t_gold_coins 20)
+   (list 32 t_arrow 10)
+   (list 32 t_bolt 5)
+   (list 32 t_food 5)
+   (list 8  t_heal_potion 1)
+   (list 8  t_mana_potion 1)
+   (list 4  t_cure_potion 1)
+   (list 2  t_leather_helm 1)
+   (list 16 t_dagger 1)
+   (list 2  t_sword 1)
+   (list 2  t_iron_helm 1)
+   (list 2  t_shield 1)
+   (list 2  t_armor_leather 1)
+   (list 1  t_shovel 1)
+   (list 4  t_torch 3)
+   (list 2  t_gem 3)
+   (list 4  t_picklock 3)
+   ))
+
+(define treasure-modulus
+  (foldr (lambda (n entry) (+ n (car entry)))
+         0
+         treasure-list))
+
+(define (treasure-lookup index)
+  (define (search n list)
+    (if (null? list)
+        (error "treasure-lookup not found")
+        (let ((next (+ n (treasure-prob (car list)))))
+          (if (<= index next)
+              (car list)
+              (search next (cdr list))))))
+  (search 0 treasure-list))
+    
+
+(define (mk-random-treasure)
+  (let ((trsr (treasure-lookup (modulo (random-next) treasure-modulus))))
+    (kern-mk-obj (treasure-type trsr) 
+                 (+ 1 (modulo (random-next) (treasure-quan trsr))))))
+    
+
+(define (mk-treasure-heap n)
+  (if (> n 0)
+      (cons (mk-random-treasure)
+            (mk-treasure-heap (- n 1)))))

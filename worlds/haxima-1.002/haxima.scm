@@ -90,7 +90,9 @@
  nil                   ; sched
  nil                   ; special ai
  nil                   ; container
- (list t_doom_staff))         ; readied
+ ;;(list t_doom_staff)         ; readied
+ nil
+ )
  
 ;;----------------------------------------------------------------------------
 ;; Player Party
@@ -127,6 +129,8 @@
                (add-content 1 mandrake)
                (add-content 1 black_pearl)
                (add-content 1 spider_silk)
+               (add-content 1 t_bow)
+               (add-content 100 t_arrow)
                ))
 
  nil ;; party members (should be nil for initial load file)

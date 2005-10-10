@@ -172,3 +172,16 @@
    ))
 
 (map (lambda (terrain) (apply kern-mk-terrain terrain)) terrains)
+
+(define bad-terrain-list
+  (list t_bog
+        t_lava
+        t_deep_lava
+        t_fire_terrain
+        t_fireplace
+        t_inv_wall
+        t_wall_torch
+        ))
+
+(define (is-bad-terrain? kter)
+  (in-list? kter bad-terrain-list))

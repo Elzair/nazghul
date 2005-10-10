@@ -256,7 +256,6 @@
           ;;;;(display "pathfind:coords=");;(display coords)(newline)
           (let ((dx (- (car coords) (loc-x origin)))
                 (dy (- (cdr coords) (loc-y origin))))
-            ;;;;(display "pathfind:dx=");;(display dx);;(display " y=");;(display dy)(newline)
             (kern-obj-move kobj dx dy)))))
   (let ((path (kern-obj-find-path kobj dest)))
     ;;;;(display "pathfind:path=");;(display path)(newline)
@@ -416,6 +415,15 @@
          #f
          (kern-get-objects-at loc)))
 
+;; ----------------------------------------------------------------------------
+;; any-object-types-at? -- returns #t iff one or more objects at loc is of one
+;; of the given types
+;; ----------------------------------------------------------------------------
+(define (any-object-types-at? loc ktypes)
+  (foldr (lambda (a b) (or a (is-object-type-at? loc b)))
+         #f
+         ktypes))
+
 ;; is-player-party-member? -- #t iff kchar is in player party  
 (define (is-player-party-member? kchar)
   (in-list? kchar 
@@ -570,6 +578,9 @@ define (blit-maps kmap . blits)
   (xy-in-rect? (loc-x loc)
                (loc-y loc)
                rect))
+(define (rect-random rect)
+  (list (+ (rect-x rect) (modulo (random-next) (rect-w rect)))
+        (+ (rect-y rect) (modulo (random-next) (rect-h rect)))))
 
 (define original-load load)  
 (define (load file)
@@ -996,3 +1007,17 @@ define (blit-maps kmap . blits)
 (define (harm-relations kb1 kb2)
   (kern-dtable-dec (kern-being-get-current-faction kb1)
                    (kern-being-get-current-faction kb2)))
+
+(define (is-bad-terrain-at? loc)
+  (is-bad-terrain? (kern-place-get-terrain loc)))
+
+;; put-random-stuff -- randomly generate locations within the given rectangle
+;; and, if pred? is satisfied, pass the loc to ctor.
+(define (put-random-stuff place rect pred? ctor n)
+  (if (> n 0)
+      (let ((loc (cons place (rect-random rect))))
+        (if (pred? loc)
+            (begin
+              (ctor loc)
+              (put-random-stuff place rect pred? ctor (- n 1)))
+            (put-random-stuff place rect pred? ctor n)))))

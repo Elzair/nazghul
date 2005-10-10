@@ -2281,6 +2281,13 @@ bool Character::joinPlayer(void)
 
 void Character::leavePlayer(void)
 {
+        if (isSolo()) {
+                assert(isPlayerControlled());
+                player_party->enableRoundRobinMode();
+        } else if (isLeader()) {
+                assert(isPlayerControlled());
+                player_party->enableFollowMode();
+        }
         player_party->removeMember(this);
 }
 

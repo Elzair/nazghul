@@ -25,7 +25,7 @@
 
 ;; Difficulty Classes
 (define dc-escape-ensnare  26)
-(define dc-escape-paralyze 10)
+(define dc-escape-paralyze 16)
 
 ;; Pmasks (keep them around until mechs are converted to use passability
 ;; classes (see below))
