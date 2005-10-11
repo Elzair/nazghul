@@ -165,6 +165,7 @@ extern "C" {
 #define NUM_DIRECTIONS 11
 #define NUM_PLANAR_DIRECTIONS 9
 #define NUM_WIND_DIRECTIONS 4
+#define IS_LEGAL_DIRECTION(dir) ((dir)>=0 && (dir)<NUM_DIRECTIONS)
 
 #define CANCEL    SDLK_ESCAPE
 
@@ -425,6 +426,7 @@ extern int directionToDy(int dir);
 extern char *directionToString(int dir);
 extern bool isvowel(char c);
 extern bool point_in_rect(int x, int y, SDL_Rect *rect);
+extern int directionToOpposite(int dir);
 
 #define keyIsDirection(key) ((key) >= KEY_SOUTHWEST && (key) <= KEY_NORTHEAST)
 

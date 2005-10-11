@@ -972,6 +972,8 @@ static int kern_place_load_subplaces(scheme *sc, pointer *args, struct place *pl
         return 0;
 }
 
+
+
 static int kern_place_load_neighbors(scheme *sc, pointer *args, 
                                      struct place *place)
 {
@@ -988,7 +990,7 @@ static int kern_place_load_neighbors(scheme *sc, pointer *args,
 
         while (scm_is_pair(sc, neighbors)) {
                 int dir, opdir;
-                struct place *neighbor;
+                struct place *neighbor, *tmp;
                 pointer cell;
 
                 cell = scm_car(sc, neighbors);
@@ -999,56 +1001,64 @@ static int kern_place_load_neighbors(scheme *sc, pointer *args,
                                  place->tag);
                         return -1;
                 }
-                
-                /* check direction and get opposite direction */
-                switch(dir) {
-                case NORTH:
-                        opdir = SOUTH;
-                        break;
-                case SOUTH:
-                        opdir = NORTH;
-                        break;
-                case EAST:
-                        opdir = WEST;
-                        break;
-                case WEST:
-                        opdir = EAST;
-                        break;
-                case UP:
-                        opdir = DOWN;
-                        break;
-                case DOWN:
-                        opdir = UP;
-                        break;
-                default:
+
+                if (! IS_LEGAL_DIRECTION(dir)) {
                         load_err("kern-mk-place %s: invalid direction for "\
                                  "neighbor: %d\n", place->tag, dir);
                         return -1;
                 }
+                
+                opdir = directionToOpposite(dir);
 
                 /* check for existing neighbors */
-                if (place->neighbors[dir]) {
+                if ((tmp = place_get_neighbor(place, dir))) {
                         load_err("kern-mk-place %s: already has %s as a "\
                                  "neighbor in direction %d\n",
-                                 place->tag, place->neighbors[dir]->tag, dir);
+                                 place->tag, tmp->tag, dir);
                         return -1;
                 }
 
-                if (neighbor->neighbors[opdir]) {
+                if ((tmp = place_get_neighbor(neighbor, opdir))) {
                         load_err("kern-mk-place %s: already has %s as a "\
                                  "neighbor in direction %d\n",
                                  neighbor->tag, 
-                                 neighbor->neighbors[opdir]->tag, opdir);
+                                 tmp->tag, opdir);
                         return -1;
                 }
 
                 /* finally, hook them up */
-                place->neighbors[dir] = neighbor;
-                neighbor->neighbors[opdir] = place;
+                place_set_neighbor(place, dir, neighbor);
         }
 
         return 0;
 }
+
+KERN_API_CALL(kern_place_set_neighbor)
+{
+        int dir;
+        struct place *place, *neighbor;
+
+        if (unpack(sc, &args, "dpp", &dir, &place, &neighbor)) {
+                rt_err("kern-place-set-neighbor: bad args");
+                return sc->F;
+        }
+
+        if (! place || ! neighbor) {
+                rt_err("kern-place-set-neighbor: null place(s)");
+                return sc->F;                
+        }
+        
+        if (! IS_LEGAL_DIRECTION(dir)) {
+                rt_err("kern-place-set-neighbor: bad direction %d", dir);
+                return sc->F;                
+        }
+
+        /* link (works both ways) */
+        place_set_neighbor(place, dir, neighbor);
+        
+        return sc->T;
+}
+
 
 static int kern_place_load_contents(scheme *sc, pointer *args, 
                                     struct place *place)
@@ -7039,6 +7049,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-place-is-wrapping?", kern_place_is_wrapping);
         API_DECL(sc, "kern-place-is-wilderness?", kern_place_is_wilderness);
         API_DECL(sc, "kern-place-map", kern_place_map);
+        API_DECL(sc, "kern-place-set-neighbor", kern_place_set_neighbor);
         API_DECL(sc, "kern-place-set-terrain", kern_place_set_terrain);
         API_DECL(sc, "kern-place-synch", kern_place_synch);
 

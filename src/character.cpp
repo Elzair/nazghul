@@ -2423,7 +2423,7 @@ void Character::setSchedule(struct sched *val)
                 // Bugfix: if a character is eating and the schedule is set to
                 // NULL then the character will be stuck eating (and doing
                 // nothing else!).
-                setActivity(NULL);
+                setActivity(NONE);
         }
 
         // Bugfix: if an npc with a schedule is added to the player party

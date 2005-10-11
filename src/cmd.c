@@ -675,10 +675,19 @@ int ui_get_direction(void)
 	return dir;
 }
 
+static void search_visitor(class Object *obj, void *arg)
+{
+        class ObjectType *type = obj->getObjectType();
+        if (type && type->canSearch()) {
+                type->search(obj);
+        }
+}
+
 bool cmdSearch(struct place *place, int x, int y)
 {
 	int dir;
         bool old_reveal;
+        int x2,  y2;
 
 	cmdwin_clear();
 	cmdwin_print("Search-");
@@ -687,12 +696,15 @@ bool cmdSearch(struct place *place, int x, int y)
 	if (dir == CANCEL)
 		return false;
 
+        x2 = x + directionToDx(dir);
+        y2 = y + directionToDy(dir);
+
+        place_for_each_object_at(place, x2, y2, search_visitor, NULL);
+
 	log_begin("You find ");
         old_reveal = Reveal;
         Reveal = true;
-	place_describe(place, x + directionToDx(dir),
-                       y + directionToDy(dir),
-                       PLACE_DESCRIBE_ALL);
+	place_describe(place, x2, y2, PLACE_DESCRIBE_ALL);
         log_end(".");
         Reveal = old_reveal;
 	return true;

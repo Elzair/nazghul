@@ -169,12 +169,11 @@
                     (eqv? (kern-place-get-terrain loc)
                           t_grass))
                   (lambda (loc)
-                    (map (lambda (kobj)
-                           (kern-obj-put-at kobj loc))
-                         (mk-treasure-heap (+ 1
-                                              (modulo (random-next)
-                                                      3))))
-                    (kern-obj-put-at (mk-corpse) loc))
+                    (kern-obj-put-at (mk-corpse2 (mk-treasure-list 
+                                                  (+ 1
+                                                     (modulo (random-next) 
+                                                             3))))
+                                     loc))
                   50)
 
 ;; spider eggs

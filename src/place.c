@@ -2151,3 +2151,22 @@ int place_in_los(struct place *p1, int x1, int y1,
 
         return vmask[x3 + y3 * VMASK_W];
 }
+
+void place_set_neighbor(struct place *place, int dir, struct place *neighbor)
+{
+        int opdir = directionToOpposite(dir);
+        
+        /* unlink current neighbors */
+        if (place->neighbors[dir]) {
+                place->neighbors[dir]->neighbors[opdir] = 0;
+        }
+
+        if (neighbor && neighbor->neighbors[opdir]) {
+                neighbor->neighbors[opdir]->neighbors[dir] = 0;
+        }
+
+        /* link new neighbors */
+        place->neighbors[dir] = neighbor;
+        if (neighbor)
+                neighbor->neighbors[opdir] = place;
+}

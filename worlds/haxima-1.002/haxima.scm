@@ -252,7 +252,8 @@
   ;(kern-obj-put-at kplayer (list p_slimy_cavern 13 2)
   ;(kern-obj-put-at kplayer (list p_enchanters_tower 32 32)))
   ;(kern-obj-put-at kplayer (list p_shard 67 42)))
-  (kern-obj-put-at kplayer (list p_lost_halls_1 9 9)))
+  ;(kern-obj-put-at kplayer (list p_lost_halls_1 9 9)))
+  (kern-obj-put-at kplayer (list p_angriss_lair_l3 9 18)))
   ;(kern-obj-put-at kplayer (list p_troll_den 9 0)))                  
 ;;----------------------------------------------------------------------------
 ;; To skip the extended start scene comment out this next line and uncomment

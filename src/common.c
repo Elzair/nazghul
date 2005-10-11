@@ -135,6 +135,28 @@ int stringToDirection(char *str)
 	return -1;
 }
 
+int directionToOpposite(int dir)
+{
+        static int tbl[] = {
+                SOUTHEAST,
+                SOUTH,
+                SOUTHWEST,
+                EAST,
+                HERE,
+                WEST,
+                NORTHEAST,
+                NORTH,
+                NORTHWEST,
+                DOWN,
+                UP
+        };
+
+        if (dir < 0 || dir >= array_sz(tbl))
+                return DIRECTION_NONE;
+
+        return tbl[dir];
+}
+
 int keyToDirection(int key)
 {
 	return keyToDirectionTable[key - KEY_SOUTHWEST];

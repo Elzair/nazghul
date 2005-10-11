@@ -29,6 +29,7 @@
   "rr rr rr rr .. .. rr rr .. .. .. rr rr rr rr rr rr rr rr "
   "rr rr rr rr rr rr rr rr .. .. .. ,, rr ,, ,, ,, rr rr rr "
   )
+ (put (mk-corpse2 (mk-treasure-list 3)) 9 10)
  )
 
 (mk-dungeon-room

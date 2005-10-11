@@ -296,6 +296,7 @@ extern int place_get_edge_entrance(struct place *place, int dir, int *x, int *y)
 extern int place_set_edge_entrance(struct place *place, int dir, int x, int y);
 extern class Object *place_get_filtered_object(struct place *place, int x, int y, int (*filter)(class Object*));
 extern struct place *place_get_neighbor(struct place *place, int dir);
+extern void place_set_neighbor(struct place *place, int dir, struct place *neighbor);
 extern int place_in_los(struct place *p1, int x1, int y1,
                         struct place *p2, int x2, int y2);
 

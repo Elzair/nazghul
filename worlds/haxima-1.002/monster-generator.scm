@@ -397,14 +397,26 @@
               (search next (cdr list))))))
   (search 0 treasure-list))
     
+(define (pick-random-treasure)
+  (let ((trsr (treasure-lookup (modulo (random-next) treasure-modulus))))
+    (list (treasure-type trsr) 
+          (+ 1 (modulo (random-next) (treasure-quan trsr))))))
 
 (define (mk-random-treasure)
-  (let ((trsr (treasure-lookup (modulo (random-next) treasure-modulus))))
-    (kern-mk-obj (treasure-type trsr) 
-                 (+ 1 (modulo (random-next) (treasure-quan trsr))))))
+  (let ((pair (pick-random-treasure)))
+    (kern-mk-obj (car pair)
+                 (+ 1 (modulo (random-next) (cadr pair))))))
     
 
+;; creates a list of objects
 (define (mk-treasure-heap n)
   (if (> n 0)
       (cons (mk-random-treasure)
             (mk-treasure-heap (- n 1)))))
+
+;; like mk-treasure-heap, but creates a list of (type . quantity) pairs
+;; suitable for inclusion in a chest or corpse
+(define (mk-treasure-list n)
+  (if (> n 0)
+      (cons (pick-random-treasure)
+            (mk-treasure-list (- n 1)))))

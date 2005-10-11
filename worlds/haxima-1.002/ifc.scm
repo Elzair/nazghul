@@ -62,7 +62,7 @@
            (if (ifc 'can (car calls)) 1 0))))
   (if (null? ifc) 0
       (cap ifc (list 'get 'use 'exec 'open 'handle 'step 'attack 'mix 
-                     'enter 'cast 'bump 'hit-loc 'buy))))
+                     'enter 'cast 'bump 'hit-loc 'buy 'search))))
 
 ;; The gob internal api:
 (define (gob-mk kobj members) (list kobj members))

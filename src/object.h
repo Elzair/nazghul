@@ -175,6 +175,7 @@ class ObjectType {
         bool canBump(); // attempted entry onto same tile
         bool canHitLocation(); // weapon hitting a target location
         bool canBuy(); // has a hook for 'buy'
+        bool canSearch(); // has a hook for 'search'
 
         void use(Object *user);
         void exec(Object *obj);
@@ -188,6 +189,7 @@ class ObjectType {
         void bump(Object *obj, Object *bumper);
         void hitLocation(Object *obj, struct place *place, int x, int y);
         void buy(Object *buyer, int q);
+        void search(Object *obj);
         closure_t *getGifc();
         void setGifc(closure_t *gifc, int cap);
 
