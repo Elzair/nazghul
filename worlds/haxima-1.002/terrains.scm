@@ -6,9 +6,10 @@
   (kern-obj-apply-damage obj "burning" 10))
 
 (define (terrain-effect-poison obj)
-  (if (> (kern-dice-roll "1d20") 10)
-        (if (kern-obj-add-effect obj ef_poison nil)
-            (kern-log-msg "Noxious fumes!"))))
+  (if (and (> (kern-dice-roll "1d20") 10)
+           (kern-obj-is-being? obj)
+           (kern-obj-add-effect obj ef_poison nil))
+      (kern-log-msg "Noxious fumes!")))
 
 (define terrains
   (list

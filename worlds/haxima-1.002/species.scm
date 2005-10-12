@@ -7,7 +7,21 @@
                              slot-ring
                              slot-ring))
 
+(define gint-slots (list slot-helm
+                         slot-helm
+                         slot-amulet
+                         slot-amulet
+                         slot-weapon-or-shield
+                         slot-weapon-or-shield
+                         slot-weapon-or-shield
+                         slot-weapon-or-shield
+                         slot-armor
+                         slot-boot
+                         slot-ring
+                         slot-ring))
+
 (define troll-speed         speed-human)
+(define gint-speed          speed-human)
 (define troll-base-hp       20)
 (define troll-critical-hp   10)
 (define troll-melee-weapon  t_hands)
@@ -259,6 +273,29 @@
                  nil            ;; on-death closure
                  3              ;; xpval
                  humanoid-slots ;; slots: hands
+                 nil            ;; native spells: currently unused
+                 )
+
+(kern-mk-species 'sp_gint       ;; tag: script variable name
+                 "gint"         ;; name: used to display name in the UI
+                 50             ;; strength: limits armament weight
+                 3              ;; intelligence: (just reported in stats)
+                 8              ;; dexterity: used to avoid traps on chests
+                 gint-speed     ;; speed: action points per turn
+                 20             ;; vision radius: in tiles
+                 mmode-hover    ;; movement mode: can cross shoals and rocks
+                 100            ;; base hp: hit points at level zero
+                 10             ;; hp multiplier: extra hp per level
+                 0              ;; base mp: mana points at level zero
+                 0              ;; mp multiplier: extra mana points per level
+                 s_asleep       ;; sleep sprite
+                 t_hands        ;; natural weapon: used when unarmed
+                 #t             ;; visible: can be seen
+                 sound-damage   ;; damage sound
+                 sound-walking  ;; walking sound
+                 nil            ;; on-death closure
+                 10             ;; xpval
+                 gint-slots     ;; slots: hands
                  nil            ;; native spells: currently unused
                  )
 

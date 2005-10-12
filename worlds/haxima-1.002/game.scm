@@ -79,7 +79,7 @@
   ;;   ====== ===== ====== =====  ====== ====== ==== =====
  (list 0      0     0      0      0      0      0     0) ;; none
  (list norm   norm  cant   norm   norm   cant   cant  norm) ;; grass/paving
- (list cant   cant  norm   cant   norm   vhard  norm  cant);; deep
+ (list cant   cant  norm   cant   norm   vhard  norm  cant) ;; deep
  (list cant   hard  cant   cant   norm   norm   norm  cant) ;; shoals
  (list cant   cant  cant   cant   vhard  cant   cant  cant) ;; mountains
  (list cant   cant  cant   norm   cant   cant   cant  cant) ;; wall (w/ ceiling)
@@ -101,7 +101,7 @@
 (define faction-hill-troll  6)
 (define faction-wood-spider 7)
 (define faction-outlaw      8)
-(define faction-cave-gobin  9)
+(define faction-gint        9)
 
 ;; Layers (must match object.h)
 (define layer-none       0)

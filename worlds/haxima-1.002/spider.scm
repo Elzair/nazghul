@@ -3,14 +3,14 @@
 
 ;; Remapped display and newline to local procs so they can be disabled/enabled
 ;; for debug more conveniently
- (define (spider-display . args) 
-   (display (kern-get-ticks))
-   (display ":")
-   (apply display args))
- (define (spider-newline) (newline))
+; (define (spider-display . args) 
+;   (display (kern-get-ticks))
+;   (display ":")
+;   (apply display args))
+; (define (spider-newline) (newline))
 
-;(define (spider-display . args) )
-;(define (spider-newline) )
+(define (spider-display . args) )
+(define (spider-newline) )
 
 ;; ----------------------------------------------------------------------------
 ;; Spider Egg
@@ -121,7 +121,7 @@
 ;; ----------------------------------------------------------------------------
 (define (spider-is-aggressive? kspider)
   (> (kern-char-get-hp kspider)
-     (/ (kern-char-get-max-hp kspider) 2)))
+     (/ (* 4 (kern-char-get-max-hp kspider)) 5)))
 
 (define (is-queen-spider? kspider)
   (eqv? (kern-char-get-species kspider) sp_queen_spider))

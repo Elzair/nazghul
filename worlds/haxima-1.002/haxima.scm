@@ -131,6 +131,17 @@
                (add-content 1 spider_silk)
                (add-content 1 t_bow)
                (add-content 100 t_arrow)
+               (add-content 1 t_dagger)
+
+               (list 23 sulphorous_ash)
+               (list 35 ginseng)
+               (list 32 garlic)
+               (list 20 spider_silk)
+               (list 16 blood_moss)
+               (list 12 black_pearl)
+               (list  3 nightshade)
+               (list  2 mandrake)
+
                ))
 
  nil ;; party members (should be nil for initial load file)
@@ -188,16 +199,17 @@
 ;; are hostile, positive are friendly.
 ;; ----------------------------------------------------------------------------
 (kern-mk-dtable
- ;;           none play men orks accu mons troll spid outl 
- (dtable-row   0    0    0   0   -1   -2   -2    -2    0) ;; none
- (dtable-row   0    2    1  -2   -1   -2   -2    -2   -2) ;; player
- (dtable-row  -1    1    2  -1   -2   -2   -2    -2   -2) ;; men
- (dtable-row  -1   -2   -1   2   -1   -2    0    -2   -2) ;; orks
- (dtable-row  -1   -1   -1  -1    2   -2   -1    -1   -2) ;; accursed
- (dtable-row  -2   -2   -2  -2   -2    0    0     0   -2) ;; monsters
- (dtable-row  -2   -2   -2   0   -1   -1    2    -2   -2) ;; hill trolls
- (dtable-row  -2   -2   -2  -2   -1    0   -2     2   -2) ;; wood spiders
- (dtable-row   0   -2   -2  -2   -2   -2   -2    -2    0) ;; outlaws
+ ;;           none play men orks accu mons troll spid outl gint
+ (dtable-row   0    0    0   0   -1   -2   -2    -2    0   -2) ;; none
+ (dtable-row   0    2    1  -2   -1   -2   -2    -2   -2   -2) ;; player
+ (dtable-row  -1    1    2  -1   -2   -2   -2    -2   -2   -2) ;; men
+ (dtable-row  -1   -2   -1   2   -1   -2    0    -2   -2   -1) ;; orks
+ (dtable-row  -1   -1   -1  -1    2   -2   -1    -1   -2   -1) ;; accursed
+ (dtable-row  -2   -2   -2  -2   -2    0    0     0   -2    0) ;; monsters
+ (dtable-row  -2   -2   -2   0   -1   -1    2    -2   -2   -1) ;; hill trolls
+ (dtable-row  -2   -2   -2  -2   -1    0   -2     2   -2   -1) ;; wood spiders
+ (dtable-row   0   -2   -2  -2   -2   -2   -2    -2    0   -2) ;; outlaws
+ (dtable-row  -2   -2   -2  -1   -1    0   -1    -1   -2    0) ;; gint
  )
 
 
@@ -252,8 +264,7 @@
   ;(kern-obj-put-at kplayer (list p_slimy_cavern 13 2)
   ;(kern-obj-put-at kplayer (list p_enchanters_tower 32 32)))
   ;(kern-obj-put-at kplayer (list p_shard 67 42)))
-  ;(kern-obj-put-at kplayer (list p_lost_halls_1 9 9)))
-  (kern-obj-put-at kplayer (list p_angriss_lair_l3 9 18)))
+  (kern-obj-put-at kplayer (list p_lost_halls_1 3 9)))
   ;(kern-obj-put-at kplayer (list p_troll_den 9 0)))                  
 ;;----------------------------------------------------------------------------
 ;; To skip the extended start scene comment out this next line and uncomment

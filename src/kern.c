@@ -4497,7 +4497,7 @@ KERN_API_CALL(kern_char_get_occ)
         class Character *ch;
 
         ch = (class Character*)unpack_obj(sc, &args, "kern-char-get-occ");
-        if (!ch)
+        if (!ch || ! ch->occ)
                 return sc->NIL;
 
         return scm_mk_ptr(sc, ch->occ);

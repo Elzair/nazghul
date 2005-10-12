@@ -30,6 +30,14 @@
   "rr rr rr rr rr rr rr rr .. .. .. ,, rr ,, ,, ,, rr rr rr "
   )
  (put (mk-corpse2 (mk-treasure-list 3)) 9 10)
+ (put (mk-edge-gen 900 1 'is-spider? 'mk-at-level 
+                   (list 'mk-wood-spider "1d8")) 9 18)
+ (put (mk-mongen2 900 1 'is-troll? 'mk-at-level
+                  (list 'mk-troll "1d8")) 7 8)
+ (put (mk-mongen2 900 1 'is-goblin? 'mk-at-level
+                  (list 'mk-goblin-hunter "1d8")) 18 8)
+ (put (mk-mongen2 900 1 'is-green-slime? 'mk-at-level
+                  (list 'mk-green-slime "1d8")) 11 10)
  )
 
 (mk-dungeon-room
@@ -55,6 +63,12 @@
   "rr xx xx xx .. .. .. ,, ,, ,, ,, ,, ,, ,, ,, xx rr .. rr "
   "rr xx rr rr rr rr bb ,, ,, ,, ,, ,, rr rr rr xx xx rr rr "
   )
+ (put (mk-edge-gen 900 2 'is-goblin? 'mk-at-level
+                  (list 'mk-goblin-hunter "1d8")) 0 9)
+ (put (mk-edge-gen 900 1 'is-gint? 'mk-at-level
+                   (list 'mk-gint "1d8")) 9 18)
+ (put (mk-edge-gen 900 1 'is-gint? 'mk-at-level
+                   (list 'mk-gint "1d8")) 18 9)
  )
 
 (mk-dungeon-room
@@ -80,6 +94,10 @@
   "xx xx xx xx xx xx xx xx xx ,, ,, ,, ,, ,, ,, xx xx rr rr "
   "xx xx xx xx xx xx xx xx ,, ,, ,, xx xx xx xx xx xx rr rr "
   )
+ (put (mk-edge-gen 900 2 'is-green-slime? 'mk-at-level
+                   (list 'mk-green-slime "1d8")) 9 18)
+ (put (mk-mongen2 900 2 'is-gint? 'mk-at-level
+                  (list 'mk-gint "1d8")) 13 9)
  )
 
 (mk-dungeon-room
@@ -105,6 +123,12 @@
   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
   )
+ (put (mk-mongen2 900 3 'is-spider? 'mk-at-level 
+                   (list 'mk-wood-spider "1d8")) 5 4)
+ (put (mk-mongen2 900 3 'is-spider? 'mk-at-level 
+                   (list 'mk-wood-spider "1d8")) 5 13)
+ (put (mk-edge-gen 900 1 'is-troll? 'mk-at-level
+                   (list 'mk-troll "1d8")) 9 0)
  )
 
 (mk-dungeon-room
@@ -130,12 +154,16 @@
   "rr rr rr .. .. rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
   )
+ (put (mk-edge-gen 900 1 'is-spider? 'mk-at-level 
+                   (list 'mk-wood-spider "1d8")) 0 9)
+ (put (mk-mongen2 900 3 'is-gint? 'mk-at-level
+                  (list 'mk-gint "1d8")) 13 9)
  )
 
 (mk-dungeon-room
  'p_lost_halls_6 "Lost Halls End"
  (list
-  "rr rr rr rr rr rr rr rr .. .. tt bb bb bb bb bb bb rr rr "
+  "rr rr rr rr rr rr rr rr .. .. .. bb bb bb bb bb bb rr rr "
   "rr rr rr rr rr rr rr tt tt tt .. bb .. .. .. bb tt tt rr "
   "rr rr rr rr rr rr rr tt tt tt .. .. tt bb .. .. tt tt rr "
   "rr rr rr rr rr rr rr rr tt .. bb .. .. .. .. tt tt rr rr "
@@ -155,6 +183,19 @@
   "rr rr rr rr rr rr rr rr rr rr bb __ __ __ __ bb ,P rr rr "
   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
   )
+
+ (put (mk-edge-gen 900 3 'is-green-slime? 'mk-at-level
+                   (list 'mk-green-slime "1d8")) 16 11)
+
+ (put (mk-corpse2
+       (mk-contents
+        (add-content 't_rune_l 1)
+        (add-content 't_armor_chain_4 1)
+        (add-content 't_chain_coif_4 1)
+        (add-content 't_sword_4 1)
+        (add-content 't_shield_4 1)
+        (add-content 't_warritrix_orders 1)
+        )) 12 12)
  )
 
 (mk-dungeon-level 

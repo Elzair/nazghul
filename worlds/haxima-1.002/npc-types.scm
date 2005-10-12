@@ -71,7 +71,7 @@
   (list #f))
 
 (define (mk-at-level ctor-tag lvl-dice . args)
-  ;(display "mk-at-level args: ")(list args)(newline)
+  (display "mk-at-level args: ")(list args)(newline)
   (set-level (apply (eval ctor-tag) args) 
              (kern-dice-roll lvl-dice)))
 
@@ -488,7 +488,32 @@
     )
    (mk-troll-gob)))
 
-
+(define (mk-gint)
+  (kern-char-arm-self
+   (mk-stock-char
+    "gint" ;;................name
+    sp_gint ;;.................species
+    oc_warrior ;;.................occupation
+    s_ettin ;;..................sprite
+    faction-gint ;;.......faction
+    nil ;;................custom ai (optional)
+    
+    ;;.......container (and contents, used to arm char)
+    (mk-chest nil 
+              (mk-contents
+               (roll-to-add 50  "1"      t_2h_axe)
+               (roll-to-add 50  "1"      t_2h_sword)
+               (roll-to-add 50  "1"      t_morning_star)
+               (roll-to-add 50  "1"      t_halberd)
+               (roll-to-add 100 "4d25"   t_gold_coins)
+               (roll-to-add 100 "1d5"    t_food)
+               ))
+    
+    nil ;;......................readied arms (in addition to container)
+    nil ;;......................effects
+    nil ;;...............conversation
+    )))
+  
 ;;----------------------------------------------------------------------------
 ;; Animals
 ;;----------------------------------------------------------------------------
@@ -536,3 +561,6 @@
 
 (define (is-crossbowman? kchar)
   (is-guard-type? kchar 'crossbowman))
+
+(define (is-gint? kchar)
+  (is-species? kchar sp_gint))

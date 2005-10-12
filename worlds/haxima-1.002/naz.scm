@@ -762,6 +762,7 @@ define (blit-maps kmap . blits)
 
 ;; max-hp -- calc max hp given species, level and occ
 (define (max-hp sp occ lvl mod mult)
+  (display "max-hp: occ=")(display occ)(newline)
   (+ (kern-species-get-hp-mod sp)
      (if (null? occ) 0 (kern-occ-get-hp-mod occ))
      mod
@@ -772,6 +773,7 @@ define (blit-maps kmap . blits)
 
 ;; max-mp -- calc max mp given species, level and occ
 (define (max-mp sp occ lvl mod mult)
+  (display "max-mp: occ=")(display occ)(newline)
   (+ (kern-species-get-mp-mod sp)
      (if (null? occ) 0 (kern-occ-get-mp-mod occ))
      mod

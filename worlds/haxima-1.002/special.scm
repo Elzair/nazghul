@@ -19,3 +19,20 @@
         (kern-map-set-dirty)
         #t)
       #f))
+
+;; ----------------------------------------------------------------------------
+;; The Warritrix's note
+;; ----------------------------------------------------------------------------
+(mk-reusable-item 
+ 't_warritrix_orders "Military Orders" s_lexicon 1
+ (lambda (klexicon kuser)
+   (kern-ui-page-text
+   "Orders to the Warritrix"
+   "Ever faithful servant of Glasdrin,"
+   "we suspect a coven of the Accursed are hiding"
+   "in the deeps of the Lost Halls. Proceed at"
+   "once to investigate. Leave no cavern"
+   "unexplored.\n"
+   "--Commander Jeffries\n"
+   "P.S. These orders are to be destroyed."
+   )))
