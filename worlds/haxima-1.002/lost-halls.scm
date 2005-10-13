@@ -38,6 +38,7 @@
                   (list 'mk-goblin-hunter "1d8")) 18 8)
  (put (mk-mongen2 950 1 'is-green-slime? 'mk-at-level
                   (list 'mk-green-slime "1d8")) 11 10)
+ (put (mk-ladder-up 'p_shard 82 20) 2 2)
  )
 
 (drop-random-corpses p_lost_halls_1 1)
