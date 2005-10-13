@@ -72,9 +72,9 @@
        "errand."))
 
 (define (jeff-erra knpc kpc)
-  (say knpc "[He looks a bit uneasy] Yes, she took a squad to Kurpolis. "
-       "We received a strange report from our commander there and sent her to "
-       "investigate. Odd that she hasn't reported back yet.")
+  (say knpc "[He looks a bit uneasy] Yes, she took a squad to the Lost Halls, "
+       "a dungeon not far from here. We received a report that the Accursed "
+       "have a secret enclave there... odd that she hasn't reported back yet.")
   (prompt-for-key)
   (say knpc "Normally I would send a search party, but at the moment I "
        "haven't the troops to spare."))
