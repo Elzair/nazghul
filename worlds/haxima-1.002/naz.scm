@@ -79,6 +79,7 @@
   (kern-place-is-passable loc char))
 
 (define (obj-is-char? kobj) (kern-obj-is-being? kobj))
+(define (is-being? kobj) (kern-obj-is-being? kobj))
 
 ;; Check if a location is occupied by a character or party
 (define (occupied? loc)
@@ -152,7 +153,8 @@
 
 ;; Check if an object is hostile toward a character
 (define (is-hostile? kbeing kobj)
-  (kern-being-is-hostile? kbeing kobj))
+  (and (is-being? kobj)
+       (kern-being-is-hostile? kbeing kobj)))
 
 ;; Check if an object is allied with a character
 (define (is-ally? kbeing kobj)
@@ -1023,6 +1025,23 @@ define (blit-maps kmap . blits)
               (ctor loc)
               (put-random-stuff place rect pred? ctor (- n 1)))
             (put-random-stuff place rect pred? ctor n)))))
+
+(define (drop-random-corpses kplace n)
+  (put-random-stuff kplace
+                    (mk-rect 0 0 
+                             (kern-place-get-width kplace) 
+                             (kern-place-get-height kplace))
+                    (lambda (loc)
+                      (eqv? (kern-place-get-terrain loc)
+                            t_grass))
+                    (lambda (loc)
+                      (kern-obj-put-at (mk-corpse2 (mk-treasure-list 
+                                                    (+ 1
+                                                       (modulo (random-next) 
+                                                               3))))
+                                       loc))
+                    n))
+                    
 
 ;; mk-dungeon-room -- make a 19x19 dungeon room (simplified form of
 ;; kern-mk-place)

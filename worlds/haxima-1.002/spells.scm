@@ -553,7 +553,7 @@
 ;; Eighth Circle
 ;; ----------------------------------------------------------------------------
 
-(define (in-flam-hur  caster)
+(define (in-flam-hur caster)
   (define (flambe-foe kobj)
     (if (is-hostile? caster kobj)
         (burn kobj)))

@@ -30,15 +30,17 @@
   "rr rr rr rr rr rr rr rr .. .. .. ,, rr ,, ,, ,, rr rr rr "
   )
  (put (mk-corpse2 (mk-treasure-list 3)) 9 10)
- (put (mk-edge-gen 900 1 'is-spider? 'mk-at-level 
+ (put (mk-edge-gen 950 1 'is-spider? 'mk-at-level 
                    (list 'mk-wood-spider "1d8")) 9 18)
- (put (mk-mongen2 900 1 'is-troll? 'mk-at-level
+ (put (mk-mongen2 950 1 'is-troll? 'mk-at-level
                   (list 'mk-troll "1d8")) 7 8)
- (put (mk-mongen2 900 1 'is-goblin? 'mk-at-level
+ (put (mk-mongen2 950 1 'is-goblin? 'mk-at-level
                   (list 'mk-goblin-hunter "1d8")) 18 8)
- (put (mk-mongen2 900 1 'is-green-slime? 'mk-at-level
+ (put (mk-mongen2 950 1 'is-green-slime? 'mk-at-level
                   (list 'mk-green-slime "1d8")) 11 10)
  )
+
+(drop-random-corpses p_lost_halls_1 1)
 
 (mk-dungeon-room
  'p_lost_halls_2 "Lost Halls East"
@@ -63,13 +65,15 @@
   "rr xx xx xx .. .. .. ,, ,, ,, ,, ,, ,, ,, ,, xx rr .. rr "
   "rr xx rr rr rr rr bb ,, ,, ,, ,, ,, rr rr rr xx xx rr rr "
   )
- (put (mk-edge-gen 900 2 'is-goblin? 'mk-at-level
+ (put (mk-edge-gen 950 2 'is-goblin? 'mk-at-level
                   (list 'mk-goblin-hunter "1d8")) 0 9)
- (put (mk-edge-gen 900 1 'is-gint? 'mk-at-level
+ (put (mk-edge-gen 950 1 'is-gint? 'mk-at-level
                    (list 'mk-gint "1d8")) 9 18)
- (put (mk-edge-gen 900 1 'is-gint? 'mk-at-level
+ (put (mk-edge-gen 950 1 'is-gint? 'mk-at-level
                    (list 'mk-gint "1d8")) 18 9)
  )
+
+(drop-random-corpses p_lost_halls_2 2)
 
 (mk-dungeon-room
  'p_lost_halls_3 "Lost Halls Keep"
@@ -94,11 +98,13 @@
   "xx xx xx xx xx xx xx xx xx ,, ,, ,, ,, ,, ,, xx xx rr rr "
   "xx xx xx xx xx xx xx xx ,, ,, ,, xx xx xx xx xx xx rr rr "
   )
- (put (mk-edge-gen 900 2 'is-green-slime? 'mk-at-level
+ (put (mk-edge-gen 980 2 'is-green-slime? 'mk-at-level
                    (list 'mk-green-slime "1d8")) 9 18)
- (put (mk-mongen2 900 2 'is-gint? 'mk-at-level
+ (put (mk-mongen2 950 2 'is-gint? 'mk-at-level
                   (list 'mk-gint "1d8")) 13 9)
  )
+
+(drop-random-corpses p_lost_halls_3 2)
 
 (mk-dungeon-room
  'p_lost_halls_4 "Lost Halls South"
@@ -123,13 +129,15 @@
   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
   )
- (put (mk-mongen2 900 3 'is-spider? 'mk-at-level 
+ (put (mk-mongen2 950 3 'is-spider? 'mk-at-level 
                    (list 'mk-wood-spider "1d8")) 5 4)
- (put (mk-mongen2 900 3 'is-spider? 'mk-at-level 
+ (put (mk-mongen2 950 3 'is-spider? 'mk-at-level 
                    (list 'mk-wood-spider "1d8")) 5 13)
- (put (mk-edge-gen 900 1 'is-troll? 'mk-at-level
+ (put (mk-edge-gen 950 1 'is-troll? 'mk-at-level
                    (list 'mk-troll "1d8")) 9 0)
  )
+
+(drop-random-corpses p_lost_halls_4 5)
 
 (mk-dungeon-room
  'p_lost_halls_5 "Lost Halls Feast Room"
@@ -154,9 +162,9 @@
   "rr rr rr .. .. rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
   )
- (put (mk-edge-gen 900 1 'is-spider? 'mk-at-level 
+ (put (mk-edge-gen 950 1 'is-spider? 'mk-at-level 
                    (list 'mk-wood-spider "1d8")) 0 9)
- (put (mk-mongen2 900 3 'is-gint? 'mk-at-level
+ (put (mk-mongen2 950 3 'is-gint? 'mk-at-level
                   (list 'mk-gint "1d8")) 13 9)
  )
 
@@ -184,7 +192,7 @@
   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
   )
 
- (put (mk-edge-gen 900 3 'is-green-slime? 'mk-at-level
+ (put (mk-edge-gen 950 3 'is-green-slime? 'mk-at-level
                    (list 'mk-green-slime "1d8")) 16 11)
 
  (put (mk-corpse2
@@ -197,6 +205,8 @@
         (add-content 't_warritrix_orders 1)
         )) 12 12)
  )
+
+(drop-random-corpses p_lost_halls_6 5)
 
 (mk-dungeon-level 
  (list p_lost_halls_1 p_lost_halls_2 p_lost_halls_3)
