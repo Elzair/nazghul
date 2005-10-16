@@ -62,11 +62,29 @@
 
 (define (ghertie-curs knpc kpc)
   (say knpc "I had a curse put upon my ship. Should it ever be stolen it "
-       "would steer itself to the Misty Isles and sink! Only I know the spell "
-       "to raise it back from its watery grave!"))
+       "would steer itself to the Misty Isles and sink! Only I know the place "
+       "of its watery grave!"))
 
-(define (ghertie-spel knpc kpc)
+(define (ghertie-grav knpc kpc)
   (say knpc "Why should I tell you?"))
+
+(define (ghertie-reve knpc kpc)
+  (say knpc "[She fixes you with an icy glare] You speak the word dearest to "
+       "my dead heart. Are you offering to avenge me upon my crew?")
+  (if (kern-conv-get-yes-no? kpc)
+      (begin
+        (say knpc "Slay any survivors, and I will tell you where my ship "
+             "lies. Do we have an oath?")
+        (if (kern-conv-get-yes-no? kpc)
+            (say knpc "Agreed. I have met the spirits of those who died when "
+                 "the ship sank, but I have not seen the spirits of those who "
+                 "live. They are Ungfried, Jovis and Shearn. Slay them, "
+                 "and I will tell you where my ship lies.")
+            (say knpc "It is wise you do not take such an oath lightly, for I "
+                 "await oath-breakers on this side of the divide.")))
+      (begin
+        (say knpc "Then do not toy with me, fool!")
+        (kern-conv-end))))
 
 (define (ghertie-fort knpc kpc)
   (say knpc "Gold, gems, magical items, weapons armor and runes."))
@@ -89,7 +107,7 @@
        (method 'ship ghertie-ship)
        (method 'haun ghertie-haun)
        (method 'curs ghertie-curs)
-       (method 'spel ghertie-spel)
+       (method 'grav ghertie-grav)
        (method 'fort ghertie-fort)
 
        ))

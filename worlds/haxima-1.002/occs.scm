@@ -30,6 +30,20 @@
              0                    ; xpval (unused)
              )
 
+(kern-mk-occ 'oc_wrogue           ; tag
+             "wrogue"             ; name 
+             1.5                  ; magic 
+             +1                   ; hp_mod 
+             +1                   ; hp_mult 
+             +1                   ; mp_mod 
+             +1                   ; mp_mult 
+             0                    ; hit_mod 
+             +1                   ; def_mod 
+             0                    ; dam_mod 
+             0                    ; arm_mod
+             0                    ; xpval (unused)
+             )
+
 (kern-mk-occ 'oc_wanderer         ; tag
              "wanderer"           ; name 
              2.0                  ; magic 

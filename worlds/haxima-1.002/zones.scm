@@ -169,3 +169,12 @@
 (define (mk-zone x y w h) (list 'p_engineers_hut x y w h))
 (define eng-bed (mk-zone 16 15 1 1))
 (define eng-workship (mk-zone 3 3 6 9))
+
+;;----------------------------------------------------------------------------
+;; The MAN's Hideout
+(define (mk-zone x y w h) (list 'p_mans_hideout x y w h))
+(define mans-bed (mk-zone 3 3 1 1))
+(define mans-supper (mk-zone 4 15 1 1))
+(define mans-hall (mk-zone 7 6 5 7))
+(define mans-tools (mk-zone 14 2 3 3))
+(define mans-dock (mk-zone 15 13 1 1))
