@@ -1370,10 +1370,24 @@ bool player_party::rendezvous(struct place *place, int rx, int ry)
                         member->cachedPath = NULL;
                 }
 
-                if (NULL == member || member->isDead() || 
-                    !member->isOnMap() || member == leader ||
-                    (member->getX() == rx && member->getY() == ry))
+                if (NULL == member 
+                    || member->isDead() 
+                    || !member->isOnMap() 
+                    || member == leader 
+                    || (member->getX() == rx 
+                        && member->getY() == ry))
                         continue;
+
+                /* The following works for sleeping, but in general is not a
+                 * good solution. What about paralyzation, or other effects
+                 * unknown to the kernel? What will happen is these effects
+                 * will be ignored in the code below. Although technically not
+                 * correct behavior, it shouldn't crash or make the game
+                 * unplayable. */
+                if (member->isAsleep()) {
+                        abort = true;
+                        continue;
+                }
 
                 memset(&as_info, 0, sizeof (as_info));
                 as_info.x0    = member->getX();

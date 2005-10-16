@@ -1603,7 +1603,9 @@ bool cmdTalk(Object *member)
 	obj->describe();
 	log_end(".");
 
-	if (obj->getActivity() == SLEEPING) {
+	if (obj->getActivity() == SLEEPING ||
+            ((obj->getLayer() == being_layer) &&
+             ((class Character*)obj)->isAsleep())) {
 		log_msg("Zzzz...\n");
                 log_end_group();
 		return true;

@@ -2302,6 +2302,10 @@ KERN_API_CALL(kern_mk_player)
         if (vehicle) {
                 player_party->vehicle = vehicle;
                 vehicle->occupant = player_party;
+
+                /* bugfix: party unrefs vehicle when it disembarks; needs to
+                 * keep a refcount while boarded */
+                obj_inc_ref(vehicle);
         }
 
         session_add_obj(Session, player_party, player_dtor, player_save, NULL);

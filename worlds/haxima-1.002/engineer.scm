@@ -7,7 +7,7 @@
 (define voidship-parts
   (list sulphorous_ash))
 
-(define voidship-loc (mk-loc 'p_shard 46 3))
+(define voidship-loc (mk-loc 'p_shard 50 3))
 
 ;;----------------------------------------------------------------------------
 ;; Schedule
@@ -54,7 +54,7 @@
 ;; as a standalone episode.
 ;;----------------------------------------------------------------------------
 (define (eng-hail knpc kpc)
-  (say knpc "[You meet a thing man with wild, white hair. "
+  (say knpc "[You meet a thin man with wild, white hair. "
        "He doesn't seem to notice you at first] Oh, hello."))
 
 (define (eng-name knpc kpc)
@@ -124,7 +124,7 @@
       (prompt-for-key)
       (say knpc "[more cursing, arguing, starting over, failing again...]")
       (prompt-for-key)
-      (say knpc "retrying, refailing, weeping, gnashing of teeth...]")
+      (say knpc "[retrying, refailing, weeping, gnashing of teeth...]")
       (prompt-for-key)
       (say knpc "[...and so on and so forth...]")
       (prompt-for-key)
@@ -136,7 +136,9 @@
       (kern-obj-relocate (mk-voidship) (eval-loc voidship-loc) nil)
       (say knpc "[You both collapse with exhaustion] "
            "That wasn't so bad. Well, she's all yours now. She's waiting "
-           "for you outside at the stardock. Good luck!")
+           "for you outside at the end of the dock. Good luck! "
+           "[He starts to snore]")
+      (kern-obj-add-effect knpc ef_sleep nil)
       (quest-done! quest #t)
       (kern-conv-end))
 
