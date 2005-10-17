@@ -50,6 +50,7 @@
 (load "void-temple.scm")
 (load "merciful-death.scm")
 (load "angriss-lair.scm")
+(load "poor-house.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Characters
@@ -262,8 +263,8 @@
   ;(kern-obj-put-at kplayer (list p_gregors_hut 11 11)))
   ;(kern-log-msg "You notice a cave to the southwest."))
   ;(kern-obj-put-at kplayer (list p_slimy_cavern 13 2)
-  (kern-obj-put-at kplayer (list p_oparine 14 20)))
-  ;(kern-obj-put-at kplayer (list p_shard 81 19)))
+  ;(kern-obj-put-at kplayer (list p_oparine 14 20)))
+  (kern-obj-put-at kplayer (list p_shard 18 65)))
   ;(kern-obj-put-at kplayer (list p_lost_halls_1 3 9)))
   ;(kern-obj-put-at kplayer (list p_troll_den 9 0)))                  
 ;;----------------------------------------------------------------------------

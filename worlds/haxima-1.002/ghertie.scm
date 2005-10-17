@@ -18,10 +18,17 @@
 
 (define (ghertie-quest gob) (car gob))
 
+
+
+;;----------------------------------------------------------------------------
+;; Conv
+;;----------------------------------------------------------------------------
+
+;; Quest...
 (define (ghertie-give-instr knpc kpc)
   (say knpc "Write this down lest you forget. Each member of my crew wears a "
        "cursed ring, with a skull for a signet. It cannot be "
-       "removed without the finger. Jorn, Gholet and Lesne still "
+       "removed without the finger. Jorn, Gholet and Meaney still "
        "live. Bring me their rings to fulfil your part of the "
        "bargain, and I will then fulfill mine."))
 
@@ -48,11 +55,6 @@
                (say knpc "Then why have you returned empty-handed? "
                     "If you fail in your oath I will flog your soul with my "
                     "own hand!"))))))
-
-
-;;----------------------------------------------------------------------------
-;; Conv
-;;----------------------------------------------------------------------------
 
 ;; Basics...
 (define (ghertie-hail knpc kpc)

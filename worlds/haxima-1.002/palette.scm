@@ -31,6 +31,7 @@
 
     (list  ",,"   t_flagstones)         ;; "flagstones"
     (list  "~,"   t_inv_wall)
+    (list  "d,"   t_doorway)
     (list  "cc"   t_cobblestone)        ;; "cobblestone"
     (list  "ee"   t_deck)               ;; "deck"
     (list  "oo"   t_mast)               ;; "mast"

@@ -165,6 +165,7 @@
 (mk-obj-type 't_door "door" s_closed_solid_wood_door_in_stone layer-mechanism 
              door-ifc)
 
+
 ;; Types for common door types
 (define solid-wood-door-in-stone
   (mk-door-states

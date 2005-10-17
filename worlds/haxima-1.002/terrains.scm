@@ -43,6 +43,7 @@
    (list 't_cobblestone     "cobblestone"   pclass-grass     s_cobblestone     1 0 nil)
    (list 't_flagstones      "flagstones"    pclass-grass     s_flagstone       1 0 nil)
    (list 't_inv_wall        "flagstones"    pclass-repel     s_flagstone       1 0 'burn)
+   (list 't_doorway         "doorway"       pclass-grass     s_doorway 1 0 nil)
    (list 't_leftwing        "castle wall"   pclass-wall      s_leftwing        1 0 nil)
    (list 't_rightwing       "castle wall"   pclass-wall      s_rightwing       1 0 nil)
 

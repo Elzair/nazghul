@@ -71,7 +71,6 @@
   (list #f))
 
 (define (mk-at-level ctor-tag lvl-dice . args)
-  (display "mk-at-level args: ")(list args)(newline)
   (set-level (apply (eval ctor-tag) args) 
              (kern-dice-roll lvl-dice)))
 

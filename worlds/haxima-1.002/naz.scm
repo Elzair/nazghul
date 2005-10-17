@@ -772,7 +772,6 @@ define (blit-maps kmap . blits)
 
 ;; max-hp -- calc max hp given species, level and occ
 (define (max-hp sp occ lvl mod mult)
-  (display "max-hp: occ=")(display occ)(newline)
   (+ (kern-species-get-hp-mod sp)
      (if (null? occ) 0 (kern-occ-get-hp-mod occ))
      mod
@@ -783,7 +782,6 @@ define (blit-maps kmap . blits)
 
 ;; max-mp -- calc max mp given species, level and occ
 (define (max-mp sp occ lvl mod mult)
-  (display "max-mp: occ=")(display occ)(newline)
   (+ (kern-species-get-mp-mod sp)
      (if (null? occ) 0 (kern-occ-get-mp-mod occ))
      mod
@@ -1054,7 +1052,6 @@ define (blit-maps kmap . blits)
 ;; mk-dungeon-room -- make a 19x19 dungeon room (simplified form of
 ;; kern-mk-place)
 (define (mk-dungeon-room tag name terrain . objects)
-  (display "objects:")(display objects)(newline)
   (kern-mk-place tag
                  name
                  nil     ; sprite
@@ -1091,7 +1088,6 @@ define (blit-maps kmap . blits)
                 (bind-south (car top) (car bot))
                 (bind-row (cdr top) (cdr bot)))))))
   (define (bind-rooms rooms)
-    (display "bind-rooms:")(display rooms)(newline)
     (if (not (null? rooms))
         (begin
           (bind-row (car rooms) 
