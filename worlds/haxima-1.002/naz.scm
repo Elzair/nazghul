@@ -364,6 +364,14 @@
           (else (hasit? item (cdr inv)))))
   (hasit? ktype (kern-char-get-inventory kchar)))
 
+(define (num-in-inventory kchar ktype)
+  (define (count-em item inv)
+    ;;;(display "inv: ");;(display inv)(newline)
+    (cond ((null? inv) 0)
+          ((eqv? item (car (car inv))) (cdr (car inv)))
+          (else (count-em item (cdr inv)))))
+  (count-em ktype (kern-char-get-inventory kchar)))
+
 (define (use-item-from-inventory-on-self kchar ktype)
   (kern-obj-remove-from-inventory kchar ktype 1)
   ;;;(display "using")(newline)

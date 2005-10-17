@@ -182,6 +182,7 @@
 (load "occs.scm")
 (load "npc-types.scm")
 (load "parties.scm")
+(load "jewelry.scm")
 
 ;; Mechanism-like things
 (load "bim.scm")

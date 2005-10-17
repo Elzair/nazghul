@@ -13,7 +13,42 @@
 ;;----------------------------------------------------------------------------
 ;; Gob
 ;;----------------------------------------------------------------------------
-(define (ghertie-mk) nil)
+(define (ghertie-mk) 
+  (list (mk-quest)))
+
+(define (ghertie-quest gob) (car gob))
+
+(define (ghertie-give-instr knpc kpc)
+  (say knpc "Write this down lest you forget. Each member of my crew wears a "
+       "cursed ring, with a skull for a signet. It cannot be "
+       "removed without the finger. Jorn, Gholet and Lesne still "
+       "live. Bring me their rings to fulfil your part of the "
+       "bargain, and I will then fulfill mine."))
+
+(define (ghertie-update-quest knpc kpc)
+  (let ((nrem (- 3 (num-in-inventory kpc t_skull_ring))))
+    (if (= nrem 0)
+        (begin
+          (say knpc "I am avenged! Now I can rest... the Merciful "
+               "Death lies at [" merciful-death-x ", " merciful-death-y
+               "] by the sextant. But how you will pillage her when "
+               "she lies at the bottom of the sea is your problem! "
+               "[She vanishes with a cruel laugh]")
+          (kern-conv-end)
+          (kern-obj-remove knpc)
+          (map-set-dirty))
+        (begin
+          (say knpc "You still have " nrem " rings to collect. "
+               "Have you forgotten my instructions?")
+           (if (kern-conv-get-yes-no? kpc)
+               (begin
+                 (say knpc "If you were one of my crew I would have you "
+                      "flogged for your carelessness!")
+                 (ghertie-give-instr knpc kpc))
+               (say knpc "Then why have you returned empty-handed? "
+                    "If you fail in your oath I will flog your soul with my "
+                    "own hand!"))))))
+
 
 ;;----------------------------------------------------------------------------
 ;; Conv
@@ -21,8 +56,12 @@
 
 ;; Basics...
 (define (ghertie-hail knpc kpc)
-  (say knpc "[You meet the ghost of a wild-looking woman] "
-       "You dare disturb me? Be wary, I am in a black mood."))
+  (let ((quest (ghertie-quest (kobj-gob-data knpc))))
+    (display "quest:")(display quest)(newline)
+    (if (quest-accepted? quest)
+        (ghertie-update-quest knpc kpc)        
+        (say knpc "[You meet the ghost of a wild-looking woman] "
+             "You dare disturb me? Be wary, I am in a black mood."))))
 
 (define (ghertie-default knpc kpc)
   (say knpc "I care not for this line of talk."))
@@ -37,7 +76,9 @@
   (say knpc "I was a pirate when I was alive. Now I haunt this room."))
 
 (define (ghertie-bye knpc kpc)
-  (say knpc "Trust not your crew!"))
+  (if (quest-accepted? (ghertie-quest (kobj-gob-data knpc)))
+      (say knpc "Avenge me without delay!")
+      (say knpc "Trust not your crew!")))
 
 ;; Pirate...
 (define (ghertie-pira knpc kpc)
@@ -49,9 +90,9 @@
   (say knpc "The cowards slew me in my sleep and stole my ship."))
 
 (define (ghertie-ship knpc kpc)
-  (say knpc "The Merciful Death was fast, limber and mean! "
+  (say knpc "The Merciful Death was fast, limber and mean. "
        "I could not wish for a finer ship. My treasure was nothing, "
-       "my life was doomed, but for stealing my ship I can never "
+       "my life was doomed, but for stealing my ship I will never "
        "forgive my crew!"))
 
 (define (ghertie-haun knpc kpc)
@@ -62,29 +103,39 @@
 
 (define (ghertie-curs knpc kpc)
   (say knpc "I had a curse put upon my ship. Should it ever be stolen it "
-       "would steer itself to the Misty Isles and sink! Only I know the place "
-       "of its watery grave!"))
+       "would steer itself to a particular place and sink! I alone know "
+       "of its watery grave..."))
 
 (define (ghertie-grav knpc kpc)
   (say knpc "Why should I tell you?"))
 
 (define (ghertie-reve knpc kpc)
-  (say knpc "[She fixes you with an icy glare] You speak the word dearest to "
-       "my dead heart. Are you offering to avenge me upon my crew?")
-  (if (kern-conv-get-yes-no? kpc)
-      (begin
-        (say knpc "Slay any survivors, and I will tell you where my ship "
-             "lies. Do we have an oath?")
-        (if (kern-conv-get-yes-no? kpc)
-            (say knpc "Agreed. I have met the spirits of those who died when "
-                 "the ship sank, but I have not seen the spirits of those who "
-                 "live. They are Ungfried, Jovis and Shearn. Slay them, "
-                 "and I will tell you where my ship lies.")
-            (say knpc "It is wise you do not take such an oath lightly, for I "
-                 "await oath-breakers on this side of the divide.")))
-      (begin
-        (say knpc "Then do not toy with me, fool!")
-        (kern-conv-end))))
+  (let ((quest (ghertie-quest (kobj-gob-data knpc))))
+    (if (quest-accepted? quest)
+        (say knpc "Yes, you have sworn to avenge me, "
+             "why are you prattling?")
+        (begin
+          (say knpc "[She fixes you with an icy glare] "
+               "You speak the word dearest to my dead heart. "
+               "Are you offering to avenge me?")
+          (if (kern-conv-get-yes-no? kpc)
+              (begin
+                (say knpc "Not all of my crew went down with the ship. "
+                     "I have searched among the dead and found some missing. "
+                     "Find and punish the survivors, "
+                     "and I will tell you where my ship lies. "
+                     "Do we have an oath?")
+                (if (kern-conv-get-yes-no? kpc)
+                    (begin
+                      (say knpc "Agreed then, mortal. ")
+                      (quest-accepted! quest #t)
+                      (ghertie-give-instr knpc kpc))
+                    (say knpc "It is wise you do not take such an oath "
+                         "lightly, for I await oath-breakers on this side "
+                         "of the divide.")))
+              (begin
+                (say knpc "Then do not toy with me, fool!")
+                (kern-conv-end)))))))
 
 (define (ghertie-fort knpc kpc)
   (say knpc "Gold, gems, magical items, weapons armor and runes."))
@@ -109,6 +160,7 @@
        (method 'curs ghertie-curs)
        (method 'grav ghertie-grav)
        (method 'fort ghertie-fort)
+       (method 'reve ghertie-reve)
 
        ))
 
