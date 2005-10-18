@@ -190,7 +190,7 @@
    (kern-mk-char 'ch_man           ; tag
                  "The MAN"             ; name
                  sp_human            ; species
-                 nil                 ; occ
+                 oc_wrogue           ; occ
                  s_brigandess        ; sprite
                  faction-men         ; starting alignment
                  0 0 0               ; str/int/dex

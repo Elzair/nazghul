@@ -1098,3 +1098,14 @@ define (blit-maps kmap . blits)
   (bind-rooms rooms))
 
 
+(define (get-donation knpc kpc)
+  (let ((give (kern-conv-get-amount kpc))
+        (have (kern-player-get-gold)))
+    (cond ((> give have)
+           (say knpc "You don't have that much!")
+           0)
+          (else
+           (kern-player-set-gold (- have
+                                    give))
+           give))))
+           

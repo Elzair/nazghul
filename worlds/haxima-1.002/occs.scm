@@ -170,3 +170,17 @@
              -1                   ;; arm_mod
              4                    ;; xpval
              )
+
+(kern-mk-occ 'oc_monk
+             "monk"             ; name 
+             1.5                  ; magic 
+             0                    ; hp_mod 
+             0                    ; hp_mult 
+             1                    ; mp_mod 
+             1                    ; mp_mult 
+             0                    ; hit_mod 
+             +1                   ; def_mod 
+             0                    ; dam_mod 
+             0                    ; arm_mod
+             2                    ; xpval
+             )

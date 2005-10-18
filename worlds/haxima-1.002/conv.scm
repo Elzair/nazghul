@@ -69,8 +69,9 @@
 
        ))
 
-;; Helper
+;; Helper(s)
 (define (say knpc . msg) (kern-conv-say knpc msg))
+(define (yes? kpc) (kern-conv-get-yes-no? kpc))
 
 ;;----------------------------------------------------------------------------
 ;; Quests
