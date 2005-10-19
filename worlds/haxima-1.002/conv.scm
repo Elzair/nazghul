@@ -73,6 +73,9 @@
 (define (say knpc . msg) (kern-conv-say knpc msg))
 (define (yes? kpc) (kern-conv-get-yes-no? kpc))
 
+(define (working? knpc)
+  (string=? "working" (kern-obj-get-activity knpc)))
+
 ;;----------------------------------------------------------------------------
 ;; Quests
 ;;----------------------------------------------------------------------------

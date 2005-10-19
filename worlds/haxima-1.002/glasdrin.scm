@@ -210,6 +210,10 @@
   ;; tavern
   (put (mk-windowed-door) 54 23)
   (put (mk-locked-door) 51 9)
+
+  ;; ladder down to prison
+  (put (mk-ladder-down 'p_prison 28 14) 49 34)
+
   )
 
  nil ; hooks
