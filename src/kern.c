@@ -5518,7 +5518,10 @@ KERN_API_CALL(kern_obj_remove_from_inventory)
                 return sc->NIL;
         }
 
-        obj->takeOut(type, amount);
+        if (! obj->takeOut(type, amount)) {
+                rt_err("kern-obj-remove-from-inventory: failed! "\
+                       "(is quantity > amount available to take out?)");
+        }
         return sc->NIL;
 }
 

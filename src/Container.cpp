@@ -84,12 +84,26 @@ bool Container::add(class ObjectType * type, int quantity)
         return true;
 }
 
+int Container::numAvail(class ObjectType *type)
+{
+	struct inv_entry *ie;
+
+	ie = search(type);
+        if (!ie)
+                return 0;
+        return ie->count;
+
+}
+
 bool Container::takeOut(class ObjectType * type, int quantity)
 {
 	struct inv_entry *ie;
 
 	ie = search(type);
         if (!ie)
+                return false;
+
+        if (ie->count < quantity)
                 return false;
 
 	ie->count -= quantity;

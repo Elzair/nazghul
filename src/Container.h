@@ -49,6 +49,7 @@ class Container:public Object {
 	virtual bool add(class ObjectType * type, int quantity);
         virtual void save(struct save *save);
 	virtual bool takeOut(class ObjectType * type, int quantity);
+        int numAvail(class ObjectType * type);
 
         int filter_count(struct filter *);
 	struct inv_entry *first(struct filter *);

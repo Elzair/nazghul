@@ -192,10 +192,6 @@ void terrain_map_blit(struct terrain_map *dest, int dest_x, int dest_y,
 	w = min(dest->w - dest_x, min(w, min(dest->w, src->w)));
 	h = min(dest->h - dest_y, min(h, min(dest->h, src->h)));
 
-	printf("terrain_map_blit: [%d %d %d %d] => [%d %d %d %d]\n", 
-           src_x,  src_y,  w, h, 
-           dest_x, dest_y, w, h);
-
 	for (y = 0; y < h; y++) {
 		dptr = dest->terrain + ((y + dest_y) * dest->w + dest_x);
 		sptr = src->terrain + ((y + src_y) * src->w + src_x);
