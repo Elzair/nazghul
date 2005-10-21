@@ -146,10 +146,7 @@
 
 (define (meaney-firs knpc kpc)
   (say knpc "The first mate was an evil wretch named Jorn. "
-       "I understand he is a bandit lord now, "
-       "and rumor has it he has fallen in among the Accursed. "
-       "His men sometimes frequent the White Stagg "
-       "in Green Tower."))
+       "I don't know what became of him."))
 
 (define (meaney-cook knpc kpc)
   (say knpc "Gholet is no doubt either dead or rotting in prison somewhere. "

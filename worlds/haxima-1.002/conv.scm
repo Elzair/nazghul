@@ -37,6 +37,10 @@
   (say knpc "The city of Oparine can be found in the southwest by a "
        "deep harbor."))
 
+;; establishments
+(define (basic-whit knpc kpc)
+  (say knpc "The White Stag is in Green Tower."))
+
 ;; quests
 (define (basic-thie knpc kpc)
   (say knpc "No, I don't know anything about a thief."))
@@ -61,6 +65,9 @@
        (method 'trig basic-trig)
        (method 'opar basic-opar)
 
+       ;; establishments
+       (method 'whit basic-whit)
+
        ;; quests
        (method 'thie basic-thie)
        (method 'rune basic-rune)
@@ -72,6 +79,7 @@
 ;; Helper(s)
 (define (say knpc . msg) (kern-conv-say knpc msg))
 (define (yes? kpc) (kern-conv-get-yes-no? kpc))
+(define (no? kpc) (not (kern-conv-get-yes-no? kpc)))
 
 (define (working? knpc)
   (string=? "working" (kern-obj-get-activity knpc)))

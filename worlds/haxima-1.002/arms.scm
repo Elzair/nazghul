@@ -206,6 +206,7 @@
    (list  't_dagger_4       "+4 dagger"      s_dagger         "1d4+4"  "1d4+4"  "1d2+4"  slot-weapon   1      1      0)
    (list  't_mace           "mace"           s_mace           "1d3"    "1d6+2"  "+0"     slot-weapon   1      1      3)
    (list  't_sword          "sword"          s_sword          "1d2"    "1d8+1"  "1d2"    slot-weapon   1      1      2)
+   (list  't_sword_2        "+2 sword"       s_sword          "1d2+2"  "1d8+3"  "1d2+2"  slot-weapon   1      1      2)
    (list  't_sword_4        "+4 sword"       s_sword          "1d2+4"  "1d8+5"  "1d2+4"  slot-weapon   1      1      2)
    (list  't_2H_axe         "2H axe"         s_2h_axe         "0"      "2d4+2"  "-2"     slot-weapon   2      1      4)
    (list  't_2H_sword       "2H sword"       s_2h_sword       "0"      "2d8-1"  "-1"     slot-weapon   2      1      4)
@@ -230,12 +231,14 @@
    ;;     tag             | name          |  sprite           |  to-hit | armor  | slots      | weight
    ;;     =============================================================================================================
    (list   't_leather_helm   "leather helm"    s_leather_helm      "0"      "1"      slot-helm    0)
+   (list   't_leather_helm_2 "+2 leather helm" s_leather_helm      "0"      "3"      slot-helm    0)
    (list   't_leather_helm_4 "+4 leather helm" s_leather_helm      "0"      "5"      slot-helm    0)
    (list   't_chain_coif     "chain coif"      s_chain_coif        "0"      "1d2"    slot-helm     1)
    (list   't_chain_coif_4   "+4 chain coif"   s_chain_coif        "0"      "1d2+4"  slot-helm     1)
    (list   't_iron_helm      "iron helm"       s_iron_helm         "0"      "1d3"    slot-helm     2)
    (list   't_iron_helm_4    "+4 iron helm"    s_iron_helm         "0"      "1d3+4"  slot-helm     2)
    (list   't_armor_leather  "leather armor"   s_leather_armor     "-1"     "1d4"    slot-armor    2)
+   (list   't_armor_leather_2 "+2 leather armor" s_leather_armor   "0"      "1d4+2"  slot-armor    2)
    (list   't_armor_leather_4 "+4 leather armor" s_leather_armor   "0"      "1d4+4"  slot-armor    2)
    (list   't_armor_chain    "chain armor"     s_chain_armor       "-2"     "1d6"    slot-armor    4)
    (list   't_armor_chain_4  "+4 chain armor"  s_chain_armor       "0"      "1d6+4"  slot-armor    4)

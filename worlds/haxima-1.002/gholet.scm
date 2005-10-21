@@ -58,21 +58,15 @@
   (say knpc "Aye, this is the easiest job I ever had."))
 
 (define (gholet-mean knpc kpc)
-  (say knpc "'Aven't seen old Meaney in ages. Last I 'eard 'e was running a poor 'ouse."))
+  (say knpc "'Aven't seen old Meaney in ages. "
+       "Last I 'eard 'e was running a poor 'ouse."))
 
 (define (gholet-jorn knpc kpc)
   (say knpc "Oh, now there's a right dangerous man, now guv'nah. "
        "Best let sleeping dogs lie, as I like to say. "))
 
 (define (gholet-dog knpc kpc)
-  (say knpc "But if the dog 'as your bone what you going to do, right?"))
-
-(define (gholet-bone knpc kpc)
-  (say knpc "You've gotta go into the doghouse after it, right?"))
-
-(define (gholet-dogh knpc kpc)
-  (say knpc "Even if the doghouse is up the river Glenfern without benefit of "
-       "the proverbial paddle!"))
+  (say knpc "From what I 'ear, that dog lies at the White Stag."))
 
 ;; Quest-related
 (define (gholet-ring knpc kpc)
@@ -95,13 +89,16 @@
                 (kern-obj-remove-from-inventory knpc t_skull_ring 1)
                 (kern-obj-add-to-inventory kpc t_skull_ring 1))))
 
-        (say knpc "Oh, that old thing? It got to itchin', I must be allergic to it. "
+        (say knpc "Oh, that old thing? It got to itchin', "
+             "I must be allergic to it. "
              "So I took it off. 'Ad to take the whole finger, off, actually, "
              "bit of a mess. Would you like to see it?")
         (if (yes? kpc)
             (begin
-              (say knpc "Don't blame you. Not at all. It's quite the curious item! "
-                   "But one good turn deserves another, don't you agree, guv'nah?")
+              (say knpc "Don't blame you. Not at all. "
+                   "It's quite the curious item! "
+                   "But one good turn deserves another, "
+                   "don't you agree, guv'nah?")
               (if (yes? kpc)
                   (begin
                     (say knpc "Of course you do! Youse a fair man, guv'nah! "
@@ -118,7 +115,8 @@
                     (say knpc "Piss off, then.")
                     (kern-conv-end))))
             (say knpc "Don't screw with me. "
-                 "I know you're 'ere for the ring or you wouldn't 'ave asked.")))))
+                 "I know you're 'ere for the ring or you wouldn't "
+                 "'ave asked.")))))
       
 (define gholet-conv
   (ifc basic-conv
@@ -141,12 +139,11 @@
        (method 'mean gholet-mean)
        (method 'jorn gholet-jorn)
        (method 'dog gholet-dog)
-       (method 'bone gholet-bone)
-       (method 'dogh gholet-dogh)
        ))
 
 (define (mk-gholet)
   (bind 
+   (kern-char-force-drop
    (kern-mk-char 
     'ch_my           ; tag
     "Gholet"             ; name
@@ -172,4 +169,5 @@
                ))
     nil              ; readied
     )
+   #t)
   (gholet-mk)))

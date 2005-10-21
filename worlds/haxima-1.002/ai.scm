@@ -107,7 +107,8 @@
           (or (ai-attack-target kchar ktarg)
               (ai-pathfind-to-target kchar ktarg))))))
 
-;; A spell-sword is an aggressive, selfish fighter that uses magic for combat.
+;;----------------------------------------------------------------------------
+;; spell-sword-ai -- aggressive, selfish fighter that uses magic for combat.
 (define (spell-sword-ai kchar)
   ;;(display "spell-sword-ai")(newline)
   (or (use-potion? kchar)
