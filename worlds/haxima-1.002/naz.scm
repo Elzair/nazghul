@@ -358,7 +358,7 @@
 
 (define (in-inventory? kchar ktype)
   (define (hasit? item inv)
-    ;;;(display "inv: ");;(display inv)(newline)
+    ;;(display "inv: ")(display inv)(newline)
     (cond ((null? inv) #f)
           ((eqv? item (car (car inv))) #t)
           (else (hasit? item (cdr inv)))))
@@ -371,6 +371,13 @@
           ((eqv? item (car (car inv))) (cdr (car inv)))
           (else (count-em item (cdr inv)))))
   (count-em ktype (kern-char-get-inventory kchar)))
+
+(define (any-in-inventory? kchar lst)
+  (foldr (lambda (v k)
+           (or v
+               (in-inventory? kchar k)))
+         #f
+         lst))
 
 (define (use-item-from-inventory-on-self kchar ktype)
   (kern-obj-remove-from-inventory kchar ktype 1)

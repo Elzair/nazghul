@@ -134,6 +134,10 @@
                (add-content 1 t_bow)
                (add-content 100 t_arrow)
                (add-content 1 t_dagger)
+               
+               ;; test:
+               (add-content 1 t_lich_skull)
+               (add-content 1 t_rune_k)
 
                (list 23 sulphorous_ash)
                (list 35 ginseng)
@@ -264,7 +268,7 @@
   ;(kern-obj-put-at kplayer (list p_gregors_hut 11 11)))
   ;(kern-log-msg "You notice a cave to the southwest."))
   ;(kern-obj-put-at kplayer (list p_slimy_cavern 13 2)
-  (kern-obj-put-at kplayer (list p_green_tower 49 33)))
+  (kern-obj-put-at kplayer (list p_necromancers_lair 9 9)))
   ;(kern-obj-put-at kplayer (list p_shard 18 65)))
   ;(kern-obj-put-at kplayer (list p_lost_halls_1 3 9)))
   ;(kern-obj-put-at kplayer (list p_troll_den 9 0)))                  

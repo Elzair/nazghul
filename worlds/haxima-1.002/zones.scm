@@ -208,3 +208,11 @@
 (define gt-ws-tbl1 (mk-zone 47 52 1 1))
 (define gt-jorn-bed (mk-zone 20 57 1 1))
 (define gt-jorn-hut (mk-zone 21 57 4 4))
+
+;;----------------------------------------------------------------------------
+;; Necromancer's Lair
+(define (mk-zone x y w h) (list 'p_necromancers_lair x y w h))
+(define nl-bed (mk-zone 15 3 1 1))
+(define nl-lab (mk-zone 3 15 3 4))
+(define nl-tbl (mk-zone 9 2 1 1))
+(define nl-lib (mk-zone 15 13 3 4))
