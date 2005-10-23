@@ -11,10 +11,10 @@
       "rr rr rr rr rr rr rr rr !! !! cc aa cc cc aa cc !! !! xx xx rr rr rr rr rr rr rr rr rr rr rr "
       "rr rr rr rr rr rr xx !! !! !! cc cc cc cc cc cc !! !! !! xx rr rr rr rr rr rr rr rr rr rr rr "
       "rr rr rr rr rr rr xx ,, ,, pp ,, ,, ,, ,, ,, ,, pp ,, ,, xx rr rr rr rr rr rr rr rr rr rr rr "
-      "rr rr rr rr rr rr xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, rr rr rr rr rr rr rr rr rr rr rr rr "
-      "rr rr rr rr rr rr xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, bb rr rr rr ,M ,E ,A ,T rr rr rr rr "
-      "rr rr rr rr rr rr xx ,, ,, pp ,, ,, ,, ,, ,, ,, pp ,, ,, rr rr rr rr ,, ,, ,, ,, rr rr rr rr "
-      "rr rr rr rr rr rr rr ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx rr rr rr ,, ,, ,, ,, rr rr rr rr "
+      "rr rr rr rr xx xx xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, rr rr rr rr rr rr rr rr rr rr rr rr "
+      "rr rr rr ,, ,, ,, xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, bb rr rr rr ,M ,E ,A ,T rr rr rr rr "
+      "rr rr rr ,, ,, ,, xx ,, ,, pp ,, ,, ,, ,, ,, ,, pp ,, ,, rr rr rr rr ,, ,, ,, ,, rr rr rr rr "
+      "rr rr xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx rr rr rr ,, ,, ,, ,, rr rr rr rr "
       "xx xx xx rr xx xx xx xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx rr rr ,, ,, ,, ,, ,, ,, rr rr rr rr "
       "rr ,S ,L ,A ,V ,E ,S xx rr xx ,, pp ,, ,, pp ,, rr xx xx rr rr ,, xx xx xx xx xx xx xx xx xx "
       "xx ,, ,, ,, ,, ,, ,, xx rr xx ,, ,, ,, ,, ,, ,, xx rr rr rr rr ,, xx ,F ,L ,E ,S ,H ,L ,Y xx "
@@ -41,7 +41,7 @@
 ;;----------------------------------------------------------------------------
 ;; NPC's
 ;;----------------------------------------------------------------------------
-
+(kern-load "silas.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Place
@@ -60,6 +60,9 @@
 
  (list ; objects
   (put (mk-ladder-down 'p_absalot 2 2) 11 27)
+
+  ;; npcs
+  (put (mk-silas) 9 9)
 
   ;; slave prison
   (put (kern-tag 'oa-cp1 (mk-portcullis)) 2 16)
@@ -107,7 +110,9 @@
   (put (mk-corpse) 25 9)
   (put (mk-corpse) 24 8)
 
-
+  ;; Silas's room
+  (put (mk-bed) 4 8)
+  
   )
 
  nil ; hooks

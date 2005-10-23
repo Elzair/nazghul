@@ -216,3 +216,14 @@
 (define nl-lab (mk-zone 3 15 3 4))
 (define nl-tbl (mk-zone 9 2 1 1))
 (define nl-lib (mk-zone 15 13 3 4))
+
+;;----------------------------------------------------------------------------
+;; Old Absalot
+(define (mk-zone x y w h) (list 'p_old_absalot x y w h))
+(define oa-bed1 (mk-zone 4 8 1 1))
+(define oa-tbl1 (mk-zone 25 17 1 1))
+(define oa-tbl2 (mk-zone 27 17 1 1))
+(define oa-tbl3 (mk-zone 26 19 1 1))
+(define oa-altar (mk-zone 10 2 6 3))
+(define oa-baths (mk-zone 25 23 5 7))
+(define oa-temple (mk-zone 10 5 6 6))

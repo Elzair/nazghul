@@ -379,6 +379,13 @@
          #f
          lst))
 
+(define (all-in-inventory? kchar lst)
+  (foldr (lambda (v k)
+           (and v
+               (in-inventory? kchar k)))
+         #t
+         lst))
+
 (define (use-item-from-inventory-on-self kchar ktype)
   (kern-obj-remove-from-inventory kchar ktype 1)
   ;;;(display "using")(newline)
