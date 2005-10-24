@@ -14,7 +14,7 @@
 (define silas-mealplace oa-tbl3)
 (define silas-workplace oa-temple)
 (define silas-leisureplace oa-baths)
-(kern-mk-sched 'sch_my
+(kern-mk-sched 'sch_silas
                (list 0  0 silas-bed          "sleeping")
                (list 7  0 silas-mealplace    "eating")
                (list 8  0 silas-workplace    "working")
@@ -337,7 +337,7 @@
     silas-lvl
     #f               ; dead
     'silas-conv         ; conv
-    sch_my           ; sched
+    sch_silas           ; sched
     nil              ; special ai
     nil              ; container
     nil              ; readied

@@ -29,7 +29,7 @@
    "The Enchanter has one of the Runes. Acquire "
    "it by any means necessary, and leave no one "
    "to tell the tale. Not even a ghost."
-   "--N")))
+   "--S")))
 
 
 ;;----------------------------------------------------------------------------

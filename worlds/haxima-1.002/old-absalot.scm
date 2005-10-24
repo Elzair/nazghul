@@ -6,15 +6,15 @@
  'm_old_absalot 31 31 pal_expanded
  (list
       "rr rr rr rr rr rr rr rr rr xx xx xx xx xx xx rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-      "rr rr rr rr rr rr rr rr xx xx ,T ,E ,M ,P ,L ,E xx xx rr rr rr rr rr rr rr rr rr rr rr rr rr "
-      "rr rr rr rr rr rr rr rr xx !! cc cc cc cc cc cc !! xx xx rr rr rr rr rr rr rr rr rr rr rr rr "
-      "rr rr rr rr rr rr rr rr !! !! cc aa cc cc aa cc !! !! xx xx rr rr rr rr rr rr rr rr rr rr rr "
-      "rr rr rr rr rr rr xx !! !! !! cc cc cc cc cc cc !! !! !! xx rr rr rr rr rr rr rr rr rr rr rr "
-      "rr rr rr rr rr rr xx ,, ,, pp ,, ,, ,, ,, ,, ,, pp ,, ,, xx rr rr rr rr rr rr rr rr rr rr rr "
-      "rr rr rr rr xx xx xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, rr rr rr rr rr rr rr rr rr rr rr rr "
-      "rr rr rr ,, ,, ,, xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, bb rr rr rr ,M ,E ,A ,T rr rr rr rr "
-      "rr rr rr ,, ,, ,, xx ,, ,, pp ,, ,, ,, ,, ,, ,, pp ,, ,, rr rr rr rr ,, ,, ,, ,, rr rr rr rr "
-      "rr rr xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx rr rr rr ,, ,, ,, ,, rr rr rr rr "
+      "rr rr rr rr rr rr rr rr xx xx ,T ,E ,M ,P ,L ,E xx xx rr rr rr ,, ,, ,, rr rr rr rr rr rr rr "
+      "rr rr rr rr rr rr rr rr xx !! cc cc cc cc cc cc !! xx xx rr rr ,, ,, ,, rr rr rr rr rr rr rr "
+      "rr rr rr rr rr rr rr rr !! !! cc aa cc cc aa cc !! !! xx xx rr ,, ,, ,, rr rr rr rr rr rr rr "
+      "rr rr rr rr rr rr xx !! !! !! cc cc cc cc cc cc !! !! !! xx rr ,, ,, ,, rr rr rr rr rr rr rr "
+      "rr rr rr rr rr rr xx ,, ,, pp ,, ,, ,, ,, ,, ,, pp ,, ,, xx rr ,, ,, ,, rr rr rr rr rr rr rr "
+      "rr rr rr rr xx xx xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, rr rr ,, rr rr rr rr rr rr rr rr rr "
+      "rr rr rr ,, ,, ,, xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, bb rr ,, rr ,M ,E ,A ,T rr rr rr rr "
+      "rr rr rr ,, ,, ,, ,, ,, ,, pp ,, ,, ,, ,, ,, ,, pp ,, ,, ,, ,, ,, rr ,, ,, ,, ,, rr rr rr rr "
+      "rr rr xx ,, ,, ,, xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx rr rr rr ,, ,, ,, ,, rr rr rr rr "
       "xx xx xx rr xx xx xx xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx rr rr ,, ,, ,, ,, ,, ,, rr rr rr rr "
       "rr ,S ,L ,A ,V ,E ,S xx rr xx ,, pp ,, ,, pp ,, rr xx xx rr rr ,, xx xx xx xx xx xx xx xx xx "
       "xx ,, ,, ,, ,, ,, ,, xx rr xx ,, ,, ,, ,, ,, ,, xx rr rr rr rr ,, xx ,F ,L ,E ,S ,H ,L ,Y xx "
@@ -42,6 +42,8 @@
 ;; NPC's
 ;;----------------------------------------------------------------------------
 (kern-load "silas.scm")
+(kern-load "dennis.scm")
+(kern-load "selene.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Place
@@ -61,8 +63,10 @@
  (list ; objects
   (put (mk-ladder-down 'p_absalot 2 2) 11 27)
 
-  ;; npcs
+  ;; npc's
   (put (mk-silas) 9 9)
+  (put (mk-dennis) 9 9)
+  (put (mk-selene) 9 9)
 
   ;; slave prison
   (put (kern-tag 'oa-cp1 (mk-portcullis)) 2 16)
@@ -74,7 +78,7 @@
   (put (kern-tag 'oa-ps2
                  (mk-connected-portcullis 'oa-ps1)) 4 19)
   (put (mk-lever 'oa-ps2) 2 20)
-  (put (mk-lever nil) 1 14)
+  (put (mk-lever 'oa-cp1) 1 14)
   (put (mk-lever 'oa-cp2) 2 14)
   (put (mk-lever 'oa-cp3) 5 14)
   (put (mk-lever 'oa-cp4) 6 14)
@@ -112,7 +116,16 @@
 
   ;; Silas's room
   (put (mk-bed) 4 8)
-  
+  (put (mk-locked-door) 6 8)
+
+  ;; Bunkroom
+  (put (mk-door) 19 8)
+  (put (mk-door) 21 6)
+  (put (mk-bed) 21 1)
+  (put (mk-bed) 23 1)
+  (put (mk-bed) 23 3)
+  (put (mk-bed) 23 5)
+
   )
 
  nil ; hooks
