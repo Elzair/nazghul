@@ -28,6 +28,7 @@
 
     (list  "^^"   t_mountains)          ;; "mountains"
     (list  "^."   t_mountains_v)        ;; "mountains" (non-LOS-blocking)
+    (list  "^~"   t_fake_mountains)
 
     (list  ",,"   t_flagstones)         ;; "flagstones"
     (list  "~,"   t_inv_wall)

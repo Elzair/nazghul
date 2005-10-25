@@ -31,6 +31,7 @@
    (list 't_hills           "hills"         pclass-forest    s_hills           1 0 nil)
    (list 't_mountains_v     "mountains"     pclass-mountains s_mountains       1 0 nil)
    (list 't_mountains       "mountains"     pclass-mountains s_mountains       0 0 nil)
+   (list 't_fake_mountains  "mountains"     pclass-grass     s_mountains       0 0 nil)
 
    (list 't_bog             "bog"           pclass-forest    s_bog             1 0 'terrain-effect-poison)
 

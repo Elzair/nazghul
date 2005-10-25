@@ -4,8 +4,8 @@
 (define silas-lvl 8)
 (define silas-species sp_human)
 (define silas-occ oc_wizard)
-(define shrine-path-x 23)
-(define shrine-path-y 23)
+(define shrine-path-x 97)
+(define shrine-path-y 5)
 
 ;;----------------------------------------------------------------------------
 ;; Schedule

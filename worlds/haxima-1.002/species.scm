@@ -320,6 +320,27 @@
                  nil               ; native spells
                  )
 
+(kern-mk-species 'sp_statue         ; tag
+                 "status"           ; name
+                 1 1 1           ; str/int/dex
+                 speed-human       ; speed
+                 1                ; vision radius
+                 mmode-walk        ; passability
+                 100000000         ; base hp
+                 0                 ; hp per level
+                 0                 ; base mp
+                 0                 ; mp per level
+                 nil          ; sleep sprite
+                 nil           ; natural (unarmed) weapon
+                 #t                ; visible
+                 sound-damage      ; damage sound
+                 sound-walking     ; walking sound
+                 nil               ; on-death closure
+                 0                 ; xpval
+                 nil               ; slots
+                 nil               ; native spells
+                 )
+
 ;;----------------------------------------------------------------------------
 ;; This list of the undead species is used by spells which affect the undead.
 ;;----------------------------------------------------------------------------
