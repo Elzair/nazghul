@@ -103,6 +103,7 @@
 (define faction-wood-spider 7)
 (define faction-outlaw      8)
 (define faction-gint        9)
+(define faction-demon      10)
 
 ;; Layers (must match object.h)
 (define layer-none       0)

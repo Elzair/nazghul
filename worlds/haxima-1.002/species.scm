@@ -22,6 +22,7 @@
 
 (define troll-speed         speed-human)
 (define gint-speed          speed-human)
+(define balron-speed        (* 2 speed-human))
 (define troll-base-hp       20)
 (define troll-critical-hp   10)
 (define troll-melee-weapon  t_hands)
@@ -298,6 +299,28 @@
                  gint-slots     ;; slots: hands
                  nil            ;; native spells: currently unused
                  )
+
+(kern-mk-species 'sp_balron        ; tag
+                 "balron"          ; name
+                 50 50 50          ; str/int/dex
+                 balron-speed      ; speed
+                 13                ; vision radius
+                 mmode-fly         ; passability
+                 100               ; base hp
+                 10                ; hp per level
+                 100               ; base mp
+                 10                ; mp per level
+                 s_asleep          ; sleep sprite
+                 t_horns           ; natural (unarmed) weapon
+                 #t                ; visible
+                 sound-damage      ; damage sound
+                 sound-walking     ; walking sound
+                 nil               ; on-death closure
+                 50                ; xpval
+                 gint-slots        ; slots
+                 nil               ; native spells
+                 )
+
 
 (kern-mk-species 'sp_bull         ; tag
                  "bull"           ; name

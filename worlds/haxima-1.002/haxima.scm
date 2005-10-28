@@ -212,17 +212,18 @@
 ;; are hostile, positive are friendly.
 ;; ----------------------------------------------------------------------------
 (kern-mk-dtable
- ;;           none play men orks accu mons troll spid outl gint
- (dtable-row   0    0    0   0   -1   -2   -2    -2    0   -2) ;; none
- (dtable-row   0    2    1  -2   -1   -2   -2    -2   -2   -2) ;; player
- (dtable-row  -1    1    2  -1   -2   -2   -2    -2   -2   -2) ;; men
- (dtable-row  -1   -2   -1   2   -1   -2    0    -2   -2   -1) ;; orks
- (dtable-row  -1   -1   -1  -1    2   -2   -1    -1   -2   -1) ;; accursed
- (dtable-row  -2   -2   -2  -2   -2    0    0     0   -2    0) ;; monsters
- (dtable-row  -2   -2   -2   0   -1   -1    2    -2   -2   -1) ;; hill trolls
- (dtable-row  -2   -2   -2  -2   -1    0   -2     2   -2   -1) ;; wood spiders
- (dtable-row   0   -2   -2  -2   -2   -2   -2    -2    0   -2) ;; outlaws
- (dtable-row  -2   -2   -2  -1   -1    0   -1    -1   -2    0) ;; gint
+ ;;           none play men orks accu mons troll spid outl gint demon
+ (dtable-row   0    0    0   0   -1   -2   -2    -2    0   -2   -2) ;; none
+ (dtable-row   0    2    1  -2   -1   -2   -2    -2   -2   -2   -2) ;; player
+ (dtable-row  -1    1    2  -1   -2   -2   -2    -2   -2   -2   -2) ;; men
+ (dtable-row  -1   -2   -1   2   -1   -2    0    -2   -2   -1   -2) ;; orks
+ (dtable-row  -1   -1   -1  -1    2   -2   -1    -1   -2   -1   -2) ;; accursed
+ (dtable-row  -2   -2   -2  -2   -2    0    0     0   -2    0   -2) ;; monsters
+ (dtable-row  -2   -2   -2   0   -1   -1    2    -2   -2   -1   -2) ;; hill trolls
+ (dtable-row  -2   -2   -2  -2   -1    0   -2     2   -2   -1   -2) ;; wood spiders
+ (dtable-row   0   -2   -2  -2   -2   -2   -2    -2    0   -2   -2) ;; outlaws
+ (dtable-row  -2   -2   -2  -1   -1    0   -1    -1   -2    0   -2) ;; gint
+ (dtable-row  -2   -2   -2  -2   -2   -2   -2    -2   -2   -2    2) ;; demon
  )
 
 

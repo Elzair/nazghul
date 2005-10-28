@@ -56,13 +56,14 @@
 ;;----------------------------------------------------------------------------
 ;; Conv
 ;;----------------------------------------------------------------------------
+(kern-load "nossifer.scm")
 
 ;; Basics...
 (define (ankh-hail knpc kpc)
   (let ((gob (kobj-gob-data knpc)))
     (if (not (ankh-done? gob))
         (begin
-          (say knpc "[A voice like a vibrating string fills your head] "
+          (say knpc "[A vibrating voice fills your head] "
                "At the dawn of the next age, how will the world be made?")
           (let ((resp (kern-conv-get-reply kpc)))
             (if (not (eq? resp 'anew))
@@ -76,16 +77,18 @@
                   (shake-map 15)
                   (ankh-done! gob)
                   (blit-map (loc-place (kern-obj-get-location knpc))
-                    0 0 31 31 m_hidden_city)))
+                    0 0 31 31 m_hidden_city)
+                  (kern-obj-put-at 
+                   (mk-nossifer)
+                   (mk-loc (loc-place (kern-obj-get-location knpc))
+                           nossifer-x
+                           nossifer-y))
+                  ))
             (kern-conv-end))))))
         
 
-(define (ankh-default knpc kpc)
-  (say knpc "[You hear a whispering like the wind in the void]"))
-
 (define ankh-conv
   (ifc basic-conv
-
        (method 'hail ankh-hail)
        ))
 
