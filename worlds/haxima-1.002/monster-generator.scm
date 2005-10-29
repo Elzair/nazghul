@@ -419,7 +419,7 @@
             (mk-treasure-heap (- n 1)))))
 
 ;; like mk-treasure-heap, but creates a list of (type . quantity) pairs
-;; suitable for inclusion in a chest or corpse
+;; suitable for inclusion in a corpse
 (define (mk-treasure-list n)
   (if (> n 0)
       (cons (pick-random-treasure)
