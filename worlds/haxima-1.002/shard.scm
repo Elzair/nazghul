@@ -471,7 +471,7 @@
  (list
 
   ;; dungeons
-  (put (mk-dungeon 'p_kurpolis_entrance 9 9) 39 75)
+  (put (mk-dungeon 'p_kurpolis_entrance 9 10) 39 75)
   (put (mk-dungeon 'p_mushroom_cave 7 12) 78 74)
   (put (mk-dungeon 'p_lost_halls_1 2 2) 82 20)
 

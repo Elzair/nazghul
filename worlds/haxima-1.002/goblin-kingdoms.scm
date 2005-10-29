@@ -21,7 +21,7 @@
       "rr rr rr rr xx ,, ,, ,, ,, ,, ,, ,, ,, ,, xx rr rr rr rr "
       "rr rr rr rr xx xx xx xx xx xx xx xx xx xx xx rr rr rr rr "
   )
- (put (mk-ladder-up 'p_shard 39 75) 9 9)
+ (put (mk-ladder-up 'p_shard 39 75) 9 10)
  (put (mk-door) 4 15)
  (put (mk-door) 4 3)
  (put (mk-door) 4 1)
