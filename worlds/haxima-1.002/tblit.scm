@@ -9,8 +9,15 @@
   ",, ,, ,,"
   ",, ,, ,,"
   ",, ,, ,,"
-  )
-)
+  ))
+
+(kern-mk-map
+ 'm_deck_section 3 3 pal_expanded
+ (list
+  "ee ee ee"
+  "ee ee ee"
+  "ee ee ee"
+  ))
 
 
 ;; A curried wrapper for kern-blit-map (note that place may legitimately be

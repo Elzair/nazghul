@@ -105,6 +105,7 @@
  (list ;; objects
   (put (mk-portcullis) 31 28)
   (put (mk-portcullis) 32 28)
+  )
  nil     ; hooks
  (list ;; edge entrances
   (list north 9 37)
