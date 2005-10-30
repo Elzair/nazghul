@@ -55,6 +55,7 @@
 (load "prison.scm")
 (load "ankh-shrine.scm")
 (load "kraken-lakes.scm")
+(load "forsaken-prison.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Characters
@@ -274,7 +275,7 @@
   )
 
 (define (simple-start kplayer)
-  (kern-obj-put-at kplayer (list p_gate_to_absalot 5 9)))
+  (kern-obj-put-at kplayer (list p_paladins_hold 8 17)))
       
 ;;----------------------------------------------------------------------------
 ;; To skip the extended start scene comment out this next line and uncomment

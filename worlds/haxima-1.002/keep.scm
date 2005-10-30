@@ -185,7 +185,7 @@
   "xx ,, ,, ,, ,, x! ,, ,, ,, ,, ,, ,, x! ,, ,, ,, ,, ,, xx "
   "x! ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, x! "
   "xx ,, ,, ,, ,, x! ,, ,, ,, ,, ,, ,, x! ,, ,, ,, ,, ,, xx "
-  "xx ,, ,, ,, ,, xx xx xx xx xx xx xx xx ,, ,, ,, ,, ,, xx "
+  "xx ,, ,, ,, ,, xx xx xx ,, xx xx xx xx ,, ,, ,, ,, ,, xx "
   "xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx "
   )
  (put (mk-portcullis) 14 9)
@@ -199,6 +199,7 @@
  (put (mk-bed) 15 17)
  (put (mk-bed) 17 17)
  (put (mk-bed) 17 15)
+ (put (mk-ladder-down 'p_forsaken_prison 9 9) 8 17)
  )
 
 (mk-dungeon-room
