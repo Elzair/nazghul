@@ -189,7 +189,7 @@
   "xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx "
   )
  (put (mk-portcullis) 14 9)
- (put (mk-portcullis) 8 8
+ (put (mk-portcullis) 8 8)
  (put (mk-portcullis) 8 10)
  (put (mk-door) 6 5)
  (put (mk-door) 6 12)
@@ -204,27 +204,78 @@
 (mk-dungeon-room
  'p_treasury "Treasury"
  (list
-  ",, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,,"
-  ",, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,,"
-  ",, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,,"
-  ",, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,,"
-  ",, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,,"
-  ",, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,,"
-  ",, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,,"
-  ",, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,,"
-  ",, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,,"
-  ",, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,,"
-  ",, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,,"
-  ",, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,,"
-  ",, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,,"
-  ",, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,,"
-  ",, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,,"
-  ",, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,,"
-  ",, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,,"
-  ",, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,,"
-  ",, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,,"
+  "xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx "
+  "xx ,, ,, ,, xx xx xx ,, ,, ,, ,, ,, xx xx xx ,, ,, ,, xx "
+  "xx ,, ,, ,, xx xx xx ,, ,, ,, ,, ,, xx xx xx ,, ,, ,, xx "
+  "xx ,, ,, ,, xx ,, ,, ,, ,, ,, ,, ,, ,, ,, xx ,, ,, ,, xx "
+  "xx xx xx xx xx ,, ,, ,, ,, ,, ,, ,, ,, ,, xx xx xx xx xx "
+  "xx xx xx ,, ,, ,, ,, ,, w+ xx w+ ,, ,, ,, ,, ,, xx xx xx "
+  "xx xx xx ,, ,, ,, ,, ,, w+ xx w+ ,, ,, ,, ,, ,, xx xx xx "
+  "xx ,, ,, ,, ,, ,, ,, ,, w+ xx w+ ,, ,, ,, ,, ,, ,, ,, xx "
+  "xx ,, ,, ,, ,, xx xx xx x! xx x! xx xx xx ,, ,, ,, ,, xx "
+  "xx ,, ,, ,, ,, xx xx xx xx ,, xx xx xx xx ,, ,, ,, ,, xx "
+  "xx ,, ,, ,, ,, xx xx xx x! xx x! xx xx xx ,, ,, ,, ,, xx "
+  "xx ,, ,, ,, ,, ,, ,, ,, xx xx xx ,, ,, ,, ,, ,, ,, ,, xx "
+  "xx xx xx ,, ,, ,, ,, ,, xx xx xx ,, ,, ,, ,, ,, xx xx xx "
+  "xx xx xx ,, ,, ,, ,, ,, xx xx xx ,, ,, ,, ,, ,, xx xx xx "
+  "xx xx xx xx xx ,, ,, ,, ,, ,, ,, ,, ,, ,, xx xx xx xx xx "
+  "xx ,, ,, ,, xx ,, ,, ,, ,, ,, ,, ,, ,, ,, xx ,, ,, ,, xx "
+  "xx ,, ,, ,, xx xx xx ,, ,, ,, ,, ,, xx xx xx ,, ,, ,, xx "
+  "xx ,, ,, ,, xx xx xx ,, ,, ,, ,, ,, xx xx xx ,, ,, ,, xx "
+  "xx xx xx xx xx xx xx ,, ,, ,, ,, ,, xx xx xx xx xx xx xx "
   )
-)
+ ;; four corner blitters and levers
+ (put (kern-tag 'tr-ba
+                (mk-tblitter 'p_treasury
+                             2 2
+                             3 3
+                             'm_hall_section)) 2 2)
+ (put (kern-tag 'tr-bb
+                (mk-tblitter 'p_treasury
+                             14 2
+                             3 3
+                             'm_hall_section)) 14 2)
+ (put (kern-tag 'tr-bc
+                (mk-tblitter 'p_treasury
+                             14 14
+                             3 3
+                             'm_hall_section)) 14 14)
+ (put (kern-tag 'tr-bd
+                (mk-tblitter 'p_treasury
+                             2 14
+                             3 3
+                             'm_hall_section)) 2 14)
+ (put (mk-lever 'tr-ba) 11 11)
+ (put (mk-lever 'tr-bb) 7 11)
+ (put (mk-lever 'tr-bc) 7 7)
+ (put (mk-lever 'tr-bd) 11 7)
+      
+ ;; four center blitters and levers
+ (put (kern-tag 'tr-be1
+                (mk-tblitter 'p_treasury
+                             9 5
+                             1 1
+                             'm_hall_section)) 9 5)
+ (put (kern-tag 'tr-be2
+                (mk-tblitter 'p_treasury
+                             9 6
+                             1 1
+                             'm_hall_section)) 9 6)
+ (put (kern-tag 'tr-be3
+                (mk-tblitter 'p_treasury
+                             9 7
+                             1 1
+                             'm_hall_section)) 9 7)
+ (put (kern-tag 'tr-be4
+                (mk-tblitter 'p_treasury
+                             9 8
+                             1 1
+                             'm_hall_section)) 9 8)
+ (put (mk-lever 'tr-be1) 1 1)
+ (put (mk-lever 'tr-be2) 17 1)
+ (put (mk-lever 'tr-be3) 17 17)
+ (put (mk-lever 'tr-be4) 1 17)
+ )
 
 (mk-dungeon-room
  'p_death_knights_hold "Death Knight's Hold"
@@ -256,4 +307,3 @@
  (list p_paladins_hold  p_great_hall p_death_knights_hold)
  (list nil              p_keep_crypt nil)
  )
-

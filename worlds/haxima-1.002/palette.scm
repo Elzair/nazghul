@@ -11,7 +11,7 @@
     ;; This constraint makes it easier to edit maps via search & replace,
     ;; and makes it easier to change the palette.
     ;; 
-    (list  "**"   t_stars)              ;; "stars"
+    (list  "xx"   t_wall)               ;; "wall"
     (list  "__"   t_deep)               ;; "deep water"
     (list  "_!"   t_sunlit_deep)               ;; "deep water"
     (list  "--"   t_shallow)            ;; "shallow water"
@@ -42,10 +42,10 @@
     (list  "!_"   t_deep_lava)
     (list  "&&"   t_fireplace)          ;; "fireplace"
 
-    (list  "xx"   t_wall)               ;; "wall"
     (list  "x."   t_wall_v)             ;; "wall"  (non-LOS-blocking)
     (list  "~x"   t_fake_wall)
 
+    (list  "**"   t_stars)              ;; "stars"
     (list  "??"   t_secret_door)        ;; "secret door"
     (list  "pp"   t_pillar)             ;; "pillar"
     (list  "~p"   t_false_pillar)

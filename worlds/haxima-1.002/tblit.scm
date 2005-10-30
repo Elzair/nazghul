@@ -4,11 +4,14 @@
 
 ;; Some convenient maps for blitting
 (kern-mk-map
- 'm_hall_section 3 1 pal_expanded
+ 'm_hall_section 3 3 pal_expanded
  (list
+  ",, ,, ,,"
+  ",, ,, ,,"
   ",, ,, ,,"
   )
 )
+
 
 ;; A curried wrapper for kern-blit-map (note that place may legitimately be
 ;; null during startup)
@@ -35,7 +38,7 @@
        (method 'init tblit-init)))
 
 ;; The kernel object type of a blitter
-(mk-obj-type 't_terrain_blitter "terrain blitter" '() layer-mechanism 
+(mk-obj-type 't_terrain_blitter '() '() layer-mechanism 
              tblit-ifc)
 
 ;; Constructor
