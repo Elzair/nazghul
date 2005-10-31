@@ -1,23 +1,23 @@
 
 (mk-dungeon-room
- 'p_warlock_circle "Warlock Circle"
+ 'p_hydra_fen "Hydra Fen"
  (list
   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
   "rr rr rr rr rr rr {{ {{ {{ {{ {{ {{ {{ rr rr rr rr rr rr "
   "rr rr rr rr rr {{ {{ {{ {{ {{ {{ {{ {{ {{ rr rr rr rr rr "
   "rr rr rr rr {{ {{ {{ {{ {{ {{ {{ {{ {{ {{ {{ rr rr rr rr "
-  "rr rr rr {{ {{ {{ {{ {{ .. .. .. {{ {{ {{ {{ {{ rr rr rr "
-  "rr rr {{ {{ {{ {{ .. .. .. .. .. .. .. {{ {{ {{ {{ rr rr "
-  "rr {{ {{ {{ {{ .. .. .. .. bb .. .. .. .. {{ {{ {{ {{ rr "
-  "rr {{ {{ {{ .. .. .. .. .. .. .. .. .. .. .. {{ {{ {{ rr "
-  "rr {{ {{ {{ .. .. bb .. .. .. .. .. bb .. .. {{ {{ {{ rr "
-  "rr {{ {{ {{ .. .. .. .. .. aa .. .. .. .. .. {{ {{ {{ rr "
-  "rr {{ {{ {{ .. .. .. .. .. .. .. .. .. .. .. {{ {{ {{ rr "
-  "rr {{ {{ {{ .. .. .. .. .. .. .. .. .. .. .. {{ {{ {{ rr "
-  "rr {{ {{ {{ {{ .. .. bb .. .. .. bb .. .. {{ {{ {{ {{ rr "
-  "rr rr {{ {{ {{ .. .. .. .. .. .. .. .. .. {{ {{ {{ rr rr "
-  "rr rr rr {{ {{ {{ .. .. .. .. .. .. .. {{ {{ {{ rr rr rr "
-  "rr rr rr rr {{ {{ {{ {{ .. .. .. {{ {{ {{ {{ rr rr rr rr "
+  "rr rr rr {{ {{ {{ {{ {{ %% %% %% {{ {{ {{ {{ {{ rr rr rr "
+  "rr rr {{ {{ {{ {{ %% %% %% %% %% %% %% {{ {{ {{ {{ rr rr "
+  "rr {{ {{ {{ {{ %% %% %% %% %% %% %% %% %% {{ {{ {{ {{ rr "
+  "rr {{ {{ {{ %% %% %% %% %% %% %% %% %% %% %% {{ {{ {{ rr "
+  "rr {{ {{ {{ %% %% %% %% %% %% %% %% %% %% %% {{ {{ {{ rr "
+  "rr {{ {{ {{ %% %% %% %% %% %% %% %% %% %% %% {{ {{ {{ rr "
+  "rr {{ {{ {{ %% %% %% %% %% %% %% %% %% %% %% {{ {{ {{ rr "
+  "rr {{ {{ {{ %% %% %% %% ee ee ee %% %% %% %% {{ {{ {{ rr "
+  "rr {{ {{ {{ %% %% %% oo ee ee ee oo %% %% {{ {{ {{ {{ rr "
+  "rr rr {{ {{ {{ %% %% %% ee ee ee %% %% %% {{ {{ {{ rr rr "
+  "rr rr rr {{ {{ {{ %% oo ee ee ee oo %% {{ {{ {{ rr rr rr "
+  "rr rr rr rr {{ {{ {{ {{ ee ee ee {{ {{ {{ {{ rr rr rr rr "
   "rr rr rr rr rr {{ {{ {{ .. .. .. {{ {{ {{ rr rr rr rr rr "
   "rr rr rr rr rr rr {{ {{ .. .. .. {{ {{ rr rr rr rr rr rr "
   "rr rr rr rr rr rr rr rr .. .. .. rr rr rr rr rr rr rr rr "
@@ -48,6 +48,7 @@
   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
   )
  (put (mk-door) 9 7)
+ (put (mk-ladder-up 'p_great_hall 9 6) 9 9)
  )
 
 (kern-mk-place 
@@ -115,4 +116,4 @@
 
 ;; tie rooms together
 (kern-place-set-neighbor south p_deepness p_pools)
-(kern-place-set-neighbor north p_deepness p_warlock_circle)
+(kern-place-set-neighbor north p_deepness p_hydra_fen)

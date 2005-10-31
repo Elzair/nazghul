@@ -56,6 +56,10 @@
 (load "ankh-shrine.scm")
 (load "kraken-lakes.scm")
 (load "forsaken-prison.scm")
+(load "old-mine.scm")
+(load "lich-tomb.scm")
+(load "altar-room.scm")
+(load "dank-cave.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Characters
@@ -275,7 +279,7 @@
   )
 
 (define (simple-start kplayer)
-  (kern-obj-put-at kplayer (list p_paladins_hold 8 17)))
+  (kern-obj-put-at kplayer (list p_dank_cave 9 2)))
       
 ;;----------------------------------------------------------------------------
 ;; To skip the extended start scene comment out this next line and uncomment

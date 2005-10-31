@@ -26,6 +26,8 @@
  ;; special mechanisms for turning corpses into skeletal warriors
  (put (kern-tag 'kc_kcma (mk-kcm (mk-rect 1 9 5 9))) 0 0)
  (put (kern-tag 'kc_kcmb (mk-kcm (mk-rect 13 9 5 9))) 0 0)
+
+ (put (mk-ladder-down 'p_lich_tomb 9 16) 9 10)
  
  ;; mundane mechs
  (put (mk-locked-door) 6 2)
@@ -163,6 +165,7 @@
   (put (mk-edge-gen 980 2 'is-crossbowman? 
                    'mk-at-level
                    (list 'mk-crossbowman "1d4+4" nil)) 0 9)
+  (put (mk-ladder-down 'p_pools 9 9) 9 6)
   )
 
 (mk-dungeon-room
@@ -305,6 +308,7 @@
  (put (mk-magic-locked-door) 14 5)
  (put (mk-magic-locked-door) 14 13)
  (put (mk-locked-door) 10 16)
+ (put (mk-ladder-down 'p_altar_room 17 17) 17 9)
 )
 
 (mk-dungeon-level 
