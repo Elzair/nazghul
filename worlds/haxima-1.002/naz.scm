@@ -148,7 +148,7 @@
                 (kern-party-get-members (kern-get-player))))
 
 (define (num-player-party-members)
-  (display "num-player-party-members")(newline)
+  ;;(display "num-player-party-members")(newline)
   (length (kern-party-get-members (kern-get-player))))
 
 ;; Check if an object is hostile toward a character
@@ -196,7 +196,6 @@
 
 ;; Check if an object is in the given range of the origin point
 (define (in-range? origin radius kobj)
-  ;;(display "in-range?")(newline)
   (<= (kern-get-distance origin
                          (kern-obj-get-location kobj))
       radius))
@@ -268,6 +267,7 @@
 ;; pathfind - use the built-in kernel call that uses cached paths and tries to
 ;; handle blocking mechanisms
 (define (pathfind kobj kdest)
+  (println "pathfind(" (kern-obj-get-name kobj) "," kdest ")")
   (and (kern-obj-is-being? kobj)
        (kern-being-pathfind-to kobj kdest)))
 
@@ -891,6 +891,67 @@ define (blit-maps kmap . blits)
          #f 
          (all-visible-hostiles kchar)))
 
+(define (use-heal-spell-on? kchar ktarg)
+  ;;(println "use-heal-spell-on?")
+  (or (and (wants-great-healing? ktarg)
+           (can-use-ability? great-heal-ability kchar)
+           (use-ability great-heal-ability kchar ktarg)
+           )
+      (and (wants-healing? ktarg)
+           (can-use-ability? heal-ability kchar)
+           (use-ability heal-ability kchar ktarg)
+           )))
+
+(define (use-heal-spell-on-ally? kchar)
+  ;;(println "use-heal-spell-on-ally?")
+  (and (or (can-use-ability? heal-ability kchar)
+           (can-use-ability? great-heal-ability kchar))
+       (foldr (lambda (val ktarg)
+                (or val
+                    (use-heal-spell-on? kchar ktarg)))
+              #f 
+              (all-in-range (kern-obj-get-location kchar)
+                            2
+                            (all-visible-allies kchar)))))
+
+(define (dump-char kchar)
+  (println "npc: " (kern-obj-get-name kchar)
+           "[" (kern-char-get-level kchar) "]"
+           " hp=" (kern-char-get-hp kchar) "/" (kern-char-get-max-hp kchar)
+           " mp=" (kern-char-get-mana kchar) "/" (kern-char-get-max-mana kchar)
+           " @[" (loc-x (kern-obj-get-location kchar)) 
+           "," (loc-y (kern-obj-get-location kchar)) "]"
+           ))
+           
+
+(define (get-nearest-patient kchar)
+  (let ((kloc (kern-obj-get-location kchar)))
+    (foldr (lambda (kpatient ktarg)
+             ;;(display "  checking ")(dump-char ktarg)
+             (if (and (wants-healing? ktarg)
+                      (or (null? kpatient)                      
+                          (< (kern-get-distance kloc (kern-obj-get-location ktarg))
+                             (kern-get-distance kloc (kern-obj-get-location kpatient)))))
+                 ktarg
+                 kpatient))
+           nil
+           (all-visible-allies kchar))))
+
+;; This is for medics. A patient is an ally that needs healing. If a patient is
+;; less than 2 tiles away then do nothing. If a patient is more than 2 tiles
+;; away then pathfind toward it.
+(define (move-toward-patient? kchar)
+  (let ((patient (get-nearest-patient kchar)))
+    (if (null? patient)
+        #f
+        (begin
+          ;;(display "selected ")(dump-char patient)
+          (if (in-range? (kern-obj-get-location kchar)
+                         2
+                         patient)
+              #f
+              (pathfind kchar (kern-obj-get-location patient)))))))
+
 (define (prompt-for-key)
   (kern-log-msg "<Hit any key to continue>")
   (kern-ui-waitkey))
@@ -911,7 +972,7 @@ define (blit-maps kmap . blits)
 
 ;; some standard healer services
 (define (heal-service kchar knpc)
-  (display "heal-service")(newline)
+  ;;(display "heal-service")(newline)
   (let ((hp (- (kern-char-get-max-hp kchar)
                (kern-char-get-hp kchar))))
     (if (> hp 0)
@@ -928,7 +989,7 @@ define (blit-maps kmap . blits)
           #f))))
   
 (define (cure-service kchar knpc)
-  (display "cure-service")(newline)
+  ;;(display "cure-service")(newline)
   (if (is-poisoned? kchar)
       (begin
         (say knpc "AN NOX! You are cured, "
@@ -942,7 +1003,7 @@ define (blit-maps kmap . blits)
         #f)))
 
 (define (resurrect-service kchar knpc)
-  (display "resurrect-service")(newline)
+  ;;(display "resurrect-service")(newline)
   (if (is-dead? kchar)
       (begin
        (say knpc "IN MANI CORP! Arise, "
@@ -1123,3 +1184,48 @@ define (blit-maps kmap . blits)
                                     give))
            give))))
            
+(define (println . args)
+  (map display args)
+  (newline))
+
+(define (get-off-bad-tile? kchar)
+  ;;(display "get-off-bad-tile")(newline)
+  
+  (define (is-bad-loc? loc)
+    ;;(display "is-bad-loc?")(newline)
+    (or (is-bad-terrain-at? loc)
+        (any-object-types-at? loc spider-bad-fields)))
+
+  (define (choose-good-tile tiles)
+    ;;(display "choose-good-tile")(newline)
+    (define (is-good-tile? tile)
+      ;;(display "is-good-tile?")(newline)
+      (and (passable? tile kchar)
+           (not (occupied? tile))
+           (not (is-bad-loc? tile))))
+    (if (null? tiles)
+        nil
+        (if (is-good-tile? (car tiles))
+            (car tiles)
+            (choose-good-tile (cdr tiles)))))
+
+  (define (move-to-good-tile)
+    ;;(display "move-to-good-tile")(newline)
+    (let* ((curloc (kern-obj-get-location kchar))
+           (tiles (get-4-neighboring-tiles curloc))
+           (newloc (choose-good-tile tiles)))
+      (if (null? newloc)
+          #f
+          (begin
+            ;;(display "moving")(newline)
+            (kern-obj-move kchar 
+                           (- (loc-x newloc) (loc-x curloc))
+                           (- (loc-y newloc) (loc-y curloc)))
+            #t))))
+
+  (and (is-bad-loc? (kern-obj-get-location kchar))
+       (move-to-good-tile)))
+
+(define (move-away-from-foes? kchar)
+  (println "move-away-from-foes?")
+  (evade kchar (all-visible-hostiles kchar)))

@@ -201,47 +201,9 @@
                            (not (eqv? x F_web_perm))))
           all-field-types))
 
-(define (get-off-bad-tile kchar)
-  ;;(display "get-off-bad-tile")(newline)
-  
-  (define (is-bad-loc? loc)
-    ;;(display "is-bad-loc?")(newline)
-    (or (is-bad-terrain-at? loc)
-        (any-object-types-at? loc spider-bad-fields)))
-
-  (define (choose-good-tile tiles)
-    ;;(display "choose-good-tile")(newline)
-    (define (is-good-tile? tile)
-      ;;(display "is-good-tile?")(newline)
-      (and (passable? tile kchar)
-           (not (occupied? tile))
-           (not (is-bad-loc? tile))))
-    (if (null? tiles)
-        nil
-        (if (is-good-tile? (car tiles))
-            (car tiles)
-            (choose-good-tile (cdr tiles)))))
-
-  (define (move-to-good-tile)
-    ;;(display "move-to-good-tile")(newline)
-    (let* ((curloc (kern-obj-get-location kchar))
-           (tiles (get-4-neighboring-tiles curloc))
-           (newloc (choose-good-tile tiles)))
-      (if (null? newloc)
-          #f
-          (begin
-            ;;(display "moving")(newline)
-            (kern-obj-move kchar 
-                           (- (loc-x newloc) (loc-x curloc))
-                           (- (loc-y newloc) (loc-y curloc)))
-            #t))))
-
-  (and (is-bad-loc? (kern-obj-get-location kchar))
-       (move-to-good-tile)))
-
 (define (spider-ai kspider)
   (spider-display "spider-ai")(spider-newline)
-  (or (get-off-bad-tile kspider)
+  (or (get-off-bad-tile? kspider)
       (let ((foes (all-visible-hostiles kspider)))
         (if (null? foes)
             (spider-no-hostiles kspider)

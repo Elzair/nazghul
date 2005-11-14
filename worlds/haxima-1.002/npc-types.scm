@@ -74,6 +74,31 @@
   (set-level (apply (eval ctor-tag) args) 
              (kern-dice-roll lvl-dice)))
 
+; (define (mk-npc-type name spec occ spr equip ai)
+;   (list spec occ spr equip))
+; (define (npc-type-name npct) (car npct))
+; (define (npc-type-spec npct) (cadr npct))
+; (define (npc-type-occ npct) (caddr npct))
+; (define (npc-type-spr npct) (cadddr npct))
+; (define (npc-type-equip npct) (list-ref npct 4))
+; (define (npc-type-ai npct) (list-ref npct 5))
+
+; (define (mk-npc npct faction lvl)
+;   (set-level
+;    (kern-char-arm-self
+;     (mk-stock-char
+;      (npc-type-name npct)
+;      (npc-type-spec npct)
+;      (npc-type-occ npct)
+;      (npc-type-spr npct)
+;      faction
+;      (npc-type-ai npct)
+;      (eval (npc-type-equip npct))
+;      nil
+;      nil
+;      nil))
+;    lvl))
+
 ;;----------------------------------------------------------------------------
 ;; NPC Type Constructors
 ;;----------------------------------------------------------------------------
@@ -129,54 +154,48 @@
     )))
 
 (define (mk-goblin-hunter)
-  (kern-char-arm-self
-   (mk-stock-char
-    " a goblin hunter" ;;........name
-    sp_goblin ;;........species
-    oc_archer ;;........occupation
-    s_orc ;;............sprite
-    faction-orks ;;.....faction
-    nil ;;..............custom ai (optional)
-    
-    ;;..................container (and contents, used to arm char)
-    (mk-chest
-     nil
-     (mk-contents (roll-to-add 95  "1"     t_dagger)
-                  (roll-to-add 100 "1"     t_bow)
-                  (roll-to-add 50  "1d20"  t_arrow)
-                  (roll-to-add 25  "1"     t_leather_helm)
-                  (roll-to-add 25  "1"     t_armor_leather)
-                  (roll-to-add 75  "1d3-1" t_heal_potion)))
+   (kern-char-arm-self
+    (mk-stock-char
+     " a goblin hunter" ;;........name
+     sp_goblin ;;........species
+     oc_archer ;;........occupation
+     s_orc ;;............sprite
+     faction-orks ;;.....faction
+     nil ;;..............custom ai (optional)
+     ;;..................container (and contents, used to arm char)
+     (mk-chest
+      nil
+      (mk-contents (roll-to-add 95  "1"     t_dagger)
+                   (roll-to-add 100 "1"     t_bow)
+                   (roll-to-add 50  "1d20"  t_arrow)
+                   (roll-to-add 25  "1"     t_leather_helm)
+                   (roll-to-add 25  "1"     t_armor_leather)
+                   (roll-to-add 75  "1d3-1" t_heal_potion)))
+     nil ;;...............readied arms (in addition to container contents)
+     nil ;;...............effects
+     nil ;;...............conversation
+     )))
 
-    nil ;;...............readied arms (in addition to container contents)
-    nil ;;...............effects
-    nil ;;...............conversation
-    )))
-
-(define (mk-goblin-shaman)
-  (kern-char-arm-self
-   (mk-stock-char
-    " a goblin hunter" ;;........name
-    sp_goblin ;;........species
-    oc_archer ;;........occupation
-    s_orc ;;............sprite
-    faction-orks ;;.....faction
-    nil ;;..............custom ai (optional)
-    
-    ;;..................container (and contents, used to arm char)
-    (mk-chest
-     nil
-     (mk-contents (roll-to-add 95  "1"     t_dagger)
-                  (roll-to-add 100 "1"     t_bow)
-                  (roll-to-add 50  "1d20"  t_arrow)
-                  (roll-to-add 25  "1"     t_leather_helm)
-                  (roll-to-add 25  "1"     t_armor_leather)
-                  (roll-to-add 75  "1d3-1" t_heal_potion)))
-
-    nil ;;...............readied arms (in addition to container contents)
-    nil ;;...............effects
-    nil ;;...............conversation
-    )))
+(define (mk-forest-goblin-shaman)
+   (kern-char-arm-self
+    (mk-stock-char
+     "a forest goblin shaman" ;;........name
+     sp_forest_goblin ;;........species
+     oc_wizard ;;........occupation
+     s_orc ;;............sprite
+     faction-orks ;;.....faction
+     'shaman-ai ;;..............custom ai (optional)
+     ;;..................container (and contents, used to arm char)
+     (mk-chest
+      (random-select (list nil 'burn 'lightning-trap))
+      (mk-contents (list 1 t_dagger)
+                   (roll-q "1d2-1" t_heal_potion)
+                   (roll-q "1d2+1" t_mana_potion)
+                   ))
+     nil ;;...............readied arms (in addition to container contents)
+     nil ;;...............effects
+     nil ;;...............conversation
+     )))
 
 
 (define (mk-skeletal-warrior)
@@ -589,3 +608,7 @@
 
 (define (is-gint? kchar)
   (is-species? kchar sp_gint))
+
+(define (is-forest-goblin-shaman? kchar)
+  (and (is-species? kchar sp_forest_goblin)
+       (is-occ? kchar oc_wizard)))

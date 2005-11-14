@@ -117,10 +117,11 @@
       (use-ranged-spell-on-foes? kchar)))
 
 
-(define (generic-ai2 kchar)
-  (or (exit-hazardous-tile? kchar)
+(define (shaman-ai kchar)
+  (display "shamain-ai ")(dump-char kchar)
+  (or (get-off-bad-tile? kchar)
       (use-potion? kchar)
-      (use-ability? kchar)
-      (move-toward-ally? kchar)
-      (move-toward-cover? kchar)
-      (evade-foe? kchar)))
+      (use-heal-spell-on-ally? kchar)
+      (move-toward-patient? kchar)
+      (spell-sword-ai kchar)
+      (move-away-from-foes? kchar)))

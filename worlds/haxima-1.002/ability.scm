@@ -18,7 +18,7 @@
            (ability-level-required ability))))
 
 (define (use-ability ability kchar . args)
-  (display "use-ability:")(display ability)
+  ;;(display "use-ability:")(display ability)
   (kern-char-dec-mana kchar (ability-mana-cost ability))
   (kern-obj-dec-ap kchar (ability-ap-cost ability))
   (apply (ability-proc ability) (cons kchar args)))
@@ -161,29 +161,20 @@
 ;; Ability declarations
 ;;----------------------------------------------------------------------------
 
-(define vampiric-touch (mk-ability "vampiric touch" 3 3 2 vampiric-touch-proc))
-(define disease-touch (mk-ability "disease touch" 6 6 1 disease-touch-proc))
-(define disarm (mk-ability "disarm" 4 2 2 disarm))
-(define heal-ability (mk-ability "heal" 1 1 1 heal-proc))
-(define great-heal-ability (mk-ability "great heal" 4 4 2 great-heal-proc))
-(define cast-fire-field (mk-ability "cast fire field" 3 3 2 
-                                    cast-fire-field-proc))
-(define cast-poison-field (mk-ability "cast poison field" 3 3 2 
-                                      cast-poison-field-proc))
-(define cast-sleep-field (mk-ability "cast sleep field" 3 3 2 
-                                     cast-sleep-field-proc))
-(define cast-energy-field (mk-ability "cast energy field" 4 4 2
-                                      cast-energy-field-proc))
-
-(define cast-magic-missile (mk-ability "cast magic missile" 1 1 1
-                                       cast-magic-missile-proc))
-(define cast-poison-missile (mk-ability "cast poison missile" 2 2 1
-                                       cast-poison-missile-proc))
-(define cast-fireball (mk-ability "cast fireball" 3 3 1
-                                       cast-fireball-proc))
-(define cast-kill (mk-ability "cast kill" 7 7 2
-                                       cast-kill-proc))
-(define web-spew (mk-ability "spew web" 4 4 2 web-spew-proc))
+(define vampiric-touch      (mk-ability "vampiric touch" 3 3 2 vampiric-touch-proc))
+(define disease-touch       (mk-ability "disease touch" 6 6 1 disease-touch-proc))
+(define disarm              (mk-ability "disarm" 4 2 2 disarm))
+(define heal-ability        (mk-ability "heal" 1 1 1 heal-proc))
+(define great-heal-ability  (mk-ability "great heal" 4 4 2 great-heal-proc))
+(define cast-fire-field     (mk-ability "cast fire field" 3 3 2 cast-fire-field-proc))
+(define cast-poison-field   (mk-ability "cast poison field" 3 3 2 cast-poison-field-proc))
+(define cast-sleep-field    (mk-ability "cast sleep field" 3 3 2 cast-sleep-field-proc))
+(define cast-energy-field   (mk-ability "cast energy field" 4 4 2 cast-energy-field-proc))
+(define cast-magic-missile  (mk-ability "cast magic missile" 1 1 1 cast-magic-missile-proc))
+(define cast-poison-missile (mk-ability "cast poison missile" 2 2 1 cast-poison-missile-proc))
+(define cast-fireball       (mk-ability "cast fireball" 3 3 1 cast-fireball-proc))
+(define cast-kill           (mk-ability "cast kill" 7 7 2 cast-kill-proc))
+(define web-spew            (mk-ability "spew web" 4 4 2 web-spew-proc))
 
 ;;----------------------------------------------------------------------------
 ;; Abilities listed by various attributes

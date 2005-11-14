@@ -108,21 +108,20 @@
                  (kern-obj-put-at (kern-mk-obj F_fire 1) 
                                   (mk-loc kplace x y))))))
 
-
 (define missile-arms-types
   (list
    ;;    ============================================================================================================
    ;;    tag           | name        | sprite        | damage | gifc
    ;;    ============================================================================================================
    (list 't_slingstone   "sling stone" s_sling_stone  "1d2"    nil)
-   (list 't_arrow        "arrow"       s_arrow        "1d6"    obj-ifc)
+   (list 't_arrow        "arrow"       s_arrow        "2d5"    obj-ifc)
    (list 't_bolt         "bolt"        s_bolt         "2d4"    obj-ifc)
    (list 't_warhead      "warhead"     s_warhead      "0"      warhead-ifc)
    (list 't_cannonball   "cannonball"  s_cannonball   "0"      obj-ifc)
    (list 't_poison_bolt  "poison bolt" s_poison_bolt  "1d6"    poison-bolt-ifc)
    (list 't_acid_bolt    "acid bolt"   s_acid_bolt    "1d3"    nil)
-   (list 't_fireball     "fireball"    s_fireball     "2d6"    nil)
-   (list 'deathball      "deathball"   s_deathball    "0"      deathball-ifc)
+   (list 't_fireball     "fireball"    s_fireball     "3d6"    nil)
+   (list 't_deathball    "deathball"   s_deathball    "0"      deathball-ifc)
    (list 't_stunball     "stunball"    s_projectile   "1d30"   stunball-ifc)
    ))
 

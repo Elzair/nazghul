@@ -142,6 +142,7 @@
                (add-content 1 t_bow)
                (add-content 100 t_arrow)
                (add-content 1 t_dagger)
+               (add-content 1 t_doom_staff)
                
                ;; test:
                (add-content 1 t_rune_k)

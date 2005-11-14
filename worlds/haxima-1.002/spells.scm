@@ -580,7 +580,7 @@
   result-ok)
 
 (define (xen-corp  caster)
-  (cast-missile-spell caster 6 deathball))
+  (cast-missile-spell caster 6 t_deathball))
 
 (define (in-mani-corp  caster)
   (let ((target (kern-ui-select-party-member)))
