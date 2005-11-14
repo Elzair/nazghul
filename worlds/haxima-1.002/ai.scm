@@ -116,3 +116,11 @@
       (use-melee-spell-on-foes? kchar)
       (use-ranged-spell-on-foes? kchar)))
 
+
+(define (generic-ai2 kchar)
+  (or (exit-hazardous-tile? kchar)
+      (use-potion? kchar)
+      (use-ability? kchar)
+      (move-toward-ally? kchar)
+      (move-toward-cover? kchar)
+      (evade-foe? kchar)))

@@ -20,6 +20,9 @@
                          slot-ring
                          slot-ring))
 
+(define humanoid humanoid-slots)
+(define giant gint-slots)
+
 (define troll-speed         speed-human)
 (define gint-speed          speed-human)
 (define balron-speed        (* 2 speed-human))
@@ -29,340 +32,35 @@
 (define troll-ranged-weapon t_thrown_boulder)
 (define troll-ripup-boulder-ap (* 2 troll-speed))
 
+(define (mk-species tag name str int dex spd con mag vr mmode weap morph xp sspr mvsnd)
+  (kern-mk-species tag name str int dex spd vr mmode 
+                   con 
+                   (max (round (/ con 10)) 1)
+                   mag 
+                   (max (round (/ mag 10)) 1)
+                   sspr
+                   weap #t sound-damage 
+                   mvsnd
+                   nil xp morph nil)) 
 
-(kern-mk-species 'sp_human         ; tag
-                 "human"           ; name
-                 10 10 10          ; str/int/dex
-                 speed-human       ; speed
-                 13                ; vision radius
-                 mmode-walk        ; passability
-                 20                ; base hp
-                 2                 ; hp per level
-                 0                 ; base mp
-                 1                 ; mp per level
-                 s_asleep          ; sleep sprite
-                 t_hands           ; natural (unarmed) weapon
-                 #t                ; visible
-                 sound-damage      ; damage sound
-                 sound-walking     ; walking sound
-                 nil               ; on-death closure
-                 2                 ; xpval
-                 humanoid-slots    ; slots
-                 nil               ; native spells
-                 )
+;;          tag              name           st in dx sp hp mp vr mmode       weap         morph    xp sspr           mvsnd           die
+(mk-species 'sp_human        "human"        10 10 10 1  20 10 13 mmode-walk  t_hands      humanoid 2  s_asleep       sound-walking   nil)
+(mk-species 'sp_nixie        "nyad"         10 10 10 1  20 10 13 mmode-fish  t_hands      humanoid 2  s_shoals       sound-splashing nil)
+(mk-species 'sp_ghast        "ghast"        10 10 10 1  10  3  8 mmode-phase t_hands      humanoid 2  s_asleep       nil             nil)
+(mk-species 'sp_goblin       "goblin"       12  8 12 1  15 20 14 mmode-walk  t_hands      humanoid 2  s_asleep       sound-walking   nil)
+(mk-species 'sp_insect       "insects"       1  1 18 2   3  0  4 mmode-hover t_stinger    nil      1  nil            nil             nil)
+(mk-species 'sp_yellow_slime "yellow slime"  4  4  4 1  15  8  6 mmode-walk  t_acid_spray nil      2  nil            sound-squishing nil)
+(mk-species 'sp_green_slime  "green slime"   2  2  2 1  10  0  5 mmode-walk  t_acid_spray nil      2  s_slime_asleep sound-squishing nil)
+(mk-species 'sp_skeleton     "skeleton"     12  8 12 1  22 10 10 mmode-walk  t_hands      nil      2  s_asleep       sound-walking   nil)
+(mk-species 'sp_snake        "snake"         2  2 14 1   5  0  6 mmode-walk  t_fangs      nil      1  s_asleep       sound-walking   nil)
+(mk-species 'sp_troll        "troll"        14  6 12 1  20  5 10 mmode-walk  t_hands      humanoid 3  s_asleep       sound-walking   nil)
+(mk-species 'sp_gint         "gint"         50  3  8 1 100  8 20 mmode-hover t_hands      giant    10 s_asleep       sound-walking   nil)
+(mk-species 'sp_balron       "balron"       50 50 50 1 100 100 13 mmode-fly  t_horns      giant    50 s_asleep       sound-walking   nil)
+(mk-species 'sp_bull         "bull"         20  1  5 1  40  0  6 mmode-walk  t_horns      nil      2  s_bull         sound-walking   nil)
+(mk-species 'sp_statue       "statue"        1  1  1 1 100000000 0 1 mmode-walk nil       nil      0  nil            nil             nil)
+(mk-species 'sp_spider       "spider"       12  6 14 2  10  1 10 mmode-crawl t_fangs      nil      2  s_asleep       sound-walking   'spider-killed)
+(mk-species 'sp_queen_spider "queen spider" 18  6 12 1  30 10 10 mmode-crawl t_fangs      nil      4  s_asleep       sound-walking   'queen-spider-killed)
 
-(kern-mk-species 'sp_nixie         ; tag
-                 "nixie"           ; name
-                 10 10 10          ; str/int/dex
-                 speed-human       ; speed
-                 9                 ; vision radius
-                 mmode-fish        ; passability
-                 20                ; base hp
-                 2                 ; hp per level
-                 0                 ; base mp
-                 1                 ; mp per level
-                 s_shoals          ; sleep sprite
-                 t_hands           ; natural (unarmed) weapon
-                 #t                ; visible
-                 sound-damage      ; damage sound
-                 sound-splashing   ; walking sound
-                 nil               ; on-death closure
-                 2                 ; xpval
-                 humanoid-slots    ; slots
-                 nil               ; native spells
-                 )
-
-(kern-mk-species 'sp_ghast         ; tag
-                 "ghast"           ; name
-                 10 10 10          ; str/int/dex
-                 speed-human       ; speed
-                 8                 ; vision radius
-                 mmode-phase       ; passability
-                 10 5              ; hp mod/mult
-                 3  1              ; mp mod/mult
-                 s_asleep          ; sleep sprite
-                 t_hands           ; natural (unarmed) weapon
-                 #f                ; visible
-                 sound-damage      ; damage sound
-                 nil               ; walking sound
-                 nil               ; on-death closure
-                 2                 ; xpval
-                 humanoid-slots    ; slots
-                 nil               ; native spells FIXME!!!!
-                 )
-
-(kern-mk-species 'sp_goblin        ; tag
-                 "goblin"          ; name
-                 12  8 12          ; str/int/dex
-                 speed-human       ; speed
-                 14                ; vision radius
-                 mmode-walk        ; passability
-                 15 2              ; hp mod/mult
-                 0 1               ; mp mod/mult
-                 s_asleep          ; sleep sprite
-                 t_hands           ; natural (unarmed) weapon
-                 #t                ; visible
-                 sound-damage      ; damage sound
-                 sound-walking     ; walking sound
-                 nil               ; on-death closure
-                 2                 ; xpval
-                 humanoid-slots    ; slots
-                 nil               ; native spells
-                 )
-
-(kern-mk-species 'sp_insect        ; tag
-                 "insect swarm"    ; name
-                 1  1  18          ; str/int/dex
-                 speed-insect      ; speed
-                 4                 ; vision radius
-                 mmode-hover       ; passability
-                 3 1               ; hp mod/mult
-                 0 0               ; mp mod/mult
-                 nil               ; sleep sprite
-                 t_stinger         ; natural (unarmed) weapon
-                 #t                ; visible
-                 sound-damage      ; damage sound
-                 nil               ; walking sound
-                 nil               ; on-death closure
-                 1                 ; xpval
-                 nil               ; slots
-                 nil               ; native spells
-                 )
-
-(kern-mk-species 'sp_yellow_slime      ; tag
-                 "yellow slime"        ; name
-                 4 4 4                 ; str/int/dex
-                 speed-yellow-slime    ; speed
-                 6                     ; vision radius
-                 mmode-walk            ; pmask
-                 15 1                  ; hp mod/mult
-                 8 0                   ; mp mod/mult
-                 s_yellow_slime_asleep ; sleep sprite
-                 t_acid_spray          ; unarmed weapon
-                 #t                    ; visible
-                 sound-damage          ; damage sound
-                 sound-squishing       ; walking sound
-                 nil               ; on-death closure
-                 2                     ; xpval
-                 nil                   ; slots
-                 ;; native spells
-                 (list 
-                  "KXN"
-                  )
-                 )
-
-(kern-mk-species 'sp_green_slime       ; tag
-                 "green slime"         ; name
-                 2 2 2                 ; str/int/dex
-                 speed-yellow-slime    ; speed
-                 5                     ; vision radius
-                 mmode-walk            ; pmask
-                 10 1                  ; hp mod/mult
-                 0 0                   ; mp mod/mult
-                 s_slime_asleep        ; sleep sprite
-                 t_acid_spray          ; unarmed weapon
-                 #t                    ; visible
-                 sound-damage          ; damage sound
-                 sound-squishing       ; walking sound
-                 nil                   ; on-death closure
-                 1                     ; xpval
-                 nil                   ; slots
-                 nil                   ; native spells
-                 )
-
-(kern-mk-species 'sp_skeleton      ; tag
-                 "skeleton"        ; name
-                 12 8 12          ; str/int/dex
-                 speed-human       ; speed
-                 10                ; vision radius
-                 mmode-walk        ; passability
-                 22 2              ; hp mod/mult
-                 1  1              ; mp mod/mult
-                 s_asleep          ; sleep sprite
-                 t_hands           ; natural (unarmed) weapon
-                 #t                ; visible
-                 sound-damage      ; damage sound
-                 sound-walking     ; walking sound
-                 nil               ; on-death closure
-                 2                 ; xpval
-                 humanoid-slots    ; slots
-                 nil               ; native spells
-                 )
-
-(kern-mk-species 'sp_snake         ; tag
-                 "snake"           ; name
-                 2 2 14             ; str/int/dex
-                 speed-human       ; speed
-                 6                 ; vision radius
-                 mmode-walk        ; passability
-                 5 1               ; hp mod/mult
-                 0 0               ; mp mod/mult
-                 nil               ; sleep sprite
-                 t_fangs           ; natural (unarmed) weapon
-                 #t                ; visible
-                 sound-damage      ; damage sound
-                 sound-walking     ; walking sound
-                 nil               ; on-death closure
-                 1                 ; xpval
-                 nil               ; slots
-                 nil               ; native spells FIXME!!!!
-                 )
-
-(kern-mk-species 'sp_spider      ;; tag: script variable name
-                 "spider"        ;; name: used to display name in the UI
-                 12             ;; strength: limits armament weight
-                 6              ;; intelligence: (just reported in stats)
-                 14              ;; dexterity: used to avoid traps on chests
-                 speed-insect   ;; speed: action points per turn
-                 10              ;; vision radius: in tiles
-                 mmode-crawl    ;; movement mode
-                 10             ;; base hp: hit points at level zero
-                 4              ;; hp multiplier: extra hp per level
-                 1              ;; base mp: mana points at level zero
-                 1              ;; mp multiplier: extra mana points per level
-                 s_asleep       ;; sleep sprite
-                 t_hands        ;; natural weapon: used when unarmed
-                 #t             ;; visible: can be seen
-                 sound-damage   ;; damage sound
-                 sound-walking  ;; walking sound
-                 'spider-killed ;; on-death
-                 1              ;; xpval
-                 humanoid-slots ;; slots: hands
-                 nil            ;; native spells: currently unused
-                 )
-
-(kern-mk-species 'sp_queen_spider ;; tag: script variable name
-                 "queen spider"   ;; name: used to display name in the UI
-                 18             ;; strength: limits armament weight
-                 6              ;; intelligence: (just reported in stats)
-                 12             ;; dexterity: used to avoid traps on chests
-                 speed-human    ;; speed: action points per turn
-                 10             ;; vision radius: in tiles
-                 mmode-crawl    ;; movement mode
-                 30             ;; base hp: hit points at level zero
-                 4              ;; hp multiplier: extra hp per level
-                 0              ;; base mp: mana points at level zero
-                 0              ;; mp multiplier: extra mana points per level
-                 s_asleep       ;; sleep sprite
-                 t_hands        ;; natural weapon: used when unarmed
-                 #t             ;; visible: can be seen
-                 sound-damage   ;; damage sound
-                 sound-walking  ;; walking sound
-                 'queen-spider-killed ;; on-death closure
-                 4              ;; xpval
-                 humanoid-slots ;; slots: hands
-                 nil            ;; native spells: currently unused
-                 )
-
-(kern-mk-species 'sp_troll      ;; tag: script variable name
-                 "troll"        ;; name: used to display name in the UI
-                 14             ;; strength: limits armament weight
-                 6              ;; intelligence: (just reported in stats)
-                 12             ;; dexterity: used to avoid traps on chests
-                 troll-speed    ;; speed: action points per turn
-                 10             ;; vision radius: in tiles
-                 mmode-walk     ;; movement mode
-                 troll-base-hp  ;; base hp: hit points at level zero
-                 2              ;; hp multiplier: extra hp per level
-                 0              ;; base mp: mana points at level zero
-                 0              ;; mp multiplier: extra mana points per level
-                 s_asleep       ;; sleep sprite
-                 t_hands        ;; natural weapon: used when unarmed
-                 #t             ;; visible: can be seen
-                 sound-damage   ;; damage sound
-                 sound-walking  ;; walking sound
-                 nil            ;; on-death closure
-                 3              ;; xpval
-                 humanoid-slots ;; slots: hands
-                 nil            ;; native spells: currently unused
-                 )
-
-(kern-mk-species 'sp_gint       ;; tag: script variable name
-                 "gint"         ;; name: used to display name in the UI
-                 50             ;; strength: limits armament weight
-                 3              ;; intelligence: (just reported in stats)
-                 8              ;; dexterity: used to avoid traps on chests
-                 gint-speed     ;; speed: action points per turn
-                 20             ;; vision radius: in tiles
-                 mmode-hover    ;; movement mode: can cross shoals and rocks
-                 100            ;; base hp: hit points at level zero
-                 10             ;; hp multiplier: extra hp per level
-                 0              ;; base mp: mana points at level zero
-                 0              ;; mp multiplier: extra mana points per level
-                 s_asleep       ;; sleep sprite
-                 t_hands        ;; natural weapon: used when unarmed
-                 #t             ;; visible: can be seen
-                 sound-damage   ;; damage sound
-                 sound-walking  ;; walking sound
-                 nil            ;; on-death closure
-                 10             ;; xpval
-                 gint-slots     ;; slots: hands
-                 nil            ;; native spells: currently unused
-                 )
-
-(kern-mk-species 'sp_balron        ; tag
-                 "balron"          ; name
-                 50 50 50          ; str/int/dex
-                 balron-speed      ; speed
-                 13                ; vision radius
-                 mmode-fly         ; passability
-                 100               ; base hp
-                 10                ; hp per level
-                 100               ; base mp
-                 10                ; mp per level
-                 s_asleep          ; sleep sprite
-                 t_horns           ; natural (unarmed) weapon
-                 #t                ; visible
-                 sound-damage      ; damage sound
-                 sound-walking     ; walking sound
-                 nil               ; on-death closure
-                 50                ; xpval
-                 gint-slots        ; slots
-                 nil               ; native spells
-                 )
-
-
-(kern-mk-species 'sp_bull         ; tag
-                 "bull"           ; name
-                 20 1 5          ; str/int/dex
-                 speed-human       ; speed
-                 6                ; vision radius
-                 mmode-walk        ; passability
-                 40                ; base hp
-                 2                 ; hp per level
-                 0                 ; base mp
-                 0                 ; mp per level
-                 s_bull          ; sleep sprite
-                 t_horns           ; natural (unarmed) weapon
-                 #t                ; visible
-                 sound-damage      ; damage sound
-                 sound-walking     ; walking sound
-                 nil               ; on-death closure
-                 2                 ; xpval
-                 nil               ; slots
-                 nil               ; native spells
-                 )
-
-(kern-mk-species 'sp_statue         ; tag
-                 "status"           ; name
-                 1 1 1           ; str/int/dex
-                 speed-human       ; speed
-                 1                ; vision radius
-                 mmode-walk        ; passability
-                 100000000         ; base hp
-                 0                 ; hp per level
-                 0                 ; base mp
-                 0                 ; mp per level
-                 nil          ; sleep sprite
-                 nil           ; natural (unarmed) weapon
-                 #t                ; visible
-                 sound-damage      ; damage sound
-                 sound-walking     ; walking sound
-                 nil               ; on-death closure
-                 0                 ; xpval
-                 nil               ; slots
-                 nil               ; native spells
-                 )
 
 ;;----------------------------------------------------------------------------
 ;; This list of the undead species is used by spells which affect the undead.

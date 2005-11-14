@@ -3,7 +3,7 @@
 ;;----------------------------------------------------------------------------
 (define jorn-lvl 5)
 (define jorn-species sp_human)
-(define jorn-occ oc_bandit)
+(define jorn-occ oc_wrogue)
 
 ;;----------------------------------------------------------------------------
 ;; Schedule
