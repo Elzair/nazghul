@@ -220,9 +220,6 @@
   (troll-display "troll-no-hostiles")(troll-newline)
   (troll-wander ktroll))
 
-(define (troll-taunted? ktroll)
-  (car (kobj-gob-data ktroll)))
-
 (define troll-taunts
   (list
    "[primal howl]"
@@ -232,7 +229,7 @@
 
 (define (troll-taunt ktroll ktarg)
   (taunt ktroll ktarg troll-taunts)
-  (set-car! (kobj-gob-data ktroll) #t))
+  (npcg-set-taunted! (gob ktroll) #t))
 
 (define (troll-hostiles ktroll foes)
   (troll-display "troll-hostiles")(troll-newline)
@@ -244,7 +241,7 @@
         (troll-display "troll-ai:melee-targs=")
         (troll-display melee-targs)
         (troll-newline)
-        (or (troll-taunted? ktroll)
+        (or (npcg-taunted? (gob ktroll))
             (troll-taunt ktroll (car foes)))
         (if (null? melee-targs)
             (if (troll-has-ranged-weapon? ktroll)

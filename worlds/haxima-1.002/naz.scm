@@ -247,6 +247,20 @@
       (foldr (lambda (a b) (if (< (distance kobj a) (distance kobj b)) a b))
              (car klist) (cdr klist))))
 
+;; Inefficient code to find nearest location from a list
+(define (nearest-loc kobj klist)
+  (println "nearest-loc: " klist)
+  (if (null? klist) 
+      nil
+      (let ((kloc (kern-obj-get-location kobj)))
+        (foldr (lambda (a b) 
+                 (if (< (loc-city-block-distance kloc a) 
+                        (loc-city-block-distance kloc b)) 
+                     a 
+                     b))
+               (car klist) 
+               (cdr klist)))))
+
 ;; Move an object one step along a path to a destination.
 (define (old-pathfind kobj dest)
   ;;;;(display "pathfind")(newline)
@@ -341,6 +355,34 @@
         nil))
   (search-rect kplace x y w h check))
 
+(define (on-terrain? kobj kter)
+  (eqv? kter (kern-place-get-terrain (kern-obj-get-location kobj))))
+
+(define (all-visible-terrain-of-type kobj kter)
+  (filter (lambda (x)
+            (eqv? kter
+                  (kern-place-get-terrain x)))
+          (kern-being-get-visible-tiles kobj)))
+
+(define (find-nearest-visible-terrain-of-type kobj kter)
+  (nearest-loc kobj (all-visible-terrain-of-type kobj kter)))
+    
+(define (hidden? kchar)
+  (println "hidden?")
+  ;; Just check if the 8 neighbors are all los-blocking
+  (let ((loc (kern-obj-get-location kchar)))
+    (foldr-rect (loc-place loc)
+                (- (loc-x loc) 1) (- (loc-y loc) 1)
+                3 3
+               (lambda (val neighbor)
+                 (println neighbor " neighbor? " (equal? neighbor loc)
+                          " blocks? " (kern-place-blocks-los? neighbor))
+                 (and val
+                      (or (eq? neighbor loc)
+                          (kern-place-blocks-los? neighbor))))
+                #t
+                )))
+  
 ;;----------------------------------------------------------------------------
 ;; find-objects -- return a list of locations with the given object on them
 ;;----------------------------------------------------------------------------
@@ -915,13 +957,16 @@ define (blit-maps kmap . blits)
                             (all-visible-allies kchar)))))
 
 (define (dump-char kchar)
-  (println "npc: " (kern-obj-get-name kchar)
-           "[" (kern-char-get-level kchar) "]"
-           " hp=" (kern-char-get-hp kchar) "/" (kern-char-get-max-hp kchar)
-           " mp=" (kern-char-get-mana kchar) "/" (kern-char-get-max-mana kchar)
-           " @[" (loc-x (kern-obj-get-location kchar)) 
-           "," (loc-y (kern-obj-get-location kchar)) "]"
-           ))
+  (if (null? kchar)
+      (println "nil")
+      (begin
+        (println "npc: " (kern-obj-get-name kchar)
+                 "[" (kern-char-get-level kchar) "]"
+                 " hp=" (kern-char-get-hp kchar) "/" (kern-char-get-max-hp kchar)
+                 " mp=" (kern-char-get-mana kchar) "/" (kern-char-get-max-mana kchar)
+                 " @[" (loc-x (kern-obj-get-location kchar)) 
+                 "," (loc-y (kern-obj-get-location kchar)) "]"
+                 ))))
            
 
 (define (get-nearest-patient kchar)

@@ -18,6 +18,38 @@
 (define (loc-sum a b) (loc-op a b +))
 (define (loc-distance a b)
   (kern-get-distance a b))
+(define (loc-city-block-distance a b)
+  (+ (abs (- (loc-x a) 
+             (loc-x b)))
+     (abs (- (loc-y a)
+             (loc-y b)))))
+
+
+(define (loc-addx loc dx)
+  (mk-loc (loc-place loc) (+ (loc-x loc) dx) (loc-y loc)))
+
+(define (loc-addy loc dy)
+  (mk-loc (loc-place loc) (loc-x loc) (+ (loc-y loc) dy)))
+
+;; loc-opposite-x -- return a list of locs AWAY from the given loc in the given
+;; x direction
+(define (loc-opposite-x loc dx)
+  (if (= 0 dx)
+      nil
+      (list (loc-addx loc dx)
+            (loc-addx (loc-addy loc -1) dx)
+            (loc-addx (loc-addy loc  1) dx))))
+
+;; loc-opposite-y -- return a list of locs AWAY from the given loc in the given
+;; y direction
+(define (loc-opposite-y loc dy)
+  (if (= 0 dy)
+      nil
+      (list (loc-addy loc dy)
+            (loc-addy (loc-addx loc -1) dy)
+            (loc-addy (loc-addx loc  1) dy))))
+
+
 
 (define (loc-diff a b)
   (let ((place (loc-place a)))

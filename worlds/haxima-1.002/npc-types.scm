@@ -64,40 +64,50 @@
 (define (mk-readied-items . items)
   items)
 
-(define (mk-bandit-gob)
-  (list #f))
-
-(define (mk-troll-gob)
-  (list #f))
-
 (define (mk-at-level ctor-tag lvl-dice . args)
   (set-level (apply (eval ctor-tag) args) 
              (kern-dice-roll lvl-dice)))
 
-; (define (mk-npc-type name spec occ spr equip ai)
-;   (list spec occ spr equip))
-; (define (npc-type-name npct) (car npct))
-; (define (npc-type-spec npct) (cadr npct))
-; (define (npc-type-occ npct) (caddr npct))
-; (define (npc-type-spr npct) (cadddr npct))
-; (define (npc-type-equip npct) (list-ref npct 4))
-; (define (npc-type-ai npct) (list-ref npct 5))
+;; npcg -- generic NPC gob
+(define (npcg-mk) (list #f))
+(define (npcg-taunted? npc) (car npc))
+(define (npcg-set-taunted! npc val) (set-car! npc val))
 
-; (define (mk-npc npct faction lvl)
-;   (set-level
-;    (kern-char-arm-self
-;     (mk-stock-char
-;      (npc-type-name npct)
-;      (npc-type-spec npct)
-;      (npc-type-occ npct)
-;      (npc-type-spr npct)
-;      faction
-;      (npc-type-ai npct)
-;      (eval (npc-type-equip npct))
-;      nil
-;      nil
-;      nil))
-;    lvl))
+;; eqp -- equipment package
+(define (mk-eqp traps contents)
+  (cons traps contents))
+(define (eqp-traps eqp) (car eqp))
+(define (eqp-contents eqp) (cdr eqp))
+(define (eqp-generate eqp)
+  (mk-chest
+   (random-select (eqp-traps))
+   (eval (eqp-contents eqp))))
+
+;; npct -- NPC type
+(define (mk-npct name spec occ spr eqp ai)
+  (list spec occ spr equip ai))
+ (define (npct-name npct) (car npct))
+ (define (npct-spec npct) (cadr npct))
+ (define (npct-occ npct) (caddr npct))
+ (define (npct-spr npct) (cadddr npct))
+ (define (npct-eqp npct) (list-ref npct 4))
+ (define (npct-ai npct) (list-ref npct 5))
+
+(define (mk-npc npct faction lvl)
+  (set-level
+   (kern-char-arm-self
+    (mk-stock-char
+     (npct-name npct)
+     (npct-spec npct)
+     (npct-occ npct)
+     (npct-spr npct)
+     faction
+     (npct-ai npct)
+     (eqp-generate (npct-eqp))
+     nil
+     nil
+     nil))
+   lvl))
 
 ;;----------------------------------------------------------------------------
 ;; NPC Type Constructors
@@ -191,6 +201,50 @@
       (mk-contents (list 1 t_dagger)
                    (roll-q "1d2-1" t_heal_potion)
                    (roll-q "1d2+1" t_mana_potion)
+                   ))
+     nil ;;...............readied arms (in addition to container contents)
+     nil ;;...............effects
+     nil ;;...............conversation
+     )))
+
+(define (mk-forest-goblin-hunter)
+   (kern-char-arm-self
+    (mk-stock-char
+     "a forest goblin hunter" ;;........name
+     sp_forest_goblin ;;........species
+     oc_warrior ;;........occupation
+     s_orc ;;............sprite
+     faction-orks ;;.....faction
+     'forest-goblin-hunter-ai ;;..............custom ai (optional)
+     ;;..................container (and contents, used to arm char)
+     (mk-chest
+      (random-select (list nil 'spike-trap))
+      (mk-contents (list 1 t_dagger)
+                   (list 1 t_bow)
+                   (list 10 t_arrow)
+                   ))
+     nil ;;...............readied arms (in addition to container contents)
+     nil ;;...............effects
+     nil ;;...............conversation
+     )))
+
+(define (mk-forest-goblin-stalker)
+   (kern-char-arm-self
+    (mk-stock-char
+     "a forest goblin stalker" ;;........name
+     sp_forest_goblin ;;........species
+     oc_warrior ;;........occupation
+     s_orc ;;............sprite
+     faction-orks ;;.....faction
+     'forest-goblin-hunter-ai ;;..............custom ai (optional)
+     ;;..................container (and contents, used to arm char)
+     (mk-chest
+      (random-select (list nil 'spike-trap))
+      (mk-contents (list 1 t_dagger)
+                   (list 1 t_dagger)
+                   (list 1 t_armor_leather)
+                   (list 1 t_leather_helm)
+                   (roll-q "1d2-1" t_heal_potion)
                    ))
      nil ;;...............readied arms (in addition to container contents)
      nil ;;...............effects
@@ -506,7 +560,7 @@
      nil ;;...............effects
      nil ;;...............conversation
      ))
-   (mk-bandit-gob)))
+   (npcg-mk)))
 
 (define (mk-troll)
   (bind
@@ -530,7 +584,7 @@
     nil ;;......................effects
     nil ;;...............conversation
     )
-   (mk-troll-gob)))
+   (npcg-mk)))
 
 (define (mk-gint)
   (kern-char-arm-self
@@ -612,3 +666,12 @@
 (define (is-forest-goblin-shaman? kchar)
   (and (is-species? kchar sp_forest_goblin)
        (is-occ? kchar oc_wizard)))
+
+(define (is-forest-goblin-hunter? kchar)
+  (and (is-species? kchar sp_forest_goblin)
+       (is-occ? kchar oc_warrior)))
+
+;; fixme -- same as forest-goblin-hunter above
+(define (is-forest-goblin-stalker? kchar)
+  (and (is-species? kchar sp_forest_goblin)
+       (is-occ? kchar oc_warrior)))

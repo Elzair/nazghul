@@ -6,6 +6,10 @@
 (define (kobj-gob kobj) (kern-obj-get-gob kobj))
 (define (kobj-gob-data kobj) (gob-data (kobj-gob kobj)))
 
+;; gob -- convenience accessor for getting the interesting part of a gob from
+;; the kernel object
+(define (gob kobj) (gob-data (kobj-gob kobj)))
+
 (define (signal-kobj kobj sig . args)
   ;;(display "signal-kobj")(newline)
   (apply (kobj-ifc kobj) (cons sig args)))

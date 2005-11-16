@@ -71,24 +71,25 @@
    (list 'mmode-fish  "swimming" 6)
    (list 'mmode-crawl "crawling" 7) ;; spiders, can cross boulders
    (list 'mmode-voidship "sailing" 8)
+   (list 'mmode-ranger "stalking" 9)
    ))
 (map (lambda (mmode) (apply kern-mk-mmode mmode)) mmodes)
 
 ;; Movement cost table
 (kern-mk-ptable
-  ;;   walk   hover ship   phase  fly    skiff  fish crawl  voidship
-  ;;   ====== ===== ====== =====  ====== ====== ==== =====  ========
- (list 0      0     0      0      0      0      0     0     0) ;; none
- (list norm   norm  cant   norm   norm   cant   cant  norm  cant) ;; grass/paving
- (list cant   cant  norm   cant   norm   vhard  norm  cant  cant) ;; deep
- (list cant   hard  cant   cant   norm   norm   norm  cant  cant) ;; shoals
- (list cant   cant  cant   cant   vhard  cant   cant  cant  cant) ;; mountains
- (list cant   cant  cant   norm   cant   cant   cant  cant  cant) ;; wall (w/ ceiling)
- (list hard   hard  cant   norm   norm   cant   cant  hard  cant) ;; trees  
- (list vhard  vhard cant   norm   norm   cant   cant  vhard cant) ;; forest/hills/bog
- (list cant   cant  cant   cant   cant   cant   cant  cant  cant) ;; energy fields
- (list cant   cant  cant   cant   norm   cant   cant  cant  norm) ;; space
- (list cant   norm  cant   norm   norm   cant   cant  hard  cant) ;; boulder
+  ;;   walk   hover ship   phase  fly    skiff  fish crawl  voidship ranger
+  ;;   ====== ===== ====== =====  ====== ====== ==== =====  ======== =====
+ (list 0      0     0      0      0      0      0     0     0        0   ) ;; none
+ (list norm   norm  cant   norm   norm   cant   cant  norm  cant     norm) ;; grass/paving
+ (list cant   cant  norm   cant   norm   vhard  norm  cant  cant     cant) ;; deep
+ (list cant   hard  cant   cant   norm   norm   norm  cant  cant     cant) ;; shoals
+ (list cant   cant  cant   cant   vhard  cant   cant  cant  cant     cant) ;; mountains
+ (list cant   cant  cant   norm   cant   cant   cant  cant  cant     cant) ;; wall (w/ ceiling)
+ (list hard   hard  cant   norm   norm   cant   cant  hard  cant     norm) ;; trees  
+ (list vhard  vhard cant   norm   norm   cant   cant  vhard cant     norm) ;; forest/hills/bog
+ (list cant   cant  cant   cant   cant   cant   cant  cant  cant     cant) ;; energy fields
+ (list cant   cant  cant   cant   norm   cant   cant  cant  norm     cant) ;; space
+ (list cant   norm  cant   norm   norm   cant   cant  hard  cant     cant) ;; boulder
  )
 
 ;; Factions. The diplomacy table (which defines the relationship between

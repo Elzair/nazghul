@@ -138,13 +138,22 @@
   "rr rr rr rr rr rr rr rr .. .. .. rr rr rr rr rr rr rr rr "
   )
  (put (mk-ladder-down 'p_dank_cave 9 1) 17 11)
- (put (mk-mongen2 900 3 'is-forest-goblin-shaman? 
-                  'mk-at-level (list 'mk-forest-goblin-shaman
+ (put (mk-mongen2 100 1 'is-forest-goblin-hunter? 
+                  'mk-at-level (list 'mk-forest-goblin-hunter
                                      "1d6"
-                                     nil)) 9 3)
- (put (mk-goblin-hunter) 10 4)
- (put (mk-goblin-hunter) 8 4)
+                                     nil)) 3 11)
+ 
  )
+
+;;  (put (mk-mongen2 100 2 'is-forest-goblin-shaman? 
+;;                   'mk-at-level (list 'mk-forest-goblin-shaman
+;;                                      "1d6"
+;;                                      nil)) 9 3)
+
+;;  (put (mk-mongen2 100 3 'is-forest-goblin-hunter? 
+;;                   'mk-at-level (list 'mk-forest-goblin-hunter
+;;                                      "1d6"
+;;                                      nil)) 14 11)
 
 (mk-dungeon-level 
  (list nil                 p_shamans_grove     nil                  )
