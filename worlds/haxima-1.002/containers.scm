@@ -32,6 +32,7 @@
 ;; Container Constructors
 ;;----------------------------------------------------------------------------
 (define (mk-chest trap contents)
+  (println "mk-chest: " trap contents)
   (kern-mk-container t_chest trap contents))
 
 ;;----------------------------------------------------------------------------

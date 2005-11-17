@@ -953,18 +953,51 @@ static int ctrl_too_close_to_target(class Character *character,
                                          character->getX(), character->getY(), 
                                          target->getX(), target->getY());
 
+        if (distance > 1)
+                return 0;
+
         for (class ArmsType * weapon = character->enumerateWeapons(); 
              weapon != NULL; weapon = character->getNextWeapon()) {
 
-                if (distance <= 1 &&
-                    character->hasAmmo(weapon) &&
-                    weapon->isMissileWeapon()) {
-                        return 1;
+                /* if npc has at least one melee weapon then not too close */
+                if (character->hasAmmo(weapon) &&
+                    ! weapon->isMissileWeapon()) {
+                        return 0;
                 }
         }
 
-        return 0;
+        return 1;
 }
+
+#if 0
+static void ctrl_unready_all_weapons(class Character *character)
+{
+        for (class ArmsType * weapon = character->enumerateWeapons(); 
+             weapon != NULL; weapon = character->getNextWeapon()) {
+                character->unready(weapon);
+        }
+}
+
+static void ctrl_ready_melee_weapons(class Character *character)
+{
+        class Container *container = character->getContainer();
+        struct inv_entry *ie;
+}
+
+static int ctrl_switch_to_melee_weapon(class Character *character)
+{
+        /* unready all weapons */
+        ctrl_unready_all_weapons(character);
+
+        /* ready any melee weapons */
+        ctrl_ready_melee_weapons(character);
+
+        /* ready any shields if hands are left open */
+
+        /* ready any missile weapons if hands are left open */
+
+}
+#endif
 
 static int ctrl_try_move_toward(class Character *character, int dx, int dy)
 {
@@ -972,8 +1005,14 @@ static int ctrl_try_move_toward(class Character *character, int dx, int dy)
         int y = character->getY() + dy;
         
         if (place_is_passable(character->getPlace(), x, y, character, 0)) {
-                character->move(dx, dy);
-                return 1;
+                switch (character->move(dx, dy)) {
+                case MovedOk:
+                case ExitedMap:
+                case SwitchedOccupants:
+                        return 1;
+                default:
+                        return 0;
+                }
         }
 
         return 0;
@@ -1213,6 +1252,7 @@ static void ctrl_idle(class Character *character)
         
         if (ctrl_too_close_to_target(character, target)) {
                 if (! ctrl_move_away_from_target(character, target))
+                        /*if (! ctrl_switch_to_melee_weapon(character))*/
                         ctrl_wander(character);
                 return;
         }

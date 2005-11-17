@@ -55,6 +55,10 @@ extern unsigned int clock_time_of_day(void);
 extern unsigned int clock_time(void);
 extern int is_noon(void);
 extern int is_midnight(void);
+extern int clock_year(void);
+extern int clock_month(void);
+extern int clock_week(void);
+extern int clock_day(void);
 extern int clock_hour(void);
 extern int clock_minute(void);
 

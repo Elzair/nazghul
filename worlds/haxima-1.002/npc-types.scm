@@ -22,13 +22,13 @@
 ;; Local Procedures
 ;;----------------------------------------------------------------------------
 
-
 ;; mk-stock-char -- convenience wrapper for kern-mk-char. Handles the
 ;; boilerplate associated with first-time "stock" character creations. A stock
 ;; character is a monster, guard or similar cannon-fodder NPC, with no
 ;; interesting conversation, no schedule of appointments, etc.
 (define (mk-stock-char name species occupation sprite faction ai container 
                        arms conv)
+  (println "mk-stock-char")
   (kern-mk-char
    nil ;;..........tag
    name ;;.........name
@@ -69,10 +69,29 @@
              (kern-dice-roll lvl-dice)))
 
 ;; npcg -- generic NPC gob
-(define (npcg-mk) (list #f))
-(define (npcg-taunted? npc) (car npc))
-(define (npcg-set-taunted! npc val) (set-car! npc val))
+(define (npcg-mk type) (list 'npcg type #f #f))
+(define (npcg-type npcg) (cadr npcg))
+(define (npcg-taunted? npcg) (caddr npcg))
+(define (npcg-spawned? npcg) (cadddr npcg))
+(define (npcg-is-type? npcg type) (equal? type (npcg-type npcg)))
+(define (npcg-set-taunted! npcg val) (set-car! (cddr npcg) val))
+(define (npcg-set-spawned! npcg val) (set-car! (cdddr npcg) val))
 
+(define (is-npcg? gob) (eq? (car gob) 'npcg))
+
+(define (kbeing-is-npc-type? kbeing type)
+  (let ((npcg (gob kbeing)))
+    (and (not (null? npcg))
+         (is-npcg? npcg)
+         (npcg-is-type? npcg type))))
+
+(define (kbeing-was-spawned? kbeing)
+  (let ((npcg (gob kbeing)))
+    (println "kbeing-was-spawned?" npcg)
+    (and (not (null? npcg))
+         (is-npcg? npcg)
+         (npcg-spawned? npcg))))
+  
 ;; eqp -- equipment package
 (define (mk-eqp traps contents)
   (cons traps contents))
@@ -84,30 +103,45 @@
    (eval (eqp-contents eqp))))
 
 ;; npct -- NPC type
-(define (mk-npct name spec occ spr eqp ai)
-  (list spec occ spr equip ai))
+(define (mk-npct name spec occ spr traps equip ai)
+  (list name spec occ spr traps equip ai))
  (define (npct-name npct) (car npct))
  (define (npct-spec npct) (cadr npct))
  (define (npct-occ npct) (caddr npct))
  (define (npct-spr npct) (cadddr npct))
- (define (npct-eqp npct) (list-ref npct 4))
- (define (npct-ai npct) (list-ref npct 5))
+ (define (npct-traps npct) (list-ref npct 4))
+ (define (npct-eqp npct) (list-ref npct 5))
+ (define (npct-ai npct) (list-ref npct 6))
 
-(define (mk-npc npct faction lvl)
-  (set-level
-   (kern-char-arm-self
-    (mk-stock-char
-     (npct-name npct)
-     (npct-spec npct)
-     (npct-occ npct)
-     (npct-spr npct)
-     faction
-     (npct-ai npct)
-     (eqp-generate (npct-eqp))
-     nil
-     nil
-     nil))
-   lvl))
+;; mk-npc -- create a kernel character of the given type, faction and level
+(define (mk-npc npct-tag faction lvl)
+  (let ((npct (eval npct-tag)))
+    (println "mk-npc:" npct " " faction " " lvl)
+    (bind
+     (set-level
+      (kern-char-arm-self
+       (mk-stock-char
+        (npct-name npct)
+        (npct-spec npct)
+        (npct-occ npct)
+        (npct-spr npct)
+        faction
+        (npct-ai npct)
+        (mk-chest
+         (random-select (npct-traps npct))
+         (map (lambda (x)
+                (apply roll-to-add x))
+              (npct-eqp npct)))
+        nil
+        nil
+        nil))
+      lvl)
+     (npcg-mk npct-tag))))
+
+(define (spawn-npc npct-tag faction lvl)
+  (let ((kchar (mk-npc npct-tag faction lvl)))
+    (npcg-set-spawned! (gob kchar) #t)
+    kchar))
 
 ;;----------------------------------------------------------------------------
 ;; NPC Type Constructors
@@ -206,6 +240,17 @@
      nil ;;...............effects
      nil ;;...............conversation
      )))
+
+(define wizard-traps (list nil 'burn 'lightning-trap))
+(define wizard-equip (list (list 100 "1" t_dagger)
+                           (list 100 "1d2-1" t_heal_potion)
+                           (list 100 "1d2+1" t_mana_potion)))
+
+(define forest-goblin-shaman
+  (mk-npct "a forest goblin shaman" sp_forest_goblin oc_wizard s_orc wizard-traps wizard-equip 'shaman-ai))
+
+(define (mk-forest-goblin-shaman)
+  (mk-npc forest-goblin-shaman faction-orks 1))
 
 (define (mk-forest-goblin-hunter)
    (kern-char-arm-self
@@ -560,7 +605,7 @@
      nil ;;...............effects
      nil ;;...............conversation
      ))
-   (npcg-mk)))
+   (npcg-mk 'bandit)))
 
 (define (mk-troll)
   (bind
@@ -584,7 +629,7 @@
     nil ;;......................effects
     nil ;;...............conversation
     )
-   (npcg-mk)))
+   (npcg-mk 'troll)))
 
 (define (mk-gint)
   (kern-char-arm-self

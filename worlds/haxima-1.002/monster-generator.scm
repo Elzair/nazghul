@@ -424,3 +424,168 @@
   (if (> n 0)
       (cons (pick-random-treasure)
             (mk-treasure-list (- n 1)))))
+
+;;----------------------------------------------------------------------------
+;; mongen3 -- next revision of monster generator; uses npc types
+(define (mongen3-mk thresh max npct-tag faction lvl-dice los?)
+  (list thresh max npct-tag faction lvl-dice los?))
+(define (mongen3-thresh gen) (car gen))
+(define (mongen3-max gen) (cadr gen))
+(define (mongen3-npct-tag gen) (caddr gen))
+(define (mongen3-faction gen) (cadddr gen))
+(define (mongen3-lvl-dice gen) (list-ref gen 4))
+(define (mongen3-los? gen) (list-ref gen 5))
+(define (mongen3-mk-monster gen)
+  (println "mongen3-mk-monster " gen)
+  (mk-npc (mongen3-npct-tag gen)
+          (mongen3-faction gen)
+          (kern-dice-roll (mongen3-lvl-dice gen))))
+
+(define (mongen3-exec kgen)
+  ;(display "mongen3-exec")(newline)
+  (let* ((gen (gob kgen)))
+
+    (if (>= (modulo (random-next) 1000) 
+            (mongen3-thresh gen))
+        (let ((gloc (kern-obj-get-location kgen)))
+
+          (define (not-too-many?)
+            ;;(display "not-too-many?")(newline)
+            (let ((npct-tag (mongen3-npct-tag gen)))
+              (< (length (filter (lambda (kbeing)
+                                   (kbeing-is-npc-type? kbeing 
+                                                        npct-tag))
+                                 (kern-place-get-beings (loc-place gloc))))
+                 (mongen3-max gen))))
+
+          (if (and (not-too-many?)
+                   (not (occupied? gloc))
+                   (or (not (mongen3-los? gen))
+                       (player-out-of-sight? kgen)))
+              (kern-obj-put-at (mongen3-mk-monster gen)
+                               gloc))))))
+
+(define mongen3-ifc
+  (ifc nil
+       (method 'exec mongen3-exec)
+       (method 'on mongen3-exec)
+       ))
+
+(mk-obj-type 't_mongen3 nil nil layer-none mongen3-ifc)
+
+(define (mk-mongen3 los? thresh max npct-tag faction lvl-dice)
+  (bind (kern-obj-set-visible (kern-mk-obj t_mongen3 1) #f)
+        (mongen3-mk thresh max npct-tag faction lvl-dice los?)))
+
+;;----------------------------------------------------------------------------
+;; spawn-pt -- generates a monster when triggered externally. The level of the
+;; monsters is calculated on-the-fly based on the player party level. The
+;; faction and npc type mix are determined by the "factory", which is passed to
+;; the spawn-pt constructor.
+(define (spawn-pt-mk npct-tag faction)
+  (list 'spawn-pt faction npct-tag))
+(define (spawn-pt-faction sppt) (cadr sppt))
+(define (spawn-pt-npct-tag sppt) (caddr sppt))
+
+(define (spawn-pt-exec ksppt)
+  (println "spawn-pt-exec")
+  (let* ((sppt (gob ksppt))
+         )
+    (println " " sppt)
+
+    (define (mean-player-party-level)
+      (let ((members (kern-party-get-members (kern-get-player))))
+        (/ (foldr (lambda (sum kchar)
+                    (+ sum (kern-char-get-level kchar)))
+                  0
+                  members)
+           (length members))))
+
+    (define (calc-level)
+      (max 0
+           (+ (mean-player-party-level)
+              (kern-dice-roll "1d5-3"))))
+
+    (define (generate)
+      (kern-obj-put-at (spawn-npc (spawn-pt-npct-tag sppt)
+                                  (spawn-pt-faction sppt)
+                                  (calc-level))
+                       (kern-obj-get-location ksppt)))
+
+    (generate)
+    (println " done!")
+    ))
+
+(define spawn-pt-ifc
+  (ifc nil
+       (method 'on spawn-pt-exec)))
+
+(mk-obj-type 't_spawn_pt nil nil layer-none spawn-pt-ifc)
+
+(define (spawn-pt npct-tag faction)
+  (bind (kern-obj-set-visible (kern-mk-obj t_spawn_pt 1) #f)
+        (spawn-pt-mk npct-tag faction)))
+
+;;----------------------------------------------------------------------------
+;; monman -- monster manager object
+
+(define (monman-mk time)
+  (list 'monman time))
+(define (monman-time mm) (cadr mm))
+(define (monman-set-time! mm val) (set-car! (cdr mm) val))
+
+(define (monman-exec kmm)
+
+  (println "monman-exec")
+
+  (let ((mm (gob kmm))
+        (kplace (loc-place (kern-obj-get-location kmm))))
+
+    (println " mm=" mm)
+    
+    (define (time-to-respawn?)
+      (println " time-to-respawn?")
+      (let* ((curtime (kern-get-time))
+             (oldtime (monman-time mm)))
+        (println "  curtime=" curtime)
+        (println "  oldtime=" oldtime)
+        (or (> (time-year curtime) (time-year oldtime))
+            (> (time-month curtime) (time-month oldtime))
+            (> (time-week curtime) (time-week oldtime))
+            (> (time-day curtime) (time-day oldtime))
+            (and (or (>= (- (time-hour curtime) (time-hour oldtime)) 2)
+                     (and (> (time-hour curtime) (time-hour oldtime))
+                          (> (time-minute curtime) (time-minute oldtime))))))))
+
+    (define (cleanup-old-spawn)
+      (println " cleanup-old-spawn")
+      (map kern-obj-remove
+           (filter kbeing-was-spawned?
+                   (kern-place-get-beings kplace))))
+
+    (define (trigger-spawn-pt sppt)
+      (println " trigger-spawn-pt")
+      (signal-kobj sppt 'on sppt nil))
+
+    (define (respawn)
+      (println " respawn")
+      (monman-set-time! mm (kern-get-time))
+      (map trigger-spawn-pt
+           (kplace-get-objects-of-type kplace t_spawn_pt)))
+
+    (if (time-to-respawn?)
+        (and (cleanup-old-spawn)
+             (respawn)))
+
+  ))
+
+(define monman-ifc
+  (ifc nil
+       (method 'on monman-exec)))
+
+(mk-obj-type 't_monman nil nil layer-none monman-ifc)
+
+(define (mk-monman)
+  (bind (kern-obj-set-visible (kern-mk-obj t_monman 1) #f)
+        (monman-mk (map - game-start-time
+                        (time-mk 0 0 0 0 1 1)))))

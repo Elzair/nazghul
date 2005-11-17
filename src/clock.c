@@ -35,6 +35,26 @@
 
 #define Clock (Session->clock)
 
+int clock_year(void)
+{
+        return Clock.year;
+}
+
+int clock_month(void)
+{
+        return Clock.month;
+}
+
+int clock_week(void)
+{
+        return Clock.week;
+}
+
+int clock_day(void)
+{
+        return Clock.day;
+}
+
 int clock_hour(void)
 {
         return Clock.hour;

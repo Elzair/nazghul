@@ -383,6 +383,17 @@
                 #t
                 )))
   
+;; kobj-is-type -- check if the object is of the given type
+(define (kobj-is-type? kobj ktype)
+  (eqv? (kern-obj-get-type kobj)
+        ktype))
+
+;; kplace-get-objects-of-type -- return a list of all objects of the given type
+;; in the given place
+(define (kplace-get-objects-of-type kplace ktype)
+  (filter (lambda (kobj) (kobj-is-type? kobj ktype))
+          (kern-place-get-objects kplace)))
+
 ;;----------------------------------------------------------------------------
 ;; find-objects -- return a list of locations with the given object on them
 ;;----------------------------------------------------------------------------
@@ -390,7 +401,7 @@
   (define (check loc)
     (define (scanobjlst lst)
       (foldr (lambda (a b) 
-               (or a (eqv? (kern-obj-get-type b) ktype)))
+               (or a (kobj-is-type? b ktype)))
              #f
              lst))
     (if (scanobjlst (kern-get-objects-at loc))
@@ -470,14 +481,14 @@
 ;; be found at the given location
 ;; ----------------------------------------------------------------------------
 (define (find-object-types-at loc ktype)
-  (filter (lambda (a) (eqv? (kern-obj-get-type a) ktype))
+  (filter (lambda (a) (kobj-is-type? a ktype))
           (kern-get-objects-at loc)))
 
 ;; ----------------------------------------------------------------------------
 ;; is-object-type-at? -- check for an object (by type) at a location
 ;; ----------------------------------------------------------------------------
 (define (is-object-type-at? loc ktype)
-  (foldr (lambda (a b) (or a (eqv? (kern-obj-get-type b) ktype)))
+  (foldr (lambda (a b) (or a (kobj-is-type? b ktype)))
          #f
          (kern-get-objects-at loc)))
 
@@ -600,8 +611,8 @@
 
 ;; ----------------------------------------------------------------------------
 ;; blit-maps -- blit multiple maps to a single target map
-(;; ---------------------------------------------------------------------------
-define (blit-maps kmap . blits)
+;; ---------------------------------------------------------------------------
+(define (blit-maps kmap . blits)
   (define (blit dstx dsty srcmap srcx srcy w h)
     (kern-blit-map kmap dstx dsty srcmap srcx srcy w h))
   (foldr (lambda (a b) (apply blit b))
@@ -788,8 +799,14 @@ define (blit-maps kmap . blits)
         (add-effect-multiple kobj keff fgob (- q 1)))))
 
 ;; time procs for use with return value from kern-get-time:
-(define (time-hour time)(car time))
-(define (time-minute time) (cdr time))
+(define (time-mk yr mo we da hr mi)
+  (list yr mo we da hr mi))
+(define (time-year time) (list-ref time 0))
+(define (time-month time) (list-ref time 1))
+(define (time-week time) (list-ref time 2))
+(define (time-day time) (list-ref time 3))
+(define (time-hour time) (list-ref time 4))
+(define (time-minute time) (list-ref time 5))
 
 ;; wants-healing? -- check if a char is <= 50% max hp
 (define (wants-healing? kchar)
@@ -1169,6 +1186,17 @@ define (blit-maps kmap . blits)
                     n))
                     
 
+;; on-entry-to-dungeon-room -- generic place on-enty procedure for dungeon
+;; rooms. When the player enters (or re-enters) a dungeon this looks for a
+;; monster manager object and triggers it.
+(define (on-entry-to-dungeon-room kplace kplayer)
+  (println "on-entry-to-dungeon-room")
+  (map (lambda (kmm)
+         (println " signal")
+         (signal-kobj kmm 'on kmm nil))
+       (kplace-get-objects-of-type kplace t_monman)))
+       
+
 ;; mk-dungeon-room -- make a 19x19 dungeon room (simplified form of
 ;; kern-mk-place)
 (define (mk-dungeon-room tag name terrain . objects)
@@ -1182,8 +1210,11 @@ define (blit-maps kmap . blits)
                  #f      ; tmp combat place
                  nil     ; subplaces
                  nil     ; neighbors
-                 objects ; objects
-                 nil     ; hooks
+
+                 ;; objects -- automatically add a monster manager
+                 (cons (put (mk-monman) 0 0)
+                       objects)
+                 (list 'on-entry-to-dungeon-room) ; hooks
                  nil     ; edge entrances
                  ))
 

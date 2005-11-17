@@ -522,12 +522,17 @@ MoveResult player_party::move(int newdx, int newdy)
 
         case move_enter_subplace:
 
+#if OLD_PRE_ENTRY_INVOCATION
+                // Going to try and move this call to place_enter()... as I
+                // recall I put this here to allow an on-entry hook to prompt
+                // the player to see if he really wants to enter.
+
                 // run the place's pre-entry hook, if applicable
                 if (info.subplace->pre_entry_hook &&
                     ! closure_exec(info.subplace->pre_entry_hook, "pp", 
                                    info.subplace, this))
                         return UserCanceled;
-
+#endif
                 return try_to_enter_subplace_from_edge(info.subplace, info.dx, 
                                                        info.dy);
 

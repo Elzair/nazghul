@@ -138,17 +138,24 @@
   "rr rr rr rr rr rr rr rr .. .. .. rr rr rr rr rr rr rr rr "
   )
  (put (mk-ladder-down 'p_dank_cave 9 1) 17 11)
- (put (mk-mongen2 100 1 'is-forest-goblin-hunter? 
-                  'mk-at-level (list 'mk-forest-goblin-hunter
-                                     "1d6"
-                                     nil)) 3 11)
- 
+
+ (put (spawn-pt 'forest-goblin-shaman faction-orks) 9 3)
+ (put (spawn-pt 'forest-goblin-shaman faction-orks) 10 4)
+ (put (spawn-pt 'forest-goblin-shaman faction-orks) 8 4)
+ (put (spawn-pt 'forest-goblin-shaman faction-orks) 9 5)
+
  )
 
-;;  (put (mk-mongen2 100 2 'is-forest-goblin-shaman? 
-;;                   'mk-at-level (list 'mk-forest-goblin-shaman
-;;                                      "1d6"
-;;                                      nil)) 9 3)
+;; (put (spawn-pt 'forest-goblin-hunter faction-orks) 4 10)
+;; (put (spawn-pt 'forest-goblin-hunter faction-orks) 3 11)
+ ; (put (mk-mongen2 100 1 'is-forest-goblin-hunter? 
+;                   'mk-at-level (list 'mk-forest-goblin-hunter
+;                                      "1d6"
+;                                      nil)) 3 11)
+;   (put (mk-mongen3 #t 100 1 'forest-goblin-shaman faction-orks "1d6") 9 3)
+
+;; (put (mk-mongen2 100 1 'is-forest-goblin-shaman? 
+;;                  'mk-npc (list 'forest-goblin-shaman faction-orks (kern-dice-roll "1d6"))) 9 3)
 
 ;;  (put (mk-mongen2 100 3 'is-forest-goblin-hunter? 
 ;;                   'mk-at-level (list 'mk-forest-goblin-hunter

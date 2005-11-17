@@ -1809,8 +1809,6 @@ static pointer kern_mk_lazy_party(scheme *sc, pointer args)
         obj = new Party(closure_new(sc, factory), faction, vehicle);
         assert(obj);
 
-        /* LEFT OFF HERE - dangerous to make a party without a type; some info
-         * is still expected from the type... update the plan. */
 
         return scm_mk_ptr(sc, obj);
 }
@@ -4573,6 +4571,64 @@ KERN_API_CALL(kern_being_get_visible_allies)
                                           subj);
 }
 
+KERN_API_CALL(kern_being_get_visible_tiles)
+{
+        Object *subj;
+        struct place *place;
+        int ox, oy, vr;
+        pointer head = sc->NIL;
+        pointer tail = sc->NIL;
+        pointer cell;
+
+        /* Unpack the subject */
+        subj = unpack_obj(sc, &args, "kern-being-get-visible-tiles");
+        if (!subj)
+                return sc->NIL;
+
+        place = subj->getPlace();
+        if (! place) {
+                rt_err("kern-being-get-visible-tiles: null place");
+                return sc->NIL;
+        }
+
+        ox = subj->getX();
+        oy = subj->getY();
+        vr = subj->getVisionRadius();
+        
+        for (int y = 0; y < place_h(place); y++) {
+                for (int x = 0; x < place_w(place); x++) {
+
+                        /* Filter out tiles not in los of the subject */
+                        if (! place_in_los(place, ox, oy, place, x, y))
+                                continue;
+                        
+                        /* Filter out tiles not in the vision radius of the
+                         * subject */
+                        if (place_flying_distance(place, ox, oy, x, y) > vr)
+                                continue;
+                        
+                        /* else append this location to the list */
+                        cell = scm_mk_loc(sc, place, x, y);
+                        cell = _cons(sc, cell, sc->NIL, 0);
+
+                        if (head == sc->NIL) {
+                                head = cell;
+                                tail = cell;
+                                scm_protect(sc, cell);
+                        } else {
+                                tail->_object._cons._cdr = cell;
+                                tail = cell;
+                        }
+                }
+        }
+
+        /* unprotect the list prior to returning */
+        if (head != sc->NIL)
+                scm_unprotect(sc, head);
+
+        return head;
+}
+
 KERN_API_CALL(kern_place_get_objects)
 {
         struct place *place;
@@ -4788,6 +4844,18 @@ KERN_API_CALL(kern_place_get_terrain)
         terrain = place_get_terrain(place, x, y);
 
         return terrain ? scm_mk_ptr(sc, terrain) : sc->NIL;
+}
+
+KERN_API_CALL(kern_place_blocks_los)
+{
+        struct place *place;
+        int x, y;
+        struct terrain *terrain;
+
+        if (unpack_loc(sc, &args, &place, &x, &y, "kern-place-blocks-los?"))
+                return sc->F;
+
+        return place_visibility(place, x, y) ? sc->F : sc->T;
 }
 
 KERN_API_CALL(kern_obj_set_temporary)
@@ -5153,7 +5221,7 @@ KERN_API_CALL(kern_terrain_get_pclass)
                 return sc->NIL;
         }
 
-        return scm_mk_integer(sc, terrain_pclass(terrain));
+        return terrain->alpha ? sc->T : sc->F;
 }
 
 KERN_API_CALL(kern_terrain_set_combat_map)
@@ -5809,10 +5877,36 @@ static bool wrap_kern_append_obj(class Character *c, void *v)
 
 KERN_API_CALL(kern_get_time)
 {
-        return _cons(sc, 
-                     scm_mk_integer(sc, clock_hour()),
-                     scm_mk_integer(sc, clock_minute()),
-                     0);
+        pointer head, tail, cell;
+
+        /* have to do everything in forward order so that our cells remain
+         * protected from gc until the list is built */
+        head = _cons(sc, scm_mk_integer(sc, clock_year()), sc->NIL, 0);
+        tail = head;
+        scm_protect(sc, head);
+
+        cell = _cons(sc, scm_mk_integer(sc, clock_month()), sc->NIL, 0);
+        tail->_object._cons._cdr = cell;
+        tail = cell;
+
+        cell = _cons(sc, scm_mk_integer(sc, clock_week()), sc->NIL, 0);
+        tail->_object._cons._cdr = cell;
+        tail = cell;
+
+        cell = _cons(sc, scm_mk_integer(sc, clock_day()), sc->NIL, 0);
+        tail->_object._cons._cdr = cell;
+        tail = cell;
+
+        cell = _cons(sc, scm_mk_integer(sc, clock_hour()), sc->NIL, 0);
+        tail->_object._cons._cdr = cell;
+        tail = cell;
+
+        cell = _cons(sc, scm_mk_integer(sc, clock_minute()), sc->NIL, 0);
+        tail->_object._cons._cdr = cell;
+        tail = cell;
+
+        scm_unprotect(sc, head);
+        return head;
 }
 
 KERN_API_CALL(kern_party_get_members)
@@ -6912,6 +7006,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-being-get-current-faction", kern_being_get_current_faction);
         API_DECL(sc, "kern-being-get-visible-hostiles", kern_being_get_visible_hostiles);
         API_DECL(sc, "kern-being-get-visible-allies", kern_being_get_visible_allies);
+        API_DECL(sc, "kern-being-get-visible-tiles", kern_being_get_visible_tiles);
         API_DECL(sc, "kern-being-is-hostile?", kern_being_is_hostile);
         API_DECL(sc, "kern-being-is-ally?", kern_being_is_ally);
         API_DECL(sc, "kern-being-pathfind-to", kern_being_pathfind_to);
@@ -7055,6 +7150,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-place-is-hazardous", kern_place_is_hazardous);
         API_DECL(sc, "kern-place-is-wrapping?", kern_place_is_wrapping);
         API_DECL(sc, "kern-place-is-wilderness?", kern_place_is_wilderness);
+        API_DECL(sc, "kern-place-blocks-los?", kern_place_blocks_los);
         API_DECL(sc, "kern-place-map", kern_place_map);
         API_DECL(sc, "kern-place-set-neighbor", kern_place_set_neighbor);
         API_DECL(sc, "kern-place-set-terrain", kern_place_set_terrain);

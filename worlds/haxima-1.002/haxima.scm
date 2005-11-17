@@ -18,6 +18,23 @@
 (kern-load "special.scm")
 
 ;;----------------------------------------------------------------------------
+;; Time -- this needs to be set before loading any dungeon rooms
+;;----------------------------------------------------------------------------
+(define hour 14)
+(define minutes 00)
+(define time-in-minutes (+ (* hour 60) minutes))
+(define game-start-time (time-mk 0 0 0 0 hour minutes))
+
+(kern-set-clock 
+ 0 ; year
+ 0 ; month
+ 0 ; week
+ 0 ; day
+ hour  ; hour
+ minutes ; minutes(
+ )
+
+;;----------------------------------------------------------------------------
 ;; Places
 ;;----------------------------------------------------------------------------
 (load "gregors-hut.scm")
@@ -179,22 +196,6 @@
 ;; Places
 ;;----------------------------------------------------------------------------
 (load "shard.scm")
-
-;;----------------------------------------------------------------------------
-;; Time
-;;----------------------------------------------------------------------------
-(define hour 14)
-(define minutes 00)
-(define time-in-minutes (+ (* hour 60) minutes))
-
-(kern-set-clock 
- 0 ; year
- 0 ; month
- 0 ; week
- 0 ; day
- hour  ; hour
- minutes ; minutes(
- )
 
 ;;----------------------------------------------------------------------------
 ;; Astronomy

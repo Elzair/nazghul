@@ -509,7 +509,7 @@ void place_del(struct place *place)
         // death so that it will be deleted when unlocked.
         // --------------------------------------------------------------------
 
-        printf("place_del(%s)\n", place->name);
+        //printf("place_del(%s)\n", place->name);
 
         if (place_is_locked(place)) {
                 place_mark_for_death(place);
@@ -1138,7 +1138,7 @@ struct astar_node *place_find_path(struct place *place,
 	/* Run the pathfinding alg */
         t1 = SDL_GetTicks();
 	path = astar_search(info);
-        dbg("place_find_path: %d msecs\n", SDL_GetTicks() - t1);
+        //dbg("place_find_path: %d msecs\n", SDL_GetTicks() - t1);
 
 	return path;
 
@@ -1224,6 +1224,9 @@ void place_synchronize(struct place *place)
 
 void place_enter(struct place *place)
 {
+        if (place->pre_entry_hook)
+                closure_exec(place->pre_entry_hook, "pp", place, player_party);
+        
         place_synchronize(place);
 }
 
