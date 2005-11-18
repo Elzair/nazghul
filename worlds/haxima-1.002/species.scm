@@ -47,7 +47,7 @@
 (mk-species 'sp_human        "human"        10 10 10 1  20 10 13 mmode-walk  t_hands      humanoid 2  s_asleep       sound-walking   nil)
 (mk-species 'sp_nixie        "nyad"         10 10 10 1  20 10 13 mmode-fish  t_hands      humanoid 2  s_shoals       sound-splashing nil)
 (mk-species 'sp_ghast        "ghast"        10 10 10 1  10  3  8 mmode-phase t_hands      humanoid 2  s_asleep       nil             nil)
-(mk-species 'sp_goblin       "goblin"       12  8 12 1  15  8 14 mmode-walk  t_hands      humanoid 2  s_asleep       sound-walking   nil)
+(mk-species 'sp_cave_goblin  "cave goblin"  12  8 12 1  15  8 14 mmode-walk  t_hands      humanoid 2  s_asleep       sound-walking   nil)
 (mk-species 'sp_forest_goblin "forest goblin" 8 10 14 1 14 14 16 mmode-walk  t_hands      humanoid 2  s_asleep       sound-walking   nil)
 (mk-species 'sp_insect       "insects"       1  1 18 2   3  0  4 mmode-hover t_stinger    nil      1  nil            nil             nil)
 (mk-species 'sp_yellow_slime "yellow slime"  4  4  4 1  15  8  6 mmode-walk  t_acid_spray nil      2  nil            sound-squishing nil)

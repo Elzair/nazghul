@@ -1455,6 +1455,9 @@ void Character::setPlayerControlled(bool val) {
 
 void Character::setAttackTarget(class Character * newtarget) 
 {
+        if (target == newtarget)
+                return;
+
         if (target && target != this)
                 obj_dec_ref(target);
 

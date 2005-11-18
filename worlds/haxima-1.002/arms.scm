@@ -180,6 +180,7 @@
    (list  't_thrown_boulder "loose boulder" s_thrown_boulder       "-2"     "2d6"    "-2"     slot-weapon   2      5     obj-ifc          10)
    ))
 
+(kern-mk-sprite 's_axe            ss_arms 1 29 #f 0)
 (kern-mk-sprite 's_dagger         ss_arms 1 32 #f 0)
 (kern-mk-sprite 's_mace           ss_arms 1 33 #f 0)
 (kern-mk-sprite 's_sword          ss_arms 1 34 #f 0)
@@ -203,7 +204,8 @@
    (list  't_stinger        "stinger"        nil              "1d8"    "1d2"    "+0"     slot-nil      1      1      0)
    (list  't_dagger         "dagger"         s_dagger         "1d4"    "1d4"    "1d2"    slot-weapon   1      1      0)
    (list  't_dagger_4       "+4 dagger"      s_dagger         "1d4+4"  "1d4+4"  "1d2+4"  slot-weapon   1      1      0)
-   (list  't_mace           "mace"           s_mace           "1d3"    "1d6+2"  "+0"     slot-weapon   1      1      3)
+   (list  't_mace           "mace"           s_mace           "1d4"    "1d6+2"  "+0"     slot-weapon   1      1      3)
+   (list  't_axe            "axe"            s_axe            "1d2"    "2d4+2"  "+0"     slot-weapon   1      1      3)
    (list  't_sword          "sword"          s_sword          "1d2"    "1d8+1"  "1d2"    slot-weapon   1      1      2)
    (list  't_sword_2        "+2 sword"       s_sword          "1d2+2"  "1d8+3"  "1d2+2"  slot-weapon   1      1      2)
    (list  't_sword_4        "+4 sword"       s_sword          "1d2+4"  "1d8+5"  "1d2+4"  slot-weapon   1      1      2)

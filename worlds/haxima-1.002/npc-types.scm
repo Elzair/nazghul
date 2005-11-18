@@ -28,7 +28,7 @@
 ;; interesting conversation, no schedule of appointments, etc.
 (define (mk-stock-char name species occupation sprite faction ai container 
                        arms conv)
-  (println "mk-stock-char")
+  ;;(println "mk-stock-char")
   (kern-mk-char
    nil ;;..........tag
    name ;;.........name
@@ -87,7 +87,7 @@
 
 (define (kbeing-was-spawned? kbeing)
   (let ((npcg (gob kbeing)))
-    (println "kbeing-was-spawned?" npcg)
+    ;;(println "kbeing-was-spawned?" npcg)
     (and (not (null? npcg))
          (is-npcg? npcg)
          (npcg-spawned? npcg))))
@@ -116,7 +116,7 @@
 ;; mk-npc -- create a kernel character of the given type, faction and level
 (define (mk-npc npct-tag faction lvl)
   (let ((npct (eval npct-tag)))
-    (println "mk-npc:" npct " " faction " " lvl)
+    ;;(println "mk-npc:" npct " " faction " " lvl)
     (bind
      (set-level
       (kern-char-arm-self
@@ -129,19 +129,76 @@
         (npct-ai npct)
         (mk-chest
          (random-select (npct-traps npct))
-         (map (lambda (x)
-                (apply roll-to-add x))
-              (npct-eqp npct)))
+         (filter notnull?
+                 (map (lambda (x)
+                        (apply roll-to-add x))
+                      (npct-eqp npct))))
         nil
         nil
         nil))
       lvl)
      (npcg-mk npct-tag))))
 
+;; spawn-npc -- like mk-npc but mark the npc as spawned (this allows monster
+;; managers to periodically clean up old spawned NPC's)
 (define (spawn-npc npct-tag faction lvl)
   (let ((kchar (mk-npc npct-tag faction lvl)))
     (npcg-set-spawned! (gob kchar) #t)
     kchar))
+
+;; common traps for different types of npcs
+(define basic-traps  (list nil 'burn 'spike-trap))
+(define wizard-traps (list nil 'poison-trap 'sleep-trap 'lightning-trap))
+
+;; common equipment packages for different types of npcs
+(define wizard-equip 
+  (list (list 100 "1" t_dagger)
+        (list 100 "1d2-1" t_heal_potion)
+        (list 100 "1d2+1" t_mana_potion)
+        (list 100 "1d20" t_gold_coins)
+        (list 10  "1d3" t_food)
+        ))
+(define archer-equip 
+  (list (list 100 "1" t_bow)
+        (list 100 "10" t_arrow)
+        (list 100 "1" t_dagger)
+        (list 50  "1" t_heal_potion)
+        (list 100 "1d10" t_gold_coins)
+        (list 20  "1d3" t_food)
+        ))
+(define stalker-equip 
+  (list (list 100 "2" t_dagger)
+        (list 100 "1" t_leather_helm)
+        (list 100 "1" t_armor_leather)
+        (list 100 "1d2" t_heal_potion)
+        (list 100 "1d15" t_gold_coins)
+        (list 30  "1d3" t_food)
+        ))
+(define slinger-equip 
+  (list (list 100 "1" t_sling)
+        (list 100 "1d10" t_gold_coins)
+        (list 20  "1d3" t_food)
+        ))
+(define berserker-equip 
+  (list (list 100 "2" t_axe)         
+        (list 100 "1d2" t_heal_potion)
+        (list 100 "1d15" t_gold_coins)
+        (list 30  "1d3" t_food)
+        ))
+
+;; npc types
+(define forest-goblin-shaman
+  (mk-npct "a forest goblin shaman" sp_forest_goblin oc_wizard s_orc wizard-traps wizard-equip 'shaman-ai))
+(define forest-goblin-hunter
+  (mk-npct "a forest goblin hunter" sp_forest_goblin oc_warrior s_orc basic-traps archer-equip 'generic-ai))
+(define forest-goblin-stalker
+  (mk-npct "a forest goblin stalker" sp_forest_goblin oc_warrior s_orc basic-traps stalker-equip 'generic-ai))
+(define cave-goblin-slinger
+  (mk-npct "a cave goblin slinger" sp_cave_goblin oc_warrior s_orc basic-traps slinger-equip 'generic-ai))
+(define cave-goblin-berserker
+  (mk-npct "a cave goblin berserker" sp_cave_goblin oc_warrior s_orc basic-traps berserker-equip 'generic-ai))
+
+
 
 ;;----------------------------------------------------------------------------
 ;; NPC Type Constructors
@@ -176,10 +233,10 @@
   (kern-char-arm-self
    (mk-stock-char
     " an ork" ;;........name
-    sp_goblin ;;........species
+    sp_cave_goblin ;;........species
     oc_warrior ;;........occupation
     s_orc ;;............sprite
-    faction-orks ;;.....faction
+    faction-cave-goblin ;;.....faction
     nil ;;..............custom ai (optional)
     
     ;;..................container (and contents, used to arm char)
@@ -201,10 +258,10 @@
    (kern-char-arm-self
     (mk-stock-char
      " a goblin hunter" ;;........name
-     sp_goblin ;;........species
+     sp_cave_goblin ;;........species
      oc_archer ;;........occupation
      s_orc ;;............sprite
-     faction-orks ;;.....faction
+     faction-cave-goblin ;;.....faction
      nil ;;..............custom ai (optional)
      ;;..................container (and contents, used to arm char)
      (mk-chest
@@ -219,83 +276,6 @@
      nil ;;...............effects
      nil ;;...............conversation
      )))
-
-(define (mk-forest-goblin-shaman)
-   (kern-char-arm-self
-    (mk-stock-char
-     "a forest goblin shaman" ;;........name
-     sp_forest_goblin ;;........species
-     oc_wizard ;;........occupation
-     s_orc ;;............sprite
-     faction-orks ;;.....faction
-     'shaman-ai ;;..............custom ai (optional)
-     ;;..................container (and contents, used to arm char)
-     (mk-chest
-      (random-select (list nil 'burn 'lightning-trap))
-      (mk-contents (list 1 t_dagger)
-                   (roll-q "1d2-1" t_heal_potion)
-                   (roll-q "1d2+1" t_mana_potion)
-                   ))
-     nil ;;...............readied arms (in addition to container contents)
-     nil ;;...............effects
-     nil ;;...............conversation
-     )))
-
-(define wizard-traps (list nil 'burn 'lightning-trap))
-(define wizard-equip (list (list 100 "1" t_dagger)
-                           (list 100 "1d2-1" t_heal_potion)
-                           (list 100 "1d2+1" t_mana_potion)))
-
-(define forest-goblin-shaman
-  (mk-npct "a forest goblin shaman" sp_forest_goblin oc_wizard s_orc wizard-traps wizard-equip 'shaman-ai))
-
-(define (mk-forest-goblin-shaman)
-  (mk-npc forest-goblin-shaman faction-orks 1))
-
-(define (mk-forest-goblin-hunter)
-   (kern-char-arm-self
-    (mk-stock-char
-     "a forest goblin hunter" ;;........name
-     sp_forest_goblin ;;........species
-     oc_warrior ;;........occupation
-     s_orc ;;............sprite
-     faction-orks ;;.....faction
-     'forest-goblin-hunter-ai ;;..............custom ai (optional)
-     ;;..................container (and contents, used to arm char)
-     (mk-chest
-      (random-select (list nil 'spike-trap))
-      (mk-contents (list 1 t_dagger)
-                   (list 1 t_bow)
-                   (list 10 t_arrow)
-                   ))
-     nil ;;...............readied arms (in addition to container contents)
-     nil ;;...............effects
-     nil ;;...............conversation
-     )))
-
-(define (mk-forest-goblin-stalker)
-   (kern-char-arm-self
-    (mk-stock-char
-     "a forest goblin stalker" ;;........name
-     sp_forest_goblin ;;........species
-     oc_warrior ;;........occupation
-     s_orc ;;............sprite
-     faction-orks ;;.....faction
-     'forest-goblin-hunter-ai ;;..............custom ai (optional)
-     ;;..................container (and contents, used to arm char)
-     (mk-chest
-      (random-select (list nil 'spike-trap))
-      (mk-contents (list 1 t_dagger)
-                   (list 1 t_dagger)
-                   (list 1 t_armor_leather)
-                   (list 1 t_leather_helm)
-                   (roll-q "1d2-1" t_heal_potion)
-                   ))
-     nil ;;...............readied arms (in addition to container contents)
-     nil ;;...............effects
-     nil ;;...............conversation
-     )))
-
 
 (define (mk-skeletal-warrior)
   (bind (kern-char-arm-self
@@ -687,7 +667,8 @@
   (is-species? kchar sp_troll))
 
 (define (is-goblin? kchar)
-  (is-species? kchar sp_goblin))
+  (or (is-species? kchar sp_cave_goblin)
+      (is-species? kchar sp_forest_goblin)))
 
 (define (is-skeleton? kchar)
   (is-species? kchar sp_skeleton))

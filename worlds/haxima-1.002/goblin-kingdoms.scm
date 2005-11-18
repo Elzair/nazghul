@@ -57,8 +57,13 @@
   "rr rr rr rr rr rr rr rr {{ {{ {{ rr rr rr rr rr rr rr rr "
   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
   )
- (put (mk-mongen2 250 5 'is-goblin? 'mk-goblin-hunter nil) 18 8)
- (put (mk-mongen2 500 5 'is-goblin? 'mk-goblin-raider nil) 18 10)
+ (put (spawn-pt 'cave-goblin-slinger faction-cave-goblin) 14 11)
+ (put (spawn-pt 'cave-goblin-berserker faction-cave-goblin) 15 9)
+
+ (put (spawn-pt 'forest-goblin-hunter faction-forest-goblin) 15 5)
+ (put (spawn-pt 'forest-goblin-hunter faction-forest-goblin) 12 7)
+ ;;(put (spawn-pt 'forest-goblin-stalker faction-forest-goblin) 13 7)
+ 
  )
 
 (mk-dungeon-room
@@ -84,8 +89,8 @@
   "rr rr rr rr rr rr rr {{ {{ {{ .. {{ rr rr {{ {{ {{ rr rr "
   "rr rr rr rr rr rr rr {{ {{ .. .. {{ rr rr rr rr rr rr rr "
   )
- (put (mk-mongen2 100 10 'is-goblin? 'mk-goblin-hunter nil) 8 4)
- (put (mk-mongen2 100 10 'is-goblin? 'mk-goblin-raider nil) 9 9)
+ (put (spawn-pt 'cave-goblin-slinger faction-cave-goblin) 8 4)
+ (put (spawn-pt 'cave-goblin-berserker faction-cave-goblin) 9 9)
  )
 
 (mk-dungeon-room
@@ -139,28 +144,15 @@
   )
  (put (mk-ladder-down 'p_dank_cave 9 1) 17 11)
 
- (put (spawn-pt 'forest-goblin-shaman faction-orks) 9 3)
- (put (spawn-pt 'forest-goblin-shaman faction-orks) 10 4)
- (put (spawn-pt 'forest-goblin-shaman faction-orks) 8 4)
- (put (spawn-pt 'forest-goblin-shaman faction-orks) 9 5)
-
+ (put (spawn-pt 'forest-goblin-shaman faction-forest-goblin) 9 3)
+ (put (spawn-pt 'forest-goblin-shaman faction-forest-goblin) 10 4)
+ (put (spawn-pt 'forest-goblin-shaman faction-forest-goblin) 8 4)
+ (put (spawn-pt 'forest-goblin-shaman faction-forest-goblin) 9 5)
+ (put (spawn-pt 'forest-goblin-hunter faction-forest-goblin) 3 11)
+ (put (spawn-pt 'forest-goblin-hunter faction-forest-goblin) 4 10)
+ (put (spawn-pt 'forest-goblin-stalker faction-forest-goblin) 5 11)
+ (put (spawn-pt 'forest-goblin-stalker faction-forest-goblin) 4 12)
  )
-
-;; (put (spawn-pt 'forest-goblin-hunter faction-orks) 4 10)
-;; (put (spawn-pt 'forest-goblin-hunter faction-orks) 3 11)
- ; (put (mk-mongen2 100 1 'is-forest-goblin-hunter? 
-;                   'mk-at-level (list 'mk-forest-goblin-hunter
-;                                      "1d6"
-;                                      nil)) 3 11)
-;   (put (mk-mongen3 #t 100 1 'forest-goblin-shaman faction-orks "1d6") 9 3)
-
-;; (put (mk-mongen2 100 1 'is-forest-goblin-shaman? 
-;;                  'mk-npc (list 'forest-goblin-shaman faction-orks (kern-dice-roll "1d6"))) 9 3)
-
-;;  (put (mk-mongen2 100 3 'is-forest-goblin-hunter? 
-;;                   'mk-at-level (list 'mk-forest-goblin-hunter
-;;                                      "1d6"
-;;                                      nil)) 14 11)
 
 (mk-dungeon-level 
  (list nil                 p_shamans_grove     nil                  )

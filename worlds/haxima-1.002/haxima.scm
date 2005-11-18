@@ -221,18 +221,19 @@
 ;; are hostile, positive are friendly.
 ;; ----------------------------------------------------------------------------
 (kern-mk-dtable
- ;;           none play men orks accu mons troll spid outl gint demon
- (dtable-row   0    0    0   0   -1   -2   -2    -2    0   -2   -2) ;; none
- (dtable-row   0    2    1  -2   -1   -2   -2    -2   -2   -2   -2) ;; player
- (dtable-row  -1    1    2  -1   -2   -2   -2    -2   -2   -2   -2) ;; men
- (dtable-row  -1   -2   -1   2   -1   -2    0    -2   -2   -1   -2) ;; orks
- (dtable-row  -1   -1   -1  -1    2   -2   -1    -1   -2   -1   -2) ;; accursed
- (dtable-row  -2   -2   -2  -2   -2    0    0     0   -2    0   -2) ;; monsters
- (dtable-row  -2   -2   -2   0   -1   -1    2    -2   -2   -1   -2) ;; hill trolls
- (dtable-row  -2   -2   -2  -2   -1    0   -2     2   -2   -1   -2) ;; wood spiders
- (dtable-row   0   -2   -2  -2   -2   -2   -2    -2    0   -2   -2) ;; outlaws
- (dtable-row  -2   -2   -2  -1   -1    0   -1    -1   -2    0   -2) ;; gint
- (dtable-row  -2   -2   -2  -2   -2   -2   -2    -2   -2   -2    2) ;; demon
+ ;;     non pla men cgb acc mon tro spd out gnt dem fgb
+ (list   0   0   0   0  -1  -2  -2  -2   0  -2  -2   0) ;; none
+ (list   0   2   1  -2  -1  -2  -2  -2  -2  -2  -2   0) ;; player
+ (list  -1   1   2  -1  -2  -2  -2  -2  -2  -2  -2   0) ;; men
+ (list  -1  -2  -1   2  -1  -2   0  -2  -2  -1  -2  -2) ;; cave goblin
+ (list  -1  -1  -1  -1   2  -2  -1  -1  -2  -1  -2  -2) ;; accursed
+ (list  -2  -2  -2  -2  -2   0   0   0  -2   0  -2   0) ;; monsters
+ (list  -2  -2  -2   0  -1  -1   2  -2  -2  -1  -2  -2) ;; hill trolls
+ (list  -2  -2  -2  -2  -1   0  -2   2  -2  -1  -2   0) ;; wood spiders
+ (list   0  -2  -2  -2  -2  -2  -2  -2   0  -2  -2  -1) ;; outlaws
+ (list  -2  -2  -2  -1  -1   0  -1  -1  -2   0  -2  -1) ;; gint
+ (list  -2  -2  -2  -2  -2  -2  -2  -2  -2  -2   2  -2) ;; demon
+ (list   0   0   0  -2  -2   0  -2   0  -1  -1  -2   2) ;; forest goblin
  )
 
 
