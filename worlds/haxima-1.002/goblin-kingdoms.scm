@@ -91,6 +91,7 @@
   )
  (put (spawn-pt 'cave-goblin-slinger faction-cave-goblin) 8 4)
  (put (spawn-pt 'cave-goblin-berserker faction-cave-goblin) 9 9)
+ (put (spawn-pt 'cave-goblin-priest faction-cave-goblin) 9 10)
  )
 
 (mk-dungeon-room

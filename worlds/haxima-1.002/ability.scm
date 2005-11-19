@@ -156,6 +156,10 @@
          (dir (loc-to-cardinal-dir v)))
     (spew-in-dir dir)))
 
+(define (teleport-proc kchar loc)
+  (kern-log-msg (kern-obj-get-name kchar)
+                " teleports")
+  (kern-obj-relocate kchar loc nil))
 
 ;;----------------------------------------------------------------------------
 ;; Ability declarations
@@ -175,6 +179,7 @@
 (define cast-fireball       (mk-ability "cast fireball" 3 3 1 cast-fireball-proc))
 (define cast-kill           (mk-ability "cast kill" 7 7 2 cast-kill-proc))
 (define web-spew            (mk-ability "spew web" 4 4 2 web-spew-proc))
+(define teleport            (mk-ability "teleport" 6 6 2 teleport-proc))
 
 ;;----------------------------------------------------------------------------
 ;; Abilities listed by various attributes

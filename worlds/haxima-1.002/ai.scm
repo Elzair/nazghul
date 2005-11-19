@@ -1,4 +1,36 @@
+(define (in-melee-range-of-foes? kchar)
+  (> (length (get-hostiles-in-range kchar 1))
+     0))
 
+(define (blink-offset kchar)
+  (let ((origin (kern-obj-get-location kchar)))
+    (loc-add origin
+             (loc-norm (apply loc-add 
+                              (map (lambda (kfoe)
+                                     (loc-diff origin
+                                               (kern-obj-get-location kfoe)))
+                                   (all-visible-hostiles kchar)))))))
+
+(define (choose-blink-loc kchar)
+  (let ((loc (blink-offset kchar)))
+    (println "choose-blink-loc " loc)
+    (if (and (not (null? loc))
+             (not (loc-equal? loc
+                              (kern-obj-get-location kchar)))
+             (passable? loc kchar)
+             (not (is-bad-terrain-at? loc))
+             (not (any-object-types-at? loc all-field-types))
+             (not (occupied? loc)))
+        loc
+        nil)))
+
+(define (blink-away-from-foes kchar)
+  (if (not (can-use-ability? teleport kchar))
+      #f
+      (let ((loc (choose-blink-loc kchar)))
+        (if (null? loc)
+            #f
+            (use-ability teleport kchar loc)))))
 
 ;; Bandit AI --------------------------------------------------
 
@@ -35,12 +67,11 @@
       (use-potion? kchar)))
 
 (define (spell-sword-ai kchar)
-  ;;(display "spell-sword-ai")(newline)
+  (println "spell-sword-ai")
   (or (std-moves? kchar)
       (use-spell-on-self? kchar)
       (use-melee-spell-on-foes? kchar)
       (use-ranged-spell-on-foes? kchar)))
-
 
 (define (shaman-ai kchar)
   ;;(display "shaman-ai ")(dump-char kchar)
@@ -49,6 +80,12 @@
       (move-toward-patient? kchar)
       (spell-sword-ai kchar)
       (move-away-from-foes? kchar)))
+
+(define (priest-ai kchar)
+  (or (std-moves? kchar)
+      (and (in-melee-range-of-foes? kchar)
+           (blink-away-from-foes kchar))
+      (spell-sword-ai kchar)))
 
 (define (generic-ai kchar)
   (std-moves? kchar))
@@ -90,14 +127,14 @@
 ;                (kern-place-get-terrain loc))))
 ;   (let* ((curloc (kern-obj-get-location kchar))
 ;          (foeloc (kern-obj-get-location nearest))
-;          (vect (loc-norm (loc-diff curloc foeloc)))
+;          (vect (loc-canonical (loc-diff curloc foeloc)))
 ;          (locs (filter is-hiding-place?
 ;                        (append (loc-opposite-x curloc (loc-x vect))
 ;                                (loc-opposite-y curloc (loc-y vect))))))
 ;     (if (null? locs)
 ;         #f
 ;         (let* ((newloc (car locs))
-;               (vect (loc-norm (loc-diff newloc curloc)))
+;               (vect (loc-canonical (loc-diff newloc curloc)))
 ;               (dx (loc-x vect))
 ;               (dy (loc-y vect)))
 ;           (println "  locs=" locs)

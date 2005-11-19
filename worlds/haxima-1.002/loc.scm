@@ -49,8 +49,26 @@
             (loc-addy (loc-addx loc -1) dy)
             (loc-addy (loc-addx loc  1) dy))))
 
+;; loc-wrap -- wrap location around edges of a wrapping map
+(define (loc-wrap loc)
+  (let ((place (loc-place loc)))
+    (if (not (kern-place-is-wrapping? place))
+        loc
+        (mk-loc place
+                (modulo (loc-x loc) (kern-place-get-width place))
+                (modulo (loc-y loc) (kern-place-get-height place))))))
 
+;; loc-add -- vector sum of locations (auto wraps)
+(define (loc-add . locs)
+  (println "loc-add " locs)
+  (if (null? locs)
+      nil
+      (loc-wrap (mk-loc (loc-place (car locs))
+                        (foldr (lambda (dx loc) (+ dx (loc-x loc))) 0 locs)
+                        (foldr (lambda (dy loc) (+ dy (loc-y loc))) 0 locs)))))
 
+;; loc-diff -- vector difference of two locations; on wrapping maps there are
+;; two solutions, the shortest is returned
 (define (loc-diff a b)
   (let ((place (loc-place a)))
     (if (kern-place-is-wrapping? place)
@@ -61,6 +79,7 @@
         (mk-loc place
                 (- (loc-x a) (loc-x b))
                 (- (loc-y a) (loc-y b))))))
+
 
 (define (loc-to-cardinal-dir loc)
   (let ((x (loc-x loc))
@@ -108,8 +127,9 @@
   (< (loc-grid-distance a c)
      (loc-grid-distance b c)))
 
-;; Convert a location vector to "normal" form
-(define (loc-norm loc)
+;; loc-canonical -- return "canonical" form of vector (ie, one of the four
+;; cardinal directions)
+(define (loc-canonical loc)
   (define (norm a)
     (cond ((> a 0) 1)
           ((< a 0) -1)
@@ -117,6 +137,38 @@
   (mk-loc (loc-place loc)
           (norm (loc-x loc))
           (norm (loc-y loc))))
+
+;; loc-sdiv -- scalar division
+(define (loc-sdiv loc s)
+  (mk-loc (loc-place loc)
+          (/ (loc-x loc s))
+          (/ (loc-y loc s))))
+
+;; loc-smul -- scaler multiplication
+(define (loc-smul loc s)
+  (println "loc-smul " loc " " s)
+  (mk-loc (loc-place loc)
+          (* (loc-x loc) s)
+          (* (loc-y loc) s)))
+
+;; loc-norm -- convert loc to normal form (where at least one component has
+;; length 1)
+(define (loc-norm loc)
+  (println "loc-norm " loc)
+  (let ((s (min (abs (loc-x loc)) 
+                     (abs (loc-y loc)))))
+    (if (<= s 1)
+        loc
+        (loc-sdiv loc s))))
+
+(define (loc-zero? loc)
+  (and (= 0 (loc-x loc))
+       (= 0 (loc-y loc))))
+
+(define (loc-equal? a b)
+  (and (eqv? (loc-place a) (loc-place b))
+       (= (loc-x a) (loc-x b))
+       (= (loc-y a) (loc-y b))))
 
 ;; ----------------------------------------------------------------------------
 ;; loc-enum-rect -- given a rectangular region of a place return a flat list of

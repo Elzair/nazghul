@@ -1,12 +1,5 @@
 ;;----------------------------------------------------------------------------
 ;; NPC type constructors
-;;
-;; Dependencies:
-;;  game.scm
-;;  species.scm
-;;  occ.scm
-;;  containers.scm
-;;  effects.scm
 ;;----------------------------------------------------------------------------
 
 (load "yellow-slime.scm")
@@ -197,6 +190,8 @@
   (mk-npct "a cave goblin slinger" sp_cave_goblin oc_warrior s_orc basic-traps slinger-equip 'generic-ai))
 (define cave-goblin-berserker
   (mk-npct "a cave goblin berserker" sp_cave_goblin oc_warrior s_orc basic-traps berserker-equip 'generic-ai))
+(define cave-goblin-priest
+  (mk-npct "a cave goblin priest" sp_cave_goblin oc_wizard s_orc wizard-traps wizard-equip 'priest-ai))
 
 
 

@@ -570,7 +570,7 @@
 (define (evade kchar foes)
   ;;(display "evade")(newline)
   (let* ((tloc (kern-obj-get-location kchar))
-         (v (loc-norm (foldr (lambda (a b) 
+         (v (loc-canonical (foldr (lambda (a b) 
                                (loc-sum a 
                                         (loc-diff tloc 
                                                   (kern-obj-get-location b))))
@@ -992,8 +992,10 @@
              ;;(display "  checking ")(dump-char ktarg)
              (if (and (wants-healing? ktarg)
                       (or (null? kpatient)                      
-                          (< (kern-get-distance kloc (kern-obj-get-location ktarg))
-                             (kern-get-distance kloc (kern-obj-get-location kpatient)))))
+                          (< (kern-get-distance kloc 
+                                                (kern-obj-get-location ktarg))
+                             (kern-get-distance kloc 
+                                                (kern-obj-get-location kpatient)))))
                  ktarg
                  kpatient))
            nil
@@ -1303,5 +1305,15 @@
        (move-to-good-tile)))
 
 (define (move-away-from-foes? kchar)
-  (println "move-away-from-foes?")
+  ;;(println "move-away-from-foes?")
   (evade kchar (all-visible-hostiles kchar)))
+
+;; random-loc -- choose a random location
+(define (random-loc kplace x y w h pred?)
+  (let* ((loc (mk-loc kplace 
+                      (+ x (modulo (random-next) w))
+                      (+ y (modulo (random-next) h)))))
+    (if (pred? loc)
+        loc
+        nil)))
+
