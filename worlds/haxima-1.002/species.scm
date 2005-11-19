@@ -52,7 +52,7 @@
 (mk-species 'sp_insect       "insects"       1  1 18 2   3  0  4 mmode-hover t_stinger    nil      1  nil            nil             nil)
 (mk-species 'sp_yellow_slime "yellow slime"  4  4  4 1  15  8  6 mmode-walk  t_acid_spray nil      2  nil            sound-squishing nil)
 (mk-species 'sp_green_slime  "green slime"   2  2  2 1  10  0  5 mmode-walk  t_acid_spray nil      2  s_slime_asleep sound-squishing nil)
-(mk-species 'sp_skeleton     "skeleton"     12  8 12 1  22 10 10 mmode-walk  t_hands      nil      2  s_asleep       sound-walking   nil)
+(mk-species 'sp_skeleton     "skeleton"     12  8 12 1  22 10 10 mmode-walk  t_hands      humanoid  2  s_asleep       sound-walking   nil)
 (mk-species 'sp_snake        "snake"         2  2 14 1   5  0  6 mmode-walk  t_fangs      nil      1  s_asleep       sound-walking   nil)
 (mk-species 'sp_troll        "troll"        14  6 12 1  20  5 10 mmode-walk  t_hands      humanoid 3  s_asleep       sound-walking   nil)
 (mk-species 'sp_gint         "gint"         50  3  8 1 100  8 20 mmode-hover t_hands      giant    10 s_asleep       sound-walking   nil)

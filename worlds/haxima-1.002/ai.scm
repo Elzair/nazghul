@@ -1,3 +1,181 @@
+;;----------------------------------------------------------------------------
+;; procedures for using items or spells on self or others
+
+;; use-potion? -- use potion on self if desired and available
+(define (use-potion? kchar)
+  (or (and (wants-healing? kchar)
+           (has-heal-potion? kchar)
+           (drink-heal-potion kchar))
+      (and (wants-mana? kchar)
+           (has-mana-potion? kchar)
+           (drink-mana-potion kchar))))
+
+(define (use-heal-spell-on-self? kchar)
+  ;;;;(display "use-heal-spell-on-self?")(newline)
+  (and (wants-healing? kchar)
+       (can-use-ability? heal-ability kchar)
+       (use-ability heal-ability kchar kchar)))
+
+(define (use-great-heal-spell-on-self? kchar)
+  ;;;;(display "use-great-heal-spell-on-self?")(newline)
+  (and (wants-great-healing? kchar)
+       (can-use-ability? great-heal-ability kchar)
+       (use-ability great-heal-ability kchar kchar)))
+
+(define (use-spell-on-self? kchar)
+  ;;;;(display "use-spell-on-self?")(newline)
+  (or (use-great-heal-spell-on-self? kchar)
+      (use-heal-spell-on-self? kchar)))
+
+;; use-melee-spell-on-foe? -- randomly select from a list of melee spells and
+;; return #t iff the spell is used
+(define (use-melee-spell-on-foe? kchar ktarg)
+  (let ((spell (random-select (filter (lambda (spell)
+                                        (can-use-ability? spell kchar))
+                                      melee-spells))))
+    (if (null? spell)
+        #f
+        (use-ability spell kchar ktarg))))
+
+(define (use-melee-spell-on-foes? kchar)
+  ;;(display "use-melee-spell-on-foes?")(newline)
+  (foldr (lambda (val ktarg)
+           (or val
+               (use-melee-spell-on-foe? kchar ktarg)))
+         #f 
+         (get-hostiles-in-range kchar 1)))
+
+
+(define (use-ranged-spell-on-foe? kchar ktarg)
+  (let ((spell-range (random-select (filter (lambda (spell-range)
+                                        (and (can-use-ability? (car spell-range)
+                                                               kchar)
+                                             (can-hit? kchar 
+                                                       ktarg 
+                                                       (cdr spell-range))))
+                                      ranged-spells))))
+    (if (null? spell-range)
+        #f
+        (use-ability (car spell-range) kchar ktarg))))
+
+(define (use-ranged-spell-on-foes? kchar)
+  ;;(display "use-ranged-spell-on-foes?")(newline)
+  (foldr (lambda (val ktarg)
+           ;;(display "ktarg=");;(display ktarg)(newline)
+           (or val
+               (use-ranged-spell-on-foe? kchar ktarg)))
+         #f 
+         (all-visible-hostiles kchar)))
+
+(define (use-heal-spell-on? kchar ktarg)
+  ;;(println "use-heal-spell-on?")
+  (or (and (wants-great-healing? ktarg)
+           (can-use-ability? great-heal-ability kchar)
+           (use-ability great-heal-ability kchar ktarg)
+           )
+      (and (wants-healing? ktarg)
+           (can-use-ability? heal-ability kchar)
+           (use-ability heal-ability kchar ktarg)
+           )))
+
+(define (use-heal-spell-on-ally? kchar)
+  ;;(println "use-heal-spell-on-ally?")
+  (and (or (can-use-ability? heal-ability kchar)
+           (can-use-ability? great-heal-ability kchar))
+       (foldr (lambda (val ktarg)
+                (or val
+                    (use-heal-spell-on? kchar ktarg)))
+              #f 
+              (all-in-range (kern-obj-get-location kchar)
+                            2
+                            (all-visible-allies kchar)))))
+
+;;----------------------------------------------------------------------------
+;; procedures for searching for nearby things
+
+(define (get-nearest-patient kchar)
+  (let ((kloc (kern-obj-get-location kchar)))
+    (foldr (lambda (kpatient ktarg)
+             ;;(display "  checking ")(dump-char ktarg)
+             (if (and (wants-healing? ktarg)
+                      (or (null? kpatient)                      
+                          (< (kern-get-distance kloc 
+                                                (kern-obj-get-location ktarg))
+                             (kern-get-distance kloc 
+                                                (kern-obj-get-location kpatient)))))
+                 ktarg
+                 kpatient))
+           nil
+           (all-visible-allies kchar))))
+
+
+;;----------------------------------------------------------------------------
+;; procedures for pursuing or avoiding
+
+(define (avoid-melee? kchar)
+  ;;;;(display "avoid-melee? kchar")(newline)
+  (let ((nearby-foes (get-hostiles-in-range kchar 1)))
+    (if (null? nearby-foes)
+        #f
+        (evade kchar nearby-foes))))
+
+;; This is for medics. A patient is an ally that needs healing. If a patient is
+;; less than 2 tiles away then do nothing. If a patient is more than 2 tiles
+;; away then pathfind toward it.
+(define (move-toward-patient? kchar)
+  (let ((patient (get-nearest-patient kchar)))
+    (if (null? patient)
+        #f
+        (begin
+          ;;(display "selected ")(dump-char patient)
+          (if (in-range? (kern-obj-get-location kchar)
+                         2
+                         patient)
+              #f
+              (pathfind kchar (kern-obj-get-location patient)))))))
+
+(define (get-off-bad-tile? kchar)
+  ;;(display "get-off-bad-tile")(newline)
+  
+  (define (is-bad-loc? loc)
+    ;;(display "is-bad-loc?")(newline)
+    (or (is-bad-terrain-at? loc)
+        (any-object-types-at? loc spider-bad-fields)))
+
+  (define (choose-good-tile tiles)
+    ;;(display "choose-good-tile")(newline)
+    (define (is-good-tile? tile)
+      ;;(display "is-good-tile?")(newline)
+      (and (passable? tile kchar)
+           (not (occupied? tile))
+           (not (is-bad-loc? tile))))
+    (if (null? tiles)
+        nil
+        (if (is-good-tile? (car tiles))
+            (car tiles)
+            (choose-good-tile (cdr tiles)))))
+
+  (define (move-to-good-tile)
+    ;;(display "move-to-good-tile")(newline)
+    (let* ((curloc (kern-obj-get-location kchar))
+           (tiles (get-4-neighboring-tiles curloc))
+           (newloc (choose-good-tile tiles)))
+      (if (null? newloc)
+          #f
+          (begin
+            ;;(display "moving")(newline)
+            (kern-obj-move kchar 
+                           (- (loc-x newloc) (loc-x curloc))
+                           (- (loc-y newloc) (loc-y curloc)))
+            #t))))
+
+  (and (is-bad-loc? (kern-obj-get-location kchar))
+       (move-to-good-tile)))
+
+(define (move-away-from-foes? kchar)
+  ;;(println "move-away-from-foes?")
+  (evade kchar (all-visible-hostiles kchar)))
+
 (define (in-melee-range-of-foes? kchar)
   (> (length (get-hostiles-in-range kchar 1))
      0))

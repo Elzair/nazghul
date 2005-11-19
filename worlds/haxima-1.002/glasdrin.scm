@@ -131,7 +131,6 @@
 
   ;; guards
   (put (post-guard (mk-halberdier) 6 32) 6 32)
-  (put (mk-skeletal-warrior) 10 32)
 
   ;; lower right wall entrance
   (put (mk-door) 55 57)

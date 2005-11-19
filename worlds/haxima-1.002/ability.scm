@@ -191,8 +191,11 @@
         cast-poison-field
         cast-energy-field))
 
+;; ranged-spells -- damaging spells which take a target kchar as an arg. The
+;; range is the caster's level divided by the number given here plus one:
+;;   range=(lvl/div)+1
 (define ranged-spells
-  (list (cons cast-magic-missile 8)
-        (cons cast-poison-missile 8)
-        (cons cast-fireball 8)
-        (cons cast-kill 6)))
+  (list (cons cast-magic-missile 1)
+        (cons cast-poison-missile 2)
+        (cons cast-fireball 2)
+        (cons cast-kill 4)))

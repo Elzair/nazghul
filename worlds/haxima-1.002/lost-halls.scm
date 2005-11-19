@@ -34,8 +34,7 @@
                    (list 'mk-wood-spider "1d8")) 9 18)
  (put (mk-mongen2 950 1 'is-troll? 'mk-at-level
                   (list 'mk-troll "1d8")) 7 8)
- (put (mk-mongen2 950 1 'is-goblin? 'mk-at-level
-                  (list 'mk-goblin-hunter "1d8")) 18 8)
+ (put (spawn-pt 'cave-goblin-slinger faction-cave-goblin) 18 8)
  (put (mk-mongen2 950 1 'is-green-slime? 'mk-at-level
                   (list 'mk-green-slime "1d8")) 11 10)
  (put (mk-ladder-up 'p_shard 82 20) 2 2)
@@ -66,8 +65,7 @@
   "rr xx xx xx .. .. .. ,, ,, ,, ,, ,, ,, ,, ,, xx rr .. rr "
   "rr xx rr rr rr rr bb ,, ,, ,, ,, ,, rr rr rr xx xx rr rr "
   )
- (put (mk-edge-gen 950 2 'is-goblin? 'mk-at-level
-                  (list 'mk-goblin-hunter "1d8")) 0 9)
+ (put (spawn-pt 'cave-goblin-slinger faction-cave-goblin) 0 9)
  (put (mk-edge-gen 950 1 'is-gint? 'mk-at-level
                    (list 'mk-gint "1d8")) 9 18)
  (put (mk-edge-gen 950 1 'is-gint? 'mk-at-level

@@ -1,9 +1,6 @@
-;; ----------------------------------------------------------------------------
-;; Map
-;; ----------------------------------------------------------------------------
-  (kern-mk-map
-    'm_merciful_death 19 19 pal_expanded
-    (list
+(kern-mk-map
+ 'm_merciful_death 19 19 pal_expanded
+ (list
       ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
       ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
       ".. .. ~~ ~~ ~~ ~~ ~~ .. .. .. .. .. ~~ ~~ ~~ ~~ ~~ .. .. "
@@ -53,14 +50,13 @@
  
  ;; objects
  (list
+  (put (mk-monman) 0 0)
   (put (mk-ladder-down 'p_merciful_death_l2 6 9) 6 9)
-  (put (mk-at-level 'mk-skeletal-warrior "1d3+5") 7 9)
-  (put (mk-at-level 'mk-skeletal-warrior "1d3+5") 10 9)
-  (put (mk-edge-gen 995 2 'is-skeletal-warrior? 'mk-at-level (list 'mk-skeletal-warrior "1d3+5"))
-       6 9)
+  (put (spawn-pt 'skeletal-warrior faction-monster) 7 9)
+  (put (spawn-pt 'skeletal-spear-thrower faction-monster) 10 9)
   )
 
- nil ; hooks
+ (list 'on-entry-to-dungeon-room) ; hooks
  nil ; edge entrances
  )
 
@@ -120,7 +116,7 @@
  
  ;; objects
  (list
-
+  (put (mk-monman) 0 0)
   (put (mk-ladder-up 'p_merciful_death 6 9) 6 9)
   (put (mk-chest
         'poison-trap
@@ -128,12 +124,10 @@
                      (add-content 342 t_gold_coins)
                      (add-content 4   t_gem)))
        14 9)
-  (put (mk-at-level 'mk-skeletal-warrior "1d3+5") 7 9)
-  (put (mk-at-level 'mk-skeletal-warrior "1d3+5") 10 9)
-  (put (mk-edge-gen 990 2 'is-skeletal-warrior? 'mk-at-level (list 'mk-skeletal-warrior "1d3+5"))
-       6 9)
+  (put (spawn-pt 'skeletal-warrior faction-monster) 7 9)
+  (put (spawn-pt 'skeletal-spear-thrower faction-monster) 10 9)
   )
 
- nil ; hooks
+ (list 'on-entry-to-dungeon-room) ; hooks
  nil ; edge entrances
  )

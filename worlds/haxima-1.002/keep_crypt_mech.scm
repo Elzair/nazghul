@@ -44,12 +44,14 @@
       ;;(display "remove-corpse")(newline)
       (kern-obj-remove corpse))
     
+    (define (mk-skeleton)
+      (if (> (modulo (random-next) 2) 0)
+          (mk-npc 'skeletal-warrior faction-monster (kern-dice-roll "1d3+4"))
+          (mk-npc 'skeletal-spear-thrower faction-monster (kern-dice-roll "1d3+4"))))
+
     (define (put-skeleton loc)
       ;;(display "put-skeleton")(newline)
-      (kern-obj-put-at (mk-at-level 'mk-skeletal-warrior
-                                    "1d3"
-                                    nil)
-                       loc))
+      (kern-obj-put-at (mk-skeleton) loc))
     
     (define (good? loc)
       ;;(display "good?")(newline)

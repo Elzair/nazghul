@@ -86,8 +86,11 @@ static void myConsiderArms(struct inv_entry *ie, void *data)
 	if (!ie->type->isType(ARMS_TYPE_ID))
 		return;
 	class ArmsType *arms = (class ArmsType *) ie->type;
-	int val = dice_average(arms->getDamageDice()) * arms->getRange() +
-	    dice_average(arms->getArmorDice());
+	int val = 2 * dice_average(arms->getDamageDice()) * arms->getRange()
+                + 2 * dice_average(arms->getArmorDice())
+                + 2 * dice_average(arms->getToDefendDice())
+                + dice_average(arms->getToHitDice())
+                ;
         if (val) {
                 for (int i = 0; 
                      i < ie->count && ks->n_items < MAX_N_ITEMS; 

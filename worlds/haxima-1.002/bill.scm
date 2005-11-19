@@ -28,7 +28,7 @@
 ;;----------------------------------------------------------------------------
 ;; Conv
 ;;
-;; Bill is a ranger of the Fens. He camps at the Enchanter's Tower.
+;; Bill is a woodcutter who lives in Bole. Not the sharpest tool in the shed.
 ;;----------------------------------------------------------------------------
 (define (bill-trade knpc kpc)
   (kern-conv-trade knpc kpc

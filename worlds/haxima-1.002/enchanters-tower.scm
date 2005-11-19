@@ -47,7 +47,7 @@
 (kern-load "zane.scm")
 (mk-zane-first-time 'ch_zane)
 
-(kern-load "gate-guard.scm")
+;;(kern-load "gate-guard.scm")
 
 (kern-load "enchanter.scm")
 (mk-enchanter-first-time 'ch_enchanter)

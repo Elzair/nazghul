@@ -109,7 +109,7 @@
 ;; mk-npc -- create a kernel character of the given type, faction and level
 (define (mk-npc npct-tag faction lvl)
   (let ((npct (eval npct-tag)))
-    ;;(println "mk-npc:" npct " " faction " " lvl)
+    ;;(println "mk-npc:" npct " " faction " " lvl)g
     (bind
      (set-level
       (kern-char-arm-self
@@ -145,38 +145,58 @@
 
 ;; common equipment packages for different types of npcs
 (define wizard-equip 
-  (list (list 100 "1" t_dagger)
+  (list (list 100 "1"     t_dagger)
         (list 100 "1d2-1" t_heal_potion)
         (list 100 "1d2+1" t_mana_potion)
-        (list 100 "1d20" t_gold_coins)
-        (list 10  "1d3" t_food)
+        (list 100 "1d20"  t_gold_coins)
+        (list 10  "1d3"   t_food)
         ))
 (define archer-equip 
-  (list (list 100 "1" t_bow)
-        (list 100 "10" t_arrow)
-        (list 100 "1" t_dagger)
-        (list 50  "1" t_heal_potion)
-        (list 100 "1d10" t_gold_coins)
-        (list 20  "1d3" t_food)
+  (list (list 100 "1"     t_bow)
+        (list 100 "10"    t_arrow)
+        (list 100 "1"     t_dagger)
+        (list 50  "1"     t_heal_potion)
+        (list 100 "1d10"  t_gold_coins)
+        (list 20  "1d3"   t_food)
         ))
 (define stalker-equip 
-  (list (list 100 "2" t_dagger)
-        (list 100 "1" t_leather_helm)
-        (list 100 "1" t_armor_leather)
-        (list 100 "1d2" t_heal_potion)
-        (list 100 "1d15" t_gold_coins)
-        (list 30  "1d3" t_food)
+  (list (list 100 "2"     t_dagger)
+        (list 100 "1"     t_leather_helm)
+        (list 100 "1"     t_armor_leather)
+        (list 100 "1d2"   t_heal_potion)
+        (list 100 "1d15"  t_gold_coins)
+        (list 30  "1d3"   t_food)
         ))
 (define slinger-equip 
-  (list (list 100 "1" t_sling)
-        (list 100 "1d10" t_gold_coins)
-        (list 20  "1d3" t_food)
+  (list (list 100 "1"     t_sling)
+        (list 100 "1d10"  t_gold_coins)
+        (list 20  "1d3"   t_food)
         ))
 (define berserker-equip 
-  (list (list 100 "2" t_axe)         
-        (list 100 "1d2" t_heal_potion)
-        (list 100 "1d15" t_gold_coins)
-        (list 30  "1d3" t_food)
+  (list (list 100 "2"     t_axe)         
+        (list 100 "1d2"   t_heal_potion)
+        (list 100 "1d15"  t_gold_coins)
+        (list 30  "1d3"   t_food)
+        ))
+(define ranger-equip
+  (list (list 100 "1"     t_sword)
+        (list 100 "1"     t_bow)
+        (list 100 "20"    t_arrow)
+        (list 100 "1"     t_leather_helm)
+        (list 100 "1"     t_armor_leather)
+        (list 100 "1d3-1" t_heal_potion)
+        ))
+(define skeletal-warrior-equip
+  (list (list 100 "1"     t_sword)
+        (list 100 "1"     t_shield)
+        (list 100 "1"     t_iron_helm)
+        (list 100 "1d20"  t_gold_coins)
+        ))
+(define skeletal-spear-thrower-equip
+  (list (list 100 "1d20"  t_spear)
+        (list 100 "1"     t_iron_helm)
+        (list 100 "1"     t_axe)
+        (list 100 "1d20"  t_gold_coins)
         ))
 
 ;; npc types
@@ -192,117 +212,44 @@
   (mk-npct "a cave goblin berserker" sp_cave_goblin oc_warrior s_orc basic-traps berserker-equip 'generic-ai))
 (define cave-goblin-priest
   (mk-npct "a cave goblin priest" sp_cave_goblin oc_wizard s_orc wizard-traps wizard-equip 'priest-ai))
+(define ranger
+  (mk-npct "a ranger" sp_human oc_warrior s_companion_ranger basic-traps ranger-equip 'generic-ai))
+(define skeletal-spear-thrower
+  (mk-npct "a skeletal spear-thrower" sp_skeleton oc_warrior s_skeleton basic-traps skeletal-spear-thrower-equip 'generic-ai))
+(define skeletal-warrior 
+  (mk-npct "a skeletal warrior" sp_skeleton oc_warrior s_skeleton basic-traps skeletal-warrior-equip 'generic-ai))
 
-
-
-;;----------------------------------------------------------------------------
-;; NPC Type Constructors
-;;----------------------------------------------------------------------------
-
-(define (mk-ranger)
-  (kern-char-arm-self
-   (mk-stock-char
-    "a ranger" ;;........name
-    sp_human ;;........species
-    oc_archer ;;........occupation
-    s_companion_ranger ;;............sprite
-    faction-men ;;.....faction
-    nil ;;..............custom ai (optional)
-    
-    ;;..................container (and contents, used to arm char)
-    (mk-chest
-     nil
-     (mk-contents (roll-to-add 100 "1"     t_sword)
-                  (roll-to-add 50  "1"     t_bow)
-                  (roll-to-add 50  "1d20"  t_arrow)
-                  (roll-to-add 100 "1"     t_leather_helm)
-                  (roll-to-add 100 "1"     t_armor_leather)
-                  (roll-to-add 100 "1d3-1" t_heal_potion)))
-
-    nil ;;...............readied arms (in addition to container contents)
-    nil ;;...............effects
-    nil ;;...............conversation
-    )))
-
-(define (mk-goblin-raider)
-  (kern-char-arm-self
-   (mk-stock-char
-    " an ork" ;;........name
-    sp_cave_goblin ;;........species
-    oc_warrior ;;........occupation
-    s_orc ;;............sprite
-    faction-cave-goblin ;;.....faction
-    nil ;;..............custom ai (optional)
-    
-    ;;..................container (and contents, used to arm char)
-    (mk-chest
-     nil
-     (mk-contents (roll-to-add 100 "1"     t_sword)
-                  (roll-to-add 25  "1d3-1" t_spear)
-                  (roll-to-add 75  "1"     t_shield)
-                  (roll-to-add 50  "1"     t_leather_helm)
-                  (roll-to-add 25  "1"     t_armor_leather)
-                  (roll-to-add 100 "1d3-1" t_heal_potion)))
-
-    nil ;;...............readied arms (in addition to container contents)
-    nil ;;...............effects
-    nil ;;...............conversation
-    )))
-
-(define (mk-goblin-hunter)
-   (kern-char-arm-self
-    (mk-stock-char
-     " a goblin hunter" ;;........name
-     sp_cave_goblin ;;........species
-     oc_archer ;;........occupation
-     s_orc ;;............sprite
-     faction-cave-goblin ;;.....faction
-     nil ;;..............custom ai (optional)
-     ;;..................container (and contents, used to arm char)
-     (mk-chest
-      nil
-      (mk-contents (roll-to-add 95  "1"     t_dagger)
-                   (roll-to-add 100 "1"     t_bow)
-                   (roll-to-add 50  "1d20"  t_arrow)
-                   (roll-to-add 25  "1"     t_leather_helm)
-                   (roll-to-add 25  "1"     t_armor_leather)
-                   (roll-to-add 75  "1d3-1" t_heal_potion)))
-     nil ;;...............readied arms (in addition to container contents)
-     nil ;;...............effects
-     nil ;;...............conversation
-     )))
-
-(define (mk-skeletal-warrior)
-  (bind (kern-char-arm-self
-         (mk-stock-char
-          " a skeleton" ;;.....name
-          sp_skeleton ;;.......species
-          oc_warrior ;;.........occupation
-          s_skeleton ;;........sprite
-          faction-monster ;;...faction
-          nil ;;...............custom ai (optional)
+; (define (mk-skeletal-warrior)
+;   (bind (kern-char-arm-self
+;          (mk-stock-char
+;           " a skeleton" ;;.....name
+;           sp_skeleton ;;.......species
+;           oc_warrior ;;.........occupation
+;           s_skeleton ;;........sprite
+;           faction-monster ;;...faction
+;           nil ;;...............custom ai (optional)
           
-          ;;...................container (and contents)
-          (mk-chest
-           nil
-           (mk-contents (roll-to-add 25  "1"     t_2h_axe)
-                        (roll-to-add 25  "1"     t_halberd)
-                        (roll-to-add 50  "1"     t_sword)
-                        (roll-to-add 25  "1"     t_2H_sword)
-                        (roll-to-add 50  "1"     t_shield)
-                        (roll-to-add 25  "1"     t_bow)
-                        (roll-to-add 50  "1d20"  t_arrow)
-                        (roll-to-add 50  "1"     t_iron_helm)
-                        (roll-to-add 50  "1"     t_armor_leather)
-                        (roll-to-add 25  "1"     t_armor_leather)
-                        (roll-to-add 10  "1"     t_armor_chain)
-                        (roll-to-add 2   "1"     t_armor_plate)))
+;           ;;...................container (and contents)
+;           (mk-chest
+;            nil
+;            (mk-contents (roll-to-add 25  "1"     t_2h_axe)
+;                         (roll-to-add 25  "1"     t_halberd)
+;                         (roll-to-add 50  "1"     t_sword)
+;                         (roll-to-add 25  "1"     t_2H_sword)
+;                         (roll-to-add 50  "1"     t_shield)
+;                         (roll-to-add 25  "1"     t_bow)
+;                         (roll-to-add 50  "1d20"  t_arrow)
+;                         (roll-to-add 50  "1"     t_iron_helm)
+;                         (roll-to-add 50  "1"     t_armor_leather)
+;                         (roll-to-add 25  "1"     t_armor_leather)
+;                         (roll-to-add 10  "1"     t_armor_chain)
+;                         (roll-to-add 2   "1"     t_armor_plate)))
           
-          nil ;;...............readied arms (in addition to container contents)
-          nil ;;...............effects
-          nil ;;...............conversation
-          ))
-        (list 'skeletal-warrior)))
+;           nil ;;...............readied arms (in addition to container contents)
+;           nil ;;...............effects
+;           nil ;;...............conversation
+;           ))
+;         (list 'skeletal-warrior)))
 
 (define (is-skeletal-warrior? kchar)
   (let ((gob (kobj-gob-data kchar)))

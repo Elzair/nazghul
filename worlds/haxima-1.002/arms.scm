@@ -255,8 +255,8 @@
    ;;     ===========================================================================================================
    ;;     tag                 | name             | sprite                | to-hit | deflect  | slots    | weight
    ;;     ===========================================================================================================
-   (list   't_shield           "small shield"     s_shield                "-1"     "1"      slot-shield   2)
-   (list   't_shield_4         "+4 small shield"  s_shield                "3"      "5"      slot-shield   2)
+   (list   't_shield           "small shield"     s_shield                "-1"     "2"      slot-shield   2)
+   (list   't_shield_4         "+4 small shield"  s_shield                "0"      "6"      slot-shield   2)
    (list   't_scratched_shield "scratched shield" s_scratched_shield      "0"      "3"      slot-shield   2)
    ))
 
