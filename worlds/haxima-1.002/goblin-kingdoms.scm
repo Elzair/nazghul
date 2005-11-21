@@ -1,3 +1,6 @@
+(kern-load "douglas.scm")
+(kern-load "anne.scm")
+
 (mk-dungeon-room
  'p_kurpolis_entrance "Entrance to Kurpolis"
  (list
@@ -12,8 +15,8 @@
       "xx ,, ,, ,, x! ,, ,, ,, ,, ,, ,, ,, ,, ,, x! bb ,, bb ,, "
       "x! ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, w+ bb ,, ,, ,, "
       "xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, bb ,, "
-      "xx ,, ,, ,, x! ,, ,, ,, ,, ,, ,, ,, ,, ,, w+ bb bb bb ,, "
-      "xx ,, ,, ,, xx ,, ,, ,, ,, ,, ,, ,, ,, ,, x! bb ,, bb rr "
+      "xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, w+ bb bb bb ,, "
+      "xx ,, ,, ,, x! ,, ,, ,, ,, ,, ,, ,, ,, ,, x! bb ,, bb rr "
       "xx ,, ,, ,, xx xx xx xx xx xx xx xx xx xx xx ,, bb rr rr "
       "xx ,, ,, ,, xx ,, ,, ,, ,, ,, ,, ,, ,, ,, xx rr rr rr rr "
       "xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx rr rr rr rr "
@@ -40,6 +43,11 @@
  (put (guard-pt 'crossbowman) 13 9)
  (put (guard-pt 'crossbowman) 13 11)
  (put (guard-pt 'halberdier) 11 10)
+ (put (guard-pt 'halberdier)  5  8)
+ (put (guard-pt 'halberdier)  5 12)
+
+ (put (mk-anne) 9 9)
+ (put (mk-douglas) 9 9)
 
  )
 

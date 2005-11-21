@@ -68,7 +68,7 @@
          (all-visible-hostiles kchar)))
 
 (define (use-heal-spell-on? kchar ktarg)
-  ;;(println "use-heal-spell-on?")
+  (println "use-heal-spell-on?")
   (or (and (wants-great-healing? ktarg)
            (can-use-ability? great-heal-ability kchar)
            (use-ability great-heal-ability kchar ktarg)
@@ -79,7 +79,7 @@
            )))
 
 (define (use-heal-spell-on-ally? kchar)
-  ;;(println "use-heal-spell-on-ally?")
+  (println "use-heal-spell-on-ally?")
   (and (or (can-use-ability? heal-ability kchar)
            (can-use-ability? great-heal-ability kchar))
        (foldr (lambda (val ktarg)
@@ -289,6 +289,13 @@
                           (use-ability disease-touch kchar (car victims))
                           #f))))))))
 
+(define (medik-ai kchar)
+  (println "medik-ai")
+  (or (std-ai kchar)
+      (use-heal-spell-on-ally? kchar)
+      (move-toward-patient? kchar)
+      (move-away-from-foes? kchar)))
+
 ;; guard-ai
 (define (guard-ai kchar)
   (define (try-to-use-ability)
@@ -301,12 +308,12 @@
                    #t)))
         #f))
   (define (goto-post)
-    (println "goto-post")
+    ;;(println "goto-post")
     (let ((guard (gob kchar)))
       (if (npcg-has-post? guard)
           (let ((post (cons (loc-place (kern-obj-get-location kchar))
                             (npcg-get-post guard))))
-            (println "post:" post)
+            ;;(println "post:" post)
             (pathfind kchar post)))))
   (or (use-potion? kchar)
       (if (any-visible-hostiles? kchar)

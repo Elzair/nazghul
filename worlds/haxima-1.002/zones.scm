@@ -233,3 +233,14 @@
 (define oa-bed5 (mk-zone 23 5 1 1))
 (define oa-slaves (mk-zone 1 12 6 7))
 (define oa-dining-hall (mk-zone 23 13 7 8))
+
+;;----------------------------------------------------------------------------
+;; Entrance to Kurpolis
+(define (mk-zone x y w h) (list 'p_kurpolis_entrance x y w h))
+(define ke-bed1 (mk-zone  5 17  1  1))
+(define ke-bed2 (mk-zone  7 17  1  1))
+(define ke-hall (mk-zone  1  3  3 13))
+(define ke-dine (mk-zone  5  1  9  5))
+(define ke-tbl1 (mk-zone  9  2  1  1))
+(define ke-tbl2 (mk-zone  9  4  1  1))
+(define ke-bunk (mk-zone  5 14  9  5))

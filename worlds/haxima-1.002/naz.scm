@@ -281,7 +281,7 @@
 ;; pathfind - use the built-in kernel call that uses cached paths and tries to
 ;; handle blocking mechanisms
 (define (pathfind kobj kdest)
-  (println "pathfind(" (kern-obj-get-name kobj) "," kdest ")")
+  ;;(println "pathfind(" (kern-obj-get-name kobj) "," kdest ")")
   (and (kern-obj-is-being? kobj)
        (kern-being-pathfind-to kobj kdest)))
 

@@ -4,15 +4,17 @@
 
 ;; fundamentals
 (define (generic-hail knpc kpc)
-  (kern-conv-say knpc "Well met"))
+  (say knpc "Well met"))
 
 (define (generic-unknown knpc kpc)
-  (kern-conv-say knpc "I can't help thee with that"))
+  (say knpc "I can't help you with that"))
 
 (define (generic-bye knpc kpc)
-  (kern-conv-say knpc "Farewell")
+  (say knpc "Farewell")
   (kern-conv-end))
 
+(define (generic-join knpc kpc)
+  (kern-conv-say knpc "I cannot join you."))
 
 ;; wise
 (define (basic-ench knpc kpc)
@@ -54,6 +56,7 @@
        (method 'hail generic-hail)
        (method 'default generic-unknown)
        (method 'bye generic-bye)
+       (method 'join generic-join)
        
        ;; wise
        (method 'ench basic-ench)
