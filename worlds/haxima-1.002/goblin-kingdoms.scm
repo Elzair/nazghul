@@ -32,6 +32,15 @@
  (put (mk-bed) 9 17)
  (put (mk-bed) 11 17)
  (put (mk-bed) 13 17)
+
+ (put (spawn-pt 'cave-goblin-slinger) 18 7)
+ (put (spawn-pt 'cave-goblin-slinger) 18 11)
+ (put (spawn-pt 'cave-goblin-berserker) 15 9)
+
+ (put (guard-pt 'crossbowman) 13 9)
+ (put (guard-pt 'crossbowman) 13 11)
+ (put (guard-pt 'halberdier) 11 10)
+
  )
 
 (mk-dungeon-room
@@ -57,12 +66,12 @@
   "rr rr rr rr rr rr rr rr {{ {{ {{ rr rr rr rr rr rr rr rr "
   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
   )
- (put (spawn-pt 'cave-goblin-slinger faction-cave-goblin) 14 11)
- (put (spawn-pt 'cave-goblin-berserker faction-cave-goblin) 15 9)
+ (put (spawn-pt 'cave-goblin-slinger) 14 11)
+ (put (spawn-pt 'cave-goblin-berserker) 15 9)
 
- (put (spawn-pt 'forest-goblin-hunter faction-forest-goblin) 15 5)
- (put (spawn-pt 'forest-goblin-hunter faction-forest-goblin) 12 7)
- ;;(put (spawn-pt 'forest-goblin-stalker faction-forest-goblin) 13 7)
+ (put (spawn-pt 'forest-goblin-hunter) 15 5)
+ (put (spawn-pt 'forest-goblin-hunter) 12 7)
+ ;;(put (spawn-pt 'forest-goblin-stalker) 13 7)
  
  )
 
@@ -89,9 +98,9 @@
   "rr rr rr rr rr rr rr {{ {{ {{ .. {{ rr rr {{ {{ {{ rr rr "
   "rr rr rr rr rr rr rr {{ {{ .. .. {{ rr rr rr rr rr rr rr "
   )
- (put (spawn-pt 'cave-goblin-slinger faction-cave-goblin) 8 4)
- (put (spawn-pt 'cave-goblin-berserker faction-cave-goblin) 9 9)
- (put (spawn-pt 'cave-goblin-priest faction-cave-goblin) 9 10)
+ (put (spawn-pt 'cave-goblin-slinger) 8 4)
+ (put (spawn-pt 'cave-goblin-berserker) 9 9)
+ (put (spawn-pt 'cave-goblin-priest) 9 10)
  )
 
 (mk-dungeon-room
@@ -145,14 +154,14 @@
   )
  (put (mk-ladder-down 'p_dank_cave 9 1) 17 11)
 
- (put (spawn-pt 'forest-goblin-shaman faction-forest-goblin) 9 3)
- (put (spawn-pt 'forest-goblin-shaman faction-forest-goblin) 10 4)
- (put (spawn-pt 'forest-goblin-shaman faction-forest-goblin) 8 4)
- (put (spawn-pt 'forest-goblin-shaman faction-forest-goblin) 9 5)
- (put (spawn-pt 'forest-goblin-hunter faction-forest-goblin) 3 11)
- (put (spawn-pt 'forest-goblin-hunter faction-forest-goblin) 4 10)
- (put (spawn-pt 'forest-goblin-stalker faction-forest-goblin) 5 11)
- (put (spawn-pt 'forest-goblin-stalker faction-forest-goblin) 4 12)
+ (put (spawn-pt 'forest-goblin-shaman) 9 3)
+ (put (spawn-pt 'forest-goblin-shaman) 10 4)
+ (put (spawn-pt 'forest-goblin-shaman) 8 4)
+ (put (spawn-pt 'forest-goblin-shaman) 9 5)
+ (put (spawn-pt 'forest-goblin-hunter) 3 11)
+ (put (spawn-pt 'forest-goblin-hunter) 4 10)
+ (put (spawn-pt 'forest-goblin-stalker) 5 11)
+ (put (spawn-pt 'forest-goblin-stalker) 4 12)
  )
 
 (mk-dungeon-level 

@@ -225,7 +225,7 @@
  (list   0   0   0   0  -1  -2  -2  -2   0  -2  -2   0) ;; none
  (list   0   2   1  -2  -1  -2  -2  -2  -2  -2  -2   0) ;; player
  (list  -1   1   2  -1  -2  -2  -2  -2  -2  -2  -2   0) ;; men
- (list  -1  -2  -1   2  -1  -2   0  -2  -2  -1  -2  -2) ;; cave goblin
+ (list  -1  -2  -2   2  -1  -2   0  -2  -2  -1  -2  -2) ;; cave goblin
  (list  -1  -1  -1  -1   2  -2  -1  -1  -2  -1  -2  -2) ;; accursed
  (list  -2  -2  -2  -2  -2   0   0   0  -2   0  -2   0) ;; monsters
  (list  -2  -2  -2   0  -1  -1   2  -2  -2  -1  -2  -2) ;; hill trolls
@@ -282,7 +282,7 @@
   )
 
 (define (simple-start kplayer)
-  (kern-obj-put-at kplayer (list p_slimy_cavern 8 30)))
+  (kern-obj-put-at kplayer (list p_kurpolis_entrance 9 9)))
       
 ;;----------------------------------------------------------------------------
 ;; To skip the extended start scene comment out this next line and uncomment

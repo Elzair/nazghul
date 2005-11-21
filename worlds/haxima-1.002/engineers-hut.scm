@@ -49,7 +49,7 @@
 
   (put (mk-engineer) 9 9)
 
-  (put (mk-npc 'bull faction-none 8) 3 15)
+  (put (mk-npc 'bull 8) 3 15)
   (put (mk-door) 15 13)
   (put (mk-bed) 16 15)
   (put (mk-chest

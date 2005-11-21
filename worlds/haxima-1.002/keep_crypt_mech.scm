@@ -46,8 +46,8 @@
     
     (define (mk-skeleton)
       (if (> (modulo (random-next) 2) 0)
-          (mk-npc 'skeletal-warrior faction-monster (kern-dice-roll "1d3+4"))
-          (mk-npc 'skeletal-spear-thrower faction-monster (kern-dice-roll "1d3+4"))))
+          (mk-npc 'skeletal-warrior (kern-dice-roll "1d3+4"))
+          (mk-npc 'skeletal-spear-thrower (kern-dice-roll "1d3+4"))))
 
     (define (put-skeleton loc)
       ;;(display "put-skeleton")(newline)

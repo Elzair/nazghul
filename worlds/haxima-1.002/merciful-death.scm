@@ -52,8 +52,8 @@
  (list
   (put (mk-monman) 0 0)
   (put (mk-ladder-down 'p_merciful_death_l2 6 9) 6 9)
-  (put (spawn-pt 'skeletal-warrior faction-monster) 7 9)
-  (put (spawn-pt 'skeletal-spear-thrower faction-monster) 10 9)
+  (put (spawn-pt 'skeletal-warrior) 7 9)
+  (put (spawn-pt 'skeletal-spear-thrower) 10 9)
   )
 
  (list 'on-entry-to-dungeon-room) ; hooks
@@ -124,8 +124,8 @@
                      (add-content 342 t_gold_coins)
                      (add-content 4   t_gem)))
        14 9)
-  (put (spawn-pt 'skeletal-warrior faction-monster) 7 9)
-  (put (spawn-pt 'skeletal-spear-thrower faction-monster) 10 9)
+  (put (spawn-pt 'skeletal-warrior) 7 9)
+  (put (spawn-pt 'skeletal-spear-thrower) 10 9)
   )
 
  (list 'on-entry-to-dungeon-room) ; hooks

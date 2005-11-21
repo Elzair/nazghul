@@ -94,7 +94,7 @@
 
 (define (mk-green-slime-verbose msg)
   (kern-log-msg msg)
-  (mk-npc 'green-slime faction-monster 3))
+  (mk-npc 'green-slime 3))
   
 
 (kern-mk-place 'p_slimy_cavern    ; tag
@@ -124,12 +124,12 @@
                 (list (mk-door-full windowed-wood-door-in-rock #t #f nil) 13 3)
 
                 ;; existing npc's
-                (put (mk-npc 'bandit faction-outlaw 2) 5 4)
-                (put (mk-npc 'bandit faction-outlaw 2) 9 4)
-                (put (mk-npc 'bandit faction-outlaw 2) 9 2)
-                (put (spawn-pt 'green-slime faction-monster) 9 17)
-                (put (spawn-pt 'green-slime faction-monster) 10 18)
-                (put (spawn-pt 'green-slime faction-monster) 13 18)
+                (put (mk-npc 'bandit 2) 5 4)
+                (put (mk-npc 'bandit 2) 9 4)
+                (put (mk-npc 'bandit 2) 9 2)
+                (put (spawn-pt 'green-slime) 9 17)
+                (put (spawn-pt 'green-slime) 10 18)
+                (put (spawn-pt 'green-slime) 13 18)
                 (put ch_roland  14 1)
 
                 )

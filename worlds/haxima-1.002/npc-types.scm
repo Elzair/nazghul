@@ -61,6 +61,19 @@
   (set-level (apply (eval ctor-tag) args) 
              (kern-dice-roll lvl-dice)))
 
+;; npct -- NPC type
+(define (mk-npct name spec occ spr traps equip eff ai faction)
+  (list name spec occ spr traps equip eff ai faction))
+(define (npct-name npct) (car npct))
+(define (npct-spec npct) (cadr npct))
+(define (npct-occ npct) (caddr npct))
+(define (npct-spr npct) (cadddr npct))
+(define (npct-traps npct) (list-ref npct 4))
+(define (npct-eqp npct) (list-ref npct 5))
+(define (npct-effects npct) (list-ref npct 6))
+(define (npct-ai npct) (list-ref npct 7))
+(define (npct-faction npct) (list-ref npct 8))
+
 ;; npcg -- generic NPC gob
 (define (npcg-mk type) (list 'npcg type #f #f nil))
 (define (npcg-type npcg) (cadr npcg))
@@ -70,7 +83,7 @@
 (define (npcg-set-taunted! npcg val) (set-car! (cddr npcg) val))
 (define (npcg-set-spawned! npcg val) (set-car! (cdddr npcg) val))
 (define (npcg-get-post npcg) (list-ref npcg 4))
-(define (npcg-set-post! npcg val) (set-car! (list-ref npcg 4)))
+(define (npcg-set-post! npcg val) (set-car! (list-tail npcg 4) val))
 (define (npcg-has-post? npcg) (not (null? (npcg-get-post npcg))))
 
 (define (is-npcg? gob) (eq? (car gob) 'npcg))
@@ -88,20 +101,8 @@
          (is-npcg? npcg)
          (npcg-spawned? npcg))))
   
-;; npct -- NPC type
-(define (mk-npct name spec occ spr traps equip eff ai)
-  (list name spec occ spr traps equip eff ai))
-(define (npct-name npct) (car npct))
-(define (npct-spec npct) (cadr npct))
-(define (npct-occ npct) (caddr npct))
-(define (npct-spr npct) (cadddr npct))
-(define (npct-traps npct) (list-ref npct 4))
-(define (npct-eqp npct) (list-ref npct 5))
-(define (npct-effects npct) (list-ref npct 6))
-(define (npct-ai npct) (list-ref npct 7))
-
 ;; mk-npc -- create a kernel character of the given type, faction and level
-(define (mk-npc npct-tag faction lvl)
+(define (mk-npc npct-tag lvl)
   ;;(println "mk-npc:" npct " " faction " " lvl)g
   (let* ((npct (eval npct-tag))
          (npc (bind
@@ -112,7 +113,7 @@
                   (npct-spec npct)
                   (npct-occ npct)
                   (npct-spr npct)
-                  faction
+                  (npct-faction npct)
                   (npct-ai npct)
                   (mk-chest
                    (random-select (npct-traps npct))
@@ -132,8 +133,8 @@
 
 ;; spawn-npc -- like mk-npc but mark the npc as spawned (this allows monster
 ;; managers to periodically clean up old spawned NPC's)
-(define (spawn-npc npct-tag faction lvl)
-  (let ((kchar (mk-npc npct-tag faction lvl)))
+(define (spawn-npc npct-tag lvl)
+  (let ((kchar (mk-npc npct-tag lvl)))
     (npcg-set-spawned! (gob kchar) #t)
     kchar))
 
@@ -303,44 +304,44 @@
         ))
 
 ;; npc types
-;;      scheme variable                 name                       species          occup.     sprite             chest traps  equipment              effects       ai
-;;      ======================          ========================== ================ ========== ================== ============ ====================== ============= ==============
-(define forest-goblin-shaman   (mk-npct "a forest goblin shaman"   sp_forest_goblin oc_wizard  s_orc              wizard-traps wizard-equip           nil           'shaman-ai))
-(define forest-goblin-hunter   (mk-npct "a forest goblin hunter"   sp_forest_goblin oc_warrior s_orc              basic-traps  archer-equip           nil           'generic-ai))
-(define forest-goblin-stalker  (mk-npct "a forest goblin stalker"  sp_forest_goblin oc_warrior s_orc              basic-traps  stalker-equip          nil           'generic-ai))
-(define cave-goblin-slinger    (mk-npct "a cave goblin slinger"    sp_cave_goblin   oc_warrior s_orc              basic-traps  slinger-equip          nil           'generic-ai))
-(define cave-goblin-berserker  (mk-npct "a cave goblin berserker"  sp_cave_goblin   oc_warrior s_orc              basic-traps  berserker-equip        nil           'generic-ai))
-(define cave-goblin-priest     (mk-npct "a cave goblin priest"     sp_cave_goblin   oc_wizard  s_orc              wizard-traps wizard-equip           nil           'priest-ai))
-(define ranger                 (mk-npct "a ranger"                 sp_human         oc_warrior s_companion_ranger basic-traps  ranger-equip           nil           'generic-ai))
-(define skeletal-spear-thrower (mk-npct "a skeletal spear-thrower" sp_skeleton      oc_warrior s_skeleton         basic-traps  spear-thrower-equip    nil           'generic-ai))
-(define skeletal-warrior       (mk-npct "a skeletal warrior"       sp_skeleton      oc_warrior s_skeleton         basic-traps  skeletal-warrior-equip nil           'generic-ai))
-(define death-knight           (mk-npct "a death knight"           sp_skeleton      oc_warrior s_knight           basic-traps  death-knight-equip     nil           'death-knigh-at))
-(define halberdier             (mk-npct "a halberdier"             sp_human         oc_warrior s_guard            no-traps     halberdier-equip       nil           'guard-ai))
-(define crossbowman            (mk-npct "a crossbowman"            sp_human         oc_warrior s_guard            no-traps     crossbowman-equip      nil           'guard-ai))
-(define yellow-slime           (mk-npct "a yellow slime"           sp_yellow_slime  nil        s_yellow_slime     nil          nil                    slime-effects 'yellow-slime-ai))
-(define green-slime            (mk-npct "a green slime"            sp_green_slime   nil        s_slime            nil          nil                    slime-effects 'animal-ai))
-(define giant-spider           (mk-npct "a giant spider"           sp_spider        nil        s_spider           nil          nil                    nil           'spider-ai))
-(define queen-spider           (mk-npct "a queen spider"           sp_queen_spider  nil        s_queen_spider     nil          nil                    nil           'spider-ai))
-(define bandit                 (mk-npct "a bandit"                 sp_human         oc_wrogue  s_brigand          wrogue-traps wrogue-equip           nil           'std-ai))
-(define troll                  (mk-npct "a troll"                  sp_troll         oc_warrior s_troll            no-traps     troll-equip            nil           'troll-ai))
-(define troll-geomancer        (mk-npct "a troll geomancer"        sp_troll         oc_wizard  s_troll            no-traps     geomancer-equip        nil           'troll-ai))
-(define gint-warrior           (mk-npct "a gint warrior"           sp_gint          oc_warrior s_ettin            basic-traps  gint-warrior-equip     nil           'std-ai))
-(define gint-mage              (mk-npct "a gint mage"              sp_gint          oc_wizard  s_ettin            wizard-traps wizard-equip           nil           'shaman-ai))
-(define bull                   (mk-npct "a bull"                   sp_bull          nil        s_bull             nil          nil                    nil           'animal-ai))
-(define kraken                 (mk-npct "kraken"                   sp_kraken        nil        s_kraken           nil          nil                    nil           'animal-ai))
-(define sea-serpent            (mk-npct "sea serpent"              sp_sea_serpent   nil        s_sea_serpent      nil          nil                    nil           'animal-ai))
-(define dryad                  (mk-npct "dryad"                    sp_dryad         nil        s_reaper           nil          reaper-equip           nil           'spell-sword-ai))
-(define wolf                   (mk-npct "wolf"                     sp_wolf          nil        s_wolf             nil          nil                    nil           'animal-ai     ))
-(define gazer                  (mk-npct "gazer"                    sp_gazer         oc_wizard  s_gazer            wizard-traps nil                    nil           'spell-sword-ai))
-(define headless               (mk-npct "headless"                 sp_headless      oc_warrior s_headless         basic-traps  headless-equip         nil           'std-ai        ))
-(define wisp                   (mk-npct "wisp"                     sp_wisp          nil        s_wisp             nil          nil                    nil           'std-ai        ))
-(define dragon                 (mk-npct "dragon"                   sp_dragon        nil        s_dragon           wizard-traps dragon-equip           nil           'std-ai        ))
-(define zorn                   (mk-npct "zorn"                     sp_zorn          oc_wrogue  s_zorn             wrogue-traps zorn-equip             nil           'std-ai        ))
-(define demon                  (mk-npct "demon"                    sp_demon         nil        s_demon            basic-traps  nil                    nil           'std-ai        ))
-(define hydra                  (mk-npct "hydra"                    sp_hydra         nil        s_hydra            no-traps     nil                    nil           'std-ai        ))
-(define lich                   (mk-npct "lich"                     sp_lich          oc_wizard  s_lich             wizard-traps wizard-equip           nil           'spell-sword-ai))
-(define warlock                (mk-npct "warlock"                  sp_human         oc_wizard  s_wizard           wizard-traps wizard-equip           nil           'spell-sword-ai))
-(define ghast                  (mk-npct "ghast"                    sp_ghast         nil        s_ghost            nil          nil                    nil           'std-ai        ))
+;;      scheme variable                 name                       species          occup.     sprite             chest traps  equipment              effects       ai               faction
+;;      ======================          ========================== ================ ========== ================== ============ ====================== ============= ==============   ========
+(define forest-goblin-shaman   (mk-npct "a forest goblin shaman"   sp_forest_goblin oc_wizard  s_orc              wizard-traps wizard-equip           nil           'shaman-ai       faction-forest-goblin))
+(define forest-goblin-hunter   (mk-npct "a forest goblin hunter"   sp_forest_goblin oc_warrior s_orc              basic-traps  archer-equip           nil           'generic-ai      faction-forest-goblin))
+(define forest-goblin-stalker  (mk-npct "a forest goblin stalker"  sp_forest_goblin oc_warrior s_orc              basic-traps  stalker-equip          nil           'generic-ai      faction-forest-goblin))
+(define cave-goblin-slinger    (mk-npct "a cave goblin slinger"    sp_cave_goblin   oc_warrior s_orc              basic-traps  slinger-equip          nil           'generic-ai      faction-cave-goblin  ))
+(define cave-goblin-berserker  (mk-npct "a cave goblin berserker"  sp_cave_goblin   oc_warrior s_orc              basic-traps  berserker-equip        nil           'generic-ai      faction-cave-goblin  ))
+(define cave-goblin-priest     (mk-npct "a cave goblin priest"     sp_cave_goblin   oc_wizard  s_orc              wizard-traps wizard-equip           nil           'priest-ai       faction-cave-goblin  ))
+(define ranger                 (mk-npct "a ranger"                 sp_human         oc_warrior s_companion_ranger basic-traps  ranger-equip           nil           'generic-ai      faction-men          ))
+(define skeletal-spear-thrower (mk-npct "a skeletal spear-thrower" sp_skeleton      oc_warrior s_skeleton         basic-traps  spear-thrower-equip    nil           'generic-ai      faction-monster      ))
+(define skeletal-warrior       (mk-npct "a skeletal warrior"       sp_skeleton      oc_warrior s_skeleton         basic-traps  skeletal-warrior-equip nil           'generic-ai      faction-monster      ))
+(define death-knight           (mk-npct "a death knight"           sp_skeleton      oc_warrior s_knight           basic-traps  death-knight-equip     nil           'death-knigh-at  faction-monster      ))
+(define halberdier             (mk-npct "a halberdier"             sp_human         oc_warrior s_guard            no-traps     halberdier-equip       nil           'guard-ai        faction-men          ))
+(define crossbowman            (mk-npct "a crossbowman"            sp_human         oc_warrior s_guard            no-traps     crossbowman-equip      nil           'guard-ai        faction-men          ))
+(define yellow-slime           (mk-npct "a yellow slime"           sp_yellow_slime  nil        s_yellow_slime     nil          nil                    slime-effects 'yellow-slime-ai faction-monster      ))
+(define green-slime            (mk-npct "a green slime"            sp_green_slime   nil        s_slime            nil          nil                    slime-effects 'animal-ai       faction-monster      ))
+(define giant-spider           (mk-npct "a giant spider"           sp_spider        nil        s_spider           nil          nil                    nil           'spider-ai       faction-monster      ))
+(define queen-spider           (mk-npct "a queen spider"           sp_queen_spider  nil        s_queen_spider     nil          nil                    nil           'spider-ai       faction-monster      ))
+(define bandit                 (mk-npct "a bandit"                 sp_human         oc_wrogue  s_brigand          wrogue-traps wrogue-equip           nil           'std-ai          faction-outlaw       ))
+(define troll                  (mk-npct "a troll"                  sp_troll         oc_warrior s_troll            no-traps     troll-equip            nil           'troll-ai        faction-troll        ))
+(define troll-geomancer        (mk-npct "a troll geomancer"        sp_troll         oc_wizard  s_troll            no-traps     geomancer-equip        nil           'troll-ai        faction-troll        ))
+(define gint-warrior           (mk-npct "a gint warrior"           sp_gint          oc_warrior s_ettin            basic-traps  gint-warrior-equip     nil           'std-ai          faction-gint         ))
+(define gint-mage              (mk-npct "a gint mage"              sp_gint          oc_wizard  s_ettin            wizard-traps wizard-equip           nil           'shaman-ai       faction-gint         ))
+(define bull                   (mk-npct "a bull"                   sp_bull          nil        s_bull             nil          nil                    nil           'animal-ai       faction-none         ))
+(define kraken                 (mk-npct "kraken"                   sp_kraken        nil        s_kraken           nil          nil                    nil           'animal-ai       faction-monster      ))
+(define sea-serpent            (mk-npct "sea serpent"              sp_sea_serpent   nil        s_sea_serpent      nil          nil                    nil           'animal-ai       faction-monster      ))
+(define dryad                  (mk-npct "dryad"                    sp_dryad         nil        s_reaper           nil          reaper-equip           nil           'spell-sword-ai  faction-monster      ))
+(define wolf                   (mk-npct "wolf"                     sp_wolf          nil        s_wolf             nil          nil                    nil           'animal-ai       faction-monster      ))
+(define gazer                  (mk-npct "gazer"                    sp_gazer         oc_wizard  s_gazer            wizard-traps nil                    nil           'spell-sword-ai  faction-monster      ))
+(define headless               (mk-npct "headless"                 sp_headless      oc_warrior s_headless         basic-traps  headless-equip         nil           'std-ai          faction-monster      ))
+(define wisp                   (mk-npct "wisp"                     sp_wisp          nil        s_wisp             nil          nil                    nil           'std-ai          faction-monster      ))
+(define dragon                 (mk-npct "dragon"                   sp_dragon        nil        s_dragon           wizard-traps dragon-equip           nil           'std-ai          faction-monster      ))
+(define zorn                   (mk-npct "zorn"                     sp_zorn          oc_wrogue  s_zorn             wrogue-traps zorn-equip             nil           'std-ai          faction-monster      ))
+(define demon                  (mk-npct "demon"                    sp_demon         nil        s_demon            basic-traps  nil                    nil           'std-ai          faction-monster      ))
+(define hydra                  (mk-npct "hydra"                    sp_hydra         nil        s_hydra            no-traps     nil                    nil           'std-ai          faction-monster      ))
+(define lich                   (mk-npct "lich"                     sp_lich          oc_wizard  s_lich             wizard-traps wizard-equip           nil           'spell-sword-ai  faction-monster      ))
+(define warlock                (mk-npct "warlock"                  sp_human         oc_wizard  s_wizard           wizard-traps wizard-equip           nil           'spell-sword-ai  faction-monster      ))
+(define ghast                  (mk-npct "ghast"                    sp_ghast         nil        s_ghost            nil          nil                    nil           'std-ai          faction-monster      ))
 
 ;;define                        (mk-npct "                          sp_              oc_        s_                 nil          nil                    nil           'std-ai           ))
 

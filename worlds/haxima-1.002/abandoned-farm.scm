@@ -68,9 +68,9 @@
                ;; objects
                (list
                 (put (mk-monman) 0 0)
-                (put (spawn-pt 'queen-spider faction-spider) 9 23)
-                (put (spawn-pt 'troll faction-troll) 19 13)
-                (put (spawn-pt 'troll faction-troll) 19 14)
+                (put (spawn-pt 'queen-spider) 9 23)
+                (put (spawn-pt 'troll) 19 13)
+                (put (spawn-pt 'troll) 19 14)
                 (list (mk-door) 13 17)
                 (list (mk-door) 7 25)
                 (list (mk-ladder-down 'p_abandoned_cellar 6 25) 6 25)

@@ -15,11 +15,11 @@
 
 ;; holdover procedures until party generation is revisited
 (define (mk-goblin-raider)
-  (mk-npc 'cave-goblin-berserker faction-cave-goblin 4))
+  (mk-npc 'cave-goblin-berserker 4))
 (define (mk-skeletal-warrior)
-  (mk-npc 'skeletal-warrior faction-monster 4))
+  (mk-npc 'skeletal-warrior 4))
 (define (mk-bandit)
-  (mk-npc 'bandit faction-outlaw 4))
+  (mk-npc 'bandit 4))
 
 ;;----------------------------------------------------------------------------
 ;; Party Types

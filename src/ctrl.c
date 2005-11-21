@@ -693,9 +693,9 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
                 } else {
                         log_end("ON");
                         player_party->enableFollowMode();
+                        if (! character->isLeader())
+                                character->endTurn();
                 }
-                if (! character->isLeader())
-                        character->endTurn();
                 break;
 
         case SDLK_1:
@@ -1245,7 +1245,9 @@ static void ctrl_idle(class Character *character)
         // -------------------------------------------------------------------
         
         if (!character->canSee(target)) {
-                if (! ctrl_pathfind_between_objects(character, target))
+                if (! character->pathfindTo(target->getPlace(), 
+                                            target->getX(), 
+                                            target->getY()))
                         ctrl_wander(character);
                 return;
         }
@@ -1262,7 +1264,9 @@ static void ctrl_idle(class Character *character)
         // -------------------------------------------------------------------
 
         if (!ctrl_attack_target(character, target))
-                if (! ctrl_pathfind_between_objects(character, target))
+                if (! character->pathfindTo(target->getPlace(),
+                                            target->getX(),
+                                            target->getY()))
                         ctrl_wander(character);
 }
 

@@ -377,10 +377,9 @@
 ;; monsters is calculated on-the-fly based on the player party level. The
 ;; faction and npc type mix are determined by the "factory", which is passed to
 ;; the spawn-pt constructor.
-(define (spawn-pt-mk npct-tag faction)
-  (list 'spawn-pt faction npct-tag))
-(define (spawn-pt-faction sppt) (cadr sppt))
-(define (spawn-pt-npct-tag sppt) (caddr sppt))
+(define (spawn-pt-mk npct-tag)
+  (list 'spawn-pt npct-tag))
+(define (spawn-pt-npct-tag sppt) (cadr sppt))
 
 (define (spawn-pt-exec ksppt)
   (println "spawn-pt-exec")
@@ -401,14 +400,12 @@
            (+ (mean-player-party-level)
               (kern-dice-roll "1d5-3"))))
 
-    (define (generate)
-      (kern-obj-put-at (spawn-npc (spawn-pt-npct-tag sppt)
-                                  (spawn-pt-faction sppt)
-                                  (calc-level))
-                       (kern-obj-get-location ksppt)))
-
-    (generate)
-    (println " done!")
+    (let ((npc (spawn-npc (spawn-pt-npct-tag sppt) 
+                          (calc-level))))
+      (kern-obj-put-at npc
+                       (kern-obj-get-location ksppt))
+      (println " done!")
+      npc)
     ))
 
 (define spawn-pt-ifc
@@ -417,21 +414,40 @@
 
 (mk-obj-type 't_spawn_pt nil nil layer-none spawn-pt-ifc)
 
-(define (spawn-pt npct-tag faction)
+(define (spawn-pt npct-tag)
   (bind (kern-obj-set-visible (kern-mk-obj t_spawn_pt 1) #f)
-        (spawn-pt-mk npct-tag faction)))
+        (spawn-pt-mk npct-tag)))
+
+;;----------------------------------------------------------------------------
+;; guard-pt -- a spawn pt which creates an npc with a guard post
+(define (guard-pt-exec kgen)
+  (println "guard-pt-exec")
+  (let ((kchar (spawn-pt-exec kgen)))
+    (npcg-set-post! (gob kchar)
+                    (cdr (kern-obj-get-location kgen)))))
+
+(define guard-pt-ifc
+  (ifc nil
+       (method 'on guard-pt-exec)))
+
+(mk-obj-type 't_guard_pt nil nil layer-none guard-pt-ifc)
+
+(define (guard-pt npct-tag)
+  (bind (kern-obj-set-visible (kern-mk-obj t_guard_pt 1) #f)
+        (spawn-pt-mk npct-tag)))
+  
 
 ;;----------------------------------------------------------------------------
 ;; time-to-respawn? -- checks if an hour and a minute has passed
 (define (time-to-respawn? oldtime)
   (let ((curtime (kern-get-time)))
+    (println "time-to-respawn? " curtime " a day past " oldtime "?")
     (or (> (time-year curtime) (time-year oldtime))
         (> (time-month curtime) (time-month oldtime))
         (> (time-week curtime) (time-week oldtime))
-        (> (time-day curtime) (time-day oldtime))
-        (and (or (>= (- (time-hour curtime) (time-hour oldtime)) 2)
-                 (and (> (time-hour curtime) (time-hour oldtime))
-                      (> (time-minute curtime) (time-minute oldtime))))))))
+        (>= (- (time-day curtime) (time-day oldtime)) 2)
+        (and (> (time-day curtime) (time-day oldtime))
+             (>= (time-hour curtime) (time-hour oldtime))))))
 
 ;;----------------------------------------------------------------------------
 ;; monman -- monster manager object
@@ -464,7 +480,10 @@
       (println " respawn")
       (monman-set-time! mm (kern-get-time))
       (map trigger-spawn-pt
-           (kplace-get-objects-of-type kplace t_spawn_pt)))
+           (kplace-get-objects-of-type kplace t_spawn_pt))
+      (map trigger-spawn-pt
+           (kplace-get-objects-of-type kplace t_guard_pt))
+      )
 
     (if (time-to-respawn? (monman-time mm))
         (and (cleanup-old-spawn)
@@ -481,4 +500,4 @@
 (define (mk-monman)
   (bind (kern-obj-set-visible (kern-mk-obj t_monman 1) #f)
         (monman-mk (map - game-start-time
-                        (time-mk 0 0 0 0 1 1)))))
+                        (time-mk 0 0 0 1 1 1)))))

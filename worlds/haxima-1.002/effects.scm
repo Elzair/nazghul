@@ -231,14 +231,13 @@
   (let ((loc (kern-obj-get-location kobj)))
     (if (not (kern-place-is-wilderness? (loc-place loc)))
         (begin
-          (display "not wilderness")(newline)
           (if (> (kern-dice-roll "2d20") 25)
               (let ((clone (mk-npc 'green-slime
-                                   (kern-being-get-base-faction kobj)
                                    (kern-char-get-level kobj))))
+                (kern-char-set-faction clone
+                                   (kern-being-get-base-faction kobj))
                 (kern-print "Slime divides!\n")
                 (kern-obj-put-at clone (pick-loc loc clone)))
-              (begin (display "roll failed")(newline))
               )))))
 
 ;; ----------------------------------------------------------------------------
