@@ -107,7 +107,7 @@
                 (list (mk-spider-egg) 11 18)
 
                 ;; troll victims
-                (list (mk-troll) 11 12)
+                (put (mk-npc 'troll faction-troll 3) 11 12)
 
                 ;; puska
                 (list (kern-mk-obj t_puska 1) 10 18)

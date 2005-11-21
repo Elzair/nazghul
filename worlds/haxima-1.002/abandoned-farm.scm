@@ -67,18 +67,14 @@
 
                ;; objects
                (list
-                (list (mk-wood-spider) 9 22)
+                (put (mk-monman) 0 0)
+                (put (spawn-pt 'queen-spider faction-spider) 9 23)
+                (put (spawn-pt 'troll faction-troll) 19 13)
+                (put (spawn-pt 'troll faction-troll) 19 14)
                 (list (mk-door) 13 17)
                 (list (mk-door) 7 25)
-                (list (mk-queen-spider faction-wood-spider) 9 23)
                 (list (mk-ladder-down 'p_abandoned_cellar 6 25) 6 25)
                 )
-               (list 'af-entry) ; hooks
+               (list 'on-entry-to-dungeon-room) ; hooks
                nil ; edge entrances
                )
-
-;; ----------------------------------------------------------------------------
-;; The entry hooks must be kern-loaded from a separate file, since they are
-;; read-only and not saved with the session.
-;; ----------------------------------------------------------------------------
-(kern-load "af-entry.scm")

@@ -233,11 +233,10 @@
         (begin
           (display "not wilderness")(newline)
           (if (> (kern-dice-roll "2d20") 25)
-              (let ((clone (mk-green-slime)))
+              (let ((clone (mk-npc 'green-slime
+                                   (kern-being-get-base-faction kobj)
+                                   (kern-char-get-level kobj))))
                 (kern-print "Slime divides!\n")
-                (kern-being-set-base-faction 
-                 clone 
-                 (kern-being-get-base-faction kobj))
                 (kern-obj-put-at clone (pick-loc loc clone)))
               (begin (display "roll failed")(newline))
               )))))

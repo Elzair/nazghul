@@ -62,13 +62,16 @@
              (kern-dice-roll lvl-dice)))
 
 ;; npcg -- generic NPC gob
-(define (npcg-mk type) (list 'npcg type #f #f))
+(define (npcg-mk type) (list 'npcg type #f #f nil))
 (define (npcg-type npcg) (cadr npcg))
 (define (npcg-taunted? npcg) (caddr npcg))
 (define (npcg-spawned? npcg) (cadddr npcg))
 (define (npcg-is-type? npcg type) (equal? type (npcg-type npcg)))
 (define (npcg-set-taunted! npcg val) (set-car! (cddr npcg) val))
 (define (npcg-set-spawned! npcg val) (set-car! (cdddr npcg) val))
+(define (npcg-get-post npcg) (list-ref npcg 4))
+(define (npcg-set-post! npcg val) (set-car! (list-ref npcg 4)))
+(define (npcg-has-post? npcg) (not (null? (npcg-get-post npcg))))
 
 (define (is-npcg? gob) (eq? (car gob) 'npcg))
 
@@ -85,52 +88,47 @@
          (is-npcg? npcg)
          (npcg-spawned? npcg))))
   
-;; eqp -- equipment package
-(define (mk-eqp traps contents)
-  (cons traps contents))
-(define (eqp-traps eqp) (car eqp))
-(define (eqp-contents eqp) (cdr eqp))
-(define (eqp-generate eqp)
-  (mk-chest
-   (random-select (eqp-traps))
-   (eval (eqp-contents eqp))))
-
 ;; npct -- NPC type
-(define (mk-npct name spec occ spr traps equip ai)
-  (list name spec occ spr traps equip ai))
- (define (npct-name npct) (car npct))
- (define (npct-spec npct) (cadr npct))
- (define (npct-occ npct) (caddr npct))
- (define (npct-spr npct) (cadddr npct))
- (define (npct-traps npct) (list-ref npct 4))
- (define (npct-eqp npct) (list-ref npct 5))
- (define (npct-ai npct) (list-ref npct 6))
+(define (mk-npct name spec occ spr traps equip eff ai)
+  (list name spec occ spr traps equip eff ai))
+(define (npct-name npct) (car npct))
+(define (npct-spec npct) (cadr npct))
+(define (npct-occ npct) (caddr npct))
+(define (npct-spr npct) (cadddr npct))
+(define (npct-traps npct) (list-ref npct 4))
+(define (npct-eqp npct) (list-ref npct 5))
+(define (npct-effects npct) (list-ref npct 6))
+(define (npct-ai npct) (list-ref npct 7))
 
 ;; mk-npc -- create a kernel character of the given type, faction and level
 (define (mk-npc npct-tag faction lvl)
-  (let ((npct (eval npct-tag)))
-    ;;(println "mk-npc:" npct " " faction " " lvl)g
-    (bind
-     (set-level
-      (kern-char-arm-self
-       (mk-stock-char
-        (npct-name npct)
-        (npct-spec npct)
-        (npct-occ npct)
-        (npct-spr npct)
-        faction
-        (npct-ai npct)
-        (mk-chest
-         (random-select (npct-traps npct))
-         (filter notnull?
-                 (map (lambda (x)
-                        (apply roll-to-add x))
-                      (npct-eqp npct))))
-        nil
-        nil
-        nil))
-      lvl)
-     (npcg-mk npct-tag))))
+  ;;(println "mk-npc:" npct " " faction " " lvl)g
+  (let* ((npct (eval npct-tag))
+         (npc (bind
+               (set-level
+                (kern-char-arm-self
+                 (mk-stock-char
+                  (npct-name npct)
+                  (npct-spec npct)
+                  (npct-occ npct)
+                  (npct-spr npct)
+                  faction
+                  (npct-ai npct)
+                  (mk-chest
+                   (random-select (npct-traps npct))
+                   (filter notnull?
+                           (map (lambda (x)
+                                  (apply roll-to-add x))
+                                (npct-eqp npct))))
+                  nil
+                  nil
+                  nil))
+                lvl)
+               (npcg-mk npct-tag))))
+    ;; revisit -- will this work or will effects need to be symbol-tags?
+    (map (lambda (eff) (kern-obj-add-effect npc eff nil))
+         (npct-effects npct))
+    npc))
 
 ;; spawn-npc -- like mk-npc but mark the npc as spawned (this allows monster
 ;; managers to periodically clean up old spawned NPC's)
@@ -139,17 +137,41 @@
     (npcg-set-spawned! (gob kchar) #t)
     kchar))
 
-;; common traps for different types of npcs
+;;----------------------------------------------------------------------------
+;; trap packages
+(define no-traps (list nil))
 (define basic-traps  (list nil 'burn 'spike-trap))
 (define wizard-traps (list nil 'poison-trap 'sleep-trap 'lightning-trap))
+(define wrogue-traps (list nil 'self-destruct-trap 'bomb-trap 'sleep-trap 'poison-trap 'spike-trap 'sleep-trap 'burn))
 
-;; common equipment packages for different types of npcs
+;;----------------------------------------------------------------------------
+;; effect packages
+(define slime-effects  (list ef_poison_immunity ef_slime_split))
+
+;;----------------------------------------------------------------------------
+;; equipment packages for different types of npcs
 (define wizard-equip 
   (list (list 100 "1"     t_dagger)
         (list 100 "1d2-1" t_heal_potion)
         (list 100 "1d2+1" t_mana_potion)
         (list 100 "1d20"  t_gold_coins)
         (list 10  "1d3"   t_food)
+        (list 10  "1"     t_cure_potion)
+        (list 10  "1"     t_poison_immunity_potion)
+        (list 20  "1d5"   sulphorous_ash)
+        (list 20  "1d5"   ginseng)
+        (list 20  "1d5"   garlic)
+        (list 10  "1d3"   spider_silk)
+        (list 10  "1d3"   blood_moss)
+        (list 10  "1d3"   black_pearl)
+        (list 5   "1d2"   nightshade)
+        (list 5   "1d2"   mandrake)
+        (list 5   "1"     t_in_mani_corp_scroll)
+        (list 5   "1"     t_xen_corp_scroll)
+        (list 10  "1"     t_in_quas_xen_scroll)
+        (list 10  "1"     t_an_xen_exe_scroll)
+        (list 20  "1"     t_in_an_scroll)
+        (list 20  "1"     t_vas_mani_scroll)
         ))
 (define archer-equip 
   (list (list 100 "1"     t_bow)
@@ -192,399 +214,135 @@
         (list 100 "1"     t_iron_helm)
         (list 100 "1d20"  t_gold_coins)
         ))
-(define skeletal-spear-thrower-equip
+(define spear-thrower-equip
   (list (list 100 "1d20"  t_spear)
         (list 100 "1"     t_iron_helm)
         (list 100 "1"     t_axe)
         (list 100 "1d20"  t_gold_coins)
         ))
+(define death-knight-equip
+  (list (list 100 "1"     t_2h_axe)
+        (list 100 "1"     t_armor_plate)
+        (list 100 "1"     t_iron_helm)
+        (list 100 "1d20"  t_gold_coins)
+        (list 100 "1d3-1" t_mana_potion)
+        ))
+(define halberdier-equip
+  (list (list 100 "1"     t_halberd)
+        (list 100 "1"     t_chain_coif)
+        (list 100 "1"     t_armor_chain)
+        (list 100 "1d3-1" t_heal_potion)
+        (list 10  "1"     t_vas_mani_scroll)
+        (list 10  "1"     t_in_an_scroll)
+        (list 50  "1d5"   t_food)
+        ))
+(define crossbowman-equip
+  (list (list 100 "1"     t_crossbow)
+        (list 100 "10"    t_bolt)
+        (list 100 "1"     t_chain_coif)
+        (list 100 "2"     t_dagger)
+        (list 100 "1"     t_armor_chain)
+        (list 100 "1d3-1" t_heal_potion)
+        (list 10  "1"     t_vas_mani_scroll)
+        (list 10  "1"     t_in_an_scroll)
+        (list 50  "1d5"   t_food)
+        ))
+(define wrogue-equip
+  (list (list 100 "1"     t_dagger)
+        (list 100 "1"     t_armor_leather)
+        (list 100 "1"     t_leather_helm)
+        (list 100 "2d6-2" t_gold_coins)
+        (list 100 "1d3-1" t_picklock)
+        (list 50  "1d5"   t_food)
+        (list 50  "1"     t_sword)
+        (list 10  "1d2"   t_oil)
+        (list 50  "1d10"  t_arrow)
+        (list 50  "1"     t_bow)
+        (list 10  "1"     t_in_ex_por_scroll)
+        (list 10  "1"     t_wis_quas_scroll)
+        (list 5   "1"     t_sanct_lor_scroll)
+        (list 5   "1"     t_an_tym_scroll)
+        (list 5   "1"     t_vas_rel_por_scroll)
+        (list 100 "1d3-1" t_heal_potion)
+        (list 20  "1"     t_mana_potion)
+        (list 10  "1"     t_cure_potion)
+        (list 10  "1"     t_poison_immunity_potion)
+        (list 10  "1d3"   t_torch)
+        ))
+(define troll-equip
+  (list (list 100 "1d3+2" t_thrown_boulder)
+        (list 25  "1d3" t_food)
+        ))
+(define geomancer-equip
+  (list (list 50  "1d3"   t_gem)
+        (list 50  "1d20"  t_gold_coins)
+        (list 100 "1d3-1" t_mana_potion)
+        ))
+(define gint-warrior-equip
+  (list (list 100 "1"     t_2h_axe)
+        (list 100 "1"     t_2h_sword)
+        (list 100 "4d25"  t_gold_coins)
+        (list 100 "1d5"   t_food)
+        (list 100 "1d3-1" t_heal_potion)
+        ))
+(define reaper-equip
+  (list (list 100 "1d5"   t_torch)
+        ))
+(define headless-equip
+  (list (list 100 "1"     t_axe)
+        (list 100 "1"     t_shield)
+        (list 100 "1d5-1" t_gold_coins)
+        ))
+(define dragon-equip
+  (list (list 100 "1d100+19" t_gold_coins)
+        (list 100 "1d20"     t_food)
+        (list 100 "1d5-1"    t_gem)
+        ))
+(define zorn-equip
+  (list (list 100 "1d20+9" t_gold_coins)
+        ))
 
 ;; npc types
-(define forest-goblin-shaman
-  (mk-npct "a forest goblin shaman" sp_forest_goblin oc_wizard s_orc wizard-traps wizard-equip 'shaman-ai))
-(define forest-goblin-hunter
-  (mk-npct "a forest goblin hunter" sp_forest_goblin oc_warrior s_orc basic-traps archer-equip 'generic-ai))
-(define forest-goblin-stalker
-  (mk-npct "a forest goblin stalker" sp_forest_goblin oc_warrior s_orc basic-traps stalker-equip 'generic-ai))
-(define cave-goblin-slinger
-  (mk-npct "a cave goblin slinger" sp_cave_goblin oc_warrior s_orc basic-traps slinger-equip 'generic-ai))
-(define cave-goblin-berserker
-  (mk-npct "a cave goblin berserker" sp_cave_goblin oc_warrior s_orc basic-traps berserker-equip 'generic-ai))
-(define cave-goblin-priest
-  (mk-npct "a cave goblin priest" sp_cave_goblin oc_wizard s_orc wizard-traps wizard-equip 'priest-ai))
-(define ranger
-  (mk-npct "a ranger" sp_human oc_warrior s_companion_ranger basic-traps ranger-equip 'generic-ai))
-(define skeletal-spear-thrower
-  (mk-npct "a skeletal spear-thrower" sp_skeleton oc_warrior s_skeleton basic-traps skeletal-spear-thrower-equip 'generic-ai))
-(define skeletal-warrior 
-  (mk-npct "a skeletal warrior" sp_skeleton oc_warrior s_skeleton basic-traps skeletal-warrior-equip 'generic-ai))
+;;      scheme variable                 name                       species          occup.     sprite             chest traps  equipment              effects       ai
+;;      ======================          ========================== ================ ========== ================== ============ ====================== ============= ==============
+(define forest-goblin-shaman   (mk-npct "a forest goblin shaman"   sp_forest_goblin oc_wizard  s_orc              wizard-traps wizard-equip           nil           'shaman-ai))
+(define forest-goblin-hunter   (mk-npct "a forest goblin hunter"   sp_forest_goblin oc_warrior s_orc              basic-traps  archer-equip           nil           'generic-ai))
+(define forest-goblin-stalker  (mk-npct "a forest goblin stalker"  sp_forest_goblin oc_warrior s_orc              basic-traps  stalker-equip          nil           'generic-ai))
+(define cave-goblin-slinger    (mk-npct "a cave goblin slinger"    sp_cave_goblin   oc_warrior s_orc              basic-traps  slinger-equip          nil           'generic-ai))
+(define cave-goblin-berserker  (mk-npct "a cave goblin berserker"  sp_cave_goblin   oc_warrior s_orc              basic-traps  berserker-equip        nil           'generic-ai))
+(define cave-goblin-priest     (mk-npct "a cave goblin priest"     sp_cave_goblin   oc_wizard  s_orc              wizard-traps wizard-equip           nil           'priest-ai))
+(define ranger                 (mk-npct "a ranger"                 sp_human         oc_warrior s_companion_ranger basic-traps  ranger-equip           nil           'generic-ai))
+(define skeletal-spear-thrower (mk-npct "a skeletal spear-thrower" sp_skeleton      oc_warrior s_skeleton         basic-traps  spear-thrower-equip    nil           'generic-ai))
+(define skeletal-warrior       (mk-npct "a skeletal warrior"       sp_skeleton      oc_warrior s_skeleton         basic-traps  skeletal-warrior-equip nil           'generic-ai))
+(define death-knight           (mk-npct "a death knight"           sp_skeleton      oc_warrior s_knight           basic-traps  death-knight-equip     nil           'death-knigh-at))
+(define halberdier             (mk-npct "a halberdier"             sp_human         oc_warrior s_guard            no-traps     halberdier-equip       nil           'guard-ai))
+(define crossbowman            (mk-npct "a crossbowman"            sp_human         oc_warrior s_guard            no-traps     crossbowman-equip      nil           'guard-ai))
+(define yellow-slime           (mk-npct "a yellow slime"           sp_yellow_slime  nil        s_yellow_slime     nil          nil                    slime-effects 'yellow-slime-ai))
+(define green-slime            (mk-npct "a green slime"            sp_green_slime   nil        s_slime            nil          nil                    slime-effects 'animal-ai))
+(define giant-spider           (mk-npct "a giant spider"           sp_spider        nil        s_spider           nil          nil                    nil           'spider-ai))
+(define queen-spider           (mk-npct "a queen spider"           sp_queen_spider  nil        s_queen_spider     nil          nil                    nil           'spider-ai))
+(define bandit                 (mk-npct "a bandit"                 sp_human         oc_wrogue  s_brigand          wrogue-traps wrogue-equip           nil           'std-ai))
+(define troll                  (mk-npct "a troll"                  sp_troll         oc_warrior s_troll            no-traps     troll-equip            nil           'troll-ai))
+(define troll-geomancer        (mk-npct "a troll geomancer"        sp_troll         oc_wizard  s_troll            no-traps     geomancer-equip        nil           'troll-ai))
+(define gint-warrior           (mk-npct "a gint warrior"           sp_gint          oc_warrior s_ettin            basic-traps  gint-warrior-equip     nil           'std-ai))
+(define gint-mage              (mk-npct "a gint mage"              sp_gint          oc_wizard  s_ettin            wizard-traps wizard-equip           nil           'shaman-ai))
+(define bull                   (mk-npct "a bull"                   sp_bull          nil        s_bull             nil          nil                    nil           'animal-ai))
+(define kraken                 (mk-npct "kraken"                   sp_kraken        nil        s_kraken           nil          nil                    nil           'animal-ai))
+(define sea-serpent            (mk-npct "sea serpent"              sp_sea_serpent   nil        s_sea_serpent      nil          nil                    nil           'animal-ai))
+(define dryad                  (mk-npct "dryad"                    sp_dryad         nil        s_reaper           nil          reaper-equip           nil           'spell-sword-ai))
+(define wolf                   (mk-npct "wolf"                     sp_wolf          nil        s_wolf             nil          nil                    nil           'animal-ai     ))
+(define gazer                  (mk-npct "gazer"                    sp_gazer         oc_wizard  s_gazer            wizard-traps nil                    nil           'spell-sword-ai))
+(define headless               (mk-npct "headless"                 sp_headless      oc_warrior s_headless         basic-traps  headless-equip         nil           'std-ai        ))
+(define wisp                   (mk-npct "wisp"                     sp_wisp          nil        s_wisp             nil          nil                    nil           'std-ai        ))
+(define dragon                 (mk-npct "dragon"                   sp_dragon        nil        s_dragon           wizard-traps dragon-equip           nil           'std-ai        ))
+(define zorn                   (mk-npct "zorn"                     sp_zorn          oc_wrogue  s_zorn             wrogue-traps zorn-equip             nil           'std-ai        ))
+(define demon                  (mk-npct "demon"                    sp_demon         nil        s_demon            basic-traps  nil                    nil           'std-ai        ))
+(define hydra                  (mk-npct "hydra"                    sp_hydra         nil        s_hydra            no-traps     nil                    nil           'std-ai        ))
+(define lich                   (mk-npct "lich"                     sp_lich          oc_wizard  s_lich             wizard-traps wizard-equip           nil           'spell-sword-ai))
+(define warlock                (mk-npct "warlock"                  sp_human         oc_wizard  s_wizard           wizard-traps wizard-equip           nil           'spell-sword-ai))
+(define ghast                  (mk-npct "ghast"                    sp_ghast         nil        s_ghost            nil          nil                    nil           'std-ai        ))
 
-; (define (mk-skeletal-warrior)
-;   (bind (kern-char-arm-self
-;          (mk-stock-char
-;           " a skeleton" ;;.....name
-;           sp_skeleton ;;.......species
-;           oc_warrior ;;.........occupation
-;           s_skeleton ;;........sprite
-;           faction-monster ;;...faction
-;           nil ;;...............custom ai (optional)
-          
-;           ;;...................container (and contents)
-;           (mk-chest
-;            nil
-;            (mk-contents (roll-to-add 25  "1"     t_2h_axe)
-;                         (roll-to-add 25  "1"     t_halberd)
-;                         (roll-to-add 50  "1"     t_sword)
-;                         (roll-to-add 25  "1"     t_2H_sword)
-;                         (roll-to-add 50  "1"     t_shield)
-;                         (roll-to-add 25  "1"     t_bow)
-;                         (roll-to-add 50  "1d20"  t_arrow)
-;                         (roll-to-add 50  "1"     t_iron_helm)
-;                         (roll-to-add 50  "1"     t_armor_leather)
-;                         (roll-to-add 25  "1"     t_armor_leather)
-;                         (roll-to-add 10  "1"     t_armor_chain)
-;                         (roll-to-add 2   "1"     t_armor_plate)))
-          
-;           nil ;;...............readied arms (in addition to container contents)
-;           nil ;;...............effects
-;           nil ;;...............conversation
-;           ))
-;         (list 'skeletal-warrior)))
-
-(define (is-skeletal-warrior? kchar)
-  (let ((gob (kobj-gob-data kchar)))
-    (and (not (null? gob))
-         (eq? (car gob)
-              'skeletal-warrior))))
-        
-
-;; Death knights can use Vampiric Touch at L3 and Disease at L6
-
-(define (death-knight-ai kchar)
-  (or (use-potion? kchar)
-      (let ((vt (can-use-ability? vampiric-touch kchar))
-            (dis (can-use-ability? disease-touch kchar)))
-        (if (not (or vt dis))
-            #f
-            (let ((victims (get-hostiles-in-range kchar 1)))
-              (if (null? victims)
-                  #f
-                  (if (wants-healing? kchar)
-                      (use-ability vampiric-touch kchar (car victims))
-                      (if (and dis
-                               (>= (kern-dice-roll "1d20") 16))
-                          (use-ability disease-touch kchar (car victims))
-                          #f))))))))
-
-(define (mk-death-knight)
-  (kern-char-arm-self
-   (mk-stock-char
-    "a death knight" ;;..name
-    sp_skeleton ;;.......species
-    oc_warrior ;;.occupation
-    s_knight ;;..........sprite
-    faction-monster ;;...faction
-    'death-knight-ai ;;..custom ai (optional)
-    ;;...................container (and contents)
-    (mk-chest
-     nil
-     (mk-contents (roll-to-add 100  "1"      t_2h_axe)
-                  (roll-to-add 100 "1"       t_iron_helm)
-                  (roll-to-add 100 "1"       t_armor_plate)
-                  (roll-to-add 75  "1d30"    t_gold_coins)
-                  (roll-to-add 1  "1d3"     t_mana_potion)
-                  ))
-
-    nil ;;...............readied arms (in addition to container contents)
-    nil ;;...............effects
-    nil ;;...............conversation
-    )))
-
-(define (mk-death-knight-at-level lvl-dice)
-  (let ((dk (mk-death-knight))
-        (lvl (kern-dice-roll lvl-dice)))
-    (kern-char-set-level dk lvl)
-    (kern-char-set-hp dk 
-                      (max-hp (kern-char-get-species dk)
-                              (kern-char-get-occ dk)
-                              lvl 0 0))
-    (kern-char-set-mana dk
-                        (max-mp (kern-char-get-species dk)
-                                (kern-char-get-occ dk)
-                                lvl 0 0))))
-
-;;----------------------------------------------------------------------------
-;; Guards
-;;----------------------------------------------------------------------------
-(define (guard-mk type post)
-  (list type post))
-(define (guard-type guard) (car guard))
-(define (guard-post guard) (cadr guard))
-(define (guard-has-post? guard) (not (null? (guard-post guard))))
-(define (guard-set-post! guard post) (set-car! (cdr guard) post))
-(define (is-guard-type? kchar type)
-  (let ((gob (kobj-gob-data kchar)))
-    (and (pair? gob)
-         (eq? (guard-type gob)
-              type))))
-
-(define (guard-ai kchar)
-
-  (define (try-to-use-ability)
-    ;;(display "try-to-use-ability")(newline)
-    (if (can-use-ability? disarm kchar)
-        (let ((victims (get-hostiles-in-range kchar 1)))
-          (and (not (null? victims))
-               (>= (kern-dice-roll "1d20") 16)
-               (or (use-ability disarm kchar (car victims))
-                   #t)))
-        #f))
-
-  (define (goto-post)
-    ;;(display "goto-post")(newline)
-    (let ((guard (kobj-gob-data kchar)))
-      (if (guard-has-post? guard)
-          (let ((post (cons (loc-place (kern-obj-get-location kchar))
-                            (guard-post guard))))
-            ;;(display "post:")(display post)(newline)
-            (pathfind kchar post)))))
-
-  (or (use-potion? kchar)
-      (if (any-visible-hostiles? kchar)
-          (try-to-use-ability)
-          (goto-post))))
-
-(define (post-guard kguard x y)
-  (guard-set-post! (kobj-gob-data kguard)
-                   (list x y))
-  kguard)
-
-(define (mk-halberdier)
-  (bind
-   (kern-char-arm-self
-    (mk-stock-char
-     "a guard" ;;.....name
-     sp_human ;;.......species
-     oc_warrior ;;.........occupation
-     s_guard ;;........sprite
-     faction-men ;;...faction
-     'guard-ai ;;...............custom ai (optional)
-     ;;...................container (and contents)
-     (mk-chest
-     nil
-     (mk-contents (roll-to-add 100 "1"     t_halberd)
-                  (roll-to-add 100 "1"     t_chain_coif)
-                  (roll-to-add 100 "1"     t_armor_chain)
-                  (roll-to-add 75  "1d2"   t_heal_potion)
-                  (roll-to-add 75  "1d2"   t_mana_potion)
-                  (roll-to-add 10  "1"     t_vas_mani_scroll)
-                  (roll-to-add 10  "1"     t_in_an_scroll)
-                  (roll-to-add 50  "1d5"   t_food)
-                  ))
-     nil ;;...............readied arms (in addition to container contents)
-     nil ;;...............effects
-     nil ;;...............conversation
-     ))
-   (guard-mk 'halberdier nil)))
-
-(define (mk-crossbowman)
-  (bind
-   (kern-char-arm-self
-    (mk-stock-char
-     "a guard" ;;.....name
-     sp_human ;;.......species
-     oc_warrior ;;.........occupation
-     s_guard ;;........sprite
-     faction-men ;;...faction
-     'guard-ai ;;...............custom ai (optional)
-     ;;...................container (and contents)
-     (mk-chest
-     nil
-     (mk-contents (roll-to-add 100 "1"     t_crossbow)
-                  (roll-to-add 100 "1d100" t_bolt)
-                  (roll-to-add 100 "1"     t_chain_coif)
-                  (roll-to-add 100 "2"     t_dagger)
-                  (roll-to-add 100 "1"     t_armor_chain)
-                  (roll-to-add 75  "1d2"   t_heal_potion)
-                  (roll-to-add 75  "1d2"   t_mana_potion)
-                  (roll-to-add 10  "1"     t_vas_mani_scroll)
-                  (roll-to-add 10  "1"     t_in_an_scroll)
-                  (roll-to-add 50  "1d5"   t_food)
-                  ))
-     nil ;;...............readied arms (in addition to container contents)
-     nil ;;...............effects
-     nil ;;...............conversation
-     ))
-   (guard-mk 'crossbowman nil)))
-
-;;----------------------------------------------------------------------------
-;; Slimes
-;;----------------------------------------------------------------------------
-
-(define (mk-yellow-slime)
-  (let ((slime
-         (mk-stock-char
-          " a yellow slime" ;;.name
-          sp_yellow_slime ;;...species
-          nil ;;...............occupation
-          s_yellow_slime ;;....sprite
-          faction-monster ;;...faction
-          'yellow-slime-ai ;;..custom ai (optional)   
-          nil ;;...............container (and contents)
-          nil ;;...............readied arms (in addition to container contents)
-          nil ;;...............effects
-          nil ;;...............conversation
-          )))
-    (kern-obj-add-effect slime ef_poison_immunity nil)
-    slime))
-
-(define (mk-yellow-slime-verbose msg)
-  (kern-log-msg msg)
-  (mk-yellow-slime))
-
-(define (mk-green-slime)
-  (let ((slime 
-         (mk-stock-char
-          " a green slime" ;;...name
-          sp_green_slime ;;.....species
-          nil ;;................occupation
-          s_slime ;;............sprite
-          faction-monster ;;....faction
-          nil ;;................custom ai (optional)   
-          nil ;;................container (and contents)
-          nil ;;................readied arms (in addition to container)
-          nil ;;................effects
-          nil ;;...............conversation
-          )))
-    (kern-obj-add-effect slime ef_slime_split nil)
-    (kern-obj-add-effect slime ef_poison_immunity nil)
-    slime))
-
-(define (mk-green-slime-verbose msg)
-  (kern-log-msg msg)
-  (mk-green-slime))
-
-(define (mk-wood-spider)
-  (mk-stock-char
-   " a wood spider" ;;..........name
-   sp_spider ;;.................species
-   nil ;;.......................occupation
-   s_spider ;;..................sprite
-   faction-wood-spider ;;.......faction
-   'spider-ai ;;................custom ai (optional)   
-   nil ;;.......................container (and contents)
-   nil ;;.......................readied arms (in addition to container)
-   nil ;;.......................effects
-   nil ;;...............conversation
-   )
-  )
-
-(define (mk-queen-spider)
-  (mk-stock-char
-   " a queen spider" ;;.........name
-   sp_queen_spider ;;...........species
-   nil ;;.......................occupation
-   s_queen_spider ;;............sprite
-   faction-wood-spider ;;.......faction
-   'spider-ai ;;................custom ai (optional)   
-   nil ;;.......................container (and contents)
-   nil ;;.......................readied arms (in addition to container)
-   nil ;;........................effects
-   nil ;;...............conversation
-   )
-  )
-
-(define (mk-bandit)
-  (bind
-   (kern-char-arm-self
-    (mk-stock-char
-     " a bandit" ;;......name
-     sp_human ;;.........species
-     oc_wrogue ;;........occupation
-     s_brigand ;;........sprite
-     faction-outlaw ;;...faction
-     nil ; 'bandit-ai ;;.......custom ai (optional)
-    
-     ;;..................container (and contents, used to arm char)
-     (mk-chest
-      'spike-trap
-      (mk-contents 
-       (roll-to-add 50  "1"    t_heal_potion)
-       (roll-to-add 75  "1"    t_dagger)
-       (roll-to-add 50  "1"    t_sword)
-       (roll-to-add 10  "1d2"  t_oil)
-       (roll-to-add 50  "1"    t_mace)
-       (roll-to-add 50  "1d20" t_bolt)
-       (roll-to-add 25  "1"    t_crossbow)
-       (roll-to-add 75  "1"    t_shield)
-       (roll-to-add 90  "1"    t_armor_leather)
-       (roll-to-add 90  "1"    t_leather_helm)
-       (roll-to-add 100 "1d10" t_gold_coins)
-       (roll-to-add 50  "1d3"  t_picklock)
-       ))
-     
-     nil ;;...............readied arms (in addition to container contents)
-     nil ;;...............effects
-     nil ;;...............conversation
-     ))
-   (npcg-mk 'bandit)))
-
-(define (mk-troll)
-  (bind
-   (mk-stock-char
-    "a troll " ;;................name
-    sp_troll ;;.................species
-    oc_warrior ;;.................occupation
-    s_troll ;;..................sprite
-    faction-hill-troll ;;.......faction
-    'troll-ai ;;................custom ai (optional)
-    
-    ;;.......container (and contents, used to arm char)
-    (mk-chest nil 
-              (mk-contents
-               (roll-to-add 100 "1d3"    t_thrown_boulder)
-               (roll-to-add 25  "1"      t_mace)
-               (roll-to-add 100 "1d25-1" t_gold_coins)
-               ))
-    
-    nil ;;......................readied arms (in addition to container)
-    nil ;;......................effects
-    nil ;;...............conversation
-    )
-   (npcg-mk 'troll)))
-
-(define (mk-gint)
-  (kern-char-arm-self
-   (mk-stock-char
-    "gint" ;;................name
-    sp_gint ;;.................species
-    oc_warrior ;;.................occupation
-    s_ettin ;;..................sprite
-    faction-gint ;;.......faction
-    nil ;;................custom ai (optional)
-    
-    ;;.......container (and contents, used to arm char)
-    (mk-chest nil 
-              (mk-contents
-               (roll-to-add 50  "1"      t_2h_axe)
-               (roll-to-add 50  "1"      t_2h_sword)
-               (roll-to-add 50  "1"      t_morning_star)
-               (roll-to-add 50  "1"      t_halberd)
-               (roll-to-add 100 "4d25"   t_gold_coins)
-               (roll-to-add 100 "1d5"    t_food)
-               ))
-    
-    nil ;;......................readied arms (in addition to container)
-    nil ;;......................effects
-    nil ;;...............conversation
-    )))
-  
-;;----------------------------------------------------------------------------
-;; Animals
-;;----------------------------------------------------------------------------
-(define (mk-bull)
-  (mk-animal "bull" sp_bull s_bull))
-  
+;;define                        (mk-npct "                          sp_              oc_        s_                 nil          nil                    nil           'std-ai           ))
 
 ;;----------------------------------------------------------------------------
 ;; Type queries
@@ -599,6 +357,7 @@
   (is-species? kchar sp_yellow_slime))
 
 (define (is-green-slime? kchar)
+  (println "is-green-slime?")
   (is-species? kchar sp_green_slime))
 
 (define (is-spider? kchar)
@@ -643,3 +402,14 @@
 (define (is-forest-goblin-stalker? kchar)
   (and (is-species? kchar sp_forest_goblin)
        (is-occ? kchar oc_warrior)))
+
+(define (is-skeletal-warrior? kchar)
+  (let ((gob (kobj-gob-data kchar)))
+    (and (not (null? gob))
+         (eq? (car gob)
+              'skeletal-warrior))))
+
+(define (post-guard kguard x y)
+  (npcg-set-post! (gob kguard) (list x y))
+  kguard)
+

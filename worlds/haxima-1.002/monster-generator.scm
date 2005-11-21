@@ -141,52 +141,6 @@
                                          mk-monster
                                          is-monster?)))
 
-;; ----------------------------------------------------------------------------
-;; Monster Generators
-;;
-;; Some common monster generator types defined here for convenience. Keep in
-;; mind that these are very generic generators, and there's nothing preventing
-;; you from making "smarter" custom generators suited to a particular place.
-;; ----------------------------------------------------------------------------
-(mk-wilderness-monster-generator 't_orc_generator 
-                                 990
-                                 2
-                                 t_goblin_horde 
-                                 faction-monster nil)
-
-(mk-wilderness-ambush-generator-type 't_spider_generator
-                                     950
-                                     t_wood_spiders
-                                     faction-wood-spider nil)
-
-(mk-wilderness-ambush-generator-type 't_queen_spider_generator
-                                     999
-                                     t_queen_wood_spiders
-                                     faction-wood-spider nil)
-
-(mk-wilderness-monster-generator 't_skeleton_generator
-                                 990
-                                 2
-                                 t_skeleton_brigade
-                                 faction-monster nil)
-
-(mk-wilderness-monster-generator 't_bandit_generator
-                                 990
-                                 1
-                                 t_bandit_gang
-                                 faction-outlaw
-                                 nil)
-
-(mk-monster-generator 't_dungeon_troll_generator 990 5 mk-troll is-troll?)
-(mk-monster-generator 't_dungeon_spider_generator 990 3 mk-queen-spider 
-                      is-queen-spider?)
-(mk-monster-generator 't_yellow_slime_generator 500 1 mk-yellow-slime
-                      is-yellow-slime?)
-
-;; Make an instance of one of the above monster generators
-(define (mk-generator generator-type)
-  (kern-obj-set-visible (kern-mk-obj generator-type 1) #f))
-
 ;;----------------------------------------------------------------------------
 ;; Newer, improveder monster generator
 ;;----------------------------------------------------------------------------
@@ -206,13 +160,17 @@
         (eval-loc tag-loc))))
 
 (define (mongen2-exec kgen)
-  ;(display "mongen2-exec")(newline)
-  (let ((gen (kobj-gob-data kgen)))
+  (display "mongen2-exec")(newline)
+  (let* ((gen (kobj-gob-data kgen))
+        (targ-loc (if (null? (mongen2-targ-loc gen)) 
+                      (kern-obj-get-location kgen)
+                      (mongen2-targ-loc gen)))
+        )
     (define (roll-to-encounter)
-      ;(display "roll-to-encounter")(newline)
+      (display "roll-to-encounter")(newline)
       (>= (modulo (random-next) 1000) (mongen2-thresh gen)))
     (define (not-too-many?)
-      ;(display "not-too-many?")(newline)
+      (display "not-too-many?")(newline)
       (< (length (filter (eval (caddr gen))
                          (kern-place-get-beings (loc-place 
                                                  (kern-obj-get-location 
@@ -220,11 +178,11 @@
          (mongen2-max gen)))
     (if (and (roll-to-encounter)
              (not-too-many?)
-             (not (occupied? (kern-obj-get-location kgen)))
+             (not (occupied? targ-loc))
              (or (not (mongen2-out-of-sight-only? gen))
                  (player-out-of-sight? kgen)))
-        (let ((targ-loc (mongen2-targ-loc gen)))
-          ;(display "targ-loc:")(display targ-loc)(newline)
+        (begin
+          (display "targ-loc:")(display targ-loc)(newline)
           (kern-obj-put-at (mongen2-mk-monster gen)
                            (if (null? targ-loc)
                                (kern-obj-get-location kgen)
@@ -245,17 +203,6 @@
   (bind (kern-obj-set-visible (kern-mk-obj t_mongen2 1) #f)
         (mongen2-mk thresh max is-monster? mk-monster mk-args #f nil)))
 
-;; same, only triggers when player steps on it and doesn't care if player is in
-;; sight
-(define step-gen-ifc
-  (ifc nil
-       (method 'step mongen2-exec)))
-
-(mk-obj-type 't_step_gen nil nil layer-mechanism step-gen-ifc)
-
-(define (mk-step-gen thresh max is-monster? mk-monster mk-args targ-loc)
-  (bind (kern-obj-set-visible (kern-mk-obj t_step_gen 1) #f)
-        (mongen2-mk thresh max is-monster? mk-monster mk-args #f targ-loc)))
 
 ;;----------------------------------------------------------------------------
 ;; Guard Generator
@@ -426,58 +373,6 @@
             (mk-treasure-list (- n 1)))))
 
 ;;----------------------------------------------------------------------------
-;; mongen3 -- next revision of monster generator; uses npc types
-(define (mongen3-mk thresh max npct-tag faction lvl-dice los?)
-  (list thresh max npct-tag faction lvl-dice los?))
-(define (mongen3-thresh gen) (car gen))
-(define (mongen3-max gen) (cadr gen))
-(define (mongen3-npct-tag gen) (caddr gen))
-(define (mongen3-faction gen) (cadddr gen))
-(define (mongen3-lvl-dice gen) (list-ref gen 4))
-(define (mongen3-los? gen) (list-ref gen 5))
-(define (mongen3-mk-monster gen)
-  (println "mongen3-mk-monster " gen)
-  (mk-npc (mongen3-npct-tag gen)
-          (mongen3-faction gen)
-          (kern-dice-roll (mongen3-lvl-dice gen))))
-
-(define (mongen3-exec kgen)
-  ;(display "mongen3-exec")(newline)
-  (let* ((gen (gob kgen)))
-
-    (if (>= (modulo (random-next) 1000) 
-            (mongen3-thresh gen))
-        (let ((gloc (kern-obj-get-location kgen)))
-
-          (define (not-too-many?)
-            ;;(display "not-too-many?")(newline)
-            (let ((npct-tag (mongen3-npct-tag gen)))
-              (< (length (filter (lambda (kbeing)
-                                   (kbeing-is-npc-type? kbeing 
-                                                        npct-tag))
-                                 (kern-place-get-beings (loc-place gloc))))
-                 (mongen3-max gen))))
-
-          (if (and (not-too-many?)
-                   (not (occupied? gloc))
-                   (or (not (mongen3-los? gen))
-                       (player-out-of-sight? kgen)))
-              (kern-obj-put-at (mongen3-mk-monster gen)
-                               gloc))))))
-
-(define mongen3-ifc
-  (ifc nil
-       (method 'exec mongen3-exec)
-       (method 'on mongen3-exec)
-       ))
-
-(mk-obj-type 't_mongen3 nil nil layer-none mongen3-ifc)
-
-(define (mk-mongen3 los? thresh max npct-tag faction lvl-dice)
-  (bind (kern-obj-set-visible (kern-mk-obj t_mongen3 1) #f)
-        (mongen3-mk thresh max npct-tag faction lvl-dice los?)))
-
-;;----------------------------------------------------------------------------
 ;; spawn-pt -- generates a monster when triggered externally. The level of the
 ;; monsters is calculated on-the-fly based on the player party level. The
 ;; faction and npc type mix are determined by the "factory", which is passed to
@@ -527,6 +422,18 @@
         (spawn-pt-mk npct-tag faction)))
 
 ;;----------------------------------------------------------------------------
+;; time-to-respawn? -- checks if an hour and a minute has passed
+(define (time-to-respawn? oldtime)
+  (let ((curtime (kern-get-time)))
+    (or (> (time-year curtime) (time-year oldtime))
+        (> (time-month curtime) (time-month oldtime))
+        (> (time-week curtime) (time-week oldtime))
+        (> (time-day curtime) (time-day oldtime))
+        (and (or (>= (- (time-hour curtime) (time-hour oldtime)) 2)
+                 (and (> (time-hour curtime) (time-hour oldtime))
+                      (> (time-minute curtime) (time-minute oldtime))))))))
+
+;;----------------------------------------------------------------------------
 ;; monman -- monster manager object
 
 (define (monman-mk time)
@@ -543,20 +450,6 @@
 
     (println " mm=" mm)
     
-    (define (time-to-respawn?)
-      (println " time-to-respawn?")
-      (let* ((curtime (kern-get-time))
-             (oldtime (monman-time mm)))
-        (println "  curtime=" curtime)
-        (println "  oldtime=" oldtime)
-        (or (> (time-year curtime) (time-year oldtime))
-            (> (time-month curtime) (time-month oldtime))
-            (> (time-week curtime) (time-week oldtime))
-            (> (time-day curtime) (time-day oldtime))
-            (and (or (>= (- (time-hour curtime) (time-hour oldtime)) 2)
-                     (and (> (time-hour curtime) (time-hour oldtime))
-                          (> (time-minute curtime) (time-minute oldtime))))))))
-
     (define (cleanup-old-spawn)
       (println " cleanup-old-spawn")
       (map kern-obj-remove
@@ -573,7 +466,7 @@
       (map trigger-spawn-pt
            (kplace-get-objects-of-type kplace t_spawn_pt)))
 
-    (if (time-to-respawn?)
+    (if (time-to-respawn? (monman-time mm))
         (and (cleanup-old-spawn)
              (respawn)))
 

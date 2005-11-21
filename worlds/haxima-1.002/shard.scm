@@ -479,13 +479,6 @@
   (list (mk-bridge east) 33 52)
   (list (mk-bridge east) 23 51)
 
-  ;; existing npc parties
-  (list (kern-mk-party t_bandit_gang faction-monster nil) 29 28)
-
-  ;; monster/ambush generators
-  (list (mk-wilderness-ambush-generator t_queen_spider_generator 
-                                        43 34 5 6 "A nest of spiders!") 46 37)
-
   ;; wreck of the Merciful Death
   (put (mk-raise-listener 'raise-merciful-death nil) 
        merciful-death-x 

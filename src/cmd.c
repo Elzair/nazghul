@@ -866,7 +866,7 @@ bool cmdOpen(class Character * pc)
          }
 
          /* Open a mechanism */
-         if (mech) {
+         if (mech && mech->getObjectType()->canOpen()) {
                  cmdwin_print("%s!", mech->getName());
                  mech->getObjectType()->open(mech, pc);
                  mapSetDirty();

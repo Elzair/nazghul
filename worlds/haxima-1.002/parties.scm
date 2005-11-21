@@ -18,6 +18,8 @@
   (mk-npc 'cave-goblin-berserker faction-cave-goblin 4))
 (define (mk-skeletal-warrior)
   (mk-npc 'skeletal-warrior faction-monster 4))
+(define (mk-bandit)
+  (mk-npc 'bandit faction-outlaw 4))
 
 ;;----------------------------------------------------------------------------
 ;; Party Types

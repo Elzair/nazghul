@@ -98,6 +98,8 @@
 
  (list  ;; objects:
 
+  (put (mk-monman) 0 0)
+
   ;; npcs
   (put (mk-patch) 0 0)
   (put (mk-angela) 0 0)
@@ -107,30 +109,20 @@
   (put (mk-ini) 0 0)
   (put (mk-jeffreys) 0 0)
 
-  ;; guard generators
-  (put (mk-ggen 10 'is-halberdier? 'mk-halberdier
-                (list
-                 (mk-post 6 32)
-                 (mk-post 32 6)
-                 (mk-post 57 32)
-                 (mk-post 32 57)))
-       28 32)
-
-  (put (mk-ggen 10 'is-crossbowman? 'mk-crossbowman
-                (list
-                 (mk-post 2 28)
-                 (mk-post 36 2)
-                 (mk-post 2 36)
-                 (mk-post 61 36)
-                 (mk-post 36 61)
-                 (mk-post 28 2)
-                 (mk-post 28 61)
-                 (mk-post 61 28)
-                 ))
-       6 6)
-
   ;; guards
-  (put (post-guard (mk-halberdier) 6 32) 6 32)
+  (put (spawn-pt 'halberdier faction-men) 6 32)
+  (put (spawn-pt 'halberdier faction-men) 32 6)
+  (put (spawn-pt 'halberdier faction-men) 57 32)
+  (put (spawn-pt 'halberdier faction-men) 32 57)
+
+  (put (spawn-pt 'crossbowman faction-men)  2 28)
+  (put (spawn-pt 'crossbowman faction-men) 36  2)
+  (put (spawn-pt 'crossbowman faction-men)  2 36)
+  (put (spawn-pt 'crossbowman faction-men) 61 36)
+  (put (spawn-pt 'crossbowman faction-men) 36 61)
+  (put (spawn-pt 'crossbowman faction-men) 28  2)
+  (put (spawn-pt 'crossbowman faction-men) 28 61)
+  (put (spawn-pt 'crossbowman faction-men) 61 28)
 
   ;; lower right wall entrance
   (put (mk-door) 55 57)
@@ -215,7 +207,7 @@
 
   )
 
- nil ; hooks
+ (list 'on-entry-to-dungeon-room) ; hooks
  nil ; edge entrances
  )
 

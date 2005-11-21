@@ -238,35 +238,80 @@
           (or (ai-attack-target kchar ktarg)
               (ai-pathfind-to-target kchar ktarg))))))
 
-;;----------------------------------------------------------------------------
-;; spell-sword-ai -- aggressive, selfish fighter that uses magic for combat.
-(define (std-moves? kchar)
+
+(define (animal-ai kchar)
+  (get-off-bad-tile? kchar))
+
+(define (std-ai kchar)
   (or (get-off-bad-tile? kchar)
       (use-potion? kchar)))
 
+;;----------------------------------------------------------------------------
+;; spell-sword-ai -- aggressive, selfish fighter that uses magic for combat.
 (define (spell-sword-ai kchar)
   (println "spell-sword-ai")
-  (or (std-moves? kchar)
+  (or (std-ai kchar)
       (use-spell-on-self? kchar)
       (use-melee-spell-on-foes? kchar)
       (use-ranged-spell-on-foes? kchar)))
 
 (define (shaman-ai kchar)
   ;;(display "shaman-ai ")(dump-char kchar)
-  (or (std-moves? kchar)
+  (or (std-ai kchar)
       (use-heal-spell-on-ally? kchar)
       (move-toward-patient? kchar)
       (spell-sword-ai kchar)
       (move-away-from-foes? kchar)))
 
 (define (priest-ai kchar)
-  (or (std-moves? kchar)
+  (or (std-ai kchar)
       (and (in-melee-range-of-foes? kchar)
            (blink-away-from-foes kchar))
       (spell-sword-ai kchar)))
 
 (define (generic-ai kchar)
-  (std-moves? kchar))
+  (std-ai kchar))
+
+;; Death knights can use Vampiric Touch at L3 and Disease at L6
+(define (death-knight-ai kchar)
+  (or (use-potion? kchar)
+      (let ((vt (can-use-ability? vampiric-touch kchar))
+            (dis (can-use-ability? disease-touch kchar)))
+        (if (not (or vt dis))
+            #f
+            (let ((victims (get-hostiles-in-range kchar 1)))
+              (if (null? victims)
+                  #f
+                  (if (wants-healing? kchar)
+                      (use-ability vampiric-touch kchar (car victims))
+                      (if (and dis
+                               (>= (kern-dice-roll "1d20") 16))
+                          (use-ability disease-touch kchar (car victims))
+                          #f))))))))
+
+;; guard-ai
+(define (guard-ai kchar)
+  (define (try-to-use-ability)
+    ;;(display "try-to-use-ability")(newline)
+    (if (can-use-ability? disarm kchar)
+        (let ((victims (get-hostiles-in-range kchar 1)))
+          (and (not (null? victims))
+               (>= (kern-dice-roll "1d20") 16)
+               (or (use-ability disarm kchar (car victims))
+                   #t)))
+        #f))
+  (define (goto-post)
+    ;;(display "goto-post")(newline)
+    (let ((guard (gob kchar)))
+      (if (npcg-has-post? guard)
+          (let ((post (cons (loc-place (kern-obj-get-location kchar))
+                            (npcg-get-post guard))))
+            ;;(display "post:")(display post)(newline)
+            (pathfind kchar post)))))
+  (or (use-potion? kchar)
+      (if (any-visible-hostiles? kchar)
+          (try-to-use-ability)
+          (goto-post))))
 
 ;;-------------------> old stuff for reference:
 ;;----------------------------------------------------------------------------

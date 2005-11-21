@@ -174,7 +174,7 @@
 (kern-mk-sprite 's_wizard         ss_u4_shapes 4 224 #f 0 )
 (kern-mk-sprite 's_lich           ss_u4_shapes 4 228 #f 0 )
 (kern-mk-sprite 's_drake          ss_u4_shapes 4 232 #f 0 )
-(kern-mk-sprite 's_xorn           ss_u4_shapes 4 236 #f 0 )
+(kern-mk-sprite 's_zorn           ss_u4_shapes 4 236 #f 0 )
 (kern-mk-sprite 's_demon          ss_u4_shapes 4 240 #f 0 )
 (kern-mk-sprite 's_hydra          ss_u4_shapes 4 244 #f 0 )
 (kern-mk-sprite 's_dragon         ss_u4_shapes 4 248 #f 0 )
@@ -332,6 +332,7 @@
 (kern-mk-sprite 's_doorway ss_addon 1 101 #f 0)
 (kern-mk-sprite 's_purple_spider ss_addon 4 104 #f 0)
 (kern-mk-sprite 's_brigandess ss_addon 4 108 #f 0)
+(kern-mk-sprite 's_wolf ss_addon 4 112 #f 0)
 
 (kern-mk-sprite 's_full_moon                ss_moons 1 0 #f 0 )
 (kern-mk-sprite 's_wane_three_quarter_moon  ss_moons 1 1 #f 0 )

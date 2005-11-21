@@ -48,7 +48,7 @@
  (list ; objects
 
   ;; npcs
-  (put (mk-bull) 14 3)
+  (put (mk-npc 'bull faction-none 6) 14 3)
   (put (mk-meaney) 9 9)
 
   ;; beds

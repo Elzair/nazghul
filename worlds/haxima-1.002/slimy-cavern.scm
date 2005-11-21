@@ -92,6 +92,10 @@
     ;; Hints/instructions
     )))
 
+(define (mk-green-slime-verbose msg)
+  (kern-log-msg msg)
+  (mk-npc 'green-slime faction-monster 3))
+  
 
 (kern-mk-place 'p_slimy_cavern    ; tag
                "Slimy Cavern"     ; name
@@ -106,6 +110,7 @@
 
                ;; objects
                (list
+                (put (mk-monman) 0 0)
 
                 ;; loot and loose-lying objects
                 (list rolands-chest 9 2)
@@ -118,18 +123,16 @@
                 ;; doors/mechanisms
                 (list (mk-door-full windowed-wood-door-in-rock #t #f nil) 13 3)
 
-                ;; monster generators
-                (put (mk-step-gen 0 3 'is-green-slime? 'mk-green-slime-verbose
-                                  (list "A slime oozes up from its foul bed!")
-                                  (list 'p_slimy_cavern 9 17)) 11 17)
-
                 ;; existing npc's
-                (list (mk-bandit) 5 4)
-                (list (mk-bandit) 9 4)
-                (list (mk-bandit) 9 2)                
-                (list ch_roland  14 1)
+                (put (mk-npc 'bandit faction-outlaw 2) 5 4)
+                (put (mk-npc 'bandit faction-outlaw 2) 9 4)
+                (put (mk-npc 'bandit faction-outlaw 2) 9 2)
+                (put (spawn-pt 'green-slime faction-monster) 9 17)
+                (put (spawn-pt 'green-slime faction-monster) 10 18)
+                (put (spawn-pt 'green-slime faction-monster) 13 18)
+                (put ch_roland  14 1)
 
                 )
-               (list 'slimy-cavern-entry) ; hooks
+               (list 'on-entry-to-dungeon-room) ; hooks
                nil ; edge entrances
                )

@@ -1,37 +1,33 @@
-(define humanoid-slots (list slot-helm
-                             slot-amulet
-                             slot-weapon-or-shield
-                             slot-weapon-or-shield
-                             slot-armor
-                             slot-boot
-                             slot-ring
-                             slot-ring))
+;;----------------------------------------------------------------------------
+;; Morphologies
+(define humanoid
+  (list slot-helm
+        slot-amulet
+        slot-weapon-or-shield
+        slot-weapon-or-shield
+        slot-armor
+        slot-boot
+        slot-ring
+        slot-ring))
 
-(define gint-slots (list slot-helm
-                         slot-helm
-                         slot-amulet
-                         slot-amulet
-                         slot-weapon-or-shield
-                         slot-weapon-or-shield
-                         slot-weapon-or-shield
-                         slot-weapon-or-shield
-                         slot-armor
-                         slot-boot
-                         slot-ring
-                         slot-ring))
+(define giant
+  (list slot-helm
+        slot-helm
+        slot-amulet
+        slot-amulet
+        slot-weapon-or-shield
+        slot-weapon-or-shield
+        slot-weapon-or-shield
+        slot-weapon-or-shield
+        slot-armor
+        slot-boot
+        slot-ring
+        slot-ring))
 
-(define humanoid humanoid-slots)
-(define giant gint-slots)
+;;----------------------------------------------------------------------------
+;; species
 
-(define troll-speed         speed-human)
-(define gint-speed          speed-human)
-(define balron-speed        (* 2 speed-human))
-(define troll-base-hp       20)
-(define troll-critical-hp   10)
-(define troll-melee-weapon  t_hands)
-(define troll-ranged-weapon t_thrown_boulder)
-(define troll-ripup-boulder-ap (* 2 troll-speed))
-
+;; mk-species -- register a species type with the kernel
 (define (mk-species tag name str int dex spd con mag vr mmode weap morph xp sspr mvsnd)
   (kern-mk-species tag name str int dex spd vr mmode 
                    con 
@@ -43,31 +39,43 @@
                    mvsnd
                    nil xp morph nil)) 
 
-;;          tag              name           st in dx sp hp mp vr mmode       weap         morph    xp sspr           mvsnd           die
-(mk-species 'sp_human        "human"        10 10 10 1  20 10 13 mmode-walk  t_hands      humanoid 2  s_asleep       sound-walking   nil)
-(mk-species 'sp_nixie        "nyad"         10 10 10 1  20 10 13 mmode-fish  t_hands      humanoid 2  s_shoals       sound-splashing nil)
-(mk-species 'sp_ghast        "ghast"        10 10 10 1  10  3  8 mmode-phase t_hands      humanoid 2  s_asleep       nil             nil)
-(mk-species 'sp_cave_goblin  "cave goblin"  12  8 12 1  15  8 14 mmode-walk  t_hands      humanoid 2  s_asleep       sound-walking   nil)
-(mk-species 'sp_forest_goblin "forest goblin" 8 10 14 1 14 14 16 mmode-walk  t_hands      humanoid 2  s_asleep       sound-walking   nil)
-(mk-species 'sp_insect       "insects"       1  1 18 2   3  0  4 mmode-hover t_stinger    nil      1  nil            nil             nil)
-(mk-species 'sp_yellow_slime "yellow slime"  4  4  4 1  15  8  6 mmode-walk  t_acid_spray nil      2  nil            sound-squishing nil)
-(mk-species 'sp_green_slime  "green slime"   2  2  2 1  10  0  5 mmode-walk  t_acid_spray nil      2  s_slime_asleep sound-squishing nil)
-(mk-species 'sp_skeleton     "skeleton"     12  8 12 1  22 10 10 mmode-walk  t_hands      humanoid  2  s_asleep       sound-walking   nil)
-(mk-species 'sp_snake        "snake"         2  2 14 1   5  0  6 mmode-walk  t_fangs      nil      1  s_asleep       sound-walking   nil)
-(mk-species 'sp_troll        "troll"        14  6 12 1  20  5 10 mmode-walk  t_hands      humanoid 3  s_asleep       sound-walking   nil)
-(mk-species 'sp_gint         "gint"         50  3  8 1 100  8 20 mmode-hover t_hands      giant    10 s_asleep       sound-walking   nil)
-(mk-species 'sp_balron       "balron"       50 50 50 1 100 100 13 mmode-fly  t_horns      giant    50 s_asleep       sound-walking   nil)
-(mk-species 'sp_bull         "bull"         20  1  5 1  40  0  6 mmode-walk  t_horns      nil      2  s_bull         sound-walking   nil)
-(mk-species 'sp_statue       "statue"        1  1  1 1 100000000 0 1 mmode-walk nil       nil      0  nil            nil             nil)
-(mk-species 'sp_spider       "spider"       12  6 14 2  10  1 10 mmode-crawl t_fangs      nil      2  s_asleep       sound-walking   'spider-killed)
-(mk-species 'sp_queen_spider "queen spider" 18  6 12 1  30 10 10 mmode-crawl t_fangs      nil      4  s_asleep       sound-walking   'queen-spider-killed)
+;;          tag              name             st in dx sp hp mp vr mmode       weap         morph   xp sspr           mvsnd           die
+(mk-species 'sp_balron       "balron"         50 50 50 1 50 50 13 mmode-fly   t_horns      giant    50 s_asleep       sound-walking   nil)
+(mk-species 'sp_bull         "bull"           20  1  5 1 20  0  6 mmode-walk  t_horns      nil       2 s_bull         sound-walking   nil)
+(mk-species 'sp_cave_goblin  "cave goblin"    12  8 12 1 12  8 14 mmode-walk  t_hands      humanoid  2 s_asleep       sound-walking   nil)
+(mk-species 'sp_forest_goblin "forest goblin"  8 10 14 1  8 14 16 mmode-walk  t_hands      humanoid  2 s_asleep       sound-walking   nil)
+(mk-species 'sp_ghast        "ghast"          10 10 10 1 10 10  8 mmode-phase t_hands      humanoid  2 s_asleep       nil             nil)
+(mk-species 'sp_gint         "gint"           50  3  8 1 50  8 20 mmode-hover t_hands      giant    10 s_asleep       sound-walking   nil)
+(mk-species 'sp_green_slime  "green slime"     2  2  2 1 10  0  5 mmode-walk  t_acid_spray nil       2 s_slime_asleep sound-squishing nil)
+(mk-species 'sp_human        "human"          10 10 10 1 10 10 13 mmode-walk  t_hands      humanoid  2 s_asleep       sound-walking   nil)
+(mk-species 'sp_insect       "insects"         1  1 18 2  3  0  4 mmode-hover t_stinger    nil       1 nil            nil             nil)
+(mk-species 'sp_nixie        "nyad"           10 10 10 1 10 10 13 mmode-fish  t_hands      humanoid  2 s_shoals       sound-splashing nil)
+(mk-species 'sp_queen_spider "queen spider"   18  6 12 1 20 12 10 mmode-crawl t_fangs      nil       4 s_asleep       sound-walking   'queen-spider-killed)
+(mk-species 'sp_skeleton     "skeleton"       12  8 12 1 12  2 10 mmode-walk  t_hands      humanoid  2 s_asleep       sound-walking   nil)
+(mk-species 'sp_snake        "snake"           2  2 14 1  4  0  6 mmode-walk  t_fangs      nil       1 s_asleep       sound-walking   nil)
+(mk-species 'sp_spider       "spider"         12  6 14 2  8  2 10 mmode-crawl t_fangs      nil       2 s_asleep       sound-walking   'spider-killed)
+(mk-species 'sp_statue       "statue"          1  1  1 1 99  0  1 mmode-none  nil          nil       0 nil            nil             nil)
+(mk-species 'sp_troll        "troll"          14  6 12 1 20  6 10 mmode-walk  t_horns      humanoid  3 s_asleep       sound-walking   nil)
+(mk-species 'sp_yellow_slime "yellow slime"    4  4  4 1 12  8  6 mmode-walk  t_acid_spray nil       2 nil            sound-squishing nil)
 
+(mk-species 'sp_kraken       "kraken"         30  3 20 1 30 10  6 mmode-fish  t_tentacles  nil      10 s_shoals       sound-splashing nil) 
+(mk-species 'sp_sea_serpent  "sea serpent"    20  2 14 1 20 10  9 mmode-fish  t_fangs      nil      8  s_asleep       sound-walking   nil) 
+(mk-species 'sp_dryad        "dryad"          12 12  4 1 12 20  6 mmode-none  nil          nil      8  s_forest       nil             nil) 
+(mk-species 'sp_wolf         "wolf"            8  2 12 2  8  0  9 mmode-walk  t_fangs      nil      2  s_asleep       sound-walking   nil) 
+(mk-species 'sp_gazer        "gazer"           6 20  6 1 10 18 16 mmode-hover nil          nil      8  s_asleep       nil             nil) 
+(mk-species 'sp_headless     "headless"       12  0 10 1 14  0  4 mmode-walk  t_hands      humanoid 2  s_asleep       sound-walking   nil) 
+(mk-species 'sp_wisp         "wisp"            2 20 16 2  8 20  9 mmode-hover nil          nil      4  nil            nil             nil) 
+(mk-species 'sp_dragon       "dragon"         20 10 10 1 30 12  9 mmode-fly   t_fangs      nil      10 nil            sound-walking   'dragon-killed) 
+(mk-species 'sp_zorn         "zorn"           10 10 10 1 10 10  9 mmode-phase t_beak       nil      4  s_asleep       sound-walking   nil) 
+(mk-species 'sp_demon        "demon"          14 14 14 1 14 14 12 mmode-phase t_hands      humanoid 8  s_asleep       sound-walking   nil) 
+(mk-species 'sp_hydra        "hydra"          20  2 10 1 30 10  6 mmode-none  t_tentacles  nil      10 nil            nil             'hydra-killed) 
+(mk-species 'sp_lich         "lich"           12 14 14 1 20 20  9 mmode-walk  t_hands      humanoid 8  s_asleep       sound-walking   'lich-killed)
 
 ;;----------------------------------------------------------------------------
 ;; This list of the undead species is used by spells which affect the undead.
 ;;----------------------------------------------------------------------------
 (define undead-species-tags
-  (list sp_skeleton))
+  (list sp_skeleton sp_lich))
 
 (define (species-is-undead? species)
   (foldr (lambda (x undead) (or x (eqv? species undead)))
@@ -118,3 +126,22 @@
   (kern-obj-set-visible (bind (kern-mk-obj t_slime_generator 1)
                               (list x y))
                         #f))
+
+;;----------------------------------------------------------------------------
+;; On-death closures
+(define (drop kchar . stuff)
+  (map (lambda (ktype) (kern-obj-put-at (kern-mk-obj ktype 1) 
+                                        (kern-obj-get-location kchar))) 
+       stuff))
+
+(define (lich-killed kchar)
+  (kern-log-msg "The lich howls and collapses in a pool of yellow ichor!")
+  (drop kchar t_lichs_blood))
+
+(define (dragon-killed kchar)
+  (kern-log-msg "Shrieking and twitching, the dragon falls with a thud!")
+  (drop kchar t_dragons_blood))
+
+(define (hydra-killed kchar)
+  (kern-log-msg "With a lust spurt of acid the hydra keels over!")
+  (drop kchar t_hydras_blood))

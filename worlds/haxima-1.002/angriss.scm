@@ -201,7 +201,7 @@
      sp_queen_spider     ; species
      nil                 ; occ
      s_purple_spider     ; sprite
-     faction-wood-spider ; starting alignment
+     faction-spider ; starting alignment
      20 0 20             ; str/int/dex
      10 5                ; hp mod/mult
      10 5                ; mp mod/mult
