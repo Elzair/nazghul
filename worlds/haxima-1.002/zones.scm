@@ -239,7 +239,7 @@
 (define (mk-zone x y w h) (list 'p_kurpolis_entrance x y w h))
 (define ke-bed1 (mk-zone  5 17  1  1))
 (define ke-bed2 (mk-zone  7 17  1  1))
-(define ke-hall (mk-zone  1  3  3 13))
+(define ke-hall (mk-zone  1  9  3  3))
 (define ke-dine (mk-zone  5  1  9  5))
 (define ke-tbl1 (mk-zone  9  2  1  1))
 (define ke-tbl2 (mk-zone  9  4  1  1))

@@ -146,13 +146,13 @@
    ;;     ========================================================================================================================
    ;;     tag         | name       | sprite     | to-hit | damage | to-def | slots       | hnds | rng | missile    | ubiq | weight
    ;;     ========================================================================================================================
-   (list 't_sling      "sling"      s_sling      "-1"     "1d3"    "-1"     slot-weapon   1      4     t_slingstone #t      0)
-   (list 't_sling_4    "+4 sling"   s_sling      "3"      "1d3+4"  "0"      slot-weapon   1      6     t_slingstone #t      0)
+   (list 't_sling      "sling"      s_sling      "-1"     "1d5"    "-1"     slot-weapon   1      4     t_slingstone #t      0)
+   (list 't_sling_4    "+4 sling"   s_sling      "3"      "1d5+4"  "0"      slot-weapon   1      6     t_slingstone #t      0)
    (list 't_bow        "bow"        s_bow        "1"      "2d5"    "-2"     slot-weapon   2      6     t_arrow      #f      2)
    (list 't_crossbow   "crossbow"   s_crossbow   "2"      "4d3"    "-3"     slot-weapon   2      4     t_bolt       #f      3)
    (list 't_doom_staff "doom staff" s_doom_staff "1d4"    "2d20"   "+2"     slot-weapon   2      12    t_warhead    #t      2)
-   (list 't_acid_spray "acid spray" nil          "0"      "1d2"    "+0"     slot-nil      2      2     t_acid_bolt  #t      0)
-   (list 't_stun_wand  "stun wand"  s_stun_wand  "-2"     "1d20"   "-1"     slot-weapon   1      8     t_stunball   #t      2)
+   (list 't_acid_spray "acid spray" nil          "0"      "1d3"    "+0"     slot-nil      2      2     t_acid_bolt  #t      0)
+   (list 't_stun_wand  "stun wand"  s_stun_wand  "-2"     "3d4"    "-1"     slot-weapon   1      8     t_stunball   #t      2)
    ))
 
 ;; ============================================================================

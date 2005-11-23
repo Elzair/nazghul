@@ -12,7 +12,7 @@
 ;; Troll AI
 ;;----------------------------------------------------------------------------
 (define (troll-is-critical? ktroll)
-  (< (kern-char-get-hp ktroll) troll-critical-hp))
+  (< (kern-char-get-hp ktroll) 5))
 
 (define (troll-wander ktroll) 
   (troll-display "troll-wander")(troll-newline)

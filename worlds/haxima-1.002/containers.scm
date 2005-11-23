@@ -35,6 +35,14 @@
   ;;(println "mk-chest: " trap contents)
   (kern-mk-container t_chest trap contents))
 
+;; mk-treasure-chest -- returns a chest with 1-10 random object types
+(define (mk-treasure-chest)
+  (kern-mk-container t_chest 
+                     nil 
+                     (mk-treasure-list (+ 1
+                                          (modulo (random-next) 
+                                                  9)))))
+
 ;;----------------------------------------------------------------------------
 ;; Corpse -- not really a container, if you search it then it sort of acts like
 ;; opening a container
@@ -43,6 +51,8 @@
   (list loot))
 (define (corpse-loot corpse) (car corpse))
 (define (corpse-set-loot! corpse val) (set-car! corpse val))
+(define (corpse-loot-entry-q loot) (car loot))
+(define (corpse-loot-entry-type loot) (eval (cadr loot)))
 
 (define (corpse-search kobj)
   (let* ((corpse (kobj-gob-data kobj))
@@ -50,9 +60,9 @@
     (display "corpse-search:")(display loot)(newline)
     (if (not (null? loot))
         (let ((loc (kern-obj-get-location kobj)))
-          (map (lambda (type-q) 
-                 (kern-obj-put-at (kern-mk-obj (eval (car type-q))
-                                               (cadr type-q))
+          (map (lambda (entry) 
+                 (kern-obj-put-at (kern-mk-obj (corpse-loot-entry-type entry)
+                                               (corpse-loot-entry-q entry))
                                   loc))
                loot)
           (corpse-set-loot! corpse nil)))))
@@ -67,6 +77,7 @@
   (bind (kern-mk-obj t_corpse 1)
         (corpse-mk nil)))
 
+;; mk-corpse2 -- loot: a list of (quantity type) lists
 (define (mk-corpse2 loot)
   (bind (kern-mk-obj t_corpse 1)
         (corpse-mk loot)))

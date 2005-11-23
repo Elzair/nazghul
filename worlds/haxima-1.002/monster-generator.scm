@@ -348,10 +348,12 @@
               (search next (cdr list))))))
   (search 0 treasure-list))
     
+;; pick-random-treasure -- returns a (quantity type) list
 (define (pick-random-treasure)
   (let ((trsr (treasure-lookup (modulo (random-next) treasure-modulus))))
-    (list (treasure-type trsr) 
-          (+ 1 (modulo (random-next) (treasure-quan trsr))))))
+    (list (+ 1 (modulo (random-next) (treasure-quan trsr)))
+          (treasure-type trsr))))
+
 
 (define (mk-random-treasure)
   (let ((pair (pick-random-treasure)))
@@ -365,8 +367,7 @@
       (cons (mk-random-treasure)
             (mk-treasure-heap (- n 1)))))
 
-;; like mk-treasure-heap, but creates a list of (type . quantity) pairs
-;; suitable for inclusion in a corpse
+;; mk-treasure-list -- returns a list of n (quantity type) lists
 (define (mk-treasure-list n)
   (if (> n 0)
       (cons (pick-random-treasure)

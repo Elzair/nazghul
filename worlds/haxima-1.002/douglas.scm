@@ -87,6 +87,8 @@
        (method 'trol doug-trol)
        (method 'wors doug-wors)
        (method 'kurp doug-kurp)
+       (method 'hell doug-kurp)
+       (method 'door doug-kurp)
        ))
 
 (define (mk-douglas)

@@ -1,4 +1,6 @@
 (kern-load "keep_crypt_mech.scm")
+(kern-load "anne.scm")
+
 
 (mk-dungeon-room
  'p_keep_crypt "Crypt"
@@ -152,10 +154,6 @@
        0
        0)
                                      
-
-  (put (kern-mk-obj t_mana_potion 1) 11 12)
-  (put (kern-mk-obj t_heal_potion 1) 12 11)
-
   ;; monster generators
   (put (mk-edge-gen 980 4 'is-death-knight? 
                    'mk-death-knight-at-level (list "1d4+4")) 18 9)
@@ -203,6 +201,8 @@
  (put (mk-bed) 17 17)
  (put (mk-bed) 17 15)
  (put (mk-ladder-down 'p_forsaken_prison 9 9) 8 17)
+ (put (mk-ladder-up 'p_kurpolis_entrance 2 9) 2 9)
+ (put (mk-anne) 9 9)
  )
 
 (mk-dungeon-room

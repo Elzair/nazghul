@@ -282,7 +282,7 @@
   )
 
 (define (simple-start kplayer)
-  (kern-obj-put-at kplayer (list p_kurpolis_entrance 9 9)))
+  (kern-obj-put-at kplayer (list p_cave_goblin_village 0 9)))
       
 ;;----------------------------------------------------------------------------
 ;; To skip the extended start scene comment out this next line and uncomment

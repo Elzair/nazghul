@@ -1,3 +1,7 @@
+;;;;
+;;;; old-mine.scm -- an abandoned mine littered with gems
+;;;;
+
 (mk-dungeon-room
  'p_old_mine "Old Mine"
  (list
