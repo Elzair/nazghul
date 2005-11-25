@@ -165,18 +165,31 @@
 (define major-light-amount 8192)
 
 (define (light-rm fgob kobj)
-  (kern-obj-remove-effect kobj ef_light)
   (kern-obj-dec-light kobj minor-light-amount))
 
 (define (light-apply fgob kobj)
   (kern-obj-inc-light kobj minor-light-amount))
 
 (define (great-light-rm fgob kobj)
-  (kern-obj-remove-effect kobj ef_great_light)
   (kern-obj-dec-light kobj major-light-amount))
 
 (define (great-light-apply fgob kobj)
   (kern-obj-inc-light kobj major-light-amount))
+
+;; ----------------------------------------------------------------------------
+;; torchlight
+;;
+;; This is just like light but it's called out especially because it's
+;; vulnerable to the douse effect, where as normal light is not.
+;; ----------------------------------------------------------------------------
+(define torchlight-amount 1024)
+
+(define (torchlight-rm fgob kobj)
+  (kern-log-msg "A torch flickers out!")
+  (kern-obj-dec-light kobj torchlight-amount))
+
+(define (torchlight-apply fgob kobj)
+  (kern-obj-inc-light kobj torchlight-amount))
 
 ;; ----------------------------------------------------------------------------
 ;; Protection
@@ -184,7 +197,7 @@
 ;; Used by the In Sanct spell.
 ;; ----------------------------------------------------------------------------
 (define (protection-rm fgob kchar)
-  (kern-obj-remove-effect kchar ef_protection)
+  ;;(kern-obj-remove-effect kchar ef_protection)
   (kern-char-add-defense kchar -10))
 
 (define (protection-apply fgob kchar)
@@ -201,7 +214,7 @@
 (define (charm-faction charm) (car charm))
 
 (define (charm-rm charm kchar)
-  (kern-obj-remove-effect kchar ef_charm)
+  ;;(kern-obj-remove-effect kchar ef_charm)
   (kern-char-uncharm kchar))
 
 (define (charm-apply charm kchar)
@@ -215,7 +228,7 @@
 ;; invisibility effects.
 ;; ----------------------------------------------------------------------------
 (define (invisibility-rm fgob kobj)
-  (kern-obj-remove-effect kobj ef_invisibility)
+  ;;(kern-obj-remove-effect kobj ef_invisibility)
   (kern-obj-set-visible kobj #t))
 
 (define (invisibility-apply fgob kobj)
@@ -289,6 +302,7 @@
    (list 'ef_temporary_poison_immunity 'poison-immunity-exec nil                 nil              nil                 "add-hook-hook"      "I" 0   #f  60)
    (list 'ef_sleep                     'sleep-exec           nil                 'sleep-rm        nil                 "start-of-turn-hook" "S" 0   #f  60)
    (list 'ef_light                     nil                   'light-apply        'light-rm        'light-apply        "start-of-turn-hook" ""  0   #t  60)
+   (list 'ef_torchlight                nil                   'torchlight-apply   'torchlight-rm   'torchlight-apply   "start-of-turn-hook" "T" 0   #f  60)
    (list 'ef_great_light               nil                   'great-light-apply  'great-light-rm  'great-light-apply  "start-of-turn-hook" "L" 0   #t  120)
    (list 'ef_protection                nil                   'protection-apply   'protection-rm   'protection-apply   "start-of-turn-hook" "P" 0   #t  10)
    (list 'ef_charm                     nil                   'charm-apply        'charm-rm        'charm-apply        "start-of-turn-hook" "C" 0   #f  10)
@@ -425,3 +439,13 @@
 
 ;; Self-destruct trap - rolls to destroy contents
 
+;;----------------------------------------------------------------------------
+;; Misc stuff -- not sure where to put this
+(define (douse ktarg)
+  (kern-obj-remove-effect ktarg ef_torchlight))
+
+(define (wind-trap ktarg)
+  (kern-log-msg "A gust of wind!")
+  (douse ktarg)
+  #f ;; prevents removal of trigger
+  )

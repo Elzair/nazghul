@@ -18,7 +18,7 @@
       "rr rr .. .. rr bb .. .. .. .. .. rr rr .. .. .. .. bb rr "
       "rr rr .. .. rr rr .. .. .. .. bb rr rr rr rr .. .. rr rr "
       "rr rr .. .. .. bb .. .. rr bb rr rr rr rr rr .. .. rr rr "
-      "rr rr .. .. .. .. .. rr rr rr rr .. .. rr .. .. bb rr rr "
+      "rr rr .. .. .. .. .. rr rr rr rr .. .. rr .. .. .. rr rr "
       "rr bb .. .. .. .. .. rr .. .. .. .. .. .. .. .. .. rr rr "
       "rr bb .. .. .. .. .. .. .. .. .. .. .. .. .. rr .. rr rr "
       "rr rr bb .. .. .. .. .. .. rr rr .. .. rr rr rr .. .. rr "
@@ -26,6 +26,10 @@
       "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
   )
  (put (mk-ladder-down 'p_trolls_den 3 15) 17 17)
+ (put (guard-pt 'ghast) 15 10)
+ (put (guard-pt 'ghast) 11 14)
+ (put (mk-step-trig 'wind-trap nil) 15 14)
+ (put (mk-step-trig 'wind-trap nil) 16 12)
  )
 
 ;; drop gems

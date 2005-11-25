@@ -12,8 +12,8 @@
 ;; torch -- use two in-lor spells
 (mk-usable-item 't_torch "torch" s_torch 1
                 (lambda (kobj kuser) 
-                  (in-lor kuser) 
-                  (in-lor kuser)))
+                  (kern-obj-add-effect kuser ef_torchlight nil)
+                  result-ok))
 
 ;; picklock
 (mk-usable-item 't_picklock "picklock" s_picklock 2

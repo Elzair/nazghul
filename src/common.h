@@ -269,7 +269,7 @@ extern "C" {
 
 /* The minimum amount of light the player generates. This is so that the user
 	* can at least see the player icon in total darkness. */
-#define MIN_PLAYER_LIGHT        128
+#define MIN_PLAYER_LIGHT        8 /*128*/
 
 // The sun sprite is SKY_SPRITE_W pixels wide, and it advances
 // MOON_WINDOW_PIXELS_PER_DEGREE every time it moves, and I want its luminence

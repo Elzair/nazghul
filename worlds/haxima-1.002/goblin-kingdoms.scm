@@ -154,6 +154,10 @@
  (put (spawn-pt 'troll) 16 10)
  (put (spawn-pt 'troll-geomancer) 17 9)
  (put (spawn-pt 'troll) 17 11)
+ (put (kern-mk-obj t_food 1) 17 8)
+ (put (kern-mk-obj t_beer 1) 16 8)
+ (put (kern-mk-obj t_food 1) 16 12)
+ (put (kern-mk-obj t_beer 1) 15 11)
  )
 
 (mk-dungeon-room
