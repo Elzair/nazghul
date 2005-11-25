@@ -5,8 +5,8 @@
 (kern-mk-sprite 's_wine ss_food 1 2 #f 0)
 
 ;; caloric values
-(define food-value 10)
-(define alcohol-value 3)
+(define food-value 1)
+(define alcohol-value 1)
 
 (define food-ifc
   (ifc '()

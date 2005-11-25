@@ -1187,6 +1187,15 @@
                                        loc))
                     n))
                     
+(define (webify kplace x y w h)
+  (define (drop-web x loc)
+    (let ((kter (kern-place-get-terrain loc)))
+      (if (or (eqv? kter t_grass)
+              (eqv? kter t_boulder))
+          (kern-obj-put-at (kern-mk-obj F_web_perm 1)
+                           loc))))
+  (foldr-rect kplace x y w h drop-web nil))
+
 
 ;; on-entry-to-dungeon-room -- generic place on-enty procedure for dungeon
 ;; rooms. When the player enters (or re-enters) a dungeon this looks for a
