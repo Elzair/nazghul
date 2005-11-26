@@ -8,10 +8,10 @@
 ;;----------------------------------------------------------------------------
 ;; Schedule
 ;;----------------------------------------------------------------------------
-(define anne-bed ke-bed2)
-(define anne-mealplace ke-tbl2)
-(define anne-workplace ke-bunk)
-(define anne-leisureplace ke-dine)
+(define anne-bed ph-bed2)
+(define anne-mealplace ph-tbl2)
+(define anne-workplace ph-medik)
+(define anne-leisureplace ph-dine)
 (kern-mk-sched 'sch_anne
                (list 0  0 anne-bed          "sleeping")
                (list 7  0 anne-mealplace    "eating")

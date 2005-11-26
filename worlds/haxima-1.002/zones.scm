@@ -244,3 +244,14 @@
 (define ke-tbl1 (mk-zone  9  2  1  1))
 (define ke-tbl2 (mk-zone  9  4  1  1))
 (define ke-bunk (mk-zone  5 14  9  5))
+
+;;----------------------------------------------------------------------------
+;; Paladin's Hold
+(define (mk-zone x y w h) (list 'p_paladins_hold x y w h))
+(define ph-bed1 (mk-zone 13 17  1  1))
+(define ph-bed2 (mk-zone 15 17  1  1))
+(define ph-hall (mk-zone  3  7  5  5))
+(define ph-dine (mk-zone  9  1  9  5))
+(define ph-tbl1 (mk-zone 13  2  1  1))
+(define ph-tbl2 (mk-zone 13  4  1  1))
+(define ph-medik (mk-zone 13 14  5  4))

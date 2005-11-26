@@ -175,13 +175,13 @@
   "xx && ,, ,, ,, ,, ,, ,, ,, ,, ,, [[ @@ @@ @@ ]] ,, ,, x! "
   "xx xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx "
   "xx xx xx xx xx x! ,, xx x! ,, ,, ,, ,, ,, ,, ,, ,, ,, xx "
-  "xx ,, ,, ,, ,, ,, ,, ,, xx xx xx xx xx xx xx xx xx xx xx "
-  "xx ,, ,, ,, ,, ,, ,, ,, x! ,, ,, ,, ,, ,, xx x! ,, ,, ,, "
-  "xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, w+ w+ w+ ,, ,, ,, ,, "
+  "xx ,, xx ,, ,, ,, ,, ,, xx xx xx xx xx xx x! xx xx xx xx "
+  "xx ,, xx ,, ,, ,, ,, ,, x! ,, ,, ,, ,, ,, w+ ,, ,, ,, ,, "
+  "xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, w+ ,, ,, ,, ,, "
   "x! ,, ,, ,, ,, ,, ,, ,, xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, "
-  "xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, w+ w+ w+ ,, ,, ,, ,, "
-  "xx ,, ,, ,, ,, ,, ,, ,, x! ,, ,, ,, ,, ,, xx x! ,, ,, ,, "
-  "xx xx xx xx xx x! ,, xx xx xx xx xx xx xx xx xx xx xx xx "
+  "xx ,, xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, w+ ,, ,, ,, ,, "
+  "xx ,, xx ,, ,, ,, ,, ,, x! ,, ,, ,, ,, ,, w+ .. ,, ,, ,, "
+  "xx xx xx xx xx x! ,, xx xx xx xx xx xx xx x! xx xx xx xx "
   "xx .A .R .M .S xx ,, ,, xx xx xx xx xx .M .E .D .I .K xx "
   "xx ,, ,, ,, ,, x! ,, ,, ,, ,, ,, ,, x! ,, ,, ,, ,, ,, xx "
   "x! ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, x! "
@@ -189,9 +189,11 @@
   "xx ,, ,, ,, ,, xx xx xx ,, xx xx xx xx ,, ,, ,, ,, ,, xx "
   "xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx "
   )
- (put (mk-portcullis) 14 9)
- (put (mk-portcullis) 8 8)
- (put (mk-portcullis) 8 10)
+ (put (kern-tag 'php1 (mk-portcullis)) 14 9)
+ (put (kern-tag 'php2 (mk-portcullis)) 8 8)
+ (put (kern-tag 'php3 (mk-connected-portcullis 'php2)) 8 10)
+ (put (mk-lever 'php3) 1 6)
+ (put (mk-lever 'php1) 1 11)
  (put (mk-door) 6 5)
  (put (mk-door) 6 12)
  (put (mk-door) 5 15)
@@ -201,8 +203,20 @@
  (put (mk-bed) 17 17)
  (put (mk-bed) 17 15)
  (put (mk-ladder-down 'p_forsaken_prison 9 9) 8 17)
- (put (mk-ladder-up 'p_kurpolis_entrance 2 9) 2 9)
+ (put (mk-ladder-up 'p_kurpolis_entrance 2 9) 3 6)
  (put (mk-anne) 9 9)
+
+ (put (custom-pt 'put-gate-guard 'php3 'deep) 6 9)
+ (put (custom-pt 'put-gate-guard 'php1 'deep) 11 9)
+
+ ;; inner guard
+ (put (guard-pt 'crossbowman) 9 7)
+ (put (guard-pt 'crossbowman) 9 9)
+ (put (guard-pt 'crossbowman) 9 11)
+
+ ;; outer guard
+ (put (guard-pt 'halberdier) 15 10)
+ (put (guard-pt 'halberdier) 15 8)
  )
 
 (mk-dungeon-room

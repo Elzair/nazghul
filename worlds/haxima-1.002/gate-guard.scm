@@ -5,11 +5,13 @@
 ;;----------------------------------------------------------------------------
 ;; Gob
 ;;----------------------------------------------------------------------------
-(define (mk-gate-guard-gob gate-tag)
-  (list 'gate-guard gate-tag 0))
+(define (mk-gate-guard-gob gate-tag post passwd)
+  (list 'gate-guard gate-tag 0 post passwd))
 
 (define (gate-guard-gate-tag guard) (cadr guard))
 (define (gate-guard-gate-timer guard) (caddr guard))
+(define (gate-guard-post guard) (cadddr guard))
+(define (gate-guard-passwd guard) (list-ref guard 4))
 (define (gate-guard-set-gate-timer! guard val) (set-car! (cddr guard) val))
 (define (gate-guard-start-timer! guard) (gate-guard-set-gate-timer! guard 10))
 
@@ -29,7 +31,7 @@
 (define (gate-guard-hail knpc kpc)
   (say knpc "Halt! What is the password?")
   (let ((passwd (kern-conv-get-reply kpc)))
-    (if (eq? passwd 'void)
+    (if (eq? passwd (gate-guard-passwd (gob knpc)))
         (let* ((guard (kobj-gob-data knpc))
                (gate (eval (gate-guard-gate-tag guard))))
           (signal-kobj gate 'on gate nil)
@@ -114,56 +116,69 @@
 (define (guard-too-far-from-gate? kguard kgate)
   (> (distance kguard kgate) 1))
 
-(define (guard-return-to-post kguard kgate)
-  (pathfind kguard (kern-obj-get-location kgate)))
+(define (guard-return-to-post kguard)
+  (pathfind kguard 
+            (cons (loc-place (kern-obj-get-location kguard))
+                  (gate-guard-post (gob kguard)))))
 
 (define (gate-guard-ai kchar)
-  (let* ((guard (kobj-gob-data kchar))
-         (kgate (eval (gate-guard-gate-tag guard))))
-    (if (guard-too-far-from-gate? kchar kgate)
-        (guard-return-to-post kchar kgate)
-        (if (hostiles-visible? kchar)
+  (or (get-off-bad-tile? kchar)
+      (use-potion? kchar)
+      (let* ((guard (kobj-gob-data kchar))
+             (kgate (eval (gate-guard-gate-tag guard))))
+        (if (any-visible-hostiles? kchar)
             (if (gate-is-open? kgate)
                 (guard-close-gate! guard kgate)
-                ;; FIXME: shouldn't assume gate-guard is a mage, fetch "sub"-AI
-                ;; from gob
-                (mguard-ai kchar))
-            (if (guard-is-holding-gate-open? guard)
-                (guard-dec-gate-timer! guard)
-                (if (gate-is-open? kgate)
+                #f)
+            (begin
+              (guard-return-to-post kchar)
+              (if (guard-is-holding-gate-open? guard)
+                  (guard-dec-gate-timer! guard)
+                  (if (gate-is-open? kgate)
                     (guard-start-gate-timer! guard)
-                    ))))
-    #t))
+                    ))
+              #t)))))
 
 ;;----------------------------------------------------------------------------
-;; Constructor
+;; Constructor -- make a guard captain
 ;;----------------------------------------------------------------------------
-(define (mk-gate-guard gate-tag)
+(define (mk-gate-guard gate-tag post passwd)
+  (println "mk-gate-guard: " gate-tag ", " post)
   (bind
-   (kern-char-arm-self
-    (mk-stock-char
-     "a mage guard" ;;......name
-     sp_human ;;.........species
-     oc_wizard ;;........occupation
-     s_wizard ;;........sprite
-     faction-men ;;...faction
-     'gate-guard-ai ;;.......custom ai (optional)
-     
-     ;;..................container (and contents, used to arm char)
-     (mk-chest
-      'lightning-trap
-      (mk-contents 
-       (roll-to-add 100  "1d3-1" t_heal_potion)
-       (roll-to-add 100  "1d3-1" t_mana_potion)
-       (roll-to-add 100  "1"     t_dagger)
-       (roll-to-add 50   "1d2"   t_oil)
-       (roll-to-add 100  "1d5"   t_gold_coins)
-       ))
-     
-     nil ;;...............readied arms (in addition to container contents)
-     'gate-guard-conv ;;..conversation
-     ))
-   (mk-gate-guard-gob gate-tag)))
+   (set-level
+    (kern-char-arm-self
+     (mk-stock-char
+      "a guard captain" ;;......name
+      sp_human ;;.........species
+      oc_warrior ;;........occupation
+      s_companion_paladin ;;........sprite
+      faction-men ;;...faction
+      'gate-guard-ai ;;.......custom ai (optional)    
+      ;;..................container (and contents, used to arm char)
+      (mk-chest
+       nil
+       (mk-contents 
+        (roll-to-add 100  "3"     t_heal_potion)
+        (roll-to-add 100  "1"     t_sword)
+        (roll-to-add 199  "1"     t_shield)
+        (roll-to-add 100  "1"     t_armor_plate)
+        (roll-to-add 100  "1"     t_iron_helm)
+        (roll-to-add 100  "1d5"   t_gold_coins)
+        ))
+      
+      nil ;;...............readied arms (in addition to container contents)
+      'gate-guard-conv ;;..conversation
+      ))
+    8)
+   (mk-gate-guard-gob gate-tag post passwd)))
+
+(define (put-gate-guard ktrig gate-tag passwd)
+  (println "put-gate-guard: " ktrig "," gate-tag)
+  (kern-obj-put-at (mk-gate-guard gate-tag
+                                  (cdr (kern-obj-get-location ktrig))
+                                  passwd)                   
+                   (kern-obj-get-location ktrig))
+  #f)
 
 ;;----------------------------------------------------------------------------
 ;; gate-guard generator

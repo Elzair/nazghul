@@ -74,18 +74,25 @@
 (define (npct-ai npct) (list-ref npct 7))
 (define (npct-faction npct) (list-ref npct 8))
 
+
+
 ;; npcg -- generic NPC gob
-(define (npcg-mk type) (list 'npcg type #f #f nil))
+(define (npcg-mk type) 
+  (list 'npcg 
+        type 
+        #f  ;; taunted
+        #f  ;; spawned
+        nil ;; post
+        ))
 (define (npcg-type npcg) (cadr npcg))
 (define (npcg-taunted? npcg) (caddr npcg))
 (define (npcg-spawned? npcg) (cadddr npcg))
 (define (npcg-is-type? npcg type) (equal? type (npcg-type npcg)))
 (define (npcg-set-taunted! npcg val) (set-car! (cddr npcg) val))
 (define (npcg-set-spawned! npcg val) (set-car! (cdddr npcg) val))
-(define (npcg-get-post npcg) (list-ref npcg 4))
 (define (npcg-set-post! npcg val) (set-car! (list-tail npcg 4) val))
 (define (npcg-has-post? npcg) (not (null? (npcg-get-post npcg))))
-
+(define (npcg-get-post npcg) (list-ref npcg 4))
 (define (is-npcg? gob) (eq? (car gob) 'npcg))
 
 (define (kbeing-is-npc-type? kbeing type)

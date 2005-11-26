@@ -187,9 +187,11 @@
 (load "npc-types.scm")
 (load "parties.scm")
 (load "jewelry.scm")
+(load "gate-guard.scm")
 
 ;; Mechanism-like things
 (load "bim.scm")
+(load "step.scm")
 (load "monster-generator.scm")
 (load "door.scm")
 (load "portcullis.scm")
@@ -201,7 +203,6 @@
 (load "bridge.scm")
 (load "drawbridge.scm")
 (load "conv.scm") ;; basic conversation
-(load "step.scm")
 
 ;; Astronomy
 (load "moon.scm")

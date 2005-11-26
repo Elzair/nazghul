@@ -425,7 +425,8 @@
   (println "guard-pt-exec")
   (let ((kchar (spawn-pt-exec kgen)))
     (npcg-set-post! (gob kchar)
-                    (cdr (kern-obj-get-location kgen)))))
+                    (cdr (kern-obj-get-location kgen)))
+    kchar))
 
 (define guard-pt-ifc
   (ifc nil
@@ -436,7 +437,18 @@
 (define (guard-pt npct-tag)
   (bind (kern-obj-set-visible (kern-mk-obj t_guard_pt 1) #f)
         (spawn-pt-mk npct-tag)))
-  
+
+;;----------------------------------------------------------------------------
+;; custom-pt -- a generic 'on trigger which is run by the respawn manager
+(define custom-pt-ifc
+  (ifc nil
+       (method 'on on-trig-exec)))
+
+(mk-obj-type 't_custom_pt nil nil layer-none custom-pt-ifc)
+
+(define (custom-pt proc-tag . args)
+  (bind (kern-obj-set-visible (kern-mk-obj t_custom_pt 1) #f)
+        (trig-mk proc-tag args)))
 
 ;;----------------------------------------------------------------------------
 ;; time-to-respawn? -- checks if an hour and a minute has passed
@@ -484,6 +496,8 @@
            (kplace-get-objects-of-type kplace t_spawn_pt))
       (map trigger-spawn-pt
            (kplace-get-objects-of-type kplace t_guard_pt))
+      (map trigger-spawn-pt
+           (kplace-get-objects-of-type kplace t_custom_pt))
       )
 
     (if (time-to-respawn? (monman-time mm))

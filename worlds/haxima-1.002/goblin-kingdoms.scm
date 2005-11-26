@@ -35,7 +35,7 @@
       "rr rr rr rr xx xx xx xx xx xx xx xx xx xx xx rr rr rr rr "
   ) 
  (put (mk-ladder-up 'p_shard 39 75) 9 10)
- (put (mk-ladder-down 'p_paladins_hold 2 9) 2 10)
+ (put (mk-ladder-down 'p_paladins_hold 3 6) 2 10)
  (put (mk-door) 2 8)
  (put (mk-door) 2 12)
  (put (mk-door) 4 15)
