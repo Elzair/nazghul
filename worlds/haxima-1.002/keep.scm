@@ -1,6 +1,7 @@
 (kern-load "keep_crypt_mech.scm")
 (kern-load "anne.scm")
-
+(kern-load "jones.scm")
+(kern-load "alex.scm")
 
 (mk-dungeon-room
  'p_keep_crypt "Crypt"
@@ -205,6 +206,8 @@
  (put (mk-ladder-down 'p_forsaken_prison 9 9) 8 17)
  (put (mk-ladder-up 'p_kurpolis_entrance 2 9) 3 6)
  (put (mk-anne) 9 9)
+ (put (mk-jones) 9 9)
+ (put (mk-alex) 9 9)
 
  (put (custom-pt 'put-gate-guard 'php3 'deep) 6 9)
  (put (custom-pt 'put-gate-guard 'php1 'deep) 11 9)
@@ -217,6 +220,12 @@
  ;; outer guard
  (put (guard-pt 'halberdier) 15 10)
  (put (guard-pt 'halberdier) 15 8)
+
+ ;; foes...
+ (put (spawn-pt 'death-knight) 17 9)
+ (put (spawn-pt 'skeletal-spear-thrower) 18 8)
+ (put (spawn-pt 'skeletal-spear-thrower) 18 10)
+
  )
 
 (mk-dungeon-room

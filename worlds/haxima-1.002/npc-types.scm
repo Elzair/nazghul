@@ -339,7 +339,7 @@
 (define ranger                 (mk-npct "a ranger"                 sp_human         oc_warrior s_companion_ranger basic-traps  ranger-equip           nil           'generic-ai      faction-men          ))
 (define skeletal-spear-thrower (mk-npct "a skeletal spear-thrower" sp_skeleton      oc_warrior s_skeleton         basic-traps  spear-thrower-equip    nil           'generic-ai      faction-monster      ))
 (define skeletal-warrior       (mk-npct "a skeletal warrior"       sp_skeleton      oc_warrior s_skeleton         basic-traps  skeletal-warrior-equip nil           'generic-ai      faction-monster      ))
-(define death-knight           (mk-npct "a death knight"           sp_skeleton      oc_warrior s_knight           basic-traps  death-knight-equip     nil           'death-knigh-at  faction-monster      ))
+(define death-knight           (mk-npct "a death knight"           sp_skeleton      oc_warrior s_knight           basic-traps  death-knight-equip     nil           'death-knight-ai faction-monster      ))
 (define halberdier             (mk-npct "a halberdier"             sp_human         oc_warrior s_guard            no-traps     halberdier-equip       nil           'guard-ai        faction-men          ))
 (define crossbowman            (mk-npct "a crossbowman"            sp_human         oc_warrior s_guard            no-traps     crossbowman-equip      nil           'guard-ai        faction-men          ))
 (define medik                  (mk-npct "a medik"                  sp_human         oc_wizard  s_companion_wizard no-traps     medik-equip            nil           'medik-ai        faction-men          ))
