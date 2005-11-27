@@ -11,7 +11,7 @@
 (define (ability-proc ability) (list-ref ability 4))
 
 (define (can-use-ability? ability kchar)
-  ;;(display "can-use-ability?")(display ability)(newline)
+  ;;(println " can-use-ability?" display ability)
   (and (>= (kern-char-get-mana kchar)
            (ability-mana-cost ability))
        (>= (kern-char-get-level kchar)
@@ -115,11 +115,16 @@
                      (kern-obj-get-location kchar)
                      (kern-obj-get-location ktarg)))
   
+;; cast-magic-missile-proc -- damage goes up with level of caster
 (define (cast-magic-missile-proc kchar ktarg)
   (kern-log-msg (kern-obj-get-name kchar)
                 " casts magic missile at "
                 (kern-obj-get-name ktarg))
-  (cast-missile-proc kchar ktarg t_arrow))
+  (if (cast-missile-proc kchar ktarg t_arrow)
+      (kern-obj-apply-damage ktarg
+                             "ouch"
+                             (* (kern-dice-roll "1d3")
+                                (kern-char-get-level kchar)))))
 
 (define (cast-poison-missile-proc kchar ktarg)
   (kern-log-msg (kern-obj-get-name kchar)
@@ -191,11 +196,9 @@
         cast-poison-field
         cast-energy-field))
 
-;; ranged-spells -- damaging spells which take a target kchar as an arg. The
-;; range is the caster's level divided by the number given here plus one:
-;;   range=(lvl/div)+1
+;; ranged-spells -- damaging spells which take a target kchar as an arg.
 (define ranged-spells
-  (list (cons cast-magic-missile 1)
-        (cons cast-poison-missile 2)
-        (cons cast-fireball 2)
+  (list (cons cast-magic-missile 8)
+        (cons cast-poison-missile 6)
+        (cons cast-fireball 6)
         (cons cast-kill 4)))

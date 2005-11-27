@@ -310,8 +310,7 @@ void ctrl_do_attack(class Character *character, class ArmsType *weapon,
         def += target->getLevel();
 
         log_continue("\n");
-        log_continue(" to-hit rolls %d\n", hit);
-        log_continue(" to-defend rolls %d\n", def);
+        log_continue(" to-hit %d vs %d to-defend\n", hit, def);
         if (hit < def) {
                 log_end("deflected!");
                 return;
@@ -319,7 +318,7 @@ void ctrl_do_attack(class Character *character, class ArmsType *weapon,
 
         /* roll for damage */
         damage = dice_roll(weapon->getDamageDice());
-        log_continue(" damage roll %d\n", damage);
+        log_continue(" damage roll %d ", damage);
 
         /* roll for critical hit */
         if (20 <= (dice_roll("1d20") + log2(character->getLevel()))) {
@@ -327,7 +326,7 @@ void ctrl_do_attack(class Character *character, class ArmsType *weapon,
                 armor = 0;
         } else {
                 armor = target->getArmor();
-                log_continue(" armor roll %d\n", armor);
+                log_continue("vs %d armor roll\n", armor);
         }
 
         damage -= armor;

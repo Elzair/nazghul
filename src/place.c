@@ -999,7 +999,7 @@ static int place_pathfind_is_valid_location(
 {
 	class Object *portal;
 
-        dbg("[%d %d]...", x, y);
+        //dbg("[%d %d]...", x, y);
 
         // --------------------------------------------------------------------
 	// I used to check this after passability, but it really belongs first.
@@ -1009,13 +1009,13 @@ static int place_pathfind_is_valid_location(
 
 	if (x == context->target_x && 
             y == context->target_y) {
-                dbg("ok\n");
+                //dbg("ok\n");
 		return 1;
         }
 
 	if (!place_is_passable(context->place, x, y, context->requestor, 
                                context->pflags)) {
-                dbg("impassable\n");
+                //dbg("impassable\n");
 		return 0;
         }
 
@@ -1029,7 +1029,7 @@ static int place_pathfind_is_valid_location(
                 if (occupant != NULL) {
                         if (0 == (context->pflags & PFLAG_IGNORECOMPANIONS) ||
                             ! context->requestor->isCompanionOf(occupant)) {
-                                dbg("occupied!\n");
+                                //dbg("occupied!\n");
                                 return 0;
                         }
                 }
@@ -1051,11 +1051,11 @@ static int place_pathfind_is_valid_location(
 
 	if ((portal = place_get_object(context->place, x, y, mech_layer)) &&
 	    portal->canStep()) {
-                dbg("portal!\n");
+                //dbg("portal!\n");
 		return 0;
         }
 
-        dbg("ok\n");
+        //dbg("ok\n");
 	return 1;
 }
 

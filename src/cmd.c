@@ -2245,6 +2245,9 @@ bool cmdMixReagents(void)
 
         statusSetMode(ShowParty);
 
+        // committed to action now, so decrement AP, 2 per spell mixed
+        character->decActionPoints(2*quantity);
+
 	// If the spell is invalid or the reagents are incorrect then punish
 	// the player.
 	if (!spell) {

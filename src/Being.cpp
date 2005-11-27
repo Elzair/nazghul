@@ -67,7 +67,7 @@ bool Being::pathfindTo(struct place *destplace, int destx, int desty)
         struct astar_search_info as_info;
         struct astar_node *pathPtr;
 
-        printf("Being::pathfindTo %s -> %s (%d, %d)\n", getName(), destplace->name, destx, desty);
+        //printf("Being::pathfindTo %s -> %s (%d, %d)\n", getName(), destplace->name, destx, desty);
 
         // For now, don't try to pathfind between places.
         if (destplace != getPlace()) {

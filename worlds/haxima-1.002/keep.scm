@@ -155,16 +155,22 @@
        0
        0)
                                      
-  ;; monster generators
-  (put (mk-edge-gen 980 4 'is-death-knight? 
-                   'mk-death-knight-at-level (list "1d4+4")) 18 9)
-  (put (mk-edge-gen 980 3 'is-halberdier? 
-                   'mk-at-level
-                   (list 'mk-halberdier "1d4+4" nil)) 0 9)
-  (put (mk-edge-gen 980 2 'is-crossbowman? 
-                   'mk-at-level
-                   (list 'mk-crossbowman "1d4+4" nil)) 0 9)
-  (put (mk-ladder-down 'p_pools 9 9) 9 6)
+  ;; militia
+  (put (spawn-pt 'halberdier) 8 8)
+  (put (spawn-pt 'halberdier) 8 10)
+  (put (spawn-pt 'crossbowman) 6 8)
+  (put (spawn-pt 'medik) 7 9)
+  (put (spawn-pt 'crossbowman) 6 10)
+
+  ;; death knights
+  (put (spawn-pt 'death-knight) 10 8)
+  (put (spawn-pt 'death-knight) 10 9)
+  (put (spawn-pt 'death-knight) 10 10)
+  (put (spawn-pt 'warlock)      12 9)
+
+  ;; skeletons
+  (put (spawn-pt 'skeletal-warrior) 9 13)
+  (put (spawn-pt 'skeletal-spear-thrower) 10 14)
   )
 
 (mk-dungeon-room
@@ -223,8 +229,8 @@
 
  ;; foes...
  (put (spawn-pt 'death-knight) 17 9)
- (put (spawn-pt 'skeletal-spear-thrower) 18 8)
- (put (spawn-pt 'skeletal-spear-thrower) 18 10)
+ (put (spawn-pt 'skeletal-spear-thrower) 18 7)
+ (put (spawn-pt 'skeletal-spear-thrower) 18 11)
 
  )
 

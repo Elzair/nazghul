@@ -58,8 +58,8 @@
   (kern-mk-arms-type tag name sprite to-hit-bonus damage deflect "0" slots 
                      num-hands range default-rap nil #t #f weight nil (ifc-cap ifc) ifc))
 
-(define (mk-missile-arms-type tag name sprite damage ifc)
-  (kern-mk-arms-type tag name sprite "0" damage "0" "0" slot-nil 0 0 0 nil #f #f 
+(define (mk-missile-arms-type tag name sprite ifc)
+  (kern-mk-arms-type tag name sprite "0" "0" "0" "0" slot-nil 0 0 0 nil #f #f 
                      0 nil (ifc-cap ifc) ifc))
 
 (define (mk-armor-type tag name sprite to-hit armor slots weight)
@@ -98,31 +98,48 @@
                             (if (notnull? targets)
                                 (hit (car targets))))))))
 
+
 (define poison-bolt-ifc (mk-missile-ifc apply-poison))
 (define deathball-ifc   (mk-missile-ifc kern-char-kill))
 (define stunball-ifc (mk-missile-ifc paralyze))
+
+;; fireball-hit -- when a fireball hits it burns all characters and leaves a
+;; fire 
+(define fireball-ifc
+  (ifc '()
+       (method 'hit-loc
+               (lambda (kmissile kplace x y)
+                 (println "fireball-hit")
+                 (map burn
+                      (filter obj-is-char? 
+                              (kern-get-objects-at (mk-loc kplace x y))))
+                 (kern-obj-put-at (kern-mk-obj F_fire 1) 
+                                  (mk-loc kplace x y))))))
+               
+
 (define warhead-ifc
   (ifc nil
        (method 'hit-loc 
                (lambda (kmissile kplace x y)
+                 (println "warhead-hit")
                  (kern-obj-put-at (kern-mk-obj F_fire 1) 
                                   (mk-loc kplace x y))))))
 
 (define missile-arms-types
   (list
-   ;;    ============================================================================================================
-   ;;    tag           | name        | sprite        | damage | gifc
-   ;;    ============================================================================================================
-   (list 't_slingstone   "sling stone" s_sling_stone  "1d2"    nil)
-   (list 't_arrow        "arrow"       s_arrow        "2d5"    obj-ifc)
-   (list 't_bolt         "bolt"        s_bolt         "2d4"    obj-ifc)
-   (list 't_warhead      "warhead"     s_warhead      "0"      warhead-ifc)
-   (list 't_cannonball   "cannonball"  s_cannonball   "0"      obj-ifc)
-   (list 't_poison_bolt  "poison bolt" s_poison_bolt  "1d6"    poison-bolt-ifc)
-   (list 't_acid_bolt    "acid bolt"   s_acid_bolt    "1d3"    nil)
-   (list 't_fireball     "fireball"    s_fireball     "3d6"    nil)
-   (list 't_deathball    "deathball"   s_deathball    "0"      deathball-ifc)
-   (list 't_stunball     "stunball"    s_projectile   "1d30"   stunball-ifc)
+   ;;    ===================================================================
+   ;;    tag           | name        | sprite        | gifc
+   ;;    ===================================================================
+   (list 't_slingstone   "sling stone" s_sling_stone  nil)
+   (list 't_arrow        "arrow"       s_arrow        obj-ifc)
+   (list 't_bolt         "bolt"        s_bolt         obj-ifc)
+   (list 't_warhead      "warhead"     s_warhead      warhead-ifc)
+   (list 't_cannonball   "cannonball"  s_cannonball   obj-ifc)
+   (list 't_poison_bolt  "poison bolt" s_poison_bolt  poison-bolt-ifc)
+   (list 't_acid_bolt    "acid bolt"   s_acid_bolt    nil)
+   (list 't_fireball     "fireball"    s_fireball     fireball-ifc)
+   (list 't_deathball    "deathball"   s_deathball    deathball-ifc)
+   (list 't_stunball     "stunball"    s_projectile   stunball-ifc)
    ))
 
 ;; If we don't create these missile types now, we won't be able to refer to
@@ -146,10 +163,10 @@
    ;;     ========================================================================================================================
    ;;     tag         | name       | sprite     | to-hit | damage | to-def | slots       | hnds | rng | missile    | ubiq | weight
    ;;     ========================================================================================================================
-   (list 't_sling      "sling"      s_sling      "-1"     "1d5"    "-1"     slot-weapon   1      4     t_slingstone #t      0)
+   (list 't_sling      "sling"      s_sling      "1d2-2"  "1d5"    "-1"     slot-weapon   1      4     t_slingstone #t      0)
    (list 't_sling_4    "+4 sling"   s_sling      "3"      "1d5+4"  "0"      slot-weapon   1      6     t_slingstone #t      0)
-   (list 't_bow        "bow"        s_bow        "1"      "2d5"    "-2"     slot-weapon   2      6     t_arrow      #f      2)
-   (list 't_crossbow   "crossbow"   s_crossbow   "2"      "4d3"    "-3"     slot-weapon   2      4     t_bolt       #f      3)
+   (list 't_bow        "bow"        s_bow        "1d3-2"  "2d5"    "-2"     slot-weapon   2      6     t_arrow      #f      2)
+   (list 't_crossbow   "crossbow"   s_crossbow   "1d4-2"  "4d3"    "-3"     slot-weapon   2      4     t_bolt       #f      3)
    (list 't_doom_staff "doom staff" s_doom_staff "1d4"    "2d20"   "+2"     slot-weapon   2      12    t_warhead    #t      2)
    (list 't_acid_spray "acid spray" nil          "0"      "1d3"    "+0"     slot-nil      2      2     t_acid_bolt  #t      0)
    (list 't_stun_wand  "stun wand"  s_stun_wand  "-2"     "3d4"    "-1"     slot-weapon   1      8     t_stunball   #t      2)
@@ -211,11 +228,11 @@
    (list  't_sword          "sword"          s_sword          "1d2"    "1d8+1"  "1d2"    slot-weapon   1      1      2)
    (list  't_sword_2        "+2 sword"       s_sword          "1d2+2"  "1d8+3"  "1d2+2"  slot-weapon   1      1      2)
    (list  't_sword_4        "+4 sword"       s_sword          "1d2+4"  "1d8+5"  "1d2+4"  slot-weapon   1      1      2)
-   (list  't_2H_axe         "2H axe"         s_2h_axe         "0"      "2d4+2"  "-2"     slot-weapon   2      1      4)
+   (list  't_2H_axe         "2H axe"         s_2h_axe         "0"      "2d8+2"  "-2"     slot-weapon   2      1      4)
    (list  't_2H_sword       "2H sword"       s_2h_sword       "0"      "2d8-1"  "-1"     slot-weapon   2      1      4)
-   (list  't_morning_star   "morning star"   s_morning_star   "1d3+3"  "1d6+1"  "-1"     slot-weapon   1      2      3)
-   (list  't_halberd        "halberd"        s_halberd        "1d4+2"  "2d8-2"  "+0"     slot-weapon   2      2      4)
-   (list  't_staff          "staff"          s_staff          "1d6"    "1d4"    "1d3"    slot-weapon   2      2      2)
+   (list  't_morning_star   "morning star"   s_morning_star   "1d2+2"  "1d6+1"  "-1"     slot-weapon   1      2      3)
+   (list  't_halberd        "halberd"        s_halberd        "1d3+1"  "2d8-2"  "+0"     slot-weapon   2      2      4)
+   (list  't_staff          "staff"          s_staff          "1d4"    "1d4"    "1d3"    slot-weapon   2      2      2)
    (list  't_eldritch_blade "eldritch blade" s_eldritch_blade "2"      "2d8+5"  "+0"     slot-weapon   2      1      2)
    (list  't_mystic_sword   "mystic sword"   s_mystic_sword   "+3"     "1d10+1" "+2"     slot-weapon   1      1      1)
    (list  't_flaming_sword  "flaming sword"  s_flaming_sword  "1d2"    "1d10+3" "1d2"    slot-weapon   1      1      2)

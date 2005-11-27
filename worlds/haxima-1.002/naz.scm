@@ -202,7 +202,7 @@
 
 ;; Check if a character's target is in range
 (define (can-hit? kchar ktarg range)
-  ;;(display "can-hit? ");;(display range)(newline)
+  ;;(println "can-hit: " range)
   (in-range? (kern-obj-get-location kchar)
              range
              ktarg))
@@ -292,6 +292,12 @@
 
 (define (being-at? loc)
   (not (null? (filter kern-obj-is-being? (kern-get-objects-at loc)))))
+
+(define (get-being-at loc)
+  (let ((beings (filter kern-obj-is-being? (kern-get-objects-at loc))))
+    (if (null? beings)
+        nil
+        (car beings))))
 
 (define (is-alive? kchar)
   (> (kern-char-get-hp kchar) 0))
@@ -909,69 +915,6 @@
     (if (null? nearby-foes)
         #f
         (evade kchar nearby-foes))))
-
-;; use-melee-spell-on-foe? -- randomly select from a list of melee spells and
-;; return #t iff the spell is used
-(define (use-melee-spell-on-foe? kchar ktarg)
-  (let ((spell (random-select (filter (lambda (spell)
-                                        (can-use-ability? spell kchar))
-                                      melee-spells))))
-    (if (null? spell)
-        #f
-        (use-ability spell kchar ktarg))))
-
-(define (use-melee-spell-on-foes? kchar)
-  ;;(display "use-melee-spell-on-foes?")(newline)
-  (foldr (lambda (val ktarg)
-           (or val
-               (use-melee-spell-on-foe? kchar ktarg)))
-         #f 
-         (get-hostiles-in-range kchar 1)))
-
-
-(define (use-ranged-spell-on-foe? kchar ktarg)
-  (let ((spell-range (random-select (filter (lambda (spell-range)
-                                        (and (can-use-ability? (car spell-range)
-                                                               kchar)
-                                             (can-hit? kchar 
-                                                       ktarg 
-                                                       (cdr spell-range))))
-                                      ranged-spells))))
-    (if (null? spell-range)
-        #f
-        (use-ability (car spell-range) kchar ktarg))))
-
-(define (use-ranged-spell-on-foes? kchar)
-  ;;(display "use-ranged-spell-on-foes?")(newline)
-  (foldr (lambda (val ktarg)
-           ;;(display "ktarg=");;(display ktarg)(newline)
-           (or val
-               (use-ranged-spell-on-foe? kchar ktarg)))
-         #f 
-         (all-visible-hostiles kchar)))
-
-(define (use-heal-spell-on? kchar ktarg)
-  ;;(println "use-heal-spell-on?")
-  (or (and (wants-great-healing? ktarg)
-           (can-use-ability? great-heal-ability kchar)
-           (use-ability great-heal-ability kchar ktarg)
-           )
-      (and (wants-healing? ktarg)
-           (can-use-ability? heal-ability kchar)
-           (use-ability heal-ability kchar ktarg)
-           )))
-
-(define (use-heal-spell-on-ally? kchar)
-  ;;(println "use-heal-spell-on-ally?")
-  (and (or (can-use-ability? heal-ability kchar)
-           (can-use-ability? great-heal-ability kchar))
-       (foldr (lambda (val ktarg)
-                (or val
-                    (use-heal-spell-on? kchar ktarg)))
-              #f 
-              (all-in-range (kern-obj-get-location kchar)
-                            2
-                            (all-visible-allies kchar)))))
 
 (define (dump-char kchar)
   (if (null? kchar)

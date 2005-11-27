@@ -282,7 +282,7 @@
   )
 
 (define (simple-start kplayer)
-  (kern-obj-put-at kplayer (list p_paladins_hold 5 9)))
+  (kern-obj-put-at kplayer (list p_great_hall 0 9)))
       
 ;;----------------------------------------------------------------------------
 ;; To skip the extended start scene comment out this next line and uncomment

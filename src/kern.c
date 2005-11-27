@@ -4091,7 +4091,7 @@ KERN_API_CALL(kern_fire_missile)
         ArmsType *missile_type;
         Missile *missile;
         struct place *oplace, *dplace;
-        int ox, oy, dx, dy;
+        int ox, oy, dx, dy, hitTarget = 0;
         Object *target;
 
         /* Unpack the missile type */
@@ -4119,19 +4119,9 @@ KERN_API_CALL(kern_fire_missile)
         /* Fire the missile */
         missile->setPlace(dplace);
         missile->animate(ox, oy, dx, dy, 0);
-        if (missile->hitTarget()) {
-
-                /* Run the missile's hit-loc procedure, if any */
-                if (missile->getObjectType()->canHitLocation()) {
-                        missile->getObjectType()->hitLocation(missile, 
-                                                              dplace, 
-                                                              dx, 
-                                                              dy);
-                }
-        }
-
+        hitTarget = missile->hitTarget();
         delete missile;
-        return sc->NIL;
+        return hitTarget ? sc->T : sc->F;
 }
 
 KERN_API_CALL(kern_obj_inc_light)

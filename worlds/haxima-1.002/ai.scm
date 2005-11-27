@@ -68,7 +68,7 @@
          (all-visible-hostiles kchar)))
 
 (define (use-heal-spell-on? kchar ktarg)
-  (println "use-heal-spell-on?")
+  ;;(println "use-heal-spell-on?")
   (or (and (wants-great-healing? ktarg)
            (can-use-ability? great-heal-ability kchar)
            (use-ability great-heal-ability kchar ktarg)
@@ -79,7 +79,7 @@
            )))
 
 (define (use-heal-spell-on-ally? kchar)
-  (println "use-heal-spell-on-ally?")
+  ;;(println "use-heal-spell-on-ally?")
   (and (or (can-use-ability? heal-ability kchar)
            (can-use-ability? great-heal-ability kchar))
        (foldr (lambda (val ktarg)
@@ -249,7 +249,7 @@
 ;;----------------------------------------------------------------------------
 ;; spell-sword-ai -- aggressive, selfish fighter that uses magic for combat.
 (define (spell-sword-ai kchar)
-  (println "spell-sword-ai")
+  ;;(println "spell-sword-ai")
   (or (std-ai kchar)
       (use-spell-on-self? kchar)
       (use-melee-spell-on-foes? kchar)
@@ -315,7 +315,7 @@
                             (npcg-get-post guard))))
             ;;(println "post:" post)
             (pathfind kchar post)))))
-  (or (use-potion? kchar)
+  (or (std-ai kchar)
       (if (any-visible-hostiles? kchar)
           (try-to-use-ability)
           (goto-post))))

@@ -99,12 +99,23 @@
           (list place (- x 1) y)
           (list place (+ x 1) y))))
 
-(define (cast-missile-spell caster range missile)
-  (let* ((from (kern-obj-get-location caster))
-         (to (kern-ui-target from range)))
-    (if (not (null? to))
-        (kern-fire-missile missile from to))
-    to))
+(define (get-target-loc caster range)
+  (kern-ui-target (kern-obj-get-location caster)
+                  range))
+
+(define (get-target-kchar caster range)
+  (let ((loc (get-target-loc caster range)))
+    (if (null? loc)
+        nil
+        (get-being-at loc))))
+
+(define (user-cast-missile-spell kchar range proc)
+  (let ((ktarg (get-target-kchar caster range)))
+    (if (null? ktarg)
+        result-no-target
+        (begin
+          (proc caster ktarg)
+          result-ok))))
 
 (define (cast-field-spell caster field-type)
   (let ((coords (kern-ui-target (kern-obj-get-location caster) 1)))
@@ -295,8 +306,8 @@
 (define (an-zu  caster)
   (cast-on-party-member awaken))
 
-(define (grav-por  caster)
-  (cast-missile-spell caster 8 t_arrow))
+(define (grav-por caster)
+  (user-cast-missile-spell caster 8 cast-magic-missile-proc))
 
 (define (in-lor  caster)
   (kern-obj-add-effect caster ef_light nil)
@@ -357,9 +368,8 @@
           (else (kern-set-wind dir (kern-dice-roll "20d6"))))))
 
 (define (in-nox-por  caster)
-  (cast-missile-spell caster 8 t_poison_bolt)
-  result-ok)
-  
+  (user-cast-missile-spell caster 8 cast-poison-missile-proc))
+
 (define (in-flam-grav  caster)
   (cast-field-spell caster F_fire))
 
@@ -370,7 +380,7 @@
   (cast-field-spell caster F_sleep))
 
 (define (vas-flam  caster)
-  (cast-missile-spell caster 8 t_fireball))
+  (user-cast-missile-spell caster 8 cast-fireball-proc))
 
 (define (vas-lor  caster)
   (kern-obj-add-effect caster ef_great_light nil))
@@ -583,7 +593,7 @@
   result-ok)
 
 (define (xen-corp  caster)
-  (cast-missile-spell caster 6 t_deathball))
+  (user-cast-missile-spell caster 6 cast-kill-proc))
 
 (define (in-mani-corp  caster)
   (let ((target (kern-ui-select-party-member)))
@@ -631,7 +641,7 @@
    ;;    ==========   ==============      =======      ==== = ===========  =====================================
    (list 'an_nox      "An Nox spell"      an-nox      "AN"  1 context-any  (list garlic ginseng))
    (list 'an_zu       "An Zu spell"       an-zu       "AZ"  1 context-any  (list garlic ginseng))
-   (list 'grav_por    "Grav Por spell"    grav-por    "GP"  1 context-town (list spider_silk black_pearl))
+   (list 'grav_por    "Grav Por spell"    grav-por    "AP"  1 context-town (list spider_silk black_pearl))
    (list 'in_lor      "In Lor spell"      in-lor      "IL"  1 context-any  (list sulphorous_ash))
    (list 'mani        "Mani spell"        mani        "M"   1 context-any  (list ginseng spider_silk))
 
