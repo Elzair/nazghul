@@ -338,6 +338,20 @@
  (put (mk-magic-locked-door) 14 13)
  (put (mk-locked-door) 10 16)
  (put (mk-ladder-down 'p_altar_room 17 17) 17 9)
+
+ ;; defenders
+ (put (guard-pt 'craven-archer)  5  5)
+ (put (guard-pt 'craven-archer)  5 13)
+ (put (guard-pt 'craven-archer) 11  9)
+ (put (spawn-pt 'death-knight)  14  2)
+ (put (spawn-pt 'death-knight)  14 16)
+ (put (spawn-pt 'death-knight)   7  9)
+ (put (guard-pt 'death-knight)   9  2)
+ (put (guard-pt 'death-knight)   9 16)
+ (put (guard-pt 'death-knight)  14  6)
+ (put (guard-pt 'death-knight)  14 12)
+ (put (guard-pt 'warlock)       14  9)
+
 )
 
 (mk-dungeon-level 

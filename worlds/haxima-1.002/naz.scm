@@ -215,11 +215,17 @@
                 radius))
           objlst))
 
-;; Return a list of all hostiles in the given range
-(define (get-hostiles-in-range kchar range)
-  (all-in-range (kern-obj-get-location kchar)
+;; Return a list of all hostiles in range of the given location
+(define (get-hostiles-in-range-of-loc kchar range loc)
+  (all-in-range loc
                 range
                 (kern-being-get-visible-hostiles kchar)))
+
+;; Return a list of all hostiles in range of the kchar's current location
+(define (get-hostiles-in-range kchar range)
+  (get-hostiles-in-range-of-loc kchar
+                                range
+                                (kern-obj-get-location kchar)))
 
 ;; Return a list of beings within the given range
 (define (get-beings-in-range kobj range)
@@ -1218,24 +1224,25 @@
   (map display args)
   (newline))
 
+(define (is-bad-loc? loc)
+  ;;(display "is-bad-loc?")(newline)
+  (or (is-bad-terrain-at? loc)
+      (any-object-types-at? loc spider-bad-fields)))
+
+(define (is-good-loc? kchar loc)
+  ;;(display "is-good-loc?")(newline)
+  (and (passable? loc kchar)
+       (not (occupied? loc))
+       (not (is-bad-loc? loc))))
+
 (define (get-off-bad-tile? kchar)
   ;;(display "get-off-bad-tile")(newline)
   
-  (define (is-bad-loc? loc)
-    ;;(display "is-bad-loc?")(newline)
-    (or (is-bad-terrain-at? loc)
-        (any-object-types-at? loc spider-bad-fields)))
-
   (define (choose-good-tile tiles)
     ;;(display "choose-good-tile")(newline)
-    (define (is-good-tile? tile)
-      ;;(display "is-good-tile?")(newline)
-      (and (passable? tile kchar)
-           (not (occupied? tile))
-           (not (is-bad-loc? tile))))
     (if (null? tiles)
         nil
-        (if (is-good-tile? (car tiles))
+        (if (is-good-loc? kchar (car tiles))
             (car tiles)
             (choose-good-tile (cdr tiles)))))
 
@@ -1261,11 +1268,25 @@
   (evade kchar (all-visible-hostiles kchar)))
 
 ;; random-loc -- choose a random location
-(define (random-loc kplace x y w h pred?)
-  (let* ((loc (mk-loc kplace 
-                      (+ x (modulo (random-next) w))
-                      (+ y (modulo (random-next) h)))))
-    (if (pred? loc)
-        loc
-        nil)))
+(define (random-loc kplace x y w h)
+  (mk-loc kplace 
+          (+ x (modulo (random-next) w))
+          (+ y (modulo (random-next) h))))
 
+;; random-loc -- choose a random location anywhere in the given place
+(define (random-loc-in-place kplace)
+  (random-loc kplace
+              0
+              0
+              (kern-place-get-width kplace)
+              (kern-place-get-height kplace)))
+
+;; random-loc-place-iter -- try up to n times to find a random location which
+;; satisfies pred?
+(define (random-loc-place-iter kplace pred? n)
+  (if (<= n 0)
+      nil
+      (let ((loc (random-loc-in-place kplace)))
+        (if (pred? loc)
+            loc
+            (random-loc-place-iter kplace pred? (- n 1))))))

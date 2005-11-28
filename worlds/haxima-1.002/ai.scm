@@ -180,6 +180,23 @@
   (> (length (get-hostiles-in-range kchar 1))
      0))
 
+;; stuck? -- #t iff kchar cannot safely move to a neighboring tile
+(define (stuck? kchar)
+  (println " stuck?")
+  (let* ((cloc (kern-obj-get-location kchar))
+         (kplace (loc-place cloc))
+         (x (loc-x cloc))
+         (y (loc-y cloc)))
+    (foldr (lambda (x loc)
+             (and x 
+                  (not (is-good-loc? kchar loc))))
+           #t
+           (list (mk-loc kplace (- x 1) y)
+                 (mk-loc kplace (+ x 1) y)
+                 (mk-loc kplace x (- y 1))
+                 (mk-loc kplace x (+ y 1))))))
+  
+
 (define (blink-offset kchar)
   (let ((origin (kern-obj-get-location kchar)))
     (loc-add origin
@@ -202,10 +219,27 @@
         loc
         nil)))
 
+(define (choose-random-blink-loc kchar)
+  (println "   choose-random-blink-loc")
+  (random-loc-place-iter (loc-place (kern-obj-get-location kchar))
+                         (lambda (loc)
+                           (println "    check loc" loc)
+                           (and (not (loc-equal? loc
+                                                 (kern-obj-get-location kchar)))
+                                (passable? loc kchar)
+                                (not (is-bad-terrain-at? loc))
+                                (not (any-object-types-at? loc all-field-types))
+                                (not (occupied? loc))
+                                (null? (get-hostiles-in-range-of-loc kchar 3 loc))
+                                ))
+                         3))
+
 (define (blink-away-from-foes kchar)
+  (println " blink-away-from-foes")
   (if (not (can-use-ability? teleport kchar))
       #f
-      (let ((loc (choose-blink-loc kchar)))
+      (let ((loc (choose-random-blink-loc kchar)))
+        (println " blink-away-from-foes:" loc)
         (if (null? loc)
             #f
             (use-ability teleport kchar loc)))))
@@ -274,7 +308,7 @@
 
 ;; Death knights can use Vampiric Touch at L3 and Disease at L6
 (define (death-knight-ai kchar)
-  (or (use-potion? kchar)
+  (or (std-ai kchar)
       (let ((vt (can-use-ability? vampiric-touch kchar))
             (dis (can-use-ability? disease-touch kchar)))
         (if (not (or vt dis))
@@ -288,6 +322,13 @@
                                (>= (kern-dice-roll "1d20") 16))
                           (use-ability disease-touch kchar (car victims))
                           #f))))))))
+
+(define (craven-archer-ai kchar)
+  (println "craven-archer-ai")
+  (or (std-ai kchar)
+      (and (stuck? kchar)
+           (in-melee-range-of-foes? kchar)
+           (blink-away-from-foes kchar))))
 
 (define (medik-ai kchar)
   (println "medik-ai")

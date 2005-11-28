@@ -184,7 +184,7 @@
 (define cast-fireball       (mk-ability "cast fireball" 3 3 1 cast-fireball-proc))
 (define cast-kill           (mk-ability "cast kill" 7 7 2 cast-kill-proc))
 (define web-spew            (mk-ability "spew web" 4 4 2 web-spew-proc))
-(define teleport            (mk-ability "teleport" 6 6 2 teleport-proc))
+(define teleport            (mk-ability "teleport" 4 6 2 teleport-proc))
 
 ;;----------------------------------------------------------------------------
 ;; Abilities listed by various attributes
