@@ -67,7 +67,7 @@
    (list 't_wall            "wall"          pclass-wall      s_wall_stone      0 0 nil)
    (list 't_fake_wall       "wall"          pclass-forest    s_wall_stone      0 0 nil)
 
-   (list 't_wall_torch      "wall torch"    pclass-wall      s_wall_torch      0 512 'burn)
+   (list 't_wall_torch      "wall torch"    pclass-wall      s_wall_torch      0 1024 'burn)
    (list 't_arrow_slit      "arrow slit"    pclass-wall      s_arrow_slit      1 0 nil)
    (list 't_window_in_stone "window"        pclass-wall      s_window_in_stone 1 0 nil)
 

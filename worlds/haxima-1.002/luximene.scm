@@ -72,3 +72,48 @@
     nil              ; readied
     )
    (lux-mk)))
+
+;; Luximene begins the game as a Lich King, when defeated he drops his skull,
+;; which can be used with the Necromancer to summon his shade.
+(mk-obj-type 't_lich_skull "King Luximenes skull" s_magic layer-item obj-ifc)
+
+(define (mk-lich-king)
+  (let ((kchar 
+         (bind 
+          (kern-char-force-drop
+           (kern-mk-char 
+            'ch_lich_king           ; tag
+            "Lich King" ; name
+            sp_skeleton         ; species
+            oc_wizard              ; occ
+            s_lich     ; sprite
+            faction-monster      ; starting alignment
+            10 10 10            ; str/int/dex
+            10 1              ; hp mod/mult
+            0  0              ; mp mod/mult
+            (max-hp lux-species lux-occ 8 10 10) ; hp
+            0                   ; xp
+            (max-mp lux-species lux-occ 8 10 10) ; mp
+            8
+            #f               ; dead
+            nil              ; conv
+            nil             ; sched
+            'lich-ai        ; special ai
+            (mk-chest
+             'lightning-trap
+             (list (list 1 t_morning_star)
+                   (list 1 t_armor_chain_4)
+                   (list 1 t_chain_coif_4)
+                   (list 100 t_gold_coins)
+                   (list 3 t_mana_potion)
+                   (list 3 t_heal_potion)
+                   (list 1 t_lich_skull)
+                   ))
+            nil              ; readied
+            )
+           #t)
+          (lux-mk))))
+    (map (lambda (eff) (kern-obj-add-effect kchar eff nil))
+         skel-effects)
+    kchar))
+

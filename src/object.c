@@ -1515,6 +1515,8 @@ int Object::nameToHookId(char *name)
                 return OBJ_HOOK_DAMAGE;
         if (! strcmp(name, "keystroke-hook"))
                 return OBJ_HOOK_KEYSTROKE;
+        if (! strcmp(name, "nil-hook"))
+                return OBJ_HOOK_NIL;
         return -1;
 }
 

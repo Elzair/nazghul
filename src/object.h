@@ -65,12 +65,16 @@
  * OBJ_HOOK_DAMAGE
  *      Runs whenever an object takes damage. Passes in the object.
  *
+ * OBJ_HOOK_NIL
+ *      Never runs. Useful for effects where the script just needs to check if
+ *      it is applied. For instance, fire immunity.
  */
 #define OBJ_HOOK_START_OF_TURN 0
 #define OBJ_HOOK_ADD_HOOK      1
 #define OBJ_HOOK_DAMAGE        2
 #define OBJ_HOOK_KEYSTROKE     3
-#define OBJ_NUM_HOOKS          4
+#define OBJ_HOOK_NIL           4
+#define OBJ_NUM_HOOKS          5
 #define OBJ_MAX_CONDITIONS     8
 
 // Note: if you change the layers you'll probably need to change the save

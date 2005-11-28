@@ -134,43 +134,6 @@
               #f
               (pathfind kchar (kern-obj-get-location patient)))))))
 
-(define (get-off-bad-tile? kchar)
-  ;;(display "get-off-bad-tile")(newline)
-  
-  (define (is-bad-loc? loc)
-    ;;(display "is-bad-loc?")(newline)
-    (or (is-bad-terrain-at? loc)
-        (any-object-types-at? loc spider-bad-fields)))
-
-  (define (choose-good-tile tiles)
-    ;;(display "choose-good-tile")(newline)
-    (define (is-good-tile? tile)
-      ;;(display "is-good-tile?")(newline)
-      (and (passable? tile kchar)
-           (not (occupied? tile))
-           (not (is-bad-loc? tile))))
-    (if (null? tiles)
-        nil
-        (if (is-good-tile? (car tiles))
-            (car tiles)
-            (choose-good-tile (cdr tiles)))))
-
-  (define (move-to-good-tile)
-    ;;(display "move-to-good-tile")(newline)
-    (let* ((curloc (kern-obj-get-location kchar))
-           (tiles (get-4-neighboring-tiles curloc))
-           (newloc (choose-good-tile tiles)))
-      (if (null? newloc)
-          #f
-          (begin
-            ;;(display "moving")(newline)
-            (kern-obj-move kchar 
-                           (- (loc-x newloc) (loc-x curloc))
-                           (- (loc-y newloc) (loc-y curloc)))
-            #t))))
-
-  (and (is-bad-loc? (kern-obj-get-location kchar))
-       (move-to-good-tile)))
 
 (define (move-away-from-foes? kchar)
   ;;(println "move-away-from-foes?")
@@ -280,10 +243,18 @@
   (or (get-off-bad-tile? kchar)
       (use-potion? kchar)))
 
+;; Invoke a summoning ability if allies are outnumbered by a certain amount
+(define (ai-summon kchar ability)
+  (println "ai-summon")
+  (println "allies=" (num-allies kchar) " foes=" (num-hostiles kchar))
+  (and (can-use-ability? ability kchar)
+       (< (num-allies kchar) (* 2 (num-hostiles kchar)))
+       (use-ability ability kchar)))
+
 ;;----------------------------------------------------------------------------
 ;; spell-sword-ai -- aggressive, selfish fighter that uses magic for combat.
 (define (spell-sword-ai kchar)
-  ;;(println "spell-sword-ai")
+  (println "spell-sword-ai")
   (or (std-ai kchar)
       (use-spell-on-self? kchar)
       (use-melee-spell-on-foes? kchar)
@@ -360,6 +331,13 @@
       (if (any-visible-hostiles? kchar)
           (try-to-use-ability)
           (goto-post))))
+
+;; A lich will summon undead minions
+(define (lich-ai kchar)
+  (display "lich-ai:") (dump-char kchar)
+  (or (std-ai kchar)
+      (ai-summon kchar summon-skeleton)
+      (spell-sword-ai kchar)))
 
 ;;-------------------> old stuff for reference:
 ;;----------------------------------------------------------------------------

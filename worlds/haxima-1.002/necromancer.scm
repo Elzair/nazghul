@@ -5,8 +5,6 @@
 (define necr-species sp_human)
 (define necr-occ oc_wizard)
 
-(mk-obj-type 't_lich_skull "King Luximenes skull" s_magic layer-item obj-ifc)
-
 ;;----------------------------------------------------------------------------
 ;; Schedule
 ;;----------------------------------------------------------------------------
@@ -174,7 +172,7 @@
   (say knpc "Alas, she is fallen. I have met her spirit in the void. "
        "She was betrayed by the leadership of Glasdrin. "
        "Would that the gods had not abandoned us, "
-       "and Vale, lord of vengeance, still stalked the Shard."))
+       "and Vale, lord of vengeance, still stalked the Shard!"))
 
 (define (necr-vale knpc kpc)
   (say knpc "An ancient god, known only to the dead now."))

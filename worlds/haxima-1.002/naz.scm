@@ -1233,19 +1233,27 @@
   (map display args)
   (newline))
 
-(define (is-bad-loc? loc)
-  ;;(display "is-bad-loc?")(newline)
+(define (is-bad-field-at? kchar loc)
+  (println "is-bad-field-at?")
+  (define (is-bad-field? ktype)
+    (and (is-field? ktype)
+         (not (is-immune-to-field? kchar ktype))))
+  (for-each is-bad-field?
+            (kern-get-objects-at loc)))
+
+(define (is-bad-loc? kchar loc)
+  (println "is-bad-loc?")
   (or (is-bad-terrain-at? loc)
-      (any-object-types-at? loc spider-bad-fields)))
+      (is-bad-field-at? kchar loc)))
 
 (define (is-good-loc? kchar loc)
-  ;;(display "is-good-loc?")(newline)
+  (println "is-good-loc?")
   (and (passable? loc kchar)
        (not (occupied? loc))
-       (not (is-bad-loc? loc))))
+       (not (is-bad-loc? kchar loc))))
 
 (define (get-off-bad-tile? kchar)
-  ;;(display "get-off-bad-tile")(newline)
+  (println "get-off-bad-tile")
   
   (define (choose-good-tile tiles)
     ;;(display "choose-good-tile")(newline)
@@ -1269,7 +1277,7 @@
                            (- (loc-y newloc) (loc-y curloc)))
             #t))))
 
-  (and (is-bad-loc? (kern-obj-get-location kchar))
+  (and (is-bad-loc? kchar (kern-obj-get-location kchar))
        (move-to-good-tile)))
 
 (define (move-away-from-foes? kchar)

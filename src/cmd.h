@@ -58,7 +58,7 @@ extern int cmd_camp_in_town(class Character *camper);
 extern int cmd_camp_in_wilderness(class Party *camper);
 extern void cmdFire(void);
 extern void cmdHelp(void);
-extern bool cmdMixReagents(void);
+extern bool cmdMixReagents(class Character *mixer);
 extern void cmdNewOrder(void);
 extern void cmdQuickSave(void);
 extern void cmdReload(void);

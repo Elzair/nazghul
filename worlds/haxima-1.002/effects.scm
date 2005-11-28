@@ -154,6 +154,13 @@
       (begin
         (kern-obj-add-effect kobj ef_ensnare nil))))
 
+;;----------------------------------------------------------------------------
+;; fire immunity
+(define (has-fire-immunity? kobj)
+  (let ((effects (kern-obj-get-effects kobj)))
+    (or (in-list? ef_fire_immunity effects)
+        (in-list? ef_temporary_fire_immunity))))
+
 ;; ----------------------------------------------------------------------------
 ;; light
 ;;
@@ -312,6 +319,8 @@
    (list 'ef_spider_calm               nil                   'spider-calm-apply  'spider-calm-rm  nil                 "start-of-turn-hook" ""  0   #f  60) 
    (list 'ef_drunk                     'drunk-exec           'drunk-apply        'drunk-rm        nil                 "keystroke-hook"     "A" 0   #t  60)
    (list 'ef_disease                   'disease-exec         nil                 nil              nil                 "start-of-turn-hook" "D" 0   #f  -1)
+   (list 'ef_fire_immunity             nil                   nil                 nil              nil                 "nil-hook"           "F" 0   #f  -1)
+   (list 'ef_temporary_fire_immunity   nil                   nil                 nil              nil                 "nil-hook"           "F" 0   #f  60)
    ))
 
 (map (lambda (effect) (apply mk-effect effect)) effects)
@@ -377,10 +386,12 @@
   (kern-obj-apply-damage actor "ouch" 1))
 
 (define (burn obj)
-  (kern-obj-apply-damage obj "burning" (kern-dice-roll "2d3+2")))
+  (if (not (has-fire-immunity? obj))
+      (kern-obj-apply-damage obj "burning" (kern-dice-roll "2d3+2"))))
 
 (define (great-burn obj)
-  (kern-obj-apply-damage obj "burning" (kern-dice-roll "10d8+20")))
+  (if (not (has-fire-immunity? obj))
+      (kern-obj-apply-damage obj "burning" (kern-dice-roll "10d8+20"))))
 
 (define (slip obj)
   (let ((mmode (kern-obj-get-mmode obj)))

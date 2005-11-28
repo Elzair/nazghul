@@ -42,3 +42,18 @@
 
 (define (is-field? kobj)
   (is-field-type? (kern-obj-get-type kobj)))
+
+(define (is-fire-field? kobj)
+  (let ((ktype (kern-obj-get-type kobj)))
+    (or (eqv? ktype 'F_fire)
+        (eqv? ktype 'F_fire_perm))))
+
+(define (is-poison-field? kobj)
+  (let ((ktype (kern-obj-get-type kobj)))
+    (or (eqv? ktype 'F_poison)
+        (eqv? ktype 'F_poison_perm))))
+
+(define (is-immune-to-field? kchar kfield)
+  (cond ((is-fire-field? kfield) (has-fire-immunity? kchar))
+        ((is-poison-field? kfield) (has-poison-immunity? kchar))
+        (else #f)))

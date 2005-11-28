@@ -11,14 +11,14 @@
 (define (ability-proc ability) (list-ref ability 4))
 
 (define (can-use-ability? ability kchar)
-  ;;(println " can-use-ability?" display ability)
+  (println " can-use-ability?" display ability)
   (and (>= (kern-char-get-mana kchar)
            (ability-mana-cost ability))
        (>= (kern-char-get-level kchar)
            (ability-level-required ability))))
 
 (define (use-ability ability kchar . args)
-  ;;(display "use-ability:")(display ability)
+  (println "use-ability:" ability)
   (kern-char-dec-mana kchar (ability-mana-cost ability))
   (kern-obj-dec-ap kchar (ability-ap-cost ability))
   (apply (ability-proc ability) (cons kchar args)))
@@ -85,6 +85,8 @@
                     (kern-obj-get-name ktarg)))
   (kern-obj-heal ktarg (kern-dice-roll "4d20+20")))
 
+;;----------------------------------------------------------------------------
+;; field spells
 (define (cast-field-proc kchar loc ktype)
   (kern-log-msg (kern-obj-get-name kchar)
                 " casts a field spell")
@@ -110,6 +112,8 @@
                    (kern-obj-get-location ktarg)
                    F_energy))
   
+;;----------------------------------------------------------------------------
+;; missile spells
 (define (cast-missile-proc kchar ktarg ktype)
   (kern-fire-missile ktype
                      (kern-obj-get-location kchar)
@@ -167,6 +171,44 @@
   (kern-obj-relocate kchar loc nil))
 
 ;;----------------------------------------------------------------------------
+;; summoning
+(define (cast-summon-proc kchar gen-npct)
+  (println "cast-summon-proc")
+  (define (run-loop count)
+    (println " run-loop " count)
+    (cond ((<= count 0) 0)
+          (else
+           (let* ((lvl (+ (kern-dice-roll "1d2") (/ (kern-char-get-level kchar) 2)))
+                  (knpc (spawn-npc (gen-npct) lvl))
+                  (loc (pick-loc (kern-obj-get-location kchar) knpc))
+                  )
+             (println " loc=" loc)
+             (cond ((null? loc) 
+                    (kern-obj-dec-ref knpc)
+                    0)
+                   (else
+                    (kern-being-set-base-faction knpc (kern-being-get-base-faction kchar))
+                    (kern-obj-set-temporary knpc #t)
+                    (kern-obj-put-at knpc loc)
+                    (+ 1 (run-loop (- count 1)))))))))
+  (run-loop (/ (kern-char-get-level kchar) 2)))
+
+(define (summon-skeleton-proc kchar)
+  (println "summon-skeleton-proc")
+  (cond ((> (cast-summon-proc kchar
+                              (lambda () 
+                                (random-select (list 'skeletal-warrior 'skeletal-spear-thrower))))
+            0)
+         (kern-log-msg (kern-obj-get-name kchar)
+                       " summons skeletons")
+         #t)
+        (else
+         (kern-log-msg (kern-obj-get-name kchar)
+                       " fails to summon skeletons")
+         #f)))
+                    
+
+;;----------------------------------------------------------------------------
 ;; Ability declarations
 ;;----------------------------------------------------------------------------
 
@@ -184,7 +226,8 @@
 (define cast-fireball       (mk-ability "cast fireball" 3 3 1 cast-fireball-proc))
 (define cast-kill           (mk-ability "cast kill" 7 7 2 cast-kill-proc))
 (define web-spew            (mk-ability "spew web" 4 4 2 web-spew-proc))
-(define teleport            (mk-ability "teleport" 4 6 2 teleport-proc))
+(define teleport            (mk-ability "teleport" 6 6 2 teleport-proc))
+(define summon-skeleton     (mk-ability "summon skeleton" 6 6 4 summon-skeleton-proc))
 
 ;;----------------------------------------------------------------------------
 ;; Abilities listed by various attributes
