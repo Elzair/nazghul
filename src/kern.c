@@ -6127,6 +6127,41 @@ KERN_API_CALL(kern_char_get_weapons)
                                       character->enumerateWeapons());
 }
 
+static pointer kern_build_arm_list(scheme *sc, 
+                                      class Character *character, 
+                                      class ArmsType *arm)
+{
+        /* base case */
+        if (! arm)
+                return sc->NIL;
+        
+        /* recursive case */
+        return _cons(sc, 
+                     scm_mk_ptr(sc, arm), 
+                     kern_build_arm_list(sc, 
+                                            character, 
+                                            character->getNextArms()), 
+                     0);
+}
+
+KERN_API_CALL(kern_char_get_arms)
+{
+        class Character *character;
+        pointer lst;
+
+        /* unpack the character */
+        character = (class Character*)unpack_obj(sc, &args, 
+                                                 "kern-char-get-arms");
+        if (!character)
+                return sc->NIL;
+
+        /* recursively enumerate the character's available arms into a
+         * scheme list */
+        return kern_build_arm_list(sc, 
+                                      character, 
+                                      character->enumerateArms());
+}
+
 KERN_API_CALL(kern_char_arm_self)
 {
         class Character *character;
@@ -7010,6 +7045,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-char-dec-mana", kern_char_dec_mana);
         API_DECL(sc, "kern-char-charm", kern_char_charm);
         API_DECL(sc, "kern-char-force-drop", kern_char_force_drop);
+        API_DECL(sc, "kern-char-get-arms", kern_char_get_arms);
         API_DECL(sc, "kern-char-get-hp", kern_char_get_hp);
         API_DECL(sc, "kern-char-get-inventory", kern_char_get_inventory);
         API_DECL(sc, "kern-char-get-level", kern_char_get_level);

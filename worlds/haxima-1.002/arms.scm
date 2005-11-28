@@ -102,6 +102,7 @@
 (define poison-bolt-ifc (mk-missile-ifc apply-poison))
 (define deathball-ifc   (mk-missile-ifc kern-char-kill))
 (define stunball-ifc (mk-missile-ifc paralyze))
+(define acid-bolt-ifc (mk-missile-ifc apply-acid))
 
 ;; fireball-hit -- when a fireball hits it burns all characters and leaves a
 ;; fire 
@@ -136,7 +137,7 @@
    (list 't_warhead      "warhead"     s_warhead      warhead-ifc)
    (list 't_cannonball   "cannonball"  s_cannonball   obj-ifc)
    (list 't_poison_bolt  "poison bolt" s_poison_bolt  poison-bolt-ifc)
-   (list 't_acid_bolt    "acid bolt"   s_acid_bolt    nil)
+   (list 't_acid_bolt    "acid bolt"   s_acid_bolt    acid-bolt-ifc)
    (list 't_fireball     "fireball"    s_fireball     fireball-ifc)
    (list 't_deathball    "deathball"   s_deathball    deathball-ifc)
    (list 't_stunball     "stunball"    s_projectile   stunball-ifc)
@@ -168,7 +169,7 @@
    (list 't_bow        "bow"        s_bow        "1d3-2"  "2d5"    "-2"     slot-weapon   2      6     t_arrow      #f      2)
    (list 't_crossbow   "crossbow"   s_crossbow   "1d4-2"  "4d3"    "-3"     slot-weapon   2      4     t_bolt       #f      3)
    (list 't_doom_staff "doom staff" s_doom_staff "1d4"    "1"      "+2"     slot-weapon   2      12    t_fireball   #t      2)
-   (list 't_acid_spray "acid spray" nil          "0"      "1d3"    "+0"     slot-nil      2      2     t_acid_bolt  #t      0)
+   (list 't_acid_spray "acid spray" nil          "-8"     "1d4"    "+0"     slot-nil      2      2     nil          #t      0)
    (list 't_stun_wand  "stun wand"  s_stun_wand  "-2"     "3d4"    "-1"     slot-weapon   1      8     t_stunball   #t      2)
    ))
 

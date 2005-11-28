@@ -21,7 +21,10 @@
   (println "use-ability:" ability)
   (kern-char-dec-mana kchar (ability-mana-cost ability))
   (kern-obj-dec-ap kchar (ability-ap-cost ability))
-  (apply (ability-proc ability) (cons kchar args)))
+  (let ((result (apply (ability-proc ability) (cons kchar args))))
+    (if (<= (kern-char-get-mana kchar))
+        (kern-log-msg (kern-obj-get-name kchar) " is exhausted!"))
+    result))
 
 
 ;;----------------------------------------------------------------------------
@@ -122,7 +125,7 @@
 ;; cast-magic-missile-proc -- damage goes up with level of caster
 (define (cast-magic-missile-proc kchar ktarg)
   (kern-log-msg (kern-obj-get-name kchar)
-                " casts magic missile at "
+                " fires magic missile at "
                 (kern-obj-get-name ktarg))
   (if (cast-missile-proc kchar ktarg t_arrow)
       (kern-obj-apply-damage ktarg
@@ -132,13 +135,13 @@
 
 (define (cast-poison-missile-proc kchar ktarg)
   (kern-log-msg (kern-obj-get-name kchar)
-                " casts poison missile at "
+                " hurls poison missile at "
                 (kern-obj-get-name ktarg))
   (cast-missile-proc kchar ktarg t_poison_bolt))
 
 (define (cast-fireball-proc kchar ktarg)
   (kern-log-msg (kern-obj-get-name kchar)
-                " casts fireball at "
+                " hurls fireball at "
                 (kern-obj-get-name ktarg))
   (cast-missile-proc kchar ktarg t_fireball))
 
@@ -147,6 +150,12 @@
                 " casts kill at "
                 (kern-obj-get-name ktarg))
   (cast-missile-proc kchar ktarg t_deathball))
+
+(define (cast-acid-missile-proc kchar ktarg)
+  (kern-log-msg (kern-obj-get-name kchar)
+                " hurls acid missile at "
+                (kern-obj-get-name ktarg))
+  (cast-missile-proc kchar ktarg t_acid_bolt))
 
 (define (web-spew-proc kchar ktarg)
   (kern-log-msg (kern-obj-get-name kchar)
@@ -191,22 +200,24 @@
                     (kern-obj-set-temporary knpc #t)
                     (kern-obj-put-at knpc loc)
                     (+ 1 (run-loop (- count 1)))))))))
-  (run-loop (/ (kern-char-get-level kchar) 2)))
-
-(define (summon-skeleton-proc kchar)
-  (println "summon-skeleton-proc")
-  (cond ((> (cast-summon-proc kchar
-                              (lambda () 
-                                (random-select (list 'skeletal-warrior 'skeletal-spear-thrower))))
+  (cond ((> (run-loop (/ (kern-char-get-level kchar) 2))
             0)
-         (kern-log-msg (kern-obj-get-name kchar)
-                       " summons skeletons")
+         (kern-log-msg (kern-obj-get-name kchar) " summons help")
          #t)
         (else
-         (kern-log-msg (kern-obj-get-name kchar)
-                       " fails to summon skeletons")
+         (kern-log-msg (kern-obj-get-name kchar) " fails to summon help")
          #f)))
+
+(define (summon-skeleton-proc kchar)
+  ;;(println "summon-skeleton-proc")
+  (cast-summon-proc kchar
+                    (lambda () 
+                      (random-select (list 'skeletal-warrior 'skeletal-spear-thrower)))))
                     
+(define (summon-slime-proc kchar)
+  (println "summon-slime-proc")
+  (cast-summon-proc kchar
+                     (lambda () 'green-slime)))
 
 ;;----------------------------------------------------------------------------
 ;; Ability declarations
@@ -225,9 +236,11 @@
 (define cast-poison-missile (mk-ability "cast poison missile" 2 2 1 cast-poison-missile-proc))
 (define cast-fireball       (mk-ability "cast fireball" 3 3 1 cast-fireball-proc))
 (define cast-kill           (mk-ability "cast kill" 7 7 2 cast-kill-proc))
+(define cast-acid-missile   (mk-ability "cast acid missile" 4 4 1 cast-acid-missile-proc))
 (define web-spew            (mk-ability "spew web" 4 4 2 web-spew-proc))
 (define teleport            (mk-ability "teleport" 6 6 2 teleport-proc))
 (define summon-skeleton     (mk-ability "summon skeleton" 6 6 4 summon-skeleton-proc))
+(define summon-slimes       (mk-ability "summon slimes"   2 2 4 summon-slime-proc))
 
 ;;----------------------------------------------------------------------------
 ;; Abilities listed by various attributes

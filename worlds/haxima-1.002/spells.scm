@@ -109,7 +109,7 @@
         nil
         (get-being-at loc))))
 
-(define (user-cast-missile-spell kchar range proc)
+(define (user-cast-ranged-targeted-spell kchar range proc)
   (let ((ktarg (get-target-kchar caster range)))
     (if (null? ktarg)
         result-no-target
@@ -144,12 +144,15 @@
       (cast-it (kern-ui-select-party-member))
       (cast-it (ui-target loc 2 obj-is-char?)))))
   
-
-(define (cast-heal-spell caster dice)
-  (cast-bimodal caster
-                (lambda (target)
-                  (kern-obj-heal target (kern-dice-roll dice)))))
-
+(define (user-cast-spell-on-party-member caster proc)
+  (define (cast-it target)
+    (cond ((null? target) nil)
+          (else (proc caster target))))
+  (let ((loc (kern-obj-get-location caster)))
+  (if (kern-place-is-wilderness? (loc-place loc))
+      (cast-it (kern-ui-select-party-member))
+      (cast-it (ui-target loc 2 obj-is-char?)))))
+  
 ;; ============================================================================
 ;; Wind spell support
 ;; ============================================================================
@@ -307,7 +310,7 @@
   (cast-on-party-member awaken))
 
 (define (grav-por caster)
-  (user-cast-missile-spell caster 8 cast-magic-missile-proc))
+  (user-cast-ranged-targeted-spell caster 8 cast-magic-missile-proc))
 
 (define (in-lor  caster)
   (kern-obj-add-effect caster ef_light nil)
@@ -317,8 +320,8 @@
   (kern-obj-add-effect caster ef_spider_calm nil)
   result-ok)
 
-(define (mani  caster)
-  (cast-heal-spell caster "2d20"))
+(define (mani caster)
+  (user-cast-spell-on-party-member caster heal-proc))
 
 (define (sanct-nox  caster)
   (let ((target (kern-ui-select-party-member)))
@@ -368,7 +371,7 @@
           (else (kern-set-wind dir (kern-dice-roll "20d6"))))))
 
 (define (in-nox-por  caster)
-  (user-cast-missile-spell caster 8 cast-poison-missile-proc))
+  (user-cast-ranged-targeted-spell caster 8 cast-poison-missile-proc))
 
 (define (in-flam-grav  caster)
   (cast-field-spell caster F_fire))
@@ -380,7 +383,7 @@
   (cast-field-spell caster F_sleep))
 
 (define (vas-flam  caster)
-  (user-cast-missile-spell caster 8 cast-fireball-proc))
+  (user-cast-ranged-targeted-spell caster 8 cast-fireball-proc))
 
 (define (vas-lor  caster)
   (kern-obj-add-effect caster ef_great_light nil))
@@ -436,7 +439,8 @@
           (else (map apply-sleep hostiles)))))
 
 (define (vas-mani  caster)
-  (cast-heal-spell caster "4d20+20"))
+  (user-cast-spell-on-party-member caster great-heal-proc))
+
 
 (define (rel-tym  caster)
   (kern-add-quicken (kern-dice-roll "3d6")))
@@ -586,14 +590,12 @@
   (kern-add-time-stop 512))
 
 (define (kal-xen-corp  caster)
-  (summon (kern-obj-get-location caster)
-          mk-skeletal-warrior
-          (kern-being-get-current-faction caster)
-          (kern-dice-roll "1d4"))
-  result-ok)
+  (if (use-ability summon-skeleton kchar)
+      result-ok
+      result-no-effect))
 
 (define (xen-corp  caster)
-  (user-cast-missile-spell caster 6 cast-kill-proc))
+  (user-cast-ranged-targeted-spell caster 6 cast-kill-proc))
 
 (define (in-mani-corp  caster)
   (let ((target (kern-ui-select-party-member)))
@@ -613,11 +615,10 @@
           (kern-obj-put-at gate loc)
           (moongate-open gate)))))
 
-(define (kal-xen-nox  caster)
-  (summon (kern-obj-get-location caster) 
-          mk-green-slime
-          (kern-being-get-current-faction caster)
-          (kern-dice-roll "1d4")))
+(define (kal-xen-nox caster)
+  (if (use-ability summon-slime kchar)
+      result-ok
+      result-no-effect))
 
 ;;----------------------------------------------------------------------------
 ;; Spell accessors

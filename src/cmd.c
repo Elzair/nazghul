@@ -2056,6 +2056,8 @@ bool cmdCastSpell(class Character * pc)
                 break;
         }
 
+        pc->decActionPoints(spell->cost);
+
 	// If the spell was mixed then remove it from inventory.
 	if (mixed)
 		player_party->takeOut(ie->type, 1);

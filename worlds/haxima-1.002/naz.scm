@@ -380,15 +380,14 @@
   (nearest-loc kobj (all-visible-terrain-of-type kobj kter)))
     
 (define (hidden? kchar)
-  (println "hidden?")
+  ;;(println "hidden?")
   ;; Just check if the 8 neighbors are all los-blocking
   (let ((loc (kern-obj-get-location kchar)))
     (foldr-rect (loc-place loc)
                 (- (loc-x loc) 1) (- (loc-y loc) 1)
                 3 3
                (lambda (val neighbor)
-                 (println neighbor " neighbor? " (equal? neighbor loc)
-                          " blocks? " (kern-place-blocks-los? neighbor))
+                 ;;(println neighbor " neighbor? " (equal? neighbor loc) " blocks? " (kern-place-blocks-los? neighbor))
                  (and val
                       (or (eq? neighbor loc)
                           (kern-place-blocks-los? neighbor))))
@@ -1159,9 +1158,9 @@
 ;; rooms. When the player enters (or re-enters) a dungeon this looks for a
 ;; monster manager object and triggers it.
 (define (on-entry-to-dungeon-room kplace kplayer)
-  (println "on-entry-to-dungeon-room")
+  ;;(println "on-entry-to-dungeon-room")
   (map (lambda (kmm)
-         (println " signal")
+         ;;(println " signal")
          (signal-kobj kmm 'on kmm nil))
        (kplace-get-objects-of-type kplace t_monman)))
        
@@ -1234,7 +1233,7 @@
   (newline))
 
 (define (is-bad-field-at? kchar loc)
-  (println "is-bad-field-at?")
+  ;;(println "is-bad-field-at?")
   (define (is-bad-field? ktype)
     (and (is-field? ktype)
          (not (is-immune-to-field? kchar ktype))))
@@ -1242,18 +1241,18 @@
             (kern-get-objects-at loc)))
 
 (define (is-bad-loc? kchar loc)
-  (println "is-bad-loc?")
+  ;;(println "is-bad-loc?")
   (or (is-bad-terrain-at? loc)
       (is-bad-field-at? kchar loc)))
 
 (define (is-good-loc? kchar loc)
-  (println "is-good-loc?")
+  ;;(println "is-good-loc?")
   (and (passable? loc kchar)
        (not (occupied? loc))
        (not (is-bad-loc? kchar loc))))
 
 (define (get-off-bad-tile? kchar)
-  (println "get-off-bad-tile")
+  ;;(println "get-off-bad-tile")
   
   (define (choose-good-tile tiles)
     ;;(display "choose-good-tile")(newline)

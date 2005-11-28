@@ -251,12 +251,12 @@
   (let ((loc (kern-obj-get-location kobj)))
     (if (not (kern-place-is-wilderness? (loc-place loc)))
         (begin
-          (if (> (kern-dice-roll "2d20") 25)
+          (if (> (kern-dice-roll "1d20") 15)
               (let ((clone (mk-npc 'green-slime
                                    (kern-char-get-level kobj))))
-                (kern-char-set-faction clone
+                (kern-being-set-base-faction clone
                                    (kern-being-get-base-faction kobj))
-                (kern-print "Slime divides!\n")
+                (kern-log-msg "Slime divides!\n")
                 (kern-obj-put-at clone (pick-loc loc clone)))
               )))))
 
@@ -367,6 +367,15 @@
 (define (make-invisible kobj)
   (kern-obj-add-effect kobj ef_permanent_invisibility nil)
   kobj)
+
+(define (apply-acid kchar)
+  (let ((arms (kern-char-get-arms kchar)))
+    (if (not (null? arms))
+        (let ((ktype (random-select arms)))
+          (kern-log-msg "Acid dissolves 1" (kern-type-get-name ktype) 
+                        " held by " (kern-char-get-name kchar))
+          (kern-char-unready kchar ktype)
+          (kern-obj-remove-from-inventory kchar ktype 1)))))
 
 ;; ----------------------------------------------------------------------------
 ;; Container traps

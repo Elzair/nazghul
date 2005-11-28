@@ -315,6 +315,7 @@ void player_party::distributeMembers(struct place *new_place, int new_x,
                 }
 	}
 
+#define CONFIG_ENABLE_ROUND_ROBIN_ON_ENTRANCE_TO_HOSTILE_PLACE
 #ifdef CONFIG_ENABLE_ROUND_ROBIN_ON_ENTRANCE_TO_HOSTILE_PLACE
         // --------------------------------------------------------------------
         // Set the party mode to "follow" by default, but if hostiles are in

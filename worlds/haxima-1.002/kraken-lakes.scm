@@ -49,6 +49,10 @@
   )
  (put (mk-door) 9 7)
  (put (mk-ladder-up 'p_great_hall 9 6) 9 9)
+ (put (spawn-pt 'yellow-slime) 11  3)
+ (put (spawn-pt 'yellow-slime)  4  6)
+ (put (spawn-pt 'yellow-slime) 10 13)
+ 
  )
 
 (kern-mk-place 

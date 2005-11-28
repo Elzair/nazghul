@@ -287,7 +287,7 @@
   )
 
 (define (simple-start kplayer)
-  (kern-obj-put-at kplayer (list p_lich_tomb 9 17)))
+  (kern-obj-put-at kplayer (list p_pools 9 9)))
       
 ;;----------------------------------------------------------------------------
 ;; To skip the extended start scene comment out this next line and uncomment
