@@ -308,7 +308,33 @@
  (put (mk-lever 'tr-be2) 17 1)
  (put (mk-lever 'tr-be3) 17 17)
  (put (mk-lever 'tr-be4) 1 17)
- )
+
+ (put (mk-ladder-up 'p_treasury2 9 9) 9 9)
+
+)
+
+;; slimes in NE corner
+(foldr-rect p_treasury 15 1 3 3 
+            (lambda (x loc) (kern-obj-put-at (spawn-pt 'green-slime) loc)) 
+            #f)
+
+;; skeletal warriors in SE corner
+(foldr-rect p_treasury 15 15 3 3 
+            (lambda (x loc) (kern-obj-put-at (spawn-pt 'skeletal-warrior) loc)) 
+            #f)
+
+;; headless in SW corner
+(foldr-rect p_treasury 1 1 3 3 
+            (lambda (x loc) (kern-obj-put-at (spawn-pt 'headless) loc)) 
+            #f)
+
+;; spiders in NW corner
+(foldr-rect p_treasury 1 15 3 3 
+            (lambda (x loc) (kern-obj-put-at (spawn-pt 'giant-spider) loc)) 
+            #f)
+
+
+
 
 (mk-dungeon-room
  'p_death_knights_hold "Death Knight's Hold"

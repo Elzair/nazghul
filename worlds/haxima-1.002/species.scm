@@ -63,7 +63,7 @@
 (mk-species 'sp_dryad        "dryad"          12 12  4 1 12 20  6 mmode-none  nil          nil      8  s_forest       nil             nil) 
 (mk-species 'sp_wolf         "wolf"            8  2 12 2  8  0  9 mmode-walk  t_fangs      nil      2  s_asleep       sound-walking   nil) 
 (mk-species 'sp_gazer        "gazer"           6 20  6 1 10 18 16 mmode-hover nil          nil      8  s_asleep       nil             nil) 
-(mk-species 'sp_headless     "headless"       12  0 10 1 14  0  4 mmode-walk  t_hands      humanoid 2  s_asleep       sound-walking   nil) 
+(mk-species 'sp_headless     "headless"       12  0 10 1 14  0  6 mmode-walk  t_hands      humanoid 2  s_asleep       sound-walking   nil) 
 (mk-species 'sp_wisp         "wisp"            2 20 16 2  8 20  9 mmode-hover nil          nil      4  nil            nil             nil) 
 (mk-species 'sp_dragon       "dragon"         20 10 10 1 30 12  9 mmode-fly   t_fangs      nil      10 nil            sound-walking   'dragon-killed) 
 (mk-species 'sp_zorn         "zorn"           10 10 10 1 10 10  9 mmode-phase t_beak       nil      4  s_asleep       sound-walking   nil) 

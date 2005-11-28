@@ -1145,6 +1145,15 @@
                            loc))))
   (foldr-rect kplace x y w h drop-web nil))
 
+;; Fill the rectangle with objects of the given type. If pred? is not null use
+;; it to filter out unsuitable locations.
+(define (rect-fill-with-npc kplace x y w h npct pred?)
+  (define (drop-obj x loc)
+    (if (or (null? pred?)
+            (pred? loc))
+        (kern-obj-put-at (kern-mk-obj ktype 1)
+                         loc)))
+(foldr-rect kplace x y w h drop-obj #f))
 
 ;; on-entry-to-dungeon-room -- generic place on-enty procedure for dungeon
 ;; rooms. When the player enters (or re-enters) a dungeon this looks for a
@@ -1290,3 +1299,11 @@
         (if (pred? loc)
             loc
             (random-loc-place-iter kplace pred? (- n 1))))))
+
+(define (is-floor? loc)
+  (let ((kter (kern-place-get-terrain loc)))
+    (or (eqv? kter t_flagstones)
+        (eqv? kter t_cobblestone))))
+
+(define (loc-is-empty? loc)
+  (null? (kern-get-objects-at loc)))

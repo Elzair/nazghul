@@ -43,6 +43,7 @@
                                           (modulo (random-next) 
                                                   9)))))
 
+
 ;;----------------------------------------------------------------------------
 ;; Corpse -- not really a container, if you search it then it sort of acts like
 ;; opening a container

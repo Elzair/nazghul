@@ -50,6 +50,7 @@
 (load "mushroom-cave.scm")
 ;;(load "kurpolis.scm")
 (load "goblin-kingdoms.scm")
+(load "treasury.scm")
 (load "bole.scm")
 (load "glasdrin.scm")
 (load "oparine.scm")
@@ -282,7 +283,7 @@
   )
 
 (define (simple-start kplayer)
-  (kern-obj-put-at kplayer (list p_death_knights_hold 0 9)))
+  (kern-obj-put-at kplayer (list p_treasury2 9 9)))
       
 ;;----------------------------------------------------------------------------
 ;; To skip the extended start scene comment out this next line and uncomment
