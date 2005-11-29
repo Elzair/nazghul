@@ -186,9 +186,21 @@
 (define (any-visible-hostiles? kchar)
   (> (length (all-visible-hostiles kchar)) 0))
 
+(define (nearest-visible-hostile kchar)
+  (nearest-obj kchar (all-visible-hostiles kchar)))
+
 ;; Find all allies
 (define (all-visible-allies kbeing)
   (kern-being-get-visible-allies kbeing))
+
+;; Count the number of visible friendlies
+(define (num-visible-allies kchar)
+  (length (all-visible-allies kchar)))
+
+;; Count the number of hostiles
+(define (num-visible-hostiles kchar)
+  (length (all-visible-hostiles kchar)))
+
 
 ;; Find all the characters in a place
 (define (all-chars kplace)
@@ -604,6 +616,7 @@
              (move (loc-x v) 0))
         (and (not (eq? 0 (loc-x v)))
              (move 0 (loc-y v))))))
+
 
 ;; ----------------------------------------------------------------------------
 ;; closest-obj -- given an origin and a list of objects, return the object from
@@ -1314,3 +1327,17 @@
 
 (define (loc-is-empty? loc)
   (null? (kern-get-objects-at loc)))
+
+(define (mean-player-party-level)
+  (let ((members (kern-party-get-members (kern-get-player))))
+    (/ (foldr (lambda (sum kchar)
+                (+ sum (kern-char-get-level kchar)))
+              0
+              members)
+       (length members))))
+
+(define (calc-level)
+  (max 0
+       (+ (mean-player-party-level)
+          (kern-dice-roll "1d5-3"))))
+

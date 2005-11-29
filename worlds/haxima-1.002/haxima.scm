@@ -31,7 +31,7 @@
  0 ; week
  0 ; day
  hour  ; hour
- minutes ; minutes(
+ minutes ; minutes
  )
 
 ;;----------------------------------------------------------------------------
@@ -287,7 +287,7 @@
   )
 
 (define (simple-start kplayer)
-  (kern-obj-put-at kplayer (list p_pools 9 9)))
+  (kern-obj-put-at kplayer (list p_hydra_fen 9 18)))
       
 ;;----------------------------------------------------------------------------
 ;; To skip the extended start scene comment out this next line and uncomment

@@ -188,3 +188,15 @@
 
 (define (is-bad-terrain? kter)
   (in-list? kter bad-terrain-list))
+
+(define inflammable-terrain-list
+  (list t_bog
+        t_deep
+        t_shallow
+        t_shoals
+        t_sunlit_deep
+        t_stars
+        ))
+
+(define (is-inflammable-terrain? kter)
+  (in-list? kter inflammable-terrain-list))

@@ -60,7 +60,7 @@
 
 ;; loc-add -- vector sum of locations (auto wraps)
 (define (loc-add . locs)
-  (println "loc-add " locs)
+  ;;(println "loc-add " locs)
   (if (null? locs)
       nil
       (loc-wrap (mk-loc (loc-place (car locs))
@@ -146,7 +146,7 @@
 
 ;; loc-smul -- scaler multiplication
 (define (loc-smul loc s)
-  (println "loc-smul " loc " " s)
+  ;;(println "loc-smul " loc " " s)
   (mk-loc (loc-place loc)
           (* (loc-x loc) s)
           (* (loc-y loc) s)))
@@ -154,7 +154,7 @@
 ;; loc-norm -- convert loc to normal form (where at least one component has
 ;; length 1)
 (define (loc-norm loc)
-  (println "loc-norm " loc)
+  ;;(println "loc-norm " loc)
   (let ((s (min (abs (loc-x loc)) 
                      (abs (loc-y loc)))))
     (if (<= s 1)
@@ -169,6 +169,14 @@
   (and (eqv? (loc-place a) (loc-place b))
        (= (loc-x a) (loc-x b))
        (= (loc-y a) (loc-y b))))
+
+;; convert loc to short directional vector
+(define (loc-to-delta loc)
+  (if (loc-zero? loc)
+      loc
+      (if (> (abs (loc-x loc)) (abs (loc-y loc)))
+          (mk-loc (loc-place loc) (if (> (loc-x loc) 0) 1 -1) 0)
+          (mk-loc (loc-place loc) 0 (if (> (loc-y loc) 0) 1  -1)))))
 
 ;; ----------------------------------------------------------------------------
 ;; loc-enum-rect -- given a rectangular region of a place return a flat list of

@@ -143,5 +143,5 @@
   (drop kchar t_dragons_blood))
 
 (define (hydra-killed kchar)
-  (kern-log-msg "With a lust spurt of acid the hydra keels over!")
+  (kern-log-msg "With a last spurt of acid the hydra keels over!")
   (drop kchar t_hydras_blood))

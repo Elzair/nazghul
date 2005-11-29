@@ -22,7 +22,7 @@
   (kern-char-dec-mana kchar (ability-mana-cost ability))
   (kern-obj-dec-ap kchar (ability-ap-cost ability))
   (let ((result (apply (ability-proc ability) (cons kchar args))))
-    (if (<= (kern-char-get-mana kchar))
+    (if (<= (kern-char-get-mana kchar) 0)
         (kern-log-msg (kern-obj-get-name kchar) " is exhausted!"))
     result))
 
@@ -220,6 +220,15 @@
                      (lambda () 'green-slime)))
 
 ;;----------------------------------------------------------------------------
+;; chomp-deck -- convert deck terrain into shallow water terrain
+(define (chomp-deck-proc kchar loc)
+  (cond ((not (eqv? (kern-place-get-terrain loc) t_deck)) #f)
+        (else
+         (kern-place-set-terrain loc t_shallow)
+         (kern-log-msg (kern-obj-get-name kchar) " chomps through the deck!")
+         #t)))
+
+;;----------------------------------------------------------------------------
 ;; Ability declarations
 ;;----------------------------------------------------------------------------
 
@@ -240,7 +249,8 @@
 (define web-spew            (mk-ability "spew web" 4 4 2 web-spew-proc))
 (define teleport            (mk-ability "teleport" 6 6 2 teleport-proc))
 (define summon-skeleton     (mk-ability "summon skeleton" 6 6 4 summon-skeleton-proc))
-(define summon-slimes       (mk-ability "summon slimes"   2 2 4 summon-slime-proc))
+(define summon-slimes       (mk-ability "summon slimes"   2 2 3 summon-slime-proc))
+(define chomp-deck          (mk-ability "chomp deck"      2 4 3 chomp-deck-proc))
 
 ;;----------------------------------------------------------------------------
 ;; Abilities listed by various attributes
@@ -253,8 +263,11 @@
         cast-energy-field))
 
 ;; ranged-spells -- damaging spells which take a target kchar as an arg.
-(define ranged-spells
+(define fireball-spell (cons cast-fireball 6))
+(define poison-missile-spell (cons cast-poison-missile 6))
+(define acid-missile-spell (cons cast-acid-missile 4))
+(define all-ranged-spells
   (list (cons cast-magic-missile 8)
-        (cons cast-poison-missile 6)
-        (cons cast-fireball 6)
+        poison-missile-spell
+        fireball-spell
         (cons cast-kill 4)))

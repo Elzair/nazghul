@@ -22,6 +22,7 @@
   "rr rr rr rr rr rr {{ {{ .. .. .. {{ {{ rr rr rr rr rr rr "
   "rr rr rr rr rr rr rr rr .. .. .. rr rr rr rr rr rr rr rr "
   )
+ (put (spawn-pt 'hydra) 9 9)
  )
 
 (mk-dungeon-room
@@ -110,8 +111,27 @@
  (list ;; objects
   (put (mk-portcullis) 31 28)
   (put (mk-portcullis) 32 28)
+  (put (mk-door) 26 31)
+  (put (mk-door) 35 29)
+  (put (mk-windowed-door) 34 31)
+  (put (mk-windowed-door) 29 31)
+
+  ;; monster generators
+  (put (mk-monman) 0 0)
+  (put (guard-pt 'headless) 3 22)
+  (put (guard-pt 'headless) 7 22)
+  (put (guard-pt 'headless) 5 21)
+  (put (guard-pt 'headless) 3 20)
+  (put (spawn-pt 'kraken) 5 9)
+  (put (spawn-pt 'sea-serpent) 18 11)
+  (put (step-pt "A yellow slime oozes up!" (list 'yellow-slime 32 11)) 33 10)
+  (put (step-pt "A yellow slime oozes up!" (list 'yellow-slime 26 3)) 26 5)
+
+  ;; put a special step trigger on the footbridge across the cistern
+  (put (mk-step-trig 'spawn-kraken-lakes-sea-serpent nil) 31 31)
+
   )
- nil     ; hooks
+ (list 'on-entry-to-dungeon-room) ; hooks
  (list ;; edge entrances
   (list north 9 37)
   (list south 29 0)

@@ -38,3 +38,7 @@
    )))
 
 
+(define (spawn-kraken-lakes-sea-serpent kbeing)
+  (kern-log-msg "Your disturb something in the water...")
+  (kern-obj-put-at (spawn-npc 'kraken 8) (mk-loc p_deepness 31 34))
+  #t)

@@ -1275,6 +1275,8 @@ void Character::addExperience(int amount)
                 if (isPlayerControlled()) {
                         mapFlash(1000);
                 }
+                setHp(getMaxHp());
+                setMana(getMaxMana());
 	}
 }
 
@@ -1418,6 +1420,7 @@ int Character::getLevel() {
 void Character::setLevel(int val) {
         assert(val>0);
         lvl = val;
+        xp = pow(2, lvl + 4);
 }
 
 bool Character::isDead() {

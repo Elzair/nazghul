@@ -22,7 +22,7 @@
 
 (mk-obj-type 't_step_trig nil nil layer-mechanism step-trig-ifc)
 
-(define (mk-step-trig proc-tag args)
+(define (mk-step-trig proc-tag . args)
   (bind (make-invisible (kern-mk-obj t_step_trig 1))
         (trig-mk proc-tag args)))
 

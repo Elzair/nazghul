@@ -46,24 +46,23 @@
          (get-hostiles-in-range kchar 1)))
 
 
-(define (use-ranged-spell-on-foe? kchar ktarg)
+(define (use-ranged-spell-on-foe? kchar ktarg spell-list)
   (let ((spell-range (random-select (filter (lambda (spell-range)
                                         (and (can-use-ability? (car spell-range)
                                                                kchar)
                                              (can-hit? kchar 
                                                        ktarg 
                                                        (cdr spell-range))))
-                                      ranged-spells))))
+                                      spell-list))))
     (if (null? spell-range)
         #f
         (use-ability (car spell-range) kchar ktarg))))
 
-(define (use-ranged-spell-on-foes? kchar)
-  ;;(display "use-ranged-spell-on-foes?")(newline)
+(define (use-ranged-spell-on-foes? kchar spell-list)
+  (println "use-ranged-spell-on-foes? spell-list:" spell-list)
   (foldr (lambda (val ktarg)
-           ;;(display "ktarg=");;(display ktarg)(newline)
            (or val
-               (use-ranged-spell-on-foe? kchar ktarg)))
+               (use-ranged-spell-on-foe? kchar ktarg spell-list)))
          #f 
          (all-visible-hostiles kchar)))
 
@@ -248,7 +247,7 @@
   (println "ai-summon")
   (println "allies=" (num-allies kchar) " foes=" (num-hostiles kchar))
   (and (can-use-ability? ability kchar)
-       (< (num-allies kchar) (* 2 (num-hostiles kchar)))
+       (< (num-visible-allies kchar) (* 2 (num-visible-hostiles kchar)))
        (use-ability ability kchar)))
 
 ;;----------------------------------------------------------------------------
@@ -258,7 +257,7 @@
   (or (std-ai kchar)
       (use-spell-on-self? kchar)
       (use-melee-spell-on-foes? kchar)
-      (use-ranged-spell-on-foes? kchar)))
+      (use-ranged-spell-on-foes? kchar all-ranged-spells)))
 
 (define (shaman-ai kchar)
   ;;(display "shaman-ai ")(dump-char kchar)
@@ -338,6 +337,45 @@
   (or (std-ai kchar)
       (ai-summon kchar summon-skeleton)
       (spell-sword-ai kchar)))
+
+;; A kraken will chomp through planking to get at its foes. If foes exist, and
+;; they are not in melee range, and the kraken cannot pathfind to them, it will
+;; attempt a directional move toward them. If the move is blocked by deck, the
+;; kraken will destroy the deck.
+(define (kraken-ai kchar)
+  ;;(display "kraken-ai:") (dump-char kchar)
+  (let ((foes (all-hostiles kchar)))
+    (if (null? foes)
+        #f
+        (let* ((kfoe (nearest-obj kchar foes))
+              (dest (kern-obj-get-location kfoe)))
+          (if (pathfind kchar dest)
+              #t
+              (let* ((cloc (kern-obj-get-location kchar))
+                     (vect (loc-to-delta (loc-diff dest cloc))))
+                ;;(println " vect:" vect)
+                (if (kern-obj-move kchar (loc-x vect) (loc-y vect))
+                    #t
+                    (let ((dest (loc-add cloc vect)))
+                      ;;(println "  dest:" dest)
+                      (and (eqv? (kern-place-get-terrain dest) t_deck)
+                           (can-use-ability? chomp-deck kchar)
+                           (use-ability chomp-deck kchar dest))))))))))
+
+;; sea-serpent-ai -- spit fireballs every once in a while
+(define (sea-serpent-ai kchar)
+  (let ((ktarg (nearest-visible-hostile kchar)))
+    (cond ((null? ktarg) #f)
+          (else
+           (and (> (kern-dice-roll "1d20") 14)
+                (use-ranged-spell-on-foes? kchar (list fireball-spell)))))))
+
+(define (hydra-ai kchar)
+  (display "hydra-ai")(dump-char kchar)
+  (or (ai-summon kchar summon-slimes)
+      (use-ranged-spell-on-foes? kchar (list poison-missile-spell
+                                             acid-missile-spell
+                                             ))))
 
 ;;-------------------> old stuff for reference:
 ;;----------------------------------------------------------------------------

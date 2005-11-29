@@ -384,23 +384,8 @@
 
 (define (spawn-pt-exec ksppt)
   (println "spawn-pt-exec")
-  (let* ((sppt (gob ksppt))
-         )
+  (let* ((sppt (gob ksppt)))
     (println " " sppt)
-
-    (define (mean-player-party-level)
-      (let ((members (kern-party-get-members (kern-get-player))))
-        (/ (foldr (lambda (sum kchar)
-                    (+ sum (kern-char-get-level kchar)))
-                  0
-                  members)
-           (length members))))
-
-    (define (calc-level)
-      (max 0
-           (+ (mean-player-party-level)
-              (kern-dice-roll "1d5-3"))))
-
     (let ((npc (spawn-npc (spawn-pt-npct-tag sppt) 
                           (calc-level))))
       (kern-obj-put-at npc
@@ -437,6 +422,52 @@
 (define (guard-pt npct-tag)
   (bind (kern-obj-set-visible (kern-mk-obj t_guard_pt 1) #f)
         (spawn-pt-mk npct-tag)))
+
+;;----------------------------------------------------------------------------
+;; step-pt -- triggered when a kchar steps on it; spawns one or more npcs at
+;; different locations and prints some flavor text
+
+(define (step-pt-mk msg time sets)
+  (list 'step-pt msg time sets))
+(define (step-pt-msg sppt) (cadr sppt))
+(define (step-pt-time sppt) (caddr sppt))
+(define (step-pt-sets sppt) (cadddr sppt))
+(define (step-pt-set-time! sppt val) (set-car! (cddr sppt) val))
+
+(define (set-npct-tag set) (car set))
+(define (set-x set) (cadr set))
+(define (set-y set) (caddr set))
+
+(define (step-pt-exec ksppt kbeing)
+  (println "step-pt-exec")
+  (let ((sppt (gob ksppt))
+        (kplace (loc-place (kern-obj-get-location ksppt))))
+    (println " sppt:" sppt)
+    (cond ((time-to-respawn? (step-pt-time sppt))
+           (kern-log-msg (step-pt-msg sppt))
+           (step-pt-set-time! sppt (kern-get-time))
+           (for-each (lambda (set)
+                       (kern-obj-put-at (spawn-npc (set-npct-tag set)
+                                                   (calc-level))
+                                        (mk-loc kplace 
+                                                (set-x set)
+                                                (set-y set))))
+                     (step-pt-sets sppt)))
+    )))
+
+(define step-pt-ifc
+  (ifc nil
+       (method 'step step-pt-exec)))
+
+(mk-obj-type 't_step_pt nil nil layer-mechanism step-pt-ifc)
+
+(define (step-pt msg . sets)
+  (bind (kern-obj-set-visible (kern-mk-obj t_step_pt 1) #f)
+        (step-pt-mk msg 
+                    (map - game-start-time
+                         (time-mk 0 0 0 1 1 1))
+                    sets)))
+  
 
 ;;----------------------------------------------------------------------------
 ;; custom-pt -- a generic 'on trigger which is run by the respawn manager

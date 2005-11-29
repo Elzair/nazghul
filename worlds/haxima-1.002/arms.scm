@@ -110,12 +110,14 @@
   (ifc '()
        (method 'hit-loc
                (lambda (kmissile kplace x y)
-                 (println "fireball-hit")
-                 (map burn
-                      (filter obj-is-char? 
-                              (kern-get-objects-at (mk-loc kplace x y))))
-                 (kern-obj-put-at (kern-mk-obj F_fire 1) 
-                                  (mk-loc kplace x y))))))
+                 ;;(println "fireball-hit")
+                 (for-each burn
+                           (filter obj-is-char? 
+                                   (kern-get-objects-at (mk-loc kplace x y))))
+                 (let ((loc (mk-loc kplace x y)))
+                   (if (not (is-inflammable-terrain? (kern-place-get-terrain loc)))
+                       (kern-obj-put-at (kern-mk-obj F_fire 1) loc)))
+                 ))))
                
 
 (define warhead-ifc

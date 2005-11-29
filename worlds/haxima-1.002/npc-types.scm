@@ -156,6 +156,7 @@
 ;; effect packages
 (define slime-effects  (list ef_poison_immunity ef_slime_split))
 (define skel-effects (list ef_poison_immunity ef_fire_immunity))
+(define hydra-effects (list ef_poison_immunity ef_grow_head))
 
 ;;----------------------------------------------------------------------------
 ;; equipment packages for different types of npcs
@@ -363,8 +364,8 @@
 (define gint-warrior           (mk-npct "a gint warrior"           sp_gint          oc_warrior s_ettin            basic-traps  gint-warrior-equip     nil           'std-ai          faction-gint         ))
 (define gint-mage              (mk-npct "a gint mage"              sp_gint          oc_wizard  s_ettin            wizard-traps wizard-equip           nil           'shaman-ai       faction-gint         ))
 (define bull                   (mk-npct "a bull"                   sp_bull          nil        s_bull             nil          nil                    nil           'animal-ai       faction-none         ))
-(define kraken                 (mk-npct "kraken"                   sp_kraken        nil        s_kraken           nil          nil                    nil           'animal-ai       faction-monster      ))
-(define sea-serpent            (mk-npct "sea serpent"              sp_sea_serpent   nil        s_sea_serpent      nil          nil                    nil           'animal-ai       faction-monster      ))
+(define kraken                 (mk-npct "kraken"                   sp_kraken        nil        s_kraken           nil          nil                    nil           'kraken-ai       faction-monster      ))
+(define sea-serpent            (mk-npct "sea serpent"              sp_sea_serpent   nil        s_sea_serpent      nil          nil                    nil           'sea-serpent-ai  faction-monster      ))
 (define dryad                  (mk-npct "dryad"                    sp_dryad         nil        s_reaper           nil          reaper-equip           nil           'spell-sword-ai  faction-monster      ))
 (define wolf                   (mk-npct "wolf"                     sp_wolf          nil        s_wolf             nil          nil                    nil           'animal-ai       faction-monster      ))
 (define gazer                  (mk-npct "gazer"                    sp_gazer         oc_wizard  s_gazer            wizard-traps nil                    nil           'spell-sword-ai  faction-monster      ))
@@ -373,7 +374,7 @@
 (define dragon                 (mk-npct "dragon"                   sp_dragon        nil        s_dragon           wizard-traps dragon-equip           nil           'std-ai          faction-monster      ))
 (define zorn                   (mk-npct "zorn"                     sp_zorn          oc_wrogue  s_zorn             wrogue-traps zorn-equip             nil           'std-ai          faction-monster      ))
 (define demon                  (mk-npct "demon"                    sp_demon         nil        s_demon            basic-traps  nil                    nil           'std-ai          faction-monster      ))
-(define hydra                  (mk-npct "hydra"                    sp_hydra         nil        s_hydra            no-traps     nil                    nil           'std-ai          faction-monster      ))
+(define hydra                  (mk-npct "hydra"                    sp_hydra         nil        s_hydra            no-traps     nil                    hydra-effects 'hydra-ai        faction-monster      ))
 (define lich                   (mk-npct "lich"                     sp_lich          oc_wizard  s_lich             wizard-traps wizard-equip           skel-effects  'spell-sword-ai  faction-monster      ))
 (define warlock                (mk-npct "warlock"                  sp_human         oc_wizard  s_wizard           wizard-traps wizard-equip           nil           'spell-sword-ai  faction-monster      ))
 (define ghast                  (mk-npct "ghast"                    sp_ghast         nil        s_ghost            nil          nil                    nil           'std-ai          faction-monster      ))

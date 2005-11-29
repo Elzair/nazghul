@@ -159,7 +159,7 @@
 (define (has-fire-immunity? kobj)
   (let ((effects (kern-obj-get-effects kobj)))
     (or (in-list? ef_fire_immunity effects)
-        (in-list? ef_temporary_fire_immunity))))
+        (in-list? ef_temporary_fire_immunity effects))))
 
 ;; ----------------------------------------------------------------------------
 ;; light
@@ -261,6 +261,16 @@
               )))))
 
 ;; ----------------------------------------------------------------------------
+;; Grow Head
+;;
+;; A special feature of the hydra species. When a hydra takes damage it gains
+;; experience, accelerating its advancement.
+;; ----------------------------------------------------------------------------
+(define (grow-head-exec fgob kobj)
+  (println "grow-head-exec")
+  (kern-char-add-experience kobj (kern-dice-roll "2d20")))
+
+;; ----------------------------------------------------------------------------
 ;; Spider Calm
 ;;
 ;; Used by the An Xen Bet spell to prevent spiders from attacking.
@@ -321,6 +331,7 @@
    (list 'ef_disease                   'disease-exec         nil                 nil              nil                 "start-of-turn-hook" "D" 0   #f  -1)
    (list 'ef_fire_immunity             nil                   nil                 nil              nil                 "nil-hook"           "F" 0   #f  -1)
    (list 'ef_temporary_fire_immunity   nil                   nil                 nil              nil                 "nil-hook"           "F" 0   #f  60)
+   (list 'ef_grow_head                 'grow-head-exec       nil                 nil              'grow-head-exec     "on-damage-hook"     ""  0   #f  -1)
    ))
 
 (map (lambda (effect) (apply mk-effect effect)) effects)
@@ -372,8 +383,8 @@
   (let ((arms (kern-char-get-arms kchar)))
     (if (not (null? arms))
         (let ((ktype (random-select arms)))
-          (kern-log-msg "Acid dissolves 1" (kern-type-get-name ktype) 
-                        " held by " (kern-char-get-name kchar))
+          (kern-log-msg "Acid dissolves 1 " (kern-type-get-name ktype) 
+                        " held by " (kern-obj-get-name kchar))
           (kern-char-unready kchar ktype)
           (kern-obj-remove-from-inventory kchar ktype 1)))))
 
@@ -395,8 +406,11 @@
   (kern-obj-apply-damage actor "ouch" 1))
 
 (define (burn obj)
+  (println "burn")
   (if (not (has-fire-immunity? obj))
-      (kern-obj-apply-damage obj "burning" (kern-dice-roll "2d3+2"))))
+      (begin
+       (println " damage")
+       (kern-obj-apply-damage obj "burning" (kern-dice-roll "2d3+2")))))
 
 (define (great-burn obj)
   (if (not (has-fire-immunity? obj))
