@@ -45,23 +45,27 @@
   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
   "rr rr rr rr {{ {{ {{ rr rr rr rr {{ {{ {{ {{ {{ rr rr rr "
   "rr rr rr {{ {{ {{ {{ {{ {{ {{ {{ {{ ~! ~! ~! {{ rr rr rr "
-  "rr {{ {{ {{ ~! ~! ~! ~! ~! ~! {{ {{ {{ {{ ~! {{ {{ rr rr "
-  "rr rr rr {{ {{ {{ {{ {{ {{ ~! ~! ~! ~! ~! ~! ~! ~! ~! ~! "
-  "rr rr rr rr {{ {{ {{ bb {{ ~! {{ {{ {{ {{ {{ ~! {{ rr rr "
-  "rr rr {{ {{ {{ ~! ~! ~! ~! ~! {{ {{ {{ {{ {{ ~! {{ rr rr "
-  "rr rr rr {{ {{ {{ {{ ~p ,, ,, ,, ~p ~! ~! ~! ~! {{ {{ rr "
+  "rr {{ {{ {{ !! !! !! !! !! !! {{ {{ {{ bb !! {{ {{ rr rr "
+  "rr rr rr {{ {{ {{ {{ {{ bb !! !! !! !! !! !! !! !! !! !! "
+  "rr rr rr rr {{ {{ {{ bb bb !! {{ {{ {{ {{ {{ !! {{ rr rr "
+  "rr rr {{ {{ {{ !! !! !! !! !! {{ {{ {{ {{ bb !! {{ rr rr "
+  "rr rr rr {{ {{ {{ {{ pp ,, ,, ,, pp !! !! !! !! {{ {{ rr "
   "rr rr rr rr rr {{ {{ ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, "
   "rr rr rr rr rr rr {{ ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, "
   "rr rr rr rr {{ {{ {{ ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, "
-  "rr rr rr {{ {{ {{ {{ ~p ,, ,, ,, ~p {{ {{ {{ {{ {{ {{ rr "
-  "rr rr {{ {{ {{ {{ {{ {{ {{ {{ {{ {{ {{ ~! ~! ~! ~! {{ rr "
-  "rr {{ {{ ~! ~! ~! ~! ~! ~! ~! ~! {{ {{ {{ {{ bb ~! {{ rr "
-  "rr rr {{ {{ {{ {{ {{ {{ {{ {{ ~! {{ {{ {{ bb {{ ~! rr rr "
-  "rr rr rr {{ {{ {{ {{ {{ {{ bb ~! ~! ~! ~! ~! ~! ~! ~! ~! "
-  "rr rr rr rr {{ {{ {{ {{ ~! ~! ~! {{ {{ {{ {{ {{ {{ rr rr "
-  "rr rr rr {{ {{ {{ {{ {{ {{ {{ {{ {{ {{ rr rr rr rr rr rr "
+  "rr rr rr {{ {{ {{ {{ pp ,, ,, ,, pp {{ {{ {{ {{ {{ {{ rr "
+  "rr rr {{ {{ {{ {{ {{ {{ {{ {{ {{ {{ {{ !! !! !! !! {{ rr "
+  "rr {{ {{ !! !! !! !! !! !! !! !! {{ {{ {{ {{ bb !! {{ rr "
+  "rr rr {{ {{ {{ {{ {{ {{ bb bb !! {{ {{ {{ bb {{ !! rr rr "
+  "rr rr rr {{ {{ {{ {{ {{ {{ bb !! !! !! !! !! !! !! !! !! "
+  "rr rr rr rr {{ {{ {{ {{ !! !! !! {{ {{ {{ {{ {{ {{ rr rr "
+  "rr rr rr bb {{ {{ {{ {{ {{ {{ {{ {{ {{ rr rr rr rr rr rr "
   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
   )
+ (put (spawn-pt 'troll) 7  4)
+ (put (spawn-pt 'troll) 14 13)
+ (put (spawn-pt 'headless) 14 9)
+ (put (spawn-pt 'headless) 14 5)
  )
 
 (mk-dungeon-room
@@ -95,6 +99,7 @@
                                      'm_deck_section)) 10 8)
   (put (mk-lever 'fb-p1) 8 3)
   (put (mk-lever 'fb-b1) 8 15)
+  (put (spawn-pt 'bandit) 8 5)
  )
 
 

@@ -287,7 +287,7 @@
   )
 
 (define (simple-start kplayer)
-  (kern-obj-put-at kplayer (list p_hydra_fen 9 18)))
+  (kern-obj-put-at kplayer (list p_fire_bridge 0 9)))
       
 ;;----------------------------------------------------------------------------
 ;; To skip the extended start scene comment out this next line and uncomment

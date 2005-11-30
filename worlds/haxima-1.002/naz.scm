@@ -1341,3 +1341,15 @@
        (+ (mean-player-party-level)
           (kern-dice-roll "1d5-3"))))
 
+(define (get-mech-at loc)
+  (let ((mechs (filter kern-obj-is-mech?
+                       (kern-get-objects-at loc))))
+    (if (null? mechs)
+        nil
+        (car mechs))))
+
+(define (handle-mech-at loc kchar)
+  (let ((kmech (get-mech-at loc)))
+    (if (null? kmech)
+        #f
+        (signal-kobj kmech 'handle kmech kchar))))
