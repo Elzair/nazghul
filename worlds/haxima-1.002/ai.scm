@@ -250,14 +250,50 @@
        (< (num-visible-allies kchar) (* 2 (num-visible-hostiles kchar)))
        (use-ability ability kchar)))
 
+(define (use-enslave? kchar)
+  (if (or (not (can-use-ability? enslave kchar))
+          (< (kern-dice-roll "1d20") 3))
+      #f
+      (let ((hostiles (filter
+                       not-disabled?
+                       (all-visible-hostiles kchar))))
+        (if (null? hostiles)
+            #f
+            (let ((ktarg (nearest-obj kchar hostiles)))
+              (if (not (can-hit? kchar ktarg (ability-range enslave)))
+                  #f
+                  (use-ability enslave kchar ktarg)
+              ))))))
+          
+(define (use-narcotize? kchar)
+  (if (or (not (can-use-ability? narcotize kchar))
+          (< (kern-dice-roll "1d20") 21)
+          #t)
+      #f
+      (let ((hostiles (filter
+                       not-disabled?
+                       (all-visible-hostiles kchar))))
+        (println " hostiles=" hostiles)
+        (if (null? hostiles)
+            #f
+            (use-ability narcotize kchar)
+            ))))
+          
+
 ;;----------------------------------------------------------------------------
 ;; spell-sword-ai -- aggressive, selfish fighter that uses magic for combat.
 (define (spell-sword-ai kchar)
-  (println "spell-sword-ai")
+  ;;(println "spell-sword-ai")
   (or (std-ai kchar)
       (use-spell-on-self? kchar)
       (use-melee-spell-on-foes? kchar)
       (use-ranged-spell-on-foes? kchar all-ranged-spells)))
+
+(define (gazer-ai kchar)
+  (display "gazer-ai")(dump-char kchar)
+  (or (std-ai kchar)
+      (use-narcotize? kchar)
+      (use-enslave? kchar)))
 
 (define (shaman-ai kchar)
   ;;(display "shaman-ai ")(dump-char kchar)

@@ -1420,7 +1420,7 @@ int Character::getLevel() {
 void Character::setLevel(int val) {
         assert(val>0);
         lvl = val;
-        xp = pow(2, lvl + 4);
+        xp = (int)pow(2, lvl + 4);
 }
 
 bool Character::isDead() {
@@ -2037,9 +2037,6 @@ void Character::charm(int newFaction)
         if (isDead())
                 return;
 
-        // Increment the faction switch.
-        factionSwitch++;
-
         // Set the temporary faction (possibly clobbering the previous one).
         tmpFaction = newFaction;
         
@@ -2058,6 +2055,11 @@ void Character::charm(int newFaction)
                 // NOTE: this needs a bit more work to be nicely done
                 // ctrl = ctrl_character_ui;
         }
+
+        // Increment the faction switch (must do this AFTER calling
+        // setControlMode())
+        factionSwitch++;
+
 }
 
 bool Character::isCharmed()

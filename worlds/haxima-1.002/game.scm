@@ -135,7 +135,6 @@
 
 ;; Damage amounts
 (define lava-damage 10)
-(define tremor-damage 10)
 
 ;; Directions (as returned by kern-ui-get-direction)
 (define northwest 0)

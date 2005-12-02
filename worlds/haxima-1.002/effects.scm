@@ -322,7 +322,7 @@
    (list 'ef_torchlight                nil                   'torchlight-apply   'torchlight-rm   'torchlight-apply   "start-of-turn-hook" "T" 0   #f  60)
    (list 'ef_great_light               nil                   'great-light-apply  'great-light-rm  'great-light-apply  "start-of-turn-hook" "L" 0   #t  120)
    (list 'ef_protection                nil                   'protection-apply   'protection-rm   'protection-apply   "start-of-turn-hook" "P" 0   #t  10)
-   (list 'ef_charm                     nil                   'charm-apply        'charm-rm        'charm-apply        "start-of-turn-hook" "C" 0   #f  10)
+   (list 'ef_charm                     nil                   'charm-apply        'charm-rm        'charm-apply        "start-of-turn-hook" "C" 0   #f   5)
    (list 'ef_invisibility              nil                   'invisibility-apply 'invisibility-rm 'invisibility-apply "start-of-turn-hook" "N" 0   #t  10)
    (list 'ef_permanent_invisibility    nil                   'invisibility-apply 'invisibility-rm 'invisibility-apply "start-of-turn-hook" "N" 0   #t  -1)
    (list 'ef_slime_split               'slime-split-exec     nil                 nil              'slime-split-exec   "on-damage-hook"     ""  0   #f  -1)
@@ -347,10 +347,27 @@
   (in-list? ef_paralyze (kern-obj-get-effects kobj)))
 
 (define (is-diseased? kobj)
-  (in-list? ef_paralyze (kern-obj-get-effects kobj)))
+  (in-list? ef_disease (kern-obj-get-effects kobj)))
 
 (define (is-asleep? kobj)
   (in-list? ef_sleep (kern-obj-get-effects kobj)))
+
+(define (is-charmed? kobj)
+  (in-list? ef_charm (kern-obj-get-effects kobj)))
+
+(define (is-disabled? kobj)
+  (let ((effects (kern-obj-get-effects kobj)))
+    (println "effects=" effects)
+    (if (null? effects)
+        #f
+        (foldr (lambda (x effect)
+                 (or x
+                     (in-list? effect effects)))
+               #f
+               (list ef_paralyze ef_sleep ef_charm ef_ensnare)))))
+
+(define (not-disabled? kobj)
+  (not (is-disabled? kobj)))
 
 ;; ----------------------------------------------------------------------------
 ;; Effect Application Procedures

@@ -35,11 +35,11 @@
       "%% %% %% bb %% %% %% %% %% .. xx ,, ,, ,, .. ,, ,, ,, ,, cc cc .. .. .. .. .. .. .. tt tt tt tt tt .. .. .. .. .. .. .. .. "
       "%% %% %% %% ~~ %% %% %% %% .. xx ,, ,, ,, ,, ,, .. .. xx .. .. cc .. .. .. .. .. .. .. tt tt tt tt tt tt tt .. .. .. bb .. "
       "%% bb %% ~~ ~~ %% %% bb .. .. .. .F .U .T .U .R .E .S xx .. .. cc .. .. .. %% %% %% .. tt tt tt tt tt tt tt tt tt .. .. .. "
-      "%% .. %% ~~ ~~ ~~ %% %% .. .. xx xx ,, ,, ,, ,, ,, xx xx .. .. cc bb .. bb %% bb %% %% .. .. tt tt tt bb tt bb tt bb .. .. "
-      "%% bb %% ~~ ~~ ~~ %% bb .. .. %% xx xx .. aa ,, xx xx .. %% .. cc .. %% %% %% %% %% %% %% .. .. tt tt tt tt tt tt .. tt tt "
-      "%% %% %% %% %% %% %% %% .. %% .. %% xx ,, ,, ,, xx %% %% %% .. .. .. %% %% %% %% %% %% %% %% .. tt bb tt tt tt tt tt tt tt "
-      "%% %% %% bb %% bb %% .. .. %% .. %% xx xx xx xx xx %% %% %% .. cc .. %% %% %% %% %% %% %% %% bb tt tt tt tt tt tt tt tt tt "
-      "%% %% %% %% %% %% %% %% %% %% %% %% %% %% %% %% %% %% %% .. .. cc .. .. %% %% %% %% %% %% %% .. .. .. tt tt tt tt tt tt tt "
+      "%% .. %% ~~ ~~ ~~ %% %% .. .. xx xx ,, ,, ,, ,, ,, xx xx .. .. cc bb .. bb %% bb %% %% .. .. tt tt tt bb tt bb tt bb .. tt "
+      "%% bb %% ~~ ~~ ~~ %% bb .. .. %% xx xx .. aa ,, xx xx .. %% .. cc .. %% %% %% %% %% %% %% .. .. tt tt tt tt tt tt tt tt tt "
+      "%% %% %% %% %% %% %% %% .. %% .. %% xx ,, ,, ,, xx %% %% %% .. .. .. %% %% %% %% %% %% %% %% .. tt bb tt tt tt tt || || || "
+      "%% %% %% bb %% bb %% .. .. %% .. %% xx xx xx xx xx %% %% %% .. cc .. %% %% %% %% %% %% %% %% bb tt tt tt tt tt || || || || "
+      "%% %% %% %% %% %% %% %% %% %% %% %% %% %% %% %% %% %% %% .. .. cc .. .. %% %% %% %% %% %% %% .. .. .. tt || || || || || || "
 ))
 
 ;;----------------------------------------------------------------------------
@@ -65,6 +65,7 @@
  (list ; objects
 
   (put (mk-ladder-down 'p_old_absalot 11 27) 2 2)
+  (put (mk-ladder-down 'p_gate_to_absalot 11 9) 40 35)
   )
 
  nil ; hooks
@@ -77,3 +78,16 @@
   )
  )
 
+;; corpses
+(put-random-stuff p_absalot
+                  (mk-rect 0 0 41 36)
+                  (lambda (loc)
+                    (or (eqv? (kern-place-get-terrain loc) t_grass)
+                        (eqv? (kern-place-get-terrain loc) t_flagstones)
+                        (eqv? (kern-place-get-terrain loc) t_bog)
+                        (eqv? (kern-place-get-terrain loc) t_cobblestone)
+                        (eqv? (kern-place-get-terrain loc) t_trees)
+                        ))
+                  (lambda (loc)
+                    (kern-obj-put-at (mk-corpse) loc))
+                  20)

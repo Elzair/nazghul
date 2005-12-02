@@ -1,14 +1,15 @@
 ;;----------------------------------------------------------------------------
 ;; Ability "class"
 ;;----------------------------------------------------------------------------
-(define (mk-ability name level mana ap proc)
-  (list name level mana ap proc))
+(define (mk-ability name level mana ap proc rng)
+  (list name level mana ap proc rng))
 
 (define (ability-name ability) (car ability))
 (define (ability-level-required ability) (cadr ability))
 (define (ability-mana-cost ability) (caddr ability))
 (define (ability-ap-cost ability) (cadddr ability))
 (define (ability-proc ability) (list-ref ability 4))
+(define (ability-range ability) (list-ref ability 5))
 
 (define (can-use-ability? ability kchar)
   (println " can-use-ability?" display ability)
@@ -215,9 +216,19 @@
                       (random-select (list 'skeletal-warrior 'skeletal-spear-thrower)))))
                     
 (define (summon-slime-proc kchar)
-  (println "summon-slime-proc")
+  ;;(println "summon-slime-proc")
   (cast-summon-proc kchar
                      (lambda () 'green-slime)))
+
+;;----------------------------------------------------------------------------
+;; enslave -- aka charm
+(define (enslave-proc kchar ktarg)
+  (kern-log-msg (kern-obj-get-name kchar)
+                " enslaves "
+                (kern-obj-get-name ktarg))
+  (kern-obj-add-effect ktarg 
+                       ef_charm 
+                       (charm-mk (kern-being-get-current-faction kchar))))
 
 ;;----------------------------------------------------------------------------
 ;; chomp-deck -- convert deck terrain into shallow water terrain
@@ -229,28 +240,48 @@
          #t)))
 
 ;;----------------------------------------------------------------------------
+;; narcotize -- mass sleep
+(define (narcotize-proc kchar)
+  (let ((hostiles (all-hostiles kchar)))
+    (cond ((null? hostiles) #f)
+          (else
+           (kern-log-msg (kern-obj-get-name kchar)
+                         " beckons slumber to its foes")
+           (map (lambda (ktarg)
+                  (if (> (- (+ (kern-dice-roll "1d20") 
+                               (kern-char-get-level kchar)) 
+                            (kern-char-get-level ktarg))
+                         16)
+                      (apply-sleep ktarg)))
+                hostiles)
+           #t))))
+
+
+;;----------------------------------------------------------------------------
 ;; Ability declarations
 ;;----------------------------------------------------------------------------
 
-(define vampiric-touch      (mk-ability "vampiric touch" 3 3 2 vampiric-touch-proc))
-(define disease-touch       (mk-ability "disease touch" 6 6 1 disease-touch-proc))
-(define disarm              (mk-ability "disarm" 4 2 2 disarm))
-(define heal-ability        (mk-ability "heal" 1 1 1 heal-proc))
-(define great-heal-ability  (mk-ability "great heal" 4 4 2 great-heal-proc))
-(define cast-fire-field     (mk-ability "cast fire field" 3 3 2 cast-fire-field-proc))
-(define cast-poison-field   (mk-ability "cast poison field" 3 3 2 cast-poison-field-proc))
-(define cast-sleep-field    (mk-ability "cast sleep field" 3 3 2 cast-sleep-field-proc))
-(define cast-energy-field   (mk-ability "cast energy field" 4 4 2 cast-energy-field-proc))
-(define cast-magic-missile  (mk-ability "cast magic missile" 1 1 1 cast-magic-missile-proc))
-(define cast-poison-missile (mk-ability "cast poison missile" 2 2 1 cast-poison-missile-proc))
-(define cast-fireball       (mk-ability "cast fireball" 3 3 1 cast-fireball-proc))
-(define cast-kill           (mk-ability "cast kill" 7 7 2 cast-kill-proc))
-(define cast-acid-missile   (mk-ability "cast acid missile" 4 4 1 cast-acid-missile-proc))
-(define web-spew            (mk-ability "spew web" 4 4 2 web-spew-proc))
-(define teleport            (mk-ability "teleport" 6 6 2 teleport-proc))
-(define summon-skeleton     (mk-ability "summon skeleton" 6 6 4 summon-skeleton-proc))
-(define summon-slimes       (mk-ability "summon slimes"   2 2 3 summon-slime-proc))
-(define chomp-deck          (mk-ability "chomp deck"      2 4 3 chomp-deck-proc))
+(define vampiric-touch      (mk-ability "vampiric touch" 3 3 2 vampiric-touch-proc 1))
+(define disease-touch       (mk-ability "disease touch" 6 6 1 disease-touch-proc 1))
+(define disarm              (mk-ability "disarm" 4 2 2 disarm 1))
+(define heal-ability        (mk-ability "heal" 1 1 1 heal-proc 2))
+(define great-heal-ability  (mk-ability "great heal" 4 4 2 great-heal-proc 2))
+(define cast-fire-field     (mk-ability "cast fire field" 3 3 2 cast-fire-field-proc 1))
+(define cast-poison-field   (mk-ability "cast poison field" 3 3 2 cast-poison-field-proc 1))
+(define cast-sleep-field    (mk-ability "cast sleep field" 3 3 2 cast-sleep-field-proc 1))
+(define cast-energy-field   (mk-ability "cast energy field" 4 4 2 cast-energy-field-proc 1))
+(define cast-magic-missile  (mk-ability "cast magic missile" 1 1 1 cast-magic-missile-proc 6))
+(define cast-poison-missile (mk-ability "cast poison missile" 2 2 1 cast-poison-missile-proc 6))
+(define cast-fireball       (mk-ability "cast fireball" 3 3 1 cast-fireball-proc 6))
+(define cast-kill           (mk-ability "cast kill" 7 7 2 cast-kill-proc 4))
+(define cast-acid-missile   (mk-ability "cast acid missile" 4 4 1 cast-acid-missile-proc 4))
+(define web-spew            (mk-ability "spew web" 4 4 2 web-spew-proc 5))
+(define teleport            (mk-ability "teleport" 6 6 2 teleport-proc 0))
+(define summon-skeleton     (mk-ability "summon skeleton" 6 6 4 summon-skeleton-proc 0))
+(define summon-slimes       (mk-ability "summon slimes"   2 2 3 summon-slime-proc 0))
+(define chomp-deck          (mk-ability "chomp deck"      2 4 3 chomp-deck-proc 1))
+(define enslave             (mk-ability "enslave"       3 4 2 enslave-proc 4))
+(define narcotize           (mk-ability "narcotize"     5 6 3 narcotize-proc 0))
 
 ;;----------------------------------------------------------------------------
 ;; Abilities listed by various attributes
