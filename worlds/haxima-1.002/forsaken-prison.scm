@@ -33,4 +33,19 @@
  (put (mk-locked-door) 5 11)
  (put (mk-locked-door) 3 9)
  (put (mk-locked-door) 5 7)
+
+ ;; prisoners
+ (put (mk-npc 'bandit 4) 5 2)
+ (put (mk-npc 'cave-goblin-berserker 4) 6 15)
+ (put (mk-npc 'troll 6) 2 9)
+ (put (mk-npc 'warlock 8) 13 16)
+ (put (mk-npc 'corrupt-halberdier 3) 17 9)
+ (put (mk-npc 'skeletal-warrior 5) 13 1)
+
+ ;; alas, expired prisoners
+ (put (mk-corpse-with-loot) 14 5)
+ (put (mk-corpse-with-loot) 12 12)
+ (put (mk-corpse-with-loot) 14 5)
+ (put (mk-corpse-with-loot) 5 6)
+
  )

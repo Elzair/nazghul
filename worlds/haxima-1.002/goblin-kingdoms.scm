@@ -21,12 +21,12 @@
       "xx xx ,, xx xx ,, ,, ,, ,, ,, ,, ,, ,, ,, xx rr rr rr rr "
       "xx xx ,, xx xx ,, ,, ,, ,, ,, ,, ,, ,, ,, xx rr rr rr rr "
       "xx xx ,, xx xx xx xx xx xx x! xx xx xx xx xx rr bb ,, rr "
-      "xx xx ,, xx xx xx .K .U .R .P .O .L .I .S xx bb bb bb ,, "
-      "xx xx ,, xx x! ,, ,, ,, ,, ,, ,, ,, ,, ,, x! bb ,, bb ,, "
-      "xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, w+ bb ,, ,, ,, "
+      "xx xx ,, xx xx .K .U .R .P .O .L .I .S xx ,, bb bb bb ,, "
+      "xx xx ,, xx x! ,, ,, ,, ,, ,, ,, ,, ,, x! bb bb ,, bb ,, "
+      "xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, w+ ,, bb ,, ,, ,, "
       "x! ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, bb ,, "
-      "xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, w+ bb bb bb ,, "
-      "xx xx ,, xx x! ,, ,, ,, ,, ,, ,, ,, ,, ,, x! bb ,, bb rr "
+      "xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, w+ bb bb bb bb ,, "
+      "xx xx ,, xx x! ,, ,, ,, ,, ,, ,, ,, ,, x! bb bb ,, bb rr "
       "xx xx ,, xx xx xx xx xx xx xx xx xx xx xx xx ,, bb rr rr "
       "xx xx ,, xx xx ,, ,, ,, ,, ,, ,, ,, ,, ,, xx rr rr rr rr "
       "xx xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx rr rr rr rr "
@@ -35,13 +35,12 @@
       "rr rr rr rr xx xx xx xx xx xx xx xx xx xx xx rr rr rr rr "
   ) 
  (put (mk-ladder-up 'p_shard 39 75) 9 10)
- (put (mk-ladder-down 'p_paladins_hold 3 6) 2 10)
  (put (mk-door) 2 8)
  (put (mk-door) 2 12)
  (put (mk-door) 4 15)
  (put (mk-door) 4 3)
  (put (mk-locked-door) 4 1)
- (put (mk-windowed-door) 14 10)
+ (put (mk-windowed-door) 13 10)
  (put (mk-chest nil (list (list 10 t_food))) 1 1)
  (put (mk-bed) 5 17)
  (put (mk-bed) 7 17)
@@ -51,9 +50,9 @@
  (put (spawn-pt 'cave-goblin-slinger) 18 7)
  (put (spawn-pt 'cave-goblin-slinger) 18 11)
  (put (spawn-pt 'cave-goblin-berserker) 15 9)
- (put (guard-pt 'crossbowman) 13 9)
- (put (guard-pt 'crossbowman) 13 11)
- (put (guard-pt 'halberdier) 11 10)
+ (put (guard-pt 'crossbowman) 12 9)
+ (put (guard-pt 'crossbowman) 12 11)
+ (put (guard-pt 'halberdier) 10 10)
  (put (mk-douglas) 9 9)
  )
 
@@ -76,9 +75,9 @@
   "rr rr {{ rr rr {{ .. .. .. {{ {{ .. .. {{ {{ {{ rr rr rr "
   "rr rr rr rr {{ {{ {{ .. .. .. .. .. {{ {{ {{ {{ rr rr rr "
   "rr rr rr rr {{ {{ {{ {{ {{ .. bb .. {{ {{ rr rr rr rr rr "
-  "rr rr rr rr rr {{ {{ {{ {{ {{ .. {{ {{ {{ {{ rr rr rr rr "
-  "rr rr rr rr rr rr rr rr {{ {{ {{ rr rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
+  "rr rr rr rr rr {{ {{ {{ {{ ,, .. .. {{ {{ {{ rr rr rr rr "
+  "rr rr rr rr rr rr rr {{ {{ .. .. {{ rr rr rr rr rr rr rr "
+  "rr rr rr rr rr rr rr {{ ,, .. .. rr rr rr rr rr rr rr rr "
   )
  (put (spawn-pt 'cave-goblin-slinger) 14 11)
  (put (spawn-pt 'cave-goblin-berserker) 15 9)
@@ -190,6 +189,34 @@
  (put (spawn-pt 'forest-goblin-stalker) 5 11)
  )
 
+(mk-dungeon-room
+ 'p_watchpoint  "Watchpoint"
+ (list
+  "rr rr rr rr rr rr rr {{ {{ ,, ,, {{ rr rr rr rr rr rr rr "
+  "rr rr rr rr rr rr rr {{ ,, ,, .. {{ rr rr rr rr rr rr rr "
+  "rr rr rr rr rr rr bb {{ ,, .. ,, .. {{ rr rr rr rr rr rr "
+  "rr rr rr rr rr rr {{ {{ ,, .. ,, bb {{ rr rr rr rr rr rr "
+  "rr rr rr rr rr bb {{ {{ .. ,, ,, .. {{ rr rr rr rr rr rr "
+  "rr rr rr rr rr {{ {{ {{ ,, .. ,, {{ {{ {{ rr rr rr rr rr "
+  "rr rr rr rr bb {{ {{ {{ oo ee oo {{ ~~ -- rr rr rr rr rr "
+  "rr rr rr rr bb bb ~~ ~~ ~~ ee ee ~~ ~~ _! rr rr rr rr rr "
+  "rr rr rr -- -- ~~ ~~ {{ oo ee ~~ {{ ~~ -- rr rr rr rr rr "
+  "rr rr rr _! -- -- {{ {{ {{ ,, {{ {{ {{ {{ {{ rr rr rr rr "
+  "rr rr rr -- -- {{ {{ bb ,, ,, ,, bb {{ {{ {{ rr rr rr rr "
+  "rr rr rr rr {{ {{ x. x. w+ d, w+ x. x. {{ {{ rr rr rr rr "
+  "rr rr rr rr {{ {{ x. .. ,, ,, ,, ,, rr .. {{ rr rr rr rr "
+  "rr rr rr rr rr {{ x. ,, ,, ,, ,, ,, x. {{ {{ rr rr rr rr "
+  "rr rr rr rr {{ {{ x. ,, ,, ,, ,, ,, x. {{ {{ rr rr rr rr "
+  "rr rr rr rr {{ {{ bb ,, ,, ,, ,, .. x. {{ rr rr rr rr rr "
+  "rr rr rr rr rr {{ x. ,, ,, ,, .. bb x. rr rr rr rr rr rr "
+  "rr rr rr rr rr rr rr x. x. && x. x. x. rr rr rr rr rr rr "
+  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
+  )
+ (put (mk-ladder-down 'p_paladins_hold 3 9) 9 14)
+ (put (guard-pt 'halberdier) 8 12)
+ (put (guard-pt 'crossbowman) 10 12)
+ )
+
 ;;
 ;; assemble the rooms into a dungeon level
 ;;
@@ -197,5 +224,5 @@
 (mk-dungeon-level 
  (list nil                 p_shamans_grove     nil                  )
  (list p_kurpolis_entrance p_goblin_crossroads p_cave_goblin_village)
- (list nil                 nil                 p_trolls_den         )
+ (list nil                 p_watchpoint        p_trolls_den         )
  )

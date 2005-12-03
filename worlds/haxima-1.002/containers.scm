@@ -82,3 +82,7 @@
 (define (mk-corpse2 loot)
   (bind (kern-mk-obj t_corpse 1)
         (corpse-mk loot)))
+
+(define (mk-corpse-with-loot)
+  (mk-corpse2 (mk-treasure-list (+ 1(modulo (random-next) 3)))))
+

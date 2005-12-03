@@ -35,20 +35,20 @@
   (say knpc "I cannot help you with that."))
 
 (define (doug-name knpc kpc)
-  (say knpc "I am Captain Douglas, commander of the Kurpolis outpost."))
+  (say knpc "I am Captain Douglas, commander of the First Kurpolis Garrison."))
 
 (define (doug-join knpc kpc)
   (say knpc "And desert my post? I think not, and don't be asking my troopers, or I'll have you expelled back to the surface."))
 
 (define (doug-job knpc kpc)
-  (say knpc "I command the outpost here in Kurpolis."))
+  (say knpc "I command this Garrison."))
 
 (define (doug-bye knpc kpc)
   (say knpc "Be careful when traveling the deeps."))
 
 ;; Special
-(define (doug-outp knpc kpc)
-  (say knpc "Glasdrin keeps this outpost here to suppress the monsters of Kurpolis. There's another outpost deeper down called Paladin's Hold."))
+(define (doug-garr knpc kpc)
+  (say knpc "Glasdrin keeps this garrison here to suppress the monsters of Kurpolis. There's a second garrison deeper down."))
 
 (define (doug-mons knpc kpc)
   (say knpc "At this level you find mostly goblins and trolls. Occasionally something worse comes up from the deeps."))
@@ -64,11 +64,18 @@
        "Sometimes I swear the rocks themselves must be giving birth to trolls."))
 
 (define (doug-wors knpc kpc)
-  (say knpc "If you want to see worse, take the ladder down to the next level."))
+  (say knpc "The worst I've ever seen? The gazer. It had a clutch of slaves, some of them paladins. Men I once knew. [He shudders and turns away]")
+  (kern-conv-end)
+  )
 
 (define (doug-kurp knpc kpc)
   (say knpc "Kurpolis is a breeding ground for monsters. We can't wipe them out, but we can keep a lid on things."))
 
+(define (doug-seco knpc kpc)
+  (say knpc "To get to the Second Garrison go east from here to the crossroads, then south and take the ladder down."))
+
+(define (doug-gaze knpc kpc)
+  (say knpc "A gazer is a creature from a nightmare. The old ones have the power to enslave other beings and force them to fight on their behalf."))
 
 (define doug-conv
   (ifc basic-conv
@@ -81,7 +88,7 @@
        (method 'name doug-name)
        (method 'join doug-join)
 
-       (method 'outp doug-outp)
+       (method 'garr doug-garr)
        (method 'mons doug-mons)
        (method 'gobl doug-gobl)
        (method 'trol doug-trol)
@@ -89,6 +96,8 @@
        (method 'kurp doug-kurp)
        (method 'hell doug-kurp)
        (method 'door doug-kurp)
+       (method 'seco doug-seco)
+       (method 'gaze doug-gaze)
        ))
 
 (define (mk-douglas)

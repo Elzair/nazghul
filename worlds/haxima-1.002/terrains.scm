@@ -28,7 +28,7 @@
    (list 't_forest_v        "forest"        pclass-forest    s_forest          1 0 nil)
    (list 't_forest          "forest"        pclass-forest    s_forest          0 0 nil)
 
-   (list 't_hills           "hills"         pclass-forest    s_hills           1 0 nil)
+   (list 't_hills           "hills"         pclass-trees     s_hills           1 0 nil)
    (list 't_mountains_v     "mountains"     pclass-mountains s_mountains       1 0 nil)
    (list 't_mountains       "mountains"     pclass-mountains s_mountains       0 0 nil)
    (list 't_fake_mountains  "mountains"     pclass-grass     s_mountains       0 0 nil)

@@ -41,7 +41,7 @@
 
 (define (alex-job knpc kpc)
   (say knpc "I am a warmage, and commander of this garrison. Do you mean to pass through our gates?")
-  (if (yes? knpc)
+  (if (yes? kpc)
       (alex-pass knpc kpc)
       (say knpc "If you change your mind and need the password come ask me.")))
 
@@ -54,9 +54,15 @@
   (say knpc "Finding reagents. Be sure and stock up before traveling any deeper!"))
 
 (define (alex-garr knpc kpc)
-  (say knpc "This garrison is on the front line in our campaign to pacify Kurpolis. Fighting is fierce at this level."))
+  (say knpc "This is one of three garrisons the militia keeps in Kurpolis. "
+       "The first garrison guards the entrance to Kurpolis to keep monsters from getting to the surface. ")
+  (prompt-for-key)
+  (say knpc "This, the second garrison, manages the prison below and keeps the undead at bay.")
+  (prompt-for-key)
+  (say knpc "The third garrison guards the way to... well, to someplace no one has any business going. ")
+  )
 
-(define (alex-leve knpc kpc)
+(define (alex-unde knpc kpc)
   (say knpc "This level of Kurpolis is an ancient keep, mostly controlled by the undead. Do you want to know what I think?")
   (if (yes? kpc)
       (say knpc "I think the undead are in the service of a lich.")
@@ -67,6 +73,17 @@
 
 (define (alex-pass knpc kpc)
   (say knpc "The password is deep."))
+
+(define (alex-thir knpc kpc)
+  (say knpc "We've lost contact with the third garrison. "
+       "One of the soldiers from that regiment is in our prison below. "
+       "I'm afraid he is quite insane. The deep places can do that to a man."))
+
+(define (alex-pris knpc kpc)
+  (say knpc "If you want to visit the prison take the ladder down."))
+
+(define (alex-firs knpc kpc)
+  (say knpc "If you want to visit the first garrison take the ladder up, then travel north and then west."))
 
 (define alex-conv
   (ifc basic-conv
@@ -80,10 +97,12 @@
        (method 'warm alex-warm)
        (method 'garr alex-garr)
        (method 'comm alex-garr)
-       (method 'leve alex-leve)
-       (method 'fier alex-leve)
        (method 'lich alex-lich)
        (method 'pass alex-pass)
+
+       (method 'thir alex-thir)
+       (method 'pris alex-pris)
+       (method 'firs alex-firs)
        ))
 
 (define (mk-alex)
