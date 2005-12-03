@@ -55,6 +55,7 @@ Uint32 Blue;
 Uint32 White;
 Uint32 Green;
 Uint32 Red;
+Uint32 Yellow;
 
 SDL_Color fontWhite = { 0xff, 0xff, 0xff, 0x00 };
 SDL_Color fontBlack = { 0, 0, 0, 0 };
@@ -67,6 +68,7 @@ void screenInitColors(void)
 	White = SDL_MapRGB(Screen->format, 0xff, 0xff, 0xff);
 	Green = SDL_MapRGB(Screen->format, 0x00, 0xff, 0x00);
 	Red = SDL_MapRGB(Screen->format, 0xff, 0x00, 0x00);
+        Yellow = SDL_MapRGB(Screen->format, 0xff, 0xff, 0x00);
 }
 
 void screenInitScreen(void)
@@ -691,15 +693,8 @@ void screenShade(SDL_Rect * area, unsigned char amount)
 	screenBlit(shade, NULL, area);
 }
 
-void screenHighlight(SDL_Rect * area)
+void screenHighlightColored(SDL_Rect * area, Uint32 color)
 {
-#if 0
-	assert(area->w <= SHADER_W);
-	assert(area->h <= SHADER_H);
-
-        SDL_SetAlpha(Highlight, SDL_SRCALPHA, 128);
-	screenBlit(Highlight, NULL, area);
-#else
         SDL_Rect edge;
 
         // ---------------------------------------------------------------------
@@ -711,7 +706,7 @@ void screenHighlight(SDL_Rect * area)
         edge.w = area->w;
         edge.h = HIGHLIGHT_THICKNESS;
 
-        screenFill(&edge, White);
+        screenFill(&edge, color);
 
         // ---------------------------------------------------------------------
         // Bottom edge
@@ -722,7 +717,7 @@ void screenHighlight(SDL_Rect * area)
         edge.w = area->w;
         edge.h = HIGHLIGHT_THICKNESS;
 
-        screenFill(&edge, White);
+        screenFill(&edge, color);
 
         // ---------------------------------------------------------------------
         // Left edge
@@ -733,7 +728,7 @@ void screenHighlight(SDL_Rect * area)
         edge.w = HIGHLIGHT_THICKNESS;
         edge.h = area->h;
 
-        screenFill(&edge, White);
+        screenFill(&edge, color);
 
         // ---------------------------------------------------------------------
         // Right edge
@@ -744,8 +739,12 @@ void screenHighlight(SDL_Rect * area)
         edge.w = HIGHLIGHT_THICKNESS;
         edge.h = area->h;
 
-        screenFill(&edge, White);
-#endif
+        screenFill(&edge, color);
+}
+
+void screenHighlight(SDL_Rect *area)
+{
+        screenHighlightColored(area, White);
 }
 
 int screenLock()

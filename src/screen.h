@@ -41,6 +41,7 @@ extern Uint32 Black;
 extern Uint32 White;
 extern Uint32 Green;
 extern Uint32 Red;
+extern Uint32 Yellow;
 
 extern SDL_Color fontWhite;
 extern SDL_Color fontBlack;
@@ -67,6 +68,7 @@ extern void screenCopy(SDL_Rect * from, SDL_Rect * to,
                        SDL_Surface * dest);
 extern void screenShade(SDL_Rect * area, unsigned char amount);
 extern void screenHighlight(SDL_Rect * area);
+extern void screenHighlightColored(SDL_Rect * area, Uint32 color);
 
 // Added for peer effect
 extern int screenLock();

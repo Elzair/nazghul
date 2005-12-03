@@ -45,6 +45,8 @@ static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
 {
         class player_party *party = (class player_party*)kh->data;
 
+        Session->subject = player_party;
+
         cmdwin_flush();
         
         G_latency_start = SDL_GetTicks();
@@ -143,6 +145,7 @@ static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
                         
         case KEY_CTRL_R:
                 cmdReload();
+                Session->subject = NULL;
                 return true;
                 break;
                         
@@ -163,6 +166,8 @@ static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
 
         /* Prep cmdwin for next prompt */
         cmdwin_clear();
+
+        Session->subject = NULL;
 
         /* Return true when done processing commands. */
         return party->isTurnEnded();
@@ -525,6 +530,20 @@ static void ctrl_attack_ui(class Character *character)
 
                         cmdwin_print("%s", target->getName());
 
+
+                        // If the npc is not hostile then get player confirmation.
+                        if (! are_hostile(character, target)) {
+                                int yesno;
+                                cmdwin_print("-attack non-hostile-<y/n>");
+                                getkey(&yesno, yesnokey);
+                                cmdwin_backspace(strlen("<y/n>"));
+                                if (yesno == 'n') {
+                                        cmdwin_print("no");
+                                        continue;
+                                }
+                                cmdwin_print("yes");
+                        }
+
                         // Strike the target
                         ctrl_do_attack(character, weapon, target, penalty);
 
@@ -644,6 +663,7 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
 
         G_latency_start = SDL_GetTicks();
 
+        Session->subject = character;
 
         /* First process commands which should not be affected by the keystroke
          * hooks. */
@@ -655,6 +675,7 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
 
         case KEY_CTRL_R:
                 cmdReload();
+                Session->subject = NULL;
                 return true;
                 break;
       
@@ -738,8 +759,10 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
         // (otherwise something like being stuck in a web can prevent a
         // user from reloading a game).
         character->runHook(OBJ_HOOK_KEYSTROKE);
-        if (character->isTurnEnded())
+        if (character->isTurnEnded()) {
+                Session->subject = NULL;
                 return true;
+        }
 
 
         switch (key) {
@@ -910,6 +933,7 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
                 cmdwin_print("%s:", character->getName());
         }
 
+        Session->subject = NULL;
         return character->isTurnEnded();
 }
 

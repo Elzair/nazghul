@@ -32,6 +32,7 @@
 #include "sky.h"
 #include "status.h"
 #include "node.h"
+#include "Being.h"
 
 /* File for quick save/reload with CTRL-q and CTRL-r */
 #define QUICKSAVE_FNAME "save.scm"
@@ -186,6 +187,16 @@ struct session {
         struct closure *camping_proc;
 
         struct node sched_chars;   /* characters with multi-place schedules */
+
+        /* This is a flat-out hack. I decided to add some things like
+         * describing if beings are hostile for the xamine command and showing
+         * red or green squares around NPCs for the attack command, and these
+         * require knowledge of a "who wants to know?" nature deep in the guts
+         * of some call stacks. So, I added this global variable. It's
+         * wrong, I know. Be careful with it. */
+        Being *subject;
+
+        char show_boxes : 1;  /* draw red/green/yellow boxes around npcs */
 };
 
 // Callback table for saving objects

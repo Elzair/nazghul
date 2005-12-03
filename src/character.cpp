@@ -1348,12 +1348,15 @@ bool Character::isShaded()
 
 void Character::describe()
 {
-        log_continue(" a level %d %s", getLevel(), species->name);
-// 	if (isvowel(species->name[0]))
-// 		log_continue("an ");
-// 	else
-// 		log_continue("a ");
-// 	log_continue("%s", species->name);
+        assert(Session->subject);
+        char *diplstr = diplomacy_string(this, Session->subject);
+        if (isvowel(diplstr[0]))
+                log_continue("an ");
+        else
+                log_continue("a ");
+        log_continue("%s level %d %s",
+                     diplstr,
+                     getLevel(), species->name);
         if (occ && occ->name)
                 log_continue(" %s", occ->name);
         if (!isVisible())

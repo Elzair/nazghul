@@ -1191,7 +1191,7 @@ int select_target(int ox, int oy, int *x, int *y, int range)
         /* initially don't shade the range unless the previous target is the
          * same as the origin (implying that there is no previous target) */
         Session->crosshair->shadeRange((*x==ox)&&(*y==oy));
-
+        Session->show_boxes = 1;
         mapSetDirty();
   
         memset(&data, 0, sizeof(data));
@@ -1205,6 +1205,7 @@ int select_target(int ox, int oy, int *x, int *y, int range)
         cmdwin_backspace(strlen("<target>"));
         eventPopKeyHandler();
   
+        Session->show_boxes = 0;
         *x = Session->crosshair->getX();
         *y = Session->crosshair->getY();
         Session->crosshair->remove();

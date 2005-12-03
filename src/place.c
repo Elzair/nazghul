@@ -321,6 +321,24 @@ static void tile_paint(struct tile *tile, int sx, int sy)
                         screenHighlight(&rect);
                 }
 
+                // Paint a red box around hostiles, green around allies, and
+                // yellow around neutrals.
+                else if (Session->show_boxes
+                         && Session->subject 
+                         && obj->getLayer() == being_layer) {
+                        SDL_Rect rect;
+                        Uint32 color = Yellow;
+                        rect.x = sx;
+                        rect.y = sy;
+                        rect.w = TILE_W;
+                        rect.h = TILE_H;
+                        if (are_allies(Session->subject, (Being*)obj))
+                                color = Green;
+                        else if (are_hostile(Session->subject, (Being*)obj))
+                                color = Red;
+                        screenHighlightColored(&rect, color);
+                }
+
 		if (sprite->faded)
 			sprite_unfade(sprite);
 	}

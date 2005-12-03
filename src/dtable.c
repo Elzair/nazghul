@@ -160,3 +160,15 @@ void dtable_dec(struct dtable *dtable, int f1, int f2)
         dtable_set(dtable, f1, f2, level-1);
 
 }
+
+extern char *dtable_describe(struct dtable *dtable, int f1, int f2)
+{
+        int level = dtable_get(dtable, f1, f2);
+        
+        if (level <= dtable->hostile)
+                return "hostile";
+        else if (level >= dtable->allies)
+                return "allied";
+        else
+                return "neutral";
+}
