@@ -157,6 +157,7 @@
 (define slime-effects  (list ef_poison_immunity ef_slime_split))
 (define skel-effects (list ef_poison_immunity ef_fire_immunity))
 (define hydra-effects (list ef_poison_immunity ef_grow_head))
+(define drag-effects (list ef_fire_immunity))
 
 ;;----------------------------------------------------------------------------
 ;; equipment packages for different types of npcs
@@ -371,7 +372,7 @@
 (define gazer                  (mk-npct "gazer"                    sp_gazer         oc_wizard  s_gazer            wizard-traps nil                    nil           'gazer-ai  faction-monster      ))
 (define headless               (mk-npct "headless"                 sp_headless      oc_warrior s_headless         basic-traps  headless-equip         nil           'std-ai          faction-monster      ))
 (define wisp                   (mk-npct "wisp"                     sp_wisp          nil        s_wisp             nil          nil                    nil           'std-ai          faction-monster      ))
-(define dragon                 (mk-npct "dragon"                   sp_dragon        nil        s_dragon           wizard-traps dragon-equip           nil           'std-ai          faction-monster      ))
+(define dragon                 (mk-npct "dragon"                   sp_dragon        nil        s_dragon           wizard-traps dragon-equip           drag-effects  'dragon-ai          faction-monster      ))
 (define zorn                   (mk-npct "zorn"                     sp_zorn          oc_wrogue  s_zorn             wrogue-traps zorn-equip             nil           'std-ai          faction-monster      ))
 (define demon                  (mk-npct "demon"                    sp_demon         nil        s_demon            basic-traps  nil                    nil           'std-ai          faction-monster      ))
 (define hydra                  (mk-npct "hydra"                    sp_hydra         nil        s_hydra            no-traps     nil                    hydra-effects 'hydra-ai        faction-monster      ))

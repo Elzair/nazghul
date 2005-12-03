@@ -47,16 +47,15 @@
 
 
 (define (use-ranged-spell-on-foe? kchar ktarg spell-list)
-  (let ((spell-range (random-select (filter (lambda (spell-range)
-                                        (and (can-use-ability? (car spell-range)
-                                                               kchar)
+  (let ((abil (random-select (filter (lambda (abil)
+                                        (and (can-use-ability? abil kchar)
                                              (can-hit? kchar 
                                                        ktarg 
-                                                       (cdr spell-range))))
+                                                       (ability-range abil))))
                                       spell-list))))
-    (if (null? spell-range)
+    (if (null? abil)
         #f
-        (use-ability (car spell-range) kchar ktarg))))
+        (use-ability abil kchar ktarg))))
 
 (define (use-ranged-spell-on-foes? kchar spell-list)
   (println "use-ranged-spell-on-foes? spell-list:" spell-list)
@@ -407,11 +406,20 @@
                 (use-ranged-spell-on-foes? kchar (list fireball-spell)))))))
 
 (define (hydra-ai kchar)
-  (display "hydra-ai")(dump-char kchar)
+  ;;(display "hydra-ai")(dump-char kchar)
   (or (ai-summon kchar summon-slimes)
       (use-ranged-spell-on-foes? kchar (list poison-missile-spell
                                              acid-missile-spell
                                              ))))
+
+(define (dragon-ai kchar)
+  (display "dragon-ai ")(dump-char kchar)
+  (or (std-ai kchar)
+      (and (> (kern-dice-roll "1d20") 14)
+           (use-ranged-spell-on-foes? kchar 
+                                      (list fireball-spell 
+                                            cast-fire-wind
+                                            )))))
 
 ;;-------------------> old stuff for reference:
 ;;----------------------------------------------------------------------------

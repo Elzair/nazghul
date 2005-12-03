@@ -180,6 +180,24 @@
                 " teleports")
   (kern-obj-relocate kchar loc nil))
 
+(define (fire-wind-proc kchar ktarg)
+  (kern-log-msg (kern-obj-get-name kchar)
+                " blasts fire at "
+                (kern-obj-get-name ktarg))
+  (define (spew-in-dir dir)
+    (define (ensnare-loc loc)
+      (kern-obj-put-at (kern-mk-obj F_fire 1) loc))
+    (let ((loc (kern-obj-get-location kchar)))
+      (cast-wind-spell2 loc
+                        ensnare-loc
+                        dir
+                        4)))
+  (let* ((v (loc-diff (kern-obj-get-location ktarg)
+                      (kern-obj-get-location kchar)))
+         (dir (loc-to-cardinal-dir v)))
+    (spew-in-dir dir)))
+
+
 ;;----------------------------------------------------------------------------
 ;; summoning
 (define (cast-summon-proc kchar gen-npct)
@@ -282,6 +300,7 @@
 (define chomp-deck          (mk-ability "chomp deck"      2 4 3 chomp-deck-proc 1))
 (define enslave             (mk-ability "enslave"       3 4 2 enslave-proc 4))
 (define narcotize           (mk-ability "narcotize"     5 6 3 narcotize-proc 0))
+(define cast-fire-wind      (mk-ability "fire wind"     1 1 2 fire-wind-proc 4))
 
 ;;----------------------------------------------------------------------------
 ;; Abilities listed by various attributes
@@ -294,11 +313,11 @@
         cast-energy-field))
 
 ;; ranged-spells -- damaging spells which take a target kchar as an arg.
-(define fireball-spell (cons cast-fireball 6))
-(define poison-missile-spell (cons cast-poison-missile 6))
-(define acid-missile-spell (cons cast-acid-missile 4))
+(define fireball-spell cast-fireball)
+(define poison-missile-spell cast-poison-missile)
+(define acid-missile-spell cons cast-acid-missile)
 (define all-ranged-spells
-  (list (cons cast-magic-missile 8)
+  (list cast-magic-missile
         poison-missile-spell
         fireball-spell
-        (cons cast-kill 4)))
+        cast-kill 4))

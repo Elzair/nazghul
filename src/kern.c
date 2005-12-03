@@ -5208,6 +5208,23 @@ KERN_API_CALL(kern_is_valid_location)
         return sc->T;
 }
 
+KERN_API_CALL(kern_terrain_blocks_los)
+{
+        struct terrain *terrain;
+
+        if (unpack(sc, &args, "p", &terrain)) {
+                rt_err("kern-terrain-blocks-los?: bad args");
+                return sc->NIL;
+        }
+
+        if(! terrain) {
+                rt_err("kern-terrain-blocks-los?: null terrain");
+                return sc->NIL;
+        }
+
+        return terrain->alpha ? sc->T : sc->F;
+}
+
 KERN_API_CALL(kern_terrain_get_pclass)
 {
         struct terrain *terrain;
@@ -5222,7 +5239,7 @@ KERN_API_CALL(kern_terrain_get_pclass)
                 return sc->NIL;
         }
 
-        return terrain->alpha ? sc->T : sc->F;
+        return scm_mk_integer(sc, terrain_pclass(terrain));
 }
 
 KERN_API_CALL(kern_terrain_set_combat_map)
@@ -7214,6 +7231,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-species-get-mp-mult", kern_species_get_mp_mult);
 
         /* kern-terrain api */
+        API_DECL(sc, "kern-terrain-blocks-los?", kern_terrain_blocks_los);
         API_DECL(sc, "kern-terrain-get-pclass", kern_terrain_get_pclass);
         API_DECL(sc, "kern-terrain-set-combat-map", kern_terrain_set_combat_map);
 
