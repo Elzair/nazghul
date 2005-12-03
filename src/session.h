@@ -214,7 +214,7 @@ typedef struct save {
 
 } save_t;
 
-extern void session_load(char *filename);
+extern int session_load(char *filename);
 extern void session_save(char *fname);
 
 // ----------------------------------------------------------------------------

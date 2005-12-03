@@ -90,6 +90,7 @@ extern void mapDetachCamera(class Object *subject);
 extern void mapSetLosStyle(char *los);
 extern void mapUpdateTile(struct place *place, int x, int y);
 extern void mapPaintDamage(int x, int y);
+extern void mapSetSelected(class Object *obj);
 
 END_DECL
 

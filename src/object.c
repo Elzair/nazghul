@@ -710,19 +710,25 @@ void Object::setPlace(struct place *place)
 
 void Object::select(bool val)
 {
+        if (val == isSelected())
+                return;
+
+        if (val) {
+                mapSetSelected(this);
+        } else if (isSelected()) {
+                mapSetSelected(NULL);
+        }
+
         selected = val;
-
-        // --------------------------------------------------------------------
-        // FIXME: instead of doing this, figure out how to just repaint the
-        // tile.
-        // --------------------------------------------------------------------
-
-        mapUpdateTile(getPlace(), getX(), getY());
+        mapUpdateTile(getPlace(), getX(), getY());        
+        //mapUpdate(0);
 }
 
 void Object::destroy()
 {
         destroyed = true;
+        if (isSelected())
+                select(false);
         remove();
 }
 

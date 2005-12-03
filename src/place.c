@@ -1644,6 +1644,10 @@ void place_exec(struct place *place)
                && ! Quit
                && ! player_party->allDead()
                && ! Reload
+               && place == Place /* otherwise projectiles and damage flashes
+                                  * from the old place are shown in the new
+                                  * place until the turn is over when the
+                                  * player does a switch */
                 ) {
 
                 /* Keep a pointer to the object in the node */

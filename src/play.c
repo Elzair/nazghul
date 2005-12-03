@@ -111,13 +111,17 @@ int G_exec_loops = 0;
 
 static void play_reload()
 {
+        int result = 0;
         tick_pause();
         log_begin("Loading from %s...", QUICKSAVE_FNAME);
         log_flush();
         log_disable();
-        session_load(QUICKSAVE_FNAME);
+        result = session_load(QUICKSAVE_FNAME);
         log_enable();
-        log_end("ok!");
+        if (result)
+                log_end("error!");
+        else
+                log_end("ok!");
         Reload = 0;
         tick_run();
         vmask_flush_all();

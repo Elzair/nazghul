@@ -100,6 +100,7 @@ static struct map {
 	char vmask[VMASK_SZ];	/* final mask used to render */
         SDL_Surface *tile_scratch_surf;
         Uint32 last_repaint;
+        class Object *selected; /* selected object -- don't shade the tile it's on */
 } Map;
 
 // The lightmap only needs to be as big as the map viewer window. Making it
@@ -332,11 +333,6 @@ static void mapMergeLightSource(struct light_source *light, struct mview *main_v
         // it yet on my slow one.
         // --------------------------------------------------------------------
 
-/*         int min_y = VMASK_H / 2 - radius; */
-/*         int max_y = VMASK_H / 2 + radius + 1; */
-/*         int min_x = VMASK_W / 2 - radius; */
-/*         int max_x = VMASK_W / 2 + radius + 1; */
-
         int min_y = 0;
         int max_y = VMASK_H;
         int min_x = 0;
@@ -365,16 +361,6 @@ static void mapMergeLightSource(struct light_source *light, struct mview *main_v
                         tmp_lmap[vmask_i] = min(light->light / D, 255);
                 }
         }
-
-/*         vmask_i = 0; */
-/*         for (y = 0; y < VMASK_H; y++) { */
-/*                 for (x = 0; x < VMASK_W; x++) { */
-/*                         printf("%c", tmp_lmap[vmask_i] ? '#' : '.'); */
-/*                         vmask_i++; */
-/*                 } */
-/*                 printf("\n"); */
-/*         } */
-
 
         // --------------------------------------------------------------------
         // Merge this source's lightmap (contained in the vmask we just built)
@@ -455,7 +441,6 @@ static void mapBuildLightMap(struct mview *view)
         }
 
 }
-
 
 static void myShadeScene(SDL_Rect *subrect)
 {
@@ -1004,6 +989,14 @@ void mapRepaintView(struct mview *view, int flags)
 		myShadeScene(&view->subrect);
 		t7 = SDL_GetTicks();
                 map_paint_cursor();
+
+                // After shading, repaint the tile with the selected object so
+                // that it shows up brightly even in darkness.
+                if (Map.selected 
+                    && Map.selected->getPlace() == Map.place)
+                        mapUpdateTile(Map.place,
+                                      Map.selected->getX(),
+                                      Map.selected->getY());
 	}
 
  done_painting_place:
@@ -1588,59 +1581,37 @@ void mapUpdateTile(struct place *place, int x, int y)
                 if (vmask[index]) {
                         place_paint_objects(place, x, y, rect.x, rect.y);
                 }
+
+                // If the selected object is not on this tile then shade it
+                if (! Map.selected
+                    || Map.selected->getPlace() != Map.place
+                    || Map.selected->getX() != x
+                    || Map.selected->getY() != y)                
+                        screenShade(&rect, LIT - lmap[index]);
+
         }
 
         if (x == Session->crosshair->getX() && y == Session->crosshair->getY())
                 map_paint_cursor();
 
+        
+        
+
         screenUpdate(&rect);
 
 }
 
-#if 0
-	// This is the original peering code which used one pixel per
-	// tile. That makes the map WAY too small. But it could be useful for a
-	// minimap so I'm keeping the code for now.
+void mapSetSelected(class Object *obj)
+{
+        if (Map.selected == obj)
+                return;
 
-	int sx, sy, mx, my, max_sx, max_sy;
-	int start_mx, start_my;
-	int center_mx, center_my;
+        if (Map.selected) {
+                obj_dec_ref(Map.selected);
+                Map.selected = NULL;
+        }
 
-	Map.peering = val;
-
-	if (!val)
-		return;
-
-	if (screenLock() < 0)
-		return;
-
-	// Find the map coordinates of the center of the viewed area.
-	class Character *leader = playerGetLeader();
-	if (leader) {
-		center_mx = leader->getX();
-		center_my = leader->getY();
-	} else {
-		center_mx = player_party->getX();
-		center_my = player_party->getY();
-	}
-
-	// Find the edges in map coordinates. Ok if negative.
-	start_my = center_my - VMASK_H / 2;
-	start_mx = center_mx - VMASK_W / 2;
-
-	// Iterate over the visible region. Paint one pixel for each tile
-	// colored according to its terrain type.
-	max_sx = Map.srect.x + Map.srect.w;
-	max_sy = Map.srect.y + Map.srect.h;
-	my = start_my;
-	for (sy = Map.srect.y; sy < max_sx; my++, sy++) {
-		mx = start_mx;
-		for (sx = Map.srect.x; sx < max_sx; mx++, sx++) {
-			screenSetPixel(sx, sy, place_get_color(Place, mx, my));
-		}
-	}
-
-	screenUnlock();
-
-	screenUpdate(&Map.srect);
-#endif
+        Map.selected = obj;
+        if (obj)
+                obj_inc_ref(obj);
+}

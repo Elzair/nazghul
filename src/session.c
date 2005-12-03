@@ -289,7 +289,7 @@ void session_del(struct session *session)
         free(session);
 }
 
-void session_load(char *filename)
+int session_load(char *filename)
 {
         scheme *sc;
         FILE *file = NULL;
@@ -308,13 +308,14 @@ void session_load(char *filename)
         if (! file) {
                 load_err("could not open script file '%s' for reading: %s",
                            filename, strerror(errno));
-                return;
+                return -1;
         }
 
         /* Create a new interpreter. */
         if (! (sc = kern_init())) {
+                load_err("could not create interpreter");
                 fclose(file);
-                return;
+                return -1;
         }
 
         /* Create a new current sesssion. */
@@ -341,7 +342,7 @@ void session_load(char *filename)
                 scheme_deinit(sc);
                 free(sc);
                 Session = old_session;
-                return;
+                return -1;
         }
 
         /* Check for stuff that needs to be there for the new session to
@@ -387,15 +388,11 @@ void session_load(char *filename)
          * and return the old one. Otherwise destroy the old session and return
          * the new one. */
         if (load_err_any()) {
-                /* 
-                 * FIXME! We're screwed here because we probably already blew
-                 * away the old player party.
-                 */
                 session_del(Session);
                 scheme_deinit(sc);
                 free(sc);
                 Session = old_session;
-                return;
+                return -1;
         }
 
         /* No errors, so it's safe to delete the old session. */
@@ -431,7 +428,7 @@ void session_load(char *filename)
 	foogodRepaint();
 	consoleRepaint();
 	statusRepaint();
-
+        return 0;
 }
 
 #define SAVE_INDENT_WIDTH 2
