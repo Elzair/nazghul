@@ -1630,14 +1630,6 @@ void combat_exit(void)
         struct place *parent = 0;
         int x, y;
 
-        // ------------------------------------------------------------
-        // Ensure all party members are removed from the current place
-        // so they don't get destroyed below.
-        // ------------------------------------------------------------
-        
-        //player_party->removeMembers();
-
-        
         // --------------------------------------------------------------------
         // Clean up the temporary combat place, if we used one. If we started
         // off in combat when we loaded this session then we need to remove

@@ -1600,9 +1600,9 @@ bool cmdTalk(Object *member)
 	log_msg("*** CONVERSATION ***");
 
         //log_begin_group();
-	log_begin("You meet ");
-	obj->describe();
-	log_end(".");
+	//log_begin("You meet ");
+	//obj->describe();
+	//log_end(".");
 
 	if (obj->getActivity() == SLEEPING ||
             ((obj->getLayer() == being_layer) &&
@@ -3099,11 +3099,11 @@ static char *cmd_help_text =
 "E)nter a town or dungeon\n"
 "F)ire a ship's cannon or other ordnance\n"
 "G)et something on the ground\n"
-"H)andle a lever or other mechanism\n"
+"H)andle a lever or mechanism\n"
 "N)ew-Order (rearrange party order)\n"
 "O)pen a chest, door or other closed object\n"
 "Q)uit and save the game\n"
-"R)eady arms for a party member\n"
+"R)eady weapons or armor\n"
 "S)earch for hidden stuff\n"
 "T)alk to somebody\n"
 "U)se an item in inventory\n"

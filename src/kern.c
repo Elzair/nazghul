@@ -2877,6 +2877,25 @@ static pointer kern_obj_set_ap(scheme *sc, pointer args)
         return sc->NIL;
 }
 
+static pointer kern_obj_set_conv(scheme *sc, pointer args)
+{
+        class Object *obj;
+        pointer conv;
+
+        if (unpack(sc, &args, "pc", &obj, &conv)) {
+                rt_err("kern-obj-set-conv: bad args");
+                return sc->NIL;
+        }
+
+        if (conv == sc->NIL) {
+                obj->setConversation(NULL);
+        } else {
+                obj->setConversation(closure_new(sc, conv));
+        }
+
+        return scm_mk_ptr(sc, obj);
+}
+
 static pointer kern_obj_set_visible(scheme *sc, pointer args)
 {
         class Object *obj;
@@ -7175,6 +7194,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-obj-remove-effect", kern_obj_remove_effect);
         API_DECL(sc, "kern-obj-remove-from-inventory", kern_obj_remove_from_inventory);
         API_DECL(sc, "kern-obj-set-ap", kern_obj_set_ap);
+        API_DECL(sc, "kern-obj-set-conv", kern_obj_set_conv);
         API_DECL(sc, "kern-obj-set-gob", kern_obj_set_gob);
         API_DECL(sc, "kern-obj-set-light", kern_obj_set_light);
         API_DECL(sc, "kern-obj-set-opacity", kern_obj_set_opacity);
