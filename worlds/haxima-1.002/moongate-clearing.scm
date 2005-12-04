@@ -1,5 +1,3 @@
-(kern-load "moongate-clearing-zones.scm")
-
 ;;----------------------------------------------------------------------------
 ;; Gregor
 ;;
@@ -42,34 +40,31 @@
     (list 10 t_food)
 
     ;; Gold
-    (list 100 t_gold_coins)
+    (list 10 t_gold_coins)
 
     ;; Reagents
-    (list 23 sulphorous_ash)
-    (list 35 ginseng)
-    (list 32 garlic)
-    (list 20 spider_silk)
-    (list 16 blood_moss)
-    (list 12 black_pearl)
-    (list  3 nightshade)
-    (list  2 mandrake)
+    (list 5 sulphorous_ash)
+    (list 5 ginseng)
+    (list 5 garlic)
+    (list 5 spider_silk)
+    (list 3 blood_moss)
+    (list 3 black_pearl)
+    (list 1 nightshade)
+    (list 1 mandrake)
     
     ;; Items
-    (list 5 t_heal_potion)
-    (list 3 t_cure_potion)
-    (list 1 t_xen_corp_scroll)
-    (list 1 t_in_mani_corp_scroll)
-    (list 5 t_torch)
-    (list 3 t_picklock)
+    (list 1 t_heal_potion)
+    (list 1 t_cure_potion)
+    (list 1 t_mana_potion)
+    (list 1 t_torch)
+    (list 1 t_picklock)
     
     ;; Arms
-    (list 1 t_shield)
-    (list 1 t_sword)
-    (list 1 t_sling)
-    (list 5 t_oil)
+    (list 1 t_dagger)
 
     ;; Hints/instructions
     (list 1 t_manual)
+    (list 1 t_letter_from_enchanter)
     )
    ))
 

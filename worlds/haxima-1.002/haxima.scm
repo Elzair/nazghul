@@ -20,7 +20,7 @@
 ;;----------------------------------------------------------------------------
 ;; Time -- this needs to be set before loading any dungeon rooms
 ;;----------------------------------------------------------------------------
-(define hour 14)
+(define hour 07)
 (define minutes 00)
 (define time-in-minutes (+ (* hour 60) minutes))
 (define game-start-time (time-mk 0 0 0 0 hour minutes))
@@ -78,6 +78,7 @@
 (load "lich-tomb.scm")
 (load "altar-room.scm")
 (load "dank-cave.scm")
+;;(load "eastpass.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Characters
@@ -101,26 +102,26 @@
  nil)                  ; readied
 
 
-;; For test
-(kern-mk-char 
- 'ch_thorald_greybeard ; tag
- "Thorald Greybeard"   ; name
- sp_human              ; species
- oc_wizard             ; occ
- s_companion_wizard    ; sprite
- faction-player        ; starting alignment
- 0 10 2                ; str/int/dex
- 0 1                   ; hp mod/mult
- 10 5                  ; mp mod/mult
- 240 0 8 8             ; hp/xp/mp/lvl
- #f                    ; dead
- nil                   ; conv
- nil                   ; sched
- nil                   ; special ai
- nil                   ; container
- ;;(list t_doom_staff)         ; readied
- nil
- )
+; ;; For test
+; (kern-mk-char 
+;  'ch_thorald_greybeard ; tag
+;  "Thorald Greybeard"   ; name
+;  sp_human              ; species
+;  oc_wizard             ; occ
+;  s_companion_wizard    ; sprite
+;  faction-player        ; starting alignment
+;  0 10 2                ; str/int/dex
+;  0 1                   ; hp mod/mult
+;  10 5                  ; mp mod/mult
+;  240 0 8 8             ; hp/xp/mp/lvl
+;  #f                    ; dead
+;  nil                   ; conv
+;  nil                   ; sched
+;  nil                   ; special ai
+;  nil                   ; container
+;  ;;(list t_doom_staff)         ; readied
+;  nil
+;  )
  
 ;;----------------------------------------------------------------------------
 ;; Player Party
@@ -130,9 +131,9 @@
  s_wanderer         ; sprite
  "Walk"                      ; movement description
  sound-walking               ; movement sound
- 10                          ; food
- 1000                           ; gold
- 0                           ; turns to next meal
+ 0                           ; food
+ 0                           ; gold
+ (* 60 60 5)                 ; turns to next meal (5 hours)
  nil                         ; formation
  m_campsite                  ; campsite map
  nil                         ; campsite formation
@@ -141,47 +142,8 @@
  (kern-mk-container
   nil ;; type
   nil ;; trap
-  ;; contents:
-  (mk-contents (add-content 1 t_wis_quas_scroll)
-               (add-content 1 t_sanct_lor_scroll)
-               (add-content 1 t_armor_leather)
-               (add-content 1 t_leather_helm)
-               (add-content 5 t_torch)
-               (add-content 1 t_sword)
-               (add-content 10 t_picklock)
-               (add-content 1 t_xen_corp_scroll)
-               (add-content 1 in_nox_por)
-               (add-content 1 t_shovel)
-               (add-content 1 t_in_ex_por_scroll)
-               (add-content 20 an_grav)
-               (add-content 1 mandrake)
-               (add-content 1 black_pearl)
-               (add-content 1 spider_silk)
-               (add-content 1 t_bow)
-               (add-content 100 t_arrow)
-               (add-content 1 t_dagger)
-               (add-content 1 t_doom_staff)
-               
-               ;; test:
-               (add-content 1 t_rune_k)
-               ;;(add-content 1 t_rune_p)
-               ;;(add-content 1 t_rune_s)
-               (add-content 1 t_rune_c)
-               (add-content 1 t_rune_l)
-               (add-content 1 t_rune_f)
-               (add-content 1 t_rune_w)
-               (add-content 1 t_rune_d)
-
-               (list 23 sulphorous_ash)
-               (list 35 ginseng)
-               (list 32 garlic)
-               (list 20 spider_silk)
-               (list 16 blood_moss)
-               (list 12 black_pearl)
-               (list  3 nightshade)
-               (list  2 mandrake)
-
-               ))
+  nil ;; contents:)
+  )
 
  nil ;; party members (should be nil for initial load file)
  )
@@ -190,7 +152,7 @@
 ;; Party members
 ;;----------------------------------------------------------------------------
 (kern-party-add-member player ch_wanderer)
-(kern-party-add-member player ch_thorald_greybeard)
+;;(kern-party-add-member player ch_thorald_greybeard)
 
 
 ;;----------------------------------------------------------------------------
@@ -287,7 +249,7 @@
   )
 
 (define (simple-start kplayer)
-  (kern-obj-put-at kplayer (list p_shard 39 80)))
+  (kern-obj-put-at kplayer (list p_moongate_clearing 11 11)))
       
 ;;----------------------------------------------------------------------------
 ;; To skip the extended start scene comment out this next line and uncomment

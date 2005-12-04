@@ -8,10 +8,10 @@
 ;;----------------------------------------------------------------------------
 ;; Schedule
 ;;----------------------------------------------------------------------------
-(define meaney-bed ph-bed1)
-(define meaney-mealplace ph-sup1)
-(define meaney-workplace ph-hall)
-(define meaney-leisureplace ph-dining)
+(define meaney-bed poorh-bed1)
+(define meaney-mealplace poorh-sup1)
+(define meaney-workplace poorh-hall)
+(define meaney-leisureplace poorh-dining)
 (kern-mk-sched 'sch_meaney
                (list 0  0 meaney-bed          "sleeping")
                (list 5  0 meaney-mealplace    "eating")

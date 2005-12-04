@@ -39,6 +39,9 @@
   (say knpc "The city of Oparine can be found in the southwest by a "
        "deep harbor."))
 
+(define (basic-fens knpc kpc)
+  (say knpc "The Fens are a swampy area in the northwest."))
+
 ;; establishments
 (define (basic-whit knpc kpc)
   (say knpc "The White Stag is in Green Tower."))
@@ -50,6 +53,12 @@
 (define (basic-rune knpc kpc)
   (say knpc "I don't know much about runes."))
 
+(define (basic-wise knpc kpc)
+  (say knpc "The Wise influence affairs in the Shard."))
+
+(define (basic-shar knpc kpc)
+  (say knpc "The Shard is what we call our world."))
+
 (define basic-conv
   (ifc '()
        ;; fundamentals
@@ -60,13 +69,16 @@
        
        ;; wise
        (method 'ench basic-ench)
+       (method 'wise basic-wise)
 
-       ;; towns
+       ;; towns & regions
        (method 'absa basic-absa)
        (method 'bole basic-bole)
        (method 'gree basic-gree)
        (method 'trig basic-trig)
        (method 'opar basic-opar)
+       (method 'fens basic-fens)
+       (method 'shar basic-shar)
 
        ;; establishments
        (method 'whit basic-whit)

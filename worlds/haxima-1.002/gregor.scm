@@ -8,7 +8,7 @@
 ;;----------------------------------------------------------------------------
 (kern-mk-sched 'sch_gregor
                (list 0  0  gh-gregors-bed   "sleeping")
-               (list 6  7  gh-graveyard     "idle")
+               (list 6  0  gh-graveyard     "idle")
                (list 7  0  mgc-roadbend     "idle")
                (list 13 0  gh-kitchen       "eating")
                )
@@ -37,6 +37,11 @@
   (say knpc "My hut's in the forest to the east. "
        "Just myself and my grandaughter living there now."))
 
+(define (gregor-ench knpc kpc)
+  (say knpc "The Enchanter? He's one of the Wise. "
+       "Take the road south and west through the pass to the town of Trigrave. "
+       "Someone there should know how to find him."))
+
 ;;----------------------------------------------------------------------------
 ;; Conv
 ;;----------------------------------------------------------------------------
@@ -55,7 +60,7 @@
        (method 'name (lambda (knpc kpc) (say knpc "Gregor's my name.")))
 
        (method 'accu (lambda (knpc kpc) 
-                       (say knpc "The Accursed trade their souls for power. "
+                       (say knpc "The Accursed? Rumour has it they trade their souls for power. "
                             "If not for the Wise they would overrun the Shard.")))     
        (method 'angr (lambda (knpc kpc) (say knpc "Just a legend. Mother of all wood spiders. "
                                              "Scares the kids, keeps them out o' the woods "
@@ -69,6 +74,7 @@
        (method 'daug (lambda (knpc kpc) (say knpc "Aye, she was a near-witch like her mother. "
                                              "Had the knack, but not enough to be among the Wise.")))
        (method 'dead gregor-dead)
+       (method 'ench gregor-ench)
        (method 'folk (lambda (knpc kpc) (say knpc "There's homesteads scattered about in "
                                              "the woods and the foothills.")))
        (method 'fore (lambda (knpc kpc) (say knpc "Stay out of the deep woods. "
@@ -92,7 +98,7 @@
        (method 'lake (lambda (knpc kpc) (say knpc "Exit this shrine and ye'll find yourself in a "
                                              "hidden valley. Head south and you'll see the Gray Lake "
                                              "to the west.")))
-       (method 'offe (lambda (knpc kpc) (say knpc "There in the corner you'll find some chests. "
+       (method 'offe (lambda (knpc kpc) (say knpc "There in the cave you'll find a chest. "
                                              "Take what's inside. Wanderers enter this world with little, "
                                              "and in the past some have done great good, "
                                              "so folks leave stuff in good will for the next one.")))

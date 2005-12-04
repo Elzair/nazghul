@@ -33,8 +33,8 @@
         )))
 
 (define (miggs-hail knpc kpc)
-  (say knpc "[You meet a large woman with a pretty face. She shyly avoids "
-       "your gaze]"))
+  (kern-print "[You meet a large woman with a pretty face. She shyly avoids "
+              "your gaze]\n"))
 
 (define (miggs-job knpc kpc)
   (say knpc "I run the the Lusty Jugs."))

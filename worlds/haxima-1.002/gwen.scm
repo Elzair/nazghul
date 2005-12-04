@@ -86,7 +86,8 @@
                (lambda (knpc kpc)
                  (kern-print "[You see an enchanting woman dressed in "
                              "gray. Belted to her waist is a long, thin "
-                             "sword.] Welcome.")))
+                             "sword.]")
+                 (say knpc "Welcome, traveler.")))
        (method 'bye (lambda (knpc kpc) (say knpc "Goodbye.")))
        (method 'job 
                (lambda (knpc kpc) 

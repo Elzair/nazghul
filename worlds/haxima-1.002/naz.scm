@@ -1199,6 +1199,25 @@
                  nil     ; edge entrances
                  ))
 
+(define (mk-tower tag name terrain . objects)
+  (kern-mk-place tag
+                 name
+                 s_keep     ; sprite
+                 (kern-mk-map nil 19 19 pal_expanded terrain)
+                 #f      ; wraps
+                 #f      ; underground
+                 #f      ; large-scale (wilderness)
+                 #f      ; tmp combat place
+                 nil     ; subplaces
+                 nil     ; neighbors
+
+                 ;; objects -- automatically add a monster manager
+                 (cons (put (mk-monman) 0 0)
+                       objects)
+                 (list 'on-entry-to-dungeon-room) ; hooks
+                 nil     ; edge entrances
+                 ))
+
 ;; mk-dungeon-level -- given a 2d list of rooms, connect them up as neighbors
 (define (mk-dungeon-level . rooms)
   (define (bind-east west-room east-room)
@@ -1330,14 +1349,16 @@
 
 (define (mean-player-party-level)
   (let ((members (kern-party-get-members (kern-get-player))))
+    (println "members:" members)
     (/ (foldr (lambda (sum kchar)
+                (println "level:" (kern-char-get-level kchar))
                 (+ sum (kern-char-get-level kchar)))
               0
               members)
        (length members))))
 
 (define (calc-level)
-  (max 0
+  (max 1
        (+ (mean-player-party-level)
           (kern-dice-roll "1d5-3"))))
 
