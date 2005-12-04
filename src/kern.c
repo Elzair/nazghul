@@ -2986,6 +2986,25 @@ static pointer kern_obj_set_gob(scheme *sc, pointer  args)
        return sc->NIL;
 }
 
+static pointer kern_obj_set_ttl(scheme *sc, pointer  args)
+{
+        Object *obj;
+        int ttl;
+
+        if (! (obj = unpack_obj(sc, &args, "kern-obj-set-ttl"))) {
+                goto done;
+        }
+
+        if (unpack(sc, &args, "d", &ttl)) {
+               rt_err("kern-obj-set-ttl: bad ttl");
+               goto done;
+        }
+
+        Object::setTTL(obj, ttl);
+ done:
+        return scm_mk_ptr(sc, obj);
+}
+
 static pointer kern_astral_body_get_gob(scheme *sc, pointer  args)
 {
         struct astral_body *astral_body;
@@ -7086,6 +7105,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-obj-set-pclass", kern_obj_set_pclass);
         API_DECL(sc, "kern-obj-set-sprite", kern_obj_set_sprite);
         API_DECL(sc, "kern-obj-set-temporary", kern_obj_set_temporary);
+        API_DECL(sc, "kern-obj-set-ttl", kern_obj_set_ttl);
         API_DECL(sc, "kern-obj-set-visible", kern_obj_set_visible);
         API_DECL(sc, "kern-obj-wander", kern_obj_wander);
 

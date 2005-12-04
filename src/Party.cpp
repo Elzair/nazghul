@@ -383,9 +383,8 @@ void Party::exec()
                         break;
 	}
 
-        /* Objects cannot save action points (but they can be in debt). */
-        if (action_points > 0)
-                action_points = 0;
+        endTurn();
+        Object::decrementTTL(this); // might destroy this!
 }
 
 

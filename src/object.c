@@ -575,7 +575,7 @@ void Object::setup()
         temporary       = false;
         forceEffect     = false;
         pclass          = PCLASS_NONE;
-        
+        ttl             = -1; // everlasting by default
         
         if (getObjectType() && ! getObjectType()->isVisible())
                 visible = 0;
@@ -744,7 +744,8 @@ void Object::exec()
         startTurn();
         if (getObjectType()->canExec())
                 getObjectType()->exec(this);
-        endTurn();
+        endTurn(); // warn: might destroy this!
+        Object::decrementTTL(this); // might destroy the object!
 }
 
 void Object::synchronize()
@@ -1966,4 +1967,50 @@ void obj_dec_ref(Object *obj)
         (obj)->refcount--;
         if (! obj->refcount)
                 delete obj;
+}
+
+int Object::getTTL(void) { return ttl; }
+
+bool Object::surreptitiouslyRemove()
+{
+        if (getPlace()==player_party->getPlace()
+            && (place_flying_distance(player_party->getPlace(),
+                                      player_party->getX(),
+                                      player_party->getY(),
+                                      getX(),
+                                      getY())
+                < player_party->getVisionRadius())
+            && place_in_los(player_party->getPlace(),
+                            player_party->getX(),
+                            player_party->getY(),
+                            getPlace(),
+                            getX(),
+                            getY())) {
+                return false;
+        }
+
+        remove();
+        return true;
+}
+
+void Object::setTTL(class Object *obj, int val)
+{
+        obj->ttl = val;
+        if (!obj->ttl) {
+                obj->surreptitiouslyRemove(); // may destroy obj!
+        }
+}
+
+void Object::decrementTTL(class Object *obj)
+{
+        // don't decrement if everlasting
+        if (-1==obj->getTTL())
+                return;
+
+        if (0==obj->getTTL()) {
+                obj->surreptitiouslyRemove(); // may destroy obj!
+                return;
+        }
+
+        obj->setTTL(obj, obj->getTTL() - 1); // may destroy obj!
 }

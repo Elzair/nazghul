@@ -365,6 +365,11 @@ class Object {
         virtual bool isPassable(int pclass);
         virtual void setPclass(int val);
         virtual int getPclass();
+
+        int getTTL(void);
+        // These two might destroy the object so make them class methods:
+        static void setTTL(class Object *obj, int val);
+        static void decrementTTL(class Object *obj);
         
         struct node *clink; // points back to node in container's list
 
@@ -435,6 +440,15 @@ class Object {
 
         // For fields, mechs and other objects that affect passability:
         int pclass;
+
+        // Time to live: if > 0, this is decremented whenever the object
+        // executes a turn. When it falls to zero the object is removed from
+        // the map, which will destroy it once nothing else references
+        // it. Defaults to -1 (ie, infinite).
+        int ttl;
+
+ private:
+        bool surreptitiouslyRemove();
 };
 
 #include "macros.h"

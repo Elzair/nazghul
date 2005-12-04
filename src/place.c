@@ -527,7 +527,7 @@ void place_del(struct place *place)
         // death so that it will be deleted when unlocked.
         // --------------------------------------------------------------------
 
-        dbg("place_del(%s)\n", place->name);
+        //dbg("place_del(%s)\n", place->name);
 
         if (place_is_locked(place)) {
                 place_mark_for_death(place);
