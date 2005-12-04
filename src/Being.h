@@ -36,10 +36,12 @@ class Being:public Object {
 	virtual ~Being();
         virtual int getCurrentFaction();
 	virtual enum layer getLayer();
+	virtual char *getName();
 
         int getBaseFaction();
         bool pathfindTo(struct place *place, int x, int y);
         void setBaseFaction(int faction);
+	void setName(char *name);
 
         // These are public because player_party::rendezvous makes heavy use of
         // them...
@@ -49,6 +51,9 @@ class Being:public Object {
       protected:
         void setDefaults();
         int baseFaction;
+
+ private:
+        char *name;
 };
 
 #endif

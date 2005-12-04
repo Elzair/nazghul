@@ -131,8 +131,7 @@ Character::Character(char *tag, char *name,
                 this->tag = NULL;
         }
 
-        this->name = strdup(name);
-        assert(this->name);
+        setName(name);
 
         plnode = NULL;
 	setPlayerControlled(false);	// by default
@@ -177,7 +176,7 @@ Character::Character(char *tag, char *name,
         setOnMap(false);
 }
 
-Character::Character():name(0), hm(0), xp(0), order(-1),
+Character::Character():hm(0), xp(0), order(-1),
                        sleeping(false),
                        ac(0), 
                        armsIndex(-1),
@@ -244,9 +243,6 @@ Character::Character():name(0), hm(0), xp(0), order(-1),
 
 Character::~Character()
 {
-	if (name)
-		free(name);
-
         obj_dec_ref_safe(container);
 
 	if (rdyArms != NULL)
@@ -1177,7 +1173,7 @@ bool Character::initCommon(void)
 }
 
 bool Character::initStock(struct species * species, struct occ * occ,
-			  struct sprite * sprite, char *name, int order)
+			  struct sprite * sprite, char *nameStr, int order)
 {
 	// This method is now only used to initialize cloned characters.
 
@@ -1190,9 +1186,7 @@ bool Character::initStock(struct species * species, struct occ * occ,
 	if (!initCommon())
 		return false;
 
-	this->name = strdup(name);
-	if (!this->name)
-		return false;
+        setName(nameStr);
 	this->order = order;
 
 	lvl = 1;		// fixme: hardcoded hack!
@@ -1389,9 +1383,6 @@ int Character::getType() {
         return CHARACTER_ID;
 }
 
-char *Character::getName() {
-        return name;
-}
 int Character::getHp() {
         return hp;
 }
@@ -1516,9 +1507,6 @@ int Character::getFleeDy() {
         return fleeY;
 }
 
-void Character::setName(char *name) {
-        this->name = strdup(name);
-}
 
 void Character::setOrder(int order) {
         this->order = order;

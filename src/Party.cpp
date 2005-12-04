@@ -658,7 +658,15 @@ struct formation *Party::get_formation()
 
 void Party::describe()
 {
-        // FIXME: need something here
+        assert(Session->subject);
+        char *diplstr = diplomacy_string(this, Session->subject);
+        if (isvowel(diplstr[0]))
+                log_continue("an ");
+        else
+                log_continue("a ");
+
+        log_continue("%s %s", diplstr, getName());
+
         if (vehicle) {
                 log_continue(" in ");
                 vehicle->describe();
@@ -743,15 +751,6 @@ void Party::switchOrder(class Character *ch1, class Character *ch2)
         ch1->setOrder(ch2->getOrder());
         ch2->setOrder(tmp);
 }
-
-char *Party::getName()
-{
-        return Object::getName();
-}
-
-// --------------------------------------------------------------------
-// Wherever the party is, there shall the members be also.
-// --------------------------------------------------------------------
 
 void Party::setPlace(struct place *place)
 {

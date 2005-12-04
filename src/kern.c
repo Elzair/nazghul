@@ -5884,16 +5884,36 @@ KERN_API_CALL(kern_being_set_base_faction)
         class Being *being;
         int faction;
 
-        being = (class Character*)unpack_obj(sc, &args, "kern-being-set-base-faction");
+        being = (class Being*)unpack_obj(sc, &args, "kern-being-set-base-faction");
         if (!being)
                 goto done;
 
         if (unpack(sc, &args, "d", &faction)) {
-                rt_err("kern-being-set-base-faction:<faction>: bad arg");
+                rt_err("kern-being-set-base-faction: bad arg");
                 goto done;
         }
 
         being->setBaseFaction(faction);
+ done:
+        return scm_mk_ptr(sc, being);
+
+}
+
+KERN_API_CALL(kern_being_set_name)
+{
+        class Being *being;
+        char *val;
+
+        being = (class Being*)unpack_obj(sc, &args, "kern-being-set-name");
+        if (!being)
+                goto done;
+
+        if (unpack(sc, &args, "s", &val)) {
+                rt_err("kern-being-set-name: bad arg");
+                goto done;
+        }
+
+        being->setName(val);
  done:
         return scm_mk_ptr(sc, being);
 
@@ -6986,6 +7006,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-being-get-visible-tiles", kern_being_get_visible_tiles);
         API_DECL(sc, "kern-being-is-hostile?", kern_being_is_hostile);
         API_DECL(sc, "kern-being-is-ally?", kern_being_is_ally);
+        API_DECL(sc, "kern-being-set-name", kern_being_set_name);
         API_DECL(sc, "kern-being-pathfind-to", kern_being_pathfind_to);
         API_DECL(sc, "kern-being-set-base-faction", kern_being_set_base_faction);
 

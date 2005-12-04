@@ -31,6 +31,7 @@ Being::Being(class ObjectType *type)
 
 void Being::setDefaults()
 {
+        name = NULL;
         cachedPath = NULL;
         cachedPathPlace = NULL;
         baseFaction = INVALID_FACTION;
@@ -40,6 +41,8 @@ Being::~Being()
 {
         if (cachedPath)
                 astar_path_destroy(cachedPath);
+        if (name)
+                free(name);
 }
 
 void Being::setBaseFaction(int faction)
@@ -246,3 +249,19 @@ bool Being::pathfindTo(struct place *destplace, int destx, int desty)
         return false;
 }
 
+char *Being::getName() 
+{
+        if (name)
+                return name;
+        return "<no name>";
+}
+
+void Being::setName(char *val) 
+{
+        if (val)
+                name = strdup(val);
+        else if (name) {
+                free(name);
+                name = NULL;
+        }
+}

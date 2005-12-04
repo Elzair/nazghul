@@ -55,7 +55,6 @@ class Party:public Being {
 	virtual void disembark();
         virtual void distributeMembers();
 	virtual void exec();
-        virtual char *getName(void);
 	virtual bool joinPlayer(void);
         virtual bool removeEffect(struct effect *effect);
 	virtual void forEachMember(bool (*fx) (class Character *, void *), 

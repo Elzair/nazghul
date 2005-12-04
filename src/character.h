@@ -77,7 +77,6 @@ class Character:public Being {
         int getToHitPenalty();
         virtual class Party * getParty();
 	virtual int getType();
-	virtual char *getName();
 	int getHp();
 	void setHp(int hp);
 	int getMana();
@@ -142,7 +141,6 @@ class Character:public Being {
         virtual void setDefaultCondition();
         virtual void setInventoryContainer(class Container *container);
         virtual void setLeader(bool val);
-	virtual void setName(char *name);
         virtual void setSchedule(struct sched *sched);
         virtual void setSolo(bool val);
 	virtual void setOrder(int order);
@@ -228,7 +226,6 @@ class Character:public Being {
 	bool isAttackTargetInRange();
         void getAppointment();
         
-	char *name;
 	int hm;
 
         // -------------------------------------------------
