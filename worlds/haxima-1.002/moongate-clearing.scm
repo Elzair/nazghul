@@ -4,7 +4,6 @@
 ;; Gregor is one of the first characters the player will meet. He starts out
 ;; in the moongate clearing in the shrine room.
 ;;----------------------------------------------------------------------------
-(kern-load "gregor.scm")
 (bind 
  (kern-mk-char 'ch_gregor ; tag
                "Gregor"              ; name

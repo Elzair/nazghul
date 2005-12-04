@@ -107,6 +107,10 @@
 (define faction-gint          9)
 (define faction-demon         10)
 (define faction-forest-goblin 11)
+(define faction-green-tower   faction-men)
+(define faction-glasdrin      faction-men)
+(define faction-oparine       faction-men)
+(define faction-trigrave      faction-men)
 
 ;; Layers (must match object.h)
 (define layer-none       0)

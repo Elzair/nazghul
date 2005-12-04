@@ -300,7 +300,7 @@
 (define chomp-deck          (mk-ability "chomp deck"      2 4 3 chomp-deck-proc 1))
 (define enslave             (mk-ability "enslave"       3 4 2 enslave-proc 4))
 (define narcotize           (mk-ability "narcotize"     5 6 3 narcotize-proc 0))
-(define cast-fire-wind      (mk-ability "fire wind"     1 1 2 fire-wind-proc 4))
+(define cast-fire-wind      (mk-ability "fire wind"     6 6 2 fire-wind-proc 4))
 
 ;;----------------------------------------------------------------------------
 ;; Abilities listed by various attributes
