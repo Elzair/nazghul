@@ -552,22 +552,6 @@ struct sprite *player_party::getSprite(void)
 	return sprite;
 }
 
-static bool member_find_slowest(class Character *character, void *data)
-{
-        *((int*)data) = min(*((int*)data), character->getSpeed());
-        return false;
-}
-
-int player_party::getSpeed(void)
-{
-        int speed = 0x7fffffff;
-	if (vehicle) {
-		return vehicle->getSpeed();
-	}
-        forEachMember(&member_find_slowest, &speed);
-	return speed;
-}
-
 char *player_party::get_movement_description(void)
 {
 	if (!vehicle)

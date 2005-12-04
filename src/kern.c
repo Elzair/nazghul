@@ -256,11 +256,6 @@ static void occ_dtor(void *val)
         occ_unref((struct occ*)val);
 }
 
-static void party_dtor(void *val)
-{
-        delete (class PartyType*)val;
-}
-
 static void arms_type_dtor(void *val)
 {
         delete (class ArmsType *)val;
@@ -1215,74 +1210,6 @@ KERN_API_CALL(kern_mk_place)
         return sc->NIL;
 }
 
-static pointer kern_mk_party_type(scheme *sc, pointer args)
-{
-        class PartyType *party;
-        struct sprite *sprite;
-        char *tag = TAG_UNK, *name;
-        struct formation *formation;
-        pointer groups;
-        pointer ret;
-        int count;
-        
-        if (unpack(sc, &args, "yspp", &tag, &name, &sprite, &formation)) {
-                load_err("kern-mk-party %s: bad args", tag);
-                return sc->NIL;
-        }
-
-        party = new PartyType(tag, name, sprite);
-        party->formation = formation;
-
-        groups = scm_car(sc, args);
-        if (! scm_is_pair(sc, groups)) {
-                load_err("kern-mk-party %s: no groups", tag);
-                goto abort;
-        }
-
-        count = 0;
-        while (scm_is_pair(sc, groups)) {
-
-                struct species *species;
-                char *dice;
-                pointer group;
-                pointer factory;
-
-                group = scm_car(sc, groups);
-                groups = scm_cdr(sc, groups);
-
-                if (unpack(sc, &group, "ppsc", &species, &sprite, &dice,
-                           &factory)) {
-                        load_err("kern-mk-party %s: error in group list", tag);
-                        goto abort;
-                }
-
-                if (!dice_valid(dice)) {
-                        load_err("kern-mk-party %s: bad dice format '%s'", 
-                                 dice);
-                        goto abort;
-                }
-
-                if (factory == sc->NIL) {
-                        load_err("kern-mk-party %s: nil factory in group %d",
-                                 tag, count);
-                        goto abort;
-                }
-
-                party->addGroup(species, sprite, dice, 
-                                closure_new(sc, factory));
-                count++;
-        }
-        
-        session_add(Session, party, party_dtor, NULL, NULL);
-        ret = scm_mk_ptr(sc, party);
-        scm_define(sc, tag, ret);
-        return ret;
-
- abort:
-        delete party;
-        return sc->NIL;
-}
-
 static bool more_args(scheme *sc, pointer args, char *func, char *tag, 
                      int argno)
 {
@@ -1765,50 +1692,9 @@ static pointer kern_mk_field(scheme *sc, pointer args)
 static pointer kern_mk_party(scheme *sc, pointer args)
 {
         class Party *obj;
-        class PartyType *type = 0;
-        int faction;
-        class Vehicle *vehicle;
 
-        if (unpack(sc, &args, "pdp", &type, &faction, &vehicle)) {
-                load_err("kern-mk-party: bad args");
-                return sc->NIL;
-        }
-
-        if (!type) {
-                load_err("kern-mk-party: null type");
-                return sc->NIL;
-        }
-
-        obj = new Party(type, faction, vehicle);
+        obj = new Party();
         assert(obj);
-
-        return scm_mk_ptr(sc, obj);
-}
-
-/*
- * kern_mk_lazy_party - create a party which uses a script closure to generate
- * its members instead of a party type
- */
-static pointer kern_mk_lazy_party(scheme *sc, pointer args)
-{
-        class Party *obj;
-        int faction;
-        class Vehicle *vehicle;
-        pointer factory;
-
-        if (unpack(sc, &args, "cdp", &factory, &faction, &vehicle)) {
-                load_err("kern-mk-lazy-party: bad args");
-                return sc->NIL;
-        }
-
-        if (factory == sc->NIL) {
-                load_err("kern-mk-lazy-party: nil factory");
-                return sc->NIL;
-        }
-
-        obj = new Party(closure_new(sc, factory), faction, vehicle);
-        assert(obj);
-
 
         return scm_mk_ptr(sc, obj);
 }
@@ -7140,7 +7026,6 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-mk-occ", kern_mk_occ);
         API_DECL(sc, "kern-mk-palette", kern_mk_palette);
         API_DECL(sc, "kern-mk-party", kern_mk_party);
-        API_DECL(sc, "kern-mk-party-type", kern_mk_party_type);
         API_DECL(sc, "kern-mk-place", kern_mk_place);
         API_DECL(sc, "kern-mk-player", kern_mk_player);
         API_DECL(sc, "kern-mk-ptable", kern_mk_ptable);

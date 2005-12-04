@@ -86,7 +86,6 @@ class player_party : public Party {
         virtual void describe();
         virtual void exec();
         virtual void damage(int amount);
-        virtual int getSpeed(void);
         virtual void decActionPoints(int points);
         virtual void beginResting(int hours);
         virtual bool isResting();

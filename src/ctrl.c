@@ -209,7 +209,7 @@ void ctrl_wander(class Object *object)
 	}
 }
 
-static void ctrl_work(class Party *party)
+void ctrl_party_ai(class Party *party)
 {
 	int d;
 
@@ -1320,21 +1320,6 @@ void ctrl_character_ui(class Character *character)
         G_turnaround_start = SDL_GetTicks();
         eventPopKeyHandler();
         mapUpdate(REPAINT_IF_DIRTY);
-}
-
-
-void ctrl_party_ai(class Party *party)
-{
-        switch (party->getActivity()) {
-        case SLEEPING:
-        case EATING:
-                break;
-        default:
-        case WORKING:
-                ctrl_work(party);
-                break;
-        }
-
 }
 
 void ctrl_party_ui(class player_party *party)

@@ -38,6 +38,7 @@
 #include "cmd.h"
 #include "cmdwin.h"
 #include "factions.h"
+#include "sprite.h"
 
 #include <stdio.h>
 
@@ -50,193 +51,22 @@
                 (coord) = 0; \
 }
 
-// --------------------------------------------------------------------------
-//
-// PartyType
-//
-// --------------------------------------------------------------------------
-
-PartyType::PartyType()
-{
-        setup();
-}
-PartyType::PartyType(char *tag, char *name, struct sprite *sprite)
-        : ObjectType(tag, name, sprite, being_layer)
-{
-        setup();
-}
-
-void PartyType::setup()
-{
-        list_init(&groups);
-        sleep_sprite = NULL;
-        pmask = 0xff;
-        vrad = 0;
-        visible = false;
-        speed = 0x7fffffff;
-}
-
-PartyType::~PartyType()
-{
-        i_group = groups.next;
-        while (i_group != &groups) {
-                struct group *info = outcast(i_group, struct group, list);
-                i_group = i_group->next;
-                if (info->dice)
-                        free(info->dice);
-                if (info->factory)
-                        closure_unref(info->factory);
-                delete info;
-        }
-}
-
-struct group *PartyType::enumerateGroups(void)
-{
-	i_group = &groups;
-	return getNextGroup();
-}
-
-struct group *PartyType::getNextGroup(void)
-{
-	i_group = i_group->next;
-	if (i_group != &groups)
-                return outcast(i_group, struct group, list);
-	return NULL;
-}
-
-class Object *PartyType::createInstance()
-{
-	class Party *obj = new Party();
-	if (!obj)
-                return NULL;
-
-        obj->init(this);
-
-	return obj;
-}
-
-
-bool PartyType::isType(int classID)
-{
-        return (classID == PARTY_TYPE_ID);
-}
-
-int PartyType::getType()
-{
-        return PARTY_TYPE_ID;
-}
-
-int PartyType::getVisionRadius()
-{
-        return vrad;
-}
-
-bool PartyType::isVisible()
-{
-        return visible;
-}
-
-void PartyType::addGroup(struct species *species, struct sprite *sprite,
-                         char *dice, struct closure *factory)
-{
-        struct group *group;
-        
-        /* assumptions */
-        assert(factory);
-        assert(species);
-        assert(sprite);
-        assert(dice);
-
-        /* create the group */
-        group = new struct group;
-        assert(group);
-        list_init(&group->list);
-        group->species = species;
-        group->sprite = sprite;
-        group->dice = strdup(dice);
-        group->factory = factory;        
-        if (factory)
-                closure_ref(factory);
-
-        /* add it to the list */
-        list_add(&groups, &group->list);
-
-        /* update party type vars */
-        vrad = max(vrad, species->vr);
-        visible = species->visible || visible;
-        speed = min(speed, species->spd);
-}
-
-// --------------------------------------------------------------------------
-//
-// Party
-//
-// --------------------------------------------------------------------------
+// Convenience macro for iterating over party members:
+#define FOR_EACH_MEMBER(e,c)                                               \
+   for ((e) = members.next, (c) = (class Character *)(e)->ptr;             \
+        (e) != &members;                                                   \
+        (e) = (e)->next, (c) = (class Character *)(e)->ptr)
 
 
 Party::Party()
+        : vehicle(NULL)
+          , size(0)
+          , formation(NULL)
+          , wandering(false)
+          , ctrl(ctrl_party_ai)
 {
-        setup();
-}
-
-Party::Party(class PartyType *type, int faction, class Vehicle *_vehicle)
-        : Being(type)
-{
-        setup();
-        
-        setBaseFaction(faction);
-
-        // Vehicle
-        if (!_vehicle) {
-                vehicle = NULL;
-        } else {
-                vehicle = _vehicle;
-                vehicle->occupant = this;
-                obj_inc_ref(vehicle);
-        }
-
-        // Create the party members.
-        createMembers();
-}
-
-Party::Party(struct closure *clxFactory, int faction, class Vehicle *_vehicle)
-        : Being(type)
-{
-        /* WARN: still need a party type for some things; this change is in
-         * progress. */
-        assert(false);
-
-        setup();
-        
-        setBaseFaction(faction);
-
-        // Vehicle
-        if (!_vehicle) {
-                vehicle = NULL;
-        } else {
-                vehicle = _vehicle;
-                vehicle->occupant = this;
-        }
-
-        // Create the party members.
-        createMembers();
-}
-
-void Party::setup()
-{
-	act = WORKING;
-	fdx = 0;
-	fdy = 0;
-	size = 0;
-	isWrapper = false;
 	node_init(&members);
-        n_members = 0;
-	formation = NULL;
-        wandering = false;
         memset(&pinfo, 0, sizeof(pinfo));
-        ctrl = ctrl_party_ai;
-        vehicle = NULL;
-        factory = NULL;
 }
 
 static bool party_remove_member(class Character *ch, void *data)
@@ -251,12 +81,11 @@ Party::~Party()
          * other container references them then they will be automatically
          * destoyed. */
         forEachMember(party_remove_member, this);
-        closure_unref_safe(factory);
 }
 
 bool Party::isType(int classID)
 {
-        if (classID == PARTY_ID)
+        return (classID == PARTY_ID);
                 return true;
         return Object::isType(classID);
 }
@@ -266,31 +95,20 @@ int Party::getType()
         return PARTY_ID;
 }
 
-class PartyType *Party::getObjectType()
-{
-        return (class PartyType *) Object::getObjectType();
-}
-
 int Party::getVisionRadius()
 {
-        return getObjectType()->getVisionRadius();
-}
+        int maxVal=0;
+        struct node *entry;
+        class Character *member;
 
-void Party::init(int x, int y, struct place *place, class PartyType * type)
-{
-        Object::init(x, y, place, type);
-}
+        FOR_EACH_MEMBER(entry, member) {
+                if (!member->isDead()) {
+                        int val  = member->getVisionRadius();
+                        maxVal = max(val, maxVal);
+                }
+        }
 
-void Party::setFleeVector(int x, int y)
-{
-        fdx = x;
-        fdy = y;
-}
-
-void Party::getFleeVector(int *x, int *y)
-{
-        *x = fdx;
-        *y = fdy;
+        return maxVal;
 }
 
 int Party::getSize(void)
@@ -423,8 +241,7 @@ MoveResult Party::move(int dx, int dy)
 
 	/* Check passability */
 	if (!place_is_passable(oldplace, newx, newy, this,
-                               PFLAG_MOVEATTEMPT |
-			       (act == COMMUTING ? PFLAG_IGNOREMECHS : 0))) {
+                               PFLAG_MOVEATTEMPT)) {
 		return WasImpassable;
 	}
 
@@ -571,55 +388,6 @@ void Party::exec()
                 action_points = 0;
 }
 
-void Party::init(class PartyType * type)
-{
-	Object::init(type);
-}
-
-bool Party::createMembers(void)
-{
-	int order = 0;
-	class PartyType *type = getObjectType();
-	char name[64];
-	static int instance = 0;
-
-	for (struct group * ginfo = type->enumerateGroups(); ginfo;
-	     ginfo = type->getNextGroup()) {
-
-		int n;
-
-		// For each group in the party, randly generate the number of
-		// NPCs from that group based on its max size (need at least
-		// one). Then create that many NPC characters and add them to
-		// the party.
-                n = dice_roll(ginfo->dice);
-
-		while (n) {
-
-			// Create and initialize a new "stock" character.
-                        class Character *c;
-                        assert(ginfo->factory);
-                        c = (class Character*)closure_exec(ginfo->factory, 
-                                                           NULL);
-
-                        // Note: closure_exec may return a non-zero but invalid
-                        // pointer if the scheme script has a bug in it. It
-                        // seems to return 0x1 in this case, so watch for
-                        // it. Otherwise we'll crash in addMember.
-                        if (! c || c == (class Character*)0x1) {
-                                warn("Failed to create character");
-                                return false;
-                        } else {
-                                addMember(c);
-                                order++;
-                                n--;
-                        }
-		}
-	}
-
-	return true;
-}
-
 
 void Party::forEachMember(bool (*fx) (class Character *, void *), void *data)
 {
@@ -750,10 +518,7 @@ struct sprite *Party::getSprite()
 	if (vehicle)
 		return vehicle->getSprite();
 
-        if (act == SLEEPING && getObjectType()->sleep_sprite)
-                return getObjectType()->sleep_sprite;
-
-	return type->getSprite();
+	return Object::getSprite();
 }
 
 void Party::disembark()
@@ -769,11 +534,25 @@ void Party::disembark()
 	}
 }
 
+
 int Party::getSpeed()
 {
 	if (vehicle)
 		return vehicle->getSpeed();
-	return getObjectType()->getSpeed();
+
+        int minVal=255; // something big, whatever
+        struct node *entry;
+        class Character *member;
+
+        FOR_EACH_MEMBER(entry, member) {
+                if (!member->isDead()) {
+                        int val  = member->getSpeed();
+                        minVal = min(val, minVal);
+                }
+        }
+
+        return minVal;
+
 }
 
 struct damage_member_info {
@@ -875,12 +654,12 @@ struct formation *Party::get_formation()
 {
 	if (vehicle && vehicle->get_formation())
 		return vehicle->get_formation();
-	return getObjectType()->formation;
+	return formation;
 }
 
 void Party::describe()
 {
-        Object::describe();
+        // FIXME: need something here
         if (vehicle) {
                 log_continue(" in ");
                 vehicle->describe();
@@ -903,11 +682,6 @@ sound_t *Party::get_movement_sound()
 		return vehicle->get_movement_sound();
         forEachMember(get_member_movement_sound, &sound);
         return sound;
-}
-
-int Party::getActivity()
-{
-        return act;
 }
 
 static bool member_burn(class Character *member, void *data)
@@ -975,12 +749,6 @@ char *Party::getName()
 {
         return Object::getName();
 }
-
-/* Convenience macro for iterating over party members: */
-#define FOR_EACH_MEMBER(e,c)                                               \
-   for ((e) = members.next, (c) = (class Character *)(e)->ptr;             \
-        (e) != &members;                                                   \
-        (e) = (e)->next, (c) = (class Character *)(e)->ptr)
 
 // --------------------------------------------------------------------
 // Wherever the party is, there shall the members be also.
@@ -1077,13 +845,29 @@ void Party::applyEffect(closure_t *effect)
 
 void Party::save(struct save *save)
 {
-        save->enter(save, "(kern-mk-party %s %d\n",
-                    getObjectType()->getTag(), getBaseFaction());
-        if (vehicle)
-                vehicle->save(save);
-        else
-                save->write(save, "nil\n");
-        save->exit(save, ")\n");
+//         save->enter(save, "(kern-mk-party %s %d\n",
+//                     getObjectType()->getTag(), getBaseFaction());
+//         if (vehicle)
+//                 vehicle->save(save);
+//         else
+//                 save->write(save, "nil\n");
+//         save->exit(save, ")\n");
+
+        struct node *entry;
+        class Character *member;
+
+        save->enter(save, "(let ((kparty (kern-mk-party)))\n");
+        save->write(save, "(kern-obj-set-sprite kparty %s)\n", getSprite()->tag);
+        save->write(save, "(kern-being-set-base-faction kparty %d)\n", getBaseFaction());
+        FOR_EACH_MEMBER(entry, member) {
+                save->enter(save, "(kern-party-add-member kparty\n");
+                member->save(save);
+                save->exit(save, ") ;; end kern-party-add-member\n");
+        }
+        save->write(save, "kparty\n");
+        save->exit(save, ") ;; end let\n");
+
+
 }
 
 static bool member_remove(class Character *member, void *data)

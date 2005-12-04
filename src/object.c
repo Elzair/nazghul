@@ -652,7 +652,9 @@ struct sprite *Object::getSprite()
 {
         if (current_sprite)
                 return current_sprite;
-        return type->getSprite();
+        if (type)
+                return type->getSprite();
+        return NULL;
 }
 
 bool Object::isSelected()
