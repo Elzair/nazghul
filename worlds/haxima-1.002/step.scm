@@ -2,7 +2,6 @@
 (define (trig-proc trg) (eval (car trg)))
 (define (trig-args trg) (cdr trg))
 (define (trig-invoke trg . more-args)
-  (println "args will be: " (append more-args (trig-args trg)))
   (apply (trig-proc trg) (append more-args (trig-args trg))))
 
 ;;----------------------------------------------------------------------------

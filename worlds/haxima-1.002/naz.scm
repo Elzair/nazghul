@@ -526,7 +526,7 @@
 
 ;; is-player-party-member? -- #t iff kchar is in player party  
 (define (is-player-party-member? kchar)
-  (in-list? kchar 
+  (in-list? kchar g
             (kern-party-get-members (kern-get-player))))
 
 ;; ----------------------------------------------------------------------------
@@ -1317,6 +1317,7 @@
 
 ;; random-loc -- choose a random location
 (define (random-loc kplace x y w h)
+  (println "random-loc:(" x "," y "," w "," h)
   (mk-loc kplace 
           (+ x (modulo (random-next) w))
           (+ y (modulo (random-next) h))))

@@ -471,8 +471,8 @@
  ;; objects:
  (list
 
-  ;; pre-existing parties
-  (put (mk-goblin-party) 51 48)
+  ;; npc party generator
+  (put (mk-edge-spawn-generator) 0 0)
 
   ;; dungeons
   (put (mk-dungeon 'p_kurpolis_entrance 9 10) 39 75)
