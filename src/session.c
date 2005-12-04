@@ -422,6 +422,11 @@ int session_load(char *filename)
                 }
         }        
 
+        // This is also called from place_enter(), which is called when the
+        // game first starts up but apparently not necessarily on a
+        // reload. Should be safe to call more than once, I think.
+        //session_synch_sched_chars(Session);
+
         /* Paint all the windows for the first time in the new session. */
         screenErase(0);
 	screen_repaint_frame();

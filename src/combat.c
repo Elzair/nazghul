@@ -680,32 +680,7 @@ bool combat_place_character(class Character * pm, void *data)
                 }
         }
 
-#if 0
-        pm->setX(info->px);
-        pm->setY(info->py);
-
-        pm->setPlace(info->place);
-
-        place_add_object(info->place, pm);
-
-        if (pm->isPlayerControlled()) {
-                mapAddView(pm->getView());
-
-                /* Initialize the pc's map view */
-                mapCenterView(pm->getView(), pm->getX(), pm->getY());
-                
-                // Set the PC's light radius based on ambient light and personal light
-                // sources. Fixme: should not assume the sun is visible.
-                // int lrad = (int)sqrt(pm->getLight() + Sun.light);
-                mapSetRadius(pm->getView(), min(pm->getVisionRadius(), MAX_VISION_RADIUS));;
-                mapRecomputeLos(pm->getView());
-        }
-                
-        /* Do some one-time init */
-        pm->setCombat(true);
-#else
         pm->relocate(info->place, info->px, info->py);
-#endif
         
         return false;
 }

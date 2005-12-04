@@ -527,7 +527,7 @@ void place_del(struct place *place)
         // death so that it will be deleted when unlocked.
         // --------------------------------------------------------------------
 
-        //printf("place_del(%s)\n", place->name);
+        dbg("place_del(%s)\n", place->name);
 
         if (place_is_locked(place)) {
                 place_mark_for_death(place);
@@ -2030,10 +2030,11 @@ int place_add_subplace(struct place *place, struct place *subplace,
         if (tile_add_subplace(tile, subplace))
                 return -1;
 
-        if (subplace->handle) {
-                session_rm(Session, subplace->handle);
-                subplace->handle = 0;
-        }
+        // Why was I doing this?
+/*         if (subplace->handle) { */
+/*                 session_rm(Session, subplace->handle); */
+/*                 subplace->handle = 0; */
+/*         } */
 
         subplace->location.place = place;
         subplace->location.x = x;

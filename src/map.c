@@ -597,22 +597,27 @@ struct mview *mapCreateView(void)
         v->subrect.x = (v->vrect.w - v->subrect.w) / 2;
         v->subrect.y = (v->vrect.h - v->subrect.h) / 2;
 
+        dbg("mapCreateView: return %08lx\n", v);
+
 	return v;
 
 }
 
 void mapDestroyView(struct mview *view)
 {
+        dbg("mapDestroyView(%08lx)\n", view);
 	free(view);
 }
 
 void mapAddView(struct mview *view)
 {
+        dbg("mapAddView(%08lx)\n", view);
 	list_add(&Map.views, &view->list);
 }
 
 void mapRmView(struct mview *view)
 {
+        dbg("mapRmView(%08lx)\n", view);
 	if (view == ALL_VIEWS)
 		mapForEachView(myRmView, 0);
 	else
