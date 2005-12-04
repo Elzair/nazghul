@@ -127,8 +127,22 @@
        "aid and hospitality. In return we give them news. Sometimes we serve "
        "them as messengers and scouts."))
 
+(define (ranger-ench knpc kpc)
+  (say knpc "The Enchanter lives in a tower by the Fens. Do you need directions?")
+  (if (yes? kpc)
+      (let ((kplace (get-place knpc)))
+        (cond ((equal? kplace p_westpass)
+               (say knpc "Take the ladder down. You'll come out in Eastpass. "
+                    "Lord Froederick's men can help you from there."))
+              (else 
+               (say knpc "I'm not sure how to get there from here."))
+        ))))
+        
+         
+
 (define ranger-conv
   (ifc basic-conv
        (method 'rang ranger-ranger)
        (method 'wise ranger-wise)
+       (method 'ench ranger-ench)
        ))

@@ -278,6 +278,14 @@
             (use-ability narcotize kchar)
             ))))
           
+(define (goto-post kchar)
+  ;;(println "goto-post")
+  (let ((guard (gob kchar)))
+    (if (npcg-has-post? guard)
+        (let ((post (cons (loc-place (kern-obj-get-location kchar))
+                          (npcg-get-post guard))))
+          ;;(println "post:" post)
+          (pathfind kchar post)))))
 
 ;;----------------------------------------------------------------------------
 ;; spell-sword-ai -- aggressive, selfish fighter that uses magic for combat.
@@ -353,18 +361,18 @@
                (or (use-ability disarm kchar (car victims))
                    #t)))
         #f))
-  (define (goto-post)
-    ;;(println "goto-post")
-    (let ((guard (gob kchar)))
-      (if (npcg-has-post? guard)
-          (let ((post (cons (loc-place (kern-obj-get-location kchar))
-                            (npcg-get-post guard))))
-            ;;(println "post:" post)
-            (pathfind kchar post)))))
   (or (std-ai kchar)
       (if (any-visible-hostiles? kchar)
           (try-to-use-ability)
-          (goto-post))))
+          (goto-post kchar))))
+
+;; ranger-ai -- nothing special, but can act like a guard
+(define (ranger-ai kchar)
+  (or (std-ai kchar)
+      (if (any-visible-hostiles? kchar)
+          #f
+          (goto-post kchar)
+          )))
 
 ;; A lich will summon undead minions
 (define (lich-ai kchar)

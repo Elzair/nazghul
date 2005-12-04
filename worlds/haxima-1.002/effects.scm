@@ -423,11 +423,10 @@
   (kern-obj-apply-damage actor "ouch" 1))
 
 (define (burn obj)
-  (println "burn")
   (if (not (has-fire-immunity? obj))
       (begin
-       (println " damage")
-       (kern-obj-apply-damage obj "burning" (kern-dice-roll "2d3+2")))))
+        (kern-log-msg "Burning!")
+        (kern-obj-apply-damage obj "burning" (kern-dice-roll "2d3+2")))))
 
 (define (great-burn obj)
   (if (not (has-fire-immunity? obj))

@@ -59,7 +59,8 @@
     (list 1 t_picklock)
     
     ;; Arms
-    (list 1 t_dagger)
+    (list 1 t_sword)
+    (list 1 t_shield)
 
     ;; Hints/instructions
     (list 1 t_manual)

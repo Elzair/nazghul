@@ -79,7 +79,7 @@
 (load "lich-tomb.scm")
 (load "altar-room.scm")
 (load "dank-cave.scm")
-;;(load "eastpass.scm")
+(load "eastpass.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Characters
@@ -91,9 +91,9 @@
  oc_wanderer           ; occ
  s_wanderer    ; sprite
  faction-player        ; starting alignment
- 2 2 2                ; str/int/dex
- 2 2                   ; hp mod/mult
- 2 2                  ; mp mod/mult
+ 5 5 5                ; str/int/dex
+ 10 3                   ; hp mod/mult
+ 10 3                  ; mp mod/mult
  29 0 3 1              ; hp/xp/mp/lvl
  #f                    ; dead
  nil                   ; conv
@@ -191,8 +191,8 @@
 (kern-mk-dtable
  ;;     non pla men cgb acc mon tro spd out gnt dem fgb
  (list   2   0   0   0  -1  -2  -2  -2   0  -2  -2   0) ;; none
- (list   0   2   1  -2  -1  -2  -2  -2  -2  -2  -2  -1) ;; player
- (list  -1   1   2  -1  -2  -2  -2  -2  -2  -2  -2  -1) ;; men
+ (list   0   2   1  -2  -1  -2  -2  -2  -2  -2  -2  -2) ;; player
+ (list  -1   1   2  -1  -2  -2  -2  -2  -2  -2  -2  -2) ;; men
  (list  -1  -2  -2   2  -1  -2   0  -2  -2  -1  -2  -2) ;; cave goblin
  (list  -1  -1  -1  -1   2  -2  -1  -1  -2  -1  -2  -2) ;; accursed
  (list  -2  -2  -2  -2  -2   2   0   0  -2   0  -2   0) ;; monsters
@@ -201,7 +201,7 @@
  (list   0  -2  -2  -2  -2  -2  -2  -2   2  -2  -2  -1) ;; outlaws
  (list  -2  -2  -2  -1  -1   0  -1  -1  -2   2  -2  -1) ;; gint
  (list  -2  -2  -2  -2  -2  -2  -2  -2  -2  -2   2  -2) ;; demon
- (list   0  -1  -1  -2  -2   0  -2   0  -1  -1  -2   2) ;; forest goblin
+ (list   0  -2  -2  -2  -2   0  -2   0  -1  -1  -2   2) ;; forest goblin
  )
 
 

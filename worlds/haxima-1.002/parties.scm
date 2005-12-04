@@ -5,9 +5,15 @@
 (define (pgroup-npct pgrp) (cadr pgrp))
 (define (pgroup-dice pgrp) (caddr pgrp))
 (define (pgroup-size pgrp)
-  (* (kern-dice-roll (pgroup-dice pgrp))
-     (length (kern-party-get-members (kern-get-player)))
-     ))
+  (define (loop n sum)
+    (if (= n 0)
+        sum
+        (loop (- n 1)
+              (+ sum (max 0 (kern-dice-roll (pgroup-dice pgrp))))
+              )))
+  (loop (length (kern-party-get-members (kern-get-player)))
+        0)
+  )
 (define (pgroup-generate pgrp)
   (define (loop n)
     (if (<= n 0)
@@ -47,6 +53,7 @@
   (ptype-mk "goblin hunting party" s_orc faction-forest-goblin
             (pgroup-mk 'forest-goblin-stalker "1d2")
             (pgroup-mk 'forest-goblin-hunter  "1d2-1")
+            (pgroup-mk 'wolf "1d2-1")
             ))
 
 (define bandit-party 
@@ -115,3 +122,13 @@
   (ptype-mk "lone dragon" s_dragon faction-monster
             (pgroup-mk 'dragon "1")
             ))
+
+(define gint-party
+  (ptype-mk "gint raiding party" s_ettin faction-gint
+            (pgroup-mk 'gint-warrior "1d2")
+            (pgroup-mk 'troll "1d3-2")
+            (pgroup-mk 'cave-goblin-slinger "1d3-2")
+            (pgroup-mk 'wolf "1d2-1")
+            ))
+
+

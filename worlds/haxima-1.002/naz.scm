@@ -526,7 +526,7 @@
 
 ;; is-player-party-member? -- #t iff kchar is in player party  
 (define (is-player-party-member? kchar)
-  (in-list? kchar g
+  (in-list? kchar
             (kern-party-get-members (kern-get-player))))
 
 ;; ----------------------------------------------------------------------------
@@ -1375,3 +1375,9 @@
     (if (null? kmech)
         #f
         (signal-kobj kmech 'handle kmech kchar))))
+
+(define (get-place kobj)
+  (loc-place (kern-obj-get-location kobj)))
+
+
+

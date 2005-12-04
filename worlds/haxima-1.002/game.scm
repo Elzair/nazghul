@@ -187,6 +187,7 @@
 (load "ai.scm")
 (load "species.scm")
 (load "occs.scm")
+(load "conv.scm") ;; basic conversation
 (load "npc-types.scm")
 (load "parties.scm")
 (load "jewelry.scm")
@@ -208,7 +209,6 @@
 (load "moongate.scm")
 (load "bridge.scm")
 (load "drawbridge.scm")
-(load "conv.scm") ;; basic conversation
 
 ;; Astronomy
 (load "moon.scm")

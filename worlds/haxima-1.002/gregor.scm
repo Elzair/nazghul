@@ -39,8 +39,8 @@
 
 (define (gregor-ench knpc kpc)
   (say knpc "The Enchanter? He's one of the Wise. "
-       "Take the road south and west through the pass to the town of Trigrave. "
-       "Someone there should know how to find him."))
+       "Take the road south and west to the keep that guards the pass. "
+       "The rangers there may know how to find him."))
 
 ;;----------------------------------------------------------------------------
 ;; Conv
