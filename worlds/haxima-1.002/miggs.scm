@@ -60,6 +60,7 @@
        (method 'trad miggs-trade)
        (method 'buy miggs-trade)
        (method 'sell miggs-trade)
+       (method 'food miggs-trade)
        (method 'lust miggs-lust)
        (method 'jugs miggs-lust)
        ))

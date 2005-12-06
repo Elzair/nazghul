@@ -298,7 +298,7 @@
   ;; General store
   (list (mk-locked-door)  1 24)
   (list (mk-door)         7 27)
-  
+ 
   ;; Iron Works
   (list (mk-door)                                  24 6)
   (list (mk-locked-door)                           26 9)
@@ -309,7 +309,7 @@
   (put jims-other-chest                            29 11)
 
   ;; Lusty Juggs (tavern)
-  (list (mk-door) 28 24)
+  (list (mk-locked-door) 28 24)
   (list (kern-tag 'tlj-d-1 (mk-connected-door 'tlj-d-2)) 17 25)
   (list (kern-tag 'tlj-d-2 (mk-connected-door 'tlj-d-1)) 17 26)
   (put (mk-bed) 27 22)

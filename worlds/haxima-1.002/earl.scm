@@ -65,6 +65,8 @@
                                 (earl-trade knpc kpc)
                                 (say knpc "Okay."))))
        (method 'name (lambda (knpc kpc) (say knpc "[He thinks for a minute] Earl! That's it!")))
+       (method 'buy earl-trade)
+       (method 'sell earl-trade)
        (method 'trad earl-trade)
        (method 'join (lambda (knpc kpc) (say knpc "You're too late! I forgot all my spells.")))
 

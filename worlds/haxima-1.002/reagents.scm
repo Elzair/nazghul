@@ -31,7 +31,7 @@
    (list 'black_pearl    "black pearl"    s_black_pearl)
    (list 'nightshade     "nightshade"     s_nightshade)
    (list 'mandrake       "mandrake"       s_mandrake)
-   (list 't_royal_cape     "royal cape mushroom" s_royal_cape)
+   (list 't_royal_cape   "royal cape mushroom" s_royal_cape)
    ))
 
 (map (lambda (type) (apply mk-reagent-type type)) reagent-types)

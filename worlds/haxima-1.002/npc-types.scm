@@ -186,17 +186,14 @@
         ))
 (define archer-equip 
   (list (list 100 "1"     t_bow)
-        (list 100 "10"    t_arrow)
+        (list 100 "1d6"   t_arrow)
         (list 100 "1"     t_dagger)
-        (list 50  "1"     t_heal_potion)
         (list 100 "1d10"  t_gold_coins)
         (list 20  "1d3"   t_food)
         ))
 (define stalker-equip 
   (list (list 100 "2"     t_dagger)
-        (list 100 "1"     t_leather_helm)
-        (list 100 "1"     t_armor_leather)
-        (list 100 "1d2"   t_heal_potion)
+        (list 100 "2"     t_dagger)
         (list 100 "1d15"  t_gold_coins)
         (list 30  "1d3"   t_food)
         ))
@@ -237,6 +234,22 @@
         (list 100 "1"     t_iron_helm)
         (list 100 "1d20"  t_gold_coins)
         (list 100 "1d3-1" t_mana_potion)
+        ))
+(define knight-equip
+  (list (list 100 "1"     t_2h_sword)
+        (list 100 "1"     t_armor_plate)
+        (list 100 "1"     t_iron_helm)
+        (list 100 "1d20"  t_gold_coins)
+        (list 100 "1d3-1" t_heal_potion)
+        ))
+(define squire-equip
+  (list (list 100 "1"     t_crossbow)
+        (list 100 "1d10"  t_bolt)
+        (list 100 "1"     t_dagger)
+        (list 100 "1"     t_armor_chain)
+        (list 100 "1"     t_chain_coif)
+        (list 100 "1d10"  t_gold_coins)
+        (list 100 "1d2-1" t_heal_potion)
         ))
 (define halberdier-equip
   (list (list 100 "1"     t_halberd)
@@ -298,7 +311,7 @@
         (list 100 "1"     t_armor_chain)
         ))
 (define troll-equip
-  (list (list 100 "1d3+2" t_thrown_boulder)
+  (list (list 100 "1d3" t_thrown_boulder)
         (list 25  "1d3" t_food)
         ))
 (define geomancer-equip
@@ -369,10 +382,10 @@
 (define sea-serpent            (mk-npct "sea serpent"              sp_sea_serpent   nil        s_sea_serpent      nil          nil                    nil           'sea-serpent-ai  faction-monster       nil))
 (define dryad                  (mk-npct "dryad"                    sp_dryad         nil        s_reaper           nil          reaper-equip           nil           'spell-sword-ai  faction-monster       nil))
 (define wolf                   (mk-npct "wolf"                     sp_wolf          nil        s_wolf             nil          nil                    nil           'animal-ai       faction-monster       nil))
-(define gazer                  (mk-npct "gazer"                    sp_gazer         oc_wizard  s_gazer            wizard-traps nil                    nil           'gazer-ai  faction-monster       nil))
+(define gazer                  (mk-npct "gazer"                    sp_gazer         oc_wizard  s_gazer            wizard-traps nil                    nil           'gazer-ai        faction-monster       nil))
 (define headless               (mk-npct "headless"                 sp_headless      oc_warrior s_headless         basic-traps  headless-equip         nil           'std-ai          faction-monster       nil))
 (define wisp                   (mk-npct "wisp"                     sp_wisp          nil        s_wisp             nil          nil                    nil           'std-ai          faction-monster       nil))
-(define dragon                 (mk-npct "dragon"                   sp_dragon        nil        s_dragon           wizard-traps dragon-equip           drag-effects  'dragon-ai          faction-monster       nil))
+(define dragon                 (mk-npct "dragon"                   sp_dragon        nil        s_dragon           wizard-traps dragon-equip           drag-effects  'dragon-ai       faction-monster       nil))
 (define zorn                   (mk-npct "zorn"                     sp_zorn          oc_wrogue  s_zorn             wrogue-traps zorn-equip             nil           'std-ai          faction-monster       nil))
 (define demon                  (mk-npct "demon"                    sp_demon         nil        s_demon            basic-traps  nil                    nil           'std-ai          faction-monster       nil))
 (define hydra                  (mk-npct "hydra"                    sp_hydra         nil        s_hydra            no-traps     nil                    hydra-effects 'hydra-ai        faction-monster       nil))
@@ -381,6 +394,8 @@
 (define ghast                  (mk-npct "ghast"                    sp_ghast         nil        s_ghost            nil          nil                    nil           'std-ai          faction-monster       nil))
 (define corrupt-halberdier     (mk-npct "a halberdier"             sp_human         oc_warrior s_guard            no-traps     halberdier-equip       nil           'guard-ai        faction-monster       nil))
 (define corrupt-crossbowman    (mk-npct "a crossbowman"            sp_human         oc_warrior s_guard            no-traps     crossbowman-equip      nil           'guard-ai        faction-monster       nil))
+(define knight                 (mk-npct "a knight"                 sp_human         oc_warrior s_knight           no-traps     knight-equip           nil           'guard-ai        faction-trigrave      'knight-conv))
+(define squire                 (mk-npct "a squire"                 sp_human         oc_warrior s_guard            no-traps     squire-equip           nil           'guard-ai        faction-trigrave      'knight-conv))
 
 ;;define                        (mk-npct "                          sp_              oc_        s_                 nil          nil                    nil           'std-ai           ))
 

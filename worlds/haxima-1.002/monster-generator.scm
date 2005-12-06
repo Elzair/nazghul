@@ -383,14 +383,9 @@
 (define (spawn-pt-npct-tag sppt) (cadr sppt))
 
 (define (spawn-pt-exec ksppt)
-  (println "spawn-pt-exec")
   (let* ((sppt (gob ksppt)))
-    (println " " sppt)
-    (let ((npc (spawn-npc (spawn-pt-npct-tag sppt) 
-                          (calc-level))))
-      (kern-obj-put-at npc
-                       (kern-obj-get-location ksppt))
-      (println " done!")
+    (let ((npc (spawn-npc (spawn-pt-npct-tag sppt) (calc-level))))
+      (kern-obj-put-at npc (kern-obj-get-location ksppt))
       npc)
     ))
 

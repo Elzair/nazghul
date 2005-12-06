@@ -40,8 +40,8 @@
 ;; not specific about what), this is the CrOOAK quest which I was going to do
 ;; as a standalone episode.
 ;;----------------------------------------------------------------------------
-(define (conv-hail knpc kpc)
-  (let ((ench (kobj-gob-data knpc)))
+(define (ench-hail knpc kpc)
+  (let ((ench (gob knpc)))
 
     (define (second-quest-spurned)
       (say knpc "It is the duty of all good men to stand up to evil. I "
@@ -113,8 +113,9 @@
     (define (check-first-quest)
       (if (in-inventory? kpc t_rune_k)
           (finish-first-quest)
-          (say knpc "Hmph. I see you still haven't found my item yet. "
-               "[He mutters something about Wanderers and thieves]")))
+          (say knpc "Hmph. I see you still haven't found my item yet!"
+               " [He mutters something about Wanderers and thieves]")
+            ))
       
     (if (ench-met? ench)
         (if (quest-done? (ench-second-quest ench))
@@ -123,42 +124,44 @@
                 (if (quest-accepted? (ench-second-quest ench))
                     (check-second-quest)
                     (offer-second-quest-again))
-                (if (quest-offered? (ench-first-quest ench))
+                (if (quest-accepted? (ench-first-quest ench))
                     (check-first-quest)
                     (say knpc "Yes, what is it this time?"))))
-        (say knpc "[This ageless mage looks unsurprised to see you] "
-             "I was wondering when you would get here, Wanderer. "
-             "It took you long enough!")
-        (ench-met! #t))))
+        (begin
+          (kern-print "[This ageless mage looks unsurprised "
+                      "to see you]")
+          (say knpc "I was wondering when you would get here. "
+               "It took you long enough!")
+          (ench-met! ench #t)))))
 
-(define (conv-name knpc kpc)
+(define (ench-name knpc kpc)
   (say knpc "I am known as the Enchanter."))
 
-(define (conv-job knpc kpc)
+(define (ench-job knpc kpc)
   (say knpc "I help as I can in the struggle against evil."))
 
-(define (conv-default knpc kpc)
+(define (ench-default knpc kpc)
   (say knpc "I cannot help you with that"))
 
-(define (conv-bye knpc kpc)
+(define (ench-bye knpc kpc)
   (say knpc "Beware the Accursed!"))
 
-(define (conv-join knpc kpc)
+(define (ench-join knpc kpc)
   (say knpc "No, I belong here. Seek the Warritrix if you desire a powerful "
        "companion."))
 
 
-(define (conv-warr knpc kpc)
+(define (ench-warr knpc kpc)
   (say knpc "The Warritrix is Wise and fierce, "
        "and like yourself prone to Wandering. "
        "In fact, at the moment I don't know where she is. "
        "Try Glasdrin."))
 
-(define (conv-wand knpc kpc)
+(define (ench-wand knpc kpc)
   (say knpc "Yes, I've met your type before. Unpredictable. "
        "And as to whether you are good or evil, that depends upon you."))
 
-(define (conv-offer-first-quest knpc kpc)
+(define (ench-offer-first-quest knpc kpc)
   (say knpc "I do not quibble over definitions of good and evil. "
        "They are easily recognized when encountered. "
        "Do you intend to do good while you are here?")
@@ -180,8 +183,8 @@
                     (say knpc "Good! Rangers have tracked the thief to "
                          "Trigrave. Go there and inquire if anyone has seen "
                          "the thief.")
-                    (quest-accepted! (ench-first-quest (kobj-gob-data knpc)
-                                                           #t)))
+                    (quest-accepted! (ench-first-quest (gob knpc)) #t)
+                    )
                   ;; no -- player is not willing
                   (say knpc "Perhaps I misjudged you.")))
             ;; no -- player is not ready
@@ -192,75 +195,75 @@
            "and men who would be callous find they can't ignore their "
            "conscience.")))
 
-(define (conv-good knpc kpc)
-  (if (quest-accepted? (ench-first-quest (kobj-gob-data knpc)))
+(define (ench-good knpc kpc)
+  (if (quest-accepted? (ench-first-quest (gob knpc)))
       (say knpc "The wicked flee when no one pursues, but the righteous are "
            "bold as dragons.")
-      (conv-offer-first-quest knpc kpc)))
+      (ench-offer-first-quest knpc kpc)))
 
-(define (conv-gate knpc kpc)
+(define (ench-gate knpc kpc)
   (say knpc "There are many gates in the land which connect to "
        "one another and appear with the moons. "
        "But the Shrine Gate is the only one I know of that connects with "
        "other worlds."))
 
-(define (conv-wise knpc kpc)
+(define (ench-wise knpc kpc)
   (say knpc "The Wise are the most powerful Warriors, Wizards, Wrights and "
        "Wrogues in the land. Although they function to protect the Shard, "
        "they are not all good."))
 
-(define (conv-accu knpc kpc)
+(define (ench-accu knpc kpc)
   (say knpc "The Accursed are an evil secret society, responsible for many "
        "crimes and atrocities. With the destruction of Absalot I thought "
        "they were finished. I was wrong. I fear now their number and "
        "strength is greater than ever before."))
 
-(define (conv-moon knpc kpc)
+(define (ench-moon knpc kpc)
   (say knpc "Ask Kalcifax the Traveler of moongates. "
        "He is quite the expert."))
 
-(define (conv-shri knpc kpc)
+(define (ench-shri knpc kpc)
   (say knpc "The Shrine Gate opens unpredictably, and only for a short time. "
        "Those who enter never return, "
        "and those who emerge are strangers and Wanderers like yourself."))
 
-(define (conv-rune knpc kpc)
+(define (ench-rune knpc kpc)
   (say knpc "The rune was passed to me by my master long ago. "
        "He did not know what it was for, and for all my research I never "
        "found its purpose, either. I decided it was an unimportant old relic. "
        "Why else would it not be mentioned in any of the arcane tomes or "
        "histories?"))
 
-(define (conv-wiza knpc kpc)
+(define (ench-wiza knpc kpc)
   (say knpc "The Warrior, Wright and Wrogue all derive some power from their "
        "knowledge of the physical world. But a Wizard's power comes from his "
        "knowledge of the magical world."))
 
-(define (conv-know knpc kpc)
+(define (ench-know knpc kpc)
   (say knpc "Just as a blind man cannot perceive colors, those without the "
        "Inner Eye cannot perceive the forces of magic. But those who have "
        "opened the Eye perceive causes and effects invisible to others."))
 
-(define (conv-wrog knpc kpc)
+(define (ench-wrog knpc kpc)
   (say knpc "The Wisest of Wrogues is The MAN, who comes and goes as if on "
        "the wind. If the MAN has a home, it is well-hidden. Ask around, "
        "perhaps your enquiries will prompt a meeting."))
 
-(define (conv-wrig knpc kpc)
+(define (ench-wrig knpc kpc)
   (say knpc "The Wisest Wright prefers to work in isolation. You may find him "
        "if your are persistent, but not in any city."))
 
-(define (conv-necr knpc kpc)
+(define (ench-necr knpc kpc)
   (say knpc "The most depraved and wicked of all the Wise, "
        "my nemesis the Necromancer abides somewhere in the underworld. "
        "He is powerful, deceitful and corrupt beyond redemption."))
 
-(define (conv-alch knpc kpc)
+(define (ench-alch knpc kpc)
   (say knpc "The Alchemist keeps a lab near Oparine. "
        "He is greedy and very cunning, so be wary of him."))
 
-(define (conv-thie knpc kpc)
-  (if (quest-done? (ench-first-quest (kobj-gob-data knpc)))
+(define (ench-thie knpc kpc)
+  (if (quest-done? (ench-first-quest (gob knpc)))
       (say knpc "Although a nuisance, he was only a middleman. "
            "I hope you did not treat him too harshly.")
       (say knpc "The thief who stole my item must be very clever. The rangers "
@@ -268,31 +271,31 @@
            "have seen the THIEF.")))
 
 (define enchanter-conv
-  (ifc nil
-       (method 'default conv-default)
-       (method 'hail conv-hail)
-       (method 'name conv-name)
-       (method 'bye conv-bye)
-       (method 'job conv-job)
-       (method 'join conv-join)
+  (ifc basic-conv
+       (method 'default ench-default)
+       (method 'hail ench-hail)
+       (method 'name ench-name)
+       (method 'bye ench-bye)
+       (method 'job ench-job)
+       (method 'join ench-join)
        
-       (method 'accu conv-accu)
-       (method 'alch conv-alch)
-       (method 'evil conv-good)
-       (method 'gate conv-gate)
-       (method 'good conv-good)
-       (method 'know conv-know)
-       (method 'moon conv-moon)
-       (method 'necr conv-necr)
-       (method 'rune conv-rune)
-       (method 'shri conv-shri)
-       (method 'thie conv-thie)
-       (method 'wand conv-wand)
-       (method 'warr conv-warr)
-       (method 'wise conv-wise)
-       (method 'wiza conv-wiza)
-       (method 'wrog conv-wrog)
-       (method 'wrig conv-wrig)
+       (method 'accu ench-accu)
+       (method 'alch ench-alch)
+       (method 'evil ench-good)
+       (method 'gate ench-gate)
+       (method 'good ench-good)
+       (method 'know ench-know)
+       (method 'moon ench-moon)
+       (method 'necr ench-necr)
+       (method 'rune ench-rune)
+       (method 'shri ench-shri)
+       (method 'thie ench-thie)
+       (method 'wand ench-wand)
+       (method 'warr ench-warr)
+       (method 'wise ench-wise)
+       (method 'wiza ench-wiza)
+       (method 'wrog ench-wrog)
+       (method 'wrig ench-wrig)
 
        ))
 

@@ -90,6 +90,13 @@
     (say knpc "Excellent! Let's ask Thud to join us and we'll see if "
          "anyone around here knows about a thief.")
     (kern-char-join-player knpc)
+    (if (in-inventory? knpc t_wis_quas_scroll)
+        (begin
+          (say knpc "Oh, this scroll may come in handy. "
+               "You take it, I really don't understand these magical "
+               "thingies very well.")    
+          (kern-obj-remove-from-inventory knpc t_wis_quas_scroll 1)
+          (kern-obj-add-to-inventory knpc kpc t_wis_quas_scroll 1)))
     (kern-conv-end))
   (say knpc "It seems we have a common goal. Join us, and when we catch the "
        "villian we'll all return the item. You can keep any reward. "
@@ -147,6 +154,18 @@
   (say knpc "[She covers her mouth in mock fright] Ooh! You guessed my dirty "
        "little secret! Now beat it or I'll use you as a torch."))
 
+(define (kathryn-scro knpc kpc)
+  (if (is-player-party-member? knpc)
+      (if (in-inventory? knpc t_wis_quas_scroll)
+          (begin
+           (say knpc "It's my last one. Take it... but don't waste it.")
+           (kern-obj-remove-from-inventory knpc t_wis_quas_scroll 1)
+           (kern-obj-add-to-inventory knpc kpc t_wis_quas_scroll 1))
+          (say knpc "I already gave you my last one!"))
+      (say knpc "A scroll? [She laughs] Shall I turn out my pockets for you? "
+           "Mind your own business.")))
+
+
 (define kathryn-conv
   (ifc nil
        (method 'default kathryn-default)
@@ -179,6 +198,7 @@
        (method 'thin kathryn-things)
        (method 'vani kathryn-vanish)
        (method 'vill kathryn-search)
+       (method 'scro kathryn-scro)
        ))
 
 ;;----------------------------------------------------------------------------
@@ -224,6 +244,7 @@
         (add-content 2 black_pearl )
         (add-content 1 nightshade )
         (add-content 1 mandrake )
+        (add-content 1 t_wis_quas_scroll)
         ))
       ;;..............readied arms (in addition to the container contents)
       (list

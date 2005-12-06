@@ -1242,6 +1242,7 @@ int select_target_with_doing(int ox, int oy, int *x, int *y,
         Session->crosshair->setViewportBounded(1);
         Session->crosshair->setOrigin(ox, oy);
         Session->crosshair->relocate(Place, *x, *y); /* previous target */
+        Session->show_boxes=1;
         mapSetDirty();
 
         memset(&data, 0, sizeof(data));
@@ -1258,6 +1259,7 @@ int select_target_with_doing(int ox, int oy, int *x, int *y,
         cmdwin_backspace(strlen("<target> (ESC to exit)"));
         eventPopKeyHandler();
   
+        Session->show_boxes=0;
         *x = Session->crosshair->getX();
         *y = Session->crosshair->getY();
         Session->crosshair->remove();

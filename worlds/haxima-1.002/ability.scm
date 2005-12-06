@@ -315,9 +315,10 @@
 ;; ranged-spells -- damaging spells which take a target kchar as an arg.
 (define fireball-spell cast-fireball)
 (define poison-missile-spell cast-poison-missile)
-(define acid-missile-spell cons cast-acid-missile)
+(define acid-missile-spell cast-acid-missile)
+(define kill-spell cast-kill)
 (define all-ranged-spells
   (list cast-magic-missile
         poison-missile-spell
         fireball-spell
-        cast-kill 4))
+        ))

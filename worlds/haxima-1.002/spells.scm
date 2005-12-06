@@ -110,11 +110,11 @@
         (get-being-at loc))))
 
 (define (user-cast-ranged-targeted-spell kchar range proc)
-  (let ((ktarg (get-target-kchar caster range)))
+  (let ((ktarg (get-target-kchar kchar range)))
     (if (null? ktarg)
         result-no-target
         (begin
-          (proc caster ktarg)
+          (proc kchar ktarg)
           result-ok))))
 
 (define (cast-field-spell caster field-type)
@@ -130,10 +130,11 @@
           (else (kern-obj-relocate caster coords nil)))))
 
 (define (cast-signal-spell caster signal target)
-  (cond ((null? target)
-         (kern-print "No effect!\n")
-         nil)
-        (else ((kobj-ifc target) signal target caster))))
+  (cond ((null? target) result-no-effect)
+        (else 
+         ((kobj-ifc target) signal target caster)
+         result-ok
+         )))
 
 (define (cast-bimodal caster proc)
   (define (cast-it target)
@@ -425,7 +426,7 @@
 
 (define (in-ex-por  caster)
   (let ((loc (kern-obj-get-location caster)))
-    (display "in-ex-por")(newline)
+    (println "in-ex-por")
     (cast-signal-spell caster 'magic-unlock (ui-target loc 1 (mk-ifc-query 'magic-unlock)))))
   
 (define (an-ex-por  caster)
@@ -662,7 +663,7 @@
    ;;    ==========   ==============      =======      ==== = ===========  =====================================
    (list 'an_nox      "An Nox spell"      an-nox      "AN"  1 context-any  (list garlic ginseng))
    (list 'an_zu       "An Zu spell"       an-zu       "AZ"  1 context-any  (list garlic ginseng))
-   (list 'grav_por    "Grav Por spell"    grav-por    "AP"  1 context-town (list spider_silk black_pearl))
+   (list 'grav_por    "Grav Por spell"    grav-por    "GP"  1 context-town (list sulphorous_ash black_pearl))
    (list 'in_lor      "In Lor spell"      in-lor      "IL"  1 context-any  (list sulphorous_ash))
    (list 'mani        "Mani spell"        mani        "M"   1 context-any  (list ginseng spider_silk))
 

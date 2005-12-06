@@ -1605,7 +1605,6 @@ void combat_exit(void)
         struct place *parent = 0;
         int x, y;
 
-        // --------------------------------------------------------------------
         // Clean up the temporary combat place, if we used one. If we started
         // off in combat when we loaded this session then we need to remove
         // the temp place and temp map from the session's list of objects
@@ -1615,11 +1614,9 @@ void combat_exit(void)
         //
         // Before destroying the place I have to memorize it's location for the
         // next step.
-        // --------------------------------------------------------------------
-
         if (Place->is_wilderness_combat) {
 
-                assert(! Place->handle); // should not be top-level
+                //assert(! Place->handle); // should not be top-level
                 assert(place_get_parent(Place));
 
                 if (Place->terrain_map->handle)
@@ -1631,7 +1628,6 @@ void combat_exit(void)
                 y = place_get_y(Place);
                 place_remove_subplace(parent, Place);
 
-                // ------------------------------------------------------------
                 // Bugfix: Invalidate the entire map from the vmask cache. If
                 // you don't do this, then the next time the player enters
                 // combat and we start looking up vmasks we will find old,
@@ -1639,9 +1635,13 @@ void combat_exit(void)
                 // because the keys used by the vmask are built from the name
                 // of the place, and for the combat map it is always the same
                 // name.
-                // ------------------------------------------------------------
-
                 vmask_invalidate(Place, 0, 0, place_w(Place), place_h(Place));
+
+                // If this place has a handle it's in the session list and
+                // needs to be removed before we destroy it, otherwise on
+                // session reload it will be deleted again.
+                if (Place->handle)
+                        session_rm(Session, Place->handle);
 
                 place_del(Place); // map deleted in here
                 Combat.place = 0;

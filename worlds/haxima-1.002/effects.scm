@@ -318,7 +318,7 @@
    (list 'ef_poison_immunity           'poison-immunity-exec nil                 nil              nil                 "add-hook-hook"      "I" 0   #f  -1)
    (list 'ef_temporary_poison_immunity 'poison-immunity-exec nil                 nil              nil                 "add-hook-hook"      "I" 0   #f  60)
    (list 'ef_sleep                     'sleep-exec           nil                 'sleep-rm        nil                 "start-of-turn-hook" "S" 0   #f  60)
-   (list 'ef_light                     nil                   'light-apply        'light-rm        'light-apply        "start-of-turn-hook" ""  0   #t  60)
+   (list 'ef_light                     nil                   'light-apply        'light-rm        'light-apply        "start-of-turn-hook" "L" 0   #t  60)
    (list 'ef_torchlight                nil                   'torchlight-apply   'torchlight-rm   'torchlight-apply   "start-of-turn-hook" "T" 0   #f  60)
    (list 'ef_great_light               nil                   'great-light-apply  'great-light-rm  'great-light-apply  "start-of-turn-hook" "L" 0   #t  120)
    (list 'ef_protection                nil                   'protection-apply   'protection-rm   'protection-apply   "start-of-turn-hook" "P" 0   #t  10)

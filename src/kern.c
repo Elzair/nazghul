@@ -4152,7 +4152,7 @@ KERN_API_CALL(kern_obj_heal)
         
         obj->heal(val);
 
-        return sc->NIL;
+        return sc->T;
 }
 
 static int kern_filter_being(Object *obj, struct kern_append_info *info)

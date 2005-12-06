@@ -18,7 +18,20 @@
 
 ;; wise
 (define (basic-ench knpc kpc)
-  (say knpc "The Enchanter is the Wise Wizard. He lives in a tower in the Fens of the northwest."))
+  (say knpc "The Enchanter is the Wise Wizard. "
+       "He lives in a tower by the Fens, do you need directions?")
+  (if (yes? kpc)
+      (let ((kplace (get-place knpc)))
+        (cond ((equal? kplace p_westpass)
+               (say knpc "Take the ladder down. You'll come out in Eastpass. "
+                    "Lord Froederick's men can help you from there."))
+              ((equal? kplace p_eastpass)
+               (say knpc "Take the road west to Trigrave and ask around there."))
+              ((equal? kplace p_trigrave)
+               (say knpc "Take the road north to Southpass and ask the guards there."))
+              (else 
+               (say knpc "I'm not sure how to get there from here."))
+        ))))
 
 ;; towns
 (define (basic-trig knpc kpc)
@@ -26,18 +39,66 @@
        "settled where two rivers meet."))
 
 (define (basic-gree knpc kpc)
-  (say knpc "Green Tower, home of the Rangers, lies deep in the Great Forest."))
+  (say knpc "Green Tower, home of the Rangers, lies deep in the Great Forest. "
+       "Do you need directions?")
+  (if (yes? kpc)
+      (let ((kplace (get-place knpc)))
+        (cond ((equal? kplace p_westpass)
+               (say knpc "Take the road east into the forest. "
+                    "Eventually it turns into a trail, follow it as best you can."))
+              ((equal? kplace p_eastpass)
+               (say knpc "Take the ladder down to Westpass and ask the Rangers there."))
+              ((equal? kplace p_trigrave)
+               (say knpc "Take the road east to the mountains and go through Eastpass. "
+                    "After that, you'll have to ask around."))
+              ((equal? kplace p_enchanters_tower)
+               (say knpc "Go south to Trigrave and ask there."))
+              (else 
+               (say knpc "I'm not sure how to get there from here."))
+              ))))
 
 (define (basic-bole knpc kpc)
   (say knpc "The hamlet of Bole sits in a canyon in the mountains north of "
-       "the Great Wood."))
-
+       "the Great Wood. Do you need directions?")
+  (if (yes? kpc)
+      (let ((kplace (get-place knpc)))
+        (cond ((equal? kplace p_westpass)
+               (say knpc "It's northeast of here. Follow the mountains."))
+              ((equal? kplace p_eastpass)
+               (say knpc "Take the ladder down to Westpass and ask the Rangers there."))
+              ((equal? kplace p_trigrave)
+               (say knpc "Take the road east to the mountains and go through Eastpass. "
+                    "After that, you'll have to ask around."))
+              ((equal? kplace p_green_tower)
+               (say knpc "Go north through the forest until you hit the mountains, "
+                    "then follow them east a short while."))
+              ((equal? kplace p_enchanters_tower)
+               (say knpc "Go south to Trigrave and ask there."))
+              (else 
+               (say knpc "I'm not sure how to get there from here."))
+              ))))
+              
 (define (basic-absa knpc kpc)
   (say knpc "Absalot, a great and wicked city, was destroyed for its sins."))
 
 (define (basic-opar knpc kpc)
   (say knpc "The city of Oparine can be found in the southwest by a "
-       "deep harbor."))
+       "deep harbor. Do you need directions?")
+  (if (yes? kpc)
+      (let ((kplace (get-place knpc)))
+        (cond ((equal? kplace p_westpass)
+               (say knpc "Take the ladder down to Eastpass and follow the road west."))
+              ((equal? kplace p_eastpass)
+               (say knpc "Follow the road west."))
+              ((equal? kplace p_trigrave)
+               (say knpc "Follow the road west and south all the way to the sea."))
+              ((equal? kplace p_green_tower)
+               (say knpc "Follow the trail south and west to Westpass and ask the rangers when you get there."))
+              ((equal? kplace p_enchanters_tower)
+               (say knpc "Go south to Trigrave and ask there."))
+              (else 
+               (say knpc "I'm not sure how to get there from here."))
+              ))))
 
 (define (basic-fens knpc kpc)
   (say knpc "The Fens are a swampy area in the northwest."))
@@ -127,22 +188,13 @@
        "aid and hospitality. In return we give them news. Sometimes we serve "
        "them as messengers and scouts."))
 
-(define (ranger-ench knpc kpc)
-  (say knpc "The Enchanter lives in a tower by the Fens. Do you need directions?")
-  (if (yes? kpc)
-      (let ((kplace (get-place knpc)))
-        (cond ((equal? kplace p_westpass)
-               (say knpc "Take the ladder down. You'll come out in Eastpass. "
-                    "Lord Froederick's men can help you from there."))
-              (else 
-               (say knpc "I'm not sure how to get there from here."))
-        ))))
-        
-         
 
 (define ranger-conv
   (ifc basic-conv
        (method 'rang ranger-ranger)
        (method 'wise ranger-wise)
-       (method 'ench ranger-ench)
        ))
+
+
+;; Knight conversation -- used by Lord Froederick's troops
+(define knight-conv basic-conv)

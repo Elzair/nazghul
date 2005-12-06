@@ -80,6 +80,7 @@
 (load "altar-room.scm")
 (load "dank-cave.scm")
 (load "eastpass.scm")
+(load "westpass.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Characters

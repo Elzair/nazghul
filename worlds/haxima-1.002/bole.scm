@@ -99,7 +99,8 @@
    (list (mk-bed) 40 17)
    (list (mk-bed) 44 17)
 
-   (list (mk-door) 24 17)
+   ;; Bill's hut
+   (list (mk-locked-door) 24 17)
    (list (mk-locked-door) 19 15)
    (list (mk-bed) 23 19)
 
@@ -118,6 +119,9 @@
    (list ch_bill  22 8)
    (put ch_melvin 44 17)
    (put ch_hackle 0 0)
+   (put (npc-mk 'bull) 6 4)
+
+   (put (npc-mk 'dryad) 36 38)
    
    )
 

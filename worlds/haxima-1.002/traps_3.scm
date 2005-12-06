@@ -56,10 +56,10 @@
  (list
 
   ;; monster generators
-  (put (mk-mongen2 980 1 'is-spider? 'mk-queen-spider nil) 6 3)
-  (put (mk-mongen2 980 3 'is-skeleton? 'mk-skeleton nil)   6 15)
-  (put (mk-mongen2 980 1 'is-yellow-slime? 'mk-yellow-slime nil) 15 15)
-  (put (mk-mongen2 980 3 'is-bandit? 'mk-bandit nil) 15 3)
+  (put (spawn-pt 'queen-spider) 6 3)
+  (put (spawn-pt 'skeletal-warrior)   6 15)
+  (put (spawn-pt 'yellow-slime) 15 15)
+  (put (spawn-pt 'bandit) 15 3)
   
   ;; portcullisses
   (put (kern-tag 't3_pc1  (mk-open-portcullis) ) 6 3)

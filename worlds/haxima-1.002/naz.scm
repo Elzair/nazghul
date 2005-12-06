@@ -433,11 +433,13 @@
   (search-rect kplace x y w h check))
 
 (define (in-inventory? kchar ktype)
+  (println (kern-type-get-name ktype))
   (define (hasit? item inv)
-    ;;(display "inv: ")(display inv)(newline)
     (cond ((null? inv) #f)
           ((eqv? item (car (car inv))) #t)
-          (else (hasit? item (cdr inv)))))
+          (else 
+           (println " " (kern-type-get-name (car (car inv))))
+           (hasit? item (cdr inv)))))
   (hasit? ktype (kern-char-get-inventory kchar)))
 
 (define (num-in-inventory kchar ktype)
@@ -462,8 +464,10 @@
          #t
          lst))
 
+;; Note: I commented out the remove-from-inventory call because the things
+;; should remove themselves (eg, potions do)
 (define (use-item-from-inventory-on-self kchar ktype)
-  (kern-obj-remove-from-inventory kchar ktype 1)
+  ;;(kern-obj-remove-from-inventory kchar ktype 1)
   ;;;(display "using")(newline)
   (apply (kern-type-get-gifc ktype) (list 'use ktype kchar))
   (kern-log-msg (kern-obj-get-name kchar)

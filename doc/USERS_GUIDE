@@ -13,16 +13,17 @@ The nazghul distribution is laid out as follows:
 
 nazghul-0.x.0
 |- doc
-|- examples
+|- worlds
+|  `-haxima-1.001
 `- src
 
 First, see the nazghul-0.x.0/INSTALL instructions in the top-level of the
 nazghul distribution for instructions on setting up and installing the game.
 
-Next, to play the example that comes with the game cd to nazghul-0.x.0/world/haxima-1.001
-and run the command:
+Next, to play the example that comes with the game:
 
-    $ nazghul session.scm
+      $ cd worlds/haxima-1.002
+      $ nazghul haxima.scm
 
 If your installation worked correctly the game should fire up.
 
@@ -30,9 +31,9 @@ If your installation worked correctly the game should fire up.
 
                                 SAVING THE GAME
 
-You can save a snapshot at any time with Ctrl-S (S is for "save"). This will save to a file
-called save.scm. Later during play, you can reload the snapshot with Ctrl-R (R
-is for "restore").
+You can save a snapshot at any time with Ctrl-S (S is for "save"). This will
+save to a file called save.scm. Later during play, you can reload the snapshot
+with Ctrl-R (R is for "restore").
 
 When you quit the game with the Q)uit command, it will automatically save to
 save.scm. To pick up where you left off later, start the game with the save.scm
@@ -43,34 +44,54 @@ file:
 
                                   ORIENTATION
 
-
-When you start you will be in party mode and the icon for your party will be in
-the center of the map view on the left. Later, when you get into trouble with
-npcs the map will show you a combat screen. Combat is pretty much the same
-except instead of one icon for the party you will see an icon for each party
-member.
-
-To enter a city first find one and then try to step on it. You will
-automatically zoom in and see all of your individual party members clustered on
-the edge of the town map. Unless you have some enemies in this city you will
-start out in "follow mode", which means you control the party leader and
-everybody else in the party tries to keep up. But if hostiles are in town you
-will be in "character mode", which means you control each party member in
-turn. To switch between these two mode use the 'f' key.
-
-To exit a city walk off the edge while in follow mode. This will take you to
-the wilderness map, and your party icon will be directly over the city.
-
-Below the map you'll see a little window with a prompt. This gives you hints
-when you're entering commands to tell you what type of input the command
-wants. For example, if you type 'x' (for e[x]amine) the command prompt will
-say:
+When you start you will have a party consisting of one character known as The
+Wanderer. The icon for this character will be in the center of the map view on
+the left. Explore around a bit using the arrow keys to move. Below the map
+you'll see a little window with a prompt. This gives you hints when you're
+entering commands to tell you what type of input the command wants. For
+example, if you type 'x' (for e[x]amine) the command prompt will say:
 
     Xamine-<target>(ESC to exit)
 
 Which means it wants you to hit the arrow keys and move the targeting
 cursor. When you hit 'ESC' instead the command will cancel. Pretty much all
 commands can be canceled by hitting 'ESC'.
+
+Eventually you will want to follow the road down to the chamber on the lower
+left. The chamber is marked by mysterious runes on its walls. Within the
+chamber is an NPC and a chest.
+
+To talk to the NPC press 't' for T)alk, target the NPC and hit enter. During
+conversation you enter a keyword and the NPC will respond. When you are done
+talking type 'bye' or hit enter by itself.
+
+After talking to the NPC, walk over to the chest and O)pen it by hitting 'o'
+and using your arrow keys to indicate a direction. The chest will open and
+deposit a bunch of stuff on the groung.
+
+G)et the stuff using the 'g' key. Among the items will be some basic weapons,
+armour and spell reagents as well as some scrolls and potions.
+
+To see your stuff hit 'z' for Z)tats and scroll around. Hit ESC when you tire
+of admiring yourself and your loot.
+
+To R)eady the weapons and armor hit 'r' then select them. Hit ESC when done.
+
+To M)ix a heal spell type 'm', select Ginseng and Garlic, and hit ENTER to mix
+them.
+
+When you are ready to face the world walk to the edge of the map and bravely
+step off. You will zoom out to Wilderness Mode, and your entire party (all one
+of you) will appear as an icon in the center. To re-enter take a step south (at
+which point you will see a shrine icon where you just were) and step north
+again. Now you now how to enter and exit towns. Congrats.
+
+When you enter a town, unless you have some enemies there, you will start out
+in "follow mode", which means you control the party leader and everybody else
+in the party tries to keep up. But if hostiles are in town you will be in
+"character mode", which means you control each party member in turn. To switch
+between these two mode use the 'f' key. This will make more sense when you add
+more characters to your party.
 
 
 
@@ -89,8 +110,7 @@ LAT/AT Counter
     for the curious: LAT means 'latency', and indicates how many milliseconds
     passed between your last keystroke and a map window update. TA means
     'turnaround', and indicates how many milliseconds passed between your last
-    chance to enter input and the current one. I want these numbers to be as
-    low as possible.
+    chance to enter input and the current one.
 
 Clock
 
@@ -128,12 +148,30 @@ Status Window
     its contents change as required by user commands. For example, (R)eady will
     turn it into a selection list.
 
+    Normally the window lists all the player's party members and shows their
+    current hit points and status. The status is reflected in one or more
+    letters following the hit points. The letters are codes:
+
+    A...Alcohol (drunk)
+    C...Charmed (in the service of an enemy)
+    D...Diseased
+    F...Fire immunity
+    G...Good (no problem)
+    I...Immune to poison
+    L...Light (magically lit up)
+    N...Invisible
+    P...Poisoned
+    S...Asleep
+    T...Torchlight (carrying a torch)
+
 Foogod Window
 
-    It sounds sacrilegious, but that's just my acronym for Food/Gold
+    It sounds sacreligious, but that's just my acronym for Food/Gold
     Window. This little window appears below the status window and shows the
-    turn, food and gold counters as well as the current combat status. If you
-    board a vehicle it will also show you the hit points for the vehicle.
+    turn, food and gold counters as well as the current combat status and any
+    pending Effects. The effects will be printed in cryptic little codes like
+    "N" for magic negated. If you board a vehicle it will also show you the hit
+    points for the vehicle.
 
 Console Window
 
@@ -173,7 +211,7 @@ General commands:
     H)andle-<member>-<target>..Activate a switch or lever
     N)ew-order-<member>-<member>...Swap order of two party members
     O)pen-<dir>................Open a container or door
-    Q)uit......................Quits & saves the game
+    Q)uit......................Quit & save the game
     R)eady-<member>-<item>.....Ready an armament like a weapon, shield, etc.
     S)earch-<dir>..............Look carefully
     T)alk-<target>.............Talk to an NPC
@@ -182,13 +220,14 @@ General commands:
     Z)tats.....................Show party stats like inventory, armaments, etc
     @)AT.......................Information about where the party is AT, etc
     <space>....................Pass one turn
-    CTRL-S)ave.................Save the game
-    CTRL-R)estore..............Reload the last saved game
+    CTRL-S)ave.................Save a snapshot of the game w/o quitting
+    CTRL-R)eload...............Reload the last snapshot
 
 Wilderness-only commands:
 
-    K)amp-<0-9>-<y/n>-<player>...Camp in the wilderness (to heal and recover 
-                                 mana) or aboard ship (to repair hull damage)
+    K)amp-<0-9/sunrise>-<y/n>-<player>
+    ...........................Camp in the wilderness (to heal and recover 
+                               mana) or aboard ship (to repair hull damage)
 
 
 Town/Dungeon/Combat-only commands:
@@ -200,12 +239,16 @@ Town/Dungeon/Combat-only commands:
     [1-9]....................Select a party member for solo mode.
     [0]......................Select turn-based party mode, where each party 
                              member takes directions one at a time.
-    K)amp-<0-9>..............Sleep on a bed.  
+    K)amp-<0-9/sunrise>......Sleep on a bed.  
 
 Special commands:
 
     <ESC>....................Aborts most commands
 
+Editing commands:
+
+    CTRL-T)erraform..........Alter terrain. This deserves its own section. [1]
+    CTRL-Z)oom...............Zoom in or out (like peering at a gem but free)
 
 
                                 MOVEMENT MODES
@@ -229,13 +272,10 @@ Solo Mode (combat/dungeons)
     bored. Enter Solo Mode by pressing the number key associated with the
     party member's order in the list. 1 is the first member in the list.
 
-    NOTE: Solo mode can be very useful if one of your party members has
-          greater passability then the others. In the example game Mesmeme the
-          gazer can cross water unaided because he floats. This gives him the
-          ability to scout places the other members don't normally have access,
-          to. For fun, see if you can find a ghost to join your party :). I
-          promise I'll put one in the example game. No cheating by looking at
-          the scripts!
+    NOTE: Solo mode can be very useful if one of your party members has greater
+          passability then the others. For example, if a gazer joins your party
+          he can float over water. Now imagine the possibilities if you get a
+          ghost to join your party.
 
 Round Robin Mode (combat/dungeons)
 
@@ -348,7 +388,6 @@ In An            | Negate Magic   | GA, MA, SA             | C
 In Vas Por Ylem  | Earthquake     | BM, MA, SA             | C
 Quas An Wis      | Confuse        | MA, NI                 | C
 Wis An Ylen      | Xray Vision    | MA, SA                 | PC
-In Rel Por       | Telekinesis    | BP, BM, SA             | PC
 ----------------------------------------------------------------------------
 In Nox Hur       | Poison Wind    | NI, SA, BM             | C
 In Quas Corp     | Fear           | NI, MA, GA             | C
@@ -370,6 +409,9 @@ Vas Rel Por      | Gate Travel    | SA, MA, BP             | P
     Mode.
 
 
+                                   MONSTERS
+
+
                                  CONVERSATION
 
 
@@ -386,12 +428,11 @@ them).
 
                              APPENDIX: MAP HACKING
 
-
-Like many games, "nazghul" is separated into an engine and some data files. In this
-case the data files are written in the Scheme programmming language. If you
-examine the default start file 'session.scm' you will see that it is a scheme
-file which loads the game types from other files and then defines the starting
-game variables.
+Like many games, "nazghul" is separated into an engine [2] and some data
+files. In this case the data files are written in the Scheme programmming
+language. If you examine the default start file 'session.scm' you will see that
+it is a scheme file which loads the game types from other files and then
+defines the starting game variables.
 
 I encourage people to experiment with modifying the example files or even using
 them as a basis to create their own games. The example script code is all
@@ -406,3 +447,12 @@ projects and their copyright holders might object to proprietary use.
 
 
 --gmcnutt (gmcnutt@cableone.net)
+
+
+FOOTNOTES
+
+[1] Alas, there isn't one. Yet.
+
+[2] I like to refer to it as a "kernel". This makes me feel like it is really
+    cool, and like I'm not a loser since Linus Torvalds and I are about the
+    same age and he works on a kernel, too.

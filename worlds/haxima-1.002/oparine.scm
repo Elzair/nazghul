@@ -35,7 +35,7 @@
             "tt tt tt tt tt ~~ ~~ ~~ ~~ ~~ tt tt tt tt tt tt ~~ ~~ ~~ tt tt bb .. cc .. .. .. .. .. xx ee ee __ __ __ __ ## ## ## __ __ __ __ ee ee xx ?? xx xx xx .. ~~ ~~ -- -- __ __ __ __ __ __ __ __ __ "
             "tt tt tt ~~ ~~ ~~ tt tt tt ~~ ~~ ~~ tt tt tt tt tt tt ~~ ~~ tt tt tt cc .. bb .. .. .. xx ee ee __ __ __ ## ## ee ## ## __ __ __ ee ee xx ,, ,, ,, xx .. .. ~~ -- -- __ __ __ __ __ __ __ __ __ "
             "tt tt tt tt tt tt tt tt tt tt tt ~~ ~~ ~~ ~~ tt tt tt tt ~~ ~~ ~~ ~~ cc tt tt .. .. .. xx ee ee __ __ __ ## ee ee ee ## __ __ __ ee ee xx xx xx ?? xx .. .. ~~ -- -- __ __ __ __ __ __ __ __ __ "
-            "tt tt tt tt tt tt tt tt tt tt tt tt tt tt ~~ tt tt tt ~~ ~~ ~~ bb ~~ == ~~ ~~ ~~ .. ~~ -- ee ee __ __ ## ## ee ee ee ## ## __ __ __ __ .. .. .. .. .. .. .. -- -- -- __ __ __ __ __ __ __ __ __ "
+            "tt tt tt tt tt tt tt tt tt tt tt tt tt tt ~~ tt tt tt ~~ ~~ ~~ bb ~~ =| ~~ ~~ ~~ .. ~~ -- ee ee __ __ ## ## ee ee ee ## ## __ __ __ __ .. .. .. .. .. .. .. -- -- -- __ __ __ __ __ __ __ __ __ "
             "tt tt tt tt tt tt tt tt tt ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ tt ~~ ~~ ~~ cc ~~ bb ~~ ~~ -- -- ee ee __ __ ## ee ee ee ee ee ## __ __ __ __ __ __ .. .. .. .. __ -- -- __ __ __ __ __ __ __ __ __ __ "
             "tt tt tt tt tt tt tt ~~ ~~ ~~ tt tt ~~ tt tt tt tt tt tt tt tt tt tt cc ~~ ~~ ~~ -- -- -- ee ee ee ee ee ee ee oo ee ee ## __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ "
             "tt tt .. .. .. .. tt tt tt tt tt ~~ ~~ tt tt .. .. .. .. .. .. bb .. cc tt tt ~~ -- -- -- ee ee __ __ ## vv vv ee ee vv ## __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ "

@@ -92,7 +92,7 @@
 
 (define wolf-party 
   (ptype-mk "wolf pack" s_wolf faction-monster
-            (pgroup-mk 'wolf "1d3-1")
+            (pgroup-mk 'wolf "1d3")
             ))
 
 (define skeleton-party 

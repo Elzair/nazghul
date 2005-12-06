@@ -114,6 +114,7 @@
        (method 'name melvin-name)
        (method 'join melvin-join)
 
+       (method 'food melvin-trade)
        (method 'trad melvin-trade)
        (method 'buy  melvin-trade)
        (method 'sell melvin-trade)

@@ -850,7 +850,10 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
                 cmdQuit();
                 break;
         case 'r':
-                cmdReady(character);
+                if (player_party->getPartyControlMode()==PARTY_CONTROL_FOLLOW)
+                        cmdReady(NULL);
+                else
+                        cmdReady(character);
                 break;
         case 's':
                 cmdSearch(character->getPlace(),
