@@ -7,10 +7,10 @@
 ;; Schedule
 ;;----------------------------------------------------------------------------
 (kern-mk-sched 'sch_bart
-               (list 0  0  bilge-water-bed      "sleeping")
-               (list 11 0  black-barts-ship    "working")
+               (list 0  0  black-barts-bed      "sleeping")
+               (list 11 0  black-barts-ship     "working")
                (list 18 0  bilge-water-hall     "idle")
-               (list 23 0  bilge-water-bed      "sleeping")
+               (list 23 0  black-barts-bed      "sleeping")
                )
 
 ;;----------------------------------------------------------------------------
@@ -133,7 +133,7 @@
   (bind 
    (kern-mk-char 'ch_bart           ; tag
                  "Bart"             ; name
-                 sp_human            ; species
+                 sp_forest_goblin    ; species
                  nil                 ; occ
                  s_orc               ; sprite
                  faction-men         ; starting alignment

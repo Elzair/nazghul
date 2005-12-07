@@ -9,9 +9,9 @@
                (list 0  0  gj-bed      "sleeping")
                (list 7  0  ghg-counter "working")
                (list 9  0  g-fountain  "idle")
-               (list 11 0  ghg-counter "working")
+               (list 10 0  ghg-counter "working")
                (list 13 0  gc-hall     "idle")
-               (list 18 0  ghg-counter "working")
+               (list 14 0  ghg-counter "working")
                )
 
 ;;----------------------------------------------------------------------------
@@ -61,7 +61,7 @@
   (if (not (string=? "working" (kern-obj-get-activity knpc)))
       (say knpc "Come by the Holy Grail when I'm working, "
            "breakfast is between 7:00AM and 9:00AM, "
-           "lunch is 11:00AM to 1:00PM and I open at 6:00PM until midnight.")
+           "lunch is 10:00AM to 1:00PM and I reopen at 2:00PM until midnight.")
       (begin
         (kern-conv-trade knpc kpc
                          (list t_food 7)
@@ -103,7 +103,7 @@
   (say knpc "Dirty old man! No, I'm just teasing him."))
 
 (define jess-conv
-  (ifc basic-conv
+  (ifc glasdrin-conv
 
        ;; basics
        (method 'default jess-default)
@@ -122,6 +122,7 @@
        (method 'sell jess-trade)
        (method 'drin jess-trade)
        (method 'ware jess-trade)
+       (method 'food jess-trade)
 
        ;; scar
        (method 'trade jess-trade)

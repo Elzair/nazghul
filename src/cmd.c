@@ -2902,16 +2902,17 @@ static void buy(struct merchant *merch)
 		// *** trade ***
 
                 class ObjectType *type = (class ObjectType*)trade->data;
-		player_party->gold -= cost;
-		player_party->add(type, quantity);
 		cmdwin_print("ok");
 		log_msg("You buy %d %s%s for %d gold\n", quantity,
 			     trade->name, quantity > 1 ? "s" : "", cost);
-		foogodRepaint();
 
+		player_party->gold -= cost;
                 if (type->canBuy()) {
                         type->buy(player_party->get_leader(), quantity);
+                } else {
+                        player_party->add(type, quantity);
                 }
+		foogodRepaint();
 	}
 
 	statusSetMode(ShowParty);

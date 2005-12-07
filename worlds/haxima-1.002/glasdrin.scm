@@ -110,19 +110,19 @@
   (put (mk-jeffreys) 0 0)
 
   ;; guards
-  (put (spawn-pt 'halberdier) 6 32)
-  (put (spawn-pt 'halberdier) 32 6)
-  (put (spawn-pt 'halberdier) 57 32)
-  (put (spawn-pt 'halberdier) 32 57)
+  (put (guard-pt 'halberdier) 6 32)
+  (put (guard-pt 'halberdier) 32 6)
+  (put (guard-pt 'halberdier) 57 32)
+  (put (guard-pt 'halberdier) 32 57)
 
-  (put (spawn-pt 'crossbowman)  2 28)
-  (put (spawn-pt 'crossbowman) 36  2)
-  (put (spawn-pt 'crossbowman)  2 36)
-  (put (spawn-pt 'crossbowman) 61 36)
-  (put (spawn-pt 'crossbowman) 36 61)
-  (put (spawn-pt 'crossbowman) 28  2)
-  (put (spawn-pt 'crossbowman) 28 61)
-  (put (spawn-pt 'crossbowman) 61 28)
+  (put (guard-pt 'crossbowman)  2 28)
+  (put (guard-pt 'crossbowman) 36  2)
+  (put (guard-pt 'crossbowman)  2 36)
+  (put (guard-pt 'crossbowman) 61 36)
+  (put (guard-pt 'crossbowman) 36 61)
+  (put (guard-pt 'crossbowman) 28  2)
+  (put (guard-pt 'crossbowman) 28 61)
+  (put (guard-pt 'crossbowman) 61 28)
 
   ;; lower right wall entrance
   (put (mk-door) 55 57)

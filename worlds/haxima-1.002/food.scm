@@ -17,7 +17,8 @@
                                                    (kern-obj-get-count kobj)))
                       (kern-obj-dec-ref kobj)))
        (method 'buy (lambda (kbuyer q)
-                      (kern-obj-add-food kbuyer (* food-value q))))
+                      (kern-obj-add-food kbuyer (* food-value q))
+                      ))
        ))
 
 (define alcohol-ifc

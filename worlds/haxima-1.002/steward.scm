@@ -136,8 +136,13 @@
        "the realm, and turned back the tide of darkness. The Peninsula "
        "owes much to this city."))
 
+(define (stew-unde knpc kpc)
+  (say knpc "The Underworld is a sunless realm where monsters breed. "
+       "I am committed to purging it of these evil creatures, "
+       "for they are a menace to all."))
+
 (define stew-conv
-  (ifc basic-conv
+  (ifc glasdrin-conv
 
        ;; basics
        (method 'default stew-default)
@@ -161,6 +166,7 @@
        (method 'conv stew-conv)
        (method 'wise stew-wise)
        (method 'rogu stew-rogu)
+       (method 'unde stew-unde)
        ))
 
 (define (mk-steward)

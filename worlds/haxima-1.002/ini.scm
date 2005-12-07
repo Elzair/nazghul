@@ -113,7 +113,7 @@
        ))
 
 (define ini-conv
-  (ifc basic-conv
+  (ifc glasdrin-conv
 
        ;; basics
        (method 'default ini-default)

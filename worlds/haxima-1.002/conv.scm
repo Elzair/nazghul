@@ -100,8 +100,32 @@
                (say knpc "I'm not sure how to get there from here."))
               ))))
 
+(define (basic-glas knpc kpc)
+  (say knpc "Glasdrin is the fortified city of the Paladins. Do you need directions?")
+  (if (yes? kpc)
+      (let ((kplace (get-place knpc)))
+        (cond ((equal? kplace p_westpass)
+               (say knpc "The best way is to take the ladder down to Eastpass and go to Trigrave first."))
+              ((equal? kplace p_eastpass)
+               (say knpc "Go west to Trigrave then up to Northpass."))
+              ((equal? kplace p_trigrave)
+               (say knpc "Go up to Northpass and ask there."))
+              ((equal? kplace p_green_tower)
+               (say knpc "Follow the trail south and west to Westpass and ask the rangers there."))
+              ((equal? kplace p_enchanters_tower)
+               (say knpc "Head east of the Fens, you'll find it by the sea."))
+              ((equal? kplace p_oparine)
+               (say knpc "Follow the road north to Trigave and ask there."))
+              (else 
+               (say knpc "I'm not sure how to get there from here."))
+              ))))
+
 (define (basic-fens knpc kpc)
   (say knpc "The Fens are a swampy area in the northwest."))
+
+(define (basic-kurp knpc kpc)
+  (say knpc "Kurpolis is an ancient underground ruin. "
+       "You'll find the entrance somewhere near Glasdrin."))
 
 ;; establishments
 (define (basic-whit knpc kpc)
@@ -120,6 +144,9 @@
 (define (basic-shar knpc kpc)
   (say knpc "The Shard is what we call our world."))
 
+(define (basic-warr knpc kpc)
+  (say knpc "The Warritris is the Wise Warrior. If you're looking for her try Glasdrin."))
+
 (define basic-conv
   (ifc '()
        ;; fundamentals
@@ -131,6 +158,7 @@
        ;; wise
        (method 'ench basic-ench)
        (method 'wise basic-wise)
+       (method 'warr basic-warr)
 
        ;; towns & regions
        (method 'absa basic-absa)
@@ -140,6 +168,8 @@
        (method 'opar basic-opar)
        (method 'fens basic-fens)
        (method 'shar basic-shar)
+       (method 'kurp basic-kurp)
+       (method 'glas basic-glas)
 
        ;; establishments
        (method 'whit basic-whit)
@@ -198,3 +228,29 @@
 
 ;; Knight conversation -- used by Lord Froederick's troops
 (define knight-conv basic-conv)
+
+;; Glasdrin
+(define (glasdrin-warr knpc kpc)
+  (say knpc "The Warritrix is the most cunning warrior of the age. I'm not sure where she is right now, ask the Steward or Commander Jeffries."))
+
+(define (glasdrin-stew knpc kpc)
+  (say knpc "The Steward is the keeper of the city and realms of Glasdrin. You can usually find her in the Citadel."))
+
+(define (glasdrin-jeff knpc kpc)
+  (say knpc "Jeffries is the commander of the Glasdrin militia. He's usually at work in the Citadel."))
+
+(define (glasdrin-kurp knpc kpc)
+         (say knpc "Take the bridge north across the river then follow the "
+              "mountains east and north into a canyon."))
+
+(define (glasdrin-cita knpc kpc)
+  (say knpc "The Citadel is the civil and military headquarters of Glasdrin. It's the big keep in the southeast corner of town."))
+
+(define glasdrin-conv
+  (ifc basic-conv
+       (method 'warr glasdrin-warr)
+       (method 'stew glasdrin-stew)
+       (method 'jeff glasdrin-jeff)
+       (method 'kurp glasdrin-kurp)
+       (method 'cita glasdrin-cita)
+       ))

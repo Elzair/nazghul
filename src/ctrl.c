@@ -334,6 +334,10 @@ void ctrl_do_attack(class Character *character, class ArmsType *weapon,
                 log_continue("vs %d armor roll\n", armor);
         }
 
+        /* roll for player bonus */
+        if (character->isPlayerControlled())
+                damage += dice_roll("1d4");
+
         damage -= armor;
         damage = max(damage, 0);
         

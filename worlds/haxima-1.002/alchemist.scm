@@ -125,7 +125,7 @@
   (say knpc "I've never done it personally, but if one wants to obtain some "
        "dragon's blood my understanding is that one must kill a dragon! "
        "I hear they're common as cows in the regions of the Fire Sea, "
-       "deep in the bowels of the Shard."))
+       "deep in the bowels of the Shard beneath Kurpolis."))
 
 
 ;; The Wise...

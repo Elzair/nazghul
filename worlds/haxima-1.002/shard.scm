@@ -479,7 +479,7 @@
   (put (mk-npc-party 'wolf-party) 51 50)
 
   ;; dungeons
-  (put (mk-dungeon 'p_kurpolis_entrance 9 10) 39 75)
+  (put (mk-dungeon 'p_kurpolis_entrance 9 10) 53 18)
   (put (mk-dungeon 'p_mushroom_cave 7 12) 78 74)
   (put (mk-dungeon 'p_lost_halls_1 2 2) 82 20)
 
