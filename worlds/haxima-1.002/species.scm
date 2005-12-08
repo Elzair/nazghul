@@ -28,7 +28,7 @@
 ;; species
 
 ;; mk-species -- register a species type with the kernel
-(define (mk-species tag name str int dex spd con mag vr mmode weap morph xp sspr mvsnd)
+(define (mk-species tag name str int dex spd con mag vr mmode weap morph xp sspr mvsnd ondeath)
   (kern-mk-species tag name str int dex spd vr mmode 
                    con 
                    (max (round (/ con 10)) 1)
@@ -37,7 +37,7 @@
                    sspr
                    weap #t sound-damage 
                    mvsnd
-                   nil xp morph nil)) 
+                   ondeath xp morph nil)) 
 
 ;;          tag              name             st in dx sp hp mp vr mmode       weap         morph   xp sspr           mvsnd           die
 (mk-species 'sp_balron       "balron"         50 50 50 1 50 50 13 mmode-fly   t_horns      giant    50 s_asleep       sound-walking   nil)
@@ -57,7 +57,6 @@
 (mk-species 'sp_statue       "statue"          1  1  1 1 99  0  1 mmode-none  nil          nil       0 nil            nil             nil)
 (mk-species 'sp_troll        "troll"          14  6 12 1 20  6 10 mmode-walk  t_horns      humanoid  3 s_asleep       sound-walking   nil)
 (mk-species 'sp_yellow_slime "yellow slime"    4  4  4 1 12  8  6 mmode-walk  t_acid_spray nil       2 nil            sound-squishing nil)
-
 (mk-species 'sp_kraken       "kraken"         30  3 20 1 30 10  6 mmode-fish  t_tentacles  nil      10 s_shoals       sound-splashing nil) 
 (mk-species 'sp_sea_serpent  "sea serpent"    20  2 14 1 20 10  9 mmode-fish  t_fangs      nil      8  s_asleep       sound-walking   nil) 
 (mk-species 'sp_dryad        "dryad"          12 12  4 1 12 20  6 mmode-none  nil          nil      8  s_forest       nil             nil) 

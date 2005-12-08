@@ -2,7 +2,7 @@
 ;; potions.scm -- potion object types. Potions work on the drinker.
 ;; ----------------------------------------------------------------------------
 
-(kern-mk-sprite-set 'ss_potions 32 32 2 8 0 0 "potions.png")
+(kern-mk-sprite-set 'ss_potions 32 32 2 5 0 0 "potions.png")
 
 (kern-mk-sprite 's_healing_potion       ss_potions 1 0 #f 0)
 (kern-mk-sprite 's_mana_potion          ss_potions 1 1 #f 0)

@@ -571,7 +571,8 @@
   (kern-print "Hit a key when done gazing...\n")
   (ui-waitkey)
   (kern-map-set-peering #f)
-  (kern-map-repaint))
+  (kern-map-repaint)
+  result-ok)
 
 (define (sanct-lor  caster)
   (define (hide target)
@@ -703,7 +704,7 @@
    (list 'in_vas_por_ylem "In Vas Por Ylem spell" in-vas-por-ylem "IVPY" 6 context-town (list mandrake blood_moss sulphorous_ash))
    (list 'quas_an_wis     "Quas An Wis spell"     quas-an-wis     "QAW"  6 context-town (list mandrake nightshade))
    (list 'vas_uus_ylem    "Vas Uus Ylem spell"    vas-uus-ylem    "VUY"  6 context-wilderness (list mandrake black_pearl spider_silk))
-   (list 'in_rel_por      "In Rel Por spell"      in-rel-por      "IRP"  6 context-town (list black_pearl blood_moss sulphorous_ash))
+   (list 'in_rel_por      "In Rel Por spell"      in-rel-por      "IRP"  6 context-town (list black_pearl blood_moss spider_silk))
 
    (list 'in_nox_hur   "In Nox Hur spell"   in-nox-hur   "INH" 7 context-town (list nightshade sulphorous_ash blood_moss))
    (list 'in_zu_hur    "In Zu Hur spell"    in-zu-hur    "IZH" 7 context-town (list mandrake ginseng blood_moss))

@@ -78,7 +78,7 @@
   (say knpc "A gazer is a creature from a nightmare. The old ones have the power to enslave other beings and force them to fight on their behalf."))
 
 (define doug-conv
-  (ifc basic-conv
+  (ifc kurpolis-conv
 
        ;; basics
        (method 'default doug-default)

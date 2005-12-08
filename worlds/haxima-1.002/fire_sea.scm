@@ -64,6 +64,7 @@
   "rr rr rr bb {{ {{ {{ {{ {{ {{ {{ {{ {{ rr rr rr rr rr rr "
   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
   )
+  (put (mk-ladder-up 'p_deepness 12 8) 9 9)
  (put (spawn-pt 'troll) 7  4)
  (put (spawn-pt 'troll) 14 13)
  (put (spawn-pt 'headless) 14 9)

@@ -423,7 +423,8 @@
   (kern-obj-apply-damage actor "ouch" 1))
 
 (define (burn obj)
-  (if (not (has-fire-immunity? obj))
+  (if (and (kern-obj-is-being? obj)
+           (not (has-fire-immunity? obj)))
       (begin
         (kern-log-msg "Burning!")
         (kern-obj-apply-damage obj "burning" (kern-dice-roll "2d3+2")))))

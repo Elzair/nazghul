@@ -1900,6 +1900,7 @@ void place_save(struct save *save, void *val)
         }
 
         place->saved = save->session_id;
+        place->saving_now = 1;
 
         save->enter(save, "(kern-mk-place '%s \"%s\"\n",
                     place->tag, 
@@ -1944,13 +1945,23 @@ void place_save(struct save *save, void *val)
          * is loaded, so we don't need to do it here. Furthermore, we CANNOT do
          * it here because we are probably dead smack in the middle of the save
          * routine for that neighbor, so we can't refer to it yet.
+         *
+         * Even more subtle: if the neighbor is in the process of being saved
+         * right now, but it is not out immediate parent in the save call
+         * stack, then upon return to it it will NOT save the neighborly
+         * relation if it thinks we already saved it here! For this reason I
+         * added the "saving_now" flag. If the neighbor is saved, but not
+         * saving now, then I can safely return to its scheme variable name
+         * now, and should do so to preserve the relation.
          */
         save->write(save, ";; neighbors\n");
 
         /* first check if there are any unsaved neighbors */
         for (i = 0; i < array_sz(place->neighbors); i++) {
-                if (place->neighbors[i] && 
-                    place->neighbors[i]->saved != save->session_id)
+                if (place->neighbors[i]
+                    //&& place->neighbors[i]->saved != save->session_id
+                    && ! place->neighbors[i]->saving_now
+                        )
                         break;
         }
 
@@ -1961,8 +1972,10 @@ void place_save(struct save *save, void *val)
                 /* yep */
                 save->enter(save, "(list\n");
                 for (i = 0; i < array_sz(place->neighbors); i++) {
-                        if (place->neighbors[i] && 
-                            place->neighbors[i]->saved != save->session_id) {
+                        if (place->neighbors[i]
+                            //&& place->neighbors[i]->saved != save->session_id
+                            && ! place->neighbors[i]->saving_now
+                                ) {
                                 save->enter(save, "(list\n");
                                 place_save(save, place->neighbors[i]);
                                 save->exit(save, "%d)\n", i);
@@ -1980,6 +1993,7 @@ void place_save(struct save *save, void *val)
         place_save_hooks(place, save);
         place_save_edge_entrances(place, save);
         save->exit(save, ") ;; end of place %s\n\n", place->tag);
+        place->saving_now = 0;
 }
 
 static void place_start_object(class Object *object, void *data)

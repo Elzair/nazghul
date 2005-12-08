@@ -508,8 +508,11 @@
     (define (cleanup-old-spawn)
       (println " cleanup-old-spawn")
       (map kern-obj-remove
-           (filter kbeing-was-spawned?
-                   (kern-place-get-beings kplace))))
+           (filter (lambda (kbeing)
+                     (or (kbeing-was-spawned? kbeing)
+                         (char-is-gate-guard? kbeing)))
+                   (kern-place-get-beings kplace)))
+      )
 
     (define (trigger-spawn-pt sppt)
       (println " trigger-spawn-pt")

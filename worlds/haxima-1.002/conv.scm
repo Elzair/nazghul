@@ -254,3 +254,20 @@
        (method 'kurp glasdrin-kurp)
        (method 'cita glasdrin-cita)
        ))
+
+;; Kurpolis
+(define (kurp-drag knpc kpc)
+  (say knpc "If you're hunting for dragons try the Fire Sea region."))
+(define (kurp-fire knpc kpc)
+  (say knpc "The Fire Sea is down near the Third Garrison."))
+(define (kurp-lich knpc kpc)
+  (say knpc "The commander of the Second Garrison believes a Lich is causing problems on the second level."))
+(define (kurp-hydr knpc kpc)
+  (say knpc "I've heard there is a vast underground lake below us, and a Hydra lurks in a nearby cave."))
+(define kurpolis-conv
+  (ifc basic-conv
+       (method 'drag kurp-drag)
+       (method 'fire kurp-fire)
+       (method 'lich kurp-lich)
+       (method 'hydr kurp-hydr)
+       ))

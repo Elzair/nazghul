@@ -126,6 +126,7 @@ struct place {
         int saved;
         int lock;
         int marked_for_death : 1;
+        int saving_now : 1;
 
         /* Coordinates used to position the player in a subplace when he enters
          * from the edge: */

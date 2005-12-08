@@ -63,7 +63,7 @@
   (say knpc "This is a savage place, not for the inexperienced. It gets worse the deeper you go."))
 
 (define anne-conv
-  (ifc basic-conv
+  (ifc kurpolis-conv
 
        ;; basics
        (method 'job anne-job)

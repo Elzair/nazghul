@@ -64,7 +64,7 @@
 ;; Quest-related
 
 (define jones-conv
-  (ifc basic-conv
+  (ifc kurpolis-conv
 
        ;; basics
        (method 'job jones-job)

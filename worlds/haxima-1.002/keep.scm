@@ -143,6 +143,8 @@
   "xx xx xx xx xx xx x! ,, cc cc cc ,, x! xx xx xx xx xx xx "
   )
 
+ (put (mk-ladder-down 'p_pools 9 9) 9 6)
+
   ;; secret wall mech
   (put (make-invisible (mk-lever 'gh_wall)) 12 2)
   (put (kern-tag 'gh_wall 
@@ -209,7 +211,7 @@
  (put (mk-jones) 9 9)
  (put (mk-alex) 9 9)
 
- (put (custom-pt 'put-gate-guard 'php1 'deep) 12 9)
+ (put (custom-pt 'put-gate-guard 'php1 'deep) 11 9)
 
  ;; inner guard
  (put (guard-pt 'crossbowman) 13 8)

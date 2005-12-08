@@ -86,7 +86,7 @@
   (say knpc "If you want to visit the first garrison take the ladder up, then travel north and then west."))
 
 (define alex-conv
-  (ifc basic-conv
+  (ifc kurpolis-conv
 
        ;; basics
        (method 'hail alex-hail)

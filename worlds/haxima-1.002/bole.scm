@@ -119,9 +119,9 @@
    (list ch_bill  22 8)
    (put ch_melvin 44 17)
    (put ch_hackle 0 0)
-   (put (npc-mk 'bull) 6 4)
+   (put (mk-npc 'bull 1) 6 4)
 
-   (put (npc-mk 'dryad) 36 38)
+   (put (mk-npc 'dryad 8) 36 38)
    
    )
 

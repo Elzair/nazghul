@@ -93,8 +93,8 @@
  s_wanderer    ; sprite
  faction-player        ; starting alignment
  5 5 5                ; str/int/dex
- 10 3                   ; hp mod/mult
- 10 3                  ; mp mod/mult
+ 6 2                   ; hp mod/mult
+ 6 2                  ; mp mod/mult
  29 0 3 1              ; hp/xp/mp/lvl
  #f                    ; dead
  nil                   ; conv
