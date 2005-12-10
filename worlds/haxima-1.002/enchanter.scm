@@ -105,10 +105,45 @@
           (start-second-quest)
           (second-quest-spurned)))
 
+    (define (need-to-find-accursed)
+      (say knpc "Search Absalot well. They were there once, I am certain, and must have left a clue."))
+                
+    (define (has-found-accursed)
+      (say knpc "Well done. Do you know why they want the Runes?")
+      (if (yes? kpc)
+          (begin
+            (say knpc "Why?")
+            (let ((why (kern-conv-get-reply kpc)))
+              (if (or (eq? why 'demo)
+                      (eq? why 'gate))
+                  (begin
+                    (say knpc "They want to re-open the Demon Gate. I see. This cannot be allowed. "
+                         "The Runes will never be safe while the Accursed exist. ")
+                    (prompt-for-key)
+                    (say knpc "I have considered the matter, and see only one option. "
+                         "You must destroy the Demon Gate itself. "
+                         "Assemble whatever help you can find and seek the Gate. "
+                         "I know not what you will find there, but I sense it is your destiny."))
+                  (say knpc "That does not ring true. Keep seeking."))))
+          (say knpc "You must find out. Search their quarters. Pretend to befriend them if you must.")))
+            
+    (define (need-to-find-runes)
+      (say knpc "Have you found any more Runes?")
+      (yes? kpc)
+      (say knpc "Ask the other Wise. When you have collected them all return to me."))
+      
+
+    (define (has-runes)
+      (say knpc "Have you found the Accursed yet?")
+      (if (yes? kpc)
+          (has-found-accursed)
+          (need-to-find-accursed)))
+
     (define (check-second-quest)
-      ;; FIXME: need more better stuff here...
-      (say knpc "I see the Accursed haven't killed you yet. "
-           "I guess that's something."))
+      (if (or (has-all-runes? kpc)
+              (missing-only-s-rune? kpc))
+          (has-runes)
+          (need-to-find-runes)))
 
     (define (check-first-quest)
       (if (in-inventory? kpc t_rune_k)
@@ -220,7 +255,7 @@
 
 (define (ench-moon knpc kpc)
   (say knpc "Ask Kalcifax the Traveler of moongates. "
-       "He is quite the expert."))
+       "She is quite the expert."))
 
 (define (ench-shri knpc kpc)
   (say knpc "The Shrine Gate opens unpredictably, and only for a short time. "
@@ -251,7 +286,8 @@
 
 (define (ench-wrig knpc kpc)
   (say knpc "The Wisest Wright prefers to work in isolation. You may find him "
-       "if your are persistent, but not in any city."))
+       "if you are persistent, but not in any city. "
+       "Seek the mage Kalcifax, I think she knows the Engineer well."))
 
 (define (ench-necr knpc kpc)
   (say knpc "The most depraved and wicked of all the Wise, "
@@ -269,6 +305,9 @@
       (say knpc "The thief who stole my item must be very clever. The rangers "
            "lost his trail in Trigrave. Inquire among everyone there if they "
            "have seen the THIEF.")))
+
+(define (ench-kalc knpc kpc)
+  (say knpc "Kalcifax? She's rather hard to keep track of I'm afraid."))
 
 (define enchanter-conv
   (ifc basic-conv
@@ -296,6 +335,7 @@
        (method 'wiza ench-wiza)
        (method 'wrog ench-wrog)
        (method 'wrig ench-wrig)
+       (method 'kalc ench-kalc)
 
        ))
 

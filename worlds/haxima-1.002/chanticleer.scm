@@ -120,7 +120,7 @@
           (begin
             (chant-dec-gold! knpc)
             (say knpc 
-                 "KURPOLIS\n"
+                 "LOST HALLS\n"
                  "\n"
                  "Delving ever deeper,\n"
                  "They woke the ancient sleeper,\n"
@@ -129,7 +129,7 @@
                  "So I won't bore you with detail!\n"
                  "\n"
                  "[stops playing] If you simply MUST go investigate, "
-                 "search the southern coast between mountain and sea.")))))
+                 "search the northern coast for a hidden bog.")))))
 
 (define (chant-thie knpc kpc)
   (if (isdrunk? knpc)
@@ -276,4 +276,7 @@
                (lambda (knpc kpc)
                  (say knpc "Well, gossip really. Give me a name, I'll give "
                       "you the dirt.")))
+       (method 'lost
+               (lambda (knpc kpc)
+                 (say knpc "Well, I wouldn't be a bard if I didn't know a song about the fabled Lost Halls!")))
        ))

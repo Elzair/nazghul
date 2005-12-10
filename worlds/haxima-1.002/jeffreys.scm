@@ -82,7 +82,10 @@
 (define (jeff-sear knpc kpc)
   (say knpc "[He grows exasperated] I can spare no one to search for the "
        "Warritrix! Now, if you don't mind, I'm a busy man...")
-  (kern-conv-end))
+  (kern-conv-end)
+  (if (is-player-party-member? ch_ini)
+      (say ch_ini "Something smells rotten in Denmark. I don't like this. We've got to find her!"))
+  )
 
 ;; Townspeople...
 (define (jeff-glas knpc kpc)
@@ -108,6 +111,15 @@
   (say knpc "We miss his mighty arm in battle, but his weapons and armor "
        "serve us well, too."))
 
+(define (jeff-lost knpc kpc)
+  (say knpc "I've sent the Warritrix to investigate the Lost Halls. "
+       "Until I hear back from here I'll say no more! Now, good day!")
+  (kern-conv-end)
+  (if (is-player-party-member? ch_ini)
+      (say ch_ini "How can anyone look for the Warritrix if they won't tell us where she is? "
+           "We've got to find the entrance on our own. "
+           "Somebody must know where it is, let's keep asking."))
+  )
 
 (define jeff-conv
   (ifc basic-conv
@@ -127,6 +139,7 @@
        (method 'erra jeff-erra)
        (method 'glas jeff-glas)
        (method 'ange jeff-ange)
+       (method 'lost jeff-lost)
        (method 'patc jeff-patc)
        (method 'stew jeff-stew)
        (method 'ini jeff-ini)

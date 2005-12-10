@@ -138,14 +138,6 @@
   (let* ((gob (kobj-gob-data knpc))
         (quest (silas-quest gob)))
 
-    (define (has-all-runes?)
-      (all-in-inventory? kpc rune-types))
-
-    (define (missing-only-s-rune?)
-      (all-in-inventory? kpc
-                         (filter (lambda (ktype)
-                                   (not (eqv? ktype t_rune_s)))
-                                 rune-types)))
 
     (define (give-last-rune)
       (say knpc "I see you have all save 1 of the runes. Please forgive me for "
@@ -205,9 +197,9 @@
         (if (quest-done? quest)
             (say knpc "Seek the Demon Gate!")
             (if (quest-accepted? quest)
-                (if (has-all-runes?)
+                (if (has-all-runes? kpc)
                     (end-quest)
-                    (if (missing-only-s-rune?)
+                    (if (missing-only-s-rune? kpc)
                         (give-last-rune)
                         (continue-quest)))
                 (offer-quest))

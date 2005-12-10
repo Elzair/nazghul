@@ -204,7 +204,7 @@
           (cons (filter (lambda (a) (and (kern-in-los? origin a)
                                          (kern-is-valid-location? a)
                                          (terrain-ok-for-field? a)))
-                        (get-line (mk-loc place x y) east n))
+                        (get-line (mk-loc place x y) south n))
                 (get-lines (+ x dx)
                            (if (= y 0) 0 (- y 1))
                            (+ n (if (= y 0) 1 2))
@@ -355,12 +355,17 @@
     (kern-char-set-fleeing kchar #t))
   (let ((all-kobjs (kern-place-get-objects (car (kern-obj-get-location caster)))))
     (cond ((null? all-kobjs) 
-           (kern-print "Odd, Nobody here!\n"))
+           (kern-print "Odd, Nobody here!\n")
+           result-no-effect
+           )
           (else (let ((all-undead-combatants (filter is-undead-char? all-kobjs)))
                   (cond ((null? all-undead-combatants) 
-                         (kern-print "No undead here!\n"))
-                        (else (map repel all-undead-combatants)))))))
-  #t) ;; always succeeds
+                         (kern-print "No undead here!\n")
+                         result-no-effect
+                         )
+                        (else (map repel all-undead-combatants)
+                              result-ok
+                              )))))))
 
 (define (in-wis  caster)
   (let ((loc (kern-obj-get-location caster)))

@@ -603,9 +603,10 @@ enum MoveResult Character::move(int dx, int dy)
 
 		// *** Switch ***
 
-		if (isPlayerControlled() && 
-                    occupant->isPlayerControlled() &&
-		    isSelected()) {
+		if (isPlayerControlled() 
+                    //&& occupant->isPlayerControlled() 
+                    //&& isSelected()
+                        ) {
 
 			// Special case: if both the occupant and this
 			// character are player-controlled then have them
@@ -1914,11 +1915,20 @@ void Character::exec()
 
                 points_last_loop = 0;
 
+                // Since this character is in follow mode it's keystroke hook
+                // hasn't been run yet. Do it now so that effects like
+                // paralysis  properly on PC's in follow mode.
+                runHook(OBJ_HOOK_KEYSTROKE);
+                if (isTurnEnded()) {
+                        break;
+                }
+
                 while (1 < place_flying_distance(Place, getX(), getY(), 
                                                  leader->getX(), 
-                                                 leader->getY()) && 
-                       ! isTurnEnded() &&
-                       getActionPoints() != points_last_loop) {
+                                                 leader->getY()) 
+                       //&& ! isTurnEnded() 
+                       && getActionPoints() != points_last_loop
+                        ) {
 
                         points_last_loop = getActionPoints();
 
@@ -1933,6 +1943,10 @@ void Character::exec()
                         mapCenterView(getView(), getX(), getY());
                         mapSetDirty();
                 }
+
+                // In follow mode don't accumulate action point depth. This
+                // leads to annoying laggardliness in player party members.
+                setActionPoints(0);
                 break;
  
         case CONTROL_MODE_IDLE:

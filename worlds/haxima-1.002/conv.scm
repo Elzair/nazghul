@@ -127,6 +127,10 @@
   (say knpc "Kurpolis is an ancient underground ruin. "
        "You'll find the entrance somewhere near Glasdrin."))
 
+(define (basic-lost knpc kpc)
+  (say knpc "The Lost Halls? I've only heard them mentioned in bard's songs. "
+       "I didn't know they really existed."))
+
 ;; establishments
 (define (basic-whit knpc kpc)
   (say knpc "The White Stag is in Green Tower."))
@@ -136,16 +140,30 @@
   (say knpc "No, I don't know anything about a thief."))
 
 (define (basic-rune knpc kpc)
-  (say knpc "I don't know much about runes."))
+  (say knpc "I don't know much about runes. Try asking one of the Wise."))
 
 (define (basic-wise knpc kpc)
-  (say knpc "The Wise influence affairs in the Shard."))
+  (say knpc "The Wise have great influence over affairs in the Shard. Do you want to know their names?")
+  (if (yes? kpc)
+      (say knpc "There's the Enchanter, the Necromancer, the Alchemist, the MAN, the Engineer and the Warritrix.")))
 
 (define (basic-shar knpc kpc)
   (say knpc "The Shard is what we call our world."))
 
 (define (basic-warr knpc kpc)
-  (say knpc "The Warritris is the Wise Warrior. If you're looking for her try Glasdrin."))
+  (say knpc "The Warritrix is the Wise Warrior. If you're looking for her try Glasdrin."))
+
+(define (basic-engi knpc kpc)
+  (say knpc "I've hard the Engineer is the greatest Wright in the land, "
+       "but I don't know much about him."))
+
+(define (basic-man knpc kpc)
+  (say knpc "The MAN is a master wrogue. Nobody knows where his hideout is. "
+       "It's rumoured that he travels in disguise."))
+
+(define (basic-alch knpc kpc)
+  (say knpc "The Alchemist is a Wise Wright who specializes in potions. "
+       "You'll find his shop in Oparine."))
 
 (define basic-conv
   (ifc '()
@@ -159,12 +177,16 @@
        (method 'ench basic-ench)
        (method 'wise basic-wise)
        (method 'warr basic-warr)
+       (method 'man basic-man)
+       (method 'engi basic-engi)
+       (method 'alch basic-alch)
 
        ;; towns & regions
        (method 'absa basic-absa)
        (method 'bole basic-bole)
        (method 'gree basic-gree)
        (method 'trig basic-trig)
+       (method 'lost basic-lost)
        (method 'opar basic-opar)
        (method 'fens basic-fens)
        (method 'shar basic-shar)
@@ -264,10 +286,14 @@
   (say knpc "The commander of the Second Garrison believes a Lich is causing problems on the second level."))
 (define (kurp-hydr knpc kpc)
   (say knpc "I've heard there is a vast underground lake below us, and a Hydra lurks in a nearby cave."))
+(define (kurp-lost knpc kpc)
+  (say knpc "I've heard rumours that a patrol found the entrance to the legendary Lost Halls. "
+       "Ask Commander Jeffrey's, he's being tight-lipped about it."))
 (define kurpolis-conv
   (ifc basic-conv
        (method 'drag kurp-drag)
        (method 'fire kurp-fire)
        (method 'lich kurp-lich)
        (method 'hydr kurp-hydr)
+       (method 'lost kurp-lost)       
        ))

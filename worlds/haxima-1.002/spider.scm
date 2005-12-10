@@ -52,7 +52,7 @@
 (define (spider-egg-hatch kegg)
   (spider-display "spider-egg-hatch")(spider-newline)
   (kern-log-msg "A spider hatches!")
-  (kern-obj-put-at (mk-wood-spider) (kern-obj-get-location kegg))
+  (kern-obj-put-at (mk-npc 'giant-spider (calc-level)) (kern-obj-get-location kegg))
   (kern-obj-remove kegg))
 
 (define (spider-egg-exec kegg)

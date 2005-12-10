@@ -76,7 +76,6 @@
                          (list t_inv_potion 100)
                          )
         (say knpc "Always carry plenty of potions!"))))
-  
 
 ;; Rune...
 (define (alch-rune knpc kpc)
