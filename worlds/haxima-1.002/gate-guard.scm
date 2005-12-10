@@ -38,7 +38,10 @@
           (gate-guard-start-timer! guard)
           (say knpc "You may pass")
           (kern-conv-end))
-        (say knpc "That is not correct"))))
+        (begin
+          (say knpc "That is not correct")
+          (kern-conv-end)
+          ))))
 
 (define gate-guard-conv
   (ifc nil

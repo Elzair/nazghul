@@ -75,17 +75,17 @@
       (say knpc "Ring? What ring?")
       (begin
 
-        (define (take-gems)
-          (if (< (num-in-inventory kpc t_gem) 12)
+        (define (take-picklocks)
+          (if (< (num-in-inventory kpc t_picklock) 12)
               (say knpc "Mmm. Bit of a problem, guv'nah, "
-                   "you don't have enough gems. "
+                   "you don't have enough picklocks. "
                    "But I'll keep the ring 'ere on layaway until you do.")
               (begin
                 (say knpc "Right you are, 'ere you go, and there I go, "
                      "right as rain, right as rain! Enjoy your new ring, "
                      "guv'nah!")
-                (kern-obj-remove-from-inventory kpc t_gem 12)
-                (kern-obj-add-to-inventory knpc t_gem 12)
+                (kern-obj-remove-from-inventory kpc t_picklock 12)
+                (kern-obj-add-to-inventory knpc t_picklock 12)
                 (kern-obj-remove-from-inventory knpc t_skull_ring 1)
                 (kern-obj-add-to-inventory kpc t_skull_ring 1))))
 
@@ -103,10 +103,10 @@
                   (begin
                     (say knpc "Of course you do! Youse a fair man, guv'nah! "
                          "You know tit-for-tat, scratch each other's back! "
-                         "A dozen gems. A dozen gems and you can have the ring. "
+                         "A dozen picklocks. A dozen picklocks and you can have the ring. "
                          "Agreed?")
                     (if (yes? kpc)
-                        (take-gems)
+                        (take-picklocks)
                         (begin
                           (say knpc "That's my price. "
                                "Come back when you're ready to pay.")

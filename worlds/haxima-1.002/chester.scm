@@ -99,7 +99,7 @@
        "but in the dark it's all the same, eh?"))
 
 (define ches-conv
-  (ifc basic-conv
+  (ifc glasdrin-conv
 
        ;; basics
        (method 'default ches-default)

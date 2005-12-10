@@ -254,19 +254,17 @@
 ;; Glasdrin
 (define (glasdrin-warr knpc kpc)
   (say knpc "The Warritrix is the most cunning warrior of the age. I'm not sure where she is right now, ask the Steward or Commander Jeffries."))
-
 (define (glasdrin-stew knpc kpc)
   (say knpc "The Steward is the keeper of the city and realms of Glasdrin. You can usually find her in the Citadel."))
-
 (define (glasdrin-jeff knpc kpc)
   (say knpc "Jeffries is the commander of the Glasdrin militia. He's usually at work in the Citadel."))
-
 (define (glasdrin-kurp knpc kpc)
          (say knpc "Take the bridge north across the river then follow the "
               "mountains east and north into a canyon."))
-
 (define (glasdrin-cita knpc kpc)
   (say knpc "The Citadel is the civil and military headquarters of Glasdrin. It's the big keep in the southeast corner of town."))
+(define (glasdrin-ghol knpc kpc)
+  (say knpc "I seem to recall a man named Gholet was arrested for theft. You might check the Citadel's dungeon."))
 
 (define glasdrin-conv
   (ifc basic-conv
@@ -275,6 +273,7 @@
        (method 'jeff glasdrin-jeff)
        (method 'kurp glasdrin-kurp)
        (method 'cita glasdrin-cita)
+       (method 'ghol glasdrin-ghol)
        ))
 
 ;; Kurpolis

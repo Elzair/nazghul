@@ -1548,10 +1548,67 @@ static void run_combat(bool camping, class Character * guard, int hours,
 	combat_enter(&cinfo);
 }
 
+struct nearest_conversant_info {
+        class Object *origin;
+        class Object *nearest;
+        int min_distance;
+        int range;
+};
+
+static void cmd_nearest_conversant_visitor(class Object *obj, void *data)
+{
+        struct nearest_conversant_info *info = 
+                (struct nearest_conversant_info*)data;
+
+        if (! obj->getConversation())
+                return;
+
+        if (obj->isPlayerControlled())
+                return;
+        
+        /* Filter out objects not in los of the subject */
+        if (! place_in_los(info->origin->getPlace(),
+                           info->origin->getX(),
+                           info->origin->getY(),
+                           obj->getPlace(),
+                           obj->getX(),
+                           obj->getY()))
+                return;
+        
+
+        int dist = place_flying_distance(info->origin->getPlace(),
+                                         info->origin->getX(),
+                                         info->origin->getY(),
+                                         obj->getX(),
+                                         obj->getY());
+        if (dist > info->range)
+                return;
+
+        if (! info->nearest
+            || dist < info->min_distance) {
+                info->nearest = obj;
+                info->min_distance = dist;
+        }
+}
+
+static class Object *cmd_get_nearest_conversant(class Object *member, int range)
+{
+        struct nearest_conversant_info info;
+        info.origin = member;
+        info.nearest = NULL;
+        info.min_distance = 0;
+        info.range = range;
+
+        place_for_each_object(member->getPlace(), cmd_nearest_conversant_visitor,
+                              &info);
+
+        return info.nearest;
+}
+
 bool cmdTalk(Object *member)
 {
 	struct closure *conv = NULL;
-        class Object *obj;
+        class Object *obj, *conversant;
         int x, y;
 
 	// *** Prompt user & check if valid ***
@@ -1565,10 +1622,15 @@ bool cmdTalk(Object *member)
                         return false;
         }
 
-        x = member->getX();
-        y = member->getY();
+        // start cursor on nearest object with a conversation
+        conversant = cmd_get_nearest_conversant(member, 5);
+        if (! conversant)
+                conversant = member;
 
-	if (select_target(x, y, &x, &y, 4) == -1) {
+        x = conversant->getX();
+        y = conversant->getY();
+
+	if (select_target(x, y, &x, &y, 5) == -1) {
 		return false;
 	}
 

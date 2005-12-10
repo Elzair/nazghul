@@ -137,7 +137,7 @@
        "if their wounds are not too grievous."))
 
 (define ange-conv
-  (ifc basic-conv
+  (ifc glasdrin-conv
 
        ;; basics
        (method 'default ange-default)

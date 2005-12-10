@@ -146,7 +146,8 @@
 
 (define (meaney-firs knpc kpc)
   (say knpc "The first mate was an evil wretch named Jorn. "
-       "I don't know what became of him."))
+       "I heard he is a bandit now, somewhere in the great forest to the east. "
+       "You might ask around Green Tower."))
 
 (define (meaney-cook knpc kpc)
   (say knpc "Gholet is no doubt either dead or rotting in prison somewhere. "
@@ -222,7 +223,9 @@
        (method 'firs meaney-firs)
        (method 'cook meaney-cook)
        (method 'ring meaney-ring)
-
+       (method 'skul meaney-ring)
+       (method 'ghol meaney-cook)
+       (method 'jorn meaney-firs)
        ))
 
 (define (mk-meaney)

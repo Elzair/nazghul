@@ -152,8 +152,8 @@
       (say knpc "Mix mandrake, black pearl and spider silk, then chant Vas "
            "Uus Ylem next to the spot where the ship has sunk."))
   (say knpc "Ghertie will not give up the location of her ship freely. But "
-       "even the dead have desires, indeed that is the most worst part of "
-       "death, and Ghertie desires nothing more than REVENGE. Mark that word "
+       "even the dead have desires, indeed that is the worst part of "
+       "death! And Ghertie desires nothing more than REVENGE. Mark that word "
        "well, and remember it when you meet her ghost."))
 
 (define man-conv

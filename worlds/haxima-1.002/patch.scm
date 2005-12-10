@@ -113,7 +113,7 @@
 ;; Townspeople...
 
 (define patch-conv
-  (ifc basic-conv
+  (ifc glasdrin-conv
 
        ;; basics
        (method 'default patch-default)

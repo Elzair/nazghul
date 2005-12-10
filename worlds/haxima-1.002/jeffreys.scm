@@ -122,7 +122,7 @@
   )
 
 (define jeff-conv
-  (ifc basic-conv
+  (ifc glasdrin-conv
 
        ;; basics
        (method 'default jeff-default)

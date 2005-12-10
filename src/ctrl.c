@@ -387,6 +387,55 @@ ctrl_get_interfering_hostile(class Character *character)
         return NULL;
 }
 
+struct nearest_hostile_info {
+        class Character *origin;
+        class Character *nearest;
+        int min_distance;
+        int range;
+};
+
+static void ctrl_nearest_hostile_visitor(class Object *obj, void *data)
+{
+        struct nearest_hostile_info *info = (struct nearest_hostile_info*)data;
+
+        if (being_layer!=obj->getLayer())
+                return;
+
+        class Character *npc = (class Character*)obj;
+
+        if (! are_hostile(npc, info->origin))
+                return;
+        
+        int dist = place_flying_distance(info->origin->getPlace(),
+                                         info->origin->getX(),
+                                         info->origin->getY(),
+                                         obj->getX(),
+                                         obj->getY());
+        if (dist > info->range)
+                return;
+
+        if (! info->nearest
+            || dist < info->min_distance) {
+                info->nearest = npc;
+                info->min_distance = dist;
+        }
+}
+
+static class Character *
+ctrl_get_nearest_hostile_in_range(class Character *character, int range)
+{
+        struct nearest_hostile_info info;
+        info.origin = character;
+        info.nearest = NULL;
+        info.min_distance = 0;
+        info.range = range;
+
+        place_for_each_object(character->getPlace(), ctrl_nearest_hostile_visitor,
+                              &info);
+
+        return info.nearest;
+}
+
 static void ctrl_attack_ui(class Character *character)
 {
         int x;
@@ -452,6 +501,13 @@ static void ctrl_attack_ui(class Character *character)
                  * target. */
                 target = character->getAttackTarget();
 
+                if (target==character) {
+                        target = ctrl_get_nearest_hostile_in_range(
+                                character,
+                                weapon->getRange());
+                        if (! target)
+                                target = character;
+                }
 
                 /* Check the four adjacent tiles for hostiles who will
                  * interfere with a missile weapon */

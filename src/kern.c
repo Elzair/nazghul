@@ -2890,6 +2890,9 @@ static pointer kern_blit_map(scheme *sc, pointer args)
 
         terrain_map_blit(dst, dst_x, dst_y, src, src_x, src_y, w, h);
 
+        vmask_flush_all();
+
+
         /* Return the modified destination map */
         return scm_mk_ptr(sc, dst);
 }

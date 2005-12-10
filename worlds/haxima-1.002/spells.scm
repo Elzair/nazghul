@@ -147,8 +147,9 @@
   
 (define (user-cast-spell-on-party-member caster proc)
   (define (cast-it target)
-    (cond ((null? target) nil)
-          (else (proc caster target))))
+    (cond ((null? target) result-no-target)
+          (else (proc caster target)
+                result-ok)))
   (let ((loc (kern-obj-get-location caster)))
   (if (kern-place-is-wilderness? (loc-place loc))
       (cast-it (kern-ui-select-party-member))
