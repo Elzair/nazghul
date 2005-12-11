@@ -2974,6 +2974,8 @@ static void buy(struct merchant *merch)
                 } else {
                         player_party->add(type, quantity);
                 }
+                trade->quantity = player_party->inventory->numAvail(type);
+                statusRepaint();
 		foogodRepaint();
 	}
 

@@ -2683,7 +2683,9 @@ static pointer kern_conv_trade(scheme *sc, pointer args)
                 trade->sprite = type->getSprite();
                 trade->name = type->getName();
                 trade->data = type;
+                trade->quantity = player_party->inventory->numAvail(type);
                 trade->show_sprite = 1;
+                trade->show_quantity = 1;
         }
 
         ui_trade(&merch);
@@ -7250,7 +7252,7 @@ scheme *kern_init(void)
         /* kern-map api */
         API_DECL(sc, "kern-map-center-camera", kern_map_center_camera);
         API_DECL(sc, "kern-map-flash", kern_map_flash);
-        API_DECL(sc, "kern-map-repaint", kern_map_repaint);
+        API_DECL(sc, "kern-map-repaintg", kern_map_repaint);
         API_DECL(sc, "kern-map-set-dirty", kern_map_set_dirty);
         API_DECL(sc, "kern-map-set-jitter", kern_map_set_jitter);
         API_DECL(sc, "kern-map-set-peering", kern_map_set_peering);

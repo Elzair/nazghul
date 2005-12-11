@@ -43,7 +43,7 @@
                "[She vanishes with a cruel laugh]")
           (kern-conv-end)
           (kern-obj-remove knpc)
-          (map-set-dirty))
+          (kern-map-set-dirty))
         (begin
           (say knpc "You still have " nrem " rings to collect. "
                "Have you forgotten my instructions?")

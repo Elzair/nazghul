@@ -289,6 +289,9 @@ class Character:public Being {
 
         struct node *sched_chars_node;   /* for chars with multiplace scheds */
         bool forceContainerDrop; // ensure the container is dropped on death
+
+ private:
+        bool atAppointment();
 };
 
 extern void char_dtor(void *val);

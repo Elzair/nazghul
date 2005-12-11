@@ -841,7 +841,7 @@ static void myPaintTrade(void)
 
 		// quantity
 		if (Status.trades[i].show_quantity) {
-			screenPrint(&qrect, 0, "%d", 
+			screenPrint(&qrect, 0, "[%d]", 
                                     Status.trades[i].quantity);
 		}
 		// price

@@ -586,7 +586,7 @@ enum MoveResult Character::move(int dx, int dy)
 	if (!place_is_passable(
                     getPlace(), newx, newy, this,
                     PFLAG_MOVEATTEMPT | 
-                    (activity == COMMUTING ? PFLAG_IGNOREMECHS : 0))) {
+                    (getActivity() == COMMUTING ? PFLAG_IGNOREMECHS : 0))) {
 		return WasImpassable;
 	}
 
@@ -1597,6 +1597,18 @@ bool Character::canSee(class Object *obj)
                              obj->getPlace(), obj->getX(), obj->getY()));
 }
 
+bool Character::atAppointment()
+{
+        struct appt *curAppt = &sched->appts[appt];
+
+        if (getX() >= curAppt->x
+            && getX() < (curAppt->x + curAppt->w)
+            && getY() >= curAppt->y
+            && getY() < (curAppt->y + curAppt->h)) {
+                return true;
+        }
+        return false;
+}
 
 bool Character::commute()
 {
@@ -1606,14 +1618,17 @@ bool Character::commute()
         // rectangle search below. Since the path is cached I'm not sure how
         // big of a gain it would be.
 
-        // Search for an open place in the appointment rectangle
-        for (ty = sched->appts[appt].y; 
-             ty < sched->appts[appt].y + sched->appts[appt].h; 
-             ty++) {
+        struct appt *curAppt = &sched->appts[appt];
 
-                for (tx = sched->appts[appt].x; 
-                     tx < sched->appts[appt].x + sched->appts[appt].w; 
-                     tx++) {
+        // Check if the commute is over
+        if (atAppointment()) {
+                setActivity(curAppt->act);
+                return true;
+        }
+
+        // Else search for an open place in the appointment rectangle
+        for (ty = curAppt->y; ty < curAppt->y + curAppt->h; ty++) {
+                for (tx = curAppt->x; tx < curAppt->x + curAppt->w;  tx++) {
 
                         if (!place_is_passable(getPlace(), tx, ty, this, 
                                                PFLAG_IGNOREMECHS) ||
@@ -1627,7 +1642,7 @@ bool Character::commute()
                         
                         // Check if the commute is over.
                         if (getX() == tx && getY() == ty) {
-                                setActivity(sched->appts[appt].act);
+                                setActivity(curAppt->act);
                         }
 
                         return true;
@@ -1704,8 +1719,12 @@ void Character::getAppointment()
 
         if (nextAppt == sched->n_appts) {
                 if (Session->clock.hour < sched->appts[appt].hr) {
-                        setActivity(COMMUTING);
                         appt = 0;
+                        if (atAppointment()) {
+                                setActivity(sched->appts[appt].act);
+                        } else {
+                                setActivity(COMMUTING);
+                        }
                 }
         }
 
@@ -1716,8 +1735,12 @@ void Character::getAppointment()
 
         else if (Session->clock.hour >= sched->appts[nextAppt].hr &&
                  Session->clock.min >= sched->appts[nextAppt].min) {
-                setActivity(COMMUTING);
                 appt = nextAppt;
+                if (atAppointment()) {
+                        setActivity(sched->appts[appt].act);
+                } else {
+                        setActivity(COMMUTING);
+                }
         }
 }
 
@@ -2309,7 +2332,12 @@ void Character::leavePlayer(void)
 
 int Character::getActivity()
 {
-        return activity;
+        if (! sched)
+                return NONE;
+        getAppointment();
+        if (atAppointment())
+                return sched->appts[appt].act;
+        return COMMUTING;
 }
 
 void Character::setActivity(int val)

@@ -163,7 +163,7 @@
                        "Oh, lovely... lovely! Ahem. In the mountains of "
                        "the northwest, along their southern face, "
                        "there is a secret passage. It is near coordinates "
-                       "[60 40]."))
+                       "[92 10]."))
                 (say knpc "'Tis a pity. You have no use for the "
                      "vial, and I am too old to go treasure-hunting.")))
           (say knpc "Well, I do hear many things, many of which are only "
