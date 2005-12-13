@@ -197,6 +197,11 @@ enum move_result player_party::check_move_to(struct move_info *info)
 	if (vehicle && place_get_vehicle(info->place, info->x, info->y))
 		return move_occupied;
 
+        // pass subp vehi
+        // *    t    t    exit vehicle
+        // t    f    *    ok
+        // f    f    *    impassable
+
         info->subplace = place_get_subplace(info->place, info->x, info->y);
         if (info->subplace)
                 return move_enter_subplace;
