@@ -148,6 +148,7 @@
                                            "was once a fair war-maiden? [she "
                                            "cackles obscenely]")))
        (method 'mush shroom-trade)
+       (method 'buy shroom-trade)
        (method 'trad shroom-trade)
        (method 'sell shroom-trade)
        (method 'reag shroom-trade)

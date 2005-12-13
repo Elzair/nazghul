@@ -170,7 +170,7 @@
       (cast-wind-spell2 loc
                         ensnare-loc
                         dir
-                        (kern-char-get-level kchar))))
+                        (/ (kern-char-get-level kchar) 2))))
   (let* ((v (loc-diff (kern-obj-get-location ktarg)
                       (kern-obj-get-location kchar)))
          (dir (loc-to-cardinal-dir v)))

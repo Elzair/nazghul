@@ -49,11 +49,11 @@
   (put (mk-ladder-down 'p_spider_cave 6 9) 6 9)
   (put (mk-ladder-down 'p_spider_cave 15 4) 15 4)
   
-  (put (spawn-pt 'gaint-spider faction-spider) 6 9)
-  (put (spawn-pt 'gaint-spider faction-spider) 15 4)
-  (put (spawn-pt 'gaint-spider faction-spider) 7 4)
-  (put (spawn-pt 'gaint-spider faction-spider) 6 13)
-  (put (spawn-pt 'gaint-spider faction-spider) 14 12)
+  (put (spawn-pt 'giant-spider faction-spider) 6 9)
+  (put (spawn-pt 'giant-spider faction-spider) 15 4)
+  (put (spawn-pt 'giant-spider faction-spider) 7 4)
+  (put (spawn-pt 'giant-spider faction-spider) 6 13)
+  (put (spawn-pt 'giant-spider faction-spider) 14 12)
 
   )
 
