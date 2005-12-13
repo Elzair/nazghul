@@ -409,9 +409,6 @@ int session_load(char *filename)
         statusSetMode(Session->status_mode);
         mapSetLosStyle(Session->los);
 	windSetDirection(NORTH, 1); /* fixme -- hardcoded */
-        sky_start_session(&Session->sky, 
-                          NULL != Place && ! Place->underground);
-
         /* Run through all the objects in the world, initializing their
          * effects */
         list_for_each(&Session->data_objects, elem) {
@@ -421,6 +418,10 @@ int session_load(char *filename)
                         entry->start(entry->obj);
                 }
         }        
+
+        sky_start_session(&Session->sky, 
+                          NULL != Place && ! Place->underground);
+
 
         // This is also called from place_enter(), which is called when the
         // game first starts up but apparently not necessarily on a

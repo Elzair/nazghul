@@ -305,6 +305,10 @@ int playRun(void)
         // Run the optional startup script.
         session_run_start_proc(Session);
 
+        // Bugfix: sun & moon not shown until player takes a step
+        sky_advance(&Session->sky, 
+                    NULL != Place && ! Place->underground);
+
         mapUpdate(REPAINT_IF_DIRTY);
 
 	// Setup all the event handlers.

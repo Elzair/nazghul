@@ -87,6 +87,17 @@
  ;; objects:
  (list
 
+  ;; moongates
+  (list (kern-tag 'mg-1 (mk-moongate 'ord)) 91 71) ;; near green tower
+  (list (kern-tag 'mg-2 (mk-moongate 'ord)) 34 56) ;; near trigrave
+  (list (kern-tag 'mg-3 (mk-moongate 'ord)) 19 82) ;; near oparine
+  (list (kern-tag 'mg-4 (mk-moongate 'ord)) 21 19) ;; near enchanter's tower
+  (list (kern-tag 'mg-5 (mk-moongate 'ord)) 32 23)
+  (list (kern-tag 'mg-6 (mk-moongate 'ord)) 32 23)
+  (list (kern-tag 'mg-7 (mk-moongate 'ord)) 32 23)
+  (list (kern-tag 'mg-8 (mk-moongate 'ord)) 32 23)
+
+
   ;; dungeons
   (list (mk-mine-entrance 'p_lost_halls 1 4) 46 12)
 
