@@ -187,7 +187,7 @@
 ;; Engineer's Hut
 (define (mk-zone x y w h) (list 'p_engineers_hut x y w h))
 (define eng-bed (mk-zone 16 15 1 1))
-(define eng-workship (mk-zone 3 3 6 9))
+(define eng-workshop (mk-zone 3 3 6 9))
 
 ;;----------------------------------------------------------------------------
 ;; The MAN's Hideout

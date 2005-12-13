@@ -100,6 +100,8 @@
 (kern-load "ghertie.scm")
 (mk-ghertie)
 
+(kern-load "kalcifax.scm")
+
 ;;----------------------------------------------------------------------------
 ;; Place
 ;;----------------------------------------------------------------------------
@@ -125,6 +127,7 @@
   (put ch_lia 0 0)
   (put ch_fing 63 63)
   (put ch_ghertie 0 0)
+  (put (mk-kalcifax) 0 0)
 
   ;; inn
   (put (mk-locked-door) 9 8)

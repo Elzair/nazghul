@@ -1374,5 +1374,11 @@
 (define (get-place kobj)
   (loc-place (kern-obj-get-location kobj)))
 
+;; xp to reach the given level
+(define (power base exp)
+  (if (= 0 exp)
+      1
+      (* base (power base (- exp 1)))))
 
-
+(define (lvl-xp lvl)
+  (power 2 (+ 4 lvl)))

@@ -15,9 +15,9 @@
 ;; The schedule below is for the place "Engineer's Tower Ground Floor"
 ;;----------------------------------------------------------------------------
 (kern-mk-sched 'sch_engineer
-               (list 0  0  eng-workship   "working")
+               (list 0  0  eng-workshop   "working")
                (list 1  0  eng-bed        "sleeping")
-               (list 10 0  eng-workship   "working")
+               (list 10 0  eng-workshop   "working")
                )
 
 ;;----------------------------------------------------------------------------

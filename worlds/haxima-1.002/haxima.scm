@@ -193,7 +193,7 @@
          'source-moon-ifc ; ifc
          ;; gates (moons are fixed at 8 phases in mk-moon):
          (list 'mg-1 'mg-2 'mg-3 'mg-4
-               'mg-1 'mg-2 'mg-3 'mg-4
+               'mg-5 'mg-6 'mg-7 'mg-8
                ))
 
 ;;----------------------------------------------------------------------------
@@ -211,7 +211,7 @@
          nil     ; ifc
          ;; gates (moons are fixed at 8 phases in mk-moon):
          (list 'mg-1 'mg-2 'mg-3 'mg-4
-               'mg-1 'mg-2 'mg-3 'mg-4
+               'mg-5 'mg-6 'mg-7 'mg-48
                ))
 
 ;; ----------------------------------------------------------------------------
@@ -285,7 +285,7 @@
   )
 
 (define (simple-start kplayer)
-  (kern-obj-put-at kplayer (list p_green_tower 31 31)))
+  (kern-obj-put-at kplayer (list p_oparine 0 0      )))
   ;;(kern-obj-put-at kplayer (list p_moongate_clearing 11 11)))
       
 ;;----------------------------------------------------------------------------
