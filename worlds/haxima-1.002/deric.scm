@@ -132,6 +132,9 @@
        "A quite vicious-looking brute, I must say. "
        "Not that I am afraid of him. Ahem."))
 
+(define (deric-gobl knpc kpc)
+  (say knpc "Sneaky fellows! Why, just the other day I caught one here in town and had him thrown into prison."))
+
 (define (deric-brute knpc kpc)
   (say knpc "Very suspicious. He obviously did not come to trade, "
        "for he carried no merchandise. And he speaks not a lick of Common. "
@@ -154,8 +157,11 @@
        "a lone man traveling north through the forest, but we know not "
        "whence."))
 
+(define (deric-accu knpc kpc)
+  (say knpc "I assure you, my good man, there are no Accursed around here."))
+
 (define deric-conv
-  (ifc basic-conv
+  (ifc green-tower-conv
        (method 'abe        deric-abe)
        (method 'afra       deric-afraid)
        (method 'ambi       deric-ambition)
@@ -182,6 +188,7 @@
        (method 'thie       deric-thie)
        (method 'towe       deric-tower)
        (method 'two        deric-two)
+       (method 'gobl       deric-gobl)
 ))                
 
 (define (mk-deric tag)

@@ -59,7 +59,6 @@
 ;; Second-tier responses
 (define (meaney-get-donation knpc kpc)
   (define (rejected)
-    (display "rejected")(newline)
     (cond ((> (kern-player-get-gold) 0)
            (say knpc "I see. Perhaps another time. [He turns away sadly]")
            (kern-conv-end))
@@ -70,7 +69,7 @@
         (begin
           (say knpc "Wilt thou donate some gold to help the poor?")
           (if (kern-conv-get-yes-no? kpc)
-              (let ((q (get-donation knpc kpc)))
+              (let ((q (get-gold-donation knpc kpc)))
                 (if (> q 0)
                     (begin
                       (say knpc "Bless you, stranger! "

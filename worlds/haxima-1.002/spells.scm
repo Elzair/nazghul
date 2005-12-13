@@ -464,7 +464,9 @@
 ;; ----------------------------------------------------------------------------
 ;; Sixth Circle
 ;; ----------------------------------------------------------------------------
-(define (in-an  caster) (kern-add-magic-negated (kern-dice-roll "3d6")))
+(define (in-an  caster) 
+  (kern-add-magic-negated (kern-dice-roll "3d6"))
+  result-ok)
 
 (define (in-rel-por caster)
   (let ((loc (get-target-loc caster 5)))

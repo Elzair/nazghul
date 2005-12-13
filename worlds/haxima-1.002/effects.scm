@@ -325,7 +325,7 @@
    (list 'ef_charm                     nil                   'charm-apply        'charm-rm        'charm-apply        "start-of-turn-hook" "C" 0   #f   5)
    (list 'ef_invisibility              nil                   'invisibility-apply 'invisibility-rm 'invisibility-apply "start-of-turn-hook" "N" 0   #t  10)
    (list 'ef_permanent_invisibility    nil                   'invisibility-apply 'invisibility-rm 'invisibility-apply "start-of-turn-hook" "N" 0   #t  -1)
-   (list 'ef_slime_split               'slime-split-exec     nil                 nil              'slime-split-exec   "on-damage-hook"     ""  0   #f  -1)
+   (list 'ef_slime_split               'slime-split-exec     nil                 nil              nil                 "on-damage-hook"     ""  0   #f  -1)
    (list 'ef_spider_calm               nil                   'spider-calm-apply  'spider-calm-rm  nil                 "start-of-turn-hook" ""  0   #f  60) 
    (list 'ef_drunk                     'drunk-exec           'drunk-apply        'drunk-rm        nil                 "keystroke-hook"     "A" 0   #t  60)
    (list 'ef_disease                   'disease-exec         nil                 nil              nil                 "start-of-turn-hook" "D" 0   #f  -1)

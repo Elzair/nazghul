@@ -2388,6 +2388,10 @@ void Character::save(struct save *save)
                 save->enter(save, "(bind\n");
         }        
 
+        if (getForceContainerDrop()) {
+                save->enter(save, "(kern-char-force-drop");
+        }
+
         save->enter(save, "(kern-mk-char\n");
         if (this->tag) {
                 save->write(save, "\'%s\n", this->tag );
@@ -2443,6 +2447,10 @@ void Character::save(struct save *save)
         Object::saveHooks(save);
 
         save->exit(save, ")\n");
+
+        if (getForceContainerDrop()) {
+                save->exit(save, "#t) ;; kern-char-force-drop\n");
+        }
 
         if (getGob()) {
 

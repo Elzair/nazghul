@@ -103,7 +103,7 @@
    (kern-char-force-drop
    (kern-char-arm-self
     (kern-mk-char 
-    'ch_my           ; tag
+    'ch_jorn           ; tag
     "Jorn"             ; name
     jorn-species     ; species
     jorn-occ         ; occ

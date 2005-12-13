@@ -34,6 +34,8 @@
    "Gu.....Spirit, Ancestor"
    "Ha.....Good, Yes, Skillful"
    "Hi.....Magic"
+   "Iki....Go, At"
+   "Jo.....Join"
    "Ka.....Kill, Destroy, End"
    "Ki.....Health, Life-Force, Power"
    "Lu.....Change, Metamorphosis, Transformation"
@@ -119,6 +121,7 @@
 (define (gen-me gen player) (say gen "Bo-Ma-Zu. I watch the forest, or I seek the hidden ways." ))
 (define (gen-ki gen player) (say gen "Bo-Ha-Ki! I am healthy." ))
 (define (gen-hi gen player) (say gen "Ha! Hi-Ma-To is the word for 'shaman'." ))
+(define (gen-jo gen player) (say gen "Very good! If you befriend a goblin he may join you in your adventures."))
 (define (gen-cho gen player) (say gen "Ha! Cho-To means 'a man'." ))
 (define (gen-nu gen player) (say gen "Ha! Nu-Ki is the goblin word for 'food'" ))
 (define (gen-ka gen player) (say gen "Ha! Ka-Ha-To means warrior." ))
@@ -144,6 +147,29 @@
        "the north wood recently saw a lone man traveling northeast toward "
        "Bole."))
 
+(define (gen-kama knpc kpc)
+  (if (is-player-party-member? ch_kama)
+      (begin
+        (say knpc "I see Kama has joined you. Bonaha Kama!")
+        (say ch_kama "Unh. Bonaha Mazuto."))
+      (begin
+        (say knpc "Kama is a forest goblin hunter. He was supposed to meet me at the edge of town a few nights back but he never showed up. Have you seen him?")
+        (if (yes? kpc)
+            (begin
+              (say knpc "Is he in trouble?")
+              (if (yes? kpc)
+                  (say knpc "We must help him if we can!")
+                  (say knpc "That is a relief!")))
+            (say knpc "If you do, let me know. I'm a bit worried.")))))
+            
+(define (gen-ruka knpc kpc)
+  (say knpc "Ruka is the goblin's name for Angriss, their god of death. "
+       "The priests of Angriss were agitators during the goblin wars. "
+       "Her cult has all but died out since their defeat. ")
+  (prompt-for-key)
+  (say knpc "Now, she is only a myth to keep children from straying into the woods, "
+       "where more practical dangers still exist."))
+
 (define gen-conv
   (ifc basic-conv
        (method 'bo gen-bo)
@@ -153,6 +179,7 @@
        (method 'gu gen-gu)
        (method 'ha gen-ha)
        (method 'hi gen-hi)
+       (method 'jo gen-jo)
        (method 'ka gen-ka)
        (method 'ki gen-ki)
        (method 'me gen-me)
@@ -189,6 +216,8 @@
        (method 'thie gen-thie)
        (method 'wars gen-wars)
        (method 'wood gen-woodsman)
+       (method 'kama gen-kama)
+       (method 'ruka gen-ruka)
        ))
 
 ;;----------------------------------------------------------------------------

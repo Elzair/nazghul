@@ -251,7 +251,8 @@
   )
 
 (define (simple-start kplayer)
-  (kern-obj-put-at kplayer (list p_moongate_clearing 11 11)))
+  (kern-obj-put-at kplayer (list p_green_tower 31 31)))
+  ;;(kern-obj-put-at kplayer (list p_moongate_clearing 11 11)))
       
 ;;----------------------------------------------------------------------------
 ;; To skip the extended start scene comment out this next line and uncomment

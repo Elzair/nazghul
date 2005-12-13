@@ -84,7 +84,7 @@
            (kern-mk-char 
             'ch_lich_king           ; tag
             "Lich King" ; name
-            sp_skeleton         ; species
+            sp_lich         ; species
             oc_wizard              ; occ
             s_lich     ; sprite
             faction-monster      ; starting alignment

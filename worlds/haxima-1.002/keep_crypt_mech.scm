@@ -70,7 +70,7 @@
 (define (kcm-exec kself)
   (let ((kcm (kobj-gob-data kself)))
     (if (and (kcm-on? kcm)
-             (> (modulo (random-next) 20) 18))
+             (> (modulo (random-next) 20) 16))
         (kcm-exec-main kcm
                        (loc-place (kern-obj-get-location kself))))))
 

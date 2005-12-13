@@ -211,7 +211,26 @@
 (define (prompt-for-key)
   (kern-log-msg "<Hit any key to continue>")
   (kern-ui-waitkey))
-
+(define (meet msg)
+  (kern-log-msg msg))
+(define (get-gold-donation knpc kpc)
+  (let ((give (kern-conv-get-amount kpc))
+        (have (kern-player-get-gold)))
+    (cond ((> give have)
+           (say knpc "You don't have that much!")
+           0)
+          (else
+           (kern-player-set-gold (- have give))
+           give))))
+(define (get-food-donation knpc kpc)
+  (let ((give (kern-conv-get-amount kpc))
+        (have (kern-player-get-food)))
+    (cond ((> give have)
+           (say knpc "You don't have that much!")
+           0)
+          (else
+           (kern-player-set-food (- have give))
+           give))))
 (define (working? knpc)
   (string=? "working" (kern-obj-get-activity knpc)))
 
@@ -295,4 +314,16 @@
        (method 'lich kurp-lich)
        (method 'hydr kurp-hydr)
        (method 'lost kurp-lost)       
+       ))
+
+;; Green Tower
+(define (gt-gobl knpc kpc)
+  (say knpc "Since the goblin wars there's been an uneasy truce. Sometimes they trade here in town, but if you meet them in the forest be careful."))
+(define (gt-towe knpc kpc)
+  (say knpc "The tower that gives this town its name is now the Ranger headquarters."))
+
+(define green-tower-conv
+  (ifc basic-conv
+       (method 'gobl gt-gobl)
+       (method 'towe gt-towe)
        ))

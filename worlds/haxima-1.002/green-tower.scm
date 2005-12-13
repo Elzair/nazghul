@@ -107,6 +107,8 @@
 (mk-deric 'ch_deric)
 
 (kern-load "jorn.scm")
+(kern-load "abe.scm")
+(kern-load "kama.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Place
@@ -125,6 +127,7 @@
   (put ch_doris   0 0)
   (put ch_deric   0 0)
   (put (mk-jorn) 0 0)
+  (put (mk-abe) 0 0)
   
   ;; Shroom's Shop
   (put (mk-locked-door) 48 10)

@@ -287,7 +287,6 @@
         (list 5   "1"     t_sanct_lor_scroll)
         (list 5   "1"     t_an_tym_scroll)
         (list 5   "1"     t_vas_rel_por_scroll)
-        (list 100 "1d3-1" t_heal_potion)
         (list 20  "1"     t_mana_potion)
         (list 10  "1"     t_cure_potion)
         (list 10  "1"     t_poison_immunity_potion)

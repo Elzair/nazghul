@@ -13,7 +13,8 @@
 
 (define (can-use-ability? ability kchar)
   (println " can-use-ability?" display ability)
-  (and (>= (kern-char-get-mana kchar)
+  (and (<= (kern-get-magic-negated) 0)
+       (>= (kern-char-get-mana kchar)
            (ability-mana-cost ability))
        (>= (kern-char-get-level kchar)
            (ability-level-required ability))))

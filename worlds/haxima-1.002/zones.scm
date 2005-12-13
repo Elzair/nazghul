@@ -225,8 +225,16 @@
 (define (mk-zone x y w h) (list 'p_green_tower x y w h))
 (define gt-ws-hall (mk-zone 42 50 12 8))
 (define gt-ws-tbl1 (mk-zone 47 52 1 1))
+(define gt-ws-tbl2 (mk-zone 49 53 1 1))
 (define gt-jorn-bed (mk-zone 20 57 1 1))
 (define gt-jorn-hut (mk-zone 21 57 4 4))
+(define gt-abe-bed (mk-zone 3 3 1 1))
+(define gt-ruins (mk-zone 6 50 7 7))
+
+;;----------------------------------------------------------------------------
+;; Green Tower Lower (incomplete)
+(define (mk-zone x y w h) (list 'p_green_tower_lower x y w h))
+(define gtl-cell1 (mk-zone 36 3 2 3))
 
 ;;----------------------------------------------------------------------------
 ;; Necromancer's Lair

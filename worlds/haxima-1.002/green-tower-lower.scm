@@ -82,6 +82,13 @@
 
  ;; objects
  (list
+  (put (mk-locked-windowed-door) 35 4)
+  (put (mk-locked-windowed-door) 35 8)
+  (put (mk-locked-windowed-door) 35 12)
+  (put (mk-locked-windowed-door) 30 4)
+  (put (mk-locked-windowed-door) 30 8)
+  (put (mk-locked-windowed-door) 30 12)
+  (put (mk-kama) 0 0)
   (put (mk-ladder-up 'p_green_tower 32 32) 32 32)
   (put (kern-tag 'gtl-portcullis-2 (mk-portcullis)) 33 18)
   (put (kern-tag 'gtl-portcullis-1 

@@ -2,6 +2,7 @@
 ;; init.scm -- contains lots of common scheme utilities
 (load "init.scm")
 
+
 ;; Override the default error hook to warn the loader when the interpreter
 ;; encounters any errors during evaluation.
 (define (my-error-hook . x)
@@ -304,6 +305,7 @@
        (kern-being-pathfind-to kobj kdest)))
 
 (define (can-pathfind? kobj dest)
+  (println "can-pathfind?")
   (not (null? (kern-obj-find-path kobj dest))))
 
 (define (notnull? val) (not (null? val)))
@@ -1253,17 +1255,6 @@
   (bind-rooms rooms))
 
 
-(define (get-donation knpc kpc)
-  (let ((give (kern-conv-get-amount kpc))
-        (have (kern-player-get-gold)))
-    (cond ((> give have)
-           (say knpc "You don't have that much!")
-           0)
-          (else
-           (kern-player-set-gold (- have
-                                    give))
-           give))))
-           
 (define (println . args)
   (map display args)
   (newline))

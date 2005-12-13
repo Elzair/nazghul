@@ -4943,7 +4943,13 @@ KERN_API_CALL(kern_add_magic_negated)
         }
 
         add_magic_negated(val);
+        foogodRepaint();
         return sc->T;
+}
+
+KERN_API_CALL(kern_get_magic_negated)
+{
+        return scm_mk_integer(sc, MagicNegated);
 }
 
 KERN_API_CALL(kern_add_quicken)
@@ -4956,6 +4962,7 @@ KERN_API_CALL(kern_add_quicken)
         }
 
         add_quicken(val);
+        foogodRepaint();
         return sc->T;
 }
 
@@ -4969,6 +4976,7 @@ KERN_API_CALL(kern_set_time_accel)
         }
 
         session_set_time_accel(val);
+        foogodRepaint();
         return sc->T;
 }
 
@@ -4996,6 +5004,7 @@ KERN_API_CALL(kern_add_time_stop)
         }
 
         add_time_stop(val);
+        foogodRepaint();
         return sc->T;
 }
 
@@ -6692,6 +6701,25 @@ KERN_API_CALL(kern_player_set_gold)
         return sc->T;
 }
 
+KERN_API_CALL(kern_player_get_food)
+{
+        return scm_mk_integer(sc, player_party->food);
+}
+
+KERN_API_CALL(kern_player_set_food)
+{
+        int val;
+
+        if (unpack(sc, &args, "d", &val)) {
+                rt_err("kern-player-set-food: bad args");
+                return sc->F;
+        }
+
+        player_party->food = val;
+        foogodRepaint();
+        return sc->T;
+}
+
 KERN_API_CALL(kern_begin_combat)
 {
         struct move_info info;
@@ -7163,8 +7191,10 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-place-synch", kern_place_synch);
 
         /* player api */
+        API_DECL(sc, "kern-player-get-food", kern_player_get_food);
         API_DECL(sc, "kern-player-get-gold", kern_player_get_gold);
         API_DECL(sc, "kern-player-set-follow-mode", kern_player_set_follow_mode);
+        API_DECL(sc, "kern-player-set-food", kern_player_set_food);
         API_DECL(sc, "kern-player-set-gold", kern_player_set_gold);
 
         /* kern-set api */
@@ -7207,6 +7237,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-fold-rect", kern_fold_rect);
         API_DECL(sc, "kern-get-distance", kern_get_distance);
         API_DECL(sc, "kern-get-objects-at", kern_get_objects_at);
+        API_DECL(sc, "kern-get-magic-negated", kern_get_magic_negated);
         API_DECL(sc, "kern-get-player", kern_get_player);
         API_DECL(sc, "kern-get-ticks", kern_get_ticks);
         API_DECL(sc, "kern-get-time", kern_get_time);

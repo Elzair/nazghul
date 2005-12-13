@@ -63,7 +63,7 @@
   "rr xx rr rr rr rr bb ,, ,, ,, ,, ,, rr rr rr xx xx rr rr "
   )
  (put (spawn-pt 'cave-goblin-slinger) 0 9)
- (put (spawn-pt 'gint-warrior 9 9)
+ (put (spawn-pt 'gint-warrior) 9 9)
  )
 
 (drop-random-corpses p_lost_halls_2 2)
@@ -154,7 +154,7 @@
  (put (spawn-pt 'giant-spider) 0 9)
  (put (spawn-pt 'gint-warrior) 13 8)
  (put (spawn-pt 'gint-warrior) 16 10)
- (put (spawn-pt 'gint-mage) 14 13))
+ (put (spawn-pt 'gint-mage) 14 13)
  )
 
 (mk-dungeon-room
