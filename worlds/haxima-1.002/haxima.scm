@@ -211,7 +211,7 @@
          nil     ; ifc
          ;; gates (moons are fixed at 8 phases in mk-moon):
          (list 'mg-1 'mg-2 'mg-3 'mg-4
-               'mg-5 'mg-6 'mg-7 'mg-48
+               'mg-5 'mg-6 'mg-7 'mg-8
                ))
 
 ;; ----------------------------------------------------------------------------

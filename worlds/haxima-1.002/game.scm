@@ -107,6 +107,7 @@
 (define faction-gint          9)
 (define faction-demon         10)
 (define faction-forest-goblin 11)
+(define faction-num           12)
 (define faction-green-tower   faction-men)
 (define faction-glasdrin      faction-men)
 (define faction-oparine       faction-men)

@@ -61,7 +61,7 @@
  nil ; neighbors
 
  (list ; objects
-  (put (mk-ladder-down 'p_absalot 2 2) 11 27)
+  (put (mk-ladder-up 'p_absalot 2 2) 11 27)
 
   ;; npc's
   (put (mk-silas) 9 9)

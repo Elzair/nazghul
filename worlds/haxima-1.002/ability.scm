@@ -94,7 +94,7 @@
 ;; field spells
 (define (cast-field-proc kchar loc ktype)
   (kern-log-msg (kern-obj-get-name kchar)
-                " casts a field spell")
+                " casts "(kern-type-get-name ktype) "!")
   (kern-obj-put-at (kern-mk-obj ktype 1) loc))
   
 (define (cast-fire-field-proc kchar ktarg)
@@ -312,6 +312,13 @@
         cast-sleep-field
         cast-poison-field
         cast-energy-field))
+
+(define all-field-spells
+  (list cast-fire-field
+        cast-poison-field
+        cast-sleep-field
+        cast-energy-field
+        ))
 
 ;; ranged-spells -- damaging spells which take a target kchar as an arg.
 (define fireball-spell cast-fireball)

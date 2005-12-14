@@ -143,12 +143,12 @@
   )
  (put (mk-magic-locked-door) 8 9)
  (put (mk-ladder-up 'p_absalot 40 35) 11 9)
+ (put (guard-pt 'gazer) 11 9)
+ (put (guard-pt 'corrupt-halberdier) 7 9)
+ (put (spawn-pt 'headless) 4 8)
+ (put (spawn-pt 'zorn) 6 11)
  )
 
-; (put (guard-pt 'gazer) 11 9)
-; (put (guard-pt 'corrupt-halberdier) 7 9)
-; (put (spawn-pt 'headless) 4 8)
-; (put (spawn-pt 'zorn) 6 11)
 
 (mk-dungeon-level 
  (list nil p_fire_sea nil)

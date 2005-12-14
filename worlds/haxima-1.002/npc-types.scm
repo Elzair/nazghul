@@ -158,6 +158,7 @@
 (define skel-effects (list ef_poison_immunity ef_fire_immunity))
 (define hydra-effects (list ef_poison_immunity ef_grow_head))
 (define drag-effects (list ef_fire_immunity))
+(define wisp-effects (list ef_poison_immunity ef_fire_immunity))
 
 ;;----------------------------------------------------------------------------
 ;; equipment packages for different types of npcs
@@ -383,7 +384,7 @@
 (define wolf                   (mk-npct "wolf"                     sp_wolf          nil        s_wolf             nil          nil                    nil           'animal-ai       faction-monster       nil))
 (define gazer                  (mk-npct "gazer"                    sp_gazer         oc_wizard  s_gazer            wizard-traps nil                    nil           'gazer-ai        faction-monster       nil))
 (define headless               (mk-npct "headless"                 sp_headless      oc_warrior s_headless         basic-traps  headless-equip         nil           'std-ai          faction-monster       nil))
-(define wisp                   (mk-npct "wisp"                     sp_wisp          nil        s_wisp             nil          nil                    nil           'std-ai          faction-monster       nil))
+(define wisp                   (mk-npct "wisp"                     sp_wisp          nil        s_wisp             nil          nil                    wisp-effects  'wisp-ai          faction-monster       nil))
 (define dragon                 (mk-npct "dragon"                   sp_dragon        nil        s_dragon           wizard-traps dragon-equip           drag-effects  'dragon-ai       faction-monster       nil))
 (define zorn                   (mk-npct "zorn"                     sp_zorn          oc_wrogue  s_zorn             wrogue-traps zorn-equip             nil           'std-ai          faction-monster       nil))
 (define demon                  (mk-npct "demon"                    sp_demon         nil        s_demon            basic-traps  nil                    nil           'std-ai          faction-monster       nil))

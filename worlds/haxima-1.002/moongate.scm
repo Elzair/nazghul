@@ -18,7 +18,9 @@
   (list moontag #f '() #f temp?))
 
 (define (moongate-kdest gate) 
+  (println "gate:" gate)
   (let ((kmoon (safe-eval (car gate))))
+    (println "moon:" kmoon)
     (cond ((null? kmoon) nil)
           (else (moon-get-current-gate kmoon)))))
 (define (moongate-open? gate) (cadr gate))

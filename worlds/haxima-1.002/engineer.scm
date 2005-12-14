@@ -5,7 +5,8 @@
 
 ;; fixme!
 (define voidship-parts
-  (list sulphorous_ash))
+  (list sulphorous_ash t_gem)
+  )
 
 (define voidship-loc (mk-loc 'p_shard 50 3))
 
@@ -117,27 +118,28 @@
       (say knpc "Yes, it looks like you have everything. "
            "Well, let's get to work...")
       (remove-stuff)
-      (say knpc "[After a good deal of effort, cursing, trying, failing...]")
+      (kern-log-msg "[After a good deal of effort, cursing, trying, failing...]")
       (prompt-for-key)
-      (say knpc "[retrying, refailing, pacing up and down, tearing out "
+      (kern-log-msg "[retrying, refailing, pacing up and down, tearing out "
            "fistfuls of hair...]")
       (prompt-for-key)
-      (say knpc "[more cursing, arguing, starting over, failing again...]")
+      (kern-log-msg "[more cursing, arguing, starting over, failing again...]")
       (prompt-for-key)
-      (say knpc "[retrying, refailing, weeping, gnashing of teeth...]")
+      (kern-log-msg "[retrying, refailing, weeping, gnashing of teeth...]")
       (prompt-for-key)
-      (say knpc "[...and so on and so forth...]")
+      (kern-log-msg "[...and so on and so forth...]")
       (prompt-for-key)
-      (say knpc "[...finally...]")
+      (kern-log-msg "[...finally...]")
       (prompt-for-key)
-      (say knpc "[...oh, hell, now what?...]")
+      (kern-log-msg "[...oh, hell, now what?...]")
       (prompt-for-key)
-      (say knpc "[...but then...]")
+      (kern-log-msg "[...but then...]")
       (kern-obj-relocate (mk-voidship) (eval-loc voidship-loc) nil)
-      (say knpc "[You both collapse with exhaustion] "
-           "That wasn't so bad. Well, she's all yours now. She's waiting "
-           "for you outside at the end of the dock. Good luck! "
-           "[He starts to snore]")
+      (kern-log-msg "[You both collapse with exhaustion] ")
+      (say knpc
+           "Well. That wasn't so bad. She's all yours now, waiting "
+           "for you outside at the end of the dock. Good luck! ")
+      (kern-log-msg "[He starts to snore]")
       (kern-obj-add-effect knpc ef_sleep nil)
       (quest-done! quest #t)
       (kern-conv-end))

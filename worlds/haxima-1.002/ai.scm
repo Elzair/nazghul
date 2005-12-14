@@ -316,6 +316,15 @@
            (blink-away-from-foes kchar))
       (spell-sword-ai kchar)))
 
+(define (wisp-ai kchar)
+  (display "wisp-ai ")(dump-char kchar)
+  (or (animal-ai kchar)
+      (and (wants-healing? kchar)
+           (in-melee-range-of-foes? kchar)
+           (blink-away-from-foes kchar))
+      (use-ranged-spell-on-foes? kchar all-field-spells)
+      ))
+
 (define (generic-ai kchar)
   (std-ai kchar))
 

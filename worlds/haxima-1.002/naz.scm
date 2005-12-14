@@ -1382,3 +1382,6 @@
 
 (define (lvl-xp lvl)
   (power 2 (+ 4 lvl)))
+
+(define (random-faction)
+  (modulo (random-next) faction-num))

@@ -52,7 +52,8 @@
   )
  
  ;; objects
- (list
+ (list 
+  (put (mk-monman) 0 0)
   (put (kern-mk-obj t_rune_d 1) 9 9)
 
   (put (kern-mk-obj F_sleep_perm 1)  15 9)
@@ -70,6 +71,11 @@
   (put (kern-mk-obj F_sleep_perm 1)  9 15)
   (put (kern-mk-obj F_fire_perm 1)   9 14)
   (put (kern-mk-obj F_energy_perm 1) 9 13)
+
+  (put (spawn-pt 'wisp) 7 9)
+  (put (spawn-pt 'wisp) 9 7)
+  (put (spawn-pt 'wisp) 11 9)
+  (put (spawn-pt 'wisp) 9 11)
 
   )
 

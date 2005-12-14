@@ -524,7 +524,7 @@
 (define (quas-an-wis  caster)
   (define (confuse kchar)
     (if (> (kern-dice-roll "2d20") 16)
-        (kern-obj-add-effect kchar ef_charm (charm-mk faction-none))))
+        (kern-being-set-base-faction kchar (random-faction))))
   (let ((foes (all-hostiles caster)))
     (cond ((null? foes) (kern-print "No hostiles here!\n"))
           (else
