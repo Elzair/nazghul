@@ -85,6 +85,7 @@
 (load "westpass.scm")
 (load "crypt.scm")
 (load "ancient-derelict.scm")
+(load "road_to_absalot.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Characters
@@ -296,7 +297,7 @@
   )
 
 (define (simple-start kplayer)
-  (kern-obj-put-at kplayer (list p_shard 43 18)))
+  (kern-obj-put-at kplayer (list p_shard 118 48)))
   ;;(kern-obj-put-at kplayer (list p_moongate_clearing 11 11)))
       
 ;;----------------------------------------------------------------------------
