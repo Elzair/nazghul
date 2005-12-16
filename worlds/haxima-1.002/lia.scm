@@ -50,6 +50,13 @@
                        (list ginseng                 8)
                        (list blood_moss              12)
                        (list black_pearl             8)
+                       (list in_ex_por_scroll        (* 4 50))
+                       (list in_an_scroll            (* 5 50))
+                       (list an_tym_scroll           (* 8 50))
+                       (list in_mani_cor_scroll      (* 8 50))
+                       (list vas_rel_por_scroll      (* 8 50))
+                       (list vas_mani_scroll         (* 4 50))
+                       (list wis_quas_scroll         (* 3 50))
                        )))
 
 (define (lia-pear knpc kpc)

@@ -34,10 +34,13 @@
  minutes ; minutes
  )
 
+;; NPC's who inhabit multiple places
+(kern-load "gregor.scm")
+(kern-load "kalcifax.scm")
+
 ;;----------------------------------------------------------------------------
 ;; Places
 ;;----------------------------------------------------------------------------
-(kern-load "gregor.scm")
 (load "gregors-hut.scm")
 (load "moongate-clearing.scm")
 (load "abandoned-farm.scm")
@@ -49,7 +52,6 @@
 (load "green-tower.scm")
 (load "green-tower-lower.scm")
 (load "mushroom-cave.scm")
-;;(load "kurpolis.scm")
 (load "goblin-kingdoms.scm")
 (load "treasury.scm")
 (load "bole.scm")
@@ -81,6 +83,7 @@
 (load "dank-cave.scm")
 (load "eastpass.scm")
 (load "westpass.scm")
+(load "crypt.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Characters
@@ -285,7 +288,7 @@
   )
 
 (define (simple-start kplayer)
-  (kern-obj-put-at kplayer (list p_oparine 0 0      )))
+  (kern-obj-put-at kplayer (list p_green_tower_lower 55 61      )))
   ;;(kern-obj-put-at kplayer (list p_moongate_clearing 11 11)))
       
 ;;----------------------------------------------------------------------------

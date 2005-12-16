@@ -125,7 +125,7 @@
                        "now about this rune. (COUGH)")
                   (begin
                     (say knpc "I thought so. King Luximene is a lich nowadays. "
-                         "Most unruly! His tomb is somewhere in the middle levels. "
+                         "Most unruly! His tomb is in a crypt beneath Green Tower. "
                          "If you bring me his skull I can tame his spirit and speak "
                          "with him. (COUGH) You'll have to defeat him first, "
                          "of course, as well as his undead army. "

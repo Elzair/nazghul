@@ -490,6 +490,7 @@
   (put (mk-dungeon 'p_kurpolis_entrance 9 10) 53 18)
   (put (mk-dungeon 'p_mushroom_cave 7 12) 78 74)
   (put (mk-dungeon 'p_lost_halls_1 2 2) 82 20)
+  (put (mk-dungeon 'p_necromancers_lair 9 9) 40 70)
 
   ;; wreck of the Merciful Death
   (put (mk-raise-listener 'raise-merciful-death nil) 

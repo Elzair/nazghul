@@ -28,7 +28,7 @@
               ((equal? kplace p_eastpass)
                (say knpc "Take the road west to Trigrave and ask around there."))
               ((equal? kplace p_trigrave)
-               (say knpc "Take the road north to Southpass and ask the guards there."))
+               (say knpc "Take the road north to The Fen."))
               (else 
                (say knpc "I'm not sure how to get there from here."))
         ))))
@@ -96,6 +96,8 @@
                (say knpc "Follow the trail south and west to Westpass and ask the rangers when you get there."))
               ((equal? kplace p_enchanters_tower)
                (say knpc "Go south to Trigrave and ask there."))
+              ((equal? kplace p_glasdrin)
+               (say knpc "Go west and south to Trigrave and ask there."))
               (else 
                (say knpc "I'm not sure how to get there from here."))
               ))))
@@ -165,6 +167,14 @@
   (say knpc "The Alchemist is a Wise Wright who specializes in potions. "
        "You'll find his shop in Oparine."))
 
+(define (basic-necr knpc kpc)
+  (say knpc "The Necromancer is a Wise Wizard who specializes in death magic. "
+       "I've heard he lives in a hidden cave."))
+
+(define (basic-drag knpc kpc)
+  (say knpc "Stories say a mighty dragon guards a fantastic hoard "
+       "in the Fire Sea."))
+
 (define basic-conv
   (ifc '()
        ;; fundamentals
@@ -180,6 +190,7 @@
        (method 'man basic-man)
        (method 'engi basic-engi)
        (method 'alch basic-alch)
+       (method 'necr basic-necr)
 
        ;; towns & regions
        (method 'absa basic-absa)
@@ -201,6 +212,8 @@
        (method 'rune basic-rune)
 
        ;; monsters
+       (method 'drag basic-drag)
+       
 
        ))
 
@@ -327,3 +340,12 @@
        (method 'gobl gt-gobl)
        (method 'towe gt-towe)
        ))
+
+;; Trigrave
+(define trigrave-conv
+  (ifc basic-conv
+       (method 'thie (lambda (knpc kpc) (say knpc "I don't know anything about a thief. Ask Gwen, maybe a traveler told her something.")))
+                       
+       ))
+
+

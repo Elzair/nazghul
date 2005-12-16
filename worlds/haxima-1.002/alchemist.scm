@@ -88,7 +88,7 @@
                    "I believe. I hope you didn't steal it! "
                    "I have seen several more like it, "
                    "but the person you really should speak to "
-                   "is the Necromancer. Are you interested in finding the "
+                   "is Abe. Are you interested in finding the "
                    "other runes?")
               (if (kern-conv-get-yes-no? kpc)
                   (if (in-inventory? kpc t_dragons_blood 1)
@@ -120,11 +120,15 @@
             (say knpc "I don't see it. Perhaps you dropped it?"))
         (say knpc "I might be able to help if you could show me.")))
 
+(define (alch-abe knpc kpc)
+  (say knpc "An old acquaintance of mine. "
+       "Last I heard he was studying the ruins at Green Tower."))
+
 (define (alch-drag knpc kpc)
   (say knpc "I've never done it personally, but if one wants to obtain some "
        "dragon's blood my understanding is that one must kill a dragon! "
-       "I hear they're common as cows in the regions of the Fire Sea, "
-       "deep in the bowels of the Shard beneath Kurpolis."))
+       "I hear they're common as cows in the regions of the Fire Sea."
+       ))
 
 
 ;; The Wise...
@@ -303,6 +307,7 @@
        (method 'accu alch-accu)
 
        (method 'lia alch-lia)
+       (method 'abe alch-abe)
 
        ))
 

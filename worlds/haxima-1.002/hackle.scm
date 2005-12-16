@@ -112,14 +112,7 @@
 
 ;; thief quest...
 (define (hackle-thie knpc kpc)
-  (say knpc "It is a Mighty Rogue indeed that robs two Mighty Wizards!"))
-
-(define (hackle-migh knpc kpc)
-  (say knpc "They disagree, their old argument must be resolved by another."))
-
-(define (hackle-anot knpc kpc)
-  (say knpc "Perhaps something will Wander into their Argument. Yes, she "
-       "thinks it will."))
+  (say knpc "It is a mighty rogue indeed that robs a mighty wizard!"))
 
 (define (hackle-robs knpc kpc)
   (say knpc "It robs and runs, down it's little mouse-hole!"))
@@ -135,20 +128,14 @@
   (if (kern-conv-get-yes-no? kpc)
       (say knpc "Then let it REVEAL and understand my riddle!")
       (begin
-        (say knpc "Wis Quas! The Red Bitch has a scroll, but not the "
-             "understanding.")))
+        (say knpc "Wis Quas! The Red Bitch has a scroll, but has not the "
+             "wisdom.")))
   )
 
 (define (hackle-reve knpc kpc)
   (say knpc "The Bill-boy knows where the mouse disappeared! "
        "Let it REVEAL there!"))
 
-(define (hackle-rogu knpc kpc)
-  (say knpc "The clever mouse plays the cats against one another!"))
-
-(define (hackle-cats knpc kpc)
-  (say knpc "One licks its fur, one prowls the night. They smugly purr, "
-       "and waste their might!"))
 
 (define hackle-conv
   (ifc basic-conv
@@ -175,21 +162,19 @@
        (method 'melv hackle-melv)
        (method 'thud hackle-thud)
        
-       (method 'anot hackle-anot)
        (method 'bole hackle-bole)
-       (method 'cat  hackle-cats)
-       (method 'cats hackle-cats)
        (method 'gaze hackle-gaze)
        (method 'god  hackle-wood)
        (method 'gods hackle-wood)
        (method 'hole hackle-hole)
        (method 'mad  hackle-mad)
-       (method 'migh hackle-migh)
+       (method 'migh hackle-robs)
        (method 'mous hackle-hole)
        (method 'reve hackle-reve)
        (method 'rob  hackle-robs)
        (method 'robs hackle-robs)
-       (method 'rogu hackle-rogu)
+       (method 'rogu hackle-robs)
+       (method 'wiza hackle-robs)
        (method 'shee hackle-shee)
        (method 'thie hackle-thie)
        (method 'wood hackle-wood)

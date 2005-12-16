@@ -54,22 +54,18 @@
 
     (define (start-second-quest)
       (quest-accepted! (ench-second-quest ench) #t)
-      (say knpc "Good for you! First, keep my rune. "
-           "If you encounter any of the other Wise ask them of it. "
-           "Try the Alchemist near Oparine. "
+      (say knpc "Good! First, keep my rune, and guard it well. ")
+      (prompt-for-key)
+      (say knpc "Second, seek out all the other Wise and ask them of the RUNE. "
+           "You might start with the Alchemist near Oparine. "
            "Although obscenely greedy, "
-           "he knows things even I do not.")
+           "he has devoted his life to the acquisition of secrets.")
       (prompt-for-key)
-      (say knpc "Second, seek the other runes. "
-           "I know not their full number nor their resting places. "
-           "One, I know, hangs about the neck of the Warritrix. "
-           "Seek her in Glasdrin.")
+      (say knpc "Third, beware the Accursed! "
+           "I sense a new leadership is guiding them, "
+           "and surely they know of you by know.")
       (prompt-for-key)
-      (say knpc "Third, find out what you can of the Accursed. "
-           "They grow bold. I sense a new leadership is guiding them. "
-           "And beware! For they surely know of you by know.")
-      (prompt-for-key)
-      (say knpc "Well, get to it! Come back when you have the other Runes.")
+      (say knpc "Well, get to it! Come back when you know what the RUNES are for.")
       (kern-conv-end)
       )
 
@@ -90,16 +86,17 @@
 
 
     (define (finish-first-quest)
-      (say knpc "Ah, I see you found my Rune!")
       (kern-obj-add-gold kpc 200)
       (kern-char-add-experience kpc 100)
+      (say knpc "Ah, I see you've found my Rune at last!")
       (say knpc "Perhaps your are not completely useless. "
            "Did you encounter any... resistance?")      
       (kern-conv-get-yes-no? kpc)
-      (say knpc "The Accursed were behind this theft, why I do not know. But "
-           "if they are seeking this rune, they are probably seeking the "
-           "others as well. And their intentions, whatever they are, will "
-           "not be good. We must stop them. Will you help?")
+      (say knpc "The Accursed were behind this theft. But why?"
+           "If they are seeking this rune, they are probably seeking the "
+           "others as well. Or perhaps they already have them. "
+           "We must find out what the Runes are for. "
+           "Will you help?")
       (quest-offered! (ench-second-quest ench) #t)
       (if (kern-conv-get-yes-no? kpc)
           (start-second-quest)
@@ -149,7 +146,7 @@
       (if (in-inventory? kpc t_rune_k)
           (finish-first-quest)
           (say knpc "Hmph. I see you still haven't found my item yet!"
-               " [He mutters something about Wanderers and thieves]")
+               " [He mutters something about Wanderers and Rogues]")
             ))
       
     (if (ench-met? ench)
@@ -216,8 +213,7 @@
                   ;; yes -- player is willing
                   (begin
                     (say knpc "Good! Rangers have tracked the thief to "
-                         "Trigrave. Go there and inquire if anyone has seen "
-                         "the thief.")
+                         "Trigrave. Go there and inquire about a THIEF.")
                     (quest-accepted! (ench-first-quest (gob knpc)) #t)
                     )
                   ;; no -- player is not willing
