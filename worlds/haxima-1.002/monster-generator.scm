@@ -352,7 +352,8 @@
 (define (pick-random-treasure)
   (let ((trsr (treasure-lookup (modulo (random-next) treasure-modulus))))
     (list (+ 1 (modulo (random-next) (treasure-quan trsr)))
-          (treasure-type trsr))))
+          (treasure-type trsr)
+          )))
 
 
 (define (mk-random-treasure)

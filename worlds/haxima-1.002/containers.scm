@@ -52,8 +52,8 @@
   (list loot))
 (define (corpse-loot corpse) (car corpse))
 (define (corpse-set-loot! corpse val) (set-car! corpse val))
-(define (corpse-loot-entry-q loot) (cadr loot))
-(define (corpse-loot-entry-type loot) (eval (car loot)))
+(define (corpse-loot-entry-q loot) (car loot))
+(define (corpse-loot-entry-type loot) (eval (cadr loot)))
 
 (define (corpse-search kobj)
   (let* ((corpse (kobj-gob-data kobj))

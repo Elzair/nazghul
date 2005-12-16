@@ -5,6 +5,7 @@
 ;; inhabited by trolls and other monsters.
 ;;----------------------------------------------------------------------------
 
+(kern-load "warritrix.scm")
 
 (mk-dungeon-room
  'p_lost_halls_1 "Lost Halls Entrance"
@@ -184,12 +185,12 @@
 
  (put (mk-corpse2
        (mk-contents
-        (add-content 't_rune_l 1)
-        (add-content 't_armor_chain_4 1)
-        (add-content 't_chain_coif_4 1)
-        (add-content 't_sword_4 1)
-        (add-content 't_shield_4 1)
-        (add-content 't_warritrix_orders 1)
+        (add-content 1 't_rune_l)
+        (add-content 1 't_armor_chain_4)
+        (add-content 1 't_chain_coif_4)
+        (add-content 1 't_sword_4)
+        (add-content 1 't_shield_4)
+        (add-content 1 't_warritrix_orders)
         )) 12 12)
  )
 

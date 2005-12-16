@@ -147,7 +147,8 @@
  (kern-mk-container
   nil ;; type
   nil ;; trap
-  nil ;; contents:)
+  (list ;; contents
+   (list 1 t_torch))
   )
 
  nil ;; party members (should be nil for initial load file)
@@ -288,7 +289,7 @@
   )
 
 (define (simple-start kplayer)
-  (kern-obj-put-at kplayer (list p_shard 39 80)))
+  (kern-obj-put-at kplayer (list p_lost_halls_6 11 12)))
   ;;(kern-obj-put-at kplayer (list p_moongate_clearing 11 11)))
       
 ;;----------------------------------------------------------------------------
