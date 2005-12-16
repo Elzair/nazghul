@@ -104,8 +104,13 @@
 (define (kama-bye knpc kpc)
   (say knpc "[his expression never changes]"))
 
+(define (kama-clov knpc kpc)
+  (if (not (kama-gave-food? (gob knpc)))
+      (kama-default knpc kpc)  
+      (say knpc "[He looks puzzled at first, but then nods] Ruka ka choto.")))
+
 (define kama-conv
-  (ifc basic-conv
+  (ifc nil
        (method 'hail kama-hail)
        (method 'default kama-default)
        (method 'bye kama-bye)
@@ -115,6 +120,7 @@
        (method 'food kama-food)
        (method 'rune kama-rune)
        (method 'ruka kama-ruka)
+       (method 'clov kama-clov)
     ))
 
 (define (mk-kama)

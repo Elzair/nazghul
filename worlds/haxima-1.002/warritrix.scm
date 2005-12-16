@@ -74,7 +74,7 @@
        "Goblin Wars and the Rune was lost. Do you wish to find it?")
   (if (yes? kpc)
       (say knpc "If anyone knows where it is, it would be the goblins. "
-           "Go to Green Tower and seek out Gen. Ask him of the goblins.")
+           "Go to Green Tower and seek out Gen. Ask him of CLOVIS.")
       (say knpc "If you do, ask me now, for like all who are dead I am pulled "
            "to the Void, and cannot resist for long."
            ))

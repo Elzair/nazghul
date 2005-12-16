@@ -14,7 +14,7 @@
   (kern-conv-end))
 
 (define (generic-join knpc kpc)
-  (kern-conv-say knpc "I cannot join you."))
+  (say knpc "I cannot join you."))
 
 ;; wise
 (define (basic-ench knpc kpc)

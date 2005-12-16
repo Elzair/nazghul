@@ -88,23 +88,25 @@
 ;;----------------------------------------------------------------------------
 ;; Characters
 ;;----------------------------------------------------------------------------
-(kern-mk-char 
- 'ch_wanderer
- "The Wanderer"        ; name
- sp_human              ; species
- oc_wanderer           ; occ
- s_wanderer    ; sprite
- faction-player        ; starting alignment
- 5 5 5                ; str/int/dex
- 6 2                   ; hp mod/mult
- 6 2                  ; mp mod/mult
- 29 0 3 1              ; hp/xp/mp/lvl
- #f                    ; dead
- nil                   ; conv
- nil                   ; sched
- nil                   ; special ai
- nil                   ; container
- nil)                  ; readied
+(set-level
+ (kern-mk-char 
+  'ch_wanderer
+  "The Wanderer"        ; name
+  sp_human              ; species
+  oc_wanderer           ; occ
+  s_wanderer    ; sprite
+  faction-player        ; starting alignment
+  5 5 5                ; str/int/dex
+  6 2                   ; hp mod/mult
+  6 2                  ; mp mod/mult
+  29 0 3 1              ; hp/xp/mp/lvl
+  #f                    ; dead
+  nil                   ; conv
+  nil                   ; sched
+  nil                   ; special ai
+  nil                   ; container
+  nil)                  ; readied
+ 8)
 
 
 ; ;; For test
@@ -136,7 +138,7 @@
  s_wanderer         ; sprite
  "Walk"                      ; movement description
  sound-walking               ; movement sound
- 0                           ; food
+ 1                           ; food
  0                           ; gold
  (* 60 60 5)                 ; turns to next meal (5 hours)
  nil                         ; formation
@@ -148,7 +150,11 @@
   nil ;; type
   nil ;; trap
   (list ;; contents
-   (list 1 t_torch))
+   (list 1 t_torch)
+   (list 1 mandrake)
+   (list 1 black_pearl)
+   (list 1 blood_moss)
+   )
   )
 
  nil ;; party members (should be nil for initial load file)
@@ -289,7 +295,7 @@
   )
 
 (define (simple-start kplayer)
-  (kern-obj-put-at kplayer (list p_lost_halls_6 11 12)))
+  (kern-obj-put-at kplayer (list p_green_tower 33 31)))
   ;;(kern-obj-put-at kplayer (list p_moongate_clearing 11 11)))
       
 ;;----------------------------------------------------------------------------

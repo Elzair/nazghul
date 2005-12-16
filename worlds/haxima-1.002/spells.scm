@@ -314,6 +314,9 @@
             result-ok
             result-no-effect))))
 
+;;----------------------------------------------------------------------------
+;; First Circle
+;;----------------------------------------------------------------------------
 (define (an-nox  caster)
   (cast-on-party-member cure-poison))
 
@@ -334,12 +337,14 @@
 (define (mani caster)
   (user-cast-spell-on-party-member caster heal-proc))
 
+;;----------------------------------------------------------------------------
+;; Second Circle
+;;----------------------------------------------------------------------------
 (define (sanct-nox  caster)
   (let ((target (kern-ui-select-party-member)))
     (if (not (null? target))
         (kern-obj-add-effect target ef_temporary_poison_immunity nil))))
   
-
 (define (an-sanct  caster)
   (let ((loc (kern-obj-get-location caster)))
     (cast-signal-spell caster 'unlock (ui-target loc 1 (mk-ifc-query 'unlock)))))
@@ -389,6 +394,9 @@
 (define (in-nox-por  caster)
   (user-cast-ranged-targeted-spell caster 8 cast-poison-missile-proc))
 
+;;----------------------------------------------------------------------------
+;; Third Circle
+;;----------------------------------------------------------------------------
 (define (in-flam-grav  caster)
   (cast-field-spell caster F_fire))
 
@@ -404,6 +412,9 @@
 (define (vas-lor  caster)
   (kern-obj-add-effect caster ef_great_light nil))
 
+;;----------------------------------------------------------------------------
+;; Fourth Circle
+;;----------------------------------------------------------------------------
 (define (an-grav  caster)
   (let ((field (ui-get-adjacent (kern-obj-get-location caster) is-field?)))
     (cond ((null? field) nil)
@@ -430,6 +441,16 @@
 (define (wis-quas  caster)
   (kern-add-reveal 50))
 
+;; bet-por -- single character blink
+(define (bet-por kcaster)
+  (let ((loc (kern-ui-target (kern-obj-get-location kcaster) (kern-char-get-level kcaster))))
+    (if (null? loc)
+        result-no-target
+        (kern-obj-relocate kcaster loc nil))))
+
+;;----------------------------------------------------------------------------
+;; Fifth Circle
+;;----------------------------------------------------------------------------
 (define (in-ex-por  caster)
   (let ((loc (kern-obj-get-location caster)))
     (println "in-ex-por")
@@ -531,7 +552,7 @@
            (map confuse foes))))
   result-ok)
 
-;; special spell which raises a sunken ship
+;; vas-uus-ylem -- special spell which raises a sunken ship
 (define (vas-uus-ylem kcaster)
   (let ((loc (kern-ui-target (kern-obj-get-location kcaster) 1)))
     (if (null? loc)
@@ -543,6 +564,16 @@
               (let ((kgen (car kobjs)))                
                 (signal-kobj kgen 'raise kgen kcaster)
                 result-ok))))))
+
+;; bet-por -- whole party blink
+(define (vas-por kcaster)
+  (let ((loc (kern-ui-target (kern-obj-get-location kcaster) 
+                             (kern-char-get-level kcaster))))
+    (if (null? loc)
+        result-no-target
+        (begin
+          (kern-obj-relocate (kern-char-get-party kcaster) loc nil)
+          result-ok))))
 
 ;; ----------------------------------------------------------------------------
 ;; Seventh Circle
@@ -670,12 +701,14 @@
   (list
    ;;    tag          name                handler      code L context      mixture
    ;;    ==========   ==============      =======      ==== = ===========  =====================================
+   ;; First Circle
    (list 'an_nox      "An Nox spell"      an-nox      "AN"  1 context-any  (list garlic ginseng))
    (list 'an_zu       "An Zu spell"       an-zu       "AZ"  1 context-any  (list garlic ginseng))
    (list 'grav_por    "Grav Por spell"    grav-por    "GP"  1 context-town (list sulphorous_ash black_pearl))
    (list 'in_lor      "In Lor spell"      in-lor      "IL"  1 context-any  (list sulphorous_ash))
    (list 'mani        "Mani spell"        mani        "M"   1 context-any  (list ginseng spider_silk))
 
+   ;; Second Circle
    (list 'sanct_nox   "Sanct Nox spell"   sanct-nox   "SN"  2 context-any  (list nightshade garlic))
    (list 'an_sanct    "An Sanct spell"    an-sanct    "AS"  2 context-town (list sulphorous_ash blood_moss))
    (list 'sanct       "Sanct spell"       sanct       "S"   2 context-town (list sulphorous_ash spider_silk))
@@ -686,19 +719,23 @@
    (list 'in_nox_por  "In Nox Por spell"  in-nox-por  "INP" 2 context-town (list nightshade blood_moss black_pearl))
    (list 'an_xen_bet  "An Xen Bet spell"  an-xen-bet  "AXB" 2 context-town (list spider_silk garlic))
 
+   ;; Third Circle
    (list 'in_flam_grav "In Flam Grav spell" in-flam-grav "IFG" 3 context-town (list sulphorous_ash black_pearl spider_silk))
    (list 'in_nox_grav  "In Nox Grav spell"  in-nox-grav  "ING" 3 context-town (list nightshade black_pearl spider_silk))
    (list 'in_zu_grav   "In Zu Grav spell"   in-zu-grav   "IZG" 3 context-town (list ginseng black_pearl spider_silk))
    (list 'vas_flam     "Vas Flam"           vas-flam     "VF"  3 context-town (list sulphorous_ash black_pearl))
    (list 'vas_lor      "Vas Lor"            vas-lor    "VL"  3 context-any (list mandrake sulphorous_ash))
 
+   ;; Fourth Circle
    (list 'an_grav       "An Grav spell"       an-grav       "AG"  4 context-any (list black_pearl sulphorous_ash))
    (list 'uus_por       "Uus Por spell"       uus-por       "UP"  4 context-any (list blood_moss spider_silk))
    (list 'des_por       "Des Por spell"       des-por       "DP"  4 context-any (list blood_moss spider_silk))
    (list 'in_sanct_grav "In Sanct Grav spell" in-sanct-grav "ISG" 4 context-town (list mandrake black_pearl spider_silk))
    (list 'in_sanct      "In Sanct spell"      in-sanct      "IS"  4 context-any (list sulphorous_ash ginseng garlic))
    (list 'wis_quas      "Wis Quas spell"      wis-quas      "WQ"  4 context-any (list nightshade spider_silk))
+   (list 'bet_por       "Bet Por spell"       bet-por       "BP"  4 context-town  (list black_pearl blood_moss))
 
+   ;; Fifth Circle
    (list 'in_ex_por   "In Ex Por spell"   in-ex-por   "IEP" 5 context-any  (list sulphorous_ash blood_moss))
    (list 'an_ex_por   "An Ex Por spell"   an-ex-por   "AEP" 5 context-any  (list sulphorous_ash blood_moss garlic))
    (list 'in_bet_xen  "In Bet Xen spell"  in-bet-xen  "IBX" 5 context-town (list spider_silk blood_moss sulphorous_ash))
@@ -706,6 +743,7 @@
    (list 'vas_mani    "Vas Mani spell"    vas-mani    "VM"  5 context-any  (list mandrake spider_silk ginseng))
    (list 'rel_tym     "Rel Tym spell"     rel-tym     "RT"  5 context-any  (list sulphorous_ash blood_moss spider_silk))
 
+   ;; Sixth Circle
    (list 'in_an           "In An spell"           in-an           "IA"   6 context-any  (list garlic mandrake sulphorous_ash))
    (list 'wis_an_ylem     "Wis An Ylem spell"     wis-an-ylem     "WAY"  6 context-any  (list mandrake sulphorous_ash))
    (list 'an_xen_exe      "An Xen Exe spell"      an-xen-exe      "AXE"  6 context-town (list black_pearl nightshade spider_silk))
@@ -713,7 +751,9 @@
    (list 'quas_an_wis     "Quas An Wis spell"     quas-an-wis     "QAW"  6 context-town (list mandrake nightshade))
    (list 'vas_uus_ylem    "Vas Uus Ylem spell"    vas-uus-ylem    "VUY"  6 context-wilderness (list mandrake black_pearl spider_silk))
    (list 'in_rel_por      "In Rel Por spell"      in-rel-por      "IRP"  6 context-town (list black_pearl blood_moss spider_silk))
+   (list 'vas_por         "Vas Por spell"         vas-por         "VP"   4 context-wilderness (list mandrake black_pearl blood_moss))
 
+   ;; Seventh Circle
    (list 'in_nox_hur   "In Nox Hur spell"   in-nox-hur   "INH" 7 context-town (list nightshade sulphorous_ash blood_moss))
    (list 'in_zu_hur    "In Zu Hur spell"    in-zu-hur    "IZH" 7 context-town (list mandrake ginseng blood_moss))
    (list 'in_quas_corp "In Quas Corp spell" in-quas-corp "IQC" 7 context-town (list nightshade mandrake garlic))
@@ -724,7 +764,7 @@
                                                                                                     blood_moss ginseng))
    (list 'kal_xen_nox      "Kal Xen Nox spell"      kal-xen-nox      "KXN"  8 context-town (list spider_silk mandrake nightshade))
 
-
+   ;; Eighth Circle
    (list 'in_flam_hur      "In Flam Hur spell"      in-flam-hur      "IFH"  8 context-town (list mandrake sulphorous_ash blood_moss))
    (list 'in_vas_grav_corp "In Vas Grap Corp spell" in-vas-grav-corp "IVGC" 8 context-town (list mandrake sulphorous_ash nightshade))
    (list 'an_tym           "An Tym spell"           an-tym           "AT"   8 context-any (list mandrake garlic blood_moss))

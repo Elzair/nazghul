@@ -170,6 +170,11 @@
   (say knpc "Now, she is only a myth to keep children from straying into the woods, "
        "where more practical dangers still exist."))
 
+(define (gen-clov knpc kpc)
+  (say knpc "King Clovis led the paladins in the Goblin War. "
+       "If my friend Kama would ever show up we could ask him "
+       "if the goblins ever recovered his body."))
+
 (define gen-conv
   (ifc basic-conv
        (method 'bo gen-bo)
@@ -218,6 +223,7 @@
        (method 'wood gen-woodsman)
        (method 'kama gen-kama)
        (method 'ruka gen-ruka)
+       (method 'clov gen-clov)
        ))
 
 ;;----------------------------------------------------------------------------
