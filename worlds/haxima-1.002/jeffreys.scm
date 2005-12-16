@@ -72,19 +72,18 @@
        "errand."))
 
 (define (jeff-erra knpc kpc)
-  (say knpc "[He looks a bit uneasy] Yes, she took a squad to the Lost Halls, "
-       "a dungeon not far from here. We received a report that the Accursed "
-       "have a secret enclave there... odd that she hasn't reported back yet.")
-  (prompt-for-key)
-  (say knpc "Normally I would send a search party, but at the moment I "
-       "haven't the troops to spare."))
+  (say knpc "[He looks a bit uneasy] Yes, she took a squad to the Lost Halls. "
+       "It's odd that she hasn't reported back yet... "
+       "Normally I would send a search party, "
+       "but at the moment I haven't the troops to spare."))
 
 (define (jeff-sear knpc kpc)
   (say knpc "[He grows exasperated] I can spare no one to search for the "
        "Warritrix! Now, if you don't mind, I'm a busy man...")
   (kern-conv-end)
   (if (is-player-party-member? ch_ini)
-      (say ch_ini "Something smells rotten in Denmark. I don't like this. We've got to find her!"))
+      (say ch_ini "Something smells rotten in Denmark. "
+           "We've got to find her!"))
   )
 
 ;; Townspeople...
@@ -112,13 +111,14 @@
        "serve us well, too."))
 
 (define (jeff-lost knpc kpc)
-  (say knpc "I've sent the Warritrix to investigate the Lost Halls. "
-       "Until I hear back from here I'll say no more! Now, good day!")
+  (say knpc "The Lost Halls are very dangerous. No place for amateurs. "
+       "I'd advise you to stay! Now good day, sir!")
   (kern-conv-end)
   (if (is-player-party-member? ch_ini)
-      (say ch_ini "How can anyone look for the Warritrix if they won't tell us where she is? "
-           "We've got to find the entrance on our own. "
-           "Somebody must know where it is, let's keep asking."))
+      (say ch_ini "Don't worry. I know where to find the Lost Halls. "
+           "We'll need to get a ship and sail to ["
+           (loc-x lost-halls-loc) " "
+           (loc-y lost-halls-loc) "]."))
   )
 
 (define jeff-conv

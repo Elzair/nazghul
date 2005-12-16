@@ -34,7 +34,7 @@
  (put (spawn-pt 'troll) 7 8)
  (put (spawn-pt 'cave-goblin-slinger) 18 8)
  (put (spawn-pt 'green-slime) 2 2)
- (put (mk-ladder-up 'p_shard 82 20) 2 2)
+ (put (apply mk-ladder-up lost-halls-loc) 2 2)
  )
 
 (drop-random-corpses p_lost_halls_1 1)

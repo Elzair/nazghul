@@ -102,7 +102,7 @@
        (method 'chan
                (lambda (knpc kpc)
                  (say knpc "That rapscallion is usually at the tavern. He "
-                      "usually stumbles back to his room here late at night.")))
+                      "stumbles back to his room here late at night, drunk as a sailor.")))
        (method 'civi 
                (lambda (knpc kpc) 
                  (say knpc "There is not much civilization to speak of around here.")))

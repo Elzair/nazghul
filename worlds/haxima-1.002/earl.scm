@@ -53,7 +53,7 @@
         (say knpc "Your life depends on your gear!"))))
 
 (define earl-conv
-  (ifc basic-conv
+  (ifc trigrave-conv
        ;; default if the only "keyword" which may (indeed must!) be longer than
        ;; 4 characters. The 4-char limit arises from the kernel's practice of
        ;; truncating all player queries to the first four characters. Default,

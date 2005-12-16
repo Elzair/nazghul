@@ -156,6 +156,10 @@
        "death! And Ghertie desires nothing more than REVENGE. Mark that word "
        "well, and remember it when you meet her ghost."))
 
+(define (man-chan knpc kpc)
+  (say knpc "So you've met Chanticleer? No doubt HE was the one who told you where to find me! "
+       "[Sigh] Well, I hope the irresponsible wrogue is well."))
+
 (define man-conv
   (ifc basic-conv
 
@@ -183,6 +187,7 @@
        (method 'engi man-engi)
        (method 'ench man-ench)
        (method 'rune man-rune)
+       (method 'chan man-chan)
        ))
 
 (define (mk-the-man)

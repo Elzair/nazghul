@@ -344,8 +344,9 @@
 ;; Trigrave
 (define trigrave-conv
   (ifc basic-conv
-       (method 'thie (lambda (knpc kpc) (say knpc "I don't know anything about a thief. Ask Gwen, maybe a traveler told her something.")))
-                       
+       (method 'thie 
+               (lambda (knpc kpc) 
+                 (say knpc "I don't know anything about a thief. Ask Gwen, maybe a traveler told her something.")))                       
        ))
 
 

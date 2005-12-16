@@ -8,7 +8,7 @@
       "xx xx xx ,, ,, ,, xx ,, ,, ,, ,, ,, xx ,, ,, ,, xx ,, xx "
       "xx xx xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx ,, xx "
       "xx xx xx xx xx xx xx ,, ,, ,, ,, ,, xx xx xx xx xx ?? xx "
-      "xx ,, ,, ,, ,, ,, xx x! ,, ,, ,, x! xx ,, ,, ,, ,, ,, xx "
+      "xx ,, ,, ,, ,, ,, xx ,, ,, ,, ,, ,, xx ,, ,, ,, ,, ,, xx "
       "xx ,, ,, ,, ,, ,, xx ,, ,, ,, ,, ,, xx ,, ,, ,, ,, ,, xx "
       "xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx "
       "xx xx xx ,, xx xx xx .C .R .Y .P .T xx xx xx ,, xx xx xx "

@@ -142,6 +142,22 @@
       (say knpc "So Enchy has you looking too? The thief must have avoided this "
            "town, but travelers may have crossed his path. Ask Gwen.")))
 
+(define (chant-man knpc kpc)
+  (if (isdrunk? knpc)
+      (begin
+        (say knpc "HEY! Can you keep a zecret?")
+        (if (yes? knpc)
+            (begin
+              (say knpc "The MAN haz a zecret cave. You know where it iz?")
+              (if (yes? kpc)
+                  (say knpc "Me too! [Hee-hee!]")
+                  (say knpc "The mountain at [" 
+                       (loc-x the-mans-hideout-loc) " " 
+                       (loc-y the-mans-hideout-loc) 
+                       "] izn't really a mountain! Go zurprize him!")))
+            (say knpc "Me neither! [He snorts]")))
+      (say knpc "The MAN? I don't know anything about the MAN. Why are you asking me?")))
+
 (define chant-conv
   (ifc basic-conv
        ;; default if the only "keyword" which may (indeed must!) be longer than
@@ -279,4 +295,6 @@
        (method 'lost
                (lambda (knpc kpc)
                  (say knpc "Well, I wouldn't be a bard if I didn't know a song about the fabled Lost Halls!")))
+       (method 'man chant-man)
+       (method 'wrog chant-man)
        ))

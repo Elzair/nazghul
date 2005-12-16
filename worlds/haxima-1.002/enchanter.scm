@@ -331,6 +331,7 @@
        (method 'wiza ench-wiza)
        (method 'wrog ench-wrog)
        (method 'wrig ench-wrig)
+       (method 'emgi ench-wrig)
        (method 'kalc ench-kalc)
 
        ))

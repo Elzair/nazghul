@@ -457,7 +457,7 @@
   (list p_glasdrin          52 32)
   (list p_oparine           12 78)
   (list p_absalot           120 4)
-  (list p_mans_hideout      92 10)
+  (list p_mans_hideout      (loc-x the-mans-hideout-loc) (loc-y the-mans-hideout-loc))
   (list p_engineers_hut     50  4)
   (list p_void_temple        7 39)
   (list p_poor_house        19 65)
@@ -489,7 +489,9 @@
   ;; dungeons
   (put (mk-dungeon 'p_kurpolis_entrance 9 10) 53 18)
   (put (mk-dungeon 'p_mushroom_cave 7 12) 78 74)
-  (put (mk-dungeon 'p_lost_halls_1 2 2) 82 20)
+  (put (mk-dungeon 'p_lost_halls_1 2 2) 
+       (loc-x lost-halls-loc)
+       (loc-y lost-halls-loc))
   (put (mk-dungeon 'p_necromancers_lair 9 9) 40 70)
 
   ;; wreck of the Merciful Death

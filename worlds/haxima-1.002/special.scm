@@ -38,9 +38,14 @@
    )))
 
 
+;; Kraken lakes kraken trigger
 (define (spawn-kraken-lakes-sea-serpent kbeing)
   (kern-log-msg "Your disturb something in the water...")
   (kern-obj-put-at (spawn-npc 'kraken 8) (mk-loc p_deepness 31 34))
   (kern-obj-put-at (spawn-npc 'kraken 8) (mk-loc p_deepness 32 35))
   (kern-obj-put-at (spawn-npc 'kraken 8) (mk-loc p_deepness 30 29))
   #t)
+
+;; Locations referred to more than once
+(define the-mans-hideout-loc (list 'p_shard 92 10))
+(define lost-halls-loc (list 'p_shard 39 75))
