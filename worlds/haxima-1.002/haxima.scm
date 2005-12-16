@@ -84,6 +84,7 @@
 (load "eastpass.scm")
 (load "westpass.scm")
 (load "crypt.scm")
+(load "ancient-derelict.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Characters
@@ -295,7 +296,7 @@
   )
 
 (define (simple-start kplayer)
-  (kern-obj-put-at kplayer (list p_green_tower 33 31)))
+  (kern-obj-put-at kplayer (list p_shard 43 18)))
   ;;(kern-obj-put-at kplayer (list p_moongate_clearing 11 11)))
       
 ;;----------------------------------------------------------------------------

@@ -18,7 +18,8 @@
                   dur))
 
 (define (poison-exec fgob obj)
-  (kern-obj-apply-damage obj "poisoned" 1))
+  (if (obj-is-char? obj)
+      (kern-obj-apply-damage obj "poisoned" 1)))
 
 
 ;; ----------------------------------------------------------------------------
@@ -42,17 +43,23 @@
 ;; throw. Note that this sleep effect is completely different than camping or
 ;; resting, which is managed entirely by the kernel.
 ;; ----------------------------------------------------------------------------
-(define (sleep-exec fgob kchar)
-  (if (> (kern-dice-roll "1d20")
-          19)
-      (begin
-        (kern-log-msg (kern-obj-get-name kchar)
-                      " wakes up!")
-        (kern-obj-remove-effect kchar ef_sleep))
-      (kern-char-set-sleep kchar #t)))
-
-(define (sleep-rm fgob kchar)
-  (kern-char-set-sleep kchar #f))
+(define (sleep-exec fgob kobj)
+  (if (not (obj-is-char? kobj))
+      (kern-obj-remove-effect kobj ef_sleep)
+      (let ((kchar kobj))
+        (if (> (kern-dice-roll "1d20")
+               19)
+            (begin
+              (kern-log-msg (kern-obj-get-name kchar)
+                            " wakes up!")
+              (kern-obj-remove-effect kchar ef_sleep)
+              )
+            (kern-char-set-sleep kchar #t)
+            ))))
+      
+(define (sleep-rm fgob kobj)
+  (if (obj-is-char? kobj)
+      (kern-char-set-sleep kchar #f)))
 
 ;; ----------------------------------------------------------------------------
 ;; paralyze
@@ -68,19 +75,22 @@
 (define (paralyze-apply fgob kobj)
   (kern-log-msg (kern-obj-get-name kobj) " paralyzed!"))
 
-(define (paralyze-exec fgob kchar)
-  (let ((droll (kern-dice-roll "1d20")))
-    (if (or (= droll 20)
-            (> droll
-               dc-escape-paralyze))
-        (begin
-          (kern-log-msg "Paralysis wears off of " (kern-obj-get-name kchar))
-          (kern-obj-remove-effect kchar ef_paralyze)
-          #f)
-        (begin
-          (kern-obj-set-ap kchar 0)
-          #f))))
-
+(define (paralyze-exec fgob kobj)
+  (if (not (obj-is-char? kobj))
+      (kern-obj-remove-effect kobj ef_paralyze)
+      (let ((kchar kobj))
+        (let ((droll (kern-dice-roll "1d20")))
+          (if (or (= droll 20)
+                  (> droll
+                     dc-escape-paralyze))
+              (begin
+                (kern-log-msg "Paralysis wears off of " (kern-obj-get-name kchar))
+                (kern-obj-remove-effect kchar ef_paralyze)
+                #f)
+              (begin
+                (kern-obj-set-ap kchar 0)
+                #f))))))
+      
 (mk-effect 'ef_paralyze 'paralyze-exec 'paralyze-apply nil 'paralyze-apply 
            "keystroke-hook" "Z" 0 #f 15)
 
@@ -94,14 +104,17 @@
 ;;
 ;; Drains life until victim is near death
 ;;----------------------------------------------------------------------------
-(define (disease-exec fgob kchar)
-  (if (> (kern-dice-roll "1d10")
-         (kern-char-get-hp kchar))
-      (begin
-        (kern-log-msg (kern-obj-get-name kchar)
-                      " fights off Disease")
-        (kern-obj-remove-effect kchar ef_disease))
-      (kern-obj-apply-damage kchar "disease" (kern-dice-roll "1d5"))))
+(define (disease-exec fgob kobj)
+  (if (not (obj-is-char? kobj))
+      (kern-obj-remove-effect kobj ef_disease)
+      (let ((kchar kobj))
+        (if (> (kern-dice-roll "1d10")
+               (kern-char-get-hp kchar))
+            (begin
+              (kern-log-msg (kern-obj-get-name kchar)
+                            " fights off Disease")
+              (kern-obj-remove-effect kchar ef_disease))
+            (kern-obj-apply-damage kchar "disease" (kern-dice-roll "1d5"))))))
 
 ;; ----------------------------------------------------------------------------
 ;; ensnare
@@ -124,24 +137,26 @@
   (map destroy-web (find-object-types-at loc F_web_perm))
   )
 
-(define (ensnare-exec fgob kchar)
-  (display "ensnare-exec")(newline)
-  (let ((droll (kern-dice-roll "1d20")))
-    ;; special case -- paralysis prevents struggling against the ensnare
-    (if (not (is-paralyzed? kchar))
-        (if (or (= droll 20)
-                (> (+ (kern-char-get-strength kchar) 
-                      droll)
-                   dc-escape-ensnare))
-            (begin
-              (kern-log-msg (kern-obj-get-name kchar) " breaks free of web!")
-              (kern-obj-remove-effect kchar ef_ensnare)
-              (destroy-webs-at (kern-obj-get-location kchar))
-              #t)
-            (begin
-              (kern-log-msg (kern-obj-get-name kchar) " struggles in the web!")
-              (kern-obj-set-ap kchar 0)
-              #f)))))
+(define (ensnare-exec fgob kobj)
+  (if (not (can-ensnare? kobj))
+      (kern-obj-remove-effect ef_ensnare)
+      (let ((kchar kobj)
+            (let ((droll (kern-dice-roll "1d20")))
+              ;; special case -- paralysis prevents struggling against the ensnare
+              (if (not (is-paralyzed? kchar))
+                  (if (or (= droll 20)
+                          (> (+ (kern-char-get-strength kchar) 
+                                droll)
+                             dc-escape-ensnare))
+                      (begin
+                        (kern-log-msg (kern-obj-get-name kchar) " breaks free of web!")
+                        (kern-obj-remove-effect kchar ef_ensnare)
+                        (destroy-webs-at (kern-obj-get-location kchar))
+                        #t)
+                      (begin
+                        (kern-log-msg (kern-obj-get-name kchar) " struggles in the web!")
+                        (kern-obj-set-ap kchar 0)
+                        #f))))))))
 
 (mk-effect 'ef_ensnare 'ensnare-exec 'ensnare-apply nil 'ensnare-apply
            "keystroke-hook" "E" 0 #f 15)
@@ -203,12 +218,13 @@
 ;;
 ;; Used by the In Sanct spell.
 ;; ----------------------------------------------------------------------------
-(define (protection-rm fgob kchar)
-  ;;(kern-obj-remove-effect kchar ef_protection)
-  (kern-char-add-defense kchar -10))
+(define (protection-rm fgob kobj)
+  (if (obj-is-char? kobj)
+      (kern-char-add-defense kobj -10)))
 
-(define (protection-apply fgob kchar)
-  (kern-char-add-defense kchar 10))
+(define (protection-apply fgob kobj)
+  (if (obj-is-char? kobj)
+      (kern-char-add-defense kobj 10)))
 
 ;; ----------------------------------------------------------------------------
 ;; Charm
@@ -221,11 +237,12 @@
 (define (charm-faction charm) (car charm))
 
 (define (charm-rm charm kchar)
-  ;;(kern-obj-remove-effect kchar ef_charm)
-  (kern-char-uncharm kchar))
+  (if (obj-is-char? kchar)
+      (kern-char-uncharm kchar)))
 
 (define (charm-apply charm kchar)
-  (kern-char-charm kchar (charm-faction charm)))
+  (if (obj-is-char? kchar)
+      (kern-char-charm kchar (charm-faction charm))))
 
 ;; ----------------------------------------------------------------------------
 ;; Invisibility
@@ -267,8 +284,8 @@
 ;; experience, accelerating its advancement.
 ;; ----------------------------------------------------------------------------
 (define (grow-head-exec fgob kobj)
-  (println "grow-head-exec")
-  (kern-char-add-experience kobj (kern-dice-roll "2d20")))
+  (if (obj-is-char? kobj)
+      (kern-char-add-experience kobj (kern-dice-roll "2d20"))))
 
 ;; ----------------------------------------------------------------------------
 ;; Spider Calm
@@ -384,8 +401,10 @@
   kobj)
 
 (define (apply-sleep kobj)
-  (kern-char-set-sleep kobj #t)
-  (kern-obj-add-effect kobj ef_sleep nil)
+  (if (obj-is-char? kobj)
+      (begin
+        (kern-char-set-sleep kobj #t)
+        (kern-obj-add-effect kobj ef_sleep nil)))
   kobj)
 
 (define (apply-slime-split kobj)
@@ -397,13 +416,14 @@
   kobj)
 
 (define (apply-acid kchar)
-  (let ((arms (kern-char-get-arms kchar)))
-    (if (not (null? arms))
-        (let ((ktype (random-select arms)))
-          (kern-log-msg "Acid dissolves 1 " (kern-type-get-name ktype) 
-                        " held by " (kern-obj-get-name kchar))
-          (kern-char-unready kchar ktype)
-          (kern-obj-remove-from-inventory kchar ktype 1)))))
+  (if (obj-is-char? kchar)
+      (let ((arms (kern-char-get-arms kchar)))
+        (if (not (null? arms))
+            (let ((ktype (random-select arms)))
+              (kern-log-msg "Acid dissolves 1 " (kern-type-get-name ktype) 
+                            " held by " (kern-obj-get-name kchar))
+              (kern-char-unready kchar ktype)
+              (kern-obj-remove-from-inventory kchar ktype 1))))))
 
 ;; ----------------------------------------------------------------------------
 ;; Container traps

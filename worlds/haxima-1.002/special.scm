@@ -49,3 +49,10 @@
 ;; Locations referred to more than once
 (define the-mans-hideout-loc (list 'p_shard 92 10))
 (define lost-halls-loc (list 'p_shard 39 75))
+
+;; Power core for voidship
+(mk-obj-type 't_power_core "ancient power core" s_magic layer-item obj-ifc)
+
+;; Luximene begins the game as a Lich King, when defeated he drops his skull,
+;; which can be used with the Necromancer to summon his shade.
+(mk-obj-type 't_lich_skull "King Luximenes skull" s_magic layer-item obj-ifc)

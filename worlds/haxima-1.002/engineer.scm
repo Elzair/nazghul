@@ -42,8 +42,9 @@
    (kern-ui-page-text
    "Voidship Plans"
    "Parts List:"
-   " Sulphorous Ash (1 clump)"
-   " Gems (1 stone)"
+   " Sulphorous Ash (20)"
+   " Gems (10)"
+   " Power Core (1)"
    )))
 
 ;;----------------------------------------------------------------------------
@@ -144,13 +145,21 @@
       (quest-done! quest #t)
       (kern-conv-end))
 
+    (define (missing-power-core?)
+      (not (in-inventory? kpc t_power_core)))
+
     (define (has-plans)
       (say knpc "Ah, you've found the plans for my voidship! "
            "Do you have all the parts we need?")
       (if (kern-conv-get-yes-no? kpc)
           (if (really-has-parts?)
               (build-ship))
-          (say knpc "Well, what are you waiting for? Go get them.")))
+          (if (missing-power-core?)
+              (say knpc "Somewhere across the chasm to the south lies a wrecked voidship. "
+                   "If you can find a way to cross the chasm it might have a power core "
+                   "you can salvage.")
+              (say knpc "Well, what are you waiting for? Go get them.")
+              )))
       
     (define (no-plans)
       (say knpc "A great void surrounds the Shard. I've designed a ship "
