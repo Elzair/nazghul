@@ -1385,3 +1385,7 @@
 
 (define (random-faction)
   (modulo (random-next) faction-num))
+
+(define (get-target-loc caster range)
+  (kern-ui-target (kern-obj-get-location caster)
+                  range))

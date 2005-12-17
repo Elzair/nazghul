@@ -1416,6 +1416,8 @@ void Character::setLevel(int val) {
         assert(val>0);
         lvl = val;
         xp = (int)pow(2, lvl + 4);
+        setHp(getMaxHp());
+        setMana(getMaxMana());
 }
 
 bool Character::isDead() {
@@ -1687,6 +1689,10 @@ void Character::introduce()
                                                      Session->clock.hour,
                                                      Session->clock.min);
         if (getPlace() != newAppt->place) {
+
+                // Since this code just "teleports" the character, make sure
+                // the player isn't looking.
+
                 // Introduce a character into the place as part of its
                 // schedule. For now, just drop it on its location as in
                 // synchronize(). DO NOT try to use object::relocate(). It's

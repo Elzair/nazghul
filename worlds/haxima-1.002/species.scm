@@ -91,7 +91,8 @@
       (eqv? species sp_queen_spider)))
 
 (define (species-is-immune-to-paralyze? species)
-  #f)
+  (eqv? species sp_balron)
+  )
 
 ;;----------------------------------------------------------------------------
 ;; Trigger to generate slimes

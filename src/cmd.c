@@ -1672,7 +1672,7 @@ bool cmdTalk(Object *member)
             ((obj->getLayer() == being_layer) &&
              ((class Character*)obj)->isAsleep())) {
 		log_msg("Zzzz...\n");
-                log_end_group();
+                //log_end_group();
 		return true;
 	}
 

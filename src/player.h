@@ -158,6 +158,7 @@ class player_party : public Party {
         virtual bool addGold(int quantity);
         virtual bool add(ObjectType *type, int amount);
         virtual bool takeOut(ObjectType *type, int amount);        
+        bool canSeeLocation(struct place *place, int x, int y);
 
         int food;
         bool onMap;

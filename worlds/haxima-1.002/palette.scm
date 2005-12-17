@@ -127,6 +127,8 @@
 
     (list  "++"   t_ankh)               ;; "ankh"
     (list  "aa"   t_altar)              ;; "altar"
+    (list  "ar"   t_rune_altar)              ;; "altar"
+    (list  "a!"   t_active_altar)              ;; "altar"
     (list  "<<"   t_leftwing)           ;; "castle wall"
     (list  ">>"   t_rightwing)          ;; "castle wall"
     (list  "w+"   t_arrow_slit)         ;; "arrow slit"

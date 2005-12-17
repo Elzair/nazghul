@@ -83,6 +83,8 @@
 
    (list 't_ankh            "ankh"          pclass-wall      s_ankh            1 0 nil)
    (list 't_altar           "altar"         pclass-wall      s_altar           1 0 nil)
+   (list 't_rune_altar      "rune altar"    pclass-wall      s_altar           1 64 nil)
+   (list 't_active_altar    "activated rune altar" pclass-wall s_altar         1 512 nil)
    (list 't_pillar          "pillar"        pclass-wall      s_pillar          1 0 nil)
    (list 't_false_pillar    "pillar"        pclass-grass     s_pillar          1 0 nil)
 

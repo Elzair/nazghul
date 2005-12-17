@@ -1720,3 +1720,9 @@ void player_party::addExperience(int val)
                 }
         }
 }
+
+bool player_party::canSeeLocation(struct place *place, int x, int y)
+{
+        // fixme -- ref naz.scm (any-player-party-member-visible?)
+        return false;
+}

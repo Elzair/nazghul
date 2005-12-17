@@ -99,10 +99,6 @@
           (list place (- x 1) y)
           (list place (+ x 1) y))))
 
-(define (get-target-loc caster range)
-  (kern-ui-target (kern-obj-get-location caster)
-                  range))
-
 (define (get-target-kchar caster range)
   (let ((loc (get-target-loc caster range)))
     (if (null? loc)

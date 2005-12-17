@@ -10,15 +10,15 @@
  (list
   ".. ** ** ** ** ** ** xx xx ** ** xx [[ ,W ,E ,L ,C ,O ,M ,E ]] xx ** xx xx ** ** ** ** ** ** "
   ".. .. ** ** ** ** ** xx [[ ,T ,O @@ ,T ,H ,E cc cc cc ,S ,H ,A ,R ,D ]] xx ** ** ** ** ** ** "
-  ".. .. .. ** ** ** ** .. .. .. .. ** cc cc cc cc aa cc cc cc cc .. ** xx xx xx xx xx xx xx xx "
-  "xx xx xx xx xx xx xx xx xx .. ** ** cc aa cc cc cc cc cc aa cc .. .. xx ,G ,U ,A ,R ,D ,S xx "
+  ".. .. .. ** ** ** ** .. .. .. .. ** cc cc cc cc ar cc cc cc cc .. ** xx xx xx xx xx xx xx xx "
+  "xx xx xx xx xx xx xx xx xx .. ** ** cc ar cc cc cc cc cc ar cc .. .. xx ,G ,U ,A ,R ,D ,S xx "
   "xx ,C ,U ,S ,T ,O ,M ,S xx .. ,, ** cc cc ,, ,, ,, ,, ,, cc cc .. xx xx ,, ,, ,, ,, ,, ,, xx "
   "xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, cc ** ** ,, ,, cc ,, ,, cc cc cc ,, ,, ,, ,, ,, ,, ,, ,, xx "
-  "xx cc cc cc cc cc cc cc cc cc cc cc aa cc ** cc cc cc ,, cc aa cc ,, ,, ,, ,, ,, ,, ,, ,, xx "
+  "xx cc cc cc cc cc cc cc cc cc cc cc ar cc ** cc cc cc ,, cc ar cc ,, ,, ,, ,, ,, ,, ,, ,, xx "
   "xx cc ,, cc ,, cc ,, cc ,, ,, ,, cc cc cc ,, ,, cc ,, ,, cc cc cc ,, ,, ,, ,, ,, ,, ,, ,, xx "
   "xx cc 00 cc 00 cc 00 cc xx ** ,, ,, cc cc ,, ,, ,, ** ,, ** cc ** xx xx ,, ,, ,, ,, ,, ,, xx "
-  "xx cc 00 cc 00 cc 00 cc xx ** ** ** cc aa cc cc cc ** ** aa cc ** ** xx xx xx ,, ,, xx xx xx "
-  "xx cc 00 cc 00 cc 00 cc xx ** ** ** cc cc cc cc aa cc ** cc cc ** ** xx ,, ,, ,, ,, ,, ,, xx "
+  "xx cc 00 cc 00 cc 00 cc xx ** ** ** cc ar cc cc cc ** ** ar cc ** ** xx xx xx ,, ,, xx xx xx "
+  "xx cc 00 cc 00 cc 00 cc xx ** ** ** cc cc cc cc ar cc ** cc cc ** ** xx ,, ,, ,, ,, ,, ,, xx "
   "xx cc cc cc cc cc cc cc xx ** ** ** ** ** .. cc cc cc ** ** ** ** .. xx ,, ,, ,, ,, ,, ,, xx "
   "xx xx ,, ,, cc ,, ,, xx xx ** .. .. .. ** ** .. ,, ** ** ** ** .. .. xx ,, ,, ,, ,, ,, ,, xx "
   ".. xx xx ,, cc ,, xx xx ** ** .. .. .. ** xx xx ,, xx ** ** .. .. .. xx ,A ,R ,M ,O ,R ,Y xx "
@@ -56,7 +56,6 @@
 ;;----------------------------------------------------------------------------
 ;; Conv
 ;;----------------------------------------------------------------------------
-(kern-load "nossifer.scm")
 
 ;; Basics...
 (define (ankh-hail knpc kpc)
@@ -78,11 +77,6 @@
                   (ankh-done! gob)
                   (blit-map (loc-place (kern-obj-get-location knpc))
                     0 0 31 31 m_hidden_city)
-                  (kern-obj-put-at 
-                   (mk-nossifer)
-                   (mk-loc (loc-place (kern-obj-get-location knpc))
-                           nossifer-x
-                           nossifer-y))
                   ))
             (kern-conv-end))))))
         

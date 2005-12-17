@@ -6983,6 +6983,18 @@ KERN_API_CALL(kern_occ_get_mp_mult)
         return scm_mk_integer(sc, occ->mp_mult);
 }
 
+KERN_API_CALL(kern_end_game)
+{
+        int yesno;
+
+        log_msg("*** CONGRATULATIONS ***");
+        log_msg("You have finished the game!");
+        log_msg("Press any key to exit.");
+        getkey(NULL, anykey);
+        Quit = true;
+        return sc->NIL;
+}
+
 #if 0
 KERN_API_CALL(kern_los_invalidate)
 {
@@ -7235,6 +7247,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-begin-combat", kern_begin_combat);
         API_DECL(sc, "kern-blit-map", kern_blit_map);
         API_DECL(sc, "kern-dice-roll", kern_dice_roll);
+        API_DECL(sc, "kern-end-game" , kern_end_game);
         API_DECL(sc, "kern-fire-missile", kern_fire_missile);
         API_DECL(sc, "kern-fold-rect", kern_fold_rect);
         API_DECL(sc, "kern-get-distance", kern_get_distance);

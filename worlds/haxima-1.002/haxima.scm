@@ -157,6 +157,14 @@
    (list 1 black_pearl)
    (list 1 blood_moss)
    (list 10 t_pick)
+      (list 1 t_rune_k)
+      (list 1 t_rune_p)
+      (list 1 t_rune_s)
+      (list 1 t_rune_c)
+      (list 1 t_rune_l)
+      (list 1 t_rune_f)
+      (list 1 t_rune_w)
+      (list 1 t_rune_d)
    )
   )
 
@@ -298,7 +306,8 @@
   )
 
 (define (simple-start kplayer)
-  (kern-obj-put-at kplayer (list p_tower_of_absalot 9 9)))
+  (kern-obj-put-at kplayer (list p_ankh_shrine 14 22)
+                   ))
   ;;(kern-obj-put-at kplayer (list p_moongate_clearing 11 11)))
       
 ;;----------------------------------------------------------------------------
