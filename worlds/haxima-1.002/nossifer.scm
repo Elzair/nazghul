@@ -128,6 +128,7 @@
 
 (define (mk-nossifer)
   (bind 
+   (kern-char-set-level
    (kern-mk-char 
     'ch_nossifer           ; tag
     "Nossifer"             ; name
@@ -135,9 +136,9 @@
     noss-occ              ; occ
     s_balron          ; sprite
     faction-men      ; starting alignment
-    0 0 0            ; str/int/dex
-    0 0              ; hp mod/mult
-    0 0              ; mp mod/mult
+    20 5 20            ; str/int/dex
+    10 5              ; hp mod/mult
+    10 5              ; mp mod/mult
     (max-hp noss-species noss-occ noss-lvl 0 0) ; hp
     0                   ; xp
     (max-mp noss-species noss-occ noss-lvl 0 0) ; mp
@@ -149,4 +150,5 @@
     nil              ; container
     nil              ; readied
     )
+   noss-lvl)
    (noss-mk)))

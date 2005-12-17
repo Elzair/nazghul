@@ -57,3 +57,25 @@
    ""
    "--Enchanter\n"
    )))
+
+;;----------------------------------------------------------------------------
+;; book of the demon gate
+(mk-reusable-item 
+ 't_demon_gate_book "Ragged Text" s_scroll 1
+ (lambda (kbook kuser)
+   (kern-ui-page-text
+   "THE DEMON GATE"
+   ""
+   "...the Wise of old locked the Demon Gate and scattered the keys... "
+   "the Shrine of the Demon Gate was not to be revealed again until the world is made ANEW... "
+   "they concealed the road to the Shrine with an illusion... "
+   "where there is a path, the unwise see only a mountain... "
+   ""
+   "... the River of Stars, and follow it to its source... "
+   ""
+   "...to he who opens the Gate, power unimaginable..."
+   ""
+   "...Nossifer awaits."
+   ""
+   "--Fildex the Unclean\n"
+   )))

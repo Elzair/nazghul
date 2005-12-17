@@ -290,7 +290,7 @@
 ;;----------------------------------------------------------------------------
 ;; spell-sword-ai -- aggressive, selfish fighter that uses magic for combat.
 (define (spell-sword-ai kchar)
-  ;;(println "spell-sword-ai")
+  (display "spell-sword-ai ")(dump-char kchar)
   (or (std-ai kchar)
       (use-spell-on-self? kchar)
       (use-melee-spell-on-foes? kchar)

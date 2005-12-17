@@ -1,7 +1,7 @@
 ;;----------------------------------------------------------------------------
 ;; Constants
 ;;----------------------------------------------------------------------------
-(define selene-lvl 1)
+(define selene-lvl 5)
 (define selene-species sp_human)
 (define selene-occ nil)
 
@@ -102,6 +102,7 @@
 
 (define (mk-selene)
   (bind 
+   (kern-char-set-level
    (kern-mk-char 
     'ch_selene           ; tag
     "Selene"             ; name
@@ -121,6 +122,7 @@
     sch_selene           ; sched
     nil              ; special ai
     nil              ; container
-    nil              ; readied
+    (list t_dagger)              ; readied
     )
+   selene-lvl)
    (selene-mk)))

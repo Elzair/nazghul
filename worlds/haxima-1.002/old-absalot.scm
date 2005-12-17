@@ -10,8 +10,8 @@
       "rr rr rr rr rr rr rr rr xx !! cc cc cc cc cc cc !! xx xx rr rr ,, ,, ,, rr rr rr rr rr rr rr "
       "rr rr rr rr rr rr rr rr !! !! cc aa cc cc aa cc !! !! xx xx rr ,, ,, ,, rr rr rr rr rr rr rr "
       "rr rr rr rr rr rr xx !! !! !! cc cc cc cc cc cc !! !! !! xx rr ,, ,, ,, rr rr rr rr rr rr rr "
-      "rr rr rr rr rr rr xx ,, ,, pp ,, ,, ,, ,, ,, ,, pp ,, ,, xx rr ,, ,, ,, rr rr rr rr rr rr rr "
-      "rr rr rr rr xx xx xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, rr rr ,, rr rr rr rr rr rr rr rr rr "
+      "rr rr rr rr ,, rr xx ,, ,, pp ,, ,, ,, ,, ,, ,, pp ,, ,, xx rr ,, ,, ,, rr rr rr rr rr rr rr "
+      "rr rr rr rr ,, xx xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, rr rr ,, rr rr rr rr rr rr rr rr rr "
       "rr rr rr ,, ,, ,, xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, bb rr ,, rr ,M ,E ,A ,T rr rr rr rr "
       "rr rr rr ,, ,, ,, ,, ,, ,, pp ,, ,, ,, ,, ,, ,, pp ,, ,, ,, ,, ,, rr ,, ,, ,, ,, rr rr rr rr "
       "rr rr xx ,, ,, ,, xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx rr rr rr ,, ,, ,, ,, rr rr rr rr "
@@ -117,6 +117,10 @@
   ;; Silas's room
   (put (mk-bed) 4 8)
   (put (mk-locked-door) 6 8)
+  (put (mk-magic-locked-door) 4 6)
+  (put (mk-chest 'bomb-trap
+                 (list (list 1 t_demon_gate_book)))
+       4 5)
 
   ;; Bunkroom
   (put (mk-door) 19 8)

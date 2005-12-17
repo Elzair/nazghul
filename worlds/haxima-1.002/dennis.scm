@@ -104,6 +104,7 @@
 
 (define (mk-dennis)
   (bind 
+   (kern-char-set-level
    (kern-mk-char 
     'ch_dennis           ; tag
     "Dennis"             ; name
@@ -121,8 +122,9 @@
     #f               ; dead
     'dennis-conv         ; conv
     sch_dennis           ; sched
-    nil              ; special ai
+    'spell-sword-ai              ; special ai
     nil              ; container
-    nil              ; readied
+    (list t_staff)              ; readied
     )
+   dennis-lvl)
    (dennis-mk)))

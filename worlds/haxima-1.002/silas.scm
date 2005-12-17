@@ -132,81 +132,6 @@
            "Surely it is good to have the option of opening the Demon Gate, "
            "even if we never intend to exercise it.")))
 
-
-;; Quest-related
-(define (silas-ques knpc kpc)
-  (let* ((gob (kobj-gob-data knpc))
-        (quest (silas-quest gob)))
-
-
-    (define (give-last-rune)
-      (say knpc "I see you have all save 1 of the runes. Please forgive me for "
-           "a small deception, but I have hidden the last rune here in Old "
-           "Absalot. Consider it one last test for you to find it."))
-
-    (define (continue-quest) 
-      (say knpc "I see you are still missing at least one rune. Don't give up, "
-           "Wanderer! Ask among the Wise, delve into the deeps, search far and wide."))
-
-    (define (offer-quest)
-      (say knpc "Wanderer, I have a most important task for you: find the eight "
-           "rune-keys which lock the Demon Gate. Will you do this?")
-      (if (yes? kpc)
-          (begin
-            (quest-accepted! quest #t)
-            (say knpc "I know I can count on you. There is a most clever man, "
-                 "an Alchemist, who lives on Oparine. Perhaps you know of him already. He would "
-                 "be a good place to start."))
-          (say knpc "It is imperative that we find them. I am disappointed, my "
-               "friend, but no doubt you have your reasons.")))
-
-    (define (end-quest)
-      (quest-done! quest #t)
-      (say knpc "Well done, Wanderer! You have collected all the lost runes, "
-           "a feat worthy of legend. Well done, indeed!")
-      (prompt-for-key)
-      (say knpc "Now that all the runes are recovered, it is imperative that "
-           "they be kept safe. Forgive me for being overly suspicious, but I do not trust "
-           "their keeping to the Wise, not even to the Enchanter himself.")
-      (prompt-for-key)
-      (say knpc "I know what you are thinking, my friend, but perish the thought! "
-           "I could not possibly keep them here with me. Nor do I want to. "
-           "But I have thought of a most ingenious place to hide them: "
-           "there at the Demon Gate itself!")
-      (prompt-for-key)
-      (say knpc "Think of the advantages. First, the location of the Gate is a "
-           "lost secret, so the runes will be difficult to find. Second, the location of "
-           "the Gate is quite defensible by a small force. Third, should we ever need to "
-           "open the Gate in an emergency the keys to the locks will be conveniently at "
-           "hand! I must admit I am probably too proud of this idea, but surely you see its "
-           "genius?")
-      (yes? kpc)
-      (say knpc "Whatever your true feelings, "
-           "I will tell you where to find the Demon Gate. "
-           "You must decide what to do with the Runes.")
-      (prompt-for-key)
-      (say knpc "The Demon Gate is in a hidden city of the void. In the "
-           "wilderness of the void, go to (" shrine-path-x ", " shrine-path-y "). A secret "
-           "trail leads through the mountains to a shrine. Enter the shrine and speak to "
-           "the ankh, which will demand a password. The password is ANEW. You had best "
-           "write that down.")
-      (prompt-for-key)
-      (say knpc "At the word ANEW, the hidden city will appear around you."))
-
-    (if (silas-will-help? gob)
-        (if (quest-done? quest)
-            (say knpc "Seek the Demon Gate!")
-            (if (quest-accepted? quest)
-                (if (has-all-runes? kpc)
-                    (end-quest)
-                    (if (missing-only-s-rune? kpc)
-                        (give-last-rune)
-                        (continue-quest)))
-                (offer-quest))
-            (say knpc "Join me, and there will be quests and glory in abundance. "
-                 "You will become the most famous Wanderer -- indeed, "
-                 "the greatest hero of the Shard -- for all time.")))))
-
 ;; Accursed, Wise
 (define (silas-accu knpc kpc)
   (say knpc "[He chuckles] Yes, I am Accursed. Unfortunately that name has come "
@@ -280,6 +205,36 @@
        "changing his mind. Unfortunately his notions of good and evil are misguided and "
        "unworkable."))
 
+
+(define (pissed-off-silas)
+  (kern-dtable-dec faction-player faction-accursed)
+  (kern-dtable-dec faction-player faction-accursed)
+  (kern-dtable-dec faction-player faction-accursed)
+  (kern-dtable-dec faction-player faction-accursed)
+  (map (lambda (tag)
+         (if (defined? tag)
+             (let ((kchar (eval tag)))
+               (if (is-alive? kchar)
+                   (begin
+                     (kern-being-set-base-faction kchar faction-accursed)
+                     (kern-char-set-schedule kchar nil)
+                     )))))
+       (list 'ch_silas 'ch_dennis 'ch_selene)))
+  
+
+(define (silas-noss knpc kpc)
+  (say knpc "[His face freezes] How did you learn that name, friend?")
+  (kern-conv-get-reply kpc)
+  (say knpc "Have you been nosing around in other people's property?")
+  (if (yes? kpc)
+      (say knpc "How unfortunate. I'm afraid it is time for you to leave.")
+      (say knpc "I think you have. I think you have been misbehaving, "
+           "and now you are telling a fib. You are not welcome here. "
+           "Leave at once."))
+  (pissed-off-silas)
+  (kern-conv-end)
+  )
+
 (define silas-conv
   (ifc basic-conv
 
@@ -298,7 +253,6 @@
        (method 'key silas-key)
        (method 'keys silas-key)
        (method 'rune silas-rune)
-       (method 'ques silas-ques)
        (method 'accu silas-accu)
        (method 'secr silas-secr)
        (method 'wise silas-wise)
@@ -309,10 +263,12 @@
        (method 'sacr silas-sacr)
        (method 'ench silas-ench)
        (method 'gate silas-demo)
+       (method 'noss silas-noss)
        ))
 
 (define (mk-silas)
   (bind 
+   (kern-char-set-level
    (kern-mk-char 
     'ch_silas           ; tag
     "Silas"             ; name
@@ -320,9 +276,9 @@
     silas-occ              ; occ
     s_companion_shepherd     ; sprite
     faction-men      ; starting alignment
-    0 0 0            ; str/int/dex
-    0 0              ; hp mod/mult
-    0 0              ; mp mod/mult
+    0 5 0            ; str/int/dex
+    2 1              ; hp mod/mult
+    2 1              ; mp mod/mult
     (max-hp silas-species silas-occ silas-lvl 0 0) ; hp
     0                   ; xp
     (max-mp silas-species silas-occ silas-lvl 0 0) ; mp
@@ -330,8 +286,9 @@
     #f               ; dead
     'silas-conv         ; conv
     sch_silas           ; sched
-    nil              ; special ai
+    'spell-sword-ai  ; special ai
     nil              ; container
-    nil              ; readied
+    (list t_stun_wand) ; readied
     )
+   silas-lvl)
    (silas-mk)))
