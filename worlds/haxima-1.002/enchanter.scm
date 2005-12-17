@@ -25,11 +25,15 @@
 ;;----------------------------------------------------------------------------
 (define (enchanter-mk)
   (list #f 
-        (mk-quest)
-        (mk-quest)))
+        (mk-quest) ;; stolen rune
+        (mk-quest) ;; purpose of runes
+        (mk-quest) ;; all runens
+        (mk-quest) ;; demon gate
+        ))
 (define (ench-met? gob) (car gob))
 (define (ench-first-quest gob) (cadr gob))
 (define (ench-second-quest gob) (caddr gob))
+(define (ench-quest gob n) (list-ref gob n))
 (define (ench-met! gob val) (set-car! gob val))
 
 ;;----------------------------------------------------------------------------
@@ -43,6 +47,49 @@
 (define (ench-hail knpc kpc)
   (let ((ench (gob knpc)))
 
+    ;; Fourth Quest -- open the demon gate
+    (define (check-fourth-quest)
+      (say knpc "Have you found the location of the Demon Gate?")
+      (if (yes? kpc)
+          (begin
+            (say knpc "And have you found the locks which the Rune-keys will open?")
+            (if (yes? kpc)
+                (say knpc "So you are just fooling around, wasting time. I see.")
+                (say knpc "I would expect them to appear as altars in a shrine. "
+                     "The shrine may be hidden, perhaps revealing itself with a "
+                     "password. Find and search the Accursed, "
+                     "they must have had a clue.")))
+          (say knpc "Search well the library at Absalot.")))
+
+    ;; Third Quest -- find all the Runes
+    (define (finish-third-quest)
+      (say knpc "You have found all the Runes! "
+           "Well, it couldn't have been all that hard. ")
+      (prompt-for-key)
+      (say knpc "I have one last task for you. "
+           "You must find the Demon Gate and re-open it. "
+           "Do you know where to find it?")
+      (if (yes? kpc)
+          (say knpc
+               "I don't know what you will face, "
+               "so prepare yourself well, "
+               "and take anyone foolish enough to join you. "
+               )
+          (say knpc "The Accursed must have some idea, "
+               "and the library of Absalot may yet hold some clue. "
+               "Search well.")
+          )
+      (quest-done! (ench-quest ench 3) #t)
+      (kern-char-add-experience kpc 100)
+      (quest-accepted! (ench-quest ench 4) #t)      
+      )
+
+    (define (check-third-quest)
+      (if (has-all-runes? kpc)
+          (finish-third-quest)
+          (say knpc "Return when you have found all the Runes.")))
+
+    ;; Second Quest -- find out what the Runes are for
     (define (second-quest-spurned)
       (say knpc "It is the duty of all good men to stand up to evil. I "
            "don't have time for sluggards or cynics. Now give me my rune, "
@@ -56,16 +103,10 @@
       (quest-accepted! (ench-second-quest ench) #t)
       (say knpc "Good! First, keep my rune, and guard it well. ")
       (prompt-for-key)
-      (say knpc "Second, seek out all the other Wise and ask them of the RUNE. "
+      (say knpc "Second, find the other Wise and ask them of the RUNE. "
            "You might start with the Alchemist near Oparine. "
            "Although obscenely greedy, "
            "he has devoted his life to the acquisition of secrets.")
-      (prompt-for-key)
-      (say knpc "Third, beware the Accursed! "
-           "I sense a new leadership is guiding them, "
-           "and surely they know of you by know.")
-      (prompt-for-key)
-      (say knpc "Well, get to it! Come back when you know what the RUNES are for.")
       (kern-conv-end)
       )
 
@@ -82,9 +123,37 @@
             (say knpc "Like a pig to the trough, "
                  "a fool returns to his own folly. "
                  "Go back to filling your belly!")
-            (kern-conv-end))))
+            (kern-conv-end)))
+      )
+    
+    (define (finish-second-quest)
+      (say knpc "[He looks very grave] "
+           "So my Rune is one of eight keys to the Demon Gate. "
+           "Very well, you must find the rest. "
+           "The Accursed have a head start on us. "
+           "No doubt they already have one of the Runes. "
+           "When you have found all the Runes return to me.")
+      (quest-done! (ench-second-quest ench) #t)
+      (kern-char-add-experience kpc 100)
+      (quest-accepted! (ench-quest ench 3) #t)
+      )
 
+    (define (check-second-quest)
+      (say knpc "Have you learned what the Rune is for?")
+      (if (yes? kpc)
+          (begin
+            (say knpc "Well, what?")
+            (let ((reply (kern-conv-get-reply kpc)))
+              (if (equal? reply 'demo)
+                  (finish-second-quest)
+                  (begin
+                    (say knpc "I don't think so. Have you asked all of the Wise about the RUNE?")
+                    (if (yes? kpc)
+                        (say knpc "Surely one of them must have given you some clue!")
+                        (say knpc "Seek them all."))))))
+          (say knpc "Ask all the Wise about the RUNE.")))
 
+    ;; First Quest -- find the stolen Rune
     (define (finish-first-quest)
       (kern-obj-add-gold kpc 200)
       (kern-char-add-experience kpc 100)
@@ -92,55 +161,13 @@
       (say knpc "Perhaps your are not completely useless. "
            "Did you encounter any... resistance?")      
       (kern-conv-get-yes-no? kpc)
-      (say knpc "The Accursed were behind this theft. But why?"
-           "If they are seeking this rune, they are probably seeking the "
-           "others as well. Or perhaps they already have them. "
-           "We must find out what the Runes are for. "
+      (say knpc "The Accursed were behind this theft. "
+           "We must find out what the Rune is for. "
            "Will you help?")
       (quest-offered! (ench-second-quest ench) #t)
       (if (kern-conv-get-yes-no? kpc)
           (start-second-quest)
           (second-quest-spurned)))
-
-    (define (need-to-find-accursed)
-      (say knpc "Search Absalot well. They were there once, I am certain, and must have left a clue."))
-                
-    (define (has-found-accursed)
-      (say knpc "Well done. Do you know why they want the Runes?")
-      (if (yes? kpc)
-          (begin
-            (say knpc "Why?")
-            (let ((why (kern-conv-get-reply kpc)))
-              (if (or (eq? why 'demo)
-                      (eq? why 'gate))
-                  (begin
-                    (say knpc "They want to re-open the Demon Gate. I see. This cannot be allowed. "
-                         "The Runes will never be safe while the Accursed exist. ")
-                    (prompt-for-key)
-                    (say knpc "I have considered the matter, and see only one option. "
-                         "You must destroy the Demon Gate itself. "
-                         "Assemble whatever help you can find and seek the Gate. "
-                         "I know not what you will find there, but I sense it is your destiny."))
-                  (say knpc "That does not ring true. Keep seeking."))))
-          (say knpc "You must find out. Search their quarters. Pretend to befriend them if you must.")))
-            
-    (define (need-to-find-runes)
-      (say knpc "Have you found any more Runes?")
-      (yes? kpc)
-      (say knpc "Ask the other Wise. When you have collected them all return to me."))
-      
-
-    (define (has-runes)
-      (say knpc "Have you found the Accursed yet?")
-      (if (yes? kpc)
-          (has-found-accursed)
-          (need-to-find-accursed)))
-
-    (define (check-second-quest)
-      (if (or (has-all-runes? kpc)
-              (missing-only-s-rune? kpc))
-          (has-runes)
-          (need-to-find-runes)))
 
     (define (check-first-quest)
       (if (in-inventory? kpc t_rune_k)
@@ -148,20 +175,24 @@
           (say knpc "Hmph. I see you still haven't found my item yet!"
                " [He mutters something about Wanderers and Rogues]")
             ))
-      
+    
+    ;; Main
     (if (ench-met? ench)
-        (if (quest-done? (ench-second-quest ench))
+        (if (quest-done? (ench-quest ench 4))
             (say knpc "Welcome, friend of the Wise")
-            (if (quest-offered? (ench-second-quest ench))
-                (if (quest-accepted? (ench-second-quest ench))
-                    (check-second-quest)
-                    (offer-second-quest-again))
-                (if (quest-accepted? (ench-first-quest ench))
-                    (check-first-quest)
-                    (say knpc "Yes, what is it this time?"))))
+            (if (quest-accepted? (ench-quest ench 4))
+                (check-fourth-quest)
+                (if (quest-accepted? (ench-quest ench 3))
+                    (check-third-quest)
+                    (if (quest-offered? (ench-second-quest ench))
+                        (if (quest-accepted? (ench-second-quest ench))
+                            (check-second-quest)
+                            (offer-second-quest-again))
+                        (if (quest-accepted? (ench-first-quest ench))
+                            (check-first-quest)
+                            (say knpc "Yes, what is it this time?"))))))
         (begin
-          (kern-print "[This ageless mage looks unsurprised "
-                      "to see you]")
+          (kern-log-msg "This ageless mage looks unsurprised to see you.")
           (say knpc "I was wondering when you would get here. "
                "It took you long enough!")
           (ench-met! ench #t)))))

@@ -172,8 +172,11 @@
        "I've heard he lives in a hidden cave."))
 
 (define (basic-drag knpc kpc)
-  (say knpc "Stories say a mighty dragon guards a fantastic hoard "
-       "in the Fire Sea."))
+  (say knpc "Stories say a mighty dragon is terrorizing shipping on the "
+       "east coast."))
+
+(define (basic-fire knpc kpc)
+  (say knpc "The Fire Sea? That's a volcano on an island off the east coast."))
 
 (define basic-conv
   (ifc '()
@@ -203,6 +206,7 @@
        (method 'shar basic-shar)
        (method 'kurp basic-kurp)
        (method 'glas basic-glas)
+       (method 'fire basic-fire)
 
        ;; establishments
        (method 'whit basic-whit)
@@ -213,7 +217,6 @@
 
        ;; monsters
        (method 'drag basic-drag)
-       
 
        ))
 
@@ -309,24 +312,8 @@
        ))
 
 ;; Kurpolis
-(define (kurp-drag knpc kpc)
-  (say knpc "If you're hunting for dragons try the Fire Sea region."))
-(define (kurp-fire knpc kpc)
-  (say knpc "The Fire Sea is down near the Third Garrison."))
-(define (kurp-lich knpc kpc)
-  (say knpc "The commander of the Second Garrison believes a Lich is causing problems on the second level."))
-(define (kurp-hydr knpc kpc)
-  (say knpc "I've heard there is a vast underground lake below us, and a Hydra lurks in a nearby cave."))
-(define (kurp-lost knpc kpc)
-  (say knpc "I've heard rumours that a patrol found the entrance to the legendary Lost Halls. "
-       "Ask Commander Jeffrey's, he's being tight-lipped about it."))
 (define kurpolis-conv
   (ifc basic-conv
-       (method 'drag kurp-drag)
-       (method 'fire kurp-fire)
-       (method 'lich kurp-lich)
-       (method 'hydr kurp-hydr)
-       (method 'lost kurp-lost)       
        ))
 
 ;; Green Tower
@@ -348,5 +335,3 @@
                (lambda (knpc kpc) 
                  (say knpc "I don't know anything about a thief. Ask Gwen, maybe a traveler told her something.")))                       
        ))
-
-

@@ -297,7 +297,7 @@
   )
 
 (define (simple-start kplayer)
-  (kern-obj-put-at kplayer (list p_shard 118 48)))
+  (kern-obj-put-at kplayer (list p_enchanters_tower 9 9)))
   ;;(kern-obj-put-at kplayer (list p_moongate_clearing 11 11)))
       
 ;;----------------------------------------------------------------------------
