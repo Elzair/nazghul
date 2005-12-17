@@ -466,6 +466,7 @@
   (list p_eastpass         43 61)
   (list p_ancient_derelict 43 17)
   (list p_gate_to_absalot 120 10)
+  (list p_tower_of_absalot 120 8)
   )
 
  nil ; neighbors

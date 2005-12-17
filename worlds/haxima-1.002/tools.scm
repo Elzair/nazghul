@@ -27,7 +27,7 @@
                           (kern-log-msg "No effect!")
                           nil)
                         (begin
-                          (if (> (kern-dice-roll "1d20") 11)
+                          (if (> (kern-dice-roll "1d20") 16)
                               (send-signal kuser ktarg 'unlock)
                               (kern-log-msg "Picklock broke!"))
                           #t)))))
