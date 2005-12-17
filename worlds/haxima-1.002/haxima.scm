@@ -306,7 +306,7 @@
   )
 
 (define (simple-start kplayer)
-  (kern-obj-put-at kplayer (list p_ankh_shrine 14 22)
+  (kern-obj-put-at kplayer (list p_shard 51 60)
                    ))
   ;;(kern-obj-put-at kplayer (list p_moongate_clearing 11 11)))
       

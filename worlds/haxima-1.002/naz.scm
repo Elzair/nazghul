@@ -1205,6 +1205,9 @@
                  nil     ; edge entrances
                  ))
 
+(define (mk-combat-map tag . terrain)
+  (kern-mk-map tag 19 19 pal_expanded terrain))
+
 (define (mk-tower tag name terrain . objects)
   (kern-mk-place tag
                  name
