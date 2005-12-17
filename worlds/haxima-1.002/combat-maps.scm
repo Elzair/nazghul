@@ -514,26 +514,49 @@
  19                 ;; height;
  pal_expanded       ;; palette
  (list
-    ".. .. tt ~~ ~~ -- -- -- __ __ __ -- -- -- ~~ ~~ tt .. ..";
-    ".. .. tt ~~ ~~ -- -- -- __ __ __ -- -- -- ~~ ~~ tt .. ..";
-    ".. .. tt ~~ ~~ -- -- -- __ __ __ -- -- -- ~~ ~~ tt .. ..";
-    ".. .. tt ~~ ~~ -- -- -- __ ~~ __ -- -- -- ~~ ~~ tt .. ..";
-    ".. .. tt ~~ ~~ -- -- -- ~~ .. ~~ -- -- -- ~~ ~~ tt .. ..";
-    ".. .. tt ~~ ~~ -- -- ~~ .. .. .. ~~ -- -- ~~ ~~ tt .. ..";
-    ".. .. tt ~~ ~~ -- -- ~~ .. bb .. ~~ -- -- ~~ ~~ tt .. ..";
-    ".. .. tt ~~ ~~ -- -- ~~ .. bb .. ~~ -- -- ~~ ~~ tt .. ..";
-    "/f /f /f /f /f /f /f /f /f /f /f /f /f /f /f /f /f /f /f";
-    "/f /f /f /f /f /f /f /f /f /f /f /f /f /f /f /f /f /f /f";
-    "/f /f /f /f /f /f /f /f /f /f /f /f /f /f /f /f /f /f /f";
-    ".. .. tt ~~ ~~ -- -- ~~ .. bb .. ~~ -- -- ~~ ~~ tt .. ..";
-    ".. .. tt ~~ ~~ -- -- ~~ .. bb .. ~~ -- -- ~~ ~~ tt .. ..";
-    ".. .. tt ~~ ~~ -- -- ~~ .. .. .. ~~ -- -- ~~ ~~ tt .. ..";
-    ".. .. tt ~~ ~~ -- -- ~~ ~~ .. ~~ ~~ -- -- ~~ ~~ tt .. ..";
-    ".. .. tt ~~ ~~ -- -- -- ~~ ~~ ~~ -- -- -- ~~ ~~ tt .. ..";
-    ".. .. tt ~~ ~~ -- -- -- __ ~~ __ -- -- -- ~~ ~~ tt .. ..";
-    ".. .. tt ~~ ~~ -- -- -- __ __ __ -- -- -- ~~ ~~ tt .. ..";
-    ".. .. tt ~~ ~~ -- -- -- __ __ __ -- -- -- ~~ ~~ tt .. ..";
+            "tt tt tt tt ~~ -- __ __ __ __ __ __ __ __ __ -- ~~ tt tt "
+            "tt tt tt tt ~~ -- __ __ __ __ __ __ __ __ -- -- ~~ tt tt "
+            "tt tt tt ~~ ~~ -- __ __ __ __ __ __ __ __ -- ~~ tt tt tt "
+            "tt tt tt ~~ -- __ -- -- -- -- -- -- -- __ -- ~~ tt tt tt "
+            "tt tt tt ~~ -- -- -- ~~ ~~ ~~ ~~ ~~ -- -- -- ~~ tt tt tt "
+            ".. .. .. ~~ -- -- ~~ ~~ .. .. .. ~~ ~~ -- -- ~~ .. .. .. "
+            ".. .. .. ~~ -- ~~ ~~ .. tt tt tt .. ~~ ~~ ~~ ~~ .. .. .. "
+            ".. oo .. ~~ ~~ oo ~~ .. tt oo tt .. ~~ oo ~~ ~~ .. oo .. "
+            "/f ee ee ee ee ee ee ee ee ee ee ee ee ee ee ee ee ee /f "
+            "/f ee ee ee ee ee ee ee ee ee ee ee ee ee ee ee ee ee /f "
+            "/f ee ee ee ee ee ee ee ee ee ee ee ee ee ee ee ee ee /f "
+            ".. oo .. ~~ ~~ oo ~~ .. tt oo tt .. ~~ oo ~~ ~~ .. oo .. "
+            ".. .. .. ~~ ~~ ~~ ~~ .. tt tt tt .. ~~ ~~ ~~ ~~ .. .. .. "
+            ".. .. .. ~~ -- -- ~~ ~~ .. .. .. ~~ ~~ -- -- ~~ .. .. .. "
+            "tt tt tt ~~ -- -- -- ~~ ~~ ~~ ~~ ~~ -- -- -- ~~ .. .. .. "
+            "tt tt tt ~~ -- __ -- -- -- -- -- -- -- __ -- ~~ tt tt tt "
+            "tt tt tt ~~ ~~ -- __ __ __ __ __ __ __ __ -- ~~ tt tt tt "
+            "tt tt tt tt ~~ -- __ __ __ __ __ __ __ __ -- -- ~~ tt tt "
+            "tt tt tt tt ~~ -- __ __ __ __ __ __ __ __ __ -- ~~ tt tt "
     ))
+
+(mk-combat-map
+ 'm_bridge_NS_combat
+ "tt tt tt tt tt tt .. .. /f /f /f .. .. tt tt tt tt tt tt "
+ "tt tt tt tt tt .. .. oo ee ee ee oo .. .. tt tt tt tt tt "
+ ".. .. .. .. .. .. .. .. ee ee ee .. .. .. .. .. .. .. .. "
+ "~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ee ee ee ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ "
+ "-- -- -- -- -- -- -- -- ee ee ee -- -- -- -- -- -- -- -- "
+ "__ __ __ __ -- -- -- oo ee ee ee oo -- -- -- __ __ __ __ "
+ "__ __ __ -- -- ~~ ~~ ~~ ee ee ee ~~ ~~ ~~ -- -- __ __ __ "
+ "__ __ __ -- ~~ ~~ .. .. ee ee ee .. .. ~~ ~~ -- __ __ __ "
+ "__ __ __ -- ~~ .. tt tt ee ee ee tt tt .. ~~ -- __ __ __ "
+ "__ __ __ -- ~~ .. tt oo ee ee ee oo tt .. ~~ -- __ __ __ "
+ "__ __ __ -- ~~ .. tt tt ee ee ee tt tt .. ~~ -- __ __ __ "
+ "__ __ __ -- ~~ ~~ .. .. ee ee ee .. .. ~~ ~~ -- __ __ __ "
+ "__ __ __ -- -- ~~ ~~ ~~ ee ee ee ~~ ~~ ~~ -- -- __ __ __ "
+ "__ __ __ __ -- -- -- oo ee ee ee oo -- -- -- __ __ __ __ "
+ "-- -- -- -- -- -- -- -- ee ee ee -- -- -- -- -- -- -- -- "
+ "~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ee ee ee ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ "
+ ".. .. .. .. .. .. .. .. ee ee ee .. .. .. .. .. .. .. .. "
+ "tt tt tt tt tt .. .. oo ee ee ee oo .. .. tt tt tt tt tt "
+ "tt tt tt tt tt tt .. .. /f /f /f .. .. tt tt tt tt tt tt "
+)
 
 (mk-combat-map
  'm_bog_combat
@@ -581,3 +604,4 @@
 (kern-terrain-set-combat-map t_trail_e m_trail_e_combat)
 
 (kern-terrain-set-combat-map t_bridge_WE  m_bridge_WE_combat)
+(kern-terrain-set-combat-map t_bridge_NS  m_bridge_NS_combat)
