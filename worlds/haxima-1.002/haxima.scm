@@ -156,6 +156,7 @@
    (list 1 mandrake)
    (list 1 black_pearl)
    (list 1 blood_moss)
+   (list 1 t_pick)
    )
   )
 
@@ -297,7 +298,7 @@
   )
 
 (define (simple-start kplayer)
-  (kern-obj-put-at kplayer (list p_enchanters_tower 9 9)))
+  (kern-obj-put-at kplayer (list p_shard 121 15)))
   ;;(kern-obj-put-at kplayer (list p_moongate_clearing 11 11)))
       
 ;;----------------------------------------------------------------------------

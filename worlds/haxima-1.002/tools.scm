@@ -8,6 +8,7 @@
 (kern-mk-sprite 's_picklock ss_tools 1 1 #f 0)
 (kern-mk-sprite 's_gem      ss_tools 1 2 #f 0)
 (kern-mk-sprite 's_shovel   ss_tools 1 3 #f 0)
+(kern-mk-sprite 's_pick     ss_tools 1 4 #f 0)
 
 ;; torch -- use two in-lor spells
 (mk-usable-item 't_torch "torch" s_torch 1
@@ -35,6 +36,26 @@
 (mk-usable-item 't_gem "gem" s_gem 2
                 (lambda (kgem kuser)
                   (in-quas-wis nil kuser)))
+
+;; sledge-hammer -- shatter rocks
+(mk-reusable-item 't_pick "pick" s_pick 2
+                  (lambda (ktool kuser)
+                    (let ((loc (kern-ui-target (kern-obj-get-location kuser)
+                                               1)))
+                      (if (null? loc)
+                          nil
+                          (let ((kter (kern-place-get-terrain loc)))
+                            (if (eqv? kter t_boulder)
+                                (begin
+                                  (kern-log-msg (kern-obj-get-name kuser)
+                                                " pulverizes a boulder!")
+                                  (kern-place-set-terrain loc t_grass)
+                                  (if (> (kern-dice-roll "1d20") 16)
+                                      (begin
+                                        (kern-log-msg "The pick shatters!")
+                                        (kern-obj-remove-from-inventory kuser ktool 1))))
+                                (kern-log-msg "No effect!")))))))
+                          
 
 ;;----------------------------------------------------------------------------
 ;; shovel & buried object generator
@@ -67,7 +88,7 @@
   (eqv? (kern-obj-get-type kobj)
         t_buried))
 
-(mk-usable-item 't_shovel "shovel" s_shovel 2
+(mk-reusable-item 't_shovel "shovel" s_shovel 2
                 (lambda (kshovel kuser)
                   (let ((ktarg (filter is-buried?
                                        (kern-get-objects-at 

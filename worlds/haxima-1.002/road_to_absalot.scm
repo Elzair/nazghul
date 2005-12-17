@@ -1,6 +1,7 @@
+(kern-load "joel.scm")
 
 (mk-dungeon-room
- 'p_rivulets_of_fire "Rivulets Of Fire"
+ 'p_road_to_absalot_1 "Passage to Absalot"
  (list
   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
   "rr rr rr rr {{ {{ {{ rr rr rr rr {{ {{ {{ {{ {{ rr rr rr "
@@ -77,7 +78,7 @@
 
 
 (mk-dungeon-room
- 'p_gate_to_absalot "Gate to Absalot"
+ 'p_road_to_absalot_3 "Passage to Absalot"
  (list
   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
   "rr rr rr {{ {{ {{ {{ !! !! !! !! !! !! !! !! {{ rr rr rr "
@@ -100,7 +101,7 @@
   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
   )
  (put (mk-magic-locked-door) 8 9)
- (put (mk-ladder-up 'p_absalot 40 35) 11 9)
+ (put (mk-ladder-up 'p_tower_of_absalot 9 9) 11 9)
  (put (guard-pt 'gazer) 11 9)
  (put (guard-pt 'corrupt-halberdier) 7 9)
  (put (spawn-pt 'headless) 4 8)
@@ -109,5 +110,60 @@
 
 
 (mk-dungeon-level 
- (list p_rivulets_of_fire p_fire_bridge p_gate_to_absalot)
+ (list p_road_to_absalot_1 p_fire_bridge p_road_to_absalot_3)
+ )
+
+(mk-tower
+ 'p_gate_to_absalot "Gate To Absalot"
+ (list
+      "^^ ^^ ^^ ^^ ^^ ^^ ^^ xx xx xx xx xx ^^ ^^ ^^ ^^ ^^ ^^ ^^ "
+      "^^ ^^ ^^ xx xx xx xx xx ,, ,, ,, xx xx xx xx xx ^^ ^^ ^^ "
+      "^^ ^^ ^^ xx ,, ,, ,, xx ,, ,, ,, xx ,, ,, ,, xx ^^ ^^ ^^ "
+      "^^ ^^ ^^ xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx ^^ ^^ ^^ "
+      "^^ ^^ ^^ xx ,, ,, ,, xx ,, ,, ,, xx ,, ,, ,, xx ^^ ^^ ^^ "
+      "^^ ^^ ^^ xx ,, ,, ,, xx xx bb xx xx ,, ,, ,, xx ^^ ^^ ^^ "
+      "^^ ^^ ^^ xx ,, ,, ,, xx bb bb bb xx ,, ,, ,, xx ^^ ^^ ^^ "
+      "^^ ^^ ^^ xx ,, ,, ,, w+ .. bb .. w+ ,, ,, ,, xx ^^ ^^ ^^ "
+      "^^ ^^ ^^ xx ,, ,, ,, xx .. .. .. xx ,, ,, ,, xx ^^ ^^ ^^ "
+      "^^ ^^ ^^ xx xx w+ xx xx .. .. .. xx xx w+ xx xx ^^ ^^ ^^ "
+      "^^ ^^ ^^ {{ .. .. .. .. .. .. .. .. .. .. .. {{ ^^ ^^ ^^ "
+      "^^ ^^ ^^ {{ {{ .. .. .. .. .. .. .. .. .. {{ {{ ^^ ^^ ^^ "
+      "^^ ^^ ^^ {{ {{ .. .. .. .. && .. .. .. .. {{ {{ ^^ ^^ ^^ "
+      "^^ ^^ ^^ {{ {{ .. .. .. .. .. .. .. .. .. {{ {{ ^^ ^^ ^^ "
+      "^^ ^^ ^^ ^^ {{ {{ .. .. .. .. .. .. .. {{ {{ ^^ ^^ ^^ ^^ "
+      "^^ ^^ ^^ ^^ ^^ {{ {{ .. .. .. .. .. {{ {{ ^^ ^^ ^^ ^^ ^^ "
+      "^^ ^^ ^^ ^^ ^^ {{ {{ .. .. .. .. .. {{ {{ ^^ ^^ ^^ ^^ ^^ "
+      "^^ ^^ ^^ ^^ {{ {{ .. .. .. .. .. .. .. {{ {{ ^^ ^^ ^^ ^^ "
+      "^^ ^^ ^^ {{ {{ .. .. .. .. .. .. .. .. .. {{ {{ ^^ ^^ ^^ "
+  )
+ (put (mk-ladder-down 'p_road_to_absalot_1 9 9) 9 1)
+ (put (mk-joel) 9 10)
+ (put (mk-npc 'bull 4) 12 12)
+ (put (mk-npc 'bull 4) 10 15)
+ )
+
+(mk-tower
+ 'p_tower_of_absalot "Tower of Absalot"
+ (list
+      "^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ {{ .. tt tt || || || || || || "
+      "^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ {{ {{ tt tt || || || || || || "
+      "^^ ^^ ^^ {{ bb && bb {{ ^^ ^^ {{ tt tt || || || || || || "
+      "^^ ^^ {{ .. .. .. .. .. {{ ^^ {{ tt tt tt || || || || || "
+      "^^ ^^ {{ .. .. .. .. .. .. {{ bb .. tt tt tt || || || || "
+      "^^ ^^ bb .. .. .. .. .. .. bb {{ .. tt tt tt tt || || || "
+      "^^ ^^ ^^ bb .. .. .. .. .. .. bb .. .. tt tt tt tt tt tt "
+      "^^ ^^ ^^ ^^ {{ .. .. .. .. .. bb .. .. .. tt tt tt tt tt "
+      "^^ ^^ ^^ ^^ bb {{ .. .. .. bb .. .. .. .. .. .. .. .. .. "
+      "^^ ^^ ^^ ^^ bb {{ .. .. .. /c /d /d /d /d /d /d /d /d /d "
+      "^^ ^^ ^^ ^^ bb bb .. .. .. bb .. .. .. .. .. .. .. .. .. "
+      "^^ ^^ ^^ {{ {{ .. .. .. .. .. bb .. .. .. tt tt tt tt tt "
+      "^^ ^^ {{ .. .. .. .. .. .. .. bb .. .. tt tt tt tt tt tt "
+      "^^ {{ .. .. .. .. .. bb ^^ bb {{ .. tt tt tt tt || || || "
+      "^^ {{ .. .. .. .. .. {{ ^^ {{ {{ tt tt tt tt || || || || "
+      "^^ {{ .. .. .. .. .. {{ ^^ ^^ {{ tt tt tt || || || || || "
+      "^^ {{ {{ .. .. .. {{ ^^ ^^ ^^ {{ {{ tt || || || || || || "
+      "^^ ^^ {{ {{ {{ {{ ^^ ^^ ^^ ^^ {{ {{ tt || || || || || || "
+      "^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ .. .. .. {{ tt || || || || || || "
+  )
+ (put (mk-ladder-down 'p_road_to_absalot_3 9 9) 9 9)
  )

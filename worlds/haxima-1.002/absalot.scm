@@ -65,7 +65,6 @@
  (list ; objects
 
   (put (mk-ladder-down 'p_old_absalot 11 27) 2 2)
-  (put (mk-ladder-down 'p_gate_to_absalot 11 9) 40 35)
   )
 
  nil ; hooks
