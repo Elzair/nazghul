@@ -107,8 +107,12 @@
   nil                   ; sched
   nil                   ; special ai
   nil                   ; container
-  nil)                  ; readied
- 8)
+  (list
+   t_sword
+   t_shield
+   )
+  )
+ 1)
 
 
 ; ;; For test
@@ -306,7 +310,7 @@
   )
 
 (define (simple-start kplayer)
-  (kern-obj-put-at kplayer (list p_shard 51 60)
+  (kern-obj-put-at kplayer (list p_shard 52 32)
                    ))
   ;;(kern-obj-put-at kplayer (list p_moongate_clearing 11 11)))
       

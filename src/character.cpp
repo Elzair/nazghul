@@ -1263,7 +1263,7 @@ void Character::addExperience(int amount)
 	double lxp;
 
 	xp += amount;
-	lxp = pow(2, lvl + 4);
+	lxp = pow(2, lvl + 5);
 	if (xp >= lxp) {
 		lvl++;
                 log_msg("%s gains level %d!", getName(), lvl);

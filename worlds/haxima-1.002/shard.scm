@@ -487,8 +487,6 @@
   ;; npc party generator
   (put (mk-edge-spawn-generator) 0 0)
 
-  (put (mk-npc-party 'wolf-party) 51 50)
-
   ;; dungeons
   (put (mk-dungeon 'p_kurpolis_entrance 9 10) 53 18)
   (put (mk-dungeon 'p_mushroom_cave 7 12) 78 74)

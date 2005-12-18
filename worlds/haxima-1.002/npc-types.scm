@@ -155,7 +155,7 @@
 ;;----------------------------------------------------------------------------
 ;; effect packages
 (define slime-effects  (list ef_poison_immunity ef_slime_split))
-(define skel-effects (list ef_poison_immunity ef_fire_immunity))
+(define undead-effects (list ef_poison_immunity ef_fire_immunity))
 (define hydra-effects (list ef_poison_immunity ef_grow_head))
 (define drag-effects (list ef_fire_immunity))
 (define wisp-effects (list ef_poison_immunity ef_fire_immunity))
@@ -350,6 +350,9 @@
         (list 100 "1d20"  t_gold_coins)
         (list 100 "1d3-1" t_mana_potion)
         ))
+(define nixie-equip
+  (list (list 100 "1d20" t_spear)
+        ))
 
 ;; npc types
 ;;      scheme variable                 name                       species          occup.     sprite             chest traps  equipment              effects       ai               faction
@@ -361,9 +364,9 @@
 (define cave-goblin-berserker  (mk-npct "a cave goblin berserker"  sp_cave_goblin   oc_warrior s_orc              basic-traps  berserker-equip        nil           'generic-ai      faction-cave-goblin   nil))
 (define cave-goblin-priest     (mk-npct "a cave goblin priest"     sp_cave_goblin   oc_wizard  s_orc              wizard-traps wizard-equip           nil           'priest-ai       faction-cave-goblin   nil))
 (define ranger                 (mk-npct "a ranger"                 sp_human         oc_warrior s_companion_ranger basic-traps  ranger-equip           nil           'ranger-ai       faction-men           'ranger-conv))
-(define skeletal-spear-thrower (mk-npct "a skeletal spear-thrower" sp_skeleton      oc_warrior s_skeleton         basic-traps  spear-thrower-equip    skel-effects  'generic-ai      faction-monster       nil))
-(define skeletal-warrior       (mk-npct "a skeletal warrior"       sp_skeleton      oc_warrior s_skeleton         basic-traps  skeletal-warrior-equip skel-effects  'generic-ai      faction-monster       nil))
-(define death-knight           (mk-npct "a death knight"           sp_skeleton      oc_warrior s_knight           basic-traps  death-knight-equip     nil           'death-knight-ai faction-monster       nil))
+(define skeletal-spear-thrower (mk-npct "a skeletal spear-thrower" sp_skeleton      oc_warrior s_skeleton         basic-traps  spear-thrower-equip    undead-effects 'generic-ai      faction-monster       nil))
+(define skeletal-warrior       (mk-npct "a skeletal warrior"       sp_skeleton      oc_warrior s_skeleton         basic-traps  skeletal-warrior-equip undead-effects 'generic-ai      faction-monster       nil))
+(define death-knight           (mk-npct "a death knight"           sp_skeleton      oc_warrior s_knight           basic-traps  death-knight-equip     undead-effects 'death-knight-ai faction-monster       nil))
 (define craven-archer          (mk-npct "a craven archer"          sp_skeleton      oc_warrior s_knight           basic-traps  craven-archer-equip    nil           'craven-archer-ai faction-monster      nil))
 (define halberdier             (mk-npct "a halberdier"             sp_human         oc_warrior s_guard            no-traps     halberdier-equip       nil           'guard-ai        faction-men           nil))
 (define crossbowman            (mk-npct "a crossbowman"            sp_human         oc_warrior s_guard            no-traps     crossbowman-equip      nil           'guard-ai        faction-men           nil))
@@ -389,13 +392,14 @@
 (define zorn                   (mk-npct "zorn"                     sp_zorn          oc_wrogue  s_zorn             wrogue-traps zorn-equip             nil           'std-ai          faction-monster       nil))
 (define demon                  (mk-npct "demon"                    sp_demon         nil        s_demon            basic-traps  nil                    nil           'std-ai          faction-monster       nil))
 (define hydra                  (mk-npct "hydra"                    sp_hydra         nil        s_hydra            no-traps     nil                    hydra-effects 'hydra-ai        faction-monster       nil))
-(define lich                   (mk-npct "lich"                     sp_lich          oc_wizard  s_lich             wizard-traps wizard-equip           skel-effects  'spell-sword-ai  faction-monster       nil))
+(define lich                   (mk-npct "lich"                     sp_lich          oc_wizard  s_lich             wizard-traps wizard-equip           undead-effects 'spell-sword-ai  faction-monster       nil))
 (define warlock                (mk-npct "warlock"                  sp_human         oc_wizard  s_wizard           wizard-traps wizard-equip           nil           'spell-sword-ai  faction-monster       nil))
-(define ghast                  (mk-npct "ghast"                    sp_ghast         nil        s_ghost            nil          nil                    nil           'std-ai          faction-monster       nil))
+(define ghast                  (mk-npct "ghast"                    sp_ghast         nil        s_ghost            nil          nil                    undead-effects 'std-ai          faction-monster       nil))
 (define corrupt-halberdier     (mk-npct "a halberdier"             sp_human         oc_warrior s_guard            no-traps     halberdier-equip       nil           'guard-ai        faction-monster       nil))
 (define corrupt-crossbowman    (mk-npct "a crossbowman"            sp_human         oc_warrior s_guard            no-traps     crossbowman-equip      nil           'guard-ai        faction-monster       nil))
 (define knight                 (mk-npct "a knight"                 sp_human         oc_warrior s_knight           no-traps     knight-equip           nil           'guard-ai        faction-trigrave      'knight-conv))
 (define squire                 (mk-npct "a squire"                 sp_human         oc_warrior s_guard            no-traps     squire-equip           nil           'guard-ai        faction-trigrave      'knight-conv))
+(define nixie-warrior          (mk-npct "a nixie warrior"          sp_nixie         oc_warrior s_nixie            no-traps     nixie-equip            nil           'std-ai          faction-monster       nil))
 
 ;;define                        (mk-npct "                          sp_              oc_        s_                 nil          nil                    nil           'std-ai           ))
 

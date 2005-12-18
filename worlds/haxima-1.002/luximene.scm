@@ -114,6 +114,6 @@
            #t)
           (lux-mk))))
     (map (lambda (eff) (kern-obj-add-effect kchar eff nil))
-         skel-effects)
+         undead-effects)
     kchar))
 

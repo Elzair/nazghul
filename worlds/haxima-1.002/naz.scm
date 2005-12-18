@@ -1348,7 +1348,6 @@
 
 (define (mean-player-party-level)
   (let ((members (kern-party-get-members (kern-get-player))))
-    (println "members:" members)
     (/ (foldr (lambda (sum kchar)
                 (println "level:" (kern-char-get-level kchar))
                 (+ sum (kern-char-get-level kchar)))
@@ -1384,7 +1383,7 @@
       (* base (power base (- exp 1)))))
 
 (define (lvl-xp lvl)
-  (power 2 (+ 4 lvl)))
+  (power 2 (+ 5 lvl)))
 
 (define (random-faction)
   (modulo (random-next) faction-num))

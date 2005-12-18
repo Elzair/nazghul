@@ -1,3 +1,38 @@
+;; difficulty class of spawned npc party -- mean player party level +/-1
+(define (difficulty) 
+  (max 1
+       (+ (mean-player-party-level)
+          (kern-dice-roll "1d3-2")
+          )))
+
+(define (filter-out-difficult-ptypes ptypes)
+  (let ((dc (difficulty)))
+    (println "filter-out-difficult-ptypes:dc=" dc)
+    (filter (lambda (ptype)
+              (println " ptype:" (ptype-name ptype))
+              (<= (ptype-dc ptype) dc))
+            ptypes)))
+
+(define (lookup-ptype n ptypes)
+  (if (or (null? ptypes)
+          (= 0 n))
+      nil
+      (begin
+        (println " lookup:n=" n " ptype=" (car ptypes))
+        (if (< n (ptype-scarcity (car ptypes)))
+            (car ptypes)
+            (lookup-ptype (- n 
+                             (ptype-scarcity (car ptypes)))
+                          (cdr ptypes))))))
+
+(define (select-ptype ptypes)
+  (let* ((mod (foldr (lambda (x ptype)
+                       (+ x (ptype-scarcity ptype)))
+                     0
+                     ptypes))
+         (n (modulo (random-next) mod)))
+    (println "  mod=" mod " n=" n)
+    (lookup-ptype n ptypes)))
 
 (define (edge-spawn-exec kwm)
 
@@ -5,13 +40,22 @@
 
   (define (get-ptype loc)
     (println "  get-ptype:loc=" loc)
-    (terrain-to-ptype (kern-place-get-terrain loc)))
+    (let ((ptypes (terrain-to-ptypes (kern-place-get-terrain loc))))
+      (println " ptypes:" ptypes)
+      (if (null? ptypes)
+          nil
+          (let ((ptypes (map eval ptypes)))
+            (let ((ptypes (filter-out-difficult-ptypes ptypes)))
+              (println "  filtered ptypes: " ptypes)
+              (if (null? ptypes)
+                  nil
+                  (select-ptype ptypes)))))))
 
   (define (try-to-spawn-at loc)
     (let ((ptype (get-ptype loc)))
       (println " try-to-spawn-at:ptype=" ptype)
       (if (not (null? ptype))
-          (let ((kparty (mk-npc-party ptype)))
+          (let ((kparty (ptype-generate ptype)))
             ;; note: must put the party on the map (thus giving it a refcount)
             ;; before setting ttl
             (kern-obj-put-at kparty loc)
@@ -33,7 +77,7 @@
         )))
 
   (define (roll-to-spawn?) 
-    (>= (modulo (random-next) 100) 95))
+    (>= (modulo (random-next) 100) 1))
 
   (if (roll-to-spawn?)
       (try-to-spawn-at (pick-edge-tile)))

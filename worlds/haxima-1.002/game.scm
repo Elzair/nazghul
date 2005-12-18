@@ -112,6 +112,7 @@
 (define faction-glasdrin      faction-men)
 (define faction-oparine       faction-men)
 (define faction-trigrave      faction-men)
+(define faction-nixie         faction-monster)
 
 ;; Layers (must match object.h)
 (define layer-none       0)
