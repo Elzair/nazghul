@@ -2047,8 +2047,18 @@ int place_add_subplace(struct place *place, struct place *subplace,
 			return -1;
 	}
         
-        if (tile_add_subplace(tile, subplace))
-                return -1;
+        /* Bugfix: combat_enter() was calling this and not checking the return
+         * value. If combat was started over a town this would fail, but combat
+         * would proceed normally. This caused two problems: 1. If we saved in
+         * such a combat the game would fail to reload. Or, 2. when
+         * combat_exit() called it would remove the town! The temp combat place
+         * doesn't really need to be attached to the tile, as long as it gets
+         * on the subplace list it will be properly saved/loaded.
+         */
+        if (!subplace->is_wilderness_combat) {
+                if (tile_add_subplace(tile, subplace))
+                        return -1;
+        }
 
         // Why was I doing this?
 /*         if (subplace->handle) { */
@@ -2078,12 +2088,16 @@ struct place *place_get_subplace(struct place *place, int x, int y)
 
 void place_remove_subplace(struct place *place, struct place *subplace)
 {
-	struct tile *tile;
-
-	tile = place_lookup_tile(place, subplace->location.x, 
-                                 subplace->location.y);
-        assert(tile);
-        tile_remove_subplace(tile);
+        /* Bugfix: if wilderness combat is initiated over a town, on exit the
+         * town would be removed from the map! See comments in
+         * place_add_subplace() */
+        if (! subplace->is_wilderness_combat) {
+                struct tile *tile;
+                tile = place_lookup_tile(place, subplace->location.x, 
+                                         subplace->location.y);
+                assert(tile);
+                tile_remove_subplace(tile);
+        }
         list_remove(&subplace->container_link);
         // FIXME: make it an orphan?
 }
