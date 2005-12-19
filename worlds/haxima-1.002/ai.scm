@@ -47,15 +47,16 @@
 
 
 (define (use-ranged-spell-on-foe? kchar ktarg spell-list)
-  (let ((abil (random-select (filter (lambda (abil)
-                                        (and (can-use-ability? abil kchar)
-                                             (can-hit? kchar 
-                                                       ktarg 
-                                                       (ability-range abil))))
-                                      spell-list))))
-    (if (null? abil)
-        #f
-        (use-ability abil kchar ktarg))))
+  (if (> (kern-dice-roll "1d20") 10)
+      (let ((abil (random-select (filter (lambda (abil)
+                                           (and (can-use-ability? abil kchar)
+                                                (can-hit? kchar 
+                                                          ktarg 
+                                                          (ability-range abil))))
+                                         spell-list))))
+        (if (null? abil)
+            #f
+            (use-ability abil kchar ktarg)))))
 
 (define (use-ranged-spell-on-foes? kchar spell-list)
   (println "use-ranged-spell-on-foes? spell-list:" spell-list)

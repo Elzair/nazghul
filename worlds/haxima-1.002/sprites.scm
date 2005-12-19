@@ -343,3 +343,9 @@
 (kern-mk-sprite 's_wax_half_moon            ss_moons 1 6 #f 0 )
 (kern-mk-sprite 's_wax_three_quarter_moon   ss_moons 1 7 #f 0 )
 (kern-mk-sprite 's_sun                      ss_moons 1 8 #f 0 )
+
+;; convenient alia
+(define s_shepherd s_companion_shepherd)
+(define s_ranger s_companion_ranger)
+(define s_blue_wizard s_companion_wizard)
+(define s_fighter s_companion_fighter)

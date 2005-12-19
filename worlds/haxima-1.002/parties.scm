@@ -58,8 +58,7 @@
 (define forest-goblin-party-l1
   (ptype-mk "goblin stalker" s_orc faction-forest-goblin 1 2
             (pgroup-mk 'forest-goblin-stalker "1")
-            ))
-            
+            ))            
 (define forest-goblin-party-l2
   (ptype-mk "goblin scouting party" s_orc faction-forest-goblin 2 2
             (pgroup-mk 'forest-goblin-stalker "1")
@@ -72,7 +71,6 @@
             (pgroup-mk 'forest-goblin-hunter  "1d2")
             (pgroup-mk 'wolf "1d2")
             ))
-
 (define forest-goblin-party-l4 
   (ptype-mk "goblin tribe" s_orc faction-forest-goblin 4 2
             (pgroup-mk 'forest-goblin-stalker "1d2")
@@ -80,34 +78,45 @@
             (pgroup-mk 'wolf "1d2")
             (pgroup-mk 'forest-goblin-shaman "1")
             ))
-
-(define bandit-party 
-  (ptype-mk "bandit gang" s_brigand faction-outlaw 3 5
+(define bandit-party-l1
+  (ptype-mk "gang of footpads" s_brigand faction-outlaw 1 4
+            (pgroup-mk 'footpad "1d2")
+            ))
+(define bandit-party-l2
+  (ptype-mk "gang of bandits" s_brigand faction-outlaw 2 4
             (pgroup-mk 'bandit "1d2")
             ))
-
-(define troll-party-l2
+(define bandit-party-l3
+  (ptype-mk "a gang of highwaymen" s_brigand faction-outlaw 3 4
+            (pgroup-mk 'highwayman "1d2")
+            ))
+(define bandit-party-l4
+  (ptype-mk "a gang of blackguards" s_brigand faction-outlaw 4 4
+            (pgroup-mk 'blackguard "1d2")
+            ))
+(define bandit-party-l5
+  (ptype-mk "a gang of sinister blackguards" s_brigand faction-outlaw 5 4
+            (pgroup-mk 'blackguard "1d2")
+            (pgroup-mk 'bomber "1d2")
+            ))
+(define troll-party-l3
   (ptype-mk "band of trolls" s_troll faction-troll 3 5
             (pgroup-mk 'troll "1")
             ))
-
-(define troll-party-l3
-  (ptype-mk "troll with goblin slaves" s_troll faction-troll 3 5
+(define troll-party-l4
+  (ptype-mk "troll with goblin slaves" s_troll faction-troll 4 5
             (pgroup-mk 'troll "1")
             (pgroup-mk 'forest-goblin-stalker "1d3-1")
             ))
-
 (define green-slime-party-l2
   (ptype-mk "ooze of slimes" s_slime faction-monster 2 3
             (pgroup-mk 'green-slime "1d3")
             ))
-
 (define yellow-slime-party-l3
   (ptype-mk "yellow slime colony" s_yellow_slime faction-monster 3 3
             (pgroup-mk 'green-slime "1d3")
             (pgroup-mk 'yellow-slime "1")
             ))
-
 (define hydra-party-l5
   (ptype-mk "hydra with slimes" s_hydra faction-monster 5 3
             (pgroup-mk 'green-slime "1d3")
@@ -250,4 +259,52 @@
   (ptype-mk "clutch of spiders" s_spider faction-spider 4 5
             (pgroup-mk 'giant-spider "1d2")
             (pgroup-mk 'queen-spider "1")
+            ))
+(define headless-party-l1
+  (ptype-mk "a headless horror" s_headless faction-monster 1 4
+            (pgroup-mk 'headless "1")))
+(define headless-party-l3
+  (ptype-mk "a mob of headless horrors" s_headless faction-monster 3 4
+            (pgroup-mk 'headless "1d2")))
+(define headless-party-l5
+  (ptype-mk "a warlock with headless horrors" s_wizard faction-monster 5 4
+            (pgroup-mk 'headless "1d2")
+            (pgroup-mk 'warlock "1")
+            ))
+
+(define accursed-party-l4
+  (ptype-mk "accursed master" s_wizard faction-accursed 4 2
+            (pgroup-mk 'accursed-master "1")
+            (pgroup-mk 'accursed-apprentice "1d2-1")
+            (pgroup-mk 'accursed-guardian "1d2")
+            ))
+(define accursed-party-l5
+  (ptype-mk "accursed master" s_wizard faction-accursed 5 2
+            (pgroup-mk 'accursed-master "1")
+            (pgroup-mk 'accursed-defender "1d2")
+            ))
+(define accursed-party-l6
+  (ptype-mk "accursed adept" s_wizard faction-accursed 6 2
+            (pgroup-mk 'accursed-master "1")
+            (pgroup-mk 'accursed-defender "1d2")
+            (pgroup-mk 'accursed-templar "1d2")
+            ))
+(define militia-party-l4
+  (ptype-mk "deserters" s_guard faction-outlaw  4 4
+            (pgroup-mk 'halberdier "1d2")
+            (pgroup-mk 'crossbowman "1d2")
+            ))
+
+(define snake-party-l1
+  (ptype-mk "snakes" s_snake faction-monster 1 5
+            (pgroup-mk 'snake "1d2")
+            ))
+(define bat-party-l1
+  (ptype-mk "bats" s_bat faction-monster 1 2
+            (pgroup-mk 'bat "1d2")
+            ))
+
+(define rat-party-l1
+  (ptype-mk "rats" s_rat faction-monster 1 5
+            (pgroup-mk 'rat "1d2")
             ))
