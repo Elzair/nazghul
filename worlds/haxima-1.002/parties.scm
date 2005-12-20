@@ -300,7 +300,7 @@
             (pgroup-mk 'snake "1d2")
             ))
 (define bat-party-l1
-  (ptype-mk "bats" s_bat faction-monster 1 2
+  (ptype-mk "bats" s_bat faction-monster 1 1
             (pgroup-mk 'bat "1d2")
             ))
 

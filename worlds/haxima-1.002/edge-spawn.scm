@@ -10,12 +10,12 @@
     (println "filter-out-difficult-ptypes:dc=" dc)
     (filter (lambda (ptype)
               (println " ptype:" (ptype-name ptype))
-              (<= (ptype-dc ptype) dc))
+              (and (<= (ptype-dc ptype) dc)
+                   (>= (ptype-dc ptype) (- dc 4))))
             ptypes)))
 
 (define (lookup-ptype n ptypes)
-  (if (or (null? ptypes)
-          (= 0 n))
+  (if (null? ptypes)
       nil
       (begin
         (println " lookup:n=" n " ptype=" (car ptypes))
