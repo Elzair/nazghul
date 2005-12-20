@@ -229,8 +229,7 @@
 ;; ----------------------------------------------------------------------------
 ;; Charm
 ;;
-;; Used by the An Xen Exe spell. This effect was the first to use its own
-;; non-nil gob.
+;; Used by the An Xen Exe spell.
 ;; ----------------------------------------------------------------------------
 (define (charm-mk faction) (list faction))
 
@@ -243,6 +242,26 @@
 (define (charm-apply charm kchar)
   (if (obj-is-char? kchar)
       (kern-char-charm kchar (charm-faction charm))))
+
+;; ----------------------------------------------------------------------------
+;; Loot Drop
+;;
+;; Used to generate loot when an NPC is killed. The hook-fx given to the gob is
+;; executed when the effect runs, taking the unfortunate npc as its parm.
+;; ----------------------------------------------------------------------------
+(define (loot-drop-mk hook-fx . hook-fx-parms) (list 'loot-drop-gob hook-fx hook-fx-parms))
+
+(define (loot-drop-hook-fx gob) (cadr gob))
+(define (loot-drop-hook-fx-parms gob) (caddr gob))
+
+(define (loot-drop-exec fgob kobj)
+  (println "loot-drop-exec:fgob=" fgob)
+  (if (not (obj-is-char? kobj))
+      (kern-obj-remove-effect kobj ef_loot_drop)
+      (let ((kchar kobj))
+        (apply (eval (loot-drop-hook-fx fgob)) 
+               (cons kchar
+                     (loot-drop-hook-fx-parms fgob))))))
 
 ;; ----------------------------------------------------------------------------
 ;; Invisibility
@@ -349,6 +368,7 @@
    (list 'ef_fire_immunity             nil                   nil                 nil              nil                 "nil-hook"           "F" 0   #f  -1)
    (list 'ef_temporary_fire_immunity   nil                   nil                 nil              nil                 "nil-hook"           "F" 0   #f  60)
    (list 'ef_grow_head                 'grow-head-exec       nil                 nil              'grow-head-exec     "on-damage-hook"     ""  0   #f  -1)
+   (list 'ef_loot_drop                 'loot-drop-exec       nil                 nil              nil                 "on-death-hook"      ""  0   #f  -1)
    ))
 
 (map (lambda (effect) (apply mk-effect effect)) effects)

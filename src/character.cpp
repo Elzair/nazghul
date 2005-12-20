@@ -1034,10 +1034,10 @@ bool Character::dropItems()
 
 void Character::kill()
 {
-	if (!isPlayerControlled() && isOnMap()) {
-		dropRdyArms();
-		dropItems();
-	}
+// 	if (!isPlayerControlled() && isOnMap()) {
+// 		dropRdyArms();
+// 		dropItems();
+// 	}
 
         if (isPlayerControlled()) {
                 log_msg("%s has fallen!!", getName());
@@ -1051,6 +1051,8 @@ void Character::kill()
         if (species && species->on_death)
                 closure_exec(species->on_death, "p", this);
 
+        // Similarly, run the on-death hook
+        runHook(OBJ_HOOK_ON_DEATH);
 	remove();
 }
 

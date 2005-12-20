@@ -81,14 +81,13 @@
          'sea-serpent-party-l3
          'nixie-party-l3
          'nixie-party-l4
+         'nixie-party-l5
          )
    (list t_deep
          'dragon-party-l6
          'dragon-party-l8
          'kraken-party-l3
          'sea-serpent-party-l3
-         'nixie-party-l3
-         'nixie-party-l4
          )
    (list t_lava
          'dragon-party-l6

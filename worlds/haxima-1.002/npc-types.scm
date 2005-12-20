@@ -62,8 +62,10 @@
              (kern-dice-roll lvl-dice)))
 
 ;; npct -- NPC type
+(define (mk-npct2 name spec occ spr traps equip eff ai faction conv drop-fx drop-fx-parms)
+  (list name spec occ spr traps equip eff ai faction conv drop-fx drop-fx-parms))
 (define (mk-npct name spec occ spr traps equip eff ai faction conv)
-  (list name spec occ spr traps equip eff ai faction conv))
+  (mk-npct2 name spec occ spr traps equip eff ai faction conv nil nil))
 (define (npct-name npct) (car npct))
 (define (npct-spec npct) (cadr npct))
 (define (npct-occ npct) (caddr npct))
@@ -74,6 +76,8 @@
 (define (npct-ai npct) (list-ref npct 7))
 (define (npct-faction npct) (list-ref npct 8))
 (define (npct-conv npct) (list-ref npct 9))
+(define (npct-drop-fx npct) (list-ref npct 10))
+(define (npct-drop-fx-parms npct) (list-ref npct 11))
 
 
 
@@ -136,6 +140,11 @@
     ;; revisit -- will this work or will effects need to be symbol-tags?
     (map (lambda (eff) (kern-obj-add-effect npc eff nil))
          (npct-effects npct))
+    (if (not (null? (npct-drop-fx npct)))
+        (kern-obj-add-effect npc 
+                             ef_loot_drop 
+                             (loot-drop-mk (npct-drop-fx npct)
+                                           (npct-drop-fx-parms npct))))
     npc))
 
 ;; spawn-npc -- like mk-npc but mark the npc as spawned (this allows monster
@@ -374,8 +383,11 @@
         (list 100 "1d20"  t_gold_coins)
         (list 100 "1d3-1" t_mana_potion)
         ))
-(define nixie-equip
+(define nixie-1-equip
   (list (list 100 "1d20" t_spear)
+        ))
+(define nixie-2-equip
+  (list (list 100 "1d20" t_sword)
         ))
 (define bomber-equip
   (list (list 100 "1d5" t_oil)
@@ -412,6 +424,33 @@
         (list 100 "1" t_iron_helm)
         (list 100 "1" t_armor_plate)
         ))
+
+(define (drop-food knpc)
+  (kern-obj-put-at (kern-mk-obj t_food (kern-dice-roll "1d3-1"))
+                   (kern-obj-get-location knpc)))
+
+(define (wrogue-drop knpc)
+  (kern-obj-put-at (kern-mk-obj t_gold
+                                (* (kern-char-get-lvl knpc)
+                                   (kern-dice-roll "1d2")))
+                   (kern-obj-get-location knpc))
+  )
+
+(define animal-loot
+  (list (list "1d4-3" 't_food)
+        ))
+
+(define (drop-generic knpc loot)
+  (println "drop-generic:loot=" loot)
+  (let ((loc (kern-obj-get-location knpc)))
+    (map (lambda (dtype)
+           (let ((quantity (kern-dice-roll (car dtype))))
+             (if (> quantity 0)
+                 (kern-obj-put-at (kern-mk-obj (eval (cadr dtype))
+                                               quantity)
+                                  loc))))
+         loot)
+    ))
 
 ;; npc types
 ;;      scheme variable                 name                       species          occup.     sprite             chest traps  equipment              effects       ai               faction
@@ -457,15 +496,18 @@
 (define corrupt-crossbowman    (mk-npct "a crossbowman"            sp_human         oc_warrior s_guard        no-traps     crossbowman-equip      nil           'guard-ai        faction-monster       nil))
 (define knight                 (mk-npct "a knight"                 sp_human         oc_warrior s_knight       no-traps     knight-equip           nil           'guard-ai    faction-trigrave 'knight-conv))
 (define squire                 (mk-npct "a squire"                 sp_human         oc_warrior s_guard        no-traps     squire-equip           nil           'guard-ai    faction-trigrave 'knight-conv))
-(define nixie-warrior          (mk-npct "a nixie warrior"          sp_nixie         oc_warrior s_nixie        no-traps     nixie-equip            nil           'std-ai          faction-monster       nil))
+(define nixie-spearman         (mk-npct "a nixie spearman"         sp_nixie         oc_warrior s_nixie        no-traps     nixie-1-equip          nil           'std-ai          faction-monster       nil))
+(define nixie-swordsman         (mk-npct "a nixie swordsman"       sp_nixie         oc_warrior s_nixie        no-traps     nixie-2-equip          nil           'std-ai          faction-monster       nil))
 (define footpad                (mk-npct "a footpad"                sp_human         oc_wrogue  s_brigand      wrogue-traps wrogue-1-equip         nil           'std-ai          faction-outlaw        nil))
 (define bandit                 (mk-npct "a bandit"                 sp_human         oc_wrogue  s_brigand      wrogue-traps wrogue-2-equip         nil           'std-ai          faction-outlaw        nil))
 (define highwayman             (mk-npct "a highwayman"             sp_human         oc_wrogue  s_brigand      wrogue-traps wrogue-3-equip         nil           'std-ai          faction-outlaw        nil))
 (define blackguard             (mk-npct "a blackguard"             sp_human         oc_wrogue  s_brigand      wrogue-traps wrogue-4-equip         nil           'std-ai          faction-outlaw        nil))
 (define bomber                 (mk-npct "a mad jester"             sp_human         oc_wrogue  s_jester       wrogue-traps bomber-equip           nil           'std-ai          faction-outlaw        nil))
 (define snake                  (mk-npct "a snake"                  sp_snake         nil        s_snake        nil          nil                    nil           'std-ai          faction-monster       nil))
-(define bat                    (mk-npct "a bat"                    sp_bat           nil        s_bat          nil          nil                    nil           'std-ai          faction-monster       nil))
-(define rat                    (mk-npct "a rat"                    sp_rat           nil        s_rat          nil          nil                    nil           'std-ai          faction-monster       nil))
+(define bat                    
+  (mk-npct2 "a bat"                    sp_bat           nil        s_bat          nil          nil                    nil           'std-ai          faction-monster       nil 'drop-generic animal-loot))
+(define rat      
+  (mk-npct2 "a rat"                    sp_rat           nil        s_rat          nil          nil                    nil           'std-ai          faction-monster       nil 'drop-generic animal-loot))
 
 ;; accursed
 (define accursed-acolyte    (mk-npct "an accursed acolyte"    sp_human oc_wizard s_shepherd nil accursed-1-equip nil 'spell-sword-ai faction-accursed nil))
