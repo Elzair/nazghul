@@ -77,7 +77,7 @@
         )))
 
   (define (roll-to-spawn?) 
-    (>= (modulo (random-next) 100) 1))
+    (>= (modulo (random-next) 100) 96))
 
   (if (roll-to-spawn?)
       (try-to-spawn-at (pick-edge-tile)))

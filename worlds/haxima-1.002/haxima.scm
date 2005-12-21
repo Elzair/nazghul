@@ -107,10 +107,7 @@
   nil                   ; sched
   nil                   ; special ai
   nil                   ; container
-  (list
-   t_sword
-   t_shield
-   )
+  nil                   ; readied
   )
  1)
 
@@ -155,21 +152,7 @@
  (kern-mk-container
   nil ;; type
   nil ;; trap
-  (list ;; contents
-   (list 1 t_torch)
-   (list 1 mandrake)
-   (list 1 black_pearl)
-   (list 1 blood_moss)
-   (list 10 t_pick)
-      (list 1 t_rune_k)
-      (list 1 t_rune_p)
-      (list 1 t_rune_s)
-      (list 1 t_rune_c)
-      (list 1 t_rune_l)
-      (list 1 t_rune_f)
-      (list 1 t_rune_w)
-      (list 1 t_rune_d)
-   )
+  nil ;; contents
   )
 
  nil ;; party members (should be nil for initial load file)
@@ -318,5 +301,5 @@
 ;; To skip the extended start scene comment out this next line and uncomment
 ;; the line after it.
 ;;----------------------------------------------------------------------------
-;(kern-set-start-proc start-scene)
-(kern-set-start-proc simple-start)
+(kern-set-start-proc start-scene)
+;(kern-set-start-proc simple-start)

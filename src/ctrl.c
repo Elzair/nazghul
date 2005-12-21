@@ -326,7 +326,7 @@ void ctrl_do_attack(class Character *character, class ArmsType *weapon,
         log_continue(" damage roll %d ", damage);
 
         /* roll for critical hit */
-        if (20 <= (dice_roll("1d20") + log2(character->getLevel()))) {
+        if (20 <= (dice_roll("1d20") + logBase2(character->getLevel()))) {
                 log_continue("Critical hit!\n");
                 armor = 0;
         } else {

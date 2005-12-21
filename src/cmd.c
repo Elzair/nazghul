@@ -894,8 +894,8 @@ bool cmdOpen(class Character * pc)
 
 		// Roll to disarm
 		if (20 <= (dice_roll("1d20") 
-                           + log2(pc->getDexterity())
-                           + log2(pc->getLevel()))) {
+                           + logBase2(pc->getDexterity())
+                           + logBase2(pc->getLevel()))) {
 			log_msg("You disarm a trap!");
 		} else {
                         // Trigger the trap. Traps may destroy containers, so
