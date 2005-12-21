@@ -41,7 +41,7 @@
                          (list t_dagger         10)
                          (list t_mace           80)
                          (list t_sword          150)
-                         (list t_morning_star   80)
+                         (list t_morning_star   180)
                          (list t_chain_coif     200)
                          (list t_armor_chain    400)
                          )

@@ -46,12 +46,12 @@
 ;;----------------------------------------------------------------------------
 ;; letter from enchanter
 (mk-reusable-item 
- 't_letter_from_enchanter "Important" s_lexicon 1
+ 't_letter_from_enchanter "Important Letter" s_lexicon 1
  (lambda (klexicon kuser)
    (kern-ui-page-text
    "IMPORTANT"
    ""
-   "It is most important that you FIND ME. "
+   "It is most critical that you FIND ME. "
    "The goodman who cares for this shrine can "
    "point the way. Beware."
    ""
