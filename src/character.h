@@ -292,6 +292,9 @@ class Character:public Being {
 
  private:
         bool atAppointment();
+        bool playerIsInMyBed();
+        void kickPlayerOutOfMyBed();
+        void switchPlaces(class Character *);
 };
 
 extern void char_dtor(void *val);

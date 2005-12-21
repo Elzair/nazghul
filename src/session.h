@@ -84,6 +84,7 @@ extern int save_errs;
 
 #define session_ticks_per_turn() (place_get_scale(Place) * Session->time_accel)
 #define session_set_time_accel(val) (Session->time_accel = (val))
+#define session_get_time_accel(val) (Session->time_accel)
 
 /* Backwards-compatible replacements for the old global work queues: */
 #define TickWorkQueue (Session->tickq)

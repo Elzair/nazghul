@@ -20,7 +20,7 @@
                (list 12 0 ghg-s8             "eating")
                (list 13 0 eng-workshop       "idle")
                (list 16 0 trigrave-tavern-hall "idle")
-               (list 17 0 trigrave-tavern-table-3a "eating")
+               (list 17 0 trigrave-tavern-table-3b "eating")
                (list 19 0 gt-ws-hall           "idle")
                (list 23 0 kalc-bed          "sleeping")
                )

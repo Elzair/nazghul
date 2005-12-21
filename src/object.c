@@ -798,25 +798,21 @@ int Object::getActivity()
 
 int Object::getActionPointsPerTurn()
 {
-        // --------------------------------------------------------------------
+        int baseAP = getSpeed() * session_get_time_accel();
+
         // If 'Quicken' is in effect then give player-controlled objects bonus
         // action points per turn.
-        // --------------------------------------------------------------------
-
         if (Quicken > 0 && isPlayerControlled()) {
-                return getSpeed() * 2;
+                return baseAP * 2;
         }
 
-        // --------------------------------------------------------------------
         // If 'TimeStop' is in effect then give action points ONLY to
         // player-controlled objects.
-        // --------------------------------------------------------------------
-
         if (TimeStop && ! isPlayerControlled()) {
                 return 0;
         }
 
-        return getSpeed();
+        return baseAP;
 }
 
 void Object::applyEffect(closure_t *effect)

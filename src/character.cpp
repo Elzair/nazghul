@@ -604,6 +604,10 @@ enum MoveResult Character::move(int dx, int dy)
 		// *** Switch ***
 
 		if (isPlayerControlled() 
+
+                    // don't allow switching with sleeping NPC's; this would
+                    // allow the player to kick THEM out of bed!
+                    && SLEEPING != occupant->getActivity()
                     //&& occupant->isPlayerControlled() 
                     //&& isSelected()
                         ) {
@@ -616,11 +620,6 @@ enum MoveResult Character::move(int dx, int dy)
 			// Note that in this case I'm ignoring movement cost
 			// (pretend that the characters help each other across
 			// the rough terrain... yeah, that's it!).
-
-			int oldx, oldy;
-			class Character *oldTarget;
-			struct place *oldPlace;
-			bool wasSolo;
 
                         // Wait - first have to check if the other character
                         // can occupy this tile (may have different
@@ -647,27 +646,7 @@ enum MoveResult Character::move(int dx, int dy)
         
                         }
 
-
-			oldx = getX();
-			oldy = getY();
-
-                        // Save these before calling remove because remove()
-                        // automatically resets these to defaults (for sane
-                        // reasons... I think)
-			oldTarget = target;
-			oldPlace = getPlace();
-			wasSolo = isSolo();
-
-			//remove();
-			occupant->relocate(oldPlace, oldx, oldy);
-			relocate(oldPlace, newx, newy);
-                        decActionPoints(place_get_movement_cost(getPlace(), 
-                                                                getX(), 
-                                                                getY(), 
-                                                                this));
-			setAttackTarget(oldTarget);
-                        setSolo(wasSolo);
-
+                        switchPlaces(occupant);
 			return SwitchedOccupants;
 		}
 
@@ -1614,6 +1593,67 @@ bool Character::atAppointment()
         return false;
 }
 
+bool Character::playerIsInMyBed()
+{
+        struct appt *curAppt = &sched->appts[appt];
+
+        if (SLEEPING!=curAppt->act)
+                return false;
+
+        class Character *sleeper = 
+                (class Character*)place_get_object(getPlace(), 
+                                                   curAppt->x,
+                                                   curAppt->y,
+                                                   being_layer);
+        return (sleeper
+                && sleeper->isPlayerControlled());
+}
+
+void Character::kickPlayerOutOfMyBed()
+{
+        struct appt *curAppt = &sched->appts[appt];
+
+        log_msg("Kicked out of bed!");
+        player_party->throw_out_of_bed();
+
+        // now switch places with whoever is in bed
+       class Character *sleeper = 
+               (class Character*)place_get_object(getPlace(), 
+                                                  curAppt->x,
+                                                  curAppt->y,
+                                                  being_layer);
+       assert(sleeper);
+       switchPlaces(sleeper);
+
+       assert(atAppointment());
+       setActivity(curAppt->act);
+}
+
+void Character::switchPlaces(class Character *occupant)
+{
+        int oldx = getX();
+        int oldy = getY();
+        int newx = occupant->getX();
+        int newy = occupant->getY();
+
+        // Save these before calling remove because remove()
+        // automatically resets these to defaults (for sane
+        // reasons... I think)
+        class Character *oldTarget = target;
+        struct place *oldPlace = getPlace();
+        bool wasSolo = isSolo();
+        
+        //remove();
+        occupant->relocate(oldPlace, oldx, oldy);
+        relocate(oldPlace, newx, newy);
+        decActionPoints(place_get_movement_cost(getPlace(), 
+                                                getX(), 
+                                                getY(), 
+                                                this));
+        setAttackTarget(oldTarget);
+        setSolo(wasSolo);
+}
+
 bool Character::commute()
 {
 	int tx, ty;
@@ -1645,12 +1685,20 @@ bool Character::commute()
                         }
                         
                         // Check if the commute is over.
-                        if (getX() == tx && getY() == ty) {
+                        if (atAppointment()) {
                                 setActivity(curAppt->act);
                         }
 
                         return true;
                 }
+        }
+
+        // Special case: if the appointment is the character's bed, and
+        // pathfinding failed because the player is sleeping in it, then kick
+        // the player out of bed
+        if (playerIsInMyBed()) {
+                kickPlayerOutOfMyBed();
+                return true;
         }
 
         dbg("%s cannot find path to [%d %d %d %d] while commuting\n", 
