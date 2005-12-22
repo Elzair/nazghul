@@ -1722,11 +1722,17 @@ void Character::synchronize()
         cur_appt = sched_get_appointment(sched, Session->clock.hour,
                                          Session->clock.min);
 
+        if (getPlace()
+            && getPlace() != cur_appt->place) {
+                introduce();
+                return;
+        } 
+
         // Drop the character in the upper left corner of their roaming
         // rectangle. The ULC is better than the center because it's more
         // obvious to the schedule designer that the ULC needs to be passable
         // terrain.
-	relocate(cur_appt->place, cur_appt->x, cur_appt->y);
+        relocate(cur_appt->place, cur_appt->x, cur_appt->y);
 	setActivity(cur_appt->act);
         appt = cur_appt->index;
 }
@@ -2547,12 +2553,15 @@ bool Character::tryToRelocateToNewPlace(struct place *newplace,
                                         int newx, int newy,
                                         struct closure *closure)
 {
-        // -----------------------------------------------------------------
         // NPCs and charmed PCs are not allowed to change places because I
         // don't want them dissappearing into the ether.
-        // -----------------------------------------------------------------
-
-        if (! isPlayerControlled() || isCharmed()) {
+        //
+        // Addendum: this needs to work for characters with multi-place
+        // schedules. If I only forbid entry to the wilderness this should work
+        // as originally intended.
+        if (place_is_wilderness(newplace)
+            && (! isPlayerControlled() 
+                || isCharmed())) {
                 return false;
         }
 

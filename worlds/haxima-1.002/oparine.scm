@@ -130,10 +130,10 @@
   ;; inn
   (put (mk-locked-door) 9 8)
   (put (kern-tag 'oparine-inn-room-1-door (mk-locked-door)) 12 14)
-  (put (mk-locked-door) 12 17)
-  (put (mk-magic-locked-door) 14 18)
-  (put (mk-locked-door) 15 16)
-  (put (mk-locked-door) 15 13)
+  (put (kern-tag 'oparine-inn-room-2-door (mk-locked-door)) 12 17)
+  (put (kern-tag 'oparine-inn-room-3-door (mk-magic-locked-door)) 14 18)
+  (put (kern-tag 'oparine-inn-room-4-door (mk-locked-door)) 15 16)
+  (put (kern-tag 'oparine-inn-room-5-door (mk-locked-door)) 15 13)
   (put (mk-windowed-door) 18 11)
   (put (mk-bed) 10 13)
   (put (mk-bed) 10 16)
@@ -167,7 +167,8 @@
   )
 
 
- nil ; hooks
+ ;; On-entry hook
+ (list 'lock-inn-room-doors)
 
  (list  ;; edge entrances
   (list south 24 0) 

@@ -182,10 +182,10 @@
   ;; inn
   (put (mk-door) 21 20)
   (put (mk-locked-door) 9 15)
-  (put (kern-tag 'gir-door (mk-locked-door)) 10 21)
-  (put (mk-locked-door) 13 21)
-  (put (mk-locked-door) 16 21)
-  (put (mk-locked-door) 19 21)
+  (put (kern-tag 'glasdrin-inn-room-1-door (mk-locked-door)) 10 21)
+  (put (kern-tag 'glasdrin-inn-room-2-door (mk-locked-door)) 13 21)
+  (put (kern-tag 'glasdrin-inn-room-3-door (mk-locked-door)) 16 21)
+  (put (kern-tag 'glasdrin-inn-room-4-door (mk-locked-door)) 19 21)
   (put (mk-bed) 9 23)
   (put (mk-bed) 12 23)
   (put (mk-bed) 16 23)
@@ -207,7 +207,10 @@
 
   )
 
- (list 'on-entry-to-dungeon-room) ; hooks
+ ;; on-entry hook
+ (list 'on-entry-to-dungeon-room 
+       'lock-inn-room-doors
+       )
  nil ; edge entrances
  )
 

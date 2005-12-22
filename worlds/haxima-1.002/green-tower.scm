@@ -199,6 +199,7 @@
   (put (mk-door) 23 32)
   
   )
- nil   ; hooks
+ ;; On-entry hook
+ (list 'lock-inn-room-doors)
  nil   ; edge entrances
 )

@@ -318,15 +318,9 @@
   (put (mk-buried 't_rune_p 1) 31 31)
 
   )
- (list 'trigrave-entry) ;; hooks
+ (list 'lock-inn-room-doors) ;; hooks
  (list  ;; edge entrances
   (list south 18 0)
   (list north  12 31)
   )
  )
-
-;; ----------------------------------------------------------------------------
-;; The entry hooks must be kern-loaded from a separate file, since they are
-;; read-only and not saved with the session.
-;; ----------------------------------------------------------------------------
-(kern-load "trigrave-entry.scm")

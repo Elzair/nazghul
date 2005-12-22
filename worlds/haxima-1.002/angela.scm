@@ -61,7 +61,7 @@
       (say knpc "Oh, do please stop by when I'm at my counter! "
            "The Palisades is open from 7:00AM to 11:00PM. "
            "I hope to see you then!")
-      (let ((door (eval 'gir-door)))
+      (let ((door (eval 'glasdrin-inn-room-1-door)))
         ;; is the room still open?
         (if (not (door-locked? (kobj-gob door)))
             ;; yes - remind player

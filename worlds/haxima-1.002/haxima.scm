@@ -16,6 +16,7 @@
 (kern-load "runes.scm")
 (kern-load "prices.scm")
 (kern-load "special.scm")
+(kern-load "town-entry.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Time -- this needs to be set before loading any dungeon rooms

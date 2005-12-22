@@ -120,8 +120,7 @@ struct place {
 
         struct list subplaces;      /* list of subplaces */
         struct list container_link; /* list hook for a subplace */
-
-        struct closure *pre_entry_hook;
+        struct list on_entry_hook;  /* on-entry hook */
 
         int saved;
         int lock;
@@ -300,7 +299,7 @@ extern struct place *place_get_neighbor(struct place *place, int dir);
 extern void place_set_neighbor(struct place *place, int dir, struct place *neighbor);
 extern int place_in_los(struct place *p1, int x1, int y1,
                         struct place *p2, int x2, int y2);
-
+extern void place_add_on_entry_hook(struct place *place, closure_t *hook_fx);
 END_DECL
 
 #endif

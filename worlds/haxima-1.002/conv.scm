@@ -324,6 +324,9 @@
 
 (define green-tower-conv
   (ifc basic-conv
+       (method 'gree
+               (lambda (knpc kpc)
+                 (say knpc "Yes, this town gets its name from the old tower in its center.")))
        (method 'gobl gt-gobl)
        (method 'towe gt-towe)
        ))

@@ -1149,14 +1149,16 @@ static int kern_place_load_hooks(scheme *sc, pointer *args,
         contents = scm_car(sc, *args);
         *args = scm_cdr(sc, *args);
 
-        if (scm_is_pair(sc, contents)) {
+        while (scm_is_pair(sc, contents)) {
+
                 if (unpack(sc, &contents, "c", &pre_entry_proc)) {
                         load_err("kern-mk-place %s: bad arg in hook list",
                                  place->tag);
                         return -1;
                 }
 
-                place->pre_entry_hook = closure_new_ref(sc, pre_entry_proc);
+                place_add_on_entry_hook(place,
+                                        closure_new_ref(sc, pre_entry_proc));
         }
 
         return 0;

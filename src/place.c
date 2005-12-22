@@ -72,6 +72,11 @@ struct place_pathfind_context {
         class Object *requestor;
 };
 
+typedef struct closure_list {
+        struct list list;
+        closure_t *closure;
+} closure_list_t;
+
 struct place *Place;
 
 /* Tile API ******************************************************************/
@@ -492,6 +497,7 @@ struct place *place_new(char *tag,
         place_init_turn_list(place);
         list_init(&place->subplaces);
         list_init(&place->container_link);
+        list_init(&place->on_entry_hook);
         place->turn_elem = &place->turn_list;
 
         place_set_default_edge_entrance(place);
@@ -520,6 +526,18 @@ void place_del_tile_visitor(struct tile *tile, void *data)
         tile_del(tile);
 }
 
+static void place_del_on_entry_hook(struct place *place)
+{
+        struct list *elem = place->on_entry_hook.next;
+        while (elem != &place->on_entry_hook) {
+                closure_list_t *node = (closure_list_t*)elem;
+                elem = elem->next;
+                list_remove(&node->list);
+                closure_unref(node->closure);
+                free(node);
+        }
+}
+
 void place_del(struct place *place)
 {
         // --------------------------------------------------------------------
@@ -546,8 +564,9 @@ void place_del(struct place *place)
 		free(place->name);
 	if (place->terrain_map)
 		terrain_map_del(place->terrain_map);
-        if (place->pre_entry_hook)
-                closure_unref(place->pre_entry_hook);
+
+        place_del_on_entry_hook(place);
+
 	free(place);
 }
 
@@ -1240,11 +1259,18 @@ void place_synchronize(struct place *place)
         session_synch_sched_chars(Session);
 }
 
+static void place_run_on_entry_hook(struct place *place)
+{
+        struct list *elem;
+        list_for_each(&place->on_entry_hook, elem) {
+                closure_list_t *node = (closure_list_t*)elem;
+                closure_exec(node->closure, "pp", place, player_party);
+        }
+}
+
 void place_enter(struct place *place)
 {
-        if (place->pre_entry_hook)
-                closure_exec(place->pre_entry_hook, "pp", place, player_party);
-        
+        place_run_on_entry_hook(place);
         place_synchronize(place);
 }
 
@@ -1862,11 +1888,28 @@ static void place_save_object(class Object *object, void *data)
         save->exit(save, "%d %d)\n", object->getX(), object->getY());
 }
 
+void place_add_on_entry_hook(struct place *place, closure_t *hook_fx)
+{
+        closure_list_t *node = (closure_list_t*)malloc(sizeof(*node));
+        assert(node);
+        node->closure = hook_fx;
+        list_add(&place->on_entry_hook, &node->list);
+}
+
 static void place_save_hooks(struct place *place, struct save *save)
 {
-        save->enter(save, "(list\n");
-        if (place->pre_entry_hook)
-                closure_save(place->pre_entry_hook, save);
+        struct list *elem;
+
+        if (list_empty(&place->on_entry_hook)) {
+                save->write(save, "nil ;; on-entry-hook\n");
+                return;
+        }
+
+        save->enter(save, "(list ;; on-entry-hooks\n");
+        list_for_each(&place->on_entry_hook, elem) {
+                closure_list_t *node = (closure_list_t*)elem;
+                closure_save(node->closure, save);
+        }
         save->exit(save, ")\n");
 }
 
