@@ -114,6 +114,11 @@ AC_CHECK_HEADERS([fcntl.h \
 	float.h           \
 	limits.h])
 
+AC_CHECK_HEADER([SDL/SDL_image.h],
+		[],
+		[AC_MSG_ERROR([*** SDL_image include files not found!
+You should install development package.])])
+
 dnl ---------------------------------------------------------------------------
 dnl 6. Typedefs and structures
 dnl    We do checks for typedefs after checking for headers for the simple
