@@ -706,3 +706,5 @@
   (npcg-set-post! (gob kguard) (list x y))
   kguard)
 
+(define (mk-bull)
+  (mk-npc 'bull 8))

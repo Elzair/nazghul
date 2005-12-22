@@ -139,50 +139,43 @@
 (define (mk-zone x y w h) (list 'p_glasdrin x y w h))
 
 ;; hospital
-(define gh-ward (mk-zone 15 37 8 4))
-(define gh-storage (mk-zone 12 36 2 5))
-
-;; shrine
-(define g-shrine (mk-zone 11 48 7 7))
-(define gs-altar (mk-zone 14 51 1 1))
+(define gh-ward (mk-zone 20 5 6 4))
 
 ;; citadel
-(define gc-hall (mk-zone 38 38 8 8))
-(define gc-train (mk-zone 32 32 5 5))
+(define gc-hall (mk-zone 12 4 7 7))
+(define gc-train (mk-zone 10 23 3 3))
 
 ;; axe-n-shielf
-(define gas-counter (mk-zone 33 16 8 1))
+(define gas-counter (mk-zone 6 5 5 1))
 
 ;; holy grail
-(define ghg-counter (mk-zone 52 9 5 1))
-(define ghg-s1 (mk-zone 53 13 1 1))
-(define ghg-s2 (mk-zone 53 14 1 1))
-(define ghg-s3 (mk-zone 53 15 1 1))
-(define ghg-s4 (mk-zone 55 13 1 1))
-(define ghg-s5 (mk-zone 55 14 1 1))
-(define ghg-s6 (mk-zone 55 15 1 1))
-(define ghg-s7 (mk-zone 54 12 1 1))
-(define ghg-s8 (mk-zone 54 16 1 1))
-(define ghg-entry (mk-zone 53 21 3 2))
-(define ghg-hall (mk-zone 52 11 5 7))
+(define ghg-counter (mk-zone 23 26 3 1))
+(define ghg-s1 (mk-zone 24 21 1 1))
+(define ghg-s2 (mk-zone 25 22 1 1))
+(define ghg-s3 (mk-zone 25 23 1 1))
+(define ghg-s4 (mk-zone 24 25 1 1))
+(define ghg-s5 (mk-zone 23 24 1 1))
+(define ghg-s6 (mk-zone 23 22 1 1))
+(define ghg-hall (mk-zone 22 20 5 5))
 
 ;; doc patch's hut
-(define gdp-hut (mk-zone 8 38 3 3))
-(define gdp-bed (mk-zone 8 39 1 1))
+(define gdp-hut (mk-zone 25 10 2 2))
+(define gdp-bed (mk-zone 26 10 1 1))
 
 ;; palisade inn
-(define gpi-counter (mk-zone 10 15 10 1))
+(define gpi-counter (mk-zone 4 19 5 1))
 
 ;; beds
-(define ga-bed (mk-zone 38 12 1 1))
-(define gj-bed (mk-zone 46 10 1 1))
-(define gc-bed (mk-zone 46 14 1 1))
-(define gv-bed (mk-zone 50 49 1 1))
-(define gi-bed (mk-zone 11 48 1 1)) ;; fixme!
-(define gcj-bed (mk-zone 48 51 1 1))
+(define ga-bed (mk-zone  4 13 1 1))
+(define gj-bed (mk-zone 26 13 1 1))
+(define gc-bed (mk-zone  4 10 1 1))
+(define gv-bed (mk-zone 11 14 1 1))
+(define gi-bed (mk-zone 29 28 1 1))
+(define gcj-bed (mk-zone 19 14 1 1))
 
 ;; fountain
-(define g-fountain (mk-zone 22 26 7 7))
+(define g-fountain (mk-zone 14 16 3 3))
+(define gs-altar (mk-zone 27 1 3 3))
 
 ;;----------------------------------------------------------------------------
 ;; Engineer's Hut

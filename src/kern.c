@@ -4364,6 +4364,17 @@ KERN_API_CALL(kern_obj_is_char)
         return (obj->getLayer() == being_layer) ? sc->T : sc->F;
 }
 
+KERN_API_CALL(kern_obj_is_field)
+{
+        Object *obj;
+
+        obj = unpack_obj(sc, &args, "kern-obj-is-field?");
+        if (!obj)
+                return sc->F;
+
+        return (obj->getLayer() == field_layer) ? sc->T : sc->F;
+}
+
 KERN_API_CALL(kern_obj_is_being)
 {
         Object *obj;
@@ -7158,6 +7169,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-obj-inc-ref", kern_obj_inc_ref);
         API_DECL(sc, "kern-obj-is-being?", kern_obj_is_being);
         API_DECL(sc, "kern-obj-is-char?", kern_obj_is_char);
+        API_DECL(sc, "kern-obj-is-field?", kern_obj_is_field);
         API_DECL(sc, "kern-obj-is-mech?", kern_obj_is_mech);
         API_DECL(sc, "kern-obj-is-visible?", kern_obj_is_visible);
         API_DECL(sc, "kern-obj-move", kern_obj_move);

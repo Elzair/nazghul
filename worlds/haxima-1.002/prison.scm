@@ -60,7 +60,7 @@
  nil ; neighbors
 
  (list ; objects
-  (put (mk-ladder-up 'p_glasdrin 49 34) 28 14)
+  (put (mk-ladder-up 'p_glasdrin 2 2) 28 14)
 
   ;; cell doors
   (put (kern-tag 'pp1 (mk-portcullis)) 12 27)

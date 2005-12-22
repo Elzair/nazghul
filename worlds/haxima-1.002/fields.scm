@@ -41,7 +41,8 @@
          all-field-types))
 
 (define (is-field? kobj)
-  (is-field-type? (kern-obj-get-type kobj)))
+  ;;(is-field-type? (kern-obj-get-type kobj)))
+  (kern-obj-is-field? kobj))
 
 (define (is-fire-field? kobj)
   (let ((ktype (kern-obj-get-type kobj)))

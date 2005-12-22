@@ -1262,18 +1262,21 @@
   (map display args)
   (newline))
 
+
 (define (is-bad-field-at? kchar loc)
-  ;;(println "is-bad-field-at?")
-  (define (is-bad-field? ktype)
-    (and (is-field? ktype)
-         (not (is-immune-to-field? kchar ktype))))
-  (for-each is-bad-field?
-            (kern-get-objects-at loc)))
+  (define (is-bad-field? val ktype)
+    (or val
+        (and (is-field? ktype)
+             (not (is-immune-to-field? kchar ktype)))))
+  (foldr is-bad-field?
+         #f
+         (kern-get-objects-at loc)))
 
 (define (is-bad-loc? kchar loc)
-  ;;(println "is-bad-loc?")
-  (or (is-bad-terrain-at? loc)
-      (is-bad-field-at? kchar loc)))
+  (or
+   (is-bad-terrain-at? loc)
+   (is-bad-field-at? kchar loc)
+   ))
 
 (define (is-good-loc? kchar loc)
   ;;(println "is-good-loc?")
@@ -1306,8 +1309,9 @@
                            (- (loc-y newloc) (loc-y curloc)))
             #t))))
 
-  (and (is-bad-loc? kchar (kern-obj-get-location kchar))
-       (move-to-good-tile)))
+  (and
+   (is-bad-loc? kchar (kern-obj-get-location kchar))
+   (move-to-good-tile)))
 
 (define (move-away-from-foes? kchar)
   ;;(println "move-away-from-foes?")

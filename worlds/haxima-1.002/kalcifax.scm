@@ -17,7 +17,7 @@
                (list 7  0 bilge-water-seat-5 "eating")
                (list 8  0 enchtwr-hall       "idle")
                (list 11  0 g-fountain         "idle")
-               (list 12 0 ghg-s8             "eating")
+               (list 12 0 ghg-s6             "eating")
                (list 13 0 eng-workshop       "idle")
                (list 16 0 trigrave-tavern-hall "idle")
                (list 17 0 trigrave-tavern-table-3b "eating")

@@ -8,12 +8,12 @@
 ;;----------------------------------------------------------------------------
 (kern-mk-sched 'sch_patch
                (list 0  0  gdp-bed "sleeping")
-               (list 8  0  ghg-s1  "eating")
-               (list 9  0  gh-ward "working")
-               (list 12 0  ghg-s1  "eating")
-               (list 13 0  gh-ward "working")
-               (list 18 0  ghg-s1  "eating")
-               (list 19 0  gc-hall "idle")
+               (list 7  0  ghg-s1  "eating")
+               (list 8  0  gh-ward "working")
+               (list 11 0  ghg-s1  "eating")
+               (list 12 0  gh-ward "working")
+               (list 17 0  ghg-s1  "eating")
+               (list 18 0  gc-hall "idle")
                (list 21 0  gdp-hut "idle")
                (list 22 0  gdp-bed "sleeping")
                )

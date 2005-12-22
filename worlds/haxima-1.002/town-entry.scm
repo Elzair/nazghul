@@ -24,8 +24,6 @@
 
         'glasdrin-inn-room-1-door        
         'glasdrin-inn-room-2-door        
-        'glasdrin-inn-room-3-door        
-        'glasdrin-inn-room-4-door        
         ))
 
 (define (lock-door door-tag)

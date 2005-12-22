@@ -239,8 +239,10 @@
   (get-off-bad-tile? kchar))
 
 (define (std-ai kchar)
-  (or (get-off-bad-tile? kchar)
-      (use-potion? kchar)))
+  (or 
+   (get-off-bad-tile? kchar)
+   (use-potion? kchar)
+   ))
 
 ;; Invoke a summoning ability if allies are outnumbered by a certain amount
 (define (ai-summon kchar ability)
@@ -361,8 +363,7 @@
       (move-away-from-foes? kchar)))
 
 ;; guard-ai
-(define (guard-ai kchar)
-  (define (try-to-use-ability)
+  (define (try-to-use-disarm)
     ;;(display "try-to-use-ability")(newline)
     (if (can-use-ability? disarm kchar)
         (let ((victims (get-hostiles-in-range kchar 1)))
@@ -371,10 +372,12 @@
                (or (use-ability disarm kchar (car victims))
                    #t)))
         #f))
+(define (guard-ai kchar)
   (or (std-ai kchar)
       (if (any-visible-hostiles? kchar)
-          (try-to-use-ability)
+          (try-to-use-disarm)
           (goto-post kchar))))
+
 
 ;; ranger-ai -- nothing special, but can act like a guard
 (define (ranger-ai kchar)
