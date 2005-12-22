@@ -168,6 +168,11 @@ void spriteAdvanceFrames(void)
 
 }
 
+int spriteGetFacing(struct sprite *sprite)
+{
+        return sprite->facing;
+}
+
 int spriteSetFacing(struct sprite *sprite, int facing)
 {
 	int bit, i;
