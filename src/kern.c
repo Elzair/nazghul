@@ -4364,6 +4364,17 @@ KERN_API_CALL(kern_obj_is_char)
         return (obj->getLayer() == being_layer) ? sc->T : sc->F;
 }
 
+KERN_API_CALL(kern_obj_is_container)
+{
+        Object *obj;
+
+        obj = unpack_obj(sc, &args, "kern-obj-is-container?");
+        if (!obj)
+                return sc->F;
+
+        return (obj->getLayer() == container_layer) ? sc->T : sc->F;
+}
+
 KERN_API_CALL(kern_obj_is_field)
 {
         Object *obj;
@@ -4406,6 +4417,35 @@ KERN_API_CALL(kern_obj_is_visible)
                 return sc->F;
 
         return obj->isVisible() ? sc->T : sc->F;
+}
+
+KERN_API_CALL(kern_obj_is_trapped)
+{
+        Object *obj;
+
+        obj = unpack_obj(sc, &args, "kern-obj-is-trapped?");
+        if (!obj)
+                return sc->F;
+
+        if (obj->getLayer() != container_layer)
+                return sc->F;
+
+        return ((Container*)obj)->isTrapped() ? sc->T : sc->F;
+}
+
+KERN_API_CALL(kern_obj_remove_trap)
+{
+        Object *obj;
+
+        obj = unpack_obj(sc, &args, "kern-obj-remove-trap");
+        if (!obj)
+                return sc->NIL;
+
+        if (obj->getLayer() != container_layer)
+                return sc->NIL;
+
+        ((Container*)obj)->setTrap(NULL);
+        return sc->NIL;
 }
 
 KERN_API_CALL(kern_char_set_fleeing)
@@ -7169,8 +7209,10 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-obj-inc-ref", kern_obj_inc_ref);
         API_DECL(sc, "kern-obj-is-being?", kern_obj_is_being);
         API_DECL(sc, "kern-obj-is-char?", kern_obj_is_char);
+        API_DECL(sc, "kern-obj-is-container?", kern_obj_is_container);
         API_DECL(sc, "kern-obj-is-field?", kern_obj_is_field);
         API_DECL(sc, "kern-obj-is-mech?", kern_obj_is_mech);
+        API_DECL(sc, "kern-obj-is-trapped?", kern_obj_is_trapped);
         API_DECL(sc, "kern-obj-is-visible?", kern_obj_is_visible);
         API_DECL(sc, "kern-obj-move", kern_obj_move);
         API_DECL(sc, "kern-obj-put-at", kern_obj_put_at);
@@ -7179,6 +7221,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-obj-remove", kern_obj_remove);
         API_DECL(sc, "kern-obj-remove-effect", kern_obj_remove_effect);
         API_DECL(sc, "kern-obj-remove-from-inventory", kern_obj_remove_from_inventory);
+        API_DECL(sc, "kern-obj-remove-trap", kern_obj_remove_trap);
         API_DECL(sc, "kern-obj-set-ap", kern_obj_set_ap);
         API_DECL(sc, "kern-obj-set-conv", kern_obj_set_conv);
         API_DECL(sc, "kern-obj-set-gob", kern_obj_set_gob);

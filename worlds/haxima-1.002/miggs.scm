@@ -27,7 +27,7 @@
            "at midnight.")
       (begin
         (kern-conv-trade knpc kpc
-                         (list t_food 2)
+                         (list t_food 5)
                          (list t_beer 3)
                          )
         )))

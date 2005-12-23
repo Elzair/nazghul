@@ -333,19 +333,20 @@
 (define (mani caster)
   (user-cast-spell-on-party-member caster heal-proc))
 
+
 ;;----------------------------------------------------------------------------
 ;; Second Circle
 ;;----------------------------------------------------------------------------
+(define (an-sanct  caster)
+  (let ((loc (kern-obj-get-location caster)))
+    (cast-signal-spell caster 'unlock (ui-target loc 1 (mk-ifc-query 'unlock)))))
+  
 (define (sanct-nox  caster)
   (let ((target (kern-ui-select-party-member)))
     (if (not (null? target))
         (kern-obj-add-effect target ef_temporary_poison_immunity nil))))
   
-(define (an-sanct  caster)
-  (let ((loc (kern-obj-get-location caster)))
-    (cast-signal-spell caster 'unlock (ui-target loc 1 (mk-ifc-query 'unlock)))))
-  
-(define (sanct  caster)
+(define (sanct caster)
   (let ((loc (kern-obj-get-location caster)))
     (cast-signal-spell caster 'lock (ui-target loc 1 (mk-ifc-query 'lock)))))
 
@@ -420,6 +421,44 @@
                                      (kern-obj-add-effect ktarg ef_temporary_poison_immunity nil)
                                      )))
 
+;; wis-sanct -- detect traps on containers
+(define (wis-sanct caster)
+  (let ((ktarg (ui-target (kern-obj-get-location caster)
+                          1
+                          (lambda (kobj)
+                            (and (kern-obj-is-container? kobj)
+                                 (kern-obj-is-visible? kobj)))
+                          )))
+    (cond ((null? ktarg) result-no-target)
+          ((kern-obj-is-trapped? ktarg)
+           (kern-log-msg (kern-obj-get-name caster)
+                         " detects a trap on "
+                         (kern-obj-get-name ktarg)
+                         "!")
+           result-ok)
+          (else
+           (kern-log-msg (kern-obj-get-name caster)
+                         " does not detect any traps")
+           result-ok))))
+                                     
+
+(define (an-sanct-ylem caster)
+  (let ((ktarg (ui-target (kern-obj-get-location caster)
+                          1
+                          (lambda (kobj)
+                            (and (kern-obj-is-container? kobj)
+                                 (kern-obj-is-visible? kobj)))
+                          )))
+    (cond ((null? ktarg) result-no-target)
+          ((kern-obj-is-trapped? ktarg)
+           (kern-log-msg (kern-obj-get-name caster)
+                         " disarms a trap on "
+                         (kern-obj-get-name ktarg)
+                         "!")
+           (kern-obj-remove-trap ktarg)
+           result-ok)
+          (else
+           result-no-effect))))
 
 ;;----------------------------------------------------------------------------
 ;; Fourth Circle
@@ -716,6 +755,8 @@
    (list 'grav_por    "Grav Por spell"    grav-por    "GP"  1 context-town (list sulphorous_ash black_pearl))
    (list 'in_lor      "In Lor spell"      in-lor      "IL"  1 context-any  (list sulphorous_ash))
    (list 'mani        "Mani spell"        mani        "M"   1 context-any  (list ginseng spider_silk))
+   (list 'wis_sanct   "Wis Sanct spell"   wis-sanct   "WS"  1 context-town (list sulphorous_ash))
+   (list 'an_sanct_ylem "An Sanct Ylem spell" an-sanct-ylem "ASY" 1 context-town (list blood_moss))
 
    ;; Second Circle
    (list 'sanct_nox   "Sanct Nox spell"   sanct-nox   "SN"  2 context-any  (list nightshade garlic))

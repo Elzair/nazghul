@@ -355,6 +355,8 @@ An Zu            | Awaken         | GI, GA                 | PC
 Grav Por         | Magic Missile  | SA, BP                 | C
 In Lor           | Light          | SA                     | PC
 Mani             | Heal           | GI, SS                 | PC
+Wis Sanct        | Detect Trap    | SA                     | PC
+An Sanct Ylem    | Disarm Trap    | BM                     | PC
 ----------------------------------------------------------------------------
 An Sanct         | Unlock         | SA, BM                 | PC
 An Xen Corp      | Repel Undead   | GA, SA                 | C
