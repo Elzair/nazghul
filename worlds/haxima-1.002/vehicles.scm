@@ -88,3 +88,5 @@
 (define (mk-voidship)
   (kern-mk-vehicle t_voidship north 100))
 
+(define (mk-vehicle ktype)
+  (kern-mk-vehicle ktype north 100))

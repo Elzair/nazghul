@@ -26,13 +26,16 @@
 ;;----------------------------------------------------------------------------
 ;; ptype -- npc party type
 (define (ptype-mk name sprite faction dc scarce . groups)
-  (list 'ptype sprite faction groups name dc scarce))
+  (list 'ptype sprite faction groups name dc scarce nil))
 (define (ptype-sprite ptype) (cadr ptype))
 (define (ptype-faction ptype) (caddr ptype))
 (define (ptype-groups ptype) (cadddr ptype))
 (define (ptype-name ptype) (list-ref ptype 4))
 (define (ptype-dc ptype) (list-ref ptype 5))
 (define (ptype-scarcity ptype) (list-ref ptype 6))
+(define (ptype-vehicle-type-tag ptype) (list-ref ptype 7))
+(define (ptype-set-vehicle-type-tag! ptype vtag)
+  (set-car! (list-tail ptype 7) vtag))
 (define (ptype-generate ptype)
   (println "ptype-generate")
   (let ((kparty (kern-mk-party)))
@@ -44,6 +47,11 @@
                   (kern-party-add-member kparty kchar))
                 (pgroup-generate pgroup)))
          (ptype-groups ptype))
+    (let ((vtag (ptype-vehicle-type-tag ptype)))
+      (println "vtag=" vtag)
+      (if (not (null? vtag))
+          (kern-party-set-vehicle kparty 
+                                  (mk-vehicle (eval vtag)))))
     kparty
     ))
 
@@ -99,6 +107,16 @@
             (pgroup-mk 'blackguard "1d2")
             (pgroup-mk 'bomber "1d2")
             ))
+(define pirate-party-l3
+  (ptype-mk "pirates" s_brigand faction-outlaw 3 5
+            (pgroup-mk 'highwayman "1d2")
+            ))
+(ptype-set-vehicle-type-tag! pirate-party-l3 't_ship)
+(define pirate-party-l4
+  (ptype-mk "pirates" s_brigand faction-outlaw 3 5
+            (pgroup-mk 'blackguard "1d2")
+            ))
+(ptype-set-vehicle-type-tag! pirate-party-l4 't_ship)
 (define troll-party-l3
   (ptype-mk "band of trolls" s_troll faction-troll 3 5
             (pgroup-mk 'troll "1")
@@ -161,12 +179,17 @@
             (pgroup-mk 'skeletal-warrior "1")
             (pgroup-mk 'skeletal-spear-thrower "1")
             ))
-
 (define skeleton-party-l4 
   (ptype-mk "skeleton brigade" s_skeleton faction-monster 4 5
             (pgroup-mk 'skeletal-warrior "1d2")
             (pgroup-mk 'skeletal-spear-thrower "1d3")
             ))
+(define skeleton-pirates-l4 
+  (ptype-mk "cursed pirates" s_skeleton faction-monster 4 5
+            (pgroup-mk 'skeletal-warrior "1d2")
+            (pgroup-mk 'skeletal-spear-thrower "1d3")
+            ))
+(ptype-set-vehicle-type-tag! skeleton-pirates-l4 't_ship)
 
 (define lich-party-l5
   (ptype-mk "lich with undead servants" s_lich faction-monster 5 5

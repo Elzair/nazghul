@@ -54,7 +54,6 @@
          'spider-party-l4
          )
    (list t_mountains 
-         'gint-party-l4
          'dragon-party-l6
          'dragon-party-l8
          'bat-party-l1
@@ -88,6 +87,9 @@
          'dragon-party-l8
          'kraken-party-l3
          'sea-serpent-party-l3
+         'pirate-party-l3
+         'pirate-party-l4
+         'skeleton-pirates-l4
          )
    (list t_lava
          'dragon-party-l6

@@ -235,10 +235,10 @@
 (kern-mk-dtable
  ;;     non pla men cgb acc mon tro spd out gnt dem fgb
  (list   2   0   0   0  -1  -2  -2  -2   0  -2  -2   0) ;; none
- (list   0   2   1  -2  -1  -2  -2  -2  -2  -2  -2  -2) ;; player
+ (list   0   2   1  -2  -2  -2  -2  -2  -2  -2  -2  -2) ;; player
  (list  -1   1   2  -1  -2  -2  -2  -2  -2  -2  -2  -2) ;; men
  (list  -1  -2  -2   2  -1  -2   0  -2  -2  -1  -2  -2) ;; cave goblin
- (list  -1  -1  -1  -1   2  -2  -1  -1  -2  -1  -2  -2) ;; accursed
+ (list  -1  -2  -1  -1   2  -2  -1  -1  -2  -1  -2  -2) ;; accursed
  (list  -2  -2  -2  -2  -2   2   0   0  -2   0  -2   0) ;; monsters
  (list  -2  -2  -2   0  -1  -1   2  -2  -2  -1  -2  -2) ;; hill trolls
  (list  -2  -2  -2  -2  -1   0  -2   2  -2  -1  -2   0) ;; wood spiders

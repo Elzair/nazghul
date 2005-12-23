@@ -484,8 +484,6 @@
   (list (kern-tag 'mg-7 (mk-moongate 'ord)) 125 18) ;; near absalot
   (list (kern-tag 'mg-8 (mk-moongate 'ord)) 50 7) ;; engineer's hut
 
-  (put (mk-npc-party 'rat-party-l1) 50 33)
-
   ;; npc party generator
   (put (mk-edge-spawn-generator) 0 0)
 

@@ -18,7 +18,7 @@
 (define speed-yellow-slime 1)
 (define speed-human        1)
 (define speed-insect       2)
-(define speed-ship         2)
+(define speed-ship         1)
 
 ;; Action Points
 (define ap-to-use-scroll speed-human)

@@ -321,7 +321,7 @@
                    "cannon"          ; name
                    nil               ; sprite
                    "+1"              ;;       to-hit : to-hit attack bonus (dice expr)
-                   "2d20+5"          ;;       damage : attack damage (dice expr)
+                   "1d10+4"          ;;       damage : attack damage (dice expr)
                    "0"               ;;        armor : added to armor class (dice expr)
                    "0"               ;;      deflect : damage deflected when hit (dice expr)
                    slot-nil          ;;        slots : slots it will fit in (e.g., hands)
