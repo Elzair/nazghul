@@ -52,13 +52,13 @@
            "between " jones-shop-open-time " and " jones-shop-close-time)
       (begin
         (kern-conv-trade knpc kpc
-                         (list t_arrow        6)
+                         (list t_arrow        5)
                          (list t_bolt        10)
                          (list t_oil         50)
-                         (list t_torch       15)
-                         (list t_heal_potion 30)
-                         (list t_mana_potion 80)
-                         (list t_food         5)
+                         (list t_torch       40)
+                         (list t_heal_potion 60)
+                         (list t_mana_potion 60)
+                         (list t_food        10)
                          ))))
 
 ;; Quest-related

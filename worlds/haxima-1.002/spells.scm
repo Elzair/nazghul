@@ -721,7 +721,7 @@
    (list 'sanct_nox   "Sanct Nox spell"   sanct-nox   "SN"  2 context-any  (list nightshade garlic))
    (list 'an_sanct    "An Sanct spell"    an-sanct    "AS"  2 context-town (list sulphorous_ash blood_moss))
    (list 'sanct       "Sanct spell"       sanct       "S"   2 context-town (list sulphorous_ash spider_silk))
-   (list 'an_xen_corp "An Xen Corp spell" an-xen-corp "AXC" 1 context-town (list garlic sulphorous_ash))
+   (list 'an_xen_corp "An Xen Corp spell" an-xen-corp "AXC" 2 context-town (list garlic sulphorous_ash))
    (list 'in_wis      "In Wis spell"      in-wis      "IW"  2 context-any  (list nightshade))
    (list 'kal_xen     "Kal Xen spell"     kal-xen     "KX"  2 context-town (list spider_silk mandrake))
    (list 'rel_hur     "Rel Hur spell"     rel-hur     "RH"  2 context-any  (list sulphorous_ash blood_moss))
@@ -729,11 +729,11 @@
    (list 'an_xen_bet  "An Xen Bet spell"  an-xen-bet  "AXB" 2 context-town (list spider_silk garlic))
 
    ;; Third Circle
-   (list 'in_flam_grav "In Flam Grav spell" in-flam-grav "IFG" 3 context-town (list sulphorous_ash black_pearl spider_silk))
-   (list 'in_nox_grav  "In Nox Grav spell"  in-nox-grav  "ING" 3 context-town (list nightshade black_pearl spider_silk))
-   (list 'in_zu_grav   "In Zu Grav spell"   in-zu-grav   "IZG" 3 context-town (list ginseng black_pearl spider_silk))
-   (list 'vas_flam     "Vas Flam"           vas-flam     "VF"  3 context-town (list sulphorous_ash black_pearl))
-   (list 'vas_lor      "Vas Lor"            vas-lor    "VL"  3 context-any (list mandrake sulphorous_ash))
+   (list 'in_flam_grav  "In Flam Grav spell"  in-flam-grav  "IFG" 3 context-town (list sulphorous_ash black_pearl spider_silk))
+   (list 'in_nox_grav   "In Nox Grav spell"   in-nox-grav   "ING" 3 context-town (list nightshade black_pearl spider_silk))
+   (list 'in_zu_grav    "In Zu Grav spell"    in-zu-grav    "IZG" 3 context-town (list ginseng black_pearl spider_silk))
+   (list 'vas_flam      "Vas Flam"            vas-flam      "VF"  3 context-town (list sulphorous_ash black_pearl))
+   (list 'vas_lor       "Vas Lor"             vas-lor       "VL"  3 context-any (list mandrake sulphorous_ash))
    (list 'in_flam_sanct "In Flam Sanct spell" in-flam-sanct "IFS" 3 context-any (list garlic sulphorous_ash t_royal_cape))
    (list 'in_nox_sanct  "In Nox Sanct spell"  in-nox-sanct  "INS" 3 context-any (list garlic nightshade t_royal_cape))
 

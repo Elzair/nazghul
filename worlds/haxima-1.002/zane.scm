@@ -37,19 +37,19 @@
   (kern-conv-trade knpc kpc
 
                    ;; reagents
-                   (list ginseng                 4)
-                   (list garlic                  4)
-                   (list blood_moss              8)
-                   (list nightshade              32)
+                   (list ginseng                 18)
+                   (list garlic                  16)
+                   (list blood_moss              32)
+                   (list nightshade              48)
 
                    ;; potions
-                   (list t_heal_potion              30)
-                   (list t_cure_potion       30)
+                   (list t_heal_potion            50)
+                   (list t_cure_potion            44)
                    (list t_poison_immunity_potion 60)
 
                    )
 
-  (say knpc "Remember, only you can prevent forest fires."))
+  (say knpc "Watch your step out there."))
   
 (define zane-conv
   (ifc ranger-conv

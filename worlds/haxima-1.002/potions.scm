@@ -32,7 +32,7 @@
 ;; mana (blue) potion
 (mk-clingy-potion 't_mana_potion "mana potion" s_mana_potion 
                   (lambda (kpotion kuser)
-                    (kern-char-dec-mana kuser (- 0 (kern-dice-roll "2d10"))))
+                    (kern-char-dec-mana kuser (- 0 (kern-dice-roll "1d8+2"))))
                   wants-mana?)
 
 ;; cure (green) potion

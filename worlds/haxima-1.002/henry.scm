@@ -48,7 +48,7 @@
            "What'll ye be 'avin' then, lads?")
       (begin
         (kern-conv-trade knpc kpc
-                         (list t_food 3)
+                         (list t_food 5)
                          (list t_beer 5)
                          (list t_wine 7)
                          ))))

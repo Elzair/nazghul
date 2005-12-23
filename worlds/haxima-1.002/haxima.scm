@@ -101,7 +101,7 @@
   faction-player        ; starting alignment
   5 5 5                ; str/int/dex
   6 2                   ; hp mod/mult
-  6 2                  ; mp mod/mult
+  2 0                  ; mp mod/mult
   29 0 3 1              ; hp/xp/mp/lvl
   #f                    ; dead
   nil                   ; conv
