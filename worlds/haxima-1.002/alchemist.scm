@@ -73,7 +73,7 @@
                          (list t_cure_potion       33)
                          (list t_mana_potion       44)
                          (list t_poison_immunity_potion   40)
-                         (list t_inv_potion 100)
+                         (list t_inv_potion    100)
                          )
         (say knpc "Always carry plenty of potions!"))))
 

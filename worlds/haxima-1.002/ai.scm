@@ -29,19 +29,18 @@
 
 ;; use-melee-spell-on-foe? -- randomly select from a list of melee spells and
 ;; return #t iff the spell is used
-(define (use-melee-spell-on-foe? kchar ktarg)
+(define (use-melee-spell-on-foe? kchar ktarg spell-list)
   (let ((spell (random-select (filter (lambda (spell)
                                         (can-use-ability? spell kchar))
-                                      melee-spells))))
+                                      spell-list))))
     (if (null? spell)
         #f
         (use-ability spell kchar ktarg))))
 
-(define (use-melee-spell-on-foes? kchar)
-  ;;(display "use-melee-spell-on-foes?")(newline)
+(define (use-melee-spell-on-foes? kchar spell-list)
   (foldr (lambda (val ktarg)
            (or val
-               (use-melee-spell-on-foe? kchar ktarg)))
+               (use-melee-spell-on-foe? kchar ktarg spell-list)))
          #f 
          (get-hostiles-in-range kchar 1)))
 
@@ -59,7 +58,6 @@
             (use-ability abil kchar ktarg)))))
 
 (define (use-ranged-spell-on-foes? kchar spell-list)
-  (println "use-ranged-spell-on-foes? spell-list:" spell-list)
   (foldr (lambda (val ktarg)
            (or val
                (use-ranged-spell-on-foe? kchar ktarg spell-list)))
@@ -296,7 +294,7 @@
   (display "spell-sword-ai ")(dump-char kchar)
   (or (std-ai kchar)
       (use-spell-on-self? kchar)
-      (use-melee-spell-on-foes? kchar)
+      (use-melee-spell-on-foes? kchar melee-spells)
       (use-ranged-spell-on-foes? kchar all-ranged-spells)))
 
 (define (gazer-ai kchar)
@@ -347,6 +345,11 @@
                                (>= (kern-dice-roll "1d20") 16))
                           (use-ability disease-touch kchar (car victims))
                           #f))))))))
+
+(define (rat-ai kchar)
+  (or (animal-ai kchar)
+      (use-ranged-spell-on-foes? kchar 
+                                 (list disease-touch))))
 
 (define (craven-archer-ai kchar)
   (println "craven-archer-ai")

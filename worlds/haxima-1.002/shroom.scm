@@ -49,8 +49,10 @@
                                (list black_pearl    16)
                                (list spider_silk    5)
                                (list nightshade     34)
-                               (list t_heal_potion  16)
-                               (list t_mana_potion  20)
+                               (list t_heal_potion  50)
+                               (list t_mana_potion  50)
+                               (list t_cure_potion  50)
+                               (list t_poison_immunity 75)
                                )
               (say knpc "Be careful with those."))))))
 
@@ -113,10 +115,10 @@
                   (say knpc "Ah, ye have the mushroom, as I requested!")
                   (kern-obj-remove-from-inventory kpc t_royal_cape 1)
                   (shroom-set-quest-done! shroom)
-                  (say knpc "Now for your reward. The battle ward is called "
-                       "In Quas Corp, of the seventh circle. Mix nightshade, "
-                       "mandrake and garlic. Cast it in battle and your "
-                       "enemies will flee in terror!"))
+                  (say knpc "Now for your reward. The ward is called "
+                       "In Flam Sanct, of the first circle. Mix royal cape, "
+                       "sulphorous ash and garlic. Cast it on yourself or a companion "
+                       "and fire will not harm!"))
                 ;; player does NOT have shrooms yet
                 (say knpc "No purple mushroom yet, I see. No rush, dear. "
                       "But I would like it before I die.")))
@@ -125,6 +127,12 @@
 
 (define (shroom-thie knpc kpc)
   (say knpc "I've seen no one strange about here."))
+
+(define (shroom-roya knpc kpc)
+  (say knpc "Do you know what the royal cape mushroom is for?")
+  (if (yes? kpc)
+      (say knpc "Very rare it is, but often found with yellow slimes.")
+      (say knpc "It is used in spells which absorb effects!")))
 
 (define shroom-conv
   (ifc basic-conv

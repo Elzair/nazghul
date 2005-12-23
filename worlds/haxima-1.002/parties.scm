@@ -314,6 +314,6 @@
             ))
 
 (define rat-party-l1
-  (ptype-mk "rats" s_rat faction-monster 1 5
+  (ptype-mk "rats" s_rat faction-monster 5 5
             (pgroup-mk 'rat "1d2")
             ))

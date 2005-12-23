@@ -23,17 +23,18 @@
 
 
 ;; ----------------------------------------------------------------------------
-;; Poison Immunity
+;; Poison & Disease Immunities
 ;;
-;; Works by attaching an effect to the "add-hook-hook", which runs whenever
-;; any new effect is applied. If anything tries to apply a poison effect, this
-;; effect will catch it and block the application.
-;;
-;; The apply proc also attaches an expiration effect to the usual
-;; start-of-turn-hook, to force the immunity effect to expire after a while.
+;; These work by attaching an effect to the "add-hook-hook", which runs
+;; whenever any new effect is applied. If anything tries to apply a poison
+;; effect, for example, the poison immunity effect will catch it and block the
+;; application.
 ;; ----------------------------------------------------------------------------
 (define (poison-immunity-exec fgob effect)
   (if (eqv? effect ef_poison) #t #f))
+
+(define (disease-immunity-exec fgob effect)
+  (if (eqv? effect ef_disease) #t #f))
 
 ;; ----------------------------------------------------------------------------
 ;; sleep
@@ -365,9 +366,12 @@
    (list 'ef_spider_calm               nil                   'spider-calm-apply  'spider-calm-rm  nil                 "start-of-turn-hook" ""  0   #f  60) 
    (list 'ef_drunk                     'drunk-exec           'drunk-apply        'drunk-rm        nil                 "keystroke-hook"     "A" 0   #t  60)
    (list 'ef_disease                   'disease-exec         nil                 nil              nil                 "start-of-turn-hook" "D" 0   #f  -1)
+   (list 'ef_disease_immunity          'disease-immunity-exec nil                nil              nil                 "add-hook-hook"      "E" 0   #f  -1)
+   (list 'ef_temporary_disease_immunity 'disease-immunity-exec nil               nil              nil                 "add-hook-hook"      "E" 0   #f  60)
    (list 'ef_fire_immunity             nil                   nil                 nil              nil                 "nil-hook"           "F" 0   #f  -1)
-   (list 'ef_temporary_fire_immunity   nil                   nil                 nil              nil                 "nil-hook"           "F" 0   #f  60)
-   (list 'ef_grow_head                 'grow-head-exec       nil                 nil              'grow-head-exec     "on-damage-hook"     ""  0   #f  -1)
+   (list 'ef_temporary_fire_immunity   nil                   nil                 nil              nil                 "nil-hook"           "F" 0   #f  15)
+   (list 'ef_grow_head                 'grow-head-exec       nil                 nil              'grow-head-exec     "on-damage-hook"     "H"  0   #f  -1)
+   (list 'ef_temporary_grow_head       'grow-head-exec       nil                 nil              'grow-head-exec     "on-damage-hook"     "H"  0   #f  15)
    (list 'ef_loot_drop                 'loot-drop-exec       nil                 nil              nil                 "on-death-hook"      ""  0   #f  -1)
    ))
 

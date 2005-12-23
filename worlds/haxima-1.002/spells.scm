@@ -408,6 +408,19 @@
 (define (vas-lor  caster)
   (kern-obj-add-effect caster ef_great_light nil))
 
+(define (in-flam-sanct caster)
+  (user-cast-spell-on-party-member caster 
+                                   (lambda (caster ktarg)
+                                     (kern-obj-add-effect ktarg ef_temporary_fire_immunity nil)
+                                     )))
+
+(define (in-nox-sanct caster)
+  (user-cast-spell-on-party-member caster 
+                                   (lambda (caster ktarg)
+                                     (kern-obj-add-effect ktarg ef_temporary_poison_immunity nil)
+                                     )))
+
+
 ;;----------------------------------------------------------------------------
 ;; Fourth Circle
 ;;----------------------------------------------------------------------------
@@ -721,6 +734,8 @@
    (list 'in_zu_grav   "In Zu Grav spell"   in-zu-grav   "IZG" 3 context-town (list ginseng black_pearl spider_silk))
    (list 'vas_flam     "Vas Flam"           vas-flam     "VF"  3 context-town (list sulphorous_ash black_pearl))
    (list 'vas_lor      "Vas Lor"            vas-lor    "VL"  3 context-any (list mandrake sulphorous_ash))
+   (list 'in_flam_sanct "In Flam Sanct spell" in-flam-sanct "IFS" 3 context-any (list garlic sulphorous_ash t_royal_cape))
+   (list 'in_nox_sanct  "In Nox Sanct spell"  in-nox-sanct  "INS" 3 context-any (list garlic nightshade t_royal_cape))
 
    ;; Fourth Circle
    (list 'an_grav       "An Grav spell"       an-grav       "AG"  4 context-any (list black_pearl sulphorous_ash))

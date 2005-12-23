@@ -54,7 +54,7 @@
 (mk-species 'sp_skeleton     "skeleton"       12  8 12 1 12  2 10 mmode-walk  t_hands      humanoid  2 s_asleep       sound-walking   nil)
 (mk-species 'sp_snake        "snake"           2  2 14 1  4  0  6 mmode-walk  t_fangs      nil       1 s_asleep       sound-walking   nil)
 (mk-species 'sp_bat          "bat"             2  2 14 2  2  0  8 mmode-fly   t_fangs      nil       1 s_asleep       nil             nil)
-(mk-species 'sp_rat          "rat"             4  2 12 2  6  0  6 mmode-crawl t_fangs      nil       1 s_asleep       nil             nil)
+(mk-species 'sp_rat          "rat"             4  2 12 1  6  0  6 mmode-crawl t_fangs      nil       1 s_asleep       nil             nil)
 (mk-species 'sp_spider       "spider"         12  6 14 2  8  2 10 mmode-crawl t_fangs      nil       2 s_asleep       sound-walking   'spider-killed)
 (mk-species 'sp_statue       "statue"          1  1  1 1 99  0  1 mmode-none  nil          nil       0 nil            nil             nil)
 (mk-species 'sp_troll        "troll"          14  6 12 1 20  6 10 mmode-walk  t_horns      humanoid  3 s_asleep       sound-walking   nil)

@@ -164,7 +164,7 @@
 ;;----------------------------------------------------------------------------
 ;; effect packages
 (define slime-effects  (list ef_poison_immunity ef_slime_split))
-(define undead-effects (list ef_poison_immunity ef_fire_immunity))
+(define undead-effects (list ef_poison_immunity ef_fire_immunity ef_disease_immunity))
 (define hydra-effects (list ef_poison_immunity ef_grow_head))
 (define drag-effects (list ef_fire_immunity))
 (define wisp-effects (list ef_poison_immunity ef_fire_immunity))
@@ -543,6 +543,9 @@
 (define ghast-loot
   (list (list 50 "1" 't_mana_potion)
         ))
+(define yellow-slime-loot
+  (list (list 50 "1" 't_royal_cape)
+        ))
 
 (define (drop-generic knpc loot)
   (println "drop-generic:loot=" loot)
@@ -586,7 +589,7 @@
 (define troll         (mk-npct2 "a troll"         sp_troll    oc_warrior s_troll        no-traps troll-equip        nil 'std-ai   faction-troll nil 'drop-generic troll-loot))
 
 (define bat (mk-npct2 "a bat" sp_bat nil s_bat nil nil nil 'std-ai faction-monster nil 'drop-generic animal-loot))
-(define rat (mk-npct2 "a rat" sp_rat nil s_rat nil nil nil 'std-ai faction-monster nil 'drop-generic animal-loot))
+(define rat (mk-npct2 "a rat" sp_rat nil s_rat nil nil nil 'rat-ai faction-monster nil 'drop-generic animal-loot))
 (define zorn (mk-npct2 "zorn" sp_zorn oc_wrogue s_zorn wrogue-traps nil nil 'std-ai faction-monster nil 'drop-generic zorn-loot))
 (define bull (mk-npct "a bull" sp_bull nil s_bull nil nil nil 'animal-ai faction-none nil 'drop-generic bull-loot))
 (define lich (mk-npct2 "lich" sp_lich oc_wizard s_lich wizard-traps wizard-equip undead-effects 'spell-sword-ai faction-monster nil 'drop-generic wizard-loot))
@@ -607,13 +610,13 @@
 (define highwayman (mk-npct2 "a highwayman" sp_human oc_wrogue s_brigand wrogue-traps wrogue-3-equip nil 'std-ai faction-outlaw nil 'drop-generic wrogue-3-loot))
 (define blackguard (mk-npct2 "a blackguard" sp_human oc_wrogue s_brigand wrogue-traps wrogue-4-equip nil 'std-ai faction-outlaw nil 'drop-generic wrogue-4-loot))
 (define gint-warrior (mk-npct2 "a gint warrior" sp_gint oc_warrior s_ettin basic-traps gint-warrior-equip nil 'std-ai faction-gint nil 'drop-generic gint-loot))
+(define yellow-slime (mk-npct2 "a yellow slime" sp_yellow_slime nil s_yellow_slime nil nil slime-effects 'yellow-slime-ai faction-monster nil 'drop-generic yellow-slime-loot))
 (define troll-geomancer (mk-npct2 "a troll geomancer" sp_troll oc_wizard s_troll no-traps geomancer-equip nil 'std-ai faction-troll nil 'drop-generic geomancer-loot))
 (define corrupt-halberdier (mk-npct2 "a halberdier" sp_human oc_warrior s_guard no-traps halberdier-equip nil 'guard-ai faction-monster nil 'drop-generic halberdier-loot))
 (define corrupt-crossbowman (mk-npct2 "a crossbowman" sp_human oc_warrior s_guard no-traps crossbowman-equip nil 'guard-ai faction-monster nil 'drop-generic crossbowman-loot))
 
-
 ;; NPC's with no drops
-(define yellow-slime    (mk-npct "a yellow slime"           sp_yellow_slime  nil        s_yellow_slime nil          nil           slime-effects 'yellow-slime-ai faction-monster       nil))
+
 (define green-slime     (mk-npct "a green slime"            sp_green_slime   nil        s_slime        nil          nil           slime-effects 'animal-ai       faction-monster       nil))
 (define giant-spider    (mk-npct "a giant spider"           sp_spider        nil        s_spider       nil          nil           nil           'spider-ai       faction-monster       nil))
 (define queen-spider    (mk-npct "a queen spider"           sp_queen_spider  nil        s_queen_spider nil          nil           nil           'spider-ai       faction-monster       nil))
