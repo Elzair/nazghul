@@ -16,6 +16,20 @@
 (define (generic-join knpc kpc)
   (say knpc "I cannot join you."))
 
+(define (generic-leav knpc kpc)
+  (if (is-player-party-member? knpc)
+      (begin
+        (say knpc "Do you want me to leave your party now?")
+        (if (yes? kpc)
+            (begin
+              (if (kern-char-leave-player knpc)
+                  (begin
+                    (say knpc "If you change your mind I'll be here waiting.")
+                    (kern-conv-end))
+                  (say knpc "I can't leave right now!")))
+            (say knpc "You made me nervous there for a minute.")))
+      (say knpc "I'm not a member of your party!")))
+
 ;; wise
 (define (basic-ench knpc kpc)
   (say knpc "The Enchanter is the Wise Wizard. "
@@ -185,6 +199,7 @@
        (method 'default generic-unknown)
        (method 'bye generic-bye)
        (method 'join generic-join)
+       (method 'leav generic-leav)
        
        ;; wise
        (method 'ench basic-ench)

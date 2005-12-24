@@ -3854,11 +3854,15 @@ KERN_API_CALL(kern_char_leave_player)
 
         ch = (class Character*)unpack_obj(sc, &args, "kern-char-leave-player");
         if (!ch)
-                return sc->NIL;
+                return sc->F;
+
+        if (NULL==ch->getPlace()
+            || place_is_wilderness(ch->getPlace()))
+                return sc->F;
 
         ch->leavePlayer();
 
-        return scm_mk_ptr(sc, ch);
+        return sc->T;
 }
 
 /* 

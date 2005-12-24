@@ -868,10 +868,7 @@ void player_party::removeMember(class Character *c)
 
         assert(c->party == (class Party*)this);
 
-        // --------------------------------------------------------------------
         // Remove all its readied arms from party inventory.
-        // --------------------------------------------------------------------
-
 	for (class ArmsType * weapon = c->enumerateArms(); weapon != NULL; 
              weapon = c->getNextArms()) {
 
@@ -883,10 +880,7 @@ void player_party::removeMember(class Character *c)
 		takeOut(weapon, 1);
 	}
 
-        // --------------------------------------------------------------------
         // Re-order the indices of the remaining party members
-        // --------------------------------------------------------------------
-
         for (entry = c->plnode->next, index = c->getOrder(); 
              entry != &members; 
              entry = entry->next, index++) {
@@ -894,12 +888,12 @@ void player_party::removeMember(class Character *c)
                 next_member->setOrder(index);
         }
 
-        // --------------------------------------------------------------------
         // Relinquish control.
-        // --------------------------------------------------------------------
-
         c->setPlayerControlled(false);
         c->setControlMode(CONTROL_MODE_AUTO);
+
+        // remove its view
+        c->rmView();
         
         // Unhook it from the party
         Party::removeMember(c);

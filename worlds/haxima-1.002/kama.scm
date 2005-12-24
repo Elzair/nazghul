@@ -109,6 +109,20 @@
       (kama-default knpc kpc)  
       (say knpc "[He looks puzzled at first, but then nods] Ruka ka choto.")))
 
+(define (kama-leav knpc kpc)
+  (if (is-player-party-member? knpc)
+      (begin
+        (say knpc "Kama tujo?")
+        (if (yes? kpc)
+            (begin
+              (if (kern-char-leave-player knpc)
+                  (begin
+                    (say knpc "Kama iki")
+                    (kern-conv-end))
+                  (say knpc "Kama tu iki")))
+            (kern-log-msg "[He looks relieved]")))
+      (kern-log-msg "[He looks confused]")))
+
 (define kama-conv
   (ifc nil
        (method 'hail kama-hail)
@@ -121,6 +135,7 @@
        (method 'rune kama-rune)
        (method 'ruka kama-ruka)
        (method 'clov kama-clov)
+       (method 'leav kama-leav)
     ))
 
 (define (mk-kama)

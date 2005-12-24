@@ -76,8 +76,6 @@
        "what with the Accursed and all.")
   )
 
-
-
 ;; Quest-related
 
 (define amy-conv

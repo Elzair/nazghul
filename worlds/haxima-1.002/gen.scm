@@ -47,7 +47,7 @@
    "Nin....Stealth"
    "Ru.....Ancient, Primordal, Deep, Cave"
    "To.....Individual"
-   "Tu.....Bad, No, Useless"
+   "Tu.....No, Bad"
    "Zu.....Watch, Seek"
    )))
 
