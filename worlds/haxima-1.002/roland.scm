@@ -78,19 +78,17 @@
           ;; yes - will the player accept his continued allegiance to
           ;; Froederick?
           (begin
-            (say knpc "I thank you for freeing me! I have sworn fealty to Lord "
-                 "Froederick. But if you swear not to raise your hand against "
-                 "him, I will join you. What say you?")
-            (if (kern-conv-get-yes-no? kpc)
+            (say knpc "I thank you for freeing me! I owe you my life, and will gladly join you. What say you?")
+            (if (yes? kpc)
                 (begin
-                  (say knpc "I am honored to join you! Those vile rogues took my "
+                  (say knpc "I am honored! Those vile rogues took my "
                        "iron chest which contains my equipment. It should be "
                        "around here somewhere.")
                   (roland-join-player knpc))
-                (say knpc "[sadly] As you will. May our swords never cross.")))
+                (say knpc "[sadly] As you will.")))
           (say knpc "I am locked in this cell! Free me from this dishonour, "
-               "and you will gain an ally. I might even JOIN you if you are "
-               "willing."))))
+               "and you will gain an ally.")
+          )))
   
 (define roland-conv
   (ifc basic-conv
@@ -110,7 +108,7 @@
        (method 'bye (lambda (knpc kpc) (say knpc "Farewell.")))
        (method 'job 
                (lambda (knpc kpc) 
-                 (say knpc "I am a knight of Lord Froederick.")))
+                 (say knpc "I am a knight errant.")))
        (method 'name (lambda (knpc kpc) (say knpc "I am Roland.")))
        (method 'join roland-join)
 
@@ -118,6 +116,12 @@
                (lambda (knpc kpc)
                  (say knpc "Use picklocks on a locked door to open it. Or, cast "
                       "an unlock spell.")))
+       (method 'clov
+               (lambda (knpc kpc)
+                 (say knpc "I was with him the day he fell in battle. "
+                      "The enemy ambushed us, and I was knocked senseless. "
+                      "I dreamt that a hideous beast dragged the King down into Tartos. "
+                      "When I awoke I was in a camp hospital.")))
        (method 'free
                (lambda (knpc kpc)
                  (say knpc "I was waylaid and kidnapped by the bandits in this "
@@ -135,9 +139,9 @@
                       "the north, with much history.")))
        (method 'knig 
                (lambda (knpc kpc)
-                 (say knpc "Lord Froederick sent me north to evaluate the "
-                      "threat of invasion from his enemies. I fear the "
-                      "situation is much worse than he expected.")))
+                 (say knpc "I was a squire of King Clovis in the Goblin Wars. "
+                      "When the wars ended, I took to wandering.")
+                 ))
        ))
 
 ;;----------------------------------------------------------------------------
@@ -145,21 +149,23 @@
 ;;----------------------------------------------------------------------------
 (define (mk-roland-first-time tag)
   (bind 
-   (kern-mk-char tag                 ; tag
-                 "Roland"            ; name
-                 sp_human            ; species
-                 nil                 ; occ
-                 s_knight            ; sprite
-                 faction-men         ; starting alignment
-                 16 10 16            ; str/int/dex
-                 0 0                 ; hp mod/mult
-                 0 0                 ; mp mod/mult
-                 30 0 9 3            ; hp/xp/mp/lvl
-                 #f                  ; dead
-                 'roland-conv        ; conv
-                 nil                 ; sched
-                 'roland-ai          ; special ai
-                 nil                 ; container
-                 nil                 ; readied
-                 )
+   (set-level
+    (kern-mk-char tag                 ; tag
+                  "Roland"            ; name
+                  sp_human            ; species
+                  nil                 ; occ
+                  s_knight            ; sprite
+                  faction-men         ; starting alignment
+                  16 10 16            ; str/int/dex
+                  2 1                 ; hp mod/mult
+                  0 0                 ; mp mod/mult
+                  30 0 9 5            ; hp/xp/mp/lvl
+                  #f                  ; dead
+                  'roland-conv        ; conv
+                  nil                 ; sched
+                  'roland-ai          ; special ai
+                  nil                 ; container
+                  nil                 ; readied
+                  )
+    5)
    (roland-mk #f #f #f)))

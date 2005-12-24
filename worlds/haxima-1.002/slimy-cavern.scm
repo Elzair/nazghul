@@ -116,7 +116,7 @@
                 (list rolands-chest 9 2)
 
                 ;; terrain features
-                (list (mk-ladder-up 'p_moongate_clearing 20 1) 8 30)
+                (list (mk-ladder-up 'p_shard 13 8) 8 30)
                 (list (mk-bridge 'north) 4 15)
                 (list (mk-bridge 'north) 11 19)                
 
