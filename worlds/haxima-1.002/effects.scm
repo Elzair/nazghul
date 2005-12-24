@@ -396,6 +396,9 @@
 (define (is-charmed? kobj)
   (in-list? ef_charm (kern-obj-get-effects kobj)))
 
+(define (is-invisible? kobj)
+  (in-list? ef_invisibility (kern-obj-get-effects kobj)))
+
 (define (is-disabled? kobj)
   (let ((effects (kern-obj-get-effects kobj)))
     (println "effects=" effects)

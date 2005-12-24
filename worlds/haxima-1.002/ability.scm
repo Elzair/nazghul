@@ -201,7 +201,7 @@
 
 ;;----------------------------------------------------------------------------
 ;; summoning
-(define (cast-summon-proc kchar gen-npct)
+(define (cast-summon-proc kchar gen-npct quantity)
   (println "cast-summon-proc")
   (define (run-loop count)
     (println " run-loop " count)
@@ -220,7 +220,7 @@
                     (kern-obj-set-temporary knpc #t)
                     (kern-obj-put-at knpc loc)
                     (+ 1 (run-loop (- count 1)))))))))
-  (cond ((> (run-loop (/ (kern-char-get-level kchar) 2))
+  (cond ((> (run-loop quantity)
             0)
          (kern-log-msg (kern-obj-get-name kchar) " summons help")
          #t)
@@ -232,12 +232,21 @@
   ;;(println "summon-skeleton-proc")
   (cast-summon-proc kchar
                     (lambda () 
-                      (random-select (list 'skeletal-warrior 'skeletal-spear-thrower)))))
+                      (random-select (list 'skeletal-warrior 'skeletal-spear-thrower)))
+                    (/ (kern-char-get-level kchar) 2)
+                    ))
                     
 (define (summon-slime-proc kchar)
   ;;(println "summon-slime-proc")
   (cast-summon-proc kchar
-                     (lambda () 'green-slime)))
+                    (lambda () 'green-slime)
+                    (/ (kern-char-get-level kchar) 2)
+                    ))
+
+(define (summon-demon-proc kchar)
+  (cast-summon-proc kchar
+                    (lambda () 'demon)
+                    1))
 
 ;;----------------------------------------------------------------------------
 ;; enslave -- aka charm
@@ -275,6 +284,12 @@
                 hostiles)
            #t))))
 
+;;----------------------------------------------------------------------------
+;; turn invisible
+(define (turn-invisible-proc kchar)
+  (kern-log-msg (kern-obj-get-name kchar)
+                " vanishes!")
+  (kern-obj-add-effect kchar ef_invisibility nil))
 
 ;;----------------------------------------------------------------------------
 ;; Ability declarations
@@ -298,10 +313,12 @@
 (define teleport            (mk-ability "teleport" 6 6 2 teleport-proc 0))
 (define summon-skeleton     (mk-ability "summon skeleton" 6 6 4 summon-skeleton-proc 0))
 (define summon-slimes       (mk-ability "summon slimes"   2 2 3 summon-slime-proc 0))
+(define summon-demon        (mk-ability "summon demon"    8 8 6 summon-demon-proc 0))
 (define chomp-deck          (mk-ability "chomp deck"      2 4 3 chomp-deck-proc 1))
 (define enslave             (mk-ability "enslave"       3 4 2 enslave-proc 4))
 (define narcotize           (mk-ability "narcotize"     5 6 3 narcotize-proc 0))
 (define cast-fire-wind      (mk-ability "fire wind"     6 6 2 fire-wind-proc 4))
+(define turn-invisible      (mk-ability "turn invisible" 7 7 2 turn-invisible-proc 0))
 
 ;;----------------------------------------------------------------------------
 ;; Abilities listed by various attributes

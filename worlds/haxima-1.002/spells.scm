@@ -665,14 +665,15 @@
   (define (hide target)
     (kern-obj-add-effect target ef_invisibility nil))
   (cast-bimodal caster hide))
-  
+
 (define (in-quas-xen  caster)
   (let ((target (ui-target (kern-obj-get-location caster) 1 obj-is-char?)))
     (if (null? target) nil
         (let* ((clone (kern-obj-clone target))
                (loc (pick-loc (kern-obj-get-location target) clone)))
-          (kern-char-set-alignment clone (kern-obj-get-alignment caster))
-          (kern-obj-put-at clone loc)))))
+          (kern-being-set-base-faction clone (kern-being-get-current-faction caster))
+          (kern-obj-put-at clone loc)
+          ))))
           
 
 ;; ----------------------------------------------------------------------------

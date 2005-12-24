@@ -165,6 +165,7 @@
 ;; effect packages
 (define slime-effects  (list ef_poison_immunity ef_slime_split))
 (define undead-effects (list ef_poison_immunity ef_fire_immunity ef_disease_immunity))
+(define demon-effects (list ef_poison_immunity ef_fire_immunity ef_disease_immunity))
 (define hydra-effects (list ef_poison_immunity ef_grow_head))
 (define drag-effects (list ef_fire_immunity))
 (define wisp-effects (list ef_poison_immunity ef_fire_immunity))
@@ -344,6 +345,9 @@
         (list 100 "1" t_iron_helm)
         (list 100 "1" t_armor_plate)
         ))
+(define demon-equip
+  (list (list 100 "1" t_flaming_sword)
+        ))
 
 ;;----------------------------------------------------------------------------
 ;; Loot drops
@@ -355,26 +359,26 @@
         ))
 
 (define wizard-loot
-  (list (list 100 "1d2-1" t_heal_potion)
-        (list 100 "1d2+1" t_mana_potion)
-        (list 100 "1d20"  t_gold_coins)
-        (list 10  "1d3"   t_food)
-        (list 10  "1"     t_cure_potion)
-        (list 10  "1"     t_poison_immunity_potion)
-        (list 20  "1d5"   sulphorous_ash)
-        (list 20  "1d5"   ginseng)
-        (list 20  "1d5"   garlic)
-        (list 10  "1d3"   spider_silk)
-        (list 10  "1d3"   blood_moss)
-        (list 10  "1d3"   black_pearl)
-        (list 5   "1d2"   nightshade)
-        (list 5   "1d2"   mandrake)
-        (list 5   "1"     t_in_mani_corp_scroll)
-        (list 5   "1"     t_xen_corp_scroll)
-        (list 10  "1"     t_in_quas_xen_scroll)
-        (list 10  "1"     t_an_xen_exe_scroll)
-        (list 20  "1"     t_in_an_scroll)
-        (list 20  "1"     t_vas_mani_scroll)
+  (list (list 100 "1d2-1" 't_heal_potion)
+        (list 100 "1d2+1" 't_mana_potion)
+        (list 100 "1d20"  't_gold_coins)
+        (list 10  "1d3"   't_food)
+        (list 10  "1"     't_cure_potion)
+        (list 10  "1"     't_poison_immunity_potion)
+        (list 20  "1d5"   'sulphorous_ash)
+        (list 20  "1d5"   'ginseng)
+        (list 20  "1d5"   'garlic)
+        (list 10  "1d3"   'spider_silk)
+        (list 10  "1d3"   'blood_moss)
+        (list 10  "1d3"   'black_pearl)
+        (list 5   "1d2"   'nightshade)
+        (list 5   "1d2"   'mandrake)
+        (list 5   "1"     't_in_mani_corp_scroll)
+        (list 5   "1"     't_xen_corp_scroll)
+        (list 10  "1"     't_in_quas_xen_scroll)
+        (list 10  "1"     't_an_xen_exe_scroll)
+        (list 20  "1"     't_in_an_scroll)
+        (list 20  "1"     't_vas_mani_scroll)
         ))
 
 (define std-loot
@@ -576,8 +580,7 @@
 
 (define ranger                (mk-npct2 "a ranger"                sp_human        oc_warrior s_ranger basic-traps  ranger-equip     nil 'ranger-ai  faction-men  'ranger-conv 'drop-generic ranger-loot))
 
-(define skeletal-spear-thrower (mk-npct2 "a skeletal spear-thrower" sp_skeleton oc_warrior s_skeleton basic-traps spear-thrower-equip    undead-effects 'generic-ai faction-monster nil 
-                                         'drop-generic spear-thrower-loot))
+(define skeletal-spear-thrower (mk-npct2 "a skeletal spear-thrower" sp_skeleton oc_warrior s_skeleton basic-traps spear-thrower-equip    undead-effects 'generic-ai faction-monster nil 'drop-generic spear-thrower-loot))
 (define skeletal-warrior (mk-npct2 "a skeletal warrior" sp_skeleton oc_warrior s_skeleton basic-traps skeletal-warrior-equip undead-effects 'generic-ai faction-monster nil 'drop-generic skel-war-loot))
 
 (define death-knight  (mk-npct2 "a death knight"  sp_skeleton oc_warrior s_knight   basic-traps death-knight-equip  undead-effects 'death-knight-ai faction-monster  nil 'drop-generic dea-kni-loot))
@@ -595,7 +598,7 @@
 (define lich (mk-npct2 "lich" sp_lich oc_wizard s_lich wizard-traps wizard-equip undead-effects 'spell-sword-ai faction-monster nil 'drop-generic wizard-loot))
 (define dryad (mk-npct2 "dryad" sp_dryad nil s_reaper nil nil nil 'spell-sword-ai faction-monster nil 'drop-generic dryad-loot))
 (define gazer (mk-npct2 "gazer" sp_gazer oc_wizard s_gazer wizard-traps nil nil 'gazer-ai faction-monster nil 'drop-generic wizard-loot))
-(define demon (mk-npct2 "demon" sp_demon nil s_demon basic-traps nil nil 'std-ai faction-monster nil 'drop-generic demon-loot))
+(define demon (mk-npct2 "demon" sp_demon nil s_demon basic-traps demon-equip demon-effects 'demon-ai faction-monster nil 'drop-generic demon-loot))
 (define ghast (mk-npct2 "ghast" sp_ghast nil s_ghost nil nil undead-effects 'std-ai faction-monster nil 'drop-generic ghast-loot))
 (define snake (mk-npct "a snake" sp_snake nil s_snake nil nil nil 'std-ai faction-monster nil 'drop-generic animal-loot))
 (define dragon (mk-npct2 "dragon" sp_dragon nil s_dragon wizard-traps nil drag-effects 'dragon-ai faction-monster nil 'drop-generic dragon-loot))
@@ -604,7 +607,7 @@
 (define squire (mk-npct2 "a squire" sp_human oc_warrior s_guard no-traps squire-equip nil 'guard-ai faction-trigrave 'knight-conv 'drop-generic squire-loot))
 (define bandit (mk-npct2 "a bandit" sp_human oc_wrogue s_brigand wrogue-traps wrogue-2-equip nil 'std-ai faction-outlaw nil 'drop-generic wrogue-2-loot))
 (define footpad (mk-npct2 "a footpad" sp_human oc_wrogue s_brigand wrogue-traps wrogue-1-equip nil 'std-ai faction-outlaw nil 'drop-generic wrogue-1-loot))
-(define warlock (mk-npct2 "warlock" sp_human oc_wizard s_wizard wizard-traps wizard-equip nil 'spell-sword-ai faction-monster nil 'drop-generic wizard-loot))
+(define warlock (mk-npct2 "warlock" sp_human oc_wizard s_wizard wizard-traps wizard-equip nil 'warlock-ai faction-monster nil 'drop-generic wizard-loot))
 (define headless (mk-npct2 "headless" sp_headless oc_warrior s_headless basic-traps headless-equip nil 'std-ai faction-monster nil 'drop-generic headless-loot))
 (define gint-mage (mk-npct2 "a gint mage" sp_gint oc_wizard s_ettin wizard-traps wizard-equip nil 'shaman-ai faction-gint nil 'drop-generic wizard-loot))
 (define highwayman (mk-npct2 "a highwayman" sp_human oc_wrogue s_brigand wrogue-traps wrogue-3-equip nil 'std-ai faction-outlaw nil 'drop-generic wrogue-3-loot))

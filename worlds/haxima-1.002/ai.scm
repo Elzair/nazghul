@@ -288,17 +288,43 @@
           ;;(println "post:" post)
           (pathfind kchar post)))))
 
+(define (summon-demon? kchar)
+  (if (and (> (kern-dice-roll "1d20") 18)
+           (can-use-ability? summon-demon kchar))
+      (use-ability summon-demon kchar)
+      #f))
+
+(define (turn-invisible? kchar)
+  (and (> (kern-dice-roll "1d20") 14)
+       (not (is-invisible? kchar))
+       (can-use-ability? turn-invisible kchar)
+       (use-ability turn-invisible kchar)))
+
 ;;----------------------------------------------------------------------------
 ;; spell-sword-ai -- aggressive, selfish fighter that uses magic for combat.
 (define (spell-sword-ai kchar)
-  (display "spell-sword-ai ")(dump-char kchar)
+  ;;(display "spell-sword-ai ")(dump-char kchar)
   (or (std-ai kchar)
       (use-spell-on-self? kchar)
       (use-melee-spell-on-foes? kchar melee-spells)
       (use-ranged-spell-on-foes? kchar all-ranged-spells)))
 
+(define (warlock-ai kchar)
+  (display "warlock-ai ")(dump-char kchar)
+  (or (std-ai kchar)
+      (use-spell-on-self? kchar)
+      (summon-demon? kchar)
+      (use-ranged-spell-on-foes? kchar all-ranged-spells)
+      ))
+
+(define (demon-ai kchar)
+  (display "demon-ai ")(dump-char kchar)
+  (or (std-ai kchar)
+      (turn-invisible? kchar)
+      ))
+
 (define (gazer-ai kchar)
-  (display "gazer-ai")(dump-char kchar)
+  ;;(display "gazer-ai")(dump-char kchar)
   (or (std-ai kchar)
       (use-narcotize? kchar)
       (use-enslave? kchar)))

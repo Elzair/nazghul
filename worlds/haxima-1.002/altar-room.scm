@@ -22,4 +22,12 @@
       "xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx "
   )
  (put (mk-ladder-up 'p_death_knights_hold 17 9) 17 17)
+
+ ;; boss L20 warlock (first time only)
+ (put (mk-npc 'warlock 20) 9 6)
+
+ ;; subservient warlocks (respawn)
+ (put (spawn-pt 'warlock) 9 12)
+ (put (spawn-pt 'warlock) 6 9)
+ (put (spawn-pt 'warlock) 12 9)
  )
