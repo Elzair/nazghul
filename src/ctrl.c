@@ -405,6 +405,9 @@ static void ctrl_nearest_hostile_visitor(class Object *obj, void *data)
 
         if (! are_hostile(npc, info->origin))
                 return;
+
+        if (! npc->isVisible() && ! Reveal)
+                return;
         
         int dist = place_flying_distance(info->origin->getPlace(),
                                          info->origin->getX(),

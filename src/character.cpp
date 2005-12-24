@@ -1306,7 +1306,13 @@ class Object *Character::clone()
 	clone->initStock(species, occ, sprite, buf, 0);
 	clone->is_clone = true;
 
-        // FIXME: clones have nothing, should possible clone inventory as well.
+        // clone the readied items
+        for (ArmsType *arms = enumerateArms(); arms != NULL; arms = getNextArms()) {
+                clone->ready(arms);
+        }
+
+        // NOTE: effects not cloned... that will require a bit of work and
+        // testing because effects can have gobs (gobs aren't cloned either)
 
 	return clone;
 }

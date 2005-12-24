@@ -4881,14 +4881,14 @@ KERN_API_CALL(kern_obj_wander)
 
 KERN_API_CALL(kern_obj_clone)
 {
-        class Character *obj, *clone;
+        class Object *obj, *clone;
         int val;
 
-        obj = (class Character*)unpack_obj(sc, &args, "kern-char-clone");
+        obj = unpack_obj(sc, &args, "kern-char-clone");
         if (!obj)
                 return sc->NIL;
 
-        clone = (class Character*)obj->clone();
+        clone = obj->clone();
         assert(clone);
         clone->setTemporary(1);
 
