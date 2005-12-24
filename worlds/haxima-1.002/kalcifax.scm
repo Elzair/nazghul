@@ -47,10 +47,14 @@
   )
 
 (define (kalc-join knpc kpc)
-  (say knpc "I thought you'd never ask!")
-  (join-player knpc)
-  (kern-conv-end)
-  )
+  (if (is-player-party-member? knpc)
+      (say knpc "I've alread joined you!")
+      (begin
+        (say knpc "Ok, this will be fun!")
+        (join-player knpc)
+        (kern-conv-end)
+        )
+  ))
 
 (define (kalc-job knpc kpc)
   (say knpc "I travel the gates, running errands for people.")

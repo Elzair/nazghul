@@ -38,14 +38,17 @@
   (say knpc "I am Inago, but everyone calls me Ini."))
 
 (define (ini-join knpc kpc)
-  (let ((ini (kobj-gob-data knpc)))
-    (if (ini-will-join? ini)
-        (begin
-          (say knpc "I thank you! Let's not waste any time finding "
-               "the Warritrix!")
-          (kern-conv-end)
-          (join-player knpc))
-        (say knpc "[Sigh] My duty is with the paladins."))))
+  (if (is-player-party-member? knpc)
+      (say knpc "I already joined you. Now let's go!")
+      (let ((ini (kobj-gob-data knpc)))
+        (if (ini-will-join? ini)
+            (begin
+              (say knpc "I thank you! Let's not waste any time finding "
+                   "the Warritrix!")
+              (kern-conv-end)
+              (join-player knpc))
+            (say knpc "[Sigh] My duty is with the paladins.")
+            ))))
         
 
 (define (ini-job knpc kpc)

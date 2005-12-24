@@ -43,10 +43,13 @@
   )
 
 (define (amy-join knpc kpc)
-  (say knpc "I thought you'd never ask!")
-  (join-player knpc)
-  (kern-conv-end)
-  )
+  (if (is-player-party-member? knpc)
+      (say knpc "I already joined you!")
+      (begin
+        (say knpc "I thought you'd never ask!")
+        (join-player knpc)
+        (kern-conv-end)
+        )))
 
 (define (amy-job knpc kpc)
   (say knpc "Well, I'm a tinker by trade, "
