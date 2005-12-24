@@ -81,6 +81,7 @@ Party::~Party()
          * other container references them then they will be automatically
          * destoyed. */
         forEachMember(party_remove_member, this);
+        obj_dec_ref_safe(vehicle);
 }
 
 bool Party::isType(int classID)
@@ -857,6 +858,11 @@ void Party::save(struct save *save)
         save->enter(save, "(let ((kparty (kern-mk-party)))\n");
         save->write(save, "(kern-obj-set-sprite kparty %s)\n", getSprite()->tag);
         save->write(save, "(kern-being-set-base-faction kparty %d)\n", getBaseFaction());
+        if (vehicle) {
+                save->enter(save, "(kern-party-set-vehicle ");
+                vehicle->save(save);
+                save->exit(save, ") ;; end kern-party-set-vehicle\n");
+        }
         FOR_EACH_MEMBER(entry, member) {
                 save->enter(save, "(kern-party-add-member kparty\n");
                 member->save(save);
@@ -864,8 +870,6 @@ void Party::save(struct save *save)
         }
         save->write(save, "kparty\n");
         save->exit(save, ") ;; end let\n");
-
-
 }
 
 static bool member_remove(class Character *member, void *data)
@@ -994,4 +998,17 @@ Object *Party::getSpeaker()
         statusSetMode(orig_stat_mode);
         free(statlist);
         return selected;
+}
+
+void Party::setVehicle(class Vehicle *val)
+{
+        if (vehicle) {
+                vehicle->occupant = NULL;
+                obj_dec_ref(vehicle);
+        }
+        vehicle=val;
+        if (val) {
+                val->occupant = this;
+                obj_inc_ref(val);
+        }
 }

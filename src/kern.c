@@ -5880,6 +5880,21 @@ KERN_API_CALL(kern_party_add_member)
         return sc->F;
 }
 
+KERN_API_CALL(kern_party_set_vehicle)
+{
+        class Party *party;
+        class Vehicle *vehicle;
+
+        party = (Party*)unpack_obj(sc, &args, "kern-party-set-vehicle");
+        if (!party)
+                return sc->NIL;
+
+        vehicle = (Vehicle*)unpack_obj(sc, &args, "kern-party-set-vehicle");
+        party->setVehicle(vehicle);
+
+        return scm_mk_ptr(sc, party);
+}
+
 static bool wrap_kern_append_obj(class Character *c, void *v)
 {
         kern_append_object(c, v);
@@ -7379,6 +7394,7 @@ scheme *kern_init(void)
         /* kern-party-api */
         API_DECL(sc, "kern-party-add-member", kern_party_add_member);
         API_DECL(sc, "kern-party-get-members", kern_party_get_members);
+        API_DECL(sc, "kern-party-set-vehicle", kern_party_set_vehicle);
 
         /* Revisit: probably want to provide some kind of custom port here. */
         scheme_set_output_port_file(sc, stderr);

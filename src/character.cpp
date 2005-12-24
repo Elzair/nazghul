@@ -2362,6 +2362,9 @@ bool Character::joinPlayer(void)
 {
         class Party *old_party = party;
 
+        if (old_party == player_party)
+                return false;
+
         if (NULL != old_party) {
                 old_party->removeMember(this);
         }
