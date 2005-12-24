@@ -3,7 +3,7 @@
 ;;----------------------------------------------------------------------------
 (define kama-lvl 4)
 (define kama-species sp_forest_goblin)
-(define kama-occ oc_warrior)
+(define kama-occ oc_wrogue)
 (define kama-exit-x 34)
 (define kama-exit-y 4)
 
@@ -44,7 +44,7 @@
   (if (not (kama-gave-food? (gob knpc)))
       (kama-default knpc kpc)
       (begin
-        (say knpc "Kahato. [He points to you] Zuto?")
+        (say knpc "Ninto. [He points to you] Zuto?")
         (if (yes? kpc)
             (say knpc "[He nods]")
             (say knpc "[He chuckles as if he disbelieves you]")))))
@@ -133,7 +133,7 @@
      kama-occ              ; occ
      s_orc     ; sprite
      faction-men      ; starting alignment
-     10 0 10            ; str/int/dex
+     2 0 10            ; str/int/dex
      3 2              ; hp mod/mult
      0 0              ; mp mod/mult
      (max-hp kama-species kama-occ kama-lvl 3 2) ; hp

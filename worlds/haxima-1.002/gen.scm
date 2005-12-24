@@ -44,6 +44,7 @@
    "Na.....Yours, Yourself"
    "Nu.....Give Birth, Create, Begin"
    "No.....Name"
+   "Nin....Stealth"
    "Ru.....Ancient, Primordal, Deep, Cave"
    "To.....Individual"
    "Tu.....Bad, No, Useless"
