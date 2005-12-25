@@ -504,7 +504,11 @@ enum MoveResult Character::move(int dx, int dy)
                 // the game.
                 // -----------------------------------------------------------
                 
-                if (! isPlayerControlled() || isCharmed()) {
+                // Note: the following used to be || isCharmed(), but since I
+                // changed charm to be just a temporary faction switch I don't
+                // think this is good any more. I don't want charmed player
+                // party members getting destroyed.
+                if (! isPlayerControlled()) {
                         remove();
                         destroy();
                         endTurn();
@@ -2160,7 +2164,7 @@ void Character::charm(int newFaction)
 
 bool Character::isCharmed()
 {
-        return (factionSwitch > 0);
+        return getCurrentFaction() != getBaseFaction();
 }
 
 bool Character::isPlayerPartyMember()
@@ -2473,7 +2477,7 @@ void Character::save(struct save *save)
         save->write(save, "%s\n",  this->species->tag);
         save->write(save, "%s\n", this->occ ? this->occ->tag : "nil");
         save->write(save, "%s\n", this->sprite->tag);
-        save->write(save, "%d\n", baseFaction);
+        save->write(save, "%d\n", getBaseFaction());
         save->write(save, "%d %d %d\n", str, intl, dex);
         save->write(save, "%d %d\n", this->hp_mod, this->hp_mult);
         save->write(save, "%d %d\n", this->mp_mod, this->mp_mult);
@@ -2569,8 +2573,7 @@ bool Character::tryToRelocateToNewPlace(struct place *newplace,
         // schedules. If I only forbid entry to the wilderness this should work
         // as originally intended.
         if (place_is_wilderness(newplace)
-            && (! isPlayerControlled() 
-                || isCharmed())) {
+            && (! isPlayerControlled())) {
                 return false;
         }
 
@@ -2620,12 +2623,43 @@ struct mmode *Character::getMovementMode()
         return species->mmode;
 }
 
-int Character::getCurrentFaction()
+void Character::setCurrentFaction(int faction)
 {
-        if (factionSwitch > 0)
-                return tmpFaction;
+        if (! isPlayerPartyMember()) {
+                Being::setCurrentFaction(faction);
+        } else {
+                if (faction != player_party->getBaseFaction()) {
+                        // player party member charmed
+                        setControlMode(CONTROL_MODE_AUTO);
+                        
+                        // subtle: in this case, do this AFTER calling
+                        // setControlMode() (charmed character's ignore control
+                        // mode changes)
+                        Being::setCurrentFaction(faction);
 
-        return getBaseFaction();
+                } else {
+                        // subtle: in this case, do this BEFORE calling
+                        // setControlMode() (opposite of above)
+                        Being::setCurrentFaction(faction);
+
+                        // player party member uncharmed
+                        switch (player_party->getPartyControlMode()) {
+                        case PARTY_CONTROL_ROUND_ROBIN:
+                                setControlMode(CONTROL_MODE_PLAYER);
+                                break;
+                        case PARTY_CONTROL_SOLO:
+                                setControlMode(CONTROL_MODE_IDLE);
+                                break;
+                        case PARTY_CONTROL_FOLLOW:
+                                if (isLeader()) {
+                                        setControlMode(CONTROL_MODE_PLAYER);
+                                } else {
+                                        setControlMode(CONTROL_MODE_FOLLOW);
+                                }
+                                break;
+                        }
+                }
+        }
 }
 
 class Container* Character::getInventoryContainer()

@@ -35,6 +35,7 @@ void Being::setDefaults()
         cachedPath = NULL;
         cachedPathPlace = NULL;
         baseFaction = INVALID_FACTION;
+        currentFaction = baseFaction;
 }
 
 Being::~Being()
@@ -48,6 +49,7 @@ Being::~Being()
 void Being::setBaseFaction(int faction)
 {
         baseFaction = faction;
+        setCurrentFaction(faction);
 }
 
 int Being::getBaseFaction()
@@ -57,7 +59,7 @@ int Being::getBaseFaction()
 
 int Being::getCurrentFaction()
 {
-        return baseFaction;
+        return currentFaction;
 }
 
 enum layer Being::getLayer()
@@ -264,4 +266,9 @@ void Being::setName(char *val)
                 free(name);
                 name = NULL;
         }
+}
+
+void Being::setCurrentFaction(int faction)
+{
+        currentFaction = faction;
 }

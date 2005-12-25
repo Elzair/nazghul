@@ -190,7 +190,7 @@ class Character:public Being {
         virtual bool addGold(int quantity);
         virtual bool add(ObjectType *type, int amount);
         virtual bool takeOut(ObjectType *type, int amount);
-        virtual int getCurrentFaction();
+        virtual void setCurrentFaction(int faction);
 
         void charm(int faction);
         void unCharm();

@@ -37,6 +37,7 @@ class Being:public Object {
         virtual int getCurrentFaction();
 	virtual enum layer getLayer();
 	virtual char *getName();
+        virtual void setCurrentFaction(int faction);
 
         int getBaseFaction();
         bool pathfindTo(struct place *place, int x, int y);
@@ -50,10 +51,11 @@ class Being:public Object {
 
       protected:
         void setDefaults();
-        int baseFaction;
 
  private:
         char *name;
+        int baseFaction;
+        int currentFaction;
 };
 
 #endif

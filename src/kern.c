@@ -5987,6 +5987,26 @@ KERN_API_CALL(kern_being_set_base_faction)
 
 }
 
+KERN_API_CALL(kern_being_set_current_faction)
+{
+        class Being *being;
+        int faction;
+
+        being = (class Being*)unpack_obj(sc, &args, "kern-being-set-current-faction");
+        if (!being)
+                goto done;
+
+        if (unpack(sc, &args, "d", &faction)) {
+                rt_err("kern-being-set-current-faction: bad arg");
+                goto done;
+        }
+
+        being->setCurrentFaction(faction);
+ done:
+        return scm_mk_ptr(sc, being);
+
+}
+
 KERN_API_CALL(kern_being_set_name)
 {
         class Being *being;
@@ -7128,6 +7148,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-being-set-name", kern_being_set_name);
         API_DECL(sc, "kern-being-pathfind-to", kern_being_pathfind_to);
         API_DECL(sc, "kern-being-set-base-faction", kern_being_set_base_faction);
+        API_DECL(sc, "kern-being-set-current-faction", kern_being_set_current_faction);
 
         /* kern-char api */
         API_DECL(sc, "kern-char-add-defense", kern_char_add_defense);
