@@ -239,7 +239,7 @@
    (list  't_halberd        "halberd"        s_halberd        "1d3+1"  "2d8-2"  "+0"     slot-weapon   2      2      4)
    (list  't_staff          "staff"          s_staff          "1d3"    "1d4"    "1d3"    slot-weapon   2      2      2)
    (list  't_eldritch_blade "eldritch blade" s_eldritch_blade "2"      "2d8+5"  "+0"     slot-weapon   2      1      2)
-   (list  't_mystic_sword   "mystic sword"   s_mystic_sword   "+3"     "1d10+1" "+2"     slot-weapon   1      1      1)
+   (list  't_mystic_sword   "mystic sword"   s_mystic_sword   "+3"     "1d10+5" "+2"     slot-weapon   1      1      1)
    (list  't_flaming_sword  "flaming sword"  s_flaming_sword  "1d2"    "1d10+3" "1d2"    slot-weapon   1      1      2)
    ))
 

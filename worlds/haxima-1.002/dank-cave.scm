@@ -23,4 +23,5 @@
   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
   )
  (put (mk-ladder-up 'p_shamans_grove 17 11) 9 1)
+ (put (spawn-pt 'gazer) 14 6)
  )

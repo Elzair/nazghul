@@ -3,7 +3,7 @@
 ;;----------------------------------------------------------------------------
 (define nossifer-x 16)
 (define nossifer-y 6)
-(define noss-lvl 9)
+(define noss-lvl 20)
 (define noss-species sp_balron)
 (define noss-occ oc_wizard)
 
@@ -62,7 +62,7 @@
        ))
 
 (define (noss-ai kchar)
-  (spell-sword-ai kchar))
+  (warlock-ai kchar))
 
 (define (mk-nossifer)
   (let ((kchar (bind 
@@ -75,8 +75,8 @@
                   s_balron          ; sprite
                   faction-men      ; starting alignment
                   20 5 20            ; str/int/dex
-                  10 5              ; hp mod/mult
-                  10 5              ; mp mod/mult
+                  0 5              ; hp mod/mult
+                  0 2              ; mp mod/mult
                   (max-hp noss-species noss-occ noss-lvl 0 0) ; hp
                   0                   ; xp
                   (max-mp noss-species noss-occ noss-lvl 0 0) ; mp
@@ -86,11 +86,13 @@
                   nil           ; sched
                   'noss-ai  ; special ai
                   nil              ; container
-                  nil              ; readied
-                  )
+                  (list
+                   t_flaming_sword
+                   t_armor_plate
+                   ))
                  noss-lvl)
                 (noss-mk))))
     (map (lambda (eff) (kern-obj-add-effect kchar eff nil))
-         (list ef_fire_immunity))
-    kchar))
- 
+         demon-effects)
+    kchar
+    ))

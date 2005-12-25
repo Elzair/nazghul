@@ -252,7 +252,7 @@
 
 (define (use-enslave? kchar)
   (if (or (not (can-use-ability? enslave kchar))
-          (< (kern-dice-roll "1d20") 3))
+          (<= (kern-dice-roll "1d20") 16))
       #f
       (let ((hostiles (filter
                        not-disabled?
@@ -267,7 +267,7 @@
           
 (define (use-narcotize? kchar)
   (if (or (not (can-use-ability? narcotize kchar))
-          (< (kern-dice-roll "1d20") 21)
+          (<= (kern-dice-roll "1d20") 16)
           #t)
       #f
       (let ((hostiles (filter

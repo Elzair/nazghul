@@ -50,17 +50,13 @@
       (let ((kchar kobj))
         (if (> (kern-dice-roll "1d20")
                19)
-            (begin
-              (kern-log-msg (kern-obj-get-name kchar)
-                            " wakes up!")
-              (kern-obj-remove-effect kchar ef_sleep)
-              )
+            (kern-obj-remove-effect kchar ef_sleep)
             (kern-char-set-sleep kchar #t)
             ))))
       
 (define (sleep-rm fgob kobj)
   (if (obj-is-char? kobj)
-      (kern-char-set-sleep kchar #f)))
+      (kern-char-set-sleep kobj #f)))
 
 ;; ----------------------------------------------------------------------------
 ;; paralyze
@@ -238,11 +234,16 @@
 
 (define (charm-rm charm kchar)
   (if (obj-is-char? kchar)
-      (kern-char-uncharm kchar)))
+      (begin
+        (kern-being-set-current-faction kchar
+                                        (kern-being-get-base-faction kchar))
+        (kern-log-msg (kern-obj-get-name kchar)
+                      " recovers from charm!")
+        )))
 
 (define (charm-apply charm kchar)
   (if (obj-is-char? kchar)
-      (kern-char-charm kchar (charm-faction charm))))
+      (kern-being-set-current-faction kchar (charm-faction charm))))
 
 ;; ----------------------------------------------------------------------------
 ;; Loot Drop
