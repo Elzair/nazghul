@@ -80,9 +80,6 @@
   (put (spawn-pt 'rat) 1 6)
   (put (spawn-pt 'rat) 4 2)
 
-  ;; Oglah's room
-  (put (mk-locked-door) 6 6)
-
   ;; portcullises
   (put (kern-tag 'pp1 (mk-portcullis)) 12 4)
   (put (kern-tag 'pp2 (mk-portcullis)) 14 4)

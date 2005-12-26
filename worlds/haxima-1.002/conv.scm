@@ -111,7 +111,7 @@
               ((equal? kplace p_enchanters_tower)
                (say knpc "Go south to Trigrave and ask there."))
               ((equal? kplace p_glasdrin)
-               (say knpc "Go west and south to Trigrave and ask there."))
+               (say knpc "Take the road south."))
               (else 
                (say knpc "I'm not sure how to get there from here."))
               ))))
@@ -121,17 +121,17 @@
   (if (yes? kpc)
       (let ((kplace (get-place knpc)))
         (cond ((equal? kplace p_westpass)
-               (say knpc "The best way is to take the ladder down to Eastpass and go to Trigrave first."))
+               (say knpc "Follow the road east and north."))
               ((equal? kplace p_eastpass)
-               (say knpc "Go west to Trigrave then up to Northpass."))
+               (say knpc "Go east to Westpass and ask there."))
               ((equal? kplace p_trigrave)
-               (say knpc "Go up to Northpass and ask there."))
+               (say knpc "Go east to Eastpass and ask there."))
               ((equal? kplace p_green_tower)
-               (say knpc "Follow the trail south and west to Westpass and ask the rangers there."))
+               (say knpc "Go west through the woods until you hit the road, then follow it north."))
               ((equal? kplace p_enchanters_tower)
-               (say knpc "Head east of the Fens, you'll find it by the sea."))
+               (say knpc "Go east through the pass and follow the river."))
               ((equal? kplace p_oparine)
-               (say knpc "Follow the road north to Trigave and ask there."))
+               (say knpc "Follow the road north to Trigave and ask there, or take a ship and follow the coastline all the way north."))
               (else 
                (say knpc "I'm not sure how to get there from here."))
               ))))
@@ -141,7 +141,7 @@
 
 (define (basic-kurp knpc kpc)
   (say knpc "Kurpolis is an ancient underground ruin. "
-       "You'll find the entrance somewhere near Glasdrin."))
+       "The entrance is somewhere in the northern mountains."))
 
 (define (basic-lost knpc kpc)
   (say knpc "The Lost Halls? I've only heard them mentioned in bard's songs. "
@@ -315,6 +315,8 @@
   (say knpc "The Citadel is the civil and military headquarters of Glasdrin. It's the big keep in the southeast corner of town."))
 (define (glasdrin-ghol knpc kpc)
   (say knpc "I seem to recall a man named Gholet was arrested for theft. You might check the Citadel's dungeon."))
+(define (glasdrin-kurp knpc kpc)
+  (say knpc "The dungeon Kurpolis is where most of our troops are now. Follow the mountains west, you'll find the entrance in a canyon."))
 
 (define glasdrin-conv
   (ifc basic-conv
@@ -324,6 +326,7 @@
        (method 'kurp glasdrin-kurp)
        (method 'cita glasdrin-cita)
        (method 'ghol glasdrin-ghol)
+       (method 'kurp glasdrin-kurp)
        ))
 
 ;; Kurpolis

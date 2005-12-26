@@ -112,7 +112,7 @@
 
 (define (jeff-lost knpc kpc)
   (say knpc "The Lost Halls are very dangerous. No place for amateurs. "
-       "I'd advise you to stay! Now good day, sir!")
+       "I'd advise you to stay away! Now good day, sir!")
   (kern-conv-end)
   (if (is-player-party-member? ch_ini)
       (say ch_ini "Don't worry. I know where to find the Lost Halls. "

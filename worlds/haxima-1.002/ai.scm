@@ -392,7 +392,7 @@
       (move-away-from-foes? kchar)))
 
 ;; guard-ai
-  (define (try-to-use-disarm)
+(define (try-to-use-disarm kchar)
     ;;(display "try-to-use-ability")(newline)
     (if (can-use-ability? disarm kchar)
         (let ((victims (get-hostiles-in-range kchar 1)))
@@ -404,7 +404,7 @@
 (define (guard-ai kchar)
   (or (std-ai kchar)
       (if (any-visible-hostiles? kchar)
-          (try-to-use-disarm)
+          (try-to-use-disarm kchar)
           (goto-post kchar))))
 
 
