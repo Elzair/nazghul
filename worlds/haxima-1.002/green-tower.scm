@@ -190,9 +190,8 @@
   (put (mk-locked-door) 59 58)
   
   ;; Tower 
-  (put (mk-lever 'gtl-drawbridge-1) 35 29)
   (put (mk-lever 'gtl-portcullis-1) 29 29)
-  (put (mk-ladder-down 'p_green_tower_lower 32 32) 32 32)
+  (put (mk-ladder-down 'p_green_tower_lower 10 26) 32 32)
   (put (mk-door) 32 22)
   (put (mk-door) 41 32)
   (put (mk-door) 32 42)

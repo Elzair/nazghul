@@ -4,8 +4,8 @@
 (define kama-lvl 4)
 (define kama-species sp_forest_goblin)
 (define kama-occ oc_wrogue)
-(define kama-exit-x 34)
-(define kama-exit-y 4)
+(define kama-exit-x 6)
+(define kama-exit-y 2)
 
 ;;----------------------------------------------------------------------------
 ;; Schedule
@@ -67,7 +67,7 @@
       (if (not (kama-gave-food? (gob knpc)))
           (kama-default knpc kpc)
           (if (door-still-locked?)
-              (say knpc "[He points to the locked cell door and shrugs]")
+              (say knpc "[He points to the cell door and shrugs, maybe if you opened it...]")
               (join)
               ))))
 

@@ -314,23 +314,16 @@
 
 (define treasure-list
   (list
-   (list 32 t_gold_coins 20)
-   (list 32 t_arrow 10)
+   (list 32 t_gold_coins 5)
+   (list 32 t_arrow 5)
    (list 32 t_bolt 5)
-   (list 32 t_food 5)
+   (list 32 t_food 1)
    (list 8  t_heal_potion 1)
    (list 8  t_mana_potion 1)
    (list 4  t_cure_potion 1)
-   (list 2  t_leather_helm 1)
-   (list 16 t_dagger 1)
-   (list 2  t_sword 1)
-   (list 2  t_iron_helm 1)
-   (list 2  t_shield 1)
-   (list 2  t_armor_leather 1)
-   (list 1  t_shovel 1)
-   (list 4  t_torch 3)
-   (list 2  t_gem 3)
-   (list 4  t_picklock 3)
+   (list 4  t_torch 1)
+   (list 2  t_gem 1)
+   (list 4  t_picklock 1)
    ))
 
 (define treasure-modulus

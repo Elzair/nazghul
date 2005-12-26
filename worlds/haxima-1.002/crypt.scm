@@ -27,7 +27,7 @@
  (put (kern-tag 'kc_kcma (mk-kcm (mk-rect 1 9 5 9))) 0 0)
  (put (kern-tag 'kc_kcmb (mk-kcm (mk-rect 13 9 5 9))) 0 0)
 
- (put (mk-ladder-up 'p_green_tower_lower 56 62) 9 3)
+ (put (mk-ladder-up 'p_green_tower_lower 17 1) 9 3)
  (put (mk-ladder-down 'p_lich_tomb 9 16) 9 10)
  
  ;; mundane mechs
