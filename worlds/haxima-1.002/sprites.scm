@@ -333,6 +333,7 @@
 (kern-mk-sprite 's_purple_spider ss_addon 4 104 #f 0)
 (kern-mk-sprite 's_brigandess ss_addon 4 108 #f 0)
 (kern-mk-sprite 's_wolf ss_addon 4 112 #f 0)
+(kern-mk-sprite 's_void_ship ss_addon 1 116 #f 170)
 
 (kern-mk-sprite 's_full_moon                ss_moons 1 0 #f 0 )
 (kern-mk-sprite 's_wane_three_quarter_moon  ss_moons 1 1 #f 0 )

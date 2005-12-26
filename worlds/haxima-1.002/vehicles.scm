@@ -48,27 +48,27 @@
 (kern-mk-map 
  'm_voidship 9 17 pal_expanded
  (list
-  "** ** ** ** ** ** ** ** **";
-  "** ** ** ** ## ** ** ** **";
-  "** ** ** ## ## ## ** ** **";
-  "** ** ## ## ee ## ## ** **";
-  "** ## ## ee ee ee ## ## **";
-  "** ## ee ee oo ee ee ## **";
-  "ee ee ee ee ee ee ee ee ee";
-  "** ## ee ee ee ee ee ## **";
-  "** ## ee ee ee ee ee ## **";
-  "** ## ee ee ee ee ee ## **";
-  "ee ee ee ee ee ee ee ee ee";
-  "** ## ee ee oo ee ee ## **";
-  "** ## ee ee WW ee ee ## **";
-  "** ## ee ee ee ee ee ## **";
-  "** ## ## ee ee ee ## ## **";
-  "** ** ## ## ## ## ## ** **";
-  "** ** ** ** ** ** ** ** **";
+  "** ** ** ** ** ** ** ** **"
+  "** ** ** ** ## ** ** ** **"
+  "** ** ** ## ## ## ** ** **"
+  "** ** ## ## ee ## ## ** **"
+  "** ## ## ee ee ee ## ## **"
+  "** ## ee ee ee ee ee ## **"
+  "ee ee ee ee ee ee ee ee ee"
+  "** ## ee ee ee ee ee ## **"
+  "** ## ee ee ee ee ee ## **"
+  "** ## ## ee ee ee ## ## **"
+  "## ## ## ee ee ee ## ## ##"
+  "## ee ee ee ee ee ee ee ##"
+  "## ee ## ee ee ee ## ee ##"
+  "ee ee ## ## ## ## ## ee ee"
+  "## ee ## ** ** ** ## ee ##"
+  "## ## ## ** ** ** ## ## ##"
+  "** ** ** ** ** ** ** ** **"
   ))
 (kern-mk-vehicle-type 't_voidship   ; tag
                       "voidship"    ; name
-                      s_ship    ; sprite
+                      s_void_ship   ; sprite
                       m_voidship    ; map
                       t_cannon  ; ordnance
                       #t        ; vulnerable

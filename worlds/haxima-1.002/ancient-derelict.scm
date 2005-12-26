@@ -29,7 +29,7 @@
 (kern-mk-place 
  'p_ancient_derelict ; tag
  "Ancient Derelict"   ; name
- s_ship              ; sprite
+ s_void_ship          ; sprite
  m_ancient_derelict  ; map
  #f               ; wraps
  #f                     ; underground

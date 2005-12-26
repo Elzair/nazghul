@@ -3,6 +3,11 @@
 ;; anywhere else.
 ;;----------------------------------------------------------------------------
 
+(kern-mk-sprite-set 'ss_special 32 32 3 3 0 0 "special.png")
+
+(kern-mk-sprite 's_gold_skull ss_special 1 0 #f 0)
+(kern-mk-sprite 's_power_core ss_special 1 1 #f 0)
+
 ;;----------------------------------------------------------------------------
 ;; Angriss Lair generator -- procedure invoked by a step trigger to create
 ;; Angriss's Lair. Should return true iff it triggers to remove the step
@@ -51,11 +56,11 @@
 (define lost-halls-loc (list 'p_shard 39 75))
 
 ;; Power core for voidship
-(mk-obj-type 't_power_core "ancient power core" s_magic layer-item obj-ifc)
+(mk-obj-type 't_power_core "ancient power core" s_power_core layer-item obj-ifc)
 
 ;; Luximene begins the game as a Lich King, when defeated he drops his skull,
 ;; which can be used with the Necromancer to summon his shade.
-(mk-obj-type 't_lich_skull "King Luximenes skull" s_magic layer-item obj-ifc)
+(mk-obj-type 't_lich_skull "King Luximenes skull" s_gold_skull layer-item obj-ifc)
 
 ;; grow -- trigger hook fx to create items (eg, growing reagents, hence the name)
 (define (grow-trig ktrig ktype-tag dice)
