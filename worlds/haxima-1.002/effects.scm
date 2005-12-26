@@ -50,9 +50,10 @@
       (let ((kchar kobj))
         (if (> (kern-dice-roll "1d20")
                19)
-            (kern-obj-remove-effect kchar ef_sleep)
-            (kern-char-set-sleep kchar #t)
-            ))))
+            (begin
+              (kern-obj-remove-effect kchar ef_sleep)
+              (kern-char-set-sleep kchar #t)
+              )))))
       
 (define (sleep-rm fgob kobj)
   (if (obj-is-char? kobj)
