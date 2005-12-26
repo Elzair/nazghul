@@ -17,7 +17,21 @@
                   result-ok))
 
 ;; picklock
-(mk-usable-item 't_picklock "picklock" s_picklock 2
+(define (pick-lock-ok kuser ktarg)
+  (send-signal kuser ktarg 'unlock)
+  #t)
+(define (pick-lock-failed kuser ktool)
+  (kern-log-msg "Picklock broke!")
+  (kern-obj-remove-from-inventory kuser ktool 1)
+  #t
+  )
+(define (pick-lock-bonus kuser)
+  (if (eqv? (kern-char-get-occ kuser)
+            oc_wrogue)
+      (kern-char-get-level kuser)
+      0
+      ))
+(mk-reusable-item 't_picklock "picklock" s_picklock 2
                 (lambda (kobj kuser)
                   (let ((ktarg (ui-target (kern-obj-get-location kuser)
                                           1 
@@ -26,11 +40,16 @@
                         (begin
                           (kern-log-msg "No effect!")
                           nil)
-                        (begin
-                          (if (> (kern-dice-roll "1d20") 16)
-                              (send-signal kuser ktarg 'unlock)
-                              (kern-log-msg "Picklock broke!"))
-                          #t)))))
+                        (let ((roll (kern-dice-roll "1d20")))
+                          (println "rolled " roll)
+                          (if (= roll 20)
+                              (pick-lock-ok kuser ktarg)
+                              (if (> (+ roll 
+                                        (pick-lock-bonus kuser))
+                                     16)
+                                  (pick-lock-ok kuser ktarg)
+                                  (pick-lock-failed kuser kobj)
+                                  )))))))
 
 ;; gem -- use peer spell
 (mk-usable-item 't_gem "gem" s_gem 2

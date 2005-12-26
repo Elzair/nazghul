@@ -3,41 +3,18 @@
 ;; Map
 ;;----------------------------------------------------------------------------
 (kern-mk-map
- 'm_prison 32 32 pal_expanded
+ 'm_prison 32 9 pal_expanded
  (list
-      "xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx "
-      "xx ,, ,, ,, ,, ,, ,, ,, 00 .. .. .. 00 ee ,, ,, ee 00 .. .. .. 00 ,, ,, ,, 00 !! cc !! 00 ee xx "
-      "xx ,, -- -- -- -- ,, ,, 00 .. .. .. 00 ,, ,, ,, ,, 00 .. .. .. 00 ,, ,, ,, 00 !! cc !! 00 ,, xx "
-      "xx ,, == == ee -- ,, ,, 00 00 ,, 00 00 ,, ,, ,, ,, 00 00 ,, 00 00 ,, ,, ,, ,, ,, ,, ,, ,, ,, xx "
-      "xx ,, -- -- -- -- ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx "
-      "xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, 00 ff cc ff 00 ,, xx "
-      "xx ,, ,, ,, ,, ,, ,, ,, ,, ,, aa ,, ,, ,, ,, ,, ,, ,, ,, aa ,, ,, ,, ,, ,, 00 ff cc ff 00 ee xx "
-      "xx xx xx xx xx xx xx xx xx xx xx xx xx xx ,, xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx "
-      "xx xx xx xx [[ .T .O .R .T .U .R .E ]] xx ,, xx [[ .C .H .A .M .B .E .R ]] xx xx xx xx xx xx xx "
-      "xx xx xx xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx xx xx xx xx xx xx "
-      "xx xx xx xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx xx xx xx xx xx xx "
-      "xx xx xx xx xx xx xx xx xx xx xx ,, ,, pp ,, pp ,, ,, xx xx xx xx xx xx xx xx xx xx xx xx xx xx "
-      "xx xx xx xx xx xx xx xx xx !! -- ,, ,, ,, ,, ,, ,, ,, -- !! xx xx xx xx xx xx xx xx xx xx xx xx "
-      "xx xx xx xx xx xx xx xx xx -- -- ,, ,, pp ,, pp ,, ,, -- -- xx xx xx xx xx xx xx xx xx xx xx xx "
-      "xx xx xx xx xx xx xx xx xx !! -- ,, ,, ,, ,, ,, ,, ,, -- !! xx xx xx xx xx xx xx xx ,, ,, ,, xx "
-      "xx xx xx xx xx xx xx xx xx -- -- ,, ,, pp ,, pp ,, ,, -- -- xx xx xx xx xx xx xx xx xx xx ,, xx "
-      "xx xx xx xx xx xx xx xx xx !! -- ,, ,, ,, ,, ,, ,, ,, -- !! xx xx xx xx xx xx xx xx xx xx ,, xx "
-      "xx xx xx xx xx xx xx xx xx xx xx ,, ,, pp ,, pp ,, ,, xx xx xx xx xx xx xx xx xx xx xx xx ,, xx "
-      "xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx "
-      "xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx "
-      "xx xx xx xx xx xx xx [[ .P .R .I .S .O .N @@ .C .E .L .L .S ]] xx ,, ,, xx xx xx xx xx xx xx xx "
-      "xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx ,, ,, xx xx xx xx xx xx xx xx "
-      "xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx xx xx xx xx xx xx xx "
-      "xx xx ,, xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx "
-      "xx xx ,, xx xx xx xx ,, xx ,, xx ,, xx xx xx ,, ,, ,, xx ,, ,, ,, xx ,, ,, ,, xx xx xx xx xx xx "
-      "xx ,, ,, .. ,, ,, ,, ,, ,, ,, ,, ,, xx xx xx ,, ,, ,, xx ,, ,, ,, xx ,, ,, ,, xx xx xx xx xx xx "
-      "xx x! ,, xx xx xx xx xx xx xx xx xx x! ee xx xx ,, xx xx xx ,, xx xx xx ,, xx xx xx ,, ,, ,, xx "
-      "xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ee ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx "
-      "xx x! .. xx xx xx xx xx xx xx xx xx x! ee xx xx ,, xx xx xx ,, xx xx xx ,, xx xx xx ,, ,, ,, xx "
-      "xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx xx xx ,, ,, ,, xx ,, ,, ,, xx ,, ,, ,, xx xx xx xx xx xx "
-      "xx ,, xx ,, xx xx xx ,, xx ,, xx ,, xx xx xx ,, ,, ,, xx ,, ,, ,, xx ,, ,, ,, xx xx xx xx xx xx "
-      "xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx "
-))
+  "xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx "
+  "xx ,, ,, ,, xx xx xx xx xx ,, xx ,, xx xx xx ,, ,, ,, xx ,, ,, ,, xx ,, ,, ,, xx xx xx xx xx xx "
+  "xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx xx xx ,, ,, ,, xx ,, ,, ,, xx ,, ,, ,, xx xx xx xx xx xx "
+  "xx ,, ,, ,, xx xx xx ,, ,, ,, ,, ,, xx ee xx xx ,, xx xx xx ,, xx xx xx ,, xx xx xx ,, ,, ,, xx "
+  "xx ,, ,, ,, xx xx ,, ,, ,, x! ,, ,, ,, ee ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx "
+  "xx ,, ,, ,, xx xx xx ,, ,, ,, ,, ,, xx ee xx xx ,, xx xx xx ,, xx xx xx ,, xx xx xx ,, ,, ,, xx "
+  "xx ,, ,, ,, xx xx xx ,, ,, ,, ,, ,, xx xx xx ,, ,, ,, xx ,, ,, ,, xx ,, ,, ,, xx xx xx xx xx xx "
+  "xx ,, ,, ,, xx xx xx xx xx ,, xx ,, xx xx xx ,, ,, ,, xx ,, ,, ,, xx ,, ,, ,, xx xx xx xx xx xx "
+  "xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx "
+  ))
 
 ;;----------------------------------------------------------------------------
 ;; NPC's
@@ -60,47 +37,92 @@
  nil ; neighbors
 
  (list ; objects
-  (put (mk-ladder-up 'p_glasdrin 2 2) 28 14)
+
+  (put (mk-monman) 0 0)
+
+  (put (mk-ladder-up 'p_glasdrin 2 2) 6 4)
+  
+  ;; store room
+  (put (mk-locked-door) 6 2)
+  (put (mk-chest
+        'burn-trap
+        (list (list 10 t_food)
+              )) 1 1)
+  (put (mk-chest
+        'burn-trap
+        (list (list 1 t_cure_potion)
+              (list 1 t_heal_potion)
+              )) 2 1)
+  (put (mk-chest
+        'burn-trap
+        (list (list 10 t_arrow)
+              )) 1 2)
+  (put (mk-chest
+        'burn-trap
+        (list (list 10 t_bolt)
+              )) 2 7)
+  (put (mk-chest
+        'burn-trap
+        (list (list 1 t_vas_mani_scroll)
+              )) 3 7)
+  (put (mk-chest
+        'burn-trap
+        (list (list 10 sulphorous_ash)
+              (list 5 garlic)
+              (list 5 ginseng)
+              )) 3 6)
+
+  ;; rats in store room
+  (put (spawn-pt 'rat) 1 1)
+  (put (spawn-pt 'rat) 1 3)
+  (put (spawn-pt 'rat) 2 4)
+  (put (spawn-pt 'rat) 3 7)
+  (put (spawn-pt 'rat) 1 6)
+  (put (spawn-pt 'rat) 4 2)
+
+  ;; Oglah's room
+  (put (mk-locked-door) 6 6)
+
+  ;; portcullises
+  (put (kern-tag 'pp1 (mk-portcullis)) 12 4)
+  (put (kern-tag 'pp2 (mk-portcullis)) 14 4)
+
+  ;; energy fields for zorn
+  (put (kern-mk-obj F_energy_perm 1) 26 4)
+  (put (kern-mk-obj F_energy_perm 1) 28 3)
+  (put (kern-mk-obj F_energy_perm 1) 28 4)
+  (put (kern-mk-obj F_energy_perm 1) 28 5)
+  (put (kern-mk-obj F_energy_perm 1) 29 3)
+  (put (kern-mk-obj F_energy_perm 1) 29 5)
+  (put (kern-mk-obj F_energy_perm 1) 30 3)
+  (put (kern-mk-obj F_energy_perm 1) 30 4)
+  (put (kern-mk-obj F_energy_perm 1) 30 5)
 
   ;; cell doors
-  (put (kern-tag 'pp1 (mk-portcullis)) 12 27)
-  (put (kern-tag 'pp2 (mk-portcullis)) 14 27)
-  (put (kern-tag 'pp3 (mk-portcullis)) 16 26)
-  (put (kern-tag 'pp4 (mk-portcullis)) 20 26)
-  (put (kern-tag 'pp5 (mk-portcullis)) 24 26)
-  (put (kern-tag 'pp6 (mk-portcullis)) 16 28)
-  (put (kern-tag 'pp7 (mk-portcullis)) 20 28)
-  (put (kern-tag 'pp8 (mk-portcullis)) 24 28)
+  (put (mk-locked-windowed-door) 16 3)
+  (put (mk-locked-windowed-door) 20 3)
+  (put (mk-locked-windowed-door) 24 3)
+  (put (mk-locked-windowed-door) 16 5)
+  (put (mk-locked-windowed-door) 20 5)
+  (put (mk-locked-windowed-door) 24 5)
+  (put (mk-locked-door)  27 4)
 
   ;; levers
-  (put (mk-lever 'pp1) 1 30)
-  (put (mk-lever 'pp2) 3 30)
-  (put (mk-lever 'pp3) 7 24)
-  (put (mk-lever 'pp4) 9 24)
-  (put (mk-lever 'pp5) 11 24)
-  (put (mk-lever 'pp6) 7 30)
-  (put (mk-lever 'pp7) 9 30)
-  (put (mk-lever 'pp8) 11 30)
+  (put (mk-lever 'pp1) 11 1)
+  (put (mk-lever 'pp2) 11 7)
 
   ;; prisoners
-  (put (mk-gholet) 24 24)
+  (put (mk-gholet) 24 1)
+  (put (mk-npc 'zorn 8) 29 4)
+  (put (mk-npc 'footpad 8) 16 7)
 
-  ;; doors
-  (put (mk-door) 2 23)
-  (put (mk-locked-door) 6 25)
-  (put (mk-locked-door) 6 29)
-  (put (mk-locked-door) 27 27)
-
-  (put (kern-mk-obj F_energy_perm 1) 26 27)
+  ;; guards
+  (put (guard-pt 'halberdier) 9 1)
+  (put (guard-pt 'halberdier) 9 7)
 
   )
 
- nil ; hooks
- (list  ;; edge entrances
-  (list east  0 9)
-  (list south 9 0) 
-  (list north 9 18)
-  (list west  18 9)
-  )
+ (list 'on-entry-to-dungeon-room) ; on-entry hook(s)
+ nil ; edge entrances
  )
 

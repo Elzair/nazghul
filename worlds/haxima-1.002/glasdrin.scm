@@ -128,7 +128,7 @@
   (put (mk-bed) 19 14)
 
   ;; ladder down to prison
-  (put (mk-ladder-down 'p_prison 28 14) 2 2)
+  (put (mk-ladder-down 'p_prison 6 4) 2 2)
 
   )
 

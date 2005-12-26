@@ -178,6 +178,11 @@
 (define gs-altar (mk-zone 27 1 3 3))
 
 ;;----------------------------------------------------------------------------
+;; Prison ('neath Glasdrin)
+(define (mk-zone x y w h) (list 'p_engineers_hut x y w h))
+(define prison-hall (mk-zone 7 2 5 5))
+
+;;----------------------------------------------------------------------------
 ;; Engineer's Hut
 (define (mk-zone x y w h) (list 'p_engineers_hut x y w h))
 (define eng-bed (mk-zone 16 15 1 1))
@@ -279,3 +284,4 @@
 (define ph-tbl3 (mk-zone 16  3  1  1))
 (define ph-medik (mk-zone 13 14 5  4))
 (define ph-arms (mk-zone   1 14 4  4))
+
