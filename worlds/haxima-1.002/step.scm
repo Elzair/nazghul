@@ -10,7 +10,6 @@
 ;; the optional args.
 ;;----------------------------------------------------------------------------
 (define (step-trig-exec ktrig kbeing)
-  (display "step-trig-exec")(newline)
   (let ((trg (gob ktrig)))
     (if (trig-invoke trg kbeing)
         (kern-obj-remove ktrig))))

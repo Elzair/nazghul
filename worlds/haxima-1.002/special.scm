@@ -56,3 +56,13 @@
 ;; Luximene begins the game as a Lich King, when defeated he drops his skull,
 ;; which can be used with the Necromancer to summon his shade.
 (mk-obj-type 't_lich_skull "King Luximenes skull" s_magic layer-item obj-ifc)
+
+;; grow -- trigger hook fx to create items (eg, growing reagents, hence the name)
+(define (grow-trig ktrig ktype-tag dice)
+  (println "grow-trig")
+  (println "  ktrig=" ktrig)
+  (println "  ktype-tag=" ktype-tag)
+  (println "  dice=" dice)
+  (kern-obj-put-at (kern-mk-obj (eval ktype-tag) (kern-dice-roll 
+                                       dice))
+                   (kern-obj-get-location ktrig)))

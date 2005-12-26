@@ -645,11 +645,23 @@
 
 (define (in-quas-corp  caster)
   (define (repel kchar)
-    (kern-char-set-fleeing kchar #t))
+    (kern-log-msg (kern-obj-get-name kchar) " flees in terror!")
+    (kern-char-set-fleeing kchar #t)
+    )
+  (define (try-repel kchar)
+    (let ((roll (kern-dice-roll "1d20")))
+      (if (> roll 14)
+          (repel kchar)
+          )))
   (let ((foes (all-hostiles caster)))
-    (cond ((null? foes) (kern-print "No hostiles here!\n"))
+    (cond ((null? foes) 
+           (kern-print "No hostiles here!\n")
+           result-no-target
+           )
           (else
-           (map repel foes)))))
+           (map try-repel foes)
+           result-ok
+           ))))
   
 
 (define (in-quas-wis  caster)

@@ -1183,7 +1183,6 @@
          (signal-kobj kmm 'on kmm nil))
        (kplace-get-objects-of-type kplace t_monman)))
        
-
 ;; mk-dungeon-room -- make a 19x19 dungeon room (simplified form of
 ;; kern-mk-place)
 (define (mk-dungeon-room tag name terrain . objects)
