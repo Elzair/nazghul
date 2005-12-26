@@ -136,6 +136,7 @@
 
     (list  "=="   t_bridge_WE)          ;; "east-west bridge"
     (list  "=|"   t_bridge_NS)          ;; "east-west bridge"
+    (list  "=!"   t_lava_bridge_NS)
     (list  "vv"   t_chasm)              ;; "chasm"
 
     (list  "/0"   t_trail_0)            ;; "trail"

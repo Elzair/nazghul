@@ -93,8 +93,9 @@
    (list 't_counter_2x1_e   "counter"       pclass-wall      s_counter_2x1_e   1 0 nil)
    (list 't_counter_1x1     "counter"       pclass-wall      s_counter_1x1     1 0 nil)
 
-   (list 't_bridge_WE       "bridge"       pclass-bridge    s_ew_bridge        1 0 nil)
-   (list 't_bridge_NS       "bridge"       pclass-bridge    s_ns_bridge        1 0 nil)
+   (list 't_bridge_WE       "bridge"        pclass-bridge    s_ew_bridge       1 0 nil)
+   (list 't_bridge_NS       "bridge"        pclass-bridge    s_ns_bridge       1 0 nil)
+   (list 't_lava_bridge_NS  "bridge"        pclass-bridge    s_ns_bridge       1 0 nil)
    (list 't_chasm           "chasm"         pclass-space     s_null            1 0 nil)
 
    (list 't_trail_0         "trail"         pclass-grass     s_trail_0         1 0 nil)
