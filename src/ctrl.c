@@ -40,9 +40,12 @@ int G_latency_start = 0;
 int G_turnaround_start = 0;
 int G_turnaround  = 0;
 
+static int unshift[] = { KEY_NORTH, KEY_SOUTH, KEY_EAST, KEY_WEST };
 
 static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
 {
+        int dir;
+
         class player_party *party = (class player_party*)kh->data;
 
         Session->subject = player_party;
@@ -58,11 +61,26 @@ static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
         case KEY_SOUTH:
         case KEY_WEST:
         {
-                int dir = keyToDirection(key);
+                dir = keyToDirection(key);
                 party->move(directionToDx(dir), directionToDy(dir));
                 mapSetDirty();
         }
         break;
+
+        case KEY_SHIFT_NORTH:
+        case KEY_SHIFT_EAST:
+        case KEY_SHIFT_SOUTH:
+        case KEY_SHIFT_WEST:
+
+                // ----------------------------------------------------
+                // Pan the camera.
+                // ----------------------------------------------------
+                        
+                key = unshift[(key - KEY_SHIFT_NORTH)];
+                dir = keyToDirection(key);
+                mapMoveCamera(directionToDx(dir), directionToDy(dir));
+                mapSetDirty();
+                break;
 
         case 'a':
                 cmdAttack();
@@ -719,7 +737,6 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
         extern int G_latency_start;
         int dir;
         class Character *character = (class Character *) kh->data;
-        static int unshift[] = { KEY_NORTH, KEY_SOUTH, KEY_EAST, KEY_WEST };
         class Object *portal;
         class Character *solo_member;
         enum MoveResult move_result;

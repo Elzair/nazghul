@@ -1286,9 +1286,11 @@ static void mapPaintProjectile(SDL_Rect *rect, struct sprite *sprite,
 
 	screenUpdate(rect);
 
-	// Pause. Doing nothing is too fast, SDL_Delay is too slow, so use the
-	// custom calibrated busywait.
-	busywait(dur);
+	// Pause. Doing nothing is too fast, SDL_Delay is too slow, and the
+	// custom calibrated busywait apparently isn't calibrated very
+	// well. Too fast is probably the least of the evils.
+	SDL_Delay(dur);
+        //busywait(dur);
 
 	// Erase the missile by blitting the background
 	screenBlit(surf, NULL, rect);
@@ -1428,13 +1430,15 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
 			Py = place_wrap_y(place, ((rect.y - Sy) / tile_h + Oy));
 
                         if (oPx != Px || oPy != Py) {
+
+                                if (mapTileIsVisible(Px, Py) && sprite)
+                                        mapPaintProjectile(&rect, sprite, surf, 10);
+
                                 if (!missile->enterTile(place, Px, Py)) {
                                         goto done;
                                 }
-                        }
 
-                        if (mapTileIsVisible(Px, Py) && sprite)
-                                mapPaintProjectile(&rect, sprite, surf, 1);
+                        }
 
 			if (P > 0) {
 				rect.x += Xincr;
@@ -1461,13 +1465,14 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
 			Py = place_wrap_y(place, ((rect.y - Sy) / tile_h + Oy));
 
                         if (oPx != Px || oPy != Py) {
+
+                                if (mapTileIsVisible(Px, Py) && sprite)
+                                        mapPaintProjectile(&rect, sprite, surf, 10);
+
                                 if (!missile->enterTile(place, Px, Py)) {
                                         goto done;
                                 }
                         }
-
-                        if (mapTileIsVisible(Px, Py) && sprite)
-                                mapPaintProjectile(&rect, sprite, surf, 1);
 
 			if (P > 0) {
 				rect.x += Xincr;
