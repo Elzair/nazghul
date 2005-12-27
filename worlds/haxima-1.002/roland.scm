@@ -157,8 +157,10 @@
                   s_knight            ; sprite
                   faction-men         ; starting alignment
                   16 10 16            ; str/int/dex
-                  2 1                 ; hp mod/mult
-                  0 0                 ; mp mod/mult
+                  pc-hp-off  ; hp bonus
+                  pc-hp-gain ; hp per-level bonus
+                  0 ; mp off
+                  0 ; mp gain
                   30 0 9 5            ; hp/xp/mp/lvl
                   #f                  ; dead
                   'roland-conv        ; conv

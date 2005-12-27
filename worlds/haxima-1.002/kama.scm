@@ -149,8 +149,10 @@
      s_orc     ; sprite
      faction-men      ; starting alignment
      2 0 10            ; str/int/dex
-     3 2              ; hp mod/mult
-     0 0              ; mp mod/mult
+     pc-hp-off  ; hp bonus
+     pc-hp-gain ; hp per-level bonus
+     0 ; mp off
+     0 ; mp gain
      (max-hp kama-species kama-occ kama-lvl 3 2) ; hp
      0                   ; xp
      (max-mp kama-species kama-occ kama-lvl 0 0) ; mp

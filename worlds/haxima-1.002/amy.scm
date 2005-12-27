@@ -104,8 +104,10 @@
     s_townswoman     ; sprite
     faction-men      ; starting alignment
     2 4 4            ; str/int/dex
-    0 2              ; hp mod/mult
-    0 1              ; mp mod/mult
+    pc-hp-off  ; hp bonus
+    pc-hp-gain ; hp per-level bonus
+    1 ; mp off
+    1 ; mp gain
     (max-hp amy-species amy-occ amy-lvl 0 0) ; hp
     0                   ; xp
     (max-mp amy-species amy-occ amy-lvl 0 0) ; mp

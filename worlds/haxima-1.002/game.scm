@@ -155,6 +155,12 @@
 (define up        9)
 (define down      10)
 
+;; Player character bonuses
+(define pc-hp-off  20)
+(define pc-hp-gain 10)
+(define pc-mp-off  2)
+(define pc-mp-gain 1)
+
 ;; NPC activities
 (define (isdrunk? knpc)
   (string=? "drunk" (kern-obj-get-activity knpc)))

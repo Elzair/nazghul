@@ -119,8 +119,10 @@
     s_companion_wizard ; sprite
     faction-men      ; starting alignment
     0 5 0            ; str/int/dex
-    3 2              ; hp mod/mult
-    3 2              ; mp mod/mult
+    (/ pc-hp-off 2)  ; hp bonus
+    (/ pc-hp-gain 2) ; hp per-level bonus
+    pc-mp-off        ; mp bonus
+    pc-mp-gain       ; mp per-level bonus
     (max-hp kalc-species kalc-occ kalc-lvl 3 2) ; hp
     (lvl-xp kalc-lvl)  ; xp
     (max-mp kalc-species kalc-occ kalc-lvl 3 2) ; mp

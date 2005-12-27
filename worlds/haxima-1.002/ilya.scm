@@ -108,22 +108,9 @@
                 (say knpc "If you keep her I will find you when I grow up.")
                 (kern-conv-end)))))))
 
-;;----------------------------------------------------------------------------
-;; Join
-;;
-;; Ilya will join the player if he finishes her quest and gets permission from
-;; Gregor. (NOTE: need to setup a flag in the player gob to mark when he gets
-;; permission).
-;;----------------------------------------------------------------------------
 (define (ilya-join knpc kpc)
-  (let ((ilya (kobj-gob-data knpc)))
-    (if (ilya-quest-done? ilya)
-        (begin
-          (say knpc "Will you teach me magic?")
-          (if (kern-conv-get-yes-no? kpc)
-              (say knpc "Ok, but first ask my Grandpa Gregor.")
-              (say knpc "Then I can't join you. I must study!")))
-        (say knpc "I'm just a little girl, silly!"))))
+  (say knpc "I'm just a little girl, silly!")
+  )
 
 ;;----------------------------------------------------------------------------
 ;; Animals
@@ -167,6 +154,11 @@
       ;; no - the player does not like animals
       (say knpc "Well don't hurt them!")))
 
+(define (ilya-fire knpc kpc)
+  (say knpc "Making fire is easy. Just mix black pearl and sulphos..."
+       "surephous... that ashy stuff you know? "
+       "And say Vas Flam!"))
+
 ;;----------------------------------------------------------------------------
 ;; Conv
 ;;----------------------------------------------------------------------------
@@ -203,9 +195,10 @@
        (method 'home (lambda (knpc kpc) (say knpc "Our farm was north and south through the woods.")))
        (method 'spid (lambda (knpc kpc) (say knpc "There are lots of spiders in the woods around here.")))
        (method 'wood (lambda (knpc kpc) (say knpc "Grandpa says to stay out of the woods.")))
-       (method 'fire (lambda (knpc kpc) (say knpc "Making fire is easy. Just mix black pearl and sulphos..."
-                                             "surephous... that ashy stuff you know? "
-                                             "And say Vas Flam!")))
+       
+       (method 'fire ilya-fire)
+       (method 'vas ilya-fire)
+       (method 'flam ilya-fire)
        (method 'greg (lambda (knpc kpc) (say knpc "He's my grandpa.")))
        (method 'join ilya-join)
        ))
