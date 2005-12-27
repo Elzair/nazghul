@@ -88,10 +88,10 @@
    (list 't_pillar          "pillar"        pclass-wall      s_pillar          1 0 nil)
    (list 't_false_pillar    "pillar"        pclass-grass     s_pillar          1 0 nil)
 
-   (list 't_counter_2x1_w   "counter"       pclass-wall      s_counter_2x1_w   1 0 nil)
-   (list 't_counter_2x1_c   "counter"       pclass-wall      s_counter_2x1_c   1 0 nil)
-   (list 't_counter_2x1_e   "counter"       pclass-wall      s_counter_2x1_e   1 0 nil)
-   (list 't_counter_1x1     "counter"       pclass-wall      s_counter_1x1     1 0 nil)
+   (list 't_counter_2x1_w   "counter"       pclass-boulder   s_counter_2x1_w   1 0 nil)
+   (list 't_counter_2x1_c   "counter"       pclass-boulder   s_counter_2x1_c   1 0 nil)
+   (list 't_counter_2x1_e   "counter"       pclass-boulder   s_counter_2x1_e   1 0 nil)
+   (list 't_counter_1x1     "counter"       pclass-boulder   s_counter_1x1     1 0 nil)
 
    (list 't_bridge_WE       "bridge"        pclass-bridge    s_ew_bridge       1 0 nil)
    (list 't_bridge_NS       "bridge"        pclass-bridge    s_ns_bridge       1 0 nil)

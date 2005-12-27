@@ -66,7 +66,6 @@
         (yes? kpc)
         (say knpc "Yes, just like Absalot!"))))
 
-
 (define (abe-absa knpc kpc)
   (say knpc "Not many know that beneath Absalot is an older city. "
        "The ruins beneath Absalot are very similar to the ruins here in Green Tower. "
@@ -78,7 +77,7 @@
       (say knpc "There are many runes. Perhaps if you brought me an example...?")))
 
 (define (abe-demo knpc kpc)
-  (say knpc "The Demon Gate was sealed shut by the Wise over 500 years ago. "
+  (say knpc "The Demon Gate was sealed shut by the Wise long ago. "
        "It's location was blotted from all records, but legend puts it somewhere to the north. "
        "Are you looking for the other Runes?")
   (if (yes? kpc)
@@ -123,7 +122,6 @@
 
 (define (abe-bye knpc kpc)
   (say knpc "Let me know if you find any more ruins!"))
-
 
 (define abe-conv
   (ifc green-tower-conv

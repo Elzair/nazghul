@@ -291,3 +291,9 @@
 (define ph-medik (mk-zone 13 14 5  4))
 (define ph-arms (mk-zone   1 14 4  4))
 
+;;----------------------------------------------------------------------------
+;; Kun
+(define (mk-zone x y w h) (list 'p_kun x y w h))
+(define cantina-counter (mk-zone 4 5 3 1))
+(define cantina (mk-zone 1 2 9 7))
+(define black-market (mk-zone 9 14 9 3))

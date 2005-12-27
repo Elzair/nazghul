@@ -87,6 +87,7 @@
 (load "crypt.scm")
 (load "ancient-derelict.scm")
 (load "road_to_absalot.scm")
+(load "kun.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Characters
@@ -100,8 +101,10 @@
   s_wanderer    ; sprite
   faction-player        ; starting alignment
   5 5 5                ; str/int/dex
-  6 2                   ; hp mod/mult
-  2 0                  ; mp mod/mult
+  pc-hp-off
+  pc-hp-gain
+  pc-mp-off
+  pc-mp-gain
   29 0 3 1              ; hp/xp/mp/lvl
   #f                    ; dead
   nil                   ; conv
