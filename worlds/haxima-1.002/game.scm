@@ -167,6 +167,9 @@
 (define (isworking? knpc)
   (string=? "working" (kern-obj-get-activity knpc)))
 
+;; Spell constants
+(define base-scroll-cost 25) ;; gold pieces per level of scroll's spell
+
 ;; Some of the following are order-dependent
 (load "loc.scm")
 (load "kobj.scm")

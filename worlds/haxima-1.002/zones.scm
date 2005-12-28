@@ -297,6 +297,7 @@
 (define cantina-counter (mk-zone 4 5 3 1))
 (define cantina (mk-zone 1 2 9 7))
 (define black-market (mk-zone 9 14 9 3))
+(define black-market-counter (mk-zone 9 16 9 3))
 (define campfire-1 (mk-zone 1 14 1 1))
 (define campfire-2 (mk-zone 2 13 1 1))
 (define campfire-3 (mk-zone 2 15 1 1))
