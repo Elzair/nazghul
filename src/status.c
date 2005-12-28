@@ -33,6 +33,7 @@
 #include "foogod.h"
 #include "mmode.h"
 #include "cmdwin.h"
+#include "session.h"
 
 #include <stdio.h>
 #include <assert.h>
@@ -43,7 +44,9 @@
 #define Y_TO_LINE(Y) (((Y) - Status.screenRect.y) / TILE_H)
 #define N_LINES Status.numLines	/* (STAT_H / TILE_H) */
 
-#define TALL_H (SCREEN_H - 4 * BORDER_H - 6 * ASCII_H)
+//#define TALL_H (SCREEN_H - 4 * BORDER_H - 6 * ASCII_H)
+#define TALL_H (10*LINE_H)
+#define STAT_H (1*LINE_H)
 
 /*
  * Armaments - R)eady-player
@@ -138,7 +141,7 @@ static bool stat_filter_ready_arms(struct inv_entry *ie, void *cookie)
                 
         /* Is one already readied by the current party member? */
         if (ie->ref && 
-            player_party->getMemberAtIndex(Status.pcIndex)->
+            Session->player_party->getMemberAtIndex(Status.pcIndex)->
             hasReadied((class ArmsType *)ie->type)) {
                 return true;
         }
@@ -187,18 +190,26 @@ static void switch_to_tall_mode(void)
 
 static void switch_to_short_mode(void)
 {
-  int num_in_party = player_party->getSize();
-  int party_height = (num_in_party * TILE_H);
+        int num_in_party = 0;
+        int party_height = 0;
+ 
+        if (Session && Session->player_party) {
+                num_in_party = Session->player_party->getSize();
+        } else {
+                num_in_party = 1; /* sane default */
+        }
 
+        party_height = (num_in_party * TILE_H);
+       
 	if (Status.screenRect.h == party_height)
 		return;
-
-    Status.numLines     = num_in_party;
-    Status.screenRect.h = party_height;
-
-    foogod_set_y(STAT_Y + Status.screenRect.h + BORDER_H);
-    //console_set_y(foogod_get_y() + FOOGOD_H);
-
+        
+        Status.numLines     = num_in_party;
+        Status.screenRect.h = party_height;
+        
+        foogod_set_y(STAT_Y + Status.screenRect.h + BORDER_H);
+        //console_set_y(foogod_get_y() + FOOGOD_H);
+        
 	foogodRepaint();
 	consoleRepaint();
 	screen_repaint_frame();
@@ -211,7 +222,7 @@ int statusInit()
 	Status.screenRect.x = STAT_X;
 	Status.screenRect.y = STAT_Y;
 	Status.screenRect.w = STAT_W;
-	Status.screenRect.h = player_party->getSize() * TILE_H;
+	Status.screenRect.h = STAT_H;
 
 	Status.titleRect.x = STAT_X;
 	Status.titleRect.y = 0;
@@ -258,7 +269,7 @@ static void myShowMember(void)
 	rect = Status.screenRect;
 	pad = (STAT_W / ASCII_W) - 17;
 	assert(pad >= 1);
-	pm = player_party->getMemberAtIndex(Status.pcIndex);
+	pm = Session->player_party->getMemberAtIndex(Status.pcIndex);
 	assert(pm);
 
 	/* Show the sex symbol */
@@ -358,7 +369,7 @@ static void stat_show_container()
 			avail -= ie->ref;
 			assert(avail >= 0);
 			if (ie->ref && 
-                            player_party->getMemberAtIndex(Status.pcIndex)->
+                            Session->player_party->getMemberAtIndex(Status.pcIndex)->
                             hasReadied((class ArmsType *)ie->type)) {
 				inUse = 1;
 			}
@@ -500,7 +511,8 @@ static void myShowParty(void)
 	Status.lineRect.y = Status.screenRect.y;
 	Status.lineRect.w = Status.screenRect.w - TILE_W;
 
-	player_party->forEachMember(myShowPCInPartyView, 0);
+        if (Session && Session->player_party)
+                Session->player_party->forEachMember(myShowPCInPartyView, 0);
 
 }
 
@@ -510,14 +522,14 @@ static void myScrollParty(enum StatusScrollDir dir)
 	case ScrollDown:
 	case ScrollRight:
 	case ScrollPageDown:
-		Status.pcIndex = (Status.pcIndex + 1) % player_party->getSize();
+		Status.pcIndex = (Status.pcIndex + 1) % Session->player_party->getSize();
 		break;
 	case ScrollUp:
 	case ScrollLeft:
 	case ScrollPageUp:
 		Status.pcIndex =
-		    (Status.pcIndex + player_party->getSize() -
-		     1) % player_party->getSize();
+		    (Status.pcIndex + Session->player_party->getSize() -
+		     1) % Session->player_party->getSize();
 		break;
 	}
 }
@@ -525,7 +537,7 @@ static void myScrollParty(enum StatusScrollDir dir)
 static int myScrollMemberZtatsHorz(int d)
 {
 
-	if (d > 0 && Status.pcIndex < (player_party->getSize() - 1)) {
+	if (d > 0 && Status.pcIndex < (Session->player_party->getSize() - 1)) {
 		Status.pcIndex++;
 		return 0;
 	}
@@ -550,11 +562,11 @@ static void myScrollZtatsHorz(int d)
 		switch (Status.ztatsView) {
 
 		case ViewMember:
-			Status.pcIndex = (d > 0 ? 0 : player_party->getSize() - 1);
+			Status.pcIndex = (d > 0 ? 0 : Session->player_party->getSize() - 1);
 			break;
 
 		default:
-                        Status.container = player_party->inventory;
+                        Status.container = Session->player_party->inventory;
                         Status.filter = &ZtatsFilters[Status.ztatsView];
                         Status.maxLine = 
                                 Status.container->filter_count(Status.filter) -
@@ -566,7 +578,7 @@ static void myScrollZtatsHorz(int d)
 	Status.maxLine = max(Status.maxLine, 0);
 
 	if (Status.ztatsView == ViewMember)
-		myRepaintTitle(player_party->getMemberAtIndex(Status.pcIndex)->getName());
+		myRepaintTitle(Session->player_party->getMemberAtIndex(Status.pcIndex)->getName());
 	else
 		myRepaintTitle(ZtatsTitles[Status.ztatsView]);
 }
@@ -1077,7 +1089,7 @@ void statusSetMode(enum StatusMode mode)
 		break;
 	case Ztats:
 		switch_to_tall_mode();
-		myRepaintTitle(player_party->
+		myRepaintTitle(Session->player_party->
                                getMemberAtIndex(Status.pcIndex)->getName());
 		Status.ztatsView = ViewMember;
 		Status.selectedEntry = 0;
@@ -1087,11 +1099,11 @@ void statusSetMode(enum StatusMode mode)
 		break;
 	case Ready:
 		switch_to_tall_mode();
-		myRepaintTitle(player_party->
+		myRepaintTitle(Session->player_party->
                                getMemberAtIndex(Status.pcIndex)->getName());
 		Status.topLine = 0;
 		Status.curLine = 0;
-		Status.container = player_party->inventory;
+		Status.container = Session->player_party->inventory;
                 Status.filter = &stat_ready_arms_filter;
 		Status.maxLine = Status.container->
                         filter_count(Status.filter) - Status.numLines;
@@ -1104,7 +1116,7 @@ void statusSetMode(enum StatusMode mode)
 		myRepaintTitle("select");
 		Status.topLine = 0;
 		Status.curLine = 0;
-		Status.container = player_party->inventory;
+		Status.container = Session->player_party->inventory;
                 Status.filter = &ZtatsFilters[ViewItems];
 		Status.maxLine = Status.container->
                         filter_count(Status.filter) - Status.numLines;
@@ -1131,7 +1143,7 @@ void statusSetMode(enum StatusMode mode)
 		myRepaintTitle("reagents");
 		Status.topLine = 0;
 		Status.curLine = 0;
-		Status.container = player_party->inventory;
+		Status.container = Session->player_party->inventory;
                 Status.filter = &ZtatsFilters[ViewReagents];
 		Status.maxLine = Status.container->
                         filter_count(Status.filter) - Status.numLines;
@@ -1168,7 +1180,7 @@ void *statusGetSelected(enum StatusSelection sel)
 {
 	switch (sel) {
 	case Character:
-		return player_party->getMemberAtIndex(Status.pcIndex);
+		return Session->player_party->getMemberAtIndex(Status.pcIndex);
 	case InventoryItem:
 	case Reagents:
 		return Status.selectedEntry;

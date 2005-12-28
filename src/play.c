@@ -147,10 +147,10 @@ static void play_loop(void)
                 // death and the Quit condition when it comes back.
                 // ------------------------------------------------------------
 
-                if (player_party->isCamping() && Session->camping_proc) {
+                if (Session->player_party->isCamping() && Session->camping_proc) {
                         closure_exec(Session->camping_proc, "pp", 
-                                     player_party, Place);
-                        if (player_party->allDead()) {
+                                     Session->player_party, Place);
+                        if (Session->player_party->allDead()) {
                                 play_print_end_of_game_prompt();
                                 break;
                         }
@@ -204,7 +204,7 @@ static void play_loop(void)
                 // ------------------------------------------------------------
 
                 times[3] = SDL_GetTicks();
-                if (player_party->allDead()) {
+                if (Session->player_party->allDead()) {
                         play_print_end_of_game_prompt();
                         break;
                 }
@@ -230,7 +230,7 @@ static void play_loop(void)
                         dec_magic_negated(session_ticks_per_turn());
                         dec_xray(session_ticks_per_turn());
                         
-                        player_party->advanceTurns(session_ticks_per_turn());
+                        Session->player_party->advanceTurns(session_ticks_per_turn());
 
                         int oldHour = Session->clock.hour;
                         clock_advance(session_ticks_per_turn());

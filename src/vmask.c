@@ -52,7 +52,7 @@ static void vmask_dump(struct vmask *vmask)
 {
         int x, y, i = 0;
 
-        dbg("vmask_dump: %s\n", vmask_key(vmask));
+        //dbg("vmask_dump: %s\n", vmask_key(vmask));
 
         for (x = 0; x < VMASK_W; x++) {
                 printf("%d", x % 10);
@@ -107,7 +107,7 @@ static void vmask_delete(struct vmask *vmask)
 
 static void vmask_insert(struct vmask *vmask)
 {
-        //printf("vmask_insert: %s\n", vmask_key(vmask));
+        //dbg("vmask_insert: %s\n", vmask_key(vmask));
         list_add(&vmask_q, &vmask->list);
         tree_insert(&vmask_root, &vmask->tree);
         vmask_n_entries++;
@@ -149,7 +149,7 @@ static void vmask_los(struct vmask *vmask, struct place *place,
         int end_y   = start_y + VMASK_H;
 	int index   = 0;
 
-        //dbg("vmask_los: %s\n", vmask_key(vmask));
+        ////dbg("vmask_los: %s\n", vmask_key(vmask));
 
 	for (y = start_y; y < end_y; y++) {
 		for (x = start_x; x < end_x; x++) {

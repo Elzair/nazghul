@@ -48,7 +48,7 @@ static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
 
         class player_party *party = (class player_party*)kh->data;
 
-        Session->subject = player_party;
+        Session->subject = Session->player_party;
 
         cmdwin_flush();
         
@@ -233,7 +233,7 @@ void ctrl_party_ai(class Party *party)
 
         /* Check if this party is friendly to the player or if the player is
          * not around */
-	if (! are_hostile(party, player_party) ||
+	if (! are_hostile(party, Session->player_party) ||
             Place != party->getPlace()) {
 		// This party is friendly to the player, so just wander for now
 		// (later I'll add schedules).
@@ -244,8 +244,8 @@ void ctrl_party_ai(class Party *party)
         /* Check if the player is _on this spot_. Yes, this can happen under
          * current game rules. If a player enters a portal and an npc is on the
          * destination then... */
-	if (party->getX() == player_party->getX() && 
-            party->getY() == player_party->getY()) {
+	if (party->getX() == Session->player_party->getX() && 
+            party->getY() == Session->player_party->getY()) {
                 
                 struct move_info info;
                 struct combat_info cinfo;
@@ -256,8 +256,8 @@ void ctrl_party_ai(class Party *party)
                 info.y = party->getY();
                 info.dx = party->getDx();
                 info.dy = party->getDy();
-                info.px = player_party->getX();
-                info.py = player_party->getY();
+                info.px = Session->player_party->getX();
+                info.py = Session->player_party->getY();
                 info.npc_party = party;
                 
                 if (!info.dx && !info.dy)
@@ -279,7 +279,7 @@ void ctrl_party_ai(class Party *party)
 	/* Check if the player is in visible range */
 	d = place_walking_distance(party->getPlace(), party->getX(), 
                                    party->getY(),
-				   player_party->getX(), player_party->getY());
+				   Session->player_party->getX(), Session->player_party->getY());
 
 	if (d > party->getVisionRadius()) {
 		ctrl_wander(party);
@@ -290,7 +290,7 @@ void ctrl_party_ai(class Party *party)
 		return;
 	}
 
-	if (!party->gotoSpot(player_party->getX(), player_party->getY())) {
+	if (!party->gotoSpot(Session->player_party->getX(), Session->player_party->getY())) {
 		ctrl_wander(party);
 		return;
 	}
@@ -469,10 +469,10 @@ static void ctrl_attack_ui(class Character *character)
 
         // If in follow mode, when the leader attacks automatically switch to
         // turn-based mode.
-        if (player_party->getPartyControlMode() == PARTY_CONTROL_FOLLOW &&
-            player_party->getSize() > 1) {
+        if (Session->player_party->getPartyControlMode() == PARTY_CONTROL_FOLLOW &&
+            Session->player_party->getSize() > 1) {
                 log_msg("Switching from Follow to Round Robin Mode.\n");
-                player_party->enableRoundRobinMode();
+                Session->player_party->enableRoundRobinMode();
         }
 
         /* Have to calculate to-hit penalty before looping over weapons. If we
@@ -786,13 +786,13 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
                 // ----------------------------------------------------
                         
                 log_begin("Follow mode ");
-                if (player_party->getPartyControlMode() == 
+                if (Session->player_party->getPartyControlMode() == 
                     PARTY_CONTROL_FOLLOW) {
                         log_end("OFF");
-                        player_party->enableRoundRobinMode();
+                        Session->player_party->enableRoundRobinMode();
                 } else {
                         log_end("ON");
-                        player_party->enableFollowMode();
+                        Session->player_party->enableFollowMode();
                         if (! character->isLeader())
                                 character->endTurn();
                 }
@@ -813,11 +813,11 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
                 // ----------------------------------------------------
                         
                 solo_member = 
-                        player_party->getMemberAtIndex(key - SDLK_1);
+                        Session->player_party->getMemberAtIndex(key - SDLK_1);
                 if (solo_member != NULL             &&
                     !solo_member->isIncapacitated() &&
                     solo_member->isOnMap()) {
-                        player_party->enableSoloMode(solo_member);
+                        Session->player_party->enableSoloMode(solo_member);
                         character->endTurn();
                 }
                 break;
@@ -826,7 +826,7 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
                 // ----------------------------------------------------
                 // Exit solo mode.
                 // ----------------------------------------------------
-                player_party->enableRoundRobinMode();
+                Session->player_party->enableRoundRobinMode();
                 character->endTurn();
                 break;
 
@@ -930,7 +930,7 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
                 cmdQuit();
                 break;
         case 'r':
-                if (player_party->getPartyControlMode()==PARTY_CONTROL_FOLLOW)
+                if (Session->player_party->getPartyControlMode()==PARTY_CONTROL_FOLLOW)
                         cmdReady(NULL);
                 else
                         cmdReady(character);
@@ -1000,7 +1000,7 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
                 // Remove all party members.
                 // ----------------------------------------------------
 
-                player_party->removeMembers();
+                Session->player_party->removeMembers();
 
                 character->endTurn();
 

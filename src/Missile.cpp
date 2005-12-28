@@ -29,6 +29,7 @@
 #include "Field.h"
 #include "place.h"
 #include "player.h"
+#include "session.h"
 
 Missile::Missile(ArmsType*type)
         : Object(type)
@@ -61,10 +62,10 @@ bool Missile::enterTile(struct place *place, int x, int y)
         }
 
         // fugly hack...
-        if (player_party->getPlace() == place &&
-            player_party->getX() == x &&
-            player_party->getY() == y) {
-                struck = player_party;
+        if (Session->player_party->getPlace() == place &&
+            Session->player_party->getX() == x &&
+            Session->player_party->getY() == y) {
+                struck = Session->player_party;
                 hit = true;
                 return false;
         }

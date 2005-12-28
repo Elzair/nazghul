@@ -197,6 +197,9 @@ struct session {
          * wrong, I know. Be careful with it. */
         Being *subject;
 
+        /* The global, per-session player party */
+        class player_party *player_party;
+
         char show_boxes : 1;  /* draw red/green/yellow boxes around npcs */
 };
 
@@ -266,6 +269,8 @@ extern struct node *session_add_sched_char(struct session *session,
 extern void session_rm_sched_char(struct node *node);
 extern void session_synch_sched_chars(struct session *session);
 extern void session_intro_sched_chars(struct session *session);
+extern void session_set_player_party(struct session *session, 
+                                     class player_party *val);
 
 // Global session object.
 extern struct session *Session;

@@ -275,6 +275,12 @@ static int start_main_menu_session(void)
         FILE *file = NULL;
         char *fname="main-menu.scm";
 
+        /* blow the existing session, if any */
+        if (1 && Session) {
+                session_del(Session);
+                Session=NULL;
+        }
+
         /* Open the load file. */
         file = fopen(fname, "r");
         if (! file) {
@@ -323,13 +329,23 @@ static int start_main_menu_session(void)
         return -1;
 }
 
-static int save_file_exists(void)
+static int file_exists(char *fname)
 {
-        FILE *file = fopen("save.scm","r");
+        FILE *file = fopen(fname, "r");
         int ret = file ? 1:0;
         if (file)
                 fclose(file);
         return ret;
+}
+
+static int save_file_exists(void)
+{
+        return file_exists("save.scm");
+}
+
+static int tutorial_exists(void)
+{
+        return file_exists("tutorial.scm");
 }
 
 static bool main_menu_quit_handler(struct QuitHandler *kh)
@@ -375,10 +391,11 @@ static char *START_NEW_GAME="Start New Game";
 static char *JOURNEY_ONWARD="Journey Onward";
 static char *CREDITS="Credits";
 static char *QUIT="Quit";
+static char *TUTORIAL="Tutorial";
 
 static void main_menu(void)
 {
-        char *menu[4];
+        char *menu[5];
         int n_items = 0;
         struct KeyHandler kh;
 	struct ScrollerContext data;
@@ -403,15 +420,22 @@ static void main_menu(void)
 
 
  start_main_menu:
+
+        /* build menu strings */
         n_items = 0;
 
         if (save_file_exists()) {
                 menu[n_items] = JOURNEY_ONWARD;
                 n_items++;
-        }
+        } 
 
         menu[n_items] = START_NEW_GAME;
         n_items++;
+
+        if (tutorial_exists()) {
+                menu[n_items] = TUTORIAL;
+                n_items++;
+        }
 
         menu[n_items] = CREDITS;
         n_items++;
@@ -419,6 +443,7 @@ static void main_menu(void)
         menu[n_items] = QUIT;
         n_items++;
 
+        /* run menu in status browser */
         statusSetStringList(n_items, menu);
         statusSetMode(StringList);
 
@@ -430,6 +455,7 @@ static void main_menu(void)
 	eventHandle();
 	eventPopKeyHandler();
 
+        /* process user's selection */
         selection = (char*)data.selection;
 
         if (! selection) {
@@ -440,6 +466,9 @@ static void main_menu(void)
                 SAVEFILE="haxima.scm";
                 
         }
+        else if (! strcmp(selection, TUTORIAL)) {
+                SAVEFILE="tutorial.scm";
+        }
         else if (! strcmp(selection, JOURNEY_ONWARD)) {
                 SAVEFILE="save.scm";
         }
@@ -447,8 +476,9 @@ static void main_menu(void)
                 show_credits();
                 goto start_main_menu;
         }
-        else if (! strcmp(selection, QUIT))
+        else if (! strcmp(selection, QUIT)) {
                 exit(0);
+        }
         else {
                 fprintf(stderr, "Invalid selection: '%s'\n", selection);
                 exit(-1);
@@ -486,7 +516,13 @@ int main(int argc, char **argv)
 
         /* reset save file so main menu runs */
         SAVEFILE=0;
-        goto main_loop;
+
+        /* Still have some double-deallocations or something taking place on
+         * session teardown, so going through the main menu loop again is
+         * hazardous. Sad but true. I've burned half a day debugging this
+         * already, and these kind of bugs are real hard to find. Just exit the
+         * program and make the user re-start if he wants to keep playing. */
+        /*goto main_loop;*/
 
         tick_kill();
 

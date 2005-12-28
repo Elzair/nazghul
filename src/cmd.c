@@ -610,8 +610,8 @@ class Character *select_party_member(void)
 	enum StatusMode omode;
 	class Character *character;
 
-        if (1 == player_party->getSize()) {
-                return player_party->getMemberByOrder(0);
+        if (1 == Session->player_party->getSize()) {
+                return Session->player_party->getMemberByOrder(0);
         }
 
 	omode = statusGetMode();
@@ -798,10 +798,10 @@ bool cmdOpen(class Character * pc)
 		y = place_wrap_y(pc->getPlace(), 
                                  pc->getY() + directionToDy(dir));
 	} else {
-		x = place_wrap_x(player_party->getPlace(),
-                                 player_party->getX() + directionToDx(dir));
-		y = place_wrap_y(player_party->getPlace(),
-                                 player_party->getY() + directionToDy(dir));
+		x = place_wrap_x(Session->player_party->getPlace(),
+                                 Session->player_party->getX() + directionToDx(dir));
+		y = place_wrap_y(Session->player_party->getPlace(),
+                                 Session->player_party->getY() + directionToDy(dir));
 	}
 
         /* Check for a mechanism */
@@ -1000,21 +1000,21 @@ void cmdAttack(void)
         // Get the npc party being attacked
         info.dx = directionToDx(dir);
         info.dy =  directionToDy(dir);;
-        info.place = player_party->getPlace();
-        info.x = place_wrap_x(info.place, player_party->getX() + info.dx);
-        info.y = place_wrap_y(info.place, player_party->getY() + info.dy);
+        info.place = Session->player_party->getPlace();
+        info.x = place_wrap_x(info.place, Session->player_party->getX() + info.dx);
+        info.y = place_wrap_y(info.place, Session->player_party->getY() + info.dy);
         info.npc_party = place_get_Party(info.place, info.x, info.y);
         if (info.npc_party == NULL) {
                 cmdwin_print("-nobody there!");
                 return;
         } 
-        info.px = player_party->getX();
-        info.py = player_party->getY();
+        info.px = Session->player_party->getX();
+        info.py = Session->player_party->getY();
 
         cmdwin_print("-%s", info.npc_party->getName());
 
         // If the npc is not hostile then get player confirmation.
-        if (! are_hostile(info.npc_party, player_party)) {
+        if (! are_hostile(info.npc_party, Session->player_party)) {
                 int yesno;
                 cmdwin_print("-attack non-hostile-<y/n>");
                 getkey(&yesno, yesnokey);
@@ -1025,7 +1025,7 @@ void cmdAttack(void)
                 }
                 cmdwin_print("yes");
 
-                make_hostile(info.npc_party, player_party);
+                make_hostile(info.npc_party, Session->player_party);
         }
 
         // Log the attack.
@@ -1044,8 +1044,8 @@ void cmdFire(void)
 	cmdwin_clear();
 	cmdwin_print("Fire");
 
-	if ((!player_party->vehicle ||
-             !player_party->vehicle->getOrdnance())) {
+	if ((!Session->player_party->vehicle ||
+             !Session->player_party->vehicle->getOrdnance())) {
                 // SAM: 
                 // In future, we may check for adjacent "cannon" 
                 // mechanisms here (as in U5).
@@ -1055,7 +1055,7 @@ void cmdFire(void)
 	}
 
 	cmdwin_print(" %s-<direction>", 
-                     player_party->vehicle->getOrdnance()->getName());
+                     Session->player_party->vehicle->getOrdnance()->getName());
 	getkey(&dir, dirkey);
 	cmdwin_backspace(strlen("<direction>"));
 
@@ -1066,9 +1066,9 @@ void cmdFire(void)
 
 	cmdwin_print("%s", directionToString(dir));
         log_begin("Fire: %s - ", directionToString(dir));
-	if (! player_party->vehicle->fire_weapon(directionToDx(dir), 
+	if (! Session->player_party->vehicle->fire_weapon(directionToDx(dir), 
                                                  directionToDy(dir), 
-                                                 player_party)) {
+                                                 Session->player_party)) {
 		cmdwin_print("-Not a broadside!");
                 log_end("not a broadside!");
 		return;
@@ -1339,14 +1339,14 @@ bool cmdHandle(class Character * pc)
 	} else {
 		// Must be party mode. Use the player party's location as the
 		// origin.
-		x = player_party->getX();
-		y = player_party->getY();
+		x = Session->player_party->getX();
+		y = Session->player_party->getY();
 
 		// And find out what the party member is Handling (so we can
 		// print the name). If only one party member then select the
 		// only one.
-		if (player_party->get_num_living_members() == 1) {
-			pc = player_party->get_first_living_member();
+		if (Session->player_party->get_num_living_members() == 1) {
+			pc = Session->player_party->get_first_living_member();
 			cmdwin_print("%s", pc->getName());
 		} else {
 			pc = select_party_member();
@@ -1384,7 +1384,7 @@ bool cmdHandle(class Character * pc)
         // I think the following was added to update LOS in cases where the
         // mech changed state and changed LOS. Not sure what happens in
         // character mode.
-        //player_party->updateView();
+        //Session->player_party->updateView();
 
 	return true;
 }
@@ -1442,7 +1442,7 @@ static void cmd_switch_party_leader(class Character *old_leader,
         old_leader->setLeader(false);
         old_leader->endTurn();
         old_leader->setControlMode(CONTROL_MODE_FOLLOW);
-        player_party->setLeader(new_leader);
+        Session->player_party->setLeader(new_leader);
 }
 
 void cmdNewOrder(void)
@@ -1450,7 +1450,7 @@ void cmdNewOrder(void)
 	class Character *pc1, *pc2;
 	int tmp;
 
-        switch (player_party->getSize()) {
+        switch (Session->player_party->getSize()) {
         case 0:
                 assert(0);
                 break;
@@ -1458,8 +1458,8 @@ void cmdNewOrder(void)
                 log_msg("New Order - only one party member!");
                 return;
         case 2:
-                pc1 = player_party->getMemberByOrder(0);
-                pc2 = player_party->getMemberByOrder(1);
+                pc1 = Session->player_party->getMemberByOrder(0);
+                pc2 = Session->player_party->getMemberByOrder(1);
                 goto swap;
         }
 
@@ -1487,7 +1487,7 @@ void cmdNewOrder(void)
 
         statusSetMode(ShowParty);
  swap:
-        player_party->switchOrder(pc1, pc2);
+        Session->player_party->switchOrder(pc1, pc2);
 
 	log_msg("New Order: %s switched with %s\n", pc1->getName(),
 		     pc2->getName());
@@ -1514,8 +1514,8 @@ static void run_combat(bool camping, class Character * guard, int hours,
 
 	memset(&minfo, 0, sizeof(minfo));
 	minfo.place = Place;
-	minfo.x = player_party->getX();
-	minfo.y = player_party->getY();
+	minfo.x = Session->player_party->getX();
+	minfo.y = Session->player_party->getY();
         minfo.px = minfo.x;
         minfo.py = minfo.y;
         minfo.npc_party = (class Party*)foe;
@@ -1541,8 +1541,8 @@ static void run_combat(bool camping, class Character * guard, int hours,
         } else {
                 // No, so we're camping or zooming in. Party values are fine
                 // here.
-                minfo.dx = player_party->getDx();
-                minfo.dy = player_party->getDy();
+                minfo.dx = Session->player_party->getDx();
+                minfo.dy = Session->player_party->getDy();
         } 
 
 	combat_enter(&cinfo);
@@ -1834,7 +1834,7 @@ int cmd_camp_in_wilderness(class Party *camper)
 		cmdwin_print("no watch");
 	}
 
-	player_party->beginCamping(guard, hours);
+	Session->player_party->beginCamping(guard, hours);
         camper->endTurn();
 	run_combat(true, guard, hours, NULL);
 
@@ -1849,7 +1849,7 @@ int cmd_camp_in_town(class Character *camper)
         cmdwin_print("Rest-");
 
         // Party must be in follow mode.
-        if (player_party->getPartyControlMode() != PARTY_CONTROL_FOLLOW) {
+        if (Session->player_party->getPartyControlMode() != PARTY_CONTROL_FOLLOW) {
                 cmdwin_print("must be in follow mode!");
                 log_begin_group();
                 log_msg("Camp - party not in follow mode!");
@@ -1867,7 +1867,7 @@ int cmd_camp_in_town(class Character *camper)
         }
 
         // Rendezvous the party around the bed.
-        if (! player_party->rendezvous(camper->getPlace(), camper->getX(), 
+        if (! Session->player_party->rendezvous(camper->getPlace(), camper->getX(), 
                                        camper->getY())) {
                 log_msg("Camp - party can't rendezvous!");
                 return 0;
@@ -1881,7 +1881,7 @@ int cmd_camp_in_town(class Character *camper)
         // Put the party in "sleep" mode before returning back to the main
         // event loop.
         cmdwin_print(" resting...");
-        player_party->beginResting(hours);
+        Session->player_party->beginResting(hours);
         camper->endTurn();
 
         return TURNS_PER_HOUR;
@@ -2059,7 +2059,7 @@ bool cmdCastSpell(class Character * pc)
 	}
 
 	// Check if the spell can be used in this context.
-	if (!(player_party->getContext() & spell->context)) {
+	if (!(Session->player_party->getContext() & spell->context)) {
 		cmdwin_print("-not here!");
                 log_end("not here!");
 		return false;
@@ -2085,7 +2085,7 @@ bool cmdCastSpell(class Character * pc)
 	}
 	// Otherwise check party inventory for a mixed spell.
 	if (!natural) {
-		ie = player_party->inventory->search(spell->type);
+		ie = Session->player_party->inventory->search(spell->type);
 		if (ie && ie->count)
 			mixed = true;
 	}
@@ -2125,7 +2125,7 @@ bool cmdCastSpell(class Character * pc)
 
 	// If the spell was mixed then remove it from inventory.
 	if (mixed)
-		player_party->takeOut(ie->type, 1);
+		Session->player_party->takeOut(ie->type, 1);
 
         /* Some spells have status in the foogod window, so repaint it now. */
         foogodRepaint();
@@ -2280,7 +2280,7 @@ bool cmdMixReagents(class Character *character)
 				if (ie->type ==
 				    (class ObjectType *) spell->reagents[i]) {
 					ie->ref--;
-					player_party->takeOut(ie->type, 
+					Session->player_party->takeOut(ie->type, 
                                                               quantity);
                                         // The following line is safe only
 					// because this is the end of the
@@ -2306,7 +2306,7 @@ bool cmdMixReagents(class Character *character)
 			list_remove(elem);
 			elem = tmp;
 			ie->ref--;
-			player_party->takeOut(ie->type, quantity);
+			Session->player_party->takeOut(ie->type, quantity);
 		}
 	}
 
@@ -2320,20 +2320,20 @@ bool cmdMixReagents(class Character *character)
 	// the player.
 	if (!spell) {
                 cmdwin_print("oops!");
-                player_party->damage(DAMAGE_ACID);
+                Session->player_party->damage(DAMAGE_ACID);
                 log_end("ACID!");
                 goto done;
 
         } else if (mistake) {
                 cmdwin_print("ouch!");
-                player_party->damage(DAMAGE_BOMB);
+                Session->player_party->damage(DAMAGE_BOMB);
                 log_end("BOMB!");
                 goto done;
 	}
 
 	// All is well. Add the spell to player inventory.
         cmdwin_print("ok");
-	player_party->add(spell->type, quantity);
+	Session->player_party->add(spell->type, quantity);
         log_end("ok!");
 
  done:
@@ -2466,7 +2466,7 @@ bool cmdXamine(class Object * pc)
 char * name_of_context (void)
 {
         // SAM: Perhaps this function belongs in common.c?
-        switch (player_party->getContext()) {
+        switch (Session->player_party->getContext()) {
         case CONTEXT_WILDERNESS:
                 return "Party Context";
                 break;
@@ -2484,7 +2484,7 @@ bool cmdAT (class Character * pc)
 
 	cmdwin_clear();
 
-        // Should I check player_party->context
+        // Should I check Session->player_party->context
         // for the context info below, 
         // rather than the current method?
 	if (pc) {
@@ -2499,14 +2499,14 @@ bool cmdAT (class Character * pc)
 		// Must be party mode. 
 		// Use the player party's location as the origin.
                 who = "The party";
-                place_name = player_party->getPlace()->name;
-                x = player_party->getX();
-                y = player_party->getY();
+                place_name = Session->player_party->getPlace()->name;
+                x = Session->player_party->getX();
+                y = Session->player_party->getY();
 	}
         // SAM: Why is this line not safe in combat mode?
         //      Would it be The Right Thing (TM) 
         //      for it to be made safe in all contexts?
-        // place_name = player_party->getPlace()->name;
+        // place_name = Session->player_party->getPlace()->name;
     
         log_begin_group();
         log_msg("This is %s.", name_of_context() );
@@ -2570,9 +2570,9 @@ bool cmdAT (class Character * pc)
 
         } // open air, under the sky
 
-        if (player_party->vehicle) {
+        if (Session->player_party->vehicle) {
                 log_msg("%s is %s a %s.", 
-                        who, "using", player_party->vehicle->getName() );
+                        who, "using", Session->player_party->vehicle->getName() );
                 // SAM:
                 // In future, we shall want GhulScript to specify 
                 // whether one is to be
@@ -2673,9 +2673,9 @@ bool cmdSaveTerrainMap(class Character * pc)
 	} else {
 		// Party Mode
 		// Use the player party's location as the origin.
-                place = player_party->getPlace();
-		x     = player_party->getX();
-		y     = player_party->getY();
+                place = Session->player_party->getPlace();
+		x     = Session->player_party->getX();
+		y     = Session->player_party->getY();
 	}
 
         map     = place->terrain_map;
@@ -2730,7 +2730,7 @@ void cmdDumpPalette(void)
 	char filename[BOGUS_FILENAME_LENGTH+1];
 	int frame_count, frames;
 
-        place   = player_party->getPlace();
+        place   = Session->player_party->getPlace();
         map     = place->terrain_map;
         palette = map->palette;
         list_for_each(&palette->set, elem) {
@@ -2762,19 +2762,19 @@ void cmdZoomIn(void)
         // 
         // For now, I print a placeholder message for each case here:
         
-        if ((subplace = place_get_subplace(player_party->getPlace(),
-                                                  player_party->getX(),
-                                                  player_party->getY()))) {
+        if ((subplace = place_get_subplace(Session->player_party->getPlace(),
+                                                  Session->player_party->getX(),
+                                                  Session->player_party->getY()))) {
 
                 // Standing over a subplace. Try to enter with no direction,
                 // this will prompt the player to provide a direction.
                 log_msg("Enter-%s\n", subplace->name);
-                player_party->try_to_enter_subplace_from_edge(subplace, 0, 0);
+                Session->player_party->try_to_enter_subplace_from_edge(subplace, 0, 0);
 
-        } else if (!place_is_passable(player_party->getPlace(),
-                                      player_party->getX(),
-                                      player_party->getY(),
-                                      player_party,
+        } else if (!place_is_passable(Session->player_party->getPlace(),
+                                      Session->player_party->getX(),
+                                      Session->player_party->getY(),
+                                      Session->player_party,
                                       PFLAG_IGNOREVEHICLES)) {
 
                 // Currently zooming in to impassable terrain is not doable;
@@ -2784,16 +2784,16 @@ void cmdZoomIn(void)
                 // on an edge.  There would be no harm in it otherwise,
                 // however.
                 struct terrain * tt = 
-                        place_get_terrain(player_party->getPlace(),
-                                          player_party->getX(),
-                                          player_party->getY() );
+                        place_get_terrain(Session->player_party->getPlace(),
+                                          Session->player_party->getX(),
+                                          Session->player_party->getY() );
                 log_msg("Enter-Cannot zoom-in to %s!\n", tt->name);
         } else {
                 // If standing on ordinary terrain, zoom in:
                 struct terrain * tt = 
-                        place_get_terrain(player_party->getPlace(),
-                                          player_party->getX(),
-                                          player_party->getY() );
+                        place_get_terrain(Session->player_party->getPlace(),
+                                          Session->player_party->getX(),
+                                          Session->player_party->getY() );
                 log_msg("Enter-%s\n", tt->name);
                 run_combat(false, 0, 0, NULL);
         }
@@ -2937,7 +2937,7 @@ static void buy(struct merchant *merch)
 
 		cmdwin_print("%s-", trade->name);
 
-		if (player_party->gold < trade->cost) {
+		if (Session->player_party->gold < trade->cost) {
 			int dummy;
 			cmdwin_print("not enough gold! <hit any key>");
 			getkey(&dummy, anykey);
@@ -2945,7 +2945,7 @@ static void buy(struct merchant *merch)
 		}
 		// *** quantity ***
 
-		max_q = player_party->gold / trade->cost;
+		max_q = Session->player_party->gold / trade->cost;
 
 		cmdwin_mark();
 		quantity = ui_get_quantity(max_q);
@@ -2968,13 +2968,13 @@ static void buy(struct merchant *merch)
 		log_msg("You buy %d %s%s for %d gold\n", quantity,
 			     trade->name, quantity > 1 ? "s" : "", cost);
 
-		player_party->gold -= cost;
+		Session->player_party->gold -= cost;
                 if (type->canBuy()) {
-                        type->buy(player_party->get_leader(), quantity);
+                        type->buy(Session->player_party->get_leader(), quantity);
                 } else {
-                        player_party->add(type, quantity);
+                        Session->player_party->add(type, quantity);
                 }
-                trade->quantity = player_party->inventory->numAvail(type);
+                trade->quantity = Session->player_party->inventory->numAvail(type);
                 statusRepaint();
 		foogodRepaint();
 	}
@@ -3002,7 +3002,7 @@ static int fill_sell_list(struct merchant *merch, struct trade_info *trades)
                         continue;
                 
                 filter.cookie = &merch->trades[i];
-                ie = player_party->inventory->next(ie, &filter);
+                ie = Session->player_party->inventory->next(ie, &filter);
                 if (!ie)
                         continue;
 
@@ -3069,7 +3069,7 @@ static void sell(struct merchant *merch)
 
 		cmdwin_print("%s-", trade->name);
 
-		ie = player_party->inventory->search((class ObjectType *) trade->data);
+		ie = Session->player_party->inventory->search((class ObjectType *) trade->data);
 		assert(ie);
 		assert(ie->ref < ie->count);
 
@@ -3090,8 +3090,8 @@ static void sell(struct merchant *merch)
 		cmdwin_print("%d-", quantity);
 
 		// make the trade
-		player_party->takeOut(ie->type, quantity);
-		player_party->gold += quantity * trade->cost;
+		Session->player_party->takeOut(ie->type, quantity);
+		Session->player_party->gold += quantity * trade->cost;
 		foogodRepaint();
 
 		cmdwin_print("ok");

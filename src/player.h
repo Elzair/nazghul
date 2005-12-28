@@ -129,7 +129,6 @@ class player_party : public Party {
         void setCombatExitDestination(struct location *loc);
         void getCombatExitDestination(struct location *loc);
         void clearCombatExitDestination();
-        void unCharmMembers();
         void setCamping(bool val);
         bool isCamping();
         enum party_control getPartyControlMode();

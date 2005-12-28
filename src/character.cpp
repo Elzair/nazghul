@@ -401,7 +401,7 @@ void Character::groupExitTo(struct place *dest_place, int dest_x, int dest_y,
 {
         struct place *oldPlace = getPlace();
 
-        player_party->removeMembers();
+        Session->player_party->removeMembers();
 
         // --------------------------------------------------------------------
         // If the party is in a vehicle check if we need to disembark before
@@ -446,7 +446,7 @@ void Character::groupExitTo(struct place *dest_place, int dest_x, int dest_y,
 
         place_exit(oldPlace);
 
-        player_party->relocate(dest_place, dest_x, dest_y, true);
+        Session->player_party->relocate(dest_place, dest_x, dest_y, true);
         endTurn();
 }
 
@@ -476,7 +476,7 @@ enum MoveResult Character::move(int dx, int dy)
                         // true.
                         // ----------------------------------------------------
 
-                        return (player_party->move(dx, dy));
+                        return (Session->player_party->move(dx, dy));
                 } else {
                         return (party->move(dx, dy) ? MovedOk : WasImpassable);
                 }
@@ -523,18 +523,18 @@ enum MoveResult Character::move(int dx, int dy)
 
                 if (place_get_parent(getPlace()) != NULL) {
                 
-                        if (player_party->getSize() == 1) {
+                        if (Session->player_party->getSize() == 1) {
                                 // Force to follow mode to avoid the annoying
                                 // case where only one member is in the party
                                 // and the player wants to leave a combat map.
-                                player_party->enableFollowMode();
+                                Session->player_party->enableFollowMode();
                         }
 
-                        if (player_party->getPartyControlMode() != PARTY_CONTROL_FOLLOW) {
+                        if (Session->player_party->getPartyControlMode() != PARTY_CONTROL_FOLLOW) {
                                 return NotFollowMode;
                         }
                         
-                        if (!player_party->rendezvous(getPlace(), getX(), getY())) {
+                        if (!Session->player_party->rendezvous(getPlace(), getX(), getY())) {
                                 return CantRendezvous;
                         }
                         
@@ -559,17 +559,17 @@ enum MoveResult Character::move(int dx, int dy)
                         }
 
                         // For parties of size 1, force to follow mode
-                        if (player_party->getSize() == 1) {
-                                player_party->enableFollowMode();
+                        if (Session->player_party->getSize() == 1) {
+                                Session->player_party->enableFollowMode();
                         }
 
                         // Ensure in follow mode
-                        if (player_party->getPartyControlMode() != PARTY_CONTROL_FOLLOW) {
+                        if (Session->player_party->getPartyControlMode() != PARTY_CONTROL_FOLLOW) {
                                 return NotFollowMode;
                         }
                         
                         // Rendezvous other party members or abort
-                        if (!player_party->rendezvous(getPlace(), getX(), getY())) {
+                        if (!Session->player_party->rendezvous(getPlace(), getX(), getY())) {
                                 return CantRendezvous;
                         }
                         
@@ -676,10 +676,10 @@ void Character::remove()
 
         if (isSolo()) {
                 assert(isPlayerControlled());
-                player_party->enableRoundRobinMode();
+                Session->player_party->enableRoundRobinMode();
         } else if (isLeader()) {
                 assert(isPlayerControlled());
-                player_party->enableFollowMode();
+                Session->player_party->enableFollowMode();
         }
         obj_dec_ref(this);
 }
@@ -791,13 +791,13 @@ int Character::hasAmmo (class ArmsType * weapon)
 		struct inv_entry *ie;
 
 		if (weapon->isMissileWeapon()) {
-			ie = player_party->inventory->search(weapon->getMissileType());
+			ie = Session->player_party->inventory->search(weapon->getMissileType());
                         if (ie == NULL)
                                 return 0;  // No ammo
 			return ie->count;  // 1 or more
 		}
                 else if (weapon->isThrownWeapon()) {
-			ie = player_party->inventory->search(weapon);
+			ie = Session->player_party->inventory->search(weapon);
 			if (ie == NULL) {
 				unready(weapon);
 				return 0;  // No more
@@ -817,7 +817,7 @@ int Character::hasAmmo (class ArmsType * weapon)
 bool Character::hasInInventory (class ObjectType *type)
 {
 	if (isPlayerControlled()) {
-                return player_party->hasInInventory(type);
+                return Session->player_party->hasInInventory(type);
 	} else {
 		return (container != NULL &&
                         container->search(type) != NULL);
@@ -854,10 +854,10 @@ void Character::changeSleep(bool val)
 
                 if (isLeader()) {
                         assert(isPlayerControlled());
-                        player_party->enableFollowMode();
+                        Session->player_party->enableFollowMode();
                 } else if (isSolo()) {
                         assert(isPlayerControlled());
-                        player_party->enableRoundRobinMode();
+                        Session->player_party->enableRoundRobinMode();
                 }
 
         } else {
@@ -872,10 +872,10 @@ void Character::changeSleep(bool val)
                         assert(! isLeader());
                         assert(! isSolo());
                         
-                        switch (player_party->getPartyControlMode()) {
+                        switch (Session->player_party->getPartyControlMode()) {
 
                         case PARTY_CONTROL_FOLLOW:
-                                if (this != player_party->get_leader()) {
+                                if (this != Session->player_party->get_leader()) {
                                         setControlMode(CONTROL_MODE_FOLLOW);
                                 }
                                 break;
@@ -1059,7 +1059,7 @@ void Character::useAmmo(class ArmsType *weapon)
 			class ArmsType *missileType = weapon->getMissileType();
 			takeOut(missileType, 1);
 		} else if (weapon->isThrownWeapon()) {
-			ie = player_party->inventory->search(weapon);
+			ie = Session->player_party->inventory->search(weapon);
 			if (ie->count == 1) {
 
 				// Multiple characters might have the same
@@ -1072,7 +1072,7 @@ void Character::useAmmo(class ArmsType *weapon)
 				// exhausted the individual characters have one
 				// remaining in their hands.
 
-				player_party->forEachMember (myUnreadyDepletedThrownWeapon, ie);
+				Session->player_party->forEachMember (myUnreadyDepletedThrownWeapon, ie);
 			}
 			takeOut(weapon, 1);
 
@@ -1149,7 +1149,7 @@ bool Character::needToRearm()
         // party inventory. Non-player characters pull from their own personal
         // inventory. I really need to merge both types into the same behaviour
         // to simplify things.
-        if (party == (Party*)player_party)
+        if (party == (Party*)Session->player_party)
                 return false;
 
 	return rearm;
@@ -1208,14 +1208,14 @@ void Character::resurrect(void)
         // put this character near the other party member's on the map.
         // ------------------------------------------------------------------
 
-        if (player_party->isOnMap())
+        if (Session->player_party->isOnMap())
                 return;
 
-        assert(player_party->get_leader());
+        assert(Session->player_party->get_leader());
 
-        putOnMap(player_party->get_leader()->getPlace(), 
-                 player_party->get_leader()->getX(),
-                 player_party->get_leader()->getY(), 4,
+        putOnMap(Session->player_party->get_leader()->getPlace(), 
+                 Session->player_party->get_leader()->getX(),
+                 Session->player_party->get_leader()->getY(), 4,
                  0);
 
         assert(isOnMap());
@@ -1632,7 +1632,7 @@ void Character::kickPlayerOutOfMyBed()
         struct appt *curAppt = &sched->appts[appt];
 
         log_msg("Kicked out of bed!");
-        player_party->throw_out_of_bed();
+        Session->player_party->throw_out_of_bed();
 
         // now switch places with whoever is in bed
        class Character *sleeper = 
@@ -1872,10 +1872,10 @@ void Character::exec()
                                 log_msg("Done resting...");
                                 endResting();
 
-                                if (player_party->isCamping())
-                                        player_party->endCamping();
-                                else if (player_party->isResting())
-                                        player_party->endResting();
+                                if (Session->player_party->isCamping())
+                                        Session->player_party->endCamping();
+                                else if (Session->player_party->isResting())
+                                        Session->player_party->endResting();
 
                                 log_end_group();
                         }
@@ -1895,15 +1895,15 @@ void Character::exec()
 
                 if (clock_alarm_is_expired(&rest_alarm)) {
                         if (isPlayerControlled() &&
-                            player_party->vehicle &&
-                            player_party->vehicle->getHp() < 
-                            player_party->vehicle->getMaxHp()) {
-                                player_party->vehicle->heal(
-                                        player_party->vehicle->getMaxHp() / 
+                            Session->player_party->vehicle &&
+                            Session->player_party->vehicle->getHp() < 
+                            Session->player_party->vehicle->getMaxHp()) {
+                                Session->player_party->vehicle->heal(
+                                        Session->player_party->vehicle->getMaxHp() / 
                                         10);
                                 foogodRepaint();
                                 consolePrint("%s repairs ", getName());
-                                player_party->vehicle->describe();
+                                Session->player_party->vehicle->describe();
                                 consoleNewline();
                         }
                         clock_alarm_set(&rest_alarm, 60);
@@ -1913,10 +1913,10 @@ void Character::exec()
                         endGuarding();
 
                         if (isPlayerPartyMember()) {
-                                if (player_party->isCamping())
-                                        player_party->endCamping();
-                                else if (player_party->isResting())
-                                        player_party->endResting();
+                                if (Session->player_party->isCamping())
+                                        Session->player_party->endCamping();
+                                else if (Session->player_party->isResting())
+                                        Session->player_party->endResting();
                         }
                 }
                 endTurn();
@@ -2005,7 +2005,7 @@ void Character::exec()
                 // Follow the party leader.
                 // -----------------------------------------------------------
 
-                leader = player_party->get_leader();
+                leader = Session->player_party->get_leader();
 
                 assert(leader);
                 assert(this != leader);
@@ -2082,94 +2082,6 @@ void Character::setSolo(bool val)
         }
 }
 
-void Character::unCharm()
-{
-        // Check for illegal request
-        if (0 == factionSwitch) {
-                warn("%s:uncharm:factionSwitch 0", getName());
-                return;
-        }
-
-        // Decrement the faction switch.
-        factionSwitch--;
-
-        // If the faction switch is still on then there are other charms in
-        // effect and we don't want to disturb them. NOTE: the last faction
-        // used with charm will remain in effect until the factionSwitch falls
-        // to zero. This will match most expected behavior related to multiple
-        // charm effects.
-        if (factionSwitch)
-                return;
-
-        // Is this an NPC or a party member?
-        if (! isPlayerPartyMember()) {
-                
-                // Revert the NPC to AI-control
-                setControlMode(CONTROL_MODE_AUTO);
-                
-                // Remove the NPC's map view, if any
-                if (NULL != getView()) {
-                        rmView();
-                        mapDestroyView(getView());
-                        setView(NULL);
-                }
-
-                // Switch the controller back to the AI
-                //ctrl = ctrl_character_ai;
-                
-        } else {
-
-                // Set the party member's control mode based on the party's
-                // current control mode.
-                switch (player_party->getPartyControlMode()) {
-                case PARTY_CONTROL_ROUND_ROBIN:
-                        setControlMode(CONTROL_MODE_PLAYER);
-                        break;
-                case PARTY_CONTROL_SOLO:
-                        setControlMode(CONTROL_MODE_IDLE);
-                        break;
-                case PARTY_CONTROL_FOLLOW:
-                        if (isLeader()) {
-                                setControlMode(CONTROL_MODE_PLAYER);
-                        } else {
-                                setControlMode(CONTROL_MODE_FOLLOW);
-                        }
-                        break;
-                }
-        }
-}
-
-void Character::charm(int newFaction)
-{
-
-        if (isDead())
-                return;
-
-        // Set the temporary faction (possibly clobbering the previous one).
-        tmpFaction = newFaction;
-        
-        if (isPlayerPartyMember())
-                // Switch the party member to be AI-controlled.
-                setControlMode(CONTROL_MODE_AUTO);
-        else {
-                // Add a map view for the non-party member
-                setView(mapCreateView());
-                addView();
-                
-                // Switch the non-party member to be player-controlled
-                setControlMode(CONTROL_MODE_PLAYER);
-
-                // Switch the controller over to the player
-                // NOTE: this needs a bit more work to be nicely done
-                // ctrl = ctrl_character_ui;
-        }
-
-        // Increment the faction switch (must do this AFTER calling
-        // setControlMode())
-        factionSwitch++;
-
-}
-
 bool Character::isCharmed()
 {
         return getCurrentFaction() != getBaseFaction();
@@ -2177,7 +2089,7 @@ bool Character::isCharmed()
 
 bool Character::isPlayerPartyMember()
 {
-        return (class Object*)party == (class Object*)player_party;
+        return (class Object*)party == (class Object*)Session->player_party;
 }
 
 void Character::setControlMode(enum control_mode mode)
@@ -2210,7 +2122,7 @@ void Character::setControlMode(enum control_mode mode)
 bool Character::add(ObjectType *type, int amount)
 {
         if (isPlayerPartyMember()) {
-                return player_party->add(type, amount);
+                return Session->player_party->add(type, amount);
         } else if (container) {
                 container->add(type, amount);
                 return true;
@@ -2223,7 +2135,7 @@ bool Character::add(ObjectType *type, int amount)
 bool Character::takeOut(ObjectType *type, int amount)
 {
         if (isPlayerPartyMember()) {
-                return player_party->takeOut(type, amount);
+                return Session->player_party->takeOut(type, amount);
         } else if(container) {
                 return container->takeOut(type, amount);                
         }
@@ -2233,7 +2145,7 @@ bool Character::takeOut(ObjectType *type, int amount)
 bool Character::addFood(int quantity)
 {
         if (isPlayerPartyMember()) {
-                player_party->addFood(quantity);
+                Session->player_party->addFood(quantity);
                 return true;
         }
         return false;
@@ -2242,7 +2154,7 @@ bool Character::addFood(int quantity)
 bool Character::addGold(int quantity)
 {
         if (isPlayerPartyMember()) {
-                player_party->addGold(quantity);
+                Session->player_party->addGold(quantity);
                 return true;
         }
         return false;
@@ -2380,14 +2292,14 @@ bool Character::joinPlayer(void)
 {
         class Party *old_party = party;
 
-        if (old_party == player_party)
+        if (old_party == Session->player_party)
                 return false;
 
         if (NULL != old_party) {
                 old_party->removeMember(this);
         }
         
-        if (player_party->addMember(this)) {
+        if (Session->player_party->addMember(this)) {
                 addView();
                 return true;
         }
@@ -2405,12 +2317,12 @@ void Character::leavePlayer(void)
 {
         if (isSolo()) {
                 assert(isPlayerControlled());
-                player_party->enableRoundRobinMode();
+                Session->player_party->enableRoundRobinMode();
         } else if (isLeader()) {
                 assert(isPlayerControlled());
-                player_party->enableFollowMode();
+                Session->player_party->enableFollowMode();
         }
-        player_party->removeMember(this);
+        Session->player_party->removeMember(this);
 }
 
 int Character::getActivity()
@@ -2590,22 +2502,22 @@ bool Character::tryToRelocateToNewPlace(struct place *newplace,
         // print informative messages.
         // -----------------------------------------------------------------
 
-        if (player_party->getSize() == 1) {
+        if (Session->player_party->getSize() == 1) {
                 // Force to follow mode to avoid the annoying case
                 // where only one member is in the party and the player
                 // wants to leave a combat map.
-                player_party->enableFollowMode();
+                Session->player_party->enableFollowMode();
         }
 
-        if (player_party->getPartyControlMode() != PARTY_CONTROL_FOLLOW) {
+        if (Session->player_party->getPartyControlMode() != PARTY_CONTROL_FOLLOW) {
                 log_msg("Exit - must be in follow mode!");
                 return false;
         }
 
-        if (player_party->get_leader() != this)
+        if (Session->player_party->get_leader() != this)
                 return false;
 
-        if (!player_party->rendezvous(getPlace(), getX(), getY())) {
+        if (!Session->player_party->rendezvous(getPlace(), getX(), getY())) {
                 log_msg("Exit - party can't rendezvous!");
                 return false;
         }
@@ -2635,8 +2547,13 @@ void Character::setCurrentFaction(int faction)
 {
         if (! isPlayerPartyMember()) {
                 Being::setCurrentFaction(faction);
-        } else {
-                if (faction != player_party->getBaseFaction()) {
+        }
+
+        // Note: Session->player_party may be NULL early in boot. In that case the
+        // faction will be set when this character is added to the party after
+        // it is created.
+        else if (Session && Session->player_party) {
+                if (faction != Session->player_party->getBaseFaction()) {
                         // player party member charmed
                         setControlMode(CONTROL_MODE_AUTO);
                         
@@ -2651,7 +2568,7 @@ void Character::setCurrentFaction(int faction)
                         Being::setCurrentFaction(faction);
 
                         // player party member uncharmed
-                        switch (player_party->getPartyControlMode()) {
+                        switch (Session->player_party->getPartyControlMode()) {
                         case PARTY_CONTROL_ROUND_ROBIN:
                                 setControlMode(CONTROL_MODE_PLAYER);
                                 break;
@@ -2674,7 +2591,7 @@ class Container* Character::getInventoryContainer()
 {
         /* for player-controlled maybe return party inventory? */
         if (isPlayerControlled())
-                return player_party->inventory;
+                return Session->player_party->inventory;
         return container;
 }
 

@@ -233,6 +233,7 @@ INTERFACE INLINE int is_environment(pointer p) { return (type(p)==T_ENVIRONMENT)
 #if USE_PROTECT
 INTERFACE INLINE pointer protect(scheme *sc, pointer p) 
 { 
+        //printf("protect: %08lx\n", p);
         if (! p->pref)
                 list_add(&sc->protect, &p->plist);
         p->pref++;
@@ -240,6 +241,7 @@ INTERFACE INLINE pointer protect(scheme *sc, pointer p)
 }
 INTERFACE INLINE pointer unprotect(scheme *sc, pointer p) 
 { 
+        //printf("unprotect: %08lx\n", p);
         assert(p->pref > 0);
         p->pref--;
         if (! p->pref)
@@ -4386,7 +4388,10 @@ void scheme_deinit(scheme *sc) {
 
 #if USE_PROTECT
   /* Make sure the kernel has released all of its references to scheme cells */
-  assert(list_empty(&sc->protect));
+  if (! list_empty(&sc->protect)) {
+          fprintf(stderr, "%d entries left in protected list!\n", list_size(&sc->protect));
+          assert(0);
+  }
 #endif
 
   sc->oblist=sc->NIL;
