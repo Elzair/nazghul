@@ -1022,6 +1022,14 @@ void Character::kill()
 // 		dropItems();
 // 	}
 
+        if (isOnMap()
+            && container
+            && forceContainerDrop) {
+                container->relocate(getPlace(), getX(), getY());
+                obj_dec_ref(container);
+                container = NULL;
+        }
+
         if (isPlayerControlled()) {
                 log_msg("%s has fallen!!", getName());
         }

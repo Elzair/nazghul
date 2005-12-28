@@ -228,6 +228,8 @@ typedef struct save {
 
 extern int session_load(char *filename);
 extern void session_save(char *fname);
+struct session *session_new(void *interp);
+void session_del(struct session *session);
 
 // ----------------------------------------------------------------------------
 // Add a persistent object to the session. If you want an object to get saved

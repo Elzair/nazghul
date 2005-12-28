@@ -285,21 +285,23 @@ int playRun(void)
         // Load a new session from a saved file.
         // -------------------------------------------------------------------
 
+        log_begin("Loading from %s...", SAVEFILE);
+        log_flush();
         log_disable();
 
 	session_load(SAVEFILE);
-        if (! Session) {
-		err("Error loading game from '%s'", SAVEFILE);
-		return -1;
-	}
 
         log_enable();
+        if (! Session) {
+                log_end("error!");
+		return -1;
+	}
+        log_end("ok!");
         log_begin_group();
         log_msg("*********************************");
 	log_msg("Welcome to Nazghul version %s", PACKAGE_VERSION );
         log_msg("*********************************");
         log_end_group();
-
         log_msg("'?' for help.");
 
         // Run the optional startup script.

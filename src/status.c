@@ -1058,6 +1058,9 @@ void statusSetMode(enum StatusMode mode)
          * over the border. */
 
 	switch (mode) {
+        case DisableStatus:
+                Status.paint=0;
+                break;
 	case ShowParty:
 		switch_to_short_mode();
 		myRepaintTitle("Party");	

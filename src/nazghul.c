@@ -39,6 +39,9 @@
 #include "status.h"
 #include "log.h"
 #include "tick.h"
+#include "cmd.h"
+#include "session.h"
+#include "kern.h"
 
 #include <errno.h>
 #include <signal.h>
@@ -193,11 +196,13 @@ static void parse_args(int argc, char **argv)
 
         if (optind < argc) {
                 SAVEFILE = argv[optind];
-        } else {
+        }
+#if 0
+        else {
                 print_usage();
                 exit(-1);
         }
-
+#endif
 }				// parse_args()
 
 static void nazghul_init_internal_libs(void)
@@ -253,15 +258,208 @@ static void nazghul_splash(void)
         }
         
         /* Fill out the screen destination rect */
-        rect.x = max(0, (screenWidth() - splash->w) / 2);
-        rect.y = max(0, (screenHeight() - splash->h) / 2);
-        rect.w = min(splash->w, screenWidth());
-        rect.h = min(splash->h, screenHeight());
+        rect.x = max(0, (MAP_W - splash->w) / 2) + MAP_X;
+        rect.y = max(0, (MAP_H - splash->h) / 2) + MAP_Y;
+        rect.w = min(splash->w, MAP_W-MAP_X);
+        rect.h = min(splash->h, MAP_H-MAP_Y);
 
         screenBlit(splash, NULL, &rect);
         screenUpdate(&rect);
 
         SDL_FreeSurface(splash);
+}
+
+static int start_main_menu_session(void)
+{
+        scheme *sc = NULL;
+        FILE *file = NULL;
+        char *fname="main-menu.scm";
+
+        /* Open the load file. */
+        file = fopen(fname, "r");
+        if (! file) {
+                load_err("could not open script file '%s' for reading: %s",
+                           fname, strerror(errno));
+                return -1;
+        }
+
+        /* Create a new interpreter. */
+        if (! (sc = kern_init())) {
+                load_err("could not create interpreter");
+                fclose(file);
+                return -1;
+        }
+
+        /* create the initial session */
+        Session = session_new(sc);
+
+        /* load the scheme file */
+        scheme_load_named_file(sc, file, fname);
+
+        /* sanity checks */
+        if (load_err_any()) {
+                goto abort;
+        }
+
+        if (! Session->frame.llc) {
+                load_err("no frame sprites (use kern-set-frame)");
+        }
+
+        if (! Session->ascii.images) {
+                load_err("no ASCII sprites (use kern-set-ascii)");
+        }
+        
+        if (! Session->cursor_sprite) {
+                load_err("no cursor sprite (use kern-set-cursor)");
+        }
+
+        return 0;
+
+ abort:
+        session_del(Session);
+        scheme_deinit(sc);
+        free(sc);
+        Session=NULL;
+        return -1;
+}
+
+static int save_file_exists(void)
+{
+        FILE *file = fopen("save.scm","r");
+        int ret = file ? 1:0;
+        if (file)
+                fclose(file);
+        return ret;
+}
+
+static bool main_menu_quit_handler(struct QuitHandler *kh)
+{
+        exit(0);
+}
+
+static void show_credits(void)
+{
+        struct KeyHandler kh;
+        char *title = "CREDITS";
+        char *text = 
+                "Engine Programming\n"\
+                "...Gordon McNutt\n"\
+                "...Sam Glasby\n"\
+                "...Tim Douglas\n"\
+                "...Karl Garrison\n"\
+                "Build System\n"\
+                "...Andreas Bauer\n"\
+                "Game Scripting\n"\
+                "...Gordon McNutt\n"\
+                "...Sam Glasby\n"
+                "Art\n"\
+                "...Joshua Steele\n"\
+                "...David Gervais\n"\
+                "...Kevin Gabbert\n"\
+                "...Gordon McNutt\n"\
+                "...Sam Glasby\n"\
+                ;
+
+        statusSetPageText(title, text);
+        statusSetMode(Page);
+        consolePrint("[Hit ESC to continue]\n");
+
+        kh.fx = scroller;
+        kh.data = NULL;
+	eventPushKeyHandler(&kh);
+	eventHandle();
+	eventPopKeyHandler();
+}
+
+static char *START_NEW_GAME="Start New Game";
+static char *JOURNEY_ONWARD="Journey Onward";
+static char *CREDITS="Credits";
+static char *QUIT="Quit";
+
+static void main_menu(void)
+{
+        char *menu[4];
+        int n_items = 0;
+        struct KeyHandler kh;
+	struct ScrollerContext data;
+        char *selection = NULL;
+	struct QuitHandler qh;
+
+        if (start_main_menu_session()) {
+                fprintf(stderr, "fatal error in main_menu\n");
+                exit(-1);
+        }
+
+        screen_repaint_frame();
+
+        /* if save file specified on command line skip the menu */
+        if (SAVEFILE)
+                return;
+
+        /* setup main menu quit handler so player can click close window to
+         * exit */
+	qh.fx = main_menu_quit_handler;
+	eventPushQuitHandler(&qh);
+
+
+ start_main_menu:
+        n_items = 0;
+
+        if (save_file_exists()) {
+                menu[n_items] = JOURNEY_ONWARD;
+                n_items++;
+        }
+
+        menu[n_items] = START_NEW_GAME;
+        n_items++;
+
+        menu[n_items] = CREDITS;
+        n_items++;
+
+        menu[n_items] = QUIT;
+        n_items++;
+
+        statusSetStringList(n_items, menu);
+        statusSetMode(StringList);
+
+        data.selection = NULL;
+        data.selector  = String;
+        kh.fx   = scroller;
+        kh.data = &data;
+	eventPushKeyHandler(&kh);
+	eventHandle();
+	eventPopKeyHandler();
+
+        selection = (char*)data.selection;
+
+        if (! selection) {
+                goto start_main_menu;
+        }
+
+        if (! strcmp(selection, START_NEW_GAME)) {
+                SAVEFILE="haxima.scm";
+                
+        }
+        else if (! strcmp(selection, JOURNEY_ONWARD)) {
+                SAVEFILE="save.scm";
+        }
+        else if (! strcmp(selection, CREDITS)) {
+                show_credits();
+                goto start_main_menu;
+        }
+        else if (! strcmp(selection, QUIT))
+                exit(0);
+        else {
+                fprintf(stderr, "Invalid selection: '%s'\n", selection);
+                exit(-1);
+        }
+
+        /* turn off status while new session is loading */
+        statusSetMode(DisableStatus);
+
+        /* pop main menu quit handler, new one will be pushed in play.c */
+        eventPopQuitHandler();
+        
 }
 
 int main(int argc, char **argv)
@@ -270,13 +468,25 @@ int main(int argc, char **argv)
 
         nazghul_init_internal_libs();
 
-        /* Show the splash screen on startup */
-        nazghul_splash();
-
         tick_start(TickMilliseconds);
+
+ main_loop:
+        /* blank out the whole screen */
+        screenErase(NULL);
+        screenUpdate(NULL);
+
+        /* pause animation tick generation */
         tick_pause();
 
+        /* Show the splash screen on startup */
+        nazghul_splash();
+        main_menu();
+
 	playRun();
+
+        /* reset save file so main menu runs */
+        SAVEFILE=0;
+        goto main_loop;
 
         tick_kill();
 
