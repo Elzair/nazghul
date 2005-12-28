@@ -124,9 +124,9 @@
                 (list (mk-door-full windowed-wood-door-in-rock #t #f nil) 13 3)
 
                 ;; existing npc's
-                (put (mk-npc 'bandit 2) 5 4)
-                (put (mk-npc 'bandit 2) 9 4)
-                (put (mk-npc 'bandit 2) 9 2)
+                (put (mk-npc 'blackguard 2) 5 4)
+                (put (mk-npc 'blackguard 2) 9 4)
+                (put (mk-npc 'blackguard 2) 9 2)
                 (put (spawn-pt 'green-slime) 9 17)
                 (put (spawn-pt 'green-slime) 10 18)
                 (put (spawn-pt 'green-slime) 13 18)

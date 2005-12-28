@@ -487,7 +487,9 @@
         (kern-obj-add-effect party ef_protection nil))))
 
 (define (wis-quas  caster)
-  (kern-add-reveal 50))
+  (kern-add-reveal 50)
+  result-ok
+  )
 
 ;; bet-por -- single character blink
 (define (bet-por kcaster)

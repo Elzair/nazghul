@@ -9,7 +9,8 @@
 ;; Schedule
 ;;----------------------------------------------------------------------------
 (kern-mk-sched 'sch_mesmeme
-               (list 0  0 cantina "idle")
+               (list 0  0 campfire-1 "sleeping")
+               (list 9  0 cantina "idle")
                )
 
 ;;----------------------------------------------------------------------------
@@ -76,8 +77,6 @@
        (method 'name mesmeme-name)
        (method 'join mesmeme-join)
        
-       (method 'job  mesmeme-job)
-       (method 'bye  mesmeme-bye)
        (method 'alon mesmeme-alon)
        (method 'kind mesmeme-kind)
        (method 'crip mesmeme-crip)

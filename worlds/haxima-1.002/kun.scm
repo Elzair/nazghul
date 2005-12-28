@@ -1,5 +1,6 @@
 (kern-load "mesmeme.scm")
 (kern-load "jake.scm")
+(kern-load "slywan.scm")
 
 (kern-mk-place
  'p_kun "Kun" s_town
@@ -40,6 +41,7 @@
   ;; npcs
   (put (mk-mesmeme) 0 0)
   (put (mk-jake) 0 0)
+  (put (mk-slywan) 0 0)
 
   (put (mk-windowed-door) 5 9)
   (put (mk-door) 13 13)
