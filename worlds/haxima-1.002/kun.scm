@@ -2,6 +2,7 @@
 (kern-load "jake.scm")
 (kern-load "slywan.scm")
 (kern-load "tooth.scm")
+(kern-load "tetzl.scm")
 
 (kern-mk-place
  'p_kun "Kun" s_town
@@ -44,6 +45,7 @@
   (put (mk-jake) 0 0)
   (put (mk-slywan) 0 0)
   (put (mk-tooth) 0 0)
+  (put (mk-tetzl) 0 0)
 
   (put (mk-windowed-door) 5 9)
   (put (mk-door) 13 13)

@@ -11,7 +11,9 @@
 (kern-mk-sched 'sch_slywan
                (list 0 0 kun-road "working")
                (list 2 0 campfire-2 "sleeping")
-               (list 9 0 cantina "idle")
+               (list 9 0 cantina-9 "idle")
+               (list 14 0 black-marekt "idle")
+               (list 17 0 cantina-9 "idle")
                (list 23 0 kun-road "working")
                )
 

@@ -11,7 +11,7 @@
 (kern-mk-sched 'sch_tooth
                (list 0 0 black-market-counter "sleeping")
                (list 6 0 black-market-counter "working")
-               (list 19 0 cantina "idle")
+               (list 19 0 cantina-12 "idle")
                )
 
 ;;----------------------------------------------------------------------------
@@ -84,7 +84,7 @@
                          (list t_in_quas_xen_scroll (* 7 base-scroll-cost))
                          (list t_an_tym_scroll     (* 8 base-scroll-cost))
                          ))
-  
+
 
 (define tooth-conv
   (ifc nil
