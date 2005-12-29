@@ -187,7 +187,7 @@
 ;; Tutorial
 (define (tutorial kplayer)
   (kern-obj-put-at kplayer (list p_tutorial_town 9 9))
-  (kern-log-msg "Welcome to the tutorial. If you want to go back to the main menu hit the Q key for Q)uit.")
+  (kern-log-msg "Welcome to the tutorial. If you want to go back to the main menu hit the 'q' key for Q)uit.")
   (kern-log-msg "Your main character appears in the center of the view to the left. See him? Move him by pressing the arrow keys.")
   )
       

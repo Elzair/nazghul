@@ -38,7 +38,7 @@
       (let ((kplace (get-place knpc)))
         (cond ((equal? kplace p_westpass)
                (say knpc "Take the ladder down. You'll come out in Eastpass. "
-                    "Lord Froederick's men can help you from there."))
+                    "The knights can help you from there."))
               ((equal? kplace p_eastpass)
                (say knpc "Take the road west to Trigrave and ask around there."))
               ((equal? kplace p_trigrave)

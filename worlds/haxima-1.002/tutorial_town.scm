@@ -37,25 +37,25 @@
  (put (mk-lever 'p1) 5 10)
  (put (kern-tag 'p2 (mk-portcullis)) 10 13)
  (put (mk-lever 'p2) 9 14)
- (put (mk-step-clue "To the left is a chest. O)pen it by pressing the 'O' key followed by an arrow key. "
-                    "Then G)et the items by pressing the 'G' key followed by an arrow.") 
+ (put (mk-step-clue "To the left is a chest. O)pen it by pressing the 'o' key followed by an arrow key. "
+                    "Then G)et the items by pressing the 'g' key followed by an arrow.") 
       6 6)
  (put (mk-step-clue "You better R)eady your weapons and armor. "
-                    "Press the 'R' key. In the window above you can select weapons and armor to wear or "
+                    "Press the 'r' key. In the window above you can select weapons and armor to wear or "
                     "remove by pressing the SPACEBAR. Experiment with this a bit. "
                     "When you're done amusing yourself press the ESC key."
                     )
       6 8)
- (put (mk-step-clue "To check your equipment Z)tatus, hit the Z key. "
+ (put (mk-step-clue "To check your equipment Z)tatus, hit the 'z' key. "
                     "Scroll through the panes with the arrow keys. "
                     "When you're done hit the ESC key."
                     )
       6 9)
  (put (mk-step-clue "To open the portcullis you need to H)andle the lever to the left. "
-                    "Press 'H', move the crosshair over the lever with the arrow keys, "
+                    "Press 'h', move the crosshair over the lever with the arrow keys, "
                     "and then press enter.")
       6 10)
- (put (mk-step-clue "If you want to identify the objects around you, use the X)amine command by pressing 'X'. "
+ (put (mk-step-clue "If you want to identify the objects around you, use the X)amine command by pressing 'x'. "
                     "The cursor over whatever you want to look at. "
                     "Non-player characters NPCs like the snake will be highlighted with a box. "
                     "Red means hostile, yellow means neutral and green means friendly. "
@@ -63,13 +63,13 @@
                     "When done hit the ESC key.")
       6 13)
  (put (mk-step-clue "Once you open the portcullis you'll have to fight the snake. "
-                    "To A)ttack press 'A' and cursor over the target, then press ENTER.")
+                    "To A)ttack press 'a' and cursor over the target, then press ENTER.")
       9 13)
 
  (put (mk-step-clue "To O)pen a door just try to step through it.") 13 13)
  (put (mk-door) 13 12)
 
- (put (mk-step-clue "S)earch corpses using the 'S' key followed by an arrow key.") 12 10)
+ (put (mk-step-clue "S)earch corpses using the 's' key followed by an arrow key. You can also S)earch for invisible items with this command.") 12 10)
  (put (mk-corpse2 (list (list 20 't_picklock) 
                         (list 10 'sulphorous_ash)
                         (list 10 'blood_moss)
@@ -77,7 +77,7 @@
 
  (put (mk-locked-door) 13 8)
  (put (mk-step-clue "U)se the picklocks from the corpse to unlock this door. "
-                    "Press 'U', select the item to use, then target the door.") 13 9)
+                    "Press 'u' for U)se, select the item, then target the door.") 13 9)
 
  (put (kern-tag 'p3 (mk-portcullis)) 12 13)
  (put (mk-lever 'p3) 11 14)

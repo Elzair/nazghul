@@ -42,6 +42,46 @@
        "Take the road south and west to the keep that guards the pass. "
        "The rangers there may know how to find him."))
 
+(define (gregor-cave knpc kpc)
+  (say knpc "There, that little trail that leads off the main path to the south and west. "
+       "Follow it on in. Open the chest. Get the stuff. "
+       "Come back and talk if you have more questions."))
+
+(define (gregor-ches knpc kpc)
+  (say knpc "Yes. Open it!"))
+
+(define (gregor-stuf knpc kpc)
+  (say knpc "Get it! Folks donated it for you, knowing one day a Wanderer would come again."))
+
+(define (gregor-open knpc kpc)
+  (say knpc "Use the 'o' key to open chests."))
+
+(define (gregor-get knpc kpc)
+  (say knpc "Use the 'g' key to get stuff that's on the ground."))
+
+(define (gregor-hail knpc kpc)
+  (if (in-inventory? kpc t_letter_from_enchanter)
+      (say knpc "I see you got your stuff. Don't forget to ready your weapons before leaving. "
+           "It's dangerous out there!")
+      (say knpc "Welcome, Wanderer. I've been watching for you. "
+           "There's some things that belong to you, over in yonder cave. "
+           "Go on in, open the chest. It's all for you.")))
+
+(define (gregor-read knpc kpc)
+  (say knpc "Use the 'r' key to ready weapons or armor. "
+       "You can't use a weapon in combat until it's ready."))
+
+(define (gregor-dang knpc kpc)
+  (say knpc "Very dangerous! If you need healing, a town inn is the safest place. "
+       "You can camp in the wilderness, but it's dangerous when you're alone and have no one to keep watch. "
+       "Of course, there are spells and potions for healing, too."))
+
+(define (gregor-camp knpc kpc)
+  (say knpc "Use the 'k' key to kamp, er camp, in the wilderness and heal up."))
+
+(define (gregor-leav knpc kpc)
+  (say knpc "When you're ready to leave just follow the trail south and step off the map."))
+
 ;;----------------------------------------------------------------------------
 ;; Conv
 ;;----------------------------------------------------------------------------
@@ -52,13 +92,21 @@
        ;; truncating all player queries to the first four characters. Default,
        ;; on the other hand, is a feature of the ifc mechanism (see ifc.scm).
        (method 'default (lambda (knpc kpc) (say knpc "Can't help you there.")))
-       (method 'hail (lambda (knpc kpc) (say knpc "Welcome, Wanderer.")))
+       (method 'hail gregor-hail)
        (method 'heal (lambda (knpc kpc) (say knpc "[cough] Well enough, my granddaughter helps take care of me.")))
        (method 'bye (lambda (knpc kpc) (say knpc "Yep.")))
        (method 'job (lambda (knpc kpc) (say knpc "I'm a charcoal burner. I also care for this shrine.")))
        (method 'join (lambda (knpc kpc) (say knpc "Nope. Already got a job.")))
        (method 'name (lambda (knpc kpc) (say knpc "Gregor's my name.")))
-
+       (method 'cave gregor-cave)
+       (method 'ches gregor-ches)
+       (method 'open gregor-open)
+       (method 'get gregor-get)
+       (method 'stuf gregor-stuf)
+       (method 'read gregor-read)
+       (method 'dang gregor-dang)
+       (method 'camp gregor-camp)
+       (method 'leav gregor-leav)
        (method 'accu (lambda (knpc kpc) 
                        (say knpc "The Accursed? Rumour has it they trade their souls for power. "
                             "If not for the Wise they would overrun the Shard.")))     
