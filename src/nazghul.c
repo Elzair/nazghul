@@ -66,6 +66,7 @@ char *SAVEFILE       = 0;
 char *RecordFile     = 0;
 char *PlaybackFile   = 0;
 int PlaybackSpeed    = 100;
+int DeveloperMode    = 0;
 
 static char program_name[] = "nazghul";
 static char *NAZGHUL_SPLASH_IMAGE_FILENAME = "splash.png";
@@ -98,6 +99,7 @@ static void print_usage(void)
 	       "    --playback <filename>  \n"
 	       "    --playback_speed <ms delay> \n"
                "    --version \n"
+               "    --developer\n"
                "<load-file> is the session to load\n",
                program_name);
 }				// print_usage()
@@ -105,18 +107,19 @@ static void print_usage(void)
 static void parse_args(int argc, char **argv)
 {
 	static struct option long_options[] = {
-		{"animate", 1, 0, 'a'},
-		{"bpp", 1, 0, 'b'},
+		{"animate",  1, 0, 'a'},
+		{"bpp",      1, 0, 'b'},
 		{"circular_vision_radius", 0, 0, 'c'},
-                {"help", 0, 0, 'h'},
-		{"los", 1, 0, 'l'},
+                {"developer", 0, 0, 'd'},
+                {"help",     0, 0, 'h'},
+		{"los",      1, 0, 'l'},
 		{"ShowAllTerrain", 0, 0, 'T'},
-		{"sound", 1, 0, 's'},
+		{"sound",    1, 0, 's'},
 		{"playback", 1, 0, 'P'},
 		{"playback_speed", 1, 0, 'S'},
-		{"record", 1, 0, 'R'},
-		{"tick", 1, 0, 't'},
-                {"version", 0, 0, 'v'},
+		{"record",   1, 0, 'R'},
+		{"tick",     1, 0, 't'},
+                {"version",  0, 0, 'v'},
 		{0, 0, 0, 0}
 	};
 	int c = 0;
@@ -151,6 +154,9 @@ static void parse_args(int argc, char **argv)
 		case 'c':
 			map_use_circular_vision_radius = 1;
 			break;
+                case 'd':
+                        DeveloperMode = 1;
+                        break;
 		case 'R':
 			// Set the global RecordFile pointer. Used by
 			// eventInit().

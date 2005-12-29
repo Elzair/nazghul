@@ -39,6 +39,7 @@
 int G_latency_start = 0;
 int G_turnaround_start = 0;
 int G_turnaround  = 0;
+extern int DeveloperMode;
 
 static int unshift[] = { KEY_NORTH, KEY_SOUTH, KEY_EAST, KEY_WEST };
 
@@ -54,8 +55,22 @@ static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
         
         G_latency_start = SDL_GetTicks();
 
-        switch (key) {
+        /* Commands which are only enabled in developer mode */
+        if (DeveloperMode) {
+                switch (key) {
+                        
+                case KEY_CTRL_T:
+                        cmd_terraform(party->getPlace(), party->getX(), party->getY());
+                        break;
+                        
+                case KEY_CTRL_Z:
+                        mapTogglePeering();
+                        break;
+                }
+        }
 
+        switch (key) {
+                
         case KEY_NORTH:
         case KEY_EAST:
         case KEY_SOUTH:
@@ -171,13 +186,6 @@ static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
                 cmdSaveTerrainMap(NULL);
                 break;
                         
-        case KEY_CTRL_T:
-                cmd_terraform(party->getPlace(), party->getX(), party->getY());
-                break;
-                        
-        case KEY_CTRL_Z:
-                mapTogglePeering();
-                break;
         default:
                 break;
         } // switch(key)
@@ -747,6 +755,22 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
 
         /* First process commands which should not be affected by the keystroke
          * hooks. */
+
+        /* Commands which are only enabled in developer mode */
+        if (DeveloperMode) {
+                switch (key) {
+
+                case KEY_CTRL_T:
+                        cmd_terraform(character->getPlace(), character->getX(),
+                                      character->getY());
+                        break;
+                        
+                case KEY_CTRL_Z:
+                        mapTogglePeering();
+                        break;
+                }
+        }
+
         switch (key) {
 
         case KEY_CTRL_Q:
@@ -761,15 +785,6 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
       
         case KEY_CTRL_S:
                 cmdSaveTerrainMap(character);
-                break;
-
-        case KEY_CTRL_T:
-                cmd_terraform(character->getPlace(), character->getX(),
-                              character->getY());
-                break;
-
-        case KEY_CTRL_Z:
-                mapTogglePeering();
                 break;
 
         case KEY_CTRL_D:
