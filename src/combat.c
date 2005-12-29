@@ -159,7 +159,7 @@ void combat_set_state(enum combat_state new_state)
                 case COMBAT_STATE_LOOTING:
                         combat_print_banner("VICTORY");
                         sound_play(Combat.sound_victory, SOUND_MAX_VOLUME);
-                        Session->player_party->addExperience(COMBAT_VICTORY_XP);
+                        player_party->addExperience(COMBAT_VICTORY_XP);
                         break;
                 case COMBAT_STATE_DONE:
                         combat_print_banner("DEFEAT");
@@ -490,7 +490,7 @@ static bool myPutNpc(class Character * pm, void *data)
 
         /* Check if we need to go back to fighting */
         if (combat_get_state() != COMBAT_STATE_FIGHTING &&
-            are_hostile(pm, Session->player_party)) {
+            are_hostile(pm, player_party)) {
                 combat_set_state(COMBAT_STATE_FIGHTING);
         }
 
@@ -655,7 +655,7 @@ bool combat_place_character(class Character * pm, void *data)
                 // crash and the player can usually get out of the fix by
                 // defeating the npc's.
 
-                class Character *leader = Session->player_party->get_leader();
+                class Character *leader = player_party->get_leader();
 
                 if (!leader) {
                         dbg("Putting %s on start location [%d %d]\n",
@@ -845,13 +845,13 @@ static void combat_hostile_status_visitor(struct node *node, void *data)
                 return;
 
         /* A hostile npc means a hostile faction still exists */
-        if (are_hostile((Being*)obj, Session->player_party)) {
+        if (are_hostile((Being*)obj, player_party)) {
                 *status = COMBAT_FACTION_EXISTS;
                 return;
         }
 
         /* Check for a charmed hostile */
-        if (are_natively_hostile((Being*)obj, Session->player_party)) {
+        if (are_natively_hostile((Being*)obj, player_party)) {
                 *status = COMBAT_FACTION_CHARMED;
         }
 }
@@ -911,13 +911,13 @@ static void combat_player_status_visitor(struct node *node, void *data)
                 return;
 
         /* A non-hostile party member means the player is still fighting. */
-        if (! are_hostile((Being*)obj, Session->player_party)) {
+        if (! are_hostile((Being*)obj, player_party)) {
                 *status = COMBAT_FACTION_EXISTS;
                 return;
         }
 
         /* Check if a player party members has been charmed */
-        if (are_natively_hostile((Being*)obj, Session->player_party)) {
+        if (are_natively_hostile((Being*)obj, player_party)) {
                 *status = COMBAT_FACTION_CHARMED;
         }
 }
@@ -1025,6 +1025,8 @@ void combat_analyze_results_of_last_turn()
                 // while the player helplessly watches.
                 // -------------------------------------------------------------
 
+                player_party->unCharmMembers();
+
                 switch (hostile_faction_status) {
                         
                 case COMBAT_FACTION_EXISTS:
@@ -1103,7 +1105,7 @@ static void combat_find_and_position_enemy(class Object * obj, void *data)
 
         info = (struct v2 *) data;
         assert(obj_is_being(obj));
-        if (are_hostile((Being*)obj, Session->player_party))
+        if (are_hostile((Being*)obj, player_party))
                 combat_set_state(COMBAT_STATE_FIGHTING);        
         combat_position_enemy((class Party *) obj, info->dx, info->dy, false, 
                         info->place);
@@ -1286,9 +1288,9 @@ static struct terrain_map *create_temporary_terrain_map(struct combat_info
 
         // Fill the player's half of the combat map
         fill_temporary_terrain_map(map,
-                                   Session->player_party->getPlace(),
-                                   Session->player_party->getX(),
-                                   Session->player_party->getY(), player_dx, player_dy);
+                                   player_party->getPlace(),
+                                   player_party->getX(),
+                                   player_party->getY(), player_dx, player_dy);
 
         // Fill the npc party's half of the combat map
         fill_temporary_terrain_map(map,
@@ -1298,9 +1300,9 @@ static struct terrain_map *create_temporary_terrain_map(struct combat_info
                                    npc_dx, npc_dy);
 
         struct terrain_map *party_map =
-            place_get_combat_terrain_map(Session->player_party->getPlace(),
-                                         Session->player_party->getX(),
-                                         Session->player_party->getY());
+            place_get_combat_terrain_map(player_party->getPlace(),
+                                         player_party->getX(),
+                                         player_party->getY());
         struct terrain_map *npc_party_map =
             place_get_combat_terrain_map(info->move->npc_party->getPlace(),
                                          info->move->npc_party->getX(),
@@ -1344,8 +1346,8 @@ static struct terrain_map *create_temporary_terrain_map(struct combat_info
                 // Use the parent map (wilderness, or whatever) to get a palette.
                 // Since the terrain fill for each half is based on 
                 // some terrain in the parent map, that palette should be appropriate.
-                assert(Session->player_party->getPlace()->terrain_map);
-                the_map = Session->player_party->getPlace()->terrain_map;
+                assert(player_party->getPlace()->terrain_map);
+                the_map = player_party->getPlace()->terrain_map;
         }
         map->palette = the_map->palette;
         terrain_map_print(stdout, INITIAL_INDENTATION, map);
@@ -1357,22 +1359,22 @@ static bool position_player_party(struct combat_info *cinfo)
 {
         class Vehicle *vehicle;
 
-        combat_fill_position_info(&Session->player_party->pinfo, Place,
+        combat_fill_position_info(&player_party->pinfo, Place,
                                   cinfo->move->x, cinfo->move->y,
                                   cinfo->move->dx, cinfo->move->dy, 
                                   cinfo->defend);
 
-        Session->player_party->pinfo.formation = Session->player_party->get_formation();
-        if (!Session->player_party->pinfo.formation)
-                Session->player_party->pinfo.formation = formation_get_default();
+        player_party->pinfo.formation = player_party->get_formation();
+        if (!player_party->pinfo.formation)
+                player_party->pinfo.formation = formation_get_default();
 
         // Check for map overlays. First check if the player is in a vehicle
         // with a map.
-        if (Session->player_party->vehicle &&
-            Session->player_party->vehicle->getObjectType()->map &&
+        if (player_party->vehicle &&
+            player_party->vehicle->getObjectType()->map &&
             Place == Combat.place) {
-                combat_overlay_map(Session->player_party->vehicle->getObjectType()->map,
-                                   &Session->player_party->pinfo,
+                combat_overlay_map(player_party->vehicle->getObjectType()->map,
+                                   &player_party->pinfo,
                                    cinfo->move->npc_party != NULL);
         }
 
@@ -1381,24 +1383,24 @@ static bool position_player_party(struct combat_info *cinfo)
         // series of dungeon combats the player party may not have a place
         // (because we remove it just below and the calling code does not
         // relocate the player party until it returns to a town or wilderness.
-        else if (Session->player_party->getPlace() &&
-                 (vehicle = place_get_vehicle(Session->player_party->getPlace(),
-                                              Session->player_party->getX(),
-                                              Session->player_party->getY())) &&
+        else if (player_party->getPlace() &&
+                 (vehicle = place_get_vehicle(player_party->getPlace(),
+                                              player_party->getX(),
+                                              player_party->getY())) &&
                  vehicle->getObjectType()->map) {
                 // dbg("party overlay, party over vehicle\n");
                 combat_overlay_map(vehicle->getObjectType()->map,
-                                   &Session->player_party->pinfo, 0);
+                                   &player_party->pinfo, 0);
         }
         // Finally, since there is no vehicle map check for a camping map.
-        else if (cinfo->camping && Session->player_party->campsite_map) {
+        else if (cinfo->camping && player_party->campsite_map) {
                 // dbg("party overlay, party is camping\n");
-                combat_overlay_map(Session->player_party->campsite_map, 
-                                   &Session->player_party->pinfo, 0);
+                combat_overlay_map(player_party->campsite_map, 
+                                   &player_party->pinfo, 0);
         }
 
-        Session->player_party->remove();
-        Session->player_party->forEachMember(combat_place_character, &Session->player_party->pinfo);
+        player_party->remove();
+        player_party->forEachMember(combat_place_character, &player_party->pinfo);
         return true;
 }
 
@@ -1406,7 +1408,7 @@ bool combat_enter(struct combat_info * info)
 {
         struct location loc;
 
-        if (Session->player_party->allDead())
+        if (player_party->allDead())
                 // Yes, this can happen in some rare circumstances...
                 return false;
 
@@ -1510,14 +1512,14 @@ bool combat_enter(struct combat_info * info)
                                       &v2);
         }
 
-        Session->player_party->forEachMember(mySetInitialCameraPosition, 0);
+        player_party->forEachMember(mySetInitialCameraPosition, 0);
 
         if (combat_get_state() == COMBAT_STATE_FIGHTING) {
-                Session->player_party->enableRoundRobinMode();
+                player_party->enableRoundRobinMode();
                 sound_play(Combat.sound_enter, SOUND_MAX_VOLUME);
         }
         else if (combat_get_state() != COMBAT_STATE_CAMPING) {
-                Session->player_party->enableFollowMode();
+                player_party->enableFollowMode();
         }
 
         // ---------------------------------------------------------------------
@@ -1650,11 +1652,11 @@ void combat_exit(void)
                 // 'Place' pointer to the wilderness.
                 // ------------------------------------------------------------
 
-                Session->player_party->relocate(parent, x, y);                
+                player_party->relocate(parent, x, y);                
 
         }
 
-        assert(NULL != Session->player_party->getPlace());
+        assert(NULL != player_party->getPlace());
 
         // --------------------------------------------------------------------
         // Force a map update. Although the map has been marked dirty by now,

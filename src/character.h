@@ -192,6 +192,8 @@ class Character:public Being {
         virtual bool takeOut(ObjectType *type, int amount);
         virtual void setCurrentFaction(int faction);
 
+        void charm(int faction);
+        void unCharm();
 	void useAmmo(class ArmsType *weapon);
         bool canSee(class Object *obj);
 	bool commute();

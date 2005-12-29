@@ -37,10 +37,13 @@
 
 ;;----------------------------------------------------------------------------
 ;; NPC's
+(kern-load "thorald.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Places
 (load "tutorial_town.scm")
+(load "tutorial_cave.scm")
+(load "tutorial_wilderness.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Player
@@ -53,12 +56,12 @@
   oc_wanderer           ; occ
   s_wanderer            ; sprite
   faction-player        ; starting alignment
-  5 5 5                 ; str/int/dex
+  5 5 25                 ; str/int/dex
   pc-hp-off
   pc-hp-gain
   pc-mp-off
   pc-mp-gain
-  40 0 12 8             ; hp/xp/mp/lvl
+  40 0 12 5             ; hp/xp/mp/lvl
   #f                    ; dead
   nil                   ; conv
   nil                   ; sched
@@ -66,6 +69,7 @@
   nil                   ; container
   nil                   ; readied
   )
+
 
 ;; Player Party
 (kern-mk-player

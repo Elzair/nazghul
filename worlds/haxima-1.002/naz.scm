@@ -1351,12 +1351,14 @@
 
 (define (mean-player-party-level)
   (let ((members (kern-party-get-members (kern-get-player))))
-    (/ (foldr (lambda (sum kchar)
-                (println "level:" (kern-char-get-level kchar))
-                (+ sum (kern-char-get-level kchar)))
-              0
-              members)
-       (length members))))
+    (if (= 0 (length members))
+        1
+        (/ (foldr (lambda (sum kchar)
+                    (println "level:" (kern-char-get-level kchar))
+                    (+ sum (kern-char-get-level kchar)))
+                  0
+                  members)
+           (length members)))))
 
 (define (calc-level)
   (max 1

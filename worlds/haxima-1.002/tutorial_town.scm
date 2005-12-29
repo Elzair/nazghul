@@ -1,25 +1,26 @@
 (mk-tower
  'p_tutorial_town "Tutorial Town"
  (list
-      "xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx "
-      "xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx "
-      "xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx "
-      "xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx "
-      "xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx "
-      "xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx "
-      "xx xx xx xx xx ,, ,, ,, ,, ,, xx xx xx xx xx xx xx xx xx "
-      "xx xx xx xx xx xx ,, xx xx ,, xx xx xx xx xx xx xx xx xx "
-      "xx xx xx xx xx xx ,, xx xx ,, xx xx xx xx xx xx xx xx xx "
-      "xx xx xx xx xx xx ,, xx xx ,, xx xx xx xx xx xx xx xx xx "
-      "xx xx xx xx xx ,, ,, xx xx xx xx xx xx xx xx xx xx xx xx "
-      "xx xx xx xx xx xx ,, xx xx xx xx xx xx xx xx xx xx xx xx "
-      "xx xx xx xx xx xx ,, xx xx xx xx xx xx xx xx xx xx xx xx "
+      "xx xx xx xx xx xx xx xx xx ,, xx xx xx xx xx xx xx xx xx "
+      "xx xx xx xx xx xx xx xx xx ,, xx xx xx xx xx xx xx xx xx "
+      "xx xx xx xx xx xx xx xx xx ,, ,, ,, ,, ,, xx xx xx xx xx "
+      "xx xx xx xx xx xx xx xx xx xx xx xx xx ,, xx xx xx xx xx "
+      "xx xx xx xx xx xx xx xx xx xx xx xx xx ,, xx xx xx xx xx "
+      "xx xx xx xx xx xx xx xx xx xx xx xx ,, ,, ,, xx xx xx xx "
+      "xx xx xx xx xx ,, ,, ,, ,, ,, xx xx ,, ,, ,, xx xx xx xx "
+      "xx xx xx xx xx xx ,, xx xx ,, xx xx ,, ,, ,, xx xx xx xx "
+      "xx xx xx xx xx xx ,, xx xx ,, xx xx xx ,, xx xx xx xx xx "
+      "xx xx xx xx xx xx ,, xx xx ,, xx xx ,, ,, ,, xx xx xx xx "
+      "xx xx xx xx xx ,, ,, xx xx xx xx ,, ,, ,, ,, xx xx xx xx "
+      "xx xx xx xx xx xx ,, xx xx xx xx xx ,, ,, ,, xx xx xx xx "
+      "xx xx xx xx xx xx ,, xx xx xx xx xx xx ,, xx xx xx xx xx "
       "xx xx xx xx xx xx ,, ,, ,, ,, ,, ,, ,, ,, xx xx xx xx xx "
       "xx xx xx xx xx xx xx xx xx ,, xx xx xx xx xx xx xx xx xx "
       "xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx "
       "xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx "
       "xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx "
       "xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx "
+
   )
  (put (mk-chest 
        nil 
@@ -31,7 +32,7 @@
         (list 1 t_halberd)
         ))
       5 6)
- ;; (put (spawn-pt 'snake) 11 13)
+ (put (spawn-pt 'snake) 11 13)
  (put (kern-tag 'p1 (mk-portcullis)) 6 11)
  (put (mk-lever 'p1) 5 10)
  (put (kern-tag 'p2 (mk-portcullis)) 10 13)
@@ -65,4 +66,34 @@
                     "To A)ttack press 'A' and cursor over the target, then press ENTER.")
       9 13)
 
+ (put (mk-step-clue "To O)pen a door just try to step through it.") 13 13)
+ (put (mk-door) 13 12)
+
+ (put (mk-step-clue "S)earch corpses using the 'S' key followed by an arrow key.") 12 10)
+ (put (mk-corpse2 (list (list 20 't_picklock) 
+                        (list 10 'sulphorous_ash)
+                        (list 10 'blood_moss)
+                        )) 11 10)
+
+ (put (mk-locked-door) 13 8)
+ (put (mk-step-clue "U)se the picklocks from the corpse to unlock this door. "
+                    "Press 'U', select the item to use, then target the door.") 13 9)
+
+ (put (kern-tag 'p3 (mk-portcullis)) 12 13)
+ (put (mk-lever 'p3) 11 14)
+
+ (put (mk-magic-locked-door) 13 4)
+ (put (mk-thorald) 12 5)
+ (put (mk-step-clue "T)alk to NPC's by hitting the 't' key and targeting them. "
+                    "Then enter keywords to ask them questions. Most NPC's respond to NAME and JOB. "
+                    "NPC's usually give you clues to more keywords in their responses. "
+                    "To end a conversation type 'bye' or just hit ENTER. "
+                    "If you think an NPC would be a good addition to your party, ask them to JOIN. "
+                    "Now talk to Thorald and ask him about the door. ")
+      13 7)
+
+
+ (put (mk-step-clue "You're about to leave town and enter the wilderness. "
+                    "In the wilderness your entire party will appear as a single icon. ")
+      9 0)
  )

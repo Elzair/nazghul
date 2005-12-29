@@ -98,17 +98,6 @@ static inline void list_switch(struct list *e1, struct list *e2)
         list_replace(&tmp, e2);
 }
 
-static inline int list_size(struct list *head)
-{
-        int size = 0;
-        struct list *elem = head->next;
-        while (elem != head) {
-                size++;
-                elem=elem->next;
-        }
-        return size;
-}
-
 END_DECL
 
 #endif

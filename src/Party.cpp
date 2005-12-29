@@ -176,8 +176,8 @@ MoveResult Party::move(int dx, int dy)
 	}
 
 	/* Check if the player is there. */
-	if (newx == Session->player_party->getX() && 
-            newy == Session->player_party->getY()) {
+	if (newx == player_party->getX() && 
+            newy == player_party->getY()) {
 
                 // ------------------------------------------------------------
                 // Subtle: check if the player party is on the map. This
@@ -187,11 +187,11 @@ MoveResult Party::move(int dx, int dy)
                 // party exits combat they will be on top of this npc party.
                 // ------------------------------------------------------------
                 
-                if (! Session->player_party->isOnMap())
+                if (! player_party->isOnMap())
                         return WasOccupied;
 
 		/* If this party is hostile to the player then begin combat */
-		if (are_hostile(this, Session->player_party)) {
+		if (are_hostile(this, player_party)) {
 
 			struct move_info info;
 			struct combat_info cinfo;
@@ -216,11 +216,11 @@ MoveResult Party::move(int dx, int dy)
                         return EngagedEnemy;
 		}
 
-                if (Session->player_party->isResting()) {
+                if (player_party->isResting()) {
 
                         /* If the player is sleeping then kick him out of
                          * bed */
-                        Session->player_party->throw_out_of_bed();
+                        player_party->throw_out_of_bed();
 
                 }
 
@@ -325,14 +325,14 @@ bool Party::attack_with_ordnance(int d)
 	// Get the normalized vector to the player.
         place_get_direction_vector(getPlace(),
                                    getX(), getY(), 
-                                   Session->player_party->getX(), Session->player_party->getY(),
+                                   player_party->getX(), player_party->getY(),
                                    &dx, &dy);
 	clamp(dx, -1, 1);
 	clamp(dy, -1, 1);
 
 	// Check if the player is on a major axes (assumes we must fire in a
 	// straight line -- always true for now).
-	if (Session->player_party->getY() == getY()) {
+	if (player_party->getY() == getY()) {
 
 		// If necessary, turn the vehicle to broadside the player (this
 		// assumes we must use a broadside, again always true for now).
@@ -350,7 +350,7 @@ bool Party::attack_with_ordnance(int d)
 		return true;
 	}
 	// Ditto but for the other axis.
-	if (Session->player_party->getX() == getX()) {
+	if (player_party->getX() == getX()) {
 		if (vehicle->getFacing() != EAST &&
 		    vehicle->getFacing() != WEST) {
 			int cost;
@@ -856,6 +856,8 @@ void Party::save(struct save *save)
         class Character *member;
 
         save->enter(save, "(let ((kparty (kern-mk-party)))\n");
+        if (getName())
+                save->write(save, "(kern-being-set-name kparty \"%s\")\n", getName());
         save->write(save, "(kern-obj-set-sprite kparty %s)\n", getSprite()->tag);
         save->write(save, "(kern-being-set-base-faction kparty %d)\n", getBaseFaction());
         if (vehicle) {

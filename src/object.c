@@ -611,7 +611,7 @@ Object::~Object()
         }
 
         if (gob)
-                gob_unref(gob);
+                gob_del(gob);
 
         if (getView()) {
                 rmView();
@@ -631,9 +631,6 @@ Object::~Object()
                 // Destroy each hook entry on the hook list.
                 hookForEach(i, object_delete_hook_entry, this);
         }
-
-        // make sure camera is not attached to this any more
-        attachCamera(false);
 }
 
 int Object::getX()
@@ -1852,17 +1849,9 @@ bool Object::addGold(int amount)
         return false; // subclasses will overload
 }
 
-void Object::setGob(struct gob *val)
+void Object::setGob(struct gob *g)
 {
-        if (gob) {
-                gob_unref(gob);
-                gob = NULL;
-        } 
-
-        if (val) {
-                gob_ref(val);
-                gob = val;
-        }
+        gob = g;
 }
 
 struct gob * Object::getGob()
@@ -1967,9 +1956,6 @@ void Object::setActionPoints(int amount)
 
 void obj_inc_ref(Object *obj)
 {
-        if (obj==Session->player_party) {
-                dbg("ref on player party\n");
-        }
         obj->refcount++;
 }
 
@@ -1985,16 +1971,16 @@ int Object::getTTL(void) { return ttl; }
 
 bool Object::surreptitiouslyRemove()
 {
-        if (getPlace()==Session->player_party->getPlace()
-            && (place_flying_distance(Session->player_party->getPlace(),
-                                      Session->player_party->getX(),
-                                      Session->player_party->getY(),
+        if (getPlace()==player_party->getPlace()
+            && (place_flying_distance(player_party->getPlace(),
+                                      player_party->getX(),
+                                      player_party->getY(),
                                       getX(),
                                       getY())
-                < Session->player_party->getVisionRadius())
-            && place_in_los(Session->player_party->getPlace(),
-                            Session->player_party->getX(),
-                            Session->player_party->getY(),
+                < player_party->getVisionRadius())
+            && place_in_los(player_party->getPlace(),
+                            player_party->getX(),
+                            player_party->getY(),
                             getPlace(),
                             getX(),
                             getY())) {

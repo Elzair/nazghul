@@ -1264,7 +1264,7 @@ static void place_run_on_entry_hook(struct place *place)
         struct list *elem;
         list_for_each(&place->on_entry_hook, elem) {
                 closure_list_t *node = (closure_list_t*)elem;
-                closure_exec(node->closure, "pp", place, Session->player_party);
+                closure_exec(node->closure, "pp", place, player_party);
         }
 }
 
@@ -1549,22 +1549,14 @@ void place_for_each_tile(struct place *place,
         int count = 0;
 
 	// for each bucket
-        // Removed the Quit check in this loop because this function is called
-        // by place_del() upon Quit, and if it doesn't run we get a memory
-        // leak.
-	//for (i = 0; i < place->objects->n && !Quit; i++) {
-        for (i = 0; i < place->objects->n; i++) {
+	for (i = 0; i < place->objects->n && !Quit; i++) {
 
 		tileList = &place->objects->buckets[i];
 		tileElem = tileList->list.next;
 		assert(tileElem->prev == &tileList->list);
 
 		// for each tile
-                // Removed the Quit check in this loop because this function is
-                // called by place_del() upon Quit, and if it doesn't run we
-                // get a memory leak.
-		//while (tileElem != &tileList->list && !Quit) {
-                while (tileElem != &tileList->list) {
+		while (tileElem != &tileList->list && !Quit) {
 
 			tileTmp = tileElem->next;
 			tile = outcast(tileElem, struct tile, hashlink.list);
@@ -1694,7 +1686,7 @@ void place_exec(struct place *place)
         /* Loop over all nodes or until the player quits or dies. */
         while (place->turn_elem != &place->turn_list
                && ! Quit
-               && ! Session->player_party->allDead()
+               && ! player_party->allDead()
                && ! Reload
                && place == Place /* otherwise projectiles and damage flashes
                                   * from the old place are shown in the new
@@ -1740,7 +1732,7 @@ void place_exec(struct place *place)
 
                         /* Don't delete the player party here, that will be
                          * handled by the caller. */
-                        if (obj == Session->player_party) {
+                        if (obj == player_party) {
                                 place_unlock(place);
                                 return;
                         }

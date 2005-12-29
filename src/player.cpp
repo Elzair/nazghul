@@ -51,6 +51,8 @@
 #define CAMPING_TIME_ACCELERATION (MINUTES_PER_HOUR)
 
 
+class player_party *player_party;
+
 #define DIRLOC(dir,place,coord) { \
     if ((dir) < 0) \
         (coord) = place_w((place)) - 1; \
@@ -135,8 +137,8 @@ static bool pc_check_if_not_immobilized(class Character * pm, void *data)
 
 static bool pc_eat_food(class Character * pm, void *data)
 {
-	if (Session->player_party->food) {
-		Session->player_party->food--;
+	if (player_party->food) {
+		player_party->food--;
 		return false;
 	}
 
@@ -811,6 +813,11 @@ player_party::~player_party()
 
 int player_init(void)
 {
+	if (!(player_party = new class player_party())) {
+		err("Failed to allocate player_party");
+		return -1;
+	}
+
 	return 0;
 }
 
@@ -1085,6 +1092,16 @@ class Character *player_party::getMemberAtIndex(int index)
         return NULL;
 }
 
+static bool member_uncharm(class Character *member, void *data)
+{
+        member->unCharm();
+        return false;
+}
+
+void player_party::unCharmMembers()
+{
+        forEachMember(member_uncharm, NULL);
+}
 
 bool player_party::addToInventory(class Object *object)
 {
@@ -1558,6 +1575,9 @@ void player_dtor(void *val)
 {
         class player_party *party = (class player_party*)val;
         obj_dec_ref(party);
+        if (! party->refcount)
+                delete (class player_party*)val;
+        player_party = 0; /* global */
 }
 
 void player_save(save_t *save, void *val)

@@ -895,8 +895,8 @@ static void mapPaintPlace(struct place *place,
 
 static void mapRepaintCoordinates(void)
 {
-        if (Session->player_party->isOnMap()) {
-                screenPrint(&Map.locRect, 0, "[%d,%d]", Session->player_party->getX(), Session->player_party->getY());
+        if (player_party->isOnMap()) {
+                screenPrint(&Map.locRect, 0, "[%d,%d]", player_party->getX(), player_party->getY());
                 return;
         }
         

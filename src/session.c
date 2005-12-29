@@ -53,7 +53,6 @@
 #include "terrain_map.h" // dbg
 #include "dtable.h"
 #include "wq.h"
-#include "vmask.h"
 
 #include <assert.h>
 #include <ctype.h>              // isspace()
@@ -142,7 +141,6 @@ void *session_add(struct session *session, void *obj,
          * order they are loaded. The order can matter in certain cases (e.g.,
          * include files loaded at the front of the session). */
         list_add_tail(&session->data_objects, &entry->list);
-        //dbg("session_add: %08lx %08lx %08lx\n", session, entry, obj);
         return entry;
 }
 
@@ -150,7 +148,6 @@ void session_rm(struct session *session, void *handle)
 {
         struct data_obj_entry *entry;
         entry = (struct data_obj_entry *)handle;
-        //dbg("session_rm: %08lx %08lx %08lx\n", session, entry, entry->obj);
         list_remove(&entry->list);
         free(entry);
 }
@@ -245,7 +242,6 @@ void session_del(struct session *session)
         int count = 0;
         while (elem != &session->data_objects) {
                 entry = list_entry(elem, struct data_obj_entry, list);
-                //dbg("session_del: %08lx %08lx %08lx\n", session, entry, entry->obj);
                 elem = elem->next;
                 entry->dtor(entry->obj);
                 free(entry);
@@ -260,10 +256,6 @@ void session_del(struct session *session)
                 ptable_del(session->ptable);
         if (session->dtable)
                 dtable_del(session->dtable);
-        if (session->player_party) {
-                obj_dec_ref(session->player_party);
-                session->player_party=NULL;
-        }
 
         /* Clean up the turn work queue */
         elem = session->turnq.next;
@@ -293,21 +285,6 @@ void session_del(struct session *session)
         /* Clean up the closures */
         closure_unref_safe(session->start_proc);
         closure_unref_safe(session->camping_proc);
-
-#if 0        
-        /* This is commented-out not because it isn't the right thing to do,
-         * but because it sometimes causes problems on reload due to what looks
-         * like a double-deallocation bug somewhere. I'm punting on finding
-         * that bug for now. The downside is now I have a memory leak on
-         * reload. I've never noticed any problems resulting from this. */
-
-        /* Clean up the interpreter */
-        if (session->interp) {
-                scheme_deinit((scheme*)session->interp);
-                free(session->interp);
-                session->interp=NULL;
-        }
-#endif
 
         free(session);
 }
@@ -399,10 +376,10 @@ int session_load(char *filename)
                 load_err("diplomacy table not set (use kern-set-dtable)");
         }
 
-        if (! Session->player_party) {
+        if (! player_party) {
                 load_err("no player party");
         }
-        if (Session->player_party->getSize() == 0) {
+        if (player_party->getSize() == 0) {
                 load_err("player party empty");
         }
 
@@ -422,12 +399,11 @@ int session_load(char *filename)
         if (old_session) {
                 scheme *old_sc = (scheme*)old_session->interp;
                 session_del(old_session);
-                // Why did I remove this?!:
                 //scheme_deinit(old_sc);
                 //free(old_sc);
         }
 
-        Session->player_party->startSession();
+        player_party->startSession();
 
         /* Now setup stuff that with known defaults. */
         statusSetMode(Session->status_mode);
@@ -458,7 +434,7 @@ int session_load(char *filename)
 	foogodRepaint();
 	consoleRepaint();
 	statusRepaint();
-        vmask_flush_all();
+
         return 0;
 }
 
@@ -577,7 +553,6 @@ void session_save(char *fname)
                 }
         }
 
-
         /* Save all the special-case stuff... */
         save->write(save, ";;--------------\n");
         save->write(save, ";; Miscellaneous\n");
@@ -645,7 +620,7 @@ void session_set_camping_proc(struct session *session, struct closure *proc)
 void session_run_start_proc(struct session *session)
 {
         if (session->start_proc) {
-                closure_exec(session->start_proc, "p", session->player_party);
+                closure_exec(session->start_proc, "p", player_party);
         }
 }
 
@@ -671,6 +646,8 @@ void session_synch_sched_chars(struct session *session)
                 class Character *npc = (class Character*)node->ptr;
                 node = node->next;
                 npc->synchronize();
+                if (npc->isCharmed())
+                        npc->unCharm();
         }
 }
 
@@ -682,18 +659,4 @@ void session_intro_sched_chars(struct session *session)
                 npc->introduce();
                 node = node->next;
         }        
-}
-
-void session_set_player_party(struct session *session, class player_party *val)
-{
-        if (session->player_party) {
-                dbg("warning: player party already exists, resetting!\n");
-                obj_dec_ref(session->player_party);
-                session->player_party=NULL;
-        }
-
-        if (val) {
-                obj_inc_ref(val);
-                session->player_party=val;
-        }
 }

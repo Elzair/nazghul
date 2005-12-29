@@ -46,7 +46,7 @@
                               (pick-lock-ok kuser ktarg)
                               (if (> (+ roll 
                                         (pick-lock-bonus kuser))
-                                     16)
+                                     12)
                                   (pick-lock-ok kuser ktarg)
                                   (pick-lock-failed kuser kobj)
                                   )))))))

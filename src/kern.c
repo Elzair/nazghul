@@ -172,7 +172,7 @@ static void kern_run_wq_job(struct wq_job *job, struct list *wq)
 {
         struct kjob *kjob;
         kjob = (struct kjob*)job->data;
-        ////dbg("kjob_run: %08lx\n", kjob);
+        //dbg("kjob_run: %08lx\n", kjob);
         closure_exec(kjob->clx, "p", kjob->data);
         kjob_del(kjob);
         wq_job_del(job);
@@ -396,7 +396,7 @@ static int unpack(scheme *sc, pointer *cell, char *fmt, ...)
                         *cval = car;
                         break;
                 default:
-                        //dbg("unknown format char: %c\n", *(fmt - 1));
+                        dbg("unknown format char: %c\n", *(fmt - 1));
                         assert(0);
                         break;
                 }
@@ -652,8 +652,6 @@ static pointer kern_mk_terrain(scheme *sc, pointer args)
         int pclass;
         pointer proc = NULL;
         closure_t *clx = NULL;
-
-        //dbg("kern_mk_terrain\n");
 
         /* Revisit: ignore effects for now */
 
@@ -1142,8 +1140,6 @@ static int kern_place_load_hooks(scheme *sc, pointer *args,
         pointer contents;
         pointer pre_entry_proc;
 
-        //dbg("kern_place_load_hooks\n");
-
         if (! scm_is_pair(sc, *args)) {
                 load_err("kern-mk-place %s: missing the hooks list",
                          place->tag);
@@ -1242,8 +1238,6 @@ static pointer kern_mk_species(scheme *sc, pointer args)
         struct mmode *mmode;
         pointer on_death;
 
-        //dbg("kern_mk_species\n");
-
         if (unpack(sc, &args, "ysdddddpddddppbppcd", &tag, &name, &str, 
                    &intl, &dex, &spd, &vr, &mmode, &hpmod, &hpmult, &mpmod, 
                    &mpmult, &sleep_sprite, &weapon, 
@@ -1333,8 +1327,6 @@ static pointer kern_mk_arms_type(scheme *sc, pointer args)
         pointer ret;
         int gifc_cap;
 
-        //dbg("kern_mk_arms_type\n");
-
         if (unpack(sc, &args, "yspssssddddpbbdpdo", &tag, &name, &sprite, 
                    &hit, &damage, &armor, &defend, &slots, &hands, 
                    &range, &rap, &missile, &thrown, &ubiq, &weight, 
@@ -1393,8 +1385,6 @@ static pointer kern_mk_field_type(scheme *sc, pointer args)
         pointer func = sc->NIL;
         pointer ret;        
 
-        //dbg("kern_mk_field_type\n");
-
         if (unpack(sc, &args, "yspdddc", &tag, &name, &sprite, &light, 
                    &duration, &pclass, &func)) {
                 load_err("kern-mk-field-type %s: bad args", tag);
@@ -1445,8 +1435,6 @@ static pointer kern_mk_obj_type(scheme *sc, pointer args)
         pointer ret;
         pointer gifc;
         int gifc_cap;
-
-        //dbg("kern_mk_obj_type\n");
 
         if (unpack(sc, &args, "yspddo", &tag, &name, &sprite, &layer, 
                    &gifc_cap, &gifc)) {
@@ -1523,7 +1511,6 @@ static int kern_load_hooks(scheme *sc, pointer hook_tbl, Object *obj)
                  * tried to use a NULL gob instead but if we pass that back
                  * into scheme as an arg and the gc tries to mark it we'll
                  * crash. */
-                //dbg("kern_load_hooks\n");
                 gob = gob_new(sc, gobcell);
                 gob->flags |= GOB_SAVECAR;
                 
@@ -1552,8 +1539,6 @@ static pointer kern_mk_char(scheme *sc, pointer args)
         struct sched *sched;
         pointer factions;
         class Container *inventory;
-
-        //dbg("kern_mk_char\n");
 
         if (unpack(sc, &args, "yspppddddddddddddbcpcp",
                    &tag, &name, &species, &occ, 
@@ -1761,8 +1746,6 @@ static pointer kern_obj_relocate(scheme *sc, pointer args)
         pointer cutscene;
         int x, y;
         struct closure *clx = NULL;
-
-        //dbg("kern_obj_relocate\n");
 
         obj = unpack_obj(sc, &args, "kern-obj-relocate");
         if (!obj)
@@ -2059,8 +2042,6 @@ static pointer kern_mk_container(scheme *sc, pointer args)
         pointer trap;
         pointer contents;
 
-        //dbg("kern_mk_container\n");
-
         if (unpack(sc, &args, "pc", &type, &trap)) {
                 load_err("kern-mk-container: bad args");
                 return sc->NIL;
@@ -2136,6 +2117,21 @@ KERN_API_CALL(kern_mk_player)
         // successfully loaded the new session.
         // --------------------------------------------------------------------
         
+        /* The player party is a special global object that is created on
+         * startup. This is legacy, and needs to be addressed eventually. For
+         * now reset the party by destroying it and recreating it. Do NOT call
+         * player_init again because it sets up work queue jobs (which right
+         * now I have no way of canceling). */
+
+        if (player_party) {
+                obj_inc_ref(player_party);
+                if (player_party->isOnMap()) // hack!
+                        player_party->remove(); // hack!
+                while (player_party->refcount > 1) // hack!
+                        obj_dec_ref(player_party); // hack!
+                obj_dec_ref(player_party);
+        }
+
         if (unpack(sc, &args, "ypspdddppppp", 
                    &tag,
                    &sprite,
@@ -2156,13 +2152,12 @@ KERN_API_CALL(kern_mk_player)
         //members = scm_car(sc, scm_cdr(sc, args));
         members = scm_car(sc, args);
 
-        class player_party *player_party = 
-                new class player_party(tag, sprite, 
-                                       mv_desc, 
-                                       mv_sound,
-                                       food, gold, form, 
-                                       campsite, 
-                                       camp_form);
+        player_party = new class player_party(tag, sprite, 
+                                              mv_desc, 
+                                              mv_sound,
+                                              food, gold, form, 
+                                              campsite, 
+                                              camp_form);
         player_party->setInventoryContainer(inventory);
         player_party->setTurnsToNextMeal(ttnm);
 
@@ -2200,13 +2195,13 @@ KERN_API_CALL(kern_mk_player)
         }
 
         session_add_obj(Session, player_party, player_dtor, player_save, NULL);
-        session_set_player_party(Session, player_party);
         ret = scm_mk_ptr(sc, player_party);
         scm_define(sc, tag, ret);
         return ret;
 
  abort:
         delete player_party;
+        player_party = 0;
         return sc->NIL;
 }
 
@@ -2462,7 +2457,6 @@ static pointer kern_obj_add_effect(scheme *sc, pointer args)
         /* Note: even if gobcell is sc->NIL we want to wrap it. I once tried to
          * use a NULL gob instead but if we pass that back into scheme as an
          * arg and the gc tries to mark it we'll crash. */
-        //dbg("kern_obj_add_effect\n");
         gob = gob_new(sc, gobcell);
         gob->flags |= GOB_SAVECAR;
 
@@ -2691,7 +2685,7 @@ static pointer kern_conv_trade(scheme *sc, pointer args)
                 trade->sprite = type->getSprite();
                 trade->name = type->getName();
                 trade->data = type;
-                trade->quantity = Session->player_party->inventory->numAvail(type);
+                trade->quantity = player_party->inventory->numAvail(type);
                 trade->show_sprite = 1;
                 trade->show_quantity = 1;
         }
@@ -2777,8 +2771,6 @@ static pointer kern_obj_set_conv(scheme *sc, pointer args)
 {
         class Object *obj;
         pointer conv;
-
-        //dbg("kern_obj_set_conv\n");
 
         if (unpack(sc, &args, "pc", &obj, &conv)) {
                 rt_err("kern-obj-set-conv: bad args");
@@ -2996,7 +2988,6 @@ static pointer kern_obj_set_gob(scheme *sc, pointer  args)
                return sc->NIL;
         }
 
-        //dbg("kern_obj_set_gob\n");
        obj->setGob(gob_new(sc, scm_car(sc, args)));
 
        return sc->NIL;
@@ -3081,15 +3072,7 @@ static pointer kern_astral_body_set_gob(scheme *sc, pointer  args)
                return sc->NIL;
         }
 
-        if (astral_body->gob) {
-                gob_unref(astral_body->gob);
-                astral_body->gob=NULL;
-        }
-
-        //dbg("kern_astral_body_set_gob\n");
-        astral_body->gob = (gob_new(sc, scm_car(sc, args)));
-        gob_ref(astral_body->gob);
-       
+       astral_body->gob = (gob_new(sc, scm_car(sc, args)));
 
        return sc->NIL;
 }
@@ -3162,8 +3145,6 @@ static pointer kern_add_tick_job(scheme *sc, pointer args)
         void *data;
         struct kjob *kjob;
 
-        //dbg("kern_add_tick_job\n");
-
         if (unpack(sc, &args, "dop", &tick, &proc, &data)) {
                 rt_err("kern-add-tick-job: bad args");
                 return sc->NIL;
@@ -3213,7 +3194,7 @@ static pointer kern_conv_begin(scheme *sc, pointer args)
                 return sc->F;                
         }
 
-        member = Session->player_party->get_leader();
+        member = player_party->get_leader();
         if (! member) {
                 rt_err("kern-conv-begin: no player party leader!");
                 return sc->F;                
@@ -3222,7 +3203,7 @@ static pointer kern_conv_begin(scheme *sc, pointer args)
 	log_msg("*** CONVERSATION ***");
 
 	log_begin("You are accosted by ");
-        Session->subject = Session->player_party;
+        Session->subject = player_party;
 	npc->describe();
         Session->subject = NULL;
 	log_end(".");
@@ -3252,8 +3233,6 @@ static pointer kern_mk_astral_body(scheme *sc, pointer args)
         pointer phases;
         pointer ret;
         int i;
-
-        //dbg("kern_mk_astral_body\n");
 
         if (unpack(sc, &args, "ysdddddc", 
                    &tag,
@@ -3894,8 +3873,6 @@ KERN_API_CALL(kern_char_set_ai)
         class Character *ch;
         pointer ai;
 
-        //dbg("kern_char_set_ai\n");
-
         ch = (class Character*)unpack_obj(sc, &args, "kern-char-set-sleep");
         if (!ch)
                 return sc->F;
@@ -4297,6 +4274,19 @@ static pointer scm_mk_loc(scheme *sc, struct place *place, int x, int y)
 {
         return pack(sc, "pdd", place, x, y);
 
+#if 0
+        pointer pcell, xcell, ycell;
+
+        pcell = scm_protect(scm_mk_ptr(sc, place));
+        xcell = scm_protect(scm_mk_integer(sc, x));
+        ycell = scm_protect(scm_mk_integer(sc, y));
+
+        return _cons(sc, pcell, 
+                     _cons(sc, xcell, 
+                           _cons(sc, ycell, sc->NIL, 0), 
+                           0), 
+                     0);
+#endif
 }
 
 static pointer 
@@ -5124,6 +5114,38 @@ KERN_API_CALL(kern_add_xray_vision)
         return sc->T;
 }
 
+KERN_API_CALL(kern_char_charm)
+{
+        int val;
+        class Character *ch;
+
+        ch = (class Character*)unpack_obj(sc, &args, "kern-char-charm");
+        if (!ch)
+                return sc->NIL;
+
+        if (unpack(sc, &args, "d", &val)) {
+                rt_err("kern-char-charm: bad args");
+                return sc->NIL;
+        }
+        
+        ch->charm(val);
+
+        return sc->NIL;
+}
+
+KERN_API_CALL(kern_char_uncharm)
+{
+        class Character *ch;
+
+        ch = (class Character*)unpack_obj(sc, &args, "kern-char-charm");
+        if (!ch)
+                return sc->NIL;
+
+        ch->unCharm();
+
+        return sc->NIL;
+}
+
 KERN_API_CALL(kern_map_set_jitter)
 {
         int val;
@@ -5449,8 +5471,6 @@ KERN_API_CALL(kern_ui_handle_events)
 {
         struct KeyHandler kh;
         pointer func;
-
-        //dbg("kern_ui_handle_events\n");
 
         if (unpack(sc, &args, "o", &func)) {
                 rt_err("kern-ui-handle-events: bad args");
@@ -6039,13 +6059,10 @@ KERN_API_CALL(kern_set_start_proc)
 {
         pointer proc;
 
-        //dbg("kern_set_start_proc\n");
-
         if (unpack(sc, &args, "o", &proc)) {
                 rt_err("kern-set-start-proc");
                 return sc->NIL;
         }
-
 
         session_set_start_proc(Session, closure_new(sc, proc));
 
@@ -6055,8 +6072,6 @@ KERN_API_CALL(kern_set_start_proc)
 KERN_API_CALL(kern_set_camping_proc)
 {
         pointer proc;
-
-        //dbg("kern_set_camping_proc\n");
 
         if (unpack(sc, &args, "o", &proc)) {
                 rt_err("kern-set-camping-proc");
@@ -6070,7 +6085,7 @@ KERN_API_CALL(kern_set_camping_proc)
 
 KERN_API_CALL(kern_player_set_follow_mode)
 {
-        Session->player_party->enableFollowMode();
+        player_party->enableFollowMode();
         return sc->NIL;
 }
 
@@ -6763,7 +6778,7 @@ KERN_API_CALL(kern_fold_rect)
 
 KERN_API_CALL(kern_player_get_gold)
 {
-        return scm_mk_integer(sc, Session->player_party->gold);
+        return scm_mk_integer(sc, player_party->gold);
 }
 
 KERN_API_CALL(kern_player_set_gold)
@@ -6775,14 +6790,14 @@ KERN_API_CALL(kern_player_set_gold)
                 return sc->F;
         }
 
-        Session->player_party->gold = val;
+        player_party->gold = val;
         foogodRepaint();
         return sc->T;
 }
 
 KERN_API_CALL(kern_player_get_food)
 {
-        return scm_mk_integer(sc, Session->player_party->food);
+        return scm_mk_integer(sc, player_party->food);
 }
 
 KERN_API_CALL(kern_player_set_food)
@@ -6794,7 +6809,7 @@ KERN_API_CALL(kern_player_set_food)
                 return sc->F;
         }
 
-        Session->player_party->food = val;
+        player_party->food = val;
         foogodRepaint();
         return sc->T;
 }
@@ -6829,8 +6844,8 @@ KERN_API_CALL(kern_begin_combat)
         info.y = y;
         info.dx = party->getDx();
         info.dy = party->getDy();
-        info.px = Session->player_party->getX();
-        info.py = Session->player_party->getY();
+        info.px = player_party->getX();
+        info.py = player_party->getY();
         info.npc_party = party;
                 
         /* If the npc party has a null or invalid direction vector (this is the
@@ -6838,8 +6853,8 @@ KERN_API_CALL(kern_begin_combat)
          * vector. */
         if ((!info.dx && !info.dy) ||
             (info.dx && info.dy)) {
-                info.dx = - Session->player_party->getDx();
-                info.dy = - Session->player_party->getDy();
+                info.dx = - player_party->getDx();
+                info.dy = - player_party->getDy();
         }
 
         memset(&cinfo, 0, sizeof(cinfo));
@@ -6884,12 +6899,12 @@ KERN_API_CALL(kern_ambush_while_camping)
         dx = party->getDx();
         dy = party->getDy();
         if ((! dx && ! dy) || (dx && dy)) {
-                dx = - Session->player_party->getDx();
-                dy = - Session->player_party->getDy();
+                dx = - player_party->getDx();
+                dy = - player_party->getDy();
         }
 
         if (combat_add_party(party, dx, dy, 0, place, 0, 0)) {
-                Session->player_party->ambushWhileCamping();
+                player_party->ambushWhileCamping();
                 return sc->T;
         }
         return sc->F;
@@ -6921,7 +6936,7 @@ KERN_API_CALL(kern_being_pathfind_to)
 
 KERN_API_CALL(kern_get_player)
 {
-        return scm_mk_ptr(sc, Session->player_party);
+        return scm_mk_ptr(sc, player_party);
 }
 
 KERN_API_CALL(kern_species_get_hp_mod)
@@ -7141,6 +7156,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-char-arm-self", kern_char_arm_self);
         API_DECL(sc, "kern-char-attack", kern_char_attack);
         API_DECL(sc, "kern-char-dec-mana", kern_char_dec_mana);
+        API_DECL(sc, "kern-char-charm", kern_char_charm);
         API_DECL(sc, "kern-char-force-drop", kern_char_force_drop);
         API_DECL(sc, "kern-char-get-arms", kern_char_get_arms);
         API_DECL(sc, "kern-char-get-hp", kern_char_get_hp);
@@ -7168,6 +7184,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-char-set-mana", kern_char_set_mana);
         API_DECL(sc, "kern-char-set-schedule", kern_char_set_schedule);
         API_DECL(sc, "kern-char-set-sleep", kern_char_set_sleep);
+        API_DECL(sc, "kern-char-uncharm", kern_char_uncharm);
         API_DECL(sc, "kern-char-unready", kern_char_unready);
 
         /* kern-map api */

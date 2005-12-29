@@ -94,26 +94,22 @@ int foogodInit(void)
 void foogodRepaint(void)
 {
 	screenErase(&Foogod.screenRect);
+	screenPrint(&Foogod.turnRect, 0, "Turn: %d", player_party->getTurnCount());
+	screenPrint(&Foogod.foodRect, 0, "Food: %d", player_party->food);
+	screenPrint(&Foogod.goldRect, SP_RIGHTJUSTIFIED, "Gold: %d",  player_party->gold);
+	screenPrint(&Foogod.combatRect, SP_RIGHTJUSTIFIED, "Combat: %c", combatGetState());
 
-        // player party may be NULL during main menu mode or early in boot
-        if (Session->player_party!=NULL) {
-                screenPrint(&Foogod.turnRect, 0, "Turn: %d", Session->player_party->getTurnCount());
-                screenPrint(&Foogod.foodRect, 0, "Food: %d", Session->player_party->food);
-                screenPrint(&Foogod.goldRect, SP_RIGHTJUSTIFIED, "Gold: %d",  Session->player_party->gold);
-                screenPrint(&Foogod.combatRect, SP_RIGHTJUSTIFIED, "Combat: %c", combatGetState());
+	if (player_party->vehicle) {
+		screenPrint(&Foogod.hullRect, 0, "Hull: %d", player_party->vehicle->getHp());
+	}
 
-                if (Session->player_party->vehicle) {
-                        screenPrint(&Foogod.hullRect, 0, "Hull: %d", Session->player_party->vehicle->getHp());
-                }
+        screenPrint(&Foogod.effectsRect, 0, "Eff: %s%s%s%s"
+                    , (TimeStop     ? "T" : "")
+                    , (Quicken      ? "Q" : "")
+                    , (MagicNegated ? "N" : "")
+                    , (Reveal       ? "R" : "")
+                );
 
-                screenPrint(&Foogod.effectsRect, 0, "Eff: %s%s%s%s"
-                            , (TimeStop     ? "T" : "")
-                            , (Quicken      ? "Q" : "")
-                            , (MagicNegated ? "N" : "")
-                            , (Reveal       ? "R" : "")
-                        );
-        }
-                
 	screenUpdate(&Foogod.screenRect);
 }
 

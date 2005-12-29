@@ -21,7 +21,6 @@
 //
 
 #include "effect.h"
-#include "debug.h"
 
 #include <assert.h>
 #include <stdlib.h>
@@ -40,8 +39,6 @@ struct effect *effect_new(char *tag, scheme *sc, pointer exec_proc,
         assert(et);
 
         et->ID = EFFECT_ID;
-
-        //dbg("effect_new\n");
 
         if (exec_proc) {
                 et->exec = closure_new_ref(sc, exec_proc);
