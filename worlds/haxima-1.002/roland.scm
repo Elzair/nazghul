@@ -169,5 +169,5 @@
                   nil                 ; container
                   nil                 ; readied
                   )
-    5)
+    3)
    (roland-mk #f #f #f)))

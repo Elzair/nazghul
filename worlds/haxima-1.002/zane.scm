@@ -50,6 +50,15 @@
                    )
 
   (say knpc "Watch your step out there."))
+
+(define (zane-ench knpc kpc)
+  (say knpc "Yeah, he's locked himself inside, see. "
+       "He doesn't need people interrupting "
+       "him all the time. If you're serious, you'll find a way in."))
+
+(define (zane-fens knpc kpc)
+  (say knpc "You're right in the middle of 'em, bub. They can be dangerous, "
+       "so watch yourself."))
   
 (define zane-conv
   (ifc ranger-conv
@@ -57,70 +66,46 @@
        ;; 4 characters. The 4-char limit arises from the kernel's practice of
        ;; truncating all player queries to the first four characters. Default,
        ;; on the other hand, is a feature of the ifc mechanism (see ifc.scm).
-       (method 'default (lambda (knpc kpc) (say knpc "Ask another of that.")))
-       (method 'hail (lambda (knpc kpc) (say knpc "Well met.")))
-       (method 'bye (lambda (knpc kpc) (say knpc "Farewell.")))
+       (method 'default (lambda (knpc kpc) (say knpc "Ask somebody else.")))
+       (method 'hail (lambda (knpc kpc) (say knpc "[He nods]")))
+       (method 'bye (lambda (knpc kpc) (say knpc "Be seeing ya, buddy")))
        (method 'job (lambda (knpc kpc) 
-                      (say knpc "I am a Ranger of the Fens.")))
+                      (say knpc "I'm a Ranger. I patrol the Fens.")))
        (method 'name (lambda (knpc kpc) (say knpc "Zane.")))
        (method 'join (lambda (knpc kpc) 
-                       (say knpc "Nay, my allegiance is to the wilds.")))
-       
-       (method 'ench
-               (lambda (knpc kpc)
-                 (say knpc "The Enchanter is one of the Wise, and has "
-                      "little time or patience for uninvited guests. His "
-                      "mind is ever on the defense of the north.")))
-       (method 'fens
-               (lambda (knpc kpc)
-                 (say knpc "The Fens are a vast bog to the northwest. They "
-                      "are dangerous to travel unless one knows the "
-                      "way.")))
-       (method 'way
-               (lambda (knpc kps)
-                 (say knpc "I know many ways in and through the Fens. If you "
-                      "seek a certain place therein ask and I will tell you "
-                      "how to find it.")))
+                       (say knpc "Sorry, bub, I already got a job to do.")))
+       (method 'ench zane-ench)
+       (method 'fens zane-fens)
        (method 'dang
                (lambda (knpc kpc)
-                 (say knpc "The Fens are poisonous and teeming with evil "
-                      "creatures. Do you intend to travel them?")
+                 (say knpc "Poisonous and teeming with monsters. "
+                      "You planning to spend much time in them?")
                  (if (kern-conv-get-yes-no? kpc)
                      (begin
-                       (say knpc "Do you know how to make the poison "
-                            "immunity spell?")
+                       (say knpc "You'll want the poison immunity spell. "
+                            "You know it?")
                        (if (kern-conv-get-yes-no? kpc)
-                           (say knpc "Good. If you need the reagents I can "
-                                "sell them to you.")
+                           (say knpc "Good. I can sell you the fixin's.")
                            (say knpc "Mix Nightshade and Garlic and chant "
-                                "Sanct Nox. I carry extra reagents if you "
-                                "need to buy some."))
-                       )
-                     (say knpc "That is most prudent. But if you ever need "
-                          "to go there ask and I will give you counsel.")
-                       )))
+                                "Sanct Nox. I've got extra reagents I can "
+                                "sell you.")
+                           ))
+                     (say knpc "Ok")
+                     )))
        (method 'pois
                (lambda (knpc kpc)
                  (say knpc "A green potion or the An Nox spell will cure "
                       "poison.")))
        (method 'poti
                (lambda (knpc kpc)
-                 (say knpc "I have some potions and reagents which I can "
-                      "sell you if you are in need.")))
-       (method 'coun
-               (lambda (knpc kpc)
-                 (say knpc "If you travel the Fens take extra potions and "
-                      "be prepared to deal with monsters, even the "
-                      "undead.")))
+                 (say knpc "I got some extra I can sell you.")))
        (method 'mons
                (lambda (knpc kpc)
-                 (say knpc "The Fen is crawling with slimes, bandits and the "
-                      "undead. ")))
+                 (say knpc "Slimes, bandits and undead mostly.")))
        (method 'reag
                (lambda (knpc kpc)
-                 (say knpc "Many magical ingredients grow in the Fens, some "
-                      "of them quite rare. I collect them when I can, and "
-                      "usually have some I can sell you.")))
+                 (say knpc "I collect 'em where I can. "
+                      "I can sell you my extras.")))
        (method 'buy zane-trade)
        (method 'sell zane-trade)
        (method 'trade zane-trade)

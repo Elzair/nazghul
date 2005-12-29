@@ -12,7 +12,7 @@
 (define jorn-mealplace gt-ws-tbl1)
 (define jorn-workplace gt-jorn-hut)
 (define jorn-leisureplace gt-ws-hall)
-(kern-mk-sched 'sch_my
+(kern-mk-sched 'sch_jorn
                (list 0  0 jorn-bed          "sleeping")
                (list 11 0 jorn-mealplace    "eating")
                (list 12 0 jorn-workplace    "working")
@@ -118,7 +118,7 @@
     jorn-lvl
     #f               ; dead
     'jorn-conv       ; conv
-    sch_my           ; sched
+    sch_jorn           ; sched
     'spell-sword-ai  ; special ai
 
     ;; container

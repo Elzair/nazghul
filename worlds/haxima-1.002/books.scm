@@ -38,6 +38,7 @@
    "<space> (pass a turn)"
    "CTRL-Q)uit saves without quitting"
    "CTRL-R)eload the last saved game"
+   "SHIFT+ARROWKEY pan viewer"
    ))
 
 (mk-reusable-item 't_manual "Basic Survival Manual" s_manual 1 

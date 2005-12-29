@@ -12,7 +12,7 @@
 (define necr-mealplace nl-tbl)
 (define necr-workplace nl-lab)
 (define necr-leisureplace nl-lib)
-(kern-mk-sched 'sch_my
+(kern-mk-sched 'sch_necr
                (list 0  0 necr-bed          "sleeping")
                (list 7  0 necr-mealplace    "eating")
                (list 8  0 necr-workplace    "working")
@@ -230,7 +230,7 @@
 (define (mk-necromancer)
   (bind 
    (kern-mk-char 
-    'ch_my           ; tag
+    'ch_necr           ; tag
     "Necromancer"    ; name
     necr-species         ; species
     necr-occ              ; occ
@@ -245,7 +245,7 @@
     necr-lvl
     #f               ; dead
     'necr-conv         ; conv
-    sch_my           ; sched
+    sch_necr         ; sched
     nil              ; special ai
     nil              ; container
     nil              ; readied

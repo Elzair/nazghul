@@ -228,7 +228,7 @@
 ;;----------------------------------------------------------------------------
 ;; Green Tower (incomplete)
 (define (mk-zone x y w h) (list 'p_green_tower x y w h))
-(define gt-ws-hall (mk-zone 42 50 12 8))
+(define gt-ws-hall (mk-zone 46 50 12 8))
 (define gt-ws-tbl1 (mk-zone 47 52 1 1))
 (define gt-ws-tbl2 (mk-zone 49 53 1 1))
 (define gt-jorn-bed (mk-zone 20 57 1 1))

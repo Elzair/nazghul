@@ -7,9 +7,9 @@
 
 (define (filter-out-difficult-ptypes ptypes)
   (let ((dc (difficulty)))
-    (println "filter-out-difficult-ptypes:dc=" dc)
+    ;;(println "filter-out-difficult-ptypes:dc=" dc)
     (filter (lambda (ptype)
-              (println " ptype:" (ptype-name ptype))
+              ;;(println " ptype:" (ptype-name ptype))
               (and (<= (ptype-dc ptype) dc)
                    (>= (ptype-dc ptype) (- dc 4))))
             ptypes)))
@@ -18,7 +18,7 @@
   (if (null? ptypes)
       nil
       (begin
-        (println " lookup:n=" n " ptype=" (car ptypes))
+        ;;(println " lookup:n=" n " ptype=" (car ptypes))
         (if (< n (ptype-scarcity (car ptypes)))
             (car ptypes)
             (lookup-ptype (- n 
@@ -31,29 +31,29 @@
                      0
                      ptypes))
          (n (modulo (random-next) mod)))
-    (println "  mod=" mod " n=" n)
+    ;;(println "  mod=" mod " n=" n)
     (lookup-ptype n ptypes)))
 
 (define (edge-spawn-exec kwm)
 
-  (println "edge-spawn-exec")
+  ;;(println "edge-spawn-exec")
 
   (define (get-ptype loc)
-    (println "  get-ptype:loc=" loc)
+    ;;(println "  get-ptype:loc=" loc)
     (let ((ptypes (terrain-to-ptypes (kern-place-get-terrain loc))))
-      (println " ptypes:" ptypes)
+      ;;(println " ptypes:" ptypes)
       (if (null? ptypes)
           nil
           (let ((ptypes (map eval ptypes)))
             (let ((ptypes (filter-out-difficult-ptypes ptypes)))
-              (println "  filtered ptypes: " ptypes)
+              ;;(println "  filtered ptypes: " ptypes)
               (if (null? ptypes)
                   nil
                   (select-ptype ptypes)))))))
 
   (define (try-to-spawn-at loc)
     (let ((ptype (get-ptype loc)))
-      (println " try-to-spawn-at:ptype=" ptype)
+      ;;(println " try-to-spawn-at:ptype=" ptype)
       (if (not (null? ptype))
           (let ((kparty (ptype-generate ptype)))
             ;; note: must put the party on the map (thus giving it a refcount)

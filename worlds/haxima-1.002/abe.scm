@@ -12,7 +12,7 @@
 (define abe-mealplace gt-ws-tbl2)
 (define abe-workplace gt-ruins)
 (define abe-leisureplace gt-ws-hall)
-(kern-mk-sched 'sch_my
+(kern-mk-sched 'sch_abe
                (list 0  0 abe-bed          "sleeping")
                (list 7  0 abe-mealplace    "eating")
                (list 8  0 abe-workplace    "working")
@@ -172,7 +172,7 @@
     abe-lvl
     #f               ; dead
     'abe-conv         ; conv
-    sch_my           ; sched
+    sch_abe           ; sched
     nil              ; special ai
     nil              ; container
     nil              ; readied

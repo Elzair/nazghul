@@ -268,11 +268,9 @@
 (define wrogue-4-equip
   (list (list 100 "1"     t_armor_chain)
         (list 100 "1"     t_chain_coif)
-        (list 50  "1"     t_sword)
-        (list 50  "1d10"  t_arrow)
-        (list 75  "1"     t_bow)
-        (list 20  "1"     t_mana_potion)
-        (list 10  "1"     t_cure_potion)
+        (list 100 "1"     t_sword)
+        (list 100 "1d10"  t_bolt)
+        (list 75  "1"     t_crossbow)
         ))
 (define medik-equip
   (list (list 100 "1d3"   t_heal_potion)

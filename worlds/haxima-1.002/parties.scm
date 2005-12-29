@@ -6,7 +6,7 @@
 (define (pgroup-dice pgrp) (caddr pgrp))
 (define (pgroup-size pgrp)
   (define (loop n sum)
-    (println "  pgroup-size loop n=" n "sum=" sum)
+    ;;(println "  pgroup-size loop n=" n "sum=" sum)
     (if (= n 0)
         sum
         (loop (- n 1)
@@ -16,9 +16,9 @@
         0)
   )
 (define (pgroup-generate pgrp)
-  (println " pgroup-generate")
+  ;;(println " pgroup-generate")
   (define (loop n)
-    (println "  n=" n)
+    ;;(println "  n=" n)
     (if (<= n 0)
         nil
         (cons (mk-npc (pgroup-npct pgrp) (calc-level))
@@ -39,7 +39,7 @@
 (define (ptype-set-vehicle-type-tag! ptype vtag)
   (set-car! (list-tail ptype 7) vtag))
 (define (ptype-generate ptype)
-  (println "ptype-generate")
+  ;;(println "ptype-generate")
   (let ((kparty (kern-mk-party)))
     (kern-being-set-name kparty (ptype-name ptype))
     (kern-obj-set-sprite kparty (ptype-sprite ptype))
@@ -50,7 +50,7 @@
                 (pgroup-generate pgroup)))
          (ptype-groups ptype))
     (let ((vtag (ptype-vehicle-type-tag ptype)))
-      (println "vtag=" vtag)
+      ;;(println "vtag=" vtag)
       (if (not (null? vtag))
           (kern-party-set-vehicle kparty 
                                   (mk-vehicle (eval vtag)))))
@@ -60,7 +60,7 @@
 ;;----------------------------------------------------------------------------
 ;; mk-npc-party
 (define (mk-npc-party ptype) 
-  (println "mk-npc-party")
+  ;;(println "mk-npc-party")
   (ptype-generate (eval ptype)))
 
 ;;----------------------------------------------------------------------------
@@ -326,7 +326,7 @@
 (define militia-party-l4
   (ptype-mk "deserters" s_guard faction-outlaw  4 4
             (pgroup-mk 'halberdier "1d2")
-            (pgroup-mk 'crossbowman "1d2")
+            (pgroup-mk 'crossbowman "1d2-1")
             ))
 
 (define snake-party-l1

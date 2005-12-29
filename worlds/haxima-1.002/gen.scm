@@ -82,13 +82,16 @@
 (define (gen-ranger gen player) (say gen "Rangers fought in these woods during the Goblin Wars. Now they maintain a token presence."))
 (define (gen-wars gen player) (say gen "Yes, I fought as a Ranger in the goblin wars. That was a generation ago, and people forget. "
                                  "They see the goblins as lesser beings, defeated and worthy of slow extinction."))
-(define (gen-goblin gen player) (say gen "An interesting species. They have their own language, but no writing. "
+(define (gen-goblin gen player) (say gen "An interesting species. They have their own LANGUAGE, but no writing. "
                                    "They are much like men, but more savage, more primal. "
                                    "Their warriors are beserkers, their shamans are ecstatic mystics."))
 (define (gen-primal gen player) (say gen "You can tell I admire them? But in the wars I fought them, not understanding what they were. "
                                    "I have friends among the wild forest goblins, now. The cave goblins, though, they are another story..." ))
 (define (gen-cave gen player) (say gen "The cave goblins, who are larger and stronger than their forest cousins, prefer to live in the deeps of the world. "
                                  "Their dark god demands living sacrifices. Beware them if you explore the caves, they burn with hatred for humankind." ))
+
+(define (gen-nuki knpc kpc)
+  (say knpc "That's goblinese for 'food'."))
 
 (define (gen-language kgen player)
   (let ((gen (kobj-gob-data kgen)))
@@ -97,7 +100,7 @@
         (if (gen-gave-notes? gen)
             (say kgen "Study the notes I gave you, and then practice on me.")
             (begin
-              (say kgen "Here are some notes I have made on their language. You may keep it.")
+              (say kgen "Here are some notes I have made on their language. You may keep it. Feel free to PRACTICE with me.")
               (kern-obj-add-to-inventory player t_goblin_lexicon 1)
               (gen-set-gave-notes! gen #t)))
         (say kgen "Perhaps another time."))))
@@ -225,6 +228,7 @@
        (method 'kama gen-kama)
        (method 'ruka gen-ruka)
        (method 'clov gen-clov)
+       (method 'nuki gen-nuki)
        ))
 
 ;;----------------------------------------------------------------------------
