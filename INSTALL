@@ -6,6 +6,7 @@ Nazghul requires the following libraries:
 
         SDL-1.2............http://www.libsdl.org
         libSDL_image-1.2...http://www.libsdl.org/projects/SDL_image/
+        libpng.............http://www.libpng.org/pub/png/libpng.html
 
 To compile and install nazghul:
 
@@ -27,8 +28,8 @@ nazghul-users@lists.sourceforge.net.
 
 STARTING THE GAME
 
-        $ cd world/haxima-1.001
-        $ nazghul session.scm
+        $ cd world/haxima-1.002
+        $ nazghul
 
 
 TROUBLESHOOTING FAQ
