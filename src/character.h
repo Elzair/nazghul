@@ -295,6 +295,7 @@ class Character:public Being {
         bool playerIsInMyBed();
         void kickPlayerOutOfMyBed();
         void switchPlaces(class Character *);
+        void unreadyAll();
 };
 
 extern void char_dtor(void *val);

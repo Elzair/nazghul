@@ -996,9 +996,13 @@ void combat_analyze_results_of_last_turn()
                 case COMBAT_FACTION_CHARMED:
                         // -----------------------------------------------------
                         // The hostile faction are all charmed. Tough luck for
-                        // them. Make sure we are fighting.
+                        // them. Make sure we are fighting.  Addendum: can't
+                        // attack them without degrading diplomacy with own
+                        // faction, so declare combat over. When charm wears
+                        // off we'll go back to fighting.
                         // -----------------------------------------------------
-                        combat_set_state(COMBAT_STATE_FIGHTING);
+                        //combat_set_state(COMBAT_STATE_FIGHTING);
+                        combat_set_state(COMBAT_STATE_LOOTING);
                         break;
 
                 case COMBAT_FACTION_GONE:

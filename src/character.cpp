@@ -994,6 +994,19 @@ void Character::dropRdyArms()
 	}
 }
 
+void Character::unreadyAll()
+{
+	for (int i = 0; i < species->n_slots; i++) {
+
+		// Anything in this slot?
+		if (rdyArms[i] == NULL)
+			continue;
+
+		// Unready it
+		unready(rdyArms[i]);
+	}
+}
+
 bool Character::dropItems()
 {
 	assert(!isPlayerControlled());
@@ -1020,6 +1033,11 @@ void Character::kill()
 // 		dropRdyArms();
 // 		dropItems();
 // 	}
+
+        // when a PC dies unready all arms so other party members can use them
+        if (isPlayerControlled()) {
+                unreadyAll();
+        }
 
         if (isOnMap()
             && container
@@ -1347,11 +1365,16 @@ void Character::describe()
                 log_continue("an ");
         else
                 log_continue("a ");
+        log_continue("%s", diplstr);
+        log_continue(" L%d", getLevel());
+        log_continue(" %s", getName());
+#if 0
         log_continue("%s level %d %s",
                      diplstr,
                      getLevel(), species->name);
         if (occ && occ->name)
                 log_continue(" %s", occ->name);
+#endif
         if (!isVisible())
                 log_continue(" (invisible)");
 }

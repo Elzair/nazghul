@@ -358,7 +358,7 @@ static void show_credits(void)
                 "Game Scripting\n"\
                 "...Gordon McNutt\n"\
                 "...Sam Glasby\n"
-                "Art\n"\
+                "Art Provided by\n"\
                 "...Joshua Steele\n"\
                 "...David Gervais\n"\
                 "...Kevin Gabbert\n"\
@@ -382,6 +382,25 @@ static char *JOURNEY_ONWARD="Journey Onward";
 static char *CREDITS="Credits";
 static char *QUIT="Quit";
 static char *TUTORIAL="Tutorial";
+
+static int confirm_selection()
+{
+        int yesno;
+        log_msg("Existing saved game will be overwritten! Are you sure?");
+        cmdwin_clear();
+        cmdwin_print("Confirm-Y/N?");
+        getkey(&yesno, yesnokey);
+        cmdwin_backspace(4);
+        if (yesno=='y') {
+                cmdwin_print("Yes!");
+                log_msg("Ok!");
+                return 1;
+        } else {
+                cmdwin_print("No!");
+                log_msg("Canceled!");
+                return 0;
+        }
+}
 
 static void main_menu(void)
 {
@@ -412,13 +431,13 @@ static void main_menu(void)
  start_main_menu:
         n_items = 0;
 
-        menu[n_items] = START_NEW_GAME;
-        n_items++;
-
         if (file_exists("save.scm")) {
                 menu[n_items] = JOURNEY_ONWARD;
                 n_items++;
         }
+
+        menu[n_items] = START_NEW_GAME;
+        n_items++;
 
         if (file_exists("tutorial.scm")) {
                 menu[n_items] = TUTORIAL;
@@ -449,8 +468,14 @@ static void main_menu(void)
         }
 
         if (! strcmp(selection, START_NEW_GAME)) {
+
+                /* prompt before over-writing save file */
+                if (file_exists("save.scm")) {
+                        if (! confirm_selection()) {
+                                goto start_main_menu;
+                        }
+                }
                 SAVEFILE="haxima.scm";
-                
         }
         else if (! strcmp(selection, JOURNEY_ONWARD)) {
                 SAVEFILE="save.scm";

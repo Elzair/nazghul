@@ -65,6 +65,8 @@
 
 #define MAX_SPELL_NAME_LENGTH 64 /* arbitrarily chosen */
 
+extern int DeveloperMode;
+
 // SAM: Using this typedef below
 typedef void (*v_funcpointer_ii)  (struct place *, int x, int y);
 typedef void (*v_funcpointer_iiv) (struct place *, int x, int y, void * v);
@@ -1099,7 +1101,6 @@ bool cmdReady(class Character * member)
                         return false;
                 }
 
-                cmdwin_print("-");
         }
 
         log_begin_group();
@@ -1112,8 +1113,8 @@ bool cmdReady(class Character * member)
 	kh.fx = scroller;
 	kh.data = &sc;
 	eventPushKeyHandler(&kh);
-	cmdwin_print("<select>");
-	erase = strlen("<select>");
+	cmdwin_print("<select/ESC>");
+	erase = strlen("<select/ESC>");
 
 	for (;;) {
 
@@ -2352,7 +2353,11 @@ bool cmdMixReagents(class Character *character)
 
 void look_at_XY(struct place *place, int x, int y)
 {
-        log_begin("At XY=(%d,%d) you see ", x, y);
+        if (DeveloperMode) {
+                log_begin("At XY=(%d,%d) you see ", x, y);
+        } else {
+                log_begin("You see ");
+        }
 
         if ( mapTileIsVisible(x, y) ) {
                 place_describe(place, x, y, PLACE_DESCRIBE_ALL);

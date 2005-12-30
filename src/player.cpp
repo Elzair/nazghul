@@ -320,7 +320,10 @@ void player_party::distributeMembers(struct place *new_place, int new_x,
                 }
 	}
 
-#define CONFIG_ENABLE_ROUND_ROBIN_ON_ENTRANCE_TO_HOSTILE_PLACE
+// I've messed with this a bit. I think it's confusing (even to me!) to have
+// the party mode switched automatically. If it felt natural during play it
+// would be ok, but it's quite the opposite.
+#undef CONFIG_ENABLE_ROUND_ROBIN_ON_ENTRANCE_TO_HOSTILE_PLACE
 #ifdef CONFIG_ENABLE_ROUND_ROBIN_ON_ENTRANCE_TO_HOSTILE_PLACE
         // --------------------------------------------------------------------
         // Set the party mode to "follow" by default, but if hostiles are in
