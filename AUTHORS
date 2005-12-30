@@ -52,6 +52,8 @@ McNutt, Gordon:
 In worlds/haxima-1.001:
         First version of all files except images/* other than images/gmcnutt,
         and P_terrain_test.scm, P_terrain_test.scm, scenery.scm
+In worlds/haxima-1.002:
+        All files, some re-used from haxima-1.001
 Everywhere else:
         Most changes except where otherwise noted.
 

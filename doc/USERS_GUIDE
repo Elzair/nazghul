@@ -5,44 +5,50 @@ top-down, 2d tile-based graphics. It is specifically modeled after Ultima V, so
 if you've played that game then this should be familiar.
 
 
+                              INSTALLING THE GAME
+
+If you downloaded a source distribution see the top-level INSTALL file.
+
+If you downloaded a windows binary just unzip the distribution.
+
 
                                STARTING THE GAME
 
 
-The nazghul distribution is laid out as follows:
-
-nazghul-0.x.0
-|- doc
-|- worlds
-|  `-haxima-1.001
-`- src
-
-First, see the nazghul-0.x.0/INSTALL instructions in the top-level of the
-nazghul distribution for instructions on setting up and installing the game.
-
-Next, to play the example that comes with the game:
+On Linux/UNIX/MacOSX:
 
       $ cd worlds/haxima-1.002
-      $ nazghul haxima.scm
+      $ nazghul
 
-If your installation worked correctly the game should fire up.
+On Windows:
 
+      Double-click on nazghul.exe
 
+You can play the Tutorial first or jump right in with Start New Game.
 
                                 SAVING THE GAME
 
-You can save a snapshot at any time with Ctrl-S (S is for "save"). This will
-save to a file called save.scm. Later during play, you can reload the snapshot
-with Ctrl-R (R is for "restore").
+When you quit the game with the Q)uit command (press 'q') it automatically
+saves before it exits. The next time you start the game choose the "Journey
+Onward" option from the main menu.
 
-When you quit the game with the Q)uit command, it will automatically save to
-save.scm. To pick up where you left off later, start the game with the save.scm
-file:
+If you want to save a snapshot without quitting press Ctrl-s (S is for
+"save"). If you want to revert back to that snapshot later press Ctrl-r.
 
-    $ nazghul save.scm
+If you die, the game will pick up where you last saved. 
+
+If you want to have more than one save file (there are legitimate reasons for
+doing this in a beta release) I'll tell you a secret: save.scm is the save
+file. You can make your own backup copies with different names. If you specify
+the file-name to nazghul on the command line it will load it, for example:
+
+     $ nazghul my-extra-bakup.scm
 
 
                                   ORIENTATION
+
+If you're unfamiliar with U5 I recommend the Tutorial. Here are some more notes
+to help you get started:
 
 When you start you will have a party consisting of one character known as The
 Wanderer. The icon for this character will be in the center of the map view on
@@ -57,17 +63,22 @@ Which means it wants you to hit the arrow keys and move the targeting
 cursor. When you hit 'ESC' instead the command will cancel. Pretty much all
 commands can be canceled by hitting 'ESC'.
 
+You'll see your first NPC to the south. To talk to the NPC press 't' for
+T)alk. This brings up a targeting crosshair. It might start out on the NPC or
+on your character, it it's on you then move it to the NPC with the arrow keys
+and hit enter. 
+
+That starts a conversation. During conversation you enter a keyword and the NPC
+will respond. For example, type NAME or JOB and see what this NPC says. When
+you are done talking type 'bye' or hit enter by itself.
+
 Eventually you will want to follow the road down to the chamber on the lower
 left. The chamber is marked by mysterious runes on its walls. Within the
-chamber is an NPC and a chest.
+chamber is a chest.
 
-To talk to the NPC press 't' for T)alk, target the NPC and hit enter. During
-conversation you enter a keyword and the NPC will respond. When you are done
-talking type 'bye' or hit enter by itself.
-
-After talking to the NPC, walk over to the chest and O)pen it by hitting 'o'
-and using your arrow keys to indicate a direction. The chest will open and
-deposit a bunch of stuff on the groung.
+Walk over next to the chest and O)pen it by hitting 'o' and using your arrow
+keys to indicate a direction. The chest will open and deposit a bunch of stuff
+on the ground.
 
 G)et the stuff using the 'g' key. Among the items will be some basic weapons,
 armour and spell reagents as well as some scrolls and potions.
@@ -84,7 +95,7 @@ When you are ready to face the world walk to the edge of the map and bravely
 step off. You will zoom out to Wilderness Mode, and your entire party (all one
 of you) will appear as an icon in the center. To re-enter take a step south (at
 which point you will see a shrine icon where you just were) and step north
-again. Now you now how to enter and exit towns. Congrats.
+again. Now you know how to enter and exit towns. Congrats.
 
 When you enter a town, unless you have some enemies there, you will start out
 in "follow mode", which means you control the party leader and everybody else
@@ -93,6 +104,9 @@ in the party tries to keep up. But if hostiles are in town you will be in
 between these two mode use the 'f' key. This will make more sense when you add
 more characters to your party.
 
+IMPORTANT: when you get somebody to join you, don't forget about Follow Mode
+    (the 'f' key). It's much easier to have everybody follow your main dude
+    around than to always individually control them.
 
 
                                 USER INTERFACE
@@ -163,6 +177,7 @@ Status Window
     P...Poisoned
     S...Asleep
     T...Torchlight (carrying a torch)
+    p...Protection (In Sanct)
 
 Foogod Window
 
@@ -372,11 +387,10 @@ Vas Flam         | Fire Ball      | BP, SA                 | C
 Vas Lor          | Great Light    | SA, MA                 | PC
 ----------------------------------------------------------------------------
 An Grav          | Dispell Field  | BP, SA                 | PC
-Uus Por          | Teleport Up    | BM, SS                 | PC [1]
-Des Por          | Teleport Down  | BM, SS                 | PC [1]
 In Sanct Grav    | Energy Field   | MA, BP, SS             | C
 In Sanct         | Protection     | SA, GI, GA             | PC
 Wis Quas         | Reveal Hidden  | SS, NI                 | PC
+Bet Por          | Blink (Caster) | BP, BM                 | C
 ----------------------------------------------------------------------------
 In Ex Por        | Unlock Magic   | SA, BM                 | PC
 An Ex Por        | Magic Lock     | SA, BM, GA             | PC
@@ -391,6 +405,7 @@ In Vas Por Ylem  | Earthquake     | BM, MA, SA             | C
 Quas An Wis      | Confuse        | MA, NI                 | C
 Wis An Ylen      | Xray Vision    | MA, SA                 | PC
 In Rel Por       | Telekinesis    | BP, BM, SS             | C
+Vas Por          | Blink (Party)  | MA, BP, BM             | P
 ----------------------------------------------------------------------------
 In Nox Hur       | Poison Wind    | NI, SA, BM             | C
 In Quas Corp     | Fear           | NI, MA, GA             | C

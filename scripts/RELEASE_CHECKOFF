@@ -10,19 +10,21 @@ PART I: PREPARE FOR RELEASE
 (3) NEWS is up-to-date with differences since last version
 (4) AUTHORS is up-to-date with _ALL_ contributions (legal reasons)
 (5) Version number is correct in configure.ac
-(6) The SUBDIRS of Makefile.am are correct for this release
+(6) The SUBDIRS of Makefile.am and worlds/Makefile.am are correct for this release
 
 PART II: BUILD AND TEST SOURCE DIST
 
-(1) Do a test build from the nazghul top-level directory:
+(1) Check that scripts/ghul-test-install will cd to the correct haxima-1.00x
+    dir for this release
+(2) Do a test build from the nazghul top-level directory:
 
         $ ./scripts/ghul-test-install <version>
 
   If all goes well the game should startup. The tarballs will all be built and
   sitting in the top-level directory.
 
-(2) Make any changes necessary, and go back to PART II step (1)
-(3) At this point checkin any changes made so far.
+(3) Make any changes necessary, and go back to PART II step (1)
+(4) At this point checkin any changes made so far.
 
 PART III: BUILD AND TEST WINDOWS BINARY
 
@@ -41,14 +43,15 @@ Note: this assumes Cygwin
 
 (3) Make a new release dir:
 
-        $ cd ../release
-        $ mkdir ../release/nazghul-0.4.0
-        $ cp src/nazghul.exe ../release/nazghul-0.4.0
-        $ cp -R worlds/haxima-1.001 ../release/nazghul-0.4.0/
-        $ cd ../release/nazghul-0.4.0
-        $ cp ../common/* ./
+        $ RELEASE=~/release/nazghul-0.4.0
+        $ mkdir -p $RELEASE
+        $ cp src/nazghul.exe $RELEASE
+        $ cp doc/USERS_GUIDE $RELEASE
+        $ cp -R worlds/haxima-1.002/* $RELEASE
+        $ cd ..
+        $ cp ../common/* $RELEASE
 
-(4) Test the release dir under windows by double-clicking on haxima.bat in an
+(4) Test the release dir under windows by double-clicking on nazghul.exe in an
     explorer window.
 
 (5) If all is well then zip up the release:

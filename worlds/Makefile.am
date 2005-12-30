@@ -1,2 +1,2 @@
 
-EXTRA_DIST = haxima-1.001
+EXTRA_DIST = haxima-1.002

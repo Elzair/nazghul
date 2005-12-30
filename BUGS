@@ -1,10 +1,7 @@
-Known bugs in release 0.4.0:
+Known bugs in release 0.5.0:
 
-o First keystroke responds slowly (new with UNICODE enablement)
-
-o Start the game, and before pressing a key, look at the astronomy window. It
-  should show the current sky, but instead is completely blank.  Press a key,
-  and notice that the sky is redrawn correctly.
+o There's an intermittent line-of-sight (LOS) bug where the player can see
+  parts of the map he shouldn't be able to.
 
 o Some combinations of (terrain + terrain) or (terrain + terrain + vehicle)
   result in sub-optimal combat maps.  This may be largely fixed/worked around

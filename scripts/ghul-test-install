@@ -25,6 +25,6 @@ cd nazghul-$version &&     \
 ./configure --prefix=$INSTALL && \
 make &&         \
 make install && \
-cd worlds/haxima-1.001 &&  \
-$INSTALL/bin/nazghul haxima.scm
+cd worlds/haxima-1.002 &&  \
+$INSTALL/bin/nazghul
 
