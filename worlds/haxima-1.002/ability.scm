@@ -248,6 +248,11 @@
                     (lambda () 'demon)
                     1))
 
+(define (summon-wolf-proc kchar)
+  (cast-summon-proc kchar
+                    (lambda () 'wolf)
+                    1))
+
 ;;----------------------------------------------------------------------------
 ;; enslave -- aka charm
 (define (enslave-proc kchar ktarg)
@@ -314,6 +319,7 @@
 (define summon-skeleton     (mk-ability "summon skeleton" 6 6 4 summon-skeleton-proc 0))
 (define summon-slimes       (mk-ability "summon slimes"   2 2 3 summon-slime-proc 0))
 (define summon-demon        (mk-ability "summon demon"    8 8 6 summon-demon-proc 0))
+(define summon-wolves       (mk-ability "summon wolves"   4 4 2 summon-wolf-proc 0))
 (define chomp-deck          (mk-ability "chomp deck"      2 4 3 chomp-deck-proc 1))
 (define enslave             (mk-ability "enslave"       3 4 2 enslave-proc 4))
 (define narcotize           (mk-ability "narcotize"     5 6 3 narcotize-proc 0))

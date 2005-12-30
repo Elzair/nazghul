@@ -165,6 +165,7 @@
        (method 'inn  oscar-inn)
        (method 'luck oscar-luck)
        (method 'ghos oscar-ghost)
+       (method 'pira oscar-ghost)
        (method 'leg  oscar-leg)
 
        ;; town & people

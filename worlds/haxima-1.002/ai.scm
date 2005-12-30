@@ -294,6 +294,12 @@
       (use-ability summon-demon kchar)
       #f))
 
+(define (summon-wolves? kchar)
+  (if (and (> (kern-dice-roll "1d20") 18)
+           (can-use-ability? summon-wolves kchar))
+      (use-ability summon-wolves kchar)
+      #f))
+
 (define (turn-invisible? kchar)
   (and (> (kern-dice-roll "1d20") 14)
        (not (is-invisible? kchar))
@@ -310,11 +316,20 @@
       (use-ranged-spell-on-foes? kchar all-ranged-spells)))
 
 (define (warlock-ai kchar)
-  (display "warlock-ai ")(dump-char kchar)
+  ;;(display "warlock-ai ")(dump-char kchar)
   (or (std-ai kchar)
       (use-spell-on-self? kchar)
       (summon-demon? kchar)
       (use-ranged-spell-on-foes? kchar all-ranged-spells)
+      ))
+
+(define (dryad-ai kchar)
+  (or (summon-wolves? kchar)
+      (use-narcotize? kchar)
+      (use-ranged-spell-on-foes? kchar all-field-spells)
+      ;; subtle: don't let kernal AI run because dryad's don't move, but if I give them
+      ;; mmode-none they won't get placed in wilderness combat
+      #t
       ))
 
 (define (demon-ai kchar)

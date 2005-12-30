@@ -121,7 +121,7 @@
    (put ch_hackle 0 0)
    (put (mk-npc 'bull 1) 6 4)
 
-   (put (mk-npc 'dryad 8) 36 38)
+   (put (mk-npc 'dryad 8) 6 35)
    
    )
 

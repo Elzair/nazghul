@@ -81,7 +81,7 @@
 ;; ----------------------------------------------------------------------------
 (define (spider-killed kspider)
   (kern-obj-put-at (kern-mk-obj spider_silk 
-                                (kern-dice-roll "1d3"))
+                                (kern-dice-roll "1d2-1"))
                    (kern-obj-get-location kspider)))
 
 ;; ----------------------------------------------------------------------------
@@ -89,9 +89,11 @@
 ;; details
 ;; ----------------------------------------------------------------------------
 (define (queen-spider-killed kspider)
-  (kern-obj-put-at (kern-mk-obj spider_silk 
-                                (kern-dice-roll "1d6"))
-                   (kern-obj-get-location kspider)))
+  (kern-obj-put-at (kern-mk-obj spider_silk (kern-dice-roll "1d2-1"))
+                   (kern-obj-get-location kspider))
+  (kern-obj-put-at (kern-mk-obj t_poison_immunity_potion (kern-dice-roll "1d2-1"))
+                   (kern-obj-get-location kspider))
+  )
 
 
 ;; ----------------------------------------------------------------------------
@@ -160,7 +162,7 @@
   (spider-display "spider-foe-in-range-of-web-spew?")(spider-newline)
   (< (kern-get-distance (kern-obj-get-location kspider)
                         (kern-obj-get-location kfoe))
-     (kern-char-get-level kspider)))
+     (/ (kern-char-get-level kspider) 2)))
 
 (define (spider-pathfind-to-foe kspider kfoe)
   (spider-display "spider-pathfind-to-foe")(spider-newline)

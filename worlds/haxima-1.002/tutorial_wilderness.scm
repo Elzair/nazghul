@@ -70,7 +70,9 @@
 
   (put (mk-step-clue "That's it for the tutorial. There's lots more info in the USERS_GUIDE. "
                      "You'll find one in the doc directory where you installed the game, or "
-                     "you can find one online at the project website. Have fun!") 17 1)
+                     "you can find one online at the project website. "
+                     "You may exit the tutorial now by Q)uitting the game with the 'q' key. "
+                     "Have fun!") 17 1)
        
   ) ;; end of objects
 

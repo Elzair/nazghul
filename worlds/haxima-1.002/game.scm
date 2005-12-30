@@ -156,9 +156,9 @@
 (define down      10)
 
 ;; Player character bonuses
-(define pc-hp-off  20)
-(define pc-hp-gain 10)
-(define pc-mp-off  2)
+(define pc-hp-off  25)
+(define pc-hp-gain 5)
+(define pc-mp-off  1)
 (define pc-mp-gain 1)
 
 ;; NPC activities

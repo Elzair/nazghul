@@ -41,7 +41,7 @@
   (set-car! (cdddr gate) open?))
 
 (define (moongate-destroy kgate)
-  (println "moongate-destroy")
+  ;;(println "moongate-destroy")
   (kern-obj-remove kgate))
 
 ;; ----------------------------------------------------------------------------
@@ -138,13 +138,13 @@
 
 (define (moongate-open kgate)
   (let ((gate (kobj-gob-data kgate)))
-    (println "moongate-open:gob=" gate)
+    ;;(println "moongate-open:gob=" gate)
     (if (not (moongate-open? gate))
         (moongate-setup-sequence kgate gate #t moongate-stages)
         )))
 
 (define (moongate-close kgate)
-  (println "moongate-close")
+  ;;(println "moongate-close")
   (let ((gate (kobj-gob-data kgate)))
     (if (not (moongate-closed? gate))
         (moongate-setup-sequence kgate gate #f (reverse moongate-stages))

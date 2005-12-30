@@ -69,8 +69,8 @@
   (put (mk-ladder-down 'p_traps_2 4 3) 14 3)
 
   ;; monster generators
-  (put (mk-mongen2 1 5 'is-bandit? 'mk-bandit nil) 4 3)
-  (put (mk-mongen2 1 5 'is-skeleton? 'mk-skeletal-warrior nil) 14 3)
+  (put (spawn-pt 'mk-bandit) 4 3)
+  (put (spawn-pt 'skeletal-warrior) 14 3)
 
   ;; doors
   (put (mk-door) 14 8)

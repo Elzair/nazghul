@@ -36,8 +36,8 @@
 
 ;; Bole
 (define (mk-zone x y w h) (list 'p_bole x y w h))
-(define bole-bed-kathryn  (mk-zone 31 18  1  1))
-(define bole-bedroom-thud (mk-zone 31 17  2  2))
+(define bole-bed-kathryn  (mk-zone 31 21  1  1))
+(define bole-bedroom-thud (mk-zone 31 20  2  2))
 (define bole-bed-2        (mk-zone 38 18  1  1))
 (define bole-bed-3        (mk-zone 31 21  1  1))
 (define bole-bed-4        (mk-zone 38 21  1  1))

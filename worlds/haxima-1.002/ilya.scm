@@ -74,8 +74,11 @@
                             (begin
                               (kern-obj-remove-from-inventory kpc t_puska 1)
                               (say knpc "There, there, puska. "
-                                   "You're safe with me.")
-                              (ilya-finish-quest ilya))
+                                   "You're safe with me. [She turns to you] Thank you so much! I wish I could pay you. "
+                                   "Wait, take these, Mommy said wizards use them, so I pick them whenever I can.")
+                              (ilya-finish-quest ilya)
+                              (kern-obj-add-to-inventory kpc nightshade 23)
+                              )
 
                             ;; no - puska not in player inventory
                             (begin

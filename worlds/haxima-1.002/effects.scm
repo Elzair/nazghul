@@ -36,6 +36,15 @@
 (define (disease-immunity-exec fgob effect)
   (if (eqv? effect ef_disease) #t #f))
 
+(define (paralysis-immunity-exec fgob effect)
+  (if (eqv? effect ef_paralyze) #t #f))
+
+(define (charm-immunity-exec fgob effect)
+  (if (eqv? effect ef_charm) #t #f))
+
+(define (sleep-immunity-exec fgob effect)
+  (if (eqv? effect ef_sleep) #t #f))
+
 ;; ----------------------------------------------------------------------------
 ;; sleep
 ;;
@@ -374,11 +383,17 @@
    (list 'ef_disease                   'disease-exec         nil                 nil              nil                 "start-of-turn-hook" "D" 0   #f  -1)
    (list 'ef_disease_immunity          'disease-immunity-exec nil                nil              nil                 "add-hook-hook"      "E" 0   #f  -1)
    (list 'ef_temporary_disease_immunity 'disease-immunity-exec nil               nil              nil                 "add-hook-hook"      "E" 0   #f  60)
+   (list 'ef_paralysis_immunity        'paralysis-immunity-exec nil              nil              nil                 "add-hook-hook"      "z" 0   #f  -1)
+   (list 'ef_temporary_paralysis_immunity 'paralysis-immunity-exec nil           nil              nil                 "add-hook-hook"      "z" 0   #f  60)
    (list 'ef_fire_immunity             nil                   nil                 nil              nil                 "nil-hook"           "F" 0   #f  -1)
    (list 'ef_temporary_fire_immunity   nil                   nil                 nil              nil                 "nil-hook"           "F" 0   #f  15)
    (list 'ef_grow_head                 'grow-head-exec       nil                 nil              'grow-head-exec     "on-damage-hook"     "H"  0   #f  -1)
    (list 'ef_temporary_grow_head       'grow-head-exec       nil                 nil              'grow-head-exec     "on-damage-hook"     "H"  0   #f  15)
    (list 'ef_loot_drop                 'loot-drop-exec       nil                 nil              nil                 "on-death-hook"      ""  0   #f  -1)
+   (list 'ef_charm_immunity            'charm-immunity-exec  nil                 nil              nil                 "add-hook-hook"      "c" 0   #f  -1)
+   (list 'ef_temporary_charm_immunity  'charm-immunity-exec  nil                 nil              nil                 "add-hook-hook"      "c" 0   #f  60)
+   (list 'ef_sleep_immunity            'sleep-immunity-exec  nil                 nil              nil                 "add-hook-hook"      "s" 0   #f  -1)
+   (list 'ef_temporary_sleep_immunity  'sleep-immunity-exec  nil                 nil              nil                 "add-hook-hook"      "s" 0   #f  60)
    ))
 
 (map (lambda (effect) (apply mk-effect effect)) effects)

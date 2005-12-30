@@ -60,7 +60,7 @@
 (define (abe-job knpc kpc)
   (say knpc "I'm a scholar. I'm studying the ruins here in Green Tower. Have you examined them?")
   (if (no? kpc)
-      (say knpc "They're in the southeast corner of town. Fascinating.")
+      (say knpc "They're in the southwest corner of town. Fascinating.")
       (begin
         (say knpc "Did you know there are more below the surface?")
         (yes? kpc)
@@ -104,7 +104,7 @@
   (if (yes? kpc)
       (say knpc "There's a legend that King Clovis carried one as a charm. "
            "He fell in battle during the goblin wars, but it was never found on his body. "
-           "Perhaps someone (perhaps a goblin!) looted his corpse and took it.")
+           "Perhaps someone (perhaps a GOBLIN!) looted his corpse and took it.")
       (say knpc "Just idle curiosity? Belive me, I understand.")))
 
 (define (abe-quee knpc kpc)
@@ -122,6 +122,18 @@
 
 (define (abe-bye knpc kpc)
   (say knpc "Let me know if you find any more ruins!"))
+
+(define (abe-alch knpc kpc)
+  (say knpc "Ah, how is the secretive old rascal? I haven't seen him since we were neighbors."))
+
+(define (abe-neig knpc kpc)
+  (say knpc "In Absalot. Before we had to flee."))
+
+(define (abe-flee knpc kpc)
+  (say knpc "[He sighs] It's a long story. Ask around. It doesn't matter anymore."))
+
+(define (abe-gobl knpc kpc)
+  (say knpc "Ask Deric or Gen about goblins, they have a lot of experience with them."))
 
 (define abe-conv
   (ifc green-tower-conv
@@ -152,6 +164,10 @@
        (method 'ship abe-ship)
        (method 'sail abe-ship)
        (method 'wrig abe-wrig)
+       (method 'alch abe-alch)
+       (method 'neig abe-neig)
+       (method 'flee abe-flee)
+       (method 'gobl abe-gobl)
        ))
 
 (define (mk-abe)

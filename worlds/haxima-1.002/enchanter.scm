@@ -87,7 +87,8 @@
     (define (check-third-quest)
       (if (has-all-runes? kpc)
           (finish-third-quest)
-          (say knpc "Return when you have found all the Runes.")))
+          (say knpc "Return when you have found all the Runes. "
+               "Consult with the other Wise, they may have clues about where to find the Runes.")))
 
     ;; Second Quest -- find out what the Runes are for
     (define (second-quest-spurned)
@@ -266,7 +267,7 @@
 (define (ench-gate knpc kpc)
   (say knpc "There are many gates in the land which connect to "
        "one another and appear with the moons. "
-       "But the Shrine Gate is the only one I know of that connects with "
+       "But the Shrine Gate is the only one I know of for certain that connects with "
        "other worlds."))
 
 (define (ench-wise knpc kpc)
@@ -336,6 +337,11 @@
 (define (ench-kalc knpc kpc)
   (say knpc "Kalcifax? She's rather hard to keep track of I'm afraid."))
 
+(define (ench-demo knpc kpc)
+  (say knpc "The Demon Gate is a legendary gate that wizards of old used to cross into other worlds. "
+       "Then, for reasons that vary in the telling, it was lost or sealed or forgotten or destroyed. "
+       "I always thought it a fiction."))
+
 (define enchanter-conv
   (ifc basic-conv
        (method 'default ench-default)
@@ -364,7 +370,7 @@
        (method 'wrig ench-wrig)
        (method 'emgi ench-wrig)
        (method 'kalc ench-kalc)
-
+       (method 'demo ench-demo)
        ))
 
 ;;----------------------------------------------------------------------------

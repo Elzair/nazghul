@@ -101,7 +101,7 @@
     "Amy"             ; name
     amy-species         ; species
     amy-occ              ; occ
-    s_townswoman     ; sprite
+    s_companion_tinker ; sprite
     faction-men      ; starting alignment
     2 4 4            ; str/int/dex
     pc-hp-off  ; hp bonus

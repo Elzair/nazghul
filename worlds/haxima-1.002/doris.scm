@@ -134,7 +134,7 @@
        "wanderings, too."))
 
 (define doris-conv
-  (ifc basic-conv
+  (ifc green-tower-conv
        (method 'hail      doris-hail)
        (method 'bye       doris-bye)
        (method 'default   doris-default)

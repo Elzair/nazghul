@@ -25,10 +25,10 @@
  (put (mk-windowed-door) 11 9)
  (put (mk-windowed-door)  5 9)
 
- (put (guard-pt 'knight)  6 9)
- (put (guard-pt 'knight)  7 9)
- (put (guard-pt 'squire)  8 10)
- (put (guard-pt 'squire)  8  10)
+ (put (guard-pt 'knight)  7 8)
+ (put (guard-pt 'knight)  9 10)
+ (put (guard-pt 'squire)  7 10)
+ (put (guard-pt 'squire)  9 8)
 
  (put (spawn-pt 'bandit) 3 8)
  (put (spawn-pt 'bandit) 4 9)

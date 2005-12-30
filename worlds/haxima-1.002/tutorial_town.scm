@@ -57,7 +57,7 @@
       6 10)
  (put (mk-step-clue "If you want to identify the objects around you, use the X)amine command by pressing 'x'. "
                     "The cursor over whatever you want to look at. "
-                    "Non-player characters NPCs like the snake will be highlighted with a box. "
+                    "Non-player characters (NPCs) like the snake will be highlighted with a box. "
                     "Red means hostile, yellow means neutral and green means friendly. "
                     "Hostile NPC's will attack you on sight. "
                     "When done hit the ESC key.")
@@ -77,7 +77,9 @@
 
  (put (mk-locked-door) 13 8)
  (put (mk-step-clue "U)se the picklocks from the corpse to unlock this door. "
-                    "Press 'u' for U)se, select the item, then target the door.") 13 9)
+                    "Press 'u' for U)se, select the item, then target the door. "
+                    "If your picklock breaks, just try again!"
+                    ) 13 9)
 
  (put (kern-tag 'p3 (mk-portcullis)) 12 13)
  (put (mk-lever 'p3) 11 14)

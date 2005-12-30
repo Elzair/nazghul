@@ -1353,7 +1353,7 @@
     (if (= 0 (length members))
         1
         (/ (foldr (lambda (sum kchar)
-                    (println "level:" (kern-char-get-level kchar))
+                    ;;(println "level:" (kern-char-get-level kchar))
                     (+ sum (kern-char-get-level kchar)))
                   0
                   members)

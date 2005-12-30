@@ -116,6 +116,50 @@
                (say knpc "I'm not sure how to get there from here."))
               ))))
 
+(define (basic-east knpc kpc)
+  (say knpc "Eastpass guards the eastern pass into the River Plain. Do you need directions?")
+  (if (yes? kpc)
+      (let ((kplace (get-place knpc)))
+        (cond ((equal? kplace p_westpass)
+               (say knpc "Take the ladder down, you'll come out in Eastpass."))
+              ((equal? kplace p_eastpass)
+               (say knpc "You're here already."))
+              ((equal? kplace p_trigrave)
+               (say knpc "Follow the road east and you'll run right into it."))
+              ((equal? kplace p_green_tower)
+               (say knpc "Travel west through the woods, then follow the road west to Westpass and ask there."))
+              ((equal? kplace p_enchanters_tower)
+               (say knpc "Go south to Trigrave and ask there."))
+              ((equal? kplace p_glasdrin)
+               (say knpc "Take the road south as far as you can and ask there."))
+              ((equal? kplace p_oparine)
+               (say knpc "Take the road north to Trigrave and ask there."))
+              (else 
+               (say knpc "I'm not sure how to get there from here."))
+              ))))
+
+(define (basic-west knpc kpc)
+  (say knpc "Westpass guards the western pass into the Great Forest. Do you need directions?")
+  (if (yes? kpc)
+      (let ((kplace (get-place knpc)))
+        (cond ((equal? kplace p_westpass)
+               (say knpc "This is it."))
+              ((equal? kplace p_eastpass)
+               (say knpc "Take the ladder down and you'll come out in it."))
+              ((equal? kplace p_trigrave)
+               (say knpc "Follow the road east and ask in Eastpass."))
+              ((equal? kplace p_green_tower)
+               (say knpc "Travel west through the woods, then follow the road west."))
+              ((equal? kplace p_enchanters_tower)
+               (say knpc "Go south to Trigrave and ask there."))
+              ((equal? kplace p_glasdrin)
+               (say knpc "Take the road south as far as you can."))
+              ((equal? kplace p_oparine)
+               (say knpc "Take the road north to Trigrave and ask there."))
+              (else 
+               (say knpc "I'm not sure how to get there from here."))
+              ))))
+
 (define (basic-glas knpc kpc)
   (say knpc "Glasdrin is the fortified city of the Paladins. Do you need directions?")
   (if (yes? kpc)
@@ -312,7 +356,7 @@
          (say knpc "Take the bridge north across the river then follow the "
               "mountains east and north into a canyon."))
 (define (glasdrin-cita knpc kpc)
-  (say knpc "The Citadel is the civil and military headquarters of Glasdrin. It's the big keep in the southeast corner of town."))
+  (say knpc "The Citadel is the inner keep in the north part of the castle."))
 (define (glasdrin-ghol knpc kpc)
   (say knpc "I seem to recall a man named Gholet was arrested for theft. You might check the Citadel's dungeon."))
 (define (glasdrin-kurp knpc kpc)
@@ -339,6 +383,8 @@
   (say knpc "Since the goblin wars there's been an uneasy truce. Sometimes they trade here in town, but if you meet them in the forest be careful."))
 (define (gt-towe knpc kpc)
   (say knpc "The tower that gives this town its name is now the Ranger headquarters."))
+(define (gt-ruin knpc kpc)
+  (say knpc "The old ruins are in the southwest corner of town."))
 
 (define green-tower-conv
   (ifc basic-conv
@@ -347,6 +393,7 @@
                  (say knpc "Yes, this town gets its name from the old tower in its center.")))
        (method 'gobl gt-gobl)
        (method 'towe gt-towe)
+       (method 'ruin gt-ruin)
        ))
 
 ;; Trigrave

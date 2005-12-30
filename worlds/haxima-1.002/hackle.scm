@@ -5,8 +5,8 @@
 ;;----------------------------------------------------------------------------
 (kern-mk-sched 'sch_hackle
                (list 0  0  bole-hackles-hut "idle")
-               (list 6  0  bole-bed-hackle "sleeping")
-               (list 14 0  bole-hackles-hut "idle")
+               (list 2  0  bole-bed-hackle "sleeping")
+               (list 10 0  bole-hackles-hut "idle")
                (list 20 0  bole-hackles-yard "idle")
                )
 
@@ -112,7 +112,7 @@
 
 ;; thief quest...
 (define (hackle-thie knpc kpc)
-  (say knpc "It is a mighty rogue indeed that robs a mighty wizard!"))
+  (say knpc "It is a mighty wrogue indeed that robs a mighty wizard!"))
 
 (define (hackle-robs knpc kpc)
   (say knpc "It robs and runs, down it's little mouse-hole!"))
@@ -136,6 +136,8 @@
   (say knpc "The Bill-boy knows where the mouse disappeared! "
        "Let it REVEAL there!"))
 
+(define (hackle-midd knpc kpc)
+  (say knpc "Yes! The middle of the night!"))
 
 (define hackle-conv
   (ifc basic-conv
@@ -173,11 +175,13 @@
        (method 'reve hackle-reve)
        (method 'rob  hackle-robs)
        (method 'robs hackle-robs)
-       (method 'rogu hackle-robs)
+       (method 'wrog hackle-robs)
        (method 'wiza hackle-robs)
        (method 'shee hackle-shee)
        (method 'thie hackle-thie)
        (method 'wood hackle-wood)
+       (method 'midd hackle-midd)
+       (method 'nigh hackle-midd)
        ))
 
 ;;----------------------------------------------------------------------------

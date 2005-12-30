@@ -61,7 +61,7 @@
 (mk-species 'sp_yellow_slime "yellow slime"    4  4  4 1 12  2  6 mmode-walk  t_acid_spray nil       2 nil            sound-squishing nil)
 (mk-species 'sp_kraken       "kraken"         30  3 20 1 30  4  6 mmode-fish  t_tentacles  nil      10 s_shoals       sound-splashing nil) 
 (mk-species 'sp_sea_serpent  "sea serpent"    20  2 14 1 20  4  9 mmode-fish  t_fangs      nil      8  s_asleep       sound-walking   nil) 
-(mk-species 'sp_dryad        "dryad"          12 12  4 1 12  6  6 mmode-none  nil          nil      8  s_forest       nil             nil) 
+(mk-species 'sp_dryad        "dryad"          12 12  4 1 12  6  6 mmode-walk  nil          nil      8  s_forest       nil             nil) 
 (mk-species 'sp_wolf         "wolf"            8  2 12 2  8  0 13 mmode-walk  t_fangs      nil      2  s_asleep       sound-walking   nil) 
 (mk-species 'sp_gazer        "gazer"           6 20  6 1 10  8 16 mmode-hover nil          nil      8  s_asleep       nil             nil) 
 (mk-species 'sp_headless     "headless"       12  0 10 1 14  0  6 mmode-walk  t_hands      humanoid 2  s_asleep       sound-walking   nil) 
