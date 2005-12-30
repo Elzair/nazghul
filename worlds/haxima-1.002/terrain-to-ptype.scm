@@ -64,7 +64,7 @@
          'skeleton-party-l4
          'lich-party-l5
          'ghast-party       
-         'green-slime-party-l1
+         'green-slime-party-l2
          'yellow-slime-party-l3
          'hydra-party-l5
          'ghast-party

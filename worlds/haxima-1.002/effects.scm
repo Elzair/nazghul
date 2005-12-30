@@ -76,19 +76,19 @@
 (define (paralyze-exec fgob kobj)
   (if (not (obj-is-char? kobj))
       (kern-obj-remove-effect kobj ef_paralyze)
-      (let ((kchar kobj))
-        (let ((droll (kern-dice-roll "1d20")))
-          (if (or (= droll 20)
-                  (> droll
-                     dc-escape-paralyze))
-              (begin
-                (kern-log-msg "Paralysis wears off of " (kern-obj-get-name kchar))
-                (kern-obj-remove-effect kchar ef_paralyze)
-                #f)
-              (begin
-                (kern-obj-set-ap kchar 0)
-                #f))))))
-      
+      (let ((kchar kobj)
+            (droll (kern-dice-roll "1d20")))
+        (if (or (= droll 20)
+                (> droll
+                   dc-escape-paralyze))
+            (begin
+              (kern-log-msg "Paralysis wears off of " (kern-obj-get-name kchar))
+              (kern-obj-remove-effect kchar ef_paralyze)
+              #f)
+            (begin
+              (kern-obj-set-ap kchar 0)
+              #f)))))
+
 (mk-effect 'ef_paralyze 'paralyze-exec 'paralyze-apply nil 'paralyze-apply 
            "keystroke-hook" "Z" 0 #f 15)
 
@@ -136,25 +136,27 @@
   )
 
 (define (ensnare-exec fgob kobj)
+  (println "ensnare-exec")
   (if (not (can-ensnare? kobj))
       (kern-obj-remove-effect ef_ensnare)
       (let ((kchar kobj)
-            (let ((droll (kern-dice-roll "1d20")))
-              ;; special case -- paralysis prevents struggling against the ensnare
-              (if (not (is-paralyzed? kchar))
-                  (if (or (= droll 20)
-                          (> (+ (kern-char-get-strength kchar) 
-                                droll)
-                             dc-escape-ensnare))
-                      (begin
-                        (kern-log-msg (kern-obj-get-name kchar) " breaks free of web!")
-                        (kern-obj-remove-effect kchar ef_ensnare)
-                        (destroy-webs-at (kern-obj-get-location kchar))
-                        #t)
-                      (begin
-                        (kern-log-msg (kern-obj-get-name kchar) " struggles in the web!")
-                        (kern-obj-set-ap kchar 0)
-                        #f))))))))
+            (droll (kern-dice-roll "1d20")))
+        ;; special case -- paralysis prevents struggling against the ensnare
+        (println "droll=" droll)
+        (if (not (is-paralyzed? kchar))
+            (if (or (= droll 20)
+                    (> (+ (kern-char-get-strength kchar) 
+                          droll)
+                       dc-escape-ensnare))
+                (begin
+                  (kern-log-msg (kern-obj-get-name kchar) " breaks free of web!")
+                  (kern-obj-remove-effect kchar ef_ensnare)
+                  (destroy-webs-at (kern-obj-get-location kchar))
+                  #t)
+                (begin
+                  (kern-log-msg (kern-obj-get-name kchar) " struggles in the web!")
+                  (kern-obj-set-ap kchar 0)
+                  #f))))))
 
 (mk-effect 'ef_ensnare 'ensnare-exec 'ensnare-apply nil 'ensnare-apply
            "keystroke-hook" "E" 0 #f 15)
@@ -185,12 +187,14 @@
 (define major-light-amount 8192)
 
 (define (light-rm fgob kobj)
+  (kern-log-msg "Light expires!")
   (kern-obj-dec-light kobj minor-light-amount))
 
 (define (light-apply fgob kobj)
   (kern-obj-inc-light kobj minor-light-amount))
 
 (define (great-light-rm fgob kobj)
+  (kern-log-msg "Great light expires!")
   (kern-obj-dec-light kobj major-light-amount))
 
 (define (great-light-apply fgob kobj)
@@ -360,7 +364,7 @@
    (list 'ef_light                     nil                   'light-apply        'light-rm        'light-apply        "start-of-turn-hook" "L" 0   #t  60)
    (list 'ef_torchlight                nil                   'torchlight-apply   'torchlight-rm   'torchlight-apply   "start-of-turn-hook" "T" 0   #f  60)
    (list 'ef_great_light               nil                   'great-light-apply  'great-light-rm  'great-light-apply  "start-of-turn-hook" "L" 0   #t  120)
-   (list 'ef_protection                nil                   'protection-apply   'protection-rm   'protection-apply   "start-of-turn-hook" "P" 0   #t  10)
+   (list 'ef_protection                nil                   'protection-apply   'protection-rm   'protection-apply   "start-of-turn-hook" "p" 0   #t  10)
    (list 'ef_charm                     nil                   'charm-apply        'charm-rm        'charm-apply        "start-of-turn-hook" "C" 0   #f   5)
    (list 'ef_invisibility              nil                   'invisibility-apply 'invisibility-rm 'invisibility-apply "start-of-turn-hook" "N" 0   #t  10)
    (list 'ef_permanent_invisibility    nil                   'invisibility-apply 'invisibility-rm 'invisibility-apply "start-of-turn-hook" "N" 0   #t  -1)

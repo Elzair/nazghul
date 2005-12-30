@@ -5,18 +5,14 @@
 (define (moon-get-current-gate kmoon)
   (let ((gates (gob-data (kern-astral-body-get-gob kmoon)))
         (phase (kern-astral-body-get-phase kmoon)))
-    (display "gates=")(display gates)(newline)
-    (display "phase=")(display phase)(newline)
     (safe-eval (list-ref gates phase))))
 
 (define (moon-signal-gate moon phase signal)
-  (display "moon-signal-gate")(newline)
   (let ((kgate (safe-eval (list-ref moon phase))))
     (if (not (null? kgate))
         (signal-kobj kgate signal kgate))))
 
 (define (moon-phase-change kmoon old-phase new-phase)
-  (display "moon-phase-change")(newline)
   (let ((moon (gob-data (kern-astral-body-get-gob kmoon))))
     (moon-signal-gate moon old-phase 'off)
     (moon-signal-gate moon new-phase 'on)))

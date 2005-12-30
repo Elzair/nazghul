@@ -182,7 +182,7 @@
     )
     (kern-mk-map nil 32 32 pal_expanded
       (list
-        ".. .. .. .. .. .. {{ {{ ^^ ^^ ^^ ^^ .. .. .. tt tt tt tt ~~ tt tt tt tt ~~ tt tt tt tt tt ~~ ~~ "
+        "/a .. .. .. .. .. {{ {{ ^^ ^^ ^^ ^^ .. .. .. tt tt tt tt ~~ tt tt tt tt ~~ tt tt tt tt tt ~~ ~~ "
         ".. .. .. {{ .. .. .. {{ {{ ^^ ^^ ^^ .. .. .. tt ~~ ~~ ~~ ~~ tt .. .. tt ~~ tt .. .. .. tt tt tt "
         ".. .. {{ {{ {{ .. .. {{ {{ ^^ ^^ ^^ .. .. .. tt ~~ tt tt tt tt .. tt tt ~~ tt .. ^^ .. .. .. .. "
         ".. {{ {{ {{ {{ {{ {{ {{ {{ {{ ^^ {{ {{ .. .. tt ~~ tt .. .. .. .. tt ~~ ~~ tt .. ^^ ^^ ^^ {{ {{ "

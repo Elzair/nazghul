@@ -230,9 +230,9 @@
         ))  
 
 (define (loc-offset loc dir)
-  (println "    loc-offset:" loc "," dir)
+  ;;(println "    loc-offset:" loc "," dir)
   (define (get-place place dz)
-    (println "     get-place:" place "," dz)
+    ;;(println "     get-place:" place "," dz)
     (cond ((= dz 0) place)
           (else (kern-place-get-neighbor place dir))))
   (let* ((vec (direction-to-lvect dir))

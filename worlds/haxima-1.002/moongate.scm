@@ -10,17 +10,18 @@
 
 (define (stage-sprite stage) (car stage))
 (define (stage-light stage) (cadr stage))
+(define moongate-default-ttl 10) ;; turns
 
 ;; ----------------------------------------------------------------------------
 ;; Moongate gob
 ;; ----------------------------------------------------------------------------
 (define (moongate-mk moontag temp?)
-  (list moontag #f '() #f temp?))
+  (list moontag #f '() #f temp? moongate-default-ttl))
 
 (define (moongate-kdest gate) 
-  (println "gate:" gate)
+  ;;(println "gate:" gate)
   (let ((kmoon (safe-eval (car gate))))
-    (println "moon:" kmoon)
+    ;;(println "moon:" kmoon)
     (cond ((null? kmoon) nil)
           (else (moon-get-current-gate kmoon)))))
 (define (moongate-open? gate) (cadr gate))
@@ -29,6 +30,8 @@
 (define (moongate-closed? gate) (and (not (moongate-open? gate))
                                      (not (moongate-pending-open? gate))))
 (define (moongate-is-temporary? gate) (car (cddddr gate)))
+(define (moongate-get-ttl gate) (list-ref gate 5))
+(define (moongate-set-ttl! gate val) (set-car! (list-tail gate 5) val))
 
 (define (moongate-set-open! gate val)
   (set-car! (cdr gate) val))
@@ -38,6 +41,7 @@
   (set-car! (cdddr gate) open?))
 
 (define (moongate-destroy kgate)
+  (println "moongate-destroy")
   (kern-obj-remove kgate))
 
 ;; ----------------------------------------------------------------------------
@@ -134,15 +138,15 @@
 
 (define (moongate-open kgate)
   (let ((gate (kobj-gob-data kgate)))
-    (if (moongate-open? gate)
-        (begin (display "already open!")(newline))
+    (println "moongate-open:gob=" gate)
+    (if (not (moongate-open? gate))
         (moongate-setup-sequence kgate gate #t moongate-stages)
         )))
 
 (define (moongate-close kgate)
+  (println "moongate-close")
   (let ((gate (kobj-gob-data kgate)))
-    (if (moongate-closed? gate)
-        (begin (display "already closed! ")(display gate)(newline))
+    (if (not (moongate-closed? gate))
         (moongate-setup-sequence kgate gate #f (reverse moongate-stages))
         )))
 
@@ -150,6 +154,17 @@
   (let ((gate (kobj-gob-data kgate)))
     (if (moongate-open? gate)
         (moongate-setup-sequence kgate gate #t moongate-stages))))
+
+(define (moongate-exec kgate)
+  (let ((gate (gob kgate)))
+    (if (moongate-is-temporary? gate)
+        (let ((ttl (- (moongate-get-ttl gate) 1)))
+          (moongate-set-ttl! gate ttl)
+          (if (<= ttl 0)
+              (begin
+                (moongate-animate kgate (reverse moongate-stages))
+                (moongate-destroy kgate)
+                ))))))
 
 ;; ----------------------------------------------------------------------------
 ;; Moongate gifc, kobj-type & constructor
@@ -160,6 +175,7 @@
        (method 'on moongate-open)
        (method 'off moongate-close)
        (method 'init moongate-init)
+       (method 'exec moongate-exec)
        ))
 
 (mk-obj-type 't_moongate "moongate" '() layer-mechanism moongate-ifc)

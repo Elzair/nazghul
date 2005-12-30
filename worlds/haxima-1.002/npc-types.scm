@@ -550,7 +550,7 @@
         ))
 
 (define (drop-generic knpc loot)
-  (println "drop-generic:loot=" loot)
+  ;;(println "drop-generic:loot=" loot)
   (let ((loc (kern-obj-get-location knpc)))
     (map (lambda (triple)
            (let ((thresh (car triple))
@@ -654,7 +654,7 @@
   (is-species? kchar sp_yellow_slime))
 
 (define (is-green-slime? kchar)
-  (println "is-green-slime?")
+  ;;(println "is-green-slime?")
   (is-species? kchar sp_green_slime))
 
 (define (is-spider? kchar)

@@ -167,23 +167,25 @@
            (list pclass-grass pclass-trees pclass-forest))))
 
 (define (get-line origin dir n)
-  (println "   get-line:" origin "," dir "," n)
-  (cond ((= n 0) (println "    nil") nil)
+  ;;(println "   get-line:" origin "," dir "," n)
+  (cond ((= n 0) 
+         ;;(println "    nil") 
+         nil)
         (else
          (cons origin
                (get-line (loc-offset origin dir) dir (- n 1))))))
 
 (define (get-cone-vert origin depth dy)
-  (println " get-cone-vert:" origin "," depth "," dy)
+  ;;(println " get-cone-vert:" origin "," depth "," dy)
   (let ((place (loc-place origin)))
     (define (get-lines x y n h)
-      (println "  get-lines:" x "," y "," n "," h)
+      ;;(println "  get-lines:" x "," y "," n "," h)
       (if (< h 0) nil
           (let ((line (filter (lambda (a) (and (kern-in-los? origin a)
                                                (kern-is-valid-location? a)
                                                (terrain-ok-for-field? a)))
                               (get-line (mk-loc place x y) east n))))
-            (println "   line:" line)
+            ;;(println "   line:" line)
             (cons line
                   (get-lines (if (= x 0) 0 (- x 1))
                              (+ y dy) 
@@ -212,7 +214,7 @@
                depth)))
 
 (define (get-cone origin depth dir)
-  (println "get-cone:" origin "," depth "," dir)
+  ;;(println "get-cone:" origin "," depth "," dir)
   (cond ((= dir north) (get-cone-vert origin 
                                       (min depth (loc-y origin)) 
                                       -1))
@@ -265,7 +267,7 @@
 ;;   o applies caller-specified proc to each location
 ;; (Note: currently used for the spider's web-spew "spell")
 (define (cast-wind-spell2 origin proc dir depth)
-  (println "cast-wind-spell2:" origin "," proc "," dir "," depth)
+  ;;(println "cast-wind-spell2:" origin "," proc "," dir "," depth)
   (define (dropfield loc)
     (if (kern-is-valid-location? loc)
         (proc loc)))
@@ -275,7 +277,7 @@
   (let ((lines (get-cone origin depth dir)))
     (cond ((null? lines) nil)
           (else
-           (println " doing lines")
+           ;;(println " doing lines")
            (map doline (cdr lines))
            (kern-map-repaint)))))
 
@@ -285,10 +287,10 @@
 ;; the callers. All of these calls must return #t on success or #f on
 ;; failure. No further details as to cause of failure are required.
 ;;----------------------------------------------------------------------------
-(define (cure-poison ktarg)
+(define (cure-poison caster ktarg)
   (kern-obj-remove-effect ktarg ef_poison))
 
-(define (awaken ktarg)
+(define (awaken caster ktarg)
   (and (kern-obj-remove-effect ktarg ef_sleep)
        (or (kern-char-set-sleep ktarg #f)
            #t)))
@@ -314,10 +316,10 @@
 ;; First Circle
 ;;----------------------------------------------------------------------------
 (define (an-nox  caster)
-  (cast-on-party-member cure-poison))
+  (user-cast-spell-on-party-member caster cure-poison))
 
 (define (an-zu  caster)
-  (cast-on-party-member awaken))
+  (user-cast-spell-on-party-member caster awaken))
 
 (define (grav-por caster)
   (user-cast-ranged-targeted-spell caster 8 cast-magic-missile-proc))
@@ -385,8 +387,12 @@
 
 (define (rel-hur  caster)
   (let ((dir (ui-get-direction)))
-    (cond ((null? dir) nil)
-          (else (kern-set-wind dir (kern-dice-roll "20d6"))))))
+    (cond ((null? dir)
+           result-no-target)
+          (else 
+           (kern-set-wind dir (kern-dice-roll "20d6"))
+           result-ok
+           ))))
 
 (define (in-nox-por  caster)
   (user-cast-ranged-targeted-spell caster 8 cast-poison-missile-proc))
@@ -483,8 +489,11 @@
 
 (define (in-sanct  caster)
   (let ((party (kern-char-get-party caster)))
-    (if (null? party) (kern-obj-add-effect caster ef_protection nil)
-        (kern-obj-add-effect party ef_protection nil))))
+    (if (null? party) 
+        (kern-obj-add-effect caster ef_protection nil)
+        (kern-obj-add-effect party ef_protection nil)
+        )
+    result-ok))
 
 (define (wis-quas  caster)
   (kern-add-reveal 50)
@@ -503,7 +512,7 @@
 ;;----------------------------------------------------------------------------
 (define (in-ex-por  caster)
   (let ((loc (kern-obj-get-location caster)))
-    (println "in-ex-por")
+    ;;(println "in-ex-por")
     (cast-signal-spell caster 'magic-unlock (ui-target loc 1 (mk-ifc-query 'magic-unlock)))))
   
 (define (an-ex-por  caster)
@@ -522,15 +531,22 @@
 (define (in-zu  caster)
   (let ((hostiles (all-hostiles caster)))
     (cond ((null? hostiles) 
-           (kern-print "No hostiles here!\n"))
-          (else (map apply-sleep hostiles)))))
+           (kern-print "No hostiles here!\n")
+           result-no-target
+           )
+          (else 
+           (map apply-sleep hostiles)
+           result-ok
+           ))))
 
 (define (vas-mani  caster)
   (user-cast-spell-on-party-member caster great-heal-proc))
 
 
 (define (rel-tym  caster)
-  (kern-add-quicken (kern-dice-roll "3d6")))
+  (kern-add-quicken (kern-dice-roll "3d6"))
+  result-ok
+  )
 
 ;; ----------------------------------------------------------------------------
 ;; Sixth Circle
@@ -547,7 +563,10 @@
             result-ok
             result-no-effect))))
 
-(define (wis-an-ylem  caster) (kern-add-xray-vision (kern-dice-roll "3d6")))
+(define (wis-an-ylem caster) 
+  (kern-add-xray-vision (kern-dice-roll "10d6"))
+  result-ok
+  )
 
 (define (an-xen-exe  caster)
    (let ((target (ui-target (kern-obj-get-location caster) 
@@ -652,7 +671,8 @@
     )
   (define (try-repel kchar)
     (let ((roll (kern-dice-roll "1d20")))
-      (if (> roll 14)
+      (println "roll=" roll)
+      (if (> roll 6)
           (repel kchar)
           )))
   (let ((foes (all-hostiles caster)))
@@ -705,16 +725,18 @@
 (define (in-vas-grav-corp  caster)
   (define (energize-foe kobj)
     (if (is-hostile? caster kobj)
-        (burn kobj)))
+        (apply-lightning kobj)))
   (cast-wind-spell (kern-obj-get-location caster)
                    energize-foe
                    F_energy))
 
 (define (an-tym  caster)
-  (kern-add-time-stop 512))
+  (kern-add-time-stop (kern-dice-roll "3d6"))
+  result-ok
+  )
 
-(define (kal-xen-corp  caster)
-  (if (use-ability summon-skeleton kchar)
+(define (kal-xen-corp caster)
+  (if (use-ability summon-skeleton caster)
       result-ok
       result-no-effect))
 
@@ -730,14 +752,20 @@
           #t))))
 
 (define (vas-rel-por  caster)
+  (println "vas-rel-por")
   (define (rmgate kobj)
     (moongate-close gate)
     (kern-obj-remove gate))
   (let ((loc (kern-ui-target (kern-obj-get-location caster) 1)))
-    (if (null? loc) nil
+    (println " loc=" loc)
+    (if (null? loc) 
+        result-no-target
         (let ((gate (summon-moongate 'ord)))
+          (println " gate=" gate)
           (kern-obj-put-at gate loc)
-          (moongate-open gate)))))
+          (moongate-open gate)
+          result-ok
+          ))))
 
 (define (kal-xen-nox caster)
   (if (use-ability summon-slime kchar)
@@ -795,8 +823,8 @@
 
    ;; Fourth Circle
    (list 'an_grav       "An Grav spell"       an-grav       "AG"  4 context-any (list black_pearl sulphorous_ash))
-   (list 'uus_por       "Uus Por spell"       uus-por       "UP"  4 context-any (list blood_moss spider_silk))
-   (list 'des_por       "Des Por spell"       des-por       "DP"  4 context-any (list blood_moss spider_silk))
+   ;;(list 'uus_por       "Uus Por spell"       uus-por       "UP"  4 context-any (list blood_moss spider_silk))
+   ;;(list 'des_por       "Des Por spell"       des-por       "DP"  4 context-any (list blood_moss spider_silk))
    (list 'in_sanct_grav "In Sanct Grav spell" in-sanct-grav "ISG" 4 context-town (list mandrake black_pearl spider_silk))
    (list 'in_sanct      "In Sanct spell"      in-sanct      "IS"  4 context-any (list sulphorous_ash ginseng garlic))
    (list 'wis_quas      "Wis Quas spell"      wis-quas      "WQ"  4 context-any (list nightshade spider_silk))
@@ -808,7 +836,7 @@
    (list 'in_bet_xen  "In Bet Xen spell"  in-bet-xen  "IBX" 5 context-town (list spider_silk blood_moss sulphorous_ash))
    (list 'in_zu       "In Zu spell"       in-zu       "IZ"  5 context-town (list nightshade spider_silk black_pearl))
    (list 'vas_mani    "Vas Mani spell"    vas-mani    "VM"  5 context-any  (list mandrake spider_silk ginseng))
-   (list 'rel_tym     "Rel Tym spell"     rel-tym     "RT"  5 context-any  (list sulphorous_ash blood_moss spider_silk))
+   (list 'rel_tym     "Rel Tym spell"     rel-tym     "RT"  5 context-any  (list sulphorous_ash blood_moss mandrake))
 
    ;; Sixth Circle
    (list 'in_an           "In An spell"           in-an           "IA"   6 context-any  (list garlic mandrake sulphorous_ash))
