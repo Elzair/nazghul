@@ -46,6 +46,8 @@ static int tick_main(void *data)
                 if (! tick_paused)
                         SDL_PushEvent(&tick_event);
 	}
+
+        return 0;
 }
 
 void tick_start(int msecs)

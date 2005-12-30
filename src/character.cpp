@@ -469,15 +469,14 @@ enum MoveResult Character::move(int dx, int dy)
 
         if (!isOnMap()) {
                 if (isPlayerControlled()) {
-
-                        // ----------------------------------------------------
-                        // Hack: if dx or dy is greater than 1 then set the
-                        // 'teleport' argument to the player party move() to
-                        // true.
-                        // ----------------------------------------------------
-
                         return (player_party->move(dx, dy));
                 } else {
+                        // I don't know how I got here, but I did with an NPC
+                        // in wilderness combat, so its party was NULL. Maybe
+                        // it was summoned?
+                        dbg("%s not on map and not player-controlled...WTF?\n");
+                        if (! party)
+                                return OffMap;
                         return (party->move(dx, dy) ? MovedOk : WasImpassable);
                 }
         }

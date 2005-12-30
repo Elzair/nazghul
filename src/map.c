@@ -66,6 +66,8 @@
     (Map.srect.y+((y)-(Map.aview->vrect.y+Map.aview->subrect.y))*TILE_H)
 
 
+extern int DeveloperMode;
+
 /* Global flag changeble by command-line parameters. */
 int map_use_circular_vision_radius = 0;
 
@@ -635,7 +637,10 @@ void mapCenterView(struct mview *view, int x, int y)
 void mapRepaintClock(void)
 {
   char * date_time_str = time_HHMM_as_string();
-  
+ 
+  if (! DeveloperMode)
+          return;
+ 
   // Show the clock time:
   screenErase(&Map.clkRect);
   screenPrint(&Map.clkRect, 0, "%s", date_time_str);
@@ -895,6 +900,10 @@ static void mapPaintPlace(struct place *place,
 
 static void mapRepaintCoordinates(void)
 {
+        if (! DeveloperMode) {
+                return;
+        }
+
         if (player_party->isOnMap()) {
                 screenPrint(&Map.locRect, 0, "[%d,%d]", player_party->getX(), player_party->getY());
                 return;
@@ -907,6 +916,10 @@ static void mapRepaintCoordinates(void)
 static void mapRepaintTurnaround(void)
 {
         extern int G_turnaround;
+
+        if (! DeveloperMode)
+                return;
+
 	screenPrint(&Map.turnaroundRect, 0, "TA: %d", G_turnaround);
 }
 
@@ -914,6 +927,9 @@ extern int G_latency_start;
 static void mapRepaintLatency(void)
 {
         static int latency = 0;
+
+        if (! DeveloperMode)
+                return;
 
         latency = SDL_GetTicks() - G_latency_start;
 
@@ -1432,7 +1448,7 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
                         if (oPx != Px || oPy != Py) {
 
                                 if (mapTileIsVisible(Px, Py) && sprite)
-                                        mapPaintProjectile(&rect, sprite, surf, 10);
+                                        mapPaintProjectile(&rect, sprite, surf, 50);
 
                                 if (!missile->enterTile(place, Px, Py)) {
                                         goto done;
@@ -1467,7 +1483,7 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
                         if (oPx != Px || oPy != Py) {
 
                                 if (mapTileIsVisible(Px, Py) && sprite)
-                                        mapPaintProjectile(&rect, sprite, surf, 10);
+                                        mapPaintProjectile(&rect, sprite, surf, 50);
 
                                 if (!missile->enterTile(place, Px, Py)) {
                                         goto done;

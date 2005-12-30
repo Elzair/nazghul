@@ -2121,7 +2121,7 @@ bool cmdCastSpell(class Character * pc)
                 break;
         }
 
-        pc->decActionPoints(spell->cost);
+        pc->decActionPoints(spell->cost/2);
 
 	// If the spell was mixed then remove it from inventory.
 	if (mixed)
@@ -2510,7 +2510,7 @@ bool cmdAT (class Character * pc)
     
         log_begin_group();
         log_msg("This is %s.", name_of_context() );
-        log_msg("%s is in %s (%d,%d).", who, place_name, x, y);
+        log_msg("%s is in %s.", who, place_name);
         log_msg("It is %s on %s, "
                 "%s of %s in the year %d.",
                 time_HHMM_as_string(), day_name(), 
