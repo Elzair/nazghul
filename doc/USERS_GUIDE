@@ -50,6 +50,8 @@ the file-name to nazghul on the command line it will load it, for example:
 If you're unfamiliar with U5 I recommend the Tutorial. Here are some more notes
 to help you get started:
 
+                                   Exploring
+
 When you start you will have a party consisting of one character known as The
 Wanderer. The icon for this character will be in the center of the map view on
 the left. Explore around a bit using the arrow keys to move. Below the map
@@ -63,6 +65,12 @@ Which means it wants you to hit the arrow keys and move the targeting
 cursor. When you hit 'ESC' instead the command will cancel. Pretty much all
 commands can be canceled by hitting 'ESC'.
 
+To get a detailed explanation of where you are and what time it is, use the AT
+command by pressing '@'. There is no clock in the game, so this is the only way
+to tell time other than guesstimating from the position of the sun.
+
+                                    Talking
+
 You'll see your first NPC to the south. To talk to the NPC press 't' for
 T)alk. This brings up a targeting crosshair. It might start out on the NPC or
 on your character, it it's on you then move it to the NPC with the arrow keys
@@ -71,6 +79,8 @@ and hit enter.
 That starts a conversation. During conversation you enter a keyword and the NPC
 will respond. For example, type NAME or JOB and see what this NPC says. When
 you are done talking type 'bye' or hit enter by itself.
+
+                                 Getting Stuff
 
 Eventually you will want to follow the road down to the chamber on the lower
 left. The chamber is marked by mysterious runes on its walls. Within the
@@ -83,13 +93,21 @@ on the ground.
 G)et the stuff using the 'g' key. Among the items will be some basic weapons,
 armour and spell reagents as well as some scrolls and potions.
 
-To see your stuff hit 'z' for Z)tats and scroll around. Hit ESC when you tire
-of admiring yourself and your loot.
+                                   Equipping
+
+To see your stuff hit 'z' for Z)tats and scroll around. The left and right
+arrow keys will switch between different status panes. Hit ESC when you tire of
+admiring yourself and your loot.
 
 To R)eady the weapons and armor hit 'r' then select them. Hit ESC when done.
 
+                                 Mixing A Spell
+
 To M)ix a heal spell type 'm', select Ginseng and Garlic, and hit ENTER to mix
-them.
+them. You just made a "Mani" spell, a spell of minor healing. More on spells
+later.
+
+                          Entering and Exiting Towns
 
 When you are ready to face the world walk to the edge of the map and bravely
 step off. You will zoom out to Wilderness Mode, and your entire party (all one
@@ -104,13 +122,12 @@ in the party tries to keep up. But if hostiles are in town you will be in
 between these two mode use the 'f' key. This will make more sense when you add
 more characters to your party.
 
-IMPORTANT: when you get somebody to join you, don't forget about Follow Mode
-    (the 'f' key). It's much easier to have everybody follow your main dude
-    around than to always individually control them.
+IMPORTANT: when you eventually get somebody to join you, don't forget about
+           Follow Mode (the 'f' key). It's much easier to have everybody follow
+           your main dude around than to always individually control them.
 
 
                                 USER INTERFACE
-
 
 Astronomy Window
 
@@ -118,42 +135,19 @@ Astronomy Window
     the position of the sun and two moons. It also shows the phase of the
     moons, which is important for moongate travel.
 
-LAT/AT Counter
-      
-    These are for performance measurement. You may safely ignore these. But,
-    for the curious: LAT means 'latency', and indicates how many milliseconds
-    passed between your last keystroke and a map window update. TA means
-    'turnaround', and indicates how many milliseconds passed between your last
-    chance to enter input and the current one.
-
-Clock
-
-    Eventually I'll make you carry around a pocketwatch but for now you can see
-    the current game time by looking in the top right corner of the map window.
-
-Coordinates
-
-    Eventually I'll make you work for this one, too, but for now I nicely
-    indicate your party's coordinates in the lower left corner of the
-    map. This is convenient for map hackers to walk around and figure out where
-    to put things.
-
 Wind
 
     Below the map, embedded in the frame, is the wind direction
     indicator. Currently the wind only affects ships. Tacking across the wind
     provides the best rate of travel, the wind at your back is second best, and
     heading into the wind is the worst. Note that this indicates the direction
-    the wind is blowing _from_.
+    the wind is blowing _FROM_.
 
 Command Prompt
 
     Unlike u4/u5/u6 the command prompt has its own window, just below the wind
     indicator. Interactive command prompts appear here, as well as the things
-    the player says in conversation. BTW, I've thought about moving this back
-    to the console window, so if you have an opinion let me know. At one point
-    I trried to log the final form of all commands to the console, but that was
-    just too verbose for my taste.
+    the player says in conversation.
 
 Status Window
 
@@ -186,13 +180,16 @@ Foogod Window
     turn, food and gold counters as well as the current combat status and any
     pending Effects. The effects will be printed in cryptic little codes like
     "N" for magic negated. If you board a vehicle it will also show you the hit
-    points for the vehicle.
+    points for the vehicle. Here are some of the codes and what they mean:
+
+    N...Magic negated (spellcasting fails)
+    Q...Quicken (player party members get extra turns per round)
+    T...Time Stopped
 
 Console Window
 
     Finally on the right hand side you'll find the window where all the game
     messages get logged.
-
 
 
                                 PLAYER COMMANDS
@@ -211,7 +208,7 @@ General syntax:
 <space>  = spacebar
 <target> = a combat target, selected by moving the crosshairs and pressing
            <enter> or <space>
-<*>      = varies depending on context (see the C)ast command)
+<*>      = varies depending on context
 
 General commands:
 
@@ -242,8 +239,8 @@ Wilderness-only commands:
 
     K)amp-<0-9/sunrise>-<y/n>-<player>
     ...........................Camp in the wilderness (to heal and recover 
-                               mana) or aboard ship (to repair hull damage)
-
+                               mana) or aboard ship (to repair hull damage as 
+                               well)
 
 Town/Dungeon/Combat-only commands:
 
@@ -281,7 +278,7 @@ Follow Mode (town/combat/dungeons)
     and still on the current map. Enter follow mode from Solo or Round Robin
     Mode by pressing 'f'.
 
-Solo Mode (combat/dungeons)
+Solo Mode (town/combat/dungeons)
 
     You control one party member while the others stand around looking
     bored. Enter Solo Mode by pressing the number key associated with the
@@ -292,7 +289,7 @@ Solo Mode (combat/dungeons)
           he can float over water. Now imagine the possibilities if you get a
           ghost to join your party.
 
-Round Robin Mode (combat/dungeons)
+Round Robin Mode (town/combat/dungeons)
 
     You control each member in turn. This is the default mode when you enter
     combat. To enter Round Robin Mode from solo mode, press 0. To enter from
