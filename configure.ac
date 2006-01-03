@@ -175,7 +175,8 @@ dnl ---------------------------------------------------------------------------
 AC_CONFIG_FILES([Makefile \
 	m4/Makefile       \
 	src/Makefile      \
-	worlds/Makefile])
+	worlds/Makefile   \
+	worlds/haxima-1.002/Makefile])
 
 AC_OUTPUT
 

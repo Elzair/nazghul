@@ -1,2 +1,2 @@
+SUBDIRS = haxima-1.002
 
-EXTRA_DIST = haxima-1.002
