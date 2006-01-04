@@ -1,0 +1,77 @@
+haximadir   = $(datadir)/nazghul/haxima
+haxima_DATA = \
+	abandoned-cellar.scm        green-tower-lower.scm  portcullis.scm \
+	abandoned-farm.scm          green-tower.scm        potions.png\
+	abe.scm                     gregor.scm             potions.scm\
+	ability.scm                 gregors-hut.scm        pre-entry-hooks.scm\
+	absalot.scm                 gwen.scm               prices.scm\
+	addons.png                  hackle.scm             prison.scm\
+	ai.scm                      haxima.scm        raise-merciful-death.scm\
+	alchemist.scm               henry.scm              reagents.png\
+	alex.scm                    horse.wav              reagents.scm\
+	altar-room.scm              ifc.scm                road_to_absalot.scm\
+	amy.scm                     ilya.scm               roland.scm\
+	ancient-derelict.scm        ini.scm                rowing.wav\
+	angela.scm                  init.scm               rune.png\
+	angriss-lair.scm            items.scm              runes.scm\
+	angriss.scm                 jake.scm               scrolls.png\
+	ankh-shrine.scm             jeffreys.scm           scrolls.scm\
+	anne.scm                    jess.scm               selene.scm\
+	arms.png                    jewelry.png            shapes.png\
+	arms.scm                    jewelry.scm            shard.scm\
+	bakup.scm                   jim.scm                shroom.scm\
+	bart.scm                    joel.scm               silas.scm\
+	beds.scm                    jones.scm              slimy-cavern.scm\
+	bill.scm                    jorn.scm          slimy-cavern-zones.scm\
+	bim.scm                     kalcifax.scm           slywan.scm\
+	bole.scm                    kama.scm               sounds.scm\
+	books.png                   kathryn.scm            special.png\
+	books.scm                   keep_crypt_mech.scm    special.scm\
+	bridge.scm                  keep.scm               species.scm\
+	camping-map.scm             kobj.scm               spells.scm\
+	cannon.wav                  kraken-lakes.scm       spider.scm\
+	chanticleer.scm             kun.scm                splash.png\
+	charset.png                 lever.scm              sprite-sets.scm\
+	chester.scm                 lia.scm                sprites.scm\
+	combat-maps.scm             lich-tomb.scm          step.scm\
+	containers.scm              loc.scm                steward.scm\
+	conv.scm                    lost-halls.scm         talking-ankh.scm\
+	crypt.scm                   luximene.scm           tblit.scm\
+	                            main-menu.scm          terrains.scm\
+	damage.wav                  Makefile.am            terrain-to-ptype.scm\
+	dank-cave.scm               mans-hideout.scm       tetzl.scm\
+	demon-gate.scm              may.scm                the-man.scm\
+	dennis.scm                  meaney.scm             thiefs_den.scm\
+	deric.scm                   melvin.scm             thorald.scm\
+	door.scm                    merciful-death.scm     thud.scm\
+	doris.scm                   mesmeme.scm            timer.scm\
+	douglas.scm                 miggs.scm              tools.png\
+	drawbridge.scm              money.png              tools.scm\
+	earl.scm                    money.scm              tooth.scm\
+	eastpass.scm                monster-generator.scm  town-entry.scm\
+	edge-spawn.scm              moongate-clearing.scm  traps_1.scm\
+	effects.scm                 moongate.scm           traps_2.scm\
+	enchanter.scm               moon.scm               traps_3_mechs.scm\
+	enchanters-tower.scm        moons.png              traps_3.scm\
+	enchanters-tower-zones.scm  mouse.scm              traps_4.scm\
+	engineer.scm                mushroom-cave.scm      treasury.scm\
+	engineers-hut.scm           naz.scm                trigrave.scm\
+	enter_moongate.wav          necromancer.scm        troll.scm\
+	fields.scm                  necromancers-lair.scm  tutorial_cave.scm\
+	fing.scm                    nossifer.scm           tutorial.scm\
+	fire_sea.scm                npc-types.scm          tutorial_town.scm\
+	food.png                    objs.scm          tutorial_wilderness.scm\
+	food.scm                    occs.scm               urt.scm\
+	forsaken-prison.scm         old-absalot.scm        vehicles.scm\
+	frame.png                   old-mine.scm           void-temple.scm\
+	game.scm                    oparine.scm            walk.wav\
+	gate-guard.scm              oscar.scm              warritrix.scm\
+	generic-mech.scm            palette.scm            westpass.scm\
+	gen.scm                     parties.scm            yellow-slime.scm\
+	ghertie.scm                 patch.scm              zane.scm\
+	gholet.scm                  player.scm             zones.scm\
+	glasdrin.scm                poor-house.scm\
+	goblin-kingdoms.scm         portals.scm
+
+EXTRA_DIST = $(haxima_DATA)
+
