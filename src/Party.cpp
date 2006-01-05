@@ -861,7 +861,7 @@ void Party::save(struct save *save)
         save->write(save, "(kern-obj-set-sprite kparty %s)\n", getSprite()->tag);
         save->write(save, "(kern-being-set-base-faction kparty %d)\n", getBaseFaction());
         if (vehicle) {
-                save->enter(save, "(kern-party-set-vehicle ");
+                save->enter(save, "(kern-party-set-vehicle kparty");
                 vehicle->save(save);
                 save->exit(save, ") ;; end kern-party-set-vehicle\n");
         }
