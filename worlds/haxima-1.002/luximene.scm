@@ -34,7 +34,42 @@
        "made by the Wise to lock the Demon Gate."))
 
 (define (lux-gate knpc kpc)
-  (say knpc "Ask a wizard, not a king."))
+  (say knpc "Each key was given to a Keeper, each Keeper was forbidden to meet with any other, "
+       "and to pass their legacy on to an heir. Art thou a Keeper?")
+  (if (yes? kpc)
+      (begin
+        (say knpc "Then why dost thou ask me of this Rune? Did they master not explain?")
+        (if (yes? kpc)
+            (say knpc "[He chuckles malignantly] Thou thinkest me a fool, "
+                 "and art a fool for thinking so. The Rune will be thy undoing, "
+                 "and the undoing of thine Age!")
+            (say knpc "Cursed is the Age wherein Men forget their vows.")))
+      (begin
+        (say knpc "Art thou a Thief?")
+        (if (yes? kpc)
+            (say knpc "Doomed is the Age where even thieves know not the value of what they steal.")
+            (say knpc "Then thou hast acquired the Rune by chance, "
+                 "and the end of thine Age is nigh.")))))
+
+(define (lux-age knpc kpc)
+  (say knpc "When the Demon Gate was sealed, the Age of Wizards ended. "
+       "It was I who conquered and united the Shard, and The Age of Luximene began. "
+       "After me each ruler was worse than the one before, and my empire fell into ruin, "
+       "and the present age, the Lost Age, began. Do you wish to know a great secret?")
+  (if (yes? kpc)
+      (say knpc "Then I will tell you, for you are the Last Keeper.")
+      (say knpc "[The room fills with his terrible laughter] But it is thine to know, "
+           "Last of the Keepers!"))
+  (say knpc "The Lost Age will end when the Demon Gate is opened."))
+
+(define (lux-keep knpc kpc)
+  (say knpc "Thou art the Last Keeper. You have a Rune, and know its meaning. "
+       "Now all the Runes are thine to Keep. Doest thou have them all?")
+  (if (yes? kpc)
+      (say knpc "Be thou certain, Keeper. The Gate will not open without them all.")
+      (say knpc "Find them. One honorable man will save an Age from disgrace, "
+           "thou perhaps not himself.")))
+
 
 (define lux-conv
   (ifc basic-conv
@@ -45,6 +80,8 @@
        (method 'name lux-name)
        (method 'rune lux-rune)
        (method 'gate lux-gate)
+       (method 'age  lux-age)
+       (method 'keep lux-keep)
 
        ))
 
@@ -66,7 +103,7 @@
     lux-lvl
     #f               ; dead
     'lux-conv         ; conv
-    sch_my           ; sched
+    nil           ; sched
     nil              ; special ai
     nil              ; container
     nil              ; readied
