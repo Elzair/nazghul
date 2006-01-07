@@ -908,8 +908,6 @@ bool player_party::addMember(class Character * c)
 	// paint routines in here. Callers will have to update the map and
 	// status if necessary.
 
-	int i = 0;
-
 	assert(!c->isPlayerControlled());
 
         // Hook it to the party

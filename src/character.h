@@ -105,7 +105,7 @@ class Character:public Being {
 	virtual struct sprite *getSprite();
 	virtual int getFleeDx();
 	virtual int getFleeDy();
-        virtual sound_t *get_damage_sound();
+        virtual sound_t *getDamageSound();
         virtual sound_t *get_movement_sound();
 
 

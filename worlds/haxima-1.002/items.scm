@@ -51,15 +51,16 @@
                                                       ap)))
                        (method 'exec
                                (lambda (kitem)
-                                 (let ((kchars (filter 
-                                                (lambda (kchar)
-                                                  (and (wants-it? kchar)
-                                                       (not (has-ap-debt? kchar))
-                                                       (not (is-player-party-member? kchar))))
-                                                (get-beings-in-range kitem 
-                                                                     1))))
-                                   (if (notnull? kchars)
-                                       (kobj-get kitem (car kchars)))))))))
+                                 (if (not (kern-place-is-wilderness? (loc-place (kern-obj-get-location kitem))))
+                                     (let ((kchars (filter 
+                                                    (lambda (kchar)
+                                                      (and (wants-it? kchar)
+                                                           (not (has-ap-debt? kchar))
+                                                           (not (is-player-party-member? kchar))))
+                                                    (get-beings-in-range kitem 
+                                                                         1))))
+                                       (if (notnull? kchars)
+                                           (kobj-get kitem (car kchars))))))))))
     (mk-obj-type tag name sprite layer-item item-ifc)))
   
                                               

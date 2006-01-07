@@ -75,24 +75,31 @@
   (bind (kern-mk-obj spider-egg-type 1)
         (spider-egg-gob-mk)))
 
+(define (drop-silk loc)
+  (let ((q (kern-dice-roll "1d2-1")))
+    (if (> q 0)
+        (kern-obj-put-at (kern-mk-obj spider_silk q) loc))))
+
+(define (drop-poison-immunity-potion loc)
+  (let ((q (kern-dice-roll "1d2-1")))
+    (if (> q 0)
+        (kern-obj-put-at (kern-mk-obj t_poison_immunity_potion q) loc))))
+
 ;; ----------------------------------------------------------------------------
 ;; spider-killed -- called when a spider is killed, the character is passed as
 ;; an arg. Drops a random amount of spider silk.
 ;; ----------------------------------------------------------------------------
 (define (spider-killed kspider)
-  (kern-obj-put-at (kern-mk-obj spider_silk 
-                                (kern-dice-roll "1d2-1"))
-                   (kern-obj-get-location kspider)))
+  (drop-silk (kern-obj-get-location kspider))
+  )
 
 ;; ----------------------------------------------------------------------------
 ;; queen-spider-killed -- virtually the same as spider-killed except for a few
 ;; details
 ;; ----------------------------------------------------------------------------
 (define (queen-spider-killed kspider)
-  (kern-obj-put-at (kern-mk-obj spider_silk (kern-dice-roll "1d2-1"))
-                   (kern-obj-get-location kspider))
-  (kern-obj-put-at (kern-mk-obj t_poison_immunity_potion (kern-dice-roll "1d2-1"))
-                   (kern-obj-get-location kspider))
+  (drop-silk (kern-obj-get-location kspider))
+  (drop-poison-immunity-potion (kern-obj-get-location kspider))
   )
 
 

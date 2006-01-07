@@ -828,8 +828,19 @@ void Object::sleep()
 {
 }
 
+sound_t *Object::getDamageSound()
+{
+        return NULL_SOUND;
+}
+
 void Object::damage(int amount)
 {
+        // Paint the red "*" damage symbol over the character's icon on the map
+        if (isOnMap()) {
+                mapPaintDamage(getX(), getY());        
+                sound_play(getDamageSound(), SOUND_MAX_VOLUME);
+        }
+
         runHook(OBJ_HOOK_DAMAGE);
 }
 

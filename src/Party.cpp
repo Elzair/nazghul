@@ -581,6 +581,8 @@ void Party::damage(int damage)
 {
 	struct damage_member_info dm_info;
 
+        Object::damage(damage);
+
 	// First apply damage to the vehicle. If the vehicle is destroyed then
 	// destroy the party, too.
 	if (vehicle) {

@@ -283,10 +283,6 @@ void Character::damage(int amount)
         // This will run the "on-damage-hook":
         Object::damage(amount);
 
-        // Paint the red "*" damage symbol over the character's icon on the map
-        mapPaintDamage(getX(), getY());        
-        sound_play(get_damage_sound(), SOUND_MAX_VOLUME);
-
         // setHP() might call kill(), which calls remove(), which will destroy
         // most objects
         obj_inc_ref(this);
@@ -1379,7 +1375,7 @@ void Character::describe()
                 log_continue(" (invisible)");
 }
 
-sound_t *Character::get_damage_sound()
+sound_t *Character::getDamageSound()
 {
         if (damage_sound)
                 return damage_sound;
@@ -1753,7 +1749,6 @@ bool Character::commute()
 
 void Character::synchronize()
 {
-	int hr, min;
         struct appt *cur_appt = 0;
 
 	if (!sched || sched->n_appts == 0)
@@ -1846,19 +1841,9 @@ void Character::getAppointment()
         }
 }
 
-static void dump_path(struct astar_node *path)
-{
-        while (path) {
-                dbg("(%d %d)", path->x, path->y);
-                path = path->next;
-        }
-        dbg("\n");
-}
-
 void Character::exec()
 {
         int points_last_loop;
-        struct KeyHandler kh;
         class Character *leader;
 
         startTurn();

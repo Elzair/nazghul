@@ -230,6 +230,7 @@ class Object {
 			  class ObjectType * type);
 	virtual void init(class ObjectType * type);
 
+        virtual sound_t *getDamageSound();
         virtual sound_t *get_movement_sound();
         virtual int getActivity();
         virtual enum control_mode getControlMode();
