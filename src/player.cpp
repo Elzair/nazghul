@@ -1319,7 +1319,6 @@ void player_party::setLeader(class Character *character)
 
 bool player_party::rendezvous(struct place *place, int rx, int ry)
 {
-        int i;
         bool abort = false;
         bool done;
         int max_path_len;
@@ -1693,6 +1692,13 @@ void player_party::setTurnsToNextMeal(int turns)
 bool player_party::hasInInventory(class ObjectType *type)
 {
         return inventory->search(type) != NULL;
+}
+
+void player_party::unrefInventoryObject(ObjectType *type)
+{
+        struct inv_entry *ie = inventory->search(type);
+        assert(ie);
+        ie->ref--;
 }
 
 void player_party::setInventoryContainer(Container *val)

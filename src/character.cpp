@@ -994,12 +994,18 @@ void Character::unreadyAll()
 {
 	for (int i = 0; i < species->n_slots; i++) {
 
+                class ArmsType *type = rdyArms[i];
+
 		// Anything in this slot?
-		if (rdyArms[i] == NULL)
+		if (!type)
 			continue;
 
 		// Unready it
-		unready(rdyArms[i]);
+		unready(type);
+
+                if (isPlayerControlled()) {
+                        player_party->unrefInventoryObject(type);
+                }
 	}
 }
 
