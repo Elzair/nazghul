@@ -149,7 +149,6 @@ MoveResult Party::move(int dx, int dy)
 	struct place *oldplace;
 	int oldx;
 	int oldy;
-	class Moongate *moongate;
 	class Object *mech;
 
 	this->dx = dx;
@@ -704,16 +703,6 @@ static bool member_sleep(class Character *member, void *data)
         return false;
 }
 
-static bool member_apply_existing(class Character * pm, void *data)
-{
-        if (pm->isAsleep()) {
-                if ((rand() % 100) < PROB_AWAKEN) {
-                        pm->awaken();
-                }
-        }
-	return false;
-}
-
 void Party::burn()
 {
         forEachMember(member_burn, NULL);
@@ -960,6 +949,9 @@ Object *Party::getSpeaker()
                 list_sz++;
         }
 
+        // Remember the current stat mode so we can restore it.
+        orig_stat_mode = statusGetMode();
+
         // Check if nobody has a conversation.
         if (! list_sz)
                 goto done;
@@ -972,9 +964,6 @@ Object *Party::getSpeaker()
 
         // The player has to choose. Poke the list into the status state.
         statusSetGenericList(list_sz, statlist);
-
-        // Remember the current stat mode so we can restore it.
-        orig_stat_mode = statusGetMode();
 
         // Switch the status mode over to list selection.
         statusSetMode(GenericList);

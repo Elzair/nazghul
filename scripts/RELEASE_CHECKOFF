@@ -10,7 +10,8 @@ PART I: PREPARE FOR RELEASE
 (3) NEWS is up-to-date with differences since last version
 (4) AUTHORS is up-to-date with _ALL_ contributions (legal reasons)
 (5) Version number is correct in configure.ac
-(6) The SUBDIRS of Makefile.am and worlds/Makefile.am are correct for this release
+(6) The SUBDIRS of Makefile.am and worlds/Makefile.am are correct for this 
+    release
 
 PART II: BUILD AND TEST SOURCE DIST
 
