@@ -261,7 +261,7 @@
    (list   't_chain_coif     "chain coif"      s_chain_coif        "-1"     "1d3"    slot-helm     1)
    (list   't_chain_coif_4   "+4 chain coif"   s_chain_coif        "0"      "1d3+4"  slot-helm     1)
    (list   't_iron_helm      "iron helm"       s_iron_helm         "-1"     "1d4"    slot-helm     2)
-   (list   't_iron_helm_4    "+4 iron helm"    s_iron_helm         "0"      "1d3+4"  slot-helm     2)
+   (list   't_iron_helm_4    "+4 iron helm"    s_iron_helm         "0"      "1d4+4"  slot-helm     2)
    (list   't_armor_leather  "leather armor"   s_leather_armor     "-1"     "1d4"    slot-armor    2)
    (list   't_armor_leather_2 "+2 leather armor" s_leather_armor   "0"      "1d4+2"  slot-armor    2)
    (list   't_armor_leather_4 "+4 leather armor" s_leather_armor   "0"      "1d4+4"  slot-armor    2)

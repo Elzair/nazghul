@@ -120,7 +120,6 @@
    (list (kern-tag 'black-gate (mk-moongate nil)) 11 11)
    (list ch_gregor  1 23)
    (list supplies_chest   1 24)
-   (list (mk-dungeon 'p_slimy_cavern 8 30) 20 1)
    )
 
   nil ;; hooks
