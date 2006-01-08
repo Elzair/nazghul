@@ -314,16 +314,16 @@
 
 (define treasure-list
   (list
-   (list 32 t_gold_coins 5)
-   (list 32 t_arrow 5)
-   (list 32 t_bolt 5)
-   (list 32 t_food 1)
-   (list 8  t_heal_potion 1)
-   (list 8  t_mana_potion 1)
-   (list 4  t_cure_potion 1)
-   (list 4  t_torch 1)
-   (list 2  t_gem 1)
-   (list 4  t_picklock 1)
+   (list 32 't_gold_coins 5)
+   (list 32 't_arrow 5)
+   (list 32 't_bolt 5)
+   (list 32 't_food 1)
+   (list 8  't_heal_potion 1)
+   (list 8  't_mana_potion 1)
+   (list 4  't_cure_potion 1)
+   (list 4  't_torch 1)
+   (list 2  't_gem 1)
+   (list 4  't_picklock 1)
    ))
 
 (define treasure-modulus
@@ -341,31 +341,44 @@
               (search next (cdr list))))))
   (search 0 treasure-list))
     
-;; pick-random-treasure -- returns a (quantity type) list
+;; pick-random-treasure -- returns a (quantity 'type) list
 (define (pick-random-treasure)
   (let ((trsr (treasure-lookup (modulo (random-next) treasure-modulus))))
     (list (+ 1 (modulo (random-next) (treasure-quan trsr)))
           (treasure-type trsr)
           )))
 
+;; eval-treasure-entry -- given a list of type (quantity 'type) it returns a
+;; list of type (quantity type)
+(define (eval-treasure-entry entry)
+  (list (car entry) (eval (cadr entry))))
 
+;; mk-random-treasure -- makes a treasure object
 (define (mk-random-treasure)
-  (let ((pair (pick-random-treasure)))
+  (let ((pair (eval-treasure-entry (pick-random-treasure))))
     (kern-mk-obj (car pair)
-                 (+ 1 (modulo (random-next) (cadr pair))))))
-    
+                 (+ 1 (modulo (random-next) 
+                              (cadr pair))))))
 
-;; creates a list of objects
+;; mk-treasure-heap -- creates a list of n treasure objects
 (define (mk-treasure-heap n)
   (if (> n 0)
       (cons (mk-random-treasure)
             (mk-treasure-heap (- n 1)))))
 
-;; mk-treasure-list -- returns a list of n (quantity type) lists
+;; mk-treasure-list -- returns a list of n (quantity type) lists suitable in
+;; kernel containers
 (define (mk-treasure-list n)
   (if (> n 0)
-      (cons (pick-random-treasure)
+      (cons (eval-treasure-entry (pick-random-treasure))
             (mk-treasure-list (- n 1)))))
+
+;; mk-quoted-treasure-list -- returns a list of n (quantity 'type) lists
+;; suitable in corpses and other gobs
+(define (mk-quoted-treasure-list n)
+  (if (> n 0)
+      (cons (pick-random-treasure)
+            (mk-quoted-treasure-list (- n 1)))))
 
 ;;----------------------------------------------------------------------------
 ;; spawn-pt -- generates a monster when triggered externally. The level of the

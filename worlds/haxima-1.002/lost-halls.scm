@@ -30,7 +30,7 @@
   "rr rr rr rr .. .. rr rr .. .. .. rr rr rr rr rr rr rr rr "
   "rr rr rr rr rr rr rr rr .. .. .. ,, rr ,, ,, ,, rr rr rr "
   )
- (put (mk-corpse2 (mk-treasure-list 3)) 9 10)
+ (put (mk-corpse-with-loot) 9 10)
  (put (spawn-pt 'giant-spider) 9 18)
  (put (spawn-pt 'troll) 7 8)
  (put (spawn-pt 'cave-goblin-slinger) 18 8)

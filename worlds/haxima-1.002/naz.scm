@@ -1147,10 +1147,7 @@
                       (eqv? (kern-place-get-terrain loc)
                             t_grass))
                     (lambda (loc)
-                      (kern-obj-put-at (mk-corpse2 (mk-treasure-list 
-                                                    (+ 1
-                                                       (modulo (random-next) 
-                                                               3))))
+                      (kern-obj-put-at (mk-corpse-with-loot)
                                        loc))
                     n))
                     

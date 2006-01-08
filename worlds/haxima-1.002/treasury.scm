@@ -68,9 +68,6 @@
                   (mk-rect 5 5 9 9)
                   can-drop?
                   (lambda (loc)
-                    (kern-obj-put-at (mk-corpse2 (mk-treasure-list 
-                                                  (+ 1
-                                                     (modulo (random-next) 
-                                                             3))))
+                    (kern-obj-put-at (mk-corpse-with-loot)
                                      loc))
                   3)

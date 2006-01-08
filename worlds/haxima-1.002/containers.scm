@@ -58,7 +58,6 @@
 (define (corpse-search kobj)
   (let* ((corpse (kobj-gob-data kobj))
          (loot (corpse-loot corpse)))
-    (display "corpse-search:")(display loot)(newline)
     (if (not (null? loot))
         (let ((loc (kern-obj-get-location kobj)))
           (map (lambda (entry) 
@@ -84,5 +83,6 @@
         (corpse-mk loot)))
 
 (define (mk-corpse-with-loot)
-  (mk-corpse2 (mk-treasure-list (+ 1(modulo (random-next) 3)))))
+  (mk-corpse2 (mk-quoted-treasure-list (+ 1(modulo (random-next)
+                                                   3)))))
 
