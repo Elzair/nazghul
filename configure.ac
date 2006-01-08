@@ -15,7 +15,7 @@ dnl   This macro performs essential initialization for the
 dnl   generated `configure' script. An optional argument may provide the name of a
 dnl   file from the source directory to ensure that the directory has been 
 dnl   specified correctly.
-AC_INIT(nazghul, 0.5.0, [nazghul-devel@lists.sourceforge.net])
+AC_INIT(nazghul, 0.5.1, [nazghul-devel@lists.sourceforge.net])
 AC_CONFIG_SRCDIR([src/nazghul.c])
 AC_CONFIG_HEADERS([config.h])
 
@@ -170,6 +170,17 @@ dnl ---------------------------------------------------------------------------
 dnl 8. Output
 dnl      This is done by invoking AC_OUTPUT.
 dnl ---------------------------------------------------------------------------
+
+# User directories for saving game data
+ 
+AC_DEFINE(NAZGHUL_USER_DIR, "/.nazghul",
+           [.nazghul is for Unix users.])
+
+AC_DEFINE(NAZGHUL_USER_DIR_WIN, "/_nazghul",
+           [_nazghul is for Windows users.])
+
+AC_DEFINE(HOME_ENV, "HOME",
+           [Most likely your home directory is stored in $HOME.])
 
 # Finally create all the generated files
 AC_CONFIG_FILES([Makefile \
