@@ -126,7 +126,7 @@
           (else (kern-obj-relocate caster coords nil)))))
 
 (define (cast-signal-spell caster signal target)
-  (cond ((null? target) result-no-effect)
+  (cond ((null? target) result-no-target)
         (else 
          ((kobj-ifc target) signal target caster)
          result-ok
