@@ -80,3 +80,17 @@
    ""
    "--Fildex the Unclean\n"
    )))
+
+;;----------------------------------------------------------------------------
+;; Kathryn's Letter
+(mk-reusable-item 
+ 't_kathryns_letter "Letter" s_scroll 1
+ (lambda (kletter kuser)
+   (kern-ui-page-text
+   "Letter"
+   "K,"
+   "The Enchanter has one of the Runes. Acquire "
+   "it by any means necessary, and leave no one "
+   "to tell the tale. Not even a ghost."
+   "--S")))
+
