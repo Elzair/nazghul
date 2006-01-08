@@ -55,12 +55,14 @@ Note: this assumes Cygwin
 (4) Test the release dir under windows by double-clicking on nazghul.exe in an
     explorer window.
 
-(5) If all is well then zip up the release:
+(5) Convert README and USERS_GUIDE to be .TXT with DOS end-lines
+
+(6) If all is well then zip up the release:
 
         $ cd ..
         $ tar -cvzf nazghul-0.4.0-win32.tar.zip nazghul-0.4.0/
 
-(6) ftp it to another windows box without cygwin and test it out
+(7) ftp it to another windows box without cygwin and test it out
 
 PART IV: LABEL THE SOURCE
 
