@@ -75,9 +75,9 @@
   "xx xx xx x! ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, x! .. ,, ,, ,, "
   "xx xx xx xx xx xx xx xx ,, xx xx xx xx xx xx xx xx xx xx "
   "xx .A .R .M .S xx xx xx ,, xx xx xx xx .M .E .D .I .K xx "
-  "xx ,, ,, ,, ,, x! ,, ,, ,, ,, ,, ,, x! ,, ,, ,, ,, ,, xx "
+  "xx ,, ,, ,, ,, x! ,, ,, ,, ,, ,, ,, sH ,, ,, ,, ,, ,, xx "
   "x! ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, x! "
-  "xx ,, ,, ,, ,, x! ,, ,, ,, ,, ,, ,, x! ,, ,, ,, ,, ,, xx "
+  "xx ,, ,, ,, ,, sA ,, ,, ,, ,, ,, ,, x! ,, ,, ,, ,, ,, xx "
   "xx ,, ,, ,, ,, xx xx xx ,, xx xx xx xx ,, ,, ,, ,, ,, xx "
   "xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx "
   )

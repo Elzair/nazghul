@@ -31,7 +31,7 @@
       "%% %% .. .. %% %% %% %% .. .. .. xx xx xx xx bb xx rr .. .. .. cc tt tt tt .. .. bb tt bb .. bb .. bb .. .. .. .. .. .. .. "
       "%% .. .. .. .. %% %% %% .. .. xx .. ,, ,, ,, ,, ,, xx xx .. .. cc .. tt .. tt bb .G .A .R .. .E .N .S bb .. .. bb .. .. bb "
       "%% .. %% %% .. .. %% .. .. .. xx .M .. .G .I .C .K .S xx .. .. cc .. .. tt tt tt .. .. tt tt tt .. .. .. .. .. .. .. .. .. "
-      "%% %% %% %% %% .. %% %% .. .. xx ,, ,, ,, ,, ,, ,, ,, xx .. .. bb .. .. bb tt bb .. tt tt tt tt tt .. bb .. bb .. .. .. bb "
+      "%% %% %% %% %% .. %% %% .. .. xx ,, ,, ,, ,, ,, ,, ,, sA .. .. bb .. .. bb tt bb .. tt tt tt tt tt .. bb .. bb .. .. .. bb "
       "%% %% %% bb %% %% %% %% %% .. xx ,, ,, ,, .. ,, ,, ,, ,, cc cc .. .. .. .. .. .. .. tt tt tt tt tt .. .. .. .. .. .. .. .. "
       "%% %% %% %% ~~ %% %% %% %% .. xx ,, ,, ,, ,, ,, .. .. xx .. .. cc .. .. .. .. .. .. .. tt tt tt tt tt tt tt .. .. .. bb .. "
       "%% bb %% ~~ ~~ %% %% bb .. .. .. .F .U .T .U .R .E .S xx .. .. cc .. .. .. %% %% %% .. tt tt tt tt tt tt tt tt tt .. .. .. "

@@ -30,7 +30,7 @@
             "^^ ^^ ^^ ^^ ^^ tt || || || tt ~~ ~~ tt tt || || || || || || tt tt tt tt tt bb .. .. bb tt xx cc cc cc cc cc cc cc cc cc cc 00 xx cc cc xx ^^ ^^ "
             "^^ ^^ ^^ ^^ ^^ tt || || tt tt ~~ tt tt || || || || || || || || || tt tt tt tt .. .. tt tt xx cc cc cc cc cc cc cc cc cc cc 00 xx cc cc xx ^^ ^^ "
             "^^ || ^^ ^^ ^^ tt tt tt tt ~~ ~~ tt || || || || || || || || || || || tt bb .. .. .. bb tt xx cc cc 00 cc cc xx xx xx cc cc cc cc cc cc xx ^^ ^^ "
-            "^^ || || ^^ ^^ ^^ tt tt ~~ ~~ tt tt || || || || || || || || || || || tt .. .. .. .. .. .. xx cc cc 00 cc cc && xx && cc cc cc xx cc cc xx ^^ ^^ "
+            "^^ || || ^^ ^^ ^^ tt tt ~~ ~~ tt tt || || || || || || || || || || || tt .. .. .. .. .. .. sI cc cc 00 cc cc && xx && cc cc cc xx cc cc xx ^^ ^^ "
             "^^ || tt tt ^^ ^^ ~~ ~~ ~~ ~~ tt || || || || || || || || || || || || bb .. .. .. .. .. .. cc cc cc 00 cc cc && xx && cc cc cc xx xx xx xx ^^ ^^ "
             "^^ tt tt ~~ ~~ ~~ ~~ ~~ ~~ ~~ tt || || || || || || tt tt tt || || || tt .. .. .. .. .. .. xx cc cc 00 cc cc xx xx xx cc cc cc cc cc cc xx ^^ ^^ "
             "^^ tt ~~ ~~ ~~ bb ~~ ~~ ~~ ~~ tt || || || || || tt tt ^^ tt tt || || tt bb .. .. .. bb tt xx cc cc cc cc cc cc cc cc cc cc 00 xx cc cc xx ^^ ^^ "

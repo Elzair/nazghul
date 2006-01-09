@@ -17,3 +17,4 @@
 (kern-mk-sprite-set 'ss_rune             32 32    4  8   0 0   "rune.png")
 (kern-mk-sprite-set 'ss_addon            32 32   16  8   0 0   "addons.png")
 (kern-mk-sprite-set 'ss_moons            16 16    8  1   0 0   "moons.png")
+(kern-mk-sprite-set 'ss_signs            32 32    1  8   0 0   "signs.png")

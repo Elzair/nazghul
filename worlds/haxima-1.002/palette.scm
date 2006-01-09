@@ -155,6 +155,15 @@
     (list  "/d"   t_trail_d)            ;; "trail"
     (list  "/e"   t_trail_e)            ;; "trail"
     (list  "/f"   t_trail_f)            ;; "trail"
+
+    (list "sE" t_equip_sign)
+    (list "sA" t_weapon_sign)
+    (list "sH" t_healer_sign)
+    (list "sT" t_tavern_sign)
+    (list "sI" t_inn_sign)
+    (list "sA" t_alchemy_sign)
+    (list "sR" t_magic_sign)
+    
   )
 ) ;; palette pal_expanded
 

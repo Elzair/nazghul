@@ -345,6 +345,15 @@
 (kern-mk-sprite 's_wax_three_quarter_moon   ss_moons 1 7 #f 0 )
 (kern-mk-sprite 's_sun                      ss_moons 1 8 #f 0 )
 
+(kern-mk-sprite 's_torch_sign ss_signs     1 0 #f 0)
+(kern-mk-sprite 's_shield_sign ss_signs    1 1 #f 0)
+(kern-mk-sprite 's_ankh_sign ss_signs      1 2 #f 0)
+(kern-mk-sprite 's_beer_sign ss_signs      1 3 #f 0)
+(kern-mk-sprite 's_bed_sign ss_signs       1 4 #f 0)
+(kern-mk-sprite 's_potion_sign ss_signs    1 5 #f 0)
+(kern-mk-sprite 's_mushroom_sign ss_signs  1 6 #f 0)
+
+
 ;; convenient alia
 (define s_shepherd s_companion_shepherd)
 (define s_ranger s_companion_ranger)

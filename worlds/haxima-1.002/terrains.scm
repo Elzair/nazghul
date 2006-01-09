@@ -175,6 +175,14 @@
    (list 't_rune_EA         "a runic sign"        pclass-wall      s_rune_EA         1 0 nil)
    (list 't_rune_ST         "a runic sign"        pclass-wall      s_rune_ST         1 0 nil)
    (list 't_rune_DOT        "a runic sign"        pclass-wall      s_rune_DOTSEP     1 0 nil)
+   (list 't_equip_sign    "an equipment shop sign" pclass-wall s_torch_sign  0 0 nil)
+   (list 't_weapon_sign   "an arms shop sign" pclass-wall s_shield_sign 0 0 nil)
+   (list 't_healer_sign   "a hospital sign" pclass-wall s_ankh_sign   0 0 nil)
+   (list 't_tavern_sign   "a tavern sign" pclass-wall s_beer_sign   0 0 nil)
+   (list 't_inn_sign      "an inn sign" pclass-wall s_bed_sign    0 0 nil) 
+   (list 't_alchemy_sign      "an alchemy sign" pclass-wall s_potion_sign    0 0 nil) 
+   (list 't_magic_sign      "a reagent shop sign" pclass-wall s_mushroom_sign    0 0 nil) 
+
    ))
 
 (map (lambda (terrain) (apply kern-mk-terrain terrain)) terrains)

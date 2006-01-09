@@ -84,7 +84,7 @@
 
 (define (kalc-peop knpc kpc)
   (say knpc "I deliver messages and packages for the Engineer, the Enchanter, city officials. "
-       "Anyone who needs to something delivered safely and fast, and is willing to pay!"))
+       "Anyone who needs something delivered safely and fast, and is willing to pay!"))
 
 (define (kalc-pay knpc kpc)
   (say knpc "I do pretty good."))
