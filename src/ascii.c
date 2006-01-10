@@ -45,6 +45,11 @@ void asciiPaint(char c, int x, int y, SDL_Surface * surf)
 	if (c == '\t')
 		c = ' ';
 
+        if (c<' ') {
+                warn("c==%d\n", c);
+                c='?';
+        }
+
 	assert(c >= ' ');
 
 	/* fixme -- put these calcs in a table or something. Don't need to do
