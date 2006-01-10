@@ -3007,7 +3007,7 @@ static int fill_sell_list(struct merchant *merch, struct trade_info *trades)
                         continue;
                 
                 filter.cookie = &merch->trades[i];
-                ie = player_party->inventory->next(ie, &filter);
+                ie = player_party->inventory->first(&filter);
                 if (!ie)
                         continue;
 
