@@ -20,7 +20,7 @@
            nil))))
 
 (define rune-ifc
-  (ifc '()
+  (ifc obj-ifc
        (method 'use rune-use)
        ))
 
