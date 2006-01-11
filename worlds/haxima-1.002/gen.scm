@@ -243,7 +243,8 @@
                  s_companion_ranger  ; sprite
                  faction-men         ; starting alignment
                  12 10 12            ; str/int/dex
-                 0 0                 ; hp mod/mult
+                 pc-hp-off  ; hp bonus
+                 pc-hp-gain ; hp per-level bonus
                  0 0                 ; mp mod/mult
                  90 0 9 3            ; hp/xp/mp/lvl
                  #f                  ; dead
