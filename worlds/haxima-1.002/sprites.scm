@@ -179,6 +179,7 @@
 (kern-mk-sprite 's_hydra          ss_u4_shapes 4 244 #f 0 )
 (kern-mk-sprite 's_dragon         ss_u4_shapes 4 248 #f 0 )
 (kern-mk-sprite 's_balron         ss_u4_shapes 4 252 #f 0 )
+(kern-mk-sprite 's_human_knight   ss_u4_shapes 4 256 #f 0 )
 
 (kern-mk-sprite 's_frame_ulc   ss_frame 1  0 #f 0 )
 (kern-mk-sprite 's_frame_td    ss_frame 1  1 #f 0 )

@@ -602,7 +602,7 @@
 (define snake (mk-npct "snake" sp_snake nil s_snake nil nil nil 'std-ai faction-monster nil 'drop-generic animal-loot))
 (define dragon (mk-npct2 "dragon" sp_dragon nil s_dragon wizard-traps nil drag-effects 'dragon-ai faction-monster nil 'drop-generic dragon-loot))
 (define bomber (mk-npct2 "mad jester" sp_human oc_wrogue s_jester wrogue-traps bomber-equip nil 'std-ai faction-outlaw nil 'drop-generic bomber-loot))
-(define knight (mk-npct2 "knight" sp_human oc_warrior s_knight no-traps knight-equip nil 'guard-ai faction-trigrave 'knight-conv 'drop-generic knight-loot))
+(define knight (mk-npct2 "knight" sp_human oc_warrior s_human_knight no-traps knight-equip nil 'guard-ai faction-trigrave 'knight-conv 'drop-generic knight-loot))
 (define squire (mk-npct2 "squire" sp_human oc_warrior s_guard no-traps squire-equip nil 'guard-ai faction-trigrave 'knight-conv 'drop-generic squire-loot))
 (define bandit (mk-npct2 "bandit" sp_human oc_wrogue s_brigand wrogue-traps wrogue-2-equip nil 'std-ai faction-outlaw nil 'drop-generic wrogue-2-loot))
 (define footpad (mk-npct2 "footpad" sp_human oc_wrogue s_brigand wrogue-traps wrogue-1-equip nil 'std-ai faction-outlaw nil 'drop-generic wrogue-1-loot))
