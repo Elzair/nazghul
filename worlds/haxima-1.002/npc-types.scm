@@ -552,20 +552,21 @@
 
 (define (drop-generic knpc loot)
   ;;(println "drop-generic:loot=" loot)
-  (let ((loc (kern-obj-get-location knpc)))
-    (map (lambda (triple)
-           (let ((thresh (car triple))
-                 (dice (cadr triple))
-                 (type-tag (caddr triple)))
-             (if (< (modulo (random-next) 100) thresh)
-                 (let ((quantity (max 0 (kern-dice-roll dice))))
-                   (if (> quantity 0)
-                       (kern-obj-put-at (kern-mk-obj (eval type-tag)
-                                                     quantity)
-                                        loc))))))
-         loot)
-    ))
-
+  (if (not (kern-place-is-wilderness? (loc-place (kern-obj-get-location knpc))))
+           (let ((loc (kern-obj-get-location knpc)))
+             (map (lambda (triple)
+                    (let ((thresh (car triple))
+                          (dice (cadr triple))
+                          (type-tag (caddr triple)))
+                      (if (< (modulo (random-next) 100) thresh)
+                          (let ((quantity (max 0 (kern-dice-roll dice))))
+                            (if (> quantity 0)
+                                (kern-obj-put-at (kern-mk-obj (eval type-tag)
+                                                              quantity)
+                                                 loc))))))
+                  loot)
+             )))
+  
 ;; npc types
 ;;      scheme variable                 name                       species          occup.     sprite             chest traps  equipment              effects       ai               faction
 ;;      ======================          ========================== ================ ========== ================== ============ ====================== ============= ==============   ========
