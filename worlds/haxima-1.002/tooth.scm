@@ -70,7 +70,7 @@
                          (list t_sword_4           (* 4 85))
                          (list t_morning_star_2    (* 2 105))
                          (list t_leather_helm_2    (* 2 100))
-                         (list t_chain_coif 4      (* 4 100))
+                         (list t_chain_coif_4      (* 4 100))
                          (list t_iron_helm_4       (* 4 150))
                          (list t_armor_leather_2   (* 2 150))
                          (list t_armor_leather_4   (* 4 150))

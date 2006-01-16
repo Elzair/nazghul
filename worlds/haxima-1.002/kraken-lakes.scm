@@ -109,7 +109,6 @@
  nil     ; subplaces
  nil     ; neighbors
  (list ;; objects
-  (put (mk-ladder-down 'p_rivulets_of_fire 9 9) 12 8)
 
   (put (mk-portcullis) 31 28)
   (put (mk-portcullis) 32 28)
