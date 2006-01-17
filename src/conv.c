@@ -37,6 +37,14 @@ static int C_room, C_len;
 static char C_query[64], *C_ptr;
 static int conv_done;
 
+static int isprintable(char c)
+{
+        /* Looks like ctype's isprint() doesn't always behave the same way. On
+         * some systems it was letting c<32 go through, causing an assert in
+         * ascii.c. */
+        return (c>=32&&c<127);
+}
+
 static int get_player_query(struct KeyHandler *kh, int key, int keymod)
 {
 	if (key == CANCEL) {
@@ -63,7 +71,7 @@ static int get_player_query(struct KeyHandler *kh, int key, int keymod)
 		return 0;
 	}
 
-	if (isprint(key) && C_room) {
+	if (isprintable(key) && C_room) {
 		cmdwin_print("%c", key);
 		*C_ptr++ = key;
 		C_room--;
@@ -88,7 +96,6 @@ void conv_end()
 void conv_enter(Object *npc, Object *pc, struct closure *conv)
 {
 	struct KeyHandler kh;
-	struct response *resp;
 
         assert(conv);
 
