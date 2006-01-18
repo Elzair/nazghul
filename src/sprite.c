@@ -109,29 +109,12 @@ static void myPaintNormal(struct sprite *sprite, int frame, int x, int y)
 
 }
 
-static void myPaintRotated(struct sprite *sprite, int frame, int x, int y)
-{
-	SDL_Rect dest;
-
-	dest.x = x;
-	dest.y = y;
-	dest.w = sprite->images->w;
-	dest.h = sprite->images->h;
-
-        frame = (frame + sprite_ticks) % sprite->n_frames;
-
-	// Offset the index into the current sequence
-	frame += sprite->sequence * sprite->n_frames;
-
-	screenBlit(sprite->surf, &sprite->frames[frame], &dest);
-}
-
 void sprite_del(struct sprite *sprite)
 {
         if (sprite->tag)
                 free(sprite->tag);
 	if (sprite->frames)
-		delete sprite->frames;
+		delete [] sprite->frames;
 	delete sprite;
 }
 

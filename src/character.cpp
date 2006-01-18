@@ -1152,11 +1152,11 @@ void Character::armThyself(void)
 
       destroy_ks:
 	if (ks.item)
-		delete ks.item;
+		delete [] ks.item;
 	if (ks.value)
-		delete ks.value;
+		delete [] ks.value;
 	if (ks.solution)
-		delete ks.solution;
+		delete [] ks.solution;
 
 	rearm = false;
 }

@@ -51,7 +51,7 @@
 #define CAMPING_TIME_ACCELERATION (MINUTES_PER_HOUR)
 
 
-class player_party *player_party;
+class player_party *player_party = NULL;
 
 #define DIRLOC(dir,place,coord) { \
     if ((dir) < 0) \

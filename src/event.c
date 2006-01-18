@@ -29,7 +29,7 @@
 #include <fcntl.h>
 
 #ifndef DEBUG_KEYS
-# define DEBUG_KEYS 0
+# define DEBUG_KEYS 1
 #endif
 
 #define EVENT_NONBLOCK   (1 << 0)
@@ -96,7 +96,7 @@ static int mapKey(SDL_keysym * keysym)
 				  ((keysym->mod & KMOD_SHIFT) ? 4 : 0)];
 
         /* Unsupported? fallback to the SDL sym */
-	return keysym->sym;;
+	return keysym->sym;
 }
 
 static int mapButton(Uint8 button)
