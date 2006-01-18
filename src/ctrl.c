@@ -182,10 +182,6 @@ static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
                 return true;
                 break;
                         
-        case KEY_CTRL_S:
-                cmdSaveTerrainMap(NULL);
-                break;
-                        
         default:
                 break;
         } // switch(key)
@@ -783,10 +779,6 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
                 return true;
                 break;
       
-        case KEY_CTRL_S:
-                cmdSaveTerrainMap(character);
-                break;
-
         case KEY_CTRL_D:
                 cmdDumpPalette();
                 break;

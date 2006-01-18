@@ -2655,69 +2655,6 @@ bool cmd_terraform(struct place *place, int x, int y)
 	return true;
 } // cmdTerraform()
 
-#define BOGUS_FILENAME_LENGTH 255  // Hack, do something proper for this...
-bool cmdSaveTerrainMap(class Character * pc)
-{
-	int x, y;
-        struct place           * place;
-        struct terrain_map     * map;
-        struct terrain_palette * palette;
-        char map_filename    [BOGUS_FILENAME_LENGTH+1];
-        char palette_filename[BOGUS_FILENAME_LENGTH+1];
-        FILE * map_fp     = NULL;
-        FILE * palette_fp = NULL;
-
-	cmdwin_clear();
-
-	if (pc) {
-		// Combat Mode
-                // Use the party member's location as the origin.
-                place = Place;
-		x = pc->getX();
-		y = pc->getY();
-	} else {
-		// Party Mode
-		// Use the player party's location as the origin.
-                place = player_party->getPlace();
-		x     = player_party->getX();
-		y     = player_party->getY();
-	}
-
-        map     = place->terrain_map;
-        palette = map->palette;
-
-        // Save the palette for the current map:
-        sprintf(palette_filename, "/tmp/nazghul.pal.%s.%d.scm", 
-                palette->tag, getpid() );
-        palette_fp = fopen(palette_filename, "w");
-        if (!palette_fp) {
-                err("Filed to open palette save file '%s' for writing "
-                    "because '%s'.\n",
-                    palette_filename, strerror(errno) );
-        }
-        palette_print(palette_fp, INITIAL_INDENTATION, palette);
-        fclose(palette_fp);
-
-        log_begin_group();
-        log_msg("Saved palette as '%s'.", palette_filename);
-
-        // And save the current map:
-        sprintf(map_filename, "/tmp/nazghul.map.%s.%d.scm", 
-                map->tag, getpid() );
-        map_fp = fopen(map_filename, "w");
-        if (!map_fp) {
-                err("Filed to open map save file '%s' for writing "
-                    "because '%s'.\n",
-                    map_filename, strerror(errno) );
-        }
-        terrain_map_print(map_fp, INITIAL_INDENTATION, map);
-        fclose(map_fp);
-        log_msg("Saved map as '%s'.", map_filename);
-        log_end_group();
-
-	return true;
-} // cmdSaveTerrainMap()
-
 /*
  * cmdDumpPalette - dump all terrain sprites as one bitmap image per frame to
  * the current directory (intended as an assist for map editing) (thanks to
