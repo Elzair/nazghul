@@ -235,7 +235,6 @@ void session_del(struct session *session)
 {
         struct list *elem;
         struct data_obj_entry *entry;
-        struct include_file *inc;
         struct node *node;
 
         elem = session->data_objects.next;
@@ -397,10 +396,7 @@ int session_load(char *filename)
 
         /* No errors, so it's safe to delete the old session. */
         if (old_session) {
-                scheme *old_sc = (scheme*)old_session->interp;
                 session_del(old_session);
-                //scheme_deinit(old_sc);
-                //free(old_sc);
         }
 
         player_party->startSession();
@@ -511,7 +507,6 @@ void session_save(char *fname)
 {
         FILE *file;
         struct list *elem;
-        time_t timep;
         save_t *save;
 
         file = fopen(fname, "w");

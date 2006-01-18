@@ -76,9 +76,8 @@ ObjectType::ObjectType()
         gifc_cap = 0;
 }
 
-ObjectType::ObjectType(char *tag, char *sname, struct sprite *sprite, 
-                       enum layer layer)
-        : speed(0), required_action_points(0), max_hp(0), sprite(sprite)
+ObjectType::ObjectType(char *tag, char *sname, struct sprite *sprite_, enum layer layer_)
+        : sprite(sprite_), layer(layer_), speed(0), required_action_points(0), max_hp(0), gifc(NULL), gifc_cap(0)
 {
 	this->tag = strdup(tag);
         assert(this->tag);
@@ -89,11 +88,6 @@ ObjectType::ObjectType(char *tag, char *sname, struct sprite *sprite,
         } else {
                 this->name = 0;
         }
-
-	this->layer = layer;
-
-        gifc = NULL;
-        gifc_cap = 0;
 }
 
 ObjectType::~ObjectType()
@@ -1486,7 +1480,6 @@ void Object::restoreEffect(struct effect *effect, struct gob *gob, int flags,
                            clock_alarm_t expiration)
 {
         hook_entry_t *entry;
-        struct add_hook_hook_data data;
 
         assert(VALID_HOOK_ID(effect->hook_id));
 
@@ -1514,10 +1507,6 @@ static int object_run_hook_entry(struct hook_entry *entry, void *data)
 
 void Object::runHook(int hook_id)
 {
-        struct list *elem;
-        struct hook_list *hl;
-        int locked;
-
         hookForEach(hook_id, object_run_hook_entry, this);
 }
 

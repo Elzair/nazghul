@@ -48,7 +48,7 @@ static struct tree *vmask_root;
 static struct list vmask_q;
 static int vmask_n_entries;
 
-static void vmask_dump(struct vmask *vmask)
+void vmask_dump(struct vmask *vmask)
 {
         int x, y, i = 0;
 

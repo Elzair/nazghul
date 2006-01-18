@@ -743,7 +743,6 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
         class Character *character = (class Character *) kh->data;
         class Object *portal;
         class Character *solo_member;
-        enum MoveResult move_result;
 
         G_latency_start = SDL_GetTicks();
 
@@ -1027,36 +1026,6 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
         return character->isTurnEnded();
 }
 
-static int ctrl_pathfind_between_objects(class Object *source, 
-                                          class Object *target)
-{
-        struct astar_node *path;
-        struct astar_search_info as_info;
-
-        dbg("FIXME: use Being::pathfindTo\n");
-
-        memset(&as_info, 0, sizeof (as_info));
-        as_info.x0 = source->getX();
-        as_info.y0 = source->getY();
-        as_info.x1 = target->getX();
-        as_info.y1 = target->getY();
-        as_info.flags = PFLAG_IGNORECOMPANIONS;
-        path = place_find_path(source->getPlace(), &as_info, source);
-        
-        if (!path) {
-                return 0;
-        }
-        
-        if (path->next) {
-                source->move(path->next->x - source->getX(), 
-                             path->next->y - source->getY());
-                
-        }
-
-        astar_path_destroy(path);                
-        return 1;
-}
-
 static int ctrl_too_close_to_target(class Character *character, 
                                     class Character *target)
 {
@@ -1137,7 +1106,6 @@ static int ctrl_move_away_from_target(class Character *character,
         /* first try moving directly away from the target */
         int dx = character->getX() - target->getX();
         int dy = character->getY() - target->getY();
-        int x, y;
 
         /* normalize vector */
         dx = dx > 0 ? 1 : (dx < 0 ? -1 : 0);
@@ -1173,8 +1141,6 @@ static bool ctrl_attack_target(class Character *character,
         int distance;
         bool attacked = false;
         int penalty;
-        bool miss;
-
 
         distance = place_flying_distance(character->getPlace(), 
                                          character->getX(), character->getY(), 

@@ -342,7 +342,6 @@ static void astral_body_advance_arc(struct astral_body *body)
 {
         int new_arc;
         int original_light;
-        int maxlight;
 
         // Calculate the new arc
         new_arc = (clock_time() / body->minutes_per_degree);
@@ -375,7 +374,6 @@ static void astral_body_advance_arc(struct astral_body *body)
 
 void sky_advance(struct sky *sky, int visible)
 {
-	int i;
         struct list *elem;
         struct astral_body *body;
 

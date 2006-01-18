@@ -457,15 +457,13 @@ static int unpack_loc(scheme *sc, pointer *args, struct place **place, int *x,
 
 pointer vpack(scheme *sc, char *fmt, va_list ap)
 {
-        pointer head;
-        pointer tail;
-        pointer cell;
-        pointer arg;
+        pointer head=sc->NIL;
+        pointer tail=sc->NIL;
+        pointer cell=sc->NIL;
+        pointer arg=sc->NIL;
         void *ptr;
         int ival;
         char *strval;
-
-        head = sc->NIL;
 
         while (*fmt) {
 
@@ -485,7 +483,7 @@ pointer vpack(scheme *sc, char *fmt, va_list ap)
                 case 'l':
                         arg = va_arg(ap, pointer);
                         break;
-                deefault:
+                default:
                         assert(false);
                         break;
                 }
@@ -570,7 +568,7 @@ static pointer pack(scheme *sc, char *fmt, ...)
 
 static pointer kern_mk_sprite_set(scheme *sc, pointer args)
 {
-        int width, height, rows, cols, offx, offy, argno = 1;
+        int width, height, rows, cols, offx, offy;
         char *fname;
         struct images *image = NULL;
         char *tag = TAG_UNK;
@@ -593,7 +591,7 @@ static pointer kern_mk_sprite_set(scheme *sc, pointer args)
 static pointer kern_mk_sprite(scheme *sc, pointer args)
 {
         struct images *images;
-        int n_frames, index, facings, wave, argno = 1;
+        int n_frames, index, facings, wave;
         struct sprite *sprite;
         char *tag = TAG_UNK;
         pointer ret;
@@ -617,41 +615,15 @@ struct connection {
         char *to;
 };
 
-static struct connection *connection_new(class Object *from, char *to)
-{
-        struct connection *con;
-        con = (struct connection*)malloc(sizeof(*con));
-        assert(con);
-        con->from = from;
-        con->to = strdup(to);
-        assert(con->to);
-        return con;
-}
-
-static void connection_save(struct save *save, void *val)
-{
-        struct connection *con = (struct connection*)val;
-        save->write(save, "(connect %s '%s)\n", con->from->tag,
-                    con->to);
-}
-
-static void connection_dtor(void *val)
-{
-        struct connection *con = (struct connection*)val;
-        free(con->to);
-        free(con);
-}
-
 static pointer kern_mk_terrain(scheme *sc, pointer args)
 {
-        int pmask, movement_cost, alpha, light;
+        int alpha, light;
         void *sprite;
         struct terrain *terrain;
         char *tag = TAG_UNK, *name;
         pointer ret;
         int pclass;
         pointer proc = NULL;
-        closure_t *clx = NULL;
 
         /* Revisit: ignore effects for now */
 
@@ -829,8 +801,8 @@ static pointer kern_mk_composite_map(scheme *sc, pointer args)
 {
         int width, height, x = 0, y = 0, i = 0;
         char *tag = TAG_UNK;
-        struct terrain_map *map, *submap;
-        pointer ret, p;        
+        struct terrain_map *map=NULL, *submap=NULL;
+        pointer ret;        
 
         /* parse supermap tag and dimensions */
         if (unpack(sc, &args, "ydd", &tag, &width, &height)) {
@@ -1166,13 +1138,11 @@ static int kern_place_load_hooks(scheme *sc, pointer *args,
 
 KERN_API_CALL(kern_mk_place)
 {
-        int wild, wraps, underground, combat, argno = 1;
+        int wild, wraps, underground, combat;
         struct terrain_map *map;
         struct place *place;
         struct sprite *sprite;
         char *tag = TAG_UNK, *name;
-        pointer contents;
-        pointer subplaces;
         pointer ret;
 
         if (unpack(sc, &args, "ysppbbbb", &tag, &name, &sprite, &map,
@@ -1201,7 +1171,6 @@ KERN_API_CALL(kern_mk_place)
             kern_place_load_entrances(sc, &args, place))
                 goto abort;
 
- done:
         place->handle = session_add(Session, place, place_dtor, place_save, place_start);
         ret = scm_mk_ptr(sc, place);
         scm_define(sc, tag, ret);
@@ -1210,17 +1179,6 @@ KERN_API_CALL(kern_mk_place)
  abort:
         place_del(place);
         return sc->NIL;
-}
-
-static bool more_args(scheme *sc, pointer args, char *func, char *tag, 
-                     int argno)
-{
-        if (! scm_is_pair(sc, args)) {
-                load_err("%s %s arg %d: arg list too short", 
-                         func, tag, argno);
-                return false;
-        }
-        return true;
 }
 
 static pointer kern_mk_species(scheme *sc, pointer args)
@@ -1320,7 +1278,7 @@ static pointer kern_mk_arms_type(scheme *sc, pointer args)
         sound_t *fire_sound;
         int slots, hands, range, weight;
         char *hit, *defend, *damage, *armor;
-        int rap, thrown, ubiq, argno = 1;
+        int rap, thrown, ubiq;
         struct sprite *sprite;
         class ArmsType *missile;
         pointer gifc;
@@ -1459,8 +1417,8 @@ static pointer kern_mk_obj_type(scheme *sc, pointer args)
 static pointer kern_mk_occ(scheme *sc, pointer args)
 {
         struct occ *occ;
-        int hpmod, hpmult, argno = 1;
-        int mpmod, mpmult, hit, def, dam, arm, i, xpval;
+        int hpmod, hpmult;
+        int mpmod, mpmult, hit, def, dam, arm, xpval;
         char *tag = TAG_UNK, *name;
         float magic;
         pointer ret;
@@ -1482,10 +1440,6 @@ static pointer kern_mk_occ(scheme *sc, pointer args)
         ret = scm_mk_ptr(sc, occ);
         scm_define(sc, tag, ret);
         return ret;
-
- abort:
-        occ_unref(occ);
-        return sc->NIL;
 }
 
 static int kern_load_hooks(scheme *sc, pointer hook_tbl, Object *obj)
@@ -1537,7 +1491,6 @@ static pointer kern_mk_char(scheme *sc, pointer args)
         pointer hook_tbl;
         int base_faction;
         struct sched *sched;
-        pointer factions;
         class Container *inventory;
 
         if (unpack(sc, &args, "yspppddddddddddddbcpcp",
@@ -1608,11 +1561,6 @@ static pointer kern_mk_char(scheme *sc, pointer args)
  abort:
         delete character;
         return sc->NIL;
-}
-
-static void obj_dtor(void *val)
-{
-        delete (class Object*)val;
 }
 
 static pointer kern_mk_obj(scheme *sc, pointer args)
@@ -1742,7 +1690,6 @@ static pointer kern_obj_relocate(scheme *sc, pointer args)
 {
         class Object *obj;
         struct place *place;
-        pointer loc;
         pointer cutscene;
         int x, y;
         struct closure *clx = NULL;
@@ -1806,9 +1753,7 @@ static pointer kern_obj_get_dir(scheme *sc, pointer args)
 
 static pointer kern_place_get_location(scheme *sc, pointer args)
 {
-        class Object *obj;
         struct place *place;
-        int x, y;
 
         if (unpack(sc, &args, "p", &place)) {
                 rt_err("kern-place-get-location: bad args");
@@ -1853,7 +1798,6 @@ static int kern_append_effect(struct hook_entry *entry, void *data)
 KERN_API_CALL(kern_obj_get_effects)
 {
         class Object *obj;
-        struct place *place;
         int i;
         struct kern_append_info info;
 
@@ -2100,7 +2044,7 @@ static pointer kern_mk_container(scheme *sc, pointer args)
 
 KERN_API_CALL(kern_mk_player)
 {
-        int food, gold, ttnrc, ttnm;
+        int food, gold, ttnm;
         char *mv_desc, *tag;
         sound_t *mv_sound;
         struct sprite *sprite;
@@ -2242,7 +2186,6 @@ static pointer kern_mk_sched(scheme *sc, pointer args)
                 struct appt *appt = &sched->appts[i];
                 pointer p = scm_car(sc, args);
                 pointer rect;
-                pointer dummy;
                 args = scm_cdr(sc, args);
 
                 if (unpack(sc, &p, "dd", &appt->hr, &appt->min, &activity)) {
@@ -2432,10 +2375,8 @@ static pointer kern_obj_apply_damage(scheme *sc, pointer args)
 
 static pointer kern_obj_add_effect(scheme *sc, pointer args)
 {
-        char *hook_name;
         class Object *obj;
         struct effect *effect = NULL;
-        pointer result = sc->F;
         pointer gobcell;
         struct gob *gob = NULL;
 
@@ -2466,7 +2407,6 @@ static pointer kern_obj_add_effect(scheme *sc, pointer args)
 static pointer kern_obj_remove_effect(scheme *sc, pointer args)
 {
         class Object *obj;
-        struct list *hook_list;
         struct effect *effect;
 
         if (unpack(sc, &args, "pp", &obj, &effect)) {
@@ -2977,7 +2917,6 @@ static pointer kern_obj_get_gob(scheme *sc, pointer  args)
 static pointer kern_obj_set_gob(scheme *sc, pointer  args)
 {
         Object *obj;
-        pointer gob;
 
         if (! (obj = unpack_obj(sc, &args, "kern-obj-set-gob"))) {
                 return sc->NIL;
@@ -3143,7 +3082,6 @@ static pointer kern_add_tick_job(scheme *sc, pointer args)
         int tick;
         pointer proc;
         void *data;
-        struct kjob *kjob;
 
         if (unpack(sc, &args, "dop", &tick, &proc, &data)) {
                 rt_err("kern-add-tick-job: bad args");
@@ -3433,8 +3371,6 @@ KERN_API_CALL(kern_obj_get_mmode)
 
 KERN_API_CALL(kern_obj_get_name)
 {
-        struct mmode *mmode;
-
         Object *obj = unpack_obj(sc, &args, "kern-obj-get-name");
         if (!obj)
                 return sc->NIL;
@@ -3924,7 +3860,6 @@ KERN_API_CALL(kern_char_attack)
 KERN_API_CALL(kern_char_is_asleep)
 {
         class Character *ch;
-        int val;
 
         ch = (class Character*)unpack_obj(sc, &args, "kern-char-is-asleep");
         if (!ch)
@@ -3941,7 +3876,6 @@ KERN_API_CALL(kern_mk_effect)
         pointer rm_proc = sc->NIL;
         pointer restart_proc = sc->NIL;
         pointer ret;
-        pointer pair; // dbg        
         char *name, *tag, *desc, *status_code_str, *hook_name;
         int hook_id;
 
@@ -4029,7 +3963,6 @@ KERN_API_CALL(kern_fire_missile)
         Missile *missile;
         struct place *oplace, *dplace;
         int ox, oy, dx, dy, hitTarget = 0;
-        Object *target;
 
         /* Unpack the missile type */
         if (unpack(sc, &args, "p", &missile_type)) {
@@ -4737,7 +4670,7 @@ KERN_API_CALL(kern_place_get_name)
 KERN_API_CALL(kern_place_is_passable)
 {
         struct place *place;
-        int x, y, pmask;
+        int x, y;
         class Object *obj;
 
         if (unpack_loc(sc, &args, &place, &x, &y, "kern-place-is-passable"))
@@ -4753,7 +4686,7 @@ KERN_API_CALL(kern_place_is_passable)
 KERN_API_CALL(kern_place_is_hazardous)
 {
         struct place *place;
-        int x, y, pmask;
+        int x, y;
         class Object *obj;
 
         if (unpack_loc(sc, &args, &place, &x, &y, "kern-place-is-hazardous"))
@@ -4839,7 +4772,6 @@ KERN_API_CALL(kern_place_blocks_los)
 {
         struct place *place;
         int x, y;
-        struct terrain *terrain;
 
         if (unpack_loc(sc, &args, &place, &x, &y, "kern-place-blocks-los?"))
                 return sc->F;
@@ -4882,7 +4814,6 @@ KERN_API_CALL(kern_obj_wander)
 KERN_API_CALL(kern_obj_clone)
 {
         class Object *obj, *clone;
-        int val;
 
         obj = unpack_obj(sc, &args, "kern-char-clone");
         if (!obj)
@@ -5161,7 +5092,6 @@ KERN_API_CALL(kern_map_set_jitter)
 
 KERN_API_CALL(kern_char_kill)
 {
-        int val;
         class Character *ch;
 
         ch = (class Character*)unpack_obj(sc, &args, "kern-char-kill");
@@ -5175,7 +5105,6 @@ KERN_API_CALL(kern_char_kill)
 
 KERN_API_CALL(kern_char_resurrect)
 {
-        int val;
         class Character *ch;
 
         ch = (class Character*)unpack_obj(sc, &args, "kern-char-resurrect");
@@ -5335,8 +5264,7 @@ KERN_API_CALL(kern_get_distance)
 KERN_API_CALL(kern_in_los)
 {
         struct place *p1, *p2;
-        int x1, x2, y1, y2, x3, y3;
-        char *vmask;
+        int x1, x2, y1, y2;
 
         if (unpack_loc(sc, &args, &p1, &x1, &y1, "kern-in-los?") ||
             unpack_loc(sc, &args, &p2, &x2, &y2, "kern-in-los?"))
@@ -5408,7 +5336,6 @@ static int kern_kh_cb(struct KeyHandler * kh, int key, int keymod)
 {
         char *key_name = NULL;
         char buf[2];
-        pointer sym;
 
         /* map the key to a string name */
         if (isprint(key)) {
@@ -5465,25 +5392,6 @@ static int kern_kh_cb(struct KeyHandler * kh, int key, int keymod)
 
         /* invoke the script's key handler */
         return closure_exec((struct closure*)kh->data, "y", key_name);
-}
-
-KERN_API_CALL(kern_ui_handle_events)
-{
-        struct KeyHandler kh;
-        pointer func;
-
-        if (unpack(sc, &args, "o", &func)) {
-                rt_err("kern-ui-handle-events: bad args");
-                return sc->F;
-        }
-
-        kh.fx = kern_kh_cb;
-        kh.data = closure_new_ref(sc, func);
-        eventPushKeyHandler(&kh);
-        eventHandle();
-        eventPopKeyHandler();
-        closure_unref((struct closure*)kh.data);
-        return sc->T;
 }
 
 KERN_API_CALL(kern_ui_select_from_list)
@@ -6140,7 +6048,6 @@ KERN_API_CALL(kern_obj_find_path)
 {
         class Object *object;
         struct place *place;
-        int x, y;
         struct astar_node *path = NULL;
         struct astar_search_info as_info;
         pointer sc_path;
@@ -6192,7 +6099,6 @@ static pointer kern_build_weapon_list(scheme *sc,
 KERN_API_CALL(kern_char_get_weapons)
 {
         class Character *character;
-        pointer lst;
 
         /* unpack the character */
         character = (class Character*)unpack_obj(sc, &args, 
@@ -6227,7 +6133,6 @@ static pointer kern_build_arm_list(scheme *sc,
 KERN_API_CALL(kern_char_get_arms)
 {
         class Character *character;
-        pointer lst;
 
         /* unpack the character */
         character = (class Character*)unpack_obj(sc, &args, 
@@ -6245,7 +6150,6 @@ KERN_API_CALL(kern_char_get_arms)
 KERN_API_CALL(kern_char_arm_self)
 {
         class Character *character;
-        pointer lst;
 
         /* unpack the character */
         character = (class Character*)unpack_obj(sc, &args, 
@@ -6706,7 +6610,6 @@ KERN_API_CALL(kern_fold_rect)
 {
         struct place *place;
         int ulc_x, ulc_y, w, h, lrc_x, lrc_y, x, y;
-        struct terrain *ter;
         pointer proc;
         pointer val;
 
@@ -7077,8 +6980,6 @@ KERN_API_CALL(kern_occ_get_mp_mult)
 
 KERN_API_CALL(kern_end_game)
 {
-        int yesno;
-
         log_msg("*** CONGRATULATIONS ***");
         log_msg("You have finished the game!");
         log_msg("Press any key to exit.");

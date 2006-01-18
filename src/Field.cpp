@@ -37,9 +37,9 @@ int FieldType::getType()
 }
 
 FieldType::FieldType(char *tag, char *name, struct sprite *sprite, 
-                     int light, int duration, int pclass, closure_t *clx)
+                     int light_, int duration_, int pclass_, closure_t *clx)
         : ObjectType(tag, name, sprite, field_layer), 
-          light(light), duration(duration), pclass(pclass)
+          pclass(pclass_), light(light_), duration(duration_)
 {
         if (clx) {
                 closure_ref(clx);

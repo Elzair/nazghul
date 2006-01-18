@@ -1,4 +1,5 @@
 AM_CXXFLAGS = -Wall -DDATADIR=\"@datadir@\" -DPREFIX=\"@prefix@\"
+AM_CFLAGS = ${AM_CXXFLAGS}
 
 bin_PROGRAMS = nazghul
 

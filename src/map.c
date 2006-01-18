@@ -670,73 +670,6 @@ static void map_convert_point_to_vrect(int *x, int *y)
         }
 }
 
-/**
- *  Shade the given map coordinates (works but unused)
- */
-static void map_shade_tile(int x, int y)
-{
-        map_convert_point_to_vrect(&x, &y);
-        if (point_in_rect(x, y, &Map.aview->vrect)) {
-                SDL_Rect rect;
-                rect.x = MX_TO_SX(x);
-                rect.y = MY_TO_SY(y);
-                rect.w = TILE_W;
-                rect.h = TILE_H;
-                screenShade(&rect, 128);
-        }
-}
-
-/**
- *  Helper for map_shade_circle() (works but unused)
- */
-static void map_shade_circle_points(int cx, int cy, int x, int y)
-{
-        if (x == 0) {
-                map_shade_tile(cx, cy + y);
-                map_shade_tile(cx, cy - y);
-                map_shade_tile(cx + y, cy);
-                map_shade_tile(cx - y, cy);
-        } else if (x == y) {
-                map_shade_tile(cx + x, cy + y);
-                map_shade_tile(cx - x, cy + y);
-                map_shade_tile(cx + x, cy - y);
-                map_shade_tile(cx - x, cy - y);
-        } else if (x < y) {
-                map_shade_tile(cx + x, cy + y);
-                map_shade_tile(cx - x, cy + y);
-                map_shade_tile(cx + x, cy - y);
-                map_shade_tile(cx - x, cy - y);
-                map_shade_tile(cx + y, cy + x);
-                map_shade_tile(cx - y, cy + x);
-                map_shade_tile(cx + y, cy - x);
-                map_shade_tile(cx - y, cy - x);
-        }
-}
-
-/**
- *  Shade the tiles on the edge of the circle (works but unused). This code is
- *  lifted from http://www.cs.unc.edu/~mcmillan/comp136/Lecture7/circle.html,
- *  which is a very nice tutorial on the subject.
- */
-static void map_shade_circle(int cx, int cy, int radius)
-{
-        int x = 0;
-        int y = radius;
-        int p = (5 - radius*4)/4;
-
-        map_shade_circle_points(cx, cy, x, y);
-        while (x < y) {
-                x++;
-                if (p < 0) {
-                        p += 2*x+1;
-                } else {
-                        y--;
-                        p += 2*(x-y)+1;
-                }
-                map_shade_circle_points(cx, cy, x, y);
-        }
-}
-
 static void map_paint_cursor(void)
 {
         int x, y;
@@ -948,7 +881,7 @@ void mapRepaintView(struct mview *view, int flags)
 		return;
 
         if (flags & REPAINT_IF_OLD
-            && (SDL_GetTicks() - Map.last_repaint) < TickMilliseconds
+            && (SDL_GetTicks() - Map.last_repaint) < (Uint32)TickMilliseconds
             && (Map.last_repaint < SDL_GetTicks()))
                 return;
 
@@ -1317,7 +1250,6 @@ void mapPaintDamage(int x, int y)
 {
         int tile_w, tile_h;
         SDL_Rect rect;
-        SDL_Rect *vrect = &Map.aview->vrect;
 
         if (!mapTileIsVisible(x, y))
                 return;
@@ -1540,7 +1472,6 @@ void mapUpdateTile(struct place *place, int x, int y)
         int index;
         char *vmask;
         SDL_Rect rect;
-        struct mview *view;
 
         //dbg("mapUpdateTile %d:%d:%s\n", x, y, place->name);
 

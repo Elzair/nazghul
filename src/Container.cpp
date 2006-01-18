@@ -229,7 +229,6 @@ void Container::save(struct save *save)
 
 int Container::filter_count(struct filter *filter)
 {
-        struct list *elem;
         struct inv_entry *ie;
         int q = 0;
 

@@ -158,7 +158,7 @@ int dice_valid(char *fmt)
 
 int dice_average(char *fmt)
 {
-        int num, faces, bias, val;
+        int num, faces, bias;
         dice_parse(fmt, &num, &faces, &bias);
         return ((faces / 2) + 1) * num + bias;
 }

@@ -196,8 +196,6 @@ static int tile_is_transparent(struct tile *tile)
 
 static void tile_remove_object(struct tile *tile, class Object *object)
 {
-        struct node *node;
-
 	if (object->isType(VEHICLE_ID)) {
                 if (tile->vehicle == object) {
                         tile->vehicle = 0;
@@ -266,16 +264,6 @@ static void tile_remove_subplace(struct tile *tile)
 	if (!tile->objects) {
 		tile_del(tile);
 	}
-}
-
-static struct place *tile_get_subplace(struct tile *tile)
-{        
-        return tile->subplace;
-}
-
-static void tile_save(struct tile *tile, struct save *save)
-{
-        /* fixme: save everything */
 }
 
 static void tile_paint(struct tile *tile, int sx, int sy)
@@ -467,7 +455,6 @@ struct place *place_new(char *tag,
                         
 {
 	struct place *place;
-        char *maptag;
         
 	CREATE(place, struct place, 0);
 
@@ -665,8 +652,6 @@ int place_is_passable(struct place *place, int x, int y,
 		      class Object *subject, int flags)
 {
 	class Object *mech;
-	bool impassable_terrain;
-	bool no_convenient_vehicle;
         int tfeat_pass = IGNORES_PASSABILITY;
 
 	// For a wrapping place, wrap out-of-bounds x,y
@@ -964,7 +949,6 @@ void place_remove_object(struct place *place, Object * object)
 
 Object *place_get_object(struct place *place, int x, int y, enum layer layer)
 {
-	struct olist *olist;
 	struct tile *tile;
 
         WRAP_COORDS(place, x, y);
@@ -978,7 +962,6 @@ Object *place_get_object(struct place *place, int x, int y, enum layer layer)
 
 Object *place_get_filtered_object(struct place *place, int x, int y, int (*filter)(Object*))
 {
-	struct olist *olist;
 	struct tile *tile;
 
         WRAP_COORDS(place, x, y);
@@ -1189,7 +1172,6 @@ struct astar_node *place_find_path_to_edge(struct place *place, int x0, int y0,
                                            class Object *requestor)
 {
         struct astar_search_info info;
-	struct astar_node *path;
 
         info.x0 = x0;
         info.y0 = y0;
@@ -1228,8 +1210,6 @@ struct astar_node *place_find_path_to_edge(struct place *place, int x0, int y0,
 int place_get_light(struct place *place, int x, int y)
 {
 	int light;
-	struct list *l;
-	Object *obj;
 	struct tile *tile;
 
         if (place->wraps) {
@@ -1280,7 +1260,6 @@ int place_get_movement_cost(struct place *place, int x, int y,
         int cost;
         struct terrain *t;
         class Object *tfeat = NULL;
-        int pclass;
 
         WRAP_COORDS(place, x, y);
 
@@ -1542,10 +1521,9 @@ void place_for_each_tile(struct place *place,
                          void (*fx)(struct tile *tile, void *data), void *data)
 {
 	int i;
-	struct olist *tileList, *objList;
+	struct olist *tileList;
 	struct list *tileElem, *tileTmp;
 	struct tile *tile;
-	class Object *obj;
         int count = 0;
 
 	// for each bucket
@@ -1570,11 +1548,7 @@ void place_for_each_tile(struct place *place,
                         
 			tileElem = tileTmp;
                         count++;
-                        if (count == 4)
-                                count;
 		}
-                if (count == 4)
-                        count;
 	}
 }
 
@@ -1712,10 +1686,6 @@ void place_exec(struct place *place)
                 } else {
                         /* 'run' the object */
                         int t = place_timed_obj_exec(obj);
-                        char *name = obj->getName();
-/*                         if (t > 1) */
-/*                                 printf("%20s: %3d ms\n",  */
-/*                                        name ? name : "null", t); */
                         times += t;
 
                         /* Apply terrain, field and any other environmental

@@ -1239,7 +1239,6 @@ static struct terrain_map *create_camping_map(struct place *place, int x,
 {
         struct terrain_map *map;
         struct terrain *terrain;
-        struct list *elem;
 
         map = place_get_combat_terrain_map(place, x, y);
         if (map) {

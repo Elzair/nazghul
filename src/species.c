@@ -98,8 +98,6 @@ struct species *species_new(char *tag,
 
 void species_del(struct species *species)
 {
-        struct list *elem;
-
 	if (!species)
 		return;
 	if (species->tag)

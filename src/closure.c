@@ -83,11 +83,8 @@ void closure_init(closure_t *clx, scheme *sc, pointer code)
 int closure_exec(closure_t *closure, char *fmt, ...)
 {
         pointer head;
-        pointer func;
         pointer result;
         va_list ap;
-        void *ptr;
-        pointer old_dump;
         int ret = 1;
 
         closure_ref(closure);
@@ -154,9 +151,6 @@ int closure_exec(closure_t *closure, char *fmt, ...)
         } else if (scm_is_ptr(closure->sc, result)) {
                 ret = (int)closure->sc->vptr->ffvalue(result);
         }
-
- unlock:
-        closure_unref(closure);
 
         return ret;
 }

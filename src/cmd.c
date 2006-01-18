@@ -723,7 +723,6 @@ bool cmdGet(class Object *actor, bool scoop_all)
 	class Object *item;
 	int dir;
         int x, y;
-        closure_t *handler;
 
 	cmdwin_clear();
 	cmdwin_print("Get-");
@@ -828,7 +827,6 @@ bool cmdOpen(class Character * pc)
                  struct stat_list_entry statlist[2];
                  struct KeyHandler kh;
                  struct ScrollerContext data;
-                 class Object *selection;
 
                  cmdwin_print("<select>");
 
@@ -902,7 +900,6 @@ bool cmdOpen(class Character * pc)
 		} else {
                         // Trigger the trap. Traps may destroy containers, so
                         // use the refcount to find out if this happened.
-                        int oldref = container->refcount;
                         int abort = 0;
 
                         obj_inc_ref(container);
@@ -1394,7 +1391,6 @@ bool cmdUse(class Character * member, int flags)
 {
 	struct inv_entry *ie;
 	class ObjectType *item;
-        bool print_target;
 
 	cmdwin_clear();
 	cmdwin_print("Use-");
@@ -1449,7 +1445,6 @@ static void cmd_switch_party_leader(class Character *old_leader,
 void cmdNewOrder(void)
 {
 	class Character *pc1, *pc2;
-	int tmp;
 
         switch (player_party->getSize()) {
         case 0:
@@ -1631,7 +1626,7 @@ bool cmdTalk(Object *member)
         x = conversant->getX();
         y = conversant->getY();
 
-	if (select_target(x, y, &x, &y, 5) == -1) {
+	if (select_target(member->getX(), member->getY(), &x, &y, 5) == -1) {
 		return false;
 	}
 
@@ -1998,13 +1993,9 @@ bool cmdCastSpell(class Character * pc)
 	struct get_spell_name_data context;
 	struct inv_entry *ie = NULL;
 	struct spell *spell;
-	class Object *target = NULL;
 	bool mixed = false;
 	bool natural = false;
 	int i;
-	int tries;
-	int max_tries;
-	int tx, ty;
         char spell_name[MAX_SPELL_NAME_LENGTH];
 
         if (MagicNegated) {
@@ -2669,7 +2660,7 @@ void cmdDumpPalette(void)
 	SDL_Surface *src_surface;
 	SDL_Surface *dest_surface;
 	SDL_Rect rect;
-	char filename[BOGUS_FILENAME_LENGTH+1];
+	char filename[65];
 	int frame_count, frames;
 
         place   = player_party->getPlace();

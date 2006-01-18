@@ -578,7 +578,7 @@ static int alloc_cellseg(scheme *sc, int n) {
      char *cp;
      long i;
      int k;
-     int adj=ADJ;
+     unsigned int adj=ADJ;
 
      if(adj<sizeof(struct cell)) {
        adj=sizeof(struct cell);
@@ -1523,7 +1523,7 @@ static pointer readstrexp(scheme *sc) {
   
   for (;;) {
     c=inchar(sc);
-    if(c==EOF || p-sc->strbuff>sizeof(sc->strbuff)-1) {
+    if(c==EOF || (p-sc->strbuff)>(int)(sizeof(sc->strbuff)-1)) {
       return sc->F;
     }
     switch(state) {
@@ -1990,7 +1990,7 @@ static INLINE void new_slot_spec_in_env(scheme *sc, pointer env,
 
 static pointer find_slot_in_env(scheme *sc, pointer env, pointer hdl, int all) 
 { 
-  pointer x,y; 
+  pointer x,y=sc->NIL; 
   int location; 
 
   for (x = env; x != sc->NIL; x = cdr(x)) { 

@@ -161,7 +161,6 @@ void sound_del(sound_t *sound)
 
 sound_t *sound_new(char *tag, char *file)
 {
-	int index;
 	SDL_AudioSpec wave;
 	Uint8 *data;
 	Uint32 dlen;

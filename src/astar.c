@@ -209,19 +209,6 @@ static inline void astar_replace_route(struct astar_node *node, int x, int y,
 	node->scheduled = 1;
 }
 
-static void astar_dump_schedule()
-{
-        struct astar_node *node;
-        int i;
-
-        for (i = 0; i < schedule->num_entries; i++) {
-                node = heap_entry(schedule->entries[i], struct astar_node, goodness);
-                dbg("(%d %d)", node->x, node->y);
-        }
-        dbg("\n");
-        
-}
-
 static inline void
 astar_schedule_neighbor(struct astar_node *node, 
                         struct astar_search_info *info)

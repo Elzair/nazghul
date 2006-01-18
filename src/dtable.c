@@ -36,7 +36,6 @@
 struct dtable *dtable_new(int n_factions)
 {
         struct dtable *dtable;
-        int row, col, index;
 
         /* allocate the "main" struct */
         dtable = (struct dtable*)calloc(1, sizeof(*dtable));
@@ -112,8 +111,6 @@ int dtable_get(struct dtable *dtable, int f1, int f2)
 
 void dtable_del(struct dtable *dtable)
 {
-        int row, col, index;
-
         assert(dtable);
 
         if (dtable->table) {

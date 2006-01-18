@@ -450,7 +450,6 @@ void palette_print(FILE * fp, int indent, struct terrain_palette *palette)
 	//fprintf(fp, ";; quick terrains:\n");
 	for (i = 0; i < NUM_QUICK_TERRAINS; i++) {
 		struct terrain *qt = palette_quick_terrain(palette, i);
-		char *tag  = "(none)";
 		char *name = "(none)";
 		if (qt) {
 			name = qt->name;
