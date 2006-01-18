@@ -1690,7 +1690,9 @@ void place_exec(struct place *place)
 
                         /* Apply terrain, field and any other environmental
                          * effects. */
-                        if (obj->isOnMap())
+                        if (obj->isOnMap()
+                            && null_layer != obj->getLayer()
+                                )
                                 /* Bugfix: as a result of executing its turn,
                                  * the object may now be in a different
                                  * place! */
