@@ -137,6 +137,10 @@
             (pgroup-mk 'green-slime "1d3")
             (pgroup-mk 'yellow-slime "1")
             ))
+(define fire-slime-party-l4
+  (ptype-mk "fire slime colony" s_red_slime faction-monster 4 3
+            (pgroup-mk 'fire-slime "1d2")
+            ))
 (define hydra-party-l5
   (ptype-mk "hydra with slimes" s_hydra faction-monster 5 3
             (pgroup-mk 'green-slime "1d3")

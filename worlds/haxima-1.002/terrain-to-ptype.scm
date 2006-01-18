@@ -92,6 +92,7 @@
          'skeleton-pirates-l4
          )
    (list t_lava
+         'fire-slime-party-l4
          'dragon-party-l6
          'dragon-party-l8
          )

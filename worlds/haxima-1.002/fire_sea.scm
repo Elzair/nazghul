@@ -65,6 +65,9 @@
             "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
       )
  (put (mk-ladder-up 'p_shard 118 46) 9 9)
+ (put (spawn-pt 'fire-slime) 9 1)
+ (put (spawn-pt 'fire-slime) 7 3)
+ (put (spawn-pt 'fire-slime) 10 4)
  )
 
 (mk-dungeon-level 

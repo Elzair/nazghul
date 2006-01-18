@@ -47,6 +47,7 @@
 (mk-species 'sp_ghast        "ghast"          10 10 10 1 10  2  8 mmode-phase t_hands      humanoid  2 s_asleep       nil             nil)
 (mk-species 'sp_gint         "gint"           50  3  8 1 50  2 20 mmode-hover t_hands      giant    10 s_asleep       sound-walking   nil)
 (mk-species 'sp_green_slime  "green slime"     2  2  2 1  6  0  5 mmode-walk  t_acid_spray nil       2 s_slime_asleep sound-squishing nil)
+(mk-species 'sp_fire_slime   "fire slime"      2  2  2 1  6  0  5 mmode-walk  t_fire_glob  nil       2 s_red_slime_asleep sound-squishing nil)
 (mk-species 'sp_human        "human"          10 10 10 1 10  2 13 mmode-walk  t_hands      humanoid  2 s_asleep       sound-walking   nil)
 (mk-species 'sp_insect       "insects"         1  1 18 2  3  0  4 mmode-hover t_stinger    nil       1 nil            nil             nil)
 (mk-species 'sp_nixie        "nyad"           10 10 10 1 10  2 13 mmode-fish  t_hands      humanoid  2 s_shoals       sound-splashing nil)

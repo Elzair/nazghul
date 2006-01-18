@@ -169,6 +169,7 @@
 (define hydra-effects (list ef_poison_immunity ef_grow_head))
 (define drag-effects (list ef_fire_immunity))
 (define wisp-effects (list ef_poison_immunity ef_fire_immunity))
+(define fire-slime-effects (list ef_fire_immunity ef_slime_split))
 
 ;;----------------------------------------------------------------------------
 ;; equipment packages for different types of npcs
@@ -549,6 +550,9 @@
 (define yellow-slime-loot
   (list (list 50 "1" 't_royal_cape)
         ))
+(define fire-slime-loot
+  (list (list 35 "1" 't_oil)
+        ))
 
 (define (drop-generic knpc loot)
   ;;(println "drop-generic:loot=" loot)
@@ -621,6 +625,7 @@
 ;; NPC's with no drops
 
 (define green-slime     (mk-npct "green slime"            sp_green_slime   nil        s_slime        nil          nil           slime-effects 'animal-ai       faction-monster       nil))
+(define fire-slime      (mk-npct "fire slime"             sp_fire_slime    nil        s_red_slime    nil          nil           fire-slime-effects 'animal-ai  faction-monster       nil))
 (define giant-spider    (mk-npct "giant spider"           sp_spider        nil        s_spider       nil          nil           nil           'spider-ai       faction-monster       nil))
 (define queen-spider    (mk-npct "queen spider"           sp_queen_spider  nil        s_queen_spider nil          nil           nil           'spider-ai       faction-monster       nil))
 (define kraken          (mk-npct "kraken"                   sp_kraken        nil        s_kraken       nil          nil           nil           'kraken-ai       faction-monster       nil))
