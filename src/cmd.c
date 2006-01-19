@@ -271,7 +271,7 @@ int getdigit(struct KeyHandler * kh, int key, int keymod)
         return 0;
 }
 
-int getchar(struct KeyHandler * kh, int key, int keymod)
+static int cmd_getchar(struct KeyHandler * kh, int key, int keymod)
 {
         struct get_char_info *info;
 
@@ -1723,7 +1723,7 @@ static int select_hours(void)
         info.string = "0123456789sS";
 	info.erase = strlen("<hours[0-9]/[s]unrise>");
 
-	getkey(&info, &getchar);
+	getkey(&info, &cmd_getchar);
 
 	if (! info.c || info.c == '0') {
                 cmdwin_backspace(1);
