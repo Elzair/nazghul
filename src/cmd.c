@@ -2271,13 +2271,13 @@ bool cmdMixReagents(class Character *character)
 				ie = outcast(elem, struct inv_entry, auxlist);
 				if (ie->type ==
 				    (class ObjectType *) spell->reagents[i]) {
-					ie->ref--;
-					player_party->takeOut(ie->type, 
-                                                              quantity);
                                         // The following line is safe only
 					// because this is the end of the
 					// list_for_each loop!
 					list_remove(elem);
+					ie->ref--;
+					player_party->takeOut(ie->type, 
+                                                              quantity);
 					found = true;
 					break;
 				}
