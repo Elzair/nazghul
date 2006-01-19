@@ -1,3 +1,5 @@
+;; rune sprites
+
 ;; rune interface: when a rune is used on a special altar, it transforms the
 ;; alter and signals the demon gate mechanism
 (define (rune-use ktype kuser)
@@ -37,14 +39,14 @@
        (method 'get rune-l-get)))
 
 ;; rune types
-(mk-obj-type 't_rune_k "Rune of Knowledge" s_rune_k layer-item rune-ifc)
-(mk-obj-type 't_rune_p "Rune of Power" s_rune_p layer-item rune-ifc)
-(mk-obj-type 't_rune_s "Rune of Skill" s_rune_s layer-item rune-ifc)
-(mk-obj-type 't_rune_c "Rune of Curiosity" s_rune_c layer-item rune-ifc)
-(mk-obj-type 't_rune_f "Rune of Freedom" s_rune_f layer-item rune-ifc)
-(mk-obj-type 't_rune_w "Rune of Wisdom" s_rune_w layer-item rune-ifc)
-(mk-obj-type 't_rune_d "Rune of Discretion" s_rune_d layer-item rune-ifc)
-(mk-obj-type 't_rune_l "Rune of Leadership" s_rune_l layer-item rune-l-ifc)
+(mk-obj-type 't_rune_k "Rune of Knowledge" s_runestone_k layer-item rune-ifc)
+(mk-obj-type 't_rune_p "Rune of Power" s_runestone_p layer-item rune-ifc)
+(mk-obj-type 't_rune_s "Rune of Skill" s_runestone_s layer-item rune-ifc)
+(mk-obj-type 't_rune_c "Rune of Curiosity" s_runestone_c layer-item rune-ifc)
+(mk-obj-type 't_rune_f "Rune of Freedom" s_runestone_f layer-item rune-ifc)
+(mk-obj-type 't_rune_w "Rune of Wisdom" s_runestone_w layer-item rune-ifc)
+(mk-obj-type 't_rune_d "Rune of Discretion" s_runestone_d layer-item rune-ifc)
+(mk-obj-type 't_rune_l "Rune of Leadership" s_runestone_l layer-item rune-l-ifc)
 
 ;; list of all rune types
 (define rune-types 
