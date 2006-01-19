@@ -59,7 +59,7 @@ enum ZtatsView {
 	ViewSpells,
 	ViewItems,
         ViewMisc,
-	NumViews,
+	NumViews
 };
 
 static bool stat_filter_arms(struct inv_entry *ie, void *cookie);

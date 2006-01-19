@@ -49,7 +49,7 @@ enum combat_state {
         COMBAT_STATE_FIGHTING,
         COMBAT_STATE_LOOTING,
         COMBAT_STATE_CAMPING,
-        COMBAT_STATE_DONE,
+        COMBAT_STATE_DONE
 };
 
 extern enum combat_state combat_get_state(void);

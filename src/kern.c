@@ -5332,68 +5332,6 @@ KERN_API_CALL(kern_test_recursion)
         return sc->NIL;
 }
 
-static int kern_kh_cb(struct KeyHandler * kh, int key, int keymod)
-{
-        char *key_name = NULL;
-        char buf[2];
-
-        /* map the key to a string name */
-        if (isprint(key)) {
-                sprintf(buf, "%c", key);
-                key_name = buf;
-        } else {
-                /* Note: KEY_NORTH and KEY_UP have the same value. If you put
-                 * clauses in for both the compiler will warn about duplicate
-                 * case statements. The same goes for the other three primary
-                 * directions. */
-                switch (key) {
-                case KEY_NORTHWEST:
-                        break;
-                case KEY_NORTH:
-                        key_name = "up";
-                        break;
-                case KEY_NORTHEAST:
-                        key_name = "northeast";
-                        break;
-                case KEY_WEST:
-                        key_name = "left";
-                        break;
-                case KEY_HERE:
-                        key_name = "here";
-                        break;
-                case KEY_EAST:
-                        key_name = "right";
-                        break;
-                case KEY_SOUTHWEST:
-                        key_name = "southwest";
-                        break;
-                case KEY_SOUTH:
-                        key_name = "down";
-                        break;
-                case KEY_SOUTHEAST:
-                        key_name = "southeast";
-                        break;
-                case KEY_SHIFT_NORTH:
-                        key_name = "shift-north";
-                        break;
-                case KEY_SHIFT_SOUTH:
-                        key_name = "shift-south";
-                        break;
-                case KEY_SHIFT_EAST:
-                        key_name = "shift-east";
-                        break;
-                case KEY_SHIFT_WEST:
-                        key_name = "shift-west";                        
-                        break;
-                default:
-                        key_name = "unknown";
-                }
-        }
-
-        /* invoke the script's key handler */
-        return closure_exec((struct closure*)kh->data, "y", key_name);
-}
-
 KERN_API_CALL(kern_ui_select_from_list)
 {
         struct KeyHandler kh;

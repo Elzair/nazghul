@@ -52,7 +52,7 @@ enum StatusScrollDir {
         ScrollRight,
         ScrollLeft,
         ScrollPageUp,
-        ScrollPageDown,
+        ScrollPageDown
 };
 								
 enum StatusMode {

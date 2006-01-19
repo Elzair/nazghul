@@ -81,7 +81,7 @@ enum cmdstate {
 	CMD_RDY,
 	CMD_RDY2,
 	CMD_USE,
-	CMD_DEAD,
+	CMD_DEAD
 };
 
 bool Quit;

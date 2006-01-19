@@ -57,7 +57,7 @@ class Character:public Being {
 		Readied,
 		NoAvailableSlot,
 		WrongType,
-		TooHeavy,
+		TooHeavy
 	};
 
 	Character();

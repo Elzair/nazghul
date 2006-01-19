@@ -35,7 +35,7 @@
 enum party_control {
         PARTY_CONTROL_ROUND_ROBIN = 0,
         PARTY_CONTROL_FOLLOW,
-        PARTY_CONTROL_SOLO,
+        PARTY_CONTROL_SOLO
 };
 
 enum move_result {
@@ -47,7 +47,7 @@ enum move_result {
         move_enter_auto_portal,
         move_impassable,
         move_player_quit,
-        move_enter_subplace,
+        move_enter_subplace
 };
 
 struct move_info {

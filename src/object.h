@@ -97,14 +97,14 @@ enum layer {
 	field_layer      = 8,
 	being_layer      = 9,
 	projectile_layer = 10,
-	cursor_layer     = 11,
+	cursor_layer     = 11
 };
 
 enum control_mode {
         CONTROL_MODE_AUTO = 0,
         CONTROL_MODE_PLAYER,
         CONTROL_MODE_IDLE,
-        CONTROL_MODE_FOLLOW,
+        CONTROL_MODE_FOLLOW
 };
 
 enum MoveResult {

@@ -31,7 +31,7 @@ extern "C" {
 
         enum tree_key_type {
                 tree_i_key, // integer key
-                tree_s_key, // string key
+                tree_s_key  // string key
         };
 
         struct tree {
