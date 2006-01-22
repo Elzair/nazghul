@@ -172,7 +172,7 @@ static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
                 cmdDumpPalette();
                 break;
 
-        case KEY_CTRL_Q:
+        case KEY_CTRL_S:
                 cmdQuickSave();
                 break;
                         
@@ -768,7 +768,7 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
 
         switch (key) {
 
-        case KEY_CTRL_Q:
+        case KEY_CTRL_S:
                 cmdQuickSave();
                 break;
 
