@@ -790,14 +790,22 @@ static int combat_position_enemy(class Party * foe, int dx, int dy,
         if (!foe->pinfo.formation)
                 foe->pinfo.formation = formation_get_default();
 
+        Combat.enemy_vehicle = foe->vehicle;
+
+        /* Bugfix SF1412060 "NPC attacks while on (but not aboard) ship" */
+        if (! Combat.enemy_vehicle) {
+                Combat.enemy_vehicle = place_get_vehicle(foe->getPlace(),
+                                                         foe->getX(),
+                                                         foe->getY());
+        }
         /* Check for a map overlay. */
-        if (foe->vehicle && foe->vehicle->getObjectType()->map &&
-            Place == Combat.place) {
-                combat_overlay_map(foe->vehicle->getObjectType()->map, 
+        if (Combat.enemy_vehicle
+            && Combat.enemy_vehicle->getObjectType()->map 
+            && Place == Combat.place) {
+                combat_overlay_map(Combat.enemy_vehicle->getObjectType()->map, 
                                    &foe->pinfo, 1);
           }
 
-        Combat.enemy_vehicle = foe->vehicle;
 
         foe->disembark();
         obj_inc_ref(foe);
