@@ -161,7 +161,7 @@
     (list "sH" t_healer_sign)
     (list "sT" t_tavern_sign)
     (list "sI" t_inn_sign)
-    (list "sA" t_alchemy_sign)
+    (list "sP" t_alchemy_sign)
     (list "sR" t_magic_sign)
     
   )
