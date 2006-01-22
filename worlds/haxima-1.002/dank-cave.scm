@@ -30,7 +30,7 @@
  (put (custom-pt 'grow-trig 'ginseng "1d5") 3 5)
  (put (custom-pt 'grow-trig 'garlic "1d5") 15 5)
  (put (custom-pt 'grow-trig 'garlic "1d5") 3 13)
- (put (mk-ladder-up 'p_shamans_grove 17 11) 9 1)
+ (put (mk-ladder-up 'p_shamans_grove 14 11) 9 1)
 
  ;; monsters
  (put (spawn-pt 'gazer) 9 9)
