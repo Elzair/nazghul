@@ -2114,6 +2114,7 @@ bool cmdCastSpell(class Character * pc)
         }
 
         pc->decActionPoints(spell->cost/2);
+        pc->addExperience(spell->cost);
 
 	// If the spell was mixed then remove it from inventory.
 	if (mixed)
