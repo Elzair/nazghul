@@ -56,6 +56,7 @@
  (list
 
   ;; monster generators
+  (put (mk-monman) 0 0)
   (put (spawn-pt 'queen-spider) 6 3)
   (put (spawn-pt 'skeletal-warrior)   6 15)
   (put (spawn-pt 'yellow-slime) 15 15)
@@ -113,6 +114,6 @@
   (put (mk-ladder-down 'p_traps_4 9 9) 9 3)
 
   )
- nil ; hooks
+ (list 'on-entry-to-dungeon-room) ; hooks
  nil ; edge entrances
  )
