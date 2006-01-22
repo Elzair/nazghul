@@ -80,35 +80,13 @@
   (put (kern-mk-obj t_an_tym_scroll 1) 9 7)
   (put (kern-mk-obj t_in_mani_corp_scroll 1) 10 7)
   (put (kern-mk-obj t_vas_rel_por_scroll 1) 10 8)
-  (put (kern-mk-obj t_xen_corp_scroll 1) 10 9)
   (put (kern-mk-obj t_sanct_lor_scroll 1) 10 10)
   (put (kern-mk-obj t_in_quas_xen_scroll 1) 9 10)
-  (put (kern-mk-obj t_in_vas_por_ylem_scroll 1) 8 10)
   (put (kern-mk-obj t_an_xen_exe_scroll 1) 8 9)
   (put (kern-mk-obj t_in_an_scroll 1) 7 9)
   (put (kern-mk-obj t_in_ex_por_scroll 1) 6 9)
   (put (kern-mk-obj t_vas_mani_scroll 1) 6 8)
   (put (kern-mk-obj t_wis_quas_scroll 1) 6 7)
-
-  ;; weapons
-  (put (kern-mk-obj t_dagger 1) 5 7)
-  (put (kern-mk-obj t_mace 1) 4 7)
-  (put (kern-mk-obj t_sword 1) 3 7)
-  (put (kern-mk-obj t_2H_axe 1) 2 7)
-  (put (kern-mk-obj t_2H_sword 1) 2 6)
-  (put (kern-mk-obj t_morning_star 1) 1 6)
-  (put (kern-mk-obj t_halberd 1) 1 5)
-  (put (kern-mk-obj t_staff 1) 1 4)
-
-  ;; armor
-  (put (kern-mk-obj t_leather_helm 1) 1 7)
-  (put (kern-mk-obj t_chain_coif 1) 5 8)
-  (put (kern-mk-obj t_iron_helm 1) 9 6)
-  (put (kern-mk-obj t_armor_leather 1) 5 4)
-  (put (kern-mk-obj t_armor_chain 1) 5 3)
-  (put (kern-mk-obj t_armor_plate 1) 5 1)
-  (put (kern-mk-obj t_spiked_helm 1) 6 1)
-  (put (kern-mk-obj t_spiked_shield 1) 1 8)
 
   ;; lucre
   (put (kern-mk-obj t_gold_coins 74) 6 2)
