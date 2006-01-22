@@ -67,6 +67,8 @@
                     "After that, you'll have to ask around."))
               ((equal? kplace p_enchanters_tower)
                (say knpc "Go south to Trigrave and ask there."))
+              ((equal? kplace p_oparine)
+               (say knpc "Take the north to Trigrave and ask there."))
               (else 
                (say knpc "I'm not sure how to get there from here."))
               ))))
