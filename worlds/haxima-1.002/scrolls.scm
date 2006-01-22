@@ -22,7 +22,11 @@
 (define (mk-scroll tag name sprite spell)
   (mk-usable-item tag name sprite 1 
                   (lambda (kscrolltype kuser)
-                    (apply spell (list kuser)))))
+                    (let ((result (apply spell (list kuser))))
+                      (if (eq? result result-ok)
+                          #t
+                          '())))))
+
 (mk-scroll 't_an_tym_scroll "An Tym scroll" s_an_tym_scroll an-tym)
 (mk-scroll 't_in_mani_corp_scroll "In Mani Corp scroll" s_in_mani_corp_scroll in-mani-corp)
 (mk-scroll 't_vas_rel_por_scroll "Vas Rel Por scroll" s_vas_rel_por_scroll vas-rel-por)
