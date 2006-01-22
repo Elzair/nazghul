@@ -342,6 +342,9 @@
        "Then, for reasons that vary in the telling, it was lost or sealed or forgotten or destroyed. "
        "I always thought it a fiction."))
 
+(define (ench-ench knpc kpc)
+  (say knpc "Yes?"))
+
 (define enchanter-conv
   (ifc basic-conv
        (method 'default ench-default)
@@ -351,6 +354,7 @@
        (method 'job ench-job)
        (method 'join ench-join)
        
+       (method 'ench ench-ench)
        (method 'accu ench-accu)
        (method 'alch ench-alch)
        (method 'evil ench-good)
