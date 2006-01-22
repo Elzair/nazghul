@@ -125,7 +125,8 @@
    
    )
 
- nil ; hooks
+ ;; on-entry-hook
+ (list 'lock-inn-room-doors)
 
  (list ;; edge entrances
   (list north 26 38)
