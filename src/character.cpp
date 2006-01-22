@@ -107,9 +107,9 @@ Character::Character(char *tag, char *name,
                      int str, int intl, int dex, 
                      int hpmod, int hpmult, 
                      int mpmod, int mpmult, 
-                     int hp, int xp, 
+                     int hp, int xp_, 
                      int mp, int lvl)
-        : hm(0), xp(xp), order(-1),
+        : hm(0), xp(xp_), order(-1),
           sleeping(false),
           ac(0), 
           armsIndex(-1),
@@ -1270,12 +1270,17 @@ int Character::getExperienceValue()
         return (xpval * lvl);
 }
 
+static int xpForLevel(int lvl)
+{
+        return (int)pow(2, lvl+6);
+}
+
 void Character::addExperience(int amount)
 {
 	double lxp;
 
 	xp += amount;
-	lxp = pow(2, lvl + 5);
+	lxp = xpForLevel(getLevel()+1);
 	if (xp >= lxp) {
 		lvl++;
                 log_msg("%s gains level %d!", getName(), lvl);
@@ -1438,7 +1443,7 @@ int Character::getLevel() {
 void Character::setLevel(int val) {
         assert(val>0);
         lvl = val;
-        xp = (int)pow(2, lvl + 4);
+        xp = xpForLevel(lvl);
         setHp(getMaxHp());
         setMana(getMaxMana());
 }
