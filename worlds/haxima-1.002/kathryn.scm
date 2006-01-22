@@ -74,14 +74,14 @@
   (define (do-join)
     (say knpc "Excellent! Let's ask Thud to join us and we'll see if "
          "anyone around here knows about a thief.")
-    (kern-char-join-player knpc)
     (if (in-inventory? knpc t_wis_quas_scroll)
         (begin
           (say knpc "Oh, this scroll may come in handy. "
                "You take it, I really don't understand these magical "
                "thingies very well.")    
           (kern-obj-remove-from-inventory knpc t_wis_quas_scroll 1)
-          (kern-obj-add-to-inventory knpc kpc t_wis_quas_scroll 1)))
+          (kern-obj-add-to-inventory kpc t_wis_quas_scroll 1)))
+    (kern-char-join-player knpc)
     (kern-conv-end))
   (say knpc "It seems we have a common goal. Join us, and when we catch the "
        "villian we'll all return the item. You can keep any reward. "
