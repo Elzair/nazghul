@@ -67,6 +67,7 @@ Party::Party()
 {
 	node_init(&members);
         memset(&pinfo, 0, sizeof(pinfo));
+        printf("Created new NPC party\n");
 }
 
 static bool party_remove_member(class Character *ch, void *data)
@@ -253,9 +254,17 @@ MoveResult Party::move(int dx, int dy)
 
 	// Check for a mech (not for passability, for sending the STEP
         // signal)
+
 	mech = place_get_object(getPlace(), newx, newy, mech_layer);
-        if (mech)
-                mech->step(this);
+        if (mech) {
+                // Bugfix 1411788: avoid step triggers; dungeon step triggers
+                // are relocating the NPC party into non-wilderness places,
+                // corrupting them (note: the code here used to call
+                // mech->step(this), not only did this invoke the step but it
+                // was redundant, because the relocate() call checks for step
+                // trigger mechs)
+                return AvoidedHazard;
+        }
 
 	relocate(newplace, newx, newy);
 
@@ -749,6 +758,12 @@ void Party::setPlace(struct place *place)
         struct node *entry;
         class Character *member;
         Object::setPlace(place);
+        if (this!=player_party
+            && !place_is_wilderness(place)) {
+                warn("putting %s in non-wilderness %s\n",
+                     getName(), place->name);
+                assert(0);
+        }
         FOR_EACH_MEMBER(entry, member) {
                 member->setPlace(place);
         }
