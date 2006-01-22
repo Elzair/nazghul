@@ -301,6 +301,7 @@
         (list 100 "20"    t_arrow)
         (list 100 "1"     t_armor_plate)
         (list 100 "1"     t_iron_helm)
+        (list 100 "1"     t_dagger)
         (list 100 "1d3-1" t_mana_potion)
         ))
 (define nixie-1-equip
