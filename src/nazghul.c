@@ -364,6 +364,7 @@ static void show_credits(void)
                 "...Kevin Gabbert\n"\
                 "...Gordon McNutt\n"\
                 "...Sam Glasby\n"\
+                "...Steve Riberdy\n"\
                 ;
 
         statusSetPageText(title, text);
