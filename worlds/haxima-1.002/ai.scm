@@ -55,7 +55,8 @@
                                          spell-list))))
         (if (null? abil)
             #f
-            (use-ability abil kchar ktarg)))))
+            (use-ability abil kchar ktarg)))
+      #f))
 
 (define (use-ranged-spell-on-foes? kchar spell-list)
   (foldr (lambda (val ktarg)
@@ -267,8 +268,7 @@
           
 (define (use-narcotize? kchar)
   (if (or (not (can-use-ability? narcotize kchar))
-          (<= (kern-dice-roll "1d20") 16)
-          #t)
+          (<= (kern-dice-roll "1d20") 18))
       #f
       (let ((hostiles (filter
                        not-disabled?
@@ -323,12 +323,13 @@
       (use-ranged-spell-on-foes? kchar all-ranged-spells)
       ))
 
+;; subtle: don't let kernal AI run because dryad's don't move, but if I give them
+;; mmode-none they won't get placed in wilderness combat
 (define (dryad-ai kchar)
-  (or (summon-wolves? kchar)
-      (use-narcotize? kchar)
-      (use-ranged-spell-on-foes? kchar all-field-spells)
-      ;; subtle: don't let kernal AI run because dryad's don't move, but if I give them
-      ;; mmode-none they won't get placed in wilderness combat
+  (or 
+   (summon-wolves? kchar)
+   (use-narcotize? kchar)
+   (use-ranged-spell-on-foes? kchar all-field-spells)
       #t
       ))
 
