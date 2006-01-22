@@ -6,59 +6,6 @@
 (define (ambush-msg gob) (list-ref gob 4))
 
 ;; ----------------------------------------------------------------------------
-;; mk-wilderness-monster-generator-ifc -- make an interface for a monster
-;; generator in the wilderness
-;; ----------------------------------------------------------------------------
-(define (mk-wilderness-monster-generator-ifc threshold max party faction 
-                                             vehicle)
-  (define (roll-to-encounter)
-    (>= (modulo (random-next) 1000) threshold))
-  (define (not-too-many kobj)
-    (< (length (filter (lambda (a) (eqv? (kern-obj-get-type a) party))
-                       (kern-place-get-beings (loc-place 
-                                               (kern-obj-get-location kobj)))))
-       max))
-  (define (generate gen)
-    (if (and (roll-to-encounter)
-             (not-too-many gen))
-        (kern-obj-put-at (kern-mk-party party
-                                        faction
-                                        vehicle)
-                         (kern-obj-get-location gen))))
-  (ifc '() 
-       (method 'exec generate)))
-
-;; ----------------------------------------------------------------------------
-;; mk-wilderness-ambush-generator-ifc - construct an interface with an 'exec
-;; handler that will roll to ambush the player. If the roll succeeds the
-;; handler will then check if the player is in the designated region and, if
-;; so, create a wilderness combat with the specified npc party of the
-;; given faction.
-;; ----------------------------------------------------------------------------
-(define (mk-wilderness-ambush-generator-ifc threshold max party faction)
-  (define (roll-to-encounter)
-    (>= (modulo (random-next) 1000) threshold))
-  (define (player-in-rect? kgen)
-    (let ((loc (kern-obj-get-location (kern-get-player)))
-          (gob (gob-data (kobj-gob kgen))))
-      ;(display "gob:")(display gob)(newline)
-      (and (>= (loc-x loc) (ambush-x gob))
-           (<  (loc-x loc) (+ (ambush-x gob) (ambush-w gob)))
-           (>= (loc-y loc) (ambush-y gob))
-           (<  (loc-y loc) (+ (ambush-y gob) (ambush-h gob))))))
-  (define (generate kgen)
-    (if (and (roll-to-encounter)
-             (player-in-rect? kgen))
-        (begin
-          (kern-log-msg (ambush-msg (gob-data (kobj-gob kgen))))
-          (kern-begin-combat (kern-obj-get-location (kern-get-player))
-                             (kern-mk-party party 
-                                            faction 
-                                            nil)))))
-  (ifc '() 
-       (method 'exec generate)))
-
-;; ----------------------------------------------------------------------------
 ;; mk-monster-generator-ifc -- make an interface for a monster generator in a
 ;; town or dungeon
 ;; ----------------------------------------------------------------------------
