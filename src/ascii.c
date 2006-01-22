@@ -27,6 +27,83 @@
 
 #include <assert.h>
 
+void asciiBlitColored(SDL_Surface *dst, SDL_Rect *dstrect, 
+                      SDL_Surface *src, SDL_Rect *srcrect,
+                      Uint32 color)
+{
+        Uint16 mask = color;
+        Uint16 *srcpix, *dstpix;
+        int x, y;
+
+        assert(dst->format->BitsPerPixel==src->format->BitsPerPixel);
+        assert(dst->format->BitsPerPixel==16);
+        assert(dstrect->w==srcrect->w);
+        assert(dstrect->h==srcrect->h);
+
+        dstpix = (Uint16*)dst->pixels;
+
+        srcpix += srcrect->y*src->w + srcrect->x;
+        dstpix += dstrect->y*dst->w + dstrect->x;
+
+        for (y=0; y<dstrect->h; y++) {
+
+                srcpix = (Uint16*)src->pixels 
+                        + (srcrect->y+y)*src->w 
+                        + srcrect->x;
+                dstpix = (Uint16*)dst->pixels 
+                        + (dstrect->y+y)*dst->w 
+                        + dstrect->x;
+
+                for (x=0; x<dstrect->w; x++) {
+                        *dstpix = *srcpix&mask;
+                        srcpix++;
+                        dstpix++;
+                }
+        }
+}
+
+void asciiPaintColored(char c, int x, int y, SDL_Surface *surf, Uint32 color)
+{
+	SDL_Rect dest;
+	SDL_Rect src;
+	int row;
+	int col;
+
+	assert(Session->ascii.images);
+
+	if (c == '\t')
+		c = ' ';
+
+	assert(c >= ' ');
+
+        if (c<' ') {
+                warn("c==%d\n", c);
+                c='?';
+        }
+
+	/* fixme -- put these calcs in a table or something. Don't need to do
+	 * it every time. */
+
+	c = c - ' ' + Session->ascii.offset;
+
+	col = c % Session->ascii.images->cols;
+	row = c / Session->ascii.images->cols;
+
+	src.x = (col * ASCII_W) + Session->ascii.images->offx;
+	src.y = (row * ASCII_H) + Session->ascii.images->offy;
+	src.w = ASCII_W;
+	src.h = ASCII_H;
+
+	dest.x = x;
+	dest.y = y;
+	dest.w = ASCII_W;
+	dest.h = ASCII_H;
+
+        asciiBlitColored(surf, &dest, 
+                         Session->ascii.images->images, &src, 
+                         color);
+}
+
 void asciiPaint(char c, int x, int y, SDL_Surface * surf)
 {
 	SDL_Rect dest;

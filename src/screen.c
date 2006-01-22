@@ -390,6 +390,8 @@ void screenPrint(SDL_Rect * rect, int flags, char *fmt, ...)
 	int y = rect->y;
 	int len;
 
+        flags |= SP_INVERTED; // dbg hack
+
 	va_start(args, fmt);
 	vsnprintf(buf, sizeof(buf), fmt, args);
 	va_end(args);

@@ -36,6 +36,8 @@ struct ascii {
 struct images;
 
 extern void asciiPaint(char c, int x, int y, SDL_Surface * surface);
+extern void asciiPaintColored(char c, int x, int y, SDL_Surface * surface, 
+                              Uint32 color);
 extern void asciiInvert(void);
 extern void asciiUninvert(void);
 
