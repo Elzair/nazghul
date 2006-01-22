@@ -303,7 +303,7 @@
   (let ((loc (kern-obj-get-location kobj)))
     (if (not (kern-place-is-wilderness? (loc-place loc)))
         (begin
-          (if (> (kern-dice-roll "1d20") 15)
+          (if (> (kern-dice-roll "1d20") 12)
               (let ((clone (mk-npc 'green-slime
                                    (kern-char-get-level kobj))))
                 (kern-being-set-base-faction clone
