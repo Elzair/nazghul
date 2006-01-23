@@ -226,6 +226,12 @@ void screenUpdate(SDL_Rect * rect)
 	}
 }
 
+/* bpp-independent macro to test if a pixel is magenta */
+#define isTransparent(ff,pp) \
+        (((ff)->Rmask&(pp))==(ff)->Rmask \
+          && ((ff)->Gmask&(pp))==0 \
+          && ((ff)->Bmask&(pp))==(ff)->Bmask)
+
 static void scaled_blit_32bpp(SDL_Surface * source, SDL_Rect * from,
 			      SDL_Surface * dest, SDL_Rect * to,
 			      int spitch, int dpitch)
@@ -242,7 +248,8 @@ static void scaled_blit_32bpp(SDL_Surface * source, SDL_Rect * from,
 			sx = dx * Zoom;
 			di = (dy + to->y) * dpitch + (dx + to->x);
 			si = (sy + from->y) * spitch + (sx + from->x);
-			d[di] = s[si];
+                        if (!isTransparent(dest->format, s[si]))
+                                d[di] = s[si];
 		}		// for (dx)
 	}			// for (dy)
 }
@@ -263,7 +270,8 @@ static void scaled_blit_16bpp(SDL_Surface * source, SDL_Rect * from,
 			sx = dx * Zoom;
 			di = (dy + to->y) * dpitch + (dx + to->x);
 			si = (sy + from->y) * spitch + (sx + from->x);
-			d[di] = s[si];
+                        if (! isTransparent(dest->format, s[si]))
+                                d[di] = s[si];
 		}		// for (dx)
 	}			// for (dy)
 }
