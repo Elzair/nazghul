@@ -67,7 +67,7 @@
 (mk-species 'sp_gazer        "gazer"           6 20  6 1 10  8 16 mmode-hover nil          nil      8  s_asleep       nil             nil) 
 (mk-species 'sp_headless     "headless"       12  0 10 1 14  0  6 mmode-walk  t_hands      humanoid 2  s_asleep       sound-walking   nil) 
 (mk-species 'sp_wisp         "wisp"            2 20 16 2  8  8  9 mmode-hover nil          nil      4  nil            nil             nil) 
-(mk-species 'sp_dragon       "dragon"         20 10 10 1 30  8  9 mmode-fly   t_fangs      nil      10 nil            sound-walking   'dragon-killed) 
+(mk-species 'sp_dragon       "dragon"         20 10 10 1 50  8  9 mmode-fly   t_fangs      nil      20 nil            sound-walking   'dragon-killed) 
 (mk-species 'sp_zorn         "zorn"           10 10 10 1 10  2  9 mmode-phase t_beak       nil      4  s_asleep       sound-walking   nil) 
 (mk-species 'sp_demon        "demon"          14 14 14 1 14  8 12 mmode-phase t_hands      humanoid 8  s_asleep       sound-walking   nil) 
 (mk-species 'sp_hydra        "hydra"          20  2 10 1 30  8  6 mmode-none  t_tentacles  nil      10 nil            nil             'hydra-killed) 
