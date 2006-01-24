@@ -35,10 +35,6 @@ BEGIN_DECL
 struct images;
 struct sprite;
 
-#define SPRITE_STYLE_NORMAL 0
-#define SPRITE_STYLE_WAVE   1
-#define SPRITE_STYLE_ROTATE 2
-
 struct sprite {
         struct list list;       // for storage while loading
         char *tag;
@@ -46,7 +42,6 @@ struct sprite {
         int index;              // location in the image set
         SDL_Rect *frames;       // all frames (sequences must be in order)
         struct images *images;  // image set
-        int style;              // wave, etc.
         SDL_Surface *surf;      // current source of images
         int facing;             // current facing sequence
         int facings;            // bitmap of supported facing sequences
