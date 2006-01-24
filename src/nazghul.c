@@ -308,6 +308,7 @@ static int file_exists(char *fname)
 static bool main_menu_quit_handler(struct QuitHandler *kh)
 {
         exit(0);
+        return(0); /* for Sun compiler */
 }
 
 static void show_credits(void)
