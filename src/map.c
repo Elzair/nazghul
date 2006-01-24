@@ -68,9 +68,6 @@
 
 extern int DeveloperMode;
 
-/* Global flag changeble by command-line parameters. */
-int map_use_circular_vision_radius = 0;
-
 static struct light_source {
 	int x, y, light;
 } lights[MAX_LIGHTS];
@@ -503,9 +500,7 @@ void mapSetLosStyle(char *los)
 {
         if (LosEngine)
                 delete LosEngine;
-	LosEngine = los_create(
-                los, VMASK_W, VMASK_H, 
-                map_use_circular_vision_radius ? MAX_VISION_RADIUS : -1);
+	LosEngine = los_create(los, VMASK_W, VMASK_H, -1);
         assert(LosEngine);
 }
 

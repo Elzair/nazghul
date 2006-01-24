@@ -51,7 +51,6 @@
 #include <SDL_image.h>
 #include <SDL_thread.h>
 #include <unistd.h>
-#include <getopt.h>
 
 extern char *optarg;
 extern int optind, opterr, optopt;
@@ -89,55 +88,32 @@ static void print_usage(void)
 {
 	printf("Usage:  %s [options] <load-file>\n"
 	       "Options: \n"
-               "    --help \n"
-	       "    --los <line-of-sight(floodfill|angband)> \n"
-	       "    --tick <game tick period in msec> \n"
-	       "    --animate <period in ticks> \n"
-	       "    --sound <0 to disable> \n"
-	       "    --bpp=<bits per pixel> \n"
-	       "    --record <filename>    \n"
-	       "    --playback <filename>  \n"
-	       "    --playback_speed <ms delay> \n"
-               "    --version \n"
-               "    --developer\n"
-               "<load-file> is the session to load\n",
+               "    -help\n"
+               "    -verbose\n"
+               "    -developer mode\n"
+	       "    -tick <period in msec> \n"
+	       "    -animation <period in ticks> \n"
+	       "    -sound <0 to disable> \n"
+	       "    -bits-per-pixel <bpp> \n"
+	       "    -recorder <filename>    \n"
+	       "    -Playback <filename>  \n"
+	       "    -Speed <playback ms delay> \n"
+               "<load-file>\n",
                program_name);
 }				// print_usage()
 
 static void parse_args(int argc, char **argv)
 {
-	static struct option long_options[] = {
-		{"animate",  1, 0, 'a'},
-		{"bpp",      1, 0, 'b'},
-		{"circular_vision_radius", 0, 0, 'c'},
-                {"developer", 0, 0, 'd'},
-                {"help",     0, 0, 'h'},
-		{"los",      1, 0, 'l'},
-		{"ShowAllTerrain", 0, 0, 'T'},
-		{"sound",    1, 0, 's'},
-		{"playback", 1, 0, 'P'},
-		{"playback_speed", 1, 0, 'S'},
-		{"record",   1, 0, 'R'},
-		{"tick",     1, 0, 't'},
-                {"version",  0, 0, 'v'},
-		{0, 0, 0, 0}
-	};
 	int c = 0;
 	char *tmp;
-        int option_index = 0;
 
 	TickMilliseconds = MS_PER_TICK;
 	AnimationTicks = ANIMATION_TICKS;
 
-	while ((c = getopt_long(argc, argv, "w:h:l:t:a:s:b:c", long_options,
-				&option_index)) != -1) {
+	while ((c = getopt(argc, argv, "b:t:a:s:TdR:S:P:vh")) != -1) {
 		switch (c) {
 		case 'b':
 			SCREEN_BPP = atoi(optarg);
-			break;
-		case 'l':
-			if ((tmp = strdup(optarg)))
-				LOS = tmp;
 			break;
 		case 't':
 			TickMilliseconds = atoi(optarg);
@@ -150,9 +126,6 @@ static void parse_args(int argc, char **argv)
 			break;
 		case 'T':
 			ShowAllTerrain = 1;
-			break;
-		case 'c':
-			map_use_circular_vision_radius = 1;
 			break;
                 case 'd':
                         DeveloperMode = 1;
@@ -203,12 +176,6 @@ static void parse_args(int argc, char **argv)
         if (optind < argc) {
                 SAVEFILE = argv[optind];
         }
-#if 0
-        else {
-                print_usage();
-                exit(-1);
-        }
-#endif
 }				// parse_args()
 
 static void nazghul_init_internal_libs(void)
@@ -365,6 +332,7 @@ static void show_credits(void)
                 "...Gordon McNutt\n"\
                 "...Sam Glasby\n"\
                 "...Steve Riberdy\n"\
+                "...Kris Parker\n"
                 ;
 
         statusSetPageText(title, text);
