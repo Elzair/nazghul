@@ -2866,7 +2866,8 @@ static pointer opexe_2(scheme *sc, enum scheme_opcodes op) {
                Error_0(sc,"expt: needs two arguments");
           } else {
                pointer y=cadr(sc->args);
-               s_return(sc, mk_real(sc, pow(rvalue(x),rvalue(y))));
+               s_return(sc, mk_real(sc, pow(rvalue(x),
+                                            rvalue(y))));
           }
 
      case OP_FLOOR:

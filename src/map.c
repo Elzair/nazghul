@@ -268,7 +268,7 @@ static void mySetViewLightRadius(struct mview *view, void *data)
 static int mapCalcMaxLightRadius(int light)
 {
         // until something faster becomes necessary
-        return (int)sqrt(light);
+        return (int)sqrt((double)light);
 }
 
 #if 0

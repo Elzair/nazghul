@@ -1272,7 +1272,7 @@ int Character::getExperienceValue()
 
 static int xpForLevel(int lvl)
 {
-        return (int)pow(2, lvl+6);
+        return (int)pow((double)2, (double)lvl+6);
 }
 
 void Character::addExperience(int amount)
