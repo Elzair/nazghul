@@ -99,9 +99,6 @@ AM_PATH_SDL($SDL_VERSION,
 	    AC_MSG_ERROR([*** SDL version $SDL_VERSION not found!])
 )
 
-dnl Check specifically for SDL_image library, i.e. -lSDL_image switch
-AC_CHECK_LIB(SDL_image, IMG_ReadXPMFromArray)
-
 dnl ---------------------------------------------------------------------------
 dnl 5. Headers
 dnl      Next come checks for existence of headers.
@@ -113,11 +110,6 @@ AC_CHECK_HEADERS([fcntl.h \
 	malloc.h          \
 	float.h           \
 	limits.h])
-
-AC_CHECK_HEADER([SDL/SDL_image.h],
-		[],
-		[AC_MSG_ERROR([*** SDL_image include files not found!
-You should install development package.])])
 
 dnl ---------------------------------------------------------------------------
 dnl 6. Typedefs and structures
@@ -160,11 +152,22 @@ CFLAGS="$CFLAGS $SDL_CFLAGS"
 dnl Use the same flags for c++ as for c
 CXXFLAGS="$CFLAGS"
 
+dnl The preprocessor needs the same info too.
+CXXCPP="$CXXCPP $CXXFLAGS"
+
 dnl Set the compiler to c++ (for now)
 CC="$CXX"
 
 dnl Add libraries to build process
 LIBS="$LIBS $SDL_LIBS"
+
+dnl Check specifically for SDL_image library, i.e. -lSDL_image switch
+AC_CHECK_LIB(SDL_image, IMG_ReadXPMFromArray)
+
+AC_CHECK_HEADER([SDL_image.h],
+               [],
+               [AC_MSG_ERROR([*** SDL_image include files not found!
+You should install development package.])])
 
 dnl ---------------------------------------------------------------------------
 dnl 8. Output
