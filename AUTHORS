@@ -48,6 +48,10 @@ In worlds/haxima-1.001 made changes throughout:
         session.scm, sprites.scm, sprite-sets.scm, palette.scm, objs.scm,
         moongate-clearing.scm
 
+Johansson, Janne:
+In src/terrain_map.c, fixes for compiler warnings.
+In configure.ac, fix for SDL_image.h include path
+
 McNutt, Gordon:
 In worlds/haxima-1.001:
         First version of all files except images/* other than images/gmcnutt,
@@ -56,6 +60,15 @@ In worlds/haxima-1.002:
         All files, some re-used from haxima-1.001
 Everywhere else:
         Most changes except where otherwise noted.
+
+Parker, Kris:
+In worlds/haxima-1.002/shapes.png, provided human knight sprite based on
+        existing sprite and added transparency to some sprites
+In worlds/haxima-1.002/food.png and addons.png, added transparency to some
+        sprites
+
+Riberdy, Steve:
+In worlds/haxima-1.002/runestones.png, provided the images
 
 Steele, Joshua:
 In worlds/haxima-1.001/images/jsteele
