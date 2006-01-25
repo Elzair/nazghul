@@ -1026,7 +1026,7 @@
         (say knpc "AN NOX! You are cured, "
              (kern-obj-get-name kchar))
         (kern-map-flash 1)
-        (cure-poison kchar))
+        (kern-obj-remove-effect kchar ef_poison))
       (begin
         (say knpc (kern-obj-get-name kchar)
              " is not poisoned!")
