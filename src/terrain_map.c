@@ -83,7 +83,9 @@ void terrain_map_rotate(struct terrain_map *map, int degree)
     // be preserved (by substitution of terrain and/or sprite) 
     // when the map is rotated.
 	struct terrain **rbuf;
-	int x1, y1, x2, y2, w2, h2;
+	int x1, y1, x2, y2;
+        int w2 = map->w;
+        int h2 = map->h;
 
 	// Originally I tried a rotation matrix with a naive implementation,
 	// but I overlooked the problem that tile coordinates do not match up
