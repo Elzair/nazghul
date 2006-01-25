@@ -36,6 +36,7 @@
    "X)amine around"
    "@)AT (info about place & time)"
    "<space> (pass a turn)"
+   "CTRL-Q)uit without saving"
    "CTRL-S)ave without quitting"
    "CTRL-R)eload the last saved game"
    "SHIFT+ARROWKEY pan viewer"

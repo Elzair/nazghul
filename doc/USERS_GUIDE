@@ -233,6 +233,7 @@ General commands:
     Z)tats.....................Show party stats like inventory, armaments, etc
     @)AT.......................Information about where the party is AT, etc
     <space>....................Pass one turn
+    CTRL-Q)uit.................Quit without saving
     CTRL-S)ave.................Save a snapshot of the game w/o quitting
     CTRL-R)eload...............Reload the last snapshot
 

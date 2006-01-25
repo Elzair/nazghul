@@ -973,6 +973,27 @@ bool cmdQuit(void)
 	return Quit;
 }
 
+bool cmdQuitWithoutSaving(void)
+{
+	int yesno;
+
+	cmdwin_clear();
+	cmdwin_print("Quit without saving-Y/N?");
+	getkey(&yesno, yesnokey);
+
+	cmdwin_backspace(4);
+
+	if (yesno == 'y') {
+		cmdwin_print("Yes!");
+		log_msg("Goodbye!\n");
+		Quit = true;
+	} else {
+		cmdwin_print("No");
+	}
+
+	return Quit;
+}
+
 void cmdAttack(void)
 {
         int dir;
@@ -3112,7 +3133,8 @@ static char *cmd_help_text =
 "X)amine around\n"
 "@)AT (info about place & time)\n"
 "<space> (pass a turn)\n"
-"CTRL-Q)uit saves without quitting\n"
+"CTRL-Q)uit without saving\n"
+"CTRL-S)ave without quitting\n"
 "CTRL-R)eload the last saved game\n"
 "\n"
 "When talking to people, enter a keyword.\n"

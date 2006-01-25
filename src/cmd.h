@@ -77,6 +77,7 @@ extern bool cmdGet(class Object *actor, bool scoop_all);
 extern bool cmdOpen(class Character * pc);
 extern bool cmdCastSpell(class Character * pc);
 extern bool cmdQuit(void);
+extern bool cmdQuitWithoutSaving(void);
 extern bool cmdLook(int x, int y);
 extern bool cmd_terraform(struct place *place, int x, int y);
 extern bool cmdSaveTerrainMap(class Character * pc);
