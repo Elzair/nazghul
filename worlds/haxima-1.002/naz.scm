@@ -1124,6 +1124,13 @@
   (kern-dtable-dec (kern-being-get-current-faction kb1)
                    (kern-being-get-current-faction kb2)))
 
+(define (make-enemies kb1 kb2)
+  (harm-relations kb1 kb2)
+  (harm-relations kb1 kb2)
+  (harm-relations kb1 kb2)
+  (harm-relations kb1 kb2)
+  )
+
 (define (is-bad-terrain-at? loc)
   (is-bad-terrain? (kern-place-get-terrain loc)))
 
@@ -1392,3 +1399,27 @@
 (define (get-target-loc caster range)
   (kern-ui-target (kern-obj-get-location caster)
                   range))
+
+
+;;----------------------------------------------------------------------------
+;; code for opening a moongate, warping in a monster, and re-closing it
+(define (open-moongate loc)
+  (let ((kgate (mk-moongate nil)))
+    (kern-obj-relocate kgate loc nil)
+    (moongate-animate kgate moongate-stages)
+    kgate))
+(define (close-moongate kgate)
+  (moongate-animate kgate (reverse moongate-stages))
+  (moongate-destroy kgate))
+(define (warp-in kchar loc dir faction)
+  (display "warp-in")(newline)
+  (kern-char-set-schedule kchar nil)
+  (kern-obj-inc-ref kchar)
+  (kern-obj-remove kchar)
+  (kern-obj-relocate kchar loc nil)
+  (kern-obj-dec-ref kchar)
+  (kern-map-repaint)
+  (kern-sleep 250)
+  (kern-obj-relocate kchar (loc-offset loc dir) nil)
+  (kern-being-set-base-faction kchar faction)
+  (kern-map-repaint))
