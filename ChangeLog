@@ -1,3 +1,309 @@
+2006-01-08  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* scripts/RELEASE_CHECKOFF: Added comment about windows text files
+
+	* worlds/haxima-1.002/spells.scm: Haxima changes:
+	o Bugfix: some spells like In Ex Por would be consumed even if the player
+	  aborted without selecting a target (In Sanct, Sanct and An Ex Por were also
+	  affected)
+
+	* worlds/haxima-1.002/angriss-lair.scm, worlds/haxima-1.002/containers.scm, worlds/haxima-1.002/lost-halls.scm, worlds/haxima-1.002/monster-generator.scm, worlds/haxima-1.002/naz.scm, worlds/haxima-1.002/treasury.scm:
+	Haxima changes:
+	o Bugfix: auto-generated corpses were saving improperly, causing null objects
+	  to be in them on reload
+
+	* worlds/haxima-1.002/mouse.scm: Haxima changes:
+	o Bugfix: if Kathrn in party but Thud alive and not in party, crash when player
+	  encounters the Mouse
+
+2006-01-07  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/luximene.scm: Haxima changes:
+	o Bugfix: error in the script when the Necromancer summoned Luximene.
+	o Added more stuff to Luximene's conversation
+
+	* src/character.cpp, src/player.cpp, src/player.h: Kernel changes:
+	o Bugfix: if a party member died it's readied items were lost.
+
+	* worlds/haxima-1.002/shard.scm: Haxima changes:
+	o Bugfix: moongate near Glasdrin was positioned over an impassable mountain
+
+	* worlds/haxima-1.002/items.scm, worlds/haxima-1.002/parties.scm, worlds/haxima-1.002/spider.scm, src/Party.cpp, src/character.cpp, src/character.h, src/object.c, src/object.h, src/player.cpp:
+	Haxima changes:
+	o Bugfix: spider's sometimes dropped piles of spider silk with zero (0) objects
+	  in them
+	o Bugfix: cannon-killing a large gint party cuases a crash. Someone in the
+	  party was dropping a healing potion. When a healing potion execs it looks for
+	  a nearby Being to put itself into its inventory. On the wilderness, it was
+	  finding the gint party, and trying to call a Character method on a Party
+	  object. Crash!
+
+	* worlds/haxima-1.002/shroom.scm:
+	Bugfix: shroom's trade conv broken by typo
+
+	* scripts/RELEASE_CHECKOFF, src/Party.cpp, worlds/haxima-1.002/edge-spawn.scm:
+	Making sure the last few fixes were committed
+
+2006-01-05  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/Party.cpp: Kernel changes:
+	o Bugfix: Party::save() was not saving one of the arguments to
+	  kern-party-set-vehicle, this caused a bad save file when the player saved
+	  with pirates somewhere on the map
+
+2006-01-04  baueran  <baueran@localhost.localdomain>
+
+	* worlds/haxima-1.002/Makefile.am: Initial.
+
+2006-01-04  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* doc/USERS_GUIDE: doc changes
+
+2006-01-03  baueran  <baueran@localhost.localdomain>
+
+	* src/Makefile.am, worlds/Makefile.am, Makefile.am, configure.ac:
+	Added haxima to build system.
+
+2005-12-31  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/lich-tomb.scm:
+	Fixed ladder up in Lich's Tomb, was referring to old Keep Crypt
+
+	* doc/USERS_GUIDE: Minor edits to USERS_GUIDE
+
+2005-12-30  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* doc/USERS_GUIDE, scripts/RELEASE_CHECKOFF, scripts/ghul-test-install, worlds/Makefile.am, AUTHORS, BUGS, Makefile.in, configure:
+	USERS_GUIDE, Makefile.in and misc other final tweaks
+
+	* worlds/haxima-1.002/thorald.scm: Adding tutorial NPC to repository
+
+	* worlds/haxima-1.002/special.png:
+	A couple of new images I forgot to check in.
+
+	* src/character.cpp, src/character.h, src/cmd.c, src/combat.c, src/nazghul.c, src/player.cpp, src/vmask.c:
+	Kernel changes:
+	o Reduced action point cost for PC spell-casting by 1/2
+	o Changed the main menu order: Journey Onward is always first if it's
+	  applicable
+	o If a party member dies it unreadies all of its arms
+	o The X)amine command shows the XY coords only in Developer Mode
+	o Turned off switching to round-robin mode on entrance to a hostile place. Just
+	  feels weird during play.
+	o Added a user confirmation check before over-writing an existing saved game
+	  when "Start New Game" is selected
+
+	* worlds/haxima-1.002/abe.scm, worlds/haxima-1.002/ability.scm, worlds/haxima-1.002/addons.png, worlds/haxima-1.002/ai.scm, worlds/haxima-1.002/amy.scm, worlds/haxima-1.002/arms.scm, worlds/haxima-1.002/bole.scm, worlds/haxima-1.002/conv.scm, worlds/haxima-1.002/doris.scm, worlds/haxima-1.002/earl.scm, worlds/haxima-1.002/eastpass.scm, worlds/haxima-1.002/effects.scm, worlds/haxima-1.002/enchanter.scm, worlds/haxima-1.002/game.scm, worlds/haxima-1.002/hackle.scm, worlds/haxima-1.002/ilya.scm, worlds/haxima-1.002/kathryn.scm, worlds/haxima-1.002/lia.scm, worlds/haxima-1.002/moongate.scm, worlds/haxima-1.002/naz.scm, worlds/haxima-1.002/npc-types.scm, worlds/haxima-1.002/oscar.scm, worlds/haxima-1.002/parties.scm, worlds/haxima-1.002/species.scm, worlds/haxima-1.002/spider.scm, worlds/haxima-1.002/traps_2.scm, worlds/haxima-1.002/tutorial_town.scm, worlds/haxima-1.002/tutorial_wilderness.scm, worlds/haxima-1.002/zones.scm:
+	Haxima changes:
+	o Bugfix: various spells needed some maintenance
+	o Bugfix: scrolls misspelled in Lia's shop script
+	o Bugfix: queen spider's would cast web spew when out of range
+	o Tweaked some loot drops
+	o Increased starting player HP but reduced HP gain per level
+
+	* src/character.cpp, src/cmd.c, src/map.c, src/tick.c: Kernel changes:
+	o Reduced action point cost for PC spell-casting by 1/2
+
+	* worlds/haxima-1.002/effects.scm, worlds/haxima-1.002/haxima.scm, worlds/haxima-1.002/loc.scm, worlds/haxima-1.002/moon.scm, worlds/haxima-1.002/moongate.scm, worlds/haxima-1.002/naz.scm, worlds/haxima-1.002/npc-types.scm, worlds/haxima-1.002/shard.scm, worlds/haxima-1.002/spells.scm, worlds/haxima-1.002/terrain-to-ptype.scm:
+	Haxima changes:
+	o Bugfix: various spells needed some maintenance
+
+2005-12-29  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/abe.scm, worlds/haxima-1.002/books.scm, worlds/haxima-1.002/edge-spawn.scm, worlds/haxima-1.002/gen.scm, worlds/haxima-1.002/jorn.scm, worlds/haxima-1.002/necromancer.scm, worlds/haxima-1.002/npc-types.scm, worlds/haxima-1.002/parties.scm, worlds/haxima-1.002/roland.scm, worlds/haxima-1.002/zane.scm, worlds/haxima-1.002/zones.scm:
+	Haxima changes:
+	o Misc tweaks to the scripts
+
+	* src/ctrl.c, src/nazghul.c: Kernel changes:
+	o Made the terraform and zoom commands available only with the --developer
+	  option on the command line
+
+	* worlds/haxima-1.002/shard.scm: Haxima changes:
+	o Paved a road from Trigrave north to the Fen
+
+	* worlds/haxima-1.002/conv.scm, worlds/haxima-1.002/gregor.scm, worlds/haxima-1.002/tutorial.scm, worlds/haxima-1.002/tutorial_town.scm:
+	Haxima changes:
+	o Conversation tweaks.
+
+	* INSTALL, README: Updated the README and INSTALL files.
+
+	* src/play.c, src/player.cpp, src/player.h, src/scheme.c, src/session.c, src/session.h, src/status.c, src/vmask.c, worlds/haxima-1.002/naz.scm, worlds/haxima-1.002/parties.scm, worlds/haxima-1.002/tools.scm, worlds/haxima-1.002/tutorial.scm, worlds/haxima-1.002/tutorial_cave.scm, worlds/haxima-1.002/tutorial_town.scm, worlds/haxima-1.002/tutorial_wilderness.scm, src/Missile.cpp, src/Party.cpp, src/character.cpp, src/character.h, src/cmd.c, src/combat.c, src/ctrl.c, src/effect.c, src/foogod.c, src/kern.c, src/list.h, src/map.c, src/nazghul.c, src/object.c, src/place.c:
+	Haxima changes:
+	o Finished the tutorial.
+
+	Kernel changes:
+	o Reverted most of my last changes since they made reload unstable.
+	o Main menu does not loop (big memory leak if it does)
+
+2005-12-28  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/combat.c, src/ctrl.c, src/effect.c, src/foogod.c, src/kern.c, src/list.h, src/map.c, src/nazghul.c, src/object.c, src/place.c, src/play.c, src/player.cpp, src/player.h, src/scheme.c, src/session.c, src/session.h, src/status.c, src/vmask.c, worlds/haxima-1.002/haxima.scm, worlds/haxima-1.002/tutorial.scm, worlds/haxima-1.002/tutorial_town.scm, src/Missile.cpp, src/Party.cpp, src/character.cpp, src/character.h, src/cmd.c:
+	Haxima changes:
+	o Added tutorial.scm to provide a walkthrough of the basic commands (unfinished)
+
+	Kernel changes:
+	o Added tutorial to the main menu
+	o Made the global player party into the session struct.
+	o Changed the way the player party is allocated/freed
+
+	* src/character.cpp, src/nazghul.c, src/play.c, src/session.h, src/status.c, src/status.h, worlds/haxima-1.002/main-menu.scm, worlds/haxima-1.002/slywan.scm:
+	Haxima changes:
+	o Added main-menu.scm to support main menu UI
+
+	Kernel changes:
+	o Added main menu UI. If no load file is specified to nazghul it will show a
+	  menu allowing the user to select a new game or to journey onward.
+	o Quit&Save now falls back to the main menu UI.
+
+	* worlds/haxima-1.002/kun.scm, worlds/haxima-1.002/mesmeme.scm, worlds/haxima-1.002/slywan.scm, worlds/haxima-1.002/tetzl.scm, worlds/haxima-1.002/tooth.scm, worlds/haxima-1.002/zones.scm, worlds/haxima-1.002/game.scm, worlds/haxima-1.002/slimy-cavern.scm, worlds/haxima-1.002/spells.scm, worlds/haxima-1.002/jake.scm:
+	Haxima changes:
+	o More stuff in new town
+
+2005-12-27  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/abe.scm, worlds/haxima-1.002/haxima.scm, worlds/haxima-1.002/jake.scm, worlds/haxima-1.002/kun.scm, worlds/haxima-1.002/mesmeme.scm, worlds/haxima-1.002/shard.scm, worlds/haxima-1.002/terrains.scm, worlds/haxima-1.002/zones.scm:
+	Haxima changes:
+	o Added extra town & some NPCs
+
+	* worlds/haxima-1.002/oparine.scm, worlds/haxima-1.002/zones.scm:
+	Haxima changes:
+	o Reworked Oparine
+
+	* worlds/haxima-1.002/amy.scm, worlds/haxima-1.002/game.scm, worlds/haxima-1.002/ilya.scm, worlds/haxima-1.002/ini.scm, worlds/haxima-1.002/kalcifax.scm, worlds/haxima-1.002/kama.scm, worlds/haxima-1.002/roland.scm:
+	Haxima changes:
+	o Tweaked Ilya's conv
+
+	* src/ctrl.c, src/map.c: Kernel changes:
+	o Bugfix: projectile animation speed varied from host to host
+
+2005-12-26  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/effects.scm: Haxima changes:
+	o Bugfix: sleep effect did not wake up victim when it expired
+
+	* worlds/haxima-1.002/crypt.scm, worlds/haxima-1.002/green-tower-lower.scm, worlds/haxima-1.002/green-tower.scm, worlds/haxima-1.002/kama.scm, worlds/haxima-1.002/monster-generator.scm, worlds/haxima-1.002/zones.scm:
+	Haxima changes:
+	o Reworked Green Tower Lower
+
+	* worlds/haxima-1.002/combat-maps.scm, worlds/haxima-1.002/palette.scm, worlds/haxima-1.002/shard.scm, worlds/haxima-1.002/terrains.scm:
+	Haxima changes:
+	o Added lava bridge combat map
+	o Added mountain combat map
+
+	* worlds/haxima-1.002/ai.scm, worlds/haxima-1.002/conv.scm, worlds/haxima-1.002/jeffreys.scm, worlds/haxima-1.002/prison.scm, worlds/haxima-1.002/shard.scm, worlds/haxima-1.002/special.scm:
+	Haxima changes:
+	o Modified the wilderness map.
+
+	* worlds/haxima-1.002/addons.png, worlds/haxima-1.002/ancient-derelict.scm, worlds/haxima-1.002/luximene.scm, worlds/haxima-1.002/special.scm, worlds/haxima-1.002/sprites.scm, worlds/haxima-1.002/vehicles.scm:
+	Haxima changes:
+	o Added some sprites for a couple of special items
+
+	* worlds/haxima-1.002/spells.scm, worlds/haxima-1.002/step.scm, worlds/haxima-1.002/dank-cave.scm, worlds/haxima-1.002/naz.scm, worlds/haxima-1.002/special.scm:
+	Haxima changes:
+	o Populated Dank Cave
+	o Fixed In Quas Corp spell
+
+	* worlds/haxima-1.002/prison.scm, worlds/haxima-1.002/tools.scm, worlds/haxima-1.002/zones.scm, worlds/haxima-1.002/glasdrin.scm:
+	Haxima changes:
+	o Reworked Glasdrin Prison.
+
+2005-12-25  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/Being.cpp, src/Being.h, src/character.cpp, src/character.h, src/kern.c:
+	Kernel changes:
+	o Bugfix: charm an NPC and try Z)tats on the NPC's turn => crash. I fixed this
+	  by tearing out the kernel implementation of "charm" and replacing it with a
+	  simple faction change. Finished implementing the notion of "current" vs
+	  "base" faction.
+
+	* worlds/haxima-1.002/ai.scm, worlds/haxima-1.002/arms.scm, worlds/haxima-1.002/dank-cave.scm, worlds/haxima-1.002/effects.scm, worlds/haxima-1.002/nossifer.scm:
+	Haxima changes:
+	o Changed the way the charm effect is implemented.
+
+2005-12-24  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/character.cpp, src/ctrl.c, src/kern.c: Kernel changes:
+	o Character::clone() now clones readied items, too
+
+	* worlds/haxima-1.002/ability.scm, worlds/haxima-1.002/ai.scm, worlds/haxima-1.002/altar-room.scm, worlds/haxima-1.002/effects.scm, worlds/haxima-1.002/npc-types.scm, worlds/haxima-1.002/spells.scm:
+	Haxima changes:
+	o bugfix: after loading a saved game, killing a wizard resulted in script
+	  errors because the wizard loot list wasn't using tags
+	o Added summon-demon ability for warlocks
+	o Added turn-invisible ability for demons
+	o Populated Altar Room
+	o Fixed In Quas Xen spell
+
+	* src/kern.c, src/player.cpp, worlds/haxima-1.002/amy.scm, worlds/haxima-1.002/conv.scm, worlds/haxima-1.002/gen.scm, worlds/haxima-1.002/kama.scm:
+	Haxima changes:
+	o NPC's who will join now check if they are already in player party when asked
+	  to join again (safe if they don't this just fixes the messages)
+	o Added LEAVe to conversations so the player can dismiss party members if he
+	  wants to.
+
+	Kernel changes:
+	o Bugfix: if an npc left and rejoined the game would hang.
+
+	* worlds/haxima-1.002/amy.scm, worlds/haxima-1.002/ini.scm, worlds/haxima-1.002/kalcifax.scm:
+	Haxima changes:
+	o NPC's who will join now check if they are already in player party when asked
+	  to join again (safe if they don't this just fixes the messages)
+
+	* src/Party.cpp, src/Party.h, src/character.cpp, src/kern.c:
+	Kernel changes:
+	o Bugfix: hang if a character joins the player when already in the player party
+
+	* worlds/haxima-1.002/gen.scm, worlds/haxima-1.002/kama.scm:
+	Haxima changes:
+	o Changed Kama's occupations
+
+	* worlds/haxima-1.002/amy.scm, worlds/haxima-1.002/poor-house.scm:
+	Haxima changes:
+	o Added Amy
+
+	* worlds/haxima-1.002/roland.scm, worlds/haxima-1.002/shard.scm, worlds/haxima-1.002/slimy-cavern.scm:
+	Haxima changes:
+	o Moved slimy cave
+	o Altered Roland's conv
+
+2005-12-23  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/arms.scm, worlds/haxima-1.002/game.scm, worlds/haxima-1.002/haxima.scm, worlds/haxima-1.002/parties.scm, worlds/haxima-1.002/shard.scm, worlds/haxima-1.002/terrain-to-ptype.scm, worlds/haxima-1.002/vehicles.scm:
+	Haxima changes:
+	o Added pirate NPC parties
+	o Tuned ship cannon damage
+
+	* doc/USERS_GUIDE, src/kern.c, worlds/haxima-1.002/earl.scm, worlds/haxima-1.002/jim.scm, worlds/haxima-1.002/miggs.scm, worlds/haxima-1.002/spells.scm:
+	Haxima changes:
+	o Added Wis Sanct, detect trap
+	o Added An Sanct Ylem, disarm trap
+
+	Kernel changes:
+	o Added kern-obj-is-container?
+	o Added kern-obj-is-trapped?
+	o Added kern-obj-remove-trap
+
+	* worlds/haxima-1.002/alchemist.scm, worlds/haxima-1.002/arms.scm, worlds/haxima-1.002/bill.scm, worlds/haxima-1.002/chester.scm, worlds/haxima-1.002/haxima.scm, worlds/haxima-1.002/henry.scm, worlds/haxima-1.002/jim.scm, worlds/haxima-1.002/jones.scm, worlds/haxima-1.002/kathryn.scm, worlds/haxima-1.002/lia.scm, worlds/haxima-1.002/potions.scm, worlds/haxima-1.002/shroom.scm, worlds/haxima-1.002/species.scm, worlds/haxima-1.002/spells.scm, worlds/haxima-1.002/zane.scm, worlds/haxima-1.002/ai.scm, worlds/haxima-1.002/effects.scm, worlds/haxima-1.002/npc-types.scm, worlds/haxima-1.002/parties.scm, worlds/haxima-1.002/shard.scm:
+	Haxima changes:
+	o Added effects for potions of dragon's, hydra's and lich's blood
+	o Added a couple of new "hidden" spells
+
+2005-12-22  baueran  <baueran@localhost.localdomain>
+
+	* ChangeLog, configure.ac: configure.ac: test for SDL_image
+
+2005-12-22  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/ai.scm, worlds/haxima-1.002/angela.scm, worlds/haxima-1.002/chester.scm, worlds/haxima-1.002/fields.scm, worlds/haxima-1.002/glasdrin.scm, worlds/haxima-1.002/ini.scm, worlds/haxima-1.002/jeffreys.scm, worlds/haxima-1.002/kalcifax.scm, worlds/haxima-1.002/naz.scm, worlds/haxima-1.002/npc-types.scm, worlds/haxima-1.002/patch.scm, worlds/haxima-1.002/prison.scm, worlds/haxima-1.002/steward.scm, worlds/haxima-1.002/town-entry.scm, worlds/haxima-1.002/zones.scm, src/kern.c:
+	Haxima changes:
+	o Redid Glasdrin's map to reduce the size and number of guards.
+
+	Kernel changes:
+	o Performance improvement: added kern-obj-is-field?. The is-field? procedure in
+	  the script was the bottleneck causing too-frequent garbage collection cycles
+	  in places with lots of combatant NPC's (like guards). This change reduces
+	  gc frequency in Glasdrin by almost 300%.
+
 2005-12-22  Andreas Bauer <baueran@in.tum.de>
 
 	* configure.ac: test for SDL_image.h
