@@ -8,9 +8,11 @@ PART I: PREPARE FOR RELEASE
 (1) INSTALL is up-to-date
 (2) BUGS is up-to-date
 (3) NEWS is up-to-date with differences since last version
-(4) AUTHORS is up-to-date with _ALL_ contributions (legal reasons)
-(5) Version number is correct in configure.ac
-(6) The SUBDIRS of Makefile.am and worlds/Makefile.am are correct for this 
+(4) AUTHORS is up-to-date 0.
+ bnwith _ALL_ contributions (legal reasons)
+(5) ChangeLog is up-to-date
+(6) Version number is correct in configure.ac
+(7) The SU......1B DIRS of Makefile.am and worlds/Makefile.am are correct for this 
     release
 
 PART II: BUILD AND TEST SOURCE DIST
