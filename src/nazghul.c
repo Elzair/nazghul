@@ -320,6 +320,7 @@ static void show_credits(void)
                 "...Gordon McNutt\n"\
                 "...Sam Glasby\n"\
                 "...Tim Douglas\n"\
+                "...Janne Johansson\n"\
                 "...Karl Garrison\n"\
                 "Build System\n"\
                 "...Andreas Bauer\n"\
