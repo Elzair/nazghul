@@ -70,8 +70,8 @@ haxima_DATA = \
 	gen.scm                     parties.scm            yellow-slime.scm\
 	ghertie.scm                 patch.scm              zane.scm\
 	gholet.scm                  player.scm             zones.scm\
-	glasdrin.scm                poor-house.scm\
-	goblin-kingdoms.scm         portals.scm
+	glasdrin.scm                poor-house.scm         signs.png\
+	goblin-kingdoms.scm         portals.scm            runestones.png
 
 EXTRA_DIST = $(haxima_DATA)
 
