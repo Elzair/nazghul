@@ -9,7 +9,7 @@
         (list s_moongate_full           128)))
 
 (define (stage-sprite stage) (car stage))
-(define (stage-light stage) (cadr stage))
+(define (stage-light stage) (* 10 (cadr stage)))
 (define moongate-default-ttl 10) ;; turns
 
 ;; ----------------------------------------------------------------------------
