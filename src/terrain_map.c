@@ -84,9 +84,9 @@ void terrain_map_rotate(struct terrain_map *map, int degree)
     // when the map is rotated.
 	struct terrain **rbuf;
 	int x1, y1, x2, y2;
-        int w2 = map->w;
+	int w2 = map->w;
         int h2 = map->h;
-
+     
 	// Originally I tried a rotation matrix with a naive implementation,
 	// but I overlooked the problem that tile coordinates do not match up
 	// naturally with the point-based coordinates of the numeric axis
@@ -117,6 +117,8 @@ void terrain_map_rotate(struct terrain_map *map, int degree)
 		// 3  4  5 => 10 7  4  1
 		// 6  7  8    11 8  5  2
 		// 9 10 11
+		w2 = map->h;
+		h2 = map->w;
 		for (y1 = 0, x2 = w2 - 1; y1 < map->h; y1++, x2--) {
 			for (x1 = 0, y2 = 0; x1 < map->w; x1++, y2++) {
 				rbuf[y2 * w2 + x2] =
@@ -131,6 +133,8 @@ void terrain_map_rotate(struct terrain_map *map, int degree)
 		// 3  4  5 =>  8  7  6
 		// 6  7  8     5  4  3
 		// 9 10 11     2  1  0
+		w2 = map->w;
+		h2 = map->h;
 		for (y1 = 0, y2 = h2 - 1; y1 < map->h; y1++, y2--) {
 			for (x1 = 0, x2 = w2 - 1; x1 < map->w; x1++, x2--) {
 				rbuf[y2 * w2 + x2] =
@@ -145,6 +149,8 @@ void terrain_map_rotate(struct terrain_map *map, int degree)
 		// 3  4  5 => 1  4  7 10
 		// 6  7  8    0  3  6  9
 		// 9 10 11
+		w2 = map->h;
+		h2 = map->w;
 		for (y1 = 0, x2 = 0; y1 < map->h; y1++, x2++) {
 			for (x1 = 0, y2 = h2 - 1; x1 < map->w; x1++, y2--) {
 				rbuf[y2 * w2 + x2] =
