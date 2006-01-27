@@ -105,8 +105,6 @@ void terrain_map_rotate(struct terrain_map *map, int degree)
 	// First convert the degrees to one of the four cases.
 	degree = degree % 360;
 	degree = degree / 90;
-	w2 = map->h;
-	h2 = map->w;
 
 	switch (degree) {
 	case 0:
