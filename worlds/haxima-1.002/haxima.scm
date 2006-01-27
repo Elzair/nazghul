@@ -274,17 +274,15 @@
   (moongate-animate black-gate blackgate-stages)
   (kern-sleep 2000)
 
-  (kern-log-msg "Then closes without a trace...")
-  (moongate-animate black-gate (reverse blackgate-stages))
   (kern-log-enable #f)
   (kern-char-set-sleep ch_wanderer #t)
+  (kern-obj-put-at kplayer (list p_moongate_clearing 11 12))
 
-  (kern-obj-put-at kplayer (list p_moongate_clearing 11 11))
-
+  (kern-log-enable #t)
+  (kern-log-msg "Then closes without a trace...")
   (moongate-animate black-gate (reverse blackgate-stages))
   (kern-sleep 1000)
   
-  (kern-log-enable #t)
   (kern-log-msg "You lie dreaming for a while, of another life...")
   (kern-sleep 2000)
 
