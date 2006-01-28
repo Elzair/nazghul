@@ -66,18 +66,12 @@
 ObjectType::ObjectType()
 {
         assert(false);
-
-        speed                  = 0;
-        required_action_points = 0;
-        max_hp                 = 0;
-        name                   = NULL;
-        tag                    = NULL;
-        gifc = NULL;
-        gifc_cap = 0;
 }
 
-ObjectType::ObjectType(char *tag, char *sname, struct sprite *sprite_, enum layer layer_)
-        : sprite(sprite_), layer(layer_), speed(0), required_action_points(0), max_hp(0), gifc(NULL), gifc_cap(0)
+ObjectType::ObjectType(char *tag, char *sname, struct sprite *sprite_, 
+                       enum layer layer_)
+        : sprite(sprite_), layer(layer_), speed(0), required_action_points(0), 
+          max_hp(0), gifc(NULL), gifc_cap(0), pluralName(NULL)
 {
 	this->tag = strdup(tag);
         assert(this->tag);
@@ -98,6 +92,23 @@ ObjectType::~ObjectType()
 		free(name);
         if (gifc)
                 closure_unref(gifc);
+        if (pluralName)
+                free(pluralName);
+}
+
+void ObjectType::setPluralName(char *val)
+{
+        if (pluralName)
+                free(pluralName);
+        if (val)
+                pluralName=strdup(val);
+        else
+                pluralName=NULL;
+}
+
+char *ObjectType::getPluralName()
+{
+        return pluralName;
 }
 
 bool ObjectType::init(char *tag, char *name, enum layer layer,
@@ -146,7 +157,9 @@ void ObjectType::describe(int count)
 		else
 			log_continue("a ");
 		log_continue("%s", name);
-	} else {
+	} else if (getPluralName()) {
+                log_continue("some %s (%d)", getPluralName(), count);
+        } else {
                 if (endsWith(name, "s")
                     || endsWith(name, "sh"))
                         log_continue("some %ses (%d)", name, count);

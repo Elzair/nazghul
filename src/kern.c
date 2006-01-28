@@ -1388,14 +1388,36 @@ static pointer kern_mk_obj_type(scheme *sc, pointer args)
 {
         class ObjectType *type;
         char *tag = TAG_UNK, *name;
+        char *pluralName=NULL;
         enum layer layer;
         struct sprite *sprite;
         pointer ret;
         pointer gifc;
         int gifc_cap;
 
-        if (unpack(sc, &args, "yspddo", &tag, &name, &sprite, &layer, 
-                   &gifc_cap, &gifc)) {
+        /* unpack the tag */
+        if (unpack(sc, &args, "y", &tag)) {
+                load_err("kern-mk-obj-type %s: bad args (did you mean to use "\
+                         "kern-mk-obj instead?)", tag);
+                return sc->NIL;
+        }
+
+        /* probe the name to see if it is a list, if so then use the car as the
+         * name and the cadr as the pluralName */
+        if (scm_is_pair(sc, scm_car(sc, args))) {
+                pointer list = scm_car(sc, args);
+                args=scm_cdr(sc, args);
+                if (unpack(sc, &list, "ss", &name, &pluralName)) {
+                        load_err("kern-mk-obj-type %s: bad name arg", tag);
+                        return sc->NIL;
+                }
+        } else if (unpack(sc, &args, "s", &name)) {
+                load_err("kern-mk-obj-type %s: bad name arg", tag);
+                return sc->NIL;
+        }
+
+        /* continue unpacking the rest of the args */
+        if (unpack(sc, &args, "pddo", &sprite, &layer, &gifc_cap, &gifc)) {
                 load_err("kern-mk-obj-type %s: bad args (did you mean to use "\
                          "kern-mk-obj instead?)", tag);
                 return sc->NIL;
@@ -1408,6 +1430,10 @@ static pointer kern_mk_obj_type(scheme *sc, pointer args)
                 type->setGifc(closure_new(sc, gifc), gifc_cap);
         }
 
+        if (pluralName) {
+                type->setPluralName(pluralName);
+        }
+        
         session_add(Session, type, obj_type_dtor, NULL, NULL);
         ret = scm_mk_ptr(sc, type);
         scm_define(sc, tag, ret);

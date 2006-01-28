@@ -202,6 +202,8 @@ class ObjectType {
         closure_t *getGifc();
         void setGifc(closure_t *gifc, int cap);
 
+        void setPluralName(char *val);
+
       protected:
 	char *tag;
 	char *name;
@@ -214,6 +216,10 @@ class ObjectType {
         /* ghulscript-interface (gifc) */
         closure_t *gifc;
         int gifc_cap;
+
+ private:
+        char *pluralName;
+        char *getPluralName();
 };
 
 class Object {
