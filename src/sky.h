@@ -52,6 +52,7 @@ struct astral_body {
         int light;
         closure_t *gifc;
         struct gob *gob;
+        float eclipse;
 };
 
 struct sky {

@@ -82,6 +82,8 @@ static double SKY_WIN_OFFSET = -(double)SUNRISE_DEGREE * (double)SKY_WIN_SLOPE;
 
 #define DEGREES_TO_RADIANS(deg) (double)((deg) * 0.0174603)
 
+#define ASTRAL_BODY_ARC_WIDTH   ((double)SKY_SPRITE_W/(double)SKY_WIN_SLOPE)
+#define ECLIPSE_FACTOR 0.75
 
 //////////////////////////////////////////////////////////////////////////////
 //
@@ -239,6 +241,7 @@ struct astral_body *astral_body_new(char *tag, char *name, int n_phases)
         assert(body);
 
         list_init(&body->list);
+        body->eclipse = 1.0;
         body->n_phases = n_phases;
         body->phases = (struct phase*)calloc(body->n_phases, 
                                              sizeof(struct phase));
@@ -366,6 +369,224 @@ static void astral_body_advance_arc(struct astral_body *body)
                 mapSetDirty();
 }
 
+typedef struct {
+        struct list list;
+        int x, w, ref;
+} range_t;
+
+static void range_init(range_t *range)
+{
+        list_init(&range->list);
+        range->x=0;
+        range->w=0;
+        range->ref=0;
+}
+
+static range_t *range_new()
+{
+        range_t *range = (range_t*)malloc(sizeof(*range));
+        range_init(range);
+        range->ref++;
+        return range;
+}
+
+static void range_unref(range_t *range)
+{
+        assert(range->ref);
+        range->ref--;
+        if (!range->ref)
+                free(range);
+}
+
+static void range_set_value(range_t *range, int x, int w)
+{
+        range->x = x;
+        range->w = w;
+}
+
+static range_t * range_intersect(range_t *r1, range_t *r2)
+{
+        // Note: this assumes positive values all around, no modulo
+        range_t *out = NULL;
+        int edge, overlap;
+
+        if (r1->x >= r2->x) {
+                edge = r1->x - r1->w;
+                if (edge > r2->x) {
+                        // no overlap:
+                        //   r1---->
+                        // --|-----|-----|-----|
+                        //              r2---->
+                        return NULL;
+                }
+                // r1 overlaps onto r2:
+                //   r1---->
+                // --|--|##|-----|
+                //     r2------->
+                out = range_new();
+                overlap = r2->x - edge;
+                range_set_value(out, r2->x, overlap);
+                return out;
+        }
+
+        edge = r2->x - r2->w;
+        if (edge > r1->x) {
+                // no overlap:
+                //                r1---->
+                // -----|-----|----|----|
+                //     r2---->
+                //
+                return NULL;
+        }
+
+        // r2 overlaps onto r1:
+        //   r2---->
+        // --|--|##|-----|
+        //     r1------->
+        out = range_new();
+        overlap = r1->x - edge;
+        range_set_value(out, r1->x, overlap);
+        return out;
+}
+
+static range_t *range_merge(range_t *r1, range_t *r2)
+{
+        // Note: this assumes positive values all around, no modulo
+        range_t *out = NULL;
+        int edge, overlap;
+
+        if (r1->x >= r2->x) {
+                edge = r1->x - r1->w;
+                if (edge > r2->x) {
+                        // no overlap:
+                        //   r1---->
+                        // --|-----|-----|-----|
+                        //              r2---->
+                        return NULL;
+                }
+                // r1 overlaps onto r2:
+                //   r1---->
+                // --|##|##|#####|
+                //     r2------->
+                out = range_new();
+                overlap = r2->x - edge;
+                range_set_value(out, r1->x, r1->w + r2->w - overlap);
+                return out;
+        }
+
+        edge = r2->x - r2->w;
+        if (edge > r1->x) {
+                // no overlap:
+                //                r1---->
+                // -----|-----|----|----|
+                //     r2---->
+                //
+                return NULL;
+        }
+
+        // r2 overlaps onto r1:
+        //   r2---->
+        // --|##|##|#####|
+        //     r1------->
+        out = range_new();
+        overlap = r1->x - edge;
+        range_set_value(out, r2->x, r1->w + r2->w - overlap);
+        return out;
+}
+
+static void range_set_union(struct list *set, range_t *r1)
+{
+        struct list *elem;
+
+        if (!r1) {
+                dbg("none\n");
+                return;
+        }
+
+        dbg("[%d %d]\n", r1->x-360, r1->w);
+
+        elem = set->next;
+
+        while (elem != set) {
+                range_t *ru;
+                range_t *r2 = outcast(elem, range_t, list);
+                elem = elem->next;
+
+                ru = range_merge(r1, r2);
+                if (ru) {
+                        dbg("   merged: [%d %d] + [%d %d] = [%d %d]\n",
+                            r1->x-360, r1->w,  
+                           r2->x-360, r2->w, 
+                            ru->x-360, ru->w);
+                        range_unref(r1);
+                        list_remove(&r2->list);
+                        range_unref(r2);
+                        r1 = ru;
+                }
+        }
+        
+        list_add(set, &r1->list);
+
+}
+
+static int range_set_sum(struct list *set)
+{
+        struct list *elem;
+        int sum = 0;
+        list_for_each(set, elem) {
+                range_t *rr=outcast(elem, range_t, list);
+                sum+=rr->w;
+        }
+        return sum;
+}
+
+static void range_set_unref_elements(struct list *set)
+{
+        struct list *elem;
+
+        elem = set->next;
+        while (elem != set) {
+                range_t *range = outcast(elem, range_t, list);
+                elem = elem->next;
+                range_unref(range);
+        }
+}
+
+static void sky_get_eclipse(struct sky *sky, 
+                            struct astral_body *outer)
+{
+        struct astral_body *inner = NULL;
+        struct list *elem = outer->list.next;
+        struct list ranges;
+        range_t r1;
+        int eclipse_arc;
+
+        dbg(" sky_get_eclipse %s (%d)\n", outer->name, outer->arc);
+
+        outer->eclipse = 1.0;
+        list_init(&ranges);
+        range_set_value(&r1, outer->arc+360, (int)ASTRAL_BODY_ARC_WIDTH);
+
+        // Check each body listed after this one to see if it eclipses it.
+        while (elem != &sky->bodies) {
+
+                range_t r2;
+
+                inner = outcast(elem, struct astral_body,  list);
+                elem = elem->next;
+                
+                dbg("  check %s (%d)...", inner->name, inner->arc);
+
+                range_set_value(&r2, inner->arc+360,
+                                (int)ASTRAL_BODY_ARC_WIDTH);
+                range_set_union(&ranges, range_intersect(&r1, &r2));
+        }
+
+        eclipse_arc = range_set_sum(&ranges);
+        outer->eclipse = eclipse_arc/ASTRAL_BODY_ARC_WIDTH * ECLIPSE_FACTOR;
+        range_set_unref_elements(&ranges);
+}
+
 //////////////////////////////////////////////////////////////////////////////
 //
 // Public sky api
@@ -379,6 +600,8 @@ void sky_advance(struct sky *sky, int visible)
 
 	screenErase(&sky->screenRect);
 
+        dbg("sky_advance\n");
+
         list_for_each(&sky->bodies, elem) {
                 body = outcast(elem, struct astral_body, list);
                 astral_body_advance_arc(body);
@@ -386,6 +609,10 @@ void sky_advance(struct sky *sky, int visible)
                         continue;
                 sky_paint_astral_body(sky, body->arc, 
                                       body->phases[body->phase].sprite);
+
+                // Assume the bodies are listed in order from outermost to
+                // innermost; outer bodies will be eclipsed by inner ones
+                sky_get_eclipse(sky, body);
         }
 
 	screenUpdate(&sky->screenRect);
@@ -448,7 +675,7 @@ int sky_get_ambient_light(struct sky *sky)
 
         list_for_each(&sky->bodies, elem) {
                 body = outcast(elem, struct astral_body, list);
-                light += body->light;
+                light += (int)((float)body->light * (1.0 - body->eclipse));
         }
 
         return clamp(light, 0, MAX_AMBIENT_LIGHT);
