@@ -120,6 +120,22 @@ void ObjectType::setSprite(struct sprite *sprite)
 	this->sprite = sprite;        
 }
 
+static int endsWith(char *word, char *end)
+{
+        int wlen=strlen(word)-1;
+        int elen=strlen(end)-1;
+
+        if (wlen<elen)
+                return 0;
+        
+        while (elen>=0) {
+                if (word[wlen--]!=end[elen--])
+                        return 0;
+        }
+
+        return 1;
+}
+
 void ObjectType::describe(int count)
 {
 	char *name = getName();
@@ -131,7 +147,11 @@ void ObjectType::describe(int count)
 			log_continue("a ");
 		log_continue("%s", name);
 	} else {
-		log_continue("some %ss (%d)", name, count);
+                if (endsWith(name, "s")
+                    || endsWith(name, "sh"))
+                        log_continue("some %ses (%d)", name, count);
+                else
+                        log_continue("some %ss (%d)", name, count);
 	}
 }
 
