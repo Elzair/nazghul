@@ -198,9 +198,9 @@
 ;;----------------------------------------------------------------------------
 (mk-moon 'lumis  ; tag
          "Lumis" ; name
-         2       ; hours per phase
-         24      ; hours per revolution
-         90      ; initial arc
+         5       ; hours per phase
+         60      ; hours per revolution
+         22      ; initial arc
          0       ; initial phase
          'source-moon-ifc ; ifc
          ;; gates (moons are fixed at 8 phases in mk-moon):
@@ -216,10 +216,10 @@
 ;;----------------------------------------------------------------------------
 (mk-moon 'ord    ; tag
          "Ord"   ; name
-         1       ; hours per phase
-         12      ; hours per revolution
-         180     ; initial arc
-         1       ; initial phase
+         9       ; hours per phase
+         36      ; hours per revolution
+         67     ; initial arc
+         7       ; initial phase
          nil     ; ifc
          ;; gates (moons are fixed at 8 phases in mk-moon):
          (list 'mg-1 'mg-2 'mg-3 'mg-4
