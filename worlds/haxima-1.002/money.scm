@@ -17,4 +17,4 @@
                                             (kern-obj-get-count kobj)))
                       (kern-obj-dec-ref kobj)))))
 
-(mk-obj-type 't_gold_coins "gold coins" s_gold_coins layer-item money-ifc)
+(mk-obj-type 't_gold_coins "gold coin" s_gold_coins layer-item money-ifc)
