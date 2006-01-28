@@ -806,19 +806,19 @@
 (define (push kobj dx dy dist)
   (let* ((loc (loc-sum (kern-obj-get-location kobj)
                        (mk-loc nil dx dy))))
-    (if (kern-place-is-passable loc kobj)
+    (if (and (kern-place-is-passable loc kobj)
+             (not (occupied? loc)))
         (begin 
           (kern-obj-relocate kobj loc nil)
           #t)
         #f)))
 
 (define (stagger kchar)
-  ;;;(display "stagger")(newline)
   (let ((vdir (random-select (list (cons -1 0) 
                                    (cons 1 0) 
                                    (cons 0 -1) 
                                    (cons 0 1)))))
-  (push kchar (car vdir) (cdr vdir) 1)))
+    (push kchar (car vdir) (cdr vdir) 1)))
 
 (define (end-turn kobj)(kern-obj-set-ap kobj 0))
 
