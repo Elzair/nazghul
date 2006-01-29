@@ -33,7 +33,7 @@
 (define (shroom-trade knpc kpc)
   (if (not (string=? "working" (kern-obj-get-activity knpc)))
       (say knpc "Yes, I trade in mushrooms and the like. "
-           "Come by my shop in the northeast corner of time when I'm open.")
+           "Come by my shop in the northeast corner when I'm open.")
       (begin
         (say knpc "Are ye interested in mushrooms or other reagents?")
         (if (not (kern-conv-get-yes-no? kpc))
