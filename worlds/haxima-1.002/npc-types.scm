@@ -503,8 +503,8 @@
         ))
 (define troll-loot
   (list (list 100 "1d3-1" 't_thrown_boulder)
-        (list 25  "1d3" 't_food)
-        (list 100 "2d10" t_gold_coins)
+        (list 25  "1d3"   't_food)
+        (list 100 "2d10"  't_gold_coins)
         ))
 (define geomancer-loot
   (list (list 50  "1d3"   't_gem)
