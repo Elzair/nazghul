@@ -575,13 +575,13 @@
 ;; npc types
 ;;      scheme variable                 name                       species          occup.     sprite             chest traps  equipment              effects       ai               faction
 ;;      ======================          ========================== ================ ========== ================== ============ ====================== ============= ==============   ========
-(define forest-goblin-shaman  (mk-npct2 "forest goblin shaman"  sp_forest_goblin oc_wizard  s_orc  wizard-traps wizard-equip  nil 'shaman-ai  faction-forest-goblin nil 'drop-generic wizard-loot ))
-(define forest-goblin-hunter  (mk-npct2 "forest goblin hunter"  sp_forest_goblin oc_warrior s_orc  basic-traps  archer-equip  nil 'generic-ai faction-forest-goblin nil 'drop-generic archer-loot ))
-(define forest-goblin-stalker (mk-npct2 "forest goblin stalker" sp_forest_goblin oc_warrior s_orc  basic-traps  stalker-equip nil 'generic-ai faction-forest-goblin nil 'drop-generic stalker-loot))
+(define forest-goblin-shaman  (mk-npct2 "forest goblin shaman"  sp_forest_goblin oc_wizard  s_fgob_shaman wizard-traps wizard-equip  nil 'shaman-ai  faction-forest-goblin nil 'drop-generic wizard-loot ))
+(define forest-goblin-hunter  (mk-npct2 "forest goblin hunter"  sp_forest_goblin oc_warrior s_fgob_archer  basic-traps  archer-equip  nil 'generic-ai faction-forest-goblin nil 'drop-generic archer-loot ))
+(define forest-goblin-stalker (mk-npct2 "forest goblin stalker" sp_forest_goblin oc_warrior s_fgob_stalker  basic-traps  stalker-equip nil 'generic-ai faction-forest-goblin nil 'drop-generic stalker-loot))
 
-(define cave-goblin-slinger   (mk-npct2 "cave goblin slinger"   sp_cave_goblin  oc_warrior s_orc    basic-traps  slinger-equip    nil 'generic-ai faction-cave-goblin  nil 'drop-generic slinger-loot))
-(define cave-goblin-berserker (mk-npct2 "cave goblin berserker" sp_cave_goblin  oc_warrior s_orc    basic-traps  berserker-equip  nil 'generic-ai faction-cave-goblin  nil 'drop-generic berserker-loot))
-(define cave-goblin-priest    (mk-npct2 "cave goblin priest"    sp_cave_goblin  oc_wizard  s_orc    wizard-traps wizard-equip     nil 'priest-ai  faction-cave-goblin  nil 'drop-generic wizard-loot))
+(define cave-goblin-slinger   (mk-npct2 "cave goblin slinger"   sp_cave_goblin  oc_warrior s_cgob_slinger    basic-traps  slinger-equip    nil 'generic-ai faction-cave-goblin  nil 'drop-generic slinger-loot))
+(define cave-goblin-berserker (mk-npct2 "cave goblin berserker" sp_cave_goblin  oc_warrior s_cgob_berserk    basic-traps  berserker-equip  nil 'generic-ai faction-cave-goblin  nil 'drop-generic berserker-loot))
+(define cave-goblin-priest    (mk-npct2 "cave goblin priest"    sp_cave_goblin  oc_wizard  s_cgob_shaman    wizard-traps wizard-equip     nil 'priest-ai  faction-cave-goblin  nil 'drop-generic wizard-loot))
 
 (define ranger                (mk-npct2 "ranger"                sp_human        oc_warrior s_ranger basic-traps  ranger-equip     nil 'ranger-ai  faction-men  'ranger-conv 'drop-generic ranger-loot))
 

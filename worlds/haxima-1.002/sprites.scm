@@ -386,6 +386,16 @@
 (mk-sprite 's_runestone_z 25)
 (mk-sprite 's_runestone_ankh 31)
 
+(kern-mk-sprite 's_fgob_stalker ss_newmonst  4 0 #f 0 )
+(kern-mk-sprite 's_fgob_archer ss_newmonst   4 8 #f 0 )
+(kern-mk-sprite 's_fgob_civilian ss_newmonst 4 16 #f 0 )
+(kern-mk-sprite 's_fgob_shaman ss_newmonst   4 24 #f 0 )
+(kern-mk-sprite 's_cgob_berserk ss_newmonst  4 4 #f 0 )
+(kern-mk-sprite 's_cgob_slinger ss_newmonst  4 12 #f 0 )
+(kern-mk-sprite 's_cgob_civilian ss_newmonst 4 20 #f 0 )
+(kern-mk-sprite 's_cgob_shaman ss_newmonst   4 28 #f 0 )
+
+
 ;; convenient alia
 (define s_shepherd s_companion_shepherd)
 (define s_ranger s_companion_ranger)

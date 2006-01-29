@@ -146,7 +146,7 @@
      "Kama"             ; name
      kama-species         ; species
      kama-occ              ; occ
-     s_orc     ; sprite
+     s_fgob_civilian  ; sprite
      faction-men      ; starting alignment
      2 0 10            ; str/int/dex
      pc-hp-off  ; hp bonus
