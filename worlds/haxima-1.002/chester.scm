@@ -83,7 +83,7 @@
                          (list t_iron_helm      150)
                          (list t_armor_leather  150)
                          (list t_armor_chain    330)
-                         (list t_armor_plate    660)
+                         (list t_armor_plate    1000)
                          )
         (say knpc "Now go bash some skulls! And come back when you need "
              "an upgrade!"))))
