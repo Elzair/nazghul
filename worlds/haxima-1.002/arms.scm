@@ -267,9 +267,9 @@
    (list   't_armor_leather_2 "+2 leather armor" s_leather_armor   "0"      "1d4+2"  slot-armor    2)
    (list   't_armor_leather_4 "+4 leather armor" s_leather_armor   "0"      "1d4+4"  slot-armor    2)
    (list   't_armor_chain    "chain armor"     s_chain_armor       "-2"     "2d4"    slot-armor    4)
-   (list   't_armor_chain_4  "+4 chain armor"  s_chain_armor       "0"      "1d6+4"  slot-armor    4)
+   (list   't_armor_chain_4  "+4 chain armor"  s_chain_armor       "0"      "2d4+4"  slot-armor    4)
    (list   't_armor_plate    "plate armor"     s_plate_armor       "-4"     "4d4"    slot-armor    8)
-   (list   't_armor_plate_4  "+4 plate armor"  s_plate_armor       "0"      "1d8+4"  slot-armor    8)
+   (list   't_armor_plate_4  "+4 plate armor"  s_plate_armor       "0"      "4d4+4"  slot-armor    8)
    ))
 
 (kern-mk-sprite 's_shield            ss_arms 1 54 #f 0)
