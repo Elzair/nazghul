@@ -72,23 +72,29 @@
 ;; cave.
 ;;----------------------------------------------------------------------------
 (define (roland-join knpc kpc)
-  (if (roland-joined? knpc)
+  (if (is-player-party-member? knpc)
       (say knpc "Yes, I am still with you. Lead on!")
-      (if (roland-is-or-can-be-free? knpc)
-          ;; yes - will the player accept his continued allegiance to
-          ;; Froederick?
+      (if (roland-joined? knpc)
           (begin
-            (say knpc "I thank you for freeing me! I owe you my life, and will gladly join you. What say you?")
-            (if (yes? kpc)
-                (begin
-                  (say knpc "I am honored! Those vile rogues took my "
-                       "iron chest which contains my equipment. It should be "
-                       "around here somewhere.")
-                  (roland-join-player knpc))
-                (say knpc "[sadly] As you will.")))
-          (say knpc "I am locked in this cell! Free me from this dishonour, "
-               "and you will gain an ally.")
-          )))
+            (say knpc "I am honored to rejoin you.")
+            (join-player knpc)
+            (kern-conv-end)
+            )
+          (if (roland-is-or-can-be-free? knpc)
+              ;; yes - will the player accept his continued allegiance to
+              ;; Froederick?
+              (begin
+                (say knpc "I thank you for freeing me! I owe you my life, and will gladly join you. What say you?")
+                (if (yes? kpc)
+                    (begin
+                      (say knpc "I am honored! Those vile rogues took my "
+                           "iron chest which contains my equipment. It should be "
+                           "around here somewhere.")
+                      (roland-join-player knpc))
+                    (say knpc "[sadly] As you will.")))
+              (say knpc "I am locked in this cell! Free me from this dishonour, "
+                   "and you will gain an ally.")
+              ))))
   
 (define roland-conv
   (ifc basic-conv
