@@ -20,3 +20,4 @@
 (kern-mk-sprite-set 'ss_signs            32 32    1  8   0 0  "signs.png")
 (kern-mk-sprite-set 'ss_runestones       32 32    4  8   0 0  "runestones.png")
 (kern-mk-sprite-set 'ss_newmonst         32 32   16  8   0 0  "newmonst.png") 
+(kern-mk-sprite-set 'ss_newfolks         32 32   16  8   0 0  "newfolks.png")

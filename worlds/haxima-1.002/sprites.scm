@@ -49,17 +49,6 @@
 (kern-mk-sprite 's_ruin          ss_u4_shapes 1 29 #f 0 )
 (kern-mk-sprite 's_shrine        ss_u4_shapes 1 30 #f 0 )
 
-(kern-mk-sprite 's_avatar             ss_u4_shapes 1 31 #f 0 )
-(kern-mk-sprite 's_companion_wizard   ss_u4_shapes 2 32 #f 0 )
-(kern-mk-sprite 's_companion_bard     ss_u4_shapes 2 34 #f 0 )
-(kern-mk-sprite 's_companion_fighter  ss_u4_shapes 2 36 #f 0 )
-(kern-mk-sprite 's_companion_druid    ss_u4_shapes 2 38 #f 0 )
-(kern-mk-sprite 's_companion_tinker   ss_u4_shapes 2 40 #f 0 )
-(kern-mk-sprite 's_companion_paladin  ss_u4_shapes 2 42 #f 0 )
-(kern-mk-sprite 's_companion_ranger   ss_u4_shapes 2 44 #f 0 )
-(kern-mk-sprite 's_companion_shepherd ss_u4_shapes 2 46 #f 0 )
-
-
 (kern-mk-sprite 's_pillar      ss_u4_shapes 1 48 #f 0 )
 (kern-mk-sprite 's_wall_b      ss_u4_shapes 1 49 #f 0 )
 (kern-mk-sprite 's_wall_a      ss_u4_shapes 1 50 #f 0 )
@@ -326,7 +315,6 @@
 (kern-mk-sprite 's_trail_e  ss_addon 1 90 #f 0 )
 (kern-mk-sprite 's_trail_f  ss_addon 1 91 #f 0 )
 (kern-mk-sprite 's_townswoman ss_addon 2 92 #f 0)
-(kern-mk-sprite 's_wanderer ss_addon 2 94 #f 0)
 (kern-mk-sprite 's_fat_townswoman ss_addon 2 97 #f 0)
 (kern-mk-sprite 's_lady ss_addon 2 99 #f 0)
 (kern-mk-sprite 's_doorway ss_addon 1 101 #f 0)
@@ -395,9 +383,32 @@
 (kern-mk-sprite 's_cgob_civilian ss_newmonst 4 20 #f 0 )
 (kern-mk-sprite 's_cgob_shaman ss_newmonst   4 28 #f 0 )
 
+;;----------------------------------------------------------------------------
+;;;; (kern-mk-sprite 's_wanderer ss_addon 2 94 #f 0)
+;;;; (kern-mk-sprite 's_avatar             ss_u4_shapes 1 31 #f 0 )
+;;;; (kern-mk-sprite 's_companion_wizard   ss_u4_shapes 2 32 #f 0 )
+;;;; (kern-mk-sprite 's_companion_bard     ss_u4_shapes 2 34 #f 0 )
+;;;; (kern-mk-sprite 's_companion_fighter  ss_u4_shapes 2 36 #f 0 )
+;;;; (kern-mk-sprite 's_companion_druid    ss_u4_shapes 2 38 #f 0 )
+;;;; (kern-mk-sprite 's_companion_tinker   ss_u4_shapes 2 40 #f 0 )
+;;;; (kern-mk-sprite 's_companion_paladin  ss_u4_shapes 2 42 #f 0 )
+;;;; (kern-mk-sprite 's_companion_ranger   ss_u4_shapes 2 44 #f 0 )
+;;;; (kern-mk-sprite 's_companion_shepherd ss_u4_shapes 2 46 #f 0 )
+
+(kern-mk-sprite 's_wanderer ss_newfolks 4 0 #f 0 )
+(kern-mk-sprite 's_avatar ss_newfolks 4 4 #f 0 )
+(kern-mk-sprite 's_companion_wizard ss_newfolks 4 8 #f 0 )
+(kern-mk-sprite 's_companion_bard ss_newfolks 4 12 #f 0 )
+(kern-mk-sprite 's_companion_fighter ss_newfolks 4 16 #f 0 )
+(kern-mk-sprite 's_companion_druid ss_newfolks 4 20 #f 0 )
+(kern-mk-sprite 's_companion_tinker ss_newfolks 4 24 #f 0 )
+(kern-mk-sprite 's_companion_paladin ss_newfolks 4 28 #f 0 )
+(kern-mk-sprite 's_companion_ranger ss_newfolks 4 32 #f 0 )
+(kern-mk-sprite 's_companion_shepherd ss_newfolks 4 36 #f 0 )
 
 ;; convenient alia
 (define s_shepherd s_companion_shepherd)
 (define s_ranger s_companion_ranger)
 (define s_blue_wizard s_companion_wizard)
 (define s_fighter s_companion_fighter)
+
