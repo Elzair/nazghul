@@ -99,8 +99,8 @@ void foogodRepaint(void)
 	screenPrint(&Foogod.goldRect, SP_RIGHTJUSTIFIED, "Gold: %d",  player_party->gold);
 	screenPrint(&Foogod.combatRect, SP_RIGHTJUSTIFIED, "Combat: %c", combatGetState());
 
-	if (player_party->vehicle) {
-		screenPrint(&Foogod.hullRect, 0, "Hull: %d", player_party->vehicle->getHp());
+	if (player_party->getVehicle()) {
+		screenPrint(&Foogod.hullRect, 0, "Hull: %d", player_party->getVehicle()->getHp());
 	}
 
         screenPrint(&Foogod.effectsRect, 0, "Eff: %s%s%s%s"

@@ -110,7 +110,7 @@ static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
                 cmdFire();
                 break;
         case 'g':
-                cmdGet(party, true);
+                cmdGet(party);
                 break;
         case 'h':
                 // SAM: Adding (H)andle command...
@@ -736,7 +736,6 @@ static void ctrl_move_character(class Character *character, int dir)
 
         log_continue("%s: %s - %s", character->getName(), dirstr, result);
         log_end("");
-
 }
 
 static int ctrl_character_key_handler(struct KeyHandler *kh, int key, 
@@ -744,6 +743,7 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
 {
         extern int G_latency_start;
         int dir;
+
         class Character *character = (class Character *) kh->data;
         class Object *portal;
         class Character *solo_member;
@@ -921,9 +921,7 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
 
 
         case 'g':
-                cmdGet(character, 
-                       !place_contains_hostiles(character->getPlace(), 
-                                                character));
+                cmdGet(character);
                 break;
         case 'h':
                 cmdHandle(character);
@@ -1031,6 +1029,7 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
         }
 
         Session->subject = NULL;
+
         return character->isTurnEnded();
 }
 
@@ -1369,7 +1368,6 @@ void ctrl_character_ai(class Character *character)
 void ctrl_character_ui(class Character *character)
 {
         struct KeyHandler kh;
-
         /* Setup cmdwin prompt for first entry to the control loop */
         cmdwin_clear();
         cmdwin_print("%s:", character->getName());
@@ -1382,7 +1380,7 @@ void ctrl_character_ui(class Character *character)
         G_turnaround = SDL_GetTicks() - G_turnaround_start;
         eventHandle();
         G_turnaround_start = SDL_GetTicks();
-        eventPopKeyHandler();
+        eventPopKeyHandler();        
         mapUpdate(REPAINT_IF_DIRTY);
 }
 

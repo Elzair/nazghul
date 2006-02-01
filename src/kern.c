@@ -2156,7 +2156,7 @@ KERN_API_CALL(kern_mk_player)
         /* Board the vehicle */
 
         if (vehicle) {
-                player_party->vehicle = vehicle;
+                player_party->setVehicle(vehicle);
                 vehicle->occupant = player_party;
 
                 /* bugfix: party unrefs vehicle when it disembarks; needs to
@@ -5771,6 +5771,21 @@ KERN_API_CALL(kern_party_set_vehicle)
         return scm_mk_ptr(sc, party);
 }
 
+KERN_API_CALL(kern_party_get_vehicle)
+{
+        class Party *party;
+        class Vehicle *vehicle;
+
+        party = (Party*)unpack_obj(sc, &args, "kern-party-get-vehicle");
+        if (!party)
+                return sc->NIL;
+
+        vehicle = party->getVehicle();
+        if (vehicle)
+                return scm_mk_ptr(sc, vehicle);
+        return sc->NIL;
+}
+
 static bool wrap_kern_append_obj(class Character *c, void *v)
 {
         kern_append_object(c, v);
@@ -7284,6 +7299,7 @@ scheme *kern_init(void)
         /* kern-party-api */
         API_DECL(sc, "kern-party-add-member", kern_party_add_member);
         API_DECL(sc, "kern-party-get-members", kern_party_get_members);
+        API_DECL(sc, "kern-party-get-vehicle", kern_party_get_vehicle);
         API_DECL(sc, "kern-party-set-vehicle", kern_party_set_vehicle);
 
         /* Revisit: probably want to provide some kind of custom port here. */

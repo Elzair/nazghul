@@ -408,7 +408,8 @@ void Character::groupExitTo(struct place *dest_place, int dest_x, int dest_y,
         // of the place we're leaving.
         // --------------------------------------------------------------------
 
-        if (party->vehicle 
+        class Vehicle *vehicle = party->getVehicle();
+        if (vehicle 
             && (! place_is_wilderness(dest_place)
                 || ! place_is_passable(dest_place, dest_x, dest_y,
                                        party, 0))) {
@@ -418,11 +419,11 @@ void Character::groupExitTo(struct place *dest_place, int dest_x, int dest_y,
 
                 dbg("disembarking");
 
-                party->vehicle->occupant = 0;
-                party->vehicle->relocate(getPlace()->location.place,
+                vehicle->occupant = 0;
+                vehicle->relocate(getPlace()->location.place,
                                          getPlace()->location.x,
                                          getPlace()->location.y);
-                party->vehicle = NULL;
+                vehicle = NULL;
         }
                                        
 
@@ -1911,17 +1912,18 @@ void Character::exec()
                 // When guarding is over the guard will wake up the party.
                 // -----------------------------------------------------------
 
+                class Vehicle *vehicle = player_party->getVehicle();
                 if (clock_alarm_is_expired(&rest_alarm)) {
                         if (isPlayerControlled() &&
-                            player_party->vehicle &&
-                            player_party->vehicle->getHp() < 
-                            player_party->vehicle->getMaxHp()) {
-                                player_party->vehicle->heal(
-                                        player_party->vehicle->getMaxHp() / 
+                            vehicle &&
+                            vehicle->getHp() < 
+                            vehicle->getMaxHp()) {
+                                vehicle->heal(
+                                        vehicle->getMaxHp() / 
                                         10);
                                 foogodRepaint();
                                 consolePrint("%s repairs ", getName());
-                                player_party->vehicle->describe();
+                                vehicle->describe();
                                 consoleNewline();
                         }
                         clock_alarm_set(&rest_alarm, 60);

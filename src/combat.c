@@ -790,7 +790,7 @@ static int combat_position_enemy(class Party * foe, int dx, int dy,
         if (!foe->pinfo.formation)
                 foe->pinfo.formation = formation_get_default();
 
-        Combat.enemy_vehicle = foe->vehicle;
+        Combat.enemy_vehicle = foe->getVehicle();
 
         /* Bugfix SF1412060 "NPC attacks while on (but not aboard) ship" */
         if (! Combat.enemy_vehicle) {
@@ -1381,10 +1381,11 @@ static bool position_player_party(struct combat_info *cinfo)
 
         // Check for map overlays. First check if the player is in a vehicle
         // with a map.
-        if (player_party->vehicle &&
-            player_party->vehicle->getObjectType()->map &&
+        vehicle = player_party->getVehicle();
+        if (vehicle &&
+            vehicle->getObjectType()->map &&
             Place == Combat.place) {
-                combat_overlay_map(player_party->vehicle->getObjectType()->map,
+                combat_overlay_map(vehicle->getObjectType()->map,
                                    &player_party->pinfo,
                                    cinfo->move->npc_party != NULL);
         }

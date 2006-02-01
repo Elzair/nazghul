@@ -29,7 +29,7 @@
 #include <fcntl.h>
 
 #ifndef DEBUG_KEYS
-# define DEBUG_KEYS 1
+# define DEBUG_KEYS 0
 #endif
 
 #define EVENT_NONBLOCK   (1 << 0)
@@ -170,13 +170,13 @@ static void event_handle_aux(int flags)
 	bool done = false;
         bool use_hook = false;
 
+        int ticks=SDL_GetTicks();
 	while (!done) {
 
 		SDL_Event event;
-
-		if (!wait_event(&event, flags))
+		if (!wait_event(&event, flags)) {
                         return;
-
+                }
 		if (record_events)
 			record_event(&event);
 
@@ -193,8 +193,7 @@ static void event_handle_aux(int flags)
                                                 done = true;
                                         }
                                 }
-
-
+                                
 			}
 			break;
 
@@ -202,7 +201,6 @@ static void event_handle_aux(int flags)
 			{
 				struct KeyHandler *keyh;
                                 int mapped_key;
-
 				keyh = getHandler(&KeyHandlers, 
                                                   struct KeyHandler);
                                 mapped_key = mapKey(&event.key.keysym);
@@ -246,7 +244,9 @@ static void event_handle_aux(int flags)
 
 		if (use_hook && eventHook)
 			eventHook();
+
 	}
+
 }
 
 int eventInit(void)

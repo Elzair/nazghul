@@ -1634,8 +1634,8 @@ static int place_timed_obj_exec(Object *obj)
 {
         int time = SDL_GetTicks();
         obj->exec();
-        if (obj->isPlayerControlled())
-                return 0;
+/*         if (obj->isPlayerControlled()) */
+/*                 return 0; */
         return SDL_GetTicks() - time;
         
 }
@@ -1686,17 +1686,21 @@ void place_exec(struct place *place)
                 } else {
                         /* 'run' the object */
                         int t = place_timed_obj_exec(obj);
+                        //printf("%s: %d ticks\n", obj->getName(), t);
                         times += t;
 
                         /* Apply terrain, field and any other environmental
                          * effects. */
                         if (obj->isOnMap()
                             && null_layer != obj->getLayer()
-                                )
+                                ) {
                                 /* Bugfix: as a result of executing its turn,
                                  * the object may now be in a different
                                  * place! */
+                                t = SDL_GetTicks();
                                 place_apply_tile_effects(obj->getPlace(), obj);
+                                times += (SDL_GetTicks() - t);
+                        }
                 }
 
                 /* Check if the object was destroyed. */

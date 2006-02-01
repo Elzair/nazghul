@@ -1020,3 +1020,8 @@ void Party::setVehicle(class Vehicle *val)
                 obj_inc_ref(val);
         }
 }
+
+class Vehicle *Party::getVehicle()
+{
+        return vehicle;
+}

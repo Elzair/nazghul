@@ -82,13 +82,14 @@ class Party:public Being {
 	bool attack_with_ordnance(int d);
 	bool gotoSpot(int x, int y);
         void setVehicle(class Vehicle *vehicle);
+        class Vehicle *getVehicle();
 
 	struct node members; // Linked list of party members
 
 	struct position_info pinfo;
-	class Vehicle *vehicle;
 
       protected:
+	class Vehicle *vehicle;
 	int size;
 	bool loitering;
 	struct formation *formation;

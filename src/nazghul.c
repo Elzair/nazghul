@@ -105,7 +105,6 @@ static void print_usage(void)
 static void parse_args(int argc, char **argv)
 {
 	int c = 0;
-	char *tmp;
 
 	TickMilliseconds = MS_PER_TICK;
 	AnimationTicks = ANIMATION_TICKS;

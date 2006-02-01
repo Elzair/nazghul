@@ -718,7 +718,7 @@ static int cmdGetFilter(class Object *obj)
                      obj->getObjectType()->canGet());
 }
 
-bool cmdGet(class Object *actor, bool scoop_all)
+bool cmdGet(class Object *actor)
 {
 	class Object *item;
 	int dir;
@@ -743,14 +743,10 @@ bool cmdGet(class Object *actor, bool scoop_all)
                
         log_begin_group();
 
-        item->getObjectType()->get(item, actor);
-
-	if (scoop_all) {
-		while (NULL != (item = place_get_filtered_object(
-                                        actor->getPlace(), 
-                                        x, y, cmdGetFilter))) {
-                        item->getObjectType()->get(item, actor);
-		}
+        while (NULL != (item = place_get_filtered_object(
+                                actor->getPlace(), 
+                                x, y, cmdGetFilter))) {
+                item->getObjectType()->get(item, actor);
 	}
 
         log_end_group();
@@ -1064,8 +1060,9 @@ void cmdFire(void)
 	cmdwin_clear();
 	cmdwin_print("Fire");
 
-	if ((!player_party->vehicle ||
-             !player_party->vehicle->getOrdnance())) {
+        class Vehicle *vehicle = player_party->getVehicle();
+	if ((!vehicle ||
+             !vehicle->getOrdnance())) {
                 // SAM: 
                 // In future, we may check for adjacent "cannon" 
                 // mechanisms here (as in U5).
@@ -1075,7 +1072,7 @@ void cmdFire(void)
 	}
 
 	cmdwin_print(" %s-<direction>", 
-                     player_party->vehicle->getOrdnance()->getName());
+                     vehicle->getOrdnance()->getName());
 	getkey(&dir, dirkey);
 	cmdwin_backspace(strlen("<direction>"));
 
@@ -1086,7 +1083,7 @@ void cmdFire(void)
 
 	cmdwin_print("%s", directionToString(dir));
         log_begin("Fire: %s - ", directionToString(dir));
-	if (! player_party->vehicle->fire_weapon(directionToDx(dir), 
+	if (! vehicle->fire_weapon(directionToDx(dir), 
                                                  directionToDy(dir), 
                                                  player_party)) {
 		cmdwin_print("-Not a broadside!");
@@ -2588,9 +2585,9 @@ bool cmdAT (class Character * pc)
 
         } // open air, under the sky
 
-        if (player_party->vehicle) {
+        if (player_party->getVehicle()) {
                 log_msg("%s is %s a %s.", 
-                        who, "using", player_party->vehicle->getName() );
+                        who, "using", player_party->getVehicle()->getName() );
                 // SAM:
                 // In future, we shall want GhulScript to specify 
                 // whether one is to be

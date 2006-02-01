@@ -499,11 +499,11 @@ static void range_set_union(struct list *set, range_t *r1)
         struct list *elem;
 
         if (!r1) {
-                dbg("none\n");
+                //dbg("none\n");
                 return;
         }
 
-        dbg("[%d %d]\n", r1->x-360, r1->w);
+        //dbg("[%d %d]\n", r1->x-360, r1->w);
 
         elem = set->next;
 
@@ -514,10 +514,10 @@ static void range_set_union(struct list *set, range_t *r1)
 
                 ru = range_merge(r1, r2);
                 if (ru) {
-                        dbg("   merged: [%d %d] + [%d %d] = [%d %d]\n",
-                            r1->x-360, r1->w,  
-                           r2->x-360, r2->w, 
-                            ru->x-360, ru->w);
+/*                         dbg("   merged: [%d %d] + [%d %d] = [%d %d]\n", */
+/*                             r1->x-360, r1->w,   */
+/*                            r2->x-360, r2->w,  */
+/*                             ru->x-360, ru->w); */
                         range_unref(r1);
                         list_remove(&r2->list);
                         range_unref(r2);
@@ -561,7 +561,7 @@ static void sky_get_eclipse(struct sky *sky,
         range_t r1;
         int eclipse_arc;
 
-        dbg(" sky_get_eclipse %s (%d)\n", outer->name, outer->arc);
+        //dbg(" sky_get_eclipse %s (%d)\n", outer->name, outer->arc);
 
         outer->eclipse = 1.0;
         list_init(&ranges);
@@ -575,7 +575,7 @@ static void sky_get_eclipse(struct sky *sky,
                 inner = outcast(elem, struct astral_body,  list);
                 elem = elem->next;
                 
-                dbg("  check %s (%d)...", inner->name, inner->arc);
+                //dbg("  check %s (%d)...", inner->name, inner->arc);
 
                 range_set_value(&r2, inner->arc+360,
                                 (int)ASTRAL_BODY_ARC_WIDTH);
@@ -600,8 +600,7 @@ void sky_advance(struct sky *sky, int visible)
 
 	screenErase(&sky->screenRect);
 
-        dbg("sky_advance\n");
-
+        //dbg("sky_advance\n");
         list_for_each(&sky->bodies, elem) {
                 body = outcast(elem, struct astral_body, list);
                 astral_body_advance_arc(body);

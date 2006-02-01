@@ -224,7 +224,7 @@ static void play_loop(void)
                 dec_time_stop(session_ticks_per_turn());
 
                 if (! TimeStop) {
-
+                        
                         dec_reveal(session_ticks_per_turn());
                         dec_quicken(session_ticks_per_turn());
                         dec_magic_negated(session_ticks_per_turn());

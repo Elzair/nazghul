@@ -73,7 +73,7 @@ extern bool cmdZtats(class Character * pc);
 extern bool cmdXamine (class Object *examiner);
 extern bool cmdYuse(class Character *pc);
 extern bool cmdAT(class Character * pc);
-extern bool cmdGet(class Object *actor, bool scoop_all);
+extern bool cmdGet(class Object *actor);
 extern bool cmdOpen(class Character * pc);
 extern bool cmdCastSpell(class Character * pc);
 extern bool cmdQuit(void);
