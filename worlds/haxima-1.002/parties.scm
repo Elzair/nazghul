@@ -269,21 +269,21 @@
             ))
 
 (define nixie-party-l3
-  (ptype-mk "school of nixies" s_nixie faction-monster 3 5
+  (ptype-mk "school of nixies with kraken" s_kraken faction-monster 3 5
             (pgroup-mk 'nixie-swordsman "1d2")
             (pgroup-mk 'nixie-spearman "1d2")
             (pgroup-mk 'kraken "1")
             ))
 
 (define nixie-party-l4
-  (ptype-mk "school of nixies" s_nixie faction-monster 3 5
+  (ptype-mk "school of nixies with kraken" s_kraken faction-monster 3 5
             (pgroup-mk 'nixie-swordsman "1d2")
             (pgroup-mk 'nixie-spearman "1d2")
             (pgroup-mk 'kraken "1")
             ))
 
 (define nixie-party-l5
-  (ptype-mk "school of nixies" s_nixie faction-monster 4 5
+  (ptype-mk "school of nixies with sea serpent" s_sea_serpent faction-monster 4 5
             (pgroup-mk 'nixie-swordsman "1d2")
             (pgroup-mk 'nixie-spearman "1d2")
             (pgroup-mk 'sea-serpent "1")

@@ -54,7 +54,7 @@
    "IMPORTANT"
    ""
    "It is most critical that you FIND ME. "
-   "The goodman who cares for this shrine can "
+   "The peasant who cares for this shrine can "
    "point the way. Beware."
    ""
    "--Enchanter\n"

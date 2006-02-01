@@ -68,7 +68,7 @@
   (if (yes? kpc)
       (say knpc "Be thou certain, Keeper. The Gate will not open without them all.")
       (say knpc "Find them. One honorable man will save an Age from disgrace, "
-           "thou perhaps not himself.")))
+           "though perhaps not himself.")))
 
 
 (define lux-conv
