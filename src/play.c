@@ -296,10 +296,6 @@ int playRun(void)
                 log_end("error!");
 		return -1;
 	}
-        if (! Place) {
-                log_end("error!");
-                return -1;
-        }
         log_end("ok!");
         log_begin_group();
         log_msg("*********************************");
@@ -308,12 +304,17 @@ int playRun(void)
         log_end_group();
         log_msg("'?' for help.");
 
-        // Run the optional startup script.
-        session_run_start_proc(Session);
-
         // Bugfix: sun & moon not shown until player takes a step
         sky_advance(&Session->sky, 
                     NULL != Place && ! Place->underground);
+
+        // Run the optional startup script.
+        session_run_start_proc(Session);
+
+        if (! Place) {
+                log_msg("Error: no starting place!");
+                return -1;
+        }
 
         mapUpdate(REPAINT_IF_DIRTY);
 

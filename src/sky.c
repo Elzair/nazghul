@@ -241,7 +241,7 @@ struct astral_body *astral_body_new(char *tag, char *name, int n_phases)
         assert(body);
 
         list_init(&body->list);
-        body->eclipse = 1.0;
+        body->eclipse = 0;
         body->n_phases = n_phases;
         body->phases = (struct phase*)calloc(body->n_phases, 
                                              sizeof(struct phase));
