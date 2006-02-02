@@ -90,16 +90,16 @@ static void print_usage(void)
 {
 	printf("Usage:  %s [options] <load-file>\n"
 	       "Options: \n"
-               "    -help\n"
-               "    -verbose\n"
-               "    -developer mode\n"
-	       "    -tick <period in msec> \n"
-	       "    -animation <period in ticks> \n"
-	       "    -sound <0 to disable> \n"
-	       "    -bits-per-pixel <bpp> \n"
-	       "    -recorder <filename>    \n"
-	       "    -Playback <filename>  \n"
-	       "    -Speed <playback ms delay> \n"
+               "    -h:	help\n"
+               "    -v: version\n"
+               "    -d: developer mode\n"
+	       "    -t: tick <period in msec> \n"
+	       "    -a: animation <period in ticks> \n"
+	       "    -s: sound <0 to disable> \n"
+	       "    -b: bits-per-pixel <bpp> \n"
+	       "    -R: recorder <filename>    \n"
+	       "    -P: playback <filename>  \n"
+	       "    -S: speed <playback ms delay> \n"
                "<load-file>\n",
                program_name);
 }				// print_usage()
