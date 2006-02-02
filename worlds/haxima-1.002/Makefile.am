@@ -38,7 +38,7 @@ haxima_DATA = \
 	conv.scm                    lost-halls.scm         talking-ankh.scm\
 	crypt.scm                   luximene.scm           tblit.scm\
 	                            main-menu.scm          terrains.scm\
-	damage.wav                  Makefile.am            terrain-to-ptype.scm\
+	damage.wav                  terrain-to-ptype.scm\
 	dank-cave.scm               mans-hideout.scm       tetzl.scm\
 	demon-gate.scm              may.scm                the-man.scm\
 	dennis.scm                  meaney.scm             thiefs_den.scm\
@@ -71,7 +71,8 @@ haxima_DATA = \
 	ghertie.scm                 patch.scm              zane.scm\
 	gholet.scm                  player.scm             zones.scm\
 	glasdrin.scm                poor-house.scm         signs.png\
-	goblin-kingdoms.scm         portals.scm            runestones.png
+	goblin-kingdoms.scm         portals.scm            runestones.png\
+	newmonst.png
 
 EXTRA_DIST = $(haxima_DATA)
 
