@@ -296,6 +296,10 @@ int playRun(void)
                 log_end("error!");
 		return -1;
 	}
+        if (! Place) {
+                log_end("error!");
+                return -1;
+        }
         log_end("ok!");
         log_begin_group();
         log_msg("*********************************");
