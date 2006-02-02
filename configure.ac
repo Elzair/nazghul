@@ -15,9 +15,9 @@ dnl   This macro performs essential initialization for the
 dnl   generated `configure' script. An optional argument may provide the name of a
 dnl   file from the source directory to ensure that the directory has been 
 dnl   specified correctly.
-AC_INIT(nazghul, 0.5.1, [nazghul-devel@lists.sourceforge.net])
+AC_INIT(nazghul, 0.5.2, [nazghul-devel@lists.sourceforge.net])
 AC_CONFIG_SRCDIR([src/nazghul.c])
-AC_CONFIG_HEADERS([config.h])
+AM_CONFIG_HEADER([config.h])
 
 dnl AC_CANONICAL_HOST
 dnl   This macro determines the type of the host system and sets the output 
