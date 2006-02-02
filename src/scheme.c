@@ -32,6 +32,7 @@
 #if USE_PROTECT
 #include <assert.h>
 #endif
+#include "common.h"
 
 /* Used for documentation purposes, to signal functions in 'interface' */
 #define INTERFACE
@@ -1282,7 +1283,14 @@ static void finalize_cell(scheme *sc, pointer a) {
 /* ========== Routines for Reading ========== */
 
 static int file_push(scheme *sc, const char *fname) {
-  FILE *fin=fopen(fname,"r");
+  FILE *fin;
+  char *filename;
+  filename = dirConcat(IncludeDir,fname);
+  if (filename) {
+	  fin=fopen(filename,"r");
+	  free(filename);
+  } else
+	  fin=fopen(fname,"r");
   if(fin!=0) {
     sc->file_i++;
     sc->load_stack[sc->file_i].kind=port_file|port_input;

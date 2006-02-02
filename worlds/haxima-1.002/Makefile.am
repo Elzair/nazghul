@@ -1,4 +1,11 @@
 haximadir   = $(datadir)/nazghul/haxima
+bin_SCRIPTS = haxima.sh
+CLEANFILES = haxima.sh
+
+haxima.sh: Makefile
+	echo '#!/bin/sh' > $@ 
+	echo '"@bindir@/nazghul" -I "@datadir@/nazghul/haxima" -G "$(HOME)/.haxima" "$$@"' >> $@
+
 haxima_DATA = \
 	abandoned-cellar.scm        green-tower-lower.scm  portcullis.scm \
 	abandoned-farm.scm          green-tower.scm        potions.png\

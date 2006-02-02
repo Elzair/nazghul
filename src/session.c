@@ -63,6 +63,7 @@
 #include <time.h>
 #include <SDL_image.h>
 #include <unistd.h>
+#include <sys/stat.h>
 //#include <sys/mman.h>
 #include <stdarg.h>
 #include <SDL.h>            // for SDL_GetTicks()
@@ -304,6 +305,20 @@ int session_load(char *filename)
 
         /* Open the load file. */
         file = fopen(filename, "r");
+	if (! file && SavedGamesDir ) {
+		char *fname = dirConcat(SavedGamesDir,filename);
+		if (fname) {
+			file = fopen(fname, "r");
+			free(fname);
+		}
+	}
+	if (! file && IncludeDir ) {
+		char *fname = dirConcat(IncludeDir,filename);
+		if (fname) {
+			file = fopen(fname, "r");
+			free(fname);
+		}
+	}
         if (! file) {
                 load_err("could not open script file '%s' for reading: %s",
                            filename, strerror(errno));
@@ -508,8 +523,22 @@ void session_save(char *fname)
         FILE *file;
         struct list *elem;
         save_t *save;
+	char *filename;
 
-        file = fopen(fname, "w");
+	filename = dirConcat(SavedGamesDir,fname);
+	if (filename) {
+		(void)mkdir(SavedGamesDir, 0777);
+		file = fopen(filename, "w");
+        	if (! file) {
+                	warn("session_save: could not open %s "
+			     "for writing: %s\n"
+			     "session_save: falling back to current "
+			     "directory.\n",
+	                     filename, strerror(errno));
+			file = fopen(fname, "w");
+		}
+	} else
+		file = fopen(fname, "w");
         if (! file) {
                 warn("session_save: could not open %s for writing: %s\n",
                      fname, strerror(errno));

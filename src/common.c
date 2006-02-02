@@ -246,3 +246,24 @@ int logBase2(int val)
 
         return ret;
 }
+
+char *dirConcat(const char *dir, const char *filename) {
+	char *ret;
+	size_t dl,fl;
+
+	if (! dir)
+		return 0;
+	dl = strlen(dir);
+	fl = strlen(filename);
+
+	ret = (char*)malloc(dl+fl+2);
+	if (! ret)
+		return ret;
+	memcpy(ret,dir,dl);
+	ret[dl] = '/';
+	memcpy(ret+dl+1,filename,fl);
+	ret[dl+1+fl] = '\0';
+
+	return ret;
+}
+

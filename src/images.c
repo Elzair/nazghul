@@ -63,6 +63,7 @@ struct images *images_new(char *tag, int w, int h, int rows, int cols,
 {
 	struct images *images;
 	SDL_Surface *tmp;
+	char *filename;
 
 	images = new struct images;
         assert(images);
@@ -81,7 +82,14 @@ struct images *images_new(char *tag, int w, int h, int rows, int cols,
         images->rows    = rows;
         images->cols    = cols;
 
-	images->images = IMG_Load(fname);
+
+	filename = dirConcat(IncludeDir,fname);
+	if (filename) {
+		images->images = IMG_Load(filename);
+		free(filename);
+	} else {
+		images->images = IMG_Load(fname);
+	}
 	if (!images->images) {
                 // BUG: Mac OS X fails to load PNG images here, but GIF works
                 // OK.  This could be a libPNG, libSDL, or libSDL_Image bug. In

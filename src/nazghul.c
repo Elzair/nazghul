@@ -62,6 +62,8 @@ static bool useSound = true;	// SAM: Sound drivers on my dev laptop are
 char *LOS            = "angband";
 int SCREEN_BPP       = DEF_SCREEN_BPP;
 char *SAVEFILE       = 0;
+char *IncludeDir     = 0;
+char *SavedGamesDir  = 0;
 char *RecordFile     = 0;
 char *PlaybackFile   = 0;
 int PlaybackSpeed    = 100;
@@ -109,7 +111,7 @@ static void parse_args(int argc, char **argv)
 	TickMilliseconds = MS_PER_TICK;
 	AnimationTicks = ANIMATION_TICKS;
 
-	while ((c = getopt(argc, argv, "b:t:a:s:TdR:S:P:vh")) != -1) {
+	while ((c = getopt(argc, argv, "b:t:a:s:TdR:S:P:I:G:vh")) != -1) {
 		switch (c) {
 		case 'b':
 			SCREEN_BPP = atoi(optarg);
@@ -149,6 +151,26 @@ static void parse_args(int argc, char **argv)
 			if (!PlaybackFile) {
 				err("Failed to allocate string for playback "
 				    "filename\n");
+				exit(-1);
+			}
+			break;
+		case 'I':
+			// Set the global include dir. So that saved games
+			// can be stored in the local directory, while
+			// we cannot write in the game directory.
+			IncludeDir =  strdup(optarg);
+			if (!IncludeDir) {
+				err("Failed to allocate string for include "
+				    "directory\n");
+				exit(-1);
+			}
+			break;
+		case 'G':
+			// Set the dir to create new saved games into.
+			SavedGamesDir =  strdup(optarg);
+			if (!SavedGamesDir) {
+				err("Failed to allocate string for saved "
+				    "games directory\n");
 				exit(-1);
 			}
 			break;
@@ -221,10 +243,16 @@ static void nazghul_splash(void)
 {
         SDL_Surface *splash;
         SDL_Rect rect;
+	char *filename;
 
         /* Load the image from the well-known filename */
-        splash = IMG_Load(NAZGHUL_SPLASH_IMAGE_FILENAME);
-        if (! splash) {
+	filename = dirConcat(IncludeDir, NAZGHUL_SPLASH_IMAGE_FILENAME);
+	if (filename) {
+		splash = IMG_Load(filename);
+		free(filename);
+	} else
+		splash = IMG_Load(NAZGHUL_SPLASH_IMAGE_FILENAME);
+	if (! splash) {
                 warn("IMG_Load failed: %s\n", SDL_GetError());
                 return;
         }
@@ -248,10 +276,15 @@ static int start_main_menu_session(void)
         char *fname="main-menu.scm";
 
         /* Open the load file. */
-        file = fopen(fname, "r");
-        if (! file) {
-                load_err("could not open script file '%s' for reading: %s",
-                           fname, strerror(errno));
+	char *filename = dirConcat(IncludeDir,fname);
+	if (filename) {
+		file = fopen(filename, "r");
+		free(filename);
+	} else
+		file = fopen(fname, "r");
+	if (! file) {
+                load_err("could not open script file '%s%s' for reading: %s",
+                           IncludeDir?IncludeDir:"", fname, strerror(errno));
                 return -1;
         }
 
@@ -401,10 +434,20 @@ static void main_menu(void)
  start_main_menu:
         n_items = 0;
 
+	// Perhaps use QUICKSAVE_FNAME instead?
         if (file_exists("save.scm")) {
                 menu[n_items] = JOURNEY_ONWARD;
                 n_items++;
-        }
+        } else {
+		char *tmp = dirConcat(SavedGamesDir,"save.scm");
+		if (tmp) {
+			if (file_exists(tmp)) {
+				menu[n_items] = JOURNEY_ONWARD;
+				n_items++;
+			}
+			free(tmp);
+		}
+	}
 
         menu[n_items] = START_NEW_GAME;
         n_items++;
@@ -412,6 +455,15 @@ static void main_menu(void)
         if (file_exists("tutorial.scm")) {
                 menu[n_items] = TUTORIAL;
                 n_items++;
+        } else {
+		char *tmp = dirConcat(IncludeDir,"tutorial.scm");
+		if (tmp) {
+			if (file_exists(tmp)) {
+				menu[n_items] = TUTORIAL;
+				n_items++;
+			}
+			free(tmp);
+		}
         }
 
         menu[n_items] = CREDITS;
@@ -445,6 +497,7 @@ static void main_menu(void)
                                 goto start_main_menu;
                         }
                 }
+		/* Why is this haxima and not something game-unspecific? */
                 SAVEFILE="haxima.scm";
         }
         else if (! strcmp(selection, JOURNEY_ONWARD)) {

@@ -29,6 +29,7 @@
 
 #include "sound.h"
 #include "debug.h"
+#include "common.h"
 
 #include <assert.h>
 #include <SDL.h>
@@ -165,6 +166,7 @@ sound_t *sound_new(char *tag, char *file)
 	Uint8 *data;
 	Uint32 dlen;
         sound_t *sound;
+	char *fn;
 
         if (file == NULL)
                 return NULL_SOUND;
@@ -173,11 +175,13 @@ sound_t *sound_new(char *tag, char *file)
 		return NULL_SOUND;
 	}
 
+	fn = dirConcat(IncludeDir,file);
 	/* Load the sound file and convert it to 16-bit stereo at 22kHz */
-	if (SDL_LoadWAV(file, &wave, &data, &dlen) == NULL) {
-                warn("SDL_LoadWav:%s:%s", file, SDL_GetError());
+	if (SDL_LoadWAV(fn?fn:file, &wave, &data, &dlen) == NULL) {
+                warn("SDL_LoadWav:%s:%s", fn?fn:file, SDL_GetError());
 		return NULL_SOUND;
 	}
+	free(fn);
 
         /* Allocate the sound structure */
         sound = (sound_t *)calloc(1, sizeof(*sound));

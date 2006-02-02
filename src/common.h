@@ -430,6 +430,8 @@ extern int directionToOpposite(int dir);
 
 #define keyIsDirection(key) ((key) >= KEY_SOUTHWEST && (key) <= KEY_NORTHEAST)
 
+char *dirConcat(const char *dir, const char *filename);
+
 /* Global Variables **********************************************************/
 
 extern struct list Terrain_Palettes;
@@ -447,6 +449,8 @@ extern struct sprite *CursorSprite;
 extern int SCREEN_BPP;
 // #define SAVEFILE "mapfile"
 extern char *SAVEFILE;	/* nazghul.c */
+extern char *IncludeDir;	/* nazghul.c */
+extern char *SavedGamesDir;	/* nazghul.c */
 extern int logBase2(int val);
 
 #ifdef __cplusplus
