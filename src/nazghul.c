@@ -533,8 +533,6 @@ int main(int argc, char **argv)
 
         tick_start(TickMilliseconds);
 
-        printf("DATADIR=%s\n", DATADIR);
-
 // main_loop:
         /* blank out the whole screen */
         screenErase(NULL);

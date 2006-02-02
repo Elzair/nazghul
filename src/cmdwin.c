@@ -39,7 +39,9 @@ static struct {
 	char *mark;
 } cmdwin;
 
+#ifdef DEBUG
 static FILE *log = NULL;
+#endif
 
 static inline void cmdwin_clear_no_repaint()
 {
@@ -61,12 +63,13 @@ int cmdwin_init(void)
 	if (!cmdwin.buf)
 		return -1;
 
-
-        log = fopen(".cmdwin", "w+");
-        if (!log) {
-                err(strerror(errno));
-                return -1;
-        }
+#ifdef DEBUG
+	log = fopen(".cmdwin", "w+");
+	if (!log) {
+		err(strerror(errno));
+		return -1;
+	}
+#endif
 
         cmdwin_clear_no_repaint();
 	return 0;
@@ -158,7 +161,10 @@ void cmdwin_flush_to_console(void)
                 return;
 
         consolePrint("%s\n", cmdwin.buf);
-        fprintf(log, "%s\n", cmdwin.buf);
+#ifdef DEBUG
+	if (log)
+	        fprintf(log, "%s\n", cmdwin.buf);
+#endif
         //cmdwin_clear();
         //cmdwin_repaint();
 }
@@ -170,6 +176,9 @@ void cmdwin_flush(void)
 
         consolePrint("%s\n", cmdwin.buf);
         consoleRepaint();
-        fprintf(log, "%s\n", cmdwin.buf);
+#ifdef DEBUG
+	if (log)
+	        fprintf(log, "%s\n", cmdwin.buf);
+#endif
         cmdwin_clear();
 }

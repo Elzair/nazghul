@@ -53,7 +53,9 @@ static struct console {
 
         int repeat;           // counts number of times last line repeats
 
+#ifdef DEBUG
         FILE *log;
+#endif
 } Console;
 
 static char console_scratch_buf[MAX_MSG_SZ + 1];
@@ -96,11 +98,13 @@ int consoleInit(void)
         for (i = 0; i < CONS_LINES; i++)
                 Console.lines[i] = &Console.buf[i * (CONSOLE_MAX_MSG_SZ + 1)];
 
-        /* Open the console log file. */
-        Console.log = fopen(".console", "w");
-        if (Console.log == NULL) {
-                perror(".console");
-        }
+#ifdef DEBUG
+	/* Open the console log file. */
+	Console.log = fopen(".console", "w");
+	if (Console.log == NULL) {
+		perror(".console");
+	}
+#endif
 
         return 0;
 }
@@ -169,8 +173,10 @@ void consolePrint(char *fmt, ...)
         printed = vsnprintf(console_scratch_buf, MAX_MSG_SZ, fmt, args);
         va_end(args);
 
+#ifdef DEBUG
         if (Console.log != NULL)
                 vfprintf(Console.log, fmt, args);
+#endif
 
         /* Check if message was truncated to fit. Note that I discard anything
          * that will not fit. */
@@ -360,8 +366,10 @@ void consoleBackspace(int n)
         memset(Console.cursor, 0, Console.room);
         // *Console.cursor = 0;
 
+#ifdef DEBUG
         if (Console.log != NULL)
                 fprintf(Console.log, "\b");
+#endif
 }
 
 void consoleNewline(void)
@@ -378,8 +386,10 @@ void consoleNewline(void)
         memset(Console.cursor, 0, CONSOLE_MAX_MSG_SZ + 1);
         Console.room = CONSOLE_MAX_MSG_SZ;
 
+#ifdef DEBUG
         if (Console.log != NULL)
                 fprintf(Console.log, "\n");
+#endif
 
         consoleRepaint();
 }
