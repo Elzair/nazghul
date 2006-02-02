@@ -72,7 +72,7 @@ haxima_DATA = \
 	gholet.scm                  player.scm             zones.scm\
 	glasdrin.scm                poor-house.scm         signs.png\
 	goblin-kingdoms.scm         portals.scm            runestones.png\
-	newmonst.png
+	newmonst.png                newfolks.png
 
 EXTRA_DIST = $(haxima_DATA)
 
