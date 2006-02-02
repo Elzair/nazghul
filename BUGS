@@ -1,4 +1,4 @@
-Known bugs in release 0.5.0:
+Known bugs in release 0.5.2:
 
 o There's an intermittent line-of-sight (LOS) bug where the player can see
   parts of the map he shouldn't be able to.

@@ -1,3 +1,204 @@
+2006-01-26  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* ChangeLog, NEWS, scripts/RELEASE_CHECKOFF: *** empty log message ***
+
+2006-01-25  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/naz.scm:
+	Bugfix: purchasing a cure service from a healer didn't work
+
+	* AUTHORS: Updated AUTHORS to reflect recent submissions
+
+	* src/terrain_map.c:
+	Applying patch from Janne Johansson for compiler warning
+
+	* worlds/haxima-1.002/mouse.scm, worlds/haxima-1.002/naz.scm:
+	Promoted some generally useful code from mouse.scm to naz.scm
+
+	* doc/USERS_GUIDE, src/cmd.c, src/cmd.h, src/ctrl.c, worlds/haxima-1.002/books.scm:
+	Applied patch from Tim Douglas to fix H)elp command; added ctrl-q)quit q/o saving at his suggestion
+
+2006-01-24  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/nazghul.c: Patch from Janne Johansson for Sun compiler
+
+	* configure.ac: Patch from Janne Johansson
+
+	* src/character.cpp, src/map.c, src/scheme.c:
+	Adding casts to double for calls to pow() and sqrt()
+
+	* src/sprite.h: Removed some obsolete code
+
+	* src/map.c, src/nazghul.c:
+	Got rid of getop_long and a few old options I don't want to support any more
+
+2006-01-23  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/screen.c:
+	Bugfix: when zoomed out, transparency shows up as magenta
+
+	* worlds/haxima-1.002/edge-spawn.scm, worlds/haxima-1.002/terrain-to-ptype.scm:
+	Reworked edge spawning to make it easier to tune
+
+	* worlds/haxima-1.002/species.scm: Increased dragon HP
+
+	* worlds/haxima-1.002/arms.scm: Arms balance tweaking
+
+2006-01-22  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/food.png, worlds/haxima-1.002/reagents.png, worlds/haxima-1.002/runestones.png, worlds/haxima-1.002/shapes.png, worlds/haxima-1.002/signs.png, worlds/haxima-1.002/special.png, worlds/haxima-1.002/sprites.scm, worlds/haxima-1.002/tools.png, worlds/haxima-1.002/addons.png, worlds/haxima-1.002/effects.scm:
+	Added transparency to all sprites
+
+	* worlds/haxima-1.002/addons.png, worlds/haxima-1.002/food.png, worlds/haxima-1.002/shapes.png:
+	From Kris, added transparency to some more sprites
+
+	* worlds/haxima-1.002/traps_3.scm:
+	Bugfix: spawn points in Fun with Levers weren't getting triggered
+
+	* src/ctrl.c, worlds/haxima-1.002/books.scm:
+	Changed quit-without-saving keybinding from ctrl-Q to ctrl-S
+
+	* src/combat.c: Bugfix: NPC attacks while on (but not aboard) ship
+
+	* src/cmd.c: Casting spells gives XP
+
+	* worlds/haxima-1.002/scrolls.scm:
+	Canceling u)se scroll was using up scroll
+
+	* src/ascii.c, src/ascii.h, src/screen.c:
+	Added support for colored console text; nothing using it yet but it does work
+
+	* src/Party.cpp:
+	Bugfix (1411788): NPC parties getting into towns and dungeons
+
+	* src/nazghul.c:
+	Added Steve Riberty to art credits for new rune sprites
+
+	* src/character.cpp: Doubled XP required for level advancement
+
+	* worlds/haxima-1.002/npc-types.scm:
+	Craven archers now armed with daggers for when they run out of ammo
+
+	* worlds/haxima-1.002/kathryn.scm:
+	Bugfix: Kathryn not giving player her Wis Quas scroll upon join
+
+	* worlds/haxima-1.002/thiefs_den.scm:
+	Removing unthiefly treasure from Thief's Den
+
+	* worlds/haxima-1.002/palette.scm:
+	Bugfix: alchemy sign confused with arms shop sign
+
+	* worlds/haxima-1.002/oparine.scm: Fixed some signs and terrain
+
+	* worlds/haxima-1.002/monster-generator.scm: Removed some obsolete code
+
+	* worlds/haxima-1.002/enchanter.scm:
+	Enchanter was using generic response to ENCH keyword
+
+	* worlds/haxima-1.002/dank-cave.scm:
+	Bugfix: ladder up from Dank Cave led to wrong location
+
+	* worlds/haxima-1.002/conv.scm:
+	Oparine townsfolk now give directions to Green Tower
+
+	* worlds/haxima-1.002/bole.scm, worlds/haxima-1.002/town-entry.scm:
+	Bugfix: Bole's inn-room door was not being locked on town re-entry
+
+	* worlds/haxima-1.002/ai.scm:
+	Bugfix: use-ranged-spells not returning #f when it didn't cast anything, cause dryads to walk
+
+2006-01-19  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/runes.scm, worlds/haxima-1.002/runestones.png, worlds/haxima-1.002/sprite-sets.scm, worlds/haxima-1.002/sprites.scm:
+	New rune stone sprites courtesy of Steve Riberdy
+
+	* src/character.h, src/combat.h, src/kern.c, src/object.h, src/play.c, src/player.h, src/status.c, src/status.h, src/tree.h:
+	Fixed all -pedantic warnings over which I have control (ie, not in SDL headers)
+
+	* src/cmd.c: Fixing an access-after-deleted bug in mixing spells
+
+	* src/cmd.c:
+	Renamed getchar to cmd_getchar to avoid collision on openBSD
+
+2006-01-18  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/place.c: Kernel changes:
+	o Bugfix: terrain effects (like fire) were being applied to monster generator
+	  objects
+
+	* worlds/haxima-1.002/addons.png, worlds/haxima-1.002/arms.scm, worlds/haxima-1.002/edge-spawn.scm, worlds/haxima-1.002/fire_sea.scm, worlds/haxima-1.002/npc-types.scm, worlds/haxima-1.002/parties.scm, worlds/haxima-1.002/species.scm, worlds/haxima-1.002/sprites.scm, worlds/haxima-1.002/terrain-to-ptype.scm:
+	Haxima changes:
+	o New NPC type: fire slimes
+
+	* src/Container.cpp, src/Field.cpp, src/Makefile.am, src/astar.c, src/closure.c, src/cmd.c, src/combat.c, src/ctrl.c, src/dice.c, src/dtable.c, src/kern.c, src/map.c, src/object.c, src/place.c, src/scheme.c, src/session.c, src/sky.c, src/sound.c, src/species.c, src/terrain.c, src/vmask.c:
+	Kernel changes:
+	o Added -Wall for CFLAGS as well as CXXFLAGS
+	o Fixed all the -Wall compilation warnings
+	o Bugfix: when t)alking and a person was nearby, target origin started on
+	  person instead of player
+
+	* src/character.cpp, src/event.c, src/nazghul.c, src/player.cpp, src/sprite.c, src/ascii.c:
+	Some -Wall compiler warning fixes
+
+	* src/cmd.c, src/ctrl.c:
+	Removed old Ctrl-S command to save terrain map; unnecessary now that terrain maps are saved along with the rest of the game, and harmful in that some distros don't have a writable /tmp/
+
+2006-01-17  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/conv.c: Fix for assert in ascii.c
+
+2006-01-16  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/angriss.scm, worlds/haxima-1.002/kraken-lakes.scm, worlds/haxima-1.002/road_to_absalot.scm, worlds/haxima-1.002/special.scm, worlds/haxima-1.002/spells.scm, worlds/haxima-1.002/tooth.scm:
+	Misc. fixes provided by Roland Hautz
+
+	* worlds/haxima-1.002/npc-types.scm:
+	NPC's no longer drop loot on the wilderness map
+
+	* worlds/haxima-1.002/npc-types.scm, worlds/haxima-1.002/shapes.png, worlds/haxima-1.002/sprites.scm:
+	Added Kris Parker's human knight sprite
+
+2006-01-11  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/gen.scm: Haxima changes:
+	o Gen needed some bufs since he can potentially become a player party member
+
+	* worlds/haxima-1.002/runes.scm: Haxima changes:
+	o Bugfix: g)et didn't work with Runes on the ground
+
+2006-01-10  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/cmd.c: Kernel changes:
+	o Bugfix: SF 1114048: selling itesm - list updated improperly. Actually, list
+	  was just getting built improperly from the get-go.
+
+	* src/ascii.c: Kernel changes:
+	o asciiPaint() now maps unrecognized chars to '?' and bleats a warning. This is
+	  to help debug the assert(c>=' ') in SF bug 1399049.
+
+2006-01-09  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/absalot.scm, worlds/haxima-1.002/bole.scm, worlds/haxima-1.002/glasdrin.scm, worlds/haxima-1.002/green-tower.scm, worlds/haxima-1.002/kalcifax.scm, worlds/haxima-1.002/keep.scm, worlds/haxima-1.002/kun.scm, worlds/haxima-1.002/oparine.scm, worlds/haxima-1.002/palette.scm, worlds/haxima-1.002/signs.png, worlds/haxima-1.002/sprite-sets.scm, worlds/haxima-1.002/sprites.scm, worlds/haxima-1.002/terrains.scm, worlds/haxima-1.002/trigrave.scm:
+	Haxima changes:
+	o Added some "sign" sprites
+
+2006-01-08  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/books.scm, worlds/haxima-1.002/kathryn.scm, worlds/haxima-1.002/shard.scm:
+	Haxima changes:
+	o Bugfix: kathryn's letter was defined in kathryn.scm, which might not be
+	  loaded before the letter is referenced in the script.
+	o Bugfix: found a part of the wilderness map that was incorrectly impassable
+
+	* worlds/haxima-1.002/arms.scm, worlds/haxima-1.002/moongate-clearing.scm:
+	Haxima changes:
+	o Bugfix: old entrance to slimy cavern still in moongate clearing
+	o Bugfix: +4 iron helm stats were wrong
+
+2006-01-08  baueran  <baueran@localhost.localdomain>
+
+	* configure.ac: *** empty log message ***
+
 2006-01-08  Gordon McNutt  <gmcnutt@localhost.localdomain>
 
 	* scripts/RELEASE_CHECKOFF: Added comment about windows text files

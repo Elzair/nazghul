@@ -1,3 +1,37 @@
+Changes between nazghul 0.5.1 and nazghul 0.5.2:
+o Bugfix: purchasing a cure service from a healer didn't work
+o Bugfix: when zoomed out, transparency shows up as magenta
+o Bugfix: spawn points in Fun with Levers weren't getting triggered
+o Bugfix: canceling u)se scroll was using up scroll
+o Bugfix  NPC parties getting into towns and dungeons
+o Bugfix: Kathryn not giving player her Wis Quas scroll upon join
+o Bugfix: ladder up from Dank Cave led to wrong location
+o Bugfix: Bole's inn-room door was not being locked on town re-entry
+o Bugfix: dryads in combat/town maps would walk
+o Bugfix: when t)alking and a person was nearby, target origin started on
+  person instead of player
+o Bugfix: g)et didn't work with Runes on the ground
+o Bugfix: selling itesm - list updated improperly. Actually, list was just
+  getting built improperly from the get-go.
+o Bugfix: kathryn's letter was defined in kathryn.scm, which might not be
+  loaded before the letter is referenced in the script.
+o Bugfix: found a part of the wilderness map that was incorrectly impassable
+o Bugfix: old entrance to slimy cavern still in moongate clearing
+o Bugfix: +4 iron helm stats were wrong
+o Ctrl-Q now means "quit without saving"
+o Ctrl-S now means "save without quitting"
+o Command-line options changed
+o Increased dragon HP
+o Changed quit-without-saving keybinding from ctrl-Q to ctrl-S
+o Casting spells now gives XP
+o Doubled XP required for level advancement
+o Removed unthiefly treasure from Thief's Den
+o New sprites: rune stones, human knight, shop signs
+o Added transparency to all sprites
+o New NPC type: fire slimes
+o NPC's no longer drop loot on the wilderness map
+o Gen buffed up
+
 Changes between nazghul 0.5.0 and 0.5.1:
 o Bugfix: some spells like In Ex Por would be
   consumed even if the player aborted without
