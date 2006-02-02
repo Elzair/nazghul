@@ -75,4 +75,5 @@ haxima_DATA = \
 	newmonst.png                newfolks.png
 
 EXTRA_DIST = $(haxima_DATA)
+MAINTAINERCLEANFILES = Makefile.in
 

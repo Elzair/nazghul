@@ -152,3 +152,5 @@ INCLUDES = -I$(includedir)                                      \
 
 LIBS = @LIBS@
 
+MAINTAINERCLEANFILES = Makefile.in
+

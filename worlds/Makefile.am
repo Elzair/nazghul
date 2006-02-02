@@ -1,2 +1,3 @@
 SUBDIRS = haxima-1.002
+MAINTAINERCLEANFILES = Makefile.in
 

@@ -14,6 +14,10 @@ ACLOCAL_AMFLAGS = -I m4
 @MAINT@	${MAKE} dist-zip
 @MAINT@	${MAKE} dist-tarZ
 
+MAINTAINERCLEANFILES = configure Makefile.in aclocal.m4 config.h.in \
+		config.guess config.sub depcomp install-sh \
+		missing mkinstalldirs
+
 @MAINT@cvsclean: maintainer-clean
 @MAINT@	@-rm -f `find . -name Makefile.in`
 @MAINT@	@-rm -f libtool ltmain.sh acinclude.m4 */Makefile.in
