@@ -68,7 +68,9 @@
                             (kern-obj-get-name ktarg))
               (kern-char-unready ktarg ktype)
               (kern-obj-remove-from-inventory ktarg ktype 1)
-              (kern-obj-add-to-inventory kchar ktype 1))
+              (kern-obj-put-at (kern-mk-obj ktype 1)
+                               (kern-obj-get-location ktarg))
+              )
             (kern-log-msg  (kern-obj-get-name kchar)
                            " fails to disarm "
                            (kern-obj-get-name ktarg))
