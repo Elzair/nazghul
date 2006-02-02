@@ -38,5 +38,6 @@ Section "" ;No components page, name is not important
   File *.png
   File *.wav
   File *.txt
+  File *.bat
   
 SectionEnd ; end the section
