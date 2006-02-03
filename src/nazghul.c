@@ -83,7 +83,7 @@ static void print_version(void)
                "You may redistribute copies of %s\n"
                "under the terms of the GNU General Public License.\n"
                "For more information about these matters,\n"
-               "see the files named COPYING.\n",
+               "see the file named COPYING.\n",
                program_name, program_name
                 );
 }
@@ -102,6 +102,8 @@ static void print_usage(void)
 	       "    -R: recorder <filename>    \n"
 	       "    -P: playback <filename>  \n"
 	       "    -S: speed <playback ms delay> \n"
+               "    -I: game data dir\n"
+               "    -G: save game dir\n"
                "<load-file>\n",
                program_name);
 }				// print_usage()
