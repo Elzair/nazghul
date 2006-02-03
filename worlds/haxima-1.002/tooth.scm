@@ -9,7 +9,7 @@
 ;; Schedule
 ;;----------------------------------------------------------------------------
 (kern-mk-sched 'sch_tooth
-               (list 0 0 black-market-counter "sleeping")
+               (list 0 0 campfire-4 "sleeping")
                (list 6 0 black-market-counter "working")
                (list 19 0 cantina-12 "idle")
                )

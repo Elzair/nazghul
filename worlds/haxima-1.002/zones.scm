@@ -11,7 +11,7 @@
 (define gh-ilyas-room      (mk-zone 7  18 2  2))
 (define gh-ilyas-bed       (mk-zone 7  18 1  1))
 (define gh-gregors-room    (mk-zone 7  15 2  2))
-(define gh-gregors-bed     (mk-zone 7  15 1  1))
+(define gh-gregors-bed     (mk-zone 7  16 1  1))
 (define gh-kitchen         (mk-zone 10 10 7  5))
 (define gh-storeroom       (mk-zone 18 10 2  5))
 (define gh-stable          (mk-zone 18 16 2  4))
