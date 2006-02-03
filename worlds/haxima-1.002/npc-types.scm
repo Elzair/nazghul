@@ -552,11 +552,18 @@
   (list (list 50 "1" 't_royal_cape)
         ))
 (define fire-slime-loot
-  (list (list 35 "1" 't_oil)
+  (list (list 100 "1" 't_oil)
+        ))
+(define spider-loot
+  (list (list 50 "1" 'spider_silk)
+        ))
+(define queen-spider-loot
+  (list (list 50 "1d3" 'spider_silk)
+        (list 25 "1" 't_poison_immunity_potion)
         ))
 
 (define (drop-generic knpc loot)
-  ;;(println "drop-generic:loot=" loot)
+  (println "drop-generic:loot=" loot)
   (if (not (kern-place-is-wilderness? (loc-place (kern-obj-get-location knpc))))
            (let ((loc (kern-obj-get-location knpc)))
              (map (lambda (triple)
@@ -622,13 +629,13 @@
 (define troll-geomancer (mk-npct2 "troll geomancer" sp_troll oc_wizard s_troll no-traps geomancer-equip nil 'std-ai faction-troll nil 'drop-generic geomancer-loot))
 (define corrupt-halberdier (mk-npct2 "halberdier" sp_human oc_warrior s_guard no-traps halberdier-equip nil 'guard-ai faction-monster nil 'drop-generic halberdier-loot))
 (define corrupt-crossbowman (mk-npct2 "crossbowman" sp_human oc_warrior s_guard no-traps crossbowman-equip nil 'guard-ai faction-monster nil 'drop-generic crossbowman-loot))
+(define giant-spider (mk-npct2 "giant spider" sp_spider nil s_spider nil nil nil 'spider-ai faction-monster nil 'drop-generic spider-loot))
+(define queen-spider (mk-npct2 "queen spider" sp_queen_spider nil s_queen_spider nil nil nil 'spider-ai faction-monster nil 'drop-generic queen-spider-loot))
+(define fire-slime (mk-npct2 "fire slime" sp_fire_slime nil s_red_slime nil nil fire-slime-effects 'animal-ai faction-monster nil 'drop-generic fire-slime-loot))
 
 ;; NPC's with no drops
 
 (define green-slime     (mk-npct "green slime"            sp_green_slime   nil        s_slime        nil          nil           slime-effects 'animal-ai       faction-monster       nil))
-(define fire-slime      (mk-npct "fire slime"             sp_fire_slime    nil        s_red_slime    nil          nil           fire-slime-effects 'animal-ai  faction-monster       nil))
-(define giant-spider    (mk-npct "giant spider"           sp_spider        nil        s_spider       nil          nil           nil           'spider-ai       faction-monster       nil))
-(define queen-spider    (mk-npct "queen spider"           sp_queen_spider  nil        s_queen_spider nil          nil           nil           'spider-ai       faction-monster       nil))
 (define kraken          (mk-npct "kraken"                   sp_kraken        nil        s_kraken       nil          nil           nil           'kraken-ai       faction-monster       nil))
 (define sea-serpent     (mk-npct "sea serpent"              sp_sea_serpent   nil        s_sea_serpent  nil          nil           nil           'sea-serpent-ai  faction-monster       nil))
 (define wolf            (mk-npct "wolf"                     sp_wolf          nil        s_wolf         nil          nil           nil           'animal-ai       faction-monster       nil))
