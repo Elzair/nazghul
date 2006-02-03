@@ -52,6 +52,8 @@
 #include <SDL_thread.h>
 #include <unistd.h>
 
+#define NEW_GAME_FILE "start-new-game.scm"
+
 extern char *optarg;
 extern int optind, opterr, optopt;
 
@@ -498,7 +500,7 @@ static void main_menu(void)
                         }
                 }
 		/* Why is this haxima and not something game-unspecific? */
-                SAVEFILE="haxima.scm";
+                SAVEFILE=NEW_GAME_FILE;
         }
         else if (! strcmp(selection, JOURNEY_ONWARD)) {
                 SAVEFILE="save.scm";

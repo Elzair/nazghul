@@ -13,7 +13,7 @@ haxima_DATA = \
 	ability.scm                 gregors-hut.scm        pre-entry-hooks.scm\
 	absalot.scm                 gwen.scm               prices.scm\
 	addons.png                  hackle.scm             prison.scm\
-	ai.scm                      haxima.scm        raise-merciful-death.scm\
+	ai.scm                      start-new-game.scm     raise-merciful-death.scm\
 	alchemist.scm               henry.scm              reagents.png\
 	alex.scm                    horse.wav              reagents.scm\
 	altar-room.scm              ifc.scm                road_to_absalot.scm\
