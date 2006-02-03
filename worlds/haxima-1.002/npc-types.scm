@@ -651,7 +651,7 @@
 (define accursed-master     (mk-npct "an accursed master"     sp_human oc_wizard s_wizard   nil accursed-3-equip nil 'spell-sword-ai faction-accursed nil))
 (define accursed-adept      (mk-npct "an accursed adept"      sp_human oc_wizard s_wizard   nil accursed-3-equip nil 'spell-sword-ai faction-accursed nil))
 (define accursed-guardian   (mk-npct "an accursed guardian"   sp_human oc_warrior s_fighter nil accursed-4-equip nil 'std-ai         faction-accursed nil))
-(define accursed-defender   (mk-npct "an accursed defender"   sp_human oc_warrior s_knight  nil accursed-5-equip nil 'std-ai         faction-accursed nil))
+(define accursed-defender   (mk-npct "an accursed defender"   sp_human oc_warrior s_human_knight  nil accursed-5-equip nil 'std-ai         faction-accursed nil))
 (define accursed-templar    (mk-npct "an accursed templar"    sp_human oc_warrior s_avatar  nil accursed-6-equip nil 'std-ai         faction-accursed nil))
 
 ;;define                        (mk-npct "                          sp_              oc_        s_                 nil          nil                    nil           'std-ai           ))
