@@ -526,7 +526,17 @@
   (list (list 100 "1d100+19" 't_gold_coins)
         (list 100 "1d20"     't_food)
         (list 100 "1d5-1"    't_gem)
+        (list 100 "1"        't_dragons_blood)
         ))
+
+(define hydra-loot
+  (list (list 100 "1" 't_hydras_blood)
+        ))
+
+(define lich-loot
+  (cons (list 100 "1" 't_lichs_blood)
+        wizard-loot))
+
 (define zorn-loot
   (list (list 100 "1d20+9" 't_gold_coins)
         ))
@@ -633,7 +643,7 @@
 (define rat (mk-npct2 "rat" sp_rat nil s_rat nil nil nil 'rat-ai faction-monster nil 'drop-generic animal-loot))
 (define zorn (mk-npct2 "zorn" sp_zorn oc_wrogue s_zorn wrogue-traps nil nil 'std-ai faction-monster nil 'drop-generic zorn-loot))
 (define bull (mk-npct "bull" sp_bull nil s_bull nil nil nil 'animal-ai faction-none nil 'drop-generic bull-loot))
-(define lich (mk-npct2 "lich" sp_lich oc_wizard s_lich wizard-traps wizard-equip undead-effects 'spell-sword-ai faction-monster nil 'drop-generic wizard-loot))
+(define lich (mk-npct2 "lich" sp_lich oc_wizard s_lich wizard-traps wizard-equip undead-effects 'spell-sword-ai faction-monster nil 'drop-generic lich-loot))
 (define dryad (mk-npct2 "dryad" sp_dryad nil s_reaper nil nil nil 'dryad-ai faction-monster nil 'drop-generic dryad-loot))
 (define gazer (mk-npct2 "gazer" sp_gazer oc_wizard s_gazer wizard-traps nil nil 'gazer-ai faction-monster nil 'drop-generic wizard-loot))
 (define demon (mk-npct2 "demon" sp_demon nil s_demon basic-traps demon-equip demon-effects 'demon-ai faction-monster nil 'drop-generic demon-loot))
@@ -658,6 +668,7 @@
 (define giant-spider (mk-npct2 "giant spider" sp_spider nil s_spider nil nil nil 'spider-ai faction-monster nil 'drop-generic spider-loot))
 (define queen-spider (mk-npct2 "queen spider" sp_queen_spider nil s_queen_spider nil nil nil 'spider-ai faction-monster nil 'drop-generic queen-spider-loot))
 (define fire-slime (mk-npct2 "fire slime" sp_fire_slime nil s_red_slime nil nil fire-slime-effects 'animal-ai faction-monster nil 'drop-generic fire-slime-loot))
+(define hydra (mk-npct2 "hydra" sp_hydra nil s_hydra no-traps nil hydra-effects 'hydra-ai faction-monster nil 'drop-generic hydra-loot))
 
 ;; NPC's with no drops
 
@@ -668,7 +679,6 @@
 (define wisp            (mk-npct "wisp"                     sp_wisp          nil        s_wisp         nil          nil           wisp-effects  'wisp-ai         faction-monster       nil))
 (define nixie-spearman  (mk-npct "nixie spearman"         sp_nixie         oc_warrior s_nixie        no-traps     nixie-1-equip nil           'std-ai          faction-monster       nil))
 (define nixie-swordsman (mk-npct "nixie swordsman"        sp_nixie         oc_warrior s_nixie        no-traps     nixie-2-equip nil           'std-ai          faction-monster       nil))
-(define hydra           (mk-npct "hydra"                    sp_hydra         nil        s_hydra        no-traps     nil           hydra-effects 'hydra-ai        faction-monster       nil))
 
 ;; accursed
 (define accursed-acolyte    (mk-npct2 "an accursed acolyte"    sp_human oc_wizard s_shepherd nil accursed-1-equip nil 'spell-sword-ai faction-accursed nil 'drop-generic accursed-1-loot))
