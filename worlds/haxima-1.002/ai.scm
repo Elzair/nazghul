@@ -471,12 +471,15 @@
            (and (> (kern-dice-roll "1d20") 14)
                 (use-ranged-spell-on-foes? kchar (list fireball-spell)))))))
 
+;; subtle: like dryads, don't let kernal AI run because hydra's don't move, but
+;; if I give them mmode-none they won't get placed in wilderness combat
 (define (hydra-ai kchar)
   ;;(display "hydra-ai")(dump-char kchar)
   (or (ai-summon kchar summon-slimes)
       (use-ranged-spell-on-foes? kchar (list poison-missile-spell
                                              acid-missile-spell
-                                             ))))
+                                             ))
+      #t))
 
 (define (dragon-ai kchar)
   (display "dragon-ai ")(dump-char kchar)

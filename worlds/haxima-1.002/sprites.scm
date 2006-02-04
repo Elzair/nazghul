@@ -406,6 +406,8 @@
 (kern-mk-sprite 's_companion_ranger ss_newfolks 4 32 #f 0 )
 (kern-mk-sprite 's_companion_shepherd ss_newfolks 4 36 #f 0 )
 
+(kern-mk-sprite 's_tower ss_buildings 2 0 #f 0)
+
 ;; convenient alia
 (define s_shepherd s_companion_shepherd)
 (define s_ranger s_companion_ranger)
