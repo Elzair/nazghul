@@ -325,6 +325,7 @@
 (kern-mk-sprite 's_human_knight ss_addon 4 120 #f 0 )
 (kern-mk-sprite 's_red_slime ss_addon 4 124 #f 0)
 (kern-mk-sprite 's_red_slime_asleep ss_addon 1 124 #f 0)
+(kern-mk-sprite 's_active_altar ss_addon 4 128 #f 0)
 
 (kern-mk-sprite 's_full_moon                ss_moons 1 0 #f 0 )
 (kern-mk-sprite 's_wane_three_quarter_moon  ss_moons 1 1 #f 0 )
