@@ -562,6 +562,32 @@
         (list 25 "1" 't_poison_immunity_potion)
         ))
 
+(define accursed-1-loot
+  (list (list 50 "1d2-1" 't_heal_potion)
+        (list 50 "1d2" 't_mana_potion)
+        (list 100 "1d10"  't_gold_coins)
+        (list 10  "1d2"   't_food)
+        (list 5  "1"     't_cure_potion)
+        (list 5  "1"     't_poison_immunity_potion)
+        (list 10  "1d3"   'sulphorous_ash)
+        (list 10  "1d3"   'ginseng)
+        (list 10  "1d3"   'garlic)
+        (list 5  "1d2"   'spider_silk)
+        (list 5  "1d2"   'blood_moss)
+        (list 5  "1d2"   'black_pearl)
+        (list 5  "1"     't_in_quas_xen_scroll)
+        (list 5  "1"     't_an_xen_exe_scroll)
+        (list 5  "1"     't_in_an_scroll)
+        (list 5  "1"     't_vas_mani_scroll)
+        )) 
+
+(define accursed-5-loot
+  (list (list 100 "1d10"    't_bolt)
+        (list 10 "1d3-1" 't_heal_potion)
+        (list 50  "1d5"   't_food)
+        (list 100 "2d10" 't_gold)
+        ))  
+
 (define (drop-generic knpc loot)
   (println "drop-generic:loot=" loot)
   (if (not (kern-place-is-wilderness? (loc-place (kern-obj-get-location knpc))))
@@ -645,14 +671,14 @@
 (define hydra           (mk-npct "hydra"                    sp_hydra         nil        s_hydra        no-traps     nil           hydra-effects 'hydra-ai        faction-monster       nil))
 
 ;; accursed
-(define accursed-acolyte    (mk-npct "an accursed acolyte"    sp_human oc_wizard s_shepherd nil accursed-1-equip nil 'spell-sword-ai faction-accursed nil))
-(define accursed-apprentice (mk-npct "an accursed apprentice" sp_human oc_wizard s_shepherd nil accursed-2-equip nil 'spell-sword-ai faction-accursed nil))
-(define accursed-journeyman (mk-npct "an accursed journeyman" sp_human oc_wizard s_wizard   nil accursed-3-equip nil 'spell-sword-ai faction-accursed nil))
-(define accursed-master     (mk-npct "an accursed master"     sp_human oc_wizard s_wizard   nil accursed-3-equip nil 'spell-sword-ai faction-accursed nil))
-(define accursed-adept      (mk-npct "an accursed adept"      sp_human oc_wizard s_wizard   nil accursed-3-equip nil 'spell-sword-ai faction-accursed nil))
-(define accursed-guardian   (mk-npct "an accursed guardian"   sp_human oc_warrior s_fighter nil accursed-4-equip nil 'std-ai         faction-accursed nil))
-(define accursed-defender   (mk-npct "an accursed defender"   sp_human oc_warrior s_human_knight  nil accursed-5-equip nil 'std-ai         faction-accursed nil))
-(define accursed-templar    (mk-npct "an accursed templar"    sp_human oc_warrior s_avatar  nil accursed-6-equip nil 'std-ai         faction-accursed nil))
+(define accursed-acolyte    (mk-npct2 "an accursed acolyte"    sp_human oc_wizard s_shepherd nil accursed-1-equip nil 'spell-sword-ai faction-accursed nil 'drop-generic accursed-1-loot))
+(define accursed-apprentice (mk-npct2 "an accursed apprentice" sp_human oc_wizard s_shepherd nil accursed-2-equip nil 'spell-sword-ai faction-accursed nil 'drop-generic accursed-1-loot))
+(define accursed-journeyman (mk-npct2 "an accursed journeyman" sp_human oc_wizard s_wizard   nil accursed-3-equip nil 'spell-sword-ai faction-accursed nil 'drop-generic wizard-loot))
+(define accursed-master     (mk-npct2 "an accursed master"     sp_human oc_wizard s_wizard   nil accursed-3-equip nil 'spell-sword-ai faction-accursed nil 'drop-generic wizard-loot))
+(define accursed-adept      (mk-npct2 "an accursed adept"      sp_human oc_wizard s_wizard   nil accursed-3-equip nil 'spell-sword-ai faction-accursed nil 'drop-generic wizard-loot))
+(define accursed-guardian   (mk-npct2 "an accursed guardian"   sp_human oc_warrior s_fighter nil accursed-4-equip nil 'std-ai         faction-accursed nil 'drop-generic wrogue-1-loot))
+(define accursed-defender   (mk-npct2 "an accursed defender"   sp_human oc_warrior s_human_knight  nil accursed-5-equip nil 'std-ai         faction-accursed nil 'drop-generic accursed-5-loot))
+(define accursed-templar    (mk-npct2 "an accursed templar"    sp_human oc_warrior s_avatar  nil accursed-6-equip nil 'std-ai         faction-accursed nil 'drop-generic wrogue-4-loot))
 
 ;;define                        (mk-npct "                          sp_              oc_        s_                 nil          nil                    nil           'std-ai           ))
 
