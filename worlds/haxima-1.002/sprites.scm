@@ -383,6 +383,7 @@
 (kern-mk-sprite 's_cgob_slinger ss_newmonst  4 12 #f 0 )
 (kern-mk-sprite 's_cgob_civilian ss_newmonst 4 20 #f 0 )
 (kern-mk-sprite 's_cgob_shaman ss_newmonst   4 28 #f 0 )
+(kern-mk-sprite 's_gint_mage ss_newmonst 4 32 #f 0 )
 
 ;;----------------------------------------------------------------------------
 ;;;; (kern-mk-sprite 's_wanderer ss_addon 2 94 #f 0)

@@ -657,7 +657,7 @@
 (define footpad (mk-npct2 "footpad" sp_human oc_wrogue s_brigand wrogue-traps wrogue-1-equip nil 'std-ai faction-outlaw nil 'drop-generic wrogue-1-loot))
 (define warlock (mk-npct2 "warlock" sp_human oc_wizard s_wizard wizard-traps wizard-equip nil 'warlock-ai faction-monster nil 'drop-generic wizard-loot))
 (define headless (mk-npct2 "headless" sp_headless oc_warrior s_headless basic-traps headless-equip nil 'std-ai faction-monster nil 'drop-generic headless-loot))
-(define gint-mage (mk-npct2 "gint mage" sp_gint oc_wizard s_ettin wizard-traps wizard-equip nil 'shaman-ai faction-gint nil 'drop-generic wizard-loot))
+(define gint-mage (mk-npct2 "gint mage" sp_gint oc_wizard s_gint_mage wizard-traps wizard-equip nil 'shaman-ai faction-gint nil 'drop-generic wizard-loot))
 (define highwayman (mk-npct2 "highwayman" sp_human oc_wrogue s_brigand wrogue-traps wrogue-3-equip nil 'std-ai faction-outlaw nil 'drop-generic wrogue-3-loot))
 (define blackguard (mk-npct2 "blackguard" sp_human oc_wrogue s_brigand wrogue-traps wrogue-4-equip nil 'std-ai faction-outlaw nil 'drop-generic wrogue-4-loot))
 (define gint-warrior (mk-npct2 "gint warrior" sp_gint oc_warrior s_ettin basic-traps gint-warrior-equip nil 'std-ai faction-gint nil 'drop-generic gint-loot))
