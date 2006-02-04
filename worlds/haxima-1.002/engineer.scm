@@ -174,7 +174,7 @@
             (no-plans)))))
 
 (define (eng-gate knpc kpc)
-  (say knpc "The moongates and Shring Gate are a mystery. I'd love to figure "
+  (say knpc "The moongates and Shrine Gate are a mystery. I'd love to figure "
        "them out. You know about the Demon Gate, right?")
   (if (kern-conv-get-yes-no? kpc)
       (say knpc "I wish I knew if it really existed or not.")
