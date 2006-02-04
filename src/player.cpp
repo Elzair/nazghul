@@ -1701,6 +1701,13 @@ void player_party::unrefInventoryObject(ObjectType *type)
         ie->ref--;
 }
 
+void player_party::refInventoryObject(ObjectType *type)
+{
+        struct inv_entry *ie = inventory->search(type);
+        assert(ie);
+        ie->ref++;
+}
+
 void player_party::setInventoryContainer(Container *val)
 {
         assert(!inventory);

@@ -1153,13 +1153,13 @@ bool cmdReady(class Character * member)
 
 		if (ie->ref && member->unready(arms)) {
 			msg = "unreadied!";
-			ie->ref--;
+			//ie->ref--;
 			statusRepaint();
 		} else {
 
 			switch (member->ready(arms)) {
 			case Character::Readied:
-				ie->ref++;
+				//ie->ref++;
 				statusRepaint();
 				msg = "readied";
 				break;

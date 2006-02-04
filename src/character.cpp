@@ -338,6 +338,15 @@ enum Character::ReadyResult Character::ready(class ArmsType * arms)
 		// Ready the item. Recalculate armour class.
 		rdyArms[i] = arms;
 		burden += arms->getWeight();
+
+                // Bugfix: for party members, have to change the party
+                // inventory ref here. cmdReady() used to do this, but the
+                // script often calls directly here for things like disarm() or
+                // acid effects.
+                if (isPlayerPartyMember()) {
+                        player_party->refInventoryObject(arms);
+                }
+
 		return Readied;
 	}
 
@@ -365,6 +374,14 @@ bool Character::unready(class ArmsType * arms)
 		// Unready the item. Recacalculate armour class.
 		rdyArms[i] = NULL;
 		burden -= arms->getWeight();
+
+                // Bugfix: for party members, have to change the party
+                // inventory ref here. cmdReady() used to do this, but the
+                // script often calls directly here for things like disarm() or
+                // acid effects.
+                if (isPlayerPartyMember()) {
+                        player_party->unrefInventoryObject(arms);
+                }
 
 		return true;
 	}

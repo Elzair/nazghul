@@ -103,7 +103,6 @@ class player_party : public Party {
         void distributeMembers(struct place *new_place, int new_x, int new_y, 
                                int new_dx, int new_dy);
         MoveResult move(int dx, int dy);
-	struct inv_entry *search_inventory(class ObjectType * type);
 	enum MoveResult try_to_enter_subplace_from_edge(struct place *town,
                                                         int dx, int dy);
         void ready_arms(struct object *object);
@@ -159,6 +158,7 @@ class player_party : public Party {
         virtual bool add(ObjectType *type, int amount);
         virtual bool takeOut(ObjectType *type, int amount);
         void unrefInventoryObject(ObjectType *type);
+        void refInventoryObject(ObjectType *type);
         bool canSeeLocation(struct place *place, int x, int y);
 
         int food;
