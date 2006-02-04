@@ -114,9 +114,6 @@
                  (for-each burn
                            (filter obj-is-char? 
                                    (kern-get-objects-at (mk-loc kplace x y))))
-                 (let ((loc (mk-loc kplace x y)))
-                   (if (not (is-inflammable-terrain? (kern-place-get-terrain loc)))
-                       (kern-obj-put-at (kern-mk-obj F_fire 1) loc)))
                  ))))
                
 
