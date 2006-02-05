@@ -52,6 +52,12 @@ Johansson, Janne:
 In src/terrain_map.c, fixes for compiler warnings.
 In configure.ac, fix for SDL_image.h include path
 
+Links, Bernhard:
+In configure.ac, change for checking SDL install
+In worlds/haxima-1.002/Makefile.am, added missing file(s)
+In src/haxima.c, scheme.c, images.c, common.c, sound.c, session.c: added
+        commandline include dir and save dir
+
 McNutt, Gordon:
 In worlds/haxima-1.001:
         First version of all files except images/* other than images/gmcnutt,
@@ -67,6 +73,7 @@ In worlds/haxima-1.002/shapes.png, provided human knight sprite based on
 In worlds/haxima-1.002/food.png and addons.png, added transparency to some
         sprites
 Added worlds/haxima-1.002/newmonst.png, newfolks.png
+In worlds/haxima-1.002/building.png, added the tower sprite
 In worlds/haxima-1.002/sprite-sets.scm, sprites.scm and npc-types.scm, added
         new goblin sprites
 

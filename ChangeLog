@@ -1,3 +1,166 @@
+2006-02-04  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/cmd.c, src/player.cpp, src/player.h, src/character.cpp:
+	Bugfix: if the script called kern-char-unready on a PC it would mess up the player party inventory counts, could cause an assert in status.c
+
+	* worlds/haxima-1.002/newmonst.png, worlds/haxima-1.002/npc-types.scm, worlds/haxima-1.002/sprites.scm:
+	Added Kris Parker's new gint mage sprite
+
+	* worlds/haxima-1.002/Makefile.am, worlds/haxima-1.002/addons.png, worlds/haxima-1.002/sprites.scm, worlds/haxima-1.002/terrains.scm, worlds/haxima-1.002/tower.png:
+	Added Kris Parker's new tower sprite and the activated altar sprite
+
+	* worlds/haxima-1.002/arms.scm:
+	Balance: fireballs no longer drop fire fields where they hit
+
+	* worlds/haxima-1.002/ai.scm, worlds/haxima-1.002/species.scm, worlds/haxima-1.002/sprite-sets.scm, worlds/haxima-1.002/sprites.scm:
+	Bugfix: hydra's weren't appearing on wilderness combat maps
+
+	* worlds/haxima-1.002/shard.scm:
+	Changed Fens to use shallow water to keep out the pirate ships from getting spawned
+
+	* worlds/haxima-1.002/engineer.scm: Fixed typo
+
+	* worlds/haxima-1.002/npc-types.scm, worlds/haxima-1.002/species.scm:
+	Fixed dragons, hydras and lichs to drop blood using normal drop; prevents them from dropping on the wilderness
+
+	* worlds/haxima-1.002/npc-types.scm:
+	Kris Parker's change: add loot to accursed npc types
+
+2006-02-03  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/npc-types.scm:
+	Accursed Templar should use human knight sprite
+
+	* worlds/haxima-1.002/species.scm, worlds/haxima-1.002/spider.scm, worlds/haxima-1.002/npc-types.scm:
+	o Spiders were still dropping loot in wilderness, converted them to use
+	  standard loot-drop which fixes this
+	o Fire slimes were supposed to drop flaming oils as loot, fixed that
+
+	* src/nazghul.c: Added -I and -G to the command-line help
+
+	* worlds/haxima-1.002/Makefile.am, src/nazghul.c:
+	Removed hard-coded haxima.scm from the kernel. It now assumes the more generic start-new-game.scm is the file to load to start a new game
+
+	* worlds/haxima-1.002/start-new-game.scm: Replacement for haxima.scm
+
+	* worlds/haxima-1.002/haxima.scm: Moved from here
+
+	* worlds/haxima-1.002/tooth.scm, worlds/haxima-1.002/zones.scm:
+	Fixed Gregor and Tooth's sleeping locations
+
+2006-02-02  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/play.c, src/sky.c:
+	Last submit broke new game startup; also previous eclipse code made new game startup all dark (which looks really cool, but was wrong)
+
+	* worlds/haxima-1.002/ability.scm:
+	Disarm now drops the target's weapon on the ground at his feet
+
+	* src/play.c:
+	Bugfix: nazghul junk (where junk was not a valid load file) caused a segfault
+
+	* src/cmdwin.c, src/console.c, src/nazghul.c:
+	Bernhard Link's debug patch to create .console and .cmdwin iff DEBUG is defined
+
+	* src/nazghul.c: Bernhard Link's usage patch
+
+	* src/common.c, src/common.h, src/images.c, src/nazghul.c, src/scheme.c, src/session.c, src/sound.c, worlds/haxima-1.002/Makefile.am:
+	Bernhard Link's patch to add -I and -G options
+
+	* Makefile.am, PRESS_RELEASE, m4/Makefile.am, src/Makefile.am, worlds/Makefile.am, worlds/haxima-1.002/Makefile.am:
+	Bernhard Link's patch to add maintainer-clean as a target to the makefiles
+
+	* worlds/haxima-1.002/Makefile.am: Install newfolks.png
+
+	* worlds/haxima-1.002/Makefile.am:
+	Bernhard Link's patch: don't install Makefile.am, do install newmonst.png
+
+	* autogen.sh, configure.ac: Bernhard Link's configure patch
+
+	* scripts/RELEASE_CHECKOFF: Updates made on last release
+
+	* AUTHORS, BUGS, ChangeLog, NEWS: *** empty log message ***
+
+	* nazghul.nsi: Windows installer will bundle .bat files
+
+2006-02-01  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/newfolks.png, worlds/haxima-1.002/sprite-sets.scm, worlds/haxima-1.002/sprites.scm:
+	Adding Kris Parker's new player character sprites
+
+	* nazghul.nsi: Nullsoft installer script for windows
+
+	* src/nazghul.c, src/place.c, src/play.c, src/sky.c, src/ctrl.c, src/event.c, src/foogod.c, src/kern.c, src/cmd.h, src/combat.c, src/Party.cpp, src/Party.h, src/character.cpp, src/cmd.c:
+	G)et now always scoops up everything
+
+	* worlds/haxima-1.002/books.scm, worlds/haxima-1.002/luximene.scm, worlds/haxima-1.002/oparine.scm, worlds/haxima-1.002/parties.scm, worlds/haxima-1.002/potions.scm:
+	Misc bugfixes
+
+2006-01-31  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/roland.scm:
+	Bugfix: after leaving, Roland couldn't rejoin
+
+	* worlds/haxima-1.002/kama.scm:
+	Bugfix: ask Kama to rejoin after he leaves and he just points at the door
+
+2006-01-29  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* AUTHORS: Recorded new sprites from Kris Parker
+
+	* worlds/haxima-1.002/kama.scm, worlds/haxima-1.002/newmonst.png, worlds/haxima-1.002/npc-types.scm, worlds/haxima-1.002/sprite-sets.scm, worlds/haxima-1.002/sprites.scm:
+	Added Kris Parker's new goblin sprites
+
+	* worlds/haxima-1.002/arms.scm: Tweaked armour defense
+
+	* worlds/haxima-1.002/shroom.scm: Typo in conv
+
+	* worlds/haxima-1.002/chester.scm: Bumped price of plate
+
+	* worlds/haxima-1.002/npc-types.scm: Bugfix: troll loot not using tags
+
+2006-01-28  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/sky.c, src/sky.h: Added eclipse
+
+	* worlds/haxima-1.002/haxima.scm: Kris Parker's improved astronomy
+
+	* worlds/haxima-1.002/moons.png: New transparent moon sprites
+
+	* worlds/haxima-1.002/food.scm: Fixed plural food names
+
+	* src/kern.c, src/object.c, src/object.h:
+	Adding better support for irregular plural names
+
+	* worlds/haxima-1.002/money.scm: Using singular name for coin
+
+	* src/object.c: Takes care of a few more plural name cases
+
+	* worlds/haxima-1.002/naz.scm:
+	Drunken staggering checks for an occupant
+
+2006-01-27  icepic  <icepic@localhost.localdomain>
+
+	* src/terrain_map.c:
+	no sub-optimizations, just the fix. Sorry for borking my first few commits
+
+	* src/terrain_map.c:
+	merging two types of fixes isn't good. sorry for the bad commit
+
+	* src/terrain_map.c:
+	remove warning about possible use of h2,w2 initialized
+
+2006-01-27  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/roland.scm:
+	Roland now uses the human knight sprite
+
+	* worlds/haxima-1.002/moongate.scm:
+	Increasing the brightness of moongates
+
+	* worlds/haxima-1.002/haxima.scm:
+	Implemented Kris Parker's recommended changes to the opening sequence in the moongate clearing
+
 2006-01-26  Gordon McNutt  <gmcnutt@localhost.localdomain>
 
 	* ChangeLog, NEWS, scripts/RELEASE_CHECKOFF: *** empty log message ***

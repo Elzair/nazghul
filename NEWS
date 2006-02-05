@@ -1,3 +1,28 @@
+Changes between nazghul 0.5.2 and nazghul 0.5.3:
+o Bugfix: assert in status.c after disarmed or acid dissolves readied 
+o New sprites: gint mage, tower, activated altar, PC's, goblins, transparent
+  moon sprites
+o Balance: fireballs no longer drop fire fields where they 
+o Bugfix: hydra's weren't appearing on wilderness combat maps
+o Bugfix: pirate ships spawning in Fens
+o Bugfix: dragons, hydras, lichs and spiders dropped some loot in wilderness
+o Accursed loot
+o Accursed Templar and Roland use human knight sprite
+o Fire slimes drop flaming oils
+o "Normal" UNIX-style installation for source distros
+o New commandline -I (game data dir) and -G (save game dir) options
+o Fixed Gregor and Tooth's sleeping locations
+o Disarm now drops the target's weapon on the ground at his feet
+o Bugfix: nazghul junk (where junk was not a valid load file) caused a segfault
+o G)et now always scoops up everything
+o Bugfix: after leaving, Roland and Kama couldn't rejoin
+o Tweaked armour defense, prices
+o Bugfix: troll loot not using 
+o Added eclipse and improved moon phases
+o Fixed many plural names
+o Drunken staggering doesn't swap
+o Opening sequence tweaks
+
 Changes between nazghul 0.5.1 and nazghul 0.5.2:
 o Bugfix: purchasing a cure service from a healer didn't work
 o Bugfix: when zoomed out, transparency shows up as magenta
