@@ -4794,6 +4794,41 @@ KERN_API_CALL(kern_place_get_terrain)
         return terrain ? scm_mk_ptr(sc, terrain) : sc->NIL;
 }
 
+KERN_API_CALL(kern_place_get_terrain_map)
+{
+        struct place *place;
+        struct terrain_map *map;
+
+        if (unpack(sc, &args, "p", &place)) {
+                rt_err("kern-place-get-terrain-map: bad args");
+                return sc->NIL;
+        }
+
+        map = place_get_terrain_map(place);
+        if (!map)
+                return sc->NIL;
+        return scm_mk_ptr(sc, map);
+}
+
+KERN_API_CALL(kern_place_set_terrain_map)
+{
+        struct place *place;
+        struct terrain_map *map;
+
+        if (unpack(sc, &args, "pp", &place, &map)) {
+                rt_err("kern-place-set-terrain-map: bad args");
+                return sc->NIL;
+        }
+
+        if (!is_terrain_map(map)) {
+                rt_err("kern-place-set-terrain-map: not a terrain map!");
+                return sc->NIL;
+        }
+
+        place_set_terrain_map(place, map);
+        return scm_mk_ptr(sc, place);
+}
+
 KERN_API_CALL(kern_place_blocks_los)
 {
         struct place *place;
@@ -7205,6 +7240,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-place-get-neighbor", kern_place_get_neighbor);
         API_DECL(sc, "kern-place-get-objects", kern_place_get_objects);
         API_DECL(sc, "kern-place-get-terrain", kern_place_get_terrain);
+        API_DECL(sc, "kern-place-get-terrain-map", kern_place_get_terrain_map);
         API_DECL(sc, "kern-place-get-vehicle", kern_place_get_vehicle);       
         API_DECL(sc, "kern-place-get-width", kern_place_get_width);
         API_DECL(sc, "kern-place-is-passable", kern_place_is_passable);
@@ -7215,6 +7251,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-place-map", kern_place_map);
         API_DECL(sc, "kern-place-set-neighbor", kern_place_set_neighbor);
         API_DECL(sc, "kern-place-set-terrain", kern_place_set_terrain);
+        API_DECL(sc, "kern-place-set-terrain-map", kern_place_set_terrain_map);
         API_DECL(sc, "kern-place-synch", kern_place_synch);
 
         /* player api */

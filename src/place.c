@@ -2250,8 +2250,11 @@ void place_set_neighbor(struct place *place, int dir, struct place *neighbor)
                 neighbor->neighbors[opdir] = place;
 }
 
-void place_set_map(struct place *place, struct terrain_map *map)
+void place_set_terrain_map(struct place *place, struct terrain_map *map)
 {
+        if (map == place->terrain_map)
+                return;
+
         if (place->terrain_map) {
                 terrain_map_unref(place->terrain_map);
                 place->terrain_map = 0;
