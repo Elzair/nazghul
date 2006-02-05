@@ -17,9 +17,9 @@ configure. E.g., ./configure --prefix=$HOME)
 
 STARTING THE GAME
 
-Just run:
+To run haxima, the game that comes packaged with the engine:
 
-        $ nazghul
+        $ haxima.sh
 
 TROUBLESHOOTING
 
