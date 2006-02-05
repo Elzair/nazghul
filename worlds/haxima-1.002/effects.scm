@@ -329,12 +329,12 @@
 ;; ----------------------------------------------------------------------------
 (define (spider-calm-rm fgob kchar)
   (kern-dtable-dec (kern-being-get-current-faction kchar)
-                   faction-wood-spider)
+                   faction-spider)
   (kern-log-msg (kern-obj-get-name kchar) " seems less friendly to spiders"))
 
 (define (spider-calm-apply fgob kchar)
   (kern-dtable-inc (kern-being-get-current-faction kchar)
-                   faction-wood-spider)
+                   faction-spider)
   (kern-log-msg (kern-obj-get-name kchar) " makes spiders seem friendlier"))
 
 ;;----------------------------------------------------------------------------
