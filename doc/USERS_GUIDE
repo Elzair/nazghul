@@ -16,14 +16,13 @@ similar.
                                STARTING THE GAME
 
 
-On Linux/UNIX/MacOSX:
+On Linux/UNIX:
 
-      $ cd worlds/haxima-1.002
-      $ nazghul
+      $ haxima.sh
 
 On Windows:
 
-      Double-click on nazghul.exe
+      Use the start menu or desktop icon
 
 You can play the Tutorial first or jump right in with Start New Game.
 
@@ -34,7 +33,8 @@ saves before it exits. The next time you start the game choose the "Journey
 Onward" option from the main menu.
 
 If you want to save a snapshot without quitting press Ctrl-s (S is for
-"save"). If you want to revert back to that snapshot later press Ctrl-r.
+"save"). If you want to revert back to that snapshot later press Ctrl-r. If you
+want to quit without saving press Ctrl-q.
 
 If you die, the game will pick up where you last saved. 
 
