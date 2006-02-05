@@ -30,8 +30,11 @@ BEGIN_DECL
 
 #include "list.h"
 
+extern char *TERRAIN_MAP_MAGIC;
+
 struct terrain_map {
-        struct list list;
+        char *magic;
+        /*struct list list;*/
         char *tag;
         int w;
         int h;
@@ -47,12 +50,15 @@ struct terrain_map {
         int submap_h;        /* submap height     */
         char composite : 1;  /* save as composite */
 };
+
+#define is_terrain_map(ptr) (((struct terrain_map*)(ptr))->magic == TERRAIN_MAP_MAGIC)
         
 extern struct terrain_map *terrain_map_new(char *tag, 
                                            unsigned int w, 
                                            unsigned int h,
                                            struct terrain_palette * pal);
-extern void terrain_map_del(struct terrain_map *map);
+#define terrain_map_ref(map) ((map)->refcount++)
+extern void terrain_map_unref(struct terrain_map *map);
 extern struct terrain_map *terrain_map_clone(struct terrain_map *orig, 
                                              char *tag);
 extern void terrain_map_rotate(struct terrain_map *map, int degree);

@@ -60,6 +60,7 @@ BEGIN_DECL
 #define place_is_marked_for_death(p) ((p)->marked_for_death)
 #define place_max_distance(p) (place_w(p) + place_h(p))
 #define place_get_all_objects(p) (&(p)->turn_list)
+#define place_get_map(p) ((p)->terrain_map)
 
 #define PFLAG_HORZ             (1 << 0) /* matches ASTAR_HORZ */
 #define PFLAG_VERT             (1 << 1) /* matches ASTAR_VERT */
@@ -300,6 +301,7 @@ extern void place_set_neighbor(struct place *place, int dir, struct place *neigh
 extern int place_in_los(struct place *p1, int x1, int y1,
                         struct place *p2, int x2, int y2);
 extern void place_add_on_entry_hook(struct place *place, closure_t *hook_fx);
+extern void place_set_map(struct place *place, struct terrain_map *map);
 END_DECL
 
 #endif

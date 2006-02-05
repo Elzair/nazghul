@@ -27,6 +27,8 @@
 
 #include <assert.h>
 
+char *TERRAIN_MAP_MAGIC = "TERRAIN_MAP";
+
 struct terrain_map *terrain_map_new(char *tag, unsigned int w,
                                     unsigned int h,
                                     struct terrain_palette * pal)
@@ -37,11 +39,13 @@ struct terrain_map *terrain_map_new(char *tag, unsigned int w,
                 terrain_map->tag = strdup(tag);
                 assert(terrain_map->tag);
         }
+        terrain_map->magic = TERRAIN_MAP_MAGIC;
 	terrain_map->w = w;
 	terrain_map->h = h;
         terrain_map->palette = pal;
 	terrain_map->terrain =
                 (struct terrain **) malloc(sizeof(struct terrain *) * w * h);
+        terrain_map->refcount = 1;
         assert(terrain_map->terrain);
 	memset(terrain_map->terrain, 0, sizeof(struct terrain *) * w * h);
 	return terrain_map;
@@ -174,13 +178,17 @@ void terrain_map_rotate(struct terrain_map *map, int degree)
 
 }
 
-void terrain_map_del(struct terrain_map *terrain_map)
+void terrain_map_unref(struct terrain_map *terrain_map)
 {
-	if (terrain_map->tag)
-		free(terrain_map->tag);
-	if (terrain_map->terrain)
-		free(terrain_map->terrain);
-	free(terrain_map);
+        assert(terrain_map->refcount);
+        terrain_map->refcount--;
+        if (!terrain_map->refcount) {
+                if (terrain_map->tag)
+                        free(terrain_map->tag);
+                if (terrain_map->terrain)
+                        free(terrain_map->terrain);
+                free(terrain_map);
+        }
 }
 
 void terrain_map_blit(struct terrain_map *dest, int dest_x, int dest_y,
@@ -483,28 +491,3 @@ void terrain_map_save(struct save *save, void *val)
 
         map->saved = save->session_id;
 }
-
-#if 0
-// A dbg function I used once to help find a memory-stomper. Keep it around for
-// a while just in case it comes in handy again.
-void terrain_map_check(struct terrain_map *map)
-{
-        int x, y, i;
-        static int j = 0;
-
-        if (!map)
-                return;
-
-        dbg("*** terrain_map_check %d\n", j++);
-        i  = 0;
-        for (y = 0; y < map->h; y++) {
-                for (x = 0; x < map->w; x++) {                        
-                        char *glyph;
-                        glyph = palette_glyph_for_terrain(map->palette,
-                                                          map->terrain[i]);
-                        assert(glyph);
-                        i++;
-                }
-        }        
-}
-#endif

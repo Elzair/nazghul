@@ -765,7 +765,7 @@ static void combat_overlay_map(struct terrain_map *map,
         // terrain_map_print(stdout, INITIAL_INDENTATION, Place->terrain_map);
 
         // Cleanup.
-        terrain_map_del(map);
+        terrain_map_unref(map);
 }
 
 static void myPutEnemy(class Party * foe, struct position_info *pinfo)

@@ -228,7 +228,7 @@ static void terrain_palette_dtor(void *val)
 
 static void terrain_map_dtor(void *val)
 {
-        terrain_map_del((struct terrain_map*)val);
+        terrain_map_unref((struct terrain_map*)val);
 }
 
 static void incfile_dtor(void *val)
@@ -791,7 +791,7 @@ static pointer kern_mk_map(scheme *sc, pointer args)
         return ret;
 
  abort:
-        terrain_map_del(map);
+        terrain_map_unref(map);
         return sc->NIL;
 }
 
@@ -884,7 +884,7 @@ static pointer kern_mk_composite_map(scheme *sc, pointer args)
         return ret;
 
  abort:
-        terrain_map_del(map);
+        terrain_map_unref(map);
         return sc->NIL;
 }
 
@@ -5214,6 +5214,42 @@ KERN_API_CALL(kern_terrain_set_combat_map)
         return scm_mk_ptr(sc, terrain);
 }
 
+KERN_API_CALL(kern_terrain_map_inc_ref)
+{
+        struct terrain_map *map;
+
+        if (unpack(sc, &args, "p", &map)) {
+                rt_err("kern-terrain-map-inc-ref: bad args");
+                return sc->NIL;
+        }
+
+        if (!is_terrain_map(map)) {
+                rt_err("kern-terrain-map-inc-ref: not a terrain map!");
+                return sc->NIL;
+        }
+
+        terrain_map_ref(map);
+        return scm_mk_ptr(sc, map);
+}
+
+KERN_API_CALL(kern_terrain_map_dec_ref)
+{
+        struct terrain_map *map;
+
+        if (unpack(sc, &args, "p", &map)) {
+                rt_err("kern-terrain-map-dec-ref: bad args");
+                return sc->NIL;
+        }
+
+        if (!is_terrain_map(map)) {
+                rt_err("kern-terrain-map-dec-ref: not a terrain map!");
+                return sc->NIL;
+        }
+
+        terrain_map_ref(map);
+        return sc->NIL;
+}
+
 KERN_API_CALL(kern_place_get_width)
 {
         struct place *place;
@@ -7206,6 +7242,8 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-terrain-blocks-los?", kern_terrain_blocks_los);
         API_DECL(sc, "kern-terrain-get-pclass", kern_terrain_get_pclass);
         API_DECL(sc, "kern-terrain-set-combat-map", kern_terrain_set_combat_map);
+        API_DECL(sc, "kern-terrain-map-inc-ref", kern_terrain_map_inc_ref);
+        API_DECL(sc, "kern-terrain-map-dec-ref", kern_terrain_map_dec_ref);
 
         /* kern-type api */
         API_DECL(sc, "kern-type-describe", kern_type_describe);

@@ -550,7 +550,7 @@ void place_del(struct place *place)
 	if (place->name)
 		free(place->name);
 	if (place->terrain_map)
-		terrain_map_del(place->terrain_map);
+		terrain_map_unref(place->terrain_map);
 
         place_del_on_entry_hook(place);
 
@@ -2248,4 +2248,16 @@ void place_set_neighbor(struct place *place, int dir, struct place *neighbor)
         place->neighbors[dir] = neighbor;
         if (neighbor)
                 neighbor->neighbors[opdir] = place;
+}
+
+void place_set_map(struct place *place, struct terrain_map *map)
+{
+        if (place->terrain_map) {
+                terrain_map_unref(place->terrain_map);
+                place->terrain_map = 0;
+        }
+
+        if (map) {
+                place->terrain_map = terrain_map_clone(map, 0);
+        }
 }
