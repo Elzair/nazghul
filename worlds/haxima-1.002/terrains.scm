@@ -195,15 +195,41 @@
                    (mk-composite-sprite (cons s_shoals sprites))
                    1 0 nil))
 
-(mk-shore-terrain 't_shore_nw s_grass_nw)
 (mk-shore-terrain 't_shore_n  s_grass_n )
-(mk-shore-terrain 't_shore_ne s_grass_ne)
 (mk-shore-terrain 't_shore_w  s_grass_w )
-(mk-shore-terrain 't_shore_c  s_grass_n s_grass_w s_grass_e s_grass_s)
+(mk-shore-terrain 't_shore_nw s_grass_nw)
 (mk-shore-terrain 't_shore_e  s_grass_e )
-(mk-shore-terrain 't_shore_sw s_grass_sw)
+(mk-shore-terrain 't_shore_ne s_grass_ne)
+(mk-shore-terrain 't_shore_we s_grass_e s_grass_w)
+(mk-shore-terrain 't_shore_nwe s_grass_ne s_grass_nw)
 (mk-shore-terrain 't_shore_s  s_grass_s )
-(mk-shore-terrain 't_shore_se s_grass_se)
+(mk-shore-terrain 't_shore_ns s_grass_s s_grass_n)
+(mk-shore-terrain 't_shore_ws s_grass_sw)
+(mk-shore-terrain 't_shore_nws s_grass_sw s_grass_nw)
+(mk-shore-terrain 't_shore_es s_grass_se)
+(mk-shore-terrain 't_shore_nes s_grass_se s_grass_ne)
+(mk-shore-terrain 't_shore_wes s_grass_se s_grass_nw)
+(mk-shore-terrain 't_shore_c s_grass_se s_grass_sw s_grass_ne s_grass_nw)
+
+(define tset_shore
+  (list
+   t_shoals    ;; 0: none
+   t_shore_n   ;; 1: north
+   t_shore_w   ;; 2: west
+   t_shore_nw  ;; 3: north west
+   t_shore_e   ;; 4: east
+   t_shore_ne  ;; 5: east north
+   t_shore_we  ;; 6: east west
+   t_shore_nwe ;; 7: east west north
+   t_shore_s   ;; 8: south
+   t_shore_ns  ;; 9: south north
+   t_shore_ws  ;; 10: south west
+   t_shore_nws ;; 11: south west north
+   t_shore_es  ;; 12: south east
+   t_shore_nes ;; 13: south east north
+   t_shore_wes ;; 14: south east west
+   t_shore_c ;; 15: south east west north
+   ))
 
 ;;----------------------------------------------------------------------------
 (define bad-terrain-list

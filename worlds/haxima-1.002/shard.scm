@@ -1,4 +1,4 @@
-  (kern-mk-composite-map
+(kern-mk-composite-map
     'm_shard     4 3
     (kern-mk-map nil 32 32 pal_expanded
       (list
@@ -435,6 +435,10 @@
   )
 
 (kern-load "raise-merciful-death.scm")
+
+(kern-terrain-map-blend m_shard t_shoals t_grass tset_shore)
+(kern-terrain-map-blend m_shard t_shoals t_trees tset_shore)
+(kern-terrain-map-blend m_shard t_shoals t_bog tset_shore)
 
 (kern-mk-place 
  'p_shard

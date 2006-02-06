@@ -15,17 +15,23 @@
     (list  "__"   t_deep)               ;; "deep water"
     (list  "_!"   t_sunlit_deep)               ;; "deep water"
     (list  "--"   t_shallow)            ;; "shallow water"
-    (list  "~~"   t_shoals)             ;; "shoals"
 
     (list  "~0"   t_shore_nw)
     (list  "~1"   t_shore_n)
     (list  "~2"   t_shore_ne)
-    (list  "~3"   t_shore_w)
-    (list  "~4"   t_shore_c)
-    (list  "~5"   t_shore_e)
-    (list  "~6"   t_shore_sw)
-    (list  "~7"   t_shore_s)
-    (list  "~8"   t_shore_se)
+    (list  "~3"   t_shore_nwe)
+    (list  "~4"   t_shore_w)
+    (list  "~~"   t_shoals)
+    (list  "~6"   t_shore_e)
+    (list  "~7"   t_shore_we)
+    (list  "~8"   t_shore_ws)
+    (list  "~9"   t_shore_s)
+    (list  "~a"   t_shore_es)
+    (list  "~b"   t_shore_wes)
+    (list  "~c"   t_shore_w)
+    (list  "~d"   t_shore_ns)
+    (list  "~e"   t_shore_nes)
+    (list  "~f"   t_shore_c)
 
     (list  "%%"   t_bog)                ;; "bog"
     (list  ".."   t_grass)              ;; "grass"
