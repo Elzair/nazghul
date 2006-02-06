@@ -5285,6 +5285,51 @@ KERN_API_CALL(kern_terrain_map_dec_ref)
         return sc->NIL;
 }
 
+KERN_API_CALL(kern_terrain_map_blend)
+{
+        struct terrain_map *map;
+        struct terrain *inf, *sup, *range[16];
+        pointer rlist;
+        int i = 0;
+
+        if (unpack(sc, &args, "ppp", &map,  &inf, &sup)) {
+                rt_err("kern-terrain-map-blend: bad args");
+                return sc->NIL;
+        }
+
+        if (!is_terrain_map(map)) {
+                rt_err("kern-terrain-map-blend: not a terrain map!");
+                return sc->NIL;
+        }
+
+        rlist = scm_car(sc, args);
+        args = scm_cdr(sc,  args);
+
+        if (! scm_is_pair(sc, rlist)) {
+                rt_err("kern-terrain-map-blend: missing range list");
+                return sc->NIL;
+        }
+
+        while (scm_is_pair(sc, rlist) && i < 16) {
+
+                if (unpack(sc, &rlist, "p", &range[i])) {
+                        rt_err("kern-terrain-map-blend: range %d bad", i);
+                        return sc->NIL;
+                }
+
+                i++;
+        }
+
+        if (i < 16) {
+                rt_err("kern-terrain-map-blend: expected 16 ranges, got %d", i);
+                return sc->NIL;
+        }
+
+        terrain_map_blend(map, inf, sup, range);
+
+        return scm_mk_ptr(sc, map);
+}
+
 KERN_API_CALL(kern_place_get_width)
 {
         struct place *place;
@@ -7313,6 +7358,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-terrain-set-combat-map", kern_terrain_set_combat_map);
         API_DECL(sc, "kern-terrain-map-inc-ref", kern_terrain_map_inc_ref);
         API_DECL(sc, "kern-terrain-map-dec-ref", kern_terrain_map_dec_ref);
+        API_DECL(sc, "kern-terrain-map-blend", kern_terrain_map_blend);
 
         /* kern-type api */
         API_DECL(sc, "kern-type-describe", kern_type_describe);

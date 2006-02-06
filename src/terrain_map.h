@@ -73,6 +73,10 @@ extern void print_horizontal_guideline (FILE * fp, int indent,
                                         struct terrain_map *map);
 
 extern void terrain_map_save(struct save *, void *val);
+extern void terrain_map_blend(struct terrain_map *map, 
+                              struct terrain *inf, 
+                              struct terrain *sup,
+                              struct terrain *range[16]);
 
 
 END_DECL

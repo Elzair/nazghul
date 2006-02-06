@@ -491,3 +491,57 @@ void terrain_map_save(struct save *save, void *val)
 
         map->saved = save->session_id;
 }
+
+static inline struct terrain *terrain_map_get_terrain(struct terrain_map *map, int x, int y)
+{
+        return map->terrain[y * map->w + x];
+}
+
+static int terrain_map_match_pattern(struct terrain_map *map, int ox, int oy, 
+                                     struct terrain *inf, 
+                                     struct terrain *sup)
+{
+        int rule = 0;
+
+        /* north */
+        if (terrain_map_get_terrain(map, ox, oy - 1) == sup)
+                rule += 1;
+
+        /* west */
+        if (terrain_map_get_terrain(map, ox - 1, oy) == sup)
+                rule += 2;
+
+        /* east */
+        if (terrain_map_get_terrain(map, ox + 1, oy) == sup)
+                rule += 4;
+
+        /* south */
+        if (terrain_map_get_terrain(map, ox, oy + 1) == sup)
+                rule += 8;
+
+        return rule;
+}
+
+void terrain_map_blend(struct terrain_map *map, 
+                       struct terrain *inf, 
+                       struct terrain *sup,
+                       struct terrain *range[16])
+{
+        int x, y, rule;
+
+        for (y = 1; y < (map->h - 1); y++) {
+
+                for (x = 1; x < (map->w - 1); x++) {
+
+                        if (terrain_map_get_terrain(map, x, y) == inf) {
+
+                                rule = terrain_map_match_pattern(map, x, y, inf, sup);
+
+                                if (rule) {
+                                        map->terrain[y*map->w+x] = range[rule];
+                                }
+
+                        }
+                }
+        }
+}
