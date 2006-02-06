@@ -16,6 +16,17 @@
     (list  "_!"   t_sunlit_deep)               ;; "deep water"
     (list  "--"   t_shallow)            ;; "shallow water"
     (list  "~~"   t_shoals)             ;; "shoals"
+
+    (list  "~0"   t_shore_nw)
+    (list  "~1"   t_shore_n)
+    (list  "~2"   t_shore_ne)
+    (list  "~3"   t_shore_w)
+    (list  "~4"   t_shore_c)
+    (list  "~5"   t_shore_e)
+    (list  "~6"   t_shore_sw)
+    (list  "~7"   t_shore_s)
+    (list  "~8"   t_shore_se)
+
     (list  "%%"   t_bog)                ;; "bog"
     (list  ".."   t_grass)              ;; "grass"
     (list  ".!"   t_sunlit_grass)              ;; "grass"

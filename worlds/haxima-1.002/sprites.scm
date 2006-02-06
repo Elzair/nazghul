@@ -410,6 +410,19 @@
 
 (kern-mk-sprite 's_tower ss_buildings 2 0 #f 0)
 
+;;----------------------------------------------------------------------------
+;; Terrain overlay pieces
+(define (mk-sprite tag offset)
+  (kern-mk-sprite tag ss_overlays 1 offset #f 0))
+(mk-sprite 's_grass_nw 0)
+(mk-sprite 's_grass_ne 1)
+(mk-sprite 's_grass_se 2)
+(mk-sprite 's_grass_sw 3)
+(mk-sprite 's_grass_n  8)
+(mk-sprite 's_grass_e  9)
+(mk-sprite 's_grass_s  10)
+(mk-sprite 's_grass_w  11)
+
 ;; convenient alia
 (define s_shepherd s_companion_shepherd)
 (define s_ranger s_companion_ranger)

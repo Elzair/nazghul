@@ -187,6 +187,25 @@
 
 (map (lambda (terrain) (apply kern-mk-terrain terrain)) terrains)
 
+;;----------------------------------------------------------------------------
+;; Make some blended shore terrain types
+
+(define (mk-shore-terrain tag . sprites)
+  (kern-mk-terrain tag "a shore" pclass-shoals
+                   (mk-composite-sprite (cons s_shoals sprites))
+                   1 0 nil))
+
+(mk-shore-terrain 't_shore_nw s_grass_nw)
+(mk-shore-terrain 't_shore_n  s_grass_n )
+(mk-shore-terrain 't_shore_ne s_grass_ne)
+(mk-shore-terrain 't_shore_w  s_grass_w )
+(mk-shore-terrain 't_shore_c  s_grass_n s_grass_w s_grass_e s_grass_s)
+(mk-shore-terrain 't_shore_e  s_grass_e )
+(mk-shore-terrain 't_shore_sw s_grass_sw)
+(mk-shore-terrain 't_shore_s  s_grass_s )
+(mk-shore-terrain 't_shore_se s_grass_se)
+
+;;----------------------------------------------------------------------------
 (define bad-terrain-list
   (list t_bog
         t_lava

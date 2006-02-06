@@ -1423,3 +1423,11 @@
   (kern-obj-relocate kchar (loc-offset loc dir) nil)
   (kern-being-set-base-faction kchar faction)
   (kern-map-repaint))
+
+;;-----------------------------------------------------------------------------
+;; mk-composite-sprite -- make a new sprite which is the composite of the
+;; others in the list. The new sprite will be "anonymous" (no tag).
+(define (mk-composite-sprite sprites)
+  (foldr (lambda (s1 s2) (kern-sprite-append-decoration s1 s2))
+         (kern-sprite-clone (car sprites))
+         (cdr sprites)))

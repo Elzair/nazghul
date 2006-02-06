@@ -22,3 +22,4 @@
 (kern-mk-sprite-set 'ss_newmonst         32 32   16  8   0 0  "newmonst.png") 
 (kern-mk-sprite-set 'ss_newfolks         32 32   16  8   0 0  "newfolks.png")
 (kern-mk-sprite-set 'ss_buildings        32 32    1  2   0 0  "tower.png")
+(kern-mk-sprite-set 'ss_overlays         32 32    3  8   0 0  "newterrain.png")
