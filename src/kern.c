@@ -7038,6 +7038,38 @@ KERN_API_CALL(kern_end_game)
         return sc->NIL;
 }
 
+KERN_API_CALL(kern_sprite_clone)
+{
+        struct sprite *orig, *clone;
+
+        if (unpack(sc, &args, "p", &orig)) {
+                rt_err("kern-sprite-clone: bad args");
+                return sc->NIL;
+        }
+        clone = spriteClone(orig);
+        if (clone) {
+                session_add(Session, clone, sprite_dtor, NULL, NULL);
+                return scm_mk_ptr(sc, clone);
+        }
+        return sc->NIL;
+}
+
+KERN_API_CALL(kern_sprite_append_decoration)
+{
+        struct sprite *orig, *decor;
+
+        if (unpack(sc, &args, "pp", &orig, &decor)) {
+                rt_err("kern-sprite-append-decoration: bad args");
+                return sc->NIL;
+        }
+        if (!orig || ! decor) {
+                rt_err("kern-sprite-append-decoration: null arg");
+                return sc->NIL;
+        }
+        spriteAppendDecoration(orig, decor);
+        return scm_mk_ptr(sc, orig);
+}
+
 #if 0
 KERN_API_CALL(kern_los_invalidate)
 {
@@ -7377,6 +7409,10 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-party-get-vehicle", kern_party_get_vehicle);
         API_DECL(sc, "kern-party-set-vehicle", kern_party_set_vehicle);
 
+        /* kern-sprite api */
+        API_DECL(sc, "kern-sprite-clone", kern_sprite_clone);
+        API_DECL(sc, "kern-sprite-append-decoration", kern_sprite_append_decoration);
+        
         /* Revisit: probably want to provide some kind of custom port here. */
         scheme_set_output_port_file(sc, stderr);
 

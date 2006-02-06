@@ -115,16 +115,23 @@ void sprite_del(struct sprite *sprite)
                 free(sprite->tag);
 	if (sprite->frames)
 		delete [] sprite->frames;
+        if (sprite->decor)
+                sprite_del(sprite->decor);
 	delete sprite;
 }
 
 void spritePaint(struct sprite *sprite, int frame, int x, int y)
 {
-        if (sprite->wave) {
-		myPaintWave(sprite, frame, x, y);
-        } else {
-		myPaintNormal(sprite, frame, x, y);
-	}
+        while (sprite) {
+
+                if (sprite->wave) {
+                        myPaintWave(sprite, frame, x, y);
+                } else {
+                        myPaintNormal(sprite, frame, x, y);
+                }
+                
+                sprite = sprite->decor;
+        }
 }
 
 void spriteAdvanceTicks(int ticks)
@@ -238,7 +245,8 @@ struct sprite * sprite_new(char *tag, int frames, int index, int wave,
         assert(sprite);
 	memset(sprite, 0, sizeof(*sprite));
 
-        sprite->tag       = strdup(tag);
+        if (tag)
+                sprite->tag       = strdup(tag);
         sprite->n_frames  = frames;
         sprite->index     = index;
         sprite->facings   = facings;
@@ -271,4 +279,19 @@ struct sprite * sprite_new(char *tag, int frames, int index, int wave,
 	}        
 
 	return sprite;
+}
+
+struct sprite *spriteClone(struct sprite *orig)
+{
+        return sprite_new(NULL, orig->n_frames, orig->index, orig->wave, 
+                          orig->facings, orig->images);
+}
+
+void spriteAppendDecoration(struct sprite *base, struct sprite *decor)
+{
+        assert(base);
+        while (base->decor) {
+                base = base->decor;
+        }
+        base->decor = spriteClone(decor);
 }

@@ -46,6 +46,7 @@ struct sprite {
         int facing;             // current facing sequence
         int facings;            // bitmap of supported facing sequences
         int sequence;           // current animation sequence
+        struct sprite *decor;   // decoration sprites
         int faded:1;	        // render sprite sem-transparent
         int wave : 1;
 };
@@ -62,6 +63,8 @@ extern void sprite_unfade(struct sprite *sprite);
 extern void spriteZoomOut(int factor);
 extern void spriteZoomIn(int factor);
 extern void spriteAdvanceTicks(int ticks);
+extern void spriteAppendDecoration(struct sprite *sprite, struct sprite *decor);
+extern struct sprite *spriteClone(struct sprite *orig);
 
 END_DECL
 
