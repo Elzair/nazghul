@@ -81,8 +81,10 @@ void Missile::animate(int Ax, int Ay, int Bx, int By, int _flags)
         struck = NULL;
         flags = _flags;
 
-        mapAnimateProjectile(Ax, Ay, &Bx, &By, getSprite(), getPlace(), this);
-        
+        struct sprite *tmpSprite = spriteClone(getSprite());
+        mapAnimateProjectile(Ax, Ay, &Bx, &By, tmpSprite, getPlace(), this);
+        sprite_del(tmpSprite);
+
         hit = (hit || (origBx == Bx && origBy == By));
 
         // New system: check if this object type has a "hit" procedure. If so

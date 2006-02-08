@@ -5288,11 +5288,12 @@ KERN_API_CALL(kern_terrain_map_dec_ref)
 KERN_API_CALL(kern_terrain_map_blend)
 {
         struct terrain_map *map;
-        struct terrain *inf, *sup, *range[16];
+        struct terrain *inf, *nonsup[32], *range[16];
         pointer rlist;
         int i = 0;
+        int n_nonsup = 0;
 
-        if (unpack(sc, &args, "ppp", &map,  &inf, &sup)) {
+        if (unpack(sc, &args, "pp", &map,  &inf)) {
                 rt_err("kern-terrain-map-blend: bad args");
                 return sc->NIL;
         }
@@ -5302,6 +5303,33 @@ KERN_API_CALL(kern_terrain_map_blend)
                 return sc->NIL;
         }
 
+        /* list of not-superior terrains */
+        rlist = scm_car(sc, args);
+        args = scm_cdr(sc,  args);
+
+        if (! scm_is_pair(sc, rlist)) {
+                rt_err("kern-terrain-map-blend: missing non-superior list");
+                return sc->NIL;
+        }
+
+        while (scm_is_pair(sc, rlist) && n_nonsup < array_sz(nonsup)) {
+
+                if (unpack(sc, &rlist, "p", &nonsup[n_nonsup])) {
+                        rt_err("kern-terrain-map-blend: non-superior terrain %d bad", i);
+                        return sc->NIL;
+                }
+
+                n_nonsup++;
+        }
+        
+        if (scm_is_pair(sc, rlist)) {
+                warn("kern-terrain-map-blend: at most %d non-superior "\
+                     "terrains may be used, the rest will be ignored",
+                     array_sz(nonsup));
+        }
+
+        /* list of target (range) terrains */
+        i = 0;
         rlist = scm_car(sc, args);
         args = scm_cdr(sc,  args);
 
@@ -5325,7 +5353,7 @@ KERN_API_CALL(kern_terrain_map_blend)
                 return sc->NIL;
         }
 
-        terrain_map_blend(map, inf, sup, range);
+        terrain_map_blend(map, inf, n_nonsup, nonsup, range);
 
         return scm_mk_ptr(sc, map);
 }

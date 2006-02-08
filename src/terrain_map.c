@@ -497,34 +497,52 @@ static inline struct terrain *terrain_map_get_terrain(struct terrain_map *map, i
         return map->terrain[y * map->w + x];
 }
 
+static int terrain_not_sup(struct terrain *tt, int n_not_sup, struct terrain **not_sup)
+{
+        int i;
+        for (i = 0; i < n_not_sup; i++) {
+                if (tt == not_sup[i])
+                        return 1;
+        }
+
+        return 0;
+}
+
 static int terrain_map_match_pattern(struct terrain_map *map, int ox, int oy, 
                                      struct terrain *inf, 
-                                     struct terrain *sup)
+                                     int n_not_sup,
+                                     struct terrain **not_sup
+                                     )
 {
         int rule = 0;
 
         /* north */
-        if (terrain_map_get_terrain(map, ox, oy - 1) == sup)
+        if (! terrain_not_sup(terrain_map_get_terrain(map, ox, oy - 1),
+                              n_not_sup, not_sup))
                 rule += 1;
 
         /* west */
-        if (terrain_map_get_terrain(map, ox - 1, oy) == sup)
+        if (! terrain_not_sup(terrain_map_get_terrain(map, ox - 1, oy),
+                              n_not_sup, not_sup))
                 rule += 2;
 
         /* east */
-        if (terrain_map_get_terrain(map, ox + 1, oy) == sup)
+        if (! terrain_not_sup(terrain_map_get_terrain(map, ox + 1, oy),
+                              n_not_sup, not_sup))
                 rule += 4;
 
         /* south */
-        if (terrain_map_get_terrain(map, ox, oy + 1) == sup)
+        if (! terrain_not_sup(terrain_map_get_terrain(map, ox, oy + 1),
+                              n_not_sup, not_sup))
                 rule += 8;
 
         return rule;
 }
 
 void terrain_map_blend(struct terrain_map *map, 
-                       struct terrain *inf, 
-                       struct terrain *sup,
+                       struct terrain *inf,
+                       int n_not_sup,
+                       struct terrain **not_sup,
                        struct terrain *range[16])
 {
         int x, y, rule;
@@ -535,7 +553,7 @@ void terrain_map_blend(struct terrain_map *map,
 
                         if (terrain_map_get_terrain(map, x, y) == inf) {
 
-                                rule = terrain_map_match_pattern(map, x, y, inf, sup);
+                                rule = terrain_map_match_pattern(map, x, y, inf, n_not_sup, not_sup);
 
                                 if (rule) {
                                         map->terrain[y*map->w+x] = range[rule];

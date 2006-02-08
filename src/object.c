@@ -1837,7 +1837,7 @@ void ObjectType::buy(Object *buyer, int q)
 
 void ObjectType::search(Object *obj)
 {
-        closure_exec(gifc, "ypd", "search", obj);
+        closure_exec(gifc, "yp", "search", obj);
 }
 
 closure_t *ObjectType::getGifc()
