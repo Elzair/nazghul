@@ -208,7 +208,7 @@
 (mk-shore-terrain 't_shore_nws s_grass_sw s_grass_nw)
 (mk-shore-terrain 't_shore_es s_grass_se)
 (mk-shore-terrain 't_shore_nes s_grass_se s_grass_ne)
-(mk-shore-terrain 't_shore_wes s_grass_se s_grass_nw)
+(mk-shore-terrain 't_shore_wes s_grass_se s_grass_sw)
 (mk-shore-terrain 't_shore_c s_grass_se s_grass_sw s_grass_ne s_grass_nw)
 
 (define tset_shore
@@ -265,3 +265,8 @@
 
 (define (is-inflammable-terrain? kter)
   (in-list? kter inflammable-terrain-list))
+
+;;----------------------------------------------------------------------------
+;; terrain map blenders (automatically run within kern-mk-map)
+(kern-mk-blender t_shoals tset_water tset_shore)
+(kern-mk-blender t_shallow tset_water tset_shore)

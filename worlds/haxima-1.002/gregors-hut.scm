@@ -58,7 +58,7 @@
                )
  (ilya-mk #f #f))
 
-(kern-terrain-map-blend m_gregors_hut t_shoals tset_water tset_shore)
+;;(kern-terrain-map-blend m_gregors_hut t_shoals tset_water tset_shore)
 
 
 (kern-mk-place 'p_gregors_hut     ; tag
