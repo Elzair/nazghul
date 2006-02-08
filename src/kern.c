@@ -138,19 +138,39 @@
 
 #define KERN_API_CALL(name) static pointer name(scheme *sc, pointer args)
 
-
 #define TAG_UNK "<tag?>"
+#define BLENDER_MAX_NONSUP 32
+#define BLENDER_N_RANGE  16
+
+
+struct kjob {
+        void *data;
+        closure_t *clx;
+};
+
+/* Struct used by callbacks which build scheme lists */
+struct kern_append_info {
+        scheme *sc;
+        pointer head;
+        pointer tail;
+        int (*filter)(Object *, struct kern_append_info *);
+        void *data;
+};
+
+typedef struct blender {
+        struct list list;
+        struct terrain *inf;
+        int n_nonsup;
+        struct terrain *nonsup[BLENDER_MAX_NONSUP];
+        struct terrain *range[BLENDER_N_RANGE];
+} blender_t;
+
 
 /*****************************************************************************
  *
  * kjob - wrapper for work queue jobs
  *
  *****************************************************************************/
-struct kjob {
-        void *data;
-        closure_t *clx;
-};
-
 static struct kjob * kjob_new(void *data, closure_t *clx)
 {
         struct kjob *kjob;
@@ -178,16 +198,6 @@ static void kern_run_wq_job(struct wq_job *job, struct list *wq)
         wq_job_del(job);
 }
 /*****************************************************************************/
-
-/* Struct used by callbacks which build scheme lists */
-struct kern_append_info {
-        scheme *sc;
-        pointer head;
-        pointer tail;
-        int (*filter)(Object *, struct kern_append_info *);
-        void *data;
-};
-
 
 static int scm_len(scheme *sc, pointer list)
 {
@@ -276,6 +286,12 @@ static void vehicle_type_dtor(void *val)
         delete (class VehicleType*)val;
 }
 
+static void blender_dtor(void *val)
+{
+        blender_t *blender=(blender_t*)val;
+        list_remove(&blender->list);
+        free(blender);
+}
 
 static int unpack(scheme *sc, pointer *cell, char *fmt, ...)
 {
@@ -728,6 +744,7 @@ static pointer kern_mk_map(scheme *sc, pointer args)
         char *tag = TAG_UNK;
         struct terrain_map *map;
         pointer ret;
+        struct list *elem;
 
         if (unpack(sc, &args, "yddp", &tag, &width, &height, &pal)) {
                 load_err("kern-mk-map %s: bad args", tag);
@@ -779,6 +796,14 @@ static pointer kern_mk_map(scheme *sc, pointer args)
                         
                 }
         }
+
+        /* run all registered terrain blenders on the new map */
+        list_for_each(&Session->blenders, elem) {
+                blender_t *blender=outcast(elem, blender_t, list);
+                terrain_map_blend(map, blender->inf, blender->n_nonsup,
+                                  blender->nonsup, blender->range);
+        }
+        
 
         map->handle = session_add(Session, map, terrain_map_dtor, NULL, NULL);
         ret = scm_mk_ptr(sc, map);
@@ -5285,6 +5310,81 @@ KERN_API_CALL(kern_terrain_map_dec_ref)
         return sc->NIL;
 }
 
+KERN_API_CALL(kern_mk_blender)
+{
+        blender_t *blender;
+        pointer rlist;
+        int i = 0;
+
+        blender = (blender_t*)calloc(1, sizeof(*blender));
+        list_init(&blender->list);
+
+        if (unpack(sc, &args, "p", &blender->inf)) {
+                rt_err("kern-terrain-map-blend: bad args");
+                goto abort;
+        }
+
+        /* list of not-superior terrains */
+        rlist = scm_car(sc, args);
+        args = scm_cdr(sc,  args);
+
+        if (! scm_is_pair(sc, rlist)) {
+                rt_err("kern-terrain-map-blend: missing non-superior list");
+                goto abort;
+        }
+
+        while (scm_is_pair(sc, rlist) 
+               && blender->n_nonsup < BLENDER_MAX_NONSUP) {
+                if (unpack(sc, &rlist, "p", &blender->nonsup[blender->n_nonsup])) {
+                        rt_err("kern-terrain-map-blend: non-superior terrain %d bad", i);
+                        goto abort;
+                }
+                blender->n_nonsup++;
+        }
+        
+        if (scm_is_pair(sc, rlist)) {
+                warn("kern-terrain-map-blend: at most %d non-superior "\
+                     "terrains may be used, the rest will be ignored",
+                     BLENDER_MAX_NONSUP);
+        }
+
+        /* list of target (range) terrains */
+        i = 0;
+        rlist = scm_car(sc, args);
+        args = scm_cdr(sc,  args);
+
+        if (! scm_is_pair(sc, rlist)) {
+                rt_err("kern-terrain-map-blend: missing range list");
+                goto abort;
+        }
+
+        while (scm_is_pair(sc, rlist) 
+               && i < BLENDER_N_RANGE) {
+
+                if (unpack(sc, &rlist, "p", &blender->range[i])) {
+                        rt_err("kern-terrain-map-blend: range %d bad", i);
+                        return sc->NIL;
+                }
+
+                i++;
+        }
+
+        if (i < BLENDER_N_RANGE) {
+                rt_err("kern-terrain-map-blend: expected %d ranges, got %d", 
+                       BLENDER_N_RANGE, i);
+                goto abort;
+        }
+
+        session_add(Session, blender, blender_dtor, NULL, NULL);
+        list_add(&Session->blenders, &blender->list);
+
+        return sc->T;
+
+ abort:
+        free(blender);
+        return sc->F;
+}
+
 KERN_API_CALL(kern_terrain_map_blend)
 {
         struct terrain_map *map;
@@ -7249,6 +7349,7 @@ scheme *kern_init(void)
         /* kern-mk api */
         API_DECL(sc, "kern-mk-arms-type", kern_mk_arms_type);
         API_DECL(sc, "kern-mk-astral-body", kern_mk_astral_body);
+        API_DECL(sc, "kern-mk-blender", kern_mk_blender);
         API_DECL(sc, "kern-mk-char", kern_mk_char);
         API_DECL(sc, "kern-mk-container", kern_mk_container);
         API_DECL(sc, "kern-mk-effect", kern_mk_effect);

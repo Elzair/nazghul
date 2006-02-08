@@ -197,6 +197,8 @@ struct session {
          * wrong, I know. Be careful with it. */
         Being *subject;
 
+        struct list blenders;
+
         char show_boxes : 1;  /* draw red/green/yellow boxes around npcs */
 };
 

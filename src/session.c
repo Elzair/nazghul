@@ -228,6 +228,7 @@ struct session *session_new(void *interp)
         list_init(&session->tickq);
         list_init(&session->turnq);
         node_init(&session->sched_chars);
+        list_init(&session->blenders);
         session->time_accel = 1;
         return session;
 }
