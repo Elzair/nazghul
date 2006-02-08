@@ -103,7 +103,8 @@
   (put (kern-mk-obj F_energy_perm 1) 5 28)
   (put (kern-mk-obj F_fire_perm 1) 1 29)
   (put (kern-mk-obj F_fire_perm 1) 5 29)
-  (put (make-invisible (kern-mk-obj t_rune_s 1)) 4 29)
+  
+  (put (mk-hidden 't_rune_s 1) 4 29)
 
   ;; meat locker
   (put (mk-locked-door) 22 14)

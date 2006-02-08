@@ -436,9 +436,9 @@
 
 (kern-load "raise-merciful-death.scm")
 
-(kern-terrain-map-blend m_shard t_shoals t_grass tset_shore)
-(kern-terrain-map-blend m_shard t_shoals t_trees tset_shore)
-(kern-terrain-map-blend m_shard t_shoals t_bog tset_shore)
+
+(kern-terrain-map-blend m_shard t_shoals tset_water tset_shore)
+(kern-terrain-map-blend m_shard t_shallow tset_water tset_shore)
 
 (kern-mk-place 
  'p_shard

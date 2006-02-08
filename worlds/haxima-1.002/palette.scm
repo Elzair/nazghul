@@ -28,7 +28,7 @@
     (list  "~9"   t_shore_s)
     (list  "~a"   t_shore_es)
     (list  "~b"   t_shore_wes)
-    (list  "~c"   t_shore_w)
+    (list  "~c"   t_shore_nws)
     (list  "~d"   t_shore_ns)
     (list  "~e"   t_shore_nes)
     (list  "~f"   t_shore_c)

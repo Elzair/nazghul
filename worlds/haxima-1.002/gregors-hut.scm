@@ -58,9 +58,7 @@
                )
  (ilya-mk #f #f))
 
-(kern-terrain-map-blend m_gregors_hut t_shoals t_grass tset_shore)
-(kern-terrain-map-blend m_gregors_hut t_shoals t_trees tset_shore)
-(kern-terrain-map-blend m_gregors_hut t_shoals t_bog tset_shore)
+(kern-terrain-map-blend m_gregors_hut t_shoals tset_water tset_shore)
 
 
 (kern-mk-place 'p_gregors_hut     ; tag

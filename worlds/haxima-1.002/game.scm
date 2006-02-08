@@ -220,6 +220,7 @@
 (load "moongate.scm")
 (load "bridge.scm")
 (load "drawbridge.scm")
+(load "hidden.scm")
 
 ;; Astronomy
 (load "moon.scm")

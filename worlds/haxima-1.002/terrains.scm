@@ -231,6 +231,15 @@
    t_shore_c ;; 15: south east west north
    ))
 
+(define tset_water
+  (append tset_shore
+          (list t_shoals
+                t_shallow
+                t_deep
+                t_sunlit_deep
+                t_bridge_WE
+                t_bridge_NS)))
+
 ;;----------------------------------------------------------------------------
 (define bad-terrain-list
   (list t_bog
