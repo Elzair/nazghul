@@ -374,7 +374,7 @@
 
 (define (in-wis  caster)
   (let ((loc (kern-obj-get-location caster)))
-    (kern-print "You are in " (kern-place-get-name (car loc)) ":lat=" (cadr loc) " long=" (caddr loc) "\n")))
+    (kern-log-msg "You are in " (kern-place-get-name (car loc)) " at [" (caddr loc) " " (cadr loc) "]")))
 
 (define (kal-xen  caster)
   (summon (kern-obj-get-location caster)
