@@ -28,11 +28,11 @@
 (kern-mk-sprite 's_shoals        ss_u4_shapes 1  2 #t 0 )
 (kern-mk-sprite 's_bog           ss_u4_shapes 1  3 #f 0 )
 (kern-mk-sprite 's_grass         ss_u4_shapes 1  4 #f 0 )
-(kern-mk-sprite 's_trees         ss_u4_shapes 1  5 #f 0 )
-(kern-mk-sprite 's_forest        ss_u4_shapes 1  6 #f 0 )
-(kern-mk-sprite 's_hills         ss_u4_shapes 1  7 #f 0 )
-(kern-mk-sprite 's_mountains     ss_u4_shapes 1  8 #f 0 )
-(kern-mk-sprite 's_dungeon       ss_u4_shapes 1  9 #f 0 )
+;(kern-mk-sprite 's_trees         ss_u4_shapes 1  5 #f 0 )
+;(kern-mk-sprite 's_forest        ss_u4_shapes 1  6 #f 0 )
+;(kern-mk-sprite 's_hills         ss_u4_shapes 1  7 #f 0 )
+;(kern-mk-sprite 's_mountains     ss_u4_shapes 1  8 #f 0 )
+;(kern-mk-sprite 's_dungeon       ss_u4_shapes 1  9 #f 0 )
 (kern-mk-sprite 's_town          ss_u4_shapes 1 10 #f 0 )
 (kern-mk-sprite 's_keep          ss_u4_shapes 1 11 #f 0 )
 (kern-mk-sprite 's_hamlet        ss_u4_shapes 1 12 #f 0 )
@@ -409,6 +409,12 @@
 (kern-mk-sprite 's_companion_shepherd ss_newfolks 4 36 #f 0 )
 
 (kern-mk-sprite 's_tower ss_buildings 2 0 #f 0)
+
+(kern-mk-sprite 's_trees         ss_overlays 1  20 #f 0 )
+(kern-mk-sprite 's_forest        ss_overlays 1  21 #f 0 )
+(kern-mk-sprite 's_hills         ss_overlays 1  22 #f 0 )
+(kern-mk-sprite 's_mountains     ss_overlays 1  23 #f 0 )
+(kern-mk-sprite 's_dungeon       ss_overlays 1  24 #f 0 )
 
 ;;----------------------------------------------------------------------------
 ;; Terrain overlay pieces
