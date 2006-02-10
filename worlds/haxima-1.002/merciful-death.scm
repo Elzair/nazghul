@@ -122,7 +122,9 @@
         'poison-trap
         (mk-contents (add-content 1   t_rune_c)
                      (add-content 342 t_gold_coins)
-                     (add-content 4   t_gem)))
+                     (add-content 4   t_gem)
+                     (add-content 1 t_sextant)
+                     ))
        14 9)
   (put (spawn-pt 'skeletal-warrior) 7 9)
   (put (spawn-pt 'skeletal-spear-thrower) 10 9)

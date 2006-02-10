@@ -4,7 +4,7 @@ CLEANFILES = haxima.sh
 
 haxima.sh: Makefile
 	echo '#!/bin/sh' > $@ 
-	echo '"@bindir@/nazghul" -I "@datadir@/nazghul/haxima" -G "$(HOME)/.haxima" "$$@"' >> $@
+	echo '"@bindir@/nazghul" -I "@datadir@/nazghul/haxima" -G "$$HOME/.haxima" "$$@"' >> $@
 
 haxima_DATA = \
 	abandoned-cellar.scm        green-tower-lower.scm  portcullis.scm \
@@ -79,7 +79,8 @@ haxima_DATA = \
 	gholet.scm                  player.scm             zones.scm\
 	glasdrin.scm                poor-house.scm         signs.png\
 	goblin-kingdoms.scm         portals.scm            runestones.png\
-	newmonst.png                newfolks.png	   tower.png
+	newmonst.png                newfolks.png	   tower.png\
+	newterrain.png              hidden.scm
 
 EXTRA_DIST = $(haxima_DATA)
 MAINTAINERCLEANFILES = Makefile.in

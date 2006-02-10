@@ -9,6 +9,7 @@
 (kern-mk-sprite 's_gem      ss_tools 1 2 #f 0)
 (kern-mk-sprite 's_shovel   ss_tools 1 3 #f 0)
 (kern-mk-sprite 's_pick     ss_tools 1 4 #f 0)
+(kern-mk-sprite 's_sextant  ss_tools 1 5 #f 0)
 
 ;; torch -- use two in-lor spells
 (mk-usable-item 't_torch "torch" s_torch 1
@@ -75,6 +76,16 @@
                                         (kern-obj-remove-from-inventory kuser ktool 1))))
                                 (kern-log-msg "No effect!")))))))
                           
+;; sextant -- gives location
+(mk-reusable-item 't_sextant "sextant" s_sextant 2
+                  (lambda (ktool kuser)
+                    (let ((loc (kern-obj-get-location kuser)))
+                      (if (kern-place-is-wilderness? (loc-place loc))
+                          (kern-log-msg "You are at cartesian coords [" 
+                                        (caddr loc) " " (cadr loc) "]")
+                          (begin
+                            (kern-log-msg "Usable only in the wilderness!")
+                            nil)))))
 
 ;;----------------------------------------------------------------------------
 ;; shovel & buried object generator

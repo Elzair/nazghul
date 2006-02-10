@@ -1431,3 +1431,9 @@
   (foldr (lambda (s1 s2) (kern-sprite-append-decoration s1 s2))
          (kern-sprite-clone (car sprites))
          (cdr sprites)))
+
+(define (kchar-in-vehicle? kchar)
+  (let ((kparty (kern-char-get-party kchar)))
+    (if (null? kparty)
+        #f
+        (not (null? (kern-party-get-vehicle kparty))))))
