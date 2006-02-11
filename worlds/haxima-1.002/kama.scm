@@ -106,10 +106,14 @@
           (say knpc "[He looks confused as you try to describe a Rune]"))))
 
 (define (kama-ruka knpc kpc)
-  (say knpc "[In the dust on the cell floor he draws a circle with jointed legs. A spider. He then points to you, himself, and then he scuffs out the spider.]")
-  (prompt-for-key)
-  (say knpc "[You get the impression he is proposing an alliance with you against the spider, or whatever it is.]"))
-
+  (if (kama-joined-once? (gob knpc))
+      (say knpc "Iki [" (loc-x angriss-lair-loc)
+           " " (loc-y angriss-lair-loc) "]")
+      (begin
+        (say knpc "[In the dust on the cell floor he draws a circle with jointed legs. A spider. He then points to you, himself, and then he scuffs out the spider.]")
+        (prompt-for-key)
+        (say knpc "[You get the impression he is proposing an alliance with you against the spider, or whatever it is.]"))))
+      
 (define (kama-default knpc kpc)
   (say knpc "[no response]"))
 
