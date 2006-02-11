@@ -545,7 +545,7 @@
   (burn actor)
   (shake-map 10)
   (map hit (get-8-neighboring-tiles (kern-obj-get-location subject)))
-  (kern-obj-remove subject))
+  )
 
 (define (self-destruct-trap actor subject)
   (shake-map 5)
