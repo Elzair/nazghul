@@ -96,6 +96,7 @@ extern "C" {
 	};
 
 	extern int eventInit(void);
+	extern void eventExit(void);
 	extern void eventHandle(void);
         extern void eventHandlePending(void); /* non-blocking version of eventHandle */
 	extern void eventPushKeyHandler(struct KeyHandler *keyh);

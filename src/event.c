@@ -27,6 +27,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <stdlib.h>
+#include <common.h>
 
 #ifndef DEBUG_KEYS
 # define DEBUG_KEYS 0
@@ -35,9 +37,15 @@
 #define EVENT_NONBLOCK   (1 << 0)
 #define EVENT_NOPLAYBACK (1 << 1)
 
-#define getHandler(stack,type) (list_empty((stack)) ? NULL : (type*)(stack)->next)
+#define getHandler(stack,type) \
+  (list_empty((stack)) ? NULL : (type*)(stack)->next)
 #define pushHandler(stack,handler) (list_add((stack), &(handler)->list))
 #define popHandler(stack) if (!list_empty((stack))) list_remove((stack)->next)
+
+typedef struct {
+        struct list list;
+        SDL_Event event;
+} sdl_event_list_t;
 
 // These are in nazghul.c
 extern char *RecordFile;
@@ -48,6 +56,7 @@ static struct list KeyHandlers;
 static struct list TickHandlers;
 static struct list QuitHandlers;
 static struct list MouseHandlers;
+static struct list backlog;
 
 static bool record_events;
 static int record_fd;
@@ -56,6 +65,32 @@ static int playback_fd;
 
 static void (*eventHook) (void);
 static int (*wait_event) (SDL_Event * event, int flags);
+static int qcount = 0;
+
+static void backlog_enqueue(SDL_Event *event)
+{
+        sdl_event_list_t *elem = (sdl_event_list_t*)malloc(sizeof(*elem));
+        elem->event = *event;
+        list_add(&backlog, &elem->list);
+        qcount++;
+        printf("enqueue: %d\n", qcount);
+}
+
+static int backlog_dequeue(SDL_Event *event)
+{
+        sdl_event_list_t *elem;
+        struct list *ptr;
+        if (list_empty(&backlog))
+                return -1;
+        ptr = backlog.next;
+        elem = outcast(ptr, sdl_event_list_t, list);
+        list_remove(&elem->list);
+        *event = elem->event;
+        free(elem);
+        qcount--;
+        printf("dequeue: %d\n", qcount);
+        return 0;
+}
 
 static int mapKey(SDL_keysym * keysym)
 {
@@ -114,6 +149,17 @@ static int mapButton(Uint8 button)
 
 static int event_get_next_event(SDL_Event *event, int flags)
 {
+        /* if a key handler exists */
+        if (getHandler(&KeyHandlers, struct KeyHandler)) {
+
+                /* if the backlog queue is not empty */
+                if (! backlog_dequeue(event)) {
+
+                        /* get the event from the backlog queue */
+                        return 1;
+                }
+        }
+
         if (flags & EVENT_NONBLOCK)
                 return SDL_PollEvent(event);
         else
@@ -170,15 +216,14 @@ static void event_handle_aux(int flags)
 	bool done = false;
         bool use_hook = false;
 
-        int ticks=SDL_GetTicks();
 	while (!done) {
 
 		SDL_Event event;
-		if (!wait_event(&event, flags)) {
+                if (!wait_event(&event, flags)) {
                         return;
                 }
-		if (record_events)
-			record_event(&event);
+                if (record_events)
+                        record_event(&event);
 
 		switch (event.type) {
 
@@ -200,16 +245,19 @@ static void event_handle_aux(int flags)
 		case SDL_KEYDOWN:
 			{
 				struct KeyHandler *keyh;
-                                int mapped_key;
 				keyh = getHandler(&KeyHandlers, 
                                                   struct KeyHandler);
-                                mapped_key = mapKey(&event.key.keysym);
 				if (keyh) {
+                                        int mapped_key = 
+                                                mapKey(&event.key.keysym);
                                         use_hook = true;
                                         if (keyh->fx(keyh, mapped_key, 
                                                      event.key.keysym.mod)) {
                                                 done = true;
                                         }
+                                } else {
+                                        /* enqueue this event */
+                                        backlog_enqueue(&event);
                                 }
 			}
 			break;
@@ -255,8 +303,10 @@ int eventInit(void)
 	list_init(&TickHandlers);
 	list_init(&QuitHandlers);
 	list_init(&MouseHandlers);
+        list_init(&backlog);
 	eventHook = NULL;
 	wait_event = event_get_next_event;
+        qcount=0;
 
 	if (RecordFile != NULL) {
 		record_events = true;
@@ -281,6 +331,14 @@ int eventInit(void)
         SDL_EnableUNICODE(1);
 
 	return 0;
+}
+
+void eventExit(void)
+{
+        /* cleanup the backlog queue */
+        SDL_Event event;
+        while (! backlog_dequeue(&event))
+                ;
 }
 
 void eventHandle(void)

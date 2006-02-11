@@ -551,6 +551,10 @@ int main(int argc, char **argv)
 
 	playRun();
 
+        /* cleanup modules that need it */
+        eventExit();
+
+
         /* reset save file so main menu runs */
         SAVEFILE=0;
 
