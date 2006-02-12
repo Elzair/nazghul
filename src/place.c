@@ -44,6 +44,10 @@
 #include <string.h>
 #include <math.h>
 
+#ifndef PLACE_PROFILE
+#define PLACE_PROFILE 0
+#endif
+
 #define HIGHLIGHT_W 2
 #define HIGHLIGHT_H 2
 
@@ -1131,6 +1135,33 @@ static void place_pathfind_heuristic(struct astar_search_info *info,
 		*cost += 9;
 }
 
+/* If pathfinding over a nontrivial distance, make a quick check to see if a
+ * path is impossible due to impassable terrain surrounding the target. This is
+ * an optimization hack to avoid the worst-case search time where a path cannot
+ * be found.
+ */
+static int place_find_path_impossible(struct place_pathfind_context *context)
+{
+        /* check four neighbors */
+        if (place_pathfind_is_valid_location(context,
+                                             context->target_x-1,
+                                             context->target_y)
+            || place_pathfind_is_valid_location(context,
+                                                context->target_x+1,
+                                                context->target_y)
+            || place_pathfind_is_valid_location(context,
+                                                context->target_x,
+                                                context->target_y-1)
+            || place_pathfind_is_valid_location(context,
+                                                context->target_x,
+                                                context->target_y+1))
+                return 0;
+
+        /* all 4 neighbors impassable so forget it */
+        return 1;
+
+}
+
 struct astar_node *place_find_path(struct place *place, 
                                    struct astar_search_info *info, 
                                    class Object *requestor)
@@ -1146,6 +1177,9 @@ struct astar_node *place_find_path(struct place *place,
 	context.pflags = info->flags;
         context.requestor = requestor;
 
+        if (place_find_path_impossible(&context))
+                return NULL;
+        
 	/* Fill out the search information */
 	info->is_valid_location =
 	    (int (*)(void *, int, int)) place_pathfind_is_valid_location;
@@ -1686,8 +1720,10 @@ void place_exec(struct place *place)
                 } else {
                         /* 'run' the object */
                         int t = place_timed_obj_exec(obj);
-                        //printf("%s: %d ticks\n", obj->getName(), t);
-                        times += t;
+                        if (PLACE_PROFILE) {
+                                printf("%32s: %d ticks\n", obj->getName(), t);
+                                times += t;
+                        }
 
                         /* Apply terrain, field and any other environmental
                          * effects. */
@@ -1724,7 +1760,9 @@ void place_exec(struct place *place)
                 obj_dec_ref(obj);
         }
 
-        //printf("*** place_exec: total=%d\n", times);
+        if (PLACE_PROFILE) {
+                printf("*** place_exec: total=%d\n", times);
+        }
 
         /* Allow the place to be destroyed. */
         place_unlock(place);

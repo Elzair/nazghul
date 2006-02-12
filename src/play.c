@@ -67,7 +67,9 @@
 # define USE_AMBUSH 1
 #endif
 
+#ifndef PROFILE_PLAY_LOOP
 #define PROFILE_PLAY_LOOP 0
+#endif
 
 enum cmdstate {
 	CMD_IDLE,
