@@ -1874,6 +1874,7 @@ void Character::exec()
 {
         int points_last_loop;
         class Character *leader;
+        bool noHostiles = false;
 
         startTurn();
         
@@ -2063,10 +2064,12 @@ void Character::exec()
                         break;
                 }
 
+                noHostiles = ! place_contains_hostiles(getPlace(), this);
+
                 while (1 < place_flying_distance(Place, getX(), getY(), 
                                                  leader->getX(), 
                                                  leader->getY()) 
-                       //&& ! isTurnEnded() 
+                       && (noHostiles || ! isTurnEnded())
                        && getActionPoints() != points_last_loop
                         ) {
 
