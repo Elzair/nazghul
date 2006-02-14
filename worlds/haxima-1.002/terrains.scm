@@ -241,6 +241,42 @@
                 t_bridge_NS)))
 
 ;;----------------------------------------------------------------------------
+;; Some blended hill terrain types
+
+(define (mk-foothill-terrain tag . sprites)
+  (kern-mk-terrain tag "foothills" pclass-grass
+                   (mk-composite-sprite (cons s_grass sprites))
+                   1 0 nil))
+
+(mk-foothill-terrain 't_foothill_n  s_hill_n )
+(mk-foothill-terrain 't_foothill_w  s_hill_w )
+(mk-foothill-terrain 't_foothill_e  s_hill_e )
+(mk-foothill-terrain 't_foothill_s  s_hill_s )
+
+(define tset_foothills
+  (list
+   t_grass    ;; 0: none
+   t_foothill_n   ;; 1: north
+   t_foothill_w   ;; 2: west
+   t_grass  ;; 3: north west
+   t_foothill_e   ;; 4: east
+   t_grass  ;; 5: east north
+   t_grass  ;; 6: east west
+   t_grass ;; 7: east west north
+   t_foothill_s   ;; 8: south
+   t_grass ;; 9: south north
+   t_grass ;; 10: south west
+   t_grass ;; 11: south west north
+   t_grass ;; 12: south east
+   t_grass ;; 13: south east north
+   t_grass ;; 14: south east west
+   t_grass ;; 15: south east west north
+   ))
+
+(define tset_grass
+  (cons t_grass tset_foothills))
+
+;;----------------------------------------------------------------------------
 (define bad-terrain-list
   (list t_bog
         t_lava
@@ -266,7 +302,17 @@
 (define (is-inflammable-terrain? kter)
   (in-list? kter inflammable-terrain-list))
 
+(define (is-deck? kter)
+  (in-list? kter 
+            (list t_deck
+                  t_ship_hull
+                  t_ship_hull2
+                  t_mast
+                  t_ships_wheel
+                  )))
+
 ;;----------------------------------------------------------------------------
 ;; terrain map blenders (automatically run within kern-mk-map)
 (kern-mk-blender t_shoals tset_water tset_shore)
 (kern-mk-blender t_shallow tset_water tset_shore)
+;;(kern-mk-blender t_grass tset_grass tset_foothills) 

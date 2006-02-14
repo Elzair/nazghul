@@ -299,16 +299,19 @@
 ;; A special feature of the slime species. When a slime takes damage it rolls
 ;; to clone itself.
 ;; ----------------------------------------------------------------------------
-(define (slime-split-exec fgob kobj)
+(define (split-gob-mk npc-type-tag) (list npc-type-tag))
+(define (split-gob-npc-type-tag gob) (car gob))
+
+(define (split-exec fgob kobj)
   (let ((loc (kern-obj-get-location kobj)))
     (if (not (kern-place-is-wilderness? (loc-place loc)))
         (begin
           (if (> (kern-dice-roll "1d20") 12)
-              (let ((clone (mk-npc 'green-slime
+              (let ((clone (mk-npc (split-gob-npc-type-tag fgob)
                                    (kern-char-get-level kobj))))
                 (kern-being-set-base-faction clone
                                    (kern-being-get-base-faction kobj))
-                (kern-log-msg "Slime divides!\n")
+                (kern-log-msg (kern-obj-get-name kobj) " divides!")
                 (kern-obj-put-at clone (pick-loc loc clone)))
               )))))
 
@@ -377,7 +380,7 @@
    (list 'ef_charm                     nil                   'charm-apply        'charm-rm        'charm-apply        "start-of-turn-hook" "C" 0   #f   5)
    (list 'ef_invisibility              nil                   'invisibility-apply 'invisibility-rm 'invisibility-apply "start-of-turn-hook" "N" 0   #t  10)
    (list 'ef_permanent_invisibility    nil                   'invisibility-apply 'invisibility-rm 'invisibility-apply "start-of-turn-hook" "N" 0   #t  -1)
-   (list 'ef_slime_split               'slime-split-exec     nil                 nil              nil                 "on-damage-hook"     ""  0   #f  -1)
+   (list 'ef_split                     'split-exec           nil                 nil              nil                 "on-damage-hook"     ""  0   #f  -1)
    (list 'ef_spider_calm               nil                   'spider-calm-apply  'spider-calm-rm  nil                 "start-of-turn-hook" ""  0   #f  60) 
    (list 'ef_drunk                     'drunk-exec           'drunk-apply        'drunk-rm        nil                 "keystroke-hook"     "A" 0   #t  60)
    (list 'ef_disease                   'disease-exec         nil                 nil              nil                 "start-of-turn-hook" "D" 0   #f  -1)
@@ -453,10 +456,6 @@
       (begin
         (kern-char-set-sleep kobj #t)
         (kern-obj-add-effect kobj ef_sleep nil)))
-  kobj)
-
-(define (apply-slime-split kobj)
-  (kern-obj-add-effect kobj ef_slime_split nil)
   kobj)
 
 (define (make-invisible kobj)

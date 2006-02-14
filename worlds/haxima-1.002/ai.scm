@@ -459,7 +459,7 @@
                     #t
                     (let ((dest (loc-add cloc vect)))
                       ;;(println "  dest:" dest)
-                      (and (eqv? (kern-place-get-terrain dest) t_deck)
+                      (and (is-deck? (kern-place-get-terrain dest))
                            (can-use-ability? chomp-deck kchar)
                            (use-ability chomp-deck kchar dest))))))))))
 

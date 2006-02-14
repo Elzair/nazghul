@@ -268,7 +268,7 @@
 ;;----------------------------------------------------------------------------
 ;; chomp-deck -- convert deck terrain into shallow water terrain
 (define (chomp-deck-proc kchar loc)
-  (cond ((not (eqv? (kern-place-get-terrain loc) t_deck)) #f)
+  (cond ((not (is-deck? (kern-place-get-terrain loc))) #f)
         (else
          (kern-place-set-terrain loc t_shallow)
          (kern-log-msg (kern-obj-get-name kchar) " chomps through the deck!")

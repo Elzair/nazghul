@@ -138,7 +138,7 @@
                 lvl)
                (npcg-mk npct-tag))))
     ;; revisit -- will this work or will effects need to be symbol-tags?
-    (map (lambda (eff) (kern-obj-add-effect npc eff nil))
+    (map (lambda (eff) (apply-eff-pkg npc eff))
          (npct-effects npct))
     (if (not (null? (npct-drop-fx npct)))
         (kern-obj-add-effect npc 
@@ -163,13 +163,25 @@
 
 ;;----------------------------------------------------------------------------
 ;; effect packages
-(define slime-effects  (list ef_poison_immunity ef_slime_split))
+(define slime-effects  (list ef_poison_immunity 
+                             (list ef_split split-gob-mk 'green-slime)))
 (define undead-effects (list ef_poison_immunity ef_fire_immunity ef_disease_immunity))
 (define demon-effects (list ef_poison_immunity ef_fire_immunity ef_disease_immunity))
 (define hydra-effects (list ef_poison_immunity ef_grow_head))
 (define drag-effects (list ef_fire_immunity))
 (define wisp-effects (list ef_poison_immunity ef_fire_immunity))
-(define fire-slime-effects (list ef_fire_immunity ef_slime_split))
+(define fire-slime-effects (list ef_fire_immunity
+                                 (list ef_split split-gob-mk 'fire-slime)))
+
+(define (apply-eff-pkg knpc pkg)
+  (println "apply-eff-pkg: " pkg)
+  (if (pair? pkg)
+      (let* ((eff (car pkg))
+             (gob-ctor (cadr pkg))
+             (gob-args (cddr pkg))
+             (gob (apply gob-ctor gob-args)))
+        (kern-obj-add-effect knpc eff gob))
+      (kern-obj-add-effect knpc pkg nil)))
 
 ;;----------------------------------------------------------------------------
 ;; equipment packages for different types of npcs

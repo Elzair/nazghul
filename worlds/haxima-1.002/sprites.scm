@@ -417,7 +417,7 @@
 (kern-mk-sprite 's_dungeon       ss_overlays 1  24 #f 0 )
 
 ;;----------------------------------------------------------------------------
-;; Terrain overlay pieces
+;; Grass overlay pieces
 (define (mk-sprite tag offset)
   (kern-mk-sprite tag ss_overlays 1 offset #f 0))
 (mk-sprite 's_grass_nw 0)
@@ -428,6 +428,15 @@
 (mk-sprite 's_grass_e  9)
 (mk-sprite 's_grass_s  10)
 (mk-sprite 's_grass_w  11)
+
+;;----------------------------------------------------------------------------
+;; Hill overlay pieces
+(define (mk-sprite tag offset)
+  (kern-mk-sprite tag ss_overlays 1 offset #f 0))
+(mk-sprite 's_hill_e  12)
+(mk-sprite 's_hill_s  13)
+(mk-sprite 's_hill_w  14)
+(mk-sprite 's_hill_n  15)
 
 ;; convenient alia
 (define s_shepherd s_companion_shepherd)
