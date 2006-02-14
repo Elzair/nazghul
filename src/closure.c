@@ -149,7 +149,7 @@ int closure_exec(closure_t *closure, char *fmt, ...)
                 result = closure->sc->vptr->pair_cdr(pair);
                 goto evaluate_result;
         } else if (scm_is_ptr(closure->sc, result)) {
-                ret = (int)closure->sc->vptr->ffvalue(result);
+                ret = (long)closure->sc->vptr->ffvalue(result);
         }
 
         return ret;

@@ -34,10 +34,10 @@ static SDL_Thread *tick_thread = NULL;
 
 static int tick_main(void *data)
 {
-	int msecs;
+	long msecs;
 	SDL_Event tick_event;
 
-        msecs = (int)data;
+        msecs = (long)data;
 	tick_event.type = SDL_USEREVENT;
 	tick_event.user.code = TICK_EVENT;
 
@@ -50,7 +50,7 @@ static int tick_main(void *data)
         return 0;
 }
 
-void tick_start(int msecs)
+void tick_start(long msecs)
 {
         assert(! tick_thread);
         tick_paused = 0;

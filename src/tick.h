@@ -20,7 +20,7 @@
  * gmcnutt@users.sourceforge.net
  */
 
-extern void tick_start(int msecs);
+extern void tick_start(long msecs);
 extern void tick_kill(void);
 extern void tick_pause(void);
 extern void tick_run(void);

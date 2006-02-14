@@ -594,7 +594,7 @@ static int alloc_cellseg(scheme *sc, int n) {
 	  i = ++sc->last_cell_seg ;
 	  sc->alloc_seg[i] = cp;
 	  /* adjust in TYPE_BITS-bit boundary */
-	  if(((int)cp)%adj!=0) {
+	  if(((long)cp)%adj!=0) {
 	    cp=(char*)(adj*((long)cp/adj+1));
 	  }
         /* insert new segment in address order */
@@ -2138,7 +2138,7 @@ struct dump_stack_frame {
 
 static void s_save(scheme *sc, enum scheme_opcodes op, pointer args, pointer code) 
 { 
-  int nframes = (int)sc->dump; 
+  long nframes = (long)sc->dump; 
   struct dump_stack_frame *next_frame; 
 
   /* enough room for the next frame? */ 
@@ -2158,7 +2158,7 @@ static void s_save(scheme *sc, enum scheme_opcodes op, pointer args, pointer cod
 
 static pointer _s_return(scheme *sc, pointer a) 
 { 
-  int nframes = (int)sc->dump; 
+  long nframes = (long)sc->dump; 
   struct dump_stack_frame *frame; 
 
   sc->value = (a); 
@@ -2198,7 +2198,7 @@ static void dump_stack_free(scheme *sc)
 
 static INLINE void dump_stack_mark(scheme *sc) 
 { 
-  int nframes = (int)sc->dump;
+  long nframes = (long)sc->dump;
   int i;
   for(i=0; i<nframes; i++) {
     struct dump_stack_frame *frame;

@@ -261,7 +261,7 @@ static void myMarkAsDirty(struct mview *view, void *data)
 
 static void mySetViewLightRadius(struct mview *view, void *data)
 {
-	int rad = (int) data;
+	int rad = *((int*)data);
 	view->rad = rad;
 }
 
@@ -1055,9 +1055,9 @@ void mapMarkAsDirty(struct mview *view)
 void mapSetRadius(struct mview *view, int rad)
 {
 	if (view == ALL_VIEWS)
-		mapForEachView(mySetViewLightRadius, (void *) rad);
+		mapForEachView(mySetViewLightRadius, (void *) &rad);
 	else
-		mySetViewLightRadius(view, (void *) rad);
+		mySetViewLightRadius(view, (void *) &rad);
 }
 
 int mapGetRadius(struct mview *view)
