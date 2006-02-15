@@ -1211,6 +1211,7 @@ static pointer kern_mk_species(scheme *sc, pointer args)
         struct species *species;
         int str, intl, dex, spd, vr, hpmod, hpmult, argno = 1;
         int mpmod, mpmult, visible, n_slots, n_spells, i, xpval;
+        int stationary=0;
         struct sprite *sleep_sprite;
         class ArmsType *weapon;
         char *tag = TAG_UNK, *name;
@@ -1219,13 +1220,12 @@ static pointer kern_mk_species(scheme *sc, pointer args)
         pointer spells;
         pointer ret;
         struct mmode *mmode;
-        pointer on_death;
 
-        if (unpack(sc, &args, "ysdddddpddddppbppcd", &tag, &name, &str, 
+        if (unpack(sc, &args, "ysdddddpddddppbppdb", &tag, &name, &str, 
                    &intl, &dex, &spd, &vr, &mmode, &hpmod, &hpmult, &mpmod, 
                    &mpmult, &sleep_sprite, &weapon, 
-                   &visible, &damage_sound, &walking_sound, &on_death,
-                   &xpval)) {
+                   &visible, &damage_sound, &walking_sound,
+                   &xpval, &stationary)) {
                 load_err("kern-mk-species %s: bad args", tag);
                 return sc->NIL;
         }
@@ -1262,11 +1262,7 @@ static pointer kern_mk_species(scheme *sc, pointer args)
         species->sleep_sprite = sleep_sprite;
         species->mmode = mmode;
         species->xpval = xpval;
-
-        /* Check if an on-death procedure was specified. */
-        if (on_death != sc->NIL) {
-                species->on_death = closure_new_ref(sc, on_death);
-        }
+        species->stationary = stationary;
 
         /* Load the list of slots. */
         i = 0;

@@ -205,6 +205,9 @@ void ctrl_wander(class Object *object)
 
 	int dx = 0, dy = 0;
 
+        if (object->isStationary())
+                return;
+
 	/* Roll for direction */
 	dx = rand() % 3 - 1;
 	if (!dx)
@@ -282,12 +285,22 @@ void ctrl_party_ai(class Party *party)
 		return;
 	}
 
-        
-
-	/* Check if the player is in visible range */
+	/* get distance to player */
 	d = place_walking_distance(party->getPlace(), party->getX(), 
                                    party->getY(),
 				   player_party->getX(), player_party->getY());
+
+        /* if adjacent attack */
+        if (1==d) {
+                int dx=0, dy=0;
+                place_get_direction_vector(party->getPlace(),
+                                           party->getX(), party->getY(),
+                                           player_party->getX(), player_party->getY(),
+                                           &dx, &dy);
+                if (party->attackPlayer(dx, dy)) {
+                        return;
+                }
+        }
 
 	if (d > party->getVisionRadius()) {
 		ctrl_wander(party);
@@ -1113,6 +1126,9 @@ static int ctrl_move_away_from_target(class Character *character,
         /* first try moving directly away from the target */
         int dx = character->getX() - target->getX();
         int dy = character->getY() - target->getY();
+
+        if (character->isStationary())
+                return 0;
 
         /* normalize vector */
         dx = dx > 0 ? 1 : (dx < 0 ? -1 : 0);

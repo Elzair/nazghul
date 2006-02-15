@@ -73,6 +73,7 @@ class Party:public Being {
 	virtual bool turn_vehicle();
         virtual void applyEffect(closure_t *effect);
         virtual Object *getSpeaker();
+        virtual bool isStationary();
 
         // NOTE: dup of getMemberAtIndex in player.cpp
         virtual class Character *getMemberByOrder(int order);
@@ -82,6 +83,9 @@ class Party:public Being {
 	bool attack_with_ordnance(int d);
 	bool gotoSpot(int x, int y);
         void setVehicle(class Vehicle *vehicle);
+        bool attackPlayer(int dx, int dy);
+
+
         class Vehicle *getVehicle();
 
 	struct node members; // Linked list of party members

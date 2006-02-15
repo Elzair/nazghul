@@ -112,8 +112,5 @@ void species_del(struct species *species)
                         free(species->spells[i]);
 		free(species->spells);
         }
-        if (species->on_death)
-                closure_unref(species->on_death);
-
         free(species);
 }

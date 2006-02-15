@@ -142,6 +142,38 @@ bool Party::turn_vehicle(void)
 	return true;
 }
 
+bool Party::attackPlayer(int dx, int dy)
+{
+        // Subtle: check if the player party is on the map. This
+        // catches the case where the player has just engaged another
+        // npc party in combat on this turn. I don't want this npc
+        // party to move to that spot because then when the player
+        // party exits combat they will be on top of this npc party.
+        if (! player_party->isOnMap())
+                return false;
+
+        struct move_info info;
+        struct combat_info cinfo;
+                
+        memset(&info, 0, sizeof(info));
+        info.place = getPlace();
+        info.x = getX();
+        info.y = getY();
+        info.dx = dx;
+        info.dy = dy;
+        info.px = player_party->getX();
+        info.py = player_party->getY();
+        info.npc_party = this;
+
+        memset(&cinfo, 0, sizeof(cinfo));
+        cinfo.defend = true;
+        cinfo.move = &info;
+
+        combat_enter(&cinfo);
+        endTurn();
+        return true;
+}
+
 MoveResult Party::move(int dx, int dy)
 {
 	struct place *newplace;
@@ -179,54 +211,14 @@ MoveResult Party::move(int dx, int dy)
 	if (newx == player_party->getX() && 
             newy == player_party->getY()) {
 
-                // ------------------------------------------------------------
-                // Subtle: check if the player party is on the map. This
-                // catches the case where the player has just engaged another
-                // npc party in combat on this turn. I don't want this npc
-                // party to move to that spot because then when the player
-                // party exits combat they will be on top of this npc party.
-                // ------------------------------------------------------------
-                
-                if (! player_party->isOnMap())
-                        return WasOccupied;
-
-		/* If this party is hostile to the player then begin combat */
-		if (are_hostile(this, player_party)) {
-
-			struct move_info info;
-			struct combat_info cinfo;
-
-			memset(&info, 0, sizeof(info));
-			info.place = getPlace();
-			info.x = newx;
-			info.y = newy;
-			info.dx = dx;
-			info.dy = dy;
-                        info.px = newx;
-                        info.py = newy;
-			info.npc_party = this;
-
-			memset(&cinfo, 0, sizeof(cinfo));
-			cinfo.defend = true;
-			cinfo.move = &info;
-
-			combat_enter(&cinfo);
-                        endTurn();
-                        //destroy();
+		// If this party is hostile to the player then begin combat
+		if (are_hostile(this, player_party)
+                    && attackPlayer(dx, dy)) {
                         return EngagedEnemy;
+
 		}
 
-                if (player_party->isResting()) {
-
-                        /* If the player is sleeping then kick him out of
-                         * bed */
-                        player_party->throw_out_of_bed();
-
-                }
-
-                /* Else abort the move */
                 return WasOccupied;
-
 	}
 
 	/* Check if another entity is already there */
@@ -282,6 +274,9 @@ bool Party::gotoSpot(int mx, int my)
 	int dx;
 	int dy;
         enum MoveResult ret = NotApplicable;
+
+        if (isStationary())
+                return StationaryObject;
 
 	/* Look for a path. */
 	memset(&as_info, 0, sizeof(as_info));
@@ -919,6 +914,21 @@ int Party::getMovementCost(int pclass)
         }
 
         return maxCost;
+}
+
+bool Party::isStationary()
+{
+        struct node *entry;
+        class Character *member;
+
+        FOR_EACH_MEMBER(entry, member) {
+                if (!member->isDead()) {
+                        if (member->isStationary())
+                                return true;
+                }
+        }
+
+        return false;
 }
 
 class Character *Party::getMemberByOrder(int order)

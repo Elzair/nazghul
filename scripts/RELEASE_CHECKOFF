@@ -13,6 +13,7 @@ PART I: PREPARE FOR RELEASE
 * Version number is correct in configure.ac
 * The SUBDIRS of Makefile.am and worlds/Makefile.am are correct for this 
     release
+* USERS_GUIDE is up-to-date
 
 PART II: BUILD AND TEST SOURCE DIST
 
@@ -48,10 +49,15 @@ Note: this assumes Cygwin
         $ RELEASE=~/release/nazghul-x.y.z
         $ mkdir -p $RELEASE
         $ cp src/nazghul.exe $RELEASE
-        $ cp doc/USERS_GUIDE $RELEASE
+        $ cp doc/USERS_GUIDE $RELEASE/USERS_GUIDE.TXT
         $ cp -R worlds/haxima-1.002/* $RELEASE
         $ cd ..
         $ cp ../common/* $RELEASE
+        $ cd $RELEASE
+        $ unix2dos USERS_GUIDE.TXT
+
+(4) Compile the nazghul.nsi script using Nullsoft
+  a) check the revision number in the script first
 
 (4) Test the release dir under windows by double-clicking on nazghul.exe in an
     explorer window.

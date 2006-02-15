@@ -74,6 +74,9 @@ bool Being::pathfindTo(struct place *destplace, int destx, int desty)
 
         //printf("Being::pathfindTo %s -> %s (%d, %d)\n", getName(), destplace->name, destx, desty);
 
+        if (isStationary())
+                return false;
+
         // For now, don't try to pathfind between places.
         if (destplace != getPlace()) {
                 warn("%s in %s, can't pathfind to %s", getName(),

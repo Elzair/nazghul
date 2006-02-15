@@ -73,7 +73,6 @@ static void backlog_enqueue(SDL_Event *event)
         elem->event = *event;
         list_add(&backlog, &elem->list);
         qcount++;
-        printf("enqueue: %d\n", qcount);
 }
 
 static int backlog_dequeue(SDL_Event *event)
@@ -88,7 +87,6 @@ static int backlog_dequeue(SDL_Event *event)
         *event = elem->event;
         free(elem);
         qcount--;
-        printf("dequeue: %d\n", qcount);
         return 0;
 }
 

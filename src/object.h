@@ -124,7 +124,8 @@ enum MoveResult {
         AvoidedHazard,
         OutOfRange,
         NoDestination,
-        UserCanceled
+        UserCanceled,
+        StationaryObject
 };
 
 struct inv_entry {
@@ -377,6 +378,7 @@ class Object {
         virtual bool isPassable(int pclass);
         virtual void setPclass(int val);
         virtual int getPclass();
+        virtual bool isStationary();
 
         int getTTL(void);
         // These two might destroy the object so make them class methods:

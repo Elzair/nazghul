@@ -191,6 +191,7 @@ class Character:public Being {
         virtual bool add(ObjectType *type, int amount);
         virtual bool takeOut(ObjectType *type, int amount);
         virtual void setCurrentFaction(int faction);
+        virtual bool isStationary();
 
         void charm(int faction);
         void unCharm();

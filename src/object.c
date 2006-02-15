@@ -2045,3 +2045,8 @@ void Object::decrementTTL(class Object *obj)
 
         obj->setTTL(obj, obj->getTTL() - 1); // may destroy obj!
 }
+
+bool Object::isStationary()
+{
+        return false;
+}

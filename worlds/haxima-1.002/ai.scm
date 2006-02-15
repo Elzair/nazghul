@@ -268,7 +268,7 @@
           
 (define (use-narcotize? kchar)
   (if (or (not (can-use-ability? narcotize kchar))
-          (<= (kern-dice-roll "1d20") 18))
+          (<= (kern-dice-roll "1d20") 17))
       #f
       (let ((hostiles (filter
                        not-disabled?
@@ -330,7 +330,6 @@
    (summon-wolves? kchar)
    (use-narcotize? kchar)
    (use-ranged-spell-on-foes? kchar all-field-spells)
-      #t
       ))
 
 (define (demon-ai kchar)
@@ -479,7 +478,7 @@
       (use-ranged-spell-on-foes? kchar (list poison-missile-spell
                                              acid-missile-spell
                                              ))
-      #t))
+      ))
 
 (define (dragon-ai kchar)
   (display "dragon-ai ")(dump-char kchar)

@@ -469,6 +469,9 @@ enum MoveResult Character::move(int dx, int dy)
 	int newx, newy;
 	class Character *occupant;
 
+        if (isStationary())
+                return StationaryObject;
+
         this->dx = dx;
         this->dy = dy;
 
@@ -1073,11 +1076,6 @@ void Character::kill()
 
 	hp = 0;
         setDead(true);
-
-        /* Run the species on-death procedure (must do this _before_ calling
-         * remove()) */
-        if (species && species->on_death)
-                closure_exec(species->on_death, "p", this);
 
         // Similarly, run the on-death hook
         runHook(OBJ_HOOK_ON_DEATH);
@@ -2764,4 +2762,9 @@ bool Character::getForceContainerDrop()
 void Character::setForceContainerDrop(bool val)
 {
         forceContainerDrop = val;
+}
+
+bool Character::isStationary()
+{
+        return species->stationary;
 }

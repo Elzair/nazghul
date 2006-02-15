@@ -37,9 +37,24 @@
                    sspr
                    weap #t sound-damage 
                    mvsnd
-                   nil xp morph nil)) 
+                   xp
+                   #f ;; stationary?
+                   morph nil)) 
 
-;;          tag              name             st in dx sp hp mp vr mmode       weap         morph   xp sspr           mvsnd           die
+(define (mk-stationary-species tag name str int dex spd con mag vr mmode weap morph xp sspr)
+  (kern-mk-species tag name str int dex spd vr mmode 
+                   con 
+                   (max (round (/ con 10)) 1)
+                   mag 
+                   (max (round (/ mag 2)) 1)
+                   sspr
+                   weap #t sound-damage 
+                   nil
+                   xp 
+                   #t ;; stationary?
+                   morph nil)) 
+
+;;          tag              name             st in dx sp hp mp vr mmode       weap         morph   xp sspr           mvsnd
 (mk-species 'sp_balron       "balron"         50 50 50 1 50 10 13 mmode-fly   t_horns      giant    50 s_asleep       sound-walking   )
 (mk-species 'sp_bull         "bull"           20  1  5 1 20  0  6 mmode-walk  t_horns      nil       2 s_bull         sound-walking   )
 (mk-species 'sp_cave_goblin  "cave goblin"    12  8 12 1 12  2 14 mmode-walk  t_hands      humanoid  2 s_asleep       sound-walking   )
@@ -62,7 +77,6 @@
 (mk-species 'sp_yellow_slime "yellow slime"    4  4  4 1 12  2  6 mmode-walk  t_acid_spray nil       2 nil            sound-squishing )
 (mk-species 'sp_kraken       "kraken"         30  3 20 1 30  4  6 mmode-fish  t_tentacles  nil      10 s_shoals       sound-splashing ) 
 (mk-species 'sp_sea_serpent  "sea serpent"    20  2 14 1 20  4  9 mmode-fish  t_fangs      nil      8  s_asleep       sound-walking   ) 
-(mk-species 'sp_dryad        "dryad"          12 12  4 1 12  6  6 mmode-walk  nil          nil      8  s_forest       nil             ) 
 (mk-species 'sp_wolf         "wolf"            8  2 12 2  8  0 13 mmode-walk  t_fangs      nil      2  s_asleep       sound-walking   ) 
 (mk-species 'sp_gazer        "gazer"           6 20  6 1 10  8 16 mmode-hover nil          nil      8  s_asleep       nil             ) 
 (mk-species 'sp_headless     "headless"       12  0 10 1 14  0  6 mmode-walk  t_hands      humanoid 2  s_asleep       sound-walking   ) 
@@ -70,8 +84,11 @@
 (mk-species 'sp_dragon       "dragon"         20 10 10 1 50  8  9 mmode-fly   t_fangs      nil      20 nil            sound-walking   )
 (mk-species 'sp_zorn         "zorn"           10 10 10 1 10  2  9 mmode-phase t_beak       nil      4  s_asleep       sound-walking   ) 
 (mk-species 'sp_demon        "demon"          14 14 14 1 14  8 12 mmode-phase t_hands      humanoid 8  s_asleep       sound-walking   ) 
-(mk-species 'sp_hydra        "hydra"          20  2 10 1 30  8  6 mmode-walk  t_tentacles  nil      10 nil            nil             )
 (mk-species 'sp_lich         "lich"           12 14 14 1 20 10  9 mmode-walk  t_hands      humanoid 8  s_asleep       sound-walking   )
+
+;; species that don't move around
+(mk-stationary-species 'sp_dryad  "dryad"     12 12  4 1 12  6  6 mmode-walk  nil          nil      8  s_forest)
+(mk-stationary-species 'sp_hydra  "hydra"     20  2 10 1 30  8  6 mmode-walk  t_tentacles  nil      10 nil     )
 
 ;;----------------------------------------------------------------------------
 ;; This list of the undead species is used by spells which affect the undead.

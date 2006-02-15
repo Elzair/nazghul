@@ -286,8 +286,12 @@
                   (if (> (- (+ (kern-dice-roll "1d20") 
                                (kern-char-get-level kchar)) 
                             (kern-char-get-level ktarg))
-                         16)
-                      (apply-sleep ktarg)))
+                         12)
+                      (begin
+                        (apply-sleep ktarg)
+                        (kern-log-msg (kern-obj-get-name ktarg) " succumbs!")
+                        )
+                      (kern-log-msg (kern-obj-get-name ktarg) " resists!")))
                 hostiles)
            #t))))
 
