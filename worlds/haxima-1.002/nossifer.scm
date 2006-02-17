@@ -29,13 +29,13 @@
   (say knpc "I am Nossifer, the Sleeper."))
 
 (define (begin-last-battle knpc kpc)
-  (say knpc "Your soul will never know the bliss of the Void, "
+  (say knpc "Your soul will never know the bliss of the Void. "
        "I will torment it FOREVER!")
   (kern-being-set-base-faction knpc faction-demon)
   (kern-conv-end))
 
 (define (noss-job knpc kpc)
-  (say knpc "I bring oblivion to worlds. You've heard of Wizard's who summon Demons to do their bidding?")
+  (say knpc "I bring oblivion to worlds. You've heard of wizards who summon demons to do their bidding?")
   (yes? kpc)
   (say knpc "I summon men to do mine. What do you think YOU are?")
   (kern-log-msg "He laughs, and the air reeks of sulphur.")
@@ -50,7 +50,7 @@
   (noss-job knpc kpc))
 
 (define noss-conv
-  (ifc basic-conv
+  (ifc nil
 
        ;; basics
        (method 'default noss-default)
