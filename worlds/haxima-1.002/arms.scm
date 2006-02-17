@@ -100,7 +100,7 @@
 
 
 (define poison-bolt-ifc (mk-missile-ifc apply-poison))
-(define deathball-ifc   (mk-missile-ifc kern-char-kill))
+(define deathball-ifc   (mk-missile-ifc magical-kill))
 (define stunball-ifc (mk-missile-ifc paralyze))
 (define acid-bolt-ifc (mk-missile-ifc apply-acid))
 

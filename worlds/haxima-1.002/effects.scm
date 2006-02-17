@@ -185,6 +185,13 @@
     (or (in-list? ef_fire_immunity effects)
         (in-list? ef_temporary_fire_immunity effects))))
 
+;;----------------------------------------------------------------------------
+;; magical kill immunity
+(define (has-magical-kill-immunity? kobj)
+  (let ((effects (kern-obj-get-effects kobj)))
+    (or (in-list? ef_magical_kill_immunity effects)
+        (in-list? ef_temporary_magical_kill_immunity effects))))
+
 ;; ----------------------------------------------------------------------------
 ;; light
 ;;
@@ -390,6 +397,8 @@
    (list 'ef_temporary_paralysis_immunity 'paralysis-immunity-exec nil           nil              nil                 "add-hook-hook"      "z" 0   #f  60)
    (list 'ef_fire_immunity             nil                   nil                 nil              nil                 "nil-hook"           "F" 0   #f  -1)
    (list 'ef_temporary_fire_immunity   nil                   nil                 nil              nil                 "nil-hook"           "F" 0   #f  15)
+   (list 'ef_magical_kill_immunity     nil                   nil                 nil              nil                 "nil-hook"           "K" 0   #f  -1)
+   (list 'ef_temporary_magical_kill_immunity   nil           nil                 nil              nil                 "nil-hook"           "K" 0   #f  15)
    (list 'ef_grow_head                 'grow-head-exec       nil                 nil              'grow-head-exec     "on-damage-hook"     "H"  0   #f  -1)
    (list 'ef_temporary_grow_head       'grow-head-exec       nil                 nil              'grow-head-exec     "on-damage-hook"     "H"  0   #f  15)
    (list 'ef_loot_drop                 'loot-drop-exec       nil                 nil              nil                 "on-death-hook"      ""  0   #f  -1)
@@ -495,6 +504,12 @@
       (begin
         (kern-log-msg "Burning!")
         (kern-obj-apply-damage obj "burning" (kern-dice-roll "2d3+2")))))
+
+(define (magical-kill obj)
+  (if (and (kern-obj-is-char? obj)
+           (not (has-magical-kill-immunity? obj)))
+      (kern-char-kill obj)))
+  
 
 (define (great-burn obj)
   (if (not (has-fire-immunity? obj))
