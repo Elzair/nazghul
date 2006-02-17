@@ -40,12 +40,6 @@ void asciiBlitColored(SDL_Surface *dst, SDL_Rect *dstrect,
         assert(dstrect->w==srcrect->w);
         assert(dstrect->h==srcrect->h);
 
-        dstpix = (Uint16*)dst->pixels;
-        srcpix = 0;
-
-        srcpix += srcrect->y*src->w + srcrect->x;
-        dstpix += dstrect->y*dst->w + dstrect->x;
-
         for (y=0; y<dstrect->h; y++) {
 
                 srcpix = (Uint16*)src->pixels 
