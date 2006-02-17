@@ -3,10 +3,12 @@
 ;;----------------------------------------------------------------------------
 (define engineer-start-lvl 8)
 
-;; fixme!
 (define voidship-parts
-  (list sulphorous_ash t_gem)
-  )
+  (list 
+  	(list t_power_core 1)
+	(list sulphorous_ash 20)
+	(list t_gem 10)
+  ))
 
 (define voidship-loc (mk-loc 'p_shard 50 3))
 
@@ -98,22 +100,31 @@
 
     (define (remove-stuff)
       (map (lambda (ktype) 
-             (kern-obj-remove-from-inventory kpc ktype 1))
+             (kern-obj-remove-from-inventory kpc (car ktype) (cadr ktype)))
            voidship-parts))
 
+	;;FIXME: the grammer here needs work
+	
     (define (really-has-parts?)
       (display "really-has-parts?")(newline)
-      (let ((missing (filter (lambda (ktype)
-                               (display "lambda:")(display ktype)(newline)
-                               (not (in-inventory? kpc ktype)))
-                             voidship-parts)))
+      (let ((missing (filter 
+				(lambda (ktype)
+					(let ((nrem (- (cadr ktype) (num-in-inventory kpc (car ktype)))))
+						(cond 
+							((> nrem 1)
+								(begin
+									(say knpc "We still need " nrem " " (kern-type-get-name (car ktype)) "s")
+									#t))
+							((> nrem 0)
+								(begin
+									(say knpc "We still need a " (kern-type-get-name (car ktype)))
+									#t))
+							(else #f))))
+					voidship-parts)))
+		
         (if (null? missing)
-            #t
-            (begin
-              (map (lambda (ktype)
-                     (say knpc "You still need 1 " (kern-type-get-name ktype)))
-                   missing)
-              #f))))
+			#t
+            #f)))
 
     (define (build-ship)
       (say knpc "Yes, it looks like you have everything. "
