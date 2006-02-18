@@ -505,7 +505,13 @@
   (let ((loc (kern-ui-target (kern-obj-get-location kcaster) (kern-char-get-level kcaster))))
     (if (null? loc)
         result-no-target
-        (kern-obj-relocate kcaster loc nil))))
+		(if (kern-place-is-passable loc kcaster)
+			(begin
+				(kern-obj-relocate kcaster loc nil)
+				result-ok)
+			(begin
+				(kern-log-msg "Failed: Impassable terrain")
+				result-no-effect)))))
 
 ;;----------------------------------------------------------------------------
 ;; Fifth Circle
@@ -634,15 +640,19 @@
                 (signal-kobj kgen 'raise kgen kcaster)
                 result-ok))))))
 
-;; bet-por -- whole party blink
+;; vas-por -- whole party blink
 (define (vas-por kcaster)
   (let ((loc (kern-ui-target (kern-obj-get-location kcaster) 
                              (kern-char-get-level kcaster))))
     (if (null? loc)
         result-no-target
-        (begin
-          (kern-obj-relocate (kern-char-get-party kcaster) loc nil)
-          result-ok))))
+        (if (kern-place-is-passable loc kcaster)
+			(begin
+				(kern-obj-relocate (kern-char-get-party kcaster) loc nil)
+				result-ok)
+			(begin
+				(kern-log-msg "Failed: Impassable terrain")
+				result-no-effect)))))
 
 ;; ----------------------------------------------------------------------------
 ;; Seventh Circle
