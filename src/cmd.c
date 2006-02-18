@@ -2112,9 +2112,6 @@ bool cmdCastSpell(class Character * pc)
 		return false;
 	}
 
-        // Decrement caster's mana
-        pc->addMana(0 - spell->cost);
-
         // Cast the spell.
         switch (spell->type->cast(pc)) {
         case RESULT_OK:
@@ -2131,6 +2128,8 @@ bool cmdCastSpell(class Character * pc)
                 break;
         }
 
+        // Decrement caster's mana
+        pc->addMana(0 - spell->cost);
         pc->decActionPoints(spell->cost/2);
         pc->addExperience(spell->cost);
 
