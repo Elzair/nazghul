@@ -1685,6 +1685,15 @@ void place_exec(struct place *place)
         /* FIXME: not sure if we still need this assert */
         assert(Place == place);
 
+        {
+                struct node *elem;
+                printf("%s:\n", place->name);
+                node_for_each(&place->turn_list, elem) {
+                        obj=(class Object*)elem->ptr;
+                        printf("  %s\n", obj->getName());
+                }
+        }
+
         /* Prevent destruction of the place. */
         place_lock(place);
 
@@ -1902,6 +1911,31 @@ static void place_save_object(class Object *object, void *data)
         save->exit(save, "%d %d)\n", object->getX(), object->getY());
 }
 
+static void place_save_objects(struct place *place, struct save *save)
+{
+        struct node *pnode;
+
+        /* Two subtle points about this process:
+           1. to preserve order, save backwards, because the list will be
+              reloaded backwards
+           2. the object which is currently being exec'd gets saved at the head
+              of the list; this ensure that when we restart, the order of exec
+              will continue right where it left off
+         */
+
+        save->enter(save, "(list ;; objects in %s\n", place->tag);
+
+        pnode = place->turn_elem->prev;
+        do {
+                pnode = pnode->prev;
+                if (pnode != &place->turn_list) {
+                        place_save_object((class Object*)pnode->ptr, save);
+                }
+        } while (pnode != place->turn_elem->prev);
+
+        save->exit(save, ") ;; end of objects in %s\n", place->tag);
+}
+
 void place_add_on_entry_hook(struct place *place, closure_t *hook_fx)
 {
         closure_list_t *node = (closure_list_t*)malloc(sizeof(*node));
@@ -2050,9 +2084,10 @@ void place_save(struct save *save, void *val)
 
         /* Save the contents */
 
-        save->enter(save, "(list ;; objects in %s\n", place->tag);
-        place_for_each_object(place, place_save_object, save);
-        save->exit(save, ") ;; end of objects in %s\n", place->tag);
+        //save->enter(save, "(list ;; objects in %s\n", place->tag);
+        //place_for_each_object(place, place_save_object, save);
+        //save->exit(save, ") ;; end of objects in %s\n", place->tag);
+        place_save_objects(place, save);
         place_save_hooks(place, save);
         place_save_edge_entrances(place, save);
         save->exit(save, ") ;; end of place %s\n\n", place->tag);
