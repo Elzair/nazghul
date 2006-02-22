@@ -1685,15 +1685,6 @@ void place_exec(struct place *place)
         /* FIXME: not sure if we still need this assert */
         assert(Place == place);
 
-        {
-                struct node *elem;
-                printf("%s:\n", place->name);
-                node_for_each(&place->turn_list, elem) {
-                        obj=(class Object*)elem->ptr;
-                        printf("  %s\n", obj->getName());
-                }
-        }
-
         /* Prevent destruction of the place. */
         place_lock(place);
 
