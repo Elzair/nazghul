@@ -1023,10 +1023,6 @@ void Character::unreadyAll()
 
 		// Unready it
 		unready(type);
-
-                if (isPlayerControlled()) {
-                        player_party->unrefInventoryObject(type);
-                }
 	}
 }
 
@@ -2676,6 +2672,14 @@ void Character::setCurrentFaction(int faction)
         } else {
                 if (faction != player_party->getBaseFaction()) {
                         // player party member charmed
+
+                        // Fix for [ 1425039 ] Solo mode + possession = lockup:
+                        // if in solo mode, switch party to follow mode
+                        if (isSolo()) {
+                                setSolo(false);
+                                player_party->enableFollowMode();
+                        }
+
                         setControlMode(CONTROL_MODE_AUTO);
                         
                         // subtle: in this case, do this AFTER calling
