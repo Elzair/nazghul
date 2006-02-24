@@ -201,14 +201,14 @@
 
 ;; Absalot...
 (define (alch-absa knpc kpc)
-  (say knpc "The pass to Absalot is sealed. But I know another way in. "
+  (say knpc "The passage to Absalot was always dangerous. Abandoned so long, who knows what lurks there now? "
        "You wouldn't happen to be thinking of going there?")
   (if (kern-conv-get-yes-no? kpc)
       (begin
         (if (in-inventory? kpc t_lichs_blood 1)
             (begin
               (say knpc "In exchange for that vial of lich's blood I'd be "
-                   "happy to tell you of the back door. What do you say?")
+                   "happy to tell you of a back door. What do you say?")
               (if (kern-conv-get-yes-no? kpc)
                   (begin
                     (kern-obj-remove-from-inventory kpc 
@@ -218,21 +218,24 @@
                                                t_lichs_blood
                                                1)
                     (say knpc "[He grins and winks] Just the stuff I need! "
-                         "Now, there is a way into Absalot through the "
-                         "underworld. You must go to the very bottom "
-                         "of Kurpolis by the Fire Sea. ")
+                         "There was a fortress overlooking a river of fire. "
+						 "If it had been manned, it might have turned Glasdrin's invasion. "
+						 "It would make for a perilous crossing indeed if monsters have taken it over.")
                     (prompt-for-key)
                     (say knpc 
-                         "You will find a great bridge over a river of fire. "
-                         "Across the bridge is a door. To pass through "
-                         "the door you must know the password: ONUS. "
-                         "Write that down!")
+                         "There is, however, an older route that bypasses the fortress. "
+                         "Search the east wall of the first cavern. "
+						 "You should be able to find the hidden entrance to a side passage.")
                     (prompt-for-key)
                     (say knpc
-                         "Beyond the doorway is a stairway which leads up to "
-                         "the lost city. The way is not easy! "
-                         "It was hard when I escaped long ago, "
-                         "it will be worse now."))
+					     "You will still need to cross the river of fire. "
+                         "There is a statue upon the river. Speak the password 'ONUS' and you will pass the lava unharmed. "
+                         "Write that password down!")
+                    (prompt-for-key)
+                    (say knpc
+                         "The passage rejoins the main route near the stairway which leads up to "
+                         "the lost city. This won't allow you to escape all the hazards of the journey, "
+                         "but it should make your life somewhat easier."))
                   (say knpc "I see. No doubt you have important plans for "
                        "that lich's blood. I can always get some from "
                        "another adventurer.")))

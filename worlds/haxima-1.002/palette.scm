@@ -15,24 +15,7 @@
     (list  "__"   t_deep)               ;; "deep water"
     (list  "_!"   t_sunlit_deep)               ;; "deep water"
     (list  "--"   t_shallow)            ;; "shallow water"
-
-    (list  "~0"   t_shore_nw)
-    (list  "~1"   t_shore_n)
-    (list  "~2"   t_shore_ne)
-    (list  "~3"   t_shore_nwe)
-    (list  "~4"   t_shore_w)
-    (list  "~~"   t_shoals)
-    (list  "~6"   t_shore_e)
-    (list  "~7"   t_shore_we)
-    (list  "~8"   t_shore_ws)
-    (list  "~9"   t_shore_s)
-    (list  "~a"   t_shore_es)
-    (list  "~b"   t_shore_wes)
-    (list  "~c"   t_shore_nws)
-    (list  "~d"   t_shore_ns)
-    (list  "~e"   t_shore_nes)
-    (list  "~f"   t_shore_c)
-
+    (list  "~~"   t_shoals)             ;; "shoals"
     (list  "%%"   t_bog)                ;; "bog"
     (list  ".."   t_grass)              ;; "grass"
     (list  ".!"   t_sunlit_grass)              ;; "grass"
@@ -70,6 +53,7 @@
 
     (list  "rr"   t_wall_rock)          ;; "rock wall"
     (list  "r."   t_wall_rock_v)        ;; "rock wall"  (non-LOS-blocking)
+    (list  "~r"   t_fake_wall_rock)     ;; "rock wall"  (fake)
 
     (list  "WW"   t_ships_wheel)        ;; "ship's wheel"
     (list  "x!"   t_wall_torch)         ;; "wall torch"
@@ -143,6 +127,7 @@
     (list  "00"   t_counter_1x1)        ;; "counter"
 
     (list  "++"   t_ankh)               ;; "ankh"
+    (list  "+s"   t_statue)               ;; "ankh"
     (list  "aa"   t_altar)              ;; "altar"
     (list  "ar"   t_rune_altar)              ;; "altar"
     (list  "a!"   t_active_altar)              ;; "altar"
