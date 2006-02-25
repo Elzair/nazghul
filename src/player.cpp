@@ -203,8 +203,11 @@ enum move_result player_party::check_move_to(struct move_info *info)
         // f    f    *    impassable
 
         info->subplace = place_get_subplace(info->place, info->x, info->y);
-        if (info->subplace)
+        if (info->subplace) {
+                if (vehicle)
+                        return move_not_in_vehicle;
                 return move_enter_subplace;
+        }
 
 	// passable? I moved this check to be before a test for portals. A
 	// portal is accessible iff the player can move across the terrain it
@@ -507,6 +510,8 @@ MoveResult player_party::move(int newdx, int newdy)
 		// Impassable terrain.
 		return WasImpassable;
 
+        case move_not_in_vehicle:
+                return NotInVehicle;
 
 	case move_enter_combat:
 		// Handle combat (possible multiple combats) until we're all

@@ -47,7 +47,8 @@ enum move_result {
         move_enter_auto_portal,
         move_impassable,
         move_player_quit,
-        move_enter_subplace
+        move_enter_subplace,
+        move_not_in_vehicle
 };
 
 struct move_info {

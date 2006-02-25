@@ -125,7 +125,8 @@ enum MoveResult {
         OutOfRange,
         NoDestination,
         UserCanceled,
-        StationaryObject
+        StationaryObject,
+        NotInVehicle
 };
 
 struct inv_entry {
