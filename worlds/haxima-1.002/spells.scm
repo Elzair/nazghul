@@ -134,7 +134,7 @@
 
 (define (cast-bimodal caster proc)
   (define (cast-it target)
-    (cond ((null? target) nil)
+    (cond ((null? target) result-no-target)
           (else (proc target))))
   (let ((loc (kern-obj-get-location caster)))
   (if (kern-place-is-wilderness? (loc-place loc))
@@ -711,8 +711,11 @@
 
 (define (sanct-lor  caster)
   (define (hide target)
-    (kern-obj-add-effect target ef_invisibility nil))
+	(begin
+		(kern-obj-add-effect target ef_invisibility nil)
+		result-ok))
   (cast-bimodal caster hide))
+
 
 (define (in-quas-xen  caster)
   (let ((target (ui-target (kern-obj-get-location caster) 1 obj-is-char?)))
