@@ -219,22 +219,22 @@
                                                1)
                     (say knpc "[He grins and winks] Just the stuff I need! "
                          "There was a fortress overlooking a river of fire. "
-						 "If it had been manned, it might have turned Glasdrin's invasion. "
-						 "It would make for a perilous crossing indeed if monsters have taken it over.")
+                         "Pity it wasn't manned, it might have turned Glasdrin's invasion. "
+                         "It will make a perilous crossing if monsters have taken it over.")
                     (prompt-for-key)
                     (say knpc 
                          "There is, however, an older route that bypasses the fortress. "
-                         "Search the east wall of the first cavern. "
-						 "You should be able to find the hidden entrance to a side passage.")
+                         "Search the east wall of the first cavern, "
+                         "you will find a hidden passage.")
                     (prompt-for-key)
                     (say knpc
-					     "You will still need to cross the river of fire. "
-                         "There is a statue upon the river. Speak the password 'ONUS' and you will pass the lava unharmed. "
+                         "You will still need to cross the river of fire. "
+                         "There is a statue upon the river. Speak the password 'ONUS' to pass unharmed. "
                          "Write that password down!")
                     (prompt-for-key)
                     (say knpc
                          "The passage rejoins the main route near the stairway which leads up to "
-                         "the lost city. This won't allow you to escape all the hazards of the journey, "
+                         "the lost city. You won't escape all the hazards of the journey, "
                          "but it should make your life somewhat easier."))
                   (say knpc "I see. No doubt you have important plans for "
                        "that lich's blood. I can always get some from "
