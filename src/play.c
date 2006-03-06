@@ -306,12 +306,14 @@ int playRun(void)
         log_end_group();
         log_msg("'?' for help.");
 
-        // Bugfix: sun & moon not shown until player takes a step
-        sky_advance(&Session->sky, 
-                    NULL != Place && ! Place->underground);
-
         // Run the optional startup script.
         session_run_start_proc(Session);
+
+        /* bugfix: Place may not be set until after the startup script runs, so
+         * now is the first time we can be sure that the following will repaint
+         * the sun and moons. */
+        sky_advance(&Session->sky, 
+                    NULL != Place && ! Place->underground);
 
         if (! Place) {
                 log_msg("Error: no starting place!");

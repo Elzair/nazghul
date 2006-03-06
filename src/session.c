@@ -420,7 +420,7 @@ int session_load(char *filename)
         /* Now setup stuff that with known defaults. */
         statusSetMode(Session->status_mode);
         mapSetLosStyle(Session->los);
-	windSetDirection(NORTH, 1); /* fixme -- hardcoded */
+
         /* Run through all the objects in the world, initializing their
          * effects */
         list_for_each(&Session->data_objects, elem) {
@@ -446,6 +446,12 @@ int session_load(char *filename)
 	foogodRepaint();
 	consoleRepaint();
 	statusRepaint();
+
+        /* show the sun, moon and wind status */
+        sky_advance(&Session->sky, 
+                    NULL != Place && ! Place->underground);
+
+        windRepaint();
 
         return 0;
 }
@@ -595,6 +601,7 @@ void session_save(char *fname)
         session_save_time_accel(save, Session);
         dtable_save(Session->dtable, save);
         sky_save(&Session->sky, save);
+        windSave(save);
 
         /* Save the flags */
         save->write(save, "(kern-add-reveal %d)\n", Session->reveal);

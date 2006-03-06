@@ -23,6 +23,7 @@
 #include "wq.h"
 #include "common.h"
 #include "screen.h"
+#include "session.h"
 
 static SDL_Rect windRect;
 static int windDirection;
@@ -37,7 +38,6 @@ void windAdvanceTurns(void)
 
 	if (rand() % 100 < WIND_CHANGE_PROBABILITY) {
 		windSetDirection(rand() % NUM_WIND_DIRECTIONS, 10);
-		screenUpdate(&windRect);
 	}
 }
 
@@ -49,19 +49,16 @@ int windInit(void)
 	windRect.h = WIND_H;
 
 	windDirection = NORTH;
+        windDuration = 0;
 
         return 0;
 }
 
 void windSetDirection(int dir, int dur)
 {
-	// fixme -- move the similar array in cmd.c to common.h and use that
 	windDirection = dir;
 	windDuration = dur;
-	screenErase(&windRect);
-	screenPrint(&windRect, SP_CENTERED, "Wind:%s",
-		    directionToString(windDirection));
-	screenUpdate(&windRect);
+        windRepaint();
 }
 
 int windGetDirection(void)
@@ -75,4 +72,10 @@ void windRepaint(void)
 	screenPrint(&windRect, SP_CENTERED, "Wind:%s",
 		    directionToString(windDirection));
 	screenUpdate(&windRect);
+}
+
+void windSave(struct save *save)
+{
+        save->write(save, "(kern-set-wind %d %d)\n", windDirection, 
+                    windDuration);
 }

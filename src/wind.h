@@ -22,17 +22,18 @@
 #ifndef wind_h
 #define wind_h
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-        
-        extern int windInit(void);
-        extern void windSetDirection(int dir, int duration);
-        extern int windGetDirection(void);
-        extern void windAdvanceTurns(void);
-        extern void windRepaint(void);
-#ifdef __cplusplus
-}
-#endif
+#include "macros.h"
+
+BEGIN_DECL
+
+extern int windInit(void);
+extern void windSetDirection(int dir, int duration);
+extern int windGetDirection(void);
+extern void windAdvanceTurns(void);
+extern void windRepaint(void);
+extern void windSave(struct save *save);
+
+END_DECL
+
 
 #endif
