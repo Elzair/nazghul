@@ -52,6 +52,7 @@
 #include "log.h"
 #include "vmask.h"
 #include "factions.h"
+#include "blender.h"
 
 #include <assert.h>
 #include <stdlib.h>
@@ -1267,6 +1268,7 @@ static struct terrain_map *create_temporary_terrain_map(struct combat_info
 {
         struct terrain_map *map;
         int player_dx, player_dy, npc_dx, npc_dy;
+        struct list *elem;
 
         // If there is no enemy then create a map derived entirely from the
         // player party's tile. This is the case for camping and zoom-in.
@@ -1361,7 +1363,15 @@ static struct terrain_map *create_temporary_terrain_map(struct combat_info
                 the_map = player_party->getPlace()->terrain_map;
         }
         map->palette = the_map->palette;
-        terrain_map_print(stdout, INITIAL_INDENTATION, map);
+        //terrain_map_print(stdout, INITIAL_INDENTATION, map);
+
+
+        /* run all registered terrain blenders on the new map */
+        list_for_each(&Session->blenders, elem) {
+                blender_t *blender=outcast(elem, blender_t, list);
+                terrain_map_blend(map, blender->inf, blender->n_nonsup,
+                                  blender->nonsup, blender->range);
+        }
 
         return map;
 }

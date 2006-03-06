@@ -22,6 +22,7 @@
 
 #include "session.h"
 
+#include "blender.h"
 #include "character.h"
 #include "cmd.h"
 #include "ctrl.h"
@@ -139,8 +140,6 @@
 #define KERN_API_CALL(name) static pointer name(scheme *sc, pointer args)
 
 #define TAG_UNK "<tag?>"
-#define BLENDER_MAX_NONSUP 32
-#define BLENDER_N_RANGE  16
 
 
 struct kjob {
@@ -156,15 +155,6 @@ struct kern_append_info {
         int (*filter)(Object *, struct kern_append_info *);
         void *data;
 };
-
-typedef struct blender {
-        struct list list;
-        struct terrain *inf;
-        int n_nonsup;
-        struct terrain *nonsup[BLENDER_MAX_NONSUP];
-        struct terrain *range[BLENDER_N_RANGE];
-} blender_t;
-
 
 /*****************************************************************************
  *
