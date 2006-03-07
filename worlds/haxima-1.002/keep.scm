@@ -5,9 +5,9 @@
 (mk-dungeon-room
  'p_great_hall "Great Hall"
  (list
-  "xx xx xx xx xx xx xx ,, ,, ,, ,, ,, xx xx xx xx xx xx xx "
-  "xx ,, ,, ,, ,, ,, xx xx ,, ,, ,, xx xx ,, ,, ,, ,, ,, xx "
-  "xx ,, ,, ,, ,, ,, ,, xx xx xx xx xx ,, ,, ,, ,, ,, ,, xx "
+  "xx xx xx xx xx xx xx xx xx xx xx xx xx x! xx xx xx xx xx "
+  "xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx "
+  "xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx "
   "xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx "
   "xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx "
   "xx ,, ,, ,, ,, xx xx ,, cc cc cc ,, xx xx ,, ,, ,, ,, xx "
@@ -29,11 +29,11 @@
  (put (mk-ladder-down 'p_pools 9 9) 9 6)
 
   ;; secret wall mech
-  (put (make-invisible (mk-lever 'gh_wall)) 12 2)
+  (put (mk-disg-lvr 'gh_wall 's_wall_torch) 13 0)
   (put (kern-tag 'gh_wall 
                  (mk-tblitter 'p_great_hall
                               8
-                              2
+                              0
                               3
                               1
                               'm_hall_section))
