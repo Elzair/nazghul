@@ -1,10 +1,9 @@
 ;;----------------------------------------------------------------------------
 ;; Schedule
 ;;----------------------------------------------------------------------------
-(define (mk-zone x y w h) (list 'p_green_tower x y w h))
 (kern-mk-sched 'sch_doris
-               (list 0  0  (mk-zone 58 61 1  1) "sleeping")
-               (list 8  0  (mk-zone 47 59 10 1) "working"))
+               (list 0  0  doris-bed "sleeping")
+               (list 8  0  white-stag-counter "working"))
 
 ;;----------------------------------------------------------------------------
 ;; Gob

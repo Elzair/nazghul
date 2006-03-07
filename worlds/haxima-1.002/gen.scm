@@ -5,7 +5,7 @@
 (kern-mk-sched 'sch_gen
                (list 0  0  (mk-zone 2  13 1  1)  "sleeping")
                (list 4  0  (mk-zone 3  12 3  3)  "eating")
-               (list 5  0  (mk-zone 7  20 5  5)  "idle")
+               (list 5  0  gt-woods  "idle")
                (list 10 0  (mk-zone 26 27 2  12) "idle")
                (list 12 0  (mk-zone 49 54 1  1)  "eating")
                (list 13 0  (mk-zone 49 3  7  2)  "idle")

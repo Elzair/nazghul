@@ -235,6 +235,11 @@
 (define gt-jorn-hut (mk-zone 21 57 4 4))
 (define gt-abe-bed (mk-zone 3 3 1 1))
 (define gt-ruins (mk-zone 6 50 7 7))
+(define doris-bed (mk-zone 58 61 1 1))
+(define abigail-bed (mk-zone 60 61 1 1))
+(define white-stag-counter (mk-zone 47 59 10 1))
+(define gt-woods (mk-zone 7 20 5 5))
+(define gt-tower (mk-zone 30 30 5 5))
 
 ;;----------------------------------------------------------------------------
 ;; Green Tower Lower (incomplete)

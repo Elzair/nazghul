@@ -109,6 +109,7 @@
 (kern-load "jorn.scm")
 (kern-load "abe.scm")
 (kern-load "kama.scm")
+(kern-load "abigail.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Place
@@ -125,6 +126,7 @@
   (put ch_shroom  14 1)
   (put ch_gen     0 0)
   (put ch_doris   0 0)
+  (put (mk-abigail) 0 0)
   (put ch_deric   0 0)
   (put (mk-jorn) 0 0)
   (put (mk-abe) 0 0)

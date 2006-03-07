@@ -216,22 +216,22 @@
 (define tset_shore
 (list
    t_shoals    ;; 0: none
-t_shore_n   ;; 1: north
-t_shore_w   ;; 2: west
-t_shore_nw  ;; 3: north west
-t_shore_e   ;; 4: east
-t_shore_ne  ;; 5: east north
-t_shore_we  ;; 6: east west
-t_shore_nwe ;; 7: east west north
-t_shore_s   ;; 8: south
-t_shore_ns  ;; 9: south north
-t_shore_ws  ;; 10: south west
-t_shore_nws ;; 11: south west north
-t_shore_es  ;; 12: south east
-t_shore_nes ;; 13: south east north
-t_shore_wes ;; 14: south east west
-t_shore_c ;; 15: south east west north
-))
+   t_shore_n   ;; 1: north
+   t_shore_w   ;; 2: west
+   t_shore_nw  ;; 3: north west
+   t_shore_e   ;; 4: east
+   t_shore_ne  ;; 5: east north
+   t_shore_we  ;; 6: east west
+   t_shore_nwe ;; 7: east west north
+   t_shore_s   ;; 8: south
+   t_shore_ns  ;; 9: south north
+   t_shore_ws  ;; 10: south west
+   t_shore_nws ;; 11: south west north
+   t_shore_es  ;; 12: south east
+   t_shore_nes ;; 13: south east north
+   t_shore_wes ;; 14: south east west
+   t_shore_c ;; 15: south east west north
+   ))
 
 (define tset_water
 (append tset_shore

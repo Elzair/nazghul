@@ -318,6 +318,7 @@
 (kern-mk-sprite 's_fat_townswoman ss_addon 2 97 #f 0)
 (kern-mk-sprite 's_lady ss_addon 2 99 #f 0)
 (kern-mk-sprite 's_doorway ss_addon 1 101 #f 0)
+(kern-mk-sprite 's_goblin_child ss_addon 2 102 #f 0)
 (kern-mk-sprite 's_purple_spider ss_addon 4 104 #f 0)
 (kern-mk-sprite 's_brigandess ss_addon 4 108 #f 0)
 (kern-mk-sprite 's_wolf ss_addon 4 112 #f 0)
