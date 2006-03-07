@@ -1580,6 +1580,9 @@ static void cmd_nearest_conversant_visitor(class Object *obj, void *data)
         if (obj->isPlayerControlled())
                 return;
         
+        if (! obj->isVisible() && ! Reveal)
+                return;
+
         /* Filter out objects not in los of the subject */
         if (! place_in_los(info->origin->getPlace(),
                            info->origin->getX(),
