@@ -497,15 +497,38 @@
 		)
 		(list
 			(list 50 'cave-goblin-slinger-m)
-			(list 100 'cave-goblin-berserker-m)
-			(list 150 'troll-m)
-			(list 200 'gint-warrior-m)
-			(list 250 'gazer)
+			(list 100 'headless)
+			(list 150 'cave-goblin-berserker-m)
+			(list 200 'troll-m)
+			(list 250 'gint-warrior-m)
+			(list 350 'gazer)
 		)
 		(list
 			(list 25 'cave-goblin-slinger-m)
 			(list 50 'cave-goblin-berserker-m)
 			(list 300 'dragon)
+		)
+		(list
+			(list 20 'ghast)
+			(list 70 'skeletal-warrior)
+			(list 120 'skeletal-spear-thrower)
+			(list 150 'craven-archer)
+			(list 300 'death-knight)
+			(list 350 'demon)
+		)
+		(list
+			(list 100 'skeletal-warrior)
+			(list 200 'skeletal-spear-thrower)
+			(list 250 'lich)
+		)
+		(list 
+			(list 100 'headless)
+			(list 150 'skeletal-warrior)
+			(list 200 'skeletal-spear-thrower)
+			(list 220 'craven-archer)
+			(list 250 'death-knight)
+			(list 260 'demon)
+			(list 330 'warlock)
 		)
 	)
 )
@@ -519,23 +542,29 @@
 		(list 50 2 100 "1d4+3") ;spiders
 		(list 60 3 100 "1d3+1") ;goblins
 		(list 70 2 110 "1d4+3") ;spiders 1q
-		(list 80 2 150 "1d6+4") ;spiders +qs
-		(list 90 5 200 "1d6+3") ;slime+
-		(list 100 3 200 "1d6+4") ;goblin war
-		(list 110 4 300 "1d6+3") ;trolls
-		(list 120 6 100 "1d2")   ;zorn
-		(list 130 7 20 "1d6+1")  ;ghost
-		(list 140 8 350 "1d6+3") ;gint
-		(list 150 7 22 "1d6+1")  ;ghost + d
-		(list 160 3 210 "1d6+5") ;goblin war +p
-		(list 170 7 200 "1d3")   ;demons
-		(list 180 3 250 "2d4+4") ;goblin tribe
-		(list 190 4 350 "1d6+5") ;trolls +m
-		(list 200 8 400 "2d4+4") ;gint + m
-		(list 210 10 300 "1d4")  ;dragon
-		(list 220 10 60 "1d6+3") ;dragon + gob	
-		(list 230 9 210 "1d6+3") ;gazer
-		(list 240 9 250 "2d4+4") ;gazers
+		(list 80 13 100 "1d6+4") ;headless
+		(list 90 2 150 "1d6+4") ;spiders +qs
+		(list 100 5 200 "1d6+3") ;slime+
+		(list 110 3 200 "1d6+4") ;goblin war
+		(list 120 7 20 "1d6+1")  ;ghost
+		(list 130 11 120 "1d6+4") ;skels
+		(list 140 4 300 "1d6+3") ;trolls
+		(list 150 6 100 "1d2")   ;zorn
+		(list 160 8 350 "1d6+3") ;gint
+		(list 170 7 22 "1d6+1")  ;ghost + d
+		(list 180 11 300 "2d4+4") ;deathknights
+		(list 190 11 310 "2d4+4") ;deathknights +d
+		(list 200 3 210 "1d6+5") ;goblin war +p
+		(list 210 7 200 "1d3")   ;demons
+		(list 220 3 250 "2d4+4") ;goblin tribe
+		(list 230 4 350 "1d6+5") ;trolls +m
+		(list 240 8 400 "2d4+4") ;gint + m
+		(list 250 10 300 "1d4")  ;dragon
+		(list 260 10 80 "1d6+3") ;dragon + gob	
+		(list 270 9 260 "1d6+3") ;gazer
+		(list 280 13 330 "2d4+4") ;warlock		
+		(list 290 12 205 "2d4+4") ;lich	
+		(list 300 9 320 "2d4+4") ;gazers
 	)
 )
 
@@ -604,7 +633,7 @@
 
 					(deep-room-addmonster kplace monster)))
 				(deep-mk-monster-group deep-group-types deep-monster-types 
-					(string-append "1d" (number->string (min 230 (ceiling (* 100 (sqrt distance))))))
+					(string-append "1d" (number->string (min 300 (ceiling (* 120 (sqrt distance))))))
 					(+ 400 (* 100 (sqrt distance)))))
 					)
 		)
