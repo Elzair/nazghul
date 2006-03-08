@@ -1,0 +1,431 @@
+;
+; I wanted to make the area down here too big and nasty for the paladins to have wiped out.
+; So I thought Id just make a more or less infinite pseudorandom dungeon.
+; The players dont need to go out there, but they can wander around if they like.
+; However, if they do, it is quite large enough for them to get lost and die in.
+;
+; TODO: occasional 'teleportation' to make "get lost and die" that much easier
+;    this latter should occasionally connect a room to a room with a matching
+;    edge at a much different location to the expected one.
+;
+
+(kern-mk-place 
+	'p_lost_garrison
+	"Deep Fortress"
+	nil          ; sprite
+	(kern-mk-map nil 38 38 pal_expanded
+		(list
+	  "rr rr rr rr rr .. .. .. .. .. .. .. .. .. rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
+	  "rr rr rr rr rr .. .. .. .. .. .. .. .. .. .. rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
+	  "rr rr rr rr rr .. .. .. .. .. .. .. .. .. rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
+	  "rr rr rr xx xx xx w+ xx ,, x! ,, xx w+ xx xx xx xx xx rr x! xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx rr rr rr "
+	  "rr .. rr xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, rr ,, ,, ,, ,, ,, ,, xx ,, ,, ,, xx ,, ,, ,, ,, ,, ,, ,, xx rr rr rr "
+	  ".. .. .. rr ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx ,, ,, ,, .. ,, ,, xx ,, ,, ,, xx ,, ,, xx ,, xx ,, ,, xx rr rr rr "
+	  ".. .. .. w+ ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, w+ ,, ,, ,, ,, ,, ,, w+ ,, ,, ,, rr xx xx x! ,, x! xx xx xx rr rr rr "
+	  ".. .. .. xx ,, ,, .. ,, ,, ,, .. bb ,, ,, ,, xx ,, ,, ,, ,, ,, ,, xx ,, ,, ,, xx ,, ,, ,, ,, ,, ,, ,, xx rr rr rr "
+	  ".. .. .. ,, ,, ,, ,, ,, ,, ,, ,, .. ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx ,, ,, xx ,, xx ,, ,, xx rr rr rr "
+	  ".. .. .. x! ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, x! ,, ,, ,, ,, ,, ,, x! ,, ,, ,, xx xx xx xx ,, xx xx xx xx rr rr rr "
+	  ".. .. .. ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx ,, ,, ,, ,, ,, ,, ,, xx rr rr rr "
+	  ".. .. .. xx ,, ,, bb ,, ,, ,, ,, ,, ,, ,, ,, xx ,, ,, ,, ,, ,, ,, xx ,, ,, ,, xx ,, ,, ,, ,, ,, ,, ,, xx rr rr rr "
+	  ".. .. .. w+ ,, ,, ,, ,, ,, ,, ,, ,, .. ,, ,, w+ ,, ,, ,, ,, ,, ,, w+ ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx rr rr rr "
+	  ".. .. .. xx ,, ,, ,, ,, ,, .. ,, ,, bb ,, ,, xx ,, ,, ,, ,, ,, .. xx ,, ,, ,, xx ,, ,, ,, ,, ,, ,, ,, xx rr rr rr "
+	  "rr rr .. xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx ,, ,, ,, .. .. .. xx ,, ,, ,, xx ,, ,, ,, ,, ,, ,, ,, xx rr rr rr "
+	  "rr rr rr xx xx xx w+ w+ x! w+ x! w+ w+ xx xx xx xx xx xx x! xx xx xx ,, ,, ,, x! ,, [[ @@ @@ @@ ]] ,, x! rr rr rr "
+	  "rr rr rr xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx rr rr rr rr rr rr xx ,, ,, ,, xx ,, ,, ,, ,, ,, ,, ,, xx rr rr rr "
+	  "rr rr rr rr ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, bb rr rr rr rr rr rr xx ,, ,, ,, xx ,, ,, ,, ,, ,, ,, ,, xx rr rr rr "
+	  "rr rr rr x! ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, x! rr rr rr rr rr rr xx ,, ,, ,, xx xx xx xx xx xx xx xx xx rr rr rr "
+	  "rr rr rr xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx rr rr rr rr rr rr xx ,, ,, ,, xx [[ .M .E .D .I .K ]] xx rr rr rr "
+	  "rr rr rr xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx rr rr rr rr rr rr rr ,, ,, ,, xx ,, ,, ,, ,, ,, ,, ,, xx rr rr rr "
+	  "rr rr rr xx xx rr xx rr xx xx xx xx ,, ,, ,, xx rr rr rr rr rr rr rr ,, ,, ,, x! ,, ,, ,, ,, ,, ,, ,, x! rr rr rr "
+	  "rr rr rr xx ,, ,, ,, [[ @@ @@ ]] xx ,, ,, ,, x! xx xx x! xx xx xx x! ,, ,, ,, xx ,, ,, ,, ,, ,, ,, ,, bb rr rr rr "
+	  "rr rr rr xx 00 ,, ,, ,, ,, ,, ,, xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx ,, ,, ,, ,, ,, ,, ,, xx rr rr rr "
+	  "rr rr rr xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx rr rr rr "
+	  "rr rr rr xx ,, ,, ,, ,, ,, ,, ,, xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx ,, ,, ,, ,, ,, ,, ,, xx rr rr rr "
+	  "rr rr rr xx xx xx xx xx x! xx xx xx xx xx xx ,, ,, xx xx xx xx ,, ,, xx xx xx xx xx xx xx xx xx rr xx xx rr rr rr "
+	  "rr rr rr xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, x! ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, 00 xx rr rr rr "
+	  "rr rr rr xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, && xx rr rr rr "
+	  "rr rr rr rr ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx ,, [[ @@ @@ @@ @@ @@ @@ @@ @@ ]] ,, ,, ,, 00 xx rr rr rr "
+	  "rr rr rr rr .. ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, rr ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, && xx rr rr rr "
+	  "rr rr rr xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, 00 xx rr rr rr "
+	  "rr rr rr xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, rr ,, [[ @@ @@ @@ @@ @@ @@ @@ @@ ]] ,, ,, ,, && xx rr rr rr "
+	  "rr rr rr bb ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, 00 xx rr rr rr "
+	  "rr rr rr xx xx xx xx xx xx xx xx rr xx xx xx xx xx xx xx xx xx x! xx xx xx xx xx x! xx xx xx xx xx xx xx rr rr rr "
+	  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
+	  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
+	  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
+		)	
+	)
+
+	 #f              ; wraps
+	 #t              ; underground
+	 #f              ; large-scale (wilderness)
+	 #f              ; tmp combat place
+	 nil ; subplaces
+	 nil ; neighbors
+ 
+	 (list (put (mk-monman) 0 0) ; objects
+		(put (mk-ladder-up 'p_deepness 12 9) 11 11)
+		(put (kern-tag 'ednp1 (mk-portcullis)) 8 3)
+		(put (kern-tag 'ednp2 (mk-connected-portcullis 'ednp1)) 10 3)
+		(put (kern-tag 'edwp1 (mk-portcullis)) 3 8)
+		(put (kern-tag 'edwp2 (mk-connected-portcullis 'edwp1)) 3 10)
+		(put (kern-tag 'ede1p1 (mk-portcullis)) 15 8)
+		(put (kern-tag 'ede1p2 (mk-connected-portcullis 'ede1p1)) 15 10)
+		(put (kern-tag 'ede2p1 (mk-portcullis)) 22 8)
+		(put (kern-tag 'ede2p2 (mk-connected-portcullis 'ede2p1)) 22 10)
+		(put (mk-locked-door) 29 4)
+		(put (mk-door) 29 7)
+		(put (mk-door) 31 4)
+		(put (mk-locked-door) 31 7)
+		(put (mk-door) 26 12)
+		(put (mk-door) 26 24)
+		(put (mk-door) 21 26)
+		(put (mk-door) 22 26)
+		(put (mk-door) 15 26)
+		(put (mk-door) 16 26)
+		(put (mk-door) 11 24)
+	
+		(put (mk-lever 'edwp2) 4 17)
+		(put (mk-lever-on 'ednp2) 4 16)
+		(put (mk-lever-on 'ede1p2) 14 16)
+		(put (mk-lever-on 'ede2p2) 25 4)
+	
+		(put (mk-bed) 4 25)
+		(put (mk-bed) 5 28)
+		(put (mk-bed) 8 28)
+		(put (mk-bed) 11 28)
+		(put (mk-bed) 14 28)
+		(put (mk-bed) 17 28)
+		(put (mk-bed) 5 30)
+		(put (mk-bed) 8 30)
+		(put (mk-bed) 11 30)
+		(put (mk-bed) 14 30)
+		(put (mk-bed) 17 30)
+		(put (mk-bed) 5 32)
+		(put (mk-bed) 8 32)
+		(put (mk-bed) 11 32)
+		(put (mk-bed) 14 32)
+		(put (mk-bed) 17 32)
+		(put (mk-bed) 28 21)
+		(put (mk-bed) 32 24)
+		(put (mk-bed) 30 24)
+		(put (mk-bed) 32 22)
+		
+		(put (kern-mk-obj t_garrison_log 1) 4 23)
+		(put (kern-mk-obj t_food 21) 33 27)
+		(put (kern-mk-obj t_food 1) 22 29)
+		(put (kern-mk-obj t_food 1) 27 32)
+		
+		(put (spawn-pt 'troll-m) 6 17)
+		(put (spawn-pt 'troll-m) 11 19)
+		(put (spawn-pt 'cave-goblin-berserker-m) 29 11)
+		(put (spawn-pt 'cave-goblin-slinger-m) 32 13)
+		(put (spawn-pt 'cave-goblin-berserker-m) 32 23)
+		(put (spawn-pt 'gint-warrior-m) 23 28)
+		(put (spawn-pt 'gint-warrior-m) 28 33)
+		
+		;;guards possessed or dead- captain + 11 troops
+		(put (mk-corpse2
+		   (mk-contents
+			(add-content 1 't_armor_chain)
+			(add-content 1 't_sword_2)
+			(add-content 1 't_scratched_shield)
+			)) 7 24)
+		
+		
+		(put (mk-npc 'corrupt-halberdier 4) 18 12)
+		(put (mk-npc 'corrupt-halberdier 8) 17 6)
+		(put (mk-npc 'corrupt-halberdier 6) 24 12)
+		(put (mk-npc 'corrupt-crossbowman 5) 8 17)
+		(put (mk-npc 'corrupt-crossbowman 6) 14 5)
+		
+		(put (mk-npc 'corrupt-halberdier 7) 24 5)
+		(put (mk-corpse2
+		   (mk-contents
+			(add-content 2 't_heal_potion)
+			(add-content 1 't_crossbow)
+			(add-content 13 't_bolt)
+			)) 13 6)
+		(put (mk-corpse-with-loot) 11 9)
+		(put (mk-corpse-with-loot) 17 13)
+		(put (mk-corpse-with-loot) 7 29)
+
+		(put (mk-corpse-with-loot) 30 30)
+		
+		
+		;;additional critters
+		;;gazers
+		(put (mk-npc 'gazer 9) 25 8)
+		(put (mk-npc 'gazer 8) 22 31)
+		(put (mk-npc 'gazer 7) 7 25)
+		(put (mk-npc 'gazer 6) 32 11)
+		
+		;;gints
+		(put (mk-npc 'gint-warrior-m 8) 5 6)
+		(put (mk-npc 'gint-warrior-m 7) 12 32)
+		(put (mk-npc 'gint-warrior-m 6) 30 27)
+		
+		;;trolls
+		(put (mk-npc 'troll-m 7) 7 19)
+		(put (mk-npc 'troll-m 6) 29 17)		
+		(put (mk-npc 'troll-m 5) 10 29)
+		(put (mk-npc 'troll-m 5) 31 21)
+		(put (mk-npc 'troll-m 4) 13 16)
+		
+		;;goblins
+		(put (mk-npc 'cave-goblin-berserker-m 6) 12 31)
+		(put (mk-npc 'cave-goblin-berserker-m 5) 9 32)
+		(put (mk-npc 'cave-goblin-berserker-m 4) 18 8)
+		(put (mk-npc 'cave-goblin-slinger-m 6) 7 20)
+		(put (mk-npc 'cave-goblin-slinger-m 5) 12 16)
+		(put (mk-npc 'cave-goblin-slinger-m 4) 10 32)
+		(put (mk-npc 'cave-goblin-slinger-m 3) 32 16)
+	 )
+ 
+ 
+	 (list
+		'on-entry-to-dungeon-room
+		'deeps-room-handle-garrison
+		) ;; hooks
+		(list ;; edge entrances
+			(list east 0 9)
+			(list south 9 0)
+		)
+ )
+ 
+
+
+(kern-mk-place 
+	'p_deeps_1
+	"endless deepness"
+	 nil          ; sprite
+	(kern-mk-map nil 19 19 pal_expanded
+		(list
+		  "rr rr rr rr rr .. .. .. .. .. .. .. .. .. rr rr rr rr rr "
+		  "rr rr rr rr rr .. .. .. .. .. .. .. .. .. rr rr rr rr rr "
+		  "rr rr rr rr rr .. .. .. .. .. .. .. .. .. rr rr rr rr rr "
+		  "rr rr rr .. .. .. .. .. .. .. .. .. .. .. .. .. rr rr rr "
+		  "rr rr rr .. .. .. .. .. .. .. .. .. .. .. .. .. rr rr rr "
+		  ".. .. .. .. .. .. .A .. .. .. .. .. .. .. .. .. .. .. .. "
+		  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+		  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+		  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+		  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+		  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+		  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+		  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+		  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+		  "rr rr rr .. .. .. .. .. .. .. .. .. .. .. .. .. rr rr rr "
+		  "rr rr rr .. .. .. .. .. .. .. .. .. .. .. .. .. rr rr rr "
+		  "rr rr rr rr rr .. .. .. .. .. .. .. .. .. rr rr rr rr rr "
+		  "rr rr rr rr rr .. .. .. .. .. .. .. .. .. rr rr rr rr rr "
+		  "rr rr rr rr rr .. .. .. .. .. .. .. .. .. rr rr rr rr rr "
+		)
+	)
+	 #f              ; wraps
+	 #t              ; underground
+	 #f              ; large-scale (wilderness)
+	 #f              ; tmp combat place
+	 nil ; subplaces
+	 nil ; neighbors
+ 
+	nil; objects
+	 
+	 (list
+		;'on-entry-to-dungeon-room
+		'deeps-room-handle-deeps
+	) ;; hooks
+	nil
+)
+
+ 
+ (kern-mk-place 
+	'p_deeps_2
+	"endless deepness"
+	nil          ; sprite
+	(kern-mk-map nil 19 19 pal_expanded
+		(list
+		  "rr rr rr rr rr .. .. .. .. .. .. .. .. .. rr rr rr rr rr "
+		  "rr rr rr rr rr .. .. .. .. .. .. .. .. .. rr rr rr rr rr "
+		  "rr rr rr rr rr .. .. .. .. .. .. .. .. .. rr rr rr rr rr "
+		  "rr rr rr .. .. .. .. .. .. .. .. .. .. .. .. .. rr rr rr "
+		  "rr rr rr .. .. .. .. .. .. .. .. .. .. .. .. .. rr rr rr "
+		  ".. .. .. .. .. .. .B .. .. .. .. .. .. .. .. .. .. .. .. "
+		  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+		  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+		  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+		  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+		  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+		  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+		  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+		  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+		  "rr rr rr .. .. .. .. .. .. .. .. .. .. .. .. .. rr rr rr "
+		  "rr rr rr .. .. .. .. .. .. .. .. .. .. .. .. .. rr rr rr "
+		  "rr rr rr rr rr .. .. .. .. .. .. .. .. .. rr rr rr rr rr "
+		  "rr rr rr rr rr .. .. .. .. .. .. .. .. .. rr rr rr rr rr "
+		  "rr rr rr rr rr .. .. .. .. .. .. .. .. .. rr rr rr rr rr "
+		)
+	)
+	 #f              ; wraps
+	 #t              ; underground
+	 #f              ; large-scale (wilderness)
+	 #f              ; tmp combat place
+	 nil ; subplaces
+	 nil ; neighbors
+ 
+	 (list (put (mk-monman) 0 0) ; objects
+	 )
+ 
+	 (list
+		;'on-entry-to-dungeon-room
+		'deeps-room-handle-deeps
+	) ;; hooks
+	nil
+)
+ 
+   (kern-mk-place 
+	'p_deeps_3
+	"endless deepness"
+	 nil          ; sprite
+	(kern-mk-map nil 19 19 pal_expanded
+		(list
+		  "rr rr rr rr rr .. .. .. .. .. .. .. .. .. rr rr rr rr rr "
+		  "rr rr rr rr rr .. .. .. .. .. .. .. .. .. rr rr rr rr rr "
+		  "rr rr rr rr rr .. .. .. .. .. .. .. .. .. rr rr rr rr rr "
+		  "rr rr rr .. .. .. .. .. .. .. .. .. .. .. .. .. rr rr rr "
+		  "rr rr rr .. .. .. .. .. .. .. .. .. .. .. .. .. rr rr rr "
+		  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+		  ".. .. .. .. .. .. .. .C .. .. .. .. .. .. .. .. .. .. .. "
+		  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+		  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+		  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+		  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+		  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+		  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+		  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+		  "rr rr rr .. .. .. .. .. .. .. .. .. .. .. .. .. rr rr rr "
+		  "rr rr rr .. .. .. .. .. .. .. .. .. .. .. .. .. rr rr rr "
+		  "rr rr rr rr rr .. .. .. .. .. .. .. .. .. rr rr rr rr rr "
+		  "rr rr rr rr rr .. .. .. .. .. .. .. .. .. rr rr rr rr rr "
+		  "rr rr rr rr rr .. .. .. .. .. .. .. .. .. rr rr rr rr rr "
+		)
+	)
+	 #f              ; wraps
+	 #t              ; underground
+	 #f              ; large-scale (wilderness)
+	 #f              ; tmp combat place
+	 nil ; subplaces
+	 nil ; neighbors
+ 
+	 (list (put (mk-monman) 0 0) ; objects
+	 )
+	 
+	 (list
+		;'on-entry-to-dungeon-room
+		'deeps-room-handle-deeps
+	) ;; hooks
+ 	nil
+ )
+ 
+   (kern-mk-place 
+	'p_deeps_4
+	"endless deepness"
+	 nil          ; sprite
+	(kern-mk-map nil 19 19 pal_expanded
+		(list
+		  "rr rr rr rr rr .. .. .. .. .. .. .. .. .. rr rr rr rr rr "
+		  "rr rr rr rr rr .. .. .. .. .. .. .. .. .. rr rr rr rr rr "
+		  "rr rr rr rr rr .. .. .. .. .. .. .. .. .. rr rr rr rr rr "
+		  "rr rr rr .. .. .. .. .. .. .. .. .. .. .. .. .. rr rr rr "
+		  "rr rr rr .. .. .. .. .. .. .. .. .. .. .. .. .. rr rr rr "
+		  ".. .. .. .. .. .. .D .. .. .. .. .. .. .. .. .. .. .. .. "
+		  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+		  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+		  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+		  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+		  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+		  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+		  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+		  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+		  "rr rr rr .. .. .. .. .. .. .. .. .. .. .. .. .. rr rr rr "
+		  "rr rr rr .. .. .. .. .. .. .. .. .. .. .. .. .. rr rr rr "
+		  "rr rr rr rr rr .. .. .. .. .. .. .. .. .. rr rr rr rr rr "
+		  "rr rr rr rr rr .. .. .. .. .. .. .. .. .. rr rr rr rr rr "
+		  "rr rr rr rr rr .. .. .. .. .. .. .. .. .. rr rr rr rr rr "
+		)
+	)
+	 #f              ; wraps
+	 #t              ; underground
+	 #f              ; large-scale (wilderness)
+	 #f              ; tmp combat place
+	 nil ; subplaces
+	 nil ; neighbors
+ 
+	 (list (put (mk-monman) 0 0) ; objects
+	 )
+	 
+	 (list
+		;'on-entry-to-dungeon-room
+		'deeps-room-handle-deeps
+	) ;; hooks
+ 	nil
+ )
+ 
+ (kern-mk-place 
+	'p_deeps_5
+	"endless deepness"
+	  nil          ; sprite
+	(kern-mk-map nil 19 19 pal_expanded
+		(list
+		  "rr rr rr rr rr .. .. .. .. .. .. .. .. .. rr rr rr rr rr "
+		  "rr rr rr rr rr .. .. .. .. .. .. .. .. .. rr rr rr rr rr "
+		  "rr rr rr rr rr .. .. .. .. .. .. .. .. .. rr rr rr rr rr "
+		  "rr rr rr .. .. .. .. .. .. .. .. .. .. .. .. .. rr rr rr "
+		  "rr rr rr .. .. .. .. .. .. .. .. .. .. .. .. .. rr rr rr "
+		  ".. .. .. .. .. .. .E .. .. .. .. .. .. .. .. .. .. .. .. "
+		  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+		  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+		  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+		  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+		  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+		  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+		  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+		  ".. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. "
+		  "rr rr rr .. .. .. .. .. .. .. .. .. .. .. .. .. rr rr rr "
+		  "rr rr rr .. .. .. .. .. .. .. .. .. .. .. .. .. rr rr rr "
+		  "rr rr rr rr rr .. .. .. .. .. .. .. .. .. rr rr rr rr rr "
+		  "rr rr rr rr rr .. .. .. .. .. .. .. .. .. rr rr rr rr rr "
+		  "rr rr rr rr rr .. .. .. .. .. .. .. .. .. rr rr rr rr rr "
+		)
+	)
+	 #f              ; wraps
+	 #t              ; underground
+	 #f              ; large-scale (wilderness)
+	 #f              ; tmp combat place
+	 nil ; subplaces
+	 nil ; neighbors
+ 
+	 (list (put (mk-monman) 0 0) ; objects
+	 )
+	 
+	 (list
+		;'on-entry-to-dungeon-room
+		'deeps-room-handle-deeps
+	) ;; hooks
+	nil
+ )
+ 
+
+ ; (x y is_current was_prev (adj_n adj_w adj_e adj_s))
+ 
+ ;  2   5   4   1   3                   
+ ; 513 324 132 245 451                          
+ ;  4   1   5   3   2  
+
+(set-roomdata p_deeps_1       (list 0 1 #f #f (list 'p_deeps_2 'p_deeps_5 'p_deeps_3 'p_deeps_4)))
+(set-roomdata p_deeps_2       (list 0 2 #f #f (list 'p_deeps_5 'p_deeps_3 'p_deeps_4 'p_deeps_1)))
+(set-roomdata p_deeps_3       (list 0 3 #f #f (list 'p_deeps_4 'p_deeps_1 'p_deeps_2 'p_deeps_5)))
+(set-roomdata p_deeps_4       (list 0 4 #f #f (list 'p_deeps_1 'p_deeps_2 'p_deeps_5 'p_deeps_3)))
+(set-roomdata p_deeps_5       (list 0 5 #f #f (list 'p_deeps_3 'p_deeps_4 'p_deeps_1 'p_deeps_2)))
+
+(set-roomdata p_lost_garrison (list 0 0 #t #t (list 'p_deeps_1 'p_deeps_2 'p_deeps_5 'p_deeps_3)))
