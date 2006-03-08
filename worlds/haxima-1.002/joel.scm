@@ -56,16 +56,26 @@
 (define (joel-absa knpc kpc)
   (say knpc "You're not thinking of going in there, are you?")
   (if (yes? kpc)
-      (say knpc "Crazy. Gazers are down there.")
+      (say knpc "Crazy. Theres nasty stuff down there.")
       (say knpc "Don't blame you.")))
 
+(define (joel-nast knpc kpc)
+  (say knpc "Gazers? Undead? Who knows what else? The place was bad enough before "
+       "the paladins sealed it up and left it to fester."))
+
+(define (joel-fest knpc kpc)
+  (say knpc "Paladins from Glasdrin destroyed Absalot. And when humans get out of the way, "
+	"monsters move in."))
+	
 (define (joel-gaze knpc kpc)
-  (say knpc "Mind-slavers. The paladins had a garrison down there. "
-       "The gazers enslaved the troops and who knows what else."))
+  (say knpc "Mind-slavers. And whatever they're controlling. "
+       "If you dont watch out you'll wind up their slaves too."))
+	   
+(define (joel-unde knpc kpc)
+  (say knpc "Ghosts, skeletons, and I'd rather not know what else."))
 
 (define (joel-bye knpc kpc)
   (say knpc "So long"))
-
 
 (define joel-conv
   (ifc basic-conv
@@ -81,7 +91,13 @@
        (method 'peac joel-peac)
        (method 'nice joel-peac)
        (method 'absa joel-absa)
-       (method 'gaze joel-gaze)
+       (method 'nast joel-nast)
+       (method 'stuf joel-nast)
+       (method 'mons joel-nast)
+       (method 'fest joel-fest)
+       (method 'pala joel-fest)
+       (method 'unde joel-unde)
+       (method 'gaze joel-gaze)	   
        ))
 
 (define (mk-joel)
