@@ -1391,9 +1391,14 @@ bool cmdHandle(class Character * pc)
                 return false;
         }
 
-        // Handle it
-        cmdwin_print("%s", mech->getName());
-        log_msg("%s handles %s", pc->getName(), mech->getName()); 
+        // Handle it (sometimes mechs are intentionally nameless so that they
+        // remain hidden from x)amine and s)earch commands)
+        char *mechName=mech->getName();
+        if (!mechName) {
+                mechName = "a hidden mechanism";
+        }
+        cmdwin_print("%s", mechName);
+        log_msg("%s handles %s", pc->getName(), mechName);
         mech->getObjectType()->handle(mech, pc);
         mapSetDirty();
 
