@@ -100,6 +100,54 @@
 		)
 	)
 
+  (kern-mk-map 'm_deeptempl_lava 19 19 pal_expanded
+		(list
+		  "rr rr rr rr rr rr !_ !_ !_ !_ !_ !_ !_ rr rr rr rr rr rr "
+		  "rr rr rr rr rr rr !! !! !! !! !! !! !_ !! rr rr rr rr rr "
+		  "rr rr rr rr rr !! !! .. .. .. bb !! !! .. rr rr rr rr rr "
+		  "rr rr rr bb rr .. .. .. .. .. .. .. .. .. .. {{ rr rr rr "
+		  "rr rr rr .. .. .. .. .. .. .. .. .. .. .. .. .. rr rr rr "
+		  "rr !! !! .. .. .. rr .. .. .. .. !! !! !! .. .. !! rr rr "
+		  "!_ !_ !! .. .. .. .. .. .. .. .. !! !_ !! .. .. !! !_ !_ "
+		  "!_ !! {{ .. .. .. .. {{ .. .. .. !! !! .. .. .. !! !! !_ "
+		  "!_ !! .. .. bb .. .. .. .. .. .. .. .. .. {{ .. .. !! !_ "
+		  "!_ !! .. .. .. .. .. !! .. .. .. .. .. .. .. .. .. !! !_ "
+		  "!_ !! .. .. .. .. !! !! !! .. .. .. .. .. .. .. .. !! !_ "
+		  "!_ !! .. .. .. !! !_ !! !! .. .. .. bb .. .. .. .. !! !_ "
+		  "!_ !! !! .. .. !! !! .. .. .. .. !! !! .. .. .. .. !! !_ "
+		  "!_ rr !! .. .. .. .. .. .. .. .. !! !! .. .. .. {{ rr !_ "
+		  "rr rr rr .. .. .. .. .. .. .. .. .. .. .. .. rr rr rr rr "
+		  "rr rr rr rr {{ .. .. .. .. .. .. .. .. .. .. bb rr rr rr "
+		  "rr rr rr rr rr .. .. !! bb .. .. !! !! !! rr rr rr rr rr "
+		  "rr rr rr rr rr !! !! !! !! !! !! !! !_ rr rr rr rr rr rr "
+		  "rr rr rr rr rr rr !_ !_ !_ !_ !_ !_ !_ !_ rr rr rr rr rr "
+		)
+	)
+	
+  (kern-mk-map 'm_deeptempl_swamp 19 19 pal_expanded
+		(list
+		  "bb rr {{ rr rr %% %% %% %% %% %% %% ~~ %% rr rr rr rr rr "
+		  "rr rr rr rr rr {{ %% %% .. {{ %% %% %% %% rr rr rr rr rr "
+		  "rr rr rr rr rr rr .. .. .. .. %% %% {{ .. rr rr rr rr rr "
+		  "rr rr rr .. rr %% .. .. bb .. %% %% %% %% %% rr rr rr rr "
+		  "rr rr rr .. %% %% %% .. %% %% %% %% .. .. .. rr rr rr rr "
+		  "rr {{ .. .. .. %% %% %% %% %% .. .. {{ .. .. .. {{ %% rr "
+		  "%% %% .. .. bb .. .. %% %% .. .. .. .. .. .. .. .. %% %% "
+		  "%% ~~ %% .. .. .. %% %% %% %% .. .. .. %% .. .. %% %% ~~ "
+		  "%% %% %% %% %% .. %% ~~ ~~ %% %% {{ %% %% %% %% %% %% %% "
+		  "%% %% .. .. %% %% %% %% %% %% rr rr %% %% %% .. .. .. %% "
+		  "%% %% bb .. .. %% %% %% %% .. %% ~~ %% .. .. .. .. .. %% "
+		  "%% %% .. .. .. .. %% .. %% %% %% %% %% .. .. .. .. {{ %% "
+		  "%% .. .. .. .. %% %% .. .. %% %% %% .. .. {{ .. .. %% %% "
+		  "%% rr .. .. .. %% ~~ %% .. .. .. %% .. .. .. .. .. rr %% "
+		  "rr rr rr .. .. %% %% %% .. .. .. %% %% .. .. rr rr rr rr "
+		  "rr rr rr .. rr %% %% .. .. bb .. %% %% %% %% rr rr rr rr "
+		  "rr rr rr rr rr .. .. .. .. .. %% %% %% {{ rr rr rr rr rr "
+		  "rr rr rr rr rr rr {{ %% %% %% %% %% %% rr rr rr rr rr rr "
+		  "rr rr rr rr rr %% %% %% %% %% %% ~~ %% %% rr rr rr rr rr "
+		)
+	)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Room data
 
@@ -175,9 +223,11 @@
 ;probability for edge terrains... out of 83
 (define deep-terrain-edges
 	(list
-		(list 30 'm_deeptempl_wall)
-		(list 35 'm_deeptempl_water)
-		(list 40 'm_deeptempl_hole)
+		(list 25 'm_deeptempl_wall)
+		(list 30 'm_deeptempl_water)
+		(list 35 'm_deeptempl_hole)
+		(list 40 'm_deeptempl_lava)
+		(list 45 'm_deeptempl_swamp)		
 		(list 100 'm_deeptempl_passage)
 	))
 
@@ -185,8 +235,10 @@
 (define deep-terrain-area
 	(list
 		(list 30 'm_deeptempl_wall)
-		(list 50 'm_deeptempl_water)
-		(list 70 'm_deeptempl_hole)		
+		(list 45 'm_deeptempl_water)
+		(list 65 'm_deeptempl_hole)		
+		(list 75 'm_deeptempl_lava)		
+		(list 80 'm_deeptempl_swamp)		
 		(list 150 'm_deeptempl_passage)
 	))
 
