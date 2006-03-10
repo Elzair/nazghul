@@ -691,7 +691,17 @@ bool Object::isSelected()
 
 enum layer Object::getLayer(void)
 {
-        return getObjectType()->getLayer();
+        // subtle: ~Being runs, calls ~Object, calls hookForEach to delete all
+        // the hooks, but there's an invalid hook which gets it's rm closure
+        // invoked. In that closure it calls kern-obj-is-being, which lands us
+        // here instead of Being::getLayer() because of where we are in the
+        // destructor chain, and Being's have no object type... hopefully since
+        // the object is being destroyed it doesn't really matter what the
+        // layer is.
+        if (getObjectType())
+                return getObjectType()->getLayer();
+        else
+                return null_layer;
 }
 
 char *Object::getName(void)

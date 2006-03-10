@@ -4,6 +4,7 @@
 #include "map.h"
 #include "place.h"
 #include "session.h"
+#include "log.h"
 
 // USE_CACHED_PATH works but it can cause some strange-seeming behavior. If a
 // new, better route opens than the cached path then the being won't find it,
@@ -185,8 +186,12 @@ bool Being::pathfindTo(struct place *destplace, int destx, int desty)
                                         pathPtr->y, 
                                         mech_layer);
                 if (mech && mech->getObjectType()->canHandle()) {
-                        //dbg("handling %s\n", mech->getName());
+                        // workaround for [ 1114054 ] messages for off-screen
+                        // NPC's getting printed: temporarily prevent the mech
+                        // script from generating log messages
+                        log_disable();
                         mech->getObjectType()->handle(mech, this);
+                        log_enable();
                         mapSetDirty();
                         
                         // Now try and move again.
