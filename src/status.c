@@ -44,6 +44,7 @@
 #define N_LINES Status.numLines	/* (STAT_H / TILE_H) */
 
 #define TALL_H (SCREEN_H - 4 * BORDER_H - 6 * ASCII_H)
+#define MAX_TITLE_LEN (N_CHARS_PER_LINE-2)
 
 /*
  * Armaments - R)eady-player
@@ -105,6 +106,7 @@ static struct status {
 	int maxLine;
 	int numLines;
 	int curLine;
+        char title[MAX_TITLE_LEN+1];
 
 	char *pg_title, *pg_text;
 	SDL_Surface *pg_surf;
@@ -228,10 +230,16 @@ int statusInit()
         return 0;
 }
 
-static void myRepaintTitle(char *title)
+static void status_set_title(char *title)
+{
+        strncpy(Status.title, title, MAX_TITLE_LEN);
+        Status.title[MAX_TITLE_LEN]=0;
+}
+
+static void status_repaint_title(void)
 {
 	screenErase(&Status.titleRect);
-	screenPrint(&Status.titleRect, SP_CENTERED | SP_ONBORDER, "%s", title);
+	screenPrint(&Status.titleRect, SP_CENTERED | SP_ONBORDER, "%s", Status.title);
 	screenUpdate(&Status.titleRect);
 }
 
@@ -566,9 +574,9 @@ static void myScrollZtatsHorz(int d)
 	Status.maxLine = max(Status.maxLine, 0);
 
 	if (Status.ztatsView == ViewMember)
-		myRepaintTitle(player_party->getMemberAtIndex(Status.pcIndex)->getName());
+		status_set_title(player_party->getMemberAtIndex(Status.pcIndex)->getName());
 	else
-		myRepaintTitle(ZtatsTitles[Status.ztatsView]);
+		status_set_title(ZtatsTitles[Status.ztatsView]);
 }
 
 static void myScrollZtats(enum StatusScrollDir dir)
@@ -768,7 +776,7 @@ static void mySetPageMode(void)
 	Status.pg_max_y = max(0, h - Status.pg_rect.h);
 
 	// Setup for viewing and scrolling.
-	myRepaintTitle(Status.pg_title);
+	status_set_title(Status.pg_title);
 	Status.paint = myPaintPage;
 	Status.scroll = myScrollPage;
 
@@ -1021,6 +1029,7 @@ void statusRepaint(void)
 
 	screenErase(&Status.screenRect);
 	Status.paint();
+        status_repaint_title();
 	screenUpdate(&Status.screenRect);
 
         repainting = 0;
@@ -1063,21 +1072,21 @@ void statusSetMode(enum StatusMode mode)
                 break;
 	case ShowParty:
 		switch_to_short_mode();
-		myRepaintTitle("Party");	
+		status_set_title("Party");	
 		Status.pcIndex = -1;
 		Status.scroll = 0;
 		Status.paint = myShowParty;
 		break;
 	case SelectCharacter:
 		switch_to_tall_mode();
-		myRepaintTitle("select");
+		status_set_title("select");
 		Status.scroll = myScrollParty;
 		Status.paint = myShowParty;
 		Status.pcIndex = 0;
 		break;
 	case Ztats:
 		switch_to_tall_mode();
-		myRepaintTitle(player_party->
+		status_set_title(player_party->
                                getMemberAtIndex(Status.pcIndex)->getName());
 		Status.ztatsView = ViewMember;
 		Status.selectedEntry = 0;
@@ -1087,7 +1096,7 @@ void statusSetMode(enum StatusMode mode)
 		break;
 	case Ready:
 		switch_to_tall_mode();
-		myRepaintTitle(player_party->
+		status_set_title(player_party->
                                getMemberAtIndex(Status.pcIndex)->getName());
 		Status.topLine = 0;
 		Status.curLine = 0;
@@ -1101,7 +1110,7 @@ void statusSetMode(enum StatusMode mode)
 		break;
 	case Use:
 		switch_to_tall_mode();
-		myRepaintTitle("select");
+		status_set_title("select");
 		Status.topLine = 0;
 		Status.curLine = 0;
 		Status.container = player_party->inventory;
@@ -1118,7 +1127,7 @@ void statusSetMode(enum StatusMode mode)
 		break;
 	case Trade:
 		switch_to_tall_mode();
-		myRepaintTitle("select");
+		status_set_title("select");
 		Status.topLine = 0;
 		Status.curLine = 0;
 		Status.maxLine = Status.list_sz - Status.numLines;
@@ -1128,7 +1137,7 @@ void statusSetMode(enum StatusMode mode)
 		break;
 	case MixReagents:
 		switch_to_tall_mode();
-		myRepaintTitle("reagents");
+		status_set_title("reagents");
 		Status.topLine = 0;
 		Status.curLine = 0;
 		Status.container = player_party->inventory;
@@ -1141,7 +1150,7 @@ void statusSetMode(enum StatusMode mode)
 		break;
         case GenericList:
 		switch_to_tall_mode();
-                myRepaintTitle("select");
+                status_set_title("select");
 		Status.topLine = 0;
 		Status.curLine = 0;
 		Status.maxLine = Status.list_sz - Status.numLines;
@@ -1151,7 +1160,7 @@ void statusSetMode(enum StatusMode mode)
                 break;
         case StringList:
 		switch_to_tall_mode();
-                myRepaintTitle("select");
+                status_set_title("select");
 		Status.topLine = 0;
 		Status.curLine = 0;
 		Status.maxLine = Status.list_sz - Status.numLines;

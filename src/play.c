@@ -63,28 +63,9 @@
 #include <unistd.h>     // getpid()
 #include <errno.h>
 
-#ifndef USE_AMBUSH
-# define USE_AMBUSH 1
-#endif
-
 #ifndef PROFILE_PLAY_LOOP
 #define PROFILE_PLAY_LOOP 0
 #endif
-
-enum cmdstate {
-	CMD_IDLE,
-	CMD_GET,
-	CMD_INV,
-	CMD_DROP,
-	CMD_FIRE,
-	CMD_LOOK,
-	CMD_ZTATS,
-	CMD_ZTATS2,
-	CMD_RDY,
-	CMD_RDY2,
-	CMD_USE,
-	CMD_DEAD
-};
 
 bool Quit;
 
@@ -321,6 +302,7 @@ int playRun(void)
         }
 
         mapUpdate(REPAINT_IF_DIRTY);
+        statusRepaint();
 
 	// Setup all the event handlers.
 	qh.fx = quitHandler;

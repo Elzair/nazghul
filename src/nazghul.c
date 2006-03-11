@@ -54,14 +54,12 @@
 
 #define NEW_GAME_FILE "start-new-game.scm"
 
-extern char *optarg;
-extern int optind, opterr, optopt;
 
 // gmcnutt: by default I'd like it on :). For one thing, printing all those
 // "Playing sound %s" messages to the console breaks all the regression tests
 // :).
 static bool useSound = true;	// SAM: Sound drivers on my dev laptop are
-char *LOS            = "angband";
+
 int SCREEN_BPP       = DEF_SCREEN_BPP;
 char *SAVEFILE       = 0;
 char *IncludeDir     = 0;
@@ -111,6 +109,8 @@ static void print_usage(void)
 static void parse_args(int argc, char **argv)
 {
 	int c = 0;
+        extern char *optarg;
+        extern int optind;
 
 	TickMilliseconds = MS_PER_TICK;
 	AnimationTicks = ANIMATION_TICKS;
@@ -203,6 +203,9 @@ static void parse_args(int argc, char **argv)
         }
 }				// parse_args()
 
+/**
+ * This initializes the various submodules.
+ */
 static void nazghul_init_internal_libs(void)
 {
         struct lib_entry {

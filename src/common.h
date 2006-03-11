@@ -443,7 +443,6 @@ extern int TickMilliseconds;
 // extern int WindDirection;
 extern bool Quit;
 extern struct los *LosEngine;
-extern char *LOS;
 extern int ShowAllTerrain;
 extern struct sprite *CursorSprite;
 extern int SCREEN_BPP;

@@ -537,6 +537,10 @@ void screen_repaint_frame(void)
 	spritePaint(Session->frame.endr, 0, WIND_X - BORDER_W, MAP_X + MAP_H);
 	spritePaint(Session->frame.endl, 0, WIND_X + WIND_W, MAP_X + MAP_H);
 
+        // And some stubs around the status title section
+	spritePaint(Session->frame.endr, 0, STAT_X, 0);
+	spritePaint(Session->frame.endl, 0, STAT_X + STAT_W - BORDER_W,   0);
+
 	screenUpdate(0);
 
 #else /* ! MAP_LEFT */
