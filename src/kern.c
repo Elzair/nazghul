@@ -818,6 +818,7 @@ static pointer kern_mk_composite_map(scheme *sc, pointer args)
         char *tag = TAG_UNK;
         struct terrain_map *map=NULL, *submap=NULL;
         pointer ret;        
+        struct list *elem;
 
         /* parse supermap tag and dimensions */
         if (unpack(sc, &args, "ydd", &tag, &width, &height)) {
@@ -886,6 +887,13 @@ static pointer kern_mk_composite_map(scheme *sc, pointer args)
                                          submap, 0, 0, 
                                          map->submap_w, map->submap_h);
                 }
+        }
+
+        /* run all registered terrain blenders on the new map */
+        list_for_each(&Session->blenders, elem) {
+                blender_t *blender=outcast(elem, blender_t, list);
+                terrain_map_blend(map, blender->inf, blender->n_nonsup,
+                                  blender->nonsup, blender->range);
         }
 
         /* add it to the session */
