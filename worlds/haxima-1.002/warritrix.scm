@@ -33,10 +33,24 @@
 (define (warr-job knpc kpc)
   (say knpc "To serve justice. Do you the same?")
   (if (yes? kpc)
-      (say knpc "Then ask the Stewardess of Glasdrin of SILAS, "
-           "and your words will be put to the test.")
+      (begin
+        (say knpc "To serve justice you must know what is just. "
+             "I was ordered to explore these caves completely, "
+             "and when my party was weak from fighting off monsters, "
+             "we were ambushed by Accursed assassins, and all slain. "
+             "Tell me, is it just to avenge my death on my betrayers?")
+        (yes? kpc)
+        (say knpc "Justice hastens not to punish, but rather to reward. "
+             "Betrayers will be rewarded with ruin, "
+             "schemers and plotters will bring their own downfall, "
+             "those who seek power will be powerless in their hour of need. "
+             "Do not avenge me, but rather seek the truth.")
+        )
       (say knpc "Injustice is served well by inaction."))
   )
+
+(define (warr-trut knpc kpc)
+  (say knpc "To find the truth, you must find Silas."))
 
 (define (warr-warr knpc kpc)
   (say knpc "It was a title I bore to gratify others. "
@@ -96,6 +110,20 @@
 (define (warr-void knpc kpc)
   (say knpc "All spirits are Wanderers in the Void."))
 
+(define (warr-assa knpc kpc)
+  (say knpc "They were expecting us, although no one knew we were here "
+       "except the Stewardess of Glasdrin and Commander Jeffries."))
+
+(define (warr-jeff knpc kpc)
+  (say knpc "The silver deeds of noble youth are tarnished by the guilt of "
+       "age. Better is one who striving, dies, than a hero ruined "
+       "by success."))
+
+(define (warr-powe knpc kpc)
+  (say knpc 
+       "Those who see an enemy in every face can never have enough power, "
+       "but the fearless hold it in contempt."))
+
 (define warr-conv
   (ifc basic-conv
 
@@ -115,6 +143,10 @@
        (method 'sila warr-sila)
        (method 'wise warr-wise)
        (method 'void warr-void)
+       (method 'trut warr-trut)
+       (method 'assa warr-assa)
+       (method 'jeff warr-jeff)
+       (method 'powe warr-powe)
        ))
 
 (define (mk-warritrix)
