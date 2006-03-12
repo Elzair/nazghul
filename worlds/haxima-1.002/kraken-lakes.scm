@@ -116,6 +116,7 @@
   (put (mk-door) 35 29)
   (put (mk-windowed-door) 34 31)
   (put (mk-windowed-door) 29 31)
+  (put (mk-ladder-down 'p_lost_garrison 11 11) 12 9)
 
   ;; monster generators
   (put (mk-monman) 0 0)

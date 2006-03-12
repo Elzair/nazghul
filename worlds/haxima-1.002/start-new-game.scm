@@ -17,6 +17,7 @@
 (kern-load "prices.scm")
 (kern-load "special.scm")
 (kern-load "town-entry.scm")
+(kern-load "endless-deeps-mech.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Time -- this needs to be set before loading any dungeon rooms
@@ -77,6 +78,7 @@
 (load "prison.scm")
 (load "ankh-shrine.scm")
 (load "kraken-lakes.scm")
+(load "endless-deeps.scm")
 (load "forsaken-prison.scm")
 (load "old-mine.scm")
 (load "lich-tomb.scm")
