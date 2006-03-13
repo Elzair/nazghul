@@ -33,7 +33,19 @@
 ;;
 ;; Quest flags, etc, go here.
 ;;----------------------------------------------------------------------------
-(define (alch-mk) nil)
+(define (alch-mk)
+	(list
+        (mk-quest) ;; dragon
+        #f ;; lich
+        #f ;; hydra
+        ))
+
+
+(define (alchq-dragon gob) (car gob))
+(define (alchq-lich? gob) (cadr gob))
+(define (alchq-hydra? gob) (caddr gob))
+(define (alchq-lich! gob val) (set-car! (cdr gob) val))
+(define (alchq-hydra! gob val) (set-car! (cddr gob) val))
 
 ;;----------------------------------------------------------------------------
 ;; Conv
@@ -78,47 +90,86 @@
         (say knpc "Always carry plenty of potions!"))))
 
 ;; Rune...
+;; offered: shown k rune
+;; accepted: sent to find p rune
+;; done: known to have found p rune
+(define (alch-dragon-reward knpc kpc)
+  (say knpc "Oh, yes, "
+	   "the rune... search in Trigrave, in the "
+	   "southeast corner of town."))
+	   
+(define (alch-dragon-done knpc kpc)
+  (say knpc "I am afraid I dont know the locations of the other "
+					"runes. Try asking the rest of the Wise."))
+		
+(define (alch-dragon-quest knpc kpc qstat)
+	(if (kern-conv-get-yes-no? kpc)
+		(cond
+			((quest-done? qstat)
+				(alch-dragon-done knpc kpc)
+				)
+			((in-inventory? kpc t_rune_p)
+				(quest-done! qstat #t)
+				(say knpc "I see you have collected the Rune of Power.")
+				(alch-dragon-done knpc kpc)
+				)
+			((quest-accepted? qstat)
+				(alch-dragon-reward knpc kpc qstat)
+				)
+			((in-inventory? kpc t_dragons_blood 1)
+			  (begin
+				(say knpc "I know where ones is buried, "
+					 "and I'll tell you in exchange for that vial of "
+					 "dragon's blood you're carrying. Deal?")
+				(if (kern-conv-get-yes-no? kpc)
+					(begin
+						  (quest-accepted! qstat #t)
+						  (kern-obj-remove-from-inventory kpc 
+														  t_dragons_blood 
+														  1)
+						  (kern-obj-add-to-inventory knpc
+													 t_dragons_blood
+													 1)
+						  (say knpc "[He eyes the vial hungrily] "
+							   "Yes! It's just what I need!")
+						  (alch-dragon-reward knpc kpc))
+					(say knpc "Well, I suppose if you dig up the "
+					 "whole Shard you'll someday find it without "
+					 "my help. Good luck!"))
+				))
+			(#t
+				(say knpc "Then perhaps we can exchange favors. "
+				   "I happen to know where one of these runes "
+				   "is buried. I'll tell you its location if you "
+				   "bring me a vial of dragon's blood. ")))
+		(say knpc "Well, if you are, I happen to know where one is "
+		   "hidden.")))
+
 (define (alch-rune knpc kpc)
-  (say knpc "[He gets a canny look] Runes, eh? I've seen a few in my time. "
-       "Have you one to look at?")
-  (if (kern-conv-get-yes-no? kpc)
-        (if (in-inventory? kpc t_rune_k 1)
-            (begin
-              (say knpc "Yes, I see. This once belonged to the Enchanter, "
-                   "I believe. I hope you didn't steal it! "
-                   "I have seen several more like it, "
-                   "but the person you really should speak to "
-                   "is Abe. Are you interested in finding the "
-                   "other runes?")
-              (if (kern-conv-get-yes-no? kpc)
-                  (if (in-inventory? kpc t_dragons_blood 1)
-                      (begin
-                        (say knpc "I know where ones is buried, "
-                             "and I'll tell you in exchange for that vial of "
-                             "dragon's blood you're carrying. Deal?")
-                        (if (kern-conv-get-yes-no? kpc)
-                            (begin
-                              (kern-obj-remove-from-inventory kpc 
-                                                              t_dragons_blood 
-                                                              1)
-                              (kern-obj-add-to-inventory knpc
-                                                         t_dragons_blood
-                                                         1)
-                              (say knpc "[He eyes the vial hungrily] "
-                                   "Yes! It's just what I need! Oh, yes, "
-                                   "the rune... search in Trigrave, in the "
-                                   "southeast corner of town."))
-                            (say knpc "Well, I suppose if you dig up the "
-                                 "whole Shard you'll someday find it without "
-                                 "my help. Good luck!")))
-                      (say knpc "Then perhaps we can exchange favors. "
-                           "I happen to know where one of these runes "
-                           "is buried. I'll tell you its location if you "
-                           "bring me a vial of dragon's blood. "))
-                  (say knpc "Well, if you are, I happen to know where one is "
-                       "hidden.")))
-            (say knpc "I don't see it. Perhaps you dropped it?"))
-        (say knpc "I might be able to help if you could show me.")))
+	(let ((qstat (alchq-dragon (gob knpc))))
+	(if (quest-offered? qstat)
+		(begin
+			(say knpc "Abe knows more about the runes themselves. Are you "
+				"interested in finding the others?")
+			(alch-dragon-quest knpc kpc qstat))
+		(begin
+			(say knpc "[He gets a canny look] Runes, eh? I've seen a few in my time. "
+			   "Have you one to look at?")
+			(if (kern-conv-get-yes-no? kpc)
+				(if (in-inventory? kpc t_rune_k 1)
+					(begin
+					  (quest-offered! qstat #t)
+					  (say knpc "Yes, I see. This once belonged to the Enchanter, "
+						   "I believe. I hope you didn't steal it! "
+						   "I have seen several more like it, "
+						   "but the person you really should speak to "
+						   "is Abe. Are you interested in finding the "
+						   "other runes?")
+					  (alch-dragon-quest knpc kpc qstat)
+					  )
+					(say knpc "I don't see it. Perhaps you dropped it?"))
+				(say knpc "I might be able to help if you could show me.")))
+		)))
 
 (define (alch-abe knpc kpc)
   (say knpc "An old acquaintance of mine. "
@@ -143,39 +194,52 @@
        "Lately he's been pre-occupied with the Accursed."
        ))
 
+(define (alch-man-reward knpc kpc)
+	(say knpc "In the mountains of "
+	   "the northeast, along their southern face, "
+	   "there is a secret passage. It is near coordinates "
+	   "[92 10]."))
+
 (define (alch-man knpc kpc)
-  (say knpc "I've never met the MAN. "
-       "Being the most accomplished of Wrogues, "
-       "he probably has a fortune stashed in his hideout. "
-       "If I were the adventurous type I might go seek it out myself. "
-       "What about you?")
-  (if (kern-conv-get-yes-no? kpc)
-      (if (in-inventory? kpc t_hydras_blood 1)
-          (begin
-            (say knpc "I've heard, from a reliable source, of an entrance "
-                 "to the MAN's secret hideout. I'll tell you in exchange "
-                 "for that vial of hydra's blood in your pack. Yes?")
-            (if (kern-conv-get-yes-no? kpc)
-                (begin
-                  (kern-obj-remove-from-inventory kpc 
-                                                  t_hydras_blood 
-                                                  1)
-                  (kern-obj-add-to-inventory knpc
-                                             t_hydras_blood
-                                             1)
-                  (say knpc "[He fairly drools over the noxious stuff] "
-                       "Oh, lovely... lovely! Ahem. In the mountains of "
-                       "the northwest, along their southern face, "
-                       "there is a secret passage. It is near coordinates "
-                       "[92 10]."))
-                (say knpc "'Tis a pity. You have no use for the "
-                     "vial, and I am too old to go treasure-hunting.")))
-          (say knpc "Well, I do hear many things, many of which are only "
-               "rumour. But a reliable source has told me of where to find "
-               "an entrance to the MAN's hideout. If you bring me a vial of "
-               "hydra's blood I'll disclose it to you."))
-      (say knpc "For fie, Wanderer! "
-           "I thought you were the adventurous type.")))
+  (let ((qstat (gob knpc)))
+	  (say knpc "I've never met the MAN. "
+		   "Being the most accomplished of Wrogues, "
+		   "he probably has a fortune stashed in his hideout. "
+		   "If I were the adventurous type I might go seek it out myself. "
+		   "What about you?")
+	  (if (kern-conv-get-yes-no? kpc)
+		(cond
+			((alchq-hydra? qstat)
+				(say knpc "I've heard, from a reliable source, of an entrance "
+					"to the MAN's secret hideout.")
+				(alch-man-reward knpc kpc))
+			((in-inventory? kpc t_hydras_blood 1)
+				(begin
+					(say knpc "I've heard, from a reliable source, of an entrance "
+						"to the MAN's secret hideout. I'll tell you in exchange "
+						"for that vial of hydra's blood in your pack. Yes?")
+					(if (kern-conv-get-yes-no? kpc)
+						(begin
+							(alchq-hydra! qstat #t)
+							(kern-obj-remove-from-inventory kpc 
+								t_hydras_blood 
+								1)
+							(kern-obj-add-to-inventory knpc
+								t_hydras_blood
+								1)
+							(say knpc "[He fairly drools over the noxious stuff] "
+								"Oh, lovely... lovely!")
+							(say knpc "Ahem.")
+							(alch-man-reward knpc kpc))
+						(say knpc "'Tis a pity. You have no use for the "
+							"vial, and I am too old to go treasure-hunting."))))
+			(#t 
+				(say knpc "Well, I do hear many things, many of which are only "
+					"rumour. But a reliable source has told me of where to find "
+					"an entrance to the MAN's hideout. If you bring me a vial of "
+					"hydra's blood I'll disclose it to you.")))
+	   (say knpc "For fie, Wanderer! "
+			"I thought you were the adventurous type."))))
 
 (define (alch-hydr knpc kpc)
   (say knpc "The hydra is a most difficult foe. "
@@ -200,49 +264,56 @@
 
 
 ;; Absalot...
+(define (alch-absa-reward knpc kpc)
+	(say knpc "There was a fortress overlooking a river of fire. "
+		 "Pity it wasn't manned, it might have turned Glasdrin's invasion. "
+		 "It will make a perilous crossing if monsters have taken it over.")
+	(prompt-for-key)
+	(say knpc 
+		 "There is, however, an older route that bypasses the fortress. "
+		 "Search the east wall of the first cavern, "
+		 "you will find a hidden passage.")
+	(prompt-for-key)
+	(say knpc
+		 "You will still need to cross the river of fire. "
+		 "There is a statue upon the river. Speak the password 'ONUS' to pass unharmed. "
+		 "Write that password down!")
+	(prompt-for-key)
+	(say knpc
+		 "The passage rejoins the main route near the stairway which leads up to "
+		 "the lost city. You won't escape all the hazards of the journey, "
+		 "but it should make your life somewhat easier."))
+
 (define (alch-absa knpc kpc)
-  (say knpc "The passage to Absalot was always dangerous. Abandoned so long, who knows what lurks there now? "
-       "You wouldn't happen to be thinking of going there?")
-  (if (kern-conv-get-yes-no? kpc)
-      (begin
-        (if (in-inventory? kpc t_lichs_blood 1)
-            (begin
-              (say knpc "In exchange for that vial of lich's blood I'd be "
-                   "happy to tell you of a back door. What do you say?")
-              (if (kern-conv-get-yes-no? kpc)
-                  (begin
-                    (kern-obj-remove-from-inventory kpc 
-                                                    t_lichs_blood 
-                                                    1)
-                    (kern-obj-add-to-inventory knpc
-                                               t_lichs_blood
-                                               1)
-                    (say knpc "[He grins and winks] Just the stuff I need! "
-                         "There was a fortress overlooking a river of fire. "
-                         "Pity it wasn't manned, it might have turned Glasdrin's invasion. "
-                         "It will make a perilous crossing if monsters have taken it over.")
-                    (prompt-for-key)
-                    (say knpc 
-                         "There is, however, an older route that bypasses the fortress. "
-                         "Search the east wall of the first cavern, "
-                         "you will find a hidden passage.")
-                    (prompt-for-key)
-                    (say knpc
-                         "You will still need to cross the river of fire. "
-                         "There is a statue upon the river. Speak the password 'ONUS' to pass unharmed. "
-                         "Write that password down!")
-                    (prompt-for-key)
-                    (say knpc
-                         "The passage rejoins the main route near the stairway which leads up to "
-                         "the lost city. You won't escape all the hazards of the journey, "
-                         "but it should make your life somewhat easier."))
-                  (say knpc "I see. No doubt you have important plans for "
-                       "that lich's blood. I can always get some from "
-                       "another adventurer.")))
-            (say knpc "Bring me a vial of lich's blood and I'll tell you "
-                 "a secret way.")))
-      (say knpc "It's just a ruin now anyways. Everything was destroyed "
-           "when it was sacked.")))
+  (let ((qstat (gob knpc)))
+	  (say knpc "The passage to Absalot was always dangerous. Abandoned so long, who knows what lurks there now? "
+		   "You wouldn't happen to be thinking of going there?")
+	  (if (kern-conv-get-yes-no? kpc)
+		(cond
+			((alchq-lich? qstat)
+				(alch-absa-reward knpc kpc))
+			((in-inventory? kpc t_lichs_blood 1)
+				(begin
+				  (say knpc "In exchange for that vial of lich's blood I'd be "
+					   "happy to tell you of a back door. What do you say?")
+				  (if (kern-conv-get-yes-no? kpc)
+					  (begin
+						(alchq-lich! qstat #t)
+						(kern-obj-remove-from-inventory kpc 
+														t_lichs_blood 
+														1)
+						(kern-obj-add-to-inventory knpc
+												   t_lichs_blood
+												   1)
+						(say knpc "[He grins and winks] Just the stuff I need!")
+						(alch-absa-reward knpc kpc)))
+					  (say knpc "I see. No doubt you have important plans for "
+						   "that lich's blood. I can always get some from "
+						   "another adventurer.")))
+			(#t (say knpc "Bring me a vial of lich's blood and I'll tell you "
+				 "a secret way.")))
+		  (say knpc "It's just a ruin now anyways. Everything was destroyed "
+			   "when it was sacked."))))
 
 (define (alch-sack knpc kpc)
   (say knpc "Oh yes, didn't you know? Absalot was sacked by the armies "
