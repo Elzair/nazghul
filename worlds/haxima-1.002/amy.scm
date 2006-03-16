@@ -75,6 +75,11 @@
   (say knpc "People are nervous of strangers now, "
        "what with the Accursed and all.")
   )
+  
+(define (amy-accu knpc kpc)
+  (say knpc "The Accursed are a secret cult who "
+       "follow evil ways.")
+  )
 
 ;; Quest-related
 
@@ -92,6 +97,7 @@
        (method 'mean amy-mean)
        (method 'tink amy-tink)
        (method 'luck amy-luck)
+       (method 'accu amy-accu)
        ))
 
 (define (mk-amy)
