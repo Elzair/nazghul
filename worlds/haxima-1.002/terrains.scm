@@ -18,8 +18,8 @@
    (list 't_stars           "stars"         pclass-space     s_stars           1 0 nil)
    (list 't_deep            "deep water"    pclass-deep      s_deep            1 0 nil)
    (list 't_sunlit_deep     "deep water"    pclass-deep      s_deep            1 64 nil)
-   (list 't_shallow         "shallow water" pclass-deep      s_shallow         1 0 nil)
-   (list 't_shoals          "shoals"        pclass-shoals    s_shoals          1 0 nil)
+   (list 't_shallow         "water"          pclass-deep      s_shallow         1 0 nil)
+   (list 't_shoals          "shallow water"  pclass-shoals    s_shoals          1 0 nil)
 
    (list 't_grass           "grass"         pclass-grass     s_grass           1 0 nil)
    (list 't_sunlit_grass    "grass"         pclass-grass     s_grass           1 64 nil)
@@ -193,7 +193,7 @@
 ;; Make some blended shore terrain types
 
 (define (mk-shore-terrain tag . sprites)
-  (kern-mk-terrain tag "a shore" pclass-shoals
+  (kern-mk-terrain tag "shallow water" pclass-shoals
                    (mk-composite-sprite (cons s_shoals sprites))
                    1 0 nil))
 
