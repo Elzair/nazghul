@@ -418,6 +418,7 @@
 (kern-mk-sprite 's_dungeon       ss_overlays 1  24 #f 0 )
 (kern-mk-sprite 's_statue        ss_overlays 1  25 #f 0 )
 (kern-mk-sprite 's_secret_rock   ss_overlays 1  26 #f 0 )
+(kern-mk-sprite 's_blank   		 ss_overlays 1  27 #f 0 )
 
 ;;----------------------------------------------------------------------------
 ;; Terrain overlay pieces

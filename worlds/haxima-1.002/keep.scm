@@ -29,6 +29,7 @@
  (put (mk-ladder-down 'p_pools 9 9) 9 6)
 
   ;; secret wall mech
+  (put (mk-hidden-mech) 13 0)
   (put (mk-disg-lvr 'gh_wall 's_wall_torch) 13 0)
   (put (kern-tag 'gh_wall 
                  (mk-tblitter 'p_great_hall

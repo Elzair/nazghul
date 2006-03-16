@@ -42,3 +42,18 @@
 (define (mk-disg-lvr dest-tag sprite-tag)
   (bind (kern-mk-obj t_disg_lvr 1)
         (bim-mk #f dest-tag sprite-tag)))
+		
+		
+;;----------------------------------------------------------------------------
+;; Searchable Description of hidden mechanisms
+;;----------------------------------------------------------------------------
+
+(mk-obj-type 't_hidden_mech  ;; tag
+             "hidden mechanism"       ;; name
+             s_blank    ;; sprite
+             layer-tfeat    ;; stacking layer
+             nil    ;; interface
+             )
+
+(define (mk-hidden-mech)
+	(mk-hidden 't_hidden_mech 1))

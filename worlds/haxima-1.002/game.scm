@@ -213,6 +213,7 @@
 (load "edge-spawn.scm")
 (load "door.scm")
 (load "portcullis.scm")
+(load "hidden.scm")
 (load "lever.scm")
 (load "timer.scm")
 (load "tblit.scm")
@@ -220,7 +221,6 @@
 (load "moongate.scm")
 (load "bridge.scm")
 (load "drawbridge.scm")
-(load "hidden.scm")
 
 ;; Astronomy
 (load "moon.scm")

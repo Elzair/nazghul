@@ -68,6 +68,7 @@
 
   ;; secret wall mech
   (put (mk-disg-lvr 'mh-b1 's_wall_rock) 7 18)
+  (put (mk-hidden-mech) 7 18)
   (put (kern-tag 'mh-b1
                  (mk-tblitter 'p_mans_hideout 
                               8 14
