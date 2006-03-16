@@ -94,9 +94,15 @@
 ;; accepted: sent to find p rune
 ;; done: known to have found p rune
 (define (alch-dragon-reward knpc kpc)
-  (say knpc "Oh, yes, "
-	   "the rune... search in Trigrave, in the "
-	   "southeast corner of town."))
+  (say knpc "Oh, yes, the rune...")
+  (say knpc
+	   "The paladins have built several fortifications in the "
+	   "deeps of Kurpolis. One of the runes was buried in the "
+	   "foundations of the deepest fort.")
+  (say knpc
+	   "A pick and shovel may be enough to get it out again, "
+	   "but it might be difficult with a dozen paladins breathing "
+	   "down your neck."))
 	   
 (define (alch-dragon-done knpc kpc)
   (say knpc "I am afraid I dont know the locations of the other "

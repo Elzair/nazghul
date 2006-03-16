@@ -314,9 +314,6 @@
   (list (kern-tag 'tlj-d-2 (mk-connected-door 'tlj-d-1)) 17 26)
   (put (mk-bed) 27 22)
 
-  ;; Rune
-  (put (mk-buried 't_rune_p 1) 31 31)
-
   )
  (list 'lock-inn-room-doors) ;; hooks
  (list  ;; edge entrances
