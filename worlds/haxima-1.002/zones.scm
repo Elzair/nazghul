@@ -300,6 +300,7 @@
 ;; Kun
 (define (mk-zone x y w h) (list 'p_kun x y w h))
 (define cantina-counter (mk-zone 4 5 3 1))
+(define cantina-counter-zzz (mk-zone 5 5 1 1))
 (define cantina (mk-zone 1 2 9 7))
 (define cantina-1 (mk-zone 3 3 1 1))
 (define cantina-2 (mk-zone 4 3 1 1))

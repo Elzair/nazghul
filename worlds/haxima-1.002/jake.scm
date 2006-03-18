@@ -10,7 +10,7 @@
 ;;----------------------------------------------------------------------------
 (define jake-bed )
 (kern-mk-sched 'sch_jake
-               (list 0  0 cantina-counter "sleeping")
+               (list 0  0 cantina-counter-zzz "sleeping")
                (list 9  0 cantina-counter "working")
                )
 
