@@ -36,6 +36,23 @@
   (say knpc "I Mesmeme.")
   )
 
+(define (mesmeme-leav knpc kpc)
+  (if (is-player-party-member? knpc)
+      (begin
+		(say knpc "Be alone?")
+        (if (yes? kpc)
+            (begin
+              (if (kern-char-leave-player knpc)
+                  (begin
+                    (say knpc "Here waiting. Until void.")
+                    (kern-conv-end))
+                  (say knpc "Not now!")))
+            (say knpc "Not alone!")))
+      (begin
+		(say knpc "Until void.")
+	    (kern-conv-end)))
+  )
+
 (define (mesmeme-join knpc kpc)
   (say knpc "Yes! I alone.")
   (join-player knpc)
@@ -76,6 +93,7 @@
        (method 'job mesmeme-job)
        (method 'name mesmeme-name)
        (method 'join mesmeme-join)
+       (method 'leav mesmeme-leav)
        
        (method 'alon mesmeme-alon)
        (method 'kind mesmeme-kind)
