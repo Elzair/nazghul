@@ -104,7 +104,7 @@
                "If you find her will you tell me?")
           (if (kern-conv-get-yes-no? kpc)
               (begin
-                (say knpc "Our farm was east and south through the woods. "
+                (say knpc "Our farm was west through the pass, then north against the hills. "
                      "Watch out for the trolls!")
                 (ilya-give-quest ilya))
               (begin
