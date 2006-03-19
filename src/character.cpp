@@ -1665,7 +1665,8 @@ bool Character::playerIsInMyBed()
                                                    curAppt->y,
                                                    being_layer);
         return (sleeper
-                && sleeper->isPlayerControlled());
+                && sleeper->isPlayerControlled()
+                && sleeper->isResting());
 }
 
 void Character::kickPlayerOutOfMyBed()
