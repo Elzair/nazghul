@@ -1,12 +1,14 @@
-&shallowblend ( ~~ ~1 ~2 ~3 ~4 ~5 ~6 ~7 ~8 ~9 ~a ~b ~c ~d ~e ~f )
+&nc ( {} )
+
+&shallowblend ( &nc ~1 ~2 ~3 ~4 ~5 ~6 ~7 ~8 ~9 ~a ~b ~c ~d ~e ~f )
 
 &shallow ( ~* ~0 &shallowblend )
 
-&waterblend ( -- -1 -2 -3 -4 -5 -6 -7 -8 -9 -a -b -c -d -e -f )
+&waterblend ( &nc -1 -2 -3 -4 -5 -6 -7 -8 -9 -a -b -c -d -e -f )
 
 &nwater ( -* -0 &waterblend )
 
-&deepwaterblend ( __ _1 _2 _3 _4 _5 _6 _7 _8 _9 _a _b _c _d _e _f )
+&deepwaterblend ( &nc _1 _2 _3 _4 _5 _6 _7 _8 _9 _a _b _c _d _e _f )
 
 &road ( /0 /1 /2 /3 /4 /5 /6 /7 /8 /9 /a /b /c /d /e /f )
 
@@ -14,24 +16,58 @@
 
 &water ( &shallow &nwater &deepwater )
 
-&hillsblend ( {1 {2 {3 {4 {5 {6 {7 {8 {9 {a {b {c {d {e {f )
+&hillsblend ( &nc {1 {2 {3 {4 {5 {6 {7 {8 {9 {a {b {c {d {e {f )
 
-&hills ( {{ ^^ )
+&hills ( {{ ^^ ^. )
 
-&bogblend ( %% %% %% %3 %% %5 %% %7 %% %% %a %b %c %d %e %f )
+&objects ( bb && ff oo pp ~p ww ## #> @@ [[ ]] 00 ++ +s aa ar a! << >> w+ ws sE sA sH sT sI sP sR )
 
-&woods ( tt || )
+&text ( .a .b .c .d .e .f .g .h .i .j .k .l .m .m .o .p .q .r .s .t .u .v .w .x .y .z ~O )
+
+&runes ( ,A ,B ,C ,D ,E ,F ,G ,H ,I ,J ,K ,L ,M ,M ,O ,P ,Q ,R ,S ,T ,U ,V ,W ,X ,Y ,Z ;T ;E ;N ;A ;S ;D )
+
+&bridge ( == =| =! )
+
+&void ( ** vv )
+
+&wall ( xx d, x. ~x ?? rr r. ~r w! )
+
+&floor ( ,, ~, cc ee )
+
+&lavablend ( &nc &nc &nc !3 &nc !5 &nc !7 &nc &nc !a !b !c !d !e !f )
+
+&bogblend ( &nc &nc &nc %3 &nc %5 &nc %7 &nc &nc %a %b %c %d %e %f )
+
+&treesinnerblend ( &nc &nc &nc t3 &nc t5 &nc t7 &nc &nc ta tb tc td te tf )
+
+&treesouterblend ( &nc &nc &nc t# &nc t% &nc t& &nc &nc tA tB tC tD tE tF )
+
+&bog ( %% &bogblend )
+
+&lava ( &lavablend !! !_ ~! )
+
+&woods ( tt || |. &treesinnerblend )
+
+&notwoods ( .. &hillsblend &hills &road &bog )
 
 &dryland ( .. &hillsblend &woods &hills &road )
 
-&land ( &dryland &bogblend )
+&manmade ( &objects &text &runes &wall &floor )
 
-( ~~ ) ( &shallowblend ) ( &land ) ( &water )
+&land ( &dryland &bog )
 
-( -- ) ( &waterblend ) ( &land ) ( &water )
+( ~~ ) ( &shallowblend ) ( &land ) ( &water &bridge &manmade )
 
-( __ ) ( &deepwaterblend ) ( &land ) ( &water )
+( -- ) ( &waterblend ) ( &land ) ( &water &bridge &manmade )
 
-( .. ) ( .. &hillsblend ) ( &hills ) ( &land &water )
+( __ ) ( &deepwaterblend ) ( &land ) ( &water &bridge &manmade )
 
-( %% ) ( &bogblend ) ( &dryland ) ( &bogblend &water )
+( tt ) ( &treesinnerblend ) ( &notwoods &water &bridge &manmade ) ( &woods )
+
+( .. ) ( &treesouterblend ) ( &woods ) ( &notwoods &water &bridge &manmade )
+
+( .. ) ( &hillsblend ) ( &hills ) ( &land &water &bridge &manmade )
+
+( %% ) ( &bogblend ) ( &dryland ) ( &bog &water &bridge &manmade )
+
+( !! ) ( &lavablend ) ( &land &water ~! ) ( &lava &manmade &bridge )

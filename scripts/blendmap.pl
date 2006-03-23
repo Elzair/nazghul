@@ -45,6 +45,8 @@ EOF
 exit(0);
 }
 
+my $nochange = "{}"; #symbol for no change in sprite. may need to be changed if it gets used.
+
 open (FILEIN,$ARGV[0]) or die "failed to open: $ARGV[1]";
 
 my @transforms;
@@ -173,6 +175,10 @@ sub runTest
 	print STDERR ">> $tally\n";
 	my $temptile =  $ruledata->[1]->[$tally];
 	defined $temptile or return $curtile;
+	if ($temptile eq $nochange)
+	{
+		return $curtile;
+	}
 	return $temptile;
 }
 
@@ -205,7 +211,10 @@ while (<FILEIN>)
 	{
 		if ($_ !~ /"(([^"][^"] )+)"/)
 		{
-			handleLine($curline,$nextline,undef);
+			if (defined($nextline))
+			{
+				handleLine($curline,$nextline,undef);
+			}
 			print ")\n\n";
 			$inmap=0;
 			$lastline = undef;
