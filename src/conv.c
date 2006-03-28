@@ -37,7 +37,7 @@ static int C_room, C_len;
 static char C_query[64], *C_ptr;
 static int conv_done;
 
-static int isprintable(char c)
+static int isprintable(int c)
 {
         /* Looks like ctype's isprint() doesn't always behave the same way. On
          * some systems it was letting c<32 go through, causing an assert in
