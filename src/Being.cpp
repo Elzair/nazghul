@@ -19,6 +19,9 @@
 # define USE_CACHED_PATH true
 #endif
 
+const int Being::DEFAULT_PATHFIND_TO_FLAGS = PFLAG_IGNORECOMPANIONS | 
+PFLAG_IGNOREMECHS;
+
 Being::Being()
 {
         setDefaults();
@@ -68,7 +71,8 @@ enum layer Being::getLayer()
         return being_layer;
 }
 
-bool Being::pathfindTo(struct place *destplace, int destx, int desty)
+bool Being::pathfindTo(struct place *destplace, int destx, int desty, 
+                       int flags)
 {
         struct astar_search_info as_info;
         struct astar_node *pathPtr;
@@ -144,7 +148,7 @@ bool Being::pathfindTo(struct place *destplace, int destx, int desty)
                 as_info.y0 = getY();
                 as_info.x1 = destx;
                 as_info.y1 = desty;
-                as_info.flags = PFLAG_IGNORECOMPANIONS|PFLAG_IGNOREMECHS;
+                as_info.flags = flags;
                 cachedPath = place_find_path(getPlace(), &as_info, this);
         }
 

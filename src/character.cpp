@@ -2077,7 +2077,8 @@ void Character::exec()
 
                         pathfindTo(leader->getPlace(), 
                                    leader->getX(), 
-                                   leader->getY());
+                                   leader->getY(),
+                                   PFLAG_IGNOREMECHS);
                         mapCenterView(getView(), getX(), getY());
                         mapSetDirty();
                 }
