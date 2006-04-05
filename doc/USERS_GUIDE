@@ -104,9 +104,12 @@ To R)eady the weapons and armor hit 'r' then select them. Hit ESC when done.
 
                                  Mixing A Spell
 
-To M)ix a heal spell type 'm', select Ginseng and Garlic, and hit ENTER to mix
-them. You just made a "Mani" spell, a spell of minor healing. More on spells
-later.
+To M)ix a heal spell type 'm' for mix. Next enter the spell name, in this case
+'m' again for "Mani", and hit ENTER. Next, select Ginseng and Spider Silk from
+the reagents list, and hit 'm' to mix them. Finally, you can mix batches of a
+given spells at once, so you will need to input the quantity of "Mani" spells
+you wish to produce. Enter '1' here, and you will have made a "Mani" spell, a
+spell of minor healing. More on spells later. 
 
                           Entering and Exiting Towns
 
