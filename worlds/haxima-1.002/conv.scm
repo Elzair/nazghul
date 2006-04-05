@@ -216,7 +216,7 @@
   (say knpc "The Warritrix is the Wise Warrior. If you're looking for her try Glasdrin."))
 
 (define (basic-engi knpc kpc)
-  (say knpc "I've hard the Engineer is the greatest Wright in the land, "
+  (say knpc "I've heard the Engineer is the greatest Wright in the land, "
        "but I don't know much about him."))
 
 (define (basic-man knpc kpc)
