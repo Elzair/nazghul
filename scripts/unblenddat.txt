@@ -1,0 +1,116 @@
+&nc ( {} )
+
+&shallowblend ( &nc ~1 ~2 ~3 ~4 ~5 ~6 ~7 ~8 ~9 ~a ~b ~c ~d ~e ~f )
+
+&voidblend ( &nc *1 *2 *3 *4 *5 *6 *7 *8 *9 *a *b *c *d *e *f )
+
+&shallowblenda ( &nc &nc &nc ~3 &nc ~5 &nc ~7 &nc &nc ~a ~b ~c ~d ~e ~f )
+
+&shallow ( ~~ ~* ~0 &shallowblend )
+
+&waterblend ( &nc -1 -2 -3 -4 -5 -6 -7 -8 -9 -a -b -c -d -e -f )
+
+&waterblenda ( &nc &nc &nc -3 &nc -5 &nc -7 &nc &nc -a -b -c -d -e -f )
+
+&nwater ( -- -* -0 &waterblend )
+
+&deepwaterblend ( &nc _1 _2 _3 _4 _5 _6 _7 _8 _9 _a _b _c _d _e _f )
+
+&deepwaterblenda ( &nc &nc &nc _3 &nc _5 &nc _7 &nc &nc _a _b _c _d _e _f )
+
+&road ( /0 /1 /2 /3 /4 /5 /6 /7 /8 /9 /a /b /c /d /e /f )
+
+&deepwater ( __ _* _0 &deepwaterblend )
+
+&water ( &shallow &nwater &deepwater )
+
+&hillsblend ( &nc {1 {2 {3 {4 {5 {6 {7 {8 {9 {a {b {c {d {e {f )
+
+&watergrassblend ( &nc &nc &nc ~# &nc ~% &nc ~& &nc &nc ~A ~B ~C ~D ~E ~F )
+
+&voidgrassblend ( &nc &nc &nc .g &nc .h &nc .i &nc &nc .j .k .l .m .n &nc )
+
+&watertreeblend ( &nc &nc &nc tG &nc tH &nc tI &nc &nc tJ tK tL tM tN tO )
+
+&waterhillblend ( &nc &nc &nc {G &nc {H &nc {I &nc &nc {J {K {L {M {N {O )
+
+&voidhillblend ( &nc &nc &nc {g &nc {h &nc {i &nc &nc {j {k {l {m {n &nc )
+
+&watermountblend ( &nc &nc &nc ^G &nc ^H &nc ^I &nc &nc ^J ^K ^L ^M ^N ^O )
+
+&voidmountblend ( &nc &nc &nc ^g &nc ^h &nc ^i &nc &nc ^j ^k ^l ^m ^n &nc )
+
+&mountinnerblend ( &nc &nc &nc ^3 &nc ^5 &nc ^7 &nc &nc ^a ^b ^c ^d ^e ^f )
+
+&hillsinnerblend ( &nc &nc &nc {# &nc {% &nc {& &nc &nc {A {B {C {D {E {F )
+
+&forestinnerblend ( &nc &nc &nc |# &nc |% &nc |& &nc &nc |A |B |C |D |E &nc )
+
+&hills ( {{ ^^ ^~ ^. &waterhillblend &watermountblend &mountinnerblend &hillsinnerblend &voidmountblend &voidhillblend )
+
+&objects ( bb && ff oo pp ~p ww ## #> @@ [[ ]] 00 ++ +s aa ar a! << >> w+ ws sE sA sH sT sI sP sR )
+
+&text ( .a .b .c .d .e .f .g .h .i .j .k .l .m .m .o .p .q .r .s .t .u .v .w .x .y .z ~O )
+
+&runes ( ,A ,B ,C ,D ,E ,F ,G ,H ,I ,J ,K ,L ,M ,M ,O ,P ,Q ,R ,S ,T ,U ,V ,W ,X ,Y ,Z ;T ;E ;N ;A ;S ;D )
+
+&bridge ( == =| =! )
+
+&void ( ** vv )
+
+&wall ( xx d, x. ~x ?? rr r. ~r w! )
+
+&floor ( ,, ~, cc ee )
+
+&lavablend ( &nc &nc &nc !3 &nc !5 &nc !7 &nc &nc !a !b !c !d !e !f )
+
+&bogblend ( &nc &nc &nc %3 &nc %5 &nc %7 &nc &nc %a %b %c %d %e %f )
+
+&treesinnerblend ( &nc &nc &nc t3 &nc t5 &nc t7 &nc &nc ta tb tc td te tf )
+
+&treesouterblend ( &nc &nc &nc t# &nc t% &nc t& &nc &nc tA tB tC tD tE tF )
+
+&grass ( &treesouterblend .. &watergrassblend &voidgrassblend )
+
+&bog ( %% &bogblend )
+
+&lava ( &lavablend !! !_ ~! )
+
+&woods ( tt || |. &treesinnerblend &watertreeblend &forestinnerblend )
+
+&notwoods ( &grass &hillsblend &hills &road &bog )
+
+&dryland ( &grass &hillsblend &woods &hills &road )
+
+&manmade ( &objects &text &runes &wall &floor )
+
+&land ( &dryland &bog )
+
+&void ( ** VV *. &voidblend )
+
+#inner water edges on:
+#land
+replace ( &watergrassblend &treesouterblend &hillsblend &voidgrassblend ) ( .. )
+#trees 
+replace ( &treesinnerblend &watertreeblend ) ( tt )
+#hills
+replace ( &waterhillblend &hillsinnerblend &voidhillblend ) ( {{ )
+#mountains
+replace ( &watermountblend &mountinnerblend &voidmountblend ) ( ^^ ) 
+
+#advanced water edging
+replace ( &shallowblend ) ( ~~ ) 
+replace ( &waterblend ) ( -- ) 
+replace ( &deepwaterblend ) ( __ )
+
+#forest
+replace ( &forestinnerblend ) ( || ) 
+
+#bog corners
+replace ( &bogblend ) ( %% ) 
+
+#lava corners
+replace ( &lavablend ) ( !! ) 
+
+#void corners
+replace ( &voidblend *. ) ( ** ) 

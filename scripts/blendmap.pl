@@ -18,11 +18,11 @@ This program is made available under the GPL. Detailed conditions should be foun
 Note that as currently implemented, the output of the program is a derivitive work of the input data, but NOT a derivitive work of the program itself.
 
 Usage:
-blendmap.pl blend_data border_symbol input_scm_data
+blendmap.pl blend_data input_scm_data [border_char]
 
 Output is a scm list of the blended maps from the input
 
-terrain beyond edge of mad is assumed to be of type border_symbol
+border_char is char to assume at border areas.
 
 blend data format:
 
@@ -51,6 +51,93 @@ open (FILEIN,$ARGV[0]) or die "failed to open: $ARGV[1]";
 
 my @transforms;
 my %charmaps;
+my $mapin;
+my $mapout;
+my $width;
+my $height;
+
+my $border;
+
+if ($ARGV[2] =~ /^(\S\S)$/)
+{
+	$border = $1;
+}
+
+my $offsets=
+[
+	[0,-1],
+	[-1,0],
+	[1,0],
+	[0,1],
+];
+
+sub loadParamList
+{
+	my $text = $_[0];
+	$text =~ s/^ *//;
+	$text =~ s/ *$//;
+	my $rule = [];
+	foreach my $item (split(/ +/,$text))
+	{
+		push (@{$rule},($item));
+	}
+	return $rule;
+}
+
+sub loadTerrainList
+{
+	my $text = $_[0];
+	$text =~ s/^ *//;
+	$text =~ s/ *$//;
+	my $rule = [];
+	foreach my $item (split(/ +/,$text))
+	{
+		if ($item =~ /&(\S\S+)/)
+		{
+			push (@{$rule},(@{$charmaps{$1}})); 
+		}
+		else
+		{
+			push (@{$rule},($item));
+		}
+	}
+	return $rule;
+}
+
+sub loadRule
+{
+	my $text=$_[0];
+	my $origtext=$_[0];
+	my $rules=[];
+	$text =~ s/(\S+)\s// or die "Bad rule definition : $origtext";
+	$rules->[0]=$1;
+	while ($text ne "")
+	{
+		if ($text =~ s/\\\s*$//) #continuation marker
+		{
+			my $temp = <FILEIN>;
+			$text .= $temp;
+			$origtext .= $temp;
+			next;
+		}
+		if ($text =~ s/^\s+//)
+		{
+			next;
+		}
+		if ($text =~ s/^\[( +(([^\]])|(\S\S+) +))\]//)
+		{
+			push (@{$rules},(loadParamList($1)));
+			next;
+		}
+		if ($text =~ s/^\(( +(\S\S+ +)*)\)//)
+		{
+			push (@{$rules},(loadTerrainList($1)));
+			next;
+		}
+		die "Bad rule definition : $origtext";
+	}
+	push (@transforms,($rules));
+}
 
 while (<FILEIN>)
 {
@@ -71,133 +158,454 @@ while (<FILEIN>)
 			}
 		}
 		$charmaps{$name}=$chars;
-		print STDERR "map $name '@{$charmaps{$name}}'\n";
+		#print STDERR "map $name '@{$charmaps{$name}}'\n";
 	}
-	elsif ($_ =~ /\( ((\S\S+ )*)\) \( ((\S\S+ )*)\) \( ((\S\S+ )*)\) \( ((\S\S+ )*)\)/)
+	elsif ($_ =~ /^\s*#/)
 	{
-		my @datas=($1,$3,$5,$7);
-		my $rules=[];
-		for (my $i=0;$i<4;$i++)
-		{
-			my $data = $datas[$i];
-			my $rule = [];
-			foreach my $item (split(/ /,$data))
-			{
-				if ($item =~ /&(\S\S+)/)
-				{
-					push (@{$rule},(@{$charmaps{$1}})); 
-				}
-				else
-				{
-					push (@{$rule},($item));
-				}
-			}
-			$rules->[$i]=$rule;
-		}
-		print STDERR "rule: \n";
-		print STDERR "    @{$rules->[0]}\n";
-		print STDERR "    @{$rules->[1]}\n";
-		print STDERR "    @{$rules->[2]}\n";
-		print STDERR "    @{$rules->[3]}\n";
-		push (@transforms,($rules));
+		#ignore it, its a comment
+	}
+	elsif ($_ =~ /\S/)	
+	{
+		loadRule($_);
 	}
 }
 
-$ARGV[1] =~ /^(\S\S)$/ or die "invalid border symbol: $ARGV[1]";
-my $border = $1;
+open (FILEIN,$ARGV[1]) or die "failed to open: $ARGV[1]";
 
-open (FILEIN,$ARGV[2]) or die "failed to open: $ARGV[2]";
-
-sub getData
+sub ruleName
 {
-	my ($data,$loc) = @_;
-	defined($data) or return ($border,$border,$border);
-	my @ret=($border,$border,$border);
-	if ($loc > 0)
-	{
-		$ret[0] = $data->[$loc-1];
-	}
-	$ret[1] = $data->[$loc];
-	if ($loc < @$data - 1)
-	{
-		$ret[2] = $data->[$loc+1];
-	}
-	return @ret;
+	$_[0]->[0];
+}
+
+sub ruleTargetTerrain
+{
+	$_[0]->[1];
+}
+
+sub ruleOutputTerrain
+{
+	$_[0]->[2];
+}
+
+sub ruleActiveTerrain
+{
+	$_[0]->[3];
+}
+
+sub ruleIgnoreTerrain
+{
+	$_[0]->[4];
 }
 
 sub inList
 {
 	my ($list,$char)=@_;
+	#print "\n$char: \n";
 	foreach my $testee (@$list)
 	{
+		#print "$testee ";
 		if ($testee eq $char)
 		{
+			#print "!\n";
 			return 1;
 		}
 	}
+	#print "X\n";
 	return 0;
 }
 
-sub testNeighbor
+sub resetMap
 {
-	my ($ruledata,$neighbor,$value,$tally)=@_;
-	if (inList($ruledata->[2],$neighbor))
+	my ($rule,$x,$y)=@_;
+	if ($x==0 && $y==0)
 	{
-		print STDERR "Y";
-		return $value + $tally;
+		$mapin = $mapout;
+		initOut();
 	}
-	elsif (inList($ruledata->[3],$neighbor))
+}
+
+sub getCell
+{
+	my ($x,$y)=@_;
+	if ($border)
 	{
-		print STDERR "N";
-		return $tally;
+		if ($x<0)
+		{
+			return $border;
+		}
+		if ($y<0)
+		{
+			return $border;
+		}
+		if ($x >= $width)
+		{
+			return $border;
+		}
+		if ($y >= $height)
+		{
+			return $border;
+		}
 	}
-	print STDERR "?";
+	else
+	{
+		while ($x<0)
+		{
+			$x += $width;
+		}
+		while ($y<0)
+		{
+			$y += $height;
+		}
+		while ($x>=$width)
+		{
+			$x -= $width;
+		}
+		while ($y>=$height)
+		{
+			$y -= $height;
+		}
+	}
+	return $mapin->[$y]->[$x];
+}
+
+sub checkNeighbor
+{
+	my ($rule,$x,$y,$offset)=@_;
+	my $xoff = $x + $offset->[0];
+	my $yoff = $y + $offset->[1];
+	my $cell = getCell($xoff,$yoff);
+	if ($cell eq $nochange)
+	{
+		return undef;
+	}
+	if (inList(ruleActiveTerrain($rule),$cell))
+	{
+		return 1;
+	}
+	elsif (inList(ruleIgnoreTerrain($rule),$cell))
+	{
+		return 0;
+	}
 	return undef;
 }
 
-sub runTest
+sub getTally
 {
-	my ($ruledata,$neighbors,$curtile)=@_;
-	if (!inList($ruledata->[0],$neighbors->[4]))
+	my ($rule,$length,$x,$y) = @_;
+	#print getCell($x,$y)." >>\n";
+	if (!inList(ruleTargetTerrain($rule),getCell($x,$y)))
 	{
-		return $curtile;	
+		return undef;	
 	}
 	my $tally=0;
-	print STDERR $neighbors->[1];
-	$tally = testNeighbor($ruledata,$neighbors->[1],1,$tally);
-	defined $tally or return $curtile;
-	$tally = testNeighbor($ruledata,$neighbors->[3],2,$tally);
-	defined $tally or return $curtile;
-	$tally = testNeighbor($ruledata,$neighbors->[5],4,$tally);
-	defined $tally or return $curtile;
-	$tally = testNeighbor($ruledata,$neighbors->[7],8,$tally);
-	defined $tally or return $curtile;
-	print STDERR ">> $tally\n";
-	my $temptile =  $ruledata->[1]->[$tally];
-	defined $temptile or return $curtile;
-	if ($temptile eq $nochange)
+	my $tallyinc=1;
+	for (my $neighbor = 0; $neighbor < $length; $neighbor++)
 	{
-		return $curtile;
+		my $cellValue = checkNeighbor($rule,$x,$y,$offsets->[$neighbor]);
+		defined ($cellValue) or return undef;
+		if ($cellValue)
+		{
+			$tally += $tallyinc;
+		}
+		$tallyinc *= 2;
 	}
-	return $temptile;
+	#print STDERR $tally."\n";
+	return $tally
 }
 
-sub handleLine
+sub writeMap
 {
-	my ($lastline,$curline,$nextline) = @_;
-	print "\t\"";
-	for (my $i=0;$i<@{$curline};$i++)
+	my ($x,$y,$cell)= @_;
+	defined $cell or return;
+	if ($cell eq $nochange)
 	{
-		my @datalist = (getData($lastline,$i),getData($curline,$i),getData($nextline,$i));
-		my $curtile = $datalist[4];
-		my $neighbors = \@datalist;
-		foreach my $rule (@transforms)
-		{
-			$curtile = runTest($rule,$neighbors,$curtile);
-		}
-		print "$curtile ";
+		return;
 	}
-	print "\"\n";
+	$mapout->[$y]->[$x]=$cell;
+}
+
+sub baseCheck
+{
+	my ($rule,$x,$y) = @_;
+	my $length = 4;
+	my $tally = getTally($rule,$length,$x,$y);
+	defined ($tally) or return;
+	writeMap($x, $y, ruleOutputTerrain($rule)->[$tally]);
+}
+
+#sub farCheck
+#{
+#	my ($rule,$x,$y)= @_;
+#	my $length = ruleParam($rule);
+#	my $tally = getTally($rule,$length,$x,$y);
+#	defined ($tally) or return;
+#	my $outTer = ruleOutputTerrain($rule);
+#	my $outChar;
+#	for (my $i = 0; $i<@($outTer);$i+=3)
+#	{
+#		my $tempTally = $tally & $outTer->[$i];
+#		if ($tempTally == $outTer->[$i+1])
+#		{
+#			$outChar = $outTer->[$i+2]
+#		}
+#	}
+#}
+
+#########################################
+
+sub checkCell
+{
+	my ($activeList,$ignoreList,$x,$y)=@_;
+	my $cell = getCell($x,$y);
+	if ($cell eq $nochange)
+	{
+		return undef;
+	}	
+	if (inList($activeList,$cell))
+	{
+		return 1;
+	}
+	elsif (inList($ignoreList,$cell))
+	{
+		return 0;
+	}
+	return undef;	
+}
+
+sub checkCornerCell
+{
+	my ($rule,$xc,$yc,$xo,$yo)=@_;
+	my $cornerList = $rule->[3]; 
+	my $edgeList = $rule->[4];
+	my $ignoreList = $rule->[5];
+	my $xoff = $xc + $xo;
+	my $yoff = $yc + $yo;
+	my $match = 1;
+	my $cellret;
+	$cellret = checkCell($cornerList,$ignoreList,$xoff,$yoff);
+	defined $cellret or return undef;
+	$match &= $cellret;
+	$cellret = checkCell($edgeList,$ignoreList,$xoff,$yc);
+	defined $cellret or return undef;
+	$match &= $cellret;
+	$cellret = checkCell($edgeList,$ignoreList,$xc,$yoff);
+	defined $cellret or return undef;
+	$match &= $cellret;
+	return $match;
+}
+
+sub getCornerTally
+{
+	my ($rule,$x,$y) = @_;
+	my $cornerOffsets=
+	[
+		[1+2,-1,-1],
+		[1+4,1,-1],
+		[8+2,-1,1],
+		[8+4,1,1]
+	];
+	if (!inList(ruleTargetTerrain($rule),getCell($x,$y)))
+	{
+		return undef;	
+	}
+	my $tally=0;
+	#print getCell($x,$y)." >>\n";
+	for (my $neighbor = 0; $neighbor < 4; $neighbor++)
+	{
+		my ($tallyinc,$xoff,$yoff)=@{$cornerOffsets->[$neighbor]};
+		#print "    $tallyinc ($x $y) ($xoff $yoff) ";
+		my $cellValue = checkCornerCell($rule,$x,$y,$xoff,$yoff);
+		#print "= $cellValue \n";
+		defined ($cellValue) or return undef;
+		if ($cellValue)
+		{
+			$tally |= $tallyinc;
+		}
+	}
+	#print $tally."\n";
+	return $tally
+};
+
+sub cornerCheck
+{
+	my ($rule,$x,$y)=@_;
+	my $tally = getCornerTally($rule,$x,$y);
+	defined ($tally) or return;
+	writeMap($x,$y,ruleOutputTerrain($rule)->[$tally]);
+}
+
+##########################################
+
+sub checkEdgeCell
+{
+	my ($rule,$xc,$yc,$xe,$ye)=@_;
+	my $cornerList = $rule->[3]; 
+	my $edgeList = $rule->[4];
+	my $ignoreList = $rule->[5];
+	my $match = 1;
+	my $cellret;
+	#print "\n\n";
+	my $xem = $xc - $xe;
+	my $yem = $yc - $ye;
+	my $xep = $xc + $xe;
+	my $yep = $yc + $ye;
+	#print "\n ($xem $yem) ($xc $yc) ($xep $yep)";
+	#print " (".$xc." ".$yc.") ";
+	#print " (".$xc+$xe." ".$yc+$ye.") <<?\n";
+	$cellret = checkCell($cornerList,$ignoreList,$xc-$xe,$yc-$ye);
+	defined $cellret or return undef;
+	$match &= $cellret;
+	$cellret = checkCell($edgeList,$ignoreList,$xc,$yc);
+	defined $cellret or return undef;
+	$match &= $cellret;
+	$cellret = checkCell($cornerList,$ignoreList,$xc+$xe,$yc+$ye);
+	defined $cellret or return undef;
+	$match &= $cellret;
+	return $match;
+}
+
+sub getEdgeTally
+{
+	my ($rule,$x,$y) = @_;
+	my $edgeOffsets=
+	[
+		[1,0,-1],
+		[2,-1,0],
+		[4,1,0],
+		[8,0,1]
+	];
+	if (!inList(ruleTargetTerrain($rule),getCell($x,$y)))
+	{
+		return undef;	
+	}
+	my $tally=0;
+	#print getCell($x,$y)." >>\n";
+	for (my $neighbor = 0; $neighbor < 4; $neighbor++)
+	{
+		my ($tallyinc,$xoff,$yoff)=@{$edgeOffsets->[$neighbor]};
+		my $xedge = 0;
+		my $yedge= 0;
+		if ($xoff == 0)
+		{
+			$xedge = 1;
+		}
+		if ($yoff == 0)
+		{
+			$yedge=1;
+		}
+		#print "    $tallyinc ($x $y) ($xoff $yoff) ";
+		my $cellValue = checkEdgeCell($rule,$x+$xoff,$y+$yoff,$xedge,$yedge);
+		#print "= $cellValue \n";
+		defined ($cellValue) or return undef;
+		if ($cellValue)
+		{
+			$tally |= $tallyinc;
+		}
+	}
+	#print $tally."\n";
+	return $tally
+};
+
+sub edgeCheck
+{
+	my ($rule,$x,$y) = @_;
+	my $tally = getEdgeTally($rule,$x,$y);
+	defined ($tally) or return;
+	writeMap($x,$y,ruleOutputTerrain($rule)->[$tally]);
+}
+
+###########################################
+
+sub replaceOp
+{
+	my ($rule,$x,$y)=@_;
+	if (!inList(ruleTargetTerrain($rule),getCell($x,$y)))
+	{
+		return undef;	
+	}
+	writeMap($x,$y,ruleOutputTerrain($rule)->[0]);
+}
+
+sub randomOp
+{
+	my ($rule,$x,$y)=@_;
+	if (!inList(ruleTargetTerrain($rule),getCell($x,$y)))
+	{
+		return undef;	
+	}
+	my $randno=rand();
+	my $problist = $rule->[2];
+	my $i;
+	my $outputs = $rule->[3];
+	for ($i=0;$i<@{$problist};$i++)
+	{
+		if ($randno < $problist->[$i])
+		{
+			last;
+		}
+	}
+	writeMap($x,$y,$outputs->[$i]);
+}
+
+########################################
+
+my %ruleTypes=
+(
+	"basic"=>\&baseCheck,
+	"corner"=>\&cornerCheck,
+	"replace" => \&replaceOp,
+	"reset"=>\&resetMap,
+	"random"=>\&randomOp,
+	"edge"=>\&edgeCheck
+);
+
+sub checkRule
+{
+	my ($rule,$x,$y) =@_;
+	my $name = ruleName($rule);
+	&{$ruleTypes{$name}}($rule,$x,$y);
+}
+
+sub handleMap
+{
+	# rule first to allow map reset
+	foreach my $rule (@transforms)
+	{
+		print STDERR ".";
+		for (my $x=0;$x<$width;$x++)
+		{
+			for (my $y=0;$y<$height;$y++)
+			{
+				checkRule($rule,$x,$y);
+			}
+		}
+	}
+}
+
+sub initOut
+{
+	$mapout = [];
+	foreach my $line (@{$mapin})
+	{
+		my $temp = [];
+		push (@{$temp},(@{$line}));
+		push (@{$mapout},($temp));
+	}
+}
+
+sub printMap
+{
+	print "(list\n";
+	foreach my $line (@{$mapout})
+	{
+		print "\t\t\"";
+		foreach my $cell (@{$line})
+		{
+			print "$cell ";
+		}
+		print "\"\n";
+	}
+	print ")\n\n";
 }
 
 my $nextline;
@@ -211,31 +619,27 @@ while (<FILEIN>)
 	{
 		if ($_ !~ /"(([^"][^"] )+)"/)
 		{
-			if (defined($nextline))
+			if (@{$mapin} > 0)
 			{
-				handleLine($curline,$nextline,undef);
+				$width=@{$mapin->[0]};
+				$height=@{$mapin};
+				initOut();
+				handleMap();
+				printMap();
+
 			}
-			print ")\n\n";
 			$inmap=0;
-			$lastline = undef;
-			$nextline = undef;
-			$curline = undef;
 		}
 		else
 		{
-			$lastline=$curline;
-			$curline=$nextline;
 			my @temp = split(/ /,$1);
-			$nextline = \@temp;
-			if (defined($curline))
-			{
-				handleLine($lastline,$curline,$nextline);
-			}
+			push (@{$mapin},(\@temp));
 		}
 	}
 	elsif ($_ =~ /\(list/)
 	{
-		print "(list\n";
+
+		$mapin=[];
 		$inmap=1;
 	}
 } 

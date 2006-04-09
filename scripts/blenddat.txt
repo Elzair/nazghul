@@ -2,23 +2,51 @@
 
 &shallowblend ( &nc ~1 ~2 ~3 ~4 ~5 ~6 ~7 ~8 ~9 ~a ~b ~c ~d ~e ~f )
 
-&shallow ( ~* ~0 &shallowblend )
+&voidblend ( &nc *1 *2 *3 *4 *5 *6 *7 *8 *9 *a *b *c *d *e *f )
+
+&shallowblenda ( &nc &nc &nc ~3 &nc ~5 &nc ~7 &nc &nc ~a ~b ~c ~d ~e ~f )
+
+&shallow ( ~~ ~* ~0 &shallowblend )
 
 &waterblend ( &nc -1 -2 -3 -4 -5 -6 -7 -8 -9 -a -b -c -d -e -f )
 
-&nwater ( -* -0 &waterblend )
+&waterblenda ( &nc &nc &nc -3 &nc -5 &nc -7 &nc &nc -a -b -c -d -e -f )
+
+&nwater ( -- -* -0 &waterblend )
 
 &deepwaterblend ( &nc _1 _2 _3 _4 _5 _6 _7 _8 _9 _a _b _c _d _e _f )
 
+&deepwaterblenda ( &nc &nc &nc _3 &nc _5 &nc _7 &nc &nc _a _b _c _d _e _f )
+
 &road ( /0 /1 /2 /3 /4 /5 /6 /7 /8 /9 /a /b /c /d /e /f )
 
-&deepwater ( _* _0 &deepwaterblend )
+&deepwater ( __ _* _0 &deepwaterblend )
 
 &water ( &shallow &nwater &deepwater )
 
 &hillsblend ( &nc {1 {2 {3 {4 {5 {6 {7 {8 {9 {a {b {c {d {e {f )
 
-&hills ( {{ ^^ ^. )
+&watergrassblend ( &nc &nc &nc ~# &nc ~% &nc ~& &nc &nc ~A ~B ~C ~D ~E ~F )
+
+&voidgrassblend ( &nc &nc &nc .g &nc .h &nc .i &nc &nc .j .k .l .m .n &nc )
+
+&watertreeblend ( &nc &nc &nc tG &nc tH &nc tI &nc &nc tJ tK tL tM tN tO )
+
+&waterhillblend ( &nc &nc &nc {G &nc {H &nc {I &nc &nc {J {K {L {M {N {O )
+
+&voidhillblend ( &nc &nc &nc {g &nc {h &nc {i &nc &nc {j {k {l {m {n &nc )
+
+&watermountblend ( &nc &nc &nc ^G &nc ^H &nc ^I &nc &nc ^J ^K ^L ^M ^N ^O )
+
+&voidmountblend ( &nc &nc &nc ^g &nc ^h &nc ^i &nc &nc ^j ^k ^l ^m ^n &nc )
+
+&mountinnerblend ( &nc &nc &nc ^3 &nc ^5 &nc ^7 &nc &nc ^a ^b ^c ^d ^e ^f )
+
+&hillsinnerblend ( &nc &nc &nc {# &nc {% &nc {& &nc &nc {A {B {C {D {E {F )
+
+&forestinnerblend ( &nc &nc &nc |# &nc |% &nc |& &nc &nc |A |B |C |D |E &nc )
+
+&hills ( {{ ^^ ^~ ^. &waterhillblend &watermountblend &mountinnerblend &hillsinnerblend &voidmountblend &voidhillblend )
 
 &objects ( bb && ff oo pp ~p ww ## #> @@ [[ ]] 00 ++ +s aa ar a! << >> w+ ws sE sA sH sT sI sP sR )
 
@@ -42,32 +70,97 @@
 
 &treesouterblend ( &nc &nc &nc t# &nc t% &nc t& &nc &nc tA tB tC tD tE tF )
 
+&grass ( &treesouterblend .. &watergrassblend &voidgrassblend )
+
 &bog ( %% &bogblend )
 
 &lava ( &lavablend !! !_ ~! )
 
-&woods ( tt || |. &treesinnerblend )
+&woods ( tt || |. &treesinnerblend &watertreeblend &forestinnerblend )
 
-&notwoods ( .. &hillsblend &hills &road &bog )
+&notwoods ( &grass &hillsblend &hills &road &bog )
 
-&dryland ( .. &hillsblend &woods &hills &road )
+&dryland ( &grass &hillsblend &woods &hills &road )
 
 &manmade ( &objects &text &runes &wall &floor )
 
 &land ( &dryland &bog )
 
-( ~~ ) ( &shallowblend ) ( &land ) ( &water &bridge &manmade )
+&void ( ** VV *. &voidblend )
 
-( -- ) ( &waterblend ) ( &land ) ( &water &bridge &manmade )
+#round off trees
+basic ( tt ) ( &treesinnerblend ) ( &notwoods &water &bridge &manmade ) ( &woods )
+basic ( .. ) ( &treesouterblend ) ( &woods ) ( &notwoods &water &bridge &manmade )
 
-( __ ) ( &deepwaterblend ) ( &land ) ( &water &bridge &manmade )
+#detect rivers (water with land on opposite sides)
+corner ( ~~ ) ( &nc &nc &nc &nc &nc &nc &nc &nc &nc &nc &nc &nc &nc &nc &nc ~x ) \
+ ( &land ) ( &land &water &bridge &manmade ) ( &water &bridge &manmade )
+basic ( ~~ ) ( &nc &nc &nc &nc &nc &nc ~x &nc &nc ~x &nc &nc &nc &nc &nc ~x ) \
+	( &land ) ( &water &bridge &manmade )
 
-( tt ) ( &treesinnerblend ) ( &notwoods &water &bridge &manmade ) ( &woods )
+reset
 
-( .. ) ( &treesouterblend ) ( &woods ) ( &notwoods &water &bridge &manmade )
+#inner water edges on:
+#land
+corner ( .. ) ( &watergrassblend ) ( &water &bridge ) ( &water &bridge ) ( &land &manmade )
+#trees (also resets forest to trees at this point. there isnt enough forest/water edge to worry about)
+corner ( || tt &treesinnerblend ) ( &watertreeblend ) ( &water &bridge ) ( &water &bridge ) ( &land &manmade )
+#hills
+corner ( {{ ) ( &waterhillblend ) ( &water &bridge ) ( &water &bridge ) ( &land &manmade )
+#mountains
+corner ( ^^ ) ( &watermountblend ) ( &water &bridge ) ( &water &bridge ) ( &land &manmade )
 
-( .. ) ( &hillsblend ) ( &hills ) ( &land &water &bridge &manmade )
+#basic water rounding on rivers
+basic ( ~x ) ( &shallowblend ) ( &land ) ( &water &bridge &manmade )
 
-( %% ) ( &bogblend ) ( &dryland ) ( &bog &water &bridge &manmade )
+reset
 
-( !! ) ( &lavablend ) ( &land &water ~! ) ( &lava &manmade &bridge )
+#clean up rivers
+replace ( ~x ) ( ~~ )
+
+reset
+ 
+#advanced water edging
+#could this be done in basic mode by detecting the corner pieces?
+edge ( ~~ ) ( &shallowblend ) ( &land ) ( &land ) ( &water &bridge &manmade )
+corner ( ~~ ) ( &shallowblend ) ( &land ) ( &land ) ( &water &bridge &manmade )
+
+edge ( -- ) ( &waterblend ) ( &land ) ( &land ) ( &water &bridge &manmade )
+corner ( -- ) ( &waterblend ) ( &land ) ( &land ) ( &water &bridge &manmade )
+
+edge ( __ ) ( &deepwaterblend ) ( &land ) ( &land ) ( &water &bridge &manmade )
+corner ( __ ) ( &deepwaterblend ) ( &land ) ( &land ) ( &water &bridge &manmade )
+
+#basic edging on hills
+basic ( .. ) ( &hillsblend ) ( &hills ) ( &land &water &bridge &manmade &lava )
+
+reset
+
+#mountain corners (where no edging)
+corner ( ^^ ) ( &mountinnerblend ) ( &water &grass &woods &bog &road &lava ) ( &water &grass &bog &woods &road &lava ) ( &hills &hillsblend )
+
+#hill corners (where no edging)
+corner ( {{ ) ( &hillsinnerblend ) ( &water &grass &woods &bog &road &lava ) ( &water &grass &bog &woods &road &lava ) ( &hills &hillsblend )
+
+#hill corners (where no edging)
+corner ( || ) ( &forestinnerblend ) ( &water &grass &bog &road &hills &hillsblend ) ( &water &grass &bog &road &hills &hillsblend ) ( &woods )
+
+#bog corners
+basic ( %% ) ( &bogblend ) ( &dryland ) ( &bog &water &bridge &manmade )
+
+#lava corners
+basic ( !! ) ( &lavablend ) ( &land &water ~! ) ( &lava &manmade &bridge )
+
+#void inner corners
+corner ( .. ) ( &voidgrassblend ) ( &void &bridge ) ( &void &bridge ) ( &lava &water &land &manmade )
+corner ( {{ ) ( &voidhillblend ) ( &void &bridge ) ( &void &bridge ) ( &lava &water &land &manmade )
+corner ( ^^ ) ( &voidmountblend ) ( &void &bridge ) ( &void &bridge ) ( &lava &water &land &manmade )
+
+#void corners
+edge ( &void ) ( &voidblend ) ( &water &lava &land &manmade ) ( &water &lava &land &manmade ) ( &void &bridge )
+corner ( &void ) ( &voidblend ) ( &water &lava &land &manmade ) ( &water &lava &land &manmade ) ( &void &bridge )
+
+reset
+
+#randomise void
+random ( ** ) [ 0.5 ] ( ** *. )
