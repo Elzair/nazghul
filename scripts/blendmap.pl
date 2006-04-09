@@ -20,27 +20,31 @@ Note that as currently implemented, the output of the program is a derivitive wo
 Usage:
 blendmap.pl blend_data input_scm_data [border_char]
 
-Output is a scm list of the blended maps from the input
+blend_data is a file containing terrain mapping rules.
+
+Output is a scm list of the blended maps from the input.
 
 border_char is char to assume at border areas.
-
-blend data format:
-
-a symbol is either a 2 character map symbol, or & followed by 2 or more characters, which expands into a list of map symbols 
-
-a symbol list is a set of symbols in brackets ( symbol symbol ... symbol )
-(note spaces around brackets (sorry, lazy parser writer))
-
-define a new symbol:
-&name symbol_list
-
-define a rule:
-symbol_list symbol_list symbol_list symbol_list
-representing:
-symbols to remap; output symbols to map onto; symbols for superior terrain; symbols for inferior terrain
-
-(if a neighbor is not in either superior or inferior list, no action is taken on the tile)
 EOF
+
+#
+#blend data format:
+#
+#a symbol is either a 2 character map symbol, or & followed by 2 or more characters, which expands into a list of map symbols 
+#
+#a symbol list is a set of symbols in brackets ( symbol symbol ... symbol )
+#(note spaces around brackets (sorry, lazy parser writer))
+#
+#define a new symbol:
+#&name symbol_list
+#
+#define a rule:
+#rule_name list_of_parameters
+#
+#list_of_parameters is a set of either a symbol list (as above) or a data list
+#
+#data list is a set of values (whatever the rule wants) enclosed in square brackets and separated by spaces.
+#
 
 exit(0);
 }
