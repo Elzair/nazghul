@@ -599,7 +599,7 @@ sub initOut
 
 sub printMap
 {
-	print "(list\n";
+	print "\t(list\n";
 	foreach my $line (@{$mapout})
 	{
 		print "\t\t\"";
@@ -609,7 +609,7 @@ sub printMap
 		}
 		print "\"\n";
 	}
-	print ")\n\n";
+	print "\t)\n\n";
 }
 
 my $nextline;
