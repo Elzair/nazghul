@@ -19,6 +19,7 @@
    (list 't_deep            "deep water"    pclass-deep      s_deep            1 0 nil)
    (list 't_sunlit_deep     "deep water"    pclass-deep      s_deep            1 64 nil)
    (list 't_shallow         "water"          pclass-deep      s_shallow         1 0 nil)
+   (list 't_blendable_shoals    "shallow water"  pclass-shoals    s_shoals          1 0 nil)
    (list 't_shoals          "shallow water"  pclass-shoals    s_shoals          1 0 nil)
 
    (list 't_grass           "grass"         pclass-grass     s_grass           1 0 nil)
@@ -99,6 +100,7 @@
    (list 't_bridge_NS       "bridge"        pclass-bridge    s_ns_bridge       1 0 nil)
    (list 't_lava_bridge_NS  "bridge"        pclass-bridge    s_ns_bridge       1 0 nil)
    (list 't_chasm           "chasm"         pclass-space     s_null            1 0 nil)
+   (list 't_void            "empty space"          pclass-space     s_null            1 0 nil)
 
    (list 't_trail_0         "trail"         pclass-grass     s_trail_0         1 0 nil)
    (list 't_trail_1         "trail"         pclass-grass     s_trail_1         1 0 nil)
@@ -232,7 +234,7 @@
    t_shore_wes ;; 14: south east west
    t_shore_c ;; 15: south east west north
    ))
-
+   
 (define tset_water
 (append tset_shore
           (list t_shoals
@@ -241,42 +243,6 @@
                 t_sunlit_deep
                 t_bridge_WE
                 t_bridge_NS)))
-
-;;----------------------------------------------------------------------------
-;; Some blended hill terrain types
-
-(define (mk-foothill-terrain tag . sprites)
-  (kern-mk-terrain tag "foothills" pclass-grass
-                   (mk-composite-sprite (cons s_grass sprites))
-                   1 0 nil))
-
-(mk-foothill-terrain 't_foothill_n  s_hill_n )
-(mk-foothill-terrain 't_foothill_w  s_hill_w )
-(mk-foothill-terrain 't_foothill_e  s_hill_e )
-(mk-foothill-terrain 't_foothill_s  s_hill_s )
-
-(define tset_foothills
-(list
-   t_grass    ;; 0: none
-t_foothill_n   ;; 1: north
-t_foothill_w   ;; 2: west
-t_grass  ;; 3: north west
-t_foothill_e   ;; 4: east
-t_grass  ;; 5: east north
-t_grass  ;; 6: east west
-t_grass ;; 7: east west north
-t_foothill_s   ;; 8: south
-t_grass ;; 9: south north
-t_grass ;; 10: south west
-t_grass ;; 11: south west north
-t_grass ;; 12: south east
-t_grass ;; 13: south east north
-t_grass ;; 14: south east west
-t_grass ;; 15: south east west north
-))
-
-(define tset_grass
-(cons t_grass tset_foothills))
 
 ;;----------------------------------------------------------------------------
 
@@ -290,9 +256,6 @@ t_grass ;; 15: south east west north
         t_wall_torch
         ))
 
-(define (is-bad-terrain? kter)
-  (in-list? kter bad-terrain-list))
-
 (define inflammable-terrain-list
   (list t_bog
         t_deep
@@ -300,7 +263,14 @@ t_grass ;; 15: south east west north
         t_shoals
         t_sunlit_deep
         t_stars
+		t_void
+		t_chasm
         ))
+		
+(load "blendterrains.scm")
+
+(define (is-bad-terrain? kter)
+  (in-list? kter bad-terrain-list))
 
 (define (is-inflammable-terrain? kter)
   (in-list? kter inflammable-terrain-list))
@@ -316,6 +286,6 @@ t_grass ;; 15: south east west north
 
 ;;----------------------------------------------------------------------------
 ;; terrain map blenders (automatically run within kern-mk-map)
-(kern-mk-blender t_shoals tset_water tset_shore)
-(kern-mk-blender t_shallow tset_water tset_shore)
+;;(kern-mk-blender t_blendable_shoals tset_water tset_shore)
+;;(kern-mk-blender t_shallow tset_water tset_wshore)
 ;;(kern-mk-blender t_grass tset_grass tset_foothills) 

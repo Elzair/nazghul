@@ -629,25 +629,95 @@
 
 (mk-combat-map
  'm_shore_combat
- "~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ "
- "~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ "
- "~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ "
- "~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ "
- "~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ "
- "~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ "
- "~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ "
- "~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ "
- "~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ "
- "~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ "
- "~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ "
- "~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ "
- "~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ "
- "~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ "
- "~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ "
- "~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ "
- "~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ "
- "~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ "
- "~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ "
+  "-- -- -- -- -- -- ~~ ~~ ~~ -- -- -- -- -- ~~ ~~ -- -- -- "
+  "~~ ~~ -- -- -- -- -- -- -- -- -- -- ~~ ~~ ~~ ~~ -- -- ~~ "
+  "~~ ~~ ~~ ~~ -- -- -- -- -- -- ~~ ~~ ~~ ~~ ~~ -- -- ~~ ~~ "
+  "~~ ~~ ~~ ~~ ~~ ~~ -- -- -- -- ~~ ~~ ~~ ~~ -- -- -- ~~ ~~ "
+  "~~ ~~ ~~ ~~ ~~ ~~ ~~ -- -- -- -- -- -- -- -- -- ~~ ~~ ~~ "
+  "~~ ~~ -- -- -- ~~ ~~ -- -- -- -- -- -- -- -- -- -- -- ~~ "
+  "~~ -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- ~~ "
+  "-- ~~ -- -- -- -- -- ~~ -- -- ~~ ~~ ~~ -- ~~ ~~ ~~ ~~ -- "
+  "-- -- -- -- -- -- -- -- ~~ -- ~~ ~~ ~~ ~~ ~~ ~~ ~~ -- -- "
+  "-- -- -- ~~ -- ~~ -- -- -- -- ~~ -- -- ~~ ~~ -- -- ~~ ~~ "
+  "-- -- ~~ ~~ ~~ ~~ ~~ -- -- -- -- -- -- -- -- -- -- ~~ ~~ "
+  "-- -- ~~ ~~ ~~ ~~ ~~ ~~ -- -- -- -- -- -- -- ~~ ~~ ~~ ~~ "
+  "-- -- -- -- ~~ ~~ ~~ ~~ ~~ -- -- -- -- -- -- -- -- -- ~~ "
+  "-- ~~ -- -- -- -- ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ -- -- -- -- "
+  "~~ ~~ -- -- -- -- -- ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ -- "
+  "-- ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ -- -- -- -- ~~ ~~ ~~ ~~ ~~ -- "
+  "-- ~~ -- -- -- ~~ ~~ ~~ ~~ -- -- -- ~~ ~~ ~~ ~~ -- -- -- "
+  "-- ~~ -- -- -- -- -- -- -- -- -- -- ~~ -- ~~ -- -- -- -- "
+  "-- -- -- -- -- -- -- ~~ ~~ ~~ ~~ -- -- -- -- -- -- -- -- "
+)
+
+(mk-combat-map
+ 'm_water_combat
+  "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "
+  "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "
+  "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "
+  "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "
+  "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "
+  "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "
+  "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "
+  "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "
+  "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "
+  "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "
+  "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "
+  "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "
+  "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "
+  "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "
+  "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "
+  "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "
+  "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "
+  "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "
+  "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "
+)
+
+(mk-combat-map
+ 'm_void_combat
+  "*. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. "
+  "*. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. "
+  "*. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. "
+  "*. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. "
+  "*. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. "
+  "*. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. "
+  "*. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. "
+  "*. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. "
+  "*. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. "
+  "*. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. "
+  "*. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. "
+  "*. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. "
+  "*. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. "
+  "*. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. "
+  "*. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. "
+  "*. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. "
+  "*. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. "
+  "*. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. "
+  "*. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. *. "
+
+)
+
+(mk-combat-map
+ 'm_lava_combat
+	".. .. .. {8 .. !3 !5 .. .. .. .. {8 {4 {{ {{ {2 {4 {{ {2 "
+	"!3 !5 {4 {{ {2 !! !! .. .. !f {4 {{ {2 {5 {C !3 !! !! !5 "
+	"!! !! .. bb !! !! !! !! !5 .. .. bb !! !! !! !_ !_ !! !! "
+	"!a !! !! !! !! !! !! !! !! !! !! !! !! !_ !_ !! !! !! !c "
+	"{# {% !a !! !_ !! {4 {% !a !! !! !! !! !! !! !! .. .. .. "
+	"{{ {{ {2 !! !_ !! !5 {1 {4 {{ {{ {a !a !! !! !! .. .. {8 "
+	"{5 {{ {2 !! !_ !! !c .. {4 {{ ^^ {{ {2 {8 !! !! .. {4 {{ "
+	".. {9 !3 !! !_ !! .. {8 {4 {{ {{ {{ {6 {{ !a !! !5 .. {1 "
+	"{4 {C !! !_ !! !c {4 {{ {2 {1 {1 {1 {4 {{ {2 !a !! bb .. "
+	".. !3 !! !_ !! {# {2 {1 .. .. {8 .. .. {1 .. .. !! .. .. "
+	"!3 !! !! !! !! {1 .. bb {8 {4 {{ {a !b !5 .. {8 !! !5 .. "
+	"!a !c {& !a !! !5 {4 {{ {{ !f {{ {{ {2 !e {4 {{ !! !! !5 "
+	".. .. {1 .. !a !! .. {5 {{ {2 {1 {1 .. .. .. {1 !! !_ !! "
+	".. !7 .. .. {8 !a !5 .. {1 .. .. .. .. !3 !! !! !! !! !c "
+	".. !a bb {4 {{ {a !a !5 .. !3 !! !! !! !! !! !! !! !c .. "
+	"{4 {{ {2 .. {5 {{ {2 !! !! !! !! !c {# {2 .. !! !! .. .. "
+	"!3 !! !! !5 {4 {{ {2 !! !! !! !c .. {1 .. {8 !a !! !! !5 "
+	"!a !! !! !! !5 {1 .. !! !c {# {2 .. !f {4 {{ {{ {2 !a !c "
+	".. {4 {{ {2 !a !! !! !c .. {1 .. .. .. .. {5 {{ {6 {{ {2 "
 )
 
 (kern-terrain-set-combat-map t_grass m_grass_combat2)
@@ -656,7 +726,6 @@
 (kern-terrain-set-combat-map t_trees m_tree_combat)
 (kern-terrain-set-combat-map t_bog m_bog_combat)
 (kern-terrain-set-combat-map t_mountains m_mountain_combat)
-
 
 (kern-terrain-set-combat-map t_trail_0 m_trail_0_combat)
 (kern-terrain-set-combat-map t_trail_1 m_trail_1_combat)
@@ -678,22 +747,110 @@
 (kern-terrain-set-combat-map t_bridge_NS  m_bridge_NS_combat)
 (kern-terrain-set-combat-map t_lava_bridge_NS m_lava_bridge_NS_combat)
 
-(map (lambda (kter) 
-       (kern-terrain-set-combat-map kter m_shore_combat))
-     (list t_shoals    ;; 0: none
-           t_shore_n   ;; 1: north
-           t_shore_w   ;; 2: west
-           t_shore_nw  ;; 3: north west
-           t_shore_e   ;; 4: east
-           t_shore_ne  ;; 5: east north
-           t_shore_we  ;; 6: east west
-           t_shore_nwe ;; 7: east west north
-           t_shore_s   ;; 8: south
-           t_shore_ns  ;; 9: south north
-           t_shore_ws  ;; 10: south west
-           t_shore_nws ;; 11: south west north
-           t_shore_es  ;; 12: south east
-           t_shore_nes ;; 13: south east north
-           t_shore_wes ;; 14: south east west
-           t_shore_c ;; 15: south east west north
-           ))
+(define (combat-map-list target-map terrains)
+	(map (lambda (kter)
+		(kern-terrain-set-combat-map kter target-map))
+		terrains
+	))
+	
+(combat-map-list m_grass_combat2
+	(list 
+	t_grassw_ne t_grassw_nw t_grassw_es t_grassw_ws
+	t_grassw_nwe t_grassw_nes t_grassw_nws t_grassw_wes
+	t_grassw_c
+	t_hilledge_n t_hilledge_w t_hilledge_nw t_hilledge_e
+	t_hilledge_ne t_hilledge_we t_hilledge_nwe t_hilledge_s
+	t_hilledge_ns t_hilledge_ws t_hilledge_nws t_hilledge_es
+	t_hilledge_nes t_hilledge_wes t_hilledge_c
+	t_grassv_ne t_grassv_nw t_grassv_es t_grassv_ws
+	t_grassv_nwe t_grassv_nes t_grassv_nws t_grassv_wes
+	t_grasst_nw t_grasst_ne t_grasst_nwe t_grasst_ws
+	t_grasst_nws t_grasst_es t_grasst_nes t_grasst_wes
+	t_grasst_c
+	)) 
+
+(combat-map-list m_water_combat
+	(list 
+	t_wshore_n t_wshore_w t_wshore_nw t_wshore_e
+	t_wshore_ne t_wshore_we t_wshore_nwe t_wshore_s
+	t_wshore_ns t_wshore_ws t_wshore_nws t_wshore_es
+	t_wshore_nes t_wshore_wes t_wshore_c
+	t_dshore_n t_dshore_w t_dshore_nw t_dshore_e
+	t_dshore_ne t_dshore_we t_dshore_nwe t_dshore_s
+	t_dshore_ns t_dshore_ws t_dshore_nws t_dshore_es
+	t_dshore_nes t_dshore_wes t_dshore_c
+	))	
+
+(combat-map-list m_tree_combat
+	(list
+	t_treew_ne t_treew_nw t_treew_es t_treew_ws
+	t_treew_nwe t_treew_nes t_treew_nws t_treew_wes
+	t_treew_c
+	t_trees_nw t_trees_ne t_trees_nwe t_trees_ws
+	t_trees_nws t_trees_es t_trees_nes t_trees_wes
+	t_trees_c
+	))	  
+
+(combat-map-list m_hill_combat
+	(list
+	t_hillw_ne t_hillw_nw t_hillw_es t_hillw_ws 
+	t_hillw_nwe  t_hillw_nes t_hillw_nws t_hillw_wes 
+	t_hillw_c  
+	t_hilli_ne t_hilli_nw t_hilli_es t_hilli_ws 
+	t_hilli_nwe t_hilli_nes t_hilli_nws t_hilli_wes 
+	t_hilli_c 
+	t_hillv_ne t_hillv_nw t_hillv_es t_hillv_ws 
+	t_hillv_nwe t_hillv_nes t_hillv_nws t_hillv_wes
+	))	 
+
+(combat-map-list m_mountain_combat
+	(list 
+	t_mountw_ne t_mountw_nw t_mountw_es t_mountw_ws 
+	t_mountw_nwe t_mountw_nes t_mountw_nws t_mountw_wes 
+	t_mountw_c 
+	t_mountg_ne t_mountg_nw t_mountg_es t_mountg_ws 
+	t_mountg_nwe t_mountg_nes t_mountg_nws t_mountg_wes 
+	t_mountg_c 
+	t_mountv_ne t_mountv_nw t_mountv_es t_mountv_ws  
+	t_mountv_nwe t_mountv_nes t_mountv_nws t_mountv_wes
+	))
+
+(combat-map-list m_bog_combat
+	(list
+	t_bog_nw t_bog_ne t_bog_nwe t_bog_ws 
+	t_bog_nws t_bog_es t_bog_nes t_bog_wes 
+	t_bog_c 
+	))	
+
+(combat-map-list m_forest_combat
+	(list
+	t_forestg_ne t_forestg_nw t_forestg_es t_forestg_ws
+	t_forestg_nwe t_forestg_nes t_forestg_nws t_forestg_wes
+	))
+
+(combat-map-list m_void_combat
+	(list
+	t_voids_n t_voids_w t_voids_nw t_voids_e 
+	t_voids_ne t_voids_we t_voids_nwe t_voids_s 
+	t_voids_ns t_voids_ws t_voids_nws t_voids_es 
+	t_voids_nes t_voids_wes t_voids_c 
+	t_void t_stars t_chasm
+	))
+
+(combat-map-list m_lava_combat
+	(list
+	t_lava_n t_lava_w t_lava_nw t_lava_e 
+	t_lava_ne t_lava_we t_lava_nwe t_lava_s 
+	t_lava_ns t_lava_ws t_lava_nws t_lava_es 
+	t_lava_nes t_lava_wes t_lava_c
+	t_lava
+	))
+	
+(combat-map-list m_shore_combat
+	(list
+	t_shore_n t_shore_w t_shore_nw t_shore_e
+	t_shore_ne t_shore_we t_shore_nwe t_shore_s
+	t_shore_ns t_shore_ws t_shore_nws t_shore_es
+	t_shore_nes t_shore_wes t_shore_c
+	t_shoals
+	))
