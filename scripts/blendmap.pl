@@ -45,6 +45,46 @@ EOF
 #
 #data list is a set of values (whatever the rule wants) enclosed in square brackets and separated by spaces.
 #
+# rules:
+#
+#   basic: uses new terrain based on the four adjacent cells
+#
+# basic (terrains to work on) (16 output terrains {no adjacents, N, E, N&E, etc} )
+#       (neighbours to change on) (neighbors not to change on)
+#
+#
+#   corner: takes input for adjacent and corner cells.
+#           if a corner cell and its adjacent cells match, sets both edges as
+#           per basic
+#
+# corner (terrains to work on) (16 output terrains) (terrains ok for corner)
+#        (terrains ok for edge) (terrains to not match)
+#
+#
+#   edge: takes input for adjacent and corner cells.
+#         if an adjacent cell and both corners next to it match, it is set as
+#         per basic
+#
+# edge (terrains to work on) (16 output terrains) (terrains ok for corner)
+#      (terrains ok for edge) (terrains to not match)
+#
+#
+#   replace: simple substitution
+#
+# replace (terrains to work on) (output terrain)
+#
+#
+#   random: takes a list of probabilities and output terrains
+#           generates a random number, and grabs the first terrain with 
+#           'probability' less than that number
+#
+# random (terrains to work on) [probabilities] (output terrains)
+#
+# 
+#   reset: starts working from the output generated so far
+#
+# reset
+#
 
 exit(0);
 }
