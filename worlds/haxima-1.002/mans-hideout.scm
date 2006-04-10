@@ -3,27 +3,27 @@
 ;; ----------------------------------------------------------------------------
   (kern-mk-map
     'm_mans_hideout 19 19 pal_expanded
-    (list
-      "xx xx xx x! xx xx xx rr rr rr rr rr xx xx xx xx xx xx xx "
-      "xx pp cc cc cc pp xx xx xx rr rr rr xx .T .O .O .L .S xx "
-      "xx cc ,, ,, ,, cc ,, ,, xx xx xx xx xx ,, ,, ,, ,, ,, xx "
-      "x! cc ,, ,, ,, cc x! ,, ?? ,, ?? ?? ?? ,, ,, ,, ,, ,, xx "
-      "xx cc ,, ,, ,, cc xx xx xx x! ?? xx xx ,, ,, ,, ,, ,, xx "
-      "xx pp cc cc cc pp xx xx ,, ,, ,, xx xx xx x! ,, x! xx xx "
-      "xx xx xx ,, xx xx x! cc ,, ,, ,, cc x! xx xx ,, xx rr rr "
-      "rr rr xx ,, xx xx cc pp cc ,, cc pp cc xx xx ,, xx rr rr "
-      "rr rr xx ,, xx ,, ,, cc ,, ,, ,, cc ,, ,, xx ,, xx rr rr "
-      "rr rr x! ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, x! rr rr "
-      "rr rr xx ,, xx ,, ,, cc ,, ,, ,, cc ,, ,, xx ,, xx ~~ ~~ "
-      "rr rr xx ,, xx xx cc pp cc ,, cc pp cc xx xx ,, xx ~~ rr "
-      "rr xx x! ,, x! xx x! cc ,, ,, ,, cc x! xx ~~ ,, ~~ ~~ rr "
-      "xx xx ,, ,, ,, xx xx xx ,, ,, ,, xx xx xx ~~ ee ~~ rr rr "
-      "xx ,, ,, ,, ,, ,, rr rr rr rr rr rr rr ~~ ~~ ~~ ~~ rr rr "
-      "x! ,, ,, 00 ,, ,, rr rr .. .. .. rr rr ~~ rr rr rr rr rr "
-      "xx ,, ,, ,, ,, ,, rr .. .. .. .. .. rr ~~ rr ,, ,, rr rr "
-      "xx xx xx && xx xx rr .. .. .. .. ~~ ~~ ~~ rr ,, ,, rr rr "
-      "rr rr xx xx xx rr rr rr .. .. .. ~~ rr rr rr rr rr rr rr "
-    )
+	(list
+		"xx xx xx x! xx xx xx rr rr rr rr rr xx xx xx xx xx xx xx "
+		"xx pp cc cc cc pp xx xx xx rr rr rr xx .T .O .O .L .S xx "
+		"xx cc ,, ,, ,, cc ,, ,, xx xx xx xx xx ,, ,, ,, ,, ,, xx "
+		"x! cc ,, ,, ,, cc x! ,, ?? ,, ?? ?? ?? ,, ,, ,, ,, ,, xx "
+		"xx cc ,, ,, ,, cc xx xx xx x! ?? xx xx ,, ,, ,, ,, ,, xx "
+		"xx pp cc cc cc pp xx xx ,, ,, ,, xx xx xx x! ,, x! xx xx "
+		"xx xx xx ,, xx xx x! cc ,, ,, ,, cc x! xx xx ,, xx rr rr "
+		"rr rr xx ,, xx xx cc pp cc ,, cc pp cc xx xx ,, xx rr rr "
+		"rr rr xx ,, xx ,, ,, cc ,, ,, ,, cc ,, ,, xx ,, xx rr rr "
+		"rr rr x! ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, x! rr rr "
+		"rr rr xx ,, xx ,, ,, cc ,, ,, ,, cc ,, ,, xx ,, xx ~~ ~~ "
+		"rr rr xx ,, xx xx cc pp cc ,, cc pp cc xx xx ,, xx ~~ rr "
+		"rr xx x! ,, x! xx x! cc ,, ,, ,, cc x! xx ~~ ,, ~~ ~c rr "
+		"xx xx ,, ,, ,, xx xx xx ,, ,, ,, xx xx xx ~~ ee ~~ rr rr "
+		"xx ,, ,, ,, ,, ,, rr rr rr rr rr rr rr ~~ ~~ ~8 ~c rr rr "
+		"x! ,, ,, 00 ,, ,, rr rr .. .. .. rr rr ~2 rr rr rr rr rr "
+		"xx ,, ,, ,, ,, ,, rr .. .. .. .. .. rr ~4 rr ,, ,, rr rr "
+		"xx xx xx && xx xx rr .. .. .. .. ~3 ~~ ~c rr ,, ,, rr rr "
+		"rr rr xx xx xx rr rr rr .. .. .. ~~ rr rr rr rr rr rr rr "
+	)
   )
 
 ;;----------------------------------------------------------------------------

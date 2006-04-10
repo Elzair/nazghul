@@ -13,27 +13,27 @@
 
 (mk-dungeon-room
  'p_kurpolis_entrance "Entrance to Kurpolis"
- (list
-      "rr rr rr rr xx xx x! xx xx && xx xx x! xx xx rr rr rr rr "
-      "rr .. .. .. ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx rr rr rr rr "
-      "xx xx x! xx xx ,, ,, ,, ,, ,, ,, ,, ,, ,, xx rr rr rr rr "
-      "xx xx ,, ,, ,, ,, ,, [[ @@ @@ @@ ]] ,, ,, x! rr rr rr rr "
-      "xx xx ,, xx xx ,, ,, ,, ,, ,, ,, ,, ,, ,, xx rr rr rr rr "
-      "xx xx ,, xx xx ,, ,, ,, ,, ,, ,, ,, ,, ,, xx rr rr rr rr "
-      "xx xx ,, xx xx xx xx xx xx x! xx xx xx xx xx rr bb ,, rr "
-      "xx xx ,, xx xx .K .U .R .P .O .L .I .S xx ,, bb bb bb ,, "
-      "xx xx ,, xx x! ,, ,, ,, ,, ,, ,, ,, ,, x! bb bb ,, bb ,, "
-      "xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, w+ ,, bb ,, ,, ,, "
-      "x! ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, bb ,, "
-      "xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, w+ bb bb bb bb ,, "
-      "xx xx ,, xx x! ,, ,, ,, ,, ,, ,, ,, ,, x! bb bb ,, bb rr "
-      "xx xx ,, xx xx xx xx xx xx xx xx xx xx xx xx ,, bb rr rr "
-      "xx xx ,, xx xx ,, ,, ,, ,, ,, ,, ,, ,, ,, xx rr rr rr rr "
-      "xx xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx rr rr rr rr "
-      "xx xx x! xx xx ,, ,, ,, ,, ,, ,, ,, ,, ,, xx rr rr rr rr "
-      "rr rr rr rr xx ,, ,, ,, ,, ,, ,, ,, ,, ,, xx rr rr rr rr "
-      "rr rr rr rr xx xx xx xx xx xx xx xx xx xx xx rr rr rr rr "
-  ) 
+	(list
+		"rr rr rr rr xx xx x! xx xx && xx xx x! xx xx rr rr rr rr "
+		"rr .. .. .. ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx rr rr rr rr "
+		"xx xx x! xx xx ,, ,, ,, ,, ,, ,, ,, ,, ,, xx rr rr rr rr "
+		"xx xx ,, ,, ,, ,, ,, [[ @@ @@ @@ ]] ,, ,, x! rr rr rr rr "
+		"xx xx ,, xx xx ,, ,, ,, ,, ,, ,, ,, ,, ,, xx rr rr rr rr "
+		"xx xx ,, xx xx ,, ,, ,, ,, ,, ,, ,, ,, ,, xx rr rr rr rr "
+		"xx xx ,, xx xx xx xx xx xx x! xx xx xx xx xx rr bb ,, rr "
+		"xx xx ,, xx xx .K .U .R .P .O .L .I .S xx ,, bb bb bb ,, "
+		"xx xx ,, xx x! ,, ,, ,, ,, ,, ,, ,, ,, x! bb bb ,, bb ,, "
+		"xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, w+ ,, bb ,, ,, ,, "
+		"x! ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, bb ,, "
+		"xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, w+ bb bb bb bb ,, "
+		"xx xx ,, xx x! ,, ,, ,, ,, ,, ,, ,, ,, x! bb bb ,, bb rr "
+		"xx xx ,, xx xx xx xx xx xx xx xx xx xx xx xx ,, bb rr rr "
+		"xx xx ,, xx xx ,, ,, ,, ,, ,, ,, ,, ,, ,, xx rr rr rr rr "
+		"xx xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx rr rr rr rr "
+		"xx xx x! xx xx ,, ,, ,, ,, ,, ,, ,, ,, ,, xx rr rr rr rr "
+		"rr rr rr rr xx ,, ,, ,, ,, ,, ,, ,, ,, ,, xx rr rr rr rr "
+		"rr rr rr rr xx xx xx xx xx xx xx xx xx xx xx rr rr rr rr "
+	)
  (put (mk-ladder-up 'p_shard 53 18) 9 10)
  (put (mk-door) 2 8)
  (put (mk-door) 2 12)
@@ -58,27 +58,27 @@
 
 (mk-dungeon-room
  'p_goblin_crossroads "Goblin Crossroads"
- (list
-  "rr rr rr rr rr rr rr {{ {{ ,, ,, {{ rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr rr {{ ,, {{ {{ {{ {{ {{ rr rr rr rr "
-  "rr rr rr rr rr rr rr rr {{ {{ ,, .. {{ rr {{ {{ {{ rr rr "
-  "rr rr rr rr rr rr rr rr rr {{ ,, bb .. {{ {{ {{ {{ rr rr "
-  "rr rr rr rr rr rr rr rr rr ,, {{ .. .. .. .. {{ {{ rr rr "
-  "rr rr rr rr rr rr rr rr rr rr {{ {{ {{ .. bb .. {{ {{ rr "
-  "rr rr rr rr rr rr rr rr rr rr bb {{ {{ {{ .. {{ {{ {{ rr "
-  "{{ {{ {{ rr rr rr rr rr rr rr rr {{ {{ {{ {{ {{ {{ {{ {{ "
-  ",, {{ {{ .. bb rr rr rr rr rr rr {{ {{ {{ {{ {{ ,, {{ ,, "
-  ",, {{ ,, {{ .. {{ rr rr rr rr rr {{ {{ ,, ,, ,, {{ ,, ,, "
-  ",, ,, ,, .. ,, ,, {{ rr rr rr {{ {{ {{ {{ ,, ,, ,, {{ ,, "
-  "{{ {{ {{ .. bb .. .. {{ {{ {{ {{ {{ .. {{ {{ {{ {{ {{ {{ "
-  "rr {{ {{ {{ .. .. bb .. {{ {{ {{ .. bb .. {{ {{ {{ rr rr "
-  "rr rr {{ rr rr {{ .. .. .. {{ {{ .. .. {{ {{ {{ rr rr rr "
-  "rr rr rr rr {{ {{ {{ .. .. .. .. .. {{ {{ {{ {{ rr rr rr "
-  "rr rr rr rr {{ {{ {{ {{ {{ .. bb .. {{ {{ rr rr rr rr rr "
-  "rr rr rr rr rr {{ {{ {{ {{ ,, .. .. {{ {{ {{ rr rr rr rr "
-  "rr rr rr rr rr rr rr {{ {{ .. .. {{ rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr {{ ,, .. .. rr rr rr rr rr rr rr rr "
-  )
+	(list
+		"rr rr rr rr rr rr rr {{ {{ ,, ,, {{ rr rr rr rr rr rr rr "
+		"rr rr rr rr rr rr rr rr {{ ,, {# {{ {{ {{ {{ rr rr rr rr "
+		"rr rr rr rr rr rr rr rr {{ {{ ,, {5 {{ rr {{ {{ {{ rr rr "
+		"rr rr rr rr rr rr rr rr rr {{ ,, bb {5 {{ {{ {{ {{ rr rr "
+		"rr rr rr rr rr rr rr rr rr ,, {{ {a {8 {1 {5 {{ {{ rr rr "
+		"rr rr rr rr rr rr rr rr rr rr {{ {{ {{ {a bb {d {{ {{ rr "
+		"rr rr rr rr rr rr rr rr rr rr bb {{ {{ {{ {e {{ {{ {{ rr "
+		"{{ {{ {{ rr rr rr rr rr rr rr rr {{ {{ {{ {{ {{ {{ {{ {{ "
+		",, {{ {{ {a bb rr rr rr rr rr rr {{ {{ {{ {{ {{ ,, {C ,, "
+		",, {E ,, {{ {6 {{ rr rr rr rr rr {{ {{ ,, ,, ,, {A ,, ,, "
+		",, ,, ,, {1 ,, ,, {{ rr rr rr {{ {{ {{ {% ,, ,, ,, {% ,, "
+		"{{ {{ {{ {a bb .. {5 {{ {{ {{ {{ {{ {7 {{ {{ {{ {{ {{ {{ "
+		"rr {{ {{ {{ {2 {8 bb {5 {{ {{ {{ {3 bb {d {{ {{ {{ rr rr "
+		"rr rr {{ rr rr {{ {a .. {5 {{ {{ {2 {c {{ {{ {{ rr rr rr "
+		"rr rr rr rr {{ {{ {{ {a {8 {1 {1 {4 {{ {{ {{ {{ rr rr rr "
+		"rr rr rr rr {{ {{ {{ {{ {{ {2 bb {4 {{ {{ rr rr rr rr rr "
+		"rr rr rr rr rr {{ {{ {{ {{ ,, .. {c {{ {{ {{ rr rr rr rr "
+		"rr rr rr rr rr rr rr {{ {{ {2 {4 {{ rr rr rr rr rr rr rr "
+		"rr rr rr rr rr rr rr {{ ,, .. .. rr rr rr rr rr rr rr rr "
+	)
  (put (spawn-pt 'cave-goblin-slinger) 14 11)
  (put (spawn-pt 'cave-goblin-berserker) 15 9)
  (put (spawn-pt 'forest-goblin-hunter) 15 5)
@@ -87,27 +87,27 @@
 
 (mk-dungeon-room
  'p_cave_goblin_village "Cave Goblin Village"
- (list
-  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr {{ {{ {{ {{ {{ {{ rr rr rr rr rr rr rr "
-  "rr rr rr rr rr {{ ,, ,, ,, ,, {{ {{ {{ rr {{ {{ {{ rr rr "
-  "rr rr rr rr rr {{ ,, ,, && ,, ,, bb {{ rr {{ ,, {{ {{ rr "
-  "rr rr rr rr rr {{ ,, ,, ,, ,, ,, ,, .. .. .. ,, ,, {{ rr "
-  "rr rr rr rr rr {{ .. .. ,, ,, {{ {{ ,, rr {{ ,, ,, {{ rr "
-  "rr rr rr rr rr {{ {{ {{ .. {{ bb {{ ,, rr {{ {{ {{ {{ rr "
-  "{{ {{ {{ {{ bb {{ bb {{ .. .. {{ ,, ,, rr rr {{ {{ rr rr "
-  "{{ {{ {{ {{ bb {{ {{ .. ,, ,, ,, ,, {{ rr rr rr rr rr rr "
-  ",, {{ ,, .. .. .. .. ,, .. ,, ,, ,, {{ {{ rr rr rr rr rr "
-  ",, ,, .. {{ bb {{ .. ,, ,, ,, ,, .. {{ {{ {{ rr rr rr rr "
-  "{{ {{ {{ {{ bb {{ {{ ,, ,, ,, ,, ,, .. .. {{ rr rr rr rr "
-  "rr rr rr rr rr {{ bb {{ ,, ,, ,, {{ ,, .. .. ~~ ~~ rr rr "
-  "rr rr rr rr rr {{ {{ {{ {{ ,, {{ {{ {{ .. ~~ -- -- ~~ rr "
-  "rr rr rr rr rr rr rr bb bb .. bb bb rr {{ ~~ -- -- ~~ rr "
-  "rr rr rr rr rr rr rr {{ {{ .. {{ {{ rr {{ {{ ~~ ~~ {{ rr "
-  "rr rr rr rr rr rr rr {{ {{ .. .. {{ rr rr {{ {{ {{ {{ rr "
-  "rr rr rr rr rr rr rr {{ {{ {{ .. {{ rr rr {{ {{ {{ rr rr "
-  "rr rr rr rr rr rr rr {{ {{ .. .. {{ rr rr rr rr rr rr rr "
-  )
+	(list
+		"rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
+		"rr rr rr rr rr rr {{ {{ {{ {{ {{ {{ rr rr rr rr rr rr rr "
+		"rr rr rr rr rr {{ ,, ,, ,, ,, {A {{ {{ rr {{ {{ {{ rr rr "
+		"rr rr rr rr rr {{ ,, ,, && ,, ,, bb {{ rr {{ ,, {A {{ rr "
+		"rr rr rr rr rr {{ ,, ,, ,, ,, ,, ,, {1 .. {9 ,, ,, {{ rr "
+		"rr rr rr rr rr {{ {a {8 ,, ,, {# {{ ,, rr {{ ,, ,, {{ rr "
+		"rr rr rr rr rr {{ {{ {{ {6 {{ bb {C ,, rr {{ {{ {{ {{ rr "
+		"{{ {{ {{ {{ bb {{ bb {{ {2 {5 {C ,, ,, rr rr {{ {{ rr rr "
+		"{{ {{ {{ {{ bb {{ {{ {3 ,, ,, ,, ,, {# rr rr rr rr rr rr "
+		",, {A ,, {9 .. {9 {1 ,, .. ,, ,, ,, {{ {{ rr rr rr rr rr "
+		",, ,, {c {{ bb {{ {a ,, ,, ,, ,, {4 {{ {{ {{ rr rr rr rr "
+		"{{ {{ {{ {{ bb {{ {{ ,, ,, ,, ,, ,, {1 {5 {{ rr rr rr rr "
+		"rr rr rr rr rr {{ bb {% ,, ,, ,, {# ,, .. ~C ~~ ~~ rr rr "
+		"rr rr rr rr rr {{ {{ {{ {D ,, {B {{ {{ {a ~3 -- -- ~~ rr "
+		"rr rr rr rr rr rr rr bb bb .. bb bb rr {{ ~a -- -- ~~ rr "
+		"rr rr rr rr rr rr rr {{ {{ {6 {{ {{ rr {{ {H ~a ~c {G rr "
+		"rr rr rr rr rr rr rr {{ {{ {a {5 {{ rr rr {{ {{ {{ {{ rr "
+		"rr rr rr rr rr rr rr {{ {{ {{ {6 {{ rr rr {{ {{ {{ rr rr "
+		"rr rr rr rr rr rr rr {{ {{ {3 {4 {{ rr rr rr rr rr rr rr "
+	)
  (put (spawn-pt 'cave-goblin-slinger)    5  8)
  (put (spawn-pt 'cave-goblin-slinger)    8  2)
  (put (spawn-pt 'cave-goblin-slinger)    9  3)
@@ -128,27 +128,27 @@
 
 (mk-dungeon-room
  'p_trolls_den "Troll's Den"
- (list
-  "rr rr rr rr rr rr rr {{ .. ,, ,, {{ rr rr rr rr rr rr rr "
-  "rr {{ {{ {{ rr rr rr {{ .. ,, {{ {{ rr rr rr rr rr rr rr "
-  "rr {{ {{ {{ {{ rr rr {{ .. .. ,, {{ rr rr rr rr rr rr rr "
-  "rr {{ {{ {{ {{ {{ rr rr {{ .. ,, bb rr rr rr rr rr rr rr "
-  "rr rr {{ {{ rr {{ {{ rr {{ ,, .. {{ rr rr rr rr rr rr rr "
-  "rr rr {{ rr rr rr {{ {{ {{ .. {{ {{ rr rr rr rr rr rr rr "
-  "rr rr {{ {{ rr {{ {{ rr {{ .. .. {{ rr {{ {{ rr rr rr rr "
-  "rr {{ {{ {{ .. {{ rr rr rr {{ .. .. .. .. {{ {{ {{ rr rr "
-  "rr {{ {{ .. bb .. {{ rr {{ .. .. rr {{ .. .. {{ .. .. rr "
-  "rr {{ {{ {{ .. {{ {{ {{ {{ .. rr rr rr {{ .. .. .. .. rr "
-  "rr rr {{ {{ {{ {{ rr {{ .. .. {{ rr {{ {{ .. .. .. && rr "
-  "rr rr rr {{ {{ rr rr rr .. {{ {{ {{ .. .. .. .. .. .. rr "
-  "rr rr rr {{ .. {{ rr {{ .. rr rr .. bb .. .. {{ .. .. rr "
-  "rr rr {{ bb .. .. {{ .. .. rr rr rr .. {{ {{ {{ {{ rr rr "
-  "rr {{ .. .. .. .. .. .. {{ {{ rr rr rr rr {{ {{ {{ rr rr "
-  "rr {{ .. .. .. bb {{ {{ {{ {{ rr rr rr rr rr rr rr rr rr "
-  "rr {{ {{ .. .. bb {{ {{ rr rr rr rr rr rr rr rr rr rr rr "
-  "rr rr {{ {{ {{ rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-  )
+	(list
+		"rr rr rr rr rr rr rr {{ {2 ,, ,, {{ rr rr rr rr rr rr rr "
+		"rr {{ {{ {{ rr rr rr {{ {2 ,, {B {{ rr rr rr rr rr rr rr "
+		"rr {{ {{ {{ {{ rr rr {{ {a .. ,, {A rr rr rr rr rr rr rr "
+		"rr {{ {{ {{ {{ {{ rr rr {{ {2 ,, bb rr rr rr rr rr rr rr "
+		"rr rr {{ {{ rr {{ {{ rr {{ ,, {c {{ rr rr rr rr rr rr rr "
+		"rr rr {{ rr rr rr {{ {{ {{ {6 {{ {{ rr rr rr rr rr rr rr "
+		"rr rr {{ {{ rr {{ {{ rr {{ {a {5 {{ rr {{ {{ rr rr rr rr "
+		"rr {{ {{ {{ {6 {{ rr rr rr {{ {2 {1 {8 {5 {{ {{ {{ rr rr "
+		"rr {{ {{ {b bb {d {{ rr {{ {3 .. rr {{ {a {5 {{ {3 .. rr "
+		"rr {{ {{ {{ {e {{ {{ {{ {{ {2 rr rr rr {{ {2 {1 .. .. rr "
+		"rr rr {{ {{ {{ {{ rr {{ {3 {c {{ rr {{ {{ {2 .. .. && rr "
+		"rr rr rr {{ {{ rr rr rr {4 {{ {{ {{ {3 {1 .. {8 .. .. rr "
+		"rr rr rr {{ {7 {{ rr {{ {2 rr rr {1 bb {8 {c {{ {a .. rr "
+		"rr rr {{ bb .. {5 {{ {3 {8 rr rr rr {4 {{ {{ {{ {{ rr rr "
+		"rr {{ {3 .. .. .. {9 {c {{ {{ rr rr rr rr {{ {{ {{ rr rr "
+		"rr {{ {a .. .. bb {{ {{ {{ {{ rr rr rr rr rr rr rr rr rr "
+		"rr {{ {{ {a {8 bb {{ {{ rr rr rr rr rr rr rr rr rr rr rr "
+		"rr rr {{ {{ {{ rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
+		"rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
+	)
  (put (mk-ladder-up 'p_old_mine 17 17) 3 15)
  (put (spawn-pt 'troll) 16 10)
  (put (spawn-pt 'troll-geomancer) 17 9)
@@ -161,27 +161,27 @@
 
 (mk-dungeon-room
  'p_shamans_grove "Shaman's Grove"
- (list
-  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr rr tt bb tt rr rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr tt tt tt tt tt rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr tt bb tt .. tt bb tt rr rr rr rr rr rr "
-  "rr rr rr rr rr rr tt tt .. aa .. tt tt rr rr rr rr rr rr "
-  "rr rr rr rr rr rr tt tt tt .. tt tt tt rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr tt bb tt bb tt rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr rr tt tt tt rr rr rr rr rr rr rr rr "
-  "rr rr rr tt tt tt rr rr || || || rr rr || || || rr rr rr "
-  "rr rr tt tt .. tt tt rr || || || rr || || || || || rr rr "
-  "rr tt tt .. .. .. tt bb || || || || || || || || || || rr "
-  "rr tt .. .. && .. .. tt || || || || || || tt || || || rr "
-  "rr tt tt .. .. .. tt bb || || || || || || || || || || rr "
-  "rr rr tt tt .. tt tt rr || || || rr || || || || || rr rr "
-  "rr rr rr tt tt tt rr rr || || || rr rr || || || rr rr rr "
-  "rr rr rr rr rr rr rr rr || tt || rr rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr rr tt tt tt rr rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr rr tt tt tt rr rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr rr .. .. .. rr rr rr rr rr rr rr rr "
-  )
+	(list
+		"rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
+		"rr rr rr rr rr rr rr rr t7 bb t7 rr rr rr rr rr rr rr rr "
+		"rr rr rr rr rr rr rr tb tt tt tt td rr rr rr rr rr rr rr "
+		"rr rr rr rr rr rr t7 bb te t& te bb t7 rr rr rr rr rr rr "
+		"rr rr rr rr rr rr tt t5 tB aa tD t3 tt rr rr rr rr rr rr "
+		"rr rr rr rr rr rr ta tt td tE tb tt tc rr rr rr rr rr rr "
+		"rr rr rr rr rr rr rr te bb t7 bb te rr rr rr rr rr rr rr "
+		"rr rr rr rr rr rr rr rr t3 tt t5 rr rr rr rr rr rr rr rr "
+		"rr rr rr t3 tt t5 rr rr || || || rr rr |# || |% rr rr rr "
+		"rr rr t3 tc t& ta t5 rr || || || rr |# || || || |% rr rr "
+		"rr t3 tc t# .. t% te bb || || || || || || || || || |% rr "
+		"rr tt tB .. && .. tD tb || || || || || || tt || || || rr "
+		"rr ta t5 tA .. tC t7 bb || || || || || || || || || |C rr "
+		"rr rr ta t5 tE t3 tc rr || || || rr |A || || || |C rr rr "
+		"rr rr rr ta tt tc rr rr || || || rr rr |A || |C rr rr rr "
+		"rr rr rr rr rr rr rr rr || tt || rr rr rr rr rr rr rr rr "
+		"rr rr rr rr rr rr rr rr tt tt tt rr rr rr rr rr rr rr rr "
+		"rr rr rr rr rr rr rr rr ta tt tc rr rr rr rr rr rr rr rr "
+		"rr rr rr rr rr rr rr rr .. .. .. rr rr rr rr rr rr rr rr "
+	)
  (put (mk-ladder-down 'p_dank_cave 9 1) 14 11)
  (put (spawn-pt 'forest-goblin-shaman) 9 3)
  (put (spawn-pt 'forest-goblin-hunter) 3 11)
@@ -191,27 +191,27 @@
 
 (mk-dungeon-room
  'p_watchpoint  "Watchpoint"
- (list
-  "rr rr rr rr rr rr rr {{ {{ ,, ,, {{ rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr {{ ,, ,, .. {{ rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr bb {{ ,, .. ,, .. {{ rr rr rr rr rr rr "
-  "rr rr rr rr rr rr {{ {{ ,, .. ,, bb {{ rr rr rr rr rr rr "
-  "rr rr rr rr rr bb {{ {{ .. ,, ,, .. {{ rr rr rr rr rr rr "
-  "rr rr rr rr rr {{ {{ {{ ,, .. ,, {{ {{ {{ rr rr rr rr rr "
-  "rr rr rr rr bb {{ {{ {{ oo ee oo {{ ~~ -- rr rr rr rr rr "
-  "rr rr rr rr bb bb ~~ ~~ ~~ ee ee ~~ ~~ _! rr rr rr rr rr "
-  "rr rr rr -- -- ~~ ~~ {{ oo ee ~~ {{ ~~ -- rr rr rr rr rr "
-  "rr rr rr _! -- -- {{ {{ {{ ,, {{ {{ {{ {{ {{ rr rr rr rr "
-  "rr rr rr -- -- {{ {{ bb ,, ,, ,, bb {{ {{ {{ rr rr rr rr "
-  "rr rr rr rr {{ {{ x. x. w+ d, w+ x. x. {{ {{ rr rr rr rr "
-  "rr rr rr rr {{ {{ x. .. ,, ,, ,, ,, rr .. {{ rr rr rr rr "
-  "rr rr rr rr rr {{ x. ,, ,, ,, ,, ,, x. {{ {{ rr rr rr rr "
-  "rr rr rr rr {{ {{ x. ,, ,, ,, ,, ,, x. {{ {{ rr rr rr rr "
-  "rr rr rr rr {{ {{ bb ,, ,, ,, ,, .. x. {{ rr rr rr rr rr "
-  "rr rr rr rr rr {{ x. ,, ,, ,, .. bb x. rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr x. x. && x. x. x. rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-  )
+	(list
+		"rr rr rr rr rr rr rr {{ {C ,, ,, {{ rr rr rr rr rr rr rr "
+		"rr rr rr rr rr rr rr {{ ,, ,, {4 {{ rr rr rr rr rr rr rr "
+		"rr rr rr rr rr rr bb {{ ,, .. ,, {5 {{ rr rr rr rr rr rr "
+		"rr rr rr rr rr rr {{ {{ ,, .. ,, bb {{ rr rr rr rr rr rr "
+		"rr rr rr rr rr bb {{ {{ {2 ,, ,, {c {{ rr rr rr rr rr rr "
+		"rr rr rr rr rr {{ {{ {{ ,, .. ,, {{ {{ {{ rr rr rr rr rr "
+		"rr rr rr rr bb {A {{ {C oo ee oo {{ ~~ -- rr rr rr rr rr "
+		"rr rr rr rr bb bb ~1 ~9 ~~ ee ee ~9 ~~ _! rr rr rr rr rr "
+		"rr rr rr -- -- ~~ ~c {& oo ee ~c {{ ~~ -- rr rr rr rr rr "
+		"rr rr rr _! -- -c {G {{ {{ ,, {{ {{ {{ {{ {{ rr rr rr rr "
+		"rr rr rr -- -- {G {{ bb ,, ,, ,, bb {{ {{ {{ rr rr rr rr "
+		"rr rr rr rr {{ {{ x. x. w+ d, w+ x. x. {{ {{ rr rr rr rr "
+		"rr rr rr rr {{ {{ x. .. ,, ,, ,, ,, rr {d {{ rr rr rr rr "
+		"rr rr rr rr rr {{ x. ,, ,, ,, ,, ,, x. {{ {{ rr rr rr rr "
+		"rr rr rr rr {{ {{ x. ,, ,, ,, ,, ,, x. {{ {{ rr rr rr rr "
+		"rr rr rr rr {{ {{ bb ,, ,, ,, ,, .. x. {{ rr rr rr rr rr "
+		"rr rr rr rr rr {{ x. ,, ,, ,, .. bb x. rr rr rr rr rr rr "
+		"rr rr rr rr rr rr rr x. x. && x. x. x. rr rr rr rr rr rr "
+		"rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
+	)
  (put (mk-ladder-down 'p_paladins_hold 3 9) 9 14)
  (put (guard-pt 'halberdier) 8 12)
  (put (guard-pt 'crossbowman) 10 12)

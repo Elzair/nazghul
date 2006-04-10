@@ -1,27 +1,27 @@
 ;; Aka, reagent cave -- generate rare reagents here
 (mk-dungeon-room
  'p_dank_cave "Dank Cave"
- (list 
-  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr rr .. .. .. rr rr rr rr rr rr rr rr "
-  "rr rr rr rr {{ rr rr rr .. .. .. rr rr rr {{ rr rr rr rr "
-  "rr rr rr {{ {{ {{ rr {{ {{ .. {{ {{ rr {{ {{ {{ rr rr rr "
-  "rr rr {{ {{ %% {{ {{ {{ {{ {{ {{ {{ {{ {{ .! {{ {{ rr rr "
-  "rr {{ {{ %% .! %% %% {{ {{ rr {{ {{ %% %% %% %% {{ {{ rr "
-  "rr {{ {{ %% %% %% {{ {{ rr rr rr {{ {{ %% %% %% {{ {{ rr "
-  "rr rr {{ {{ %% {{ {{ {{ {{ rr {{ {{ {{ {{ %% {{ {{ rr rr "
-  "rr rr rr {{ {{ {{ rr {{ {{ {{ {{ {{ rr {{ {{ {{ rr rr rr "
-  "rr rr rr rr {{ rr rr rr {{ {{ {{ rr rr rr {{ rr rr rr rr "
-  "rr rr rr {{ {{ {{ rr {{ {{ {{ {{ {{ rr {{ {{ {{ rr rr rr "
-  "rr rr {{ {{ %% {{ {{ {{ {{ rr {{ {{ {{ {{ %% {{ {{ rr rr "
-  "rr {{ {{ %% %% %% {{ {{ rr rr rr {{ {{ %% %% %% {{ {{ rr "
-  "rr {{ {{ %% %% .! %% {{ {{ rr {{ {{ %% %% %% %% {{ {{ rr "
-  "rr rr {{ {{ %% %% %% %% {{ {{ {{ %% %% .! %% {{ {{ rr rr "
-  "rr rr rr {{ {{ %% %% {{ {{ rr {{ {{ %% %% {{ {{ rr rr rr "
-  "rr rr rr rr {{ {{ {{ {{ rr rr rr {{ {{ {{ {{ rr rr rr rr "
-  "rr rr rr rr rr {{ {{ rr rr rr rr rr {{ {{ rr rr rr rr rr "
-  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-  )
+	(list
+		"rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
+		"rr rr rr rr rr rr rr rr .. .. .. rr rr rr rr rr rr rr rr "
+		"rr rr rr rr {{ rr rr rr {8 .. {8 rr rr rr {{ rr rr rr rr "
+		"rr rr rr {{ {{ {{ rr {{ {{ {e {{ {{ rr {{ {{ {{ rr rr rr "
+		"rr rr {{ {C %f {A {{ {{ {{ {{ {{ {{ {{ {C .! {A {{ rr rr "
+		"rr {{ {{ %7 .! %3 %d {{ {{ rr {{ {{ %b %% %% %5 {{ {{ rr "
+		"rr {{ {{ %a %% %c {# {{ rr rr rr {{ {% %a %% %c {{ {{ rr "
+		"rr rr {{ {% %e {# {{ {{ {{ rr {{ {{ {{ {% %e {# {{ rr rr "
+		"rr rr rr {{ {{ {{ rr {{ {{ {{ {{ {{ rr {{ {{ {{ rr rr rr "
+		"rr rr rr rr {{ rr rr rr {{ {{ {{ rr rr rr {{ rr rr rr rr "
+		"rr rr rr {{ {{ {{ rr {{ {{ {{ {{ {{ rr {{ {{ {{ rr rr rr "
+		"rr rr {{ {C %7 {A {{ {{ {{ rr {{ {{ {{ {C %7 {A {{ rr rr "
+		"rr {{ {{ %3 %% %d {A {{ rr rr rr {{ {C %3 %% %5 {{ {{ rr "
+		"rr {{ {{ %a %% .! %7 {A {{ rr {{ {C %3 %% %% %c {{ {{ rr "
+		"rr rr {{ {% %a %% %% %d {{ {{ {{ %b %% .! %e {# {{ rr rr "
+		"rr rr rr {{ {% %a %c {# {{ rr {{ {% %a %d {# {{ rr rr rr "
+		"rr rr rr rr {{ {{ {{ {{ rr rr rr {{ {{ {{ {{ rr rr rr rr "
+		"rr rr rr rr rr {{ {{ rr rr rr rr rr {{ {{ rr rr rr rr rr "
+		"rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
+	)
 
  ;; reagents
  (put (custom-pt 'grow-trig 'mandrake "1d5") 14 14)

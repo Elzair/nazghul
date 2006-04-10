@@ -3,27 +3,29 @@
 ;; ----------------------------------------------------------------------------
 (kern-mk-map
  'm_angriss_lair 19 19 pal_expanded
- (list
-  "|| || || || || || || || tt tt tt || || || tt || || || || "
-  "|| || || || || || || || || tt || || || tt tt tt || || || "
-  "|| || || || || || bb bb bb bb || || || bb .. bb || || || "
-  "|| || || || bb bb bb tt tt bb bb || bb .. .. .. bb || || "
-  "|| || || bb .. .. tt || || tt bb .. .. .. .. .. bb || || "
-  "|| || || bb .. .. tt || || tt .. .. .. .. .. bb || || || "
-  "|| || || bb bb bb .. .. .. .. .. .. .. bb bb || || || || "
-  "|| || || || bb bb .. bb .. .. .. tt tt tt bb || || || || "
-  "tt || || || bb || || || bb .. tt || || tt tt bb || || tt "
-  "tt tt || || bb || .. || bb .. .. || || tt .. bb || tt tt "
-  "tt || || || bb || || || bb bb .. .. .. .. bb || || || tt "
-  "|| || || || bb bb bb bb .. .. .. bb .. bb bb bb || || || "
-  "|| || || bb .. .. tt tt .. .. .. bb .. || || bb || || || "
-  "|| || || bb .. tt || || tt .. bb .. .. .. || bb || || || "
-  "|| || || bb .. tt || || .. .. bb .. .. .. .. bb || || || "
-  "|| || || || bb .. .. .. .. bb || bb bb .. bb || || || || "
-  "|| || || || || bb .. bb bb || || || tt tt tt || || || || "
-  "|| || || || || tt tt tt || tt || || || tt || || || || || "
-  "|| || || || || || tt || tt tt tt || || || || || || || || "
-  )
+	(list
+		"|| || || || || || || || tt tt tt || || || tt || || || || "
+		"|| || || || || || || || || tt || || || tt tt tt || || || "
+		"|| || || || || || bb bb bb bb || || || bb .. bb || || || "
+		"|| || || || bb bb bb t3 t5 bb bb || bb .. .. .. bb || || "
+		"|| || || bb .. .. t3 || || t5 bb .. .. .. .. .. bb || || "
+		"|| || || bb .. .. ta || || tc .. .. .. .. .. bb || || || "
+		"|| || || bb bb bb .. .. .. .. .. .. .. bb bb || || || || "
+		"|| || || || bb bb .. bb .. .. tC t3 tt t5 bb || || || || "
+		"tt || || || bb || || || bb .. tb || || tt td bb || || tt "
+		"tt tt || || bb || tF || bb .. t% |A || tc t# bb || tt tt "
+		"tt || || || bb || || || bb bb .. .. .. .. bb || || || tt "
+		"|| || || || bb bb bb bb .. .. .. bb .. bb bb bb || || || "
+		"|| || || bb .. tC t3 t5 tA .. .. bb .. || || bb || || || "
+		"|| || || bb .. t3 || || td .. bb .. .. t% || bb || || || "
+		"|| || || bb .. ta || |C t# .. bb .. .. .. .. bb || || || "
+		"|| || || || bb .. .. .. .. bb || bb bb .. bb || || || || "
+		"|| || || || || bb .. bb bb || || || tt tt tt || || || || "
+		"|| || || || || tt tt tt || tt || || || tt || || || || || "
+		"|| || || || || || tt || tt tt tt || || || || || || || || "
+	)
+	
+
  )
 ;;----------------------------------------------------------------------------
 ;; Place
@@ -153,27 +155,28 @@
 
 (mk-dungeon-room
  'p_spider_cave "Spider Cave"
- (list
-  "rr rr rr rr rr rr rr .. .. .. .. .. rr rr rr rr rr rr rr "
-  "rr bb .. .. .. .. .. .. .. .. .. .. rr rr bb .. bb bb rr "
-  "rr rr .. .. .. .. .. .. .. .. .. rr rr bb .. .. .. bb rr "
-  "rr rr rr .. rr .. .. .. .. tt .. rr .. .. .. .! .. bb rr "
-  "rr rr rr rr rr rr .. .. tt tt tt rr .. .. .! .! .! .. rr "
-  "rr rr rr bb rr tt tt tt tt tt tt rr bb .. .. .! .. .. rr "
-  "rr rr .. .. tt tt tt tt tt tt .. rr rr bb bb .. .. bb rr "
-  "rr .. .. tt tt tt tt tt tt tt .. .. rr rr rr rr rr rr rr "
-  "rr .. tt tt tt .! .! .! tt tt tt .. .. .. bb .. .. .. rr "
-  "rr .. tt tt tt .! .! .! tt tt tt tt .. .. .. .. .. rr rr "
-  "rr .. tt tt tt .! .! .! tt tt tt .. .. .. bb .. .. .. rr "
-  "rr .. tt tt tt tt tt tt tt tt rr .. .. .. .. bb .. .. rr "
-  "rr .. .. tt tt tt bb tt tt rr rr bb .. rr rr .. .. rr rr "
-  "rr .. .. .. tt rr rr rr rr rr rr rr rr rr bb rr .. .. rr "
-  "rr bb .. rr .. .. rr rr .. .. bb .. .. bb .. .. .. .. rr "
-  "rr rr bb .. .. .. .. .. .. .. .. bb .. .. .. .. .. .. rr "
-  "rr rr .. .. .. bb .. .. .. .. bb .. .. .. .. bb .. bb rr "
-  "rr .. .. .. .. .. .. .. rr rr rr rr rr .. .. .. .. rr rr "
-  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-  )
+	(list
+		"rr rr rr rr rr rr rr .. .. .. .. .. rr rr rr rr rr rr rr "
+		"rr bb .. .. .. .. .. .. .. .. .. .. rr rr bb .. bb bb rr "
+		"rr rr .. .. .. .. .. .. .. .. .. rr rr bb .. .. .. bb rr "
+		"rr rr rr .. rr .. .. .. tC t7 tA rr .. .. .. .! .. bb rr "
+		"rr rr rr rr rr rr .. tC t3 tt t5 rr .. .. .! .! .! .. rr "
+		"rr rr rr bb rr t3 tt tt tt tt tc rr bb .. .. .! .. .. rr "
+		"rr rr .. tC t3 tt tt tt tt tt t# rr rr bb bb .. .. bb rr "
+		"rr .. tC t3 tt tt tt tt tt tt tA .. rr rr rr rr rr rr rr "
+		"rr .. t3 tt tt .! .! .! tt tt t5 tA .. .. bb .. .. .. rr "
+		"rr .. tt tt tt .! .! .! tt tt tt td .. .. .. .. .. rr rr "
+		"rr .. tt tt tt .! .! .! tt tt tc t# .. .. bb .. .. .. rr "
+		"rr .. ta tt tt tt tt tt tt tc rr .. .. .. .. bb .. .. rr "
+		"rr .. t% ta tt tc bb ta tc rr rr bb .. rr rr .. .. rr rr "
+		"rr .. .. t% te rr rr rr rr rr rr rr rr rr bb rr .. .. rr "
+		"rr bb .. rr .. .. rr rr .. .. bb .. .. bb .. .. .. .. rr "
+		"rr rr bb .. .. .. .. .. .. .. .. bb .. .. .. .. .. .. rr "
+		"rr rr .. .. .. bb .. .. .. .. bb .. .. .. .. bb .. bb rr "
+		"rr .. .. .. .. .. .. .. rr rr rr rr rr .. .. .. .. rr rr "
+		"rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
+	)
+	
  (put (mk-ladder-up 'p_angriss_lair 6 9) 6 9)
  (put (mk-ladder-up 'p_angriss_lair 15 4) 15 4)
 
