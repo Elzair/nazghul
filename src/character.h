@@ -90,6 +90,12 @@ class Character:public Being {
 	virtual unsigned char getStrength();
 	virtual unsigned char getIntelligence();
 	virtual unsigned char getDexterity();
+	virtual unsigned char getBaseStrength();
+	virtual unsigned char getBaseIntelligence();
+	virtual unsigned char getBaseDexterity();
+	virtual void setStrength(unsigned char newstat);
+	virtual void setIntelligence(unsigned char newstat);
+	virtual void setDexterity(unsigned char newstat);
 	int getLevel();
         void setLevel(int level);
         virtual struct mmode *getMovementMode();

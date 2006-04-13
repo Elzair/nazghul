@@ -6506,6 +6506,88 @@ KERN_API_CALL(kern_char_get_strength)
         return scm_mk_integer(sc, character->getStrength());
 }
 
+KERN_API_CALL(kern_char_get_dexterity)
+{
+        class Character *character;
+
+        /* unpack the character */
+        character = (class Character*)unpack_obj(sc, &args, "kern-char-get-dexterity");
+        if (!character)
+                return sc->NIL;
+
+        return scm_mk_integer(sc, character->getDexterity());
+}
+
+KERN_API_CALL(kern_char_get_intelligence)
+{
+        class Character *character;
+
+        /* unpack the character */
+        character = (class Character*)unpack_obj(sc, &args, "kern-char-get-intelligence");
+        if (!character)
+                return sc->NIL;
+
+        return scm_mk_integer(sc, character->getIntelligence());
+
+}
+
+KERN_API_CALL(kern_char_set_strength)
+{
+        class Character *character;
+        int val = 0;
+
+        /* unpack the character */
+        character = (class Character*)unpack_obj(sc, &args, "kern-char-set-strength");
+        if (!character)
+                return sc->NIL;
+
+        if (unpack(sc, &args, "d", &val)) {
+                rt_err("kern-char-set-strength: bad args");
+                return sc->NIL;
+        }
+
+	character->setStrength(val);
+        return scm_mk_ptr(sc, character);
+}
+
+KERN_API_CALL(kern_char_set_dexterity)
+{
+        class Character *character;
+        int val = 0;
+
+        /* unpack the character */
+        character = (class Character*)unpack_obj(sc, &args, "kern-char-set-dexterity");
+        if (!character)
+                return sc->NIL;
+
+        if (unpack(sc, &args, "d", &val)) {
+                rt_err("kern-char-set-dexterity: bad args");
+                return sc->NIL;
+        }
+
+	character->setDexterity(val);
+        return scm_mk_ptr(sc, character);
+}
+
+KERN_API_CALL(kern_char_set_intelligence)
+{
+        class Character *character;
+        int val = 0;
+
+        /* unpack the character */
+        character = (class Character*)unpack_obj(sc, &args, "kern-char-set-intelligence");
+        if (!character)
+                return sc->NIL;
+
+        if (unpack(sc, &args, "d", &val)) {
+                rt_err("kern-char-set-intelligence: bad args");
+                return sc->NIL;
+        }
+
+	character->setIntelligence(val);
+        return scm_mk_ptr(sc, character);
+}
+
 KERN_API_CALL(kern_obj_get_ap)
 {
         class Object *object;
@@ -7321,6 +7403,11 @@ scheme *kern_init(void)
                  kern_char_get_readied_weapons);
         API_DECL(sc, "kern-char-get-species", kern_char_get_species);
         API_DECL(sc, "kern-char-get-strength", kern_char_get_strength);
+        API_DECL(sc, "kern-char-get-dexterity", kern_char_get_dexterity);
+        API_DECL(sc, "kern-char-get-intelligence", kern_char_get_intelligence);
+        API_DECL(sc, "kern-char-set-strength", kern_char_set_strength);
+        API_DECL(sc, "kern-char-set-dexterity", kern_char_set_dexterity);
+        API_DECL(sc, "kern-char-set-intelligence", kern_char_set_intelligence);
         API_DECL(sc, "kern-char-get-weapons", kern_char_get_weapons);
         API_DECL(sc, "kern-char-is-asleep?", kern_char_is_asleep);
         API_DECL(sc, "kern-char-join-player", kern_char_join_player);

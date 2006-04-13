@@ -1448,6 +1448,30 @@ unsigned char Character::getDexterity() {
         return (species->dex + dex);
 }
 
+unsigned char Character::getBaseStrength() {
+        return (str);
+}
+
+unsigned char Character::getBaseIntelligence() {
+        return (intl);
+}
+
+unsigned char Character::getBaseDexterity() {
+        return (dex);
+}
+
+void Character::setStrength(unsigned char newstat) {
+        str = newstat;
+}
+
+void Character::setIntelligence(unsigned char newstat) {
+       intl = newstat;
+}
+
+void Character::setDexterity(unsigned char newstat) {
+	dex = newstat;
+}
+
 int Character::getLevel() {
         return lvl;
 }
