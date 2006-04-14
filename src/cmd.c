@@ -2827,7 +2827,7 @@ static int ui_getline_handler(struct KeyHandler *kh, int key, int keymod)
 		return 0;
 	}
 
-	if (isprint(key) && data->room) {
+	if (isprintable(key) && data->room) {
 		cmdwin_print("%c", key);
 		*data->ptr++ = key;
 		data->room--;
