@@ -444,7 +444,7 @@
 ;; kraken will destroy the deck.
 (define (kraken-ai kchar)
   ;;(display "kraken-ai:") (dump-char kchar)
-  (let ((foes (all-hostiles kchar)))
+  (let ((foes (all-visible-hostiles kchar)))
     (if (null? foes)
         #f
         (let* ((kfoe (nearest-obj kchar foes))
