@@ -443,24 +443,23 @@
 ;; attempt a directional move toward them. If the move is blocked by deck, the
 ;; kraken will destroy the deck.
 (define (kraken-ai kchar)
-  ;;(display "kraken-ai:") (dump-char kchar)
-  (let ((foes (all-visible-hostiles kchar)))
-    (if (null? foes)
-        #f
-        (let* ((kfoe (nearest-obj kchar foes))
-              (dest (kern-obj-get-location kfoe)))
-          (if (pathfind kchar dest)
-              #t
-              (let* ((cloc (kern-obj-get-location kchar))
-                     (vect (loc-to-delta (loc-diff dest cloc))))
-                ;;(println " vect:" vect)
-                (if (kern-obj-move kchar (loc-x vect) (loc-y vect))
-                    #t
-                    (let ((dest (loc-add cloc vect)))
-                      ;;(println "  dest:" dest)
-                      (and (is-deck? (kern-place-get-terrain dest))
-                           (can-use-ability? chomp-deck kchar)
-                           (use-ability chomp-deck kchar dest))))))))))
+	(let ((foes (all-visible-hostiles kchar)))
+		(if (null? foes)
+			#t
+			(let* ((kfoe (nearest-obj kchar foes))
+					(dest (kern-obj-get-location kfoe)))
+				(if (pathfind kchar dest)
+					#t
+					(if (not (null? (get-hostiles-in-range kchar 1)))
+						#t
+						(let* ((cloc (kern-obj-get-location kchar))
+								(vect (loc-to-delta (loc-diff dest cloc)))
+								(dest (loc-add cloc vect)))
+							(if (passable? dest kchar)
+								(kern-obj-move kchar (loc-x vect) (loc-y vect))
+								(and (is-deck? (kern-place-get-terrain dest))
+									(can-use-ability? chomp-deck kchar)
+									(use-ability chomp-deck kchar dest))))))))))
 
 ;; sea-serpent-ai -- spit fireballs every once in a while
 (define (sea-serpent-ai kchar)
