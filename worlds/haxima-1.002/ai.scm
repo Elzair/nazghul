@@ -445,7 +445,7 @@
 (define (kraken-ai kchar)
 	(let ((foes (all-visible-hostiles kchar)))
 		(if (null? foes)
-			#t
+			#f
 			(let* ((kfoe (nearest-obj kchar foes))
 					(dest (kern-obj-get-location kfoe)))
 				(if (pathfind kchar dest)
