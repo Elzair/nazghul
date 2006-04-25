@@ -24,7 +24,7 @@
 
 &deepwater ( __ _* _0 &deepwaterblend )
 
-&water ( &shallow &nwater &deepwater )
+&water ( &shallow &nwater &deepwater b~ )
 
 &hillsblend ( &nc {1 {2 {3 {4 {5 {6 {7 {8 {9 {a {b {c {d {e {f )
 
@@ -113,7 +113,7 @@ corner ( {{ ) ( &waterhillblend ) ( &water ) ( &water ) ( &land &manmade &bridge
 corner ( ^^ ) ( &watermountblend ) ( &water ) ( &water ) ( &land &manmade &bridge }{ )
 
 #basic water rounding on rivers
-basic ( ~x ) ( &shallowblend ) ( &land ) ( &water &bridge &manmade }{ )
+basic ( ~x ) ( &shallowblend ) ( &land &objects rr ) ( &water &bridge &manmade }{ )
 
 reset
 

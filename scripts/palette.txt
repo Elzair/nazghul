@@ -32,6 +32,7 @@ tt #66FF66
 !_ #DD0000
 rr #EEEEEE
 bb #CCCCCC
+b~ #CCCCEE
 pp #F0F0F0
 ,, #AA8866
 cc #8866AA
