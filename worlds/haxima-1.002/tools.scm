@@ -29,9 +29,9 @@
 (define (pick-lock-bonus kuser)
   (if (eqv? (kern-char-get-occ kuser)
             oc_wrogue)
-      (kern-char-get-level kuser)
-      0
-      ))
+      (floor (+ (kern-char-get-level kuser) (/ (kern-char-get-dexterity kuser) 3)))
+      (floor (/ (+ (kern-char-get-level kuser) (kern-char-get-dexterity kuser)) 4)))
+      )
 (mk-reusable-item 't_picklock "picklock" s_picklock 2
                 (lambda (kobj kuser)
                   (let ((ktarg (ui-target (kern-obj-get-location kuser)
@@ -41,13 +41,14 @@
                         (begin
                           (kern-log-msg "No effect!")
                           nil)
-                        (let ((roll (kern-dice-roll "1d20")))
-                          (println "rolled " roll)
+                        (let ((roll (kern-dice-roll "1d20"))
+							  (bonus (kern-dice-roll (string-append "1d" (number->string (pick-lock-bonus kuser)))))
+								)
+                          (println "rolled " roll " + " bonus)
                           (if (= roll 20)
                               (pick-lock-ok kuser ktarg)
-                              (if (> (+ roll 
-                                        (pick-lock-bonus kuser))
-                                     12)
+                              (if (> (+ roll bonus ) 
+                                     15)
                                   (pick-lock-ok kuser ktarg)
                                   (pick-lock-failed kuser kobj)
                                   )))))))
