@@ -6531,6 +6531,43 @@ KERN_API_CALL(kern_char_get_intelligence)
 
 }
 
+KERN_API_CALL(kern_char_get_base_strength)
+{
+        class Character *character;
+
+        /* unpack the character */
+        character = (class Character*)unpack_obj(sc, &args, "kern-char-get-strength");
+        if (!character)
+                return sc->NIL;
+
+        return scm_mk_integer(sc, character->getBaseStrength());
+}
+
+KERN_API_CALL(kern_char_get_base_dexterity)
+{
+        class Character *character;
+
+        /* unpack the character */
+        character = (class Character*)unpack_obj(sc, &args, "kern-char-get-dexterity");
+        if (!character)
+                return sc->NIL;
+
+        return scm_mk_integer(sc, character->getBaseDexterity());
+}
+
+KERN_API_CALL(kern_char_get_base_intelligence)
+{
+        class Character *character;
+
+        /* unpack the character */
+        character = (class Character*)unpack_obj(sc, &args, "kern-char-get-intelligence");
+        if (!character)
+                return sc->NIL;
+
+        return scm_mk_integer(sc, character->getBaseIntelligence());
+
+}
+
 KERN_API_CALL(kern_char_set_strength)
 {
         class Character *character;
@@ -7405,6 +7442,9 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-char-get-strength", kern_char_get_strength);
         API_DECL(sc, "kern-char-get-dexterity", kern_char_get_dexterity);
         API_DECL(sc, "kern-char-get-intelligence", kern_char_get_intelligence);
+        API_DECL(sc, "kern-char-get-base-strength", kern_char_get_base_strength);
+        API_DECL(sc, "kern-char-get-base-dexterity", kern_char_get_base_dexterity);
+        API_DECL(sc, "kern-char-get-base-intelligence", kern_char_get_base_intelligence);
         API_DECL(sc, "kern-char-set-strength", kern_char_set_strength);
         API_DECL(sc, "kern-char-set-dexterity", kern_char_set_dexterity);
         API_DECL(sc, "kern-char-set-intelligence", kern_char_set_intelligence);
