@@ -23,9 +23,9 @@
 ;; 170 NSEW facing
 ;;----------------------------------------------------------------------------
 
-(kern-mk-sprite 's_deep          ss_u4_shapes 1  0 #t 0 )
-(kern-mk-sprite 's_shallow       ss_u4_shapes 1  1 #t 0 )
-(kern-mk-sprite 's_shoals        ss_u4_shapes 1  2 #t 0 )
+;(kern-mk-sprite 's_deep          ss_u4_shapes 1  0 #t 0 )
+;(kern-mk-sprite 's_shallow       ss_u4_shapes 1  1 #t 0 )
+;(kern-mk-sprite 's_shoals        ss_u4_shapes 1  2 #t 0 )
 (kern-mk-sprite 's_bog           ss_u4_shapes 1  3 #f 0 )
 (kern-mk-sprite 's_grass         ss_u4_shapes 1  4 #f 0 )
 ;(kern-mk-sprite 's_trees         ss_u4_shapes 1  5 #f 0 )
@@ -56,7 +56,7 @@
 (kern-mk-sprite 's_wall_d      ss_u4_shapes 1 52 #f 0 )
 (kern-mk-sprite 's_mast        ss_u4_shapes 1 53 #f 0 )
 (kern-mk-sprite 's_ships_wheel ss_u4_shapes 1 54 #f 0 )
-(kern-mk-sprite 's_boulder     ss_u4_shapes 1 55 #f 0 )
+;(kern-mk-sprite 's_boulder     ss_u4_shapes 1 55 #f 0 )
 (kern-mk-sprite 's_asleep      ss_u4_shapes 1 56 #f 0 )
 (kern-mk-sprite 's_wall_rock   ss_u4_shapes 1 57 #f 0 )
 (kern-mk-sprite 's_door_locked ss_u4_shapes 1 58 #f 0 )
@@ -345,6 +345,9 @@
 (kern-mk-sprite 's_bed_sign ss_signs       1 4 #f 0)
 (kern-mk-sprite 's_potion_sign ss_signs    1 5 #f 0)
 (kern-mk-sprite 's_mushroom_sign ss_signs  1 6 #f 0)
+(kern-mk-sprite 's_axe_sign ss_signs  1 8 #f 0)
+(kern-mk-sprite 's_key_sign ss_signs  1 9 #f 0)
+(kern-mk-sprite 's_book_sign ss_signs  1 10 #f 0)
 
 (define (mk-sprite tag offset)
   (kern-mk-sprite tag ss_runestones 1 offset #f 0))
@@ -419,6 +422,8 @@
 (kern-mk-sprite 's_statue        ss_overlays 1  25 #f 0 )
 (kern-mk-sprite 's_secret_rock   ss_overlays 1  26 #f 0 )
 (kern-mk-sprite 's_blank   		 ss_overlays 1  27 #f 0 )
+(kern-mk-sprite 's_boulder_over  ss_overlays 1  68 #f 0 )
+(kern-mk-sprite 's_boulder       ss_overlays 1  69 #f 0 )
 
 ;;----------------------------------------------------------------------------
 ;; Terrain overlay pieces
@@ -478,9 +483,11 @@
 (mk-sprite 's_forest_se 66)
 (mk-sprite 's_forest_sw 67)
 
+
 (kern-mk-sprite 's_deep          ss_overlays 1  4 #t 0 )
 (kern-mk-sprite 's_shallow       ss_overlays 1  5 #t 0 )
 (kern-mk-sprite 's_shoals        ss_overlays 1  6 #t 0 )
+
 
 ;; convenient alia
 (define s_shepherd s_companion_shepherd)

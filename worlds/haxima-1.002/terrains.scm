@@ -187,6 +187,10 @@
    (list 't_alchemy_sign      "an alchemy sign" pclass-wall s_potion_sign    0 0 nil) 
    (list 't_magic_sign      "a reagent shop sign" pclass-wall s_mushroom_sign    0 0 nil) 
 
+   (list 't_str_sign      "a sign of strength" pclass-wall s_axe_sign    1 1024 nil) 
+   (list 't_dex_sign      "a sign of dexterity" pclass-wall s_key_sign    1 1024 nil) 
+   (list 't_wis_sign      "a sign of wisdom" pclass-wall s_book_sign    1 1024 nil) 
+
    ))
 
 (map (lambda (terrain) (apply kern-mk-terrain terrain)) terrains)

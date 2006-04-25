@@ -51,7 +51,8 @@
     (list  "pp"   t_pillar)             ;; "pillar"
     (list  "~p"   t_false_pillar)
     (list  "bb"   t_boulder)            ;; "boulder"
-
+    (list  "b~"   t_water_rocks)        ;; "boulder" in water
+	
     (list  "rr"   t_wall_rock)          ;; "rock wall"
     (list  "r."   t_wall_rock_v)        ;; "rock wall"  (non-LOS-blocking)
     (list  "~r"   t_fake_wall_rock)     ;; "rock wall"  (fake)
@@ -149,6 +150,9 @@
     (list "sI" t_inn_sign)
     (list "sP" t_alchemy_sign)
     (list "sR" t_magic_sign)
+    (list "sS" t_str_sign)
+    (list "sD" t_dex_sign)
+    (list "sW" t_wis_sign)
 	
 	;; blended terrains (mostly terrain + corner of something else)
 	

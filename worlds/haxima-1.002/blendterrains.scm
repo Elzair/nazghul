@@ -43,6 +43,10 @@
 (mk-blend-terrain 't_dshore_wes s_grass_se s_grass_sw)
 (mk-blend-terrain 't_dshore_c s_grass_se s_grass_sw s_grass_ne s_grass_nw)
 
+(kern-mk-terrain 't_water_rocks "boulder" pclass-waterboulder
+                   (mk-composite-sprite (list s_shoals s_boulder_over))
+                   1 0 nil)
+
 ;;----------------------------
 ;; Water edges
 
