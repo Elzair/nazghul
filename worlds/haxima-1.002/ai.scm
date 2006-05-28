@@ -449,9 +449,9 @@
 			(let* ((kfoe (nearest-obj kchar foes))
 					(dest (kern-obj-get-location kfoe)))
 				(if (pathfind kchar dest)
-					#t
+					#f
 					(if (not (null? (get-hostiles-in-range kchar 1)))
-						#t
+						#f
 						(let* ((cloc (kern-obj-get-location kchar))
 								(vect (loc-to-delta (loc-diff dest cloc)))
 								(dest (loc-add cloc vect)))
