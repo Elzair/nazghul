@@ -58,6 +58,7 @@
 (define pclass-bridge    pclass-grass)
 (define pclass-road      pclass-grass)
 (define pclass-boulder   10) ;; no ceiling, smaller than mountain
+(define pclass-waterboulder   11) ;; worst case of boulder and water
 
 ;; Movement modes
 (define mmodes
@@ -91,6 +92,7 @@
  (list cant   cant  cant   cant   cant   cant   cant  cant  cant  cant  cant ) ;; energy fields
  (list cant   cant  cant   cant   norm   cant   cant  cant  norm  cant  cant ) ;; space
  (list cant   norm  cant   norm   norm   cant   cant  hard  cant  cant  cant ) ;; boulder
+ (list cant   hard  cant   cant   norm   cant   cant  cant  cant  cant  cant ) ;; waterboulder
  )
 
 ;; Factions. The diplomacy table (which defines the relationship between
@@ -184,6 +186,7 @@
 (load "combat-maps.scm")
 
 ;; Object types
+(load "occs.scm")
 (load "objs.scm")
 (load "containers.scm")
 (load "reagents.scm")
@@ -197,7 +200,6 @@
 (load "money.scm")
 (load "ai.scm")
 (load "species.scm")
-(load "occs.scm")
 (load "conv.scm") ;; basic conversation
 (load "npc-types.scm")
 (load "parties.scm")
