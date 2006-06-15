@@ -4,8 +4,42 @@
 #define _SCHEME_PRIVATE_H
 
 #include "scheme.h"
+#include "gc.h"
 /*------------------ Ugly internals -----------------------------------*/
 /*------------------ Of interest only to FFI users --------------------*/
+
+/* ADJ is enough slack to align cells in a TYPE_BITS-bit boundary */
+#define ADJ 32
+#define TYPE_BITS 5
+
+/* cell flags */
+#define T_MASKTYPE      31    /* 0000000000011111 */
+#define FLAG1          512    /* 0000001000000000 */   /* extension for gc */
+#define FLAG2         1024    /* 0000010000000000 */   /* extension for gc */
+#define FLAG3         2048    /* 0000100000000000 */   /* extension for gc */
+#define T_SYNTAX      4096    /* 0001000000000000 */
+#define T_IMMUTABLE   8192    /* 0010000000000000 */
+#define T_ATOM       16384    /* 0100000000000000 */   /* only for gc */
+#define CLRATOM      49151    /* 1011111111111111 */   /* only for gc */
+#define MARK         32768    /* 1000000000000000 */
+#define UNMARK       32767    /* 0111111111111111 */
+
+#define MAX_REF      255
+
+/* macros for cell operations needed by gc */
+#define typeflag(p)      ((p)->_flag)
+#define type(p)          (typeflag(p)&T_MASKTYPE)
+#define settype(p,v)     (typeflag(p)=((typeflag(p)&~T_MASKTYPE)|(v)))
+#define car(p)           ((p)->_object._cons._car)
+#define cdr(p)           ((p)->_object._cons._cdr)
+#define is_atom(p)       (typeflag(p)&T_ATOM)
+#define setatom(p)       typeflag(p) |= T_ATOM
+#define clratom(p)       typeflag(p) &= CLRATOM
+#define is_mark(p)       (typeflag(p)&MARK)
+#define setmark(p)       typeflag(p) |= MARK
+#define clrmark(p)       typeflag(p) &= UNMARK
+#define ivalue_unchecked(p)       ((p)->_object._number.value.ivalue)
+#define ref(p)           ((p)->ref)
 
 enum scheme_port_kind { 
   port_free=0, 
@@ -14,6 +48,13 @@ enum scheme_port_kind {
   port_input=16, 
   port_output=32 
 };
+
+/* operator code */
+enum scheme_opcodes { 
+#define _OP_DEF(A,B,C,D,E,OP) OP, 
+#include "opdefines.h" 
+  OP_MAXDEFINED 
+}; 
 
 typedef struct port {
   unsigned char kind;
@@ -40,6 +81,9 @@ struct cell {
   struct list plist;
   int pref;
 #endif
+#if USE_REFCOUNT
+  unsigned char ref;
+#endif
   unsigned int _flag;
   union {
     struct {
@@ -55,6 +99,16 @@ struct cell {
     } _cons;
   } _object;
 };
+
+#ifndef USE_SCHEME_STACK 
+/* this structure holds all the interpreter's registers */ 
+struct dump_stack_frame { 
+  enum scheme_opcodes op; 
+  pointer args; 
+  pointer envir; 
+  pointer code; 
+}; 
+#endif
 
 struct scheme {
 /* arrays for segments */
@@ -72,25 +126,27 @@ struct scheme {
         int     last_cell_seg;
         
 /* We use 4 registers. */
-        pointer args;            /* register for arguments of function */
-        pointer envir;           /* stack register for current environment */
-        pointer code;            /* register for current code */
-        pointer dump;            /* stack register for next evaluation */
+pointer args;            /* register for arguments of function */
+pointer envir;           /* stack register for current environment */
+pointer code;            /* register for current code */
+pointer dump;            /* stack register for next evaluation */
 
-        int interactive_repl;    /* are we in an interactive REPL? */
+gc_t *gc;
 
-        struct cell _sink;
-        pointer sink;            /* when mem. alloc. fails */
-        struct cell _NIL;
-        pointer NIL;             /* special cell representing empty cell */
-        struct cell _HASHT;
-        pointer T;               /* special cell representing #t */
-        struct cell _HASHF;
-        pointer F;               /* special cell representing #f */
-        struct cell _EOF_OBJ;
-        pointer EOF_OBJ;         /* special cell representing end-of-file object */
-        pointer oblist;          /* pointer to symbol table */
-        pointer global_env;      /* pointer to global environment */
+int interactive_repl;    /* are we in an interactive REPL? */
+
+struct cell _sink;
+pointer sink;            /* when mem. alloc. fails */
+struct cell _NIL;
+pointer NIL;             /* special cell representing empty cell */
+struct cell _HASHT;
+pointer T;               /* special cell representing #t */
+struct cell _HASHF;
+pointer F;               /* special cell representing #f */
+struct cell _EOF_OBJ;
+pointer EOF_OBJ;         /* special cell representing end-of-file object */
+pointer oblist;          /* pointer to symbol table */
+pointer global_env;      /* pointer to global environment */
 
 /* global pointers to special symbols */
         pointer LAMBDA;               /* pointer to syntax lambda */
@@ -142,6 +198,15 @@ struct scheme {
         struct list protect;
 #endif
         char inside; /* gmcnutt: flag to check recursive entry from C */
+#if USE_DEBUG
+  int debug_nesting;
+  pointer breaksym;
+  pointer current_proc;
+  pointer CURRENT_PROC;
+  char dbg_next;
+  char dbg_step;
+#endif
+        char *include_dir;
 };
 
 #define cons(sc,a,b) _cons(sc,a,b,0)
@@ -187,5 +252,6 @@ int is_promise(pointer p);
 int is_environment(pointer p);
 int is_immutable(pointer p);
 void setimmutable(pointer p);
+void finalize_cell(scheme *sc, pointer a);
 
 #endif

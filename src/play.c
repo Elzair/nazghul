@@ -67,6 +67,10 @@
 #define PROFILE_PLAY_LOOP 0
 #endif
 
+#ifndef DETAILED_PROFILE
+#define DETAILED_PROFILE 0
+#endif
+
 bool Quit;
 
 static bool tickHandler(struct TickHandler *th)
@@ -113,6 +117,8 @@ static void play_reload()
 static void play_loop(void)
 {
         int times[8];
+        int total_time = 0;
+        
 
         Turn = 0;
 
@@ -243,12 +249,21 @@ static void play_loop(void)
                 times[5] = SDL_GetTicks();
                 
                 if (PROFILE_PLAY_LOOP) {
-                        printf("Loop time=%d\n", times[5] - times[0]);
-                        printf("      place_exec: %d\n", times[1] - times[0]);
-                        printf("     end-of-turn: %d\n", times[2] - times[1]);
-                        printf("  pending events: %d\n", times[3] - times[2]);
-                        printf("     end-of-game: %d\n", times[4] - times[3]);
-                        printf("    advance misc: %d\n", times[5] - times[4]);
+                        total_time += (times[5]-times[0]);
+                        printf("Loop time=%d avg=%d\n", times[5] - times[0],
+                               total_time/G_exec_loops);
+                        if (DETAILED_PROFILE) {
+                          printf("      place_exec: %d\n", 
+                                 times[1] - times[0]);
+                          printf("     end-of-turn: %d\n", 
+                                 times[2] - times[1]);
+                          printf("  pending events: %d\n", 
+                                 times[3] - times[2]);
+                          printf("     end-of-game: %d\n", 
+                                 times[4] - times[3]);
+                          printf("    advance misc: %d\n", 
+                                 times[5] - times[4]);
+                        }
                 }
                 
         }

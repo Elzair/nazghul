@@ -109,6 +109,12 @@ nazghul_SOURCES =		\
 	scheme.c \
 	scheme.h \
 	scheme-private.h \
+	marksweep.c \
+	gc.c \
+	snapshot.c \
+	ref.c \
+	markonly.c \
+	rop.c \
 	opdefines.h \
 	macros.h \
 	session.c \

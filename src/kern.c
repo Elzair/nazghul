@@ -302,6 +302,8 @@ static int unpack(scheme *sc, pointer *cell, char *fmt, ...)
 
                 count++;
                 car = scm_car(sc, *cell);
+                if (car==(pointer)0x4116218c)
+                        printf("hack\n");
                 *cell = scm_cdr(sc, *cell);
 
                 switch(*fmt++) {
@@ -505,7 +507,7 @@ pointer vpack(scheme *sc, char *fmt, va_list ap)
                          * list */
                         scm_protect(sc, head);
                 } else {
-                        tail->_object._cons._cdr = cell;
+                        gc_set_cdr(sc, tail, cell);
                         tail = cell;
                 }
         }
@@ -1833,7 +1835,7 @@ static int kern_append_effect(struct hook_entry *entry, void *data)
                 info->head = cell;
                 info->tail = cell;
         } else {
-                info->tail->_object._cons._cdr = cell;
+                gc_set_cdr(info->sc, info->tail, cell);
                 info->tail = cell;
         }
 
@@ -3751,7 +3753,7 @@ KERN_API_CALL(kern_char_get_readied_weapons)
                         head = cell;
                         tail = cell;
                 } else {
-                        tail->_object._cons._cdr = cell;
+                        gc_set_cdr(sc, tail, cell);
                         tail = cell;
                 }
         }
@@ -4243,7 +4245,7 @@ static void kern_append_object(Object *obj, void *data)
                 /* Protect the list from gc until we can return to scheme */
                 scm_protect(info->sc, cell);
         } else {
-                info->tail->_object._cons._cdr = cell;
+                gc_set_cdr(info->sc, info->tail, cell);
                 info->tail = cell;
         }
 }
@@ -4251,20 +4253,6 @@ static void kern_append_object(Object *obj, void *data)
 static pointer scm_mk_loc(scheme *sc, struct place *place, int x, int y)
 {
         return pack(sc, "pdd", place, x, y);
-
-#if 0
-        pointer pcell, xcell, ycell;
-
-        pcell = scm_protect(scm_mk_ptr(sc, place));
-        xcell = scm_protect(scm_mk_integer(sc, x));
-        ycell = scm_protect(scm_mk_integer(sc, y));
-
-        return _cons(sc, pcell, 
-                     _cons(sc, xcell, 
-                           _cons(sc, ycell, sc->NIL, 0), 
-                           0), 
-                     0);
-#endif
 }
 
 static pointer 
@@ -4583,7 +4571,7 @@ KERN_API_CALL(kern_being_get_visible_tiles)
                                 tail = cell;
                                 scm_protect(sc, cell);
                         } else {
-                                tail->_object._cons._cdr = cell;
+                                gc_set_cdr(sc, tail, cell);
                                 tail = cell;
                         }
                 }
@@ -6041,23 +6029,23 @@ KERN_API_CALL(kern_get_time)
         scm_protect(sc, head);
 
         cell = _cons(sc, scm_mk_integer(sc, clock_month()), sc->NIL, 0);
-        tail->_object._cons._cdr = cell;
+        gc_set_cdr(sc, tail, cell);
         tail = cell;
 
         cell = _cons(sc, scm_mk_integer(sc, clock_week()), sc->NIL, 0);
-        tail->_object._cons._cdr = cell;
+        gc_set_cdr(sc, tail, cell);
         tail = cell;
 
         cell = _cons(sc, scm_mk_integer(sc, clock_day()), sc->NIL, 0);
-        tail->_object._cons._cdr = cell;
+        gc_set_cdr(sc, tail, cell);
         tail = cell;
 
         cell = _cons(sc, scm_mk_integer(sc, clock_hour()), sc->NIL, 0);
-        tail->_object._cons._cdr = cell;
+        gc_set_cdr(sc, tail, cell);
         tail = cell;
 
         cell = _cons(sc, scm_mk_integer(sc, clock_minute()), sc->NIL, 0);
-        tail->_object._cons._cdr = cell;
+        gc_set_cdr(sc, tail, cell);
         tail = cell;
 
         scm_unprotect(sc, head);
@@ -6747,7 +6735,7 @@ static void kern_append_loc(Object *obj, void *data)
                 info->tail = cell;
                 scm_protect(info->sc, cell);
         } else {
-                info->tail->_object._cons._cdr = cell;
+                gc_set_cdr(info->sc, info->tail, cell);
                 info->tail = cell;
         }
 }
@@ -6802,7 +6790,7 @@ KERN_API_CALL(kern_search_rect)
                                         info.tail = cell;
                                         scm_protect(sc, cell);
                                 } else {
-                                        info.tail->_object._cons._cdr = cell;
+                                        gc_set_cdr(info.sc, info.tail, cell);
                                         info.tail = cell;
                                 }
                                 
@@ -6927,7 +6915,7 @@ KERN_API_CALL(kern_search_rect_for_terrain)
                                 info.head = cell;
                                 info.tail = cell;
                         } else {
-                                info.tail->_object._cons._cdr = cell;
+                                gc_set_cdr(info.sc, info.tail, cell);
                                 info.tail = cell;
                         }
                 }
@@ -7710,7 +7698,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-sprite-append-decoration", kern_sprite_append_decoration);
         
         /* Revisit: probably want to provide some kind of custom port here. */
-        scheme_set_output_port_file(sc, stderr);
+        scheme_set_output_port_file(sc, stdout);
 
         /* Implemented but untested:
            API_DECL(sc, "kern-ui-handle-events", kern_ui_handle_events);

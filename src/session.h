@@ -269,6 +269,9 @@ extern void session_rm_sched_char(struct node *node);
 extern void session_synch_sched_chars(struct session *session);
 extern void session_intro_sched_chars(struct session *session);
 
+#define session_gc() session_interp_gc(Session)
+extern void session_interp_gc(struct session *session);
+
 // Global session object.
 extern struct session *Session;
 

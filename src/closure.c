@@ -101,7 +101,9 @@ int closure_exec(closure_t *closure, char *fmt, ...)
         }
 
         if (scm_is_closure(closure->sc, closure->code)) {
+                int t1 = SDL_GetTicks();
                 result = scheme_call(closure->sc, closure->code, head);
+                printf("exec: %d ms\n", SDL_GetTicks()-t1);
         } else if (scm_is_symbol(closure->sc, closure->code)) {
 
                 pointer pair;
@@ -117,7 +119,10 @@ int closure_exec(closure_t *closure, char *fmt, ...)
                                                            1);
                 assert(scm_is_pair(closure->sc, pair));
                 proc = closure->sc->vptr->pair_cdr(pair);
+
+                int t1 = SDL_GetTicks();
                 result = scheme_call(closure->sc, proc, head);
+                printf("exec: %d ms\n", SDL_GetTicks()-t1);
 
                 /* WARNING: it is no longer safe to reference the closure at
                  * this point, because it may have destroyed itself as part of

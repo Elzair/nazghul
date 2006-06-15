@@ -666,6 +666,14 @@ enum MoveResult Character::move(int dx, int dy)
         
                         }
 
+                        // In follow mode only the leader can switch with other
+                        // party members, otherwise two or more followers can
+                        // spin-in-place.
+                        if (occupant->isPlayerControlled()
+                            && CONTROL_MODE_FOLLOW == getControlMode()) {
+                                return WasOccupied;
+                        }
+
                         switchPlaces(occupant);
 			return SwitchedOccupants;
 		}
@@ -2077,7 +2085,7 @@ void Character::exec()
 
                 // Since this character is in follow mode it's keystroke hook
                 // hasn't been run yet. Do it now so that effects like
-                // paralysis  properly on PC's in follow mode.
+                // paralysis work properly on PC's in follow mode.
                 runHook(OBJ_HOOK_KEYSTROKE);
                 if (isTurnEnded()) {
                         break;
@@ -2102,7 +2110,8 @@ void Character::exec()
                         pathfindTo(leader->getPlace(), 
                                    leader->getX(), 
                                    leader->getY(),
-                                   PFLAG_IGNOREMECHS);
+                                   PFLAG_IGNOREMECHS
+                                   |PFLAG_IGNORECOMPANIONS);
                         mapCenterView(getView(), getX(), getY());
                         mapSetDirty();
                 }
