@@ -2028,6 +2028,7 @@ void Character::exec()
                                 commute();
                                 break;
                         case EATING:
+                        case SLEEPING:
                                 // do nothing
                                 break;
                         default:
