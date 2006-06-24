@@ -77,10 +77,13 @@ static inline void improve_relations(Being *a, Being *b)
 }
 
 static inline void harm_relations(Being *a, Being *b)
-{
+{		
+	if (a->getCurrentFaction() != b->getCurrentFaction())
+	{
         dtable_dec(session_dtable(),
                    a->getCurrentFaction(),
                    b->getCurrentFaction());
+	}
 }
 
 static inline char * diplomacy_string(Being *a, Being *b)
