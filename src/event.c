@@ -29,14 +29,9 @@
 #include <fcntl.h>
 #include <stdlib.h>
 #include <common.h>
-#include <session.h>
 
 #ifndef DEBUG_KEYS
 # define DEBUG_KEYS 0
-#endif
-
-#ifndef GC_WHILE_IDLE
-# define GC_WHILE_IDLE 0
 #endif
 
 #define EVENT_NONBLOCK   (1 << 0)
@@ -72,7 +67,6 @@ static void (*eventHook) (void);
 static int (*wait_event) (SDL_Event * event, int flags);
 static int qcount = 0;
 
-#if CONFIG_BACKLOG
 static void backlog_enqueue(SDL_Event *event)
 {
         sdl_event_list_t *elem = (sdl_event_list_t*)malloc(sizeof(*elem));
@@ -95,10 +89,6 @@ static int backlog_dequeue(SDL_Event *event)
         qcount--;
         return 0;
 }
-#else
-#define backlog_enqueue(e)
-#define backlog_dequeue(e) (-1)
-#endif
 
 static int mapKey(SDL_keysym * keysym)
 {
@@ -168,20 +158,10 @@ static int event_get_next_event(SDL_Event *event, int flags)
                 }
         }
 
-        if (flags & EVENT_NONBLOCK) {
+        if (flags & EVENT_NONBLOCK)
                 return SDL_PollEvent(event);
-        } else if (GC_WHILE_IDLE) {
-                int pollResult = SDL_PollEvent(event);
-                if (! pollResult) {
-                        session_gc();
-                } else {
-                        return pollResult;
-                }
+        else
                 return SDL_WaitEvent(event);
-                
-        } else {
-                return SDL_WaitEvent(event);
-        }
 }
 
 static int playback_event(SDL_Event * event, int flags)
@@ -233,16 +213,10 @@ static void event_handle_aux(int flags)
 {
 	bool done = false;
         bool use_hook = false;
-        static int keyTicks = -1;
 
 	while (!done) {
 
 		SDL_Event event;
-
-                if (keyTicks != -1) {
-                        printf("latency: %d ms\n", SDL_GetTicks() - keyTicks);
-                        keyTicks = -1;
-                }
                 if (!wait_event(&event, flags)) {
                         return;
                 }
@@ -274,7 +248,6 @@ static void event_handle_aux(int flags)
 				if (keyh) {
                                         int mapped_key = 
                                                 mapKey(&event.key.keysym);
-                                        keyTicks = SDL_GetTicks();
                                         use_hook = true;
                                         if (keyh->fx(keyh, mapped_key, 
                                                      event.key.keysym.mod)) {

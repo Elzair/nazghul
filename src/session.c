@@ -696,17 +696,3 @@ void session_intro_sched_chars(struct session *session)
                 node = node->next;
         }        
 }
-
-void session_interp_gc(struct session *session)
-{
-        const int LOW_WATER_MARK=16000;
-        scheme *sc = (scheme *)session->interp;
-        if (!sc)
-                return;
-#if ! USE_ITERGC
-        if (sc->fcells > LOW_WATER_MARK)
-                return;
-#endif
-        sc->vptr->force_gc(sc);
-        
-}

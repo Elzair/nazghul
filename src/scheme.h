@@ -45,10 +45,6 @@
 # define USE_PROTECT 0
 # define USE_SERIALIZE 0
 # define USE_REENTER 0
-# define USE_DEBUG 0
-# define USE_INTERFACE_GC 0
-# define USE_REFCOUNT 0
-# define USE_SDLPROFILING 0
 #endif
 
 #if USE_DL
@@ -56,10 +52,8 @@
 #endif
 
 #ifndef USE_PROTECT
+# include "list.h"
 # define USE_PROTECT 1
-# if USE_PROTECT
-#  include "list.h"
-# endif
 #endif
 
 #ifndef USE_REENTER
@@ -125,22 +119,6 @@
 
 #ifndef USE_INTERFACE
 # define USE_INTERFACE 0
-#endif
-
-#ifndef USE_DEBUG   /* Add debug commands like memdump and envdump */
-# define USE_DEBUG 1
-#endif
-
-#ifndef USE_INTERFACE_GC
-# define USE_INTERFACE_GC 1
-#endif
-
-#ifndef USE_REFCOUNT
-# define USE_REFCOUNT 1
-#endif
-
-#ifndef USE_SDLPROFILING
-# define USE_SDLPROFILING 1
 #endif
 
 typedef struct scheme scheme;
@@ -227,9 +205,9 @@ struct scheme_interface {
   long (*charvalue)(pointer p);
   int (*is_vector)(pointer p);
   long (*vector_length)(pointer vec);
-  void (*fill_vector)(scheme *sc, pointer vec, pointer elem);
+  void (*fill_vector)(pointer vec, pointer elem);
   pointer (*vector_elem)(pointer vec, int ielem);
-  pointer (*set_vector_elem)(scheme *sc, pointer vec, int ielem, pointer newel);
+  pointer (*set_vector_elem)(pointer vec, int ielem, pointer newel);
   int (*is_port)(pointer p);
   
   int (*is_pair)(pointer p);
@@ -261,10 +239,6 @@ struct scheme_interface {
 #if USE_PROTECT
   pointer (*protect)(scheme *sc, pointer p);
   pointer (*unprotect)(scheme *sc, pointer p);
-#endif
-
-#if USE_INTERFACE_GC
-  void (*force_gc)(scheme *sc);
 #endif
 
   foreign_func (*ffvalue)(pointer arg); /* gmcnutt: new addition */

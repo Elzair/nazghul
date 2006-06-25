@@ -191,22 +191,4 @@
 #if USE_REENTER
     _OP_DEF(opexe_ghul, 0,                             0,  0,       0,                               OP_EXIT_REENTER     )
 #endif
-#if USE_DEBUG
-    _OP_DEF(opexe_dbg, "memdump",                      0,  0,       TST_NONE,                        OP_MEMDUMP          )
-    _OP_DEF(opexe_dbg, "envdump",                      0,  0,       TST_NONE,                        OP_ENVDUMP          )
-    _OP_DEF(opexe_dbg, "break",                        0,  INF_ARG, TST_CLOSURE,                     OP_BREAK1           )
-    _OP_DEF(opexe_dbg, 0,                              0,  0,       TST_NONE,                        OP_BREAK2           )  
-    _OP_DEF(opexe_dbg, 0,                              0,  0,       TST_NONE,                        OP_BREAK3           )  
-    _OP_DEF(opexe_dbg, 0,                              0,  0,       TST_NONE,                        OP_BREAK4           )  
-    _OP_DEF(opexe_dbg, 0,                              0,  0,       TST_NONE,                        OP_BREAKPROC        )  
-    _OP_DEF(opexe_dbg, "continue",                     0,  0,       TST_NONE,                        OP_CONTINUE         )
-    _OP_DEF(opexe_dbg, "closure-stackdump",            0,  0,       TST_NONE,                        OP_CLOSURESTACKDUMP )
-    _OP_DEF(opexe_dbg, "internal-stackdump",           0,  0,       TST_NONE,                        OP_INTERNALSTACKDUMP )
-    _OP_DEF(opexe_dbg, "next",                         0,  0,       TST_NONE,                        OP_NEXT1            )
-    _OP_DEF(opexe_dbg, 0,                              0,  0,       TST_NONE,                        OP_NEXT2            )
-    _OP_DEF(opexe_dbg, "step",                         0,  0,       TST_NONE,                        OP_STEP1            )
-    _OP_DEF(opexe_dbg, 0,                              0,  0,       TST_NONE,                        OP_STEP2            )
-    _OP_DEF(opexe_0,   0,                              0,  0,       0,                               OP_BEGIN2           )
-
-#endif
 #undef _OP_DEF
