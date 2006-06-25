@@ -15,6 +15,7 @@
     (list  "__"   t_deep)               ;; "deep water"
     (list  "_!"   t_sunlit_deep)               ;; "deep water"
     (list  "~*"   t_blendable_shoals)            ;; "shallow water"
+    (list  "_s"   t_sludge)
 	
     (list  "%%"   t_bog)                ;; "bog"
     (list  ".."   t_grass)              ;; "grass"

@@ -18,9 +18,10 @@
    (list 't_stars           "stars"         pclass-space     s_stars           1 0 nil)
    (list 't_deep            "deep water"    pclass-deep      s_deep            1 0 nil)
    (list 't_sunlit_deep     "deep water"    pclass-deep      s_deep            1 64 nil)
-   (list 't_shallow         "water"          pclass-deep      s_shallow         1 0 nil)
-   (list 't_blendable_shoals    "shallow water"  pclass-shoals    s_shoals          1 0 nil)
-   (list 't_shoals          "shallow water"  pclass-shoals    s_shoals          1 0 nil)
+   (list 't_shallow         "water"          pclass-deep      s_shallow        1 0 nil)
+   (list 't_blendable_shoals "shallow water" pclass-shoals    s_shoals         1 0 nil)
+   (list 't_shoals          "shallow water" pclass-shoals    s_shoals          1 0 nil)
+   (list 't_sludge          "oily sludge"   pclass-sludge    s_sludge          1 0 nil)
 
    (list 't_grass           "grass"         pclass-grass     s_grass           1 0 nil)
    (list 't_sunlit_grass    "grass"         pclass-grass     s_grass           1 64 nil)
@@ -190,7 +191,6 @@
    (list 't_str_sign      "a sign of strength" pclass-wall s_axe_sign    1 1024 nil) 
    (list 't_dex_sign      "a sign of dexterity" pclass-wall s_key_sign    1 1024 nil) 
    (list 't_wis_sign      "a sign of wisdom" pclass-wall s_book_sign    1 1024 nil) 
-
    ))
 
 (map (lambda (terrain) (apply kern-mk-terrain terrain)) terrains)
