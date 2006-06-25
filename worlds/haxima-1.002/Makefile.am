@@ -80,7 +80,9 @@ haxima_DATA = \
 	glasdrin.scm                poor-house.scm         signs.png\
 	goblin-kingdoms.scm         portals.scm            runestones.png\
 	newmonst.png                newfolks.png	   tower.png\
-	newterrain.png              hidden.scm
+	newterrain.png              hidden.scm             blendterrains.scm\
+	endless-deeps-mech.scm      endless-deeps.scm      abigail.scm\
+	r2a_mech.scm
 
 EXTRA_DIST = $(haxima_DATA)
 MAINTAINERCLEANFILES = Makefile.in
