@@ -1058,7 +1058,7 @@ void player_party::beginResting(int hours)
         mapSetDirty();
 
         // Accelerate time while resting.
-        session_set_time_accel(CAMPING_TIME_ACCELERATION * WILDERNESS_SCALE);
+        session_set_time_accel(CAMPING_TIME_ACCELERATION);
 }
 
 bool player_party::isResting()
