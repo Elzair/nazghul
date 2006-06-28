@@ -34,13 +34,12 @@
   (define (kathryn-alive-in-party)
     (betray-player ch_kathryn)
     (if (and (defined? 'ch_thud)
-             (is-player-party-member? ch_thud)
-             (is-alive? ch_thud))
-        (begin
-          (say ch_kathryn "The fool has led us right to the Thief! "
-               "Quickly, Thud! Kill them all!")
-          (betray-player ch_thud))
-        (say ch_kathryn "Fool! Now the thief is mine!"))
+             (is-player-party-member? ch_thud))
+        (if (is-alive? ch_thud)
+            (say ch_kathryn "The fool has led us right to the Thief! "
+                 "Quickly, Thud! Kill them all!"))
+        (betray-player ch_thud))
+    (say ch_kathryn "Fool! Now the thief is mine!"))
     (mouse-disappear))
 
 
