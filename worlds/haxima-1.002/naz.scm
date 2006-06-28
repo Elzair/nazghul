@@ -897,15 +897,7 @@
 ;; set-level -- set character to level and max out hp and mana (intended for
 ;; new npc creation)
 (define (set-level kchar lvl)
-  (kern-char-set-level kchar lvl)
-  (kern-char-set-hp kchar 
-                    (max-hp (kern-char-get-species kchar)
-                            (kern-char-get-occ kchar)
-                            lvl 0 0))
-  (kern-char-set-mana kchar
-                      (max-mp (kern-char-get-species kchar)
-                              (kern-char-get-occ kchar)
-                              lvl 0 0)))
+  (kern-char-set-level kchar lvl))
 
 ;; use-potion? -- use potion on self if desired and available
 (define (use-potion? kchar)
