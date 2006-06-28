@@ -155,6 +155,7 @@
        (method 'trad hackle-trade)
        (method 'buy hackle-trade)
        (method 'sell hackle-trade)
+       (method 'heal hackle-trade)
 
        (method 'bill hackle-bill)
        (method 'kath hackle-kath)

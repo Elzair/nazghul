@@ -17,6 +17,8 @@
 (define gh-stable          (mk-zone 18 16 2  4))
 (define gh-pasture         (mk-zone 21 10 5  10))
 (define gh-graveyard       (mk-zone 29 29 3  3))
+(define gh-table-1         (mk-zone 13 11 1  1))
+(define gh-table-2         (mk-zone 13 13 1  1))
 
 ;; Moongate clearing
 (define (mk-zone x y w h) (list 'p_moongate_clearing x y w h))

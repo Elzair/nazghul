@@ -199,6 +199,9 @@
        "Ask the Enchanter, he surely knows more of it than I. "
        "Meanwhile I will confer with the dead to see what I can discover."))
 
+(define (necr-necr knpc kpc)
+  (say knpc "[Cough] I specialize in magic relating to the dead."))
+
 (define necr-conv
   (ifc basic-conv
 
@@ -225,6 +228,7 @@
        (method 'accu necr-accu)
        (method 'gate necr-gate)
        (method 'demo necr-gate)
+       (method 'necr necr-necr)
        ))
 
 (define (mk-necromancer)

@@ -212,6 +212,9 @@
 (define (basic-shar knpc kpc)
   (say knpc "The Shard is what we call our world."))
 
+(define (basic-peni knpc kpc)
+  (say knpc "The Peninsula is our little corner of the Shard."))
+
 (define (basic-warr knpc kpc)
   (say knpc "The Warritrix is the Wise Warrior. If you're looking for her try Glasdrin."))
 
@@ -265,6 +268,7 @@
        (method 'opar basic-opar)
        (method 'fens basic-fens)
        (method 'shar basic-shar)
+       (method 'peni basic-peni)
        (method 'kurp basic-kurp)
        (method 'glas basic-glas)
        (method 'fire basic-fire)
@@ -364,6 +368,12 @@
 (define (glasdrin-kurp knpc kpc)
   (say knpc "The dungeon Kurpolis is where most of our troops are now. Follow the mountains west, you'll find the entrance in a canyon."))
 
+(define (glasdrin-glas knpc kpc)
+  (say knpc "Glasdrin is the city of the Paladins."))
+
+(define (glasdrin-pala knpc kpc)
+  (say knpc "The Paladins of Glasdrin are the greatest military force on the peninsula."))
+
 (define glasdrin-conv
   (ifc basic-conv
        (method 'warr glasdrin-warr)
@@ -373,6 +383,8 @@
        (method 'cita glasdrin-cita)
        (method 'ghol glasdrin-ghol)
        (method 'kurp glasdrin-kurp)
+       (method 'glas glasdrin-glas)
+       (method 'pala glasdrin-pala)
        ))
 
 ;; Kurpolis

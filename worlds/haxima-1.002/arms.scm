@@ -164,8 +164,8 @@
    ;;     ========================================================================================================================
    ;;     tag         | name       | sprite     | to-hit | damage | to-def | slots       | hnds | rng | missile    | ubiq | weight
    ;;     ========================================================================================================================
-   (list 't_sling      "sling"      s_sling      "1d2-2"  "1d4"    "-1"     slot-weapon   1      4     t_slingstone #t      0)
-   (list 't_sling_4    "+4 sling"   s_sling      "3"      "1d4+4"  "0"      slot-weapon   1      6     t_slingstone #t      0)
+   (list 't_sling      "sling"      s_sling      "1d2-2"  "1d3"    "-1"     slot-weapon   1      4     t_slingstone #t      0)
+   (list 't_sling_4    "+4 sling"   s_sling      "3"      "1d3+4"  "0"      slot-weapon   1      6     t_slingstone #t      0)
    (list 't_bow        "bow"        s_bow        "1d3-2"  "2d4"    "-2"     slot-weapon   2      6     t_arrow      #f      2)
    (list 't_crossbow   "crossbow"   s_crossbow   "1d4-2"  "4d4"    "-1"     slot-weapon   2      4     t_bolt       #f      3)
    (list 't_doom_staff "doom staff" s_doom_staff "1d4"    "1"      "+2"     slot-weapon   2      6     t_fireball   #t      2)

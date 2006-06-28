@@ -10,7 +10,11 @@
                (list 0  0  gh-gregors-bed   "sleeping")
                (list 6  0  gh-graveyard     "idle")
                (list 7  0  mgc-roadbend     "idle")
-               (list 13 0  gh-kitchen       "eating")
+               (list 13 0  gh-table-2       "eating")
+               (list 14 0  gh-pasture       "working")
+               (list 17 0  gh-table-2       "eating")
+               (list 18 0  gh-living-room   "idle")
+               (list 20 0  gh-gregors-bed   "sleeping")
                )
 
 ;;----------------------------------------------------------------------------
