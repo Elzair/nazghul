@@ -39,7 +39,7 @@
             (say ch_kathryn "The fool has led us right to the Thief! "
                  "Quickly, Thud! Kill them all!"))
         (betray-player ch_thud))
-    (say ch_kathryn "Fool! Now the thief is mine!"))
+    (say ch_kathryn "Fool! Now the thief is mine!")
     (mouse-disappear))
 
 
