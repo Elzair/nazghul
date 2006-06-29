@@ -3913,6 +3913,17 @@ KERN_API_CALL(kern_char_is_asleep)
         return ch->isAsleep() ? sc->T : sc->F;
 }
 
+KERN_API_CALL(kern_char_is_dead)
+{
+        class Character *ch;
+
+        ch = (class Character*)unpack_obj(sc, &args, "kern-char-is-dead");
+        if (!ch)
+                return sc->T;
+
+        return ch->isDead() ? sc->T : sc->F;
+}
+
 KERN_API_CALL(kern_mk_effect)
 {
         struct effect *effect;
@@ -7450,6 +7461,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-char-set-intelligence", kern_char_set_intelligence);
         API_DECL(sc, "kern-char-get-weapons", kern_char_get_weapons);
         API_DECL(sc, "kern-char-is-asleep?", kern_char_is_asleep);
+        API_DECL(sc, "kern-char-is-dead?", kern_char_is_dead);
         API_DECL(sc, "kern-char-join-player", kern_char_join_player);
         API_DECL(sc, "kern-char-kill", kern_char_kill);
         API_DECL(sc, "kern-char-leave-player", kern_char_leave_player);
