@@ -137,7 +137,8 @@ static bool pc_check_if_not_immobilized(class Character * pm, void *data)
 
 static bool pc_eat_food(class Character * pm, void *data)
 {
-	if (player_party->food) {
+	if (player_party->food
+            && !pm->isDead()) {
 		player_party->food--;
 		return false;
 	}
