@@ -173,6 +173,7 @@
 
 ;; Spell constants
 (define base-scroll-cost 25) ;; gold pieces per level of scroll's spell
+(define reagent-price-mult 1) ;; global reagent price multiplier
 
 ;; Some of the following are order-dependent
 (load "loc.scm")
