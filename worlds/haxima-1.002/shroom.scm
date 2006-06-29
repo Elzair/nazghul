@@ -42,13 +42,13 @@
             (begin
               ;; Trading!
               (kern-conv-trade knpc kpc
-                               (list sulphorous_ash 10)
-                               (list garlic         16)
-                               (list ginseng        18)
-                               (list blood_moss     30)
-                               (list spider_silk    30)
-                               (list nightshade     50)
-                               (list mandrake       60)
+                               (list sulphorous_ash (* 10 reagent-price-mult))
+                               (list garlic         (* 16 reagent-price-mult))
+                               (list ginseng        (* 18 reagent-price-mult))
+                               (list blood_moss     (* 30 reagent-price-mult))
+                               (list spider_silk    (* 30 reagent-price-mult))
+                               (list nightshade     (* 50 reagent-price-mult))
+                               (list mandrake       (* 60 reagent-price-mult))
                                (list t_heal_potion  55)
                                (list t_mana_potion  48)
                                (list t_cure_potion  50)

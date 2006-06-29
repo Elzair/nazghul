@@ -1,3 +1,4 @@
+;; Reagent-seller
 ;;----------------------------------------------------------------------------
 ;; Constants
 ;;----------------------------------------------------------------------------
@@ -46,17 +47,18 @@
   (if (not (string=? "working" (kern-obj-get-activity knpc)))
       (say knpc "My shop is open from 8:00AM to 8:00PM.")
       (kern-conv-trade knpc kpc
-                       (list sulphorous_ash           6)
-                       (list garlic                  20)
-                       (list ginseng                 20)
-                       (list black_pearl             28)
-                       (list nightshade              60)
-                       (list mandrake                50)
-                       (list t_in_an_scroll            (* 6 base-scroll-cost))
-                       (list t_in_mani_corp_scroll     (* 8 base-scroll-cost))
-                       (list t_vas_rel_por_scroll      (* 8 base-scroll-cost))
-                       (list t_vas_mani_scroll         (* 5 base-scroll-cost))
-                       (list t_wis_quas_scroll         (* 4 base-scroll-cost))
+                       (list sulphorous_ash         (* 2  reagent-price-mult))
+                       (list garlic                 (* 6  reagent-price-mult))
+                       (list ginseng                (* 7  reagent-price-mult))
+                       (list black_pearl            (* 6  reagent-price-mult))
+                       (list blood_moss             (* 11 reagent-price-mult))
+                       (list nightshade             (* 20 reagent-price-mult))
+                       (list mandrake               (* 24 reagent-price-mult))
+                       (list t_in_an_scroll         (* 6 base-scroll-cost))
+                       (list t_in_mani_corp_scroll  (* 8 base-scroll-cost))
+                       (list t_vas_rel_por_scroll   (* 8 base-scroll-cost))
+                       (list t_vas_mani_scroll      (* 5 base-scroll-cost))
+                       (list t_wis_quas_scroll      (* 4 base-scroll-cost))
                        )))
 
 (define (lia-pear knpc kpc)

@@ -35,7 +35,7 @@
   )
 
 (define (abigail-default knpc kpc)
-  (say knpc "Nope.")
+  (say knpc "[She shrugs]")
   )
 
 (define (abigail-name knpc kpc)

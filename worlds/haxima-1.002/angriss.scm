@@ -86,14 +86,20 @@
           (harm-relations knpc kpc)
           (harm-relations knpc kpc)
           (kern-conv-end))
-        (begin
-          (say knpc "Honor is satisfied.\n")
-          (if (not (quest-done? quest))
-              (quest-done! quest #t))
-          (kern-char-leave-player kchar)
-          (kern-being-set-base-faction kchar faction-none)
-          (improve-relations knpc kpc)
-          (kern-conv-end)))))
+        (if (is-dead? kchar)
+            (begin
+              (say knpc "FRESH meat I require!\n"
+                   "Poison! Foul, is that dead blood!\n"
+                   "Bring me another.")
+              (kern-conv-end))
+            (begin
+              (say knpc "Honor is satisfied.\n")
+              (if (not (quest-done? quest))
+                  (quest-done! quest #t))
+              (kern-char-leave-player kchar)
+              (kern-being-set-base-faction kchar faction-none)
+              (improve-relations knpc kpc)
+              (kern-conv-end))))))
 
 
 (define (angriss-rune knpc kpc)

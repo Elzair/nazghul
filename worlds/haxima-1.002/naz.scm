@@ -319,11 +319,11 @@
         nil
         (car beings))))
 
-(define (is-alive? kchar)
-  (> (kern-char-get-hp kchar) 0))
-
 (define (is-dead? kchar)
-  (not (is-alive? kchar)))
+  (kern-char-is-dead? kchar))
+
+(define (is-alive? kchar)
+  (not (is-dead? kchar)))
 
 (define (has-ap? kobj) 
   (> (kern-obj-get-ap kobj) 0))
