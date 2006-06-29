@@ -78,7 +78,7 @@
 (mk-species 'sp_kraken       "kraken"         30  3 20 1 30  4  6 mmode-fish  t_tentacles  nil      10 s_shoals       sound-splashing ) 
 (mk-species 'sp_sea_serpent  "sea serpent"    20  2 14 1 20  4  9 mmode-fish  t_fangs      nil      8  s_asleep       sound-walking   ) 
 (mk-species 'sp_wolf         "wolf"            8  2 12 2  8  0 13 mmode-walk  t_fangs      nil      2  s_asleep       sound-walking   ) 
-(mk-species 'sp_gazer        "gazer"           6 20  6 1 10  8 16 mmode-hover nil          nil      8  s_asleep       nil             ) 
+(mk-species 'sp_gazer        "gazer"           6 20  6 1 10  8 16 mmode-hover t_fangs      nil      8  s_asleep       nil             ) 
 (mk-species 'sp_headless     "headless"       12  0 10 1 14  0  6 mmode-walk  t_hands      humanoid 2  s_asleep       sound-walking   ) 
 (mk-species 'sp_wisp         "wisp"            2 20 16 2  8  8  9 mmode-hover nil          nil      4  nil            nil             ) 
 (mk-species 'sp_dragon       "dragon"         20 10 10 1 50  8  9 mmode-fly   t_fangs      nil      20 nil            sound-walking   )

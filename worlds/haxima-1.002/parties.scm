@@ -12,7 +12,9 @@
         (loop (- n 1)
               (+ sum (max 0 (kern-dice-roll (pgroup-dice pgrp))))
               )))
-  (loop (max 1 (length (kern-party-get-members (kern-get-player))))
+  (loop (max 1 
+             (length (filter is-alive? 
+                             (kern-party-get-members (kern-get-player)))))
         0)
   )
 (define (pgroup-generate pgrp)
