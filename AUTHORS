@@ -76,6 +76,9 @@ Added worlds/haxima-1.002/newmonst.png, newfolks.png
 In worlds/haxima-1.002/building.png, added the tower sprite
 In worlds/haxima-1.002/sprite-sets.scm, sprites.scm and npc-types.scm, added
         new goblin sprites
+In worlds/haxima-1.002/mouse.scm, minor bugfix
+Added nazghul.nsi, nazinst.ico
+In src/factions.h, minor bugfix
 
 Riberdy, Steve:
 In worlds/haxima-1.002/runestones.png, provided the images

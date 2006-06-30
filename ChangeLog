@@ -1,3 +1,564 @@
+2006-06-30  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* scripts/RELEASE_CHECKOFF: Added another note
+
+2006-06-29  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/arms.scm, worlds/haxima-1.002/parties.scm, worlds/haxima-1.002/species.scm:
+	o Slime attacks increased slightly.
+	o NPC party generator, when determining how big to make the NPC party, doesn't
+	  count dead member's as part of the player party size count
+	o Gazers given fangs as a natural weapon (instead of nothing)
+
+	* src/player.cpp: Dead party members were eating rations
+
+	* src/kern.c: Added kern-char-is-dead?
+
+	* worlds/haxima-1.002/abigail.scm, worlds/haxima-1.002/angriss.scm, worlds/haxima-1.002/lia.scm, worlds/haxima-1.002/naz.scm, worlds/haxima-1.002/shroom.scm, worlds/haxima-1.002/zane.scm:
+	o Reduced reagent prices
+	o Bugfix: Angriss would accept dead party members, caused a crash
+
+	* worlds/haxima-1.002/game.scm: Renamed a variable
+
+2006-06-28  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/mouse.scm: stray bracket removed
+
+2006-06-28  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/mouse.scm:
+	Thud was not getting removed if he was dead but Kathryn was alive
+
+	* src/player.cpp: Camping in town took more time than player specified
+
+	* src/map.c:
+	Put the clock display back on the map viewer since there is no other way to tell time yet in haxima
+
+	* worlds/haxima-1.002/arms.scm, worlds/haxima-1.002/conv.scm, worlds/haxima-1.002/gregor.scm, worlds/haxima-1.002/hackle.scm, worlds/haxima-1.002/ilya.scm, worlds/haxima-1.002/necromancer.scm, worlds/haxima-1.002/zones.scm:
+	o Necromancer used generic response when asked about himself.
+	o People in Glasdrin couldn't give directions to Glasdrin.
+	o Ilya and Gregor were eating in the ULC of the kitchen. Gregor lacked a
+	  complete schedule.
+	o Dropped sling damage by a point.
+
+	* configure.ac: Bumped the version number
+
+	* worlds/haxima-1.002/naz.scm:
+	Fixed the set-level procedure to simply call kern-char-set-level. It was trying
+	to set the hp and mp, too, but doing it incorrectly by not accounting for
+	custom mp and hp bonuses. This causes the Wanderer to start with 11/41 hit
+	points, making him wolf-meat.
+
+2006-06-25  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/Makefile.am, src/closure.c, src/event.c, src/kern.c, src/opdefines.h, src/scheme-private.h, src/scheme.c, src/scheme.h, src/session.c, src/session.h:
+	Reverted scheme interpreter to previous version (w/o garbage collector
+	changes). I don't want to change something fundamental like the garbage
+	collector so soon before a release, and I want to do it differently anyway.
+
+	* worlds/haxima-1.002/Makefile.am:
+	Added some missing files to Makefile.am.
+
+	* worlds/haxima-1.002/addons.png, worlds/haxima-1.002/game.scm, worlds/haxima-1.002/palette.scm, worlds/haxima-1.002/sprites.scm, worlds/haxima-1.002/terrains.scm:
+	Added sludge terrain. I think we need some sludge.
+
+2006-06-25  kaypy  <kaypy@localhost.localdomain>
+
+	* nazghul.nsi, nazinst.ico: upgraded w32 installer
+
+	* scripts/nazghulrun.au3:
+	compilable version of w32 save file backup script
+
+2006-06-24  kaypy  <kaypy@localhost.localdomain>
+
+	* src/factions.h:
+	Quick fix for bug 1462932: checks for same faction in harm_relations.
+	make_hostile isnt given a similar check since that is only used in party-party attacks (and hence not player triggerable)
+
+2006-06-15  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/character.cpp:
+	Fixing [ 1460699 ] kama wanders while sleeping. In character::exec() it now
+	checks for sleeping as an activity like eating and doesn't move.
+
+	* src/closure.c, src/event.c, src/kern.c, src/opdefines.h, src/play.c, src/scheme-private.h, src/scheme.c, src/scheme.h, src/session.c, src/session.h, src/Makefile.am, src/character.cpp:
+	Fixing [ 1451252 ] Followers get stuck in follow mode. character::move now
+	checks for PC's trying to spin in follow mode. character::exec now passes the
+	flag to ignore companions to the pathfinding routine; I think it used to do
+	this and removing it was an early (bad) attempt to fix this bug.
+
+	Also updating the Scheme garbage collector to use a new algorithm with less
+	latency.
+
+2006-05-28  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/ai.scm:
+	the kraken ai needed to default to the kernel mode in a few more cases
+
+	* worlds/haxima-1.002/game.scm:
+	Added pclass-waterboulder, for boulders embedded in water terrain
+
+	* src/cmd.c:
+	No longer allows (and crashes on) diagonal wilderness (a)ttacks
+
+2006-04-25  kaypy  <kaypy@localhost.localdomain>
+
+	* scripts/blenddat.txt, scripts/palette.txt:
+	new terrains in terrain blending scripts
+
+	* worlds/haxima-1.002/tools.scm: dex helps pick locks
+
+	* worlds/haxima-1.002/kraken-lakes.scm, worlds/haxima-1.002/slimy-cavern.scm:
+	added boulders-in-water to maps
+
+	* worlds/haxima-1.002/blendterrains.scm, worlds/haxima-1.002/newterrain.png, worlds/haxima-1.002/palette.scm, worlds/haxima-1.002/signs.png, worlds/haxima-1.002/sprites.scm, worlds/haxima-1.002/terrains.scm:
+	a few new terrains: signs for character creation + new boulders
+
+	* src/kern.c: mechanisms to retrieve unmodified stats added
+
+	* worlds/haxima-1.002/ai.scm:
+	kraken will now default to kernel ai if no targets visible (rather than just sitting there)
+
+2006-04-17  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/ai.scm:
+	Fix for: krakens poisoning themselves on swamps and chomping decks players are standing on
+
+2006-04-17  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/ai.scm:
+	Fixing krakens to not pursue invisible foes
+
+2006-04-14  kaypy  <kaypy@localhost.localdomain>
+
+	* src/cmd.c, src/conv.c, src/conv.h:
+	The kern-conv-get-reply and kern-conv-get-string commands now use
+	our isprintable check
+
+2006-04-13  kaypy  <kaypy@localhost.localdomain>
+
+	* src/character.cpp, src/character.h, src/kern.c:
+	read/write access to character str/dex/int
+
+2006-04-10  kaypy  <kaypy@localhost.localdomain>
+
+	* scripts/blendmap.pl:
+	Documentation is your friend. It reduces the next person to use your softwares desire to murder you brutally
+
+	* worlds/haxima-1.002/abandoned-farm.scm, worlds/haxima-1.002/absalot.scm, worlds/haxima-1.002/ancient-derelict.scm, worlds/haxima-1.002/angriss-lair.scm, worlds/haxima-1.002/bole.scm, worlds/haxima-1.002/dank-cave.scm, worlds/haxima-1.002/eastpass.scm, worlds/haxima-1.002/enchanters-tower.scm, worlds/haxima-1.002/endless-deeps-mech.scm, worlds/haxima-1.002/engineers-hut.scm, worlds/haxima-1.002/fire_sea.scm, worlds/haxima-1.002/glasdrin.scm, worlds/haxima-1.002/goblin-kingdoms.scm, worlds/haxima-1.002/green-tower.scm, worlds/haxima-1.002/gregors-hut.scm, worlds/haxima-1.002/kraken-lakes.scm, worlds/haxima-1.002/kun.scm, worlds/haxima-1.002/lich-tomb.scm, worlds/haxima-1.002/lost-halls.scm, worlds/haxima-1.002/mans-hideout.scm, worlds/haxima-1.002/merciful-death.scm, worlds/haxima-1.002/moongate-clearing.scm, worlds/haxima-1.002/mushroom-cave.scm, worlds/haxima-1.002/oparine.scm, worlds/haxima-1.002/poor-house.scm, worlds/haxima-1.002/road_to_absalot.scm, worlds/haxima-1.002/shard.scm, worlds/haxima-1.002/slimy-cavern.scm, worlds/haxima-1.002/talking-ankh.scm, worlds/haxima-1.002/trigrave.scm, worlds/haxima-1.002/void-temple.scm, worlds/haxima-1.002/westpass.scm:
+	Maps use blended terrains
+
+	* worlds/haxima-1.002/blendterrains.scm, worlds/haxima-1.002/combat-maps.scm, worlds/haxima-1.002/newterrain.png, worlds/haxima-1.002/palette.scm, worlds/haxima-1.002/sprites.scm, worlds/haxima-1.002/terrains.scm:
+	Support for blended terrains
+
+	* scripts/blenddat.txt, scripts/blendmap.pl, scripts/palette.txt:
+	More terrain blending working. (Ongoing tweaks while blending new maps)
+
+2006-04-09  kaypy  <kaypy@localhost.localdomain>
+
+	* scripts/blendmap.pl: Updated the help somewhat
+
+	* scripts/blenddat.txt, scripts/blendmap.pl, scripts/unblenddat.txt:
+	Blending much more advanced and now handles most terrain types
+
+2006-04-05  kaypy  <kaypy@localhost.localdomain>
+
+	* doc/USERS_GUIDE:
+	Fixed ingredients in 'Mix' tutorial, and made it a better fit to the actual game interface
+
+	* worlds/haxima-1.002/conv.scm: Typo in basic-engi
+
+2006-03-29  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/Being.cpp, src/Being.h, src/character.cpp:
+	Bugfix: followers get stuck in follow mode. They were switching places with one
+	another over and over in an attempt to reach the party leader. The option to
+	ignore companions is a flag passed to the pathfinding algorithm, in the case of
+	follow mode I no longer pass that flag, so followers will pathfind around one
+	another instead of switching places.
+
+2006-03-28  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/conv.c: Bugfix: [1451180] Shift key adds letters in conversation
+
+	The new isprintable(char c) function which replaced libc's isprint was declared to
+	take a char arg. Some values like 304 (the value for the left shift key on my system),
+	when downcast to 8 bits, fell into the 32-127 range and were declared
+	printable. Fixed this by changing to isprintable(int c).
+
+2006-03-23  kaypy  <kaypy@localhost.localdomain>
+
+	* scripts/blenddat.txt, scripts/blendmap.pl: Blends more terrain types
+
+2006-03-22  kaypy  <kaypy@localhost.localdomain>
+
+	* scripts/blenddat.txt, scripts/blendmap.pl, scripts/splitmap.pl:
+	New toys: pre-rendered terrain blending, and splitting large maps down to tiles for composites
+
+	* worlds/haxima-1.002/shard.scm: Added mountains south of eastpass
+
+2006-03-21  kaypy  <kaypy@localhost.localdomain>
+
+	* scripts/palette.txt: Belatedly added palette data for map scripts
+
+	* scripts/maptoxpm.pl, scripts/mergemap.pl, scripts/xpmtomap.pl:
+	Added some map editting scripts
+
+2006-03-19  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/character.cpp:
+	Bugfix: wait on NPC bed (awake), when NPC tries to kick you out of bed we get
+	an assert because the player is not sleeping. Fixed this by having the NPC
+	check that the player is asleep first. Otherwise it waits for the player to
+	leave.
+
+2006-03-18  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/mesmeme.scm: Mesmeme can now be asked to leave
+
+	* worlds/haxima-1.002/jake.scm, worlds/haxima-1.002/zones.scm:
+	Jake&Percival no longer sleepwalk
+
+	* worlds/haxima-1.002/ilya.scm:
+	Ilya now gives correct directions to farm
+
+	* worlds/haxima-1.002/ini.scm: Gave ini appropriate xp for level
+
+2006-03-16  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/amy.scm:
+	Amy mentioned the accursed, but didnt provide any information on them. Now you get some gossip.
+
+	* worlds/haxima-1.002/terrains.scm: Less specific water naming
+
+	* worlds/haxima-1.002/game.scm, worlds/haxima-1.002/keep.scm, worlds/haxima-1.002/lever.scm, worlds/haxima-1.002/mans-hideout.scm, worlds/haxima-1.002/sprites.scm:
+	Hidden lever now searchable
+
+	* worlds/haxima-1.002/alchemist.scm, worlds/haxima-1.002/endless-deeps.scm, worlds/haxima-1.002/trigrave.scm:
+	Dragon quest rune is now in Kurpolis deeps
+
+2006-03-14  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/gen.scm: Gen now has appropriate xp for his level
+
+2006-03-13  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/alchemist.scm:
+	Alchemist remembers completed quests
+
+2006-03-12  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/r2a_mech.scm, worlds/haxima-1.002/road_to_absalot.scm:
+	road to absalot now works after save/reload (oops)
+
+2006-03-12  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/warritrix.scm:
+	Fixed up the Warritrix's conversation
+
+2006-03-12  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/kraken-lakes.scm, worlds/haxima-1.002/start-new-game.scm:
+	Linked in endless deeps level
+
+2006-03-11  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/kern.c:
+	Composite maps were not getting blended. It's not sufficient to blend the
+	sub-maps, because they're edges aren't blended and it makes their seams visible
+	in the composite map.
+
+	* src/common.h, src/nazghul.c, src/play.c, src/screen.c, src/status.c:
+	Some minor cleanup, and a fix for the status display, which wasn't showing a
+	title on startup.
+
+2006-03-10  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/Being.cpp, src/object.c:
+	Workaround for [ 1114054 ] messages for off-screen NPC's getting printed:
+	While the pathfinding code attempts to handle a mechanism it disables console
+	messages. This prevents mechanism scripts from printing to the console when
+	NPC's handle them during normal pathfinding.
+
+2006-03-08  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/endless-deeps-mech.scm:
+	Added more critters to the deeps
+
+	* worlds/haxima-1.002/endless-deeps-mech.scm:
+	New random templates: lava and swamp
+
+	* worlds/haxima-1.002/joel.scm:
+	Joel still had the old paladins in the tunnel plot.
+
+	* worlds/haxima-1.002/endless-deeps-mech.scm, worlds/haxima-1.002/endless-deeps.scm:
+	Initial upload of third garrison and endless deeps
+
+2006-03-08  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/cmd.c:
+	If the player handles a nameless mech the console prints "Fyodor handles a
+	hidden mechanism". Ie, nameless is assumed to mean "hidden". A hack, so if the
+	assumption becomes unwieldy we'll have to add some more support for different
+	types of "hidden-ness".
+
+2006-03-07  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/keep.scm: Alternative treasure room access
+
+2006-03-07  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/abigail.scm, worlds/haxima-1.002/addons.png, worlds/haxima-1.002/doris.scm, worlds/haxima-1.002/gen.scm, worlds/haxima-1.002/green-tower.scm, worlds/haxima-1.002/lever.scm, worlds/haxima-1.002/sprites.scm, worlds/haxima-1.002/terrains.scm, worlds/haxima-1.002/zones.scm:
+	Fix for [ 1434216 ] where's abigail?
+
+	Added Abigail character.
+
+	* src/cmd.c: [ 1437442 ] t)alk targets invisible people.
+
+	Now it doesn't.
+
+2006-03-06  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/kern.c, src/Makefile.am, src/blender.h, src/combat.c:
+	The terrain blenders are now run on automatically-generated combat maps.
+
+	* worlds/haxima-1.002/combat-maps.scm:
+	Fix for [ 1431953 ] bad default combat map with blended terrain
+
+	The case for all existing blended terrains has been fixed by assigning a combat
+	map to each of them. This will have to be done for all future blended terrains
+	as well as they are added.
+
+	* src/play.c, src/session.c, src/wind.c, src/wind.h:
+	Fix for [ 1429543 ] wind not updated on load
+
+	session_load() now calls windRepaint(). Also, added windSave() since I noticed
+	that the wind direction was not getting saved. session_save() now calls it.
+
+2006-02-25  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/palette.scm, worlds/haxima-1.002/sprites.scm, worlds/haxima-1.002/terrains.scm:
+	Restoring a few things that were accidentally removed
+
+	* worlds/haxima-1.002/alchemist.scm:
+	A few stylistic tweaks to Alchemist's conv
+
+	* src/object.h, src/player.cpp, src/player.h:
+	Fix for [ 1429541 ] extra ship on town entry
+
+	Added a check to see if the player was in a vehicle when trying to move onto a
+	subplace. If so, denied.
+
+2006-02-25  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/spells.scm:
+	Fix for invisibility spells not using up scrolls (they probaby didnt use reagents either)
+
+2006-02-24  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/alchemist.scm, worlds/haxima-1.002/newterrain.png, worlds/haxima-1.002/palette.scm, worlds/haxima-1.002/road_to_absalot.scm, worlds/haxima-1.002/sprites.scm, worlds/haxima-1.002/terrains.scm:
+	Added path through road to absalot to match Alchemists lich quest
+
+2006-02-23  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/character.cpp:
+	Fix for [ 1425039 ] Solo mode + possession = lockup
+
+	The charm works by setting a being's current faction to the
+	caster's. Character::setCurrentFaction() already checks if the character is a
+	party member, I added another check to see if the character was in solo mode,
+	and if so to set the party mode to follow.
+
+	Also found a bug where unreadyAll() was calling
+	player_party->unrefInventoryObject(arms) after unready() already did, causing
+	some oddities in the player inventory.
+
+2006-02-22  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/place.c: Turning off some noise debug
+
+	* src/place.c: Fix for 1425025: abuse of party moded + save game.
+
+	Fixed this by addressing the order in which objects are saved in the current
+	place. Previously, they were saved by tile order, so in addition to what the
+	bug report noted you could get some other odd things. Now, they're saved in
+	turn list order, and the current object is always saved at the head of the
+	list. This ensures that on reload the object which saved the game begins the
+	turn order and the place then continues executing objects in the original
+	order.
+
+2006-02-18  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/cmd.c: Aborting a spell should not cost mana
+
+2006-02-18  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/spells.scm:
+	Blink spells now only work withing LOS
+
+	* worlds/haxima-1.002/spells.scm:
+	Blink spells will no longer transport the caster onto an impassable terrain
+
+2006-02-17  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/ascii.c:
+	Got rid of some dead code I noticed thanks to Janne's last patch
+
+2006-02-17  icepic  <icepic@localhost.localdomain>
+
+	* src/ascii.c: uninitialized nitpickings. shuts gcc4 up
+
+2006-02-17  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/engineer.scm:
+	Quests now require component quantities as in the voidship plans.
+	TODO: grammer on 'we still need X' messages needs work
+
+2006-02-17  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/arms.scm, worlds/haxima-1.002/effects.scm, worlds/haxima-1.002/npc-types.scm:
+	Demons (and Nossifer) now immune to kill spell
+
+	* worlds/haxima-1.002/nossifer.scm:
+	Fix for 1425031: spelling/grammer errors in nossifer.scm. Fixed as suggested.
+
+2006-02-15  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/event.c, src/kern.c, src/object.c, src/object.h, src/species.c, src/species.h, worlds/haxima-1.002/ability.scm, worlds/haxima-1.002/ai.scm, worlds/haxima-1.002/species.scm, scripts/RELEASE_CHECKOFF, src/Being.cpp, src/Party.cpp, src/Party.h, src/character.cpp, src/character.h, src/ctrl.c:
+	Fix for bug [ 1423898 ]: immobile critters. Critters like dryads and hydras are
+	supposed to be stationary. Early efforts to make this happen using the movement
+	modes and passability masks didn't work, so I did it in their AI's. But this
+	allowed their NPC parties to move on the map. With this change a species may
+	have a "stationary" flag. Any member of that species, and any party which
+	contains a living member of that species, will not move on the map, although
+	they will attack the player normally.
+
+2006-02-14  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/npc-types.scm, worlds/haxima-1.002/sprites.scm, worlds/haxima-1.002/terrains.scm, worlds/haxima-1.002/ability.scm, worlds/haxima-1.002/ai.scm, worlds/haxima-1.002/effects.scm:
+	Fix for 1423370: fire slimes divide into green slimes. Changed the slime-split
+	effect to be a generic split effect. It now has its own gob which specifies the
+	npc type tag to use to create the clone. Had to modify the generic npc
+	constructor in npc-types.scm to expect some effects to specify a gob ctor and
+	parms.
+
+	* src/character.cpp:
+	Fix for 1421524: abuse of solo mode/rendezvous. If hostiles are around, solo
+	mode party member's no longer instantly pathfind to the party leader when the
+	player enters Follow mode.
+
+	* src/closure.c, src/map.c, src/scheme.c, src/tick.c, src/tick.h:
+	Changes for 64bit compilation based on Jason Tibbs patch
+
+2006-02-12  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/place.c, src/play.c:
+	Added a performance optimization: the pathfinding algorithm now makes a quick
+	check to see if the target is surrounded by impassible terrain. If so, it
+	aborts early. Makes all the difference for cases like sea creatures trying to
+	pathfind to the player party in the middle of dry land.
+
+2006-02-11  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/newterrain.png:
+	Added corner pieces for light forest. Also some plains corners without the shore effect
+
+2006-02-11  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/event.c, src/event.h, src/nazghul.c:
+	Fixed missing keystrokes by adding a backlog queue in event.c. Not the dramatic improvement I was hoping for, unfortunately.
+
+	* worlds/haxima-1.002/effects.scm: Bomb traps no longer self-destrruct
+
+	* worlds/haxima-1.002/kama.scm:
+	After joining once, Kama gives coords to Angriss in response to RUKA
+
+2006-02-10  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/sprites.scm:
+	Added sprite definitions for hires mountains/forest
+
+	* worlds/haxima-1.002/newterrain.png: Added:
+	High resolution mountains & forests
+	Hill edge effects for blended terrain
+
+	* worlds/haxima-1.002/tools.png: Updated sextant
+
+2006-02-10  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/Makefile.am, worlds/haxima-1.002/earl.scm, worlds/haxima-1.002/merciful-death.scm, worlds/haxima-1.002/naz.scm, worlds/haxima-1.002/tools.png, worlds/haxima-1.002/tools.scm:
+	Added a sextant
+
+2006-02-09  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/rune.png:
+	Uploaded 'Etched' look for runic sign text
+
+2006-02-09  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/spells.scm:
+	Removed LAT and LONG from in-wis verbage, as Tristan points out these are backwards
+
+2006-02-08  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/terrains.scm, worlds/haxima-1.002/gregors-hut.scm, worlds/haxima-1.002/shard.scm:
+	Converted kern-terrain-map blend calls to kern-mk-blender
+
+	* src/kern.c, src/session.c, src/session.h:
+	Added kern-mk-blender, creates a terrain blender which is automatically applied to all maps as they are created
+
+	* src/Missile.cpp, src/kern.c, src/object.c, src/terrain_map.c, src/terrain_map.h:
+	Arrows on the ground were spinning whenever anyone shot an arrow; similar for other ammo types
+
+	* worlds/haxima-1.002/green-tower.scm: Moved the lever in GT
+
+	* worlds/haxima-1.002/game.scm, worlds/haxima-1.002/gregors-hut.scm, worlds/haxima-1.002/hidden.scm, worlds/haxima-1.002/newterrain.png, worlds/haxima-1.002/old-absalot.scm, worlds/haxima-1.002/palette.scm, worlds/haxima-1.002/shard.scm, worlds/haxima-1.002/terrains.scm:
+	Searching for the S rune revealed it, but the player couldn't see it and might assume that searching for it put it in his inventory. This change adds the notion of a 'hidden' object which, when searched, becomes a normal visible object. This is done via a wrapper object which responds to the 'search' signal by creating the hidden object.
+
+2006-02-06  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/kern.c, src/terrain_map.c, src/terrain_map.h:
+	Added kern-terrain-map-blend
+
+	* worlds/haxima-1.002/gregors-hut.scm, worlds/haxima-1.002/palette.scm, worlds/haxima-1.002/shard.scm, worlds/haxima-1.002/terrains.scm:
+	Blending shard and gregor's hut maps
+
+	* worlds/haxima-1.002/newterrain.png: Terrain pieces
+
+	* worlds/haxima-1.002/naz.scm, worlds/haxima-1.002/palette.scm, worlds/haxima-1.002/sprite-sets.scm, worlds/haxima-1.002/sprites.scm, worlds/haxima-1.002/terrains.scm:
+	Added some shore sprites and shore terrains based on Kris Parker's work
+
+	* src/kern.c, src/sprite.c, src/sprite.h:
+	Added ability to 'decorate' sprites with other sprites, making layered sprites
+
+2006-02-05  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/kern.c, src/place.c, src/place.h:
+	Added kern-place-set/get-terrain-map
+
+	* src/combat.c, src/kern.c, src/place.c, src/place.h, src/session.c, src/terrain_map.c, src/terrain_map.h:
+	Added ref counting for terrain maps
+
+	* worlds/haxima-1.002/effects.scm:
+	Bugfix from Bernhard Link: faction-wood-spider is nowehere defined, use faction-spider
+
+	* doc/USERS_GUIDE: Updated for new install
+
+	* INSTALL: Updated instructions on running the game
+
+	* worlds/haxima-1.002/Makefile.am: Wrong filename
+
+	* AUTHORS, BUGS, ChangeLog, INSTALL, NEWS, configure.ac, scripts/RELEASE_CHECKOFF:
+	Preparing for 0.5.3 release
+
+2006-02-04  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/cmd.c, src/player.cpp, src/player.h, src/character.cpp:
+	Bugfix: if the script called kern-char-unready on a PC it would mess up the player party inventory counts, could cause an assert in status.c
+
+	* worlds/haxima-1.002/newmonst.png, worlds/haxima-1.002/npc-types.scm, worlds/haxima-1.002/sprites.scm:
+	Added Kris Parker's new gint mage sprite
+
 2006-02-04  Gordon McNutt  <gmcnutt@localhost.localdomain>
 
 	* src/cmd.c, src/player.cpp, src/player.h, src/character.cpp:

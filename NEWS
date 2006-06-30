@@ -1,3 +1,23 @@
+Changes between nazghul 0.5.3 and nazghul 0.5.4:
+o Blended terrain [1]
+o Misc. improved sprites
+o Fixes for: spinning arrows on ground, S rune visibility, "dropped" key
+  presses, solo mode/rendezvous abuse, fire slimes dividing into green slimes,
+  immobile critters, misc. spelling/grammar, party mode + save game abuse, solo
+  moded + posession lockup, Alchemist's lich quest, invisibility scrolls not
+  getting consumed when used, extra ship on town entry bug, wind not updated on
+  load bug, t)alk targeting invisible people abuse, missing Abigail character
+  [1], misc. haxima plot fixes, misc. other
+o Minor limited tweaks to some weapon stats
+o Reagents a lot cheaper now
+o New bottom level of Kurpolis (warning: evil) [1]
+o Demons immune to kill spell
+o Improved pathfinding performance
+o Fixes for 64bit compilation
+o Added sextants
+[1] Changes not applicable with previous saved games
+
+
 Changes between nazghul 0.5.2 and nazghul 0.5.3:
 o Bugfix: assert in status.c after disarmed or acid dissolves readied 
 o New sprites: gint mage, tower, activated altar, PC's, goblins, transparent
