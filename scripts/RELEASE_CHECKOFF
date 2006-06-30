@@ -8,7 +8,8 @@ PART I: PREPARE FOR RELEASE
 * INSTALL is up-to-date
 * BUGS is up-to-date
 * ChangeLog is up-to-date (use C-x v a)
-* NEWS is up-to-date with differences since last version
+* NEWS is up-to-date with differences since last version (note which
+  differences work with saved games and which require a restart)
 * AUTHORS is up-to-date with _ALL_ contributions (legal reasons)
 * Version number is correct in configure.ac
 * The SUBDIRS of Makefile.am and worlds/Makefile.am are correct for this 
