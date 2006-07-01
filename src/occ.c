@@ -37,6 +37,8 @@ static void occ_del(struct occ *occ)
 		free(occ->tag);
 	if (occ->name)
 		free(occ->name);
+        if (occ->gob)
+                gob_del(occ->gob);
         free(occ);
 }
 
