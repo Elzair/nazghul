@@ -64,6 +64,7 @@
 #include <errno.h>
 
 #define MAX_SPELL_NAME_LENGTH 64 /* arbitrarily chosen */
+#define MIN_XAMINE_LIGHT_LEVEL 32
 
 extern int DeveloperMode;
 
@@ -2381,18 +2382,23 @@ bool cmdMixReagents(class Character *character)
 void look_at_XY(struct place *place, int x, int y)
 {
         if (DeveloperMode) {
-                log_begin("At XY=(%d,%d) you see ", x, y);
+                log_begin("At XY=(%d,%d): ", x, y);
         } else {
-                log_begin("You see ");
+                log_begin("");
         }
 
         if ( mapTileIsVisible(x, y) ) {
-                place_describe(place, x, y, PLACE_DESCRIBE_ALL);
+                if (mapTileLightLevel(x,y) < MIN_XAMINE_LIGHT_LEVEL) {
+                        log_continue("You can't see!");
+                } else {
+                        log_continue("You see ");
+                        place_describe(place, x, y, PLACE_DESCRIBE_ALL);
+                }
         } else if (ShowAllTerrain) {
-                log_continue("(via xray) ");
+                log_continue("You see (via xray) ");
                 place_describe(place, x, y, PLACE_DESCRIBE_TERRAIN);
         } else {
-                log_continue("nothing (out of LOS)");
+                log_continue("You can't see!");
         }
 
         log_end(NULL);

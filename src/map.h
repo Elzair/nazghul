@@ -74,6 +74,7 @@ extern int mapIsInCameraView(struct place *place, int x, int y);
 
 extern int mapTileIsWithinViewport(int x, int y);
 extern int mapTileIsVisible(int x, int y);
+extern unsigned char mapTileLightLevel(int x, int y);
 
 extern void mapBlackout(int val); // for sleeping in town
 

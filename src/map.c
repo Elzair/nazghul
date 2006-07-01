@@ -833,12 +833,14 @@ static void mapRepaintCoordinates(void)
         }
 
         if (player_party->isOnMap()) {
-                screenPrint(&Map.locRect, 0, "[%d,%d]", player_party->getX(), player_party->getY());
+                screenPrint(&Map.locRect, 0, "[%d,%d]", player_party->getX(), 
+                            player_party->getY());
                 return;
         }
         
         if (NULL != Map.subject)
-                screenPrint(&Map.locRect, 0, "[%d,%d]", Map.subject->getX(), Map.subject->getY());
+                screenPrint(&Map.locRect, 0, "[%d,%d]", Map.subject->getX(), 
+                            Map.subject->getY());
 }
 
 static void mapRepaintTurnaround(void)
@@ -976,72 +978,67 @@ void mapRepaintView(struct mview *view, int flags)
 	}
 }
 
+static int mapXToViewX(int x)
+{
+        SDL_Rect *vrect = &Map.aview->vrect;
+        int x2 = x - vrect->x;
+        if (x2 < 0
+            && place_is_wrapping(Map.place)
+            && (vrect->x + vrect->w) > place_w(Map.place))
+                x2 += place_w(Map.place);
+        return x2;
+}
+
+static int mapYToViewY(int y)
+{
+        SDL_Rect *vrect = &Map.aview->vrect;
+        int y2 = y - vrect->y;
+        if (y2 < 0
+            && place_is_wrapping(Map.place)
+            && (vrect->y + vrect->h) > place_h(Map.place))
+                y2 += place_h(Map.place);
+        return y2;
+}
+
 int mapTileIsWithinViewport(int x, int y)
 {
         SDL_Rect *vrect = &Map.aview->vrect;
-  
-        // If the view rect extends past the right side of the map, and x is
-        // left of the view rect, then convert x to be right of the view rect.
-        if ((vrect->x + vrect->w) > place_w(Map.place) && 
-            x < vrect->x) {
-                x += place_w(Map.place);
-        }
-        
-        // Likewise if the view rect extends beyond the southern edge of the
-        // map, and y is less than the top of the view rect, then convert y to
-        // be south of the view rect.
-        if ((vrect->y + vrect->h) > place_h(Map.place) && 
-            y < vrect->y) {
-                y += place_h(Map.place);
-        }
-        
-        // check if the coords are in the view rect
-        if (x < vrect->x ||
-            x >= (vrect->x + vrect->w) ||
-            y < vrect->y ||
-            y >= (vrect->y + vrect->h))
+        int vx = mapXToViewX(x);
+        int vy = mapYToViewY(y);
+        if (vx < 0
+            || vx >= vrect->w
+            || vy < 0
+            || vy >= vrect->h)
                 return 0;
-        
-        return 1;  
+        return 1;
+}
+
+unsigned char mapTileLightLevel(int x, int y)
+{
+        int vx = mapXToViewX(x);
+        int vy = mapYToViewY(y);
+        return lmap[vy * LMAP_W + vx];
 }
 
 int mapTileIsVisible(int x, int y)
 {       
-        int index;
         SDL_Rect *vrect = &Map.aview->vrect;
+        int vx = mapXToViewX(x);
+        int vy = mapYToViewY(y);
 
-        // If the view rect extends past the right side of the map, and x is
-        // left of the view rect, then convert x to be right of the view rect.
-        if ((vrect->x + vrect->w) > place_w(Map.place) && 
-            x < vrect->x) {
-                x += place_w(Map.place);
-        }
-
-        // Likewise if the view rect extends beyond the southern edge of the
-        // map, and y is less than the top of the view rect, then convert y to
-        // be south of the view rect.
-        if ((vrect->y + vrect->h) > place_h(Map.place) && 
-            y < vrect->y) {
-                y += place_h(Map.place);
-        }
-        
-
-        // check if the coords are in the view rect
-        if (x < vrect->x ||
-            x >= (vrect->x + vrect->w) ||
-            y < vrect->y ||
-            y >= (vrect->y + vrect->h))
+        // check if coords in vrect
+        if (vx < 0
+            || vx >= vrect->w
+            || vy < 0
+            || vy >= vrect->h)
                 return 0;
 
         // If zoomed out then don't bother checking the vmask.
         if (Map.aview->zoom > 1)
                 return 1;
 
-        // check if the tile is marked as visible in the view rect
-        index = (y - vrect->y) * vrect->w +
-                (x - vrect->x);
-        
-        return Map.vmask[index];
+        // Return if the tile is marked as visible
+        return Map.vmask[vy * vrect->w + vx];
             
 }
 void mapMarkAsDirty(struct mview *view)
@@ -1483,12 +1480,16 @@ void mapUpdateTile(struct place *place, int x, int y)
         if (place != Map.place)
                 return;
 
-        rect.x = (x - (Map.aview->vrect.x + Map.aview->subrect.x)) * TILE_W/Map.aview->zoom + Map.srect.x;
-        if (rect.x < Map.srect.x || rect.x > (Map.srect.x + Map.srect.w - TILE_W/Map.aview->zoom))
+        rect.x = (x - (Map.aview->vrect.x + Map.aview->subrect.x)) 
+                * TILE_W/Map.aview->zoom + Map.srect.x;
+        if (rect.x < Map.srect.x || rect.x > (Map.srect.x + Map.srect.w 
+                                              - TILE_W/Map.aview->zoom))
                 return;
 
-        rect.y = (y - (Map.aview->vrect.y + Map.aview->subrect.y)) * TILE_H/Map.aview->zoom + Map.srect.y;
-        if (rect.y < Map.srect.y || rect.y > (Map.srect.y + Map.srect.h - TILE_H/Map.aview->zoom))
+        rect.y = (y - (Map.aview->vrect.y + Map.aview->subrect.y)) 
+                * TILE_H/Map.aview->zoom + Map.srect.y;
+        if (rect.y < Map.srect.y || rect.y > (Map.srect.y + Map.srect.h 
+                                              - TILE_H/Map.aview->zoom))
                 return;
 
         // ---------------------------------------------------------------------
@@ -1524,7 +1525,8 @@ void mapUpdateTile(struct place *place, int x, int y)
                 // ------------------------------------------------------------
 
                 vmask = Map.vmask;
-                index = ((y - Map.aview->vrect.y) * Map.aview->vrect.w) + (x - Map.aview->vrect.x);
+                index = ((y - Map.aview->vrect.y) * Map.aview->vrect.w) 
+                        + (x - Map.aview->vrect.x);
 
                 if (vmask[index] || ShowAllTerrain || XrayVision) {
                         spritePaint(terrain->sprite, 0, rect.x, rect.y);
