@@ -316,6 +316,9 @@ int playRun(void)
                 return -1;
         }
 
+        /* bugfix for [ 1475929 ]: sleeping npcs wake on reloads */
+        place_synchronize(Place);
+
         mapUpdate(REPAINT_IF_DIRTY);
         statusRepaint();
 
