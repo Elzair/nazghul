@@ -42,7 +42,7 @@
                           (kern-log-msg "No effect!")
                           nil)
                         (let ((roll (kern-dice-roll "1d20"))
-							  (bonus (kern-dice-roll (string-append "1d" (number->string (pick-lock-bonus kuser)))))
+							  (bonus (kern-dice-roll (string-append "1d" (number->string (occ-ability-thief kuser)))))
 								)
                           (println "rolled " roll " + " bonus)
                           (if (= roll 20)
