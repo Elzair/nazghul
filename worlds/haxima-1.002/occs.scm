@@ -36,7 +36,7 @@
 			(floor 
 				(/ (+ (kern-char-get-level kchar) 
 					(kern-char-get-dexterity kchar)) 4))
-				(occ-abil kchar)
+			(occ-abil kchar)
 			)))
 
 
@@ -58,3 +58,67 @@
 	(occ-set-abil oc_wanderer 0 partskill)
 	)
 
+;-----------------------------
+;Magic output
+
+(define (occ-ability-whitemagic kchar)
+	(let ((occ-abil (occ-get-abil (kern-char-get-occ kchar) 1)))
+		(if (null? occ-abil)
+			(floor 
+				(+ (/ (kern-char-get-level kchar) 3)
+					(/ (kern-char-get-intelligence kchar) 3)))
+			(occ-abil kchar)
+			)))
+			
+(define (occ-ability-blackmagic kchar)
+	(let ((occ-abil (occ-get-abil (kern-char-get-occ kchar) 2)))
+		(if (null? occ-abil)
+			(floor 
+				(/ (+ (kern-char-get-level kchar) 
+					(kern-char-get-intelligence kchar)) 4))
+			(occ-abil kchar)
+			)))
+			
+(let (
+	(highskill
+		(lambda (kchar)
+			(floor 
+				(+ (kern-char-get-level kchar)
+					(/ (kern-char-get-intelligence kchar) 2))
+			)))
+	(modskill
+		(lambda (kchar)
+			(floor 
+				(+ (* (kern-char-get-level kchar) 0.75)
+					(/ (kern-char-get-intelligence kchar) 3))
+			)))
+	(someskill
+		(lambda (kchar)
+			(floor 
+				(+ (/ (kern-char-get-level kchar) 3)
+					(/ (kern-char-get-intelligence kchar) 3))
+			)))	
+	(poorskill
+		(lambda (kchar)
+			(floor 
+				(+ (/ (kern-char-get-level kchar) 4)
+					(/ (kern-char-get-intelligence kchar) 4))
+			)))
+	(noskill
+		(lambda (kchar)
+			(floor 
+				(+ (/ (kern-char-get-level kchar) 6)
+					(/ (kern-char-get-intelligence kchar) 4))
+			)))
+	)
+	(occ-set-abil oc_wizard 1 highskill)
+	(occ-set-abil oc_wizard 2 highskill)
+	(occ-set-abil oc_wanderer 1 modskill)
+	(occ-set-abil oc_wanderer 2 modskill)
+	(occ-set-abil oc_warrior 1 poorskill)
+	(occ-set-abil oc_warrior 2 noskill)
+	(occ-set-abil oc_ranger 2 someskill)
+)
+
+;-----------------------------
+; Magic defense
