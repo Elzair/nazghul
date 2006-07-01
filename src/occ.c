@@ -20,6 +20,7 @@
 // gmcnutt@users.sourceforge.net
 //
 
+#include "gob.h"
 #include "occ.h"
 #include "object.h"
 #include "sprite.h"

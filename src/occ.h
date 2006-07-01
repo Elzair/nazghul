@@ -51,6 +51,8 @@ struct occ {
         
         int xpval; /* reward for killing this type */
         int refcount;
+		
+		struct gob *gob;
 };
 
 extern struct occ *occ_new(char *tag,

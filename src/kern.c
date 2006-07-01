@@ -7325,6 +7325,49 @@ KERN_API_CALL(kern_occ_get_mp_mult)
         return scm_mk_integer(sc, occ->mp_mult);
 }
 
+KERN_API_CALL(kern_occ_get_gob)
+{
+        struct occ *occ;
+
+        if (unpack(sc, &args, "p", &occ)) {
+                rt_err("kern-occ-get-gob: bad args");
+                return sc->NIL;
+        }
+
+        if (! occ) {
+                rt_err("kern-occ-get-gob: null occ");
+                return sc->NIL;
+        }
+
+		if (occ->gob == NULL)
+		{
+			return sc->NIL;
+		}
+
+        // It's already a scheme pointer so just return it directly
+        return occ->gob->p;
+}
+
+KERN_API_CALL(kern_occ_set_gob)
+{
+
+        struct occ *occ;
+		
+        if (unpack(sc, &args, "p", &occ)) {
+                rt_err("kern-occ-set-gob: bad args");
+                return sc->NIL;
+        }
+		
+        if (! scm_is_pair(sc, args)) {
+               rt_err("kern-occ-set-gob: no gob specified");
+               return sc->NIL;
+        }
+
+       occ->gob = gob_new(sc, scm_car(sc, args));
+
+       return sc->NIL;
+}
+
 KERN_API_CALL(kern_end_game)
 {
         log_msg("*** CONGRATULATIONS ***");
@@ -7569,6 +7612,8 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-occ-get-hp-mult", kern_occ_get_hp_mult);
         API_DECL(sc, "kern-occ-get-mp-mod",  kern_occ_get_mp_mod);
         API_DECL(sc, "kern-occ-get-mp-mult", kern_occ_get_mp_mult);
+        API_DECL(sc, "kern-occ-get-gob", kern_occ_get_gob);
+        API_DECL(sc, "kern-occ-set-gob", kern_occ_set_gob);
 
         /* kern-place api */
         API_DECL(sc, "kern-place-set-subplace", kern_place_set_subplace);
