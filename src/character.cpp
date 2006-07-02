@@ -2473,6 +2473,8 @@ bool Character::joinPlayer(void)
 
 void Character::leavePlayer(void)
 {
+        if (!isPlayerPartyMember())
+                return;
         if (isSolo()) {
                 assert(isPlayerControlled());
                 player_party->enableRoundRobinMode();
