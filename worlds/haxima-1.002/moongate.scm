@@ -49,8 +49,12 @@
 ;; ----------------------------------------------------------------------------
 (define (moongate-animate kgate stages)
   (let ((view (kern-map-view-create))
-        (original-sprite (kern-obj-get-sprite kgate))
-        (original-light (kern-obj-get-light kgate))
+        ;; Commented-these out to fix mouse.scm's moongate animation; doesn't
+        ;; seem to effect the starting scene animation which is the only other
+        ;; reference I see to this procedure. Leaving these as comments for now
+        ;; just in case.
+        ;;(original-sprite (kern-obj-get-sprite kgate))
+        ;;(original-light (kern-obj-get-light kgate))
         (loc (kern-obj-get-location kgate)))
     (kern-map-view-add view)
     (kern-map-view-center view loc)
@@ -61,8 +65,8 @@
            (kern-map-repaint)
            (kern-sleep 250))
          stages)
-    (kern-obj-set-sprite kgate original-sprite)
-    (kern-obj-set-light kgate original-light)
+    ;;(kern-obj-set-sprite kgate original-sprite)
+    ;;(kern-obj-set-light kgate original-light)
     (kern-map-view-rm view)
     (kern-map-view-destroy view)
     ))

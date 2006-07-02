@@ -72,8 +72,7 @@
 
 (define (kathryn-search knpc kpc)
   (define (do-join)
-    (say knpc "Excellent! Let's ask Thud to join us and we'll see if "
-         "anyone around here knows about a thief.")
+    (say knpc "Excellent! Let's see if anyone around here knows about a thief.")
     (if (in-inventory? knpc t_wis_quas_scroll)
         (begin
           (say knpc "Oh, this scroll may come in handy. "
@@ -82,6 +81,12 @@
           (kern-obj-remove-from-inventory knpc t_wis_quas_scroll 1)
           (kern-obj-add-to-inventory kpc t_wis_quas_scroll 1)))
     (kern-char-join-player knpc)
+    (if (and (defined? 'ch_thud)
+             (is-alive? ch_thud))
+        (begin
+          (say knpc "You won't mind if my cousin Thud joins us. "
+               "He's really such a child, and quite helpless without me.")
+          (kern-char-join-player ch_thud)))
     (kern-conv-end))
   (say knpc "It seems we have a common goal. Join us, and when we catch the "
        "villian we'll all return the item. You can keep any reward. "

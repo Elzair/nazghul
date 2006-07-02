@@ -16,80 +16,112 @@
 (define (mouse-first-meeting? mouse) (car mouse))
 (define (mouse-set-first-meeting! mouse val) (set-car! mouse val))
 
+;; The procedure below references ch_thud and ch_kathryn if they are defined,
+;; so on load add a ref count so if they are killed they won't be destroyed;
+;; once dead, on subsequent reloads they won't be defined anymore
+(if (defined? 'ch_thud)
+    (kern-obj-inc-ref ch_thud))
+(if (defined? 'ch_kathryn)
+    (kern-obj-inc-ref ch_kathryn))
+
 (define (mouse-meet-first-time knpc kpc)
-  (mouse-set-first-meeting! (kobj-gob-data knpc) #f)
 
   (define (mouse-disappear)
     (say knpc "Oh, bother. Not again!")
     (kern-obj-add-effect knpc ef_invisibility nil)
     (kern-conv-end kpc)
-    (kern-log-msg "<Hit any key to continue>")
-    (kern-ui-waitkey)
     )
-    
-  (define (betray-player kchar)
-    (kern-char-leave-player kchar)
-    (kern-being-set-base-faction kchar faction-monster))
 
-  (define (kathryn-alive-in-party)
-    (betray-player ch_kathryn)
-    (if (and (defined? 'ch_thud)
-			(is-alive? ch_thud))
-		(if	(is-player-party-member? ch_thud)
-			(begin
-				(say ch_kathryn "The fool has led us right to the Thief! "
-					"Quickly, Thud! Kill them all!")
-				(betray-player ch_thud))
-			(kern-being-set-base-faction ch_thud faction-monster)))
-    (say ch_kathryn "Fool! Now the thief is mine!")
-    (mouse-disappear))
+  (define (mouse-query)
+    (say knpc "Hi. You weren't sent by the Red Lady, were you?")
+    (if (yes? kpc)
+        (mouse-disappear)
+        (say knpc "Whew! You scared me for a minute.")))
 
+  (define (mouse-gratitude)
+    (say knpc "Praise be to Alopex! The Red Lady is dead! "
+         "You've done me a great favor."))
 
-  (define (kathryn-alive-but-not-in-party)
-    (let* ((gate-loc (mk-loc (loc-place (kern-obj-get-location knpc)) 7 2))
-           (kgate (open-moongate gate-loc)))
-      (warp-in ch_kathryn gate-loc south faction-monster)
-      (say ch_kathryn "I knew this fool would lead me right to you, "
-           "Thief!")
-      (if (and (defined? 'ch_thud)
-               (is-alive? ch_thud))
-          (begin
-            (warp-in ch_thud gate-loc west faction-monster)
-            (say ch_kathryn "Thud, do what you do best!")
-            (say ch_thud "KILL! KILL! KILL! KILL")))
-      (close-moongate kgate))
-    (mouse-disappear))
+  (define (kathryn-speech)
+    (say ch_kathryn "Fool, you have led me right to the thief!")
+    (kern-being-set-base-faction ch_kathryn faction-monster))
 
-  (define (thud-alive-in-party)
-    (say ch_thud "Thief here, but Red Lady dead! Thud kill all!")
-    (mouse-disappear))
+  (define (thud-speech)
+    (say ch_thud "Thief here! Kill! Kill! Kill!")
+    (kern-being-set-base-faction ch_thud faction-monster))
 
-  (define (both-dead-in-party)
-    (betray-player ch_thud)
-    (say knpc "It appears I owe you a debt of gratitude. That sorceress and "
-         "her brute were getting to be a nuisance!"))
-
-  (define (kathryn-dead-in-party)
-    (betray-player ch_kathryn)
-    (if (and (defined? 'ch_thud)
-             (is-player-party-member? ch_thud))
-        (if (is-alive? ch_thud)
-            (thud-alive-in-party)
-            (both-dead-in-party))))
-
-  (if (defined? 'ch_kathryn)
-      (if (is-player-party-member? ch_kathryn)              
-          (if (is-alive? ch_kathryn)
-              (kathryn-alive-in-party)
-              (kathryn-dead-in-party))
-          (if (is-alive? ch_kathryn)
-              (kathryn-alive-but-not-in-party)
-              (if (and (defined? 'ch_thud)
-                       (is-player-party-member? ch_thud))
-                  (if (is-alive? ch_thud)
-                      (thud-alive-in-party)
-                      (both-dead-in-party)))))))
+  (define (open-gate)
+    (open-moongate (mk-loc (loc-place (kern-obj-get-location knpc)) 7 2)))
   
+  (define (warp-in-kathryn kgate)
+    (warp-in ch_kathryn 
+             (kern-obj-get-location kgate)
+             south
+             faction-monster))
+
+  (define (warp-in-thud kgate)
+    (warp-in ch_thud 
+             (kern-obj-get-location kgate)
+             west
+             faction-monster))
+
+  (mouse-set-first-meeting! (kobj-gob-data knpc) #f)
+  (if (defined? 'ch_kathryn)
+      (if (is-alive? ch_kathryn)
+          (if (is-player-party-member? ch_kathryn)
+
+              ;; kathryn is alive in the party (if thud is defined then he must
+              ;; be in the party, too; see kathryn.scm)
+              (begin
+                (kern-char-leave-player ch_kathryn)
+                (kathryn-speech)
+                (if (defined? 'ch_thud)
+                    (begin
+                      (if (is-alive? ch_thud)
+                          (thud-speech))
+                      (kern-char-leave-player ch_thud)))
+                (mouse-disappear))
+
+              ;; kathryn is alive but not in the party so gate her in, and
+              ;; thud, too, if he's alive
+              (let ((kgate (open-gate))
+                    (use-thud? (and (defined? 'ch_thud)
+                                    (is-alive? ch_thud))))
+                (kern-sleep 1000)
+                (warp-in-kathryn kgate)
+                (if use-thud?
+                    (warp-in-thud kgate))
+                (kathryn-speech)
+                (if use-thud?
+                    (thud-speech))
+                (kern-sleep 1000)
+                (close-moongate kgate)
+                (mouse-disappear)))
+
+          ;; kathryn is dead
+          (if (is-player-party-member? ch_kathryn)
+
+              ;; but in the party so remove her and thud, too, if he's defined
+              (begin
+                (kern-char-leave-player ch_kathryn)
+                (if (defined? 'ch_thud)
+                    (if (is-alive? ch_thud)
+                        (begin
+                          (thud-speech)
+                          (kern-char-leave-player ch_thud)
+                          (mouse-disappear))
+                        (begin
+                          (kern-char-leave-player ch_thud)
+                          (mouse-gratitude)))
+                    (mouse-gratitude)))
+
+              ;; kathryn is dead but not in the party (since she is not in the
+              ;; party, thud cannot be either)
+              (mouse-query)))
+
+      ;; kathryn is undefined (so she could never have been in the party, and
+      ;; thus neither could thud)
+      (mouse-query)))
 
 ;;----------------------------------------------------------------------------
 ;; Conv
@@ -181,6 +213,10 @@
 (define (mouse-bye knpc kpc)
   (say knpc "No offense, but I hope we never meet again."))
 
+(define (mouse-alopex knpc kpc)
+  (say knpc "Alopex? Oh, the old god of thieves. "
+       "Or so I've heard."))
+
 (define mouse-conv
   (ifc nil
        (method 'default mouse-default)
@@ -195,6 +231,7 @@
        (method 'lady mouse-lady)
        (method 'rune mouse-rune)
        (method 'thie mouse-thie)
+       (method 'alop mouse-alopex)
        ))
 
 ;;----------------------------------------------------------------------------
