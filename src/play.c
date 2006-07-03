@@ -110,6 +110,7 @@ static void play_reload()
         else
                 log_end("ok!");
         Reload = 0;
+		place_synchronize(Place);
         tick_run();
         vmask_flush_all();
 }
