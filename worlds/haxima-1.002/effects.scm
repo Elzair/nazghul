@@ -63,7 +63,11 @@
               (kern-obj-remove-effect kchar ef_sleep)
               (kern-char-set-sleep kchar #t)
               )))))
-      
+    
+(define (sleep-reset fgob kobj)
+  (if (obj-is-char? kobj)
+     (kern-char-set-sleep kobj #t)))
+
 (define (sleep-rm fgob kobj)
   (if (obj-is-char? kobj)
       (kern-char-set-sleep kobj #f)))
@@ -392,7 +396,7 @@
    (list 'ef_poison                    'poison-exec          nil                 nil              nil                 "start-of-turn-hook" "P" 0   #f  120)
    (list 'ef_poison_immunity           'poison-immunity-exec nil                 nil              nil                 "add-hook-hook"      "I" 0   #f  -1)
    (list 'ef_temporary_poison_immunity 'poison-immunity-exec nil                 nil              nil                 "add-hook-hook"      "I" 0   #f  60)
-   (list 'ef_sleep                     'sleep-exec           nil                 'sleep-rm        nil                 "start-of-turn-hook" "S" 0   #f  60)
+   (list 'ef_sleep                     'sleep-exec           nil                 'sleep-rm        'sleep-reset        "start-of-turn-hook" "S" 0   #f  60)
    (list 'ef_light                     nil                   'light-apply        'light-rm        'light-apply        "start-of-turn-hook" "L" 0   #t  60)
    (list 'ef_torchlight                nil                   'torchlight-apply   'torchlight-rm   'torchlight-apply   "start-of-turn-hook" "T" 0   #f  60)
    (list 'ef_great_light               nil                   'great-light-apply  'great-light-rm  'great-light-apply  "start-of-turn-hook" "L" 0   #t  120)
