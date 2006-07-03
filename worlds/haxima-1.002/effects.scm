@@ -314,10 +314,23 @@
     (if (not (kern-place-is-wilderness? (loc-place loc)))
         (begin
           (if (> (kern-dice-roll "1d20") 12)
-              (let ((clone (mk-npc (split-gob-npc-type-tag fgob)
-                                   (kern-char-get-level kobj))))
+              (let* (
+					(orighp (kern-char-get-hp kobj))
+					(orighproll (string-append "1d" (number->string (kern-char-get-max-hp kobj))))
+					(hurtclone (< (kern-dice-roll orighproll) orighp))
+					(origlevel (kern-char-get-level kobj))
+					(clonelevel 
+						(if (= origlevel 1)
+							1
+							(if hurtclone
+								origlevel
+								(- origlevel 1))))
+					(clone (mk-npc (split-gob-npc-type-tag fgob)
+                                   clonelevel)))
                 (kern-being-set-base-faction clone
                                    (kern-being-get-base-faction kobj))
+				(if hurtclone
+					(kern-char-set-hp clone orighp))
                 (kern-log-msg (kern-obj-get-name kobj) " divides!")
                 (kern-obj-put-at clone (pick-loc loc clone)))
               )))))
