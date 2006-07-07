@@ -39,9 +39,9 @@
                    ;; reagents
                    (list ginseng        (* 5 reagent-price-mult))
                    (list garlic         (* 4 reagent-price-mult))
-                   (list blood_moss     (* 10 reagent-price-mult))
-                   (list nightshade     (* 16 reagent-price-mult))
-                   (list mandrake       (* 22 reagent-price-mult))
+                   (list blood_moss     (* 6 reagent-price-mult))
+                   (list nightshade     (* 8 reagent-price-mult))
+                   (list mandrake       (* 10 reagent-price-mult))
 
                    ;; potions
                    (list t_heal_potion            50)
