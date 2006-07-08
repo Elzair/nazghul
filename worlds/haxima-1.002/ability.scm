@@ -82,7 +82,9 @@
                 (if (eqv? kchar ktarg)
                     "self"
                     (kern-obj-get-name ktarg)))
-  (kern-obj-heal ktarg (kern-dice-roll "1d20+5")))
+	(kern-obj-heal ktarg 
+		(+ 2 (kern-dice-roll "1d10")
+			(kern-dice-roll (string-append "2d" (number->string (occ-ability-whitemagic kchar)))))))
 
 (define (great-heal-proc kchar ktarg)
   (kern-log-msg (kern-obj-get-name kchar)
@@ -132,10 +134,17 @@
                 " fires magic missile at "
                 (kern-obj-get-name ktarg))
   (if (cast-missile-proc kchar ktarg t_arrow)
+	  (let* (
+			(apower 
+				(ceiling (- 
+					(/ (occ-ability-blackmagic kchar) 2)
+					(/ (occ-ability-magicdef ktarg) 10)
+					)))
+			(damagedice (string-append 
+				(number->string (if (> apower 0) apower 1))
+				"d3")))
       (kern-obj-apply-damage ktarg
-                             "ouch"
-                             (* (kern-dice-roll "1d3")
-                                (kern-char-get-level kchar)))))
+                             "ouch" (kern-dice-roll damagedice)))))
 
 (define (cast-poison-missile-proc kchar ktarg)
   (kern-log-msg (kern-obj-get-name kchar)

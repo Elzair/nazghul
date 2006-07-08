@@ -21,6 +21,26 @@
   (if (obj-is-char? obj)
       (kern-obj-apply-damage obj "poisoned" 1)))
 
+;; ------------------------------------------------------------------
+;; Accumulating duration effects support
+;; Should probably have a 'remove from list', but
+;; it might be a better way elsewhere anyway
+;; -------------------------------------------------------------------
+
+(define (effect-list-lookup-loop fxlist target)
+	(if (null? fxlist)
+		nil
+		(if (equal? (caar fxlist) target)
+			(cadar fxlist)
+			(effect-list-lookup-loop (tail fxlist) target)
+		)))
+		
+(define (effect-list-lookup fxlist target)
+	(let ((result (effect-list-lookup-loop (tail fxlist) target)))
+		(if (null? result)
+			(car (cdr (car (tail (set-cdr! fxlist (append (list (list target (list 0))) (tail fxlist)))))))
+			result
+		)))
 
 ;; ----------------------------------------------------------------------------
 ;; Poison & Disease Immunities
@@ -203,22 +223,46 @@
 ;; is applied, and decreasing it when the effect is removed. It does this in a
 ;; two-step process. The first step is an effect which runs on the special
 ;; ----------------------------------------------------------------------------
-(define minor-light-amount 512)
-(define major-light-amount 8192)
+
+(define (light-effect-getdecr current)
+	(if (< current 300)
+		50
+		(if (< current 600)
+			5
+			(floor (/ current 20))
+	)))
 
 (define (light-rm fgob kobj)
-  (kern-log-msg "Light expires!")
-  (kern-obj-dec-light kobj minor-light-amount))
+  (kern-log-msg "Light spell wore off")
+  (set-car! (car fxgob) 0)
+  (kern-obj-dec-light kobj (car fgob)))
 
-(define (light-apply fgob kobj)
-  (kern-obj-inc-light kobj minor-light-amount))
+(define (light-reset fgob kobj)
+	(kern-obj-inc-light kobj (car fgob))
+	)
 
-(define (great-light-rm fgob kobj)
-  (kern-log-msg "Great light expires!")
-  (kern-obj-dec-light kobj major-light-amount))
+(define (light-exec fgob kobj)
+	(if (> (kern-get-total-minutes) (cadar fgob))
+		(let ((decrlight (light-effect-getdecr (caar fgob))))
+			(set-cdr! (car fgob) (list (kern-get-total-minutes)))
+			(if (> decrlight (caar fgob))
+				(kern-obj-remove-effect kobj ef_light)	
+				(begin
+					(set-car! (car fgob) (- (caar fgob) decrlight))
+					(kern-obj-dec-light kobj decrlight)
+				)))))
 
-(define (great-light-apply fgob kobj)
-  (kern-obj-inc-light kobj major-light-amount))
+
+(define light-fxlist (list (list )))
+
+(define (light-apply-new target power)
+	(let ((fxgob (effect-list-lookup light-fxlist target)))
+		(if (equal? fxgob (list 0))
+			(set-car! fxgob (list 0 (kern-get-total-minutes))))
+		(set-car! (car fxgob) (+ (caar fxgob) power))
+		(kern-obj-inc-light target power)
+		(kern-obj-add-effect target ef_light fxgob)
+	))
 
 ;; ----------------------------------------------------------------------------
 ;; torchlight
@@ -397,9 +441,8 @@
    (list 'ef_poison_immunity           'poison-immunity-exec nil                 nil              nil                 "add-hook-hook"      "I" 0   #f  -1)
    (list 'ef_temporary_poison_immunity 'poison-immunity-exec nil                 nil              nil                 "add-hook-hook"      "I" 0   #f  60)
    (list 'ef_sleep                     'sleep-exec           nil                 'sleep-rm        'sleep-reset        "start-of-turn-hook" "S" 0   #f  60)
-   (list 'ef_light                     nil                   'light-apply        'light-rm        'light-apply        "start-of-turn-hook" "L" 0   #t  60)
    (list 'ef_torchlight                nil                   'torchlight-apply   'torchlight-rm   'torchlight-apply   "start-of-turn-hook" "T" 0   #f  60)
-   (list 'ef_great_light               nil                   'great-light-apply  'great-light-rm  'great-light-apply  "start-of-turn-hook" "L" 0   #t  120)
+   (list 'ef_light                     'light-exec           nil                 'light-rm        'light-reset        "start-of-turn-hook" "L" 0   #f  -1)
    (list 'ef_protection                nil                   'protection-apply   'protection-rm   'protection-apply   "start-of-turn-hook" "p" 0   #t  10)
    (list 'ef_charm                     nil                   'charm-apply        'charm-rm        'charm-apply        "start-of-turn-hook" "C" 0   #f   5)
    (list 'ef_invisibility              nil                   'invisibility-apply 'invisibility-rm 'invisibility-apply "start-of-turn-hook" "N" 0   #t  10)

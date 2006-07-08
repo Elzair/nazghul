@@ -288,7 +288,10 @@
 ;; failure. No further details as to cause of failure are required.
 ;;----------------------------------------------------------------------------
 (define (cure-poison caster ktarg)
-  (kern-obj-remove-effect ktarg ef_poison))
+  (kern-obj-remove-effect ktarg ef_poison)
+  (if (< (kern-dice-roll "1d25") (occ-ability-whitemagic caster))
+	(kern-obj-remove-effect ktarg ef_disease))
+  )
 
 (define (awaken caster ktarg)
   (and (kern-obj-remove-effect ktarg ef_sleep)
@@ -322,11 +325,16 @@
   (user-cast-spell-on-party-member caster awaken))
 
 (define (grav-por caster)
-  (user-cast-ranged-targeted-spell caster 8 cast-magic-missile-proc))
+  (let ((range (+ 4 (floor (/ (occ-ability-blackmagic caster) 3)))))
+  (println "gprange " range)
+  (user-cast-ranged-targeted-spell caster range cast-magic-missile-proc)))
 
-(define (in-lor  caster)
-  (kern-obj-add-effect caster ef_light nil)
-  result-ok)
+(define (in-lor caster)
+	(let ((power 
+			(kern-dice-roll (string-append "5d" (
+				number->string (occ-ability-whitemagic caster))))))
+	(light-apply-new caster (+ 400 (* 5 power)))
+	result-ok))
 
 (define (an-xen-bet  caster)
   (kern-obj-add-effect caster ef_spider_calm nil)
@@ -413,7 +421,11 @@
   (user-cast-ranged-targeted-spell caster 8 cast-fireball-proc))
 
 (define (vas-lor  caster)
-  (kern-obj-add-effect caster ef_great_light nil))
+	(let ((power 
+			(kern-dice-roll (string-append "5d" (
+				number->string (occ-ability-whitemagic caster))))))
+	(light-apply-new caster (+ 6000 (* 50 power)))
+	result-ok))
 
 (define (in-flam-sanct caster)
   (user-cast-spell-on-party-member caster 
