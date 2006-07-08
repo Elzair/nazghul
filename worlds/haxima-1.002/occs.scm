@@ -2,7 +2,7 @@
 ;; occupations
 (define (mk-occ tag name hit def dam arm xp)
   (kern-mk-occ tag name 1.0 0 0 0 0 hit def dam arm xp)
-  (kern-occ-set-gob (eval tag) (list nil nil nil)))
+  (kern-occ-set-gob (eval tag) (list nil nil nil nil)))
 
 ;;            /           /         / t  / f / e /   /
 ;;           /           /         / i  / e / g / r /
@@ -18,7 +18,9 @@
 (mk-occ 'oc_ranger   "ranger"    1   1   0   0   4)
 
 (define (occ-get-abil kocc ability)
-	(list-ref (kern-occ-get-gob kocc) ability))
+	(if (null? kocc)
+		nil
+		(list-ref (kern-occ-get-gob kocc) ability)))
 		
 (define (occ-set-abil kocc ability calc)
 	(set-car! 
@@ -122,3 +124,30 @@
 
 ;-----------------------------
 ; Magic defense
+
+(define (occ-ability-magicdef kchar)
+	(let ((occ-abil (occ-get-abil (kern-char-get-occ kchar) 3)))
+		(if (null? occ-abil)
+			(floor 
+				(+ (/ (kern-char-get-level kchar) 3)
+					(/ (kern-char-get-intelligence kchar) 2)))
+			(occ-abil kchar)
+			)))
+			
+(let (
+	(highskill
+		(lambda (kchar)
+			(floor 
+				(+ (/ (kern-char-get-level kchar) 2)
+					(/ (kern-char-get-intelligence kchar) 2))
+			)))
+	(modskill
+		(lambda (kchar)
+			(floor 
+				(+ (* (kern-char-get-level kchar) 0.4)
+					(/ (kern-char-get-intelligence kchar) 2))
+			)))
+	)
+	(occ-set-abil oc_wizard 3 highskill)
+	(occ-set-abil oc_wanderer 3 modskill)
+)
