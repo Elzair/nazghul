@@ -6075,6 +6075,12 @@ KERN_API_CALL(kern_get_time)
         return head;
 }
 
+KERN_API_CALL(kern_get_total_minutes)
+{
+ 		return scm_mk_integer(sc, clock_time());
+}
+
+
 KERN_API_CALL(kern_party_get_members)
 {
         class Party *party;
@@ -7693,6 +7699,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-get-player", kern_get_player);
         API_DECL(sc, "kern-get-ticks", kern_get_ticks);
         API_DECL(sc, "kern-get-time", kern_get_time);
+		API_DECL(sc, "kern-get-total-minutes", kern_get_total_minutes);
         API_DECL(sc, "kern-in-los?", kern_in_los);
         /*API_DECL(sc, "kern-los-invalidate", kern_los_invalidate);*/
         API_DECL(sc, "kern-include", kern_include);
