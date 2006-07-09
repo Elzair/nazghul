@@ -19,9 +19,6 @@
 # define USE_CACHED_PATH true
 #endif
 
-const int Being::DEFAULT_PATHFIND_TO_FLAGS = PFLAG_IGNORECOMPANIONS | 
-PFLAG_IGNOREMECHS;
-
 Being::Being()
 {
         setDefaults();
@@ -76,6 +73,9 @@ bool Being::pathfindTo(struct place *destplace, int destx, int desty,
 {
         struct astar_search_info as_info;
         struct astar_node *pathPtr;
+
+	if (!flags)
+		flags = PFLAG_IGNORECOMPANIONS | PFLAG_IGNOREMECHS;
 
         //printf("Being::pathfindTo %s -> %s (%d, %d)\n", getName(), destplace->name, destx, desty);
 

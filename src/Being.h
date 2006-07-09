@@ -30,8 +30,6 @@ class Being:public Object {
 
       public:
 
-        static const int DEFAULT_PATHFIND_TO_FLAGS;
-
 	Being();
         Being(class ObjectType *type);
 
@@ -42,8 +40,7 @@ class Being:public Object {
         virtual void setCurrentFaction(int faction);
 
         int getBaseFaction();
-        bool pathfindTo(struct place *place, int x, int y, 
-                        int flags = DEFAULT_PATHFIND_TO_FLAGS);
+        bool pathfindTo(struct place *place, int x, int y, int flags = 0);
         void setBaseFaction(int faction);
 	void setName(char *name);
 
