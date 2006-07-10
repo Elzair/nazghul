@@ -38,7 +38,8 @@ extern "C" {
 /* Constants *****************************************************************/
 
 /* Dimensions */
-#define SCREEN_W                        1024	/* 1028 */
+//#define SCREEN_W                        1024	/* 1028 */
+#define SCREEN_W                        (BORDER_W * 3 + MAP_W + CONS_W)
 #define SCREEN_H                        (BORDER_H * 3 + MAP_H + CMD_H)
 #define DEF_SCREEN_BPP                  16
 #define TILE_W                          32
@@ -50,11 +51,14 @@ extern "C" {
 #define BORDER_H                        16
 #define CONSOLE_MAX_MSG_SZ              (CONS_W / ASCII_W)	/* 128 */
 
-#define MAP_LEFT
-#ifdef MAP_LEFT
-
+//#define CONFIG_11X11_MAP
+#ifdef CONFIG_11X11_MAP
+#define MAP_TILE_W 11
+#define MAP_TILE_H 11
+#else
 #define MAP_TILE_W 19
 #define MAP_TILE_H 19
+#endif
 #define MAP_X   BORDER_W
 #define MAP_Y   BORDER_H
 #define MAP_W   (TILE_W * MAP_TILE_W)
@@ -68,7 +72,8 @@ extern "C" {
 
 #define STAT_X  (MAP_X + MAP_W + BORDER_W)
 #define STAT_Y  BORDER_H
-#define STAT_W  (SCREEN_W - STAT_X - BORDER_W)
+//#define STAT_W  (SCREEN_W - STAT_X - BORDER_W)
+#define STAT_W  (BORDER_W * 2 + ASCII_W * 42)
 //#define STAT_H  (MAP_H - FOOGOD_H - BORDER_H)
 #define STAT_H  (3 * TILE_H)
 #define STAT_H_MAX (16 * TILE_H)
@@ -83,58 +88,6 @@ extern "C" {
 #define WIND_W  (strlen("wind:north") * ASCII_W)
 #define WIND_H  BORDER_H
 
-#ifdef BOTTOM_CONSOLE
-#define CONS_X  BORDER_W
-#define CONS_Y  (WIND_Y + WIND_H)
-#define CONS_W  (SCREEN_W - (2 * BORDER_W))
-#define CONS_H  (SCREEN_H - BORDER_H - (WIND_Y + WIND_H))
-#define CONS_LINES (CONS_H / ASCII_H)
-#else
-#define CONS_X  STAT_X
-#define CONS_Y  (FOOGOD_Y + FOOGOD_H + BORDER_H)
-#define CONS_W  STAT_W
-#define CONS_H  (SCREEN_H - BORDER_H - CONS_Y)
-#define CONS_LINES (CONS_H / ASCII_H)
-#endif
-
-#define SKY_X   (MAP_X + (MAP_W - SKY_W) / 2)
-#define SKY_Y   0
-#define SKY_W   MOON_WINDOW_W
-#define SKY_H   BORDER_H
-#define SKY_SPRITE_W (TILE_W/2)
-
-#else /* ! MAP_LEFT */
-
-#define MAP_TILE_W 19
-#define MAP_TILE_H 19
-#define MAP_W   (TILE_W * MAP_TILE_W)
-#define MAP_H   (TILE_H * MAP_TILE_H)
-
-#define STAT_X  BORDER_W
-#define STAT_Y  BORDER_H
-#define STAT_W  (SCREEN_W - STAT_X - BORDER_W * 2 - MAP_W)
-//#define STAT_H  (MAP_H - FOOGOD_H - BORDER_H)
-#define STAT_H  (3 * TILE_H)
-#define STAT_H_MAX (16 * TILE_H)
-
-#define FOOGOD_X STAT_X
-#define FOOGOD_Y (STAT_Y + STAT_H + BORDER_H)
-#define FOOGOD_W STAT_W
-#define FOOGOD_H (2 * ASCII_H)
-
-#define MAP_X   (STAT_X + STAT_W + BORDER_W)
-#define MAP_Y   BORDER_H
-
-#define CMD_X   MAP_X
-#define CMD_Y   (MAP_Y + MAP_H + BORDER_H)
-#define CMD_W   MAP_W
-#define CMD_H   ASCII_H
-
-#define WIND_X  (MAP_X + (MAP_W - WIND_W) / 2)
-#define WIND_Y  (MAP_Y + MAP_H)
-#define WIND_W  (strlen("wind:north") * ASCII_W)
-#define WIND_H  BORDER_H
-
 #define CONS_X  STAT_X
 #define CONS_Y  (FOOGOD_Y + FOOGOD_H + BORDER_H)
 #define CONS_W  STAT_W
@@ -146,8 +99,6 @@ extern "C" {
 #define SKY_W   MOON_WINDOW_W
 #define SKY_H   BORDER_H
 #define SKY_SPRITE_W (TILE_W/2)
-
-#endif /* ! MAP_LEFT */
 
 /* Directions */
 #define DIRECTION_NONE -1

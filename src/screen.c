@@ -458,8 +458,6 @@ void screen_repaint_frame(void)
 {
 	int i;
 
-#ifdef MAP_LEFT
-
 	// First draw the top and bottom horizontal bars. Leave gaps for the
 	// sky and wind windows. Originally I went ahead and painted over them
 	// here, relying on their update routines to black out their
@@ -543,84 +541,6 @@ void screen_repaint_frame(void)
 
 	screenUpdate(0);
 
-#else /* ! MAP_LEFT */
-	// First draw the top and bottom horizontal bars. Leave gaps for the
-	// sky and wind windows. Originally I went ahead and painted over them
-	// here, relying on their update routines to black out their
-	// backgrounds. But when I started using the tall/short mode for the
-	// status window I found that this was no longer good enough. The
-	// backgrounds of these windows tended to flash when switching mode.
-
-        // Bar across the top to sky window
-        for (i = 0; i < (SKY_X - BORDER_W); i += BORDER_W)
-		spritePaint(Session->frame.horz, 0, i, 0);
-
-	// Bar from sky window to right edge
-	for (i = SKY_X + SKY_W + BORDER_W; i < SCREEN_W; i += BORDER_W)
-		spritePaint(Session->frame.horz, 0, i, 0);
-
-	// Draw the bottom of the map from the left edge to the wind window.
-	for (i = MAP_X; i < (int) (WIND_X - BORDER_W); i += BORDER_W)
-		spritePaint(Session->frame.horz, 0, i, MAP_Y + MAP_H);
-
-	// Draw the bottom of the map from the wind window to screen edge
-	for (i = WIND_X + WIND_W + BORDER_W; i < SCREEN_W; i += BORDER_W)
-		spritePaint(Session->frame.horz, 0, i, MAP_Y + MAP_H);
-
-	// Draw the bar across the bottom of the screen.
-	for (i = 0; i < SCREEN_W; i += BORDER_W)
-		spritePaint(Session->frame.horz, 0, i, SCREEN_H - BORDER_H);
-
-	// Next draw the bottom of the status and food/gold window.
-	for (i = STAT_X; i < (STAT_W + BORDER_W); i += BORDER_W) {
-		spritePaint(Session->frame.horz, 0, i, STAT_Y + 
-                            status_get_h());
-		spritePaint(Session->frame.horz, 0, i,
-			    foogod_get_y() + FOOGOD_H);
-	}
-
-	// Next rough in all the vertical lines.
-	for (i = 0; i < SCREEN_H; i += BORDER_H) {
-		spritePaint(Session->frame.vert, 0, 0, i);
-		spritePaint(Session->frame.vert, 0, MAP_X - BORDER_W, i);
-		spritePaint(Session->frame.vert, 0, SCREEN_W - BORDER_W, i);
-	}
-
-	// Now paint the four corner pieces
-	spritePaint(Session->frame.ulc, 0, 0, 0);
-	spritePaint(Session->frame.urc, 0, SCREEN_W - BORDER_W, 0);
-	spritePaint(Session->frame.llc, 0, 0, SCREEN_H - BORDER_H);
-	spritePaint(Session->frame.lrc, 0, SCREEN_W - BORDER_W,
-		    SCREEN_H - BORDER_H);
-
-	// Then all the right-facing tee-joints
-	spritePaint(Session->frame.tr, 0, 0, MAP_Y + MAP_H);
-	spritePaint(Session->frame.tr, 0, MAP_X + MAP_W,
-		    STAT_Y + status_get_h());
-	spritePaint(Session->frame.tr, 0, MAP_X + MAP_W,
-		    foogod_get_y() + FOOGOD_H);
-
-	// Then all the left-facing tee-joints
-	spritePaint(Session->frame.tl, 0, MAP_X + MAP_W, MAP_Y + MAP_H);
-	spritePaint(Session->frame.tl, 0, SCREEN_W - BORDER_W,
-		    STAT_Y + status_get_h());
-	spritePaint(Session->frame.tl, 0, SCREEN_W - BORDER_W,
-		    foogod_get_y() + FOOGOD_H);
-
-	// Then the downward and upward-facing tee-joints
-	spritePaint(Session->frame.td, 0, MAP_X + MAP_W, 0);
-	spritePaint(Session->frame.tu, 0, MAP_X + MAP_W, SCREEN_H - BORDER_H);
-
-	// And then the stubs around the sky section
-	spritePaint(Session->frame.endr, 0, SKY_X - BORDER_W, 0);
-	spritePaint(Session->frame.endl, 0, SKY_X + SKY_W, 0);
-
-	// And finally stubs around the wind section
-	spritePaint(Session->frame.endr, 0, WIND_X - BORDER_W, MAP_X + MAP_H);
-	spritePaint(Session->frame.endl, 0, WIND_X + WIND_W, MAP_X + MAP_H);
-
-	screenUpdate(0);
-#endif /* ! MAP_LEFT */
 }
 
 SDL_Surface *screenCreateSurface(int w, int h)
