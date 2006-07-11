@@ -31,8 +31,6 @@
 #include <stdlib.h>
 #include <time.h>
 
-struct list Terrain_Palettes;  // Initialized by initLoader()
-struct list OrdnanceTypes;
 int Turn;
 int Tick;
 int AnimationTicks;
@@ -42,42 +40,14 @@ int ShowAllTerrain = 0;
 
 struct los *LosEngine;
 
-static int CYCLES_PER_MSEC;
-
-static void busywaitInit(void)
-{
-	int start, diff = 0;
-	unsigned long count = 10000;
-	volatile unsigned long cycles;
-
-	while (diff < 2) {
-		start = SDL_GetTicks();
-		for (cycles = 0; cycles < count; cycles++) ;
-		diff = SDL_GetTicks() - start;
-		if (diff)
-			CYCLES_PER_MSEC = count / diff;
-		else
-			count *= 10;
-	}
-	// printf("CYCLES_PER_MSEC=%d\n", CYCLES_PER_MSEC);
-}				// busywaitInit()
-
-void busywait(int msec)
-{
-	volatile int cycles;
-	cycles = CYCLES_PER_MSEC * msec;
-	while (cycles--) ;
-}				// busywait()
 
 int commonInit(void)
 {
 	Turn = 0;
 	Tick = 0;
-	srand(0);		// fixme: should save/load as part of
-	// record/playback
-	busywaitInit();
+	srand(0);
         return 0;
-}				// commonInit()
+}
 
 // fixme -- obsolete, use the next one
 static char *dir_str[] = {

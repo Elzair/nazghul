@@ -970,7 +970,7 @@ Object *Party::getSpeaker()
                         continue;
 
                 statlist[list_sz].sprite = member->getSprite();
-                snprintf(statlist[list_sz].line1, STAT_MAX_CHARS_PER_LINE,
+                snprintf(statlist[list_sz].line1, STAT_LIST_CHARS_PER_LINE,
                          member->getName());
                 statlist[list_sz].data = member;
                 list_sz++;

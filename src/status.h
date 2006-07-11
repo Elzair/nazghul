@@ -24,10 +24,11 @@
 
 #include "macros.h"
 #include "common.h"
+#include "dimensions.h"
 
 BEGIN_DECL
 
-#define STAT_MAX_CHARS_PER_LINE (STAT_W / ASCII_W)
+#define STAT_LIST_CHARS_PER_LINE (STAT_CHARS_PER_LINE - (TILE_W / ASCII_W))
 
 struct trade_info {
         struct sprite *sprite;
@@ -41,8 +42,8 @@ struct trade_info {
 
 struct stat_list_entry {
         struct sprite *sprite;
-        char line1[STAT_MAX_CHARS_PER_LINE - TILE_W];
-        char line2[STAT_MAX_CHARS_PER_LINE - TILE_W];
+        char line1[STAT_LIST_CHARS_PER_LINE + 1];
+        char line2[STAT_LIST_CHARS_PER_LINE + 1];
         void *data;
 };
 

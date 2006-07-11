@@ -71,11 +71,8 @@ static double SKY_AMPLITUDE = 0.0;
 //
 
 // 1.06667
-static double SKY_WIN_SLOPE = ((double)SKY_W + (double)SKY_SPRITE_W) / 
-                              ((double)SUNSET_DEGREE - (double)SUNRISE_DEGREE);
-
- // -64.0002
-static double SKY_WIN_OFFSET = -(double)SUNRISE_DEGREE * (double)SKY_WIN_SLOPE;
+static double SKY_WIN_SLOPE;
+static double SKY_WIN_OFFSET;
 
 #define SKY_ARC_TO_PIXEL_OFFSET(arc) (int)(SKY_WIN_SLOPE * (double)(arc) + \
                                            (SKY_WIN_OFFSET))
@@ -623,6 +620,10 @@ void sky_init(struct sky *sky)
 	sky->screenRect.x = SKY_X;
 	sky->screenRect.y = SKY_Y;
 	sky->screenRect.h = SKY_H;
+
+        SKY_WIN_SLOPE = ((double)SKY_W + (double)SKY_SPRITE_W) / 
+                ((double)SUNSET_DEGREE - (double)SUNRISE_DEGREE);
+        SKY_WIN_OFFSET = -(double)SUNRISE_DEGREE * (double)SKY_WIN_SLOPE;
 
         sky_compute_factors();
         list_init(&sky->bodies);

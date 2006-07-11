@@ -68,9 +68,9 @@
 
 extern int DeveloperMode;
 
-static struct light_source {
+struct light_source {
 	int x, y, light;
-} lights[MAX_LIGHTS];
+};
 
 struct mview {
 	struct list list;	/* used internally by map lib */
@@ -96,19 +96,14 @@ static struct map {
         class Object *subject;
 	int cam_x, cam_y, cam_max_x, cam_max_y, cam_min_x, cam_min_y;
 	bool peering;
-	char vmask[VMASK_SZ];	/* final mask used to render */
+	char *vmask;	/* final mask used to render */
         SDL_Surface *tile_scratch_surf;
         Uint32 last_repaint;
         class Object *selected; /* selected object -- don't shade the tile it's on */
+        struct light_source *lights;
+        unsigned char *lmap;
+        unsigned char *tmp_lmap;
 } Map;
-
-// The lightmap only needs to be as big as the map viewer window. Making it
-// larger does allow for lights outside the field of view to be processed, but
-// this makes dungeons appear too bright - I like them dark and gloomy.
-static unsigned char lmap[LMAP_SZ];
-
-// This one is used during mapMergeLightSource:
-static unsigned char tmp_lmap[VMASK_W * VMASK_H];
 
 static void myRmView(struct mview *view, void *data)
 {
@@ -348,7 +343,7 @@ static void mapMergeLightSource(struct light_source *light, struct mview *main_v
 
                         // skip non-visible tiles
                         if (vmask[vmask_i] == 0) {
-                                tmp_lmap[vmask_i] = 0;
+                                Map.tmp_lmap[vmask_i] = 0;
                                 continue;
                         }
                                 
@@ -357,7 +352,7 @@ static void mapMergeLightSource(struct light_source *light, struct mview *main_v
                         D = place_flying_distance(Map.place, light->x, 
                                                   light->y, map_x, map_y);
                         D = D * D + 1;
-                        tmp_lmap[vmask_i] = min(light->light / D, 255);
+                        Map.tmp_lmap[vmask_i] = min(light->light / D, 255);
                 }
         }
 
@@ -370,7 +365,7 @@ static void mapMergeLightSource(struct light_source *light, struct mview *main_v
         // the vrect to the radius? Would that work?
         // --------------------------------------------------------------------
 
-        mapMergeRects(&tmp_view.vrect, tmp_lmap, &main_view->vrect, lmap);
+        mapMergeRects(&tmp_view.vrect, Map.tmp_lmap, &main_view->vrect, Map.lmap);
 
 }
 
@@ -389,9 +384,9 @@ static void mapBuildLightMap(struct mview *view)
         ambient_light = sky_get_ambient_light(&Session->sky);
 
         // Initialize the main lightmap to ambient light levels.
-        memset(lmap, 
+        memset(Map.lmap, 
                (Map.place->underground ? UNLIT : ambient_light),
-               sizeof(lmap));
+               LMAP_SZ);
 
         // --------------------------------------------------------------------
         // Optimization: if we're already getting max light everywhere from the
@@ -421,9 +416,9 @@ static void mapBuildLightMap(struct mview *view)
 			if (!light)
 				continue;
 
-			lights[lt_i].x = map_x;
-			lights[lt_i].y = map_y;
-			lights[lt_i].light = light;
+			Map.lights[lt_i].x = map_x;
+			Map.lights[lt_i].y = map_y;
+			Map.lights[lt_i].light = light;
 			lt_i++;
 		}
 	}
@@ -436,7 +431,7 @@ static void mapBuildLightMap(struct mview *view)
         // For each light source build a lightmap centered on that source and
         // merge it into the main lightmap.
         while (lt_i--) {
-                mapMergeLightSource(&lights[lt_i], view);
+                mapMergeLightSource(&Map.lights[lt_i], view);
         }
 
 }
@@ -466,7 +461,7 @@ static void myShadeScene(SDL_Rect *subrect)
 			 * lightmap values must be converted to opacity values
 			 * for a black square, so I reverse them by subtracting
 			 * them from LIT. */
-			screenShade(&rect, LIT - lmap[lmap_i + x]);
+			screenShade(&rect, LIT - Map.lmap[lmap_i + x]);
 		}
 	}
 }
@@ -504,13 +499,64 @@ void mapSetLosStyle(char *los)
         assert(LosEngine);
 }
 
+static void mapExit(void)
+{
+        if (Map.lights) {
+                free(Map.lights);
+                Map.lights = 0;
+        }
+
+        if (Map.lmap) {
+                free(Map.lmap);
+                Map.lmap = 0;
+        }
+
+        if (Map.tmp_lmap) {
+                free(Map.tmp_lmap);
+                Map.tmp_lmap = 0;
+        }
+
+        if (Map.cam_view) {
+                mapDestroyView(Map.cam_view);
+                Map.cam_view = 0;
+        }
+
+        if (Map.vmask) {
+                free(Map.vmask);
+                Map.vmask = 0;
+        }
+}
+
 int mapInit(void)
 {
 
 	memset(&Map, 0, sizeof(Map));
 
+        Map.lights = (struct light_source*)calloc(MAX_LIGHTS, 
+                                                  sizeof(Map.lights[0]));
+        if (!Map.lights)
+                goto abort;
+
+        /* The lightmap only needs to be as big as the map viewer
+           window. Making it larger does allow for lights outside the field of
+           view to be processed, but this makes dungeons appear too bright - I
+           like them dark and gloomy. */
+        Map.lmap = (unsigned char*)calloc(LMAP_SZ, sizeof(Map.lmap[0]));
+        if (!Map.lmap)
+                goto abort;
+
+        /* This one is used during mapMergeLightSource */
+        Map.tmp_lmap = (unsigned char*)calloc(LMAP_SZ, 
+                                              sizeof(Map.tmp_lmap[0]));
+        if (!Map.tmp_lmap)
+                goto abort;
+
 	if (!(Map.cam_view = mapCreateView()))
-		return -1;
+                goto abort;
+
+        Map.vmask = (char*)calloc(VMASK_SZ, sizeof(Map.vmask[0]));
+        if (!Map.vmask)
+                goto abort;
 
 	list_init(&Map.views);
 
@@ -546,6 +592,10 @@ int mapInit(void)
         assert(Map.tile_scratch_surf);
 
 	return 0;
+
+abort:
+        mapExit();
+        return -1;
 }
 
 void mapFlash(int mdelay)
@@ -1017,7 +1067,7 @@ unsigned char mapTileLightLevel(int x, int y)
 {
         int vx = mapXToViewX(x);
         int vy = mapYToViewY(y);
-        return lmap[vy * LMAP_W + vx];
+        return Map.lmap[vy * LMAP_W + vx];
 }
 
 int mapTileIsVisible(int x, int y)
@@ -1227,11 +1277,7 @@ static void mapPaintProjectile(SDL_Rect *rect, struct sprite *sprite,
 
 	screenUpdate(rect);
 
-	// Pause. Doing nothing is too fast, SDL_Delay is too slow, and the
-	// custom calibrated busywait apparently isn't calibrated very
-	// well. Too fast is probably the least of the evils.
 	SDL_Delay(dur);
-        //busywait(dur);
 
 	// Erase the missile by blitting the background
 	screenBlit(surf, NULL, rect);
@@ -1541,7 +1587,7 @@ void mapUpdateTile(struct place *place, int x, int y)
                     || Map.selected->getPlace() != Map.place
                     || Map.selected->getX() != x
                     || Map.selected->getY() != y)                
-                        screenShade(&rect, LIT - lmap[index]);
+                        screenShade(&rect, LIT - Map.lmap[index]);
 
         }
 

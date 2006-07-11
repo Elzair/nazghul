@@ -22,6 +22,7 @@
 #include "foogod.h"
 #include "constants.h"
 #include "common.h"
+#include "dimensions.h"
 #include "screen.h"
 #include "sound.h"
 #include "play.h"
@@ -54,7 +55,6 @@
 
 #define NEW_GAME_FILE "start-new-game.scm"
 
-
 // gmcnutt: by default I'd like it on :). For one thing, printing all those
 // "Playing sound %s" messages to the console breaks all the regression tests
 // :).
@@ -68,6 +68,7 @@ char *RecordFile     = 0;
 char *PlaybackFile   = 0;
 int PlaybackSpeed    = 100;
 int DeveloperMode    = 0;
+int MapSize          = DEF_MAP_SIZE;
 
 static char program_name[] = "nazghul";
 static char *NAZGHUL_SPLASH_IMAGE_FILENAME = "splash.png";
@@ -102,6 +103,7 @@ static void print_usage(void)
 	       "    -S: speed <playback ms delay> \n"
                "    -I: game data dir\n"
                "    -G: save game dir\n"
+               "    -m: map size <tiles>\n"
                "<load-file>\n",
                program_name);
 }				// print_usage()
@@ -115,7 +117,7 @@ static void parse_args(int argc, char **argv)
 	TickMilliseconds = MS_PER_TICK;
 	AnimationTicks = ANIMATION_TICKS;
 
-	while ((c = getopt(argc, argv, "b:t:a:s:TdR:S:P:I:G:vh")) != -1) {
+	while ((c = getopt(argc, argv, "b:t:a:s:TdR:S:P:I:G:vhm:")) != -1) {
 		switch (c) {
 		case 'b':
 			SCREEN_BPP = atoi(optarg);
@@ -185,6 +187,15 @@ static void parse_args(int argc, char **argv)
                 case 'h':
                         print_usage();
                         exit(0);
+                case 'm':
+                        MapSize = atoi(optarg);
+                        if (MapSize < MIN_MAP_SIZE
+                            || MapSize > MAX_MAP_SIZE) {
+                                err("Map size must be in the range [%d %d]\n",
+                                    MIN_MAP_SIZE, MAX_MAP_SIZE);
+                                exit(-1);
+                        }
+                        break;
                 case '?':
                 default:
 			print_usage();
@@ -535,6 +546,11 @@ static void main_menu(void)
 int main(int argc, char **argv)
 {
 	parse_args(argc, argv);
+
+        if (dimensions_init(MapSize)) {
+                err("dimensions_init() failed\n");
+                exit(-1);
+        }
 
         nazghul_init_internal_libs();
 

@@ -37,69 +37,6 @@ extern "C" {
 
 /* Constants *****************************************************************/
 
-/* Dimensions */
-//#define SCREEN_W                        1024	/* 1028 */
-#define SCREEN_W                        (BORDER_W * 3 + MAP_W + CONS_W)
-#define SCREEN_H                        (BORDER_H * 3 + MAP_H + CMD_H)
-#define DEF_SCREEN_BPP                  16
-#define TILE_W                          32
-#define TILE_H                          32
-#define STATUS_MAX_MSG_SZ               128
-#define ASCII_W                         8
-#define ASCII_H                         16
-#define BORDER_W                        16
-#define BORDER_H                        16
-#define CONSOLE_MAX_MSG_SZ              (CONS_W / ASCII_W)	/* 128 */
-
-//#define CONFIG_11X11_MAP
-#ifdef CONFIG_11X11_MAP
-#define MAP_TILE_W 11
-#define MAP_TILE_H 11
-#else
-#define MAP_TILE_W 19
-#define MAP_TILE_H 19
-#endif
-#define MAP_X   BORDER_W
-#define MAP_Y   BORDER_H
-#define MAP_W   (TILE_W * MAP_TILE_W)
-#define MAP_H   (TILE_H * MAP_TILE_H)
-
-#define CMD_X   MAP_X
-#define CMD_Y   (MAP_Y + MAP_H + BORDER_H)
-
-#define CMD_W   MAP_W
-#define CMD_H   ASCII_H
-
-#define STAT_X  (MAP_X + MAP_W + BORDER_W)
-#define STAT_Y  BORDER_H
-//#define STAT_W  (SCREEN_W - STAT_X - BORDER_W)
-#define STAT_W  (BORDER_W * 2 + ASCII_W * 42)
-//#define STAT_H  (MAP_H - FOOGOD_H - BORDER_H)
-#define STAT_H  (3 * TILE_H)
-#define STAT_H_MAX (16 * TILE_H)
-
-#define FOOGOD_X STAT_X
-#define FOOGOD_Y (STAT_Y + STAT_H + BORDER_H)
-#define FOOGOD_W STAT_W
-#define FOOGOD_H (2 * ASCII_H)
-
-#define WIND_X  (BORDER_W + (MAP_W - WIND_W) / 2)
-#define WIND_Y  (MAP_Y + MAP_H)
-#define WIND_W  (strlen("wind:north") * ASCII_W)
-#define WIND_H  BORDER_H
-
-#define CONS_X  STAT_X
-#define CONS_Y  (FOOGOD_Y + FOOGOD_H + BORDER_H)
-#define CONS_W  STAT_W
-#define CONS_H  (SCREEN_H - BORDER_H - CONS_Y)
-#define CONS_LINES (CONS_H / ASCII_H)
-
-#define SKY_X   (MAP_X + (MAP_W - SKY_W) / 2)
-#define SKY_Y   0
-#define SKY_W   MOON_WINDOW_W
-#define SKY_H   BORDER_H
-#define SKY_SPRITE_W (TILE_W/2)
-
 /* Directions */
 #define DIRECTION_NONE -1
 #define NORTHWEST 0
@@ -159,8 +96,6 @@ extern "C" {
 #define MIDNIGHT_DEGREE_EARLY   (MIDNIGHT_HOUR_EARLY * DEGREES_PER_HOUR)
 
 /* Moons */
-/* gmcnutt: turned off moons for new loader. Need to completely clean all that
- * up with a rewrite. */
 #define NUM_MOONS                       0 /*2*/
 #define MOON_WINDOW_DEGREES             (HOURS_OF_SUNLIGHT * DEGREES_PER_HOUR)
 #define MOON_WINDOW_PIXELS_PER_DEGREE   1	/* needs to be an integer */
@@ -355,6 +290,11 @@ extern "C" {
 
 /* Enums *********************************************************************/
 
+typedef enum {
+        UI_SIZE_NORMAL = 0,
+        UI_SIZE_SMALL = 1
+} ui_size_t;
+
 /* Structures ****************************************************************/
 
 /* Global Functions **********************************************************/
@@ -364,8 +304,6 @@ char * version_as_string(void);  // From nazghul.c
 extern int commonInit(void);
 extern char *get_dir_str(int dx, int dy);
 extern void turnAdvance(int turns);
-// extern void windSetDirection(int dir);
-extern void busywait(int msec);
 extern int vector_to_dir(int dx, int dy);
 extern int vector_to_facing(int dx, int dy);
 extern int vector_to_rotation(int dx, int dy);
@@ -385,19 +323,14 @@ char *dirConcat(const char *dir, const char *filename);
 
 /* Global Variables **********************************************************/
 
-extern struct list Terrain_Palettes;
-extern struct list Sprites;
 extern int Turn;
 extern int AnimationTicks;
 extern int Tick;
 extern int TickMilliseconds;
-// extern int WindDirection;
 extern bool Quit;
 extern struct los *LosEngine;
 extern int ShowAllTerrain;
-extern struct sprite *CursorSprite;
 extern int SCREEN_BPP;
-// #define SAVEFILE "mapfile"
 extern char *SAVEFILE;	/* nazghul.c */
 extern char *IncludeDir;	/* nazghul.c */
 extern char *SavedGamesDir;	/* nazghul.c */

@@ -35,12 +35,13 @@
 #include <stdio.h>
 
 #define MAX_MSG_SZ 512
+#define CONS_BUF_SIZE (CONS_LINES * (CONSOLE_MAX_MSG_SZ + 1))
 
 static struct console {
         SDL_Rect screenRect;
-        char buf[CONS_LINES * (CONSOLE_MAX_MSG_SZ + 1)];
-        char *lines[CONS_LINES];        /* pointers into buf, one per line */
-        int line;              // current line index
+        char *buf;             /* text buffer */
+        char **lines;          /* pointers into buf, one per line */
+        int line;              /* current line index */
         char *cursor;          /* next byte on current line */
         int room;              /* bytes left on current line */
         int numLines;          /* num lines filled + current line */
@@ -81,7 +82,11 @@ int consoleInit(void)
 
         //console_set_y(foogod_get_y() + FOOGOD_H + BORDER_H);
 
+        Console.buf = (char *)malloc(CONS_BUF_SIZE);
+        if (! Console.buf)
+                return -1;
         memset(Console.buf, 0, CONSOLE_MAX_MSG_SZ + 1);
+
         Console.cursor = Console.buf;
         Console.room = CONSOLE_MAX_MSG_SZ;
         Console.line = 0;
@@ -94,7 +99,9 @@ int consoleInit(void)
          * routine. In other words, I always pretend that the current line has
          * something on it. */
         Console.numLines = 1;
-
+        Console.lines = (char**)malloc(CONS_LINES * sizeof(char*));
+        if (!Console.lines)
+                return -1;
         for (i = 0; i < CONS_LINES; i++)
                 Console.lines[i] = &Console.buf[i * (CONSOLE_MAX_MSG_SZ + 1)];
 

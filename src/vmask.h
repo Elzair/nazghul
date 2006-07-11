@@ -22,7 +22,7 @@
 #ifndef vmask_h
 #define vmask_h
 
-#include "common.h" // for MAP_TILE_W
+#include "dimensions.h"
 
 #define VMASK_W    (MAP_TILE_W * 2 + 1)
 #define VMASK_H    (VMASK_W)

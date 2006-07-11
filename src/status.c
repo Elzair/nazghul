@@ -39,12 +39,11 @@
 #include <ctype.h>
 
 #define LINE_H TILE_H
-#define N_CHARS_PER_LINE STAT_MAX_CHARS_PER_LINE
 #define Y_TO_LINE(Y) (((Y) - Status.screenRect.y) / TILE_H)
 #define N_LINES Status.numLines	/* (STAT_H / TILE_H) */
 
 #define TALL_H (SCREEN_H - 4 * BORDER_H - 6 * ASCII_H)
-#define MAX_TITLE_LEN (N_CHARS_PER_LINE-2)
+#define MAX_TITLE_LEN (STAT_CHARS_PER_LINE-2)
 
 /*
  * Armaments - R)eady-player
@@ -672,7 +671,7 @@ static int myFormatPgText()
 	while (1) {
 
 		n = 0;
-		while (*ptr && n < N_CHARS_PER_LINE) {
+		while (*ptr && n < STAT_CHARS_PER_LINE) {
 			if (*ptr == '\n') {
 				n = 0;
 				lines++;
@@ -704,12 +703,12 @@ static int myFormatPgText()
 		 * give up and just wrap the word. */
 		ptr -= 2;
 		n = 2;
-		while (!isspace(*ptr) && n < N_CHARS_PER_LINE) {
+		while (!isspace(*ptr) && n < STAT_CHARS_PER_LINE) {
 			ptr--;
 			n++;
 		}
 
-		if (n != N_CHARS_PER_LINE) {
+		if (n != STAT_CHARS_PER_LINE) {
 			*ptr = '\n';
 			added_lines++;
 		} else
@@ -921,7 +920,7 @@ static void statusPaintGenericList(void)
 		screenPrint(&l1rect, 0, "%s", Status.list[i].line1);
 
 		// print line 2
-		screenPrint(&l1rect, 0, "%s", Status.list[i].line1);
+		screenPrint(&l2rect, 0, "%s", Status.list[i].line2);
 
 
 		// Shade unselected items.
