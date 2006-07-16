@@ -104,6 +104,7 @@ static void print_usage(void)
                "    -I: game data dir\n"
                "    -G: save game dir\n"
                "    -m: map size <tiles>\n"
+               "    -T: show all terrain\n"
                "<load-file>\n",
                program_name);
 }				// print_usage()
