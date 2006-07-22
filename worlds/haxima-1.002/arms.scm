@@ -43,19 +43,19 @@
 
 (define (mk-melee-arms-type tag name sprite to-hit-bonus damage deflect slots 
                             num-hands range weight)
-  (kern-mk-arms-type tag name sprite to-hit-bonus damage deflect "0"  slots 
+  (kern-mk-arms-type tag name sprite to-hit-bonus damage "0" deflect slots 
                      num-hands range default-rap nil #f #f weight nil obj-ifc-cap obj-ifc))
 
 ;; Curried constructor: missile weapon (add missile, ubiq flag to melee)
 (define (mk-projectile-arms-type tag name sprite to-hit-bonus damage deflect 
                                  slots num-hands range missile ubiq weight)
-  (kern-mk-arms-type tag name sprite to-hit-bonus damage deflect "0"  slots 
+  (kern-mk-arms-type tag name sprite to-hit-bonus damage "0" deflect slots 
                      num-hands range default-rap missile #f ubiq weight nil obj-ifc-cap obj-ifc))
 
 ;; Curried constructor: thrown weapon (add field to melee)
 (define (mk-thrown-arms-type tag name sprite to-hit-bonus damage deflect slots 
                              num-hands range ifc weight)
-  (kern-mk-arms-type tag name sprite to-hit-bonus damage deflect "0" slots 
+  (kern-mk-arms-type tag name sprite to-hit-bonus damage "0" deflect slots 
                      num-hands range default-rap nil #t #f weight nil (ifc-cap ifc) ifc))
 
 (define (mk-missile-arms-type tag name sprite ifc)
