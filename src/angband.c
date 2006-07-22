@@ -35,7 +35,6 @@
 
 /* Wrapper/Stubs for cave.c code *********************************************/
 
-//#include <SDL/SDL_types.h>
 #include <string.h>
 
 typedef unsigned char byte;
@@ -73,7 +72,8 @@ typedef unsigned int u32b;
 /*
  * Maximum possible sight radius minus one.
  */
-#define MAX_SIGHT 20		/* 19 */
+#define MAX_SIGHT 19		/* 19 */
+
 
 /* From xtra2.c **************************************************************/
 
@@ -178,37 +178,38 @@ int distance(int y1, int x1, int y2, int x2)
 /*
  * Maximum number of grids in a single octant
  */
-#define VINFO_MAX_GRIDS 161
-//#define VINFO_MAX_GRIDS 147
+//#define VINFO_MAX_GRIDS 161
+#define VINFO_MAX_GRIDS 147
 
 /*
  * Maximum number of slopes in a single octant
  */
-#define VINFO_MAX_SLOPES 126
-//#define VINFO_MAX_SLOPES 113
+//#define VINFO_MAX_SLOPES 126
+#define VINFO_MAX_SLOPES 113
 
 /*
  * Mask of bits used in a single octant
  */
-#define VINFO_BITS_3 0x3FFFFFFF
-//#define VINFO_BITS_3 0x0001FFFF
+//#define VINFO_BITS_3 0x3FFFFFFF
+#define VINFO_BITS_3 0x0001FFFF
 #define VINFO_BITS_2 0xFFFFFFFF
 #define VINFO_BITS_1 0xFFFFFFFF
 #define VINFO_BITS_0 0xFFFFFFFF
 
 /*
- * The 'vinfo_type' structure
+ * The 'vinfo_type' structure. There is one of these for each possible grid
+ * location in an octant.
  */
 struct vinfo_type {
-	s16b grid[8];
+	s16b grid[8]; /* the location of this grid cell in each of the 8
+                       * octants */
+	u32b bits_3;  /* the rays which strike this grid cell */
+	u32b bits_2;  /* the rays which strike this grid cell */
+	u32b bits_1;  /* the rays which strike this grid cell */
+	u32b bits_0;  /* the rays which strike this grid cell */
 
-	u32b bits_3;
-	u32b bits_2;
-	u32b bits_1;
-	u32b bits_0;
-
-	struct vinfo_type *next_0;
-	struct vinfo_type *next_1;
+	struct vinfo_type *next_0; /* grid to the right */
+	struct vinfo_type *next_1; /* grid to the right and down (usually) */
 
 	byte y;
 	byte x;
@@ -223,21 +224,10 @@ struct vinfo_type {
 
 /*
  * Temporary data used by "vinfo_init()"
- *
- *	- Number of grids
- *
- *	- Number of slopes
- *
- *	- Slope values
- *
- *	- Slope range per grid
  */
 struct vinfo_hack {
-
 	int num_slopes;
-
 	long slopes[VINFO_MAX_SLOPES];
-
 	long slopes_min[MAX_SIGHT + 1][MAX_SIGHT + 1];
 	long slopes_max[MAX_SIGHT + 1][MAX_SIGHT + 1];
 };
@@ -335,29 +325,28 @@ static void vinfo_init_aux(struct vinfo_hack *hack, int y, int x, long m)
  * array. The width of the grid array is now dynamic and passed in as
  * a parameter.
  */
-int vinfo_init(struct vinfo_type *vinfo, int w)
+int vinfo_init(struct vinfo_type *vinfo, int width)
 {
 	int i, g;
 	int y, x;
-
 	long m;
-
 	struct vinfo_hack *hack;
-
 	int num_grids = 0;
-
 	int queue_head = 0;
 	int queue_tail = 0;
 	struct vinfo_type *queue[VINFO_MAX_GRIDS * 2];
+
+        /* Max width of a single octant (center of grid to edge of LOS) */
+        const int max_sight = width/2;
 
 	/* Make hack */
 	MAKE(hack, struct vinfo_hack);
 
 	/* Analyze grids */
-	for (y = 0; y <= MAX_SIGHT; ++y) {
-		for (x = y; x <= MAX_SIGHT; ++x) {
+	for (y = 0; y <= max_sight; ++y) {
+		for (x = y; x <= max_sight; ++x) {
 			/* Skip grids which are out of sight range */
-			if (distance(0, 0, y, x) > MAX_SIGHT)
+			if (distance(0, 0, y, x) > max_sight)
 				continue;
 
 			/* Default slope range */
@@ -402,17 +391,13 @@ int vinfo_init(struct vinfo_type *vinfo, int w)
 
 	/* Enforce maximal efficiency */
 	if (num_grids < VINFO_MAX_GRIDS) {
-		err("Too few grids (%d < %d)!", num_grids, VINFO_MAX_GRIDS);
-                KILL(hack);
-		return -1;
+		warn("Too few grids (%d < %d)!\n", num_grids, VINFO_MAX_GRIDS);
 	}
 
 	/* Enforce maximal efficiency */
 	if (hack->num_slopes < VINFO_MAX_SLOPES) {
-		err("Too few slopes (%d < %d)!",
+		warn("Too few slopes (%d < %d)!\n",
 		    hack->num_slopes, VINFO_MAX_SLOPES);
-                KILL(hack);
-		return -1;
 	}
 
 	/* Sort slopes numerically */
@@ -441,18 +426,18 @@ int vinfo_init(struct vinfo_type *vinfo, int w)
 		g = vinfo[e].grid[0];
 
 		/* Location */
-		y = GRID_Y(g, w);
-		x = GRID_X(g, w);
+		y = GRID_Y(g, width);
+		x = GRID_X(g, width);
 
 		/* compute grid offsets */
-		vinfo[e].grid[0] = GRID(+y, +x, w);
-		vinfo[e].grid[1] = GRID(+x, +y, w);
-		vinfo[e].grid[2] = GRID(+x, -y, w);
-		vinfo[e].grid[3] = GRID(+y, -x, w);
-		vinfo[e].grid[4] = GRID(-y, -x, w);
-		vinfo[e].grid[5] = GRID(-x, -y, w);
-		vinfo[e].grid[6] = GRID(-x, +y, w);
-		vinfo[e].grid[7] = GRID(-y, +x, w);
+		vinfo[e].grid[0] = GRID(+y, +x, width);
+		vinfo[e].grid[1] = GRID(+x, +y, width);
+		vinfo[e].grid[2] = GRID(+x, -y, width);
+		vinfo[e].grid[3] = GRID(+y, -x, width);
+		vinfo[e].grid[4] = GRID(-y, -x, width);
+		vinfo[e].grid[5] = GRID(-x, -y, width);
+		vinfo[e].grid[6] = GRID(-x, +y, width);
+		vinfo[e].grid[7] = GRID(-y, +x, width);
 
 		/* Analyze slopes */
 		for (i = 0; i < hack->num_slopes; ++i) {
@@ -483,8 +468,8 @@ int vinfo_init(struct vinfo_type *vinfo, int w)
 		vinfo[e].next_0 = &vinfo[0];
 
 		/* Grid next child */
-		if (distance(0, 0, y, x + 1) <= MAX_SIGHT) {
-			g = GRID(y, x + 1, w);
+		if (distance(0, 0, y, x + 1) <= max_sight) {
+			g = GRID(y, x + 1, width);
 
 			if (queue[queue_tail - 1]->grid[0] != g) {
 				vinfo[queue_tail].grid[0] = g;
@@ -499,8 +484,8 @@ int vinfo_init(struct vinfo_type *vinfo, int w)
 		vinfo[e].next_1 = &vinfo[0];
 
 		/* Grid diag child */
-		if (distance(0, 0, y + 1, x + 1) <= MAX_SIGHT) {
-			g = GRID(y + 1, x + 1, w);
+		if (distance(0, 0, y + 1, x + 1) <= max_sight) {
+			g = GRID(y + 1, x + 1, width);
 
 			if (queue[queue_tail - 1]->grid[0] != g) {
 				vinfo[queue_tail].grid[0] = g;
@@ -513,7 +498,7 @@ int vinfo_init(struct vinfo_type *vinfo, int w)
 
 		/* Hack -- main diagonal has special children */
 		if (y == x)
-			vinfo[e].next_0 = vinfo[e].next_1;
+                        vinfo[e].next_0 = vinfo[e].next_1;
 
 		/* Extra values */
 		vinfo[e].y = y;
@@ -527,9 +512,7 @@ int vinfo_init(struct vinfo_type *vinfo, int w)
 	    ((vinfo[1].bits_2 | vinfo[2].bits_2) != VINFO_BITS_2) ||
 	    ((vinfo[1].bits_1 | vinfo[2].bits_1) != VINFO_BITS_1) ||
 	    ((vinfo[1].bits_0 | vinfo[2].bits_0) != VINFO_BITS_0)) {
-		err("Incorrect bit masks!");
-                KILL(hack);
-		return -1;
+		warn("Incorrect bit masks!\n");
 	}
 
 	/* Kill hack */
@@ -730,7 +713,8 @@ static void ANGBAND_destroy(struct los *los)
 static void ANGBAND_compute(struct los *los)
 {
 	update_view(los);
-	los->vmask[(los->w * los->h) / 2] = 1;	/* make center always visible */
+	los->vmask[(los->w * los->h) / 2] = 1;	/* make center always
+                                                 * visible */
 }
 
 int ANGBAND_Init(struct los *los)
