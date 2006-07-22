@@ -1,3 +1,5 @@
+
+
                             USERS GUIDE TO NAZGHUL
 
 Nazghul is an old-school RPG clone modeled after those made in the heyday of
@@ -25,6 +27,7 @@ On Windows:
       Use the start menu or desktop icon
 
 You can play the Tutorial first or jump right in with Start New Game.
+
 
                                 SAVING THE GAME
 
@@ -168,6 +171,7 @@ Status Window
     A...Alcohol (drunk)
     C...Charmed (in the service of an enemy)
     D...Diseased
+    E...Ensnared
     F...Fire immunity
     G...Good (no problem)
     I...Immune to poison
@@ -177,6 +181,7 @@ Status Window
     S...Asleep
     T...Torchlight (carrying a torch)
     p...Protection (In Sanct)
+    Z...Paralyzed
 
 Foogod Window
 
@@ -303,9 +308,7 @@ Round Robin Mode (town/combat/dungeons)
     someday. Let me know if you have an opinion.
 
 
-
                                     PLACES
-
 
 Wilderness:
 
@@ -329,7 +332,6 @@ Towns/Dungeons:
     mode, or control the leader and have the other party members follow.
 
 
-
                                     COMBAT
 
 
@@ -337,6 +339,48 @@ What can I say? It's pretty much like u5. Try the flaming oil at night or in an
 underground place. Oh, and watch out for gazers. They can charm you. Kill them
 or charm them right away.
 
+
+                                  ADVANCEMENT
+
+
+As usual, characters advance a level when they gain sufficient experience
+points. There is no maximum level limit. When a character advances his maximum
+HP and MP increase, depending on his class, species and personal bonuses. At
+the moment of advancment he is fully healed and mana is restored to their new
+maximum levels.
+
+                          XP Required for Advancement
+============================================================================
+Level | XP
+============================================================================
+1     | 0       
+2     | 32      
+3     | 64      
+4     | 128     
+5     | 256     
+6     | 512     
+n     | 2^(n+5)
+============================================================================
+
+                                  Attributes
+
+Characters have three basic attributes: Strength, Dexterity and
+Intelligence. These are fixed when the character is created and don't change
+during the game.
+
+Strength
+
+    Strength limits the total weight of readied weapons and armour. It is also
+    used when breaking free of spider webs (most trolls don't stay ensnared too
+    long...).
+
+Dexterity
+
+    Dexterity is used when picking locks and disarming trapped chests.
+
+Intelligence
+
+    Intelligence makes spells more potent and more likely to succeed.
 
 
                                      MAGIC
@@ -430,7 +474,50 @@ Vas Rel Por      | Gate Travel    | SA, MA, BP             | P
     Mode.
 
 
-                                   MONSTERS
+                                    EFFECTS
+
+From time to time your characters might run into a little trouble with magical
+foes, natural hazards, or their own weakness for alcohol. Don't panic. Most
+effects are non-fatal, but a few are.
+
+Asleep (S)
+
+    Sleeping party members will eventually wake up of their own accord. If you
+    don't feel like waiting use the An Zu spell.
+
+Charmed (C)
+
+    Enemy wizards might charm party members, causing them to fight on their
+    behalf. Charm wears off after 10 minutes.
+
+Diseased (D)
+
+    Some monsters may infect party members with disease. Disease is not fatal,
+    but it will not wear off until your party member is nearly out of hit
+    points.
+
+Drunk (A)
+
+    Anytime your character buys alcoholic drinks or picks them up from the
+    ground he gets drink. Drunkenness lasts an hour or so and causes him to
+    randomly bump into things.
+
+Ensnared (E)
+
+    When stuck in a spider web, a character will break free after struggling
+    for a while. The time required to free himself depends on the characters
+    strength.
+
+Paralyzed (Z)
+
+    Spiders inject paralyzing venom to make their foes helpless before feeding
+    on them. Paralysis will wear off after a short random interval.
+
+Poisoned (P)
+
+    Bogs or spells may poison party members, causing them to lose hit points
+    every turn until the poison is cured with a spell or potion. Poison is
+    fatal! It won't wear off like disease.
 
 
                                  CONVERSATION
@@ -439,15 +526,14 @@ Vas Rel Por      | Gate Travel    | SA, MA, BP             | P
 Start a conversation with an NPC with the T)alk command. During conversation
 you type simple inquiries and the NPC responds, sometimes asking you a question
 in return. Conversations with shopkeepers will allow you to buy and sell
-items. Most NPCs respond to the 'NAME', 'JOB', and 'HEALTH' queries. Their
-responses usually give you clues to further fruitful queries. Also, with the
-special 'JOIN' query you can ask an NPC to join your party (some will join you,
-and some will join you only if you do or say something that impresses
-them).
+items. Most NPCs respond to the 'NAME' and 'JOB' queries, as well as queris
+about their town and fellow townsmen. Their responses usually give you clues to
+further fruitful queries. Also, with the special 'JOIN' query you can ask an
+NPC to join your party (some will join you, and some will join you only if you
+do or say something that impresses them).
 
 
-
-                             APPENDIX: MAP HACKING
+                             APPENDIX A: MAP HACKING
 
 Like many games, "nazghul" is separated into an engine [2] and some data
 files. In this case the data files are written in the Scheme programmming
@@ -465,6 +551,81 @@ If you want to make a proprietary game you may use the example script files,
 but you will probably need to make your own image and sound resource files as
 the ones in the examples directory come from other open-source or freeware
 projects and their copyright holders might object to proprietary use.
+
+
+                             APPENDIX B: Spoilers
+
+These apply specifically to Haxima, and not necessarily to any other game made
+with the Nazghul engine.
+
+                            Projectile Weapon Stats
+============================================================================
+Name          To-Hit  Damage  To-Def  Hnds  Rng  Ammo       Weight
+============================================================================
+Sling         1d2-2   1d3     -1      1     4    slingstone 0
+Sling+4       3       1d3+4    0      1     6    slingstone 0
+Bow           1d3-2   2d4     -2      2     6    arrow      2
+Crossbow      1d4-2   4d4     -1      2     4    bolt       3
+Doom Staff    1d4     1       +2      2     6    -          2
+Stun Wand [1] -2      1d4     -1      1     6    -          2
+============================================================================
+[1] Temporarily paralyzes target
+
+                              Thrown Weapon Stats
+============================================================================
+Name              To-Hit  Damage  To-Def  Hnds  Rng  Weight
+============================================================================
+Flaming oil [1]   -1      1d6     -2      1     4    1
+Spear              0      1d8     +1      1     4    2
+Boulder           -2      3d4+1   -2      2     5    10
+============================================================================
+[1] Leaves a temporary burning patch of ground
+
+                              Melee Weapon Stats
+============================================================================
+Name            To-Hit Damage To-Def Hnds Rng Weight
+============================================================================
+Dagger          1d4    1d4    1d2    1    1   0
+Dagger+4        1d4+4  1d4+4  1d2+4  1    1   0
+Mace            1d4    1d6+2  +0     1    1   3
+Axe             1d2    2d3+2  +0     1    1   3
+Sword           1d2    1d8+1  1d2    1    1   2
+Sword+2         1d2+2  1d8+3  1d2+2  1    1   2
+Sword+4         1d2+4  1d8+5  1d2+4  1    1   2
+2H Axe          0      4d3+2  -2     2    1   4
+2H Sword        0      2d8+2   1     2    1   4
+Morning star    1d2+2  1d6+1  -1     1    2   3
+Morning star+2  1d2+4  1d6+3  2      1    2   3
+Halberd         1d3+1  2d8-2  1d2    2    2   4
+Staff           1d3    1d4    1d3    2    2   2
+Eldritch blade  2      2d8+5  +0     2    1   2
+Mystic sword    +3     1d10+5 +2     1    1   1
+Flaming sword   1d2    1d10+3 1d2    1    1   2
+============================================================================
+
+                                  Armor Stats
+============================================================================
+Name              To-Hit  Damage Armor To-Def Weight
+============================================================================
+Leather helm      -1      -      1d2   -      0
+Leather helm+2     0      -      1d2+2 -      0
+Leather helm+4     0      -      1d2+4 -      0
+chain coif        -1      -      1d3   -      1
+Chain coif+4       0      -      1d3+4 -      1
+iron helm         -1      -      1d4   -      2
+Iron helm+4        0      -      1d4+4 -      2
+leather armor     -1      -      1d4   -      2
+Leather armor+2    0      -      1d4+2 -      2
+Leather armor+4    0      -      1d4+4 -      2
+chain armor       -2      -      2d4   -      4
+Chain armor+4      0      -      2d4+4 -      4
+plate armor       -4      -      4d4   -      8
+Plate armor+4      0      -      4d4+4 -      8
+Small shield      -1      -      0     2      2
+Small shield+4     0      -      0     6      2
+Spiked shield      0      1d5    0     1      3
+Spiked helm        0      1d4    3     0      2
+============================================================================
 
 
 --gmcnutt (gmcnutt@cableone.net)
