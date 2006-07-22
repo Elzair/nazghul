@@ -533,6 +533,13 @@ NPC to join your party (some will join you, and some will join you only if you
 do or say something that impresses them).
 
 
+                                     MISC
+
+Food is consumed three times per day, once unit for each living party
+member. When the food runs out, party members take a point of damage at each
+meal time.
+
+
                              APPENDIX A: MAP HACKING
 
 Like many games, "nazghul" is separated into an engine [2] and some data
