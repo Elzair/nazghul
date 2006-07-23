@@ -85,7 +85,7 @@
 #endif
 
 #ifndef USE_TRACING
-# define USE_TRACING 1
+# define USE_TRACING 0
 #endif
 
 #ifndef USE_PLIST
