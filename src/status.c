@@ -242,14 +242,22 @@ static void status_repaint_title(void)
 	screenUpdate(&Status.titleRect);
 }
 
-static void myShowMemberArms(SDL_Rect * rect, class ArmsType * arms, char *slot)
+static void status_show_member_arms(SDL_Rect * rect, class ArmsType * arms, 
+                                    char *slot)
 {
-	rect->y += ASCII_H;
 	spritePaint(arms->getSprite(), 0, rect->x, rect->y);
 	rect->x += TILE_W;
-	rect->y += TILE_H / 4;
+
+        /* name */
 	screenPrint(rect, 0, "%s", arms->getName());
-	rect->y += (TILE_H * 3) / 4;
+        rect->y += ASCII_H;
+
+        /* stats */
+        screenPrint(rect, 0, "TH:%s TD:%s DA:%s AR:%s", 
+                    arms->getToHitDice(), arms->getToDefendDice(),
+                    arms->getDamageDice(), arms->getArmorDice());
+
+	rect->y += (TILE_H - ASCII_H);
 	rect->x -= TILE_W;
 }
 
@@ -260,8 +268,6 @@ static void myShowMember(void)
 	class Character *pm;
         struct mmode *mmode;
         
-	// screenErase(&Status.screenRect);
-
 	rect = Status.screenRect;
 	pad = (STAT_W / ASCII_W) - 17;
 	assert(pad >= 1);
@@ -289,10 +295,8 @@ static void myShowMember(void)
 	screenPrint(&rect, 0, "Dex=%3d%*cAC:%3d", pm->getDexterity(), pad,
 		    ' ', pm->getArmourClass());
 
-        // Show Movement Modes (pmask for now)
+        /* Show movement mode */
         rect.y += ASCII_H;
-        // SAM: What is wanted here is a function to turn a pmask 
-        //      into one or more words of text (names of movement modes).
         mmode = pm->getMovementMode();
         if (mmode)
                 screenPrint(&rect, 0, "Move:%s", mmode->name);
@@ -302,9 +306,10 @@ static void myShowMember(void)
 	rect.y += ASCII_H;
 	screenPrint(&rect, SP_CENTERED, "*** Arms ***");
 
+        rect.y += ASCII_H;
 	class ArmsType *arms = pm->enumerateArms();
 	while (arms != NULL) {
-		myShowMemberArms(&rect, arms, "null");
+		status_show_member_arms(&rect, arms, "null");
 		arms = pm->getNextArms();
 	}
 
@@ -370,6 +375,7 @@ static void stat_show_container()
 				inUse = 1;
 			}
 		}
+
 		// If mixing reagents then check if this reagent has already
 		// been selected. I'm going to cheat a bit here and reuse the
 		// 'ref' field of the inv_entry to mean that the reagent has
@@ -479,7 +485,8 @@ static bool myShowPCInPartyView(class Character * pm, void *data)
 		return true;
 
 	/* Paint the sprite */
-	spritePaint(pm->getSprite(), 0, Status.screenRect.x, Status.lineRect.y);
+	spritePaint(pm->getSprite(), 0, Status.screenRect.x, 
+                    Status.lineRect.y);
 
 	/* Paint the name */
 	screenPrint(&Status.lineRect, flags, "%-*s", MAX_NAME_LEN,
@@ -517,7 +524,8 @@ static void myScrollParty(enum StatusScrollDir dir)
 	case ScrollDown:
 	case ScrollRight:
 	case ScrollPageDown:
-		Status.pcIndex = (Status.pcIndex + 1) % player_party->getSize();
+		Status.pcIndex = (Status.pcIndex + 1) 
+                        % player_party->getSize();
 		break;
 	case ScrollUp:
 	case ScrollLeft:
@@ -557,7 +565,8 @@ static void myScrollZtatsHorz(int d)
 		switch (Status.ztatsView) {
 
 		case ViewMember:
-			Status.pcIndex = (d > 0 ? 0 : player_party->getSize() - 1);
+			Status.pcIndex = (d > 0 ? 0 : player_party->getSize() 
+                                          - 1);
 			break;
 
 		default:
@@ -573,7 +582,8 @@ static void myScrollZtatsHorz(int d)
 	Status.maxLine = max(Status.maxLine, 0);
 
 	if (Status.ztatsView == ViewMember)
-		status_set_title(player_party->getMemberAtIndex(Status.pcIndex)->getName());
+		status_set_title(player_party->
+                                 getMemberAtIndex(Status.pcIndex)->getName());
 	else
 		status_set_title(ZtatsTitles[Status.ztatsView]);
 }

@@ -135,12 +135,9 @@ static void vmask_purge(void)
 static void vmask_los(struct vmask *vmask, struct place *place, 
                       int center_x, int center_y)
 {
-        // --------------------------------------------------------------------
-        // First, build an "alpha mask", which is a grid corresponding to the
-        // surrounding tiles. Each cell in the grid indicates if a tile blocks
-        // line-of-sight or lets it pass.
-        // --------------------------------------------------------------------
-
+        /* First, build an "alpha mask", which is a grid corresponding to the
+         * surrounding tiles. Each cell in the grid indicates if a tile blocks
+         * line-of-sight or lets it pass. */
 	int x;
         int y;
         int start_x = center_x - VMASK_W / 2;
@@ -149,24 +146,19 @@ static void vmask_los(struct vmask *vmask, struct place *place,
         int end_y   = start_y + VMASK_H;
 	int index   = 0;
 
-        //dbg("vmask_los: %s\n", vmask_key(vmask));
-
-	for (y = start_y; y < end_y; y++) {
-		for (x = start_x; x < end_x; x++) {
-			LosEngine->alpha[index] = place_visibility(place, x, y);
+        for (y = start_y; y < end_y; y++) {
+                for (x = start_x; x < end_x; x++) {
+                        LosEngine->alpha[index] = place_visibility(place, x, 
+                                                                   y);
 			index++;
 		}
 	}
         
-        // --------------------------------------------------------------------
-        // Next invoke the los engine and copy the results into the new vmask;
-        // --------------------------------------------------------------------
-
+        /* Next invoke the los engine and copy the results into the new
+         * vmask */
         LosEngine->r = max(VMASK_W, VMASK_H);
         LosEngine->compute(LosEngine);
         memcpy(vmask->data, LosEngine->vmask, VMASK_SZ);
-
-        //vmask_dump(vmask);
 }
 
 static struct vmask *vmask_create(char *key, struct place *place, int x, int y)
