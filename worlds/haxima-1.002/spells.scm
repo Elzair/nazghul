@@ -302,6 +302,15 @@
   (kern-char-resurrect kchar)
   #t)
 
+(define (contest-of-skill offense defense)
+	(let ((oprob (+ offense 1))
+		 (tprob (number->string (+ offense defense 2))))
+		(if (< (kern-dice-roll (string-append "1d" tprob))
+				oprob)
+			#t
+			#f
+			)))
+
 ;; ----------------------------------------------------------------------------
 ;; All the spell cast handlers are listed here. These are the procedures that
 ;; get called whenever a spell is cast.
@@ -314,6 +323,15 @@
         (if (spell ktarg)
             result-ok
             result-no-effect))))
+			
+(define (mkdice dice size)
+	(let ((numstr (if (number? dice)
+						(number->string dice)
+						dice))
+			(sizestr (if (number? size)
+						(number->string size)
+						size)))
+			(string-append numstr "d" sizestr)))
 
 ;;----------------------------------------------------------------------------
 ;; First Circle
@@ -325,8 +343,8 @@
   (user-cast-spell-on-party-member caster awaken))
 
 (define (grav-por caster)
+  (println (kern-obj-get-name (car (kern-obj-get-effects caster))))
   (let ((range (+ 4 (floor (/ (occ-ability-blackmagic caster) 3)))))
-  (println "gprange " range)
   (user-cast-ranged-targeted-spell caster range cast-magic-missile-proc)))
 
 (define (in-lor caster)
@@ -365,7 +383,10 @@
     (and (obj-is-char? kobj)
          (species-is-undead? (kern-char-get-species kobj))))
   (define (repel kchar)
-    (kern-char-set-fleeing kchar #t))
+	(if (contest-of-skill
+			(+ (occ-ability-blackmagic caster) 3)
+			(occ-ability-magicdef kchar))
+		(kern-char-set-fleeing kchar #t)))
   (let ((all-kobjs (kern-place-get-objects (car (kern-obj-get-location caster)))))
     (cond ((null? all-kobjs) 
            (kern-print "Odd, Nobody here!\n")
@@ -385,25 +406,30 @@
     (kern-log-msg "You are in " (kern-place-get-name (car loc)) " at [" (caddr loc) " " (cadr loc) "]")))
 
 (define (kal-xen  caster)
-  (summon (kern-obj-get-location caster)
-          (lambda () (mk-animal " a snake"
-                                sp_snake 
+  (let ((spower (floor (+ (/ (occ-ability-whitemagic caster) 4) 1))))
+	(summon (kern-obj-get-location caster)
+			(lambda () (mk-animal " a snake"
+								sp_snake 
                                 s_snake 
                                 faction-player))
-          (kern-being-get-current-faction caster)
-          (kern-dice-roll "1d4")))
+			(kern-being-get-current-faction caster)
+			(kern-dice-roll (mkdice 1 spower)))))
 
 (define (rel-hur  caster)
-  (let ((dir (ui-get-direction)))
+  (let ((dir (ui-get-direction))
+		(mpow (string-append
+			(number->string (* 2 (occ-ability-whitemagic caster)))
+			"d6")))
     (cond ((null? dir)
            result-no-target)
           (else 
-           (kern-set-wind dir (kern-dice-roll "20d6"))
+           (kern-set-wind dir (kern-dice-roll mpow))
            result-ok
            ))))
 
 (define (in-nox-por  caster)
-  (user-cast-ranged-targeted-spell caster 8 cast-poison-missile-proc))
+  (let ((range (+ 3 (floor (/ (occ-ability-blackmagic caster) 3)))))
+  (user-cast-ranged-targeted-spell caster range cast-poison-missile-proc)))
 
 ;;----------------------------------------------------------------------------
 ;; Third Circle
@@ -418,7 +444,8 @@
   (cast-field-spell caster F_sleep))
 
 (define (vas-flam  caster)
-  (user-cast-ranged-targeted-spell caster 8 cast-fireball-proc))
+	(let ((range (+ 3 (floor (/ (occ-ability-blackmagic caster) 3)))))
+	(user-cast-ranged-targeted-spell caster range cast-fireball-proc)))
 
 (define (vas-lor  caster)
 	(let ((power 
@@ -508,13 +535,15 @@
     result-ok))
 
 (define (wis-quas  caster)
-  (kern-add-reveal 50)
+  (let ((spower (* (occ-ability-blackmagic caster) 4)))
+  (kern-add-reveal spower)
   result-ok
-  )
+  ))
 
 ;; bet-por -- single character blink
 (define (bet-por kcaster)
-  (let ((loc (kern-ui-target (kern-obj-get-location kcaster) (kern-char-get-level kcaster))))
+  (let* ((range (floor (* (occ-ability-whitemagic kcaster) 0.75)))
+		(loc (kern-ui-target (kern-obj-get-location kcaster) (kern-char-get-level kcaster))))
     (cond ((null? loc)
 			result-no-target)
 		((not (kern-in-los? (kern-obj-get-location kcaster) loc))
@@ -540,16 +569,22 @@
     (cast-signal-spell caster 'magic-lock (ui-target loc 1 (mk-ifc-query 'magic-lock)))))
 
 (define (in-bet-xen  caster)
+  (let ((spower (floor (+ (/ (occ-ability-whitemagic caster) 3) 2))))
   (summon (kern-obj-get-location caster)
           (lambda () (mk-animal "an insect swarm"
                                 sp_insect 
                                 s_insects
                                 faction-player))
           (kern-being-get-current-faction caster)
-          (kern-dice-roll "1d6")))
+          (kern-dice-roll (mkdice 1 spower)))))
 
 (define (in-zu  caster)
   (let ((hostiles (all-hostiles caster)))
+  (define (trysleep target)
+	(if (contest-of-skill
+			(+ (occ-ability-blackmagic caster) 3)
+			(occ-ability-magicdef target))
+		(apply-sleep target)))
     (cond ((null? hostiles) 
            (kern-print "No hostiles here!\n")
            result-no-target
@@ -564,19 +599,21 @@
 
 
 (define (rel-tym  caster)
-  (kern-add-quicken (kern-dice-roll "3d6"))
+  (let ((spower (floor (+ (/ (occ-ability-whitemagic caster) 3) 1))))
+  (kern-add-quicken (kern-dice-roll (mkdice 3 spower)))
   result-ok
-  )
+  ))
 
 ;; ----------------------------------------------------------------------------
 ;; Sixth Circle
 ;; ----------------------------------------------------------------------------
 (define (in-an  caster) 
-  (kern-add-magic-negated (kern-dice-roll "3d6"))
-  result-ok)
+  (let ((spower (floor (+ (/ (occ-ability-whitemagic caster) 3) 1))))
+  (kern-add-magic-negated (kern-dice-roll (mkdice 3 spower)))
+  result-ok))
 
 (define (in-rel-por caster)
-  (let ((loc (get-target-loc caster 5)))
+  (let ((loc (get-target-loc caster (floor (+ (/ (occ-ability-whitemagic caster) 3) 1)))))
     (if (null? loc)
         result-no-target
         (if (handle-mech-at loc caster)
@@ -584,23 +621,34 @@
             result-no-effect))))
 
 (define (wis-an-ylem caster) 
-  (kern-add-xray-vision (kern-dice-roll "10d6"))
+  (let ((spower (floor (+ (/ (occ-ability-whitemagic caster) 3) 1))))
+  (kern-add-xray-vision (kern-dice-roll (mkdice 10 spower)))
   result-ok
-  )
+  ))
 
 (define (an-xen-exe  caster)
-   (let ((target (ui-target (kern-obj-get-location caster) 
-                            8 
+   (let* ((range (+ 3 (floor (/ (occ-ability-blackmagic caster) 3))))
+		(target (ui-target (kern-obj-get-location caster) 
+                            range
                             (lambda (kobj) (obj-is-char? kobj)))))
-     (if (null? target) 
-         result-no-target
-         (if (kern-obj-add-effect target 
+	 (define (trysleep target)
+		(if (contest-of-skill
+				(+ (occ-ability-blackmagic caster) 1)
+				(occ-ability-magicdef target))
+			(kern-obj-add-effect target 
                                   ef_charm 
                                   (charm-mk (kern-being-get-current-faction caster)))
+			#f
+			))
+     (if (null? target) 
+         result-no-target
+         (if (trysleep target)
              result-ok
              result-no-effect))))
 
 (define (in-vas-por-ylem  caster)
+  (let ((damdice (mkdice 1 (occ-ability-blackmagic caster)))
+		(foes (all-hostiles caster)))
   (define (tremor kchar)
     ;;(println "tremor")
     (cond ((kern-char-is-asleep? kchar) (kern-char-set-sleep kchar #f))
@@ -608,18 +656,17 @@
            (kern-map-set-jitter #t)
            (kern-map-repaint)
            (kern-char-set-sleep kchar #t)
-           (kern-obj-apply-damage kchar "knocked down" (kern-dice-roll "1d10")))
+           (kern-obj-apply-damage kchar "knocked down" (kern-dice-roll damdice)))
           (else nil)))
-  (define (loop n foes)
+  (define (loop n kchar)
     ;;(println "loop:" n)
     ;;(println "foes:" foes)
     (if (not (= n 0))
         (begin
-          (map tremor foes)
-          (loop (- n 1) foes))))
+          (map tremor kchar)
+          (loop (- n 1) kchar))))
   (define (wakeup kchar) (kern-char-set-sleep kchar #f))
   ;;(println "in-vas-por-ylem: entry")
-  (let ((foes (all-hostiles caster)))
     ;;(println "in-vas-por-ylem:" foes)
     (kern-log-enable #f)
     (map kern-obj-inc-ref foes)
@@ -628,13 +675,16 @@
     (kern-map-repaint)
     (map wakeup foes)
     (map kern-obj-dec-ref foes)
-    (kern-log-enable #t)
-    result-ok))
+    (map wakeup (kern-place-get-beings (loc-place (kern-obj-get-location caster))))
+	(kern-log-enable #t)
+	result-ok))
 
 (define (quas-an-wis  caster)
-  (define (confuse kchar)
-    (if (> (kern-dice-roll "2d20") 16)
-        (kern-being-set-base-faction kchar (random-faction))))
+  (define   (confuse kchar)
+    (if (contest-of-skill
+				((occ-ability-blackmagic caster))
+				(+ (occ-ability-magicdef kchar) 2))
+			(kern-being-set-base-faction kchar (random-faction))))
   (let ((foes (all-hostiles caster)))
     (cond ((null? foes) (kern-print "No hostiles here!\n"))
           (else
@@ -656,7 +706,8 @@
 
 ;; vas-por -- whole party blink
 (define (vas-por kcaster)
-  (let ((loc (kern-ui-target (kern-obj-get-location kcaster) 
+ (let* ((range (floor (* (occ-ability-whitemagic kcaster) 0.75)))
+		(loc (kern-ui-target (kern-obj-get-location kcaster) 
                              (kern-char-get-level kcaster))))
 	(cond ((null? loc)
 			result-no-target)
@@ -760,9 +811,10 @@
                    F_energy))
 
 (define (an-tym  caster)
-  (kern-add-time-stop (kern-dice-roll "3d6"))
+  (let ((spower (floor (+ (/ (occ-ability-whitemagic caster) 3) 1))))
+  (kern-add-time-stop (kern-dice-roll (mkdice 3 spower)))
   result-ok
-  )
+  ))
 
 (define (kal-xen-corp caster)
   (if (use-ability summon-skeleton caster)
@@ -770,7 +822,8 @@
       result-no-effect))
 
 (define (xen-corp  caster)
-  (user-cast-ranged-targeted-spell caster 6 cast-kill-proc))
+	(let ((range (+ 1 (floor (/ (occ-ability-blackmagic caster) 3)))))
+	(user-cast-ranged-targeted-spell caster range cast-kill-proc)))
 
 (define (in-mani-corp  caster)
   (let ((target (kern-ui-select-party-member)))
@@ -797,7 +850,7 @@
           ))))
 
 (define (kal-xen-nox caster)
-  (if (use-ability summon-slime kchar)
+  (if (use-ability summon-slimes caster)
       result-ok
       result-no-effect))
 
