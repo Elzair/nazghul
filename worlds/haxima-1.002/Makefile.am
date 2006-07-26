@@ -26,7 +26,7 @@ haxima_DATA = \
 	anne.scm                    jess.scm               selene.scm\
 	arms.png                    jewelry.png            shapes.png\
 	arms.scm                    jewelry.scm            shard.scm\
-\	bakup.scm                   jim.scm                shroom.scm\
+	cursor.png                  jim.scm                shroom.scm\
 	bart.scm                    joel.scm               silas.scm\
 	beds.scm                    jones.scm              slimy-cavern.scm\
 	bill.scm                    jorn.scm          slimy-cavern-zones.scm\

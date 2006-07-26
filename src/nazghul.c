@@ -505,13 +505,15 @@ static int load_cfg_script()
 	char *filename = dirConcat(IncludeDir,fname);
 	if (filename) {
 		file = fopen(filename, "r");
-		free(filename);
 	} else
 		file = fopen(fname, "r");
 	if (! file) {
-                load_err("could not open script file '%s%s' for reading: %s",
-                           IncludeDir?IncludeDir:"", fname, strerror(errno));
+                load_err("could not open script file '%s' for reading: %s",
+                           filename?filename:fname, strerror(errno));
                 return -1;
+        }
+        if (filename) {
+		free(filename);
         }
 
         /* Create a new interpreter. */
