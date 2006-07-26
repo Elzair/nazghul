@@ -53,6 +53,9 @@
         ;; seem to effect the starting scene animation which is the only other
         ;; reference I see to this procedure. Leaving these as comments for now
         ;; just in case.
+        ;; Update: I think commenting these out causes the destination gate to
+        ;; remain open in normal moongate travel. Need to revisit and fix all
+        ;; cases here. SF bug #1520871.
         ;;(original-sprite (kern-obj-get-sprite kgate))
         ;;(original-light (kern-obj-get-light kgate))
         (loc (kern-obj-get-location kgate)))

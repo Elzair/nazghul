@@ -146,7 +146,9 @@ nazghul_SOURCES =		\
 	tick.h \
 	tick.c \
 	blender.h \
-	dimensions.h dimensions.c
+	dimensions.h dimensions.c \
+	frame.h \
+	cfg.h cfg.c
 
 INCLUDES = -I$(includedir)                                      \
         -I$(srcdir) -I$(top_srcdir)/include -I$(top_srcdir)     \

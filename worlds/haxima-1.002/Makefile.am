@@ -26,7 +26,7 @@ haxima_DATA = \
 	anne.scm                    jess.scm               selene.scm\
 	arms.png                    jewelry.png            shapes.png\
 	arms.scm                    jewelry.scm            shard.scm\
-	bakup.scm                   jim.scm                shroom.scm\
+\	bakup.scm                   jim.scm                shroom.scm\
 	bart.scm                    joel.scm               silas.scm\
 	beds.scm                    jones.scm              slimy-cavern.scm\
 	bill.scm                    jorn.scm          slimy-cavern-zones.scm\
@@ -82,7 +82,7 @@ haxima_DATA = \
 	newmonst.png                newfolks.png	   tower.png\
 	newterrain.png              hidden.scm             blendterrains.scm\
 	endless-deeps-mech.scm      endless-deeps.scm      abigail.scm\
-	r2a_mech.scm
+	r2a_mech.scm                kern-init.scm
 
 EXTRA_DIST = $(haxima_DATA)
 MAINTAINERCLEANFILES = Makefile.in

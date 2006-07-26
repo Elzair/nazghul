@@ -103,12 +103,14 @@ void foogodRepaint(void)
 		screenPrint(&Foogod.hullRect, 0, "Hull: %d", player_party->getVehicle()->getHp());
 	}
 
-        screenPrint(&Foogod.effectsRect, 0, "Eff: %s%s%s%s"
-                    , (TimeStop     ? "T" : "")
-                    , (Quicken      ? "Q" : "")
-                    , (MagicNegated ? "N" : "")
-                    , (Reveal       ? "R" : "")
-                );
+        if (Session) {
+                screenPrint(&Foogod.effectsRect, 0, "Eff: %s%s%s%s"
+                            , (TimeStop     ? "T" : "")
+                            , (Quicken      ? "Q" : "")
+                            , (MagicNegated ? "N" : "")
+                            , (Reveal       ? "R" : "")
+                        );
+        }
 
 	screenUpdate(&Foogod.screenRect);
 }

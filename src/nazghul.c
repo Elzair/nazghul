@@ -43,6 +43,7 @@
 #include "cmd.h"
 #include "session.h"
 #include "kern.h"
+#include "cfg.h"
 
 #include <errno.h>
 #include <signal.h>
@@ -62,7 +63,6 @@ static bool useSound = true;	// SAM: Sound drivers on my dev laptop are
 
 int SCREEN_BPP       = DEF_SCREEN_BPP;
 char *SAVEFILE       = 0;
-char *IncludeDir     = 0;
 char *SavedGamesDir  = 0;
 char *RecordFile     = 0;
 char *PlaybackFile   = 0;
@@ -71,7 +71,6 @@ int DeveloperMode    = 0;
 int MapSize          = DEF_MAP_SIZE;
 
 static char program_name[] = "nazghul";
-static char *NAZGHUL_SPLASH_IMAGE_FILENAME = "splash.png";
 
 static void print_version(void)
 {
@@ -165,16 +164,11 @@ static void parse_args(int argc, char **argv)
 			// Set the global include dir. So that saved games
 			// can be stored in the local directory, while
 			// we cannot write in the game directory.
-			IncludeDir =  strdup(optarg);
-			if (!IncludeDir) {
-				err("Failed to allocate string for include "
-				    "directory\n");
-				exit(-1);
-			}
+			cfg_set("include-dirname", optarg);
 			break;
 		case 'G':
 			// Set the dir to create new saved games into.
-			SavedGamesDir =  strdup(optarg);
+			SavedGamesDir = strdup(optarg);
 			if (!SavedGamesDir) {
 				err("Failed to allocate string for saved "
 				    "games directory\n");
@@ -228,6 +222,7 @@ static void nazghul_init_internal_libs(void)
         struct lib_entry libs[] = {
                 { "commonInit",     commonInit     },
                 { "screenInit",     screenInit     },
+                { "asciiInit",      asciiInit      },
                 { "spriteInit",     spriteInit     },
                 { "player_init",    player_init    },
                 { "eventInit",      eventInit      },
@@ -258,19 +253,22 @@ static void nazghul_init_internal_libs(void)
 		sound_init();
 }
 
+/* nazghul_splash -- show the splash image */
 static void nazghul_splash(void)
 {
         SDL_Surface *splash;
         SDL_Rect rect;
-	char *filename;
+	char *basename = cfg_get("splash-image-filename");
+        char *filename;
 
-        /* Load the image from the well-known filename */
-	filename = dirConcat(IncludeDir, NAZGHUL_SPLASH_IMAGE_FILENAME);
+        /* Look for the splash image, check the include dir first, then check
+         * the current working dir */
+	filename = dirConcat(cfg_get("include-dirname"), basename);
 	if (filename) {
 		splash = IMG_Load(filename);
 		free(filename);
 	} else
-		splash = IMG_Load(NAZGHUL_SPLASH_IMAGE_FILENAME);
+		splash = IMG_Load(basename);
 	if (! splash) {
                 warn("IMG_Load failed: %s\n", SDL_GetError());
                 return;
@@ -286,65 +284,6 @@ static void nazghul_splash(void)
         screenUpdate(&rect);
 
         SDL_FreeSurface(splash);
-}
-
-static int start_main_menu_session(void)
-{
-        scheme *sc = NULL;
-        FILE *file = NULL;
-        char *fname="main-menu.scm";
-
-        /* Open the load file. */
-	char *filename = dirConcat(IncludeDir,fname);
-	if (filename) {
-		file = fopen(filename, "r");
-		free(filename);
-	} else
-		file = fopen(fname, "r");
-	if (! file) {
-                load_err("could not open script file '%s%s' for reading: %s",
-                           IncludeDir?IncludeDir:"", fname, strerror(errno));
-                return -1;
-        }
-
-        /* Create a new interpreter. */
-        if (! (sc = kern_init())) {
-                load_err("could not create interpreter");
-                fclose(file);
-                return -1;
-        }
-
-        /* create the initial session */
-        Session = session_new(sc);
-
-        /* load the scheme file */
-        scheme_load_named_file(sc, file, fname);
-
-        /* sanity checks */
-        if (load_err_any()) {
-                goto abort;
-        }
-
-        if (! Session->frame.llc) {
-                load_err("no frame sprites (use kern-set-frame)");
-        }
-
-        if (! Session->ascii.images) {
-                load_err("no ASCII sprites (use kern-set-ascii)");
-        }
-        
-        if (! Session->cursor_sprite) {
-                load_err("no cursor sprite (use kern-set-cursor)");
-        }
-
-        return 0;
-
- abort:
-        session_del(Session);
-        scheme_deinit(sc);
-        free(sc);
-        Session=NULL;
-        return -1;
 }
 
 static int file_exists(char *fname)
@@ -433,10 +372,8 @@ static void main_menu(void)
         char *selection = NULL;
 	struct QuitHandler qh;
 
-        if (start_main_menu_session()) {
-                fprintf(stderr, "fatal error in main_menu\n");
-                exit(-1);
-        }
+        /* Still need a Session? */
+        assert(!Session);
 
         screen_repaint_frame();
 
@@ -475,7 +412,8 @@ static void main_menu(void)
                 menu[n_items] = TUTORIAL;
                 n_items++;
         } else {
-		char *tmp = dirConcat(IncludeDir,"tutorial.scm");
+		char *tmp = dirConcat(cfg_get("include-dirname"),
+                                      "tutorial.scm");
 		if (tmp) {
 			if (file_exists(tmp)) {
 				menu[n_items] = TUTORIAL;
@@ -544,9 +482,65 @@ static void main_menu(void)
         
 }
 
+/* init_default_cfg -- initialize the global cfg settings to start-up defaults
+ * and prepare it for loading the cfg script */
+static void init_default_cfg()
+{
+        cfg_init();
+        cfg_set("init-script-filename", "kern-init.scm");
+        cfg_set("splash-image-filename", "splash.png");
+}
+
+/* load_cfg_script -- run the kernel initialization script through the
+ * interpreter so it can load saved settings into the global cfg */
+static int load_cfg_script()
+{
+        scheme *sc = NULL;
+        FILE *file = NULL;
+        char *fname= cfg_get("init-script-filename");
+        char *IncludeDir = cfg_get("include-dirname");
+
+        /* Open the load file. Search the include-dir first, then the current
+         * working directory. */
+	char *filename = dirConcat(IncludeDir,fname);
+	if (filename) {
+		file = fopen(filename, "r");
+		free(filename);
+	} else
+		file = fopen(fname, "r");
+	if (! file) {
+                load_err("could not open script file '%s%s' for reading: %s",
+                           IncludeDir?IncludeDir:"", fname, strerror(errno));
+                return -1;
+        }
+
+        /* Create a new interpreter. */
+        if (! (sc = kern_init())) {
+                load_err("could not create interpreter");
+                fclose(file);
+                return -1;
+        }
+
+        /* Load the init file. */
+        scheme_load_named_file(sc, file, fname);
+
+        /* Cleanup interpreter. */
+        scheme_deinit(sc);
+        free(sc);
+        return 0;
+}
+
 int main(int argc, char **argv)
 {
+        /* Initialize the cfg environment before parsing args. */
+        init_default_cfg();
+
 	parse_args(argc, argv);
+
+        /* Load the cfg script after parsing args */
+        if (load_cfg_script()) {
+                exit(-1);
+        }
 
         if (dimensions_init(MapSize)) {
                 err("dimensions_init() failed\n");

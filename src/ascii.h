@@ -28,19 +28,10 @@
 
 BEGIN_DECL
 
-struct ascii {
-        struct images *images;
-        int offset;
-};
-
-struct images;
-
+extern int asciiInit(void);
 extern void asciiPaint(char c, int x, int y, SDL_Surface * surface);
 extern void asciiPaintColored(char c, int x, int y, SDL_Surface * surface, 
                               Uint32 color);
-extern void asciiInvert(void);
-extern void asciiUninvert(void);
-
 END_DECL
 
 #endif

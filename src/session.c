@@ -33,7 +33,6 @@
 #include "common.h"
 #include "player.h"
 #include "sky.h"
-#include "ascii.h"
 #include "map.h"
 #include "cursor.h"
 #include "Arms.h"
@@ -53,6 +52,7 @@
 #include "terrain_map.h" // dbg
 #include "dtable.h"
 #include "wq.h"
+#include "cfg.h"
 
 #include <assert.h>
 #include <ctype.h>              // isspace()
@@ -159,43 +159,10 @@ static void session_save_crosshair(save_t *save, struct session *session)
                 session->crosshair_type->getTag());
 }
 
-static void session_save_cursor(save_t *save, struct session *session)
-{
-        save->write(save, "(kern-set-cursor %s)\n", 
-                    session->cursor_sprite->tag);
-}
-
 static void session_save_damage_sprite(save_t *save, struct session *session)
 {
         save->write(save, "(kern-set-damage-sprite %s)\n", 
                     session->damage_sprite->tag);
-}
-
-static void session_save_frame(save_t *save, struct session *session)
-{
-        save->write(save, "(kern-set-frame %s %s %s %s "\
-                "%s %s %s %s %s "\
-                "%s %s %s %s)\n",
-                session->frame.ulc->tag,
-                session->frame.urc->tag,
-                session->frame.llc->tag,
-                session->frame.lrc->tag,
-                session->frame.td->tag,
-                session->frame.tu->tag,
-                session->frame.tl->tag,
-                session->frame.tr->tag,
-                session->frame.tx->tag,
-                session->frame.horz->tag,
-                session->frame.vert->tag,
-                session->frame.endl->tag,
-                session->frame.endr->tag);
-}
-
-static void session_save_ascii(save_t *save, struct session *session)
-{
-        save->write(save, "(kern-set-ascii %s %d)\n",
-                session->ascii.images->tag,
-                session->ascii.offset);
 }
 
 static void session_save_clock(save_t *save, struct session *session)
@@ -297,6 +264,7 @@ int session_load(char *filename)
         struct session *old_session;
         int t1, t2;
         struct list *elem;
+        char *IncludeDir = cfg_get("include-dirname");
 
         /* Remember the old session in case we have to bail out. */
         old_session = Session;
@@ -368,15 +336,6 @@ int session_load(char *filename)
                 Session->crosshair = new Cursor();
                 Session->crosshair->init(Session->crosshair_type);
                 obj_inc_ref(Session->crosshair);
-        }
-        if (! Session->frame.llc) {
-                load_err("no frame sprites (use kern-set-frame)");
-        }
-        if (! Session->ascii.images) {
-                load_err("no ASCII sprites (use kern-set-ascii)");
-        }
-        if (! Session->cursor_sprite) {
-                load_err("no cursor sprite (use kern-set-cursor)");
         }
         if (! Session->damage_sprite) {
                 load_err("no damage sprite (use kern-set-cursor)");
@@ -592,11 +551,8 @@ void session_save(char *fname)
         save->write(save, ";;--------------\n");
         save->write(save, ";; Miscellaneous\n");
         save->write(save, ";;--------------\n");
-        session_save_frame(save, Session);
-        session_save_cursor(save, Session);
         session_save_damage_sprite(save, Session);
         session_save_crosshair(save, Session);
-        session_save_ascii(save, Session);
         session_save_clock(save, Session);
         session_save_time_accel(save, Session);
         dtable_save(Session->dtable, save);

@@ -67,6 +67,7 @@
 #include "dtable.h"
 #include "factions.h"
 #include "cmdwin.h"
+#include "cfg.h"
 
 #include <assert.h>
 #include <ctype.h>              // isspace()
@@ -138,6 +139,11 @@
 #define scm_closure_env(sc, arg) ((sc)->vptr->closure_env(arg))
 
 #define KERN_API_CALL(name) static pointer name(scheme *sc, pointer args)
+#define KERN_OBSOLETE_CALL(name)                 \
+static pointer name(scheme *sc, pointer args) {  \
+        warn("warn: '" #name "' is obsolete\n"); \
+        return sc->NIL;                          \
+}
 
 #define TAG_UNK "<tag?>"
 
@@ -2303,14 +2309,6 @@ static pointer kern_set_crosshair(scheme *sc, pointer args)
 }
 
 
-static pointer kern_set_cursor(scheme *sc, pointer args)
-{
-        if (unpack(sc, &args, "p", &Session->cursor_sprite)) {
-                load_err("kern-set-cursor: bad args");
-        }
-        return sc->NIL;
-}
-
 static pointer kern_set_damage_sprite(scheme *sc, pointer args)
 {
         if (unpack(sc, &args, "p", &Session->damage_sprite)) {
@@ -2318,50 +2316,6 @@ static pointer kern_set_damage_sprite(scheme *sc, pointer args)
         }
         return sc->NIL;
 }
-
-static pointer kern_set_frame(scheme *sc, pointer args)
-{
-        if (unpack(sc, &args, "ppppppppppppp", 
-                   &Session->frame.ulc,
-                   &Session->frame.urc,
-                   &Session->frame.llc,
-                   &Session->frame.lrc,
-                   &Session->frame.td,
-                   &Session->frame.tu,
-                   &Session->frame.tl,
-                   &Session->frame.tr,
-                   &Session->frame.tx,
-                   &Session->frame.horz,
-                   &Session->frame.vert,
-                   &Session->frame.endl,
-                   &Session->frame.endr)) {
-                load_err("kern-set-frame: bad args");
-        }
-        return sc->NIL;
-}
-
-
-static pointer kern_set_ascii(scheme *sc, pointer args)
-{
-        if (unpack(sc, &args, "pd", 
-                   &Session->ascii.images,
-                   &Session->ascii.offset)) {
-                load_err("kern-set-ascii: bad args");
-                return sc->NIL;
-        }
-
-	if ((Session->ascii.images->w != ASCII_W) ||
-            (Session->ascii.images->h != ASCII_H) ||
-            (Session->ascii.offset >
-             ((Session->ascii.images->cols * Session->ascii.images->rows) -
-              (128 - ' ')))) {
-                load_err("kern-set-ascii: ascii images are the wrong size "\
-                         "or number");
-        }
-
-        return sc->NIL;
-}
-
 
 static pointer kern_set_clock(scheme *sc, pointer args)
 {
@@ -7439,6 +7393,38 @@ KERN_API_CALL(kern_los_invalidate)
 }
 #endif
 
+KERN_API_CALL(kern_cfg_set)
+{
+        char *key, *val;
+
+        while (scm_is_pair(sc, args)) {
+                if (unpack(sc, &args, "ss", &key, &val)) {
+                        rt_err("kern-cfg-set: bad args");
+                        return sc->NIL;
+                }
+                cfg_set(key, val);
+        }
+        return sc->NIL;
+}
+
+KERN_API_CALL(kern_cfg_get)
+{
+        char *key, *val;
+
+        if (unpack(sc, &args, "s", &key)) {
+                rt_err("kern-cfg-get: bad args");
+                return sc->NIL;
+        }
+        val = cfg_get(key);
+        if (!val)
+                return sc->NIL;
+        return scm_mk_string(sc, cfg_get(key));
+}
+
+KERN_OBSOLETE_CALL(kern_set_ascii);
+KERN_OBSOLETE_CALL(kern_set_frame);
+KERN_OBSOLETE_CALL(kern_set_cursor);
+
 scheme *kern_init(void)
 {        
         scheme *sc;
@@ -7653,10 +7639,7 @@ scheme *kern_init(void)
 
         /* kern-set api */
         API_DECL(sc, "kern-set-crosshair", kern_set_crosshair);
-        API_DECL(sc, "kern-set-cursor", kern_set_cursor);
         API_DECL(sc, "kern-set-damage-sprite", kern_set_damage_sprite);
-        API_DECL(sc, "kern-set-frame", kern_set_frame);
-        API_DECL(sc, "kern-set-ascii", kern_set_ascii);
         API_DECL(sc, "kern-set-clock", kern_set_clock);
 
         /* kern-species api */
@@ -7772,6 +7755,17 @@ scheme *kern_init(void)
         /* kern-sprite api */
         API_DECL(sc, "kern-sprite-clone", kern_sprite_clone);
         API_DECL(sc, "kern-sprite-append-decoration", kern_sprite_append_decoration);
+
+        /* kern-cfg api */
+        API_DECL(sc, "kern-cfg-set", kern_cfg_set);
+        API_DECL(sc, "kern-cfg-get", kern_cfg_get);
+
+        /* obsolete (keep these until old save games are unlikely to use
+         * them) */
+        API_DECL(sc, "kern-set-frame", kern_set_frame);
+        API_DECL(sc, "kern-set-cursor", kern_set_cursor);
+        API_DECL(sc, "kern-set-ascii", kern_set_ascii);
+
         
         /* Revisit: probably want to provide some kind of custom port here. */
         scheme_set_output_port_file(sc, stderr);

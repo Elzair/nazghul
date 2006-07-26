@@ -33,6 +33,7 @@
 #include <assert.h>
 #endif
 #include "common.h"
+#include "cfg.h"
 
 /* Used for documentation purposes, to signal functions in 'interface' */
 #define INTERFACE
@@ -1285,7 +1286,7 @@ static void finalize_cell(scheme *sc, pointer a) {
 static int file_push(scheme *sc, const char *fname) {
   FILE *fin;
   char *filename;
-  filename = dirConcat(IncludeDir,fname);
+  filename = dirConcat(cfg_get("include-dirname"),fname);
   if (filename) {
 	  fin=fopen(filename,"r");
 	  free(filename);

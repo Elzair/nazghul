@@ -21,10 +21,13 @@
 //
 #include "images.h"
 #include "screen.h"
-#include "common.h"
+#include "common.h" /* for dirConcat */
+#include "cfg.h"
 
 #include <assert.h>
 #include <SDL_image.h>
+#include <stdlib.h>
+#include <string.h>
 
 void images_del(struct images *images)
 {
@@ -69,8 +72,10 @@ struct images *images_new(char *tag, int w, int h, int rows, int cols,
         assert(images);
 	memset(images, 0, sizeof(*images));
 
-        images->tag     = strdup(tag);
-        assert(images->tag);
+        if (tag) {
+                images->tag     = strdup(tag);
+                assert(images->tag);
+        }
 
         images->fname   = strdup(fname);
         assert(images->fname);
@@ -83,7 +88,7 @@ struct images *images_new(char *tag, int w, int h, int rows, int cols,
         images->cols    = cols;
 
 
-	filename = dirConcat(IncludeDir,fname);
+	filename = dirConcat(cfg_get("include-dirname"),fname);
 	if (filename) {
 		images->images = IMG_Load(filename);
 		free(filename);

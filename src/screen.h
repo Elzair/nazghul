@@ -31,11 +31,6 @@ BEGIN_DECL
 #define MAX_SHADE 0
 #define MIN_SHADE 255
 
-struct frame {
-	struct sprite *ulc, *urc, *llc, *lrc, *td, *tu, *tl, *tr, *tx, *horz, 
-                *vert, *endl, *endr;
-};
-
 extern Uint32 Blue;
 extern Uint32 Black;
 extern Uint32 White;
@@ -78,7 +73,6 @@ extern Uint32 screenMapRGB(Uint8 red, Uint8 grn, Uint8 blu);
 extern void screenZoomOut(int factor);
 extern void screenZoomIn(int factor);
 
-extern int screenLoadFrame(class Loader * loader);
 extern void screen_fade_surface(SDL_Surface * surf, int transparency);
 extern void screen_repaint_frame(void);
 

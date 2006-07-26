@@ -21,12 +21,16 @@
 //
 
 #include "cmdwin.h"
-#include "screen.h"
-#include "common.h"
-#include "session.h"
-#include "sprite.h"
-#include "console.h"
 
+#include "cfg.h"
+#include "common.h"
+#include "console.h"
+#include "dimensions.h"
+#include "images.h"
+#include "screen.h"
+#include "sprite.h"
+
+#include <assert.h>
 #include <errno.h>
 #include <stdarg.h>
 
@@ -37,6 +41,7 @@ static struct {
 	int blen;
 	int room;
 	char *mark;
+        struct sprite *cursor_sprite;
 } cmdwin;
 
 #ifdef DEBUG
@@ -51,8 +56,22 @@ static inline void cmdwin_clear_no_repaint()
 	cmdwin.mark = cmdwin.buf;
 }
 
+static void cmdwin_cursor_sprite_init()
+{
+        char *fname = cfg_get("cursor-image-filename");
+        struct images *ss_cursor = 0;
+
+        assert(fname);
+        ss_cursor = images_new(0, 8, 16, 1, 4, 0, 0, fname);
+        assert(ss_cursor);
+        cmdwin.cursor_sprite = sprite_new(0, 4, 0, 0, 0, ss_cursor);
+        assert(cmdwin.cursor_sprite);
+}
+
 int cmdwin_init(void)
 {
+        cmdwin_cursor_sprite_init();
+
 	cmdwin.srect.x = CMD_X;
 	cmdwin.srect.y = CMD_Y;
 	cmdwin.srect.w = CMD_W;
@@ -130,7 +149,7 @@ void cmdwin_repaint_cursor(void)
 
 	rect.x += (cmdwin.ptr - cmdwin.buf) * ASCII_W;
 
-	spritePaint(Session->cursor_sprite, 0, rect.x, rect.y);
+	spritePaint(cmdwin.cursor_sprite, 0, rect.x, rect.y);
 	screenUpdate(&rect);
 }
 

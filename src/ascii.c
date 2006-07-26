@@ -23,9 +23,25 @@
 #include "images.h"
 #include "screen.h"
 #include "common.h"
-#include "session.h"
+#include "cfg.h"
+#include "dimensions.h"
 
 #include <assert.h>
+
+static struct ascii {
+        struct images *images;
+        int offset;
+} Ascii;
+
+int asciiInit(void)
+{
+        char *fname = cfg_get("ascii-image-filename");
+        assert(fname);
+        Ascii.images = images_new(0, 8, 16, 8, 16, 0, 0, fname);
+        assert(Ascii.images);
+        Ascii.offset = 32;
+        return 0;
+}
 
 void asciiBlitColored(SDL_Surface *dst, SDL_Rect *dstrect, 
                       SDL_Surface *src, SDL_Rect *srcrect,
@@ -64,7 +80,7 @@ void asciiPaintColored(char c, int x, int y, SDL_Surface *surf, Uint32 color)
 	int row;
 	int col;
 
-	assert(Session->ascii.images);
+	assert(Ascii.images);
 
 	if (c == '\t')
 		c = ' ';
@@ -79,13 +95,13 @@ void asciiPaintColored(char c, int x, int y, SDL_Surface *surf, Uint32 color)
 	/* fixme -- put these calcs in a table or something. Don't need to do
 	 * it every time. */
 
-	c = c - ' ' + Session->ascii.offset;
+	c = c - ' ' + Ascii.offset;
 
-	col = c % Session->ascii.images->cols;
-	row = c / Session->ascii.images->cols;
+	col = c % Ascii.images->cols;
+	row = c / Ascii.images->cols;
 
-	src.x = (col * ASCII_W) + Session->ascii.images->offx;
-	src.y = (row * ASCII_H) + Session->ascii.images->offy;
+	src.x = (col * ASCII_W) + Ascii.images->offx;
+	src.y = (row * ASCII_H) + Ascii.images->offy;
 	src.w = ASCII_W;
 	src.h = ASCII_H;
 
@@ -95,7 +111,7 @@ void asciiPaintColored(char c, int x, int y, SDL_Surface *surf, Uint32 color)
 	dest.h = ASCII_H;
 
         asciiBlitColored(surf, &dest, 
-                         Session->ascii.images->images, &src, 
+                         Ascii.images->images, &src, 
                          color);
 }
 
@@ -106,7 +122,7 @@ void asciiPaint(char c, int x, int y, SDL_Surface * surf)
 	int row;
 	int col;
 
-	assert(Session->ascii.images);
+	assert(Ascii.images);
 
 	if (c == '\t')
 		c = ' ';
@@ -121,13 +137,13 @@ void asciiPaint(char c, int x, int y, SDL_Surface * surf)
 	/* fixme -- put these calcs in a table or something. Don't need to do
 	 * it every time. */
 
-	c = c - ' ' + Session->ascii.offset;
+	c = c - ' ' + Ascii.offset;
 
-	col = c % Session->ascii.images->cols;
-	row = c / Session->ascii.images->cols;
+	col = c % Ascii.images->cols;
+	row = c / Ascii.images->cols;
 
-	src.x = (col * ASCII_W) + Session->ascii.images->offx;
-	src.y = (row * ASCII_H) + Session->ascii.images->offy;
+	src.x = (col * ASCII_W) + Ascii.images->offx;
+	src.y = (row * ASCII_H) + Ascii.images->offy;
 	src.w = ASCII_W;
 	src.h = ASCII_H;
 
@@ -136,41 +152,5 @@ void asciiPaint(char c, int x, int y, SDL_Surface * surf)
 	dest.w = ASCII_W;
 	dest.h = ASCII_H;
 
-	SDL_BlitSurface(Session->ascii.images->images, &src, surf, &dest);
-}
-
-void asciiInvert(void)
-{
-	int wIndex, bIndex;
-
-	/* Get the index of white */
-	wIndex = SDL_MapRGB(Session->ascii.images->images->format, 0xff, 0xff, 0xff);
-
-	/* Get the index of black */
-	bIndex = SDL_MapRGB(Session->ascii.images->images->format, 0x00, 0x00, 0x00);
-
-	/* Set the white index to black */
-	SDL_SetPalette(Session->ascii.images->images, SDL_LOGPAL, &fontBlack, wIndex, 1);
-
-	/* Set the black index to white */
-	SDL_SetPalette(Session->ascii.images->images, SDL_LOGPAL, &fontWhite, bIndex, 1);
-
-}
-
-void asciiUninvert(void)
-{
-	int wIndex, bIndex;
-
-	/* Get the index of white */
-	wIndex = SDL_MapRGB(Session->ascii.images->images->format, 0xff, 0xff, 0xff);
-
-	/* Get the index of black */
-	bIndex = SDL_MapRGB(Session->ascii.images->images->format, 0x00, 0x00, 0x00);
-
-	/* Set the white index to white */
-	SDL_SetPalette(Session->ascii.images->images, SDL_LOGPAL, &fontWhite, wIndex, 1);
-
-	/* Set the black index to black */
-	SDL_SetPalette(Session->ascii.images->images, SDL_LOGPAL, &fontBlack, bIndex, 1);
-
+	SDL_BlitSurface(Ascii.images->images, &src, surf, &dest);
 }
