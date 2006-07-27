@@ -54,8 +54,6 @@
 #include <SDL_thread.h>
 #include <unistd.h>
 
-#define NEW_GAME_FILE "start-new-game.scm"
-
 // gmcnutt: by default I'd like it on :). For one thing, printing all those
 // "Playing sound %s" messages to the console breaks all the regression tests
 // :).
@@ -161,19 +159,14 @@ static void parse_args(int argc, char **argv)
 			}
 			break;
 		case 'I':
-			// Set the global include dir. So that saved games
-			// can be stored in the local directory, while
-			// we cannot write in the game directory.
+                        /* Set the directory for read-only game and cfg
+                         * files. */
 			cfg_set("include-dirname", optarg);
 			break;
 		case 'G':
-			// Set the dir to create new saved games into.
-			SavedGamesDir = strdup(optarg);
-			if (!SavedGamesDir) {
-				err("Failed to allocate string for saved "
-				    "games directory\n");
-				exit(-1);
-			}
+                        /* Set the directory for read-write game and cfg
+                         * files. */
+			cfg_set("saved-games-dirname", optarg);
 			break;
                 case 'v':
                         print_version();
@@ -286,9 +279,60 @@ static void nazghul_splash(void)
         SDL_FreeSurface(splash);
 }
 
-static int file_exists(char *fname)
+/* open_via_path -- open the file for reading in the specific directory and
+ * return the file handle */
+static FILE *open_via_path(char *fname, char *prefix)
 {
-        FILE *file = fopen(fname,"r");
+        FILE *file = 0;
+        char *path = 0;
+
+        if (prefix) {
+                path = dirConcat(prefix, fname);
+        } else {
+                path = fname;
+        }
+
+        file = fopen(path, "r");
+        
+        if (path != fname) {
+                free(path);
+        }
+
+        return file;
+}
+
+/* open_via_std_search_path -- check if the file can be found in the standard
+ * search path and open it for reading */
+FILE *open_via_std_search_path(char *fname)
+{
+        FILE *file = 0;
+
+        /* check current working directory first */
+        if ((file = fopen(fname, "r"))) {
+                return file;
+        }
+
+        /* next check the saved games directory */
+        if ((file = open_via_path(fname, cfg_get("saved-games-dirname")))) {
+                return file;
+        }
+        
+        /* finally check the include directory */
+        if ((file = open_via_path(fname, cfg_get("include-dirname")))) {
+                return file;
+        }
+
+        return 0;
+}
+
+/* file_exists_in_std_search_path -- check if the file can be found in the
+ * standard search path and opened for reading */
+static int file_exists_in_std_search_path(char *fname)
+{
+        FILE *file = 0;
+        if (!fname)
+                return 0;
+        file = open_via_std_search_path(fname);
         int ret = file ? 1:0;
         if (file)
                 fclose(file);
@@ -338,12 +382,6 @@ static void show_credits(void)
 	eventPopKeyHandler();
 }
 
-static char *START_NEW_GAME="Start New Game";
-static char *JOURNEY_ONWARD="Journey Onward";
-static char *CREDITS="Credits";
-static char *QUIT="Quit";
-static char *TUTORIAL="Tutorial";
-
 static int confirm_selection()
 {
         int yesno;
@@ -365,14 +403,21 @@ static int confirm_selection()
 
 static void main_menu(void)
 {
+        static char *START_NEW_GAME="Start New Game";
+        static char *JOURNEY_ONWARD="Journey Onward";
+        static char *CREDITS="Credits";
+        static char *QUIT="Quit";
+        static char *TUTORIAL="Tutorial";
         char *menu[5];
         int n_items = 0;
         struct KeyHandler kh;
 	struct ScrollerContext data;
         char *selection = NULL;
 	struct QuitHandler qh;
+        char *new_game_fname = cfg_get("new-game-filename");
+        char *save_game_fname = cfg_get("save-game-filename");
+        char *tutorial_fname = cfg_get("tutorial-filename");
 
-        /* Still need a Session? */
         assert(!Session);
 
         screen_repaint_frame();
@@ -390,37 +435,22 @@ static void main_menu(void)
  start_main_menu:
         n_items = 0;
 
-	// Perhaps use QUICKSAVE_FNAME instead?
-        if (file_exists("save.scm")) {
+        /* check for a previously saved game to Journey Onward */
+        if (file_exists_in_std_search_path(save_game_fname)) {
                 menu[n_items] = JOURNEY_ONWARD;
                 n_items++;
-        } else {
-		char *tmp = dirConcat(SavedGamesDir,"save.scm");
-		if (tmp) {
-			if (file_exists(tmp)) {
-				menu[n_items] = JOURNEY_ONWARD;
-				n_items++;
-			}
-			free(tmp);
-		}
-	}
+        }
 
-        menu[n_items] = START_NEW_GAME;
-        n_items++;
+        /* check for the default script for Start New Game */
+        if (file_exists_in_std_search_path(new_game_fname)) {
+                menu[n_items] = START_NEW_GAME;
+                n_items++;
+        }
 
-        if (file_exists("tutorial.scm")) {
+        /* check for a tutorial script for Tutorial */
+        if (file_exists_in_std_search_path(tutorial_fname)) {
                 menu[n_items] = TUTORIAL;
                 n_items++;
-        } else {
-		char *tmp = dirConcat(cfg_get("include-dirname"),
-                                      "tutorial.scm");
-		if (tmp) {
-			if (file_exists(tmp)) {
-				menu[n_items] = TUTORIAL;
-				n_items++;
-			}
-			free(tmp);
-		}
         }
 
         menu[n_items] = CREDITS;
@@ -449,23 +479,24 @@ static void main_menu(void)
         if (! strcmp(selection, START_NEW_GAME)) {
 
                 /* prompt before over-writing save file */
-                if (file_exists("save.scm")) {
+                if (file_exists_in_std_search_path(save_game_fname)) {
                         if (! confirm_selection()) {
                                 goto start_main_menu;
                         }
                 }
-		/* Why is this haxima and not something game-unspecific? */
-                SAVEFILE=NEW_GAME_FILE;
+
+                SAVEFILE = new_game_fname;
+                assert(SAVEFILE);
         }
         else if (! strcmp(selection, JOURNEY_ONWARD)) {
-                SAVEFILE="save.scm";
+                SAVEFILE = save_game_fname;
         }
         else if (! strcmp(selection, CREDITS)) {
                 show_credits();
                 goto start_main_menu;
         }
         else if (! strcmp(selection, TUTORIAL)) {
-                SAVEFILE="tutorial.scm";
+                SAVEFILE = tutorial_fname;
         }
         else if (! strcmp(selection, QUIT))
                 exit(0);
@@ -498,22 +529,13 @@ static int load_cfg_script()
         scheme *sc = NULL;
         FILE *file = NULL;
         char *fname= cfg_get("init-script-filename");
-        char *IncludeDir = cfg_get("include-dirname");
 
-        /* Open the load file. Search the include-dir first, then the current
-         * working directory. */
-	char *filename = dirConcat(IncludeDir,fname);
-	if (filename) {
-		file = fopen(filename, "r");
-	} else
-		file = fopen(fname, "r");
+        /* Open the load file. */
+        file = open_via_std_search_path(fname);
 	if (! file) {
-                load_err("could not open script file '%s' for reading: %s",
-                           filename?filename:fname, strerror(errno));
+                warn("could not open script file '%s' for reading: %s\n",
+                     fname, strerror(errno));
                 return -1;
-        }
-        if (filename) {
-		free(filename);
         }
 
         /* Create a new interpreter. */
@@ -529,6 +551,9 @@ static int load_cfg_script()
         /* Cleanup interpreter. */
         scheme_deinit(sc);
         free(sc);
+
+        /* REVISIT: need to fclose(file) here, or does intepreter do it
+         * automatically when it reaches EOF? */
         return 0;
 }
 

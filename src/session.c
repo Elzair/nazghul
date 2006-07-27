@@ -257,6 +257,10 @@ void session_del(struct session *session)
         free(session);
 }
 
+/* FIXME: move to a header, put all the file utilities in a single file
+ * maybe (currently in nazghul.c) */
+extern FILE *open_via_std_search_path(char*);
+
 int session_load(char *filename)
 {
         scheme *sc;
@@ -273,21 +277,7 @@ int session_load(char *filename)
         load_err_clear();
 
         /* Open the load file. */
-        file = fopen(filename, "r");
-	if (! file && SavedGamesDir ) {
-		char *fname = dirConcat(SavedGamesDir,filename);
-		if (fname) {
-			file = fopen(fname, "r");
-			free(fname);
-		}
-	}
-	if (! file && IncludeDir ) {
-		char *fname = dirConcat(IncludeDir,filename);
-		if (fname) {
-			file = fopen(fname, "r");
-			free(fname);
-		}
-	}
+        file = open_via_std_search_path(filename);
         if (! file) {
                 load_err("could not open script file '%s' for reading: %s",
                            filename, strerror(errno));
