@@ -59,7 +59,6 @@
 // :).
 static bool useSound = true;	// SAM: Sound drivers on my dev laptop are
 
-int SCREEN_BPP       = DEF_SCREEN_BPP;
 char *SAVEFILE       = 0;
 char *SavedGamesDir  = 0;
 char *RecordFile     = 0;
@@ -94,7 +93,6 @@ static void print_usage(void)
 	       "    -t: tick <period in msec> \n"
 	       "    -a: animation <period in ticks> \n"
 	       "    -s: sound <0 to disable> \n"
-	       "    -b: bits-per-pixel <bpp> \n"
 	       "    -R: recorder <filename>    \n"
 	       "    -P: playback <filename>  \n"
 	       "    -S: speed <playback ms delay> \n"
@@ -115,11 +113,8 @@ static void parse_args(int argc, char **argv)
 	TickMilliseconds = MS_PER_TICK;
 	AnimationTicks = ANIMATION_TICKS;
 
-	while ((c = getopt(argc, argv, "b:t:a:s:TdR:S:P:I:G:vhm:")) != -1) {
+	while ((c = getopt(argc, argv, "t:a:s:TdR:S:P:I:G:vhm:")) != -1) {
 		switch (c) {
-		case 'b':
-			SCREEN_BPP = atoi(optarg);
-			break;
 		case 't':
 			TickMilliseconds = atoi(optarg);
 			break;

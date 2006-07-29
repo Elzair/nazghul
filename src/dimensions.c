@@ -28,7 +28,6 @@
 int STATUS_MAX_MSG_SZ;
 int SCREEN_W;
 int SCREEN_H;
-int DEF_SCREEN_BPP;
 int CONSOLE_MAX_MSG_SZ;
 int MAP_TILE_W;
 int MAP_TILE_H;
@@ -70,7 +69,6 @@ int dimensions_init(int map_size)
             || map_size > MAX_MAP_SIZE)
                 return -1;
 
-        DEF_SCREEN_BPP = 16;
         STATUS_MAX_MSG_SZ = 128;
 
         MAP_TILE_W = map_size;

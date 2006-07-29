@@ -42,7 +42,6 @@ BEGIN_DECL
 extern int STATUS_MAX_MSG_SZ;
 extern int SCREEN_W;
 extern int SCREEN_H;
-extern int DEF_SCREEN_BPP;
 extern int CONSOLE_MAX_MSG_SZ;
 
 extern int MAP_TILE_W;

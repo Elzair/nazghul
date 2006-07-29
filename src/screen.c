@@ -95,6 +95,9 @@ void screenInitScreen(void)
 	Uint32 flags = 0;
 	const SDL_VideoInfo *fmt;
 
+        /* gmcnutt: why 16? I don't remember. */
+        const int SCREEN_BPP = 16;
+
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
 		perror_sdl("SDL_Init");
 		exit(-1);
