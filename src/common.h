@@ -330,8 +330,6 @@ extern int TickMilliseconds;
 extern bool Quit;
 extern struct los *LosEngine;
 extern int ShowAllTerrain;
-extern char *SAVEFILE;	/* nazghul.c */
-extern char *SavedGamesDir;	/* nazghul.c */
 extern int logBase2(int val);
 
 #ifdef __cplusplus

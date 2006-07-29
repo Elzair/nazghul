@@ -480,12 +480,14 @@ void session_save(char *fname)
         struct list *elem;
         save_t *save;
 	char *filename;
+        char *SavedGamesDir = cfg_get("saved-games-dirname");
 
 	filename = dirConcat(SavedGamesDir,fname);
 	if (filename) {
 #ifndef WIN32
                 /* FIXME: cygwin build fails, saying that mkdir below has too
-                 * many arguments. We don't use the save dir so not a problem */
+                 * many arguments. We don't use the save dir so not a
+                 * problem */
 		(void)mkdir(SavedGamesDir, 0777);
 #endif
 		file = fopen(filename, "w");

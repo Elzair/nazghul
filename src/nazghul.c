@@ -59,11 +59,9 @@
 // :).
 static bool useSound = true;	// SAM: Sound drivers on my dev laptop are
 
-char *SAVEFILE       = 0;
-char *SavedGamesDir  = 0;
-char *RecordFile     = 0;
-char *PlaybackFile   = 0;
-int PlaybackSpeed    = 100;
+/* Name of the file to load the game from. */
+static char *nazghul_load_fname = 0;
+
 int DeveloperMode    = 0;
 int MapSize          = DEF_MAP_SIZE;
 
@@ -131,27 +129,16 @@ static void parse_args(int argc, char **argv)
                         DeveloperMode = 1;
                         break;
 		case 'R':
-			// Set the global RecordFile pointer. Used by
-			// eventInit().
-			RecordFile = strdup(optarg);
-			if (!RecordFile) {
-				err("Failed to allocate string for record "
-				    "filename\n");
-				exit(-1);
-			}
+                        /* Set the filename for recording keystrokes. */
+			cfg_set("record-filename", optarg);
 			break;
 		case 'S':
-			PlaybackSpeed = atoi(optarg);
+                        /* Set the speed to play back recorded keystrokes. */
+                        cfg_set("playback-speed", optarg);
 			break;
 		case 'P':
-			// Set the global PlaybackFile pointer. Used by
-			// eventInit().
-			PlaybackFile = strdup(optarg);
-			if (!PlaybackFile) {
-				err("Failed to allocate string for playback "
-				    "filename\n");
-				exit(-1);
-			}
+                        /* Set the file to play back keystrokes from. */
+                        cfg_set("playback-filename", optarg);
 			break;
 		case 'I':
                         /* Set the directory for read-only game and cfg
@@ -193,7 +180,7 @@ static void parse_args(int argc, char **argv)
         // --------------------------------------------------------------------
 
         if (optind < argc) {
-                SAVEFILE = argv[optind];
+                nazghul_load_fname = argv[optind];
         }
 }				// parse_args()
 
@@ -413,14 +400,6 @@ static void main_menu(void)
         char *save_game_fname = cfg_get("save-game-filename");
         char *tutorial_fname = cfg_get("tutorial-filename");
 
-        assert(!Session);
-
-        screen_repaint_frame();
-
-        /* if save file specified on command line skip the menu */
-        if (SAVEFILE)
-                return;
-
         /* setup main menu quit handler so player can click close window to
          * exit */
 	qh.fx = main_menu_quit_handler;
@@ -480,18 +459,18 @@ static void main_menu(void)
                         }
                 }
 
-                SAVEFILE = new_game_fname;
-                assert(SAVEFILE);
+                nazghul_load_fname = new_game_fname;
+                assert(nazghul_load_fname);
         }
         else if (! strcmp(selection, JOURNEY_ONWARD)) {
-                SAVEFILE = save_game_fname;
+                nazghul_load_fname = save_game_fname;
         }
         else if (! strcmp(selection, CREDITS)) {
                 show_credits();
                 goto start_main_menu;
         }
         else if (! strcmp(selection, TUTORIAL)) {
-                SAVEFILE = tutorial_fname;
+                nazghul_load_fname = tutorial_fname;
         }
         else if (! strcmp(selection, QUIT))
                 exit(0);
@@ -583,16 +562,23 @@ int main(int argc, char **argv)
 
         /* Show the splash screen on startup */
         nazghul_splash();
-        main_menu();
+        
+        /* paint the border for the first time */
+        screen_repaint_frame();
 
-	playRun();
+        /* if no load file specified on the command line then run the main
+         * menu */
+        if (! nazghul_load_fname)
+                main_menu();
+
+        /* run the game, don't return until the user quits */
+	playRun(nazghul_load_fname);
 
         /* cleanup modules that need it */
         eventExit();
 
-
         /* reset save file so main menu runs */
-        SAVEFILE=0;
+        nazghul_load_fname=0;
 
         // memory leaks prevent this from being a good idea:
         //goto main_loop;

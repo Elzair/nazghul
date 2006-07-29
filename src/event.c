@@ -20,6 +20,7 @@
 // gmcnutt@users.sourceforge.net
 //
 #include "event.h"
+#include "cfg.h"
 
 #include <SDL.h>
 #include <ctype.h>
@@ -47,11 +48,6 @@ typedef struct {
         SDL_Event event;
 } sdl_event_list_t;
 
-// These are in nazghul.c
-extern char *RecordFile;
-extern char *PlaybackFile;
-extern int PlaybackSpeed;
-
 static struct list KeyHandlers;
 static struct list TickHandlers;
 static struct list QuitHandlers;
@@ -62,6 +58,7 @@ static bool record_events;
 static int record_fd;
 static bool playback_events;
 static int playback_fd;
+static int event_playback_speed = 0;
 
 static void (*eventHook) (void);
 static int (*wait_event) (SDL_Event * event, int flags);
@@ -186,7 +183,7 @@ static int playback_event(SDL_Event * event, int flags)
 		len -= n;
 	}
 
-	SDL_Delay(PlaybackSpeed);
+	SDL_Delay(event_playback_speed);
 
 	return 1;
 }
@@ -297,6 +294,9 @@ static void event_handle_aux(int flags)
 
 int eventInit(void)
 {
+        char *record_fname = cfg_get("record-filename");
+        char *playback_fname = cfg_get("playback-filename");
+
 	list_init(&KeyHandlers);
 	list_init(&TickHandlers);
 	list_init(&QuitHandlers);
@@ -306,24 +306,30 @@ int eventInit(void)
 	wait_event = event_get_next_event;
         qcount=0;
 
-	if (RecordFile != NULL) {
+	if (record_fname != NULL) {
 		record_events = true;
-		record_fd = open(RecordFile, O_WRONLY | O_CREAT, 00666);
+		record_fd = open(record_fname, O_WRONLY | O_CREAT, 00666);
 		if (record_fd == -1) {
-			perror(RecordFile);
+			perror(record_fname);
 			return -1;
 		}
 	}
 
-	if (PlaybackFile != NULL) {
+	if (playback_fname != NULL) {
+                char *playback_spd_str = cfg_get("playback-speed");
 		playback_events = true;
-		playback_fd = open(PlaybackFile, O_RDONLY, 00666);
+		playback_fd = open(playback_fname, O_RDONLY, 00666);
 		if (playback_fd == -1) {
-			perror(PlaybackFile);
+			perror(playback_fname);
 			return -1;
 		}
 		// Override the normal wait_event routine
 		wait_event = playback_event;
+
+                /* Set the play back speed. */
+                if (playback_spd_str) {
+                        event_playback_speed = atoi(playback_spd_str);
+                }
 	}
 
         SDL_EnableUNICODE(1);

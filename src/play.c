@@ -275,7 +275,7 @@ static void updateAfterEvent(void)
 	mapUpdate(REPAINT_IF_DIRTY|REPAINT_IF_OLD);
 }
 
-int playRun(void)
+int playRun(char *SAVEFILE)
 {
 	struct QuitHandler qh;
 	struct TickHandler th;

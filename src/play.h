@@ -22,18 +22,12 @@
 #ifndef play_h
 #define play_h
 
-class Character;
+#include "macros.h"
 
+BEGIN_DECL
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+extern int playRun(char *game_fname);
 
-        extern int playRun(void);
-
-
-#ifdef __cplusplus
-}
-#endif
+END_DECL
 
 #endif
