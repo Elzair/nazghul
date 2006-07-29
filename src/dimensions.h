@@ -84,9 +84,8 @@ extern int SKY_W;
 extern int SKY_H;
 extern int SKY_SPRITE_W;
 
-/* Set all the runtime-configurable UI dimensions, based on the desired map
- * size. */
-int dimensions_init(int map_size);
+/* Set all the runtime-configurable UI dimensions */
+int dimensions_init();
 
 END_DECL
 

@@ -22,6 +22,7 @@
 
 #include "dimensions.h"
 #include "common.h" /* for MOON_WINDOW_W */
+#include "cfg.h"
 
 #include <string.h>
 
@@ -63,13 +64,39 @@ int SKY_W;
 int SKY_H;
 int SKY_SPRITE_W;
 
-int dimensions_init(int map_size)
+/* dimensions_get_map_size -- figure out the biggest map window that will
+ * satisfy the screen dimensions.  */
+static int dimensions_get_map_size(char *dimstr)
 {
-        if (map_size < MIN_MAP_SIZE
-            || map_size > MAX_MAP_SIZE)
-                return -1;
+        struct dimstr2mapsz {
+                char *dimstr;
+                int map_sz;
+        } tbl[] = {
+                { "640x480", 11 },
+                { "1280x960", MAX_MAP_SIZE },
+        };
+        int i;
 
-        STATUS_MAX_MSG_SZ = 128;
+        if (!dimstr) {
+                warn("warn: NULL dimensions");
+                return -1;
+        }
+
+        for (i = 0; i < array_sz(tbl); i++) {
+                if (! strcmp(tbl[i].dimstr, dimstr)) {
+                        return tbl[i].map_sz;
+                }
+        }
+
+        warn("warn: screen res %s not found in table\n", dimstr);
+        return -1;
+}
+
+int dimensions_init()
+{
+        int map_size = dimensions_get_map_size(cfg_get("screen-dims"));
+        if (map_size < 0)
+                return -1;
 
         MAP_TILE_W = map_size;
         MAP_TILE_H = map_size;
@@ -86,9 +113,10 @@ int dimensions_init(int map_size)
 
         SCREEN_H = (BORDER_H * 3 + MAP_H + CMD_H);
 
+        STATUS_MAX_MSG_SZ = 128;
         STAT_X =  (MAP_X + MAP_W + BORDER_W);
         STAT_Y =  BORDER_H;
-        STAT_W =  (BORDER_W * 2 + ASCII_W * STAT_CHARS_PER_LINE);
+        STAT_W = (BORDER_W * 2 + ASCII_W * STAT_CHARS_PER_LINE);
         STAT_H =  (3 * TILE_H);
         STAT_H_MAX = (16 * TILE_H);
 

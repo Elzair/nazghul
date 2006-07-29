@@ -63,7 +63,6 @@ static bool useSound = true;	// SAM: Sound drivers on my dev laptop are
 static char *nazghul_load_fname = 0;
 
 int DeveloperMode    = 0;
-int MapSize          = DEF_MAP_SIZE;
 
 static char program_name[] = "nazghul";
 
@@ -96,7 +95,7 @@ static void print_usage(void)
 	       "    -S: speed <playback ms delay> \n"
                "    -I: game data dir\n"
                "    -G: save game dir\n"
-               "    -m: map size <tiles>\n"
+               "    -r: screen size <pixels> (eg, 640x480)\n"
                "    -T: show all terrain\n"
                "<load-file>\n",
                program_name);
@@ -111,7 +110,7 @@ static void parse_args(int argc, char **argv)
 	TickMilliseconds = MS_PER_TICK;
 	AnimationTicks = ANIMATION_TICKS;
 
-	while ((c = getopt(argc, argv, "t:a:s:TdR:S:P:I:G:vhm:")) != -1) {
+	while ((c = getopt(argc, argv, "t:a:s:TdR:S:P:I:G:vhr:")) != -1) {
 		switch (c) {
 		case 't':
 			TickMilliseconds = atoi(optarg);
@@ -157,14 +156,9 @@ static void parse_args(int argc, char **argv)
                 case 'h':
                         print_usage();
                         exit(0);
-                case 'm':
-                        MapSize = atoi(optarg);
-                        if (MapSize < MIN_MAP_SIZE
-                            || MapSize > MAX_MAP_SIZE) {
-                                err("Map size must be in the range [%d %d]\n",
-                                    MIN_MAP_SIZE, MAX_MAP_SIZE);
-                                exit(-1);
-                        }
+                case 'r':
+                        /* set the screen dimensions */
+                        cfg_set("screen-dims", optarg);
                         break;
                 case '?':
                 default:
@@ -494,6 +488,7 @@ static void init_default_cfg()
         cfg_init();
         cfg_set("init-script-filename", "kern-init.scm");
         cfg_set("splash-image-filename", "splash.png");
+        cfg_set("screen-dims", "1280x960", /*"640x480"*/);
 }
 
 /* load_cfg_script -- run the kernel initialization script through the
@@ -543,7 +538,7 @@ int main(int argc, char **argv)
                 exit(-1);
         }
 
-        if (dimensions_init(MapSize)) {
+        if (dimensions_init()) {
                 err("dimensions_init() failed\n");
                 exit(-1);
         }
