@@ -34,6 +34,7 @@
 #include "mmode.h"
 #include "cmdwin.h"
 #include "dice.h"
+#include "occ.h"
 
 #include <stdio.h>
 #include <assert.h>
@@ -389,7 +390,8 @@ static void status_show_ztat_character(SDL_Rect *rect, void *thing)
         screenPrint(rect, 0, "^c+=");
 
 	/* Show the level and base attributes */
-	screenPrint(rect, 0, "^cyLvl:^cw%d ^cyStr:^cw%d ^cyInt:^cw%d ^cyDex:^cw%d"
+	screenPrint(rect, 0, 
+                    "^cyLvl:^cw%d ^cyStr:^cw%d ^cyInt:^cw%d ^cyDex:^cw%d"
                     , pm->getLevel()
                     , pm->getStrength()
                     , pm->getIntelligence()
@@ -398,7 +400,8 @@ static void status_show_ztat_character(SDL_Rect *rect, void *thing)
         rect->y += ASCII_H;
 
         /* Show the xp, hp and mp */
-        screenPrint(rect, 0, "^cyHP:^c%c%d^cw/%d ^cyMP:^c%c%d^cw/%d ^cyXP:^cw%d/%d"
+        screenPrint(rect, 0, 
+                    "^cyHP:^c%c%d^cw/%d ^cyMP:^c%c%d^cw/%d ^cyXP:^cw%d/%d"
                     , status_range_color(pm->getHp(), pm->getMaxHp())
                     , pm->getHp(), pm->getMaxHp()
                     , status_range_color(pm->getMana(), pm->getMaxMana())
@@ -408,10 +411,15 @@ static void status_show_ztat_character(SDL_Rect *rect, void *thing)
                 );
         rect->y += ASCII_H;
 
-        /* Show movement mode */
+        /* Show movement mode, class and species */
         mmode = pm->getMovementMode();
-        if (mmode)
-                screenPrint(rect, 0, "^cyMove:^cw%s", mmode->name);
+        assert(mmode);
+        screenPrint(rect, 0
+                    , "^cyMove:^cw%s ^cySpe:^cw%s ^cyOcc:^cw%s"
+                    , mmode->name
+                    , pm->species ? pm->species->name:"?"
+                    , pm->occ ? pm->occ->name : "none"
+                );
 	rect->y += ASCII_H;
 
 	/* Show arms */
