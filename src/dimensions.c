@@ -72,7 +72,8 @@ static int dimensions_get_map_size(char *dimstr)
                 char *dimstr;
                 int map_sz;
         } tbl[] = {
-                { "640x480", 11 },
+                { "640x480",  11 },
+                { "800x600",  11 },
                 { "1280x960", MAX_MAP_SIZE },
         };
         int i;

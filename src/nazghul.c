@@ -487,17 +487,20 @@ static void init_default_cfg()
 {
         cfg_init();
         cfg_set("init-script-filename", "kern-init.scm");
+        cfg_set("options-script-filename", "options.scm");
         cfg_set("splash-image-filename", "splash.png");
-        cfg_set("screen-dims", "1280x960", /*"640x480"*/);
+        cfg_set("screen-dims", "1280x960" /*"640x480"*/);
 }
 
-/* load_cfg_script -- run the kernel initialization script through the
- * interpreter so it can load saved settings into the global cfg */
-static int load_cfg_script()
+/* load_script -- run a script through the interpreter */
+static int load_script(char *fname)
 {
         scheme *sc = NULL;
         FILE *file = NULL;
-        char *fname= cfg_get("init-script-filename");
+
+        if (!fname) {
+                return -1;
+        }
 
         /* Open the load file. */
         file = open_via_std_search_path(fname);
@@ -534,8 +537,13 @@ int main(int argc, char **argv)
 	parse_args(argc, argv);
 
         /* Load the cfg script after parsing args */
-        if (load_cfg_script()) {
+        if (load_script(cfg_get("init-script-filename"))) {
                 exit(-1);
+        }
+
+        /* Load the options script */
+        if (load_script(cfg_get("options-script-filename"))) {
+                warn("Could not load options script\n");
         }
 
         if (dimensions_init()) {

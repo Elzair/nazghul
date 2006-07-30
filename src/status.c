@@ -45,13 +45,6 @@
 #define TALL_H (SCREEN_H - 4 * BORDER_H - 6 * ASCII_H)
 #define MAX_TITLE_LEN (STAT_CHARS_PER_LINE-2)
 
-/*
- * Armaments - R)eady-player
- * Reagents  - M)ix
- * Spells    - C)ast
- * Items     - U)se
- */
-
 enum ZtatsView {
 	ViewMember = 0,
 	ViewArmaments,
@@ -62,33 +55,20 @@ enum ZtatsView {
 	NumViews
 };
 
-static bool stat_filter_arms(struct inv_entry *ie, void *cookie);
-static bool stat_filter_ready_arms(struct inv_entry *ie, void *cookie);
-static bool stat_filter_reagents(struct inv_entry *ie, void *cookie);
-static bool stat_filter_spells(struct inv_entry *ie, void *cookie);
-static bool stat_filter_items(struct inv_entry *ie, void *cookie);
-static bool stat_filter_misc(struct inv_entry *ie, void *cookie);
+/* Entry types for the Z)tats "sub-viewer" windows. */
+struct ztats_entry {
 
-static char *ZtatsTitles[] = {
-	"Party Member",
-	"Armaments",
-	"Reagents",
-	"Spells",
-	"Usable Items",
-        "Misc"
-};
+        /* The title of the window. */
+        char *title;
 
-static struct filter ZtatsFilters[] = {
-        { 0, 0 },
-        { stat_filter_arms, 0 },
-        { stat_filter_reagents, 0 },
-        { stat_filter_spells, 0 },
-        { stat_filter_items, 0 },
-        { stat_filter_misc, 0 },
-};
+        /* This filters player inventory for the objects that are of interest
+         * to this viewer. For example, the Spells viewer will filter through
+         * only Spell inventory entries. */
+        struct filter filter;
 
-static struct filter stat_ready_arms_filter = {
-        stat_filter_ready_arms, 0
+        /* This shows whatever the specific type of thing is. Different types of
+         * inventory elements are shown differently. */
+        void (*show_thing)(SDL_Rect * rect, void *thing);
 };
 
 static struct status {
@@ -119,8 +99,40 @@ static struct status {
 
         Container *container;
         struct filter *filter;
+        void (*show_thing)(SDL_Rect * rect, void *thing);
 
 } Status;
+
+/* filtering functions used with status_show_container() */
+static bool stat_filter_arms(struct inv_entry *ie, void *cookie);
+static bool stat_filter_ready_arms(struct inv_entry *ie, void *cookie);
+static bool stat_filter_reagents(struct inv_entry *ie, void *cookie);
+static bool stat_filter_spells(struct inv_entry *ie, void *cookie);
+static bool stat_filter_items(struct inv_entry *ie, void *cookie);
+static bool stat_filter_misc(struct inv_entry *ie, void *cookie);
+
+/* functions to show specific types of things from status_show_containe() */
+static void status_show_ztat_character(SDL_Rect *rect, void *thing);
+static void status_show_ztat_arms(SDL_Rect *rect, void *thing);
+static void status_show_generic_object_type(SDL_Rect *rect, void *thing);
+static void status_show_mix_reagent(SDL_Rect *rect, void *thing);
+
+/* Filter for the player inventory during the R)eady UI. */
+static struct filter stat_ready_arms_filter = {
+        stat_filter_ready_arms, 0
+};
+
+/* Table for the different Z)tats UI windows. */
+static struct ztats_entry ztats_entries[] = {
+        { "Party Member", { 0, 0 }, 0 /* different because it doesn't use the
+                                       * generic stat_show_container() */ },
+        { "Armaments", { stat_filter_arms, 0 }, status_show_ztat_arms },
+        { "Reagents", { stat_filter_reagents, 0 }, status_show_generic_object_type },
+        { "Spells", { stat_filter_spells, 0 }, status_show_generic_object_type },
+        { "Usable Items", { stat_filter_items, 0 }, status_show_generic_object_type },
+        { "Misc", { stat_filter_misc, 0 }, status_show_generic_object_type },
+};
+
 
 static bool stat_filter_arms(struct inv_entry *ie, void *cookie)
 {
@@ -238,12 +250,14 @@ static void status_set_title(char *title)
 static void status_repaint_title(void)
 {
 	screenErase(&Status.titleRect);
-	screenPrint(&Status.titleRect, SP_CENTERED | SP_ONBORDER, "%s", Status.title);
+	screenPrint(&Status.titleRect, SP_CENTERED | SP_ONBORDER, "%s", 
+                    Status.title);
 	screenUpdate(&Status.titleRect);
 }
 
-static void status_show_member_arms(SDL_Rect * rect, class ArmsType * arms, 
-                                    char *slot)
+/* status_show_member_arms -- called during Ztats when showing Party Members,
+ * this shows individual arms held by the member */
+static void status_show_member_arms(SDL_Rect * rect, ArmsType *arms)
 {
 	spritePaint(arms->getSprite(), 0, rect->x, rect->y);
 	rect->x += TILE_W;
@@ -261,14 +275,83 @@ static void status_show_member_arms(SDL_Rect * rect, class ArmsType * arms,
 	rect->x -= TILE_W;
 }
 
-static void myShowMember(void)
+/* status_show_ztat_arms -- called during Ztats to show individual Armaments */
+static void status_show_ztat_arms(SDL_Rect * rect, void *thing)
 {
-	SDL_Rect rect;
+        struct inv_entry *ie = (struct inv_entry*)thing;
+        ArmsType *arms = (ArmsType*)ie->type;
+
+        assert(ie->count);
+
+        /* sprite */
+	spritePaint(arms->getSprite(), 0, rect->x, rect->y);
+	rect->x += TILE_W;
+
+        /* quantity and name */
+        screenPrint(rect, 0, "%2d[%d in use] %s", ie->count,
+                    ie->ref, arms->getName());
+        rect->y += ASCII_H;
+
+        /* stats */
+        screenPrint(rect, 0, "TH:%s TD:%s DA:%s AR:%s", 
+                    arms->getToHitDice(), arms->getToDefendDice(),
+                    arms->getDamageDice(), arms->getArmorDice());
+
+	rect->y += (TILE_H - ASCII_H);
+	rect->x -= TILE_W;
+}
+
+/* status_show_ready_arms -- called during the R)eady command, this shows
+ * individual arms, indicating if they are available or already held by the
+ * character in question */
+static void status_show_ready_arms(SDL_Rect * rect, void *thing)
+{
+        struct inv_entry *ie = (struct inv_entry*)thing;
+        ArmsType *arms = (ArmsType*)ie->type;
+        int inUse = 0;
+        int avail = ie->count - ie->ref;
+
+        assert(ie->count);
+        assert(avail >= 0);
+
+        /* sprite */
+	spritePaint(arms->getSprite(), 0, rect->x, rect->y);
+	rect->x += TILE_W;
+
+        if (ie->ref && 
+            player_party->getMemberAtIndex(Status.pcIndex)->
+            hasReadied(arms)) {
+                inUse = 1;
+        }
+
+        /* quantity and name */
+        if (avail) {
+                screenPrint(rect, 0, "%2d%c%s",
+                            ie->count,
+                            (inUse?'*':' '),
+                            arms->getName());
+        } else {
+                screenPrint(rect, 0, "--%c%s",
+                            (inUse?'*':' '),
+                            arms->getName());
+        }
+        rect->y += ASCII_H;
+
+        /* stats */
+        screenPrint(rect, 0, "TH:%s TD:%s DA:%s AR:%s", 
+                    arms->getToHitDice(), arms->getToDefendDice(),
+                    arms->getDamageDice(), arms->getArmorDice());
+
+	rect->y += (TILE_H - ASCII_H);
+	rect->x -= TILE_W;
+}
+
+static void status_show_ztat_character(SDL_Rect *rect, void *thing)
+{
 	int pad;
-	class Character *pm;
         struct mmode *mmode;
+        class Character *pm = (class Character*)thing;
         
-	rect = Status.screenRect;
 	pad = (STAT_W / ASCII_W) - 17;
 	assert(pad >= 1);
 	pm = player_party->getMemberAtIndex(Status.pcIndex);
@@ -277,39 +360,39 @@ static void myShowMember(void)
 	/* Show the sex symbol */
 
 	/* Show the level and class */
-	screenPrint(&rect, 0, "Lvl=%3d%*cXP:%7d", pm->getLevel(), pad, ' ',
+	screenPrint(rect, 0, "Lvl=%3d%*cXP:%7d", pm->getLevel(), pad, ' ',
 		    pm->getExperience());
 
 	/* Show strength and hp */
-	rect.y += ASCII_H;
-	screenPrint(&rect, 0, "Str=%3d%*cHP:%3d/%3d", pm->getStrength(), pad,
+	rect->y += ASCII_H;
+	screenPrint(rect, 0, "Str=%3d%*cHP:%3d/%3d", pm->getStrength(), pad,
 		    ' ', pm->getHp(), pm->getMaxHp());
 
 	/* Show intelligence and mana */
-	rect.y += ASCII_H;
-	screenPrint(&rect, 0, "Int=%3d%*cMP:%3d/%3d", pm->getIntelligence(),
+	rect->y += ASCII_H;
+	screenPrint(rect, 0, "Int=%3d%*cMP:%3d/%3d", pm->getIntelligence(),
 		    pad, ' ', pm->getMana(), pm->getMaxMana());
 
 	/* Show dexterity and armour class */
-	rect.y += ASCII_H;
-	screenPrint(&rect, 0, "Dex=%3d%*cAC:%3d", pm->getDexterity(), pad,
+	rect->y += ASCII_H;
+	screenPrint(rect, 0, "Dex=%3d%*cAC:%3d", pm->getDexterity(), pad,
 		    ' ', pm->getArmourClass());
 
         /* Show movement mode */
-        rect.y += ASCII_H;
+        rect->y += ASCII_H;
         mmode = pm->getMovementMode();
         if (mmode)
-                screenPrint(&rect, 0, "Move:%s", mmode->name);
+                screenPrint(rect, 0, "Move:%s", mmode->name);
 
 	/* Show arms */
-	rect.y += ASCII_H;
-	rect.y += ASCII_H;
-	screenPrint(&rect, SP_CENTERED, "*** Arms ***");
+	rect->y += ASCII_H;
+	rect->y += ASCII_H;
+	screenPrint(rect, SP_CENTERED, "*** Arms ***");
 
-        rect.y += ASCII_H;
+        rect->y += ASCII_H;
 	class ArmsType *arms = pm->enumerateArms();
 	while (arms != NULL) {
-		status_show_member_arms(&rect, arms, "null");
+		status_show_member_arms(rect, arms);
 		arms = pm->getNextArms();
 	}
 
@@ -338,29 +421,83 @@ static void myShadeHalfLines(int line, int n)
 	screenShade(&rect, 128);
 }
 
+static void status_show_generic_object_type(SDL_Rect *rect, void *thing)
+{
+        struct inv_entry *ie = (struct inv_entry*)thing;
+        if (ie->type->getSprite()) {
+                spritePaint(ie->type->getSprite(), 0, rect->x, rect->y);
+        }
+        
+        /* Indent past the sprite column. */
+        rect->x += TILE_W;
+
+        /* This is a single-line entry in a two-line rect, so center it
+         * vertically. */
+        rect->y += LINE_H / 4;
+
+        screenPrint(rect, 0, "%2d %s", ie->count, ie->type->getName());
+
+        /* Carriage-return line-feed */
+        rect->y += (LINE_H * 3) / 4;
+        rect->x -= TILE_W;
+}
+
+static void status_show_mix_reagent(SDL_Rect *rect, void *thing)
+{
+        struct inv_entry *ie = (struct inv_entry*)thing;
+        if (ie->type->getSprite()) {
+                spritePaint(ie->type->getSprite(), 0, rect->x, rect->y);
+        }
+        
+        /* Indent past the sprite column. */
+        rect->x += TILE_W;
+        
+        /* This is a single-line entry in a two-line rect, so center it
+         * vertically. */
+        rect->y += LINE_H / 4;
+
+        /* During mixing, if the ref field is set that means the reagent has
+         * been selected to be part of the mixture (see cmdMix() in cmd.c, this
+         * is something of a hack). Show an asterisk to mark selected
+         * reagents. */
+        screenPrint(rect, 0, "%2d%c%s", 
+                    ie->count, 
+                    (ie->ref ? '*':' '), 
+                    ie->type->getName());
+
+        /* Carriage-return line-feed */
+        rect->y += (LINE_H * 3) / 4;
+        rect->x -= TILE_W;
+}
+
 static void stat_show_container()
 {
 	SDL_Rect rect;
 	struct inv_entry *ie;
 	int top = Status.topLine;
-	int flags, line = 0;
+	int line = 0;
 
 	rect = Status.screenRect;
-	rect.x += TILE_W;
 	rect.h = LINE_H;
 
         for (ie = Status.container->first(Status.filter);
              ie != NULL; 
              ie = Status.container->next(ie, Status.filter)) {
 
-		int inUse = 0;
-		int avail = 0;
-
 		/* Check the scrolling window */
 		if (top) {
 			top--;
 			continue;
 		}
+
+                /* Use a specific function to show whatever it is. This should
+                 * advance the rect to the next entry position before it
+                 * returns. */
+                Status.show_thing(&rect, ie);
+
+#if 0 /* obsolete -- delete this when done */
+		int inUse = 0;
+		int avail = 0;
 
 		avail = ie->count;
 
@@ -391,32 +528,37 @@ static void stat_show_container()
 		if (!avail && !inUse)
 			continue;
 
-                if (ie->type->getSprite()) {
-                        spritePaint(ie->type->getSprite(), 0, 
-                                    Status.screenRect.x,
-                                    rect.y);
+                /* For Ready mode use the specialized show routine. */
+		if (Status.mode == Ready) {
+                        status_show_ready_arms(&rect, (ArmsType*)ie->type, 
+                                               avail, inUse);
                 }
 
-                rect.y += LINE_H / 4;
+                /* For all other modes use the generic show routine. */
+                else {
+                        if (ie->type->getSprite()) {
+                                spritePaint(ie->type->getSprite(), 0, 
+                                            Status.screenRect.x,
+                                            rect.y);
+                        }
 
-		if (avail)
-			screenPrint(&rect, flags, "%2d%c%s", avail,
-				    (inUse ? '*' : ' '), ie->type->getName());
-		else
-			screenPrint(&rect, flags, "--%c%s",
-				    (inUse ? '*' : ' '), ie->type->getName());
+                        rect.y += LINE_H / 4;
+			screenPrint(&rect, flags, "%2d %s", avail,
+				    ie->type->getName());
+                        rect.y += (LINE_H * 3) / 4;
+                
+                }
+#endif /* end obsolete section */
 
-                rect.y += (LINE_H * 3) / 4;
-
+                /* Highlight the selected item by shading all the other
+                 * entries. */
 		if (Status.selectedEntry && ie != Status.selectedEntry) {
-			/* Highlight the selected item by shading all the other
-			 * entries. */
 			myShadeLines(line, 2);
 		}
 
 		line++;
 
-		// Don't print outside the status window
+		/* Don't print outside the status window. */
 		if (line >= N_LINES)
 			break;
 	}
@@ -571,7 +713,9 @@ static void myScrollZtatsHorz(int d)
 
 		default:
                         Status.container = player_party->inventory;
-                        Status.filter = &ZtatsFilters[Status.ztatsView];
+                        Status.show_thing = ztats_entries[Status.ztatsView].show_thing;
+                        Status.filter = 
+                                &ztats_entries[Status.ztatsView].filter;
                         Status.maxLine = 
                                 Status.container->filter_count(Status.filter) -
                                 Status.numLines;
@@ -585,7 +729,7 @@ static void myScrollZtatsHorz(int d)
 		status_set_title(player_party->
                                  getMemberAtIndex(Status.pcIndex)->getName());
 	else
-		status_set_title(ZtatsTitles[Status.ztatsView]);
+		status_set_title(ztats_entries[Status.ztatsView].title);
 }
 
 static void myScrollZtats(enum StatusScrollDir dir)
@@ -621,8 +765,13 @@ static void myShowZtats(void)
 {
 	switch (Status.ztatsView) {
 	case ViewMember:
-		myShowMember();
-		break;
+        {
+                SDL_Rect rect = Status.screenRect;
+		status_show_ztat_character(&rect,
+                                           player_party->
+                                           getMemberAtIndex(Status.pcIndex));
+        }
+        break;
 	default:
                 stat_show_container();
 		break;
@@ -1115,6 +1264,7 @@ void statusSetMode(enum StatusMode mode)
                         filter_count(Status.filter) - Status.numLines;
 		Status.paint = stat_show_container;
                 Status.scroll = stat_scroll_container;
+                Status.show_thing = status_show_ready_arms;
 		Status.selectedEntry = Status.container->first(Status.filter);
 		break;
 	case Use:
@@ -1123,11 +1273,12 @@ void statusSetMode(enum StatusMode mode)
 		Status.topLine = 0;
 		Status.curLine = 0;
 		Status.container = player_party->inventory;
-                Status.filter = &ZtatsFilters[ViewItems];
+                Status.filter = &ztats_entries[ViewItems].filter;
 		Status.maxLine = Status.container->
                         filter_count(Status.filter) - Status.numLines;
 		Status.paint = stat_show_container;
                 Status.scroll = stat_scroll_container;
+                Status.show_thing = status_show_generic_object_type;
 		Status.selectedEntry = Status.container->first(Status.filter);
 		break;
 	case Page:
@@ -1146,15 +1297,16 @@ void statusSetMode(enum StatusMode mode)
 		break;
 	case MixReagents:
 		switch_to_tall_mode();
-		status_set_title("reagents");
+		status_set_title(ztats_entries[ViewReagents].title);
 		Status.topLine = 0;
 		Status.curLine = 0;
 		Status.container = player_party->inventory;
-                Status.filter = &ZtatsFilters[ViewReagents];
+                Status.filter = &ztats_entries[ViewReagents].filter;
 		Status.maxLine = Status.container->
                         filter_count(Status.filter) - Status.numLines;
 		Status.paint = stat_show_container;
                 Status.scroll = stat_scroll_container;
+                Status.show_thing = status_show_mix_reagent;
 		Status.selectedEntry = Status.container->first(Status.filter);
 		break;
         case GenericList:

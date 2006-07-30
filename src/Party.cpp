@@ -67,7 +67,6 @@ Party::Party()
 {
 	node_init(&members);
         memset(&pinfo, 0, sizeof(pinfo));
-        printf("Created new NPC party\n");
 }
 
 static bool party_remove_member(class Character *ch, void *data)
