@@ -35,7 +35,8 @@
 enum ascii_ctrl_states {
         ASCII_STATE_DEF = 0,
         ASCII_STATE_ESC,
-        ASCII_STATE_CLR
+        ASCII_STATE_CLR,
+        ASCII_STATE_CLRPUSH
 };
 
 
@@ -101,6 +102,9 @@ static void asciiSetColor(char clr)
                 break;
         case '-':
                 asciiPopColor();
+                break;
+        case '=':
+                /* current color, nop */
                 break;
         default:
                 Ascii.color = asciiDecodeColor(clr);
@@ -241,9 +245,14 @@ int asciiPaint(char c, int x, int y, SDL_Surface * surf)
                         
         case ASCII_STATE_CLR:
                 asciiSetColor(c);
-                Ascii.state = ASCII_STATE_DEF;
+                Ascii.state = ('+'==c?ASCII_STATE_CLRPUSH:ASCII_STATE_DEF);
                 break;
                 
+        case ASCII_STATE_CLRPUSH:
+                asciiSetColor(c);
+                Ascii.state = ASCII_STATE_DEF;
+                break;
+
         case ASCII_STATE_ESC:
                 if (c == 'c') {
                         Ascii.state = ASCII_STATE_CLR;

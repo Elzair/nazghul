@@ -53,7 +53,7 @@
    (kern-ui-page-text
    "IMPORTANT"
    ""
-   "It is most ^c+^crcritical^c- that you FIND ME. "
+   "It is most ^c+rcritical^c- that you FIND ME. "
    "The peasant who cares for this shrine can "
    "point the way. Beware."
    ""

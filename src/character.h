@@ -85,6 +85,7 @@ class Character:public Being {
         class Container *getInventoryContainer();
 	virtual int getMaxHp();
 	virtual int getOrder();
+        int getXpForLevel(int lvl);
 	virtual void addExperience(int delta);
 	virtual int getExperience();
 	virtual unsigned char getStrength();

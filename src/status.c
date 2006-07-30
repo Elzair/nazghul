@@ -274,7 +274,8 @@ static void status_show_arms_stats(SDL_Rect *rect, ArmsType *arms)
         char *tdd = arms->getToDefendDice();
         char *dad = arms->getDamageDice();
         char *ard = arms->getArmorDice();
-        screenPrint(rect, 0, "^ccTH:^c%c%s ^ccTD:^c%c%s ^ccDA:^c%c%s ^ccAR:^c%c%s", 
+        screenPrint(rect, 0, 
+                 "^c+y   TH:^c%c%s ^cyTD:^c%c%s ^cyDA:^c%c%s ^cyAR:^c%c%s^c-", 
                     status_arms_stat_color(thd), thd,
                     status_arms_stat_color(tdd), tdd,
                     status_arms_stat_color(dad), dad,
@@ -291,7 +292,7 @@ static void status_show_member_arms(SDL_Rect * rect, ArmsType *arms)
 	rect->x += TILE_W;
 
         /* name */
-	screenPrint(rect, 0, "^cy%s", arms->getName());
+	screenPrint(rect, 0, "%s", arms->getName());
         rect->y += ASCII_H;
 
         /* stats */
@@ -312,8 +313,12 @@ static void status_show_ztat_arms(SDL_Rect * rect, void *thing)
 	rect->x += TILE_W;
 
         /* quantity and name */
-        screenPrint(rect, 0, "%2d[%d in use] ^cy%s", ie->count,
-                    ie->ref, arms->getName());
+        if (ie->ref) {
+                screenPrint(rect, 0, "%2d[%d] %s", ie->count,
+                            ie->ref, arms->getName());
+        } else {
+                screenPrint(rect, 0, "%2d %s", ie->count, arms->getName());
+        }
         rect->y += ASCII_H;
 
         /* stats */
@@ -346,14 +351,13 @@ static void status_show_ready_arms(SDL_Rect * rect, void *thing)
 
         /* quantity and name */
         if (avail) {
-                screenPrint(rect, 0, "^c%c%2d%c^c%c%s",
+                screenPrint(rect, 0, "^c+%c%2d%c%s^c-",
                             (inUse?'g':'w'),
                             ie->count,
                             (inUse?'*':' '),
-                            (inUse?'g':'y'),
                             arms->getName());
         } else {
-                screenPrint(rect, 0, "^c%c--%c%s",
+                screenPrint(rect, 0, "^c+%c--%c%s^c-",
                             (inUse?'g':'G'),
                             (inUse?'*':' '),
                             arms->getName());
@@ -365,50 +369,59 @@ static void status_show_ready_arms(SDL_Rect * rect, void *thing)
 	rect->x -= TILE_W;
 }
 
+static char status_range_color(int cur, int max)
+{
+        if (cur > max/2) {
+                return 'g';
+        } else if (cur > max/4) {
+                return 'y';
+        } else {
+                return 'r';
+        }
+}
+
 static void status_show_ztat_character(SDL_Rect *rect, void *thing)
 {
-	int pad;
         struct mmode *mmode;
         class Character *pm = (class Character*)thing;
         
-	pad = (STAT_W / ASCII_W) - 17;
-	assert(pad >= 1);
-	pm = player_party->getMemberAtIndex(Status.pcIndex);
-	assert(pm);
+        /* Push the current color. */
+        screenPrint(rect, 0, "^c+=");
 
-	/* Show the sex symbol */
+	/* Show the level and base attributes */
+	screenPrint(rect, 0, "^cyLvl:^cw%d ^cyStr:^cw%d ^cyInt:^cw%d ^cyDex:^cw%d"
+                    , pm->getLevel()
+                    , pm->getStrength()
+                    , pm->getIntelligence()
+                    , pm->getDexterity()
+                );
+        rect->y += ASCII_H;
 
-	/* Show the level and class */
-	screenPrint(rect, 0, "Lvl=%3d%*cXP:%7d", pm->getLevel(), pad, ' ',
-		    pm->getExperience());
-
-	/* Show strength and hp */
-	rect->y += ASCII_H;
-	screenPrint(rect, 0, "Str=%3d%*cHP:%3d/%3d", pm->getStrength(), pad,
-		    ' ', pm->getHp(), pm->getMaxHp());
-
-	/* Show intelligence and mana */
-	rect->y += ASCII_H;
-	screenPrint(rect, 0, "Int=%3d%*cMP:%3d/%3d", pm->getIntelligence(),
-		    pad, ' ', pm->getMana(), pm->getMaxMana());
-
-	/* Show dexterity and armour class */
-	rect->y += ASCII_H;
-	screenPrint(rect, 0, "Dex=%3d%*cAC:%3d", pm->getDexterity(), pad,
-		    ' ', pm->getArmourClass());
+        /* Show the xp, hp and mp */
+        screenPrint(rect, 0, "^cyHP:^c%c%d^cw/%d ^cyMP:^c%c%d^cw/%d ^cyXP:^cw%d/%d"
+                    , status_range_color(pm->getHp(), pm->getMaxHp())
+                    , pm->getHp(), pm->getMaxHp()
+                    , status_range_color(pm->getMana(), pm->getMaxMana())
+                    , pm->getMana(), pm->getMaxMana()
+                    , pm->getExperience()
+                    , pm->getXpForLevel(pm->getLevel()+1)
+                );
+        rect->y += ASCII_H;
 
         /* Show movement mode */
-        rect->y += ASCII_H;
         mmode = pm->getMovementMode();
         if (mmode)
-                screenPrint(rect, 0, "Move:%s", mmode->name);
+                screenPrint(rect, 0, "^cyMove:^cw%s", mmode->name);
+	rect->y += ASCII_H;
 
 	/* Show arms */
-	rect->y += ASCII_H;
-	rect->y += ASCII_H;
-	screenPrint(rect, SP_CENTERED, "*** Arms ***");
-
+	screenPrint(rect, SP_CENTERED
+                    , "^cy*** Arms ***");
         rect->y += ASCII_H;
+
+        /* Pop the saved current color. */
+        screenPrint(rect, 0, "^c-");
+
 	class ArmsType *arms = pm->enumerateArms();
 	while (arms != NULL) {
 		status_show_member_arms(rect, arms);

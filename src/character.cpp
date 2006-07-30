@@ -1290,18 +1290,15 @@ int Character::getExperienceValue()
         return (xpval * lvl);
 }
 
-static int xpForLevel(int lvl)
+int Character::getXpForLevel(int lvl)
 {
         return (int)pow((double)2, (double)lvl+6);
 }
 
 void Character::addExperience(int amount)
 {
-	double lxp;
-
 	xp += amount;
-	lxp = xpForLevel(getLevel()+1);
-	if (xp >= lxp) {
+	if (xp >= getXpForLevel(getLevel()+1)) {
 		lvl++;
                 log_msg("%s gains level %d!", getName(), lvl);
                 if (isPlayerControlled()) {
@@ -1486,8 +1483,8 @@ int Character::getLevel() {
 
 void Character::setLevel(int val) {
         assert(val>0);
+        xp = getXpForLevel(lvl);
         lvl = val;
-        xp = xpForLevel(lvl);
         setHp(getMaxHp());
         setMana(getMaxMana());
 }
