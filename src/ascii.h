@@ -29,9 +29,17 @@
 BEGIN_DECL
 
 extern int asciiInit(void);
-extern void asciiPaint(char c, int x, int y, SDL_Surface * surface);
-extern void asciiPaintColored(char c, int x, int y, SDL_Surface * surface, 
-                              Uint32 color);
+
+/* asciiPaint -- in the usual case this prints the character to the surface
+ * using the current font and color. In the general case, 'c' may be part of a
+ * control sequence. Currently the only supported control sequence is to change
+ * the current color, where the format is:
+ *
+ *       <SEQ> := ^c<COLOR>
+ *     <COLOR> := B|w|r|g|b|c|y|m|G|!
+ */
+extern int asciiPaint(char c, int x, int y, SDL_Surface * surface);
+
 END_DECL
 
 #endif

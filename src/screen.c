@@ -40,13 +40,7 @@
 #define SHADER_H STAT_H_MAX
 #define HIGHLIGHT_THICKNESS 2
 
-static SDL_Surface *Screen;
-static SDL_Surface *Shaders[N_SHADERS];
-
-// ---------------------------------------------------------
-// The Highlight surface is used to highlight specific tiles.
-// ---------------------------------------------------------
-
+/* Frame image indices */
 #define FRAME_ULC  0
 #define FRAME_TD   1
 #define FRAME_URC  2
@@ -65,6 +59,8 @@ static SDL_Surface *Shaders[N_SHADERS];
 #define FRAME_DOT  15
 #define FRAME_NUM_SPRITES 16
 
+static SDL_Surface *Screen;
+static SDL_Surface *Shaders[N_SHADERS];
 static SDL_Surface *Highlight;
 static struct sprite *FrameSprites[FRAME_NUM_SPRITES];
 static int Zoom;
@@ -75,6 +71,9 @@ Uint32 White;
 Uint32 Green;
 Uint32 Red;
 Uint32 Yellow;
+Uint32 Cyan;
+Uint32 Magenta;
+Uint32 Gray;
 
 SDL_Color fontWhite = { 0xff, 0xff, 0xff, 0x00 };
 SDL_Color fontBlack = { 0, 0, 0, 0 };
@@ -82,12 +81,15 @@ SDL_Color fontBlack = { 0, 0, 0, 0 };
 void screenInitColors(void)
 {
 
-	Black = SDL_MapRGB(Screen->format, 0, 0, 0);
-	Blue = SDL_MapRGB(Screen->format, 0, 0, 0xff);
-	White = SDL_MapRGB(Screen->format, 0xff, 0xff, 0xff);
-	Green = SDL_MapRGB(Screen->format, 0x00, 0xff, 0x00);
-	Red = SDL_MapRGB(Screen->format, 0xff, 0x00, 0x00);
-        Yellow = SDL_MapRGB(Screen->format, 0xff, 0xff, 0x00);
+	Black   = SDL_MapRGB(Screen->format, 0x00, 0x00, 0x00);
+	White   = SDL_MapRGB(Screen->format, 0xff, 0xff, 0xff);
+	Red     = SDL_MapRGB(Screen->format, 0xff, 0x00, 0x00);
+	Green   = SDL_MapRGB(Screen->format, 0x00, 0xff, 0x00);
+	Blue    = SDL_MapRGB(Screen->format, 0x00, 0x00, 0xff);
+        Yellow  = SDL_MapRGB(Screen->format, 0xff, 0xff, 0x00);
+        Cyan    = SDL_MapRGB(Screen->format, 0x00, 0xff, 0xff);
+        Magenta = SDL_MapRGB(Screen->format, 0xff, 0xff, 0x00);
+        Gray    = SDL_MapRGB(Screen->format, 0x80, 0x80, 0x80);
 }
 
 void screenInitScreen(void)
@@ -440,8 +442,7 @@ void screenPrint(SDL_Rect * rect, int flags, char *fmt, ...)
 	int y = rect->y;
 	int len;
 
-        flags |= SP_INVERTED; // dbg hack
-
+        /* Print the string to a buffer. */
 	va_start(args, fmt);
 	vsnprintf(buf, sizeof(buf), fmt, args);
 	va_end(args);
@@ -479,9 +480,11 @@ void screenPrint(SDL_Rect * rect, int flags, char *fmt, ...)
 	if (flags & SP_ONBORDER)
 		spritePaint(FrameSprites[FRAME_ENDR], 0, x - BORDER_W, rect->y);
 
+        /* Paint the individual characters from the buffer. This uses a state
+         * machine to accomodate embedded control sequences in the text. */
 	for (i = 0; i < len; i++) {
-		asciiPaint(buf[i], x, y, Screen);
-		x += ASCII_W;
+                if (asciiPaint(buf[i], x, y, Screen))
+                        x += ASCII_W;
 	}
 
 	// If painting on the border, then paint the left stub 

@@ -28,24 +28,89 @@
 
 #include <assert.h>
 
+#define ASCII_DEF_CLR White /* default printing color is white */
+#define ASCII_CLR_STK_SZ 32
+
+/* State machine states for embedded control sequences. */
+enum ascii_ctrl_states {
+        ASCII_STATE_DEF = 0,
+        ASCII_STATE_ESC,
+        ASCII_STATE_CLR
+};
+
+
 static struct ascii {
         struct images *images;
         int offset;
+        ascii_ctrl_states state;
+        Uint32 color_stack[ASCII_CLR_STK_SZ];
+        int i_color;  /* index onto stack */
+        Uint32 color; /* active color */
 } Ascii;
 
-int asciiInit(void)
+static Uint32  asciiDecodeColor(char clr)
 {
-        char *fname = cfg_get("ascii-image-filename");
-        assert(fname);
-        Ascii.images = images_new(0, 8, 16, 8, 16, 0, 0, fname);
-        assert(Ascii.images);
-        Ascii.offset = 32;
-        return 0;
+        switch (clr) {
+        case 'w': return White;
+        case 'B': return Black;
+        case 'r': return Red;
+        case 'g': return Green;
+        case 'b': return Blue;
+        case 'y': return Yellow;
+        case 'c': return Cyan;
+        case 'm': return Magenta;
+        case 'G': return Gray;
+        default:
+                warn("Color '%c' unknown\n", clr);
+                return ASCII_DEF_CLR;
+        }
 }
 
-void asciiBlitColored(SDL_Surface *dst, SDL_Rect *dstrect, 
-                      SDL_Surface *src, SDL_Rect *srcrect,
-                      Uint32 color)
+static void asciiPushColor()
+{
+        /* Check for overrun. */
+        if (array_sz(Ascii.color_stack) == Ascii.i_color) {
+                warn("Ascii color stack overrun\n");
+                return;
+        }
+
+        /* Push the new color. */
+        Ascii.color_stack[Ascii.i_color] = Ascii.color;
+        Ascii.i_color++;
+}
+
+static void asciiPopColor()
+{
+        /* Check for underrun. */
+        if (0 == Ascii.i_color) {
+                warn("Ascii color stack already at bottom\n");
+                return;
+        }
+        
+        Ascii.i_color--;
+        Ascii.color = Ascii.color_stack[Ascii.i_color];
+        return;
+}
+
+static void asciiSetColor(char clr)
+{
+        /* Check for a pop. */
+        switch (clr) {
+        case '+': 
+                asciiPushColor();
+                break;
+        case '-':
+                asciiPopColor();
+                break;
+        default:
+                Ascii.color = asciiDecodeColor(clr);
+                break;
+        }
+}
+
+static void asciiBlitColored(SDL_Surface *dst, SDL_Rect *dstrect, 
+                             SDL_Surface *src, SDL_Rect *srcrect,
+                             Uint32 color)
 {
         Uint16 mask = color;
         Uint16 *srcpix, *dstpix;
@@ -73,7 +138,7 @@ void asciiBlitColored(SDL_Surface *dst, SDL_Rect *dstrect,
         }
 }
 
-void asciiPaintColored(char c, int x, int y, SDL_Surface *surf, Uint32 color)
+static void asciiPaintColored(char c, int x, int y, SDL_Surface *surf, Uint32 color)
 {
 	SDL_Rect dest;
 	SDL_Rect src;
@@ -115,7 +180,7 @@ void asciiPaintColored(char c, int x, int y, SDL_Surface *surf, Uint32 color)
                          color);
 }
 
-void asciiPaint(char c, int x, int y, SDL_Surface * surf)
+static void asciiPaintDefault(char c, int x, int y, SDL_Surface * surf)
 {
 	SDL_Rect dest;
 	SDL_Rect src;
@@ -153,4 +218,51 @@ void asciiPaint(char c, int x, int y, SDL_Surface * surf)
 	dest.h = ASCII_H;
 
 	SDL_BlitSurface(Ascii.images->images, &src, surf, &dest);
+}
+
+int asciiInit(void)
+{
+        char *fname = cfg_get("ascii-image-filename");
+        assert(fname);
+        Ascii.images = images_new(0, 8, 16, 8, 16, 0, 0, fname);
+        assert(Ascii.images);
+        Ascii.offset = 32;
+        Ascii.state = ASCII_STATE_DEF;
+        Ascii.i_color = 0;
+        Ascii.color = ASCII_DEF_CLR;
+        return 0;
+}
+
+int asciiPaint(char c, int x, int y, SDL_Surface * surf)
+{
+        int ret = 0;
+
+        switch (Ascii.state) {
+                        
+        case ASCII_STATE_CLR:
+                asciiSetColor(c);
+                Ascii.state = ASCII_STATE_DEF;
+                break;
+                
+        case ASCII_STATE_ESC:
+                if (c == 'c') {
+                        Ascii.state = ASCII_STATE_CLR;
+                }
+                break;
+                
+        case ASCII_STATE_DEF:
+        default:
+                if (c == '^') {
+                        Ascii.state = ASCII_STATE_ESC;
+                } else {
+                        if (ASCII_DEF_CLR==Ascii.color) {
+                                asciiPaintDefault(c, x, y, surf);
+                        } else {
+                                asciiPaintColored(c, x, y, surf, Ascii.color);
+                        }
+                        ret = 1;
+                }
+        }
+
+        return ret;
 }

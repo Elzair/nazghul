@@ -268,7 +268,6 @@ int session_load(char *filename)
         struct session *old_session;
         int t1, t2;
         struct list *elem;
-        char *IncludeDir = cfg_get("include-dirname");
 
         /* Remember the old session in case we have to bail out. */
         old_session = Session;

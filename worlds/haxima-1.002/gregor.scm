@@ -65,10 +65,10 @@
 
 (define (gregor-hail knpc kpc)
   (if (in-inventory? kpc t_letter_from_enchanter)
-      (say knpc "I see you got your stuff. Don't forget to ready your weapons before leaving. "
+      (say knpc "I see you got your stuff. Don't forget to ^ccready^cw your weapons before leaving. "
            "It's dangerous out there!")
       (say knpc "Welcome, Wanderer. I've been watching for you. "
-           "There's some things that belong to you, over in yonder cave. "
+           "There's some things that belong to you, over in yonder ^cccave^cw. "
            "Go on in, open the chest. It's all for you.")))
 
 (define (gregor-read knpc kpc)

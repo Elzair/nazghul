@@ -33,6 +33,7 @@
 #include "foogod.h"
 #include "mmode.h"
 #include "cmdwin.h"
+#include "dice.h"
 
 #include <stdio.h>
 #include <assert.h>
@@ -255,6 +256,33 @@ static void status_repaint_title(void)
 	screenUpdate(&Status.titleRect);
 }
 
+static char status_arms_stat_color(char *dice)
+{
+        int avg = dice_average(dice);
+        if (avg < 0)
+                return 'r';
+        if (avg > 0)
+                return 'g';
+        return 'w';
+}
+
+/* status_show_arms_stats -- helper function to print the arms stats the same
+ * way for all viewers. */
+static void status_show_arms_stats(SDL_Rect *rect, ArmsType *arms)
+{
+        char *thd = arms->getToHitDice();
+        char *tdd = arms->getToDefendDice();
+        char *dad = arms->getDamageDice();
+        char *ard = arms->getArmorDice();
+        screenPrint(rect, 0, "^ccTH:^c%c%s ^ccTD:^c%c%s ^ccDA:^c%c%s ^ccAR:^c%c%s", 
+                    status_arms_stat_color(thd), thd,
+                    status_arms_stat_color(tdd), tdd,
+                    status_arms_stat_color(dad), dad,
+                    status_arms_stat_color(ard), ard
+                );
+        rect->y += (TILE_H - ASCII_H);
+}
+
 /* status_show_member_arms -- called during Ztats when showing Party Members,
  * this shows individual arms held by the member */
 static void status_show_member_arms(SDL_Rect * rect, ArmsType *arms)
@@ -263,15 +291,11 @@ static void status_show_member_arms(SDL_Rect * rect, ArmsType *arms)
 	rect->x += TILE_W;
 
         /* name */
-	screenPrint(rect, 0, "%s", arms->getName());
+	screenPrint(rect, 0, "^cy%s", arms->getName());
         rect->y += ASCII_H;
 
         /* stats */
-        screenPrint(rect, 0, "TH:%s TD:%s DA:%s AR:%s", 
-                    arms->getToHitDice(), arms->getToDefendDice(),
-                    arms->getDamageDice(), arms->getArmorDice());
-
-	rect->y += (TILE_H - ASCII_H);
+        status_show_arms_stats(rect, arms);
 	rect->x -= TILE_W;
 }
 
@@ -288,16 +312,12 @@ static void status_show_ztat_arms(SDL_Rect * rect, void *thing)
 	rect->x += TILE_W;
 
         /* quantity and name */
-        screenPrint(rect, 0, "%2d[%d in use] %s", ie->count,
+        screenPrint(rect, 0, "%2d[%d in use] ^cy%s", ie->count,
                     ie->ref, arms->getName());
         rect->y += ASCII_H;
 
         /* stats */
-        screenPrint(rect, 0, "TH:%s TD:%s DA:%s AR:%s", 
-                    arms->getToHitDice(), arms->getToDefendDice(),
-                    arms->getDamageDice(), arms->getArmorDice());
-
-	rect->y += (TILE_H - ASCII_H);
+        status_show_arms_stats(rect, arms);
 	rect->x -= TILE_W;
 }
 
@@ -326,23 +346,22 @@ static void status_show_ready_arms(SDL_Rect * rect, void *thing)
 
         /* quantity and name */
         if (avail) {
-                screenPrint(rect, 0, "%2d%c%s",
+                screenPrint(rect, 0, "^c%c%2d%c^c%c%s",
+                            (inUse?'g':'w'),
                             ie->count,
                             (inUse?'*':' '),
+                            (inUse?'g':'y'),
                             arms->getName());
         } else {
-                screenPrint(rect, 0, "--%c%s",
+                screenPrint(rect, 0, "^c%c--%c%s",
+                            (inUse?'g':'G'),
                             (inUse?'*':' '),
                             arms->getName());
         }
         rect->y += ASCII_H;
 
         /* stats */
-        screenPrint(rect, 0, "TH:%s TD:%s DA:%s AR:%s", 
-                    arms->getToHitDice(), arms->getToDefendDice(),
-                    arms->getDamageDice(), arms->getArmorDice());
-
-	rect->y += (TILE_H - ASCII_H);
+        status_show_arms_stats(rect, arms);
 	rect->x -= TILE_W;
 }
 
@@ -918,9 +937,9 @@ static void mySetPageMode(void)
 				ptr++;
 				continue;
 			}
-			asciiPaint(*ptr++, c * ASCII_W, y * ASCII_H,
-				   Status.pg_surf);
-			c++;
+			if (asciiPaint(*ptr++, c * ASCII_W, y * ASCII_H,
+                                       Status.pg_surf))
+                                c++;
 		}
 	}
 

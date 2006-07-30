@@ -37,6 +37,9 @@ extern Uint32 White;
 extern Uint32 Green;
 extern Uint32 Red;
 extern Uint32 Yellow;
+extern Uint32 Cyan;
+extern Uint32 Magenta;
+extern Uint32 Gray;
 
 extern SDL_Color fontWhite;
 extern SDL_Color fontBlack;
@@ -45,6 +48,9 @@ extern SDL_Color fontBlack;
 #define SP_INVERTED (1 << 1)
 #define SP_RIGHTJUSTIFIED (1 << 2)
 #define SP_ONBORDER (1 << 4)
+
+#define SP_ESC '^'
+#define SP_CLR 'c'
 
 extern int screenInit(void);
 extern void screenErase(SDL_Rect * rect);

@@ -330,7 +330,10 @@ void ctrl_do_attack(class Character *character, class ArmsType *weapon,
          * factions */
         harm_relations(character, target);
 
-        log_begin("%s attacks %s with %s: ", character->getName()
+        log_begin("^c%c%s^cw attacks ^c%c%s^cw with %s: "
+                  , (are_hostile(character, player_party)?'r':'g')
+                  , character->getName()
+                  , (are_hostile(target, player_party)?'r':'g')
                   , target->getName()
                   , weapon->getName()
                 );
@@ -744,6 +747,8 @@ static void ctrl_move_character(class Character *character, int dir)
                 break;
         case CouldNotSwitchOccupants:
                 result = "can't switch places!";
+                break;
+        default:
                 break;
         }
 
