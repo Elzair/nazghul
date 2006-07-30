@@ -804,6 +804,14 @@ class ArmsType *Character::getNextArms(void)
 	return 0;
 }
 
+ArmsType *Character::getArmsInSlot(int slot)
+{
+        if (slot < 0
+            || slot >= species->n_slots)
+                return NULL;
+        return rdyArms[slot];
+}
+
 int Character::hasAmmo (class ArmsType * weapon)
 {
         // SAM: Changed this from returning bool to 
@@ -2687,7 +2695,7 @@ bool Character::tryToRelocateToNewPlace(struct place *newplace,
 
 void Character::setDefaultCondition()
 {
-        condition[0] = isDead() ? 'D' : 'G';
+        condition[0] = isDead() ? 'D' : 0;
 }
 
 void Character::addDefense(int val)

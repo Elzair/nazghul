@@ -148,7 +148,7 @@ static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
                 cmdXamine(party);
                 break;
         case 'z':
-                cmdZtats(NULL);
+                cmdZtats(party->getMemberAtIndex(0));
                 break;
         case '@':
                 // SAM: 'AT' command for party-centric information

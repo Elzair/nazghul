@@ -2,9 +2,9 @@
 ;; effects.scm - generic effects procedures used in multiple places
 ;; ----------------------------------------------------------------------------
 
-(define (mk-effect tag exec apply rm restart hook sym ddc cum dur)
+(define (mk-effect tag name exec apply rm restart hook sym ddc cum dur)
   (kern-mk-effect tag 
-                  "undef" 
+                  name
                   "undef" 
                   exec 
                   apply 
@@ -122,7 +122,7 @@
               (kern-obj-set-ap kchar 0)
               #f)))))
 
-(mk-effect 'ef_paralyze 'paralyze-exec 'paralyze-apply nil 'paralyze-apply 
+(mk-effect 'ef_paralyze "Paralyzed" 'paralyze-exec 'paralyze-apply nil 'paralyze-apply 
            "keystroke-hook" "Z" 0 #f 15)
 
 (define (paralyze kobj)
@@ -191,7 +191,7 @@
                   (kern-obj-set-ap kchar 0)
                   #f))))))
 
-(mk-effect 'ef_ensnare 'ensnare-exec 'ensnare-apply nil 'ensnare-apply
+(mk-effect 'ef_ensnare "Ensnared" 'ensnare-exec 'ensnare-apply nil 'ensnare-apply
            "keystroke-hook" "E" 0 #f 15)
 
 (define (is-ensnared? kobj)
@@ -433,42 +433,37 @@
 ;; Effects Table
 ;; ----------------------------------------------------------------------------
 
-(define effects
-  (list
-   ;;    tag                           exec proc             apply proc          rm proc          restart proc        hook                 sym ddc cum dur
-   ;;    ============================= ============          ==========          =========        ============        ==================== === === === ===
-   (list 'ef_poison                    'poison-exec          nil                 nil              nil                 "start-of-turn-hook" "P" 0   #f  120)
-   (list 'ef_poison_immunity           'poison-immunity-exec nil                 nil              nil                 "add-hook-hook"      "I" 0   #f  -1)
-   (list 'ef_temporary_poison_immunity 'poison-immunity-exec nil                 nil              nil                 "add-hook-hook"      "I" 0   #f  60)
-   (list 'ef_sleep                     'sleep-exec           nil                 'sleep-rm        'sleep-reset        "start-of-turn-hook" "S" 0   #f  60)
-   (list 'ef_torchlight                nil                   'torchlight-apply   'torchlight-rm   'torchlight-apply   "start-of-turn-hook" "T" 0   #f  60)
-   (list 'ef_light                     'light-exec           nil                 'light-rm        'light-reset        "start-of-turn-hook" "L" 0   #f  -1)
-   (list 'ef_protection                nil                   'protection-apply   'protection-rm   'protection-apply   "start-of-turn-hook" "p" 0   #t  10)
-   (list 'ef_charm                     nil                   'charm-apply        'charm-rm        'charm-apply        "start-of-turn-hook" "C" 0   #f   5)
-   (list 'ef_invisibility              nil                   'invisibility-apply 'invisibility-rm 'invisibility-apply "start-of-turn-hook" "N" 0   #t  10)
-   (list 'ef_permanent_invisibility    nil                   'invisibility-apply 'invisibility-rm 'invisibility-apply "start-of-turn-hook" "N" 0   #t  -1)
-   (list 'ef_split                     'split-exec           nil                 nil              nil                 "on-damage-hook"     ""  0   #f  -1)
-   (list 'ef_spider_calm               nil                   'spider-calm-apply  'spider-calm-rm  nil                 "start-of-turn-hook" ""  0   #f  60) 
-   (list 'ef_drunk                     'drunk-exec           'drunk-apply        'drunk-rm        nil                 "keystroke-hook"     "A" 0   #t  60)
-   (list 'ef_disease                   'disease-exec         nil                 nil              nil                 "start-of-turn-hook" "D" 0   #f  -1)
-   (list 'ef_disease_immunity          'disease-immunity-exec nil                nil              nil                 "add-hook-hook"      "E" 0   #f  -1)
-   (list 'ef_temporary_disease_immunity 'disease-immunity-exec nil               nil              nil                 "add-hook-hook"      "E" 0   #f  60)
-   (list 'ef_paralysis_immunity        'paralysis-immunity-exec nil              nil              nil                 "add-hook-hook"      "z" 0   #f  -1)
-   (list 'ef_temporary_paralysis_immunity 'paralysis-immunity-exec nil           nil              nil                 "add-hook-hook"      "z" 0   #f  60)
-   (list 'ef_fire_immunity             nil                   nil                 nil              nil                 "nil-hook"           "F" 0   #f  -1)
-   (list 'ef_temporary_fire_immunity   nil                   nil                 nil              nil                 "nil-hook"           "F" 0   #f  15)
-   (list 'ef_magical_kill_immunity     nil                   nil                 nil              nil                 "nil-hook"           "K" 0   #f  -1)
-   (list 'ef_temporary_magical_kill_immunity   nil           nil                 nil              nil                 "nil-hook"           "K" 0   #f  15)
-   (list 'ef_grow_head                 'grow-head-exec       nil                 nil              'grow-head-exec     "on-damage-hook"     "H"  0   #f  -1)
-   (list 'ef_temporary_grow_head       'grow-head-exec       nil                 nil              'grow-head-exec     "on-damage-hook"     "H"  0   #f  15)
-   (list 'ef_loot_drop                 'loot-drop-exec       nil                 nil              nil                 "on-death-hook"      ""  0   #f  -1)
-   (list 'ef_charm_immunity            'charm-immunity-exec  nil                 nil              nil                 "add-hook-hook"      "c" 0   #f  -1)
-   (list 'ef_temporary_charm_immunity  'charm-immunity-exec  nil                 nil              nil                 "add-hook-hook"      "c" 0   #f  60)
-   (list 'ef_sleep_immunity            'sleep-immunity-exec  nil                 nil              nil                 "add-hook-hook"      "s" 0   #f  -1)
-   (list 'ef_temporary_sleep_immunity  'sleep-immunity-exec  nil                 nil              nil                 "add-hook-hook"      "s" 0   #f  60)
-   ))
-
-(map (lambda (effect) (apply mk-effect effect)) effects)
+;;    tag                                name                       exec proc             apply proc          rm proc          restart proc        hook                 sym ddc cum dur
+;;    =============================      =================          ============          ==========          =========        ============        ==================== === === === ===
+(mk-effect 'ef_poison                    "Poison"          'poison-exec          nil                 nil              nil                 "start-of-turn-hook" "P" 0   #f  120)
+(mk-effect 'ef_poison_immunity           "Poison immunity" 'poison-immunity-exec nil                 nil              nil                 "add-hook-hook"      "I" 0   #f  -1)
+(mk-effect 'ef_temporary_poison_immunity "Poison immunity" 'poison-immunity-exec nil                 nil              nil                 "add-hook-hook"      "I" 0   #f  60)
+(mk-effect 'ef_sleep                     "Sleep" 'sleep-exec           nil                 'sleep-rm        'sleep-reset        "start-of-turn-hook" "S" 0   #f  60)
+(mk-effect 'ef_torchlight                "Torchlight" nil                   'torchlight-apply   'torchlight-rm   'torchlight-apply   "start-of-turn-hook" "T" 0   #f  60)
+(mk-effect 'ef_light                     "Magical light" 'light-exec           nil                 'light-rm        'light-reset        "start-of-turn-hook" "L" 0   #f  -1)
+(mk-effect 'ef_protection                "Protection" nil                   'protection-apply   'protection-rm   'protection-apply   "start-of-turn-hook" "p" 0   #t  10)
+(mk-effect 'ef_charm                     "Charm" nil                   'charm-apply        'charm-rm        'charm-apply        "start-of-turn-hook" "C" 0   #f   5)
+(mk-effect 'ef_invisibility              "Invisible" nil                   'invisibility-apply 'invisibility-rm 'invisibility-apply "start-of-turn-hook" "N" 0   #t  10)
+(mk-effect 'ef_permanent_invisibility    "Invisible" nil                   'invisibility-apply 'invisibility-rm 'invisibility-apply "start-of-turn-hook" "N" 0   #t  -1)
+(mk-effect 'ef_split                     "Split" 'split-exec           nil                 nil              nil                 "on-damage-hook"     ""  0   #f  -1)
+(mk-effect 'ef_spider_calm               "Spider carlm" nil                   'spider-calm-apply  'spider-calm-rm  nil                 "start-of-turn-hook" ""  0   #f  60) 
+(mk-effect 'ef_drunk                     "Drunk" 'drunk-exec           'drunk-apply        'drunk-rm        nil                 "keystroke-hook"     "A" 0   #t  60)
+(mk-effect 'ef_disease                   "Diseased" 'disease-exec         nil                 nil              nil                 "start-of-turn-hook" "D" 0   #f  -1)
+(mk-effect 'ef_disease_immunity          "Disease immunity" 'disease-immunity-exec nil                nil              nil                 "add-hook-hook"      "E" 0   #f  -1)
+(mk-effect 'ef_temporary_disease_immunity "Disease immunity" 'disease-immunity-exec nil               nil              nil                 "add-hook-hook"      "E" 0   #f  60)
+(mk-effect 'ef_paralysis_immunity        "Paralysis immunity" 'paralysis-immunity-exec nil              nil              nil                 "add-hook-hook"      "z" 0   #f  -1)
+(mk-effect 'ef_temporary_paralysis_immunity "Paralysis immunity" 'paralysis-immunity-exec nil           nil              nil                 "add-hook-hook"      "z" 0   #f  60)
+(mk-effect 'ef_fire_immunity             "Fire immunity" nil                   nil                 nil              nil                 "nil-hook"           "F" 0   #f  -1)
+(mk-effect 'ef_temporary_fire_immunity   "Fire immunity" nil                   nil                 nil              nil                 "nil-hook"           "F" 0   #f  15)
+(mk-effect 'ef_magical_kill_immunity     "Magic kill immunity" nil                   nil                 nil              nil                 "nil-hook"           "K" 0   #f  -1)
+(mk-effect 'ef_temporary_magical_kill_immunity   "Magic kill immunity" nil           nil                 nil              nil                 "nil-hook"           "K" 0   #f  15)
+(mk-effect 'ef_grow_head                 "XP from damage" 'grow-head-exec       nil                 nil              'grow-head-exec     "on-damage-hook"     "H"  0   #f  -1)
+(mk-effect 'ef_temporary_grow_head       "XP from damage" 'grow-head-exec       nil                 nil              'grow-head-exec     "on-damage-hook"     "H"  0   #f  15)
+(mk-effect 'ef_loot_drop                 nil 'loot-drop-exec       nil                 nil              nil                 "on-death-hook"      ""  0   #f  -1)
+(mk-effect 'ef_charm_immunity            "Charm immunity" 'charm-immunity-exec  nil                 nil              nil                 "add-hook-hook"      "c" 0   #f  -1)
+(mk-effect 'ef_temporary_charm_immunity  "Charm immunity" 'charm-immunity-exec  nil                 nil              nil                 "add-hook-hook"      "c" 0   #f  60)
+(mk-effect 'ef_sleep_immunity            "Sleep immunity" 'sleep-immunity-exec  nil                 nil              nil                 "add-hook-hook"      "s" 0   #f  -1)
+(mk-effect 'ef_temporary_sleep_immunity  "Sleep immunity" 'sleep-immunity-exec  nil                 nil              nil                 "add-hook-hook"      "s" 0   #f  60)
 
 ;;----------------------------------------------------------------------------
 ;; Effect Test Procedures

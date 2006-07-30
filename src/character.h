@@ -193,6 +193,7 @@ class Character:public Being {
                                              struct closure *closure);
 	virtual class ArmsType *enumerateArms();
 	virtual class ArmsType *enumerateWeapons();
+        class ArmsType *getArmsInSlot(int slot);
         virtual bool addFood(int quantity);
         virtual bool addGold(int quantity);
         virtual bool add(ObjectType *type, int amount);

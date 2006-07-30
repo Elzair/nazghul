@@ -47,7 +47,7 @@ struct effect {
         struct sprite *sprite;  /* might be used in ztats window */
         int detect_dc;          /* detection difficulty class (default zero) */
         int cumulative;         /* more then one instance can be attached */
-        int duration;           /* turns before expire (-1 for never) */
+        int duration;           /* minutes before expire (-1 for never) */
         int hook_id;            /* hook the effect attaches to */
 };
 

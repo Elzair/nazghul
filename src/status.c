@@ -35,6 +35,9 @@
 #include "cmdwin.h"
 #include "dice.h"
 #include "occ.h"
+#include "effect.h"
+#include "session.h"
+#include "magic.h"
 
 #include <stdio.h>
 #include <assert.h>
@@ -118,6 +121,7 @@ static void status_show_ztat_character(SDL_Rect *rect, void *thing);
 static void status_show_ztat_arms(SDL_Rect *rect, void *thing);
 static void status_show_generic_object_type(SDL_Rect *rect, void *thing);
 static void status_show_mix_reagent(SDL_Rect *rect, void *thing);
+static void status_show_ztat_spells(SDL_Rect *rect, void *thing);
 
 /* Filter for the player inventory during the R)eady UI. */
 static struct filter stat_ready_arms_filter = {
@@ -130,7 +134,7 @@ static struct ztats_entry ztats_entries[] = {
                                        * generic stat_show_container() */ },
         { "Armaments", { stat_filter_arms, 0 }, status_show_ztat_arms },
         { "Reagents", { stat_filter_reagents, 0 }, status_show_generic_object_type },
-        { "Spells", { stat_filter_spells, 0 }, status_show_generic_object_type },
+        { "Spells", { stat_filter_spells, 0 }, status_show_ztat_spells },
         { "Usable Items", { stat_filter_items, 0 }, status_show_generic_object_type },
         { "Misc", { stat_filter_misc, 0 }, status_show_generic_object_type },
 };
@@ -315,8 +319,8 @@ static void status_show_ztat_arms(SDL_Rect * rect, void *thing)
 
         /* quantity and name */
         if (ie->ref) {
-                screenPrint(rect, 0, "%2d[%d] %s", ie->count,
-                            ie->ref, arms->getName());
+                screenPrint(rect, 0, "%2d %s ^c+G[%d in use]^c-", ie->count,
+                            arms->getName(), ie->ref);
         } else {
                 screenPrint(rect, 0, "%2d %s", ie->count, arms->getName());
         }
@@ -370,6 +374,8 @@ static void status_show_ready_arms(SDL_Rect * rect, void *thing)
 	rect->x -= TILE_W;
 }
 
+/* status_range_color -- return red, green or yellow to reflect the relative
+ * level of a statistic */
 static char status_range_color(int cur, int max)
 {
         if (cur > max/2) {
@@ -381,10 +387,54 @@ static char status_range_color(int cur, int max)
         }
 }
 
+int status_show_effect(hook_entry_t *entry, void *data)
+{
+        SDL_Rect *rect = (SDL_Rect*)data;
+        struct effect *effect = entry->effect;
+
+        /* No name implies invisible to UI. */
+        if (!effect->name) {
+                return 0;
+        }
+
+        if (-1 == entry->effect->duration) {
+                screenPrint(rect, 0, "%c %s (permanent)"
+                            , entry->effect->status_code
+                            , entry->effect->name
+                        );
+        } else {
+                screenPrint(rect, 0, "%c %s [%d min]"
+                            , entry->effect->status_code
+                            , entry->effect->name
+                            , entry->effect->duration
+                        );
+        }
+        rect->y += ASCII_H;
+
+        return 0;
+}
+
+static void status_show_character_var_stats(SDL_Rect *rect, class Character *pm)
+{
+        /* Show the xp, hp and mp */
+        screenPrint(rect, 0, 
+                    "^c+yHP:^c%c%d^cw/%d ^cyMP:^c%c%d^cw/%d ^cyXP:^cw%d/%d^c-"
+                    , status_range_color(pm->getHp(), pm->getMaxHp())
+                    , pm->getHp(), pm->getMaxHp()
+                    , status_range_color(pm->getMana(), pm->getMaxMana())
+                    , pm->getMana(), pm->getMaxMana()
+                    , pm->getExperience()
+                    , pm->getXpForLevel(pm->getLevel()+1)
+                );
+        rect->y += ASCII_H;
+}
+
+/* status_show_ztat_character -- show character stats in Ztat mode */
 static void status_show_ztat_character(SDL_Rect *rect, void *thing)
 {
         struct mmode *mmode;
         class Character *pm = (class Character*)thing;
+        int i;
         
         /* Push the current color. */
         screenPrint(rect, 0, "^c+=");
@@ -400,16 +450,7 @@ static void status_show_ztat_character(SDL_Rect *rect, void *thing)
         rect->y += ASCII_H;
 
         /* Show the xp, hp and mp */
-        screenPrint(rect, 0, 
-                    "^cyHP:^c%c%d^cw/%d ^cyMP:^c%c%d^cw/%d ^cyXP:^cw%d/%d"
-                    , status_range_color(pm->getHp(), pm->getMaxHp())
-                    , pm->getHp(), pm->getMaxHp()
-                    , status_range_color(pm->getMana(), pm->getMaxMana())
-                    , pm->getMana(), pm->getMaxMana()
-                    , pm->getExperience()
-                    , pm->getXpForLevel(pm->getLevel()+1)
-                );
-        rect->y += ASCII_H;
+        status_show_character_var_stats(rect, pm);
 
         /* Show movement mode, class and species */
         mmode = pm->getMovementMode();
@@ -422,19 +463,43 @@ static void status_show_ztat_character(SDL_Rect *rect, void *thing)
                 );
 	rect->y += ASCII_H;
 
+        /* Show effects */
+	screenPrint(rect, SP_CENTERED , "^cy*** Effects ***^cw");
+        rect->y += ASCII_H;
+        for (i = 0; i < OBJ_NUM_HOOKS; i++) {
+                pm->hookForEach(i, status_show_effect, rect);
+        }
+
 	/* Show arms */
-	screenPrint(rect, SP_CENTERED
-                    , "^cy*** Arms ***");
+	screenPrint(rect, SP_CENTERED , "^cy*** Arms ***^cw");
         rect->y += ASCII_H;
 
-        /* Pop the saved current color. */
-        screenPrint(rect, 0, "^c-");
-
+#if 1
 	class ArmsType *arms = pm->enumerateArms();
 	while (arms != NULL) {
 		status_show_member_arms(rect, arms);
 		arms = pm->getNextArms();
 	}
+#else
+        /* This was an experiment with enumerating the slots instead of the
+         * readied arms. I couldn't get the formatting to look very good, so I
+         * punted. */
+        for (i = 0; i < pm->species->n_slots; i++) {
+                class ArmsType *arms = pm->getArmsInSlot(i);
+                if (arms) {
+                        status_show_member_arms(rect, i, arms);
+                } else {
+                        rect->x += TILE_W;
+                        screenPrint(rect, 0, "^c+y%d:^cG(empty)^c-", i);
+                        rect->x -= TILE_W;
+                        rect->y += ASCII_H;
+                }
+        }
+#endif
+
+        /* Pop the saved current color. */
+        screenPrint(rect, 0, "^c-");
+
 
 	// fixme: currently this will overprint and it doesn't support
 	// scrolling. These may be necessary if the status window is not large
@@ -461,6 +526,8 @@ static void myShadeHalfLines(int line, int n)
 	screenShade(&rect, 128);
 }
 
+/* status_show_generic_object_type -- show a generic object type (just name and
+ * quantity) */
 static void status_show_generic_object_type(SDL_Rect *rect, void *thing)
 {
         struct inv_entry *ie = (struct inv_entry*)thing;
@@ -482,6 +549,27 @@ static void status_show_generic_object_type(SDL_Rect *rect, void *thing)
         rect->x -= TILE_W;
 }
 
+/* status_show_generic_object_type -- show a generic object type (just name and
+ * quantity) */
+static void status_show_ztat_spells(SDL_Rect *rect, void *thing)
+{
+        struct inv_entry *ie = (struct inv_entry*)thing;
+
+        /* This is a single-line entry in a two-line rect, so center it
+         * vertically. */
+        rect->y += LINE_H / 4;
+
+        /* Damn! There's no way to get from the object type back to the spell
+         * struct. Need to fix that somehow so we can print more info here. */
+        screenPrint(rect, 0, "%2d %s", ie->count, ie->type->getName());
+
+        /* Carriage-return line-feed */
+        rect->y += (LINE_H * 3) / 4;
+}
+
+
+/* status_show_mix_reagent -- show a reagent during the M)ix UI. Marks reagents
+ * which have been selected for mixing. */
 static void status_show_mix_reagent(SDL_Rect *rect, void *thing)
 {
         struct inv_entry *ie = (struct inv_entry*)thing;
@@ -510,6 +598,9 @@ static void status_show_mix_reagent(SDL_Rect *rect, void *thing)
         rect->x -= TILE_W;
 }
 
+/* stat_show_container -- generic function for showing the contents of a
+ * container. Uses a filter to select certain types of contents for display,
+ * and a specialized function for that type of content. */
 static void stat_show_container()
 {
 	SDL_Rect rect;
@@ -534,61 +625,6 @@ static void stat_show_container()
                  * advance the rect to the next entry position before it
                  * returns. */
                 Status.show_thing(&rect, ie);
-
-#if 0 /* obsolete -- delete this when done */
-		int inUse = 0;
-		int avail = 0;
-
-		avail = ie->count;
-
-		/* For Ready mode, check if any of the items are worn by the
-		 * selected member */
-		if (Status.mode == Ready) {
-			avail -= ie->ref;
-			assert(avail >= 0);
-			if (ie->ref && 
-                            player_party->getMemberAtIndex(Status.pcIndex)->
-                            hasReadied((class ArmsType *)ie->type)) {
-				inUse = 1;
-			}
-		}
-
-		// If mixing reagents then check if this reagent has already
-		// been selected. I'm going to cheat a bit here and reuse the
-		// 'ref' field of the inv_entry to mean that the reagent has
-		// been selected. Must clear this field when done mixing!
-		else if (Status.mode == MixReagents) {
-			inUse = ie->ref;
-		}
-
-		flags = 0;
-
-		/* If there are no free items and none are worn by the current
-		 * player then don't list them. */
-		if (!avail && !inUse)
-			continue;
-
-                /* For Ready mode use the specialized show routine. */
-		if (Status.mode == Ready) {
-                        status_show_ready_arms(&rect, (ArmsType*)ie->type, 
-                                               avail, inUse);
-                }
-
-                /* For all other modes use the generic show routine. */
-                else {
-                        if (ie->type->getSprite()) {
-                                spritePaint(ie->type->getSprite(), 0, 
-                                            Status.screenRect.x,
-                                            rect.y);
-                        }
-
-                        rect.y += LINE_H / 4;
-			screenPrint(&rect, flags, "%2d %s", avail,
-				    ie->type->getName());
-                        rect.y += (LINE_H * 3) / 4;
-                
-                }
-#endif /* end obsolete section */
 
                 /* Highlight the selected item by shading all the other
                  * entries. */
@@ -654,14 +690,10 @@ static void stat_scroll_container(enum StatusScrollDir dir)
 	}
 }
 
-static bool myShowPCInPartyView(class Character * pm, void *data)
+/* status_show_party_view_character -- show a party member during Party View
+ * mode. */
+static bool status_show_party_view_character(class Character * pm, void *data)
 {
-	int flags;
-	char condition[32];
-
-	// flags = (pm->getOrder() == Status.pcIndex ? SP_INVERTED : 0);
-	flags = 0;
-
 	// check if we've scrolled too far
 	if (Status.lineRect.y >= (Status.screenRect.y + Status.screenRect.h))
 		return true;
@@ -670,15 +702,17 @@ static bool myShowPCInPartyView(class Character * pm, void *data)
 	spritePaint(pm->getSprite(), 0, Status.screenRect.x, 
                     Status.lineRect.y);
 
-	/* Paint the name */
-	screenPrint(&Status.lineRect, flags, "%-*s", MAX_NAME_LEN,
+	/* Paint the name on line 1 */
+	screenPrint(&Status.lineRect, 0, "%-*s", MAX_NAME_LEN,
 		    pm->getName());
 	Status.lineRect.y += ASCII_H;
 
-	/* Paint the condition */
-        strncpy(condition, pm->getCondition(), array_sz(condition) - 1);
-	screenPrint(&Status.lineRect, SP_RIGHTJUSTIFIED, "%d%s",
-		    pm->getHp(), condition);
+	/* Paint the condition on line 2 */
+        status_show_character_var_stats(&Status.lineRect, pm);
+	Status.lineRect.y -= ASCII_H; /* the above auto-advances; backup to
+                                       * show the condition codes on the same
+                                       * line */
+	screenPrint(&Status.lineRect, SP_RIGHTJUSTIFIED, "%s", pm->getCondition());
 	Status.lineRect.y += ASCII_H;
 
 	if (Status.pcIndex != -1 && pm->getOrder() != Status.pcIndex) {
@@ -696,7 +730,7 @@ static void myShowParty(void)
 	Status.lineRect.y = Status.screenRect.y;
 	Status.lineRect.w = Status.screenRect.w - TILE_W;
 
-	player_party->forEachMember(myShowPCInPartyView, 0);
+	player_party->forEachMember(status_show_party_view_character, 0);
 
 }
 

@@ -59,8 +59,11 @@ struct effect *effect_new(char *tag, scheme *sc, pointer exec_proc,
         et->tag = strdup(tag);
         assert(et->tag);
 
-        et->name = strdup(name);
-        assert(et->name);
+        /* Effects with no name should be considered invisible to the UI */
+        if (name) {
+                et->name = strdup(name);
+                assert(et->name);
+        }
 
         et->description = strdup(description);
         assert(et->description);

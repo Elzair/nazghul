@@ -1159,7 +1159,7 @@ bool cmdReady(class Character * member)
 
 		class ArmsType *arms = (class ArmsType *) ie->type;
 
-		cmdwin_print("%s-", arms->getName());
+		cmdwin_print("-%s-", arms->getName());
                 log_begin("%s - ", arms->getName());
 
 		if (ie->ref && member->unready(arms)) {
@@ -1175,10 +1175,10 @@ bool cmdReady(class Character * member)
 				msg = "readied";
 				break;
 			case Character::NoAvailableSlot:
-				msg = "no place to put!";
+				msg = "all full!";
 				break;
 			case Character::WrongType:
-				msg = "character type can't use that!";
+				msg = "can't use!";
 				break;
 			case Character::TooHeavy:
 				msg = "too heavy!";
@@ -1191,7 +1191,7 @@ bool cmdReady(class Character * member)
 
 		cmdwin_print(msg);
                 log_end(msg);
-		erase = strlen(arms->getName()) + strlen(msg) + 1;
+		erase = strlen(arms->getName()) + strlen(msg) + 2 /* dashes */;
 	}
 
 	eventPopKeyHandler();
