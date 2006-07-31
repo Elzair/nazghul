@@ -26,5 +26,5 @@
 	)
  (put (spawn-pt 'yellow-slime) 7 7)
  (put (mk-ladder-up 'p_shard 78 74) 7 12)
- (put (kern-mk-obj t_royal_cape 1) 4 14)
+ (put (kern-mk-obj t_royal_cape 1) 4 15)
  )

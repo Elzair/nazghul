@@ -165,6 +165,7 @@
 ;; effect packages
 (define slime-effects  (list ef_poison_immunity 
                              (list ef_split split-gob-mk 'green-slime)))
+(define yellow-slime-effects  (list ef_poison_immunity))
 (define undead-effects (list ef_poison_immunity ef_fire_immunity ef_disease_immunity))
 (define demon-effects (list ef_poison_immunity ef_fire_immunity ef_disease_immunity ef_magical_kill_immunity))
 (define hydra-effects (list ef_poison_immunity ef_grow_head))
@@ -673,7 +674,7 @@
 (define highwayman (mk-npct2 "highwayman" sp_human oc_wrogue s_brigand wrogue-traps wrogue-3-equip nil 'std-ai faction-outlaw nil 'drop-generic wrogue-3-loot))
 (define blackguard (mk-npct2 "blackguard" sp_human oc_wrogue s_brigand wrogue-traps wrogue-4-equip nil 'std-ai faction-outlaw nil 'drop-generic wrogue-4-loot))
 (define gint-warrior (mk-npct2 "gint warrior" sp_gint oc_warrior s_ettin basic-traps gint-warrior-equip nil 'std-ai faction-gint nil 'drop-generic gint-loot))
-(define yellow-slime (mk-npct2 "yellow slime" sp_yellow_slime nil s_yellow_slime nil nil slime-effects 'yellow-slime-ai faction-monster nil 'drop-generic yellow-slime-loot))
+(define yellow-slime (mk-npct2 "yellow slime" sp_yellow_slime nil s_yellow_slime nil nil yellow-slime-effects 'yellow-slime-ai faction-monster nil 'drop-generic yellow-slime-loot))
 (define troll-geomancer (mk-npct2 "troll geomancer" sp_troll oc_wizard s_troll no-traps geomancer-equip nil 'std-ai faction-troll nil 'drop-generic geomancer-loot))
 (define corrupt-halberdier (mk-npct2 "halberdier" sp_human oc_warrior s_guard no-traps halberdier-equip nil 'guard-ai faction-monster nil 'drop-generic halberdier-loot))
 (define corrupt-crossbowman (mk-npct2 "crossbowman" sp_human oc_warrior s_guard no-traps crossbowman-equip nil 'guard-ai faction-monster nil 'drop-generic crossbowman-loot))
