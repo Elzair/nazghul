@@ -182,6 +182,12 @@ static void session_save_time_accel(save_t *save, struct session *session)
                     session->time_accel);
 }
 
+static void session_save_turn_count(save_t *save, struct session *session)
+{
+        save->write(save, "(kern-set-turn-count %d)\n", 
+                    session->turn_count);
+}
+
 struct session *session_new(void *interp)
 {
         struct session *session = (struct session*)calloc(1, sizeof(*session));
@@ -546,6 +552,7 @@ void session_save(char *fname)
         session_save_crosshair(save, Session);
         session_save_clock(save, Session);
         session_save_time_accel(save, Session);
+        session_save_turn_count(save, Session);
         dtable_save(Session->dtable, save);
         sky_save(&Session->sky, save);
         windSave(save);

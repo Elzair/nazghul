@@ -637,6 +637,12 @@ void player_party::exec()
         startTurn();
 
         if (action_points > 0 && ! isDestroyed()) {        
+
+                /* In party mode increment the turn count whenever the player
+                 * moves. I'm assuming he'll move at most once per turn. */
+                session_inc_turn_count();
+                foogodRepaint();
+                
                 ctrl(this);
 
                 if (Session->reloaded)
@@ -737,7 +743,6 @@ player_party::player_party()
 	campsite_formation = 0;
 	camping            = false;
         resting            = false;
-        turn_count         = 0;
         leader             = NULL;
         solo_member        = NULL;
         control_mode       = PARTY_CONTROL_ROUND_ROBIN;
@@ -773,7 +778,6 @@ player_party::player_party(char *_tag,
 	campsite_formation = _camping_formation;
 	camping            = false;
         resting            = false;
-        turn_count         = 0;
         leader             = NULL;
         solo_member        = NULL;
         control_mode       = PARTY_CONTROL_ROUND_ROBIN;
@@ -1071,18 +1075,6 @@ void player_party::throw_out_of_bed()
 {
         assert(isResting());
         endResting();
-}
-
-int player_party::getTurnCount()
-{
-        return turn_count;
-}
-
-void player_party::decActionPoints(int points)
-{        
-        Object::decActionPoints(points);
-        turn_count++;
-        foogodRepaint();
 }
 
 class Character *player_party::getMemberAtIndex(int index)

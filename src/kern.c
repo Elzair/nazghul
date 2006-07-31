@@ -5015,6 +5015,19 @@ KERN_API_CALL(kern_set_time_accel)
         return sc->T;
 }
 
+KERN_API_CALL(kern_set_turn_count)
+{
+        int val;
+
+        if (unpack(sc, &args, "d", &val)) {
+                rt_err("kern-set-turn-count: bad args");
+                return sc->F;
+        }
+
+        session_set_turn_count(val);
+        return sc->T;
+}
+
 KERN_API_CALL(kern_add_reveal)
 {
         int val;
@@ -7703,6 +7716,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-sound-play", kern_sound_play);
         API_DECL(sc, "kern-tag", kern_tag);
         API_DECL(sc, "kern-test-recursion", kern_test_recursion);
+        API_DECL(sc, "kern-set-turn-count", kern_set_turn_count);
         
         /* ui api */
         API_DECL(sc, "kern-ui-direction", kern_ui_direction);

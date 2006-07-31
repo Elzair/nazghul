@@ -2059,6 +2059,12 @@ void Character::exec()
                 /* Hand control over to the player */
                 ctrl(this);
 
+                /* Increment the turn count once per combat round. */
+                if (isSolo() || isLeader()) {
+                        session_inc_turn_count();
+                        foogodRepaint();
+                }
+
                 if (Session->reloaded)
                         /* Hack: this object has been destroyed. Leave
                          * now. Don't touch a thing. */

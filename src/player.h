@@ -87,7 +87,6 @@ class player_party : public Party {
         virtual void describe();
         virtual void exec();
         virtual void damage(int amount);
-        virtual void decActionPoints(int points);
         virtual void beginResting(int hours);
         virtual bool isResting();
         virtual void beginCamping(class Character *guard, int hours);
@@ -124,7 +123,6 @@ class player_party : public Party {
         int get_num_living_members(void);
         class Character *get_first_living_member(void);
         void throw_out_of_bed();
-        int getTurnCount();
         class Character *getMemberAtIndex(int index);
         void setCombatExitDestination(struct location *loc);
         void getCombatExitDestination(struct location *loc);
@@ -180,7 +178,6 @@ class player_party : public Party {
         clock_alarm_t rest_alarm;
         bool          resting;
         int           speed;
-        int           turn_count;
 
         bool camping;
         class Character *camp_guard;

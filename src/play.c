@@ -238,17 +238,19 @@ static void play_loop(void)
                         windAdvanceTurns();
                         wqRunToTick(&TurnWorkQueue, Turn);
 
-                        // ----------------------------------------------------
-                        // Update the "Turn" counter. This drives the
-                        // TurnWorkQueue, which is still used for scheduled
-                        // things like torches burning out and doors closing.
-                        // ----------------------------------------------------
+                        /* Update the "Turn" counter. This drives the
+                         * TurnWorkQueue, which is still used for scheduled
+                         * things like torches burning out and doors closing.
+                         * Note: this is NOT the turn count shown in the foogod
+                         * window, that one is stored in the session struct and
+                         * is incremented above.
+                         */
                         Turn += session_ticks_per_turn();
                 }
 
                 G_exec_loops++;
                 times[5] = SDL_GetTicks();
-                
+
                 if (PROFILE_PLAY_LOOP) {
                         total_time += (times[5]-times[0]);
                         printf("Loop time=%d avg=%d\n", times[5] - times[0],

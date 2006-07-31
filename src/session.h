@@ -90,6 +90,11 @@ extern int save_errs;
 #define TickWorkQueue (Session->tickq)
 #define TurnWorkQueue (Session->turnq)
 
+/* Access to the turn counter: */
+#define session_inc_turn_count() (Session->turn_count++)
+#define session_set_turn_count(val) (Session->turn_count=(val))
+#define session_get_turn_count() (Session->turn_count)
+
 struct session {
 
         // This list keeps track of all loaded object types. It's private to
@@ -189,6 +194,10 @@ struct session {
         Being *subject;
 
         struct list blenders;
+
+        /* The turn count shown in the foogod window; incremented once per game
+         * loop in play.c */
+        int turn_count;
 
         char show_boxes : 1;  /* draw red/green/yellow boxes around npcs */
 };
