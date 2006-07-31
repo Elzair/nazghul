@@ -29,7 +29,7 @@
 #include "session.h"
 #include "vehicle.h"
 
-struct {
+struct foogod {
 	SDL_Rect screenRect;
 	SDL_Rect turnRect;
 	SDL_Rect foodRect;
@@ -94,7 +94,10 @@ int foogodInit(void)
 void foogodRepaint(void)
 {
 	screenErase(&Foogod.screenRect);
-	screenPrint(&Foogod.turnRect, 0, "Turn: %d", session_get_turn_count());
+        if (Session) {
+                screenPrint(&Foogod.turnRect, 0, "Turn: %d", 
+                            session_get_turn_count());
+        }
 	screenPrint(&Foogod.foodRect, 0, "Food: %d", player_party->food);
 	screenPrint(&Foogod.goldRect, SP_RIGHTJUSTIFIED, "Gold: %d",  player_party->gold);
 	screenPrint(&Foogod.combatRect, SP_RIGHTJUSTIFIED, "Combat: %c", combatGetState());
