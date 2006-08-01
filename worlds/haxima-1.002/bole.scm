@@ -3,47 +3,47 @@
 ;;----------------------------------------------------------------------------
 (kern-mk-map 
  'm_bole 48 39 pal_expanded
-	(list
-		"^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ~6 ^a ^^ ^c ~6 ^a ^^ ^^ ~6 || || || || || || || || || ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ "
-		"^^ ^^ ^^ ^^ ^c t7 ^^ ^^ ^^ ^^ ^^ ^^ ^^ ~6 |B || |% ~6 |# |% ^e ~6 || || || || || || || || || ^a ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ "
-		"^^ ^^ ^c t3 tt tc {5 ^^ ^^ ^^ ^^ ^^ ^^ ~a ~5 |A |C ~6 |A |C ~3 ~c || || || || || || || || || |% ^a ^^ ^^ ^^ ^^ ^c |& ^a ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ "
-		"^^ ^^ t3 tt tc t# .. {1 {5 ^^ ^^ ^^ ^c |& ~a ~1 ~~ ~~ ~~ ~1 ~c |# || || || || || || || || || || |% ^^ ^^ ^c |# || || |% ^e t3 tt tt tt t5 ^^ ^^ "
-		"^^ ^c tt t# .. .. .. .. .. {5 ^c tb tt || |% ~a ~~ bb ~~ ~c |# || || || tt tt tt tt tt tt tt tt || ^a ^c |# || || || || tt tc bb .. bb te ^a ^^ "
-		"^^ t3 tc .. .. .. .. .. .. .. bb .. t% tt || tH ~a ~~ ~c tG || || || tc t# .. .. .. t% ta tt tt || || || || || || |C ^7 tt bb .. .. .. bb t7 ^^ "
-		"^^ tt t# .. .. .. .. .. .. bb .. .. .. ta tt tt td ~6 tb tt || || tt t# tC t3 tt t5 tA .. t% ta tt tt tt || || || ^3 ^^ tt .. .. .. .. tb tt ^^ "
-		"^^ tt .. .. rr rr rr rr rr rr rr .. .. .. .. .. .. == .. t% ta tt tc .. t3 || || || || t5 .. .. .. t% tt || || |C ^^ ^^ tt bb .. .. .. bb tt ^^ "
-		"^^ tt .. .. rr .. .. .. .. .. rr .. .. tC t3 tt td ~6 t7 tA .. .. .. tC tt || || || || tt tA .. .. tC tt || |C ^3 ^^ ^^ ta t5 bb .. bb t3 tc ^^ "
-		"^^ tt .. .. rr .. .. .. .. .. rr .. .. t3 || || ~3 ~c || tt tt tt tt tt || || || || || tt t5 .. .. t3 tt || ^3 ^^ ^^ ^^ ^5 ta tt tt tt tc ^3 ^^ "
-		"^^ tt .. .. rr .. .. && .. .. .. .. .. tt || || ~6 |# || || || || || || || || || || || || tt .. tC tt || |C ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ "
-		"^^ tt .. .. rr .. .. .. .. .. rr .. .. tt || |C ~6 || || || || || || || || || || tt tt tt tc .. t3 || |C ^3 ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ "
-		"^^ tt .. .. rr .. .. .. .. .. rr .. .. tt || ~3 ~c tt tt tt tt tt tt tt tt || || tt t# .. .. tC tt || ^b ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ "
-		"^^ tt .. .. rr rr rr .. rr rr rr .. .. || |C ~6 t3 tt tt tt tt tt tt tt tt tt || tt .. t3 tt tt || || |% ^a ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ "
-		"^^ tt tA .. .. .. .. .. .. bb .. .. tC || ~3 ~c tt xx xx xx xx xx xx xx xx tt tt tc .. tt tt tt tt tt tt t5 ^a ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ "
-		"^^ tt t5 tA .. .. .. .. bb {8 tC t3 tt || ~6 t3 tt xx cc cc cc cc cc cc xx te bb .. tC tt tt tt tt tt tt tt tt td ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ "
-		"^^ ta tt t5 .. .. .. {c ^^ ^c t3 tt || || ~6 tt tt xx cc xx cc cc cc cc xx .. .. .. t3 tt xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx ^^ ^^ "
-		"^^ ^5 tt tt tA .. {c ^^ ^^ t3 tt || tt tc ~6 tt tt xx xx xx cc cc cc cc cc .. .. bb tt tt xx cc cc cc cc cc cc cc cc xx cc cc cc cc cc xx ^^ ^^ "
-		"^^ ^^ ta tt tt td ^^ ^^ ^c tt tt || tt ~3 ~c tt tt tt t5 xx cc cc cc cc xx .. .. tb tt tt xx cc cc x! cc cc x! cc cc xx cc cc cc cc cc xx ^^ ^^ "
-		"^^ ^^ ^5 ta tc ^3 ^^ ^^ t3 tt tt || tt ~6 t3 tt tt tt tt xx cc cc cc cc xx .. .. bb tt tt xx xx xx xx cc cc xx xx xx xx cc cc cc cc cc xx ^^ ^^ "
-		"^^ ^^ ^^ ^^ ^^ ^^ ^^ ^c tt || || tt tc ~6 tt || || tt tt xx xx xx && xx xx .. .. .. ta tt xx cc cc cc cc cc cc cc cc xx cc cc cc cc cc xx ^^ ^^ "
-		"^^ ^^ ^^ ^^ ^^ ^^ ^c t3 tt || tt tc ~3 ~c tt || || tt tt tt t5 xx xx xx t7 bb .. .. bb tt xx cc cc x! cc cc x! cc cc xx cc cc cc cc cc xx ^^ ^^ "
-		"^^ ^^ ^^ ^^ ^^ t3 tt tt tt tt tc ~3 ~c t3 tt || || || tt tt tt tt tt tt tt td .. .. tb tt xx xx xx xx cc cc xx xx xx xx xx xx xx cc cc xx ^^ ^^ "
-		"^^ ^^ ^^ ^^ ^^ tt || || || tt ~3 ~c t3 tt || || || || || || tt tt tt tt tt bb .. .. bb tt xx cc cc cc cc cc cc cc cc cc cc 00 xx cc cc xx ^^ ^^ "
-		"^^ ^^ ^^ ^^ ^^ tt || || tt tc ~6 t3 tt || || || || || || || || || tt tt tt td .. .. tb tt xx cc cc cc cc cc cc cc cc cc cc 00 xx cc cc xx ^^ ^^ "
-		"^^ |& ^a ^^ ^^ ta tt tt tc ~3 ~c tt || || || || || || || || || || || tt bb .. .. .. bb te xx cc cc 00 cc cc xx xx xx cc cc cc cc cc cc xx ^^ ^^ "
-		"^^ || |% ^a ^^ ^5 ta tL ~3 ~4 t3 tt || || || || || || || || || || || tc .. .. .. .. .. .. sI cc cc 00 cc cc && xx && cc cc cc xx cc cc xx ^^ ^^ "
-		"^^ || tt td ^a ^L ~3 ~~ ~~ ~4 tt || || || || || || || || || || || || bb .. .. .. .. .. .. cc cc cc 00 cc cc && xx && cc cc cc xx xx xx xx ^^ ^^ "
-		"^^ tt tL ~3 ~1 ~~ ~~ ~~ ~~ ~4 tt || || || || || || tt tt tt || || || t5 .. .. .. .. .. .. xx cc cc 00 cc cc xx xx xx cc cc cc cc cc cc xx ^^ ^^ "
-		"^c tL ~3 ~~ ~~ bb ~~ ~~ ~~ ~c tt || || || || || tt tc ^7 ta tt || || tt bb .. .. .. bb t7 xx cc cc cc cc cc cc cc cc cc cc 00 xx cc cc xx ^^ ^^ "
-		"~~ ~~ ~~ ~~ ~~ ~~ ~~ bb ~~ tG tt || || || || tt tc ^3 ^^ ^5 ta tt || || tt td .. .. tb tt xx cc cc cc cc cc cc cc cc cc cc 00 xx cc cc xx ^^ ^^ "
-		"bb ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~c tt || || || || || tt ^b ^^ ^^ ^^ ^d tt || || || bb .. .. bb tt xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx ^^ ^^ "
-		"~~ ~~ ~~ bb ~~ ~~ ~8 ~c tG tt || || || || || tt t5 ^a ^^ ^c t3 tt || || || td .. .. tb tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt t5 ^^ ^^ ^^ "
-		"~~ ~~ ~~ ~~ ~c tG tt tt tt || || || || || || || tt tt tt tt tt || || || tt bb .. .. bb tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt t5 ^a ^^ "
-		"~~ bb ~c tG tt tt tt tt || || || || || || || || || || || || || || || || tc .. .. .. tb tt tt || || || || || || || || || || || tt tt tt tt td ^^ "
-		"~~ ~~ || tt tt tt tt tt tt || || || || || || || || || || || || || || || bb .. .. .. bb || || || || || || || || || || || || || || || tt tc ^3 ^^ "
-		"~~ ~c || || tt tt tt tt tt || || || || || || || || || || || || || || || td .. .. tb tt || || || || || || || || || || || || || || || tt ^b ^^ ^^ "
-		"~c tG || || tt tt || || || || || || || || || || || || || || || || || || bb .. .. bb || || || || || || || || || || || || || || || || tt t5 ^a ^^ "
-		"|| || || || || || || || || || || || || || || || || || || || || || || || t5 .. .. t3 || || || || || || || || || || || || || || || || || tt t5 ^^ "
-	)
+ (list
+  "^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ~6 ^a ^^ ^c ~6 ^a ^^ ^^ ~6 || || || || || || || || || ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ "
+  "^^ ^^ ^^ ^^ ^c t7 ^^ ^^ ^^ ^^ ^^ ^^ ^^ ~6 |B || |% ~6 |# |% ^e ~6 || || || || || || || || || ^a ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ "
+  "^^ ^^ ^c t3 tt tc {5 ^^ ^^ ^^ ^^ ^^ ^^ ~a ~5 |A |C ~6 |A |C ~3 ~c || || || || || || || || || |% ^a ^^ ^^ ^^ ^^ ^c |& ^a ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ "
+  "^^ ^^ t3 tt tc t# .. {1 {5 ^^ ^^ ^^ ^c |& ~a ~1 ~~ ~~ ~~ ~1 ~c |# || || || || || || || || || || |% ^^ ^^ ^c |# || || |% ^e t3 tt tt tt t5 ^^ ^^ "
+  "^^ ^c tt t# .. .. .. .. .. {5 ^c tb tt || |% ~a ~~ bb ~~ ~c |# || || || tt tt tt tt tt tt tt tt || ^a ^c |# || || || || tt tc bb .. bb te ^a ^^ "
+  "^^ t3 tc .. .. .. .. .. .. .. bb .. t% tt || tH ~a ~~ ~c tG || || || tc t# .. .. .. t% ta tt tt || || || || || || |C ^7 tt bb .. .. .. bb t7 ^^ "
+  "^^ tt t# .. .. .. .. .. .. bb .. .. .. ta tt tt td ~6 tb tt || || tt t# tC t3 tt t5 tA .. t% ta tt tt tt || || || ^3 ^^ tt .. .. .. .. tb tt ^^ "
+  "^^ tt .. .. rr rr rr rr rr rr rr .. .. .. .. .. .. == .. t% ta tt tc .. t3 || || || || t5 .. .. .. t% tt || || |C ^^ ^^ tt bb .. .. .. bb tt ^^ "
+  "^^ tt .. .. rr .. .. .. .. .. rr .. .. tC t3 tt td ~6 t7 tA .. .. .. tC tt || || || || tt tA .. .. tC tt || |C ^3 ^^ ^^ ta t5 bb .. bb t3 tc ^^ "
+  "^^ tt .. .. rr .. .. .. .. .. rr .. .. t3 || || ~3 ~c || tt tt tt tt tt || || || || || tt t5 .. .. t3 tt || ^3 ^^ ^^ ^^ ^5 ta tt tt tt tc ^3 ^^ "
+  "^^ tt .. .. rr .. .. && .. .. .. .. .. tt || || ~6 |# || || || || || || || || || || || || tt .. tC tt || |C ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ "
+  "^^ tt .. .. rr .. .. .. .. .. rr .. .. tt || |C ~6 || || || || || || || || || || tt tt tt tc .. t3 || |C ^3 ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ "
+  "^^ tt .. .. rr .. .. .. .. .. rr .. .. tt || ~3 ~c tt tt tt tt tt tt tt tt || || tt t# .. .. tC tt || ^b ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ "
+  "^^ tt .. .. rr rr rr .. rr rr rr .. .. || |C ~6 t3 tt tt tt tt tt tt tt tt tt || tt .. t3 tt tt || || |% ^a ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ "
+  "^^ tt tA .. .. .. .. .. .. bb .. .. tC || ~3 ~c tt xx xx xx xx xx xx xx xx tt tt tc .. tt tt tt tt tt tt t5 ^a ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ "
+  "^^ tt t5 tA .. .. .. .. bb {8 tC t3 tt || ~6 t3 tt xx cc cc cc cc cc cc xx te bb .. tC tt tt tt tt tt tt tt tt td ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ "
+  "^^ ta tt t5 .. .. .. {c ^^ ^c t3 tt || || ~6 tt tt xx cc xx cc cc cc cc xx .. .. .. t3 tt xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx ^^ ^^ "
+  "^^ ^5 tt tt tA .. {c ^^ ^^ t3 tt || tt tc ~6 tt tt xx xx xx cc cc cc cc cc .. .. bb tt tt xx cc cc cc cc cc cc cc cc xx cc cc cc cc cc xx ^^ ^^ "
+  "^^ ^^ ta tt tt td ^^ ^^ ^c tt tt || tt ~3 ~c tt tt tt t5 xx cc cc cc cc xx .. .. tb tt tt xx cc cc x! cc cc x! cc cc xx cc cc cc cc cc xx ^^ ^^ "
+  "^^ ^^ ^5 ta tc ^3 ^^ ^^ t3 tt tt || tt ~6 t3 tt tt tt tt xx cc cc cc cc xx .. .. bb tt tt xx xx xx xx cc cc xx xx xx xx cc cc cc cc cc xx ^^ ^^ "
+  "^^ ^^ ^^ ^^ ^^ ^^ ^^ ^c tt || || tt tc ~6 tt || || tt tt xx xx xx && xx xx .. .. .. ta tt xx cc cc cc cc cc cc cc cc xx cc cc cc cc cc xx ^^ ^^ "
+  "^^ ^^ ^^ ^^ ^^ ^^ ^c t3 tt || tt tc ~3 ~c tt || || tt tt tt t5 xx xx xx t7 bb .. .. bb tt xx cc cc x! cc cc x! cc cc xx cc cc cc cc cc xx ^^ ^^ "
+  "^^ ^^ ^^ ^^ ^^ t3 tt tt tt tt tc ~3 ~c t3 tt || || || tt tt tt tt tt tt tt td .. .. tb tt xx xx xx xx cc cc xx xx xx xx xx xx xx cc cc xx ^^ ^^ "
+  "^^ ^^ ^^ ^^ ^^ tt || || || tt ~3 ~c t3 tt || || || || || || tt tt tt tt tt bb .. .. bb tt xx cc cc cc cc cc cc cc cc cc cc 00 xx cc cc xx ^^ ^^ "
+  "^^ ^^ ^^ ^^ ^^ tt || || tt tc ~6 t3 tt || || || || || || || || || tt tt tt td .. .. tb tt xx cc cc cc cc cc cc cc cc cc cc 00 xx cc cc xx ^^ ^^ "
+  "^^ |& ^a ^^ ^^ ta tt tt tc ~3 ~c tt || || || || || || || || || || || tt bb .. .. .. bb te xx cc cc 00 cc cc xx xx xx cc cc cc cc cc cc xx ^^ ^^ "
+  "|| || |% ^a td td ta tL ~3 ~4 t3 tt || || || || || || || || || || || tc .. .. .. .. .. .. sI cc cc 00 cc cc && xx && cc cc cc xx cc cc xx ^^ ^^ "
+  "|| || tt td td td ~3 ~~ ~~ ~4 tt || || || || || || tt tt tt || || || bb .. .. .. .. .. .. cc cc cc 00 cc cc && xx && cc cc cc xx xx xx xx ^^ ^^ "
+  "|| tt tt ~3 ~1 ~~ ~~ ~~ ~~ ~4 tt || || || || || tt tt tt tt tt || || t5 .. .. .. .. .. .. xx cc cc 00 cc cc xx xx xx cc cc cc cc cc cc xx ^^ ^^ "
+  "tt tt tt ~~ ~~ bb ~~ ~~ ~~ ~c tt || || || || tt tt tc ^7 ta tt tt || tt bb .. .. .. bb t7 xx cc cc cc cc cc cc cc cc cc cc 00 xx cc cc xx ^^ ^^ "
+  "tt tt tt ~~ ~~ ~~ ~~ bb ~~ tG tt || || || tt tt tc ^3 ^^ ^5 ta tt || || tt td .. .. tb tt xx cc cc cc cc cc cc cc cc cc cc 00 xx cc cc xx ^^ ^^ "
+  "tt tt tt tt ~~ ~~ ~~ ~~ ~c tt || || || || tt tt ^b ^^ ^^ ^^ ^d tt tt || || bb .. .. bb tt xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx ^^ ^^ "
+  "|| tt tt tt tt ~~ ~8 ~c tG tt || || || || tt tt t5 ^a ^^ ^c t3 tt tt || || td .. .. tb tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt t5 ^^ ^^ ^^ "
+  "|| || || tt tt tt tt tt tt || || || tt tt tt tt tt tt tt tt tt tt || || tt bb .. .. bb tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt tt t5 ^a ^^ "
+  "|| || || || || tt tt tt || || || tt tt tt tt tt tt tt tt tt tt || || || tc .. .. .. tb tt tt || || || || || || || || || || || tt tt tt tt td ^^ "
+  "|| || || || || tt bb tt || || tt tt bb tt || || || || || || || || || || bb .. .. .. bb || || || || || || || || || || || || || || || tt tc ^3 ^^ "
+  "|| || || || || tt tt tt tt tt tt tt tt tt || || || || || || || || || || td .. .. tb tt || || || || || || || || || || || || || || || tt ^b ^^ ^^ "
+  "|| || || || || || tt tt tt tt tt tt || || || || || || || || || || || || bb .. .. bb || || || || || || || || || || || || || || || || tt t5 ^a ^^ "
+  "|| || || || || || || || || || || || || || || || || || || || || || || || t5 .. .. t3 || || || || || || || || || || || || || || || || || tt t5 ^^ "
+  )
  )
 
 ;;----------------------------------------------------------------------------
@@ -120,9 +120,6 @@
    (put ch_melvin 44 17)
    (put ch_hackle 0 0)
    (put (mk-npc 'bull 1) 6 4)
-
-   (put (mk-npc 'dryad 8) 6 35)
-   
    )
 
  ;; on-entry-hook
@@ -130,9 +127,62 @@
 
  (list ;; edge entrances
   (list north 26 38)
+  (list east  0  30)
   )
 
  )
 
-;; (list (mk-cave-entrance 'p_cave_level_1 1 30) 44 1) 
-;;   (list (mk-wolf) 11 33)
+;;-----------------------------------------------------------------------------
+;; Make a special cave for the dryad so it doen't kill the town with its wolves
+;;-----------------------------------------------------------------------------
+(kern-mk-map
+ 'm_dryad_grove 19 19 pal_expanded
+ (list
+  "^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ "
+  "^^ ^^ ^^ ^^ ^^ || || || || || || || || || || || || ^^ ^^ "
+  "^^ ^^ ^^ .. tt tt tt || || tt tt tt || || || || || || ^^ "
+  "^^ ^^ .. .. .. tt tt tt tt tt .. tt tt tt || || || || || "
+  "^^ ^^ tt .. tt tt tt tt tt .. .. .. tt tt tt tt || || || "
+  "^^ || tt tt tt || || tt tt tt .. tt tt tt tt tt tt tt tt "
+  "^^ || || || || || || || || tt tt tt || || tt tt tt tt tt "
+  "^^ || || || || || || || || || || || || || tt tt tt .. .. "
+  "^^ || || || || || || || || || || || || || tt tt .. .. .. "
+  "^^ || || || || || || || || || || || || || tt tt .. .. .. "
+  "^^ || || tt tt tt || || || || || || || || tt tt .. .. .. "
+  "^^ || tt tt tt tt tt || || || || || || || tt tt tt .. .. "
+  "^^ || tt tt tt tt tt tt || || || || || tt tt tt tt tt tt "
+  "^^ || tt tt tt tt tt tt tt || || || || tt tt tt tt tt tt "
+  "^^ || tt tt tt tt tt tt tt || || || tt tt tt || || || || "
+  "^^ || || tt tt tt tt tt tt || || || tt tt tt || || || || "
+  "^^ || || || tt tt tt tt || || || tt tt .. tt tt || || ^^ "
+  "^^ || || || || || || || || || || tt .. .. .. tt || ^^ ^^ "
+  "^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ "
+  )
+ )
+(kern-mk-place 
+ 'p_dryad_grove ; tag
+ "Dryad Grove"   ; name
+ nil     ; sprite
+ m_dryad_grove  ; map
+ #f               ; wraps
+ #f                     ; underground
+ #f                     ; large-scale (wilderness)
+ #f                     ; tmp combat place
+ nil                    ; subplaces
+ 
+ ;; neighbors
+ (list
+  )
+ 
+ ;; objects
+ (list
+  (put (mk-npc 'dryad 8) 4 14)
+  )
+
+ nil ; hooks
+ nil ; edge entrances
+ )
+
+(mk-dungeon-level 
+ (list p_dryad_grove p_bole)
+ )
