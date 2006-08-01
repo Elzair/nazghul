@@ -60,7 +60,7 @@
        "They stays mostly inna south, away from town."))
 
 (define (bill-scared knpc kpc)
-  (say knpc "Ah wuz south and east, "
+  (say knpc "Ah wuz west o' the town, "
        "where's I hardly never go on account o' the wulves. "
        "There was a great big, old, dead oak. "
        "I sez to myself, that's a good-un! "
@@ -108,8 +108,8 @@
        (method 'haun
                (lambda (knpc kpc)
                  (say knpc "[He leans in close and whispers] "
-                      "Thar's a haunted tree southeast in a nook o' the "
-                      "hills. Scared the jinkins outta me! Har!")))
+                      "Thar's a haunted tree west o' the town. "
+                      "Scared the jinkins outta me! Har!")))
        (method 'jink bill-scared)
        (method 'ladi bill-lady)
        (method 'lady bill-lady)

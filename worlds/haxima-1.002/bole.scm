@@ -177,6 +177,7 @@
  ;; objects
  (list
   (put (mk-npc 'dryad 8) 4 14)
+  (put (kern-mk-obj t_2H_axe 1) 5 15)
   )
 
  nil ; hooks
