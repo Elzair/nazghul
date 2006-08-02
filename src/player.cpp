@@ -146,7 +146,12 @@ static bool pc_eat_food(class Character * pm, void *data)
 	consolePrint("Starving!");
 	consoleNewline();
 	consoleRepaint();
-	int damage = DAMAGE_STARVATION;
+
+        /* Partial fix for SF BUG [ 1526910 ] "starvation is lame". Instead of
+         * a fixed amount of damage, make damage proportional to existing
+         * health. The player can starve for a while before dying, but the loss
+         * of HP is a serious threat now even at high levels. */
+	int damage = max(pm->getHp()/2, 1);
 	apply_damage(pm, &damage);
 	return false;
 }

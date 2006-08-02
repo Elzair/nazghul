@@ -1290,10 +1290,22 @@ struct sprite *Character::getSprite()
 
 void Character::rest(int hours)
 {
+        int healAmount = HP_RECOVERED_PER_HOUR_OF_REST;
+        int manaAmount = MANA_RECOVERED_PER_HOUR_OF_REST;
+
+        /* Partial fix for SF BUG [ 1526910 ] "starvation is lame". Don't let
+         * the player completely rest his way out of starvation. */
+        if (isPlayerPartyMember()) {
+                if (!player_party->food) {
+                        healAmount /= 2;
+                        manaAmount /= 2;
+                }
+        }
+
 	while (hours) {
                 if (!isDead()) {
-                        heal(HP_RECOVERED_PER_HOUR_OF_REST);
-                        addMana(MANA_RECOVERED_PER_HOUR_OF_REST);
+                        heal(healAmount);
+                        addMana(manaAmount);
                 }
 		hours--;
 	}
