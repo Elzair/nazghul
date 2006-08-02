@@ -1071,12 +1071,19 @@ static int place_pathfind_is_valid_location(
         // code below avoids any mechanism which responds to the "step" signal,
         // including non-portals. That's fine, because anything which responds
         // to "step" is probably something I want to avoid.
+        //
+        // Addendum 2: fix for SF Bug #[ 1523230 ] "pathfinding across
+        // mechs". Added the new IGNORESTEPTRIG flag and wrapped the following
+        // with a check. Currently the only time this flag should be set is in
+        // pathfinding done by player party member's in Follow Mode.
         // --------------------------------------------------------------------
 
-	if ((portal = place_get_object(context->place, x, y, mech_layer)) &&
-	    portal->canStep()) {
-                //dbg("portal!\n");
-		return 0;
+	if (0 == (context->pflags & PFLAG_IGNORESTEPTRIG)) {
+                if ((portal = place_get_object(context->place, x, y, mech_layer)) &&
+                    portal->canStep()) {
+                        //dbg("portal!\n");
+                        return 0;
+                }
         }
 
         //dbg("ok\n");

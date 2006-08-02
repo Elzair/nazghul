@@ -2146,7 +2146,9 @@ void Character::exec()
                                    leader->getX(), 
                                    leader->getY(),
                                    PFLAG_IGNOREMECHS
-                                   |PFLAG_IGNORECOMPANIONS);
+                                   |PFLAG_IGNORECOMPANIONS
+                                   |PFLAG_IGNORESTEPTRIG
+                                );
                         mapCenterView(getView(), getX(), getY());
                         mapSetDirty();
                 }
