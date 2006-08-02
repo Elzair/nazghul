@@ -307,9 +307,13 @@
 		 (tprob (number->string (+ offense defense 2))))
 		(if (< (kern-dice-roll (string-append "1d" tprob))
 				oprob)
-			#t
-			#f
-			)))
+                    (begin
+                      (kern-log-msg "^c+gSpell succeeds!^c-")
+                      #t)
+                    (begin
+                      (kern-log-msg "^c+rSpell resisted!^c-")
+                      #f)
+                    )))
 
 ;; ----------------------------------------------------------------------------
 ;; All the spell cast handlers are listed here. These are the procedures that
