@@ -166,11 +166,19 @@
 (define slime-effects  (list ef_poison_immunity 
                              (list ef_split split-gob-mk 'green-slime)))
 (define yellow-slime-effects  (list ef_poison_immunity))
-(define undead-effects (list ef_poison_immunity ef_fire_immunity ef_disease_immunity))
-(define demon-effects (list ef_poison_immunity ef_fire_immunity ef_disease_immunity ef_magical_kill_immunity))
+(define undead-effects (list ef_poison_immunity 
+                             ef_fire_immunity 
+                             ef_disease_immunity 
+                             ef_sleep_immunity 
+                             ef_magical_kill_immunity))
+(define demon-effects (list ef_poison_immunity 
+                            ef_fire_immunity 
+                            ef_disease_immunity 
+                            ef_magical_kill_immunity))
 (define hydra-effects (list ef_poison_immunity ef_grow_head))
 (define drag-effects (list ef_fire_immunity))
-(define wisp-effects (list ef_poison_immunity ef_fire_immunity))
+(define wisp-effects (list ef_poison_immunity 
+                           ef_disease_immunity))
 (define fire-slime-effects (list ef_fire_immunity
                                  (list ef_split split-gob-mk 'fire-slime)))
 
@@ -776,3 +784,8 @@
 
 (define (mk-bull)
   (mk-npc 'bull 8))
+
+(define (is-undead? kchar)
+  (or (is-species? kchar sp_skeleton)
+      (is-species? kchar sp_lich)))
+      

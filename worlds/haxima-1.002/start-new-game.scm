@@ -297,7 +297,7 @@
   )
 
 (define (simple-start kplayer)
-  (kern-obj-put-at kplayer (list p_shard 52 32)
+  (kern-obj-put-at kplayer (list p_moongate_clearing 11 11)
                    ))
   ;;(kern-obj-put-at kplayer (list p_moongate_clearing 11 11)))
       
@@ -305,5 +305,5 @@
 ;; To skip the extended start scene comment out this next line and uncomment
 ;; the line after it.
 ;;----------------------------------------------------------------------------
-(kern-set-start-proc start-scene)
-;;(kern-set-start-proc simple-start)
+;;(kern-set-start-proc start-scene)
+(kern-set-start-proc simple-start)
