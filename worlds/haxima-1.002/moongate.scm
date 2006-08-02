@@ -52,10 +52,10 @@
         ;; Commented-these out to fix mouse.scm's moongate animation; doesn't
         ;; seem to effect the starting scene animation which is the only other
         ;; reference I see to this procedure. Leaving these as comments for now
-        ;; just in case.
-        ;; Update: I think commenting these out causes the destination gate to
-        ;; remain open in normal moongate travel. Need to revisit and fix all
-        ;; cases here. SF bug #1520871.
+        ;; just in case.  Update: I think commenting these out causes the
+        ;; destination gate to remain open in normal moongate travel. Need to
+        ;; revisit and fix all cases here. SF bug #1520871. Update 2: this was
+        ;; fixed in moongate-cut-scene, below.
         ;;(original-sprite (kern-obj-get-sprite kgate))
         ;;(original-light (kern-obj-get-light kgate))
         (loc (kern-obj-get-location kgate)))
@@ -80,6 +80,8 @@
   (kern-map-flash 1000)
   (kern-place-synch (car (kern-obj-get-location dest-kgate)))
   (moongate-animate dest-kgate moongate-stages)
+  ;; "erase" the destination gate so it doesn't look like it remains open
+  (kern-obj-set-sprite dest-kgate (stage-sprite (car moongate-stages)))
   (let ((gate (kobj-gob-data src-kgate)))
     (if (moongate-is-temporary? gate)
         (moongate-destroy src-kgate))))
