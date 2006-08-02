@@ -2149,7 +2149,7 @@ bool cmdCastSpell(class Character * pc)
 
         // Decrement caster's mana
         pc->addMana(0 - spell->cost);
-        pc->decActionPoints(spell->cost/2);
+        pc->decActionPoints(max(spell->cost/2,1));
         pc->addExperience(spell->cost);
 
 	// If the spell was mixed then remove it from inventory.
