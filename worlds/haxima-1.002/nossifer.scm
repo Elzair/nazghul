@@ -94,5 +94,6 @@
                 (noss-mk))))
     (map (lambda (eff) (kern-obj-add-effect kchar eff nil))
          demon-effects)
+    (kern-obj-add-effect kchar ef_charm_immunity nil)
     kchar
     ))
