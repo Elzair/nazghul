@@ -561,6 +561,14 @@
 (define (in-nox-por  caster)
   (let ((range (+ 3 (floor (/ (occ-ability-blackmagic caster) 3)))))
   (user-cast-ranged-targeted-spell caster range cast-poison-missile-proc)))
+  
+(define (bet-flam-hur caster)
+  (define (flambe-all kobj)
+    (if (is-being? kobj)
+        (burn kobj)))
+  (cone-simple caster 3.3
+	(mk-basic-cone-proc flambe-all F_fire 0
+	caster)))	
 
 ;;----------------------------------------------------------------------------
 ;; Third Circle
@@ -1033,6 +1041,7 @@
       (list 'rel_hur     "Rel Hur spell"     rel-hur     "RH"  2 context-any  (list sulphorous_ash blood_moss))
       (list 'in_nox_por  "In Nox Por spell"  in-nox-por  "INP" 2 context-town (list nightshade blood_moss black_pearl))
       (list 'an_xen_bet  "An Xen Bet spell"  an-xen-bet  "AXB" 2 context-town (list spider_silk garlic))
+      (list 'bet_flam_hur  "Bet Flam Hur spell"  bet-flam-hur  "BFH"  2 context-town (list black_pearl sulphorous_ash blood_moss))
 
       ;; Third Circle
       (list 'in_flam_grav  "In Flam Grav spell"  in-flam-grav  "IFG" 3 context-town (list sulphorous_ash black_pearl spider_silk))
