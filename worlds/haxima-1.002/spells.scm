@@ -280,6 +280,133 @@
            ;;(println " doing lines")
            (map doline (cdr lines))
            (kern-map-repaint)))))
+		   
+(define pi (* 2 (acos 0)))
+		   
+(define (xy->angle x y)
+	(if (equal? x 0)
+		(cond ((> y 0) (atan 999999))
+			((< y 0) (atan -999999))
+			(else 0))
+		(if (< x 0)
+			(+ (atan (/ y x)) pi)
+			(atan (/ y x)))))
+
+(define (cone-in-range x y range)
+	(< (+ (* x x) (* y y)) (* range range)))
+		
+(define (angle-wrap angle)
+	(cond ((< angle 0) (angle-wrap (+ angle (* 2 pi))))
+		((> angle (* 2 pi)) (angle-wrap (- angle (* 2 pi))))
+		(else angle)))
+		
+(define (angle-diff baseangle testangle)
+	(- (angle-wrap (- testangle baseangle pi)) pi))
+
+(define (cone-in-angle x y minangle maxangle)
+	(let ((tangle (xy->angle x y)))
+		(if (< (angle-diff minangle maxangle) 0)
+			(or (>= (angle-diff minangle tangle) 0)
+				(<= (angle-diff maxangle tangle) 0))
+			(and (>= (angle-diff minangle tangle) 0)
+				(<= (angle-diff maxangle tangle) 0))
+			)))
+	
+(define (cone-get-edge x y inlist)
+	(cons (list y x) 
+	(cons (list x y) inlist)))
+	
+(define (cone-get-initial n inlist)
+	(cone-get-edge (- 0 n) 0
+	(cone-get-edge n 0 inlist)))
+	
+(define (cone-get-sides n m inlist)
+	(if (< m n)
+		(cone-get-sides n (+ m 1)
+			(cone-get-edge n m
+			(cone-get-edge (- 0 n) m
+			(cone-get-edge n (- 0 m)
+			(cone-get-edge (- 0 n) (- 0 m) inlist))))
+		)
+		inlist))
+
+(define (cone-get-corners n inlist)
+	(cons (list n n)
+	(cons (list (- 0 n) (- 0 n) )
+	(cone-get-edge (- 0 n) n inlist))))
+	
+(define (cone-get-box n)
+	(cone-get-sides n 1
+	(cone-get-corners n
+	(cone-get-initial n nil))))
+			
+(define (cone-check-cell origin minangle maxangle range proc cell)
+	(let* ((x (car cell))
+			(y (cadr cell))
+			(loc (list (car origin) (+ (cadr origin) x) (+ y (caddr origin)))))
+		(if (and (cone-in-range x y range)
+					(cone-in-angle x y minangle maxangle)
+					(kern-is-valid-location? loc)
+					(kern-in-los? origin loc)
+					(not (kern-place-blocks-los? loc)))
+				(proc loc)
+				)))
+			
+			
+(define (cone-handle-box origin minangle maxangle range proc list)
+	(if (null? list)
+		(println "donebox")
+		(begin		
+			(cone-check-cell origin minangle maxangle range proc (car list))
+			(cone-handle-box origin minangle maxangle range proc (cdr list))
+		)))
+
+			
+(define (cone-area-slice n origin minangle maxangle range proc)
+	(if (< n range)
+		(begin
+			(cone-handle-box origin minangle maxangle range proc
+				(cone-get-box n))
+			(cone-area-slice (+ n 1) origin minangle maxangle range proc)
+		)))
+			
+(define (cone-area-effect origin angle range width proc)
+	(let ((minangle (angle-wrap (- angle (/ width 2))))
+		(maxangle (angle-wrap (+ angle (/ width 2)))))
+	(cone-area-slice 1 origin minangle maxangle range proc)
+    ))
+	
+(define (cone-simple caster range proc)
+	(let ((origin (kern-obj-get-location caster))
+		(target (get-target-loc caster range)))
+		(if (null? target)
+			#f
+			(let ((x (- (cadr target) (cadr origin))) 
+				(y (- (caddr target) (caddr origin)))) 
+			(cone-area-effect origin (xy->angle x y) range (/ pi 2) proc))
+		)))
+		
+(define (mk-basic-cone-proc objfx field-type leaveprob caster)
+	(define (dropfield loc)
+		(if (kern-obj-put-at (kern-mk-obj field-type 1) loc)))
+	(define (is-my-field? kobj) (eqv? field-type (kern-obj-get-type kobj)))
+	(define (cleanfields loc)
+		(if	(or (not (terrain-ok-for-field? loc))
+				(> (kern-dice-roll "1d100") leaveprob))
+			(let ((fields (filter is-my-field? (kern-get-objects-at loc))))
+				(cond ((null? fields) nil)
+					(else
+						(kern-obj-remove (car fields)))))))
+	(lambda (loc)
+			(if (not (null? objfx))
+				(map objfx (kern-get-objects-at loc)))
+			(if (not (null? field-type))
+				(begin
+					(dropfield loc)
+					(kern-map-repaint)
+					(cleanfields loc)
+				))))
+
 
 ;;----------------------------------------------------------------------------
 ;; Core actions behind spells, special abilities, etc. No UI prompting, no mana
@@ -730,20 +857,23 @@
 ;; ----------------------------------------------------------------------------
 
 (define (in-nox-hur  caster)
-  (define (poison-foe kobj)
-    (if (is-hostile? caster kobj)
+  (define (poison-all kobj)
+    (if (is-being? kobj)
         (apply-poison kobj)))
-  (cast-wind-spell (kern-obj-get-location caster)
-                   poison-foe
-                   F_poison))
+  (cone-simple caster 10
+	(mk-basic-cone-proc poison-all F_poison (* (occ-ability-blackmagic caster) 5)
+	caster)))
 
 (define (in-zu-hur  caster)
-  (define (lullaby-foe kobj)
-    (if (is-hostile? caster kobj)
-        (apply-sleep kobj)))
-  (cast-wind-spell (kern-obj-get-location caster)
-                   lullaby-foe
-                   F_sleep))
+  (define (sleep-all kobj)
+    (if (and (is-being? kobj)
+			(contest-of-skill
+				(+ (occ-ability-blackmagic caster) 6)
+				(occ-ability-magicdef kobj)))
+			(apply-sleep kobj)))
+  (cone-simple caster 10
+	(mk-basic-cone-proc sleep-all F_sleep (* (occ-ability-blackmagic caster) 5)
+	caster)))
 
 (define (in-quas-corp  caster)
   (define (repel kchar)
@@ -798,21 +928,23 @@
 ;; Eighth Circle
 ;; ----------------------------------------------------------------------------
 
+
+
 (define (in-flam-hur caster)
-  (define (flambe-foe kobj)
-    (if (is-hostile? caster kobj)
+  (define (flambe-all kobj)
+    (if (is-being? kobj)
         (burn kobj)))
-  (cast-wind-spell (kern-obj-get-location caster)
-                   flambe-foe
-                   F_fire))
+  (cone-simple caster 10
+	(mk-basic-cone-proc flambe-all F_fire (* (occ-ability-blackmagic caster) 5)
+	caster)))
 
 (define (in-vas-grav-corp  caster)
-  (define (energize-foe kobj)
-    (if (is-hostile? caster kobj)
+  (define (energize-all kobj)
+    (if (is-being? kobj)
         (apply-lightning kobj)))
-  (cast-wind-spell (kern-obj-get-location caster)
-                   energize-foe
-                   F_energy))
+  (cone-simple caster 10
+	(mk-basic-cone-proc energize-all F_energy (* (occ-ability-blackmagic caster) 5)
+	caster)))
 
 (define (an-tym  caster)
   (let ((spower (floor (+ (/ (occ-ability-whitemagic caster) 3) 1))))
