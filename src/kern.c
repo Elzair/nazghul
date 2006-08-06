@@ -3886,6 +3886,7 @@ KERN_API_CALL(kern_mk_effect)
         pointer rm_proc = sc->NIL;
         pointer restart_proc = sc->NIL;
         void *sprite;
+        void *dummy;
         pointer ret;
         char *name, *tag = 0, *desc, *status_code_str, *hook_name;
         int hook_id;
@@ -3918,12 +3919,11 @@ KERN_API_CALL(kern_mk_effect)
                             restart_proc, name, desc);
 
         effect->hook_id = hook_id;
-		
-        if (sprite != sc->NIL)
-                effect->sprite = (struct sprite*)sprite;
+        effect->sprite = (struct sprite*)sprite;
 
         if (unpack(sc, &args, "sdpbd", &status_code_str, &effect->detect_dc,
-                   &effect->sprite, &effect->cumulative, &effect->duration)) {
+                   &dummy /* FIXME: get rid of this here and in the scripts */, 
+                   &effect->cumulative, &effect->duration)) {
                 load_err("kern-mk-effect %s: bad args", tag);
                 goto abort;
         }

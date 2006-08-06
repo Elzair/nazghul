@@ -690,6 +690,55 @@ static void stat_scroll_container(enum StatusScrollDir dir)
 	}
 }
 
+/* status_show_effect_icon -- visitor function for
+ * status_show_party_view_character_effects(), called for each effect on a
+ * character and paints the status icons if the effect has one */
+static int status_show_effect_icon(hook_entry_t *entry, void *data)
+{
+        SDL_Rect *rect = (SDL_Rect*)data;
+        struct effect *eff = entry->effect;
+
+        /* Skip effects which have no icon. */
+        if (!eff->sprite)
+                return 0;
+
+        /* Blit the effect sprite. */
+        spritePaint(eff->sprite, 0, rect->x, rect->y);
+        
+        /* Shift the rectangle one left. */
+        rect->x -= ASCII_W;
+        
+        /* If we hit the left edge abort. */
+        if (rect->x == (Status.lineRect.x + BORDER_W)) {
+                return -1;
+        }
+
+        return 0;
+}
+
+/* status_show_party_view_character_effects -- shows the party member's effects
+ * as little mini-icons on the right side of the status line during Party View
+ * mode. */
+static void status_show_party_view_character_effects(class Character *pm, 
+                                                     SDL_Rect *rect)
+{
+        int hook;
+
+        /* remember the left edge for the limit check in the loop */
+        int left_edge = rect->x;
+
+        /* Start the rectangle on the far right */
+        rect->x = rect->x + rect->w - ASCII_W;
+
+        /* for each effect */
+        for (hook = 0; hook < OBJ_NUM_HOOKS; hook++) {
+                pm->hookForEach(hook, status_show_effect_icon, rect);
+        }
+
+        /* restore the left edge for the caller */
+        rect->x = left_edge;
+}
+
 /* status_show_party_view_character_arms -- shows the party member's readied
  * arms as little mini-icons on the right side of the status line during Party
  * View mode. */
@@ -757,12 +806,16 @@ static bool status_show_party_view_character(class Character * pm, void *data)
         /* Go to line 2 */
 	Status.lineRect.y += ASCII_H;
 
-	/* Paint the condition on line 2 */
+	/* Show character stats on line 2, left-justified. */
         status_show_character_var_stats(&Status.lineRect, pm);
 	Status.lineRect.y -= ASCII_H; /* the above auto-advances; backup to
                                        * show the condition codes on the same
                                        * line */
-	screenPrint(&Status.lineRect, SP_RIGHTJUSTIFIED, "%s", pm->getCondition());
+
+        /* Show the character effects as mini-icons right-justified on line
+         * 2 */
+        status_show_party_view_character_effects(pm, &Status.lineRect);
+	/*screenPrint(&Status.lineRect, SP_RIGHTJUSTIFIED, "%s", pm->getCondition());*/
 	Status.lineRect.y += ASCII_H;
 
 	if (Status.pcIndex != -1 && pm->getOrder() != Status.pcIndex) {
