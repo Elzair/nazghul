@@ -79,6 +79,8 @@ extern void effect_del(struct effect *et)
         closure_unref_safe(et->apply);
         closure_unref_safe(et->rm);
         closure_unref_safe(et->restart);
-		/*TODO need to free sprite? */
+        /* Need to free sprite? Nope -- sprites are global resources
+         * managed by the session. When the session is torn down it frees all
+         * of the sprites created when it loaded. */
         free(et);
 }

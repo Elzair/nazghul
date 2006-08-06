@@ -690,6 +690,9 @@ static void stat_scroll_container(enum StatusScrollDir dir)
 	}
 }
 
+/* status_show_party_view_character_arms -- shows the party member's readied
+ * arms as little mini-icons on the right side of the status line during Party
+ * View mode. */
 static void status_show_party_view_character_arms(class Character *pm, 
                                                   SDL_Rect *rect)
 {
@@ -723,7 +726,7 @@ static void status_show_party_view_character_arms(class Character *pm,
                 }
         }
 
-        /* Tell the sprite lib to zoom back in */
+        /* Tell the sprite lib to go back to unscaled sprites */
         screenZoomIn(2);
         spriteZoomIn(2);
 

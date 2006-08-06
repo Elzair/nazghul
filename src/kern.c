@@ -3885,7 +3885,7 @@ KERN_API_CALL(kern_mk_effect)
         pointer apply_proc = sc->NIL;
         pointer rm_proc = sc->NIL;
         pointer restart_proc = sc->NIL;
-		void *sprite;
+        void *sprite;
         pointer ret;
         char *name, *tag, *desc, *status_code_str, *hook_name;
         int hook_id;
@@ -3919,8 +3919,8 @@ KERN_API_CALL(kern_mk_effect)
 
         effect->hook_id = hook_id;
 		
-		if (sprite != sc->NIL)
-			effect->sprite = (struct sprite*)sprite;
+        if (sprite != sc->NIL)
+                effect->sprite = (struct sprite*)sprite;
 
         if (unpack(sc, &args, "sdpbd", &status_code_str, &effect->detect_dc,
                    &effect->sprite, &effect->cumulative, &effect->duration)) {
