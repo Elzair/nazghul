@@ -99,7 +99,7 @@ struct images *images_new(char *tag, int w, int h, int rows, int cols,
                 // BUG: Mac OS X fails to load PNG images here, but GIF works
                 // OK.  This could be a libPNG, libSDL, or libSDL_Image bug. In
                 // the meantime, better error logging is helpful.
-                printf("IMG_Load() failed to load file '%s' because '%s'.\n", 
+                err("IMG_Load() failed to load file '%s' because '%s'.\n", 
                        fname, SDL_GetError() );
                 assert(false);
                 // err("IMG_Load: %s", SDL_GetError()); The err() macro acted
