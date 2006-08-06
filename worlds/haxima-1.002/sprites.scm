@@ -490,10 +490,14 @@
 (kern-mk-sprite 's_shallow       ss_overlays 1  5 #t 0 )
 (kern-mk-sprite 's_shoals        ss_overlays 1  6 #t 0 )
 
+(kern-mk-sprite 's_torchlight	ss_effects 1  0 #f 0 )
+(kern-mk-sprite 's_light		ss_effects 1  1 #f 0 )
+(kern-mk-sprite 's_poison		ss_effects 1  2 #f 0 )
+
+
 
 ;; convenient alia
 (define s_shepherd s_companion_shepherd)
 (define s_ranger s_companion_ranger)
 (define s_blue_wizard s_companion_wizard)
 (define s_fighter s_companion_fighter)
-
