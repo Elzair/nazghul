@@ -41,6 +41,27 @@
 (mk-potion 't_cure_potion "cure potion" s_cure_potion
            (lambda (kpotion kuser) 
              (kern-obj-remove-effect kuser ef_poison)))
+			 
+(mk-potion 't_xp_potion "potion of gain level" s_cure_potion
+           (lambda (kpotion kuser) 
+             (kern-char-add-experience kuser 500)))
+
+(mk-potion 't_str_potion "potion of strength" s_healing_potion
+           (lambda (kpotion kuser) 
+             (kern-char-set-strength kuser (+ (kern-char-get-base-strength kuser) 1))))
+			 
+(mk-potion 't_dex_potion "potion of dexterity" s_immunity_potion
+           (lambda (kpotion kuser) 
+            (kern-char-set-dexterity kuser (+ (kern-char-get-base-dexterity kuser) 1))))
+			 
+(mk-potion 't_int_potion "potion of intelligence" s_mana_potion
+           (lambda (kpotion kuser) 
+            (kern-char-set-intelligence kuser (+ (kern-char-get-base-intelligence kuser) 1))))
+
+(mk-potion 't_info_potion "potion of enlightenment" s_mana_potion
+           (lambda (kpotion kuser) 
+            ()))
+
 
 ;; posion immunity (bubbly yellow) potion
 (mk-potion 't_poison_immunity_potion "immunity potion" s_immunity_potion
