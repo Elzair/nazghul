@@ -690,6 +690,47 @@ static void stat_scroll_container(enum StatusScrollDir dir)
 	}
 }
 
+static void status_show_party_view_character_arms(class Character *pm, 
+                                                  SDL_Rect *rect)
+{
+        class ArmsType *arms = NULL;
+
+        /* Use half the normal width for the arms icons. */
+        const int ICON_W = TILE_W/2;
+
+        /* remember the left edge for the limit check in the loop */
+        int left_edge = rect->x;
+
+        /* Start the rectangle on the far right */
+        rect->x = rect->x + rect->w - ICON_W;
+
+        /* Tell the sprite lib to scale down by 2x */
+        spriteZoomOut(2);
+        screenZoomOut(2);
+
+        /* for each readied armament */
+	for (arms = pm->enumerateArms(); arms != NULL; arms = pm->getNextArms()) {
+
+                /* blit it */
+                spritePaint(arms->getSprite(), 0, rect->x, rect->y);
+
+                /* shift the rectangle one left */
+                rect->x -= ICON_W;
+
+                /* if we hit the left edge abort */
+                if (rect->x == left_edge) {
+                        break;
+                }
+        }
+
+        /* Tell the sprite lib to zoom back in */
+        screenZoomIn(2);
+        spriteZoomIn(2);
+
+        /* restore the left edge for the caller */
+        rect->x = left_edge;
+}
+
 /* status_show_party_view_character -- show a party member during Party View
  * mode. */
 static bool status_show_party_view_character(class Character * pm, void *data)
@@ -705,6 +746,12 @@ static bool status_show_party_view_character(class Character * pm, void *data)
 	/* Paint the name on line 1 */
 	screenPrint(&Status.lineRect, 0, "%-*s", MAX_NAME_LEN,
 		    pm->getName());
+
+        /* Show the readied arms as scaled-down icons right-justified on line
+         * 1 */
+        status_show_party_view_character_arms(pm, &Status.lineRect);
+
+        /* Go to line 2 */
 	Status.lineRect.y += ASCII_H;
 
 	/* Paint the condition on line 2 */
@@ -728,7 +775,7 @@ static void myShowParty(void)
 {
 	/* Setup the text rectangle */
 	Status.lineRect.y = Status.screenRect.y;
-	Status.lineRect.w = Status.screenRect.w - TILE_W;
+	Status.lineRect.w = Status.screenRect.w - (2 * BORDER_W);
 
 	player_party->forEachMember(status_show_party_view_character, 0);
 
