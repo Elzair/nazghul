@@ -736,12 +736,18 @@ class ArmsType *Character::getNextWeapon(int *armsIndex)
 	return currentArms;
 }
 
+/* If target is null, then it cant be in range.
+  If weapon is null, then theres no range limitation, so target is
+  considered 'in range' */
 bool Character::isAttackTargetInRange(class ArmsType *weapon)
 {
 	int dx, dy, distance;
 
-	if (target == NULL || weapon == NULL)
+	if (target == NULL)
 		return false;
+		
+	if (weapon == NULL)
+		return true;
 
 	dx = target->getX() - getX();
 	dy = target->getY() - getY();
