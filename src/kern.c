@@ -3887,12 +3887,12 @@ KERN_API_CALL(kern_mk_effect)
         pointer restart_proc = sc->NIL;
         void *sprite;
         pointer ret;
-        char *name, *tag, *desc, *status_code_str, *hook_name;
+        char *name, *tag = 0, *desc, *status_code_str, *hook_name;
         int hook_id;
 
-        if (unpack(sc, &args, "ysscccccs", &tag, &name, &desc, &sprite, &exec_proc,
+        if (unpack(sc, &args, "ysspccccs", &tag, &name, &desc, &sprite, &exec_proc,
                    &apply_proc, &rm_proc, &restart_proc, &hook_name)) {
-                load_err("kern-mk-effect: bad args");
+                load_err("kern-mk-effect %s: bad args", tag);
                 return sc->NIL;
         }
 
@@ -3924,7 +3924,7 @@ KERN_API_CALL(kern_mk_effect)
 
         if (unpack(sc, &args, "sdpbd", &status_code_str, &effect->detect_dc,
                    &effect->sprite, &effect->cumulative, &effect->duration)) {
-                load_err("kern-mk-effect: bad args");
+                load_err("kern-mk-effect %s: bad args", tag);
                 goto abort;
         }
 
