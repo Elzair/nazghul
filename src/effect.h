@@ -49,6 +49,7 @@ struct effect {
         int cumulative;         /* more then one instance can be attached */
         int duration;           /* minutes before expire (-1 for never) */
         int hook_id;            /* hook the effect attaches to */
+        struct sprite *status_icon; /* 8x16 sprite for status window */
 };
 
 /* Create the closure and dup the strings. Zero out other fields (caller must
