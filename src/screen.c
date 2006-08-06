@@ -75,6 +75,14 @@ Uint32 Cyan;
 Uint32 Magenta;
 Uint32 Gray;
 
+Uint32 TextRed;
+Uint32 TextGreen;
+Uint32 TextBlue;
+Uint32 TextYellow;
+Uint32 TextCyan;
+Uint32 TextMagenta;
+
+
 SDL_Color fontWhite = { 0xff, 0xff, 0xff, 0x00 };
 SDL_Color fontBlack = { 0, 0, 0, 0 };
 
@@ -84,12 +92,18 @@ void screenInitColors(void)
 	Black   = SDL_MapRGB(Screen->format, 0x00, 0x00, 0x00);
 	White   = SDL_MapRGB(Screen->format, 0xff, 0xff, 0xff);
 	Red     = SDL_MapRGB(Screen->format, 0xff, 0x00, 0x00);
+	TextRed = SDL_MapRGB(Screen->format, 0xff, 0x99, 0x99);
 	Green   = SDL_MapRGB(Screen->format, 0x00, 0xff, 0x00);
+	TextGreen = SDL_MapRGB(Screen->format, 0x99, 0xff, 0x99);
 	Blue    = SDL_MapRGB(Screen->format, 0x00, 0x00, 0xff);
-        Yellow  = SDL_MapRGB(Screen->format, 0xff, 0xff, 0x00);
-        Cyan    = SDL_MapRGB(Screen->format, 0x00, 0xff, 0xff);
-        Magenta = SDL_MapRGB(Screen->format, 0xff, 0xff, 0x00);
-        Gray    = SDL_MapRGB(Screen->format, 0x80, 0x80, 0x80);
+	TextBlue = SDL_MapRGB(Screen->format, 0x99, 0x99, 0xff);
+    Yellow  = SDL_MapRGB(Screen->format, 0xff, 0xff, 0x00);
+	TextYellow = SDL_MapRGB(Screen->format, 0xff, 0xff, 0x99);
+	Cyan    = SDL_MapRGB(Screen->format, 0x00, 0xff, 0xff);
+	TextCyan = SDL_MapRGB(Screen->format, 0x99, 0xff, 0xff);
+	Magenta = SDL_MapRGB(Screen->format, 0xff, 0xff, 0x00);
+	TextMagenta = SDL_MapRGB(Screen->format, 0xff, 0x99, 0xff);
+	Gray    = SDL_MapRGB(Screen->format, 0x80, 0x80, 0x80);
 }
 
 void screenInitScreen(void)

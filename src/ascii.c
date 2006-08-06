@@ -54,12 +54,12 @@ static Uint32  asciiDecodeColor(char clr)
         switch (clr) {
         case 'w': return White;
         case 'B': return Black;
-        case 'r': return Red;
-        case 'g': return Green;
-        case 'b': return Blue;
-        case 'y': return Yellow;
-        case 'c': return Cyan;
-        case 'm': return Magenta;
+        case 'r': return TextRed;
+        case 'g': return TextGreen;
+        case 'b': return TextBlue;
+        case 'y': return TextYellow;
+        case 'c': return TextCyan;
+        case 'm': return TextMagenta;
         case 'G': return Gray;
         default:
                 warn("Color '%c' unknown\n", clr);

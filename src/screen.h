@@ -41,6 +41,13 @@ extern Uint32 Cyan;
 extern Uint32 Magenta;
 extern Uint32 Gray;
 
+extern Uint32 TextRed;
+extern Uint32 TextGreen;
+extern Uint32 TextBlue;
+extern Uint32 TextYellow;
+extern Uint32 TextCyan;
+extern Uint32 TextMagenta;
+
 extern SDL_Color fontWhite;
 extern SDL_Color fontBlack;
 
