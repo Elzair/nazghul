@@ -79,5 +79,6 @@ extern void effect_del(struct effect *et)
         closure_unref_safe(et->apply);
         closure_unref_safe(et->rm);
         closure_unref_safe(et->restart);
+		/*TODO need to free sprite? */
         free(et);
 }
