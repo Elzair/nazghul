@@ -50,6 +50,21 @@
 #define TALL_H (SCREEN_H - 4 * BORDER_H - 6 * ASCII_H)
 #define MAX_TITLE_LEN (STAT_CHARS_PER_LINE-2)
 
+/* Standard color scheme */
+#define STAT_LABEL_CLR        'G'
+#define STAT_BONUS_CLR        'g'
+#define STAT_PENALTY_CLR      'r'
+#define STAT_NULL_CLR         'w'
+#define STAT_OK_CLR           'g'
+#define STAT_WARNING_CLR      'y'
+#define STAT_CRITICAL_CLR     'r'
+#define STAT_FRIENDLY_CLR     'g'
+#define STAT_NEUTRAL_CLR      'y'
+#define STAT_HOSTILE_CLR      'r'
+#define STAT_PARTY_MEMBER_CLR 'c'
+#define STAT_INUSE_CLR        'g'
+#define STAT_UNAVAIL_CLR      'G'
+
 enum ZtatsView {
 	ViewMember = 0,
 	ViewArmaments,
@@ -265,10 +280,10 @@ static char status_arms_stat_color(char *dice)
 {
         int avg = dice_average(dice);
         if (avg < 0)
-                return 'r';
+                return STAT_PENALTY_CLR;
         if (avg > 0)
-                return 'g';
-        return 'w';
+                return STAT_BONUS_CLR;
+        return STAT_NULL_CLR;
 }
 
 /* status_show_arms_stats -- helper function to print the arms stats the same
@@ -280,10 +295,14 @@ static void status_show_arms_stats(SDL_Rect *rect, ArmsType *arms)
         char *dad = arms->getDamageDice();
         char *ard = arms->getArmorDice();
         screenPrint(rect, 0, 
-                 "^c+y   TH:^c%c%s ^cyTD:^c%c%s ^cyDA:^c%c%s ^cyAR:^c%c%s^c-", 
+                 "^c+%c   TH:^c%c%s ^c%cTD:^c%c%s ^c%cDA:^c%c%s ^c%cAR:^c%c%s^c-", 
+                    STAT_LABEL_CLR,
                     status_arms_stat_color(thd), thd,
+                    STAT_LABEL_CLR,
                     status_arms_stat_color(tdd), tdd,
+                    STAT_LABEL_CLR,
                     status_arms_stat_color(dad), dad,
+                    STAT_LABEL_CLR,
                     status_arms_stat_color(ard), ard
                 );
         rect->y += (TILE_H - ASCII_H);
@@ -319,8 +338,8 @@ static void status_show_ztat_arms(SDL_Rect * rect, void *thing)
 
         /* quantity and name */
         if (ie->ref) {
-                screenPrint(rect, 0, "%2d %s ^c+G[%d in use]^c-", ie->count,
-                            arms->getName(), ie->ref);
+                screenPrint(rect, 0, "%2d %s ^c+%c[%d in use]^c-", ie->count,
+                            arms->getName(), ie->ref, STAT_INUSE_CLR);
         } else {
                 screenPrint(rect, 0, "%2d %s", ie->count, arms->getName());
         }
@@ -357,13 +376,13 @@ static void status_show_ready_arms(SDL_Rect * rect, void *thing)
         /* quantity and name */
         if (avail) {
                 screenPrint(rect, 0, "^c+%c%2d%c%s^c-",
-                            (inUse?'g':'w'),
+                            (inUse?STAT_INUSE_CLR:STAT_NULL_CLR),
                             ie->count,
                             (inUse?'*':' '),
                             arms->getName());
         } else {
                 screenPrint(rect, 0, "^c+%c--%c%s^c-",
-                            (inUse?'g':'G'),
+                            (inUse?STAT_INUSE_CLR:STAT_UNAVAIL_CLR),
                             (inUse?'*':' '),
                             arms->getName());
         }
@@ -379,11 +398,11 @@ static void status_show_ready_arms(SDL_Rect * rect, void *thing)
 static char status_range_color(int cur, int max)
 {
         if (cur > max/2) {
-                return 'g';
+                return STAT_OK_CLR;
         } else if (cur > max/4) {
-                return 'y';
+                return STAT_WARNING_CLR;
         } else {
-                return 'r';
+                return STAT_CRITICAL_CLR;
         }
 }
 
@@ -423,11 +442,14 @@ static void status_show_character_var_stats(SDL_Rect *rect, class Character *pm)
 {
         /* Show the xp, hp and mp */
         screenPrint(rect, 0, 
-                    "^c+yHP:^c%c%d^cw/%d ^cyMP:^c%c%d^cw/%d ^cyXP:^cw%d/%d^c-"
+                    "^c+%cHP:^c%c%d^cw/%d ^c%cMP:^c%c%d^cw/%d ^c%cXP:^cw%d/%d^c-"
+                    , STAT_LABEL_CLR
                     , status_range_color(pm->getHp(), pm->getMaxHp())
                     , pm->getHp(), pm->getMaxHp()
+                    , STAT_LABEL_CLR
                     , status_range_color(pm->getMana(), pm->getMaxMana())
                     , pm->getMana(), pm->getMaxMana()
+                    , STAT_LABEL_CLR
                     , pm->getExperience()
                     , pm->getXpForLevel(pm->getLevel()+1)
                 );
@@ -446,10 +468,14 @@ static void status_show_ztat_character(SDL_Rect *rect, void *thing)
 
 	/* Show the level and base attributes */
 	screenPrint(rect, 0, 
-                    "^cyLvl:^cw%d ^cyStr:^cw%d ^cyInt:^cw%d ^cyDex:^cw%d"
+                    "^c%cLvl:^cw%d ^c%cStr:^cw%d ^c%cInt:^cw%d ^c%cDex:^cw%d"
+                    , STAT_LABEL_CLR
                     , pm->getLevel()
+                    , STAT_LABEL_CLR
                     , pm->getStrength()
+                    , STAT_LABEL_CLR
                     , pm->getIntelligence()
+                    , STAT_LABEL_CLR
                     , pm->getDexterity()
                 );
         rect->y += ASCII_H;
@@ -461,22 +487,26 @@ static void status_show_ztat_character(SDL_Rect *rect, void *thing)
         mmode = pm->getMovementMode();
         assert(mmode);
         screenPrint(rect, 0
-                    , "^cyMove:^cw%s ^cySpe:^cw%s ^cyOcc:^cw%s"
+                    , "^c%cMove:^cw%s ^c%cSpe:^cw%s ^c%cOcc:^cw%s"
+                    , STAT_LABEL_CLR
                     , mmode->name
+                    , STAT_LABEL_CLR
                     , pm->species ? pm->species->name:"?"
+                    , STAT_LABEL_CLR
                     , pm->occ ? pm->occ->name : "none"
                 );
 	rect->y += ASCII_H;
 
         /* Show effects */
-	screenPrint(rect, SP_CENTERED , "^cy*** Effects ***^cw");
+	screenPrint(rect, SP_CENTERED , "^c%c*** Effects ***^cw", 
+                    STAT_LABEL_CLR);
         rect->y += ASCII_H;
         for (i = 0; i < OBJ_NUM_HOOKS; i++) {
                 pm->hookForEach(i, status_show_effect, rect);
         }
 
 	/* Show arms */
-	screenPrint(rect, SP_CENTERED , "^cy*** Arms ***^cw");
+	screenPrint(rect, SP_CENTERED , "^c%c*** Arms ***^cw", STAT_LABEL_CLR);
         rect->y += ASCII_H;
 
 #if 1
