@@ -397,14 +397,19 @@ int status_show_effect(hook_entry_t *entry, void *data)
                 return 0;
         }
 
+        /* Blit the effect icon, if it has one */
+        if (effect->sprite) {
+                spritePaint(effect->sprite, 0, rect->x, rect->y);
+        }
+
+        rect->x += ASCII_W;
+
         if (-1 == entry->effect->duration) {
-                screenPrint(rect, 0, "%c %s (permanent)"
-                            , entry->effect->status_code
+                screenPrint(rect, 0, " %s (permanent)"
                             , entry->effect->name
                         );
         } else {
-                screenPrint(rect, 0, "%c %s [%d min]"
-                            , entry->effect->status_code
+                screenPrint(rect, 0, " %s [%d min]"
                             , entry->effect->name
                             , entry->effect->duration
                         );
