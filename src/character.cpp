@@ -112,11 +112,9 @@ Character::Character(char *tag, char *name,
         : hm(0), xp(xp_), order(-1),
           sleeping(false),
           ac(0), 
-          armsIndex(-1),
           str(str), intl(intl),
           dex(dex), mana(mp), lvl(lvl),
-          solo(false),
-          currentArms(NULL), target(NULL),
+          solo(false), target(NULL),
           rdyArms(NULL),
           fleeing(false), fleeX(0), fleeY(0), burden(0),
           inCombat(false),
@@ -179,11 +177,10 @@ Character::Character(char *tag, char *name,
 Character::Character():hm(0), xp(0), order(-1),
                        sleeping(false),
                        ac(0), 
-                       armsIndex(-1),
                        str(0), intl(0),
                        dex(0), mana(0), lvl(0),
                        playerControlled(true), solo(false),
-                       currentArms(NULL), target(NULL),
+                       target(NULL),
                        rdyArms(NULL),
                        fleeing(false), fleeX(0), fleeY(0), burden(0),
                        inCombat(false),
@@ -719,30 +716,31 @@ void Character::remove()
         obj_dec_ref(this);
 }
 
-class ArmsType *Character::enumerateWeapons(void)
+class ArmsType *Character::enumerateWeapons(int *armsIndex)
 {
-	armsIndex = -1;
-	currentArms = NULL;
-	getNextWeapon();
+	*armsIndex = -1;
+	class ArmsType *currentArms;
+	currentArms = getNextWeapon(armsIndex);
 	if (!currentArms)
 		currentArms = species->weapon;
 	return currentArms;
 }
 
-class ArmsType *Character::getNextWeapon(void)
+class ArmsType *Character::getNextWeapon(int *armsIndex)
 {
+	class ArmsType *currentArms;
 	do {
-		getNextArms();
+		currentArms = getNextArms(armsIndex);
 	} while (currentArms != NULL 
                  && dice_average(currentArms->getDamageDice()) <= 0);
 	return currentArms;
 }
 
-bool Character::isAttackTargetInRange()
+bool Character::isAttackTargetInRange(class ArmsType *weapon)
 {
 	int dx, dy, distance;
 
-	if (target == NULL || currentArms == NULL)
+	if (target == NULL || weapon == NULL)
 		return false;
 
 	dx = target->getX() - getX();
@@ -755,14 +753,14 @@ bool Character::isAttackTargetInRange()
 
 	distance = (dx > dy) ? (dx + (dy >> 1)) : (dy + (dx >> 1));
 
-	return (currentArms->getRange() >= distance);
+	return (weapon->getRange() >= distance);
 }
 
-class Character *Character::getAttackTarget(void)
+class Character *Character::getAttackTarget(class ArmsType *weapon)
 {
 	// Is the old target still valid?
 	if (!target || !target->isOnMap() || target->isDead() ||
-	    !isAttackTargetInRange() || !target->isVisible()) {
+	    !isAttackTargetInRange(weapon) || !target->isVisible()) {
 		setAttackTarget(this);
 		return this;
 	}
@@ -772,46 +770,41 @@ class Character *Character::getAttackTarget(void)
 
 bool Character::hasReadied(class ArmsType * arms)
 {
-	class ArmsType *readied = enumerateArms();
+	int armsIndex = -1;
+	class ArmsType *readied = enumerateArms(&armsIndex);
 	while (readied != NULL && readied != arms)
-		readied = getNextArms();
+		readied = getNextArms(&armsIndex);
 	return readied == arms;
 }
 
-class ArmsType *Character::enumerateArms(void)
+class ArmsType *Character::enumerateArms(int *armsIndex)
 {
-	armsIndex = -1;
-	currentArms = NULL;
-	getNextArms();
-	return currentArms;
+	*armsIndex = -1;
+	return getNextArms(armsIndex);
 }
 
-class ArmsType *Character::getNextArms(void)
+class ArmsType *Character::getNextArms(int *armsIndex)
 {
 	// Advance to the next slot
-	armsIndex++;
+	// *armsIndex++ doesnt work for some reason...
+	*armsIndex=*armsIndex+1;
 
 	// Search remaining slots for a weapon
-	for (; armsIndex < species->n_slots; armsIndex++) {
+	for (; *armsIndex < species->n_slots; *armsIndex=*armsIndex+1) {
 
 		// Is anything in this slot?
-		if (rdyArms[armsIndex] == NULL)
+		if (rdyArms[*armsIndex] == NULL)
 			continue;
 
 		// Is this just another slot for the same weapon (happens in
 		// the case of multi-slotted weapons like 2h swords)?
-		if (currentArms == rdyArms[armsIndex] &&
-		    currentArms->getNumHands() == 2)
+		if (armsIndex > 0 && rdyArms[*armsIndex-1] == rdyArms[*armsIndex] &&
+		    rdyArms[*armsIndex]->getNumHands() == 2)
 			continue;
 
-		currentArms = rdyArms[armsIndex];
-		if (!currentArms)
-			continue;
-
-		return currentArms;
+		return rdyArms[*armsIndex];
 	}
-
-	currentArms = NULL;
+	
 	return 0;
 }
 
@@ -1004,9 +997,9 @@ enum MoveResult Character::flee()
 	return move(fleeX, fleeY);
 }
 
-void Character::attackTerrain(int x, int y)
+void Character::attackTerrain(ArmsType *weapon, int x, int y)
 {
-	class ArmsType *weapon = getCurrentWeapon();
+	assert(weapon != NULL);
 	weapon->fire(getPlace(), getX(), getY(), x, y);
 	useAmmo(weapon);
 }
@@ -1391,7 +1384,8 @@ class Object *Character::clone()
 	clone->is_clone = true;
 
         // clone the readied items
-        for (ArmsType *arms = enumerateArms(); arms != NULL; arms = getNextArms()) {
+		int armsIndex = 0;
+        for (ArmsType *arms = enumerateArms(&armsIndex); arms != NULL; arms = getNextArms(&armsIndex)) {
                 clone->ready(arms);
         }
 
@@ -1570,10 +1564,6 @@ void Character::setAttackTarget(class Character * newtarget)
                 obj_inc_ref(target);
 }
 
-class ArmsType *Character::getCurrentWeapon() {
-        return currentArms;
-}
-
 bool Character::isSolo() {
         return solo;
 }
@@ -1626,8 +1616,9 @@ int Character::getDefend()
         if (isAsleep())
                 return -3; // hack: hard-coded constant
 
-        for (class ArmsType * arms = enumerateArms(); arms != NULL; 
-             arms = getNextArms()) {
+		int armsIndex=0;
+        for (class ArmsType * arms = enumerateArms(&armsIndex); arms != NULL; 
+             arms = getNextArms(&armsIndex)) {
                 defend += dice_roll(arms->getToDefendDice());
         }
         
@@ -1640,8 +1631,9 @@ int Character::getToHitPenalty()
 {
         int penalty = 0;
 
-        for (class ArmsType * arms = enumerateArms();
-             arms != NULL; arms = getNextArms()) {
+		int armsIndex=0;
+        for (class ArmsType * arms = enumerateArms(&armsIndex);
+             arms != NULL; arms = getNextArms(&armsIndex)) {
                 int roll = dice_roll(arms->getToHitDice());
                 if (roll < 0)
                         penalty += roll;
@@ -1654,8 +1646,9 @@ int Character::getArmor()
 {
         int armor = 0;
 
-        for (class ArmsType * arms = enumerateArms();
-             arms != NULL; arms = getNextArms()) {
+		int armsIndex=0;
+        for (class ArmsType * arms = enumerateArms(&armsIndex);
+             arms != NULL; arms = getNextArms(&armsIndex)) {
                 armor += dice_roll(arms->getArmorDice());
         }
 
@@ -2622,14 +2615,15 @@ void Character::save(struct save *save)
 
         // Readied items. Subtle: if this character has a container then these
         // items have already been saved.
-	arms = this->enumerateArms();
+		int armsIndex=0;
+	arms = this->enumerateArms(&armsIndex);
         if (! arms) {
                 save->write(save, "nil\n");
         } else {
                 save->enter(save, "(list\n");
                 while (arms != NULL) {
                         save->write(save, "%s\n", arms->getTag());
-                        arms = this->getNextArms();
+                        arms = this->getNextArms(&armsIndex);
                 }
                 save->exit(save, ")\n");
         }

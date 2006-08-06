@@ -480,10 +480,11 @@ static void status_show_ztat_character(SDL_Rect *rect, void *thing)
         rect->y += ASCII_H;
 
 #if 1
-	class ArmsType *arms = pm->enumerateArms();
+	int armsIndex=0;
+	class ArmsType *arms = pm->enumerateArms(&armsIndex);
 	while (arms != NULL) {
 		status_show_member_arms(rect, arms);
-		arms = pm->getNextArms();
+		arms = pm->getNextArms(&armsIndex);
 	}
 #else
         /* This was an experiment with enumerating the slots instead of the
@@ -766,7 +767,8 @@ static void status_show_party_view_character_arms(class Character *pm,
         screenZoomOut(2);
 
         /* for each readied armament */
-	for (arms = pm->enumerateArms(); arms != NULL; arms = pm->getNextArms()) {
+	int armsIndex=0;
+	for (arms = pm->enumerateArms(&armsIndex); arms != NULL; arms = pm->getNextArms(&armsIndex)) {
 
                 /* blit it */
                 spritePaint(arms->getSprite(), 0, rect->x, rect->y);

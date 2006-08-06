@@ -490,7 +490,7 @@ static void ctrl_attack_ui(class Character *character)
         class Character *target;
         struct terrain *terrain;
         class Object *mech;
-
+		
         // If in follow mode, when the leader attacks automatically switch to
         // turn-based mode.
         if (player_party->getPartyControlMode() == PARTY_CONTROL_FOLLOW &&
@@ -505,9 +505,10 @@ static void ctrl_attack_ui(class Character *character)
         penalty = character->getToHitPenalty();
 
         // Loop over all readied weapons
-        for (weapon = character->enumerateWeapons(); weapon != NULL; 
-             weapon = character->getNextWeapon()) {
-                
+		int armsIndex=0;
+        for (weapon = character->enumerateWeapons(&armsIndex); weapon != NULL; 
+             weapon = character->getNextWeapon(&armsIndex)) {
+                				
                 // prompt the user
                 cmdwin_clear();
                 cmdwin_print("Attack-");
@@ -544,7 +545,7 @@ static void ctrl_attack_ui(class Character *character)
                  * target, or it may be out of range of the weapon. The
                  * getAttackTarget routine will reevaluate the current
                  * target. */
-                target = character->getAttackTarget();
+                target = character->getAttackTarget(weapon);
 
                 if (target==character) {
                         target = ctrl_get_nearest_hostile_in_range(
@@ -569,6 +570,7 @@ static void ctrl_attack_ui(class Character *character)
                         }
                 }
 
+
                 // select the target location
                 x = target->getX();
                 y = target->getY();
@@ -579,6 +581,7 @@ static void ctrl_attack_ui(class Character *character)
                 // select_target() might be a more elegant place to put
                 // logic to prevent (or require confirm of) attacking self, 
                 // party members, etc.
+				
                 if (select_target(character->getX(), character->getY(), &x, &y,
                                   weapon->getRange()) == -1) {
                         cmdwin_print("abort!");
@@ -599,8 +602,9 @@ static void ctrl_attack_ui(class Character *character)
                         log_begin("%s: %s - ", character->getName()
                                   , weapon->getName()
                                 );
-
-                        character->attackTerrain(x, y);
+				
+                        character->attackTerrain(weapon, x, y);
+						
                         cmdwin_print("%s", terrain->name);
 
                         /* Check for a mech */
@@ -612,6 +616,7 @@ static void ctrl_attack_ui(class Character *character)
                         } else {
                                 log_end("%s hit!", terrain->name);
                         }
+
                 }
                 else if (target == character) {
 
@@ -1063,8 +1068,9 @@ static int ctrl_too_close_to_target(class Character *character,
         if (distance > 1)
                 return 0;
 
-        for (class ArmsType * weapon = character->enumerateWeapons(); 
-             weapon != NULL; weapon = character->getNextWeapon()) {
+		int armsIndex=0;
+        for (class ArmsType * weapon = character->enumerateWeapons(&armsIndex); 
+             weapon != NULL; weapon = character->getNextWeapon(&armsIndex)) {
 
                 /* if npc has at least one melee weapon then not too close */
                 if (character->hasAmmo(weapon) &&
@@ -1079,8 +1085,9 @@ static int ctrl_too_close_to_target(class Character *character,
 #if 0
 static void ctrl_unready_all_weapons(class Character *character)
 {
-        for (class ArmsType * weapon = character->enumerateWeapons(); 
-             weapon != NULL; weapon = character->getNextWeapon()) {
+		int armsIndex = 0;
+        for (class ArmsType * weapon = character->enumerateWeapons(&armsIndex); 
+             weapon != NULL; weapon = character->getNextWeapon(&armsIndex)) {
                 character->unready(weapon);
         }
 }
@@ -1176,8 +1183,9 @@ static bool ctrl_attack_target(class Character *character,
 
         penalty = character->getToHitPenalty();
 
-        for (class ArmsType * weapon = character->enumerateWeapons(); 
-             weapon != NULL; weapon = character->getNextWeapon()) {
+		int armsIndex=0;
+        for (class ArmsType * weapon = character->enumerateWeapons(&armsIndex); 
+             weapon != NULL; weapon = character->getNextWeapon(&armsIndex)) {
 
                 if (distance > weapon->getRange()) {
                         continue;
@@ -1309,8 +1317,8 @@ static class Character * ctrl_select_target(class Character *character)
 
         /* Try the old one */
         if (ctrl_is_valid_target(character,
-                                 character->getAttackTarget()))
-                return character->getAttackTarget();
+                                 character->getAttackTarget(NULL)))
+                return character->getAttackTarget(NULL);
 
         /* No valid targets */
         character->setAttackTarget(NULL);

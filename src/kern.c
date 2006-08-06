@@ -3690,8 +3690,9 @@ KERN_API_CALL(kern_char_get_readied_weapons)
         if (!ch)
                 return sc->F;
 
-        for (weapon = ch->enumerateWeapons(); weapon != NULL; 
-             weapon = ch->getNextWeapon()) {
+		int armsIndex = 0;
+        for (weapon = ch->enumerateWeapons(&armsIndex); weapon != NULL; 
+             weapon = ch->getNextWeapon(&armsIndex)) {
                     
                 /* skip "natural" weapons that are not really readied */
                 if (ch->species &&
@@ -6286,7 +6287,8 @@ KERN_API_CALL(kern_obj_find_path)
 
 static pointer kern_build_weapon_list(scheme *sc, 
                                       class Character *character, 
-                                      class ArmsType *weapon)
+                                      class ArmsType *weapon,
+									  int *armsIndex)
 {
         /* base case */
         if (! weapon)
@@ -6297,7 +6299,8 @@ static pointer kern_build_weapon_list(scheme *sc,
                      scm_mk_ptr(sc, weapon), 
                      kern_build_weapon_list(sc, 
                                             character, 
-                                            character->getNextWeapon()), 
+                                            character->getNextWeapon(armsIndex),
+											armsIndex), 
                      0);
 }
 
@@ -6313,14 +6316,17 @@ KERN_API_CALL(kern_char_get_weapons)
 
         /* recursively enumerate the character's available weapons into a
          * scheme list */
+		int armsIndex = 0;
         return kern_build_weapon_list(sc, 
                                       character, 
-                                      character->enumerateWeapons());
+                                      character->enumerateWeapons(&armsIndex),
+									  &armsIndex);
 }
 
 static pointer kern_build_arm_list(scheme *sc, 
                                       class Character *character, 
-                                      class ArmsType *arm)
+                                      class ArmsType *arm,
+									  int *armsIndex)
 {
         /* base case */
         if (! arm)
@@ -6331,7 +6337,8 @@ static pointer kern_build_arm_list(scheme *sc,
                      scm_mk_ptr(sc, arm), 
                      kern_build_arm_list(sc, 
                                             character, 
-                                            character->getNextArms()), 
+                                            character->getNextArms(armsIndex),
+											armsIndex), 
                      0);
 }
 
@@ -6347,9 +6354,11 @@ KERN_API_CALL(kern_char_get_arms)
 
         /* recursively enumerate the character's available arms into a
          * scheme list */
+		int armsIndex=0;
         return kern_build_arm_list(sc, 
                                       character, 
-                                      character->enumerateArms());
+                                      character->enumerateArms(&armsIndex),
+									  &armsIndex);
 }
 
 KERN_API_CALL(kern_char_arm_self)

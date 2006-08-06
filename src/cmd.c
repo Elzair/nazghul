@@ -1002,7 +1002,7 @@ void cmdAttack(void)
         memset(&cinfo, 0, sizeof(cinfo));
         cinfo.move = &info;
         cinfo.defend = false;
-        
+		
         // Get the direction
 	cmdwin_clear();
 	cmdwin_print("Attack-<direction>");

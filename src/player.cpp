@@ -887,8 +887,9 @@ void player_party::removeMember(class Character *c)
         assert(c->party == (class Party*)this);
 
         // Remove all its readied arms from party inventory.
-	for (class ArmsType * weapon = c->enumerateArms(); weapon != NULL; 
-             weapon = c->getNextArms()) {
+		int armsIndex = 0;
+	for (class ArmsType * weapon = c->enumerateArms(&armsIndex); weapon != NULL; 
+             weapon = c->getNextArms(&armsIndex)) {
 
 		struct inv_entry *ie;
 
@@ -947,8 +948,9 @@ bool player_party::addMember(class Character * c)
 	// Loop over all readied weapons and add them to player inventory. Also
 	// must set the refcount once they are in inventory.
 
-	for (class ArmsType * weapon = c->enumerateArms();
-	     weapon != NULL; weapon = c->getNextArms()) {
+	int armsIndex = 0;
+	for (class ArmsType * weapon = c->enumerateArms(&armsIndex);
+	     weapon != NULL; weapon = c->getNextArms(&armsIndex)) {
 
 		struct inv_entry *ie;
 

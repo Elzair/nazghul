@@ -102,10 +102,9 @@ class Character:public Being {
         virtual struct mmode *getMovementMode();
 	virtual int getArmourClass();
 	virtual char *getWoundDescription();
-	virtual class Character *getAttackTarget();
-	virtual class ArmsType *getNextArms();
-	virtual class ArmsType *getNextWeapon();
-	virtual class ArmsType *getCurrentWeapon();
+	virtual class Character *getAttackTarget(class ArmsType * weapon);
+	virtual class ArmsType *getNextArms(int * armsIndex);
+	virtual class ArmsType *getNextWeapon(int * armsIndex);
 	virtual int getLight();
 	virtual int getVisionRadius();
 	virtual int getSpeed();
@@ -178,7 +177,7 @@ class Character:public Being {
 	virtual bool unready(class ArmsType * arms);
 	virtual enum MoveResult move(int dx, int dy);
 	virtual enum MoveResult flee();
-	virtual void attackTerrain(int x, int y);
+	virtual void attackTerrain(class ArmsType *weapon, int x, int y);
 	virtual void armThyself();
 	virtual bool needToRearm();
 	virtual void resurrect();
@@ -191,8 +190,8 @@ class Character:public Being {
         virtual bool tryToRelocateToNewPlace(struct place *place, 
                                              int x, int y,
                                              struct closure *closure);
-	virtual class ArmsType *enumerateArms();
-	virtual class ArmsType *enumerateWeapons();
+	virtual class ArmsType *enumerateArms(int *armsIndex);
+	virtual class ArmsType *enumerateWeapons(int *armsIndex);
         class ArmsType *getArmsInSlot(int slot);
         virtual bool addFood(int quantity);
         virtual bool addGold(int quantity);
@@ -232,7 +231,7 @@ class Character:public Being {
 
  protected:
 	bool initCommon(void);
-	bool isAttackTargetInRange();
+	bool isAttackTargetInRange(class ArmsType *weapon);
         void getAppointment();
         
 	int hm;
@@ -246,7 +245,6 @@ class Character:public Being {
 	int order;
 	bool sleeping;
 	int ac; // used by spells
-	int armsIndex;
 	int str;
 	int intl;
 	int dex;
@@ -255,7 +253,6 @@ class Character:public Being {
         int defenseBonus;
 	bool playerControlled;
 	bool solo;
-	class ArmsType *currentArms;
 	class Character *target;
 	class ArmsType **rdyArms;
 	bool fleeing;
