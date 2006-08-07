@@ -1514,7 +1514,7 @@ int Character::getLevel() {
 
 void Character::setLevel(int val) {
         assert(val>0);
-        xp = getXpForLevel(lvl);
+        xp = getXpForLevel(val);
         lvl = val;
         setHp(getMaxHp());
         setMana(getMaxMana());
