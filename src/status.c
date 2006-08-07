@@ -438,7 +438,7 @@ int status_show_effect(hook_entry_t *entry, void *data)
         return 0;
 }
 
-static void status_show_character_var_stats(SDL_Rect *rect, class Character *pm)
+static void status_show_character_var_stats_full(SDL_Rect *rect, class Character *pm)
 {
         /* Show the xp, hp and mp */
         screenPrint(rect, 0, 
@@ -455,6 +455,26 @@ static void status_show_character_var_stats(SDL_Rect *rect, class Character *pm)
                 );
         rect->y += ASCII_H;
 }
+
+static void status_show_character_var_stats(SDL_Rect *rect, class Character *pm)
+{
+        /* Show the xp, hp and mp */
+        screenPrint(rect, 0, 
+                    "^c+%cHP:^c%c%d^cw/%d ^c%cMP:^c%c%d^cw/%d ^c%cXP:^cw%d^c%c(%d%%)^c-"
+                    , STAT_LABEL_CLR
+                    , status_range_color(pm->getHp(), pm->getMaxHp())
+                    , pm->getHp(), pm->getMaxHp()
+                    , STAT_LABEL_CLR
+                    , status_range_color(pm->getMana(), pm->getMaxMana())
+                    , pm->getMana(), pm->getMaxMana()
+                    , STAT_LABEL_CLR
+                    , pm->getLevel()
+                    , STAT_LABEL_CLR
+                    , (100 * (pm->getExperience()-pm->getXpForLevel(pm->getLevel()))/pm->getXpForLevel(pm->getLevel()))
+                );
+        rect->y += ASCII_H;
+}
+
 
 /* status_show_ztat_character -- show character stats in Ztat mode */
 static void status_show_ztat_character(SDL_Rect *rect, void *thing)
@@ -481,7 +501,7 @@ static void status_show_ztat_character(SDL_Rect *rect, void *thing)
         rect->y += ASCII_H;
 
         /* Show the xp, hp and mp */
-        status_show_character_var_stats(rect, pm);
+        status_show_character_var_stats_full(rect, pm);
 
         /* Show movement mode, class and species */
         mmode = pm->getMovementMode();
