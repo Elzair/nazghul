@@ -204,7 +204,7 @@
                  1 6 1               ; str/int/dex
                  0 0                 ; hp mod/mult
                  0 0                 ; mp mod/mult
-                 30 0 9 3            ; hp/xp/mp/lvl
+                 max-health -1 max-health 3            ; hp/xp/mp/lvl
                  #f                  ; dead
                  'shroom-conv        ; conv
                  sch_shroom          ; sched

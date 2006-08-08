@@ -14,7 +14,7 @@
                0 10 5              ; str/int/dex
                0 0                 ; hp mod/mult
                0 0                 ; mp mod/mult
-               30 0 9 9            ; hp/xp/mp/lvl
+               max-health -1 max-health 2            ; hp/xp/mp/lvl
                #f                  ; dead
                'gregor-conv        ; conv
                sch_gregor          ; sched

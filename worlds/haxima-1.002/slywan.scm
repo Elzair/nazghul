@@ -102,7 +102,6 @@
 (define (mk-slywan)
   (bind 
    (kern-char-force-drop
-   (set-level
    (kern-mk-char 
     'ch_slywan           ; tag
     "Slywan"             ; name
@@ -115,9 +114,9 @@
     0 ; hp per-level bonus
     0 ; mp off
     1 ; mp gain
-    (max-hp slywan-species slywan-occ slywan-lvl 0 0) ; hp
-    0                   ; xp
-    (max-mp slywan-species slywan-occ slywan-lvl 0 0) ; mp
+    max-health ; hp
+    -1                   ; xp
+    max-health ; mp
     slywan-lvl
     #f               ; dead
     'slywan-conv         ; conv
@@ -126,6 +125,5 @@
     (mk-chest nil nil) ;; container
     nil              ; readied
     )
-   slywan-lvl)
    #t)
    (slywan-mk)))

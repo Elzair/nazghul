@@ -211,9 +211,9 @@
       1 ;;............custom hp multiplier (per-level)
       4 ;;............custom base mp modifier
       2 ;;............custom mp multiplier (per-level)
-      (max-hp sp_human oc_wizard kathryn-start-lvl 0 0) ;; current hit points
-      0  ;;...........current experience points
-      (max-mp sp_human oc_wizard kathryn-start-lvl 0 0) ;; current magic points
+      max-health ;; current hit points
+      -1  ;;...........current experience points
+      max-health ;; current magic points
       kathryn-start-lvl  ;;..current level
       #f ;;...........dead?
       'kathryn-conv ;;conversation (optional)

@@ -104,7 +104,6 @@
 
 (define (mk-dennis)
   (bind 
-   (kern-char-set-level
    (kern-mk-char 
     'ch_dennis           ; tag
     "Dennis"             ; name
@@ -115,9 +114,9 @@
     0 1 0            ; str/int/dex
     0 0              ; hp mod/mult
     0 0              ; mp mod/mult
-    (max-hp dennis-species dennis-occ dennis-lvl 0 0) ; hp
-    0                   ; xp
-    (max-mp dennis-species dennis-occ dennis-lvl 0 0) ; mp
+    max-health ; hp
+    -1                   ; xp
+    max-health ; mp
     dennis-lvl
     #f               ; dead
     'dennis-conv         ; conv
@@ -126,5 +125,4 @@
     nil              ; container
     (list t_staff)              ; readied
     )
-   dennis-lvl)
    (dennis-mk)))

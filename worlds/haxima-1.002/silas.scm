@@ -268,7 +268,6 @@
 
 (define (mk-silas)
   (bind 
-   (kern-char-set-level
    (kern-mk-char 
     'ch_silas           ; tag
     "Silas"             ; name
@@ -279,9 +278,9 @@
     0 5 0            ; str/int/dex
     2 1              ; hp mod/mult
     2 1              ; mp mod/mult
-    (max-hp silas-species silas-occ silas-lvl 0 0) ; hp
-    0                   ; xp
-    (max-mp silas-species silas-occ silas-lvl 0 0) ; mp
+    max-health ; hp
+    -1                   ; xp
+    max-health ; mp
     silas-lvl
     #f               ; dead
     'silas-conv         ; conv
@@ -290,5 +289,4 @@
     nil              ; container
     (list t_stun_wand) ; readied
     )
-   silas-lvl)
    (silas-mk)))

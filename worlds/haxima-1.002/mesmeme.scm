@@ -103,7 +103,6 @@
 
 (define (mk-mesmeme)
   (bind 
-   (set-level
    (kern-mk-char 
     'ch_mesmeme           ; tag
     "Mesmeme"             ; name
@@ -116,9 +115,9 @@
     (/ pc-hp-gain 2) ; hp per-level bonus
     0 ; mp off
     1 ; mp gain
-    (max-hp mesmeme-species mesmeme-occ mesmeme-lvl 0 0) ; hp
-    0                   ; xp
-    (max-mp mesmeme-species mesmeme-occ mesmeme-lvl 0 0) ; mp
+    max-health ; hp
+    -1                   ; xp
+    max-health ; mp
     mesmeme-lvl
     #f               ; dead
     'mesmeme-conv         ; conv
@@ -127,5 +126,4 @@
     nil              ; container
     nil              ; readied
     )
-   mesmeme-lvl)
    (mesmeme-mk)))

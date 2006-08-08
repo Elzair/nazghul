@@ -243,9 +243,9 @@
     1 6 0            ; str/int/dex
     0 0              ; hp mod/mult
     0 0              ; mp mod/mult
-    (max-hp necr-species necr-occ necr-lvl 0 0) ; hp
-    0                   ; xp
-    (max-mp necr-species necr-occ necr-lvl 0 0) ; mp
+    max-health ; hp
+    -1                   ; xp
+    max-health ; mp
     necr-lvl
     #f               ; dead
     'necr-conv         ; conv

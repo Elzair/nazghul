@@ -89,9 +89,9 @@
     2 0 0            ; str/int/dex
     0 0              ; hp mod/mult
     0 0              ; mp mod/mult
-    (max-hp jones-species jones-occ jones-lvl 0 0) ; hp
-    0                   ; xp
-    (max-mp jones-species jones-occ jones-lvl 0 0) ; mp
+    max-health ; hp
+    -1                   ; xp
+    max-health ; mp
     jones-lvl
     #f               ; dead
     'jones-conv         ; conv

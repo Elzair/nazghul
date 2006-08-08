@@ -112,9 +112,9 @@
     2 0 1            ; str/int/dex
     0 0              ; hp mod/mult
     0 0              ; mp mod/mult
-    (max-hp jorn-species jorn-occ jorn-lvl 0 0) ; hp
-    0                ; xp
-    (max-mp jorn-species jorn-occ jorn-lvl 0 0) ; mp
+    max-health ; hp
+    -1                ; xp
+    max-health ; mp
     jorn-lvl
     #f               ; dead
     'jorn-conv       ; conv

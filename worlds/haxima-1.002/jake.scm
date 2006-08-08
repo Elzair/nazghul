@@ -138,7 +138,6 @@
 
 (define (mk-jake)
   (bind 
-   (set-level
    (kern-mk-char 
     'ch_jake           ; tag
     "Jake&Percival"             ; name
@@ -149,9 +148,9 @@
     0 0 0            ; str/int/dex
     0 0              ; hp mod/mult
     0 0              ; mp mod/mult
-    (max-hp jake-species jake-occ jake-lvl 0 0) ; hp
-    0                   ; xp
-    (max-mp jake-species jake-occ jake-lvl 0 0) ; mp
+    max-health ; hp
+    -1                   ; xp
+    max-health ; mp
     jake-lvl
     #f               ; dead
     'jake-conv         ; conv
@@ -160,5 +159,4 @@
     nil              ; container
     nil              ; readied
     )
-   jake-lvl)
    (jake-mk)))

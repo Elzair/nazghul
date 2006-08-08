@@ -156,7 +156,6 @@
 
 (define (mk-kama)
   (bind 
-   (set-level
     (kern-mk-char 
      'ch_kama           ; tag
      "Kama"             ; name
@@ -169,9 +168,9 @@
      pc-hp-gain ; hp per-level bonus
      0 ; mp off
      0 ; mp gain
-     (max-hp kama-species kama-occ kama-lvl 3 2) ; hp
-     0                   ; xp
-     (max-mp kama-species kama-occ kama-lvl 0 0) ; mp
+     max-health ; hp
+     -1                   ; xp
+     max-health ; mp
      kama-lvl
      #f               ; dead
      'kama-conv         ; conv
@@ -180,5 +179,4 @@
      nil              ; container
      nil              ; readied
      )
-    kama-lvl)
    (kama-mk)))

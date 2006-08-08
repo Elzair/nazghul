@@ -201,9 +201,9 @@
                  0 3 5               ; str/int/dex
                  0 0                 ; hp mod/mult
                  0 0                 ; mp mod/mult
-                 (max-hp sp_human oc_wrogue the-man-start-lvl 0 0) ; hp
-                 0                   ; xp
-                 (max-mp sp_human oc_wrogue the-man-start-lvl 0 0) ; mp
+                 max-health ; hp
+                 -1                   ; xp
+                 max-health ; mp
                  the-man-start-lvl
                  #f                  ; dead
                  'man-conv         ; conv

@@ -121,11 +121,11 @@
     s_statue     ; sprite
     faction-men      ; starting alignment
     0 0 0            ; str/int/dex
-    0 0              ; hp mod/mult
+    999 0              ; hp mod/mult
     0 0              ; mp mod/mult
-    (max-hp sp_statue nil 9 0 0) ; hp
+    max-health ; hp
     0                   ; xp
-    (max-mp sp_statue nil 9 0 0) ; mp
+    max-health ; mp
     9
     #f               ; dead
     'r2a-statue-conv         ; conv

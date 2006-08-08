@@ -155,7 +155,6 @@
 ;;----------------------------------------------------------------------------
 (define (mk-roland-first-time tag)
   (bind 
-   (set-level
     (kern-mk-char tag                 ; tag
                   "Roland"            ; name
                   sp_human            ; species
@@ -167,7 +166,7 @@
                   pc-hp-gain ; hp per-level bonus
                   0 ; mp off
                   0 ; mp gain
-                  30 0 9 5            ; hp/xp/mp/lvl
+                  max-health -1 max-health 3            ; hp/xp/mp/lvl
                   #f                  ; dead
                   'roland-conv        ; conv
                   nil                 ; sched
@@ -175,5 +174,4 @@
                   nil                 ; container
                   nil                 ; readied
                   )
-    3)
    (roland-mk #f #f #f)))

@@ -76,7 +76,6 @@
 
 (define (mk-abigail)
   (bind 
-   (set-level
    (kern-mk-char 
     'ch_abigail           ; tag
     "Abigail"             ; name
@@ -89,9 +88,9 @@
     0 ; hp per-level bonus
     0 ; mp off
     1 ; mp gain
-    (max-hp abigail-species abigail-occ abigail-lvl 0 0) ; hp
+    max-health ; hp
     0                   ; xp
-    (max-mp abigail-species abigail-occ abigail-lvl 0 0) ; mp
+    max-health ; mp
     abigail-lvl
     #f               ; dead
     'abigail-conv         ; conv
@@ -100,5 +99,4 @@
     nil
     nil              ; readied
     )
-   abigail-lvl)
    (abigail-mk)))

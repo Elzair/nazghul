@@ -195,9 +195,9 @@
      0 ;;............custom hp multiplier (per-level)
      0 ;;............custom base mp modifier
      0 ;;............custom mp multiplier (per-level)
-     (max-hp sp_human nil may-start-lvl 0 0) ;;..current hit points
-     0  ;;...........current experience points
-     (max-mp sp_human nil may-start-lvl 0 0) ;;..current magic points
+     max-health ;;..current hit points
+     -1  ;;...........current experience points
+     max-health ;;..current magic points
      may-start-lvl  ;;..current level
      #f ;;...........dead?
      'may-conv ;;...conversation (optional)

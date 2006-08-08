@@ -66,7 +66,6 @@
 
 (define (mk-nossifer)
   (let ((kchar (bind 
-                (kern-char-set-level
                  (kern-mk-char 
                   'ch_nossifer           ; tag
                   "Nossifer"             ; name
@@ -77,9 +76,9 @@
                   20 5 20            ; str/int/dex
                   0 5              ; hp mod/mult
                   0 2              ; mp mod/mult
-                  (max-hp noss-species noss-occ noss-lvl 0 0) ; hp
+                  max-health ; hp
                   0                   ; xp
-                  (max-mp noss-species noss-occ noss-lvl 0 0) ; mp
+                  max-health ; mp
                   noss-lvl
                   #f               ; dead
                   'noss-conv       ; conv
@@ -90,7 +89,6 @@
                    t_flaming_sword
                    t_armor_plate
                    ))
-                 noss-lvl)
                 (noss-mk))))
     (map (lambda (eff) (kern-obj-add-effect kchar eff nil))
          demon-effects)

@@ -159,7 +159,7 @@
                  2 1 1               ; str/int/dex
                  0 0                 ; hp mod/mult
                  0 0                 ; mp mod/mult
-                 30 0 0 5            ; hp/xp/mp/lvl
+                 max-health -1 max-health 5            ; hp/xp/mp/lvl
                  #f                  ; dead
                  'jeff-conv         ; conv
                  sch_jeff           ; sched

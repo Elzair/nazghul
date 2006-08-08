@@ -161,9 +161,9 @@
     10 0 10            ; str/int/dex
     5 2              ; hp mod/mult
     5 2              ; mp mod/mult
-    (max-hp warr-species warr-occ warr-lvl 0 0) ; hp
-    0                   ; xp
-    (max-mp warr-species warr-occ warr-lvl 0 0) ; mp
+    max-health ; hp
+    -1                   ; xp
+    max-health ; mp
     warr-lvl
     #f               ; dead
     'warr-conv         ; conv

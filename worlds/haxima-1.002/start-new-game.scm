@@ -36,6 +36,11 @@
  minutes ; minutes
  )
 
+;; rather than trying to calculate appropriate hp/mp for
+;; characters, stick in a big number and let Character::new
+;; trim it as needed
+(define max-health 999999999)
+
 ;; NPC's who inhabit multiple places
 (kern-load "gregor.scm")
 (kern-load "kalcifax.scm")
@@ -95,7 +100,6 @@
 ;;----------------------------------------------------------------------------
 ;; Characters
 ;;----------------------------------------------------------------------------
-(set-level
  (kern-mk-char 
   'ch_wanderer
   "The Wanderer"        ; name
@@ -108,7 +112,7 @@
   pc-hp-gain
   pc-mp-off
   pc-mp-gain
-  29 0 3 1              ; hp/xp/mp/lvl
+  max-health 0 max-health 1              ; hp/xp/mp/lvl
   #f                    ; dead
   nil                   ; conv
   nil                   ; sched
@@ -116,7 +120,7 @@
   nil                   ; container
   nil                   ; readied
   )
- 1)
+
 
 
 ; ;; For test

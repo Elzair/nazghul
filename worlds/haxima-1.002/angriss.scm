@@ -211,9 +211,9 @@
      20 0 20             ; str/int/dex
      10 5                ; hp mod/mult
      10 5                ; mp mod/mult
-     (max-hp sp_spider nil angriss-lvl 10 5) ;;..current hit points
-     0 ;;...........current experience points
-     (max-mp sp_spider nil angriss-lvl 10 5) ;;..current magic points
+     max-health ;;..current hit points
+     -1 ;;...........current experience points
+     max-health ;;..current magic points
      angriss-lvl
      #f                  ; dead
      'angriss-conv       ; conv

@@ -37,7 +37,7 @@
    0 ;;............custom base mp modifier
    0 ;;............custom mp multiplier (per-level)
    (max-hp species occupation default-level 0 0) ;;.current hit points
-   0  ;;...........current experience points
+   -1  ;;...........current experience points
    (max-mp species occupation default-level 0 0) ;;.current magic points
    default-level  ;;............current level
    #f ;;...........dead?

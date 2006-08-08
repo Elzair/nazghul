@@ -246,7 +246,7 @@
                  pc-hp-off  ; hp bonus
                  pc-hp-gain ; hp per-level bonus
                  0 0                 ; mp mod/mult
-                 90 812 9 3            ; hp/xp/mp/lvl
+                 max-health -1 max-health 3            ; hp/xp/mp/lvl
                  #f                  ; dead
                  'gen-conv           ; conv
                  sch_gen             ; sched

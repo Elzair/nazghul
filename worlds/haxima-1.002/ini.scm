@@ -150,7 +150,7 @@
                   pc-hp-gain ; hp per-level bonus
                   0 ; mp off
                   0 ; mp gain
-                 30 612 0 3            ; hp/xp/mp/lvl
+                 max-health -1 max-health 3            ; hp/xp/mp/lvl
                  #f                  ; dead
                  'ini-conv         ; conv
                  sch_ini           ; sched

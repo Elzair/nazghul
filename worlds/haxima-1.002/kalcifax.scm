@@ -110,7 +110,6 @@
 
 (define (mk-kalcifax)
   (bind 
-   (set-level
    (kern-mk-char 
     'ch_kalc           ; tag
     "Kalcifax"             ; name
@@ -123,9 +122,9 @@
     (/ pc-hp-gain 2) ; hp per-level bonus
     pc-mp-off        ; mp bonus
     pc-mp-gain       ; mp per-level bonus
-    (max-hp kalc-species kalc-occ kalc-lvl 3 2) ; hp
-    (lvl-xp kalc-lvl)  ; xp
-    (max-mp kalc-species kalc-occ kalc-lvl 3 2) ; mp
+    max-health ; hp
+    -1  ; xp
+    max-health ; mp
     kalc-lvl
     #f               ; dead
     'kalc-conv         ; conv
@@ -136,5 +135,4 @@
      t_staff
      )
     )
-   kalc-lvl)
    (kalc-mk)))

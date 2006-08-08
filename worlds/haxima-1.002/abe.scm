@@ -182,9 +182,9 @@
     2 1 1            ; str/int/dex
     0 0              ; hp mod/mult
     0 0              ; mp mod/mult
-    (max-hp abe-species abe-occ abe-lvl 0 0) ; hp
-    0                   ; xp
-    (max-mp abe-species abe-occ abe-lvl 0 0) ; mp
+    max-health ; hp
+    -1                   ; xp
+    max-health ; mp
     abe-lvl
     #f               ; dead
     'abe-conv         ; conv

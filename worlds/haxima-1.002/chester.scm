@@ -147,7 +147,7 @@
                  5 0 2               ; str/int/dex
                  0 0                 ; hp mod/mult
                  0 0                 ; mp mod/mult
-                 30 0 0 3            ; hp/xp/mp/lvl
+                 max-health -1 max-health 3            ; hp/xp/mp/lvl
                  #f                  ; dead
                  'ches-conv          ; conv
                  sch_ches            ; sched

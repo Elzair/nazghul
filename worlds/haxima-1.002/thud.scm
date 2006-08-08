@@ -87,7 +87,6 @@
 ;;----------------------------------------------------------------------------
 (define (mk-thud)
   (bind 
-   (kern-char-set-level
     (kern-char-arm-self
      (kern-mk-char 
       'ch_thud ;;.....tag
@@ -103,9 +102,9 @@
       1 ;;............custom hp multiplier (per-level)
       0 ;;............custom base mp modifier
       0 ;;............custom mp multiplier (per-level)
-      (max-hp sp_troll oc_warrior thud-start-lvl 0 0) ;;..current hit points
-      0  ;;...........current experience points
-      (max-mp sp_troll oc_warrior thud-start-lvl 0 0) ;;..current magic points
+      max-health;;..current hit points
+      -1  ;;...........current experience points
+      max-health ;;..current magic points
       thud-start-lvl  ;;..current level
       #f ;;...........dead?
       'thud-conv ;;...conversation (optional)
@@ -120,5 +119,4 @@
        )
       nil ;;..........hooks in effect
       ))
-    thud-start-lvl)
    (thud-mk)))

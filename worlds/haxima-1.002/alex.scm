@@ -117,9 +117,9 @@
     2 5 1            ; str/int/dex
     0 0              ; hp mod/mult
     0 0              ; mp mod/mult
-    (max-hp alex-species alex-occ alex-lvl 0 0) ; hp
-    0                   ; xp
-    (max-mp alex-species alex-occ alex-lvl 0 0) ; mp
+    max-health ; hp
+    -1                   ; xp
+    max-health ; mp
     alex-lvl
     #f               ; dead
     'alex-conv         ; conv

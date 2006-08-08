@@ -102,7 +102,6 @@
 
 (define (mk-selene)
   (bind 
-   (kern-char-set-level
    (kern-mk-char 
     'ch_selene           ; tag
     "Selene"             ; name
@@ -113,9 +112,9 @@
     0 2 1            ; str/int/dex
     0 0              ; hp mod/mult
     0 0              ; mp mod/mult
-    (max-hp selene-species selene-occ selene-lvl 0 0) ; hp
-    0                   ; xp
-    (max-mp selene-species selene-occ selene-lvl 0 0) ; mp
+    max-health ; hp
+    -1                   ; xp
+    max-health ; mp
     selene-lvl
     #f               ; dead
     'selene-conv         ; conv
@@ -124,5 +123,4 @@
     nil              ; container
     (list t_dagger)              ; readied
     )
-   selene-lvl)
    (selene-mk)))

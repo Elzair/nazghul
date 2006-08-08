@@ -105,7 +105,6 @@
 
 (define (mk-tooth)
   (bind 
-   (set-level
    (kern-mk-char 
     'ch_tooth           ; tag
     "Tooth"             ; name
@@ -118,9 +117,9 @@
     0 ; hp per-level bonus
     0 ; mp off
     1 ; mp gain
-    (max-hp tooth-species tooth-occ tooth-lvl 0 0) ; hp
-    0                   ; xp
-    (max-mp tooth-species tooth-occ tooth-lvl 0 0) ; mp
+    max-health ; hp
+    -1                  ; xp
+    max-health ; mp
     tooth-lvl
     #f               ; dead
     'tooth-conv         ; conv
@@ -129,5 +128,4 @@
     nil
     nil              ; readied
     )
-   tooth-lvl)
    (tooth-mk)))

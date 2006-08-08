@@ -90,9 +90,9 @@
     1 3 2            ; str/int/dex
     0 0              ; hp mod/mult
     0 0              ; mp mod/mult
-    (max-hp anne-species anne-occ anne-lvl 0 0) ; hp
-    0                   ; xp
-    (max-mp anne-species anne-occ anne-lvl 0 0) ; mp
+    max-health ; hp
+    -1                   ; xp
+    max-health ; mp
     anne-lvl
     #f               ; dead
     'anne-conv         ; conv

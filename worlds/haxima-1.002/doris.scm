@@ -176,7 +176,7 @@
                  0 1 0               ; str/int/dex
                  0 0                 ; hp mod/mult
                  0 0                 ; mp mod/mult
-                 30 0 0 1            ; hp/xp/mp/lvl
+                 max-health -1 max-health 2            ; hp/xp/mp/lvl
                  #f                  ; dead
                  'doris-conv         ; conv
                  sch_doris           ; sched

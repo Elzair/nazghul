@@ -114,9 +114,9 @@
     pc-hp-gain ; hp per-level bonus
     1 ; mp off
     1 ; mp gain
-    (max-hp amy-species amy-occ amy-lvl 0 0) ; hp
-    0                   ; xp
-    (max-mp amy-species amy-occ amy-lvl 0 0) ; mp
+    max-health ; hp
+    -1                   ; xp
+    max-health ; mp
     amy-lvl
     #f               ; dead
     'amy-conv         ; conv

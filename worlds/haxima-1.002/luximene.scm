@@ -97,9 +97,9 @@
     0 0 0            ; str/int/dex
     0 0              ; hp mod/mult
     0 0              ; mp mod/mult
-    (max-hp lux-species lux-occ lux-lvl 0 0) ; hp
-    0                   ; xp
-    (max-mp lux-species lux-occ lux-lvl 0 0) ; mp
+    max-health ; hp
+    -1                   ; xp
+    max-health ; mp
     lux-lvl
     #f               ; dead
     'lux-conv         ; conv
@@ -124,9 +124,9 @@
             10 10 10            ; str/int/dex
             10 1              ; hp mod/mult
             0  0              ; mp mod/mult
-            (max-hp lux-species lux-occ 8 10 10) ; hp
-            0                   ; xp
-            (max-mp lux-species lux-occ 8 10 10) ; mp
+            max-health ; hp
+            -1                   ; xp
+            max-health ; mp
             8
             #f               ; dead
             nil              ; conv
