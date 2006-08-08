@@ -442,7 +442,7 @@ static void status_show_character_var_stats_full(SDL_Rect *rect, class Character
 {
         /* Show the xp, hp and mp */
         screenPrint(rect, 0, 
-                    "^c+%cHP:^c%c%d^cw/%d ^c%cMP:^c%c%d^cw/%d ^c%cLVL:^cw%d/%d^c-"
+                    "^c+%cHP:^c%c%d^cw/%d ^c%cMP:^c%c%d^cw/%d ^c%cXP:^cw%d/%d^c-"
                     , STAT_LABEL_CLR
                     , status_range_color(pm->getHp(), pm->getMaxHp())
                     , pm->getHp(), pm->getMaxHp()
@@ -461,7 +461,7 @@ static void status_show_character_var_stats(SDL_Rect *rect, class Character *pm)
         /* Show the xp, hp and mp */
 		/* Note that getXpForLevel(2) - getXpForLevel(1) != getXpForLevel(1)*/
         screenPrint(rect, 0, 
-                    "^c+%cHP:^c%c%d^cw/%d ^c%cMP:^c%c%d^cw/%d ^c%cXP:^cw%d^c%c(%d%%)^c-"
+                    "^c+%cHP:^c%c%d^cw/%d ^c%cMP:^c%c%d^cw/%d ^c%cLvl:^cw%d^c%c(%d%%)^c-"
                     , STAT_LABEL_CLR
                     , status_range_color(pm->getHp(), pm->getMaxHp())
                     , pm->getHp(), pm->getMaxHp()
