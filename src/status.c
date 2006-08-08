@@ -459,6 +459,7 @@ static void status_show_character_var_stats_full(SDL_Rect *rect, class Character
 static void status_show_character_var_stats(SDL_Rect *rect, class Character *pm)
 {
         /* Show the xp, hp and mp */
+		/* Note that getXpForLevel(2) - getXpForLevel(1) != getXpForLevel(1)*/
         screenPrint(rect, 0, 
                     "^c+%cHP:^c%c%d^cw/%d ^c%cMP:^c%c%d^cw/%d ^c%cXP:^cw%d^c%c(%d%%)^c-"
                     , STAT_LABEL_CLR
@@ -470,7 +471,7 @@ static void status_show_character_var_stats(SDL_Rect *rect, class Character *pm)
                     , STAT_LABEL_CLR
                     , pm->getLevel()
                     , STAT_LABEL_CLR
-                    , (100 * (pm->getExperience()-pm->getXpForLevel(pm->getLevel()))/pm->getXpForLevel(pm->getLevel()))
+                    , (100 * (pm->getExperience()-pm->getXpForLevel(pm->getLevel()))/(pm->getXpForLevel(pm->getLevel()+1)-pm->getXpForLevel(pm->getLevel())))
                 );
         rect->y += ASCII_H;
 }

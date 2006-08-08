@@ -166,12 +166,26 @@ Character::Character(char *tag, char *name,
 
         setActivity(NONE);
 
+
         initCommon();
 
 	this->hp = min(this->hp, getMaxHp());
 	this->mana = min(this->mana, getMaxMana());
 
         setOnMap(false);
+	if (xp == 0)
+		this->xp = getXpForLevel(this->lvl);
+	if (xp < 0)
+	{
+		if (this->lvl == 1)
+		{
+			this->xp = rand() % getXpForLevel(this->lvl + 1);
+		}
+		else
+		{
+			this->xp = getXpForLevel(this->lvl) + (rand() % getXpForLevel(this->lvl));
+		}
+	}
 }
 
 Character::Character():hm(0), xp(0), order(-1),
@@ -1322,7 +1336,9 @@ int Character::getExperienceValue()
 
 int Character::getXpForLevel(int lvl)
 {
-        return (int)pow((double)2, (double)lvl+6);
+	if (lvl == 1)
+		return 0;
+    return (int)pow((double)2, (double)lvl+6);
 }
 
 void Character::addExperience(int amount)
@@ -1514,7 +1530,7 @@ int Character::getLevel() {
 
 void Character::setLevel(int val) {
         assert(val>0);
-        xp = getXpForLevel(val);
+		xp = getXpForLevel(val);
         lvl = val;
         setHp(getMaxHp());
         setMana(getMaxMana());
