@@ -189,7 +189,7 @@
      s_townswoman ;;...sprite
      faction-men ;;..faction
      0 ;;............custom strength modifier
-     0 ;;............custom intelligence modifier
+     1 ;;............custom intelligence modifier
      0 ;;............custom dexterity modifier
      0 ;;............custom base hp modifier
      0 ;;............custom hp multiplier (per-level)

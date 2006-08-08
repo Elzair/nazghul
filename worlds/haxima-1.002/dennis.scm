@@ -112,7 +112,7 @@
     dennis-occ              ; occ
     s_townsman     ; sprite
     faction-men      ; starting alignment
-    0 0 0            ; str/int/dex
+    0 1 0            ; str/int/dex
     0 0              ; hp mod/mult
     0 0              ; mp mod/mult
     (max-hp dennis-species dennis-occ dennis-lvl 0 0) ; hp

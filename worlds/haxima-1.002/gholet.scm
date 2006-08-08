@@ -151,7 +151,7 @@
     gholet-occ              ; occ
     s_brigand     ; sprite
     faction-men      ; starting alignment
-    0 0 0            ; str/int/dex
+    1 0 3            ; str/int/dex
     0 0              ; hp mod/mult
     0 0              ; mp mod/mult
     (max-hp gholet-species gholet-occ gholet-lvl 0 0) ; hp

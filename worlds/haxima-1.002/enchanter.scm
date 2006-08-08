@@ -391,7 +391,7 @@
      s_companion_wizard ;;..sprite
      faction-men ;;..faction
      0 ;;...........custom strength modifier
-     5 ;;...........custom intelligence modifier
+     7 ;;...........custom intelligence modifier
      0 ;;...........custom dexterity modifier
      10 ;;............custom base hp modifier
      2 ;;............custom hp multiplier (per-level)

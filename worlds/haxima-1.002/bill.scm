@@ -162,7 +162,7 @@
      nil ;;..........occupation
      s_townsman ;;...sprite
      faction-men ;;..faction
-     0 ;;............custom strength modifier
+     2 ;;............custom strength modifier
      0 ;;............custom intelligence modifier
      0 ;;............custom dexterity modifier
      0 ;;............custom base hp modifier

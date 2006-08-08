@@ -201,7 +201,7 @@
                  nil                 ; occ
                  s_companion_druid   ; sprite
                  faction-men         ; starting alignment
-                 8 14 8              ; str/int/dex
+                 1 6 1               ; str/int/dex
                  0 0                 ; hp mod/mult
                  0 0                 ; mp mod/mult
                  30 0 9 3            ; hp/xp/mp/lvl

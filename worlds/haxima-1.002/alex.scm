@@ -114,7 +114,7 @@
     alex-occ              ; occ
     s_companion_wizard     ; sprite
     faction-men      ; starting alignment
-    0 0 0            ; str/int/dex
+    2 5 1            ; str/int/dex
     0 0              ; hp mod/mult
     0 0              ; mp mod/mult
     (max-hp alex-species alex-occ alex-lvl 0 0) ; hp

@@ -109,7 +109,7 @@
     joel-occ              ; occ
     s_companion_shepherd     ; sprite
     faction-men      ; starting alignment
-    0 0 0            ; str/int/dex
+    1 0 1            ; str/int/dex
     0 0              ; hp mod/mult
     0 0              ; mp mod/mult
     (max-hp joel-species joel-occ joel-lvl 0 0) ; hp

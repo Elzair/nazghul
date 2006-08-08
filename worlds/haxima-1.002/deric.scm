@@ -199,7 +199,7 @@
                  nil                 ; occ
                  s_companion_ranger   ; sprite
                  faction-men         ; starting alignment
-                 0 0 0               ; str/int/dex
+                 1 3 2               ; str/int/dex
                  0 0                 ; hp mod/mult
                  0 0                 ; mp mod/mult
                  120 0 9 4            ; hp/xp/mp/lvl

@@ -110,7 +110,7 @@
     slywan-occ              ; occ
     s_brigand     ; sprite
     faction-men      ; starting alignment
-    0 0 0            ; str/int/dex
+    1 0 4            ; str/int/dex
     0  ; hp bonus
     0 ; hp per-level bonus
     0 ; mp off

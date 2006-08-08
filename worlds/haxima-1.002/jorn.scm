@@ -109,7 +109,7 @@
     jorn-occ         ; occ
     s_brigand        ; sprite
     faction-men      ; starting alignment
-    0 0 0            ; str/int/dex
+    2 0 1            ; str/int/dex
     0 0              ; hp mod/mult
     0 0              ; mp mod/mult
     (max-hp jorn-species jorn-occ jorn-lvl 0 0) ; hp

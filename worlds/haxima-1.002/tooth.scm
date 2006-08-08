@@ -113,7 +113,7 @@
     tooth-occ              ; occ
     s_rat     ; sprite
     faction-men      ; starting alignment
-    0 0 0            ; str/int/dex
+    0 4 1            ; str/int/dex
     0  ; hp bonus
     0 ; hp per-level bonus
     0 ; mp off

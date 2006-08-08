@@ -76,7 +76,7 @@
                  nil                 ; occ
                  s_fat_townswoman    ; sprite
                  faction-men         ; starting alignment
-                 12 10 8             ; str/int/dex
+                 2 0 0             ; str/int/dex
                  0 0                 ; hp mod/mult
                  0 0                 ; mp mod/mult
                  30 0 0 3            ; hp/xp/mp/lvl

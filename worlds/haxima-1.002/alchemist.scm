@@ -405,8 +405,8 @@
      s_companion_tinker ;;......sprite
      faction-men ;;..faction
      0 ;;............custom strength modifier
-     0 ;;............custom intelligence modifier
-     0 ;;............custom dexterity modifier
+     4 ;;............custom intelligence modifier
+     1 ;;............custom dexterity modifier
      0 ;;............custom base hp modifier
      0 ;;............custom hp multiplier (per-level)
      0 ;;............custom base mp modifier

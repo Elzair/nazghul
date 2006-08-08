@@ -200,7 +200,7 @@
                  nil                 ; occ
                  s_beggar             ; sprite
                  faction-men         ; starting alignment
-                 10 10 10            ; str/int/dex
+                 0 0 1            ; str/int/dex
                  0 0                 ; hp mod/mult
                  0 0                 ; mp mod/mult
                  30 0 0 6            ; hp/xp/mp/lvl

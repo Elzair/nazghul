@@ -237,7 +237,7 @@
      meaney-occ              ; occ
      s_companion_shepherd  ; sprite
      faction-men      ; starting alignment
-     0 0 0            ; str/int/dex
+     1 2 1            ; str/int/dex
      0 0              ; hp mod/mult
      0 0              ; mp mod/mult
      (max-hp meaney-species meaney-occ meaney-lvl 0 0) ; hp

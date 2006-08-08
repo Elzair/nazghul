@@ -110,7 +110,7 @@
     selene-occ              ; occ
     s_townswoman     ; sprite
     faction-men      ; starting alignment
-    0 0 0            ; str/int/dex
+    0 2 1            ; str/int/dex
     0 0              ; hp mod/mult
     0 0              ; mp mod/mult
     (max-hp selene-species selene-occ selene-lvl 0 0) ; hp

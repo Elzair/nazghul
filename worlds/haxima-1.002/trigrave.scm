@@ -136,7 +136,7 @@
                nil                 ; occ
                s_townsman          ; sprite
                faction-men         ; starting alignment
-               0 10 5              ; str/int/dex
+               4 1 2              ; str/int/dex
                0 0                 ; hp mod/mult
                0 0                 ; mp mod/mult
                30 0 9 9            ; hp/xp/mp/lvl
@@ -157,7 +157,7 @@
                nil                 ; occ
                s_gwen ; sprite
                faction-men         ; starting alignment
-               0 10 5              ; str/int/dex
+               0 1 2              ; str/int/dex
                0 0                 ; hp mod/mult
                0 0                 ; mp mod/mult
                30 0 9 9            ; hp/xp/mp/lvl
@@ -178,7 +178,7 @@
                nil                 ; occ
                s_chanticleer     ; sprite
                faction-men         ; starting alignment
-               0 10 5              ; str/int/dex
+               0 4 2              ; str/int/dex
                0 0                 ; hp mod/mult
                0 0                 ; mp mod/mult
                30 0 9 9            ; hp/xp/mp/lvl
@@ -199,7 +199,7 @@
                nil          ;; occ
                s_townsman   ;; sprite
                faction-men  ;; starting alignment
-               0 10 5       ;; str/int/dex
+               0 5 3       ;; str/int/dex
                0 0          ;; hp mod/mult
                0 0          ;; mp mod/mult
                30 0 9 9     ;; hp/xp/mp/lvl

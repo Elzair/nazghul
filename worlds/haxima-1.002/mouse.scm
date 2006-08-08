@@ -250,7 +250,7 @@
       faction-men ;;..faction
       0 ;;............custom strength modifier
       0 ;;............custom intelligence modifier
-      10 ;;............custom dexterity modifier
+      6 ;;............custom dexterity modifier
       2 ;;............custom base hp modifier
       2 ;;............custom hp multiplier (per-level)
       1 ;;............custom base mp modifier

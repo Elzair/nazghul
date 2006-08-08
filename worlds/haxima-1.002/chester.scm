@@ -144,7 +144,7 @@
                  oc_warrior          ; occ
                  s_townsman          ; sprite
                  faction-men         ; starting alignment
-                 0 0 0               ; str/int/dex
+                 5 0 2               ; str/int/dex
                  0 0                 ; hp mod/mult
                  0 0                 ; mp mod/mult
                  30 0 0 3            ; hp/xp/mp/lvl

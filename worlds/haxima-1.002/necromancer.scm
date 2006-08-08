@@ -240,7 +240,7 @@
     necr-occ              ; occ
     s_companion_wizard     ; sprite
     faction-men      ; starting alignment
-    0 0 0            ; str/int/dex
+    1 6 0            ; str/int/dex
     0 0              ; hp mod/mult
     0 0              ; mp mod/mult
     (max-hp necr-species necr-occ necr-lvl 0 0) ; hp

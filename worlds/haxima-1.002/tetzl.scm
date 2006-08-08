@@ -43,7 +43,7 @@
     tetzl-occ              ; occ
     s_spider     ; sprite
     faction-men      ; starting alignment
-    0 0 0            ; str/int/dex
+    1 0 1            ; str/int/dex
     0 0              ; hp mod/mult
     0 0              ; mp mod/mult
     (max-hp tetzl-species tetzl-occ tetzl-lvl 0 0) ; hp

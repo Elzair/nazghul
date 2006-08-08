@@ -86,7 +86,7 @@
     jones-occ              ; occ
     s_townsman     ; sprite
     faction-men      ; starting alignment
-    0 0 0            ; str/int/dex
+    2 0 0            ; str/int/dex
     0 0              ; hp mod/mult
     0 0              ; mp mod/mult
     (max-hp jones-species jones-occ jones-lvl 0 0) ; hp

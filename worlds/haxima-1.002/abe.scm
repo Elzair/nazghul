@@ -179,7 +179,7 @@
     abe-occ              ; occ
     s_companion_wizard ; sprite
     faction-men      ; starting alignment
-    0 0 0            ; str/int/dex
+    2 1 1            ; str/int/dex
     0 0              ; hp mod/mult
     0 0              ; mp mod/mult
     (max-hp abe-species abe-occ abe-lvl 0 0) ; hp
