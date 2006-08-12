@@ -339,7 +339,7 @@ static void status_show_ztat_arms(SDL_Rect * rect, void *thing)
         /* quantity and name */
         if (ie->ref) {
                 screenPrint(rect, 0, "%2d %s ^c+%c[%d in use]^c-", ie->count,
-                            arms->getName(), ie->ref, STAT_INUSE_CLR);
+                            arms->getName(), STAT_INUSE_CLR, ie->ref);
         } else {
                 screenPrint(rect, 0, "%2d %s", ie->count, arms->getName());
         }
