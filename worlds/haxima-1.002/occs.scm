@@ -2,7 +2,7 @@
 ;; occupations
 (define (mk-occ tag name hit def dam arm xp)
   (kern-mk-occ tag name 1.0 0 0 0 0 hit def dam arm xp)
-  (kern-occ-set-gob (eval tag) (list nil nil nil nil)))
+  (kern-occ-set-gob (eval tag) (list nil nil nil nil nil nil nil)))
 
 ;;            /           /         / t  / f / e /   /
 ;;           /           /         / i  / e / g / r /
@@ -150,4 +150,103 @@
 	)
 	(occ-set-abil oc_wizard 3 highskill)
 	(occ-set-abil oc_wanderer 3 modskill)
+)
+
+;----------------------------
+; Combat
+
+(define (occ-ability-strattack kchar)
+	(let ((occ-abil (occ-get-abil (kern-char-get-occ kchar) 4)))
+		(if (null? occ-abil)
+			(+ (/ (kern-char-get-level kchar) 2)
+				(/ (kern-char-get-strength kchar) 3))
+			(occ-abil kchar)
+			)))
+
+(let (
+	(highskill
+		(lambda (kchar)
+			(+ (* (kern-char-get-level kchar) 0.8)
+				(/ (kern-char-get-strength kchar) 2))
+			))
+	(modskill
+		(lambda (kchar)
+			(+ (* (kern-char-get-level kchar) 0.6)
+				(* (kern-char-get-strength kchar) 0.4))
+			))
+	(lowskill
+		(lambda (kchar) 
+			(+ (/ (kern-char-get-level kchar) 3)
+				(/ (kern-char-get-strength kchar) 4))
+			))
+	)
+	(occ-set-abil oc_wizard 4 lowskill)
+	(occ-set-abil oc_wright 4 modskill)
+	(occ-set-abil oc_wanderer 4 modskill)
+	(occ-set-abil oc_warrior 4 highskill)
+	(occ-set-abil oc_ranger 4 modskill)
+)
+
+(define (occ-ability-dexattack kchar)
+	(let ((occ-abil (occ-get-abil (kern-char-get-occ kchar) 4)))
+		(if (null? occ-abil)
+			(+ (/ (kern-char-get-level kchar) 2)
+				(/ (kern-char-get-dexterity kchar) 3))
+			(occ-abil kchar)
+			)))
+
+(let (
+	(highskill
+		(lambda (kchar)
+			(+ (* (kern-char-get-level kchar) 0.8)
+				(/ (kern-char-get-dexterity kchar) 2))
+			))
+	(modskill
+		(lambda (kchar)
+			(+ (* (kern-char-get-level kchar) 0.6)
+				(* (kern-char-get-dexterity kchar) 0.4))
+			))
+	(lowskill
+		(lambda (kchar) 
+			(+ (/ (kern-char-get-level kchar) 3)
+				(/ (kern-char-get-dexterity kchar) 4))
+			))
+	)
+	(occ-set-abil oc_wizard 5 lowskill)
+	(occ-set-abil oc_wrogue 5 modskill)
+	(occ-set-abil oc_wanderer 5 modskill)
+	(occ-set-abil oc_warrior 5 highskill)
+	(occ-set-abil oc_ranger 5 modskill)
+)
+
+(define (occ-ability-dexdefend kchar)
+	(let ((occ-abil (occ-get-abil (kern-char-get-occ kchar) 4)))
+		(if (null? occ-abil)
+			(+ (/ (kern-char-get-level kchar) 2)
+				(/ (kern-char-get-dexterity kchar) 3))
+			(occ-abil kchar)
+			)))
+
+(let (
+	(highskill
+		(lambda (kchar)
+			(+ (* (kern-char-get-level kchar) 0.8)
+				(/ (kern-char-get-dexterity kchar) 2))
+			))
+	(modskill
+		(lambda (kchar)
+			(+ (* (kern-char-get-level kchar) 0.6)
+				(* (kern-char-get-dexterity kchar) 0.4))
+			))
+	(lowskill
+		(lambda (kchar) 
+			(+ (/ (kern-char-get-level kchar) 3)
+				(/ (kern-char-get-dexterity kchar) 4))
+			))
+	)
+	(occ-set-abil oc_wizard 6 lowskill)
+	(occ-set-abil oc_wrogue 6 highskill)
+	(occ-set-abil oc_wanderer 6 modskill)
+	(occ-set-abil oc_warrior 6 modskill)
+	(occ-set-abil oc_ranger 6 highskill)
 )
