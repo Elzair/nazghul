@@ -44,23 +44,54 @@
 			 
 (mk-potion 't_xp_potion "potion of gain level" s_cure_potion
            (lambda (kpotion kuser) 
-             (kern-char-add-experience kuser 500)))
+             (kern-char-add-experience kuser 500)
+			 #t))
+
+(define (potion-gain-stats kuser current-stat stat-name stat-setter)
+	(let ((total-stats ((kern-char-get-base-strength kuser)
+				(kern-char-get-base-dexterity kuser)
+				(kern-char-get-base-intelligence kuser))))
+		(kern-log-msg "Total stats: " total-stats)
+		(if (> (kern-dice-roll "1d30") total-stats)
+			(begin (kern-log-msg (kern-obj-get-name kuser) " gains " stat-name "!")
+				(println stat-setter)
+				(stat-setter kuser (+ current-stat 1))
+				(println stat-setter)
+				)
+			(kern-log-msg "No effect")
+			)
+		#t
+	))
 
 (mk-potion 't_str_potion "potion of strength" s_healing_potion
-           (lambda (kpotion kuser) 
-             (kern-char-set-strength kuser (+ (kern-char-get-base-strength kuser) 1))))
+		(lambda (kpotion kuser)
+			(potion-gain-stats kuser (kern-char-get-base-strength kuser)
+				"strength" kern-char-set-strength)
+		))
 			 
 (mk-potion 't_dex_potion "potion of dexterity" s_immunity_potion
-           (lambda (kpotion kuser) 
-            (kern-char-set-dexterity kuser (+ (kern-char-get-base-dexterity kuser) 1))))
+		(lambda (kpotion kuser)
+			(potion-gain-stats kuser (kern-char-get-base-dexterity kuser)
+				"dexterity" kern-char-set-dexterity)
+		))
 			 
 (mk-potion 't_int_potion "potion of intelligence" s_mana_potion
-           (lambda (kpotion kuser) 
-            (kern-char-set-intelligence kuser (+ (kern-char-get-base-intelligence kuser) 1))))
+		(lambda (kpotion kuser)
+			(potion-gain-stats kuser (kern-char-get-base-intelligence kuser)
+				"intelligence" kern-char-set-intelligence)
+		))
 
 (mk-potion 't_info_potion "potion of enlightenment" s_mana_potion
            (lambda (kpotion kuser) 
-            ()))
+            (kern-log-msg "Information about " (kern-obj-get-name kuser))
+			(kern-log-msg "Thief skill: " (number->string (occ-ability-thief kuser)))
+			(kern-log-msg "Offensive magic: " (number->string (occ-ability-blackmagic kuser)))
+			(kern-log-msg "Utility magic: " (number->string (occ-ability-whitemagic kuser)))
+			(kern-log-msg "Magic resistance: " (number->string (occ-ability-magicdef kuser)))
+			(kern-log-msg "Combat strength: " (number->string (occ-ability-strattack kuser)))
+			(kern-log-msg "Combat dexterity: " (number->string (occ-ability-dexattack kuser)))
+			(kern-log-msg "Avoidance: " (number->string (occ-ability-dexdefend kuser)))
+			#t))
 
 
 ;; posion immunity (bubbly yellow) potion
