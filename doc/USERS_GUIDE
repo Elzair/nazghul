@@ -31,38 +31,36 @@ You can play the Tutorial first or jump right in with Start New Game.
 
                                 SAVING THE GAME
 
-When you quit the game with the Q)uit command (press 'q') it automatically
-saves before it exits. The next time you start the game choose the "Journey
-Onward" option from the main menu.
-
-If you want to save a snapshot without quitting press Ctrl-s (S is for
-"save"). If you want to revert back to that snapshot later press Ctrl-r. If you
-want to quit without saving press Ctrl-q.
+You can save your game at any time while playing by using the CTRL-S key
+sequence for the S)ave command. An unlimited number of saved games is
+permitted. When you restart, use the Journey Onward option from the main menu
+to select a saved game to continue.
 
 If you die, the game will exit, and when you restart it will pick up where you
 last saved via the Journey Onward option.
 
-If you want to have more than one save file (there are legitimate reasons for
-doing this in a beta release) I'll tell you a secret: save.scm is the save
-file. You can make your own backup copies with different names. If you specify
-the file-name to nazghul on the command line it will load it, for example:
 
-     $ nazghul my-extra-bakup.scm
+                               EXITING THE GAME
+
+You can quit at any time by pressing Q for the Q)uit commmand. It will prompt
+you to save if you like and then exit.
 
 
                                   ORIENTATION
 
-If you're unfamiliar with U5 I recommend the Tutorial. Here are some more notes
-to help you get started.
+If you are unfamiliar with U5 I recommend the Tutorial option available from the
+Main Menu when you start the game. Here are some more notes to help you get
+started.
 
                                    Exploring
 
-When you start you will have a party consisting of one character known as The
-Wanderer. The icon for this character will be in the center of the map view on
-the left. Explore around a bit using the arrow keys to move. Below the map
-you'll see a little window with a prompt. This gives you hints when you're
-entering commands to tell you what type of input the command wants. For
-example, if you type 'x' (for e[x]amine) the command prompt will say:
+When you start you will have a party consisting of one character known
+initially as The Wanderer. The icon for this character will be in the center of
+the map view on the left. Explore around a bit using the arrow keys to
+move. Below the map you'll see a little window with a prompt. This gives you
+hints when you're entering commands to tell you what type of input the command
+wants. For example, if you type 'x' (for e[x]amine) the command prompt will
+say:
 
     Xamine-<target>(ESC to exit)
 
