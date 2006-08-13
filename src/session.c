@@ -30,7 +30,7 @@
 #include "images.h"
 #include "Party.h"
 #include "ptable.h"
-#include "common.h"
+#include "file.h"
 #include "player.h"
 #include "sky.h"
 #include "map.h"
@@ -481,14 +481,14 @@ void save_del(save_t *save)
 
 void session_save(char *fname)
 {
-        FILE *file;
+        FILE *file = 0;
         struct list *elem;
         save_t *save;
 	char *filename;
         char *SavedGamesDir = cfg_get("saved-games-dirname");
 
         /* FIXME: dupe of code in menus.c */
-	filename = dirConcat(SavedGamesDir,fname);
+	filename = file_mkpath(SavedGamesDir,fname);
 	if (filename) {
 #ifndef WIN32
                 /* FIXME: cygwin build fails, saying that mkdir below has too
@@ -497,6 +497,12 @@ void session_save(char *fname)
 		(void)mkdir(SavedGamesDir, 0777);
 #endif
 		file = fopen(filename, "w");
+#if 0
+                /* gmcnutt: I *think* it's ok to remove this, since the
+                 * saved-games-dirname defaults to the current working
+                 * directory if it's not specified in the cfg file or on the
+                 * command line. Need to make sure the binary distros work with
+                 * this removed. */
         	if (! file) {
                 	warn("session_save: could not open %s "
 			     "for writing: %s\n"
@@ -505,10 +511,10 @@ void session_save(char *fname)
 	                     filename, strerror(errno));
 			file = fopen(fname, "w");
 		}
+#endif
                 free(filename);
                 filename = 0;
-	} else
-		file = fopen(fname, "w");
+	}
         if (! file) {
                 warn("session_save: could not open %s for writing: %s\n",
                      fname, strerror(errno));

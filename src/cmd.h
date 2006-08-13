@@ -60,7 +60,7 @@ extern void cmdFire(void);
 extern void cmdHelp(void);
 extern bool cmdMixReagents(class Character *mixer);
 extern void cmdNewOrder(void);
-extern void cmdQuickSave(void);
+extern void cmdSave(void);
 extern void cmdReload(void);
 extern bool cmdSearch(struct place *place, int x, int y);
 extern bool cmdTalk(Object *member);

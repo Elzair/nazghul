@@ -32,7 +32,8 @@
 #if USE_PROTECT
 #include <assert.h>
 #endif
-#include "common.h"
+//#include "common.h"
+#include "file.h"
 #include "cfg.h"
 
 /* Used for documentation purposes, to signal functions in 'interface' */
@@ -1284,14 +1285,12 @@ static void finalize_cell(scheme *sc, pointer a) {
 /* ========== Routines for Reading ========== */
 
 static int file_push(scheme *sc, const char *fname) {
-  FILE *fin;
-  char *filename;
-  filename = dirConcat(cfg_get("include-dirname"),fname);
+  FILE *fin = 0;
+  char *filename = file_mkpath(cfg_get("include-dirname"),fname);
   if (filename) {
 	  fin=fopen(filename,"r");
 	  free(filename);
-  } else
-	  fin=fopen(fname,"r");
+  }
   if(fin!=0) {
     sc->file_i++;
     sc->load_stack[sc->file_i].kind=port_file|port_input;
@@ -3268,6 +3267,7 @@ static pointer opexe_3(scheme *sc, enum scheme_opcodes op) {
                case OP_GRE:   comp_func=num_gt; break;
                case OP_LEQ:   comp_func=num_le; break;
                case OP_GEQ:   comp_func=num_ge; break;
+          default: break;
           }
           x=sc->args;
           v=nvalue(car(x));
@@ -3535,6 +3535,7 @@ static pointer opexe_4(scheme *sc, enum scheme_opcodes op) {
                case OP_OPEN_INFILE:     prop=port_input; break;
                case OP_OPEN_OUTFILE:    prop=port_output; break;
                case OP_OPEN_INOUTFILE: prop=port_input|port_output; break;
+          default: break;
           }
           p=port_from_filename(sc,strvalue(car(sc->args)),prop);
           if(p==sc->NIL) {
@@ -3553,6 +3554,7 @@ static pointer opexe_4(scheme *sc, enum scheme_opcodes op) {
                case OP_OPEN_INSTRING:     prop=port_input; break;
                case OP_OPEN_OUTSTRING:    prop=port_output; break;
                case OP_OPEN_INOUTSTRING:  prop=port_input|port_output; break;
+          default: break;
           }
           p=port_from_string(sc, strvalue(car(sc->args)),
 	             strvalue(car(sc->args))+strlength(car(sc->args)), prop);
@@ -3576,6 +3578,7 @@ static pointer opexe_4(scheme *sc, enum scheme_opcodes op) {
 
      case OP_CURR_ENV: /* current-environment */
           s_return(sc,sc->envir);
+     default: break;
 
      }
      return sc->T;
@@ -3934,6 +3937,7 @@ static pointer opexe_ghul(scheme *sc, enum scheme_opcodes op) {
                  * the script the script can continue processing. */
                 return sc->NIL;
                 break;
+        default: break;
         }
         return sc->T; /* NOTREACHED */
 }

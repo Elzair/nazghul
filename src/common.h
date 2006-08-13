@@ -319,8 +319,6 @@ extern int directionToOpposite(int dir);
 
 #define keyIsDirection(key) ((key) >= KEY_SOUTHWEST && (key) <= KEY_NORTHEAST)
 
-char *dirConcat(const char *dir, const char *filename);
-
 /* Global Variables **********************************************************/
 
 extern int Turn;

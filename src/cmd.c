@@ -977,6 +977,7 @@ bool cmdQuit(void)
 		log_msg("Goodbye!\n");
 		Quit = true;
 	} else {
+                /* FIXME: if player hits ESC we want to abort, not quit! */
                 log_msg("Goodbye!\n");
                 Quit = true;
 	}
@@ -2767,7 +2768,7 @@ void cmdZoomIn(void)
         }
 }
 
-void cmdQuickSave(void)
+void cmdSave(void)
 {
         char *fname = save_game_menu();
         if (!fname)

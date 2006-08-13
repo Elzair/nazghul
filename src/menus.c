@@ -27,6 +27,7 @@
 #include "log.h"
 #include "node.h"
 #include "status.h"
+#include "file.h"
 
 #include <assert.h>
 #include <errno.h>
@@ -202,7 +203,7 @@ static void menu_rewrite_saves(char **menu, int n)
         FILE *file = 0;
         int i;
         char *fname = cfg_get("save-game-filename");
-	char *filename = dirConcat(cfg_get("saved-games-dirname"), fname);
+	char *filename = file_mkpath(cfg_get("saved-games-dirname"), fname);
 
         /* FIXME: dupe of code in session_save */
 
@@ -224,9 +225,7 @@ static void menu_rewrite_saves(char **menu, int n)
 		}
                 free(filename);
                 filename = 0;
-	} else {
-		file = fopen(fname, "w");
-        }
+	}
         if (! file) {
                 warn("Could not open %s for writing: %s\n",
                      fname, strerror(errno));
@@ -290,7 +289,7 @@ reselect:
                         if (!selection)
                                 goto reselect;
 
-                        /* Check if the use re-typed an existing filename */
+                        /* Check if the player re-typed an existing filename */
                         for (i = 1; i < n; i++) {
                                 if (!strcmp(selection, menu[i])) {
                                         if (!confirm_selection()) {
@@ -300,9 +299,6 @@ reselect:
                                         }
                                 }
                         }
-                        
-                        /* FIXME: if there's an error writing the game then we
-                         * don't want to list it in the saves */
                         menu[0] = selection;
                         menu_rewrite_saves(menu, i);
 
@@ -314,7 +310,7 @@ reselect:
                 }
         }
 
-        /* turn off status before deleting list */
+        /* Restore the original status mode before deleting the list. */
         statusSetMode(omode);
 
         menu_cleanup_saved_game_list();

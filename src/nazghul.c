@@ -21,7 +21,7 @@
 #include "../config.h"
 #include "foogod.h"
 #include "constants.h"
-#include "common.h"
+#include "file.h"
 #include "dimensions.h"
 #include "screen.h"
 #include "sound.h"
@@ -229,19 +229,18 @@ static void nazghul_init_internal_libs(void)
 /* nazghul_splash -- show the splash image */
 static void nazghul_splash(void)
 {
-        SDL_Surface *splash;
+        SDL_Surface *splash = 0;
         SDL_Rect rect;
 	char *basename = cfg_get("splash-image-filename");
         char *filename;
 
         /* Look for the splash image, check the include dir first, then check
          * the current working dir */
-	filename = dirConcat(cfg_get("include-dirname"), basename);
+	filename = file_mkpath(cfg_get("include-dirname"), basename);
 	if (filename) {
 		splash = IMG_Load(filename);
 		free(filename);
-	} else
-		splash = IMG_Load(basename);
+	}
 	if (! splash) {
                 warn("IMG_Load failed: %s\n", SDL_GetError());
                 return;
@@ -264,17 +263,9 @@ static void nazghul_splash(void)
 static FILE *open_via_path(char *fname, char *prefix)
 {
         FILE *file = 0;
-        char *path = 0;
-
-        if (prefix) {
-                path = dirConcat(prefix, fname);
-        } else {
-                path = fname;
-        }
-
-        file = fopen(path, "r");
-        
-        if (path != fname) {
+        char *path = file_mkpath(prefix, fname);
+        if (path) {
+                file = fopen(path, "r");
                 free(path);
         }
 

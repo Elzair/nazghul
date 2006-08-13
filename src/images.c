@@ -21,8 +21,9 @@
 //
 #include "images.h"
 #include "screen.h"
-#include "common.h" /* for dirConcat */
+#include "file.h"
 #include "cfg.h"
+#include "debug.h"
 
 #include <assert.h>
 #include <SDL_image.h>
@@ -88,12 +89,10 @@ struct images *images_new(char *tag, int w, int h, int rows, int cols,
         images->cols    = cols;
 
 
-	filename = dirConcat(cfg_get("include-dirname"),fname);
+	filename = file_mkpath(cfg_get("include-dirname"),fname);
 	if (filename) {
 		images->images = IMG_Load(filename);
 		free(filename);
-	} else {
-		images->images = IMG_Load(fname);
 	}
 	if (!images->images) {
                 // BUG: Mac OS X fails to load PNG images here, but GIF works

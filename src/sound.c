@@ -29,7 +29,7 @@
 
 #include "sound.h"
 #include "debug.h"
-#include "common.h"
+#include "file.h"
 #include "cfg.h"
 
 #include <assert.h>
@@ -176,7 +176,7 @@ sound_t *sound_new(char *tag, char *file)
 		return NULL_SOUND;
 	}
 
-	fn = dirConcat(cfg_get("include-dirname"), file);
+	fn = file_mkpath(cfg_get("include-dirname"), file);
 	/* Load the sound file and convert it to 16-bit stereo at 22kHz */
 	if (SDL_LoadWAV(fn?fn:file, &wave, &data, &dlen) == NULL) {
                 warn("SDL_LoadWav:%s:%s", fn?fn:file, SDL_GetError());
