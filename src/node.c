@@ -70,3 +70,14 @@ void node_foldr(struct node *head,
                 fx(p, data);
         }
 }
+
+int node_list_len(struct node *head)
+{
+        struct node *node = head->next;
+        int n = 0;
+        while (node != head) {
+                node = node->next;
+                n++;
+        }
+        return n;
+}

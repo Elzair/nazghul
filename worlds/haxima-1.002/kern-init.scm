@@ -17,9 +17,8 @@
  "new-game-filename"     "start-new-game.scm"
 
  ;; This is the script file run when the user selects the "Journey Onward"
- ;; option from the main menu, and is also the file written when the game is
- ;; saved.
- "save-game-filename"     "save.scm"
+ ;; option from the main menu. It lists the current save files.
+ "save-game-filename"     "saved-games.scm"
 
  ;; This is the script file run when the user selects the "Tutorial"
  ;; option from the main menu.

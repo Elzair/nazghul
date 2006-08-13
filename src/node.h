@@ -57,7 +57,7 @@ extern void node_unref(struct node *node);
 extern void node_foldr(struct node *node,
                        void (*fx)(struct node *node, void *data),
                        void *data);
-
+extern int node_list_len(struct node *head);
 END_DECL
 
 #endif /* node_h */

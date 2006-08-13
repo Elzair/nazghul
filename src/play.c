@@ -54,6 +54,7 @@
 #include "log.h"
 #include "tick.h"
 #include "vmask.h"
+#include "menus.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -99,18 +100,25 @@ int G_exec_loops = 0;
 static void play_reload()
 {
         int result = 0;
+        char *fname = 0;
+
+        Reload = 0;
+
+        fname = load_game_menu();
+        if (!fname)
+                return;
+
         tick_pause();
-        log_begin("Loading from %s...", QUICKSAVE_FNAME);
+        log_begin("Loading from %s...", fname);
         log_flush();
         log_disable();
-        result = session_load(QUICKSAVE_FNAME);
+        result = session_load(fname);
         log_enable();
         if (result)
                 log_end("error!");
         else
                 log_end("ok!");
-        Reload = 0;
-		place_synchronize(Place);
+        place_synchronize(Place);
         tick_run();
         vmask_flush_all();
 }

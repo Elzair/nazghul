@@ -44,6 +44,7 @@
 #include "session.h"
 #include "kern.h"
 #include "cfg.h"
+#include "menus.h"
 
 #include <errno.h>
 #include <signal.h>
@@ -65,6 +66,8 @@ static char *nazghul_load_fname = 0;
 int DeveloperMode    = 0;
 
 static char program_name[] = "nazghul";
+
+int load_script(char *fname);
 
 static void print_version(void)
 {
@@ -205,6 +208,7 @@ static void nazghul_init_internal_libs(void)
                 { "combatInit",     combatInit     },
                 { "foogodInit",     foogodInit     },
                 { "statusInit",     statusInit     },
+                { "menu_init",      menu_init      }
         };
 
         int i;
@@ -301,186 +305,6 @@ FILE *open_via_std_search_path(char *fname)
         return 0;
 }
 
-/* file_exists_in_std_search_path -- check if the file can be found in the
- * standard search path and opened for reading */
-static int file_exists_in_std_search_path(char *fname)
-{
-        FILE *file = 0;
-        if (!fname)
-                return 0;
-        file = open_via_std_search_path(fname);
-        int ret = file ? 1:0;
-        if (file)
-                fclose(file);
-        return ret;
-}
-
-static bool main_menu_quit_handler(struct QuitHandler *kh)
-{
-        exit(0);
-        return(0); /* for Sun compiler */
-}
-
-static void show_credits(void)
-{
-        struct KeyHandler kh;
-        char *title = "CREDITS";
-        char *text = 
-                "Engine Programming\n"\
-                "...Gordon McNutt\n"\
-                "...Sam Glasby\n"\
-                "...Tim Douglas\n"\
-                "...Janne Johansson\n"\
-                "...Karl Garrison\n"\
-                "Build System\n"\
-                "...Andreas Bauer\n"\
-                "Game Scripting\n"\
-                "...Gordon McNutt\n"\
-                "...Sam Glasby\n"
-                "Art Provided by\n"\
-                "...Joshua Steele\n"\
-                "...David Gervais\n"\
-                "...Kevin Gabbert\n"\
-                "...Gordon McNutt\n"\
-                "...Sam Glasby\n"\
-                "...Steve Riberdy\n"\
-                "...Kris Parker\n"
-                ;
-
-        statusSetPageText(title, text);
-        statusSetMode(Page);
-        consolePrint("[Hit ESC to continue]\n");
-
-        kh.fx = scroller;
-        kh.data = NULL;
-	eventPushKeyHandler(&kh);
-	eventHandle();
-	eventPopKeyHandler();
-}
-
-static int confirm_selection()
-{
-        int yesno;
-        log_msg("Existing saved game will be overwritten! Are you sure?");
-        cmdwin_clear();
-        cmdwin_print("Confirm-Y/N?");
-        getkey(&yesno, yesnokey);
-        cmdwin_backspace(4);
-        if (yesno=='y') {
-                cmdwin_print("Yes!");
-                log_msg("Ok!");
-                return 1;
-        } else {
-                cmdwin_print("No!");
-                log_msg("Canceled!");
-                return 0;
-        }
-}
-
-static void main_menu(void)
-{
-        static char *START_NEW_GAME="Start New Game";
-        static char *JOURNEY_ONWARD="Journey Onward";
-        static char *CREDITS="Credits";
-        static char *QUIT="Quit";
-        static char *TUTORIAL="Tutorial";
-        char *menu[5];
-        int n_items = 0;
-        struct KeyHandler kh;
-	struct ScrollerContext data;
-        char *selection = NULL;
-	struct QuitHandler qh;
-        char *new_game_fname = cfg_get("new-game-filename");
-        char *save_game_fname = cfg_get("save-game-filename");
-        char *tutorial_fname = cfg_get("tutorial-filename");
-
-        /* setup main menu quit handler so player can click close window to
-         * exit */
-	qh.fx = main_menu_quit_handler;
-	eventPushQuitHandler(&qh);
-
-
- start_main_menu:
-        n_items = 0;
-
-        /* check for a previously saved game to Journey Onward */
-        if (file_exists_in_std_search_path(save_game_fname)) {
-                menu[n_items] = JOURNEY_ONWARD;
-                n_items++;
-        }
-
-        /* check for the default script for Start New Game */
-        if (file_exists_in_std_search_path(new_game_fname)) {
-                menu[n_items] = START_NEW_GAME;
-                n_items++;
-        }
-
-        /* check for a tutorial script for Tutorial */
-        if (file_exists_in_std_search_path(tutorial_fname)) {
-                menu[n_items] = TUTORIAL;
-                n_items++;
-        }
-
-        menu[n_items] = CREDITS;
-        n_items++;
-
-        menu[n_items] = QUIT;
-        n_items++;
-
-        statusSetStringList(n_items, menu);
-        statusSetMode(StringList);
-
-        data.selection = NULL;
-        data.selector  = String;
-        kh.fx   = scroller;
-        kh.data = &data;
-	eventPushKeyHandler(&kh);
-	eventHandle();
-	eventPopKeyHandler();
-
-        selection = (char*)data.selection;
-
-        if (! selection) {
-                goto start_main_menu;
-        }
-
-        if (! strcmp(selection, START_NEW_GAME)) {
-
-                /* prompt before over-writing save file */
-                if (file_exists_in_std_search_path(save_game_fname)) {
-                        if (! confirm_selection()) {
-                                goto start_main_menu;
-                        }
-                }
-
-                nazghul_load_fname = new_game_fname;
-                assert(nazghul_load_fname);
-        }
-        else if (! strcmp(selection, JOURNEY_ONWARD)) {
-                nazghul_load_fname = save_game_fname;
-        }
-        else if (! strcmp(selection, CREDITS)) {
-                show_credits();
-                goto start_main_menu;
-        }
-        else if (! strcmp(selection, TUTORIAL)) {
-                nazghul_load_fname = tutorial_fname;
-        }
-        else if (! strcmp(selection, QUIT))
-                exit(0);
-        else {
-                fprintf(stderr, "Invalid selection: '%s'\n", selection);
-                exit(-1);
-        }
-
-        /* turn off status while new session is loading */
-        statusSetMode(DisableStatus);
-
-        /* pop main menu quit handler, new one will be pushed in play.c */
-        eventPopQuitHandler();
-        
-}
-
 /* init_default_cfg -- initialize the global cfg settings to start-up defaults
  * and prepare it for loading the cfg script */
 static void init_default_cfg()
@@ -493,7 +317,7 @@ static void init_default_cfg()
 }
 
 /* load_script -- run a script through the interpreter */
-static int load_script(char *fname)
+int load_script(char *fname)
 {
         scheme *sc = NULL;
         FILE *file = NULL;
@@ -572,7 +396,7 @@ int main(int argc, char **argv)
         /* if no load file specified on the command line then run the main
          * menu */
         if (! nazghul_load_fname)
-                main_menu();
+                nazghul_load_fname = main_menu();
 
         /* run the game, don't return until the user quits */
 	playRun(nazghul_load_fname);

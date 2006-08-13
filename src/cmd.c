@@ -52,6 +52,7 @@
 #include "factions.h"
 #include "result.h"
 #include "dice.h"
+#include "menus.h"
 
 #define DEBUG
 #include "debug.h"
@@ -953,39 +954,31 @@ bool cmdQuit(void)
 	int yesno;
 
 	cmdwin_clear();
-	cmdwin_print("Quit & Save Game-Y/N?");
+	cmdwin_print("Quit-Save Game-Y/N?");
 	getkey(&yesno, yesnokey);
 
 	cmdwin_backspace(4);
 
 	if (yesno == 'y') {
+                char *fname = 0;
 		cmdwin_print("Yes!");
-		log_msg("Goodbye!\n");
-                session_save(QUICKSAVE_FNAME);
-		Quit = true;
-	} else {
-		cmdwin_print("No");
-	}
 
-	return Quit;
-}
+                fname = save_game_menu();
+                if (!fname) {
+                        cmdwin_backspace(4);
+                        cmdwin_print("Cancel!");
+                        log_msg("Quit game aborted!");
+                        return Quit;
+                }
 
-bool cmdQuitWithoutSaving(void)
-{
-	int yesno;
-
-	cmdwin_clear();
-	cmdwin_print("Quit without saving-Y/N?");
-	getkey(&yesno, yesnokey);
-
-	cmdwin_backspace(4);
-
-	if (yesno == 'y') {
-		cmdwin_print("Yes!");
+                log_begin("Saving to %s...", fname);
+                session_save(fname);
+                log_end("ok!");
 		log_msg("Goodbye!\n");
 		Quit = true;
 	} else {
-		cmdwin_print("No");
+                log_msg("Goodbye!\n");
+                Quit = true;
 	}
 
 	return Quit;
@@ -2776,8 +2769,12 @@ void cmdZoomIn(void)
 
 void cmdQuickSave(void)
 {
-        log_begin("Saving to %s...", QUICKSAVE_FNAME);
-        session_save(QUICKSAVE_FNAME);
+        char *fname = save_game_menu();
+        if (!fname)
+                return;
+
+        log_begin("Saving to %s...", fname);
+        session_save(fname);
         log_end("ok!");
 }
 
@@ -2852,14 +2849,11 @@ static int ui_getline_handler(struct KeyHandler *kh, int key, int keymod)
 	return 0;
 }
 
-int ui_getline(char *buf, int len)
+int ui_getline_plain(char *buf, int len)
 {
         struct KeyHandler kh;
         getline_t data;
 
-        cmdwin_clear();
-        cmdwin_print("Say: ");
-        
         data.buf  = buf;
         data.ptr  = buf;
         data.room = len - 1;
@@ -2874,6 +2868,13 @@ int ui_getline(char *buf, int len)
         eventPopKeyHandler();
 
         return len - (data.room + 1);
+}
+
+int ui_getline(char *buf, int len)
+{
+        cmdwin_clear();
+        cmdwin_print("Say: ");
+        return ui_getline_plain(buf, len);
 }
 
 static void buy(struct merchant *merch)

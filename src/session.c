@@ -487,6 +487,7 @@ void session_save(char *fname)
 	char *filename;
         char *SavedGamesDir = cfg_get("saved-games-dirname");
 
+        /* FIXME: dupe of code in menus.c */
 	filename = dirConcat(SavedGamesDir,fname);
 	if (filename) {
 #ifndef WIN32
@@ -504,6 +505,8 @@ void session_save(char *fname)
 	                     filename, strerror(errno));
 			file = fopen(fname, "w");
 		}
+                free(filename);
+                filename = 0;
 	} else
 		file = fopen(fname, "w");
         if (! file) {

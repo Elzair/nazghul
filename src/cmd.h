@@ -77,7 +77,6 @@ extern bool cmdGet(class Object *actor);
 extern bool cmdOpen(class Character * pc);
 extern bool cmdCastSpell(class Character * pc);
 extern bool cmdQuit(void);
-extern bool cmdQuitWithoutSaving(void);
 extern bool cmdLook(int x, int y);
 extern bool cmd_terraform(struct place *place, int x, int y);
 extern bool cmdSaveTerrainMap(class Character * pc);
@@ -94,6 +93,7 @@ extern int ui_get_quantity(int max);
 extern int ui_get_direction(void);
 extern int ui_get_yes_no(char *asked_persons_name);
 extern int ui_getline(char *buf, int len);
+extern int ui_getline_plain(char *buf, int len);
 
 struct merchant {
         char *name;

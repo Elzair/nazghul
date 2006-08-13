@@ -68,6 +68,7 @@
 #include "factions.h"
 #include "cmdwin.h"
 #include "cfg.h"
+#include "menus.h"
 
 #include <assert.h>
 #include <ctype.h>              // isspace()
@@ -7447,6 +7448,20 @@ KERN_API_CALL(kern_cfg_get)
         return scm_mk_string(sc, cfg_get(key));
 }
 
+KERN_API_CALL(kern_add_save_game)
+{
+        char *fname;
+
+        while (scm_is_pair(sc, args)) {
+                if (unpack(sc, &args, "s", &fname)) {
+                        rt_err("kern-add-save-game: bad args");
+                }
+                menu_add_saved_game(fname);
+        }
+
+        return sc->NIL;
+}
+
 KERN_OBSOLETE_CALL(kern_set_ascii);
 KERN_OBSOLETE_CALL(kern_set_frame);
 KERN_OBSOLETE_CALL(kern_set_cursor);
@@ -7691,6 +7706,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-add-magic-negated", kern_add_magic_negated);
         API_DECL(sc, "kern-add-quicken", kern_add_quicken);
         API_DECL(sc, "kern-add-reveal", kern_add_reveal);
+        API_DECL(sc, "kern-add-save-game", kern_add_save_game);
         API_DECL(sc, "kern-add-spell", kern_add_spell);
         API_DECL(sc, "kern-add-tick-job", kern_add_tick_job);
         API_DECL(sc, "kern-add-time-stop", kern_add_time_stop);
