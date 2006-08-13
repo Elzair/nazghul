@@ -77,8 +77,8 @@
   (initstats kplayer)
     
   (kern-log-enable #f)
-  
-  (kern-obj-set-sprite (get-gamestart-data kplayer 3) s_grass)
+
+  (kern-obj-set-sprite (eval (get-gamestart-data kplayer 3)) s_grass)
    (kern-map-repaint)
 	
   (kern-obj-relocate kplayer (list p_moongate_clearing 11 12) (mk-start-cutscene kplayer (get-gamestart-data kplayer 3)))

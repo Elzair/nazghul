@@ -268,13 +268,6 @@
 ;; from the ground, pause, then sink back down, leaving the player's sleep
 ;; sprite on the ground. Another pause, and then the player should wake up.
 ;;----------------------------------------------------------------------------
-(define blackgate-stages
-  (list (list '()                       0)
-        (list s_blackgate_quarter        32)
-        (list s_blackgate_half           64)
-        (list s_blackgate_three_quarters 96)
-        (list s_blackgate_full           128)))
-
 (define (start-scene kplayer)
 
   (kern-log-msg "A dark gate rises in a quiet clearing...")

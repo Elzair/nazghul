@@ -49,7 +49,8 @@
 		(obj-line objfactory yloc (+ xloc 1) xmax)
 	))  
  
-(set-roomdata p_char_setup (list 6 6 6 start-gate))
+;; Note: start-gate must be a tag to survive saving/reloading.
+(set-roomdata p_char_setup (list 6 6 6 'start-gate))
 
 (obj-line (lambda (unused)
 	(mk-step-trig 'one-off-message "Would ye be strong, or swift?" "sdmes"))

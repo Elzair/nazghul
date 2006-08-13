@@ -8,6 +8,13 @@
         (list s_moongate_three_quarters 96)
         (list s_moongate_full           128)))
 
+(define blackgate-stages
+  (list (list '()                       0)
+        (list s_blackgate_quarter        32)
+        (list s_blackgate_half           64)
+        (list s_blackgate_three_quarters 96)
+        (list s_blackgate_full           128)))
+
 (define (stage-sprite stage) (car stage))
 (define (stage-light stage) (* 10 (cadr stage)))
 (define moongate-default-ttl 10) ;; turns
