@@ -229,7 +229,7 @@ typedef struct save {
 } save_t;
 
 extern int session_load(char *filename);
-extern void session_save(char *fname);
+extern int session_save(char *fname);
 struct session *session_new(void *interp);
 void session_del(struct session *session);
 

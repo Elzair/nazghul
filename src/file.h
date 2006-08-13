@@ -41,10 +41,20 @@ extern int file_exists_in_save_dir(const char *fname);
  * the file just use fclose(). The file_open_in_save_dir function will attempt
  * to create the configured save dir if it doesn't exist yet, except on win32
  * platforms. */
-extern FILE *file_open(const char *fname);
-extern FILE *file_open_in_dir(const char *dirname, const char *fname);
+extern FILE *file_open(const char *fname, char *mode);
+extern FILE *file_open_in_dir(const char *dirname, const char *fname, char *mode);
 extern FILE *file_open_in_include_dir(const char *fname);
-extern FILE *file_open_in_save_dir(const char *fname);
+extern FILE *file_open_in_save_dir(const char *fname, char *mode);
+
+/* The following all try to load a script file from the respective directories.
+ * These are meant for loading the various config scripts. They are not
+ * suitable for loading session save files, because they destroy the
+ * interpreter context after the scripts have executed (session.c knows this
+ * and loads save games "by hand" so it can keep the context). */
+extern int file_load(const char *fname);
+extern int file_load_from_dir(const char *dirname, const char *fname);
+extern int file_load_from_include_dir(const char *fname);
+extern int file_load_from_save_dir(const char *fname);
 
 /* If any of the file_open_ functions return NULL then use the following to get
  * an error string description of what went wrong. Obviously this is not meant

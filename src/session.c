@@ -263,10 +263,6 @@ void session_del(struct session *session)
         free(session);
 }
 
-/* FIXME: move to a header, put all the file utilities in a single file
- * maybe (currently in nazghul.c) */
-extern FILE *open_via_std_search_path(char*);
-
 int session_load(char *filename)
 {
         scheme *sc;
@@ -281,8 +277,9 @@ int session_load(char *filename)
         /* Clear any leftover load errors. */
         load_err_clear();
 
-        /* Open the load file. */
-        file = open_via_std_search_path(filename);
+        /* Open the load file (this might come from the include dir or the save
+         * dir, so the caller must pass in the complete pathname). */
+        file = file_open(filename, "r");
         if (! file) {
                 load_err("could not open script file '%s' for reading: %s",
                            filename, strerror(errno));
@@ -479,46 +476,17 @@ void save_del(save_t *save)
         free(save);
 }
 
-void session_save(char *fname)
+int session_save(char *fname)
 {
         FILE *file = 0;
         struct list *elem;
         save_t *save;
-	char *filename;
-        char *SavedGamesDir = cfg_get("saved-games-dirname");
 
-        /* FIXME: dupe of code in menus.c */
-	filename = file_mkpath(SavedGamesDir,fname);
-	if (filename) {
-#ifndef WIN32
-                /* FIXME: cygwin build fails, saying that mkdir below has too
-                 * many arguments. We don't use the save dir so not a
-                 * problem */
-		(void)mkdir(SavedGamesDir, 0777);
-#endif
-		file = fopen(filename, "w");
-#if 0
-                /* gmcnutt: I *think* it's ok to remove this, since the
-                 * saved-games-dirname defaults to the current working
-                 * directory if it's not specified in the cfg file or on the
-                 * command line. Need to make sure the binary distros work with
-                 * this removed. */
-        	if (! file) {
-                	warn("session_save: could not open %s "
-			     "for writing: %s\n"
-			     "session_save: falling back to current "
-			     "directory.\n",
-	                     filename, strerror(errno));
-			file = fopen(fname, "w");
-		}
-#endif
-                free(filename);
-                filename = 0;
-	}
+        file = file_open_in_save_dir(fname, "w");
         if (! file) {
-                warn("session_save: could not open %s for writing: %s\n",
-                     fname, strerror(errno));
-                return;
+                warn("session_save: could not open %s: %s\n", fname,
+                     file_get_error());
+                return -1;
         }
 
         save = save_new(file);
@@ -584,6 +552,7 @@ void session_save(char *fname)
 
         save_del(save);
         fclose(file);                
+        return 0;
 }
 
 void session_set_start_proc(struct session *session, struct closure *proc)

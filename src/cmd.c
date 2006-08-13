@@ -972,10 +972,13 @@ bool cmdQuit(void)
                 }
 
                 log_begin("Saving to %s...", fname);
-                session_save(fname);
-                log_end("ok!");
-		log_msg("Goodbye!\n");
-		Quit = true;
+                if (session_save(fname)) {
+                        log_end("^c+rfailed!^c-");
+                } else {
+                        log_end("ok!");
+                        log_msg("Goodbye!\n");
+                        Quit = true;
+                }
 	} else {
                 /* FIXME: if player hits ESC we want to abort, not quit! */
                 log_msg("Goodbye!\n");

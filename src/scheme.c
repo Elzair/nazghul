@@ -32,9 +32,7 @@
 #if USE_PROTECT
 #include <assert.h>
 #endif
-//#include "common.h"
 #include "file.h"
-#include "cfg.h"
 
 /* Used for documentation purposes, to signal functions in 'interface' */
 #define INTERFACE
@@ -1285,12 +1283,7 @@ static void finalize_cell(scheme *sc, pointer a) {
 /* ========== Routines for Reading ========== */
 
 static int file_push(scheme *sc, const char *fname) {
-  FILE *fin = 0;
-  char *filename = file_mkpath(cfg_get("include-dirname"),fname);
-  if (filename) {
-	  fin=fopen(filename,"r");
-	  free(filename);
-  }
+  FILE *fin = file_open_in_include_dir(fname);
   if(fin!=0) {
     sc->file_i++;
     sc->load_stack[sc->file_i].kind=port_file|port_input;
@@ -4450,7 +4443,7 @@ void scheme_load_file(scheme *sc, FILE *fin) {
   }
 }
 #if USE_FILE_AND_LINE
-void scheme_load_named_file(scheme *sc, FILE *fin, char *fname) {
+void scheme_load_named_file(scheme *sc, FILE *fin, const char *fname) {
   dump_stack_reset(sc); 
   sc->envir = sc->global_env;
   sc->file_i=0;

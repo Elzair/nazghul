@@ -285,7 +285,7 @@ static void updateAfterEvent(void)
 	mapUpdate(REPAINT_IF_DIRTY|REPAINT_IF_OLD);
 }
 
-int playRun(char *SAVEFILE)
+int playRun(char *fname)
 {
 	struct QuitHandler qh;
 	struct TickHandler th;
@@ -294,11 +294,11 @@ int playRun(char *SAVEFILE)
         // Load a new session from a saved file.
         // -------------------------------------------------------------------
 
-        log_begin("Loading from %s...", SAVEFILE);
+        log_begin("Loading from %s...", fname);
         log_flush();
         log_disable();
 
-	session_load(SAVEFILE);
+	session_load(fname);
 
         log_enable();
         if (! Session) {

@@ -67,8 +67,6 @@ int DeveloperMode    = 0;
 
 static char program_name[] = "nazghul";
 
-int load_script(char *fname);
-
 static void print_version(void)
 {
         printf("%s %s\n", program_name, PACKAGE_VERSION);
@@ -258,44 +256,6 @@ static void nazghul_splash(void)
         SDL_FreeSurface(splash);
 }
 
-/* open_via_path -- open the file for reading in the specific directory and
- * return the file handle */
-static FILE *open_via_path(char *fname, char *prefix)
-{
-        FILE *file = 0;
-        char *path = file_mkpath(prefix, fname);
-        if (path) {
-                file = fopen(path, "r");
-                free(path);
-        }
-
-        return file;
-}
-
-/* open_via_std_search_path -- check if the file can be found in the standard
- * search path and open it for reading */
-FILE *open_via_std_search_path(char *fname)
-{
-        FILE *file = 0;
-
-        /* check current working directory first */
-        if ((file = fopen(fname, "r"))) {
-                return file;
-        }
-
-        /* next check the saved games directory */
-        if ((file = open_via_path(fname, cfg_get("saved-games-dirname")))) {
-                return file;
-        }
-        
-        /* finally check the include directory */
-        if ((file = open_via_path(fname, cfg_get("include-dirname")))) {
-                return file;
-        }
-
-        return 0;
-}
-
 /* init_default_cfg -- initialize the global cfg settings to start-up defaults
  * and prepare it for loading the cfg script */
 static void init_default_cfg()
@@ -307,43 +267,6 @@ static void init_default_cfg()
         cfg_set("screen-dims", "1280x960" /*"640x480"*/);
 }
 
-/* load_script -- run a script through the interpreter */
-int load_script(char *fname)
-{
-        scheme *sc = NULL;
-        FILE *file = NULL;
-
-        if (!fname) {
-                return -1;
-        }
-
-        /* Open the load file. */
-        file = open_via_std_search_path(fname);
-	if (! file) {
-                warn("could not open script file '%s' for reading: %s\n",
-                     fname, strerror(errno));
-                return -1;
-        }
-
-        /* Create a new interpreter. */
-        if (! (sc = kern_init())) {
-                load_err("could not create interpreter");
-                fclose(file);
-                return -1;
-        }
-
-        /* Load the init file. */
-        scheme_load_named_file(sc, file, fname);
-
-        /* Cleanup interpreter. */
-        scheme_deinit(sc);
-        free(sc);
-
-        /* REVISIT: need to fclose(file) here, or does intepreter do it
-         * automatically when it reaches EOF? */
-        return 0;
-}
-
 int main(int argc, char **argv)
 {
         /* Initialize the cfg environment before parsing args. */
@@ -352,13 +275,17 @@ int main(int argc, char **argv)
 	parse_args(argc, argv);
 
         /* Load the cfg script after parsing args */
-        if (load_script(cfg_get("init-script-filename"))) {
-                exit(-1);
+        if (file_load_from_include_dir(cfg_get("init-script-filename"))) {
+                err("Error loading %s: %s\n", cfg_get("init-script-filename"), 
+                    file_get_error());
         }
 
         /* Load the options script */
-        if (load_script(cfg_get("options-script-filename"))) {
-                warn("Could not load options script\n");
+        if (file_exists_in_save_dir(cfg_get("options-script-filename"))) {
+                if (file_load_from_save_dir
+                    (cfg_get("options-script-filename"))) {
+                        warn("Could not load options script\n");
+                }
         }
 
         if (dimensions_init()) {

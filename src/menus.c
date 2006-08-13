@@ -34,25 +34,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-/* still in nazghul.c: */
-extern int load_script(char *fname);
-extern FILE *open_via_std_search_path(char *fname);
-
 static struct node menu_saved_games;
-
-/* file_exists_in_std_search_path -- check if the file can be found in the
- * standard search path and opened for reading */
-static int file_exists_in_std_search_path(char *fname)
-{
-        FILE *file = 0;
-        if (!fname)
-                return 0;
-        file = open_via_std_search_path(fname);
-        int ret = file ? 1:0;
-        if (file)
-                fclose(file);
-        return ret;
-}
 
 static bool main_menu_quit_handler(struct QuitHandler *kh)
 {
@@ -134,6 +116,8 @@ static void menu_cleanup_saved_game_list()
         }
 }
 
+/* load_game_menu -- show the player the available saved games, return the full
+ * pathname. */
 char * load_game_menu(void)
 {
         char **menu = 0;
@@ -145,13 +129,13 @@ char * load_game_menu(void)
         static char *selection = 0;
         enum StatusMode omode = statusGetMode();
 
-        /* erase previous selection */
+        /* Erase any previous selection. */
         if (selection) {
                 free(selection);
                 selection = 0;
         }
 
-        load_script(cfg_get("save-game-filename"));
+        file_load_from_save_dir(cfg_get("save-game-filename"));
         n = node_list_len(&menu_saved_games);
         menu = (char**)malloc(sizeof(menu[0]) * n);
         assert(menu);
@@ -171,8 +155,11 @@ char * load_game_menu(void)
 	eventHandle();
 	eventPopKeyHandler();
 
+        /* If the player selected something then build the full pathname for
+         * return. */
         if (data.selection) {
-                selection = strdup((char*)data.selection);
+                selection = file_mkpath(cfg_get("saved-games-dirname"),
+                                        (char*)data.selection);
                 assert(selection);
         }
 
@@ -198,38 +185,16 @@ static char *prompt_for_fname()
         return 0;
 }
 
-static void menu_rewrite_saves(char **menu, int n)
+static int menu_rewrite_saves(char **menu, int n)
 {
         FILE *file = 0;
         int i;
         char *fname = cfg_get("save-game-filename");
-	char *filename = file_mkpath(cfg_get("saved-games-dirname"), fname);
 
-        /* FIXME: dupe of code in session_save */
-
-	if (filename) {
-#ifndef WIN32
-                /* FIXME: cygwin build fails, saying that mkdir below has too
-                 * many arguments. We don't use the save dir so not a
-                 * problem */
-		(void)mkdir(cfg_get("saved-games-dirname"), 0777);
-#endif
-		file = fopen(filename, "w");
-        	if (! file) {
-                        /* FIXME: send some error messages to the console so
-                         * the player has a clue */
-                	warn("Could not open %s for writing: %s;\n"
-			     "falling back to current directory.\n",
-	                     filename, strerror(errno));
-			file = fopen(fname, "w");
-		}
-                free(filename);
-                filename = 0;
-	}
+        file = file_open_in_save_dir(fname, "w");
         if (! file) {
-                warn("Could not open %s for writing: %s\n",
-                     fname, strerror(errno));
-                return;
+                warn("Problem updating %s: %s\n", fname, file_get_error());
+                return -1;
         }
         
         for (i = 0; i < n; i++) {
@@ -237,6 +202,7 @@ static void menu_rewrite_saves(char **menu, int n)
         }
 
         fclose(file);
+        return 0;
 }
 
 char * save_game_menu(void)
@@ -257,8 +223,8 @@ char * save_game_menu(void)
                 selection = 0;
         }
 
-        if (file_exists_in_std_search_path(cfg_get("save-game-filename"))) {
-                load_script(cfg_get("save-game-filename"));
+        if (file_exists_in_save_dir(cfg_get("save-game-filename"))) {
+                file_load_from_save_dir(cfg_get("save-game-filename"));
         }
         n = node_list_len(&menu_saved_games) + 1;
         menu = (char**)malloc(sizeof(menu[0]) * n);
@@ -285,6 +251,7 @@ reselect:
 
         if (data.selection) {
                 if (!strcmp((char*)data.selection, NEW_SAVED_GAME)) {
+                        int need_rewrite = 1;
                         selection = prompt_for_fname();
                         if (!selection)
                                 goto reselect;
@@ -297,6 +264,8 @@ reselect:
                                                 selection = 0;
                                                 goto reselect;
                                         }
+                                        need_rewrite = 0;
+                                        break;
                                 }
                         }
                         menu[0] = selection;
@@ -332,10 +301,14 @@ char * main_menu(void)
 	struct ScrollerContext data;
         char *selection = NULL;
 	struct QuitHandler qh;
-        char *new_game_fname = cfg_get("new-game-filename");
-        char *save_game_fname = cfg_get("save-game-filename");
-        char *tutorial_fname = cfg_get("tutorial-filename");
+        static char *new_game_fname =
+                file_mkpath(cfg_get("include-dirname"),
+                            cfg_get("new-game-filename"));
+        static char *tutorial_fname =  
+                file_mkpath(cfg_get("include-dirname"),
+                            cfg_get("tutorial-filename"));
         char *load_fname = 0;
+        char *save_game_fname = cfg_get("save-game-filename");
 
         /* setup main menu quit handler so player can click close window to
          * exit */
@@ -347,19 +320,19 @@ char * main_menu(void)
         n_items = 0;
 
         /* check for a previously saved game to Journey Onward */
-        if (file_exists_in_std_search_path(save_game_fname)) {
+        if (file_exists_in_save_dir(save_game_fname)) {
                 menu[n_items] = JOURNEY_ONWARD;
                 n_items++;
         }
 
         /* check for the default script for Start New Game */
-        if (file_exists_in_std_search_path(new_game_fname)) {
+        if (file_exists(new_game_fname)) {
                 menu[n_items] = START_NEW_GAME;
                 n_items++;
         }
 
         /* check for a tutorial script for Tutorial */
-        if (file_exists_in_std_search_path(tutorial_fname)) {
+        if (file_exists(tutorial_fname)) {
                 menu[n_items] = TUTORIAL;
                 n_items++;
         }
