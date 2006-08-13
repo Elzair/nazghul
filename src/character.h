@@ -217,6 +217,10 @@ class Character:public Being {
         void setForceContainerDrop(bool val);
         bool getForceContainerDrop();
 
+        void beginLoitering(int hours);
+        void endLoitering();
+        bool isLoitering();
+
 	char *tag;
         struct node *plnode; // pointer back to party list node
 	class Party *party;
@@ -279,6 +283,7 @@ class Character:public Being {
         clock_alarm_t rest_alarm;
         bool resting;
         bool guarding;
+        bool loitering;
 
 	struct sched *sched;
         int activity;

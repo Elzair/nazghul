@@ -99,6 +99,9 @@ class player_party : public Party {
         virtual void changePlaceHook();
         virtual bool isPlayerControlled();
 
+        void beginLoitering(int hours);
+        void endLoitering();
+        bool isLoitering();
         void startSession(void);
         void distributeMembers(struct place *new_place, int new_x, int new_y, 
                                int new_dx, int new_dy);
@@ -190,6 +193,7 @@ class player_party : public Party {
         int turns_to_next_rest_credit;
         int turns_to_next_meal;
         sound_t *mv_sound;
+        bool loitering;
 };
 
 extern class player_party *player_party;

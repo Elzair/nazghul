@@ -119,6 +119,9 @@ static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
         case 'k':
                 cmd_camp_in_wilderness(party);
                 break;
+        case 'l':
+                cmdLoiter(party);
+                break;
         case 'm':
                 cmdMixReagents(NULL);
                 break;
@@ -943,6 +946,9 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
                 break;
         case 'k':
                 cmd_camp_in_town(character);
+                break;
+        case 'l':
+                cmdLoiter(character);
                 break;
         case 'm':
                 cmdMixReagents(character);

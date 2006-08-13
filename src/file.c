@@ -132,7 +132,8 @@ FILE *file_open_in_save_dir(const char *fname, char *mode)
         /* FIXME: cygwin build fails, saying that mkdir below has too
          * many arguments. We don't use the save dir so not a
          * problem */
-        if (strchr(mode, 'w')
+        if (dir
+            && strchr(mode, 'w')
             && !file_exists(dir)) {
                         if (mkdir(dir, 0777)) {
                                 file_errstr = strerror(errno);

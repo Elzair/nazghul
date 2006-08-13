@@ -148,6 +148,7 @@ Character::Character(char *tag, char *name,
         this->damage_sound = NULL_SOUND;
         this->charmed      = false;
         this->resting      = false;
+        this->loitering    = false;
         this->guarding     = false;
         this->mp_mod       = mpmod;
         this->mp_mult      = mpmult;
@@ -221,6 +222,7 @@ Character::Character():hm(0), xp(0), order(-1),
         damage_sound = NULL_SOUND;
         charmed      = false;
         resting      = false;
+        loitering    = false;
         guarding     = false;
         mp_mod       = 0;
         mp_mult      = 0;
@@ -2031,6 +2033,24 @@ void Character::exec()
                 return;
         }
 
+        else if (isLoitering()) {
+                if (clock_alarm_is_expired(&wakeup_alarm)) {
+                        if (! isPlayerPartyMember()) {
+                                endLoitering();
+                        } else {
+                                log_begin_group();
+                                log_msg("Done loitering...");
+                                endLoitering();
+
+                                if (player_party->isLoitering())
+                                        player_party->endLoitering();
+                                log_end_group();
+                        }
+                }
+                endTurn();
+                return;
+        }
+
         // ------------------------------------------------------------------
         // Check for cases that prevent the character from taking a turn. Note
         // that if the character is sleeping he will still take a turn iff the
@@ -2392,6 +2412,28 @@ void Character::endResting()
 bool Character::isResting()
 {
         return resting;
+}
+
+void Character::beginLoitering(int hours)
+{
+        assert(hours > 0);
+
+        if (isDead())
+                return;
+
+        clock_alarm_set(&wakeup_alarm, hours * 60);
+        loitering = true;
+}
+
+void Character::endLoitering()
+{
+        loitering = false;
+        setControlMode(CONTROL_MODE_PLAYER);
+}
+
+bool Character::isLoitering()
+{
+        return loitering;
 }
 
 void Character::beginCamping(int hours)

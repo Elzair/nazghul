@@ -1871,6 +1871,35 @@ int cmd_camp_in_wilderness(class Party *camper)
         return 0;
 }
 
+void cmdLoiter(class Being *subject)
+{
+        int hours = 0;
+
+        cmdwin_clear();
+        cmdwin_print("Loiter-");
+
+        /* Check if enemies are around. */
+        if (place_contains_hostiles(subject->getPlace(), subject)) {
+                cmdwin_print("foes nearby!");
+                log_msg("Loiter - foes nearby!");
+                return;
+        }
+
+        /* Prompt for the number of hours. */
+        hours = select_hours();
+        if (!hours) {
+                return;
+        }
+
+        /* Tell the party to start loitering. */
+        cmdwin_print(" loitering...");
+        player_party->beginLoitering(hours);
+
+        /* End the turn. */
+        subject->endTurn();
+        
+}
+
 int cmd_camp_in_town(class Character *camper)
 {
         int hours;

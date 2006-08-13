@@ -639,6 +639,14 @@ void player_party::exec()
                 return;
         }
 
+        /* Loiter */
+        if (isLoitering()) {
+                if (clock_alarm_is_expired(&wakeup_alarm)) {
+                        endLoitering();
+                }
+                return;
+        }
+
         startTurn();
 
         if (action_points > 0 && ! isDestroyed()) {        
@@ -748,6 +756,7 @@ player_party::player_party()
 	campsite_formation = 0;
 	camping            = false;
         resting            = false;
+        loitering          = false;
         leader             = NULL;
         solo_member        = NULL;
         control_mode       = PARTY_CONTROL_ROUND_ROBIN;
@@ -783,6 +792,7 @@ player_party::player_party(char *_tag,
 	campsite_formation = _camping_formation;
 	camping            = false;
         resting            = false;
+        loitering          = false;
         leader             = NULL;
         solo_member        = NULL;
         control_mode       = PARTY_CONTROL_ROUND_ROBIN;
@@ -1043,6 +1053,46 @@ class Character *player_party::get_first_living_member(void)
         class Character *pc = NULL;
         forEachMember(pc_get_first_living, &pc);
         return pc;
+}
+
+void player_party::beginLoitering(int hours)
+{
+        struct node *entry = 0;
+        class Character *member = 0;
+
+        assert(hours > 0);
+
+        log_begin_group();
+        log_msg("Loitering...");
+        FOR_EACH_MEMBER(entry, member) {
+                member->beginLoitering(hours);
+        }
+        log_end_group();
+
+        clock_alarm_set(&wakeup_alarm, hours * 60);
+        loitering = true;
+
+        session_set_time_accel(CAMPING_TIME_ACCELERATION);
+}
+
+bool player_party::isLoitering()
+{
+        return loitering;
+}
+
+void player_party::endLoitering()
+{
+        struct node *entry;
+        class Character *member;
+
+        loitering  = false;
+        session_set_time_accel(1);
+        log_begin_group();
+        FOR_EACH_MEMBER(entry, member) {
+                member->endLoitering();
+        }
+        enableFollowMode();
+        log_end_group();
 }
 
 static bool member_begin_resting(class Character *member, void *data)
