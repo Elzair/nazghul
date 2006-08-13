@@ -164,22 +164,9 @@ Status Window
 
     Normally the window lists all the player's party members and shows their
     current hit points and status. The status is reflected in one or more
-    letters following the hit points. The letters are codes:
-
-    A...Alcohol (drunk)
-    C...Charmed (in the service of an enemy)
-    D...Diseased
-    E...Ensnared
-    F...Fire immunity
-    G...Good (no problem)
-    I...Immune to poison
-    L...Light (magically lit up)
-    N...Invisible
-    P...Poisoned
-    S...Asleep
-    T...Torchlight (carrying a torch)
-    p...Protection (In Sanct)
-    Z...Paralyzed
+    little icons. For example, if a character is poisoned you'll see a little
+    green skull-and-crossbones. You can get a better description of the status
+    by using the Z)tatus command to inspect individual party members.
 
 Foogod Window
 
