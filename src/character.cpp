@@ -2552,6 +2552,8 @@ bool Character::joinPlayer(void)
         
         if (player_party->addMember(this)) {
                 addView();
+                // Turn off any prior AI.
+                setAI(NULL);
                 return true;
         }
 

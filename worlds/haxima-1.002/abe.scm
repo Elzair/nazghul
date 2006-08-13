@@ -189,7 +189,7 @@
     #f               ; dead
     'abe-conv         ; conv
     sch_abe           ; sched
-    nil              ; special ai
+    'townsman-ai              ; special ai
     nil              ; container
     nil              ; readied
     )

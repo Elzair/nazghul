@@ -404,7 +404,7 @@
      #f ;;...........dead?
      'enchanter-conv ;;...conversation (optional)
      sch_enchanter ;;.....schedule (optional)
-     nil ;;..........custom ai (optional)
+     'townsman-ai ;;..........custom ai (optional)
      ;;..............container (and contents)
      (mk-chest
       'burn

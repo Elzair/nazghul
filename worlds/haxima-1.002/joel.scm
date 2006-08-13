@@ -119,7 +119,7 @@
     #f               ; dead
     'joel-conv         ; conv
     sch_joel           ; sched
-    nil              ; special ai
+    'townsman-ai              ; special ai
     nil              ; container
     nil              ; readied
     )

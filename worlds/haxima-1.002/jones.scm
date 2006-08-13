@@ -96,7 +96,7 @@
     #f               ; dead
     'jones-conv         ; conv
     sch_jones           ; sched
-    nil              ; special ai
+    'townsman-ai              ; special ai
     nil              ; container
     nil              ; readied
     )

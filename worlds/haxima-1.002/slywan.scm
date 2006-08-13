@@ -121,7 +121,7 @@
     #f               ; dead
     'slywan-conv         ; conv
     sch_slywan           ; sched
-    nil              ; special ai
+    'townsman-ai              ; special ai
     (mk-chest nil nil) ;; container
     nil              ; readied
     )

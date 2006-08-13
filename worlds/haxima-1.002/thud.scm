@@ -109,7 +109,7 @@
       #f ;;...........dead?
       'thud-conv ;;...conversation (optional)
       sch_thud ;;.....schedule (optional)
-      nil ;;..........custom ai (optional)
+      'townsman-ai ;;..........custom ai (optional)
       nil ;;..........container (and contents)
       ;;.........readied arms (in addition to the container contents)
       (list

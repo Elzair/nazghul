@@ -207,7 +207,7 @@
                  #f                  ; dead
                  'hackle-conv        ; conv
                  sch_hackle          ; sched
-                 nil                 ; special ai
+                 'townsman-ai                 ; special ai
                  nil                 ; container
                  nil                 ; readied
                  )

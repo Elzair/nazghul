@@ -180,7 +180,7 @@
                  #f                  ; dead
                  'ange-conv          ; conv
                  sch_ange            ; sched
-                 nil                 ; special ai
+                 'townsman-ai                 ; special ai
                  nil                 ; container
                  nil                 ; readied
                  )

@@ -143,7 +143,7 @@
                #f                  ; dead
                'jim-conv          ; conv
                sch_jim           ; sched
-               nil                 ; special ai
+               'townsmain-ai                 ; special ai
                nil                 ; container
                nil                 ; readied
                )
@@ -164,7 +164,7 @@
                #f                  ; dead
                'gwen-conv          ; conv
                sch_gwen           ; sched
-               nil                 ; special ai
+               'townsman-ai                 ; special ai
                nil                 ; container
                nil                 ; readied
                )
@@ -185,7 +185,7 @@
                #f                  ; dead
                'chant-conv         ; conv
                sch_chant           ; sched
-               nil                 ; special ai
+               'townsman-ai                 ; special ai
                nil                 ; container
                nil                 ; readied
                )
@@ -206,7 +206,7 @@
                #f                  ; dead
                'earl-conv   ;; conv
                sch_earl     ;; sched
-               nil          ;; special ai
+               'townsman-ai          ;; special ai
                nil          ;; container
                nil          ;; readied
                )

@@ -418,7 +418,7 @@
      #f ;;...........dead?
      'alch-conv ;;...conversation (optional)
      sch_alch ;;.....schedule (optional)
-     nil ;;..........custom ai (optional)
+     'townsman-ai ;;..........custom ai (optional)
      nil ;;..........container (and contents)
      nil ;;......... readied arms (in addition to the container contents)
      nil ;;..........hooks in effect

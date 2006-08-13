@@ -184,7 +184,7 @@
                  #f                  ; dead
                  'stew-conv          ; conv
                  sch_stew            ; sched
-                 nil                 ; special ai
+                 'townsman-ai                 ; special ai
                  nil                 ; container
                  nil                 ; readied
                  )

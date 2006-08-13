@@ -169,7 +169,7 @@
                   max-health -1 max-health 3            ; hp/xp/mp/lvl
                   #f                  ; dead
                   'roland-conv        ; conv
-                  nil                 ; sched
+                  nil              ; sched
                   'roland-ai          ; special ai
                   nil                 ; container
                   nil                 ; readied

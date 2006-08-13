@@ -250,7 +250,7 @@
     #f               ; dead
     'necr-conv         ; conv
     sch_necr         ; sched
-    nil              ; special ai
+    'townsman-ai              ; special ai
     nil              ; container
     nil              ; readied
     )

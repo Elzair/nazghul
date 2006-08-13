@@ -208,7 +208,7 @@
                  #f                  ; dead
                  'man-conv         ; conv
                  sch_man           ; sched
-                 nil                 ; special ai
+                 'townsman-ai                 ; special ai
                  nil                 ; container
                  nil                 ; readied
                  )

@@ -97,7 +97,7 @@
     #f               ; dead
     'anne-conv         ; conv
     sch_anne           ; sched
-    nil              ; special ai
+    'townsman-ai              ; special ai
     nil              ; container
     nil              ; readied
     )

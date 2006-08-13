@@ -121,7 +121,7 @@
     #f               ; dead
     'amy-conv         ; conv
     sch_amy           ; sched
-    nil              ; special ai
+    'townsman-ai              ; special ai
     nil              ; container
     (list
      t_armor_leather

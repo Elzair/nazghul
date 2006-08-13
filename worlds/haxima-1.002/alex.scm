@@ -124,7 +124,7 @@
     #f               ; dead
     'alex-conv         ; conv
     sch_alex           ; sched
-    nil              ; special ai
+    'townsman-ai              ; special ai
     nil              ; container
     nil              ; readied
     )

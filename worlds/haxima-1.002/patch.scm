@@ -160,7 +160,7 @@
                  #f                  ; dead
                  'patch-conv         ; conv
                  sch_patch           ; sched
-                 nil                 ; special ai
+                 'townsman-ai                 ; special ai
                  nil                 ; container
                  nil                 ; readied
                  )

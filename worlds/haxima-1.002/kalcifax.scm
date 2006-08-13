@@ -129,7 +129,7 @@
     #f               ; dead
     'kalc-conv         ; conv
     sch_kalc           ; sched
-    nil              ; special ai
+    'townsman-ai              ; special ai
     nil              ; container
     (list            ;; readied
      t_staff

@@ -124,7 +124,7 @@
     #f               ; dead
     'tooth-conv         ; conv
     sch_tooth           ; sched
-    nil              ; special ai
+    'townsman-ai              ; special ai
     nil
     nil              ; readied
     )

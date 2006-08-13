@@ -308,7 +308,7 @@
      #f ;;...........dead?
      'engineer-conv ;;...conversation (optional)
      sch_engineer ;;.....schedule (optional)
-     nil ;;..........custom ai (optional)
+     'townsman-ai ;;..........custom ai (optional)
      ;;..............container (and contents)
      (mk-chest
       'bomb-trap

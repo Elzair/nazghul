@@ -157,7 +157,7 @@
                  #f                  ; dead
                  'melvin-conv        ; conv
                  sch_melvin          ; sched
-                 nil                 ; special ai
+                 'townsman-ai                 ; special ai
                  nil                 ; container
                  nil                 ; readied
                  )

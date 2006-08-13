@@ -155,7 +155,7 @@
     #f               ; dead
     'jake-conv         ; conv
     sch_jake           ; sched
-    nil              ; special ai
+    'townsman-ai              ; special ai
     nil              ; container
     nil              ; readied
     )

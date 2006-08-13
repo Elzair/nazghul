@@ -52,7 +52,7 @@
                #f                  ; dead
                'ilya-conv          ; conv
                sch_ilya           ; sched
-               nil                 ; special ai
+               'townsman-ai                 ; special ai
                nil                 ; container
                nil                 ; readied
                )

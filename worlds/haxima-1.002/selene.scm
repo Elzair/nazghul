@@ -119,7 +119,7 @@
     #f               ; dead
     'selene-conv         ; conv
     sch_selene           ; sched
-    nil              ; special ai
+    'townsman-ai              ; special ai
     nil              ; container
     (list t_dagger)              ; readied
     )

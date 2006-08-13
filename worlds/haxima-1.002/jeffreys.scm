@@ -163,7 +163,7 @@
                  #f                  ; dead
                  'jeff-conv         ; conv
                  sch_jeff           ; sched
-                 nil                 ; special ai
+                 'townsman-ai                 ; special ai
                  nil                 ; container
                  (list t_armor_chain
                        t_chain_coif

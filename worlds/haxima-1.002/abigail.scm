@@ -95,7 +95,7 @@
     #f               ; dead
     'abigail-conv         ; conv
     sch_abigail           ; sched
-    nil              ; special ai
+    'townsman-ai              ; special ai
     nil
     nil              ; readied
     )

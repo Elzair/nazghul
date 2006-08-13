@@ -10,6 +10,13 @@
            (has-mana-potion? kchar)
            (drink-mana-potion kchar))))
 
+(define (use-torch? kchar)
+  (if (not (is-in-darkness? kchar))
+      #f
+      (begin
+        (kern-obj-add-effect kchar ef_weaklight nil)
+        #t)))
+
 (define (use-heal-spell-on-self? kchar)
   ;;;;(display "use-heal-spell-on-self?")(newline)
   (and (wants-healing? kchar)
@@ -241,12 +248,11 @@
   (or 
    (get-off-bad-tile? kchar)
    (use-potion? kchar)
+   (use-torch? kchar)
    ))
 
 ;; Invoke a summoning ability if allies are outnumbered by a certain amount
 (define (ai-summon kchar ability)
-  (println "ai-summon")
-  (println "allies=" (num-allies kchar) " foes=" (num-hostiles kchar))
   (and (can-use-ability? ability kchar)
        (< (num-visible-allies kchar) (* 2 (num-visible-hostiles kchar)))
        (use-ability ability kchar)))
@@ -480,13 +486,18 @@
       ))
 
 (define (dragon-ai kchar)
-  (display "dragon-ai ")(dump-char kchar)
+  ;;(display "dragon-ai ")(dump-char kchar)
   (or (std-ai kchar)
       (and (> (kern-dice-roll "1d20") 14)
            (use-ranged-spell-on-foes? kchar 
                                       (list fireball-spell 
                                             cast-fire-wind
                                             )))))
+
+;; townsman-ai -- may be extended in the future to do things like flee from
+;; invaders, for now just do the basics and light up a torch if it gets dark.
+(define (townsman-ai kchar)
+  (std-ai kchar))
 
 ;;-------------------> old stuff for reference:
 ;;----------------------------------------------------------------------------

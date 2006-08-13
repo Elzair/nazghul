@@ -18,7 +18,7 @@
                #f                  ; dead
                'gregor-conv        ; conv
                sch_gregor          ; sched
-               nil                 ; special ai
+               'townsman-ai                 ; special ai
                nil                 ; container
                nil                 ; readied
                )

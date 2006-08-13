@@ -176,7 +176,7 @@
      #f ;;...........dead?
      'bill-conv ;;...conversation (optional)
      sch_bill ;;.....schedule (optional)
-     nil ;;..........custom ai (optional)
+     'townsman-ai ;;..........custom ai (optional)
 
      ;;..............container (and contents)
      (mk-chest 

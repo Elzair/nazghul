@@ -134,7 +134,7 @@
                  #f                  ; dead
                  'fing-conv         ; conv
                  sch_fing           ; sched
-                 nil                 ; special ai
+                 'townsman-ai                 ; special ai
                  nil                 ; container
                  nil                 ; readied
                  )

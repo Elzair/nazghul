@@ -163,7 +163,7 @@
                  #f                  ; dead
                  'lia-conv         ; conv
                  sch_lia           ; sched
-                 nil                 ; special ai
+                 'townsman-ai                 ; special ai
                  nil                 ; container
                  nil                 ; readied
                  )

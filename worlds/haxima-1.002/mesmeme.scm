@@ -122,7 +122,7 @@
     #f               ; dead
     'mesmeme-conv         ; conv
     sch_mesmeme           ; sched
-    nil              ; special ai
+    'townsman-ai              ; special ai
     nil              ; container
     nil              ; readied
     )

@@ -250,7 +250,7 @@
                  #f                  ; dead
                  'gen-conv           ; conv
                  sch_gen             ; sched
-                 nil                 ; special ai
+                 'townsman-ai        ; special ai
                  nil                 ; container
                  nil                 ; readied
                  )

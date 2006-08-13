@@ -1429,3 +1429,9 @@
     (if (null? kparty)
         #f
         (not (null? (kern-party-get-vehicle kparty))))))
+
+;; is-in-darkness? -- #t iff light on this object's tile is less than the
+;; threshold for "dark"
+(define (is-in-darkness? kobj)
+  (< (kern-place-get-light (kern-obj-get-location kobj))
+     64))

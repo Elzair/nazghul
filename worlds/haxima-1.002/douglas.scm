@@ -115,7 +115,7 @@
                  #f                  ; dead
                  'doug-conv         ; conv
                  sch_doug           ; sched
-                 nil                 ; special ai
+                 'townsman-ai                 ; special ai
                  nil                 ; container
                  (list t_armor_chain
                        t_chain_coif

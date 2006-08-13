@@ -281,6 +281,19 @@
   (kern-obj-inc-light kobj torchlight-amount))
 
 ;; ----------------------------------------------------------------------------
+;; Weak light
+;;
+;; A silent, weak version of torchlight for NPCs.
+;; ----------------------------------------------------------------------------
+(define weaklight-amount 256)
+
+(define (weaklight-rm fgob kobj)
+  (kern-obj-dec-light kobj weaklight-amount))
+
+(define (weaklight-apply fgob kobj)
+  (kern-obj-inc-light kobj weaklight-amount))
+
+;; ----------------------------------------------------------------------------
 ;; Protection
 ;;
 ;; Used by the In Sanct spell.
@@ -441,6 +454,7 @@
 (mk-effect 'ef_temporary_poison_immunity "Poison immunity" 			s_im_poison		'poison-immunity-exec nil                 nil              nil                 "add-hook-hook"      "I" 0   #f  60)
 (mk-effect 'ef_sleep                     "Sleep"					s_sleep			'sleep-exec           nil                 'sleep-rm        'sleep-reset        "start-of-turn-hook" "S" 0   #f  60)
 (mk-effect 'ef_torchlight                "Torchlight"				s_torchlight	nil                   'torchlight-apply   'torchlight-rm   'torchlight-apply   "start-of-turn-hook" "T" 0   #f  60)
+(mk-effect 'ef_weaklight                "Torchlight"				s_torchlight	nil                   'weaklight-apply   'weaklight-rm   'weaklight-apply   "start-of-turn-hook" "T" 0   #f  60)
 (mk-effect 'ef_light                     "Magical light"			s_light			'light-exec           nil                 'light-rm        'light-reset        "start-of-turn-hook" "L" 0   #f  -1)
 (mk-effect 'ef_protection                "Protection"				s_protect		 nil                   'protection-apply   'protection-rm   'protection-apply   "start-of-turn-hook" "p" 0   #t  10)
 (mk-effect 'ef_charm                     "Charm"					s_charm		 	nil                   'charm-apply        'charm-rm        'charm-apply        "start-of-turn-hook" "C" 0   #f   5)

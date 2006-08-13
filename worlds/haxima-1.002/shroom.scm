@@ -208,7 +208,7 @@
                  #f                  ; dead
                  'shroom-conv        ; conv
                  sch_shroom          ; sched
-                 nil                 ; special ai
+                 'townsman-ai                 ; special ai
                  nil                 ; container
                  nil                 ; readied
                  )

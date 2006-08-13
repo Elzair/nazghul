@@ -83,7 +83,7 @@
                  #f                  ; dead
                  'miggs-conv        ; conv
                  sch_miggs          ; sched
-                 nil                 ; special ai
+                 'townsman-ai                 ; special ai
                  nil                 ; container
                  nil                 ; readied
                  )

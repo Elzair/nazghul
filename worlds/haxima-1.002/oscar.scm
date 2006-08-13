@@ -195,7 +195,7 @@
                  #f                  ; dead
                  'oscar-conv         ; conv
                  sch_oscar           ; sched
-                 nil                 ; special ai
+                 'townsman-ai                 ; special ai
                  nil                 ; container
                  nil                 ; readied
                  )

@@ -180,7 +180,7 @@
                  #f                  ; dead
                  'doris-conv         ; conv
                  sch_doris           ; sched
-                 nil                 ; special ai
+                 'townsman-ai        ; special ai
                  nil                 ; container
                  nil                 ; readied
                  )

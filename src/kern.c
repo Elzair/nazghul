@@ -4784,6 +4784,17 @@ KERN_API_CALL(kern_place_get_terrain)
         return terrain ? scm_mk_ptr(sc, terrain) : sc->NIL;
 }
 
+KERN_API_CALL(kern_place_get_light)
+{
+        struct place *place;
+        int x, y;
+
+        if (unpack_loc(sc, &args, &place, &x, &y, "kern-place-get-light"))
+                return sc->F;
+
+        return scm_mk_integer(sc, place_get_light(place, x, y));
+}
+
 KERN_API_CALL(kern_place_get_terrain_map)
 {
         struct place *place;
@@ -7652,6 +7663,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-place-set-subplace", kern_place_set_subplace);
         API_DECL(sc, "kern-place-get-beings", kern_place_get_beings);
         API_DECL(sc, "kern-place-get-height", kern_place_get_height);
+        API_DECL(sc, "kern-place-get-light", kern_place_get_light);
         API_DECL(sc, "kern-place-get-location", kern_place_get_location);
         API_DECL(sc, "kern-place-get-name", kern_place_get_name);
         API_DECL(sc, "kern-place-get-neighbor", kern_place_get_neighbor);

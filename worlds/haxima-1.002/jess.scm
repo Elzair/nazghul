@@ -152,7 +152,7 @@
                  #f                  ; dead
                  'jess-conv         ; conv
                  sch_jess           ; sched
-                 nil                 ; special ai
+                 'townsman-ai                 ; special ai
                  nil                 ; container
                  nil                 ; readied
                  )

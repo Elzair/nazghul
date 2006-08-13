@@ -247,7 +247,7 @@
      #f               ; dead
      'meaney-conv         ; conv
      sch_meaney           ; sched
-     nil              ; special ai
+     'townsman-ai              ; special ai
 
      ;;..........container (and contents)
      (mk-chest nil
