@@ -143,7 +143,7 @@
                #f                  ; dead
                'jim-conv          ; conv
                sch_jim           ; sched
-               'townsmain-ai                 ; special ai
+               'townsman-ai                 ; special ai
                nil                 ; container
                nil                 ; readied
                )
