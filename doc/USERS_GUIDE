@@ -216,9 +216,10 @@ General commands:
     F)ire-<dir>................Fire vehicle's weapon (e.g., ship cannon)
     G)et-<dir>.................Get an object from the ground
     H)andle-<member>-<target>..Activate a switch or lever
+    L)oiter-<0-9/sunrise>......Loiter a few hours
     N)ew-order-<member>-<member>...Swap order of two party members
     O)pen-<dir>................Open a container or door
-    Q)uit......................Quit & save the game
+    Q)uit......................Quit & optionally save the game
     R)eady-<member>-<item>.....Ready an armament like a weapon, shield, etc.
     S)earch-<dir>..............Look carefully
     T)alk-<target>.............Talk to an NPC
@@ -227,9 +228,8 @@ General commands:
     Z)tats.....................Show party stats like inventory, armaments, etc
     @)AT.......................Information about where the party is AT, etc
     <space>....................Pass one turn
-    CTRL-Q)uit.................Quit without saving
-    CTRL-S)ave.................Save a snapshot of the game w/o quitting
-    CTRL-R)eload...............Reload the last snapshot
+    CTRL-S)ave.................Save a game
+    CTRL-R)eload...............Reload a game
 
 Wilderness-only commands:
 

@@ -25,9 +25,10 @@
    "F)ire a ship's cannon or other ordnance"
    "G)et something on the ground"
    "H)andle a lever or other mechanism"
+   "L)oiter a few hours"
    "N)ew-Order (rearrange party order)"
    "O)pen a chest, door or other closed object"
-   "Q)uit and save the game"
+   "Q)uit and optionally save the game"
    "R)eady arms for a party member"
    "S)earch for hidden stuff"
    "T)alk to somebody"
@@ -36,9 +37,8 @@
    "X)amine around"
    "@)AT (info about place & time)"
    "<space> (pass a turn)"
-   "CTRL-Q)uit without saving"
-   "CTRL-S)ave without quitting"
-   "CTRL-R)eload the last saved game"
+   "CTRL-S)ave the game"
+   "CTRL-R)eload a game"
    "SHIFT+ARROWKEY pan viewer"
    ))
 
