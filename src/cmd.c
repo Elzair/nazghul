@@ -66,6 +66,7 @@
 
 #define MAX_SPELL_NAME_LENGTH 64 /* arbitrarily chosen */
 #define MIN_XAMINE_LIGHT_LEVEL 32
+#define ESCAPE_CHARACTER 110
 
 extern int DeveloperMode;
 
@@ -954,7 +955,7 @@ bool cmdQuit(void)
 	int yesno;
 
 	cmdwin_clear();
-	cmdwin_print("Quit-Save Game-Y/N?");
+	cmdwin_print("Quit-Save and Quit-Y/N?");
 	getkey(&yesno, yesnokey);
 
 	cmdwin_backspace(4);
@@ -979,10 +980,20 @@ bool cmdQuit(void)
                         log_msg("Goodbye!\n");
                         Quit = true;
                 }
-	} else {
+	} 
+	else {
+		cmdwin_clear();
+		cmdwin_print("Quit-Quit without Saving-Y/N?");
+		getkey(&yesno, yesnokey);
+		if (yesno == 'y') {
                 /* FIXME: if player hits ESC we want to abort, not quit! */
-                log_msg("Goodbye!\n");
+				log_msg("Goodbye!\n");
                 Quit = true;
+		}
+		else
+		{
+		    log_msg("Quit game aborted!");
+		}
 	}
 
 	return Quit;
