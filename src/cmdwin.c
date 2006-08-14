@@ -77,7 +77,10 @@ int cmdwin_init(void)
 	cmdwin.srect.w = CMD_W;
 	cmdwin.srect.h = CMD_H;
 
-	cmdwin.blen = CMD_W / ASCII_W + 1;
+        /* The actual string buffer length is one less than the width of the
+         * cmdwin, because the last space must always be reserved for the
+         * cursor. */
+	cmdwin.blen = CMD_W / ASCII_W;
 	cmdwin.buf = (char *) malloc(cmdwin.blen);
 	if (!cmdwin.buf)
 		return -1;

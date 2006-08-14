@@ -56,6 +56,7 @@ class Container:public Object {
 	struct inv_entry *first(struct filter *);
 	struct inv_entry *next(struct inv_entry *ie, struct filter*);
 	struct inv_entry *prev(struct inv_entry *ie, struct filter*);
+        void moveToFront(struct inv_entry *ie);
 
 	void forEach(void (*fx) (struct inv_entry *, void *), void *);
 

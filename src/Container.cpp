@@ -294,3 +294,9 @@ bool Container::isEmpty()
 {
         return list_empty(&contents);
 }
+
+void Container::moveToFront(struct inv_entry *ie)
+{
+        list_remove(&ie->list);
+        list_add(&contents, &ie->list);
+}

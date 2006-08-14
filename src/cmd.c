@@ -1125,7 +1125,9 @@ bool cmdReady(class Character * member)
 	cmdwin_print("Ready-");
 
         // Select user
-        if (! member) {
+        if (member) {
+		cmdwin_print("%s", member->getName());                
+        } else {
                 member = select_party_member();
                 if (member == NULL)
                         return false;       
@@ -1147,7 +1149,7 @@ bool cmdReady(class Character * member)
 	kh.fx = scroller;
 	kh.data = &sc;
 	eventPushKeyHandler(&kh);
-	cmdwin_print("<select/ESC>");
+	cmdwin_print("-<select/ESC>");
 	erase = strlen("<select/ESC>");
 
 	for (;;) {
@@ -1167,20 +1169,27 @@ bool cmdReady(class Character * member)
 
 		class ArmsType *arms = (class ArmsType *) ie->type;
 
-		cmdwin_print("-%s-", arms->getName());
+		cmdwin_print("%s-", arms->getName());
                 log_begin("%s - ", arms->getName());
 
 		if (ie->ref && member->unready(arms)) {
 			msg = "unreadied!";
-			//ie->ref--;
 			statusRepaint();
 		} else {
 
 			switch (member->ready(arms)) {
 			case Character::Readied:
-				//ie->ref++;
 				statusRepaint();
 				msg = "readied";
+                                /* Move the readied item to the front of the
+                                 * list for easy access next time, and to
+                                 * percolate frequently-used items up to the
+                                 * top. */
+                                player_party->inventory->moveToFront(ie);
+                                /* After re-ordering the list, reset the status
+                                 * viewer to synch it back up with the new
+                                 * list. */
+                                statusSetMode(Ready);
 				break;
 			case Character::NoAvailableSlot:
 				msg = "all full!";
@@ -1199,7 +1208,7 @@ bool cmdReady(class Character * member)
 
 		cmdwin_print(msg);
                 log_end(msg);
-		erase = strlen(arms->getName()) + strlen(msg) + 2 /* dashes */;
+		erase = strlen(arms->getName()) + strlen(msg) + 1 /* dashes */;
 	}
 
 	eventPopKeyHandler();
@@ -1457,18 +1466,18 @@ bool cmdUse(class Character * member, int flags)
 		return false;
         }
 
+        /* warning: assume usable item came from player inventory; move it to
+         * the front of the list so that frequently-used items percolate to the
+         * top for easy selection by the player. Oh, and do this *before* using
+         * it, since using it may delete the ie if it is a consumable item and
+         * the last one in inventory. */
+        player_party->inventory->moveToFront(ie);
+
 	item = ie->type;
         assert(item->isUsable());
 
 	item->use(member);
 	statusRepaint();
-
-
-        /* Hack: assume all usable items are consumable. Can't fix this until
-         * items are stored in inventory as objects, not types. That or add a
-         * consumable flag to all object types. Or pass the container to the
-         * use() method. */
-        //member->takeOut(item, 1);
 
 	return true;
 }
