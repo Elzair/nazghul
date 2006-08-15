@@ -1144,6 +1144,7 @@ bool cmdReady(class Character * member)
 
 	statusSelectCharacter(member->getOrder());
 
+	player_party->sortReadiedItems(member);
 	statusSetMode(Ready);
 	sc.selector = InventoryItem;
 	kh.fx = scroller;
@@ -1185,11 +1186,11 @@ bool cmdReady(class Character * member)
                                  * list for easy access next time, and to
                                  * percolate frequently-used items up to the
                                  * top. */
-                                player_party->inventory->moveToFront(ie);
+                                //player_party->inventory->moveToFront(ie);
                                 /* After re-ordering the list, reset the status
                                  * viewer to synch it back up with the new
                                  * list. */
-                                statusSetMode(Ready);
+                                //statusSetMode(Ready);
 				break;
 			case Character::NoAvailableSlot:
 				msg = "all full!";
@@ -1215,6 +1216,7 @@ bool cmdReady(class Character * member)
 	statusSetMode(ShowParty);
 
         if (committed) {
+				player_party->sortReadiedItems(member);
                 member->decActionPoints(NAZGHUL_BASE_ACTION_POINTS);
         }
 

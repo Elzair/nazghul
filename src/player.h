@@ -170,6 +170,7 @@ class player_party : public Party {
         struct terrain_map *campsite_map;
         struct formation *campsite_formation;
         struct position_info pinfo;
+		void sortReadiedItems(class Character * member);
 
  protected:
         enum MoveResult try_to_move_off_map(struct move_info *info);
@@ -200,6 +201,5 @@ extern class player_party *player_party;
 extern int player_init(void);
 extern void player_dtor(void *val);
 extern void player_save(struct save *save, void *val);
-
 
 #endif				// player_h

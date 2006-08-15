@@ -1789,3 +1789,17 @@ bool player_party::canSeeLocation(struct place *place, int x, int y)
         // fixme -- ref naz.scm (any-player-party-member-visible?)
         return false;
 }
+
+/* shifts currently wielded items to the top of the equipment list */
+void player_party::sortReadiedItems(class Character * member)
+{
+	struct inv_entry *ie;
+	int armsIndex = 0;
+	for (class ArmsType * weapon = member->enumerateArms(&armsIndex); weapon != NULL; 
+             weapon = member->getNextArms(&armsIndex)) {
+
+		ie = inventory->search(weapon);
+		assert(ie);
+		inventory->moveToFront(ie);
+	}
+}
