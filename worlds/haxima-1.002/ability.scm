@@ -143,8 +143,8 @@
 			(damagedice (string-append 
 				(number->string (if (> apower 0) apower 1))
 				"d3")))
-      (kern-obj-apply-damage ktarg
-                             "ouch" (kern-dice-roll damagedice)))))
+      (kern-obj-inflict-damage ktarg
+                             "magic" (kern-dice-roll damagedice) kchar))))
 
 (define (cast-poison-missile-proc kchar ktarg)
   (kern-log-msg (kern-obj-get-name kchar)
