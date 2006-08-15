@@ -308,8 +308,25 @@ void Character::damage(int amount)
 			setFleeing(true);
 	}
         obj_dec_ref(this);
-
 }
+
+void Character::inflictDamage(int amount, class Character *attacker)
+{
+	bool mightkill = false;
+	if (!isDead())
+	{
+		mightkill = true;
+		harm_relations(attacker, this);
+	}
+	obj_inc_ref(this);
+	damage(amount);
+	if (mightkill && isDead())
+	{
+		attacker->addExperience(getExperienceValue());
+	}
+	obj_dec_ref(this);
+}
+
 enum Character::ReadyResult Character::ready(class ArmsType * arms)
 {
 	bool foundSlotType = false;

@@ -309,6 +309,7 @@ class Object {
         virtual void burn();
         virtual void sleep();
         virtual void damage(int amount);
+        virtual void inflictDamage(int amount,class Character *attacker);
         virtual void decActionPoints(int points);
         virtual void setActionPoints(int amount);
         virtual void endTurn();

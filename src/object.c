@@ -881,6 +881,11 @@ void Object::damage(int amount)
         runHook(OBJ_HOOK_DAMAGE);
 }
 
+void Object::inflictDamage(int amount, class Character *attacker)
+{
+    damage(amount);
+}
+
 int Object::getActionPoints()
 {
         return action_points;

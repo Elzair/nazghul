@@ -2359,6 +2359,28 @@ static pointer kern_obj_apply_damage(scheme *sc, pointer args)
         int amount;
 
         if (unpack(sc, &args, "psd", &obj, &desc, &amount)) {
+                rt_err("kern-obj-inflict-damage: bad args");
+                return sc->NIL;
+        }
+
+        if (!obj) {
+                rt_err("kern-obj-inflict-damage: null object");
+                return sc->NIL;
+        }
+
+        obj->damage(amount);
+
+        return sc->NIL;
+}
+
+static pointer kern_obj_inflict_damage(scheme *sc, pointer args)
+{
+        class Object *obj;
+        char *desc;
+        int amount;
+		class Character *attacker;
+
+        if (unpack(sc, &args, "psdp", &obj, &desc, &amount, &attacker)) {
                 rt_err("kern-obj-apply-damage: bad args");
                 return sc->NIL;
         }
@@ -2368,7 +2390,7 @@ static pointer kern_obj_apply_damage(scheme *sc, pointer args)
                 return sc->NIL;
         }
 
-        obj->damage(amount);
+        obj->inflictDamage(amount,attacker);
 
         return sc->NIL;
 }
@@ -7610,6 +7632,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-obj-add-effect", kern_obj_add_effect);
         API_DECL(sc, "kern-obj-add-to-inventory", kern_obj_add_to_inventory);
         API_DECL(sc, "kern-obj-apply-damage", kern_obj_apply_damage);
+        API_DECL(sc, "kern-obj-inflict-damage", kern_obj_inflict_damage);
         API_DECL(sc, "kern-obj-clone", kern_obj_clone);
         API_DECL(sc, "kern-obj-dec-ap", kern_obj_dec_ap);
         API_DECL(sc, "kern-obj-dec-light", kern_obj_dec_light);

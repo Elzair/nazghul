@@ -160,6 +160,7 @@ class Character:public Being {
         virtual void beginGuarding(int hours);
         virtual void beginResting(int hours);        
 	virtual void damage(int amount);
+	virtual void inflictDamage(int amount,class Character *attacker);
         virtual void endCamping(void);
         virtual void endGuarding();
         virtual void endResting(void);
