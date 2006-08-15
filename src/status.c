@@ -377,7 +377,7 @@ static void status_show_ready_arms(SDL_Rect * rect, void *thing)
         if (avail) {
                 screenPrint(rect, 0, "^c+%c%2d%c%s^c-",
                             (inUse?STAT_INUSE_CLR:STAT_NULL_CLR),
-                            ie->count,
+                            avail,
                             (inUse?'*':' '),
                             arms->getName());
         } else {
