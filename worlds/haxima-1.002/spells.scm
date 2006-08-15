@@ -474,7 +474,6 @@
   (user-cast-spell-on-party-member caster awaken))
 
 (define (grav-por caster)
-  (println (kern-obj-get-name (car (kern-obj-get-effects caster))))
   (let ((range (+ 4 (floor (/ (occ-ability-blackmagic caster) 3)))))
   (user-cast-ranged-targeted-spell caster range cast-magic-missile-proc)))
 
