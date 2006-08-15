@@ -3605,6 +3605,15 @@ KERN_API_CALL(kern_add_spell)
         return sc->NIL;
 }
 
+KERN_API_CALL(kern_init_random)
+{
+	/* This should have some timing randomness,
+		since human interaction is required before scripts run */
+	
+	srand(clock());
+	return sc->NIL;
+}
+
 KERN_API_CALL(kern_dice_roll)
 {
         static char *dice;
@@ -7726,6 +7735,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-add-xray-vision", kern_add_xray_vision);
         API_DECL(sc, "kern-begin-combat", kern_begin_combat);
         API_DECL(sc, "kern-blit-map", kern_blit_map);
+        API_DECL(sc, "kern-init-random", kern_init_random);
         API_DECL(sc, "kern-dice-roll", kern_dice_roll);
         API_DECL(sc, "kern-end-game" , kern_end_game);
         API_DECL(sc, "kern-fire-missile", kern_fire_missile);
