@@ -249,3 +249,4 @@
 (kern-set-ascii ss_u4_charset 32)
 (kern-set-cursor ls_whirlpool)
 (kern-set-damage-sprite s_hit)
+(kern-init-random)
