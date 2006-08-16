@@ -48,7 +48,7 @@
 			 #t))
 
 (define (potion-gain-stats kuser current-stat stat-name stat-setter)
-	(let ((total-stats ((kern-char-get-base-strength kuser)
+	(let ((total-stats (+ (kern-char-get-base-strength kuser)
 				(kern-char-get-base-dexterity kuser)
 				(kern-char-get-base-intelligence kuser))))
 		(kern-log-msg "Total stats: " total-stats)
