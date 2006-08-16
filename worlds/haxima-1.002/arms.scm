@@ -31,6 +31,22 @@
 
 (kern-mk-sprite-set 'ss_arms 32 32 7 8 0 0 "arms.png")
 
+;;-------------------------------------------------------------------------
+;; Temp ifc for mutable attack types
+;;-------------------------------------------------------------------------
+
+(define temp-ifc-state (list 0))
+
+(define (temp-ifc-set tempifc)
+	(set-car! temp-ifc-state tempifc))
+	
+(define temp-ifc
+  (ifc '()
+       (method 'hit-loc
+               (lambda (kmissile kplace x y)
+				 ((car temp-ifc-state) kmissile kplace x y)
+                 ))))
+
 ;;--------------------------------------------------------------------------
 ;; Curried constructors
 ;;
@@ -141,6 +157,7 @@
    (list 't_deathball    "deathball"   s_deathball    deathball-ifc)
    (list 't_stunball     "stunball"    s_projectile   stunball-ifc)
    (list 't_slimeglob    "slime glob"  s_acid_bolt    nil)
+   (list 't_mfireball    "fireball"    s_fireball     temp-ifc)
    ))
 
 ;; If we don't create these missile types now, we won't be able to refer to
