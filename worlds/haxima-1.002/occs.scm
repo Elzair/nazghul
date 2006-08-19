@@ -157,27 +157,31 @@
 
 (define (occ-ability-strattack kchar)
 	(let ((occ-abil (occ-get-abil (kern-char-get-occ kchar) 4)))
-		(if (null? occ-abil)
-			(+ (/ (kern-char-get-level kchar) 2)
-				(/ (kern-char-get-strength kchar) 3))
+		 (if (null? occ-abil)
+			(/ (* (kern-char-get-level kchar)
+				(+ (kern-char-get-strength kchar) 15))
+				30)
 			(occ-abil kchar)
 			)))
 
 (let (
 	(highskill
 		(lambda (kchar)
-			(+ (* (kern-char-get-level kchar) 0.8)
-				(/ (kern-char-get-strength kchar) 2))
+			(/ (* (kern-char-get-level kchar)
+				(+ (kern-char-get-strength kchar) 10))
+				20)
 			))
 	(modskill
 		(lambda (kchar)
-			(+ (* (kern-char-get-level kchar) 0.6)
-				(* (kern-char-get-strength kchar) 0.4))
+			(/ (* (kern-char-get-level kchar)
+				(+ (kern-char-get-strength kchar) 12))
+				24)
 			))
 	(lowskill
 		(lambda (kchar) 
-			(+ (/ (kern-char-get-level kchar) 3)
-				(/ (kern-char-get-strength kchar) 4))
+			(/ (* (kern-char-get-level kchar)
+				(+ (kern-char-get-strength kchar) 10))
+				30)
 			))
 	)
 	(occ-set-abil oc_wizard 4 lowskill)
@@ -187,29 +191,34 @@
 	(occ-set-abil oc_ranger 4 modskill)
 )
 
+
 (define (occ-ability-dexattack kchar)
-	(let ((occ-abil (occ-get-abil (kern-char-get-occ kchar) 4)))
-		(if (null? occ-abil)
-			(+ (/ (kern-char-get-level kchar) 2)
-				(/ (kern-char-get-dexterity kchar) 3))
+	(let ((occ-abil (occ-get-abil (kern-char-get-occ kchar) 5)))
+		 (if (null? occ-abil)
+			(/ (* (kern-char-get-level kchar)
+				(+ (kern-char-get-dexterity kchar) 15))
+				30)
 			(occ-abil kchar)
 			)))
 
 (let (
 	(highskill
 		(lambda (kchar)
-			(+ (* (kern-char-get-level kchar) 0.8)
-				(/ (kern-char-get-dexterity kchar) 2))
+			(/ (* (kern-char-get-level kchar)
+				(+ (kern-char-get-dexterity kchar) 10))
+				20)
 			))
 	(modskill
 		(lambda (kchar)
-			(+ (* (kern-char-get-level kchar) 0.6)
-				(* (kern-char-get-dexterity kchar) 0.4))
+			(/ (* (kern-char-get-level kchar)
+				(+ (kern-char-get-dexterity kchar) 12))
+				24)
 			))
 	(lowskill
 		(lambda (kchar) 
-			(+ (/ (kern-char-get-level kchar) 3)
-				(/ (kern-char-get-dexterity kchar) 4))
+			(/ (* (kern-char-get-level kchar)
+				(+ (kern-char-get-dexterity kchar) 10))
+				30)
 			))
 	)
 	(occ-set-abil oc_wizard 5 lowskill)
@@ -218,6 +227,9 @@
 	(occ-set-abil oc_warrior 5 highskill)
 	(occ-set-abil oc_ranger 5 modskill)
 )
+
+(define (occ-ability-strdamage kchar)
+	(* 2 (-  (log (+ 2 (occ-ability-strattack kchar))))))
 
 (define (occ-ability-dexdefend kchar)
 	(let ((occ-abil (occ-get-abil (kern-char-get-occ kchar) 4)))
@@ -250,3 +262,15 @@
 	(occ-set-abil oc_warrior 6 modskill)
 	(occ-set-abil oc_ranger 6 highskill)
 )
+
+(define (proc-stratt kchar)
+	(* 1000 (occ-ability-strattack kchar)))
+
+(define (proc-dexatt kchar)
+	(* 1000 (occ-ability-dexattack kchar)))
+
+(define (proc-strdam kchar)
+	(* 1000 (occ-ability-strdamage kchar)))
+
+(define (proc-dexdef kchar)
+	(* 1000 (occ-ability-dexdefend kchar)))

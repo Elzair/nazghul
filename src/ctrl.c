@@ -342,7 +342,7 @@ void ctrl_do_attack(class Character *character, class ArmsType *weapon,
         character->useAmmo(weapon);
 
         if (miss) {
-                log_end("missed!");
+                log_end("obstructed!");
                 return;
         }
 
@@ -351,14 +351,21 @@ void ctrl_do_attack(class Character *character, class ArmsType *weapon,
         hit += to_hit_penalty;
         def = target->getDefend();
 
+		int abonus = character->getAttackBonus(weapon);
+		int dbonus = target->getAvoidBonus();
+
+        log_continue("\n");
+        log_continue(" to-hit bonus %d\n", abonus);
+        log_continue(" to-defend bonus %d", dbonus);
+
         /* Add level bonuses */
-        hit += character->getLevel();
-        def += target->getLevel();
+        hit += abonus;
+        def += dbonus;
 
         log_continue("\n");
         log_continue(" to-hit %d vs %d to-defend\n", hit, def);
         if (hit < def) {
-                log_end("deflected!");
+                log_end("evaded!");
                 return;
         }
 
@@ -484,7 +491,6 @@ static void ctrl_attack_ui(class Character *character)
 {
         int x;
         int y;
-        int penalty;
         class ArmsType *weapon;
         class Character *target;
         struct terrain *terrain;
@@ -497,11 +503,6 @@ static void ctrl_attack_ui(class Character *character)
                 log_msg("Switching from Follow to Round Robin Mode.\n");
                 player_party->enableRoundRobinMode();
         }
-
-        /* Have to calculate to-hit penalty before looping over weapons. If we
-         * wait to do it in the ctrl_do_attack() function we'll enumeratue
-         * WITHIN the enumeration and screw it all up. */
-        penalty = character->getToHitPenalty();
 
         // Loop over all readied weapons
 		int armsIndex=0;
@@ -655,7 +656,7 @@ static void ctrl_attack_ui(class Character *character)
                         }
 
                         // Strike the target
-                        ctrl_do_attack(character, weapon, target, penalty);
+                        ctrl_do_attack(character, weapon, target, character->getToHitPenalty());
 
                         // If we hit a party member then show their new hit
                         // points in the status window
@@ -1174,13 +1175,10 @@ static bool ctrl_attack_target(class Character *character,
 {
         int distance;
         bool attacked = false;
-        int penalty;
 
         distance = place_flying_distance(character->getPlace(), 
                                          character->getX(), character->getY(), 
                                          target->getX(), target->getY());
-
-        penalty = character->getToHitPenalty();
 
 		int armsIndex=0;
         for (class ArmsType * weapon = character->enumerateWeapons(&armsIndex); 
@@ -1199,7 +1197,7 @@ static bool ctrl_attack_target(class Character *character,
                         continue;
                 }
 
-                ctrl_do_attack(character, weapon, target, penalty);
+                ctrl_do_attack(character, weapon, target, character->getToHitPenalty());
                 attacked = true;
                 statusRepaint();
 

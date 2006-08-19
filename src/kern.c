@@ -6179,6 +6179,21 @@ KERN_API_CALL(kern_being_set_name)
 
 }
 
+KERN_API_CALL(kern_harm_relations)
+{
+        class Character *cha;
+        class Character *chb;
+
+        if (unpack(sc, &args, "pp", &cha, &chb)) {
+                rt_err("kern-harm-relations: bad args");
+                return sc->NIL;
+        }
+
+		harm_relations(cha,chb);
+
+		return sc->NIL;
+}
+
 KERN_API_CALL(kern_being_get_current_faction)
 {
         class Being *being;
@@ -6233,6 +6248,20 @@ KERN_API_CALL(kern_set_camping_proc)
         session_set_camping_proc(Session, closure_new(sc, proc));
 
         return proc;
+}
+
+KERN_API_CALL(kern_set_combat_procs)
+{
+        pointer stra,dexa,dam,def;
+
+        if (unpack(sc, &args, "oooo", &stra,&dexa,&dam,&def)) {
+                rt_err("kern-set-combat-procs");
+                return sc->NIL;
+        }
+
+		session_set_combat_procs(Session, closure_new(sc, stra),closure_new(sc, dexa),closure_new(sc, dam),closure_new(sc, def));
+
+        return sc->NIL;
 }
 
 KERN_API_CALL(kern_player_set_follow_mode)
@@ -6508,6 +6537,19 @@ KERN_API_CALL(kern_char_get_level)
                 return sc->NIL;
 
         return scm_mk_integer(sc, character->getLevel());
+}
+
+
+KERN_API_CALL(kern_char_get_experience_value)
+{
+        class Character *character;
+
+        /* unpack the character */
+        character = (class Character*)unpack_obj(sc, &args, "kern-char-get-level");
+        if (!character)
+                return sc->NIL;
+
+        return scm_mk_integer(sc, character->getExperienceValue());
 }
 
 KERN_API_CALL(kern_char_set_level)
@@ -7552,6 +7594,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-char-charm", kern_char_charm);
         API_DECL(sc, "kern-char-force-drop", kern_char_force_drop);
         API_DECL(sc, "kern-char-get-arms", kern_char_get_arms);
+        API_DECL(sc, "kern-char-get-experience-value", kern_char_get_experience_value);		
         API_DECL(sc, "kern-char-get-hp", kern_char_get_hp);
         API_DECL(sc, "kern-char-get-inventory", kern_char_get_inventory);
         API_DECL(sc, "kern-char-get-level", kern_char_get_level);
@@ -7765,6 +7808,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-get-ticks", kern_get_ticks);
         API_DECL(sc, "kern-get-time", kern_get_time);
 		API_DECL(sc, "kern-get-total-minutes", kern_get_total_minutes);
+		API_DECL(sc, "kern-harm-relations", kern_harm_relations);		
         API_DECL(sc, "kern-in-los?", kern_in_los);
         /*API_DECL(sc, "kern-los-invalidate", kern_los_invalidate);*/
         API_DECL(sc, "kern-include", kern_include);
@@ -7776,6 +7820,8 @@ scheme *kern_init(void)
                  kern_search_rect_for_terrain);
         API_DECL(sc, "kern-search-rect-for-obj-type", 
                  kern_search_rect_for_obj_type);
+        API_DECL(sc, "kern-set-camping-proc", kern_set_camping_proc);
+        API_DECL(sc, "kern-set-combat-procs", kern_set_combat_procs);
         API_DECL(sc, "kern-set-camping-proc", kern_set_camping_proc);
         API_DECL(sc, "kern-set-spell-words", kern_set_spell_words);
         API_DECL(sc, "kern-set-start-proc", kern_set_start_proc);

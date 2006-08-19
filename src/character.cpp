@@ -1683,6 +1683,36 @@ int Character::getToHitPenalty()
         return penalty;
 }
 
+// for now assumes weapon is 20% str and 60% dex. no that doesnt add up to 100%
+int Character::getAttackBonus(class ArmsType * weapon)
+{
+	int strbonus = closure_exec(Session->str_based_attack, "p", this);
+	int dexbonus = closure_exec(Session->dex_based_attack, "p", this);
+	int totalbonus = (closure_exec(Session->str_based_attack, "p", this) * 20 +
+	closure_exec(Session->dex_based_attack, "p", this) * 60) / (100 * 1000);
+	fprintf(stderr,"attack bonus: 20%% %f + 60%% %f = %d\n", strbonus/1000.0, dexbonus/1000.0,totalbonus);
+	return (rand() % totalbonus);
+}
+
+int Character::getBaseDamageBonus()
+{
+	return closure_exec(Session->damage_bonus, "p", 
+                                     this);
+}
+
+//for now assumes armour halves dodge bonus
+int Character::getAvoidBonus()
+{
+	//hack: dont get any bonus here if you're asleep on the job
+	if (isAsleep())
+		return 0;
+		
+	int dexbonus = closure_exec(Session->defense_bonus, "p", this);	
+	int totalbonus = closure_exec(Session->defense_bonus, "p", this) * 50 / (100 * 1000);	
+	fprintf(stderr,"defense bonus: 50%% %f = %d\n", dexbonus/1000.0, totalbonus);	
+	return (rand() % totalbonus);
+}
+
 int Character::getArmor()
 {
         int armor = 0;

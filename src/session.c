@@ -585,6 +585,48 @@ void session_set_camping_proc(struct session *session, struct closure *proc)
         }
 }
 
+void session_set_combat_procs(struct session *session,
+		struct closure *stra, struct closure *dexa,
+		struct closure *dam, struct closure *def)
+{
+        /* out with the old */
+        if (session->str_based_attack) {
+                closure_unref(session->str_based_attack);
+                session->str_based_attack = NULL;
+        }
+        if (session->dex_based_attack) {
+                closure_unref(session->dex_based_attack);
+                session->dex_based_attack = NULL;
+        }
+        if (session->damage_bonus) {
+                closure_unref(session->damage_bonus);
+                session->damage_bonus = NULL;
+        }
+        if (session->defense_bonus) {
+                closure_unref(session->defense_bonus);
+                session->defense_bonus = NULL;
+        }
+        
+        /* in with the new */
+        if (stra) {
+                closure_ref(stra);
+                session->str_based_attack = stra;
+        }
+        if (dexa) {
+                closure_ref(dexa);
+                session->dex_based_attack = dexa;
+        }
+        if (dam) {
+                closure_ref(dam);
+                session->damage_bonus = dam;
+        }
+        if (def) {
+                closure_ref(def);
+                session->defense_bonus = def;
+        }
+
+}
+
 void session_run_start_proc(struct session *session)
 {
         if (session->start_proc) {

@@ -75,6 +75,9 @@ class Character:public Being {
         int getArmor();
         int getDefend();
         int getToHitPenalty();
+        int getAttackBonus(class ArmsType * weapon);
+        int getBaseDamageBonus();
+        int getAvoidBonus();
         virtual class Party * getParty();
 	virtual int getType();
 	int getHp();

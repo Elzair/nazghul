@@ -182,7 +182,13 @@ struct session {
         /* Optional script to run every turn the player is camping in the
          * wilderness */
         struct closure *camping_proc;
-
+		
+		/* Scripts that retrieve combat abilities */
+		struct closure *str_based_attack;
+		struct closure *dex_based_attack;
+		struct closure *damage_bonus;
+		struct closure *defense_bonus;
+		
         struct node sched_chars;   /* characters with multi-place schedules */
 
         /* This is a flat-out hack. I decided to add some things like
@@ -262,6 +268,11 @@ extern void session_set_start_proc(struct session *session,
 extern void session_run_start_proc(struct session *session);
 extern void session_set_camping_proc(struct session *session, 
                                      struct closure *proc);
+extern void session_set_combat_procs(struct session *session, 
+									struct closure *stra,
+									struct closure *dexa,
+									struct closure *dam,
+                                    struct closure *def);
 extern void save_err(char *fmt, ...);
 extern struct node *session_add_sched_char(struct session *session,
                                            class Character *npc);

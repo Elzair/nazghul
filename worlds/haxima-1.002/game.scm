@@ -249,4 +249,8 @@
 (kern-set-ascii ss_u4_charset 32)
 (kern-set-cursor ls_whirlpool)
 (kern-set-damage-sprite s_hit)
+(kern-set-combat-procs proc-stratt proc-dexatt
+	proc-stratt proc-dexdef)
+
 (kern-init-random)
+
