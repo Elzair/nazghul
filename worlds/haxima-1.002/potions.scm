@@ -12,6 +12,9 @@
 (kern-mk-sprite 's_red_bubbly_potion    ss_potions 1 5 #f 0)
 (kern-mk-sprite 's_green_bubbly_potion  ss_potions 1 6 #f 0)
 (kern-mk-sprite 's_yellow_bubbly_potion ss_potions 1 7 #f 0)
+(kern-mk-sprite 's_round_bubbly_purple  ss_potions 1 10 #f 0)
+(kern-mk-sprite 's_round_bubbly_lblue   ss_potions 1 11 #f 0)
+(kern-mk-sprite 's_round_bubbly_yellow  ss_potions 1 12 #f 0)
 
 ;; mk-potion -- utility for making potion types
 (define (mk-potion tag name sprite drink-proc)
@@ -63,19 +66,19 @@
 		#t
 	))
 
-(mk-potion 't_str_potion "potion of strength" s_healing_potion
+(mk-potion 't_str_potion "potion of strength" s_round_bubbly_yellow
 		(lambda (kpotion kuser)
 			(potion-gain-stats kuser (kern-char-get-base-strength kuser)
 				"strength" kern-char-set-strength)
 		))
 			 
-(mk-potion 't_dex_potion "potion of dexterity" s_immunity_potion
+(mk-potion 't_dex_potion "potion of dexterity" s_round_bubbly_purple
 		(lambda (kpotion kuser)
 			(potion-gain-stats kuser (kern-char-get-base-dexterity kuser)
 				"dexterity" kern-char-set-dexterity)
 		))
 			 
-(mk-potion 't_int_potion "potion of intelligence" s_mana_potion
+(mk-potion 't_int_potion "potion of intelligence" s_round_bubbly_lblue
 		(lambda (kpotion kuser)
 			(potion-gain-stats kuser (kern-char-get-base-intelligence kuser)
 				"intelligence" kern-char-set-intelligence)

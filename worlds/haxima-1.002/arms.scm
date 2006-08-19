@@ -99,6 +99,7 @@
 (kern-mk-sprite 's_bolt        ss_arms 1 12 #f 170)
 (kern-mk-sprite 's_poison_bolt ss_arms 1 16 #f 170)
 (kern-mk-sprite 's_acid_bolt   ss_arms 1 20 #f 170)
+(kern-mk-sprite 's_squat_bubbly_green_potion ss_arms 1 30 #f 170)
 
 ;; ----------------------------------------------------------------------------
 ;; mk-missile-ifc -- automate missile ifc creation. 'pred?' takes an object as
@@ -228,7 +229,7 @@
    ;;     tag              | name          | sprite              | to-hit | damage | to-def | slots       | hnds | rng | ifc             | weight
    ;;     ==========================================================================================================================================
    (list  't_oil            "flaming oil"   s_flaming_oil          "-1"     "1d6"    "-2"     slot-weapon   1      4     flaming-oil-ifc  1)
-   (list  't_slime_vial     "vial of slime" s_flaming_oil          "-1"     "1d2"    "-2"     slot-weapon   1      4     vial-of-slime-ifc  1)
+   (list  't_slime_vial     "vial of slime" s_squat_bubbly_green_potion "-1"     "1d2"    "-2"     slot-weapon   1      4     vial-of-slime-ifc  1)
    (list  't_spear          "spear"         s_spear                "0"      "1d8"    "+1"     slot-weapon   1      4     obj-ifc          2)
    (list  't_thrown_boulder "loose boulder" s_thrown_boulder       "-2"     "3d4+1"  "-2"     slot-weapon   2      5     obj-ifc          10)
    ))
