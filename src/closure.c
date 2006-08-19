@@ -55,6 +55,56 @@ static void closure_del(closure_t *closure)
         free(closure);
 }
 
+/* 
+ * closure_execv - internal helper method to call the closure and return the
+ * Scheme result. 
+ */
+static pointer closure_execv(closure_t *closure, char *fmt, va_list args)
+{
+        pointer head;
+        pointer result;
+
+        /* Lock the closure against deletion while it is being called. */
+        closure_ref(closure);
+
+        /* Convert the C args to Scheme. */
+        head = vpack(closure->sc, fmt, args);
+
+        /* Straight procedure call? */
+        if (scm_is_closure(closure->sc, closure->code)) {
+                result = scheme_call(closure->sc, closure->code, head);
+        }
+
+        /* Need to lookup it up first? */
+        else if (scm_is_symbol(closure->sc, closure->code)) {
+
+                pointer pair;
+                pointer proc;
+
+                /* The 'code' pointer is a pointer to a scheme symbol. Looking
+                 * it up in the scheme environment will return a (symbol,
+                 * value) pair. We then take the cdr of the pair to get the
+                 * actual procedure we want to call. */
+                pair = closure->sc->vptr->find_slot_in_env(closure->sc, 
+                                                           closure->sc->envir, 
+                                                           closure->code, 
+                                                           1);
+                assert(scm_is_pair(closure->sc, pair));
+                proc = closure->sc->vptr->pair_cdr(pair);
+                result = scheme_call(closure->sc, proc, head);
+
+        }
+
+        /* Invalid or garbage-collected closure? */
+        else {
+                /* There's a bug somewhere. Happy hunting. */
+                assert(false);
+        }
+
+        closure_unref(closure);
+        return result;
+}
+
 closure_t *closure_new(scheme *sc, pointer code)
 {
         closure_t *clx = (closure_t*)calloc(1, sizeof(*clx));
@@ -82,68 +132,28 @@ void closure_init(closure_t *clx, scheme *sc, pointer code)
 
 int closure_exec(closure_t *closure, char *fmt, ...)
 {
-        pointer head;
         pointer result;
         va_list ap;
         int ret = 1;
 
         closure_ref(closure);
 
-        assert(closure->code);
-
-        head = closure->sc->NIL;
-
-        /* Convert the args to a scheme list */
-        if (fmt) {
-                va_start(ap, fmt);
-                head = vpack(closure->sc, fmt, ap);
-                va_end(ap);
-        }
-
-        if (scm_is_closure(closure->sc, closure->code)) {
-                //int t1 = SDL_GetTicks();
-                result = scheme_call(closure->sc, closure->code, head);
-                //printf("exec: %d ms\n", SDL_GetTicks()-t1);
-        } else if (scm_is_symbol(closure->sc, closure->code)) {
-
-                pointer pair;
-                pointer proc;
-
-                /* The 'code' pointer is a pointer to a scheme symbol. Looking
-                 * it up in the scheme environment will return a (symbol,
-                 * value) pair. We then take the cdr of the pair to get the
-                 * actual procedure we want to call. */
-                pair = closure->sc->vptr->find_slot_in_env(closure->sc, 
-                                                           closure->sc->envir, 
-                                                           closure->code, 
-                                                           1);
-                assert(scm_is_pair(closure->sc, pair));
-                proc = closure->sc->vptr->pair_cdr(pair);
-
-                //int t1 = SDL_GetTicks();
-                result = scheme_call(closure->sc, proc, head);
-                //printf("exec: %d ms\n", SDL_GetTicks()-t1);
-
-                /* WARNING: it is no longer safe to reference the closure at
-                 * this point, because it may have destroyed itself as part of
-                 * the scheme_call! Probably need to implement a lock mechanism
-                 * like that used for place tiles. */
-
-        } else {
-                /* This can happen if the interpreter gc's our closure. */
-                assert(false);
-        }
-
-        /* FIXME: need to return integer results, too */
+        va_start(ap, fmt);
+        result = closure_execv(closure, fmt, ap);
+        va_end(ap);
 
  evaluate_result:
 
         if (result == closure->sc->NIL ||
             result == closure->sc->F) {
                 ret = 0;
-        } else if (closure->sc->vptr->is_number(result) &&
-                   closure->sc->vptr->is_integer(result)) {
-                ret = closure->sc->vptr->ivalue(result);
+        } else if (closure->sc->vptr->is_number(result)) {
+                if (closure->sc->vptr->is_integer(result)) {
+                        ret = closure->sc->vptr->ivalue(result);
+                } else {
+                        /* coerce it */
+                        ret = (int)closure->sc->vptr->rvalue(result);
+                }
         } else if (scm_is_symbol(closure->sc, result)) {
                 pointer pair;
                 pair = closure->sc->vptr->find_slot_in_env(closure->sc, 
@@ -157,6 +167,7 @@ int closure_exec(closure_t *closure, char *fmt, ...)
                 ret = (long)closure->sc->vptr->ffvalue(result);
         }
 
+        closure_unref(closure);
         return ret;
 }
 
