@@ -476,7 +476,7 @@ void Character::groupExitTo(struct place *dest_place, int dest_x, int dest_y,
 
         if (cutscene) {
                 mapUpdate(0);
-                closure_exec(cutscene, NULL);
+                closure_exec(cutscene, "");
         }
 
         // --------------------------------------------------------------------
