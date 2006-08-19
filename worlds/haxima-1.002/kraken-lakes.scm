@@ -27,27 +27,27 @@
 
 (mk-dungeon-room
  'p_pools "Pools"
-	(list
-		"rr rr rr .. .. .. .. .. .. .. .. .. .. .. .. .. rr rr rr "
-		"rr rr rr rr .. .. .. .. .. .. .. .. .. .. .. .. .. rr rr "
-		"rr -- -- rr rr .. .. .. .. .. .. .. %3 %% %% %5 .. .. rr "
-		"rr -- -- rr rr .. .. .. .. .. .. %b %% ~3 ~5 %% %5 .. rr "
-		"rr -- -- ~~ %5 .. .. .. .. .. .. ~C ~3 -- -- ~5 %% %5 rr "
-		"rr rr ~~ ~c %% .. .. .. .. .. .. ~3 -- -- -- -- ~5 %% rr "
-		"rr rr %a %% %c .. .. .. .. .. .. ~~ -- -- -- -- ~4 %% rr "
-		"rr rr .. .. .. .. .. xx w+ d, ,, xx ~~ -- -- -- ~c %% rr "
-		"rr .. .. .. .. .. .. rr ,, ,, ,, xx ~~ -- -- ~c %% %c rr "
-		"rr .. %3 %% %% %5 .. w+ .. ,, ,, rr ~% ~a ~c %% %c rr rr "
-		"rr %3 %% ~3 ~5 %% .. ,, ,, ,, ,, ,, .. %% %% %% .. .. rr "
-		"rr %% ~3 -- ~c %% .. rr xx .. ,, rr .. %% ~7 %% %5 .. rr "
-		"rr %% ~a ~c %% %c .. .. .. .. .. .. %3 ~3 -- ~5 %% .. rr "
-		"rr %a %% %% %c .. .. .. .. .. %3 %% ~3 -- -- ~4 %% .. rr "
-		"rr rr .. rr rr .. .. .. .. .. %% ~3 -- -- -- ~c %% .. rr "
-		"rr rr rr rr rr .. .. .. .. .. %% ~a -- -- ~c %% %c .. rr "
-		"rr rr rr rr .. .. .. .. .. .. %a %% ~a ~c %% %c .. rr rr "
-		"rr rr rr rr rr .. .. rr rr .. .. %a %% %% %c .. .. rr rr "
-		"rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-	)
+ (list
+      "rr rr rr .. .. .. .. bb dd dd dd .. .. .. .. .. rr rr rr "
+      "rr rr rr rr .. .. .. .. dd dd dd bb .. .. .. .. .. rr rr "
+      "rr -- -- rr rr .. .. bb dd dd dd .. %3 %% %% %5 .. .. rr "
+      "rr -- -- rr rr .. .. .. dd dd dd bb %% ~3 ~5 %% %5 .. rr "
+      "rr -- -- ~~ %5 .. .. bb dd dd dd ~C ~3 -- -- ~5 %% %5 rr "
+      "rr rr ~~ ~c %% .. .. .. dd dd dd bb -- -- -- -- ~5 %% rr "
+      "rr rr %a %% %c .. .. bb dd dd dd %% -- -- -- -- ~4 %% rr "
+      "rr rr .. .. .. .. .. xx w+ d, bb xx ~~ -- -- -- ~c %% rr "
+      "rr .. .. .. .. .. .. rr ,, ,, ,, xx ~~ -- -- ~c %% %c rr "
+      "rr .. %3 %% %% %5 .. w+ gg ,, ,, rr ~% ~a ~c %% %c rr rr "
+      "rr %3 %% ~3 ~5 %% .. gg ,, ,, ,, gg .. %% %% %% .. .. rr "
+      "rr %% ~3 -- ~c %% .. rr xx bb gg rr .. %% ~7 %% %5 .. rr "
+      "rr %% ~a ~c %% %c .. .. .. .. .. .. %3 ~3 -- ~5 %% .. rr "
+      "rr %a %% %% %c .. .. .. .. .. %3 %% ~3 -- -- ~4 %% .. rr "
+      "rr rr .. rr rr .. .. .. .. .. %% ~3 -- -- -- ~c %% .. rr "
+      "rr rr rr rr rr .. .. .. .. .. %% ~a -- -- ~c %% %c .. rr "
+      "rr rr rr rr .. .. .. .. .. .. %a %% ~a ~c %% %c .. rr rr "
+      "rr rr rr rr rr .. .. rr rr .. .. %a %% %% %c .. .. rr rr "
+      "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
+      )
  (put (mk-door) 9 7)
  (put (mk-ladder-up 'p_great_hall 9 6) 9 9)
  (put (spawn-pt 'yellow-slime) 11  3)

@@ -25,6 +25,8 @@
 
    (list 't_grass           "grass"         pclass-grass     s_grass           1 0 nil)
    (list 't_sunlit_grass    "grass"         pclass-grass     s_grass           1 64 nil)
+   (list 't_dirt            "dirt"          pclass-grass     s_dirt            1 0 nil)
+   (list 't_gravel          "gravel"        pclass-grass     s_gravel          1 0 nil)
 
    (list 't_trees           "trees"         pclass-trees     s_trees           1 0 nil)
    (list 't_forest_v        "forest"        pclass-forest    s_forest          1 0 nil)

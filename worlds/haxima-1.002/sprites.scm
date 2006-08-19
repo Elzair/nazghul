@@ -329,6 +329,8 @@
 (kern-mk-sprite 's_active_altar ss_addon 4 128 #f 0)
 (kern-mk-sprite 's_tentacle ss_addon 4 132 #f 0)
 (kern-mk-sprite 's_sludge ss_addon 1 136 #t 0)
+(kern-mk-sprite 's_dirt ss_addon 1 137 #f 0)
+(kern-mk-sprite 's_gravel ss_addon 1 138 #f 0)
 
 (kern-mk-sprite 's_full_moon                ss_moons 1 0 #f 0 )
 (kern-mk-sprite 's_wane_three_quarter_moon  ss_moons 1 1 #f 0 )
