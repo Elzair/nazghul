@@ -35,6 +35,7 @@
 #include <stdarg.h>
 
 #define CMDWIN_FRAG_MAX_LEN 64
+#define CMDWIN_BUF_SZ       256
 
 /* Fragment flags */
 #define CMDWIN_FRAG_SEP     (1<<0)
@@ -47,12 +48,15 @@ struct cmdwin_frag {
 };
 
 static struct {
-	SDL_Rect srect;
-	char *buf;
-	char *ptr;
-	int blen;
-	int room;
-	char *mark;
+	SDL_Rect srect; /* screen rectangle (pixels) */
+	char *buf;      /* string buffer */
+	char *ptr;      /* next empty spot in buffer */
+	int blen;       /* buffer length, this should be bigger than slen and
+                         * is the max expected total size of any prompt (the
+                         * longest prompts may be too big for the window) */
+	int room;       /* empty space in buffer */
+        int slen;       /* printable string length (blen >= slen), this is
+                         * limited by the cmdwin UI size */
         struct sprite *cursor_sprite;
         struct list frags;
 } cmdwin;
@@ -66,7 +70,6 @@ static inline void cmdwin_clear_no_repaint()
 	memset(cmdwin.buf, 0, cmdwin.blen);
 	cmdwin.ptr = cmdwin.buf;
 	cmdwin.room = cmdwin.blen;
-	cmdwin.mark = cmdwin.buf;
 }
 
 static void cmdwin_cursor_sprite_init()
@@ -101,7 +104,7 @@ static struct cmdwin_frag *cmdwin_top()
         return (struct cmdwin_frag*)cmdwin.frags.prev;
 }
 
-void cmdwin_reprint_buffer(void)
+static void cmdwin_reprint_buffer(void)
 {
         struct list *entry;
 
@@ -146,8 +149,11 @@ int cmdwin_init(void)
 	cmdwin.srect.y = CMD_Y;
 	cmdwin.srect.w = CMD_W;
 	cmdwin.srect.h = CMD_H;
+	cmdwin.slen = (CMD_W / ASCII_W) - 1; /* leave one space for the
+                                              * cursor */
+        cmdwin.blen = CMDWIN_BUF_SZ;
+        assert(cmdwin.blen >= cmdwin.slen);
 
-	cmdwin.blen = CMD_W / ASCII_W;
 	cmdwin.buf = (char *) malloc(cmdwin.blen);
 	if (!cmdwin.buf)
 		return -1;
@@ -258,7 +264,10 @@ void cmdwin_repaint_cursor(void)
 	rect.w = ASCII_W;
 	rect.h = ASCII_H;
 
-	rect.x += (cmdwin.ptr - cmdwin.buf) * ASCII_W;
+        /* If the string is too big, show the last part of it (in other words,
+         * right-justify it) */
+        char *start = max(cmdwin.buf, cmdwin.ptr - cmdwin.slen);
+	rect.x += (cmdwin.ptr - start) * ASCII_W;
 
 	spritePaint(cmdwin.cursor_sprite, 0, rect.x, rect.y);
 	screenUpdate(&rect);
@@ -266,15 +275,13 @@ void cmdwin_repaint_cursor(void)
 
 void cmdwin_repaint(void)
 {
+        /* If the string is too big, show the last part of it (in other words,
+         * right-justify it) */
+        char *start = max(cmdwin.buf, cmdwin.ptr - cmdwin.slen);
 	screenErase(&cmdwin.srect);
-	screenPrint(&cmdwin.srect, 0, cmdwin.buf);
+	screenPrint(&cmdwin.srect, 0, start);
 	screenUpdate(&cmdwin.srect);
 	cmdwin_repaint_cursor();
-}
-
-void cmdwin_mark(void)
-{
-	cmdwin.mark = cmdwin.ptr;
 }
 
 void cmdwin_flush(void)
