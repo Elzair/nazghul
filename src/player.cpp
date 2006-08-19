@@ -387,7 +387,7 @@ enum MoveResult player_party::try_to_enter_subplace_from_edge(
         // --------------------------------------------------------------------
 
 	if (dx == 0 && dy == 0) {
-		cmdwin_print("Enter-");
+		cmdwin_spush("Enter");
 		dir = ui_get_direction();
 	} else {
 		dir = vector_to_dir(dx, dy);

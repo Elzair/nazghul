@@ -2563,7 +2563,7 @@ static pointer kern_conv_get_yes_no(scheme *sc,  pointer args)
 static pointer kern_conv_get_amount(scheme *sc,  pointer args)
 {
         cmdwin_clear();
-        cmdwin_print("How much-");
+        cmdwin_spush("How much");
         return scm_mk_integer(sc, ui_get_quantity(-1));
 }
 
@@ -3121,13 +3121,11 @@ static pointer kern_ui_select_party_member(scheme *sc, pointer args)
 {
         class Character *member;
 
-        cmdwin_print("-");
         member = select_party_member();
+        cmdwin_pop();
         if (! member) {
-                cmdwin_backspace(1);
                 return sc->NIL;
         }
-        cmdwin_backspace(1+strlen(member->getName()));
         return scm_mk_ptr(sc, member);
 }
 
@@ -3990,9 +3988,6 @@ KERN_API_CALL(kern_ui_target)
                 rt_err("kern-ui-target: bad range arg");
                 return sc->NIL;
         }
-
-        /* Not sure if this is really the best place to do this... */
-	cmdwin_print("-");
 
         /* Get the target coords from the user */
         tx = ox;

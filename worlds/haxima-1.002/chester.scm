@@ -11,8 +11,8 @@
                (list 8  0  gas-counter "working")
                (list 11 0  ghg-s3       "eating")
                (list 12 0  gas-counter "working")
-               (list 17 0  ghg-s3       "eating")
-               (list 18 0  ghg-hall     "idle")
+               (list 18 0  ghg-s3       "eating")
+               (list 19 0  ghg-hall     "idle")
                (list 21 0  gc-bed       "sleeping")
                )
 

@@ -43,7 +43,7 @@ static int get_player_query(struct KeyHandler *kh, int key, int keymod)
 		while (C_ptr > C_query) {
 			C_ptr--;
 			*C_ptr = 0;
-			cmdwin_backspace(1);
+			cmdwin_pop();
 			C_room++;
 		}
 		return 1;
@@ -58,13 +58,13 @@ static int get_player_query(struct KeyHandler *kh, int key, int keymod)
 			C_ptr--;
 			*C_ptr = 0;
 			C_room++;
-			cmdwin_backspace(1);
+			cmdwin_pop();
 		}
 		return 0;
 	}
 
 	if (isprintable(key) && C_room) {
-		cmdwin_print("%c", key);
+		cmdwin_push("%c", key);
 		*C_ptr++ = key;
 		C_room--;
 	}
@@ -113,7 +113,7 @@ void conv_enter(Object *npc, Object *pc, struct closure *conv)
 		C_ptr = C_query;
 
 		cmdwin_clear();
-		cmdwin_print("Say: ");
+		cmdwin_push("Say: ");
 
 		/*** Get next query ***/
 

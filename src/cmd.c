@@ -138,9 +138,11 @@ enum get_number_state {
 	GN_CANCEL
 };
 
+/* Max number getnum() will accept */
+const int MAX_GETNUM = 999999999;
+
 struct get_number_info {
 	int digit;
-	int erase;
 	int state;
 	char *prompt;
 };
@@ -148,18 +150,17 @@ struct get_number_info {
 struct get_char_info {
         char *string;
         char c;
-	int erase;
 	int state;
 	char *prompt;
 };
 
-static inline void getnum_erase_prompt(struct get_number_info *info)
-{
-	if (info->erase) {
-		cmdwin_backspace(info->erase);
-		// info->erase = 0;
-	}
-}
+struct get_spell_name_data {
+	char spell_name[MAX_WORDS_IN_SPELL_NAME + 1];
+        char *prompt;
+	char *ptr;
+	int n;
+        int state;
+};
 
 int getnum(struct KeyHandler *kh, int key, int keymod)
 {
@@ -170,26 +171,26 @@ int getnum(struct KeyHandler *kh, int key, int keymod)
 	switch (info->state) {
 	case GN_ALL:
 		if (key == CANCEL) {
-			getnum_erase_prompt(info);
+                        cmdwin_pop();
 			info->digit = 0;
 			info->state = GN_CANCEL;
 			return 1;
 		}
 		if (key == '\n') {
-			getnum_erase_prompt(info);
+                        cmdwin_pop();
 			return 1;
 		}
 		if (key == '0') {
-			getnum_erase_prompt(info);
-			cmdwin_print("0");
+                        cmdwin_pop();
+			cmdwin_push("0");
 			info->digit = 0;
 			info->state = GN_ZERO;
 			return 0;
 		}
 		if (isdigit(key)) {
-			getnum_erase_prompt(info);
+                        cmdwin_pop();
 			info->digit = info->digit * 10 + key - '0';
-			cmdwin_print("%c", key);
+			cmdwin_push("%c", key);
 			info->state = GN_SOME;
 			return 0;
 		}
@@ -204,18 +205,18 @@ int getnum(struct KeyHandler *kh, int key, int keymod)
 			return 1;
 		}
 		if (key == '\b') {
-			cmdwin_backspace(1);
+			cmdwin_pop();
 			if (info->prompt)
-				cmdwin_print(info->prompt);
+				cmdwin_spush(info->prompt);
 			info->state = GN_ALL;
 			return 0;
 		}
 		if (key == '0')
 			return 0;
 		if (isdigit(key)) {
-			cmdwin_backspace(1);
+			cmdwin_pop();
 			info->digit = info->digit * 10 + key - '0';
-			cmdwin_print("%c", key);
+			cmdwin_push("%c", key);
 			info->state = GN_SOME;
 			return 0;
 		}
@@ -232,17 +233,20 @@ int getnum(struct KeyHandler *kh, int key, int keymod)
 		if (key == '\b') {
 			info->digit = info->digit - (info->digit % 10);
 			info->digit /= 10;
-			cmdwin_backspace(1);
+			cmdwin_pop();
 			if (info->digit == 0) {
 				info->state = GN_ALL;
 				if (info->prompt)
-					cmdwin_print(info->prompt);
+					cmdwin_spush(info->prompt);
 			}
 			return 0;
 		}
 		if (isdigit(key)) {
-			info->digit = info->digit * 10 + key - '0';
-			cmdwin_print("%c", key);
+                        int keyval = key - '0';
+                        if ((MAX_GETNUM - keyval) >= info->digit) {
+                                info->digit = info->digit * 10 + keyval;
+                                cmdwin_push("%c", key);
+                        }
 			return 0;
 		}
 		break;
@@ -258,16 +262,16 @@ int getdigit(struct KeyHandler * kh, int key, int keymod)
         info = (struct get_number_info *) kh->data;
         
         if (key == CANCEL) {
-                cmdwin_backspace(info->erase);
+                cmdwin_pop();
                 info->digit = 0;
                 return 1;
         }
 
         if (isdigit(key)) {
-                cmdwin_backspace(info->erase);
+                cmdwin_pop();
                 info->digit = key - '0';
                 if (info->digit != 0)
-                        cmdwin_print("%c", key);
+                        cmdwin_push("%c", key);
                 return 1;
         }
         
@@ -281,15 +285,15 @@ static int cmd_getchar(struct KeyHandler * kh, int key, int keymod)
         info = (struct get_char_info *) kh->data;
         
         if (key == CANCEL) {
-                cmdwin_backspace(info->erase);
+                cmdwin_pop();
                 info->c = 0;
                 return 1;
         }
 
         if (strchr(info->string, key)) {
-                cmdwin_backspace(info->erase);
+                cmdwin_pop();
                 info->c = key;
-                cmdwin_print("%c", key);
+                cmdwin_push("%c", key);
                 return 1;
         }
         
@@ -592,20 +596,20 @@ struct inv_entry *select_item(void)
 	kh.data = &sc;
 
 	eventPushKeyHandler(&kh);
-	cmdwin_print("<select>");
+	cmdwin_push("<select>");
 	eventHandle();
-	cmdwin_backspace(strlen("<select>"));
+	cmdwin_pop();
 	eventPopKeyHandler();
 
 	statusSetMode(omode);
 
 	ie = (struct inv_entry *) sc.selection;
 	if (ie == NULL) {
-		cmdwin_print("none!");
+		cmdwin_push("none!");
 		return NULL;
 	}
 
-	cmdwin_print(ie->type->getName());
+	cmdwin_spush(ie->type->getName());
 
 	return ie;
 }
@@ -630,9 +634,9 @@ class Character *select_party_member(void)
 	kh.data = &sc;
 
 	eventPushKeyHandler(&kh);
-	cmdwin_print("<select>");
+	cmdwin_push("<select>");
 	eventHandle();
-	cmdwin_backspace(strlen("<select>"));
+	cmdwin_pop();
 	eventPopKeyHandler();
 
 	statusRepaint();
@@ -640,14 +644,14 @@ class Character *select_party_member(void)
 	character = (class Character *) sc.selection;
 
 	if (character == NULL) {
-		cmdwin_print("none!");
+		cmdwin_push("none!");
 		/* Hack alert: this saves the caller from having to remember to
 		 * do this. Doing it unconditionally is undesirable because it
 		 * can cause status screen flashes if the old mode requires a
 		 * short status window and the next mode requires a tall
 		 * one. */
 	} else {
-		cmdwin_print("%s", character->getName());
+		cmdwin_spush("%s", character->getName());
 	}
 
 	statusSetMode(omode);
@@ -669,13 +673,13 @@ void getkey(void *data, int(*handler) (struct KeyHandler * kh, int key, int keym
 int ui_get_direction(void)
 {
 	int dir;
-	cmdwin_print("<direction>");
+	cmdwin_push("<direction>");
 	getkey(&dir, dirkey);
-	cmdwin_backspace(strlen("<direction>"));
+	cmdwin_pop();
 	if (dir == CANCEL) {
-		cmdwin_print("none!");
+		cmdwin_push("none!");
 	} else {
-		cmdwin_print(directionToString(dir));
+		cmdwin_spush(directionToString(dir));
 	}
 	return dir;
 }
@@ -695,7 +699,7 @@ bool cmdSearch(struct place *place, int x, int y)
         int x2,  y2;
 
 	cmdwin_clear();
-	cmdwin_print("Search-");
+	cmdwin_spush("Search");
 
 	dir = ui_get_direction();
 	if (dir == CANCEL)
@@ -728,7 +732,7 @@ bool cmdGet(class Object *actor)
         int x, y;
 
 	cmdwin_clear();
-	cmdwin_print("Get-");
+	cmdwin_spush("Get");
 
 	dir = ui_get_direction();
 	if (dir == CANCEL)
@@ -773,20 +777,18 @@ bool cmdOpen(class Character * pc)
 	class Container *container;
 
 	cmdwin_clear();
-	cmdwin_print("Open-");
+	cmdwin_spush("Open");
 
 	// Get the party member who will open the container (in combat mode
 	// this is passed in as a parameter).
-	if (pc != NULL) {
-		cmdwin_print("%s", pc->getName());
+	if (pc) {
+		cmdwin_spush(pc->getName());
 	} else {
 		pc = select_party_member();
 		if (pc == NULL) {
 			return false;
 		}
 	}
-
-        cmdwin_print("-");
 
 	dir = ui_get_direction();
 	if (dir == CANCEL)
@@ -827,7 +829,7 @@ bool cmdOpen(class Character * pc)
                  struct KeyHandler kh;
                  struct ScrollerContext data;
 
-                 cmdwin_print("<select>");
+                 cmdwin_push("<select>");
 
                  statlist[0].sprite = mech->getSprite();
                  snprintf(statlist[0].line1, sizeof(statlist[0].line1), "%s",
@@ -861,12 +863,12 @@ bool cmdOpen(class Character * pc)
                  else
                          mech = NULL;
 
-                 cmdwin_backspace(strlen("<select>"));
+                 cmdwin_pop();
          }
 
          /* Open a mechanism */
          if (mech && mech->getObjectType()->canOpen()) {
-                 cmdwin_print("%s!", mech->getName());
+                 cmdwin_push("%s!", mech->getName());
                  mech->getObjectType()->open(mech, pc);
                  mapSetDirty();
                  return true;
@@ -874,7 +876,7 @@ bool cmdOpen(class Character * pc)
 
          /* Nothing to open */
          if (NULL == container) {
-                 cmdwin_print("abort!");
+                 cmdwin_push("abort!");
                  log_msg("Open - nothing there!");
                  return false;
          }
@@ -884,7 +886,7 @@ bool cmdOpen(class Character * pc)
         log_begin_group();
 
         pc->decActionPoints(NAZGHUL_BASE_ACTION_POINTS);
-        cmdwin_print("%s!", container->getName());
+        cmdwin_push("%s!", container->getName());
 
 	// Check for traps.
 	if (container->isTrapped()) {
@@ -911,7 +913,7 @@ bool cmdOpen(class Character * pc)
                         obj_dec_ref(container);
 
                         if (abort) {
-                                cmdwin_print("can't!");
+                                cmdwin_push("can't!");
                                 log_end_group();
                                 return false;
                         }
@@ -953,48 +955,50 @@ bool cmdOpen(class Character * pc)
 bool cmdQuit(void)
 {
 	int yesno;
+        char *fname = 0;
 
 	cmdwin_clear();
-	cmdwin_print("Quit-Save and Quit-Y/N?");
+	cmdwin_spush("Quit");
+        cmdwin_spush("<y/n>");
 	getkey(&yesno, yesnokey);
+	cmdwin_pop();
 
-	cmdwin_backspace(4);
+        /* Cancel quit? */
+	if (yesno == 'n') {
+                cmdwin_spush("abort!");
+                return false;
+        }
 
-	if (yesno == 'y') {
-                char *fname = 0;
-		cmdwin_print("Yes!");
+        cmdwin_spush("save");
+        cmdwin_spush("<y/n>");
+        getkey(&yesno, yesnokey);
+        cmdwin_pop();
 
-                fname = save_game_menu();
-                if (!fname) {
-                        cmdwin_backspace(4);
-                        cmdwin_print("Cancel!");
-                        log_msg("Quit game aborted!");
-                        return Quit;
-                }
-
-                log_begin("Saving to %s...", fname);
-                if (session_save(fname)) {
-                        log_end("^c+rfailed!^c-");
-                } else {
-                        log_end("ok!");
-                        log_msg("Goodbye!\n");
-                        Quit = true;
-                }
-	} 
-	else {
-		cmdwin_clear();
-		cmdwin_print("Quit-Quit without Saving-Y/N?");
-		getkey(&yesno, yesnokey);
-		if (yesno == 'y') {
-                /* FIXME: if player hits ESC we want to abort, not quit! */
-				log_msg("Goodbye!\n");
+        /* Don't save? */
+        if (yesno == 'n') {
+                cmdwin_spush("not saving!");
                 Quit = true;
-		}
-		else
-		{
-		    log_msg("Quit game aborted!");
-		}
-	}
+                return true;
+        }
+
+        /* Select a filename to save to. */
+        cmdwin_pop();
+        fname = save_game_menu();
+
+        /* Did player cancel from the menu? */
+        if (!fname) {
+                cmdwin_spush("abort!");
+                return false;
+        }
+        
+        log_begin("Saving to %s...", fname);
+        if (session_save(fname)) {
+                log_end("^c+rfailed!^c-");
+        } else {
+                log_end("^c+gok!^c-");
+                log_msg("Goodbye!\n");
+                Quit = true;
+        }
 
 	return Quit;
 }
@@ -1013,14 +1017,15 @@ void cmdAttack(void)
 		
         // Get the direction
 	cmdwin_clear();
-	cmdwin_print("Attack-<direction>");
+	cmdwin_spush("Attack");
+        cmdwin_spush("<direction>");
 	getkey(&dir, dirkey);
-	cmdwin_backspace(strlen("<direction>"));
+	cmdwin_pop();
 	if (dir == CANCEL) {
-		cmdwin_print("none!");
+		cmdwin_spush("none!");
 		return;
 	}
-	cmdwin_print("%s", directionToString(dir));
+	cmdwin_spush("%s", directionToString(dir));
 
         // Get the npc party being attacked
         info.dx = directionToDx(dir);
@@ -1034,31 +1039,32 @@ void cmdAttack(void)
 			//only allow adjactent attacks in wilderness
 			if (info.dx && info.dy)
 			{
-				cmdwin_print("-adjacent foes only!");
+				cmdwin_spush("adjacent foes only!");
 				return;
 			}
         }
 		
         if (info.npc_party == NULL) {
-                cmdwin_print("-nobody there!");
+                cmdwin_spush("nobody there!");
                 return;
         } 
         info.px = player_party->getX();
         info.py = player_party->getY();
 
-        cmdwin_print("-%s", info.npc_party->getName());
+        cmdwin_spush("%s", info.npc_party->getName());
 
         // If the npc is not hostile then get player confirmation.
         if (! are_hostile(info.npc_party, player_party)) {
                 int yesno;
-                cmdwin_print("-attack non-hostile-<y/n>");
+                cmdwin_spush("attack non-hostile");
+                cmdwin_spush("<y/n>");
                 getkey(&yesno, yesnokey);
-                cmdwin_backspace(strlen("<y/n>"));
+                cmdwin_pop();
                 if (yesno == 'n') {
-                        cmdwin_print("no");
+                        cmdwin_spush("no");
                         return;
                 }
-                cmdwin_print("yes");
+                cmdwin_spush("yes");
 
                 make_hostile(info.npc_party, player_party);
         }
@@ -1077,7 +1083,7 @@ void cmdFire(void)
 	int dir;
 
 	cmdwin_clear();
-	cmdwin_print("Fire");
+	cmdwin_spush("Fire");
 
         class Vehicle *vehicle = player_party->getVehicle();
 	if ((!vehicle ||
@@ -1085,27 +1091,27 @@ void cmdFire(void)
                 // SAM: 
                 // In future, we may check for adjacent "cannon" 
                 // mechanisms here (as in U5).
-		cmdwin_print("-No cannons available!");
+		cmdwin_spush("No cannons available!");
                 log_msg("Fire - nothing to fire!");
 		return;
 	}
 
-	cmdwin_print(" %s-<direction>", 
-                     vehicle->getOrdnance()->getName());
+	cmdwin_spush("%s", vehicle->getOrdnance()->getName());
+        cmdwin_spush("<direction>");
 	getkey(&dir, dirkey);
-	cmdwin_backspace(strlen("<direction>"));
+	cmdwin_pop();
 
 	if (dir == CANCEL) {
-		cmdwin_print("none!");
+		cmdwin_spush("none!");
 		return;
 	}
 
-	cmdwin_print("%s", directionToString(dir));
+	cmdwin_spush("%s", directionToString(dir));
         log_begin("Fire: %s - ", directionToString(dir));
 	if (! vehicle->fire_weapon(directionToDx(dir), 
                                                  directionToDy(dir), 
                                                  player_party)) {
-		cmdwin_print("-Not a broadside!");
+		cmdwin_spush("Not a broadside!");
                 log_end("not a broadside!");
 		return;
         }
@@ -1118,15 +1124,14 @@ bool cmdReady(class Character * member)
 	struct inv_entry *ie;
 	struct KeyHandler kh;
 	struct ScrollerContext sc;
-	int erase;
 	char *msg = 0;
 
 	cmdwin_clear();
-	cmdwin_print("Ready-");
+	cmdwin_spush("Ready");
 
         // Select user
         if (member) {
-		cmdwin_print("%s", member->getName());                
+		cmdwin_spush("%s", member->getName());                
         } else {
                 member = select_party_member();
                 if (member == NULL)
@@ -1150,19 +1155,19 @@ bool cmdReady(class Character * member)
 	kh.fx = scroller;
 	kh.data = &sc;
 	eventPushKeyHandler(&kh);
-	cmdwin_print("-<select/ESC>");
-	erase = strlen("<select/ESC>");
+
+        cmdwin_spush("<select/ESC>");
 
 	for (;;) {
 
 		sc.selection = NULL;
 
 		eventHandle();
-		cmdwin_backspace(erase);
+                cmdwin_pop();
 
 		ie = (struct inv_entry *) sc.selection;
 		if (ie == NULL) {
-			cmdwin_print("Done");
+			cmdwin_spush("done!");
 			break;
 		}
 
@@ -1170,7 +1175,6 @@ bool cmdReady(class Character * member)
 
 		class ArmsType *arms = (class ArmsType *) ie->type;
 
-		cmdwin_print("%s-", arms->getName());
                 log_begin("%s - ", arms->getName());
 
 		if (ie->ref && member->unready(arms)) {
@@ -1181,7 +1185,7 @@ bool cmdReady(class Character * member)
 			switch (member->ready(arms)) {
 			case Character::Readied:
 				statusRepaint();
-				msg = "readied";
+				msg = "readied!";
                                 /* Move the readied item to the front of the
                                  * list for easy access next time, and to
                                  * percolate frequently-used items up to the
@@ -1207,9 +1211,8 @@ bool cmdReady(class Character * member)
 			}
 		}
 
-		cmdwin_print(msg);
+		cmdwin_spush("%s %s", arms->getName(), msg);
                 log_end(msg);
-		erase = strlen(arms->getName()) + strlen(msg) + 1 /* dashes */;
 	}
 
 	eventPopKeyHandler();
@@ -1246,9 +1249,9 @@ int select_target(int ox, int oy, int *x, int *y, int range)
         kh.data = &data;
   
         eventPushKeyHandler(&kh);
-        cmdwin_print("<target>");
+        cmdwin_spush("<target>");
         eventHandle();
-        cmdwin_backspace(strlen("<target>"));
+        cmdwin_pop();
         eventPopKeyHandler();
   
         Session->show_boxes = 0;
@@ -1258,7 +1261,7 @@ int select_target(int ox, int oy, int *x, int *y, int range)
         mapSetDirty();
   
         if (data.abort) {
-                cmdwin_print("none!");
+                cmdwin_spush("none!");
                 return -1;
         }
   
@@ -1300,9 +1303,9 @@ int select_target_with_doing(int ox, int oy, int *x, int *y,
         kh.data = &data;
   
         eventPushKeyHandler(&kh);
-        cmdwin_print("<target> (ESC to exit)");
+        cmdwin_spush("<target> (ESC to exit)");
         eventHandle();
-        cmdwin_backspace(strlen("<target> (ESC to exit)"));
+        cmdwin_pop();
         eventPopKeyHandler();
   
         Session->show_boxes=0;
@@ -1312,7 +1315,7 @@ int select_target_with_doing(int ox, int oy, int *x, int *y,
         mapSetDirty();
   
         if (data.abort) {
-                cmdwin_print("Done.");
+                cmdwin_spush("Done.");
                 return -1;
         }
   
@@ -1350,11 +1353,11 @@ static int cmd_terraform_cursor_func(int ox, int oy, int *x, int *y,
   
         /* Start interactive mode */
         eventPushKeyHandler(&kh);
-        cmdwin_print("<target> (ESC to exit)");
+        cmdwin_spush("<target> (ESC to exit)");
         eventHandle();
 
         /* Done -  cleanup */
-        cmdwin_backspace(strlen("<target> (ESC to exit)"));
+        cmdwin_pop();
         eventPopKeyHandler();
   
         *x = Session->crosshair->getX();
@@ -1362,7 +1365,7 @@ static int cmd_terraform_cursor_func(int ox, int oy, int *x, int *y,
         Session->crosshair->remove();
         mapSetDirty();
   
-        cmdwin_print("Done.");
+        cmdwin_spush("Done.");
 
         return 0;
 }
@@ -1374,14 +1377,14 @@ bool cmdHandle(class Character * pc)
 	int y;
 
 	cmdwin_clear();
-	cmdwin_print("Handle-");
+	cmdwin_spush("Handle");
 
 	if (pc) {
 		// A party member was specified as a parameter, so this must be
 		// combat mode. Use the party member's location as the origin.
 		x = pc->getX();
 		y = pc->getY();
-		cmdwin_print("%s", pc->getName());
+		cmdwin_spush("%s", pc->getName());
 	} else {
 		// Must be party mode. Use the player party's location as the
 		// origin.
@@ -1393,7 +1396,7 @@ bool cmdHandle(class Character * pc)
 		// only one.
 		if (player_party->get_num_living_members() == 1) {
 			pc = player_party->get_first_living_member();
-			cmdwin_print("%s", pc->getName());
+			cmdwin_spush("%s", pc->getName());
 		} else {
 			pc = select_party_member();
 			if (pc == NULL) {
@@ -1401,8 +1404,6 @@ bool cmdHandle(class Character * pc)
 			}
 		}
 	}
-
-	cmdwin_print("-");
 
 	// *** Pick a target ***
 
@@ -1416,7 +1417,7 @@ bool cmdHandle(class Character * pc)
             || ! mech->getObjectType()->canHandle()
             || (! mech->isVisible()            
                 && ! Reveal)) {
-                cmdwin_print("nothing!");
+                cmdwin_spush("nothing!");
                 log_msg("Handle - nothing there!");
                 return false;
         }
@@ -1427,7 +1428,7 @@ bool cmdHandle(class Character * pc)
         if (!mechName) {
                 mechName = "a hidden mechanism";
         }
-        cmdwin_print("%s", mechName);
+        cmdwin_spush("%s", mechName);
         log_msg("%s handles %s", pc->getName(), mechName);
         mech->getObjectType()->handle(mech, pc);
         mapSetDirty();
@@ -1446,7 +1447,7 @@ bool cmdUse(class Character * member, int flags)
 	class ObjectType *item;
 
 	cmdwin_clear();
-	cmdwin_print("Use-");
+	cmdwin_spush("Use");
 
         // Select user
         if (flags & CMD_SELECT_MEMBER) {
@@ -1455,12 +1456,11 @@ bool cmdUse(class Character * member, int flags)
                         return false;       
         } else {
                 assert(member);
-                cmdwin_print("%s", member->getName());
+                cmdwin_spush("%s", member->getName());
         }
 	statusSelectCharacter(member->getOrder());
 
         // select item to use
-        cmdwin_print("-");
 	statusSetMode(Use);
 	ie = select_item();
 	statusSetMode(ShowParty);
@@ -1513,7 +1513,7 @@ void cmdNewOrder(void)
         }
 
 	cmdwin_clear();
-	cmdwin_print("Switch-");
+	cmdwin_spush("Switch");
 
         // Set the mode now - before calling select_party_member - so that the
         // screen will not flash back to a short status window between the two
@@ -1526,7 +1526,7 @@ void cmdNewOrder(void)
 		return;
         }
 
-	cmdwin_print("-with-");
+	cmdwin_spush("with");
 
 	pc2 = select_party_member();
 	if (pc2 == NULL) {
@@ -1666,7 +1666,7 @@ bool cmdTalk(Object *member)
 	// *** Prompt user & check if valid ***
 
 	cmdwin_clear();
-	cmdwin_print("Talk-");
+	cmdwin_spush("Talk");
 
         if (! member) {
                 member = select_party_member();
@@ -1689,7 +1689,7 @@ bool cmdTalk(Object *member)
 	obj = place_get_object(Place, x, y, being_layer);
 
 	if (!obj) {
-                cmdwin_print("nobody there!");
+                cmdwin_spush("nobody there!");
                 log_msg("Try talking to a PERSON.");
                 return false;
         }
@@ -1698,20 +1698,20 @@ bool cmdTalk(Object *member)
         // speaker is not the party itself.
         obj = obj->getSpeaker();
         if (! obj) {
-                cmdwin_print("cancel");
+                cmdwin_spush("cancel");
                 return false;
         }
 
         conv = obj->getConversation();
         if (!conv) {
-		cmdwin_print("no response!");
+		cmdwin_spush("no response!");
                 log_begin("No response from ");
                 obj->describe();
                 log_end(".");
 		return true;
         }
 
-	cmdwin_print(obj->getName());
+	cmdwin_spush(obj->getName());
 
 	log_msg("*** CONVERSATION ***");
 
@@ -1739,17 +1739,17 @@ bool cmdTalk(Object *member)
 bool cmdZtats(class Character * pc)
 {
 	cmdwin_clear();
-	cmdwin_print("Stats-");
+	cmdwin_spush("Stats");
 
 	if (pc != NULL) {
-		cmdwin_print("%s", pc->getName());
+		cmdwin_spush("%s", pc->getName());
 	} else {
 		pc = select_party_member();
 		if (pc == NULL)
 			return false;
 	}
 
-	cmdwin_print("-<ESC to exit>");
+	cmdwin_spush("<ESC to exit>");
 
 	statusSelectCharacter(pc->getOrder());
 	statusSetMode(Ztats);
@@ -1761,8 +1761,8 @@ bool cmdZtats(class Character * pc)
 	eventHandle();
 	eventPopKeyHandler();
 
-	cmdwin_backspace(strlen("<ESC to exit>"));
-	cmdwin_print("ok");
+	cmdwin_pop();
+	cmdwin_spush("ok");
 
 	statusSetMode(ShowParty);
 
@@ -1773,17 +1773,16 @@ static int select_hours(void)
 {
 	struct get_char_info info;
 
-	cmdwin_print("<hours[0-9]/[s]unrise>");
+	cmdwin_spush("<hours[0-9]/[s]unrise>");
 
 	info.c = '0';
         info.string = "0123456789sS";
-	info.erase = strlen("<hours[0-9]/[s]unrise>");
 
 	getkey(&info, &cmd_getchar);
 
 	if (! info.c || info.c == '0') {
-                cmdwin_backspace(1);
-		cmdwin_print("none!");
+                cmdwin_pop();
+		cmdwin_spush("none!");
                 return 0;
         }
         else if (info.c == 's' ||
@@ -1791,8 +1790,8 @@ static int select_hours(void)
                 int hour;
                 int sunrise;
 
-                cmdwin_backspace(1);
-                cmdwin_print("until sunrise");
+                cmdwin_pop();
+                cmdwin_spush("until sunrise");
                 hour = clock_time_of_day() / 60;
                 sunrise = SUNRISE_HOUR + 1;
                 if (hour < sunrise)
@@ -1800,11 +1799,11 @@ static int select_hours(void)
                 return HOURS_PER_DAY - hour + sunrise;
         }
 	else if (info.c == '1') {
-		cmdwin_print(" hour");
+		cmdwin_push(" hour");
                 return 1;
         }
 	else {
-		cmdwin_print(" hours");
+		cmdwin_push(" hours");
                 return info.c - '0';
         }
 }
@@ -1812,21 +1811,21 @@ static int select_hours(void)
 int ui_get_quantity(int max)
 {
 	struct get_number_info info;
-	char prompt[64];
+        char prompt[64];
 
+        /* Push the prompt but remember it for use within getnum() */
 	if (max == -1) {
-		snprintf(prompt, sizeof(prompt), "<quantity>");
+                snprintf(prompt, sizeof(prompt), "<quantity>");
 	} else {
-		snprintf(prompt, sizeof(prompt), "<quantity[0-%d]/RET=%d>", max,
-			 max);
+                snprintf(prompt, sizeof(prompt), 
+                         "<quantity[0-%d]/RET=%d>", max, max);
 	}
-	cmdwin_print(prompt);
 
 	info.digit = 0;
-	info.erase = strlen(prompt);
 	info.state = GN_ALL;
 	info.prompt = prompt;
 
+        cmdwin_spush(info.prompt);
 	getkey(&info, getnum);
 
 	if (info.state == GN_ALL) {
@@ -1835,7 +1834,7 @@ int ui_get_quantity(int max)
 		else
 			info.digit = max;
 	} else if (info.state == GN_CANCEL)
-		cmdwin_print("none!");
+		cmdwin_spush("none!");
 
 	return info.digit;
 }
@@ -1846,11 +1845,11 @@ int cmd_camp_in_wilderness(class Party *camper)
 	class Character *guard = 0;
 
 	cmdwin_clear();
-	cmdwin_print("Camp-");
+	cmdwin_spush("Camp");
 
 	if (!place_is_passable(camper->getPlace(), camper->getX(), 
                                camper->getY(), camper, PFLAG_IGNOREVEHICLES)) {
-		cmdwin_print("not here!");
+		cmdwin_spush("not here!");
                 log_msg("Camp - not here!");
 		return 0;
 	}
@@ -1858,7 +1857,7 @@ int cmd_camp_in_wilderness(class Party *camper)
         if (place_get_subplace(camper->getPlace(), 
                                camper->getX(), 
                                camper->getY())) {
-		cmdwin_print("not here!");
+		cmdwin_spush("not here!");
                 log_msg("Camp - not here!");
                 return 0;
         }
@@ -1867,23 +1866,23 @@ int cmd_camp_in_wilderness(class Party *camper)
 	if (hours == 0)
 		return 0;
 
-	cmdwin_print("-set a watch <y/n>-");
+	cmdwin_spush("set a watch");
+        cmdwin_spush("<y/n>");
 	getkey(&yesno, &yesnokey);
 
 	if (yesno == 'y') {
 
-		cmdwin_backspace(strlen(" <y/n>-"));
-		cmdwin_print("-");
+		cmdwin_pop();
 		guard = select_party_member();
 		if (!guard) {
-			cmdwin_backspace(strlen("set a watch-none!"));
-			cmdwin_print("no watch");
+			cmdwin_pop();
+			cmdwin_spush("no watch");
 		}
                 // else select_party_member() prints the name
 
 	} else {
-		cmdwin_backspace(strlen("set a watch <y/n>-"));
-		cmdwin_print("no watch");
+		cmdwin_pop();
+		cmdwin_spush("no watch");
 	}
 
 	player_party->beginCamping(guard, hours);
@@ -1898,11 +1897,11 @@ void cmdLoiter(class Being *subject)
         int hours = 0;
 
         cmdwin_clear();
-        cmdwin_print("Loiter-");
+        cmdwin_spush("Loiter");
 
         /* Check if enemies are around. */
         if (place_contains_hostiles(subject->getPlace(), subject)) {
-                cmdwin_print("foes nearby!");
+                cmdwin_spush("foes nearby!");
                 log_msg("Loiter - foes nearby!");
                 return;
         }
@@ -1914,7 +1913,7 @@ void cmdLoiter(class Being *subject)
         }
 
         /* Tell the party to start loitering. */
-        cmdwin_print(" loitering...");
+        cmdwin_spush("loitering...");
         player_party->beginLoitering(hours);
 
         /* End the turn. */
@@ -1927,11 +1926,11 @@ int cmd_camp_in_town(class Character *camper)
         int hours;
 
         cmdwin_clear();
-        cmdwin_print("Rest-");
+        cmdwin_spush("Rest");
 
         // Party must be in follow mode.
         if (player_party->getPartyControlMode() != PARTY_CONTROL_FOLLOW) {
-                cmdwin_print("must be in follow mode!");
+                cmdwin_spush("must be in follow mode!");
                 log_begin_group();
                 log_msg("Camp - party not in follow mode!");
                 log_msg("(Hint: hit 'f' to enter follow mode)");
@@ -1942,7 +1941,7 @@ int cmd_camp_in_town(class Character *camper)
         // Check for an object that will serve as a bed.
         if (place_get_object(camper->getPlace(), camper->getX(), 
                              camper->getY(),  bed_layer) == NULL) {
-                cmdwin_print("no bed!");
+                cmdwin_spush("no bed!");
                 log_msg("Camp - no bed here!");
                 return 0;
         }
@@ -1961,26 +1960,11 @@ int cmd_camp_in_town(class Character *camper)
 
         // Put the party in "sleep" mode before returning back to the main
         // event loop.
-        cmdwin_print(" resting...");
+        cmdwin_spush("resting...");
         player_party->beginResting(hours);
         camper->endTurn();
 
         return TURNS_PER_HOUR;
-}
-
-struct get_spell_name_data {
-	char spell_name[MAX_WORDS_IN_SPELL_NAME + 1];
-	char *ptr;
-	int n;
-	int erase;
-};
-
-static inline void erase_spell_prompt(struct get_spell_name_data *ctx)
-{
-	if (ctx->erase > 0) {
-		cmdwin_backspace(ctx->erase);
-		ctx->erase = 0;
-	}
 }
 
 int get_spell_name(struct KeyHandler *kh, int key, int keymod)
@@ -1989,78 +1973,128 @@ int get_spell_name(struct KeyHandler *kh, int key, int keymod)
 	char *word, letter;
 
 	ctx = (struct get_spell_name_data *) kh->data;
-	if (key == '\n') {
-		// Done
-		erase_spell_prompt(ctx);
-		*ctx->ptr = 0;
-		return 1;
-	}
 
-	if (key == CANCEL) {
-		// Abort
-		erase_spell_prompt(ctx);
-		ctx->spell_name[0] = 0;
-		return 1;
-	}
+        switch (ctx->state) {
 
-	if (key == '\b' && ctx->n) {
-		// Backspace -- erase the previous word
-		erase_spell_prompt(ctx);
-		ctx->ptr--;
-		letter = *ctx->ptr;
-		word = magic_lookup_word(&Session->magic, letter);
-		cmdwin_backspace(strlen(word) + 1);
-		*ctx->ptr = 0;
-		ctx->n--;
-		return 0;
-	}
+        case GN_ZERO: /* No spell words are entered yet and the prompt is
+                       * sitting there. */
 
-	if (ctx->n == MAX_WORDS_IN_SPELL_NAME) {
-		// Out of space -- refuse word
-		return 0;
-	}
+                /* Done? */
+                if (key == '\n') {
+                        cmdwin_pop();
+                        return 1;
+                }
 
-	if (!isalpha(key))
-		// Not a letter
-		return 0;
+                /* Abort? */
+                if (key == CANCEL) {
+                        cmdwin_pop();
+                        ctx->spell_name[0] = 0;
+                        return 1;
+                }
 
-	erase_spell_prompt(ctx);
+                /* A letter? */
+                if (isalpha(key)) {
+                        
+                        /* Lookup the word that goes with the letter. */
+                        letter = toupper(key);
+                        word = magic_lookup_word(&Session->magic, letter);
 
-	letter = toupper(key);
-        word = magic_lookup_word(&Session->magic, letter);
-	if (!word)
-		// Letter does not map to a magic word
-		return 0;
+                        /* Valid word? */
+                        if (word) {
 
-	// Accept the word and print it
-	cmdwin_print("%s ", word);
-	*ctx->ptr = letter;
-	ctx->ptr++;
-	ctx->n++;
+                                /* Clear prompt, show the word and advance. */
+                                cmdwin_pop();
+                                cmdwin_push(word);
+                                *ctx->ptr = letter;
+                                ctx->ptr++;
+                                ctx->n++;
+                                ctx->state = GN_SOME;
+                        }
+                }
+                return 0;
 
-	return 0;
+        case GN_SOME: /* One or more words are already entered. */
+
+                /* Done? Ensure null-termination. */
+                if (key == '\n') {
+                        /* Segment-push a null string to force a '-' following
+                         * the spell name. */
+                        cmdwin_spush(0);
+                        *ctx->ptr = 0;
+                        return 1;
+                }
+
+                /* Abort? Terminate string at beginning. */
+                if (key == CANCEL) {
+                        ctx->spell_name[0] = 0;
+                        return 1;
+                }
+
+                /* Backspace? */
+                if (key == '\b' && ctx->n) {
+                        cmdwin_pop();
+                        ctx->ptr--;
+                        *ctx->ptr = 0;
+                        ctx->n--;
+
+                        /* Back to empty? Re-prompt. */
+                        if (!ctx->n) {
+                                cmdwin_spush(ctx->prompt);
+                                ctx->state = GN_ZERO;
+                        }
+                        return 0;
+                }
+
+                /* Out of space? */
+                if (ctx->n == MAX_WORDS_IN_SPELL_NAME) {
+                        return 0;
+                }
+
+                /* Not a letter? */
+                if (!isalpha(key))
+                        return 0;
+
+                /* Lookup the word that goes with the letter. */
+                letter = toupper(key);
+                word = magic_lookup_word(&Session->magic, letter);
+                if (!word) {
+                        return 0;
+                }
+                
+                /* Accept the word and print it. After the first word separate words
+                 * with a space. */
+                cmdwin_push(" %s", word);
+                *ctx->ptr = letter;
+                ctx->ptr++;
+                ctx->n++;
+                return 0;
+
+        default: /* Invalid state */
+                assert(0);
+                return 0;
+        }
+
 }
 
 int select_spell(struct get_spell_name_data *context)
 {
 	struct KeyHandler kh;
-	char *prompt = "<spell name>";
 
-	// Get the spell name from the player
 	memset(context, 0, sizeof(*context));
 	context->ptr = context->spell_name;
-	context->erase = strlen(prompt);
+        context->prompt = "<spell name>";
+        context->state = GN_ZERO;
 
 	kh.fx = get_spell_name;
 	kh.data = context;
 
+        cmdwin_spush(context->prompt);
 	eventPushKeyHandler(&kh);
-	cmdwin_print(prompt);
 	eventHandle();
 	eventPopKeyHandler();
 
 	if (strlen(context->spell_name) == 0) {
-		cmdwin_print("none!");
+		cmdwin_spush("none!");
 		return -1;
 	}
 
@@ -2089,12 +2123,11 @@ bool cmdCastSpell(class Character * pc)
         }
 
 	cmdwin_clear();
-	cmdwin_print("Cast");
+	cmdwin_spush("Cast");
 
-	// If the pc is null then we are in non-combat mode and need to prompt
-	// the user.
+	/* If the pc is null then we are in non-combat mode and need to promp
+         * the user. */
 	if (pc == NULL) {
-		cmdwin_print("-");
 		pc = select_party_member();
 		if (pc == NULL) {
 			return false;
@@ -2102,47 +2135,40 @@ bool cmdCastSpell(class Character * pc)
 		statusSetMode(ShowParty);
 	}
 
-        // --------------------------------------------------------------------
-        // Make sure the PC is not asleep, dead, etc.
-        // --------------------------------------------------------------------
-
+        /* Make sure the PC is not asleep, dead, etc. */
         if (pc->isDead() || pc->isAsleep()) {
-                cmdwin_print("-unable right now!");
+                cmdwin_spush("unable right now!");
                 return false;
         }
 
-	// Prompt to select a spell
-	cmdwin_print("-");
+	/* Prompt to select a spell */
 	if (select_spell(&context) == -1)
 		return false;
 
-	// erase the extra ' ' left by the selection routine
-	cmdwin_backspace(1);
-
-        // The code for the spell is stored in the context, but not the full
-        // name. I want the full name for log msgs.
+        /* The code for the spell is stored in the context, but not the full
+         * name. I want the full name for log msgs. */
         magic_spell_code_to_name(&Session->magic, spell_name, 
                                  MAX_SPELL_NAME_LENGTH, 
                                  context.spell_name);
 
         log_begin("%s: %s - ", pc->getName(), spell_name);
 
-	// Lookup the spell
+	/* Lookup the spell in the list of valid spells. */
 	spell = magic_lookup_spell(&Session->magic, context.spell_name);
 	if (!spell) {
-		cmdwin_print("-no effect!");
+		cmdwin_spush("no effect!");
                 log_end("no effect!");
 		return false;
 	}
 
-	// Check if the spell can be used in this context.
+	/* Check if the spell can be used in this context. */
 	if (!(player_party->getContext() & spell->context)) {
-		cmdwin_print("-not here!");
+		cmdwin_spush("not here!");
                 log_end("not here!");
 		return false;
 	}
 
-	// Check if the character comes by this spell naturally
+	/* Check if the character comes by this spell naturally. */
 	for (i = 0; i < pc->species->n_spells; i++) {
 		if (! strcmp(pc->species->spells[i], spell->code)) {
 			natural = true;
@@ -2150,17 +2176,18 @@ bool cmdCastSpell(class Character * pc)
 		}
 	}
 
-        //Check if the caster is of sufficient level
-        //
-        // FIXME: what if the spell is natural? cast An Xen Exe on a snake and
-	// try to cast In Nox Por to see what I mean...
-        //
+        /* Check if the caster is of sufficient level. */
+        /*
+         * FIXME: what if the spell is natural? cast An Xen Exe on a snake and
+         * try to cast In Nox Por to see what I mean...
+         */
 	if (!natural && pc->getLevel() < spell->level) {
-		cmdwin_print("-need more experience!");
+		cmdwin_spush("need more experience!");
                 log_end("need more experience!");
 		return false;
 	}
-	// Otherwise check party inventory for a mixed spell.
+
+	/* Check party inventory for a mixed spell. */
 	if (!natural) {
 		ie = player_party->inventory->search(spell->type);
 		if (ie && ie->count)
@@ -2168,18 +2195,19 @@ bool cmdCastSpell(class Character * pc)
 	}
 
 	if (!natural && !mixed) {
-		cmdwin_print("-none mixed!");
+		cmdwin_spush("none mixed!");
                 log_end("none mixed!");
 		return false;
 	}
-	// Check if the character has enough mana to cast the spell.
+
+	/* Check if the character has enough mana to cast the spell. */
 	if (pc->getMana() < spell->cost) {
-		cmdwin_print("-need more mana!");
+		cmdwin_spush("need more mana!");
                 log_end("need more mana!");
 		return false;
 	}
 
-        // Cast the spell.
+        /* Cast the spell. */
         switch (spell->type->cast(pc)) {
         case RESULT_OK:
                 log_continue("ok!");
@@ -2195,12 +2223,12 @@ bool cmdCastSpell(class Character * pc)
                 break;
         }
 
-        // Decrement caster's mana
+        /* Decrement the caster's mana. */
         pc->addMana(0 - spell->cost);
         pc->decActionPoints(max(spell->cost/2,1));
         pc->addExperience(spell->cost);
 
-	// If the spell was mixed then remove it from inventory.
+	/* If the spell was mixed then remove it from inventory. */
 	if (mixed)
 		player_party->takeOut(ie->type, 1);
 
@@ -2226,7 +2254,7 @@ bool cmdMixReagents(class Character *character)
 	list_init(&reagents);
 
 	cmdwin_clear();
-	cmdwin_print("Mix-");
+	cmdwin_spush("Mix");
 
 	// Select a spell...
 	if (select_spell(&context) == -1)
@@ -2240,12 +2268,9 @@ bool cmdMixReagents(class Character *character)
 
 	// Lookup the spell. If null then keep going and bomb when done.
 	spell = magic_lookup_spell(&Session->magic, context.spell_name);
-	cmdwin_backspace(1);
 
 	// Prompt for reagents 
-	cmdwin_print("-");
-	cmdwin_mark();
-	cmdwin_print("<select, then 'm' to mix when done selecting>");
+	cmdwin_spush("<select, then M)ix>");
 
 	// Show the reagents in the status window
 	statusSetMode(MixReagents);
@@ -2268,9 +2293,9 @@ bool cmdMixReagents(class Character *character)
 
 		if (sc.abort) {
 			// u5 silently aborts here
-			cmdwin_erase_back_to_mark();
+                        cmdwin_pop();
 			eventPopKeyHandler();
-			cmdwin_print("none!");
+			cmdwin_spush("none!");
 			goto done;
 		}
 
@@ -2281,9 +2306,9 @@ bool cmdMixReagents(class Character *character)
                 if (! ie) {
                         /* This happens when the player has no reagents
                          * whatsoever. */
-			cmdwin_erase_back_to_mark();
+			cmdwin_pop();
 			eventPopKeyHandler();
-			cmdwin_print("none!");
+			cmdwin_spush("none!");
 			goto done;
                 }
 
@@ -2300,11 +2325,11 @@ bool cmdMixReagents(class Character *character)
 		statusRepaint();
 	}
 
-	cmdwin_erase_back_to_mark();
+	cmdwin_pop();
 	eventPopKeyHandler();
 
 	if (list_empty(&reagents)) {
-		cmdwin_print("none!");
+		cmdwin_spush("none!");
 		goto done;
 	}
 
@@ -2322,26 +2347,21 @@ bool cmdMixReagents(class Character *character)
 
 		int dummy;
 
+                cmdwin_push_mark();
 		quantity = ui_get_quantity(max_quantity);
 
 		if (quantity == 0) {
 			goto done;
 		}
 
-		if (quantity == 1)
-			cmdwin_print(" mixture");
-		else
-			cmdwin_print(" mixtures");
-
 		if (quantity <= max_quantity)
 			break;
 
-		cmdwin_print("-not enough reagents! Hit any key to retry");
+                cmdwin_spush(0); /* for the '-' after the quantity */
+		cmdwin_spush("not enough reagents!");
 		getkey(&dummy, anykey);
-		cmdwin_erase_back_to_mark();
+		cmdwin_pop_to_mark();
 	}
-
-	cmdwin_print("-");
 
 	log_begin("Mix: %s - ", spell_name);
 
@@ -2396,20 +2416,20 @@ bool cmdMixReagents(class Character *character)
 	// If the spell is invalid or the reagents are incorrect then punish
 	// the player.
 	if (!spell) {
-                cmdwin_print("oops!");
+                cmdwin_spush("oops!");
                 player_party->damage(DAMAGE_ACID);
                 log_end("ACID!");
                 goto done;
 
         } else if (mistake) {
-                cmdwin_print("ouch!");
+                cmdwin_spush("ouch!");
                 player_party->damage(DAMAGE_BOMB);
                 log_end("BOMB!");
                 goto done;
 	}
 
 	// All is well. Add the spell to player inventory.
-        cmdwin_print("ok");
+        cmdwin_spush("ok");
 	player_party->add(spell->type, quantity);
         log_end("ok!");
 
@@ -2526,7 +2546,7 @@ bool cmdXamine(class Object * pc)
         bool ret = true;
 
 	cmdwin_clear();
-	cmdwin_print("Xamine-");
+	cmdwin_spush("Xamine");
 
         x = pc->getX();
         y = pc->getY();
@@ -2705,7 +2725,7 @@ bool cmd_terraform(struct place *place, int x, int y)
         struct terrain         * terrain;
 
 	cmdwin_clear();
-	cmdwin_print("Terraform-");
+	cmdwin_push("Terraform");
 
         map     = place->terrain_map;
         palette = map->palette;
@@ -2847,15 +2867,16 @@ int ui_get_yes_no(char *name)
 {
 	int yesno;
 	cmdwin_clear();
-	cmdwin_print("Reply-<Y/N>");
+	cmdwin_spush("Reply");
+        cmdwin_spush("<y/n>");
 	getkey(&yesno, yesnokey);
-	cmdwin_backspace(strlen("<Y/N>"));
+	cmdwin_pop();
 	if (yesno == 'y') {
-		cmdwin_print("yes");
+		cmdwin_spush("yes");
 		log_msg("%s: Yes", name);
                 return 1;
 	} else {
-		cmdwin_print("no");
+		cmdwin_spush("no");
 		log_msg("%s: No", name);
                 return 0;
 	}
@@ -2875,7 +2896,7 @@ static int ui_getline_handler(struct KeyHandler *kh, int key, int keymod)
 		while (data->ptr > data->buf) {
 			data->ptr--;
 			*data->ptr = 0;
-			cmdwin_backspace(1);
+			cmdwin_pop();
 			data->room++;
 		}
 		return 1;
@@ -2890,13 +2911,13 @@ static int ui_getline_handler(struct KeyHandler *kh, int key, int keymod)
 			data->ptr--;
 			*data->ptr = 0;
 			data->room++;
-			cmdwin_backspace(1);
+			cmdwin_pop();
 		}
 		return 0;
 	}
 
 	if (isprintable(key) && data->room) {
-		cmdwin_print("%c", key);
+		cmdwin_push("%c", key);
 		*data->ptr++ = key;
 		data->room--;
 	}
@@ -2928,7 +2949,7 @@ int ui_getline_plain(char *buf, int len)
 int ui_getline(char *buf, int len)
 {
         cmdwin_clear();
-        cmdwin_print("Say: ");
+        cmdwin_push("Say: ");
         return ui_getline_plain(buf, len);
 }
 
@@ -2953,49 +2974,49 @@ static void buy(struct merchant *merch)
 		sc.selection = NULL;
 
 		cmdwin_clear();
-		cmdwin_print("Buy-<select/ESC>");
+		cmdwin_spush("Buy");
+                cmdwin_spush("<select/ESC>");
 		eventPushKeyHandler(&kh);
 		eventHandle();
 		eventPopKeyHandler();
-		cmdwin_backspace(strlen("<select/ESC>"));
+		cmdwin_pop();
 
 		trade = (struct trade_info *) sc.selection;
 
 		if (!trade) {
-			cmdwin_print("none!");
+			cmdwin_spush("none!");
 			break;
 		}
 
-		cmdwin_print("%s-", trade->name);
+		cmdwin_spush("%s", trade->name);
 
 		if (player_party->gold < trade->cost) {
 			int dummy;
-			cmdwin_print("not enough gold! <hit any key>");
+			cmdwin_spush("not enough gold! <hit any key>");
 			getkey(&dummy, anykey);
 			continue;
 		}
 		// *** quantity ***
 
+                cmdwin_push_mark();
 		max_q = player_party->gold / trade->cost;
-
-		cmdwin_mark();
 		quantity = ui_get_quantity(max_q);
-		cmdwin_erase_back_to_mark();
+                cmdwin_pop_to_mark();
 
 		if (quantity == 0) {
-			cmdwin_print("none!");
+			cmdwin_spush("none!");
 			continue;
 		}
 
 		quantity = min(quantity, max_q);
-		cmdwin_print("%d-", quantity);
+		cmdwin_spush("%d", quantity);
 
 		cost = quantity * trade->cost;
 
 		// *** trade ***
 
                 class ObjectType *type = (class ObjectType*)trade->data;
-		cmdwin_print("ok");
+		cmdwin_spush("ok");
 		log_msg("You buy %d %s%s for %d gold\n", quantity,
 			     trade->name, quantity > 1 ? "s" : "", cost);
 
@@ -3085,20 +3106,21 @@ static void sell(struct merchant *merch)
 		sc.selection = NULL;
 
 		cmdwin_clear();
-		cmdwin_print("Sell-<select or ESC>");
+		cmdwin_spush("Sell");
+                cmdwin_spush("<select or ESC>");
 		eventPushKeyHandler(&kh);
 		eventHandle();
 		eventPopKeyHandler();
-		cmdwin_backspace(strlen("<select or ESC>"));
+		cmdwin_pop();
 
 		trade = (struct trade_info *) sc.selection;
 
 		if (!trade) {
-			cmdwin_print("none!");
+			cmdwin_spush("none!");
 			break;
 		}
 
-		cmdwin_print("%s-", trade->name);
+		cmdwin_spush("%s", trade->name);
 
 		ie = player_party->inventory->search((class ObjectType *) trade->data);
 		assert(ie);
@@ -3108,24 +3130,24 @@ static void sell(struct merchant *merch)
 
 		max_q = ie->count - ie->ref;
 
-		cmdwin_mark();
+		cmdwin_push_mark();
 		quantity = ui_get_quantity(max_q);
-		cmdwin_erase_back_to_mark();
+                cmdwin_pop_to_mark();
 
 		if (quantity == 0) {
-			cmdwin_print("none!");
+			cmdwin_spush("none!");
 			continue;
 		}
 
 		quantity = min(quantity, max_q);
-		cmdwin_print("%d-", quantity);
+		cmdwin_spush("%d", quantity);
 
 		// make the trade
 		player_party->takeOut(ie->type, quantity);
 		player_party->gold += quantity * trade->cost;
 		foogodRepaint();
 
-		cmdwin_print("ok");
+		cmdwin_spush("ok");
 		log_msg("You sell %d %s%s for %d gold\n", quantity,
 			     trade->name, quantity > 1 ? "s" : "",
 			     quantity * trade->cost);
@@ -3168,7 +3190,8 @@ void ui_trade(struct merchant *merch)
 
 	for (;;) {
 		cmdwin_clear();
-		cmdwin_print("Buy or sell-<B/S/ESC>");
+		cmdwin_spush("Buy or sell");
+                cmdwin_spush("<B/S/ESC>");
 		getkey(&key, get_buy_or_sell_key);
 
 		switch (key) {
@@ -3179,8 +3202,8 @@ void ui_trade(struct merchant *merch)
 			sell(merch);
 			break;
 		default:
-			cmdwin_backspace(strlen("<B/S>"));
-			cmdwin_print("none!");
+			cmdwin_pop();
+			cmdwin_spush("none!");
 			return;
 		}
 	}

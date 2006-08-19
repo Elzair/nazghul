@@ -84,15 +84,16 @@ static int confirm_selection()
         int yesno;
         log_msg("Existing saved game will be overwritten! Are you sure?");
         cmdwin_clear();
-        cmdwin_print("Confirm-Y/N?");
+        cmdwin_spush("Confirm");
+        cmdwin_spush("<y/n>");
         getkey(&yesno, yesnokey);
-        cmdwin_backspace(4);
+        cmdwin_pop();
         if (yesno=='y') {
-                cmdwin_print("Yes!");
+                cmdwin_spush("yes!");
                 log_msg("Ok!");
                 return 1;
         } else {
-                cmdwin_print("No!");
+                cmdwin_spush("no!");
                 log_msg("Canceled!");
                 return 0;
         }
@@ -177,7 +178,7 @@ static char *prompt_for_fname()
 
         log_msg("Enter the new filename.");
         cmdwin_clear();
-        cmdwin_print("Filename-");
+        cmdwin_push("Filename: ");
 
         if (ui_getline_plain(buf, sizeof(buf))) {
                 return strdup(buf);

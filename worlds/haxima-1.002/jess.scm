@@ -38,8 +38,8 @@
 (define (jess-name knpc kpc)
   (if (working? knpc)
       (say knpc "I'm Jess, proprieter of this here oasis.")
-      (say knpc "I own the Holy Grail. Come by some time when you're "
-           "thirsty.")))
+      (say knpc "I'm Jess, proprieter of the Holy Grail. "
+           "Come by some time when you're thirsty.")))
 
 (define (jess-join knpc kpc)
   (say knpc "No thanks, I get enough action throwing out drunks and "

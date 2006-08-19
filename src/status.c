@@ -1175,7 +1175,7 @@ static void mySetPageMode(void)
 
         // Clear the cmdwin and print instructions for exiting page mode.
         cmdwin_clear();
-        cmdwin_print("(Hit ESC when done reading)");
+        cmdwin_push("(Hit ESC when done reading)");
 }
 
 static void myPaintTrade(void)

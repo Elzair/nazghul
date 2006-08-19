@@ -510,29 +510,29 @@ static void ctrl_attack_ui(class Character *character)
                 				
                 // prompt the user
                 cmdwin_clear();
-                cmdwin_print("Attack-");
+                cmdwin_spush("Attack");
 
                 if (weapon->isMissileWeapon()) {
                         // SAM: It would be nice to get ammo name, too...
-                        cmdwin_print("%s (range %d, %d ammo)-", 
+                        cmdwin_spush("%s (range %d, %d ammo)", 
                                      weapon->getName(), weapon->getRange(), 
                                      character->hasAmmo(weapon));
                 }
                 else if (weapon->isThrownWeapon()) {
                         // SAM: It would be nice to get ammo name, too...
-                        cmdwin_print("%s (range %d, %d left)-",
+                        cmdwin_spush("%s (range %d, %d left)",
                                      weapon->getName(), weapon->getRange(), 
                                      character->hasAmmo(weapon));
                 }
                 else {
-                        cmdwin_print("%s (reach %d)-", 
+                        cmdwin_spush("%s (reach %d)", 
                                      weapon->getName(), weapon->getRange() );
                 }
 
 
                 // Check ammo
                 if (!character->hasAmmo(weapon)) {
-                        cmdwin_print("no ammo!");
+                        cmdwin_spush("no ammo!");
                         log_msg("%s: %s - no ammo!\n",
                                      character->getName(),
                                      weapon->getName());
@@ -560,7 +560,7 @@ static void ctrl_attack_ui(class Character *character)
                         class Character *near;
                         near = ctrl_get_interfering_hostile(character);
                         if (near) {
-                                cmdwin_print("blocked!");
+                                cmdwin_spush("blocked!");
                                 log_msg("%s: %s - blocked by %s!\n",
                                              character->getName(),
                                              weapon->getName(),
@@ -583,7 +583,7 @@ static void ctrl_attack_ui(class Character *character)
 				
                 if (select_target(character->getX(), character->getY(), &x, &y,
                                   weapon->getRange()) == -1) {
-                        cmdwin_print("abort!");
+                        cmdwin_spush("abort!");
                         continue;
                 }
 
@@ -604,7 +604,7 @@ static void ctrl_attack_ui(class Character *character)
 				
                         character->attackTerrain(weapon, x, y);
 						
-                        cmdwin_print("%s", terrain->name);
+                        cmdwin_spush("%s", terrain->name);
 
                         /* Check for a mech */
                         mech = place_get_object(character->getPlace(), x, y, 
@@ -637,20 +637,21 @@ static void ctrl_attack_ui(class Character *character)
                         // being layer
                         assert(target->isType(CHARACTER_ID));
 
-                        cmdwin_print("%s", target->getName());
+                        cmdwin_spush("%s", target->getName());
 
 
                         // If the npc is not hostile then get player confirmation.
                         if (! are_hostile(character, target)) {
                                 int yesno;
-                                cmdwin_print("-attack non-hostile-<y/n>");
+                                cmdwin_spush("attack non-hostile");
+                                cmdwin_spush("<y/n>");
                                 getkey(&yesno, yesnokey);
-                                cmdwin_backspace(strlen("<y/n>"));
+                                cmdwin_pop();
                                 if (yesno == 'n') {
-                                        cmdwin_print("no");
+                                        cmdwin_spush("no");
                                         continue;
                                 }
-                                cmdwin_print("yes");
+                                cmdwin_spush("yes");
                         }
 
                         // Strike the target
@@ -707,7 +708,7 @@ static void ctrl_move_character(class Character *character, int dir)
                 character->endTurn();
                 break;
         case EngagedEnemy:
-                cmdwin_print("enter combat!");
+                cmdwin_spush("enter combat!");
                 break;
         case WasOccupied:
                 result = "occupied!";
@@ -1046,7 +1047,7 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
         cmdwin_clear();
 
         if (!character->isTurnEnded()) {
-                cmdwin_print("%s:", character->getName());
+                cmdwin_push("%s:", character->getName());
         }
 
         Session->subject = NULL;
@@ -1397,7 +1398,7 @@ void ctrl_character_ui(class Character *character)
         struct KeyHandler kh;
         /* Setup cmdwin prompt for first entry to the control loop */
         cmdwin_clear();
-        cmdwin_print("%s:", character->getName());
+        cmdwin_push("%s:", character->getName());
 
         /* Push the key handler and enter the event loop until character is
          * done with turn */

@@ -34,6 +34,18 @@
 #include <errno.h>
 #include <stdarg.h>
 
+#define CMDWIN_FRAG_MAX_LEN 64
+
+/* Fragment flags */
+#define CMDWIN_FRAG_SEP     (1<<0)
+#define CMDWIN_FRAG_MARK    (1<<1)
+
+struct cmdwin_frag {
+        struct list list;
+        int flags;
+        char buf[CMDWIN_FRAG_MAX_LEN];
+};
+
 static struct {
 	SDL_Rect srect;
 	char *buf;
@@ -42,6 +54,7 @@ static struct {
 	int room;
 	char *mark;
         struct sprite *cursor_sprite;
+        struct list frags;
 } cmdwin;
 
 #ifdef DEBUG
@@ -68,18 +81,72 @@ static void cmdwin_cursor_sprite_init()
         assert(cmdwin.cursor_sprite);
 }
 
+static void cmdwin_clear_frag_stack(void)
+{
+        struct list *entry;
+        
+        entry = cmdwin.frags.next;
+        while (entry != &cmdwin.frags) {
+                struct cmdwin_frag *frag = (struct cmdwin_frag*)entry;
+                entry = entry->next;
+                list_remove(&frag->list);
+                free(frag);
+        }
+}
+
+static struct cmdwin_frag *cmdwin_top()
+{
+        if (list_empty(&cmdwin.frags))
+                return 0;
+        return (struct cmdwin_frag*)cmdwin.frags.prev;
+}
+
+void cmdwin_reprint_buffer(void)
+{
+        struct list *entry;
+
+        /* Erase the buffer */
+        cmdwin_clear_no_repaint();
+
+        /* Loop over the fragments until out of room or out of fragments */
+        list_for_each(&cmdwin.frags, entry) {
+                struct cmdwin_frag *frag = (struct cmdwin_frag*)entry;
+                int n = 0;
+
+                /* Append the fragment to the buffer. */
+                if ((frag->flags & CMDWIN_FRAG_SEP)
+                    && (entry->next != &cmdwin.frags)) {
+                        /* Print a '-' after this fragment. */
+                        n = snprintf(cmdwin.ptr, cmdwin.room, "%s-", frag->buf);
+                } else {
+                        /* No '-' afterwards. */
+                        n = snprintf(cmdwin.ptr, cmdwin.room, "%s", frag->buf);
+                }
+                n = min(n, cmdwin.room);
+                cmdwin.room -= n;
+                cmdwin.ptr += n;
+
+                /* If out of room then stop, and backup the ptr to the last
+                 * entry in the buffer */
+                if (!cmdwin.room) {
+                        cmdwin.ptr--;
+                        break;
+                }
+
+        }
+}
+
 int cmdwin_init(void)
 {
         cmdwin_cursor_sprite_init();
+
+        list_init(&cmdwin.frags);
 
 	cmdwin.srect.x = CMD_X;
 	cmdwin.srect.y = CMD_Y;
 	cmdwin.srect.w = CMD_W;
 	cmdwin.srect.h = CMD_H;
 
-        /* The actual string buffer length is one less than the width of the
-         * cmdwin, because the last space must always be reserved for the
-         * cursor. */
 	cmdwin.blen = CMD_W / ASCII_W;
 	cmdwin.buf = (char *) malloc(cmdwin.blen);
 	if (!cmdwin.buf)
@@ -97,46 +164,87 @@ int cmdwin_init(void)
 	return 0;
 }
 
-void cmdwin_print(char *fmt, ...)
+static void cmdwin_vpush(int flags, char *fmt, va_list args)
+{
+        /* Allocate a new fragment */
+        struct cmdwin_frag *frag = (struct cmdwin_frag*)malloc(sizeof(*frag));
+        if (!frag) {
+                warn("allocation failed");
+                return;
+        }
+
+        frag->flags = flags;
+
+        /* Store the string in the fragment */
+	vsnprintf(frag->buf, sizeof(frag->buf), fmt, args);
+
+        /* Push the fragment onto the stack */
+        list_add_tail(&cmdwin.frags, &frag->list);
+
+        /* Reprint the buffer with the new fragment */
+        cmdwin_reprint_buffer();
+
+        /* Update the display */
+	cmdwin_repaint();        
+}
+
+void cmdwin_spush(char *fmt, ...)
 {
 	va_list args;
-	int n;
 
 	va_start(args, fmt);
-	n = vsnprintf(cmdwin.ptr, cmdwin.room, fmt, args);
+        cmdwin_vpush(CMDWIN_FRAG_SEP, fmt, args);
 	va_end(args);
+        
+}
 
-	if (n == -1) {
-		cmdwin.room = 0;
-	} else {
-		cmdwin.ptr += n;
-		cmdwin.room -= n;
-	}
+void cmdwin_push(char *fmt, ...)
+{
+	va_list args;
 
+	va_start(args, fmt);
+        cmdwin_vpush(0, fmt, args);
+	va_end(args);
+}
+
+void cmdwin_push_mark()
+{
+        cmdwin_vpush(CMDWIN_FRAG_MARK, 0, 0);
+}
+
+void cmdwin_pop(void)
+{
+        struct cmdwin_frag *frag;
+
+        /* Fragment stack should not be empty. */
+        assert(! list_empty(&cmdwin.frags));
+
+        /* Remove the last fragment and free it. */
+        frag = (struct cmdwin_frag*)cmdwin.frags.prev;
+        list_remove(&frag->list);
+        free(frag);
+
+        /* Reprint the buffer without the fragment */
+        cmdwin_reprint_buffer();
+
+        /* Update the display */
 	cmdwin_repaint();
 }
 
-void cmdwin_backspace(int n)
+void cmdwin_pop_to_mark()
 {
-	int len;
+        struct cmdwin_frag *frag = cmdwin_top();
+        while (frag && frag->flags != CMDWIN_FRAG_MARK) {
+                cmdwin_pop();
+                frag = cmdwin_top();
+        }
 
-	/* Don't allow backspace beyond end of prompt */
-	len = cmdwin.blen - cmdwin.room;
-	if (len > n)
-		len = n;
-
-	/* Backup */
-	cmdwin.ptr -= len;
-	cmdwin.room += len;
-
-	/* Erase everything beyond the Console.cursor */
-	memset(cmdwin.ptr, 0, cmdwin.room);
-
-	cmdwin_repaint();
+        /* DON'T pop the mark itself */
 }
 
 void cmdwin_clear(void)
 {
+        cmdwin_clear_frag_stack();
         cmdwin_clear_no_repaint();
         cmdwin_repaint();
 }
@@ -167,28 +275,6 @@ void cmdwin_repaint(void)
 void cmdwin_mark(void)
 {
 	cmdwin.mark = cmdwin.ptr;
-}
-
-void cmdwin_erase_back_to_mark(void)
-{
-	int n;
-	n = cmdwin.ptr - cmdwin.mark;
-	if (n > 0)
-		cmdwin_backspace(n);
-}
-
-void cmdwin_flush_to_console(void)
-{
-        if (!strlen(cmdwin.buf))
-                return;
-
-        consolePrint("%s\n", cmdwin.buf);
-#ifdef DEBUG
-	if (log)
-	        fprintf(log, "%s\n", cmdwin.buf);
-#endif
-        //cmdwin_clear();
-        //cmdwin_repaint();
 }
 
 void cmdwin_flush(void)

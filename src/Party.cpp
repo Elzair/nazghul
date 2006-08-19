@@ -1002,9 +1002,9 @@ Object *Party::getSpeaker()
 
         // Push the handler and wait for the player to make a selection.
 	eventPushKeyHandler(&kh);
-	cmdwin_print("<select>");
+	cmdwin_spush("<select>");
 	eventHandle();
-	cmdwin_backspace(strlen("<select>"));
+	cmdwin_pop();
 	eventPopKeyHandler();
 
 	statusRepaint();
