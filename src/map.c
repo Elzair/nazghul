@@ -65,7 +65,6 @@
 #define MY_TO_SY(y) \
     (Map.srect.y+((y)-(Map.aview->vrect.y+Map.aview->subrect.y))*TILE_H)
 
-
 extern int DeveloperMode;
 
 struct light_source {
@@ -1604,4 +1603,17 @@ void mapSetSelected(class Object *obj)
         Map.selected = obj;
         if (obj)
                 obj_inc_ref(obj);
+}
+
+int mapScreenToPlaceCoords(int *x, int *y)
+{
+        int px = (*x - Map.srect.x) / TILE_W + Map.aview->vrect.x + Map.aview->subrect.x;
+        int py = (*y - Map.srect.y) / TILE_H + Map.aview->vrect.y + Map.aview->subrect.y;
+
+        if (place_off_map(Map.place, px, py))
+                return -1;
+
+        *x = place_wrap_x(Map.place, px);
+        *y = place_wrap_y(Map.place, py);
+        return 0;
 }

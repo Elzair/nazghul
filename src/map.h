@@ -93,6 +93,8 @@ extern void mapUpdateTile(struct place *place, int x, int y);
 extern void mapPaintDamage(int x, int y);
 extern void mapSetSelected(class Object *obj);
 
+extern int mapScreenToPlaceCoords(int *x, int *y);
+
 END_DECL
 
 #endif

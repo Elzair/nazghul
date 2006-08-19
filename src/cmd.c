@@ -355,6 +355,38 @@ int scroller(struct KeyHandler * kh, int key, int keymod)
 	return 0;
 }
 
+bool mousecursor(struct MouseHandler *mh, int button, int x, int y)
+{
+        struct cursor_movement_keyhandler * data
+                = (struct cursor_movement_keyhandler *) mh->data;
+        int mx = x;
+        int my = y;
+
+        /* Off-map? */
+        if (mapScreenToPlaceCoords(&mx, &my)) {
+                return false;
+        }
+
+        /* Move the crosshair */
+        Session->crosshair->move(mx - Session->crosshair->getX(),
+                                 my - Session->crosshair->getY());
+        mapSetDirty();
+
+        /* target selected? */
+        if (button == BUTTON_LEFT) {
+                if (data->each_target_func) {
+                        data->each_target_func(Session->crosshair->getPlace(),
+                                               Session->crosshair->getX(),
+                                               Session->crosshair->getY());
+                }
+
+                return ! data->multi;   /* done unless multiple targets */
+        }
+
+
+        return false;
+}
+
 /**
  * movecursor - move the crosshair around, possibly running a function on each
  * tile entered by the crosshair or on each tile selected
@@ -1232,6 +1264,7 @@ int select_target(int ox, int oy, int *x, int *y, int range)
 {
         struct cursor_movement_keyhandler data;
         struct KeyHandler kh;
+        struct MouseHandler mh;
 
         Session->crosshair->setRange(range);
         Session->crosshair->setOrigin(ox, oy);
@@ -1248,11 +1281,16 @@ int select_target(int ox, int oy, int *x, int *y, int range)
         kh.fx   = movecursor;
         kh.data = &data;
   
+        mh.fx = mousecursor;
+        mh.data = &data;
+
+        eventPushMouseHandler(&mh);
         eventPushKeyHandler(&kh);
         cmdwin_spush("<target>");
         eventHandle();
         cmdwin_pop();
         eventPopKeyHandler();
+        eventPopMouseHandler();
   
         Session->show_boxes = 0;
         *x = Session->crosshair->getX();

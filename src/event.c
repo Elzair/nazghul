@@ -281,6 +281,19 @@ static void event_handle_aux(int flags)
 			}
 			break;
 
+		case SDL_MOUSEMOTION:
+			{
+				struct MouseHandler *mouseh;
+				mouseh = getHandler(&MouseHandlers,
+						    struct MouseHandler);
+				if (mouseh &&
+				    mouseh->fx(mouseh,
+					       -1,
+					       event.motion.x, event.motion.y))
+					done = true;
+			}
+			break;
+
 		default:
 			break;
 		}
