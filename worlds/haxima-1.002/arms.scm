@@ -206,12 +206,29 @@
                  (kern-obj-put-at (kern-mk-obj F_fire 1) 
                                   (mk-loc kplace x y))))))
 
+(define vial-of-slime-ifc
+  (ifc obj-ifc
+       (method 'hit-loc 
+               (lambda (kmissile kplace x y)
+                 (let* ((lvl (kern-dice-roll "1d3+5"))
+                        (knpc (spawn-npc 'green-slime lvl))
+                        (loc (pick-loc (mk-loc kplace x y) knpc)))
+                   (println " loc=" loc)
+                   (cond ((null? loc) 
+                          (kern-obj-dec-ref knpc)
+                          0)
+                         (else
+                          (kern-being-set-base-faction knpc faction-none)
+                          (kern-obj-set-temporary knpc #t)
+                          (kern-obj-put-at knpc loc))))))))
+
 (define thrown-arms-types
   (list
    ;;     ==========================================================================================================================================
    ;;     tag              | name          | sprite              | to-hit | damage | to-def | slots       | hnds | rng | ifc             | weight
    ;;     ==========================================================================================================================================
    (list  't_oil            "flaming oil"   s_flaming_oil          "-1"     "1d6"    "-2"     slot-weapon   1      4     flaming-oil-ifc  1)
+   (list  't_slime_vial     "vial of slime" s_flaming_oil          "-1"     "1d2"    "-2"     slot-weapon   1      4     vial-of-slime-ifc  1)
    (list  't_spear          "spear"         s_spear                "0"      "1d8"    "+1"     slot-weapon   1      4     obj-ifc          2)
    (list  't_thrown_boulder "loose boulder" s_thrown_boulder       "-2"     "3d4+1"  "-2"     slot-weapon   2      5     obj-ifc          10)
    ))
