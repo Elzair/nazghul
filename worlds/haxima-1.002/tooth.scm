@@ -62,9 +62,9 @@
        "All quality! Rare, valuable, hard-to-find! Reasonably priced! "
        "How do I stay in business? I don't know! See for yourself!")
         (kern-conv-trade knpc kpc
-                         (list t_picklock          50)
-                         (list t_gem               100)
-                         (list t_oil               50)
+                         (list t_picklock          25)
+                         (list t_gem               50)
+                         (list t_oil               25)
                          (list t_dagger_4          (* 4 65))
                          (list t_sword_2           (* 2 85))
                          (list t_sword_4           (* 4 85))
@@ -83,6 +83,7 @@
                          (list t_wis_quas_scroll   (* 4 base-scroll-cost))
                          (list t_in_quas_xen_scroll (* 7 base-scroll-cost))
                          (list t_an_tym_scroll     (* 8 base-scroll-cost))
+                         (list t_slime_vial 40)
                          ))
 
 

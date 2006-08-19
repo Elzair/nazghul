@@ -53,6 +53,7 @@
                                (list t_mana_potion  48)
                                (list t_cure_potion  50)
                                (list t_poison_immunity_potion 75)
+                               (list t_slime_vial 50)
                                )
               (say knpc "Be careful with those."))))))
 
