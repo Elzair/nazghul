@@ -68,7 +68,11 @@ static pointer closure_execv(closure_t *closure, char *fmt, va_list args)
         closure_ref(closure);
 
         /* Convert the C args to Scheme. */
-        head = vpack(closure->sc, fmt, args);
+        if (fmt) {
+                head = vpack(closure->sc, fmt, args);
+        } else {
+                head = closure->sc->NIL;
+        }
 
         /* Straight procedure call? */
         if (scm_is_closure(closure->sc, closure->code)) {
