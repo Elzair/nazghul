@@ -51,7 +51,8 @@ typedef struct {
 static struct list KeyHandlers;
 static struct list TickHandlers;
 static struct list QuitHandlers;
-static struct list MouseHandlers;
+static struct list MouseButtonHandlers;
+static struct list MouseMotionHandlers;
 static struct list backlog;
 
 static bool record_events;
@@ -127,19 +128,6 @@ static int mapKey(SDL_keysym * keysym)
 
         /* Unsupported? fallback to the SDL sym */
 	return keysym->sym;
-}
-
-static int mapButton(Uint8 button)
-{
-	switch (button) {
-	case SDL_BUTTON_RIGHT:
-		return BUTTON_RIGHT;
-	case SDL_BUTTON_MIDDLE:
-		return BUTTON_MIDDLE;
-	case SDL_BUTTON_LEFT:
-	default:
-		return BUTTON_LEFT;
-	}
 }
 
 static int event_get_next_event(SDL_Event *event, int flags)
@@ -270,27 +258,25 @@ static void event_handle_aux(int flags)
 
 		case SDL_MOUSEBUTTONDOWN:
 			{
-				struct MouseHandler *mouseh;
-				mouseh = getHandler(&MouseHandlers,
-						    struct MouseHandler);
+				struct MouseButtonHandler *mouseh;
+				mouseh = getHandler(&MouseButtonHandlers,
+						    struct MouseButtonHandler);
 				if (mouseh &&
-				    mouseh->fx(mouseh,
-					       mapButton(event.button.button),
-					       event.button.x, event.button.y))
+				    mouseh->fx(mouseh, &event.button)) {
 					done = true;
+                                }
 			}
 			break;
 
 		case SDL_MOUSEMOTION:
 			{
-				struct MouseHandler *mouseh;
-				mouseh = getHandler(&MouseHandlers,
-						    struct MouseHandler);
+				struct MouseMotionHandler *mouseh;
+				mouseh = getHandler(&MouseMotionHandlers,
+						    struct MouseMotionHandler);
 				if (mouseh &&
-				    mouseh->fx(mouseh,
-					       -1,
-					       event.motion.x, event.motion.y))
+				    mouseh->fx(mouseh, &event.motion)) {
 					done = true;
+                                }
 			}
 			break;
 
@@ -313,7 +299,8 @@ int eventInit(void)
 	list_init(&KeyHandlers);
 	list_init(&TickHandlers);
 	list_init(&QuitHandlers);
-	list_init(&MouseHandlers);
+	list_init(&MouseButtonHandlers);
+	list_init(&MouseMotionHandlers);
         list_init(&backlog);
 	eventHook = NULL;
 	wait_event = event_get_next_event;
@@ -398,14 +385,24 @@ void eventPopQuitHandler(void)
 	popHandler(&QuitHandlers);
 }
 
-void eventPushMouseHandler(struct MouseHandler *keyh)
+void eventPushMouseButtonHandler(struct MouseButtonHandler *keyh)
 {
-	pushHandler(&MouseHandlers, keyh);
+	pushHandler(&MouseButtonHandlers, keyh);
 }
 
-void eventPopMouseHandler(void)
+void eventPopMouseButtonHandler(void)
 {
-	popHandler(&MouseHandlers);
+	popHandler(&MouseButtonHandlers);
+}
+
+void eventPushMouseMotionHandler(struct MouseMotionHandler *keyh)
+{
+	pushHandler(&MouseMotionHandlers, keyh);
+}
+
+void eventPopMouseMotionHandler(void)
+{
+	popHandler(&MouseMotionHandlers);
 }
 
 void eventAddHook(void (*fx) (void))

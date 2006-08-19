@@ -22,17 +22,12 @@
 #ifndef event_h
 #define event_h
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "macros.h"
+
+BEGIN_DECL
 
 #include "list.h"
-
 #include <SDL.h>
-
-#define BUTTON_LEFT     0
-#define BUTTON_MIDDLE   1
-#define BUTTON_RIGHT    2
 
 /* Map directions to the numeric keypad */
 #define KEY_NORTHWEST   SDLK_KP7
@@ -65,51 +60,57 @@ extern "C" {
 #define KEY_CTRL_T      0x14
 #define KEY_CTRL_Z      0x1a
 
-	struct TickHandler {
-		struct list list;
-                bool(*fx) (struct TickHandler * handler);
-		void *data;
-	};
+struct TickHandler {
+        struct list list;
+        bool(*fx) (struct TickHandler * handler);
+        void *data;
+};
 
 
-        struct KeyHandler {
-                struct list list;
-                int(*fx) (struct KeyHandler * handler, int key, int keymod);
-                void *data;  
-                // The data field should always be filled with a struct, 
-                // rather than a scalar such as bool or int,
-                // to facilitate expansions to two or more subfields
-                // For example, the 'struct cursor_movement_keyhandler' above.
-        };
+struct KeyHandler {
+        struct list list;
+        int(*fx) (struct KeyHandler * handler, int key, int keymod);
+        void *data;  
+        // The data field should always be filled with a struct, 
+        // rather than a scalar such as bool or int,
+        // to facilitate expansions to two or more subfields
+        // For example, the 'struct cursor_movement_keyhandler' above.
+};
 
-	struct QuitHandler {
-		struct list list;
-                bool(*fx) (struct QuitHandler * handler);
-		void *data;
-	};
+struct QuitHandler {
+        struct list list;
+        bool(*fx) (struct QuitHandler * handler);
+        void *data;
+};
 
-	struct MouseHandler {
-		struct list list;
-                bool(*fx) (struct MouseHandler * handler, int button, int x,
-                           int y);
-		void *data;
-	};
+struct MouseMotionHandler {
+        struct list list;
+        bool(*fx) (struct MouseMotionHandler * handler, SDL_MouseMotionEvent *event);
+        void *data;
+};
 
-	extern int eventInit(void);
-	extern void eventExit(void);
-	extern void eventHandle(void);
-        extern void eventHandlePending(void); /* non-blocking version of eventHandle */
-	extern void eventPushKeyHandler(struct KeyHandler *keyh);
-	extern void eventPopKeyHandler(void);
-	extern void eventPushTickHandler(struct TickHandler *keyh);
-	extern void eventPopTickHandler(void);
-	extern void eventPushQuitHandler(struct QuitHandler *keyh);
-	extern void eventPopQuitHandler(void);
-	extern void eventPushMouseHandler(struct MouseHandler *keyh);
-	extern void eventPopMouseHandler(void);
-	extern void eventAddHook(void (*fx) (void));
+struct MouseButtonHandler {
+        struct list list;
+        bool(*fx) (struct MouseButtonHandler * handler, SDL_MouseButtonEvent *event);
+        void *data;
+};
 
-#ifdef __cplusplus
-}
-#endif
+extern int eventInit(void);
+extern void eventExit(void);
+extern void eventHandle(void);
+extern void eventHandlePending(void); /* non-blocking version of eventHandle */
+extern void eventPushKeyHandler(struct KeyHandler *keyh);
+extern void eventPopKeyHandler(void);
+extern void eventPushTickHandler(struct TickHandler *keyh);
+extern void eventPopTickHandler(void);
+extern void eventPushQuitHandler(struct QuitHandler *keyh);
+extern void eventPopQuitHandler(void);
+extern void eventPushMouseButtonHandler(struct MouseButtonHandler *keyh);
+extern void eventPopMouseButtonHandler(void);
+extern void eventPushMouseMotionHandler(struct MouseMotionHandler *keyh);
+extern void eventPopMouseMotionHandler(void);
+extern void eventAddHook(void (*fx) (void));
+
+END_DECL
+
 #endif

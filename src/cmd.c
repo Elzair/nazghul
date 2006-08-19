@@ -71,29 +71,25 @@
 extern int DeveloperMode;
 
 // SAM: Using this typedef below
-typedef void (*v_funcpointer_ii)  (struct place *, int x, int y);
 typedef void (*v_funcpointer_iiv) (struct place *, int x, int y, void * v);
 
 struct cursor_movement_keyhandler {
-        v_funcpointer_ii each_tile_func;
-        v_funcpointer_ii each_target_func;
+        v_funcpointer_iiv each_tile_func;
+        v_funcpointer_iiv each_target_func;
         char abort : 1;   /* command was aborted */
         char multi : 1;   /* select multiple targets */
 };
 
+// This struct is put into the 'data' field of a 'struct KeyHandler'.  It is
+// used by terraform_movecursor_and_do().
 struct terraform_mode_keyhandler {
-        // This struct is put into the 'data' field of a 
-        // 'struct KeyHandler'.
-        // It is used by terraform_movecursor_and_do().
-        bool              abort;
-        v_funcpointer_iiv each_tile_func;
-        v_funcpointer_iiv each_target_func;
-        
+        /* "Inherit" from cursor_movement_keyhandler so we can use the same
+         * mousecursor function for terraform and other targetting commands. */
+        struct cursor_movement_keyhandler base;
         struct place           * place;  // needed?
         struct terrain_map     * map;
         struct terrain_palette * palette;
 };
-
 
 int dirkey(struct KeyHandler *kh, int key, int keymod)
 {
@@ -355,31 +351,99 @@ int scroller(struct KeyHandler * kh, int key, int keymod)
 	return 0;
 }
 
-bool mousecursor(struct MouseHandler *mh, int button, int x, int y)
+bool mouse_button_cursor(struct MouseButtonHandler *mh, SDL_MouseButtonEvent *event)
 {
         struct cursor_movement_keyhandler * data
                 = (struct cursor_movement_keyhandler *) mh->data;
-        int mx = x;
-        int my = y;
+        int mx = event->x;
+        int my = event->y;
 
         /* Off-map? */
         if (mapScreenToPlaceCoords(&mx, &my)) {
                 return false;
         }
 
+        /* Did the crosshair move? */
+        if (Session->crosshair->getX() != mx
+            || Session->crosshair->getY() != my) {
+
+                /* turn on range shading after the first move */
+                Session->crosshair->shadeRange(true);
+
+                /* Move the crosshair */
+                Session->crosshair->move(mx - Session->crosshair->getX(),
+                                         my - Session->crosshair->getY());
+                mapSetDirty();
+
+                /* Need to run our visitor function on each tile? */
+                if (data->each_tile_func) {
+                        data->each_tile_func(Session->crosshair->getPlace(),
+                                             Session->crosshair->getX(),
+                                             Session->crosshair->getY(),
+                                             0);
+                }
+
+        }
+
+        /* target selected? */
+        if (event->button == SDL_BUTTON_LEFT) {
+                if (data->each_target_func) {
+                        data->each_target_func(Session->crosshair->getPlace(),
+                                               Session->crosshair->getX(),
+                                               Session->crosshair->getY(),
+                                               data);
+                }
+
+                return ! data->multi;   /* done unless multiple targets */
+        }
+
+
+        return false;
+}
+
+bool mouse_motion_cursor(struct MouseMotionHandler *mh, SDL_MouseMotionEvent *event)
+{
+        struct cursor_movement_keyhandler * data
+                = (struct cursor_movement_keyhandler *) mh->data;
+        int mx = event->x;
+        int my = event->y;
+        int moved = 0;
+
+        /* Off-map? */
+        if (mapScreenToPlaceCoords(&mx, &my)) {
+                return false;
+        }
+        
+        /* Did the crosshair NOT move? */
+        if (Session->crosshair->getX() == mx
+            && Session->crosshair->getY() == my) {
+                return false;
+        }
+
+        /* turn on range shading after the first move */
+        Session->crosshair->shadeRange(true);
+
         /* Move the crosshair */
         Session->crosshair->move(mx - Session->crosshair->getX(),
                                  my - Session->crosshair->getY());
         mapSetDirty();
 
-        /* target selected? */
-        if (button == BUTTON_LEFT) {
-                if (data->each_target_func) {
-                        data->each_target_func(Session->crosshair->getPlace(),
-                                               Session->crosshair->getX(),
-                                               Session->crosshair->getY());
-                }
+        /* Need to run our visitor function on each tile? */
+        if (data->each_tile_func) {
+                data->each_tile_func(Session->crosshair->getPlace(),
+                                     Session->crosshair->getX(),
+                                     Session->crosshair->getY(),
+                                     0);
+        }
 
+        /* Mouse dragging? */
+        if (event->state & SDL_BUTTON(1)
+            && data->each_target_func) {
+                data->each_target_func(Session->crosshair->getPlace(),
+                                       Session->crosshair->getX(),
+                                       Session->crosshair->getY(),
+                                       data);
+                
                 return ! data->multi;   /* done unless multiple targets */
         }
 
@@ -401,7 +465,8 @@ int movecursor(struct KeyHandler * kh, int key, int keymod)
                 if (data->each_target_func) {
                         data->each_target_func(Session->crosshair->getPlace(),
                                                Session->crosshair->getX(),
-                                               Session->crosshair->getY());
+                                               Session->crosshair->getY(),
+                                               0);
                 }
 
                 return ! data->multi;   /* done unless multiple targets */
@@ -417,7 +482,8 @@ int movecursor(struct KeyHandler * kh, int key, int keymod)
                 if (data->each_tile_func) {
                         data->each_tile_func(Session->crosshair->getPlace(),
                                              Session->crosshair->getX(),
-                                             Session->crosshair->getY());
+                                             Session->crosshair->getY(),
+                                             0);
                 }
 
                 /* turn on range shading after the first move */
@@ -489,8 +555,8 @@ int cmd_terraform_movecursor_and_do(struct KeyHandler * kh, int key,
             key == SDLK_LCTRL || key == SDLK_RCTRL) {
                 int x = Session->crosshair->getX();
                 int y = Session->crosshair->getY();
-                if (data->each_target_func)
-                        data->each_target_func(Session->crosshair->getPlace(),
+                if (data->base.each_target_func)
+                        data->base.each_target_func(Session->crosshair->getPlace(),
                                                x, y, data);
                 return 0;  /* Keep on keyhandling */
         }
@@ -505,15 +571,15 @@ int cmd_terraform_movecursor_and_do(struct KeyHandler * kh, int key,
                 mapSetDirty();
                 int x = Session->crosshair->getX();
                 int y = Session->crosshair->getY();
-                if (data->each_tile_func)
-                        data->each_tile_func(Session->crosshair->getPlace(),
+                if (data->base.each_tile_func)
+                        data->base.each_tile_func(Session->crosshair->getPlace(),
                                               x, y, data);
 
                 /* If the CTRL key is held down then also run the target
                  * function to paint the tile. */
                 if (keymod & KMOD_CTRL &&
-                    data->each_target_func)
-                        data->each_target_func(Session->crosshair->getPlace(),
+                    data->base.each_target_func)
+                        data->base.each_target_func(Session->crosshair->getPlace(),
                                                x, y, data);
 
                 return 0;  /* Keep on keyhandling */
@@ -606,7 +672,7 @@ int cmd_terraform_movecursor_and_do(struct KeyHandler * kh, int key,
         // ...
     
         if (key == SDLK_ESCAPE) {
-                data->abort = 1;
+                data->base.abort = 1;
                 return 1;  // Done (abort)
         }
         return 0;  /* Keep on keyhandling */
@@ -1264,7 +1330,8 @@ int select_target(int ox, int oy, int *x, int *y, int range)
 {
         struct cursor_movement_keyhandler data;
         struct KeyHandler kh;
-        struct MouseHandler mh;
+        struct MouseButtonHandler mbh;
+        struct MouseMotionHandler mmh;
 
         Session->crosshair->setRange(range);
         Session->crosshair->setOrigin(ox, oy);
@@ -1281,16 +1348,21 @@ int select_target(int ox, int oy, int *x, int *y, int range)
         kh.fx   = movecursor;
         kh.data = &data;
   
-        mh.fx = mousecursor;
-        mh.data = &data;
+        mbh.fx = mouse_button_cursor;
+        mbh.data = &data;
 
-        eventPushMouseHandler(&mh);
+        mmh.fx = mouse_motion_cursor;
+        mmh.data = &data;
+
+        eventPushMouseButtonHandler(&mbh);
+        eventPushMouseMotionHandler(&mmh);
         eventPushKeyHandler(&kh);
         cmdwin_spush("<target>");
         eventHandle();
         cmdwin_pop();
         eventPopKeyHandler();
-        eventPopMouseHandler();
+        eventPopMouseButtonHandler();
+        eventPopMouseMotionHandler();
   
         Session->show_boxes = 0;
         *x = Session->crosshair->getX();
@@ -1308,8 +1380,8 @@ int select_target(int ox, int oy, int *x, int *y, int range)
 
 int select_target_with_doing(int ox, int oy, int *x, int *y,
                              int range,
-                             v_funcpointer_ii each_tile_func,
-                             v_funcpointer_ii each_target_func)
+                             v_funcpointer_iiv each_tile_func,
+                             v_funcpointer_iiv each_target_func)
 {
         // SAM: 
         // As select_target(), but each_tile_func() 
@@ -1324,6 +1396,8 @@ int select_target_with_doing(int ox, int oy, int *x, int *y,
         // the ESC abort stomps on it.
         struct cursor_movement_keyhandler data;
         struct KeyHandler kh;
+        struct MouseButtonHandler mbh;
+        struct MouseMotionHandler mmh;
 
         Session->crosshair->setRange(range);
         Session->crosshair->setViewportBounded(1);
@@ -1340,11 +1414,21 @@ int select_target_with_doing(int ox, int oy, int *x, int *y,
         kh.fx   = movecursor;
         kh.data = &data;
   
+        mbh.fx = mouse_button_cursor;
+        mbh.data = &data;
+
+        mmh.fx = mouse_motion_cursor;
+        mmh.data = &data;
+
+        eventPushMouseButtonHandler(&mbh);
+        eventPushMouseMotionHandler(&mmh);
         eventPushKeyHandler(&kh);
         cmdwin_spush("<target> (ESC to exit)");
         eventHandle();
         cmdwin_pop();
         eventPopKeyHandler();
+        eventPopMouseButtonHandler();
+        eventPopMouseMotionHandler();
   
         Session->show_boxes=0;
         *x = Session->crosshair->getX();
@@ -1371,6 +1455,8 @@ static int cmd_terraform_cursor_func(int ox, int oy, int *x, int *y,
 {
         struct terraform_mode_keyhandler data;
         struct KeyHandler kh;
+        struct MouseButtonHandler mbh;
+        struct MouseMotionHandler mmh;
 
         /* Position the cursor */
         Session->crosshair->setRange(range);
@@ -1380,16 +1466,25 @@ static int cmd_terraform_cursor_func(int ox, int oy, int *x, int *y,
         mapSetDirty();
   
         /* Setup the key handler */
-        data.each_tile_func   = each_tile_func;
-        data.each_target_func = each_target_func;
-        data.abort            = false;
+        data.base.each_tile_func   = each_tile_func;
+        data.base.each_target_func = each_target_func;
+        data.base.abort            = 0;
+        data.base.multi            = 1;
         data.map              = place->terrain_map;
         data.palette          = place->terrain_map->palette;
 
         kh.fx   = cmd_terraform_movecursor_and_do;
         kh.data = &data;
-  
+
+        mbh.fx = mouse_button_cursor;
+        mbh.data = &data;
+
+        mmh.fx = mouse_motion_cursor;
+        mmh.data = &data;
+
         /* Start interactive mode */
+        eventPushMouseButtonHandler(&mbh);
+        eventPushMouseMotionHandler(&mmh);
         eventPushKeyHandler(&kh);
         cmdwin_spush("<target> (ESC to exit)");
         eventHandle();
@@ -1397,6 +1492,8 @@ static int cmd_terraform_cursor_func(int ox, int oy, int *x, int *y,
         /* Done -  cleanup */
         cmdwin_pop();
         eventPopKeyHandler();
+        eventPopMouseMotionHandler();
+        eventPopMouseButtonHandler();
   
         *x = Session->crosshair->getX();
         *y = Session->crosshair->getY();
@@ -2485,7 +2582,7 @@ bool cmdMixReagents(class Character *character)
 	return true;
 }
 
-void look_at_XY(struct place *place, int x, int y)
+void look_at_XY(struct place *place, int x, int y, void *unused)
 {
         if (DeveloperMode) {
                 log_begin("At XY=(%d,%d): ", x, y);
@@ -2510,7 +2607,7 @@ void look_at_XY(struct place *place, int x, int y)
         log_end(NULL);
 }
 
-void detailed_examine_XY(struct place *place, int x, int y)
+void detailed_examine_XY(struct place *place, int x, int y, void *unused)
 {
 	// SAM: 
 	// Hmmm...how best to print more info about
@@ -2596,7 +2693,7 @@ bool cmdXamine(class Object * pc)
         else
                 log_msg("You examine around...");
 
-        look_at_XY(pc->getPlace(), x,y);  // First look at the current tile
+        look_at_XY(pc->getPlace(), x, y, 0);  // First look at the current tile
 	if (select_target_with_doing(x, y, &x, &y, pc->getVisionRadius(),
 				     look_at_XY, detailed_examine_XY) == -1) {
 		ret = false;
