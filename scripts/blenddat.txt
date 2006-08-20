@@ -95,9 +95,9 @@ basic ( tt ) ( &treesinnerblend ) ( &notwoods &water &bridge &manmade ) ( &woods
 basic ( .. ) ( &treesouterblend ) ( &woods ) ( &notwoods &water &bridge &manmade }{ )
 
 #detect rivers (water with land on opposite sides)
-corner ( ~~ ) ( &nc &nc &nc &nc &nc &nc &nc &nc &nc &nc &nc &nc &nc &nc &nc ~x ) \
+corner ( ~~ &shallowblend ) ( &nc &nc &nc &nc &nc &nc &nc &nc &nc &nc &nc &nc &nc &nc &nc ~x ) \
  ( &land ) ( &land &water &bridge &manmade ) ( &water &bridge &manmade }{ )
-basic ( ~~ ) ( &nc &nc &nc &nc &nc &nc ~x &nc &nc ~x &nc &nc &nc &nc &nc ~x ) \
+basic ( ~~ &shallowblend ) ( &nc &nc &nc &nc &nc &nc ~x &nc &nc ~x &nc &nc &nc &nc &nc ~x ) \
 	( &land ) ( &water &bridge &manmade }{ )
 
 reset
