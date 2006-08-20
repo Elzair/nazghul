@@ -74,27 +74,29 @@
 
 ;; Curried constructor: missile weapon (add missile, ubiq flag to melee)
 (define (mk-projectile-arms-type tag name sprite to-hit-bonus damage deflect 
-                                 slots num-hands range missile ubiq weight)
+                                 slots num-hands range missile ubiq weight
+								 stratt_mod dexatt_mod damage_mod avoid_mod)
   (kern-mk-arms-type tag name sprite to-hit-bonus damage "0" deflect slots 
-                     num-hands range default-rap missile #f ubiq weight nil obj-ifc-cap obj-ifc 0 80 10 1.0))
+                     num-hands range default-rap missile #f ubiq weight nil obj-ifc-cap obj-ifc stratt_mod dexatt_mod damage_mod avoid_mod))
 
 ;; Curried constructor: thrown weapon (add field to melee)
 (define (mk-thrown-arms-type tag name sprite to-hit-bonus damage deflect slots 
-                             num-hands range ifc weight)
+                             num-hands range ifc weight
+							 stratt_mod dexatt_mod damage_mod avoid_mod)
   (kern-mk-arms-type tag name sprite to-hit-bonus damage "0" deflect slots 
-                     num-hands range default-rap nil #t #f weight nil (ifc-cap ifc) ifc 10 70 10 1.0))
+                     num-hands range default-rap nil #t #f weight nil (ifc-cap ifc) ifc stratt_mod dexatt_mod damage_mod avoid_mod))
 
 (define (mk-missile-arms-type tag name sprite ifc)
   (kern-mk-arms-type tag name sprite "0" "0" "0" "0" slot-nil 0 0 0 nil #f #f 
                      0 nil (ifc-cap ifc) ifc 20 60 20 1.0))
 
-(define (mk-armor-type tag name sprite to-hit armor slots weight)
+(define (mk-armor-type tag name sprite to-hit armor slots weight avoid_mod)
   (kern-mk-arms-type tag name sprite to-hit "0" armor "0" slots 1 0 0 nil #f #f 
-                     weight nil obj-ifc-cap obj-ifc 20 60 20 0.8))
+                     weight nil obj-ifc-cap obj-ifc 20 60 20 avoid_mod))
 
-(define (mk-shield-type tag name sprite to-hit deflect slots weight) 
+(define (mk-shield-type tag name sprite to-hit deflect slots weight avoid_mod) 
   (kern-mk-arms-type tag name sprite to-hit "0" "0" deflect slots 1 0 0 nil #f #f 
-                     weight nil obj-ifc-cap obj-ifc 20 60 20 0.8))
+                     weight nil obj-ifc-cap obj-ifc 20 60 20 avoid_mod))
 
 ;; ============================================================================
 ;; Missiles for Projectile Weapons & Spells
@@ -189,17 +191,17 @@
 
 (define projectile-arms-types
   (list
-   ;;     ========================================================================================================================
-   ;;     tag         | name       | sprite     | to-hit | damage | to-def | slots       | hnds | rng | missile    | ubiq | weight
-   ;;     ========================================================================================================================
-   (list 't_sling      "sling"      s_sling      "1d2-2"  "1d3"    "-1"     slot-weapon   1      4     t_slingstone #t      0)
-   (list 't_sling_4    "+4 sling"   s_sling      "3"      "1d3+4"  "0"      slot-weapon   1      6     t_slingstone #t      0)
-   (list 't_bow        "bow"        s_bow        "1d3-2"  "2d4"    "-2"     slot-weapon   2      6     t_arrow      #f      2)
-   (list 't_crossbow   "crossbow"   s_crossbow   "1d4-2"  "4d4"    "-1"     slot-weapon   2      4     t_bolt       #f      3)
-   (list 't_doom_staff "doom staff" s_doom_staff "1d4"    "1"      "+2"     slot-weapon   2      6     t_fireball   #t      2)
-   (list 't_acid_spray "acid spray" nil          "-7"     "1d6"    "+0"     slot-nil      2      2     t_slimeglob  #t      0)
-   (list 't_fire_glob  "fire glob"  nil          "-8"     "1d6"    "+0"     slot-nil      2      2     t_fireball   #t      0)
-   (list 't_stun_wand  "stun wand"  s_stun_wand  "-2"     "1d4"    "-1"     slot-weapon   1      6     t_stunball   #t      2)
+   ;;     =============================================================================================================================================================
+   ;;     tag         | name       | sprite     | to-hit | damage | to-def | slots       | hnds | rng | missile    | ubiq | weight | stratt | dexatt | dammod | avoid
+   ;;     =============================================================================================================================================================
+   (list 't_sling      "sling"      s_sling      "1d2-2"  "1d3"    "-1"     slot-weapon   1      4     t_slingstone #t      0			10		60		30		0.9		)
+   (list 't_sling_4    "+4 sling"   s_sling      "3"      "1d3+4"  "0"      slot-weapon   1      6     t_slingstone #t      0			10		60		30		0.9		)
+   (list 't_bow        "bow"        s_bow        "1d3-2"  "2d4"    "-2"     slot-weapon   2      6     t_arrow      #f      2			10		70		20		0.9		)
+   (list 't_crossbow   "crossbow"   s_crossbow   "1d4-2"  "4d4"    "-1"     slot-weapon   2      4     t_bolt       #f      3			0		80		0		0.95	)
+   (list 't_doom_staff "doom staff" s_doom_staff "1d4"    "1"      "+2"     slot-weapon   2      6     t_fireball   #t      2			0		50		0		1.0		)
+   (list 't_acid_spray "acid spray" nil          "-7"     "1d6"    "+0"     slot-nil      2      2     t_slimeglob  #t      0			10		50		20		1.0		)
+   (list 't_fire_glob  "fire glob"  nil          "-8"     "1d6"    "+0"     slot-nil      2      2     t_fireball   #t      0			10		50		20		1.0		)
+   (list 't_stun_wand  "stun wand"  s_stun_wand  "-2"     "1d4"    "-1"     slot-weapon   1      6     t_stunball   #t      2			0		80		0		1.0		)
    ))
 
 ;; ============================================================================
@@ -235,13 +237,13 @@
 
 (define thrown-arms-types
   (list
-   ;;     ==========================================================================================================================================
-   ;;     tag              | name          | sprite              | to-hit | damage | to-def | slots       | hnds | rng | ifc             | weight
-   ;;     ==========================================================================================================================================
-   (list  't_oil            "flaming oil"   s_flaming_oil          "-1"     "1d6"    "-2"     slot-weapon   1      4     flaming-oil-ifc  1)
-   (list  't_slime_vial     "vial of slime" s_squat_bubbly_green_potion "-1"     "1d2"    "-2"     slot-weapon   1      4     vial-of-slime-ifc  1)
-   (list  't_spear          "spear"         s_spear                "0"      "1d8"    "+1"     slot-weapon   1      4     obj-ifc          2)
-   (list  't_thrown_boulder "loose boulder" s_thrown_boulder       "-2"     "3d4+1"  "-2"     slot-weapon   2      5     obj-ifc          10)
+   ;;     ============================================================================================================================================================================
+   ;;     tag              | name          | sprite              | to-hit | damage | to-def | slots       | hnds | rng | ifc             | weight | stratt | dexatt | dammod | avoid
+   ;;     ============================================================================================================================================================================
+   (list  't_oil            "flaming oil"   s_flaming_oil          "-1"     "1d6"    "-2"     slot-weapon   1      4     flaming-oil-ifc  	1		20			30		0		0.9	)
+   (list  't_slime_vial     "vial of slime" s_squat_bubbly_green_potion "-1" "1d2"   "-2"     slot-weapon   1      4     vial-of-slime-ifc  1		20			30		0		1.0	)
+   (list  't_spear          "spear"         s_spear                "0"      "1d8"    "+1"     slot-weapon   1      4     obj-ifc          	2		20			40		40		1.0	)
+   (list  't_thrown_boulder "loose boulder" s_thrown_boulder       "-2"     "3d4+1"  "-2"     slot-weapon   2      5     obj-ifc         	10		40			20		60		0.9	)
    ))
 
 (kern-mk-sprite 's_axe            ss_arms 1 29 #f 0)
@@ -295,36 +297,36 @@
 
 (define armor-types
   (list
-   ;;     =============================================================================================================
-   ;;     tag             | name          |  sprite           |  to-hit | armor  | slots      | weight
-   ;;     =============================================================================================================
-   (list   't_leather_helm   "leather helm"    s_leather_helm      "-1"     "1d2"    slot-helm    0)
-   (list   't_leather_helm_2 "+2 leather helm" s_leather_helm      "0"      "1d2+2"  slot-helm    0)
-   (list   't_leather_helm_4 "+4 leather helm" s_leather_helm      "0"      "1d2+4"  slot-helm    0)
-   (list   't_chain_coif     "chain coif"      s_chain_coif        "-1"     "1d3"    slot-helm     1)
-   (list   't_chain_coif_4   "+4 chain coif"   s_chain_coif        "0"      "1d3+4"  slot-helm     1)
-   (list   't_iron_helm      "iron helm"       s_iron_helm         "-1"     "1d4"    slot-helm     2)
-   (list   't_iron_helm_4    "+4 iron helm"    s_iron_helm         "0"      "1d4+4"  slot-helm     2)
-   (list   't_armor_leather  "leather armor"   s_leather_armor     "-1"     "1d4"    slot-armor    2)
-   (list   't_armor_leather_2 "+2 leather armor" s_leather_armor   "0"      "1d4+2"  slot-armor    2)
-   (list   't_armor_leather_4 "+4 leather armor" s_leather_armor   "0"      "1d4+4"  slot-armor    2)
-   (list   't_armor_chain    "chain armor"     s_chain_armor       "-2"     "2d4"    slot-armor    4)
-   (list   't_armor_chain_4  "+4 chain armor"  s_chain_armor       "0"      "2d4+4"  slot-armor    4)
-   (list   't_armor_plate    "plate armor"     s_plate_armor       "-4"     "4d4"    slot-armor    8)
-   (list   't_armor_plate_4  "+4 plate armor"  s_plate_armor       "0"      "4d4+4"  slot-armor    8)
-   ))
+   ;;     ===========================================================================================================
+   ;;     tag             | name          |  sprite           |  to-hit | armor  | slots      | weight | avoid
+   ;;     ===========================================================================================================
+   (list   't_leather_helm   "leather helm"    s_leather_helm      "-1"     "1d2"    slot-helm     0		1.0		)
+   (list   't_leather_helm_2 "+2 leather helm" s_leather_helm      "0"      "1d2+2"  slot-helm     0		1.0		)
+   (list   't_leather_helm_4 "+4 leather helm" s_leather_helm      "0"      "1d2+4"  slot-helm     0		1.0		)
+   (list   't_chain_coif     "chain coif"      s_chain_coif        "-1"     "1d3"    slot-helm     1		0.9		)
+   (list   't_chain_coif_4   "+4 chain coif"   s_chain_coif        "0"      "1d3+4"  slot-helm     1		0.9		)
+   (list   't_iron_helm      "iron helm"       s_iron_helm         "-1"     "1d4"    slot-helm     2		0.9		)
+   (list   't_iron_helm_4    "+4 iron helm"    s_iron_helm         "0"      "1d4+4"  slot-helm     2		0.9		)
+   (list   't_armor_leather  "leather armor"   s_leather_armor     "-1"     "1d4"    slot-armor    2		0.85	)
+   (list   't_armor_leather_2 "+2 leather armor" s_leather_armor   "0"      "1d4+2"  slot-armor    2		0.85	)
+   (list   't_armor_leather_4 "+4 leather armor" s_leather_armor   "0"      "1d4+4"  slot-armor    2		0.9		)
+   (list   't_armor_chain    "chain armor"     s_chain_armor       "-2"     "2d4"    slot-armor    4		0.7		)
+   (list   't_armor_chain_4  "+4 chain armor"  s_chain_armor       "0"      "2d4+4"  slot-armor    4		0.8		)
+   (list   't_armor_plate    "plate armor"     s_plate_armor       "-4"     "4d4"    slot-armor    8		0.6		)
+   (list   't_armor_plate_4  "+4 plate armor"  s_plate_armor       "0"      "4d4+4"  slot-armor    8		0.7		)
+   ))	
 
 (kern-mk-sprite 's_shield            ss_arms 1 54 #f 0)
 (kern-mk-sprite 's_scratched_shield  ss_arms 1 55 #f 0)
 
 (define shield-types
   (list
-   ;;     ===========================================================================================================
-   ;;     tag                 | name             | sprite                | to-hit | deflect  | slots    | weight
-   ;;     ===========================================================================================================
-   (list   't_shield           "small shield"     s_shield                "-1"     "2"      slot-shield   2)
-   (list   't_shield_4         "+4 small shield"  s_shield                "0"      "6"      slot-shield   2)
-   (list   't_scratched_shield "scratched shield" s_scratched_shield      "0"      "3"      slot-shield   2)
+   ;;     =================================================================================================================
+   ;;     tag                 | name             | sprite                | to-hit | deflect  | slots    | weight | avoid
+   ;;     =================================================================================================================
+   (list   't_shield           "small shield"     s_shield                "-1"     "2"      slot-shield   2			0.9		)
+   (list   't_shield_4         "+4 small shield"  s_shield                "0"      "6"      slot-shield   2			0.95	)
+   (list   't_scratched_shield "scratched shield" s_scratched_shield      "0"      "3"      slot-shield   2			0.9		)
    ))
 
 
