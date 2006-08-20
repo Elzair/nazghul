@@ -75,6 +75,11 @@ ArmsType::ArmsType(char *tag, char *name, struct sprite *sprite,
                 setMissileType(this);
         }
         
+		str_attack_mod = 20;
+		dex_attack_mod = 60;
+		char_damage_mod = 30;
+		char_avoid_mod = 0.9;
+		
         required_action_points = reqActPts;
 }
 
@@ -297,4 +302,24 @@ void ArmsType::setWeight(int val)
 int ArmsType::getWeight(void) 
 {
         return weight;
+}
+
+int ArmsType::modifyStrAttack(int strBonus)
+{
+	return strBonus *  str_attack_mod;
+}
+
+int ArmsType::modifyDexAttack(int dexBonus)
+{
+	return dexBonus *  dex_attack_mod;
+}
+
+int ArmsType::modifyDamageBonus(int damBonus)
+{
+	return damBonus *  char_damage_mod;
+}
+
+float ArmsType::modifyAvoidBonus(float avoidBonus)
+{
+	return avoidBonus * char_avoid_mod;
 }

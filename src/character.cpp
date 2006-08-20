@@ -1683,33 +1683,46 @@ int Character::getToHitPenalty()
         return penalty;
 }
 
-// for now assumes weapon is 20% str and 60% dex. no that doesnt add up to 100%
+int Character::getBaseAttackBonus(class ArmsType * weapon)
+{
+	int strbonus = weapon->modifyStrAttack(closure_exec(Session->str_based_attack, "p", this));
+	int dexbonus = weapon->modifyDexAttack(closure_exec(Session->dex_based_attack, "p", this));
+	int totalbonus = (strbonus + dexbonus) / (100 * 1000);
+	fprintf(stderr,"attack bonus: %f + %f = %d\n", strbonus/1000.0, dexbonus/1000.0,totalbonus);
+	return (1+ totalbonus);
+}
+
 int Character::getAttackBonus(class ArmsType * weapon)
 {
-	int strbonus = closure_exec(Session->str_based_attack, "p", this);
-	int dexbonus = closure_exec(Session->dex_based_attack, "p", this);
-	int totalbonus = (closure_exec(Session->str_based_attack, "p", this) * 20 +
-	closure_exec(Session->dex_based_attack, "p", this) * 60) / (100 * 1000);
-	fprintf(stderr,"attack bonus: 20%% %f + 60%% %f = %d\n", strbonus/1000.0, dexbonus/1000.0,totalbonus);
-	return (rand() % (1+ totalbonus));
+	return (rand() % getBaseAttackBonus(weapon));
 }
 
-int Character::getBaseDamageBonus()
+int Character::getDamageBonus(class ArmsType * weapon)
 {
-	return closure_exec(Session->damage_bonus, "p", 
-                                     this);
+	int dambonus = weapon->modifyDamageBonus(closure_exec(Session->damage_bonus, "p", this))/(100 * 1000);
+	fprintf(stderr,"damage bonus: %d\n", dambonus);
+	return (rand() % (1+ dambonus));
 }
 
-//for now assumes armour halves dodge bonus
 int Character::getAvoidBonus()
 {
 	//hack: dont get any bonus here if you're asleep on the job
 	if (isAsleep())
 		return 0;
 		
-	int dexbonus = closure_exec(Session->defense_bonus, "p", this);	
-	int totalbonus = closure_exec(Session->defense_bonus, "p", this) * 50 / (100 * 1000);	
-	fprintf(stderr,"defense bonus: 50%% %f = %d\n", dexbonus/1000.0, totalbonus);	
+	int avoidBonus = closure_exec(Session->defense_bonus, "p", this);
+	float avoidMod = 1;
+	
+	//roundabout way of getting data in order to preserve info for stderr
+	int armsIndex=0;
+	for (class ArmsType * arms = enumerateArms(&armsIndex);
+		 arms != NULL; arms = getNextArms(&armsIndex))
+	{
+		avoidMod = arms->modifyAvoidBonus(avoidMod);
+	}
+	
+	int totalbonus = (int)(avoidBonus * (avoidMod/1000));
+	fprintf(stderr,"defense bonus: %f%% %f = %d\n", avoidMod, avoidBonus/1000.0, totalbonus);
 	return (rand() % (1+ totalbonus));
 }
 

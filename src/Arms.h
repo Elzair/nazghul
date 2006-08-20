@@ -72,6 +72,10 @@ class ArmsType:public ObjectType {
 	virtual bool ammoIsUbiquitous();
 	virtual void setWeight(int val);
 	virtual int getWeight(void);
+	virtual int modifyStrAttack(int strBonus);
+	virtual int modifyDexAttack(int dexBonus);
+	virtual int modifyDamageBonus(int damBonus);
+	virtual float modifyAvoidBonus(float avoidBonus);
 
       protected:
 	int slotMask;
@@ -85,6 +89,10 @@ class ArmsType:public ObjectType {
         char *toDefendDice;
         char *toHitDice;
         sound_t *fire_sound;
+	int str_attack_mod;
+	int dex_attack_mod;
+	int char_damage_mod;
+	float char_avoid_mod;
 	class Missile *missile;
 };
 

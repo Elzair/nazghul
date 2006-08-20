@@ -371,12 +371,16 @@ void ctrl_do_attack(class Character *character, class ArmsType *weapon,
 
         /* roll for damage */
         damage = dice_roll(weapon->getDamageDice());
-        log_continue(" damage roll %d ", damage);
+		int damageBonus = character->getDamageBonus(weapon);
+        log_continue(" damage roll %d + %d ", damage, damageBonus);
+
+		damage += damageBonus;
 
         /* roll for critical hit */
-        if (20 <= (dice_roll("1d20") + logBase2(character->getLevel()))) {
+        if (20 <= (dice_roll("1d20") + logBase2(character->getBaseAttackBonus(weapon)))) {
                 log_continue("Critical hit!\n");
                 armor = 0;
+				damage += character->getDamageBonus(weapon);
         } else {
                 armor = target->getArmor();
                 log_continue("vs %d armor roll\n", armor);
