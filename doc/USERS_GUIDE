@@ -366,13 +366,16 @@ during the game.
 
 Strength
 
-    Strength limits the total weight of readied weapons and armour. It is also
-    used when breaking free of spider webs (most trolls don't stay ensnared too
-    long...).
+    Strength limits the total weight of readied weapons and armour. Strong
+	characters do more damage and are better at hitting with heavy or
+	bludgeoning weapons. It is also used when breaking free of spider webs
+	(most trolls don't stay ensnared too long...).
 
 Dexterity
 
-    Dexterity is used when picking locks and disarming trapped chests.
+    Dexterity is used when attacking with missile and balanced weaponry, and
+	helps when avoiding your opponents blows. It is also needed when
+	picking locks and disarming trapped chests.
 
 Intelligence
 
