@@ -2187,10 +2187,10 @@ KERN_API_CALL(kern_mk_player)
         }
 
         /* Board the vehicle */
-
         if (vehicle) {
+
+                /* This sets the vehicle's occupant, too. */
                 player_party->setVehicle(vehicle);
-                vehicle->occupant = player_party;
 
                 /* bugfix: party unrefs vehicle when it disembarks; needs to
                  * keep a refcount while boarded */
@@ -6186,6 +6186,26 @@ KERN_API_CALL(kern_being_set_name)
 
 }
 
+KERN_API_CALL(kern_vehicle_set_name)
+{
+        class Vehicle *vehicle;
+        char *val;
+
+        vehicle = (class Vehicle*)unpack_obj(sc, &args, "kern-vehicle-set-name");
+        if (!vehicle)
+                goto done;
+
+        if (unpack(sc, &args, "s", &val)) {
+                rt_err("kern-vehicle-set-name: bad arg");
+                goto done;
+        }
+
+        vehicle->setName(val);
+ done:
+        return scm_mk_ptr(sc, vehicle);
+
+}
+
 KERN_API_CALL(kern_harm_relations)
 {
         class Character *cha;
@@ -7891,6 +7911,9 @@ scheme *kern_init(void)
         /* kern-sprite api */
         API_DECL(sc, "kern-sprite-clone", kern_sprite_clone);
         API_DECL(sc, "kern-sprite-append-decoration", kern_sprite_append_decoration);
+
+        /* kern-vehicle-api */
+        API_DECL(sc, "kern-vehicle-set-name", kern_vehicle_set_name);
 
         /* kern-cfg api */
         API_DECL(sc, "kern-cfg-set", kern_cfg_set);

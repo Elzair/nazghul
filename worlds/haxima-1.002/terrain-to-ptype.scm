@@ -84,7 +84,8 @@
          (ttp-entry-mk 'sea-serpent-party-l3 3 1)
          )
    (list t_shallow
-         (ttp-entry-mk 'kraken-party-l3      3 12)
+         (ttp-entry-mk 'nil                  0 16)
+         (ttp-entry-mk 'kraken-party-l3      3 6)
          (ttp-entry-mk 'sea-serpent-party-l3 3 6)
          (ttp-entry-mk 'nixie-party-l3       3 16)
          (ttp-entry-mk 'nixie-party-l4       4 16)
@@ -92,9 +93,9 @@
          (ttp-entry-mk 'dragon-party-l6      6 3)
          )
    (list t_deep
-         (ttp-entry-mk 'nil                  0 48)
-         (ttp-entry-mk 'kraken-party-l3      3 48)
-         (ttp-entry-mk 'sea-serpent-party-l3 3 48)
+         (ttp-entry-mk 'nil                  0 96)
+         (ttp-entry-mk 'kraken-party-l3      3 8)
+         (ttp-entry-mk 'sea-serpent-party-l3 3 8)
          (ttp-entry-mk 'pirate-party-l3      3 8)
          (ttp-entry-mk 'pirate-party-l4      4 8)
          (ttp-entry-mk 'skeleton-pirates-l4  4 8)

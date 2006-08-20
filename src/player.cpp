@@ -855,12 +855,17 @@ void player_party::board_vehicle(void)
 
 	// already in a vehicle so exit
 	if (vehicle) {
-                log_msg("You exit your %s.", vehicle->getName());
-		vehicle->occupant = 0;
+                log_begin("You exit ");
+                vehicle->describe();
+                log_end(".");
+		vehicle->setOccupant(0);
 		vehicle->relocate(getPlace(), getX(), getY());
                 obj_dec_ref(vehicle);
 		vehicle = NULL;
 		mapSetDirty();
+
+                /* Erase vehicle hull stats. */
+                foogodRepaint();
 		return;
 	}
 
@@ -875,9 +880,18 @@ void player_party::board_vehicle(void)
         vehicle->describe();
         log_end(".");
 
-	vehicle->occupant = this;
+	vehicle->setOccupant(this);
 	vehicle->remove();
 	mapSetDirty();
+
+        /* Show vehicle hull stats. */
+        foogodRepaint();
+
+        /* Prompt the player to name the vehicle so it isn't
+         * garbage-collected. */
+        if (! vehicle->isNamed()) {
+                ui_name_vehicle(vehicle);
+        }
 }
 
 class Character *player_party::get_leader(void)

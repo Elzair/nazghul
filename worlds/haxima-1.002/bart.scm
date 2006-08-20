@@ -45,11 +45,10 @@
 ;; Trade...
 (define (bart-trade knpc kpc)
 
-  (define (sell-ship)
+  (define (buy-ship)
     (let* ((town (loc-place (kern-obj-get-location knpc)))
            (town-loc (kern-place-get-location town))
            (ship-loc (loc-offset town-loc east)))
-      (display "ship-loc:")(display ship-loc)(newline)
       (if (ship-at? ship-loc)
           (say knpc "Hunh. No room at dock. Somebody need move ship first.")
           (begin
@@ -57,19 +56,47 @@
             (take-player-gold oparine-ship-price)
             (say knpc "Ship ready ready outside town.")
             ))))
-  
+
+  (define (sell-ship)
+    (let* ((town (loc-place (kern-obj-get-location knpc)))
+           (town-loc (kern-place-get-location town))
+           (ship-loc (loc-offset town-loc east))
+           (kship (kern-place-get-vehicle ship-loc)))
+      (if (null? kship)
+          (say knpc "Bart no see ship. Park at dock, come back.")
+          (begin
+            (say knpc "You want sell that junk ship? Bart give " 
+                 oparine-ship-tradein-price
+                 ". Ok?")
+            (if (kern-conv-get-yes-no? kpc)
+                (begin
+                  (say knpc "Bart too generous, you lucky.")
+                  (kern-obj-remove kship)
+                  (give-player-gold oparine-ship-tradein-price))
+                (say knpc "Hunh. That ship sink soon."))))))
+
   (if (not (string=? "working" (kern-obj-get-activity knpc)))
       (say knpc "Not work now. Now drink!")
       (begin
-        (say knpc "Ship " oparine-ship-price " gold. Want ship?")
-        (if (kern-conv-get-yes-no? kpc)
-            (if (player-has-gold? oparine-ship-price)
-                (sell-ship)
-                (begin
-                  (say knpc "You not have gold! You try cheat Bart? "
-                       "[He spits on the ground]")
-                  (kern-conv-end)))
-            (say knpc "Fine. You swim.")))))
+        (say knpc "You want buy ship?")
+        (if (yes? kpc)
+            (begin
+              (say knpc "Ship " oparine-ship-price " gold. Want ship?")
+              (if (kern-conv-get-yes-no? kpc)
+                  (if (player-has-gold? oparine-ship-price)
+                      (buy-ship)
+                      (begin
+                        (say knpc "You not have gold! You try cheat Bart? "
+                             "[He spits on the ground]")
+                        (kern-conv-end)))
+                  (say knpc "Fine. You swim.")))
+            (begin
+              (say knpc "You want sell ship?")
+              (if (yes? kpc)
+                  (sell-ship)
+                  (begin
+                    (say knpc "Then what hell you bother Bart for?")
+                    (kern-conv-end))))))))
 
 ;; Drink...
 (define (bart-drink knpc kpc)

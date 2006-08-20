@@ -102,6 +102,7 @@ extern int ui_get_direction(void);
 extern int ui_get_yes_no(char *asked_persons_name);
 extern int ui_getline(char *buf, int len);
 extern int ui_getline_plain(char *buf, int len);
+extern void ui_name_vehicle(class Vehicle *vehicle);
 
 struct merchant {
         char *name;

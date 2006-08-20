@@ -99,18 +99,22 @@ class Vehicle:public Object {
         virtual struct place *getPlace();
         virtual void destroy();
         virtual void save(struct save *save);
+        virtual void describe();
 
         bool isVulnerable();
         bool turn(int dx, int dy, int *cost);
         int getMovementCostMultiplier();
         void damage(int amount);
-
-        class Object *occupant;
+        void setName(char *val);
+        class Object *getOccupant();
+        void setOccupant(class Object *val);
+        bool isNamed();
 
  protected:
         bool setFacing(int);
         int facing;
-
+        char *name;
+        class Object *occupant;
 };
 
 #endif				// vehicle_h

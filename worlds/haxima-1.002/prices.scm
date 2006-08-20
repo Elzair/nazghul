@@ -5,3 +5,4 @@
 
 ;; ship prices
 (define oparine-ship-price      1000)
+(define oparine-ship-tradein-price 300)

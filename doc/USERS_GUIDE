@@ -193,6 +193,9 @@ Console Window
 Here's your chance to let the sweat dry on your mouse - all commands are via
 the keyboard. As it should be, forever and ever amen.
 
+Addendum: For the sake of convenience to mousephiles, targeting prompts will
+accept input from the mouse. But the shortcut keys are faster.
+
 General syntax:
 
 <dir>    = one of the four arrow keys
@@ -202,7 +205,7 @@ General syntax:
 <spell>  = a spell, selected from a list
 <space>  = spacebar
 <target> = a combat target, selected by moving the crosshairs and pressing
-           <enter> or <space>
+           <enter> or <space> (or using the mouse and left-clicking)
 <*>      = varies depending on context
 
 General commands:
@@ -258,6 +261,14 @@ Editing commands:
     CTRL-T)erraform..........Alter terrain. This deserves its own section. [1]
     CTRL-Z)oom...............Zoom in or out (like peering at a gem but free)
 
+Shortcuts:
+
+    +/=......................When targeting an attack, moves cursor to next
+                             hostile npc.
+    -........................When targeting an attack, moves cursor to previous
+                             hostile npc.
+    ESC......................When wilderness combat is over, exits to
+                             wilderness map.
 
                                 MOVEMENT MODES
 

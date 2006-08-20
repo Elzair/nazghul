@@ -984,6 +984,9 @@
 (define (take-player-gold q)
   (kern-player-set-gold (- (kern-player-get-gold) q)))
 
+(define (give-player-gold q)
+  (kern-player-set-gold (+ (kern-player-get-gold) q)))
+
 (define (player-has-gold? q)
   (>= (kern-player-get-gold) q))
 

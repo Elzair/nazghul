@@ -2123,6 +2123,7 @@ int cmd_camp_in_wilderness(class Party *camper)
 	if (hours == 0)
 		return 0;
 
+        cmdwin_spush(""); /* for the '-' */
 	cmdwin_spush("set a watch");
         cmdwin_spush("<y/n>");
 	getkey(&yesno, &yesnokey);
@@ -3513,4 +3514,37 @@ void cmdHelp(void)
 	eventPopKeyHandler();
 
         statusSetMode(ShowParty);
+}
+
+void ui_name_vehicle(class Vehicle *vehicle)
+{
+        int yesno;
+        char buf[64];
+
+        log_begin("Do you want to name your ");
+        vehicle->describe();
+        log_end("?");
+
+        cmdwin_spush("Name");
+        cmdwin_spush("<y/n>");
+        getkey(&yesno, yesnokey);
+        cmdwin_pop();
+        cmdwin_pop();
+
+        if (yesno == 'n') {
+                cmdwin_spush("no!");
+                log_msg("It's likely to be stolen!");
+                return;
+        }
+
+        if (!ui_getline(buf, sizeof(buf))) {
+                log_msg("It's likely to be stolen!");
+                return;
+        }
+
+        vehicle->setName(buf);
+
+        log_begin("You christen ");
+        vehicle->describe();
+        log_end(".");
 }

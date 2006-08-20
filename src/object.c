@@ -1326,6 +1326,10 @@ enum MoveResult Object::move(int dx, int dy)
 
 void Object::save(struct save *save)
 {
+        if (getTTL() != -1) {
+                save->enter(save, "(kern-obj-set-ttl ");
+        }
+
         if (tag) {
                 // wrap the declaration in a call to assign the tag
                 save->enter(save, "(kern-tag '%s\n", tag);
@@ -1354,6 +1358,10 @@ void Object::save(struct save *save)
 
         if (tag) {
                 save->exit(save, ") ;; kern-tag\n");
+        }
+
+        if (getTTL() != -1) {
+                save->exit(save, "%d) ;; kern-obj-set-ttl\n", getTTL());
         }
 }
 

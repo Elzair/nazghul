@@ -30,6 +30,13 @@
 #include "wind.h"
 #include "player.h"
 #include "session.h"
+#include "log.h"
+
+/* This is the number of wilderness turns an unnamed vehicle will hang around
+ * before being garbage collected. Note that wilderness turns only pass when
+ * the player is actually walking around in the wilderness. Kamping, loitering
+ * and combat don't count. */
+#define VEHICLE_DEF_TTL 256
 
 #include <unistd.h>
 
@@ -177,7 +184,7 @@ sound_t *VehicleType::get_movement_sound()
 // The constructor used by VehicleType::createInstance()
 // ----------------------------------------------------------------------------
 Vehicle::Vehicle(VehicleType *type)
-        : Object(type)
+        : Object(type), name(0)
 {
 	facing = NORTH;
 	hp = type->getMaxHp();
@@ -188,7 +195,7 @@ Vehicle::Vehicle(VehicleType *type)
 // The constructor used by kern_mk_vehicle()
 // ----------------------------------------------------------------------------
 Vehicle::Vehicle(VehicleType *type, int _facing, int _hp)
-        : Object(type)
+        : Object(type), name(0)
 {
 	occupant = NULL;
 	facing = _facing;
@@ -197,6 +204,8 @@ Vehicle::Vehicle(VehicleType *type, int _facing, int _hp)
 
 Vehicle::~Vehicle()
 {
+        if (name)
+                free(name);
 }
 
 int Vehicle::getFacing()
@@ -270,6 +279,7 @@ int Vehicle::getMovementCostMultiplier()
 
 void Vehicle::damage(int amount)
 {
+        Object::damage(amount);
 	hp -= amount;
 	hp = max(0, hp);
 	hp = min(hp, getObjectType()->getMaxHp());
@@ -311,8 +321,7 @@ bool Vehicle::mustTurn()
 
 bool Vehicle::isVulnerable()
 {
-        return getObjectType()->isVulnerable();
-        
+        return getObjectType()->isVulnerable();       
 }
 
 void Vehicle::destroy()
@@ -322,7 +331,7 @@ void Vehicle::destroy()
         if (occupant != NULL &&
             getObjectType()->killsOccupants()) {                
                 occupant->destroy();
-                occupant = NULL;
+                setOccupant(0);
         }
 }
 
@@ -343,11 +352,6 @@ class VehicleType *Vehicle::getObjectType()
         return (class VehicleType *) Object::getObjectType();
 }
 
-char *Vehicle::getName() 
-{
-        return getObjectType()->getName();
-}
-
 class ArmsType *Vehicle::getOrdnance() 
 { 
         return getObjectType()->getOrdnance();
@@ -365,11 +369,68 @@ sound_t *Vehicle::get_movement_sound()
 
 void Vehicle::save(struct save *save)
 {
-        save->write(save, "(kern-mk-vehicle %s %d %d)\n",
+        save->enter(save, "(let ((kveh (kern-mk-vehicle %s %d %d)))\n",
                     getObjectType()->getTag(), getFacing(), getHp());
+        if (name) {
+                save->write(save, "(kern-vehicle-set-name kveh \"%s\")\n", name);
+        }
+        if (getTTL() != -1) {
+                save->write(save, "(kern-obj-set-ttl kveh %d)\n", getTTL());
+        }
+        save->exit(save, ") ;; vehicle \n");
 }
 
 struct mmode *Vehicle::getMovementMode()
 {
         return getObjectType()->mmode;
+}
+
+char *Vehicle::getName()
+{
+        if (name)
+                return name;
+        return Object::getName();
+}
+
+void Vehicle::setName(char *val)
+{
+        name = strdup(val);
+        assert(name);
+}
+
+class Object *Vehicle::getOccupant()
+{
+        return occupant;
+}
+
+void Vehicle::setOccupant(class Object *val)
+{
+        if (val) {
+                assert(!occupant);
+                occupant = val;
+                obj_inc_ref(occupant);
+                Object::setTTL(this, -1);
+        } else if (occupant) {
+                obj_dec_ref(occupant);
+                occupant = 0;
+
+                /* Unnamed vehicles will expire after a while. */
+                if (!name) {
+                        Object::setTTL(this, VEHICLE_DEF_TTL);
+                }
+        }
+}
+
+bool Vehicle::isNamed()
+{
+        return name != 0;
+}
+
+void Vehicle::describe()
+{
+        if (name) {
+                log_continue("the %s", name);
+        } else {
+                Object::describe();
+        }
 }

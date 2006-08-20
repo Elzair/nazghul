@@ -466,7 +466,7 @@ void Character::groupExitTo(struct place *dest_place, int dest_x, int dest_y,
 
                 dbg("disembarking");
 
-                vehicle->occupant = 0;
+                vehicle->setOccupant(0);
                 vehicle->relocate(getPlace()->location.place,
                                          getPlace()->location.x,
                                          getPlace()->location.y);
@@ -2072,9 +2072,9 @@ void Character::exec()
                                         vehicle->getMaxHp() / 
                                         10);
                                 foogodRepaint();
-                                consolePrint("%s repairs ", getName());
+                                log_begin("%s repairs ", getName());
                                 vehicle->describe();
-                                consoleNewline();
+                                log_end(".");
                         }
                         clock_alarm_set(&rest_alarm, 60);
                 }

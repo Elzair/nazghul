@@ -29,6 +29,7 @@
 #include "Field.h"
 #include "place.h"
 #include "player.h"
+#include "vehicle.h"
 
 Missile::Missile(ArmsType*type)
         : Object(type)
@@ -65,6 +66,13 @@ bool Missile::enterTile(struct place *place, int x, int y)
             player_party->getX() == x &&
             player_party->getY() == y) {
                 struck = player_party;
+                hit = true;
+                return false;
+        }
+
+        /* Allow wilderness-scale weapons to destroy empty vehicles. */
+        struck = place_get_vehicle(place, x, y);
+        if (struck != NULL) {
                 hit = true;
                 return false;
         }

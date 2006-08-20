@@ -227,7 +227,7 @@ MoveResult Party::move(int dx, int dy)
 
 	/* Check for a vehicle. */
 	class Vehicle *veh = place_get_vehicle(newplace, newx, newy);
-	if (veh && (vehicle || veh->occupant)) {
+	if (veh && (vehicle || veh->getOccupant())) {
 		return WasOccupied;
 	}
 
@@ -527,7 +527,7 @@ void Party::disembark()
 {
 	if (vehicle) {
 		assert(getPlace());
-		vehicle->occupant = 0;
+		vehicle->setOccupant(0);
                 if (!vehicle->isDestroyed()) {
                         vehicle->relocate(getPlace(), getX(), getY());
                 }
@@ -844,14 +844,6 @@ void Party::applyEffect(closure_t *effect)
 
 void Party::save(struct save *save)
 {
-//         save->enter(save, "(kern-mk-party %s %d\n",
-//                     getObjectType()->getTag(), getBaseFaction());
-//         if (vehicle)
-//                 vehicle->save(save);
-//         else
-//                 save->write(save, "nil\n");
-//         save->exit(save, ")\n");
-
         struct node *entry;
         class Character *member;
 
@@ -869,6 +861,9 @@ void Party::save(struct save *save)
                 save->enter(save, "(kern-party-add-member kparty\n");
                 member->save(save);
                 save->exit(save, ") ;; end kern-party-add-member\n");
+        }
+        if (getTTL() != -1) {
+                save->write(save, "(kern-obj-set-ttl kparty %d)\n", getTTL());
         }
         save->write(save, "kparty\n");
         save->exit(save, ") ;; end let\n");
@@ -1020,12 +1015,12 @@ Object *Party::getSpeaker()
 void Party::setVehicle(class Vehicle *val)
 {
         if (vehicle) {
-                vehicle->occupant = NULL;
+                vehicle->setOccupant(0);
                 obj_dec_ref(vehicle);
         }
         vehicle=val;
         if (val) {
-                val->occupant = this;
+                val->setOccupant(this);
                 obj_inc_ref(val);
         }
 }
