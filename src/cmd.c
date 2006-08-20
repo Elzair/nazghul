@@ -91,6 +91,10 @@ struct movecursor_data {
         /* Optional pointer into the objlist. */
         struct list *cur_loc;
 
+        /* Number of tiles to "jump" the cursor on the next direction
+         * keypress. */
+        int jump;
+
         /* Flags */
         char abort : 1;   /* command was aborted     */
         char multi : 1;   /* select multiple targets */
@@ -493,9 +497,21 @@ int movecursor(struct KeyHandler * kh, int key, int keymod)
         /* crosshairs moved? */
         if (keyIsDirection(key)) {
                 int dir = keyToDirection(key);
-                Session->crosshair->move(directionToDx(dir), 
-                                         directionToDy(dir));
+                int dx = directionToDx(dir);
+                int dy = directionToDy(dir);
+                
+                /* Brain-dead but simple way to clamp the jump distance to
+                 * range: iteratively back-off until it's ok. */
+                while (OutOfRange == Session->crosshair->move(dx * data->jump, 
+                                                              dy * data->jump)
+                        && data->jump > 1) {
+                        data->jump--;
+                }
                 moved = 1;
+        } else if (isdigit(key)) {
+                data->jump = key - '0';
+                if (! data->jump)
+                        data->jump = 1; /* disallow zero */
         } else {
   
                 struct list *old_loc = data->cur_loc;
@@ -509,6 +525,7 @@ int movecursor(struct KeyHandler * kh, int key, int keymod)
                         
                 case '+':
                 case '=':
+                case 'n':
                         /* Next target */
                         if (! list_empty(data->loc_list)) {
                                 data->cur_loc = data->cur_loc->next;
@@ -521,6 +538,7 @@ int movecursor(struct KeyHandler * kh, int key, int keymod)
                         break;
                         
                 case '-':
+                case 'p':
                         /* Previous target */
                         if (! list_empty(data->loc_list)) {
                                 data->cur_loc = data->cur_loc->prev;
@@ -549,6 +567,7 @@ int movecursor(struct KeyHandler * kh, int key, int keymod)
 
         /* Cursor was moved? */
         if (moved) {
+                data->jump = 1;
                 mapSetDirty();
                 if (data->each_tile_func) {
                         data->each_tile_func(Session->crosshair->getPlace(),
@@ -1395,6 +1414,7 @@ static void cmd_init_movecursor_data(struct movecursor_data *data,
         struct list *entry = 0;
 
         memset(data, 0, sizeof(*data));
+        data->jump = 1;
 
         if (! suggest)
                 return;
@@ -1571,6 +1591,7 @@ static int cmd_terraform_cursor_func(int ox, int oy, int *x, int *y,
         data.base.each_target_func = each_target_func;
         data.base.abort            = 0;
         data.base.multi            = 1;
+        data.base.jump             = 1;
         data.map              = place->terrain_map;
         data.palette          = place->terrain_map->palette;
 
