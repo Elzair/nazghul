@@ -47,7 +47,11 @@ ArmsType::ArmsType(char *tag, char *name, struct sprite *sprite,
                    bool thrown,
                    bool ubiquitousAmmo,
                    sound_t *fireSound,
-                   class ArmsType *missileType
+                   class ArmsType *missileType,
+					int strAttackMod,
+					int dexAttackMod,
+					int charDamageMod,
+					float charAvoidMod
                    )
         : ObjectType(tag, name, sprite, item_layer),
           slotMask(slotMask),
@@ -75,10 +79,10 @@ ArmsType::ArmsType(char *tag, char *name, struct sprite *sprite,
                 setMissileType(this);
         }
         
-		str_attack_mod = 20;
-		dex_attack_mod = 60;
-		char_damage_mod = 30;
-		char_avoid_mod = 0.9;
+		str_attack_mod = strAttackMod;
+		dex_attack_mod = dexAttackMod;
+		char_damage_mod =charDamageMod;
+		char_avoid_mod = charAvoidMod;
 		
         required_action_points = reqActPts;
 }

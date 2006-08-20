@@ -60,31 +60,31 @@
 (define (mk-melee-arms-type tag name sprite to-hit-bonus damage deflect slots 
                             num-hands range weight)
   (kern-mk-arms-type tag name sprite to-hit-bonus damage "0" deflect slots 
-                     num-hands range default-rap nil #f #f weight nil obj-ifc-cap obj-ifc))
+                     num-hands range default-rap nil #f #f weight nil obj-ifc-cap obj-ifc 20 60 30 1.0))
 
 ;; Curried constructor: missile weapon (add missile, ubiq flag to melee)
 (define (mk-projectile-arms-type tag name sprite to-hit-bonus damage deflect 
                                  slots num-hands range missile ubiq weight)
   (kern-mk-arms-type tag name sprite to-hit-bonus damage "0" deflect slots 
-                     num-hands range default-rap missile #f ubiq weight nil obj-ifc-cap obj-ifc))
+                     num-hands range default-rap missile #f ubiq weight nil obj-ifc-cap obj-ifc 0 80 10 1.0))
 
 ;; Curried constructor: thrown weapon (add field to melee)
 (define (mk-thrown-arms-type tag name sprite to-hit-bonus damage deflect slots 
                              num-hands range ifc weight)
   (kern-mk-arms-type tag name sprite to-hit-bonus damage "0" deflect slots 
-                     num-hands range default-rap nil #t #f weight nil (ifc-cap ifc) ifc))
+                     num-hands range default-rap nil #t #f weight nil (ifc-cap ifc) ifc 10 70 10 1.0))
 
 (define (mk-missile-arms-type tag name sprite ifc)
   (kern-mk-arms-type tag name sprite "0" "0" "0" "0" slot-nil 0 0 0 nil #f #f 
-                     0 nil (ifc-cap ifc) ifc))
+                     0 nil (ifc-cap ifc) ifc 20 60 20 1.0))
 
 (define (mk-armor-type tag name sprite to-hit armor slots weight)
   (kern-mk-arms-type tag name sprite to-hit "0" armor "0" slots 1 0 0 nil #f #f 
-                     weight nil obj-ifc-cap obj-ifc))
+                     weight nil obj-ifc-cap obj-ifc 20 60 20 0.8))
 
 (define (mk-shield-type tag name sprite to-hit deflect slots weight) 
   (kern-mk-arms-type tag name sprite to-hit "0" "0" deflect slots 1 0 0 nil #f #f 
-                     weight nil obj-ifc-cap obj-ifc))
+                     weight nil obj-ifc-cap obj-ifc 20 60 20 0.8))
 
 ;; ============================================================================
 ;; Missiles for Projectile Weapons & Spells
@@ -335,14 +335,16 @@
                    slot-helm 1 1 default-rap
                    nil #f #f
                    2 ;; weight
-                   nil obj-ifc-cap obj-ifc)
+                   nil obj-ifc-cap obj-ifc
+				   30 10 20 0.9)
 
 (kern-mk-arms-type 't_spiked_shield "spiked shield" s_spiked_shield
                    "0" "1d5" "0" "1"
                    slot-shield 1 1 default-rap
                    nil #f #f
                    3 ;; weight
-                   nil obj-ifc-cap obj-ifc)
+                   nil obj-ifc-cap obj-ifc
+				   40 20 20 0.8)
 
 ;;--------------------------------------------------------------------------
 ;; Special arms types
@@ -368,6 +370,7 @@
                    sound-cannon-fire ;;   fire-sound : string name of sound file to play when it's fired
                    0                 ;;      ifc-cap : integer bitmap describing interface slots
                    nil               ;;  get-handler : script ifc
+				   0 0 0 1.0
                    )
 
 ;;----------------------------------------------------------------------------

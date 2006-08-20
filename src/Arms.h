@@ -47,7 +47,11 @@ class ArmsType:public ObjectType {
                  bool thrown,
                  bool ubiquitousAmmo,
                  sound_t *fire_sound,
-                 class ArmsType *missileType
+                class ArmsType *missileType,
+				int str_attack_mod,
+				int dex_attack_mod,
+				int char_damage_mod,
+				float char_avoid_mod
                  );
 	virtual ~ ArmsType();
 
