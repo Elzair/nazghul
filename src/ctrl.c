@@ -440,6 +440,7 @@ struct nearest_hostile_info {
         class Character *nearest;
         int min_distance;
         int range;
+        struct list suggest; /* for ctrl_attack_ui */
 };
 
 static void ctrl_nearest_hostile_visitor(class Object *obj, void *data)
@@ -487,6 +488,55 @@ ctrl_get_nearest_hostile_in_range(class Character *character, int range)
         return info.nearest;
 }
 
+static void ctrl_suggest_visitor(class Object *obj, void *data)
+{
+        struct nearest_hostile_info *info = (struct nearest_hostile_info*)data;
+        class Character *npc = 0;
+        int dist = 0;
+        struct location_list *entry = 0;
+
+        if (being_layer!=obj->getLayer())
+                return;
+
+        npc = (class Character*)obj;
+
+        if (! are_hostile(npc, info->origin))
+                return;
+
+        if (! npc->isVisible() && ! Reveal)
+                return;
+        
+        dist = place_flying_distance(info->origin->getPlace(),
+                                     info->origin->getX(),
+                                     info->origin->getY(),
+                                     obj->getX(),
+                                     obj->getY());
+        if (dist > info->range)
+                return;
+
+        /* Add it to the list */
+        entry = (struct location_list*)malloc(sizeof(*entry));
+        assert(entry);
+        entry->x = obj->getX();
+        entry->y = obj->getY();
+        list_add_tail(&info->suggest, &entry->list);
+
+        printf("Added %s at [%d %d]\n", obj->getName(), obj->getX(), obj->getY());        
+}
+
+static void ctrl_del_suggest_list(struct list *head)
+{
+        struct list *entry = head->next;
+        while (entry != head) {
+                struct location_list *tmp = 
+                        (struct location_list*)entry;
+                entry = entry->next;
+                list_remove(&tmp->list);
+                free(tmp);
+        }
+}
+
+
 static void ctrl_attack_ui(class Character *character)
 {
         int x;
@@ -495,6 +545,7 @@ static void ctrl_attack_ui(class Character *character)
         class Character *target;
         struct terrain *terrain;
         class Object *mech;
+        struct nearest_hostile_info info;
 		
         // If in follow mode, when the leader attacks automatically switch to
         // turn-based mode.
@@ -503,6 +554,11 @@ static void ctrl_attack_ui(class Character *character)
                 log_msg("Switching from Follow to Round Robin Mode.\n");
                 player_party->enableRoundRobinMode();
         }
+
+        /* Partially initialize the suggestion info. */
+        memset(&info, 0, sizeof(info));
+        info.origin = character;
+        list_init(&info.suggest);
 
         // Loop over all readied weapons
 		int armsIndex=0;
@@ -577,16 +633,28 @@ static void ctrl_attack_ui(class Character *character)
 
 
         prompt_for_target:
+
+                /* Initialize the rest of the suggestion list. */
+                info.range = weapon->getRange();
+                place_for_each_object(character->getPlace(),
+                                      ctrl_suggest_visitor,
+                                      &info);
+
                 // SAM:
                 // select_target() might be a more elegant place to put
                 // logic to prevent (or require confirm of) attacking self, 
                 // party members, etc.
-				
-                if (select_target(character->getX(), character->getY(), &x, &y,
-                                  weapon->getRange()) == -1) {
+                if (-1 == select_target(character->getX(), 
+                                        character->getY(), 
+                                        &x, &y,
+                                        weapon->getRange(),
+                                        &info.suggest)) {
                         cmdwin_spush("abort!");
                         continue;
                 }
+
+                /* Cleanup the suggestion list */
+                ctrl_del_suggest_list(&info.suggest);
 
                 // Find the new target under the cursor
                 target = (class Character *) 

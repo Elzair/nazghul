@@ -3992,7 +3992,7 @@ KERN_API_CALL(kern_ui_target)
         /* Get the target coords from the user */
         tx = ox;
         ty = oy;
-        if (select_target(ox, oy, &tx, &ty, range))
+        if (select_target(ox, oy, &tx, &ty, range, 0))
                 return sc->NIL;
         
         /* Pack the target coords for return */

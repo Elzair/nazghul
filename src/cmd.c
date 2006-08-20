@@ -70,22 +70,39 @@
 
 extern int DeveloperMode;
 
-// SAM: Using this typedef below
+/* SAM: Using this typedef below */
 typedef void (*v_funcpointer_iiv) (struct place *, int x, int y, void * v);
 
-struct cursor_movement_keyhandler {
+/* Struct used by the movecursor function and it's mouse-handling counterparts
+ * for commands which prompt the player to select a target from the map. */
+struct movecursor_data {
+
+        /* Optional function called when a tile is entered by the cursor */
         v_funcpointer_iiv each_tile_func;
+
+        /* Optional function called when the tile under the cursor is selected
+         * by the player */
         v_funcpointer_iiv each_target_func;
-        char abort : 1;   /* command was aborted */
+
+        /* Optional list of objects to be used by the 'previous' and 'next'
+         * cursor operations. */
+        struct list *loc_list;
+
+        /* Optional pointer into the objlist. */
+        struct list *cur_loc;
+
+        /* Flags */
+        char abort : 1;   /* command was aborted     */
         char multi : 1;   /* select multiple targets */
 };
 
-// This struct is put into the 'data' field of a 'struct KeyHandler'.  It is
-// used by terraform_movecursor_and_do().
+/* Struct used by the terraform version of the movecursor function et al. It's
+ * a superset of the standard movecursor_data and extends it with
+ * some extra data. */
 struct terraform_mode_keyhandler {
-        /* "Inherit" from cursor_movement_keyhandler so we can use the same
+        /* "Inherit" from movecursor_data so we can use the same
          * mousecursor function for terraform and other targetting commands. */
-        struct cursor_movement_keyhandler base;
+        struct movecursor_data base;
         struct place           * place;  // needed?
         struct terrain_map     * map;
         struct terrain_palette * palette;
@@ -353,8 +370,8 @@ int scroller(struct KeyHandler * kh, int key, int keymod)
 
 bool mouse_button_cursor(struct MouseButtonHandler *mh, SDL_MouseButtonEvent *event)
 {
-        struct cursor_movement_keyhandler * data
-                = (struct cursor_movement_keyhandler *) mh->data;
+        struct movecursor_data * data
+                = (struct movecursor_data *) mh->data;
         int mx = event->x;
         int my = event->y;
 
@@ -403,11 +420,10 @@ bool mouse_button_cursor(struct MouseButtonHandler *mh, SDL_MouseButtonEvent *ev
 
 bool mouse_motion_cursor(struct MouseMotionHandler *mh, SDL_MouseMotionEvent *event)
 {
-        struct cursor_movement_keyhandler * data
-                = (struct cursor_movement_keyhandler *) mh->data;
+        struct movecursor_data * data
+                = (struct movecursor_data *) mh->data;
         int mx = event->x;
         int my = event->y;
-        int moved = 0;
 
         /* Off-map? */
         if (mapScreenToPlaceCoords(&mx, &my)) {
@@ -457,8 +473,9 @@ bool mouse_motion_cursor(struct MouseMotionHandler *mh, SDL_MouseMotionEvent *ev
  */
 int movecursor(struct KeyHandler * kh, int key, int keymod)
 {
-        struct cursor_movement_keyhandler * data
-                = (struct cursor_movement_keyhandler *) kh->data;
+        int moved = 0;
+        struct movecursor_data * data
+                = (struct movecursor_data *) kh->data;
   
         /* target selected? */
         if (key == '\n' || key == SDLK_SPACE || key == SDLK_RETURN) {
@@ -478,6 +495,60 @@ int movecursor(struct KeyHandler * kh, int key, int keymod)
                 int dir = keyToDirection(key);
                 Session->crosshair->move(directionToDx(dir), 
                                          directionToDy(dir));
+                moved = 1;
+        } else {
+  
+                struct list *old_loc = data->cur_loc;
+
+                switch (key) {
+                        
+                case SDLK_ESCAPE:
+                        /* Abort */
+                        data->abort = 1;
+                        return 1;   /* done */
+                        
+                case '+':
+                case '=':
+                        /* Next target */
+                        if (! list_empty(data->loc_list)) {
+                                data->cur_loc = data->cur_loc->next;
+                                if (data->cur_loc == data->loc_list) {
+                                        /* wrap around */
+                                        data->cur_loc = 
+                                                data->cur_loc->next;
+                                }
+                        }
+                        break;
+                        
+                case '-':
+                        /* Previous target */
+                        if (! list_empty(data->loc_list)) {
+                                data->cur_loc = data->cur_loc->prev;
+                                if (data->cur_loc == data->loc_list) {
+                                        /* wrap around */
+                                        data->cur_loc = 
+                                                data->cur_loc->prev;
+                                }
+                        }
+                        break;
+                default:
+                        break;
+                }
+
+                /* Target changed? */
+                if (old_loc != data->cur_loc) {
+                        struct location_list *loc = 
+                                (struct location_list*)data->cur_loc;
+                        Session->crosshair->move(loc->x - 
+                                                 Session->crosshair->getX(),
+                                                 loc->y - 
+                                                 Session->crosshair->getY());
+                        moved = 1;
+                }
+        }
+
+        /* Cursor was moved? */
+        if (moved) {
                 mapSetDirty();
                 if (data->each_tile_func) {
                         data->each_tile_func(Session->crosshair->getPlace(),
@@ -488,14 +559,6 @@ int movecursor(struct KeyHandler * kh, int key, int keymod)
 
                 /* turn on range shading after the first move */
                 Session->crosshair->shadeRange(true);
-
-                return 0;   /* not done */
-        }
-  
-        /* abort? */
-        if (key == SDLK_ESCAPE) {
-                data->abort = 1;
-                return 1;   /* done */
         }
 
         return 0;   /* not done */
@@ -1326,9 +1389,47 @@ bool cmdReady(class Character * member)
 	return committed;
 }
 
-int select_target(int ox, int oy, int *x, int *y, int range)
+static void cmd_init_movecursor_data(struct movecursor_data *data, 
+                                     struct list *suggest)
 {
-        struct cursor_movement_keyhandler data;
+        struct list *entry = 0;
+
+        memset(data, 0, sizeof(*data));
+
+        if (! suggest)
+                return;
+
+        /* Copy the head of the list. */
+        data->loc_list = suggest;
+        data->cur_loc = data->loc_list;
+
+        /* Look for the crosshair in the suggest list. */
+        list_for_each(suggest, entry) {
+                struct location_list *loc = 
+                        (struct location_list*)entry;
+                if (loc->x == Session->crosshair->getX()
+                    && loc->y == Session->crosshair->getY()) {
+                        data->cur_loc = &loc->list;
+                        break;
+                }
+        }
+
+#if 0
+        /* If cur_loc not in the list then create an entry for it. */
+        if (! data->cur_loc) {
+                struct location_list *loc = 
+                        (struct location_list*)malloc(sizeof(*loc));
+                loc->x = Session->crosshair->getX();
+                loc->y = Session->crosshair->getY();
+                list_add(data->loc_list, &loc->list);
+        }
+#endif
+}
+
+int select_target(int ox, int oy, int *x, int *y, int range, 
+                  struct list *suggest)
+{
+        struct movecursor_data data;
         struct KeyHandler kh;
         struct MouseButtonHandler mbh;
         struct MouseMotionHandler mmh;
@@ -1342,8 +1443,8 @@ int select_target(int ox, int oy, int *x, int *y, int range)
         Session->crosshair->shadeRange((*x==ox)&&(*y==oy));
         Session->show_boxes = 1;
         mapSetDirty();
-  
-        memset(&data, 0, sizeof(data));
+
+        cmd_init_movecursor_data(&data, suggest);
 
         kh.fx   = movecursor;
         kh.data = &data;
@@ -1369,7 +1470,7 @@ int select_target(int ox, int oy, int *x, int *y, int range)
         *y = Session->crosshair->getY();
         Session->crosshair->remove();
         mapSetDirty();
-  
+
         if (data.abort) {
                 cmdwin_spush("none!");
                 return -1;
@@ -1394,7 +1495,7 @@ int select_target_with_doing(int ox, int oy, int *x, int *y,
         // SAM: It might be nice to return the last target,
         // in case our caller wants it, but it seems that
         // the ESC abort stomps on it.
-        struct cursor_movement_keyhandler data;
+        struct movecursor_data data;
         struct KeyHandler kh;
         struct MouseButtonHandler mbh;
         struct MouseMotionHandler mmh;
@@ -1542,7 +1643,7 @@ bool cmdHandle(class Character * pc)
 
 	// *** Pick a target ***
 
-	if (select_target(x, y, &x, &y, 1) == -1)
+	if (select_target(x, y, &x, &y, 1, 0) == -1)
 		return false;
 
         // Try to find a mech
@@ -1817,7 +1918,7 @@ bool cmdTalk(Object *member)
         x = conversant->getX();
         y = conversant->getY();
 
-	if (select_target(member->getX(), member->getY(), &x, &y, 5) == -1) {
+	if (select_target(member->getX(), member->getY(), &x, &y, 5, 0) == -1) {
 		return false;
 	}
 
@@ -2860,7 +2961,7 @@ bool cmd_terraform(struct place *place, int x, int y)
         struct terrain         * terrain;
 
 	cmdwin_clear();
-	cmdwin_push("Terraform");
+	cmdwin_spush("Terraform");
 
         map     = place->terrain_map;
         palette = map->palette;

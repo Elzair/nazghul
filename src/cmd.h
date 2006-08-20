@@ -84,7 +84,14 @@ extern bool cmdSaveTerrainMap(class Character * pc);
   
 extern class Character *select_party_member(void);
     
-extern int select_target(int ox, int oy, int *x, int *y, int range);
+struct location_list {
+        struct list list;
+        int x;
+        int y;
+};
+
+extern int select_target(int ox, int oy, int *x, int *y, int range, 
+                         struct list *suggest);
 
 extern char * name_of_context (void);
 
