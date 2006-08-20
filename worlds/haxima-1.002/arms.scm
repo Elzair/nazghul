@@ -22,6 +22,13 @@
 ;;         ubiq : true if it needs ammo in inventory, false otherwise
 ;;       weight : weight of arms
 ;;   fire-sound : string name of sound file to play when it's fired
+;;     gifc-cap :
+;;         gifc :
+;;   stratt_mod : percentage of str based attack bonus used
+;;   dexatt_mod : percentage of dex based attack bonus used
+;;   damage_mod : percentage of damage bonus used
+;;    avoid_mod : multiplier for avoidance bonus (1.0 = no effect)
+;;
 ;;
 ;;----------------------------------------------------------------------------
 
@@ -55,12 +62,15 @@
 ;; the primitive kern-mk-arms-type procedure.
 ;;--------------------------------------------------------------------------
 
-(define obj-ifc-cap (ifc-cap obj-ifc))
+(define obj-ifc-cap (ifc-cap obj-ifc))    
 
 (define (mk-melee-arms-type tag name sprite to-hit-bonus damage deflect slots 
-                            num-hands range weight)
+                            num-hands range weight
+							stratt_mod dexatt_mod
+							damage_mod avoid_mod)
   (kern-mk-arms-type tag name sprite to-hit-bonus damage "0" deflect slots 
-                     num-hands range default-rap nil #f #f weight nil obj-ifc-cap obj-ifc 20 60 30 1.0))
+                     num-hands range default-rap nil #f #f weight nil
+					 obj-ifc-cap obj-ifc stratt_mod dexatt_mod damage_mod avoid_mod))
 
 ;; Curried constructor: missile weapon (add missile, ubiq flag to melee)
 (define (mk-projectile-arms-type tag name sprite to-hit-bonus damage deflect 
@@ -249,31 +259,31 @@
 
 (define melee-arms-types
   (list
-   ;;     ===============================================================================================================
-   ;;     tag          |    name          | sprite           | to-hit | damage | to-def | slots       | hnds | rng | weight
-   ;;     ===============================================================================================================
-   (list  't_hands          "bare hands"     nil              "1d2"    "1d2"    "1d2"    slot-nil      1      1      0)
-   (list  't_fangs          "fangs"          nil              "1d2"    "1d6"    "+0"     slot-nil      1      1      0)
-   (list  't_horns          "horns"          nil              "1d2"    "1d8"    "1d2"    slot-nil      1      1      0)
-   (list  't_stinger        "stinger"        nil              "1d2"    "1d2"    "+0"     slot-nil      1      1      0)
-   (list  't_tentacles      "tentacles"      nil              "1d3"    "4d4"    "4d2"    slot-nil      1      1      0)
-   (list  't_beak           "beak"           nil              "0"      "2d4"    "0"      slot-nil      1      1      0)
-   (list  't_dagger         "dagger"         s_dagger         "1d4"    "1d4"    "1d2"    slot-weapon   1      1      0)
-   (list  't_dagger_4       "+4 dagger"      s_dagger         "1d4+4"  "1d4+4"  "1d2+4"  slot-weapon   1      1      0)
-   (list  't_mace           "mace"           s_mace           "1d4"    "1d6+2"  "+0"     slot-weapon   1      1      3)
-   (list  't_axe            "axe"            s_axe            "1d2"    "2d3+2"  "+0"     slot-weapon   1      1      3)
-   (list  't_sword          "sword"          s_sword          "1d2"    "1d8+1"  "1d2"    slot-weapon   1      1      2)
-   (list  't_sword_2        "+2 sword"       s_sword          "1d2+2"  "1d8+3"  "1d2+2"  slot-weapon   1      1      2)
-   (list  't_sword_4        "+4 sword"       s_sword          "1d2+4"  "1d8+5"  "1d2+4"  slot-weapon   1      1      2)
-   (list  't_2H_axe         "2H axe"         s_2h_axe         "0"      "4d3+2"  "-2"     slot-weapon   2      1      4)
-   (list  't_2H_sword       "2H sword"       s_2h_sword       "0"      "2d8+2"   "1"     slot-weapon   2      1      4)
-   (list  't_morning_star   "morning star"   s_morning_star   "1d2+2"  "1d6+1"  "-1"     slot-weapon   1      2      3)
-   (list  't_morning_star_2 "+2 morning star" s_morning_star  "1d2+4"  "1d6+3"  "2"      slot-weapon   1      2      3)
-   (list  't_halberd        "halberd"        s_halberd        "1d3+1"  "2d8-2"  "1d2"    slot-weapon   2      2      4)
-   (list  't_staff          "staff"          s_staff          "1d3"    "1d4"    "1d3"    slot-weapon   2      2      2)
-   (list  't_eldritch_blade "eldritch blade" s_eldritch_blade "2"      "2d8+5"  "+0"     slot-weapon   2      1      2)
-   (list  't_mystic_sword   "mystic sword"   s_mystic_sword   "+3"     "1d10+5" "+2"     slot-weapon   1      1      1)
-   (list  't_flaming_sword  "flaming sword"  s_flaming_sword  "1d2"    "1d10+3" "1d2"    slot-weapon   1      1      2)
+   ;;     ===================================================================================================================================================
+   ;;     tag          |    name          | sprite           | to-hit | damage | to-def | slots       | hnds | rng | weight | dxmod | stmod | dammod | avoid
+   ;;     ===================================================================================================================================================
+   (list  't_hands          "bare hands"     nil              "1d2"    "1d2"    "1d2"    slot-nil      1      1      0			50		20		10		1.0	)
+   (list  't_fangs          "fangs"          nil              "1d2"    "1d6"    "+0"     slot-nil      1      1      0			50		20		30		1.0	)
+   (list  't_horns          "horns"          nil              "1d2"    "1d8"    "1d2"    slot-nil      1      1      0			30		40		60		1.0	)
+   (list  't_stinger        "stinger"        nil              "1d2"    "1d2"    "+0"     slot-nil      1      1      0			50		20		10		1.0	)
+   (list  't_tentacles      "tentacles"      nil              "1d3"    "4d4"    "4d2"    slot-nil      1      1      0			70		20		60		1.0	)
+   (list  't_beak           "beak"           nil              "0"      "2d4"    "0"      slot-nil      1      1      0			50		30		30		1.0	)
+   (list  't_dagger         "dagger"         s_dagger         "1d4"    "1d4"    "1d2"    slot-weapon   1      1      0			80		10		10		1.0	)
+   (list  't_dagger_4       "+4 dagger"      s_dagger         "1d4+4"  "1d4+4"  "1d2+4"  slot-weapon   1      1      0			80		10		10		1.0	)
+   (list  't_mace           "mace"           s_mace           "1d4"    "1d6+2"  "+0"     slot-weapon   1      1      3			20		60		80		0.95	)
+   (list  't_axe            "axe"            s_axe            "1d2"    "2d3+2"  "+0"     slot-weapon   1      1      3			30		50		90		0.95	)
+   (list  't_sword          "sword"          s_sword          "1d2"    "1d8+1"  "1d2"    slot-weapon   1      1      2			50		20		70		1.0	)
+   (list  't_sword_2        "+2 sword"       s_sword          "1d2+2"  "1d8+3"  "1d2+2"  slot-weapon   1      1      2			50		20		70		1.0	)
+   (list  't_sword_4        "+4 sword"       s_sword          "1d2+4"  "1d8+5"  "1d2+4"  slot-weapon   1      1      2			50		20		70		1.0	)
+   (list  't_2H_axe         "2H axe"         s_2h_axe         "0"      "4d3+2"  "-2"     slot-weapon   2      1      4			20		60		100		0.9	)
+   (list  't_2H_sword       "2H sword"       s_2h_sword       "0"      "2d8+2"   "1"     slot-weapon   2      1      4			40		40		90		0.95	)
+   (list  't_morning_star   "morning star"   s_morning_star   "1d2+2"  "1d6+1"  "-1"     slot-weapon   1      2      3			20		40		70		0.9	)
+   (list  't_morning_star_2 "+2 morning star" s_morning_star  "1d2+4"  "1d6+3"  "2"      slot-weapon   1      2      3			20		40		70		0.9	)
+   (list  't_halberd        "halberd"        s_halberd        "1d3+1"  "2d8-2"  "1d2"    slot-weapon   2      2      4			30		30		100		0.9	)
+   (list  't_staff          "staff"          s_staff          "1d3"    "1d4"    "1d3"    slot-weapon   2      2      2			60		30		40		1.0	)
+   (list  't_eldritch_blade "eldritch blade" s_eldritch_blade "2"      "2d8+5"  "+0"     slot-weapon   2      1      2			50		20		70		1.0	)
+   (list  't_mystic_sword   "mystic sword"   s_mystic_sword   "+3"     "1d10+5" "+2"     slot-weapon   1      1      1			60		20		70		1.0	)
+   (list  't_flaming_sword  "flaming sword"  s_flaming_sword  "1d2"    "1d10+3" "1d2"    slot-weapon   1      1      2			50		20		70		1.0	)
    ))
 
 (kern-mk-sprite 's_leather_helm  ss_arms 1 48 #f 0)
