@@ -635,9 +635,6 @@ static void ctrl_attack_ui(class Character *character)
                 x = target->getX();
                 y = target->getY();
 
-
-        prompt_for_target:
-
                 /* Initialize the rest of the suggestion list. */
                 info.range = weapon->getRange();
                 place_for_each_object(character->getPlace(),
@@ -691,18 +688,13 @@ static void ctrl_attack_ui(class Character *character)
 
                 }
                 else if (target == character) {
-
-                        // ----------------------------------------------------
-                        // Don't allow attacking self. This results in a nested
-                        // enumerateArms() call when we call getDefend() on
-                        // ourself, which messes up the loop we're in right
-                        // now. If we really want to support suicide then we'll
-                        // need to rework the enumeration code.
-                        // ----------------------------------------------------
-
-                        goto prompt_for_target;
-                }               // confirm attack self
-                else {
+                        /* Targeting the self is taken to mean "switch to my
+                         * next weapon". This allows players to quickly jump to
+                         * the next weapon if no target is in range and they
+                         * aren't interested in attacking the ground. */
+                        cmdwin_spush("skip weapon!");
+                        continue;
+                } else {
                         // confirmed_attack_ally:
 
                         // in combat all npc parties and the player party
