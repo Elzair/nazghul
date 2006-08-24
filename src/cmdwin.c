@@ -181,8 +181,15 @@ static void cmdwin_vpush(int flags, char *fmt, va_list args)
 
         frag->flags = flags;
 
-        /* Store the string in the fragment */
-	vsnprintf(frag->buf, sizeof(frag->buf), fmt, args);
+		if (fmt == NULL)
+		{
+			vsnprintf(frag->buf, sizeof(frag->buf), "",0);
+		}
+		else
+		{
+			/* Store the string in the fragment */
+			vsnprintf(frag->buf, sizeof(frag->buf), fmt, args);
+		}
 
         /* Push the fragment onto the stack */
         list_add_tail(&cmdwin.frags, &frag->list);
