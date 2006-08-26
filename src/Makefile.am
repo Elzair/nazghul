@@ -149,7 +149,8 @@ nazghul_SOURCES =		\
 	dimensions.h dimensions.c \
 	cfg.h cfg.c \
 	menus.h menus.c \
-	file.h file.c
+	file.h file.c \
+	screen_dims.h
 
 INCLUDES = -I$(includedir)                                      \
         -I$(srcdir) -I$(top_srcdir)/include -I$(top_srcdir)     \
