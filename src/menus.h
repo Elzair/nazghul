@@ -25,5 +25,6 @@ extern char *main_menu(void);
 extern char *load_game_menu(void);
 extern char *save_game_menu(void);
 extern void menu_add_saved_game(char *fname);
+extern void options_menu(void);
 
 #endif

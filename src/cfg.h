@@ -22,7 +22,7 @@
 
 int cfg_init();
 int cfg_save(char *fname);
-void cfg_set(char *key, char *val);
+void cfg_set(char *key, const char *val);
 char *cfg_get(char *key);
 
 #endif

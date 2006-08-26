@@ -62,7 +62,12 @@ struct active_sound {
 
 int SOUND_MAX_VOLUME = SDL_MIX_MAXVOLUME;
 
-static int sound_enabled = 0;
+/* This indicates whether or not the player has turned sound on or off. */
+static int sound_enabled = 1;
+
+/* This is 1 iff SDL_Audio() is initialized and ready for use. */
+static int sound_activated = 0;
+
 static SDL_mutex *sound_mutex = NULL;
 
 static void sound_unref(sound_t *sound)
@@ -125,14 +130,14 @@ void sound_play(sound_t *sound, int volume)
 	int index;
         struct active_sound *active = NULL;
 
+	if (!sound_enabled || !sound_activated) {                
+		return;
+	}
+
         if (NULL_SOUND == sound)
                 return;
 
         assert(IS_SOUND(sound));
-
-	if (!sound_enabled) {                
-		return;
-	}
 
 	/* Look for an empty (or finished) sound slot */
 	for (index = 0; index < NUM_SOUNDS; ++index) {
@@ -169,12 +174,12 @@ sound_t *sound_new(char *tag, char *file)
         sound_t *sound;
 	char *fn;
 
-        if (file == NULL)
-                return NULL_SOUND;
-
-	if (!sound_enabled) {
+	if (!sound_activated) {
 		return NULL_SOUND;
 	}
+
+        if (file == NULL)
+                return NULL_SOUND;
 
 	fn = file_mkpath(cfg_get("include-dirname"), file);
 	/* Load the sound file and convert it to 16-bit stereo at 22kHz */
@@ -219,9 +224,8 @@ int sound_init(void)
 {
 	SDL_AudioSpec fmt;
 
-        /* Create the mutex */
-        sound_mutex = SDL_CreateMutex();
-        assert(sound_mutex);
+        if (sound_activated)
+                return 0;
 
         /* Init the active sound list */
         memset(active_sounds, 0, sizeof(active_sounds));
@@ -237,13 +241,16 @@ int sound_init(void)
 	/* Open the audio device and start playing sound! */
 	if (SDL_OpenAudio(&fmt, NULL) < 0) {
                 warn("SDL_OpenAudio: %s", SDL_GetError());
-                sound_enabled = 0;
 		return -1;
 	}
 
+        /* Create the mutex */
+        sound_mutex = SDL_CreateMutex();
+        assert(sound_mutex);
+
 	atexit(SDL_CloseAudio);
 
-	sound_enabled = 1;
+	sound_activated = 1;
 	SDL_PauseAudio(0);
 
         return 0;
@@ -251,10 +258,10 @@ int sound_init(void)
 
 void sound_exit(void)
 {
-        if (! sound_enabled)
+        if (! sound_activated)
                 return;
 
-        sound_enabled = 0;
+        sound_activated = 0;
 
         /* Does this invoke the mixer callback on all active sounds? If not
          * then how will I unref active sounds? */
@@ -264,4 +271,19 @@ void sound_exit(void)
 char *sound_get_tag(sound_t *sound)
 {
         return sound->tag;
+}
+
+void sound_on(void)
+{
+        sound_enabled = 1;
+}
+
+void sound_off(void)
+{
+        sound_enabled = 0;
+}
+
+int sound_is_activated(void)
+{
+        return sound_activated;
 }

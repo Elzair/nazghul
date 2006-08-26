@@ -36,4 +36,13 @@ extern void sound_del(sound_t *sound);
 extern void sound_play(sound_t *sound, int volume);
 extern char *sound_get_tag(sound_t *sound);
 
+/* These allow enabling/disabling sound at runtime. sound_on() will have no
+ * effect unless sound_init() has already been called. */
+extern void sound_on();
+extern void sound_off();
+
+/* Returns non-zero iff sounds are ready to play (ie sound_init() has been
+ * called) */
+extern int sound_is_activated();
+
 #endif

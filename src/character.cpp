@@ -1969,37 +1969,28 @@ void Character::getAppointment()
 
         int nextAppt = appt + 1;
 
-        // -------------------------------------------------------------------
-        // Special case: the last appointment of the day is over when the clock
-        // rolls over at midnight. We can detect clock rollover by checking if
-        // the time is BEFORE the start of the current appt.
-        // -------------------------------------------------------------------
-
+        /* Special case: the last appointment of the day is over when the clock
+           rolls over at midnight. We can detect clock rollover by checking if
+           the current time is BEFORE the start of the current appt. */
         if (nextAppt == sched->n_appts) {
                 if (Session->clock.hour < sched->appts[appt].hr) {
                         appt = 0;
-                        if (atAppointment()) {
-                                setActivity(sched->appts[appt].act);
-                        } else {
-                                setActivity(COMMUTING);
-                        }
                 }
         }
 
-        // -------------------------------------------------------------------
-        // Normal case: check if the clock time exceeds the start time of our
-        // next appt.
-        // -------------------------------------------------------------------
-
+        /* Normal case: check if the clock time exceeds the start time of our
+           next appt. */
         else if (Session->clock.hour >= sched->appts[nextAppt].hr &&
                  Session->clock.min >= sched->appts[nextAppt].min) {
                 appt = nextAppt;
-                if (atAppointment()) {
-                        setActivity(sched->appts[appt].act);
-                } else {
-                        setActivity(COMMUTING);
-                }
         }
+
+        if (atAppointment()) {
+                setActivity(sched->appts[appt].act);
+        } else {
+                setActivity(COMMUTING);
+        }
+
 }
 
 void Character::exec()
@@ -2007,6 +1998,8 @@ void Character::exec()
         int points_last_loop;
         class Character *leader;
         bool noHostiles = false;
+        bool appointmentChecked = false;
+                
 
         startTurn();
         
@@ -2132,18 +2125,25 @@ void Character::exec()
                 
         case CONTROL_MODE_AUTO:
 
-                // Lookup this character's schedule (do it outside the loop
-                // because we only need to do it once per turn - the clock
-                // won't change in the loop).
-                if (sched)
-                        getAppointment();
-
                 // Loop until the turn is over or the character stops using
                 // action points.
                 points_last_loop = 0;
                 while (! isTurnEnded() &&
                        getActionPoints() != points_last_loop) {
                         points_last_loop = action_points;
+
+                        // Lookup this character's schedule. We only need to do
+                        // it once per turn; the clock won't change in the
+                        // loop. But we want to do it inside the loop so that
+                        // if there's no AP the schedule won't change the
+                        // character's state. This was specifically added so
+                        // that An Zu could wake up sleeping NPC's for a few
+                        // rounds by waking them up and socking them with an AP
+                        // debt to keep them docile for a bit.
+                        if (sched && ! appointmentChecked) {
+                                getAppointment();
+                                appointmentChecked = true;
+                        }
 
                         switch (getActivity()) {
                         case COMMUTING:

@@ -69,13 +69,14 @@ int SKY_SPRITE_W;
 static int dimensions_get_map_size(char *dimstr)
 {
         struct dimstr2mapsz {
-                char *dimstr;
-                int map_sz;
-        } tbl[] = {
-                { "640x480",  11 },
-                { "800x600",  11 },
-                { "1280x960", MAX_MAP_SIZE },
+        char *dimstr;
+        int map_sz;
         };
+#       define ADD_SCREEN_DIM(dim,mapw) { (dim), (mapw) },
+        struct dimstr2mapsz tbl[] = {
+#               include "screen_dims.h"
+        };
+
         int i;
 
         if (!dimstr) {

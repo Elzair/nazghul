@@ -49,6 +49,7 @@
 
 #define TALL_H (SCREEN_H - 4 * BORDER_H - 6 * ASCII_H)
 #define MAX_TITLE_LEN (STAT_CHARS_PER_LINE-2)
+#define STAT_MAX_H TALL_H
 
 /* Standard color scheme */
 #define STAT_LABEL_CLR        'G'
@@ -214,6 +215,23 @@ static void switch_to_tall_mode(void)
 
         foogod_set_y(STAT_Y + Status.screenRect.h + BORDER_H);
 
+	foogodRepaint();
+	consoleRepaint();
+	screen_repaint_frame();
+}
+
+static void status_set_line_height(int lines)
+{
+        int height = lines * ASCII_H;
+
+        if (height > STAT_MAX_H) {
+                height = STAT_MAX_H;
+        }
+
+        Status.screenRect.h = height;
+	Status.numLines     = Status.screenRect.h / ASCII_H;
+
+        foogod_set_y(STAT_Y + Status.screenRect.h + BORDER_H);
 	foogodRepaint();
 	consoleRepaint();
 	screen_repaint_frame();
@@ -1555,7 +1573,7 @@ void statusSetMode(enum StatusMode mode)
 		Status.selectedEntry = 0;                
                 break;
         case StringList:
-		switch_to_tall_mode();
+                status_set_line_height(max(Status.list_sz, 5));
                 status_set_title("select");
 		Status.topLine = 0;
 		Status.curLine = 0;

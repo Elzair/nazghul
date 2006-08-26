@@ -184,6 +184,10 @@ static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
                 Session->subject = NULL;
                 return true;
                 break;
+
+        case SDLK_F10:
+                cmdSettings();
+                break;
                         
         default:
                 break;
@@ -874,6 +878,10 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
                 cmdDumpPalette();
                 break;
 
+        case SDLK_F10:
+                cmdSettings();
+                break;
+                        
         case 'f':
 
                 // ----------------------------------------------------

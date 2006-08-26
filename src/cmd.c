@@ -1972,12 +1972,7 @@ bool cmdTalk(Object *member)
 
 	log_msg("*** CONVERSATION ***");
 
-        //log_begin_group();
-	//log_begin("You meet ");
-	//obj->describe();
-	//log_end(".");
-
-	if (obj->getActivity() == SLEEPING ||
+	if (/*obj->getActivity() == SLEEPING || not sure why this was here... */
             ((obj->getLayer() == being_layer) &&
              ((class Character*)obj)->isAsleep())) {
 		log_msg("Zzzz...\n");
@@ -3547,4 +3542,11 @@ void ui_name_vehicle(class Vehicle *vehicle)
         log_begin("You christen ");
         vehicle->describe();
         log_end(".");
+}
+
+void cmdSettings(void)
+{
+        StatusMode omode = statusGetMode();
+        options_menu();
+        statusSetMode(omode);
 }

@@ -2731,7 +2731,7 @@ static pointer kern_obj_set_ap(scheme *sc, pointer args)
                 return sc->NIL;
         }
 
-        obj->setActionPoints(0);
+        obj->setActionPoints(ap);
 
         return sc->NIL;
 }

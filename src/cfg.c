@@ -30,7 +30,7 @@ struct cfg_entry {
         char *key, *val;        
 } *cfg_hash[CFG_HASH_SIZE];
 
-static struct cfg_entry *cfg_entry_new(char *key, char *val)
+static struct cfg_entry *cfg_entry_new(char *key, const char *val)
 {
         struct cfg_entry *entry = (struct cfg_entry*)malloc(sizeof(*entry));
         assert(entry);
@@ -66,13 +66,11 @@ int cfg_init()
         return 0;
 }
 
-int cfg_save(char *fname)
+static void replace_string(char **sptr, const char *val)
 {
+        if (*sptr == val)
+                return;
 
-}
-
-static void replace_string(char **sptr, char *val)
-{
         if (*sptr) {
                 free(*sptr);
                 *sptr = 0;
@@ -83,7 +81,7 @@ static void replace_string(char **sptr, char *val)
         }
 }
 
-void cfg_set(char *key, char *val)
+void cfg_set(char *key, const char *val)
 {
         int hashkey = hashfn(key);
         struct cfg_entry *entry = cfg_hash[hashkey];

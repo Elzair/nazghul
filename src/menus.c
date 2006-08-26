@@ -296,7 +296,8 @@ char * main_menu(void)
         static char *CREDITS="Credits";
         static char *QUIT="Quit";
         static char *TUTORIAL="Tutorial";
-        char *menu[5];
+        static char *SETTINGS = "Settings";
+        char *menu[6];
         int n_items = 0;
         struct KeyHandler kh;
 	struct ScrollerContext data;
@@ -316,9 +317,9 @@ char * main_menu(void)
 	qh.fx = main_menu_quit_handler;
 	eventPushQuitHandler(&qh);
 
-
  start_main_menu:
         n_items = 0;
+        cmdwin_clear();
 
         /* check for a previously saved game to Journey Onward */
         if (file_exists_in_save_dir(save_game_fname)) {
@@ -337,6 +338,9 @@ char * main_menu(void)
                 menu[n_items] = TUTORIAL;
                 n_items++;
         }
+
+        menu[n_items] = SETTINGS;
+        n_items++;
 
         menu[n_items] = CREDITS;
         n_items++;
@@ -370,6 +374,10 @@ char * main_menu(void)
                 if (!load_fname)
                         goto start_main_menu;
         }
+        else if (! strcmp(selection, SETTINGS)) {
+                options_menu();
+                goto start_main_menu;
+        }
         else if (! strcmp(selection, CREDITS)) {
                 show_credits();
                 goto start_main_menu;
@@ -397,4 +405,267 @@ int menu_init(void)
 {
         node_init(&menu_saved_games);
         return 0;
+}
+
+/*****************************************************************************
+ * Options Menu
+ */
+#include "cmd.h" /* for yesnokey() */
+#include "sound.h" 
+
+#define OPTION_MAXNAMESTRLEN 16
+#define OPTION_MAXVALSTRLEN  16
+#define OPTION_MAXMENUSTRLEN (OPTION_MAXNAMESTRLEN + OPTION_MAXVALSTRLEN + 4)
+
+enum {
+        OPTION_SCREEN_DIMS = 0,
+        OPTION_SOUND_ENABLE,
+        OPTION_NUMOPTIONS /* keep last */
+};
+
+struct option {
+        char name[OPTION_MAXNAMESTRLEN];
+        char *comment;
+        char *key;
+        char *val;
+        char *entry_val;
+        char *startup_val;
+        void (*handler)(struct option *);
+        char restart : 1;
+        char changed : 1;
+};
+
+static void option_screen_dims(struct option *opt);
+static void option_sound(struct option *opt);
+
+static struct option options[OPTION_NUMOPTIONS] = {
+        { "Screen Size", 
+          "Set the dimensions of the game screen.",
+          "screen-dims", 0, 0, 0,
+          option_screen_dims,
+          0, 
+          0
+        },
+        { "Sound", 
+          "Turn sound on or off.",
+          "sound-enabled", 0, 0, 0,
+          option_sound,
+          0,
+          0
+        }
+};
+
+/* option_screen_dims -- let player select desired screen size from a list */
+static void option_screen_dims(struct option *opt)
+{
+#       define ADD_SCREEN_DIM(dim,mapw) (dim),
+        char *menu[] = {
+#               include "screen_dims.h"
+        };
+        struct KeyHandler kh;
+	struct ScrollerContext data;
+        
+        log_msg("Choose your screen size");
+        cmdwin_clear();
+        cmdwin_spush("Screen size");
+        cmdwin_spush("<select>");
+
+        statusSetStringList(array_sz(menu), menu);
+        statusSetMode(StringList);
+        data.selection = NULL;
+        data.selector  = String;
+        kh.fx   = scroller;
+        kh.data = &data;
+        eventPushKeyHandler(&kh);
+        eventHandle();
+        eventPopKeyHandler();
+
+        if (!data.selection) {
+                return;
+        }
+
+        if (! strcmp((char*)data.selection, opt->startup_val)) {
+                opt->restart = 0;
+        } else {
+                opt->restart = 1;
+        }
+
+        opt->val = (char*)data.selection;
+}
+
+/* option_sound -- prompt player to enable or disable sound */
+static void option_sound(struct option *opt)
+{
+        if (!strcmp(opt->val, "yes")) {
+                opt->val = "no";
+                sound_off();
+                opt->restart = 0;
+        } else {
+                opt->val = "yes";
+                sound_on();
+                if (strcmp(opt->startup_val, "yes")) {
+                        opt->restart = 1;
+                } else {
+                        opt->restart = 0;
+                }
+        }
+}
+
+static int options_save(void)
+{
+        int i;
+        char *fname = cfg_get("options-script-filename");
+        FILE *file = file_open_in_save_dir(fname, "w");
+        if (!file) {
+                warn("Could not open '%s': %s", fname, strerror(errno));
+                return -1;
+        }
+
+        fprintf(file, 
+                ";; %s -- This file contains user-specified options that override the\n"
+                ";; game defaults.\n"
+                "(kern-cfg-set \n\n",
+                fname);
+
+        for (i = 0; i < OPTION_NUMOPTIONS; i++) {
+                fprintf(file, ";; %s\n \"%s\" \"%s\"\n\n",
+                        options[i].comment,
+                        options[i].key,
+                        options[i].val);
+        }
+
+        fprintf(file, ")\n");
+        fclose(file);
+
+        return 0;
+}        
+
+/* options_menu -- show the user-configurable options. Upon exit prompt to save
+ * the current settings to the options file. */
+void options_menu(void)
+{
+        int i;
+        int yesno;
+        int any_changed = 0;
+        int any_restart = 0;
+        char menu_strings[OPTION_NUMOPTIONS][OPTION_MAXMENUSTRLEN] = {};
+        char *menu[OPTION_NUMOPTIONS];
+        struct KeyHandler kh;
+	struct ScrollerContext data;
+
+        /* Get current values and build the menu list. */
+        for (i = 0; i < OPTION_NUMOPTIONS; i++) {
+
+                /* Make a copy of the original value on startup. */
+                if (! options[i].startup_val) {
+                        options[i].startup_val = strdup(cfg_get(options[i].key));
+                }
+
+                /* Make a copy of the values on entry. */
+                options[i].entry_val = strdup(cfg_get(options[i].key));
+
+                /* Clear the flags on entry */
+                options[i].changed = 0;
+
+                /* Init the current val. */
+                options[i].val = cfg_get(options[i].key);
+
+                /* Build the menu entry. */
+                snprintf(menu_strings[i], OPTION_MAXMENUSTRLEN,
+                         "%s [%s] %s",
+                         options[i].name,
+                         options[i].val,
+                         options[i].restart ? "(restart)" : ""
+                        );
+
+                /* Add it to the menu list. */
+                menu[i] = menu_strings[i];
+        }
+
+        /* Menu loop */
+        for (;;) {
+
+                /* Setup status browser (do this every time through the loop,
+                 * as the handler functions might change things) */
+                cmdwin_clear();
+                cmdwin_spush("Settings");
+                cmdwin_push("<select/ESC>");
+                statusSetStringList(OPTION_NUMOPTIONS, (char**)menu);
+                statusSetMode(StringList);
+                data.selection = NULL;
+                data.selector  = String;
+                kh.fx   = scroller;
+                kh.data = &data;
+                eventPushKeyHandler(&kh);
+                eventHandle();
+                eventPopKeyHandler();
+
+                /* Player ESC */
+                if (! data.selection) {
+                        break;
+                }
+
+                /* Handle the option */
+                for (i = 0; i < OPTION_NUMOPTIONS; i++) {
+
+                        if (strcmp((char*)data.selection, menu[i])) {
+                                continue;
+                        }
+                        
+                        /* Invoke the option handler. */
+                        options[i].handler(&options[i]);
+
+                        /* Update the menu string. */
+                        options[i].changed = strcmp(options[i].entry_val, 
+                                                    options[i].val);
+                        snprintf(menu_strings[i], OPTION_MAXMENUSTRLEN,
+                                 "%s [%s] %c %s",
+                                 options[i].name,
+                                 options[i].val,
+                                 options[i].changed ? '*' : ' ',
+                                 options[i].restart ? "(restart)" : ""
+                                );
+
+                        break;
+                }
+        }
+
+        cmdwin_clear();
+
+        /* If none of the options changed from their entry values then return
+         * without bothering the player. */
+        for (i = 0; i < OPTION_NUMOPTIONS; i++) {
+                any_changed |= options[i].changed;
+                any_restart |= options[i].restart;
+        }
+        if (! any_changed) {
+                return;
+        }
+
+        /* Prompt to save */
+        log_msg("Save settings?");
+        cmdwin_spush("Save");
+        cmdwin_push("<y/n>");
+        getkey(&yesno, yesnokey);
+        cmdwin_pop();
+
+        if (yesno == 'y') {
+                /* Set everything and save to the options file. */
+                for (i = 0; i < OPTION_NUMOPTIONS; i++) {
+                        cfg_set(options[i].key, options[i].val);
+                }
+                if (options_save()) {
+                        log_msg("Error while saving!");
+                } else {
+                        log_msg("Settings saved!");
+                        if (any_restart) {
+                                log_msg("NOTE: some of your changes won't "
+                                        "take effect until you Quit and "
+                                        "restart the program. Sorry for the "
+                                        "inconvenience.");
+                        }
+                }
+        } else {
+                log_msg("Settings unchanged.");
+        }        
 }

@@ -55,11 +55,6 @@
 #include <SDL_thread.h>
 #include <unistd.h>
 
-// gmcnutt: by default I'd like it on :). For one thing, printing all those
-// "Playing sound %s" messages to the console breaks all the regression tests
-// :).
-static bool useSound = true;	// SAM: Sound drivers on my dev laptop are
-
 /* Name of the file to load the game from. */
 static char *nazghul_load_fname = 0;
 
@@ -120,7 +115,8 @@ static void parse_args(int argc, char **argv)
 			AnimationTicks = atoi(optarg);
 			break;
 		case 's':
-			useSound = atoi(optarg) != 0;
+                        cfg_set("sound-enabled", 
+                                atoi(optarg) != 0 ? "yes" : "no");
 			break;
 		case 'T':
 			ShowAllTerrain = 1;
@@ -220,8 +216,10 @@ static void nazghul_init_internal_libs(void)
 
         log_init();
 
-	if (useSound)
-		sound_init();
+        if (!strcmp("yes", cfg_get("sound-enabled"))) {
+                sound_init();
+        }
+
 }
 
 /* nazghul_splash -- show the splash image */
@@ -265,6 +263,7 @@ static void init_default_cfg()
         cfg_set("options-script-filename", "options.scm");
         cfg_set("splash-image-filename", "splash.png");
         cfg_set("screen-dims", "1280x960" /*"640x480"*/);
+        cfg_set("sound-enabled", "yes");
 }
 
 int main(int argc, char **argv)

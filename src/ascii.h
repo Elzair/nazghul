@@ -32,11 +32,15 @@ extern int asciiInit(void);
 
 /* asciiPaint -- in the usual case this prints the character to the surface
  * using the current font and color. In the general case, 'c' may be part of a
- * control sequence. Currently the only supported control sequence is to change
- * the current color, where the format is:
+ * control sequence, where the format is:
  *
- *       <SEQ> := ^c<COLOR>
+ *       <SEQ> := ^c<CMD><COLOR>
  *     <COLOR> := B|w|r|g|b|c|y|m|G|!
+ *       <CMD> := +|-|<NIL>
+ *       <NIL> :=
+ *
+ * The '+' CMD pushes the current color before setting the new color. The '-'
+ * CMD pops the last pushed color and makes it the new color.
  */
 extern int asciiPaint(char c, int x, int y, SDL_Surface * surface);
 
