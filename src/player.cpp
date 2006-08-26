@@ -255,6 +255,12 @@ bool player_party::turn_vehicle(void)
            (e) != &members; \
            (e) = (e)->next, (c) = (class Character *)(e)->ptr)
 
+#define FOR_EACH_REVERSE_MEMBER(e,c) \
+      for ((e) = members.prev, (c) = (class Character *)(e)->ptr; \
+           (e) != &members; \
+           (e) = (e)->prev, (c) = (class Character *)(e)->ptr)
+
+
 void player_party::distributeMembers(struct place *new_place, int new_x, 
                                      int new_y, int new_dx, int new_dy)
 {
@@ -295,7 +301,7 @@ void player_party::distributeMembers(struct place *new_place, int new_x,
         struct node *entry;
         class Character *member;
 
-        FOR_EACH_MEMBER(entry, member) {
+        FOR_EACH_REVERSE_MEMBER(entry, member) {
                 if (!member->isDead()) {
 
                         int flags = 0;

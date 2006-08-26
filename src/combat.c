@@ -1422,7 +1422,7 @@ static bool position_player_party(struct combat_info *cinfo)
         }
 
         player_party->remove();
-        player_party->forEachMember(combat_place_character, &player_party->pinfo);
+        player_party->forEachReverseMember(combat_place_character, &player_party->pinfo);
         return true;
 }
 

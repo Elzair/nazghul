@@ -407,6 +407,25 @@ void Party::forEachMember(bool (*fx) (class Character *, void *), void *data)
 	}
 }
 
+
+void Party::forEachReverseMember(bool (*fx) (class Character *, void *), void *data)
+{
+	struct node *elem;
+
+	elem = members.prev;
+	while (elem != &members) {
+		class Character *c;
+
+		c = (class Character *)elem->ptr;
+                elem = elem->prev;
+
+		if (fx(c, data))
+			return;
+	}
+}
+
+
+
 static bool party_destroy_and_remove_member(class Character * c, void *data)
 {
 	class Party *party = (class Party *) data;

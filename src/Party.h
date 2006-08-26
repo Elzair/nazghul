@@ -59,6 +59,8 @@ class Party:public Being {
         virtual bool removeEffect(struct effect *effect);
 	virtual void forEachMember(bool (*fx) (class Character *, void *), 
                                    void *);
+	virtual void forEachReverseMember(bool (*fx) (class Character *, void *), 
+                                   void *);
 	virtual MoveResult move(int dx, int dy);
 	virtual void paint(int sx, int sy);
 	virtual void removeMember(class Character *);
