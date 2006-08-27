@@ -175,6 +175,11 @@
 (define base-scroll-cost 25) ;; gold pieces per level of scroll's spell
 (define reagent-price-mult 1) ;; global reagent price multiplier
 
+;; rather than trying to calculate appropriate hp/mp for
+;; characters, stick in a big number and let Character::new
+;; trim it as needed
+(define max-health 999999999)
+
 ;; Some of the following are order-dependent
 (load "loc.scm")
 (load "kobj.scm")

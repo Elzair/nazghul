@@ -36,11 +36,6 @@
  minutes ; minutes
  )
 
-;; rather than trying to calculate appropriate hp/mp for
-;; characters, stick in a big number and let Character::new
-;; trim it as needed
-(define max-health 999999999)
-
 ;; NPC's who inhabit multiple places
 (kern-load "gregor.scm")
 (kern-load "kalcifax.scm")
@@ -295,9 +290,7 @@
   )
 
 (define (simple-start kplayer)
-  (kern-obj-put-at kplayer (list p_moongate_clearing 11 11)
-                   ))
-  ;;(kern-obj-put-at kplayer (list p_moongate_clearing 11 11)))
+  (kern-obj-put-at kplayer (list p_moongate_clearing 11 11)))
   
 (define (create-char kplayer)
   (kern-obj-put-at kplayer (list p_char_setup 9 17)
