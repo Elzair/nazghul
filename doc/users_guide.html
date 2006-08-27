@@ -1,0 +1,1446 @@
+<html>
+<head>
+<title>Nazghul Users Guide</title>
+<style>
+	.example
+	{
+		color:#333;
+		background-color:#eee;
+		padding-left:60px;
+	}
+	.key, .ph
+	{
+		background-color:#ddd;
+		font-family: monospace;
+		padding-left:2px;
+		padding-right:2px;
+	}
+	.hk
+	{
+		background-color:#ddd;
+		font-weight:bold;
+		color:#114;
+	}
+	table
+	{
+		border:1px outset grey
+	}
+	td
+	{
+		padding:5px;3px;
+		border:1px inset grey;
+	}
+	tr.header td
+	{
+		border:1px outset grey;
+		font-weight:bold;
+	}
+	td.break
+	{
+		border:1px outset grey;
+		height:3px;
+		background color:#999;
+	}
+</style>
+</head>
+<body>
+<h1>
+	USERS GUIDE TO NAZGHUL
+</h1>
+<p>
+Nazghul is an old-school RPG clone modeled after those made in the heyday of
+top-down, 2d tile-based graphics. It is specifically modeled after Ultima V, so
+if you've played that game then this should be familiar.
+</p>
+
+<h2>
+	INSTALLING THE GAME
+</h2>
+
+<p>
+If you downloaded a source distribution see the top-level INSTALL file.
+</p>
+<p>
+If you downloaded a windows binary just unzip the distribution using Winzip or
+similar.
+</p>
+
+
+<h2>
+	STARTING THE GAME
+</h2>
+
+<p>
+On Linux/UNIX:
+</p>
+<p class="example">
+	$ haxima.sh
+</p>
+<p>
+On Windows:
+</p>
+<p class="example">
+	Use the start menu or desktop icon
+</p>
+<p>
+You can play the Tutorial first or jump right in with Start New Game.
+</p>
+
+<h2>
+	SAVING THE GAME
+</h2>
+<p>
+You can save your game at any time while playing by using the CTRL-S key
+sequence for the S)ave command. An unlimited number of saved games is
+permitted. When you restart, use the Journey Onward option from the main menu
+to select a saved game to continue.
+</p>
+<p>
+If you die, the game will exit, and when you restart it will pick up where you
+last saved via the Journey Onward option.
+</p>
+
+<h2>
+	EXITING THE GAME
+</h2>
+<p>
+You can quit at any time by pressing Q for the Q)uit commmand. It will prompt
+you to save if you like and then exit.
+</p>
+
+<h2>
+	ORIENTATION
+</h2>
+<p>
+If you are unfamiliar with U5 I recommend the Tutorial option available from the
+Main Menu when you start the game. Here are some more notes to help you get
+started.
+</p>
+
+<h3>
+	Exploring
+</h3>
+<p>
+When you start you will have a party consisting of one character known
+initially as The Wanderer. The icon for this character will be in the center of
+the map view on the left. Explore around a bit using the arrow keys to
+move. Below the map you'll see a little window with a prompt. This gives you
+hints when you're entering commands to tell you what type of input the command
+wants. For example, if you type 'x' (for e[x]amine) the command prompt will
+say:
+</p>
+<p class="example">
+    Xamine-<target>(ESC to exit)
+</p>
+<p>
+Which means it wants you to hit the arrow keys and move the targeting
+cursor. When you hit 'ESC' instead the command will cancel. Pretty much all
+commands can be canceled by hitting 'ESC'.
+</p>
+<p>
+To get a detailed explanation of where you are and what time it is, use the AT
+command by pressing '@'. There is no clock in the game, so this is the only way
+to tell time other than guesstimating from the position of the sun.
+</p>
+
+<h3>
+	Talking
+</h3>
+<p>
+You'll see your first NPC to the south. To talk to the NPC press 't' for
+T)alk. This brings up a targeting crosshair. It might start out on the NPC or
+on your character, it it's on you then move it to the NPC with the arrow keys
+and hit enter. 
+</p>
+<p>
+That starts a conversation. During conversation you enter a keyword and the NPC
+will respond. For example, type NAME or JOB and see what this NPC says. When
+you are done talking type 'bye' or hit enter by itself.
+</p>
+
+<h3>
+	Getting Stuff
+</h3>
+<p>
+Eventually you will want to follow the road down to the chamber on the lower
+left. The chamber is marked by mysterious runes on its walls. Within the
+chamber is a chest.
+</p>
+<p>
+Walk over next to the chest and O)pen it by hitting 'o' and using your arrow
+keys to indicate a direction. The chest will open and deposit a bunch of stuff
+on the ground.
+</p>
+<p>
+G)et the stuff using the 'g' key. Among the items will be some basic weapons,
+armour and spell reagents as well as some scrolls and potions.
+</p>
+
+<h3>
+	Equipping
+</h3>
+<p>
+To see your stuff hit 'z' for Z)tats and scroll around. The left and right
+arrow keys will switch between different status panes. Hit ESC when you tire of
+admiring yourself and your loot.
+</p>
+<p>
+To R)eady the weapons and armor hit 'r' then select them. Hit ESC when done.
+</p>
+
+<h3>
+	Mixing A Spell
+</h3>
+<p>
+To M)ix a heal spell type 'm' for mix. Next enter the spell name, in this case
+'m' again for "Mani", and hit ENTER. Next, select Ginseng and Spider Silk from
+the reagents list, and hit 'm' to mix them. Finally, you can mix batches of a
+given spells at once, so you will need to input the quantity of "Mani" spells
+you wish to produce. Enter '1' here, and you will have made a "Mani" spell, a
+spell of minor healing. More on spells later. 
+</p>
+<h3>
+	Entering and Exiting Towns
+</h3>
+<p>
+When you are ready to face the world walk to the edge of the map and bravely
+step off. You will zoom out to Wilderness Mode, and your entire party (all one
+of you) will appear as an icon in the center. To re-enter take a step south (at
+which point you will see a shrine icon where you just were) and step north
+again. Now you know how to enter and exit towns. Congrats.
+</p>
+<p>
+When you enter a town, unless you have some enemies there, you will start out
+in "follow mode", which means you control the party leader and everybody else
+in the party tries to keep up. But if hostiles are in town you will be in
+"character mode", which means you control each party member in turn. To switch
+between these two mode use the 'f' key. This will make more sense when you add
+more characters to your party.
+</p>
+<p>
+IMPORTANT: when you eventually get somebody to join you, don't forget about
+           Follow Mode (the 'f' key). It's much easier to have everybody follow
+           your main dude around than to always individually control them.
+</p>
+
+<h2>
+	USER INTERFACE
+</h2>
+<h3>
+Astronomy Window
+</h3>
+<p>
+    Above the map you'll see a little window embedded in the frame which shows
+    the position of the sun and two moons. It also shows the phase of the
+    moons, which is important for moongate travel.
+</p>
+<h3>
+Wind
+</h3>
+<p>
+    Below the map, embedded in the frame, is the wind direction
+    indicator. Currently the wind only affects ships. Tacking across the wind
+    provides the best rate of travel, the wind at your back is second best, and
+    heading into the wind is the worst. Note that this indicates the direction
+    the wind is blowing _FROM_.
+</p>
+<h3>
+Command Prompt
+</h3>
+<p>
+    Unlike u4/u5/u6 the command prompt has its own window, just below the wind
+    indicator. Interactive command prompts appear here, as well as the things
+    the player says in conversation.
+</p>
+<h3>
+Status Window
+</h3>
+<p>
+    In the top right you have a general-purpose window for viewing and
+    selecting lists of things. Normally it shows some basic party stats, but
+    its contents change as required by user commands. For example, (R)eady will
+    turn it into a selection list.
+</p>
+<p>
+    Normally the window lists all the player's party members and shows their
+    current hit points and status. The status is reflected in one or more
+    little icons. For example, if a character is poisoned you'll see a little
+    green skull-and-crossbones. You can get a better description of the status
+    by using the Z)tatus command to inspect individual party members.
+</p>
+<h3>
+Foogod Window
+</h3>
+<p>
+    It sounds sacreligious, but that's just my acronym for Food/Gold
+    Window. This little window appears below the status window and shows the
+    turn, food and gold counters as well as the current combat status and any
+    pending Effects. The effects will be printed in cryptic little codes like
+    "N" for magic negated. If you board a vehicle it will also show you the hit
+    points for the vehicle. Here are some of the codes and what they mean:
+</p>
+<dl>
+<dt>N</dt>
+	<dd>Magic negated (spellcasting fails)</dd>
+<dt>Q</dt>
+	<dd>Quicken (player party members get extra turns per round)</dd>
+<dt>T</dt>
+	<dd>Time Stopped</dd>
+</dl>
+<h3>
+Console Window
+</h3>
+<p>
+    Finally on the right hand side you'll find the window where all the game
+    messages get logged.
+</p>
+
+<h2>
+	PLAYER COMMANDS
+</h2>
+<p>
+Here's your chance to let the sweat dry on your mouse - all commands are via
+the keyboard. As it should be, forever and ever amen.
+</p>
+<p>
+Addendum: For the sake of convenience to mousephiles, targeting prompts will
+accept input from the mouse. But the shortcut keys are faster.
+</p>
+
+<h3>
+General syntax:
+</h3>
+<dl>
+<dt><span class="key">dir</span></dt>
+	<dd>one of the four arrow keys</dd>
+<dt><span class="ph">member</span></dt>
+	<dd>a party member, selected from a list by scrolling with the arrow
+    keys and pressing <span class="key">enter</span> or <span class="key">space</span></dd>
+<dt><span class="ph">item</span></dt>
+	<dd>an inventory item, selected from a list</dd>
+<dt><span class="ph">spell</span></dt>
+	<dd>a spell, selected from a list</dd>
+<dt><span class="key">space</span></dt>
+	<dd>spacebar</dd>
+<dt><span class="ph">target</span></dt>
+	<dd>a combat target, selected by moving the crosshairs and pressing
+	<span class="key">enter</span> or <span class="key">space</span> (or using the mouse and left-clicking)</dd>
+<dt><span class="ph">*</span></dt>
+	<dd>varies depending on context</dd>
+</dl>
+
+<h3>
+General commands:
+</h3>
+<dl>
+<dt><span class="key">dir</span></dt>
+	<dd>Move in that direction</dd>
+<dt>A)ttack-<span class="key">dir</span></dt>
+	<dd>Initiate combat</dd>
+<dt>B)oard</dt>
+	<dd>Board/exit a vehicle like a ship or horse</dd>
+<dt>C)ast-<span class="ph">member</span>-<span class="ph">spell</span>-<span class="ph">*</span></dt>
+	<dd>Cast a spell (the last argument depends on the spell)</dd>
+<dt>E)nter</dt>
+	<dd>Enter a portal, including up or down ladders</dd>
+<dt>F)ire-<span class="key">dir</span></dt>
+	<dd>Fire vehicle's weapon (e.g., ship cannon)</dd>
+<dt>G)et-<span class="key">dir</span></dt>
+	<dd>Get an object from the ground</dd>
+<dt>H)andle-<span class="ph">member</span>-<target></dt>
+	<dd>Activate a switch or lever</dd>
+<dt>L)oiter-<span class="ph">0-9/sunrise</span></dt>
+	<dd>Loiter a few hours</dd>
+<dt>N)ew-order-<span class="ph">member</span>-<span class="ph">member</span></dt>
+	<dd>Swap order of two party members</dd>
+<dt>O)pen-<span class="key">dir</span></dt>
+	<dd>Open a container or door</dd>
+<dt>Q)uit</dt>
+	<dd>Quit &amp; optionally save the game</dd>
+<dt>R)eady-<span class="ph">member</span>-<span class="ph">item</span></dt>
+	<dd>Ready an armament like a weapon, shield, etc.</dd>
+<dt>S)earch-<span class="key">dir</span></dt>
+	<dd>Look carefully</dd>
+<dt>T)alk-<span class="ph">target</span></dt>
+	<dd>Talk to an NPC</dd>
+<dt>U)se-<span class="ph">member</span>-<span class="ph">item</span></dt>
+	<dd>Use an item like a torch or potion</dd>
+<dt>X)amine-<span class="ph">target</span></dt>
+	<dd>Examine map files within view</dd>
+<dt>Z)tats</dt>
+	<dd>Show party stats like inventory, armaments, etc</dd>
+<dt>@)AT</dt>
+	<dd>Information about where the party is AT, etc</dd>
+<dt><span class="key">space</span></dt>
+	<dd>Pass one turn</dd>
+<dt>CTRL-S)ave</dt>
+	<dd>Save a game</dd>
+<dt>CTRL-R)eload</dt>
+	<dd>Reload a game</dd>
+</dl>
+
+<h3>
+Wilderness-only commands:
+</h3>
+<dl>
+<dt>K)amp-<span class="ph">0-9/sunrise</span>-<span class="ph">y/n</span>-<span class="ph">player</span></dt>
+	<dd>Camp in the wilderness (to heal and recover mana) or aboard ship
+	(to repair hull damage as well)</dd>
+</dl>
+
+<h3>
+Town/Dungeon/Combat-only commands:
+</h3>
+<dl>
+<dt>A)ttack-<span class="ph">target</span></dt>
+	<dd>Attack the specified target</dd>
+<dt>F)ollow</dt>
+	<dd>Select follow mode, where the party members 
+	automatically follow the party leader.</dd>
+<dt>[1-9]</dt>
+	<dd>Select a party member for solo mode.</dd>
+<dt>[0]</dt>
+	<dd>Select turn-based party mode, where each party 
+	member takes directions one at a time.</dd>
+<dt>K)amp-<span class="ph">0-9/sunrise</span></dt>
+	<dd>Sleep on a bed.</dd> 
+</dl>
+
+<h3>
+Special commands:
+</h3>
+<dl>
+<dt><span class="key">ESC</span></dt>
+	<dd>Aborts most commands</dd>
+</dl>
+
+<h3>
+Shortcuts:
+</h3>
+<dl>
+<dt><span class="key">+/=</span></dt>
+	<dd>When targeting an attack, moves cursor to next
+	hostile npc.</dd>
+<dt><span class="key">-</span></dt>
+	<dd>When targeting an attack, moves cursor to previous
+	hostile npc.</dd>
+<dt><span class="key">ESC</span></dt>
+	<dd>When wilderness combat is over, exits to
+	wilderness map.</dd>
+</dl>
+
+<h3>
+Editing commands:
+</h3>
+<dl>
+<dt>CTRL-T)erraform</dt>
+	<dd>Alter terrain. This deserves its own section.<sup><a class="footnote" href="#f1">1</a></sup></dd>
+<dt>CTRL-Z)oom</dt>
+	<dd>Zoom in or out (like peering at a gem but free)</dd>
+
+<h2>
+	MOVEMENT MODES
+</h2>
+<h3>
+Party Mode (wilderness)
+</h3>
+<p>
+    The party appears as a single icon in the center of the screen.
+</p>
+
+<h3>
+Follow Mode (town/combat/dungeons)
+</h3>
+<p>
+    You control the party leader and the other members follow the
+    leader. Attacking a target will automatically switch to Round-Robin
+    Mode. The party leader is always the top person in the list who is alive
+    and still on the current map. Enter follow mode from Solo or Round Robin
+    Mode by pressing 'f'.
+</p>
+
+<h3>
+Solo Mode (town/combat/dungeons)
+</h3>
+<P>
+    You control one party member while the others stand around looking
+    bored. Enter Solo Mode by pressing the number key associated with the
+    party member's order in the list. 1 is the first member in the list.
+</p>
+<p>
+    NOTE: Solo mode can be very useful if one of your party members has greater
+          passability then the others. For example, if a gazer joins your party
+          he can float over water. Now imagine the possibilities if you get a
+          ghost to join your party.
+</p>
+
+<h3>
+Round Robin Mode (town/combat/dungeons)
+</h3>
+<p>
+    You control each member in turn. This is the default mode when you enter
+    combat. To enter Round Robin Mode from solo mode, press 0. To enter from
+    Follow Mode press 'f'. Yes, confusing to have two methods. I'll fix it
+    someday. Let me know if you have an opinion.
+</p>
+
+<h2>
+	PLACES
+</h2>
+
+<h3>
+Wilderness:
+</h3>
+<p>
+    In the outdoor or wilderness map the party moves as a single unit. You can
+    enter into combat with enemy NPC parties by moving into them or waiting for
+    them to attack you. Likewise you can enter towns, dungeons or moongates by
+    simply walking into them.
+</p>
+
+<h3>
+Wilderness Combat:
+</h3>
+<p>
+    This is a special temporary combat map that pops up when you engage an
+    enemy NPC party in the wilderness. In this mode you control individual
+    party members. You return to the wilderness map by having all of your
+    living party members walk off the edge of the map. (Hint: if combat is over
+    you can press <ESC> to quickly leave the map).
+</p>
+
+<h3>
+Towns/Dungeons:
+</h3>
+<p>
+    In towns and dungeons you move just like in combat mode. You can control
+    the individual party members in turn, have one of them scout around in solo
+    mode, or control the leader and have the other party members follow.
+</p>
+
+<h2>
+COMBAT
+</h2>
+<p>
+What can I say? It's pretty much like u5. Try the flaming oil at night or in an
+underground place. Oh, and watch out for gazers. They can charm you. Kill them
+or charm them right away.
+</p>
+
+<h2>
+ADVANCEMENT
+</h2>
+<p>
+As usual, characters advance a level when they gain sufficient experience
+points. There is no maximum level limit. When a character advances his maximum
+HP and MP increase, depending on his class, species and personal bonuses. At
+the moment of advancment he is fully healed and mana is restored to their new
+maximum levels.
+</p>
+
+<h3>
+XP Required for Advancement
+</h3>
+<table>
+<tr class="header">
+	<td>
+		Level
+	</td><td>
+		XP
+	</td>
+</tr><tr>
+	<td>
+		1
+	</td><td>
+		0
+	</td>
+</tr><tr>
+	<td>
+		2
+	</td><td>
+		32
+	</td>
+</tr><tr>
+	<td>
+		3
+	</td><td>
+		64
+	</td>
+</tr><tr>
+	<td>      
+		4
+	</td><td>
+		128 
+	</td>
+</tr><tr>
+	<td>    
+		5
+	</td><td>
+		256
+	</td>
+</tr><tr>
+	<td>     
+		6
+	</td><td>
+		512
+	</td>
+</tr><tr>
+	<td>     
+		n
+	</td><td>
+		2^(n+5)
+	</td>
+</tr>
+</table>
+
+<h2>
+	Attributes
+</h2>
+<p>
+Characters have three basic attributes: Strength, Dexterity and
+Intelligence. These are fixed when the character is created and don't change
+during the game.
+</p>
+
+<h3>
+Strength
+</h3>
+<p>
+    Strength limits the total weight of readied weapons and armour. Strong
+	characters do more damage and are better at hitting with heavy or
+	bludgeoning weapons. It is also used when breaking free of spider webs
+	(most trolls don't stay ensnared too long...).
+</p>
+<h3>
+Dexterity
+</h3>
+<p>
+    Dexterity is used when attacking with missile and balanced weaponry, and
+	helps when avoiding your opponents blows. It is also needed when
+	picking locks and disarming trapped chests.
+</p>
+<h3>
+Intelligence
+</h3>
+<P>
+    Intelligence makes spells more potent and more likely to succeed.
+</p>
+
+<h2>
+MAGIC
+</h2>
+<p>
+The example game contains a full complement of spells. The magic system is
+similar to Ultima 5 and Ultima 6: you select a spell by entering magic
+syllables. A spell name is a combination of one to four syllables.
+</p>
+<p>
+The syllables, spell names and reagent mixtures provided in the example game
+are a direct ripoff of Ultima 5. If you don't have a u5 reference manual laying
+around then the tables below will help:
+</p>
+
+<h3>
+Table 1: Reagents
+</h3>
+<table>
+<tr class="header">
+	<td>
+		Name
+	</td><td>
+		Abbrev used in spell table
+	</td>
+</tr><tr>
+	<td>
+		Black Pearl
+	</td><td>
+		BP
+	</td>
+</tr><tr>
+	<td>
+		Blood Moss
+	</td><td>
+		BM
+	</td>
+</tr><tr>
+	<td>
+		Garlic
+	</td><td>
+		GA
+	</td>
+</tr><tr>
+	<td>
+		Ginseng
+	</td><td>
+		GI
+	</td>
+</tr><tr>
+	<td>
+		Mandrake Root
+	</td><td>
+		MR
+	</td>
+</tr><tr>
+	<td>
+		Nightshade
+	</td><td>
+		NI
+	</td>
+</tr><tr>
+	<td>
+		Spider Silk
+	</td><td>
+		SS
+	</td>
+</tr><tr>
+	<td>
+		Sulphurous Ash
+	</td><td>
+		SA
+	</td>
+</tr>
+</table>
+
+<h3>
+	Table 2: Spells
+</h3>
+<table>
+<tr class="header">
+	<td>
+		Syllables
+	</td><td>
+		Effects
+	</td><td>
+		Reagents
+	</td><td>
+		Party/Combat
+	</td>
+</tr><tr>
+	<td>
+		An Nox
+	</td><td>
+		Cure Poison
+	</td><td>
+		GI, GA
+	</td><td>
+		PC
+	</td>
+</tr><tr>
+	<td>
+		An Zu
+	</td><td>
+		Awaken
+	</td><td>
+		GI, GA
+	</td><td>
+		PC
+	</td>
+</tr><tr>
+	<td>
+		Grav Por
+	</td><td>
+		Magic Missile
+	</td><td>
+		SA, BP
+	</td><td>
+		C
+	</td>
+</tr><tr>
+	<td>
+		In Lor
+	</td><td>
+		Light
+	</td><td>
+		SA
+	</td><td>
+		PC
+	</td>
+</tr><tr>
+	<td>
+		Mani
+	</td><td>
+		Heal
+	</td><td>
+		GI, SS
+	</td><td>
+		PC
+	</td>
+</tr><tr>
+	<td>
+		Wis Sanct
+	</td><td>
+		Detect Trap
+	</td><td>
+		SA
+	</td><td>
+		PC
+	</td>
+</tr><tr>
+	<td>
+		An Sanct Ylem
+	</td><td>
+		Disarm Trap
+	</td><td>
+		BM
+	</td><td>
+		PC
+	</td>
+</tr><tr>
+	<td colspan="12" style="break"><span></span>
+	</td>
+</tr><tr>
+	<td>
+		An Sanct
+	</td><td>
+		Unlock
+	</td><td>
+		SA, BM
+	</td><td>
+		PC
+	</td>
+</tr><tr>
+	<td>
+		An Xen Corp
+	</td><td>
+		Repel Undead
+	</td><td>
+		GA, SA
+	</td><td>
+		C
+	</td>
+</tr><tr>
+	<td>
+		In Wis
+	</td><td>
+		Locate
+	</td><td>
+		NI
+	</td><td>
+		P
+	</td>
+</tr><tr>
+	<td>
+		Kal Xen
+	</td><td>
+		Summon Snakes
+	</td><td>
+		SS, MA
+	</td><td>
+		C
+	</td>
+</tr><tr>
+	<td>
+		Rel Hur
+	</td><td>
+		Change Wind
+	</td><td>
+		SA, BM
+	</td><td>
+		P
+	</td>
+</tr><tr>
+	<td>
+		In Nox Por
+	</td><td>
+		Poison Missile
+	</td><td>
+		NI, BM, BP
+	</td><td>
+		C
+	</td>
+</tr><tr>
+	<td colspan="12" style="break"><span></span>
+	</td>
+</tr><tr>
+	<td>
+		In Flam Grav
+	</td><td>
+		Fire Field
+	</td><td>
+		SA, BP, SS
+	</td><td>
+		C
+	</td>
+</tr><tr>
+	<td>
+		In Zu Grav
+	</td><td>
+		Sleep Field
+	</td><td>
+		GI, BP, SS
+	</td><td>
+		C
+	</td>
+</tr><tr>
+	<td>
+		In Nox Grav
+	</td><td>
+		Poison Field
+	</td><td>
+		NI, BP, SS
+	</td><td>
+		C
+	</td>
+</tr><tr>
+	<td>
+		Vas Flam
+	</td><td>
+		Fire Ball
+	</td><td>
+		BP, SA
+	</td><td>
+		C
+	</td>
+</tr><tr>
+	<td>
+		Vas Lor
+	</td><td>
+		Great Light
+	</td><td>
+		SA, MA
+	</td><td>
+		PC
+	</td>
+</tr><tr>
+	<td colspan="12" style="break"><span></span>
+	</td>
+</tr><tr>
+	<td>
+		An Grav
+	</td><td>
+		Dispell Field
+	</td><td>
+		BP, SA
+	</td><td>
+		PC
+	</td>
+</tr><tr>
+	<td>
+		In Sanct Grav
+	</td><td>
+		Energy Field
+	</td><td>
+		MA, BP, SS
+	</td><td>
+		C
+	</td>
+</tr><tr>
+	<td>
+		In Sanct
+	</td><td>
+		Protection
+	</td><td>
+		SA, GI, GA
+	</td><td>
+		PC
+	</td>
+</tr><tr>
+	<td>
+		Wis Quas
+	</td><td>
+		Reveal Hidden
+	</td><td>
+		SS, NI
+	</td><td>
+		PC
+	</td>
+</tr><tr>
+	<td>
+		Bet Por
+	</td><td>
+		Blink (Caster)
+	</td><td>
+		BP, BM
+	</td><td>
+		C
+	</td>
+</tr><tr>
+	<td colspan="12" style="break"><span></span>
+	</td>
+</tr><tr>
+	<td>
+		In Ex Por
+	</td><td>
+		Unlock Magic
+	</td><td>
+		SA, BM
+	</td><td>
+		PC
+	</td>
+</tr><tr>
+	<td>
+		An Ex Por
+	</td><td>
+		Magic Lock
+	</td><td>
+		SA, BM, GA
+	</td><td>
+		PC
+	</td>
+</tr><tr>
+	<td>
+		In Bet Xen
+	</td><td>
+		Insect Swarm
+	</td><td>
+		SS, BM, SA
+	</td><td>
+		C
+	</td>
+</tr><tr>
+	<td>
+		In Zu
+	</td><td>
+		Sleep Field
+	</td><td>
+		NI, SS, BP
+	</td><td>
+		C
+	</td>
+</tr><tr>
+	<td>
+		Vas Mani
+	</td><td>
+		Great Heal
+	</td><td>
+		GI, SS, MA
+	</td><td>
+		PC
+	</td>
+</tr><tr>
+	<td>
+		Rel Tym
+	</td><td>
+		Quickness
+	</td><td>
+		SA, BM, MA
+	</td><td>
+		PC
+	</td>
+</tr><tr>
+	<td colspan="12" style="break"><span></span>
+	</td>
+</tr><tr>
+	<td>
+		An Xen Exe
+	</td><td>
+		Charm
+	</td><td>
+		BP, NI, SS
+	</td><td>
+		C
+	</td>
+</tr><tr>
+	<td>
+		In An
+	</td><td>
+		Negate Magic
+	</td><td>
+		GA, MA, SA
+	</td><td>
+		C
+	</td>
+</tr><tr>
+	<td>
+		In Vas Por Ylem
+	</td><td>
+		Earthquake
+	</td><td>
+		BM, MA, SA
+	</td><td>
+		C
+	</td>
+</tr><tr>
+	<td>
+		Quas An Wis
+	</td><td>
+		Confuse
+	</td><td>
+		MA, NI
+	</td><td>
+		C
+	</td>
+</tr><tr>
+	<td>
+		Wis An Ylen
+	</td><td>
+		Xray Vision
+	</td><td>
+		MA, SA
+	</td><td>
+		PC
+	</td>
+</tr><tr>
+	<td>
+		In Rel Por
+	</td><td>
+		Telekinesis
+	</td><td>
+		BP, BM, SS
+	</td><td>
+		C
+	</td>
+</tr><tr>
+	<td>
+		Vas Por
+	</td><td>
+		Blink (Party)
+	</td><td>
+		MA, BP, BM
+	</td><td>
+		P
+	</td>
+</tr><tr>
+	<td colspan="12" style="break"><span></span>
+	</td>
+</tr><tr>
+	<td>
+		In Nox Hur
+	</td><td>
+		Poison Wind
+	</td><td>
+		NI, SA, BM
+	</td><td>
+		C
+	</td>
+</tr><tr>
+	<td>
+		In Quas Corp
+	</td><td>
+		Fear
+	</td><td>
+		NI, MA, GA
+	</td><td>
+		C
+	</td>
+</tr><tr>
+	<td>
+		In Quas Wis
+	</td><td>
+		Peer
+	</td><td>
+		NI, MA
+	</td><td>
+		PC
+	</td>
+</tr><tr>
+	<td>
+		In Quas Xen
+	</td><td>
+		Clone
+	</td><td>
+		NI, MA, SA, SS, BM, GI
+	</td><td>
+		C
+	</td>
+</tr><tr>
+	<td>
+		Sanct Lor
+	</td><td>
+		Invisibility
+	</td><td>
+		NI, MA, BM
+	</td><td>
+		C
+	</td>
+</tr><tr>
+	<td>
+		Xen Corp
+	</td><td>
+		Kill
+	</td><td>
+		NI, BP
+	</td><td>
+		C
+	</td>
+</tr><tr>
+	<td colspan="12" style="break"><span></span>
+	</td>
+</tr><tr>
+	<td>
+		An Tym
+	</td><td>
+		Stop Time
+	</td><td>
+		MA, GA, BM
+	</td><td>
+		WC
+	</td>
+</tr><tr>
+	<td>
+		In Flam Hur
+	</td><td>
+		Flame Wind
+	</td><td>
+		MA, SA, BM
+	</td><td>
+		C
+	</td>
+</tr><tr>
+	<td>
+		In Vas Grav Corp
+	</td><td>
+		Energy Wind
+	</td><td>
+		MA, SA, NI
+	</td><td>
+		C
+	</td>
+</tr><tr>
+	<td>
+		In Mani Corp
+	</td><td>
+		Resurrect
+	</td><td>
+		GA, GI, SS, SA, BM, MA
+	</td><td>
+		PC
+	</td>
+</tr><tr>
+	<td>
+		Kal Xen Corp
+	</td><td>
+		Summon Undead
+	</td><td>
+		SS, MA, NI
+	</td><td>
+		C
+	</td>
+</tr><tr>
+	<td>
+		Vas Rel Por
+	</td><td>
+		Gate Travel
+	</td><td>
+		SA, MA, BP
+	</td><td>
+		P
+	</td>
+</tr>
+</table>
+<p>
+[1] In Towns and Dungeons teleport spells that can move the party from one
+    place to another will fail unless combat is over and the party is in Follow
+    Mode.
+</p>
+
+<h2>
+EFFECTS
+</h2>
+<p>
+From time to time your characters might run into a little trouble with magical
+foes, natural hazards, or their own weakness for alcohol. Don't panic. Most
+effects are non-fatal, but a few are.
+</p>
+<dl>
+<dt>
+Asleep (S)
+</dt>
+<dd>
+    Sleeping party members will eventually wake up of their own accord. If you
+    don't feel like waiting use the An Zu spell.
+</dd>
+<dt>
+Charmed (C)
+</dt>
+<dd>
+    Enemy wizards might charm party members, causing them to fight on their
+    behalf. Charm wears off after 10 minutes.
+</dd>
+<dt>
+Diseased (D)
+</dt>
+<dd>
+    Some monsters may infect party members with disease. Disease is not fatal,
+    but it will not wear off until your party member is nearly out of hit
+    points.
+</dd>
+<dt>
+Drunk (A)
+</dt>
+<dd>
+    Anytime your character buys alcoholic drinks or picks them up from the
+    ground he gets drink. Drunkenness lasts an hour or so and causes him to
+    randomly bump into things.
+</dd>
+<dt>
+Ensnared (E)
+</dt>
+<dd>
+    When stuck in a spider web, a character will break free after struggling
+    for a while. The time required to free himself depends on the characters
+    strength.
+</dd>
+<dt>
+Paralyzed (Z)
+</dt>
+<dd>
+    Spiders inject paralyzing venom to make their foes helpless before feeding
+    on them. Paralysis will wear off after a short random interval.
+</dd>
+<dt>
+Poisoned (P)
+</dt>
+<dd>
+    Bogs or spells may poison party members, causing them to lose hit points
+    every turn until the poison is cured with a spell or potion. Poison is
+    fatal! It won't wear off like disease.
+</dd>
+</dl>
+
+<h2>
+CONVERSATION
+</h2>
+<p>
+Start a conversation with an NPC with the T)alk command. During conversation
+you type simple inquiries and the NPC responds, sometimes asking you a question
+in return. Conversations with shopkeepers will allow you to buy and sell
+items. Most NPCs respond to the 'NAME' and 'JOB' queries, as well as queris
+about their town and fellow townsmen. Their responses usually give you clues to
+further fruitful queries. Also, with the special 'JOIN' query you can ask an
+NPC to join your party (some will join you, and some will join you only if you
+do or say something that impresses them).
+</p>
+
+<h2>
+MISC
+</h2>
+<p>
+Food is consumed three times per day, once unit for each living party
+member. When the food runs out, party members take a point of damage at each
+meal time.
+</p>
+
+<h2>
+APPENDIX A: MAP HACKING
+</h2>
+<p>
+Like many games, "nazghul" is separated into an engine<sup><a class="footnote"href="#f2">2</a></sup> and some data
+files. In this case the data files are written in the Scheme programmming
+language. If you examine the default start file 'session.scm' you will see that
+it is a scheme file which loads the game types from other files and then
+defines the starting game variables.
+</p>
+<p>
+I encourage people to experiment with modifying the example files or even using
+them as a basis to create their own games. The example script code is all
+committed to the public domain. The image and sound files come from various
+sources - see the COPYING file in the top nazghul directory for details on
+where they came from.
+</p>
+<p>
+If you want to make a proprietary game you may use the example script files,
+but you will probably need to make your own image and sound resource files as
+the ones in the examples directory come from other open-source or freeware
+projects and their copyright holders might object to proprietary use.
+</p>
+
+<h2>
+APPENDIX B: Spoilers
+</h2>
+<p>
+These apply specifically to Haxima, and not necessarily to any other game made
+with the Nazghul engine.
+/p>
+
+<h3>
+Projectile Weapon Stats
+</h3>
+<pre>
+============================================================================
+Name          To-Hit  Damage  To-Def  Hnds  Rng  Ammo       Weight
+============================================================================
+Sling         1d2-2   1d3     -1      1     4    slingstone 0
+Sling+4       3       1d3+4    0      1     6    slingstone 0
+Bow           1d3-2   2d4     -2      2     6    arrow      2
+Crossbow      1d4-2   4d4     -1      2     4    bolt       3
+Doom Staff    1d4     1       +2      2     6    -          2
+Stun Wand [1] -2      1d4     -1      1     6    -          2
+============================================================================
+[1] Temporarily paralyzes target
+</pre>
+
+<h3>
+Thrown Weapon Stats
+</h3>
+<pre>
+============================================================================
+Name              To-Hit  Damage  To-Def  Hnds  Rng  Weight
+============================================================================
+Flaming oil [1]   -1      1d6     -2      1     4    1
+Spear              0      1d8     +1      1     4    2
+Boulder           -2      3d4+1   -2      2     5    10
+============================================================================
+[1] Leaves a temporary burning patch of ground
+</pre>
+
+<h3>
+Melee Weapon Stats
+</h3>
+<pre>
+============================================================================
+Name            To-Hit Damage To-Def Hnds Rng Weight
+============================================================================
+Dagger          1d4    1d4    1d2    1    1   0
+Dagger+4        1d4+4  1d4+4  1d2+4  1    1   0
+Mace            1d4    1d6+2  +0     1    1   3
+Axe             1d2    2d3+2  +0     1    1   3
+Sword           1d2    1d8+1  1d2    1    1   2
+Sword+2         1d2+2  1d8+3  1d2+2  1    1   2
+Sword+4         1d2+4  1d8+5  1d2+4  1    1   2
+2H Axe          0      4d3+2  -2     2    1   4
+2H Sword        0      2d8+2   1     2    1   4
+Morning star    1d2+2  1d6+1  -1     1    2   3
+Morning star+2  1d2+4  1d6+3  2      1    2   3
+Halberd         1d3+1  2d8-2  1d2    2    2   4
+Staff           1d3    1d4    1d3    2    2   2
+Eldritch blade  2      2d8+5  +0     2    1   2
+Mystic sword    +3     1d10+5 +2     1    1   1
+Flaming sword   1d2    1d10+3 1d2    1    1   2
+============================================================================
+</pre>
+
+<h3>
+Armor Stats
+</h3>
+<pre>
+============================================================================
+Name              To-Hit  Damage Armor To-Def Weight
+============================================================================
+Leather helm      -1      -      1d2   -      0
+Leather helm+2     0      -      1d2+2 -      0
+Leather helm+4     0      -      1d2+4 -      0
+chain coif        -1      -      1d3   -      1
+Chain coif+4       0      -      1d3+4 -      1
+iron helm         -1      -      1d4   -      2
+Iron helm+4        0      -      1d4+4 -      2
+leather armor     -1      -      1d4   -      2
+Leather armor+2    0      -      1d4+2 -      2
+Leather armor+4    0      -      1d4+4 -      2
+chain armor       -2      -      2d4   -      4
+Chain armor+4      0      -      2d4+4 -      4
+plate armor       -4      -      4d4   -      8
+Plate armor+4      0      -      4d4+4 -      8
+Small shield      -1      -      0     2      2
+Small shield+4     0      -      0     6      2
+Spiked shield      0      1d5    0     1      3
+Spiked helm        0      1d4    3     0      2
+============================================================================
+</pre>
+
+<h2>
+FOOTNOTES
+</h2>
+<p>
+<a name="f1"></a>
+[1] Alas, there isn't one. Yet.
+</p>
+<a name="f2"></a>
+<p>
+[2] I like to refer to it as a "kernel". This makes me feel like it is really
+    cool, and like I'm not a loser since Linus Torvalds and I are about the
+    same age and he works on a kernel, too.
+</p>
+<p>
+--gmcnutt (gmcnutt@cableone.net)
+</p>
