@@ -527,7 +527,8 @@ int movecursor(struct KeyHandler * kh, int key, int keymod)
                 case '=':
                 case 'n':
                         /* Next target */
-                        if (! list_empty(data->loc_list)) {
+                        if (data->loc_list
+                            && ! list_empty(data->loc_list)) {
                                 data->cur_loc = data->cur_loc->next;
                                 if (data->cur_loc == data->loc_list) {
                                         /* wrap around */
@@ -540,7 +541,8 @@ int movecursor(struct KeyHandler * kh, int key, int keymod)
                 case '-':
                 case 'p':
                         /* Previous target */
-                        if (! list_empty(data->loc_list)) {
+                        if (data->loc_list
+                            && ! list_empty(data->loc_list)) {
                                 data->cur_loc = data->cur_loc->prev;
                                 if (data->cur_loc == data->loc_list) {
                                         /* wrap around */
@@ -1433,17 +1435,6 @@ static void cmd_init_movecursor_data(struct movecursor_data *data,
                         break;
                 }
         }
-
-#if 0
-        /* If cur_loc not in the list then create an entry for it. */
-        if (! data->cur_loc) {
-                struct location_list *loc = 
-                        (struct location_list*)malloc(sizeof(*loc));
-                loc->x = Session->crosshair->getX();
-                loc->y = Session->crosshair->getY();
-                list_add(data->loc_list, &loc->list);
-        }
-#endif
 }
 
 int select_target(int ox, int oy, int *x, int *y, int range, 
@@ -1531,6 +1522,7 @@ int select_target_with_doing(int ox, int oy, int *x, int *y,
         data.each_tile_func   = each_tile_func;
         data.each_target_func = each_target_func;
         data.multi            = 1;
+        data.jump             = 1;
 
         kh.fx   = movecursor;
         kh.data = &data;
