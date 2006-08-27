@@ -86,6 +86,9 @@ Uint32 TextMagenta;
 SDL_Color fontWhite = { 0xff, 0xff, 0xff, 0x00 };
 SDL_Color fontBlack = { 0, 0, 0, 0 };
 
+static void scaled_blit(SDL_Surface * source, SDL_Rect * from,
+			SDL_Surface * dest, SDL_Rect * to);
+
 void screenInitColors(void)
 {
 
@@ -355,17 +358,67 @@ static void scaled_blit_8bpp(SDL_Surface * source, SDL_Rect * from,
 	}			// for (dy)
 }
 
+/* scale_then_blit_normal -- cheesy hack to support scaled blitting of
+ * incompatible surface types. This blits the source to a temporary compatible
+ * surface using the scaled_blit function, then blits the tmp surface to the
+ * screen with Zoom=1. Inefficient but functional. */
+static void scale_then_blit_normal(SDL_Surface * source, SDL_Rect * from,
+                                   SDL_Surface * dest, SDL_Rect * to)
+{
+        SDL_Surface *tmp = 0;
+        SDL_Rect rect;
+        int o_zoom = Zoom;
+
+        /* Create a temporary surface for the scaled blit which has the same
+         * format as the source. */
+	tmp = SDL_CreateRGBSurface(source->flags,
+				   from->w / Zoom, from->h / Zoom,
+				   source->format->BitsPerPixel,
+				   source->format->Rmask,
+				   source->format->Gmask,
+				   source->format->Bmask,
+				   source->format->Amask);
+        if (!tmp) {
+		perror_sdl("SDL_CreateRGBSurface");
+		return;
+        }
+
+        /* Setup a rect for the tmp surface. */
+        rect.x = 0;
+        rect.y = 0;
+        rect.w = to->w;
+        rect.h = to->h;
+
+        /* Do a scaled_blit from the source to the temporary surface. */
+        scaled_blit(source, from, tmp, &rect);
+
+        /* Do a normal blit from the tmp surface to the final dest, temporarily
+         * setting Zoom factor to 1 to prevent another call into
+         * scaled_blit(). */
+        o_zoom = Zoom;
+        Zoom = 1;
+        screenBlit(tmp, &rect, to);
+        Zoom = o_zoom;
+
+        /* Free the tmp surface. */
+	SDL_FreeSurface(tmp);        
+}
+
 static void scaled_blit(SDL_Surface * source, SDL_Rect * from,
 			SDL_Surface * dest, SDL_Rect * to)
 {
 	int dpitch, spitch;
 
-	// This is not a general-purpose blitting routine, and I assume that
-	// the source and destination surfaces are compatible.
-
-	assert(source->format->BitsPerPixel == dest->format->BitsPerPixel);
 	assert(Zoom > 0);
 
+	/* This is not a general-purpose blitting routine. If the source and
+         * destination surfaces don't have the same format then use a hack to
+         * workaround it. */
+	if (source->format->BitsPerPixel != dest->format->BitsPerPixel) {
+                scale_then_blit_normal(source, from, dest, to);
+                return;
+        }
+        
 	to->w /= Zoom;
 	to->h /= Zoom;
 
