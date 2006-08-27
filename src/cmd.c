@@ -2862,11 +2862,17 @@ bool cmdAT (class Character * pc)
         log_begin_group();
         log_msg("This is %s.", name_of_context() );
         log_msg("%s is in %s.", who, place_name);
-        log_msg("It is %s on %s, "
+		if (Place->underground) {
+			log_msg("It is %s, %s of %s in the year %d.",
+                day_name(), week_name(), month_name(), Session->clock.year );
+        }
+		else
+		{
+			log_msg("It is %s on %s, "
                 "%s of %s in the year %d.",
-                time_HHMM_as_string(), day_name(), 
+                vague_time_as_string(), day_name(), 
                 week_name(), month_name(), Session->clock.year );
-
+		}
         // SAM: Is this really interesting though, I wonder?
         log_msg("%d game turns have passed.", Turn);
 

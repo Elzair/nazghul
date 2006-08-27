@@ -62,6 +62,7 @@ extern int clock_day(void);
 extern int clock_hour(void);
 extern int clock_minute(void);
 
+extern char * vague_time_as_string       (void);
 extern char * time_HHMM_as_string       (void);
 extern char * time_YYYY_MM_DD_as_string (void);
 

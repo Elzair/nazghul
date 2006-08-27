@@ -133,6 +133,49 @@ char *time_HHMM_as_string(void)
 	return str;
 }				// time_HHMM_as_string()
 
+char *vague_time_as_string(void)
+{
+	static char str[] = "late afternoon";
+	static int maxlen = strlen("late afternoon") + 1;
+	int hr = Clock.hour;
+	int n;
+
+	if (hr < 4)
+	{
+		n = snprintf(str, maxlen, "night");
+	}
+	else if (hr < 7)
+	{
+		n = snprintf(str, maxlen, "early morning");	
+	}
+	else if (hr < 11)
+	{
+		n = snprintf(str, maxlen, "morning");	
+	}
+	else if (hr < 13)
+	{
+		n = snprintf(str, maxlen, "noon");	
+	}
+	else if (hr < 15)
+	{
+		n = snprintf(str, maxlen, "afternoon");	
+	}
+	else if (hr < 18)
+	{
+		n = snprintf(str, maxlen, "late afternoon");	
+	}
+	else if (hr < 20)
+	{
+		n = snprintf(str, maxlen, "evening");	
+	}
+	else
+	{
+		n = snprintf(str, maxlen, "night");	
+	}
+	assert(n != -1);
+	return str;
+}				// vague_time_as_string()
+
 char *time_YYYY_MM_DD_as_string(void)
 {
 	static char str[] = "YYYY/MM/DD";
