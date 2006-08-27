@@ -30,6 +30,66 @@
 #include <stdlib.h>
 #include <string.h>
 
+void images_dump_surface(char *name, SDL_Surface *surf)
+{
+        printf("DUMP SURFACE ============================\n");
+        printf("%s info:\n", name);
+        printf("     w, h: %d %d\n", surf->w, surf->h);
+        printf("    pitch: %d\n", surf->pitch);
+        printf("clip_rect: [%d %d %d %d]\n", surf->clip_rect.x, 
+               surf->clip_rect.y, surf->clip_rect.w, surf->clip_rect.h);
+        printf("   format:\n");
+        printf("      palette: %s\n", 
+               surf->format->palette ? "yes" : "no");
+        printf(" BitsPerPixel: %d\n",
+               surf->format->BitsPerPixel);
+        printf("BytesPerPixel: %d\n", 
+               surf->format->BytesPerPixel);
+        printf("  R/G/B/Amask: 0x%x 0x%x 0x%x 0x%x\n",
+               surf->format->Rmask, surf->format->Gmask, surf->format->Bmask,
+               surf->format->Amask);
+        printf(" R/G/B/Ashift: %d %d %d %d\n",
+               surf->format->Rshift, surf->format->Gshift, 
+               surf->format->Bshift, surf->format->Ashift);
+        printf("  R/G/B/Aloss: %d %d %d %d\n",
+               surf->format->Rloss, surf->format->Gloss, 
+               surf->format->Bloss, surf->format->Aloss);
+        printf("     colorkey: 0x%x\n", surf->format->colorkey);
+        printf("        alpha: 0x%x\n", surf->format->alpha);
+        printf("    flags:\n");
+        if (surf->flags & SDL_SWSURFACE)
+                printf("  SDL_SWSURFACE\n");
+        if (surf->flags & SDL_HWSURFACE)
+                printf("  SDL_HWSURFACE\n");
+        if (surf->flags & SDL_ASYNCBLIT)
+                printf("  SDL_ASYNCBLIT\n");
+        if (surf->flags & SDL_ANYFORMAT)
+                printf("  SDL_ANYFORMAT\n");
+        if (surf->flags & SDL_HWPALETTE)
+                printf("  SDL_HWPALETTE\n");
+        if (surf->flags & SDL_DOUBLEBUF)
+                printf("  SDL_DOUBLEBUF\n");
+        if (surf->flags & SDL_FULLSCREEN)
+                printf("  SDL_FULLSCREEN\n");
+        if (surf->flags & SDL_OPENGL)
+                printf("  SDL_OPENGL\n");
+        if (surf->flags & SDL_OPENGLBLIT)
+                printf("  SDL_OPENGLBLIT\n");
+        if (surf->flags & SDL_RESIZABLE)
+                printf("  SDL_RESIZABLE\n");
+        if (surf->flags & SDL_HWACCEL)
+                printf("  SDL_HWACCEL\n");
+        if (surf->flags & SDL_SRCCOLORKEY)
+                printf("  SDL_SRCCOLORKEY\n");
+        if (surf->flags & SDL_RLEACCEL)
+                printf("  SDL_RLEACCEL\n");
+        if (surf->flags & SDL_SRCALPHA)
+                printf("  SDL_SRCALPHA\n");
+        if (surf->flags & SDL_PREALLOC)
+                printf("  SDL_PREALLOC\n");
+
+}
+
 void images_del(struct images *images)
 {
         if (images->tag)
@@ -109,22 +169,35 @@ struct images *images_new(char *tag, int w, int h, int rows, int cols,
                 // differ from the nazghul-0.2.0 release and recent CVS?
 	}
 
-	/* Make magenta the transparent color */
-	if (SDL_SetColorKey(images->images, SDL_SRCCOLORKEY,
-			    SDL_MapRGB(images->images->format,
-				       0xff, 0x00, 0xff)) < 0) {
-		err("SDL_SetColorKey: %s", SDL_GetError());
-                goto fail;
-	}
+        /* Images which are saved with a transparency layer will have the
+         * SDL_SRCALPHA flag set. Their alpha layer will be managed
+         * automatically by SDL_BlitSurface(). For images without an alpha
+         * layer, assume that magenta (RGB 0xff00ff) is the special color for
+         * transparency. To correctly support transparent blitting we have to
+         * set their color key to magenta and we have to convert them to match
+         * the display format. */
+        if (! (images->images->flags & SDL_SRCALPHA)) {
 
-	/* Convert to video format for faster blitting */
-	if ((tmp = SDL_DisplayFormat(images->images)) == NULL) {
-		err("SDL_DisplayFormat: %s", SDL_GetError());
-                goto fail;
-	}
+                /* Convert to video format for faster blitting */
+                if ((tmp = SDL_DisplayFormat(images->images)) == NULL) {
+                        err("SDL_DisplayFormat: %s", SDL_GetError());
+                        goto fail;
+                }
 
-	SDL_FreeSurface(images->images);
-	images->images = tmp;
+                SDL_FreeSurface(images->images);
+                images->images = tmp;
+
+                /* Make magenta the transparent color */
+                if (SDL_SetColorKey(images->images, SDL_SRCCOLORKEY,
+                                    SDL_MapRGB(images->images->format,
+                                               0xff, 0x00, 0xff)) < 0) {
+                        err("SDL_SetColorKey: %s", SDL_GetError());
+                        goto fail;
+                }
+
+        }
+
+        /*images_dump_surface(fname, images->images);*/
 
 	return images;
 
