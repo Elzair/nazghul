@@ -10,6 +10,7 @@
 (kern-mk-sprite 's_shovel   ss_tools 1 3 #f 0)
 (kern-mk-sprite 's_pick     ss_tools 1 4 #f 0)
 (kern-mk-sprite 's_sextant  ss_tools 1 5 #f 0)
+(kern-mk-sprite 's_clock    ss_tools 1 6 #f 0)
 
 ;; torch -- use two in-lor spells
 (mk-usable-item 't_torch "torch" s_torch 1
@@ -129,3 +130,17 @@
                         (begin
                           (signal-kobj (car ktarg) 'digup (car ktarg) nil)
                           )))))
+						  
+(mk-reusable-item 't_chrono "chronometer" s_clock 2
+                (lambda (kshovel kuser)
+					(let* ((time (kern-get-time))
+						(hour (number->string
+								(if (< (time-hour time) 13)
+									(time-hour time)
+									(- (time-hour time) 12))))
+						(minbase (number->string (time-minute time)))
+						(min (if (< (time-minute time) 10)
+								(string-append "0" minbase)
+								minbase)))
+						(kern-log-msg "The chronometer reads " hour ":" min)
+					)))
