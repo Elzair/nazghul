@@ -112,18 +112,15 @@ static void asciiSetColor(char clr)
         }
 }
 
-static void asciiBlitColored(SDL_Surface *dst, SDL_Rect *dstrect, 
-                             SDL_Surface *src, SDL_Rect *srcrect,
-                             Uint32 color)
+static void asciiBlitColored16(SDL_Surface *dst, SDL_Rect *dstrect, 
+                               SDL_Surface *src, SDL_Rect *srcrect,
+                               Uint32 color)
 {
         Uint16 mask = color;
         Uint16 *srcpix, *dstpix;
         int x=0, y=0;
 
-        assert(dst->format->BitsPerPixel==src->format->BitsPerPixel);
         assert(dst->format->BitsPerPixel==16);
-        assert(dstrect->w==srcrect->w);
-        assert(dstrect->h==srcrect->h);
 
         for (y=0; y<dstrect->h; y++) {
 
@@ -139,6 +136,55 @@ static void asciiBlitColored(SDL_Surface *dst, SDL_Rect *dstrect,
                         srcpix++;
                         dstpix++;
                 }
+        }
+}
+
+static void asciiBlitColored32(SDL_Surface *dst, SDL_Rect *dstrect, 
+                               SDL_Surface *src, SDL_Rect *srcrect,
+                               Uint32 color)
+{
+        Uint32 mask = color;
+        Uint32 *srcpix, *dstpix;
+        int x=0, y=0;
+
+        assert(dst->format->BitsPerPixel==32);
+
+        for (y=0; y<dstrect->h; y++) {
+
+                srcpix = (Uint32*)src->pixels 
+                        + (srcrect->y+y)*src->w 
+                        + srcrect->x;
+                dstpix = (Uint32*)dst->pixels 
+                        + (dstrect->y+y)*dst->w 
+                        + dstrect->x;
+
+                for (x=0; x<dstrect->w; x++) {
+                        *dstpix = *srcpix&mask;
+                        srcpix++;
+                        dstpix++;
+                }
+        }
+}
+
+static void asciiBlitColored(SDL_Surface *dst, SDL_Rect *dstrect, 
+                             SDL_Surface *src, SDL_Rect *srcrect,
+                             Uint32 color)
+{
+        assert(dst->format->BitsPerPixel==src->format->BitsPerPixel);
+        assert(dstrect->w==srcrect->w);
+        assert(dstrect->h==srcrect->h);
+
+        switch (dst->format->BitsPerPixel) {
+        case 16:
+                asciiBlitColored16(dst, dstrect, src, srcrect, color);
+                break;
+        case 32:
+                asciiBlitColored32(dst, dstrect, src, srcrect, color);
+                break;
+        default:
+                err("asciiBlitColored: unsupported BitsPerPixel: %d\n",
+                    dst->format->BitsPerPixel);
+                break;
         }
 }
 

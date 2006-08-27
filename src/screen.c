@@ -115,7 +115,7 @@ void screenInitScreen(void)
 	const SDL_VideoInfo *fmt;
 
         /* gmcnutt: why 16? I don't remember. */
-        const int SCREEN_BPP = 16;
+        const int SCREEN_BPP = 32;
 
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
 		perror_sdl("SDL_Init");
@@ -414,7 +414,9 @@ static void scaled_blit(SDL_Surface * source, SDL_Rect * from,
 	/* This is not a general-purpose blitting routine. If the source and
          * destination surfaces don't have the same format then use a hack to
          * workaround it. */
-	if (source->format->BitsPerPixel != dest->format->BitsPerPixel) {
+	if (source->format->BitsPerPixel != dest->format->BitsPerPixel
+            || source->format->Amask != dest->format->Amask
+                ) {
                 scale_then_blit_normal(source, from, dest, to);
                 return;
         }
