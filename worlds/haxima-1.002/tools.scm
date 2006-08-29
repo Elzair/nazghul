@@ -2,7 +2,7 @@
 ;; tools.scm -- "usable" stuff that isn't a book, scroll or potion
 ;; ----------------------------------------------------------------------------
 
-(kern-mk-sprite-set 'ss_tools 32 32 3 3 0 0 "tools.png")
+(kern-mk-sprite-set 'ss_tools 32 32 8 8 0 0 "tools.png")
 
 (kern-mk-sprite 's_torch    ss_tools 1 0 #f 0)
 (kern-mk-sprite 's_picklock ss_tools 1 1 #f 0)
@@ -10,7 +10,12 @@
 (kern-mk-sprite 's_shovel   ss_tools 1 3 #f 0)
 (kern-mk-sprite 's_pick     ss_tools 1 4 #f 0)
 (kern-mk-sprite 's_sextant  ss_tools 1 5 #f 0)
-(kern-mk-sprite 's_clock    ss_tools 1 6 #f 0)
+(kern-mk-sprite 's_chrono   ss_tools 1 6 #f 0)
+(kern-mk-sprite 's_clock_body    ss_tools 1 7 #f 0)
+(kern-mk-sprite 's_clock_pendulum    ss_tools 2 8 #f 0)
+(kern-mk-sprite 's_clock_handup    ss_tools 1 10 #f 0)
+(kern-mk-sprite 's_clock_spin    ss_tools 6 10 #f 0)
+
 
 ;; torch -- use two in-lor spells
 (mk-usable-item 't_torch "torch" s_torch 1
@@ -131,8 +136,8 @@
                           (signal-kobj (car ktarg) 'digup (car ktarg) nil)
                           )))))
 						  
-(mk-reusable-item 't_chrono "chronometer" s_clock 2
-                (lambda (kshovel kuser)
+(mk-reusable-item 't_chrono "chronometer" s_chrono 2
+                (lambda (kclock kuser)
 					(let* ((time (kern-get-time))
 						(hour (number->string
 								(if (< (time-hour time) 13)
@@ -144,3 +149,31 @@
 								minbase)))
 						(kern-log-msg "The chronometer reads " hour ":" min)
 					)))
+			
+(define clock-ifc
+  (ifc '()
+       (method 'handle 
+			(lambda (kclock kuser)
+					(let* ((time (kern-get-time))
+						(hour (number->string
+								(if (< (time-hour time) 13)
+									(time-hour time)
+									(- (time-hour time) 12))))
+						(minbase (number->string (time-minute time)))
+						(min (if (< (time-minute time) 10)
+								(string-append "0" minbase)
+								minbase)))
+						(kern-log-msg "The clock reads " hour ":" min)
+					)))
+       ))
+	
+(mk-obj-type 't_clock "clock"
+	(mk-composite-sprite (list s_clock_body s_clock_pendulum s_clock_handup s_clock_spin))
+	layer-mechanism clock-ifc)
+
+(define (mk-clock)
+	(let ((kclock (kern-mk-obj t_clock 1)))
+		(kern-obj-set-pclass kclock pclass-wall)
+		kclock))
+	
+
