@@ -312,6 +312,7 @@
   (list (mk-locked-door) 28 24)
   (list (kern-tag 'tlj-d-1 (mk-connected-door 'tlj-d-2)) 17 25)
   (list (kern-tag 'tlj-d-2 (mk-connected-door 'tlj-d-1)) 17 26)
+  (list (mk-clock) 25 23)
   (put (mk-bed) 27 22)
 
   )

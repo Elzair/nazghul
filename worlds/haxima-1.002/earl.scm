@@ -50,6 +50,7 @@
                          (list t_shovel            70)
                          (list t_pick              100)
                          (list t_sextant           500)
+                         (list t_chrono            300)
                          )
         (say knpc "Your life depends on your gear!"))))
 
