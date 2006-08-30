@@ -11,8 +11,8 @@
 (kern-mk-sprite 's_pick     ss_tools 1 4 #f 0)
 (kern-mk-sprite 's_sextant  ss_tools 1 5 #f 0)
 (kern-mk-sprite 's_chrono   ss_tools 1 6 #f 0)
-(kern-mk-sprite 's_clock_body    ss_tools 1 7 #f 0)
-(kern-mk-sprite 's_clock_pendulum    ss_tools 2 8 #f 0)
+(kern-mk-sprite 's_clock_stopped    ss_tools 1 7 #f 0)
+(kern-mk-sprite 's_clock_body    ss_tools 2 8 #f 0)
 (kern-mk-sprite 's_clock_handup    ss_tools 1 10 #f 0)
 (kern-mk-sprite 's_clock_spin    ss_tools 6 10 #f 0)
 
@@ -168,7 +168,7 @@
        ))
 	
 (mk-obj-type 't_clock "clock"
-	(mk-composite-sprite (list s_clock_body s_clock_pendulum s_clock_handup s_clock_spin))
+	(mk-composite-sprite (list s_clock_body s_clock_handup s_clock_spin))
 	layer-mechanism clock-ifc)
 
 (define (mk-clock)
