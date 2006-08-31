@@ -13,7 +13,12 @@
 (kern-mk-sprite 's_chrono   ss_tools 1 6 #f 0)
 (kern-mk-sprite 's_clock_stopped    ss_tools 1 7 #f 0)
 (kern-mk-sprite 's_clock_body    ss_tools 2 8 #f 0)
-(kern-mk-sprite 's_clock_handup    ss_tools 1 10 #f 0)
+(kern-mk-sprite 's_clock_hand_n    ss_tools 1 10 #f 0)
+(kern-mk-sprite 's_clock_hand_ne    ss_tools 1 11 #f 0)
+(kern-mk-sprite 's_clock_hand_se    ss_tools 1 12 #f 0)
+(kern-mk-sprite 's_clock_hand_s    ss_tools 1 13 #f 0)
+(kern-mk-sprite 's_clock_hand_sw    ss_tools 1 14 #f 0)
+(kern-mk-sprite 's_clock_hand_nw    ss_tools 1 15 #f 0)
 (kern-mk-sprite 's_clock_spin    ss_tools 6 10 #f 0)
 
 
@@ -166,14 +171,35 @@
 						(kern-log-msg "The clock reads " hour ":" min)
 					)))
        ))
+
+(define broken-clock-ifc
+  (ifc '()
+       (method 'handle 
+			(lambda (kclock kuser)
+						(kern-log-msg (gob kclock))
+					))
+       ))
 	
 (mk-obj-type 't_clock "clock"
-	(mk-composite-sprite (list s_clock_body s_clock_handup s_clock_spin))
+	(mk-composite-sprite (list s_clock_body s_clock_hand_n s_clock_spin))
 	layer-mechanism clock-ifc)
 
 (define (mk-clock)
 	(let ((kclock (kern-mk-obj t_clock 1)))
 		(kern-obj-set-pclass kclock pclass-wall)
 		kclock))
+		
+(mk-obj-type 't_broken_clock "clock"
+	s_clock_stopped
+	layer-mechanism broken-clock-ifc)
+	
+(define (mk-broken-clock icona iconb message)
+	(let ((kclock (kern-mk-obj t_broken_clock 1)))
+		(bind kclock message)
+		(kern-obj-set-sprite kclock (mk-composite-sprite (list s_clock_stopped icona iconb)))
+		(kern-obj-set-pclass kclock pclass-wall)
+		kclock))
+		
+
 	
 

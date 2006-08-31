@@ -74,6 +74,7 @@
                 (list (mk-door) 13 17)
                 (list (mk-door) 7 25)
                 (list (mk-ladder-down 'p_abandoned_cellar 6 25) 6 25)
+				(list (mk-broken-clock s_clock_hand_s s_clock_hand_ne "The clock reads 6:12") 6 23)
                 )
                (list 'on-entry-to-dungeon-room) ; hooks
                nil ; edge entrances
