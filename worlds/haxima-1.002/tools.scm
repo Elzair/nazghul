@@ -155,21 +155,37 @@
 						(kern-log-msg "The chronometer reads " hour ":" min)
 					)))
 			
+(define clock-hand-icons (list s_clock_hand_n s_clock_hand_ne s_clock_hand_se s_clock_hand_s s_clock_hand_sw s_clock_hand_nw))
+
+(define (clock-get-hand number)
+	(if (> number 5)
+		(clock-get-hand (- number 6))
+		(list-ref clock-hand-icons number)
+	))
+
 (define clock-ifc
   (ifc '()
        (method 'handle 
 			(lambda (kclock kuser)
-					(let* ((time (kern-get-time))
+				(let* ((time (kern-get-time))
 						(hour (number->string
-								(if (< (time-hour time) 13)
-									(time-hour time)
-									(- (time-hour time) 12))))
+							(if (< (time-hour time) 13)
+								(time-hour time)
+								(- (time-hour time) 12))))
 						(minbase (number->string (time-minute time)))
 						(min (if (< (time-minute time) 10)
 								(string-append "0" minbase)
 								minbase)))
-						(kern-log-msg "The clock reads " hour ":" min)
-					)))
+					(kern-log-msg "The clock reads " hour ":" min)
+				)))
+		(method 'update-gfx
+			(lambda (kclock)
+				(let* ((time (kern-get-time))
+						(hour-hand (clock-get-hand (floor (/ (time-hour time) 2))))
+						(min-hand (clock-get-hand (floor (/ (+ (time-minute time) 5) 10)))))
+					(kern-obj-set-sprite kclock (mk-composite-sprite (list s_clock_body hour-hand min-hand)))
+				)))
+				
        ))
 
 (define broken-clock-ifc
@@ -187,6 +203,7 @@
 (define (mk-clock)
 	(let ((kclock (kern-mk-obj t_clock 1)))
 		(kern-obj-set-pclass kclock pclass-wall)
+		(kern-obj-add-effect kclock ef_graphics_update nil) 
 		kclock))
 		
 (mk-obj-type 't_broken_clock "clock"

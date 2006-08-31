@@ -443,6 +443,17 @@
 (define (drunk-rm fgob kchar)
   (kern-log-msg (kern-obj-get-name kchar) " feels less inebriated"))
 
+;;-----------------------------------------------------------------
+;; Graphics update
+;; for stuff that changes appearance with time
+;; requires update-gfx ifc
+;;-----------------------------------------------------------
+
+(define (update-graphics fgob kobj)
+	(if (kobj-can? kobj 'update-gfx)
+		(send-signal nil kobj 'update-gfx)
+	))
+
 ;; ----------------------------------------------------------------------------
 ;; Effects Table
 ;; ----------------------------------------------------------------------------
@@ -479,7 +490,7 @@
 (mk-effect 'ef_temporary_charm_immunity  "Charm immunity"			s_im_charm		'charm-immunity-exec  nil                 nil              nil                 "add-hook-hook"      "c" 0   #f  60)
 (mk-effect 'ef_sleep_immunity            "Sleep immunity"			s_im_sleep		'sleep-immunity-exec  nil                 nil              nil                 "add-hook-hook"      "s" 0   #f  -1)
 (mk-effect 'ef_temporary_sleep_immunity  "Sleep immunity"			s_im_sleep		'sleep-immunity-exec  nil                 nil              nil                 "add-hook-hook"      "s" 0   #f  60)
-
+(mk-effect 'ef_graphics_update           nil						nil				'update-graphics	  nil                 nil              'update-graphics    "start-of-turn-hook"  "" 0   #f  -1)
 ;;----------------------------------------------------------------------------
 ;; Effect Test Procedures
 ;;----------------------------------------------------------------------------
