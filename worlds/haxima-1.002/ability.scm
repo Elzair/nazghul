@@ -123,28 +123,10 @@
   
 ;;----------------------------------------------------------------------------
 ;; missile spells
-(define (cast-missile-proc kchar ktarg ktype)
-  (kern-fire-missile ktype
-                     (kern-obj-get-location kchar)
-                     (kern-obj-get-location ktarg)))
-  
+
 ;; cast-magic-missile-proc -- damage goes up with level of caster
 (define (cast-magic-missile-proc kchar ktarg)
-  (kern-log-msg (kern-obj-get-name kchar)
-                " fires magic missile at "
-                (kern-obj-get-name ktarg))
-  (if (cast-missile-proc kchar ktarg t_arrow)
-	  (let* (
-			(apower 
-				(ceiling (- 
-					(/ (occ-ability-blackmagic kchar) 2)
-					(/ (occ-ability-magicdef ktarg) 10)
-					)))
-			(damagedice (string-append 
-				(number->string (if (> apower 0) apower 1))
-				"d3")))
-      (kern-obj-inflict-damage ktarg
-                             "magic" (kern-dice-roll damagedice) kchar))))
+	(powers-magic-missile kchar ktarg (occ-ability-blackmagic kchar)))
 
 (define (cast-poison-missile-proc kchar ktarg)
   (kern-log-msg (kern-obj-get-name kchar)
@@ -438,3 +420,4 @@
         poison-missile-spell
         fireball-spell
         ))
+

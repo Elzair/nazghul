@@ -59,112 +59,11 @@
                     (+ (/ level 2) 1) ;; action point cost
                     reagents)))
 
-;; ui-target-char -- return the first available object for which 'pred' returns
-;; true at a user-specified location on the map
-(define (ui-target origin range pred)
-  (define (select-from seq)
-    (cond ((null? seq) 
-           nil)
-          (else (car seq))))
-  (let ((coords (kern-ui-target origin range)))
-    (cond ((null? coords) nil)
-          (else (select-from (filter pred (kern-get-objects-at coords)))))))
 
-(define (ui-get-direction)
-  (kern-ui-direction))
-
-(define (ui-get-adjacent origin pred)
-  (define (select-from seq)
-    (cond ((null? seq) 
-           (kern-print "Nothing!\n") 
-           nil)
-          (else
-           (car seq))))
-  (let ((dir (ui-get-direction)))
-    (if (null? dir) nil
-        (select-from (filter pred (kern-get-objects-at (loc-offset origin dir)))))))
-
-(define (ui-waitkey)
-  (kern-ui-waitkey))
-
-(define (mk-ifc-query signal)
-  (lambda (kobj) (kobj-can? kobj signal)))
-
-(define (neighbors loc)
-  (let ((place (car loc))
-        (x (cadr loc))
-        (y (caddr loc)))
-    (list (list place x (- y 1))
-          (list place x (+ y 1))
-          (list place (- x 1) y)
-          (list place (+ x 1) y))))
-
-(define (get-target-kchar caster range)
-  (let ((loc (get-target-loc caster range)))
-    (if (null? loc)
-        nil
-        (get-being-at loc))))
-
-(define (user-cast-ranged-targeted-spell kchar range proc)
-  (let ((ktarg (get-target-kchar kchar range)))
-    (if (null? ktarg)
-        result-no-target
-        (begin
-          (proc kchar ktarg)
-          result-ok))))
-
-(define (cast-field-spell caster field-type)
-  (let ((coords (kern-ui-target (kern-obj-get-location caster) 1)))
-    (cond ((null? coords) nil)
-          (else
-           (kern-obj-put-at (kern-mk-obj field-type 1) coords)))))
-
-(define (cast-teleport-spell caster dir)
-  (let ((coords (loc-offset (kern-obj-get-location caster) dir)))
-    (cond ((null? coords) (kern-print "You sense nothing there!\n"))
-          ((not (passable? coords caster)) (kern-print "You sense it is impassable!\n"))
-          (else (kern-obj-relocate caster coords nil)))))
-
-(define (cast-signal-spell caster signal target)
-  (cond ((null? target) result-no-target)
-        (else 
-         ((kobj-ifc target) signal target caster)
-         result-ok
-         )))
-
-(define (cast-bimodal caster proc)
-  (define (cast-it target)
-    (cond ((null? target) result-no-target)
-          (else (proc target))))
-  (let ((loc (kern-obj-get-location caster)))
-  (if (kern-place-is-wilderness? (loc-place loc))
-      (cast-it (kern-ui-select-party-member))
-      (cast-it (ui-target loc 2 obj-is-char?)))))
-  
-(define (user-cast-spell-on-party-member caster proc)
-  (define (cast-it target)
-    (cond ((null? target) result-no-target)
-          (else (proc caster target)
-                result-ok)))
-  (let ((loc (kern-obj-get-location caster)))
-  (if (kern-place-is-wilderness? (loc-place loc))
-      (cast-it (kern-ui-select-party-member))
-      (cast-it (ui-target loc 2 obj-is-char?)))))
   
 ;; ============================================================================
 ;; Wind spell support
 ;; ============================================================================
-
-;; ----------------------------------------------------------------------------
-;; terrain-ok-for-field? -- check if the terrain at a given location will allow
-;; a field to be dropped on it. Terrains with passability class equivalent to
-;; Grass, trees and forest are ok, everything else is not.
-;; ----------------------------------------------------------------------------
-(define (terrain-ok-for-field? loc)
-  (let ((pclass (kern-terrain-get-pclass (kern-place-get-terrain loc))))
-    (foldr (lambda (a b) (or a (= pclass b)))
-           #f
-           (list pclass-grass pclass-trees pclass-forest))))
 
 (define (get-line origin dir n)
   ;;(println "   get-line:" origin "," dir "," n)
@@ -281,132 +180,6 @@
            (map doline (cdr lines))
            (kern-map-repaint)))))
 		   
-(define pi (* 2 (acos 0)))
-		   
-(define (xy->angle x y)
-	(if (equal? x 0)
-		(cond ((> y 0) (atan 999999))
-			((< y 0) (atan -999999))
-			(else 0))
-		(if (< x 0)
-			(+ (atan (/ y x)) pi)
-			(atan (/ y x)))))
-
-(define (cone-in-range x y range)
-	(< (+ (* x x) (* y y)) (* range range)))
-		
-(define (angle-wrap angle)
-	(cond ((< angle 0) (angle-wrap (+ angle (* 2 pi))))
-		((> angle (* 2 pi)) (angle-wrap (- angle (* 2 pi))))
-		(else angle)))
-		
-(define (angle-diff baseangle testangle)
-	(- (angle-wrap (- testangle baseangle pi)) pi))
-
-(define (cone-in-angle x y minangle maxangle)
-	(let ((tangle (xy->angle x y)))
-		(if (< (angle-diff minangle maxangle) 0)
-			(or (>= (angle-diff minangle tangle) 0)
-				(<= (angle-diff maxangle tangle) 0))
-			(and (>= (angle-diff minangle tangle) 0)
-				(<= (angle-diff maxangle tangle) 0))
-			)))
-	
-(define (cone-get-edge x y inlist)
-	(cons (list y x) 
-	(cons (list x y) inlist)))
-	
-(define (cone-get-initial n inlist)
-	(cone-get-edge (- 0 n) 0
-	(cone-get-edge n 0 inlist)))
-	
-(define (cone-get-sides n m inlist)
-	(if (< m n)
-		(cone-get-sides n (+ m 1)
-			(cone-get-edge n m
-			(cone-get-edge (- 0 n) m
-			(cone-get-edge n (- 0 m)
-			(cone-get-edge (- 0 n) (- 0 m) inlist))))
-		)
-		inlist))
-
-(define (cone-get-corners n inlist)
-	(cons (list n n)
-	(cons (list (- 0 n) (- 0 n) )
-	(cone-get-edge (- 0 n) n inlist))))
-	
-(define (cone-get-box n)
-	(cone-get-sides n 1
-	(cone-get-corners n
-	(cone-get-initial n nil))))
-			
-(define (cone-check-cell origin minangle maxangle range proc cell)
-	(let* ((x (car cell))
-			(y (cadr cell))
-			(loc (list (car origin) (+ (cadr origin) x) (+ y (caddr origin)))))
-		(if (and (cone-in-range x y range)
-					(cone-in-angle x y minangle maxangle)
-					(kern-is-valid-location? loc)
-					(kern-in-los? origin loc)
-					(not (kern-place-blocks-los? loc)))
-				(proc loc)
-				)))
-			
-			
-(define (cone-handle-box origin minangle maxangle range proc list)
-	(if (null? list)
-		(println "donebox")
-		(begin		
-			(cone-check-cell origin minangle maxangle range proc (car list))
-			(cone-handle-box origin minangle maxangle range proc (cdr list))
-		)))
-
-			
-(define (cone-area-slice n origin minangle maxangle range proc)
-	(if (< n range)
-		(begin
-			(cone-handle-box origin minangle maxangle range proc
-				(cone-get-box n))
-			(cone-area-slice (+ n 1) origin minangle maxangle range proc)
-		)))
-			
-(define (cone-area-effect origin angle range width proc)
-	(let ((minangle (angle-wrap (- angle (/ width 2))))
-		(maxangle (angle-wrap (+ angle (/ width 2)))))
-	(cone-area-slice 1 origin minangle maxangle range proc)
-    ))
-	
-(define (cone-simple caster range proc)
-	(let ((origin (kern-obj-get-location caster))
-		(target (get-target-loc caster range)))
-		(if (null? target)
-			#f
-			(let ((x (- (cadr target) (cadr origin))) 
-				(y (- (caddr target) (caddr origin)))) 
-			(cone-area-effect origin (xy->angle x y) range (/ pi 2) proc))
-		)))
-		
-(define (mk-basic-cone-proc objfx field-type leaveprob caster)
-	(define (dropfield loc)
-		(if (kern-obj-put-at (kern-mk-obj field-type 1) loc)))
-	(define (is-my-field? kobj) (eqv? field-type (kern-obj-get-type kobj)))
-	(define (cleanfields loc)
-		(if	(or (not (terrain-ok-for-field? loc))
-				(> (kern-dice-roll "1d100") leaveprob))
-			(let ((fields (filter is-my-field? (kern-get-objects-at loc))))
-				(cond ((null? fields) nil)
-					(else
-						(kern-obj-remove (car fields)))))))
-	(lambda (loc)
-			(if (not (null? objfx))
-				(map objfx (kern-get-objects-at loc)))
-			(if (not (null? field-type))
-				(begin
-					(dropfield loc)
-					(kern-map-repaint)
-					(cleanfields loc)
-				))))
-
 
 ;;----------------------------------------------------------------------------
 ;; Core actions behind spells, special abilities, etc. No UI prompting, no mana
@@ -414,16 +187,7 @@
 ;; the callers. All of these calls must return #t on success or #f on
 ;; failure. No further details as to cause of failure are required.
 ;;----------------------------------------------------------------------------
-(define (cure-poison caster ktarg)
-  (kern-obj-remove-effect ktarg ef_poison)
-  (if (< (kern-dice-roll "1d25") (occ-ability-whitemagic caster))
-	(kern-obj-remove-effect ktarg ef_disease))
-  )
 
-(define (awaken caster ktarg)
-  (and (kern-obj-remove-effect ktarg ef_sleep)
-       (or (kern-char-set-sleep ktarg #f)
-           #t)))
 
 (define (resurrect kchar)
   (kern-char-resurrect kchar)
@@ -454,42 +218,37 @@
         (if (spell ktarg)
             result-ok
             result-no-effect))))
-			
-(define (mkdice dice size)
-	(let ((numstr (if (number? dice)
-						(number->string dice)
-						dice))
-			(sizestr (if (number? size)
-						(number->string size)
-						size)))
-			(string-append numstr "d" sizestr)))
+		
 
 ;;----------------------------------------------------------------------------
 ;; First Circle
 ;;----------------------------------------------------------------------------
-(define (an-nox  caster)
-  (user-cast-spell-on-party-member caster cure-poison))
+
+(define (an-nox caster)
+	(cast-ui-basic-member-spell powers-cure-poison
+		caster (occ-ability-whitemagic caster)))
 
 (define (an-zu  caster)
-  (user-cast-spell-on-party-member caster awaken))
+	(cast-ui-basic-member-spell powers-awaken
+		caster (occ-ability-whitemagic caster)))
 
 (define (grav-por caster)
-  (let ((range (+ 4 (floor (/ (occ-ability-blackmagic caster) 3)))))
-  (user-cast-ranged-targeted-spell caster range cast-magic-missile-proc)))
+	(cast-ui-basic-ranged-spell powers-magic-missile
+		caster 
+		(powers-magic-missile-range occ-ability-blackmagic caster)
+		(occ-ability-blackmagic kchar)))
 
 (define (in-lor caster)
-	(let ((power 
-			(kern-dice-roll (string-append "5d" (
-				number->string (occ-ability-whitemagic caster))))))
-	(light-apply-new caster (+ 400 (* 5 power)))
-	result-ok))
+	(powers-light caster caster (occ-ability-whitemagic caster))
+	result-ok)
 
 (define (an-xen-bet  caster)
-  (kern-obj-add-effect caster ef_spider_calm nil)
+  (powers-spider-calm caster caster (occ-ability-whitemagic caster))
   result-ok)
 
 (define (mani caster)
-  (user-cast-spell-on-party-member caster heal-proc))
+	(cast-ui-basic-member-spell powers-heal
+		caster (occ-ability-whitemagic caster)))
 
 
 ;;----------------------------------------------------------------------------
