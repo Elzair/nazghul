@@ -140,6 +140,7 @@
   ;; tavern
   (put (mk-locked-door) 19 5)
   (put (mk-windowed-door) 23 14)
+  (put (mk-clock) 27 13)
   (put (mk-door) 20 4)
   (put (mk-door) 26 4)
   (put (mk-bed) 27 2)

@@ -185,6 +185,7 @@
   (put (mk-door) 51 49)
   (put (mk-door) 52 49)
   (put (mk-door) 57 59)
+  (put (mk-clock) 46 50)
   (put (kern-tag 'white-stag-door (mk-locked-door)) 44 58)
   (put (mk-bed) 43 61)
   (put (mk-bed) 58 61)

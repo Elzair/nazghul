@@ -111,6 +111,7 @@
 		(put (mk-bed) 30 24)
 		(put (mk-bed) 32 22)
 		
+		(put (mk-broken-clock s_clock_hand_sw s_clock_hand_se "The clock reads 8:27") 4 22)
 		(put (kern-mk-obj t_garrison_log 1) 4 23)
 		(put (kern-mk-obj t_food 21) 33 27)
 		(put (kern-mk-obj t_food 1) 22 29)

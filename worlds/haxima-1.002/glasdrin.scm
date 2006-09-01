@@ -119,6 +119,7 @@
   (put (kern-tag 'glasdrin-inn-room-2-door (mk-locked-door)) 7 23)
   (put (mk-bed) 4 25)
   (put (mk-bed) 8 25)
+  (put (mk-clock) 4 21)
 
   ;; NPC beds
   (put (mk-bed) 26 10)

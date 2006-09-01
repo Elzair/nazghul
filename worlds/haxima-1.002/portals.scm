@@ -111,7 +111,7 @@
 (define (thief-door-step kportal kchar)
   (let ((time (kern-get-time)))
     (if (and (= (time-hour time) 0)
-             (= (time-minute time) 0))
+             (< (time-minute time) 15))
         (portal-step kportal kchar))))
 
 (define thief-door-ifc

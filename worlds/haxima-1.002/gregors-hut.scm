@@ -84,6 +84,7 @@
                 (list (mk-door) 11 15)
                 (list (mk-door) 17 14)
                 (list (mk-door) 18 20)
+                (list (mk-clock) 10 10)
                 (list (mk-bridge 'east) 25 26)
                 (put (mk-bed) 7 18)
                 (put (mk-bed) 7 16)

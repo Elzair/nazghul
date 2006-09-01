@@ -21,8 +21,8 @@
   "^^ tt tA .. .. .. .. .. .. bb .. .. tC || ~3 ~c tt xx xx xx xx xx xx xx xx tt tt tc .. tt tt tt tt tt tt t5 ^a ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ "
   "^^ tt t5 tA .. .. .. .. bb {8 tC t3 tt || ~6 t3 tt xx cc cc cc cc cc cc xx te bb .. tC tt tt tt tt tt tt tt tt td ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ "
   "^^ ta tt t5 .. .. .. {c ^^ ^c t3 tt || || ~6 tt tt xx cc xx cc cc cc cc xx .. .. .. t3 tt xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx ^^ ^^ "
-  "^^ ^5 tt tt tA .. {c ^^ ^^ t3 tt || tt tc ~6 tt tt xx xx xx cc cc cc cc cc .. .. bb tt tt xx cc cc cc cc cc cc cc cc xx cc cc cc cc cc xx ^^ ^^ "
-  "^^ ^^ ta tt tt td ^^ ^^ ^c tt tt || tt ~3 ~c tt tt tt t5 xx cc cc cc cc xx .. .. tb tt tt xx cc cc x! cc cc x! cc cc xx cc cc cc cc cc xx ^^ ^^ "
+  "^^ ^5 tt tt tA .. {c ^^ ^^ t3 tt || tt tc ~6 tt tt xx xx xx cc cc cc cc cc .. .. bb tt tt xx cc cc cc cc cc x! cc cc xx cc cc cc cc cc xx ^^ ^^ "
+  "^^ ^^ ta tt tt td ^^ ^^ ^c tt tt || tt ~3 ~c tt tt tt t5 xx cc cc cc cc xx .. .. tb tt tt xx cc cc x! cc cc cc cc cc xx cc cc cc cc cc xx ^^ ^^ "
   "^^ ^^ ^5 ta tc ^3 ^^ ^^ t3 tt tt || tt ~6 t3 tt tt tt tt xx cc cc cc cc xx .. .. bb tt tt xx xx xx xx cc cc xx xx xx xx cc cc cc cc cc xx ^^ ^^ "
   "^^ ^^ ^^ ^^ ^^ ^^ ^^ ^c tt || || tt tc ~6 tt || || tt tt xx xx xx && xx xx .. .. .. ta tt xx cc cc cc cc cc cc cc cc xx cc cc cc cc cc xx ^^ ^^ "
   "^^ ^^ ^^ ^^ ^^ ^^ ^c t3 tt || tt tc ~3 ~c tt || || tt tt tt t5 xx xx xx t7 bb .. .. bb tt xx cc cc x! cc cc x! cc cc xx cc cc cc cc cc xx ^^ ^^ "
@@ -86,7 +86,7 @@
    ;; Tag the special door used as the player's guest room:
    (list (kern-tag 'bole-inn-room-door (mk-locked-door)) 33 17)
 
-   (list (mk-locked-door) 36 17)
+   (list (mk-locked-door) 36 18)
    (list (mk-locked-door) 33 20)
    (list (mk-locked-door) 36 20)
    (list (mk-locked-door) 42 25)
@@ -98,6 +98,7 @@
    (list (mk-bed) 38 21)
    (list (mk-bed) 40 17)
    (list (mk-bed) 44 17)
+   (list (mk-clock) 35 17)
 
    ;; Bill's hut
    (list (mk-locked-door) 24 17)

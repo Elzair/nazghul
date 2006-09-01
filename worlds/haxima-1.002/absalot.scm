@@ -65,6 +65,9 @@
  (list ; objects
 
   (put (mk-ladder-down 'p_old_absalot 11 27) 2 2)
+  (put (mk-clock) 12 4)
+  (put (mk-broken-clock s_clock_stopped s_clock_stopped "The clock is broken beyond repair") 34 8)
+  
   )
 
  nil ; hooks

@@ -47,6 +47,7 @@
  (put (mk-bed) 9 17)
  (put (mk-bed) 11 17)
  (put (mk-bed) 13 17)
+ (put (mk-clock) 13 5)
  (put (spawn-pt 'cave-goblin-slinger) 18 7)
  (put (spawn-pt 'cave-goblin-slinger) 18 11)
  (put (spawn-pt 'cave-goblin-berserker) 15 9)

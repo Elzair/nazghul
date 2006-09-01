@@ -61,6 +61,8 @@
 
   (put (mk-door) 9 5)
   (put (mk-windowed-door) 2 12)
+  (put (mk-clock) 5 9)
+  (put (mk-broken-clock s_clock_stopped s_clock_stopped "The internals of this clock are spread across the table") 8 7)
 
   (put (kern-mk-obj t_voidship_plans 1) 16 7)
   )

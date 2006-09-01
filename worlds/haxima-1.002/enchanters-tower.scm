@@ -134,6 +134,7 @@
   (put (mk-door) 13 12)
   (put (mk-door) 17  9)
   (put (mk-door) 17 12)
+  (put (mk-clock) 7 12)
   )
 
  nil ; hooks

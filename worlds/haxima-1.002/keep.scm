@@ -63,7 +63,7 @@
  'p_paladins_hold "Paladin's Hold"
  (list
   "xx xx xx xx xx xx xx xx xx xx xx xx xx && xx xx xx xx xx "
-  "xx xx xx xx xx xx xx xx xx x! ,, ,, ,, ,, ,, ,, ,, x! xx "
+  "xx xx xx ,, xx xx xx xx xx x! ,, ,, ,, ,, ,, ,, ,, x! xx "
   "xx xx ,, ,, ,, xx x! xx xx ,, ,, ,, ,, ,, ,, ,, ,, ,, xx "
   "xx && ,, ,, ,, ,, ,, ,, ,, ,, ,, [[ @@ @@ @@ ]] ,, ,, xx "
   "xx xx ,, ,, ,, xx ,, xx xx ,, ,, ,, ,, ,, ,, ,, ,, ,, xx "
@@ -83,6 +83,7 @@
   "xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx "
   )
  (put (kern-tag 'php1 (mk-portcullis)) 14 9)
+ (put (mk-clock) 3 1) 
  (put (mk-door) 5 15)
  (put (mk-door) 12 15)
  (put (mk-bed) 13 17)
