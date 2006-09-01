@@ -131,6 +131,7 @@
   (put (mk-locked-door) 4 47)  
   (put (mk-door) 4 44)
   (put (mk-bed) (zone-x sea-witch-bed) (zone-y sea-witch-bed))
+  (put (mk-mirror s_mirror_bg_flagstones) 5 45)
 
   ;; Alkemysts
   (put (mk-door) 8 29)

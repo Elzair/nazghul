@@ -19,7 +19,11 @@
 (kern-mk-sprite 's_clock_hand_s    ss_tools 1 13 #f 0)
 (kern-mk-sprite 's_clock_hand_sw    ss_tools 1 14 #f 0)
 (kern-mk-sprite 's_clock_hand_nw    ss_tools 1 15 #f 0)
-(kern-mk-sprite 's_clock_spin    ss_tools 6 10 #f 0)
+(kern-mk-sprite 's_clock_spin            ss_tools 6 10 #f 0)
+(kern-mk-sprite 's_mirror_fg             ss_tools 1 16 #f 0)
+(kern-mk-sprite 's_mirror_bg_flagstones   ss_tools 1 17 #f 0)
+(kern-mk-sprite 's_mirror_bg   ss_tools 1 18 #f 0)
+
 
 
 ;; torch -- use two in-lor spells
@@ -216,7 +220,46 @@
 		(kern-obj-set-sprite kclock (mk-composite-sprite (list s_clock_stopped icona iconb)))
 		(kern-obj-set-pclass kclock pclass-wall)
 		kclock))
-		
 
+(define (get-char-at location)
+	(define (get-char-from list)
+		(println list)
+		(cond ((null? list) nil)
+			((kern-obj-is-char? (car list)) (car list))
+			(else get-char-from (cdr list)))
+		)
+	(get-char-from (kern-get-objects-at location))
+	)
+
+(define mirror-ifc
+  (ifc '()
+       (method 'handle 
+			(lambda (kmirror kuser)
+					(kern-log-msg (kern-obj-get-name kuser) " spots a " (kern-obj-get-name kuser) " in the mirror")
+				))
+		(method 'update-gfx
+			(lambda (kmirror)
+				(let* ((mirror-loc (kern-obj-get-location kmirror))
+						(temp (println "a"))
+						(target-loc (list (car mirror-loc) (cadr mirror-loc) (+ (caddr mirror-loc) 1)))
+						(temp (println "b"))
+						(character (get-char-at target-loc)))
+					(if (null? character)
+						(kern-obj-set-sprite kmirror (mk-composite-sprite (list s_mirror_bg (gob kmirror) s_mirror_fg)))
+						(kern-obj-set-sprite kmirror (mk-composite-sprite (list s_mirror_bg (kern-obj-get-sprite character) (gob kmirror) s_mirror_fg))))
+					(kern-map-set-dirty)
+				)))
+       ))
 	
+(mk-obj-type 't_mirror "mirror"
+	'()
+	layer-mechanism mirror-ifc)
+	
+(define (mk-mirror background)
+	(let ((kmirror (kern-mk-obj t_mirror 1)))
+		(bind kmirror background)
+		(kern-obj-set-sprite kmirror (mk-composite-sprite (list background s_mirror_fg)))
+		(kern-obj-set-pclass kmirror pclass-wall)
+		(kern-obj-add-effect kmirror ef_graphics_update nil) 
+		kmirror))
 
