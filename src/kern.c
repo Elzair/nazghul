@@ -7576,6 +7576,24 @@ KERN_API_CALL(kern_sprite_append_decoration)
         return scm_mk_ptr(sc, orig);
 }
 
+KERN_API_CALL(kern_sprite_tint)
+{
+        struct sprite *sprite;
+        Uint32 tint;
+
+        if (unpack(sc, &args, "pd", &sprite, &tint)) {
+                load_err("kern-sprite-tint: bad args");
+                return sc->NIL;
+        }
+
+        /* prototype hack: access fields directly */
+        sprite->tint = tint;
+        sprite->tinted = 1;
+
+        return scm_mk_ptr(sc, sprite);
+}
+
+
 #if 0
 KERN_API_CALL(kern_los_invalidate)
 {
@@ -7984,6 +8002,8 @@ scheme *kern_init(void)
         /* kern-sprite api */
         API_DECL(sc, "kern-sprite-clone", kern_sprite_clone);
         API_DECL(sc, "kern-sprite-append-decoration", kern_sprite_append_decoration);
+        API_DECL(sc, "kern-sprite-tint", kern_sprite_tint);
+
 
         /* kern-vehicle-api */
         API_DECL(sc, "kern-vehicle-set-name", kern_vehicle_set_name);

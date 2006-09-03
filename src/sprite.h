@@ -47,8 +47,10 @@ struct sprite {
         int facings;            // bitmap of supported facing sequences
         int sequence;           // current animation sequence
         struct sprite *decor;   // decoration sprites
-        int faded:1;	        // render sprite sem-transparent
-        int wave : 1;
+        Uint32 tint;            /* optional color tint */
+        int faded  : 1;	        // render sprite sem-transparent
+        int wave   : 1;         /* vertical roll */
+        int tinted : 1;         /* apply tint color */
 };
 
 extern int spriteInit(void);

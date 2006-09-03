@@ -42,6 +42,71 @@ struct {
 static int sprite_zoom_factor = 1;
 static unsigned int sprite_ticks = 0;
 
+static void sprite_blit_tinted(SDL_Surface *source, SDL_Rect *from, 
+                               SDL_Rect *to, Uint32 tint)
+{
+	int dx, dy, di, sx, sy, si, spitch, dpitch;
+	Uint32 *dpix, *spix;
+        Uint8 tint_red, tint_grn, tint_blu;
+        Uint8 pix_red, pix_grn, pix_blu, pix_alpha;
+        SDL_Surface *tmp = 0;
+
+	tmp = SDL_CreateRGBSurface(source->flags,
+				   from->w, from->h,
+				   source->format->BitsPerPixel,
+				   source->format->Rmask,
+				   source->format->Gmask,
+				   source->format->Bmask,
+				   source->format->Amask);
+	if (tmp == NULL) {
+		perror_sdl("SDL_CreateRGBSurface");
+		return;
+	}
+
+        /* Isolate the color components of the tint (this assumes the tint has
+         * the same pixel format as the source...) */
+        tint_red = (tint & source->format->Rmask) >> source->format->Rshift;
+        tint_grn = (tint & source->format->Gmask) >> source->format->Gshift;
+        tint_blu = (tint & source->format->Bmask) >> source->format->Bshift;
+
+	dpix = (Uint32 *) tmp->pixels;
+	spix = (Uint32 *) source->pixels;
+
+	dpitch = tmp->pitch / tmp->format->BytesPerPixel;
+	spitch = source->pitch / source->format->BytesPerPixel;
+
+	for (dy = 0; dy < from->h; dy++) {
+		sy = dy;
+		for (dx = 0; dx < from->w; dx++) {
+			sx = dx;
+			di = (dy * dpitch + dx);
+			si = (sy + from->y) * spitch + (sx + from->x);
+
+                        /* Isolate the color components of the pixel. */
+                        pix_red = (spix[si] & source->format->Rmask) >> source->format->Rshift;
+                        pix_grn = (spix[si] & source->format->Gmask) >> source->format->Gshift;
+                        pix_blu = (spix[si] & source->format->Bmask) >> source->format->Bshift;
+                        pix_alpha = (spix[si] & source->format->Amask) >> source->format->Ashift;
+
+                        /* Average the tint and pixel colors. */
+                        pix_red = (pix_red + tint_red) / 2;
+                        pix_grn = (pix_grn + tint_grn) / 2;
+                        pix_blu = (pix_blu + tint_blu) / 2;
+
+                        /* Recombine them, along with the original alpha
+                         * component, into the destination pixel. */
+                        dpix[di] = (pix_red << tmp->format->Rshift
+                                    | pix_grn << tmp->format->Gshift
+                                    | pix_blu << tmp->format->Bshift
+                                    | pix_alpha << tmp->format->Ashift);
+                }
+        }
+        
+
+        screenBlit(tmp, NULL, to);
+        SDL_FreeSurface(tmp);
+}
+
 static void myPaintWave(struct sprite *sprite, int frame, int x, int y)
 {
 	SDL_Rect src;
@@ -78,7 +143,12 @@ static void myPaintWave(struct sprite *sprite, int frame, int x, int y)
 	dest.w = sprite->images->w;
 	dest.h = src.h;
 
-	screenBlit(sprite->surf, &src, &dest);
+        if (sprite->tinted) {
+                sprite_blit_tinted(sprite->surf, &src,
+                                   &dest, sprite->tint);
+        } else {
+                screenBlit(sprite->surf, &src, &dest);
+        }
 
 	src = sprite->frames[frame];
 	src.h = wavecrest;
@@ -88,8 +158,13 @@ static void myPaintWave(struct sprite *sprite, int frame, int x, int y)
                 sprite_zoom_factor;
 	dest.w = sprite->images->w;
 	dest.h = src.h;
-
-	screenBlit(sprite->surf, &sprite->frames[frame], &dest);
+        
+        if (sprite->tinted) {
+                sprite_blit_tinted(sprite->surf, &sprite->frames[frame], 
+                                   &dest, sprite->tint);
+        } else {
+                screenBlit(sprite->surf, &sprite->frames[frame], &dest);
+        }
 
 }
 
@@ -105,7 +180,12 @@ static void myPaintNormal(struct sprite *sprite, int frame, int x, int y)
         frame = (frame + sprite_ticks) % sprite->n_frames;
 	frame += sprite->sequence * sprite->n_frames;
 
-	screenBlit(sprite->surf, &sprite->frames[frame], &dest);
+        if (sprite->tinted) {
+                sprite_blit_tinted(sprite->surf, &sprite->frames[frame], 
+                                   &dest, sprite->tint);
+        } else {
+                screenBlit(sprite->surf, &sprite->frames[frame], &dest);
+        }
 
 }
 
@@ -283,8 +363,12 @@ struct sprite * sprite_new(char *tag, int frames, int index, int wave,
 
 struct sprite *spriteClone(struct sprite *orig)
 {
-        return sprite_new(NULL, orig->n_frames, orig->index, orig->wave, 
-                          orig->facings, orig->images);
+        struct sprite *sprite = sprite_new(NULL, orig->n_frames, 
+                                           orig->index, orig->wave, 
+                                           orig->facings, orig->images);
+        sprite->tint = orig->tint;
+        sprite->tinted = orig->tinted;
+        return sprite;
 }
 
 void spriteAppendDecoration(struct sprite *base, struct sprite *decor)
