@@ -163,6 +163,12 @@ struct kern_append_info {
         void *data;
 };
 
+struct kern_ui_target_info {
+        struct place *place;
+        int x, y, range;
+        struct list suggest;
+};
+
 /*****************************************************************************
  *
  * kjob - wrapper for work queue jobs
@@ -3980,10 +3986,59 @@ KERN_API_CALL(kern_mk_effect)
         return sc->NIL;
 }
 
+/*  kern_ui_target_visitor - build a suggested list of targets from all beings
+ *  in range. */
+static void kern_ui_target_visitor(class Object *obj, void *data)
+{
+        struct kern_ui_target_info *info = (struct kern_ui_target_info*)data;
+        class Character *npc = 0;
+        int dist = 0;
+        struct location_list *entry = 0;
+
+        if (being_layer!=obj->getLayer())
+                return;
+
+        npc = (class Character*)obj;
+
+        if (! npc->isVisible() && ! Reveal)
+                return;
+        
+        dist = place_flying_distance(info->place,
+                                     info->x,
+                                     info->y,
+                                     obj->getX(),
+                                     obj->getY());
+        if (dist > info->range)
+                return;
+
+        /* Add it to the list */
+        entry = (struct location_list*)malloc(sizeof(*entry));
+        assert(entry);
+        entry->x = obj->getX();
+        entry->y = obj->getY();
+        list_add_tail(&info->suggest, &entry->list);
+}
+
+/* kern_ui_target_cleanup_info - free the suggest list. */
+static void kern_ui_target_cleanup_info(struct kern_ui_target_info *info)
+{
+        struct list *head = &info->suggest;
+        struct list *entry = head->next;
+        while (entry != head) {
+                struct location_list *tmp = 
+                        (struct location_list*)entry;
+                entry = entry->next;
+                list_remove(&tmp->list);
+                free(tmp);
+        }
+}
+
 KERN_API_CALL(kern_ui_target)
 {
         struct place *place;
         int ox, oy, tx, ty, range;
+        struct kern_ui_target_info info;
+        pointer ret;
 
         /* Unpack the origin */
         if (unpack_loc(sc, &args, &place, &ox, &oy, "kern-ui-target")) {
@@ -3996,14 +4051,32 @@ KERN_API_CALL(kern_ui_target)
                 return sc->NIL;
         }
 
+        /* Build a list of suggested targets. */
+        memset(&info, 0, sizeof(info));
+        info.place = Place;
+        info.x = ox;
+        info.y = oy;
+        info.range = range;
+        list_init(&info.suggest);
+        place_for_each_object(Place,
+                              kern_ui_target_visitor,
+                              &info);
+        
+
         /* Get the target coords from the user */
         tx = ox;
         ty = oy;
-        if (select_target(ox, oy, &tx, &ty, range, 0))
-                return sc->NIL;
+        if (select_target(ox, oy, &tx, &ty, range, &info.suggest)) {
+                ret = sc->NIL;
+        }
         
         /* Pack the target coords for return */
-        return pack(sc, "pdd", place, tx, ty);
+        else { 
+                ret = pack(sc, "pdd", place, tx, ty);
+        }
+
+        kern_ui_target_cleanup_info(&info);
+        return ret;
 }
 
 KERN_API_CALL(kern_fire_missile)

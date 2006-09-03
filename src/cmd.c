@@ -1846,17 +1846,23 @@ static void run_combat(bool camping, class Character * guard, int hours,
 	combat_enter(&cinfo);
 }
 
-struct nearest_conversant_info {
+struct talk_info {
         class Object *origin;
         class Object *nearest;
         int min_distance;
         int range;
+        struct list suggest;
 };
 
-static void cmd_nearest_conversant_visitor(class Object *obj, void *data)
+/* cmd_talk_info_visitor - called on each object in the current place. Used by
+ * cmdTalk() to find the nearest conversant and build a list of other available
+ * conversants. */
+static void cmd_talk_info_visitor(class Object *obj, void *data)
 {
-        struct nearest_conversant_info *info = 
-                (struct nearest_conversant_info*)data;
+        struct location_list *entry = 0;
+        int dist = 0;
+        struct talk_info *info = 
+                (struct talk_info*)data;
 
         if (! obj->getConversation())
                 return;
@@ -1877,14 +1883,24 @@ static void cmd_nearest_conversant_visitor(class Object *obj, void *data)
                 return;
         
 
-        int dist = place_flying_distance(info->origin->getPlace(),
-                                         info->origin->getX(),
-                                         info->origin->getY(),
-                                         obj->getX(),
-                                         obj->getY());
+        /* Filter out objects not in range of conversation. */
+        dist = place_flying_distance(info->origin->getPlace(),
+                                     info->origin->getX(),
+                                     info->origin->getY(),
+                                     obj->getX(),
+                                     obj->getY());
+
         if (dist > info->range)
                 return;
 
+        /* Add this conversant to the suggestion list. */
+        entry = (struct location_list*)malloc(sizeof(*entry));
+        assert(entry);
+        entry->x = obj->getX();
+        entry->y = obj->getY();
+        list_add_tail(&info->suggest, &entry->list);
+
+        /* Remember the nearest conversant. */
         if (! info->nearest
             || dist < info->min_distance) {
                 info->nearest = obj;
@@ -1892,25 +1908,45 @@ static void cmd_nearest_conversant_visitor(class Object *obj, void *data)
         }
 }
 
-static class Object *cmd_get_nearest_conversant(class Object *member, int range)
+/* cmd_get_talk_info - find the nearest conversant and build the
+ * 'suggest' list. */
+static class Object *cmd_get_talk_info(struct talk_info *info,
+                                             class Object *member, 
+                                             int range)
 {
-        struct nearest_conversant_info info;
-        info.origin = member;
-        info.nearest = NULL;
-        info.min_distance = 0;
-        info.range = range;
+        memset(info, 0, sizeof(info));
+        info->origin = member;
+        info->nearest = NULL;
+        info->min_distance = 0;
+        info->range = range;
+        list_init(&info->suggest);
 
-        place_for_each_object(member->getPlace(), cmd_nearest_conversant_visitor,
-                              &info);
+        place_for_each_object(member->getPlace(), 
+                              cmd_talk_info_visitor,
+                              info);
 
-        return info.nearest;
+        return info->nearest;
 }
 
-bool cmdTalk(Object *member)
+/* cmd_cleanup_talk_info - free the 'suggest' list. */
+static void cmd_cleanup_talk_info(struct talk_info *info)
+{
+        struct list *entry;
+        for (entry = info->suggest.next; entry != &info->suggest; ) {
+                struct location_list *loc = (struct location_list*)entry;
+                entry = entry->next;
+                list_remove(&loc->list);
+                free(loc);
+        }
+}
+
+void cmdTalk(Object *member)
 {
 	struct closure *conv = NULL;
         class Object *obj, *conversant;
         int x, y;
+        struct talk_info info;
+        const int max_distance = 5;
 
 	// *** Prompt user & check if valid ***
 
@@ -1920,19 +1956,20 @@ bool cmdTalk(Object *member)
         if (! member) {
                 member = select_party_member();
                 if (! member)
-                        return false;
+                        return;
         }
 
         // start cursor on nearest object with a conversation
-        conversant = cmd_get_nearest_conversant(member, 5);
+        conversant = cmd_get_talk_info(&info, member, max_distance);
         if (! conversant)
                 conversant = member;
 
         x = conversant->getX();
         y = conversant->getY();
 
-	if (select_target(member->getX(), member->getY(), &x, &y, 5, 0) == -1) {
-		return false;
+	if (select_target(member->getX(), member->getY(), 
+                          &x, &y, max_distance, &info.suggest) == -1) {
+                goto cleanup;
 	}
 
 	obj = place_get_object(Place, x, y, being_layer);
@@ -1940,7 +1977,7 @@ bool cmdTalk(Object *member)
 	if (!obj) {
                 cmdwin_spush("nobody there!");
                 log_msg("Try talking to a PERSON.");
-                return false;
+                goto cleanup;
         }
 
         // This next bit was added to support talking to parties, where the
@@ -1948,7 +1985,7 @@ bool cmdTalk(Object *member)
         obj = obj->getSpeaker();
         if (! obj) {
                 cmdwin_spush("cancel");
-                return false;
+                goto cleanup;
         }
 
         conv = obj->getConversation();
@@ -1957,7 +1994,7 @@ bool cmdTalk(Object *member)
                 log_begin("No response from ");
                 obj->describe();
                 log_end(".");
-		return true;
+                goto cleanup;
         }
 
 	cmdwin_spush(obj->getName());
@@ -1969,7 +2006,7 @@ bool cmdTalk(Object *member)
              ((class Character*)obj)->isAsleep())) {
 		log_msg("Zzzz...\n");
                 //log_end_group();
-		return true;
+                goto cleanup;
 	}
 
         conv_enter(obj, member, conv);
@@ -1977,7 +2014,11 @@ bool cmdTalk(Object *member)
 
 	mapSetDirty();
 
-        return true;
+ cleanup:
+        
+        cmd_cleanup_talk_info(&info);
+
+        return;
 }
 
 bool cmdZtats(class Character * pc)
