@@ -235,8 +235,8 @@
 (define (grav-por caster)
 	(cast-ui-basic-ranged-spell powers-magic-missile
 		caster 
-		(powers-magic-missile-range occ-ability-blackmagic caster)
-		(occ-ability-blackmagic kchar)))
+		(powers-magic-missile-range (occ-ability-blackmagic caster))
+		(occ-ability-blackmagic caster)))
 
 (define (in-lor caster)
 	(powers-light caster caster (occ-ability-whitemagic caster))
