@@ -89,7 +89,7 @@ void Missile::animate(int Ax, int Ay, int Bx, int By, int _flags)
         struck = NULL;
         flags = _flags;
 
-        struct sprite *tmpSprite = spriteClone(getSprite());
+        struct sprite *tmpSprite = sprite_clone(getSprite());
         mapAnimateProjectile(Ax, Ay, &Bx, &By, tmpSprite, getPlace(), this);
         sprite_del(tmpSprite);
 

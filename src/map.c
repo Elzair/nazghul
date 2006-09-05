@@ -720,7 +720,7 @@ static void map_paint_cursor(void)
         }
 
         /* Paint it */
-        spritePaint(Session->crosshair->getSprite(), 0, 
+        sprite_paint(Session->crosshair->getSprite(), 0, 
                     MX_TO_SX(x), MY_TO_SY(y));
 
 }
@@ -827,7 +827,7 @@ static void mapPaintPlace(struct place *place,
                                 // shade it.
                                 terrain = place_get_terrain(place,map_x,map_y);
                                 sprite = terrain->sprite;
-                                spritePaint(sprite, 0, scr_x, scr_y);
+                                sprite_paint(sprite, 0, scr_x, scr_y);
                                 
                                 SDL_Rect shade_rect;
                                 shade_rect.x = scr_x;
@@ -843,7 +843,7 @@ static void mapPaintPlace(struct place *place,
                         // Tile is visible, so paint terrain and objects.
                         terrain = place_get_terrain(place, map_x, map_y);
 			sprite = terrain->sprite;
-			spritePaint(sprite, 0, scr_x, scr_y);
+			sprite_paint(sprite, 0, scr_x, scr_y);
                         place_paint_objects(place, map_x, map_y, scr_x, scr_y);
 
                         // If the crosshair is active but this tile is not in
@@ -938,7 +938,7 @@ void mapRepaintView(struct mview *view, int flags)
         }
 
 	if (Map.aview->zoom > 1) {
-                spriteZoomOut(Map.aview->zoom);
+                sprite_zoom_out(Map.aview->zoom);
 		screenZoomOut(Map.aview->zoom);
 		t5 = SDL_GetTicks();
 		mapPaintPlace(Map.place, &view->vrect, &Map.srect, 
@@ -947,7 +947,7 @@ void mapRepaintView(struct mview *view, int flags)
                               TILE_H / Map.aview->zoom);
 		t6 = SDL_GetTicks();
 		screenZoomIn(Map.aview->zoom);
-                spriteZoomIn(Map.aview->zoom);
+                sprite_zoom_in(Map.aview->zoom);
 	} else if (flags & REPAINT_NO_LOS) {
                 t5 = SDL_GetTicks();
 		mapPaintPlace(Map.place, &view->vrect, &Map.srect, 0, 
@@ -1258,10 +1258,10 @@ static void mapPaintProjectile(SDL_Rect *rect, struct sprite *sprite,
 	screenCopy(rect, NULL, surf);
 
 	// Paint the missile at the new location
-        spriteZoomOut(Map.aview->zoom);
+        sprite_zoom_out(Map.aview->zoom);
         screenZoomOut(Map.aview->zoom);
-	spritePaint(sprite, 0, rect->x, rect->y);
-        spriteZoomIn(Map.aview->zoom);
+	sprite_paint(sprite, 0, rect->x, rect->y);
+        sprite_zoom_in(Map.aview->zoom);
         screenZoomIn(Map.aview->zoom);
 
 	screenUpdate(rect);
@@ -1380,7 +1380,7 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
 
 	// Select the sprite orientation based on direction of travel
         if (sprite) {
-                spriteSetFacing(sprite, vector_to_dir(dX, dY));
+                sprite_set_facing(sprite, vector_to_dir(dX, dY));
         }
 
 	// Moving left?
@@ -1467,7 +1467,7 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
 
 	// restore the missile sprite to the default facing
         if (sprite)
-                spriteSetFacing(sprite, SPRITE_DEF_FACING);
+                sprite_set_facing(sprite, SPRITE_DEF_FACING);
 
         // Not anymore, now that we keep it in Map.tile_scratch_surf
 	//if (surf != NULL)
@@ -1544,11 +1544,11 @@ void mapUpdateTile(struct place *place, int x, int y)
                 // cover the area viewed.
                 // ------------------------------------------------------------
                 
-                spriteZoomOut(Map.aview->zoom);
+                sprite_zoom_out(Map.aview->zoom);
 		screenZoomOut(Map.aview->zoom);
-                spritePaint(terrain->sprite, 0, rect.x, rect.y);
+                sprite_paint(terrain->sprite, 0, rect.x, rect.y);
                 place_paint_objects(place, x, y, rect.x, rect.y);
-                spriteZoomIn(Map.aview->zoom);
+                sprite_zoom_in(Map.aview->zoom);
 		screenZoomIn(Map.aview->zoom);
 
         } else {
@@ -1564,7 +1564,7 @@ void mapUpdateTile(struct place *place, int x, int y)
                         + (x - Map.aview->vrect.x);
 
                 if (vmask[index] || ShowAllTerrain || XrayVision) {
-                        spritePaint(terrain->sprite, 0, rect.x, rect.y);
+                        sprite_paint(terrain->sprite, 0, rect.x, rect.y);
                 }
 
                 if (vmask[index]) {

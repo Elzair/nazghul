@@ -512,7 +512,7 @@ void Object::paint(int sx, int sy)
 {
 	struct sprite *sprite = getSprite();
 	if (sprite)
-		spritePaint(sprite, 0, sx, sy);
+		sprite_paint(sprite, 0, sx, sy);
 }
 
 void Object::describe()

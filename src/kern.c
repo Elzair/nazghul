@@ -7552,7 +7552,7 @@ KERN_API_CALL(kern_sprite_clone)
                 rt_err("kern-sprite-clone: bad args");
                 return sc->NIL;
         }
-        clone = spriteClone(orig);
+        clone = sprite_clone(orig);
         if (clone) {
                 session_add(Session, clone, sprite_dtor, NULL, NULL);
                 return scm_mk_ptr(sc, clone);
@@ -7572,7 +7572,7 @@ KERN_API_CALL(kern_sprite_append_decoration)
                 rt_err("kern-sprite-append-decoration: null arg");
                 return sc->NIL;
         }
-        spriteAppendDecoration(orig, decor);
+        sprite_append_decoration(orig, decor);
         return scm_mk_ptr(sc, orig);
 }
 

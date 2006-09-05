@@ -78,7 +78,7 @@ static bool tickHandler(struct TickHandler *th)
 {
 	Tick++;
         wqRunToTick(&TickWorkQueue, Tick);
-        spriteAdvanceTicks(1);
+        sprite_advance_ticks(1);
 	return Quit;
 }
 

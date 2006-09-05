@@ -203,7 +203,7 @@ static void sky_paint_astral_body(struct sky *sky, int arc,
                 return;
 	x = sky->screenRect.x + sky->screenRect.w - pixels;
 
-	spritePaint(sprite, 0, x, sky->screenRect.y);
+	sprite_paint(sprite, 0, x, sky->screenRect.y);
 }
 
 int astral_body_is_visible(int arc)

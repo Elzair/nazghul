@@ -330,7 +330,7 @@ static void status_show_arms_stats(SDL_Rect *rect, ArmsType *arms)
  * this shows individual arms held by the member */
 static void status_show_member_arms(SDL_Rect * rect, ArmsType *arms)
 {
-	spritePaint(arms->getSprite(), 0, rect->x, rect->y);
+	sprite_paint(arms->getSprite(), 0, rect->x, rect->y);
 	rect->x += TILE_W;
 
         /* name */
@@ -351,7 +351,7 @@ static void status_show_ztat_arms(SDL_Rect * rect, void *thing)
         assert(ie->count);
 
         /* sprite */
-	spritePaint(arms->getSprite(), 0, rect->x, rect->y);
+	sprite_paint(arms->getSprite(), 0, rect->x, rect->y);
 	rect->x += TILE_W;
 
         /* quantity and name */
@@ -382,7 +382,7 @@ static void status_show_ready_arms(SDL_Rect * rect, void *thing)
         assert(avail >= 0);
 
         /* sprite */
-	spritePaint(arms->getSprite(), 0, rect->x, rect->y);
+	sprite_paint(arms->getSprite(), 0, rect->x, rect->y);
 	rect->x += TILE_W;
 
         if (ie->ref && 
@@ -436,7 +436,7 @@ int status_show_effect(hook_entry_t *entry, void *data)
 
         /* Blit the effect icon, if it has one */
         if (effect->sprite) {
-                spritePaint(effect->sprite, 0, rect->x, rect->y);
+                sprite_paint(effect->sprite, 0, rect->x, rect->y);
         }
 
         rect->x += ASCII_W;
@@ -607,7 +607,7 @@ static void status_show_generic_object_type(SDL_Rect *rect, void *thing)
 {
         struct inv_entry *ie = (struct inv_entry*)thing;
         if (ie->type->getSprite()) {
-                spritePaint(ie->type->getSprite(), 0, rect->x, rect->y);
+                sprite_paint(ie->type->getSprite(), 0, rect->x, rect->y);
         }
         
         /* Indent past the sprite column. */
@@ -649,7 +649,7 @@ static void status_show_mix_reagent(SDL_Rect *rect, void *thing)
 {
         struct inv_entry *ie = (struct inv_entry*)thing;
         if (ie->type->getSprite()) {
-                spritePaint(ie->type->getSprite(), 0, rect->x, rect->y);
+                sprite_paint(ie->type->getSprite(), 0, rect->x, rect->y);
         }
         
         /* Indent past the sprite column. */
@@ -778,7 +778,7 @@ static int status_show_effect_icon(hook_entry_t *entry, void *data)
                 return 0;
 
         /* Blit the effect sprite. */
-        spritePaint(eff->sprite, 0, rect->x, rect->y);
+        sprite_paint(eff->sprite, 0, rect->x, rect->y);
         
         /* Shift the rectangle one left. */
         rect->x -= ASCII_W;
@@ -832,7 +832,7 @@ static void status_show_party_view_character_arms(class Character *pm,
         rect->x = rect->x + rect->w - ICON_W;
 
         /* Tell the sprite lib to scale down by 2x */
-        spriteZoomOut(2);
+        sprite_zoom_out(2);
         screenZoomOut(2);
 
         /* for each readied armament */
@@ -840,7 +840,7 @@ static void status_show_party_view_character_arms(class Character *pm,
 	for (arms = pm->enumerateArms(&armsIndex); arms != NULL; arms = pm->getNextArms(&armsIndex)) {
 
                 /* blit it */
-                spritePaint(arms->getSprite(), 0, rect->x, rect->y);
+                sprite_paint(arms->getSprite(), 0, rect->x, rect->y);
 
                 /* shift the rectangle one left */
                 rect->x -= ICON_W;
@@ -853,7 +853,7 @@ static void status_show_party_view_character_arms(class Character *pm,
 
         /* Tell the sprite lib to go back to unscaled sprites */
         screenZoomIn(2);
-        spriteZoomIn(2);
+        sprite_zoom_in(2);
 
         /* restore the left edge for the caller */
         rect->x = left_edge;
@@ -868,7 +868,7 @@ static bool status_show_party_view_character(class Character * pm, void *data)
 		return true;
 
 	/* Paint the sprite */
-	spritePaint(pm->getSprite(), 0, Status.screenRect.x, 
+	sprite_paint(pm->getSprite(), 0, Status.screenRect.x, 
                     Status.lineRect.y);
 
 	/* Paint the name on line 1 */
@@ -1252,7 +1252,7 @@ static void myPaintTrade(void)
 		}
 		// sprite
 		if (Status.trades[i].show_sprite) {
-			spritePaint(Status.trades[i].sprite, 0, srect.x,
+			sprite_paint(Status.trades[i].sprite, 0, srect.x,
 				    srect.y);
 		}
 		// name
@@ -1324,7 +1324,7 @@ static void statusPaintGenericList(void)
 
 		// paint sprite (if applicable)
 		if (Status.list[i].sprite) {
-			spritePaint(Status.list[i].sprite, 0, srect.x,
+			sprite_paint(Status.list[i].sprite, 0, srect.x,
 				    srect.y);
 		}
 

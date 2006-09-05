@@ -249,10 +249,10 @@ bool Vehicle::fire_weapon(int dx, int dy, class Object *user)
 void Vehicle::paint(int sx, int sy)
 {
 	struct sprite *sprite = getSprite();
-        int origFacing = spriteGetFacing(sprite);
-	spriteSetFacing(sprite, facing);
-	spritePaint(sprite, 0, sx, sy);
-        spriteSetFacing(sprite, origFacing);
+        int origFacing = sprite_get_facing(sprite);
+	sprite_set_facing(sprite, facing);
+	sprite_paint(sprite, 0, sx, sy);
+        sprite_set_facing(sprite, origFacing);
 }
 
 bool Vehicle::turn(int dx, int dy, int *cost)

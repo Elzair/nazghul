@@ -163,7 +163,7 @@ void tile_paint(tile_t *tile, int sx, int sy)
 
         /* Check for a subplace. The temp combat place won't have a sprite. */
         if (tile->subplace && place_get_sprite(tile->subplace)) {
-                spritePaint(place_get_sprite(tile->subplace), 0, sx, sy);
+                sprite_paint(place_get_sprite(tile->subplace), 0, sx, sy);
         }
 
 	/* Check for a vehicle */

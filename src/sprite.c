@@ -218,7 +218,7 @@ void sprite_del(struct sprite *sprite)
 	delete sprite;
 }
 
-void spritePaint(struct sprite *sprite, int frame, int x, int y)
+void sprite_paint(struct sprite *sprite, int frame, int x, int y)
 {
         while (sprite) {
 
@@ -232,36 +232,36 @@ void spritePaint(struct sprite *sprite, int frame, int x, int y)
         }
 }
 
-void spriteAdvanceTicks(int ticks)
+void sprite_advance_ticks(int ticks)
 {
         Sprite.ticks_to_next_animation -= ticks;
         if (Sprite.ticks_to_next_animation <= 0) {
-                spriteAdvanceFrames();
+                sprite_advance_frames();
                 cmdwin_repaint_cursor();
                 statusRepaint();
                 Sprite.ticks_to_next_animation += AnimationTicks;
         }
 }
 
-int spriteInit(void)
+int sprite_init(void)
 {
         Sprite.ticks_to_next_animation = 0;
         return 0;
 }
 
-void spriteAdvanceFrames(void)
+void sprite_advance_frames(void)
 {
         sprite_ticks++;
 	mapSetDirty();
 
 }
 
-int spriteGetFacing(struct sprite *sprite)
+int sprite_get_facing(struct sprite *sprite)
 {
         return sprite->facing;
 }
 
-int spriteSetFacing(struct sprite *sprite, int facing)
+int sprite_set_facing(struct sprite *sprite, int facing)
 {
 	int bit, i;
 
@@ -271,7 +271,7 @@ int spriteSetFacing(struct sprite *sprite, int facing)
 	}
 	// facing supported?
 	if ((sprite->facings & (1 << facing)) == 0) {
-                dbg("warn: spriteSetFacing: facing=%d invalid for sprite %s\n",
+                dbg("warn: sprite_set_facing: facing=%d invalid for sprite %s\n",
                     facing, sprite->tag);
 		return -1;
         }
@@ -317,12 +317,12 @@ void sprite_unfade(struct sprite *sprite)
 	sprite->faded = 0;
 }
 
-void spriteZoomOut(int factor)
+void sprite_zoom_out(int factor)
 {
         sprite_zoom_factor *= factor;
 }
 
-extern void spriteZoomIn(int factor)
+extern void sprite_zoom_in(int factor)
 {
         sprite_zoom_factor /= factor;
 }
@@ -379,7 +379,7 @@ struct sprite * sprite_new(char *tag, int frames, int index, int wave,
 	return sprite;
 }
 
-struct sprite *spriteClone(struct sprite *orig)
+struct sprite *sprite_clone(struct sprite *orig)
 {
         struct sprite *sprite = sprite_new(NULL, orig->n_frames, 
                                            orig->index, orig->wave, 
@@ -389,13 +389,13 @@ struct sprite *spriteClone(struct sprite *orig)
         return sprite;
 }
 
-void spriteAppendDecoration(struct sprite *base, struct sprite *decor)
+void sprite_append_decoration(struct sprite *base, struct sprite *decor)
 {
         assert(base);
         while (base->decor) {
                 base = base->decor;
         }
-        base->decor = spriteClone(decor);
+        base->decor = sprite_clone(decor);
 }
 
 char *sprite_get_tag(struct sprite *sprite)

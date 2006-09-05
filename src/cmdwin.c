@@ -276,7 +276,7 @@ void cmdwin_repaint_cursor(void)
         char *start = max(cmdwin.buf, cmdwin.ptr - cmdwin.slen);
 	rect.x += (cmdwin.ptr - start) * ASCII_W;
 
-	spritePaint(cmdwin.cursor_sprite, 0, rect.x, rect.y);
+	sprite_paint(cmdwin.cursor_sprite, 0, rect.x, rect.y);
 	screenUpdate(&rect);
 }
 

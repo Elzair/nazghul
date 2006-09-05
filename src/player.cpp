@@ -1034,7 +1034,7 @@ void player_party::paint(int sx, int sy)
 	if (vehicle)
 		vehicle->paint(sx, sy);
 	else
-		spritePaint(getSprite(), 0, sx, sy);
+		sprite_paint(getSprite(), 0, sx, sy);
 }
 
 char *player_party::getName()

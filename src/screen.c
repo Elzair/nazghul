@@ -525,7 +525,7 @@ void screenPrint(SDL_Rect * rect, int flags, char *fmt, ...)
 	// image.
 	if (flags & SP_ONBORDER) {
 		for (x = rect->x; x < rect->x + rect->w; x += BORDER_W)
-			spritePaint(FrameSprites[FRAME_HORZ], 0, x, rect->y);
+			sprite_paint(FrameSprites[FRAME_HORZ], 0, x, rect->y);
 	}
 
 	if (flags & SP_CENTERED) {
@@ -547,7 +547,7 @@ void screenPrint(SDL_Rect * rect, int flags, char *fmt, ...)
 	// If painting on the border, then paint the right stub 
 	// to the left of the text.
 	if (flags & SP_ONBORDER)
-		spritePaint(FrameSprites[FRAME_ENDR], 0, x - BORDER_W, rect->y);
+		sprite_paint(FrameSprites[FRAME_ENDR], 0, x - BORDER_W, rect->y);
 
         /* Paint the individual characters from the buffer. This uses a state
          * machine to accomodate embedded control sequences in the text. */
@@ -559,7 +559,7 @@ void screenPrint(SDL_Rect * rect, int flags, char *fmt, ...)
 	// If painting on the border, then paint the left stub 
 	// to the right of the text.
 	if (flags & SP_ONBORDER)
-		spritePaint(FrameSprites[FRAME_ENDL], 0, x, rect->y);
+		sprite_paint(FrameSprites[FRAME_ENDL], 0, x, rect->y);
 }
 
 void screen_repaint_frame(void)
@@ -575,77 +575,77 @@ void screen_repaint_frame(void)
 
 	// Draw the top bar from the top left corner to the sky window.
 	for (i = 0; i < SKY_X - BORDER_W; i += BORDER_W)
-		spritePaint(FrameSprites[FRAME_HORZ], 0, i, 0);
+		sprite_paint(FrameSprites[FRAME_HORZ], 0, i, 0);
 
 	// Draw the top bar from the sky window to the left edge of the status
 	// window's title.
 	for (i = SKY_X + SKY_W + BORDER_W; i < STAT_X; i += BORDER_W)
-		spritePaint(FrameSprites[FRAME_HORZ], 0, i, 0);
+		sprite_paint(FrameSprites[FRAME_HORZ], 0, i, 0);
 
 	// Draw the bottom of the map from the left edge to the wind window.
 	for (i = 0; i < (int) (WIND_X - BORDER_W); i += BORDER_W)
-		spritePaint(FrameSprites[FRAME_HORZ], 0, i, MAP_X + MAP_H);
+		sprite_paint(FrameSprites[FRAME_HORZ], 0, i, MAP_X + MAP_H);
 
 	// Draw the bottom of the map from the wind window to the left edge of
 	// the console window.
 	for (i = WIND_X + WIND_W + BORDER_W; i < CONS_X - BORDER_W;
 	     i += BORDER_W)
-		spritePaint(FrameSprites[FRAME_HORZ], 0, i, MAP_X + MAP_H);
+		sprite_paint(FrameSprites[FRAME_HORZ], 0, i, MAP_X + MAP_H);
 
 	// Draw the bar across the bottom of the screen.
 	for (i = 0; i < SCREEN_W; i += BORDER_W)
-		spritePaint(FrameSprites[FRAME_HORZ], 0, i, SCREEN_H - BORDER_H);
+		sprite_paint(FrameSprites[FRAME_HORZ], 0, i, SCREEN_H - BORDER_H);
 
 	// Next draw the bottom of the status and food/gold window.
 	for (i = (MAP_X + MAP_W); i < SCREEN_W; i += BORDER_W) {
-		spritePaint(FrameSprites[FRAME_HORZ], 0, i, STAT_Y + status_get_h());
-		spritePaint(FrameSprites[FRAME_HORZ], 0, i,
+		sprite_paint(FrameSprites[FRAME_HORZ], 0, i, STAT_Y + status_get_h());
+		sprite_paint(FrameSprites[FRAME_HORZ], 0, i,
 			    foogod_get_y() + FOOGOD_H);
 	}
 
 	// Next rough in all the vertical lines.
 	for (i = 0; i < SCREEN_H; i += BORDER_H) {
-		spritePaint(FrameSprites[FRAME_VERT], 0, 0, i);
-		spritePaint(FrameSprites[FRAME_VERT], 0, MAP_X + MAP_W, i);
-		spritePaint(FrameSprites[FRAME_VERT], 0, SCREEN_W - BORDER_W, i);
+		sprite_paint(FrameSprites[FRAME_VERT], 0, 0, i);
+		sprite_paint(FrameSprites[FRAME_VERT], 0, MAP_X + MAP_W, i);
+		sprite_paint(FrameSprites[FRAME_VERT], 0, SCREEN_W - BORDER_W, i);
 	}
 
 	// Now paint the four corner pieces
-	spritePaint(FrameSprites[FRAME_ULC], 0, 0, 0);
-	spritePaint(FrameSprites[FRAME_URC], 0, SCREEN_W - BORDER_W, 0);
-	spritePaint(FrameSprites[FRAME_LLC], 0, 0, SCREEN_H - BORDER_H);
-	spritePaint(FrameSprites[FRAME_LRC], 0, SCREEN_W - BORDER_W,
+	sprite_paint(FrameSprites[FRAME_ULC], 0, 0, 0);
+	sprite_paint(FrameSprites[FRAME_URC], 0, SCREEN_W - BORDER_W, 0);
+	sprite_paint(FrameSprites[FRAME_LLC], 0, 0, SCREEN_H - BORDER_H);
+	sprite_paint(FrameSprites[FRAME_LRC], 0, SCREEN_W - BORDER_W,
 		    SCREEN_H - BORDER_H);
 
 	// Then all the right-facing tee-joints
-	spritePaint(FrameSprites[FRAME_TR], 0, 0, MAP_Y + MAP_H);
-	spritePaint(FrameSprites[FRAME_TR], 0, MAP_X + MAP_W,
+	sprite_paint(FrameSprites[FRAME_TR], 0, 0, MAP_Y + MAP_H);
+	sprite_paint(FrameSprites[FRAME_TR], 0, MAP_X + MAP_W,
 		    STAT_Y + status_get_h());
-	spritePaint(FrameSprites[FRAME_TR], 0, MAP_X + MAP_W,
+	sprite_paint(FrameSprites[FRAME_TR], 0, MAP_X + MAP_W,
 		    foogod_get_y() + FOOGOD_H);
 
 	// Then all the left-facing tee-joints
-	spritePaint(FrameSprites[FRAME_TL], 0, MAP_X + MAP_W, MAP_Y + MAP_H);
-	spritePaint(FrameSprites[FRAME_TL], 0, SCREEN_W - BORDER_W,
+	sprite_paint(FrameSprites[FRAME_TL], 0, MAP_X + MAP_W, MAP_Y + MAP_H);
+	sprite_paint(FrameSprites[FRAME_TL], 0, SCREEN_W - BORDER_W,
 		    STAT_Y + status_get_h());
-	spritePaint(FrameSprites[FRAME_TL], 0, SCREEN_W - BORDER_W,
+	sprite_paint(FrameSprites[FRAME_TL], 0, SCREEN_W - BORDER_W,
 		    foogod_get_y() + FOOGOD_H);
 
 	// Then the downward and upward-facing tee-joints
-	spritePaint(FrameSprites[FRAME_TD], 0, MAP_X + MAP_W, 0);
-	spritePaint(FrameSprites[FRAME_TU], 0, MAP_X + MAP_W, SCREEN_H - BORDER_H);
+	sprite_paint(FrameSprites[FRAME_TD], 0, MAP_X + MAP_W, 0);
+	sprite_paint(FrameSprites[FRAME_TU], 0, MAP_X + MAP_W, SCREEN_H - BORDER_H);
 
 	// And then the stubs around the sky section
-	spritePaint(FrameSprites[FRAME_ENDR], 0, SKY_X - BORDER_W, 0);
-	spritePaint(FrameSprites[FRAME_ENDL], 0, SKY_X + SKY_W, 0);
+	sprite_paint(FrameSprites[FRAME_ENDR], 0, SKY_X - BORDER_W, 0);
+	sprite_paint(FrameSprites[FRAME_ENDL], 0, SKY_X + SKY_W, 0);
 
 	// And finally stubs around the wind section
-	spritePaint(FrameSprites[FRAME_ENDR], 0, WIND_X - BORDER_W, MAP_X + MAP_H);
-	spritePaint(FrameSprites[FRAME_ENDL], 0, WIND_X + WIND_W, MAP_X + MAP_H);
+	sprite_paint(FrameSprites[FRAME_ENDR], 0, WIND_X - BORDER_W, MAP_X + MAP_H);
+	sprite_paint(FrameSprites[FRAME_ENDL], 0, WIND_X + WIND_W, MAP_X + MAP_H);
 
         // And some stubs around the status title section
-	spritePaint(FrameSprites[FRAME_ENDR], 0, STAT_X, 0);
-	spritePaint(FrameSprites[FRAME_ENDL], 0, STAT_X + STAT_W - BORDER_W,   0);
+	sprite_paint(FrameSprites[FRAME_ENDR], 0, STAT_X, 0);
+	sprite_paint(FrameSprites[FRAME_ENDL], 0, STAT_X + STAT_W - BORDER_W,   0);
 
 	screenUpdate(0);
 
