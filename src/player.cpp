@@ -1667,7 +1667,7 @@ void player_party::save(save_t *save)
                 save->write(save, "'%s\n", tag);
         else
                 save->write(save, "nil\n");
-        save->write(save, "%s\n", this->sprite->tag);
+        save->write(save, "%s\n", sprite_get_tag(this->sprite));
         save->write(save, "\"%s\"\n", this->mv_desc);
         if (NULL_SOUND != mv_sound)
                 save->write(save, "%s\n", sound_get_tag(this->mv_sound));

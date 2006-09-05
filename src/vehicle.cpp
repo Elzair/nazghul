@@ -88,10 +88,7 @@ VehicleType::~ VehicleType()
 
 bool VehicleType::canFace(int facing)
 {
-	int bit = (1 << facing);
-	struct sprite *sprite = getSprite();
-	assert(sprite);
-	return ((sprite->facings & bit) != 0);
+	return sprite_can_face(getSprite(), facing);
 }
 
 class Object *VehicleType::createInstance()

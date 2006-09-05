@@ -162,7 +162,7 @@ static void session_save_crosshair(save_t *save, struct session *session)
 static void session_save_damage_sprite(save_t *save, struct session *session)
 {
         save->write(save, "(kern-set-damage-sprite %s)\n", 
-                    session->damage_sprite->tag);
+                    sprite_get_tag(session->damage_sprite));
 }
 
 static void session_save_clock(save_t *save, struct session *session)

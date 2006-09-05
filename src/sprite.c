@@ -34,6 +34,24 @@
 #include <string.h>
 #include <assert.h>
 
+struct sprite {
+        struct list list;       // for storage while loading
+        char *tag;
+        int n_frames;           // per sequence
+        int index;              // location in the image set
+        SDL_Rect *frames;       // all frames (sequences must be in order)
+        struct images *images;  // image set
+        SDL_Surface *surf;      // current source of images
+        int facing;             // current facing sequence
+        int facings;            // bitmap of supported facing sequences
+        int sequence;           // current animation sequence
+        struct sprite *decor;   // decoration sprites
+        Uint32 tint;            /* optional color tint */
+        int faded  : 1;	        // render sprite sem-transparent
+        int wave   : 1;         /* vertical roll */
+        int tinted : 1;         /* apply tint color */
+};
+
 struct {
 	struct list list;
         int ticks_to_next_animation;
@@ -378,4 +396,25 @@ void spriteAppendDecoration(struct sprite *base, struct sprite *decor)
                 base = base->decor;
         }
         base->decor = spriteClone(decor);
+}
+
+char *sprite_get_tag(struct sprite *sprite)
+{
+        return sprite->tag;
+}
+
+int sprite_is_faded(struct sprite *sprite)
+{
+        return sprite->faded;
+}
+
+int sprite_can_face(struct sprite *sprite, int facing)
+{
+        return (sprite->facings & (1 << facing));
+}
+
+void sprite_tint(struct sprite *sprite, Uint32 tint)
+{
+        sprite->tint = tint;
+        sprite->tinted = 1;
 }

@@ -7587,9 +7587,7 @@ KERN_API_CALL(kern_sprite_tint)
         }
 
         /* prototype hack: access fields directly */
-        sprite->tint = tint;
-        sprite->tinted = 1;
-
+        sprite_tint(sprite, tint);
         return scm_mk_ptr(sc, sprite);
 }
 

@@ -171,10 +171,6 @@ static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
                 cmdHelp();
                 break;
 
-        case KEY_CTRL_D:
-                cmdDumpPalette();
-                break;
-
         case KEY_CTRL_S:
                 cmdSave();
                 break;
@@ -874,10 +870,6 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
                 return true;
                 break;
       
-        case KEY_CTRL_D:
-                cmdDumpPalette();
-                break;
-
         case SDLK_F10:
                 cmdSettings();
                 break;

@@ -35,24 +35,6 @@ BEGIN_DECL
 struct images;
 struct sprite;
 
-struct sprite {
-        struct list list;       // for storage while loading
-        char *tag;
-        int n_frames;           // per sequence
-        int index;              // location in the image set
-        SDL_Rect *frames;       // all frames (sequences must be in order)
-        struct images *images;  // image set
-        SDL_Surface *surf;      // current source of images
-        int facing;             // current facing sequence
-        int facings;            // bitmap of supported facing sequences
-        int sequence;           // current animation sequence
-        struct sprite *decor;   // decoration sprites
-        Uint32 tint;            /* optional color tint */
-        int faded  : 1;	        // render sprite sem-transparent
-        int wave   : 1;         /* vertical roll */
-        int tinted : 1;         /* apply tint color */
-};
-
 extern int spriteInit(void);
 extern struct sprite *spriteLookup(char *tag);
 extern void spritePaint(struct sprite *sprite, int frame, int x, int y);
@@ -74,5 +56,9 @@ END_DECL
 extern struct sprite * sprite_new(char *tag, int frames, int index, int wave, 
                                   int facings, struct images *image);
 extern void sprite_del(struct sprite *sprite);
+extern char *sprite_get_tag(struct sprite *sprite);
+extern int sprite_is_faded(struct sprite *sprite);
+extern int sprite_can_face(struct sprite *sprite, int facing);
+extern void sprite_tint(struct sprite *sprite, Uint32 tint);
 
 #endif

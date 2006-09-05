@@ -300,7 +300,7 @@ void astral_body_save(struct astral_body *body, struct save *save)
         save->enter(save, "(list\n");
         for (i = 0; i < body->n_phases; i++) {
                 save->write(save, "(list %s %d \"%s\")\n", 
-                            body->phases[i].sprite->tag,
+                            sprite_get_tag(body->phases[i].sprite),
                             body->phases[i].maxlight,
                             body->phases[i].name);
         }

@@ -336,7 +336,7 @@ static void tile_paint(struct tile *tile, int sx, int sy)
                         screenHighlightColored(&rect, color);
                 }
 
-		if (sprite->faded)
+		if (sprite_is_faded(sprite))
 			sprite_unfade(sprite);
 	}
 }
@@ -2003,7 +2003,7 @@ void place_save(struct save *save, void *val)
                     place->tag, 
                     place->name);
         save->write(save, "%s ;; sprite\n", 
-                    place->sprite ? place->sprite->tag : "nil");
+                    place->sprite ? sprite_get_tag(place->sprite) : "nil");
         terrain_map_save(save, place->terrain_map);
         save->write(save, "%s %s %s %s\n",
                     place->wraps ? "#t" : "#f",
