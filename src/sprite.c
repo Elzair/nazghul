@@ -125,7 +125,7 @@ static void sprite_blit_tinted(SDL_Surface *source, SDL_Rect *from,
         SDL_FreeSurface(tmp);
 }
 
-static void myPaintWave(struct sprite *sprite, int frame, int x, int y)
+static void sprite_paint_wave(struct sprite *sprite, int frame, int x, int y)
 {
 	SDL_Rect src;
 	SDL_Rect dest;
@@ -186,7 +186,7 @@ static void myPaintWave(struct sprite *sprite, int frame, int x, int y)
 
 }
 
-static void myPaintNormal(struct sprite *sprite, int frame, int x, int y)
+static void sprite_paint_normal(struct sprite *sprite, int frame, int x, int y)
 {
 	SDL_Rect dest;
 
@@ -223,9 +223,9 @@ void sprite_paint(struct sprite *sprite, int frame, int x, int y)
         while (sprite) {
 
                 if (sprite->wave) {
-                        myPaintWave(sprite, frame, x, y);
+                        sprite_paint_wave(sprite, frame, x, y);
                 } else {
-                        myPaintNormal(sprite, frame, x, y);
+                        sprite_paint_normal(sprite, frame, x, y);
                 }
                 
                 sprite = sprite->decor;
@@ -294,14 +294,7 @@ int sprite_fade(struct sprite *sprite)
 	if (sprite->faded)
 		return 0;
 
-	if (sprite->images->images->format->palette) {
-		if (sprite->images->faded == NULL &&
-		    images_fade(sprite->images) < 0)
-			return -1;
-		sprite->surf = sprite->images->faded;
-	} else {
-		SDL_SetAlpha(sprite->images->images, SDL_SRCALPHA, 128);
-	}
+        SDL_SetAlpha(sprite->images->images, SDL_SRCALPHA, 128);
 
 	sprite->faded = 1;
 	return 0;
@@ -309,11 +302,7 @@ int sprite_fade(struct sprite *sprite)
 
 void sprite_unfade(struct sprite *sprite)
 {
-	if (sprite->images->images->format->palette)
-		sprite->surf = sprite->images->images;
-	else
-		SDL_SetAlpha(sprite->images->images, SDL_SRCALPHA,
-			     SDL_ALPHA_OPAQUE);
+        SDL_SetAlpha(sprite->images->images, SDL_SRCALPHA, SDL_ALPHA_OPAQUE);
 	sprite->faded = 0;
 }
 
