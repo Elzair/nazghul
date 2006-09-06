@@ -37,16 +37,17 @@
 struct sprite {
         struct list list;       // for storage while loading
         char *tag;
-        int n_frames;           // per sequence
+        int n_frames;           /* per sequence */
+        int n_total_frames;     /* n_frames x # facings */
         int index;              // location in the image set
         SDL_Rect *frames;       // all frames (sequences must be in order)
-        struct images *images;  // image set
         SDL_Surface *surf;      // current source of images
         int facing;             // current facing sequence
         int facings;            // bitmap of supported facing sequences
         int sequence;           // current animation sequence
         struct sprite *decor;   // decoration sprites
         Uint32 tint;            /* optional color tint */
+        int w_pix, h_pix;   /* frame dimensions (in pixels) */
         int faded  : 1;	        // render sprite sem-transparent
         int wave   : 1;         /* vertical roll */
         int tinted : 1;         /* apply tint color */
@@ -191,8 +192,8 @@ static void sprite_paint_wave(struct sprite *sprite, int frame, int x, int y)
         // of two then the wavecrest must be a multiple of 2. Since we only
         // support a zoom factor of 2 right now, the simplest thing to do is
         // always use 2.
-        wavecrest = (sprite_ticks * 2) % sprite->images->h;
-        wavecrest = sprite->images->h - wavecrest; // make it roll south
+        wavecrest = (sprite_ticks * 2) % sprite->h_pix;
+        wavecrest = sprite->h_pix - wavecrest; // make it roll south
 
 	/* Wave sprites are painted in two blits. The first blit copies
 	 * everything below the wavecrest to the top part of the onscreen tile.
@@ -207,7 +208,7 @@ static void sprite_paint_wave(struct sprite *sprite, int frame, int x, int y)
 
 	dest.x = x;
 	dest.y = y;
-	dest.w = sprite->images->w;
+	dest.w = sprite->w_pix;
 	dest.h = src.h;
 
         if (sprite->tinted) {
@@ -224,9 +225,9 @@ static void sprite_paint_wave(struct sprite *sprite, int frame, int x, int y)
 	src.h = wavecrest;
 
 	dest.x = x;
-	dest.y = dest.y + (sprite->images->h - wavecrest) / 
+	dest.y = dest.y + (sprite->h_pix - wavecrest) / 
                 sprite_zoom_factor;
-	dest.w = sprite->images->w;
+	dest.w = sprite->w_pix;
 	dest.h = src.h;
         
         if (sprite->tinted) {
@@ -247,8 +248,8 @@ static void sprite_paint_normal(struct sprite *sprite, int frame, int x, int y)
 
 	dest.x = x;
 	dest.y = y;
-	dest.w = sprite->images->w;
-	dest.h = sprite->images->h;
+	dest.w = sprite->w_pix;
+	dest.h = sprite->h_pix;
 
         frame = (frame + sprite_ticks) % sprite->n_frames;
 	frame += sprite->sequence * sprite->n_frames;
@@ -368,32 +369,16 @@ extern void sprite_zoom_in(int factor)
         sprite_zoom_factor /= factor;
 }
 
-struct sprite * sprite_new(char *tag, int frames, int index, int wave, 
-                           int facings, struct images *images)
+static struct sprite * sprite_new_internal(int frames, int facings)
 {
 	struct sprite *sprite;
-        int n_total_frames;
-        int col_width;
-        int row_height;
-	int i;
-        int frame;
-        int col;
-        int row;
 
-	sprite = new struct sprite;
+	sprite = (struct sprite*)calloc(1, sizeof(*sprite));
         assert(sprite);
-	memset(sprite, 0, sizeof(*sprite));
 
-        if (tag)
-                sprite->tag       = strdup(tag);
         sprite->n_frames  = frames;
-        sprite->index     = index;
-        sprite->facings   = facings;
-	sprite->facing    = 0;
-	sprite->sequence  = 0;
-        sprite->images    = images;
-	sprite->surf      = images->images;
-        sprite->wave      = !!wave;
+        sprite->facings = facings;
+        sprite->n_total_frames = sprite->n_frames * (sprite->facings ? NUM_PLANAR_DIRECTIONS : 1);
 
 	// Allocate and initialize the rect structures which index into the
 	// image. One rect per frame of animation. Note that 'facings' is a
@@ -401,14 +386,46 @@ struct sprite * sprite_new(char *tag, int frames, int index, int wave,
 	// specify 'facings' as zero, so for these assume we'll want one
 	// sequence of frames. Sprites that do support facings will need as
 	// many sequences as there are directions supported by the game.
-	n_total_frames = sprite->n_frames * (sprite->facings ? NUM_PLANAR_DIRECTIONS : 1);
-	sprite->frames = new SDL_Rect[n_total_frames];
+	
+	sprite->frames = (SDL_Rect*)calloc(sprite->n_total_frames, 
+                                           sizeof(SDL_Rect));
         assert(sprite->frames);
 
-	col_width      = (images->w + images->offx);
-	row_height     = (images->h + images->offy);
+	return sprite;
+}
 
-	for (i = 0, frame = sprite->index; i < n_total_frames; i++, frame++) {
+struct sprite * sprite_new(char *tag, int frames, int index, int wave, 
+                           int facings, struct images *images)
+{
+	struct sprite *sprite;
+        int col_width;
+        int row_height;
+	int i;
+        int frame;
+        int col;
+        int row;
+
+        /* Allocate it. */
+	sprite = sprite_new_internal(frames, facings);
+        assert(sprite);
+
+        /* Dupe the tag if applicable. */
+        if (tag)
+                sprite->tag = strdup(tag);
+
+        /* Fill out the rest of the basic fields. */
+        sprite->index = index;
+	sprite->surf = images->images;
+        sprite->wave = !!wave;
+        sprite->w_pix = images->w;
+        sprite->h_pix = images->h;
+
+        /* Fill out the frames based on the index and image info. */
+	col_width = (images->w + images->offx);
+	row_height = (images->h + images->offy);
+	for (i = 0, frame = sprite->index; 
+             i < sprite->n_total_frames; 
+             i++, frame++) {
 		col = frame % images->cols;
 		row = frame / images->cols;
 		sprite->frames[i].x = col * col_width + images->offx;
@@ -422,11 +439,21 @@ struct sprite * sprite_new(char *tag, int frames, int index, int wave,
 
 struct sprite *sprite_clone(struct sprite *orig)
 {
-        struct sprite *sprite = sprite_new(NULL, orig->n_frames, 
-                                           orig->index, orig->wave, 
-                                           orig->facings, orig->images);
-        sprite->tint = orig->tint;
-        sprite->tinted = orig->tinted;
+        /* Allocate it. */
+        struct sprite *sprite = sprite_new_internal(orig->n_frames, orig->facings);
+        assert(sprite);
+
+        /* Copy the sprite info. */
+        memcpy(sprite, orig, sizeof(*orig));
+
+        /* Copy the frames. */
+        memcpy(sprite->frames, orig->frames, 
+               sprite->n_frames * sizeof(sprite->frames[0]));
+
+        /* Clones shouldn't need a tag. Scripts can use (define s_clone
+         * (kern-sprite-clone foo)). */
+        sprite->tag = 0;
+
         return sprite;
 }
 
