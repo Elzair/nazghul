@@ -125,6 +125,55 @@ static void sprite_blit_tinted(SDL_Surface *source, SDL_Rect *from,
         SDL_FreeSurface(tmp);
 }
 
+static void sprite_blit_faded(SDL_Surface *source, SDL_Rect *from, 
+                              SDL_Rect *to)
+{
+	int dx, dy, di, sx, sy, si, spitch, dpitch;
+	Uint32 *dpix, *spix, pixel;
+        Uint8 pix_alpha;
+        SDL_Surface *tmp = 0;
+
+	tmp = SDL_CreateRGBSurface(source->flags,
+				   from->w, from->h,
+				   source->format->BitsPerPixel,
+				   source->format->Rmask,
+				   source->format->Gmask,
+				   source->format->Bmask,
+				   source->format->Amask);
+	if (tmp == NULL) {
+		perror_sdl("SDL_CreateRGBSurface");
+		return;
+	}
+
+	dpix = (Uint32 *) tmp->pixels;
+	spix = (Uint32 *) source->pixels;
+
+	dpitch = tmp->pitch / tmp->format->BytesPerPixel;
+	spitch = source->pitch / source->format->BytesPerPixel;
+
+	for (dy = 0; dy < from->h; dy++) {
+		sy = dy;
+		for (dx = 0; dx < from->w; dx++) {
+			sx = dx;
+			di = (dy * dpitch + dx);
+			si = (sy + from->y) * spitch + (sx + from->x);
+
+                        /* Cut alpha component in half. */
+                        pixel = spix[si];
+                        pix_alpha = (pixel & source->format->Amask) >> source->format->Ashift;
+                        pix_alpha /= 2;
+                        pixel &= ~source->format->Amask;
+                        pixel |= (pix_alpha << source->format->Ashift);
+
+                        /* Assign result. */
+                        dpix[di] = pixel;
+                }
+        }
+        
+        screenBlit(tmp, NULL, to);
+        SDL_FreeSurface(tmp);
+}
+
 static void sprite_paint_wave(struct sprite *sprite, int frame, int x, int y)
 {
 	SDL_Rect src;
@@ -164,6 +213,9 @@ static void sprite_paint_wave(struct sprite *sprite, int frame, int x, int y)
         if (sprite->tinted) {
                 sprite_blit_tinted(sprite->surf, &src,
                                    &dest, sprite->tint);
+        } else if (sprite->faded) {
+                sprite_blit_faded(sprite->surf,  &sprite->frames[frame], 
+                                  &dest);
         } else {
                 screenBlit(sprite->surf, &src, &dest);
         }
@@ -180,6 +232,9 @@ static void sprite_paint_wave(struct sprite *sprite, int frame, int x, int y)
         if (sprite->tinted) {
                 sprite_blit_tinted(sprite->surf, &sprite->frames[frame], 
                                    &dest, sprite->tint);
+        } else if (sprite->faded) {
+                sprite_blit_faded(sprite->surf,  &sprite->frames[frame], 
+                                  &dest);
         } else {
                 screenBlit(sprite->surf, &sprite->frames[frame], &dest);
         }
@@ -201,6 +256,9 @@ static void sprite_paint_normal(struct sprite *sprite, int frame, int x, int y)
         if (sprite->tinted) {
                 sprite_blit_tinted(sprite->surf, &sprite->frames[frame], 
                                    &dest, sprite->tint);
+        } else if (sprite->faded) {
+                sprite_blit_faded(sprite->surf,  &sprite->frames[frame], 
+                                  &dest);
         } else {
                 screenBlit(sprite->surf, &sprite->frames[frame], &dest);
         }
@@ -291,18 +349,12 @@ int sprite_set_facing(struct sprite *sprite, int facing)
 
 int sprite_fade(struct sprite *sprite)
 {
-	if (sprite->faded)
-		return 0;
-
-        SDL_SetAlpha(sprite->images->images, SDL_SRCALPHA, 128);
-
 	sprite->faded = 1;
 	return 0;
 }
 
 void sprite_unfade(struct sprite *sprite)
 {
-        SDL_SetAlpha(sprite->images->images, SDL_SRCALPHA, SDL_ALPHA_OPAQUE);
 	sprite->faded = 0;
 }
 
