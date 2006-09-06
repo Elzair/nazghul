@@ -34,96 +34,60 @@
 #include <string.h>
 #include <assert.h>
 
+/* rsurf - wraps a surface with a reference count so sprites can share them
+ * without fear of premature calls to SDL_FreeSurface(). */
+struct rsurf {
+        int ref;              /* reference count                     */
+        SDL_Surface *surf;    /* underlying surface                  */
+        char custom : 1;      /* NOT referenced by any struct images */
+};
+
+/* sprite - animation sequence with different facings */
 struct sprite {
-        struct list list;       // for storage while loading
-        char *tag;
-        int n_frames;           /* per sequence */
-        int n_total_frames;     /* n_frames x # facings */
-        int index;              // location in the image set
-        SDL_Rect *frames;       // all frames (sequences must be in order)
-        SDL_Surface *surf;      // current source of images
-        int facing;             // current facing sequence
-        int facings;            // bitmap of supported facing sequences
-        int sequence;           // current animation sequence
-        struct sprite *decor;   // decoration sprites
-        Uint32 tint;            /* optional color tint */
-        int w_pix, h_pix;   /* frame dimensions (in pixels) */
-        int faded  : 1;	        // render sprite sem-transparent
-        int wave   : 1;         /* vertical roll */
-        int tinted : 1;         /* apply tint color */
+        char *tag;              /* Script variable name for the sprite.    */
+        int n_frames;           /* per sequence                            */
+        int n_total_frames;     /* n_frames x # facings                    */
+        SDL_Rect *frames;       /* all frames (sequences must be in order) */
+        struct rsurf *rsurf;    /* source of image                         */
+        int facing;             /* current facing sequence                 */
+        int facings;            /* bitmap of supported facing sequences    */
+        int sequence;           /* current animation sequence              */
+        struct sprite *decor;   /* decoration sprites                      */
+        Uint32 tint;            /* optional color tint                     */
+        int w_pix, h_pix;       /* frame dimensions (in pixels)            */
+        int faded  : 1;	        /* render sprite sem-transparent           */
+        int wave   : 1;         /* vertical roll                           */
+        int tinted : 1;         /* apply tint color                        */
 };
 
 struct {
-	struct list list;
         int ticks_to_next_animation;
 } Sprite;
 
 static int sprite_zoom_factor = 1;
 static unsigned int sprite_ticks = 0;
 
-static void sprite_blit_tinted(SDL_Surface *source, SDL_Rect *from, 
-                               SDL_Rect *to, Uint32 tint)
+static struct rsurf *sprite_rsurf_new(SDL_Surface *surf)
 {
-	int dx, dy, di, sx, sy, si, spitch, dpitch;
-	Uint32 *dpix, *spix;
-        Uint8 tint_red, tint_grn, tint_blu;
-        Uint8 pix_red, pix_grn, pix_blu, pix_alpha;
-        SDL_Surface *tmp = 0;
+        struct  rsurf *rsurf;
 
-	tmp = SDL_CreateRGBSurface(source->flags,
-				   from->w, from->h,
-				   source->format->BitsPerPixel,
-				   source->format->Rmask,
-				   source->format->Gmask,
-				   source->format->Bmask,
-				   source->format->Amask);
-	if (tmp == NULL) {
-		perror_sdl("SDL_CreateRGBSurface");
-		return;
-	}
+        rsurf = (struct rsurf*)calloc(1, sizeof(*rsurf));
+        assert(rsurf);
+        rsurf->ref = 1;
+        rsurf->surf = surf;
+        return rsurf;
+}
 
-        /* Isolate the color components of the tint (this assumes the tint has
-         * the same pixel format as the source...) */
-        tint_red = (tint & source->format->Rmask) >> source->format->Rshift;
-        tint_grn = (tint & source->format->Gmask) >> source->format->Gshift;
-        tint_blu = (tint & source->format->Bmask) >> source->format->Bshift;
-
-	dpix = (Uint32 *) tmp->pixels;
-	spix = (Uint32 *) source->pixels;
-
-	dpitch = tmp->pitch / tmp->format->BytesPerPixel;
-	spitch = source->pitch / source->format->BytesPerPixel;
-
-	for (dy = 0; dy < from->h; dy++) {
-		sy = dy;
-		for (dx = 0; dx < from->w; dx++) {
-			sx = dx;
-			di = (dy * dpitch + dx);
-			si = (sy + from->y) * spitch + (sx + from->x);
-
-                        /* Isolate the color components of the pixel. */
-                        pix_red = (spix[si] & source->format->Rmask) >> source->format->Rshift;
-                        pix_grn = (spix[si] & source->format->Gmask) >> source->format->Gshift;
-                        pix_blu = (spix[si] & source->format->Bmask) >> source->format->Bshift;
-                        pix_alpha = (spix[si] & source->format->Amask) >> source->format->Ashift;
-
-                        /* Average the tint and pixel colors. */
-                        pix_red = (pix_red + tint_red) / 2;
-                        pix_grn = (pix_grn + tint_grn) / 2;
-                        pix_blu = (pix_blu + tint_blu) / 2;
-
-                        /* Recombine them, along with the original alpha
-                         * component, into the destination pixel. */
-                        dpix[di] = (pix_red << tmp->format->Rshift
-                                    | pix_grn << tmp->format->Gshift
-                                    | pix_blu << tmp->format->Bshift
-                                    | pix_alpha << tmp->format->Ashift);
+static void sprite_rsurf_unref(struct rsurf *rsurf)
+{
+        assert(rsurf->ref > 0);
+        rsurf->ref--;
+        if (!rsurf->ref) {
+                if (rsurf->surf && rsurf->custom) {
+                        SDL_FreeSurface(rsurf->surf);
                 }
+                free(rsurf);
         }
-        
-
-        screenBlit(tmp, NULL, to);
-        SDL_FreeSurface(tmp);
 }
 
 static void sprite_blit_faded(SDL_Surface *source, SDL_Rect *from, 
@@ -211,14 +175,11 @@ static void sprite_paint_wave(struct sprite *sprite, int frame, int x, int y)
 	dest.w = sprite->w_pix;
 	dest.h = src.h;
 
-        if (sprite->tinted) {
-                sprite_blit_tinted(sprite->surf, &src,
-                                   &dest, sprite->tint);
-        } else if (sprite->faded) {
-                sprite_blit_faded(sprite->surf,  &sprite->frames[frame], 
+        if (sprite->faded) {
+                sprite_blit_faded(sprite->rsurf->surf,  &sprite->frames[frame], 
                                   &dest);
         } else {
-                screenBlit(sprite->surf, &src, &dest);
+                screenBlit(sprite->rsurf->surf, &src, &dest);
         }
 
 	src = sprite->frames[frame];
@@ -230,14 +191,11 @@ static void sprite_paint_wave(struct sprite *sprite, int frame, int x, int y)
 	dest.w = sprite->w_pix;
 	dest.h = src.h;
         
-        if (sprite->tinted) {
-                sprite_blit_tinted(sprite->surf, &sprite->frames[frame], 
-                                   &dest, sprite->tint);
-        } else if (sprite->faded) {
-                sprite_blit_faded(sprite->surf,  &sprite->frames[frame], 
+        if (sprite->faded) {
+                sprite_blit_faded(sprite->rsurf->surf,  &sprite->frames[frame], 
                                   &dest);
         } else {
-                screenBlit(sprite->surf, &sprite->frames[frame], &dest);
+                screenBlit(sprite->rsurf->surf, &sprite->frames[frame], &dest);
         }
 
 }
@@ -254,16 +212,86 @@ static void sprite_paint_normal(struct sprite *sprite, int frame, int x, int y)
         frame = (frame + sprite_ticks) % sprite->n_frames;
 	frame += sprite->sequence * sprite->n_frames;
 
-        if (sprite->tinted) {
-                sprite_blit_tinted(sprite->surf, &sprite->frames[frame], 
-                                   &dest, sprite->tint);
-        } else if (sprite->faded) {
-                sprite_blit_faded(sprite->surf,  &sprite->frames[frame], 
+        if (sprite->faded) {
+                sprite_blit_faded(sprite->rsurf->surf,  &sprite->frames[frame], 
                                   &dest);
         } else {
-                screenBlit(sprite->surf, &sprite->frames[frame], &dest);
+                screenBlit(sprite->rsurf->surf, &sprite->frames[frame], &dest);
         }
 
+}
+
+static void sprite_tint_image(SDL_Surface *source, SDL_Rect *from, 
+                              SDL_Surface *dest, SDL_Rect *to, Uint32 tint)
+{
+	int dx, dy, di, sx, sy, si, spitch, dpitch;
+	Uint32 *dpix, *spix;
+        Uint8 tint_red, tint_grn, tint_blu;
+        Uint8 pix_red, pix_grn, pix_blu, pix_alpha;
+
+        /* Isolate the color components of the tint (this assumes the tint has
+         * the same pixel format as the source...) */
+        tint_red = (tint & source->format->Rmask) >> source->format->Rshift;
+        tint_grn = (tint & source->format->Gmask) >> source->format->Gshift;
+        tint_blu = (tint & source->format->Bmask) >> source->format->Bshift;
+
+	dpix = (Uint32 *) dest->pixels;
+	spix = (Uint32 *) source->pixels;
+
+	dpitch = dest->pitch / dest->format->BytesPerPixel;
+	spitch = source->pitch / source->format->BytesPerPixel;
+
+	for (dy = 0; dy < from->h; dy++) {
+		sy = dy;
+		for (dx = 0; dx < from->w; dx++) {
+			sx = dx;
+			di = (dy * dpitch + dx);
+			si = (sy + from->y) * spitch + (sx + from->x);
+
+                        /* Isolate the color components of the pixel. */
+                        pix_red = (spix[si] & source->format->Rmask) >> source->format->Rshift;
+                        pix_grn = (spix[si] & source->format->Gmask) >> source->format->Gshift;
+                        pix_blu = (spix[si] & source->format->Bmask) >> source->format->Bshift;
+                        pix_alpha = (spix[si] & source->format->Amask) >> source->format->Ashift;
+
+                        /* Average the tint and pixel colors. */
+                        pix_red = (pix_red + tint_red) / 2;
+                        pix_grn = (pix_grn + tint_grn) / 2;
+                        pix_blu = (pix_blu + tint_blu) / 2;
+
+                        /* Recombine them, along with the original alpha
+                         * component, into the destination pixel. */
+                        dpix[di] = (pix_red << dest->format->Rshift
+                                    | pix_grn << dest->format->Gshift
+                                    | pix_blu << dest->format->Bshift
+                                    | pix_alpha << dest->format->Ashift);
+                }
+        }
+}
+
+static struct sprite * sprite_new_internal(int frames, int facings)
+{
+	struct sprite *sprite;
+
+	sprite = (struct sprite*)calloc(1, sizeof(*sprite));
+        assert(sprite);
+
+        sprite->n_frames  = frames;
+        sprite->facings = facings;
+        sprite->n_total_frames = sprite->n_frames * (sprite->facings ? NUM_PLANAR_DIRECTIONS : 1);
+
+	// Allocate and initialize the rect structures which index into the
+	// image. One rect per frame of animation. Note that 'facings' is a
+	// bitmask, not a count. Sprites that don't have different facings
+	// specify 'facings' as zero, so for these assume we'll want one
+	// sequence of frames. Sprites that do support facings will need as
+	// many sequences as there are directions supported by the game.
+	
+	sprite->frames = (SDL_Rect*)calloc(sprite->n_total_frames, 
+                                           sizeof(SDL_Rect));
+        assert(sprite->frames);
+
+	return sprite;
 }
 
 void sprite_del(struct sprite *sprite)
@@ -271,10 +299,12 @@ void sprite_del(struct sprite *sprite)
         if (sprite->tag)
                 free(sprite->tag);
 	if (sprite->frames)
-		delete [] sprite->frames;
+		free(sprite->frames);
         if (sprite->decor)
                 sprite_del(sprite->decor);
-	delete sprite;
+        sprite_rsurf_unref(sprite->rsurf);
+
+        free(sprite);
 }
 
 void sprite_paint(struct sprite *sprite, int frame, int x, int y)
@@ -369,31 +399,6 @@ extern void sprite_zoom_in(int factor)
         sprite_zoom_factor /= factor;
 }
 
-static struct sprite * sprite_new_internal(int frames, int facings)
-{
-	struct sprite *sprite;
-
-	sprite = (struct sprite*)calloc(1, sizeof(*sprite));
-        assert(sprite);
-
-        sprite->n_frames  = frames;
-        sprite->facings = facings;
-        sprite->n_total_frames = sprite->n_frames * (sprite->facings ? NUM_PLANAR_DIRECTIONS : 1);
-
-	// Allocate and initialize the rect structures which index into the
-	// image. One rect per frame of animation. Note that 'facings' is a
-	// bitmask, not a count. Sprites that don't have different facings
-	// specify 'facings' as zero, so for these assume we'll want one
-	// sequence of frames. Sprites that do support facings will need as
-	// many sequences as there are directions supported by the game.
-	
-	sprite->frames = (SDL_Rect*)calloc(sprite->n_total_frames, 
-                                           sizeof(SDL_Rect));
-        assert(sprite->frames);
-
-	return sprite;
-}
-
 struct sprite * sprite_new(char *tag, int frames, int index, int wave, 
                            int facings, struct images *images)
 {
@@ -413,9 +418,11 @@ struct sprite * sprite_new(char *tag, int frames, int index, int wave,
         if (tag)
                 sprite->tag = strdup(tag);
 
+        /* Create a new refcounted surf. */
+        sprite->rsurf = sprite_rsurf_new(images->images);
+        assert(sprite->rsurf);
+
         /* Fill out the rest of the basic fields. */
-        sprite->index = index;
-	sprite->surf = images->images;
         sprite->wave = !!wave;
         sprite->w_pix = images->w;
         sprite->h_pix = images->h;
@@ -423,7 +430,7 @@ struct sprite * sprite_new(char *tag, int frames, int index, int wave,
         /* Fill out the frames based on the index and image info. */
 	col_width = (images->w + images->offx);
 	row_height = (images->h + images->offy);
-	for (i = 0, frame = sprite->index; 
+	for (i = 0, frame = index; 
              i < sprite->n_total_frames; 
              i++, frame++) {
 		col = frame % images->cols;
@@ -439,16 +446,25 @@ struct sprite * sprite_new(char *tag, int frames, int index, int wave,
 
 struct sprite *sprite_clone(struct sprite *orig)
 {
+        SDL_Rect *frames;
+
         /* Allocate it. */
         struct sprite *sprite = sprite_new_internal(orig->n_frames, orig->facings);
         assert(sprite);
+
+        /* Remember the frames pointer before we wipe it out with the copy. */
+        frames = sprite->frames;
 
         /* Copy the sprite info. */
         memcpy(sprite, orig, sizeof(*orig));
 
         /* Copy the frames. */
+        sprite->frames = frames;
         memcpy(sprite->frames, orig->frames, 
-               sprite->n_frames * sizeof(sprite->frames[0]));
+               sprite->n_total_frames * sizeof(sprite->frames[0]));
+
+        /* Bump the refcount on the surface. */
+        sprite->rsurf->ref++;
 
         /* Clones shouldn't need a tag. Scripts can use (define s_clone
          * (kern-sprite-clone foo)). */
@@ -483,6 +499,47 @@ int sprite_can_face(struct sprite *sprite, int facing)
 
 void sprite_tint(struct sprite *sprite, Uint32 tint)
 {
+        SDL_Surface *dest = 0;
+        SDL_Surface *source = sprite->rsurf->surf;
+        SDL_Rect to;
+        int i;
+
+        /* Create a temporary surface for the scaled blit which has the same
+         * format as the source. */
+	dest = SDL_CreateRGBSurface(source->flags,
+                                    sprite->w_pix * sprite->n_total_frames,
+                                    sprite->h_pix,
+                                    source->format->BitsPerPixel,
+                                    source->format->Rmask,
+                                    source->format->Gmask,
+                                    source->format->Bmask,
+                                    source->format->Amask);
+        if (!dest) {
+		perror_sdl("SDL_CreateRGBSurface");
+		return;
+        }
+
+        /* Make a tinted copy of the surface. */
+        to.x = 0;
+        to.y = 0;
+        to.w = sprite->w_pix;
+        to.h = sprite->h_pix;
+        for (i = 0; i < sprite->n_total_frames; i++) {
+                to.x = i * sprite->w_pix;
+
+                /* Tint the frame image. */
+                sprite_tint_image(sprite->rsurf->surf, &sprite->frames[i],
+                                  dest, &to, tint);
+
+                /* Fixup the frames as we go. */
+                sprite->frames[i] = to;
+        }
+
+        /* Stash the surface in a new refcounted surf wrapper. */
+        sprite->rsurf = sprite_rsurf_new(dest);
+        sprite->rsurf->custom = 1;
+
+        /* Set the tint info. */
         sprite->tint = tint;
         sprite->tinted = 1;
 }
