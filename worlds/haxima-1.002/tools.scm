@@ -168,8 +168,7 @@
 	))
 
 (define clock-ifc
-  (ifc '()
-       (method 'handle 
+  (let ((readclock 
 			(lambda (kclock kuser)
 				(let* ((time (kern-get-time))
 						(hour (number->string
@@ -181,7 +180,12 @@
 								(string-append "0" minbase)
 								minbase)))
 					(kern-log-msg "The clock reads " hour ":" min)
-				)))
+				))))
+  (ifc '()
+		(method 'handle 
+			readclock)
+		(method 'xamine 
+			readclock)
 		(method 'step
 			(lambda (kmirror kuser)
 				))
@@ -193,18 +197,22 @@
 					(kern-obj-set-sprite kclock (mk-composite-sprite (list s_clock_body hour-hand min-hand)))
 				)))
 				
-       ))
+       )))
 
 (define broken-clock-ifc
-  (ifc '()
-       (method 'handle 
+  (let ((readclock 
 			(lambda (kclock kuser)
-						(kern-log-msg (gob kclock))
-					))
+				(kern-log-msg (gob kclock))
+			)))
+  (ifc '()
+		(method 'handle 
+			readclock)
+		(method 'xamine
+			readclock)
 		(method 'step
 			(lambda (kmirror kuser)
 				))
-       ))
+       )))
 	
 (mk-obj-type 't_clock "clock"
 	(mk-composite-sprite (list s_clock_body s_clock_hand_n s_clock_spin))
