@@ -437,6 +437,7 @@ char *Character::getWoundDescription()
 		return "Fleeing";
 
 	return desc[(getHp() * 4) / getMaxHp()];
+	return desc[(getHp() * 4) / getMaxHp()];
 }
 
 void Character::groupExitTo(struct place *dest_place, int dest_x, int dest_y,
@@ -1467,6 +1468,15 @@ void Character::describe()
 #endif
         if (!isVisible())
                 log_continue(" (invisible)");
+}
+
+void Character::examine()
+{
+	char *diplstr = diplomacy_string(this, Session->subject);
+	log_continue("%s:\n", getName());	
+	log_continue("  %s\n", diplstr);
+	log_continue("  Level %d\n", getLevel());
+	log_continue("  %s\n", getWoundDescription());
 }
 
 sound_t *Character::getDamageSound()

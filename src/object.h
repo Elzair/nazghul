@@ -182,6 +182,7 @@ class ObjectType {
         bool canStep();
         bool canHandle();
 		bool canSense();
+		bool canXamine();
         bool canAttack();
         bool canEnter();
         bool canBump(); // attempted entry onto same tile
@@ -195,6 +196,7 @@ class ObjectType {
         void open(Object *obj, Object *opener);
         void step(Object *obj, Object *stepper);
         void sense(Object *obj, Object *stepper);
+        void xamine(Object *obj, Object *xaminer);		
         void handle(Object *obj, Object *handler);
         void attack(Object *obj, Object *attacker);
         void enter(Object *obj, Object *enterer);
@@ -299,6 +301,7 @@ class Object {
         virtual void setVisible(bool val);
 	virtual bool isShaded();
 	virtual void describe();
+		virtual void examine();
 	virtual void paint(int sx, int sy);
         virtual class Object *clone();
 	virtual bool joinPlayer(void);     

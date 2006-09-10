@@ -63,6 +63,7 @@
 #define GIFC_CAN_BUY          4096
 #define GIFC_CAN_SEARCH       8192
 #define GIFC_CAN_SENSE        16384
+#define GIFC_CAN_XAMINE       32768
 
 ObjectType::ObjectType()
 {
@@ -544,6 +545,22 @@ void Object::describe()
         getObjectType()->describe(getCount());
         if (!isVisible())
                 consolePrint(" (invisible)");
+}
+
+void Object::examine()
+{
+	if (getObjectType())
+	{
+		getObjectType()->describe(getCount());
+	}
+	
+	//todo: dont have examiner to pass in to ifc
+	if (getObjectType()->canXamine())
+	{
+		log_end(":");
+		getObjectType()->xamine(this, this);
+		log_begin("");
+	}
 }
 
 sound_t *Object::get_movement_sound()
@@ -1781,6 +1798,11 @@ bool ObjectType::canSense()
         return (gifc_cap & GIFC_CAN_SENSE);
 }
 
+bool ObjectType::canXamine()
+{
+        return (gifc_cap & GIFC_CAN_XAMINE);
+}
+
 bool ObjectType::canAttack()
 {
         return (gifc_cap & GIFC_CAN_ATTACK);
@@ -1855,6 +1877,11 @@ void ObjectType::step(Object *obj, Object *stepper)
 void ObjectType::sense(Object *obj, Object *stepper)
 {
 		closure_exec(gifc, "ypp", "sense", obj, stepper);
+}
+
+void ObjectType::xamine(Object *obj, Object *xaminer)
+{
+		closure_exec(gifc, "ypp", "xamine", obj, xaminer);
 }
 
 void ObjectType::attack(Object *obj, Object *stepper)

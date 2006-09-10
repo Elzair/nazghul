@@ -1537,6 +1537,54 @@ static int place_describe_objects(struct place *place, int x, int y,
 
 }				// myPlaceDescribeObjects()
 
+static void place_examine_objects(struct place *place, int x, int y)
+{
+	//can simplify from place_describe, since entries will have their own lines.
+	struct node *l;
+	struct tile *tile;
+	Object *obj = NULL, *prev_obj = NULL;
+	class ObjectType *type = NULL;
+
+	tile = place_lookup_tile(place, x, y);
+	if (!tile)
+		return;
+ 
+
+	if (tile->subplace) {
+
+			log_continue("The entrance to %s;\n", tile->subplace->name);
+	}
+
+	node_for_each(&tile->objstack, l) {
+
+		obj = (Object *)l->ptr;
+
+		if (obj->getLayer() == cursor_layer)
+				// Special case: don't describe the cursor
+				continue;
+
+		if (! obj->isVisible() && ! Reveal && ! obj->isShaded())
+				continue;
+
+		// hack: objects without names are assumed to be invisible
+		if (! obj->getName())
+				continue;
+         
+		log_end("");
+		log_begin("");	   
+		obj->examine();   
+		
+
+        }
+
+        if (tile->vehicle && (tile->vehicle->isVisible() || Reveal || 
+                              obj->isShaded())) {
+		log_end("");
+		log_begin("");	 
+                tile->vehicle->examine();
+        }
+}				// place_examine_objects()
+
 void place_describe(struct place *place, int x, int y, int flags)
 {
         int count = 0;
@@ -1556,6 +1604,19 @@ void place_describe(struct place *place, int x, int y, int flags)
                                        (flags & PLACE_DESCRIBE_TERRAIN) == 0);
         if (!count)
                 log_continue("nothing!");
+}
+
+void place_examine(struct place *place, int x, int y)
+{
+	WRAP_COORDS(place, x, y);
+
+	if (place_off_map(place, x, y)) {
+		log_continue("nothing!");
+		return;
+	}
+	
+    place_describe_terrain(place, x, y);
+	place_examine_objects(place, x, y);
 }
 
 void place_for_each_tile(struct place *place, 

@@ -294,6 +294,7 @@ extern void place_for_each_object_at(struct place *place, int x, int y, void (*f
 extern void place_exit(struct place *place);
 extern void place_unlock(struct place *place);
 extern void place_describe(struct place *place, int x, int y, int flags);
+extern void place_examine(struct place *place, int x, int y);
 extern int place_get_edge_entrance(struct place *place, int dir, int *x, int *y);
 extern int place_set_edge_entrance(struct place *place, int dir, int x, int y);
 extern class Object *place_get_filtered_object(struct place *place, int x, int y, int (*filter)(class Object*));

@@ -2760,6 +2760,27 @@ void look_at_XY(struct place *place, int x, int y, void *unused)
 
 void detailed_examine_XY(struct place *place, int x, int y, void *unused)
 {
+	if (DeveloperMode) {
+			log_begin("At XY=(%d,%d): ", x, y);
+	} else {
+			log_begin("");
+	}
+
+	if ( mapTileIsVisible(x, y) ) {
+			if (mapTileLightLevel(x,y) < MIN_XAMINE_LIGHT_LEVEL) {
+					log_continue("You can't see!");
+			} else {
+					log_continue("You see:\n");
+					place_examine(place, x, y);
+			}
+	} else if (ShowAllTerrain) {
+			log_continue("You see (via xray):\n");
+			place_examine(place, x, y);
+	} else {
+			log_continue("You can't see!");
+	}
+
+	#if 0
 	// SAM: 
 	// Hmmm...how best to print more info about
 	// the objects on this tile?
@@ -2786,6 +2807,9 @@ void detailed_examine_XY(struct place *place, int x, int y, void *unused)
                 return;
         }
         log_msg("DETAIL XY=(%d,%d) out of LOS\n", x, y);
+	#endif
+	
+	log_end(NULL);
 }
 
 /**
