@@ -131,8 +131,7 @@
   (put (mk-locked-door) 4 47)  
   (put (mk-door) 4 44)
   (put (mk-bed) (zone-x sea-witch-bed) (zone-y sea-witch-bed))
-  (put (mk-mirror s_mirror_bg_flagstones) 5 45)
-
+  
   ;; Alkemysts
   (put (mk-door) 8 29)
   (put (mk-magic-locked-door) 8 23)
@@ -155,6 +154,10 @@
   )
 )
 
+  (let* ((kmir (mk-mirror s_mirror_bg_flagstones))
+			(ksen (mk-char-sensor kmir)))
+	(kern-obj-put-at kmir (list p_oparine 5 45))
+	(kern-obj-put-at ksen (list p_oparine 5 46)))
 
 
 

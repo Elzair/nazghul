@@ -182,6 +182,9 @@
 								minbase)))
 					(kern-log-msg "The clock reads " hour ":" min)
 				)))
+		(method 'step
+			(lambda (kmirror kuser)
+				))
 		(method 'update-gfx
 			(lambda (kclock)
 				(let* ((time (kern-get-time))
@@ -198,6 +201,9 @@
 			(lambda (kclock kuser)
 						(kern-log-msg (gob kclock))
 					))
+		(method 'step
+			(lambda (kmirror kuser)
+				))
        ))
 	
 (mk-obj-type 't_clock "clock"
@@ -221,15 +227,18 @@
 		(kern-obj-set-pclass kclock pclass-wall)
 		kclock))
 
+
 (define (get-char-at location)
 	(define (get-char-from list)
-		(println list)
 		(cond ((null? list) nil)
 			((kern-obj-is-char? (car list)) (car list))
-			(else get-char-from (cdr list)))
+			(else (get-char-from (cdr list))))
 		)
 	(get-char-from (kern-get-objects-at location))
 	)
+
+;;------------------------------------------------
+;; mirrors
 
 (define mirror-ifc
   (ifc '()
@@ -237,12 +246,13 @@
 			(lambda (kmirror kuser)
 					(kern-log-msg (kern-obj-get-name kuser) " spots a " (kern-obj-get-name kuser) " in the mirror")
 				))
-		(method 'update-gfx
-			(lambda (kmirror)
+		(method 'step
+			(lambda (kmirror kuser)
+				))
+		(method 'remote-sensor
+			(lambda (kmirror kuser)
 				(let* ((mirror-loc (kern-obj-get-location kmirror))
-						(temp (println "a"))
 						(target-loc (list (car mirror-loc) (cadr mirror-loc) (+ (caddr mirror-loc) 1)))
-						(temp (println "b"))
 						(character (get-char-at target-loc)))
 					(if (null? character)
 						(kern-obj-set-sprite kmirror (mk-composite-sprite (list s_mirror_bg (gob kmirror) s_mirror_fg)))
@@ -258,8 +268,7 @@
 (define (mk-mirror background)
 	(let ((kmirror (kern-mk-obj t_mirror 1)))
 		(bind kmirror background)
-		(kern-obj-set-sprite kmirror (mk-composite-sprite (list background s_mirror_fg)))
+		(kern-obj-set-sprite kmirror (mk-composite-sprite (list s_mirror_bg background s_mirror_fg)))
 		(kern-obj-set-pclass kmirror pclass-wall)
-		(kern-obj-add-effect kmirror ef_graphics_update nil) 
 		kmirror))
 
