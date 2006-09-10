@@ -2509,6 +2509,29 @@ static pointer kern_log_msg(scheme *sc,  pointer args)
         return sc->NIL;
 }
 
+static pointer kern_stdout_msg(scheme *sc,  pointer args)
+{
+
+        while (scm_is_pair(sc, args)) {
+
+                pointer val = scm_car(sc, args);
+                args = scm_cdr(sc, args);
+
+                if (scm_is_str(sc, val)) {
+                        fprintf(stdout,"%s",scm_str_val(sc, val));
+                } else if (scm_is_int(sc, val)) {
+                        fprintf(stdout,"%d",scm_int_val(sc, val));
+                } else if (scm_is_real(sc, val)) {
+                        fprintf(stdout,"%f",scm_real_val(sc, val));
+                } else {
+                        rt_err("kern-print: bad args");
+                }
+        }
+		fprintf(stdout,"\n");
+		
+        return sc->NIL;
+}
+
 KERN_API_CALL(kern_log_enable)
 {
         int val;
@@ -5661,7 +5684,7 @@ KERN_API_CALL(kern_ui_waitkey)
 {
         int key;
         getkey(&key, anykey);
-        return sc->NIL;
+        return scm_mk_integer(sc, key);
 }
 
 KERN_API_CALL(kern_char_dec_mana)
@@ -7983,7 +8006,8 @@ scheme *kern_init(void)
         /* kern-log api */
         API_DECL(sc, "kern-log-msg", kern_log_msg);
         API_DECL(sc, "kern-log-enable", kern_log_enable);
-
+        API_DECL(sc, "kern-stdout-msg", kern_stdout_msg);
+		
         /* kern-dtable api */
         API_DECL(sc, "kern-mk-dtable", kern_mk_dtable);
         API_DECL(sc, "kern-dtable-get", kern_dtable_get);
