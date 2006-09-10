@@ -83,7 +83,8 @@ haxima_DATA = \
 	newterrain.png              hidden.scm             blendterrains.scm\
 	endless-deeps-mech.scm      endless-deeps.scm      abigail.scm\
 	r2a_mech.scm                kern-init.scm          effects.png\
-	gamestart-mech.scm          gamestart.scm
+	gamestart-mech.scm          gamestart.scm          bodies.png\
+	adornments.png              clothes.png
 
 EXTRA_DIST = $(haxima_DATA)
 MAINTAINERCLEANFILES = Makefile.in

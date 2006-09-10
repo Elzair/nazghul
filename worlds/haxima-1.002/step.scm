@@ -51,13 +51,13 @@
 
 (define char-sensor-ifc
   (ifc '() (method 'sense
-		(lambda (ksensor kuser)
-					(send-signal kuser (gob ksensor) 'remote-sensor)
-				))
-			))
+                   (lambda (ksensor kuser)
+                     (send-signal kuser (eval (gob ksensor)) 'remote-sensor)
+                     ))
+       ))
 
 (mk-obj-type 't_char_sensor nil nil layer-mechanism char-sensor-ifc)
 
-(define (mk-char-sensor target)
+(define (mk-char-sensor target-tag)
   (bind (make-invisible (kern-mk-obj t_char_sensor 1))
-        target))
+        target-tag))

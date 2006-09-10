@@ -35,6 +35,7 @@ BEGIN_DECL
 
 struct images;
 struct sprite;
+struct save;
 
 extern int sprite_init(void);
 extern void sprite_paint(struct sprite *sprite, int frame, int x, int y);
@@ -48,7 +49,10 @@ extern void sprite_zoom_in(int factor);
 extern void sprite_advance_ticks(int ticks);
 extern void sprite_append_decoration(struct sprite *sprite, 
                                      struct sprite *decor);
-extern struct sprite *sprite_clone(struct sprite *orig);
+
+/* sprite_clone - clone an existing sprite and give it a new tag. */
+extern struct sprite *sprite_clone(struct sprite *orig, char *new_tag);
+
 extern struct sprite * sprite_new(char *tag, int frames, int index, int wave, 
                                   int facings, struct images *image);
 extern void sprite_del(struct sprite *sprite);
@@ -56,6 +60,20 @@ extern char *sprite_get_tag(struct sprite *sprite);
 extern int sprite_is_faded(struct sprite *sprite);
 extern int sprite_can_face(struct sprite *sprite, int facing);
 extern void sprite_tint(struct sprite *sprite, Uint32 tint);
+
+/* sprite_save - save to file for reload. */
+extern void sprite_save(struct sprite *sprite, struct save *save);
+
+/* sprite_apply_matrix - applies a color conversion matrix. This is good for
+ * converting monotone or grayscale images into other tones. The matrix is
+ * applied as follows:
+ *
+ * r = R*m[0][0] + G*m[0][1] + B*m[0][2] + m[3][0]
+ * g = R*m[1][0] + G*m[1][1] + B*m[1][2] + m[3][1]
+ * b = R*m[2][0] + G*m[2][1] + B*m[2][2] + m[3][2]
+ *
+ */
+void sprite_apply_matrix(struct sprite *sprite, float matrix[4][3]);
 
 END_DECL
 

@@ -290,7 +290,7 @@
   )
 
 (define (simple-start kplayer)
-  (kern-obj-put-at kplayer (list p_moongate_clearing 11 11)))
+  (kern-obj-put-at kplayer (list p_oparine 5 47)))
   
 (define (create-char kplayer)
   (kern-obj-put-at kplayer (list p_char_setup 9 17)
@@ -301,5 +301,5 @@
 ;; the line after it.
 ;;----------------------------------------------------------------------------
 ;;(kern-set-start-proc start-scene)
-;;(kern-set-start-proc simple-start)
-(kern-set-start-proc create-char)
+(kern-set-start-proc simple-start)
+;;(kern-set-start-proc create-char)

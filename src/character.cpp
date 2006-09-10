@@ -2721,7 +2721,8 @@ void Character::save(struct save *save)
         save->write(save, "\"%s\"\n", this->getName());
         save->write(save, "%s\n",  this->species->tag);
         save->write(save, "%s\n", this->occ ? this->occ->tag : "nil");
-        save->write(save, "%s\n", sprite_get_tag(this->sprite));
+        sprite_save(sprite, save);
+        /*save->write(save, "%s\n", sprite_get_tag(this->sprite));*/
         save->write(save, "%d\n", getBaseFaction());
         save->write(save, "%d %d %d\n", str, intl, dex);
         save->write(save, "%d %d\n", this->hp_mod, this->hp_mult);

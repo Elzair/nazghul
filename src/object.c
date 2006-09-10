@@ -1367,9 +1367,43 @@ enum MoveResult Object::move(int dx, int dy)
 
 void Object::save(struct save *save)
 {
-        if (getTTL() != -1) {
-                save->enter(save, "(kern-obj-set-ttl ");
+        // Create the object within a 'let' block
+        save->enter(save, "(let ((kobj (kern-mk-obj %s %d\n", 
+                    getObjectType()->getTag(), 
+                    getCount());
+        saveHooks(save);
+        save->write(save, ")))\n");
+
+        // Assign the tag.
+        if (tag) {
+                save->write(save, "(kern-tag '%s kobj)\n", tag);
         }
+
+        // Save the gob binding.
+        if (getGob()) {
+                save->enter(save, "(bind kobj\n");
+                gob_save(getGob(), save);
+                save->exit(save, ")\n");
+        }
+
+        // Save time-to-live.
+        if (getTTL() != -1) {
+                save->write(save, "(kern-obj-set-ttl kobj %d)\n",
+                            getTTL());
+        }
+
+        // Set the custom sprite.
+        if (current_sprite) {
+                save->enter(save, "(kern-obj-set-sprite kobj\n");
+                sprite_save(current_sprite, save);
+                save->exit(save, ")\n");
+        }
+
+        // Close the 'let' block, returning kobj as the last thing evaluated.
+        save->exit(save, "kobj)\n");
+
+#if 0
+        // Old way:
 
         if (tag) {
                 // wrap the declaration in a call to assign the tag
@@ -1404,6 +1438,7 @@ void Object::save(struct save *save)
         if (getTTL() != -1) {
                 save->exit(save, "%d) ;; kern-obj-set-ttl\n", getTTL());
         }
+#endif
 }
 
 

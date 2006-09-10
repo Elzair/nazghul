@@ -154,8 +154,8 @@
   )
 )
 
-  (let* ((kmir (mk-mirror s_mirror_bg_flagstones))
-			(ksen (mk-char-sensor kmir)))
+  (let* ((kmir (kern-tag 'sea-witch-mirror (mk-mirror 's_mirror_bg_flagstones)))
+         (ksen (mk-char-sensor 'sea-witch-mirror)))
 	(kern-obj-put-at kmir (list p_oparine 5 45))
 	(kern-obj-put-at ksen (list p_oparine 5 46)))
 

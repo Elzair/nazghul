@@ -28,6 +28,7 @@
 ;(kern-mk-sprite 's_shoals        ss_u4_shapes 1  2 #t 0 )
 (kern-mk-sprite 's_bog           ss_u4_shapes 1  3 #f 0 )
 (kern-mk-sprite 's_grass         ss_u4_shapes 1  4 #f 0 )
+
 ;(kern-mk-sprite 's_trees         ss_u4_shapes 1  5 #f 0 )
 ;(kern-mk-sprite 's_forest        ss_u4_shapes 1  6 #f 0 )
 ;(kern-mk-sprite 's_hills         ss_u4_shapes 1  7 #f 0 )
@@ -487,7 +488,6 @@
 (mk-sprite 's_forest_se 66)
 (mk-sprite 's_forest_sw 67)
 
-
 (kern-mk-sprite 's_deep          ss_overlays 1  4 #t 0 )
 (kern-mk-sprite 's_shallow       ss_overlays 1  5 #t 0 )
 (kern-mk-sprite 's_shoals        ss_overlays 1  6 #t 0 )
@@ -519,3 +519,20 @@
 (define s_ranger s_companion_ranger)
 (define s_blue_wizard s_companion_wizard)
 (define s_fighter s_companion_fighter)
+
+;; Humanoid paper-doll-ready sprites
+(define (mk-sprite tag sprite-set offset n-frames)
+  (kern-mk-sprite tag sprite-set n-frames offset #f 0))
+(mk-sprite 's_hum_body  ss_bodies     0 1)
+(mk-sprite 's_hum_beard ss_adornments 0 1)
+(mk-sprite 's_hum_pants ss_clothes    0 1)
+(mk-sprite 's_hum_shirt ss_clothes    1 1)
+(mk-sprite 's_hum_robe  ss_clothes    2 1)
+(mk-sprite 's_hum_belt  ss_clothes    3 1)
+
+(kern-sprite-apply-matrix (kern-sprite-clone s_hum_robe 
+                                             's_hum_robe_blue) 
+                          (list (list 0 0 0)
+                                (list 0 0 0)
+                                (list 0 0 2)
+                                (list 0 0 0)))

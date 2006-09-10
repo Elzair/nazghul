@@ -354,6 +354,18 @@ static int unpack(scheme *sc, pointer *cell, char *fmt, ...)
                                 *ival = scm_int_val(sc, car);
                         }
                         break;
+                case 'f': /* float */
+                        rval = va_arg(args, float*);
+                        if (! scm_is_num(sc, car)) {
+                                errs++;
+                                load_err("arg %d not a number", count);
+                        } else if (! scm_is_real(sc, car)) {
+                                /* coerce it */
+                                *rval = scm_int_val(sc, car);
+                        } else {
+                                *rval = scm_real_val(sc, car);
+                        }
+                        break;
                 case 'o': /* procedure */
                         cval = va_arg(args, pointer*);
                         if (car == sc->NIL) {
@@ -7570,15 +7582,23 @@ KERN_API_CALL(kern_end_game)
 KERN_API_CALL(kern_sprite_clone)
 {
         struct sprite *orig, *clone;
+        char *tag;
 
-        if (unpack(sc, &args, "p", &orig)) {
+        if (unpack(sc, &args, "py", &orig, &tag)) {
                 rt_err("kern-sprite-clone: bad args");
                 return sc->NIL;
         }
-        clone = sprite_clone(orig);
+        clone = sprite_clone(orig, tag);
         if (clone) {
+                pointer ret = scm_mk_ptr(sc, clone);
                 session_add(Session, clone, sprite_dtor, NULL, NULL);
-                return scm_mk_ptr(sc, clone);
+
+                /* Tags are optional on clones, but only clones with tags will
+                 * be assigned to scheme variables. */
+                if (tag) {
+                        scm_define(sc, tag, ret);
+                }
+                return ret;
         }
         return sc->NIL;
 }
@@ -7609,8 +7629,47 @@ KERN_API_CALL(kern_sprite_tint)
                 return sc->NIL;
         }
 
-        /* prototype hack: access fields directly */
         sprite_tint(sprite, tint);
+        return scm_mk_ptr(sc, sprite);
+}
+
+KERN_API_CALL(kern_sprite_apply_matrix)
+{
+        struct sprite *sprite;
+        float matrix[4][3];
+        int row;
+        pointer pcol;
+
+        /* unpack the sprite */
+        if (unpack(sc, &args, "p", &sprite)) {
+                load_err("kern-sprite-tint: bad args");
+                return sc->NIL;
+        }
+
+        if (!scm_is_pair(sc, args)) {
+                load_err("kern-sprite-apply-matrix: no matrix!");
+                goto abort;
+        }
+        args = scm_car(sc, args);
+
+        /* unpack the matrix */
+        for (row = 0; row < 4; row++) {
+                if (! scm_is_pair(sc, args)) {
+                        load_err("kern-sprite-apply-matrix: only %d of 4 rows!", row);
+                        goto abort;
+                }
+                pcol = scm_car(sc, args);
+                args = scm_cdr(sc, args);
+                if (unpack(sc, &pcol, "fff", &matrix[row][0],
+                           &matrix[row][1],
+                           &matrix[row][2])) {
+                        load_err("kern-sprite-apply-matrix: bad args in row %d!", row);
+                        goto abort;
+                }
+        }
+
+        sprite_apply_matrix(sprite, matrix);
+ abort:
         return scm_mk_ptr(sc, sprite);
 }
 
@@ -8025,6 +8084,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-sprite-clone", kern_sprite_clone);
         API_DECL(sc, "kern-sprite-append-decoration", kern_sprite_append_decoration);
         API_DECL(sc, "kern-sprite-tint", kern_sprite_tint);
+        API_DECL(sc, "kern-sprite-apply-matrix", kern_sprite_apply_matrix);
 
 
         /* kern-vehicle-api */

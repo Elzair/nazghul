@@ -260,4 +260,3 @@
 	proc-stratt proc-dexdef)
 
 (kern-init-random)
-

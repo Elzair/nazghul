@@ -251,32 +251,35 @@
 (define mirror-ifc
   (ifc '()
        (method 'handle 
-			(lambda (kmirror kuser)
-					(kern-log-msg (kern-obj-get-name kuser) " spots a " (kern-obj-get-name kuser) " in the mirror")
-				))
-		(method 'step
-			(lambda (kmirror kuser)
-				))
-		(method 'remote-sensor
-			(lambda (kmirror kuser)
-				(let* ((mirror-loc (kern-obj-get-location kmirror))
-						(target-loc (list (car mirror-loc) (cadr mirror-loc) (+ (caddr mirror-loc) 1)))
-						(character (get-char-at target-loc)))
-					(if (null? character)
-						(kern-obj-set-sprite kmirror (mk-composite-sprite (list s_mirror_bg (gob kmirror) s_mirror_fg)))
-						(kern-obj-set-sprite kmirror (mk-composite-sprite (list s_mirror_bg (kern-obj-get-sprite character) (gob kmirror) s_mirror_fg))))
-					(kern-map-set-dirty)
-				)))
+               (lambda (kmirror kuser)
+                 (kern-log-msg (kern-obj-get-name kuser) " spots a " (kern-obj-get-name kuser) " in the mirror")
+                 ))
+       (method 'step
+               (lambda (kmirror kuser)
+                 ))
+       (method 'remote-sensor
+               (lambda (kmirror kuser)
+                 (let* ((mirror-loc (kern-obj-get-location kmirror))
+                        (target-loc (list (car mirror-loc) (cadr mirror-loc) (+ (caddr mirror-loc) 1)))
+                        (character (get-char-at target-loc)))
+                   (println "mirror-loc: " mirror-loc)
+                   (println "target-loc: " target-loc)
+                   (println "character: " character)
+                   (if (null? character)
+                       (kern-obj-set-sprite kmirror (mk-composite-sprite (list s_mirror_bg (eval (gob kmirror)) s_mirror_fg)))
+                       (kern-obj-set-sprite kmirror (mk-composite-sprite (list s_mirror_bg (kern-obj-get-sprite character) (eval (gob kmirror)) s_mirror_fg))))
+                   (kern-map-set-dirty)
+                   )))
        ))
 	
 (mk-obj-type 't_mirror "mirror"
 	'()
 	layer-mechanism mirror-ifc)
 	
-(define (mk-mirror background)
+(define (mk-mirror background-tag)
 	(let ((kmirror (kern-mk-obj t_mirror 1)))
-		(bind kmirror background)
-		(kern-obj-set-sprite kmirror (mk-composite-sprite (list s_mirror_bg background s_mirror_fg)))
+		(bind kmirror background-tag)
+		(kern-obj-set-sprite kmirror (mk-composite-sprite (list s_mirror_bg (eval background-tag) s_mirror_fg)))
 		(kern-obj-set-pclass kmirror pclass-wall)
 		kmirror))
 

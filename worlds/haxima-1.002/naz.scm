@@ -2,7 +2,6 @@
 ;; init.scm -- contains lots of common scheme utilities
 (load "init.scm")
 
-
 ;; Override the default error hook to warn the loader when the interpreter
 ;; encounters any errors during evaluation.
 (define (my-error-hook . x)
@@ -1424,7 +1423,7 @@
 ;; others in the list. The new sprite will be "anonymous" (no tag).
 (define (mk-composite-sprite sprites)
   (foldr (lambda (s1 s2) (kern-sprite-append-decoration s1 s2))
-         (kern-sprite-clone (car sprites))
+         (kern-sprite-clone (car sprites) nil)
          (cdr sprites)))
 
 (define (kchar-in-vehicle? kchar)
