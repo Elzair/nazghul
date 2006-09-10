@@ -62,6 +62,7 @@
 #define GIFC_CAN_HIT_LOCATION 2048
 #define GIFC_CAN_BUY          4096
 #define GIFC_CAN_SEARCH       8192
+#define GIFC_CAN_SENSE        16384
 
 ObjectType::ObjectType()
 {
@@ -352,6 +353,13 @@ void Object::relocate(struct place *newplace, int newx, int newy, bool noStep,
 
         assert(newplace);
 
+		class Object *mech = NULL;
+		
+		if (isOnMap())
+		{
+			mech = place_get_object(getPlace(), x, y, mech_layer);
+		}
+
         if (isOnMap()) {
 
                 assert(getPlace());
@@ -406,6 +414,11 @@ void Object::relocate(struct place *newplace, int newx, int newy, bool noStep,
                                                       place_switch_hook))
                                 return;
 
+						if (mech 
+							&& mech != this 
+							&& mech->getObjectType()->canSense())
+								mech->getObjectType()->sense(mech, this);
+				
                         // ----------------------------------------------------
                         // This object may no longer be on a map as a result of
                         // the above call. If so then finish processing.
@@ -432,6 +445,11 @@ void Object::relocate(struct place *newplace, int newx, int newy, bool noStep,
                 changePlaceHook();
 
         }
+
+		if (mech 
+			&& mech != this 
+			&& mech->getObjectType()->canSense())
+				mech->getObjectType()->sense(mech, this);
 
         mapSetDirty();
 
@@ -477,16 +495,22 @@ void Object::relocate(struct place *newplace, int newx, int newy, bool noStep,
         // --------------------------------------------------------------------
         // Send the "step" signal to any mechanisms on this tile.
         // --------------------------------------------------------------------
-
-        if (! noStep) {
-                class Object *mech;
-
-                mech = place_get_object(place, x, y, mech_layer);
-                if (mech 
-                    && mech != this 
-                    && mech->getObjectType()->canStep())
-                        mech->getObjectType()->step(mech, this);
+		
+        if (! noStep) {  
+		
+			mech = place_get_object(place, x, y, mech_layer);
+			if (mech 
+				&& mech != this 
+				&& mech->getObjectType()->canStep())
+					mech->getObjectType()->step(mech, this);
         }
+
+		//need to get mech twice, in case old call destroyed it
+		mech = place_get_object(place, x, y, mech_layer);
+		if (mech 
+			&& mech != this 
+			&& mech->getObjectType()->canSense())
+				mech->getObjectType()->sense(mech, this);
 
 }
 
@@ -1752,6 +1776,11 @@ bool ObjectType::canStep()
         return (gifc_cap & GIFC_CAN_STEP);
 }
 
+bool ObjectType::canSense()
+{
+        return (gifc_cap & GIFC_CAN_SENSE);
+}
+
 bool ObjectType::canAttack()
 {
         return (gifc_cap & GIFC_CAN_ATTACK);
@@ -1821,6 +1850,11 @@ void ObjectType::hitLocation(Object *obj, struct place *place, int x, int y)
 void ObjectType::step(Object *obj, Object *stepper)
 {
         closure_exec(gifc, "ypp", "step", obj, stepper);
+}
+
+void ObjectType::sense(Object *obj, Object *stepper)
+{
+		closure_exec(gifc, "ypp", "sense", obj, stepper);
 }
 
 void ObjectType::attack(Object *obj, Object *stepper)
@@ -1929,6 +1963,15 @@ void Object::step(Object *stepper)
         getObjectType()->step(this, stepper);
 }
 
+void Object::sense(Object *stepper)
+{        
+        if (! getObjectType() ||
+            ! getObjectType()->canSense())
+                return;
+
+        getObjectType()->sense(this, stepper);
+}
+
 void Object::attack(Object *stepper)
 {        
         if (! getObjectType() ||
@@ -1971,6 +2014,11 @@ void Object::enter(Object *enterer)
 bool Object::canStep()
 {
         return (getObjectType() && getObjectType()->canStep());
+}
+
+bool Object::canSense()
+{
+        return (getObjectType() && getObjectType()->canSense());
 }
 
 void Object::setLight(int val)

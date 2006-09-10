@@ -181,6 +181,7 @@ class ObjectType {
         bool canOpen();
         bool canStep();
         bool canHandle();
+		bool canSense();
         bool canAttack();
         bool canEnter();
         bool canBump(); // attempted entry onto same tile
@@ -193,6 +194,7 @@ class ObjectType {
         void get(Object *obj, Object *getter);
         void open(Object *obj, Object *opener);
         void step(Object *obj, Object *stepper);
+        void sense(Object *obj, Object *stepper);
         void handle(Object *obj, Object *handler);
         void attack(Object *obj, Object *attacker);
         void enter(Object *obj, Object *enterer);
@@ -363,7 +365,9 @@ class Object {
         // Proxies into script signals
         bool canEnter();
         bool canStep();
+		bool canSense();
         void step(Object *stepper);
+		void sense(Object *stepper);
         void attack(Object *attacker);
         void enter(Object *enterer);
 
