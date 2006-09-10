@@ -44,3 +44,20 @@
   (bind (make-invisible (kern-mk-obj t_on_trig 1))
         (trig-mk proc-tag args)))
 
+;;------------------------------------------------------------------------
+;; sensor pad - sends a remote-sensor ifc call when it detects someone
+;;	enters or leaves its tile
+;;------------------------------------------------------------------------
+
+(define char-sensor-ifc
+  (ifc '() (method 'sense
+		(lambda (ksensor kuser)
+					(send-signal kuser (gob ksensor) 'remote-sensor)
+				))
+			))
+
+(mk-obj-type 't_char_sensor nil nil layer-mechanism char-sensor-ifc)
+
+(define (mk-char-sensor target)
+  (bind (make-invisible (kern-mk-obj t_char_sensor 1))
+        target))
