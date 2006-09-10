@@ -221,37 +221,6 @@
 		
 
 ;;----------------------------------------------------------------------------
-;; First Circle
-;;----------------------------------------------------------------------------
-
-(define (an-nox caster)
-	(cast-ui-basic-member-spell powers-cure-poison
-		caster (occ-ability-whitemagic caster)))
-
-(define (an-zu  caster)
-	(cast-ui-basic-member-spell powers-awaken
-		caster (occ-ability-whitemagic caster)))
-
-(define (grav-por caster)
-	(cast-ui-basic-ranged-spell powers-magic-missile
-		caster 
-		(powers-magic-missile-range (occ-ability-blackmagic caster))
-		(occ-ability-blackmagic caster)))
-
-(define (in-lor caster)
-	(powers-light caster caster (occ-ability-whitemagic caster))
-	result-ok)
-
-(define (an-xen-bet  caster)
-  (powers-spider-calm caster caster (occ-ability-whitemagic caster))
-  result-ok)
-
-(define (mani caster)
-	(cast-ui-basic-member-spell powers-heal
-		caster (occ-ability-whitemagic caster)))
-
-
-;;----------------------------------------------------------------------------
 ;; Second Circle
 ;;----------------------------------------------------------------------------
 (define (an-sanct  caster)
@@ -362,45 +331,6 @@
                                    (lambda (caster ktarg)
                                      (kern-obj-add-effect ktarg ef_temporary_poison_immunity nil)
                                      )))
-
-;; wis-sanct -- detect traps on containers
-(define (wis-sanct caster)
-  (let ((ktarg (ui-target (kern-obj-get-location caster)
-                          1
-                          (lambda (kobj)
-                            (and (kern-obj-is-container? kobj)
-                                 (kern-obj-is-visible? kobj)))
-                          )))
-    (cond ((null? ktarg) result-no-target)
-          ((kern-obj-is-trapped? ktarg)
-           (kern-log-msg (kern-obj-get-name caster)
-                         " detects a trap on "
-                         (kern-obj-get-name ktarg)
-                         "!")
-           result-ok)
-          (else
-           (kern-log-msg (kern-obj-get-name caster)
-                         " does not detect any traps")
-           result-ok))))
-                                     
-
-(define (an-sanct-ylem caster)
-  (let ((ktarg (ui-target (kern-obj-get-location caster)
-                          1
-                          (lambda (kobj)
-                            (and (kern-obj-is-container? kobj)
-                                 (kern-obj-is-visible? kobj)))
-                          )))
-    (cond ((null? ktarg) result-no-target)
-          ((kern-obj-is-trapped? ktarg)
-           (kern-log-msg (kern-obj-get-name caster)
-                         " disarms a trap on "
-                         (kern-obj-get-name ktarg)
-                         "!")
-           (kern-obj-remove-trap ktarg)
-           result-ok)
-          (else
-           result-no-effect))))
 
 ;;----------------------------------------------------------------------------
 ;; Fourth Circle

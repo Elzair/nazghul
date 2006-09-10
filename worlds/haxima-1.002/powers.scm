@@ -174,6 +174,27 @@
 		(kern-obj-remove-effect ktarg ef_disease))
 	)
 	
+;todo currently only checks topmost item
+(define (powers-detect-traps caster ktarg power)
+	(if (kern-obj-is-trapped? ktarg)
+		(kern-log-msg (kern-obj-get-name caster)
+			" detects a trap on "
+			(kern-obj-get-name ktarg)
+			"!")
+		(kern-log-msg (kern-obj-get-name caster)
+			" does not detect any traps")))
+			
+;todo currently only checks topmost item
+(define (powers-disarm-traps caster ktarg power)
+	(if (kern-obj-is-trapped? ktarg)
+		(begin
+			(kern-log-msg (kern-obj-get-name caster)
+				" disarms a trap on "
+				(kern-obj-get-name ktarg)
+				"!")
+			(kern-obj-remove-trap ktarg))
+	))
+	
 ;todo should the messages be in the ui part?
 (define (powers-heal kchar ktarg power)
   (kern-log-msg (kern-obj-get-name kchar)

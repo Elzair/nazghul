@@ -116,8 +116,12 @@
 			nil
 			(get-being-at loc))))
 			
-			
-			
+(define (cast-ui-target-any caster range checkproc)
+	(ui-target (kern-obj-get-location caster)
+		range
+		checkproc))
+		
+		
 
 (define (cast-ui-dospell target effect caster power)
 	(if (null? target)
@@ -141,3 +145,58 @@
 		(cast-ui-target-char caster range)
 		effect caster power))
 
+(define (cast-ui-ranged-any effect caster range power targetcheck)
+	(cast-ui-dospell
+		(cast-ui-target-any caster range targetcheck)
+		effect caster power))
+
+
+
+
+;;----------------------------------------------------------------------------
+;; First Circle
+;;----------------------------------------------------------------------------
+
+(define (an-nox caster)
+	(cast-ui-basic-member-spell powers-cure-poison
+		caster (occ-ability-whitemagic caster)))
+
+(define (an-zu  caster)
+	(cast-ui-basic-member-spell powers-awaken
+		caster (occ-ability-whitemagic caster)))
+
+(define (grav-por caster)
+	(cast-ui-basic-ranged-spell powers-magic-missile
+		caster 
+		(powers-magic-missile-range occ-ability-blackmagic caster)
+		(occ-ability-blackmagic caster)))
+
+(define (in-lor caster)
+	(powers-light caster caster (occ-ability-whitemagic caster))
+	result-ok)
+
+(define (an-xen-bet  caster)
+  (powers-spider-calm caster caster (occ-ability-whitemagic caster))
+  result-ok)
+
+(define (mani caster)
+	(cast-ui-basic-member-spell powers-heal
+		caster (occ-ability-whitemagic caster)))
+		
+;todo currently only checks topmost item
+(define (wis-sanct caster)
+	(cast-ui-ranged-any powers-detect-traps
+		caster 1 (occ-ability-whitemagic caster)
+		(lambda (kobj)
+            (and (kern-obj-is-container? kobj)
+				(kern-obj-is-visible? kobj)))
+	))
+
+;todo currently only checks topmost item
+(define (an-sanct-ylem caster)
+	(cast-ui-ranged-any powers-disarm-traps
+		caster 1 (occ-ability-whitemagic caster)
+		(lambda (kobj)
+            (and (kern-obj-is-container? kobj)
+				(kern-obj-is-visible? kobj)))
+	))
