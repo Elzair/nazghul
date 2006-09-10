@@ -613,8 +613,22 @@ static void sprite_apply_matrix_to_image(SDL_Surface *source, SDL_Rect *from,
                 sy = dy;
                 for (dx = 0; dx < from->w; dx++) {
                         sx = dx;
-                        di = (dy * dpitch + dx);
+                        di = (dy + to->y) * dpitch + (dx + to->x);
                         si = (sy + from->y) * spitch + (sx + from->x);
+
+                        /* For speed, skip blank pixels. */
+                        if (!spix[si]) {
+                                continue;
+                        }
+
+                        /* Extract the alpha component of the source pixel. */
+                        in_alpha = ((spix[si] & source->format->Amask) 
+                                     >> source->format->Ashift);
+
+                        /* For speed, skip transparent pixels. */
+                        if (! in_alpha) {
+                                continue;
+                        }
 
                         /* Extract the color components of the source pixel. */
                         in_red = ((spix[si] & source->format->Rmask) 
@@ -623,8 +637,6 @@ static void sprite_apply_matrix_to_image(SDL_Surface *source, SDL_Rect *from,
                                    >> source->format->Gshift);
                         in_blu = ((spix[si] & source->format->Bmask) 
                                    >> source->format->Bshift);
-                        in_alpha = ((spix[si] & source->format->Amask) 
-                                     >> source->format->Ashift);
 
                         /* Run the matrix conversion. */
                         ired = (int)((in_red * matrix[0][0])
@@ -706,7 +718,7 @@ void sprite_apply_matrix(struct sprite *sprite, float matrix[4][3])
         for (i = 0; i < sprite->n_total_frames; i++) {
                 to.x = i * sprite->w_pix;
 
-                /* Tint the frame image. */
+                /* Apply to the image. */
                 sprite_apply_matrix_to_image(sprite->rsurf->surf, 
                                              &sprite->frames[i],
                                              dest, &to, matrix);

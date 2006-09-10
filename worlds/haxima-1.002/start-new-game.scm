@@ -290,7 +290,7 @@
   )
 
 (define (simple-start kplayer)
-  (kern-obj-put-at kplayer (list p_oparine 5 47)))
+  (kern-obj-put-at kplayer (list p_enchanters_tower 15 15)))
   
 (define (create-char kplayer)
   (kern-obj-put-at kplayer (list p_char_setup 9 17)
