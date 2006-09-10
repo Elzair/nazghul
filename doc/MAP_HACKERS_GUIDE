@@ -1,109 +1,145 @@
-----------------------------------------------------------------------------
-Q: How do I add a character to a town?
+                     MAP HACKER'S GUIDE TO NAZGHUL/HAXIMA
 
-A: Characters are added to the objects section of a town's PLACE
-   declaration. For example, say you have a character named Hawknoz and a town
-   called Empire_City. Empire_City will have a PLACE declaration similar to
-   this:
 
-   PLACE Empire_City {
+                        "The map is not the territory."
+                         --Attributed to Alfred Korzybski
 
-       type town;
-       // etc...
 
-       objects {
-           // insert characters here
-           // <tag> <x> <y> <alignment> <home-flag>
-           ch_Hawknoz 15 25 (ALIGN_TOWN) 1;         
-       }
-   }
+                                 INTRODUCTION
 
-   The 'tag' is the tag used when the character was declared.
+So you want to modify Haxima, or maybe you think Haxima sucks and you know you
+can do better? Then you've come to the right place. The Haxima scripts will
+give you lots of examples on how to do things. If you can figure them
+out. You're a smart guy. I'm sure you can. But even smart guys sometimes need a
+hint, and that's what this manual is for. Here you'll find a discussion of the
+principles of how to build a game with nazghul, including details on the kernel
+API. 
 
-   The 'x' and 'y' fields are the starting coordinates of the character within
-   the town (don't woryy - if the character has a schedule it will still follow
-   it).
+Or, you will when it's finished.
 
-   'alignment' determines the character's attitude toward others.
 
-   'home-flag' is obsolete but still required by the parser.
+                                   CONCEPTS
 
-----------------------------------------------------------------------------
-Q: How do I create a schedule for a character?
+COMPOSITE SPRITE
+        First, see SPRITE. A composite sprite is a sprite made up of layers of
+        other sprites.
 
-A: Use the SCHED declaration and assign a schedule in the character's CHAR
-   declaration.
+OBJECT  Something which exists on the map and is not part of the scenery.
 
-   Here's a sample schedule:
+SPRITE  An animation sequence which shows an object. Every visible object has a
+        sprite. Sprites can be composed of other sprites, see COMPOSITE SPRITE.
 
-   SCHED sched_Hawknoz {
-       0  0  25 60 1  1  SLEEPING;
-       7  0  11 57 10 3  WORKING;
-       12 0  55 52 1  1  EATING;
-       13 0  11 57 10 3  WORKING;
-       5  0  21 29 8  7  RELAXING;
-       19 0  25 60 1  1  SLEEPING;
-   }
+SPRITE SET
+        Usually sprite images are collected into files with lots of images in
+        them. A sprite set refers to the file and stores information like
+        how big the images are, how many are in the file, etc. Sprites refer to
+        sprite sets. Different sprites can share some of the same images,
+        although few ever do.
 
-   Each line of a schedule defines an appointment for a character. The format is:
+TAG     A name given to a kernel data structure so that it can be referred to
+        by a scheme variable. Tags are important because they can be used when
+        saving a game to allow objects to refer to one another when the game is
+        reloaded.
 
-   <time-hours> <time-minutes> <x> <y> <w> <h> <activity>
+                                  KERNEL API
 
-   'time-hours' and 'time-minutes' specify the time to start the
-   appointment. Character's remain at an appointment until its time for the
-   next one, at which point they will begin commuting to their enxt
-   appointment. (Debugginh note: although characters pathfind and can commute
-   through closed doors, they aren't smart enough to solve other types of
-   obstacle problems. For example, if they have to cross a drawbridge which
-   requires using a lever to lower it the characters will probably "freeze"
-   because they can't find a path to the next appointment. Once the time rolls
-   around for an appointment which they can pathfind to they will unfreeze,
-   however.)
- 
-   <x>, <y>, <w>, and <h> specify a rectangle where the characters are free to
-   wander during their appointment. If you don't want them to wander use 1 for
-   both <w> and <h>.
-
-   <activity> specifies an activity for the character to engage in. This is a
-   number ID, with the first four numbers reserved:
-
-       WORKING   0
-       SLEEPING  1
-       COMMUTING 2
-       EATING    3
-
-   Other numbers are free to be used by game developers. The purpose of the
-   activity is to allow a character's conversation script to provide different
-   responses based on what the character is doing. For example, a conversation
-   might have a response like this:
-
-       RESP Job { 
-           CHECK_PARM ACTIVITY = EATING {
-               SAY "[Mouth full] Mrmph rormph... ";
-           }{
-               SAY "Not much.";
-           }
-
-   This response says that if the player asks the character about his job, the
-   character will respond with "[Mouth full] Mrmph rormph..." if he is eating
-   or "Not much." otherwise.
+This section documents the kernel calls available to scripts. The document
+format is moduled after the UNIX man pages, which, like so many things in UNIX,
+have served well enough over the last 30-odd years to be worth emulating.
 
 ----------------------------------------------------------------------------
-Q: How do I add a mechanism to a place?
-A: First declare the mechanism and then put it in the objects block of the
-   place. For example, to add a drawbridge:
+NAME
+        kern-sprite-apply-matrix - apply a color conversion matrix to a sprite
 
-   MECH drawbridge {
-       // mech definition goes here
-   }
+SYNOPSIS
+        (kern-sprite-apply-matrix <sprite> <matrix>)
 
-   PLACE castle {
-       // other fields
-       objects {
-           drawbridge west_bridge 30 5 "down";
-       }
-   }
+DESCRIPTION
+        The purpose of this is to alter the colors of a sprite. The idea is you
+        create one sprite, probably in grayscale, and use this procedure to
+        make different colored variations of it. This works by applying the
+        matrix to the sprite, resulting in a linear remapping of the sprite
+        colors to another set of colors. The matrix is in the form:
 
-   The syntax for the line in the objects block is:
+                (list (list <c01> <c02> <c03>)
+                      (list <c11> <c12> <c13>)
+                      (list <c21> <c22> <c23>)
+                      (list <k1> <k2> <k3>))
 
-   <mech type name> <instance name> <x> <y> <initial state name>
+        This matrix is applied to the red, green and blue components of each
+        pixel in the sprite like this:
+
+                r = R * c00 + G * c01 + B * c02 + k1
+                g = R * c10 + G * c11 + B * c12 + k2
+                b = R * c20 + G * c21 + B * c22 + k3
+                 
+        Where r, g and b are the result and R, G and B are the original values
+        for the pixel. The result for a component will be clamped to [0, 255].
+
+        The underlying image is copied before being modified. This means that
+        if the sprite is a clone of another sprite, the other sprite will not
+        be modified.
+
+RETURNS
+        The modified sprite. If something is wrong with the arguments it
+        returns the original, unmodified sprite.
+
+EXAMPLES
+
+        This applies an identity matrix, which does nothing:
+
+                (kern-sprite-apply-matrix ksprite
+                                          '((1 0 0)
+                                            (0 1 0)
+                                            (0 0 1)
+                                            (0 0 0)))
+
+        This matrix will convert a grayscale image to blue:
+
+                0 0 0
+                0 0 0
+                0 0 1
+                0 0 0
+
+        This will swap red and blue:
+
+                0 0 1
+                0 1 0
+                1 0 0
+                0 0 0
+
+        This will lighten every pixel by a fixed offset:
+        
+                1   0  0
+                0   1  0
+                0   0  1
+                64 64 64
+
+         This will darken every pixel by a scale factor:
+
+                0.5 0   0
+                0   0.5 0
+                0   0   0.5
+                0   0   0
+
+----------------------------------------------------------------------------
+NAME
+        kern-sprite-clone - copy a sprite
+
+SYNOPSIS
+        (kern-sprite-clone <original> <new-tag>)
+
+DESCRIPTION
+        Use this when you want to make a modified version of a sprite but still
+        want to keep the original intact. You can assign the clone its own tag
+        and henceforth refer to the tag as a scheme variable, or you can pass
+        in nil and just use the return value.
+
+RETURNS
+        The cloned sprite, or nil if 'original' was a bad arg or a memory
+        allocation failure prevented creation of the clone.
+
+EXAMPLES
+        ;; Clone grass and turn it brown to make dirt
+        (kern-sprite-clone s_grass 's_dirt)
+        (kern-sprite-apply-matrix s_dirt green-to-brown-matrix)
