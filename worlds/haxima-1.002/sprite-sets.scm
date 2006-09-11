@@ -27,5 +27,5 @@
 
 ;; New paper-doll sprite sets
 (kern-mk-sprite-set 'ss_bodies     32 32 4 4 0 0 "bodies.png")
-(kern-mk-sprite-set 'ss_adornments 32 32 1 1 0 0 "adornments.png")
-(kern-mk-sprite-set 'ss_clothes    32 32 4 4 0 0 "clothes.png")
+(kern-mk-sprite-set 'ss_adornments 32 32 4 4 0 0 "adornments.png")
+(kern-mk-sprite-set 'ss_clothes    32 32 5 4 0 0 "clothes.png")

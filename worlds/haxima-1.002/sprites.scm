@@ -524,7 +524,11 @@
 (define (mk-sprite tag sprite-set offset n-frames)
   (kern-mk-sprite tag sprite-set n-frames offset #f 0))
 (mk-sprite 's_hum_body   ss_bodies     0 4)
-(mk-sprite 's_hum_beard  ss_adornments 0 1)
+
+(mk-sprite 's_hum_beard          ss_adornments 0 1)
+(mk-sprite 's_hum_med_hair_gold  ss_adornments 4 1)
+(mk-sprite 's_hum_long_hair_gold  ss_adornments 5 1)
+
 (mk-sprite 's_hum_pants  ss_clothes    0 1)
 (mk-sprite 's_hum_shirt  ss_clothes    4 1)
 (mk-sprite 's_hum_robe   ss_clothes    8 4)
@@ -562,22 +566,33 @@
                      (0 0 0)
                      (0 0 0)))
 
+(define mat_gold_to_midnight '((0 0 0.25)
+                               (0 0.25 0)
+                               (0.25 0 0)
+                               (0 0 0)))
+
 ;;----------------------------------------------------------------------------
 ;; Sprites derived from other sprites via color conversion
-(define (mk-clothes tag matrix)
+(define (mk-sprite tag matrix)
   (kern-sprite-apply-matrix (kern-sprite-clone s_hum_robe tag) matrix))
 
-(mk-clothes 's_hum_robe_red    mat_red)
-(mk-clothes 's_hum_robe_green  mat_green)
-(mk-clothes 's_hum_robe_blue   mat_blue)
-(mk-clothes 's_hum_robe_white  mat_white)
-(mk-clothes 's_hum_robe_yellow mat_yellow)
+(mk-sprite 's_hum_robe_red    mat_red)
+(mk-sprite 's_hum_robe_green  mat_green)
+(mk-sprite 's_hum_robe_blue   mat_blue)
+(mk-sprite 's_hum_robe_white  mat_white)
+(mk-sprite 's_hum_robe_yellow mat_yellow)
 
-(define (mk-clothes tag matrix)
+(define (mk-sprite tag matrix)
   (kern-sprite-apply-matrix (kern-sprite-clone s_hum_mantle tag) matrix))
 
-(mk-clothes 's_hum_mantle_red    mat_red)
-(mk-clothes 's_hum_mantle_green  mat_green)
-(mk-clothes 's_hum_mantle_blue   mat_blue)
-(mk-clothes 's_hum_mantle_white  mat_white)
-(mk-clothes 's_hum_mantle_yellow mat_yellow)
+(mk-sprite 's_hum_mantle_red    mat_red)
+(mk-sprite 's_hum_mantle_green  mat_green)
+(mk-sprite 's_hum_mantle_blue   mat_blue)
+(mk-sprite 's_hum_mantle_white  mat_white)
+(mk-sprite 's_hum_mantle_yellow mat_yellow)
+
+(define (mk-sprite tag matrix base)
+  (kern-sprite-apply-matrix (kern-sprite-clone base tag) matrix))
+
+(mk-sprite 's_hum_med_hair_midnight  mat_gold_to_midnight s_hum_med_hair_gold)
+(mk-sprite 's_hum_long_hair_midnight mat_gold_to_midnight s_hum_long_hair_gold)
