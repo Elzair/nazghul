@@ -527,7 +527,9 @@
 
 (mk-sprite 's_hum_beard          ss_adornments 0 1)
 (mk-sprite 's_hum_med_hair_gold  ss_adornments 4 1)
-(mk-sprite 's_hum_long_hair_gold  ss_adornments 5 1)
+(mk-sprite 's_hum_long_hair_gold ss_adornments 5 1)
+(mk-sprite 's_hum_staff_gold     ss_adornments 8 4)
+(mk-sprite 's_hum_staffglo_blue  ss_adornments 12 4)
 
 (mk-sprite 's_hum_pants  ss_clothes    0 1)
 (mk-sprite 's_hum_shirt  ss_clothes    4 1)
@@ -571,6 +573,11 @@
                                (0.25 0 0)
                                (0 0 0)))
 
+(define mat_blue_to_green '((1 0 0)
+                            (0 0 1)
+                            (0 1 0)
+                            (0 0 0)))
+
 ;;----------------------------------------------------------------------------
 ;; Sprites derived from other sprites via color conversion
 (define (mk-sprite tag matrix)
@@ -596,3 +603,6 @@
 
 (mk-sprite 's_hum_med_hair_midnight  mat_gold_to_midnight s_hum_med_hair_gold)
 (mk-sprite 's_hum_long_hair_midnight mat_gold_to_midnight s_hum_long_hair_gold)
+
+(kern-sprite-apply-matrix (kern-sprite-clone s_hum_staffglo_blue 's_hum_staffglo_green) mat_blue_to_green)
+

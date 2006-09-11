@@ -119,7 +119,10 @@
                                s_hum_robe_yellow 
                                s_hum_mantle_green 
                                s_hum_long_hair_midnight
-                               s_hum_belt))
+                               s_hum_staff_gold 
+                               s_hum_belt
+                               s_hum_staffglo_green
+                               ))
     faction-men      ; starting alignment
     0 7 0            ; str/int/dex
     (/ pc-hp-off 2)  ; hp bonus
