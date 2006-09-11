@@ -115,7 +115,10 @@
     "Kalcifax"             ; name
     kalc-species         ; species
     kalc-occ              ; occ
-    s_companion_wizard ; sprite
+    (mk-composite-sprite (list s_hum_body 
+                               s_hum_robe_yellow 
+                               s_hum_mantle_green 
+                               s_hum_belt))
     faction-men      ; starting alignment
     0 7 0            ; str/int/dex
     (/ pc-hp-off 2)  ; hp bonus

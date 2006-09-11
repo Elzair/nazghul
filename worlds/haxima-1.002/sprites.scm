@@ -523,16 +523,61 @@
 ;; Humanoid paper-doll-ready sprites
 (define (mk-sprite tag sprite-set offset n-frames)
   (kern-mk-sprite tag sprite-set n-frames offset #f 0))
-(mk-sprite 's_hum_body  ss_bodies     0 2)
-(mk-sprite 's_hum_beard ss_adornments 0 1)
-(mk-sprite 's_hum_pants ss_clothes    0 1)
-(mk-sprite 's_hum_shirt ss_clothes    2 1)
-(mk-sprite 's_hum_robe  ss_clothes    4 2)
-(mk-sprite 's_hum_belt  ss_clothes    6 1)
+(mk-sprite 's_hum_body   ss_bodies     0 4)
+(mk-sprite 's_hum_beard  ss_adornments 0 1)
+(mk-sprite 's_hum_pants  ss_clothes    0 1)
+(mk-sprite 's_hum_shirt  ss_clothes    4 1)
+(mk-sprite 's_hum_robe   ss_clothes    8 4)
+(mk-sprite 's_hum_belt   ss_clothes    12 1)
+(mk-sprite 's_hum_mantle ss_clothes    16 1)
 
-(kern-sprite-apply-matrix (kern-sprite-clone s_hum_robe 
-                                             's_hum_robe_blue) 
-                          '((0 0 0)
-                            (0 0 0)
-                            (0 0 2)
-                            (0 0 0)))
+;;----------------------------------------------------------------------------
+;; Color conversion matrices - used as parms to the
+;; kern-sprite-apply-matrix. By convention, names are mat_<color>, where
+;; <color> is the target color and the source is assumed to be gray. To
+;; translate other colors, eg from red to blue, use a name like mat_red_blue.
+;;
+(define mat_red '((0 0 2)
+                  (0 0 0)
+                  (0 0 0)
+                  (0 0 0)))
+
+(define mat_green '((0 0 0)
+                    (0 2 0)
+                    (0 0 0)
+                    (0 0 0)))
+
+(define mat_blue '((0 0 0)
+                   (0 0 0)
+                   (0 0 2)
+                   (0 0 0)))
+
+(define mat_white '((3 0 0)
+                    (0 3 0)
+                    (0 0 3)
+                    (0 0 0)))
+
+(define mat_yellow '((3 0 0)
+                     (0 3 0)
+                     (0 0 0)
+                     (0 0 0)))
+
+;;----------------------------------------------------------------------------
+;; Sprites derived from other sprites via color conversion
+(define (mk-clothes tag matrix)
+  (kern-sprite-apply-matrix (kern-sprite-clone s_hum_robe tag) matrix))
+
+(mk-clothes 's_hum_robe_red    mat_red)
+(mk-clothes 's_hum_robe_green  mat_green)
+(mk-clothes 's_hum_robe_blue   mat_blue)
+(mk-clothes 's_hum_robe_white  mat_white)
+(mk-clothes 's_hum_robe_yellow mat_yellow)
+
+(define (mk-clothes tag matrix)
+  (kern-sprite-apply-matrix (kern-sprite-clone s_hum_mantle tag) matrix))
+
+(mk-clothes 's_hum_mantle_red    mat_red)
+(mk-clothes 's_hum_mantle_green  mat_green)
+(mk-clothes 's_hum_mantle_blue   mat_blue)
+(mk-clothes 's_hum_mantle_white  mat_white)
+(mk-clothes 's_hum_mantle_yellow mat_yellow)

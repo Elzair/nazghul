@@ -389,7 +389,11 @@
      sp_human ;;.....species
      oc_wizard ;;.. .occupation
      ;;s_companion_wizard ;;..sprite
-     (mk-composite-sprite (list s_hum_body s_hum_robe_blue s_hum_belt s_hum_beard))
+     (mk-composite-sprite (list s_hum_body 
+                                s_hum_robe_white 
+                                s_hum_mantle_blue 
+                                s_hum_belt 
+                                s_hum_beard))
      ;;(mk-composite-sprite (list s_hum_body s_hum_belt s_hum_beard))
      faction-men ;;..faction
      0 ;;...........custom strength modifier
