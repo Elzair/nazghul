@@ -3735,9 +3735,13 @@ static pointer opexe_5(scheme *sc, enum scheme_opcodes op) {
                sc->tok = token(sc);
           }
           if (sc->tok == TOK_RPAREN) {
-               int c = inchar(sc);
-               if (c != '\n') backchar(sc,c);
+               int c;
+               /* inchar() may pop the file, so decrement the nesting stack
+                * now. Otherwise if files end in RPAREN you'll get a mysterious
+                * "mismatched parentheseis: -1" error. */
                sc->nesting_stack[sc->file_i]--;
+               c = inchar(sc);
+               if (c != '\n' && c != EOF) backchar(sc,c);
                s_return(sc,reverse_in_place(sc, sc->NIL, sc->args));
           } else if (sc->tok == TOK_DOT) {
                s_save(sc,OP_RDDOT, sc->args, sc->NIL);
