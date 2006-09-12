@@ -196,7 +196,10 @@
 						(min-hand (clock-get-hand (floor (/ (+ (time-minute time) 5) 10)))))
 					(kern-obj-set-sprite kclock (mk-composite-sprite (list s_clock_body hour-hand min-hand)))
 				)))
-				
+		(method 'init
+            (lambda (kmirror)
+				(kern-obj-set-pclass kmirror pclass-wall)
+            ))	
        )))
 
 (define broken-clock-ifc
@@ -212,6 +215,10 @@
 		(method 'step
 			(lambda (kmirror kuser)
 				))
+		(method 'init
+            (lambda (kmirror)
+				(kern-obj-set-pclass kmirror pclass-wall)
+            ))
        )))
 	
 (mk-obj-type 't_clock "clock"
@@ -220,7 +227,6 @@
 
 (define (mk-clock)
 	(let ((kclock (kern-mk-obj t_clock 1)))
-		(kern-obj-set-pclass kclock pclass-wall)
 		(kern-obj-add-effect kclock ef_graphics_update nil) 
 		kclock))
 		
@@ -232,7 +238,6 @@
 	(let ((kclock (kern-mk-obj t_broken_clock 1)))
 		(bind kclock message)
 		(kern-obj-set-sprite kclock (mk-composite-sprite (list s_clock_stopped icona iconb)))
-		(kern-obj-set-pclass kclock pclass-wall)
 		kclock))
 
 
@@ -262,14 +267,15 @@
                  (let* ((mirror-loc (kern-obj-get-location kmirror))
                         (target-loc (list (car mirror-loc) (cadr mirror-loc) (+ (caddr mirror-loc) 1)))
                         (character (get-char-at target-loc)))
-                   (println "mirror-loc: " mirror-loc)
-                   (println "target-loc: " target-loc)
-                   (println "character: " character)
                    (if (null? character)
                        (kern-obj-set-sprite kmirror (mk-composite-sprite (list s_mirror_bg (eval (gob kmirror)) s_mirror_fg)))
                        (kern-obj-set-sprite kmirror (mk-composite-sprite (list s_mirror_bg (kern-obj-get-sprite character) (eval (gob kmirror)) s_mirror_fg))))
                    (kern-map-set-dirty)
                    )))
+       (method 'init
+               (lambda (kmirror)
+					(kern-obj-set-pclass kmirror pclass-wall)
+                 ))
        ))
 	
 (mk-obj-type 't_mirror "mirror"
@@ -280,6 +286,5 @@
 	(let ((kmirror (kern-mk-obj t_mirror 1)))
 		(bind kmirror background-tag)
 		(kern-obj-set-sprite kmirror (mk-composite-sprite (list s_mirror_bg (eval background-tag) s_mirror_fg)))
-		(kern-obj-set-pclass kmirror pclass-wall)
 		kmirror))
 
