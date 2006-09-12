@@ -25,6 +25,8 @@
 #include "macros.h"
 #include "scheme.h"
 
+#include <stdarg.h>
+
 BEGIN_DECL
 
 typedef struct closure {
@@ -44,6 +46,10 @@ extern int closure_exec(closure_t *closure, char *fmt, ...);
 extern void closure_save(closure_t *closure, struct save *save);
 extern void closure_ref(closure_t *closure);
 extern void closure_unref(closure_t *closure);
+
+/* closure_execv - call the closure and return the Scheme result. 'args' is a
+ * var-args list, similar to vfprintf and its ilk. */
+pointer closure_execv(closure_t *closure, char *fmt, va_list args);
 
 END_DECL
 

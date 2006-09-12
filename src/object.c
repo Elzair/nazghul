@@ -73,7 +73,7 @@ ObjectType::ObjectType()
 ObjectType::ObjectType(char *tag, char *sname, struct sprite *sprite_, 
                        enum layer layer_)
         : sprite(sprite_), layer(layer_), speed(0), required_action_points(0), 
-          max_hp(0), gifc(NULL), gifc_cap(0), pluralName(NULL)
+          max_hp(0), gifc(NULL), gifc_cap(0), gob(NULL), pluralName(NULL)
 {
 	this->tag = strdup(tag);
         assert(this->tag);
@@ -1979,6 +1979,16 @@ void ObjectType::setGifc(closure_t *g, int cap)
                 gifc = g;
                 gifc_cap = cap;
         }
+}
+
+void ObjectType::setGob(struct gob *g)
+{
+        gob = g;
+}
+
+struct gob * ObjectType::getGob()
+{
+        return gob;
 }
 
 bool Object::add(ObjectType *type, int amount)

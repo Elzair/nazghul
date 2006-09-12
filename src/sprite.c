@@ -600,6 +600,7 @@ static void sprite_apply_matrix_to_image(SDL_Surface *source, SDL_Rect *from,
         Uint8 in_red, in_grn, in_blu, in_alpha, out_red, out_grn, out_blu, 
                 out_alpha;
         int ired, igrn, iblu;
+        Uint32 transparent;
 
         assert(source->format->BytesPerPixel==4);
 
@@ -609,6 +610,15 @@ static void sprite_apply_matrix_to_image(SDL_Surface *source, SDL_Rect *from,
         dpitch = dest->pitch / dest->format->BytesPerPixel;
         spitch = source->pitch / source->format->BytesPerPixel;
 
+        /* Make a transparent pixel. If SDL_ALPHA_TRANSPARENT is non-zero that
+         * means transparency is high, so use the mask value. Otherwise zero
+         * means transparent. */
+        if (SDL_ALPHA_TRANSPARENT) {
+                transparent = dest->format->Amask;
+        } else {
+                transparent = 0;
+        }
+
         for (dy = 0; dy < from->h; dy++) {
                 sy = dy;
                 for (dx = 0; dx < from->w; dx++) {
@@ -616,17 +626,13 @@ static void sprite_apply_matrix_to_image(SDL_Surface *source, SDL_Rect *from,
                         di = (dy + to->y) * dpitch + (dx + to->x);
                         si = (sy + from->y) * spitch + (sx + from->x);
 
-                        /* For speed, skip blank pixels. */
-                        if (!spix[si]) {
-                                continue;
-                        }
-
                         /* Extract the alpha component of the source pixel. */
                         in_alpha = ((spix[si] & source->format->Amask) 
                                      >> source->format->Ashift);
 
                         /* For speed, skip transparent pixels. */
-                        if (! in_alpha) {
+                        if (SDL_ALPHA_TRANSPARENT == in_alpha) {
+                                dpix[di] = transparent;
                                 continue;
                         }
 

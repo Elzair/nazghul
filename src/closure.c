@@ -28,7 +28,6 @@
 #include "scheme-private.h"
 
 #include <assert.h>
-#include <stdarg.h>
 #include <stdlib.h>
 
 #define scm_is_pair(sc,arg) ((sc)->vptr->is_pair(arg))
@@ -56,10 +55,10 @@ static void closure_del(closure_t *closure)
 }
 
 /* 
- * closure_execv - internal helper method to call the closure and return the
- * Scheme result. 
+ * closure_execv - call the closure and return the Scheme result. 'args' is a
+ * var-args list, similar to vfprintf and its ilk.
  */
-static pointer closure_execv(closure_t *closure, char *fmt, va_list args)
+pointer closure_execv(closure_t *closure, char *fmt, va_list args)
 {
         pointer head;
         pointer result;
