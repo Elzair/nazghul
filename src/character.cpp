@@ -371,7 +371,7 @@ enum Character::ReadyResult Character::ready(class ArmsType * arms)
 
                 // Run the "ready" hook, passing in the arms type being readied
                 // and the (first) changed equipment slot.
-                runHook(OBJ_HOOK_READY_EQUIP, "pi", arms, i);
+                runHook(OBJ_HOOK_READY_EQUIP, "pd", arms, i);
 
                 // Bugfix: for party members, have to change the party
                 // inventory ref here. cmdReady() used to do this, but the
@@ -411,7 +411,7 @@ bool Character::unready(class ArmsType * arms)
 
                 // Run the "uunready" hook, passing in the arms type being
                 // unreadied and the (first) changed equipment slot.
-                runHook(OBJ_HOOK_UNREADY_EQUIP, "pi", arms, i);
+                runHook(OBJ_HOOK_UNREADY_EQUIP, "pd", arms, i);
 
                 // Bugfix: for party members, have to change the party
                 // inventory ref here. cmdReady() used to do this, but the

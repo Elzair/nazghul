@@ -7739,17 +7739,17 @@ KERN_API_CALL(kern_add_save_game)
         return sc->NIL;
 }
 
-KERN_API_CALL(kern_obj_type_set_gob)
+KERN_API_CALL(kern_type_set_gob)
 {
         ObjectType *type = 0;
 
         if (unpack(sc, &args, "p", &type)) {
-                rt_err("kern-obj-type-set-gob: bad args");
+                rt_err("kern-type-set-gob: bad args");
                 return sc->NIL;
         }
 
         if (! scm_is_pair(sc, args)) {
-               rt_err("kern-obj-type-set-gob: no gob specified");
+               rt_err("kern-type-set-gob: no gob specified");
         } else {
                 type->setGob(gob_new(sc, scm_car(sc, args)));
         }
@@ -7757,17 +7757,17 @@ KERN_API_CALL(kern_obj_type_set_gob)
        return scm_mk_ptr(sc, type);
 }
 
-KERN_API_CALL(kern_obj_type_get_gob)
+KERN_API_CALL(kern_type_get_gob)
 {
         ObjectType *type = 0;
 
         if (unpack(sc, &args, "p", &type)) {
-                rt_err("kern-obj-type-get-gob: bad args");
+                rt_err("kern-type-get-gob: bad args");
                 return sc->NIL;
         }
 
         if (!type) {
-                rt_err("kern-obj-type-get-gob: null obj");
+                rt_err("kern-type-get-gob: null obj");
                 return sc->NIL;
         }
 
@@ -7958,10 +7958,6 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-obj-set-visible", kern_obj_set_visible);
         API_DECL(sc, "kern-obj-wander", kern_obj_wander);
 
-        /* kern-obj-type api */
-        API_DECL(sc, "kern-obj-type-set-gob", kern_obj_type_set_gob);
-        API_DECL(sc, "kern-obj-type-get-gon", kern_obj_type_get_gob);
-
         /* kern-occ api */
         API_DECL(sc, "kern-occ-get-hp-mod",  kern_occ_get_hp_mod);
         API_DECL(sc, "kern-occ-get-hp-mult", kern_occ_get_hp_mult);
@@ -8023,7 +8019,9 @@ scheme *kern_init(void)
         /* kern-type api */
         API_DECL(sc, "kern-type-describe", kern_type_describe);
         API_DECL(sc, "kern-type-get-gifc", kern_type_get_gifc);
+        API_DECL(sc, "kern-type-get-gob", kern_type_get_gob);
         API_DECL(sc, "kern-type-get-name", kern_type_get_name);
+        API_DECL(sc, "kern-type-set-gob", kern_type_set_gob);
 
         /* misc api */
         API_DECL(sc, "kern-add-magic-negated", kern_add_magic_negated);

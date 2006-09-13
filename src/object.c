@@ -1675,6 +1675,10 @@ int Object::nameToHookId(char *name)
                 return OBJ_HOOK_NIL;
         if (! strcmp(name, "on-death-hook"))
                 return OBJ_HOOK_ON_DEATH;
+        if (! strcmp(name, "ready-equip-hook"))
+                return OBJ_HOOK_READY_EQUIP;
+        if (! strcmp(name, "unready-equip-hook"))
+                return OBJ_HOOK_UNREADY_EQUIP;
         return -1;
 }
 
