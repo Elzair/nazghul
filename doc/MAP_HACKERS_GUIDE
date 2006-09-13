@@ -24,7 +24,26 @@ COMPOSITE SPRITE
         First, see SPRITE. A composite sprite is a sprite made up of layers of
         other sprites.
 
+GOB     Scheme data associated with a kernel data structure. The kernel never
+        accesses this data, it is meant to be used by scripts to customize or
+        augment these data structures. Objects, object types and astral bodies
+        all optionally have gobs.
+
 OBJECT  Something which exists on the map and is not part of the scenery.
+
+OBJECT TYPE
+        Read-only data associated with and shared by a class of objects. A type
+        is a kernel data structure which describes attributes that are common
+        to an entire class of objects. For example, all short swords have the
+        same sprite and basic attributes, and all sword objects refer to the
+        sword object type to provide these attributes. In fact, simple objects
+        like short swords may be implemented in the kernel as little more than
+        an object type and a location.
+
+        There are several classes of object type: a generic base class, an arms
+        type, a vehicle type, and a field type. Every object type class has a
+        fixed set of attributes. These can be extended by the script, however,
+        by attaching a gob to the object type.
 
 SPRITE  An animation sequence which shows an object. Every visible object has a
         sprite. Sprites can be composed of other sprites, see COMPOSITE SPRITE.
@@ -143,3 +162,25 @@ EXAMPLES
         ;; Clone grass and turn it brown to make dirt
         (kern-sprite-clone s_grass 's_dirt)
         (kern-sprite-apply-matrix s_dirt green-to-brown-matrix)
+
+----------------------------------------------------------------------------
+NAME
+        kern-type-set/get-gob - associate scheme data with an object type
+
+SYNOPSIS
+        (kern-type-set-gob <ktype> <cell>)
+        (kern-type-get-gob <ktype>)
+
+DESCRIPTION
+
+        kern-type-set-gob associates 'cell' with the object type 'ktype', so
+        that it can later be found by scripts via kern-type-get-gob. 'ktype'
+        must be the result of a call to kern-mk-obj-type.
+
+        The purpose is to add game-specific information to a kernel data
+        structure so that closures called from the kernel can find it. This
+        information is not visible to the kernel.
+
+        Unlike the gobs attached to objects, gobs attached to object types are
+        not written to the save-game file. For that matter, object types are
+        not written, either, and must be reloaded for every game.
