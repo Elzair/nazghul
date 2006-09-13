@@ -1539,11 +1539,11 @@ static int place_describe_objects(struct place *place, int x, int y,
 
 static void place_examine_objects(struct place *place, int x, int y)
 {
-	//can simplify from place_describe, since entries will have their own lines.
+	//can simplify from place_describe, since entries will have their own
+	//lines.
 	struct node *l;
 	struct tile *tile;
-	Object *obj = NULL, *prev_obj = NULL;
-	class ObjectType *type = NULL;
+	Object *obj = NULL;
 
 	tile = place_lookup_tile(place, x, y);
 	if (!tile)
@@ -1551,8 +1551,7 @@ static void place_examine_objects(struct place *place, int x, int y)
  
 
 	if (tile->subplace) {
-
-			log_continue("The entrance to %s;\n", tile->subplace->name);
+                log_continue("The entrance to %s;\n", tile->subplace->name);
 	}
 
 	node_for_each(&tile->objstack, l) {

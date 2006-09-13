@@ -919,7 +919,7 @@ void Object::damage(int amount)
                 sound_play(getDamageSound(), SOUND_MAX_VOLUME);
         }
 
-        runHook(OBJ_HOOK_DAMAGE);
+        runHook(OBJ_HOOK_DAMAGE, 0);
 }
 
 void Object::inflictDamage(int amount, class Character *attacker)
@@ -946,7 +946,7 @@ void Object::endTurn()
 void Object::startTurn()
 {
         action_points += getActionPointsPerTurn();
-        runHook(OBJ_HOOK_START_OF_TURN);
+        runHook(OBJ_HOOK_START_OF_TURN, 0);
 }
 
 int Object::getSpeed()
@@ -1628,18 +1628,35 @@ void Object::restoreEffect(struct effect *effect, struct gob *gob, int flags,
 
 }
 
+struct object_run_hook_entry_data {
+        Object *obj;
+        char *fmt;
+        va_list args;
+};
+
 static int object_run_hook_entry(struct hook_entry *entry, void *data)
 {
-        //dbg("run entry: %p\n", entry);
+        struct object_run_hook_entry_data *info;
+        info = (struct object_run_hook_entry_data *)data;
+
         if (entry->effect->exec)
-                return closure_exec(entry->effect->exec, "lp", 
-                                    hook_entry_gob(entry), data);
+                return closure_execlpv(entry->effect->exec, 
+                                       hook_entry_gob(entry),
+                                       info->obj,
+                                       info->fmt, 
+                                       info->args);
         return 0;
 }
 
-void Object::runHook(int hook_id)
+void Object::runHook(int hook_id, char *fmt, ...)
 {
-        hookForEach(hook_id, object_run_hook_entry, this);
+        struct object_run_hook_entry_data data;
+
+        data.obj = this;
+        data.fmt = fmt;
+        va_start(data.args, fmt);
+        hookForEach(hook_id, object_run_hook_entry, &data);
+        va_end(data.args);
 }
 
 int Object::nameToHookId(char *name)

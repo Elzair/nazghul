@@ -845,7 +845,7 @@ void Party::startTurn()
         // be authentic we really should iterate over this in proportion to the
         // map scale.
         FOR_EACH_MEMBER(entry, member)
-                member->runHook(OBJ_HOOK_START_OF_TURN);
+                member->runHook(OBJ_HOOK_START_OF_TURN, 0);
 
         if (allDead())
                 destroy();

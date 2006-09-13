@@ -43,13 +43,13 @@ extern closure_t *closure_new(scheme *interp, pointer code);
 extern closure_t *closure_new_ref(scheme *interp, pointer code);
 extern void closure_init(closure_t *closure, scheme *interp, pointer code);
 extern int closure_exec(closure_t *closure, char *fmt, ...);
-extern void closure_save(closure_t *closure, struct save *save);
+extern  void closure_save(closure_t *closure, struct save *save);
 extern void closure_ref(closure_t *closure);
 extern void closure_unref(closure_t *closure);
 
-/* closure_execv - call the closure and return the Scheme result. 'args' is a
- * var-args list, similar to vfprintf and its ilk. */
-pointer closure_execv(closure_t *closure, char *fmt, va_list args);
+/* Special form of closure_exec() made for running object hooks. */
+int closure_execlpv(closure_t *closure, pointer gob, void *obj, 
+                     char *fmt, va_list args);
 
 END_DECL
 

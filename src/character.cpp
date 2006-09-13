@@ -1142,7 +1142,7 @@ void Character::kill()
         setDead(true);
 
         // Similarly, run the on-death hook
-        runHook(OBJ_HOOK_ON_DEATH);
+        runHook(OBJ_HOOK_ON_DEATH, 0);
 	remove();
 }
 
@@ -2234,7 +2234,7 @@ void Character::exec()
                 // Since this character is in follow mode it's keystroke hook
                 // hasn't been run yet. Do it now so that effects like
                 // paralysis work properly on PC's in follow mode.
-                runHook(OBJ_HOOK_KEYSTROKE);
+                runHook(OBJ_HOOK_KEYSTROKE, 0);
                 if (isTurnEnded()) {
                         break;
                 }

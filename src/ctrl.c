@@ -936,7 +936,7 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
         // effects should not affect the special ctrl charactes
         // (otherwise something like being stuck in a web can prevent a
         // user from reloading a game).
-        character->runHook(OBJ_HOOK_KEYSTROKE);
+        character->runHook(OBJ_HOOK_KEYSTROKE, 0);
         if (character->isTurnEnded()) {
                 Session->subject = NULL;
                 return true;

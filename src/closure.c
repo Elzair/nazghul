@@ -54,28 +54,24 @@ static void closure_del(closure_t *closure)
         free(closure);
 }
 
-/* 
- * closure_execv - call the closure and return the Scheme result. 'args' is a
- * var-args list, similar to vfprintf and its ilk.
+/**
+ * Evaluate a Scheme procedure with Scheme args. This is an internal helper
+ * function.
+ *
+ * @param closure The closure to invoke.
+ * @param args A scheme list of parameters.
+ * @returns The result of evaluating the closure.
  */
-pointer closure_execv(closure_t *closure, char *fmt, va_list args)
+static pointer closure_exec_with_scheme_args(closure_t *closure, pointer args)
 {
-        pointer head;
         pointer result;
 
         /* Lock the closure against deletion while it is being called. */
         closure_ref(closure);
 
-        /* Convert the C args to Scheme. */
-        if (fmt) {
-                head = vpack(closure->sc, fmt, args);
-        } else {
-                head = closure->sc->NIL;
-        }
-
         /* Straight procedure call? */
         if (scm_is_closure(closure->sc, closure->code)) {
-                result = scheme_call(closure->sc, closure->code, head);
+                result = scheme_call(closure->sc, closure->code, args);
         }
 
         /* Need to lookup it up first? */
@@ -94,7 +90,7 @@ pointer closure_execv(closure_t *closure, char *fmt, va_list args)
                                                            1);
                 assert(scm_is_pair(closure->sc, pair));
                 proc = closure->sc->vptr->pair_cdr(pair);
-                result = scheme_call(closure->sc, proc, head);
+                result = scheme_call(closure->sc, proc, args);
 
         }
 
@@ -106,6 +102,62 @@ pointer closure_execv(closure_t *closure, char *fmt, va_list args)
 
         closure_unref(closure);
         return result;
+}
+
+/** 
+ * Evaluate a Scheme procedure with C-style varargs.
+ * @param closure The procedure to evaluate.
+ * @param fmt Character encoding for the args, similar to printf, but the codes
+ * are different. See kern.c's vpack() function.
+ * @returns The Scheme result of evaluation.
+ */
+static pointer closure_execv(closure_t *closure, char *fmt, va_list args)
+{
+        pointer head;
+
+        /* Convert the C args to Scheme. */
+        if (fmt) {
+                head = vpack(closure->sc, fmt, args);
+        } else {
+                head = closure->sc->NIL;
+        }
+
+        return closure_exec_with_scheme_args(closure, head);
+}
+
+/* Do our best to translate a Scheme evaluation result into a C integer. */
+static int closure_translate_result(scheme *sc, pointer result)
+{
+        if (result == sc->NIL ||
+            result == sc->F) {
+                return 0;
+        } 
+        
+        if (sc->vptr->is_number(result)) {
+                if (sc->vptr->is_integer(result)) {
+                        return sc->vptr->ivalue(result);
+                }
+                /* coerce it */
+                return (int)sc->vptr->rvalue(result);
+        }
+        
+        if (scm_is_symbol(sc, result)) {
+                pointer pair;
+                pair = sc->vptr->find_slot_in_env(sc, 
+                                                  sc->envir, 
+                                                  result, 
+                                                  1);
+                assert(scm_is_pair(sc, pair));
+                result = sc->vptr->pair_cdr(pair);
+                /* recursive call... */
+                return closure_translate_result(sc, result);
+        }
+        
+        if (scm_is_ptr(sc, result)) {
+                return (long)sc->vptr->ffvalue(result);
+        }
+
+        return 1;
 }
 
 closure_t *closure_new(scheme *sc, pointer code)
@@ -145,30 +197,7 @@ int closure_exec(closure_t *closure, char *fmt, ...)
         result = closure_execv(closure, fmt, ap);
         va_end(ap);
 
- evaluate_result:
-
-        if (result == closure->sc->NIL ||
-            result == closure->sc->F) {
-                ret = 0;
-        } else if (closure->sc->vptr->is_number(result)) {
-                if (closure->sc->vptr->is_integer(result)) {
-                        ret = closure->sc->vptr->ivalue(result);
-                } else {
-                        /* coerce it */
-                        ret = (int)closure->sc->vptr->rvalue(result);
-                }
-        } else if (scm_is_symbol(closure->sc, result)) {
-                pointer pair;
-                pair = closure->sc->vptr->find_slot_in_env(closure->sc, 
-                                                           closure->sc->envir, 
-                                                           result, 
-                                                           1);
-                assert(scm_is_pair(closure->sc, pair));
-                result = closure->sc->vptr->pair_cdr(pair);
-                goto evaluate_result;
-        } else if (scm_is_ptr(closure->sc, result)) {
-                ret = (long)closure->sc->vptr->ffvalue(result);
-        }
+        ret = closure_translate_result(closure->sc, result);
 
         closure_unref(closure);
         return ret;
@@ -198,4 +227,39 @@ void closure_unref(closure_t *closure)
         closure->ref--;
         if (! closure->ref)
                 closure_del(closure);
+}
+
+int closure_execlpv(closure_t *closure, pointer cell, void *ptr, 
+                    char *fmt, va_list args)
+{
+        pointer head, tmp, result;
+        scheme *sc = closure->sc;
+
+        /* Convert the C args to Scheme. */
+        if (fmt) {
+                head = vpack(sc, fmt, args);
+        } else {
+                head = sc->NIL;
+        }
+
+        /* Protect the list while allocating cells. */
+        tmp = head;
+        if (tmp != sc->NIL) {
+                sc->vptr->protect(sc, tmp);
+        }
+
+        /* Prepend the cell and ptr to the arg list. */
+        head = _cons(sc, scm_mk_ptr(sc, ptr), head, 0);
+        head = _cons(sc, cell, head, 0);
+
+        /* Unprotect the list now that we're done allocating. */
+        if (tmp != sc->NIL) {
+                sc->vptr->unprotect(sc, tmp);
+        }
+
+        /* Evaluate the closure. */
+        result = closure_exec_with_scheme_args(closure, head);
+
+        /* Translate the result to an int. */
+        return closure_translate_result(closure->sc, result);
 }
