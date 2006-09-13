@@ -1,21 +1,27 @@
+$Id$
+
                      MAP HACKER'S GUIDE TO NAZGHUL/HAXIMA
 
 
                         "The map is not the territory."
-                         --Attributed to Alfred Korzybski
+                                     --Alfred Korzybski
 
 
                                  INTRODUCTION
 
-So you want to modify Haxima, or maybe you think Haxima sucks and you know you
-can do better? Then you've come to the right place. The Haxima scripts will
-give you lots of examples on how to do things. If you can figure them
-out. You're a smart guy. I'm sure you can. But even smart guys sometimes need a
-hint, and that's what this manual is for. Here you'll find a discussion of the
-principles of how to build a game with nazghul, including details on the kernel
-API. 
+So you want to modify Haxima? Or maybe you find Haxima pathetic and know you
+can do better. Then you've come to the right place. The Haxima scripts will
+give you lots of examples on how to do things, if you can figure them
+out. Since you're a smart guy I'm sure you can, but an explanation here or
+there might speed things up. Here you'll find a discussion of the principles of
+how to build a game like Haxima with the nazghul engine.
 
-Or, you will when it's finished.
+This manual is still in its infancy. If you don't find what you're looking for
+feel free to email requests or suggestions to
+
+        nazghul-devel@lists.sourceforge.net
+
+Happy hacking!
 
 
                                    CONCEPTS
@@ -59,6 +65,7 @@ TAG     A name given to a kernel data structure so that it can be referred to
         by a scheme variable. Tags are important because they can be used when
         saving a game to allow objects to refer to one another when the game is
         reloaded.
+
 
                                   KERNEL API
 
