@@ -96,6 +96,8 @@ ObjectType::~ObjectType()
                 closure_unref(gifc);
         if (pluralName)
                 free(pluralName);
+        if (gob)
+                gob_unref(gob);
 }
 
 void ObjectType::setPluralName(char *val)

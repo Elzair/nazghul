@@ -369,9 +369,9 @@ enum Character::ReadyResult Character::ready(class ArmsType * arms)
 		rdyArms[i] = arms;
 		burden += arms->getWeight();
 
-                //
-                // TODO: put a hook right here for a script call
-                //
+                // Run the "ready" hook, passing in the arms type being readied
+                // and the (first) changed equipment slot.
+                runHook(OBJ_HOOK_READY_EQUIP, "pi", arms, i);
 
                 // Bugfix: for party members, have to change the party
                 // inventory ref here. cmdReady() used to do this, but the
@@ -409,9 +409,9 @@ bool Character::unready(class ArmsType * arms)
 		rdyArms[i] = NULL;
 		burden -= arms->getWeight();
 
-                //
-                // TODO: call unready hook here
-                //
+                // Run the "uunready" hook, passing in the arms type being
+                // unreadied and the (first) changed equipment slot.
+                runHook(OBJ_HOOK_UNREADY_EQUIP, "pi", arms, i);
 
                 // Bugfix: for party members, have to change the party
                 // inventory ref here. cmdReady() used to do this, but the

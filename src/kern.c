@@ -2532,7 +2532,7 @@ static pointer kern_stdout_msg(scheme *sc,  pointer args)
                 if (scm_is_str(sc, val)) {
                         fprintf(stdout,"%s",scm_str_val(sc, val));
                 } else if (scm_is_int(sc, val)) {
-                        fprintf(stdout,"%d",scm_int_val(sc, val));
+                        fprintf(stdout,"%ld",scm_int_val(sc, val));
                 } else if (scm_is_real(sc, val)) {
                         fprintf(stdout,"%f",scm_real_val(sc, val));
                 } else {
@@ -7739,6 +7739,45 @@ KERN_API_CALL(kern_add_save_game)
         return sc->NIL;
 }
 
+KERN_API_CALL(kern_obj_type_set_gob)
+{
+        ObjectType *type = 0;
+
+        if (unpack(sc, &args, "p", &type)) {
+                rt_err("kern-obj-type-set-gob: bad args");
+                return sc->NIL;
+        }
+
+        if (! scm_is_pair(sc, args)) {
+               rt_err("kern-obj-type-set-gob: no gob specified");
+        } else {
+                type->setGob(gob_new(sc, scm_car(sc, args)));
+        }
+
+       return scm_mk_ptr(sc, type);
+}
+
+KERN_API_CALL(kern_obj_type_get_gob)
+{
+        ObjectType *type = 0;
+
+        if (unpack(sc, &args, "p", &type)) {
+                rt_err("kern-obj-type-get-gob: bad args");
+                return sc->NIL;
+        }
+
+        if (!type) {
+                rt_err("kern-obj-type-get-gob: null obj");
+                return sc->NIL;
+        }
+
+        if (! type->getGob()) {
+                return sc->NIL;
+        }
+
+        return type->getGob()->p;
+}
+
 KERN_OBSOLETE_CALL(kern_set_ascii);
 KERN_OBSOLETE_CALL(kern_set_frame);
 KERN_OBSOLETE_CALL(kern_set_cursor);
@@ -7918,6 +7957,10 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-obj-set-ttl", kern_obj_set_ttl);
         API_DECL(sc, "kern-obj-set-visible", kern_obj_set_visible);
         API_DECL(sc, "kern-obj-wander", kern_obj_wander);
+
+        /* kern-obj-type api */
+        API_DECL(sc, "kern-obj-type-set-gob", kern_obj_type_set_gob);
+        API_DECL(sc, "kern-obj-type-get-gon", kern_obj_type_get_gob);
 
         /* kern-occ api */
         API_DECL(sc, "kern-occ-get-hp-mod",  kern_occ_get_hp_mod);
