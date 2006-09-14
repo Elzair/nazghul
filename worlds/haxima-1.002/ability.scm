@@ -129,10 +129,7 @@
 	(powers-magic-missile kchar ktarg (occ-ability-blackmagic kchar)))
 
 (define (cast-poison-missile-proc kchar ktarg)
-  (kern-log-msg (kern-obj-get-name kchar)
-                " hurls poison missile at "
-                (kern-obj-get-name ktarg))
-  (cast-missile-proc kchar ktarg t_poison_bolt))
+   	(powers-poison kchar ktarg (occ-ability-blackmagic caster)))
 
 (define (cast-fireball-proc kchar ktarg)
 	(define (fireball-damage-dice power)

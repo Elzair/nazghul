@@ -108,6 +108,13 @@
 	(cone-area-slice 1 origin minangle maxangle range proc)
     ))
 	
+(define (cone-do-simple caster target range proc)
+	(let* ((origin (kern-obj-get-location caster))
+			(x (- (cadr target) (cadr origin))) 
+			(y (- (caddr target) (caddr origin))))
+		(cone-area-effect origin (xy->angle x y) range (/ pi 2) proc)
+		))
+		
 (define (cone-simple caster range proc)
 	(let ((origin (kern-obj-get-location caster))
 		(target (get-target-loc caster range)))
@@ -116,9 +123,9 @@
 			(let ((x (- (cadr target) (cadr origin))) 
 				(y (- (caddr target) (caddr origin)))) 
 			(cone-area-effect origin (xy->angle x y) range (/ pi 2) proc))
-		)))
-		
-(define (mk-basic-cone-proc objfx field-type leaveprob caster)
+		)))	
+
+(define (mk-basic-cone-proc objfx field-type leaveprob)
 	(define (dropfield loc)
 		(if (kern-obj-put-at (kern-mk-obj field-type 1) loc)))
 	(define (is-my-field? kobj) (eqv? field-type (kern-obj-get-type kobj)))
@@ -158,6 +165,7 @@
 ;;--------------------------------------------------------------
 
 
+
 ;;--------------------------------------------------------------
 ;; Spells
 ;;--------------------------------------------------------------
@@ -195,6 +203,18 @@
 			(kern-obj-remove-trap ktarg))
 	))
 	
+(define (powers-flamespray caster ktarg power)
+	(let ((damage (mkdice 2 (min (floor (+ 2 (/ power 2))) 10))))
+		(println damage)
+		(define (flambe-all kobj)
+			(if (and (is-being? kobj)
+					(not (has-fire-immunity? kobj)))
+				(kern-obj-inflict-damage kobj "burning" (kern-dice-roll damage) caster)
+				))
+		(cone-do-simple caster ktarg 3.3
+			(mk-basic-cone-proc flambe-all F_fire 0)
+			)))
+	
 ;todo should the messages be in the ui part?
 (define (powers-heal kchar ktarg power)
   (kern-log-msg (kern-obj-get-name kchar)
@@ -212,6 +232,15 @@
 				(mkdice 5 power))))
 		(light-apply-new ktarg (+ 400 (* 5 power)))))
 		  
+(define (powers-lock caster ktarg power)
+	((kobj-ifc target) 'lock ktarg caster)
+	)
+	
+(define (powers-locate caster ktarg power)
+	(let ((loc (kern-obj-get-location caster)))
+		(kern-log-msg "You are in " (kern-place-get-name (car loc)) " at [" (caddr loc) " " (cadr loc) "]"))
+	)
+
 (define (powers-magic-missile-range power)
 	(+ 4 (floor (/ power 3))))
 		  
@@ -233,8 +262,69 @@
 		(kern-obj-inflict-damage ktarg
 							 "magic" (kern-dice-roll damagedice) kchar))))
 
+(define (powers-poison-range power)
+	(+ 3 (floor (/ power 3)))
+	)
+
+(define (powers-poison caster ktarg power)
+	(kern-obj-add-effect ktarg ef_temporary_poison_immunity nil)
+	)
+
+;todo contest to resist? to-hit roll required? power based initial damage?
+(define (powers-poison-resist caster ktarg power)
+	  (kern-log-msg (kern-obj-get-name caster)
+					" hurls poison missile at "
+					(kern-obj-get-name ktarg))
+	  (cast-missile-proc caster ktarg t_poison_bolt)
+	)
+
 ;todo duration based on power?
 (define (powers-spider-calm caster ktarg power)
 	(kern-obj-add-effect ktarg ef_spider_calm nil))
+
+;todo enable remote summoning for high power?
+(define (powers-summon-snake caster ktarg power)
+  (let ((spower (floor (+ (/ power 4) 1))))
+	(summon (kern-obj-get-location caster)
+			(lambda () (mk-animal " a snake"
+								sp_snake 
+                                s_snake 
+                                faction-player))
+			(kern-being-get-current-faction caster)
+			(kern-dice-roll (mkdice 1 spower)))))	
 	
+; a few things needed here:
+;	check for visibility before messages
+;	no player specific messages
+;	only hits hostiles
+;   area of effect based on power
+;	'turned' as an effect? [so it shows on description] or maybe fleeing should show...
+(define (powers-turn-undead caster unused power)
+  (define (is-undead-char? kobj)
+    (and (obj-is-char? kobj)
+         (species-is-undead? (kern-char-get-species kobj))))
+  (define (repel kchar)
+	(if (contest-of-skill
+			(+ power 3)
+			(occ-ability-magicdef kchar))
+		(kern-char-set-fleeing kchar #t)))
+  (let ((all-kobjs (kern-place-get-objects (car (kern-obj-get-location caster)))))
+    (cond ((null? all-kobjs) 
+           (kern-print "Odd, Nobody here!\n")
+           )
+          (else (let ((all-undead-combatants (filter is-undead-char? all-kobjs)))
+                  (cond ((null? all-undead-combatants) 
+                         (kern-print "No undead here!\n")
+                         )
+                        (else (map repel all-undead-combatants)
+                              )))))))
+	
+(define (powers-unlock caster ktarg power)
+	((kobj-ifc target) 'unlock ktarg caster)
+	)
+	
+(define (powers-wind-change caster dir power)
+	(let ((spower (* 2 power)))
+		(kern-set-wind dir (kern-dice-roll (mkdice spower 6)))
+    ))
 	

@@ -220,82 +220,6 @@
             result-no-effect))))
 		
 
-;;----------------------------------------------------------------------------
-;; Second Circle
-;;----------------------------------------------------------------------------
-(define (an-sanct  caster)
-  (let ((loc (kern-obj-get-location caster)))
-    (cast-signal-spell caster 'unlock (ui-target loc 1 (mk-ifc-query 'unlock)))))
-  
-(define (sanct-nox  caster)
-  (let ((target (kern-ui-select-party-member)))
-    (if (not (null? target))
-        (kern-obj-add-effect target ef_temporary_poison_immunity nil))))
-  
-(define (sanct caster)
-  (let ((loc (kern-obj-get-location caster)))
-    (cast-signal-spell caster 'lock (ui-target loc 1 (mk-ifc-query 'lock)))))
-
-(define (an-xen-corp  caster)
-  (define (is-undead-char? kobj)
-    (and (obj-is-char? kobj)
-         (species-is-undead? (kern-char-get-species kobj))))
-  (define (repel kchar)
-	(if (contest-of-skill
-			(+ (occ-ability-blackmagic caster) 3)
-			(occ-ability-magicdef kchar))
-		(kern-char-set-fleeing kchar #t)))
-  (let ((all-kobjs (kern-place-get-objects (car (kern-obj-get-location caster)))))
-    (cond ((null? all-kobjs) 
-           (kern-print "Odd, Nobody here!\n")
-           result-no-effect
-           )
-          (else (let ((all-undead-combatants (filter is-undead-char? all-kobjs)))
-                  (cond ((null? all-undead-combatants) 
-                         (kern-print "No undead here!\n")
-                         result-no-effect
-                         )
-                        (else (map repel all-undead-combatants)
-                              result-ok
-                              )))))))
-
-(define (in-wis  caster)
-  (let ((loc (kern-obj-get-location caster)))
-    (kern-log-msg "You are in " (kern-place-get-name (car loc)) " at [" (caddr loc) " " (cadr loc) "]")))
-
-(define (kal-xen  caster)
-  (let ((spower (floor (+ (/ (occ-ability-whitemagic caster) 4) 1))))
-	(summon (kern-obj-get-location caster)
-			(lambda () (mk-animal " a snake"
-								sp_snake 
-                                s_snake 
-                                faction-player))
-			(kern-being-get-current-faction caster)
-			(kern-dice-roll (mkdice 1 spower)))))
-
-(define (rel-hur  caster)
-  (let ((dir (ui-get-direction))
-		(mpow (string-append
-			(number->string (* 2 (occ-ability-whitemagic caster)))
-			"d6")))
-    (cond ((null? dir)
-           result-no-target)
-          (else 
-           (kern-set-wind dir (kern-dice-roll mpow))
-           result-ok
-           ))))
-
-(define (in-nox-por  caster)
-  (let ((range (+ 3 (floor (/ (occ-ability-blackmagic caster) 3)))))
-  (user-cast-ranged-targeted-spell caster range cast-poison-missile-proc)))
-  
-(define (bet-flam-hur caster)
-  (define (flambe-all kobj)
-    (if (is-being? kobj)
-        (burn kobj)))
-  (cone-simple caster 3.3
-	(mk-basic-cone-proc flambe-all F_fire 0
-	caster)))	
 
 ;;----------------------------------------------------------------------------
 ;; Third Circle
@@ -557,8 +481,7 @@
     (if (is-being? kobj)
         (apply-poison kobj)))
   (cone-simple caster 10
-	(mk-basic-cone-proc poison-all F_poison (* (occ-ability-blackmagic caster) 5)
-	caster)))
+	(mk-basic-cone-proc poison-all F_poison (* (occ-ability-blackmagic caster) 5))))
 
 (define (in-zu-hur  caster)
   (define (sleep-all kobj)
@@ -568,8 +491,7 @@
 				(occ-ability-magicdef kobj)))
 			(apply-sleep kobj)))
   (cone-simple caster 10
-	(mk-basic-cone-proc sleep-all F_sleep (* (occ-ability-blackmagic caster) 5)
-	caster)))
+	(mk-basic-cone-proc sleep-all F_sleep (* (occ-ability-blackmagic caster) 5))))
 
 (define (in-quas-corp  caster)
   (define (repel kchar)
@@ -631,16 +553,14 @@
     (if (is-being? kobj)
         (burn kobj)))
   (cone-simple caster 10
-	(mk-basic-cone-proc flambe-all F_fire (* (occ-ability-blackmagic caster) 5)
-	caster)))
+	(mk-basic-cone-proc flambe-all F_fire (* (occ-ability-blackmagic caster) 5))))
 
 (define (in-vas-grav-corp  caster)
   (define (energize-all kobj)
     (if (is-being? kobj)
         (apply-lightning kobj)))
   (cone-simple caster 10
-	(mk-basic-cone-proc energize-all F_energy (* (occ-ability-blackmagic caster) 5)
-	caster)))
+	(mk-basic-cone-proc energize-all F_energy (* (occ-ability-blackmagic caster) 5))))
 
 (define (an-tym  caster)
   (let ((spower (floor (+ (/ (occ-ability-whitemagic caster) 3) 1))))

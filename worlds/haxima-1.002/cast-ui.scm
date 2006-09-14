@@ -145,13 +145,11 @@
 		(cast-ui-target-char caster range)
 		effect caster power))
 
-(define (cast-ui-ranged-any effect caster range power targetcheck)
+(define (cast-ui-ranged-loc effect caster range power)
 	(cast-ui-dospell
-		(cast-ui-target-any caster range targetcheck)
+		(kern-ui-target (kern-obj-get-location caster) range)
 		effect caster power))
-
-
-
+		
 
 ;;----------------------------------------------------------------------------
 ;; First Circle
@@ -168,7 +166,7 @@
 (define (grav-por caster)
 	(cast-ui-basic-ranged-spell powers-magic-missile
 		caster 
-		(powers-magic-missile-range occ-ability-blackmagic caster)
+		(powers-magic-missile-range (occ-ability-blackmagic caster))
 		(occ-ability-blackmagic caster)))
 
 (define (in-lor caster)
@@ -200,3 +198,53 @@
             (and (kern-obj-is-container? kobj)
 				(kern-obj-is-visible? kobj)))
 	))
+	
+;;----------------------------------------------------------------------------
+;; Second Circle
+;;----------------------------------------------------------------------------
+(define (an-sanct  caster)
+	(cast-ui-ranged-any powers-unlock
+		caster 1 (occ-ability-whitemagic caster)
+		(mk-ifc-query 'unlock)))
+
+(define (sanct  caster)
+	(cast-ui-ranged-any powers-lock
+		caster 1 (occ-ability-whitemagic caster)
+		(mk-ifc-query 'lock)))
+		
+(define (sanct-nox  caster)
+	(cast-ui-basic-member-spell powers-poison-resist
+		caster (occ-ability-whitemagic caster)))
+
+(define (an-xen-corp caster)
+	(powers-turn-undead caster nil (occ-ability-blackmagic caster))
+	result-ok)
+
+(define (in-wis caster)
+  (powers-locate caster nil nil)
+  result-ok)
+
+(define (kal-xen caster)
+	(powers-summon-snake caster caster (occ-ability-whitemagic caster))
+	result-ok)
+
+(define (rel-hur  caster)
+  (let ((dir (ui-get-direction)))
+    (cond ((null? dir)
+           result-no-target)
+          (else 
+           (powers-wind-change caster dir (occ-ability-whitemagic caster))
+           result-ok
+           ))))
+
+(define (in-nox-por  caster)
+ 	(cast-ui-basic-ranged-spell powers-poison
+		caster 
+		(powers-poison-range occ-ability-blackmagic caster)
+		(occ-ability-blackmagic caster)))
+  
+(define (bet-flam-hur caster)
+ 	(cast-ui-ranged-loc powers-flamespray
+		caster 
+		4
+		(occ-ability-blackmagic caster)))
