@@ -503,15 +503,14 @@
 (kern-mk-sprite 's_invis		ss_effects 1 8 #f 0 )
 (kern-mk-sprite 's_spider_calm	ss_effects 1 9 #f 0 )
 (kern-mk-sprite 's_drunk		ss_effects 1 10 #f 0 )
-(kern-mk-sprite 's_disease		ss_effects 1 11 #f 0 )
-(kern-mk-sprite 's_im_disease	ss_effects 1 12 #f 0 )
-(kern-mk-sprite 's_tangle		ss_effects 1 13 #f 0 )
-(kern-mk-sprite 's_im_paralyse	ss_effects 1 14 #f 0 )
-(kern-mk-sprite 's_im_fire		ss_effects 1 15 #f 0 )
-(kern-mk-sprite 's_im_death		ss_effects 1 16 #f 0 )
-(kern-mk-sprite 's_im_charm		ss_effects 1 17 #f 0 )
-(kern-mk-sprite 's_im_sleep		ss_effects 1 18 #f 0 )
-(kern-mk-sprite 's_paralyse		ss_effects 1 19 #f 0 )
+(kern-mk-sprite 's_im_disease	ss_effects 1 11 #f 0 )
+(kern-mk-sprite 's_tangle		ss_effects 1 12 #f 0 )
+(kern-mk-sprite 's_im_paralyse	ss_effects 1 13 #f 0 )
+(kern-mk-sprite 's_im_fire		ss_effects 1 14 #f 0 )
+(kern-mk-sprite 's_im_death		ss_effects 1 15 #f 0 )
+(kern-mk-sprite 's_im_charm		ss_effects 1 16 #f 0 )
+(kern-mk-sprite 's_im_sleep		ss_effects 1 17 #f 0 )
+(kern-mk-sprite 's_paralyse		ss_effects 1 18 #f 0 )
 
 
 ;; convenient alia
