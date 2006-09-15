@@ -335,3 +335,32 @@
 	(cast-ui-ranged-loc powers-blink caster
 		(powers-blink-range (occ-ability-whitemagic caster))
 		(occ-ability-whitemagic caster)))
+
+;;----------------------------------------------------------------------------
+;; Fifth Circle
+;;----------------------------------------------------------------------------
+(define (in-ex-por  caster)
+	(cast-ui-ranged-any powers-unlock-magic
+		caster 1 (occ-ability-whitemagic caster)
+		(mk-ifc-query 'magic-unlock)))
+
+(define (an-ex-por  caster)
+	(cast-ui-ranged-any powers-lock-magic
+		caster 1 (occ-ability-whitemagic caster)
+		(mk-ifc-query 'magic-lock)))
+
+(define (in-bet-xen  caster)
+	(powers-summon-insect caster caster (occ-ability-whitemagic caster))
+	result-ok)
+
+(define (in-zu  caster)
+	(powers-sleep-area caster caster (occ-ability-blackmagic caster))
+	result-ok)
+
+(define (vas-mani  caster)
+	(cast-ui-basic-member-spell powers-great-heal
+		caster (occ-ability-whitemagic caster)))
+		
+(define (rel-tym  caster)
+	(powers-quickness caster caster (occ-ability-whitemagic caster))
+	result-ok)

@@ -207,54 +207,6 @@
             result-no-effect))))
 		
 
-;;----------------------------------------------------------------------------
-;; Fifth Circle
-;;----------------------------------------------------------------------------
-(define (in-ex-por  caster)
-  (let ((loc (kern-obj-get-location caster)))
-    ;;(println "in-ex-por")
-    (cast-signal-spell caster 'magic-unlock (ui-target loc 1 (mk-ifc-query 'magic-unlock)))))
-  
-(define (an-ex-por  caster)
-  (let ((loc (kern-obj-get-location caster)))
-    (cast-signal-spell caster 'magic-lock (ui-target loc 1 (mk-ifc-query 'magic-lock)))))
-
-(define (in-bet-xen  caster)
-  (let ((spower (floor (+ (/ (occ-ability-whitemagic caster) 3) 2))))
-  (summon (kern-obj-get-location caster)
-          (lambda () (mk-animal "an insect swarm"
-                                sp_insect 
-                                s_insects
-                                faction-player))
-          (kern-being-get-current-faction caster)
-          (kern-dice-roll (mkdice 1 spower)))))
-
-(define (in-zu  caster)
-  (let ((hostiles (all-hostiles caster)))
-  (define (trysleep target)
-	(if (contest-of-skill
-			(+ (occ-ability-blackmagic caster) 3)
-			(occ-ability-magicdef target))
-		(apply-sleep target)))
-    (cond ((null? hostiles) 
-           (kern-print "No hostiles here!\n")
-           result-no-target
-           )
-          (else 
-           (map apply-sleep hostiles)
-           result-ok
-           ))))
-
-(define (vas-mani  caster)
-  (user-cast-spell-on-party-member caster great-heal-proc))
-
-
-(define (rel-tym  caster)
-  (let ((spower (floor (+ (/ (occ-ability-whitemagic caster) 3) 1))))
-  (kern-add-quicken (kern-dice-roll (mkdice 3 spower)))
-  result-ok
-  ))
-
 ;; ----------------------------------------------------------------------------
 ;; Sixth Circle
 ;; ----------------------------------------------------------------------------

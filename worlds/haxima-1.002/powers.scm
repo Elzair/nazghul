@@ -354,6 +354,17 @@
 		(light-apply-new ktarg (+ 6000 (* 50 power)))))
 
 ;todo should the messages be in the ui part?
+(define (powers-great-heal kchar ktarg power)
+  (kern-log-msg (kern-obj-get-name kchar)
+                " casts a great healing spell on "
+                (if (eqv? kchar ktarg)
+                    "self"
+                    (kern-obj-get-name ktarg)))
+	(kern-obj-heal ktarg 
+		(+ 10 power (kern-dice-roll "2d20")
+			(kern-dice-roll (mkdice 4 power)))))
+
+;todo should the messages be in the ui part?
 (define (powers-heal kchar ktarg power)
   (kern-log-msg (kern-obj-get-name kchar)
                 " casts a healing spell on "
@@ -372,6 +383,10 @@
 		  
 (define (powers-lock caster ktarg power)
 	((kobj-ifc target) 'lock ktarg caster)
+	)
+
+(define (powers-lock-magic caster ktarg power)
+	((kobj-ifc target) 'magic-lock ktarg caster)
 	)
 	
 (define (powers-locate caster ktarg power)
@@ -428,8 +443,23 @@
 (define (powers-protect-vs-poison caster ktarg power)
 	(kern-obj-add-effect ktarg ef_temporary_poison_immunity nil))
 
+(define (powers-quickness caster dir power)
+	(kern-add-quicken (kern-dice-roll
+		(mkdice 3 (floor (+ (/ power 3) 1))))))
+
 (define (powers-reveal caster ktarg power)
 	(kern-add-reveal (* power 4)))
+
+(define (powers-sleep-area caster ktarg power)
+	(let ((hostiles (all-hostiles caster)))
+		(define (trysleep target)
+			(if (contest-of-skill
+				(+ power 3)
+				(occ-ability-magicdef target))
+			(apply-sleep target)))
+		(map apply-sleep hostiles)
+		result-ok
+		))
 
 ;todo duration based on power?
 (define (powers-spider-calm caster ktarg power)
@@ -445,6 +475,17 @@
                                 faction-player))
 			(kern-being-get-current-faction caster)
 			(kern-dice-roll (mkdice 1 spower)))))	
+
+;todo enable remote summoning for high power?
+(define (powers-summon-insect caster ktarg power)
+  (let ((spower (floor (+ (/ power 3) 2))))
+  (summon (kern-obj-get-location caster)
+          (lambda () (mk-animal "an insect swarm"
+                                sp_insect 
+                                s_insects
+                                faction-player))
+          (kern-being-get-current-faction caster)
+          (kern-dice-roll (mkdice 1 spower)))))
 	
 ; a few things needed here:
 ;	check for visibility before messages
@@ -473,11 +514,11 @@
                               )))))))
 	
 (define (powers-unlock caster ktarg power)
-	((kobj-ifc target) 'unlock ktarg caster)
-	)
+	((kobj-ifc target) 'unlock ktarg caster))
+
+(define (powers-unlock-magic caster ktarg power)
+	((kobj-ifc target) 'magic-unlock ktarg caster))
 	
 (define (powers-wind-change caster dir power)
-	(let ((spower (* 2 power)))
-		(kern-set-wind dir (kern-dice-roll (mkdice spower 6)))
-    ))
+	(kern-set-wind dir (kern-dice-roll (mkdice (* 2 power) 6))))
 	
