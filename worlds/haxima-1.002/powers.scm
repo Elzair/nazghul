@@ -165,6 +165,19 @@
 ;;--------------------------------------------------------------
 
 
+(define (contest-of-skill offense defense)
+	(let ((oprob (+ offense 1))
+		 (tprob (number->string (+ offense defense 2))))
+		(if (< (kern-dice-roll (string-append "1d" tprob))
+				oprob)
+                    (begin
+                      (kern-log-msg "^c+gSpell succeeds!^c-")
+                      #t)
+                    (begin
+                      (kern-log-msg "^c+rSpell resisted!^c-")
+                      #f)
+                    )))
+
 
 ;;--------------------------------------------------------------
 ;; Spells
@@ -191,7 +204,13 @@
 			"!")
 		(kern-log-msg (kern-obj-get-name caster)
 			" does not detect any traps")))
-			
+
+;again, a bit of range for powerful users?
+(define (powers-dispel-field caster ktarg power)
+   (kern-print "Dispelled field!\n")
+   (kern-obj-remove ktarg)
+   (kern-map-repaint))	
+
 ;todo currently only checks topmost item
 (define (powers-disarm-traps caster ktarg power)
 	(if (kern-obj-is-trapped? ktarg)
@@ -214,7 +233,117 @@
 		(cone-do-simple caster ktarg 3.3
 			(mk-basic-cone-proc flambe-all F_fire 0)
 			)))
+			
+;todo
+; duration should be somewhat random, and vary with caster strength
+; fields would be a lot more useful if a wall was created instead of one square
+;   (length based on caster strength of course)
+; I need a 'line' utility anyway, perhaps a ui along the lines of (select center point) (select end point)
+;   -> draw line from centre to end and opposite side
+;
+; powerful casters should have at least some range, too
+;
+(define (powers-field-energy caster ktarg power)
+	(kern-obj-put-at (kern-mk-obj F_energy 1) ktarg))
+
+(define (powers-field-fire caster ktarg power)
+	(kern-obj-put-at (kern-mk-obj F_fire 1) ktarg))
 	
+(define (powers-field-poison caster ktarg power)
+	(kern-obj-put-at (kern-mk-obj F_poison 1) ktarg))
+
+(define (powers-field-sleep caster ktarg power)
+	(kern-obj-put-at (kern-mk-obj F_sleep 1) ktarg))
+
+(define (powers-fireball-range power)
+	(+ 3 (floor (/ power 3))))
+	
+(define (powers-fireball caster ktarg apower)
+	(define (fireball-damage-dice power)
+		(if (> power 3) (string-append (number->string  (floor (/ power 2))) "d3")
+				"1d3"))
+	(define (is-my-field? kobj) (eqv? F_fire (kern-obj-get-type kobj)))
+	(define (cleanfields kplace x y)
+		(let ((kloc (mk-loc kplace x y)))
+			(if (kern-is-valid-location? kloc)
+				(let ((fields (filter is-my-field? (kern-get-objects-at kloc))))
+					(cond ((null? fields) nil)
+						(else
+							(kern-obj-remove (car fields))))))))
+	(define (do-fireball-hit kplace x y damdf damdi)
+		(define (fire-damage kobj)
+			(if (kern-obj-is-char? kobj)
+				(begin
+					(kern-log-msg "Burning!")
+					(if (not (has-fire-immunity? kobj))
+						(kern-obj-inflict-damage kobj "burning" (kern-dice-roll damdf) caster)
+						(if (not (null? damdi)
+							(kern-obj-inflict-damage kobj "impact" (kern-dice-roll damdi) caster)))
+				))
+				(kern-obj-apply-damage kobj "burning" (kern-dice-roll damdf))
+				)
+		)
+		(let ((kloc (mk-loc kplace x y)))
+			(if (kern-is-valid-location? kloc)
+				(begin
+					(kern-obj-put-at (kern-mk-obj F_fire 1) kloc)
+					(kern-map-repaint)
+					(for-each fire-damage
+						(kern-get-objects-at kloc))
+				))))
+	(let* ((targchar (get-being-at ktarg))
+		(damf (fireball-damage-dice apower))
+		(dami (if (> apower 5) (fireball-damage-dice (/ apower 3)) nil)))
+		(define (do-fireball-effect kplace x y)
+			(do-fireball-hit kplace x y damf dami)
+			(if (> apower 10) (let ((apower (- apower 5))
+					(damf (fireball-damage-dice apower))
+					(dami (if (> apower 5) (fireball-damage-dice (/ apower 3)) nil)))
+				(do-fireball-hit kplace (+ x 1) y damf dami)
+				(do-fireball-hit kplace (- x 1) y damf dami)
+				(do-fireball-hit kplace x (+ y 1) damf dami)
+				(do-fireball-hit kplace x (- y 1) damf dami)
+			(if (> apower 10) (let ((apower (- apower 5))
+					(damf (fireball-damage-dice apower))
+					(dami (if (> apower 5) (fireball-damage-dice (/ apower 3)) nil)))
+				(do-fireball-hit kplace (+ x 1) (+ y 1) damf dami)
+				(do-fireball-hit kplace (- x 1) (+ y 1) damf dami)
+				(do-fireball-hit kplace (+ x 1) (- y 1) damf dami)
+				(do-fireball-hit kplace (- x 1) (- y 1) damf dami)
+				(cleanfields kplace (+ x 1) (+ y 1))				
+				(cleanfields kplace (- x 1) (+ y 1))				
+				(cleanfields kplace (+ x 1) (- y 1))				
+				(cleanfields kplace (- x 1) (- y 1))				
+			))
+			(cleanfields kplace (+ x 1) y)				
+			(cleanfields kplace (- x 1) y)				
+			(cleanfields kplace x (+ y 1))				
+			(cleanfields kplace x (- y 1))				
+			))
+			(cleanfields kplace x y)
+		)
+		(if (null? targchar)
+			(kern-log-msg (kern-obj-get-name caster)
+							" hurls a fireball")
+			(kern-log-msg (kern-obj-get-name caster)
+							" hurls a fireball at "
+						(kern-obj-get-name targchar)))
+		(temp-ifc-set 
+			(lambda (kmissile kplace x y)
+				(do-fireball-effect kplace x y)
+			)
+		)
+		(kern-fire-missile t_mfireball
+                     (kern-obj-get-location caster)
+                     ktarg))
+	)
+
+(define (powers-great-light caster ktarg power)
+	(let ((lightadd 
+			(kern-dice-roll
+				(mkdice 5 power))))
+		(light-apply-new ktarg (+ 6000 (* 50 power)))))
+
 ;todo should the messages be in the ui part?
 (define (powers-heal kchar ktarg power)
   (kern-log-msg (kern-obj-get-name kchar)
@@ -266,17 +395,33 @@
 	(+ 3 (floor (/ power 3)))
 	)
 
-(define (powers-poison caster ktarg power)
-	(kern-obj-add-effect ktarg ef_temporary_poison_immunity nil)
-	)
-
 ;todo contest to resist? to-hit roll required? power based initial damage?
-(define (powers-poison-resist caster ktarg power)
+(define (powers-poison caster ktarg power)
 	  (kern-log-msg (kern-obj-get-name caster)
 					" hurls poison missile at "
 					(kern-obj-get-name ktarg))
 	  (cast-missile-proc caster ktarg t_poison_bolt)
 	)
+
+;todo duration based on power?
+(define (powers-protect caster ktarg power)
+  (let ((party (kern-char-get-party caster)))
+    (if (null? party) 
+        (kern-obj-add-effect caster ef_protection nil)
+        (kern-obj-add-effect party ef_protection nil)
+        )
+    ))
+
+;todo duration based on power?
+(define (powers-protect-vs-fire caster ktarg power)
+	(kern-obj-add-effect ktarg ef_temporary_fire_immunity nil))
+
+;todo duration based on power?
+(define (powers-protect-vs-poison caster ktarg power)
+	(kern-obj-add-effect ktarg ef_temporary_poison_immunity nil))
+
+(define (powers-reveal caster ktarg power)
+	(kern-add-reveal (* power 4)))
 
 ;todo duration based on power?
 (define (powers-spider-calm caster ktarg power)

@@ -193,19 +193,6 @@
   (kern-char-resurrect kchar)
   #t)
 
-(define (contest-of-skill offense defense)
-	(let ((oprob (+ offense 1))
-		 (tprob (number->string (+ offense defense 2))))
-		(if (< (kern-dice-roll (string-append "1d" tprob))
-				oprob)
-                    (begin
-                      (kern-log-msg "^c+gSpell succeeds!^c-")
-                      #t)
-                    (begin
-                      (kern-log-msg "^c+rSpell resisted!^c-")
-                      #f)
-                    )))
-
 ;; ----------------------------------------------------------------------------
 ;; All the spell cast handlers are listed here. These are the procedures that
 ;; get called whenever a spell is cast.
@@ -220,53 +207,13 @@
             result-no-effect))))
 		
 
-
-;;----------------------------------------------------------------------------
-;; Third Circle
-;;----------------------------------------------------------------------------
-(define (in-flam-grav  caster)
-  (cast-field-spell caster F_fire))
-
-(define (in-nox-grav  caster)
-  (cast-field-spell caster F_poison))
-
-(define (in-zu-grav  caster)
-  (cast-field-spell caster F_sleep))
-
-(define (vas-flam  caster)
-	(let ((range (+ 3 (floor (/ (occ-ability-blackmagic caster) 3)))))
-	(user-cast-ranged-targeted-spell caster range cast-fireball-proc)))
-
-(define (vas-lor  caster)
-	(let ((power 
-			(kern-dice-roll (string-append "5d" (
-				number->string (occ-ability-whitemagic caster))))))
-	(light-apply-new caster (+ 6000 (* 50 power)))
-	result-ok))
-
-(define (in-flam-sanct caster)
-  (user-cast-spell-on-party-member caster 
-                                   (lambda (caster ktarg)
-                                     (kern-obj-add-effect ktarg ef_temporary_fire_immunity nil)
-                                     )))
-
-(define (in-nox-sanct caster)
-  (user-cast-spell-on-party-member caster 
-                                   (lambda (caster ktarg)
-                                     (kern-obj-add-effect ktarg ef_temporary_poison_immunity nil)
-                                     )))
-
 ;;----------------------------------------------------------------------------
 ;; Fourth Circle
 ;;----------------------------------------------------------------------------
 (define (an-grav  caster)
-  (let ((field (ui-get-adjacent (kern-obj-get-location caster) is-field?)))
-    (cond ((null? field) nil)
-          (else 
-           (kern-print "Dispelled field!\n")
-           (kern-obj-remove field)
-           (kern-map-repaint)
-           ))))
+	(cast-ui-ranged-any powers-dispel-field
+		caster 1 (occ-ability-whitemagic caster)
+		is-field?))
 
 (define (uus-por  caster)
   (cast-teleport-spell caster up))
@@ -275,21 +222,15 @@
   (cast-teleport-spell caster down))
 
 (define (in-sanct-grav  caster)
-  (cast-field-spell caster F_energy))
+  (cast-ui-field powers-field-energy caster 1 (occ-ability-whitemagic caster)))
 
 (define (in-sanct  caster)
-  (let ((party (kern-char-get-party caster)))
-    (if (null? party) 
-        (kern-obj-add-effect caster ef_protection nil)
-        (kern-obj-add-effect party ef_protection nil)
-        )
-    result-ok))
+	(powers-protect caster caster (occ-ability-whitemagic caster))
+		result-ok)
 
 (define (wis-quas  caster)
-  (let ((spower (* (occ-ability-blackmagic caster) 4)))
-  (kern-add-reveal spower)
-  result-ok
-  ))
+	(powers-reveal (occ-ability-blackmagic caster))
+	result-ok)
 
 ;; bet-por -- single character blink
 (define (bet-por kcaster)

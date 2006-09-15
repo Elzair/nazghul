@@ -150,6 +150,18 @@
 		(kern-ui-target (kern-obj-get-location caster) range)
 		effect caster power))
 		
+(define (cast-ui-ranged-any effect caster range power targetcheck)
+	(cast-ui-dospell
+		(cast-ui-target-any caster range targetcheck)
+		effect caster power))
+		
+(define (cast-ui-field effect caster range power)
+	(let ((target (kern-ui-target (kern-obj-get-location caster) range)))
+		(cond ((null? target) result-no-target)
+			((not (terrain-ok-for-field? target)) result-no-effect)
+			(else 
+				(effect caster target power)
+				result-ok))))
 
 ;;----------------------------------------------------------------------------
 ;; First Circle
@@ -248,3 +260,32 @@
 		caster 
 		4
 		(occ-ability-blackmagic caster)))
+
+;;----------------------------------------------------------------------------
+;; Third Circle
+;;----------------------------------------------------------------------------
+(define (in-flam-grav caster)
+  (cast-ui-field powers-field-fire caster 1 (occ-ability-whitemagic caster)))
+
+(define (in-nox-grav  caster)
+  (cast-ui-field powers-field-poison caster 1 (occ-ability-whitemagic caster)))
+
+(define (in-zu-grav  caster)
+  (cast-ui-field powers-field-sleep caster 1 (occ-ability-whitemagic caster)))
+
+(define (vas-flam  caster)
+	(cast-ui-ranged-loc powers-fireball caster
+		(powers-fireball-range (occ-ability-blackmagic caster))
+		(occ-ability-blackmagic caster)))
+
+(define (vas-lor  caster)
+	(powers-great-light caster caster (occ-ability-whitemagic caster))
+	result-ok)
+
+(define (in-flam-sanct caster)
+	(cast-ui-basic-member-spell powers-protect-vs-fire
+			caster (occ-ability-whitemagic caster)))
+
+(define (in-nox-sanct caster)
+	(cast-ui-basic-member-spell powers-protect-vs-poison
+			caster (occ-ability-whitemagic caster)))
