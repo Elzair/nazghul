@@ -208,47 +208,6 @@
 		
 
 ;;----------------------------------------------------------------------------
-;; Fourth Circle
-;;----------------------------------------------------------------------------
-(define (an-grav  caster)
-	(cast-ui-ranged-any powers-dispel-field
-		caster 1 (occ-ability-whitemagic caster)
-		is-field?))
-
-(define (uus-por  caster)
-  (cast-teleport-spell caster up))
-
-(define (des-por  caster)
-  (cast-teleport-spell caster down))
-
-(define (in-sanct-grav  caster)
-  (cast-ui-field powers-field-energy caster 1 (occ-ability-whitemagic caster)))
-
-(define (in-sanct  caster)
-	(powers-protect caster caster (occ-ability-whitemagic caster))
-		result-ok)
-
-(define (wis-quas  caster)
-	(powers-reveal (occ-ability-blackmagic caster))
-	result-ok)
-
-;; bet-por -- single character blink
-(define (bet-por kcaster)
-  (let* ((range (floor (* (occ-ability-whitemagic kcaster) 0.75)))
-		(loc (kern-ui-target (kern-obj-get-location kcaster) (kern-char-get-level kcaster))))
-    (cond ((null? loc)
-			result-no-target)
-		((not (kern-in-los? (kern-obj-get-location kcaster) loc))
-			result-no-target)
-		((kern-place-is-passable loc kcaster)
-			(begin
-				(kern-obj-relocate kcaster loc nil)
-				result-ok))
-		(else
-			(kern-log-msg "Failed: Impassable terrain")
-			result-no-effect))))
-
-;;----------------------------------------------------------------------------
 ;; Fifth Circle
 ;;----------------------------------------------------------------------------
 (define (in-ex-por  caster)

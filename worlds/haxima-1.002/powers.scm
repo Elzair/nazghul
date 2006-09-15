@@ -189,6 +189,15 @@
 	(kern-obj-remove-effect ktarg ef_sleep)
 	(kern-char-set-sleep ktarg #f))
 	
+(define (powers-blink-range power)
+	(+ 3 power))
+	
+(define (powers-blink caster ktarg power)
+	(if (kern-place-is-passable ktarg caster)
+		(kern-obj-relocate caster ktarg nil)
+		(kern-log-msg "Blink Failed: Impassable terrain")
+	))
+	
 (define (powers-cure-poison caster ktarg power)
 	(kern-obj-remove-effect ktarg ef_poison)
 	(if (< (kern-dice-roll "1d25") power)
@@ -256,7 +265,7 @@
 	(kern-obj-put-at (kern-mk-obj F_sleep 1) ktarg))
 
 (define (powers-fireball-range power)
-	(+ 3 (floor (/ power 3))))
+	(+ 3 (/ power 3)))
 	
 (define (powers-fireball caster ktarg apower)
 	(define (fireball-damage-dice power)
@@ -371,7 +380,7 @@
 	)
 
 (define (powers-magic-missile-range power)
-	(+ 4 (floor (/ power 3))))
+	(+ 4 (/ power 3)))
 		  
 ;todo messages out?
 (define (powers-magic-missile kchar ktarg power)
@@ -392,8 +401,7 @@
 							 "magic" (kern-dice-roll damagedice) kchar))))
 
 (define (powers-poison-range power)
-	(+ 3 (floor (/ power 3)))
-	)
+	(+ 3 (/ power 3)))
 
 ;todo contest to resist? to-hit roll required? power based initial damage?
 (define (powers-poison caster ktarg power)

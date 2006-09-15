@@ -102,8 +102,6 @@
           (proc kchar ktarg)
           result-ok))))  
 	  
-	  
-	  
 (define (cast-ui-target-party-member caster range)
 	(let ((loc (kern-obj-get-location caster)))
 		(if (kern-place-is-wilderness? (loc-place loc))
@@ -120,10 +118,17 @@
 	(ui-target (kern-obj-get-location caster)
 		range
 		checkproc))
-		
-		
 
 (define (cast-ui-dospell target effect caster power)
+	(cond ((null? target) result-no-target)
+		((kern-in-los? (kern-obj-get-location kcaster) loc)
+			(effect caster target power)
+			result-ok)
+		(else
+			(kern-log-msg "Not in LOS!")
+			result-no-target)))
+
+(define (cast-ui-dospell-nolos target effect caster power)
 	(if (null? target)
 		(begin 
 			result-no-target
@@ -131,7 +136,6 @@
 		(begin
 			(effect caster target power)
 			result-ok)))
-			
 			
 			
 			
@@ -150,6 +154,11 @@
 		(kern-ui-target (kern-obj-get-location caster) range)
 		effect caster power))
 		
+(define (cast-ui-ranged-loc-nolos effect caster range power)
+	(cast-ui-dospell-nolos
+		(kern-ui-target (kern-obj-get-location caster) range)
+		effect caster power))
+		
 (define (cast-ui-ranged-any effect caster range power targetcheck)
 	(cast-ui-dospell
 		(cast-ui-target-any caster range targetcheck)
@@ -159,9 +168,13 @@
 	(let ((target (kern-ui-target (kern-obj-get-location caster) range)))
 		(cond ((null? target) result-no-target)
 			((not (terrain-ok-for-field? target)) result-no-effect)
-			(else 
+			((kern-in-los? (kern-obj-get-location kcaster) loc)
 				(effect caster target power)
-				result-ok))))
+				result-ok)
+			(else 
+				(kern-log-msg "Not in LOS!")
+				result-no-target))))	
+
 
 ;;----------------------------------------------------------------------------
 ;; First Circle
@@ -256,7 +269,7 @@
 		(occ-ability-blackmagic caster)))
   
 (define (bet-flam-hur caster)
- 	(cast-ui-ranged-loc powers-flamespray
+ 	(cast-ui-ranged-loc-nolos powers-flamespray
 		caster 
 		4
 		(occ-ability-blackmagic caster)))
@@ -289,3 +302,36 @@
 (define (in-nox-sanct caster)
 	(cast-ui-basic-member-spell powers-protect-vs-poison
 			caster (occ-ability-whitemagic caster)))
+
+;;----------------------------------------------------------------------------
+;; Fourth Circle
+;;----------------------------------------------------------------------------
+(define (an-grav  caster)
+	(cast-ui-ranged-any powers-dispel-field
+		caster 1 (occ-ability-whitemagic caster)
+		is-field?))
+		
+;leaving alone at the moment (not used)
+(define (uus-por  caster)
+  (cast-teleport-spell caster up))
+
+;leaving alone at the moment (not used)
+(define (des-por  caster)
+  (cast-teleport-spell caster down))
+
+(define (in-sanct-grav  caster)
+  (cast-ui-field powers-field-energy caster 1 (occ-ability-whitemagic caster)))
+
+(define (in-sanct  caster)
+	(powers-protect caster caster (occ-ability-whitemagic caster))
+		result-ok)
+
+(define (wis-quas  caster)
+	(powers-reveal (occ-ability-blackmagic caster))
+	result-ok)
+
+;; bet-por -- single character blink
+(define (bet-por kcaster)
+	(cast-ui-ranged-loc powers-blink caster
+		(powers-blink-range (occ-ability-whitemagic caster))
+		(occ-ability-whitemagic caster)))
