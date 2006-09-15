@@ -121,7 +121,7 @@
 
 (define (cast-ui-dospell target effect caster power)
 	(cond ((null? target) result-no-target)
-		((kern-in-los? (kern-obj-get-location kcaster) loc)
+		((kern-in-los? (kern-obj-get-location caster) target)
 			(effect caster target power)
 			result-ok)
 		(else
@@ -168,7 +168,7 @@
 	(let ((target (kern-ui-target (kern-obj-get-location caster) range)))
 		(cond ((null? target) result-no-target)
 			((not (terrain-ok-for-field? target)) result-no-effect)
-			((kern-in-los? (kern-obj-get-location kcaster) loc)
+			((kern-in-los? (kern-obj-get-location caster) loc)
 				(effect caster target power)
 				result-ok)
 			(else 
@@ -331,7 +331,7 @@
 	result-ok)
 
 ;; bet-por -- single character blink
-(define (bet-por kcaster)
+(define (bet-por caster)
 	(cast-ui-ranged-loc powers-blink caster
 		(powers-blink-range (occ-ability-whitemagic caster))
 		(occ-ability-whitemagic caster)))
@@ -364,3 +364,46 @@
 (define (rel-tym  caster)
 	(powers-quickness caster caster (occ-ability-whitemagic caster))
 	result-ok)
+	
+	
+;; ----------------------------------------------------------------------------
+;; Sixth Circle
+;; ----------------------------------------------------------------------------
+(define (in-an  caster) 
+	(powers-negate-magic caster caster (occ-ability-whitemagic caster))
+	result-ok)
+
+(define (in-rel-por caster)
+	(cast-ui-ranged-any powers-telekinesis
+		caster 1 (occ-ability-whitemagic caster)
+		kern-obj-is-mech?))
+
+(define (wis-an-ylem caster) 
+	(powers-xray caster caster (occ-ability-whitemagic caster))
+	result-ok)
+
+(define (an-xen-exe  caster)
+	(cast-ui-basic-ranged-spell powerscharm
+		caster 
+		(powers-charm-range (occ-ability-blackmagic caster))
+		(occ-ability-blackmagic caster)))
+
+(define (in-vas-por-ylem  caster)
+	(powers-tremor caster caster (occ-ability-blackmagic caster))
+	result-ok)
+
+(define (quas-an-wis  caster)
+	(powers-confuse caster caster (occ-ability-blackmagic caster))
+	result-ok)
+
+;; vas-uus-ylem -- special spell which raises a sunken ship
+(define (vas-uus-ylem caster)
+	(cast-ui-ranged-loc powers-raise-lost-area caster
+		1 (occ-ability-whitemagic caster)))
+
+;; vas-por -- whole party blink
+(define (vas-por caster)
+	(cast-ui-ranged-loc powers-blink-party caster
+		(powers-blink-party-range (occ-ability-whitemagic caster))
+		(occ-ability-whitemagic caster)))
+

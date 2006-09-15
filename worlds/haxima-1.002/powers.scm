@@ -198,6 +198,37 @@
 		(kern-log-msg "Blink Failed: Impassable terrain")
 	))
 	
+(define (powers-blink-party-range power)
+	(* power 0.75))
+	
+(define (powers-blink-party caster ktarg power)
+	(if (kern-place-is-passable ktarg (kern-char-get-party caster))
+		(kern-obj-relocate (kern-char-get-party caster) ktarg nil)
+		(kern-log-msg "Blink Failed: Impassable terrain")
+	))
+
+(define (powers-charm-range power)
+	(+ 3 (/ (occ-ability-blackmagic caster) 3)))
+	
+(define (powers-charm caster target power)
+	(if (contest-of-skill
+			(+ power 1)
+			(occ-ability-magicdef target))
+		(kern-obj-add-effect target 
+							ef_charm 
+							(charm-mk (kern-being-get-current-faction caster)))
+			))
+	
+;todo limit to some range?
+(define (powers-confuse caster unused power)
+	(define (confuse kchar)
+		(if (contest-of-skill
+				power
+				(+ (occ-ability-magicdef kchar) 2))
+			(kern-being-set-base-faction kchar (random-faction))
+			))
+	(map confuse (all-hostiles caster)))	
+	
 (define (powers-cure-poison caster ktarg power)
 	(kern-obj-remove-effect ktarg ef_poison)
 	(if (< (kern-dice-roll "1d25") power)
@@ -415,6 +446,10 @@
 		(kern-obj-inflict-damage ktarg
 							 "magic" (kern-dice-roll damagedice) kchar))))
 
+(define (powers-negate-magic caster ktarg power)
+	(kern-add-magic-negated (kern-dice-roll
+		(mkdice 3 (floor (+ (/ power 3) 1))))))
+
 (define (powers-poison-range power)
 	(+ 3 (/ power 3)))
 
@@ -447,9 +482,20 @@
 	(kern-add-quicken (kern-dice-roll
 		(mkdice 3 (floor (+ (/ power 3) 1))))))
 
+;note is different scenarios, could have other uses
+(define (powers-raise-lost-area caster loc power)
+	(let ((kobjs (filter can-raise-vessel? 
+					(kern-get-objects-at loc))))
+		(if (not (null? kobjs))
+			(let ((kgen (car kobjs)))                
+				(signal-kobj kgen 'raise kgen kcaster)
+			))))
+
+				
 (define (powers-reveal caster ktarg power)
 	(kern-add-reveal (* power 4)))
 
+;todo limit to some range?
 (define (powers-sleep-area caster ktarg power)
 	(let ((hostiles (all-hostiles caster)))
 		(define (trysleep target)
@@ -486,6 +532,13 @@
                                 faction-player))
           (kern-being-get-current-faction caster)
           (kern-dice-roll (mkdice 1 spower)))))
+
+;todo damage/knock away critters?	
+(define (powers-telekinesis-range power)
+	(+ (/ power 3) 1))
+
+(define (powers-telekinesis caster ktarg power)
+	(handle-mech-at ktarg caster))
 	
 ; a few things needed here:
 ;	check for visibility before messages
@@ -513,6 +566,40 @@
                         (else (map repel all-undead-combatants)
                               )))))))
 	
+;todo limit to some (large) range?
+(define (powers-tremor caster unused power)
+	(let ((damdice (mkdice 1 power))
+		(foes (all-hostiles caster)))
+	(define (tremor kchar)
+		;;(println "tremor")
+		(cond ((kern-char-is-asleep? kchar) (kern-char-set-sleep kchar #f))
+			((> (kern-dice-roll "1d4") 1)
+				(kern-map-set-jitter #t)
+				(kern-map-repaint)
+				(kern-char-set-sleep kchar #t)
+				(kern-obj-inflict-damage kchar "knocked down" (kern-dice-roll damdice) caster))
+				(else nil)))
+	(define (loop n kchar)
+		;;(println "loop:" n)
+		;;(println "foes:" foes)
+		(if (not (= n 0))
+			(begin
+			(map tremor kchar)
+			(loop (- n 1) kchar))))
+	(define (wakeup kchar) (kern-char-set-sleep kchar #f))
+  ;;(println "in-vas-por-ylem: entry")
+    ;;(println "in-vas-por-ylem:" foes)
+    (kern-log-enable #f)
+    (map kern-obj-inc-ref foes)
+    (shake-map 20)
+    (loop (+ 1 (floor (/ power 4))) foes)
+    (kern-map-repaint)
+    (map wakeup foes)
+    (map kern-obj-dec-ref foes)
+    (map wakeup (kern-place-get-beings (loc-place (kern-obj-get-location caster))))
+	(kern-log-enable #t)
+	))
+
 (define (powers-unlock caster ktarg power)
 	((kobj-ifc target) 'unlock ktarg caster))
 
@@ -522,3 +609,7 @@
 (define (powers-wind-change caster dir power)
 	(kern-set-wind dir (kern-dice-roll (mkdice (* 2 power) 6))))
 	
+(define (powers-xray caster dir power)
+	(kern-add-xray-vision (kern-dice-roll
+		(mkdice 10 (floor (+ (/ power 3) 1))))))
+		
