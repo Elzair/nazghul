@@ -74,7 +74,30 @@ extern void sprite_save(struct sprite *sprite, struct save *save);
  */
 void sprite_apply_matrix(struct sprite *sprite, float matrix[4][3]);
 
+/**
+ * Remove all decorations from the sprite and discard them (see
+ * sprite_append_decoration()). Useful for rebuilding decorated sprites from
+ * scratch.
+ *
+ * @param sprite The sprite to strip.
+ */
 extern void sprite_strip_decorations(struct sprite *sprite);
+
+/**
+ * Blit one sprite over another. The images of the destination sprite will be
+ * copied and then modified by the blit, so you don't have to worry about other
+ * sprites that refer to the same images. The two sprites should have the same
+ * number of frames and the same dimensions or the results are not defined. The
+ * modification will not be saved with the game, so it needs to be redone at
+ * load time.
+ *
+ * @param dest The sprite that will be modified.
+ * @param src The sprite that will blit over the other one. It won't be
+ * modified.
+ *
+ */
+extern void sprite_blit_over(struct sprite *dest, 
+                             struct sprite *src);
 
 END_DECL
 

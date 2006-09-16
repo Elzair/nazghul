@@ -150,6 +150,39 @@ EXAMPLES
 
 ----------------------------------------------------------------------------
 NAME
+        kern-sprite-blit-over - blit one sprite over another one
+
+SYNOPSIS
+        (kern-sprite-blit-over <dest> <src>)
+
+DESCRIPTION
+        The images of the destination sprite will be copied and then modified
+        by the blit, so you don't have to worry about other sprites that refer
+        to the same images. The two sprites should have the same number of
+        frames and the same dimensions or the results are not defined. The
+        modification will not be saved with the game, so it needs to be redone
+        at load time.
+
+        Blitting over uses more memory than decorating sprites because it makes
+        an extra copy of all the sprite frames. It is faster, though, because
+        it only blits all the sprite components once when it is created,
+        instead of every time it is rendered.
+
+        Blitting is also preferrable for composite weapon sprites, because
+        composite sprite building does not have good support for recursively
+        composite sprites. Unreadying composite weapon sprites will strip them
+        down to their bare sprite. But weapon sprites built via blitting over
+        do not have this problem, because stripping down a blitted-over sprite
+        has no effect.
+
+RETURNS
+        The modified destination sprite.
+
+EXAMPLES
+        (define s_fancy_shield (kern-sprite-blit-over s_shield s_emblem))
+
+----------------------------------------------------------------------------
+NAME
         kern-sprite-clone - copy a sprite
 
 SYNOPSIS
@@ -191,3 +224,43 @@ DESCRIPTION
         Unlike the gobs attached to objects, gobs attached to object types are
         not written to the save-game file. For that matter, object types are
         not written, either, and must be reloaded for every game.
+
+----------------------------------------------------------------------------
+NAME
+        kern-sprite-strip-decorations - remove all decorations from a base
+        sprite
+
+SYNOPSIS
+        (kern-sprite-strip-decorations <sprite>)
+
+DESCRIPTION
+        Remove all decorations from <sprite> and discard them (see
+        sprite_append_decoration()). Useful for rebuilding decorated sprites
+        from scratch.
+
+        This does not remove layers built via kern-sprite-blit-over.
+
+RETURNS
+        The base sprite.
+
+EXAMPLES
+        ;; Make a ship with sails.
+        (define s_ship (kern-sprite-append-decorations (list s_ship s_sails)))
+
+        ;; Nah, changed my mind.
+        (define s_ship (kern-sprite-strip-decorations s_ship))
+
+
+----------------------------------------------------------------------------
+NAME
+        -
+
+SYNOPSIS
+        ()
+
+DESCRIPTION
+
+RETURNS
+
+EXAMPLES
+

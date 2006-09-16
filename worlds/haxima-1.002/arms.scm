@@ -408,4 +408,6 @@
 ;; Test paper doll sprites: add a gob to the staff arms type with a "readied"
 ;; sprite.
 ;;----------------------------------------------------------------------------
-(kern-type-set-gob t_staff s_hum_staff_gold)
+(kern-type-set-gob t_staff 
+                   (kern-sprite-blit-over s_hum_staff_gold 
+                                          s_hum_staffglo_blue))

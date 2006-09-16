@@ -62,7 +62,7 @@ struct {
 static int sprite_zoom_factor = 1;
 static unsigned int sprite_ticks = 0;
 
-static struct rsurf *sprite_rsurf_new(SDL_Surface *surf)
+static struct rsurf *rsurf_new(SDL_Surface *surf)
 {
         struct  rsurf *rsurf;
 
@@ -74,7 +74,7 @@ static struct rsurf *sprite_rsurf_new(SDL_Surface *surf)
         return rsurf;
 }
 
-static void sprite_rsurf_unref(struct rsurf *rsurf)
+static void rsurf_unref(struct rsurf *rsurf)
 {
         assert(rsurf->ref > 0);
         rsurf->ref--;
@@ -84,6 +84,117 @@ static void sprite_rsurf_unref(struct rsurf *rsurf)
                 }
                 free(rsurf);
         }
+}
+
+/**
+ * For reasons I don't quite understand, doing an RGBA->RGBA blit with
+ * SDL_BlitSurface() seems to result in a totally transparent image. I wrote
+ * this as a debug measure, but since it works, and I don't expect it to run in
+ * a performance-critical part of the code, I'm leaving it in for now.
+ *
+ * @param source The surface to blit from.
+ * @param from The area of the source to blit from.
+ * @param dest The surface to blit to.
+ * @param to The area of the destination to blit to.
+ */
+static void sprite_custom_blit(SDL_Surface *source, SDL_Rect *from,
+                               SDL_Surface *dest, SDL_Rect *to)
+{
+        Uint32 *dpix, *spix;
+        int dx, dy, di, sx,  sy, si, spitch,  dpitch;
+        Uint8 in_alpha;
+
+        assert(source->format->BytesPerPixel==4);
+
+        spix = (Uint32*)source->pixels;
+        dpix = (Uint32*)dest->pixels;
+
+        dpitch = dest->pitch / dest->format->BytesPerPixel;
+        spitch = source->pitch / source->format->BytesPerPixel;
+
+        for (dy = 0; dy < from->h; dy++) {
+                sy = dy;
+                for (dx = 0; dx < from->w; dx++) {
+                        sx = dx;
+                        di = (dy + to->y) * dpitch + (dx + to->x);
+                        si = (sy + from->y) * spitch + (sx + from->x);
+
+                        /* Extract the alpha component of the source pixel. */
+                        in_alpha = ((spix[si] & source->format->Amask) 
+                                     >> source->format->Ashift);
+
+                        /* Skip transparent source pixels, leaving destination
+                         * intact. */
+                        if (SDL_ALPHA_TRANSPARENT == in_alpha) {
+                                continue;
+                        }
+
+                        /* Do a direct copy of everything else. Note that this
+                         * is only correct if the source alpha is opaque. We
+                         * really should blend semi-transparent source
+                         * pixels. */
+                        dpix[di] = spix[si];
+                }
+        }        
+}
+
+
+/**
+ * Replace the sprite's current image surface with a reference-counted copy.
+ *
+ * @param sprite The sprite to modify.
+ * @returns 0 on success or -1 on error. An error occurs if the surface cannot
+ * be copied.
+ */
+static int sprite_clone_and_replace_rsurf(struct sprite *sprite)
+{
+        SDL_Surface *dest = 0;
+        SDL_Surface *source = sprite->rsurf->surf;
+        SDL_Rect to;
+        int i;
+
+        /* Create a new surface so that the original (which may be shared with
+         * other sprites) is not altered. */
+	dest = SDL_CreateRGBSurface(source->flags,
+                                    sprite->w_pix * sprite->n_total_frames,
+                                    sprite->h_pix,
+                                    source->format->BitsPerPixel,
+                                    source->format->Rmask,
+                                    source->format->Gmask,
+                                    source->format->Bmask,
+                                    source->format->Amask);
+        if (!dest) {
+		perror_sdl("SDL_CreateRGBSurface");
+		return -1;
+        }
+
+        /* Copy each frame of the sprite to the new surface. */
+        to.x = 0;
+        to.y = 0;
+        to.w = sprite->w_pix;
+        to.h = sprite->h_pix;
+        for (i = 0; i < sprite->n_total_frames; i++) {
+                to.x = i * sprite->w_pix;
+
+                /* Blit the frame. */
+                sprite_custom_blit(sprite->rsurf->surf, 
+                            &sprite->frames[i],
+                            dest, &to);
+
+                /* Fixup the frames as we go. */
+                sprite->frames[i] = to;
+        }
+
+        /* If the original surface was a custom rsurf then unref it. */
+        if (sprite->rsurf->custom) {
+                rsurf_unref(sprite->rsurf);
+        }
+
+        /* Stash the surface in a new refcounted surf wrapper. */
+        sprite->rsurf = rsurf_new(dest);
+        sprite->rsurf->custom = 1;
+
+        return 0;
 }
 
 static void sprite_blit_faded(SDL_Surface *source, SDL_Rect *from, 
@@ -260,7 +371,7 @@ void sprite_del(struct sprite *sprite)
 		free(sprite->frames);
         if (sprite->decor)
                 sprite_del(sprite->decor);
-        sprite_rsurf_unref(sprite->rsurf);
+        rsurf_unref(sprite->rsurf);
 
         free(sprite);
 }
@@ -381,7 +492,7 @@ struct sprite * sprite_new(char *tag, int frames, int index, int wave,
         }
 
         /* Create a new refcounted surf. */
-        if (!(sprite->rsurf = sprite_rsurf_new(images->images)))
+        if (!(sprite->rsurf = rsurf_new(images->images)))
                 goto abort;
 
 
@@ -633,20 +744,40 @@ void sprite_apply_matrix(struct sprite *sprite, float matrix[4][3])
         }
 
         /* Stash the surface in a new refcounted surf wrapper. */
-        sprite->rsurf = sprite_rsurf_new(dest);
+        sprite->rsurf = rsurf_new(dest);
         sprite->rsurf->custom = 1;
 }
 
 void sprite_strip_decorations(struct sprite *sprite)
 {
-        struct sprite *decor = sprite->decor;
-        sprite->decor = 0;
-        while (decor) {
-                struct sprite *tmp = decor;
-                decor = decor->decor;
-
+        if (sprite->decor) {
                 /* Decoration sprites are always single-referenced clones, so
-                 * blow them away when they're stripped. */
-                sprite_del(tmp);
+                 * blow them away when they're stripped. This will recursively
+                 * delete all the trailing decor sprites. */
+                sprite_del(sprite->decor);
+                sprite->decor = 0;
+        }
+}
+
+void sprite_blit_over(struct sprite *dest, struct sprite *src)
+{
+        int i = 0;
+
+        /* Check preconditions. */
+        assert(dest->w_pix == src->w_pix);
+        assert(dest->h_pix == src->h_pix);
+        assert(dest->n_total_frames == src->n_total_frames);
+
+        /* Clone the destination sprite's surface before changing it. */
+        if (sprite_clone_and_replace_rsurf(dest))
+                return;
+
+        /* For each frame... */
+        for (i = 0; i < dest->n_total_frames; i++) {
+
+                /* Blit the source over the destination. */
+                sprite_custom_blit(src->rsurf->surf, &src->frames[i],
+                                   dest->rsurf->surf, &dest->frames[i]);
+                                
         }
 }

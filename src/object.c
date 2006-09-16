@@ -2006,7 +2006,15 @@ void ObjectType::setGifc(closure_t *g, int cap)
 
 void ObjectType::setGob(struct gob *g)
 {
-        gob = g;
+        if (gob) {
+                gob_unref(gob);
+                gob = 0;
+        }
+
+        if (g) {
+                gob = g;
+                gob_ref(g);
+        }
 }
 
 struct gob * ObjectType::getGob()
