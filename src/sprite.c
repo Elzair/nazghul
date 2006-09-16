@@ -636,3 +636,17 @@ void sprite_apply_matrix(struct sprite *sprite, float matrix[4][3])
         sprite->rsurf = sprite_rsurf_new(dest);
         sprite->rsurf->custom = 1;
 }
+
+void sprite_strip_decorations(struct sprite *sprite)
+{
+        struct sprite *decor = sprite->decor;
+        sprite->decor = 0;
+        while (decor) {
+                struct sprite *tmp = decor;
+                decor = decor->decor;
+
+                /* Decoration sprites are always single-referenced clones, so
+                 * blow them away when they're stripped. */
+                sprite_del(tmp);
+        }
+}

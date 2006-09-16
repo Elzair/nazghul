@@ -7619,6 +7619,18 @@ KERN_API_CALL(kern_sprite_append_decoration)
         return scm_mk_ptr(sc, orig);
 }
 
+KERN_API_CALL(kern_sprite_strip_decorations)
+{
+        struct sprite *orig;
+
+        if (unpack(sc, &args, "p", &orig)) {
+                rt_err("kern-sprite-strip-decoration: bad args");
+                return sc->NIL;
+        }
+        sprite_strip_decorations(orig);
+        return scm_mk_ptr(sc, orig);
+}
+
 KERN_API_CALL(kern_sprite_apply_matrix)
 {
         struct sprite *sprite;
@@ -8111,6 +8123,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-sprite-clone", kern_sprite_clone);
         API_DECL(sc, "kern-sprite-append-decoration", kern_sprite_append_decoration);
         API_DECL(sc, "kern-sprite-apply-matrix", kern_sprite_apply_matrix);
+        API_DECL(sc, "kern-sprite-strip-decorations", kern_sprite_strip_decorations);
 
 
         /* kern-vehicle-api */

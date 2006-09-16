@@ -464,11 +464,34 @@
 ;;----------------------------------------------------------------------------
 ;; Ready/Unready hooks
 ;;----------------------------------------------------------------------------
-(define (ready-equip fgob kobj karms slot)
-  (println (kern-obj-get-name kobj) " readies " (kern-type-get-name karms) " in slot " slot))
+(define (uses-paper-doll? kobj)
+  (and (obj-is-char? kobj)
+       (eqv? (kern-char-get-species kobj)
+             sp_human)))
+
+(define (ktype-get-sprite ktype)
+  (println "ktype: " (kern-type-get-name ktype) " gob: " (kern-type-get-gob ktype))
+  (let ((gob (kern-type-get-gob ktype)))
+    (if (null? gob)
+        nil
+        gob)))
+
+(define (rebuild-humanoid-sprite khum)
+  (re-mk-composite-sprite (cons (kern-sprite-strip-decorations 
+                                 (kern-obj-get-sprite khum))
+                                (filter notnull?
+                                        (map ktype-get-sprite
+                                             (kern-char-get-arms khum))))))
 
 (define (ready-equip fgob kobj karms slot)
-  (println (kern-obj-get-name kobj) " unreadies " (kern-type-get-name karms) " from slot " slot))
+  (if (uses-paper-doll? kobj)
+      (begin
+        (kern-obj-set-sprite kobj (rebuild-humanoid-sprite kobj))
+        (kern-map-set-dirty))))
+
+(define (unready-equip fgob kobj karms slot)
+  (ready-equip fgob kobj karms slot))
+
 
 ;; ----------------------------------------------------------------------------
 ;; Effects Table

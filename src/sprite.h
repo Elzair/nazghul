@@ -74,6 +74,8 @@ extern void sprite_save(struct sprite *sprite, struct save *save);
  */
 void sprite_apply_matrix(struct sprite *sprite, float matrix[4][3]);
 
+extern void sprite_strip_decorations(struct sprite *sprite);
+
 END_DECL
 
 #endif

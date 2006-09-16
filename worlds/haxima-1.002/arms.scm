@@ -403,3 +403,9 @@
 
 (define (arms-type-needs-ammo? karms)
   (in-list? karms arms-types-needing-ammo))
+
+;;----------------------------------------------------------------------------
+;; Test paper doll sprites: add a gob to the staff arms type with a "readied"
+;; sprite.
+;;----------------------------------------------------------------------------
+(kern-type-set-gob t_staff s_hum_staff_gold)

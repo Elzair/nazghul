@@ -1,28 +1,35 @@
 ;;----------------------------------------------------------------------------
 ;; Morphologies
+;;
+;; Slots should be listed in desired paper-doll rendering order, bottom layer
+;; to top.
 (define humanoid
-  (list slot-helm
-        slot-amulet
-        slot-weapon-or-shield
-        slot-weapon-or-shield
-        slot-armor
-        slot-boot
-        slot-ring
-        slot-ring))
+  (list 
+   slot-armor
+   slot-boot
+   slot-helm
+   slot-amulet
+   slot-ring
+   slot-ring
+   slot-weapon-or-shield
+   slot-weapon-or-shield
+   ))
 
 (define giant
-  (list slot-helm
-        slot-helm
-        slot-amulet
-        slot-amulet
-        slot-weapon-or-shield
-        slot-weapon-or-shield
-        slot-weapon-or-shield
-        slot-weapon-or-shield
-        slot-armor
-        slot-boot
-        slot-ring
-        slot-ring))
+  (list
+   slot-armor
+   slot-boot
+   slot-helm
+   slot-helm
+   slot-amulet
+   slot-amulet
+   slot-ring
+   slot-ring
+   slot-weapon-or-shield
+   slot-weapon-or-shield
+   slot-weapon-or-shield
+   slot-weapon-or-shield
+   ))
 
 ;;----------------------------------------------------------------------------
 ;; species
