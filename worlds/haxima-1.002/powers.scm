@@ -457,6 +457,18 @@
                      ktarg))
 	)
 
+;todo high power should go to user specified gate
+(define (powers-gate-travel caster ktarg power)
+	(println "vas-rel-por")
+	(define (rmgate kobj)
+		(moongate-close gate)
+		(kern-obj-remove gate))
+	(let ((gate (summon-moongate 'ord)))
+		(println " gate=" gate)
+		(kern-obj-put-at gate loc)
+		(moongate-open gate)
+		))
+		  
 (define (powers-great-light caster ktarg power)
 	(let ((lightadd 
 			(kern-dice-roll
@@ -489,6 +501,11 @@
 (define (powers-invisibility kchar ktarg power)
 	(kern-obj-add-effect ktarg ef_invisibility nil))
 
+(define (powers-kill kchar ktarg)
+  (kern-log-msg (kern-obj-get-name kchar)
+                " casts kill at "
+                (kern-obj-get-name ktarg))
+  (cast-missile-proc kchar ktarg t_deathball))
 	
 (define (powers-light caster ktarg power)
 	(let ((lightadd 
@@ -575,6 +592,10 @@
 				(signal-kobj kgen 'raise kgen kcaster)
 			))))
 
+;resurrect should have side effects, diminishing with power
+(define (powers-resurrect caster ktarg power)
+	(kern-char-resurrect ktarg)
+	(apply-sleep ktarg))
 				
 (define (powers-reveal caster ktarg power)
 	(kern-add-reveal (* power 4)))
@@ -595,34 +616,87 @@
 (define (powers-spider-calm caster ktarg power)
 	(kern-obj-add-effect ktarg ef_spider_calm nil))
 
+(define (powers-summon targetloc quantity typegen levelgen faction)
+	(define (run-loop count done)
+		(println " run-loop " count)
+		(if (<= count 0) done
+			(let* ((knpc (spawn-npc (typegen) (levelgen)))
+					(loc (pick-loc targetloc knpc)))
+				(println " loc=" loc)
+				(if (null? loc) 
+					(begin
+						(kern-obj-dec-ref knpc)
+						done)
+					(begin
+						(kern-being-set-base-faction knpc faction)
+						(kern-obj-set-temporary knpc #t)
+						(kern-obj-put-at knpc loc)
+						(run-loop (- count 1) 1)
+					)))))
+	(run-loop quantity 0))
+	
+(define (powers-summon-simple-levelgen power)
+	(lambda ()
+		(+ (floor (+ (* power 0.2) 1)
+			(kern-dice-roll
+				(mkdice 3 (floor (+ (* power 0.2) 1)))
+			)))))
+
+(define (powers-summon-single-type type)
+	(lambda ()
+		type
+	))
+
 ;todo enable remote summoning for high power?
 (define (powers-summon-snake caster ktarg power)
   (let ((spower (floor (+ (/ power 4) 1))))
-	(summon (kern-obj-get-location caster)
-			(lambda () (mk-animal " a snake"
-								sp_snake 
-                                s_snake 
-                                faction-player))
-			(kern-being-get-current-faction caster)
-			(kern-dice-roll (mkdice 1 spower)))))	
+	(powers-summon (kern-obj-get-location caster)
+			(kern-dice-roll (mkdice 1 spower))
+			(powers-summon-single-type 'snake)
+			(powers-summon-simple-levelgen power)
+			(kern-being-get-base-faction caster))
+	))	
 
 ;todo enable remote summoning for high power?
 (define (powers-summon-insect caster ktarg power)
-  (let ((spower (floor (+ (/ power 3) 2))))
-  (summon (kern-obj-get-location caster)
-          (lambda () (mk-animal "an insect swarm"
-                                sp_insect 
-                                s_insects
-                                faction-player))
-          (kern-being-get-current-faction caster)
-          (kern-dice-roll (mkdice 1 spower)))))
+  (let ((spower (floor (+ (/ power 4) 1))))
+	(powers-summon (kern-obj-get-location caster)
+			(kern-dice-roll (mkdice 2 spower))
+			(powers-summon-single-type 'insect)
+			(powers-summon-simple-levelgen power)
+			(kern-being-get-base-faction caster))
+	))
 
+;todo enable remote summoning for high power?
+(define (powers-summon-undead caster ktarg power)
+  (let ((spower (floor (+ (/ power 4) 1))))
+	(powers-summon (kern-obj-get-location caster)
+			(kern-dice-roll (mkdice 1 spower))
+			(lambda () 
+                (random-select (list 'skeletal-warrior 'skeletal-spear-thrower 'ghast)))
+			(powers-summon-simple-levelgen power)
+			(kern-being-get-base-faction caster))
+	))
+	
+(define (powers-summon-slime caster ktarg power)
+  (let ((spower (floor (+ (/ power 4) 1))))
+	(powers-summon (kern-obj-get-location caster)
+			(kern-dice-roll (mkdice 1 spower))
+			(powers-summon-single-type 'green-slime)
+			(powers-summon-simple-levelgen power)
+			(kern-being-get-base-faction caster))
+	))
+		 
 ;todo damage/knock away critters?	
 (define (powers-telekinesis-range power)
 	(+ (/ power 3) 1))
 
 (define (powers-telekinesis caster ktarg power)
 	(handle-mech-at ktarg caster))
+	
+(define (powers-timestop caster dir power)
+	(kern-add-time-stop (kern-dice-roll
+		(mkdice 3 (floor (+ (/ power 3) 1))))))
 	
 ; a few things needed here:
 ;	check for visibility before messages

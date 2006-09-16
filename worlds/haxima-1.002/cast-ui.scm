@@ -441,3 +441,49 @@
 		(powes-clone-range (occ-ability-blackmagic caster))
 		(occ-ability-blackmagic caster)))
 
+;; ----------------------------------------------------------------------------
+;; Eighth Circle
+;; ----------------------------------------------------------------------------
+
+(define (in-flam-hur caster)
+ 	(cast-ui-ranged-loc-nolos powers-cone-poison
+		caster 
+		(+ 2 (powers-cone-basic-range (occ-ability-blackmagic caster)))
+		(occ-ability-blackmagic caster)))
+
+(define (in-vas-grav-corp  caster)
+ 	(cast-ui-ranged-loc-nolos powers-cone-poison
+		caster 
+		(powers-cone-basic-range (occ-ability-blackmagic caster))
+		(occ-ability-blackmagic caster)))
+
+(define (an-tym  caster)
+	(powers-timestop caster caster (occ-ability-whitemagic caster))
+	result-ok)
+
+(define (kal-xen-corp caster)
+	(powers-summon-undead caster caster (occ-ability-blackmagic caster))
+	result-ok)
+
+(define (xen-corp  caster)
+	(let ((range (+ 1 (floor (/ (occ-ability-blackmagic caster) 3)))))
+	(user-cast-ranged-targeted-spell caster range cast-kill-proc)))
+
+(define (in-mani-corp  caster)
+	(cast-ui-basic-member-spell powers-resurrect
+		caster (occ-ability-whitemagic caster)))
+
+(define (vas-rel-por  caster)
+	(let* ((loc (kern-obj-get-location caster))
+			(range (if 
+				(kern-place-is-wilderness? (loc-place loc))
+				1
+				2)))
+		(cast-ui-ranged-loc powers-gate-travel
+			caster 
+			4
+			(occ-ability-whitemagic caster))))
+	
+(define (kal-xen-nox caster)
+	(powers-summon-slime caster caster (occ-ability-whitemagic caster))
+	result-ok)

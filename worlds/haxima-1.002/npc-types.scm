@@ -670,6 +670,7 @@
 (define demon (mk-npct2 "demon" sp_demon nil s_demon basic-traps demon-equip demon-effects 'demon-ai faction-monster nil 'drop-generic demon-loot))
 (define ghast (mk-npct2 "ghast" sp_ghast nil s_ghost nil nil undead-effects 'std-ai faction-monster nil 'drop-generic ghast-loot))
 (define snake (mk-npct "snake" sp_snake nil s_snake nil nil nil 'std-ai faction-monster nil 'drop-generic animal-loot))
+(define insect (mk-npct "insect swarm" sp_insect nil s_insects nil nil nil 'std-ai faction-monster nil 'drop-generic animal-loot))
 (define dragon (mk-npct2 "dragon" sp_dragon nil s_dragon wizard-traps nil drag-effects 'dragon-ai faction-monster nil 'drop-generic dragon-loot))
 (define bomber (mk-npct2 "mad jester" sp_human oc_wrogue s_jester wrogue-traps bomber-equip nil 'std-ai faction-outlaw nil 'drop-generic bomber-loot))
 (define knight (mk-npct2 "knight" sp_human oc_warrior s_human_knight no-traps knight-equip nil 'guard-ai faction-trigrave 'knight-conv 'drop-generic knight-loot))

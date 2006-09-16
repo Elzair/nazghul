@@ -207,66 +207,6 @@
             result-no-effect))))
 	          
 
-;; ----------------------------------------------------------------------------
-;; Eighth Circle
-;; ----------------------------------------------------------------------------
-
-(define (in-flam-hur caster)
- 	(cast-ui-ranged-loc-nolos powers-cone-poison
-		caster 
-		(+ 2 (powers-cone-basic-range (occ-ability-blackmagic caster)))
-		(occ-ability-blackmagic caster)))
-
-(define (in-vas-grav-corp  caster)
- 	(cast-ui-ranged-loc-nolos powers-cone-poison
-		caster 
-		(powers-cone-basic-range (occ-ability-blackmagic caster))
-		(occ-ability-blackmagic caster)))
-
-(define (an-tym  caster)
-  (let ((spower (floor (+ (/ (occ-ability-whitemagic caster) 3) 1))))
-  (kern-add-time-stop (kern-dice-roll (mkdice 3 spower)))
-  result-ok
-  ))
-
-(define (kal-xen-corp caster)
-  (if (use-ability summon-skeleton caster)
-      result-ok
-      result-no-effect))
-
-(define (xen-corp  caster)
-	(let ((range (+ 1 (floor (/ (occ-ability-blackmagic caster) 3)))))
-	(user-cast-ranged-targeted-spell caster range cast-kill-proc)))
-
-(define (in-mani-corp  caster)
-  (let ((target (kern-ui-select-party-member)))
-    (if (null? target) nil
-        (begin
-          (resurrect target)
-          (apply-sleep target)
-          #t))))
-
-(define (vas-rel-por  caster)
-  (println "vas-rel-por")
-  (define (rmgate kobj)
-    (moongate-close gate)
-    (kern-obj-remove gate))
-  (let ((loc (kern-ui-target (kern-obj-get-location caster) 1)))
-    (println " loc=" loc)
-    (if (null? loc) 
-        result-no-target
-        (let ((gate (summon-moongate 'ord)))
-          (println " gate=" gate)
-          (kern-obj-put-at gate loc)
-          (moongate-open gate)
-          result-ok
-          ))))
-
-(define (kal-xen-nox caster)
-  (if (use-ability summon-slimes caster)
-      result-ok
-      result-no-effect))
-
 ;;----------------------------------------------------------------------------
 ;; Spell accessors
 ;;----------------------------------------------------------------------------
