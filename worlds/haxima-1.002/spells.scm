@@ -205,97 +205,23 @@
         (if (spell ktarg)
             result-ok
             result-no-effect))))
-		
-
-;; ----------------------------------------------------------------------------
-;; Seventh Circle
-;; ----------------------------------------------------------------------------
-
-(define (in-nox-hur  caster)
-  (define (poison-all kobj)
-    (if (is-being? kobj)
-        (apply-poison kobj)))
-  (cone-simple caster 10
-	(mk-basic-cone-proc poison-all F_poison (* (occ-ability-blackmagic caster) 5))))
-
-(define (in-zu-hur  caster)
-  (define (sleep-all kobj)
-    (if (and (is-being? kobj)
-			(contest-of-skill
-				(+ (occ-ability-blackmagic caster) 6)
-				(occ-ability-magicdef kobj)))
-			(apply-sleep kobj)))
-  (cone-simple caster 10
-	(mk-basic-cone-proc sleep-all F_sleep (* (occ-ability-blackmagic caster) 5))))
-
-(define (in-quas-corp  caster)
-  (define (repel kchar)
-    (kern-log-msg (kern-obj-get-name kchar) " flees in terror!")
-    (kern-char-set-fleeing kchar #t)
-    )
-  (define (try-repel kchar)
-    (let ((roll (kern-dice-roll "1d20")))
-      (println "roll=" roll)
-      (if (> roll 6)
-          (repel kchar)
-          )))
-  (let ((foes (all-hostiles caster)))
-    (cond ((null? foes) 
-           (kern-print "No hostiles here!\n")
-           result-no-target
-           )
-          (else
-           (map try-repel foes)
-           result-ok
-           ))))
-  
-
-(define (in-quas-wis  caster)
-  (kern-map-set-peering #t)
-  (kern-map-repaint)
-  (kern-print "Hit a key when done gazing...\n")
-  (ui-waitkey)
-  (kern-map-set-peering #f)
-  (kern-map-repaint)
-  result-ok)
-
-(define (sanct-lor  caster)
-  (define (hide target)
-	(begin
-		(kern-obj-add-effect target ef_invisibility nil)
-		result-ok))
-  (cast-bimodal caster hide))
-
-
-(define (in-quas-xen  caster)
-  (let ((target (ui-target (kern-obj-get-location caster) 1 obj-is-char?)))
-    (if (null? target) nil
-        (let* ((clone (kern-obj-clone target))
-               (loc (pick-loc (kern-obj-get-location target) clone)))
-          (kern-being-set-base-faction clone (kern-being-get-current-faction caster))
-          (kern-obj-put-at clone loc)
-          ))))
-          
+	          
 
 ;; ----------------------------------------------------------------------------
 ;; Eighth Circle
 ;; ----------------------------------------------------------------------------
 
-
-
 (define (in-flam-hur caster)
-  (define (flambe-all kobj)
-    (if (is-being? kobj)
-        (burn kobj)))
-  (cone-simple caster 10
-	(mk-basic-cone-proc flambe-all F_fire (* (occ-ability-blackmagic caster) 5))))
+ 	(cast-ui-ranged-loc-nolos powers-cone-poison
+		caster 
+		(+ 2 (powers-cone-basic-range (occ-ability-blackmagic caster)))
+		(occ-ability-blackmagic caster)))
 
 (define (in-vas-grav-corp  caster)
-  (define (energize-all kobj)
-    (if (is-being? kobj)
-        (apply-lightning kobj)))
-  (cone-simple caster 10
-	(mk-basic-cone-proc energize-all F_energy (* (occ-ability-blackmagic caster) 5))))
+ 	(cast-ui-ranged-loc-nolos powers-cone-poison
+		caster 
+		(powers-cone-basic-range (occ-ability-blackmagic caster))
+		(occ-ability-blackmagic caster)))
 
 (define (an-tym  caster)
   (let ((spower (floor (+ (/ (occ-ability-whitemagic caster) 3) 1))))

@@ -204,6 +204,13 @@
         (kern-obj-add-effect kobj ef_ensnare nil))))
 
 ;;----------------------------------------------------------------------------
+;; poison immunity
+(define (has-poison-immunity? kobj)
+  (let ((effects (kern-obj-get-effects kobj)))
+    (or (in-list? ef_poison_immunity effects)
+        (in-list? ef_temporary_poison_immunity effects))))
+
+;;----------------------------------------------------------------------------
 ;; fire immunity
 (define (has-fire-immunity? kobj)
   (let ((effects (kern-obj-get-effects kobj)))

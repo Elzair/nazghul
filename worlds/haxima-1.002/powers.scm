@@ -208,7 +208,7 @@
 	))
 
 (define (powers-charm-range power)
-	(+ 3 (/ (occ-ability-blackmagic caster) 3)))
+	(+ 3 (/ power 3)))
 	
 (define (powers-charm caster target power)
 	(if (contest-of-skill
@@ -218,7 +218,84 @@
 							ef_charm 
 							(charm-mk (kern-being-get-current-faction caster)))
 			))
+
+(define (powers-charm-range power)
+	(+ 1 (/ power 7)))
+
+;todo: nerf this! (does anything stop you cloning the final boss?)
+(define (powers-clone caster target power)
+	(let* ((clone (kern-obj-clone target))
+		(loc (pick-loc (kern-obj-get-location target) clone)))
+			(kern-being-set-base-faction clone (kern-being-get-current-faction caster))
+			(kern-obj-put-at clone loc)
+		))
 	
+(define (powers-cone-flamespray caster ktarg power)
+	(let ((damage (mkdice 2 (min (floor (+ 2 (/ power 2))) 10))))
+		(define (flambe-all kobj)
+			(if (and (is-being? kobj)
+					(not (has-fire-immunity? kobj)))
+				(kern-obj-inflict-damage kobj "burning" (kern-dice-roll damage) caster)
+				))
+		(cone-do-simple caster ktarg 3.3
+			(mk-basic-cone-proc flambe-all F_fire 0)
+			)))
+
+(define (powers-cone-basic-range power)
+	(+ 7 (/ power 3)))
+
+(define (powers-cone-energy caster ktarg power)
+	(let ((damage (mkdice (floor (/ power 2)) 3)))
+		(define (energize-all kobj)
+			(if (is-being? kobj)
+				(kern-obj-inflict-damage kobj "shocked" (kern-dice-roll damage) caster)
+				))
+		(cone-do-simple caster ktarg (powers-cone-basic-range power)
+			(mk-basic-cone-proc energize-all F_energy (* power 3))
+			)))
+
+(define (powers-cone-fire caster ktarg power)
+	(let ((damage (mkdice (floor (/ power 2)) 3)))
+		(define (burn-all kobj)
+			(if (is-being? kobj)
+				(begin
+					(if	(has-fire-immunity? kobj)
+						(kern-obj-inflict-damage kobj "burning" (kern-dice-roll damage) caster)
+						(kern-obj-inflict-damage kobj "burning" 0 caster)
+				))))
+		(cone-do-simple caster ktarg (+ 2 (powers-cone-basic-range power))
+			(mk-basic-cone-proc burn-all F_fire (* power 4))
+			)))
+
+(define (powers-cone-poison caster ktarg power)
+	(let ((damage (mkdice 1 (floor (/ power 4)))))
+		(define (poison-all kobj)
+			(if (is-being? kobj)
+				(begin
+					(apply-poison kobj)
+					(if	(is-poisoned? kobj)
+						(kern-obj-inflict-damage kobj "poison" (kern-dice-roll damage) caster)
+						(kern-obj-inflict-damage kobj "poison" 0 caster)
+				))))
+		(cone-do-simple caster ktarg (powers-cone-basic-range power)
+			(mk-basic-cone-proc poison-all F_poison (* power 2))
+			)))
+
+(define (powers-cone-sleep caster ktarg power)
+	(let ((damage (mkdice 1 (floor (/ power 4)))))
+		(define (sleep-all kobj)
+			(if (is-being? kobj)
+				(begin
+					(kern-obj-inflict-damage kobj "sleep" 0 caster)
+					(if (contest-of-skill
+							(+ power 8)
+							(occ-ability-magicdef kobj))
+						(apply-sleep kobj))
+				)))
+		(cone-do-simple caster ktarg (powers-cone-basic-range power)
+			(mk-basic-cone-proc sleep-all F_sleep (* power 3))
+			)))
+
 ;todo limit to some range?
 (define (powers-confuse caster unused power)
 	(define (confuse kchar)
@@ -261,19 +338,21 @@
 				"!")
 			(kern-obj-remove-trap ktarg))
 	))
-	
-(define (powers-flamespray caster ktarg power)
-	(let ((damage (mkdice 2 (min (floor (+ 2 (/ power 2))) 10))))
-		(println damage)
-		(define (flambe-all kobj)
-			(if (and (is-being? kobj)
-					(not (has-fire-immunity? kobj)))
-				(kern-obj-inflict-damage kobj "burning" (kern-dice-roll damage) caster)
-				))
-		(cone-do-simple caster ktarg 3.3
-			(mk-basic-cone-proc flambe-all F_fire 0)
-			)))
-			
+				
+;todo limit range?
+;check critter is viewable before message?
+(define (powers-fear caster unused power)			
+	(define (repel kchar)
+		(kern-log-msg (kern-obj-get-name kchar) " flees in terror!")
+		(kern-char-set-fleeing kchar #t)
+		)
+	(define (try-repel kchar)
+		(if (contest-of-skill
+				(+ power 8)
+				(occ-ability-magicdef kobj))
+			(repel kchar)))
+	(map try-repel (all-hostiles caster)))
+				
 ;todo
 ; duration should be somewhat random, and vary with caster strength
 ; fields would be a lot more useful if a wall was created instead of one square
@@ -405,6 +484,11 @@
 	(kern-obj-heal ktarg 
 		(+ 2 (kern-dice-roll "1d10")
 			(kern-dice-roll (mkdice 2 power)))))
+	
+;todo vary duration with power
+(define (powers-invisibility kchar ktarg power)
+	(kern-obj-add-effect ktarg ef_invisibility nil))
+
 	
 (define (powers-light caster ktarg power)
 	(let ((lightadd 
@@ -606,6 +690,14 @@
 (define (powers-unlock-magic caster ktarg power)
 	((kobj-ifc target) 'magic-unlock ktarg caster))
 	
+(define (powers-view caster ktarg power)
+	(kern-map-set-peering #t)
+	(kern-map-repaint)
+	(kern-print "Hit a key when done gazing...\n")
+	(ui-waitkey)
+	(kern-map-set-peering #f)
+	(kern-map-repaint))
+
 (define (powers-wind-change caster dir power)
 	(kern-set-wind dir (kern-dice-roll (mkdice (* 2 power) 6))))
 	

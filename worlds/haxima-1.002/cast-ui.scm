@@ -265,11 +265,11 @@
 (define (in-nox-por  caster)
  	(cast-ui-basic-ranged-spell powers-poison
 		caster 
-		(powers-poison-range occ-ability-blackmagic caster)
+		(powers-poison-range (occ-ability-blackmagic caster))
 		(occ-ability-blackmagic caster)))
   
 (define (bet-flam-hur caster)
- 	(cast-ui-ranged-loc-nolos powers-flamespray
+ 	(cast-ui-ranged-loc-nolos powers-cone-flamespray
 		caster 
 		4
 		(occ-ability-blackmagic caster)))
@@ -406,4 +406,38 @@
 	(cast-ui-ranged-loc powers-blink-party caster
 		(powers-blink-party-range (occ-ability-whitemagic caster))
 		(occ-ability-whitemagic caster)))
+
+;; ----------------------------------------------------------------------------
+;; Seventh Circle
+;; ----------------------------------------------------------------------------
+
+(define (in-nox-hur  caster)
+ 	(cast-ui-ranged-loc-nolos powers-cone-poison
+		caster 
+		(powers-cone-basic-range (occ-ability-blackmagic caster))
+		(occ-ability-blackmagic caster)))
+
+(define (in-zu-hur  caster)
+ 	(cast-ui-ranged-loc-nolos powers-cone-sleep
+		caster 
+		(powers-cone-basic-range (occ-ability-blackmagic caster))
+		(occ-ability-blackmagic caster)))
+
+(define (in-quas-corp  caster)
+	(powers-confuse caster caster (occ-ability-blackmagic caster))
+	result-ok)
+
+(define (in-quas-wis  caster)
+	(powers-view caster caster (occ-ability-whitemagic caster))
+	result-ok)
+
+(define (sanct-lor  caster)
+	(cast-ui-basic-member-spell powers-invisibility
+			caster (occ-ability-whitemagic caster)))
+
+(define (in-quas-xen  caster)
+	(cast-ui-basic-ranged-spell powers-clone
+		caster 
+		(powes-clone-range (occ-ability-blackmagic caster))
+		(occ-ability-blackmagic caster)))
 
