@@ -1419,12 +1419,25 @@
   (kern-map-repaint))
 
 ;;-----------------------------------------------------------------------------
-;; mk-composite-sprite -- make a new sprite which is the composite of the
-;; others in the list. The new sprite will be "anonymous" (no tag).
-(define (mk-composite-sprite sprites)
+;; re-mk-composite-sprite -- combine all the sprites into one layered sprite,
+;; cloning ALL BUT the first sprite. Useful for re-decorating base sprites that
+;; have already been cloned.
+(define (re-mk-composite-sprite sprites)
   (foldr (lambda (s1 s2) (kern-sprite-append-decoration s1 s2))
-         (kern-sprite-clone (car sprites) nil)
+         (car sprites)
          (cdr sprites)))
+
+;;-----------------------------------------------------------------------------
+;; mk-composite-sprite -- combine all the sprites into one composite sprite,
+;; cloning all the sprites in the list.
+(define (mk-composite-sprite sprites)
+  (re-mk-composite-sprite (cons (kern-sprite-clone (car sprites)
+                                                   nil)
+                                (cdr sprites))))
+
+;   (foldr (lambda (s1 s2) (kern-sprite-append-decoration s1 s2))
+;          (kern-sprite-clone (car sprites) nil)
+;          (cdr sprites)))
 
 (define (kchar-in-vehicle? kchar)
   (let ((kparty (kern-char-get-party kchar)))
