@@ -59,7 +59,6 @@ extern void sprite_del(struct sprite *sprite);
 extern char *sprite_get_tag(struct sprite *sprite);
 extern int sprite_is_faded(struct sprite *sprite);
 extern int sprite_can_face(struct sprite *sprite, int facing);
-extern void sprite_tint(struct sprite *sprite, Uint32 tint);
 
 /* sprite_save - save to file for reload. */
 extern void sprite_save(struct sprite *sprite, struct save *save);

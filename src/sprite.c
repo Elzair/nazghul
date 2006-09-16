@@ -50,11 +50,9 @@ struct sprite {
         int facings;            /* bitmap of supported facing sequences    */
         int sequence;           /* current animation sequence              */
         struct sprite *decor;   /* decoration sprites                      */
-        Uint32 tint;            /* optional color tint                     */
         int w_pix, h_pix;       /* frame dimensions (in pixels)            */
         int faded  : 1;	        /* render sprite sem-transparent           */
         int wave   : 1;         /* vertical roll                           */
-        int tinted : 1;         /* apply tint color                        */
 };
 
 struct {
@@ -218,58 +216,6 @@ static void sprite_paint_normal(struct sprite *sprite, int frame, int x, int y)
                 screenBlit(sprite->rsurf->surf, &sprite->frames[frame], &dest);
         }
 
-}
-
-static void sprite_tint_image(SDL_Surface *source, SDL_Rect *from, 
-                              SDL_Surface *dest, SDL_Rect *to, Uint32 tint)
-{
-	int dx, dy, di, sx, sy, si, spitch, dpitch;
-	Uint32 *dpix, *spix;
-        Uint8 tint_red, tint_grn, tint_blu;
-        Uint8 pix_red, pix_grn, pix_blu, pix_alpha;
-
-        /* Isolate the color components of the tint (this assumes the tint has
-         * the same pixel format as the source...) */
-        tint_red = (tint & source->format->Rmask) >> source->format->Rshift;
-        tint_grn = (tint & source->format->Gmask) >> source->format->Gshift;
-        tint_blu = (tint & source->format->Bmask) >> source->format->Bshift;
-
-	dpix = (Uint32 *) dest->pixels;
-	spix = (Uint32 *) source->pixels;
-
-	dpitch = dest->pitch / dest->format->BytesPerPixel;
-	spitch = source->pitch / source->format->BytesPerPixel;
-
-	for (dy = 0; dy < from->h; dy++) {
-		sy = dy;
-		for (dx = 0; dx < from->w; dx++) {
-			sx = dx;
-			di = (dy * dpitch + dx);
-			si = (sy + from->y) * spitch + (sx + from->x);
-
-                        /* Isolate the color components of the pixel. */
-                        pix_red = ((spix[si] & source->format->Rmask) 
-                                   >> source->format->Rshift);
-                        pix_grn = ((spix[si] & source->format->Gmask) 
-                                   >> source->format->Gshift);
-                        pix_blu = ((spix[si] & source->format->Bmask) 
-                                   >> source->format->Bshift);
-                        pix_alpha = ((spix[si] & source->format->Amask) 
-                                     >> source->format->Ashift);
-
-                        /* Average the tint and pixel colors. */
-                        pix_red = (pix_red + tint_red) / 2;
-                        pix_grn = (pix_grn + tint_grn) / 2;
-                        pix_blu = (pix_blu + tint_blu) / 2;
-
-                        /* Recombine them, along with the original alpha
-                         * component, into the destination pixel. */
-                        dpix[di] = (pix_red << dest->format->Rshift
-                                    | pix_grn << dest->format->Gshift
-                                    | pix_blu << dest->format->Bshift
-                                    | pix_alpha << dest->format->Ashift);
-                }
-        }
 }
 
 static struct sprite * sprite_new_internal(int frames, int facings)
@@ -522,53 +468,6 @@ int sprite_is_faded(struct sprite *sprite)
 int sprite_can_face(struct sprite *sprite, int facing)
 {
         return (sprite->facings & (1 << facing));
-}
-
-void sprite_tint(struct sprite *sprite, Uint32 tint)
-{
-        SDL_Surface *dest = 0;
-        SDL_Surface *source = sprite->rsurf->surf;
-        SDL_Rect to;
-        int i;
-
-        /* Create a new surface so that the original (which may be shared with
-         * other sprites) is not tinted. */
-	dest = SDL_CreateRGBSurface(source->flags,
-                                    sprite->w_pix * sprite->n_total_frames,
-                                    sprite->h_pix,
-                                    source->format->BitsPerPixel,
-                                    source->format->Rmask,
-                                    source->format->Gmask,
-                                    source->format->Bmask,
-                                    source->format->Amask);
-        if (!dest) {
-		perror_sdl("SDL_CreateRGBSurface");
-		return;
-        }
-
-        /* Make a tinted copy of the surface. */
-        to.x = 0;
-        to.y = 0;
-        to.w = sprite->w_pix;
-        to.h = sprite->h_pix;
-        for (i = 0; i < sprite->n_total_frames; i++) {
-                to.x = i * sprite->w_pix;
-
-                /* Tint the frame image. */
-                sprite_tint_image(sprite->rsurf->surf, &sprite->frames[i],
-                                  dest, &to, tint);
-
-                /* Fixup the frames as we go. */
-                sprite->frames[i] = to;
-        }
-
-        /* Stash the surface in a new refcounted surf wrapper. */
-        sprite->rsurf = sprite_rsurf_new(dest);
-        sprite->rsurf->custom = 1;
-
-        /* Set the tint info. */
-        sprite->tint = tint;
-        sprite->tinted = 1;
 }
 
 /* sprite_save - save to file for reload. */

@@ -7619,20 +7619,6 @@ KERN_API_CALL(kern_sprite_append_decoration)
         return scm_mk_ptr(sc, orig);
 }
 
-KERN_API_CALL(kern_sprite_tint)
-{
-        struct sprite *sprite;
-        Uint32 tint;
-
-        if (unpack(sc, &args, "pd", &sprite, &tint)) {
-                load_err("kern-sprite-tint: bad args");
-                return sc->NIL;
-        }
-
-        sprite_tint(sprite, tint);
-        return scm_mk_ptr(sc, sprite);
-}
-
 KERN_API_CALL(kern_sprite_apply_matrix)
 {
         struct sprite *sprite;
@@ -7642,7 +7628,7 @@ KERN_API_CALL(kern_sprite_apply_matrix)
 
         /* unpack the sprite */
         if (unpack(sc, &args, "p", &sprite)) {
-                load_err("kern-sprite-tint: bad args");
+                load_err("kern-sprite-apply-matrix: bad args");
                 return sc->NIL;
         }
 
@@ -8124,7 +8110,6 @@ scheme *kern_init(void)
         /* kern-sprite api */
         API_DECL(sc, "kern-sprite-clone", kern_sprite_clone);
         API_DECL(sc, "kern-sprite-append-decoration", kern_sprite_append_decoration);
-        API_DECL(sc, "kern-sprite-tint", kern_sprite_tint);
         API_DECL(sc, "kern-sprite-apply-matrix", kern_sprite_apply_matrix);
 
 
