@@ -23,6 +23,7 @@
 (kern-mk-sprite 's_mirror_fg             ss_tools 1 16 #f 0)
 (kern-mk-sprite 's_mirror_bg_flagstones   ss_tools 1 17 #f 0)
 (kern-mk-sprite 's_mirror_bg   ss_tools 1 18 #f 0)
+(kern-mk-sprite 's_bookshelf   ss_tools 1 23 #f 0)
 
 
 
@@ -287,4 +288,27 @@
 		(bind kmirror background-tag)
 		(kern-obj-set-sprite kmirror (mk-composite-sprite (list s_mirror_bg (eval background-tag) s_mirror_fg)))
 		kmirror))
+
+;;---------------------------------------------------------
+;; bookshelf
+
+(define shelf-ifc
+  (ifc '()
+		(method 'step
+			(lambda (kobj kuser)
+				))
+		(method 'init
+            (lambda (kobj)
+				(kern-obj-set-pclass kobj pclass-wall)
+            ))
+       ))
+
+(mk-obj-type 't_shelf "set of shelves"
+	s_bookshelf
+	layer-mechanism shelf-ifc)
+
+(define (mk-shelf)
+	(let ((kshelf (kern-mk-obj t_shelf 1)))
+		(bind kshelf nil)
+		kshelf))
 
