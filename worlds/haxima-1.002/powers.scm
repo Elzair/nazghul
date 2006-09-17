@@ -514,11 +514,11 @@
 		(light-apply-new ktarg (+ 400 (* 5 power)))))
 		  
 (define (powers-lock caster ktarg power)
-	((kobj-ifc target) 'lock ktarg caster)
+	((kobj-ifc ktarg) 'lock ktarg caster)
 	)
 
 (define (powers-lock-magic caster ktarg power)
-	((kobj-ifc target) 'magic-lock ktarg caster)
+	((kobj-ifc ktarg) 'magic-lock ktarg caster)
 	)
 	
 (define (powers-locate caster ktarg power)
@@ -759,10 +759,10 @@
 	))
 
 (define (powers-unlock caster ktarg power)
-	((kobj-ifc target) 'unlock ktarg caster))
+	((kobj-ifc ktarg) 'unlock ktarg caster))
 
 (define (powers-unlock-magic caster ktarg power)
-	((kobj-ifc target) 'magic-unlock ktarg caster))
+	((kobj-ifc ktarg) 'magic-unlock ktarg caster))
 	
 (define (powers-view caster ktarg power)
 	(kern-map-set-peering #t)
