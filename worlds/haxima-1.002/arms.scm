@@ -112,6 +112,7 @@
 (kern-mk-sprite 's_poison_bolt ss_arms 1 16 #f 170)
 (kern-mk-sprite 's_acid_bolt   ss_arms 1 20 #f 170)
 (kern-mk-sprite 's_squat_bubbly_green_potion ss_arms 1 30 #f 170)
+(kern-mk-sprite 's_thrownweb		   ss_arms 1 31 #f 0)
 
 ;; ----------------------------------------------------------------------------
 ;; mk-missile-ifc -- automate missile ifc creation. 'pred?' takes an object as
@@ -171,6 +172,7 @@
    (list 't_stunball     "stunball"    s_projectile   stunball-ifc)
    (list 't_slimeglob    "slime glob"  s_acid_bolt    nil)
    (list 't_mfireball    "fireball"    s_fireball     temp-ifc)
+   (list 't_mweb	     "web"         s_thrownweb          temp-ifc)
    ))
 
 ;; If we don't create these missile types now, we won't be able to refer to

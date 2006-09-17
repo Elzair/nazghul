@@ -772,6 +772,41 @@
 	(kern-map-set-peering #f)
 	(kern-map-repaint))
 
+(define (powers-web-range power)
+	(+ 3 (/ power 3)))
+	
+;note defense is dodge, not magicdef
+(define (powers-web caster target power)
+	(define (do-web-effect kplace x y)
+		(let* ((loc (mk-loc kplace x y))
+				(targchar (get-being-at loc)))
+			(if (not (null? targchar))
+				(begin
+					(if (contest-of-skill
+							power
+							(occ-ability-dexdefend targchar))
+						(ensnare targchar))
+					(kern-obj-inflict-damage targchar "webbed" 0 caster)))
+			(if (and (< (kern-dice-roll "1d20") power)
+					(terrain-ok-for-field? loc))
+				(kern-obj-put-at (kern-mk-obj web-type 1) loc))
+		))
+	(let ((targchar (get-being-at target)))	
+		(if (null? targchar)
+			(kern-log-msg (kern-obj-get-name caster)
+							" hurls a web")
+			(kern-log-msg (kern-obj-get-name caster)
+							" hurls a web at "
+						(kern-obj-get-name targchar)))
+		(temp-ifc-set 
+			(lambda (kmissile kplace x y)
+				(do-web-effect kplace x y)
+			))
+		(kern-fire-missile t_mweb
+                     (kern-obj-get-location caster)
+                     target)
+	))
+
 (define (powers-wind-change caster dir power)
 	(kern-set-wind dir (kern-dice-roll (mkdice (* 2 power) 6))))
 	

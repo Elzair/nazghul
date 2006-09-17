@@ -224,6 +224,11 @@
 				(kern-obj-is-visible? kobj)))
 	))
 	
+(define (ylem-an-exe  caster)
+	(cast-ui-ranged-loc powers-web caster
+		(powers-web-range (occ-ability-blackmagic caster))
+		(occ-ability-blackmagic caster)))
+	
 ;;----------------------------------------------------------------------------
 ;; Second Circle
 ;;----------------------------------------------------------------------------

@@ -239,6 +239,7 @@
       (list 'mani        "Mani spell"        mani        "M"   1 context-any  (list ginseng spider_silk))
       (list 'wis_sanct   "Wis Sanct spell"   wis-sanct   "WS"  1 context-town (list sulphorous_ash))
       (list 'an_sanct_ylem "An Sanct Ylem spell" an-sanct-ylem "ASY" 1 context-town (list blood_moss))
+      (list 'ylem_an_exe    "Ylem An Exe spell"    ylem-an-exe    "YAE"  1 context-town (list spider_silk black_pearl))
 
       ;; Second Circle
       (list 'sanct_nox   "Sanct Nox spell"   sanct-nox   "SN"  2 context-any  (list nightshade garlic))
