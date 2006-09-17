@@ -95,3 +95,28 @@
    "to tell the tale. Not even a ghost."
    "--S")))
 
+;;----------------------------------------------------------------------------
+;; Spell books
+(mk-reusable-item 
+ 't_ylem_an_exe_book "spell book" s_manual 1
+ (lambda (kletter kuser)
+   (kern-ui-page-text
+   "Web Spell- Ylem An Exe"
+   ""
+   "A useful spell for beginning spellcasters, "
+   "web allows a distant opponent to be "
+   "entangled and made helpless for a short "
+   "period of time."
+   ""
+   "If used correctly, it can also block an "
+   "area with webs temporarily, although this is "
+   "hard for novices to achieve."
+   ""
+   "The spell requires spider silk, of course, "
+   "and also black perl, to project the web at "
+   "the desired target."
+   ""
+   "With the appropriate mixture, entone "
+   "Ylem An Exe (Matter to Negate Freedom) and "
+   "hurl the net of web at your foe."
+   )))

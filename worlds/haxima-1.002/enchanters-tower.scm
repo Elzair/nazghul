@@ -135,6 +135,10 @@
   (put (mk-door) 17  9)
   (put (mk-door) 17 12)
   (put (mk-clock) 7 12)
+  
+  (put (mk-shelf) 8 10)
+  (put (mk-shelf) 18 11)
+  (put (mk-hidden t_ylem_an_exe_book 1) 18 11)
   )
 
  nil ; hooks
