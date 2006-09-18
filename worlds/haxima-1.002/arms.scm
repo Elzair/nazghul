@@ -172,7 +172,8 @@
    (list 't_stunball     "stunball"    s_projectile   stunball-ifc)
    (list 't_slimeglob    "slime glob"  s_acid_bolt    nil)
    (list 't_mfireball    "fireball"    s_fireball     temp-ifc)
-   (list 't_mweb	     "web"         s_thrownweb          temp-ifc)
+   (list 't_mweb	     "web"         s_thrownweb    temp-ifc)
+   (list 't_mpoison_bolt "poison bolt" s_poison_bolt  temp-ifc)
    ))
 
 ;; If we don't create these missile types now, we won't be able to refer to

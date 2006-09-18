@@ -239,7 +239,7 @@
       (list 'mani        "Mani spell"        mani        "M"   1 context-any  (list ginseng spider_silk))
       (list 'wis_sanct   "Wis Sanct spell"   wis-sanct   "WS"  1 context-town (list sulphorous_ash))
       (list 'an_sanct_ylem "An Sanct Ylem spell" an-sanct-ylem "ASY" 1 context-town (list blood_moss))
-      (list 'ylem_an_exe    "Ylem An Exe spell"    ylem-an-exe    "YAE"  1 context-town (list spider_silk black_pearl))
+      (list 'ylem_an_ex    "Ylem An Ex spell"    ylem-an-ex    "YAE"  1 context-town (list spider_silk black_pearl))
 
       ;; Second Circle
       (list 'sanct_nox   "Sanct Nox spell"   sanct-nox   "SN"  2 context-any  (list nightshade garlic))
@@ -282,7 +282,7 @@
       ;; Sixth Circle
       (list 'in_an           "In An spell"           in-an           "IA"   6 context-any  (list garlic mandrake sulphorous_ash))
       (list 'wis_an_ylem     "Wis An Ylem spell"     wis-an-ylem     "WAY"  6 context-any  (list mandrake sulphorous_ash))
-      (list 'an_xen_exe      "An Xen Exe spell"      an-xen-exe      "AXE"  6 context-town (list black_pearl nightshade spider_silk))
+      (list 'an_xen_ex      "An Xen Ex spell"      an-xen-ex      "AXE"  6 context-town (list black_pearl nightshade spider_silk))
       (list 'in_vas_por_ylem "In Vas Por Ylem spell" in-vas-por-ylem "IVPY" 6 context-town (list mandrake blood_moss sulphorous_ash))
       (list 'quas_an_wis     "Quas An Wis spell"     quas-an-wis     "QAW"  6 context-town (list mandrake nightshade))
       (list 'vas_uus_ylem    "Vas Uus Ylem spell"    vas-uus-ylem    "VUY"  6 context-wilderness (list mandrake black_pearl spider_silk))

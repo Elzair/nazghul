@@ -178,7 +178,7 @@
 	(let ((target (kern-ui-target (kern-obj-get-location caster) range)))
 		(cond ((null? target) result-no-target)
 			((not (terrain-ok-for-field? target)) result-no-effect)
-			((kern-in-los? (kern-obj-get-location caster) loc)
+			((kern-in-los? (kern-obj-get-location caster) target)
 				(effect caster target power)
 				result-ok)
 			(else 
@@ -234,7 +234,7 @@
 				(kern-obj-is-visible? kobj)))
 	))
 	
-(define (ylem-an-exe  caster)
+(define (ylem-an-ex  caster)
 	(cast-ui-ranged-loc powers-web caster
 		(powers-web-range (occ-ability-blackmagic caster))
 		(occ-ability-blackmagic caster)))
@@ -253,7 +253,7 @@
 		(mk-ifc-query 'lock)))
 		
 (define (sanct-nox  caster)
-	(cast-ui-basic-member-spell powers-poison-resist
+	(cast-ui-basic-member-spell powers-protect-vs-poison
 		caster (occ-ability-whitemagic caster)))
 
 (define (an-xen-corp caster)
@@ -342,7 +342,7 @@
 		result-ok)
 
 (define (wis-quas  caster)
-	(powers-reveal (occ-ability-blackmagic caster))
+	(powers-reveal caster caster (occ-ability-blackmagic caster))
 	result-ok)
 
 ;; bet-por -- single character blink
@@ -390,15 +390,17 @@
 
 (define (in-rel-por caster)
 	(cast-ui-ranged-any powers-telekinesis
-		caster 1 (occ-ability-whitemagic caster)
+		caster
+		(powers-telekinesis-range (occ-ability-whitemagic caster))
+		(occ-ability-whitemagic caster)
 		kern-obj-is-mech?))
 
 (define (wis-an-ylem caster) 
 	(powers-xray caster caster (occ-ability-whitemagic caster))
 	result-ok)
 
-(define (an-xen-exe  caster)
-	(cast-ui-basic-ranged-spell powerscharm
+(define (an-xen-ex  caster)
+	(cast-ui-basic-ranged-spell powers-charm
 		caster 
 		(powers-charm-range (occ-ability-blackmagic caster))
 		(occ-ability-blackmagic caster)))
@@ -439,7 +441,7 @@
 		(occ-ability-blackmagic caster)))
 
 (define (in-quas-corp  caster)
-	(powers-confuse caster caster (occ-ability-blackmagic caster))
+	(powers-fear caster caster (occ-ability-blackmagic caster))
 	result-ok)
 
 (define (in-quas-wis  caster)
@@ -453,7 +455,7 @@
 (define (in-quas-xen  caster)
 	(cast-ui-basic-ranged-spell powers-clone
 		caster 
-		(powes-clone-range (occ-ability-blackmagic caster))
+		(powers-clone-range (occ-ability-blackmagic caster))
 		(occ-ability-blackmagic caster)))
 
 ;; ----------------------------------------------------------------------------
@@ -461,13 +463,13 @@
 ;; ----------------------------------------------------------------------------
 
 (define (in-flam-hur caster)
- 	(cast-ui-ranged-loc-nolos powers-cone-poison
+ 	(cast-ui-ranged-loc-nolos powers-cone-fire
 		caster 
 		(+ 2 (powers-cone-basic-range (occ-ability-blackmagic caster)))
 		(occ-ability-blackmagic caster)))
 
 (define (in-vas-grav-corp  caster)
- 	(cast-ui-ranged-loc-nolos powers-cone-poison
+ 	(cast-ui-ranged-loc-nolos powers-cone-energy
 		caster 
 		(powers-cone-basic-range (occ-ability-blackmagic caster))
 		(occ-ability-blackmagic caster)))
@@ -489,6 +491,9 @@
 		caster (occ-ability-whitemagic caster)))
 
 (define (vas-rel-por  caster)
+	)
+
+(define (vas-rel-por-not-working  caster)
 	(let* ((loc (kern-obj-get-location caster))
 			(range (if 
 				(kern-place-is-wilderness? (loc-place loc))

@@ -210,6 +210,7 @@
 (define (powers-charm-range power)
 	(+ 3 (/ power 3)))
 	
+;failed charm pisses off target
 (define (powers-charm caster target power)
 	(if (contest-of-skill
 			(+ power 1)
@@ -217,12 +218,14 @@
 		(kern-obj-add-effect target 
 							ef_charm 
 							(charm-mk (kern-being-get-current-faction caster)))
-			))
+			)
+		(kern-harm-relations target caster))
 
-(define (powers-charm-range power)
+(define (powers-clone-range power)
 	(+ 1 (/ power 7)))
 
 ;todo: nerf this! (does anything stop you cloning the final boss?)
+;otoh that it creates a level 1 clone makes it practically useless anyway
 (define (powers-clone caster target power)
 	(let* ((clone (kern-obj-clone target))
 		(loc (pick-loc (kern-obj-get-location target) clone)))
@@ -261,7 +264,7 @@
 				(begin
 					(if	(has-fire-immunity? kobj)
 						(kern-obj-inflict-damage kobj "burning" (kern-dice-roll damage) caster)
-						(kern-obj-inflict-damage kobj "burning" 0 caster)
+						(kern-harm-relations kobj caster)
 				))))
 		(cone-do-simple caster ktarg (+ 2 (powers-cone-basic-range power))
 			(mk-basic-cone-proc burn-all F_fire (* power 4))
@@ -275,8 +278,11 @@
 					(apply-poison kobj)
 					(if	(is-poisoned? kobj)
 						(kern-obj-inflict-damage kobj "poison" (kern-dice-roll damage) caster)
-						(kern-obj-inflict-damage kobj "poison" 0 caster)
-				))))
+						(kern-harm-relations kobj caster))
+					(kern-harm-relations kobj caster)
+					(kern-harm-relations kobj caster)
+					(kern-harm-relations kobj caster)
+				)))
 		(cone-do-simple caster ktarg (powers-cone-basic-range power)
 			(mk-basic-cone-proc poison-all F_poison (* power 2))
 			)))
@@ -286,7 +292,7 @@
 		(define (sleep-all kobj)
 			(if (is-being? kobj)
 				(begin
-					(kern-obj-inflict-damage kobj "sleep" 0 caster)
+					(kern-harm-relations kobj caster)
 					(if (contest-of-skill
 							(+ power 8)
 							(occ-ability-magicdef kobj))
@@ -349,7 +355,7 @@
 	(define (try-repel kchar)
 		(if (contest-of-skill
 				(+ power 8)
-				(occ-ability-magicdef kobj))
+				(occ-ability-magicdef kchar))
 			(repel kchar)))
 	(map try-repel (all-hostiles caster)))
 				
@@ -465,7 +471,7 @@
 		(kern-obj-remove gate))
 	(let ((gate (summon-moongate 'ord)))
 		(println " gate=" gate)
-		(kern-obj-put-at gate loc)
+		(kern-obj-put-at gate ktarg)
 		(moongate-open gate)
 		))
 		  
@@ -501,6 +507,7 @@
 (define (powers-invisibility kchar ktarg power)
 	(kern-obj-add-effect ktarg ef_invisibility nil))
 
+;todo hack in something for xp & hostility
 (define (powers-kill kchar ktarg)
   (kern-log-msg (kern-obj-get-name kchar)
                 " casts kill at "
@@ -555,11 +562,29 @@
 	(+ 3 (/ power 3)))
 
 ;todo contest to resist? to-hit roll required? power based initial damage?
+;note instant hostility - you cant just cause someone to slowly die and say
+;sorry afterwards
 (define (powers-poison caster ktarg power)
-	  (kern-log-msg (kern-obj-get-name caster)
-					" hurls poison missile at "
-					(kern-obj-get-name ktarg))
-	  (cast-missile-proc caster ktarg t_poison_bolt)
+	(define (do-poison-effect kmissile kplace x y)
+		(let* ((loc (mk-loc kplace x y))
+				(targchar (get-being-at loc)))
+			(if (not (null? targchar))
+				(begin
+					(if (contest-of-skill
+							(+ power 10)
+							(occ-ability-dexdefend targchar))
+						(apply-poison targchar))
+					(kern-harm-relations targchar caster)
+					(kern-harm-relations targchar caster)
+					(kern-harm-relations targchar caster)
+					(kern-harm-relations targchar caster)
+					))
+		))
+	(temp-ifc-set do-poison-effect)
+	(kern-log-msg (kern-obj-get-name caster)
+				" hurls poison missile at "
+				(kern-obj-get-name ktarg))
+	(cast-missile-proc caster ktarg t_mpoison_bolt)
 	)
 
 ;todo duration based on power?
@@ -589,7 +614,7 @@
 					(kern-get-objects-at loc))))
 		(if (not (null? kobjs))
 			(let ((kgen (car kobjs)))                
-				(signal-kobj kgen 'raise kgen kcaster)
+				(signal-kobj kgen 'raise kgen caster)
 			))))
 
 ;resurrect should have side effects, diminishing with power
@@ -637,9 +662,9 @@
 	
 (define (powers-summon-simple-levelgen power)
 	(lambda ()
-		(+ (floor (+ (* power 0.2) 1)
+		(+ (floor (+ (* power 0.2) 1
 			(kern-dice-roll
-				(mkdice 3 (floor (+ (* power 0.2) 1)))
+				(mkdice 3 (floor (+ (* power 0.2) 1))))
 			)))))
 
 (define (powers-summon-single-type type)
@@ -687,12 +712,14 @@
 			(kern-being-get-base-faction caster))
 	))
 		 
-;todo damage/knock away critters?	
+	
 (define (powers-telekinesis-range power)
 	(+ (/ power 3) 1))
-
+	
+;todo damage/knock away critters?
+;should fail on no handler squares rather than aborting?
 (define (powers-telekinesis caster ktarg power)
-	(handle-mech-at ktarg caster))
+	((kobj-ifc ktarg) 'handle ktarg caster))
 	
 (define (powers-timestop caster dir power)
 	(kern-add-time-stop (kern-dice-roll
@@ -786,7 +813,7 @@
 							power
 							(occ-ability-dexdefend targchar))
 						(ensnare targchar))
-					(kern-obj-inflict-damage targchar "webbed" 0 caster)))
+						(kern-harm-relations kobj caster)))
 			(if (and (< (kern-dice-roll "1d20") power)
 					(terrain-ok-for-field? loc))
 				(kern-obj-put-at (kern-mk-obj web-type 1) loc))

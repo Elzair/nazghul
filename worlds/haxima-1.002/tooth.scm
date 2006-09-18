@@ -78,7 +78,7 @@
                          (list t_armor_plate_4     (* 4 660))
                          (list t_xen_corp_scroll   (* 7 base-scroll-cost))
                          (list t_sanct_lor_scroll  (* 7 base-scroll-cost))
-                         (list t_an_xen_exe_scroll (* 6 base-scroll-cost))
+                         (list t_an_xen_ex_scroll (* 6 base-scroll-cost))
                          (list t_in_ex_por_scroll  (* 4 base-scroll-cost))
                          (list t_wis_quas_scroll   (* 4 base-scroll-cost))
                          (list t_in_quas_xen_scroll (* 7 base-scroll-cost))

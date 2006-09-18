@@ -82,7 +82,7 @@
   (put (kern-mk-obj t_vas_rel_por_scroll 1) 10 8)
   (put (kern-mk-obj t_sanct_lor_scroll 1) 10 10)
   (put (kern-mk-obj t_in_quas_xen_scroll 1) 9 10)
-  (put (kern-mk-obj t_an_xen_exe_scroll 1) 8 9)
+  (put (kern-mk-obj t_an_xen_ex_scroll 1) 8 9)
   (put (kern-mk-obj t_in_an_scroll 1) 7 9)
   (put (kern-mk-obj t_in_ex_por_scroll 1) 6 9)
   (put (kern-mk-obj t_vas_mani_scroll 1) 6 8)

@@ -98,10 +98,10 @@
 ;;----------------------------------------------------------------------------
 ;; Spell books
 (mk-reusable-item 
- 't_ylem_an_exe_book "spell book" s_manual 1
+ 't_ylem_an_ex_book "spell book" s_manual 1
  (lambda (kletter kuser)
    (kern-ui-page-text
-   "Web Spell- Ylem An Exe"
+   "Web Spell- Ylem An Ex"
    ""
    "A useful spell for beginning spellcasters, "
    "web allows a distant opponent to be "
@@ -117,6 +117,6 @@
    "the desired target."
    ""
    "With the appropriate mixture, entone "
-   "Ylem An Exe (Matter to Negate Freedom) and "
+   "Ylem An Ex (Matter to Negate Freedom) and "
    "hurl the net of web at your foe."
    )))

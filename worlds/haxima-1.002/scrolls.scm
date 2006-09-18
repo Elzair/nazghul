@@ -12,7 +12,7 @@
 (kern-mk-sprite 's_sanct_lor_scroll       ss_scrolls 1 4 #f 0) ;; invisibility
 (kern-mk-sprite 's_in_quas_xen_scroll     ss_scrolls 1 5 #f 0) ;; clone
 (kern-mk-sprite 's_in_vas_por_ylem_scroll ss_scrolls 1 6 #f 0) ;; tremor
-(kern-mk-sprite 's_an_xen_exe_scroll      ss_scrolls 1 7 #f 0) ;; charm
+(kern-mk-sprite 's_an_xen_ex_scroll      ss_scrolls 1 7 #f 0) ;; charm
 
 (kern-mk-sprite 's_in_an_scroll           ss_scrolls 1 8 #f 0) ;; negate
 (kern-mk-sprite 's_in_ex_por_scroll       ss_scrolls 1 9 #f 0) ;; unlock magic
@@ -34,7 +34,7 @@
 (mk-scroll 't_sanct_lor_scroll "Sanct Lor scroll" s_sanct_lor_scroll sanct-lor)
 (mk-scroll 't_in_quas_xen_scroll "In Quas Xen scroll" s_in_quas_xen_scroll in-quas-xen)
 (mk-scroll 't_in_vas_por_ylem_scroll "In Vas Por Ylem scroll" s_in_vas_por_ylem_scroll in-vas-por-ylem)
-(mk-scroll 't_an_xen_exe_scroll "An Xen Exe scroll" s_an_xen_exe_scroll an-xen-exe)
+(mk-scroll 't_an_xen_ex_scroll "An Xen Ex scroll" s_an_xen_ex_scroll an-xen-ex)
 (mk-scroll 't_in_an_scroll "In An scroll" s_in_an_scroll in-an)
 (mk-scroll 't_in_ex_por_scroll "In Ex Por scroll" s_in_ex_por_scroll in-ex-por)
 (mk-scroll 't_vas_mani_scroll "Vas Mani scroll" s_vas_mani_scroll vas-mani)

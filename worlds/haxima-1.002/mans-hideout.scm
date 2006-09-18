@@ -126,7 +126,7 @@
          (add-content 10 t_an_tym_scroll)
          (add-content 10 t_sanct_lor_scroll)
          (add-content 10 t_in_quas_xen_scroll)
-         (add-content 10 t_an_xen_exe_scroll)
+         (add-content 10 t_an_xen_ex_scroll)
          )) 17 4)
 
   (put (mk-ladder-down 'p_forsaken_prison 2 16) 9 3)
