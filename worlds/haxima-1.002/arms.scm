@@ -36,7 +36,7 @@
 ;; turns it takes a human to cross normal terrain
 (define default-rap norm) 
 
-(kern-mk-sprite-set 'ss_arms 32 32 7 8 0 0 "arms.png")
+(kern-mk-sprite-set 'ss_arms 32 32 9 8 0 0 "arms.png")
 
 ;;-------------------------------------------------------------------------
 ;; Temp ifc for mutable attack types
@@ -248,6 +248,7 @@
    (list  't_thrown_boulder "loose boulder" s_thrown_boulder       "-2"     "3d4+1"  "-2"     slot-weapon   2      5     obj-ifc         	10		40			20		60		0.9	)
    ))
 
+;; Inventory sprites
 (kern-mk-sprite 's_axe            ss_arms 1 29 #f 0)
 (kern-mk-sprite 's_dagger         ss_arms 1 32 #f 0)
 (kern-mk-sprite 's_mace           ss_arms 1 33 #f 0)
@@ -260,6 +261,14 @@
 (kern-mk-sprite 's_eldritch_blade ss_arms 1 40 #f 0)
 (kern-mk-sprite 's_mystic_sword   ss_arms 1 42 #f 0)
 (kern-mk-sprite 's_flaming_sword  ss_arms 1 44 #f 0)
+
+;; Paper-doll sprites
+(kern-mk-sprite 's_hum_staff_gold     ss_arms 4 56 #f 0)
+(kern-mk-sprite 's_hum_staffglo_blue  ss_arms 4 60 #f 0)
+(kern-sprite-apply-matrix (kern-sprite-clone s_hum_staffglo_blue 
+                                             's_hum_staffglo_green) 
+                          mat_blue_to_green)
+(kern-mk-sprite 's_hum_halberd ss_arms 4 64 #f 0)
 
 (define melee-arms-types
   (list
@@ -413,3 +422,5 @@
 (kern-type-set-gob t_staff 
                    (kern-sprite-blit-over s_hum_staff_gold 
                                           s_hum_staffglo_blue))
+
+(kern-type-set-gob t_halberd s_hum_halberd)
