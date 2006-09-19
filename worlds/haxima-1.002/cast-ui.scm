@@ -491,9 +491,6 @@
 		caster (occ-ability-whitemagic caster)))
 
 (define (vas-rel-por  caster)
-	)
-
-(define (vas-rel-por-not-working  caster)
 	(let* ((loc (kern-obj-get-location caster))
 			(range (if 
 				(kern-place-is-wilderness? (loc-place loc))
@@ -501,7 +498,7 @@
 				2)))
 		(cast-ui-ranged-loc powers-gate-travel
 			caster 
-			4
+			range
 			(occ-ability-whitemagic caster))))
 	
 (define (kal-xen-nox caster)
