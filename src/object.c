@@ -363,6 +363,11 @@ void Object::relocate(struct place *newplace, int newx, int newy, bool noStep,
 			mech = place_get_object(getPlace(), x, y, mech_layer);
 		}
 
+		if (mech)
+		{
+			obj_inc_ref(mech);
+		}
+
         if (isOnMap()) {
 
                 assert(getPlace());
@@ -417,11 +422,15 @@ void Object::relocate(struct place *newplace, int newx, int newy, bool noStep,
                                                       place_switch_hook))
                                 return;
 
-						if (mech 
-							&& mech != this 
-							&& mech->getObjectType()->canSense())
+
+						if (mech)
+						{
+							if (mech != this 
+									&& mech->getObjectType()->canSense())
 								mech->getObjectType()->sense(mech, this);
-				
+							obj_dec_ref(mech);								
+						}
+
                         // ----------------------------------------------------
                         // This object may no longer be on a map as a result of
                         // the above call. If so then finish processing.
@@ -449,10 +458,13 @@ void Object::relocate(struct place *newplace, int newx, int newy, bool noStep,
 
         }
 
-		if (mech 
-			&& mech != this 
-			&& mech->getObjectType()->canSense())
+		if (mech)
+		{
+			if (mech != this 
+					&& mech->getObjectType()->canSense())
 				mech->getObjectType()->sense(mech, this);
+			obj_dec_ref(mech);								
+		}
 
         mapSetDirty();
 
