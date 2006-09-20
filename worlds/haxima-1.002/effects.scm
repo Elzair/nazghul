@@ -232,6 +232,21 @@
 ;; two-step process. The first step is an effect which runs on the special
 ;; ----------------------------------------------------------------------------
 
+(define temp-light-power (list 0))
+
+(define (temp-light-power-set power)
+	(set-car! temp-light-power power))
+
+(define (light-rm fgob kobj)
+  (kern-log-msg "Light spell wore off")
+  (kern-obj-dec-light kobj (caar fgob))
+  (temp-light-power-set (caar fgob)))
+
+(define (light-apply fgob kobj)
+	(kern-obj-inc-light kobj (caar fgob))
+	)
+
+;a function with a working power->time calculation would be nicer
 (define (light-effect-getdecr current)
 	(if (< current 300)
 		50
@@ -240,38 +255,36 @@
 			(floor (/ current 20))
 	)))
 
-(define (light-rm fgob kobj)
-  (kern-log-msg "Light spell wore off")
-  (set-car! (car fxgob) 0)
-  (kern-obj-dec-light kobj (car fgob)))
-
-(define (light-reset fgob kobj)
-	(kern-obj-inc-light kobj (car fgob))
-	)
+(define (light-dim power light-time current-time kobj)
+	(if (<= current-time light-time)
+		power
+		(let ((decrlight (light-effect-getdecr power)))
+			(if (> decrlight power)
+				0
+				(light-dim (- power decrlight) (+ light-time 1) current-time kobj)
+			))))
 
 (define (light-exec fgob kobj)
-	(if (> (kern-get-total-minutes) (cadar fgob))
-		(let ((decrlight (light-effect-getdecr (caar fgob))))
-			(set-cdr! (car fgob) (list (kern-get-total-minutes)))
-			(if (> decrlight (caar fgob))
-				(kern-obj-remove-effect kobj ef_light)	
-				(begin
-					(set-car! (car fgob) (- (caar fgob) decrlight))
-					(kern-obj-dec-light kobj decrlight)
-				)))))
-
-
-(define light-fxlist (list (list )))
+	(let* ((light-time (cadar fgob))
+		(current-time (kern-get-total-minutes))
+		(power (caar fgob))
+		(newpower (light-dim power light-time current-time kobj)))
+		(cond ((= newpower power) nil)
+			((<= newpower 0) (kern-obj-remove-effect kobj ef_light))
+			(else
+				(set-car! fgob (list newpower (kern-get-total-minutes)))
+				(kern-obj-dec-light kobj (- power newpower))
+				))))
 
 (define (light-apply-new target power)
-	(let ((fxgob (effect-list-lookup light-fxlist target)))
-		(if (equal? fxgob (list 0))
-			(set-car! fxgob (list 0 (kern-get-total-minutes))))
-		(set-car! (car fxgob) (+ (caar fxgob) power))
-		(kern-obj-inc-light target power)
+	(temp-light-power-set 0)
+	(kern-log-enable #f)
+	(kern-obj-remove-effect target ef_light)
+	(kern-log-enable #t)
+	(let ((fxgob (list (list (+ power (car temp-light-power)) (kern-get-total-minutes)))))
 		(kern-obj-add-effect target ef_light fxgob)
 	))
-
+	
 ;; ----------------------------------------------------------------------------
 ;; torchlight
 ;;
@@ -504,8 +517,8 @@
 (mk-effect 'ef_temporary_poison_immunity "Poison immunity" 			s_im_poison		'poison-immunity-exec nil                 nil              nil                 "add-hook-hook"      "I" 0   #f  60)
 (mk-effect 'ef_sleep                     "Sleep"					s_sleep			'sleep-exec           nil                 'sleep-rm        'sleep-reset        "start-of-turn-hook" "S" 0   #f  60)
 (mk-effect 'ef_torchlight                "Torchlight"				s_torchlight	nil                   'torchlight-apply   'torchlight-rm   'torchlight-apply   "start-of-turn-hook" "T" 0   #f  60)
-(mk-effect 'ef_weaklight                "Torchlight"				s_torchlight	nil                   'weaklight-apply   'weaklight-rm   'weaklight-apply   "start-of-turn-hook" "T" 0   #f  60)
-(mk-effect 'ef_light                     "Magical light"			s_light			'light-exec           nil                 'light-rm        'light-reset        "start-of-turn-hook" "L" 0   #f  -1)
+(mk-effect 'ef_weaklight                "Torchlight"				s_torchlight	nil                   'weaklight-apply   'weaklight-rm   'weaklight-apply      "start-of-turn-hook" "T" 0   #f  60)
+(mk-effect 'ef_light                     "Magical light"			s_light			'light-exec           'light-apply        'light-rm        'light-apply        "start-of-turn-hook" "L" 0   #t  -2)
 (mk-effect 'ef_protection                "Protection"				s_protect		 nil                   'protection-apply   'protection-rm   'protection-apply   "start-of-turn-hook" "p" 0   #t  10)
 (mk-effect 'ef_charm                     "Charm"					s_charm		 	nil                   'charm-apply        'charm-rm        'charm-apply        "start-of-turn-hook" "C" 0   #f   5)
 (mk-effect 'ef_invisibility              "Invisible"				s_invis		 	nil                   'invisibility-apply 'invisibility-rm 'invisibility-apply "start-of-turn-hook" "N" 0   #t  10)
@@ -513,7 +526,7 @@
 (mk-effect 'ef_split                     "Split"					nil				'split-exec           nil                 nil              nil                 "on-damage-hook"     ""  0   #f  -1)
 (mk-effect 'ef_spider_calm               "Spider calm"				s_spider_calm	nil                   'spider-calm-apply  'spider-calm-rm  nil                 "start-of-turn-hook" ""  0   #f  60) 
 (mk-effect 'ef_drunk                     "Drunk"					s_drunk			'drunk-exec           'drunk-apply        'drunk-rm        nil                 "keystroke-hook"     "A" 0   #t  60)
-(mk-effect 'ef_disease                   "Diseased"					s_disease		'disease-exec         nil                 nil              nil                 "start-of-turn-hook" "D" 0   #f  -1)
+(mk-effect 'ef_disease                   "Diseased"					s_disease		'disease-exec         nil                 nil              nil                 "start-of-turn-hook" "D" 0   #f  -2)
 (mk-effect 'ef_disease_immunity          "Disease immunity"			s_im_disease	'disease-immunity-exec nil                nil              nil                 "add-hook-hook"      "E" 0   #f  -1)
 (mk-effect 'ef_temporary_disease_immunity "Disease immunity"		s_im_disease	'disease-immunity-exec nil               nil              nil                 "add-hook-hook"      "E" 0   #f  60)
 (mk-effect 'ef_paralysis_immunity        "Paralysis immunity"		s_im_paralyse	'paralysis-immunity-exec nil              nil              nil                 "add-hook-hook"      "z" 0   #f  -1)
