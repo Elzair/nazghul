@@ -33,6 +33,7 @@
 #include <errno.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <unistd.h>
 
 static struct node menu_saved_games;
 
@@ -117,8 +118,11 @@ static void menu_cleanup_saved_game_list()
         }
 }
 
-/* load_game_menu -- show the player the available saved games, return the full
- * pathname. */
+/**
+ * Let the player choose from the available saved games.
+ *
+ * @return The full pathname of the save file.
+ */
 char * load_game_menu(void)
 {
         char **menu = 0;
@@ -172,6 +176,41 @@ char * load_game_menu(void)
         return selection;
 }
 
+/**
+ * Find the most recently saved game.
+ *
+ * @returns The name of the most recently saved game or 0 if there are none.
+ */
+char * journey_onward(void)
+{
+        char *fname = 0;
+        struct node *nodep = 0;
+        char *ret = 0;
+        time_t mtime = 0;
+        struct stat statbuf;
+
+        file_load_from_save_dir(cfg_get("save-game-filename"));
+        node_for_each(&menu_saved_games, nodep) {
+                fname =  file_mkpath(cfg_get("saved-games-dirname"),
+                                     (char*)nodep->ptr);
+                if (!fname)
+                        continue;
+                if (stat(fname, &statbuf)) {
+                        warn("Could not stat '%s'\n", fname);
+                        continue;
+                }
+                if (! ret
+                    || mtime < statbuf.st_mtime) {
+                        ret = fname;
+                        mtime = statbuf.st_mtime;
+                } else {
+                        free(fname);
+                }
+        }
+        menu_cleanup_saved_game_list();
+        return ret;
+}
+
 static char *prompt_for_fname()
 {
         char buf[32];
@@ -206,6 +245,11 @@ static int menu_rewrite_saves(char **menu, int n)
         return 0;
 }
 
+/**
+ * Let the player select a file to save the current game.
+ *
+ * @return The name of the file to save to, or 0 if the player aborts.
+ */
 char * save_game_menu(void)
 {
         static char *NEW_SAVED_GAME = "New Saved Game";
@@ -293,11 +337,12 @@ char * main_menu(void)
 {
         static char *START_NEW_GAME="Start New Game";
         static char *JOURNEY_ONWARD="Journey Onward";
+        static char *LOAD_GAME="Load Game";
         static char *CREDITS="Credits";
         static char *QUIT="Quit";
         static char *TUTORIAL="Tutorial";
         static char *SETTINGS = "Settings";
-        char *menu[6];
+        char *menu[7];
         int n_items = 0;
         struct KeyHandler kh;
 	struct ScrollerContext data;
@@ -324,6 +369,8 @@ char * main_menu(void)
         /* check for a previously saved game to Journey Onward */
         if (file_exists_in_save_dir(save_game_fname)) {
                 menu[n_items] = JOURNEY_ONWARD;
+                n_items++;
+                menu[n_items] = LOAD_GAME;
                 n_items++;
         }
 
@@ -370,6 +417,11 @@ char * main_menu(void)
                 assert(load_fname);
         }
         else if (! strcmp(selection, JOURNEY_ONWARD)) {
+                load_fname = journey_onward();
+                if (! load_fname)
+                        goto start_main_menu;
+        }
+        else if (! strcmp(selection, LOAD_GAME)) {
                 load_fname = load_game_menu();
                 if (!load_fname)
                         goto start_main_menu;

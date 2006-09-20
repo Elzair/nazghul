@@ -1284,6 +1284,7 @@ static void finalize_cell(scheme *sc, pointer a) {
 
 static int file_push(scheme *sc, const char *fname) {
   FILE *fin = file_open_in_include_dir(fname);
+  /*printf("load %s...\n", fname);*/
   if(fin!=0) {
     sc->file_i++;
     sc->load_stack[sc->file_i].kind=port_file|port_input;

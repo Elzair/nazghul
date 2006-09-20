@@ -20,6 +20,8 @@
 #ifndef menus_h
 #define menus_h
 
+#include <time.h>
+
 extern int menu_init(void);
 extern char *main_menu(void);
 extern char *load_game_menu(void);
