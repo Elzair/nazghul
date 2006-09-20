@@ -350,6 +350,10 @@
 	(cast-ui-ranged-loc powers-blink caster
 		(powers-blink-range (occ-ability-whitemagic caster))
 		(occ-ability-whitemagic caster)))
+		
+(define (vas-sanct-nox  caster)
+	(powers-protect-vs-poison-all caster caster (occ-ability-whitemagic caster))
+		result-ok)
 
 ;;----------------------------------------------------------------------------
 ;; Fifth Circle

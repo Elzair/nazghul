@@ -604,6 +604,15 @@
 (define (powers-protect-vs-poison caster ktarg power)
 	(kern-obj-add-effect ktarg ef_temporary_poison_immunity nil))
 
+;todo duration based on power?
+(define (powers-protect-vs-poison-all caster ktarg power)
+  (let ((party (kern-char-get-party caster)))
+    (if (null? party) 
+        (kern-obj-add-effect caster ef_temporary_poison_immunity nil)
+        (kern-obj-add-effect party ef_temporary_poison_immunity nil)
+        )
+    ))
+
 (define (powers-quickness caster dir power)
 	(kern-add-quicken (kern-dice-roll
 		(mkdice 3 (floor (+ (/ power 3) 1))))))
@@ -624,6 +633,8 @@
 				
 (define (powers-reveal caster ktarg power)
 	(kern-add-reveal (* power 4)))
+
+;todo sleep single target
 
 ;todo limit to some range?
 (define (powers-sleep-area caster ktarg power)
