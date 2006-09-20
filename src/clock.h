@@ -51,6 +51,7 @@ struct clock {
 extern void clock_advance(int ticks);
 extern void clock_alarm_set(clock_alarm_t *alarm, unsigned int minutes);
 extern int clock_alarm_is_expired(clock_alarm_t *alarm);
+extern int clock_alarm_remaining(clock_alarm_t *alarm);
 extern unsigned int clock_time_of_day(void);
 extern unsigned int clock_time(void);
 extern int is_noon(void);

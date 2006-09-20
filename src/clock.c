@@ -304,6 +304,12 @@ int clock_alarm_is_expired(clock_alarm_t *alarm)
         return (Clock.total_minutes >= *alarm);
 }
 
+int clock_alarm_remaining(clock_alarm_t *alarm)
+{
+	if (Clock.total_minutes >= *alarm) return 0;
+	return (*alarm - Clock.total_minutes);
+}
+
 int is_noon(void)
 {
         return (Clock.hour == 12 && Clock.min == 0);

@@ -38,6 +38,7 @@
 #include "effect.h"
 #include "session.h"
 #include "magic.h"
+#include "clock.h"
 
 #include <stdio.h>
 #include <assert.h>
@@ -441,14 +442,18 @@ int status_show_effect(hook_entry_t *entry, void *data)
 
         rect->x += ASCII_W;
 
-        if (-1 == entry->effect->duration) {
+        if (-2 == entry->effect->duration) {
+                screenPrint(rect, 0, " %s"
+                            , entry->effect->name
+                        );
+        } else if (-1 == entry->effect->duration) {
                 screenPrint(rect, 0, " %s (permanent)"
                             , entry->effect->name
                         );
         } else {
                 screenPrint(rect, 0, " %s [%d min]"
                             , entry->effect->name
-                            , entry->effect->duration
+                            , clock_alarm_remaining(&entry->expiration)
                         );
         }
         rect->y += ASCII_H;
