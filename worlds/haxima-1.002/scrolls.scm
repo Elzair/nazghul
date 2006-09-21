@@ -39,3 +39,8 @@
 (mk-scroll 't_in_ex_por_scroll "In Ex Por scroll" s_in_ex_por_scroll in-ex-por)
 (mk-scroll 't_vas_mani_scroll "Vas Mani scroll" s_vas_mani_scroll vas-mani)
 (mk-scroll 't_wis_quas_scroll "Wis Quas scroll" s_wis_quas_scroll wis-quas)
+
+
+;; Temp shims to keep saved games working
+(define t_an_xen_exe_scroll t_an_xen_ex_scroll)
+(define t_in_exe_por_scroll t_in_ex_por_scroll)
