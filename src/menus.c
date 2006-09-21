@@ -119,6 +119,57 @@ static void menu_cleanup_saved_game_list()
 }
 
 /**
+ * Print the saved game's name, timestamp and other info for display in the
+ * status window.
+ *
+ * @param buf The string buffer to hold the printed line.
+ * @param n The size in bytes of the string buffer (including a terminating 
+ * NULL).
+ * @param fname The name of the saved game file, not including the full path.
+ */
+static int sprintf_game_info(char *buf, int n, char *fname)
+{
+        struct tm timeinfo;
+        struct stat fileinfo;
+        char *path;
+        int ret = -1;
+        char datebuf[n];
+        int padlen;
+
+        /* Get the full path. */
+        path = file_mkpath(cfg_get("saved-games-dirname"), fname);
+        if (!path) {
+                warn("Could not alloc filename");
+                return -1;
+        }
+        
+        /* Get the modification time. */
+        if (stat(path, &fileinfo)) {
+                warn("Could not stat '%s'", path);
+                goto done;
+        }
+        
+        /* Convert the mod time from epoch to a time structure. */
+        localtime_r(&fileinfo.st_mtime, &timeinfo);
+
+        /* Print the date to a temp buffer to see how big it is. */
+        snprintf(datebuf, n, "%02d:%02d %02d/%02d/%d", timeinfo.tm_hour, 
+                 timeinfo.tm_min, timeinfo.tm_mon, timeinfo.tm_mday, 
+                 1900+timeinfo.tm_year);
+
+        /* Calculate necessary padding to right-justify the date. */
+        padlen = n - (strlen(fname) + strlen(datebuf) + 2);
+
+        /* Print to the buffer. */
+        snprintf(buf, n, "%s %*c%s", fname, padlen, ' ', datebuf);
+
+ done:
+        free(path);
+        return ret;
+                 
+}
+
+/**
  * Let the player choose from the available saved games.
  *
  * @return The full pathname of the save file.
@@ -126,6 +177,7 @@ static void menu_cleanup_saved_game_list()
 char * load_game_menu(void)
 {
         char **menu = 0;
+        char *menubuf, *menubufptr;
         int n = 0;
         int i = 0;
         struct node *nodep = 0;
@@ -133,6 +185,7 @@ char * load_game_menu(void)
 	struct ScrollerContext data;
         static char *selection = 0;
         enum StatusMode omode = statusGetMode();
+        int linew = STAT_W/ASCII_W;
 
         /* Erase any previous selection. */
         if (selection) {
@@ -142,10 +195,19 @@ char * load_game_menu(void)
 
         file_load_from_save_dir(cfg_get("save-game-filename"));
         n = node_list_len(&menu_saved_games);
-        menu = (char**)malloc(sizeof(menu[0]) * n);
+        /* left off here */
+        menubuf = (char*)calloc(n, linew+1);
+        assert(menubuf);
+        menu = (char**)calloc(n, sizeof(menu[0]));
         assert(menu);
+
+        /* For each saved game.. */
+        menubufptr = menubuf;
         node_for_each(&menu_saved_games, nodep) {
-                menu[i] = (char*)nodep->ptr;
+                menu[i] = menubufptr;
+                sprintf_game_info(menubufptr, linew+1, 
+                                  (char*)nodep->ptr);
+                menubufptr += linew+1;
                 i++;
         }
         
@@ -163,6 +225,12 @@ char * load_game_menu(void)
         /* If the player selected something then build the full pathname for
          * return. */
         if (data.selection) {
+                /* The selected string has the filename followed by whitespace
+                 * followed by other info like the date. We just want the
+                 * filename, and we'll discard this buffer below, so insert a
+                 * NULL where the first space is to snip the string short. */
+                char *end = strchr((char*)data.selection, ' ');
+                *end = 0;
                 selection = file_mkpath(cfg_get("saved-games-dirname"),
                                         (char*)data.selection);
                 assert(selection);
@@ -172,6 +240,7 @@ char * load_game_menu(void)
 
         menu_cleanup_saved_game_list();
         free(menu);
+        free(menubuf);
 
         return selection;
 }
@@ -189,16 +258,26 @@ char * journey_onward(void)
         time_t mtime = 0;
         struct stat statbuf;
 
+        /* Load all the saved-game info. */
         file_load_from_save_dir(cfg_get("save-game-filename"));
+
+        /* For each saved game... */
         node_for_each(&menu_saved_games, nodep) {
+
+                /* Get the pathname. */
                 fname =  file_mkpath(cfg_get("saved-games-dirname"),
                                      (char*)nodep->ptr);
                 if (!fname)
                         continue;
+
+                /* Get the modification info. */
                 if (stat(fname, &statbuf)) {
                         warn("Could not stat '%s'\n", fname);
+                        free(fname);
                         continue;
                 }
+
+                /* Compare to find the most recent modified file. */
                 if (! ret
                     || mtime < statbuf.st_mtime) {
                         ret = fname;
@@ -207,6 +286,7 @@ char * journey_onward(void)
                         free(fname);
                 }
         }
+
         menu_cleanup_saved_game_list();
         return ret;
 }
