@@ -84,7 +84,8 @@ haxima_DATA = \
 	endless-deeps-mech.scm      endless-deeps.scm      abigail.scm\
 	r2a_mech.scm                kern-init.scm          effects.png\
 	gamestart-mech.scm          gamestart.scm          bodies.png\
-	adornments.png              clothes.png
+	adornments.png              clothes.png            powers.scm\
+	cast-ui.scm
 
 EXTRA_DIST = $(haxima_DATA)
 MAINTAINERCLEANFILES = Makefile.in
