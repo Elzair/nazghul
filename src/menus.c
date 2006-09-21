@@ -233,6 +233,12 @@ char * load_game_menu(void)
                 *end = 0;
                 selection = file_mkpath(cfg_get("saved-games-dirname"),
                                         (char*)data.selection);
+
+                /* Repair the damage we did to the string, else when we set the
+                 * old status mode it will repaint our menu list but this entry
+                 * will be missing the data. I know. Cheesy hack. */
+                *end = ' ';
+
                 assert(selection);
         }
 
