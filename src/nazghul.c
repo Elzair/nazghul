@@ -321,6 +321,7 @@ int main(int argc, char **argv)
         /* cleanup modules that need it */
         eventExit();
 
+        /* FIXME: need to free nazghul_load_fname */
         /* reset save file so main menu runs */
         nazghul_load_fname=0;
 

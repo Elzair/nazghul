@@ -1182,6 +1182,8 @@ bool cmdQuit(void)
                 Quit = true;
         }
 
+        free(fname);
+
 	return Quit;
 }
 
@@ -3128,6 +3130,7 @@ void cmdSave(void)
         log_begin("Saving to %s...", fname);
         session_save(fname);
         log_end("ok!");
+        free(fname);
 }
 
 void cmdReload(void)

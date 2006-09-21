@@ -170,6 +170,25 @@ static int sprintf_game_info(char *buf, int n, char *fname)
 }
 
 /**
+ * Extract the filename from the menu entry strings used in the load and save
+ * game menus.
+ * @returns A strdup'd copy of the fname.
+ */
+static char *menu_entry_to_fname(char *entry)
+{
+        char *fname = 0;
+        char *end = strchr(entry, ' ');
+        int mod = end ? 1 : 0;
+        if (mod)
+                *end = 0;
+        fname = strdup(entry);
+        assert(fname);
+        if (mod)
+                *end = ' ';
+        return fname;
+}
+
+/**
  * Let the player choose from the available saved games.
  *
  * @return The full pathname of the save file.
@@ -185,7 +204,7 @@ char * load_game_menu(void)
 	struct ScrollerContext data;
         static char *selection = 0;
         enum StatusMode omode = statusGetMode();
-        int linew = STAT_W/ASCII_W;
+        int linew = STAT_CHARS_PER_LINE;
 
         /* Erase any previous selection. */
         if (selection) {
@@ -195,7 +214,6 @@ char * load_game_menu(void)
 
         file_load_from_save_dir(cfg_get("save-game-filename"));
         n = node_list_len(&menu_saved_games);
-        /* left off here */
         menubuf = (char*)calloc(n, linew+1);
         assert(menubuf);
         menu = (char**)calloc(n, sizeof(menu[0]));
@@ -225,21 +243,11 @@ char * load_game_menu(void)
         /* If the player selected something then build the full pathname for
          * return. */
         if (data.selection) {
-                /* The selected string has the filename followed by whitespace
-                 * followed by other info like the date. We just want the
-                 * filename, and we'll discard this buffer below, so insert a
-                 * NULL where the first space is to snip the string short. */
-                char *end = strchr((char*)data.selection, ' ');
-                *end = 0;
+                char *fname = menu_entry_to_fname((char*)data.selection);
                 selection = file_mkpath(cfg_get("saved-games-dirname"),
-                                        (char*)data.selection);
-
-                /* Repair the damage we did to the string, else when we set the
-                 * old status mode it will repaint our menu list but this entry
-                 * will be missing the data. I know. Cheesy hack. */
-                *end = ' ';
-
+                                        fname);
                 assert(selection);
+                free(fname);
         }
 
         statusSetMode(omode);
@@ -297,6 +305,10 @@ char * journey_onward(void)
         return ret;
 }
 
+/**
+ * Get a file name from the player.
+ * @returns A strdup'd copy of the filename.
+ */
 static char *prompt_for_fname()
 {
         char buf[32];
@@ -324,7 +336,9 @@ static int menu_rewrite_saves(char **menu, int n)
         }
         
         for (i = 0; i < n; i++) {
-                fprintf(file, "(kern-add-save-game \"%s\")\n", menu[i]);
+                char *fname = menu_entry_to_fname(menu[i]);
+                fprintf(file, "(kern-add-save-game \"%s\")\n", fname);
+                free(fname);
         }
 
         fclose(file);
@@ -334,38 +348,48 @@ static int menu_rewrite_saves(char **menu, int n)
 /**
  * Let the player select a file to save the current game.
  *
- * @return The name of the file to save to, or 0 if the player aborts.
+ * @returns A strdup'd copy of the name of the file to save to, or 0 if the
+ * player aborts. The filename is NOT the full path, like some of the other
+ * menu functions return, because we're not going to load anything with the
+ * result.
  */
 char * save_game_menu(void)
 {
         static char *NEW_SAVED_GAME = "New Saved Game";
         char **menu = 0;
+        char *menubuf, *menubufptr;
         int n = 0;
         int i = 0;
         struct node *nodep = 0;
         struct KeyHandler kh;
 	struct ScrollerContext data;
-        static char *selection = 0;
+        char *selection = 0;
         enum StatusMode omode = statusGetMode();
-
-        /* erase previous selection */
-        if (selection) {
-                free(selection);
-                selection = 0;
-        }
+        int linew = STAT_CHARS_PER_LINE;
 
         if (file_exists_in_save_dir(cfg_get("save-game-filename"))) {
                 file_load_from_save_dir(cfg_get("save-game-filename"));
         }
         n = node_list_len(&menu_saved_games) + 1;
-        menu = (char**)malloc(sizeof(menu[0]) * n);
+        menubuf = (char*)calloc(n, linew+1);
+        assert(menubuf);
+        menu = (char**)calloc(n, sizeof(menu[0]));
         assert(menu);
 
-        /* first entry is always N)ew Save */
-        menu[i++] = NEW_SAVED_GAME;
+        /* The first entry is always New Save Game. */
+        i = 0;
+        menubufptr = menubuf;
+        sprintf(menubufptr, NEW_SAVED_GAME);
+        menu[i++] = menubufptr;
+        menubufptr += linew+1;
 
+        /* For each saved game add it to the list. */
         node_for_each(&menu_saved_games, nodep) {
-                menu[i++] = (char*)nodep->ptr;
+                menu[i] = menubufptr;
+                sprintf_game_info(menubufptr, linew+1, 
+                                  (char*)nodep->ptr);
+                menubufptr += linew+1;
+                i++;
         }
         
         statusSetStringList(n, menu);
@@ -381,6 +405,8 @@ reselect:
 	eventPopKeyHandler();
 
         if (data.selection) {
+
+                /* New saved game? */
                 if (!strcmp((char*)data.selection, NEW_SAVED_GAME)) {
                         int need_rewrite = 1;
                         selection = prompt_for_fname();
@@ -389,22 +415,30 @@ reselect:
 
                         /* Check if the player re-typed an existing filename */
                         for (i = 1; i < n; i++) {
-                                if (!strcmp(selection, menu[i])) {
+                                char *fname = menu_entry_to_fname(menu[i]);
+                                if (!strcmp(selection, fname)) {
                                         if (!confirm_selection()) {
                                                 free(selection);
                                                 selection = 0;
+                                                free(fname);
                                                 goto reselect;
                                         }
                                         need_rewrite = 0;
                                         break;
                                 }
+                                free(fname);
                         }
-                        menu[0] = selection;
+
+                        /* Replace "New Saved Game" with what the player 
+                           typed */
+                        snprintf(menu[0], linew, selection);
+
+                        /* Re-write the saved games file to add the new
+                         * save. */
                         menu_rewrite_saves(menu, i);
 
                 } else if (confirm_selection()) {
-                        selection = strdup((char*)data.selection);
-                        assert(selection);
+                        selection = menu_entry_to_fname((char*)data.selection);
                 } else {
                         goto reselect;
                 }
@@ -415,6 +449,7 @@ reselect:
 
         menu_cleanup_saved_game_list();
         free(menu);
+        free(menubuf);
 
         return selection;
 }
