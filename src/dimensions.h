@@ -26,7 +26,7 @@
 
 BEGIN_DECL
 
-#define STAT_CHARS_PER_LINE 42
+#define STAT_CHARS_PER_LINE 46
 
 #define TILE_W   32
 #define TILE_H   32

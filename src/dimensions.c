@@ -118,7 +118,7 @@ int dimensions_init()
         STATUS_MAX_MSG_SZ = 128;
         STAT_X =  (MAP_X + MAP_W + BORDER_W);
         STAT_Y =  BORDER_H;
-        STAT_W = (BORDER_W * 2 + ASCII_W * STAT_CHARS_PER_LINE);
+        STAT_W = (/*BORDER_W * 2*/ + ASCII_W * STAT_CHARS_PER_LINE);
         STAT_H =  (3 * TILE_H);
         STAT_H_MAX = (16 * TILE_H);
 
