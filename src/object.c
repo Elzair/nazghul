@@ -417,19 +417,20 @@ void Object::relocate(struct place *newplace, int newx, int newy, bool noStep,
                         // map. This is a special case for character objects so
                         // use an overloadable method to implement it.
                         // ---------------------------------------------------
-
+						
                         if (! tryToRelocateToNewPlace(newplace, newx, newy,
                                                       place_switch_hook))
-                                return;
-
-
-						if (mech)
 						{
-							if (mech != this 
-									&& mech->getObjectType()->canSense())
-								mech->getObjectType()->sense(mech, this);
-							obj_dec_ref(mech);								
+							if (mech)
+								obj_dec_ref(mech);	
+                            return;
 						}
+
+
+						if (mech && mech != this 
+									&& mech->getObjectType()->canSense())
+								mech->getObjectType()->sense(mech, this);							
+						
 
                         // ----------------------------------------------------
                         // This object may no longer be on a map as a result of
@@ -437,7 +438,11 @@ void Object::relocate(struct place *newplace, int newx, int newy, bool noStep,
                         // ----------------------------------------------------
 
                         if (! isOnMap())
-                                return;
+						{
+							if (mech)
+								obj_dec_ref(mech);	
+                            return;
+						}
                 }
 
         } else {
