@@ -67,6 +67,44 @@ TAG     A name given to a kernel data structure so that it can be referred to
         reloaded.
 
 
+                       QUICK START: HOW TO CHANGE A MAP
+
+Start haxima with the -d option:
+
+      $ haxima -d
+
+Start a game, then invoke the terrain editor using the Ctrl-T command. Like a
+paint program, terrain editing has the concept of a current "brush", which is a
+terrain type. 
+
+The following keybindings are in effect:
+
+        Arrow keys - move the cursor
+        [0-9]-Arrow - jump the cursor
+        Space/Enter - change the terrain under the cursor
+        PgUp/PgDn - scroll the available terrain list to change the brush
+        Home/End - jump to the top or bottom of the available terrain list
+        C - copy; set the terrain under the cursor as the brush
+        F - terrain fill (uses the 4-neighbor algorithm)
+        ESC - abort eddit mode
+        Ctrl-[0-9] - save the brush in a "quick access" terrain slot
+        [0-9] - load the brush with the quick access terrain slot
+ 
+"Quick Access" slots start as all walls. Palette.scm holds the list of terrain
+types.
+
+When you are done editing, save the game like you normally would. Your changes
+will be there the next time you start the game. If you want your changes to be
+part of a game started from "Start New Game" the current process involves
+modifying some Scheme files.
+
+To add your changes to the "Start New Game" scripts you need to find your
+changes in the file you saved and copy-and-paste them into the proper startup
+.scm file. In general, you must find the name of the place which is using the
+map and search for it in the .scm files, then replace the starting map with
+your own.
+
+
                                   KERNEL API
 
 This section documents the kernel calls available to scripts. The document
