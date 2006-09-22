@@ -125,17 +125,20 @@
 			(cone-area-effect origin (xy->angle x y) range (/ pi 2) proc))
 		)))	
 
-(define (mk-basic-cone-proc objfx field-type leaveprob)
+(define (mk-basic-cone-proc objfx field-type leaveproc)
 	(define (dropfield loc)
 		(if (kern-obj-put-at (kern-mk-obj field-type 1) loc)))
 	(define (is-my-field? kobj) (eqv? field-type (kern-obj-get-type kobj)))
 	(define (cleanfields loc)
-		(if	(or (not (terrain-ok-for-field? loc))
-				(> (kern-dice-roll "1d100") leaveprob))
-			(let ((fields (filter is-my-field? (kern-get-objects-at loc))))
-				(cond ((null? fields) nil)
-					(else
-						(kern-obj-remove (car fields)))))))
+		(let ((fields (filter is-my-field? (kern-get-objects-at loc)))
+				(duration (leaveproc)))
+			(cond ((null? fields) nil)
+				(else
+					(kern-obj-remove (car fields))))
+			(if	(and (terrain-ok-for-field? loc)
+					(> duration 0))
+				(kern-obj-put-at (kern-mk-field field-type duration) loc))
+				))
 	(lambda (loc)
 			(if (not (null? objfx))
 				(map objfx (kern-get-objects-at loc)))
@@ -241,9 +244,13 @@
 				(kern-obj-inflict-damage kobj "burning" (kern-dice-roll damage) caster)
 				))
 		(cone-do-simple caster ktarg 3.3
-			(mk-basic-cone-proc flambe-all F_fire 0)
+			(mk-basic-cone-proc flambe-all F_fire (lambda () 0))
 			)))
 
+(define (powers-cone-basic-leaveproc balance width)
+	(lambda ()
+		(- (kern-dice-roll (mkdice 1 width)) balance)))
+	
 (define (powers-cone-basic-range power)
 	(+ 7 (/ power 3)))
 
@@ -254,8 +261,9 @@
 				(kern-obj-inflict-damage kobj "shocked" (kern-dice-roll damage) caster)
 				))
 		(cone-do-simple caster ktarg (powers-cone-basic-range power)
-			(mk-basic-cone-proc energize-all F_energy (* power 3))
-			)))
+			(mk-basic-cone-proc energize-all F_energy 
+				(powers-cone-basic-leaveproc 40 (+ 30 (* 4 power)))
+			))))
 
 (define (powers-cone-fire caster ktarg power)
 	(let ((damage (mkdice (floor (/ power 2)) 3)))
@@ -267,8 +275,9 @@
 						(kern-harm-relations kobj caster)
 				))))
 		(cone-do-simple caster ktarg (+ 2 (powers-cone-basic-range power))
-			(mk-basic-cone-proc burn-all F_fire (* power 4))
-			)))
+			(mk-basic-cone-proc burn-all F_fire 
+				(powers-cone-basic-leaveproc 30 (+ 20 (* 5 power)))
+			))))
 
 (define (powers-cone-poison caster ktarg power)
 	(let ((damage (mkdice 1 (floor (/ power 4)))))
@@ -284,8 +293,9 @@
 					(kern-harm-relations kobj caster)
 				)))
 		(cone-do-simple caster ktarg (powers-cone-basic-range power)
-			(mk-basic-cone-proc poison-all F_poison (* power 2))
-			)))
+			(mk-basic-cone-proc poison-all F_poison 
+				(powers-cone-basic-leaveproc 60 (+ 40 (* 3 power)))
+			))))
 
 (define (powers-cone-sleep caster ktarg power)
 	(let ((damage (mkdice 1 (floor (/ power 4)))))
@@ -299,8 +309,9 @@
 						(apply-sleep kobj))
 				)))
 		(cone-do-simple caster ktarg (powers-cone-basic-range power)
-			(mk-basic-cone-proc sleep-all F_sleep (* power 3))
-			)))
+			(mk-basic-cone-proc sleep-all F_sleep 
+				(powers-cone-basic-leaveproc 40 (+ 30 (* 4 power)))
+			))))
 
 ;todo limit to some range?
 (define (powers-confuse caster unused power)
@@ -360,25 +371,24 @@
 	(map try-repel (all-hostiles caster)))
 				
 ;todo
-; duration should be somewhat random, and vary with caster strength
 ; fields would be a lot more useful if a wall was created instead of one square
 ;   (length based on caster strength of course)
 ; I need a 'line' utility anyway, perhaps a ui along the lines of (select center point) (select end point)
 ;   -> draw line from centre to end and opposite side
-;
-; powerful casters should have at least some range, too
-;
+(define (powers-field-range power)
+	(+ 1 (/ power 5)))
+
 (define (powers-field-energy caster ktarg power)
-	(kern-obj-put-at (kern-mk-obj F_energy 1) ktarg))
+	(kern-obj-put-at (kern-mk-field F_energy (+ 20 (kern-dice-roll (mkdice 2 power)))) ktarg))
 
 (define (powers-field-fire caster ktarg power)
-	(kern-obj-put-at (kern-mk-obj F_fire 1) ktarg))
+	(kern-obj-put-at (kern-mk-field F_fire (+ 20 (kern-dice-roll (mkdice 1 power)))) ktarg))
 	
 (define (powers-field-poison caster ktarg power)
-	(kern-obj-put-at (kern-mk-obj F_poison 1) ktarg))
+	(kern-obj-put-at (kern-mk-field F_poison (+ 10 (kern-dice-roll (mkdice 1 power)))) ktarg))
 
 (define (powers-field-sleep caster ktarg power)
-	(kern-obj-put-at (kern-mk-obj F_sleep 1) ktarg))
+	(kern-obj-put-at (kern-mk-field F_sleep (+ 15 (kern-dice-roll (mkdice 1 power)))) ktarg))
 
 (define (powers-fireball-range power)
 	(+ 3 (/ power 3)))
