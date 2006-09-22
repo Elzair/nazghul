@@ -5758,7 +5758,7 @@ KERN_API_CALL(kern_ui_select_from_list)
         }
 
         omode = statusGetMode();
-        statusSetStringList(list_sz, strings);
+        statusSetStringList("Select", list_sz, strings);
         statusSetMode(StringList);
 
         data.selection = NULL;

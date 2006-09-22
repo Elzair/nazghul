@@ -114,6 +114,7 @@ static struct status {
 	SDL_Rect pg_rect;
 	int pg_max_y;
 
+        char *list_title;
 	int list_sz;
 	struct trade_info *trades;
         struct stat_list_entry *list;
@@ -1495,7 +1496,7 @@ void statusSetMode(enum StatusMode mode)
 		break;
 	case SelectCharacter:
 		switch_to_tall_mode();
-		status_set_title("select");
+		status_set_title("Select Member");
 		Status.scroll = myScrollParty;
 		Status.paint = myShowParty;
 		Status.pcIndex = 0;
@@ -1527,7 +1528,7 @@ void statusSetMode(enum StatusMode mode)
 		break;
 	case Use:
 		switch_to_tall_mode();
-		status_set_title("select");
+		status_set_title("Use");
 		Status.topLine = 0;
 		Status.curLine = 0;
 		Status.container = player_party->inventory;
@@ -1545,7 +1546,7 @@ void statusSetMode(enum StatusMode mode)
 		break;
 	case Trade:
 		switch_to_tall_mode();
-		status_set_title("select");
+		status_set_title("Trade");
 		Status.topLine = 0;
 		Status.curLine = 0;
 		Status.maxLine = Status.list_sz - Status.numLines;
@@ -1569,7 +1570,7 @@ void statusSetMode(enum StatusMode mode)
 		break;
         case GenericList:
 		switch_to_tall_mode();
-                status_set_title("select");
+                status_set_title(Status.list_title);
 		Status.topLine = 0;
 		Status.curLine = 0;
 		Status.maxLine = Status.list_sz - Status.numLines;
@@ -1579,7 +1580,7 @@ void statusSetMode(enum StatusMode mode)
                 break;
         case StringList:
                 status_set_line_height(max(Status.list_sz, 5));
-                status_set_title("select");
+                status_set_title(Status.list_title);
 		Status.topLine = 0;
 		Status.curLine = 0;
 		Status.maxLine = Status.list_sz - Status.numLines;
@@ -1638,24 +1639,17 @@ void statusUpdateTradeInfo(int list_sz, struct trade_info *trades)
 	statusRepaint();
 }
 
-void statusSetGenericList(int list_sz, struct stat_list_entry *list)
+void statusSetGenericList(char *title, int list_sz, 
+                          struct stat_list_entry *list)
 {
+        Status.list_title = title;
 	Status.list_sz = list_sz;
 	Status.list    = list;
 }
 
-void statusUpdateGenericList(int list_sz, struct stat_list_entry *list)
+void statusSetStringList(char *title, int list_sz, char **strings)
 {
-	Status.list_sz = list_sz;
-	Status.list    = list;
-	Status.maxLine = Status.list_sz - Status.numLines;
-	if (Status.curLine >= list_sz)
-		Status.curLine = max(0, list_sz - 1);
-	statusRepaint();
-}
-
-void statusSetStringList(int list_sz, char **strings)
-{
+        Status.list_title = title;
 	Status.list_sz = list_sz;
 	Status.strlist = strings;
 }

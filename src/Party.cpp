@@ -1004,7 +1004,7 @@ Object *Party::getSpeaker()
         }
 
         // The player has to choose. Poke the list into the status state.
-        statusSetGenericList(list_sz, statlist);
+        statusSetGenericList("Choose Speaker", list_sz, statlist);
 
         // Switch the status mode over to list selection.
         statusSetMode(GenericList);

@@ -1026,7 +1026,7 @@ bool cmdOpen(class Character * pc)
                  statlist[1].data   = container;
 
                  omode = statusGetMode();
-                 statusSetGenericList(2, statlist);
+                 statusSetGenericList("Choose Target", 2, statlist);
                  statusSetMode(GenericList);
                  
                  data.selection = NULL;

@@ -46,7 +46,7 @@ static bool main_menu_quit_handler(struct QuitHandler *kh)
 static void show_credits(void)
 {
         struct KeyHandler kh;
-        char *title = "CREDITS";
+        char *title = "Credits";
         char *text = 
                 "Engine Programming\n"\
                 "...Gordon McNutt\n"\
@@ -229,7 +229,7 @@ char * load_game_menu(void)
                 i++;
         }
         
-        statusSetStringList(n, menu);
+        statusSetStringList("Load Game", n, menu);
         statusSetMode(StringList);
 
         data.selection = NULL;
@@ -392,7 +392,7 @@ char * save_game_menu(void)
                 i++;
         }
         
-        statusSetStringList(n, menu);
+        statusSetStringList("Save Game", n, menu);
         statusSetMode(StringList);
 
 reselect:
@@ -516,7 +516,7 @@ char * main_menu(void)
         menu[n_items] = QUIT;
         n_items++;
 
-        statusSetStringList(n_items, menu);
+        statusSetStringList("Main Menu", n_items, menu);
         statusSetMode(StringList);
 
         data.selection = NULL;
@@ -643,7 +643,7 @@ static void option_screen_dims(struct option *opt)
         cmdwin_spush("Screen size");
         cmdwin_spush("<select>");
 
-        statusSetStringList(array_sz(menu), menu);
+        statusSetStringList("Screen Dimensions", array_sz(menu), menu);
         statusSetMode(StringList);
         data.selection = NULL;
         data.selector  = String;
@@ -763,7 +763,8 @@ void options_menu(void)
                 cmdwin_clear();
                 cmdwin_spush("Settings");
                 cmdwin_push("<select/ESC>");
-                statusSetStringList(OPTION_NUMOPTIONS, (char**)menu);
+                statusSetStringList("Settings", OPTION_NUMOPTIONS, 
+                                    (char**)menu);
                 statusSetMode(StringList);
                 data.selection = NULL;
                 data.selector  = String;

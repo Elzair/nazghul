@@ -93,9 +93,41 @@ extern void statusSetPageText(char *title, char *text);
 extern void statusSetTradeInfo(int list_sz, struct trade_info *trades);
 extern void statusUpdateTradeInfo(int list_sz, 
                                   struct trade_info *trades);
-extern void statusSetGenericList(int list_sz, struct stat_list_entry *list);
-extern void statusUpdateGenericList(int list_sz, struct stat_list_entr *list);
-extern void statusSetStringList(int list_sz, char **list);
+
+/**
+ * Setup a generic list for use with the GenericList mode. A generic list has
+ * two lines and an optional icon per list entry. This call has no effect on
+ * the UI until it is followed by a statusSetMode(GenericList) call.
+ *
+ * @param title The title to show in the GenericList mode. This call does not
+ * make its own copy, so 'title' must remain a valid pointer until the caller
+ * is done using this mode and changes to another mode.
+ *
+ * @param list_sz The number of entries in the list.
+ *
+ * @param list An array of pointers to the list entries. Like the 'title', this
+ * call does not make its own copy, so all the pointers must remain valid while
+ * the GenericList mode is in use.
+ */
+extern void statusSetGenericList(char *title, int list_sz, 
+                                 struct stat_list_entry *list);
+
+/**
+ * Setup a list of plain string entries for use with the StringList mode. Each
+ * string will take up one line in the status display. This call has no effect
+ * on the UI until it is followed by a statusSetMode(StringList) call.
+ *
+ * @param title The title to show in the StringList mode. This call does not
+ * make its own copy, so 'title' must remain a valid pointer until the caller
+ * is done using this mode and changes to another mode.
+ *
+ * @param list_sz The number of entries in the list.
+ *
+ * @param list An array of pointers to the list entries. Like the 'title', this
+ * call does not make its own copy, so all the pointers must remain valid while
+ * the StringList mode is in use.
+ */
+extern void statusSetStringList(char *title, int list_sz, char **list);
 
 extern int status_get_h(void);
         
