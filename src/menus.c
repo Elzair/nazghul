@@ -37,6 +37,12 @@
 
 static struct node menu_saved_games;
 
+/**
+ * Keep track of the name of the currently loaded game so we can mark it in the
+ * load and save menus.
+ */
+static char *menu_current_game_fname = 0;
+
 static bool main_menu_quit_handler(struct QuitHandler *kh)
 {
         exit(0);
@@ -135,6 +141,7 @@ static int sprintf_game_info(char *buf, int n, char *fname)
         int ret = -1;
         char datebuf[n];
         int padlen;
+        char mark = ' ';
 
         /* Get the full path. */
         path = file_mkpath(cfg_get("saved-games-dirname"), fname);
@@ -158,10 +165,16 @@ static int sprintf_game_info(char *buf, int n, char *fname)
                  1900+timeinfo.tm_year);
 
         /* Calculate necessary padding to right-justify the date. */
-        padlen = n - (strlen(fname) + strlen(datebuf) + 2);
+        padlen = n - (strlen(fname) + strlen(datebuf) + 1);
+
+        /* We'll mark the current game with an '*'. */
+        if (menu_current_game_fname && 
+            ! strcmp(fname, menu_current_game_fname)) {
+                mark = '*';
+        }
 
         /* Print to the buffer. */
-        snprintf(buf, n, "%s %*c%s", fname, padlen, ' ', datebuf);
+        snprintf(buf, n, "%s %*c%c%s", fname, padlen, ' ', mark, datebuf);
 
  done:
         free(path);
@@ -186,6 +199,18 @@ static char *menu_entry_to_fname(char *entry)
         if (mod)
                 *end = ' ';
         return fname;
+}
+
+/**
+ * Store a copy of the current game filename before it is loaded.
+ * @param fname The filename to copy.
+ */
+static void menu_set_current_game_fname(char *fname)
+{
+        if (menu_current_game_fname) {
+                free(menu_current_game_fname);
+        }
+        menu_current_game_fname = strdup(fname);
 }
 
 /**
@@ -247,6 +272,9 @@ char * load_game_menu(void)
                 selection = file_mkpath(cfg_get("saved-games-dirname"),
                                         fname);
                 assert(selection);
+
+                menu_set_current_game_fname(fname);
+
                 free(fname);
         }
 
@@ -255,6 +283,7 @@ char * load_game_menu(void)
         menu_cleanup_saved_game_list();
         free(menu);
         free(menubuf);
+
 
         return selection;
 }
@@ -266,7 +295,7 @@ char * load_game_menu(void)
  */
 char * journey_onward(void)
 {
-        char *fname = 0;
+        char *fname = 0, *suffix_name = 0;
         struct node *nodep = 0;
         char *ret = 0;
         time_t mtime = 0;
@@ -296,11 +325,13 @@ char * journey_onward(void)
                     || mtime < statbuf.st_mtime) {
                         ret = fname;
                         mtime = statbuf.st_mtime;
+                        suffix_name = (char*)nodep->ptr;
                 } else {
                         free(fname);
                 }
         }
 
+        menu_set_current_game_fname(suffix_name);
         menu_cleanup_saved_game_list();
         return ret;
 }
