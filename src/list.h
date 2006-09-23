@@ -98,6 +98,18 @@ static inline void list_switch(struct list *e1, struct list *e2)
         list_replace(&tmp, e2);
 }
 
+static inline int list_len(struct list *head)
+{
+        struct list *list = head->next;
+        int n = 0;
+        while (list != head) {
+                list = list->next;
+                n++;
+        }
+        return n;
+}
+
+
 END_DECL
 
 #endif

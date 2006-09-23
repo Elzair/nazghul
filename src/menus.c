@@ -25,7 +25,7 @@
 #include "console.h"
 #include "event.h"
 #include "log.h"
-#include "node.h"
+#include "list.h"
 #include "status.h"
 #include "file.h"
 
@@ -35,7 +35,23 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-static struct node menu_saved_games;
+/**
+ * Struct used to keep information about saved game files.
+ */
+typedef struct saved_game {
+        struct list list; /**< For menu_saved_games list */
+        char *fname;      /**< Filename (w/o path) */
+        char *path;       /**< Full pathname to save file */
+        time_t timestamp; /**< Last modification time */
+        int ref;          /**< Reference count on this struct */
+} saved_game_t;
+
+
+/**
+ * The list of saved games, built when we evaluate the saved-game script for
+ * the load and save menus.
+ */
+static struct list menu_saved_games;
 
 /**
  * Keep track of the name of the currently loaded game so we can mark it in the
@@ -43,12 +59,104 @@ static struct node menu_saved_games;
  */
 static char *menu_current_game_fname = 0;
 
+/**
+ * Delete a saved game struct and all it's strings. Don't call this, use
+ * saved_game_unref().
+ *
+ * @param save The struct to delete.
+ */
+static void saved_game_del(saved_game_t *save)
+{
+        assert(! save->ref);
+
+        if (save->fname)
+                free(save->fname);
+        if (save->path)
+                free(save->path);
+        free(save);
+}
+
+/**
+ * Create a new saved game struct and populate it's fields. This makes a copy
+ * of the fname, creates a copy of the full pathname, and gets the modification
+ * time of the file.
+ *
+ * @param fname Name of the saved game file.
+ * @returns The new struct or 0 if there was a problem accessing the file or
+ * allocating memory.
+ */
+static saved_game_t *saved_game_new(char *fname)
+{
+        struct stat fileinfo;
+        saved_game_t *save = (saved_game_t*)malloc(sizeof(*save));
+        if (!save) {
+                warn("Could not alloc save");
+                return 0;
+        }
+
+        memset(save, 0, sizeof(*save));
+        
+        list_init(&save->list);        
+
+        /* Keep a copy of the file name. */
+        save->fname = strdup(fname);
+        if (! save->fname) {
+                warn("Could not alloc fname");
+                goto abort;
+        }
+
+        /* Build the full path. */
+        save->path = file_mkpath(cfg_get("saved-games-dirname"), fname);
+        if (!save->path) {
+                warn("Could not alloc filename");
+                goto abort;
+        }
+        
+        /* Get the timestamp. */
+        if (stat(save->path, &fileinfo)) {
+                warn("Could not stat '%s'", save->path);
+                goto abort;
+        }
+        save->timestamp = fileinfo.st_mtime;
+
+        save->ref = 1;
+        return save;
+
+ abort:
+        saved_game_del(save);
+        return 0;
+}
+
+/**
+ * Release a reference to a saved game struct. This could destroy it.
+ *
+ * @param save The struct to release.
+ */
+static void saved_game_unref(saved_game_t *save)
+{
+        assert(save->ref);
+        save->ref--;
+        if (!save->ref) {
+                saved_game_del(save);
+        }
+}
+
+/**
+ * Called when the user kills the window during the main menu. Exits the
+ * program.
+ *
+ * @param kh Unused
+ * @returns Nothing, the program exits.
+ */
 static bool main_menu_quit_handler(struct QuitHandler *kh)
 {
         exit(0);
         return(0); /* for Sun compiler */
 }
 
+/**
+ * Shows the game credits in the status window.
+ */
 static void show_credits(void)
 {
         struct KeyHandler kh;
@@ -86,6 +194,11 @@ static void show_credits(void)
 	eventPopKeyHandler();
 }
 
+/**
+ * Prompts the user to confirm that they want to overwrite a saved game.
+ *
+ * @returns 1 On confirm, 0 on cancel.
+ */
 static int confirm_selection()
 {
         int yesno;
@@ -106,21 +219,53 @@ static int confirm_selection()
         }
 }
 
+/**
+ * Add another saved game to the list. This is called as a result of executing
+ * the saved-games script, which is just a sequence of (kern-add-saved-game
+ * <fname>) procedure calls, each of which lands here. Based on the filename
+ * we'll build out the other info associated with the saved game like the
+ * timestamp and screenshot image. This also adds the saved game to the list in
+ * order sorted by timestamp, using a simple insertion sort algorithm.
+ *
+ * @param fname The name of the saved game file.
+ */
 void menu_add_saved_game(char *fname)
 {
-        struct node *node = node_new(strdup(fname));
-        node_add(&menu_saved_games, node);
+        struct list *lptr;
+
+        /* Create a new saved game list element. */
+        saved_game_t *save = saved_game_new(fname);
+        if (!save) {
+                warn("menu_add_saved_game: could not add '%s'", fname);
+                return;
+        }
+
+        /* Insert it in the list ordered by timestamp. Find the first saved
+         * game in the list which has a timestamp after this one.  */
+        lptr = menu_saved_games.next;
+        while (lptr != &menu_saved_games) {
+                saved_game_t *save2 = outcast(lptr, saved_game_t, list);
+                if (save->timestamp > save2->timestamp) {
+                        break;
+                }
+                lptr = lptr->next;
+        }
+
+        /* Insert this one previous to it. Works for empty lists, too. */
+        list_add_tail(lptr, &save->list);
 }
 
+/**
+ * Removes and unreferences all the saved game structs on the list.
+ */
 static void menu_cleanup_saved_game_list()
 {
-        struct node *node = menu_saved_games.next;
-        while (node != &menu_saved_games) {
-                struct node *tmp = node;
-                node = node->next;
-                node_remove(tmp);
-                free(tmp->ptr);
-                node_unref(tmp);                
+        struct list *lptr = menu_saved_games.next;
+        while (lptr != &menu_saved_games) {
+                struct list *tmp = lptr;
+                lptr = lptr->next;
+                list_remove(tmp);
+                saved_game_unref(outcast(tmp, saved_game_t, list));
         }
 }
 
@@ -133,31 +278,16 @@ static void menu_cleanup_saved_game_list()
  * NULL).
  * @param fname The name of the saved game file, not including the full path.
  */
-static int sprintf_game_info(char *buf, int n, char *fname)
+static int sprintf_game_info(char *buf, int n, saved_game_t *save)
 {
         struct tm timeinfo;
-        struct stat fileinfo;
-        char *path;
         int ret = -1;
         char datebuf[n];
         int padlen;
         char mark = ' ';
 
-        /* Get the full path. */
-        path = file_mkpath(cfg_get("saved-games-dirname"), fname);
-        if (!path) {
-                warn("Could not alloc filename");
-                return -1;
-        }
-        
-        /* Get the modification time. */
-        if (stat(path, &fileinfo)) {
-                warn("Could not stat '%s'", path);
-                goto done;
-        }
-        
-        /* Convert the mod time from epoch to a time structure. */
-        localtime_r(&fileinfo.st_mtime, &timeinfo);
+        /* Convert the timestamp from epoch to a time structure. */
+        localtime_r(&save->timestamp, &timeinfo);
 
         /* Print the date to a temp buffer to see how big it is. */
         snprintf(datebuf, n, "%02d:%02d %02d/%02d/%d", timeinfo.tm_hour, 
@@ -165,19 +295,17 @@ static int sprintf_game_info(char *buf, int n, char *fname)
                  1900+timeinfo.tm_year);
 
         /* Calculate necessary padding to right-justify the date. */
-        padlen = n - (strlen(fname) + strlen(datebuf) + 1);
+        padlen = n - (strlen(save->fname) + strlen(datebuf) + 1);
 
         /* We'll mark the current game with an '*'. */
         if (menu_current_game_fname && 
-            ! strcmp(fname, menu_current_game_fname)) {
+            ! strcmp(save->fname, menu_current_game_fname)) {
                 mark = '*';
         }
 
         /* Print to the buffer. */
-        snprintf(buf, n, "%s %*c%c%s", fname, padlen, ' ', mark, datebuf);
-
- done:
-        free(path);
+        snprintf(buf, n, "%s %*c%c%s", save->fname, padlen, ' ', mark, 
+                 datebuf);
         return ret;
                  
 }
@@ -224,7 +352,7 @@ char * load_game_menu(void)
         char *menubuf, *menubufptr;
         int n = 0;
         int i = 0;
-        struct node *nodep = 0;
+        struct list *lptr = 0;
         struct KeyHandler kh;
 	struct ScrollerContext data;
         static char *selection = 0;
@@ -238,18 +366,18 @@ char * load_game_menu(void)
         }
 
         file_load_from_save_dir(cfg_get("save-game-filename"));
-        n = node_list_len(&menu_saved_games);
+        n = list_len(&menu_saved_games);
         menubuf = (char*)calloc(n, linew+1);
         assert(menubuf);
         menu = (char**)calloc(n, sizeof(menu[0]));
         assert(menu);
 
-        /* For each saved game.. */
+        /* Add each saved game to the menu list. */
         menubufptr = menubuf;
-        node_for_each(&menu_saved_games, nodep) {
+        list_for_each(&menu_saved_games, lptr) {
+                saved_game_t *save = outcast(lptr, saved_game_t, list);
                 menu[i] = menubufptr;
-                sprintf_game_info(menubufptr, linew+1, 
-                                  (char*)nodep->ptr);
+                sprintf_game_info(menubufptr, linew+1, save);
                 menubufptr += linew+1;
                 i++;
         }
@@ -291,47 +419,26 @@ char * load_game_menu(void)
 /**
  * Find the most recently saved game.
  *
- * @returns The name of the most recently saved game or 0 if there are none.
+ * @returns A copy of the full pathname of the most recently saved game, or 0
+ * if there are no saved games.
  */
 char * journey_onward(void)
 {
-        char *fname = 0, *suffix_name = 0;
-        struct node *nodep = 0;
         char *ret = 0;
-        time_t mtime = 0;
-        struct stat statbuf;
+        saved_game_t *save;
 
         /* Load all the saved-game info. */
         file_load_from_save_dir(cfg_get("save-game-filename"));
-
-        /* For each saved game... */
-        node_for_each(&menu_saved_games, nodep) {
-
-                /* Get the pathname. */
-                fname =  file_mkpath(cfg_get("saved-games-dirname"),
-                                     (char*)nodep->ptr);
-                if (!fname)
-                        continue;
-
-                /* Get the modification info. */
-                if (stat(fname, &statbuf)) {
-                        warn("Could not stat '%s'\n", fname);
-                        free(fname);
-                        continue;
-                }
-
-                /* Compare to find the most recent modified file. */
-                if (! ret
-                    || mtime < statbuf.st_mtime) {
-                        ret = fname;
-                        mtime = statbuf.st_mtime;
-                        suffix_name = (char*)nodep->ptr;
-                } else {
-                        free(fname);
-                }
+        
+        if (list_empty(&menu_saved_games)) {
+                return 0;
         }
 
-        menu_set_current_game_fname(suffix_name);
+        /* Since the saved game list is kept sorted by modification time, the
+         * first element in the list is the most recent. */
+        save = outcast(menu_saved_games.next, saved_game_t, list);
+        ret = strdup(save->path);
+        menu_set_current_game_fname(save->fname);
         menu_cleanup_saved_game_list();
         return ret;
 }
@@ -391,7 +498,7 @@ char * save_game_menu(void)
         char *menubuf, *menubufptr;
         int n = 0;
         int i = 0;
-        struct node *nodep = 0;
+        struct list *lptr = 0;
         struct KeyHandler kh;
 	struct ScrollerContext data;
         char *selection = 0;
@@ -401,7 +508,7 @@ char * save_game_menu(void)
         if (file_exists_in_save_dir(cfg_get("save-game-filename"))) {
                 file_load_from_save_dir(cfg_get("save-game-filename"));
         }
-        n = node_list_len(&menu_saved_games) + 1;
+        n = list_len(&menu_saved_games) + 1;
         menubuf = (char*)calloc(n, linew+1);
         assert(menubuf);
         menu = (char**)calloc(n, sizeof(menu[0]));
@@ -414,11 +521,11 @@ char * save_game_menu(void)
         menu[i++] = menubufptr;
         menubufptr += linew+1;
 
-        /* For each saved game add it to the list. */
-        node_for_each(&menu_saved_games, nodep) {
+        /* Add each saved game to the menu list. */
+        list_for_each(&menu_saved_games, lptr) {
+                saved_game_t *save = outcast(lptr, saved_game_t, list);
                 menu[i] = menubufptr;
-                sprintf_game_info(menubufptr, linew+1, 
-                                  (char*)nodep->ptr);
+                sprintf_game_info(menubufptr, linew+1, save);
                 menubufptr += linew+1;
                 i++;
         }
@@ -607,7 +714,7 @@ char * main_menu(void)
 
 int menu_init(void)
 {
-        node_init(&menu_saved_games);
+        list_init(&menu_saved_games);
         return 0;
 }
 
