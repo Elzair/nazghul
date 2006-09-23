@@ -20,10 +20,21 @@
 #ifndef menus_h
 #define menus_h
 
-#include <time.h>
-
+/**
+ * Initializes the menus for first-use. The cfg script must be loaded before
+ * calling this.
+ *
+ * @returns 0 on success, -1 on error.
+ */
 extern int menu_init(void);
+
 extern char *main_menu(void);
+
+/**
+ * Let the player choose from the available saved games.
+ *
+ * @return The full pathname of the save file.
+ */
 extern char *load_game_menu(void);
 extern char *save_game_menu(void);
 extern void menu_add_saved_game(char *fname);

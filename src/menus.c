@@ -31,6 +31,7 @@
 
 #include <assert.h>
 #include <errno.h>
+#include <time.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -44,6 +45,7 @@ typedef struct saved_game {
         char *path;       /**< Full pathname to save file */
         time_t timestamp; /**< Last modification time */
         int ref;          /**< Reference count on this struct */
+        char is_current;  /**< 1 iff this is the currently loaded game */
 } saved_game_t;
 
 
@@ -57,7 +59,7 @@ static struct list menu_saved_games;
  * Keep track of the name of the currently loaded game so we can mark it in the
  * load and save menus.
  */
-static char *menu_current_game_fname = 0;
+static saved_game_t *menu_current_saved_game = 0;
 
 /**
  * Delete a saved game struct and all it's strings. Don't call this, use
@@ -112,12 +114,14 @@ static saved_game_t *saved_game_new(char *fname)
                 goto abort;
         }
         
-        /* Get the timestamp. */
-        if (stat(save->path, &fileinfo)) {
-                warn("Could not stat '%s'", save->path);
-                goto abort;
+        /* Get the timestamp on the file. */
+        if (! stat(save->path, &fileinfo)) {
+                save->timestamp = fileinfo.st_mtime;
+        } else {
+                /* This is probably a new save that hasn't been written to file
+                 * yet. Use the current time as it's timestamp. */
+                save->timestamp = time(0);
         }
-        save->timestamp = fileinfo.st_mtime;
 
         save->ref = 1;
         return save;
@@ -256,20 +260,6 @@ void menu_add_saved_game(char *fname)
 }
 
 /**
- * Removes and unreferences all the saved game structs on the list.
- */
-static void menu_cleanup_saved_game_list()
-{
-        struct list *lptr = menu_saved_games.next;
-        while (lptr != &menu_saved_games) {
-                struct list *tmp = lptr;
-                lptr = lptr->next;
-                list_remove(tmp);
-                saved_game_unref(outcast(tmp, saved_game_t, list));
-        }
-}
-
-/**
  * Print the saved game's name, timestamp and other info for display in the
  * status window.
  *
@@ -298,8 +288,7 @@ static int sprintf_game_info(char *buf, int n, saved_game_t *save)
         padlen = n - (strlen(save->fname) + strlen(datebuf) + 1);
 
         /* We'll mark the current game with an '*'. */
-        if (menu_current_game_fname && 
-            ! strcmp(save->fname, menu_current_game_fname)) {
+        if (save->is_current) {
                 mark = '*';
         }
 
@@ -330,22 +319,43 @@ static char *menu_entry_to_fname(char *entry)
 }
 
 /**
- * Store a copy of the current game filename before it is loaded.
- * @param fname The filename to copy.
+ * Reset the current saved game.
+ * @param save A pointer to the new saved game struct.
  */
-static void menu_set_current_game_fname(char *fname)
+static void menu_set_current_saved_game(saved_game_t *save)
 {
-        if (menu_current_game_fname) {
-                free(menu_current_game_fname);
+        if (menu_current_saved_game) {
+                menu_current_saved_game->is_current = 0;
+                saved_game_unref(menu_current_saved_game);
+                menu_current_saved_game = 0;
         }
-        menu_current_game_fname = strdup(fname);
+        menu_current_saved_game = save;
+        if (save) {
+                save->is_current = 1;
+                save->ref++;
+                /* Move it to the front of the list. */
+                list_remove(&save->list);
+                list_add(&menu_saved_games, &save->list);
+        }
 }
 
 /**
- * Let the player choose from the available saved games.
+ * Search the list of saved games for one with the given file name.
  *
- * @return The full pathname of the save file.
+ * @param fname Filename to search for.
+ * @returns The saved game with the matching filename, or 0 if none found.
  */
+static saved_game_t *saved_game_lookup(char *fname)
+{
+        struct list *lptr;
+        list_for_each(&menu_saved_games, lptr) {
+                saved_game_t *save = outcast(lptr, saved_game_t, list);
+                if (! strcmp(fname, save->fname))
+                        return save;
+        }
+        return 0;
+}
+
 char * load_game_menu(void)
 {
         char **menu = 0;
@@ -364,8 +374,7 @@ char * load_game_menu(void)
                 free(selection);
                 selection = 0;
         }
-
-        file_load_from_save_dir(cfg_get("save-game-filename"));
+        
         n = list_len(&menu_saved_games);
         menubuf = (char*)calloc(n, linew+1);
         assert(menubuf);
@@ -397,21 +406,17 @@ char * load_game_menu(void)
          * return. */
         if (data.selection) {
                 char *fname = menu_entry_to_fname((char*)data.selection);
-                selection = file_mkpath(cfg_get("saved-games-dirname"),
-                                        fname);
+                saved_game_t *save = saved_game_lookup(fname);
+                assert(save);
+                selection = strdup(save->path);
                 assert(selection);
-
-                menu_set_current_game_fname(fname);
-
+                menu_set_current_saved_game(save);
                 free(fname);
         }
 
         statusSetMode(omode);
-
-        menu_cleanup_saved_game_list();
         free(menu);
         free(menubuf);
-
 
         return selection;
 }
@@ -427,9 +432,6 @@ char * journey_onward(void)
         char *ret = 0;
         saved_game_t *save;
 
-        /* Load all the saved-game info. */
-        file_load_from_save_dir(cfg_get("save-game-filename"));
-        
         if (list_empty(&menu_saved_games)) {
                 return 0;
         }
@@ -438,8 +440,7 @@ char * journey_onward(void)
          * first element in the list is the most recent. */
         save = outcast(menu_saved_games.next, saved_game_t, list);
         ret = strdup(save->path);
-        menu_set_current_game_fname(save->fname);
-        menu_cleanup_saved_game_list();
+        menu_set_current_saved_game(save);
         return ret;
 }
 
@@ -461,10 +462,15 @@ static char *prompt_for_fname()
         return 0;
 }
 
-static int menu_rewrite_saves(char **menu, int n)
+/**
+ * Rewrite the saved-game script, using the current list of saved games.
+ *
+ * @returns -1 on error, 0 on success.
+ */
+static int menu_rewrite_saves()
 {
-        FILE *file = 0;
-        int i;
+        FILE *file;
+        struct list *lptr;
         char *fname = cfg_get("save-game-filename");
 
         file = file_open_in_save_dir(fname, "w");
@@ -473,10 +479,9 @@ static int menu_rewrite_saves(char **menu, int n)
                 return -1;
         }
         
-        for (i = 0; i < n; i++) {
-                char *fname = menu_entry_to_fname(menu[i]);
-                fprintf(file, "(kern-add-save-game \"%s\")\n", fname);
-                free(fname);
+        list_for_each(&menu_saved_games, lptr) {
+                saved_game_t *save = outcast(lptr, saved_game_t,  list);
+                fprintf(file, "(kern-add-save-game \"%s\")\n", save->fname);
         }
 
         fclose(file);
@@ -505,29 +510,43 @@ char * save_game_menu(void)
         enum StatusMode omode = statusGetMode();
         int linew = STAT_CHARS_PER_LINE;
 
-        if (file_exists_in_save_dir(cfg_get("save-game-filename"))) {
-                file_load_from_save_dir(cfg_get("save-game-filename"));
-        }
         n = list_len(&menu_saved_games) + 1;
         menubuf = (char*)calloc(n, linew+1);
         assert(menubuf);
         menu = (char**)calloc(n, sizeof(menu[0]));
         assert(menu);
 
-        /* The first entry is always New Save Game. */
         i = 0;
         menubufptr = menubuf;
+
+        /* The first entry is always the currently loaded game (if there is
+         * one), which should always be first in the list. */
+        if (menu_current_saved_game) {
+                assert(menu_saved_games.next 
+                       == &menu_current_saved_game->list);
+                sprintf_game_info(menubufptr, linew+1, 
+                                  menu_current_saved_game);
+                menu[i++] = menubufptr;
+                menubufptr += linew+1;
+        }
+
+        /* The next entry is always New Save Game. */
         sprintf(menubufptr, NEW_SAVED_GAME);
         menu[i++] = menubufptr;
         menubufptr += linew+1;
 
-        /* Add each saved game to the menu list. */
-        list_for_each(&menu_saved_games, lptr) {
-                saved_game_t *save = outcast(lptr, saved_game_t, list);
-                menu[i] = menubufptr;
-                sprintf_game_info(menubufptr, linew+1, save);
-                menubufptr += linew+1;
-                i++;
+        /* The remaining saved games are listed in timestamp order, as they
+         * appear in the list. */
+        if (menu_current_saved_game) {
+                lptr = menu_current_saved_game->list.next;
+                while (lptr != &menu_saved_games) {
+                        saved_game_t *save = outcast(lptr, saved_game_t, list);
+                        lptr = lptr->next;
+                        menu[i] = menubufptr;
+                        sprintf_game_info(menubufptr, linew+1, save);
+                        menubufptr += linew+1;
+                        i++;
+                }
         }
         
         statusSetStringList("Save Game", n, menu);
@@ -571,9 +590,12 @@ reselect:
                            typed */
                         snprintf(menu[0], linew, selection);
 
+                        /* Add a new saved game struct to the list. */
+                        menu_add_saved_game(selection);
+
                         /* Re-write the saved games file to add the new
                          * save. */
-                        menu_rewrite_saves(menu, i);
+                        menu_rewrite_saves();
 
                 } else if (confirm_selection()) {
                         selection = menu_entry_to_fname((char*)data.selection);
@@ -582,10 +604,14 @@ reselect:
                 }
         }
 
+        /* Set the selected saved game as current. */
+        if (selection) {
+                menu_set_current_saved_game(saved_game_lookup(selection));
+        }
+
         /* Restore the original status mode before deleting the list. */
         statusSetMode(omode);
 
-        menu_cleanup_saved_game_list();
         free(menu);
         free(menubuf);
 
@@ -714,7 +740,11 @@ char * main_menu(void)
 
 int menu_init(void)
 {
+        char *fname = cfg_get("save-game-filename");
         list_init(&menu_saved_games);
+        if (file_exists_in_save_dir(fname)) {
+                file_load_from_save_dir(fname);
+        }
         return 0;
 }
 
