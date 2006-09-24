@@ -72,7 +72,7 @@
 ;; gem -- use peer spell
 (mk-usable-item 't_gem "gem" s_gem 2
                 (lambda (kgem kuser)
-                  (in-quas-wis nil kuser)))
+                  (powers-view kuser kuser 12) #t))
 
 ;; sledge-hammer -- shatter rocks
 (mk-reusable-item 't_pick "pick" s_pick 2
@@ -258,7 +258,7 @@
   (ifc '()
        (method 'handle 
                (lambda (kmirror kuser)
-                 (kern-log-msg (kern-obj-get-name kuser) " spots a " (kern-obj-get-name kuser) " in the mirror")
+                 (kern-log-msg (kern-obj-get-name kuser) " spots " (kern-obj-get-name kuser) " in the mirror")
                  ))
        (method 'step
                (lambda (kmirror kuser)
@@ -312,3 +312,25 @@
 		(bind kshelf nil)
 		kshelf))
 
+;;---------------------------------------------------------
+;; blocker
+
+(define blocker-ifc
+  (ifc '()
+		(method 'step
+			(lambda (kobj kuser)
+				))
+		(method 'init
+            (lambda (kobj)
+				(kern-obj-set-pclass kobj pclass-wall)
+            ))
+       ))
+
+(mk-obj-type 't_blocker nil
+	'()
+	layer-mechanism blocker-ifc)
+
+(define (mk-blocker)
+	(let ((kstop (kern-mk-obj t_blocker 1)))
+		(bind kstop nil)
+		kstop))
