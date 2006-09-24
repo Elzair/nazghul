@@ -23,6 +23,7 @@
 #define map_h
 
 #include "macros.h"
+#include <SDL.h>
 
 BEGIN_DECL
 
@@ -94,6 +95,9 @@ extern void mapPaintDamage(int x, int y);
 extern void mapSetSelected(class Object *obj);
 
 extern int mapScreenToPlaceCoords(int *x, int *y);
+extern void mapSetImage(SDL_Surface *image);
+extern void mapClearImage(void);
+
 
 END_DECL
 

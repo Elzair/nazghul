@@ -28,6 +28,7 @@
 #include "cfg.h"
 #include "images.h"
 
+#include <png.h>
 #include <unistd.h>
 #include <stdarg.h>
 #include <assert.h>
@@ -114,7 +115,6 @@ void screenInitScreen(void)
 	Uint32 flags = 0;
 	const SDL_VideoInfo *fmt;
 
-        /* gmcnutt: why 16? I don't remember. */
         const int SCREEN_BPP = 32;
 
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -846,4 +846,98 @@ void screenZoomIn(int factor)
 {
 	if (factor)
 		Zoom /= factor;
+}
+
+void screenCapture(char *fname, SDL_Rect *rect)
+{
+        png_structp png_ptr = 0;
+        png_infop info_ptr = 0;
+        Uint32 *spix = 0;
+        Uint8 *row_pointer = 0;
+        int si, spitch;
+
+        /* Open the destination file. */
+        FILE *fp = fopen(fname, "wb");
+        if (!fp) {
+                return;
+        }
+
+        /* Setup PNG for writing. */
+        png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, 
+                                          (png_voidp)0,
+                                          0, 
+                                          0);
+        if (!png_ptr) {
+                goto done;
+                return;
+        }
+
+        info_ptr = png_create_info_struct(png_ptr);
+        if (!info_ptr) {
+                goto done;
+        }
+        
+        if (setjmp(png_jmpbuf(png_ptr))) {
+                warn("screenCapture: PNG error!\n");
+                goto done;
+        }
+
+        png_init_io(png_ptr, fp);
+
+        /* Setup the image header. */
+        png_set_IHDR(png_ptr, info_ptr,
+                     MAP_W,
+                     MAP_H,
+                     8,
+                     PNG_COLOR_TYPE_RGB,
+                     PNG_INTERLACE_NONE,
+                     PNG_COMPRESSION_TYPE_DEFAULT,
+                     PNG_FILTER_TYPE_DEFAULT);
+
+        /* Write the header. */
+        png_write_info(png_ptr, info_ptr);
+
+        /* Grab the screen pixels. */
+        assert(Screen->format->BytesPerPixel==4);
+        spix = (Uint32*)Screen->pixels;
+        spitch = Screen->pitch / Screen->format->BytesPerPixel;
+
+        /* Allocate the row buffer. I copy pixels to an intermediate row buffer
+         * so that I can handle different pixel formats (eg, RGBA vs ARGB,
+         * etc). */
+        row_pointer = (Uint8*)malloc(rect->w * 3);
+        assert(row_pointer);
+
+        for (int y = 0; y < rect->h; y++) {
+
+                /* Copy the SDL pixels into the intermediate buffer. PNG
+                 * expects pixels in RGB order. */
+                Uint8 *dpix = row_pointer;
+                for (int x = 0; x < rect->w; x++) {
+                        si = (y + rect->y) * spitch + (x + rect->x);
+                        *dpix++ = ((spix[si] & Screen->format->Rmask) 
+                                   >> Screen->format->Rshift);
+                        *dpix++ = ((spix[si] & Screen->format->Gmask) 
+                                   >> Screen->format->Gshift);
+                        *dpix++ = ((spix[si] & Screen->format->Bmask) 
+                                   >> Screen->format->Bshift);
+                }
+
+                /* Write the row to PNG. */
+                png_write_row(png_ptr, row_pointer);
+        }
+
+        png_write_end(png_ptr, 0);
+
+ done:
+        if (row_pointer) {
+                free(row_pointer);
+        }
+
+        if (png_ptr) {
+                png_destroy_write_struct(&png_ptr, &info_ptr);
+        }
+        
+        fclose(fp);
+
 }

@@ -103,6 +103,7 @@ static struct map {
         struct light_source *lights;
         unsigned char *lmap;
         unsigned char *tmp_lmap;
+        char is_image_mode : 1;
 } Map;
 
 static void myRmView(struct mview *view, void *data)
@@ -1145,6 +1146,9 @@ void mapMoveCamera(int dx, int dy)
 
 void mapUpdate(int flags)
 {
+        if (Map.is_image_mode)
+                return;
+
 	mapRepaintView(Map.cam_view, flags);
 }
 
@@ -1616,4 +1620,17 @@ int mapScreenToPlaceCoords(int *x, int *y)
         *x = place_wrap_x(Map.place, px);
         *y = place_wrap_y(Map.place, py);
         return 0;
+}
+
+void mapSetImage(SDL_Surface *image)
+{
+        Map.is_image_mode = 1;
+        screenBlit(image, NULL, &Map.srect);
+        screenUpdate(&Map.srect);
+}
+
+void mapClearImage(void)
+{
+        Map.is_image_mode = 0;
+        mapUpdate(0);
 }

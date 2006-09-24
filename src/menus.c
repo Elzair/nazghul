@@ -26,12 +26,16 @@
 #include "event.h"
 #include "log.h"
 #include "list.h"
+#include "map.h"
+#include "screen.h"
 #include "status.h"
 #include "file.h"
 
 #include <assert.h>
 #include <errno.h>
+#include <png.h>
 #include <time.h>
+#include <SDL_image.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -40,12 +44,13 @@
  * Struct used to keep information about saved game files.
  */
 typedef struct saved_game {
-        struct list list; /**< For menu_saved_games list */
-        char *fname;      /**< Filename (w/o path) */
-        char *path;       /**< Full pathname to save file */
-        time_t timestamp; /**< Last modification time */
-        int ref;          /**< Reference count on this struct */
-        char is_current;  /**< 1 iff this is the currently loaded game */
+        struct list list;        /**< For menu_saved_games list */
+        char *fname;             /**< Filename (w/o path) */
+        char *path;              /**< Full pathname to save file */
+        time_t timestamp;        /**< Last modification time */
+        int ref;                 /**< Reference count on this struct */
+        SDL_Surface *screenshot; /**< Map screenshot */
+        char is_current;         /**< is this the currently loaded game? */
 } saved_game_t;
 
 
@@ -75,7 +80,17 @@ static void saved_game_del(saved_game_t *save)
                 free(save->fname);
         if (save->path)
                 free(save->path);
+        if (save->screenshot)
+                SDL_FreeSurface(save->screenshot);
         free(save);
+}
+
+static char *saved_game_mk_screenshot_fname(saved_game_t *save)
+{
+        char *s_fname = (char*)malloc(strlen(save->path)+5);
+        assert(s_fname);
+        sprintf(s_fname, "%s.png", save->path);
+        return s_fname;
 }
 
 /**
@@ -90,6 +105,7 @@ static void saved_game_del(saved_game_t *save)
 static saved_game_t *saved_game_new(char *fname)
 {
         struct stat fileinfo;
+        char *s_fname = 0;
         saved_game_t *save = (saved_game_t*)malloc(sizeof(*save));
         if (!save) {
                 warn("Could not alloc save");
@@ -113,7 +129,7 @@ static saved_game_t *saved_game_new(char *fname)
                 warn("Could not alloc filename");
                 goto abort;
         }
-        
+
         /* Get the timestamp on the file. */
         if (! stat(save->path, &fileinfo)) {
                 save->timestamp = fileinfo.st_mtime;
@@ -122,6 +138,13 @@ static saved_game_t *saved_game_new(char *fname)
                  * yet. Use the current time as it's timestamp. */
                 save->timestamp = time(0);
         }
+
+        /* Load the screenshot. Ignore failure. */
+        s_fname = saved_game_mk_screenshot_fname(save);
+        if (file_exists(s_fname)) {
+                save->screenshot = IMG_Load(s_fname);
+        }
+        free(s_fname);
 
         save->ref = 1;
         return save;
@@ -528,6 +551,11 @@ char * save_game_menu(void)
                                   menu_current_saved_game);
                 menu[i++] = menubufptr;
                 menubufptr += linew+1;
+
+                /* Test: blit the screenshot */
+                if (menu_current_saved_game->screenshot) {
+                        mapSetImage(menu_current_saved_game->screenshot);
+                }
         }
 
         /* The next entry is always New Save Game. */
@@ -604,13 +632,24 @@ reselect:
                 }
         }
 
-        /* Set the selected saved game as current. */
+        /* Set the selected saved game as current and store a screenshot. */
         if (selection) {
-                menu_set_current_saved_game(saved_game_lookup(selection));
+                saved_game_t *save = saved_game_lookup(selection);
+                char *s_fname = saved_game_mk_screenshot_fname(save);
+                SDL_Rect rect;
+                rect.x = MAP_X;
+                rect.y = MAP_Y;
+                rect.w = MAP_W;
+                rect.h = MAP_H;
+                screenCapture(s_fname, &rect);
+                save->screenshot = IMG_Load(s_fname);
+                menu_set_current_saved_game(save);
+                free(s_fname);
         }
 
         /* Restore the original status mode before deleting the list. */
         statusSetMode(omode);
+        mapClearImage();
 
         free(menu);
         free(menubuf);

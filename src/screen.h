@@ -88,6 +88,7 @@ extern void screenZoomIn(int factor);
 
 extern void screen_fade_surface(SDL_Surface * surf, int transparency);
 extern void screen_repaint_frame(void);
+extern void screenCapture(char *fname, SDL_Rect *rect);
 
 END_DECL
 
