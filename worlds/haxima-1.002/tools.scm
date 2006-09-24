@@ -229,6 +229,7 @@
 (define (mk-clock)
 	(let ((kclock (kern-mk-obj t_clock 1)))
 		(kern-obj-add-effect kclock ef_graphics_update nil) 
+		(bind kclock nil)
 		kclock))
 		
 (mk-obj-type 't_broken_clock "clock"
