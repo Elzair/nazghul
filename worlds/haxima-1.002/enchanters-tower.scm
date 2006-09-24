@@ -249,17 +249,11 @@
 	(put (mk-shelf) 9 13)
 	(put (mk-shelf) 11 13)
 	
-	;;(put (mk-shelf) 9 15)
 	(put (mk-shelf) 10 15)
 	(put (mk-shelf) 11 15)
-	
-	;;(put (mk-shelf) 12 18)
-	;;(put (mk-shelf) 13 18)
-	;;(put (mk-shelf) 14 18)
 
 	(put (mk-shelf) 16 18)
 	(put (mk-shelf) 17 18)
-	(put (mk-shelf) 18 18)
 
 	(put (mk-hidden t_ylem_an_ex_book 1) 14 9)
    
@@ -369,6 +363,10 @@
 		'ench-lib-wall)
 			(list p_enchanters_tower_l2 9 15))
 	)	
+	
+;;magic clock
+(kern-obj-put-at (mk-mag-clock) (list p_enchanters_tower_l2 18 18))
+ 
  
 (kern-mk-place '
  p_enchanters_tower_l3 ; tag

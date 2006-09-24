@@ -208,3 +208,57 @@
 		"Clean up more often!"
 		"   -- the MAN"
    )))
+   
+   
+;;--------------------------
+;; magic clock. runs backwards. casts time stop
+
+
+(define mag-clock-ifc
+  (let ((mod
+			(lambda (input modulus)
+				(- input (* (floor (/ input modulus)) modulus))
+			)))
+  (ifc '()
+		(method 'handle 
+			(lambda (kclock kuser)
+				(kern-log-msg "The clock hands stop moving!")
+				(powers-timestop kuser kuser 30)
+			))
+		(method 'xamine 
+			(lambda (kclock kuser)
+				(let* ((time (kern-get-time))
+						(hour (floor (/ (* 12 (- 60 (time-minute time))) 60)))
+						(hour (number->string
+							(if (< 1 hour) hour	12)))
+						(min (- 6 (mod (time-minute time) 6)))
+						(min (if (> min 5)
+								"00"
+								(number->string (* 10 min)))))
+					(kern-log-msg "The clock reads " hour ":" min)
+				)))
+		(method 'step
+			(lambda (kmirror kuser)
+				))
+		(method 'update-gfx
+			(lambda (kclock)
+				(let* ((time (kern-get-time))
+						(min-hand (clock-get-hand (- 60 (time-minute time))))
+						(hour-hand (clock-get-hand (floor (/ (- 65 (time-minute time)) 10)))))
+					(kern-obj-set-sprite kclock (mk-composite-sprite (list s_clock_body hour-hand min-hand)))
+				)))
+		(method 'init
+            (lambda (kmirror)
+				(kern-obj-set-pclass kmirror pclass-wall)
+            ))	
+       )))
+
+(mk-obj-type 't_mag_clock "clock"
+	(mk-composite-sprite (list s_clock_body s_clock_hand_n s_clock_spin))
+	layer-mechanism mag-clock-ifc)
+
+(define (mk-mag-clock)
+	(let ((kclock (kern-mk-obj t_mag_clock 1)))
+		(kern-obj-add-effect kclock ef_graphics_update nil)
+		(bind kclock nil)
+		kclock))
