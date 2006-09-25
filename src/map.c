@@ -1625,12 +1625,15 @@ int mapScreenToPlaceCoords(int *x, int *y)
 void mapSetImage(SDL_Surface *image)
 {
         Map.is_image_mode = 1;
-        screenBlit(image, NULL, &Map.srect);
+        if (image) {
+                screenBlit(image, NULL, &Map.srect);
+        } else {
+                screenErase(&Map.srect);
+        }
         screenUpdate(&Map.srect);
 }
 
 void mapClearImage(void)
 {
         Map.is_image_mode = 0;
-        mapUpdate(0);
 }

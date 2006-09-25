@@ -41,7 +41,7 @@
 #include <unistd.h>
 
 /**
- * Struct used to keep information about saved game files.
+ * Information about saved game files.
  */
 typedef struct saved_game {
         struct list list;        /**< For menu_saved_games list */
@@ -53,6 +53,22 @@ typedef struct saved_game {
         char is_current;         /**< is this the currently loaded game? */
 } saved_game_t;
 
+/**
+ * The context used for the menu_scroll function. This keeps track of the
+ * currently selected saved game from the menu and communicates a player abort
+ * back to the menu code.
+ */
+typedef struct {
+        saved_game_t *save; /**< Currently highlighted saved game */
+        char abort : 1;     /**< The player aborted the selection */
+} menu_scroll_data_t;
+
+
+/**
+ * The main menu uses this to rest the splash image if the user enters the load
+ * menu but then changes his mind and backs out to the main menu.
+ */
+extern void nazghul_splash(void);
 
 /**
  * The list of saved games, built when we evaluate the saved-game script for
@@ -65,6 +81,11 @@ static struct list menu_saved_games;
  * load and save menus.
  */
 static saved_game_t *menu_current_saved_game = 0;
+
+/**
+ * This is what the Save Game menu shows for the new game option.
+ */
+static char *MENU_NEW_GAME_STR = "New Saved Game";
 
 /**
  * Delete a saved game struct and all it's strings. Don't call this, use
@@ -85,6 +106,13 @@ static void saved_game_del(saved_game_t *save)
         free(save);
 }
 
+/**
+ * Infer the filename of a screenshot from the filename for the saved game.
+ *
+ * @param save The saved game that goes with the screenshot.
+ * @returns The full pathname to the screenshot file. The caller should free()
+ * the string when done using it.
+ */
 static char *saved_game_mk_screenshot_fname(saved_game_t *save)
 {
         char *s_fname = (char*)malloc(strlen(save->path)+5);
@@ -108,7 +136,7 @@ static saved_game_t *saved_game_new(char *fname)
         char *s_fname = 0;
         saved_game_t *save = (saved_game_t*)malloc(sizeof(*save));
         if (!save) {
-                warn("Could not alloc save");
+                warn("Could not alloc save\n");
                 return 0;
         }
 
@@ -119,14 +147,14 @@ static saved_game_t *saved_game_new(char *fname)
         /* Keep a copy of the file name. */
         save->fname = strdup(fname);
         if (! save->fname) {
-                warn("Could not alloc fname");
+                warn("Could not alloc fname\n");
                 goto abort;
         }
 
         /* Build the full path. */
         save->path = file_mkpath(cfg_get("saved-games-dirname"), fname);
         if (!save->path) {
-                warn("Could not alloc filename");
+                warn("Could not alloc filename\n");
                 goto abort;
         }
 
@@ -263,7 +291,7 @@ void menu_add_saved_game(char *fname)
         /* Create a new saved game list element. */
         saved_game_t *save = saved_game_new(fname);
         if (!save) {
-                warn("menu_add_saved_game: could not add '%s'", fname);
+                warn("menu_add_saved_game: could not add '%s'\n", fname);
                 return;
         }
 
@@ -308,7 +336,7 @@ static int sprintf_game_info(char *buf, int n, saved_game_t *save)
                  1900+timeinfo.tm_year);
 
         /* Calculate necessary padding to right-justify the date. */
-        padlen = n - (strlen(save->fname) + strlen(datebuf) + 1);
+        padlen = n - (strlen(save->fname) + strlen(datebuf) + 3);
 
         /* We'll mark the current game with an '*'. */
         if (save->is_current) {
@@ -379,6 +407,97 @@ static saved_game_t *saved_game_lookup(char *fname)
         return 0;
 }
 
+/**
+ * Show a screenshot over the map viewer with the words "SCREEN SHOT" in the
+ * middle.
+ *
+ * @param screenshot The image to show, or 0 to just show a blank screen. For a
+ * blank screen the words "SCREEN SHOT" are still printed.
+ */
+static void menu_show_screenshot(SDL_Surface *screenshot)
+{
+        static char *MENU_SCREEN_SHOT_STR = "^c+ySCREEN SHOT^c-";
+        SDL_Rect rect;
+
+        mapSetImage(screenshot);
+        rect.x = (((MAP_X + MAP_W) / 2) - (5 * ASCII_W));
+        rect.y = (MAP_Y + MAP_H)/2;
+        rect.w = strlen(MENU_SCREEN_SHOT_STR);
+        rect.h = ASCII_H;
+        screenPrint(&rect, 0, MENU_SCREEN_SHOT_STR);
+
+        rect.w *= ASCII_W;
+        screenUpdate(&rect);
+}
+
+/**
+ * Get the highlighted menu item from the status viewer and figure out which
+ * saved game it corresponds to.
+ *
+ * @returns The saved game struct that goes with the menu entry, or 0 if the
+ * "New Game" option is highlighted.
+ */
+static saved_game_t *menu_scroller_get_selected()
+{
+        char *fname;
+        char *entry_str = (char*)statusGetSelected(String);
+        if (!entry_str) {
+                return 0;
+        }
+        if (! strcmp(entry_str, MENU_NEW_GAME_STR)) {
+                return 0;
+        }
+        fname = menu_entry_to_fname(entry_str);
+        return saved_game_lookup(fname);
+}
+
+/**
+ * Scroll the status window for the load/save menus. As the player scrolls over
+ * a saved game, show its screenshot on the map window.
+ *
+ * @param kh Keyhandler with the menu context as its data element.
+ * @param key The key pressed by the player.
+ * @param keymod Reflects the status of the SHIFT, CTRL and ALT keys.
+ * @returns 0 to keep the Status window in scroll mode, 1 to end it.
+ */
+int menu_scroller(struct KeyHandler * kh, int key, int keymod)
+{
+	menu_scroll_data_t *data = (menu_scroll_data_t *) kh->data;
+        enum StatusScrollDir dir;
+
+	switch (key) {
+	case KEY_NORTH:
+                dir = ScrollUp;
+		break;
+	case KEY_SOUTH:
+                dir = ScrollDown;
+		break;
+	case SDLK_PAGEUP:
+                dir = ScrollPageUp;
+		break;
+	case SDLK_PAGEDOWN:
+                dir = ScrollPageDown;
+		break;
+	case SDLK_RETURN:
+	case SDLK_SPACE:
+	case '\n':
+                data->save = menu_scroller_get_selected();
+		return 1;
+	case SDLK_ESCAPE:
+	case 'q':
+                data->abort = 1;
+		return 1;
+	default:
+		break;
+	}
+
+        statusScroll(dir);
+        data->save = menu_scroller_get_selected();
+        menu_show_screenshot(data->save ? data->save->screenshot : 0);
+
+	return 0;
+}
+
 char * load_game_menu(void)
 {
         char **menu = 0;
@@ -387,17 +506,12 @@ char * load_game_menu(void)
         int i = 0;
         struct list *lptr = 0;
         struct KeyHandler kh;
-	struct ScrollerContext data;
+	menu_scroll_data_t data;
         static char *selection = 0;
         enum StatusMode omode = statusGetMode();
         int linew = STAT_CHARS_PER_LINE;
 
-        /* Erase any previous selection. */
-        if (selection) {
-                free(selection);
-                selection = 0;
-        }
-        
+        /* Allocate the memory for the menu strings. */
         n = list_len(&menu_saved_games);
         menubuf = (char*)calloc(n, linew+1);
         assert(menubuf);
@@ -417,9 +531,17 @@ char * load_game_menu(void)
         statusSetStringList("Load Game", n, menu);
         statusSetMode(StringList);
 
-        data.selection = NULL;
-        data.selector  = String;
-        kh.fx   = scroller;
+        /* Setup the initial screen shot */
+        if (list_empty(&menu_saved_games)) {
+                menu_show_screenshot(0);
+        } else {
+                saved_game_t *save = outcast(menu_saved_games.next, 
+                                             saved_game_t, list);
+                menu_show_screenshot(save->screenshot);
+        }
+
+        memset(&data, 0, sizeof(data));
+        kh.fx = menu_scroller;
         kh.data = &data;
 	eventPushKeyHandler(&kh);
 	eventHandle();
@@ -427,16 +549,14 @@ char * load_game_menu(void)
 
         /* If the player selected something then build the full pathname for
          * return. */
-        if (data.selection) {
-                char *fname = menu_entry_to_fname((char*)data.selection);
-                saved_game_t *save = saved_game_lookup(fname);
-                assert(save);
-                selection = strdup(save->path);
+        if (! data.abort
+            && data.save) {
+                selection = strdup(data.save->path);
                 assert(selection);
-                menu_set_current_saved_game(save);
-                free(fname);
+                menu_set_current_saved_game(data.save);
         }
 
+        mapClearImage();
         statusSetMode(omode);
         free(menu);
         free(menubuf);
@@ -521,132 +641,170 @@ static int menu_rewrite_saves()
  */
 char * save_game_menu(void)
 {
-        static char *NEW_SAVED_GAME = "New Saved Game";
         char **menu = 0;
         char *menubuf, *menubufptr;
         int n = 0;
         int i = 0;
         struct list *lptr = 0;
         struct KeyHandler kh;
-	struct ScrollerContext data;
-        char *selection = 0;
+        menu_scroll_data_t data;
         enum StatusMode omode = statusGetMode();
         int linew = STAT_CHARS_PER_LINE;
+        saved_game_t *selected_game = 0;
 
+        /* Allocate the string buffers to display the menu. */
         n = list_len(&menu_saved_games) + 1;
         menubuf = (char*)calloc(n, linew+1);
         assert(menubuf);
         menu = (char**)calloc(n, sizeof(menu[0]));
         assert(menu);
 
+        /* Prepare to fill in the menu list. */
         i = 0;
         menubufptr = menubuf;
 
-        /* The first entry is always the currently loaded game (if there is
-         * one), which should always be first in the list. */
+        /* Is there a game already loaded? */
         if (menu_current_saved_game) {
+
+                /* It should be first in the list of saved games. */
                 assert(menu_saved_games.next 
                        == &menu_current_saved_game->list);
+                
+                /* Put it as the top item in the menu. */
                 sprintf_game_info(menubufptr, linew+1, 
                                   menu_current_saved_game);
                 menu[i++] = menubufptr;
                 menubufptr += linew+1;
-
-                /* Test: blit the screenshot */
-                if (menu_current_saved_game->screenshot) {
-                        mapSetImage(menu_current_saved_game->screenshot);
-                }
         }
 
-        /* The next entry is always New Save Game. */
-        sprintf(menubufptr, NEW_SAVED_GAME);
+        /* The next entry is always the New Save Game option. */
+        sprintf(menubufptr, MENU_NEW_GAME_STR);
         menu[i++] = menubufptr;
         menubufptr += linew+1;
 
-        /* The remaining saved games are listed in timestamp order, as they
-         * appear in the list. */
+        /* Prepare to list the remaining saved games. */
         if (menu_current_saved_game) {
                 lptr = menu_current_saved_game->list.next;
-                while (lptr != &menu_saved_games) {
-                        saved_game_t *save = outcast(lptr, saved_game_t, list);
-                        lptr = lptr->next;
-                        menu[i] = menubufptr;
-                        sprintf_game_info(menubufptr, linew+1, save);
-                        menubufptr += linew+1;
-                        i++;
-                }
+        } else {
+                lptr = menu_saved_games.next;
         }
-        
+
+        /* The remaining saved games are in timestamp order on the list; add
+         * them to the menu in this order. */
+        while (lptr != &menu_saved_games) {
+                saved_game_t *save = outcast(lptr, saved_game_t, list);
+                lptr = lptr->next;
+                menu[i] = menubufptr;
+                sprintf_game_info(menubufptr, linew+1, save);
+                menubufptr += linew+1;
+                i++;
+        }
+
+        /* Setup the menu in the status window. */
         statusSetStringList("Save Game", n, menu);
         statusSetMode(StringList);
 
+        /* Show the initial screenshot. */
+        menu_show_screenshot(menu_current_saved_game 
+                             ? menu_current_saved_game->screenshot
+                             : 0);
+
 reselect:
-        data.selection = NULL;
-        data.selector  = String;
-        kh.fx   = scroller;
+        memset(&data, 0, sizeof(data));
+        kh.fx = menu_scroller;
         kh.data = &data;
 	eventPushKeyHandler(&kh);
 	eventHandle();
 	eventPopKeyHandler();
 
-        if (data.selection) {
+        if (data.abort) {
+                selected_game = 0;
+                goto done;
+        }
 
-                /* New saved game? */
-                if (!strcmp((char*)data.selection, NEW_SAVED_GAME)) {
-                        int need_rewrite = 1;
-                        selection = prompt_for_fname();
-                        if (!selection)
-                                goto reselect;
+        /* Did the player select an existing saved game? */
+        if (data.save) {
 
-                        /* Check if the player re-typed an existing filename */
-                        for (i = 1; i < n; i++) {
-                                char *fname = menu_entry_to_fname(menu[i]);
-                                if (!strcmp(selection, fname)) {
-                                        if (!confirm_selection()) {
-                                                free(selection);
-                                                selection = 0;
-                                                free(fname);
-                                                goto reselect;
-                                        }
-                                        need_rewrite = 0;
-                                        break;
-                                }
-                                free(fname);
-                        }
-
-                        /* Replace "New Saved Game" with what the player 
-                           typed */
-                        snprintf(menu[0], linew, selection);
-
-                        /* Add a new saved game struct to the list. */
-                        menu_add_saved_game(selection);
-
-                        /* Re-write the saved games file to add the new
-                         * save. */
-                        menu_rewrite_saves();
-
-                } else if (confirm_selection()) {
-                        selection = menu_entry_to_fname((char*)data.selection);
+                /* Yes. Overwrite? */
+                if (confirm_selection()) {
+                        selected_game = data.save;
                 } else {
                         goto reselect;
                 }
         }
 
-        /* Set the selected saved game as current and store a screenshot. */
-        if (selection) {
-                saved_game_t *save = saved_game_lookup(selection);
-                char *s_fname = saved_game_mk_screenshot_fname(save);
+        /* No. Did player abort? */
+        else if (!data.abort) {
+
+                /* No. Must be a new saved game. */
+                struct list *lptr;
+                char *new_name = prompt_for_fname();
+                if (!new_name)
+                        goto reselect;
+
+                /* Did player re-type an existing filename? */
+                list_for_each(&menu_saved_games, lptr) {
+                        saved_game_t *exist = outcast(lptr, saved_game_t, 
+                                                      list);
+                        if (!strcmp(new_name, exist->fname)) {
+
+                                /* Yes. Confirm overwrite? */
+                                if (!confirm_selection()) {
+                                        /* No. Reselect. */
+                                        free(new_name);
+                                        goto reselect;
+                                }
+
+                                /* Ok, overwrite. Nothing new to add to the
+                                 * saved-game script. */
+                                break;
+                        }
+                }
+                
+                /* Replace the "New Saved Game" menu line with what the player
+                   typed. */
+                strncpy(menu[0], new_name, linew);
+                
+                /* Add a new saved game struct to the list. */
+                selected_game = saved_game_new(new_name);
+                list_add(&menu_saved_games, &selected_game->list);
+                
+                /* Re-write the saved games file to add the new
+                 * save. */
+                menu_rewrite_saves();
+
+                free(new_name);
+        }
+
+        /* Save selected? */
+        if (selected_game) {
+
+                char *s_fname = saved_game_mk_screenshot_fname(selected_game);
                 SDL_Rect rect;
+
+                /* Does it have an old screenshot? */
+                if (selected_game->screenshot) {
+                        /* Yes. Get rid of it. */
+                        SDL_FreeSurface(selected_game->screenshot);
+                        selected_game->screenshot = 0;
+                }
+
+                /* Restore map view so we can get a new screenshot. */
+                mapClearImage();
+                mapUpdate(0);
+
+                /* Take a new screenshot. */
                 rect.x = MAP_X;
                 rect.y = MAP_Y;
                 rect.w = MAP_W;
                 rect.h = MAP_H;
                 screenCapture(s_fname, &rect);
-                save->screenshot = IMG_Load(s_fname);
-                menu_set_current_saved_game(save);
+                selected_game->screenshot = IMG_Load(s_fname);
+                menu_set_current_saved_game(selected_game);
                 free(s_fname);
         }
 
+ done:
         /* Restore the original status mode before deleting the list. */
         statusSetMode(omode);
         mapClearImage();
@@ -654,7 +812,10 @@ reselect:
         free(menu);
         free(menubuf);
 
-        return selection;
+        if (selected_game) {
+                return strdup(selected_game->fname);
+        }
+        return 0;
 }
 
 char * main_menu(void)
@@ -689,6 +850,7 @@ char * main_menu(void)
  start_main_menu:
         n_items = 0;
         cmdwin_clear();
+        nazghul_splash();
 
         /* check for a previously saved game to Journey Onward */
         if (file_exists_in_save_dir(save_game_fname)) {
@@ -897,7 +1059,7 @@ static int options_save(void)
         char *fname = cfg_get("options-script-filename");
         FILE *file = file_open_in_save_dir(fname, "w");
         if (!file) {
-                warn("Could not open '%s': %s", fname, strerror(errno));
+                warn("Could not open '%s': %s\n", fname, strerror(errno));
                 return -1;
         }
 

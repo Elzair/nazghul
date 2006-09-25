@@ -223,7 +223,7 @@ static void nazghul_init_internal_libs(void)
 }
 
 /* nazghul_splash -- show the splash image */
-static void nazghul_splash(void)
+void nazghul_splash(void)
 {
         SDL_Surface *splash = 0;
         SDL_Rect rect;
@@ -241,7 +241,13 @@ static void nazghul_splash(void)
                 warn("IMG_Load failed: %s\n", SDL_GetError());
                 return;
         }
-        
+
+        rect.x = MAP_X;
+        rect.y = MAP_Y;
+        rect.w = MAP_W;
+        rect.h = MAP_H;
+        screenErase(&rect);
+
         /* Fill out the screen destination rect */
         rect.x = max(0, (MAP_W - splash->w) / 2) + MAP_X;
         rect.y = max(0, (MAP_H - splash->h) / 2) + MAP_Y;

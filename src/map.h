@@ -95,7 +95,20 @@ extern void mapPaintDamage(int x, int y);
 extern void mapSetSelected(class Object *obj);
 
 extern int mapScreenToPlaceCoords(int *x, int *y);
+
+/**
+ * Instead of showing the current place, show an image. This lasts until
+ * mapClearImage() is called.
+ *
+ * @param image The image to show. If null, the map is erased instead (ie,
+ * blacked-out).
+ */
 extern void mapSetImage(SDL_Surface *image);
+
+/**
+ * Turn off the image set via mapSetImage() and resume showing the current
+ * place.
+ */
 extern void mapClearImage(void);
 
 

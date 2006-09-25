@@ -113,6 +113,7 @@ static void play_reload()
         log_flush();
         log_disable();
         result = session_load(fname);
+        free(fname);
         log_enable();
         if (result)
                 log_end("error!");
