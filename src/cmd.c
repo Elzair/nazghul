@@ -2717,9 +2717,9 @@ bool cmdMixReagents(class Character *character)
         statusSetMode(ShowParty);
         foogodSetMode(FOOGOD_DEFAULT);
 
-        // committed to action now, so decrement AP, 2 per spell mixed
+        // committed to action now, so decrement AP
         if (character)
-                character->decActionPoints(quantity);
+                character->decActionPoints(1);
 
 	// If the spell is invalid or the reagents are incorrect then punish
 	// the player.
