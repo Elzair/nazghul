@@ -24,6 +24,7 @@
 #include "cmdwin.h"
 #include "console.h"
 #include "event.h"
+#include "foogod.h"
 #include "log.h"
 #include "list.h"
 #include "map.h"
@@ -527,7 +528,9 @@ char * load_game_menu(void)
                 menubufptr += linew+1;
                 i++;
         }
-        
+
+        foogodSetHintText(SCROLLER_HINT);
+        foogodSetMode(FOOGOD_HINT);
         statusSetStringList("Load Game", n, menu);
         statusSetMode(StringList);
 
@@ -558,6 +561,7 @@ char * load_game_menu(void)
 
         mapClearImage();
         statusSetMode(omode);
+        foogodSetMode(FOOGOD_DEFAULT);
         free(menu);
         free(menubuf);
 
@@ -700,6 +704,9 @@ char * save_game_menu(void)
                 i++;
         }
 
+        foogodSetHintText(SCROLLER_HINT);
+        foogodSetMode(FOOGOD_HINT);
+
         /* Setup the menu in the status window. */
         statusSetStringList("Save Game", n, menu);
         statusSetMode(StringList);
@@ -807,6 +814,8 @@ reselect:
  done:
         /* Restore the original status mode before deleting the list. */
         statusSetMode(omode);
+        foogodSetMode(FOOGOD_DEFAULT);
+        foogodRepaint();
         mapClearImage();
 
         free(menu);
@@ -881,6 +890,8 @@ char * main_menu(void)
         menu[n_items] = QUIT;
         n_items++;
 
+        foogodSetHintText("\005\006=scroll ENT=select");
+        foogodSetMode(FOOGOD_HINT);
         statusSetStringList("Main Menu", n_items, menu);
         statusSetMode(StringList);
 
@@ -932,6 +943,7 @@ char * main_menu(void)
 
         /* turn off status while new session is loading */
         statusSetMode(DisableStatus);
+        foogodSetMode(FOOGOD_DEFAULT);
 
         /* pop main menu quit handler, new one will be pushed in play.c */
         eventPopQuitHandler();
@@ -1132,6 +1144,8 @@ void options_menu(void)
                 cmdwin_clear();
                 cmdwin_spush("Settings");
                 cmdwin_push("<select/ESC>");
+                foogodSetHintText(SCROLLER_HINT);
+                foogodSetMode(FOOGOD_HINT);
                 statusSetStringList("Settings", OPTION_NUMOPTIONS, 
                                     (char**)menu);
                 statusSetMode(StringList);
@@ -1174,6 +1188,7 @@ void options_menu(void)
         }
 
         cmdwin_clear();
+        foogodSetMode(FOOGOD_DEFAULT);
 
         /* If none of the options changed from their entry values then return
          * without bothering the player. */

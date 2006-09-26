@@ -188,7 +188,8 @@ static void asciiBlitColored(SDL_Surface *dst, SDL_Rect *dstrect,
         }
 }
 
-static void asciiPaintColored(char c, int x, int y, SDL_Surface *surf, Uint32 color)
+static void asciiPaintColored(unsigned char c, int x, int y, 
+                              SDL_Surface *surf, Uint32 color)
 {
 	SDL_Rect dest;
 	SDL_Rect src;
@@ -209,9 +210,6 @@ static void asciiPaintColored(char c, int x, int y, SDL_Surface *surf, Uint32 co
 
 	/* fixme -- put these calcs in a table or something. Don't need to do
 	 * it every time. */
-
-	c = c - ' ' + Ascii.offset;
-
 	col = c % Ascii.images->cols;
 	row = c / Ascii.images->cols;
 
@@ -230,7 +228,8 @@ static void asciiPaintColored(char c, int x, int y, SDL_Surface *surf, Uint32 co
                          color);
 }
 
-static void asciiPaintDefault(char c, int x, int y, SDL_Surface * surf)
+static void asciiPaintDefault(unsigned char c, int x, int y, 
+                              SDL_Surface * surf)
 {
 	SDL_Rect dest;
 	SDL_Rect src;
@@ -242,18 +241,8 @@ static void asciiPaintDefault(char c, int x, int y, SDL_Surface * surf)
 	if (c == '\t')
 		c = ' ';
 
-	assert(c >= ' ');
-
-        if (c<' ') {
-                warn("c==%d\n", c);
-                c='?';
-        }
-
 	/* fixme -- put these calcs in a table or something. Don't need to do
 	 * it every time. */
-
-	c = c - ' ' + Ascii.offset;
-
 	col = c % Ascii.images->cols;
 	row = c / Ascii.images->cols;
 
@@ -274,9 +263,9 @@ int asciiInit(void)
 {
         char *fname = cfg_get("ascii-image-filename");
         assert(fname);
-        Ascii.images = images_new(0, 8, 16, 8, 16, 0, 0, fname);
+        Ascii.images = images_new(0, 8, 16, 9, 16, 0, 0, fname);
         assert(Ascii.images);
-        Ascii.offset = 32;
+        Ascii.offset = 0;
         Ascii.state = ASCII_STATE_DEF;
         Ascii.i_color = 0;
         Ascii.color = ASCII_DEF_CLR;

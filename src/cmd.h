@@ -42,6 +42,9 @@ struct ScrollerContext {
         bool mixing; // for mix reagents
 };
 
+#define SCROLLER_HINT "\005\006=scroll ENT=select ESC=exit"
+#define PAGER_HINT  "\005\006=scroll ESC=exit"
+
 extern int dirkey(struct KeyHandler *kh, int key, int keymod);
 extern int yesnokey(struct KeyHandler *kh, int key, int keymod);
 extern int anykey(struct KeyHandler *kh, int key, int keymod);

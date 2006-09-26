@@ -22,6 +22,7 @@
 #include "cmd.h"
 #include "place.h"
 #include "constants.h"
+#include "foogod.h"
 #include "images.h"
 #include "sprite.h"
 #include "los.h"
@@ -770,6 +771,8 @@ struct inv_entry *select_item(void)
 	struct ScrollerContext sc;
 
 	omode = statusGetMode();
+        foogodSetHintText(SCROLLER_HINT);
+        foogodSetMode(FOOGOD_HINT);        
 	statusSetMode(Use);
 
 	sc.selector = InventoryItem;
@@ -784,6 +787,7 @@ struct inv_entry *select_item(void)
 	eventPopKeyHandler();
 
 	statusSetMode(omode);
+        foogodSetMode(FOOGOD_DEFAULT);
 
 	ie = (struct inv_entry *) sc.selection;
 	if (ie == NULL) {
@@ -805,6 +809,8 @@ class Character *select_party_member(void)
                 return player_party->getMemberByOrder(0);
         }
 
+        foogodSetHintText(SCROLLER_HINT);
+        foogodSetMode(FOOGOD_HINT);        
 	omode = statusGetMode();
 	statusSetMode(SelectCharacter);
 
@@ -837,6 +843,7 @@ class Character *select_party_member(void)
 	}
 
 	statusSetMode(omode);
+        foogodSetMode(FOOGOD_DEFAULT);
 
 	return character;
 }
@@ -1025,6 +1032,8 @@ bool cmdOpen(class Character * pc)
                  statlist[1].line2[0] = 0;
                  statlist[1].data   = container;
 
+                 foogodSetHintText(SCROLLER_HINT);
+                 foogodSetMode(FOOGOD_HINT);        
                  omode = statusGetMode();
                  statusSetGenericList("Choose Target", 2, statlist);
                  statusSetMode(GenericList);
@@ -1038,6 +1047,7 @@ bool cmdOpen(class Character * pc)
                  eventPopKeyHandler();
                  
                  statusSetMode(omode);
+                 foogodSetMode(FOOGOD_DEFAULT);
                  
                  /* Disqualify the object NOT selected */
                  if (data.selection == mech)
@@ -1334,6 +1344,8 @@ bool cmdReady(class Character * member)
 	statusSelectCharacter(member->getOrder());
 
 	player_party->sortReadiedItems(member);
+        foogodSetHintText(SCROLLER_HINT);
+        foogodSetMode(FOOGOD_HINT);        
 	statusSetMode(Ready);
 	sc.selector = InventoryItem;
 	kh.fx = scroller;
@@ -1401,6 +1413,7 @@ bool cmdReady(class Character * member)
 
 	eventPopKeyHandler();
 	statusSetMode(ShowParty);
+        foogodSetMode(FOOGOD_DEFAULT);
 
         if (committed) {
 				player_party->sortReadiedItems(member);
@@ -2038,6 +2051,8 @@ bool cmdZtats(class Character * pc)
 
 	cmdwin_spush("<ESC to exit>");
 
+        foogodSetHintText("\200\201=scroll ESC=exit");
+        foogodSetMode(FOOGOD_HINT);        
 	statusSelectCharacter(pc->getOrder());
 	statusSetMode(Ztats);
 
@@ -2052,6 +2067,7 @@ bool cmdZtats(class Character * pc)
 	cmdwin_spush("ok");
 
 	statusSetMode(ShowParty);
+        foogodSetMode(FOOGOD_DEFAULT);
 
 	return false;
 }
@@ -2560,6 +2576,9 @@ bool cmdMixReagents(class Character *character)
 	// Prompt for reagents 
 	cmdwin_spush("<select, then M)ix>");
 
+        foogodSetHintText("\005\006=scroll ENT=add/remove ESC=abort M=done");
+        foogodSetMode(FOOGOD_HINT);
+
 	// Show the reagents in the status window
 	statusSetMode(MixReagents);
 
@@ -2696,6 +2715,7 @@ bool cmdMixReagents(class Character *character)
 	}
 
         statusSetMode(ShowParty);
+        foogodSetMode(FOOGOD_DEFAULT);
 
         // committed to action now, so decrement AP, 2 per spell mixed
         if (character)
@@ -2732,6 +2752,7 @@ bool cmdMixReagents(class Character *character)
 		ie->ref--;
 	}
 	statusSetMode(ShowParty);
+        foogodSetMode(FOOGOD_DEFAULT);
 	return true;
 }
 
@@ -3240,6 +3261,8 @@ static void buy(struct merchant *merch)
 	struct trade_info *trade;
 	int quantity, cost, max_q;
 
+        foogodSetHintText(SCROLLER_HINT);
+        foogodSetMode(FOOGOD_HINT);
 	statusSetTradeInfo(merch->n_trades, merch->trades);
 	statusSetMode(Trade);
 
@@ -3312,6 +3335,7 @@ static void buy(struct merchant *merch)
 	}
 
 	statusSetMode(ShowParty);
+        foogodSetMode(FOOGOD_DEFAULT);
 }
 
 static bool conv_filter_trade(struct inv_entry *ie, void *cookie)
@@ -3371,6 +3395,8 @@ static void sell(struct merchant *merch)
 	}
 	// Fill out the list
 	n_trades = fill_sell_list(merch, trades);
+        foogodSetHintText(SCROLLER_HINT);
+        foogodSetMode(FOOGOD_HINT);
 	statusSetTradeInfo(n_trades, trades);
 	statusSetMode(Trade);
 
@@ -3439,6 +3465,7 @@ static void sell(struct merchant *merch)
 	}
 
 	statusSetMode(ShowParty);
+        foogodSetMode(FOOGOD_DEFAULT);
 
 	delete trades;
 }
@@ -3526,6 +3553,8 @@ void cmdHelp(void)
 {
         struct KeyHandler kh;
 
+        foogodSetHintText(PAGER_HINT);
+        foogodSetMode(FOOGOD_HINT);
         statusSetPageText("Commands", cmd_help_text);
         statusSetMode(Page);
 
@@ -3536,6 +3565,7 @@ void cmdHelp(void)
 	eventPopKeyHandler();
 
         statusSetMode(ShowParty);
+        foogodSetMode(FOOGOD_DEFAULT);
 }
 
 void ui_name_vehicle(class Vehicle *vehicle)

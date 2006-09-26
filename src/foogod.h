@@ -27,6 +27,10 @@
 BEGIN_DECL
 
 /* Food-Gold-Date window */
+typedef enum {
+        FOOGOD_DEFAULT = 0
+        , FOOGOD_HINT
+} foogod_mode_t;
 
 extern int foogodInit(void);
 extern void foogodRepaint(void);
@@ -34,6 +38,9 @@ extern void foogodAdvanceTurns();
 extern void foogod_set_y(int y);
 extern int foogod_get_y(void);
 extern int foogod_get_h(void);
+
+extern void foogodSetMode(foogod_mode_t mode);
+extern void foogodSetHintText(char *text);
 
 END_DECL
 

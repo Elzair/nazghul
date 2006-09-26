@@ -5757,6 +5757,8 @@ KERN_API_CALL(kern_ui_select_from_list)
                 i++;
         }
 
+        foogodSetHintText(SCROLLER_HINT);
+        foogodSetMode(FOOGOD_HINT);
         omode = statusGetMode();
         statusSetStringList("Select", list_sz, strings);
         statusSetMode(StringList);
@@ -5770,6 +5772,7 @@ KERN_API_CALL(kern_ui_select_from_list)
 	eventPopKeyHandler();
 
         statusSetMode(omode);
+        foogodSetMode(FOOGOD_DEFAULT);
         
         selection = (char*)data.selection;
 
@@ -5817,6 +5820,8 @@ KERN_API_CALL(kern_ui_page_text)
                 lines++;
         }
 
+        foogodSetHintText(PAGER_HINT);
+        foogodSetMode(FOOGOD_HINT);
         statusSetPageText(title, text);
         statusSetMode(Page);
         consolePrint("[Hit ESC to continue]\n");
@@ -5828,6 +5833,7 @@ KERN_API_CALL(kern_ui_page_text)
 	eventPopKeyHandler();
 
         statusSetMode(ShowParty);
+        foogodSetMode(FOOGOD_DEFAULT);
 
  done:
         if (text)
