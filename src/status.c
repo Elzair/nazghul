@@ -1612,6 +1612,21 @@ void *statusGetSelected(enum StatusSelection sel)
 	}
 }
 
+void statusSetSelected(int index)
+{
+        switch (Status.mode) {
+        case StringList:
+        case Trade:
+        case GenericList:
+                Status.curLine = index;
+                statusRepaint();
+                break;
+        default:
+                assert(0);
+                break;
+        }
+}
+
 void statusSelectCharacter(int partyOrderIndex)
 {
 	Status.pcIndex = partyOrderIndex;

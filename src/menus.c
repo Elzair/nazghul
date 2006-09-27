@@ -33,6 +33,7 @@
 #include "file.h"
 
 #include <assert.h>
+#include <ctype.h>
 #include <errno.h>
 #include <png.h>
 #include <time.h>
@@ -61,6 +62,8 @@ typedef struct saved_game {
  */
 typedef struct {
         saved_game_t *save; /**< Currently highlighted saved game */
+        char *entry;        /**< Currently highlighted string entry */
+        char *hotkeys;      /**< Hotkey characters, in order of listing */
         char abort : 1;     /**< The player aborted the selection */
 } menu_scroll_data_t;
 
@@ -86,7 +89,7 @@ static saved_game_t *menu_current_saved_game = 0;
 /**
  * This is what the Save Game menu shows for the new game option.
  */
-static char *MENU_NEW_GAME_STR = "New Saved Game";
+static char *MENU_NEW_GAME_STR = "N)ew Saved Game";
 
 /**
  * Delete a saved game struct and all it's strings. Don't call this, use
@@ -320,7 +323,7 @@ void menu_add_saved_game(char *fname)
  * NULL).
  * @param fname The name of the saved game file, not including the full path.
  */
-static int sprintf_game_info(char *buf, int n, saved_game_t *save)
+static int sprintf_game_info(char *buf, int n, saved_game_t *save, char hotkey)
 {
         struct tm timeinfo;
         int ret = -1;
@@ -337,7 +340,10 @@ static int sprintf_game_info(char *buf, int n, saved_game_t *save)
                  1900+timeinfo.tm_year);
 
         /* Calculate necessary padding to right-justify the date. */
-        padlen = n - (strlen(save->fname) + strlen(datebuf) + 3);
+        padlen = n - (strlen(save->fname) 
+                      + strlen(datebuf) 
+                      + 3 
+                      + (hotkey ? 3 : 0));
 
         /* We'll mark the current game with an '*'. */
         if (save->is_current) {
@@ -345,8 +351,13 @@ static int sprintf_game_info(char *buf, int n, saved_game_t *save)
         }
 
         /* Print to the buffer. */
-        snprintf(buf, n, "%s %*c%c%s", save->fname, padlen, ' ', mark, 
-                 datebuf);
+        if (hotkey) {
+                snprintf(buf, n, "%c) %s %*c%c%s", hotkey, save->fname, 
+                         padlen, ' ', mark, datebuf);
+        } else {
+                snprintf(buf, n, "%s %*c%c%s", save->fname, 
+                         padlen, ' ', mark, datebuf);
+        }
         return ret;
                  
 }
@@ -358,9 +369,16 @@ static int sprintf_game_info(char *buf, int n, saved_game_t *save)
  */
 static char *menu_entry_to_fname(char *entry)
 {
-        char *fname = 0;
-        char *end = strchr(entry, ' ');
-        int mod = end ? 1 : 0;
+        char *fname, *end;
+        int mod;
+
+        /* Most saved games entries start with x), where x is a 0-9 */
+        if (isdigit(entry[0]) && ')' == entry[1]) {
+                entry += 3;
+        }
+
+        end = strchr(entry, ' ');
+        mod = end ? 1 : 0;
         if (mod)
                 *end = 0;
         fname = strdup(entry);
@@ -466,6 +484,19 @@ int menu_scroller(struct KeyHandler * kh, int key, int keymod)
 	menu_scroll_data_t *data = (menu_scroll_data_t *) kh->data;
         enum StatusScrollDir dir;
 
+        if (data->hotkeys && key < 128) {
+                char ckey = (char)key;
+                char *hotkey = strchr(data->hotkeys, ckey);
+                if (hotkey) {
+                        int index = hotkey - data->hotkeys;
+                        printf("ckey=%c index=%d\n", ckey, index);
+                        statusSetSelected(index);
+                        data->entry = (char*)statusGetSelected(String);
+                        data->save = menu_scroller_get_selected();
+                        return 1;
+                }
+        }
+
 	switch (key) {
 	case KEY_NORTH:
                 dir = ScrollUp;
@@ -482,6 +513,7 @@ int menu_scroller(struct KeyHandler * kh, int key, int keymod)
 	case SDLK_RETURN:
 	case SDLK_SPACE:
 	case '\n':
+                data->entry = (char*)statusGetSelected(String);
                 data->save = menu_scroller_get_selected();
 		return 1;
 	case SDLK_ESCAPE:
@@ -493,10 +525,79 @@ int menu_scroller(struct KeyHandler * kh, int key, int keymod)
 	}
 
         statusScroll(dir);
+        data->entry = (char*)statusGetSelected(String);
         data->save = menu_scroller_get_selected();
         menu_show_screenshot(data->save ? data->save->screenshot : 0);
 
 	return 0;
+}
+
+/**
+ * Scroll the status window for the main menu.
+ *
+ * @param kh Keyhandler with the menu context as its data element.
+ * @param key The key pressed by the player.
+ * @param keymod Reflects the status of the SHIFT, CTRL and ALT keys.
+ * @returns 0 to keep the Status window in scroll mode, 1 to end it.
+ */
+int main_menu_scroller(struct KeyHandler * kh, int key, int keymod)
+{
+	menu_scroll_data_t *data = (menu_scroll_data_t *) kh->data;
+        enum StatusScrollDir dir;
+
+        if (data->hotkeys && key < 128) {
+                char ckey = (char)key;
+                char *hotkey = strchr(data->hotkeys, ckey);
+                if (hotkey) {
+                        int index = hotkey - data->hotkeys;
+                        printf("ckey=%c index=%d\n", ckey, index);
+                        statusSetSelected(index);
+                        data->entry = (char*)statusGetSelected(String);
+                        return 1;
+                }
+        }
+
+	switch (key) {
+	case KEY_NORTH:
+                dir = ScrollUp;
+		break;
+	case KEY_SOUTH:
+                dir = ScrollDown;
+		break;
+	case SDLK_PAGEUP:
+                dir = ScrollPageUp;
+		break;
+	case SDLK_PAGEDOWN:
+                dir = ScrollPageDown;
+		break;
+	case SDLK_RETURN:
+	case SDLK_SPACE:
+	case '\n':
+                data->entry = (char*)statusGetSelected(String);
+		return 1;
+	case SDLK_ESCAPE:
+	case 'q':
+                data->abort = 1;
+		return 1;
+	default:
+		break;
+	}
+
+        statusScroll(dir);
+        data->entry = (char*)statusGetSelected(String);
+
+	return 0;
+}
+
+/**
+ * Get a suitable hotkey for the numeral.
+ *
+ * @param i The number of the hotkey.
+ * @returns ASCII 0-9 or NULL if i is out of range.
+ */
+static char menu_hotkey(int i)
+{
+        return (i < 10) ? (i + '0') : 0;
 }
 
 char * load_game_menu(void)
@@ -508,9 +609,11 @@ char * load_game_menu(void)
         struct list *lptr = 0;
         struct KeyHandler kh;
 	menu_scroll_data_t data;
-        static char *selection = 0;
+        char *selection = 0;
         enum StatusMode omode = statusGetMode();
         int linew = STAT_CHARS_PER_LINE;
+
+        memset(&data, 0, sizeof(data));
 
         /* Allocate the memory for the menu strings. */
         n = list_len(&menu_saved_games);
@@ -519,12 +622,16 @@ char * load_game_menu(void)
         menu = (char**)calloc(n, sizeof(menu[0]));
         assert(menu);
 
+        data.hotkeys = (char*)calloc(n + 1, 1);
+        assert(data.hotkeys);
+
         /* Add each saved game to the menu list. */
         menubufptr = menubuf;
         list_for_each(&menu_saved_games, lptr) {
                 saved_game_t *save = outcast(lptr, saved_game_t, list);
                 menu[i] = menubufptr;
-                sprintf_game_info(menubufptr, linew+1, save);
+                data.hotkeys[i] = menu_hotkey(i);
+                sprintf_game_info(menubufptr, linew+1, save, data.hotkeys[i]);
                 menubufptr += linew+1;
                 i++;
         }
@@ -543,7 +650,6 @@ char * load_game_menu(void)
                 menu_show_screenshot(save->screenshot);
         }
 
-        memset(&data, 0, sizeof(data));
         kh.fx = menu_scroller;
         kh.data = &data;
 	eventPushKeyHandler(&kh);
@@ -560,10 +666,17 @@ char * load_game_menu(void)
         }
 
         mapClearImage();
-        statusSetMode(omode);
+
+        /* If the original status mode was already StringList don't reset the
+         * mode, this will cause status to highlight the top list entry of our
+         * list and it looks funny while we're loading the game. */
+        if (omode != StringList)
+                statusSetMode(omode);
+
         foogodSetMode(FOOGOD_DEFAULT);
         free(menu);
         free(menubuf);
+        free(data.hotkeys);
 
         return selection;
 }
@@ -656,12 +769,16 @@ char * save_game_menu(void)
         int linew = STAT_CHARS_PER_LINE;
         saved_game_t *selected_game = 0;
 
+        memset(&data, 0, sizeof(data));
+
         /* Allocate the string buffers to display the menu. */
         n = list_len(&menu_saved_games) + 1;
         menubuf = (char*)calloc(n, linew+1);
         assert(menubuf);
         menu = (char**)calloc(n, sizeof(menu[0]));
         assert(menu);
+        data.hotkeys = (char*)calloc(n+1, 1);
+        assert(data.hotkeys);
 
         /* Prepare to fill in the menu list. */
         i = 0;
@@ -674,15 +791,18 @@ char * save_game_menu(void)
                 assert(menu_saved_games.next 
                        == &menu_current_saved_game->list);
                 
+                data.hotkeys[i] = menu_hotkey(i);
+
                 /* Put it as the top item in the menu. */
                 sprintf_game_info(menubufptr, linew+1, 
-                                  menu_current_saved_game);
+                                  menu_current_saved_game, data.hotkeys[i]);
                 menu[i++] = menubufptr;
                 menubufptr += linew+1;
         }
 
         /* The next entry is always the New Save Game option. */
         sprintf(menubufptr, MENU_NEW_GAME_STR);
+        data.hotkeys[i] = 'n';
         menu[i++] = menubufptr;
         menubufptr += linew+1;
 
@@ -699,7 +819,8 @@ char * save_game_menu(void)
                 saved_game_t *save = outcast(lptr, saved_game_t, list);
                 lptr = lptr->next;
                 menu[i] = menubufptr;
-                sprintf_game_info(menubufptr, linew+1, save);
+                data.hotkeys[i] = menu_hotkey(i);
+                sprintf_game_info(menubufptr, linew+1, save, data.hotkeys[i]);
                 menubufptr += linew+1;
                 i++;
         }
@@ -717,7 +838,6 @@ char * save_game_menu(void)
                              : 0);
 
 reselect:
-        memset(&data, 0, sizeof(data));
         kh.fx = menu_scroller;
         kh.data = &data;
 	eventPushKeyHandler(&kh);
@@ -820,6 +940,7 @@ reselect:
 
         free(menu);
         free(menubuf);
+        free(data.hotkeys);
 
         if (selected_game) {
                 return strdup(selected_game->fname);
@@ -829,17 +950,18 @@ reselect:
 
 char * main_menu(void)
 {
-        static char *START_NEW_GAME="Start New Game";
-        static char *JOURNEY_ONWARD="Journey Onward";
-        static char *LOAD_GAME="Load Game";
-        static char *CREDITS="Credits";
-        static char *QUIT="Quit";
-        static char *TUTORIAL="Tutorial";
-        static char *SETTINGS = "Settings";
+        static char *START_NEW_GAME="S)tart New Game";
+        static char *JOURNEY_ONWARD="J)ourney Onward";
+        static char *LOAD_GAME="L)oad Game";
+        static char *CREDITS="C)redits";
+        static char *QUIT="Q)uit";
+        static char *TUTORIAL="T)utorial";
+        static char *SETTINGS = "S(e)ttings";
         char *menu[7];
+        char hotkeys[7+1];
         int n_items = 0;
         struct KeyHandler kh;
-	struct ScrollerContext data;
+        menu_scroll_data_t data;
         char *selection = NULL;
 	struct QuitHandler qh;
         static char *new_game_fname =
@@ -864,46 +986,54 @@ char * main_menu(void)
         /* check for a previously saved game to Journey Onward */
         if (file_exists_in_save_dir(save_game_fname)) {
                 menu[n_items] = JOURNEY_ONWARD;
+                hotkeys[n_items] = 'j';
                 n_items++;
                 menu[n_items] = LOAD_GAME;
+                hotkeys[n_items] = 'l';
                 n_items++;
         }
 
         /* check for the default script for Start New Game */
         if (file_exists(new_game_fname)) {
                 menu[n_items] = START_NEW_GAME;
+                hotkeys[n_items] = 's';
                 n_items++;
         }
 
         /* check for a tutorial script for Tutorial */
         if (file_exists(tutorial_fname)) {
                 menu[n_items] = TUTORIAL;
+                hotkeys[n_items] = 't';
                 n_items++;
         }
 
         menu[n_items] = SETTINGS;
+        hotkeys[n_items] = 'e';
         n_items++;
 
         menu[n_items] = CREDITS;
+        hotkeys[n_items] = 'c';
         n_items++;
 
         menu[n_items] = QUIT;
+        hotkeys[n_items] = 'q';
         n_items++;
+
+        hotkeys[n_items] = 0;
 
         foogodSetHintText("\005\006=scroll ENT=select");
         foogodSetMode(FOOGOD_HINT);
         statusSetStringList("Main Menu", n_items, menu);
         statusSetMode(StringList);
 
-        data.selection = NULL;
-        data.selector  = String;
-        kh.fx   = scroller;
+        data.hotkeys = hotkeys;
+        kh.fx   = main_menu_scroller;
         kh.data = &data;
 	eventPushKeyHandler(&kh);
 	eventHandle();
 	eventPopKeyHandler();
 
-        selection = (char*)data.selection;
+        selection = data.entry;
 
         if (! selection) {
                 goto start_main_menu;

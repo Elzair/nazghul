@@ -129,6 +129,15 @@ extern void statusSetGenericList(char *title, int list_sz,
  */
 extern void statusSetStringList(char *title, int list_sz, char **list);
 
+/**
+ * When in one of the list modes, this forces the list entry at the given index
+ * to be highlighted.
+ *
+ * @param index The index of the entry to be selected. The first entry has
+ * index 0.
+ */
+extern void statusSetSelected(int index);
+
 extern int status_get_h(void);
         
 END_DECL
