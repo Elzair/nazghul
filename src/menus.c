@@ -784,6 +784,12 @@ char * save_game_menu(void)
         i = 0;
         menubufptr = menubuf;
 
+        /* The first entry is always the New Save Game option. */
+        sprintf(menubufptr, MENU_NEW_GAME_STR);
+        data.hotkeys[i] = 'n';
+        menu[i++] = menubufptr;
+        menubufptr += linew+1;
+
         /* Is there a game already loaded? */
         if (menu_current_saved_game) {
 
@@ -793,18 +799,12 @@ char * save_game_menu(void)
                 
                 data.hotkeys[i] = menu_hotkey(i);
 
-                /* Put it as the top item in the menu. */
+                /* Put it as the next item in the menu. */
                 sprintf_game_info(menubufptr, linew+1, 
                                   menu_current_saved_game, data.hotkeys[i]);
                 menu[i++] = menubufptr;
                 menubufptr += linew+1;
         }
-
-        /* The next entry is always the New Save Game option. */
-        sprintf(menubufptr, MENU_NEW_GAME_STR);
-        data.hotkeys[i] = 'n';
-        menu[i++] = menubufptr;
-        menubufptr += linew+1;
 
         /* Prepare to list the remaining saved games. */
         if (menu_current_saved_game) {
@@ -831,6 +831,11 @@ char * save_game_menu(void)
         /* Setup the menu in the status window. */
         statusSetStringList("Save Game", n, menu);
         statusSetMode(StringList);
+        
+        /* Highlight the current saved game. */
+        if (menu_current_saved_game) {
+                statusSetSelected(1);
+        }
 
         /* Show the initial screenshot. */
         menu_show_screenshot(menu_current_saved_game 
