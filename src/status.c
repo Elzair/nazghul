@@ -1612,7 +1612,21 @@ void *statusGetSelected(enum StatusSelection sel)
 	}
 }
 
-void statusSetSelected(int index)
+int statusGetSelectedIndex(enum StatusSelection sel)
+{
+        switch (sel) {
+	case Character:
+		return Status.pcIndex;
+        case Generic:
+	case TradeItem:
+        case String:
+                return Status.list_sz ? Status.curLine : -1;
+	default:
+		return -1;
+        }
+}
+
+void statusSetSelectedIndex(int index)
 {
         switch (Status.mode) {
         case StringList:
@@ -1677,4 +1691,28 @@ enum StatusMode statusGetMode(void)
 int status_get_h(void)
 {
 	return Status.screenRect.h;
+}
+
+void statusFlashSelected(unsigned int color)
+{
+        SDL_Rect rect;
+        switch (Status.mode) {
+        case StringList:
+        case Trade:
+        case GenericList:
+                rect.x = Status.screenRect.x;
+                rect.y = (Status.screenRect.y 
+                          + ((Status.curLine - Status.topLine) 
+                             * ASCII_H));
+                if (rect.y >= (Status.screenRect.y 
+                               + Status.screenRect.h))
+                        return;
+                rect.w = Status.screenRect.w;
+                rect.h = ASCII_H;
+                screenFlash(&rect, 50, color);
+                statusRepaint();
+                break;
+        default:
+                break;
+        }
 }

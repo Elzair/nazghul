@@ -93,6 +93,8 @@ extern void statusSetPageText(char *title, char *text);
 extern void statusSetTradeInfo(int list_sz, struct trade_info *trades);
 extern void statusUpdateTradeInfo(int list_sz, 
                                   struct trade_info *trades);
+extern int status_get_h(void);
+        
 
 /**
  * Setup a generic list for use with the GenericList mode. A generic list has
@@ -136,10 +138,26 @@ extern void statusSetStringList(char *title, int list_sz, char **list);
  * @param index The index of the entry to be selected. The first entry has
  * index 0.
  */
-extern void statusSetSelected(int index);
+extern void statusSetSelectedIndex(int index);
 
-extern int status_get_h(void);
-        
+/**
+ * Similar to statusGetSelected, but get the integer index.
+ *
+ * @param sel The type of index to get. Supported values are Character,
+ * Generic, TradeItem and String.
+ *
+ * @returns The index or -1 if an invalid type is used or the corresponding
+ * list has no entries.
+ */
+extern int statusGetSelectedIndex(enum StatusSelection sel);
+
+/**
+ * Flash the line of the currently selected item.
+ *
+ * @param color The color to flash. See the list in screen.h.
+ */
+extern void statusFlashSelected(unsigned int color);
+
 END_DECL
 
 #endif

@@ -42,6 +42,8 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#define LOADSAVE_HINT "\005\006=scroll ENT=select DEL=delete ESC=exit"
+
 /**
  * Information about saved game files.
  */
@@ -64,6 +66,9 @@ typedef struct {
         saved_game_t *save; /**< Currently highlighted saved game */
         char *entry;        /**< Currently highlighted string entry */
         char *hotkeys;      /**< Hotkey characters, in order of listing */
+        char **menu;        /**< Menu strings */
+        int n_menu;         /**< Number of menu strings */
+        char *title;        /**< Menu title */
         char abort : 1;     /**< The player aborted the selection */
 } menu_scroll_data_t;
 
@@ -471,6 +476,121 @@ static saved_game_t *menu_scroller_get_selected()
 }
 
 /**
+ * Rewrite the saved-game script, using the current list of saved games.
+ *
+ * @returns -1 on error, 0 on success.
+ */
+static int menu_rewrite_saves()
+{
+        FILE *file;
+        struct list *lptr;
+        char *fname = cfg_get("save-game-filename");
+
+        file = file_open_in_save_dir(fname, "w");
+        if (! file) {
+                warn("Problem updating %s: %s\n", fname, file_get_error());
+                return -1;
+        }
+        
+        list_for_each(&menu_saved_games, lptr) {
+                saved_game_t *save = outcast(lptr, saved_game_t,  list);
+                fprintf(file, "(kern-add-save-game \"%s\")\n", save->fname);
+        }
+
+        fclose(file);
+        return 0;
+}
+
+/**
+ * Prompt the user to delete the currently highlighted save-game. This checks
+ * if the highlighted entry is a valid save game, prompts the user to confirm
+ * the deletetion, deletes the save file and the screenshot file, removes the
+ * saved game struct from the list, unrefs it, and re-writes the saved game
+ * script.
+ *
+ * If the save-game or screenshot files can't be deleted the operation warns
+ * the user but continues to remove and unreference the saved game. It will
+ * appear again the next time nazghul is restarted.
+ */
+static void menu_prompt_to_delete(menu_scroll_data_t *data)
+{
+        char *selstr = 0;
+        saved_game_t *save = 0;
+        int yesno = 0;
+        int i1, i2;
+
+        /* Check if user tried to delete the N)ew Saved Game option */
+        selstr =  (char*)statusGetSelected(String);
+        if (! strcmp(selstr, MENU_NEW_GAME_STR))
+                return;
+
+        /* Get the saved game struct for the selection. */
+        save =  menu_scroller_get_selected();
+        if (!save)
+                return;
+
+        /* Prompt to confirm. */
+        log_begin("Delete %s?", save->fname);
+        log_flush();
+        cmdwin_clear();
+        cmdwin_push("Delete-");
+        cmdwin_push("<y/n>");
+        getkey(&yesno, yesnokey);
+        cmdwin_pop();
+
+        /* If confirmation denied then cancel. */
+        if (yesno == 'n') {
+                cmdwin_spush("abort!");
+                log_end(" Canceled!");
+                return;
+        }
+
+        /* Confirmed, try to delete the save file. Abort if it doesn't work. */
+        cmdwin_push("yes!");
+        statusFlashSelected(Red);
+        if (unlink(save->path)) {
+                log_end(" WARNING! Failed to delete save file %s: %s", 
+                        save->path, strerror(errno));
+        }
+
+        /* Try to delete the screenshot. Warn the user and continue if it
+         * doesn't work. */
+        if (save->screenshot) {
+                char *scr_fname = saved_game_mk_screenshot_fname(save);
+                if (unlink(scr_fname)) {
+                        log_end(" WARNING! Failed to delete screenshot file "\
+                                "%s: %s:", scr_fname, strerror(errno));
+                }
+                free(scr_fname);
+        }
+
+        /* Remove and unreference the saved game struct. */
+        list_remove(&save->list);
+        if (save == menu_current_saved_game) {
+                menu_set_current_saved_game(0);
+        }
+        saved_game_unref(save);
+
+        /* Re-write the saved game script. */
+        menu_rewrite_saves();
+
+        /* Reshuffle all the menu entries to close the gap and reset the status
+         * menu list. */
+        i1 = statusGetSelectedIndex(String);
+        assert(i1 >= 0);
+        for (i2 = i1; i2 < data->n_menu-1; i2++) {
+                data->menu[i2] = data->menu[i2+1];
+        }
+        data->menu[i2] = 0;
+        data->n_menu--;
+        statusSetStringList(data->title, data->n_menu, data->menu);
+        statusSetSelectedIndex(i1 ? (i1 - 1) : 0);
+        statusRepaint();
+
+        log_end(" Deleted!");
+}
+
+/**
  * Scroll the status window for the load/save menus. As the player scrolls over
  * a saved game, show its screenshot on the map window.
  *
@@ -483,6 +603,7 @@ int menu_scroller(struct KeyHandler * kh, int key, int keymod)
 {
 	menu_scroll_data_t *data = (menu_scroll_data_t *) kh->data;
         enum StatusScrollDir dir;
+        int i1;
 
         if (data->hotkeys && key < 128) {
                 char ckey = (char)key;
@@ -490,7 +611,8 @@ int menu_scroller(struct KeyHandler * kh, int key, int keymod)
                 if (hotkey) {
                         int index = hotkey - data->hotkeys;
                         printf("ckey=%c index=%d\n", ckey, index);
-                        statusSetSelected(index);
+                        statusSetSelectedIndex(index);
+                        statusFlashSelected(Green);
                         data->entry = (char*)statusGetSelected(String);
                         data->save = menu_scroller_get_selected();
                         return 1;
@@ -513,6 +635,8 @@ int menu_scroller(struct KeyHandler * kh, int key, int keymod)
 	case SDLK_RETURN:
 	case SDLK_SPACE:
 	case '\n':
+                i1 = statusGetSelectedIndex(String);
+                statusFlashSelected(Green);
                 data->entry = (char*)statusGetSelected(String);
                 data->save = menu_scroller_get_selected();
 		return 1;
@@ -520,6 +644,11 @@ int menu_scroller(struct KeyHandler * kh, int key, int keymod)
 	case 'q':
                 data->abort = 1;
 		return 1;
+        case SDLK_DELETE:
+        case 'd':
+                menu_prompt_to_delete(data);
+                return data->n_menu ? 0 : 1;
+                break;
 	default:
 		break;
 	}
@@ -551,7 +680,7 @@ int main_menu_scroller(struct KeyHandler * kh, int key, int keymod)
                 if (hotkey) {
                         int index = hotkey - data->hotkeys;
                         printf("ckey=%c index=%d\n", ckey, index);
-                        statusSetSelected(index);
+                        statusSetSelectedIndex(index);
                         data->entry = (char*)statusGetSelected(String);
                         return 1;
                 }
@@ -624,6 +753,9 @@ char * load_game_menu(void)
 
         data.hotkeys = (char*)calloc(n + 1, 1);
         assert(data.hotkeys);
+        data.menu = menu;
+        data.n_menu = n;
+        data.title = "Load Game";
 
         /* Add each saved game to the menu list. */
         menubufptr = menubuf;
@@ -636,9 +768,9 @@ char * load_game_menu(void)
                 i++;
         }
 
-        foogodSetHintText(SCROLLER_HINT);
+        foogodSetHintText(LOADSAVE_HINT);
         foogodSetMode(FOOGOD_HINT);
-        statusSetStringList("Load Game", n, menu);
+        statusSetStringList(data.title, n, menu);
         statusSetMode(StringList);
 
         /* Setup the initial screen shot */
@@ -723,32 +855,6 @@ static char *prompt_for_fname()
 }
 
 /**
- * Rewrite the saved-game script, using the current list of saved games.
- *
- * @returns -1 on error, 0 on success.
- */
-static int menu_rewrite_saves()
-{
-        FILE *file;
-        struct list *lptr;
-        char *fname = cfg_get("save-game-filename");
-
-        file = file_open_in_save_dir(fname, "w");
-        if (! file) {
-                warn("Problem updating %s: %s\n", fname, file_get_error());
-                return -1;
-        }
-        
-        list_for_each(&menu_saved_games, lptr) {
-                saved_game_t *save = outcast(lptr, saved_game_t,  list);
-                fprintf(file, "(kern-add-save-game \"%s\")\n", save->fname);
-        }
-
-        fclose(file);
-        return 0;
-}
-
-/**
  * Let the player select a file to save the current game.
  *
  * @returns A strdup'd copy of the name of the file to save to, or 0 if the
@@ -777,8 +883,12 @@ char * save_game_menu(void)
         assert(menubuf);
         menu = (char**)calloc(n, sizeof(menu[0]));
         assert(menu);
+
         data.hotkeys = (char*)calloc(n+1, 1);
         assert(data.hotkeys);
+        data.menu = menu;
+        data.n_menu = n;
+        data.title = "Save Game";
 
         /* Prepare to fill in the menu list. */
         i = 0;
@@ -825,16 +935,16 @@ char * save_game_menu(void)
                 i++;
         }
 
-        foogodSetHintText(SCROLLER_HINT);
+        foogodSetHintText(LOADSAVE_HINT);
         foogodSetMode(FOOGOD_HINT);
 
         /* Setup the menu in the status window. */
-        statusSetStringList("Save Game", n, menu);
+        statusSetStringList(data.title, n, menu);
         statusSetMode(StringList);
         
         /* Highlight the current saved game. */
         if (menu_current_saved_game) {
-                statusSetSelected(1);
+                statusSetSelectedIndex(1);
         }
 
         /* Show the initial screenshot. */
