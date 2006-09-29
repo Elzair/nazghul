@@ -1,10 +1,4 @@
 ;;----------------------------------------------------------------------------
-;; Schedule
-;;
-;; no schedule...
-;;----------------------------------------------------------------------------
-
-;;----------------------------------------------------------------------------
 ;; Gob
 ;;
 ;; Quest flags, etc, go here.
@@ -153,25 +147,26 @@
 ;;----------------------------------------------------------------------------
 ;; First-time constructor
 ;;----------------------------------------------------------------------------
-(define (mk-roland-first-time tag)
+(define (mk-roland)
   (bind 
-    (kern-mk-char tag                 ; tag
-                  "Roland"            ; name
-                  sp_human            ; species
-                  oc_warrior          ; occ
-                  s_human_knight      ; sprite
-                  faction-men         ; starting alignment
-                  6 0 6            ; str/int/dex
-                  pc-hp-off  ; hp bonus
-                  pc-hp-gain ; hp per-level bonus
-                  0 ; mp off
-                  0 ; mp gain
-                  max-health -1 max-health 3            ; hp/xp/mp/lvl
-                  #f                  ; dead
-                  'roland-conv        ; conv
-                  nil              ; sched
-                  'roland-ai          ; special ai
-                  nil                 ; container
-                  nil                 ; readied
-                  )
-   (roland-mk #f #f #f)))
+    (kern-mk-char 
+     'ch_roland          ; tag
+     "Roland"            ; name
+     sp_human            ; species
+     oc_warrior          ; occ
+     s_human_knight      ; sprite
+     faction-men         ; starting alignment
+     6 0 6               ; str/int/dex
+     pc-hp-off           ; hp bonus
+     pc-hp-gain          ; hp per-level bonus
+     0                   ; mp off
+     0                   ; mp gain
+     max-health -1 max-health 3            ; hp/xp/mp/lvl
+     #f                  ; dead
+     'roland-conv        ; conv
+     nil                 ; sched
+     'roland-ai          ; special ai
+     nil                 ; container
+     nil                 ; readied
+     )
+    (roland-mk #f #f #f)))

@@ -1,36 +1,16 @@
 ;;----------------------------------------------------------------------------
 ;; Slimy Cavern
 ;;
+;;  Wherein the player fights some slimes, some bandits, and optionally rescues
+;;  Roland.
 ;;----------------------------------------------------------------------------
 
-;;----------------------------------------------------------------------------
-;; Zones
-;;
-;; Zones are rectangular areas defined as scheme variables. They can be
-;; referred to by NPC schedules and other parts of the script. They cannot be
-;; defined in this file, however, and must be kern-loaded, for a couple of
-;; reasons:
-;;
-;; 1. When the kernel saves and reloads a game, the reloaded game will not load
-;; this file (this one, right here). The reason is that everything in this file
-;; defines an initial game state, and the game will change as it plays. When
-;; the kernel saves it will save all of this state as part of a single file.
-;;
-;; 2. When the kernel saves a game it will not save the zones because it
-;; doesn't know about them.
-;;
-;; 3. The kern-load procedure tells the kernel that when it reloads a game it
-;; needs to reload the given file. Think of the zone file as read-only data,
-;; whereas this file contains read/write data.
-;;----------------------------------------------------------------------------
 (kern-load "slimy-cavern-zones.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Characters
 ;;----------------------------------------------------------------------------
 (kern-load "roland.scm")
-(mk-roland-first-time 'ch_roland)
-
 
 ;; ----------------------------------------------------------------------------
 ;; Map
@@ -114,6 +94,17 @@
 
                 ;; loot and loose-lying objects
                 (list rolands-chest 9 2)
+                (put (mk-corpse-with-loot) 12 21)
+
+                ;; Trapped chest with some reasonably nice thiefly items
+                (put (mk-chest 'poison-trap
+                               (list (list 1 t_in_ex_por_scroll)
+                                     (list 1 t_wis_quas_scroll)
+                                     (list 3 t_gem)
+                                     (list 5 t_picklock)
+                                     (list 50 t_gold_coins)
+                                     ))
+                     5 2)
 
                 ;; terrain features
                 (list (mk-ladder-up 'p_shard 13 8) 8 30)
@@ -130,7 +121,7 @@
                 (put (spawn-pt 'green-slime) 9 17)
                 (put (spawn-pt 'green-slime) 10 18)
                 (put (spawn-pt 'green-slime) 13 18)
-                (put ch_roland  14 1)
+                (put (mk-roland) 14 1)
 
                 )
                (list 'on-entry-to-dungeon-room) ; hooks
