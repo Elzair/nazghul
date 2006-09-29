@@ -82,8 +82,11 @@
 	)
  (put (spawn-pt 'cave-goblin-slinger) 14 11)
  (put (spawn-pt 'cave-goblin-berserker) 15 9)
+ (put (spawn-pt 'cave-goblin-priest) 16 10)
  (put (spawn-pt 'forest-goblin-hunter) 15 5)
  (put (spawn-pt 'forest-goblin-hunter) 12 7)
+ (put (spawn-pt 'forest-goblin-shaman) 13 5)
+ (put (spawn-pt 'forest-goblin-stalker) 16 8)
  )
 
 (mk-dungeon-room
@@ -188,6 +191,23 @@
  (put (spawn-pt 'forest-goblin-hunter) 3 11)
  (put (spawn-pt 'forest-goblin-hunter) 4 10)
  (put (spawn-pt 'forest-goblin-stalker) 5 11)
+ (put (mk-chest 'spike-trap
+                (list (list 5 t_food)
+                      (list 20 t_arrow)
+                      (list 30 t_gold_coins)
+                      (list 3 t_heal_potion)
+                      ))
+      2 13)
+ (put (mk-chest 'lightning-trap
+                (list (list 2 mandrake)
+                      (list 6 sulphorous_ash)
+                      (list 4 blood_moss)
+                      (list 5 garlic)
+                      (list 5 ginseng)
+                      (list 2 t_mana_potion)
+                      (list 1 t_xp_potion)
+                      ))
+      10 1)
  )
 
 (mk-dungeon-room

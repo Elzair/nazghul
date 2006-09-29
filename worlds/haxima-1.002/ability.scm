@@ -132,7 +132,7 @@
    	(powers-poison kchar ktarg (occ-ability-blackmagic kchar)))
 
 (define (cast-fireball-proc kchar ktarg)
-	(powers-fireball kchar (kern-obj-get-location kchar) (occ-ability-blackmagic kchar)))
+	(powers-fireball kchar (kern-obj-get-location ktarg) (occ-ability-blackmagic kchar)))
 
 (define (cast-kill-proc kchar ktarg)
   (kern-log-msg (kern-obj-get-name kchar)

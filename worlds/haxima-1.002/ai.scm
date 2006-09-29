@@ -359,6 +359,10 @@
       (move-away-from-foes? kchar)))
 
 (define (priest-ai kchar)
+  (println "Priest hostiles:")
+  (map (lambda (kfoe)
+         (println "  " (kern-obj-get-name kfoe)))
+       (all-visible-hostiles kchar))
   (or (std-ai kchar)
       (and (in-melee-range-of-foes? kchar)
            (blink-away-from-foes kchar))
