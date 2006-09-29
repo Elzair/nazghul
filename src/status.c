@@ -103,10 +103,33 @@ static struct status {
 	struct inv_entry *selectedEntry;
 	enum ZtatsView ztatsView;
 	enum StatusMode mode;
+
+        /**
+         * The index of the list entry that appears at the top of the status
+         * window.
+         */
 	int topLine;
+
+        /**
+         * Not sure what this is.
+         */
 	int maxLine;
+
+        /**
+         * The number of lines in the status window.
+         */
 	int numLines;
+
+        /**
+         * The index of the list entry that is currently highlighted in the
+         * status window.
+         */
 	int curLine;
+
+        /**
+         * The text that appears in the title bar at the top of the status
+         * window.
+         */
         char title[MAX_TITLE_LEN+1];
 
 	char *pg_title, *pg_text;
@@ -123,6 +146,13 @@ static struct status {
         Container *container;
         struct filter *filter;
         void (*show_thing)(SDL_Rect * rect, void *thing);
+
+        /**
+         * Sometimes I just don't want to repaint until I'm done doing more
+         * stuff. Repaints will be suppressed unless this counter is
+         * zero. Limiteed to internal use only for now.
+         */
+        int suppressRepaint;
 
 } Status;
 
@@ -1404,6 +1434,8 @@ static void statusPaintStringList(void)
 
 static void myScrollGeneric(enum StatusScrollDir dir)
 {
+        int i;
+
 	switch (dir) {
 	case ScrollUp:
 		// If the window is not at the top of the list and the current
@@ -1425,14 +1457,39 @@ static void myScrollGeneric(enum StatusScrollDir dir)
 		if (Status.curLine < (Status.list_sz - 1))
 			Status.curLine++;
 		break;
-	default:
+        case ScrollTop:
+                Status.topLine = 0;
+                Status.curLine = 0;
+                break;
+        case ScrollBottom:
+                Status.curLine = Status.list_sz - 1;
+                if (Status.list_sz > Status.numLines) {
+                        Status.topLine = Status.list_sz - Status.numLines;
+                } else {
+                        Status.topLine = 0;
+                }
 		break;
+        case ScrollPageUp:
+                for (i = 0; i < Status.numLines; i++) {
+                        myScrollGeneric(ScrollUp);
+                }
+                break;
+        case ScrollPageDown:
+                for (i = 0; i < Status.numLines; i++) {
+                        myScrollGeneric(ScrollDown);
+                }
+                break;
+        default:
+                break;
 	}
 }
 
 void statusRepaint(void)
 {
         static int repainting = 0;
+
+        if (Status.suppressRepaint)
+                return;
 
         // Check if we're early in startup and haven't set the paint function
         // yet.
@@ -1632,7 +1689,13 @@ void statusSetSelectedIndex(int index)
         case StringList:
         case Trade:
         case GenericList:
-                Status.curLine = index;
+                while (index < Status.curLine) {
+                        Status.scroll(ScrollUp);
+                }
+                while (index > Status.curLine) {
+                        Status.scroll(ScrollDown);
+                }
+                /*Status.curLine = index;*/
                 statusRepaint();
                 break;
         default:
@@ -1715,4 +1778,15 @@ void statusFlashSelected(unsigned int color)
         default:
                 break;
         }
+}
+
+void statusDisableRepaint()
+{
+        Status.suppressRepaint++;
+}
+
+void statusEnableRepaint()
+{
+        assert(Status.suppressRepaint);
+        Status.suppressRepaint--;        
 }

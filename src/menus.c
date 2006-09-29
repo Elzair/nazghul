@@ -584,8 +584,15 @@ static void menu_prompt_to_delete(menu_scroll_data_t *data)
         data->menu[i2] = 0;
         data->n_menu--;
         statusSetStringList(data->title, data->n_menu, data->menu);
+
+        /* Disable repainting while re-setting the mode to avoid the ugly
+         * flashes on the top line. */
+        statusDisableRepaint();
+        statusSetMode(StringList);
+        statusEnableRepaint();
+
         statusSetSelectedIndex(i1 ? (i1 - 1) : 0);
-        statusRepaint();
+        /*statusRepaint();*/
 
         log_end(" Deleted!");
 }
@@ -632,6 +639,12 @@ int menu_scroller(struct KeyHandler * kh, int key, int keymod)
 	case SDLK_PAGEDOWN:
                 dir = ScrollPageDown;
 		break;
+        case SDLK_HOME:
+                dir = ScrollTop;
+                break;
+        case SDLK_END:
+                dir = ScrollBottom;
+                break;
 	case SDLK_RETURN:
 	case SDLK_SPACE:
 	case '\n':
@@ -648,9 +661,8 @@ int menu_scroller(struct KeyHandler * kh, int key, int keymod)
         case 'd':
                 menu_prompt_to_delete(data);
                 return data->n_menu ? 0 : 1;
-                break;
 	default:
-		break;
+                return 0;
 	}
 
         statusScroll(dir);

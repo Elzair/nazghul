@@ -53,7 +53,9 @@ enum StatusScrollDir {
         ScrollRight,
         ScrollLeft,
         ScrollPageUp,
-        ScrollPageDown
+        ScrollPageDown,
+        ScrollTop,
+        ScrollBottom
 };
 								
 enum StatusMode {
@@ -157,6 +159,20 @@ extern int statusGetSelectedIndex(enum StatusSelection sel);
  * @param color The color to flash. See the list in screen.h.
  */
 extern void statusFlashSelected(unsigned int color);
+
+/**
+ * Temporarily disable repainting. This increments an internal "suppression
+ * counter" inside status. When the counter is non-zero the status window will
+ * not repaint itself.
+ */
+extern void statusDisableRepaint();
+
+/**
+ * Enable repainting again. This decrements an internal "suppression
+ * counter" inside status. When the counter is non-zero the status window will
+ * not repaint itself.
+ */
+extern void statusEnableRepaint();
 
 END_DECL
 
