@@ -302,7 +302,7 @@ int main(int argc, char **argv)
 
         tick_start(TickMilliseconds);
 
-// main_loop:
+ main_loop:
         /* blank out the whole screen */
         screenErase(NULL);
         screenUpdate(NULL);
@@ -331,8 +331,9 @@ int main(int argc, char **argv)
         /* reset save file so main menu runs */
         nazghul_load_fname=0;
 
-        // memory leaks prevent this from being a good idea:
-        //goto main_loop;
+        /* In the past, memory leaks made this a bad idea. Let's give it
+         * another go and try to work through them if they crop up again. */
+        goto main_loop;
 
         tick_kill();
 
