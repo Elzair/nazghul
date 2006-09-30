@@ -161,6 +161,9 @@
  (put (kern-mk-obj t_beer 1) 16 8)
  (put (kern-mk-obj t_food 1) 16 12)
  (put (kern-mk-obj t_beer 1) 15 11)
+ (put (mk-corpse-with-loot) 12 13)
+ (put (mk-corpse-with-loot) 14 14)
+ (put (mk-corpse-with-loot) 14 6)
  )
 
 (mk-dungeon-room
