@@ -71,14 +71,19 @@ static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
 
         switch (key) {
                 
+        case KEY_NORTHWEST:
+        case KEY_NORTHEAST:
+        case KEY_SOUTHWEST:
+        case KEY_SOUTHEAST:
         case KEY_NORTH:
+        case KEY_WEST:
         case KEY_EAST:
         case KEY_SOUTH:
-        case KEY_WEST:
         {
                 dir = keyToDirection(key);
                 party->move(directionToDx(dir), directionToDy(dir));
                 mapSetDirty();
+                dir = keyToDirection(key);
         }
         break;
 
@@ -945,11 +950,14 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
 
         switch (key) {
 
+        case KEY_NORTHWEST:
         case KEY_NORTH:
-        case KEY_EAST:
-        case KEY_SOUTH:
+        case KEY_NORTHEAST:
         case KEY_WEST:
-
+        case KEY_EAST:
+        case KEY_SOUTHWEST:
+        case KEY_SOUTH:
+        case KEY_SOUTHEAST:
                 dir = keyToDirection(key);
                 ctrl_move_character(character, dir);
                 break;

@@ -647,6 +647,7 @@ int menu_scroller(struct KeyHandler * kh, int key, int keymod)
                 break;
 	case SDLK_RETURN:
 	case SDLK_SPACE:
+        case KEY_HERE:
 	case '\n':
                 i1 = statusGetSelectedIndex(String);
                 statusFlashSelected(Green);
@@ -713,6 +714,7 @@ int main_menu_scroller(struct KeyHandler * kh, int key, int keymod)
 		break;
 	case SDLK_RETURN:
 	case SDLK_SPACE:
+        case KEY_HERE:
 	case '\n':
                 data->entry = (char*)statusGetSelected(String);
 		return 1;
