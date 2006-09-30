@@ -32,10 +32,11 @@
 
 #define COORD_TO_INDEX(x,y,w) ((y)*(w)+(x))
 
+#define CONFIG_NEIGHBORS 8 /* number of neighbors to search */
 #define MAX_DEPTH 1000	/* hack to limit search time on large places */
 
 static struct heap *schedule;	/* Priority queue of nodes to explore */
-static struct tree *found;	/* Nodes with a known path, ordered by location 
+static struct tree *found;	/* Nodes with a known path, ordered by location
 				 */
 
 /* Internal ******************************************************************/
@@ -351,10 +352,19 @@ struct astar_node *astar_search(struct astar_search_info *info)
 			for (col = 0, info->x0 = node->x - 1; col < 3;
 			     col++, info->x0++) {
 
+#if (CONFIG_NEIGHBORS==4)
 				/* skip diagonals and center */
 				if (((row * 3 + col) % 2) == 0) {
 					continue;
 				}
+#elif (CONFIG_NEIGHBORS==8)
+				/* skip center */
+				if ((row == col) && (row == 1)) {
+					continue;
+				}
+#else
+#error CONFIG_NEIGHBORS undefined or has bad value
+#endif
 
 				/* Wrap x-coord if applicable */
 				if (info->wraps)

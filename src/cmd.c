@@ -484,16 +484,20 @@ int movecursor(struct KeyHandler * kh, int key, int keymod)
                 = (struct movecursor_data *) kh->data;
   
         /* target selected? */
-        if (key == '\n' || key == SDLK_SPACE || key == SDLK_RETURN) {
+        switch (key) {
+	case SDLK_RETURN:
+	case SDLK_SPACE:
+        case KEY_HERE:
+	case '\n':
                 if (data->each_target_func) {
                         data->each_target_func(Session->crosshair->getPlace(),
                                                Session->crosshair->getX(),
                                                Session->crosshair->getY(),
                                                0);
                 }
-
                 return ! data->multi;   /* done unless multiple targets */
-
+        default:
+                break;
         }
   
         /* crosshairs moved? */
@@ -3267,8 +3271,6 @@ static void buy(struct merchant *merch)
 	struct trade_info *trade;
 	int quantity, cost, max_q;
 
-        foogodSetHintText(SCROLLER_HINT);
-        foogodSetMode(FOOGOD_HINT);
 	statusSetTradeInfo(merch->n_trades, merch->trades);
 	statusSetMode(Trade);
 
@@ -3341,7 +3343,6 @@ static void buy(struct merchant *merch)
 	}
 
 	statusSetMode(ShowParty);
-        foogodSetMode(FOOGOD_DEFAULT);
 }
 
 static bool conv_filter_trade(struct inv_entry *ie, void *cookie)
@@ -3401,8 +3402,6 @@ static void sell(struct merchant *merch)
 	}
 	// Fill out the list
 	n_trades = fill_sell_list(merch, trades);
-        foogodSetHintText(SCROLLER_HINT);
-        foogodSetMode(FOOGOD_HINT);
 	statusSetTradeInfo(n_trades, trades);
 	statusSetMode(Trade);
 
@@ -3471,7 +3470,6 @@ static void sell(struct merchant *merch)
 	}
 
 	statusSetMode(ShowParty);
-        foogodSetMode(FOOGOD_DEFAULT);
 
 	delete trades;
 }
