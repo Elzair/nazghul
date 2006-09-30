@@ -1942,11 +1942,19 @@ void Character::synchronize()
                 return;
         } 
 
-        // Drop the character in the upper left corner of their roaming
-        // rectangle. The ULC is better than the center because it's more
-        // obvious to the schedule designer that the ULC needs to be passable
-        // terrain.
-        relocate(cur_appt->place, cur_appt->x, cur_appt->y);
+        /* Iff the character is not already in their appointment rectangle then
+         * relocate them to the upper left corner of their appointment. The ULC
+         * is better than the center because it's more obvious to the schedule
+         * designer that the ULC needs to be passable terrain. If they are
+         * already in their appointment then don't relocate them, because it
+         * looks funny when you reload the game.
+         */
+        if ((getX() < cur_appt->x)
+            || (getX() >= (cur_appt->x + cur_appt->w))
+            || (getY() < cur_appt->y)
+            || (getY() >= (cur_appt->y + cur_appt->h))) {
+                relocate(cur_appt->place, cur_appt->x, cur_appt->y);
+        }
 	setActivity(cur_appt->act);
         appt = cur_appt->index;
 }
