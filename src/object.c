@@ -670,13 +670,6 @@ void Object::setup()
                 visible = 1;
 }
 
-static int object_delete_hook_entry(struct hook_entry *entry, void *data)
-{
-        list_remove(&entry->list);
-        hook_entry_del(entry);
-        return 0;
-}
-
 Object::~Object()
 {
         int i;
@@ -715,8 +708,29 @@ Object::~Object()
                 // lists is locked.
                 assert(! hook_list_locked(&hooks[i]));
 
-                // Destroy each hook entry on the hook list.
-                hookForEach(i, object_delete_hook_entry, this);
+                // This is a hack to workaround a bug due to a design flaw. A
+                // request has been logged to fix the design flaw [SF
+                // 1568398]. It will be a "deep" fix, and I expect it to add
+                // lots of new bugs, so I'm going to see if this relatively
+                // easy change will get us by a bit longer.
+                //
+                // The bug is this: we land here in the process of a
+                // session_del() call. Some of our effects have already been
+                // destroyed. In hookForEach() it will inspect some of these
+                // effects, not knowing that they are destroyed, and cause a
+                // crash. So instead of using hookForEach() I'm going to
+                // destroy the lists by hand right here without calling any
+                // hook removal closures or anything like that.
+                struct list *lptr;
+                struct hook_list *hl;
+                hl = &hooks[i];
+                lptr = hook_list_first(hl);
+                while (lptr != hook_list_end(hl)) {
+                        hook_entry_t *he = outcast(lptr, hook_entry_t, list);
+                        lptr = lptr->next;
+                        list_remove(&he->list);
+                        hook_entry_del(he);
+                }
         }
 }
 
