@@ -2456,8 +2456,9 @@ bool cmdCastSpell(class Character * pc)
 	/* Lookup the spell in the list of valid spells. */
 	spell = magic_lookup_spell(&Session->magic, context.spell_name);
 	if (!spell) {
-		cmdwin_spush("no effect!");
-                log_end("no effect!");
+                /* Bugfix for SF1564255: don't let player guess at spells. */
+		cmdwin_spush("none mixed!");
+                log_end("none mixed!");
 		return false;
 	}
 
