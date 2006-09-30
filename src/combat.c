@@ -1434,6 +1434,17 @@ bool combat_enter(struct combat_info * info)
                 // Yes, this can happen in some rare circumstances...
                 return false;
 
+        /* Our map-building code assumes 4-neighbor adjacency. If attacking on
+         * a diagonal, randomly choose a cardinal direction. */
+        if (info->move->dx && info->move->dy)
+        {
+                if (rand() % 2) {
+                        info->move->dx = 0;
+                } else {
+                        info->move->dy = 0;
+                }
+        }
+
         // --------------------------------------------------------------------
         // Default to the entry point as the combat exit location for the
         // player party.

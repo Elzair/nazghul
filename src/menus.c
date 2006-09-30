@@ -445,7 +445,7 @@ static void menu_show_screenshot(SDL_Surface *screenshot)
 
         mapSetImage(screenshot);
         rect.x = (((MAP_X + MAP_W) / 2) - (5 * ASCII_W));
-        rect.y = (MAP_Y + MAP_H)/2;
+        rect.y = (MAP_Y + MAP_H)/4;
         rect.w = strlen(MENU_SCREEN_SHOT_STR);
         rect.h = ASCII_H;
         screenPrint(&rect, 0, MENU_SCREEN_SHOT_STR);

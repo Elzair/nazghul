@@ -1233,21 +1233,7 @@ void cmdAttack(void)
         info.x = place_wrap_x(info.place, player_party->getX() + info.dx);
         info.y = place_wrap_y(info.place, player_party->getY() + info.dy);
         info.npc_party = place_get_Party(info.place, info.x, info.y);
-		
-        if (info.place->wilderness) {
-                //only allow adjactent attacks in wilderness
-                if (info.dx && info.dy)
-                {
-/*                         cmdwin_spush("adjacent foes only!"); */
-/*                         return; */
-                        if (rand() % 2) {
-                                info.dx = 0;
-                        } else {
-                                info.dy = 0;
-                        }
-                }
-        }
-		
+				
         if (info.npc_party == NULL) {
                 cmdwin_spush("nobody there!");
                 return;
