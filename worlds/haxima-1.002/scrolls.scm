@@ -19,6 +19,8 @@
 (kern-mk-sprite 's_vas_mani_scroll        ss_scrolls 1 10 #f 0) ;; great heal
 (kern-mk-sprite 's_wis_quas_scroll        ss_scrolls 1 11 #f 0) ;; reveal
 
+(kern-mk-sprite 's_wis_an_ylem_scroll     ss_scrolls 1 13 #f 0) ;; xray
+
 (define (mk-scroll tag name sprite spell)
   (mk-usable-item tag name sprite 1 
                   (lambda (kscrolltype kuser)
@@ -39,6 +41,7 @@
 (mk-scroll 't_in_ex_por_scroll "In Ex Por scroll" s_in_ex_por_scroll in-ex-por)
 (mk-scroll 't_vas_mani_scroll "Vas Mani scroll" s_vas_mani_scroll vas-mani)
 (mk-scroll 't_wis_quas_scroll "Wis Quas scroll" s_wis_quas_scroll wis-quas)
+(mk-scroll 't_wis_an_ylem_scroll "Wis An Ylem scroll" s_wis_an_ylem_scroll wis-an-ylem)
 
 
 ;; Temp shims to keep saved games working

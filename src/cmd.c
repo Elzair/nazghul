@@ -2762,12 +2762,12 @@ void look_at_XY(struct place *place, int x, int y, void *unused)
 
         if ( mapTileIsVisible(x, y) ) {
                 if (mapTileLightLevel(x,y) < MIN_XAMINE_LIGHT_LEVEL) {
-                        log_continue("You can't see!");
+                        log_continue("Too dark!");
                 } else {
                         log_continue("You see ");
                         place_describe(place, x, y, PLACE_DESCRIBE_ALL);
                 }
-        } else if (ShowAllTerrain) {
+        } else if (ShowAllTerrain || XrayVision) {
                 log_continue("You see (via xray) ");
                 place_describe(place, x, y, PLACE_DESCRIBE_TERRAIN);
         } else {
@@ -2792,7 +2792,7 @@ void detailed_examine_XY(struct place *place, int x, int y, void *unused)
 					log_continue("You see:\n");
 					place_examine(place, x, y);
 			}
-	} else if (ShowAllTerrain) {
+	} else if (ShowAllTerrain || XrayVision) {
 			log_continue("You see (via xray):\n");
 			place_examine(place, x, y);
 	} else {
