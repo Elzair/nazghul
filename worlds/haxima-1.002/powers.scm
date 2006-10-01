@@ -654,9 +654,10 @@
 				(+ power 3)
 				(occ-ability-magicdef target))
 			(apply-sleep target)))
-		(map apply-sleep hostiles)
-		result-ok
-		))
+                (cond ((null? hostiles) result-no-hostiles)
+                      (else
+                       (map apply-sleep hostiles)
+                       result-ok))))
 
 ;todo duration based on power?
 (define (powers-spider-calm caster ktarg power)

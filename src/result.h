@@ -24,8 +24,9 @@
 #define result_h
 
 /* These need to match naz.scm */
-#define RESULT_OK        0
-#define RESULT_NO_TARGET 1
-#define RESULT_NO_EFFECT 2
+#define RESULT_OK          0
+#define RESULT_NO_TARGET   1
+#define RESULT_NO_EFFECT   2
+#define RESULT_NO_HOSTILES 3
 
 #endif

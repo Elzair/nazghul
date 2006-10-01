@@ -2,6 +2,13 @@
 ;; init.scm -- contains lots of common scheme utilities
 (load "init.scm")
 
+;; Result codes (these belong here because they are tied to kernel values, see
+;; result.h)
+(define result-ok          0)
+(define result-no-target   1)
+(define result-no-effect   2)
+(define result-no-hostiles 3)
+
 ;; Override the default error hook to warn the loader when the interpreter
 ;; encounters any errors during evaluation.
 (define (my-error-hook . x)
@@ -253,11 +260,6 @@
   (let ((loc-a (kern-obj-get-location kobj-a))
         (loc-b (kern-obj-get-location kobj-b)))
   (kern-get-distance loc-a loc-b)))
-
-;; Result codes
-(define result-ok          0)
-(define result-no-target   1)
-(define result-no-effect   2)
 
 ;; Inefficient code to find nearest obj from a list
 (define (nearest-obj kobj klist)

@@ -373,8 +373,7 @@
 	result-ok)
 
 (define (in-zu  caster)
-	(powers-sleep-area caster caster (occ-ability-blackmagic caster))
-	result-ok)
+        (powers-sleep-area caster caster (occ-ability-blackmagic caster)))
 
 (define (vas-mani  caster)
 	(cast-ui-basic-member-spell powers-great-heal

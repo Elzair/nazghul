@@ -2519,6 +2519,9 @@ bool cmdCastSpell(class Character * pc)
         case RESULT_NO_EFFECT:
                 log_continue("no effect!");
                 break;
+        case RESULT_NO_HOSTILES:
+                log_continue("no hostiles here!");
+                break;
         default:
                 assert(false);
                 break;
