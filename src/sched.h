@@ -36,7 +36,8 @@
 #define COMMUTING      3
 #define EATING         4
 #define DRUNK          5
-#define NUM_ACTIVITIES 6
+#define FIGHTING       6
+#define NUM_ACTIVITIES 7
 
 struct appt {
         int hr, min, x, y, w, h, act;

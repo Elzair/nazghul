@@ -2180,6 +2180,7 @@ void Character::exec()
                         case SLEEPING:
                                 // do nothing
                                 break;
+                        case FIGHTING:
                         default:
                                 // call the AI
                                 ctrl(this);
@@ -2668,6 +2669,9 @@ void Character::leavePlayer(void)
 
 int Character::getActivity()
 {
+        if (place_contains_hostiles(getPlace(), this))
+                return FIGHTING;
+
         if (! sched)
                 return NONE;
         getAppointment();
