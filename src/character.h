@@ -113,8 +113,6 @@ class Character:public Being {
 	virtual int getVisionRadius();
 	virtual int getSpeed();
 	virtual struct sprite *getSprite();
-	virtual int getFleeDx();
-	virtual int getFleeDy();
         virtual sound_t *getDamageSound();
         virtual sound_t *get_movement_sound();
 
@@ -266,7 +264,6 @@ class Character:public Being {
 	class Character *target;
 	class ArmsType **rdyArms;
 	bool fleeing;
-	int fleeX, fleeY;
 	int burden;
 	bool inCombat;
         sound_t *damage_sound;
@@ -313,6 +310,8 @@ class Character:public Being {
         void kickPlayerOutOfMyBed();
         void switchPlaces(class Character *);
         void unreadyAll();
+        void getEvasionVector(int *dx, int *dy);
+        bool locationIsOk(int x2, int y2);
 };
 
 extern void char_dtor(void *val);

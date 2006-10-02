@@ -1457,8 +1457,17 @@ static void ctrl_idle(class Character *character)
 void ctrl_character_ai(class Character *character)
 {
         if (character->isFleeing()) {
-                character->flee();
-                return;
+                switch (character->flee()) {
+                case NotApplicable:
+                case NoDestination:
+                case WasImpassable:
+                case WasOccupied:
+                        /* couldn't move, so stand and fight */
+                        break;
+                default:
+                        /* moved, so return */
+                        return;
+                }
         }
         ctrl_idle(character);
 }

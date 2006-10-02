@@ -55,6 +55,15 @@
 #include <stdlib.h>
 #include <math.h>
 
+/**
+ * Used when calculating an evasion vector away from hostiles.
+ */
+struct evasionVectorInfo {
+        class Character *subj; /**< The character doing the evading. */
+        int dx;          /**< The x component of the evasion vector. */
+        int dy;          /**< The y component of the evasion vector. */
+};
+
 static bool myUnreadyDepletedThrownWeapon(class Character * pc, void *data)
 {
 	assert(pc->isPlayerControlled());
@@ -101,6 +110,57 @@ static void myConsiderArms(struct inv_entry *ie, void *data)
         }
 }
 
+/**
+ * Accumulate the sum of the vectors from hostile foes. This is passed as an
+ * argument to place_for_each() to scan for hostiles. It sums up the vectors
+ * from hostile foes to the subject in order to calculate the best vector to
+ * flee.
+ *
+ * @param obj An object in the current place.
+ * @param data The evasion vector struct which refers to the calling object and
+ * accumulates results.
+ */
+static void getEvasionVectorVisitor(Object *obj, void *data)
+{
+        struct evasionVectorInfo *info;
+        class Character *subj;
+
+        info = (struct evasionVectorInfo *)data;
+        subj = info->subj;
+
+        /* Filter out non-beings */
+        if (obj->getLayer() != being_layer)
+                return;
+
+        /* Filter out non-hostiles */
+        if (! are_hostile(subj, (class Being*)obj))
+                return;
+
+#if 0
+        /* Cheat a bit here, both for performance and to increase the
+         * effectiveness of townsfolk trying to flee raiders. */
+
+        /* Filter out objects not in los of the subject */
+        if (! place_in_los(subj->getPlace(),subj->getX(),subj->getY(),
+                                   obj->getPlace(),obj->getX(),obj->getY()))
+                return;
+
+        /* Filter out object not in the vision radius of the subject */
+        if (place_flying_distance(subj->getPlace(),subj->getX(),subj->getY(),
+                                  obj->getX(),obj->getY())
+            > subj->getVisionRadius())
+                return;
+
+        /* Filter out invisible objects */
+        if (! obj->isVisible())
+                return;
+#endif
+        /* Add the vector going from the hostile to the subject to the
+         * cumulative vector. */
+        info->dx += (subj->getX() - obj->getX());
+        info->dy += (subj->getX() - obj->getX());
+}
+
 Character::Character(char *tag, char *name, 
                      struct sprite *sprite, 
                      struct species *species, struct occ *occ, 
@@ -116,7 +176,7 @@ Character::Character(char *tag, char *name,
           dex(dex), mana(mp), lvl(lvl),
           solo(false), target(NULL),
           rdyArms(NULL),
-          fleeing(false), fleeX(0), fleeY(0), burden(0),
+          fleeing(false), burden(0),
           inCombat(false),
           container(NULL), sprite(sprite),
           sched_chars_node(0),
@@ -197,7 +257,7 @@ Character::Character():hm(0), xp(0), order(-1),
                        playerControlled(true), solo(false),
                        target(NULL),
                        rdyArms(NULL),
-                       fleeing(false), fleeX(0), fleeY(0), burden(0),
+                       fleeing(false), burden(0),
                        inCombat(false),
                        container(NULL), sprite(0),
                        sched_chars_node(0),
@@ -997,52 +1057,84 @@ void Character::setFleeing(bool val)
 		return;
 
 	fleeing = val;
+}
 
-	if (!fleeing) {
-		fleeX = fleeY = 0;
-		return;
-	}
+/**
+ * Check if it's a good idea to try and move here in the given place. Checks
+ * for passability and known hazards.
+ */
+bool Character::locationIsOk(int x2, int y2)
+{
+        return (place_is_passable(getPlace(), x2, y2, this, 0)
+                && (! place_is_occupied(getPlace(), x2, y2))
+                && (! place_is_hazardous(getPlace(), x2, y2)));
+}
 
-	// Pick a direction to flee. Don't bother pathfinding, just look for
-	// the nearest edge and move toward it. After all, the Character is
-	// supposed to be fleeing in a panic so it doesn't have to be too smart
-	// about it.
+/**
+ * Compute the optimal vector to move away from hostiles.
+ *
+ * @param dx The x component of the resulting evasion vector.
+ * @param dy The y component of the resulting evasion vector.
+ */
+void Character::getEvasionVector(int *dx, int *dy)
+{
+        struct evasionVectorInfo info;
+        int x2, y2;
 
-	int leftx = getX();
-	int rightx = place_w(getPlace()) - getX();
-	int topy = getY();
-	int boty = place_h(getPlace()) - getY();
-	int dx, minx, dy, miny;
+        /* Get the vector away from foes. */
+        memset(&info, 0, sizeof(info));
+        info.subj = this;
+        place_for_each_object(getPlace(), getEvasionVectorVisitor, &info);
 
-	// Is the left edge nearer than the right edge?
-	if (leftx < rightx) {
-		dx = -1;
-		minx = leftx;
-	} else {
-		dx = 1;
-		minx = leftx;
-	}
+        /* Normalize the vector. */
+        clamp(info.dx, -1, 1);
+        clamp(info.dy, -1, 1);
 
-	// Is the top edge nearer than the bottom edge?
-	if (topy < boty) {
-		dy = -1;
-		miny = topy;
-	} else {
-		dy = 1;
-		miny = boty;
-	}
+        /* Compute the new location. */
+        x2 = getX() + info.dx;
+        y2 = getY() + info.dy;
 
-	// Flee horizontally?
-	if (minx < miny) {
-		fleeX = dx;
-	} else {
-		fleeY = dy;
-	}
+        /* Check if ok. */
+        if (locationIsOk(x2, y2)) {
+                goto done;
+        }
+
+        /* Not ok, try the vertical. */
+        if (info.dx) {
+                x2 -= info.dx;
+                if (locationIsOk(x2, y2)) {
+                        goto done;
+                }
+                x2 += info.dx;
+        }
+
+        /* Not ok, try the horizontal. */
+        if (info.dy) {
+                y2 -= info.dy;
+                if (locationIsOk(x2, y2)) {
+                        goto done;
+                }
+                y2 += info.dx;
+        }
+
+        /* No place to go. */
+        info.dx = 0;
+        info.dy = 0;
+
+ done:
+        *dx = info.dx;
+        *dy = info.dy;
 }
 
 enum MoveResult Character::flee()
 {
-	return move(fleeX, fleeY);
+        int dx = 0, dy = 0;
+        getEvasionVector(&dx, &dy);
+        if (dx || dy) {
+                return move(dx, dy);
+        } else {
+                return NotApplicable;
+        }
 }
 
 void Character::attackTerrain(ArmsType *weapon, int x, int y)
@@ -1650,15 +1742,6 @@ void Character::setMana(int val) {
 bool Character::isFleeing() {
         return fleeing;
 }
-
-int Character::getFleeDx() {
-        return fleeX;
-}
-
-int Character::getFleeDy() {
-        return fleeY;
-}
-
 
 void Character::setOrder(int order) {
         this->order = order;
