@@ -168,7 +168,8 @@ Character::Character(char *tag, char *name,
                      int hpmod, int hpmult, 
                      int mpmod, int mpmult, 
                      int hp, int xp_, 
-                     int mp, int lvl)
+                     int mp, int lvl
+                     )
         : hm(0), xp(xp_), order(-1),
           sleeping(false),
           ac(0), 
@@ -181,6 +182,10 @@ Character::Character(char *tag, char *name,
           container(NULL), sprite(sprite),
           sched_chars_node(0),
           forceContainerDrop(false)
+          , fleePathFound(false)
+          , fleeX(0)
+          , fleeY(0)
+          , fleePathFlags(0)
 {
         if (tag) {
                 this->tag = strdup(tag);
@@ -262,6 +267,10 @@ Character::Character():hm(0), xp(0), order(-1),
                        container(NULL), sprite(0),
                        sched_chars_node(0),
                        forceContainerDrop(false)
+                      , fleePathFound(false)
+                      , fleeX(0)
+                      , fleeY(0)
+                      , fleePathFlags(0)
 {
         // This method is probably obsolete now
 
@@ -1057,6 +1066,9 @@ void Character::setFleeing(bool val)
 		return;
 
 	fleeing = val;
+        fleePathFound = false;
+        fleePathFlags = 0;
+        cachedPath = 0;
 }
 
 /**
@@ -1080,6 +1092,8 @@ void Character::getEvasionVector(int *dx, int *dy)
 {
         struct evasionVectorInfo info;
         int x2, y2;
+
+        printf("%s: getEvasionVector\n", getName());
 
         /* Get the vector away from foes. */
         memset(&info, 0, sizeof(info));
@@ -1126,15 +1140,136 @@ void Character::getEvasionVector(int *dx, int *dy)
         *dy = info.dy;
 }
 
-enum MoveResult Character::flee()
+static bool movedOk(enum MoveResult result)
+{
+        switch (result) {
+        case NotApplicable:
+        case NoDestination:
+        case WasImpassable:
+        case WasOccupied:
+                return false;
+        default:
+                return true;
+        }
+}
+
+bool Character::mapHasEdge()
+{
+        // This is the simple thing to do, and works for towns and wilderness
+        // maps. Dungeon rooms could have edges shared with other rooms, but I
+        // don't want to deal with that right now, mostly because it
+        // complicates the pathfinding heuristics, and I want to get this case
+        // right first.
+        printf("%s: mapHasEdge\n", getName());
+        return (place_get_parent(getPlace()));
+}
+
+bool Character::exitMap()
+{
+        if (getX() == 0) {
+                return movedOk(move(-1, 0));
+        } else if (getX() == (place_w(getPlace()) - 1)) {
+                return movedOk(move(1, 0));
+        } else if (getY() == 0) {
+                return movedOk(move(0, -1));
+        } else if (getY() == (place_h(getPlace()) - 1)) {
+                return movedOk(move(0, 1));
+        } else {
+                return false;
+        }
+}
+
+bool Character::followFleePath()
+{
+        printf("%s: followFleePath\n", getName());
+        return (exitMap()
+                || pathfindTo(getPlace(), fleeX, fleeY, fleePathFlags));
+}
+
+bool Character::findFleePath()
+{
+	// Just look for the nearest map edge. Note that this might not be the
+	// best choice, because it might not have a path. Get this working
+	// first, then get fancy if you want.
+	int leftx = getX();
+	int rightx = place_w(getPlace()) - getX();
+	int boty = getY();
+	int topy = place_h(getPlace()) - getY();
+	int minx, miny;
+
+	// Is the left edge nearer than the right edge?
+	if (leftx < rightx) {
+                fleeX = 0;
+		minx = leftx;
+	} else {
+                fleeX = place_w(getPlace()) - 1;
+		minx = leftx;
+	}
+
+	// Is the top edge nearer than the bottom edge?
+	if (boty < topy) {
+                fleeY = 0;
+		miny = topy;
+	} else {
+                fleeY = place_h(getPlace()) - 1;
+		miny = boty;
+	}
+
+        // Is the vertical edge nearer than the horizontal edge?
+        if (minx < miny) {
+                fleePathFlags = PFLAG_HORZ;
+        } else {
+                fleePathFlags = PFLAG_VERT;
+        }
+
+        printf("%s: findFleePath: [%d %d]->[%d %d]\n", 
+               getName(), getX(), getY(), fleeX, fleeY);
+
+        fleePathFound = true;
+        return true;
+}
+
+bool Character::pathfindToMapEdge()
+{
+        printf("%s: pathfindToMapEdge\n", getName());
+
+        if (fleePathFound
+            && followFleePath()) {
+                return true;
+        }
+
+        if (! findFleePath()) {
+                return false;
+        }
+
+        return followFleePath();
+}
+
+bool Character::fleeToMapEdge()
+{
+        printf("%s: fleeToMapEdge\n", getName());
+        return (mapHasEdge()
+                && pathfindToMapEdge());
+}
+
+bool Character::evade()
 {
         int dx = 0, dy = 0;
+        printf("%s: evade\n", getName());
         getEvasionVector(&dx, &dy);
-        if (dx || dy) {
-                return move(dx, dy);
-        } else {
-                return NotApplicable;
+        if (!dx && !dy) {
+                return false;
         }
+
+        return movedOk(move(dx, dy));
+}
+
+bool Character::flee()
+{
+        printf("%s: flee\n", getName());
+        return (!isStationary()
+                && (fleeToMapEdge()
+                    || evade()));
 }
 
 void Character::attackTerrain(ArmsType *weapon, int x, int y)

@@ -179,7 +179,6 @@ class Character:public Being {
 	virtual void synchronize();
 	virtual bool unready(class ArmsType * arms);
 	virtual enum MoveResult move(int dx, int dy);
-	virtual enum MoveResult flee();
 	virtual void attackTerrain(class ArmsType *weapon, int x, int y);
 	virtual void armThyself();
 	virtual bool needToRearm();
@@ -224,6 +223,7 @@ class Character:public Being {
         void beginLoitering(int hours);
         void endLoitering();
         bool isLoitering();
+	bool flee();
 
 	char *tag;
         struct node *plnode; // pointer back to party list node
@@ -312,6 +312,16 @@ class Character:public Being {
         void unreadyAll();
         void getEvasionVector(int *dx, int *dy);
         bool locationIsOk(int x2, int y2);
+        bool mapHasEdge();
+        bool followFleePath();
+        bool findFleePath();
+        bool pathfindToMapEdge();
+        bool fleeToMapEdge();
+        bool evade();
+        bool exitMap();
+
+        bool fleePathFound;
+        int fleeX, fleeY, fleePathFlags;
 };
 
 extern void char_dtor(void *val);
