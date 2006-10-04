@@ -549,7 +549,7 @@ static void menu_prompt_to_delete(menu_scroll_data_t *data)
         cmdwin_push("yes!");
         statusFlashSelected(Red);
         if (unlink(save->path)) {
-                log_end(" WARNING! Failed to delete save file %s: %s", 
+                log_continue(" WARNING! Failed to delete save file %s: %s", 
                         save->path, strerror(errno));
         }
 
@@ -558,8 +558,9 @@ static void menu_prompt_to_delete(menu_scroll_data_t *data)
         if (save->screenshot) {
                 char *scr_fname = saved_game_mk_screenshot_fname(save);
                 if (unlink(scr_fname)) {
-                        log_end(" WARNING! Failed to delete screenshot file "\
-                                "%s: %s:", scr_fname, strerror(errno));
+                        log_continue(" WARNING! Failed to delete screenshot "\
+                                     "file %s: %s:", scr_fname, 
+                                     strerror(errno));
                 }
                 free(scr_fname);
         }
@@ -594,7 +595,7 @@ static void menu_prompt_to_delete(menu_scroll_data_t *data)
         statusSetSelectedIndex(i1 ? (i1 - 1) : 0);
         /*statusRepaint();*/
 
-        log_end(" Deleted!");
+        log_end(" Removed!");
 }
 
 /**
@@ -851,6 +852,24 @@ char * journey_onward(void)
 }
 
 /**
+ * Filter characters we don't want to show in filenames.
+ *
+ * @param key A keypress code, usually ASCII.
+ * @returns 1 to reject the character, 0 to allow it.
+ */
+static int menu_fname_filter(int key)
+{
+        if (isalnum(key)
+            || (key=='_')
+            || (key=='-')
+            || (key=='.')) {
+                return 0;
+        } else {
+                return 1;
+        }
+}
+
+/**
  * Get a file name from the player.
  * @returns A strdup'd copy of the filename.
  */
@@ -862,7 +881,7 @@ static char *prompt_for_fname()
         cmdwin_clear();
         cmdwin_push("Filename: ");
 
-        if (ui_getline_plain(buf, sizeof(buf))) {
+        if (ui_getline_filtered(buf, sizeof(buf),  menu_fname_filter)) {
                 return strdup(buf);
         }
         return 0;

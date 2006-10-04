@@ -25,12 +25,6 @@
 extern void conv_enter(class Object *npc, class Object *pc, struct closure *conv);
 extern void conv_end(void);
 
-static int isprintable(int c)
-{
-        /* Looks like ctype's isprint() doesn't always behave the same way. On
-         * some systems it was letting c<32 go through, causing an assert in
-         * ascii.c. */
-        return (c>=32&&c<127);
-}
+extern int isprintable(int c);
 
 #endif

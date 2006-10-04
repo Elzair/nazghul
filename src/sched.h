@@ -29,7 +29,8 @@
 #include "scheme-private.h"   /* for scheme */
 #include "place.h"
 
-/* Reserved activities */
+/* Reserved activities (if you add one don't forget to update the
+ * activity_names[] array in sched.c) */
 #define NONE           0
 #define WORKING        1
 #define SLEEPING       2

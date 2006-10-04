@@ -115,6 +115,29 @@ struct merchant {
 
 extern void ui_trade(struct merchant *merch);
 
+/**
+ * Prompt the player to enter a line. By default (no filter provided) this will
+ * accept all printable characters as valid input from the player. Especially
+ * the ESC, '\n' and '\b' characters are taken to mean control characters and
+ * aren't considered printable.
+ *
+ * @param buf The string buffer to fill with the response. On success this
+ * contains a null-terminated string. The NULL will be there, and the buffer
+ * length will not be exceeded. The user reply will be truncated if necessary.
+ *
+ * @param len The length of buf.
+ *
+ * @param filter An optional filter function. This function should return
+ * non-zero to reject a key. Note that all non-printable characters are already
+ * filtered automatically; this param let's you filter even more. The filter is
+ * applied after checking for ESC, '\n' and '\b', which are processed as
+ * control characters and never appear in the result anyway.
+ *
+ * @returns The actual number of characters stored. Note that if the player
+ * hits ESC this will be zero as if no keys were pressed.
+ */
+extern int ui_getline_filtered(char *buf, int len, int (*filter)(int key));
+
 END_DECL;
 
 #endif

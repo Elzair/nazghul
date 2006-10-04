@@ -33,7 +33,8 @@ char *activity_names[NUM_ACTIVITIES] = {
         "sleeping",
         "commuting",
         "eating",
-        "drunk"
+        "drunk",
+        "fighting"
 };
 
 int sched_name_to_activity(char *activity_name)

@@ -63,7 +63,8 @@ static int get_player_query(struct KeyHandler *kh, int key, int keymod)
 		return 0;
 	}
 
-	if (isprintable(key) && C_room) {
+	if (isprintable(key) 
+            && C_room) {
 		cmdwin_push("%c", key);
 		*C_ptr++ = key;
 		C_room--;
@@ -145,3 +146,15 @@ void conv_enter(Object *npc, Object *pc, struct closure *conv)
 	cmdwin_repaint();
         
 }
+int isprintable(int c)
+{
+        /* Looks like ctype's isprint() doesn't always behave the same way. On
+         * some systems it was letting c<32 go through, causing an assert in
+         * ascii.c. */
+        return ((c >= 32)
+                && (c < 127)
+                && (c != '%') /* printf special char */
+                && (c != '^') /* ascii.c special char */
+                );
+}
+

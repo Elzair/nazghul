@@ -3187,6 +3187,7 @@ typedef struct ui_getline_data {
         char *ptr;
         char *buf;
         int room;
+        int (*filter)(int key);
 } getline_t;
 
 static int ui_getline_handler(struct KeyHandler *kh, int key, int keymod)
@@ -3217,7 +3218,13 @@ static int ui_getline_handler(struct KeyHandler *kh, int key, int keymod)
 		return 0;
 	}
 
-	if (isprintable(key) && data->room) {
+        if (data->filter
+            && data->filter(key)) {
+                return 0;
+        }
+
+	if (isprintable(key) 
+            && data->room) {
 		cmdwin_push("%c", key);
 		*data->ptr++ = key;
 		data->room--;
@@ -3226,7 +3233,7 @@ static int ui_getline_handler(struct KeyHandler *kh, int key, int keymod)
 	return 0;
 }
 
-int ui_getline_plain(char *buf, int len)
+int ui_getline_filtered(char *buf, int len, int (*filter)(int key))
 {
         struct KeyHandler kh;
         getline_t data;
@@ -3234,6 +3241,7 @@ int ui_getline_plain(char *buf, int len)
         data.buf  = buf;
         data.ptr  = buf;
         data.room = len - 1;
+        data.filter = filter;
 
         memset(buf, 0, len);
 
@@ -3244,7 +3252,12 @@ int ui_getline_plain(char *buf, int len)
         eventHandle();
         eventPopKeyHandler();
 
-        return len - (data.room + 1);
+        return len - (data.room + 1);        
+}
+
+int ui_getline_plain(char *buf, int len)
+{
+        return ui_getline_filtered(buf, len, 0);
 }
 
 int ui_getline(char *buf, int len)
