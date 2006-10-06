@@ -205,3 +205,4 @@ struct images *images_new(char *tag, int w, int h, int rows, int cols,
 	images_del(images);
 	return NULL;
 }
+

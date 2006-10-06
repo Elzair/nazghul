@@ -237,7 +237,10 @@ static void screenInitFrame()
         char *fname = cfg_get("frame-image-filename");
         struct images *ss_frame = 0;
 
-        assert(fname);
+        if (!fname) {
+                warn("No frame image filename!");
+                return;
+        }
 
         memset(FrameSprites, 0, sizeof(FrameSprites));
 

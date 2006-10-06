@@ -272,6 +272,58 @@ static void init_default_cfg()
         cfg_set("sound-enabled", "yes");
 }
 
+/**
+ * Initialize enough of the libs to show some kind of crude error message in a
+ * window. This is to support players on OS's that don't show stdout and stderr
+ * on a console. This will show the message for 10 seconds and then exit the
+ * program.
+ *
+ * @param fmt The printf-formatted error message.
+ */
+static void startup_error(char *fmt, ...)
+{
+	va_list args;
+	char buf[128], *ptr;
+        SDL_Rect rect;
+        int len;
+
+        SCREEN_W = 320;
+        SCREEN_H = 240;
+        screenInit();
+        asciiInit();
+
+	va_start(args, fmt);
+	vsnprintf(buf, sizeof(buf), fmt, args);
+	va_end(args);
+
+        len = strlen(buf);
+        ptr = buf;
+        rect.x = 0;
+        rect.y = 0;
+        rect.w = screenWidth();
+        rect.h = ASCII_H;
+
+        screenPrint(&rect, 0, "^c+r*** STARTUP ERROR ***^c-");
+        rect.y += ASCII_H;
+
+        while (len) {
+
+                int n = min(len, rect.w/ASCII_W);
+
+                screenPrint(&rect, 0, ptr);
+                len -= n;
+                ptr += n;
+                rect.y += ASCII_H;
+                
+        }
+
+        screenPrint(&rect, 0, "^c+y(This window will close in 10 seconds)^c-");
+        screenUpdate(0);
+
+        sleep(10);
+        exit(-1);
+}
+
 int main(int argc, char **argv)
 {
         /* Initialize the cfg environment before parsing args. */
@@ -281,8 +333,8 @@ int main(int argc, char **argv)
 
         /* Load the cfg script after parsing args */
         if (file_load_from_include_dir(cfg_get("init-script-filename"))) {
-                err("Error loading %s: %s\n", cfg_get("init-script-filename"), 
-                    file_get_error());
+                startup_error("Error loading %s: %s", cfg_get("init-script-filename"), 
+                              file_get_error());
         }
 
         /* Load the options script */
