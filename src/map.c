@@ -106,6 +106,13 @@ static struct map {
         char is_image_mode : 1;
 } Map;
 
+/**
+ * The callback function prototype for rendering a tile.
+ */
+typedef void (*map_tile_render_t)(struct place *place, int map_x, int map_y,
+                                  int scr_x, int scr_y, int in_los);
+
+
 static void myRmView(struct mview *view, void *data)
 {
 	list_remove(&view->list);
@@ -726,16 +733,101 @@ static void map_paint_cursor(void)
 
 }
 
-static void mapPaintPlace(struct place *place, 
-                          SDL_Rect * region,   /* portion of place covered by
-                                                * the vmask */
-                          SDL_Rect * dest,     /* screen rectangle */
-                          unsigned char *mask, /* visibility mask for entire
-                                                * region */
-                          SDL_Rect * subrect,  /* sub-rectangle within region
-                                                * that the map viewer sees */
-                          int tile_h, 
-                          int tile_w)
+/**
+ * Paint the terrain sprite for a tile.
+ *
+ * @param place The place to use as the tile source.
+ * @param map_x The tile coordinate in the place.
+ * @param map_y The tile coordinate in the place.
+ * @param scr_x The screen pixel coordinate to blit to.
+ * @param scr_y The screen pixel coordinate to blit to.
+ * @param in_los Zero iff the tile is not in player LOS.
+ */
+static void map_paint_tile_terrain(struct place *place, int map_x, int map_y,
+                                   int scr_x, int scr_y, int in_los)
+{
+        if (in_los) {
+
+                /* This tile is in player LOS, so paint normally. */
+                struct terrain *terrain = place_get_terrain(place, map_x, map_y);
+                struct sprite *sprite = terrain->sprite;
+                sprite_paint(sprite, 0, scr_x, scr_y);
+
+        } else if (ShowAllTerrain || XrayVision) {
+
+                /* This tile is not in player LOS, but the command-line option
+                 * to show all terrain or the special XrayVision flag is in
+                 * effect, so paint the terrain but then shade it. */
+                struct terrain *terrain = place_get_terrain(place,map_x,map_y);
+                struct sprite *sprite = terrain->sprite;
+                sprite_paint(sprite, 0, scr_x, scr_y);
+                                
+                SDL_Rect shade_rect;
+                shade_rect.x = scr_x;
+                shade_rect.y = scr_y;
+                shade_rect.w = TILE_W;
+                shade_rect.h = TILE_H;
+                screenShade(&shade_rect, 128);
+        }
+
+}
+
+/**
+ * Paint the object sprites for a tile.
+ *
+ * @param place The place to use as the tile source.
+ * @param map_x The tile coordinate in the place.
+ * @param map_y The tile coordinate in the place.
+ * @param scr_x The screen pixel coordinate to blit to.
+ * @param scr_y The screen pixel coordinate to blit to.
+ * @param in_los Zero iff the tile is not in player LOS.
+ */
+static void map_paint_tile_objects(struct place *place, int map_x, int map_y,
+                                   int scr_x, int scr_y, int in_los)
+{
+        if (in_los) {
+
+                /* The tile is visible, so paint the objects normally. */
+                place_paint_objects(place, map_x, map_y, scr_x, scr_y);
+
+                /* If the crosshair is active but this tile is not in range
+                 * then shade the tile. */
+                if (Session->crosshair->is_active() &&
+                    Session->crosshair->isRangeShaded() &&
+                    ! Session->crosshair->inRange(map_x, map_y)) {
+                        SDL_Rect shade_rect;
+                        shade_rect.x = scr_x;
+                        shade_rect.y = scr_y;
+                        shade_rect.w = TILE_W;
+                        shade_rect.h = TILE_H;
+                        screenShade(&shade_rect, 128);
+                }
+        }
+}
+
+/**
+ * Loop over the map tiles shown in the map viewer, invoking a callback
+ * function for each tile.
+ *
+ * @param place The place viewed.
+ * @param region The part of the place covered by the visibility mask. Units
+ * are tiles.
+ * @param dest The screen rectangle of the viewer. Units are pixels.
+ * @param mask The visibility mask for the region. Each entry in the mask
+ * covers one tile.
+ * @param subrect The part of the place under the viewer (this is contained
+ * within the region). Units are tiles.
+ * @param tile_w Tile dimension in pixels.
+ * @param tile_h Tile dimension in pixels.
+ */
+static void map_render_loop(struct place *place, 
+                            SDL_Rect * region,
+                            SDL_Rect * dest,
+                            unsigned char *mask,
+                            SDL_Rect * subrect,
+                            int tile_h, 
+                            int tile_w,
+                            map_tile_render_t tile_render)
 {
 	int row;
 	int col;
@@ -778,9 +870,7 @@ static void mapPaintPlace(struct place *place,
 	map_y = region->y + subrect->y;
         mask_i = (subrect->y * region->w) + subrect->x;
 
-	for (row = 0; 
-             row < subrect->h; 
-             row++, map_y++, mask_i += region->w) {
+	for (row = 0; row < subrect->h; row++, map_y++, mask_i += region->w) {
 
                 /* Test if the row is off-map */
 		if (place->wraps) {
@@ -799,8 +889,7 @@ static void mapPaintPlace(struct place *place,
 
 		for (col = 0; col < subrect->w; col++, map_x++) {
 
-			struct sprite *sprite;
-                        struct terrain *terrain;
+                        int in_los;
 
                         /* Test if the column is off-map */
 			if (place->wraps) {
@@ -814,54 +903,35 @@ static void mapPaintPlace(struct place *place,
                         /* Set the screen pixel column */
 			scr_x = col * tile_w + dest->x;
 
-                        // Is the tile visible?
-                        if (use_mask && !mask[mask_i + col]) {
-                                
-                                // No - is show all terrain in effect?
-                                if (!ShowAllTerrain && !XrayVision) {
+                        /* Set the LOS flag. */
+                        in_los = (!use_mask || mask[mask_i + col]);
 
-                                        // No - skip this tile
-                                        continue;
-                                }
-
-                                // Yes - paint the terrain and then
-                                // shade it.
-                                terrain = place_get_terrain(place,map_x,map_y);
-                                sprite = terrain->sprite;
-                                sprite_paint(sprite, 0, scr_x, scr_y);
-                                
-                                SDL_Rect shade_rect;
-                                shade_rect.x = scr_x;
-                                shade_rect.y = scr_y;
-                                shade_rect.w = TILE_W;
-                                shade_rect.h = TILE_H;
-                                screenShade(&shade_rect, 128);
-
-                                // Do NOT paint objects on this tile
-                                continue;
-                        }
-
-                        // Tile is visible, so paint terrain and objects.
-                        terrain = place_get_terrain(place, map_x, map_y);
-			sprite = terrain->sprite;
-			sprite_paint(sprite, 0, scr_x, scr_y);
-                        place_paint_objects(place, map_x, map_y, scr_x, scr_y);
-
-                        // If the crosshair is active but this tile is not in
-                        // range then shade it.
-                        if (Session->crosshair->is_active() &&
-                            Session->crosshair->isRangeShaded() &&
-                            ! Session->crosshair->inRange(map_x, map_y)) {
-                                SDL_Rect shade_rect;
-                                shade_rect.x = scr_x;
-                                shade_rect.y = scr_y;
-                                shade_rect.w = TILE_W;
-                                shade_rect.h = TILE_H;
-                                screenShade(&shade_rect, 128);
-                        }
+                        /* Invoke the callback function that does the rendering
+                         * for the tile. */
+                        tile_render(place, map_x, map_y, scr_x, scr_y, in_los);
 		}
 	}
 
+}
+
+static void mapPaintPlace(struct place *place, 
+                          SDL_Rect * region,   /* portion of place covered by
+                                                * the vmask */
+                          SDL_Rect * dest,     /* screen rectangle */
+                          unsigned char *mask, /* visibility mask for entire
+                                                * region */
+                          SDL_Rect * subrect,  /* sub-rectangle within region
+                                                * that the map viewer sees */
+                          int tile_h, 
+                          int tile_w)
+{
+        /* In order to render giant characters properly over the terrain of
+         * neighboring tiles, rendering must be done in two passes. The first
+         * pass renders the terrain, the second the objects. */
+        map_render_loop(place, region, dest, mask,  subrect, tile_h, tile_w,
+                        map_paint_tile_terrain);
+        map_render_loop(place, region, dest, mask,  subrect, tile_h, tile_w,
+                        map_paint_tile_objects);
 	place->dirty = 0;
 }
 

@@ -317,6 +317,16 @@ static void sprite_paint_normal(struct sprite *sprite, int frame, int x, int y)
 	dest.w = sprite->w_pix;
 	dest.h = sprite->h_pix;
 
+        /* If the sprite is larger than a tile, ASSUME (watch out!) we're
+         * blitting a giant character to the map. In this case the bottom of
+         * the sprite will still line up with the bottom of the tile and it
+         * will be horizontally-centered, making the left, right and top
+         * overlap the neighboring tiles. */
+        if (sprite->w_pix > TILE_W) {
+                dest.x -= (sprite->w_pix - TILE_W) / 2;
+                dest.y -= (sprite->h_pix - TILE_H);
+        }
+
         frame = (frame + sprite_ticks) % sprite->n_frames;
 	frame += sprite->sequence * sprite->n_frames;
 
