@@ -1236,6 +1236,7 @@ void cmdAttack(void)
 				
         if (info.npc_party == NULL) {
                 cmdwin_spush("nobody there!");
+                log_msg("Attack - nobody there!");
                 return;
         } 
         info.px = player_party->getX();
@@ -1282,7 +1283,7 @@ void cmdFire(void)
                 // In future, we may check for adjacent "cannon" 
                 // mechanisms here (as in U5).
 		cmdwin_spush("No cannons available!");
-                log_msg("Fire - nothing to fire!");
+                log_msg("Fire - no cannons!");
 		return;
 	}
 
@@ -1297,15 +1298,13 @@ void cmdFire(void)
 	}
 
 	cmdwin_spush("%s", directionToString(dir));
-        log_begin("Fire: %s - ", directionToString(dir));
 	if (! vehicle->fire_weapon(directionToDx(dir), 
                                                  directionToDy(dir), 
                                                  player_party)) {
 		cmdwin_spush("Not a broadside!");
-                log_end("not a broadside!");
+                log_msg("Fire - not a broadside!");
 		return;
         }
-        log_end("hits away!");
 }
 
 bool cmdReady(class Character * member)
@@ -1328,7 +1327,8 @@ bool cmdReady(class Character * member)
                         return false;       
 
                 if (member->isCharmed()) {
-                        log_msg("Charmed characters can't ready arms!\n");
+                        cmdwin_push("Charmed!");
+                        log_msg("Ready - charmed!");
                         return false;
                 }
 
@@ -1678,7 +1678,7 @@ bool cmdHandle(class Character * pc)
             || (! mech->isVisible()            
                 && ! Reveal)) {
                 cmdwin_spush("nothing!");
-                log_msg("Handle - nothing there!");
+                log_msg("Handle - nothing there to handle!");
                 return false;
         }
 
@@ -2438,6 +2438,13 @@ bool cmdCastSpell(class Character * pc)
         /* Make sure the PC is not asleep, dead, etc. */
         if (pc->isDead() || pc->isAsleep()) {
                 cmdwin_spush("unable right now!");
+                log_msg("Cast - %s is too dead!", pc->getName());
+                return false;
+        }
+
+        if (pc->isAsleep()) {
+                cmdwin_spush("unable right now!");
+                log_msg("Cast - %s is asleep!", pc->getName());
                 return false;
         }
 
@@ -2484,7 +2491,7 @@ bool cmdCastSpell(class Character * pc)
          */
 	if (!natural && pc->getLevel() < spell->level) {
 		cmdwin_spush("need more experience!");
-                log_end("need more experience!");
+                log_end("must be level %d!", spell->level);
 		return false;
 	}
 

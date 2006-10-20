@@ -27,6 +27,7 @@
 #include "console.h"
 #include "dimensions.h"
 #include "images.h"
+#include "log.h"
 #include "screen.h"
 #include "sprite.h"
 
@@ -181,15 +182,13 @@ static void cmdwin_vpush(int flags, char *fmt, va_list args)
 
         frag->flags = flags;
 
-		if (fmt == NULL)
-		{
-			vsnprintf(frag->buf, sizeof(frag->buf), "",0);
-		}
-		else
-		{
-			/* Store the string in the fragment */
-			vsnprintf(frag->buf, sizeof(frag->buf), fmt, args);
-		}
+        /* default to empty string */
+        frag->buf[0] = 0;
+
+        /* Store the string in the fragment */
+        if (fmt != NULL) {
+                vsnprintf(frag->buf, sizeof(frag->buf), fmt, args);
+        }
 
         /* Push the fragment onto the stack */
         list_add_tail(&cmdwin.frags, &frag->list);
@@ -296,11 +295,6 @@ void cmdwin_flush(void)
         if (!strlen(cmdwin.buf))
                 return;
 
-        consolePrint("%s\n", cmdwin.buf);
-        consoleRepaint();
-#ifdef DEBUG
-	if (log)
-	        fprintf(log, "%s\n", cmdwin.buf);
-#endif
+        log_msg("%s\n", cmdwin.buf);
         cmdwin_clear();
 }
