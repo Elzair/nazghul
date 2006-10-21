@@ -965,6 +965,8 @@ static void myScrollParty(enum StatusScrollDir dir)
 		    (Status.pcIndex + player_party->getSize() -
 		     1) % player_party->getSize();
 		break;
+        default:
+                break;
 	}
 }
 
@@ -1047,6 +1049,8 @@ static void myScrollZtats(enum StatusScrollDir dir)
 		Status.topLine = min(Status.maxLine,
 				     Status.topLine + Status.numLines);
 		break;
+        default:
+                break;
 	}
 }
 
@@ -1095,6 +1099,8 @@ static void myScrollPage(enum StatusScrollDir dir)
 				       (Status.pg_rect.h - ASCII_H),
 				       Status.pg_max_y);
 		break;
+        default:
+                break;
 	}
 }
 
