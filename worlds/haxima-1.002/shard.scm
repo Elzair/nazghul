@@ -457,6 +457,7 @@
   (list p_gate_to_absalot 120 10)
   (list p_tower_of_absalot 120 8)
   (list p_kun 60 38)
+  (list p_bandit_hideout_l1 72 63)
   )
 
  nil ; neighbors

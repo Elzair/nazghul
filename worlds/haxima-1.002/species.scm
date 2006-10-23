@@ -83,7 +83,7 @@
 (mk-species 'sp_insect       "insects"         1  1 18 2  3  0  4 mmode-hover t_stinger    nil       1 nil            nil             )
 (mk-species 'sp_nixie        "nyad"           10 10 10 1 10  2 19 mmode-fish  t_hands      humanoid  2 s_shoals       sound-splashing )
 (mk-species 'sp_queen_spider "queen spider"   18  6 12 1 20  4 10 mmode-crawl t_fangs      nil       4 s_asleep       sound-walking   )
-(mk-species 'sp_skeleton     "skeleton"       12  8 12 1 12  2 10 mmode-walk  t_hands      humanoid  2 s_asleep       sound-walking   )
+(mk-species 'sp_skeleton     "skeleton"       12  8 12 1 12  2 10 mmode-walk  t_hands      humanoid  3 s_asleep       sound-walking   )
 (mk-species 'sp_snake        "snake"           2  2 14 1  4  0  6 mmode-walk  t_fangs      nil       1 s_asleep       sound-walking   )
 (mk-species 'sp_bat          "bat"             2  2 14 2  2  0  8 mmode-fly   t_fangs      nil       1 s_asleep       nil             )
 (mk-species 'sp_rat          "rat"             4  2 12 1  6  0  6 mmode-crawl t_fangs      nil       1 s_asleep       nil             )

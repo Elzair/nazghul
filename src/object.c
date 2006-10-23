@@ -353,20 +353,19 @@ void Object::relocate(struct place *newplace, int newx, int newy, bool noStep,
         int distance;
         struct place *foc_place;
         int foc_x, foc_y;
+        bool triggerMechs = ! noStep;
 
         assert(newplace);
 
-		class Object *mech = NULL;
-		
-		if (isOnMap())
-		{
-			mech = place_get_object(getPlace(), x, y, mech_layer);
-		}
-
-		if (mech)
-		{
-			obj_inc_ref(mech);
-		}
+        class Object *mech = NULL;
+        
+        if (triggerMechs
+            && isOnMap()) {
+                mech = place_get_object(getPlace(), x, y, mech_layer);
+                if (mech) {
+                        obj_inc_ref(mech);
+                }
+        }
 
         if (isOnMap()) {
 
@@ -419,30 +418,30 @@ void Object::relocate(struct place *newplace, int newx, int newy, bool noStep,
                         // ---------------------------------------------------
 						
                         if (! tryToRelocateToNewPlace(newplace, newx, newy,
-                                                      place_switch_hook))
-						{
-							if (mech)
-								obj_dec_ref(mech);	
-                            return;
-						}
+                                                      place_switch_hook)) {
+                                if (mech)
+                                        obj_dec_ref(mech);	
+                                return;
+                        }
 
 
-						if (mech && mech != this 
-									&& mech->getObjectType()->canSense())
-								mech->getObjectType()->sense(mech, this);							
-						
+                        if (mech 
+                            && mech != this 
+                            && mech->getObjectType()->canSense()) {
+                                mech->getObjectType()->sense(mech, this);
+                        }
 
                         // ----------------------------------------------------
                         // This object may no longer be on a map as a result of
                         // the above call. If so then finish processing.
                         // ----------------------------------------------------
 
-                        if (! isOnMap())
-						{
-							if (mech)
-								obj_dec_ref(mech);	
-                            return;
-						}
+                        if (! isOnMap()) {
+                                if (mech) {
+                                        obj_dec_ref(mech);	
+                                }
+                                return;
+                        }
                 }
 
         } else {
@@ -463,13 +462,13 @@ void Object::relocate(struct place *newplace, int newx, int newy, bool noStep,
 
         }
 
-		if (mech)
-		{
-			if (mech != this 
-					&& mech->getObjectType()->canSense())
-				mech->getObjectType()->sense(mech, this);
-			obj_dec_ref(mech);								
-		}
+        if (mech) {
+                if (mech != this 
+                    && mech->getObjectType()->canSense()) {
+                        mech->getObjectType()->sense(mech, this);
+                }
+                obj_dec_ref(mech);								
+        }
 
         mapSetDirty();
 
@@ -516,22 +515,20 @@ void Object::relocate(struct place *newplace, int newx, int newy, bool noStep,
         // Send the "step" signal to any mechanisms on this tile.
         // --------------------------------------------------------------------
 		
-        if (! noStep) {  
-		
-			mech = place_get_object(place, x, y, mech_layer);
-			if (mech 
-				&& mech != this 
-				&& mech->getObjectType()->canStep())
-					mech->getObjectType()->step(mech, this);
+        if (triggerMechs) {  
+                mech = place_get_object(place, x, y, mech_layer);
+                if (mech 
+                    && mech != this) {
+
+                        if (mech->getObjectType()->canStep()) {
+                                mech->getObjectType()->step(mech, this);
+                        }
+
+                        if (mech->getObjectType()->canSense()) {
+                                mech->getObjectType()->sense(mech, this);
+                        }
+                }
         }
-
-		//need to get mech twice, in case old call destroyed it
-		mech = place_get_object(place, x, y, mech_layer);
-		if (mech 
-			&& mech != this 
-			&& mech->getObjectType()->canSense())
-				mech->getObjectType()->sense(mech, this);
-
 }
 
 void Object::setOnMap(bool val)

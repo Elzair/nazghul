@@ -1226,6 +1226,26 @@
                  nil     ; edge entrances
                  ))
 
+;; Just like mk-tower but make the sprite configurable
+(define (mk-19x19-town tag name sprite terrain . objects)
+  (kern-mk-place tag
+                 name
+                 sprite
+                 (kern-mk-map nil 19 19 pal_expanded terrain)
+                 #f      ; wraps
+                 #f      ; underground
+                 #f      ; large-scale (wilderness)
+                 #f      ; tmp combat place
+                 nil     ; subplaces
+                 nil     ; neighbors
+                 ;; objects -- automatically add a monster manager
+                 (cons (put (mk-monman) 0 0)
+                       objects)
+                 (list 'on-entry-to-dungeon-room) ; hooks
+                 nil     ; edge entrances
+                 ))
+
+
 ;; mk-dungeon-level -- given a 2d list of rooms, connect them up as neighbors
 (define (mk-dungeon-level . rooms)
   (define (bind-east west-room east-room)

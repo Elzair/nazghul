@@ -2,7 +2,8 @@
 (define (trig-proc trg) (eval (car trg)))
 (define (trig-args trg) (cdr trg))
 (define (trig-invoke trg . more-args)
-  (apply (trig-proc trg) (append more-args (trig-args trg))))
+  (apply (trig-proc trg) 
+         (append more-args (trig-args trg))))
 
 ;;----------------------------------------------------------------------------
 ;; Step trigger -- executes a named procedure whan a character steps on it.
@@ -24,12 +25,43 @@
   (bind (make-invisible (kern-mk-obj t_step_trig 1))
         (trig-mk proc-tag args)))
 
+;;-----------------------------------------------------------------------------
+;; Sense trigger -- just like a step trigger, but responds to the 'sense signal
+;; instead, which is sent anytime a character enters or leaves its tile
+;;-----------------------------------------------------------------------------
+(define sense-trig-ifc
+  (ifc '()
+       (method 'sense step-trig-exec)))
+
+(mk-obj-type 't_sense_trig nil nil layer-mechanism sense-trig-ifc)
+
+(define (mk-sense-trig proc-tag . args)
+  (bind (make-invisible (kern-mk-obj t_sense_trig 1))
+        (trig-mk proc-tag args)))
+
+;;----------------------------------------------------------------------------
+;; Procedure for use with step or sense triggers. kchar is the character which
+;; caused the trigger by stepping on the tile (or off it, in the case of a
+;; sense trigger). target-tag is the object which will receive the message
+;; sigval.
+;;
+;; Example:
+;;
+;;   (put (kern-tag 'p1 (mk-portcullis)) 3 4)
+;;   (put (mk-sense-trig 'generic-trig-exec 'p1 'signal) 10 23)
+;;
+;; Whenever anybody enters tile (10, 23), the portcullis at (3, 4) will open in
+;; response to the "signal" message. . When they leave, it will close again.
+;;----------------------------------------------------------------------------
+(define (generic-trig-exec kchar target-tag sigval)
+  (send-signal kchar (eval target-tag) sigval)
+  #f)
+
 ;;----------------------------------------------------------------------------
 ;; 'on trigger -- object which executes a named procedure when it gets the 'on
 ;; signal from something.
 ;;----------------------------------------------------------------------------
 (define (on-trig-exec ktrig)
-  (println "on-trig-exec:" ktrig)
   (let ((trg (gob ktrig)))
     (if (trig-invoke trg ktrig)
         (kern-obj-remove ktrig))))
