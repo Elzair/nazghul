@@ -27,6 +27,11 @@
  (put (kern-tag 'p_bhl1_p2 (mk-portcullis)) 9 11)
  (put (mk-sense-trig 'generic-trig-exec 'p_bhl1_p1 'signal)  12 9)
  (put (mk-sense-trig 'generic-trig-exec 'p_bhl1_p2 'signal)  10 9)
+
+ (put (mk-chest2 '((t_sword 1)
+                   (t_arrow 5)
+                   (t_torch 2)))
+      5 8)
  )
 
 (mk-dungeon-room

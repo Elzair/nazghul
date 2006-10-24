@@ -86,3 +86,80 @@
   (mk-corpse2 (mk-quoted-treasure-list (+ 1(modulo (random-next)
                                                    3)))))
 
+;;----------------------------------------------------------------------------
+;; This next section is an experimental new container type. It attempts to
+;; bypass the kernel's built-in Container class and implement everything in the
+;; script as a normal kernel Object that responds to the 'open signal the same
+;; way a kernel Container would respond to the open command.
+;;
+;; This currently works. The next step is to implement the ability to add (and
+;; remove or disable) traps on a container. The means of doing so will be
+;; implemented here in the script, so the kernel won't need to know about
+;; trapped containers when this all works, and the kernel's Container class can
+;; be stripped back to a basic Inventory class.
+
+;; Define the gob structure and procedures. The contents should be a single
+;; quoted list, for example:
+;;
+;;   '((t_sword 1)
+;;     (t_arrow 5)
+;;     (t_torch 2)))
+;;
+;; Using the quotes is not only cleaner in the declarations, it automatically
+;; ensures that the contents are safe to save and reload as part of the gob
+;; because they are stored in the gob merely as symbols.
+(define (mk-container contents) (cons 'container contents))
+(define (is-container? gob) (eq? (car gob) 'container))
+(define (container-contents gob) (car (cdr gob)))
+(define (content-type content) (car content))
+(define (content-quantity content) (cadr content))
+
+;; This is the heart of the implementation. This procedure runs when the
+;; container object gets the 'open signal, which is sent by the kernel in
+;; response to the player's o)pen command followed by selection of this
+;; object. It expects kobj to be a kernel object which is bound to a container
+;; gob following the above format (the constructors further down illustrate how
+;; to create such an object).
+;;
+;; Opening the container creates objects based on the types and quantities
+;; listed in the container's content list and deposits these objects on the
+;; ground where the container is. Then it removes the container, which likely
+;; results in its destruction.
+(define (container-open kobj kchar)
+  (let ((container (kobj-gob-data kobj))
+        (loc (kern-obj-get-location kobj)))
+    (println container)
+    (map (lambda (content)
+           (println content)
+           (let ((newobj (kern-mk-obj (eval (content-type content))
+                                      (content-quantity content))))
+             (kern-obj-put-at newobj loc)))
+         (container-contents container))
+    (kern-obj-remove kobj)))
+
+;; This interface binds the 'open signal to our open procedure above.
+(define container-ifc
+  (ifc '()
+       (method 'open container-open)))
+
+;; This constructor makes new types of objects that conform to the container
+;; interface above. An example of usage is below, where I make a new chest type.
+(define (mk-container-type tag name sprite)
+  (mk-obj-type tag name sprite layer-mechanism container-ifc))
+
+
+;; Test it out. First, make a new chest type.
+(mk-container-type 't_chest2 "chest" s_chest)
+
+;; Define a constructor for an object of the new chest type. Example usage:
+;;
+;; (put (mk-chest2 '((t_sword 1)
+;;                   (t_arrow 5)
+;;                   (t_torch 2)))
+;;      5 8)
+;;
+;; * Note the use of a quoted list.
+;;
+(define (mk-chest2 . ktype-q-pairs)
+  (bind (kern-mk-obj t_chest2 1)
+        (mk-container ktype-q-pairs)))
