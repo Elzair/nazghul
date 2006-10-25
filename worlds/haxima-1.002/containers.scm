@@ -145,6 +145,7 @@
 (define (kcontainer-open kobj kchar)
   (let ((container (kobj-gob-data kobj))
         (loc (kern-obj-get-location kobj))
+        (thief-dice (string-append "1d" (number->string (occ-ability-thief kchar))))
         )
     (println container)
 
@@ -154,8 +155,15 @@
 
     ;; Apply traps
     (map (lambda (trap)
-           (println trap)
-           (apply (eval trap) (list kchar kobj)))
+           (let ((roll (kern-dice-roll "1d20"))
+                 (bonus (kern-dice-roll thief-dice)))
+             (println trap " roll:" roll "+" bonus)
+             (cond ((or (= roll 20)
+                        (> (+ roll bonus) 20))
+                    (kern-log-msg (kern-obj-get-name kchar) " avoids a trap!"))
+                   (else
+                    (kern-log-msg (kern-obj-get-name kchar) " trips a trap!")
+                    (apply (eval trap) (list kchar kobj))))))
          (container-traps container))
 
     ;; Spill contents

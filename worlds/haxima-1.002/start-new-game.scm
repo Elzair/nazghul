@@ -91,6 +91,7 @@
 (load "road_to_absalot.scm")
 (load "kun.scm")
 (load "gamestart.scm")
+(load "bandit-hideout.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Characters
@@ -293,7 +294,7 @@
   )
 
 (define (simple-start kplayer)
-  (kern-obj-put-at kplayer (list p_slimy_cavern 8 30)))
+  (kern-obj-put-at kplayer (list p_bandit_hideout_l1 5 9)))
   
 (define (create-char kplayer)
   (kern-obj-put-at kplayer (list p_char_setup 9 17)
@@ -304,5 +305,5 @@
 ;; the line after it.
 ;;----------------------------------------------------------------------------
 ;;(kern-set-start-proc start-scene)
-;;(kern-set-start-proc simple-start)
-(kern-set-start-proc create-char)
+(kern-set-start-proc simple-start)
+;;(kern-set-start-proc create-char)
