@@ -108,11 +108,23 @@
 ;; Using the quotes is not only cleaner in the declarations, it automatically
 ;; ensures that the contents are safe to save and reload as part of the gob
 ;; because they are stored in the gob merely as symbols.
-(define (mk-container contents) (cons 'container contents))
+;;
+;; Each container has a (often empty) list of traps, where each trap is the
+;; symbol for a procedure of the form (foo <kchar> <kcontainer>). The symbol is
+;; used instead of the actual procedure so that the list of traps can be saved
+;; and re-loaded.
+;;
+(define (mk-container contents) (list 'container contents nil))
 (define (is-container? gob) (eq? (car gob) 'container))
 (define (container-contents gob) (car (cdr gob)))
+(define (container-traps gob) (car (cdr (cdr gob))))
+(define (container-set-traps! gob traps) (set-car! (cdr (cdr gob)) traps))
 (define (content-type content) (car content))
 (define (content-quantity content) (cadr content))
+(define (container-add-trap! gob trap)
+  (container-set-traps! gob
+                        (cons trap 
+                              (container-traps gob))))
 
 ;; This is the heart of the implementation. This procedure runs when the
 ;; container object gets the 'open signal, which is sent by the kernel in
@@ -125,25 +137,51 @@
 ;; listed in the container's content list and deposits these objects on the
 ;; ground where the container is. Then it removes the container, which likely
 ;; results in its destruction.
-(define (container-open kobj kchar)
+;;
+;; Before opening this applies all the traps attached to the container. Note
+;; that the self-destruct trap, as currently implemented, does not work as
+;; expected, because it relies on the removal of the container from the map as
+;; a means of destroying it; and that is not sufficient here.
+(define (kcontainer-open kobj kchar)
   (let ((container (kobj-gob-data kobj))
-        (loc (kern-obj-get-location kobj)))
+        (loc (kern-obj-get-location kobj))
+        )
     (println container)
+
+    ;; Applying traps can destroy both kobj and kchar
+    (kern-obj-inc-ref kobj)
+    (kern-obj-inc-ref kchar)
+
+    ;; Apply traps
+    (map (lambda (trap)
+           (println trap)
+           (apply (eval trap) (list kchar kobj)))
+         (container-traps container))
+
+    ;; Spill contents
     (map (lambda (content)
            (println content)
            (let ((newobj (kern-mk-obj (eval (content-type content))
                                       (content-quantity content))))
              (kern-obj-put-at newobj loc)))
          (container-contents container))
-    (kern-obj-remove kobj)))
+
+    ;; Remove the container from the map
+    (kern-obj-remove kobj)
+
+    ;; Done with references
+    (kern-obj-dec-ref kobj)
+    (kern-obj-dec-ref kchar)
+    ))
 
 ;; This interface binds the 'open signal to our open procedure above.
 (define container-ifc
   (ifc '()
-       (method 'open container-open)))
+       (method 'open kcontainer-open)))
 
 ;; This constructor makes new types of objects that conform to the container
-;; interface above. An example of usage is below, where I make a new chest type.
+;; interface above. An example of usage is below, where I make a new chest
+;; type.
 (define (mk-container-type tag name sprite)
   (mk-obj-type tag name sprite layer-mechanism container-ifc))
 
@@ -160,6 +198,9 @@
 ;;
 ;; * Note the use of a quoted list.
 ;;
-(define (mk-chest2 . ktype-q-pairs)
+(define (mk-chest2 ktype-q-pairs)
   (bind (kern-mk-obj t_chest2 1)
         (mk-container ktype-q-pairs)))
+
+(define (chest2-add-trap kobj trap)
+  (container-add-trap! (kobj-gob-data kobj) trap))
