@@ -4,6 +4,7 @@
 
 ;; Define a vtable scheme - a list of (<name> <body>) pairs
 (define (vtable-call vtable method args)
+  ;;(println method ":" args)
   (let ((proc (assoc method vtable)))
     (if (eq? #f proc)
         ;; If we fail to find the desired method then see if there's a default
@@ -95,3 +96,12 @@
 ;; ----------------------------------------------------------------------------
 (define (send-signal ksender kobj sig)
   ((kobj-ifc kobj) sig kobj ksender))
+
+;;----------------------------------------------------------------------------
+;; Yet Another Way to Send a Signal. This one works with arbitrary-length
+;; parameters, so it is more generally applicable to a variety of signals than
+;; previous efforts. It automatically repackages the kobj itself as the first
+;; parameter, so make sure the designated signal handlers expect this.
+;;----------------------------------------------------------------------------
+(define (ifccall kobj sig . parms)
+  (apply (kobj-ifc kobj) (cons sig (cons kobj parms))))

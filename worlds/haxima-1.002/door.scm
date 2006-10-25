@@ -15,22 +15,29 @@
 (define (mk-door-states closed open locked magic-locked)
   (list closed open locked magic-locked))
 
-;; Make a door class.
+;; Define the door gob structure and procedures.
+(define (door-mk open? timeout port active? locked? magic-locked? type)
+  (list open? timeout port active? locked? magic-locked? type nil))
 (define (door-open? door) (car (gob-data door)))
 (define (door-timeout door) (cadr (gob-data door)))
-(define (door-port door) (caddr (gob-data door)))
-(define (door-active? door) (cadddr (gob-data door)))
-(define (door-locked? door) (car (cddddr (gob-data door))))
+(define (door-port door) (list-ref (gob-data door) 2))
+(define (door-active? door) (list-ref (gob-data door) 3))
+(define (door-locked? door) (list-ref (gob-data door) 4))
 (define (door-magic-locked? door) (list-ref (gob-data door) 5))
 (define (door-states door) (list-ref (gob-data door) 6))
+(define (door-traps door) (list-ref (gob-data door) 7))
+(define (door-trapped? door) (not (null? (door-traps door))))
 
 (define (door-set-open door val) (set-car! (gob-data door) val))
 (define (door-set-timeout! door time) (set-car! (cdr (gob-data door)) time))
 (define (door-set-port! door port) (set-car! (cddr (gob-data door)) port))
 (define (door-set-active! door val) (set-car! (cdddr (gob-data door)) val))
 (define (door-set-locked! door val) (set-car! (cddddr (gob-data door)) val))
-(define (door-set-magic-locked! door val) 
+(define (door-set-magic-locked! door val)
   (list-set-ref! (gob-data door) 5 val))
+(define (door-set-traps! door val) (list-set-ref! (gob-data door) 7 val))
+(define (door-add-trap! door val)
+  (door-set-traps! door (cons val (door-traps door))))
 
 (define (door-send-signal kdoor sig)
   (let ((door (kobj-gob kdoor)))
@@ -57,6 +64,30 @@
   (kern-map-set-dirty)
   kdoor)
 
+(define (door-trip-traps kdoor kchar)
+  (let ((door (kobj-gob kdoor))
+        (thief-dice (string-append "1d" 
+                                   (number->string (occ-ability-thief kchar))))
+        )
+    (kern-obj-inc-ref kdoor)
+    (kern-obj-inc-ref kchar)
+    (map (lambda (trap)
+           (let ((roll (kern-dice-roll "1d20"))
+                 (bonus (kern-dice-roll thief-dice)))
+             (println trap " roll:" roll "+" bonus)
+             (cond ((or (= roll 20)
+                        (> (+ roll bonus) 20))
+                    (kern-log-msg (kern-obj-get-name kchar) 
+                                  " avoids a trap!"))
+                   (else
+                    (kern-log-msg (kern-obj-get-name kchar) 
+                                  " trips a trap!")
+                    (apply (eval trap) (list kchar kdoor))))))
+         (door-traps door))
+    (door-set-traps! door nil)
+    (kern-obj-dec-ref kdoor)
+    (kern-obj-dec-ref kchar)))
+
 (define (door-open kdoor khandler) 
   (let ((door (kobj-gob kdoor)))
     (cond 
@@ -65,6 +96,9 @@
       #f)
      ((door-locked? door)
       (kern-log-msg "Locked!\n")
+      #f)
+     ((door-trapped? door)
+      (door-trip-traps kdoor khandler)
       #f)
       (else
        (door-set-open door #t)
@@ -146,6 +180,10 @@
   (let ((door (kobj-gob kobj)))
     (door-set-port! door kto-tag)))
 
+(define (door-add-trap kdoor trap-sym)
+  (let ((door (kobj-gob kdoor)))
+    (door-add-trap! door trap-sym)))
+  
 
 (define door-ifc
   (ifc '()
@@ -159,6 +197,7 @@
        (method 'unlock door-unlock)
        (method 'magic-lock door-magic-lock)
        (method 'magic-unlock door-magic-unlock)
+       (method 'add-trap door-add-trap)
        ))
 
 ;; Create the kernel "door" type
@@ -193,7 +232,7 @@
 ;;----------------------------------------------------------------------------
 (define (mk-door-full type locked? magic-locked? connected-to)
   (bind (kern-mk-obj t_door 1)
-        (list #f 0 connected-to #f locked? magic-locked? type)))
+        (door-mk #f 0 connected-to #f locked? magic-locked? type)))
 
 ;; Backward-compatible curried constructors
 (define (mk-door) (mk-door-full solid-wood-door-in-stone #f #f nil))

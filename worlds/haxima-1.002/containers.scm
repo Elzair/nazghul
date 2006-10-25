@@ -182,10 +182,17 @@
     (kern-obj-dec-ref kchar)
     ))
 
+(define (kcontainer-add-trap kobj trap-sym)
+  (println trap-sym)
+  (container-add-trap! (kobj-gob-data kobj)
+                       trap-sym))
+
 ;; This interface binds the 'open signal to our open procedure above.
 (define container-ifc
   (ifc '()
-       (method 'open kcontainer-open)))
+       (method 'open kcontainer-open)
+       (method 'add-trap kcontainer-add-trap)
+       ))
 
 ;; This constructor makes new types of objects that conform to the container
 ;; interface above. An example of usage is below, where I make a new chest

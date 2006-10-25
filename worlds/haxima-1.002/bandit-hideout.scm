@@ -28,16 +28,19 @@
  (put (mk-sense-trig 'generic-trig-exec 'p_bhl1_p1 'signal)  12 9)
  (put (mk-sense-trig 'generic-trig-exec 'p_bhl1_p2 'signal)  10 9)
 
+ ;; Make a test chest with a bunch of traps on it.
  (let ((kchest (mk-chest2 '((t_sword 1)
                    (t_arrow 5)
                    (t_torch 2)))))
-   (chest2-add-trap kchest 'sleep-trap)
-   (chest2-add-trap kchest 'poison-trap)
-   (chest2-add-trap kchest 'burn-trap)
-   (chest2-add-trap kchest 'spike-trap)
-   (chest2-add-trap kchest 'lightning-trap)
-   (chest2-add-trap kchest 'self-destruct-trap)
-   (chest2-add-trap kchest 'bomb-trap)
+   (map (lambda (trap)
+          (ifccall kchest 'add-trap trap))
+        (list 'sleep-trap
+              'poison-trap
+              'burn-trap
+              'spike-trap
+              'lightning-trap
+              'self-destruct-trap
+              'bomb-trap))
    (put kchest 5 8))
 
  )
@@ -70,7 +73,10 @@
  (put (mk-portcullis) 14 10)
 
  ;; FIXME: make these trapped doors
- (put (mk-door) 9 7)
+ (let ((kdoor (mk-door)))
+   (ifccall kdoor 'add-trap 'spike-trap)
+   (put kdoor 9 7))
+
  (put (mk-door) 7 9)
  (put (mk-door) 9 11)
  (put (mk-door) 11 9)
