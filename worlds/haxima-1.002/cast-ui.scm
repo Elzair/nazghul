@@ -221,19 +221,20 @@
   (cast-ui-ranged-any powers-detect-traps
                       caster 1 (occ-ability-whitemagic caster)
                       (lambda (kobj)
-                        (or (and (kern-obj-is-container? kobj)
-                                 (kern-obj-is-visible? kobj))
-                            (handles? kobj 'is-trapped?)))
+                        (and (kern-obj-is-visible? kobj)
+                             (or (kern-obj-is-container? kobj)
+                                 (handles? kobj 'is-trapped?))))
                       ))
 
 ;todo currently only checks topmost item
 (define (an-sanct-ylem caster)
-	(cast-ui-ranged-any powers-disarm-traps
-		caster 1 (occ-ability-whitemagic caster)
-		(lambda (kobj)
-            (and (kern-obj-is-container? kobj)
-				(kern-obj-is-visible? kobj)))
-	))
+  (cast-ui-ranged-any powers-disarm-traps
+                      caster 1 (occ-ability-whitemagic caster)
+                      (lambda (kobj)
+                        (and (kern-obj-is-visible? kobj)
+                             (or (kern-obj-is-container? kobj)
+                                 (handles? kobj 'rm-traps))))
+                      ))
 	
 (define (ylem-an-ex  caster)
 	(cast-ui-ranged-loc powers-web caster

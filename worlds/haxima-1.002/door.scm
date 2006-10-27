@@ -188,6 +188,10 @@
   (let ((door (kobj-gob kdoor)))
     (not (null? (door-traps door)))))
 
+(define (door-rm-traps kdoor)
+  (let ((door (kobj-gob kdoor)))
+    (door-set-traps! door nil)))
+
 (define door-ifc
   (ifc '()
        (method 'exec door-exec)
@@ -202,6 +206,7 @@
        (method 'magic-unlock door-magic-unlock)
        (method 'add-trap door-add-trap)
        (method 'is-trapped? door-is-trapped?)
+       (method 'rm-traps door-rm-traps)
        ))
 
 ;; Create the kernel "door" type
