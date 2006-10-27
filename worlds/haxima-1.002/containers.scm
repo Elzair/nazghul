@@ -183,15 +183,18 @@
     ))
 
 (define (kcontainer-add-trap kobj trap-sym)
-  (println trap-sym)
   (container-add-trap! (kobj-gob-data kobj)
                        trap-sym))
+
+(define (kcontainer-is-trapped? kobj)
+  (not (null? (container-traps (kobj-gob-data kobj)))))
 
 ;; This interface binds the 'open signal to our open procedure above.
 (define container-ifc
   (ifc '()
        (method 'open kcontainer-open)
        (method 'add-trap kcontainer-add-trap)
+       (method 'is-trapped? kcontainer-is-trapped?)
        ))
 
 ;; This constructor makes new types of objects that conform to the container

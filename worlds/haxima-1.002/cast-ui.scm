@@ -218,12 +218,13 @@
 		
 ;todo currently only checks topmost item
 (define (wis-sanct caster)
-	(cast-ui-ranged-any powers-detect-traps
-		caster 1 (occ-ability-whitemagic caster)
-		(lambda (kobj)
-            (and (kern-obj-is-container? kobj)
-				(kern-obj-is-visible? kobj)))
-	))
+  (cast-ui-ranged-any powers-detect-traps
+                      caster 1 (occ-ability-whitemagic caster)
+                      (lambda (kobj)
+                        (or (and (kern-obj-is-container? kobj)
+                                 (kern-obj-is-visible? kobj))
+                            (handles? kobj 'is-trapped?)))
+                      ))
 
 ;todo currently only checks topmost item
 (define (an-sanct-ylem caster)

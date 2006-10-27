@@ -105,3 +105,11 @@
 ;;----------------------------------------------------------------------------
 (define (ifccall kobj sig . parms)
   (apply (kobj-ifc kobj) (cons sig (cons kobj parms))))
+
+;;----------------------------------------------------------------------------
+;; This returns #t iff kobj has an interface and it has a handler for the sig.
+;;----------------------------------------------------------------------------
+(define (handles? kobj sig)
+  (let ((ifc (kobj-ifc kobj)))
+    (and (not (null? ifc))
+         (ifc 'can sig))))

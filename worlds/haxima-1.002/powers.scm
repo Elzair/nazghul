@@ -331,13 +331,14 @@
 	
 ;todo currently only checks topmost item
 (define (powers-detect-traps caster ktarg power)
-	(if (kern-obj-is-trapped? ktarg)
-		(kern-log-msg (kern-obj-get-name caster)
-			" detects a trap on "
-			(kern-obj-get-name ktarg)
-			"!")
-		(kern-log-msg (kern-obj-get-name caster)
-			" does not detect any traps")))
+	(if (or (kern-obj-is-trapped? ktarg)
+                (ifccall ktarg 'is-trapped?))
+            (kern-log-msg (kern-obj-get-name caster)
+                          " detects a trap on "
+                          (kern-obj-get-name ktarg)
+                          "!")
+            (kern-log-msg (kern-obj-get-name caster)
+                          " does not detect any traps")))
 
 ;again, a bit of range for powerful users?
 (define (powers-dispel-field caster ktarg power)
