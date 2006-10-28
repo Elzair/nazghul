@@ -40,4 +40,13 @@ extern char *save_game_menu(void);
 extern void menu_add_saved_game(char *fname);
 extern void options_menu(void);
 
+/**
+ * Called when the game cannot fully initialize itself to present the normal
+ * UI. This is to support players on OS's that don't show stdout and stderr on
+ * a console.
+ *
+ * @param fmt The printf-formatted error message.
+ */
+void menu_startup_error(char *fmt, ...);
+
 #endif

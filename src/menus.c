@@ -19,6 +19,7 @@
 
 #include "menus.h"
 
+#include "ascii.h"
 #include "cfg.h"
 #include "cmd.h"
 #include "cmdwin.h"
@@ -1504,4 +1505,52 @@ void options_menu(void)
         } else {
                 log_msg("Settings unchanged.");
         }        
+}
+
+void menu_startup_error(char *fmt, ...)
+{
+	va_list args;
+	char buf[128], *ptr;
+        SDL_Rect rect;
+        int len;
+	struct QuitHandler qh;
+
+        SCREEN_W = 320;
+        SCREEN_H = 240;
+        screenInit();
+        asciiInit();
+        eventInit();
+
+	va_start(args, fmt);
+	vsnprintf(buf, sizeof(buf), fmt, args);
+	va_end(args);
+
+        len = strlen(buf);
+        ptr = buf;
+        rect.x = 0;
+        rect.y = 0;
+        rect.w = screenWidth();
+        rect.h = ASCII_H;
+
+        screenPrint(&rect, 0, "^c+r*** STARTUP ERROR ***^c-");
+        rect.y += ASCII_H;
+
+        /* Print the error message, wrapping lines to make it fit on the
+         * screen. */
+        while (len) {
+                int n = min(len, rect.w/ASCII_W);
+
+                screenPrint(&rect, 0, ptr);
+                len -= n;
+                ptr += n;
+                rect.y += ASCII_H;
+        }
+
+        /* Wait for the user to close the window. */
+	qh.fx = main_menu_quit_handler;
+	eventPushQuitHandler(&qh);
+
+        /* This will block until the use closes the message window, which
+         * terminates the program. */
+	eventHandle();
 }
