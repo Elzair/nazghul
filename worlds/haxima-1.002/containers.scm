@@ -22,25 +22,6 @@
       nil))
 
 ;;----------------------------------------------------------------------------
-;; Container Types
-;;----------------------------------------------------------------------------
-(mk-obj-type 't_chest 
-             "chest"  s_chest
-             layer-container nil)
-
-;;----------------------------------------------------------------------------
-;; Container Constructors
-;;----------------------------------------------------------------------------
-
-;; mk-treasure-chest -- returns a chest with 1-10 random object types
-(define (mk-treasure-chest)
-  (mk-chest nil
-            (mk-treasure-list (+ 1
-                                 (modulo (random-next) 
-                                         9)))))
-
-
-;;----------------------------------------------------------------------------
 ;; Corpse -- not really a container, if you search it then it sort of acts like
 ;; opening a container
 ;;----------------------------------------------------------------------------
@@ -105,10 +86,9 @@
 ;; ensures that the contents are safe to save and reload as part of the gob
 ;; because they are stored in the gob merely as symbols.
 ;;
-;; Each container has a (often empty) list of traps, where each trap is the
-;; symbol for a procedure of the form (foo <kchar> <kcontainer>). The symbol is
-;; used instead of the actual procedure so that the list of traps can be saved
-;; and re-loaded.
+;; Each container has a (often empty) list of traps. See traps.scm for details
+;; of trap implementations. When traps are attached to a container, the type of
+;; trap is specified, and an instance of that type is added to the list.yn
 ;;
 (define (mk-container contents) (list 'container contents nil))
 (define (is-container? gob) (eq? (car gob) 'container))
@@ -117,9 +97,9 @@
 (define (container-set-traps! gob traps) (set-car! (cdr (cdr gob)) traps))
 (define (content-type content) (cadr content))
 (define (content-quantity content) (car content))
-(define (container-add-trap! gob trap)
+(define (container-add-trap! gob trap-type)
   (container-set-traps! gob
-                        (cons trap 
+                        (cons (mk-trap (eval trap-type))
                               (container-traps gob))))
 
 ;; This is the heart of the implementation. This procedure runs when the
@@ -141,7 +121,8 @@
 (define (kcontainer-open kobj kchar)
   (let ((container (kobj-gob-data kobj))
         (loc (kern-obj-get-location kobj))
-        (thief-dice (string-append "1d" (number->string (occ-ability-thief kchar))))
+        (thief-dice (string-append "1d" 
+                                   (number->string (occ-ability-thief kchar))))
         )
     (println container)
 
@@ -149,17 +130,9 @@
     (kern-obj-inc-ref kobj)
     (kern-obj-inc-ref kchar)
 
-    ;; Apply traps
+    ;; Apply traps (see trap.scm for trap-trigger)
     (map (lambda (trap)
-           (let ((roll (kern-dice-roll "1d20"))
-                 (bonus (kern-dice-roll thief-dice)))
-             (println trap " roll:" roll "+" bonus)
-             (cond ((or (= roll 20)
-                        (> (+ roll bonus) 20))
-                    (kern-log-msg (kern-obj-get-name kchar) " avoids a trap!"))
-                   (else
-                    (kern-log-msg (kern-obj-get-name kchar) " trips a trap!")
-                    (apply (eval trap) (list kchar kobj))))))
+           (trap-trigger trap kobj kchar))
          (container-traps container))
 
     ;; Spill contents
@@ -203,9 +176,8 @@
 (define (mk-container-type tag name sprite)
   (mk-obj-type tag name sprite layer-mechanism container-ifc))
 
-
 ;; Test it out. First, make a new chest type.
-(mk-container-type 't_chest2 "chest" s_chest)
+(mk-container-type 't_chest "chest" s_chest)
 
 ;; Define a constructor for an object of the new chest type. Example usage:
 ;;
@@ -217,7 +189,7 @@
 ;; * Note the use of a quoted list.
 ;;
 (define (mk-chest trap contents)
-  (let ((kchest (bind (kern-mk-obj t_chest2 1)
+  (let ((kchest (bind (kern-mk-obj t_chest 1)
                       (mk-container contents))))
     (if (not (null? trap))
         (container-add-trap! (kobj-gob-data kchest) trap))
@@ -225,3 +197,10 @@
 
 (define (chest-add-trap kobj trap)
   (container-add-trap! (kobj-gob-data kobj) trap))
+
+;; mk-treasure-chest -- returns a chest with 1-10 random object types
+(define (mk-treasure-chest)
+  (mk-chest nil
+            (mk-treasure-list (+ 1
+                                 (modulo (random-next) 
+                                         9)))))
