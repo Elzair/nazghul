@@ -222,8 +222,7 @@
                       caster 1 (occ-ability-whitemagic caster)
                       (lambda (kobj)
                         (and (kern-obj-is-visible? kobj)
-                             (or (kern-obj-is-container? kobj)
-                                 (handles? kobj 'is-trapped?))))
+                             (handles? kobj 'is-trapped?)))
                       ))
 
 ;todo currently only checks topmost item
@@ -232,8 +231,7 @@
                       caster 1 (occ-ability-whitemagic caster)
                       (lambda (kobj)
                         (and (kern-obj-is-visible? kobj)
-                             (or (kern-obj-is-container? kobj)
-                                 (handles? kobj 'rm-traps))))
+                             (handles? kobj 'rm-traps)))
                       ))
 	
 (define (ylem-an-ex  caster)

@@ -1085,38 +1085,6 @@ bool cmdOpen(class Character * pc)
         pc->decActionPoints(NAZGHUL_BASE_ACTION_POINTS);
         cmdwin_push("%s!", container->getName());
 
-	// Check for traps.
-	if (container->isTrapped()) {
-
-		closure_t *trap = container->getTrap();
-
-		// Roll to disarm
-		if (20 <= (dice_roll("1d20") 
-                           + logBase2(pc->getDexterity())
-                           + logBase2(pc->getLevel()))) {
-			log_msg("You disarm a trap!");
-		} else {
-                        // Trigger the trap. Traps may destroy containers, so
-                        // use the refcount to find out if this happened.
-                        int abort = 0;
-
-                        obj_inc_ref(container);
-                        closure_exec(trap, "pp", pc, container);
-                        if (container->refcount == 1) {
-                                log_msg("The %s was destroyed!", 
-                                        container->getName());
-                                abort = 1;
-                        }
-                        obj_dec_ref(container);
-
-                        if (abort) {
-                                cmdwin_push("can't!");
-                                log_end_group();
-                                return false;
-                        }
-		}
-	}
-
         // Describe the contents of the container.
         log_msg("You find:");
         container->forEach(cmd_describe_inv_entry, NULL);

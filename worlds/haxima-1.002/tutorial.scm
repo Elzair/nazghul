@@ -85,9 +85,7 @@
  nil                         ; campsite formation
  nil                         ; vehicle
  ;; inventory
- (kern-mk-container
-  nil ;; type
-  nil ;; trap
+ (kern-mk-inventory
   (list
    )
   )

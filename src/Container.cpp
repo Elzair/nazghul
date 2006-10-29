@@ -45,20 +45,13 @@ static void destroy_content(struct inv_entry *ie, void *data)
 	delete ie;
 }
 
-Container::Container():trap(NULL)
+Container::Container()
 {
 	list_init(&contents);
 }
 
-Container::Container(ObjectType *type)
-        : Object(type), trap(NULL)
-{
-        list_init(&contents);
-}
-
 Container::~Container()
 {
-        closure_unref_safe(trap);
         return;
 	forEach(destroy_content, NULL);
 }
@@ -147,31 +140,6 @@ struct inv_entry *Container::search(class ObjectType * type)
 	return NULL;
 }
 
-bool Container::isTrapped()
-{
-	return trap != NULL;
-}
-
-closure_t *Container::getTrap()
-{
-	return trap;
-}
-
-void Container::setTrap(closure_t * val)
-{
-        // out with the old
-        if (trap) {
-                closure_unref(trap);
-                trap = NULL;
-        }
-
-        // in with the new
-        if (val) {
-                closure_ref(val);
-                trap = val;
-        }
-}
-
 void Container::saveContents(struct save *save)
 {
         struct list *elem;
@@ -207,13 +175,6 @@ void Container::save(struct save *save)
                 save->write(save, "%s\n", getObjectType()->getTag());
         else
                 save->write(save, "nil\n");
-
-        save->write(save, ";; trap\n");
-        if (!trap) {
-                save->write(save, "nil\n");
-        } else {
-                closure_save(trap, save);
-        }
 
         save->write(save, ";; contents\n");
         if (list_empty(&contents)) {

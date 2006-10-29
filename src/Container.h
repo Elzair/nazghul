@@ -23,7 +23,6 @@
 #define Container_h
 
 #include "object.h"
-#include "closure.h"
 
 /* FIXME: move this to object.h */
 struct filter {
@@ -36,15 +35,10 @@ class TrapType;
 class Container:public Object {
       public:
 	Container();
-        Container(class ObjectType *type);
 	virtual ~ Container();
 	void open();
 	virtual struct inv_entry *search(class ObjectType * type);
         bool isEmpty();
-	bool isTrapped();
-	void setTrap(closure_t *trap);
-
-	closure_t *getTrap();
 
         // Virtual methods from base class
 	virtual bool add(class ObjectType * type, int quantity);
@@ -63,7 +57,6 @@ class Container:public Object {
       protected:
         void saveContents(struct save *save);
 	struct list contents;
-	closure_t *trap;
 };
 
 #endif

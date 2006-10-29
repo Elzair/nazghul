@@ -329,19 +329,15 @@
 		(kern-obj-remove-effect ktarg ef_disease))
 	)
 	
-(define (kobj-is-trapped? kobj)
-  (or (kern-obj-is-trapped? kobj)
-      (ifccall kobj 'is-trapped?)))
-
 ;todo currently only checks topmost item
 (define (powers-detect-traps caster ktarg power)
-	(if (kobj-is-trapped? ktarg)
-            (kern-log-msg (kern-obj-get-name caster)
-                          " detects a trap on "
-                          (kern-obj-get-name ktarg)
-                          "!")
-            (kern-log-msg (kern-obj-get-name caster)
-                          " does not detect any traps")))
+  (if (ifccall ktarg 'is-trapped?)
+      (kern-log-msg (kern-obj-get-name caster)
+                    " detects a trap on "
+                    (kern-obj-get-name ktarg)
+                    "!")
+      (kern-log-msg (kern-obj-get-name caster)
+                    " does not detect any traps")))
 
 ;again, a bit of range for powerful users?
 (define (powers-dispel-field caster ktarg power)
@@ -349,20 +345,16 @@
    (kern-obj-remove ktarg)
    (kern-map-repaint))	
 
-(define (kobj-remove-trap kobj)
-  (cond ((handles? kobj 'rm-traps) (ifccall kobj 'rm-traps))
-        (else (kern-obj-remove-trap kobj))))
-
 ;todo currently only checks topmost item
 (define (powers-disarm-traps caster ktarg power)
-  (if (kobj-is-trapped? ktarg)
+  (if (and (ifccall ktarg 'is-trapped?)
+           (handles? ktarg 'rm-traps))
       (begin
         (kern-log-msg (kern-obj-get-name caster)
                       " disarms a trap on "
                       (kern-obj-get-name ktarg)
                       "!")
-        (kobj-remove-trap ktarg))
-      ))
+        (ifccall ktarg 'rm-traps))))
 				
 ;todo limit range?
 ;check critter is viewable before message?

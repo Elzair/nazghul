@@ -156,9 +156,7 @@
  nil                         ; campsite formation
  nil                         ; vehicle
  ;; inventory
- (kern-mk-container
-  nil ;; type
-  nil ;; trap
+ (kern-mk-inventory
   (list (list 1 t_sword)
         (list 1 t_shield)
         (list 10 t_torch)
@@ -299,7 +297,7 @@
   )
 
 (define (simple-start kplayer)
-  (kern-obj-put-at kplayer (list p_slimy_cavern 13 8)))
+  (kern-obj-put-at kplayer (list p_bandit_hideout_l1 5 9)))
   
 (define (create-char kplayer)
   (kern-obj-put-at kplayer (list p_char_setup 9 17)

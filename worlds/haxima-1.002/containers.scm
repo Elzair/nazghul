@@ -31,9 +31,6 @@
 ;;----------------------------------------------------------------------------
 ;; Container Constructors
 ;;----------------------------------------------------------------------------
-;;(define (mk-chest trap contents)
-  ;;(println "mk-chest: " trap contents)
-;;  (kern-mk-container t_chest trap contents))
 
 ;; mk-treasure-chest -- returns a chest with 1-10 random object types
 (define (mk-treasure-chest)
