@@ -143,7 +143,7 @@
     "Jake&Percival"             ; name
     jake-species         ; species
     jake-occ              ; occ
-    s_ettin     ; sprite
+    s_gint     ; sprite
     faction-men      ; starting alignment
     0 0 0            ; str/int/dex
     0 0              ; hp mod/mult

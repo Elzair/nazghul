@@ -657,11 +657,11 @@
 (define skeletal-spear-thrower (mk-npct2 "skeletal spear-thrower" sp_skeleton oc_warrior s_skeleton basic-traps spear-thrower-equip    undead-effects 'generic-ai faction-monster nil 'drop-generic spear-thrower-loot))
 (define skeletal-warrior (mk-npct2 "skeletal warrior" sp_skeleton oc_warrior s_skeleton basic-traps skeletal-warrior-equip undead-effects 'generic-ai faction-monster nil 'drop-generic skel-war-loot))
 
-(define death-knight  (mk-npct2 "death knight"  sp_skeleton oc_warrior s_knight   basic-traps death-knight-equip  undead-effects 'death-knight-ai faction-monster  nil 'drop-generic dea-kni-loot))
-(define craven-archer (mk-npct2 "craven archer" sp_skeleton oc_warrior s_knight   basic-traps craven-archer-equip nil            'craven-archer-ai faction-monster nil 'drop-generic cra-arch-loot))
+(define death-knight  (mk-npct2 "death knight"  sp_skeleton oc_warrior s_deathknight   basic-traps death-knight-equip  undead-effects 'death-knight-ai faction-monster  nil 'drop-generic dea-kni-loot))
+(define craven-archer (mk-npct2 "craven archer" sp_skeleton oc_warrior s_deathknight   basic-traps craven-archer-equip nil            'craven-archer-ai faction-monster nil 'drop-generic cra-arch-loot))
 
 (define halberdier    (mk-npct2 "halberdier"    sp_human    oc_warrior s_guard        no-traps halberdier-equip   nil 'guard-ai faction-men   nil 'drop-generic halberdier-loot))
-(define crossbowman   (mk-npct2 "crossbowman"   sp_human    oc_warrior s_guard        no-traps crossbowman-equip  nil 'guard-ai faction-men   nil 'drop-generic crossbowman-loot))
+(define crossbowman   (mk-npct2 "crossbowman"   sp_human    oc_warrior s_xbowguard        no-traps crossbowman-equip  nil 'guard-ai faction-men   nil 'drop-generic crossbowman-loot))
 (define medik         (mk-npct2 "medik"         sp_human    oc_wizard  s_blue_wizard  no-traps medik-equip        nil 'medik-ai faction-men   nil 'drop-generic medik-loot))
 (define troll         (mk-npct2 "troll"         sp_troll    oc_warrior s_troll        no-traps troll-equip        nil 'std-ai   faction-troll nil 'drop-generic troll-loot))
 
@@ -678,8 +678,8 @@
 (define insect (mk-npct "insect swarm" sp_insect nil s_insects nil nil nil 'std-ai faction-monster nil 'drop-generic animal-loot))
 (define dragon (mk-npct2 "dragon" sp_dragon nil s_dragon wizard-traps nil drag-effects 'dragon-ai faction-monster nil 'drop-generic dragon-loot))
 (define bomber (mk-npct2 "mad jester" sp_human oc_wrogue s_jester wrogue-traps bomber-equip nil 'std-ai faction-outlaw nil 'drop-generic bomber-loot))
-(define knight (mk-npct2 "knight" sp_human oc_warrior s_human_knight no-traps knight-equip nil 'guard-ai faction-trigrave 'knight-conv 'drop-generic knight-loot))
-(define squire (mk-npct2 "squire" sp_human oc_warrior s_guard no-traps squire-equip nil 'guard-ai faction-trigrave 'knight-conv 'drop-generic squire-loot))
+(define knight (mk-npct2 "knight" sp_human oc_warrior s_knight no-traps knight-equip nil 'guard-ai faction-trigrave 'knight-conv 'drop-generic knight-loot))
+(define squire (mk-npct2 "squire" sp_human oc_warrior s_xbowguard no-traps squire-equip nil 'guard-ai faction-trigrave 'knight-conv 'drop-generic squire-loot))
 (define bandit (mk-npct2 "bandit" sp_human oc_wrogue s_brigand wrogue-traps wrogue-2-equip nil 'std-ai faction-outlaw nil 'drop-generic wrogue-2-loot))
 (define footpad (mk-npct2 "footpad" sp_human oc_wrogue s_brigand wrogue-traps wrogue-1-equip nil 'std-ai faction-outlaw nil 'drop-generic wrogue-1-loot))
 (define warlock (mk-npct2 "warlock" sp_human oc_wizard s_wizard wizard-traps wizard-equip nil 'warlock-ai faction-monster nil 'drop-generic wizard-loot))
@@ -687,7 +687,7 @@
 (define gint-mage (mk-npct2 "gint mage" sp_gint oc_wizard s_gint_mage wizard-traps wizard-equip nil 'shaman-ai faction-gint nil 'drop-generic wizard-loot))
 (define highwayman (mk-npct2 "highwayman" sp_human oc_wrogue s_brigand wrogue-traps wrogue-3-equip nil 'std-ai faction-outlaw nil 'drop-generic wrogue-3-loot))
 (define blackguard (mk-npct2 "blackguard" sp_human oc_wrogue s_brigand wrogue-traps wrogue-4-equip nil 'std-ai faction-outlaw nil 'drop-generic wrogue-4-loot))
-(define gint-warrior (mk-npct2 "gint warrior" sp_gint oc_warrior s_ettin basic-traps gint-warrior-equip nil 'std-ai faction-gint nil 'drop-generic gint-loot))
+(define gint-warrior (mk-npct2 "gint warrior" sp_gint oc_warrior s_gint basic-traps gint-warrior-equip nil 'std-ai faction-gint nil 'drop-generic gint-loot))
 (define yellow-slime (mk-npct2 "yellow slime" sp_yellow_slime nil s_yellow_slime nil nil yellow-slime-effects 'yellow-slime-ai faction-monster nil 'drop-generic yellow-slime-loot))
 (define troll-geomancer (mk-npct2 "troll geomancer" sp_troll oc_wizard s_troll no-traps geomancer-equip nil 'std-ai faction-troll nil 'drop-generic geomancer-loot))
 (define corrupt-halberdier (mk-npct2 "halberdier" sp_human oc_warrior s_guard no-traps halberdier-equip nil 'guard-ai faction-monster nil 'drop-generic halberdier-loot))
@@ -714,7 +714,7 @@
 (define accursed-master     (mk-npct2 "an accursed master"     sp_human oc_wizard s_wizard   nil accursed-3-equip nil 'spell-sword-ai faction-accursed nil 'drop-generic wizard-loot))
 (define accursed-adept      (mk-npct2 "an accursed adept"      sp_human oc_wizard s_wizard   nil accursed-3-equip nil 'spell-sword-ai faction-accursed nil 'drop-generic wizard-loot))
 (define accursed-guardian   (mk-npct2 "an accursed guardian"   sp_human oc_warrior s_fighter nil accursed-4-equip nil 'std-ai         faction-accursed nil 'drop-generic wrogue-1-loot))
-(define accursed-defender   (mk-npct2 "an accursed defender"   sp_human oc_warrior s_human_knight  nil accursed-5-equip nil 'std-ai         faction-accursed nil 'drop-generic accursed-5-loot))
+(define accursed-defender   (mk-npct2 "an accursed defender"   sp_human oc_warrior s_knight  nil accursed-5-equip nil 'std-ai         faction-accursed nil 'drop-generic accursed-5-loot))
 (define accursed-templar    (mk-npct2 "an accursed templar"    sp_human oc_warrior s_avatar  nil accursed-6-equip nil 'std-ai         faction-accursed nil 'drop-generic wrogue-4-loot))
 
 ;;define                        (mk-npct "                          sp_              oc_        s_                 nil          nil                    nil           'std-ai           ))

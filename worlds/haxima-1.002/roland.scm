@@ -154,7 +154,7 @@
      "Roland"            ; name
      sp_human            ; species
      oc_warrior          ; occ
-     s_human_knight      ; sprite
+     s_knight            ; sprite
      faction-men         ; starting alignment
      6 0 6               ; str/int/dex
      pc-hp-off           ; hp bonus

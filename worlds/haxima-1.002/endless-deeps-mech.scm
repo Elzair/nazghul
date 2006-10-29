@@ -446,7 +446,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; critters with alternative alignment
 
-(define gint-warrior-m (mk-npct2 "gint warrior" sp_gint oc_warrior s_ettin basic-traps gint-warrior-equip nil 'std-ai faction-monster nil 'drop-generic gint-loot))
+(define gint-warrior-m (mk-npct2 "gint warrior" sp_gint oc_warrior s_gint basic-traps gint-warrior-equip nil 'std-ai faction-monster nil 'drop-generic gint-loot))
 (define troll-m         (mk-npct2 "troll"         sp_troll    oc_warrior s_troll        no-traps troll-equip        nil 'std-ai   faction-monster nil 'drop-generic troll-loot))
 (define cave-goblin-slinger-m   (mk-npct2 "cave goblin slinger"   sp_cave_goblin  oc_warrior s_cgob_slinger    basic-traps  slinger-equip    nil 'generic-ai faction-monster  nil 'drop-generic slinger-loot))
 (define cave-goblin-berserker-m (mk-npct2 "cave goblin berserker" sp_cave_goblin  oc_warrior s_cgob_berserk    basic-traps  berserker-equip  nil 'generic-ai faction-monster  nil 'drop-generic berserker-loot))

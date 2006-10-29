@@ -162,7 +162,7 @@
                  "Bart"             ; name
                  sp_forest_goblin    ; species
                  nil                 ; occ
-                 s_orc               ; sprite
+                 s_fgob_civilian     ; sprite
                  faction-men         ; starting alignment
                  0 0 0               ; str/int/dex
                  0 0                 ; hp mod/mult

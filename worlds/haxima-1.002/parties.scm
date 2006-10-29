@@ -68,23 +68,23 @@
 ;;----------------------------------------------------------------------------
 ;; NPC PARTY TYPES
 (define forest-goblin-party-l1
-  (ptype-mk "goblin stalker" s_orc faction-forest-goblin 1 2
+  (ptype-mk "goblin stalker" s_fgob_stalker faction-forest-goblin 1 2
             (pgroup-mk 'forest-goblin-stalker "1")
             ))            
 (define forest-goblin-party-l2
-  (ptype-mk "goblin scouting party" s_orc faction-forest-goblin 2 2
+  (ptype-mk "goblin scouting party" s_fgob_archer faction-forest-goblin 2 2
             (pgroup-mk 'forest-goblin-stalker "1")
             (pgroup-mk 'forest-goblin-hunter  "1")
             ))
             
 (define forest-goblin-party-l3 
-  (ptype-mk "goblin hunting party" s_orc faction-forest-goblin 3 2
+  (ptype-mk "goblin hunting party" s_fgob_archer faction-forest-goblin 3 2
             (pgroup-mk 'forest-goblin-stalker "1d2")
             (pgroup-mk 'forest-goblin-hunter  "1d2")
             (pgroup-mk 'wolf "1d2")
             ))
 (define forest-goblin-party-l4 
-  (ptype-mk "goblin tribe" s_orc faction-forest-goblin 4 2
+  (ptype-mk "goblin tribe"  s_fgob_civilian faction-forest-goblin 4 2
             (pgroup-mk 'forest-goblin-stalker "1d2")
             (pgroup-mk 'forest-goblin-hunter  "1d2")
             (pgroup-mk 'wolf "1d2")
@@ -235,19 +235,19 @@
             ))
 
 (define gint-party-l4
-  (ptype-mk "gint scouting party" s_ettin faction-gint 4 5
+  (ptype-mk "gint scouting party" s_gint_party faction-gint 4 5
             (pgroup-mk 'gint-warrior "1")
             ))
 
 (define gint-party-l5
-  (ptype-mk "gint hunting party" s_ettin faction-gint 5 5
+  (ptype-mk "gint hunting party" s_gint_party faction-gint 5 5
             (pgroup-mk 'gint-warrior "1")
             (pgroup-mk 'cave-goblin-slinger "1d2")
             (pgroup-mk 'wolf "1d2")
             ))
 
 (define gint-party-l6
-  (ptype-mk "gint war party" s_ettin faction-gint 6 3
+  (ptype-mk "gint war party" s_gint_party faction-gint 6 3
             (pgroup-mk 'gint-warrior "1d2")
             (pgroup-mk 'troll "1d2")
             (pgroup-mk 'cave-goblin-slinger "1d3")
