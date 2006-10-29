@@ -616,23 +616,6 @@
               (kern-char-unready kchar ktype)
               (kern-obj-remove-from-inventory kchar ktype 1))))))
 
-;; ----------------------------------------------------------------------------
-;; Container traps
-;;
-;; Container traps trigger when somebody (the actor) opens the container (the
-;; subject). A trap may effect the actor, the subject, the contents of the
-;; subject, or the place or tiles where the event takes place. A container trap
-;; receives the actor and the subject as parameters.
-;; ----------------------------------------------------------------------------
-
-;; Simple trap - applies an effect to the actor
-(define (mk-simple-trap effect)
-  (lambda (actor subject)
-    (effect actor)))
-
-(define (test-trap actor subject)
-  (kern-obj-apply-damage actor "ouch" 1))
-
 (define (burn obj)
   (if (and (kern-obj-is-being? obj)
            (not (has-fire-immunity? obj)))
@@ -664,48 +647,6 @@
 
 (define (apply-lightning obj)
   (kern-obj-apply-damage obj "shocked" (kern-dice-roll "2d8")))
-
-(define (lightning-trap actor subject)
-  (kern-log-msg "Lightning trap!")
-  (apply-lightning actor))
-
-(define (spike-trap actor subject)
-  (kern-log-msg "Spike trap!")
-  (kern-obj-apply-damage actor "ouch" (kern-dice-roll "1d6")))
-
-(define (burn-trap actor subject)
-  (kern-log-msg "Fire trap!")
-  (burn actor))
-
-(define (poison-trap actor subject)
-  (kern-log-msg "Poison trap!")
-  (apply-poison actor))
-
-(define (sleep-trap actor subject)
-  (kern-log-msg "Sleep trap!")
-  (apply-sleep actor))
-
-(define (bomb-trap actor subject)
-  (define (hit loc)
-    (map burn (kern-get-objects-at loc))
-    (if (terrain-ok-for-field? loc)
-        (kern-obj-put-at (kern-mk-obj F_fire 1) loc)))
-  (kern-log-msg "Bomb trap!")
-  (burn actor)
-  (shake-map 10)
-  (map hit (get-8-neighboring-tiles (kern-obj-get-location subject)))
-  )
-
-(define (self-destruct-trap actor subject)
-  (shake-map 5)
-  (kern-log-msg "Self-destruct trap!")
-  (kern-obj-remove subject))
-
-;; Explosion trap - shakes the screen and damages all surrounding objects
-
-;; Burst trap - splatters the surrounding scene with dangerous fields
-
-;; Self-destruct trap - rolls to destroy contents
 
 ;;----------------------------------------------------------------------------
 ;; Misc stuff -- not sure where to put this

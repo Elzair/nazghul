@@ -29,8 +29,7 @@
 ;; These will be placed on the map in the shrine room in the SW.
 ;;-----------------------------------------------------------------------------
 (define supplies_chest
-  (kern-mk-container
-   t_chest ;; type
+  (mk-chest
    nil ;; trap
 
    (list

@@ -85,7 +85,8 @@ haxima_DATA = \
 	r2a_mech.scm                kern-init.scm          effects.png\
 	gamestart-mech.scm          gamestart.scm          bodies.png\
 	adornments.png              clothes.png            powers.scm\
-	cast-ui.scm                 enchanters-tower-mech.scm bandit-hideout.scm
+	cast-ui.scm              enchanters-tower-mech.scm bandit-hideout.scm\
+	traps.scm
 
 EXTRA_DIST = $(haxima_DATA)
 MAINTAINERCLEANFILES = Makefile.in

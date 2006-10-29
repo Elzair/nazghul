@@ -188,6 +188,7 @@
 (load "sprites.scm")
 (load "sounds.scm")
 (load "effects.scm")
+(load "traps.scm")
 (load "terrains.scm")
 (load "palette.scm")
 (load "fields.scm")

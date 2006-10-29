@@ -57,8 +57,7 @@
 ;; Special Objects
 ;;----------------------------------------------------------------------------
 (define rolands-chest
-  (kern-mk-container
-   t_chest ;; type
+  (mk-chest
    nil ;; trap
    (list
     ;; Food

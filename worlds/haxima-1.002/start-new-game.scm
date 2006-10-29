@@ -162,7 +162,10 @@
   (list (list 1 t_sword)
         (list 1 t_shield)
         (list 1 t_torch)
-        (list 10 t_heal_potion))
+        (list 10 t_heal_potion)
+        (list 10 wis_sanct)
+        (list 10 an_sanct_ylem)
+        )
   )
 
  nil ;; party members (should be nil for initial load file)
@@ -294,7 +297,7 @@
   )
 
 (define (simple-start kplayer)
-  (kern-obj-put-at kplayer (list p_bandit_hideout_l2a 9 9)))
+  (kern-obj-put-at kplayer (list p_bandit_hideout_l1 5 9)))
   
 (define (create-char kplayer)
   (kern-obj-put-at kplayer (list p_char_setup 9 17)
