@@ -122,7 +122,7 @@
     'spell-sword-ai  ; special ai
 
     ;; container
-    (mk-chest nil
+    (mk-inventory
               (mk-contents
                (add-content 1 t_skull_ring)
                (add-content 1 t_sword_2)

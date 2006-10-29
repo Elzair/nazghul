@@ -220,8 +220,7 @@
       sch_kathryn ;;..schedule (optional)
       'spell-sword-ai ;;...custom ai (optional)
       ;;..............container (and contents)
-      (mk-chest
-       nil
+      (mk-inventory
        (mk-contents
         (add-content 1 t_kathryns_letter)
         (add-content 100 t_gold_coins)

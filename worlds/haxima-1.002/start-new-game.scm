@@ -161,7 +161,9 @@
   nil ;; trap
   (list (list 1 t_sword)
         (list 1 t_shield)
-        (list 1 t_torch)
+        (list 10 t_torch)
+        (list 1 t_armor_plate_4)
+        (list 1 t_mystic_sword)
         (list 10 t_heal_potion)
         (list 10 wis_sanct)
         (list 10 an_sanct_ylem)
@@ -297,7 +299,7 @@
   )
 
 (define (simple-start kplayer)
-  (kern-obj-put-at kplayer (list p_bandit_hideout_l1 5 9)))
+  (kern-obj-put-at kplayer (list p_slimy_cavern 13 8)))
   
 (define (create-char kplayer)
   (kern-obj-put-at kplayer (list p_char_setup 9 17)
@@ -308,5 +310,5 @@
 ;; the line after it.
 ;;----------------------------------------------------------------------------
 ;;(kern-set-start-proc start-scene)
-;;(kern-set-start-proc simple-start)
-(kern-set-start-proc create-char)
+(kern-set-start-proc simple-start)
+;;(kern-set-start-proc create-char)

@@ -132,8 +132,7 @@
             nil              ; conv
             nil             ; sched
             'lich-ai        ; special ai
-            (mk-chest
-             'lightning-trap
+            (mk-inventory
              (list (list 1 t_morning_star)
                    (list 1 t_armor_chain_4)
                    (list 1 t_chain_coif_4)

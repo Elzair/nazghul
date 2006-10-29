@@ -158,8 +158,7 @@
       faction-men ;;...faction
       'gate-guard-ai ;;.......custom ai (optional)    
       ;;..................container (and contents, used to arm char)
-      (mk-chest
-       nil
+      (mk-inventory
        (mk-contents 
         (roll-to-add 100  "3"     t_heal_potion)
         (roll-to-add 100  "1"     t_sword)

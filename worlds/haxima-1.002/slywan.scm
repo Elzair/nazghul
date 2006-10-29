@@ -122,7 +122,7 @@
     'slywan-conv         ; conv
     sch_slywan           ; sched
     'townsman-ai              ; special ai
-    (mk-chest nil nil) ;; container
+    (mk-inventory nil) ;; container
     nil              ; readied
     )
    #t)

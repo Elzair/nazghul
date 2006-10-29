@@ -310,8 +310,7 @@
      sch_engineer ;;.....schedule (optional)
      'townsman-ai ;;..........custom ai (optional)
      ;;..............container (and contents)
-     (mk-chest
-      'bomb-trap
+     (mk-inventory
       (mk-contents 
        (add-content 1   t_dagger)
        (add-content 1   t_doom_staff)

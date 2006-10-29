@@ -29,9 +29,10 @@
  (put (mk-sense-trig 'generic-trig-exec 'p_bhl1_p2 'signal)  10 9)
 
  ;; Make a test chest with a bunch of traps on it.
- (let ((kchest (mk-chest2 '((t_sword 1)
-                   (t_arrow 5)
-                   (t_torch 2)))))
+ (let ((kchest (mk-chest nil
+                '((1 t_sword)
+                  (5 t_arrow)
+                  (2 t_torch)))))
    (map (lambda (trap)
           (ifccall kchest 'add-trap trap))
         (list 'sleep-trap

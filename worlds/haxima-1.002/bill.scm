@@ -179,8 +179,7 @@
      'townsman-ai ;;..........custom ai (optional)
 
      ;;..............container (and contents)
-     (mk-chest 
-      nil ;;.........trap
+     (mk-inventory
       (mk-contents 
        (add-content 10  t_torch)
        (add-content 100 t_arrow)

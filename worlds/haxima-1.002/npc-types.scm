@@ -112,7 +112,13 @@
     (and (not (null? npcg))
          (is-npcg? npcg)
          (npcg-spawned? npcg))))
-  
+
+;; An NPC inventory is kind of an abstract container. It should never appear on
+;; the world map.
+(mk-obj-type 't_inventory "inventory" nil layer-container nil)
+(define (mk-inventory contents)
+  (kern-mk-container t_inventory nil contents))
+
 ;; mk-npc -- create a kernel character of the given type, faction and level
 (define (mk-npc npct-tag lvl)
   ;;(println "mk-npc:" npct " " faction " " lvl)g
@@ -127,8 +133,7 @@
                   (npct-spr npct)
                   (npct-faction npct)
                   (npct-ai npct)
-                  (mk-chest
-                   (random-select (npct-traps npct))
+                  (mk-inventory
                    (filter notnull?
                            (map (lambda (x)
                                   (apply roll-to-add x))

@@ -265,14 +265,14 @@
       nil ;;..........custom ai (optional)
       
       ;;..........container (and contents)
-      (mk-chest nil
-                (mk-contents
-                             (add-content 1 t_rune_k)
-                             (add-content 1 t_armor_leather)
-                             (add-content 1 t_leather_helm)
-                             (add-content 1 t_sword)
-                             (add-content 1 t_bow)
-                             (add-content 50 t_arrow)))
+      (mk-inventory
+       (mk-contents
+        (add-content 1 t_rune_k)
+        (add-content 1 t_armor_leather)
+        (add-content 1 t_leather_helm)
+        (add-content 1 t_sword)
+        (add-content 1 t_bow)
+        (add-content 50 t_arrow)))
       
       nil ;;..........readied arms (in addition to the container contents)
       nil ;;..........hooks in effect

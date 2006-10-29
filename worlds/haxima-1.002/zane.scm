@@ -142,8 +142,7 @@
      'townsman-ai ;;..........custom ai (optional)
 
      ;;..............container (and contents)
-     (mk-chest 
-      'burn
+     (mk-inventory
       (mk-contents 
        (add-content 10  t_food)
        (add-content 100 t_arrow)

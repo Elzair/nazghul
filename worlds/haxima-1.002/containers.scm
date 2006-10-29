@@ -31,17 +31,16 @@
 ;;----------------------------------------------------------------------------
 ;; Container Constructors
 ;;----------------------------------------------------------------------------
-(define (mk-chest trap contents)
+;;(define (mk-chest trap contents)
   ;;(println "mk-chest: " trap contents)
-  (kern-mk-container t_chest trap contents))
+;;  (kern-mk-container t_chest trap contents))
 
 ;; mk-treasure-chest -- returns a chest with 1-10 random object types
 (define (mk-treasure-chest)
-  (kern-mk-container t_chest 
-                     nil 
-                     (mk-treasure-list (+ 1
-                                          (modulo (random-next) 
-                                                  9)))))
+  (mk-chest nil
+            (mk-treasure-list (+ 1
+                                 (modulo (random-next) 
+                                         9)))))
 
 
 ;;----------------------------------------------------------------------------
@@ -119,8 +118,8 @@
 (define (container-contents gob) (car (cdr gob)))
 (define (container-traps gob) (car (cdr (cdr gob))))
 (define (container-set-traps! gob traps) (set-car! (cdr (cdr gob)) traps))
-(define (content-type content) (car content))
-(define (content-quantity content) (cadr content))
+(define (content-type content) (cadr content))
+(define (content-quantity content) (car content))
 (define (container-add-trap! gob trap)
   (container-set-traps! gob
                         (cons trap 
@@ -213,16 +212,19 @@
 
 ;; Define a constructor for an object of the new chest type. Example usage:
 ;;
-;; (put (mk-chest2 '((t_sword 1)
-;;                   (t_arrow 5)
-;;                   (t_torch 2)))
+;; (put (mk-chest2 '((1 t_sword)
+;;                   (5 t_arrow)
+;;                   (2 t_torch)))
 ;;      5 8)
 ;;
 ;; * Note the use of a quoted list.
 ;;
-(define (mk-chest2 ktype-q-pairs)
-  (bind (kern-mk-obj t_chest2 1)
-        (mk-container ktype-q-pairs)))
+(define (mk-chest trap contents)
+  (let ((kchest (bind (kern-mk-obj t_chest2 1)
+                      (mk-container contents))))
+    (if (not (null? trap))
+        (container-add-trap! (kobj-gob-data kchest) trap))
+    kchest))
 
-(define (chest2-add-trap kobj trap)
+(define (chest-add-trap kobj trap)
   (container-add-trap! (kobj-gob-data kobj) trap))

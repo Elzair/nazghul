@@ -163,7 +163,7 @@
     nil              ; sched
     nil              ; special ai
     ;;..........container (and contents)
-    (mk-chest nil
+    (mk-inventory
               (mk-contents
                (add-content 1 t_skull_ring)
                ))

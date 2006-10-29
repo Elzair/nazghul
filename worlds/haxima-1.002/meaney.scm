@@ -250,11 +250,11 @@
      'townsman-ai              ; special ai
 
      ;;..........container (and contents)
-     (mk-chest nil
-               (mk-contents
-                (add-content 1 t_skull_ring)
-                (add-content 1 t_dagger)
-                ))
+     (mk-inventory
+      (mk-contents
+       (add-content 1 t_skull_ring)
+       (add-content 1 t_dagger)
+       ))
      nil              ; readied
      )
     #t)

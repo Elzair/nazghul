@@ -221,8 +221,7 @@
      'angriss-ai          ; special ai
      
      ;;..........container (and contents)
-     (mk-chest nil
-               (mk-contents (add-content 1 t_rune_f)))
+     (mk-inventory (mk-contents (add-content 1 t_rune_f)))
      nil                 ; readied
      )
     #t)
