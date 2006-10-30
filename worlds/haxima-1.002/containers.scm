@@ -155,8 +155,8 @@
   (container-add-trap! (kobj-gob-data kobj)
                        trap-sym))
 
-(define (kcontainer-is-trapped? kobj)
-  (not (null? (container-traps (kobj-gob-data kobj)))))
+(define (kcontainer-get-traps kobj)
+  (container-traps (kobj-gob-data kobj)))
 
 (define (kcontainer-rm-traps kobj)
   (container-set-traps! (kobj-gob-data kobj) nil))
@@ -166,7 +166,7 @@
   (ifc '()
        (method 'open kcontainer-open)
        (method 'add-trap kcontainer-add-trap)
-       (method 'is-trapped? kcontainer-is-trapped?)
+       (method 'get-traps kcontainer-get-traps)
        (method 'rm-traps kcontainer-rm-traps)
        ))
 

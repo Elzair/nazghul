@@ -2,11 +2,11 @@
 ;; This stuff needs to be somewhere more generic
 ;;--------------------------------------------------------------
 
-	;; ----------------------------------------------------------------------------
-	;; terrain-ok-for-field? -- check if the terrain at a given location will allow
-	;; a field to be dropped on it. Terrains with passability class equivalent to
-	;; Grass, trees and forest are ok, everything else is not.
-	;; ----------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------
+;; terrain-ok-for-field? -- check if the terrain at a given location will allow
+;; a field to be dropped on it. Terrains with passability class equivalent to
+;; Grass, trees and forest are ok, everything else is not.
+;; ----------------------------------------------------------------------------
 (define (terrain-ok-for-field? loc)
   (let ((pclass (kern-terrain-get-pclass (kern-place-get-terrain loc))))
     (foldr (lambda (a b) (or a (= pclass b)))
@@ -331,13 +331,16 @@
 	
 ;todo currently only checks topmost item
 (define (powers-detect-traps caster ktarg power)
-  (if (ifccall ktarg 'is-trapped?)
-      (kern-log-msg (kern-obj-get-name caster)
-                    " detects a trap on "
-                    (kern-obj-get-name ktarg)
-                    "!")
-      (kern-log-msg (kern-obj-get-name caster)
-                    " does not detect any traps")))
+  (let ((traps (ifccall ktarg 'get-traps)))
+    (cond ((null? traps)
+           (kern-log-msg (kern-obj-get-name caster)
+                         " does not detect any traps"))
+          (else
+           (map (lambda (trap)
+                  (trap-set-detected! trap #t)
+                  (kern-log-msg (kern-obj-get-name caster)
+                                " detects a " (trap-name trap) " trap!"))
+                traps)))))
 
 ;again, a bit of range for powerful users?
 (define (powers-dispel-field caster ktarg power)
@@ -347,14 +350,17 @@
 
 ;todo currently only checks topmost item
 (define (powers-disarm-traps caster ktarg power)
-  (if (and (ifccall ktarg 'is-trapped?)
-           (handles? ktarg 'rm-traps))
-      (begin
-        (kern-log-msg (kern-obj-get-name caster)
-                      " disarms a trap on "
-                      (kern-obj-get-name ktarg)
-                      "!")
-        (ifccall ktarg 'rm-traps))))
+  (let ((traps (ifccall ktarg 'get-traps)))
+    (cond ((null? traps) 
+           (kern-log-msg "No traps!"))
+          ((not (handles? ktarg 'rm-traps)) 
+           (kern-log-msg "Traps can't be removed!"))
+          (else
+           (map (lambda (trap)
+                  (kern-log-msg (kern-obj-get-name caster)
+                                " disarms a " (trap-name trap) " trap!"))
+                traps)
+           (ifccall ktarg 'rm-traps)))))
 				
 ;todo limit range?
 ;check critter is viewable before message?

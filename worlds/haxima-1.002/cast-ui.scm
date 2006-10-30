@@ -222,7 +222,7 @@
                       caster 1 (occ-ability-whitemagic caster)
                       (lambda (kobj)
                         (and (kern-obj-is-visible? kobj)
-                             (handles? kobj 'is-trapped?)))
+                             (handles? kobj 'get-traps)))
                       ))
 
 ;todo currently only checks topmost item

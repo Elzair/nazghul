@@ -175,9 +175,8 @@
   (let ((door (kobj-gob kdoor)))
     (door-add-trap! door trap-sym)))
   
-(define (door-is-trapped? kdoor)
-  (let ((door (kobj-gob kdoor)))
-    (not (null? (door-traps door)))))
+(define (door-get-traps kdoor)
+  (door-traps (kobj-gob kdoor)))
 
 (define (door-rm-traps kdoor)
   (let ((door (kobj-gob kdoor)))
@@ -196,7 +195,7 @@
        (method 'magic-lock door-magic-lock)
        (method 'magic-unlock door-magic-unlock)
        (method 'add-trap door-add-trap)
-       (method 'is-trapped? door-is-trapped?)
+       (method 'get-traps door-get-traps)
        (method 'rm-traps door-rm-traps)
        ))
 

@@ -31,6 +31,8 @@
 (define (trap-type trap) (cadr trap))
 (define (trap-detected? trap) (caddr trap))
 (define (trap-set-detected! trap val) (set-car! (cddr trap) val))
+(define (trap-name trap) (trap-type-name (trap-type trap)))
+(define (trap-dc trap) (if (trap-detected? trap) 10 20))
 
 ;; Trigger a trap. The trap parm is one of our scripted traps conforming to the
 ;; above, kobj is the kernel object the trap is applied to, and kchar is the
@@ -44,7 +46,8 @@
          (ttype (trap-type trap))
         )
     (cond ((or (= roll 20)
-               (> (+ roll bonus) 20))
+               (> (+ roll bonus) 
+                  (trap-dc trap)))
            (kern-log-msg (kern-obj-get-name kchar) 
                          " avoids a " 
                          (trap-type-name ttype) 
