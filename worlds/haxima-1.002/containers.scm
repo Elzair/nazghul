@@ -121,8 +121,6 @@
 (define (kcontainer-open kobj kchar)
   (let ((container (kobj-gob-data kobj))
         (loc (kern-obj-get-location kobj))
-        (thief-dice (string-append "1d" 
-                                   (number->string (occ-ability-thief kchar))))
         )
     (println container)
 

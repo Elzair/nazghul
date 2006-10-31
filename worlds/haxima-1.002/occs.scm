@@ -60,6 +60,10 @@
 	(occ-set-abil oc_wanderer 0 partskill)
 	)
 
+(define (occ-thief-dice-roll kchar)
+  (kern-dice-roll (string-append "1d" 
+                                 (number->string (occ-ability-thief kchar)))))
+
 ;-----------------------------
 ;Magic output
 

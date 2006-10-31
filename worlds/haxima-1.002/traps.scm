@@ -32,22 +32,20 @@
 (define (trap-detected? trap) (caddr trap))
 (define (trap-set-detected! trap val) (set-car! (cddr trap) val))
 (define (trap-name trap) (trap-type-name (trap-type trap)))
-(define (trap-dc trap) (if (trap-detected? trap) 10 20))
+(define (trap-avoid-dc trap) (if (trap-detected? trap) 10 20))
 
 ;; Trigger a trap. The trap parm is one of our scripted traps conforming to the
 ;; above, kobj is the kernel object the trap is applied to, and kchar is the
 ;; kernel character object that triggered the trap. This proc will
 ;; automatically use the character's thiefly skill to roll to avoid the trap.
 (define (trap-trigger trap kobj kchar)
-  (let* ((thief-dice (string-append "1d" 
-                                    (number->string (occ-ability-thief kchar))))
-         (roll (kern-dice-roll "1d20"))
-         (bonus (kern-dice-roll thief-dice))
-         (ttype (trap-type trap))
+  (let ((roll (kern-dice-roll "1d20"))
+        (bonus (occ-thief-dice-roll kchar))
+        (ttype (trap-type trap))
         )
     (cond ((or (= roll 20)
                (> (+ roll bonus) 
-                  (trap-dc trap)))
+                  (trap-avoid-dc trap)))
            (kern-log-msg (kern-obj-get-name kchar) 
                          " avoids a " 
                          (trap-type-name ttype) 
@@ -121,3 +119,4 @@
 ;; Burst trap - splatters the surrounding scene with dangerous fields
 
 ;; Self-destruct trap - rolls to destroy contents
+
