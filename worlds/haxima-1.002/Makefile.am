@@ -87,7 +87,7 @@ haxima_DATA = \
 	adornments.png              clothes.png            powers.scm\
 	cast-ui.scm              enchanters-tower-mech.scm bandit-hideout.scm\
 	traps.scm                   bigobjects.png         hirespeople.png\
-	humanoids.png
+	humanoids.png               pitfalls.scm           pitfalls.png
 
 EXTRA_DIST = $(haxima_DATA)
 MAINTAINERCLEANFILES = Makefile.in
