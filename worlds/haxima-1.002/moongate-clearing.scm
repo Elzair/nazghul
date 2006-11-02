@@ -32,38 +32,38 @@
   (mk-chest
    nil ;; trap
 
-   (list
+   '(
     
     ;; Food
-    (list 10 t_food)
+    (10 t_food)
 
     ;; Gold
-    (list 10 t_gold_coins)
+    (10 t_gold_coins)
 
     ;; Reagents
-    (list 5 sulphorous_ash)
-    (list 5 ginseng)
-    (list 5 garlic)
-    (list 5 spider_silk)
-    (list 3 blood_moss)
-    (list 3 black_pearl)
-    (list 1 nightshade)
-    (list 1 mandrake)
+    (5 sulphorous_ash)
+    (5 ginseng)
+    (5 garlic)
+    (5 spider_silk)
+    (3 blood_moss)
+    (3 black_pearl)
+    (1 nightshade)
+    (1 mandrake)
     
     ;; Items
-    (list 1 t_heal_potion)
-    (list 1 t_cure_potion)
-    (list 1 t_mana_potion)
-    (list 1 t_torch)
-    (list 1 t_picklock)
+    (1 t_heal_potion)
+    (1 t_cure_potion)
+    (1 t_mana_potion)
+    (1 t_torch)
+    (1 t_picklock)
     
     ;; Arms
-    (list 1 t_sword)
-    (list 1 t_shield)
+    (1 t_sword)
+    (1 t_shield)
 
     ;; Hints/instructions
-    (list 1 t_manual)
-    (list 1 t_letter_from_enchanter)
+    (1 t_manual)
+    (1 t_letter_from_enchanter)
     )
    ))
 

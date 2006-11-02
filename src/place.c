@@ -2164,6 +2164,13 @@ void place_start(void *val)
 
         place = (struct place *)val;
 
+        /* Don't start places multiple times. It tends to screw up things, like
+         * starting cumulative effects on objects multiple times. */
+        if (place->started) {
+                return;
+        }
+        place->started = 1;
+
         // --------------------------------------------------------------------
         // Start all subplaces recursively.
         // --------------------------------------------------------------------

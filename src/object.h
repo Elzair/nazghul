@@ -146,6 +146,7 @@ typedef struct hook_entry {
         struct gob *gob;
         clock_alarm_t expiration;
         int flags;
+        char started : 1; /* unsaved flag */
 } hook_entry_t;
 
 class ObjectType {
@@ -479,6 +480,7 @@ class Object {
 
  private:
         bool surreptitiouslyRemove();
+        bool started;
 };
 
 #include "macros.h"

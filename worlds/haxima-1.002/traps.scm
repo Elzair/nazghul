@@ -20,7 +20,7 @@
 ;; Where kchar is the kernel object for the character that triggered the trap,
 ;; and kobj is the kernel object which the trap was attached to.
 ;;
-(define (mk-trap-type namestr proc) (list 'trap-type namestr proc))
+(define (mk-trap-type namestr proc-tag) (list 'trap-type namestr proc-tag))
 (define (trap-type-name ttype) (cadr ttype))
 (define (trap-type-proc ttype) (caddr ttype))
 
@@ -61,58 +61,37 @@
 ;;----------------------------------------------------------------------------
 ;; Trap Types
 ;;----------------------------------------------------------------------------
-(define lightning-trap
-  (mk-trap-type "lightning"
-                (lambda (actor subject)
-                  (kern-log-msg "Lightning trap!")
-                  (apply-lightning actor))))
+(define (lightning-trap-proc actor subject) (apply-lightning actor))
+(define (burn-trap-proc actor subject) (burn actor))
+(define (poison-trap-proc actor subject) (apply-poison actor))
+(define (sleep-trap-proc actor subject) (apply-sleep actor))
 
-(define spike-trap
-  (mk-trap-type "spike"
-                (lambda (actor subject)
-                  (kern-log-msg "Spike trap!")
-                  (kern-obj-apply-damage actor "ouch" 
-                                         (kern-dice-roll "1d6")))))
+(define (spike-trap-proc actor subject)
+  (kern-obj-apply-damage actor "ouch" 
+                         (kern-dice-roll "1d6")))
 
-(define burn-trap 
-  (mk-trap-type "burn"
-                (lambda (actor subject)
-                  (kern-log-msg "Fire trap!")
-                  (burn actor))))
-
-(define poison-trap
-  (mk-trap-type "poison"
-                (lambda (actor subject)
-                  (kern-log-msg "Poison trap!")
-                  (apply-poison actor))))
-
-(define sleep-trap
-  (mk-trap-type "sleep"
-                (lambda (actor subject)
-                  (kern-log-msg "Sleep trap!")
-                  (apply-sleep actor))))
-
-(define bomb-trap
-  (mk-trap-type 
-   "bomb"
-   (lambda (actor subject)
-     (define (hit loc)
-       (map burn (kern-get-objects-at loc))
-       (if (terrain-ok-for-field? loc)
-           (kern-obj-put-at (kern-mk-obj F_fire 1) loc)))
-     (kern-log-msg "Bomb trap!")
-     (burn actor)
-     (shake-map 10)
-     (map hit 
-          (get-8-neighboring-tiles (kern-obj-get-location subject))))))
+(define (bomb-trap-proc actor subject)
+  (define (hit loc)
+    (map burn (kern-get-objects-at loc))
+    (if (terrain-ok-for-field? loc)
+        (kern-obj-put-at (kern-mk-obj F_fire 1) loc)))
+  (burn actor)
+  (shake-map 10)
+  (map hit 
+       (get-8-neighboring-tiles (kern-obj-get-location subject))))
 
 ;; FIXME: this doesn't actually self-destruct any more
-(define self-destruct-trap
-  (mk-trap-type "self-destruct"
-                (lambda (actor subject)
-                  (shake-map 5)
-                  (kern-log-msg "Self-destruct trap!")
-                  (kern-obj-remove subject))))
+(define (self-destruct-trap-proc actor subject)
+  (shake-map 5)
+  (kern-obj-remove subject))
+
+(define lightning-trap (mk-trap-type "lightning" 'lightning-trap-proc))
+(define burn-trap (mk-trap-type "burn" 'burn-trap-proc))
+(define poison-trap (mk-trap-type "poison" 'poison-trap-proc))
+(define sleep-trap (mk-trap-type "sleep" 'sleep-trap-proc))
+(define spike-trap (mk-trap-type "spike" 'spike-trap-proc))
+(define bomb-trap (mk-trap-type "bomb" 'bomb-trap-proc))
+(define self-destruct-trap (mk-trap-type "self-destruct" 'self-destruct-trap-proc))
 
 ;; Explosion trap - shakes the screen and damages all surrounding objects
 

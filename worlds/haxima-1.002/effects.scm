@@ -6,7 +6,7 @@
   (kern-mk-effect tag 
                   name
                   "undef" 
-				  sprite
+                  sprite
                   exec 
                   apply 
                   rm 
@@ -376,7 +376,6 @@
 ;; invisibility effects.
 ;; ----------------------------------------------------------------------------
 (define (invisibility-rm fgob kobj)
-  ;;(kern-obj-remove-effect kobj ef_invisibility)
   (kern-obj-set-visible kobj #t))
 
 (define (invisibility-apply fgob kobj)
@@ -521,8 +520,8 @@
 (mk-effect 'ef_light                     "Magical light"			s_light			'light-exec           'light-apply        'light-rm        'light-apply        "start-of-turn-hook" "L" 0   #t  -2)
 (mk-effect 'ef_protection                "Protection"				s_protect		 nil                   'protection-apply   'protection-rm   'protection-apply   "start-of-turn-hook" "p" 0   #t  10)
 (mk-effect 'ef_charm                     "Charm"					s_charm		 	nil                   'charm-apply        'charm-rm        'charm-apply        "start-of-turn-hook" "C" 0   #f   5)
-(mk-effect 'ef_invisibility              "Invisible"				s_invis		 	nil                   'invisibility-apply 'invisibility-rm 'invisibility-apply "start-of-turn-hook" "N" 0   #t  10)
-(mk-effect 'ef_permanent_invisibility    "Invisible"				s_invis			nil                   'invisibility-apply 'invisibility-rm 'invisibility-apply "start-of-turn-hook" "N" 0   #t  -1)
+(mk-effect 'ef_invisibility              "Invisible" s_invis nil 'invisibility-apply 'invisibility-rm 'invisibility-apply "start-of-turn-hook" "N" 0   #t  10)
+(mk-effect 'ef_permanent_invisibility    "Invisible" s_invis nil 'invisibility-apply 'invisibility-rm 'invisibility-apply "start-of-turn-hook" "N" 0   #t  -1)
 (mk-effect 'ef_split                     "Split"					nil				'split-exec           nil                 nil              nil                 "on-damage-hook"     ""  0   #f  -1)
 (mk-effect 'ef_spider_calm               "Spider calm"				s_spider_calm	nil                   'spider-calm-apply  'spider-calm-rm  nil                 "start-of-turn-hook" ""  0   #f  60) 
 (mk-effect 'ef_drunk                     "Drunk"					s_drunk			'drunk-exec           'drunk-apply        'drunk-rm        nil                 "keystroke-hook"     "A" 0   #t  60)

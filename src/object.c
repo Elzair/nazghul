@@ -247,11 +247,14 @@ int ObjectType::getMaxHp()
 
 #define HEF_INVALID (1<<0)
 #define HEF_DETECTED (1<<1)
+#define HEF_STARTED  (1<<2)
 
 #define hook_entry_invalidate(he) ((he)->flags |= HEF_INVALID)
 #define hook_entry_detected(he) ((he)->flags & HEF_DETECTED)
 #define hook_entry_detect(he) ((he)->flags |= HEF_DETECTED)
 #define hook_entry_gob(he) ((he)->gob->p)
+#define hook_entry_started(he) ((he)->started)
+#define hook_entry_set_started(he) ((he)->started=1)
 
 hook_entry_t *hook_entry_new(struct effect *effect, struct gob *gob)
 {
@@ -660,6 +663,7 @@ void Object::setup()
         forceEffect     = false;
         pclass          = PCLASS_NONE;
         ttl             = -1; // everlasting by default
+        started         = false;
         
         if (getObjectType() && ! getObjectType()->isVisible())
                 visible = 0;
@@ -870,8 +874,12 @@ void Object::setVisible(bool val)
 {
 	if (val)
 		visible++;
-	else
+	else {
 		visible--;
+                if (visible < 0 && getName()) {
+                        printf("%s: %d\n", getName(), visible);
+                }
+        }
 }
 
 bool Object::isShaded()
@@ -1533,15 +1541,24 @@ void Object::hookForEach(int hook_id,
 
 static int object_start_effect(struct hook_entry *entry, void *data)
 {
-        if (entry->effect->restart)
+        if (entry->effect->restart
+            && ! hook_entry_started(entry)) {
+                hook_entry_set_started(entry);
                 closure_exec(entry->effect->restart, "lp", hook_entry_gob(entry),
                              data);
+        }
         return 0;
 }
 
 void Object::start(void)
 {
         int i;
+
+        // Don't start effects multiple times.
+        if (started) {
+                return;
+        }
+        started = true;
 
         forceEffect = true;
         for (i = 0; i < OBJ_NUM_HOOKS; i++) {
@@ -1620,10 +1637,12 @@ bool Object::addEffect(struct effect *effect, struct gob *gob)
         }
 
         // Run the "apply" procedure of the effect if it has one.
-        if (effect->apply)
+        if (effect->apply) {
                 closure_exec(effect->apply, "lp", gob? gob->p : NULL, this);
+        }
 
         entry = hook_entry_new(effect, gob);
+        hook_entry_set_started(entry);
 
         // Roll to see if the character detects the effect (it won't show up in
         // stats if not)

@@ -146,7 +146,7 @@ void Container::saveContents(struct save *save)
         struct inv_entry *ie;
         int count;
 
-        save->enter(save, "(list\n");
+        save->enter(save, "(list ");
 
         // Iterate backwards to save/reload in the same order
         for (elem = contents.prev; elem != &contents; elem = elem->prev) {
@@ -167,15 +167,7 @@ void Container::save(struct save *save)
 
         saved = save->session_id;
 
-        save->enter(save, "(kern-mk-container\n");
-
-        // The anonymous container used as the player party inventory does not
-        // have a type.
-        if (getObjectType())
-                save->write(save, "%s\n", getObjectType()->getTag());
-        else
-                save->write(save, "nil\n");
-
+        save->enter(save, "(kern-mk-inventory\n");
         save->write(save, ";; contents\n");
         if (list_empty(&contents)) {
                 save->write(save, "nil\n");

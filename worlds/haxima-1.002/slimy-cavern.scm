@@ -59,14 +59,14 @@
 (define rolands-chest
   (mk-chest
    nil ;; trap
-   (list
+   '(
     ;; Food
-    (list 2 t_food)
+    (2 t_food)
 
     ;; Arms
-    (list 1 t_2H_sword)
-    (list 1 t_armor_chain)
-    (list 1 t_iron_helm)
+    (1 t_2H_sword)
+    (1 t_armor_chain)
+    (1 t_iron_helm)
 
     ;; Hints/instructions
     )))
@@ -97,12 +97,12 @@
 
                 ;; Trapped chest with some reasonably nice thiefly items
                 (put (mk-chest 'poison-trap
-                               (list (list 1 t_in_ex_por_scroll)
-                                     (list 1 t_wis_quas_scroll)
-                                     (list 3 t_gem)
-                                     (list 5 t_picklock)
-                                     (list 50 t_gold_coins)
-                                     ))
+                               '((1 t_in_ex_por_scroll)
+                                 (1 t_wis_quas_scroll)
+                                 (3 t_gem)
+                                 (5 t_picklock)
+                                 (50 t_gold_coins)
+                                 ))
                      5 2)
 
                 ;; terrain features

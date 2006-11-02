@@ -1446,14 +1446,14 @@ int select_target(int ox, int oy, int *x, int *y, int range,
         mmh.data = &data;
 
         eventPushMouseButtonHandler(&mbh);
-        eventPushMouseMotionHandler(&mmh);
+        //eventPushMouseMotionHandler(&mmh);
         eventPushKeyHandler(&kh);
         cmdwin_spush("<target>");
         eventHandle();
         cmdwin_pop();
         eventPopKeyHandler();
         eventPopMouseButtonHandler();
-        eventPopMouseMotionHandler();
+        //eventPopMouseMotionHandler();
   
         Session->show_boxes = 0;
         *x = Session->crosshair->getX();
@@ -1513,14 +1513,14 @@ int select_target_with_doing(int ox, int oy, int *x, int *y,
         mmh.data = &data;
 
         eventPushMouseButtonHandler(&mbh);
-        eventPushMouseMotionHandler(&mmh);
+        //eventPushMouseMotionHandler(&mmh);
         eventPushKeyHandler(&kh);
         cmdwin_spush("<target> (ESC to exit)");
         eventHandle();
         cmdwin_pop();
         eventPopKeyHandler();
         eventPopMouseButtonHandler();
-        eventPopMouseMotionHandler();
+        //eventPopMouseMotionHandler();
   
         Session->show_boxes=0;
         *x = Session->crosshair->getX();
@@ -1577,7 +1577,7 @@ static int cmd_terraform_cursor_func(int ox, int oy, int *x, int *y,
 
         /* Start interactive mode */
         eventPushMouseButtonHandler(&mbh);
-        eventPushMouseMotionHandler(&mmh);
+        //eventPushMouseMotionHandler(&mmh);
         eventPushKeyHandler(&kh);
         cmdwin_spush("<target> (ESC to exit)");
         eventHandle();
@@ -1585,7 +1585,7 @@ static int cmd_terraform_cursor_func(int ox, int oy, int *x, int *y,
         /* Done -  cleanup */
         cmdwin_pop();
         eventPopKeyHandler();
-        eventPopMouseMotionHandler();
+        //eventPopMouseMotionHandler();
         eventPopMouseButtonHandler();
   
         *x = Session->crosshair->getX();

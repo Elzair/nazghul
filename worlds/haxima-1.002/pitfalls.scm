@@ -25,7 +25,7 @@
     (if (not (pitfall-detected? pfall))
         (let ((roll (kern-dice-roll "1d20"))
               (bonus (occ-thief-dice-roll kchar)))
-          (kern-obj-set-visible kobj #t)
+          (kern-obj-remove-effect kobj ef_permanent_invisibility)
           (pitfall-set-detected! pfall #t)
           (cond ((or (= roll 20)
                      (> (+ roll bonus)
@@ -44,9 +44,52 @@
                   "ouch" 
                   (kern-dice-roll (pitfall-damage pfall)))))))))
 
+;; This is a helper for kpitfall-use-handler. It checks if the location in the
+;; current place has the right passability class for a pitfall to be concealed
+;; on it.
+(define (terrain-ok-for-pitfall? loc)
+  (let ((pclass (kern-terrain-get-pclass (kern-place-get-terrain loc))))
+    (foldr (lambda (a b) (or a (= pclass b)))
+           #f
+           (list pclass-grass pclass-trees pclass-forest))))
+
+(define (mk-pitfall-from-ktype ktype)
+  (cond ((eqv? ktype t_caltrops) (mk-caltrops))
+        ((eqv? ktype t_beartrap) (mk-beartrap))))
+
+;; The use handler runs when the player directs a character (kchar) to use a
+;; pitfall type (ktype) from inventory. This prompts the player to select a
+;; tile. If the tile has the right passability and is unoccupied, this creates
+;; a new instance and conceals it on the tile.
+(define (kpitfall-use-handler ktype kchar)
+  (let ((loc (kern-ui-target (kern-obj-get-location kchar) 1)))
+    (cond ((null? loc) 
+           (kern-log-msg "Abort!")
+           #f)
+          ((not (terrain-ok-for-pitfall? loc)) 
+           (kern-log-msg "Wrong terrain type!")
+           #f)
+          ((occupied? loc) 
+           (kern-log-msg "Somebody is there!")
+           #f)
+          (else
+           (let ((kobj (mk-pitfall-from-ktype ktype)))
+             (cond ((null? kobj) 
+                    (kern-log-msg "Script error: unknown type")
+                    #f)
+                   (else
+                    (kern-log-msg (kern-obj-get-name kchar)
+                                  " plants "
+                                  (pitfall-name (kobj-gob-data kobj))
+                                  "!")
+                    (kern-obj-put-at kobj loc)
+                    (kern-obj-remove-from-inventory kchar ktype 1)
+                    #t)))))))
+
 (define ktrap-ifc
-  (ifc nil
+  (ifc obj-ifc
        (method 'step kpitfall-step-handler)
+       (method 'use kpitfall-use-handler)
        ))
 
 (kern-mk-sprite-set 'ss_pitfalls 32 32 8 8 0 0 "pitfalls.png")
@@ -57,9 +100,11 @@
 (mk-obj-type 't_beartrap "beartrap" s_beartrap layer-mechanism ktrap-ifc)
 
 (define (mk-caltrops)
-  (bind (make-invisible (kern-mk-obj t_caltrops 1))
-        (mk-pitfall "a caltrops" 18 "1d10")))
+  (let ((kobj (kern-mk-obj t_caltrops 1)))
+    (kern-obj-add-effect kobj ef_permanent_invisibility nil)
+    (bind kobj (mk-pitfall "a caltrops" 18 "1d10"))))
 
 (define (mk-beartrap)
-  (bind (make-invisible (kern-mk-obj t_beartrap 1))
-        (mk-pitfall "a beartrap" 16 "2d10")))
+  (let ((kobj (kern-mk-obj t_beartrap 1)))
+    (kern-obj-add-effect kobj ef_permanent_invisibility nil)
+    (bind kobj (mk-pitfall "a beartrap" 16 "2d10"))))
