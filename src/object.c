@@ -513,25 +513,27 @@ void Object::relocate(struct place *newplace, int newx, int newy, bool noStep,
         }
         
         updateView();
-
-        // --------------------------------------------------------------------
+		
+		// --------------------------------------------------------------------
         // Send the "step" signal to any mechanisms on this tile.
         // --------------------------------------------------------------------
 		
         if (triggerMechs) {  
-                mech = place_get_object(place, x, y, mech_layer);
-                if (mech 
-                    && mech != this) {
-
-                        if (mech->getObjectType()->canStep()) {
-                                mech->getObjectType()->step(mech, this);
-                        }
-
-                        if (mech->getObjectType()->canSense()) {
-                                mech->getObjectType()->sense(mech, this);
-                        }
-                }
+		
+			mech = place_get_object(place, x, y, mech_layer);
+			if (mech 
+				&& mech != this 
+				&& mech->getObjectType()->canStep())
+					mech->getObjectType()->step(mech, this);
         }
+
+		// check that the mech still exists, since there is no guarantee that it wasnt
+		// destroyed by a step action
+		mech = place_get_object(place, x, y, mech_layer);
+		if (triggerMechs && mech 
+			&& mech != this 
+			&& mech->getObjectType()->canSense())
+				mech->getObjectType()->sense(mech, this);
 }
 
 void Object::setOnMap(bool val)
