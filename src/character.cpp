@@ -568,7 +568,7 @@ void Character::groupExitTo(struct place *dest_place, int dest_x, int dest_y,
 
         place_exit(oldPlace);
 
-        player_party->relocate(dest_place, dest_x, dest_y, true);
+        player_party->relocate(dest_place, dest_x, dest_y, REL_NOSTEP);
         endTurn();
 }
 

@@ -76,7 +76,7 @@ enum MoveResult Cursor::move(int dx, int dy)
                 return OutOfRange;
         
         // move the cursor
-        relocate(getPlace(), newx, newy, true);
+        relocate(getPlace(), newx, newy, REL_NOTRIG);
         
         return MovedOk;
 }
@@ -100,7 +100,7 @@ void Cursor::setOrigin(int x, int y)
 void Cursor::relocate(struct place *newplace, int newx, int newy, bool noStep,
                       struct closure *place_switch_hook)
 {
-        Object::relocate(newplace, newx, newy, true, NULL);
+        Object::relocate(newplace, newx, newy, REL_NOTRIG, NULL);
         active = true;
 }
 

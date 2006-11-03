@@ -85,6 +85,11 @@
 
 #define OBJ_MAX_CONDITIONS     8 /* OBSOLETE */
 
+/* Relocation flags. Used to avoid triggers in special cases. */
+#define REL_NOSTEP    (1<<0)                     /* don't trigger "step"     */
+#define REL_NOSENSE   (1<<1)                     /* don't trigger "sense"    */
+#define REL_NOTRIG    (REL_NOSTEP|REL_NOSENSE)   /* don't trigger anything   */
+
 // Note: if you change the layers you'll probably need to change the save
 //       file
 // Proper rendering depends on keeping these in order!
@@ -301,7 +306,7 @@ class Object {
 	virtual void select(bool val);
 	virtual void destroy();
 	virtual void relocate(struct place *newplace, int newx, int newy, 
-                              bool noStep = false, 
+                              int flags = 0,
                               struct closure *place_switch_hook = NULL);
 	virtual void remove();
         virtual void start();
@@ -481,6 +486,12 @@ class Object {
  private:
         bool surreptitiouslyRemove();
         bool started;
+        void triggerSense(struct place *tilePlace, int tileX, int tileY);
+        void triggerStep(struct place *tilePlace, int tileX, int tileY);
+        void triggerOnTileEntry(struct place *tilePlace, int tileX, int tileY,
+                                int flags);
+        void triggerOnTileExit(struct place *tilePlace, int tileX, int tileY,
+                               int flags);
 };
 
 #include "macros.h"

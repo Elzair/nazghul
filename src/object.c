@@ -349,26 +349,95 @@ bool Object::tryToRelocateToNewPlace(struct place *newplace,
         return true;
 }
 
-void Object::relocate(struct place *newplace, int newx, int newy, bool noStep,
+////
+// Trigger the topmost sense mechanism on a tile, using this as the subject
+//
+// @param tilePlace place the tile is in
+// @param tileX coord of tile
+// @param tileY coord of tile
+//
+void Object::triggerSense(struct place *tilePlace, int tileX, int tileY)
+{
+        Object *mech = place_get_object(tilePlace, tileX, tileY, mech_layer);
+        if (mech 
+            && mech != this 
+            && mech->getObjectType()->canSense()) {
+                mech->getObjectType()->sense(mech, this);
+        }
+}
+
+////
+// Trigger the topmost step mechanism on a tile, using this as the subject
+//
+// @param tilePlace place the tile is in
+// @param tileX coord of tile
+// @param tileY coord of tile
+//
+void Object::triggerStep(struct place *tilePlace, int tileX, int tileY)
+{
+        Object *mech = place_get_object(tilePlace, tileX, tileY, mech_layer);
+        if (mech 
+            && mech != this 
+            && mech->getObjectType()->canStep()) {
+                mech->getObjectType()->step(mech, this);
+        }
+}
+
+////
+// Run the step and sense triggers on tile entry using this as the subject,
+// flags permitting.
+//
+// @param tilePlace place the tile is in
+// @param tileX coord of tile
+// @param tileY coord of tile
+// @param flags relocation flags which specify what types of triggers to avoid
+//
+void Object::triggerOnTileEntry(struct place *tilePlace, int tileX, int tileY,
+                                int flags)
+{
+        bool sense = !(flags & REL_NOSENSE);
+        bool step = !(flags & REL_NOSTEP);
+
+        if (sense) {
+                triggerSense(tilePlace, tileX, tileY);
+        }
+
+        if (step) {
+                triggerStep(tilePlace, tileX, tileY);
+        }
+}
+
+////
+// Run the sense trigger on tile exit using this as the subject, flags
+// permitting.
+//
+// @param tilePlace place the tile is in
+// @param tileX coord of tile
+// @param tileY coord of tile
+// @param flags relocation flags which specify what types of triggers to avoid
+//
+void Object::triggerOnTileExit(struct place *tilePlace, int tileX, int tileY,
+                               int flags)
+{
+        bool sense = ! (flags & REL_NOSENSE);
+
+        if (sense) {
+                triggerSense(tilePlace, tileX, tileY);
+        }
+}
+
+void Object::relocate(struct place *newplace, int newx, int newy, int flags,
                       struct closure *place_switch_hook)
 {
         int volume;
         int distance;
         struct place *foc_place;
         int foc_x, foc_y;
-        bool triggerMechs = ! noStep;
+        struct place *oldPlace = getPlace(); // remember for tile exit
+        int oldX = getX(); // remember for tile exit
+        int oldY = getY(); // remember for tile exit
 
         assert(newplace);
-
-        class Object *mech = NULL;
-        
-        if (triggerMechs
-            && isOnMap()) {
-                mech = place_get_object(getPlace(), x, y, mech_layer);
-                if (mech) {
-                        obj_inc_ref(mech);
-                }
-        }
 
         if (isOnMap()) {
 
@@ -376,19 +445,13 @@ void Object::relocate(struct place *newplace, int newx, int newy, bool noStep,
 
                 if (newplace == getPlace()) {
 
-                        // ---------------------------------------------------
                         // Moving from one tile to another in the same place.
-                        // ---------------------------------------------------
-
                         if (place_switch_hook) {
 
-                                // --------------------------------------------
                                 // A cut scene was specified (this happens for
                                 // moongate entry, for example). Remove the
                                 // object, play the cut scene, and put the
                                 // object back down at the new location.
-                                // --------------------------------------------
-
                                 mapUpdate(0);
                                 setOnMap(false);
                                 rmView();
@@ -414,47 +477,32 @@ void Object::relocate(struct place *newplace, int newx, int newy, bool noStep,
 
                 } else {
 
-                        // ---------------------------------------------------
                         // Place-to-place movement, where the object is on the
                         // map. This is a special case for character objects so
                         // use an overloadable method to implement it.
-                        // ---------------------------------------------------
-						
                         if (! tryToRelocateToNewPlace(newplace, newx, newy,
                                                       place_switch_hook)) {
-                                if (mech)
-                                        obj_dec_ref(mech);	
                                 return;
                         }
 
-
-                        if (mech 
-                            && mech != this 
-                            && mech->getObjectType()->canSense()) {
-                                mech->getObjectType()->sense(mech, this);
-                        }
-
-                        // ----------------------------------------------------
                         // This object may no longer be on a map as a result of
                         // the above call. If so then finish processing.
-                        // ----------------------------------------------------
-
                         if (! isOnMap()) {
-                                if (mech) {
-                                        obj_dec_ref(mech);	
+
+                                // Run the exit triggers before returning
+                                if (oldPlace) {
+                                        triggerOnTileExit(oldPlace, oldX, oldY, flags);
                                 }
+
                                 return;
                         }
                 }
 
         } else {
 
-                // ------------------------------------------------------------
                 // Place-to-place movement, where the object is off-map in the
                 // old place. I assume by default it will be on-map in the new
                 // place and let changePlaceHook() fix things up if necessary.
-                // ------------------------------------------------------------
-
                 setPlace(newplace);
                 setX(place_wrap_x(newplace, newx));
                 setY(place_wrap_y(newplace, newy));
@@ -465,35 +513,25 @@ void Object::relocate(struct place *newplace, int newx, int newy, bool noStep,
 
         }
 
-        if (mech) {
-                if (mech != this 
-                    && mech->getObjectType()->canSense()) {
-                        mech->getObjectType()->sense(mech, this);
-                }
-                obj_dec_ref(mech);								
+        // Run the exit triggers.
+        if (oldPlace) {
+                triggerOnTileExit(oldPlace, oldX, oldY, flags);
         }
-
+        
         mapSetDirty();
 
-        // --------------------------------------------------------------------
         // It's possible that changePlaceHook() removed this object from the
         // map. This certainly happens when the player party moves from town to
         // wilderness, for example. In this case I probably want to skip all of
         // what follows. I ABSOLUTELY want to skip the call to updateView() at
         // the end, and in fact I changed updateView() to assert if this object
         // is not on the map.
-        // --------------------------------------------------------------------
-
         if (! isOnMap())
                 return;
 
-        // --------------------------------------------------------------------
         // Attenuate movement sound based on distance from the camera's focal
         // point.
-        // --------------------------------------------------------------------
-
         volume = SOUND_MAX_VOLUME;
-
         mapGetCameraFocus(&foc_place, &foc_x, &foc_y);
         if (foc_place == getPlace()) {
                 distance = place_flying_distance(foc_place, foc_x, foc_y, 
@@ -503,37 +541,16 @@ void Object::relocate(struct place *newplace, int newx, int newy, bool noStep,
                 sound_play(get_movement_sound(), volume);
         }
 
-        // --------------------------------------------------------------------
         // If the camera is attached to this object then update it to focus on
         // the object's new location.
-        // --------------------------------------------------------------------
-
         if (isCameraAttached()) {
                 mapCenterCamera(getX(), getY());
         }
         
         updateView();
-		
-		// --------------------------------------------------------------------
-        // Send the "step" signal to any mechanisms on this tile.
-        // --------------------------------------------------------------------
-		
-        if (triggerMechs) {  
-		
-			mech = place_get_object(place, x, y, mech_layer);
-			if (mech 
-				&& mech != this 
-				&& mech->getObjectType()->canStep())
-					mech->getObjectType()->step(mech, this);
-        }
 
-		// check that the mech still exists, since there is no guarantee that it wasnt
-		// destroyed by a step action
-		mech = place_get_object(place, x, y, mech_layer);
-		if (triggerMechs && mech 
-			&& mech != this 
-			&& mech->getObjectType()->canSense())
-				mech->getObjectType()->sense(mech, this);
+	// Run the entry triggers.
+	triggerOnTileEntry(getPlace(), getX(), getY(), flags);
 }
 
 void Object::setOnMap(bool val)
@@ -1316,7 +1333,7 @@ bool Object::putOnMap(struct place *new_place, int new_x, int new_y, int r,
                 // ------------------------------------------------------------
 
                 printf("OK!\n");
-                relocate(new_place, new_x, new_y, true, NULL);
+                relocate(new_place, new_x, new_y, REL_NOSTEP, NULL);
                 ret = true;
 
                 goto done;

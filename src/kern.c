@@ -1110,7 +1110,7 @@ static int kern_place_load_contents(scheme *sc, pointer *args,
                         return -1;
                 }
 
-                obj->relocate(place, x, y, true);
+                obj->relocate(place, x, y, REL_NOTRIG);
         }
 
         return 0;
@@ -1759,7 +1759,7 @@ static pointer kern_obj_put_at(scheme *sc, pointer args)
                 return sc->NIL;
         }
 
-        obj->relocate(place, x, y, true);
+        obj->relocate(place, x, y, REL_NOSTEP);
         return sc->NIL;
 }
 
@@ -1787,7 +1787,7 @@ static pointer kern_obj_relocate(scheme *sc, pointer args)
                 clx = closure_new_ref(sc, cutscene);
         }
 
-        obj->relocate(place, x, y, true, clx);
+        obj->relocate(place, x, y, REL_NOSTEP, clx);
 
         closure_unref_safe(clx);
 
