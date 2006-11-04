@@ -1,3 +1,5 @@
+(kern-load "nate.scm")
+
 (mk-19x19-town
  'p_bandit_hideout_l1 "Bandit Stockade" s_forest
  (list
@@ -26,9 +28,10 @@
  (put (kern-tag 'p_bhl1_p1 (mk-portcullis)) 7 9)
  (put (kern-tag 'p_bhl1_p2 (mk-portcullis)) 9 11)
  (put (mk-sense-trig 'generic-trig-exec 'p_bhl1_p1 'signal)  12 9)
- (put (mk-sense-trig 'generic-trig-exec 'p_bhl1_p2 'signal)  10 9)
+ (put (mk-lever 'p_bhl1_p2)  10 9)
  (put (mk-caltrops) 6 9)
  (put (mk-beartrap) 6 10)
+ (put (mk-nate) 5 5)
 
  ;; Make a test chest with a bunch of traps on it.
  (let ((kchest (mk-chest nil

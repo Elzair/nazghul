@@ -1472,3 +1472,23 @@
 (define (is-in-darkness? kobj)
   (< (kern-place-get-light (kern-obj-get-location kobj))
      64))
+
+;; Convenience wrapper for kern-obj-add-to-inventory
+(define (give kpc ktype quantity)
+  (kern-obj-add-to-inventory kpc ktype quantity))
+
+;; Convenience wrapper for kern-obj-remove-from-inventory
+(define (take kobj ktype quantity)
+  (kern-obj-remove-from-inventory kobj ktype quantity))
+
+;; Return #t iff object has at least that many in inventory
+(define (has? kobj ktype quantity)
+  (>= (num-in-inventory kobj ktype) quantity))
+
+;; Safely if a character is in the player party. char-tag should be the
+;; character's quoted scheme variable name, for example 'ch_dude.
+(define (in-player-party? kchar-tag)
+  (and (defined? kchar-tag)
+       (let ((kchar (eval kchar-tag)))
+         (and (is-alive? kchar)
+              (is-player-party-member? kchar)))))

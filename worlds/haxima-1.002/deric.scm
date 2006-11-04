@@ -16,9 +16,10 @@
 ;;----------------------------------------------------------------------------
 ;; Gob
 ;;----------------------------------------------------------------------------
-(define (deric-mk tell-secret?) (list tell-secret?))
+(define (deric-mk tell-secret?) (list tell-secret? (mk-quest)))
 (define (deric-tell-secret? deric) (car deric))
 (define (deric-set-tell-secret! deric) (set-car! deric #t))
+(define (deric-bandit-quest deric) (cadr deric))
 
 ;;----------------------------------------------------------------------------
 ;; Conv
@@ -160,12 +161,85 @@
 (define (deric-accu knpc kpc)
   (say knpc "I assure you, my good man, there are no Accursed around here."))
 
+
+(define (deric-band knpc kpc)
+
+  ;; Scan the player party looking for mercs
+  (define (get-ranger-merc)
+    (let ((mercs (filter (lambda (kchar)
+                           (kbeing-is-npc-type? kchar 'ranger))
+                         (kern-party-get-members (kern-get-player)))))
+      (println "mercs:" mercs)
+      (cond ((null? mercs) nil)
+            (else
+             (car mercs)))))
+                         
+  (let ((quest (deric-bandit-quest (kobj-gob-data knpc))))
+    (cond ((quest-done? quest) 
+           (say knpc "I don't expect any more trouble from bandits since I "
+                "had their leader apprehended. "
+                "By you, of course. "
+                "But I had it done. "
+                "Ahem."))
+          ((quest-accepted? quest)
+           (if (in-player-party? 'ch_nate)
+               (begin
+                 (say knpc "I see you have apprehended the bandit leader! "
+                      "Very well, done. This will look very good on my "
+                      "record. I'll take this villian into custody to stand "
+                      "trial. And here is your reward. ")
+                 (kern-char-leave-player ch_nate)
+                 (give kpc t_gold_coins 100)
+                 (kern-char-add-experience kpc 64)
+                 (quest-done! quest #t)
+                 (let ((kmerc (get-ranger-merc)))
+                   (if (not (null? kmerc))
+                       (begin
+                         (say knpc "I'll need my ranger back now.")
+                         (kern-char-leave-player kmerc)
+                         )))
+                 (say knpc "Do you know what you're going to do next?")
+                 (yes? kpc)
+                 (say knpc "Well, you might consider visiting Lord Froederick "
+                      "near Trigrave. I've heard he's been having some... "
+                      "troubles. Alas, we can't all have first-rate "
+                      "leadership skills.")
+                 )
+               (say knpc "The bandits have a hideout somewhere in these "
+                    "woods.  Keep searching! And bring me their leader "
+                    "back alive.")))
+          (else
+           (say knpc "So you've heard of our bandit problem. "
+                "Yes, they have a secret hideout somewhere in these woods. "
+                "I would have flushed them out long ago, "
+                "but I haven't the men to spare. You understand. "
+                "Say, you seem like a plucky sort. "
+                "If you capture the bandit leader and bring him here I'll "
+                "gladly reward you for your trouble. What do you say?")
+           (if (yes? kpc)
+               (begin
+                 (quest-accepted! quest #t)
+                 (say knpc "Good! You may need some help. "
+                      "Here, take this. "
+                      "[He writes on some parchment and gives it to "
+                      "you]. These orders will assign one of my Rangers "
+                      "to join you temporarily. "
+                      "There should be some milling about town "
+                      "between patrols. Take your pick of one and ask "
+                      "him or her to join you.")
+                 (give kpc t_ranger_orders 1)
+                 )
+               (say knpc "You'll never gain a reputation that way!")))
+          )))
+                       
+
 (define deric-conv
   (ifc green-tower-conv
        (method 'abe        deric-abe)
        (method 'afra       deric-afraid)
        (method 'ambi       deric-ambition)
        (method 'aspi       deric-ambition)
+       (method 'band       deric-band)
        (method 'brut       deric-brute)
        (method 'bye        deric-bye)
        (method 'comm       deric-rangers)

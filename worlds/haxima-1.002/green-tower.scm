@@ -198,9 +198,18 @@
   (put (mk-door) 41 32)
   (put (mk-door) 32 42)
   (put (mk-door) 23 32)
+
+  ;; Guards
+  (put (mk-monman) 0 0)
+  (put (guard-pt 'ranger) 31 5)
+  (put (guard-pt 'ranger) 5  31)
+  (put (guard-pt 'ranger) 56 31)
+  (put (guard-pt 'ranger) 31 56)
   
   )
  ;; On-entry hook
- (list 'lock-inn-room-doors)
+ (list 'on-entry-to-dungeon-room 
+       'lock-inn-room-doors
+       )
  nil   ; edge entrances
 )

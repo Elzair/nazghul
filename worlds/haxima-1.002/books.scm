@@ -120,3 +120,13 @@
    "Ylem An Ex (Matter to Negate Freedom) and "
    "hurl the net of web at your foe."
    )))
+
+(mk-reusable-item
+ 't_ranger_orders "Ranger orders" s_scroll 0
+ (lambda (kletter kuser)
+   (kern-ui-page-text
+    "Ranger Orders"
+    ""
+    "The bearer of this letter may conscript "
+    "one (1) ranger into limited temporary "
+    "service.")))

@@ -340,9 +340,20 @@
        "aid and hospitality. In return we give them news. Sometimes we serve "
        "them as messengers and scouts."))
 
+(define (ranger-join knpc kpc)
+  (cond ((has? kpc t_ranger_orders 1)
+         (say knpc "Let's see those orders... ok. Looks like we're partners "
+              "for a while.")
+         (take kpc t_ranger_orders 1)
+         (join-player knpc)
+         (kern-conv-end)
+         )
+        (else
+         (say knpc "Sorry, I've got to get back to my patrol."))))
 
 (define ranger-conv
   (ifc basic-conv
+       (method 'join ranger-join)
        (method 'rang ranger-ranger)
        (method 'wise ranger-wise)
        ))
