@@ -132,8 +132,13 @@
        "reports from ranger patrols. And Gen may have seen something in his "
        "wanderings, too."))
 
+(define (doris-band knpc kpc)
+  (say knpc "Travelers have been complaining about them! "
+       "I wish Deric would do something, they're bad for business!"))
+
 (define doris-conv
   (ifc green-tower-conv
+       (method 'band      doris-band)
        (method 'hail      doris-hail)
        (method 'bye       doris-bye)
        (method 'default   doris-default)

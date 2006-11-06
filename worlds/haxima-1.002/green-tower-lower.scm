@@ -1,44 +1,44 @@
 (kern-mk-map 
  'm_green_tower_lower 22 38 pal_expanded
  (list
-            "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-            "rr cc cc rr cc cc cc rr cc cc rr rr x! rr rr rr .. .. .. rr rr rr "
-            "rr cc cc cc cc cc cc cc cc cc rr rr rr rr rr .. .. .. .. .. rr rr "
-            "rr cc cc rr cc cc cc rr cc cc rr rr rr rr .. .. .. rr .. .. .. rr "
-            "rr rr rr rr cc cc cc rr rr rr rr rr rr rr rr .. rr rr rr .. rr rr "
-            "rr cc cc rr cc cc cc rr cc cc rr rr x! rr .. .. .. rr .. .. .. rr "
-            "rr cc cc cc cc cc cc cc cc cc rr rr rr rr rr .. rr rr rr .. rr rr "
-            "rr cc cc rr cc cc cc rr cc cc rr rr rr rr .. .. .. rr .. .. .. rr "
-            "rr rr rr rr cc cc cc rr rr rr rr rr rr rr rr .. rr rr rr .. rr rr "
-            "rr cc cc rr cc cc cc rr cc cc rr rr x! rr .. .. .. rr .. .. .. rr "
-            "rr cc cc cc cc cc cc cc cc cc rr rr rr rr rr .. rr rr rr .. rr rr "
-            "rr cc cc rr cc cc cc rr cc cc rr rr rr rr .. .. .. rr .. .. .. rr "
-            "rr rr rr rr cc cc cc rr rr rr rr rr rr rr rr .. rr rr rr .. rr rr "
-            "rr rr rr rr cc cc cc cc cc cc cc rr rr rr .. .. .. rr .. .. .. rr "
-            "rr rr rr rr cc cc cc cc cc cc cc cc rr rr rr .. .. .. .. .. rr rr "
-            "rr rr rr rr rr cc cc cc cc cc cc cc rr .. .. .. .. .. .. .. .. rr "
-            "rr rr rr rr rr rr rr rr xx x! cc x! xx .. rr ,C ,R ,Y ,P ,T rr rr "
-            "xx xx xx xx xx xx xx xx xx cc cc cc xx ?? xx xx xx xx xx xx xx rr "
-            "xx xx ,T ,A ,L ,O ,S xx xx cc cc cc xx cc cc _! x! _! cc cc xx rr "
-            "xx x! cc cc cc cc cc x! xx cc cc cc xx cc cc -- _! -- cc cc xx rr "
-            "xx cc cc cc cc cc cc cc xx cc cc cc cc cc cc -- -- -- cc cc xx rr "
-            "xx cc cc cc aa cc cc cc xx cc cc cc xx cc cc cc cc cc cc cc xx rr "
-            "xx cc cc cc cc cc cc cc xx cc cc cc xx cc cc cc cc cc cc cc xx rr "
-            "xx x! cc cc cc cc cc x! xx cc cc cc xx ,C ,I ,S ,T ,E ,R ,N xx rr "
-            "xx xx xx xx cc xx xx xx x! cc cc cc x! xx xx xx xx xx xx xx xx xx "
-            "xx cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc xx "
-            "xx cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc xx "
-            "xx cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc xx "
-            "xx xx xx xx cc xx xx xx x! cc cc cc x! xx xx xx cc xx xx xx xx xx "
-            "xx cc cc cc cc cc cc cc xx cc cc cc xx cc cc cc cc cc cc cc xx rr "
-            "xx cc cc cc cc cc cc cc xx cc cc cc xx cc cc cc cc cc cc cc ?? rr "
-            "xx xx cc cc cc x! cc cc xx cc cc cc xx cc cc x! cc cc cc xx xx rr "
-            "rr xx cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc xx rr rr "
-            "rr xx xx xx cc cc cc cc xx cc cc cc xx cc cc cc cc xx xx xx rr rr "
-            "rr rr rr xx xx xx cc cc xx cc cc cc xx cc cc xx xx xx rr rr rr rr "
-            "rr rr rr rr rr xx xx xx xx cc cc cc xx xx xx xx rr rr rr rr rr rr "
-            "rr rr rr rr rr rr rr rr xx xx xx xx xx rr rr rr rr rr rr rr rr rr "
-            "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
+  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
+  "rr cc cc rr cc cc cc rr cc cc rr rr rr rr rr rr .. .. .. rr rr rr "
+  "rr cc cc cc cc cc cc cc cc cc rr rr rr rr rr .. .. .. .. .. rr rr "
+  "rr cc cc rr cc cc cc rr cc cc rr rr rr rr .. .. .. rr .. .. .. rr "
+  "rr rr rr rr cc cc cc rr rr rr rr rr rr rr rr .. rr rr rr .. rr rr "
+  "rr cc cc rr cc cc cc rr cc cc rr rr rr rr .. .. .. rr .. .. .. rr "
+  "rr cc cc cc cc cc cc cc cc cc rr rr rr rr rr .. rr rr rr .. rr rr "
+  "rr cc cc rr cc cc cc rr cc cc rr rr rr rr .. .. .. rr .. .. .. rr "
+  "rr rr rr rr cc cc cc rr rr rr rr rr rr rr rr .. rr rr rr .. rr rr "
+  "rr cc cc rr cc cc cc rr cc cc rr rr rr rr .. .. .. rr .. .. .. rr "
+  "rr cc cc cc cc cc cc cc cc cc rr rr rr rr rr .. rr rr rr .. rr rr "
+  "rr cc cc rr cc cc cc rr cc cc rr rr rr rr .. .. .. rr .. .. .. rr "
+  "rr rr rr rr cc cc cc rr rr rr rr rr rr rr rr .. rr rr rr .. rr rr "
+  "rr rr rr rr cc cc cc cc cc cc cc rr rr rr .. .. .. rr .. .. .. rr "
+  "rr rr cc cc cc cc cc cc cc cc cc cc rr rr rr .. .. .. .. .. rr rr "
+  "rr cc cc cc rr cc cc cc cc cc cc cc rr .. .. .. .. .. .. .. .. rr "
+  "rr cc && cc rr rr rr rr xx x! cc x! xx .. rr ,C ,R ,Y ,P ,T rr rr "
+  "xx xx xx xx xx xx xx xx xx cc cc cc xx ?? xx xx xx xx xx xx xx rr "
+  "xx xx ,T ,A ,L ,O ,S xx xx cc cc cc xx cc cc _! x! _! cc cc xx rr "
+  "xx x! cc cc cc cc cc x! xx cc cc cc xx cc cc -- _! -- cc cc xx rr "
+  "xx cc cc cc cc cc cc cc xx cc cc cc cc cc cc -- -- -- cc cc xx rr "
+  "xx cc cc cc aa cc cc cc xx cc cc cc xx cc cc cc cc cc cc cc xx rr "
+  "xx cc cc cc cc cc cc cc xx cc cc cc xx cc cc cc cc cc cc cc xx rr "
+  "xx x! cc cc cc cc cc x! xx cc cc cc xx ,C ,I ,S ,T ,E ,R ,N xx rr "
+  "xx xx xx xx cc xx xx xx x! cc cc cc x! xx xx xx xx xx xx xx xx xx "
+  "xx cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc xx "
+  "xx cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc xx "
+  "xx cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc xx "
+  "xx xx xx xx cc xx xx xx x! cc cc cc x! xx xx xx cc xx xx xx xx xx "
+  "xx cc cc cc cc cc cc cc xx cc cc cc xx cc cc cc cc cc cc cc xx rr "
+  "xx cc cc cc cc cc cc cc xx cc cc cc xx cc cc cc cc cc cc cc ?? rr "
+  "xx xx cc cc cc x! cc cc xx cc cc cc xx cc cc x! cc cc cc xx xx rr "
+  "rr xx cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc xx rr rr "
+  "rr xx xx xx cc cc cc cc xx cc cc cc xx cc cc cc cc xx xx xx rr rr "
+  "rr rr rr xx xx xx cc cc xx cc cc cc xx cc cc xx xx xx rr rr rr rr "
+  "rr rr rr rr rr xx xx xx xx cc cc cc xx xx xx xx rr rr rr rr rr rr "
+  "rr rr rr rr rr rr rr rr xx xx xx xx xx rr rr rr rr rr rr rr rr rr "
+  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
   ))
 
 (kern-mk-place 
@@ -106,7 +106,13 @@
   (put (spawn-pt 'rat) 2 32)
   (put (spawn-pt 'giant-spider) 13 29)
   (put (spawn-pt 'giant-spider) 19 29)
+
+  ;; Jailer
+  (put (mk-edward) 5 10)
+  (put (mk-bed) 1 14)
+
   )
+
 
  ;; hooks
  (list 'on-entry-to-dungeon-room)

@@ -135,6 +135,9 @@
       (say knpc "Very rare it is, but often found with yellow slimes.")
       (say knpc "It is used in spells which absorb effects!")))
 
+(define (shroom-band knpc kpc)
+  (say knpc "Bandits? Yes, an old woman must be careful in the woods."))
+
 (define shroom-conv
   (ifc basic-conv
        ;; default if the only "keyword" which may (indeed must!) be longer than
@@ -189,6 +192,7 @@
        (method 'wars (lambda (knpc) (say knpc "Ha! Yes, I fought the goblins. "
                                          "Long ago that was. People forget.")))
        (method 'ward shroom-wards)
+       (method 'band shroom-band)
        ))
 
 ;;----------------------------------------------------------------------------

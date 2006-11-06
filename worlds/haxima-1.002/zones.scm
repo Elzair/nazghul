@@ -247,6 +247,8 @@
 ;; Green Tower Lower (incomplete)
 (define (mk-zone x y w h) (list 'p_green_tower_lower x y w h))
 (define gtl-cell1 (mk-zone 8 1 2 3))
+(define gtl-jailor-bed (mk-zone 1 14 1 1))
+(define gtl-jail (mk-zone 1 1 10 14))
 
 ;;----------------------------------------------------------------------------
 ;; Necromancer's Lair

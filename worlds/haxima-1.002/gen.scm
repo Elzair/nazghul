@@ -179,6 +179,10 @@
        "If my friend Kama would ever show up we could ask him "
        "if the goblins ever recovered his body."))
 
+(define (gen-band knpc kpc)
+  (say knpc "The goblins report a bandit camp somewhere to the south and west. "
+       "Perhaps Deric knows more."))
+
 (define gen-conv
   (ifc basic-conv
        (method 'bo gen-bo)
@@ -202,6 +206,7 @@
        (method 'zu gen-zu)
        (method 'admi gen-primal)
        (method 'ambi gen-ambitious)
+       (method 'band gen-band)
        (method 'bona gen-bonaha)
        (method 'bye  gen-bye)
        (method 'capt gen-captain)

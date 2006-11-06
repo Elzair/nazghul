@@ -130,3 +130,12 @@
     "The bearer of this letter may conscript "
     "one (1) ranger into limited temporary "
     "service.")))
+
+(mk-reusable-item
+ 't_prisoner_receipt "Prisoner Receipt" s_scroll 0
+ (lambda (kletter kuser)
+   (kern-ui-page-text
+    "Prisoner Receipt"
+    ""
+    "The bearer of this letter has deliverd "
+    "one (1) prisoner to the gaoler.")))

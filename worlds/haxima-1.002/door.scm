@@ -90,7 +90,8 @@
       #f)
      ((door-trapped? door)
       (door-trip-traps kdoor khandler)
-      #f)
+      (door-open kdoor khandler)
+      )
       (else
        (door-set-open door #t)
        (door-set-timeout! door 10)
@@ -241,3 +242,9 @@
 (define (mk-magic-locked-door) (mk-door-full solid-wood-door-in-stone #f #t nil))
 (define (mk-locked-windowed-door) 
   (mk-door-full windowed-wood-door-in-rock #t #f nil))
+
+;; Add a trap to a door
+(define (trap-door kdoor trap-tag)
+  (ifccall kdoor 'add-trap trap-tag)
+  kdoor
+  )

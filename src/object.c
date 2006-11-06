@@ -565,6 +565,7 @@ void Object::remove()
                 setOnMap(false);
                 rmView();
 		place_remove_object(getPlace(), this);
+                setPlace(NULL);
 	}
         endTurn();
         attachCamera(false);

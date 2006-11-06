@@ -82,8 +82,13 @@
 
 ;; FIXME: this doesn't actually self-destruct any more
 (define (self-destruct-trap-proc actor subject)
-  (shake-map 5)
-  (kern-obj-remove subject))
+  (shake-map 3)
+  (kern-obj-put-at (kern-mk-field F_fire 10)
+                   (kern-obj-get-location subject))
+  (kern-obj-put-at (kern-mk-obj sulphorous_ash 1)
+                   (kern-obj-get-location subject))
+  (ifccall subject 'self-destruct)
+  )
 
 (define lightning-trap (mk-trap-type "lightning" 'lightning-trap-proc))
 (define burn-trap (mk-trap-type "burn" 'burn-trap-proc))

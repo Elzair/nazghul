@@ -90,17 +90,21 @@
 ;; of trap implementations. When traps are attached to a container, the type of
 ;; trap is specified, and an instance of that type is added to the list.yn
 ;;
-(define (mk-container contents) (list 'container contents nil))
+(define (mk-container contents) (list 'container contents nil #f))
 (define (is-container? gob) (eq? (car gob) 'container))
-(define (container-contents gob) (car (cdr gob)))
-(define (container-traps gob) (car (cdr (cdr gob))))
+(define (container-contents gob) (cadr gob))
+(define (container-set-contents! gob val) (set-car! (cdr gob) val))
+(define (container-traps gob) (caddr gob))
 (define (container-set-traps! gob traps) (set-car! (cdr (cdr gob)) traps))
-(define (content-type content) (cadr content))
-(define (content-quantity content) (car content))
 (define (container-add-trap! gob trap-type)
   (container-set-traps! gob
                         (cons (mk-trap (eval trap-type))
                               (container-traps gob))))
+(define (container-destroyed? gob) (cadddr gob))
+(define (container-destroy! gob) (set-car! (cdddr gob) #t))
+
+(define (content-type content) (cadr content))
+(define (content-quantity content) (car content))
 
 ;; This is the heart of the implementation. This procedure runs when the
 ;; container object gets the 'open signal, which is sent by the kernel in
@@ -123,6 +127,9 @@
         (loc (kern-obj-get-location kobj))
         )
     (println container)
+    (println "contents: " (container-contents container))
+    (println "traps: " (container-traps container))
+    (println "destroyed: " (container-destroyed? container))
 
     ;; Applying traps can destroy both kobj and kchar
     (kern-obj-inc-ref kobj)
@@ -133,20 +140,24 @@
            (trap-trigger trap kobj kchar))
          (container-traps container))
 
-    ;; Spill contents
-    (map (lambda (content)
-           (println content)
-           (let ((newobj (kern-mk-obj (eval (content-type content))
-                                      (content-quantity content))))
-             (kern-obj-put-at newobj loc)))
-         (container-contents container))
-
-    ;; Remove the container from the map
-    (kern-obj-remove kobj)
-
-    ;; Done with references
-    (kern-obj-dec-ref kobj)
-    (kern-obj-dec-ref kchar)
+    (cond ((container-destroyed? container)
+           nil)
+          (else
+           ;; Spill contents
+           (map (lambda (content)
+                  (println content)
+                  (let ((newobj (kern-mk-obj (eval (content-type content))
+                                             (content-quantity content))))
+                    (kern-obj-put-at newobj loc)))
+                (container-contents container))
+           
+           ;; Remove the container from the map
+           (kern-obj-remove kobj)
+           
+           ;; Done with references
+           (kern-obj-dec-ref kobj)
+           (kern-obj-dec-ref kchar)
+           ))
     ))
 
 (define (kcontainer-add-trap kobj trap-sym)
@@ -159,6 +170,13 @@
 (define (kcontainer-rm-traps kobj)
   (container-set-traps! (kobj-gob-data kobj) nil))
 
+(define (kcontainer-self-destruct kobj)
+  (let ((container (kobj-gob-data kobj)))
+    (container-set-contents! container nil)
+    (container-destroy! container)
+    (kern-obj-remove kobj)
+    ))
+
 ;; This interface binds the 'open signal to our open procedure above.
 (define container-ifc
   (ifc '()
@@ -166,6 +184,7 @@
        (method 'add-trap kcontainer-add-trap)
        (method 'get-traps kcontainer-get-traps)
        (method 'rm-traps kcontainer-rm-traps)
+       (method 'self-destruct kcontainer-self-destruct)
        ))
 
 ;; This constructor makes new types of objects that conform to the container

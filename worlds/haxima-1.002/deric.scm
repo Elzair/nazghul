@@ -146,8 +146,48 @@
 (define (deric-default knpc kpc)
   (say knpc "You must ask another of that!"))
 
+;; Scan the player party looking for mercs
+                         
+
 (define (deric-hail knpc kpc)
-  (say knpc "Well met, indeed!"))
+
+  (define (get-ranger-merc)
+    (let ((mercs (filter (lambda (kchar)
+                           (kbeing-is-npc-type? kchar 'ranger))
+                         (kern-party-get-members (kern-get-player)))))
+      (cond ((null? mercs) nil)
+            (else
+           (car mercs)))))
+
+  (cond ((in-player-party? 'ch_nate)
+         (say knpc "I see you have apprehended the bandit leader! "
+              "Deliver him downstairs to the jailer and I will give you the "
+              "reward.")
+         (let ((kmerc (get-ranger-merc)))
+           (if (not (null? kmerc))
+               (begin
+                 (prompt-for-key)
+                 (say knpc "I'll need to re-assign that ranger to a patrol.")
+                 (kern-char-leave-player kmerc)
+                 )))
+         )        
+        ((has? kpc t_prisoner_receipt 1)
+         (say knpc "Putting that bandit behind bars will look very good on my "
+              "record! Here is your reward.")
+         (give-player-gold 100)
+         (kern-char-add-experience kpc 64)
+         (take kpc t_prisoner_receipt 1)
+         (quest-done! (deric-bandit-quest (kobj-gob-data knpc)) #t)
+         (prompt-for-key)
+         (say knpc "Any idea what you will do next?")
+         (yes? kpc)
+         (say knpc "You might travel west and look up Lord Froederick. "
+              "I understand he's having some sort of... trouble. "
+              "Not everyone is cut out for leadership!")
+         )
+        (else
+         (say knpc "Well met, indeed!")
+         )))
 
 (define (deric-bye knpc kpc)
   (say knpc "Until next time"))
@@ -163,17 +203,6 @@
 
 
 (define (deric-band knpc kpc)
-
-  ;; Scan the player party looking for mercs
-  (define (get-ranger-merc)
-    (let ((mercs (filter (lambda (kchar)
-                           (kbeing-is-npc-type? kchar 'ranger))
-                         (kern-party-get-members (kern-get-player)))))
-      (println "mercs:" mercs)
-      (cond ((null? mercs) nil)
-            (else
-             (car mercs)))))
-                         
   (let ((quest (deric-bandit-quest (kobj-gob-data knpc))))
     (cond ((quest-done? quest) 
            (say knpc "I don't expect any more trouble from bandits since I "
@@ -182,37 +211,17 @@
                 "But I had it done. "
                 "Ahem."))
           ((quest-accepted? quest)
-           (if (in-player-party? 'ch_nate)
-               (begin
-                 (say knpc "I see you have apprehended the bandit leader! "
-                      "Very well, done. This will look very good on my "
-                      "record. I'll take this villian into custody to stand "
-                      "trial. And here is your reward. ")
-                 (kern-char-leave-player ch_nate)
-                 (give kpc t_gold_coins 100)
-                 (kern-char-add-experience kpc 64)
-                 (quest-done! quest #t)
-                 (let ((kmerc (get-ranger-merc)))
-                   (if (not (null? kmerc))
-                       (begin
-                         (say knpc "I'll need my ranger back now.")
-                         (kern-char-leave-player kmerc)
-                         )))
-                 (say knpc "Do you know what you're going to do next?")
-                 (yes? kpc)
-                 (say knpc "Well, you might consider visiting Lord Froederick "
-                      "near Trigrave. I've heard he's been having some... "
-                      "troubles. Alas, we can't all have first-rate "
-                      "leadership skills.")
-                 )
-               (say knpc "The bandits have a hideout somewhere in these "
-                    "woods.  Keep searching! And bring me their leader "
-                    "back alive.")))
+           (say knpc "The bandits have a hideout somewhere in these "
+                "woods.  Keep searching! And bring me their leader "
+                "back alive.")
+           )
           (else
            (say knpc "So you've heard of our bandit problem. "
                 "Yes, they have a secret hideout somewhere in these woods. "
                 "I would have flushed them out long ago, "
-                "but I haven't the men to spare. You understand. "
+                "but I haven't the men to spare. You understand. ")
+           (prompt-for-key)
+           (say knpc
                 "Say, you seem like a plucky sort. "
                 "If you capture the bandit leader and bring him here I'll "
                 "gladly reward you for your trouble. What do you say?")
@@ -220,13 +229,9 @@
                (begin
                  (quest-accepted! quest #t)
                  (say knpc "Good! You may need some help. "
-                      "Here, take this. "
-                      "[He writes on some parchment and gives it to "
-                      "you]. These orders will assign one of my Rangers "
-                      "to join you temporarily. "
-                      "There should be some milling about town "
-                      "between patrols. Take your pick of one and ask "
-                      "him or her to join you.")
+                      "[He gives you a parchment]."
+                      "These orders will temporarily assign one of my Rangers "
+                      "to you. Just ask one to join your party.")
                  (give kpc t_ranger_orders 1)
                  )
                (say knpc "You'll never gain a reputation that way!")))

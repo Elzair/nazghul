@@ -3,9 +3,6 @@
 ;;----------------------------------------------------------------------------
 ;;----------------------------------------------------------------------------
 ;; Schedule
-;;
-;; The schedule below is for...
-;;----------------------------------------------------------------------------
 (kern-mk-sched 'sch_gregor
                (list 0  0  gh-gregors-bed   "sleeping")
                (list 6  0  gh-graveyard     "idle")
@@ -19,16 +16,12 @@
 
 ;;----------------------------------------------------------------------------
 ;; Gob
-;;
-;; Gregor has no special flags or data.
-;;----------------------------------------------------------------------------
-(define (gregor-mk) nil)
+(define (gregor-mk) (list (mk-quest)))
+(define (gregor-quest gob) (car gob))
 
 
 ;;----------------------------------------------------------------------------
-;; The following are responses that are invoked by more than one keyword in the
-;; conversation table.
-;;----------------------------------------------------------------------------
+;; Conv
 (define (gregor-dead knpc kpc)
   (say knpc "Aye, it's a shame. My daughter and her husband both - "
        "killed by trolls."))
@@ -65,10 +58,11 @@
 
 (define (gregor-hail knpc kpc)
   (if (in-inventory? kpc t_letter_from_enchanter)
-      (say knpc "I see you got your stuff. Don't forget to ^ccready^cw your weapons before leaving. "
+      (say knpc "I see you got your stuff. Don't forget to ready your weapons before leaving. "
            "It's dangerous out there!")
-      (say knpc "Welcome, Wanderer. I've been watching for you. "
-           "There's some things that belong to you, over in yonder ^cccave^cw. "
+      (say knpc "[You meet a grizzled old peasant] "
+           "Welcome, Wanderer. I've been watching for you. "
+           "There's some things that belong to you, over in yonder cave. "
            "Go on in, open the chest. It's all for you.")))
 
 (define (gregor-read knpc kpc)
@@ -86,9 +80,45 @@
 (define (gregor-leav knpc kpc)
   (say knpc "When you're ready to leave just follow the trail south and step off the map."))
 
-;;----------------------------------------------------------------------------
-;; Conv
-;;----------------------------------------------------------------------------
+(define (gregor-band knpc kpc)
+  (let ((quest (gregor-quest (kobj-gob-data knpc))))
+    (cond ((quest-accepted? quest)
+           (say knpc "Have you found the bandits?")
+           (cond ((yes? kpc)
+                  (say knpc "The old gods be praised!")
+                  (quest-done! quest #t)
+                  )
+                 (else 
+                  (say knpc "Go to Green Tower and ask around about the bandits.")
+                  )))
+          (else
+           (say knpc "Bandits have raiding the woods. "
+                "They robbed me in my own hut! I tried to fight them, and now I walk with a limp and a cane. "
+                "The rangers at Green Tower would not help me. "
+                "I have a granddaughter living with me now, "
+                "and I am afraid of what they will do the next time they come... "
+                "Please milord, will you help?")
+           (cond ((yes? kpc)
+                  (say knpc "Thank you. Once you have your equipment, go to Green Tower. "
+                       "Ask the townsfolk there of bandits. "
+                       "Perhaps someone knows where they are hiding.")
+                  (quest-accepted! quest #t)
+                  )
+                 (else
+                  (say knpc "[He turns away sadly and begins to soundlessly weep]")
+                  (kern-conv-end)
+                  ))))))
+
+(define (gregor-bye knpc kpc)
+  (let ((quest (gregor-quest (kobj-gob-data knpc))))
+    (cond ((quest-accepted? quest)
+           (say knpc "Farewell, and be careful."))
+          (else
+           (say knpc "Wait! Before you go, I have a favor to ask you.")
+           (prompt-for-key)
+           (gregor-band knpc kpc)
+           ))))
+
 (define gregor-conv
   (ifc basic-conv
        ;; default if the only "keyword" which may (indeed must!) be longer than
@@ -98,10 +128,11 @@
        (method 'default (lambda (knpc kpc) (say knpc "Can't help you there.")))
        (method 'hail gregor-hail)
        (method 'heal (lambda (knpc kpc) (say knpc "[cough] Well enough, my granddaughter helps take care of me.")))
-       (method 'bye (lambda (knpc kpc) (say knpc "Yep.")))
+       (method 'bye gregor-bye)
        (method 'job (lambda (knpc kpc) (say knpc "I'm a charcoal burner. I also care for this shrine.")))
        (method 'join (lambda (knpc kpc) (say knpc "Nope. Already got a job.")))
        (method 'name (lambda (knpc kpc) (say knpc "Gregor's my name.")))
+       (method 'band gregor-band)
        (method 'cave gregor-cave)
        (method 'ches gregor-ches)
        (method 'open gregor-open)
@@ -177,3 +208,26 @@
        (method 'witc (lambda (knpc kpc) (say knpc "Don't know of any witches in these parts any more.")))
        ))
 
+;;----------------------------------------------------------------------------
+;; Ctor
+(define (mk-gregor)
+  (bind 
+   (kern-mk-char 'ch_gregor ; tag
+                 "Gregor"              ; name
+                 sp_human            ; species
+                 nil                 ; occ
+                 s_townsman          ; sprite
+                 faction-men         ; starting alignment
+                 0 10 5              ; str/int/dex
+                 0 0                 ; hp mod/mult
+                 0 0                 ; mp mod/mult
+                 max-health -1 max-health 2            ; hp/xp/mp/lvl
+                 #f                  ; dead
+                 'gregor-conv        ; conv
+                 sch_gregor          ; sched
+                 'townsman-ai                 ; special ai
+                 nil                 ; container
+                 nil                 ; readied
+                 )
+   (gregor-mk)
+   ))

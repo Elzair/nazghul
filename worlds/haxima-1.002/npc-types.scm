@@ -281,6 +281,7 @@
         ))
 (define wrogue-2-equip
   (list (list 100 "1"     t_sword)
+        (list 100 "1"     t_sling)
         (list 100 "1"     t_leather_helm)
         (list 100 "1"     t_armor_leather)
         ))
@@ -664,6 +665,13 @@
 (define medik         (mk-npct2 "medik"         sp_human    oc_wizard  s_blue_wizard  no-traps medik-equip        nil 'medik-ai faction-men   nil 'drop-generic medik-loot))
 (define troll         (mk-npct2 "troll"         sp_troll    oc_warrior s_troll        no-traps troll-equip        nil 'std-ai   faction-troll nil 'drop-generic troll-loot))
 
+;; Bandit types
+(define footpad    (mk-npct2 "footpad"    sp_human oc_wrogue s_brigand wrogue-traps wrogue-1-equip nil 'std-ai faction-outlaw nil 'drop-generic wrogue-1-loot))
+(define bandit     (mk-npct2 "bandit"     sp_human oc_wrogue s_brigand wrogue-traps wrogue-2-equip nil 'std-ai faction-outlaw nil 'drop-generic wrogue-2-loot))
+(define highwayman (mk-npct2 "highwayman" sp_human oc_wrogue s_brigand wrogue-traps wrogue-3-equip nil 'std-ai faction-outlaw nil 'drop-generic wrogue-3-loot))
+(define blackguard (mk-npct2 "blackguard" sp_human oc_wrogue s_brigand wrogue-traps wrogue-4-equip nil 'std-ai faction-outlaw nil 'drop-generic wrogue-4-loot))
+(define bomber     (mk-npct2 "mad jester" sp_human oc_wrogue s_jester  wrogue-traps bomber-equip   nil 'std-ai faction-outlaw nil 'drop-generic bomber-loot))
+
 (define bat (mk-npct2 "bat" sp_bat nil s_bat nil nil nil 'std-ai faction-monster nil 'drop-generic animal-loot))
 (define rat (mk-npct2 "rat" sp_rat nil s_rat nil nil nil 'rat-ai faction-monster nil 'drop-generic animal-loot))
 (define zorn (mk-npct2 "zorn" sp_zorn oc_wrogue s_zorn wrogue-traps nil nil 'std-ai faction-monster nil 'drop-generic zorn-loot))
@@ -676,16 +684,11 @@
 (define snake (mk-npct "snake" sp_snake nil s_snake nil nil nil 'std-ai faction-monster nil 'drop-generic animal-loot))
 (define insect (mk-npct "insect swarm" sp_insect nil s_insects nil nil nil 'std-ai faction-monster nil 'drop-generic animal-loot))
 (define dragon (mk-npct2 "dragon" sp_dragon nil s_dragon wizard-traps nil drag-effects 'dragon-ai faction-monster nil 'drop-generic dragon-loot))
-(define bomber (mk-npct2 "mad jester" sp_human oc_wrogue s_jester wrogue-traps bomber-equip nil 'std-ai faction-outlaw nil 'drop-generic bomber-loot))
 (define knight (mk-npct2 "knight" sp_human oc_warrior s_knight no-traps knight-equip nil 'guard-ai faction-trigrave 'knight-conv 'drop-generic knight-loot))
 (define squire (mk-npct2 "squire" sp_human oc_warrior s_xbowguard no-traps squire-equip nil 'guard-ai faction-trigrave 'knight-conv 'drop-generic squire-loot))
-(define bandit (mk-npct2 "bandit" sp_human oc_wrogue s_brigand wrogue-traps wrogue-2-equip nil 'std-ai faction-outlaw nil 'drop-generic wrogue-2-loot))
-(define footpad (mk-npct2 "footpad" sp_human oc_wrogue s_brigand wrogue-traps wrogue-1-equip nil 'std-ai faction-outlaw nil 'drop-generic wrogue-1-loot))
 (define warlock (mk-npct2 "warlock" sp_human oc_wizard s_wizard wizard-traps wizard-equip nil 'warlock-ai faction-monster nil 'drop-generic wizard-loot))
 (define headless (mk-npct2 "headless" sp_headless oc_warrior s_headless basic-traps headless-equip nil 'std-ai faction-monster nil 'drop-generic headless-loot))
 (define gint-mage (mk-npct2 "gint mage" sp_gint oc_wizard s_gint_mage wizard-traps wizard-equip nil 'shaman-ai faction-gint nil 'drop-generic wizard-loot))
-(define highwayman (mk-npct2 "highwayman" sp_human oc_wrogue s_brigand wrogue-traps wrogue-3-equip nil 'std-ai faction-outlaw nil 'drop-generic wrogue-3-loot))
-(define blackguard (mk-npct2 "blackguard" sp_human oc_wrogue s_brigand wrogue-traps wrogue-4-equip nil 'std-ai faction-outlaw nil 'drop-generic wrogue-4-loot))
 (define gint-warrior (mk-npct2 "gint warrior" sp_gint oc_warrior s_gint basic-traps gint-warrior-equip nil 'std-ai faction-gint nil 'drop-generic gint-loot))
 (define yellow-slime (mk-npct2 "yellow slime" sp_yellow_slime nil s_yellow_slime nil nil yellow-slime-effects 'yellow-slime-ai faction-monster nil 'drop-generic yellow-slime-loot))
 (define troll-geomancer (mk-npct2 "troll geomancer" sp_troll oc_wizard s_troll no-traps geomancer-equip nil 'std-ai faction-troll nil 'drop-generic geomancer-loot))

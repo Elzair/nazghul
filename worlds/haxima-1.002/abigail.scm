@@ -58,7 +58,6 @@
 (define (abigail-both knpc kpc)
   (say knpc "I talk to goblins. I talk to people. See? Both!"))
 
-
 (define abigail-conv
   (ifc nil
 

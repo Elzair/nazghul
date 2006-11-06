@@ -109,6 +109,7 @@
 (kern-load "abe.scm")
 (kern-load "kama.scm")
 (kern-load "abigail.scm")
+(kern-load "edward.scm") ;; for GTL
 
 ;;----------------------------------------------------------------------------
 ;; Place
@@ -201,10 +202,10 @@
 
   ;; Guards
   (put (mk-monman) 0 0)
-  (put (guard-pt 'ranger) 31 5)
-  (put (guard-pt 'ranger) 5  31)
-  (put (guard-pt 'ranger) 56 31)
-  (put (guard-pt 'ranger) 31 56)
+  (put (spawn-pt 'ranger) 31 5)
+  (put (spawn-pt 'ranger) 5  31)
+  (put (spawn-pt 'ranger) 56 31)
+  (put (spawn-pt 'ranger) 31 56)
   
   )
  ;; On-entry hook

@@ -225,7 +225,6 @@ class Character:public Being {
         bool isLoitering();
 	bool flee();
 
-	char *tag;
         struct node *plnode; // pointer back to party list node
 	class Party *party;
 	struct species *species;

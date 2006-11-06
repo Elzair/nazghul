@@ -69,6 +69,9 @@
                (say knpc "Go south to Trigrave and ask there."))
               ((equal? kplace p_oparine)
                (say knpc "Take the north to Trigrave and ask there."))
+              ((equal? kplace p_moongate_clearing)
+               (say knpc "Follow the road south to the junction, then travel east. "
+                    "When the road bends north keep going east into the woods."))
               (else 
                (say knpc "I'm not sure how to get there from here."))
               ))))
@@ -346,16 +349,25 @@
               "for a while.")
          (take kpc t_ranger_orders 1)
          (join-player knpc)
+         ;; NOTE: the following only permits one ranger at a time to join the
+         ;; player!
+         (kern-tag 'ch_ranger_merc knpc)
+         (give kpc t_arrow 20)
          (kern-conv-end)
          )
         (else
          (say knpc "Sorry, I've got to get back to my patrol."))))
+
+(define (ranger-band knpc kpc)
+  (say knpc "When men get in trouble with the law, they flee to the woods. "
+       "There are always bandits in the forest."))
 
 (define ranger-conv
   (ifc basic-conv
        (method 'join ranger-join)
        (method 'rang ranger-ranger)
        (method 'wise ranger-wise)
+       (method 'band ranger-band)
        ))
 
 
@@ -410,6 +422,10 @@
   (say knpc "The tower that gives this town its name is now the Ranger headquarters."))
 (define (gt-ruin knpc kpc)
   (say knpc "The old ruins are in the southwest corner of town."))
+(define (gt-band knpc kpc)
+  (say knpc "Ask Deric about bandits. "
+       "He's the one who should be dealing with them."))
+
 
 (define green-tower-conv
   (ifc basic-conv
@@ -419,6 +435,7 @@
        (method 'gobl gt-gobl)
        (method 'towe gt-towe)
        (method 'ruin gt-ruin)
+       (method 'band gt-band)
        ))
 
 ;; Trigrave
