@@ -245,7 +245,7 @@
                  "Gen"               ; name
                  sp_human            ; species
                  oc_ranger           ; occ
-                 s_companion_ranger  ; sprite
+                 s_old_ranger  ; sprite
                  faction-men         ; starting alignment
                  4 2 4           	 ; str/int/dex
                  pc-hp-off  ; hp bonus
