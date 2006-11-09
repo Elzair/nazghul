@@ -276,7 +276,7 @@
                  "Deric"            ; name
                  sp_human            ; species
                  nil                 ; occ
-                 s_companion_ranger   ; sprite
+                 s_ranger_captain   ; sprite
                  faction-men         ; starting alignment
                  1 3 2               ; str/int/dex
                  0 0                 ; hp mod/mult

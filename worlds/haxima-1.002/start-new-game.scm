@@ -92,6 +92,7 @@
 (load "kun.scm")
 (load "gamestart.scm")
 (load "bandit-hideout.scm")
+(load "brundegardt.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Characters
@@ -297,7 +298,7 @@
   )
 
 (define (simple-start kplayer)
-  (kern-obj-put-at kplayer (list p_bandit_hideout_l1 5 9)))
+  (kern-obj-put-at kplayer (list p_moongate_clearing 15 15)))
   
 (define (create-char kplayer)
   (kern-obj-put-at kplayer (list p_char_setup 9 17)

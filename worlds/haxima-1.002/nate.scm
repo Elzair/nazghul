@@ -120,7 +120,7 @@
      "Nate" ;;.......name
      sp_human ;;.....species
      oc_wrogue ;;.. .occupation
-     s_brigand ;;..sprite
+     s_companion_bard ;;..sprite
      faction-outlaw ;;..faction
      +1 ;;...........custom strength modifier
      0 ;;...........custom intelligence modifier

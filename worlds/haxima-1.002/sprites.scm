@@ -439,6 +439,7 @@
 (kern-mk-sprite 's_beggar ss_people 2 90 #f 0 )
 (kern-mk-sprite 's_jester ss_people 4 92 #f 0 )
 (kern-mk-sprite 's_child ss_people 2 96 #f 0 )
+(kern-mk-sprite 's_ranger_captain ss_people 4 104 #f 0)
 
 (kern-mk-sprite 's_tower ss_buildings 2 0 #f 0)
 
