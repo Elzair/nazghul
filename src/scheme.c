@@ -66,6 +66,8 @@
 # include <malloc.h>
 #endif /* __APPLE__ */
 
+#ifndef __AMIGA__
+
 #if USE_STRLWR
 #ifndef strlwr
 static const char *strlwr(char *s) {
@@ -78,6 +80,8 @@ static const char *strlwr(char *s) {
 }
 #endif
 #endif
+
+#endif /* __AMIGA__ */
 
 #ifndef prompt
 # define prompt "> "
