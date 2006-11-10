@@ -216,7 +216,7 @@
                  "Gregor"              ; name
                  sp_human            ; species
                  nil                 ; occ
-                 s_townsman          ; sprite
+                 s_old_townsman          ; sprite
                  faction-men         ; starting alignment
                  0 10 5              ; str/int/dex
                  0 0                 ; hp mod/mult

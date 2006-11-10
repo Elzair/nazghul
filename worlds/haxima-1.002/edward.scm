@@ -88,7 +88,7 @@
      "Edward" ;;.......name
      sp_human ;;.....species
      oc_ranger ;;.. .occupation
-     s_companion_ranger ;;..sprite
+     s_old_townsman ;;..sprite
      faction-men ;;..faction
      0 ;;...........custom strength modifier
      0 ;;...........custom intelligence modifier
