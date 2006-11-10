@@ -292,6 +292,7 @@
 (define (say knpc . msg) (kern-conv-say knpc msg))
 (define (yes? kpc) (kern-conv-get-yes-no? kpc))
 (define (no? kpc) (not (kern-conv-get-yes-no? kpc)))
+(define (reply? kpc) (kern-conv-get-reply kpc))
 (define (prompt-for-key)
   (kern-log-msg "<Hit any key to continue>")
   (kern-ui-waitkey))
