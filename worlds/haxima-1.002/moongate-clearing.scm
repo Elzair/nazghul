@@ -17,14 +17,14 @@
     (10 t_gold_coins)
 
     ;; Reagents
-    (5 sulphorous_ash)
-    (5 ginseng)
-    (5 garlic)
-    (5 spider_silk)
-    (3 blood_moss)
-    (3 black_pearl)
-    (1 nightshade)
-    (1 mandrake)
+    (10 sulphorous_ash)
+    (10 ginseng)
+    (10 garlic)
+    (10 spider_silk)
+    (6 blood_moss)
+    (6 black_pearl)
+    (2 nightshade)
+    (2 mandrake)
     
     ;; Items
     (1 t_heal_potion)

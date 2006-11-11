@@ -109,7 +109,7 @@
   pc-hp-gain
   pc-mp-off
   pc-mp-gain
-  max-health 0 max-health 9              ; hp/xp/mp/lvl
+  max-health 0 max-health 1              ; hp/xp/mp/lvl
   #f                    ; dead
   nil                   ; conv
   nil                   ; sched
@@ -158,15 +158,7 @@
  nil                         ; vehicle
  ;; inventory
  (kern-mk-inventory
-  (list (list 1 t_sword)
-        (list 1 t_shield)
-        (list 10 t_torch)
-        (list 1 t_armor_plate_4)
-        (list 1 t_mystic_sword)
-        (list 10 t_heal_potion)
-        (list 10 wis_sanct)
-        (list 10 an_sanct_ylem)
-        )
+  nil
   )
 
  nil ;; party members (should be nil for initial load file)
@@ -309,5 +301,5 @@
 ;; the line after it.
 ;;----------------------------------------------------------------------------
 ;;(kern-set-start-proc start-scene)
-(kern-set-start-proc simple-start)
-;;(kern-set-start-proc create-char)
+;;(kern-set-start-proc simple-start)
+(kern-set-start-proc create-char)
