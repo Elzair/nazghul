@@ -157,15 +157,27 @@
 ;; The riddle machine -- fills region with given terrain when answered
 ;; incorrectly
 ;;----------------------------------------------------------------------------
-(define (riddle-mk ans ter-tag x y w h msg)
-  (list ans ter-tag x y w h msg))
+(define (riddle-mk ans ter-tag x y w h pos? msg)
+  (list ans ter-tag x y w h pos? msg))
 (define (riddle-ans riddle) (car riddle))
 (define (riddle-terrain riddle) (eval (cadr riddle)))
 (define (riddle-x riddle) (caddr riddle))
 (define (riddle-y riddle) (list-ref riddle 3))
 (define (riddle-w riddle) (list-ref riddle 4))
 (define (riddle-h riddle) (list-ref riddle 5))
-(define (riddle-msg riddle) (list-ref riddle 6))
+(define (riddle-pos? riddle) (list-ref riddle 6))
+(define (riddle-msg riddle) (list-ref riddle 7))
+
+(define (riddle-trigger riddle kmech)
+  (shake-map 10)
+  (fill-terrain (riddle-terrain riddle)
+                (loc-place (kern-obj-get-location kmech))
+                (riddle-x riddle)
+                (riddle-y riddle)
+                (riddle-w riddle)
+                (riddle-h riddle))
+  (kern-obj-remove kmech)  
+  )
 
 (define (riddle-step kmech kchar)
   (if (is-player-party-member? kchar)
@@ -173,19 +185,15 @@
         (kern-log-msg "*** STENTORIAN VOICE ***")
         (apply kern-log-msg (riddle-msg riddle))
         (let ((guess (kern-conv-get-reply kchar)))
-          (if (eq? guess (riddle-ans riddle))
-              (kern-log-msg "YOU MAY PASS")
-              (begin
-                (kern-log-msg "WRONG!")
-                ;(display "riddle-step:")(display riddle)(newline)
-                (shake-map 10)
-                (fill-terrain (riddle-terrain riddle)
-                              (loc-place (kern-obj-get-location kmech))
-                              (riddle-x riddle)
-                              (riddle-y riddle)
-                              (riddle-w riddle)
-                              (riddle-h riddle))))
-          (kern-obj-remove kmech)))))
+          (cond ((eq? guess (riddle-ans riddle))
+                 (kern-log-msg "YOU MAY PASS")
+                 (if (riddle-pos? riddle)
+                     (riddle-trigger riddle kmech)))
+                (else
+                 (kern-log-msg "WRONG!")
+                 (if (not (riddle-pos? riddle))
+                     (riddle-trigger riddle kmech))))))))
+                
 
 (define riddle-step-ifc
   (ifc '()
@@ -193,6 +201,7 @@
 
 (mk-obj-type 't_step_riddle nil nil layer-mechanism riddle-step-ifc)
 
-(define (mk-riddle ans ter-tag x y w h . msg)
+(define (mk-riddle ans ter-tag x y w h  pos? . msg)
   (bind (kern-mk-obj t_step_riddle 1)
-        (riddle-mk ans ter-tag x y w h msg)))
+        (riddle-mk ans ter-tag x y w h pos? msg)))
+
