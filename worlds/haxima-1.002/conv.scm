@@ -319,6 +319,26 @@
 (define (working? knpc)
   (string=? "working" (kern-obj-get-activity knpc)))
 
+;; Not really an aside in the theatrical sense, this routine causes a party
+;; member to interject something into the conversation. kpc is the character
+;; being conversed with, mem-tag is either nil or the party member who should
+;; do the interjection. If mem-tag is nil then a party member (other than the
+;; speaker) will be chosen at random. msg is the text of the comment. If kpc is
+;; the only member of the party then the aside will not do anything.
+(define (aside kpc kchar-tag . msg)
+  (println msg)
+  (if (in-player-party? kchar-tag)
+      (say (eval kchar-tag) msg)
+      (let ((members (filter (lambda (kchar)
+                               (not (eqv? kchar kpc)))
+                             (kern-party-get-members (kern-get-player)))
+                     ))
+        (if (not (null? members))
+            (let ((kchar (random-select members)))
+              (kern-conv-say kchar msg)
+              )))))
+         
+
 ;;----------------------------------------------------------------------------
 ;; Quests
 ;;----------------------------------------------------------------------------

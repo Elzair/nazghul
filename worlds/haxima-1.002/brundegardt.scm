@@ -1,3 +1,5 @@
+(kern-load "anaxes.scm")
+
 ;;----------------------------------------------------------------------------
 ;; Entrance to Brundegardt
 (kern-mk-place 
@@ -141,26 +143,27 @@
 (mk-dungeon-room
  'p_cave_shrine "Cave Shrine"
  (list
-  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr rr rr rr gg gg gg rr rr rr rr rr rr rr "
+      "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
+      "rr rr rr rr rr ,V ,I ,G ,I ,L ,A ,N ,C ,E rr rr rr rr rr "
+      "rr rr rr rr rr !! !! !! !! !! !! !! !! !! rr rr rr rr rr "
+      "rr rr rr gg gg gg gg gg gg gg gg gg gg gg gg gg rr rr rr "
+      "rr rr rr gg gg gg dd bb dd dd dd bb dd gg gg gg rr rr rr "
+      "rr rr gg gg gg gg dd dd dd dd dd dd dd gg gg gg gg rr rr "
+      "rr rr gg gg dd dd dd dd dd dd dd dd dd dd dd gg gg rr rr "
+      "rr rr gg gg bb dd dd dd dd dd dd dd dd dd bb gg gg rr rr "
+      "rr !! gg gg dd dd dd dd gg gg gg dd dd dd dd gg gg !! rr "
+      "rr !! gg gg dd dd dd dd gg aa gg dd dd dd dd gg gg !! rr "
+      "rr !! gg gg dd dd dd dd gg gg gg dd dd dd dd gg gg !! rr "
+      "rr rr gg gg bb dd dd dd dd gg dd dd dd dd bb gg gg rr rr "
+      "rr rr gg gg dd dd dd dd dd gg dd dd dd dd dd gg gg rr rr "
+      "rr rr gg gg gg gg dd dd dd gg dd dd dd gg gg gg gg rr rr "
+      "rr rr rr gg gg gg dd bb dd gg dd bb dd gg gg gg rr rr rr "
+      "rr rr rr gg gg gg gg gg gg gg gg gg gg gg gg gg rr rr rr "
+      "rr rr rr rr rr gg gg gg gg gg gg gg gg gg rr rr rr rr rr "
+      "rr rr rr rr rr rr rr rr gg gg gg rr rr rr rr rr rr rr rr "
+      "rr rr rr rr rr rr rr rr gg gg gg rr rr rr rr rr rr rr rr "
   )
+ (put (mk-anaxes) 9 8)
  )
 
 ;;----------------------------------------------------------------------------
