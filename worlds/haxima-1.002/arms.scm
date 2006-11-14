@@ -282,6 +282,7 @@
    (list  't_stinger        "stinger"        nil              "1d2"    "1d2"    "+0"     slot-nil      1      1      0			50		20		10		1.0	)
    (list  't_tentacles      "tentacles"      nil              "1d3"    "4d4"    "4d2"    slot-nil      1      1      0			70		20		60		1.0	)
    (list  't_beak           "beak"           nil              "0"      "2d4"    "0"      slot-nil      1      1      0			50		30		30		1.0	)
+   (list  't_pincers        "pincers"        nil              "-1"     "4d4"    "4d2"    slot-nil      1      1      0			50		30		30		1.0	)
    (list  't_dagger         "dagger"         s_dagger         "1d4"    "1d4"    "1d2"    slot-weapon   1      1      0			80		10		10		1.0	)
    (list  't_dagger_4       "+4 dagger"      s_dagger         "1d4+4"  "1d4+4"  "1d2+4"  slot-weapon   1      1      0			80		10		10		1.0	)
    (list  't_mace           "mace"           s_mace           "1d4"    "1d6+2"  "+0"     slot-weapon   1      1      3			20		60		80		0.95	)

@@ -24,9 +24,10 @@
 (kern-mk-sprite-set 'ss_buildings        32 32    1  2   0 0  "tower.png")
 (kern-mk-sprite-set 'ss_overlays         32 32    3  8   0 0  "newterrain.png")
 (kern-mk-sprite-set 'ss_effects          8  16    3  16  0 0  "effects.png")
-(kern-mk-sprite-set 'ss_bigobjects       40  40   8  8   0 0  "bigobjects.png")
-(kern-mk-sprite-set 'ss_humanoids        32  32   16  8  0 0  "humanoids.png")
-(kern-mk-sprite-set 'ss_people           32  32   16  8  0 0  "hirespeople.png")
+(kern-mk-sprite-set 'ss_bigobjects       40 40    8  8   0 0  "bigobjects.png")
+(kern-mk-sprite-set 'ss_humanoids        32 32   16  8  0 0  "humanoids.png")
+(kern-mk-sprite-set 'ss_people           32 32   16  8  0 0  "hirespeople.png")
+(kern-mk-sprite-set 'ss_monsters         32 32   16  8  0 0  "monsters.png")
 
 ;; New paper-doll sprite sets
 (kern-mk-sprite-set 'ss_bodies     32 32 4 4 0 0 "bodies.png")

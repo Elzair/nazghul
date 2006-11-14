@@ -443,6 +443,9 @@
 (kern-mk-sprite 's_old_ranger ss_people 4 108 #f 0)
 (kern-mk-sprite 's_old_townsman ss_people 4 112 #f 0)
 
+(kern-mk-sprite 's_carabid ss_monsters 4 0 #f 0)
+(kern-mk-sprite 's_carabid_asleep ss_monsters 1 0 #f 0)
+
 (kern-mk-sprite 's_tower ss_buildings 2 0 #f 0)
 
 (kern-mk-sprite 's_trees         ss_overlays 1  20 #f 0 )

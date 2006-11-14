@@ -75,12 +75,37 @@
 
 (define (nate-pass knpc kpc)
   (if (is-player-party-member? knpc)
-      (if (equal? (get-place knpc) p_brundegardt)
-          (say knpc "Yes, here we are. You've done well, milord. The password... "
-               "[he clenches his teeth] "
-               "...NOOR. [He sighs] It is NOOR.")
-          (say knpc "But sir! We have not reached Brundegardt!"))
-      (say knpc "Password? What password?")))
+      (cond ((equal? (get-place knpc) p_brundegardt)
+             (say knpc "Yes, here we are. You've done well, milord. The password... "
+                  "[he clenches his teeth] "
+                  "...NOOR. [He sighs] It is NOOR.")
+             (prompt-for-key)
+             (say knpc "Merciful sir, I beg of you a boon. "
+                  "Long have I yearned to enter Brundegardt and learn its "
+                  "secrets. Let us go together, and should we live, you "
+                  "may do with me as you see fit. Will you grant me this?")
+             (cond ((yes? kpc)
+                    (say knpc "I am forever in your debt! But this place has "
+                         "lain hidden for ages. We know not what awaits within. "
+                         "We had best supply ourselves as best we can, with "
+                         "torches, food and lockpicks.")
+                    (prompt-for-key)
+                    (say knpc "But most of all, we will need a goodly store of "
+                         "magical reagents for the mixing of spells. "
+                         "I hope you have some of the wizardly skill, "
+                         "for mark my words: we shall need it ere we are done."))
+                   (else
+                    (say knpc "I beg you to reconsider, but if you do not then heed "
+                         "my warning, for I bear you no ill will, "
+                         "you being a mere soldier of fortune like myself: "
+                         "do not enter Brundegardt alone, "
+                         "and take with you what supplies you can steal or purchase.")
+                    ))
+             (else
+              (say knpc "But sir! We have not reached Brundegardt!"))
+             ))
+      (say knpc "Password? What password?")
+      ))
 
 (define nate-conv
   (ifc basic-conv

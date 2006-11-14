@@ -135,11 +135,13 @@
 
  ;; edge entrances
  (list
-  (list west 18 3)
+  (list west 24 22)
   (list south 22 0)
   )
  )
 
+;;----------------------------------------------------------------------------
+;; Cave Shrine
 (mk-dungeon-room
  'p_cave_shrine "Cave Shrine"
  (list
@@ -233,9 +235,62 @@
  )
 
 ;;----------------------------------------------------------------------------
+;; Long Passage
+(kern-mk-place 
+ 'p_long_passage     ; tag
+ "Long Passage"      ; name
+ nil
+ (kern-mk-map 
+  nil 25 25 pal_expanded
+  (list
+   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr"
+   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr"
+   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr"
+   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr"
+   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr"
+   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr"
+   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr"
+   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr"
+   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr"
+   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr"
+   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr"
+   "xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx"
+   "cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc"
+   "xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx xx"
+   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr"
+   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr"
+   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr"
+   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr"
+   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr"
+   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr"
+   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr"
+   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr"
+   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr"
+   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr"
+   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr"
+   ))
+ #f                 ; wraps
+ #t                 ; underground
+ #f                 ; large-scale (wilderness)
+ #f                 ; tmp combat place
+ nil ; subplaces
+ nil ; neighbors
+
+ ;; objects
+ (list
+  (put (mk-locked-windowed-door) 14 12)
+  (put (mk-locked-windowed-door) 10 12)
+  )
+
+ nil ;; hooks
+
+ nil ;; edge entrances
+ )
+
+;;----------------------------------------------------------------------------
 ;; Assemble the levels into a dungeon complex
 (mk-dungeon-level 
  (list nil           p_cave_shrine     )
- (list p_brundegardt p_brundegardt_keep)
+ (list p_brundegardt p_brundegardt_keep p_long_passage)
  )
 

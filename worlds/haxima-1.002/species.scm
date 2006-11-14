@@ -101,6 +101,7 @@
 (mk-species 'sp_zorn         "zorn"           10 10 10 1 10  2  9 mmode-phase t_beak       nil      4  s_asleep       sound-walking   ) 
 (mk-species 'sp_demon        "demon"          14 14 14 1 14  8 12 mmode-phase t_hands      humanoid 8  s_asleep       sound-walking   ) 
 (mk-species 'sp_lich         "lich"           12 14 14 1 20 10  9 mmode-walk  t_hands      humanoid 8  s_asleep       sound-walking   )
+(mk-species 'sp_carabid      "carabid"        30  1 10 1 40  0  3 mmode-walk  t_pincers    nil      4  s_carabid_asleep sound-walking )
 
 ;; species that don't move around
 (mk-stationary-species 'sp_dryad  "dryad"     12 12  4 1 12  6  6 mmode-walk  nil          nil      8  s_forest)

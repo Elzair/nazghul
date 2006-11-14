@@ -27,8 +27,8 @@
            "Thou hast broken through the defenses, "
            "but thy foul master will not find me toothless!")
       (say knpc "Deny it not, I know he seeks to slay me for my rebellion!"))
-  (aside kpc 'ch_thorald "[Whispering] Milord, Luximene has been dead for ages! "
-         "This lich is mad!")
+  (aside kpc 'ch_nate 
+         "[Whispering] Milord, Luximene has been dead for ages!")
   )
 
 
@@ -47,7 +47,7 @@
        "This is too much! Now his perfidy is made plain! ")
   (prompt-for-key)
   (say knpc "So long as I draw breath, the Shrine of Brune will not be defiled!")
-  (aside kpc 'ch_thorald "Ah! The name of the god at last! "
+  (aside kpc 'ch_nate "Ah! The name of the god at last! "
          "I feared it was forgotten forever!")
   )
 
@@ -71,7 +71,8 @@
        "Alas! We were all deceived!"))
 
 (define (anaxes-accu knpc kpc)
-  (say knpc "In the years that followed the Sundering, the priesthood became corrupted. "
+  (say knpc "In the years that followed the Sundering, "
+       "the priesthood became corrupted. "
        "All manner of wretched men claimed to speak on behalf of the gods, "
        "polluting the worship of the gods with their foul practices. ")
   (prompt-for-key)
@@ -82,13 +83,19 @@
 (define (anaxes-bye knpc kpc)
   (say knpc "On thy guard, defiler of the holy! I shall resist you; "
        "and should I fall in battle, I will strike from beyond the grave!")
-  (aside kpc 'ch_thorald "[Muttering] I'd say he's ahead of schedule.")
+  (aside kpc 'ch_nate "[Muttering] Methinks he is ahead of schedule.")
   (kern-being-set-base-faction knpc faction-monster)
   )
 
 (define (anaxes-job knpc kpc)
   (say knpc "I was one of Luximene's Twelve, trusted with the command of "
-       "this fortress and its watch-tower."))
+       "this fortress and its watch-tower. "
+       "But Luximene has ordered the desecration of the shrines, "
+       "and I have rebelled!")
+  (aside kpc 'ch_nate 
+         "[Whispering] This lich thinks himself a wizard living "
+         "in the time of Luximene. Can it be that he once was?")
+  )
 
 (define (anaxes-fort knpc kpc)
   (say knpc "This fortress is Brune-Guard, so-called for this Shrine of Brune, "
@@ -152,7 +159,7 @@
     #f               ; dead
     'anaxes-conv         ; conv
     nil           ; sched
-    nil              ; special ai
+    'lich-ai         ; special ai
     nil              ; container
     nil              ; readied
     )
