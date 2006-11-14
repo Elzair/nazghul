@@ -1976,6 +1976,11 @@ int Character::getArmor()
         // effect
         armor += ac;
         
+        // Some species have an armor bonus
+        if (species->armor_dice) {
+                armor += dice_roll(species->armor_dice);
+        }
+
         return armor;
 
 }

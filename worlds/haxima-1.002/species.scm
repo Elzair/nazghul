@@ -35,7 +35,7 @@
 ;; species
 
 ;; mk-species -- register a species type with the kernel
-(define (mk-species tag name str int dex spd con mag vr mmode weap morph xp sspr mvsnd)
+(define (mk-species tag name str int dex spd con mag vr mmode weap morph xp sspr armordice mvsnd)
   (kern-mk-species tag name str int dex spd vr mmode 
                    con 
                    (max (round (/ con 10)) 1)
@@ -46,9 +46,10 @@
                    mvsnd
                    xp
                    #f ;; stationary?
+                   armordice
                    morph nil)) 
 
-(define (mk-stationary-species tag name str int dex spd con mag vr mmode weap morph xp sspr)
+(define (mk-stationary-species tag name str int dex spd con mag vr mmode weap morph xp sspr armordice)
   (kern-mk-species tag name str int dex spd vr mmode 
                    con 
                    (max (round (/ con 10)) 1)
@@ -59,6 +60,7 @@
                    nil
                    xp 
                    #t ;; stationary?
+                   armordice
                    morph nil)) 
 
 ;; Note: SF Bug# [ 1523228 ] "AI not moving to attack" was almost certainly
@@ -70,42 +72,42 @@
 ;; critters. So make all sea creatures have at least 19 vision radius, but
 ;; leave the rest as-is.
 
-;;          tag              name             st in dx sp hp mp vr mmode       weap         morph   xp sspr           mvsnd
-(mk-species 'sp_balron       "balron"         50 50 50 1 50 10 13 mmode-fly   t_horns      giant    50 s_asleep       sound-walking   )
-(mk-species 'sp_bull         "bull"           20  1  5 1 20  0  6 mmode-walk  t_horns      nil       2 s_bull         sound-walking   )
-(mk-species 'sp_cave_goblin  "cave goblin"    12  8 12 1 12  2 14 mmode-walk  t_hands      humanoid  2 s_asleep       sound-walking   )
-(mk-species 'sp_forest_goblin "forest goblin"  8 10 14 1  8  4 16 mmode-walk  t_hands      humanoid  2 s_asleep       sound-walking   )
-(mk-species 'sp_ghast        "ghast"          10 10 10 1 10  2  8 mmode-phase t_hands      humanoid  2 s_asleep       nil             )
-(mk-species 'sp_gint         "gint"           50  3  8 1 50  2 20 mmode-hover t_hands      giant    10 s_asleep       sound-walking   )
-(mk-species 'sp_green_slime  "green slime"     2  2  2 1  6  0  5 mmode-walk  t_acid_spray nil       2 s_slime_asleep sound-squishing )
-(mk-species 'sp_fire_slime   "fire slime"      2  2  2 1  6  0  5 mmode-walk  t_fire_glob  nil       2 s_red_slime_asleep sound-squishing )
-(mk-species 'sp_human        "human"          10 10 10 1 10  2 13 mmode-walk  t_hands      humanoid  2 s_asleep       sound-walking   )
-(mk-species 'sp_insect       "insects"         1  1 18 2  3  0  4 mmode-hover t_stinger    nil       1 nil            nil             )
-(mk-species 'sp_nixie        "nyad"           10 10 10 1 10  2 19 mmode-fish  t_hands      humanoid  2 s_shoals       sound-splashing )
-(mk-species 'sp_queen_spider "queen spider"   18  6 12 1 20  4 10 mmode-crawl t_fangs      nil       4 s_asleep       sound-walking   )
-(mk-species 'sp_skeleton     "skeleton"       12  8 12 1 12  2 10 mmode-walk  t_hands      humanoid  3 s_asleep       sound-walking   )
-(mk-species 'sp_snake        "snake"           2  2 14 1  4  0  6 mmode-walk  t_fangs      nil       1 s_asleep       sound-walking   )
-(mk-species 'sp_bat          "bat"             2  2 14 2  2  0  8 mmode-fly   t_fangs      nil       1 s_asleep       nil             )
-(mk-species 'sp_rat          "rat"             4  2 12 1  6  0  6 mmode-crawl t_fangs      nil       1 s_asleep       nil             )
-(mk-species 'sp_spider       "spider"         12  6 14 2  8  2 10 mmode-crawl t_fangs      nil       2 s_asleep       sound-walking   )
-(mk-species 'sp_statue       "statue"          1  1  1 1 99  0  1 mmode-none  nil          nil       0 nil            nil             )
-(mk-species 'sp_troll        "troll"          14  6 12 1 20  2 10 mmode-walk  t_horns      humanoid  3 s_asleep       sound-walking   )
-(mk-species 'sp_yellow_slime "yellow slime"    4  4  4 1 12  2  6 mmode-walk  t_acid_spray nil       2 nil            sound-squishing )
-(mk-species 'sp_kraken       "kraken"         30  3 20 1 30  4 19 mmode-fish  t_tentacles  nil      10 s_shoals       sound-splashing ) 
-(mk-species 'sp_sea_serpent  "sea serpent"    20  2 14 1 20  4 19 mmode-fish  t_fangs      nil      8  s_asleep       sound-walking   ) 
-(mk-species 'sp_wolf         "wolf"            8  2 12 2  8  0 13 mmode-walk  t_fangs      nil      2  s_asleep       sound-walking   ) 
-(mk-species 'sp_gazer        "gazer"           6 20  6 1 10  8 16 mmode-hover t_fangs      nil      8  s_asleep       nil             ) 
-(mk-species 'sp_headless     "headless"       12  0 10 1 14  0  6 mmode-walk  t_hands      humanoid 2  s_asleep       sound-walking   ) 
-(mk-species 'sp_wisp         "wisp"            2 20 16 2  8  8  9 mmode-hover nil          nil      4  nil            nil             ) 
-(mk-species 'sp_dragon       "dragon"         20 10 10 1 50  8  9 mmode-fly   t_fangs      nil      20 nil            sound-walking   )
-(mk-species 'sp_zorn         "zorn"           10 10 10 1 10  2  9 mmode-phase t_beak       nil      4  s_asleep       sound-walking   ) 
-(mk-species 'sp_demon        "demon"          14 14 14 1 14  8 12 mmode-phase t_hands      humanoid 8  s_asleep       sound-walking   ) 
-(mk-species 'sp_lich         "lich"           12 14 14 1 20 10  9 mmode-walk  t_hands      humanoid 8  s_asleep       sound-walking   )
-(mk-species 'sp_carabid      "carabid"        30  1 10 1 40  0  3 mmode-walk  t_pincers    nil      4  s_carabid_asleep sound-walking )
+;;          tag              name             st in dx sp hp mp vr mmode       weap         morph   xp sspr               armrdc  mvsnd
+(mk-species 'sp_balron       "balron"         50 50 50 1 50 10 13 mmode-fly   t_horns      giant    50 s_asleep           nil     sound-walking   )
+(mk-species 'sp_bull         "bull"           20  1  5 1 20  0  6 mmode-walk  t_horns      nil       2 s_bull             nil     sound-walking   )
+(mk-species 'sp_cave_goblin  "cave goblin"    12  8 12 1 12  2 14 mmode-walk  t_hands      humanoid  2 s_asleep           nil     sound-walking   )
+(mk-species 'sp_forest_goblin "forest goblin"  8 10 14 1  8  4 16 mmode-walk  t_hands      humanoid  2 s_asleep           nil     sound-walking   )
+(mk-species 'sp_ghast        "ghast"          10 10 10 1 10  2  8 mmode-phase t_hands      humanoid  2 s_asleep           nil     nil             )
+(mk-species 'sp_gint         "gint"           50  3  8 1 50  2 20 mmode-hover t_hands      giant    10 s_asleep           nil     sound-walking   )
+(mk-species 'sp_green_slime  "green slime"     2  2  2 1  6  0  5 mmode-walk  t_acid_spray nil       2 s_slime_asleep     nil     sound-squishing )
+(mk-species 'sp_fire_slime   "fire slime"      2  2  2 1  6  0  5 mmode-walk  t_fire_glob  nil       2 s_red_slime_asleep nil     sound-squishing )
+(mk-species 'sp_human        "human"          10 10 10 1 10  2 13 mmode-walk  t_hands      humanoid  2 s_asleep           nil     sound-walking   )
+(mk-species 'sp_insect       "insects"         1  1 18 2  3  0  4 mmode-hover t_stinger    nil       1 nil                nil     nil             )
+(mk-species 'sp_nixie        "nyad"           10 10 10 1 10  2 19 mmode-fish  t_hands      humanoid  2 s_shoals           nil     sound-splashing )
+(mk-species 'sp_queen_spider "queen spider"   18  6 12 1 20  4 10 mmode-crawl t_fangs      nil       4 s_asleep           "1d2"   sound-walking   )
+(mk-species 'sp_skeleton     "skeleton"       12  8 12 1 12  2 10 mmode-walk  t_hands      humanoid  3 s_asleep           nil     sound-walking   )
+(mk-species 'sp_snake        "snake"           2  2 14 1  4  0  6 mmode-walk  t_fangs      nil       1 s_asleep           nil     sound-walking   )
+(mk-species 'sp_bat          "bat"             2  2 14 2  2  0  8 mmode-fly   t_fangs      nil       1 s_asleep           nil     nil             )
+(mk-species 'sp_rat          "rat"             4  2 12 1  6  0  6 mmode-crawl t_fangs      nil       1 s_asleep           nil     nil             )
+(mk-species 'sp_spider       "spider"         12  6 14 2  8  2 10 mmode-crawl t_fangs      nil       2 s_asleep           nil     sound-walking   )
+(mk-species 'sp_statue       "statue"          1  1  1 1 99  0  1 mmode-none  nil          nil       0 nil                "16"    nil             )
+(mk-species 'sp_troll        "troll"          14  6 12 1 20  2 10 mmode-walk  t_horns      humanoid  3 s_asleep           nil     sound-walking   )
+(mk-species 'sp_yellow_slime "yellow slime"    4  4  4 1 12  2  6 mmode-walk  t_acid_spray nil       2 nil                nil     sound-squishing )
+(mk-species 'sp_kraken       "kraken"         30  3 20 1 30  4 19 mmode-fish  t_tentacles  nil      10 s_shoals           "1d4"   sound-splashing ) 
+(mk-species 'sp_sea_serpent  "sea serpent"    20  2 14 1 20  4 19 mmode-fish  t_fangs      nil      8  s_asleep           "2d4"   sound-walking   ) 
+(mk-species 'sp_wolf         "wolf"            8  2 12 2  8  0 13 mmode-walk  t_fangs      nil      2  s_asleep           nil     sound-walking   ) 
+(mk-species 'sp_gazer        "gazer"           6 20  6 1 10  8 16 mmode-hover t_fangs      nil      8  s_asleep           nil     nil             ) 
+(mk-species 'sp_headless     "headless"       12  0 10 1 14  0  6 mmode-walk  t_hands      humanoid 2  s_asleep           nil     sound-walking   ) 
+(mk-species 'sp_wisp         "wisp"            2 20 16 2  8  8  9 mmode-hover nil          nil      4  nil                nil     nil             ) 
+(mk-species 'sp_dragon       "dragon"         20 10 10 1 50  8  9 mmode-fly   t_fangs      nil      20 nil                "2d4"   sound-walking   )
+(mk-species 'sp_zorn         "zorn"           10 10 10 1 10  2  9 mmode-phase t_beak       nil      4  s_asleep           nil     sound-walking   ) 
+(mk-species 'sp_demon        "demon"          14 14 14 1 14  8 12 mmode-phase t_hands      humanoid 8  s_asleep           nil     sound-walking   ) 
+(mk-species 'sp_lich         "lich"           12 14 14 1 20 10  9 mmode-walk  t_hands      humanoid 8  s_asleep           nil     sound-walking   )
+(mk-species 'sp_carabid      "carabid"        30  1 10 1 40  0  3 mmode-walk  t_pincers    nil      4  s_carabid_asleep   "4d4+4" sound-walking   )
 
 ;; species that don't move around
-(mk-stationary-species 'sp_dryad  "dryad"     12 12  4 1 12  6  6 mmode-walk  nil          nil      8  s_forest)
-(mk-stationary-species 'sp_hydra  "hydra"     20  2 10 1 30  8  6 mmode-walk  t_tentacles  nil      10 nil     )
+(mk-stationary-species 'sp_dryad  "dryad"     12 12  4 1 12  6  6 mmode-walk  nil          nil      8  s_forest nil)
+(mk-stationary-species 'sp_hydra  "hydra"     20  2 10 1 30  8  6 mmode-walk  t_tentacles  nil      10 nil      nil)
 
 ;;----------------------------------------------------------------------------
 ;; This list of the undead species is used by spells which affect the undead.

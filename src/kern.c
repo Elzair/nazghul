@@ -1237,18 +1237,19 @@ static pointer kern_mk_species(scheme *sc, pointer args)
         int stationary=0;
         struct sprite *sleep_sprite;
         class ArmsType *weapon;
-        char *tag = TAG_UNK, *name;
+        char *tag = TAG_UNK, *name, *armor_dice;
         sound_t *damage_sound, *walking_sound;
         pointer slots;
         pointer spells;
         pointer ret;
         struct mmode *mmode;
+        
 
-        if (unpack(sc, &args, "ysdddddpddddppbppdb", &tag, &name, &str, 
+        if (unpack(sc, &args, "ysdddddpddddppbppdbs", &tag, &name, &str, 
                    &intl, &dex, &spd, &vr, &mmode, &hpmod, &hpmult, &mpmod, 
                    &mpmult, &sleep_sprite, &weapon, 
                    &visible, &damage_sound, &walking_sound,
-                   &xpval, &stationary)) {
+                   &xpval, &stationary, &armor_dice)) {
                 load_err("kern-mk-species %s: bad args", tag);
                 return sc->NIL;
         }
@@ -1286,6 +1287,11 @@ static pointer kern_mk_species(scheme *sc, pointer args)
         species->mmode = mmode;
         species->xpval = xpval;
         species->stationary = stationary;
+
+        /* Optional armor dice */
+        if (armor_dice) {
+                species->armor_dice = strdup(armor_dice);
+        }
 
         /* Load the list of slots. */
         i = 0;

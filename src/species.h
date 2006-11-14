@@ -53,8 +53,9 @@ struct species {
         bool visible;
         sound_t *damage_sound;
         sound_t *movement_sound;
-        int xpval; /* reward for killing this type */
-        int stationary : 1; /* doesn't move? */
+        int xpval;           /* reward for killing this type */
+        char *armor_dice;    /* for scaly or chitinous types */
+        int stationary : 1;  /* doesn't move?                */
 };
 
 extern struct species *species_new(char *tag,

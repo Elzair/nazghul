@@ -112,5 +112,8 @@ void species_del(struct species *species)
                         free(species->spells[i]);
 		free(species->spells);
         }
+        if (species->armor_dice) {
+                free(species->armor_dice);
+        }
         free(species);
 }
