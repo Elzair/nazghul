@@ -181,27 +181,27 @@
    "rr rr rr rr xx cc cc cc xx rr rr bb dd dd dd bb rr rr rr bb dd dd bb rr rr "
    "rr rr rr rr xx cc cc cc xx rr dd dd dd dd dd dd dd rr bb dd dd dd dd bb rr "
    "rr rr rr rr xx cc cc cc xx rr rr bb dd dd dd bb rr rr dd dd dd dd dd dd rr "
-   "rr rr rr rr xx xx cc xx xx rr rr rr rr dd rr rr rr rr dd dd dd dd dd dd rr "
-   "rr rr rr rr %% .. dd dd dd bb rr rr bb dd bb rr rr rr bb dd dd dd dd dd rr "
-   "rr rr dd dd .. dd dd %% dd dd dd dd dd dd dd dd bb rr rr rr dd dd dd bb rr "
-   "rr dd dd bb dd dd %% bb dd bb dd dd dd dd dd dd dd dd bb rr rr dd rr rr rr "
-   "rr rr dd .. dd dd rr rr rr rr .. .. dd dd dd dd dd dd dd dd dd dd rr rr rr "
-   "rr rr rr %% .. rr rr rr rr bb %% %% .. dd dd dd dd dd bb rr rr rr rr rr rr "
-   "rr rr rr rr rr rr rr rr rr dd .. .. dd dd dd dd dd dd rr rr rr rr rr rr rr "
-   "rr rr rr rr rr rr rr rr bb dd dd dd dd dd dd dd dd dd rr rr rr rr rr rr rr "
+   "rr rr rr rr xx xx cc xx xx rr dd dd dd dd bb rr rr rr dd dd dd dd dd dd rr "
+   "rr rr rr rr %% .. dd .. dd dd dd dd bb dd dd rr rr rr bb dd dd dd dd dd rr "
+   "rr rr dd dd .. dd .. %% .. dd rr rr rr rr rr rr bb rr rr bb dd dd dd bb rr "
+   "rr dd dd bb dd .. %% bb .. rr rr dd dd bb bb dd dd dd dd dd dd dd dd rr rr "
+   "rr rr dd .. dd dd rr rr rr rr dd dd dd dd dd dd dd dd dd dd dd dd dd rr rr "
+   "rr rr rr %% .. rr rr rr rr dd dd dd dd dd dd dd dd dd dd dd dd dd bb rr rr "
+   "rr rr rr rr rr rr rr rr bb dd dd dd dd dd dd dd dd dd bb rr rr rr rr rr rr "
    "rr rr %% .. dd dd dd dd dd dd dd dd dd dd dd dd dd dd rr rr rr rr rr rr rr "
-   "rr rr .. rr rr rr rr rr dd dd dd dd dd dd dd dd dd dd rr rr rr rr rr rr rr "
-   "rr rr dd rr rr rr rr rr rr dd dd dd dd dd dd dd dd dd bb rr rr rr rr rr rr "
-   "rr rr dd rr rr rr rr rr rr dd .. .. dd dd dd dd dd dd dd dd dd dd rr rr rr "
-   "rr rr dd rr rr rr rr rr rr bb %% %% .. dd dd dd dd dd bb rr rr dd rr rr rr "
-   "rr rr dd rr rr rr rr rr rr rr %% .. dd dd dd dd dd dd rr rr rr dd dd rr rr "
-   "rr rr dd rr rr rr rr rr rr rr .. dd dd dd dd dd dd rr rr rr dd dd dd dd rr "
-   "rr rr dd rr rr rr rr rr rr rr bb dd dd dd dd dd bb rr rr rr dd dd dd dd rr "
-   "xx bb dd bb xx rr rr xx xx rr rr rr bb dd bb rr rr rr rr rr dd dd dd dd rr "
-   "xx cc cc cc w+ bb cc cc bb rr rr rr rr dd rr rr rr rr rr rr rr dd dd rr rr "
-   "xx cc cc cc rr cc cc cc dd dd dd dd dd dd rr rr rr rr rr rr rr rr rr rr rr "
-   "xx cc cc bb w+ cc cc cc bb rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-   "xx xx rr xx xx xx xx xx xx rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr " 
+   "rr %% %% .. dd dd dd dd dd dd dd dd dd dd dd dd dd dd rr rr rr rr rr rr rr "
+   "rr .. .. dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd rr rr rr rr rr rr rr "
+   "rr dd dd dd dd rr rr rr bb dd dd dd dd dd dd dd dd dd bb rr rr rr rr rr rr "
+   "rr dd dd dd rr rr rr rr rr .. .. .. dd dd dd dd dd dd dd rr rr rr rr rr rr "
+   "rr dd dd .. rr rr rr rr rr bb %% %% .. dd dd dd dd dd bb rr dd dd rr rr rr "
+   "rr dd .. %% rr rr rr rr rr rr %% .. dd dd dd dd dd dd rr rr dd dd dd rr rr "
+   "rr dd dd .. rr rr rr rr rr rr .. dd dd dd dd dd dd rr rr dd dd dd dd dd rr "
+   "rr bb dd bb rr rr rr rr rr rr bb dd dd dd dd dd bb rr rr dd dd dd dd dd rr "
+   "xx rr dd rr xx rr rr xx xx rr rr bb dd dd dd rr rr rr rr dd dd dd dd dd rr "
+   "xx cc cc cc w+ bb cc cc rr bb dd dd dd dd dd rr rr rr rr rr dd dd dd dd rr "
+   "xx cc cc cc rr cc cc cc dd dd dd dd dd .. dd rr rr rr rr rr rr dd dd rr rr "
+   "xx cc cc bb w+ cc cc cc rr bb dd dd .. %% bb rr rr rr rr rr rr rr rr rr rr "
+   "xx xx rr xx xx xx xx xx xx rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
    ))
  #f                 ; wraps
  #t                 ; underground
@@ -229,9 +229,53 @@
   (put (mk-ladder-up 'p_brundegardt_keep 22 19) 22 19)
 
   )
-
  nil ;; hooks
  nil ;; edge entrances
+ )
+
+;;----------------------------------------------------------------------------
+;; Tunnel Turn
+(kern-mk-place 
+ 'p_tunnel_turn "Tunnel Turn"
+ nil
+ (kern-mk-map 
+  nil 19 19 pal_expanded
+  (list
+   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
+   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
+   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
+   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
+   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
+   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
+   "rr rr rr rr rr rr xx xx xx xx xx xx xx rr rr rr rr rr rr "
+   "rr rr rr rr rr rr xx cc cc cc cc cc xx rr rr rr rr rr rr "
+   "rr rr rr rr rr rr xx cc pp cc pp cc xx xx xx xx xx xx xx "
+   "rr rr rr rr rr rr xx cc cc cc cc cc cc cc cc cc cc cc cc "
+   "rr rr rr rr rr rr xx cc pp cc pp cc xx xx xx xx xx xx xx "
+   "rr rr rr rr rr rr xx cc cc cc cc cc xx rr rr rr rr rr rr "
+   "rr rr rr rr rr rr xx xx xx cc xx xx xx rr rr rr rr rr rr "
+   "rr rr rr rr rr rr rr rr xx cc xx rr rr rr rr rr rr rr rr "
+   "rr rr rr rr rr rr rr rr xx cc xx rr rr rr rr rr rr rr rr "
+   "xx xx xx xx xx xx xx xx xx cc xx rr rr rr rr rr rr rr rr "
+   "cc cc cc cc cc cc cc cc cc cc xx rr rr rr rr rr rr rr rr "
+   "xx xx xx xx xx xx xx xx xx xx xx rr rr rr rr rr rr rr rr "
+   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
+   ))
+ #f                 ; wraps
+ #t                 ; underground
+ #f                 ; large-scale (wilderness)
+ #f                 ; tmp combat place
+ nil ; subplaces
+ nil ; neighbors
+ (list
+  (put (mk-windowed-door) 9 12)
+  (put (mk-windowed-door) 12 9)
+  )
+ nil ;; hooks
+ ;; edge entrances
+ (list
+  (list east 0 16)
+  )
  )
 
 ;;----------------------------------------------------------------------------
@@ -286,8 +330,8 @@
   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
   )
- (put (mk-locked-windowed-door) 7 9)
- (put (mk-locked-windowed-door) 11 9)
+ (put (mk-windowed-door) 7 9)
+ (put (mk-windowed-door) 11 9)
  (put (mk-corpse-with-loot) 8 8)
  (put (mk-corpse-with-loot) 8 10)
  (put (mk-corpse-with-loot) 10 8)
@@ -614,7 +658,7 @@
 ;; Assemble the lower levels into a dungeon complex
 (mk-dungeon-level 
  (list nil           p_cave_shrine     )
- (list p_brundegardt p_brundegardt_keep p_black_canal p_tunnels p_wide_chasm p_brundegardt_tower_1)
+ (list p_brundegardt p_brundegardt_keep p_tunnel_turn p_black_canal p_tunnels p_wide_chasm p_brundegardt_tower_1)
  )
 
 ;;----------------------------------------------------------------------------
