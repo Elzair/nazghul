@@ -656,6 +656,7 @@
 
 (define skeletal-spear-thrower (mk-npct2 "skeletal spear-thrower" sp_skeleton oc_warrior s_skeleton basic-traps spear-thrower-equip    undead-effects 'generic-ai faction-monster nil 'drop-generic spear-thrower-loot))
 (define skeletal-warrior (mk-npct2 "skeletal warrior" sp_skeleton oc_warrior s_skeleton basic-traps skeletal-warrior-equip undead-effects 'generic-ai faction-monster nil 'drop-generic skel-war-loot))
+(define skeletal-archer (mk-npct2 "skeletal archer" sp_skeleton oc_warrior s_skeleton basic-traps archer-equip undead-effects 'generic-ai faction-monster nil 'drop-generic archer-loot))
 
 (define death-knight  (mk-npct2 "death knight"  sp_skeleton oc_warrior s_deathknight   basic-traps death-knight-equip  undead-effects 'death-knight-ai faction-monster  nil 'drop-generic dea-kni-loot))
 (define craven-archer (mk-npct2 "craven archer" sp_skeleton oc_warrior s_deathknight   basic-traps craven-archer-equip nil            'craven-archer-ai faction-monster nil 'drop-generic cra-arch-loot))
@@ -698,6 +699,7 @@
 (define queen-spider (mk-npct2 "queen spider" sp_queen_spider nil s_queen_spider nil nil nil 'spider-ai faction-monster nil 'drop-generic queen-spider-loot))
 (define fire-slime (mk-npct2 "fire slime" sp_fire_slime nil s_red_slime nil nil fire-slime-effects 'animal-ai faction-monster nil 'drop-generic fire-slime-loot))
 (define hydra (mk-npct2 "hydra" sp_hydra nil s_hydra no-traps nil hydra-effects 'hydra-ai faction-monster nil 'drop-generic hydra-loot))
+(define mimic (mk-npct2 "mimic" sp_mimic nil s_mimic no-traps nil nil 'std-ai faction-monster nil 'drop-generic zorn-loot))
 
 ;; NPC's with no drops
 

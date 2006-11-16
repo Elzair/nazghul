@@ -214,6 +214,7 @@
 (load "species.scm")
 (load "conv.scm") ;; basic conversation
 (load "npc-types.scm")
+(load "mimic.scm")
 (load "parties.scm")
 (load "jewelry.scm")
 (load "gate-guard.scm")

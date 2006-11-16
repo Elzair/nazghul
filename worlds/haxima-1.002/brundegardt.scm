@@ -39,7 +39,6 @@
  ;; objects
  (list
   (put (spawn-pt 'troll) 12 14)
-  (put (spawn-pt 'troll) 10 14)
   (put (spawn-pt 'troll) 11 15)
   (put (mk-riddle 'noor 't_doorway 18 3 1 1 #t
                   "All who would pass must speak the password!") 17 3)
@@ -67,16 +66,16 @@
    "rr rr rr rr xx cc cc cc ?? gg gg gg gg gg gg gg gg gg gg rr rr rr gg rr rr "
    "rr rr rr rr xx cc cc cc xx rr rr xx xx xx xx xx xx xx gg rr rr rr gg rr rr "
    "rr rr rr rr xx xx cc xx xx xx xx xx cc cc cc cc cc xx gg gg gg gg gg rr rr "
-   "rr rr rr rr xx xx cc xx cc cc cc xx cc cc cc cc cc xx xx xx xx rr rr rr rr "
-   "rr rr rr rr xx cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc xx rr rr rr rr "
-   "rr rr rr rr xx xx cc xx cc cc cc xx cc cc cc cc cc xx xx cc xx rr rr rr rr "
-   "rr rr rr rr xx xx cc xx xx xx xx xx cc cc cc cc cc xx xx cc xx rr rr rr rr "
+   "rr rr rr rr xx xx cc xx cc cc cc xx cc cc cc cc cc xx xx xx xx xx xx xx xx "
+   "rr rr rr rr xx cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc xx cc cc cc xx "
+   "rr rr rr rr xx xx gg xx cc cc cc xx cc cc cc cc cc xx xx cc cc cc cc cc xx "
+   "rr rr rr rr xx xx cc xx xx xx xx xx cc cc cc cc cc xx xx cc xx cc cc cc xx "
    "rr rr rr rr xx cc cc cc w+ cc xx xx xx xx cc xx xx xx xx cc xx xx xx xx xx "
-   "rr rr rr rr xx cc cc cc w+ cc xx cc cc xx cc xx cc cc cc cc cc cc cc cc xx "
+   "rr rr rr rr xx cc cc cc w+ cc xx xx xx xx cc xx cc cc cc cc cc cc cc cc xx "
    "xx xx xx xx xx cc cc cc w+ cc xx cc cc xx cc xx cc [[ ]] cc [[ ]] cc cc xx "
    "cc cc cc cc cc cc cc cc w+ cc cc cc cc cc cc xx cc cc cc cc cc cc cc cc xx "
    "xx xx xx xx xx cc cc cc w+ cc xx cc cc xx cc xx cc [[ ]] cc [[ ]] cc cc xx "
-   "rr rr rr rr xx cc cc cc w+ cc xx cc cc xx cc xx cc cc cc cc cc cc cc cc xx "
+   "rr rr rr rr xx cc cc cc w+ cc xx xx xx xx cc xx cc cc cc cc cc cc cc cc xx "
    "rr rr rr rr xx cc cc cc w+ cc xx xx xx xx cc xx xx xx xx cc xx xx cc xx xx "
    "rr rr rr rr xx xx cc xx xx xx xx xx cc cc cc cc cc xx xx cc xx cc cc cc xx "
    "rr rr rr rr xx xx cc xx cc cc cc xx cc cc cc cc cc xx xx cc xx cc cc cc xx "
@@ -122,6 +121,7 @@
   (put (mk-locked-door) 22 15)
   (put (mk-door) 19 9)
   (put (mk-door) 17 6)
+  (put (mk-magic-locked-door) 20 7)
 
   ;; ladders
   (put (mk-ladder-down 'p_ratling_warren 6 2) 6 2)
@@ -129,6 +129,64 @@
   (put (mk-ladder-down 'p_ratling_warren 2 22) 2 22)
   (put (mk-ladder-down 'p_ratling_warren 22 19) 22 19)
 
+  ;; npc generators
+  (put (spawn-pt 'skeletal-warrior) 6 14)
+  (put (spawn-pt 'skeletal-warrior) 6 10)
+  (put (spawn-pt 'skeletal-warrior) 6 22)
+  (put (spawn-pt 'skeletal-warrior) 6 2)
+  (put (spawn-pt 'skeletal-archer) 9 10)
+  (put (spawn-pt 'skeletal-archer) 9 10)
+  (put (spawn-pt 'skeletal-archer) 3 22)
+  (put (spawn-pt 'ghast) 9 6)
+  (put (spawn-pt 'ghast) 14 6)
+  (put (spawn-pt 'ghast) 12 12)
+  (put (spawn-pt 'ghast) 9 18)
+  (put (spawn-pt 'ghast) 14 18)
+  (put (spawn-pt 'ghast) 18 12)
+  (put (spawn-pt 'ghast) 21 12)
+
+  ;; loot
+  (put (kern-mk-obj t_sword 1) 8 5)
+  (put (kern-mk-obj t_sword 1) 9 5)
+  (put (kern-mk-obj t_sword 1) 10 5)
+  (put (kern-mk-obj t_shield 1) 8 7)
+  (put (kern-mk-obj t_shield 1) 9 7)
+  (put (kern-mk-obj t_shield 1) 10 7)
+  (put (kern-mk-obj t_sword 1) 8 17)
+  (put (kern-mk-obj t_sword 1) 9 17)
+  (put (kern-mk-obj t_sword 1) 10 17)
+  (put (kern-mk-obj t_shield 1) 8 19)
+  (put (kern-mk-obj t_shield 1) 9 19)
+  (put (kern-mk-obj t_shield 1) 10 19)
+  (put (kern-mk-obj t_bow 1) 11 11)
+  (put (kern-mk-obj t_bow 1) 12 11)
+  (put (kern-mk-obj t_arrow 20) 11 13)
+  (put (kern-mk-obj t_arrow 20) 12 13)
+  (put (mk-chest nil
+                 '((10 t_food))) 21 16)
+  (put (mk-mimic) 21 17)
+  (put (mk-mimic) 16 4)
+  (put (mk-chest nil
+                 '((t_wine))) 23 16)
+  (put (mk-chest nil
+                 '((5 t_garlic)
+                   (5 t_ginseng))) 23 17)
+  (put (mk-chest 'bomb-trap
+                 '((1 t_an_tym_scroll)
+                   (1 t_in_mani_corp_scroll)
+                   (1 t_wis_quas_scroll)
+                   (1 t_wis_an_ylem_scroll))) 23 6)
+  (put (mk-chest 'lightning-trap
+                 '((5 blood_moss)
+                   (5 black_pearl)
+                   (3 nightshade)
+                   (3 mandrake))) 23 7)
+  (put (mk-chest 'poison-trap
+                 '((1 t_staff)
+                   (1 t_dagger)
+                   (1 t_slime_vial)
+                   (3 t_heal_potion)
+                   (3 t_mana_potion))) 23 8)
   )
 
  nil ;; hooks
@@ -227,6 +285,14 @@
   (put (mk-ladder-up 'p_brundegardt_keep 6 22) 6 22)
   (put (mk-ladder-up 'p_brundegardt_keep 2 22) 2 22)
   (put (mk-ladder-up 'p_brundegardt_keep 22 19) 22 19)
+
+  ;; loot chamber
+  (put (mk-chest nil '((5 t_gems))) 20 16)
+  (put (mk-chest nil '((100 t_gold_coins))) 21 16)
+  (put (mk-chest nil '((10 sulphorous_ash))) 20 18)
+  (put (mk-mimic) 20 19)
+  (put (mk-chest nil '((10 ginseng))) 20 20)
+  (put (mk-chest nil '((10 garlic))) 21 21)
 
   )
  nil ;; hooks

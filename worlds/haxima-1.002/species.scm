@@ -108,6 +108,7 @@
 ;; species that don't move around
 (mk-stationary-species 'sp_dryad  "dryad"     12 12  4 1 12  6  6 mmode-walk  nil          nil      8  s_forest nil)
 (mk-stationary-species 'sp_hydra  "hydra"     20  2 10 1 30  8  6 mmode-walk  t_tentacles  nil      10 nil      nil)
+(mk-stationary-species 'sp_mimic  "mimic"     11  3 10 1 15  0  5 mmode-walk  t_fangs      nil      2  s_chest  "1d2")
 
 ;;----------------------------------------------------------------------------
 ;; This list of the undead species is used by spells which affect the undead.
