@@ -700,6 +700,8 @@
 (define fire-slime (mk-npct2 "fire slime" sp_fire_slime nil s_red_slime nil nil fire-slime-effects 'animal-ai faction-monster nil 'drop-generic fire-slime-loot))
 (define hydra (mk-npct2 "hydra" sp_hydra nil s_hydra no-traps nil hydra-effects 'hydra-ai faction-monster nil 'drop-generic hydra-loot))
 (define mimic (mk-npct2 "mimic" sp_mimic nil s_mimic no-traps nil nil 'std-ai faction-monster nil 'drop-generic zorn-loot))
+(define ratling (mk-npct2 "ratling" sp_ratling nil s_fgob_archer no-traps nil nil 'std-ai faction-monster nil 'drop-generic animal-loot))
+(define ratling-sorcerer (mk-npct2 "ratling sorcerer"  sp_ratling oc_wizard s_fgob_shaman wizard-traps wizard-equip  nil 'ratling-sorcerer-ai faction-monster nil 'drop-generic animal-loot))
 
 ;; NPC's with no drops
 

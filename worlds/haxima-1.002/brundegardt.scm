@@ -38,13 +38,14 @@
 
  ;; objects
  (list
+  (put (mk-monman) 0 0)
   (put (spawn-pt 'troll) 12 14)
   (put (spawn-pt 'troll) 11 15)
   (put (mk-riddle 'noor 't_doorway 18 3 1 1 #t
                   "All who would pass must speak the password!") 17 3)
   )
 
- nil ;; hooks
+  (list 'on-entry-to-dungeon-room) ; hooks
 
  ;; edge entrances
  (list
@@ -96,6 +97,7 @@
 
  ;; objects
  (list
+  (put (mk-monman) 0 0)
 
   ;; mechanisms
   (put (mk-locked-windowed-door) 4 12)
@@ -189,6 +191,7 @@
                    (3 t_mana_potion))) 23 8)
   )
 
+ ;; (list 'on-entry-to-dungeon-room) ; hooks
  nil ;; hooks
 
  ;; edge entrances
@@ -270,6 +273,7 @@
 
  ;; objects
  (list
+  (put (mk-monman) 0 0)
 
   ;; mechs
   (put (kern-tag 'rw-p1 (mk-portcullis)) 6 4)
@@ -289,13 +293,47 @@
   ;; loot chamber
   (put (mk-chest nil '((5 t_gems))) 20 16)
   (put (mk-chest nil '((100 t_gold_coins))) 21 16)
-  (put (mk-chest nil '((10 sulphorous_ash))) 20 18)
-  (put (mk-mimic) 20 19)
-  (put (mk-chest nil '((10 ginseng))) 20 20)
-  (put (mk-chest nil '((10 garlic))) 21 21)
+  (put (mk-chest nil '((10 sulphorous_ash))) 19 18)
+  (put (mk-mimic) 19 19)
+  (put (mk-chest nil '((10 ginseng))) 19 20)
+  (put (mk-chest nil '((10 garlic))) 20 21)
+  (put (spawn-pt 'skeletal-warrior) 20 19)
+
+  ;; npcs
+  (put (guard-pt 'ratling-sorcerer) 13 13)
+  (put (spawn-pt 'ratling) 2 22)
+  (put (spawn-pt 'ratling) 20 4)
+  (put (spawn-pt 'ratling) 2 22)
+  (put (spawn-pt 'ratling) 13 15)
+
+  ;; ratling stash
+  (put (kern-mk-obj t_heal_potion 1) 20 1)
+  (put (kern-mk-obj t_torch 1) 21 1)
+  (put (kern-mk-obj t_dagger 1) 19 2)
+  (put (kern-mk-obj garlic 1) 20 2)
+  (put (kern-mk-obj t_cure_potion 1) 21 2)
+  (put (kern-mk-obj t_food 1) 22 2)
+  (put (kern-mk-obj t_gold_coins 1) 18 3)
+  (put (kern-mk-obj t_in_an_scroll 1) 19 3)
+  (put (kern-mk-obj ginseng 1) 20 3)
+  (put (kern-mk-obj t_picklock 1) 21 3)
+  (put (kern-mk-obj t_bolt 1) 22 3)
+  (put (mk-corpse) 23 3)
+
+  (put (kern-mk-obj t_int_potion 1) 18 4)
+  (put (kern-mk-obj t_broken_clock 1) 19 4)
+  (put (kern-mk-obj t_mana_potion 1) 20 4)
+  (put (kern-mk-obj t_gem 1) 21 4)
+  (put (kern-mk-obj t_gold_coins 2) 22 4)
+  (put (kern-mk-obj t_arrow 1) 23 4)
+
+  (put (kern-mk-obj t_wine 1) 19 5)
+  (put (kern-mk-obj t_poison_immunity_potion 1) 20 5)
+  (put (kern-mk-obj t_pick 1) 21 5)
+  (put (kern-mk-obj t_oil 1) 22 5)
 
   )
- nil ;; hooks
+  (list 'on-entry-to-dungeon-room) ; hooks
  nil ;; edge entrances
  )
 

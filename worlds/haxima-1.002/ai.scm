@@ -306,6 +306,12 @@
       (use-ability summon-wolves kchar)
       #f))
 
+(define (summon-ratlings? kchar)
+  (cond ((not (can-use-ability? summon-ratlings kchar)) #f)
+        ((null? (get-hostiles-in-range kchar 4)) #f)
+        (else
+         (use-ability summon-ratlings kchar))))
+
 (define (turn-invisible? kchar)
   (and (> (kern-dice-roll "1d20") 14)
        (not (is-invisible? kchar))
@@ -329,8 +335,6 @@
       (use-ranged-spell-on-foes? kchar all-ranged-spells)
       ))
 
-;; subtle: don't let kernal AI run because dryad's don't move, but if I give them
-;; mmode-none they won't get placed in wilderness combat
 (define (dryad-ai kchar)
   (or 
    (summon-wolves? kchar)
@@ -351,11 +355,15 @@
       (use-enslave? kchar)))
 
 (define (shaman-ai kchar)
-  ;;(display "shaman-ai ")(dump-char kchar)
   (or (std-ai kchar)
       (use-heal-spell-on-ally? kchar)
       (move-toward-patient? kchar)
       (spell-sword-ai kchar)
+      (move-away-from-foes? kchar)))
+
+(define (ratling-sorcerer-ai kchar)
+  (or (std-ai kchar)
+      (summon-ratlings? kchar)
       (move-away-from-foes? kchar)))
 
 (define (priest-ai kchar)

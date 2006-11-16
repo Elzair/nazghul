@@ -12,7 +12,7 @@
 (define (ability-range ability) (list-ref ability 5))
 
 (define (can-use-ability? ability kchar)
-  (println " can-use-ability?" display ability)
+  ;;(println " can-use-ability?" display ability)
   (and (<= (kern-get-magic-negated) 0)
        (>= (kern-char-get-mana kchar)
            (ability-mana-cost ability))
@@ -20,7 +20,7 @@
            (ability-level-required ability))))
 
 (define (use-ability ability kchar . args)
-  (println "use-ability:" ability)
+  ;;(println "use-ability:" ability)
   (kern-char-dec-mana kchar (ability-mana-cost ability))
   (kern-obj-dec-ap kchar (ability-ap-cost ability))
   (let ((result (apply (ability-proc ability) (cons kchar args))))
@@ -240,6 +240,12 @@
                     (lambda () 'wolf)
                     1))
 
+(define (summon-ratling-proc kchar)
+  (cast-summon-proc kchar
+                    (lambda () 'ratling)
+                    (* (kern-char-get-level kchar) 2)
+                    ))
+
 ;;----------------------------------------------------------------------------
 ;; enslave -- aka charm
 (define (enslave-proc kchar ktarg)
@@ -311,6 +317,7 @@
 (define summon-slimes       (mk-ability "summon slimes"   2 2 3 summon-slime-proc 0))
 (define summon-demon        (mk-ability "summon demon"    8 8 6 summon-demon-proc 0))
 (define summon-wolves       (mk-ability "summon wolves"   4 4 2 summon-wolf-proc 0))
+(define summon-ratlings     (mk-ability "summon ratlings" 1 2 4 summon-ratling-proc 0))
 (define chomp-deck          (mk-ability "chomp deck"      2 4 3 chomp-deck-proc 1))
 (define enslave             (mk-ability "enslave"       3 4 2 enslave-proc 4))
 (define narcotize           (mk-ability "narcotize"     5 6 3 narcotize-proc 0))
