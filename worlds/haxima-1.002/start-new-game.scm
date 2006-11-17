@@ -109,7 +109,7 @@
   pc-hp-gain
   pc-mp-off
   pc-mp-gain
-  max-health 0 max-health 1              ; hp/xp/mp/lvl
+  max-health 0 max-health 2              ; hp/xp/mp/lvl
   #f                    ; dead
   nil                   ; conv
   nil                   ; sched
@@ -158,8 +158,16 @@
  nil                         ; vehicle
  ;; inventory
  (kern-mk-inventory
-  nil
-  )
+  (list
+   (list 100 t_torch)
+   (list 100 t_picklock)
+   (list 100 spider_silk)
+   (list 100 mandrake)
+   (list 1 t_sword)
+   (list 1 t_armor_leather)
+   (list 1 t_shield)
+   (list 1 t_leather_helm)
+  ))
 
  nil ;; party members (should be nil for initial load file)
  )
@@ -290,7 +298,7 @@
   )
 
 (define (simple-start kplayer)
-  (kern-obj-put-at kplayer (list p_moongate_clearing 15 15)))
+  (kern-obj-put-at kplayer (list p_brundegardt_keep 5 13)))
   
 (define (create-char kplayer)
   (kern-obj-put-at kplayer (list p_char_setup 9 17)
@@ -301,5 +309,5 @@
 ;; the line after it.
 ;;----------------------------------------------------------------------------
 ;;(kern-set-start-proc start-scene)
-;;(kern-set-start-proc simple-start)
-(kern-set-start-proc create-char)
+(kern-set-start-proc simple-start)
+;;(kern-set-start-proc create-char)

@@ -86,7 +86,7 @@
 (mk-species 'sp_nixie        "nyad"           10 10 10 1 10  2 19 mmode-fish  t_hands      humanoid  2 s_shoals           nil     sound-splashing )
 (mk-species 'sp_queen_spider "queen spider"   18  6 12 1 20  4 10 mmode-crawl t_fangs      nil       4 s_asleep           "1d2"   sound-walking   )
 (mk-species 'sp_skeleton     "skeleton"       12  8 12 1 12  2 10 mmode-walk  t_hands      humanoid  3 s_asleep           nil     sound-walking   )
-(mk-species 'sp_snake        "snake"           2  2 14 1  4  0  6 mmode-walk  t_fangs      nil       1 s_asleep           nil     sound-walking   )
+(mk-species 'sp_snake        "snake"           2  2 14 1  6  0  6 mmode-walk  t_fangs      nil       1 s_asleep           nil     sound-walking   )
 (mk-species 'sp_bat          "bat"             2  2 14 2  2  0  8 mmode-fly   t_fangs      nil       1 s_asleep           nil     nil             )
 (mk-species 'sp_rat          "rat"             4  2 12 1  6  0  6 mmode-crawl t_fangs      nil       1 s_asleep           nil     nil             )
 (mk-species 'sp_spider       "spider"         12  6 14 2  8  2 10 mmode-crawl t_fangs      nil       2 s_asleep           nil     sound-walking   )
@@ -104,7 +104,7 @@
 (mk-species 'sp_demon        "demon"          14 14 14 1 14  8 12 mmode-phase t_hands      humanoid 8  s_asleep           nil     sound-walking   ) 
 (mk-species 'sp_lich         "lich"           12 14 14 1 20 10  9 mmode-walk  t_hands      humanoid 8  s_asleep           nil     sound-walking   )
 (mk-species 'sp_carabid      "carabid"        30  1 10 1 40  0  3 mmode-walk  t_pincers    nil      4  s_carabid_asleep   "4d4+4" sound-walking   )
-(mk-species 'sp_ratling      "ratling"         6  8 14 2  6  2 12 mmode-walk  t_fangs      humanoid 2  s_asleep           nil     sound-walking   )
+(mk-species 'sp_ratling      "ratling"         6  8 14 2  4  2 12 mmode-walk  t_fangs      humanoid 2  s_asleep           nil     sound-walking   )
 
 ;; species that don't move around
 (mk-stationary-species 'sp_dryad  "dryad"     12 12  4 1 12  6  6 mmode-walk  nil          nil      8  s_forest nil)

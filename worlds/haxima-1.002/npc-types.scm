@@ -682,7 +682,7 @@
 (define gazer (mk-npct2 "gazer" sp_gazer oc_wizard s_gazer wizard-traps nil nil 'gazer-ai faction-monster nil 'drop-generic wizard-loot))
 (define demon (mk-npct2 "demon" sp_demon nil s_demon basic-traps demon-equip demon-effects 'demon-ai faction-monster nil 'drop-generic demon-loot))
 (define ghast (mk-npct2 "ghast" sp_ghast nil s_ghost nil nil undead-effects 'std-ai faction-monster nil 'drop-generic ghast-loot))
-(define snake (mk-npct "snake" sp_snake nil s_snake nil nil nil 'std-ai faction-monster nil 'drop-generic animal-loot))
+(define snake (mk-npct "snake" sp_snake nil s_snake nil nil nil 'snake-ai faction-monster nil 'drop-generic animal-loot))
 (define insect (mk-npct "insect swarm" sp_insect nil s_insects nil nil nil 'std-ai faction-monster nil 'drop-generic animal-loot))
 (define dragon (mk-npct2 "dragon" sp_dragon nil s_dragon wizard-traps nil drag-effects 'dragon-ai faction-monster nil 'drop-generic dragon-loot))
 (define knight (mk-npct2 "knight" sp_human oc_warrior s_knight no-traps knight-equip nil 'guard-ai faction-trigrave 'knight-conv 'drop-generic knight-loot))
@@ -700,7 +700,7 @@
 (define fire-slime (mk-npct2 "fire slime" sp_fire_slime nil s_red_slime nil nil fire-slime-effects 'animal-ai faction-monster nil 'drop-generic fire-slime-loot))
 (define hydra (mk-npct2 "hydra" sp_hydra nil s_hydra no-traps nil hydra-effects 'hydra-ai faction-monster nil 'drop-generic hydra-loot))
 (define mimic (mk-npct2 "mimic" sp_mimic nil s_mimic no-traps nil nil 'std-ai faction-monster nil 'drop-generic zorn-loot))
-(define ratling (mk-npct2 "ratling" sp_ratling nil s_fgob_archer no-traps nil nil 'std-ai faction-monster nil 'drop-generic animal-loot))
+(define ratling (mk-npct2 "ratling" sp_ratling nil s_fgob_archer no-traps nil nil 'ratling-ai faction-monster nil 'drop-generic animal-loot))
 (define ratling-sorcerer (mk-npct2 "ratling sorcerer"  sp_ratling oc_wizard s_fgob_shaman wizard-traps wizard-equip  nil 'ratling-sorcerer-ai faction-monster nil 'drop-generic animal-loot))
 
 ;; NPC's with no drops
@@ -801,3 +801,9 @@
   (or (is-species? kchar sp_skeleton)
       (is-species? kchar sp_lich)))
       
+(define (is-snake? kchar)
+  (is-species? kchar sp_snake))
+
+(define (is-rat? kchar)
+  (or (is-species? kchar sp_rat)
+      (is-species? kchar sp_ratling)))

@@ -494,7 +494,6 @@
       ))
 
 (define (dragon-ai kchar)
-  ;;(display "dragon-ai ")(dump-char kchar)
   (or (std-ai kchar)
       (and (> (kern-dice-roll "1d20") 14)
            (use-ranged-spell-on-foes? kchar 
@@ -506,6 +505,31 @@
 ;; invaders, for now just do the basics and light up a torch if it gets dark.
 (define (townsman-ai kchar)
   (std-ai kchar))
+
+;; ratlings fear snakes
+(define (ratling-ai kchar)
+  (define (evade-snakes?)
+    (let ((snakes (filter is-snake? (get-hostiles-in-range kchar 4))))
+      (cond ((null? snakes) #f)
+            (else (evade kchar snakes)))))
+  (or (std-ai kchar)
+      (evade-snakes?)))
+
+;; snakes eat rats and ratlings, recovering hp
+(define (snake-ai kchar)
+  (define (eat-ratling?)
+    (let ((ratlings (filter is-rat? (get-hostiles-in-range kchar 1))))
+      (cond ((null? ratlings) #f)
+            (else
+             (kern-log-msg (kern-obj-get-name kchar)
+                           " eats "
+                           (kern-obj-get-name (car ratlings)))
+             (kern-obj-remove (car ratlings))
+             (kern-obj-heal kchar 2)
+             #t
+             ))))
+  (or (std-ai kchar)
+      (eat-ratling?)))
 
 ;;-------------------> old stuff for reference:
 ;;----------------------------------------------------------------------------

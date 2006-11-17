@@ -598,7 +598,6 @@
 ;; vector(s).
 ;; ----------------------------------------------------------------------------
 (define (evade kchar foes)
-  ;;(display "evade")(newline)
   (let* ((tloc (kern-obj-get-location kchar))
          (v (loc-canonical (foldr (lambda (a b) 
                                (loc-sum a 
