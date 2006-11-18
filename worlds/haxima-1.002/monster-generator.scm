@@ -356,7 +356,6 @@
 ;;----------------------------------------------------------------------------
 ;; guard-pt -- a spawn pt which creates an npc with a guard post
 (define (guard-pt-exec kgen)
-  (println "guard-pt-exec")
   (let ((kchar (spawn-pt-exec kgen)))
     (npcg-set-post! (gob kchar)
                     (cdr (kern-obj-get-location kgen)))
@@ -388,10 +387,8 @@
 (define (set-y set) (caddr set))
 
 (define (step-pt-exec ksppt kbeing)
-  (println "step-pt-exec")
   (let ((sppt (gob ksppt))
         (kplace (loc-place (kern-obj-get-location ksppt))))
-    (println " sppt:" sppt)
     (cond ((time-to-respawn? (step-pt-time sppt))
            (kern-log-msg (step-pt-msg sppt))
            (step-pt-set-time! sppt (kern-get-time))
@@ -434,7 +431,6 @@
 ;; time-to-respawn? -- checks if an hour and a minute has passed
 (define (time-to-respawn? oldtime)
   (let ((curtime (kern-get-time)))
-    (println "time-to-respawn? " curtime " a day past " oldtime "?")
     (or (> (time-year curtime) (time-year oldtime))
         (> (time-month curtime) (time-month oldtime))
         (> (time-week curtime) (time-week oldtime))
@@ -451,16 +447,9 @@
 (define (monman-set-time! mm val) (set-car! (cdr mm) val))
 
 (define (monman-exec kmm)
-
-  (println "monman-exec")
-
   (let ((mm (gob kmm))
         (kplace (loc-place (kern-obj-get-location kmm))))
-
-    (println " mm=" mm)
-    
     (define (cleanup-old-spawn)
-      (println " cleanup-old-spawn")
       (map kern-obj-remove
            (filter (lambda (kbeing)
                      (or (kbeing-was-spawned? kbeing)
@@ -469,11 +458,9 @@
       )
 
     (define (trigger-spawn-pt sppt)
-      (println " trigger-spawn-pt")
       (signal-kobj sppt 'on sppt nil))
 
     (define (respawn)
-      (println " respawn")
       (monman-set-time! mm (kern-get-time))
       (map trigger-spawn-pt
            (kplace-get-objects-of-type kplace t_spawn_pt))

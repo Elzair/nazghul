@@ -45,7 +45,7 @@
                   "All who would pass must speak the password!") 17 3)
   )
 
-  (list 'on-entry-to-dungeon-room) ; hooks
+ (list 'on-entry-to-dungeon-room) ; hooks
 
  ;; edge entrances
  (list
@@ -191,8 +191,7 @@
                    (3 t_mana_potion))) 23 8)
   )
 
- ;; (list 'on-entry-to-dungeon-room) ; hooks
- nil ;; hooks
+ (list 'on-entry-to-dungeon-room) ; hooks
 
  ;; edge entrances
  (list
@@ -372,15 +371,28 @@
  nil ; subplaces
  nil ; neighbors
  (list
+  (put (mk-monman) 0 0)
   (put (mk-windowed-door) 9 12)
   (put (mk-windowed-door) 12 9)
+  (put (spawn-pt 'carabid) 9 9)
   )
- nil ;; hooks
+  (list 'on-entry-to-dungeon-room) ; hooks
  ;; edge entrances
  (list
   (list east 0 16)
   )
  )
+
+;; randomly scatter gems through the rocks
+(put-random-stuff p_tunnel_turn
+                  (mk-rect 0 0 19 19)
+                  (lambda (loc)
+                    (eqv? (kern-place-get-terrain loc)
+                          t_wall_rock))
+                  (lambda (loc)
+                    (kern-obj-put-at (kern-mk-obj t_gem 1)
+                                     loc))
+                  10)
 
 ;;----------------------------------------------------------------------------
 ;; Black River
@@ -440,7 +452,20 @@
  (put (mk-corpse-with-loot) 8 10)
  (put (mk-corpse-with-loot) 10 8)
  (put (mk-corpse-with-loot) 10 10)
+ (put (spawn-pt 'carabid) 9 7)
+ (put (spawn-pt 'carabid) 9 11)
  )
+
+;; randomly scatter gems through the rocks
+(put-random-stuff p_tunnels
+                  (mk-rect 0 0 19 19)
+                  (lambda (loc)
+                    (eqv? (kern-place-get-terrain loc)
+                          t_wall_rock))
+                  (lambda (loc)
+                    (kern-obj-put-at (kern-mk-obj t_gem 1)
+                                     loc))
+                  10)
 
 ;;----------------------------------------------------------------------------
 ;; Chasm Drawbridge

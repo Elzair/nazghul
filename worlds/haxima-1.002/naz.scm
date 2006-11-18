@@ -803,6 +803,17 @@
         (kern-map-set-jitter #f)
         (kern-map-repaint))))
 
+(define (random-vdir)
+  (random-select (list (cons -1 0) 
+                       (cons 1 0) 
+                       (cons 0 -1) 
+                       (cons 0 1))))
+
+(define (random-neighbor-loc kobj)
+  (let ((vdir (random-vdir)))
+    (loc-sum (kern-obj-get-location kobj)
+             (mk-loc nil (car vdir) (cdr vdir)))))
+
 (define (push kobj dx dy dist)
   (let* ((loc (loc-sum (kern-obj-get-location kobj)
                        (mk-loc nil dx dy))))
@@ -814,10 +825,7 @@
         #f)))
 
 (define (stagger kchar)
-  (let ((vdir (random-select (list (cons -1 0) 
-                                   (cons 1 0) 
-                                   (cons 0 -1) 
-                                   (cons 0 1)))))
+  (let ((vdir (random-vdir)))
     (push kchar (car vdir) (cdr vdir) 1)))
 
 (define (end-turn kobj)(kern-obj-set-ap kobj 0))

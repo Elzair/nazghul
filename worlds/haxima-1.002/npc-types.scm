@@ -21,7 +21,6 @@
 ;; interesting conversation, no schedule of appointments, etc.
 (define (mk-stock-char name species occupation sprite faction ai container 
                        arms conv)
-  ;;(println "mk-stock-char")
   (kern-mk-char
    nil ;;..........tag
    name ;;.........name
@@ -108,7 +107,6 @@
 
 (define (kbeing-was-spawned? kbeing)
   (let ((npcg (gob kbeing)))
-    ;;(println "kbeing-was-spawned?" npcg)
     (and (not (null? npcg))
          (is-npcg? npcg)
          (npcg-spawned? npcg))))
@@ -120,7 +118,6 @@
 
 ;; mk-npc -- create a kernel character of the given type, faction and level
 (define (mk-npc npct-tag lvl)
-  ;;(println "mk-npc:" npct " " faction " " lvl)g
   (let* ((npct (eval npct-tag))
          (npc (bind
                (set-level
@@ -187,7 +184,6 @@
                                  (list ef_split split-gob-mk 'fire-slime)))
 
 (define (apply-eff-pkg knpc pkg)
-  (println "apply-eff-pkg: " pkg)
   (if (pair? pkg)
       (let* ((eff (car pkg))
              (gob-ctor (cadr pkg))
@@ -625,7 +621,6 @@
         ))  
 
 (define (drop-generic knpc loot)
-  (println "drop-generic:loot=" loot)
   (if (not (kern-place-is-wilderness? (loc-place (kern-obj-get-location knpc))))
            (let ((loc (kern-obj-get-location knpc)))
              (map (lambda (triple)
@@ -702,6 +697,7 @@
 (define mimic (mk-npct2 "mimic" sp_mimic nil s_mimic no-traps nil nil 'std-ai faction-monster nil 'drop-generic zorn-loot))
 (define ratling (mk-npct2 "ratling" sp_ratling nil s_fgob_archer no-traps nil nil 'ratling-ai faction-monster nil 'drop-generic animal-loot))
 (define ratling-sorcerer (mk-npct2 "ratling sorcerer"  sp_ratling oc_wizard s_fgob_shaman wizard-traps wizard-equip  nil 'ratling-sorcerer-ai faction-monster nil 'drop-generic animal-loot))
+(define carabid (mk-npct2 "carabid" sp_carabid nil s_carabid nil nil nil 'carabid-ai faction-monster nil 'drop-generic animal-loot))
 
 ;; NPC's with no drops
 
@@ -738,7 +734,6 @@
   (is-species? kchar sp_yellow_slime))
 
 (define (is-green-slime? kchar)
-  ;;(println "is-green-slime?")
   (is-species? kchar sp_green_slime))
 
 (define (is-spider? kchar)
