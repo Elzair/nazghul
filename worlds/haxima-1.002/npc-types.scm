@@ -87,6 +87,7 @@
         #f  ;; taunted
         #f  ;; spawned
         nil ;; post
+        nil ;; subgob
         ))
 (define (npcg-type npcg) (cadr npcg))
 (define (npcg-taunted? npcg) (caddr npcg))
@@ -97,6 +98,8 @@
 (define (npcg-set-post! npcg val) (set-car! (list-tail npcg 4) val))
 (define (npcg-has-post? npcg) (not (null? (npcg-get-post npcg))))
 (define (npcg-get-post npcg) (list-ref npcg 4))
+(define (npcg-get-subgob npcg) (list-ref npcg 5))
+(define (npcg-set-subgob! npcg val) (set-car! (list-tail npcg 5) val))
 (define (is-npcg? gob) (eq? (car gob) 'npcg))
 
 (define (kbeing-is-npc-type? kbeing type)
@@ -702,12 +705,14 @@
 ;; NPC's with no drops
 
 (define green-slime     (mk-npct "green slime"            sp_green_slime   nil        s_slime        nil          nil           slime-effects 'animal-ai       faction-monster       nil))
-(define kraken          (mk-npct "kraken"                   sp_kraken        nil        s_kraken       nil          nil           nil           'kraken-ai       faction-monster       nil))
-(define sea-serpent     (mk-npct "sea serpent"              sp_sea_serpent   nil        s_sea_serpent  nil          nil           nil           'sea-serpent-ai  faction-monster       nil))
-(define wolf            (mk-npct "wolf"                     sp_wolf          nil        s_wolf         nil          nil           nil           'animal-ai       faction-monster       nil))
-(define wisp            (mk-npct "wisp"                     sp_wisp          nil        s_wisp         nil          nil           wisp-effects  'wisp-ai         faction-monster       nil))
+(define kraken          (mk-npct "kraken"                 sp_kraken        nil        s_kraken       nil          nil           nil           'kraken-ai       faction-monster       nil))
+(define sea-serpent     (mk-npct "sea serpent"            sp_sea_serpent   nil        s_sea_serpent  nil          nil           nil           'sea-serpent-ai  faction-monster       nil))
+(define wolf            (mk-npct "wolf"                   sp_wolf          nil        s_wolf         nil          nil           nil           'animal-ai       faction-monster       nil))
+(define wisp            (mk-npct "wisp"                   sp_wisp          nil        s_wisp         nil          nil           wisp-effects  'wisp-ai         faction-monster       nil))
 (define nixie-spearman  (mk-npct "nixie spearman"         sp_nixie         oc_warrior s_nixie        no-traps     nixie-1-equip nil           'std-ai          faction-monster       nil))
 (define nixie-swordsman (mk-npct "nixie swordsman"        sp_nixie         oc_warrior s_nixie        no-traps     nixie-2-equip nil           'std-ai          faction-monster       nil))
+(define great-kraken    (mk-npct "great kraken"           sp_great_kraken  nil        s_great_kraken nil          nil           nil           'great-kraken-ai faction-monster       nil))
+(define kraken-tentacle (mk-npct "kraken tentacle"        sp_kraken_tentacle nil      s_tentacle     nil          nil           nil           'std-ai          faction-monster       nil))
 
 ;; accursed
 (define accursed-acolyte    (mk-npct2 "an accursed acolyte"    sp_human oc_wizard s_shepherd nil accursed-1-equip nil 'spell-sword-ai faction-accursed nil 'drop-generic accursed-1-loot))
@@ -802,3 +807,6 @@
 (define (is-rat? kchar)
   (or (is-species? kchar sp_rat)
       (is-species? kchar sp_ratling)))
+
+(define (is-kraken-tentacle? kchar)
+  (kbeing-is-npc-type? kchar 'kraken-tentacle))

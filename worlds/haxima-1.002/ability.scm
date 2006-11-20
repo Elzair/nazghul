@@ -189,16 +189,13 @@
 ;;----------------------------------------------------------------------------
 ;; summoning
 (define (cast-summon-proc kchar gen-npct quantity)
-  (println "cast-summon-proc")
   (define (run-loop count)
-    (println " run-loop " count)
     (cond ((<= count 0) 0)
           (else
            (let* ((lvl (+ (kern-dice-roll "1d2") (/ (kern-char-get-level kchar) 2)))
                   (knpc (spawn-npc (gen-npct) lvl))
                   (loc (pick-loc (kern-obj-get-location kchar) knpc))
                   )
-             (println " loc=" loc)
              (cond ((null? loc) 
                     (kern-obj-dec-ref knpc)
                     0)

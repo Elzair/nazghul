@@ -94,6 +94,8 @@
 (mk-species 'sp_troll        "troll"          14  6 12 1 20  2 10 mmode-walk  t_horns      humanoid  3 s_asleep           nil     sound-walking   )
 (mk-species 'sp_yellow_slime "yellow slime"    4  4  4 1 12  2  6 mmode-walk  t_acid_spray nil       2 nil                nil     sound-squishing )
 (mk-species 'sp_kraken       "kraken"         30  3 20 1 30  4 19 mmode-fish  t_tentacles  nil      10 s_shoals           "1d4"   sound-splashing ) 
+(mk-species 'sp_great_kraken    "kraken"      10  5  8 1 30  0 19 mmode-fish  t_fangs      nil      10 s_shoals           "1d4"   sound-splashing ) 
+(mk-species 'sp_kraken_tentacle "kraken"      30  1 20 1 10  0 19 mmode-fish  t_tentacles  nil      10 s_shoals           nil     sound-splashing ) 
 (mk-species 'sp_sea_serpent  "sea serpent"    20  2 14 1 20  4 19 mmode-fish  t_fangs      nil      8  s_asleep           "2d4"   sound-walking   ) 
 (mk-species 'sp_wolf         "wolf"            8  2 12 2  8  0 13 mmode-walk  t_fangs      nil      2  s_asleep           nil     sound-walking   ) 
 (mk-species 'sp_gazer        "gazer"           6 20  6 1 10  8 16 mmode-hover t_fangs      nil      8  s_asleep           nil     nil             ) 

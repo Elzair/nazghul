@@ -419,6 +419,7 @@
   "rr rr rr rr rr _s _s _s _s _s _s _s _s _s rr rr rr rr rr "
   "rr rr rr rr rr _s _s _s _s _s _s _s _s _s rr rr rr rr rr "
   ) 
+ (put (spawn-pt 'great-kraken) 9 3)
  )
 
 ;;----------------------------------------------------------------------------

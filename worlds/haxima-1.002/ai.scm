@@ -457,23 +457,53 @@
 ;; attempt a directional move toward them. If the move is blocked by deck, the
 ;; kraken will destroy the deck.
 (define (kraken-ai kchar)
-	(let ((foes (all-visible-hostiles kchar)))
-		(if (null? foes)
-			#f
-			(let* ((kfoe (nearest-obj kchar foes))
-					(dest (kern-obj-get-location kfoe)))
-				(if (pathfind kchar dest)
-					#f
-					(if (not (null? (get-hostiles-in-range kchar 1)))
-						#f
-						(let* ((cloc (kern-obj-get-location kchar))
-								(vect (loc-to-delta (loc-diff dest cloc)))
-								(dest (loc-add cloc vect)))
-							(if (passable? dest kchar)
-								(kern-obj-move kchar (loc-x vect) (loc-y vect))
-								(and (is-deck? (kern-place-get-terrain dest))
-									(can-use-ability? chomp-deck kchar)
-									(use-ability chomp-deck kchar dest))))))))))
+  (let ((foes (all-visible-hostiles kchar)))
+    (if (null? foes)
+        #f
+        (let* ((kfoe (nearest-obj kchar foes))
+               (dest (kern-obj-get-location kfoe)))
+          (if (pathfind kchar dest)
+              #f
+              (if (not (null? (get-hostiles-in-range kchar 1)))
+                  #f
+                  (let* ((cloc (kern-obj-get-location kchar))
+                         (vect (loc-to-delta (loc-diff dest cloc)))
+                         (dest (loc-add cloc vect)))
+                    (if (passable? dest kchar)
+                        (kern-obj-move kchar (loc-x vect) (loc-y vect))
+                        (and (is-deck? (kern-place-get-terrain dest))
+                             (can-use-ability? chomp-deck kchar)
+                             (use-ability chomp-deck kchar dest))))))))))
+
+;; The great kraken spawns tentacles.
+(define (great-kraken-ai kchar)
+  (define (spawn ktarg)
+    (let* ((lvl (kern-char-get-level kchar))
+           (knpc (spawn-npc 'kraken-tentacle lvl))
+           (loc (pick-loc (kern-obj-get-location ktarg) knpc))
+           )
+      (cond ((null? loc) 
+             (kern-obj-dec-ref knpc)
+             #f)
+            (else
+             (kern-being-set-base-faction knpc 
+                                          (kern-being-get-base-faction kchar))
+             (kern-obj-put-at knpc loc)
+             #t))))
+  (define (spawn-tentacle?)
+    (let ((ktarg (random-select (all-visible-hostiles kchar)))
+          (tentacles (filter is-kraken-tentacle? 
+                             (kern-place-get-beings (loc-place (kern-obj-get-location kchar)))))
+          )
+      (println ktarg tentacles)
+      (cond ((null? ktarg) #f)
+            ((< (length tentacles) 
+                (* 2 (kern-char-get-level kchar)))
+             (spawn ktarg))
+            (else
+             #f))))
+  (or (animal-ai kchar)
+      (spawn-tentacle?)))
 
 ;; sea-serpent-ai -- spit fireballs every once in a while
 (define (sea-serpent-ai kchar)
