@@ -163,6 +163,8 @@
    (list 100 t_picklock)
    (list 100 spider_silk)
    (list 100 mandrake)
+   (list 100 sulphorous_ash)
+   (list 100 blood_moss)
    (list 1 t_sword)
    (list 1 t_armor_leather)
    (list 1 t_shield)
@@ -298,7 +300,7 @@
   )
 
 (define (simple-start kplayer)
-  (kern-obj-put-at kplayer (list p_brundegardt_keep 5 13)))
+  (kern-obj-put-at kplayer (list p_ratling_warren 6 22)))
   
 (define (create-char kplayer)
   (kern-obj-put-at kplayer (list p_char_setup 9 17)

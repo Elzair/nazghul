@@ -169,7 +169,7 @@
   (put (mk-mimic) 21 17)
   (put (mk-mimic) 16 4)
   (put (mk-chest nil
-                 '((t_wine))) 23 16)
+                 '((5 t_wine))) 23 16)
   (put (mk-chest nil
                  '((5 t_garlic)
                    (5 t_ginseng))) 23 17)
@@ -290,7 +290,7 @@
   (put (mk-ladder-up 'p_brundegardt_keep 22 19) 22 19)
 
   ;; loot chamber
-  (put (mk-chest nil '((5 t_gems))) 20 16)
+  (put (mk-chest nil '((5 t_gem))) 20 16)
   (put (mk-chest nil '((100 t_gold_coins))) 21 16)
   (put (mk-chest nil '((10 sulphorous_ash))) 19 18)
   (put (mk-mimic) 19 19)
@@ -300,10 +300,10 @@
 
   ;; npcs
   (put (guard-pt 'ratling-sorcerer) 13 13)
-  (put (spawn-pt 'ratling) 2 22)
-  (put (spawn-pt 'ratling) 20 4)
-  (put (spawn-pt 'ratling) 2 22)
-  (put (spawn-pt 'ratling) 13 15)
+  (put (spawn-pt 'ratling-swarmer) 2 22)
+  (put (spawn-pt 'ratling-swarmer) 20 4)
+  (put (spawn-pt 'ratling-swarmer) 2 22)
+  (put (spawn-pt 'ratling-swarmer) 13 15)
 
   ;; ratling stash
   (put (kern-mk-obj t_heal_potion 1) 20 1)

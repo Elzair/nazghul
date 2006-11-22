@@ -361,11 +361,6 @@
       (spell-sword-ai kchar)
       (move-away-from-foes? kchar)))
 
-(define (ratling-sorcerer-ai kchar)
-  (or (std-ai kchar)
-      (summon-ratlings? kchar)
-      (move-away-from-foes? kchar)))
-
 (define (priest-ai kchar)
   (or (std-ai kchar)
       (and (in-melee-range-of-foes? kchar)
@@ -544,6 +539,11 @@
             (else (evade kchar snakes)))))
   (or (std-ai kchar)
       (evade-snakes?)))
+
+(define (ratling-sorcerer-ai kchar)
+  (or (ratling-ai kchar)
+      (summon-ratlings? kchar)
+      (move-away-from-foes? kchar)))
 
 ;; snakes eat rats and ratlings, recovering hp
 (define (snake-ai kchar)

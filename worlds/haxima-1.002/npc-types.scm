@@ -672,7 +672,7 @@
 (define bomber     (mk-npct2 "mad jester" sp_human oc_wrogue s_jester  wrogue-traps bomber-equip   nil 'std-ai faction-outlaw nil 'drop-generic bomber-loot))
 
 (define bat (mk-npct2 "bat" sp_bat nil s_bat nil nil nil 'std-ai faction-monster nil 'drop-generic animal-loot))
-(define rat (mk-npct2 "rat" sp_rat nil s_rat nil nil nil 'rat-ai faction-monster nil 'drop-generic animal-loot))
+(define rat (mk-npct2 "dire rat" sp_rat nil s_rat nil nil nil 'rat-ai faction-monster nil 'drop-generic animal-loot))
 (define zorn (mk-npct2 "zorn" sp_zorn oc_wrogue s_zorn wrogue-traps nil nil 'std-ai faction-monster nil 'drop-generic zorn-loot))
 (define bull (mk-npct "bull" sp_bull nil s_bull nil nil nil 'animal-ai faction-none nil 'drop-generic bull-loot))
 (define lich (mk-npct2 "lich" sp_lich oc_wizard s_lich wizard-traps wizard-equip undead-effects 'spell-sword-ai faction-monster nil 'drop-generic lich-loot))
@@ -698,8 +698,8 @@
 (define fire-slime (mk-npct2 "fire slime" sp_fire_slime nil s_red_slime nil nil fire-slime-effects 'animal-ai faction-monster nil 'drop-generic fire-slime-loot))
 (define hydra (mk-npct2 "hydra" sp_hydra nil s_hydra no-traps nil hydra-effects 'hydra-ai faction-monster nil 'drop-generic hydra-loot))
 (define mimic (mk-npct2 "mimic" sp_mimic nil s_mimic no-traps nil nil 'std-ai faction-monster nil 'drop-generic zorn-loot))
-(define ratling (mk-npct2 "ratling" sp_ratling nil s_fgob_archer no-traps nil nil 'ratling-ai faction-monster nil 'drop-generic animal-loot))
-(define ratling-sorcerer (mk-npct2 "ratling sorcerer"  sp_ratling oc_wizard s_fgob_shaman wizard-traps wizard-equip  nil 'ratling-sorcerer-ai faction-monster nil 'drop-generic animal-loot))
+(define ratling-swarmer (mk-npct2 "ratling swarmer" sp_ratling nil s_mouse no-traps nil nil 'ratling-ai faction-monster nil 'drop-generic animal-loot))
+(define ratling-sorcerer (mk-npct2 "ratling sorcerer"  sp_ratling oc_wizard s_ratling_sorcerer wizard-traps wizard-equip  nil 'ratling-sorcerer-ai faction-monster nil 'drop-generic animal-loot))
 (define carabid (mk-npct2 "carabid" sp_carabid nil s_carabid nil nil nil 'carabid-ai faction-monster nil 'drop-generic animal-loot))
 
 ;; NPC's with no drops
