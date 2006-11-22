@@ -578,8 +578,12 @@ void Object::remove()
 void Object::paint(int sx, int sy)
 {
 	struct sprite *sprite = getSprite();
-	if (sprite)
-		sprite_paint(sprite, 0, sx, sy);
+	if (sprite) {
+                int origFacing = sprite_get_facing(sprite);
+                sprite_set_facing(sprite, facing);
+                sprite_paint(sprite, 0, sx, sy);
+                sprite_set_facing(sprite, origFacing);
+        }
 }
 
 void Object::describe()
@@ -687,7 +691,8 @@ void Object::setup()
         pclass          = PCLASS_NONE;
         ttl             = -1; // everlasting by default
         started         = false;
-        
+        facing          = SPRITE_DEF_FACING;
+
         if (getObjectType() && ! getObjectType()->isVisible())
                 visible = 0;
         else
@@ -1460,46 +1465,14 @@ void Object::save(struct save *save)
                 save->exit(save, ")\n");
         }
 
+        // Set the facing
+        if (SPRITE_DEF_FACING != facing) {
+                save->write(save, "(kern-obj-set-facing kobj %d)\n", facing);
+        }
+
         // Close the 'let' block, returning kobj as the last thing evaluated.
         save->exit(save, "kobj)\n");
 
-#if 0
-        // Old way:
-
-        if (tag) {
-                // wrap the declaration in a call to assign the tag
-                save->enter(save, "(kern-tag '%s\n", tag);
-        }
-
-        if (getGob()) {
-                // wrap the declaration in a call to bind the object to the
-                // gob 
-                save->enter(save, "(bind\n");
-        }
-
-        // Save the object constructor call
-        save->enter(save, "(kern-mk-obj %s %d\n", getObjectType()->getTag(), 
-                    getCount());
-        saveHooks(save);
-        save->exit(save, ")\n");
-
-        if (getGob()) {
-
-                // save the gob list
-                gob_save(getGob(), save);
-
-                // end the bind call
-                save->exit(save, ") ;; bind\n");
-        }
-
-        if (tag) {
-                save->exit(save, ") ;; kern-tag\n");
-        }
-
-        if (getTTL() != -1) {
-                save->exit(save, "%d) ;; kern-obj-set-ttl\n", getTTL());
-        }
-#endif
 }
 
 
@@ -2294,3 +2267,17 @@ bool Object::isStationary()
 {
         return false;
 }
+
+bool Object::setFacing(int val)
+{
+	if (!sprite_can_face(getSprite(), val))
+		return false;
+	facing = val;
+	return true;
+}
+
+int Object::getFacing()
+{
+	return facing;
+}
+

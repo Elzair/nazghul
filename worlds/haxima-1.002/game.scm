@@ -236,6 +236,8 @@
 (load "moongate.scm")
 (load "bridge.scm")
 (load "drawbridge.scm")
+(load "weather-vane.scm")
+(load "wind-bridge.scm")
 
 ;; Astronomy
 (load "moon.scm")

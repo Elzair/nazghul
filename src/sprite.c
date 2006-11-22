@@ -348,6 +348,7 @@ static struct sprite * sprite_new_internal(int frames, int facings)
                 return 0;
 
         sprite->n_frames  = frames;
+        sprite->facing = SPRITE_DEF_FACING;
         sprite->facings = facings;
         sprite->n_total_frames = (sprite->n_frames 
                                   * (sprite->facings ? 

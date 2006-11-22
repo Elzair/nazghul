@@ -1188,7 +1188,8 @@
   (map (lambda (kmm)
          ;;(println " signal")
          (signal-kobj kmm 'on kmm nil))
-       (kplace-get-objects-of-type kplace t_monman)))
+       (kplace-get-objects-of-type kplace t_monman))
+  )
        
 ;; mk-dungeon-room -- make a 19x19 dungeon room (simplified form of
 ;; kern-mk-place)
@@ -1499,3 +1500,7 @@
        (let ((kchar (eval kchar-tag)))
          (and (is-alive? kchar)
               (is-player-party-member? kchar)))))
+
+(define (set-wind-north)
+  (println "set-wind-north")
+  (kern-set-wind north 10))

@@ -86,11 +86,6 @@ VehicleType::~ VehicleType()
                 free(mv_desc);
 }
 
-bool VehicleType::canFace(int facing)
-{
-	return sprite_can_face(getSprite(), facing);
-}
-
 class Object *VehicleType::createInstance()
 {
 	class Vehicle *obj = new Vehicle(this);
@@ -183,7 +178,7 @@ sound_t *VehicleType::get_movement_sound()
 Vehicle::Vehicle(VehicleType *type)
         : Object(type), name(0)
 {
-	facing = NORTH;
+	setFacing(NORTH);
 	hp = type->getMaxHp();
 }
 
@@ -195,7 +190,7 @@ Vehicle::Vehicle(VehicleType *type, int _facing, int _hp)
         : Object(type), name(0)
 {
 	occupant = NULL;
-	facing = _facing;
+        setFacing(_facing);
 	hp = _hp;
 }
 
@@ -204,20 +199,6 @@ Vehicle::~Vehicle()
         if (name)
                 free(name);
 }
-
-int Vehicle::getFacing()
-{
-	return facing;
-}
-
-bool Vehicle::setFacing(int val)
-{
-	if (!getObjectType()->canFace(val))
-		return false;
-	facing = val;
-	return true;
-}
-
 
 int Vehicle::get_facing_to_fire_weapon(int dx, int dy)
 {
@@ -244,15 +225,6 @@ bool Vehicle::fire_weapon(int dx, int dy, class Object *user)
 
         ordnance->fireInDirection(getPlace(), getX(), getY(), dx, dy, user);
         return true;
-}
-
-void Vehicle::paint(int sx, int sy)
-{
-	struct sprite *sprite = getSprite();
-        int origFacing = sprite_get_facing(sprite);
-	sprite_set_facing(sprite, facing);
-	sprite_paint(sprite, 0, sx, sy);
-        sprite_set_facing(sprite, origFacing);
 }
 
 bool Vehicle::turn(int dx, int dy, int *cost)

@@ -42,6 +42,7 @@ extern void sprite_paint(struct sprite *sprite, int frame, int x, int y);
 extern void sprite_advance_frames(void);
 extern int sprite_set_facing(struct sprite *sprite, int direction);
 extern int sprite_get_facing(struct sprite *sprite);
+
 extern int sprite_fade(struct sprite *sprite);
 extern void sprite_unfade(struct sprite *sprite);
 extern void sprite_zoom_out(int factor);

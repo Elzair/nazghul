@@ -478,22 +478,26 @@
   "rr rr rr rr rr rr vv vv vv vv vv vv vv rr rr rr rr rr rr "
   "rr rr rr rr rr vv vv vv vv vv vv vv vv vv rr rr rr rr rr "
   "rr rr rr xx xx vv vv vv vv vv vv vv vv vv xx xx rr rr rr "
-  "rr rr xx xx cc vv vv vv vv ee vv vv vv vv cc xx xx rr rr "
-  "rr xx xx cc cc vv vv vv vv ee vv vv vv vv cc cc xx xx rr "
-  "xx xx cc cc cc vv vv vv vv ee vv vv vv vv cc cc cc xx xx "
-  "xx cc cc cc cc vv vv vv ee ee ee vv vv vv cc cc cc cc xx "
-  "cc cc cc cc cc vv vv vv ee oo ee vv vv vv cc cc cc cc cc "
-  "xx cc cc cc cc vv vv vv ee ee ee vv vv vv cc cc cc cc xx "
-  "xx xx cc cc cc vv vv vv vv ee vv vv vv vv cc cc cc xx xx "
-  "rr xx xx cc cc vv vv vv vv ee vv vv vv vv cc cc xx xx rr "
-  "rr rr xx xx cc vv vv vv vv ee vv vv vv vv cc xx xx rr rr "
+  "rr rr xx xx cc vv vv vv vv vv vv vv vv vv cc xx xx rr rr "
+  "rr xx xx cc cc vv vv vv vv vv vv vv vv vv cc cc xx xx rr "
+  "xx xx cc cc cc vv vv vv vv vv vv vv vv vv cc cc cc xx xx "
+  "xx cc cc cc cc vv vv vv vv vv vv vv vv vv cc cc cc cc xx "
+  "cc cc cc cc cc vv vv vv vv vv vv vv vv vv cc cc cc cc cc "
+  "xx cc cc cc cc vv vv vv vv vv vv vv vv vv cc cc cc cc xx "
+  "xx xx cc cc cc vv vv vv vv vv vv vv vv vv cc cc cc xx xx "
+  "rr xx xx cc cc vv vv vv vv vv vv vv vv vv cc cc xx xx rr "
+  "rr rr xx xx cc vv vv vv vv vv vv vv vv vv cc xx xx rr rr "
   "rr rr rr xx xx vv vv vv vv vv vv vv vv vv xx xx rr rr rr "
   "rr rr rr rr rr vv vv vv vv vv vv vv vv vv rr rr rr rr rr "
   "rr rr rr rr rr rr vv vv vv vv vv vv vv rr rr rr rr rr rr "
   "rr rr rr rr rr rr rr vv vv vv vv vv rr rr rr rr rr rr rr "
   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
   )
+  (put (mk-weather-vane) 9 9)
+  (put (mk-wind-bridge) 5 5)
  )
+
+(kern-place-add-on-entry-hook p_wide_chasm 'set-wind-north)
 
 ;;----------------------------------------------------------------------------
 ;; Tower L1

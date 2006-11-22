@@ -49,7 +49,6 @@ class VehicleType:public ObjectType {
 	virtual char *getMvDesc();
 	virtual sound_t *get_movement_sound();
 	virtual bool mustTurn();
-        virtual bool canFace(int facing);
         virtual class Object *createInstance();
         virtual int getWindPenalty(int facing);
         
@@ -91,10 +90,8 @@ class Vehicle:public Object {
 	virtual char *getMvDesc();
         virtual sound_t *get_movement_sound();
 	virtual bool mustTurn();
-        virtual int getFacing();
         virtual int get_facing_to_fire_weapon(int dx, int dy);
         virtual bool fire_weapon(int dx, int dy, class Object *user);
-        virtual void paint(int sx, int sy);
         virtual struct formation *get_formation();
         virtual struct place *getPlace();
         virtual void destroy();
@@ -111,8 +108,6 @@ class Vehicle:public Object {
         bool isNamed();
 
  protected:
-        bool setFacing(int);
-        int facing;
         char *name;
         class Object *occupant;
 };

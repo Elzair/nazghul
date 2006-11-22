@@ -1184,6 +1184,26 @@ static int kern_place_load_hooks(scheme *sc, pointer *args,
         return 0;
 }
 
+KERN_API_CALL(kern_place_add_on_entry_hook)
+{
+        struct place *place; 
+        pointer proc;
+
+       if (unpack(sc, &args, "pc", &place, &proc)) {
+                rt_err("kern-place-add-on-entry-hook: bad args");
+                return sc->NIL;
+        }
+
+        if (! place) {
+                rt_err("kern-place-add-on-entry-hook: null place");
+                return sc->NIL;
+        }
+
+        place_add_on_entry_hook(place,
+                                closure_new_ref(sc, proc));
+        return sc->NIL;
+}
+
 KERN_API_CALL(kern_mk_place)
 {
         int wild, wraps, underground, combat;
@@ -2765,6 +2785,43 @@ static pointer kern_obj_set_ap(scheme *sc, pointer args)
         obj->setActionPoints(ap);
 
         return sc->NIL;
+}
+
+static pointer kern_obj_set_facing(scheme *sc, pointer args)
+{
+        class Object *obj;
+        int facing;
+
+        if (unpack(sc, &args, "pd", &obj, &facing)) {
+                rt_err("kern-obj-set-facing: bad args");
+                return sc->NIL;
+        }
+
+        if (!obj) {
+                rt_err("kern-obj-set-facing: null object");
+                return sc->NIL;
+        }
+
+        obj->setFacing(facing);
+
+        return sc->NIL;
+}
+
+static pointer kern_obj_get_facing(scheme *sc, pointer args)
+{
+        class Object *obj;
+
+        if (unpack(sc, &args, "p", &obj)) {
+                rt_err("kern-obj-get-facing: bad args");
+                return sc->NIL;
+        }
+
+        if (!obj) {
+                rt_err("kern-obj-get-facing: null object");
+                return sc->NIL;
+        }
+
+        return scm_mk_integer(sc, obj->getFacing());
 }
 
 static pointer kern_obj_set_conv(scheme *sc, pointer args)
@@ -5001,6 +5058,11 @@ KERN_API_CALL(kern_set_wind)
 
         windSetDirection(dir, dur);
         return sc->T;
+}
+
+KERN_API_CALL(kern_get_wind)
+{
+        return scm_mk_integer(sc, windGetDirection());
 }
 
 KERN_API_CALL(kern_ui_direction)
@@ -7900,6 +7962,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-obj-get-count", kern_obj_get_count);
         API_DECL(sc, "kern-obj-get-dir", kern_obj_get_dir);
         API_DECL(sc, "kern-obj-get-effects", kern_obj_get_effects);
+        API_DECL(sc, "kern-obj-get-facing", kern_obj_get_facing);
         API_DECL(sc, "kern-obj-get-gob", kern_obj_get_gob);
         API_DECL(sc, "kern-obj-get-light", kern_obj_get_light);
         API_DECL(sc, "kern-obj-get-location", kern_obj_get_location);
@@ -7927,6 +7990,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-obj-remove-from-inventory", kern_obj_remove_from_inventory);
         API_DECL(sc, "kern-obj-set-ap", kern_obj_set_ap);
         API_DECL(sc, "kern-obj-set-conv", kern_obj_set_conv);
+        API_DECL(sc, "kern-obj-set-facing", kern_obj_set_facing);
         API_DECL(sc, "kern-obj-set-gob", kern_obj_set_gob);
         API_DECL(sc, "kern-obj-set-light", kern_obj_set_light);
         API_DECL(sc, "kern-obj-set-opacity", kern_obj_set_opacity);
@@ -7946,6 +8010,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-occ-set-gob", kern_occ_set_gob);
 
         /* kern-place api */
+        API_DECL(sc, "kern-place-add-on-entry-hook", kern_place_add_on_entry_hook);
         API_DECL(sc, "kern-place-set-subplace", kern_place_set_subplace);
         API_DECL(sc, "kern-place-get-beings", kern_place_get_beings);
         API_DECL(sc, "kern-place-get-height", kern_place_get_height);
@@ -8044,6 +8109,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-set-spell-words", kern_set_spell_words);
         API_DECL(sc, "kern-set-start-proc", kern_set_start_proc);
         API_DECL(sc, "kern-set-wind", kern_set_wind);
+        API_DECL(sc, "kern-get-wind", kern_get_wind);
         API_DECL(sc, "kern-set-time-accel", kern_set_time_accel);
         API_DECL(sc, "kern-sleep", kern_sleep);
         API_DECL(sc, "kern-sound-play", kern_sound_play);

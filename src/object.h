@@ -425,6 +425,9 @@ class Object {
          * zero. */
         int refcount;
 
+        bool setFacing(int facing);
+        int getFacing();
+
       protected:
         virtual void setup();
 
@@ -492,6 +495,8 @@ class Object {
                                 int flags);
         void triggerOnTileExit(struct place *tilePlace, int tileX, int tileY,
                                int flags);
+        int facing;
+
 };
 
 #include "macros.h"
