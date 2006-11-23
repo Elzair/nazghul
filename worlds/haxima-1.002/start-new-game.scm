@@ -169,6 +169,7 @@
    (list 1 t_armor_leather)
    (list 1 t_shield)
    (list 1 t_leather_helm)
+   (list 1 t_slime_vial)
   ))
 
  nil ;; party members (should be nil for initial load file)
@@ -300,7 +301,7 @@
   )
 
 (define (simple-start kplayer)
-  (kern-obj-put-at kplayer (list p_ratling_warren 6 22)))
+  (kern-obj-put-at kplayer (list p_brundegardt_tower_3 8 9)))
   
 (define (create-char kplayer)
   (kern-obj-put-at kplayer (list p_char_setup 9 17)

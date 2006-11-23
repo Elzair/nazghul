@@ -495,6 +495,12 @@
   )
   (put (mk-weather-vane) 9 9)
   (put (mk-wind-bridge) 5 5)
+  (put (spawn-pt 'bat) 9 8)
+  (put (spawn-pt 'bat) 9 9)
+  (put (spawn-pt 'bat) 8 8)
+  (put (spawn-pt 'bat) 8 10)
+  (put (spawn-pt 'bat) 10 9)
+  (put (spawn-pt 'bat) 10 10)
  )
 
 (kern-place-add-on-entry-hook p_wide_chasm 'set-wind-north)
@@ -505,27 +511,123 @@
  'p_brundegardt_tower_1 "BrundeGardt Tower L1"
  (list
   "rr rr rr rr rr xx xx xx xx xx xx xx xx xx rr rr rr rr rr "
-  "rr rr rr xx xx xx cc cc cc cc cc cc cc xx xx xx rr rr rr "
-  "rr rr xx xx cc cc cc cc cc cc cc cc cc cc cc xx xx rr rr "
-  "rr xx xx cc cc cc cc pp cc cc cc pp cc cc cc cc xx xx rr "
-  "rr xx cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc xx rr "
-  "xx xx cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc xx xx "
-  "xx cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc xx "
-  "xx cc cc pp cc cc cc pp cc cc cc pp cc cc cc pp cc cc xx "
-  "xx cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc xx "
-  "cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc xx "
-  "xx cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc xx "
-  "xx cc cc pp cc cc cc pp cc cc cc pp cc cc cc pp cc cc xx "
-  "xx cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc xx "
-  "xx xx cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc xx xx "
-  "rr xx cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc xx rr "
-  "rr xx xx cc cc cc cc pp cc cc cc pp cc cc cc cc xx xx rr "
-  "rr rr xx xx cc cc cc cc cc cc cc cc cc cc cc xx xx rr rr "
-  "rr rr rr xx xx xx cc cc cc cc cc cc cc xx xx xx rr rr rr "
+  "rr rr rr xx xx xx xx xx cc cc cc xx xx xx xx xx rr rr rr "
+  "rr rr xx xx xx cc cc xx cc cc cc xx cc cc cc cc xx rr rr "
+  "rr xx xx cc cc cc cc xx cc cc cc cc cc cc xx cc xx xx rr "
+  "rr xx xx cc xx xx xx xx xx cc xx xx xx xx xx cc cc xx rr "
+  "xx xx cc cc xx cc cc xx cc cc cc xx cc cc xx cc cc xx xx "
+  "xx xx cc cc xx cc cc xx cc cc cc cc cc cc xx cc cc xx xx "
+  "xx xx xx cc xx xx cc xx xx xx xx xx cc xx xx xx xx xx xx "
+  "xx cc cc cc xx cc cc cc cc cc cc xx cc cc xx cc cc cc xx "
+  "cc cc cc cc cc cc cc cc cc cc cc xx cc cc xx cc cc cc xx "
+  "xx cc cc cc xx cc cc cc cc cc cc xx cc cc xx cc cc cc xx "
+  "xx xx xx cc xx xx xx xx xx xx xx xx xx cc xx xx cc xx xx "
+  "xx xx cc cc xx cc cc xx cc cc cc cc cc cc xx cc cc xx xx "
+  "xx xx cc cc cc cc cc cc cc cc cc xx cc cc xx cc cc xx xx "
+  "rr xx ?? xx xx xx xx xx xx cc xx xx xx xx xx cc cc xx rr "
+  "rr xx cc xx cc cc cc xx cc cc cc xx cc cc xx cc xx xx rr "
+  "rr rr xx xx cc cc cc cc cc cc cc cc cc cc cc cc xx rr rr "
+  "rr rr rr xx xx xx xx xx cc cc cc xx xx xx xx xx rr rr rr "
   "rr rr rr rr rr xx xx xx xx xx xx xx xx xx rr rr rr rr rr "
   )
+
+ ;; doors
+ (put (mk-door) 4 9)
+ (put (mk-door) 3 7)
+ (put (mk-door) 3 11)
+ (put (mk-door) 4 13)
+ (put (mk-windowed-door) 7 13)
+ (put (mk-door) 11 16)
+ (put (mk-locked-door) 14 16)
+ (put (mk-door) 15 15)
+ (put (mk-magic-locked-door) 16 11)
+ (put (mk-door) 11 12)
+ (put (mk-door) 13 11)
+ (put (mk-windowed-door) 12 7)
+ (put (mk-windowed-door) 11 6)
+ (put (mk-locked-door) 9 4)
+ (put (mk-door) 11 3)
+ (put (mk-locked-windowed-door) 15 3)
+ (put (mk-door) 3 4)
+
+ (put (mk-portcullis) 7 8)
+ (put (mk-portcullis) 7 10)
+ (put (kern-tag 'bt1_p1 (mk-portcullis)) 7 9)
+ (put (kern-tag 'bt1_p2 (mk-portcullis)) 4 3)
+ (put (kern-tag 'bt1_p3 (mk-portcullis)) 7 16)
+ (put (kern-tag 'bt1_p4 (mk-portcullis)) 6 7)
+ 
+ (put (mk-lever 'bt1_p1) 16 6)
+ (put (mk-lever 'bt1_p3) 8 10)
+ (put (mk-lever 'bt1_p4) 2 15)
+
  (put (mk-ladder-up 'p_brundegardt_tower_2 10 9) 10 9)
+
+ (put (spawn-pt 'yellow-slime) 8 16)
+ (put (spawn-pt 'yellow-slime) 10 16)
+ (put (spawn-pt 'yellow-slime) 9 13)
+
+ (put (spawn-pt 'ratling-sorcerer) 8 5)
+ (put (spawn-pt 'ratling-sorcerer) 8 6)
+
+ (put (spawn-pt 'insect) 5 12)
+ (put (spawn-pt 'insect) 6 12)
+ (put (spawn-pt 'insect) 5 13)
+ (put (spawn-pt 'insect) 6 13)
+
+ (put (guard-pt 'skeletal-warrior) 5 8)
+ (put (guard-pt 'skeletal-warrior) 5 10)
+ (put (guard-pt 'skeletal-spear-thrower) 8 9)
+ (put (guard-pt 'skeletal-spear-thrower) 9 9)
+
+ (put (spawn-pt 'giant-spider) 15 12)
+ (put (spawn-pt 'giant-spider) 16 12)
+
+ (put (spawn-pt 'rat) 2 5)
+ (put (spawn-pt 'rat) 3 5)
+
+ (put (spawn-pt 'snake) 9 2)
+ (put (spawn-pt 'snake) 8 1)
+ (put (spawn-pt 'snake) 10 3)
+
+ (put (spawn-pt 'giant-spider) 13 3)
+
+ (put (mk-corpse-with-loot) 5 5)
+ (put (mk-corpse-with-loot) 5 2)
+ (put (mk-corpse-with-loot) 6 3)
+ (put (mk-corpse-with-loot) 5 16)
+ (put (mk-corpse-with-loot) 2 9)
+
+ ;; demon room
+ (put (kern-mk-obj F_energy_perm 1) 15 9)
+ (put (kern-mk-obj F_energy_perm 1) 16 9)
+ (put (kern-mk-obj F_energy_perm 1) 17 9)
+ (put (mk-npc 'demon 4) 16 8)
+ (put (mk-chest 'bomb-trap
+                '((1 t_an_tym_scroll)
+                  (1 t_in_mani_corp_scroll)
+                  (1 t_xen_corp_scroll)
+                  (1 t_sanct_lor_scroll)
+                  (100 t_gold_coin)))
+      15 8)
+ (put (mk-chest 'poison-trap
+                '((1 t_str_potion)
+                  (1 t_dex_potion)
+                  (1 t_int_potion)
+                  (100 t_gold_coin)))
+      17 8)
  )
+
+;; random loot corpses
+(put-random-stuff p_brundegardt_tower_1
+                  (mk-rect 0 0 19 19)
+                  (lambda (loc)
+                    (eqv? (kern-place-get-terrain loc)
+                          t_cobblestone))
+                  (lambda (loc)
+                    (kern-obj-put-at (mk-corpse-with-loot)
+                                     loc))
+                  5)
 
 ;;----------------------------------------------------------------------------
 ;; Tower L2
@@ -533,12 +635,12 @@
  'p_brundegardt_tower_2 "BrundeGardt Tower L2"
  (list
   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
-  "rr rr rr rr rr rr xx xx xx xx xx xx xx rr rr rr rr rr rr "
-  "rr rr rr rr xx xx xx cc cc cc cc cc xx xx xx rr rr rr rr "
-  "rr rr rr xx xx cc cc cc cc cc cc cc cc cc xx xx rr rr rr "
-  "rr rr xx xx cc cc cc pp cc cc cc pp cc cc cc xx xx rr rr "
-  "rr rr xx cc cc cc cc cc cc cc cc cc cc cc cc cc xx rr rr "
-  "rr xx xx cc cc cc cc cc cc cc cc cc cc cc cc cc xx xx rr "
+  "rr rr bb bb rr rr xx xx xx xx xx xx xx rr rr rr rr rr rr "
+  "rr bb dd dd bb bb dd cc cc cc cc cc xx xx xx rr rr rr rr "
+  "rr bb dd dd dd dd cc cc cc cc cc cc cc cc xx xx rr rr rr "
+  "rr rr bb dd && dd cc pp cc cc cc pp cc cc cc xx xx rr rr "
+  "rr rr bb dd dd dd cc cc cc cc cc cc cc cc cc cc xx rr rr "
+  "rr xx dd cc cc cc cc cc cc cc cc cc cc cc cc cc xx xx rr "
   "rr xx cc cc pp cc cc pp cc cc cc pp cc cc pp cc cc xx rr "
   "rr xx cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc xx rr "
   "rr xx cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc xx rr "
@@ -554,6 +656,10 @@
   )
  (put (mk-ladder-down 'p_brundegardt_tower_1 10 9) 10 9)
  (put (mk-ladder-up 'p_brundegardt_tower_3 8 9) 8 9)
+ (put (spawn-pt 'troll-geomancer) 3 4)
+ (put (spawn-pt 'troll) 4 3)
+ (put (spawn-pt 'troll) 5 4)
+ (put (spawn-pt 'troll) 3 5)
  )
 
 ;;----------------------------------------------------------------------------
@@ -583,6 +689,7 @@
   )
  (put (mk-ladder-down 'p_brundegardt_tower_2 8 9) 8 9)
  (put (mk-ladder-up 'p_brundegardt_tower_4 10 9) 10 9)
+ (put (spawn-pt 'queen-spider) 12 9)
  )
 
 ;;----------------------------------------------------------------------------
@@ -596,13 +703,13 @@
   "^. ^. .. .. .. .. .. .. .. .. .. .. .. .. .. .. bb ^. ^. "
   "^. ^. .. .. .. .. xx w+ xx w+ xx w+ xx .. .. .. .. ^. ^. "
   "^. bb .. .. .. xx xx cc cc cc cc cc xx xx .. .. .. bb ^. "
-  "^. .. .. .. xx xx cc cc cc cc cc cc cc xx xx .. .. .. ^. "
-  "^. .. .. .. w+ cc cc pp cc cc cc pp cc cc w+ .. .. .. bb "
-  "^. .. .. .. xx cc cc cc cc cc cc cc cc cc xx .. .. .. .. "
+  "^. .. .. .. xx xx xx xx xx cc cc cc cc xx xx .. .. .. ^. "
+  "^. .. .. .. w+ cc cc cc xx cc cc pp cc cc w+ .. .. .. bb "
+  "^. .. .. .. xx cc cc cc xx cc cc cc cc cc xx .. .. .. .. "
   "^. .. .. .. w+ cc cc cc cc cc cc cc cc cc cc .. .. .. .. "
-  "^. .. .. .. xx cc cc cc cc cc cc cc cc cc xx .. .. .. .. "
-  "^. .. .. .. w+ cc cc pp cc cc cc pp cc cc w+ .. .. .. bb "
-  "^. .. .. .. xx xx cc cc cc cc cc cc cc xx xx .. .. .. ^. "
+  "^. .. .. .. xx cc cc cc xx cc cc cc cc cc xx .. .. .. .. "
+  "^. .. .. .. w+ cc cc cc xx cc cc pp cc cc w+ .. .. .. bb "
+  "^. .. .. .. xx xx xx xx xx cc cc cc cc xx xx .. .. .. ^. "
   "^. bb .. .. .. xx xx cc cc cc cc cc xx xx .. .. .. bb ^. "
   "^. ^. .. .. .. .. xx w+ xx w+ xx w+ xx .. .. .. .. ^. ^. "
   "^. ^. bb .. .. .. .. .. .. .. .. .. .. .. .. .. bb ^. ^. "
@@ -611,7 +718,8 @@
   "^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. "
   )
  (put (mk-ladder-down 'p_brundegardt_tower_3 10 9) 10 9)
- (put (mk-ladder-up 'p_brundegardt_tower_5 8 9) 8 9)
+ (put (mk-ladder-up 'p_brundegardt_tower_5 6 9) 6 9)
+ (put (mk-door) 8 9)
  )
 
 ;;----------------------------------------------------------------------------
@@ -639,7 +747,7 @@
   "^. ^. ^. ^. bb bb .. .. .. .. .. .. .. bb ^. ^. ^. ^. ^. "
   "^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. "
   )
- (put (mk-ladder-down 'p_brundegardt_tower_4 8 9) 8 9)
+ (put (mk-ladder-down 'p_brundegardt_tower_4 6 9) 6 9)
  )
 
 ;;----------------------------------------------------------------------------
