@@ -750,6 +750,31 @@
  (put (mk-ladder-down 'p_brundegardt_tower_4 6 9) 6 9)
  )
 
+(block-teleporting 
+ p_brundegardt_tower_5
+ (list
+  "x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# "
+  "x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# "
+  "x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# "
+  "x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# "
+  "x# x# x# x# x# x# ee ee ee x. ee ee ee x# x# x# x# x# x# "
+  "x# x# x# x# x# ee ee x. x. x. x. x. ee ee x# x# x# x# x# "
+  "x# x# x# x# ee ee x. x. cc cc cc x. x. ee ee x# x# x# x# "
+  "x# x# x# x# ee x. x. cc cc cc cc cc x. x. ee x# x# x# x# "
+  "x# x# x# x# ee x. cc cc cc cc cc cc cc x. ee x# x# x# x# "
+  "x# x# x# x# x. x. cc cc cc cc cc cc cc x. x. x# x# x# x# "
+  "x# x# x# x# ee x. cc cc cc cc cc cc cc x. ee x# x# x# x# "
+  "x# x# x# x# ee x. x. cc cc cc cc cc x. x. ee x# x# x# x# "
+  "x# x# x# x# ee ee x. x. cc cc cc x. x. ee ee x# x# x# x# "
+  "x# x# x# x# x# ee ee x. x. x. x. x. ee ee x# x# x# x# x# "
+  "x# x# x# x# x# x# ee ee ee x. ee ee ee x# x# x# x# x# x# "
+  "x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# "
+  "x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# "
+  "x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# "
+  "x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# "
+  )
+)                  
+
 ;;----------------------------------------------------------------------------
 ;; Griffin Peak
 (mk-19x19-town
@@ -783,6 +808,31 @@
  (put (mk-corpse) 8 8)
  (put (mk-corpse) 10 1)
  )
+
+(block-teleporting 
+ p_griffin_peak_s
+ (list
+  "~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ x# x# x# ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ "
+  "~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ x# x# x# ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ "
+  "~~ ~~ ~~ ~~ ~~ ~~ ~~ x# x# x# x# x# ~~ ~~ ~~ ~~ ~~ ~~ ~~ "
+  "~~ ~~ ~~ ~~ ~~ ~~ x# x# x# x# x# x# x# ~~ ~~ ~~ ~~ ~~ ~~ "
+  "~~ ~~ ~~ ~~ ~~ x# x# x# x# x# x# x# x# x# ~~ ~~ ~~ ~~ ~~ "
+  "~~ ~~ ~~ ~~ ~~ x# x# x# x# x# x# x# x# x# ~~ ~~ ~~ ~~ ~~ "
+  "~~ ~~ ~~ ~~ ~~ x# x# x# x# x# x# x# x# x# ~~ ~~ ~~ ~~ ~~ "
+  "~~ ~~ ~~ ~~ ~~ x# x# x# x# x# x# x# x# x# ~~ ~~ ~~ ~~ ~~ "
+  "~~ ~~ ~~ ~~ ~~ x# x# x# x# x# x# x# x# x# ~~ ~~ ~~ ~~ ~~ "
+  "~~ ~~ ~~ ~~ ~~ ~~ x# x# x# x# x# x# x# ~~ ~~ ~~ ~~ ~~ ~~ "
+  "~~ ~~ ~~ ~~ ~~ ~~ ~~ x# x# x# x# x# ~~ ~~ ~~ ~~ ~~ ~~ ~~ "
+  "~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ x# ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ "
+  "~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ "
+  "~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ "
+  "~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ "
+  "~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ "
+  "~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ "
+  "~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ "
+  "~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ ~~ "
+  ))
+                   
 
 (mk-19x19-town
  'p_griffin_peak_se "Southeast Face of Griffin Peak" nil
@@ -895,6 +945,31 @@
  (put (mk-corpse) 8 8)
  (put (mk-corpse) 10 1)
  )
+
+(block-teleporting 
+ p_griffin_peak
+ (list
+  "x# x# x# x# x# x# x# x# .. .. .. x# x# x# x# x# x# x# x# "
+  "x# x# x# x# x# x# x# x# .. .. .. x# x# x# x# x# x# x# x# "
+  "x# x# x# x# x# x# x# bb .. .. .. bb x# x# x# x# x# x# x# "
+  "x# x# x# x# x# x# bb .. dd .. dd .. bb x# x# x# x# x# x# "
+  "x# x# x# x# x# bb .. dd dd dd .. dd .. bb x# x# x# x# x# "
+  "x# x# x# x# x# .. dd dd dd dd dd dd dd .. x# x# x# x# x# "
+  "x# x# x# x# x# bb dd dd dd dd dd dd dd bb x# x# x# x# x# "
+  "x# x# x# x# x# .. dd .. dd dd dd dd dd .. x# x# x# x# x# "
+  "x# x# x# x# x# bb .. dd dd dd dd dd .. bb x# x# x# x# x# "
+  "x# x# x# x# x# x# bb .. dd .. dd .. bb x# x# x# x# x# x# "
+  "x# x# x# x# x# x# x# bb .. dd .. bb x# x# x# x# x# x# x# "
+  "x# x# x# x# x# x# x# x# x# bb x# x# x# x# x# x# x# x# x# "
+  "x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# "
+  "x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# "
+  "x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# "
+  "x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# "
+  "x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# "
+  "x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# "
+  "x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# x# "
+  ))
+                   
 
 ;;----------------------------------------------------------------------------
 ;; Assemble the lower levels into a dungeon complex

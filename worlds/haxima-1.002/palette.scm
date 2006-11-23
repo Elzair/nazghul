@@ -11,6 +11,8 @@
     ;; This constraint makes it easier to edit maps via search & replace,
     ;; and makes it easier to change the palette.
     ;; 
+    ;; NOTE: "x#" is reserved for blocking mechanisms, see block-teleporting in
+    ;; naz.scm
     (list  "xx"   t_wall)               ;; "wall"
     (list  "__"   t_deep)               ;; "deep water"
     (list  "_!"   t_sunlit_deep)               ;; "deep water"

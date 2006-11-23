@@ -1504,3 +1504,29 @@
 (define (set-wind-north)
   (println "set-wind-north")
   (kern-set-wind north 10))
+
+;; block-teleporting takes a place and a list of strings that looks
+;; suspiciously like a terrain map, and uses the map to apply blocking
+;; mechanisms to the place. Every "x#" entry in the map will cause a blocking
+;; mechanism to be placed on that location. All other entries are ignored. The
+;; blocking mechanisms prevent spells like blink from letting the player break
+;; the fiction of a simulated multi-story place.
+(define (block-teleporting kplace map)
+  (define (doline y lines)
+    ;;(println "doline: y=" y ", lines=" lines)
+    (define (docol x tokens)
+      ;;(println "docol: x=" x ", tokens=" tokens)
+      (cond ((null? tokens) nil)
+            (else
+             (if (and (char=? #\x (car tokens))
+                       (char=? #\# (cadr tokens)))
+                 (begin
+                   ;;(println "blocking " (kern-place-get-name kplace) ":(" x "," y ")")
+                   (kern-obj-put-at (mk-blocker) (list kplace x y))
+                 ))
+             (docol (+ x 1) (cdddr tokens)))))
+    (cond ((null? lines) nil)
+          (else
+           (docol 0 (string->list (car lines)))
+           (doline (+ y 1) (cdr lines)))))
+    (doline 0 map))

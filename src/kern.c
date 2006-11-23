@@ -4831,11 +4831,11 @@ KERN_API_CALL(kern_place_get_name)
 
         /* unpack the place */
         if (unpack(sc, &args, "p", &place)) {
-                rt_err("kern-place-get-objects: bad args");
+                rt_err("kern-place-get-name: bad args");
                 return sc->NIL;
         }
         if (! place) {
-                rt_err("kern-place-get-objects: null place");
+                rt_err("kern-place-get-name: null place");
                 return sc->NIL;
         }
 

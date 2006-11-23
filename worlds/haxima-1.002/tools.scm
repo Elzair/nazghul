@@ -323,7 +323,7 @@
 				))
 		(method 'init
             (lambda (kobj)
-				(kern-obj-set-pclass kobj pclass-wall)
+				(kern-obj-set-pclass kobj pclass-space)
             ))
        ))
 
