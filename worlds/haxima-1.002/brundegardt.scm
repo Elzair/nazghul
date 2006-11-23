@@ -719,7 +719,10 @@
   )
  (put (mk-ladder-down 'p_brundegardt_tower_3 10 9) 10 9)
  (put (mk-ladder-up 'p_brundegardt_tower_5 6 9) 6 9)
- (put (mk-door) 8 9)
+ (let ((kdoor (mk-door)))
+   (lock-door-with-key kdoor 't_brundegardt_tower_4_key)
+   (put kdoor 8 9))
+ (put (mk-key t_brundegardt_tower_4_key) 10 9)
  )
 
 ;;----------------------------------------------------------------------------

@@ -1,6 +1,5 @@
 ;;----------------------------------------------------------------------------
-;; Local Variables
-;;----------------------------------------------------------------------------
+;; Doors
 (define door-state-closed       0)
 (define door-state-open         1)
 (define door-state-locked       2)
@@ -17,7 +16,7 @@
 
 ;; Define the door gob structure and procedures.
 (define (door-mk open? timeout port active? locked? magic-locked? type)
-  (list open? timeout port active? locked? magic-locked? type nil))
+  (list open? timeout port active? locked? magic-locked? type nil nil))
 (define (door-open? door) (car (gob-data door)))
 (define (door-timeout door) (cadr (gob-data door)))
 (define (door-port door) (list-ref (gob-data door) 2))
@@ -27,6 +26,12 @@
 (define (door-states door) (list-ref (gob-data door) 6))
 (define (door-traps door) (list-ref (gob-data door) 7))
 (define (door-trapped? door) (not (null? (door-traps door))))
+(define (door-key door) (list-ref (gob-data door) 8))
+(define (door-needs-key? door) (not (null? (door-key door))))
+(define (door-key-fits? door ktype)
+  (let ((key (safe-eval (door-key door))))
+    (and (not (null? key))
+         (eqv? key ktype))))
 
 (define (door-set-open door val) (set-car! (gob-data door) val))
 (define (door-set-timeout! door time) (set-car! (cdr (gob-data door)) time))
@@ -39,6 +44,8 @@
 (define (door-add-trap! door trap-type)
   (door-set-traps! door (cons (mk-trap (eval trap-type))
                               (door-traps door))))
+(define (door-set-key! door key-type-tag) 
+  (list-set-ref! (gob-data door) 8 key-type-tag))
 
 (define (door-send-signal kdoor sig)
   (let ((door (kobj-gob kdoor)))
@@ -130,6 +137,7 @@
     ;;(display "door-unlock:")(display door)(newline)
     (cond ((door-open? door) (kern-log-msg "Not closed!\n"))
           ((not (door-locked? door)) (kern-log-msg "Not locked!\n"))
+          ((door-needs-key? door) (kern-log-msg "Needs the key!\n"))
           (else
            (door-set-locked! door #f)
            (door-update-kstate kdoor)))))
@@ -183,6 +191,17 @@
   (let ((door (kobj-gob kdoor)))
     (door-set-traps! door nil)))
 
+(define (door-use-key kdoor key-type)
+  (let ((door (kobj-gob kdoor)))
+    (cond ((door-open? door) (kern-log-msg "Not closed!"))
+          ((not (door-key-fits? door key-type)) (kern-log-msg "Key won't fit!"))
+          ((door-locked? door)
+           (door-set-locked! door #f)
+           (door-update-kstate kdoor))
+          (else
+           (door-set-locked! door #t)
+           (door-update-kstate kdoor)))))
+
 (define door-ifc
   (ifc '()
        (method 'exec door-exec)
@@ -198,6 +217,7 @@
        (method 'add-trap door-add-trap)
        (method 'get-traps door-get-traps)
        (method 'rm-traps door-rm-traps)
+       (method 'use-key door-use-key)
        ))
 
 ;; Create the kernel "door" type
@@ -242,6 +262,12 @@
 (define (mk-magic-locked-door) (mk-door-full solid-wood-door-in-stone #f #t nil))
 (define (mk-locked-windowed-door) 
   (mk-door-full windowed-wood-door-in-rock #t #f nil))
+
+(define (lock-door-with-key kdoor key-type-tag)
+  (lock-door kdoor nil)
+  (door-set-key! (kobj-gob kdoor) key-type-tag)
+  )
+    
 
 ;; Add a trap to a door
 (define (trap-door kdoor trap-tag)
