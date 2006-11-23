@@ -138,27 +138,27 @@
 ;;-----------------------------------------------------------------------------
 (kern-mk-map
  'm_dryad_grove 19 19 pal_expanded
- (list
-  "^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ "
-  "^^ ^^ ^^ ^^ ^^ || || || || || || || || || || || || ^^ ^^ "
-  "^^ ^^ ^^ .. tt tt tt || || tt tt tt || || || || || || ^^ "
-  "^^ ^^ .. .. .. tt tt tt tt tt .. tt tt tt || || || || || "
-  "^^ ^^ tt .. tt tt tt tt tt .. .. .. tt tt tt tt || || || "
-  "^^ || tt tt tt || || tt tt tt .. tt tt tt tt tt tt tt tt "
-  "^^ || || || || || || || || tt tt tt || || tt tt tt tt tt "
-  "^^ || || || || || || || || || || || || || tt tt tt .. .. "
-  "^^ || || || || || || || || || || || || || tt tt .. .. .. "
-  "^^ || || || || || || || || || || || || || tt tt .. .. .. "
-  "^^ || || tt tt tt || || || || || || || || tt tt .. .. .. "
-  "^^ || tt tt tt tt tt || || || || || || || tt tt tt .. .. "
-  "^^ || tt tt tt tt tt tt || || || || || tt tt tt tt tt tt "
-  "^^ || tt tt tt tt tt tt tt || || || || tt tt tt tt tt tt "
-  "^^ || tt tt tt tt tt tt tt || || || tt tt tt || || || || "
-  "^^ || || tt tt tt tt tt tt || || || tt tt tt || || || || "
-  "^^ || || || tt tt tt tt || || || tt tt .. tt tt || || ^^ "
-  "^^ || || || || || || || || || || tt .. .. .. tt || ^^ ^^ "
-  "^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ "
-  )
+	(list
+		"^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ "
+		"^^ ^^ ^^ ^^ ^c |# || || || || || || || || || || |% ^a ^^ "
+		"^^ ^^ ^^ {3 tb tt tt || || tt tt tt || || || || || |% ^^ "
+		"^^ ^^ {3 .. tD tt tt tt tt tc t& ta tt tt || || || || || "
+		"^^ ^c t7 tE t3 tt tt tt tt tB .. tD tt tt tt tt || || || "
+		"^^ |# tt tt tt || || tt tt t5 tE t3 tt tt tt tt tt tt tt "
+		"^^ || || || || || || || || tt tt tt || || tt tt tt tt tt "
+		"^^ || || || || || || || || || || || || || tt tt tc t# .. "
+		"^^ || || || || || || || || || || || || || tt tt t# .. .. "
+		"^^ || || || || || || || || || || || || || tt tt .. .. .. "
+		"^^ || || tt tt tt || || || || || || || || tt tt tA .. .. "
+		"^^ || tt tt tt tt tt || || || || || || || tt tt t5 tA .. "
+		"^^ || tt tt tt tt tt tt || || || || || tt tt tt tt tt tt "
+		"^^ || tt tt tt tt tt tt tt || || || || tt tt tt tt tt tt "
+		"^^ || tt tt tt tt tt tt tt || || || tt tt tt || || || || "
+		"^^ || || tt tt tt tt tt tt || || || tt tt tt || || || || "
+		"^^ || || || tt tt tt tt || || || tt tc t& ta tt || |C ^^ "
+		"^^ |A || || || || || || || || || tc t# {8 t% ta |C ^3 ^^ "
+		"^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ ^^ "
+	)
  )
 (kern-mk-place 
  'p_dryad_grove ; tag
