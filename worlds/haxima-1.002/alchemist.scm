@@ -53,7 +53,7 @@
 
 ;; Basics...
 (define (alch-hail knpc kpc)
-  (say knpc "[You meet a short, fat old man with a long noise] "
+  (say knpc "[You meet a short, fat old man with a long nose] "
        "Hello and welcome, Traveler!"))
 
 (define (alch-default knpc kpc)

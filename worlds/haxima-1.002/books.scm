@@ -113,10 +113,10 @@
    "hard for novices to achieve."
    ""
    "The spell requires spider silk, of course, "
-   "and also black perl, to project the web at "
+   "and also black pearl, to project the web at "
    "the desired target."
    ""
-   "With the appropriate mixture, entone "
+   "With the appropriate mixture, intone "
    "Ylem An Ex (Matter to Negate Freedom) and "
    "hurl the net of web at your foe."
    )))

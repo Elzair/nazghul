@@ -39,7 +39,7 @@
        (method 'spel
                (lambda (knpc kpc)
                  (say knpc "The In Ex Por spell unlocks magically locked doors. "
-                      "To mix it you'll need sulphorous ash and blood moss. "
+                      "To mix it you'll need sulphurous ash and blood moss. "
                       "Ask me about mixing if you don't know how.")))
        (method 'mix
                (lambda (knpc kpc)

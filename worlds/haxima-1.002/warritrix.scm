@@ -79,7 +79,7 @@
 
 ;; Quest-related
 (define (warr-rune knpc kpc)
-  (say knpc "You may keep the Rune. I know not it's purpose. I have carried it "
+  (say knpc "You may keep the Rune. I know not its purpose. I have carried it "
        "all these years in honour of King Clovis, my godfather, "
        "who gave it to me."))
 

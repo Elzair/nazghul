@@ -38,7 +38,7 @@
        "and to pass their legacy on to an heir. Art thou a Keeper?")
   (if (yes? kpc)
       (begin
-        (say knpc "Then why dost thou ask me of this Rune? Did they master not explain?")
+        (say knpc "Then why dost thou ask me of this Rune? Did thy master not explain?")
         (if (yes? kpc)
             (say knpc "[He chuckles malignantly] Thou thinkest me a fool, "
                  "and art a fool for thinking so. The Rune will be thy undoing, "

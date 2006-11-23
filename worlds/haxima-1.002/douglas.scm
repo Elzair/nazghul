@@ -55,7 +55,7 @@
 
 (define (doug-gobl knpc kpc)
   (say knpc "The cave goblins dominate this level. They are savage but ill-equipped. "
-       "There is also a grotto where you can find some forest goblins who are usually not not as hostile. "
+       "There is also a grotto where you can find some forest goblins who are usually not as hostile. "
        "The forest and cave goblins do not get along, which helps keep them under control."))
 
 (define (doug-trol knpc kpc)

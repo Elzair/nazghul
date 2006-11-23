@@ -139,7 +139,7 @@
 
 (define (oscar-seaw knpc kpc)
   (say knpc "The sea witch is very beautiful but keeps to herself. "
-       "She'd ignores me, of course."))
+       "She ignores me, of course."))
 
 (define (oscar-henr knpc kpc)
   (say knpc "There's a real sailor. I'll never be like him."))
