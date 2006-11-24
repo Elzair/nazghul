@@ -722,11 +722,11 @@
  (let ((kdoor (mk-door)))
    (lock-door-with-key kdoor 't_brundegardt_tower_4_key)
    (put kdoor 8 9))
- (put (mk-key t_brundegardt_tower_4_key) 10 9)
  )
 
 ;;----------------------------------------------------------------------------
 ;; Tower L5
+(kern-load "eye-of-brune.scm")
 (mk-19x19-town
  'p_brundegardt_tower_5 "BrundeGardt Tower L5" nil
  (list
@@ -751,6 +751,10 @@
   "^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. "
   )
  (put (mk-ladder-down 'p_brundegardt_tower_4 6 9) 6 9)
+ (put (kern-mk-obj t_eye_of_brune 1) 9 9)
+ (put (mk-corpse-with-loot) 8 9)
+ (put (mk-corpse-with-loot) 9 8)
+ (put (mk-corpse-with-loot) 10 10)
  )
 
 (block-teleporting 
@@ -947,6 +951,7 @@
  (put (mk-corpse) 13 7)
  (put (mk-corpse) 8 8)
  (put (mk-corpse) 10 1)
+ (put (mk-key t_brundegardt_tower_4_key) 9 9)
  )
 
 (block-teleporting 

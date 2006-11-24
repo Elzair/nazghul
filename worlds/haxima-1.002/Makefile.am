@@ -89,7 +89,8 @@ haxima_DATA = \
 	traps.scm                   bigobjects.png         hirespeople.png\
 	humanoids.png               pitfalls.scm           pitfalls.png\
 	brundegardt.scm             anaxes.scm		   mimic.scm\
-	weather-vane.scm            wind-bridge.scm        keys.scm
+	weather-vane.scm            wind-bridge.scm        keys.scm\
+	eye-of-brune.scm
 
 EXTRA_DIST = $(haxima_DATA)
 MAINTAINERCLEANFILES = Makefile.in

@@ -69,6 +69,7 @@
 #include "cmdwin.h"
 #include "cfg.h"
 #include "menus.h"
+#include "file.h"
 
 #include <assert.h>
 #include <ctype.h>              // isspace()
@@ -5329,6 +5330,63 @@ KERN_API_CALL(kern_map_set_jitter)
         return sc->T;
 }
 
+KERN_API_CALL(kern_image_load)
+{
+        char *fname, *path;
+        SDL_Surface *image = 0;
+
+        if (unpack(sc, &args, "s", &fname)) {
+                rt_err("kern-image-load: bad args");
+                return sc->NIL;
+        }
+
+        path = file_mkpath(cfg_get("include-dirname"), fname);
+        if (! path) {
+                rt_err("kern-image-load: %s", file_get_error());
+                return sc->NIL;
+        }
+
+        image = IMG_Load(path);
+        if (! image) {
+                rt_err("kern-image-load: %s", SDL_GetError());
+        }
+        free(path);
+
+        return scm_mk_ptr(sc, image);
+}
+
+KERN_API_CALL(kern_image_free)
+{
+        SDL_Surface *image;
+
+        if (unpack(sc, &args, "p", &image)) {
+                rt_err("kern-image-free: bad args");
+                return sc->NIL;
+        }
+
+        SDL_FreeSurface(image);
+        return sc->NIL;
+}
+
+KERN_API_CALL(kern_map_set_image)
+{
+        SDL_Surface *image;
+
+        if (unpack(sc, &args, "p", &image)) {
+                rt_err("kern-map-set-image: bad args");
+                return sc->NIL;
+        }
+
+        if (!image) {
+                mapClearImage();
+                mapUpdate(0);
+                return sc->NIL;
+        }
+
+        mapSetImage(image);
+        return sc->NIL;
+}
+
 KERN_API_CALL(kern_char_kill)
 {
         class Character *ch;
@@ -8140,6 +8198,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-map-flash", kern_map_flash);
         API_DECL(sc, "kern-map-repaint", kern_map_repaint);
         API_DECL(sc, "kern-map-set-dirty", kern_map_set_dirty);
+        API_DECL(sc, "kern-map-set-image", kern_map_set_image);
         API_DECL(sc, "kern-map-set-jitter", kern_map_set_jitter);
         API_DECL(sc, "kern-map-set-peering", kern_map_set_peering);
         API_DECL(sc, "kern-map-view-create", kern_map_view_create);
@@ -8180,6 +8239,10 @@ scheme *kern_init(void)
         /* kern-cfg api */
         API_DECL(sc, "kern-cfg-set", kern_cfg_set);
         API_DECL(sc, "kern-cfg-get", kern_cfg_get);
+
+        /* kern-image api */
+        API_DECL(sc, "kern-image-load", kern_image_load);
+        API_DECL(sc, "kern-image-free", kern_image_free);
 
         /* obsolete (keep these until old save games are unlikely to use
          * them) */

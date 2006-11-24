@@ -1696,7 +1696,18 @@ void mapSetImage(SDL_Surface *image)
 {
         Map.is_image_mode = 1;
         if (image) {
-                screenBlit(image, NULL, &Map.srect);
+                /* center the image over the map */
+                SDL_Rect rect = Map.srect;
+                if (image->w < Map.srect.w) {
+                        rect.x = Map.srect.x + (Map.srect.w - image->w) / 2;
+                        rect.w = image->w;
+                }
+                if (image->h < Map.srect.h) {
+                        rect.y = Map.srect.y + (Map.srect.h - image->h) / 2;
+                        rect.h = image->h;
+                }
+                screenErase(&Map.srect);
+                screenBlit(image, NULL, &rect);
         } else {
                 screenErase(&Map.srect);
         }

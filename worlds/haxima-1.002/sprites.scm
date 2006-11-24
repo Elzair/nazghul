@@ -334,7 +334,9 @@
 (kern-mk-sprite 's_gravel ss_addon 1 138 #f 0)
 (kern-mk-sprite 's_great_kraken ss_addon 2 139 #f 0)
 (kern-mk-sprite 's_weather_vane ss_addon 1 144 #f 170)
-(kern-mk-sprite 's_mouse ss_addon 2 148 #f 0)
+(kern-mk-sprite 's_mouse        ss_addon 2 148 #f 0)
+(kern-mk-sprite 's_eye_closed   ss_addon 1 150 #f 0)
+(kern-mk-sprite 's_eye_open     ss_addon 1 151 #f 0)
 
 (kern-mk-sprite 's_full_moon                ss_moons 1 0 #f 0 )
 (kern-mk-sprite 's_wane_three_quarter_moon  ss_moons 1 1 #f 0 )
