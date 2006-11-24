@@ -46,6 +46,18 @@
 #define LOADSAVE_HINT "\005\006=scroll ENT=select DEL=delete ESC=exit"
 
 /**
+ * Enable this option to have the a "L)oad Game" menu item in addition to the
+ * "J)ourney Onward" menu item. When this is enabled J)ourney Onward
+ * automatically picks the last saved game. Otherwise, J)ourney Onward works
+ * like L)oad Game, providing a list of all saved games, with the most recently
+q
+ * saved one at the top.
+ */
+#ifndef CONFIG_LOAD_GAME_OPTION
+#define CONFIG_LOAD_GAME_OPTION 0
+#endif
+
+/**
  * Information about saved game files.
  */
 typedef struct saved_game {
@@ -745,6 +757,37 @@ static char menu_hotkey(int i)
         return (i < 10) ? (i + '0') : 0;
 }
 
+/**
+ * Find the most recently saved game.
+ *
+ * @returns A copy of the full pathname of the most recently saved game, or 0
+ * if there are no saved games.
+ */
+char * journey_onward(void)
+{
+        char *ret = 0;
+        saved_game_t *save;
+
+        if (list_empty(&menu_saved_games)) {
+                return 0;
+        }
+
+        /* Since the saved game list is kept sorted by modification time, the
+         * first element in the list is the most recent. */
+        save = outcast(menu_saved_games.next, saved_game_t, list);
+        ret = strdup(save->path);
+        menu_set_current_saved_game(save);
+        return ret;
+}
+
+/**
+ * Give the user a choice of saved games to load, with the most recently saved
+ * always at the top for easy access. If there is only one saved game then
+ * don't bother asking, just load it directly.
+ *
+ * @returns A copy of the full pathname of the game file to load, or 0 if the
+ * player canceled.
+ */
 char * load_game_menu(void)
 {
         char **menu = 0;
@@ -757,6 +800,12 @@ char * load_game_menu(void)
         char *selection = 0;
         enum StatusMode omode = statusGetMode();
         int linew = STAT_CHARS_PER_LINE;
+
+        /* If there is only one saved game then just load it without prompting
+         * the user. */
+        if (1 == list_len(&menu_saved_games)) {
+                return journey_onward();
+        }
 
         memset(&data, 0, sizeof(data));
 
@@ -827,29 +876,6 @@ char * load_game_menu(void)
         free(data.hotkeys);
 
         return selection;
-}
-
-/**
- * Find the most recently saved game.
- *
- * @returns A copy of the full pathname of the most recently saved game, or 0
- * if there are no saved games.
- */
-char * journey_onward(void)
-{
-        char *ret = 0;
-        saved_game_t *save;
-
-        if (list_empty(&menu_saved_games)) {
-                return 0;
-        }
-
-        /* Since the saved game list is kept sorted by modification time, the
-         * first element in the list is the most recent. */
-        save = outcast(menu_saved_games.next, saved_game_t, list);
-        ret = strdup(save->path);
-        menu_set_current_saved_game(save);
-        return ret;
 }
 
 /**
@@ -1137,9 +1163,11 @@ char * main_menu(void)
                 menu[n_items] = JOURNEY_ONWARD;
                 hotkeys[n_items] = 'j';
                 n_items++;
-                menu[n_items] = LOAD_GAME;
-                hotkeys[n_items] = 'l';
-                n_items++;
+                if (CONFIG_LOAD_GAME_OPTION) {
+                        menu[n_items] = LOAD_GAME;
+                        hotkeys[n_items] = 'l';
+                        n_items++;
+                }
         }
 
         /* check for the default script for Start New Game */
@@ -1193,11 +1221,16 @@ char * main_menu(void)
                 assert(load_fname);
         }
         else if (! strcmp(selection, JOURNEY_ONWARD)) {
-                load_fname = journey_onward();
+                if (CONFIG_LOAD_GAME_OPTION) {
+                        load_fname = journey_onward();
+                } else {
+                        load_fname = load_game_menu();
+                }
                 if (! load_fname)
                         goto start_main_menu;
         }
-        else if (! strcmp(selection, LOAD_GAME)) {
+        else if (CONFIG_LOAD_GAME_OPTION
+                 && ! strcmp(selection, LOAD_GAME)) {
                 load_fname = load_game_menu();
                 if (!load_fname)
                         goto start_main_menu;
