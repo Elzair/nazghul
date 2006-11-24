@@ -645,6 +645,13 @@ enum MoveResult Character::move(int dx, int dy)
                         return ExitedMap;
                 }
 
+                if (player_party->get_num_living_members() == 1) {
+                        // Force to follow mode to avoid the annoying case
+                        // where only one member is in the party and the player
+                        // wants to leave a combat map.
+                        player_party->enableFollowMode();
+                }
+
                 /* Let's try switching the order used to look for an exit
                  * place. Instead of checking the parent first, check for a
                  * neighbor first. */
@@ -678,7 +685,7 @@ enum MoveResult Character::move(int dx, int dy)
                                                       getY())) {
                                 return CantRendezvous;
                         }
-                        
+
                         // Goto neighbor
                         groupExitTo(dest_place, dest_x, dest_y, NULL);
                         endTurn();
@@ -688,13 +695,6 @@ enum MoveResult Character::move(int dx, int dy)
 
                 if (place_get_parent(getPlace()) != NULL) {
                 
-                        if (player_party->getSize() == 1) {
-                                // Force to follow mode to avoid the annoying
-                                // case where only one member is in the party
-                                // and the player wants to leave a combat map.
-                                player_party->enableFollowMode();
-                        }
-
                         if (player_party->getPartyControlMode() 
                             != PARTY_CONTROL_FOLLOW) {
                                 return NotFollowMode;
