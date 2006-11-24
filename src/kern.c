@@ -3488,8 +3488,13 @@ KERN_API_CALL(kern_obj_get_mmode)
 KERN_API_CALL(kern_obj_get_name)
 {
         Object *obj = unpack_obj(sc, &args, "kern-obj-get-name");
-        if (!obj)
+        if (!obj) {
                 return sc->NIL;
+        }
+
+        if (!obj->getName()) {
+                return sc->NIL;
+        }
 
         return scm_mk_string(sc, obj->getName());
 }
