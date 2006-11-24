@@ -100,10 +100,10 @@
                          "you being a mere soldier of fortune like myself: "
                          "do not enter Brundegardt alone, "
                          "and take with you what supplies you can steal or purchase.")
-                    ))
+                    )))
              (else
-              (say knpc "But sir! We have not reached Brundegardt!"))
-             ))
+              (say knpc "But sir! We have not reached Brundegardt!")
+              ))
       (say knpc "Password? What password?")
       ))
 

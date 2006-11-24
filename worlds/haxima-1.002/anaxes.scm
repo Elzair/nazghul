@@ -1,7 +1,7 @@
 ;;----------------------------------------------------------------------------
 ;; Constants
 ;;----------------------------------------------------------------------------
-(define anaxes-lvl 5)
+(define anaxes-lvl 6)
 (define anaxes-species sp_ghast)
 (define anaxes-occ oc_wizard)
 
@@ -47,8 +47,7 @@
        "This is too much! Now his perfidy is made plain! ")
   (prompt-for-key)
   (say knpc "So long as I draw breath, the Shrine of Brune will not be defiled!")
-  (aside kpc 'ch_nate "Ah! The name of the god at last! "
-         "I feared it was forgotten forever!")
+  (aside kpc 'ch_nate "Ah! The name of the god at last! I feared it was forgotten forever!")
   )
 
 (define (anaxes-gods knpc kpc)
@@ -57,11 +56,18 @@
        "drowned in blood at the last battle! "
        "Vigilance to the faithful!"))
 
-(define (anaxes-vigi knpc kpc)
+(define (anaxes-brun knpc kpc)
   (say knpc "This is the Shrine of Brune, god of vigilance. "
        "I rebelled against Luximene's order to disgrace it with his image. "
        "I ordered the entrace to Brune-Guard sealed, and awaited the siege. ")
   )
+
+(define (anaxes-vigi knpc kpc)
+  (say knpc "We have failed in our vigilance! "
+       "Luximene has decieved us all, and now we must pay the price for failure."))
+
+(define (anaxes-fail knpc kpc)
+  (say knpc "We have failed the gods, it is no wonder they have forsaken us!"))
 
 (define (anaxes-twel knpc kpc)
   (say knpc "I was among the Twelve Counselors of Luximene. "
@@ -93,8 +99,7 @@
        "But Luximene has ordered the desecration of the shrines, "
        "and I have rebelled!")
   (aside kpc 'ch_nate 
-         "[Whispering] This lich thinks himself a wizard living "
-         "in the time of Luximene. Can it be that he once was?")
+         "[Whispering] This lich thinks himself a wizard living in the time of Luximene. Can it be that he once was?")
   )
 
 (define (anaxes-fort knpc kpc)
@@ -119,9 +124,10 @@
        (method 'accu anaxes-accu)
        (method 'assa anaxes-luxi)
        (method 'bye anaxes-bye)
-       (method 'brun anaxes-vigi)
+       (method 'brun anaxes-brun)
        (method 'default anaxes-default)
        (method 'defe anaxes-fort)
+       (method 'fail anaxes-fail)
        (method 'fait anaxes-vigi)
        (method 'fort anaxes-fort)
        (method 'god  anaxes-gods)
@@ -137,7 +143,6 @@
        (method 'towe anaxes-towe)
        (method 'twel anaxes-twel)
        (method 'vigi anaxes-vigi)
-
        ))
 
 (define (mk-anaxes)
@@ -161,7 +166,13 @@
     nil           ; sched
     'lich-ai         ; special ai
     nil              ; container
-    nil              ; readied
+    ;; readied
+    (list
+     t_armor_chain_4
+     t_chain_coif_4
+     t_morning_star_2
+     t_shield_4
+     )
     )
    (anaxes-mk)
    ))

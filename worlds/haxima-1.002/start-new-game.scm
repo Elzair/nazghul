@@ -109,7 +109,7 @@
   pc-hp-gain
   pc-mp-off
   pc-mp-gain
-  max-health 0 max-health 2              ; hp/xp/mp/lvl
+  max-health 0 max-health 1              ; hp/xp/mp/lvl
   #f                    ; dead
   nil                   ; conv
   nil                   ; sched
@@ -157,21 +157,7 @@
  nil                         ; campsite formation
  nil                         ; vehicle
  ;; inventory
- (kern-mk-inventory
-  (list
-   (list 100 t_torch)
-   (list 100 t_picklock)
-   (list 100 spider_silk)
-   (list 100 mandrake)
-   (list 100 sulphorous_ash)
-   (list 100 blood_moss)
-   (list 1 t_sword)
-   (list 1 t_armor_leather)
-   (list 1 t_shield)
-   (list 1 t_leather_helm)
-   (list 1 t_slime_vial)
-  ))
-
+ (kern-mk-inventory nil)
  nil ;; party members (should be nil for initial load file)
  )
 
@@ -312,5 +298,5 @@
 ;; the line after it.
 ;;----------------------------------------------------------------------------
 ;;(kern-set-start-proc start-scene)
-(kern-set-start-proc simple-start)
-;;(kern-set-start-proc create-char)
+;;(kern-set-start-proc simple-start)
+(kern-set-start-proc create-char)

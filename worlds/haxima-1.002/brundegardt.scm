@@ -64,7 +64,7 @@
   (list
    "rr rr rr rr xx xx xx xx xx rr rr rr rr rr rr rr rr rr rr rr rr gg gg gg rr "
    "rr rr rr rr xx cc cc cc xx rr rr rr rr rr rr rr rr rr rr rr rr rr gg rr rr "
-   "rr rr rr rr xx cc cc cc ?? gg gg gg gg gg gg gg gg gg gg rr rr rr gg rr rr "
+   "rr rr rr rr xx cc cc cc cc gg gg gg gg gg gg gg gg gg gg rr rr rr gg rr rr "
    "rr rr rr rr xx cc cc cc xx rr rr xx xx xx xx xx xx xx gg rr rr rr gg rr rr "
    "rr rr rr rr xx xx cc xx xx xx xx xx cc cc cc cc cc xx gg gg gg gg gg rr rr "
    "rr rr rr rr xx xx cc xx cc cc cc xx cc cc cc cc cc xx xx xx xx xx xx xx xx "
@@ -171,8 +171,8 @@
   (put (mk-chest nil
                  '((5 t_wine))) 23 16)
   (put (mk-chest nil
-                 '((5 t_garlic)
-                   (5 t_ginseng))) 23 17)
+                 '((5 garlic)
+                   (5 ginseng))) 23 17)
   (put (mk-chest 'bomb-trap
                  '((1 t_an_tym_scroll)
                    (1 t_in_mani_corp_scroll)
@@ -298,8 +298,10 @@
   (put (mk-chest nil '((10 garlic))) 20 21)
   (put (spawn-pt 'skeletal-warrior) 20 19)
 
-  ;; npcs
+  ;; ratlings!
   (put (guard-pt 'ratling-sorcerer) 13 13)
+  (put (guard-pt 'ratling-sorcerer) 12 13)
+  (put (guard-pt 'ratling-sorcerer) 14 14)
   (put (spawn-pt 'ratling-swarmer) 2 22)
   (put (spawn-pt 'ratling-swarmer) 20 4)
   (put (spawn-pt 'ratling-swarmer) 2 22)
@@ -447,8 +449,8 @@
   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
   "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
   )
- (put (mk-windowed-door) 7 9)
- (put (mk-windowed-door) 11 9)
+ (put (mk-locked-windowed-door) 7 9)
+ (put (mk-locked-windowed-door) 11 9)
  (put (mk-corpse-with-loot) 8 8)
  (put (mk-corpse-with-loot) 8 10)
  (put (mk-corpse-with-loot) 10 8)
