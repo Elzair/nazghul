@@ -690,7 +690,7 @@
 (define gint-mage (mk-npct2 "gint mage" sp_gint oc_wizard s_gint_mage wizard-traps wizard-equip nil 'shaman-ai faction-gint nil 'drop-generic wizard-loot))
 (define gint-warrior (mk-npct2 "gint warrior" sp_gint oc_warrior s_gint basic-traps gint-warrior-equip nil 'std-ai faction-gint nil 'drop-generic gint-loot))
 (define yellow-slime (mk-npct2 "yellow slime" sp_yellow_slime nil s_yellow_slime nil nil yellow-slime-effects 'yellow-slime-ai faction-monster nil 'drop-generic yellow-slime-loot))
-(define troll-geomancer (mk-npct2 "troll geomancer" sp_troll oc_wizard s_troll_geomancer no-traps geomancer-equip nil 'std-ai faction-troll nil 'drop-generic geomancer-loot))
+(define troll-geomancer (mk-npct2 "troll geomancer" sp_troll oc_wizard s_troll_geomancer no-traps geomancer-equip nil 'geomancer-ai faction-troll nil 'drop-generic geomancer-loot))
 (define corrupt-halberdier (mk-npct2 "halberdier" sp_human oc_warrior s_guard no-traps halberdier-equip nil 'guard-ai faction-monster nil 'drop-generic halberdier-loot))
 (define corrupt-crossbowman (mk-npct2 "crossbowman" sp_human oc_warrior s_guard no-traps crossbowman-equip nil 'guard-ai faction-monster nil 'drop-generic crossbowman-loot))
 (define giant-spider (mk-npct2 "giant spider" sp_spider nil s_spider nil nil nil 'spider-ai faction-monster nil 'drop-generic spider-loot))

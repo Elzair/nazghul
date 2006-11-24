@@ -694,6 +694,7 @@
 
 ;;----------------------------------------------------------------------------
 ;; Tower L4
+(kern-load "tim.scm")
 (mk-19x19-town
  'p_brundegardt_tower_4 "BrundeGardt Tower L4" nil
  (list
@@ -719,6 +720,10 @@
   )
  (put (mk-ladder-down 'p_brundegardt_tower_3 10 9) 10 9)
  (put (mk-ladder-up 'p_brundegardt_tower_5 6 9) 6 9)
+ (put (mk-tim) 16 9)
+ (put (mk-corpse) 9 8)
+ (put (mk-corpse) 9 10)
+ (put (mk-corpse) 11 5)
  (let ((kdoor (mk-door)))
    (lock-door-with-key kdoor 't_brundegardt_tower_4_key)
    (put kdoor 8 9))
@@ -807,13 +812,6 @@
   "^. ^. ^. .. ^. ^. ^. .. .. .. .. .. ^. ^. ^. ^. ^. ^. ^. "
   "^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. "
   )
- (put (mk-corpse) 6 15)
- (put (mk-corpse) 11 15)
- (put (mk-corpse) 14 13)
- (put (mk-corpse) 7 5)
- (put (mk-corpse) 13 7)
- (put (mk-corpse) 8 8)
- (put (mk-corpse) 10 1)
  (put (spawn-pt 'griffin) 9 13)
  )
 
@@ -824,7 +822,7 @@
                     (eqv? (kern-place-get-terrain loc)
                           t_grass))
                   (lambda (loc)
-                    (kern-obj-put-at (mk-corpse)
+                    (kern-obj-put-at (mk-corpse-with-loot)
                                      loc))
                   20)
 
@@ -865,18 +863,36 @@
   "^. ^. ^. ^. ^. ^^ ^^ ^^ ^. .. .. .. ^. ^. ^. {{ {{ ^. ^. "
   "^. .. .. .. ^. ^. ^^ ^. ^. .. .. ^. ^. ^. ^. ^. {{ ^. ^. "
   ".. .. .. .. .. ^. ^. ^. .. .. .. ^. ^. ^. ^. ^. ^. ^. ^. "
-  ".. .. .. .. .. .. .. .. .. .. .. .. ^. ^. ^. ^. ^. ^. ^. "
-  ".. ^. ^. ^. .. .. .. .. .. .. ^. .. .. .. .. ^. ^. ^. ^. "
-  "^. ^. ^. ^. ^. .. .. ^. ^. .. .. .. .. .. .. .. ^. ^. ^. "
+  ".. .. .. .. .. .. .. .. .. .. .. .. bb ^. ^. ^. ^. ^. ^. "
+  ".. ^. ^. ^. .. .. .. .. .. .. bb .. .. .. .. ^. ^. ^. ^. "
+  "^. ^. ^. ^. ^. .. .. ^. ^. .. .. .. .. .. .. bb ^. ^. ^. "
   "^. ^. ^. ^. ^. ^. ^. ^. ^. ^. .. .. .. .. .. .. .. ^. ^. "
   "^. ^. ^. ^. ^. ^. ^. ^. ^. ^. .. .. .. && .. .. .. ^. ^. "
-  "^. {{ ^. ^. ^. ^. {{ ^. ^. ^. .. .. .. .. .. .. .. ^. ^. "
-  "^. ^. {{ {{ {{ {{ ^. ^. ^. ^. ^. .. .. .. .. .. ^. ^. ^. "
-  "^. {{ tt tt tt tt {{ ^. ^. ^. ^. ^. .. .. .. ^. ^. ^. ^. "
+  "^. {{ ^. ^. ^. ^. {{ ^. ^. ^. bb .. .. .. .. .. .. ^. ^. "
+  "^. ^. {{ {{ {{ {{ ^. ^. ^. ^. ^. .. .. .. .. bb ^. ^. ^. "
+  "^. {{ tt tt tt tt {{ ^. ^. ^. ^. ^. bb .. .. ^. ^. ^. ^. "
   "{{ tt tt |. |. tt tt {{ ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. "
   "{{ tt |. |. |. |. tt {{ ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. {{ "
   )
+ (put (spawn-pt 'griffin) 8 7)
+ (put (spawn-pt 'griffin) 7 8)
+ (put (spawn-pt 'griffin) 9 9)
+ (put (spawn-pt 'troll) 12 13)
+ (put (spawn-pt 'troll) 13 12)
+ (put (spawn-pt 'troll-geomancer) 14 13)
+ (put (spawn-pt 'troll) 13 14)
  )
+
+;; random loot corpses
+(put-random-stuff p_griffin_peak_se
+                  (mk-rect 0 0 19 19)
+                  (lambda (loc)
+                    (eqv? (kern-place-get-terrain loc)
+                          t_grass))
+                  (lambda (loc)
+                    (kern-obj-put-at (mk-corpse-with-loot)
+                                     loc))
+                  5)
 
 (mk-19x19-town
  'p_griffin_peak_ne "Northeast Face of Griffin Peak" nil
@@ -957,6 +973,11 @@
   "^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. "
   )
  (put (mk-key t_brundegardt_tower_4_key) 9 9)
+ (put (spawn-pt 'griffin-chick) 8 5)
+ (put (spawn-pt 'griffin-chick) 10 5)
+ (put (spawn-pt 'griffin-chick) 8 7)
+ (put (spawn-pt 'griffin-chick) 10 7)
+ (put (spawn-pt 'griffin) 9 6)
  )
 
 ;; random loot corpses

@@ -604,3 +604,9 @@
 (define (griffin-ai kchar)
   (or (get-off-bad-tile? kchar)
       (eat-corpse? kchar)))
+
+;; FIXME: need to do something here. Geomancers should be able to do things
+;; like transform terrain, convert boulders into trolls, convert rock walls
+;; into boulders, etc. (Note: the old troll AI is broken, too).
+(define (geomancer-ai kchar)
+  (std-ai kchar))

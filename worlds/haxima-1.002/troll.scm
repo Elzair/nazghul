@@ -6,7 +6,7 @@
 
 (define (troll-display . args) )
 (define (troll-newline) )
-
+(define troll-melee-weapon t_horns)
 
 ;;----------------------------------------------------------------------------
 ;; Troll AI
