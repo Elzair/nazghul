@@ -1068,6 +1068,7 @@ bool cmdOpen(class Character * pc)
                  cmdwin_push("%s!", mech->getName());
                  mech->getObjectType()->open(mech, pc);
                  mapSetDirty();
+                 pc->decActionPoints(NAZGHUL_BASE_ACTION_POINTS);
                  return true;
          }
 
@@ -1659,6 +1660,7 @@ bool cmdHandle(class Character * pc)
         cmdwin_spush("%s", mechName);
         log_msg("%s handles %s", pc->getName(), mechName);
         mech->getObjectType()->handle(mech, pc);
+        pc->decActionPoints(NAZGHUL_BASE_ACTION_POINTS);
         mapSetDirty();
 
         // I think the following was added to update LOS in cases where the
