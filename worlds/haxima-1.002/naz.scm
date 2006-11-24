@@ -1530,3 +1530,13 @@
            (docol 0 (string->list (car lines)))
            (doline (+ y 1) (cdr lines)))))
     (doline 0 map))
+
+;; Find the visible object of the given type nearest to the kchar.
+(define (find-nearest kchar ktype)
+  (let ((objects (filter (lambda (kobj)
+                           (and (kobj-is-type? kobj ktype)
+                                (can-see? kchar kobj)))
+                         (kern-place-get-objects (loc-place (kern-obj-get-location kchar))))))
+    (cond ((null? objects) nil)
+          (else
+           (nearest-obj kchar objects)))))

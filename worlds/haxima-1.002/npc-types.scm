@@ -713,6 +713,8 @@
 (define nixie-swordsman (mk-npct "nixie swordsman"        sp_nixie         oc_warrior s_nixie        no-traps     nixie-2-equip nil           'std-ai          faction-monster       nil))
 (define great-kraken    (mk-npct "great kraken"           sp_great_kraken  nil        s_great_kraken nil          nil           nil           'great-kraken-ai faction-monster       nil))
 (define kraken-tentacle (mk-npct "kraken tentacle"        sp_kraken_tentacle nil      s_tentacle     nil          nil           nil           'std-ai          faction-monster       nil))
+(define griffin         (mk-npct "griffin"                sp_griffin       nil        s_griffin      nil          nil           nil           'griffin-ai      faction-monster       nil))
+(define griffin-chick   (mk-npct "griffin chick"          sp_griffin_chick nil        s_griffin_chick nil         nil           nil           'griffin-ai      faction-monster       nil))
 
 ;; accursed
 (define accursed-acolyte    (mk-npct2 "an accursed acolyte"    sp_human oc_wizard s_shepherd nil accursed-1-equip nil 'spell-sword-ai faction-accursed nil 'drop-generic accursed-1-loot))

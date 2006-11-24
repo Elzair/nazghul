@@ -814,7 +814,19 @@
  (put (mk-corpse) 13 7)
  (put (mk-corpse) 8 8)
  (put (mk-corpse) 10 1)
+ (put (spawn-pt 'griffin) 9 13)
  )
+
+;; random loot corpses
+(put-random-stuff p_griffin_peak_s
+                  (mk-rect 0 0 19 19)
+                  (lambda (loc)
+                    (eqv? (kern-place-get-terrain loc)
+                          t_grass))
+                  (lambda (loc)
+                    (kern-obj-put-at (mk-corpse)
+                                     loc))
+                  20)
 
 (block-teleporting 
  p_griffin_peak_s
@@ -944,15 +956,21 @@
   "^. ^. ^. .. ^. ^. ^. .. .. .. .. .. ^. ^. ^. ^. ^. ^. ^. "
   "^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. "
   )
- (put (mk-corpse) 6 15)
- (put (mk-corpse) 11 15)
- (put (mk-corpse) 14 13)
- (put (mk-corpse) 7 5)
- (put (mk-corpse) 13 7)
- (put (mk-corpse) 8 8)
- (put (mk-corpse) 10 1)
  (put (mk-key t_brundegardt_tower_4_key) 9 9)
  )
+
+;; random loot corpses
+(put-random-stuff p_griffin_peak
+                  (mk-rect 0 0 19 19)
+                  (lambda (loc)
+                    (or (eqv? (kern-place-get-terrain loc)
+                              t_dirt)
+                        (eqv? (kern-place-get-terrain loc)
+                              t_grass)))
+                  (lambda (loc)
+                    (kern-obj-put-at (mk-corpse)
+                                     loc))
+                  20)
 
 (block-teleporting 
  p_griffin_peak

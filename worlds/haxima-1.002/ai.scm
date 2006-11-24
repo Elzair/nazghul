@@ -582,3 +582,25 @@
             (else #f))))
   (or (animal-ai kchar)
       (tunnel? kchar)))
+
+(define (eat-corpse? kchar)
+  (cond ((wants-healing? kchar)
+         (let ((kcorpse (find-nearest kchar t_corpse)))
+           (cond ((null? kcorpse) #f)
+                 (else
+                  (cond ((loc-equal? (kern-obj-get-location kchar)
+                                     (kern-obj-get-location kcorpse))
+                         (kern-log-msg (kern-obj-get-name kchar) " eats " (kern-obj-get-name kcorpse))
+                         (kern-obj-remove kcorpse)
+                         (kern-obj-heal kchar (kern-dice-roll "1d10+2"))
+                         #t)
+                        (else
+                         (pathfind kchar (kern-obj-get-location kcorpse))
+                         ))))))
+        (else
+         #f)))
+
+;; griffin's recover hp by eating corpses
+(define (griffin-ai kchar)
+  (or (get-off-bad-tile? kchar)
+      (eat-corpse? kchar)))

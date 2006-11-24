@@ -86,7 +86,7 @@
  (list norm   norm  cant   norm   norm   cant   cant  norm  cant  norm  cant ) ;; grass/paving
  (list cant   cant  norm   cant   norm   vhard  norm  cant  cant  cant  cant ) ;; deep
  (list cant   hard  cant   cant   norm   norm   norm  cant  cant  cant  cant ) ;; shoals
- (list cant   cant  cant   cant   vhard  cant   cant  cant  cant  cant  cant ) ;; mountains
+ (list cant   cant  cant   cant   norm   cant   cant  cant  cant  cant  cant ) ;; mountains
  (list cant   cant  cant   norm   cant   cant   cant  cant  cant  cant  cant ) ;; wall (w/ ceiling)
  (list hard   hard  cant   norm   norm   cant   cant  hard  cant  norm  cant ) ;; trees  
  (list vhard  vhard cant   norm   norm   cant   cant  vhard cant  norm  cant ) ;; forest/hills/bog

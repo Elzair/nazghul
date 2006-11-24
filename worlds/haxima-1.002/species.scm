@@ -105,8 +105,10 @@
 (mk-species 'sp_zorn         "zorn"           10 10 10 1 10  2  9 mmode-phase t_beak       nil      4  s_asleep           nil     sound-walking   ) 
 (mk-species 'sp_demon        "demon"          14 14 14 1 14  8 12 mmode-fly   t_hands      humanoid 8  s_asleep           nil     sound-walking   ) 
 (mk-species 'sp_lich         "lich"           12 14 14 1 20 10  9 mmode-walk  t_hands      humanoid 8  s_asleep           nil     sound-walking   )
-(mk-species 'sp_carabid      "carabid"        30  1 10 1 40  0  3 mmode-walk  t_pincers    nil      4  s_carabid_asleep   "4d4+4" sound-walking   )
+(mk-species 'sp_carabid      "carabid"        30  1 10 1  8  0  3 mmode-walk  t_pincers    nil      8  s_carabid_asleep   "4d4+4" sound-walking   )
 (mk-species 'sp_ratling      "ratling"         6  8 14 2  4  2 12 mmode-walk  t_fangs      humanoid 2  s_asleep           nil     sound-walking   )
+(mk-species 'sp_griffin      "griffin"        20  8 12 1 25  0 19 mmode-fly   t_beak       nil      3  s_griffin_asleep   nil     nil             )
+(mk-species 'sp_griffin_chick "griffin chick"  5  8 10 2  8  0 19 mmode-fly   t_beak       nil      2  s_griffin_chick_asleep nil nil             )
 
 ;; species that don't move around
 (mk-stationary-species 'sp_dryad  "dryad"     12 12  4 1 12  6  6 mmode-walk  nil          nil      8  s_forest nil)

@@ -457,6 +457,9 @@
 (kern-mk-sprite 's_carabid ss_monsters 4 0 #f 0)
 (kern-mk-sprite 's_carabid_asleep ss_monsters 1 0 #f 0)
 (kern-mk-sprite 's_griffin ss_monsters 4 4 #f 0)
+(kern-mk-sprite 's_griffin_asleep ss_monsters 1 4 #f 0)
+(kern-mk-sprite 's_griffin_chick ss_monsters 4 12 #f 0)
+(kern-mk-sprite 's_griffin_chick_asleep ss_monsters 1 12 #f 0)
 
 (kern-mk-sprite 's_tower ss_buildings 2 0 #f 0)
 
