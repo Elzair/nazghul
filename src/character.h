@@ -179,7 +179,6 @@ class Character:public Being {
 	virtual void synchronize();
 	virtual bool unready(class ArmsType * arms);
 	virtual enum MoveResult move(int dx, int dy);
-	virtual void attackTerrain(class ArmsType *weapon, int x, int y);
 	virtual void armThyself();
 	virtual bool needToRearm();
 	virtual void resurrect();

@@ -64,16 +64,6 @@ struct evasionVectorInfo {
         int dy;          /**< The y component of the evasion vector. */
 };
 
-static bool myUnreadyDepletedThrownWeapon(class Character * pc, void *data)
-{
-	assert(pc->isPlayerControlled());
-	struct inv_entry *ie = (struct inv_entry *) data;
-	assert(ie->type->isType(ARMS_TYPE_ID));
-	if (pc->unready((class ArmsType *) ie->type))
-		ie->ref--;
-	return false;
-}
-
 static int wrapReady(void *item, void *context)
 {
 	class ArmsType *type = (class ArmsType *) item;
@@ -1272,13 +1262,6 @@ bool Character::flee()
                     || evade()));
 }
 
-void Character::attackTerrain(ArmsType *weapon, int x, int y)
-{
-	assert(weapon != NULL);
-	weapon->fire(getPlace(), getX(), getY(), x, y);
-	useAmmo(weapon);
-}
-
 void Character::dropRdyArms()
 {
 	assert(!isPlayerControlled());
@@ -1385,23 +1368,20 @@ void Character::useAmmo(class ArmsType *weapon)
 			class ArmsType *missileType = weapon->getMissileType();
 			takeOut(missileType, 1);
 		} else if (weapon->isThrownWeapon()) {
+
+                        // Handle the case where multiple party members have
+                        // all readied the same throwable weapon, and there is
+                        // no longer enough to supply them all, by forcing the
+                        // character that just threw to unready.
 			ie = player_party->inventory->search(weapon);
-			if (ie->count == 1) {
-
-				// Multiple characters might have the same
-				// thrown weapon readied. Although they will
-				// eventually discover that they have no more
-				// ammo, I want to unready them all now because
-				// the 'Ztats' command will show them as
-				// readied, and this would deceive the user,
-				// who would think that although inventory is
-				// exhausted the individual characters have one
-				// remaining in their hands.
-
-				player_party->forEachMember (myUnreadyDepletedThrownWeapon, ie);
-			}
+                        assert(ie);
+                        assert(ie->ref <= ie->count);
+                        if (ie->ref == ie->count) {
+                                unready(weapon);
+                                log_msg("%s : %s now out of ammo\n", 
+                                        getName(), weapon->getName());
+                        }
 			takeOut(weapon, 1);
-
 		}
 	} else {
 		if (weapon->isMissileWeapon()) {

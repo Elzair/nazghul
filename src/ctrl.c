@@ -683,8 +683,14 @@ static void ctrl_attack_ui(class Character *character)
                                   , weapon->getName()
                                 );
 				
-                        character->attackTerrain(weapon, x, y);
-						
+                        weapon->fire(character->getPlace(), 
+                                     character->getX(), 
+                                     character->getY(), 
+                                     x, 
+                                     y);
+                        character->decActionPoints(weapon->getRequiredActionPoints());
+                        character->useAmmo(weapon);
+	
                         cmdwin_spush("%s", terrain->name);
 
                         /* Check for a mech */
