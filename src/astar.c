@@ -32,7 +32,11 @@
 
 #define COORD_TO_INDEX(x,y,w) ((y)*(w)+(x))
 
-#define CONFIG_NEIGHBORS 8 /* number of neighbors to search */
+/**
+ * The number of neighbors to search. If you want to allow NPC's to have
+ * diagonal movement, set this to 8. Otherwise set it to 4.
+ */
+#define CONFIG_NEIGHBORS 4
 #define MAX_DEPTH 1000	/* hack to limit search time on large places */
 
 static struct heap *schedule;	/* Priority queue of nodes to explore */

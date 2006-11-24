@@ -36,6 +36,10 @@
 #include "log.h"
 #include "factions.h"
 
+#ifndef CONFIG_DIAGONAL_MOVEMENT
+#define CONFIG_DIAGONAL_MOVEMENT 0
+#endif
+
 int G_latency_start = 0;
 int G_turnaround_start = 0;
 int G_turnaround  = 0;
@@ -71,10 +75,12 @@ static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
 
         switch (key) {
                 
+#if CONFIG_DIAGONAL_MOVEMENT
         case KEY_NORTHWEST:
         case KEY_NORTHEAST:
         case KEY_SOUTHWEST:
         case KEY_SOUTHEAST:
+#endif   /* CONFIG_DIAGONAL_MOVEMENT */
         case KEY_NORTH:
         case KEY_WEST:
         case KEY_EAST:
@@ -950,14 +956,16 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
 
         switch (key) {
 
+#if CONFIG_DIAGONAL_MOVEMENT
         case KEY_NORTHWEST:
-        case KEY_NORTH:
         case KEY_NORTHEAST:
+        case KEY_SOUTHWEST:
+        case KEY_SOUTHEAST:
+#endif   /* CONFIG_DIAGONAL_MOVEMENT */
+        case KEY_NORTH:
         case KEY_WEST:
         case KEY_EAST:
-        case KEY_SOUTHWEST:
         case KEY_SOUTH:
-        case KEY_SOUTHEAST:
                 dir = keyToDirection(key);
                 ctrl_move_character(character, dir);
                 break;
