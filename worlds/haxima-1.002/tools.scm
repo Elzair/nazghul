@@ -98,8 +98,8 @@
                   (lambda (ktool kuser)
                     (let ((loc (kern-obj-get-location kuser)))
                       (if (kern-place-is-wilderness? (loc-place loc))
-                          (kern-log-msg "You are at cartesian coords [" 
-                                        (caddr loc) " " (cadr loc) "]")
+                          (kern-log-msg "You are at [x=" 
+                                        (cadr loc) " y=" (caddr loc) "]")
                           (begin
                             (kern-log-msg "Usable only in the wilderness!")
                             nil)))))

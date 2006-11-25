@@ -546,7 +546,8 @@
 	
 (define (powers-locate caster ktarg power)
 	(let ((loc (kern-obj-get-location caster)))
-		(kern-log-msg "You are in " (kern-place-get-name (car loc)) " at [" (caddr loc) " " (cadr loc) "]"))
+		(kern-log-msg "You are in " (kern-place-get-name (car loc)) 
+                              " at [x=" (cadr loc) " y=" (caddr loc) "]"))
 	)
 
 (define (powers-magic-missile-range power)
