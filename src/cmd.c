@@ -2038,14 +2038,19 @@ bool cmdZtats(class Character * pc)
 	return false;
 }
 
-static int select_hours(void)
+static int select_hours(int allow_sunrise)
 {
 	struct get_char_info info;
 
-	cmdwin_spush("<hours[0-9]/[s]unrise>");
+        if (allow_sunrise) {
+                cmdwin_spush("<hours[0-9]/[s]unrise>");
+                info.string = "0123456789sS";
+        } else {
+                cmdwin_spush("<hours[0-9]>");
+                info.string = "0123456789";
+        }
 
 	info.c = '0';
-        info.string = "0123456789sS";
 
 	getkey(&info, &cmd_getchar);
 
@@ -2054,8 +2059,9 @@ static int select_hours(void)
 		cmdwin_spush("none!");
                 return 0;
         }
-        else if (info.c == 's' ||
-                 info.c == 'S') {
+        else if (allow_sunrise
+                 && (info.c == 's' ||
+                     info.c == 'S')) {
                 int hour;
                 int sunrise;
 
@@ -2131,7 +2137,7 @@ int cmd_camp_in_wilderness(class Party *camper)
                 return 0;
         }
 
-	hours = select_hours();
+	hours = select_hours(1);
 	if (hours == 0)
 		return 0;
 
@@ -2177,7 +2183,7 @@ void cmdLoiter(class Being *subject)
         }
 
         /* Prompt for the number of hours. */
-        hours = select_hours();
+        hours = select_hours(0);
         if (!hours) {
                 return;
         }
@@ -2224,7 +2230,7 @@ int cmd_camp_in_town(class Character *camper)
         }
 
         // Prompt for the number of hours to sleep.
-        hours = select_hours();
+        hours = select_hours(! camper->getPlace()->underground);
         if (hours == 0)
                 return 0;
 
