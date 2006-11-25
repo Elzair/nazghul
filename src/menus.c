@@ -343,19 +343,19 @@ void menu_add_saved_game(char *fname)
  */
 static int sprintf_game_info(char *buf, int n, saved_game_t *save, char hotkey)
 {
-        struct tm timeinfo;
+        struct tm *timeinfo;
         int ret = -1;
         char datebuf[n];
         int padlen;
         char mark = ' ';
 
         /* Convert the timestamp from epoch to a time structure. */
-        localtime_r(&save->timestamp, &timeinfo);
+        timeinfo = localtime(&save->timestamp);
 
         /* Print the date to a temp buffer to see how big it is. */
-        snprintf(datebuf, n, "%02d:%02d %02d/%02d/%d", timeinfo.tm_hour, 
-                 timeinfo.tm_min, timeinfo.tm_mon, timeinfo.tm_mday, 
-                 1900+timeinfo.tm_year);
+        snprintf(datebuf, n, "%02d:%02d %02d/%02d/%d", timeinfo->tm_hour, 
+                 timeinfo->tm_min, timeinfo->tm_mon, timeinfo->tm_mday, 
+                 1900+timeinfo->tm_year);
 
         /* Calculate necessary padding to right-justify the date. */
         padlen = n - (strlen(save->fname) 
