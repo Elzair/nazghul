@@ -146,12 +146,8 @@
 
 (define (kathryn-scro knpc kpc)
   (if (is-player-party-member? knpc)
-      (if (and #f (in-inventory? knpc t_wis_quas_scroll))
-          (begin
-           (say knpc "It's my last one. Take it... but don't waste it.")
-           (kern-obj-remove-from-inventory knpc t_wis_quas_scroll 1)
-           (kern-obj-add-to-inventory kpc t_wis_quas_scroll 1))
-          (say knpc "I already gave you my last one!"))
+      (say knpc "But I already gave you the only one I had. "
+           "I don't even know where I got it!")
       (say knpc "A scroll? [She laughs] Shall I turn out my pockets for you? "
            "Mind your own business.")))
 
