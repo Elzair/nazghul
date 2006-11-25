@@ -325,8 +325,8 @@
 ;; do the interjection. If mem-tag is nil then a party member (other than the
 ;; speaker) will be chosen at random. msg is the text of the comment. If kpc is
 ;; the only member of the party then the aside will not do anything.
-(define (aside kpc kchar-tag . msg)
-  (println msg)
+(define (aside kpc kchar-tag msg)
+  ;;(println msg)
   (if (in-player-party? kchar-tag)
       (say (eval kchar-tag) msg)
       (let ((members (filter (lambda (kchar)

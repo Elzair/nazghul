@@ -78,7 +78,7 @@
 
 ;;quickstart stuff for playtesting
 
-(if #t
+(if #f
     (begin
       (kern-obj-put-at 
        (mk-chest

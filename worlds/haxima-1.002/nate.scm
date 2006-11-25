@@ -1,7 +1,7 @@
 ;;----------------------------------------------------------------------------
 ;; Constants
 ;;----------------------------------------------------------------------------
-(define nate-start-lvl 4)
+(define nate-start-lvl 2)
 
 ;;----------------------------------------------------------------------------
 ;; Schedule
@@ -149,9 +149,9 @@
      faction-outlaw ;;..faction
      +1 ;;...........custom strength modifier
      0 ;;...........custom intelligence modifier
-     +1 ;;...........custom dexterity modifier
-     +1 ;;............custom base hp modifier
-     +1 ;;............custom hp multiplier (per-level)
+     +6 ;;...........custom dexterity modifier
+     pc-hp-off ;;............custom base hp modifier
+     pc-hp-gain ;;............custom hp multiplier (per-level)
      0 ;;............custom base mp modifier
      0 ;;............custom mp multiplier (per-level)
      max-health ;;..current hit points

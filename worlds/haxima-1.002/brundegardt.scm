@@ -322,7 +322,7 @@
   (put (mk-corpse) 23 3)
 
   (put (kern-mk-obj t_int_potion 1) 18 4)
-  (put (kern-mk-obj t_broken_clock 1) 19 4)
+  (put (mk-broken-clock s_clock_hand_s s_clock_hand_n "The clock reads 6:00") 19 4)
   (put (kern-mk-obj t_mana_potion 1) 20 4)
   (put (kern-mk-obj t_gem 1) 21 4)
   (put (kern-mk-obj t_gold_coins 2) 22 4)
@@ -503,6 +503,9 @@
   (put (spawn-pt 'bat) 8 10)
   (put (spawn-pt 'bat) 10 9)
   (put (spawn-pt 'bat) 10 10)
+  (put (mk-chest 'spike-trap
+       '((3 sulphorous_ash)
+         (3 blood_moss))) 14 7)
  )
 
 (kern-place-add-on-entry-hook p_wide_chasm 'set-wind-north)
@@ -569,8 +572,8 @@
  (put (spawn-pt 'yellow-slime) 10 16)
  (put (spawn-pt 'yellow-slime) 9 13)
 
- (put (spawn-pt 'ratling-sorcerer) 8 5)
- (put (spawn-pt 'ratling-sorcerer) 8 6)
+ (put (spawn-pt 'ratling-sorcerer) 15 12)
+ (put (spawn-pt 'ratling-sorcerer) 16 12)
 
  (put (spawn-pt 'insect) 5 12)
  (put (spawn-pt 'insect) 6 12)
@@ -582,15 +585,14 @@
  (put (guard-pt 'skeletal-spear-thrower) 8 9)
  (put (guard-pt 'skeletal-spear-thrower) 9 9)
 
- (put (spawn-pt 'giant-spider) 15 12)
- (put (spawn-pt 'giant-spider) 16 12)
+ (put (spawn-pt 'giant-spider) 8 12)
+ (put (spawn-pt 'giant-spider) 8 6)
 
  (put (spawn-pt 'rat) 2 5)
  (put (spawn-pt 'rat) 3 5)
 
- (put (spawn-pt 'snake) 9 2)
- (put (spawn-pt 'snake) 8 1)
- (put (spawn-pt 'snake) 10 3)
+ (put (spawn-pt 'giant-spider) 9 2)
+ (put (spawn-pt 'giant-spider) 8 1)
 
  (put (spawn-pt 'giant-spider) 13 3)
 
@@ -692,6 +694,7 @@
  (put (mk-ladder-down 'p_brundegardt_tower_2 8 9) 8 9)
  (put (mk-ladder-up 'p_brundegardt_tower_4 10 9) 10 9)
  (put (spawn-pt 'queen-spider) 12 9)
+ (put (spawn-pt 'queen-spider) 9 12)
  )
 
 ;;----------------------------------------------------------------------------
@@ -815,6 +818,8 @@
   "^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. ^. "
   )
  (put (spawn-pt 'griffin) 9 13)
+ (put (spawn-pt 'griffin) 3 3)
+ (put (spawn-pt 'griffin) 9 17)
  )
 
 ;; random loot corpses
@@ -879,6 +884,7 @@
  (put (spawn-pt 'griffin) 8 7)
  (put (spawn-pt 'griffin) 7 8)
  (put (spawn-pt 'griffin) 9 9)
+ (put (spawn-pt 'griffin) 12 6)
  (put (spawn-pt 'troll) 12 13)
  (put (spawn-pt 'troll) 13 12)
  (put (spawn-pt 'troll-geomancer) 14 13)
@@ -991,7 +997,7 @@
                         (eqv? (kern-place-get-terrain loc)
                               t_grass)))
                   (lambda (loc)
-                    (kern-obj-put-at (mk-corpse)
+                    (kern-obj-put-at (mk-corpse-with-loot)
                                      loc))
                   20)
 

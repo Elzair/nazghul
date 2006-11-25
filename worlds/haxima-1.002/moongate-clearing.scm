@@ -23,8 +23,8 @@
     (10 spider_silk)
     (6 blood_moss)
     (6 black_pearl)
-    (2 nightshade)
-    (2 mandrake)
+    (3 nightshade)
+    (3 mandrake)
     
     ;; Items
     (1 t_heal_potion)

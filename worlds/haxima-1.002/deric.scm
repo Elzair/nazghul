@@ -178,12 +178,6 @@
          (kern-char-add-experience kpc 64)
          (take kpc t_prisoner_receipt 1)
          (quest-done! (deric-bandit-quest (kobj-gob-data knpc)) #t)
-         (prompt-for-key)
-         (say knpc "Any idea what you will do next?")
-         (yes? kpc)
-         (say knpc "You might travel west and look up Lord Froederick. "
-              "I understand he's having some sort of... trouble. "
-              "Not everyone is cut out for leadership!")
          )
         (else
          (say knpc "Well met, indeed!")

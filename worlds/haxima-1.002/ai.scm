@@ -150,7 +150,7 @@
 
 ;; stuck? -- #t iff kchar cannot safely move to a neighboring tile
 (define (stuck? kchar)
-  (println " stuck?")
+  ;;(println " stuck?")
   (let* ((cloc (kern-obj-get-location kchar))
          (kplace (loc-place cloc))
          (x (loc-x cloc))
@@ -176,7 +176,7 @@
 
 (define (choose-blink-loc kchar)
   (let ((loc (blink-offset kchar)))
-    (println "choose-blink-loc " loc)
+    ;;(println "choose-blink-loc " loc)
     (if (and (not (null? loc))
              (not (loc-equal? loc
                               (kern-obj-get-location kchar)))
@@ -188,10 +188,10 @@
         nil)))
 
 (define (choose-random-blink-loc kchar)
-  (println "   choose-random-blink-loc")
+  ;;(println "   choose-random-blink-loc")
   (random-loc-place-iter (loc-place (kern-obj-get-location kchar))
                          (lambda (loc)
-                           (println "    check loc" loc)
+                           ;;(println "    check loc" loc)
                            (and (not (loc-equal? loc
                                                  (kern-obj-get-location kchar)))
                                 (passable? loc kchar)
@@ -203,11 +203,11 @@
                          3))
 
 (define (blink-away-from-foes kchar)
-  (println " blink-away-from-foes")
+  ;;(println " blink-away-from-foes")
   (if (not (can-use-ability? teleport kchar))
       #f
       (let ((loc (choose-random-blink-loc kchar)))
-        (println " blink-away-from-foes:" loc)
+        ;;(println " blink-away-from-foes:" loc)
         (if (null? loc)
             #f
             (use-ability teleport kchar loc)))))
@@ -279,19 +279,19 @@
       (let ((hostiles (filter
                        not-disabled?
                        (all-visible-hostiles kchar))))
-        (println " hostiles=" hostiles)
+        ;;(println " hostiles=" hostiles)
         (if (null? hostiles)
             #f
             (use-ability narcotize kchar)
             ))))
           
 (define (goto-post kchar)
-  ;;(println "goto-post")
+  ;;;;(println "goto-post")
   (let ((guard (gob kchar)))
     (if (npcg-has-post? guard)
         (let ((post (cons (loc-place (kern-obj-get-location kchar))
                           (npcg-get-post guard))))
-          ;;(println "post:" post)
+          ;;;;(println "post:" post)
           (pathfind kchar post)))))
 
 (define (summon-demon? kchar)
@@ -308,7 +308,7 @@
 
 (define (summon-ratlings? kchar)
   (cond ((not (can-use-ability? summon-ratlings kchar)) #f)
-        ((null? (get-hostiles-in-range kchar 4)) #f)
+        ;;((null? (get-hostiles-in-range kchar 4)) #f)
         (else
          (use-ability summon-ratlings kchar))))
 
@@ -402,14 +402,14 @@
                                  (list disease-touch))))
 
 (define (craven-archer-ai kchar)
-  (println "craven-archer-ai")
+  ;;(println "craven-archer-ai")
   (or (std-ai kchar)
       (and (stuck? kchar)
            (in-melee-range-of-foes? kchar)
            (blink-away-from-foes kchar))))
 
 (define (medik-ai kchar)
-  (println "medik-ai")
+  ;;(println "medik-ai")
   (or (std-ai kchar)
       (use-heal-spell-on-ally? kchar)
       (move-toward-patient? kchar)
@@ -490,7 +490,7 @@
           (tentacles (filter is-kraken-tentacle? 
                              (kern-place-get-beings (loc-place (kern-obj-get-location kchar)))))
           )
-      (println ktarg tentacles)
+      ;;(println ktarg tentacles)
       (cond ((null? ktarg) #f)
             ((< (length tentacles) 
                 (* 2 (kern-char-get-level kchar)))
@@ -563,18 +563,18 @@
 
 ;; carabid beetles tunnel through stone
 (define (carabid-ai kchar)
-  (println "carabid-ai")
+  ;;(println "carabid-ai")
   (define (tunnel loc kter)
-    (println "tunnel")
+    ;;(println "tunnel")
     (kern-place-set-terrain (kern-obj-get-location kchar) kter)
     (kern-place-set-terrain loc t_gravel)
     (kern-obj-relocate kchar loc nil)
     #t)
   (define (tunnel?)
-    (println "tunnel?")
+    ;;(println "tunnel?")
     (let* ((loc (random-neighbor-loc kchar))
            (kter (kern-place-get-terrain loc)))
-      (println "loc=" loc)
+      ;;(println "loc=" loc)
       (cond ((or (eqv? kter t_wall)
                  (eqv? kter t_wall_rock))
              (tunnel loc t_boulder))

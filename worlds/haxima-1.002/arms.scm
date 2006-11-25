@@ -243,10 +243,10 @@
    ;;     ============================================================================================================================================================================
    ;;     tag              | name          | sprite              | to-hit | damage | to-def | slots       | hnds | rng | ifc             | weight | stratt | dexatt | dammod | avoid
    ;;     ============================================================================================================================================================================
-   (list  't_oil            "flaming oil"   s_flaming_oil          "-1"     "1d6"    "-2"     slot-weapon   1      4     flaming-oil-ifc  	1		20			30		0		0.9	)
-   (list  't_slime_vial     "vial of slime" s_squat_bubbly_green_potion "-1" "1d2"   "-2"     slot-weapon   1      4     vial-of-slime-ifc  1		20			30		0		1.0	)
-   (list  't_spear          "spear"         s_spear                "0"      "1d8"    "+1"     slot-weapon   1      4     obj-ifc          	2		20			40		40		1.0	)
-   (list  't_thrown_boulder "loose boulder" s_thrown_boulder       "-2"     "3d4+1"  "-2"     slot-weapon   2      5     obj-ifc         	10		40			20		60		0.9	)
+   (list  't_oil            "flaming oil"   s_flaming_oil          "-1"     "1d6"    "-2"     slot-weapon   1      4     flaming-oil-ifc    1       20       30       0        0.9     )
+   (list  't_slime_vial     "vial of slime" s_squat_bubbly_green_potion "-1" "1d2"   "-2"     slot-weapon   1      4     vial-of-slime-ifc  1       20       30       0        1.0     )
+   (list  't_spear          "spear"         s_spear                "0"      "1d8"    "+1"     slot-weapon   1      4     obj-ifc            2       20       40       40       1.0     )
+   (list  't_thrown_boulder "loose boulder" s_thrown_boulder       "-2"     "3d4+1"  "-2"     slot-weapon   2      5     obj-ifc            10      40       20       60       0.9     )
    ))
 
 ;; Inventory sprites

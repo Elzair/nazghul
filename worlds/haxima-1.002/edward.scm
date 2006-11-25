@@ -47,13 +47,32 @@
            (say knpc "Welcome back. I remember your footfalls.")
            ))))
 
+(define (edward-give-nate knpc kpc)
+  (say knpc "Are you delivering a prisoner?")
+  (cond ((yes? kpc)
+         (say knpc "Oh, good. More company. [He takes Nate into custody and "
+              "locks him in a cell]")
+         (kern-char-leave-player ch_nate)
+         (kern-obj-relocate ch_nate (mk-loc p_green_tower_lower 9 10) nil)
+         (prompt-for-key)
+         (say knpc "Here's your receipt, in case the Captain wants it.")
+         (give kpc t_prisoner_receipt 1)
+         (edward-has-nate! (kobj-gob-data knpc))
+         )
+        (else
+         (say knpc "Hokay. [He gives Nate a look, then shrugs]")
+         )))
+
 (define (edward-pris knpc kpc)
-  (let ((edward (kobj-gob-data knpc)))
-    (if (edward-has-nate? edward)
-        (say knpc "I've got a forest goblin and that fellow you brought in.")
-        (say knpc "I've just got a forest goblin right now. "
-             "He and I can't understand each other, "
-             "but that doesn't stop us from swapping stories."))))
+  (cond ((in-player-party? 'ch_nate) (edward-give-nate knpc kpc))
+        (else
+         (let ((edward (kobj-gob-data knpc)))
+           (if (edward-has-nate? edward)
+               (say knpc "I've got a forest goblin and that fellow you brought in.")
+               (say knpc "I've just got a forest goblin right now. "
+                    "He and I can't understand each other, "
+                    "but that doesn't stop us from swapping stories."))))
+        ))
 
 (define (edward-gobl knpc kpc)
   (say knpc "I'm not afraid of them. They never done me no harm."))
@@ -98,6 +117,13 @@
 (define (edward-guar knpc kpc)
   (say knpc "Truth be told, I'm not much of a guard."))
 
+(define (edward-jail knpc kpc)
+  (cond ((in-player-party? 'ch_nate) (edward-give-nate knpc kpc))
+        (else
+         (say knpc "I feed the prisoners and swap stories with them. "
+              "I'm supposed to guard them, to. Prevent escapes.")
+         )))
+
 (define edward-conv
   (ifc ranger-conv
        ;; default if the only "keyword" which may (indeed must!) be longer than
@@ -120,31 +146,6 @@
        (method 'join 
                (lambda (knpc kpc) 
                  (say knpc "Love to. [But he doesn't]")))
-       (method 'jail
-               (lambda (knpc kpc)
-                 (cond ((in-player-party? 'ch_nate)
-                        (say knpc "Are you delivering a prisoner?")
-                        (cond ((yes? kpc)
-                               (say knpc "Oh, good. More company. [He takes Nate into custody and "
-                                    "locks him in a cell]")
-                               (kern-char-leave-player ch_nate)
-                               (kern-obj-relocate ch_nate 
-                                                  (mk-loc p_green_tower_lower 
-                                                          9 10)
-                                                  nil)
-                               (prompt-for-key)
-                               (say knpc "Here's your receipt, in case the Captain wants it.")
-                               (give kpc t_prisoner_receipt 1)
-                               (edward-has-nate! (kobj-gob-data knpc))
-                               )
-                              (else
-                               (say knpc "Hokay. [He gives Nate a look, "
-                                    "then shrugs]")
-                               )))
-                       (else
-                        (say knpc "I feed the prisoners and swap stories with them. "
-                             "I'm supposed to guard them, to. Prevent escapes.")
-                        ))))
        (method 'accu edward-accu)
        (method 'blin edward-blin)
        (method 'esca edward-guar)
@@ -153,6 +154,7 @@
        (method 'god  edward-gods)
        (method 'gods edward-gods)
        (method 'guar edward-guar)
+       (method 'jail edward-jail)
        (method 'old  edward-gods)
        (method 'pris edward-pris)
        (method 'stor edward-stor)
