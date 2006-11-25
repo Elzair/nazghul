@@ -323,6 +323,9 @@ int main(int argc, char **argv)
         if (! nazghul_load_fname)
                 nazghul_load_fname = main_menu();
 
+        /* Clear out the vmask cache */
+        vmask_flush_all();
+
         /* run the game, don't return until the user quits */
 	playRun(nazghul_load_fname);
 
