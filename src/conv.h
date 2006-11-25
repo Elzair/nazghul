@@ -22,7 +22,11 @@
 #ifndef conv_h
 #define conv_h
 
-extern void conv_enter(class Object *npc, class Object *pc, struct closure *conv);
+#define CONV_PC_COLOR  'g'
+#define CONV_NPC_COLOR 'b'
+
+extern void conv_enter(class Object *npc, class Object *pc, 
+                       struct closure *conv);
 extern void conv_end(void);
 
 extern int isprintable(int c);

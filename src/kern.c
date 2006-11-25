@@ -2586,7 +2586,7 @@ static pointer kern_conv_say(scheme *sc,  pointer args)
                 return sc->NIL;
         }
 
-        log_begin("%s: ", speaker->getName());
+        log_begin("^c+%c%s:^c- ", CONV_NPC_COLOR, speaker->getName());
 
         args = scm_car(sc, args);
 
@@ -2635,7 +2635,7 @@ static pointer kern_conv_get_reply(scheme *sc,  pointer args)
                 return sc->F;
 
         ui_getline(buf, sizeof(buf));
-        log_msg("%s: %s", pc->getName(), buf);
+        log_msg("^c+%c%s:^c- %s", CONV_PC_COLOR, pc->getName(), buf);
 
         /* Return only the first four characters, to be consistent with the
          * usual keyword/reply scheme. */

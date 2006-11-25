@@ -126,7 +126,8 @@ void conv_enter(Object *npc, Object *pc, struct closure *conv)
 		C_len = strlen(C_query);
                 if (! C_len)
                         sprintf(C_query, "bye");
-		log_msg("%s: %s", pc->getName(), C_query);
+		log_msg("^c+%c%s:^c- %s", CONV_PC_COLOR, 
+                        pc->getName(), C_query);
 
 		/*** Check if player ended conversation ***/
 

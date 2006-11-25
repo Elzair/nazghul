@@ -3151,11 +3151,11 @@ int ui_get_yes_no(char *name)
 	cmdwin_pop();
 	if (yesno == 'y') {
 		cmdwin_spush("yes");
-		log_msg("%s: Yes", name);
+		log_msg("^c+%c%s:^c- Yes", CONV_PC_COLOR, name);
                 return 1;
 	} else {
 		cmdwin_spush("no");
-		log_msg("%s: No", name);
+		log_msg("^c+%c%s:^c- No", CONV_PC_COLOR, name);
                 return 0;
 	}
 }
@@ -3377,7 +3377,8 @@ static void sell(struct merchant *merch)
 	// Allocate the trade list.
 	trades = new struct trade_info[merch->n_trades];
 	if (!trades) {
-		log_msg("%s: I don't need anything.\n", merch->name);
+		log_msg("^c+%c%s:^c- I don't need anything.\n", 
+                        CONV_NPC_COLOR, merch->name);
 		return;
 	}
 	// Fill out the list
