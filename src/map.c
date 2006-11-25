@@ -680,7 +680,7 @@ void mapRepaintClock(void)
 {
   char * date_time_str = time_HHMM_as_string();
  
-  if (0 && ! DeveloperMode)
+  if (! DeveloperMode)
           return;
  
   // Show the clock time:
