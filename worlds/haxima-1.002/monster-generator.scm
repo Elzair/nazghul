@@ -313,13 +313,6 @@
       (cons (mk-random-treasure)
             (mk-treasure-heap (- n 1)))))
 
-;; mk-treasure-list -- returns a list of n (quantity type) lists suitable in
-;; kernel containers
-(define (mk-treasure-list n)
-  (if (> n 0)
-      (cons (eval-treasure-entry (pick-random-treasure))
-            (mk-treasure-list (- n 1)))))
-
 ;; mk-quoted-treasure-list -- returns a list of n (quantity 'type) lists
 ;; suitable in corpses and other gobs
 (define (mk-quoted-treasure-list n)

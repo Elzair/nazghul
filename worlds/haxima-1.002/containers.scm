@@ -218,6 +218,6 @@
 ;; mk-treasure-chest -- returns a chest with 1-10 random object types
 (define (mk-treasure-chest)
   (mk-chest nil
-            (mk-treasure-list (+ 1
-                                 (modulo (random-next) 
-                                         9)))))
+            (mk-quoted-treasure-list (+ 1
+                                        (modulo (random-next) 
+                                                9)))))
