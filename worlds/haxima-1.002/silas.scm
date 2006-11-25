@@ -273,7 +273,7 @@
     "Silas"             ; name
     silas-species         ; species
     silas-occ              ; occ
-    s_companion_shepherd     ; sprite
+    s_silas     ; sprite
     faction-men      ; starting alignment
     0 5 0            ; str/int/dex
     2 1              ; hp mod/mult

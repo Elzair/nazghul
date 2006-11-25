@@ -238,7 +238,7 @@
     "Necromancer"    ; name
     necr-species         ; species
     necr-occ              ; occ
-    s_companion_wizard     ; sprite
+    s_necromancer     ; sprite
     faction-men      ; starting alignment
     1 6 0            ; str/int/dex
     0 0              ; hp mod/mult
