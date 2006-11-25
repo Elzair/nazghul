@@ -21,7 +21,7 @@
 	  "xx ,, sS cc cc cc cc cc cc cc cc cc cc cc cc cc sD ,, xx "
 	  "xx ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, ,, xx "
 	  "xx ,, ,, ,, ,, +s ,, ,, pp cc pp ,, ,, +s ,, ,, ,, ,, xx "
-	  "xx ,, ,, ,, ,, ,, ,, ,, pp cc pp ,, ,, ,, ,, ,, ,, ,, xx "
+	  "xx ,, ,, ,, ,, ,, ,, pp ,, cc ,, pp ,, ,, ,, ,, ,, ,, xx "
 	  "xx xx xx xx xx xx x! xx xx xx xx xx x! xx xx xx xx xx xx "
 	)
 	)
