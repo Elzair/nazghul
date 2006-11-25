@@ -84,7 +84,11 @@ static bool tickHandler(struct TickHandler *th)
 
 static bool quitHandler(struct QuitHandler *kh)
 {
+        extern int ExitProgram; /* see nazghul.c */
 	cmdQuit();
+        if (Quit) {
+                ExitProgram = 1;
+        }
 	return Quit;
 }
 

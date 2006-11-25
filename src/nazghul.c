@@ -59,6 +59,7 @@
 static char *nazghul_load_fname = 0;
 
 int DeveloperMode    = 0;
+int ExitProgram = 0;
 
 static char program_name[] = "nazghul";
 
@@ -332,9 +333,14 @@ int main(int argc, char **argv)
         /* reset save file so main menu runs */
         nazghul_load_fname=0;
 
-        /* In the past, memory leaks made this a bad idea. Let's give it
-         * another go and try to work through them if they crop up again. */
-        goto main_loop;
+        /* ExitProgram is set when the player closes the window; in that case
+         * drop out of the program without showing the main menu again. */
+        if (! ExitProgram) {
+                /* In the past, memory leaks made this a bad idea. Let's give
+                 * it another go and try to work through them if they crop up
+                 * again. */
+                goto main_loop;
+        }
 
         tick_kill();
 
