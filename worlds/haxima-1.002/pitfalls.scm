@@ -8,21 +8,28 @@
 ;; the character's thiefly skill to determine if the character detects and
 ;; avoids the trap before it trips.
 ;;----------------------------------------------------------------------------
-(define (mk-pitfall name ddc dmg) (list 'pitfall name ddc dmg #f))
+(define (mk-pitfall name ddc dmg) (list 'pitfall name ddc dmg #f #t))
 (define (pitfall-name pfall) (cadr pfall))
 (define (pitfall-detect-dc pfall) (caddr pfall))
 (define (pitfall-damage pfall) (cadddr pfall))
 (define (pitfall-detected? pfall) (list-ref pfall 4))
 (define (pitfall-set-detected! pfall val) (list-set-ref! pfall 4 val))
+(define (pitfall-known-to-npc? pfall) (list-ref pfall 5))
+(define (pitfall-set-known-to-npc! pfall val) (list-set-ref! pfall 5 val))
 
 ;; The step handler runs whenever a character (kchar) steps on the pitfall
 ;; object (kobj). If the pitfall has already been detected then no harm
-;; done. Otherwise, the character gets a roll to avoid the pitfall. Whether
-;; avoided or not, the pitfall will be detected and made visible.
+;; done. If the character is an NPC, and the pitfall was not put there by the
+;; player, then the NPC avoids it automatically. Otherwise the character gets a
+;; roll to avoid the pitfall. Whether avoided or not, the pitfall will be
+;; detected and made visible.
 (define (kpitfall-step-handler kobj kchar)
   (let ((pfall (kobj-gob-data kobj)))
     (println pfall)
-    (if (not (pitfall-detected? pfall))
+    (if (and (not (pitfall-detected? pfall))
+             (or (is-player-party-member? kchar)
+                 (not (pitfall-known-to-npc? pfall))
+                 ))
         (let ((roll (kern-dice-roll "1d20"))
               (bonus (occ-thief-dice-roll kchar)))
           (kern-obj-remove-effect kobj ef_permanent_invisibility)
@@ -84,6 +91,7 @@
                                   "!")
                     (kern-obj-put-at kobj loc)
                     (kern-obj-remove-from-inventory kchar ktype 1)
+                    (pitfall-set-known-to-npc! (gob kobj) #f)
                     #t)))))))
 
 (define ktrap-ifc

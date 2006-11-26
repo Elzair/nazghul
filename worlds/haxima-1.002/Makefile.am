@@ -76,7 +76,7 @@ haxima_DATA = \
 	generic-mech.scm            palette.scm            westpass.scm\
 	gen.scm                     parties.scm            yellow-slime.scm\
 	ghertie.scm                 patch.scm              zane.scm\
-	gholet.scm                  player.scm             zones.scm\
+	gholet.scm                  monsters.png           zones.scm\
 	glasdrin.scm                poor-house.scm         signs.png\
 	goblin-kingdoms.scm         portals.scm            runestones.png\
 	newmonst.png                newfolks.png	   tower.png\
@@ -90,7 +90,8 @@ haxima_DATA = \
 	humanoids.png               pitfalls.scm           pitfalls.png\
 	brundegardt.scm             anaxes.scm		   mimic.scm\
 	weather-vane.scm            wind-bridge.scm        keys.scm\
-	eye-of-brune.scm            tim.scm                map.png
+	eye-of-brune.scm            tim.scm                map.png\
+	edward.scm                  nate.scm
 
 EXTRA_DIST = $(haxima_DATA)
 MAINTAINERCLEANFILES = Makefile.in

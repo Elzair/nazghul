@@ -92,7 +92,7 @@
                   (say knpc "Go to Green Tower and ask around about the bandits.")
                   )))
           (else
-           (say knpc "Bandits have raiding the woods. "
+           (say knpc "Bandits are raiding the woods. "
                 "They robbed me in my own hut! I tried to fight them, and now I walk with a limp and a cane. "
                 "The rangers at Green Tower would not help me. "
                 "I have a granddaughter living with me now, "
