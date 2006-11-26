@@ -623,13 +623,13 @@
                   (1 t_in_mani_corp_scroll)
                   (1 t_xen_corp_scroll)
                   (1 t_sanct_lor_scroll)
-                  (100 t_gold_coin)))
+                  (100 t_gold_coins)))
       15 8)
  (put (mk-chest 'poison-trap
                 '((1 t_str_potion)
                   (1 t_dex_potion)
                   (1 t_int_potion)
-                  (100 t_gold_coin)))
+                  (100 t_gold_coins)))
       17 8)
  )
 
