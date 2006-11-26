@@ -69,7 +69,7 @@
   (put (kern-mk-obj t_mana_potion 1) 4 5)
   (put (kern-mk-obj t_heal_potion 1) 5 5)
   (put (kern-mk-obj t_poison_immunity_potion 1) 6 5)
-  (put (kern-mk-obj t_inv_potion 1) 7 5)
+  (put (kern-mk-obj t_invisibility_potion 1) 7 5)
 
   ;; tools
   (put (kern-mk-obj t_torch 1) 8 5)

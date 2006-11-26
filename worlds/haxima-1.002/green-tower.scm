@@ -152,7 +152,7 @@
                               (add-content 10 t_heal_potion)
                               (add-content 10 t_mana_potion)
                               (add-content 10 t_poison_immunity_potion)
-                              (add-content 1 t_inv_potion)))
+                              (add-content 1 t_invisibility_potion)))
        54 9)
   (put (mk-chest 'sleep-trap
                  (mk-contents (add-content 1 t_armor_leather)

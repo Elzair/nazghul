@@ -102,7 +102,7 @@
         (mk-contents
          (add-content 10 t_cure_potion)
          (add-content 10 t_poison_immunity_potion)
-         (add-content 10 t_inv_potion)
+         (add-content 10 t_invisibility_potion)
          )) 13 4)
   ;; potions 2...
   (put (mk-chest

@@ -103,7 +103,7 @@
              (kern-obj-add-effect kuser ef_temporary_poison_immunity nil)))
 
 ;; invisibility (black) potion
-(mk-potion 't_inv_potion "invisibility potion" s_invisibility_potion
+(mk-potion 't_invisibility_potion "invisibility potion" s_invisibility_potion
            (lambda (kpotion kuser)
              (kern-obj-add-effect kuser ef_invisibility nil)))
 

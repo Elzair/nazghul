@@ -184,7 +184,7 @@
                      (add-content 10 t_mana_potion)
                      (add-content 5 t_cure_potion)
                      (add-content 5 t_poison_immunity_potion)
-                     (add-content 1 t_inv_potion)))
+                     (add-content 1 t_invisibility_potion)))
        11 15)
   (put (mk-chest
         'lightning-trap
