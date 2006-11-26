@@ -458,51 +458,6 @@ struct nearest_hostile_info {
         struct list suggest; /* for ctrl_attack_ui */
 };
 
-static void ctrl_nearest_hostile_visitor(class Object *obj, void *data)
-{
-        struct nearest_hostile_info *info = (struct nearest_hostile_info*)data;
-
-        if (being_layer!=obj->getLayer())
-                return;
-
-        class Character *npc = (class Character*)obj;
-
-        if (! are_hostile(npc, info->origin))
-                return;
-
-        if (! npc->isVisible() && ! Reveal)
-                return;
-        
-        int dist = place_flying_distance(info->origin->getPlace(),
-                                         info->origin->getX(),
-                                         info->origin->getY(),
-                                         obj->getX(),
-                                         obj->getY());
-        if (dist > info->range)
-                return;
-
-        if (! info->nearest
-            || dist < info->min_distance) {
-                info->nearest = npc;
-                info->min_distance = dist;
-        }
-}
-
-static class Character *
-ctrl_get_nearest_hostile_in_range(class Character *character, int range)
-{
-        struct nearest_hostile_info info;
-        info.origin = character;
-        info.nearest = NULL;
-        info.min_distance = 0;
-        info.range = range;
-
-        place_for_each_object(character->getPlace(), ctrl_nearest_hostile_visitor,
-                              &info);
-
-        return info.nearest;
-}
-
 static void ctrl_suggest_visitor(class Object *obj, void *data)
 {
         struct nearest_hostile_info *info = (struct nearest_hostile_info*)data;
@@ -521,12 +476,19 @@ static void ctrl_suggest_visitor(class Object *obj, void *data)
         if (! npc->isVisible() && ! Reveal)
                 return;
         
-        dist = place_flying_distance(info->origin->getPlace(),
-                                     info->origin->getX(),
-                                     info->origin->getY(),
-                                     obj->getX(),
-                                     obj->getY());
-        if (dist > info->range)
+        if (! place_in_los(info->origin->getPlace(),
+                           info->origin->getX(),
+                           info->origin->getY(),
+                           info->origin->getPlace(),
+                           obj->getX(),
+                           obj->getY()))
+                return;
+
+        if (info->range < (dist = place_flying_distance(info->origin->getPlace(),
+                                                        info->origin->getX(),
+                                                        info->origin->getY(),
+                                                        obj->getX(),
+                                                        obj->getY())))
                 return;
 
         /* Add it to the list */
@@ -535,6 +497,13 @@ static void ctrl_suggest_visitor(class Object *obj, void *data)
         entry->x = obj->getX();
         entry->y = obj->getY();
         list_add_tail(&info->suggest, &entry->list);
+
+        /* Keep track of the nearest as we go. */
+        if (! info->nearest
+            || (dist < info->min_distance)) {
+                info->min_distance = dist;
+                info->nearest = npc;
+        }
 
         printf("Added %s at [%d %d]\n", obj->getName(), obj->getX(), obj->getY());        
 }
@@ -611,21 +580,6 @@ static void ctrl_attack_ui(class Character *character)
                         continue;
                 }
 
-                /* Get the target. It's important to do this every time the
-                 * loop because the last iteration may have killed the previous
-                 * target, or it may be out of range of the weapon. The
-                 * getAttackTarget routine will reevaluate the current
-                 * target. */
-                target = character->getAttackTarget(weapon);
-
-                if (target==character) {
-                        target = ctrl_get_nearest_hostile_in_range(
-                                character,
-                                weapon->getRange());
-                        if (! target)
-                                target = character;
-                }
-
                 /* Check the four adjacent tiles for hostiles who will
                  * interfere with a missile weapon */
                 if (weapon->isMissileWeapon()) {
@@ -641,16 +595,36 @@ static void ctrl_attack_ui(class Character *character)
                         }
                 }
 
+                /* Build the list of suggested targets. */
+                info.range = weapon->getRange();
+                info.min_distance = 0;
+                info.nearest = 0;
+                place_for_each_object(character->getPlace(),
+                                      ctrl_suggest_visitor,
+                                      &info);
+
+                /* Get the default target. It's important to do this every time
+                 * the loop because the last iteration may have killed the
+                 * previous target, or it may be out of range of the
+                 * weapon. The getAttackTarget routine will reevaluate the
+                 * current target. */
+                target = character->getAttackTarget(weapon);
+
+                /* If the target is the character that means there is no
+                 * default target now. Select the nearest one is the new
+                 * default. */
+                if (target==character) {
+                        if (! list_empty(&info.suggest)) {
+                                assert(info.nearest);
+                                target = info.nearest;
+                        }
+                }
+
+                assert(target);
 
                 // select the target location
                 x = target->getX();
                 y = target->getY();
-
-                /* Initialize the rest of the suggestion list. */
-                info.range = weapon->getRange();
-                place_for_each_object(character->getPlace(),
-                                      ctrl_suggest_visitor,
-                                      &info);
 
                 // SAM:
                 // select_target() might be a more elegant place to put
