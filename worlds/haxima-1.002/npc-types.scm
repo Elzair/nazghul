@@ -812,3 +812,12 @@
 
 (define (is-sludge-tentacle? kchar)
   (kbeing-is-npc-type? kchar 'sludge-tentacle))
+
+(define (can-fly? kobj)
+  (in-list? (kern-obj-get-mmode kobj)
+            (list mmode-hover
+                  mmode-fly
+                  mmode-voidship)))
+
+(define (is-abstract? kobj)
+  (null? (kern-obj-get-name kobj)))

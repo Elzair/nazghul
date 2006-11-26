@@ -622,6 +622,16 @@
         (kern-log-msg "Burning!")
         (kern-obj-apply-damage obj "burning" (kern-dice-roll "2d3+2")))))
 
+;; fixme: what about the player party? probably not safe to just remove it from
+;; the map...
+(define (chasm-fall kobj)
+  (cond ((and (not (can-fly? kobj))
+              (not (is-abstract? kobj)))
+         (kern-log-msg (kern-obj-get-name kobj) " drops into the abyss!")
+         (if (obj-is-char? kobj)
+             (kern-char-kill kobj)
+             (kern-obj-remove kobj)))))
+
 (define (magical-kill obj)
   (if (and (kern-obj-is-char? obj)
            (not (has-magical-kill-immunity? obj)))

@@ -39,7 +39,7 @@
         (gob (gob kobj))
         (loc (kern-obj-get-location kobj))
         )
-    (println "wind=" wind "gob=" gob "loc=" loc)
+    ;;(println "wind=" wind "gob=" gob "loc=" loc)
     (define (blit map)
       (kern-blit-map (kern-place-map (loc-place loc))
                      (loc-x loc)
@@ -64,7 +64,7 @@
        ))
 
 ;; Make a kernel portcullis type
-(mk-obj-type 't_wind_bridge "wind bridge" nil layer-mechanism wind-bridge-ifc)
+(mk-obj-type 't_wind_bridge nil nil layer-mechanism wind-bridge-ifc)
 
 ;; Define a constructor
 (define (mk-wind-bridge)
