@@ -52,8 +52,6 @@
  (put (mk-corpse) 13 13)
 
  ;; Traps
- (put (mk-caltrops) 2 9)
- (put (mk-caltrops) 12 8)
  (put (mk-caltrops) 8 12)
 
  )
