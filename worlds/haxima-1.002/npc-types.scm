@@ -650,7 +650,7 @@
 (define cave-goblin-berserker (mk-npct2 "cave goblin berserker" sp_cave_goblin  oc_warrior s_cgob_berserk    basic-traps  berserker-equip  nil 'generic-ai faction-cave-goblin  nil 'drop-generic berserker-loot))
 (define cave-goblin-priest    (mk-npct2 "cave goblin priest"    sp_cave_goblin  oc_wizard  s_cgob_shaman    wizard-traps wizard-equip     nil 'priest-ai  faction-cave-goblin  nil 'drop-generic wizard-loot))
 
-(define ranger                (mk-npct2 "ranger"                sp_human        oc_warrior s_ranger basic-traps  ranger-equip     nil 'ranger-ai  faction-men  'ranger-conv 'drop-generic ranger-loot))
+(define ranger                (mk-npct2 "ranger"                sp_human        oc_ranger s_ranger basic-traps  ranger-equip     nil 'ranger-ai  faction-men  'ranger-conv 'drop-generic ranger-loot))
 
 (define skeletal-spear-thrower (mk-npct2 "skeletal spear-thrower" sp_skeleton oc_warrior s_skeleton basic-traps spear-thrower-equip    undead-effects 'generic-ai faction-monster nil 'drop-generic spear-thrower-loot))
 (define skeletal-warrior (mk-npct2 "skeletal warrior" sp_skeleton oc_warrior s_skeleton basic-traps skeletal-warrior-equip undead-effects 'generic-ai faction-monster nil 'drop-generic skel-war-loot))
