@@ -60,6 +60,7 @@
 (define pclass-boulder   10) ;; no ceiling, smaller than mountain
 (define pclass-waterboulder   11) ;; worst case of boulder and water
 (define pclass-sludge    12)
+(define pclass-shallows  13)
 
 ;; Movement modes
 (define mmodes
@@ -95,6 +96,7 @@
  (list cant   norm  cant   norm   norm   cant   cant  hard  cant  cant  cant ) ;; boulder
  (list cant   hard  cant   cant   norm   cant   cant  cant  cant  cant  cant ) ;; waterboulder
  (list cant   norm  vhard  cant   norm   vhard  vhard cant  cant  cant  cant ) ;; sludge
+ (list norm   norm  cant   norm   norm   norm   norm  norm  cant  norm  cant ) ;; shallows
  )
 
 ;; Factions. The diplomacy table (which defines the relationship between

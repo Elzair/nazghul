@@ -450,8 +450,10 @@
 ;; A kraken will chomp through planking to get at its foes. If foes exist, and
 ;; they are not in melee range, and the kraken cannot pathfind to them, it will
 ;; attempt a directional move toward them. If the move is blocked by deck, the
-;; kraken will destroy the deck.
-(define (kraken-ai kchar)
+;; kraken will destroy the deck, using the given ability. The ability varies by
+;; kraken type to match the expected terrain that the deck should be converted
+;; into.
+(define (generic-kraken-ai kchar ability)
   (let ((foes (all-visible-hostiles kchar)))
     (if (null? foes)
         #f
@@ -467,14 +469,21 @@
                     (if (passable? dest kchar)
                         (kern-obj-move kchar (loc-x vect) (loc-y vect))
                         (and (is-deck? (kern-place-get-terrain dest))
-                             (can-use-ability? chomp-deck kchar)
-                             (use-ability chomp-deck kchar dest))))))))))
+                             (can-use-ability? ability kchar)
+                             (use-ability ability kchar dest))))))))))
 
-;; The great kraken spawns tentacles.
-(define (great-kraken-ai kchar)
+;; A kraken will chomp through planking to get at its foes. If foes exist, and
+;; they are not in melee range, and the kraken cannot pathfind to them, it will
+;; attempt a directional move toward them. If the move is blocked by deck, the
+;; kraken will destroy the deck.
+(define (kraken-ai kchar)
+  (generic-kraken-ai kchar chomp-deck))
+
+;; The sludge kraken spawns tentacles.
+(define (sludge-kraken-ai kchar)
   (define (spawn ktarg)
     (let* ((lvl (kern-char-get-level kchar))
-           (knpc (spawn-npc 'kraken-tentacle lvl))
+           (knpc (spawn-npc 'sludge-tentacle lvl))
            (loc (pick-loc (kern-obj-get-location ktarg) knpc))
            )
       (cond ((null? loc) 
@@ -487,7 +496,7 @@
              #t))))
   (define (spawn-tentacle?)
     (let ((ktarg (random-select (all-visible-hostiles kchar)))
-          (tentacles (filter is-kraken-tentacle? 
+          (tentacles (filter is-sludge-tentacle? 
                              (kern-place-get-beings (loc-place (kern-obj-get-location kchar)))))
           )
       ;;(println ktarg tentacles)
@@ -499,6 +508,11 @@
              #f))))
   (or (animal-ai kchar)
       (spawn-tentacle?)))
+
+;; Sludge kraken tentacles work like sea krakens, but convert deck to sludge
+;; instead of shoals.
+(define (sludge-tentacle-ai kchar)
+  (generic-kraken-ai kchar deck-to-sludge))
 
 ;; sea-serpent-ai -- spit fireballs every once in a while
 (define (sea-serpent-ai kchar)

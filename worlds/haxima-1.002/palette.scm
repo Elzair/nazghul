@@ -18,6 +18,7 @@
     (list  "_!"   t_sunlit_deep)               ;; "deep water"
     (list  "~*"   t_blendable_shoals)            ;; "shallow water"
     (list  "_s"   t_sludge)
+    (list  "~s"   t_shallow_sludge)
     (list  "dd"   t_dirt)
     (list  "gg"   t_gravel)
 	

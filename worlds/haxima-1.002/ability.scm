@@ -262,6 +262,13 @@
          (kern-log-msg (kern-obj-get-name kchar) " chomps through the deck!")
          #t)))
 
+(define (deck-to-sludge-proc kchar loc)
+  (cond ((not (is-deck? (kern-place-get-terrain loc))) #f)
+        (else
+         (kern-place-set-terrain loc t_shallow_sludge)
+         (kern-log-msg (kern-obj-get-name kchar) " chomps through the deck!")
+         #t)))
+
 ;;----------------------------------------------------------------------------
 ;; narcotize -- mass sleep
 (define (narcotize-proc kchar)
@@ -316,6 +323,7 @@
 (define summon-wolves       (mk-ability "summon wolves"   4 4 2 summon-wolf-proc 0))
 (define summon-ratlings     (mk-ability "summon ratlings" 1 2 4 summon-ratling-proc 0))
 (define chomp-deck          (mk-ability "chomp deck"      2 4 3 chomp-deck-proc 1))
+(define deck-to-sludge      (mk-ability "chomp deck"      1 1 1 deck-to-sludge-proc 1))
 (define enslave             (mk-ability "enslave"       3 4 2 enslave-proc 4))
 (define narcotize           (mk-ability "narcotize"     5 6 3 narcotize-proc 0))
 (define cast-fire-wind      (mk-ability "fire wind"     6 6 2 fire-wind-proc 4))

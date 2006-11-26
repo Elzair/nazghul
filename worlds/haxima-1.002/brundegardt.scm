@@ -401,28 +401,39 @@
 (mk-dungeon-room
  'p_black_canal "Black Canal"
  (list
-  "rr rr rr rr rr _s _s _s _s _s _s _s _s _s rr rr rr rr rr "
-  "rr rr rr rr rr _s _s _s _s _s _s _s _s _s rr rr rr rr rr "
-  "rr rr rr rr rr _s _s _s _s _s _s _s _s _s rr rr rr rr rr "
-  "rr rr rr rr rr _s _s _s _s _s _s _s _s _s rr rr rr rr rr "
-  "rr rr rr rr rr _s _s _s _s _s _s _s _s _s rr rr rr rr rr "
-  "rr rr rr rr rr _s _s _s _s _s _s _s _s _s rr rr rr rr rr "
-  "rr rr rr rr rr _s _s _s _s _s _s _s _s _s rr rr rr rr rr "
-  "rr rr rr rr rr _s _s _s _s _s _s _s _s _s rr rr rr rr rr "
-  "xx xx xx xx xx oo ee ee ee oo ee ee ee oo xx xx xx xx xx "
-  "cc cc cc cc cc ee ee ee ee ee ee _s ee ee cc cc cc cc cc "
-  "xx xx xx xx xx oo ee _s ee oo ee _s _s oo xx xx xx xx xx "
-  "rr rr rr rr rr _s _s _s _s _s _s _s _s _s rr rr rr rr rr "
-  "rr rr == rr rr _s _s _s _s _s _s _s _s _s rr rr rr rr rr "
-  "rr rr rr rr rr _s _s _s _s _s _s _s _s _s rr rr rr rr rr "
-  "rr rr rr rr rr _s _s _s _s _s _s _s _s _s rr rr rr rr rr "
-  "rr rr rr rr rr _s _s _s _s _s _s _s _s _s rr rr rr rr rr "
-  "rr rr rr rr rr _s _s _s _s _s _s _s _s _s rr rr rr rr rr "
-  "rr rr rr rr rr _s _s _s _s _s _s _s _s _s rr rr rr rr rr "
-  "rr rr rr rr rr _s _s _s _s _s _s _s _s _s rr rr rr rr rr "
+  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
+  "rr rr gg gg gg rr rr bb ~s _s _s _s rr rr rr rr rr rr rr "
+  "rr gg gg bb gg gg ~s ~s ~s bb ~s _s _s rr rr rr rr rr rr "
+  "rr gg gg gg gg ~s _s _s ~s ~s ~s _s _s _s rr rr rr rr rr "
+  "rr rr gg gg ~s _s _s _s _s _s ~s bb ~s _s _s _s rr rr rr "
+  "rr rr rr rr _s _s _s _s _s _s ~s ~s ~s bb ~s _s rr rr rr "
+  "rr rr rr _s _s _s _s _s _s _s _s _s ~s ~s ~s _s rr rr rr "
+  "xx xx _s _s _s _s _s _s _s _s _s _s _s ~s _s _s xx xx rr "
+  "xx ee ee oo ee ee ee oo ~s ee ee oo ee ee oo ee ee xx xx "
+  "cc ee ee ee ee ~s ee ee ee ee ee ee ee ee ee ee ee cc cc "
+  "xx ee ee oo ee ee ee oo ee ee ee oo ~s ee oo ee ee xx xx "
+  "xx xx _s ~s _s _s _s ~s _s _s _s ~s _s _s ~s _s xx xx rr "
+  "rr rr rr ~s bb ~s _s _s _s _s _s _s _s _s _s rr rr rr rr "
+  "rr rr rr ~s ~s ~s bb ~s _s _s _s _s _s _s _s ~s rr rr rr "
+  "rr rr ~s _s _s _s ~s _s _s _s _s ~s bb ~s _s _s ~s rr rr "
+  "rr rr _s _s _s _s _s _s _s _s _s _s ~s _s _s _s _s rr rr "
+  "rr rr rr _s _s _s _s _s _s _s _s _s _s _s _s _s rr rr rr "
+  "rr rr rr rr rr _s _s rr rr rr rr rr _s _s rr rr rr rr rr "
+  "rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr rr "
   ) 
- (put (spawn-pt 'great-kraken) 9 3)
+ (put (spawn-pt 'sludge-kraken) 9 4)
  )
+
+;; random loot corpses
+(put-random-stuff p_black_canal
+                  (mk-rect 1 1 4 4)
+                  (lambda (loc)
+                    (eqv? (kern-place-get-terrain loc)
+                          t_gravel))
+                  (lambda (loc)
+                    (kern-obj-put-at (mk-corpse-with-loot)
+                                     loc))
+                  8)
 
 ;;----------------------------------------------------------------------------
 ;; Tunnels

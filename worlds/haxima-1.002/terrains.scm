@@ -22,6 +22,7 @@
    (list 't_blendable_shoals "shallow water" pclass-shoals    s_shoals         1 0 nil)
    (list 't_shoals          "shallow water" pclass-shoals    s_shoals          1 0 nil)
    (list 't_sludge          "oily sludge"   pclass-sludge    s_sludge          1 0 nil)
+   (list 't_shallow_sludge  "oily sludge"   pclass-shallows  s_shallow_sludge  1 0 nil)
 
    (list 't_grass           "grass"         pclass-grass     s_grass           1 0 nil)
    (list 't_sunlit_grass    "grass"         pclass-grass     s_grass           1 64 nil)
