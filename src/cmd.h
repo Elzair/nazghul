@@ -66,7 +66,7 @@ extern bool cmdMixReagents(class Character *mixer);
 extern void cmdNewOrder(void);
 extern void cmdSave(void);
 extern void cmdReload(void);
-extern bool cmdSearch(struct place *place, int x, int y);
+extern bool cmdSearch(class Character *pc);
 extern void cmdTalk(Object *member);
 extern void cmdZoomIn(void);
 extern bool cmdUse(class Character * pc, int flags);

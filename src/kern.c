@@ -2523,11 +2523,78 @@ static pointer kern_log_msg(scheme *sc,  pointer args)
                 } else if (scm_is_real(sc, val)) {
                         log_continue("%f", scm_real_val(sc, val));
                 } else {
-                        rt_err("kern-print: bad args");
+                        rt_err("kern-log-msg: bad args");
                 }
         }
 
         log_end(NULL);
+
+        return sc->NIL;
+}
+
+KERN_API_CALL(kern_log_begin)
+{
+        log_begin(NULL);
+
+        while (scm_is_pair(sc, args)) {
+
+                pointer val = scm_car(sc, args);
+                args = scm_cdr(sc, args);
+
+                if (scm_is_str(sc, val)) {
+                        log_continue(scm_str_val(sc, val));
+                } else if (scm_is_int(sc, val)) {
+                        log_continue("%d", scm_int_val(sc, val));
+                } else if (scm_is_real(sc, val)) {
+                        log_continue("%f", scm_real_val(sc, val));
+                } else {
+                        rt_err("kern-log-begin: bad args");
+                }
+        }
+
+        return sc->NIL;
+}
+
+KERN_API_CALL(kern_log_end)
+{
+        while (scm_is_pair(sc, args)) {
+
+                pointer val = scm_car(sc, args);
+                args = scm_cdr(sc, args);
+
+                if (scm_is_str(sc, val)) {
+                        log_continue(scm_str_val(sc, val));
+                } else if (scm_is_int(sc, val)) {
+                        log_continue("%d", scm_int_val(sc, val));
+                } else if (scm_is_real(sc, val)) {
+                        log_continue("%f", scm_real_val(sc, val));
+                } else {
+                        rt_err("kern-log-end: bad args");
+                }
+        }
+
+        log_end(NULL);
+
+        return sc->NIL;
+}
+
+static pointer kern_log_continue(scheme *sc,  pointer args)
+{
+        while (scm_is_pair(sc, args)) {
+
+                pointer val = scm_car(sc, args);
+                args = scm_cdr(sc, args);
+
+                if (scm_is_str(sc, val)) {
+                        log_continue(scm_str_val(sc, val));
+                } else if (scm_is_int(sc, val)) {
+                        log_continue("%d", scm_int_val(sc, val));
+                } else if (scm_is_real(sc, val)) {
+                        log_continue("%f", scm_real_val(sc, val));
+                } else {
+                        rt_err("kern-log-continue: bad args");
+                }
+        }
 
         return sc->NIL;
 }
@@ -3191,7 +3258,7 @@ static pointer kern_type_describe(scheme *sc, pointer  args)
                 return sc->NIL;
         }
 
-        cptr->describe(1);
+        cptr->describeType(1);
         return sc->NIL;
 }
 
@@ -8213,8 +8280,11 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-map-view-rm", kern_map_view_rm);
 
         /* kern-log api */
-        API_DECL(sc, "kern-log-msg", kern_log_msg);
+        API_DECL(sc, "kern-log-begin", kern_log_begin);
+        API_DECL(sc, "kern-log-continue", kern_log_continue);
+        API_DECL(sc, "kern-log-end", kern_log_end);
         API_DECL(sc, "kern-log-enable", kern_log_enable);
+        API_DECL(sc, "kern-log-msg", kern_log_msg);
         API_DECL(sc, "kern-stdout-msg", kern_stdout_msg);
 		
         /* kern-dtable api */

@@ -149,8 +149,7 @@ static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
                 cmdReady(NULL);
                 break;
         case 's':
-                cmdSearch(party->getPlace(),
-                          party->getX(), party->getY());
+                cmdSearch(0);
                 break;
         case 't':
                 cmdTalk(NULL);
@@ -1031,9 +1030,7 @@ static int ctrl_character_key_handler(struct KeyHandler *kh, int key,
                         cmdReady(character);
                 break;
         case 's':
-                cmdSearch(character->getPlace(),
-                          character->getX(),
-                          character->getY());
+                cmdSearch(character);
                 break;
         case 't':
                 cmdTalk(character);

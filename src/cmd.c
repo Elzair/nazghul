@@ -881,19 +881,41 @@ int ui_get_direction(void)
 static void search_visitor(class Object *obj, void *arg)
 {
         class ObjectType *type = obj->getObjectType();
+        /* Caution: searching can destroy the object if it triggers traps; the
+         * arg should be protected by the caller. */
         if (type && type->canSearch()) {
-                type->search(obj);
+                type->search(obj, (class Object*)arg);
         }
 }
 
-bool cmdSearch(struct place *place, int x, int y)
+bool cmdSearch(class Character *pc)
 {
 	int dir;
         bool old_reveal;
-        int x2,  y2;
+        int x, y, x2,  y2;
+        struct place *place = 0;
 
 	cmdwin_clear();
 	cmdwin_spush("Search");
+
+        /* FIXME: this is duplicated in cmdHandle(), these command functions
+         * all need to be cleaned up to ensure consistency. */
+        if (! pc) {
+                if (player_party->get_num_living_members() == 1) {
+			pc = player_party->get_first_living_member();
+			cmdwin_spush("%s", pc->getName());
+		} else {
+			pc = select_party_member();
+			if (pc == NULL) {
+				return false;
+			}
+		}
+        }
+
+        assert(pc);
+        place = pc->getPlace();
+        x = pc->getX();
+        y = pc->getY();
 
 	dir = ui_get_direction();
 	if (dir == CANCEL)
@@ -902,7 +924,12 @@ bool cmdSearch(struct place *place, int x, int y)
         x2 = x + directionToDx(dir);
         y2 = y + directionToDy(dir);
 
-        place_for_each_object_at(place, x2, y2, search_visitor, NULL);
+        /* Caution: searching can destroy the pc if it triggers traps. The
+         * following is iterative, so protect the pc from destruction until it
+         * completes. */
+        obj_inc_ref(pc);
+        place_for_each_object_at(place, x2, y2, search_visitor, pc);
+        obj_dec_ref(pc);
 
 	log_begin("You find ");
         old_reveal = Reveal;
@@ -960,7 +987,7 @@ bool cmdGet(class Object *actor)
 static void cmd_describe_inv_entry(struct inv_entry *ie, void *unused)
 {
         log_begin("...");
-        ie->type->describe(ie->count);
+        ie->type->describeType(ie->count);
         log_end(NULL);
 }
 

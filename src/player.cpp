@@ -598,7 +598,7 @@ bool player_party::add(class ObjectType * type, int quantity)
 		return true;
 
         log_begin("You get ");
-        type->describe(quantity);
+        type->describeType(quantity);
         log_end(NULL);
 
         return inventory->add(type, quantity);
@@ -608,7 +608,7 @@ bool player_party::takeOut(ObjectType *type, int q)
 {
         // Some types can be in more than one category, so remove from all.
         log_begin("You lose ");
-        type->describe(q);
+        type->describeType(q);
         log_end(NULL);
         return inventory->takeOut(type, q);
 }

@@ -48,22 +48,23 @@
 //
 // These GIFC_CAN_* bits need to match the script:
 //
-#define GIFC_CAN_GET          1
-#define GIFC_CAN_USE          2
-#define GIFC_CAN_EXEC         4
-#define GIFC_CAN_OPEN         8
-#define GIFC_CAN_HANDLE       16
-#define GIFC_CAN_STEP         32
-#define GIFC_CAN_ATTACK       64
-#define GIFC_CAN_MIX          128
-#define GIFC_CAN_ENTER        256
-#define GIFC_CAN_CAST         512
-#define GIFC_CAN_BUMP         1024
-#define GIFC_CAN_HIT_LOCATION 2048
-#define GIFC_CAN_BUY          4096
-#define GIFC_CAN_SEARCH       8192
-#define GIFC_CAN_SENSE        16384
-#define GIFC_CAN_XAMINE       32768
+#define GIFC_CAN_GET          (1<<0)
+#define GIFC_CAN_USE          (1<<1)
+#define GIFC_CAN_EXEC         (1<<2)
+#define GIFC_CAN_OPEN         (1<<3)
+#define GIFC_CAN_HANDLE       (1<<4)
+#define GIFC_CAN_STEP         (1<<5)
+#define GIFC_CAN_ATTACK       (1<<6)
+#define GIFC_CAN_MIX          (1<<7)
+#define GIFC_CAN_ENTER        (1<<8)
+#define GIFC_CAN_CAST         (1<<9)
+#define GIFC_CAN_BUMP         (1<<10)
+#define GIFC_CAN_HIT_LOCATION (1<<11)
+#define GIFC_CAN_BUY          (1<<12)
+#define GIFC_CAN_SEARCH       (1<<13)
+#define GIFC_CAN_SENSE        (1<<14)
+#define GIFC_CAN_XAMINE       (1<<15)
+#define GIFC_CAN_DESCRIBE     (1<<16)
 
 ObjectType::ObjectType()
 {
@@ -151,25 +152,33 @@ static int endsWith(char *word, char *end)
         return 1;
 }
 
-void ObjectType::describe(int count)
+void ObjectType::describeType(int count)
 {
-	char *name = getName();
-
-	if (count == 1) {
+	if (1 == count) {
 		if (isvowel(name[0]))
 			log_continue("an ");
 		else
 			log_continue("a ");
-		log_continue("%s", name);
+		log_continue("%s", getName());
 	} else if (getPluralName()) {
                 log_continue("some %s (%d)", getPluralName(), count);
         } else {
                 if (endsWith(name, "s")
                     || endsWith(name, "sh"))
-                        log_continue("some %ses (%d)", name, count);
+                        log_continue("some %ses (%d)", getName(), count);
                 else
-                        log_continue("some %ss (%d)", name, count);
+                        log_continue("some %ss (%d)", getName(), count);
 	}
+}
+
+void ObjectType::describe(Object *obj)
+{
+        if (hasDescribeHook()) {
+                runDescribeHook(obj);
+                return;
+        }
+
+        describeType(obj->getCount());
 }
 
 bool ObjectType::isType(int classID) 
@@ -588,7 +597,7 @@ void Object::paint(int sx, int sy)
 
 void Object::describe()
 {
-        getObjectType()->describe(getCount());
+        getObjectType()->describe(this);
         if (!isVisible())
                 consolePrint(" (invisible)");
 }
@@ -597,7 +606,7 @@ void Object::examine()
 {
 	if (getObjectType())
 	{
-		getObjectType()->describe(getCount());
+		getObjectType()->describe(this);
 	}
 	
 	//todo: dont have examiner to pass in to ifc
@@ -2020,9 +2029,9 @@ void ObjectType::buy(Object *buyer, int q)
         closure_exec(gifc, "ypd", "buy", buyer, q);
 }
 
-void ObjectType::search(Object *obj)
+void ObjectType::search(Object *obj, Object *searcher)
 {
-        closure_exec(gifc, "yp", "search", obj);
+        closure_exec(gifc, "ypp", "search", obj, searcher);
 }
 
 closure_t *ObjectType::getGifc()
@@ -2063,6 +2072,16 @@ void ObjectType::setGob(struct gob *g)
 struct gob * ObjectType::getGob()
 {
         return gob;
+}
+
+bool ObjectType::hasDescribeHook()
+{
+        return (gifc_cap & GIFC_CAN_DESCRIBE);
+}
+
+void ObjectType::runDescribeHook(Object *obj)
+{
+        closure_exec(gifc, "ypd", "describe", obj, obj->getCount());
 }
 
 bool Object::add(ObjectType *type, int amount)

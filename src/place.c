@@ -1366,7 +1366,6 @@ static int place_describe_objects(struct place *place, int x, int y,
 	struct tile *tile;
 	Object *obj = NULL, *prev_obj = NULL;
 	class ObjectType *type = NULL;
-	int n_instances;
         int n_types;
         int n_described = 0;
 
@@ -1434,7 +1433,6 @@ static int place_describe_objects(struct place *place, int x, int y,
         // Step 2: now we actually list the things, using the count to help us
         // decide how to punctuate.
 
-        n_instances = 0;
         type = NULL;
         prev_obj = NULL;
 
@@ -1459,7 +1457,6 @@ static int place_describe_objects(struct place *place, int x, int y,
                         // list. Don't print it until we find out how many
                         // there are.
 			type = obj->getObjectType();
-                        n_instances = obj->getCount();
 
 		} else if (obj->getObjectType() != type
                            || !obj->getObjectType()) {
@@ -1480,23 +1477,14 @@ static int place_describe_objects(struct place *place, int x, int y,
                                                 log_continue(", ");
                                 }
 
-                                if (prev_obj->getObjectType())
-                                        prev_obj->getObjectType()->
-                                                describe(n_instances);
-                                else
-                                        prev_obj->describe();
-
+                                prev_obj->describe();
                                 n_described++;
                                 n_types--;
                         }
 
 			type = obj->getObjectType();
-                        n_instances = obj->getCount();
 
-		} else {
-                        // More of the same.
-                        n_instances += obj->getCount();
-                }
+		}
 
                 prev_obj = obj;
 	}
@@ -1511,13 +1499,7 @@ static int place_describe_objects(struct place *place, int x, int y,
                                 log_continue(", ");
                 }
 
-                // Bugfix: multiple chests on one tile are 1 each, need to pass
-                // in the instance; Characters, however, have no type, so this
-                // is not a general solution
-                if (prev_obj->getObjectType())
-                        prev_obj->getObjectType()->describe(n_instances);
-                else
-                        prev_obj->describe();
+                prev_obj->describe();
                 n_described++;
                 n_types--;
         }

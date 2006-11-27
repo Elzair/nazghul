@@ -63,7 +63,8 @@
            (if (ifc 'can (car calls)) 1 0))))
   (if (null? ifc) 0
       (cap ifc (list 'get 'use 'exec 'open 'handle 'step 'attack 'mix 
-                     'enter 'cast 'bump 'hit-loc 'buy 'search 'sense 'xamine))))
+                     'enter 'cast 'bump 'hit-loc 'buy 'search 'sense 'xamine 
+                     'describe))))
 
 ;; The gob internal api:
 (define (gob-mk kobj members) (list kobj members))
@@ -73,7 +74,6 @@
 
 ;; Bind a kernel object to a gob and initialize it
 (define (bind kobj gob-data)
-  ;;(display "bind: ")(display gob-data)(newline)s
   (kern-obj-set-gob kobj (gob-mk kobj gob-data))
   (let ((ifc (kobj-ifc kobj)))
     (cond ((null? ifc) '())

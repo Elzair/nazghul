@@ -153,11 +153,12 @@
            
            ;; Remove the container from the map
            (kern-obj-remove kobj)
-           
-           ;; Done with references
-           (kern-obj-dec-ref kobj)
-           (kern-obj-dec-ref kchar)
            ))
+
+           
+    ;; Done with references
+    (kern-obj-dec-ref kobj)
+    (kern-obj-dec-ref kchar)
     ))
 
 (define (kcontainer-add-trap kobj trap-sym)
@@ -177,6 +178,49 @@
     (kern-obj-remove kobj)
     ))
 
+(define (kcontainer-search kobj kchar)
+  ;; Searching can trigger traps, which can destroy both kobj and kchar
+  (kern-obj-inc-ref kobj)
+  (kern-obj-inc-ref kchar)
+  (kern-log-begin "Searching chest...")
+  (let ((container (gob kobj)))
+    (println "container=" container)
+    (if (foldr (lambda (detected? trap)
+                 (println "trap=" trap)
+                 (trap-search trap kobj kchar)
+                 (if (trap-tripped? trap)
+                     (container-set-traps! container
+                                           (filter (lambda (trap2)
+                                                     (not (equal? trap trap2)))
+                                                   (container-traps container))))
+                 (or detected? (trap-detected? trap)))
+               #f
+               (container-traps container))
+        (kern-log-end "Trap detected!")
+        (kern-log-end "No traps detected!")
+        ))
+  ;; Done with references
+  (kern-obj-dec-ref kobj)
+  (kern-obj-dec-ref kchar)
+  )
+
+(define (kcontainer-describe kobj count)
+  (kern-log-continue "a chest (")
+  (if (foldr (lambda (described? trap)
+               (cond ((trap-detected? trap)
+                      (if described?
+                          (kern-log-continue ", "))
+                      (kern-log-continue (trap-name trap))
+                      #t)
+                     (else described?)))
+             #f
+             (container-traps (gob kobj)))
+      (kern-log-continue " trap(s) detected")
+      (kern-log-continue "no traps detected")
+      )
+  (kern-log-continue ")")
+  )
+
 ;; This interface binds the 'open signal to our open procedure above.
 (define container-ifc
   (ifc '()
@@ -185,6 +229,8 @@
        (method 'get-traps kcontainer-get-traps)
        (method 'rm-traps kcontainer-rm-traps)
        (method 'self-destruct kcontainer-self-destruct)
+       (method 'search kcontainer-search)
+       (method 'describe kcontainer-describe)
        ))
 
 ;; This constructor makes new types of objects that conform to the container

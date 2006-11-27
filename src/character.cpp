@@ -716,7 +716,7 @@ enum MoveResult Character::move(int dx, int dy)
                     getPlace(), newx, newy, this,
                     PFLAG_MOVEATTEMPT | 
                     (getActivity() == COMMUTING ? PFLAG_IGNOREMECHS : 0))) {
-		return WasImpassable;
+                return WasImpassable;
 	}
 
 	// Are the new coordinates already occupied by another character?
@@ -1973,8 +1973,7 @@ class Party *Character::getParty()
 void Character::burn()
 {
         damage(DAMAGE_FIRE);
-        consolePrint("%s burning-%s!\n", getName(), getWoundDescription());
-        consoleRepaint();
+        log_msg("%s burning-%s!", getName(), getWoundDescription());
 }
 
 void Character::sleep()
@@ -1983,7 +1982,7 @@ void Character::sleep()
                 return;
 
         changeSleep(true);
-        log_msg("%s sleeping!\n", getName());
+        log_msg("%s sleeping!", getName());
 }
 
 bool Character::canSee(class Object *obj)

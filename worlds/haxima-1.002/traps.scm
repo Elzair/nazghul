@@ -26,13 +26,19 @@
 
 ;; Define what a trap is. A trap has a type and some state variables. Currently
 ;; the only state variable is a "detected" flag, which is set if the player has
-;; detected the trap.
-(define (mk-trap type) (list 'trap type #f))
+;; detected the trap. The avoidance is hard-coded currently, but depends on if
+;; the trap has already been detected. The detection and fumble difficulties
+;; are also hard-coded (these are used when s)earching trapped objects).
+(define (mk-trap type) (list 'trap type #f #f))
 (define (trap-type trap) (cadr trap))
 (define (trap-detected? trap) (caddr trap))
 (define (trap-set-detected! trap val) (set-car! (cddr trap) val))
+(define (trap-tripped? trap) (cadddr trap))
+(define (trap-set-tripped! trap val) (set-car! (cdddr trap) val))
 (define (trap-name trap) (trap-type-name (trap-type trap)))
 (define (trap-avoid-dc trap) (if (trap-detected? trap) 10 20))
+(define (trap-detect-dc trap) 18)
+(define (trap-fumble-dc trap) 10)
 
 ;; Trigger a trap. The trap parm is one of our scripted traps conforming to the
 ;; above, kobj is the kernel object the trap is applied to, and kchar is the
@@ -42,21 +48,46 @@
   (let ((roll (kern-dice-roll "1d20"))
         (bonus (occ-thief-dice-roll kchar))
         (ttype (trap-type trap))
+        (avoid (trap-avoid-dc trap))
+        (already-tripped? (trap-tripped? trap))
         )
-    (cond ((or (= roll 20)
-               (> (+ roll bonus) 
-                  (trap-avoid-dc trap)))
+    (trap-set-detected! trap #t)
+    (trap-set-tripped! trap #t)
+    (cond (already-tripped? nil)
+          ((or (= roll 20)
+               (> (+ roll bonus) avoid))
            (kern-log-msg (kern-obj-get-name kchar) 
-                         " avoids a " 
+                         " ^c+gavoids^c- a " 
                          (trap-type-name ttype) 
                          " trap!"))
           (else
-           (println trap)
-           (kern-log-msg (kern-obj-get-name kchar) " trips a "
+           (kern-log-msg (kern-obj-get-name kchar) " ^c+rtrips^c- a "
                          (trap-type-name ttype)
                          " trap!")
            (apply (eval (trap-type-proc (trap-type trap)))
                   (list kchar kobj))))))
+
+;; S)earch a trap. Roll to detect. If the roll is bad then the trap is
+;; triggered (whether or not it was already detected). If the roll is good then
+;; the trap is detected.
+(define (trap-search trap kobj kchar)
+  (let ((roll (kern-dice-roll "1d20"))
+        (bonus (occ-thief-dice-roll kchar))
+        (ttype (trap-type trap))
+        )
+    (cond ((and (not (trap-detected? trap))
+                (or (= roll 20) 
+                    (> (+ roll bonus) 
+                       (trap-detect-dc trap))))
+           (kern-log-msg (kern-obj-get-name kchar) 
+                         " ^c+gfinds^c- a " 
+                         (trap-type-name ttype) 
+                         " trap!")
+           (trap-set-detected! trap #t))
+          ((or (= roll 1)
+               (< (+ roll bonus) (trap-fumble-dc trap)))
+           (trap-trigger trap kobj kchar)
+           ))))
 
 ;;----------------------------------------------------------------------------
 ;; Trap Types
@@ -75,12 +106,10 @@
     (map burn (kern-get-objects-at loc))
     (if (terrain-ok-for-field? loc)
         (kern-obj-put-at (kern-mk-obj F_fire 1) loc)))
-  (burn actor)
   (shake-map 10)
   (map hit 
        (get-8-neighboring-tiles (kern-obj-get-location subject))))
 
-;; FIXME: this doesn't actually self-destruct any more
 (define (self-destruct-trap-proc actor subject)
   (shake-map 3)
   (kern-obj-put-at (kern-mk-field F_fire 10)
@@ -97,10 +126,3 @@
 (define spike-trap (mk-trap-type "spike" 'spike-trap-proc))
 (define bomb-trap (mk-trap-type "bomb" 'bomb-trap-proc))
 (define self-destruct-trap (mk-trap-type "self-destruct" 'self-destruct-trap-proc))
-
-;; Explosion trap - shakes the screen and damages all surrounding objects
-
-;; Burst trap - splatters the surrounding scene with dangerous fields
-
-;; Self-destruct trap - rolls to destroy contents
-

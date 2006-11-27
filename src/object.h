@@ -172,14 +172,16 @@ class ObjectType {
 	virtual enum layer getLayer();
 	virtual class Object *createInstance();
 	virtual bool isVisible();
-	virtual void describe(int count);
+	virtual void describe(Object *obj);
         virtual int getSpeed();
         virtual int getMaxHp();
 
         // This might turn out to be too vague. We'll see.
         virtual int getRequiredActionPoints();
 
-	//struct list list;
+        // This version of describe() can't run any hooks; it's used for
+        // inventory descriptions, where there are no object instances.
+        void describeType(int count);
 
         bool isUsable();    // items, etc
         bool isReadyable(); // arms
@@ -190,8 +192,8 @@ class ObjectType {
         bool canOpen();
         bool canStep();
         bool canHandle();
-		bool canSense();
-		bool canXamine();
+        bool canSense();
+        bool canXamine();
         bool canAttack();
         bool canEnter();
         bool canBump(); // attempted entry onto same tile
@@ -213,7 +215,7 @@ class ObjectType {
         void bump(Object *obj, Object *bumper);
         void hitLocation(Object *obj, struct place *place, int x, int y);
         void buy(Object *buyer, int q);
-        void search(Object *obj);
+        void search(Object *obj, Object *searcher);
         closure_t *getGifc();
         void setGifc(closure_t *gifc, int cap);
 
@@ -237,6 +239,9 @@ class ObjectType {
         struct gob *gob;
 
  private:
+        bool hasDescribeHook();
+        void runDescribeHook(Object *obj);
+
         char *pluralName;
         char *getPluralName();
 };
