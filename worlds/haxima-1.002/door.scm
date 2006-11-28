@@ -202,6 +202,51 @@
            (door-set-locked! door #t)
            (door-update-kstate kdoor)))))
 
+(define (door-search kdoor kchar)
+  (kern-log-begin "Searching door...")
+  (let ((door (kobj-gob kdoor)))
+    (if (foldr (lambda (detected? trap)
+                 (trap-search trap kdoor kchar)
+                 (if (trap-tripped? trap)
+                     (door-set-traps! door
+                                      (filter (lambda (trap2)
+                                                (not (equal? trap trap2)))
+                                              (door-traps door))))
+                 (or detected? (trap-detected? trap)))
+               #f
+               (door-traps door))
+        (kern-log-end "Trap detected!")
+        (kern-log-end "No traps detected!")
+        )))
+
+(define (door-describe kdoor count)
+  (let ((door (kobj-gob kdoor)))
+    (kern-log-continue "a ")
+    (if (door-magic-locked? door)
+        (kern-log-continue "magically locked, "))
+    (if (door-locked? door)
+        (if (door-needs-key? door)
+            (kern-log-continue "locked (with a key), ")
+            (kern-log-continue "padlocked, ")))
+    (if (door-open? door)
+        (kern-log-continue "open door ")
+        (kern-log-continue "closed door "))
+    (kern-log-continue "(")
+    (if (foldr (lambda (described? trap)
+                 (cond ((trap-detected? trap)
+                        (if described?
+                            (kern-log-continue ", "))
+                        (kern-log-continue (trap-name trap))
+                        #t)
+                       (else described?)))
+               #f
+               (door-traps door))
+        (kern-log-continue " trap(s) detected")
+        (kern-log-continue "no traps detected")
+        )
+    (kern-log-continue ")")
+    ))
+
 (define door-ifc
   (ifc '()
        (method 'exec door-exec)
@@ -218,6 +263,8 @@
        (method 'get-traps door-get-traps)
        (method 'rm-traps door-rm-traps)
        (method 'use-key door-use-key)
+       (method 'search door-search)
+       (method 'describe door-describe)
        ))
 
 ;; Create the kernel "door" type

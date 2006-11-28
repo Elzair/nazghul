@@ -38,7 +38,7 @@
 (define (trap-name trap) (trap-type-name (trap-type trap)))
 (define (trap-avoid-dc trap) (if (trap-detected? trap) 10 20))
 (define (trap-detect-dc trap) 18)
-(define (trap-fumble-dc trap) 10)
+(define (trap-fumble-dc trap) 12)
 
 ;; Trigger a trap. The trap parm is one of our scripted traps conforming to the
 ;; above, kobj is the kernel object the trap is applied to, and kchar is the
