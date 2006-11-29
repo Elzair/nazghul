@@ -62,10 +62,11 @@
          (ttp-entry-mk 'dragon-party-l7 7 6)
          )
    (list t_mountains 
-         (ttp-entry-mk 'nil             0 100)
-         (ttp-entry-mk 'bat-party-l1    1 20)
-         (ttp-entry-mk 'dragon-party-l6 6 1)
-         (ttp-entry-mk 'dragon-party-l8 8 1)
+         (ttp-entry-mk 'nil              0 100)
+         (ttp-entry-mk 'bat-party-l1     1 20)
+         (ttp-entry-mk 'griffin-party-l3 3 10)
+         (ttp-entry-mk 'dragon-party-l6  6 1)
+         (ttp-entry-mk 'dragon-party-l8  8 1)
          )
    (list t_bog
          (ttp-entry-mk 'skeleton-party-l2     2 1)

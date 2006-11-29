@@ -349,3 +349,8 @@
   (ptype-mk "rats" s_rat faction-monster 5 5
             (pgroup-mk 'rat "1d2")
             ))
+
+(define griffin-party-l3
+  (ptype-mk "flock of griffin" s_griffin faction-monster 3 5
+            (pgroup-mk 'griffin "1d2")
+            ))

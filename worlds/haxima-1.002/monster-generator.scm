@@ -107,17 +107,14 @@
         (eval-loc tag-loc))))
 
 (define (mongen2-exec kgen)
-  (display "mongen2-exec")(newline)
   (let* ((gen (kobj-gob-data kgen))
         (targ-loc (if (null? (mongen2-targ-loc gen)) 
                       (kern-obj-get-location kgen)
                       (mongen2-targ-loc gen)))
         )
     (define (roll-to-encounter)
-      (display "roll-to-encounter")(newline)
       (>= (modulo (random-next) 1000) (mongen2-thresh gen)))
     (define (not-too-many?)
-      (display "not-too-many?")(newline)
       (< (length (filter (eval (caddr gen))
                          (kern-place-get-beings (loc-place 
                                                  (kern-obj-get-location 
@@ -129,7 +126,6 @@
              (or (not (mongen2-out-of-sight-only? gen))
                  (player-out-of-sight? kgen)))
         (begin
-          (display "targ-loc:")(display targ-loc)(newline)
           (kern-obj-put-at (mongen2-mk-monster gen)
                            (if (null? targ-loc)
                                (kern-obj-get-location kgen)
