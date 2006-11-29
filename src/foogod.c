@@ -111,20 +111,6 @@ void foogodRepaint(void)
                 if (Session) {
                         screenPrint(&Foogod.turnRect, 0, "Turn: %d", 
                                     session_get_turn_count());
-                }
-                screenPrint(&Foogod.foodRect, 0, "Food: %d", 
-                            player_party->food);
-                screenPrint(&Foogod.goldRect, SP_RIGHTJUSTIFIED, "Gold: %d",  
-                            player_party->gold);
-                screenPrint(&Foogod.combatRect, SP_RIGHTJUSTIFIED, 
-                            "Combat: %c", combatGetState());
-                
-                if (player_party->getVehicle()) {
-                        screenPrint(&Foogod.hullRect, 0, "Hull: %d", 
-                                    player_party->getVehicle()->getHp());
-                }
-                
-                if (Session) {
                         screenPrint(&Foogod.effectsRect, 0, "Eff: %s%s%s%s"
                                     , (TimeStop     ? "T" : "")
                                     , (Quicken      ? "Q" : "")
@@ -132,6 +118,20 @@ void foogodRepaint(void)
                                     , (Reveal       ? "R" : "")
                         );
                 }
+                if (player_party) {
+                        screenPrint(&Foogod.foodRect, 0, "Food: %d", 
+                                    player_party->food);
+                        screenPrint(&Foogod.goldRect, 
+                                    SP_RIGHTJUSTIFIED, "Gold: %d",  
+                                    player_party->gold);
+                        if (player_party->getVehicle()) {
+                                screenPrint(&Foogod.hullRect, 0, "Hull: %d", 
+                                            player_party->getVehicle()->
+                                            getHp());
+                        }
+                }
+                screenPrint(&Foogod.combatRect, SP_RIGHTJUSTIFIED, 
+                            "Combat: %c", combatGetState());
         } else {
                 screenPrint(&Foogod.screenRect, 0, Foogod.hintText);
         }

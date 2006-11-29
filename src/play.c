@@ -357,5 +357,8 @@ int playRun(char *fname)
 	eventPopQuitHandler();
 	//eventPopKeyHandler();
 
+        session_del(Session); /* here we go... */
+        Session = 0;
+
 	return 1;
 }

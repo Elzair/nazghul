@@ -67,7 +67,6 @@ struct move_info {
 class player_party : public Party {
  
       public:
-        player_party();
         player_party(char *tag,
                      struct sprite *sprite,
                      char *mv_desc, sound_t *mv_sound,
@@ -195,10 +194,13 @@ class player_party : public Party {
         int turns_to_next_meal;
         sound_t *mv_sound;
         bool loitering;
+
+ private:
+        player_party();
+
 };
 
 extern class player_party *player_party;
-extern int player_init(void);
 extern void player_dtor(void *val);
 extern void player_save(struct save *save, void *val);
 

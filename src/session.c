@@ -74,6 +74,7 @@
 struct data_obj_entry {
         struct list list;
         void *obj;
+        int refcount;
         void (*dtor)(void*);
         void (*save)(save_t *save, void *obj);
         void (*start)(void *obj);
@@ -121,6 +122,15 @@ void save_err(char *fmt, ...)
         warn("\n");
 }
 
+static void data_obj_entry_unref(struct data_obj_entry *entry)
+{
+        assert(entry->refcount >= 1);
+        entry->refcount--;
+        if (! entry->refcount) {
+                free(entry);
+        }
+}
+
 void *session_add(struct session *session, void *obj, 
                   void (*dtor)(void *),
                   void (*save)(save_t *, void *),
@@ -133,6 +143,7 @@ void *session_add(struct session *session, void *obj,
         assert(entry);
         list_init(&entry->list);
         entry->obj = obj;
+        entry->refcount = 1;
         entry->dtor = dtor;
         entry->save = save;
         entry->start = start;
@@ -150,7 +161,7 @@ void session_rm(struct session *session, void *handle)
         struct data_obj_entry *entry;
         entry = (struct data_obj_entry *)handle;
         list_remove(&entry->list);
-        free(entry);
+        data_obj_entry_unref(entry);
 }
 
 static void session_save_crosshair(save_t *save, struct session *session)
@@ -212,13 +223,20 @@ void session_del(struct session *session)
         struct data_obj_entry *entry;
         struct node *node;
 
+        /* ref the player party so we can control when it gets destroyed, so we
+         * know when to zero out the global */
+        if (player_party) {
+                obj_inc_ref(player_party);
+        }
+
         elem = session->data_objects.next;
         int count = 0;
         while (elem != &session->data_objects) {
                 entry = list_entry(elem, struct data_obj_entry, list);
                 elem = elem->next;
+                entry->refcount++; /* keep a ref while dtor runs */
                 entry->dtor(entry->obj);
-                free(entry);
+                data_obj_entry_unref(entry); /* now release ref */
                 count++;
         }
 
@@ -259,6 +277,15 @@ void session_del(struct session *session)
         /* Clean up the closures */
         closure_unref_safe(session->start_proc);
         closure_unref_safe(session->camping_proc);
+
+        /* Now zilch the global player party */
+        assert(player_party
+               && (1==player_party->refcount));
+        obj_dec_ref(player_party);
+        player_party = 0;
+
+        /* Fixme: need to cleanup the interpreter, too, when I'm feeling
+         * brave. */
 
         free(session);
 }

@@ -845,16 +845,6 @@ player_party::~player_party()
         /* fixme: need to somehow cancel those wq jobs setup by player_init? */
 }
 
-int player_init(void)
-{
-	if (!(player_party = new class player_party())) {
-		err("Failed to allocate player_party");
-		return -1;
-	}
-
-	return 0;
-}
-
 void player_party::board_vehicle(void)
 {
 	cmdwin_clear();
@@ -1650,9 +1640,6 @@ void player_dtor(void *val)
 {
         class player_party *party = (class player_party*)val;
         obj_dec_ref(party);
-        if (! party->refcount)
-                delete (class player_party*)val;
-        player_party = 0; /* global */
 }
 
 void player_save(save_t *save, void *val)

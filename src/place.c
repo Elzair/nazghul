@@ -1609,20 +1609,24 @@ void place_for_each_tile(struct place *place,
 	struct tile *tile;
         int count = 0;
 
-	// for each bucket
-	for (i = 0; i < place->objects->n && !Quit; i++) {
+        /* Note: took the !Quit check out of these loops because this is called
+         * as part of place_del(), so that check means we never delete any
+         * objects! */
+
+	/* for each bucket */
+	for (i = 0; i < place->objects->n /*&& !Quit*/; i++) {
 
 		tileList = &place->objects->buckets[i];
 		tileElem = tileList->list.next;
 		assert(tileElem->prev == &tileList->list);
 
-		// for each tile
-		while (tileElem != &tileList->list && !Quit) {
+		/* for each tile */
+		while (tileElem != &tileList->list /*&& !Quit*/) {
 
 			tileTmp = tileElem->next;
 			tile = outcast(tileElem, struct tile, hashlink.list);
                         
-                        // invoke the function on the tile
+                        /* invoke the function on the tile */
                         tile->lock++;
                         fx(tile, data);
                         tile->lock--;

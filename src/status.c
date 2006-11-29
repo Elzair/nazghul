@@ -295,7 +295,8 @@ int statusInit()
 	Status.screenRect.x = STAT_X;
 	Status.screenRect.y = STAT_Y;
 	Status.screenRect.w = STAT_W;
-	Status.screenRect.h = player_party->getSize() * TILE_H;
+        Status.screenRect.h = TILE_H;
+                
 
 	Status.titleRect.x = STAT_X;
 	Status.titleRect.y = 0;

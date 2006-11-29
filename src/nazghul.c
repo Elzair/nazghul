@@ -191,7 +191,6 @@ static void nazghul_init_internal_libs(void)
                 { "screenInit",     screenInit     },
                 { "asciiInit",      asciiInit      },
                 { "sprite_init",     sprite_init     },
-                { "player_init",    player_init    },
                 { "eventInit",      eventInit      },
                 { "windInit",       windInit       },
                 { "formation_init", formation_init },

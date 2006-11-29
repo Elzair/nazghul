@@ -2607,6 +2607,11 @@ bool Character::isCharmed()
 
 bool Character::isPlayerPartyMember()
 {
+        // If player party has not been created yet it's safe to assume that
+        // for now this is not a party member.
+        if (! player_party) {
+                return false;
+        }
         return (class Object*)party == (class Object*)player_party;
 }
 

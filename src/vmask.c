@@ -202,7 +202,7 @@ static struct vmask *vmask_create(char *key, struct place *place, int x, int y)
 
         vmask_los(vmask, place, x, y);
         vmask_insert(vmask);
-
+        /*vmask_dump(vmask);*/
 
         return vmask;
 }

@@ -2226,12 +2226,24 @@ void Object::setActionPoints(int amount)
 void obj_inc_ref(Object *obj)
 {
         obj->refcount++;
+#if 0
+        if (obj->getName() && ! strcmp(obj->getName(), "player party"
+                                       /*"The Wanderer"*/)) {
+                printf("obj_inc_ref: %d\n", obj->refcount);
+        }
+#endif
 }
 
 void obj_dec_ref(Object *obj)
 {
         assert((obj)->refcount >= 0);
         (obj)->refcount--;
+#if 0
+        if (obj->getName() && ! strcmp(obj->getName(), "player party"
+                                       /*"The Wanderer"*/)) {
+                printf("obj_dec_ref: %d\n", obj->refcount);
+        }
+#endif
         if (! obj->refcount)
                 delete obj;
 }
