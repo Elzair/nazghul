@@ -94,6 +94,10 @@
          #f 
          (kern-get-objects-at loc)))
 
+(define (get-beings-at loc)
+  (filter kern-obj-is-being?
+          (kern-get-objects-at loc)))
+
 ;; Given a starting location, search outward for a passable, unoccupied place
 ;; to put a character.
 (define (pick-loc origin char)
@@ -649,15 +653,21 @@
          kmap
          blits))
 
-(define (fill-terrain kter kplace ox oy ow oh)
+(define (fill-terrain-prob kter kplace ox oy ow oh prob)
   (define (fill x y w h)
     (if (> h 0)
         (if (> w 0)
             (begin
-              (kern-place-set-terrain (list kplace x y) kter)
+              (if (<= (modulo (random-next) 
+                              100) 
+                      prob)
+                  (kern-place-set-terrain (list kplace x y) kter))
               (fill (+ x 1) y (- w 1) h))
             (fill ox (+ y 1) ow (- h 1)))))
   (fill ox oy ow oh))
+
+(define (fill-terrain kter kplace ox oy ow oh)
+  (fill-terrain-prob kter kplace ox oy ow oh 100))
 
 ;;============================================================================
 ;; rect 

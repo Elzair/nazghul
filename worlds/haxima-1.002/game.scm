@@ -190,7 +190,6 @@
 (load "sprites.scm")
 (load "sounds.scm")
 (load "effects.scm")
-(load "traps.scm")
 (load "terrains.scm")
 (load "palette.scm")
 (load "fields.scm")
@@ -199,7 +198,9 @@
 ;; Object types
 (load "occs.scm")
 (load "objs.scm")
+(load "traps.scm")
 (load "pitfalls.scm")
+(load "landslide.scm")
 (load "containers.scm")
 (load "reagents.scm")
 (load "food.scm")

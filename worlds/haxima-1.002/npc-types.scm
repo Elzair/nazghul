@@ -820,5 +820,9 @@
                   mmode-fly
                   mmode-voidship)))
 
+(define (can-phase? kobj)
+  (eqv? (kern-obj-get-mmode kobj)
+        mmode-phase))
+
 (define (is-abstract? kobj)
   (null? (kern-obj-get-name kobj)))
