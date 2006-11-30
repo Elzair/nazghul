@@ -103,32 +103,35 @@ int foogodInit(void)
         return 0;
 }
 
+static void foogodPaintSessionInfo()
+{
+        screenPrint(&Foogod.turnRect, 0, "Turn: %d", session_get_turn_count());
+        screenPrint(&Foogod.effectsRect, 0, "Eff: %s%s%s%s"
+                    , (TimeStop     ? "T" : "")
+                    , (Quicken      ? "Q" : "")
+                    , (MagicNegated ? "N" : "")
+                    , (Reveal       ? "R" : "")
+                );
+
+        if (player_party) {
+                screenPrint(&Foogod.foodRect, 0, "Food: %d", 
+                            player_party->food);
+                screenPrint(&Foogod.goldRect, SP_RIGHTJUSTIFIED, "Gold: %d",  
+                            player_party->gold);
+                if (player_party->getVehicle()) {
+                        screenPrint(&Foogod.hullRect, 0, "Hull: %d", 
+                                    player_party->getVehicle()->getHp());
+                }
+        }
+}
+
 void foogodRepaint(void)
 {
 	screenErase(&Foogod.screenRect);
 
         if (FOOGOD_DEFAULT == Foogod.mode) {
                 if (Session) {
-                        screenPrint(&Foogod.turnRect, 0, "Turn: %d", 
-                                    session_get_turn_count());
-                        screenPrint(&Foogod.effectsRect, 0, "Eff: %s%s%s%s"
-                                    , (TimeStop     ? "T" : "")
-                                    , (Quicken      ? "Q" : "")
-                                    , (MagicNegated ? "N" : "")
-                                    , (Reveal       ? "R" : "")
-                        );
-                }
-                if (player_party) {
-                        screenPrint(&Foogod.foodRect, 0, "Food: %d", 
-                                    player_party->food);
-                        screenPrint(&Foogod.goldRect, 
-                                    SP_RIGHTJUSTIFIED, "Gold: %d",  
-                                    player_party->gold);
-                        if (player_party->getVehicle()) {
-                                screenPrint(&Foogod.hullRect, 0, "Hull: %d", 
-                                            player_party->getVehicle()->
-                                            getHp());
-                        }
+                        foogodPaintSessionInfo();
                 }
                 screenPrint(&Foogod.combatRect, SP_RIGHTJUSTIFIED, 
                             "Combat: %c", combatGetState());

@@ -346,7 +346,7 @@ void Vehicle::save(struct save *save)
         if (getTTL() != -1) {
                 save->write(save, "(kern-obj-set-ttl kveh %d)\n", getTTL());
         }
-        save->exit(save, ") ;; vehicle \n");
+        save->exit(save, "kveh) ;; vehicle \n");
 }
 
 struct mmode *Vehicle::getMovementMode()

@@ -64,17 +64,17 @@ struct move_info {
         struct place *subplace;
 };
 
-class player_party : public Party {
+class PlayerParty : public Party {
  
       public:
-        player_party(char *tag,
+        PlayerParty(char *tag,
                      struct sprite *sprite,
                      char *mv_desc, sound_t *mv_sound,
                      int food, int gold, 
                      struct formation *formation, 
                      struct terrain_map *camping_map,
                      struct formation *camping_formation);
-	virtual ~ player_party();
+	virtual ~ PlayerParty();
 
         // overloaded Object methods:
 	virtual void addExperience(int delta);
@@ -189,18 +189,18 @@ class player_party : public Party {
         class Character *leader;
         class Character *solo_member;
         class Character *active_member;
-        void (*ctrl)(class player_party*);
+        void (*ctrl)(class PlayerParty*);
         int turns_to_next_rest_credit;
         int turns_to_next_meal;
         sound_t *mv_sound;
         bool loitering;
 
  private:
-        player_party();
+        PlayerParty();
 
 };
 
-extern class player_party *player_party;
+//extern class player_party *player_party;
 extern void player_dtor(void *val);
 extern void player_save(struct save *save, void *val);
 

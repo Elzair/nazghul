@@ -1,3 +1,18 @@
+(define (thorald-mixi knpc kpc)
+  (say knpc "To M)ix spells first press the 'M' key. "
+       "Then type the first letter of each spell syllable followed by ENTER. "
+       "For example, In Ex Por would be: i, e, p, ENTER.")
+  (prompt-for-key)
+  (say knpc "Next, select the reagents using the space bar. ")
+  (prompt-for-key)
+  (say knpc "Next, press ENTER and type the number of mixtures to make. "
+       "Just mix 1 for now. ")
+  (prompt-for-key)
+  (say knpc "You can see what spells you have mixed with the Z)tatus command. "
+       "Why don't you try mixing one now? Talk to me again when you've succeeded.")
+  (kern-conv-end)
+  )
+
 (define conv-thorald
   (ifc nil
        (method 'bye
@@ -41,21 +56,8 @@
                  (say knpc "The In Ex Por spell unlocks magically locked doors. "
                       "To mix it you'll need sulphurous ash and blood moss. "
                       "Ask me about mixing if you don't know how.")))
-       (method 'mix
-               (lambda (knpc kpc)
-                 (say knpc "To M)ix spells first press the 'M' key. "
-                      "Then type the first letter of each spell syllable followed by ENTER. "
-                      "For example, In Ex Por would be: i, e, p, ENTER.")
-                 (prompt-for-key)
-                 (say knpc "Next, select the reagents using the space bar. ")
-                 (prompt-for-key)
-                 (say knpc "Next, press ENTER and type the number of mixtures to make. "
-                      "Just mix 1 for now. ")
-                 (prompt-for-key)
-                 (say knpc "You can see what spells you have mixed with the Z)tatus command. "
-                      "Why don't you try mixing one now? Talk to me again when you've succeeded.")
-                 (kern-conv-end)
-                 ))
+       (method 'mix thorald-mixi)
+       (method 'mixi thorald-mixi)
        (method 'cast
                (lambda (knpc kpc)
                  (say knpc "To C)ast a spell press 'c' and then enter the first letter of each magic word. "

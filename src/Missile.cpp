@@ -30,6 +30,7 @@
 #include "place.h"
 #include "player.h"
 #include "vehicle.h"
+#include "session.h"
 
 Missile::Missile(ArmsType*type)
         : Object(type)

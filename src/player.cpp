@@ -51,8 +51,6 @@
 #define CAMPING_TIME_ACCELERATION (MINUTES_PER_HOUR)
 
 
-class player_party *player_party = NULL;
-
 #define DIRLOC(dir,place,coord) { \
     if ((dir) < 0) \
         (coord) = place_w((place)) - 1; \
@@ -71,7 +69,7 @@ static bool apply_damage(class Character * pm, void *amount)
 	return false;
 }
 
-void player_party::damage(int amount)
+void PlayerParty::damage(int amount)
 {
 	/* First apply damage to the vehicle. If the vehicle is destroyed then
            destroy the party, too. */
@@ -156,7 +154,7 @@ static bool pc_eat_food(class Character * pm, void *data)
 	return false;
 }
 
-void player_party::changePlaceHook()
+void PlayerParty::changePlaceHook()
 {
         mapSetPlace(place);
         Place = place;
@@ -174,7 +172,7 @@ void player_party::changePlaceHook()
         }
 }
 
-enum move_result player_party::check_move_to(struct move_info *info)
+enum move_result PlayerParty::check_move_to(struct move_info *info)
 {
 	class Party *npc_party;
 
@@ -226,7 +224,7 @@ enum move_result player_party::check_move_to(struct move_info *info)
 	return move_ok;
 }
 
-bool player_party::turn_vehicle(void)
+bool PlayerParty::turn_vehicle(void)
 {
 	int cost = 0;
 
@@ -261,7 +259,7 @@ bool player_party::turn_vehicle(void)
            (e) = (e)->prev, (c) = (class Character *)(e)->ptr)
 
 
-void player_party::distributeMembers(struct place *new_place, int new_x, 
+void PlayerParty::distributeMembers(struct place *new_place, int new_x, 
                                      int new_y, int new_dx, int new_dy)
 {
         // --------------------------------------------------------------------
@@ -369,7 +367,7 @@ void player_party::distributeMembers(struct place *new_place, int new_x,
 
 }
 
-enum MoveResult player_party::try_to_enter_subplace_from_edge(
+enum MoveResult PlayerParty::try_to_enter_subplace_from_edge(
         struct place *subplace, int dx, int dy)
 {
         int new_x;
@@ -426,7 +424,7 @@ enum MoveResult player_party::try_to_enter_subplace_from_edge(
         return MovedOk;
 }
 
-enum MoveResult player_party::try_to_move_off_map(struct move_info * info)
+enum MoveResult PlayerParty::try_to_move_off_map(struct move_info * info)
 {
          
         // Yes, I'm making the following unconditional with no further checks.
@@ -454,7 +452,7 @@ enum MoveResult player_party::try_to_move_off_map(struct move_info * info)
         return MovedOk;
 }
 
-MoveResult player_party::move(int newdx, int newdy)
+MoveResult PlayerParty::move(int newdx, int newdy)
 {
 	struct move_info info;
 	struct combat_info cinfo;
@@ -569,7 +567,7 @@ MoveResult player_party::move(int newdx, int newdy)
 	}
 }
 
-struct sprite *player_party::getSprite(void)
+struct sprite *PlayerParty::getSprite(void)
 {
 	if (vehicle)
 		return vehicle->getSprite();
@@ -577,14 +575,14 @@ struct sprite *player_party::getSprite(void)
 	return sprite;
 }
 
-char *player_party::get_movement_description(void)
+char *PlayerParty::get_movement_description(void)
 {
 	if (!vehicle)
 		return mv_desc;
 	return vehicle->getMvDesc();
 }
 
-sound_t *player_party::get_movement_sound(void)
+sound_t *PlayerParty::get_movement_sound(void)
 {
 	if (vehicle) {
 		return vehicle->get_movement_sound();
@@ -592,7 +590,7 @@ sound_t *player_party::get_movement_sound(void)
 	return mv_sound;
 }
 
-bool player_party::add(class ObjectType * type, int quantity)
+bool PlayerParty::add(class ObjectType * type, int quantity)
 {
 	if (!quantity)
 		return true;
@@ -604,7 +602,7 @@ bool player_party::add(class ObjectType * type, int quantity)
         return inventory->add(type, quantity);
 }
 
-bool player_party::takeOut(ObjectType *type, int q)
+bool PlayerParty::takeOut(ObjectType *type, int q)
 {
         // Some types can be in more than one category, so remove from all.
         log_begin("You lose ");
@@ -620,7 +618,7 @@ static bool player_member_rest_one_hour(class Character * pm, void *data)
         return false;
 }
 
-void player_party::exec()
+void PlayerParty::exec()
 {
 
         if (allDead())
@@ -673,14 +671,14 @@ void player_party::exec()
         endTurn();
 }
 
-bool player_party::allDead(void)
+bool PlayerParty::allDead(void)
 {
 	int count = 0;
 	forEachMember(pc_check_if_alive, &count);
 	return (count == 0);
 }
 
-bool player_party::immobilized(void)
+bool PlayerParty::immobilized(void)
 {
 	int count = 0;
 	forEachMember(pc_check_if_not_immobilized, &count);
@@ -700,7 +698,7 @@ bool myGetBestVisionRadius(class Character * c, void *data)
 	return false;
 }
 
-int player_party::getLight()
+int PlayerParty::getLight()
 {
         struct node *entry;
         class Character *member;
@@ -714,7 +712,7 @@ int player_party::getLight()
         return light;
 }
 
-int player_party::getVisionRadius()
+int PlayerParty::getVisionRadius()
 {
 	struct VradInfo info;
 
@@ -741,7 +739,7 @@ int player_party::getVisionRadius()
 	return min(info.vrad, MAX_VISION_RADIUS);
 }
 
-player_party::player_party()
+PlayerParty::PlayerParty()
 {
 	dx                 = 0;
 	dy                 = -1;
@@ -774,7 +772,7 @@ player_party::player_party()
         view = mapCreateView();
 }
 
-player_party::player_party(char *_tag,
+PlayerParty::PlayerParty(char *_tag,
                            struct sprite *sprite,
                            char *movement_desc, sound_t *movement_sound,
                            int _food, int _gold,
@@ -835,7 +833,7 @@ player_party::player_party(char *_tag,
         this->mv_sound = movement_sound;
 }
 
-player_party::~player_party()
+PlayerParty::~PlayerParty()
 {
         if (mv_desc)
                 free(mv_desc);
@@ -845,7 +843,7 @@ player_party::~player_party()
         /* fixme: need to somehow cancel those wq jobs setup by player_init? */
 }
 
-void player_party::board_vehicle(void)
+void PlayerParty::board_vehicle(void)
 {
 	cmdwin_clear();
 
@@ -890,7 +888,7 @@ void player_party::board_vehicle(void)
         }
 }
 
-class Character *player_party::get_leader(void)
+class Character *PlayerParty::get_leader(void)
 {
         if (leader == NULL) {
                 chooseNewLeader();
@@ -898,7 +896,7 @@ class Character *player_party::get_leader(void)
         return leader;
 }
 
-void player_party::removeMember(class Character *c)
+void PlayerParty::removeMember(class Character *c)
 {
         struct node *entry;
         class Character *next_member;
@@ -938,7 +936,7 @@ void player_party::removeMember(class Character *c)
         Party::removeMember(c);
 }
 
-bool player_party::addMember(class Character * c)
+bool PlayerParty::addMember(class Character * c)
 {
 	// Note: this is called so early in startup that I can't touch the
 	// paint routines in here. Callers will have to update the map and
@@ -1019,7 +1017,7 @@ bool player_party::addMember(class Character * c)
 
 }
 
-void player_party::paint(int sx, int sy)
+void PlayerParty::paint(int sx, int sy)
 {
 	if (vehicle)
 		vehicle->paint(sx, sy);
@@ -1027,22 +1025,22 @@ void player_party::paint(int sx, int sy)
 		sprite_paint(getSprite(), 0, sx, sy);
 }
 
-char *player_party::getName()
+char *PlayerParty::getName()
 {
 	return "player party";
 }
 
-bool player_party::isVisible()
+bool PlayerParty::isVisible()
 {
 	return true;
 }
 
-void player_party::describe()
+void PlayerParty::describe()
 {
 	log_continue("the %s", getName());
 }
 
-struct formation *player_party::get_formation()
+struct formation *PlayerParty::get_formation()
 {
 	if (vehicle && vehicle->get_formation())
 		return vehicle->get_formation();
@@ -1051,21 +1049,21 @@ struct formation *player_party::get_formation()
 	return formation;
 }
 
-int player_party::get_num_living_members(void)
+int PlayerParty::get_num_living_members(void)
 {
 	int count = 0;
 	forEachMember(pc_check_if_alive, &count);
         return count;
 }
 
-class Character *player_party::get_first_living_member(void)
+class Character *PlayerParty::get_first_living_member(void)
 {
         class Character *pc = NULL;
         forEachMember(pc_get_first_living, &pc);
         return pc;
 }
 
-void player_party::beginLoitering(int hours)
+void PlayerParty::beginLoitering(int hours)
 {
         struct node *entry = 0;
         class Character *member = 0;
@@ -1085,12 +1083,12 @@ void player_party::beginLoitering(int hours)
         session_set_time_accel(CAMPING_TIME_ACCELERATION);
 }
 
-bool player_party::isLoitering()
+bool PlayerParty::isLoitering()
 {
         return loitering;
 }
 
-void player_party::endLoitering()
+void PlayerParty::endLoitering()
 {
         struct node *entry;
         class Character *member;
@@ -1111,7 +1109,7 @@ static bool member_begin_resting(class Character *member, void *data)
         return false;
 }
 
-void player_party::beginResting(int hours)
+void PlayerParty::beginResting(int hours)
 {
         assert(hours > 0);
 
@@ -1133,18 +1131,18 @@ void player_party::beginResting(int hours)
         session_set_time_accel(CAMPING_TIME_ACCELERATION);
 }
 
-bool player_party::isResting()
+bool PlayerParty::isResting()
 {
         return (resting || camping);
 }
 
-void player_party::throw_out_of_bed()
+void PlayerParty::throw_out_of_bed()
 {
         assert(isResting());
         endResting();
 }
 
-class Character *player_party::getMemberAtIndex(int index)
+class Character *PlayerParty::getMemberAtIndex(int index)
 {
         struct node *entry;
         class Character *member;
@@ -1164,12 +1162,12 @@ static bool member_uncharm(class Character *member, void *data)
         return false;
 }
 
-void player_party::unCharmMembers()
+void PlayerParty::unCharmMembers()
 {
         forEachMember(member_uncharm, NULL);
 }
 
-bool player_party::addToInventory(class Object *object)
+bool PlayerParty::addToInventory(class Object *object)
 {
         // ---------------------------------------------------------------------
         // This is the overloaded generic Object method. For now it is just a
@@ -1185,12 +1183,12 @@ bool player_party::addToInventory(class Object *object)
         return true;
 }
 
-bool player_party::isCamping()
+bool PlayerParty::isCamping()
 {
         return camping;
 }
 
-void player_party::beginCamping(class Character *guard, int hours)
+void PlayerParty::beginCamping(class Character *guard, int hours)
 {
         struct node *entry;
         class Character *member;
@@ -1210,7 +1208,7 @@ void player_party::beginCamping(class Character *guard, int hours)
         session_set_time_accel(CAMPING_TIME_ACCELERATION);
 }
 
-void player_party::endCamping()
+void PlayerParty::endCamping()
 {
         struct node *entry;
         class Character *member;
@@ -1235,7 +1233,7 @@ void player_party::endCamping()
 
 }
 
-void player_party::ambushWhileCamping()
+void PlayerParty::ambushWhileCamping()
 {
         struct node *entry;
         class Character *member;
@@ -1269,7 +1267,7 @@ void player_party::ambushWhileCamping()
                 camp_guard->endGuarding();
 }
 
-void player_party::endResting()
+void PlayerParty::endResting()
 {
         struct node *entry;
         class Character *member;
@@ -1302,12 +1300,12 @@ static bool member_set_control_mode(class Character *member, void *data)
         return false;
 }
 
-enum party_control player_party::getPartyControlMode()
+enum party_control PlayerParty::getPartyControlMode()
 {
         return control_mode;
 }
 
-void player_party::disableCurrentMode()
+void PlayerParty::disableCurrentMode()
 {
         if (solo_member) {
                 solo_member->setSolo(false);
@@ -1320,7 +1318,7 @@ void player_party::disableCurrentMode()
         }
 }
 
-void player_party::enableFollowMode()
+void PlayerParty::enableFollowMode()
 {
         enum control_mode mode = CONTROL_MODE_FOLLOW;
 
@@ -1334,7 +1332,7 @@ void player_party::enableFollowMode()
 
 }
 
-void player_party::enableRoundRobinMode()
+void PlayerParty::enableRoundRobinMode()
 {
         enum control_mode mode = CONTROL_MODE_PLAYER;
 
@@ -1343,7 +1341,7 @@ void player_party::enableRoundRobinMode()
         control_mode = PARTY_CONTROL_ROUND_ROBIN;
 }
 
-void player_party::enableSoloMode(class Character *solo)
+void PlayerParty::enableSoloMode(class Character *solo)
 {
         enum control_mode mode = CONTROL_MODE_IDLE;
 
@@ -1356,7 +1354,7 @@ void player_party::enableSoloMode(class Character *solo)
         control_mode = PARTY_CONTROL_SOLO;
 }
 
-void player_party::chooseNewLeader()
+void PlayerParty::chooseNewLeader()
 {
         if (NULL != leader) {
                 leader->setLeader(false);
@@ -1377,12 +1375,12 @@ void player_party::chooseNewLeader()
                 leader->setLeader(true);
 }
 
-void player_party::setLeader(class Character *character)
+void PlayerParty::setLeader(class Character *character)
 {
         leader = character;
 }
 
-bool player_party::rendezvous(struct place *place, int rx, int ry)
+bool PlayerParty::rendezvous(struct place *place, int rx, int ry)
 {
         bool abort = false;
         bool done;
@@ -1536,19 +1534,19 @@ bool player_party::rendezvous(struct place *place, int rx, int ry)
 
 }
 
-int player_party::getContext(void)
+int PlayerParty::getContext(void)
 {
         return (isOnMap() ? CONTEXT_WILDERNESS : CONTEXT_TOWN);
 }
 
-void player_party::addView()
+void PlayerParty::addView()
 {
         attachCamera(true);
         mapSetPlace(getPlace());
         Object::addView();
 }
 
-struct place *player_party::getPlaceFromMembers(void)
+struct place *PlayerParty::getPlaceFromMembers(void)
 {
         struct node *elem;
         class Character *member;
@@ -1567,7 +1565,7 @@ struct place *player_party::getPlaceFromMembers(void)
         return 0;
 }
 
-void player_party::startSession(void)
+void PlayerParty::startSession(void)
 {
         struct node *elem;
         class Character *member;
@@ -1614,7 +1612,7 @@ void player_party::startSession(void)
 
 }
 
-void player_party::setOnMap(bool val)
+void PlayerParty::setOnMap(bool val)
 {
         if (val == isOnMap())
                 return;
@@ -1638,16 +1636,16 @@ void player_party::setOnMap(bool val)
 
 void player_dtor(void *val)
 {
-        class player_party *party = (class player_party*)val;
+        class PlayerParty *party = (class PlayerParty*)val;
         obj_dec_ref(party);
 }
 
 void player_save(save_t *save, void *val)
 {
-        ((class player_party*)val)->save(save);
+        ((class PlayerParty*)val)->save(save);
 }
 
-void player_party::save(save_t *save)
+void PlayerParty::save(save_t *save)
 {
         save->enter(save, "(kern-mk-player\n");
         if (tag)
@@ -1694,7 +1692,7 @@ void player_party::save(save_t *save)
         save->exit(save, ")\n");
 }
 
-bool player_party::addFood(int amount)
+bool PlayerParty::addFood(int amount)
 {
         if (amount == 0)
                 return true;
@@ -1712,7 +1710,7 @@ bool player_party::addFood(int amount)
         return true;
 }
 
-bool player_party::addGold(int amount)
+bool PlayerParty::addGold(int amount)
 {
         if (amount == 0)
                 return true;
@@ -1730,12 +1728,12 @@ bool player_party::addGold(int amount)
         return true;
 }
 
-bool player_party::isPlayerControlled()
+bool PlayerParty::isPlayerControlled()
 {
         return true;
 }
 
-void player_party::advanceTurns(int turns)
+void PlayerParty::advanceTurns(int turns)
 {
         // Check if its time to eat
         turns_to_next_meal -= turns;
@@ -1746,31 +1744,31 @@ void player_party::advanceTurns(int turns)
         }
 }
 
-void player_party::setTurnsToNextMeal(int turns)
+void PlayerParty::setTurnsToNextMeal(int turns)
 {
         turns_to_next_meal = turns;
 }
 
-bool player_party::hasInInventory(class ObjectType *type)
+bool PlayerParty::hasInInventory(class ObjectType *type)
 {
         return inventory->search(type) != NULL;
 }
 
-void player_party::unrefInventoryObject(ObjectType *type)
+void PlayerParty::unrefInventoryObject(ObjectType *type)
 {
         struct inv_entry *ie = inventory->search(type);
         assert(ie);
         ie->ref--;
 }
 
-void player_party::refInventoryObject(ObjectType *type)
+void PlayerParty::refInventoryObject(ObjectType *type)
 {
         struct inv_entry *ie = inventory->search(type);
         assert(ie);
         ie->ref++;
 }
 
-void player_party::setInventoryContainer(Container *val)
+void PlayerParty::setInventoryContainer(Container *val)
 {
         assert(!inventory);
         assert(val);
@@ -1779,7 +1777,7 @@ void player_party::setInventoryContainer(Container *val)
         obj_inc_ref(inventory);
 }
 
-void player_party::addExperience(int val)
+void PlayerParty::addExperience(int val)
 {
         struct node *entry;
         class Character *member;
@@ -1791,14 +1789,14 @@ void player_party::addExperience(int val)
         }
 }
 
-bool player_party::canSeeLocation(struct place *place, int x, int y)
+bool PlayerParty::canSeeLocation(struct place *place, int x, int y)
 {
         // fixme -- ref naz.scm (any-player-party-member-visible?)
         return false;
 }
 
 /* shifts currently wielded items to the top of the equipment list */
-void player_party::sortReadiedItems(class Character * member)
+void PlayerParty::sortReadiedItems(class Character * member)
 {
 	struct inv_entry *ie;
 	int armsIndex = 0;

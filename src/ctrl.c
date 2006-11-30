@@ -51,7 +51,7 @@ static int ctrl_party_key_handler(struct KeyHandler *kh, int key, int keymod)
 {
         int dir;
 
-        class player_party *party = (class player_party*)kh->data;
+        class PlayerParty *party = (class PlayerParty*)kh->data;
 
         Session->subject = player_party;
 
@@ -1467,7 +1467,7 @@ void ctrl_character_ui(class Character *character)
         mapUpdate(REPAINT_IF_DIRTY);
 }
 
-void ctrl_party_ui(class player_party *party)
+void ctrl_party_ui(class PlayerParty *party)
 {
         struct KeyHandler kh;
 

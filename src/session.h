@@ -95,6 +95,9 @@ extern int save_errs;
 #define session_set_turn_count(val) (Session->turn_count=(val))
 #define session_get_turn_count() (Session->turn_count)
 
+/* Backwards-compatible replacement for the old global player_party */
+#define player_party (Session->player)
+
 struct session {
 
         // This list keeps track of all loaded object types. It's private to
@@ -204,6 +207,9 @@ struct session {
         /* The turn count shown in the foogod window; incremented once per game
          * loop in play.c */
         int turn_count;
+
+        /* The player party object for this session */
+        class PlayerParty *player;
 
         char show_boxes : 1;  /* draw red/green/yellow boxes around npcs */
 };

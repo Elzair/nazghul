@@ -22,7 +22,7 @@
 #ifndef ctrl_h
 #define ctrl_h
 
-extern void ctrl_party_ui(class player_party *party);
+extern void ctrl_party_ui(class PlayerParty *party);
 extern void ctrl_party_ai(class Party *party);
 extern void ctrl_character_ui(class Character *character);
 extern void ctrl_character_ai(class Character *character);

@@ -43,7 +43,6 @@
 ;; Places
 (load "tutorial_town.scm")
 (load "tutorial_cave.scm")
-(load "tutorial_wilderness.scm")
 
 ;;----------------------------------------------------------------------------
 ;; Player
@@ -94,6 +93,13 @@
 
 ;; Party members
 (kern-party-add-member player ch_wanderer)
+
+;;----------------------------------------------------------------------------
+;; Caution: tutorial_wilderness.scm must be loaded AFTER the player party is
+;; declared, because it creates npc parties using a procedure that sizes them
+;; based on the player party size.
+(load "tutorial_wilderness.scm")
+
 
 ;;----------------------------------------------------------------------------
 ;; Astronomy
@@ -180,6 +186,7 @@
         (list s_blackgate_half           64)
         (list s_blackgate_three_quarters 96)
         (list s_blackgate_full           128)))
+
 
 ;;----------------------------------------------------------------------------
 ;; Tutorial

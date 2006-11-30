@@ -225,8 +225,8 @@ void session_del(struct session *session)
 
         /* ref the player party so we can control when it gets destroyed, so we
          * know when to zero out the global */
-        if (player_party) {
-                obj_inc_ref(player_party);
+        if (session->player) {
+                obj_inc_ref(session->player);
         }
 
         elem = session->data_objects.next;
@@ -279,10 +279,10 @@ void session_del(struct session *session)
         closure_unref_safe(session->camping_proc);
 
         /* Now zilch the global player party */
-        assert(player_party
-               && (1==player_party->refcount));
-        obj_dec_ref(player_party);
-        player_party = 0;
+        assert(session->player
+               && (1==session->player->refcount));
+        obj_dec_ref(session->player);
+        session->player = 0;
 
         /* Fixme: need to cleanup the interpreter, too, when I'm feeling
          * brave. */
@@ -369,10 +369,10 @@ int session_load(char *filename)
                 load_err("diplomacy table not set (use kern-set-dtable)");
         }
 
-        if (! player_party) {
+        if (! Session->player) {
                 load_err("no player party");
         }
-        if (player_party->getSize() == 0) {
+        if (Session->player->getSize() == 0) {
                 load_err("player party empty");
         }
 
@@ -393,7 +393,7 @@ int session_load(char *filename)
                 session_del(old_session);
         }
 
-        player_party->startSession();
+        Session->player->startSession();
 
         /* Now setup stuff that with known defaults. */
         statusSetMode(Session->status_mode);
@@ -657,7 +657,7 @@ void session_set_combat_procs(struct session *session,
 void session_run_start_proc(struct session *session)
 {
         if (session->start_proc) {
-                closure_exec(session->start_proc, "p", player_party);
+                closure_exec(session->start_proc, "p", session->player);
         }
 }
 

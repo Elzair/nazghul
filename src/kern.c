@@ -2143,6 +2143,7 @@ KERN_API_CALL(kern_mk_player)
         pointer members;
         pointer ret;
 
+#if 0
         // --------------------------------------------------------------------
         // FIXME: the global player_party should be per-session. That way we
         // can postpone destroying the current player party until we have
@@ -2163,6 +2164,7 @@ KERN_API_CALL(kern_mk_player)
                         obj_dec_ref(player_party); // hack!
                 obj_dec_ref(player_party);
         }
+#endif
 
         if (unpack(sc, &args, "ypspdddppppp", 
                    &tag,
@@ -2184,7 +2186,7 @@ KERN_API_CALL(kern_mk_player)
         //members = scm_car(sc, scm_cdr(sc, args));
         members = scm_car(sc, args);
 
-        player_party = new class player_party(tag, sprite, 
+        player_party = new class PlayerParty(tag, sprite, 
                                               mv_desc, 
                                               mv_sound,
                                               food, gold, form, 
@@ -4483,20 +4485,6 @@ static void kern_append_object(Object *obj, void *data)
 static pointer scm_mk_loc(scheme *sc, struct place *place, int x, int y)
 {
         return pack(sc, "pdd", place, x, y);
-
-#if 0
-        pointer pcell, xcell, ycell;
-
-        pcell = scm_protect(scm_mk_ptr(sc, place));
-        xcell = scm_protect(scm_mk_integer(sc, x));
-        ycell = scm_protect(scm_mk_integer(sc, y));
-
-        return _cons(sc, pcell, 
-                     _cons(sc, xcell, 
-                           _cons(sc, ycell, sc->NIL, 0), 
-                           0), 
-                     0);
-#endif
 }
 
 static pointer 
