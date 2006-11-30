@@ -92,20 +92,23 @@
                   (say knpc "Go to Green Tower and ask around about the bandits.")
                   )))
           (else
-           (say knpc "Bandits are raiding the woods. "
-                "They robbed me in my own hut! I tried to fight them, and now I walk with a limp and a cane. "
-                "The rangers at Green Tower would not help me. "
+           (say knpc "Bandits are in the woods. "
+                "They robbed me in my own hut. "
+                "I tried to fight them, "
+                "and now I walk with a limp and a cane. "
+                "The rangers would not help me. "
                 "I have a granddaughter living with me now, "
                 "and I am afraid of what they will do the next time they come... "
-                "Please milord, will you help?")
+                "If it's not too much trouble, will you help me?")
            (cond ((yes? kpc)
-                  (say knpc "Thank you. Once you have your equipment, go to Green Tower. "
-                       "Ask the townsfolk there of bandits. "
-                       "Perhaps someone knows where they are hiding.")
+                  (say knpc "Thank you. "
+                       "When you get your equipment, go to Green Tower. "
+                       "Ask there about bandits. "
+                       "Someone may know where to find them.")
                   (quest-accepted! quest #t)
                   )
                  (else
-                  (say knpc "[He turns away sadly and begins to soundlessly weep]")
+                  (say knpc "[He turns away sadly]")
                   (kern-conv-end)
                   ))))))
 
