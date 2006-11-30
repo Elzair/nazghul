@@ -126,10 +126,6 @@
   (let ((container (kobj-gob-data kobj))
         (loc (kern-obj-get-location kobj))
         )
-    (println container)
-    (println "contents: " (container-contents container))
-    (println "traps: " (container-traps container))
-    (println "destroyed: " (container-destroyed? container))
 
     ;; Applying traps can destroy both kobj and kchar
     (kern-obj-inc-ref kobj)
@@ -145,7 +141,6 @@
           (else
            ;; Spill contents
            (map (lambda (content)
-                  (println content)
                   (let ((newobj (kern-mk-obj (eval (content-type content))
                                              (content-quantity content))))
                     (kern-obj-put-at newobj loc)))
@@ -184,9 +179,7 @@
   (kern-obj-inc-ref kchar)
   (kern-log-begin "Searching chest...")
   (let ((container (gob kobj)))
-    (println "container=" container)
     (if (foldr (lambda (detected? trap)
-                 (println "trap=" trap)
                  (trap-search trap kobj kchar)
                  (if (trap-tripped? trap)
                      (container-set-traps! container

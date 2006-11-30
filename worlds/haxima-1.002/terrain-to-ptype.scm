@@ -120,7 +120,6 @@
         )))
 
 (define (ttp-list-modulus entries)
-  (println "  ttp-list-modulus:" entries)
   (foldr (lambda (sum entry)
            (+ sum (ttp-entry-occur entry)))
          0
@@ -131,7 +130,6 @@
         (else
          (if (< n (ttp-entry-occur (car entries)))
              (begin
-               (println "  ttp-list-lookup chose " (car entries))
                (eval (ttp-entry-ptype (car entries)))
                )
              (ttp-list-lookup (cdr entries)
@@ -144,13 +142,11 @@
           entries))
 
 (define (ttp-list-select entries lvl)
-  (println " ttp-list-select:" entries lvl)
   (let ((entries (ttp-list-filter entries lvl)))
     (if (null? entries)
         nil
         (let ((n (modulo (random-next) 
                          (ttp-list-modulus entries))))
-          (println " calling ttp-list-lookup:" entries n)
           (ttp-list-lookup entries n)))))
 
 ;;----------------------------------------------------------------------------
