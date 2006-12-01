@@ -490,9 +490,10 @@
 	(user-cast-ranged-targeted-spell caster range cast-kill-proc)))
 
 (define (in-mani-corp  caster)
-	(cast-ui-basic-member-spell powers-resurrect
-		caster (occ-ability-whitemagic caster)))
-
+	(cast-ui-dospell-nolos
+		(kern-ui-select-party-member)
+			powers-resurrect caster (occ-ability-whitemagic caster)))
+			
 (define (vas-rel-por  caster)
 	(let* ((loc (kern-obj-get-location caster))
 			(range (if 
