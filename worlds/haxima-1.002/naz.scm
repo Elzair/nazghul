@@ -162,6 +162,18 @@
   ;;(display "num-player-party-members")(newline)
   (length (kern-party-get-members (kern-get-player))))
 
+(define (is-only-living-party-member? kchar)
+  (and (is-alive? kchar)
+       (is-player-party-member? kchar)
+       (not (foldr (lambda (found kchar2)
+                     (println  found " " (kern-obj-get-name kchar2))
+                     (or found
+                         (and (not (eqv? kchar kchar2))
+                              (is-alive? kchar2))))
+                   #f
+                   (kern-party-get-members (kern-get-player))))
+       ))
+
 ;; Check if an object is hostile toward a character
 (define (is-hostile? kbeing kobj)
   (and (is-being? kobj)
@@ -1506,6 +1518,7 @@
 ;; Safely if a character is in the player party. char-tag should be the
 ;; character's quoted scheme variable name, for example 'ch_dude.
 (define (in-player-party? kchar-tag)
+  (println "in-player-party? " kchar-tag)
   (and (defined? kchar-tag)
        (let ((kchar (eval kchar-tag)))
          (and (is-alive? kchar)
@@ -1523,15 +1536,12 @@
 ;; the fiction of a simulated multi-story place.
 (define (block-teleporting kplace map)
   (define (doline y lines)
-    ;;(println "doline: y=" y ", lines=" lines)
     (define (docol x tokens)
-      ;;(println "docol: x=" x ", tokens=" tokens)
       (cond ((null? tokens) nil)
             (else
              (if (and (char=? #\x (car tokens))
                        (char=? #\# (cadr tokens)))
                  (begin
-                   ;;(println "blocking " (kern-place-get-name kplace) ":(" x "," y ")")
                    (kern-obj-put-at (mk-blocker) (list kplace x y))
                  ))
              (docol (+ x 1) (cdddr tokens)))))

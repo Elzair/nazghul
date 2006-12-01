@@ -17,18 +17,23 @@
   (say knpc "I cannot join you."))
 
 (define (generic-leav knpc kpc)
-  (if (is-player-party-member? knpc)
-      (begin
-        (say knpc "Do you want me to leave your party now?")
-        (if (yes? kpc)
-            (begin
-              (if (kern-char-leave-player knpc)
-                  (begin
-                    (say knpc "If you change your mind I'll be here waiting.")
-                    (kern-conv-end))
-                  (say knpc "I can't leave right now!")))
-            (say knpc "You made me nervous there for a minute.")))
-      (say knpc "I'm not a member of your party!")))
+  (cond ((is-player-party-member? knpc)
+         (cond ((is-only-living-party-member? knpc)
+                (say knpc "Maybe I should resurrect the Wanderer first... "
+                     "or sell his body parts to a thaumaturge, at least."))
+               (else
+                (say knpc "Do you want me to leave your party now?")
+                (cond ((yes? kpc)
+                       (cond ((kern-char-leave-player knpc)
+                              (say knpc "If you change your mind I'll be here waiting.")
+                              (kern-conv-end)
+                              )
+                             (else 
+                              (say knpc "I can't leave right now!"))))
+                      (else
+                       (say knpc "You made me nervous there for a minute."))))))
+         (else
+          (say knpc "I'm not a member of your party!"))))
 
 ;; wise
 (define (basic-ench knpc kpc)

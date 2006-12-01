@@ -2867,11 +2867,16 @@ void Character::leavePlayer(void)
         if (isSolo()) {
                 assert(isPlayerControlled());
                 player_party->enableRoundRobinMode();
-        } else if (isLeader()) {
-                assert(isPlayerControlled());
+        }
+
+        bool wasLeader = isLeader();
+
+        unreadyAll();
+
+        player_party->removeMember(this);
+        if (wasLeader) {
                 player_party->enableFollowMode();
         }
-        player_party->removeMember(this);
 }
 
 int Character::getActivity()
@@ -3056,7 +3061,7 @@ bool Character::tryToRelocateToNewPlace(struct place *newplace,
         // print informative messages.
         // -----------------------------------------------------------------
 
-        if (player_party->getSize() == 1) {
+        if (player_party->get_num_living_members() == 1) {
                 // Force to follow mode to avoid the annoying case
                 // where only one member is in the party and the player
                 // wants to leave a combat map.

@@ -50,15 +50,21 @@
 (define (edward-give-nate knpc kpc)
   (say knpc "Are you delivering a prisoner?")
   (cond ((yes? kpc)
-         (say knpc "Oh, good. More company. [He takes Nate into custody and "
-              "locks him in a cell]")
-         (kern-char-leave-player ch_nate)
-         (kern-obj-relocate ch_nate (mk-loc p_green_tower_lower 9 10) nil)
-         (prompt-for-key)
-         (say knpc "Here's your receipt, in case the Captain wants it.")
-         (give kpc t_prisoner_receipt 1)
-         (edward-has-nate! (kobj-gob-data knpc))
-         )
+         (cond ((is-only-living-party-member? ch_nate)
+                (say knpc "Turn yourself in if you like, "
+                     "but get rid of that dead body first! "
+                     "This isn't a morgue.")
+                )
+               (else
+                (say knpc "Oh, good. More company. [He takes Nate into custody and "
+                     "locks him in a cell]")
+                (kern-char-leave-player ch_nate)
+                (kern-obj-relocate ch_nate (mk-loc p_green_tower_lower 9 10) nil)
+                (prompt-for-key)
+                (say knpc "Here's your receipt, in case the Captain wants it.")
+                (give kpc t_prisoner_receipt 1)
+                (edward-has-nate! (kobj-gob-data knpc))
+                )))
         (else
          (say knpc "Hokay. [He gives Nate a look, then shrugs]")
          )))
