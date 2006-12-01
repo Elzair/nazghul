@@ -164,8 +164,8 @@
     nil              ; special ai
     ;;..........container (and contents)
     (mk-inventory
-              (mk-contents
-               (add-content 1 t_skull_ring)
+              (list
+               (list 1 t_skull_ring)
                ))
     nil              ; readied
     )

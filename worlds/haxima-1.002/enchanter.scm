@@ -408,17 +408,17 @@
      'townsman-ai ;;..........custom ai (optional)
      ;;..............container (and contents)
      (mk-inventory
-      (mk-contents 
-       (add-content 10  t_food)
-       (add-content 100 t_arrow)
-       (add-content 1   t_bow)
-       (add-content 1   t_dagger)
-       (add-content 1   t_sword)
-       (add-content 1   t_leather_helm)
-       (add-content 1   t_armor_leather)
-       (add-content 5   t_torch)
-       (add-content 5   t_cure_potion)
-       (add-content 5   t_heal_potion)
+      (list
+       (list 10  t_food)
+       (list 100 t_arrow)
+       (list 1   t_bow)
+       (list 1   t_dagger)
+       (list 1   t_sword)
+       (list 1   t_leather_helm)
+       (list 1   t_armor_leather)
+       (list 5   t_torch)
+       (list 5   t_cure_potion)
+       (list 5   t_heal_potion)
        ))
      nil ;;.........readied arms (in addition to the container contents)
      nil ;;..........hooks in effect

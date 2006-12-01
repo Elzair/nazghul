@@ -251,9 +251,9 @@
 
      ;;..........container (and contents)
      (mk-inventory
-      (mk-contents
-       (add-content 1 t_skull_ring)
-       (add-content 1 t_dagger)
+      (list
+       (list 1 t_skull_ring)
+       (list 1 t_dagger)
        ))
      nil              ; readied
      )

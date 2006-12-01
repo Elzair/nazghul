@@ -180,10 +180,10 @@
 
      ;;..............container (and contents)
      (mk-inventory
-      (mk-contents 
-       (add-content 10  t_torch)
-       (add-content 100 t_arrow)
-       (add-content 1   t_2h_axe)
+      (list
+       (list 10  t_torch)
+       (list 100 t_arrow)
+       (list 1   t_2h_axe)
        ))
      nil ;;.........readied arms (in addition to the container contents)
      nil ;;..........hooks in effect

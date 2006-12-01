@@ -120,10 +120,10 @@
   (put (mk-ladder-up 'p_merciful_death 6 9) 6 9)
   (put (mk-chest
         'poison-trap
-        (mk-contents (add-content 1   t_rune_c)
-                     (add-content 342 t_gold_coins)
-                     (add-content 4   t_gem)
-                     (add-content 1 t_sextant)
+        '((1   t_rune_c)
+                     (342 t_gold_coins)
+                     (4   t_gem)
+                     (1 t_sextant)
                      ))
        14 9)
   (put (spawn-pt 'skeletal-warrior) 7 9)

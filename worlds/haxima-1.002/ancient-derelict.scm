@@ -48,9 +48,9 @@
   (put (spawn-pt 'wisp) 10 9)
   (put (kern-mk-obj t_power_core 1) 12 5)
   (put (mk-corpse2
-        (mk-contents
-         (add-content 1 't_staff)
-         (add-content 1 't_vas_rel_por_scroll)
+        '(
+         (1 't_staff)
+         (1 't_vas_rel_por_scroll)
          )) 9 10)
   
   )

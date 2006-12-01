@@ -138,27 +138,27 @@
   (put (mk-magic-locked-door) 54 12)
   (put (mk-bed) 51 9)
   (put (mk-chest 'burn-trap
-                 (mk-contents (add-content 50 sulphorous_ash)
-                              (add-content 50 garlic)
-                              (add-content 50 ginseng)
-                              (add-content 50 blood_moss)
-                              (add-content 50 black_pearl)
-                              (add-content 50 spider_silk)
-                              (add-content 50 mandrake)
-                              (add-content 50 nightshade)))
+                 '((50 sulphorous_ash)
+                              (50 garlic)
+                              (50 ginseng)
+                              (50 blood_moss)
+                              (50 black_pearl)
+                              (50 spider_silk)
+                              (50 mandrake)
+                              (50 nightshade)))
        53 9)
   (put (mk-chest 'poison-trap
-                 (mk-contents (add-content 10 t_cure_potion)
-                              (add-content 10 t_heal_potion)
-                              (add-content 10 t_mana_potion)
-                              (add-content 10 t_poison_immunity_potion)
-                              (add-content 1 t_invisibility_potion)))
+                 '((10 t_cure_potion)
+                              (10 t_heal_potion)
+                              (10 t_mana_potion)
+                              (10 t_poison_immunity_potion)
+                              (1 t_invisibility_potion)))
        54 9)
   (put (mk-chest 'sleep-trap
-                 (mk-contents (add-content 1 t_armor_leather)
-                              (add-content 1 t_sword)
-                              (add-content 1 t_shield)
-                              (add-content 1 t_leather_helm)))
+                 '((1 t_armor_leather)
+                              (1 t_sword)
+                              (1 t_shield)
+                              (1 t_leather_helm)))
        55 9)
 
 
@@ -166,8 +166,8 @@
   (put (mk-door) 7 13)
   (put (mk-bed) 2 13)
   (put (mk-chest nil 
-                 (mk-contents (add-content 100 t_arrow)
-                              (add-content 1 t_bow)))
+                 '((100 t_arrow)
+                              (1 t_bow)))
        4 11)
                 
   ;; Deric's Hut
@@ -175,11 +175,11 @@
   (put (mk-door) 16 6)
   (put (mk-bed) 17 4)
   (put (mk-chest 'burn-trap
-                 (mk-contents (add-content 100 t_bolt)
-                              (add-content 1 t_crossbow)
-                              (add-content 1 t_shield)
-                              (add-content 2 t_cure_potion)
-                              (add-content 5 t_heal_potion)))
+                 '((100 t_bolt)
+                              (1 t_crossbow)
+                              (1 t_shield)
+                              (2 t_cure_potion)
+                              (5 t_heal_potion)))
        17 6)
   
   ;; White Stag Lodge

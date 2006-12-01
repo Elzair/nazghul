@@ -68,10 +68,10 @@
   ;; chests
   (put (mk-chest
         nil
-        (mk-contents (add-content 1 t_food))) 10 14)
+        '((1 t_food))) 10 14)
   (put (mk-chest
         nil
-        (mk-contents (add-content 1 t_gold_coins))) 14 14)
+        '((1 t_gold_coins))) 14 14)
 
   )
 

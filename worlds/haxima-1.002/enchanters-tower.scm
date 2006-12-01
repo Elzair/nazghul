@@ -169,26 +169,26 @@
   ;; treasure in west store room
   (put (mk-chest 
         'burn-trap
-        (mk-contents (add-content 10 sulphorous_ash)
-                     (add-content 10 ginseng)
-                     (add-content 10 garlic)
-                     (add-content 10 spider_silk)
-                     (add-content 10 blood_moss)
-                     (add-content 10 black_pearl)
-                     (add-content 10 nightshade)
-                     (add-content 10 mandrake)))
+        '((10 sulphorous_ash)
+                     (10 ginseng)
+                     (10 garlic)
+                     (10 spider_silk)
+                     (10 blood_moss)
+                     (10 black_pearl)
+                     (10 nightshade)
+                     (10 mandrake)))
        11 14)
   (put (mk-chest
         'spike-trap
-        (mk-contents (add-content 10 t_heal_potion)
-                     (add-content 10 t_mana_potion)
-                     (add-content 5 t_cure_potion)
-                     (add-content 5 t_poison_immunity_potion)
-                     (add-content 1 t_invisibility_potion)))
+        '((10 t_heal_potion)
+                     (10 t_mana_potion)
+                     (5 t_cure_potion)
+                     (5 t_poison_immunity_potion)
+                     (1 t_invisibility_potion)))
        11 15)
   (put (mk-chest
         'lightning-trap
-        (mk-contents (add-content 100 t_gold_coins)))
+        '((100 t_gold_coins)))
        11 16)
 
   (put (mk-bed) 21 11)

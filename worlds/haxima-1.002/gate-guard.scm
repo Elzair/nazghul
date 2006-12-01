@@ -159,7 +159,7 @@
       'gate-guard-ai ;;.......custom ai (optional)    
       ;;..................container (and contents, used to arm char)
       (mk-inventory
-       (mk-contents 
+       (mk-contents
         (roll-to-add 100  "3"     t_heal_potion)
         (roll-to-add 100  "1"     t_sword)
         (roll-to-add 199  "1"     t_shield)

@@ -221,27 +221,27 @@
 (define jims-chest
   (mk-chest
    nil ;; trap
-   (mk-contents (add-content 1 t_scratched_shield)
-                (add-content 1 t_armor_plate)
-                (add-content 1 t_iron_helm))))
+   '((1 t_scratched_shield)
+                (1 t_armor_plate)
+                (1 t_iron_helm))))
 
 (define jims-other-chest
   (mk-chest
    'bomb-trap ;; trap
-   (mk-contents (add-content 100 t_gold_coins)
-                (add-content 3 t_dagger)
-                (add-content 3 t_mace)
-                (add-content 3 t_sword)
+   '((100 t_gold_coins)
+                (3 t_dagger)
+                (3 t_mace)
+                (3 t_sword)
                 )))
 
 (define earls-chest
   (make-invisible
    (mk-chest
     nil ;; trap
-    (mk-contents (add-content 1 t_stun_wand)
-                 (add-content 3 t_xen_corp_scroll)
-                 (add-content 3 t_in_vas_por_ylem_scroll)
-                 (add-content 5 t_vas_mani_scroll)))))
+    '((1 t_stun_wand)
+                 (3 t_xen_corp_scroll)
+                 (3 t_in_vas_por_ylem_scroll)
+                 (5 t_vas_mani_scroll)))))
   
 ;;----------------------------------------------------------------------------
 ;; Place

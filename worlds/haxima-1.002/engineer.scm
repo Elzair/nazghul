@@ -311,11 +311,11 @@
      'townsman-ai ;;..........custom ai (optional)
      ;;..............container (and contents)
      (mk-inventory
-      (mk-contents 
-       (add-content 1   t_dagger)
-       (add-content 1   t_doom_staff)
-       (add-content 5   t_cure_potion)
-       (add-content 5   t_heal_potion)
+      (list
+       (list 1   t_dagger)
+       (list 1   t_doom_staff)
+       (list 5   t_cure_potion)
+       (list 5   t_heal_potion)
        ))
      nil ;;.........readied arms (in addition to the container contents)
      nil ;;..........hooks in effect

@@ -198,8 +198,8 @@
 
      ;;..............container (and contents)
      (mk-inventory
-      (mk-contents 
-       (add-content 1   t_torch)
+      (list
+       (list 1 t_torch)
        ))
 
      nil ;;.........readied arms (in addition to the container contents)

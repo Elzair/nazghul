@@ -123,15 +123,15 @@
 
     ;; container
     (mk-inventory
-              (mk-contents
-               (add-content 1 t_skull_ring)
-               (add-content 1 t_sword_2)
-               (add-content 1 t_dagger_4)
-               (add-content 1 t_armor_leather_2)
-               (add-content 1 t_leather_helm_2)
-               (add-content 67 t_gold_coins)
-               (add-content 3 t_picklock)
-               (add-content 3 t_heal_potion)
+              (list
+               (list 1 t_skull_ring)
+               (list 1 t_sword_2)
+               (list 1 t_dagger_4)
+               (list 1 t_armor_leather_2)
+               (list 1 t_leather_helm_2)
+               (list 67 t_gold_coins)
+               (list 3 t_picklock)
+               (list 3 t_heal_potion)
                ))
 
 
