@@ -54,6 +54,19 @@
 		width:9px;
 		height:16px;
 	}
+	tr.breaker td
+	{
+		border:none;
+		text-align:center;
+	}
+	tr.breaker td span:before
+	{
+		content: "\002192   "
+	}
+	tr.breaker td span:after
+	{
+		content: "   \002190"
+	}
 </style>
 </head>
 <body>
@@ -340,7 +353,7 @@ wants. For example, if you type 'x' (for e[x]amine) the command prompt will
 say:
 </p>
 <p class="example">
-    Xamine-<target>(ESC to exit)
+    Xamine-&lt;target&gt;(ESC to exit)
 </p>
 <p>
 Which means it wants you to hit the arrow keys and move the targeting
@@ -360,7 +373,7 @@ to tell time other than guesstimating from the position of the sun.
 <p>
 You'll see your first NPC to the south. To talk to the NPC press 't' for
 T)alk. This brings up a targeting crosshair. It might start out on the NPC or
-on your character, it it's on you then move it to the NPC with the arrow keys
+on your character, if it's on you then move it to the NPC with the arrow keys
 and hit enter. 
 </p>
 <p>
@@ -964,6 +977,10 @@ Table 1: Reagents
 	</td><td>
 		Party/Combat
 	</td>
+</tr><tr class="breaker">
+	<td colspan="4">
+		<span>1</span>
+	</td>
 </tr><tr>
 	<td>
 		An Nox
@@ -1034,8 +1051,9 @@ Table 1: Reagents
 	</td><td>
 		PC
 	</td>
-</tr><tr>
-	<td colspan="12" style="break"><span></span>
+</tr><tr class="breaker">
+	<td colspan="4">
+		<span>2</span>
 	</td>
 </tr><tr>
 	<td>
@@ -1097,8 +1115,9 @@ Table 1: Reagents
 	</td><td>
 		C
 	</td>
-</tr><tr>
-	<td colspan="12" style="break"><span></span>
+</tr><tr class="breaker">
+	<td colspan="4">
+		<span>3</span>
 	</td>
 </tr><tr>
 	<td>
@@ -1150,8 +1169,9 @@ Table 1: Reagents
 	</td><td>
 		PC
 	</td>
-</tr><tr>
-	<td colspan="12" style="break"><span></span>
+</tr><tr class="breaker">
+	<td colspan="4">
+		<span>4</span>
 	</td>
 </tr><tr>
 	<td>
@@ -1203,8 +1223,9 @@ Table 1: Reagents
 	</td><td>
 		C
 	</td>
-</tr><tr>
-	<td colspan="12" style="break"><span></span>
+</tr><tr class="breaker">
+	<td colspan="4">
+		<span>5</span>
 	</td>
 </tr><tr>
 	<td>
@@ -1266,12 +1287,13 @@ Table 1: Reagents
 	</td><td>
 		PC
 	</td>
-</tr><tr>
-	<td colspan="12" style="break"><span></span>
+</tr><tr class="breaker">
+	<td colspan="4">
+		<span>6</span>
 	</td>
 </tr><tr>
 	<td>
-		An Xen Exe
+		An Xen Ex
 	</td><td>
 		Charm
 	</td><td>
@@ -1339,8 +1361,9 @@ Table 1: Reagents
 	</td><td>
 		P
 	</td>
-</tr><tr>
-	<td colspan="12" style="break"><span></span>
+</tr><tr class="breaker">
+	<td colspan="4">
+		<span>7</span>
 	</td>
 </tr><tr>
 	<td>
@@ -1402,8 +1425,9 @@ Table 1: Reagents
 	</td><td>
 		C
 	</td>
-</tr><tr>
-	<td colspan="12" style="break"><span></span>
+</tr><tr class="breaker">
+	<td colspan="4">
+		<span>8</span>
 	</td>
 </tr><tr>
 	<td>
@@ -1633,7 +1657,7 @@ Projectile Weapon Stats
 	</td><td>
 		1d2-2
 	</td><td>
-		1d3
+		1d4
 	</td><td>
 		-1
 	</td><td>
@@ -1651,7 +1675,7 @@ Projectile Weapon Stats
 	</td><td>
 		3
 	</td><td>
-		1d3+4
+		1d4+4
 	</td><td>
 		0
 	</td><td>
