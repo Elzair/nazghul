@@ -244,6 +244,12 @@
 (define (animal-ai kchar)
   (get-off-bad-tile? kchar))
 
+(define (nolight-ai kchar)
+  (or 
+   (get-off-bad-tile? kchar)
+   (use-potion? kchar)
+   ))
+
 (define (std-ai kchar)
   (or 
    (get-off-bad-tile? kchar)
@@ -381,7 +387,7 @@
 
 ;; Death knights can use Vampiric Touch at L3 and Disease at L6
 (define (death-knight-ai kchar)
-  (or (std-ai kchar)
+  (or (nolight-ai kchar)
       (let ((vt (can-use-ability? vampiric-touch kchar))
             (dis (can-use-ability? disease-touch kchar)))
         (if (not (or vt dis))
@@ -403,7 +409,7 @@
 
 (define (craven-archer-ai kchar)
   ;;(println "craven-archer-ai")
-  (or (std-ai kchar)
+  (or (nolight-ai kchar)
       (and (stuck? kchar)
            (in-melee-range-of-foes? kchar)
            (blink-away-from-foes kchar))))
@@ -443,7 +449,7 @@
 ;; A lich will summon undead minions
 (define (lich-ai kchar)
   (display "lich-ai:") (dump-char kchar)
-  (or (std-ai kchar)
+  (or (nolight-ai kchar)
       (ai-summon kchar summon-skeleton)
       (spell-sword-ai kchar)))
 
