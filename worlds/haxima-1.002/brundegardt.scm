@@ -100,7 +100,6 @@
   (put (mk-monman) 0 0)
 
   ;; mechanisms
-  (put (mk-locked-windowed-door) 4 12)
   (put (mk-locked-windowed-door) 6 4)
   (put (kern-tag 'bgk-p1 (mk-portcullis)) 6 20)
   (put (kern-tag 'bgk-p2 (mk-portcullis)) 8 22)
