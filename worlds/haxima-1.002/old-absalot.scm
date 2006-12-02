@@ -120,7 +120,7 @@
   (put (mk-locked-door) 6 8)
   (put (mk-magic-locked-door) 4 6)
   (put (mk-chest 'bomb-trap
-                 (list (list 1 t_demon_gate_book)))
+                 '((1 t_demon_gate_book)))
        4 5)
 
   ;; Bunkroom

@@ -24,12 +24,12 @@
   )
  (put (mk-chest 
        nil 
-       (list 
-        (list 10 t_torch)
-        (list 1 t_sword)
-        (list 1 t_armor_leather)
-        (list 1 t_shield)
-        (list 1 t_halberd)
+       '( 
+        ( 10 t_torch)
+        ( 1 t_sword)
+        ( 1 t_armor_leather)
+        ( 1 t_shield)
+        ( 1 t_halberd)
         ))
       5 6)
  (put (spawn-pt 'snake) 11 13)

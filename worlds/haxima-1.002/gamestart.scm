@@ -84,54 +84,54 @@
        (mk-chest
         nil ;; trap
         
-        (list
+        '(
          
          ;; Food
-         (list 1000 t_food)
+         ( 1000 t_food)
          
          ;; Gold
-         (list 1000 t_gold_coins)
+         ( 1000 t_gold_coins)
          
          ;; Reagents
-         (list 55 sulphorous_ash)
-         (list 55 ginseng)
-         (list 55 garlic)
-         (list 55 spider_silk)
-         (list 53 blood_moss)
-         (list 53 black_pearl)
-         (list 51 nightshade)
-         (list 51 mandrake)
+         ( 55 sulphorous_ash)
+         ( 55 ginseng)
+         ( 55 garlic)
+         ( 55 spider_silk)
+         ( 53 blood_moss)
+         ( 53 black_pearl)
+         ( 51 nightshade)
+         ( 51 mandrake)
          
          ;; Items
-         (list 9 t_vas_mani_scroll)
-         (list 9 t_in_ex_por_scroll)
-         (list 9 t_sanct_lor_scroll)
-         (list 9 t_wis_quas_scroll)
-         (list 9 t_vas_rel_por_scroll)
-         (list 9 t_gem)
-         (list 9 t_cure_potion)
-         (list 9 t_mana_potion)
-         (list 99 t_xp_potion)
-         (list 99 t_str_potion)
-         (list 99 t_dex_potion)
-         (list 99 t_int_potion)
-         (list 99 t_info_potion)
-         (list 99 t_torch)
-         (list 99 t_picklock)
-         (list 9 t_pick)
-         (list 2 t_dragons_blood)
-         (list 2 t_hydras_blood)
-         (list 2 t_shovel)
-         (list 1 t_rune_k)
+         ( 9 t_vas_mani_scroll)
+         ( 9 t_in_ex_por_scroll)
+         ( 9 t_sanct_lor_scroll)
+         ( 9 t_wis_quas_scroll)
+         ( 9 t_vas_rel_por_scroll)
+         ( 9 t_gem)
+         ( 9 t_cure_potion)
+         ( 9 t_mana_potion)
+         ( 99 t_xp_potion)
+         ( 99 t_str_potion)
+         ( 99 t_dex_potion)
+         ( 99 t_int_potion)
+         ( 99 t_info_potion)
+         ( 99 t_torch)
+         ( 99 t_picklock)
+         ( 9 t_pick)
+         ( 2 t_dragons_blood)
+         ( 2 t_hydras_blood)
+         ( 2 t_shovel)
+         ( 1 t_rune_k)
          
          
          ;; Arms
-         (list 1 t_sword_4)
-         (list 1 t_morning_star_2)
-         (list 1 t_sling_4)
-         (list 1 t_shield)
-         (list 1 t_iron_helm_4)
-         (list 1 t_armor_plate_4)
+         ( 1 t_sword_4)
+         ( 1 t_morning_star_2)
+         ( 1 t_sling_4)
+         ( 1 t_shield)
+         ( 1 t_iron_helm_4)
+         ( 1 t_armor_plate_4)
          ))
        (list p_char_setup 16 17))
       (kern-obj-put-at

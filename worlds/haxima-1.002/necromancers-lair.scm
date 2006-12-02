@@ -60,7 +60,7 @@
   ;; galley
   (put (mk-chest
         nil
-        (list (list 5 t_food))) 10 1)
+        '((5 t_food))) 10 1)
 
   ;; library
   (put (mk-door) 15 12)

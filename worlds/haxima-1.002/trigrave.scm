@@ -227,7 +227,7 @@
 
 (define jims-other-chest
   (mk-chest
-   'bomb-trap ;; trap
+   'spike-trap ;; trap
    '((100 t_gold_coins)
                 (3 t_dagger)
                 (3 t_mace)

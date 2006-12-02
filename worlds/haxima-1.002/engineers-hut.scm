@@ -55,7 +55,7 @@
   (put (mk-bed) 16 15)
   (put (mk-chest
         nil
-        (list (list 5 t_food))) 14 16)
+        '((5 t_food))) 14 16)
 
   (put (mk-door) 14  3)
 

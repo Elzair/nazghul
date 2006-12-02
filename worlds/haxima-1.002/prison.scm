@@ -46,31 +46,31 @@
   (put (mk-locked-door) 6 2)
   (put (mk-chest
         'burn-trap
-        (list (list 10 t_food)
-              )) 1 1)
+        '(( 10 t_food)
+          )) 1 1)
   (put (mk-chest
         'burn-trap
-        (list (list 1 t_cure_potion)
-              (list 1 t_heal_potion)
-              )) 2 1)
+        '((1 t_cure_potion)
+          (1 t_heal_potion)
+          )) 2 1)
   (put (mk-chest
         'burn-trap
-        (list (list 10 t_arrow)
-              )) 1 2)
+        '((10 t_arrow)
+          )) 1 2)
   (put (mk-chest
         'burn-trap
-        (list (list 10 t_bolt)
-              )) 2 7)
+        '((10 t_bolt)
+          )) 2 7)
   (put (mk-chest
         'burn-trap
-        (list (list 1 t_vas_mani_scroll)
-              )) 3 7)
+        '((1 t_vas_mani_scroll)
+          )) 3 7)
   (put (mk-chest
         'burn-trap
-        (list (list 10 sulphorous_ash)
-              (list 5 garlic)
-              (list 5 ginseng)
-              )) 3 6)
+        '((10 sulphorous_ash)
+          (5 garlic)
+          (5 ginseng)
+          )) 3 6)
 
   ;; rats in store room
   (put (spawn-pt 'rat) 1 1)
