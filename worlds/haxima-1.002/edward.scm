@@ -62,7 +62,7 @@
                 (kern-obj-relocate ch_nate (mk-loc p_green_tower_lower 9 10) nil)
                 (prompt-for-key)
                 (say knpc "Here's your receipt, in case the Captain wants it.")
-                (give kpc t_prisoner_receipt 1)
+                (give (kern-get-player) t_prisoner_receipt 1)
                 (edward-has-nate! (kobj-gob-data knpc))
                 )))
         (else

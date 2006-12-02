@@ -159,17 +159,20 @@
             (else
            (car mercs)))))
 
+  (define (rm-ranger-merc)
+    (let ((kmerc (get-ranger-merc)))
+      (if (not (null? kmerc))
+          (begin
+            (prompt-for-key)
+            (say knpc "I'll need to re-assign that ranger to a patrol.")
+            (kern-char-leave-player kmerc)
+            ))))
+
   (cond ((in-player-party? 'ch_nate)
          (say knpc "I see you have apprehended the bandit leader! "
               "Deliver him downstairs to the jailer and I will give you the "
               "reward.")
-         (let ((kmerc (get-ranger-merc)))
-           (if (not (null? kmerc))
-               (begin
-                 (prompt-for-key)
-                 (say knpc "I'll need to re-assign that ranger to a patrol.")
-                 (kern-char-leave-player kmerc)
-                 )))
+         (rm-ranger-merc)
          )        
         ((has? kpc t_prisoner_receipt 1)
          (say knpc "Putting that bandit behind bars will look very good on my "
@@ -178,6 +181,7 @@
          (kern-char-add-experience kpc 64)
          (take kpc t_prisoner_receipt 1)
          (quest-done! (deric-bandit-quest (kobj-gob-data knpc)) #t)
+         (rm-ranger-merc)
          )
         (else
          (say knpc "Well met, indeed!")
