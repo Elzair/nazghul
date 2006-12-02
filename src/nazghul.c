@@ -251,8 +251,8 @@ void nazghul_splash(void)
         /* Fill out the screen destination rect */
         rect.x = max(0, (MAP_W - splash->w) / 2) + MAP_X;
         rect.y = max(0, (MAP_H - splash->h) / 2) + MAP_Y;
-        rect.w = min(splash->w, MAP_W-MAP_X);
-        rect.h = min(splash->h, MAP_H-MAP_Y);
+        rect.w = min(splash->w, MAP_W);
+        rect.h = min(splash->h, MAP_H);
 
         screenBlit(splash, NULL, &rect);
         screenUpdate(&rect);
