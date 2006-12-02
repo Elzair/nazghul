@@ -44,9 +44,9 @@
                    (list mandrake       (* 10 reagent-price-mult))
 
                    ;; potions
-                   (list t_heal_potion            50)
-                   (list t_cure_potion            44)
-                   (list t_poison_immunity_potion 60)
+                   (list t_heal_potion            21)
+                   (list t_cure_potion            21)
+                   (list t_poison_immunity_potion 21)
 
                    )
 

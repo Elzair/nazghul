@@ -81,11 +81,11 @@
         (say knpc "I'm sure I have something you'll like! "
              "[He rubs his hands briskly]")
         (kern-conv-trade knpc kpc
-                         (list t_heal_potion       50)
-                         (list t_cure_potion       50)
-                         (list t_mana_potion       50)
-                         (list t_poison_immunity_potion 80)
-                         (list t_invisibility_potion        200)
+                         (list t_heal_potion       18)
+                         (list t_cure_potion       18)
+                         (list t_mana_potion       18)
+                         (list t_poison_immunity_potion 18)
+                         (list t_invisibility_potion    40)
                          )
         (say knpc "Always carry plenty of potions!"))))
 

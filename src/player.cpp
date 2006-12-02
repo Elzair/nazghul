@@ -48,7 +48,7 @@
 #include <unistd.h>
 #include <math.h>
 
-#define CAMPING_TIME_ACCELERATION (MINUTES_PER_HOUR)
+#define CAMPING_TIME_ACCELERATION (TURNS_PER_HOUR)
 
 
 #define DIRLOC(dir,place,coord) { \

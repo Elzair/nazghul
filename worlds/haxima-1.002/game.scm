@@ -173,8 +173,8 @@
 (define (isworking? knpc)
   (string=? "working" (kern-obj-get-activity knpc)))
 
-;; Spell constants
-(define base-scroll-cost 25) ;; gold pieces per level of scroll's spell
+;; Prices
+(define base-scroll-cost 10) ;; gold pieces per level of scroll's spell
 (define reagent-price-mult 1) ;; global reagent price multiplier
 
 ;; rather than trying to calculate appropriate hp/mp for
