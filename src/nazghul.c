@@ -225,21 +225,45 @@ static void nazghul_init_internal_libs(void)
 /* nazghul_splash -- show the splash image */
 void nazghul_splash(void)
 {
-        SDL_Surface *splash = 0;
+        static SDL_Surface *splash = 0;
         SDL_Rect rect;
-	char *basename = cfg_get("splash-image-filename");
-        char *filename;
 
-        /* Look for the splash image, check the include dir first, then check
-         * the current working dir */
-	filename = file_mkpath(cfg_get("include-dirname"), basename);
-	if (filename) {
-		splash = IMG_Load(filename);
-		free(filename);
-	}
-	if (! splash) {
-                warn("IMG_Load failed: %s\n", SDL_GetError());
-                return;
+        /* The first time through load the splash image from a file. */
+        if (! splash) {
+                char *dims = cfg_get("screen-dims");
+                char *suffix = "-splash-image-filename";
+                char *key;
+                char *basename;
+                char *filename;
+                
+                /* Build a key for the splash image filename based on the
+                 * screen dimensions. */
+                key = (char*)malloc(strlen(dims) + strlen(suffix) + 1);
+                assert(key);
+                strcpy(key, dims);
+                strcat(key, suffix);
+                
+                /* Lookup the filename. */
+                basename = cfg_get(key);
+                if (! basename) {
+                        warn("cfg_get: no key matches '%s'", key);
+                        free(key);
+                        return;
+                }
+                free(key);
+                
+                /* Look for the splash image, check the include dir first, then
+                 * check the current working dir */
+                filename = file_mkpath(cfg_get("include-dirname"), basename);
+                if (filename) {
+                        splash = IMG_Load(filename);
+                        free(filename);
+                }
+                if (! splash) {
+                        warn("IMG_Load failed: %s\n", SDL_GetError());
+                        return;
+                }
+
         }
 
         rect.x = MAP_X;
@@ -256,8 +280,6 @@ void nazghul_splash(void)
 
         screenBlit(splash, NULL, &rect);
         screenUpdate(&rect);
-
-        SDL_FreeSurface(splash);
 }
 
 /* init_default_cfg -- initialize the global cfg settings to start-up defaults
