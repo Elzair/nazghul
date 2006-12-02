@@ -241,6 +241,7 @@ static void show_credits(void)
         char *text = 
                 "Engine Programming\n"\
                 "...Gordon McNutt\n"\
+                "...Kris Parker\n"\
                 "...Sam Glasby\n"\
                 "...Tim Douglas\n"\
                 "...Janne Johansson\n"\
@@ -249,15 +250,16 @@ static void show_credits(void)
                 "...Andreas Bauer\n"\
                 "Game Scripting\n"\
                 "...Gordon McNutt\n"\
+                "...Kris Parker\n"\
                 "...Sam Glasby\n"
                 "Art Provided by\n"\
                 "...Joshua Steele\n"\
                 "...David Gervais\n"\
+                "...Kris Parker\n"
                 "...Kevin Gabbert\n"\
                 "...Gordon McNutt\n"\
                 "...Sam Glasby\n"\
                 "...Steve Riberdy\n"\
-                "...Kris Parker\n"
                 ;
 
         statusSetPageText(title, text);
