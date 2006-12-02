@@ -28,6 +28,6 @@
  ;; various supported screen sizes. The format of the key must be
  ;; <width>x<height>-splash-image-filename.
  "1280x960-splash-image-filename" "splash.png"
- "640x480-splash-image-filename" "splashsmall.png"
+ "640x480-splash-image-filename" "640x480_splash.png"
 
  )
