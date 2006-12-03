@@ -27,7 +27,7 @@
 
 ;; Enchanter's Tower
 (define (mk-zone x y w h) (list 'p_enchanters_tower x y w h))
-(define enchtwr-campsite         (mk-zone  4  4  5   5))
+(define enchtwr-campsite         (mk-zone  5  5  3   3))
 (define enchtwr-dining-room-1    (mk-zone  9 11  1   1))
 (define enchtwr-dining-room-2    (mk-zone 11 11  1   1))
 (define enchtwr-dining-room      (mk-zone  8  8  5   5))

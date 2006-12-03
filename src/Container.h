@@ -44,6 +44,9 @@ class Container:public Object {
 	virtual bool add(class ObjectType * type, int quantity);
         virtual void save(struct save *save);
 	virtual bool takeOut(class ObjectType * type, int quantity);
+	virtual void relocate(struct place *newplace, int newx, int newy, 
+                              int flags = 0,
+                              struct closure *place_switch_hook = NULL);
         int numAvail(class ObjectType * type);
 
         int filter_count(struct filter *);

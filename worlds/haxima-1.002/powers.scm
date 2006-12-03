@@ -169,17 +169,18 @@
 
 
 (define (contest-of-skill offense defense)
-	(let ((oprob (+ offense 1))
-		 (tprob (number->string (+ offense defense 2))))
-		(if (< (kern-dice-roll (string-append "1d" tprob))
-				oprob)
-                    (begin
-                      (kern-log-msg "^c+gSpell succeeds!^c-")
-                      #t)
-                    (begin
-                      (kern-log-msg "^c+rSpell resisted!^c-")
-                      #f)
-                    )))
+  (let ((oprob (+ offense 1))
+        (tprob (number->string (+ offense defense 2))))
+    (println "oprob=" oprob " tprob=" tprob " offense=" offense " defense=" defense)
+    (if (< (kern-dice-roll (string-append "1d" tprob))
+           oprob)
+        (begin
+          (kern-log-msg "^c+gSpell succeeds!^c-")
+          #t)
+        (begin
+          (kern-log-msg "^c+rSpell resisted!^c-")
+          #f)
+        )))
 
 
 ;;--------------------------------------------------------------

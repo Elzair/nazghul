@@ -41,8 +41,11 @@
   (put (mk-monman) 0 0)
   (put (spawn-pt 'troll) 12 14)
   (put (spawn-pt 'troll) 11 15)
-  (put (mk-riddle 'noor 't_doorway 18 3 1 1 #t
-                  "All who would pass must speak the password!") 17 3)
+  (put (let ((kriddle (mk-riddle 'noor 't_doorway 18 3 1 1 #t
+                                 "All who would pass must speak the password!")))
+         (riddle-set-rm-on-wrong! (gob kriddle) #f)
+         kriddle)
+       17 3)
   )
 
  (list 'on-entry-to-dungeon-room) ; hooks

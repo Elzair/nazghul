@@ -110,8 +110,8 @@
 ;;----------------------------------------------------------------------------
 (define (thief-door-step kportal kchar)
   (let ((time (kern-get-time)))
-    (if (and (= (time-hour time) 0)
-             (< (time-minute time) 15))
+    (if (and (>= (time-hour time) 0)
+             (< (time-hour time) 3))
         (portal-step kportal kchar))))
 
 (define thief-door-ifc
@@ -158,7 +158,10 @@
 ;; incorrectly
 ;;----------------------------------------------------------------------------
 (define (riddle-mk ans ter-tag x y w h pos? msg)
-  (list ans ter-tag x y w h pos? msg))
+  (list ans ter-tag x y w h pos? msg 
+        #t  ;; rm-on-correct
+        #t  ;; rm-on-wrong
+        ))
 (define (riddle-ans riddle) (car riddle))
 (define (riddle-terrain riddle) (eval (cadr riddle)))
 (define (riddle-x riddle) (caddr riddle))
@@ -167,6 +170,10 @@
 (define (riddle-h riddle) (list-ref riddle 5))
 (define (riddle-pos? riddle) (list-ref riddle 6))
 (define (riddle-msg riddle) (list-ref riddle 7))
+(define (riddle-rm-on-correct? riddle) (list-ref riddle 8))
+(define (riddle-rm-on-wrong? riddle) (list-ref riddle 9))
+(define (riddle-set-rm-on-correct! riddle val) (list-set-ref! riddle 8 val))
+(define (riddle-set-rm-on-wrong! riddle val) (list-set-ref! riddle 9 val))
 
 (define (riddle-trigger riddle kmech)
   (shake-map 10)
@@ -176,7 +183,6 @@
                 (riddle-y riddle)
                 (riddle-w riddle)
                 (riddle-h riddle))
-  (kern-obj-remove kmech)  
   )
 
 (define (riddle-step kmech kchar)
@@ -188,11 +194,18 @@
           (cond ((eq? guess (riddle-ans riddle))
                  (kern-log-msg "YOU MAY PASS")
                  (if (riddle-pos? riddle)
-                     (riddle-trigger riddle kmech)))
+                     (riddle-trigger riddle kmech))
+                 (if (riddle-rm-on-correct? riddle)
+                     (kern-obj-remove kmech))
+                 )
                 (else
                  (kern-log-msg "WRONG!")
                  (if (not (riddle-pos? riddle))
-                     (riddle-trigger riddle kmech))))))))
+                     (riddle-trigger riddle kmech))
+                 (if (riddle-rm-on-wrong? riddle)
+                     (kern-obj-remove kmech))
+                 )
+                )))))
                 
 
 (define riddle-step-ifc

@@ -703,18 +703,20 @@
 ;; is. This was written to be used by a weapon like a prismatic wand, and the
 ;; missile procedures don't get the user/caster as a parm (yet).
 (define (apply-prismatic kobj)
-  (let ((selection (random-select (list 'paralyze 
-                                        'apply-acid
-                                        'apply-poison
-                                        'burn
-                                        'slip
-                                        'apply-lightning
-                                        'fizzle
-                                        'apply-random-field
-                                        ))))
-    ;;(println selection)
-    (apply (eval selection)
-           (list kobj))))
+  (if (or (not (kern-obj-is-being? kobj))
+          (contest-of-skill 8 (occ-ability-magicdef kobj)))
+      (let ((selection (random-select (list 'paralyze 
+                                            'apply-acid
+                                            'apply-poison
+                                            'burn
+                                            'slip
+                                            'apply-lightning
+                                            'fizzle
+                                            'apply-random-field
+                                            ))))
+        (println selection)
+        (apply (eval selection)
+               (list kobj)))))
    
                   
 

@@ -480,6 +480,14 @@ bool Character::unready(class ArmsType * arms)
                         player_party->unrefInventoryObject(arms);
                 }
 
+                // Bugfix: for others, put the item back into personal
+                // inventory. This fixes (e.g.) Haxima's acid effect on NPC's,
+                // which first unreadies, and then removes, which is correct
+                // for PC's.
+                else if (container) {
+                        container->add(arms, 1);
+                }
+
 		return true;
 	}
 
@@ -1687,11 +1695,30 @@ void Character::describe()
 
 void Character::examine()
 {
+        int i;
+        int n = 0;
 	char *diplstr = diplomacy_string(this, Session->subject);
-	log_continue("%s:\n", getName());	
-	log_continue("  %s\n", diplstr);
-	log_continue("  Level %d\n", getLevel());
-	log_continue("  %s\n", getWoundDescription());
+
+        log_continue("%s level %d %s, %s [", 
+                     diplstr, 
+                     getLevel(), 
+                     getName(), 
+                     getWoundDescription());
+
+        for (ArmsType *arms = enumerateArms(&i); arms; 
+             arms = getNextArms(&i)) {
+                if (n > 0) {
+                        log_continue(", ");
+                }
+                log_continue("%s", arms->getName());
+                n++;
+        }
+
+        if (!n) {
+                log_continue("no arms");
+        }
+
+        log_continue("]");
 }
 
 sound_t *Character::getDamageSound()

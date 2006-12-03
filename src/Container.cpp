@@ -253,3 +253,14 @@ void Container::moveToFront(struct inv_entry *ie)
         list_remove(&ie->list);
         list_add(&contents, &ie->list);
 }
+
+void Container::relocate(struct place *newplace, int newx, int newy, int flags,
+                         struct closure *place_switch_hook)
+{
+        // Spill the contents but don't try to put this down on the map as a
+        // physical object, because it's not.
+        setPlace(newplace);
+        setX(newx);
+        setY(newy);
+        open();
+}
