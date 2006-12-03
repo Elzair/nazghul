@@ -49,8 +49,8 @@
                          (list t_arrow             1)
                          (list t_shovel            50)
                          (list t_pick              50)
-                         (list t_sextant           100)
-                         (list t_chrono            75)
+                         (list t_sextant           500)
+                         (list t_chrono            300)
                          )
         (say knpc "Your life depends on your gear!"))))
 

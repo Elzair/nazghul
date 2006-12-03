@@ -129,6 +129,7 @@
 (define (paralyze kobj)
   (if (can-paralyze? kobj)
       (begin
+        (kern-log-msg (kern-obj-get-name kobj) " is paralyzed!")
         (kern-obj-add-effect kobj ef_paralyze nil))))
 
 ;;----------------------------------------------------------------------------
@@ -611,6 +612,7 @@
 
 ;; Used by spells:
 (define (apply-poison obj)
+  (kern-log-msg (kern-obj-get-name obj) " poisoned!")
   (kern-obj-add-effect obj ef_poison nil)
   obj)
 
@@ -633,7 +635,8 @@
 (define (apply-acid kchar)
   (if (obj-is-char? kchar)
       (let ((arms (kern-char-get-arms kchar)))
-        (if (not (null? arms))
+        (if (null? arms)
+            (kern-log-msg "Acid has no effect!")
             (let ((ktype (random-select arms)))
               (kern-log-msg "Acid dissolves 1 " (kern-type-get-name ktype) 
                             " held by " (kern-obj-get-name kchar))
@@ -680,7 +683,40 @@
                     (kern-obj-apply-damage obj "slipped" (kern-dice-roll "1d4")))))))))
 
 (define (apply-lightning obj)
+  (kern-log-msg (kern-obj-get-name obj) " shocked!")
   (kern-obj-apply-damage obj "shocked" (kern-dice-roll "2d8")))
+
+;; Drop a random temporary field on the object's location
+(define (apply-random-field kobj)
+  (kern-obj-put-at (kern-mk-obj (random-select (list  F_fire 
+                                                      F_poison 
+                                                      F_sleep 
+                                                      F_energy))
+                                1)
+                   (kern-obj-get-location kobj)))
+                   
+(define (fizzle kobj)
+  (kern-log-msg (kern-obj-get-name kobj) " shrugs off the attack"))
+
+;; Prismatic -- pick a random effect. This isn't quite what I want, I'd rather
+;; go through the powers layer, but that requires me to know who my caster
+;; is. This was written to be used by a weapon like a prismatic wand, and the
+;; missile procedures don't get the user/caster as a parm (yet).
+(define (apply-prismatic kobj)
+  (let ((selection (random-select (list 'paralyze 
+                                        'apply-acid
+                                        'apply-poison
+                                        'burn
+                                        'slip
+                                        'apply-lightning
+                                        'fizzle
+                                        'apply-random-field
+                                        ))))
+    ;;(println selection)
+    (apply (eval selection)
+           (list kobj))))
+   
+                  
 
 ;;----------------------------------------------------------------------------
 ;; Misc stuff -- not sure where to put this
