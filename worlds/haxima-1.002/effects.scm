@@ -643,12 +643,19 @@
               (kern-char-unready kchar ktype)
               (kern-obj-remove-from-inventory kchar ktype 1))))))
 
-(define (burn obj)
+(define (generic-burn obj dice)
   (if (and (kern-obj-is-being? obj)
            (not (has-fire-immunity? obj)))
       (begin
-        (kern-log-msg "Burning!")
-        (kern-obj-apply-damage obj "burning" (kern-dice-roll "2d3+2")))))
+        (if (kobj-is-being? obj)
+            (kern-log-msg (kern-obj-get-name obj) " burned!"))
+        (kern-obj-apply-damage obj "burning" (kern-dice-roll dice)))))
+
+(define (burn obj)
+  (generic-burn obj "2d3+2"))
+
+(define (great-burn obj)
+  (generic-burn obj "10d8+20"))
 
 ;; fixme: what about the player party? probably not safe to just remove it from
 ;; the map...
@@ -666,10 +673,6 @@
       (kern-char-kill obj)))
   
 
-(define (great-burn obj)
-  (if (not (has-fire-immunity? obj))
-      (kern-obj-apply-damage obj "burning" (kern-dice-roll "10d8+20"))))
-
 (define (slip obj)
   (let ((mmode (kern-obj-get-mmode obj)))
     (if (eqv? mmode mmode-walk)
@@ -683,7 +686,8 @@
                     (kern-obj-apply-damage obj "slipped" (kern-dice-roll "1d4")))))))))
 
 (define (apply-lightning obj)
-  (kern-log-msg (kern-obj-get-name obj) " shocked!")
+  (if (kern-obj-is-being? obj)
+      (kern-log-msg (kern-obj-get-name obj) " shocked!"))
   (kern-obj-apply-damage obj "shocked" (kern-dice-roll "2d8")))
 
 ;; Drop a random temporary field on the object's location
