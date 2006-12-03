@@ -73,7 +73,7 @@
               ((equal? kplace p_enchanters_tower)
                (say knpc "Go south to Trigrave and ask there."))
               ((equal? kplace p_oparine)
-               (say knpc "Take the north to Trigrave and ask there."))
+               (say knpc "Take the road north to Trigrave and ask there."))
               ((equal? kplace p_moongate_clearing)
                (say knpc "Follow the road south to the junction, then travel east. "
                     "When the road bends north keep going east into the woods."))
