@@ -298,9 +298,9 @@
       (list 'xen_corp     "Xen Corp spell"     xen-corp     "XC"  7 context-town (list nightshade black_pearl))
       (list 'in_quas_xen  "In Quas Xen spell"  in-quas-xen  "IQX" 7 context-town (list nightshade mandrake sulphorous_ash spider_silk
                                                                                        blood_moss ginseng))
-      (list 'kal_xen_nox      "Kal Xen Nox spell"      kal-xen-nox      "KXN"  8 context-town (list spider_silk mandrake nightshade))
 
       ;; Eighth Circle
+      (list 'kal_xen_nox      "Kal Xen Nox spell"      kal-xen-nox      "KXN"  8 context-town (list spider_silk mandrake nightshade))
       (list 'in_flam_hur      "In Flam Hur spell"      in-flam-hur      "IFH"  8 context-town (list mandrake sulphorous_ash blood_moss))
       (list 'in_vas_grav_corp "In Vas Grap Corp spell" in-vas-grav-corp "IVGC" 8 context-town (list mandrake sulphorous_ash nightshade))
       (list 'an_tym           "An Tym spell"           an-tym           "AT"   8 context-any (list mandrake garlic blood_moss))
