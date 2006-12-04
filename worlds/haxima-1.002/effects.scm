@@ -646,7 +646,7 @@
   (if (and (kern-obj-is-being? obj)
            (not (has-fire-immunity? obj)))
       (begin
-        (if (kobj-is-being? obj)
+        (if (kern-obj-is-being? obj)
             (kern-log-msg (kern-obj-get-name obj) " burned!"))
         (kern-obj-apply-damage obj "burning" (kern-dice-roll dice)))))
 
