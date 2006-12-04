@@ -326,6 +326,80 @@ void ctrl_party_ai(class Party *party)
 	}
 }
 
+static int ctrl_calc_to_hit(class Character *character, 
+                            class ArmsType *weapon, 
+                            int penalty)
+{
+        int base        = dice_roll("1d20");
+        int weaponBonus = dice_roll(weapon->getToHitDice());
+        int attackBonus = character->getAttackBonus(weapon);
+        int val         = base + weaponBonus + attackBonus + penalty;
+
+        log_continue("to-hit: %d=%d+%d+%d", val, base, weaponBonus, 
+                     attackBonus);
+        if (penalty >= 0) {
+                log_continue("+");
+        }
+        log_continue("%d\n", penalty);
+
+        return val;
+}
+
+static int ctrl_calc_to_defend(class Character *target)
+{
+        int base  = target->getDefend();
+        int bonus = target->getAvoidBonus();
+        int val   = base + bonus;
+
+        log_continue("to-def: %d=%d+%d\n", val, base, bonus);
+        
+        return val;
+}
+
+static int ctrl_calc_damage(class Character *character, 
+                            class ArmsType *weapon, 
+                            char critical)
+{
+        int weaponDamage   = dice_roll(weapon->getDamageDice());
+        int characterBonus = character->getDamageBonus(weapon);
+        int memberBonus    = 0;
+        int criticalBonus  = 0;
+
+        if (character->isPlayerControlled()) {
+                memberBonus = dice_roll("1d4");
+        }
+
+        if (critical) {
+                criticalBonus = character->getDamageBonus(weapon);
+        }
+
+        int val = weaponDamage + characterBonus + criticalBonus + memberBonus;
+
+        log_continue("damage: %d=%d+%d", val, weaponDamage, characterBonus);
+        if (memberBonus) {
+                log_continue("+%d", memberBonus);
+        }
+        if (criticalBonus) {
+                log_continue("+%d", criticalBonus);
+        }
+        log_continue("\n");
+
+        return val;
+}
+
+static int ctrl_calc_armor(class Character *target, int critical)
+{
+        int armor = 0;
+
+        if (! critical) {
+                armor = target->getArmor();
+        }
+
+        log_continue(" armor: %d\n", armor);
+        
+        return armor;
+}
+
 void ctrl_do_attack(class Character *character, class ArmsType *weapon, 
                     class Character *target, int to_hit_penalty)
 {
@@ -333,6 +407,7 @@ void ctrl_do_attack(class Character *character, class ArmsType *weapon,
         int def;
         int damage;
         int armor;
+        int critical = 0;
         bool miss;
 
         /* Reduce the diplomacy rating between the attacker's and target's
@@ -357,55 +432,30 @@ void ctrl_do_attack(class Character *character, class ArmsType *weapon,
         }
 
         /* Roll to hit. */
-        hit = dice_roll("1d20") + dice_roll(weapon->getToHitDice());
-        hit += to_hit_penalty;
-        def = target->getDefend();
-
-		int abonus = character->getAttackBonus(weapon);
-		int dbonus = target->getAvoidBonus();
-
         log_continue("\n");
-        log_continue(" to-hit bonus %d\n", abonus);
-        log_continue(" to-defend bonus %d", dbonus);
-
-        /* Add level bonuses */
-        hit += abonus;
-        def += dbonus;
-
-        log_continue("\n");
-        log_continue(" to-hit %d vs %d to-defend\n", hit, def);
+        hit = ctrl_calc_to_hit(character, weapon, to_hit_penalty);
+        def = ctrl_calc_to_defend(target);
         if (hit < def) {
                 log_end("evaded!");
                 return;
         }
 
-        /* roll for damage */
-        damage = dice_roll(weapon->getDamageDice());
-		int damageBonus = character->getDamageBonus(weapon);
-        log_continue(" damage roll %d + %d ", damage, damageBonus);
-
-		damage += damageBonus;
-
         /* roll for critical hit */
-        if (20 <= (dice_roll("1d20") + logBase2(character->getBaseAttackBonus(weapon)))) {
-                log_continue("Critical hit!\n");
-                armor = 0;
-				damage += character->getDamageBonus(weapon);
-        } else {
-                armor = target->getArmor();
-                log_continue("vs %d armor roll\n", armor);
+        if (20 <= (dice_roll("1d20") 
+                   + logBase2(character->getBaseAttackBonus(weapon)))) {
+                critical = 1;
+                log_continue("^c+yCritical hit!^c-\n");
         }
 
-        /* roll for player bonus */
-        if (character->isPlayerControlled())
-                damage += dice_roll("1d4");
-
+        /* roll for damage */
+        damage = ctrl_calc_damage(character, weapon, critical);
+        armor = ctrl_calc_armor(target, critical);
         damage -= armor;
         damage = max(damage, 0);
         
         if (damage <= 0) {
                 log_end("blocked!");
-                        return;
+                return;
         }
 
         // the damage() method may destroy the target, so bump the refcount
