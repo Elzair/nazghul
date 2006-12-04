@@ -109,10 +109,11 @@
 ;; send an ifc to multiple targets
 
 (define (send-to-all kuser tags signal)
-	(send-signal kuser (eval (car tags)) signal)
-	(if (not (equal? (cadr tags) '()))
-		(send-to-all kuser (cdr tags) signal)
-	))
+  (if (defined? (car tags))
+      (send-signal kuser (eval (car tags)) signal))
+  (if (not (equal? (cadr tags) '()))
+      (send-to-all kuser (cdr tags) signal)
+      ))
 
 (define sig-splitter-ifc
   (ifc '() (method 'remote-sensor
