@@ -129,7 +129,6 @@
 (define (paralyze kobj)
   (if (can-paralyze? kobj)
       (begin
-        (kern-log-msg (kern-obj-get-name kobj) " is paralyzed!")
         (kern-obj-add-effect kobj ef_paralyze nil))))
 
 ;;----------------------------------------------------------------------------
