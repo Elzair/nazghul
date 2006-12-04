@@ -129,7 +129,7 @@
                  "So I won't bore you with detail!\n"
                  "\n"
                  "[stops playing] If you simply MUST go investigate, "
-                 "search the northern coast for a hidden bog.")))))
+                 "search the southern coast.")))))
 
 (define (chant-thie knpc kpc)
   (if (isdrunk? knpc)
