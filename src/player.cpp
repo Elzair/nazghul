@@ -840,6 +840,16 @@ PlayerParty::~PlayerParty()
 
         obj_dec_ref_safe(inventory);
 
+        // Bugfix: when quitting while on board a vehicle, force the vehicle to
+        // give up its reference to the player (otherwise this causes an
+        // assert in session_del()).
+        if (vehicle) {
+                vehicle->setOccupant(0);
+                vehicle->relocate(getPlace(), getX(), getY());
+                obj_dec_ref(vehicle);
+		vehicle = NULL;
+        }
+
         /* fixme: need to somehow cancel those wq jobs setup by player_init? */
 }
 

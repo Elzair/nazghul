@@ -278,9 +278,14 @@ void session_del(struct session *session)
         closure_unref_safe(session->start_proc);
         closure_unref_safe(session->camping_proc);
 
-        /* Now zilch the global player party */
+        /* Ensure that nothing is referencing the player party (except perhaps
+         * its vehicle, which will be cleaned up with the party). */
         assert(session->player
-               && (1==session->player->refcount));
+               && ((1==session->player->refcount)
+                   || ((2==session->player->refcount)
+                       && session->player->getVehicle())));
+
+        /* Now zilch the global player party */
         obj_dec_ref(session->player);
         session->player = 0;
 
