@@ -2680,6 +2680,7 @@ bool cmdMixReagents(class Character *character)
 		cmdwin_pop_to_mark();
 	}
 
+        cmdwin_push("-");
 	log_begin("Mix: %s - ", spell_name);
 
 	// For each reagent required by the spell, check if it is in the list
