@@ -185,12 +185,12 @@
 
  (put (mk-corpse2
        '(
-        (1 't_rune_l)
-        (1 't_armor_chain_4)
-        (1 't_chain_coif_4)
-        (1 't_sword_4)
-        (1 't_shield_4)
-        (1 't_warritrix_orders)
+        (1 t_rune_l)
+        (1 t_armor_chain_4)
+        (1 t_chain_coif_4)
+        (1 t_sword_4)
+        (1 t_shield_4)
+        (1 t_warritrix_orders)
         )) 12 12)
  )
 

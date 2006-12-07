@@ -26,7 +26,7 @@
  ;; special treasures
  (put (mk-chest 
        'bomb-trap
-       '((1 t_eldritch_blade 1)
+       '((1 t_eldritch_blade)
          (1 t_armor_plate_4)
          (1 t_iron_helm_4)
          (1 t_doom_staff)
