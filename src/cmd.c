@@ -2178,9 +2178,13 @@ int cmd_camp_in_wilderness(class Party *camper)
 		cmdwin_pop();
 		guard = select_party_member();
 		if (!guard) {
-			cmdwin_pop();
-			cmdwin_spush("no watch");
+                        cmdwin_pop();
+			cmdwin_push("no watch");
 		}
+                if (guard->isDead()) {
+                        log_msg("You prop up the corpse and wave off "
+                                "the flies...");
+                }
                 // else select_party_member() prints the name
 
 	} else {
