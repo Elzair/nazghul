@@ -474,11 +474,11 @@ int status_show_effect(hook_entry_t *entry, void *data)
 
         rect->x += ASCII_W;
 
-        if (-2 == entry->effect->duration) {
+        if (EFFECT_NONDETERMINISTIC == entry->effect->duration) {
                 screenPrint(rect, 0, " %s"
                             , entry->effect->name
                         );
-        } else if (-1 == entry->effect->duration) {
+        } else if (EFFECT_PERMANENT == entry->effect->duration) {
                 screenPrint(rect, 0, " %s (permanent)"
                             , entry->effect->name
                         );
@@ -488,6 +488,7 @@ int status_show_effect(hook_entry_t *entry, void *data)
                             , clock_alarm_remaining(&entry->expiration)
                         );
         }
+        rect->x -= ASCII_W; /* back up to start next effect at column 0 */
         rect->y += ASCII_H;
 
         return 0;

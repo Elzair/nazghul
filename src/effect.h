@@ -27,6 +27,10 @@
 
 BEGIN_DECL
 
+/* Negative expiration codes */
+#define EFFECT_PERMANENT          -1   /* never expires              */
+#define EFFECT_NONDETERMINISTIC   -2   /* can't tell when it expires */
+
 /* Runtime type-verification: */
 extern char *EFFECT_ID;
 #define is_effect(eff) ((eff) && ((eff)->ID == EFFECT_ID))
