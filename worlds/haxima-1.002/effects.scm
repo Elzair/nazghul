@@ -18,9 +18,19 @@
                   cum 
                   dur))
 
+;; apply-time-scaled damage account for damaging effects applied at wilderness
+;; scale or when camping or loitering. At higher time scales I think it's not
+;; so nice to kill characters in one turn by applying the full damage for the
+;; time scale. However, you have to apply *some* extra damage or its
+;; incongruent.
+(define (time-scaled-damage-factor)
+  (if (> (kern-ticks-per-turn) 1)
+      10
+      1))
+
 (define (poison-exec fgob obj)
   (if (obj-is-char? obj)
-      (kern-obj-apply-damage obj "poisoned" 1)))
+      (kern-obj-apply-damage obj "poisoned" (* 1 (time-scaled-damage-factor)))))
 
 ;; ------------------------------------------------------------------
 ;; Accumulating duration effects support
@@ -140,13 +150,17 @@
   (if (not (obj-is-char? kobj))
       (kern-obj-remove-effect kobj ef_disease)
       (let ((kchar kobj))
-        (if (> (kern-dice-roll "1d10")
-               (kern-char-get-hp kchar))
-            (begin
-              (kern-log-msg (kern-obj-get-name kchar)
-                            " fights off Disease")
-              (kern-obj-remove-effect kchar ef_disease))
-            (kern-obj-apply-damage kchar "disease" (kern-dice-roll "1d5"))))))
+        (let ((dmgroll (* (time-scaled-damage-factor) 
+                          (kern-dice-roll "1d5")))
+              (maxdmg (- (kern-char-get-hp kchar) 
+                         (kern-dice-roll "1d10"))))
+          (cond ((> dmgroll maxdmg)
+                 (kern-log-msg (kern-obj-get-name kchar) " fights off Disease")
+                 (kern-obj-apply-damage kchar "disease" maxdmg)
+                 (kern-obj-remove-effect kchar ef_disease)
+                 )
+                (else
+                 (kern-obj-apply-damage kchar "disease" dmgroll)))))))
 
 ;; ----------------------------------------------------------------------------
 ;; ensnare
@@ -518,7 +532,7 @@
 ;; ----------------------------------------------------------------------------
 
 ;; Start-of-turn hooks
-(mk-effect 'ef_poison                 "Poison"        s_poison      'poison-exec nil                 nil              nil                 "start-of-turn-hook" "P" 0   #f  120)
+(mk-effect 'ef_poison                 "Poison"        s_poison      'poison-exec nil                 nil              nil                 "start-of-turn-hook" "P" 0   #f  -1)
 (mk-effect 'ef_sleep                  "Sleep"         s_sleep       'sleep-exec  nil                 'sleep-rm        'sleep-reset        "start-of-turn-hook" "S" 0   #f  60)
 (mk-effect 'ef_light                  "Magical light" s_light       'light-exec  'light-apply        'light-rm        'light-apply        "start-of-turn-hook" "L" 0   #t  -2)
 (mk-effect 'ef_torchlight             "Torchlight"    s_torchlight  nil          'torchlight-apply   'torchlight-rm   'torchlight-apply   "start-of-turn-hook" "T" 0   #f  60)
@@ -648,6 +662,7 @@
       (begin
         (if (kern-obj-is-being? obj)
             (kern-log-msg (kern-obj-get-name obj) " burned!"))
+        ;; FIXME: multiply damage by kern-ticks-per-turn?
         (kern-obj-apply-damage obj "burning" (kern-dice-roll dice)))))
 
 (define (burn obj)
@@ -687,6 +702,7 @@
 (define (apply-lightning obj)
   (if (kern-obj-is-being? obj)
       (kern-log-msg (kern-obj-get-name obj) " shocked!"))
+  ;; FIXME: multiply damage by kern-ticks-per-turn?
   (kern-obj-apply-damage obj "shocked" (kern-dice-roll "2d8")))
 
 ;; Drop a random temporary field on the object's location
