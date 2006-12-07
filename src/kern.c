@@ -7079,6 +7079,11 @@ KERN_API_CALL(kern_get_ticks)
         return scm_mk_integer(sc, SDL_GetTicks());
 }
 
+KERN_API_CALL(kern_ticks_per_turn)
+{
+        return scm_mk_integer(sc, session_ticks_per_turn());
+}
+
 static int kern_obj_is_type(class Object *obj, struct kern_append_info *info)
 {
         return (obj->getObjectType() == (class ObjectType*)info->data);
@@ -8233,6 +8238,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-sound-play", kern_sound_play);
         API_DECL(sc, "kern-tag", kern_tag);
         API_DECL(sc, "kern-test-recursion", kern_test_recursion);
+        API_DECL(sc, "kern-ticks-per-turn", kern_ticks_per_turn);
         API_DECL(sc, "kern-set-turn-count", kern_set_turn_count);
         
         /* ui api */
