@@ -45,12 +45,12 @@
 	   (method 'on
                (lambda (kmirror kuser)
 					(mag-mirror-active! kmirror #t)
-					(send-signal kmirror kuser 'remote-sensor)
+					(send-signal kuser kmirror 'remote-sensor)
                  ))
 		(method 'off
                (lambda (kmirror kuser)
 					(mag-mirror-active! kmirror #f)
-					(send-signal kmirror kuser 'remote-sensor)
+					(send-signal kuser kmirror 'remote-sensor)
                  ))
        (method 'init
                (lambda (kmirror)
