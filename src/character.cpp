@@ -1052,7 +1052,9 @@ void Character::changeSleep(bool val)
 
 void Character::awaken(void)
 {
-        if (isAsleep() && ! isResting()) {
+        if (isAsleep() 
+            && ! isResting()
+            && ! isDead()) {
                 changeSleep(false);
                 log_msg("%s wakes up!", getName());
         }
