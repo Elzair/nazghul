@@ -135,8 +135,11 @@ static bool pc_check_if_not_immobilized(class Character * pm, void *data)
 
 static bool pc_eat_food(class Character * pm, void *data)
 {
-	if (player_party->food
-            && !pm->isDead()) {
+        if (pm->isDead()) {
+                return false;
+        }
+
+	if (player_party->food) {
 		player_party->food--;
 		return false;
 	}
@@ -1206,7 +1209,9 @@ void PlayerParty::beginCamping(class Character *guard, int hours)
         camping    = true;
         camp_guard = guard;        
 
-        if (NULL != camp_guard)
+        if (camp_guard
+            && ! camp_guard->isDead()
+            && ! camp_guard->isAsleep())
                 camp_guard->beginGuarding(hours);
 
         FOR_EACH_MEMBER(entry, member) {
