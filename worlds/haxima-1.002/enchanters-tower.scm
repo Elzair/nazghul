@@ -256,6 +256,7 @@
 	(put (mk-shelf) 17 18)
 
 	(put (mk-hidden 't_ylem_an_ex_book 1) 14 9)
+	(put (mk-hidden 't_bet_flam_hur_book 1) 11 10)
    
     ;; treasure in east store room
 	(put (kern-mk-obj t_doom_staff 1) 20 13)

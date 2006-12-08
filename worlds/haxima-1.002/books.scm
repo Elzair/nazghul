@@ -98,7 +98,7 @@
 ;;----------------------------------------------------------------------------
 ;; Spell books
 (mk-reusable-item 
- 't_ylem_an_ex_book "spell book" s_manual 1
+ 't_ylem_an_ex_book "spell book: YAE" s_manual 1
  (lambda (kletter kuser)
    (kern-ui-page-text
    "Web Spell- Ylem An Ex"
@@ -119,6 +119,23 @@
    "With the appropriate mixture, intone "
    "Ylem An Ex (Matter to Negate Freedom) and "
    "hurl the net of web at your foe."
+   )))
+
+(mk-reusable-item 
+ 't_bet_flam_hur_book "spell book: BFH" s_manual 1
+ (lambda (kletter kuser)
+   (kern-ui-page-text
+   "Fire Spray- Bet Flam Hur"
+   ""
+   "While the effectiveness of the Flame Wind spell is renowned, it is difficult to cast, exhausting, and well beyond the means of  all but the greatest mages."
+   ""
+   "The Fire Spray spell is an adaption of the Flame Wind spell to more modest requirements. While it cannot be cast by an absolute beginner, it requires minimal ability. The effectiveness of the spell increases, of course, with the caster's ability."
+   ""
+   "The Fire Spray spell has a limited range- not much greater than a polearm- and does not have sufficient power to leave the blazing fields associated with the Flame Wind spell."
+   ""
+   "The spell requires sulphurous ash to power the flame. The initial launch of the spell is provided by black pearl, and blood moss instills the motion of the spreading cone of fire."
+   ""
+   "With this mixture, intone Bet Flam Hur (Small Fire Wind) and direct the cone to engulf your foes."
    )))
 
 (mk-reusable-item
@@ -156,7 +173,7 @@
     "................ Reagents ................."
     "GI Ginger                    SS Spider Silk"
     "GA Garlic                    BP Black Pearl"
-    "SA Sulphorous Ash            BM Blood Moss "
+    "SA Sulphurous Ash            BM Blood Moss "
     "NI Nightshade                MA Mandrake   "
     "................. Spells .................."
     "-------------- First Circle ---------------"
