@@ -140,6 +140,7 @@
                    (list 3 t_mana_potion)
                    (list 3 t_heal_potion)
                    (list 1 t_lich_skull)
+                   (list 1 t_lichs_blood)
                    ))
             nil              ; readied
             )
