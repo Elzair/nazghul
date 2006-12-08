@@ -128,9 +128,9 @@
 		;;guards possessed or dead- captain + 11 troops
 		(put (mk-corpse2
 		   '(
-			(1 't_armor_chain)
-			(1 't_sword_2)
-			(1 't_scratched_shield)
+			(1 t_armor_chain)
+			(1 t_sword_2)
+			(1 t_scratched_shield)
 			)) 7 24)
 		
 		
@@ -143,9 +143,9 @@
 		(put (mk-npc 'corrupt-halberdier 7) 24 5)
 		(put (mk-corpse2
 		   '(
-			(2 't_heal_potion)
-			(1 't_crossbow)
-			(13 't_bolt)
+			(2 t_heal_potion)
+			(1 t_crossbow)
+			(13 t_bolt)
 			)) 13 6)
 		(put (mk-corpse-with-loot) 11 9)
 		(put (mk-corpse-with-loot) 17 13)
