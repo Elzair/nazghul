@@ -1385,6 +1385,9 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
         int tile_w;
         int tile_h;
         mapGetTileDimensions(&tile_w, &tile_h);
+		// Half tile offset- missiles fly from and to the middle of a tile
+		int tile_w_half = tile_w/2;
+		int tile_h_half = tile_h/2;
 
 	// Create a scratch surface for saving/restoring the background
         surf = Map.tile_scratch_surf;
@@ -1459,9 +1462,20 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
 
 	// Moving left?
 	int Xincr = (rect.x > sBx) ? -1 : 1;
+	// adjust for rounding errors
+	if (rect.x < sBx)
+	{
+		tile_w_half--;
+	}
 
 	// Moving down?
 	int Yincr = (rect.y > sBy) ? -1 : 1;
+	// adjust for rounding errors
+	if (rect.y < sBy)
+	{
+		tile_h_half--;
+	}
+	
 
 	// Walk the x-axis?
 	if (AdX >= AdY) {
@@ -1475,8 +1489,8 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
 
                         oPx = Px;
                         oPy = Py;
-			Px = place_wrap_x(place, ((rect.x - Sx) / tile_w + Ox));
-			Py = place_wrap_y(place, ((rect.y - Sy) / tile_h + Oy));
+			Px = place_wrap_x(place, ((tile_w_half + rect.x - Sx) / tile_w + Ox));
+			Py = place_wrap_y(place, ((tile_h_half + rect.y - Sy) / tile_h + Oy));
 
                         if (oPx != Px || oPy != Py) {
 
@@ -1510,8 +1524,8 @@ void mapAnimateProjectile(int Ax, int Ay, int *Bx, int *By,
 
                         oPx = Px;
                         oPy = Py;
-			Px = place_wrap_x(place, ((rect.x - Sx) / tile_w + Ox));
-			Py = place_wrap_y(place, ((rect.y - Sy) / tile_h + Oy));
+			Px = place_wrap_x(place, ((tile_w_half + rect.x - Sx)/ tile_w + Ox));
+			Py = place_wrap_y(place, ((tile_h_half + rect.y - Sy)/ tile_h + Oy));
 
                         if (oPx != Px || oPy != Py) {
 
