@@ -9,6 +9,14 @@
 		(set-car! (list-ref (gob mir) 3) val)
 	)
 
+(define (mag-mirror-have-target mir)
+		(let ((loc (list-ref (gob mir) (if (mag-mirror-active? mir) 1 2))))
+			(if (null? (portal-place loc))
+				#f
+				#t
+				))
+	)
+
 (define (mag-mirror-target-loc mir)
 		(portal-coords (list-ref (gob mir) (if (mag-mirror-active? mir) 1 2)))
 	)
@@ -45,12 +53,14 @@
 	   (method 'on
                (lambda (kmirror kuser)
 					(mag-mirror-active! kmirror #t)
-					(send-signal kuser kmirror 'remote-sensor)
+					(if (mag-mirror-have-target kmirror)
+						(send-signal kuser kmirror 'remote-sensor))
                  ))
 		(method 'off
                (lambda (kmirror kuser)
 					(mag-mirror-active! kmirror #f)
-					(send-signal kuser kmirror 'remote-sensor)
+					(if (mag-mirror-have-target kmirror)
+						(send-signal kuser kmirror 'remote-sensor))
                  ))
        (method 'init
                (lambda (kmirror)
