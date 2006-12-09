@@ -727,6 +727,15 @@
 (define accursed-defender   (mk-npct2 "an accursed defender"   sp_human oc_warrior s_knight  nil accursed-5-equip nil 'std-ai         faction-accursed nil 'drop-generic accursed-5-loot))
 (define accursed-templar    (mk-npct2 "an accursed templar"    sp_human oc_warrior s_avatar  nil accursed-6-equip nil 'std-ai         faction-accursed nil 'drop-generic wrogue-4-loot))
 
+;; npcs with odd alignments
+(define gint-warrior-m (mk-npct2 "gint warrior" sp_gint oc_warrior s_gint basic-traps gint-warrior-equip nil 'std-ai faction-monster nil 'drop-generic gint-loot))
+(define troll-m         (mk-npct2 "troll"         sp_troll    oc_warrior s_troll        no-traps troll-equip        nil 'std-ai   faction-monster nil 'drop-generic troll-loot))
+(define cave-goblin-slinger-m   (mk-npct2 "cave goblin slinger"   sp_cave_goblin  oc_warrior s_cgob_slinger    basic-traps  slinger-equip    nil 'generic-ai faction-monster  nil 'drop-generic slinger-loot))
+(define cave-goblin-berserker-m (mk-npct2 "cave goblin berserker" sp_cave_goblin  oc_warrior s_cgob_berserk    basic-traps  berserker-equip  nil 'generic-ai faction-monster  nil 'drop-generic berserker-loot))
+(define gint-mage-m (mk-npct2 "gint mage" sp_gint oc_wizard s_gint_mage wizard-traps wizard-equip nil 'shaman-ai faction-monster nil 'drop-generic wizard-loot))
+(define troll-geomancer-m (mk-npct2 "troll geomancer" sp_troll oc_wizard s_troll no-traps geomancer-equip nil 'std-ai faction-monster nil 'drop-generic geomancer-loot))
+
+
 ;;define                        (mk-npct "                          sp_              oc_        s_                 nil          nil                    nil           'std-ai           ))
 
 ;;----------------------------------------------------------------------------
