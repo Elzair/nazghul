@@ -130,6 +130,27 @@ int dirkey(struct KeyHandler *kh, int key, int keymod)
 	return 0;
 }
 
+int cardinaldirkey(struct KeyHandler *kh, int key, int keymod)
+{
+	int *dir = (int *) kh->data;
+
+	switch (key) {
+	case KEY_NORTH:
+	case KEY_SOUTH:
+	case KEY_EAST:
+	case KEY_WEST:
+		*dir = keyToDirection(key);
+		return 1;
+	}
+
+	if (key == SDLK_ESCAPE) {
+		*dir = key;
+		return 1;
+	}
+
+	return 0;
+}
+
 int yesnokey(struct KeyHandler * kh, int key, int keymod)
 {
 	int *yesno = (int *) kh->data;
@@ -1214,7 +1235,7 @@ void cmdAttack(void)
 	cmdwin_clear();
 	cmdwin_spush("Attack");
         cmdwin_spush("<direction>");
-	getkey(&dir, dirkey);
+	getkey(&dir, cardinaldirkey);
 	cmdwin_pop();
 	if (dir == CANCEL) {
 		cmdwin_spush("none!");

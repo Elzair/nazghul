@@ -46,6 +46,7 @@ struct ScrollerContext {
 #define PAGER_HINT  "\005\006=scroll ESC=exit"
 
 extern int dirkey(struct KeyHandler *kh, int key, int keymod);
+extern int cardinaldirkey(struct KeyHandler *kh, int key, int keymod);
 extern int yesnokey(struct KeyHandler *kh, int key, int keymod);
 extern int anykey(struct KeyHandler *kh, int key, int keymod);
 extern int scroller(struct KeyHandler *kh, int key, int keymod);
