@@ -112,12 +112,12 @@
             (pgroup-mk 'bomber "1d2")
             ))
 (define pirate-party-l3
-  (ptype-mk "pirate ship" s_brigand faction-outlaw 3 5
+  (ptype-mk "crew of pirates" s_brigand faction-outlaw 3 5
             (pgroup-mk 'highwayman "1d2")
             ))
 (ptype-set-vehicle-type-tag! pirate-party-l3 't_ship)
 (define pirate-party-l4
-  (ptype-mk "pirate ship" s_brigand faction-outlaw 3 5
+  (ptype-mk "crew of pirates" s_brigand faction-outlaw 3 5
             (pgroup-mk 'blackguard "1d2")
             ))
 (ptype-set-vehicle-type-tag! pirate-party-l4 't_ship)
@@ -193,7 +193,7 @@
             (pgroup-mk 'skeletal-spear-thrower "1d3")
             ))
 (define skeleton-pirates-l4 
-  (ptype-mk "cursed pirate ship" s_skeleton faction-monster 4 5
+  (ptype-mk "crew of cursed pirates" s_skeleton faction-monster 4 5
             (pgroup-mk 'skeletal-warrior "1d2")
             (pgroup-mk 'skeletal-spear-thrower "1d3")
             ))
