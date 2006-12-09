@@ -7,13 +7,13 @@
 		"rr rr rr rr !! rr rr rr ,, ,, ,, rr rr rr rr !! rr rr rr "
 		"rr rr rr rr !! rr rr {{ ,, .. ,, {{ {{ {{ rr !! rr rr rr "
 		"rr rr rr {{ !! {A {{ {C ,, ,, ,, {{ !3 !! !! !! {{ rr rr "
-		"rr {{ {{ {C !! !! !! !! ,, ,, ,, {{ !! bb {F !! {{ rr rr "
+		"rr {{ {{ {C !! !! !! !5 ,, ,, ,, {{ !! bb {F !! {{ rr rr "
 		"rr {{ !3 !! !! {& bb !! ,, ,, {4 {{ !! {# bb !! {{ rr rr "
 		"rr {{ !! bb !! {{ {% !! ,, ,, ,, {{ !e {{ {% !! {{ rr rr "
 		"rr {{ !e {& !! {{ {{ !e .. ,, ,, {A {{ {{ {{ !! {{ {{ ~r "
 		"rr {{ {{ {{ !! {{ {{ pp ,, ,, ,, pp {{ {{ {C !! {A {{ rr "
 		"rr rr {{ {C !! {A {C ,, ,, ,, ,, ,, {{ !3 !! !! !5 {{ rr "
-		"rr rr {{ !3 !! !! !! ,, ,, ,, ,, ,, {{ !! bb bb !! {{ rr "
+		"rr rr {{ !3 !! !! !5 ,, ,, ,, ,, ,, {{ !! bb bb !! {{ rr "
 		"rr rr {{ !! bb bb !! ,, ,, ,, ,, ,, {{ !! bb {& !e {{ rr "
 		"rr rr {{ !! {& bb !! pp {8 ,, ,, bb {{ !! {# {{ {{ {{ rr "
 		"rr {{ {{ !! {{ {% !! {# {{ {{ {{ {{ {{ !! {{ {{ {{ {{ rr "
@@ -26,8 +26,8 @@
 	)
   (put (mk-ladder-up 'p_gate_to_absalot 9 1) 9 9)
   (put (mk-trap-door 'p_absalot_passage 1 38) 18 6)
- (put (spawn-pt 'troll) 4 12)
- (put (spawn-pt 'troll) 13 4)
+ (put (spawn-pt 'troll-m) 4 12)
+ (put (spawn-pt 'troll-m) 13 4)
  (put (spawn-pt 'headless) 9 4)
  (put (spawn-pt 'headless) 5 4)
  (put (spawn-pt 'gazer) 3 17)
@@ -49,9 +49,9 @@
 		"xx ,, ,, ,, ,, ,, w+ !! ,, ,, bb !! w+ ,, ,, ,, ,, ,, xx "
 		"xx ,, ,, ,, ,, ,, w+ !! ,, ,, ,, !! w+ ,, ,, ,, ,, ,, xx "
 		"xx xx ,, ,, ,, xx rr !! !! ,, ,, !! xx xx ,, ,, ,, xx xx "
-		"!! xx bb w+ w+ xx !! !! ,, ,, ,, !! !! xx w+ w+ w+ xx !! "
-		"!! !! ,, !! !! !! !! !! ,, ,, !! !! !! !! !! !! !! !! !! "
-		"!! !! ,, !! !! !! !c {& ,, ,, {4 {% !a !! !! !! !! !! !! "
+		"!_ xx bb w+ w+ xx !! !! ,, ,, ,, !! !! xx w+ w+ w+ xx !_ "
+		"!_ !! !! !! !! !! !! !! ,, ,, !! !! !! !! !! !! !! !! !_ "
+		"!_ !! !! !! !! !! !c {& ,, ,, {4 {% !a !! !! !! !! !! !_ "
 		"rr {{ {% !a !! !c {# {{ ,, ,, ,, {{ {% !a !! !c {# {{ rr "
 		"rr {{ {{ {{ {{ {{ {{ {{ {2 ,, ,, {{ {{ {{ {{ {{ {{ rr rr "
 		"rr rr rr rr rr rr rr rr ,, ,, ,, rr rr rr rr rr rr rr rr "
