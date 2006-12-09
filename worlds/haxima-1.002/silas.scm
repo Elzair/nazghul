@@ -264,6 +264,7 @@
        (method 'ench silas-ench)
        (method 'gate silas-demo)
        (method 'noss silas-noss)
+       (method 'ques silas-wand)
        ))
 
 (define (mk-silas)

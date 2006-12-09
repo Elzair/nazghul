@@ -236,3 +236,34 @@
     "Vas Rel Por      Gate Travel    SA, MA, BP "
     )))
    
+;;----------------------------------------------------------------------------
+;; Anaxes letters
+(mk-reusable-item
+ 't_anaxes_letter "Letter to Anaxes" s_scroll 0
+ (lambda (kletter kuser)
+   (kern-ui-page-text
+    "Letter"
+    ""
+    "Anaxes,                                      "
+    "                                             "
+    "My dearest love. The Twelve have cast you out" 
+    "(Luximene has them thoroughly cowed). He hath"
+    "issued an edict that the old religion is     "
+    "illegal, and all who show piety to any god   "
+    "but he are Accursed.                         "
+    "                                             "
+    "As I write, the legions of Glasdrin and      "
+    "Tulemane march on Brundegardt. I go to       "
+    "destroy them before they reach you. Seal the "
+    "entrance lest my sacrifice be in vain.       "
+    "                                             "
+    "Know, my love, that I never betrayed you. May"
+    "our spirits meet in the void, and Vale exact "
+    "his price from our enemies.                  "
+    "                                             "
+    "Love,                                        "
+    "  Isin                                       "
+    "                                             "
+    "P.S. The Titans are safe. I have seen that   "
+    "those who knew of them were slain.           "
+    )))

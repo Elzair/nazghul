@@ -2,7 +2,7 @@
 ;; Constants
 ;;----------------------------------------------------------------------------
 (define anaxes-lvl 6)
-(define anaxes-species sp_ghast)
+(define anaxes-species sp_lich)
 (define anaxes-occ oc_wizard)
 
 ;;----------------------------------------------------------------------------
@@ -48,7 +48,15 @@
   (prompt-for-key)
   (say knpc "So long as I draw breath, the Shrine of Brune will not be defiled!")
   (aside kpc 'ch_nate "Ah! The name of the god at last! I feared it was forgotten forever!")
-  )
+  (cond ((has? kpc t_lich_skull 1)
+         (say knpc "Wait! What have you there? [He points to Luximene's skull] What doth this mean? Is Luximene then dead?")
+         (yes? kpc)
+         (say knpc "[He ignores you. The light in his eyes begins to fade and his voice grows weak] It is over...")
+         (prompt-for-key kpc)
+         (say knpc "[He collapses in a heap] ...Isin! ...Isin...")
+         (aside kpc 'ch_nate "Dibs on his boots.")
+         (kern-conv-end)
+         (kern-char-kill knpc))))
 
 (define (anaxes-gods knpc kpc)
   (say knpc "The gods will take a terrible vengeance on the Shard for its "
@@ -146,33 +154,55 @@
        ))
 
 (define (mk-anaxes)
-  (bind 
-   (kern-mk-char 
-    'ch_lux           ; tag
-    "Anaxes"             ; name
-    anaxes-species         ; species
-    anaxes-occ              ; occ
-    s_lich     ; sprite
-    faction-men      ; starting alignment
-    0 0 0            ; str/int/dex
-    0 0              ; hp mod/mult
-    0 0              ; mp mod/mult
-    max-health ; hp
-    -1                   ; xp
-    max-health ; mp
-    anaxes-lvl
-    #f               ; dead
-    'anaxes-conv         ; conv
-    nil           ; sched
-    'lich-ai         ; special ai
-    nil              ; container
-    ;; readied
-    (list
-     t_armor_chain_4
-     t_chain_coif_4
-     t_morning_star_2
-     t_shield_4
-     )
-    )
-   (anaxes-mk)
-   ))
+  (let ((kchar
+         (bind 
+          (kern-char-force-drop
+           (kern-mk-char 
+            'ch_lux          ; tag
+            "Anaxes"         ; name
+            anaxes-species   ; species
+            anaxes-occ       ; occ
+            s_lich           ; sprite
+            faction-men      ; starting alignment
+            0 0 0            ; str/int/dex
+            0 0              ; hp mod/mult
+            0 0              ; mp mod/mult
+            max-health       ; hp
+            -1               ; xp
+            max-health       ; mp
+            anaxes-lvl       ; level
+            #f               ; dead
+            'anaxes-conv     ; conv
+            nil              ; sched
+            'lich-ai         ; special ai
+            (mk-inventory
+             ;; hack: as the kernel is currently written, he won't drop his
+             ;; readied arms on death, and he won't ready arms from inventory
+             ;; (its all messed up), but he will drop his inventory. So put
+             ;; some decent arms in as loot.
+             (list (list 1 t_armor_chain)
+                   (list 1 t_chain_coif)
+                   (list 1 t_morning_star)
+                   (list 1 t_shield)
+                   (list 3 mandrake)
+                   (list 3 nightshade)
+                   (list 8 sulphorous_ash)
+                   (list 5 blood_moss)
+                   (list 5 black_pearl)
+                   (list 50 t_gold_coins)
+                   (list 1 t_anaxes_letter)
+                   ))
+            ;; readied
+            (list
+             t_armor_chain_4
+             t_chain_coif_4
+             t_morning_star_2
+             t_shield_4
+             )
+            ) ; kern-mk-char
+           #t) ; kern-char-force-drop
+          (anaxes-mk)) ; bind
+         ))
+    (map (lambda (eff) (kern-obj-add-effect kchar eff nil))
+         undead-effects)
+    kchar))
