@@ -697,12 +697,23 @@ void Party::describe()
         }
 }
 
+static bool member_examine(class Character *member, void *data)
+{
+        log_begin("");
+        member->examine();
+        log_end("");
+        return false;
+}
+
 void Party::examine()
 {
 	describe();
-	
+        log_end(":");
+	forEachMember(member_examine, this);
+        log_begin("");
 	//todo: more details?
 }
+
 
 static bool get_member_movement_sound(class Character * member, void *data)
 {
