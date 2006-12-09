@@ -112,12 +112,12 @@
             (pgroup-mk 'bomber "1d2")
             ))
 (define pirate-party-l3
-  (ptype-mk "pirates" s_brigand faction-outlaw 3 5
+  (ptype-mk "pirate ship" s_brigand faction-outlaw 3 5
             (pgroup-mk 'highwayman "1d2")
             ))
 (ptype-set-vehicle-type-tag! pirate-party-l3 't_ship)
 (define pirate-party-l4
-  (ptype-mk "pirates" s_brigand faction-outlaw 3 5
+  (ptype-mk "pirate ship" s_brigand faction-outlaw 3 5
             (pgroup-mk 'blackguard "1d2")
             ))
 (ptype-set-vehicle-type-tag! pirate-party-l4 't_ship)
@@ -126,7 +126,7 @@
             (pgroup-mk 'troll "1")
             ))
 (define troll-party-l4
-  (ptype-mk "troll with goblin slaves" s_troll faction-troll 4 5
+  (ptype-mk "band of trolls with goblin slaves" s_troll faction-troll 4 5
             (pgroup-mk 'troll "1")
             (pgroup-mk 'forest-goblin-stalker "1d3-1")
             ))
@@ -193,7 +193,7 @@
             (pgroup-mk 'skeletal-spear-thrower "1d3")
             ))
 (define skeleton-pirates-l4 
-  (ptype-mk "cursed pirates" s_skeleton faction-monster 4 5
+  (ptype-mk "cursed pirate ship" s_skeleton faction-monster 4 5
             (pgroup-mk 'skeletal-warrior "1d2")
             (pgroup-mk 'skeletal-spear-thrower "1d3")
             ))
@@ -302,13 +302,13 @@
             (pgroup-mk 'queen-spider "1")
             ))
 (define headless-party-l1
-  (ptype-mk "a headless horror" s_headless faction-monster 1 4
+  (ptype-mk "headless horror" s_headless faction-monster 1 4
             (pgroup-mk 'headless "1")))
 (define headless-party-l3
-  (ptype-mk "a mob of headless horrors" s_headless faction-monster 3 4
+  (ptype-mk "mob of headless horrors" s_headless faction-monster 3 4
             (pgroup-mk 'headless "1d2")))
 (define headless-party-l5
-  (ptype-mk "a warlock with headless horrors" s_wizard faction-monster 5 4
+  (ptype-mk "warlock with headless horrors" s_wizard faction-monster 5 4
             (pgroup-mk 'headless "1d2")
             (pgroup-mk 'warlock "1")
             ))
@@ -331,26 +331,26 @@
             (pgroup-mk 'accursed-templar "1d2")
             ))
 (define militia-party-l4
-  (ptype-mk "deserters" s_guard faction-outlaw  4 4
+  (ptype-mk "squad of deserters" s_guard faction-outlaw  4 4
             (pgroup-mk 'halberdier "1d2")
             (pgroup-mk 'crossbowman "1d2-1")
             ))
 
 (define snake-party-l1
-  (ptype-mk "snakes" s_snake faction-monster 1 5
+  (ptype-mk "rave of snakes" s_snake faction-monster 1 5
             (pgroup-mk 'snake "1d2")
             ))
 (define bat-party-l1
-  (ptype-mk "bats" s_bat faction-monster 1 1
+  (ptype-mk "cloud of bats" s_bat faction-monster 1 1
             (pgroup-mk 'bat "1d2")
             ))
 
 (define rat-party-l1
-  (ptype-mk "rats" s_rat faction-monster 5 5
+  (ptype-mk "pack of rats" s_rat faction-monster 5 5
             (pgroup-mk 'rat "1d2")
             ))
 
 (define griffin-party-l3
-  (ptype-mk "flock of griffin" s_griffin faction-monster 3 5
+  (ptype-mk "pride of griffins" s_griffin faction-monster 3 5
             (pgroup-mk 'griffin "1d2")
             ))
