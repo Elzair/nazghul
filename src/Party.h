@@ -51,6 +51,7 @@ class Party:public Being {
         virtual void burn();
         virtual void damage(int amount);
         virtual void describe();
+        virtual void examine();
 	virtual void destroy();        
 	virtual void disembark();
         virtual void distributeMembers();

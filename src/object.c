@@ -606,16 +606,15 @@ void Object::examine()
 {
 	if (getObjectType())
 	{
-		getObjectType()->describe(this);
+		describe();
 	}
-	
 	//todo: dont have examiner to pass in to ifc
-	if (getObjectType()->canXamine())
+	if (getObjectType() && getObjectType()->canXamine())
 	{
 		log_end(":");
 		getObjectType()->xamine(this, this);
 		log_begin("");
-	}
+	} 
 }
 
 sound_t *Object::get_movement_sound()

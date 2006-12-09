@@ -697,6 +697,13 @@ void Party::describe()
         }
 }
 
+void Party::examine()
+{
+	describe();
+	
+	//todo: more details?
+}
+
 static bool get_member_movement_sound(class Character * member, void *data)
 {
         sound_t **sound = (sound_t **)data;

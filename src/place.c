@@ -1530,14 +1530,12 @@ static void place_examine_objects(struct place *place, int x, int y)
 	tile = place_lookup_tile(place, x, y);
 	if (!tile)
 		return;
- 
 
 	if (tile->subplace) {
-                log_continue("The entrance to %s;\n", tile->subplace->name);
+                log_continue("\nthe entrance to %s", tile->subplace->name);
 	}
-
+	
 	node_for_each(&tile->objstack, l) {
-
 		obj = (Object *)l->ptr;
 
 		if (obj->getLayer() == cursor_layer)
@@ -1552,10 +1550,8 @@ static void place_examine_objects(struct place *place, int x, int y)
 				continue;
          
 		log_end("");
-		log_begin("");	   
+		log_begin("");	 
 		obj->examine();   
-		
-
         }
 
         if (tile->vehicle && (tile->vehicle->isVisible() || Reveal || 
