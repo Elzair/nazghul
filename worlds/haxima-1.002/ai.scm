@@ -376,6 +376,7 @@
 (define (wisp-ai kchar)
   (display "wisp-ai ")(dump-char kchar)
   (or (animal-ai kchar)
+	  (use-torch? kchar)
       (and (wants-healing? kchar)
            (in-melee-range-of-foes? kchar)
            (blink-away-from-foes kchar))
