@@ -168,7 +168,7 @@
 ;;(kern-mk-sprite 's_demon          ss_u4_shapes 4 240 #f 0 )
 (kern-mk-sprite 's_hydra          ss_u4_shapes 4 244 #f 0 )
 (kern-mk-sprite 's_dragon         ss_u4_shapes 4 248 #f 0 )
-(kern-mk-sprite 's_balron         ss_u4_shapes 4 252 #f 0 )
+;;(kern-mk-sprite 's_balron         ss_u4_shapes 4 252 #f 0 )
 
 (kern-mk-sprite 's_frame_ulc   ss_frame 1  0 #f 0 )
 (kern-mk-sprite 's_frame_td    ss_frame 1  1 #f 0 )
@@ -410,6 +410,7 @@
 
 (kern-mk-sprite 's_gint ss_bigobjects 4 0 #f 0 )
 (kern-mk-sprite 's_gint_mage ss_bigobjects 4 4 #f 0 )
+(kern-mk-sprite 's_balron   ss_bigobjects 4 8 #f 0 )
 
 ;;----------------------------------------------------------------------------
 ;;;; (kern-mk-sprite 's_wanderer ss_addon 2 94 #f 0)
