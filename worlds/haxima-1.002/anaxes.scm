@@ -191,6 +191,7 @@
                    (list 5 black_pearl)
                    (list 50 t_gold_coins)
                    (list 1 t_anaxes_letter)
+                   (list 1 t_lichs_blood)
                    ))
             ;; readied
             (list
