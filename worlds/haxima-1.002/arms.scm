@@ -204,7 +204,7 @@
    (list 't_sling_4    "+4 sling"   s_sling      "3"      "1d4+4"  "0"      slot-weapon   1      6     t_slingstone #t      0        10       60       30       0.9  )
    (list 't_bow        "bow"        s_bow        "1d3-2"  "2d4"    "-2"     slot-weapon   2      6     t_arrow      #f      2        10       70       20       0.9  )
    (list 't_crossbow   "crossbow"   s_crossbow   "1d4-2"  "4d4"    "-1"     slot-weapon   2      4     t_bolt       #f      3        0        80       0        0.95 )
-   (list 't_doom_staff "doom staff" s_doom_staff "1d4"    "1"      "+2"     slot-weapon   2      6     t_fireball   #t      2        0        50       0        1.0  )
+   (list 't_doom_staff "doom staff" s_doom_staff "1d4"    "1"      "+2"     slot-weapon   2      5     t_fireball   #t      2        0        50       0        1.0  )
    (list 't_acid_spray "acid spray" nil          "-7"     "1d6"    "+0"     slot-nil      2      2     t_slimeglob  #t      0        10       50       20       1.0  )
    (list 't_fire_glob  "fire glob"  nil          "-8"     "1d6"    "+0"     slot-nil      2      2     t_fireball   #t      0        10       50       20       1.0  )
    (list 't_stun_wand  "stun wand"  s_stun_wand  "-2"     "1d4"    "-1"     slot-weapon   1      6     t_stunball   #t      2        0        80       0        1.0  )
