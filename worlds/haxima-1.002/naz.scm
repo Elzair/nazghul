@@ -1159,6 +1159,13 @@
   (harm-relations kb1 kb2)
   )
 
+(define (make-allies kb1 kb2)
+  (improve-relations kb1 kb2)
+  (improve-relations kb1 kb2)
+  (improve-relations kb1 kb2)
+  (improve-relations kb1 kb2)
+  )
+
 (define (is-bad-terrain-at? loc)
   (is-bad-terrain? (kern-place-get-terrain loc)))
 
