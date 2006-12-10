@@ -79,6 +79,11 @@
 (define (dennis-old knpc kpc)
   (say knpc "I can't help but feel awed when I walk among these ruins. But they are a bit creepy. The ancients had some strange beliefs!"))
 
+(define (dennis-sele knpc kpc)
+  (say knpc "[He blushes] If you know what's good for you, you will stay away from her!")
+  (kern-conv-end)
+  )
+
 (define dennis-conv
   (ifc basic-conv
 
@@ -90,6 +95,7 @@
        (method 'name dennis-name)
        (method 'join dennis-join)
        
+       (method 'sele dennis-sele)
        (method 'stud dennis-stud)
        (method 'teac dennis-stud)
        (method 'accu dennis-accu)
