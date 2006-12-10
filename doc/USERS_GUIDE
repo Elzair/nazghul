@@ -173,13 +173,29 @@ Foogod Window
     It sounds sacreligious, but that's just my acronym for Food/Gold
     Window. This little window appears below the status window and shows the
     turn, food and gold counters as well as the current combat status and any
-    pending Effects. The effects will be printed in cryptic little codes like
-    "N" for magic negated. If you board a vehicle it will also show you the hit
-    points for the vehicle. Here are some of the codes and what they mean:
+    active global effects (e.g., "Magic Negated"). If you board a vehicle it
+    will also show you the hit points for the vehicle.  The effects are shown
+    with cryptic little icons that appear until the effect expires.
 
-    N...Magic negated (spellcasting fails)
-    Q...Quicken (player party members get extra turns per round)
-    T...Time Stopped
+    Magic Negated
+
+        Spellcasting fails.
+
+    Quicken
+
+        Party members get extra turns per round.
+
+    Reveal
+
+        Invisible things are visible.
+
+    Time Stop
+
+        Everything in the world suspends while Party members get to move.
+
+    Xray Vision
+
+        Party members can see through walls.
 
 Console Window
 
