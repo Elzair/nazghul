@@ -1,3 +1,2250 @@
+2006-12-09  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/Party.cpp: On detailed x)amine a party describes its members
+
+	* worlds/haxima-1.002/parties.scm:
+	More corrections to plural party names
+
+	* worlds/haxima-1.002/parties.scm: Fixed some plural party names
+
+	* worlds/haxima-1.002/anaxes.scm:
+	Forgot to add Lich's blood to Anaxes's drops
+
+	* worlds/haxima-1.002/anaxes.scm, worlds/haxima-1.002/books.scm, worlds/haxima-1.002/silas.scm:
+	Fixed loot and lich effects for Anaxes
+
+2006-12-09  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/library/artwork/humanoids/balron.xcf, worlds/haxima-1.002/bigobjects.png, worlds/haxima-1.002/sprites.scm:
+	bigger balron icon
+
+	* src/Party.h, src/place.c, src/Party.cpp, src/object.c:
+	fix for examine crashing on parties
+	linebreaks in examine
+
+	* worlds/haxima-1.002/road_to_absalot.scm: tweaks to absalot:
+	alignment fixes
+	lava edging
+	removed too easy way through fort
+
+	* worlds/haxima-1.002/ai.scm: wisps use light
+
+	* worlds/haxima-1.002/endless-deeps-mech.scm, worlds/haxima-1.002/npc-types.scm:
+	moved alternate alignment critters to npc-types
+
+	* worlds/haxima-1.002/ancient-derelict.scm: loot on anchient derelict
+
+	* src/cmd.h, src/cmd.c:
+	added cardinal direction keyhandler for attack command
+
+2006-12-08  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/books.scm, worlds/haxima-1.002/enchanters-tower.scm:
+	added bet flam hur spellbook
+
+	* worlds/haxima-1.002/luximene.scm: added lichs blood to luxs inventory
+
+	* worlds/haxima-1.002/endless-deeps.scm: corpse loot fixed
+
+	* src/map.c:
+	missile fire should now have less wierdness with obstructions
+
+	* worlds/haxima-1.002/enchanters-tower-mech.scm:
+	fix for mirror based crash
+
+2006-12-07  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/effect.h, src/status.c:
+	Converted some magic numbers to named constants; fixed a ztats bug which caused multiple effects to be listed offset from column 0
+
+	* src/cmd.c:
+	Print a snarky message if the player selects a dead character to guard the camp
+
+	* src/kern.c: Added (kern-ticks-per-turn)
+
+	* worlds/haxima-1.002/effects.scm:
+	Poison now permanent, so it doesn't wear off with 2 hours of camping. Poison and disease both apply more damage per turn in the wilderness than at town scale.
+
+	* worlds/haxima-1.002/lost-halls.scm, worlds/haxima-1.002/treasury.scm:
+	Bugfix: bad chest list
+
+2006-12-07  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/enchanters-tower-mech.scm:
+	enchanters' oddly reflecting mirrors activate in timely fashion
+
+2006-12-07  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/character.cpp:
+	Bugfix: dead characters could give a 'wakes up' message when camping
+
+	* src/player.cpp: Bugfix: dead party members starving
+
+2006-12-06  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/cmd.c:
+	Bugfix: when mixing, the number mixed flashes without a - separator; annoying
+
+	* src/player.cpp, src/session.c:
+	Bugfix: assert when quitting while aboard a vehicle
+
+2006-12-04  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/enchanters-tower-mech.scm:
+	Protect against evaluating tags on startup before they are declared
+
+	* worlds/haxima-1.002/effects.scm: Fixed typo in generic-burn
+
+	* worlds/haxima-1.002/chanticleer.scm:
+	Fixed the hint about where to find the Lost Halls
+
+	* worlds/haxima-1.002/spells.scm:
+	Tweak to format, moved Kal Xen Nox down with the other L8 spells
+
+	* worlds/haxima-1.002/effects.scm:
+	Removed superfluous console message for paralysis
+
+	* src/ctrl.c: Adjusted console printout for attack verbage
+
+2006-12-03  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/effects.scm:
+	Tweaks to console messages for burn and lightning effects
+
+	* worlds/haxima-1.002/conv.scm: Grammar fix
+
+	* worlds/haxima-1.002/alchemist.scm:
+	Raised price of invisibility potion back up again
+
+	* worlds/haxima-1.002/game.scm:
+	Raising scroll prices back up a bit more
+
+	* src/Container.cpp, src/Container.h, src/character.cpp, worlds/haxima-1.002/brundegardt.scm, worlds/haxima-1.002/effects.scm, worlds/haxima-1.002/jones.scm, worlds/haxima-1.002/occs.scm, worlds/haxima-1.002/portals.scm, worlds/haxima-1.002/powers.scm, worlds/haxima-1.002/traps_1.scm, worlds/haxima-1.002/traps_2.scm, worlds/haxima-1.002/traps_3.scm, worlds/haxima-1.002/traps_4.scm, worlds/haxima-1.002/zones.scm:
+	Haxima changes:
+	o Increased time that Thief's Door in Bole is open
+	o Added (floor ...) to a few more spots in powers.scm
+
+	Kernel changes:
+	o When an NPC unreadies arms they are put back into personal inventory (fixes
+	  acid on NPC's)
+	o Bugfix: NPC's with their "force drop" flag set would drop their inventories,
+	  which are now abstract containers and don't function well as physical
+	  objects. They now drop their contents directly instead.
+
+2006-12-03  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/640x480_splash.png, worlds/haxima-1.002/splash.png:
+	Updated splash screens (now use a more up to date version of the logo, doesnt scale screenshot part of smaller splash)
+
+2006-12-03  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/arms.png, worlds/haxima-1.002/arms.scm, worlds/haxima-1.002/earl.scm, worlds/haxima-1.002/effects.scm, worlds/haxima-1.002/species.scm:
+	Haxima changes:
+	o Raised back up the price of precision instruments.
+	o Added prismatic_gaze as a natural weapon for gazers.
+
+2006-12-02  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/old-absalot.scm, worlds/haxima-1.002/prison.scm, worlds/haxima-1.002/trigrave.scm, worlds/haxima-1.002/tutorial_town.scm, worlds/haxima-1.002/engineers-hut.scm, worlds/haxima-1.002/gamestart.scm, worlds/haxima-1.002/goblin-kingdoms.scm, worlds/haxima-1.002/necromancers-lair.scm:
+	Haxima changes:
+	o Shroom opens shop earlier
+	o Price deflation on potions, scrolls and misc items.
+	o Added an in-game spell book for reference
+	o Converted some more chests from (list (list ...) ...) to '(( ...) ...)
+	  format.
+	o Tweaked Zane's schedule zones
+
+	Kernel changes:
+	o Time accelerated faster now while sleeping in town or k)amping
+
+	* src/player.cpp, worlds/haxima-1.002/alchemist.scm, worlds/haxima-1.002/books.scm, worlds/haxima-1.002/earl.scm, worlds/haxima-1.002/game.scm, worlds/haxima-1.002/shroom.scm, worlds/haxima-1.002/tooth.scm, worlds/haxima-1.002/zane.scm:
+	Haxima changes:
+	o Shroom opens shop earlier
+	o Price deflation on potions, scrolls and misc items.
+	o Added an in-game spell book for reference
+
+	Kernel changes:
+	o Time accelerated faster now while sleeping in town or k)amping
+
+	* worlds/haxima-1.002/640x480_splash.png, worlds/haxima-1.002/kern-init.scm:
+	Added the small splash image file
+
+	* src/nazghul.c, worlds/haxima-1.002/kern-init.scm: Haxima changes:
+	o Updated kern-init.scm to reflect kernel changes.
+
+	Kernel changes:
+	o Support a different splash screen for each supported screen dimension.
+
+	* src/menus.c: Tweaked credits
+
+	* worlds/haxima-1.002/deric.scm, worlds/haxima-1.002/edward.scm:
+	Haxima changes:
+	o Tweaks to Edward to handle cases where the Wanderer is dead or not the party
+	  leader.
+	o If player took Nate straight to jail Deric would not re-assign ranger.
+
+	* src/nazghul.c: Splash screen width computed wrong
+
+2006-12-01  kaypy  <kaypy@localhost.localdomain>
+
+	* doc/users_guide.html: tweaked html manual
+
+	* worlds/haxima-1.002/ai.scm, worlds/haxima-1.002/npc-types.scm:
+	removed light from several non tool using or dark appreciating critters
+
+	* worlds/haxima-1.002/cast-ui.scm: fix for resurect spell in town
+
+2006-12-01  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/ancient-derelict.scm, worlds/haxima-1.002/angriss.scm, worlds/haxima-1.002/bill.scm, worlds/haxima-1.002/containers.scm, worlds/haxima-1.002/edward.scm, worlds/haxima-1.002/enchanter.scm, worlds/haxima-1.002/enchanters-tower.scm, worlds/haxima-1.002/endless-deeps.scm, worlds/haxima-1.002/engineer.scm, worlds/haxima-1.002/gate-guard.scm, worlds/haxima-1.002/gholet.scm, worlds/haxima-1.002/green-tower.scm, worlds/haxima-1.002/jorn.scm, worlds/haxima-1.002/kathryn.scm, worlds/haxima-1.002/lost-halls.scm, worlds/haxima-1.002/meaney.scm, worlds/haxima-1.002/merciful-death.scm, worlds/haxima-1.002/mouse.scm, worlds/haxima-1.002/nate.scm, worlds/haxima-1.002/naz.scm, worlds/haxima-1.002/poor-house.scm, worlds/haxima-1.002/trigrave.scm, worlds/haxima-1.002/zane.scm:
+	Haxima changes:
+	o Fixed the broken chests that used mk-content and add-content. At least, I
+	  fixed the one or two I've tested thus far.
+
+	* worlds/haxima-1.002/brundegardt.scm: Haxima changes:
+	o Removed door left stranded after my last map tweaks to Brundegardt.
+
+	* worlds/haxima-1.002/conv.scm, worlds/haxima-1.002/edward.scm, worlds/haxima-1.002/naz.scm, src/character.cpp:
+	Haxima changes:
+	o Edward won't take Nate out of the party if he's the only living member.
+	o If the only living party member talks to his/her/itself, and asks
+	  his/her/itself to leave, it will give itself some excuse not to.
+
+	Kernel changes:
+	o Bugfix: if the current party leader was removed while in follow mode, the new
+	  leader was not re-evaluated, and the kernel continued to try and use the
+	  ex-member as the leader, causing a crash.
+	o When a party member leaves he/she/it unreadies all weapons instead of
+	  removing them from party inventory.
+
+	* worlds/haxima-1.002/brundegardt.scm:
+	Weather vane was falling into the chasm...
+
+2006-11-30  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/brundegardt.scm:
+	Tweaked the brundegardt fortress map again
+
+	* worlds/haxima-1.002/brundegardt.scm, worlds/haxima-1.002/camping-map.scm, worlds/haxima-1.002/containers.scm, worlds/haxima-1.002/terrain-to-ptype.scm:
+	Haxima changes:
+	o Removed some debug spew.
+	o Tweaked brundegardt fortress map
+
+	* worlds/haxima-1.002/gregor.scm: Tweaked Gregor's conv
+
+	* worlds/haxima-1.002/thorald.scm, worlds/haxima-1.002/tutorial.scm, src/Missile.cpp, src/ctrl.c, src/ctrl.h, src/foogod.c, src/kern.c, src/player.cpp, src/player.h, src/session.c, src/session.h, src/vehicle.cpp:
+	Haxima changes:
+	o Bugfix: tutorial crashed on load because of my changes last night to the
+	  kernel. NPC party creation using (mk-npc-party ...) must be held off until
+	  after (kern-mk-player ...).
+	o Thorald in the tutorial responds to 'mixi' as well as 'mix' with instruction
+	  on mixing spells.
+
+	Kernel changes:
+	o Bugfix: vehicle save code was incorrect; resulted in a null object.
+	o Bugfix: last night's kernel changes broke reload. Fixed this by moving the
+	  global player_party variable into a field of the global session struct (down
+	  to one global variable now, yee-haa!). Added a player_party macro which
+	  references this field for backwards-compatibility.
+
+2006-11-29  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/character.cpp, src/foogod.c, src/nazghul.c, src/object.c, src/place.c, src/play.c, src/player.cpp, src/player.h, src/session.c, src/status.c, src/vmask.c:
+	Risky kernel change that should fix the LOS bug for real. It also partially
+	cleans up a big memory leak I've been ignoring since I added the main menu
+	loop. The gist of it is I know destroy the current session before falling back
+	to the main loop. This fixes the LOS bug by removing all the player-controlled
+	beings, and hence their map views. The LOS bug was caused by a leftover map
+	view from the previous session remaining active. I expect to find a few more
+	(maybe a lot more) bugs after this change that are related to improper
+	cleanup. Stand bye for asserts and seg faults. If it's too bad I'll back this
+	out and workaround the LOS bug with an evil hack instead.
+
+	* worlds/haxima-1.002/Makefile.am:
+	Forgot to add a file to the distro list
+
+	* worlds/haxima-1.002/wind-bridge.scm:
+	Wind bridge now delays two turns before rotating
+
+	* worlds/haxima-1.002/brundegardt.scm, worlds/haxima-1.002/game.scm, worlds/haxima-1.002/landslide.scm, worlds/haxima-1.002/naz.scm, worlds/haxima-1.002/npc-types.scm:
+	Added landslide to slope of Griffin Peak
+
+	* worlds/haxima-1.002/monster-generator.scm, worlds/haxima-1.002/parties.scm, worlds/haxima-1.002/terrain-to-ptype.scm:
+	Added griffin parties to wilderness encounters
+
+2006-11-28  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/effects.scm, worlds/haxima-1.002/npc-types.scm:
+	Haxima changes:
+	o Organized the effects a bit.
+	o When a sludge kraken dies it takes all its tentacles with it.
+
+	* worlds/haxima-1.002/splash.png: Changed splash screen
+
+	* worlds/haxima-1.002/door.scm, worlds/haxima-1.002/traps.scm:
+	Haxima changes:
+	o S)earching doors now has some chance of detecting or tripping traps.
+	o Tweaked the difficulty stats on detecting/fumbling traps
+
+2006-11-27  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/object.c, src/object.h, src/place.c, src/player.cpp, worlds/haxima-1.002/containers.scm, worlds/haxima-1.002/hidden.scm, worlds/haxima-1.002/ifc.scm, worlds/haxima-1.002/rune.png, worlds/haxima-1.002/traps.scm, src/character.cpp, src/cmd.c, src/cmd.h, src/ctrl.c, src/kern.c:
+	S)earch now detects traps on chests, with a chance of setting them off. Doors
+	do NOT support this yet.
+
+	Haxima changes:
+	o Containers implement the search ifc and roll to detect or trigger traps
+	o Traps triggered by a s)earch are removed
+	o Containers implement the describe ifc and list their detected traps
+
+	Kernel changes:
+	o Reworked code for describing objects to support a hook for custom
+	  descriptions
+	o Added kern-log-begin/continue/end
+
+2006-11-26  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/effects.scm, worlds/haxima-1.002/npc-types.scm, worlds/haxima-1.002/terrains.scm, worlds/haxima-1.002/wind-bridge.scm:
+	Haxima changes:
+	o Chasms are now *very* unsafe for non-flying, non-abstract objects
+
+	* src/ctrl.c: Kernel changes:
+	o Auto-targeting now respects LOS.
+
+	* worlds/haxima-1.002/npc-types.scm:
+	Rangers now use the ranger occupation
+
+2006-11-26  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/bandit-hideout.scm: bandit stockade blended
+
+	* worlds/haxima-1.002/combat-maps.scm: combat maps blended
+
+	* worlds/haxima-1.002/brundegardt.scm:
+	blended new areas. Added some minor encounters to empty areas
+
+	* worlds/haxima-1.002/potions.scm:
+	removed total stats message on stat potions
+
+	* worlds/haxima-1.002/brundegardt.scm:
+	2 chests failing due to contents typos
+
+	* worlds/haxima-1.002/mans-hideout.scm:
+	I think this fixes the man's chests
+
+	* worlds/haxima-1.002/food.scm: typo: s/wind/wine
+
+2006-11-26  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/Makefile.am, worlds/haxima-1.002/gregor.scm, worlds/haxima-1.002/pitfalls.scm:
+	Haxima changes:
+	o Some files missing from Makefile.am
+	o Fixed typo in Gregor's conv
+	o Only pitfalls (eg caltrops) planted by player will affect NPC's
+
+2006-11-26  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/green-tower.scm, worlds/haxima-1.002/mans-hideout.scm, worlds/haxima-1.002/potions.scm, worlds/haxima-1.002/thiefs_den.scm, worlds/haxima-1.002/alchemist.scm, worlds/haxima-1.002/enchanters-tower.scm:
+	standardising on unabbreviated t_invisibility_potion. Mixing t_invisibility_potion and t_inv_potion was causing reusable chests
+
+2006-11-26  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/bandit-hideout.scm: Removing some caltrops
+
+	* worlds/haxima-1.002/ability.scm, worlds/haxima-1.002/addons.png, worlds/haxima-1.002/ai.scm, worlds/haxima-1.002/brundegardt.scm, worlds/haxima-1.002/game.scm, worlds/haxima-1.002/npc-types.scm, worlds/haxima-1.002/palette.scm, worlds/haxima-1.002/species.scm, worlds/haxima-1.002/sprites.scm, worlds/haxima-1.002/terrains.scm:
+	Improvements to one of the brundegardt dungeon rooms:
+	o Sludge kraken tentacles chomp deck into sludge shallows
+	o Added sludge shallows (passable to most things)
+	o Sludge krakens summon a few more tentacles
+
+2006-11-25  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/nazghul.c:
+	Flushing the vmask cache before starting a game to fix LOS bugs
+
+	* src/menus.c: Changed localtime_r to localtime for Mingw portability
+
+	* src/cmd.c:
+	When camping underground resting until sunrise is no longer an option
+
+	* worlds/haxima-1.002/powers.scm, worlds/haxima-1.002/tools.scm:
+	Sextant and In Wis both report location as [x=<x> y=<y>]
+
+	* worlds/haxima-1.002/kathryn.scm:
+	Permanent fix for Kathryn's response to 'scroll'
+
+	* src/nazghul.c, src/play.c:
+	Closing the window now exits the program instead of dropping back to the main menu
+
+	* src/cmd.c, src/conv.c, src/conv.h, src/kern.c:
+	Minor feature enhancement: player and npc names highlighted in conversation
+
+	* worlds/haxima-1.002/treasury.scm, worlds/haxima-1.002/containers.scm, worlds/haxima-1.002/monster-generator.scm:
+	Bugfix: mk-treasure-chest needed to use a quoted list
+
+2006-11-25  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/enchanters-tower.scm:
+	fixed script error after reload: mk-hidden must use 'object not object
+
+	* src/map.c:
+	Removed clock from map (these days its possible to get the time in-game)
+
+	* worlds/haxima-1.002/necromancer.scm, worlds/haxima-1.002/silas.scm:
+	Some other sprites I'd missed earlier
+
+	* worlds/haxima-1.002/kalcifax.scm:
+	Revert kalcifax to regular wizard sprite due to that bug with the mirrors and composite sprites
+
+	* worlds/haxima-1.002/gamestart.scm:
+	Reverting to diagonal pillars in startup room
+
+2006-11-25  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/Makefile.am, worlds/haxima-1.002/ai.scm, worlds/haxima-1.002/arms.scm, worlds/haxima-1.002/brundegardt.scm, worlds/haxima-1.002/conv.scm, worlds/haxima-1.002/deric.scm, worlds/haxima-1.002/edward.scm, worlds/haxima-1.002/gamestart.scm, worlds/haxima-1.002/map.png, worlds/haxima-1.002/moongate-clearing.scm, worlds/haxima-1.002/nate.scm:
+	Misc tweaks and fixes
+
+2006-11-24  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/character.cpp, src/character.h, src/ctrl.c:
+	Seems like every year I have to fix this bug again: Bill and Sue have both
+	readied flaming oil. There are two in party inventory. Bill throws, leaving
+	only one, but ostensibly he and Sue both still have the weapon readied. This is
+	a crash waiting to happen. This time I fixed it by forcing Bill to unready, but
+	allowing Sue to remain readied.
+
+	* worlds/haxima-1.002/anaxes.scm, worlds/haxima-1.002/brundegardt.scm, worlds/haxima-1.002/nate.scm, worlds/haxima-1.002/start-new-game.scm:
+	Tweaks to brundegardt
+
+	* src/character.cpp:
+	Fixed another annoying must-be-in-follow-mode message when player is alone
+
+	* src/menus.c:
+	Disabling the L)oad Game menu option. J)ourney Onward now works like L)oad
+	Game, with the most recently saved game always highlighted at the top by
+	default for quick access. If there is only one saved game then it just launches
+	it without showing the menu.
+
+	* src/cmd.c: Bugfix: opening doors was not decrementing action points
+
+	* worlds/haxima-1.002/arms.scm: Buffed slings a bit
+
+	* src/astar.c, src/ctrl.c: Disabling diagonal movement
+
+	* src/kern.c:
+	Bugfix: kern-obj-get-name would (sometimes?) crash if the object had a null name
+
+	* worlds/haxima-1.002/Makefile.am, worlds/haxima-1.002/ai.scm, worlds/haxima-1.002/brundegardt.scm, worlds/haxima-1.002/npc-types.scm, worlds/haxima-1.002/start-new-game.scm, worlds/haxima-1.002/tim.scm, worlds/haxima-1.002/troll.scm:
+	Haxima changes:
+	o Trolls now hostile to generic monsters but less hostile to forest goblins.
+	o Finished adding NPC's to Griffin peaks and Brundegardt tower.
+
+	* worlds/haxima-1.002/ai.scm, worlds/haxima-1.002/brundegardt.scm, worlds/haxima-1.002/game.scm, worlds/haxima-1.002/naz.scm, worlds/haxima-1.002/npc-types.scm, worlds/haxima-1.002/species.scm, worlds/haxima-1.002/sprites.scm:
+	Started adding Griffins to the peak
+
+	* src/kern.c, src/map.c, worlds/haxima-1.002/Makefile.am, worlds/haxima-1.002/addons.png, worlds/haxima-1.002/brundegardt.scm, worlds/haxima-1.002/eye-of-brune.scm, worlds/haxima-1.002/sprites.scm:
+	kernel:
+	o Added kern-image-load
+	o Added kern-image-free
+	o Moved kern-map-set-image
+
+	haxima:
+	o Added Eye of Brune to Brundegardt tower
+
+2006-11-23  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/Makefile.am, worlds/haxima-1.002/brundegardt.scm, worlds/haxima-1.002/door.scm, worlds/haxima-1.002/items.scm, worlds/haxima-1.002/keys.scm:
+	Added doors-with-unique-keys
+
+	* src/kern.c, worlds/haxima-1.002/brundegardt.scm, worlds/haxima-1.002/naz.scm, worlds/haxima-1.002/palette.scm, worlds/haxima-1.002/tools.scm:
+	kernel:
+	o Added kern-get-wind
+	o Added kern-place-add-on-entry-hook
+	o Moved facing support from Vehicle subclass up to base Object class
+
+	haxima:
+	o Added a weather vane
+	o Added a wind bridge
+
+2006-11-23  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/npc-types.scm, worlds/haxima-1.002/sprites.scm:
+	some sprite tweaks
+
+	* worlds/haxima-1.002/kathryn.scm: quick fix for bug 1601241:
+	kathryn automatically goes to "dont have one". Otherwise it pulls the scroll from *your* inventory
+
+	* worlds/haxima-1.002/douglas.scm, worlds/haxima-1.002/alchemist.scm, worlds/haxima-1.002/books.scm, worlds/haxima-1.002/luximene.scm, worlds/haxima-1.002/oscar.scm, worlds/haxima-1.002/thorald.scm, worlds/haxima-1.002/warritrix.scm:
+	typo fixes for bug 1591311
+
+	* worlds/haxima-1.002/bole.scm: bole grove reblended
+
+	* worlds/haxima-1.002/bole.scm: lake at bole reblended
+
+2006-11-23  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/brundegardt.scm, worlds/haxima-1.002/species.scm, worlds/haxima-1.002/start-new-game.scm:
+	Haxima changes:
+	o Filled out Brundegardt tower levels 1, 2 and 3.
+
+2006-11-22  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/library/artwork/monsters/egg.xcf: egg sprite
+
+	* worlds/haxima-1.002/monsters.png: quick n dirty griffon cub
+
+	* worlds/library/artwork/monsters/griffoncub.xcf:
+	old griffon sprite on bigger template to scale down by 0.66
+
+	* scripts/palette.txt: tweaks to maptoxpm palette
+
+2006-11-22  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/Makefile.am, worlds/haxima-1.002/weather-vane.scm, worlds/haxima-1.002/wind-bridge.scm:
+	Adding files
+
+	* worlds/haxima-1.002/ability.scm, worlds/haxima-1.002/addons.png, worlds/haxima-1.002/ai.scm, worlds/haxima-1.002/brundegardt.scm, worlds/haxima-1.002/monsters.png, worlds/haxima-1.002/npc-types.scm, worlds/haxima-1.002/sprites.scm, worlds/haxima-1.002/start-new-game.scm:
+	Sprites for ratling NPC's
+
+	* worlds/library/artwork/monsters/kraken.xcf, worlds/haxima-1.002/brundegardt.scm, worlds/haxima-1.002/game.scm, worlds/haxima-1.002/naz.scm, worlds/haxima-1.002/portcullis.scm, worlds/haxima-1.002/sprites.scm, worlds/haxima-1.002/addons.png, src/sprite.c, src/sprite.h, src/vehicle.cpp, src/vehicle.h, src/object.c, src/object.h, src/kern.c:
+	kernel:
+	o Added kern-get-wind
+	o Added kern-place-add-on-entry-hook
+	o Moved facing support from Vehicle subclass up to base Object class
+
+	haxima:
+	o Added a weather vane
+	o Added a wind bridge
+
+2006-11-20  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/ai.scm, worlds/haxima-1.002/brundegardt.scm, worlds/haxima-1.002/npc-types.scm, worlds/haxima-1.002/species.scm, worlds/haxima-1.002/sprites.scm, worlds/haxima-1.002/ability.scm, worlds/haxima-1.002/addons.png:
+	Added Great Kraken
+
+2006-11-18  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/library/artwork/monsters/kraken.xcf: Added new kraken image
+
+	* worlds/haxima-1.002/ai.scm, worlds/haxima-1.002/brundegardt.scm, worlds/haxima-1.002/monster-generator.scm, worlds/haxima-1.002/naz.scm, worlds/haxima-1.002/npc-types.scm:
+	Haxima changes:
+	o New npc: carabids (stone-munching beetles)
+	o Added objects to a few more brundegardt rooms
+
+2006-11-17  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/ability.scm, worlds/haxima-1.002/ai.scm, worlds/haxima-1.002/naz.scm, worlds/haxima-1.002/npc-types.scm, worlds/haxima-1.002/species.scm, worlds/haxima-1.002/start-new-game.scm:
+	Haxima changes:
+	o Ratlings fear snakes
+	o Snakes eat rats and ratlings
+
+2006-11-16  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/ability.scm, worlds/haxima-1.002/ai.scm, worlds/haxima-1.002/brundegardt.scm, worlds/haxima-1.002/npc-types.scm, worlds/haxima-1.002/species.scm:
+	Haxima changes:
+	o Added ratling npc types (currently borrowing the forest goblin sprites)
+	o Added objects to Ratling Warren
+
+	* worlds/haxima-1.002/Makefile.am, worlds/haxima-1.002/brundegardt.scm, worlds/haxima-1.002/game.scm, worlds/haxima-1.002/mimic.scm, worlds/haxima-1.002/npc-types.scm, worlds/haxima-1.002/species.scm:
+	Haxima changes:
+	o Added mimic npc type
+	o Added objects to Brundegardt Keep
+
+2006-11-15  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/brundegardt.scm: Tweaks to dungeon rooms
+
+	* worlds/haxima-1.002/brundegardt.scm:
+	Added a bunch of rooms to Brundegardt
+
+2006-11-15  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/monsters.png, worlds/library/artwork/monsters/griffon.xcf:
+	griffon sprite
+
+2006-11-14  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/species.c, src/species.h, worlds/haxima-1.002/species.scm, src/character.cpp, src/kern.c:
+	kernel:
+	o Added an armor dice bonus to the species struct, for scaly and chitinous
+	  critters.
+
+	haxima:
+	o Updated to match kernel change.
+
+	* worlds/haxima-1.002/species.scm, worlds/haxima-1.002/sprite-sets.scm, worlds/haxima-1.002/sprites.scm, worlds/haxima-1.002/anaxes.scm, worlds/haxima-1.002/arms.scm, worlds/haxima-1.002/brundegardt.scm, worlds/haxima-1.002/nate.scm:
+	Haxima changes:
+	o Started on another room for Brundegardt
+	o Started adding the Carabid NPC type
+	o Tweaked some conversations related to the Brundegardt quest
+
+2006-11-13  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/library/artwork/monsters/beetle.xcf: minor update
+
+	* worlds/haxima-1.002/monsters.png, worlds/library/artwork/monsters/beetle.xcf:
+	an attempt at a beetle
+
+	* worlds/haxima-1.002/humanoids.png, worlds/library/artwork/humanoids/ratling.xcf:
+	draft ratling
+
+2006-11-13  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/Makefile.am, worlds/haxima-1.002/anaxes.scm, worlds/haxima-1.002/brundegardt.scm, worlds/haxima-1.002/conv.scm:
+	Haxima changes:
+	o Added a procedure for interjecting party member comments in a conversation
+	o Added Anaxes
+	o Made the Cave Shrine map
+
+	* worlds/haxima-1.002/brundegardt.scm: Expanding Brundegardt
+
+2006-11-12  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/brundegardt.scm, worlds/haxima-1.002/portals.scm, worlds/haxima-1.002/traps_1.scm:
+	Haxima changes:
+	o Made riddles slightly more general
+	o First pass at Entrance to Brundegart
+
+2006-11-11  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/moongate-clearing.scm, worlds/haxima-1.002/start-new-game.scm:
+	Haxima changes:
+	o Doubled starting reagents
+	o Restored start-of-game to release state
+
+2006-11-11  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/hirespeople.png, worlds/library/artwork/hirespeople/generic.xcf, worlds/library/artwork/hirespeople/old_ranger.xcf, worlds/library/artwork/hirespeople/ranger_captain.xcf:
+	Minor consistency tweaks
+
+2006-11-10  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/conv.scm, worlds/haxima-1.002/edward.scm:
+	Expanded Edward's conversation
+
+	* src/object.c:
+	Fixed a recently-introduced bug in Object::setOnMap() that caused an assert in
+	combat_exit().
+
+	* worlds/library/artwork/hirespeople/generic.xcf, worlds/haxima-1.002/edward.scm, worlds/haxima-1.002/gregor.scm, worlds/haxima-1.002/hirespeople.png, worlds/haxima-1.002/sprites.scm:
+	artwork:
+	o Added some layers to the generic sprite
+
+	haxima:
+	o Added an old townsman sprite, changed Gregor and Edward to use it
+
+	* src/scheme.c: Hubert Maier's patch for Amiga OS
+
+2006-11-09  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/enchanter.scm, worlds/haxima-1.002/gen.scm, worlds/haxima-1.002/hirespeople.png, worlds/haxima-1.002/sprites.scm, worlds/library/artwork/hirespeople/old_ranger.xcf:
+	Added an old ranger sprite. Gen uses it now.
+
+	* worlds/library/artwork/hirespeople/ranger_captain.xcf, worlds/haxima-1.002/deric.scm, worlds/haxima-1.002/hirespeople.png, worlds/haxima-1.002/nate.scm, worlds/haxima-1.002/sprites.scm, worlds/haxima-1.002/start-new-game.scm:
+	Added a sprite for Ranger Captain. Deric now uses it.
+
+2006-11-06  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/green-tower.scm, worlds/haxima-1.002/gregor.scm, worlds/haxima-1.002/moongate-clearing.scm, worlds/haxima-1.002/nate.scm, worlds/haxima-1.002/npc-types.scm, worlds/haxima-1.002/shard.scm, worlds/haxima-1.002/shroom.scm, worlds/haxima-1.002/step.scm, worlds/haxima-1.002/traps.scm, worlds/haxima-1.002/zones.scm, worlds/haxima-1.002/abigail.scm, worlds/haxima-1.002/bandit-hideout.scm, worlds/haxima-1.002/books.scm, worlds/haxima-1.002/brundegardt.scm, worlds/haxima-1.002/containers.scm, worlds/haxima-1.002/conv.scm, worlds/haxima-1.002/deric.scm, worlds/haxima-1.002/door.scm, worlds/haxima-1.002/doris.scm, worlds/haxima-1.002/edward.scm, worlds/haxima-1.002/gen.scm, worlds/haxima-1.002/green-tower-lower.scm, src/character.h, src/object.c:
+	The Bandit quest (new quest for L1 players) is now pretty much done.
+
+2006-11-04  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/conv.scm, worlds/haxima-1.002/deric.scm, worlds/haxima-1.002/green-tower.scm, worlds/haxima-1.002/nate.scm, worlds/haxima-1.002/naz.scm, worlds/haxima-1.002/bandit-hideout.scm, worlds/haxima-1.002/books.scm:
+	Haxima changes:
+	o Deric gives player the bandit quest
+	o Added some generic ranger guards to Green Tower
+	o Player can recruit a generic ranger for the bandit quest
+	o Added Nate, the bandit leader
+
+2006-11-03  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/character.cpp, src/cursor.cpp, src/kern.c, src/object.c, src/object.h:
+	Fixed Object::relocate() to distinguish between avoiding step triggers, sense
+	triggers, and both.
+
+2006-11-02  kaypy  <kaypy@localhost.localdomain>
+
+	* src/object.c:
+	sense/step mechanisms need to be double checked after hooks are called since they may be destroyed in the process
+
+	* worlds/library/artwork/humanoids/demon.xcf: v2 demon
+
+2006-11-02  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/Container.cpp, src/cmd.c, src/object.c, src/object.h, src/place.c, src/place.h, worlds/haxima-1.002/effects.scm, worlds/haxima-1.002/game.scm, worlds/haxima-1.002/moongate-clearing.scm, worlds/haxima-1.002/pitfalls.png, worlds/haxima-1.002/pitfalls.scm, worlds/haxima-1.002/slimy-cavern.scm, worlds/haxima-1.002/traps.scm:
+	Kernel changes:
+	o Fixed inventory saving/loading (recently broken)
+	o Fixed a bug that applied effects multiple time on startup (broken for a while
+	  but I didn't know it)
+
+	Haxima changes:
+	o Fixed saving from new game (recently broken)
+	o Fixed saving traps (recently broken)
+	o Fixed invisibility on pitfalls
+	o Pitfalls (caltrops and beartraps) can now be picked up and re-used
+
+	* worlds/haxima-1.002/pitfalls.png:
+	Slightly better sprites for the caltrops and beartrap
+
+2006-11-01  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/library/artwork/humanoids/demon.xcf: Demon icon: first attempt
+
+2006-11-01  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/Makefile.am:
+	Adding pitfalls.scm/png to the install list
+
+2006-10-31  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/humanoids.png, worlds/library/artwork/humanoids/headless.xcf:
+	headless icon
+
+2006-10-31  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/containers.scm, worlds/haxima-1.002/game.scm, worlds/haxima-1.002/occs.scm, worlds/haxima-1.002/traps.scm, worlds/haxima-1.002/bandit-hideout.scm, worlds/haxima-1.002/pitfalls.png, worlds/haxima-1.002/pitfalls.scm:
+	Added caltrops and a beartrap
+
+	* src/tile.c, src/tile.h: Removing unused files
+
+2006-10-30  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/humanoids.png: troll geomancer icon
+
+	* worlds/library/artwork/humanoids/trollmage.xcf, worlds/haxima-1.002/humanoids.png, worlds/library/artwork/humanoids/trollfighter.xcf:
+	troll icon
+
+2006-10-30  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/cast-ui.scm, worlds/haxima-1.002/containers.scm, worlds/haxima-1.002/door.scm, worlds/haxima-1.002/powers.scm, worlds/haxima-1.002/traps.scm:
+	Haxima changes:
+	o Wis Sanct now lists the type of trap(s) attached to a chest or mechanism.
+	o An Sancy Ylem lists the type of trap(s) being disarmed.
+	o After a trap is detected with Wis Sanct, the chance of disarming it is
+	  greatly improved.
+
+2006-10-29  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/containers.scm, worlds/haxima-1.002/door.scm, worlds/haxima-1.002/traps.scm:
+	Traps now implemented via a script object, instead of just a closure, so they can keep some state
+
+	* src/Container.cpp, src/Container.h, src/cmd.c, src/kern.c, worlds/haxima-1.002/cast-ui.scm, worlds/haxima-1.002/containers.scm, worlds/haxima-1.002/npc-types.scm, worlds/haxima-1.002/powers.scm, worlds/haxima-1.002/start-new-game.scm, worlds/haxima-1.002/tutorial.scm:
+	THIS WILL BREAK ALL SAVED GAMES!
+
+	Kernel changes:
+	o Stripped trap support from the Container class. Containers should only be
+	  used for abstract inventory "objects" now.
+	o Removed kern-obj-is-trapped? and kern-obj-rm-trap. These are done in the
+	  script now.
+	o Changed kern-mk-container to kern-mk-inventory and removed the type and trap
+	  parms.
+
+	Haxima changes:
+	o Modified code as necessary to deal with the above.
+
+2006-10-29  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/Makefile.am, worlds/haxima-1.002/bart.scm, worlds/haxima-1.002/endless-deeps-mech.scm, worlds/haxima-1.002/jake.scm, worlds/haxima-1.002/npc-types.scm, worlds/haxima-1.002/parties.scm, worlds/haxima-1.002/roland.scm, worlds/haxima-1.002/sprite-sets.scm, worlds/haxima-1.002/sprites.scm:
+	sprite updates
+
+2006-10-29  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/containers.scm, worlds/haxima-1.002/enchanter.scm, worlds/haxima-1.002/engineer.scm, worlds/haxima-1.002/gate-guard.scm, worlds/haxima-1.002/gholet.scm, worlds/haxima-1.002/jorn.scm, worlds/haxima-1.002/kathryn.scm, worlds/haxima-1.002/luximene.scm, worlds/haxima-1.002/meaney.scm, worlds/haxima-1.002/mouse.scm, worlds/haxima-1.002/npc-types.scm, worlds/haxima-1.002/slywan.scm, worlds/haxima-1.002/start-new-game.scm, worlds/haxima-1.002/zane.scm, worlds/haxima-1.002/angriss.scm, worlds/haxima-1.002/bandit-hideout.scm, worlds/haxima-1.002/bill.scm:
+	Haxima changes:
+	o Changed everything to use the new-style containers. Character inventories
+	  should be the only things that use the kernel Container class now.
+
+2006-10-29  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/bigobjects.png, worlds/haxima-1.002/humanoids.png:
+	giants updated
+
+	* worlds/library/artwork/humanoids/giantmage.xcf: giant mage
+
+	* worlds/library/artwork/humanoids/giant.xcf: hairier giant
+
+2006-10-29  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/Makefile.am, worlds/haxima-1.002/effects.scm, worlds/haxima-1.002/game.scm, worlds/haxima-1.002/gamestart.scm, worlds/haxima-1.002/moongate-clearing.scm, worlds/haxima-1.002/player.scm, worlds/haxima-1.002/slimy-cavern.scm, worlds/haxima-1.002/start-new-game.scm, worlds/haxima-1.002/traps.scm:
+	Haxima changes:
+	o Moved trap routines to their own file in traps.scm
+	o Removed the obsolete player.scm file
+	o Modified the character creation place: now that diagonal movement works the
+	  player could miss the name prompt
+	o Changed all the places that refer directly to kern-mk-container to use one of
+	  the wrapper functions in container.scm
+
+2006-10-28  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/menus.c, src/menus.h, src/nazghul.c:
+	The function which displays the error message when the kernel can't find the
+	config files no longer uses sleep(); instead it lets the user close the window
+	normally.
+
+2006-10-27  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/bigobjects.png: area for 40x40 icons
+
+	* worlds/library/artwork/humanoids/giant.xcf:
+	meaner, hairier giant. Think it still needs more hair tho
+
+	* worlds/haxima-1.002/humanoids.png, worlds/library/artwork/humanoids/cgoblinfighter.xcf, worlds/library/artwork/humanoids/cgoblinmage.xcf, worlds/library/artwork/humanoids/cgoblinslinger.xcf, worlds/library/artwork/humanoids/fgoblinarcher.xcf, worlds/library/artwork/humanoids/fgoblinfighter.xcf, worlds/library/artwork/humanoids/fgoblinmage.xcf:
+	lots of goblins
+
+	* worlds/library/artwork/humanoids/cgoblinciv.xcf: cave goblin paler
+
+2006-10-27  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/cast-ui.scm, worlds/haxima-1.002/containers.scm, worlds/haxima-1.002/door.scm, worlds/haxima-1.002/powers.scm:
+	Traps on doors now removable via An Sanct Ylem.
+
+	* worlds/haxima-1.002/cast-ui.scm, worlds/haxima-1.002/containers.scm, worlds/haxima-1.002/door.scm, worlds/haxima-1.002/ifc.scm, worlds/haxima-1.002/powers.scm:
+	Traps on doors now detectable via Wis Sanct.
+
+2006-10-25  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/containers.scm, worlds/haxima-1.002/door.scm, worlds/haxima-1.002/ifc.scm, worlds/haxima-1.002/start-new-game.scm, worlds/haxima-1.002/bandit-hideout.scm:
+	Traps can now be added to chests or doors.
+
+	* worlds/haxima-1.002/containers.scm, worlds/haxima-1.002/start-new-game.scm:
+	;;----------------------------------------------------------------------------
+	;; Containers - objects that contain stuff
+	;;----------------------------------------------------------------------------
+	;;----------------------------------------------------------------------------
+	;; Local Procedures
+	;;----------------------------------------------------------------------------
+	(define (add-content quantity type)
+	  (list quantity type))
+
+	(define (mk-contents . contents)
+	  (filter notnull? contents))
+
+	(define (roll-100 prob)
+	  (>= prob (modulo (random-next) 100)))
+
+	(define (roll-q dice type)
+	  (add-content (kern-dice-roll dice) type))
+
+	(define (roll-to-add prob dice type)
+	  (if (roll-100 prob)
+	      (roll-q dice type)
+	      nil))
+
+	;;----------------------------------------------------------------------------
+	;; Container Types
+	;;----------------------------------------------------------------------------
+	(mk-obj-type 't_chest
+	             "chest"  s_chest
+	             layer-container nil)
+
+	;;----------------------------------------------------------------------------
+	;; Container Constructors
+	;;----------------------------------------------------------------------------
+	(define (mk-chest trap contents)
+	  ;;(println "mk-chest: " trap contents)
+	  (kern-mk-container t_chest trap contents))
+
+	;; mk-treasure-chest -- returns a chest with 1-10 random object types
+	(define (mk-treasure-chest)
+	  (kern-mk-container t_chest
+	                     nil
+	                     (mk-treasure-list (+ 1
+	                                          (modulo (random-next)
+	                                                  9)))))
+
+
+	;;----------------------------------------------------------------------------
+	;; Corpse -- not really a container, if you search it then it sort of acts like
+	;; opening a container
+	;;----------------------------------------------------------------------------
+	(define (corpse-mk loot)
+	  (list loot))
+	(define (corpse-loot corpse) (car corpse))
+	(define (corpse-set-loot! corpse val) (set-car! corpse val))
+	(define (corpse-loot-entry-q loot) (car loot))
+	(define (corpse-loot-entry-type loot) (eval (cadr loot)))
+
+	(define (corpse-search kobj)
+	  (let* ((corpse (kobj-gob-data kobj))
+	         (loot (corpse-loot corpse)))
+	    (if (not (null? loot))
+	        (let ((loc (kern-obj-get-location kobj)))
+	          (map (lambda (entry)
+	                 (kern-obj-put-at (kern-mk-obj (corpse-loot-entry-type entry)
+	                                               (corpse-loot-entry-q entry))
+	                                  loc))
+	               loot)
+	          (corpse-set-loot! corpse nil)))))
+
+	(define corpse-ifc
+	  (ifc nil
+	       (method 'search corpse-search)))
+
+	(mk-obj-type 't_corpse "corpse" s_corpse layer-item corpse-ifc)
+
+	(define (mk-corpse)
+	  (bind (kern-mk-obj t_corpse 1)
+	        (corpse-mk nil)))
+
+	;; mk-corpse2 -- loot: a list of (quantity type) lists
+	(define (mk-corpse2 loot)
+	  (bind (kern-mk-obj t_corpse 1)
+	        (corpse-mk loot)))
+
+	(define (mk-corpse-with-loot)
+	  (mk-corpse2 (mk-quoted-treasure-list (+ 1(modulo (random-next)
+	                                                   3)))))
+
+	;;----------------------------------------------------------------------------
+	;; This next section is an experimental new container type. It attempts to
+	;; bypass the kernel's built-in Container class and implement everything in the
+	;; script as a normal kernel Object that responds to the 'open signal the same
+	;; way a kernel Container would respond to the open command.
+	;;
+	;; This currently works. The next step is to implement the ability to add (and
+	;; remove or disable) traps on a container. The means of doing so will be
+	;; implemented here in the script, so the kernel won't need to know about
+	;; trapped containers when this all works, and the kernel's Container class can
+	;; be stripped back to a basic Inventory class.
+
+	;; Define the gob structure and procedures. The contents should be a single
+	;; quoted list, for example:
+	;;
+	;;   '((t_sword 1)
+	;;     (t_arrow 5)
+	;;     (t_torch 2)))
+	;;
+	;; Using the quotes is not only cleaner in the declarations, it automatically
+	;; ensures that the contents are safe to save and reload as part of the gob
+	;; because they are stored in the gob merely as symbols.
+	;;
+	;; Each container has a (often empty) list of traps, where each trap is the
+	;; symbol for a procedure of the form (foo <kchar> <kcontainer>). The symbol is
+	;; used instead of the actual procedure so that the list of traps can be saved
+	;; and re-loaded.
+	;;
+	(define (mk-container contents) (list 'container contents nil))
+	(define (is-container? gob) (eq? (car gob) 'container))
+	(define (container-contents gob) (car (cdr gob)))
+	(define (container-traps gob) (car (cdr (cdr gob))))
+	(define (container-set-traps! gob traps) (set-car! (cdr (cdr gob)) traps))
+	(define (content-type content) (car content))
+	(define (content-quantity content) (cadr content))
+	(define (container-add-trap! gob trap)
+	  (container-set-traps! gob
+	                        (cons trap
+	                              (container-traps gob))))
+
+	;; This is the heart of the implementation. This procedure runs when the
+	;; container object gets the 'open signal, which is sent by the kernel in
+	;; response to the player's o)pen command followed by selection of this
+	;; object. It expects kobj to be a kernel object which is bound to a container
+	;; gob following the above format (the constructors further down illustrate how
+	;; to create such an object).
+	;;
+	;; Opening the container creates objects based on the types and quantities
+	;; listed in the container's content list and deposits these objects on the
+	;; ground where the container is. Then it removes the container, which likely
+	;; results in its destruction.
+	;;
+	;; Before opening this applies all the traps attached to the container. Note
+	;; that the self-destruct trap, as currently implemented, does not work as
+	;; expected, because it relies on the removal of the container from the map as
+	;; a means of destroying it; and that is not sufficient here.
+	(define (kcontainer-open kobj kchar)
+	  (let ((container (kobj-gob-data kobj))
+	        (loc (kern-obj-get-location kobj))
+	        (thief-dice (string-append "1d" (number->string (occ-ability-thief kchar))))
+	        )
+	    (println container)
+
+	    ;; Applying traps can destroy both kobj and kchar
+	    (kern-obj-inc-ref kobj)
+	    (kern-obj-inc-ref kchar)
+
+	    ;; Apply traps
+	    (map (lambda (trap)
+	           (let ((roll (kern-dice-roll "1d20"))
+	                 (bonus (kern-dice-roll thief-dice)))
+	             (println trap " roll:" roll "+" bonus)
+	             (cond ((or (= roll 20)
+	                        (> (+ roll bonus) 20))
+	                    (kern-log-msg (kern-obj-get-name kchar) " avoids a trap!"))
+	                   (else
+	                    (kern-log-msg (kern-obj-get-name kchar) " trips a trap!")
+	                    (apply (eval trap) (list kchar kobj))))))
+	         (container-traps container))
+
+	    ;; Spill contents
+	    (map (lambda (content)
+	           (println content)
+	           (let ((newobj (kern-mk-obj (eval (content-type content))
+	                                      (content-quantity content))))
+	             (kern-obj-put-at newobj loc)))
+	         (container-contents container))
+
+	    ;; Remove the container from the map
+	    (kern-obj-remove kobj)
+
+	    ;; Done with references
+	    (kern-obj-dec-ref kobj)
+	    (kern-obj-dec-ref kchar)
+	    ))
+
+	;; This interface binds the 'open signal to our open procedure above.
+	(define container-ifc
+	  (ifc '()
+	       (method 'open kcontainer-open)))
+
+	;; This constructor makes new types of objects that conform to the container
+	;; interface above. An example of usage is below, where I make a new chest
+	;; type.
+	(define (mk-container-type tag name sprite)
+	  (mk-obj-type tag name sprite layer-mechanism container-ifc))
+
+
+	;; Test it out. First, make a new chest type.
+	(mk-container-type 't_chest2 "chest" s_chest)
+
+	;; Define a constructor for an object of the new chest type. Example usage:
+	;;
+	;; (put (mk-chest2 '((t_sword 1)
+	;;                   (t_arrow 5)
+	;;                   (t_torch 2)))
+	;;      5 8)
+	;;
+	;; * Note the use of a quoted list.
+	;;
+	(define (mk-chest2 ktype-q-pairs)
+	  (bind (kern-mk-obj t_chest2 1)
+	        (mk-container ktype-q-pairs)))
+
+	(define (chest2-add-trap kobj trap)
+	  (container-add-trap! (kobj-gob-data kobj) trap))
+
+	* worlds/haxima-1.002/bandit-hideout.scm, worlds/haxima-1.002/containers.scm:
+	Added ability to attach traps to the new container implementation. An unlimited
+	number of traps is supported. Removing, detecting and disarming traps is not
+	yet supported.
+
+2006-10-24  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/bandit-hideout.scm, worlds/haxima-1.002/containers.scm:
+	Started a new implementation of container objects (like chests) that will be
+	done entirely in the script. This is a preliminary step to adding traps on
+	doors and other non-container mechanisms.
+
+2006-10-23  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/bandit-hideout.scm, worlds/haxima-1.002/naz.scm, worlds/haxima-1.002/shard.scm, worlds/haxima-1.002/species.scm, worlds/haxima-1.002/step.scm, src/object.c, worlds/haxima-1.002/Makefile.am:
+	Kernel changes:
+	o Bugfix: the crosshair object was triggering sense mechanisms
+
+	Haxima changes:
+	o Started a new entry-level quest dungeon for L1 players
+
+2006-10-21  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/start-new-game.scm:
+	I keep forgetting to undo my test changes to start-new-game.scm...
+
+	* src/ascii.c, src/status.c:
+	Fixed some compiler errors and warnings that occur with newer versions of g++
+
+2006-10-20  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/cmd.c, src/cmdwin.c:
+	Fixed some command error messages that were only being printed to the cmdwin, where they were promptly erased before the player could read them
+
+2006-10-15  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/library/artwork/humanoids/giant.xcf: draft giant/ettin
+
+	* worlds/library/artwork/humanoids/cgoblinciv.xcf: basic cave goblin
+
+	* worlds/library/artwork/humanoids/fgoblinciv.xcf: smaller goblin
+
+	* worlds/library/artwork/humanoids/deadknight.xcf:
+	Deathknight glow effects tweaked
+
+2006-10-14  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/map.c, src/sprite.c: Added initial support for giant sprites.
+
+2006-10-14  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/library/artwork/humanoids/fgoblinciv.xcf:
+	first attempt at forest goblins
+
+2006-10-13  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/library/artwork/humanoids/deadknight.xcf: animated armour icon
+
+	* worlds/haxima-1.002/hirespeople.png: tonights icons in 32x32
+
+	* worlds/library/artwork/hirespeople/paladin.xcf, worlds/library/artwork/hirespeople/fighter.xcf:
+	fighter/paladin given shoulderguards
+
+	* worlds/library/artwork/hirespeople/child.xcf, worlds/library/artwork/hirespeople/generic.xcf:
+	child icon added. generic townsman cleaned up
+
+	* worlds/library/artwork/hirespeople/beggar.xcf: beggar icon
+
+	* worlds/library/artwork/hirespeople/jester.xcf: jester icon
+
+	* worlds/library/artwork/hirespeople/minstrel.xcf: minstrel icon
+
+	* worlds/library/artwork/hirespeople/fencer.xcf:
+	the companion_bard icon isnt used anywhere according to grep. (probably too generic looking). Anyway, Ive put together this 2 weapon fencer to get rid of the gaping hole in my icons page
+
+	* worlds/library/artwork/hirespeople/knight.xcf: knight icon
+
+2006-10-12  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/hirespeople.png, worlds/library/artwork/hirespeople/fatwoman.xcf:
+	fat woman sprite
+
+	* worlds/haxima-1.002/hirespeople.png, worlds/library/artwork/hirespeople/lady.xcf:
+	lady sprite
+
+	* worlds/haxima-1.002/hirespeople.png, worlds/library/artwork/hirespeople/roguef.xcf, worlds/library/artwork/hirespeople/xbowman.xcf, worlds/library/artwork/hirespeople/cloackedf.xcf, worlds/library/artwork/hirespeople/rmage.xcf, worlds/library/artwork/hirespeople/rogue.xcf:
+	more sprites
+
+2006-10-11  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/hirespeople.png, worlds/library/artwork/hirespeople/avatar.xcf, worlds/library/artwork/hirespeople/shopkeep.xcf, worlds/library/artwork/hirespeople/shopkeepf.xcf:
+	new: female shopkeeper, avatar
+	shopkeeper now uses mages body weight, instead of fighters
+
+2006-10-10  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/hirespeople.png, worlds/library/artwork/hirespeople/druid.xcf:
+	new druid icon
+
+	* worlds/haxima-1.002/hirespeople.png: shepherd icon replaced
+
+	* worlds/library/artwork/hirespeople/shepherd.xcf: shepherd icon
+
+	* worlds/haxima-1.002/hirespeople.png:
+	initial batch of highres people icons
+
+	* worlds/library/artwork/hirespeople/pikeman.xcf, worlds/library/artwork/hirespeople/ranger.xcf, worlds/library/artwork/hirespeople/shopkeep.xcf, worlds/library/artwork/hirespeople/silas.xcf, worlds/library/artwork/hirespeople/tinker.xcf, worlds/library/artwork/hirespeople/wanderer.xcf, worlds/library/artwork/hirespeople/generic.xcf, worlds/library/artwork/hirespeople/mage.xcf, worlds/library/artwork/hirespeople/necromancer.xcf, worlds/library/artwork/hirespeople/paladin.xcf, worlds/library/artwork/hirespeople/fighter.xcf, worlds/library/artwork/hirespeople/enchanter.xcf:
+	initial batch of highres icon working files
+
+2006-10-06  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/ascii.c, src/images.c, src/nazghul.c, src/screen.c:
+	Added a C source code XPM to provide a set of "emergency" ASII images. These
+	are used to display a crude error message in a window if nazghul encounters an
+	error during or before it can load the basic init script.
+
+2006-10-04  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/cmd.c, src/cmd.h, src/conv.c, src/conv.h, src/menus.c, src/sched.c, src/sched.h:
+	o Bugfix: the filename prompt from the Save Game menu allowed invalid and
+	  undesirable characters for filenames
+	o Bugfix: t)alking to an NPC when hostiles present caused assert
+	o Bugfix: deleting a saved game with a non-existent save file caused assert
+	o Bugfix: entering '%' during conversation caused a crash
+	o Bugfix: entering '^' during conversation caused error messages and problems
+	  with text colors
+
+2006-10-03  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/character.cpp, src/character.h, src/ctrl.c:
+	Improved fleeing by another notch. Fleeing NPC's in town or wilderness combat
+	now attempt to pathfind to the nearest edge. Failing that, they fall back on
+	evasion. Failing that, they fall back on fighting.
+
+2006-10-02  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/astar.h, src/character.cpp, src/character.h, src/ctrl.c:
+	o Improved the algorithm used by NPCs to flee. It now uses the basic adaptvie
+	  evasion algorithm where it tries to run away from current hostile
+	  positions. If a fleeing NPC gets stuck it doesn't just sit there helplessly,
+	  but will turn and fight. More improvements are planned.
+
+2006-10-01  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/character.cpp, src/sched.h:
+	o Bugfix: "angry townfolk wont move or attack past their assigned
+	  locations, making them pretty much sitting ducks". If hostiles are present,
+	  the schedule is ignored and the AI run instead.
+
+	* worlds/haxima-1.002/cast-ui.scm, worlds/haxima-1.002/naz.scm, worlds/haxima-1.002/powers.scm, src/cmd.c, src/result.h:
+	o Added a new result code from spells: result-no-hostiles
+	o The area effect sleep spell now returns result-no-hostiles if there are none,
+	  so the console can tell the player why his sleep spell has no effect in town.
+
+2006-09-30  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/cmd.c:
+	Tying to cast non-existend spells results in a None Mixed! error, so player cannot guess at spells without mixing them
+
+	* src/cmd.c, worlds/haxima-1.002/scrolls.png, worlds/haxima-1.002/scrolls.scm:
+	Kernel changes:
+	o Bugfix: x)amine with x-ray no longer says "Can't see!"
+
+	Haxima changes:
+	o Added a Wis An Ylem (x-ray) scroll and sprite.
+
+	* src/character.cpp:
+	o Bugfix: t)alk auto-targeting broken. I don't think it was actually
+	  broken. Anyway, I can't reproduce it now. But I did fix something similar:
+	  when reloading a saved game NPC's are no longer teleported to the upper left
+	  corner of their appointment rectangle if they are already in the
+	  rectangle. Without this NPC's could get stacked on the same tile on reload,
+	  making the auto-targeting appear to "stick" on a character when it was
+	  actually cycling over the characters hidden below it.
+
+	* src/object.c:
+	o Workaround: for [SF 1564243], crash on reload. The root cause is improper
+	  order of destruction of objects. A good fix would use reference counts to
+	  control that, but implementing it would probably add lots of new bugs, so I'm
+	  too chicken to do it right now. I've logged a feature request to address this
+	  when I'm feeling more courageous (or when this workaround proves to be
+	  insufficient).
+
+	* src/cmd.c, src/combat.c, src/menus.c:
+	o Bugfix: NPC's attacking on diagonal hit assert
+	o When showing saved game screen screen shots, moved the "SCREEN SHOT" text
+	  higher so the center is visible.
+
+	* doc/USERS_GUIDE, src/astar.c, src/cmd.c:
+	o Pathfinding code now uses diagonals
+	o Made the '5' key on the keypad mean "select" in the movecursor function
+	o When buying/selling, reverted foogod window to show party gold instead of UI
+	  hints
+
+	* src/cmd.c, src/ctrl.c, src/menus.c:
+	o Added diagonal movement using number keypad.
+	o Made the '5' key on the keypad mean "select" in most menus.
+	o Bugfix: cmdwin prompts had extra '-' in camping command
+
+	* worlds/haxima-1.002/goblin-kingdoms.scm:
+	Added some corpses to troll's den
+
+2006-09-29  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/ai.scm: Removing some debug
+
+	* worlds/haxima-1.002/ability.scm, worlds/haxima-1.002/ai.scm, worlds/haxima-1.002/goblin-kingdoms.scm:
+	o Bugfix: fireball spell was being cast on the caster, not the target
+	o Added more combatants to the Goblin Crossroads dungeon room battle
+	o Added loot chests to the Shamans Grove dungeon room
+
+	* worlds/haxima-1.002/roland.scm, worlds/haxima-1.002/slimy-cavern.scm, worlds/haxima-1.002/start-new-game.scm:
+	Added more loot to Roland's cave
+
+	* src/nazghul.c: When the game ends it falls back to the main menu.
+
+	* src/menus.c, src/status.c, src/status.h:
+	Page up/down and Home/end now work with the saved game menus and other string or generic lists
+
+2006-09-28  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/menus.c, src/status.c, src/status.h:
+	Added a delete command to the load/save menus so players can delete saved games they don't want anymore.
+
+	* src/menus.c:
+	N)ew Game is now always top on the Save Game menu, and current saved game is always next
+
+2006-09-27  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/menus.c, src/status.c, src/status.h:
+	Hacked-in hotkeys for the main menus
+
+2006-09-26  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/cmd.c: Only one AP taken per mix command
+
+2006-09-26  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/Makefile.am: updated makefile
+
+2006-09-26  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/ascii.c, src/cmd.c, src/cmd.h, src/foogod.c, src/foogod.h, src/kern.c, src/menus.c:
+	The foogod window now has a hint mode, where it can show UI hints
+
+	* worlds/haxima-1.002/charset.png: Added symbols for sideways arrows
+
+2006-09-25  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/map.c, src/map.h, src/menus.c, src/nazghul.c, src/play.c:
+	Saved-game screenshots implemented, not fully tested yet
+
+2006-09-24  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/enchanters-tower-mech.scm, worlds/haxima-1.002/enchanters-tower.scm:
+	more wierdness for enchy's new lab
+
+	* worlds/haxima-1.002/tools.scm: clocks are impassable
+
+	* worlds/haxima-1.002/enchanters-tower-mech.scm, worlds/haxima-1.002/enchanters-tower.scm:
+	Enchanters tower expanded
+
+	* worlds/haxima-1.002/tools.scm: gems work with new spell system
+	added invisible object based wall
+
+2006-09-24  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/map.c, src/map.h, src/menus.c, src/screen.c, src/screen.h:
+	o Added screenCapture(), which will save some or all of the current screen to a
+	  PNG file.
+	o Saved-game screenshots partially implemented. Saving a game creates a
+	  screenshot of the map named after the save file. The screenshots aren't yet
+	  shown in the load/save menus.
+
+2006-09-23  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/menus.c, src/menus.h:
+	o Menus now cache the saved game list instead of re-evaluating the script every
+	  time for the save/load menus.
+	o When a game is saved, the saved name becomes the new "current" game.
+	o The current game is always listed at the top of the load/save list and is
+	  highlighted by default for quick access. Other saves continue to be listed in
+	  timestamp order, oldest last.
+
+	* src/list.h, src/menus.c:
+	o Re-organized the code that handles saved games to use a struct.
+	o The saved games are now presented in order sorted by save time, youngest
+	first.
+
+2006-09-22  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/powers.scm: field spells have variable duration
+
+2006-09-22  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/menus.c:
+	The filename for the currently loaded game is marked with an '*' in the load and save menus.
+
+	* src/status.c, src/status.h, src/Party.cpp, src/cmd.c, src/kern.c, src/menus.c:
+	Generic and string lists now specify titles in the status UI
+
+2006-09-21  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/cmd.c, src/menus.c, src/nazghul.c:
+	Dates now added to save game menu
+
+	* worlds/haxima-1.002/scrolls.scm:
+	Temp hack to keep saved games working with old scroll names
+
+	* worlds/haxima-1.002/Makefile.am:
+	Bugfix: some new files missing in the install list
+
+	* src/menus.c:
+	Bugfix: after choosing from the Load Saved Game menu, it would repaint but your selection would have not data
+
+	* src/dimensions.c, src/dimensions.h:
+	Bugfix: STAT_W was counting the frame boundaries
+
+	* src/menus.c: Added dates to the Load Saved Game menu options
+
+2006-09-21  kaypy  <kaypy@localhost.localdomain>
+
+	* src/object.c:
+	fixed crash due to my last "fix" using obj_dec_ref too often
+
+2006-09-21  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* doc/MAP_HACKERS_GUIDE: Added some basic map-editing instructions
+
+2006-09-20  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/effects.scm: another attempt at a light spell
+
+	* worlds/haxima-1.002/cast-ui.scm, worlds/haxima-1.002/powers.scm, worlds/haxima-1.002/spells.scm:
+	spell cleanups
+
+	* src/clock.c, src/clock.h, src/status.c:
+	effects display allows remaining duration and unknown duration
+
+2006-09-20  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/menus.c, src/menus.h, src/scheme.c:
+	Journey Onward now loads most recently saved game. Load Game lets the player pick from available saved games.
+
+2006-09-19  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/cast-ui.scm: vas rel por reinstated
+
+	* src/object.c:
+	fixed crash in ifc sense handling when cutscene deleted mech
+
+2006-09-18  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/arms.scm, worlds/haxima-1.002/books.scm, worlds/haxima-1.002/cast-ui.scm, worlds/haxima-1.002/effects.scm, worlds/haxima-1.002/enchanters-tower.scm, worlds/haxima-1.002/mans-hideout.scm, worlds/haxima-1.002/npc-types.scm, worlds/haxima-1.002/powers.scm, worlds/haxima-1.002/scrolls.scm, worlds/haxima-1.002/spells.scm, worlds/haxima-1.002/thiefs_den.scm, worlds/haxima-1.002/tooth.scm:
+	most spells debugged
+
+2006-09-18  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/adornments.png, worlds/haxima-1.002/arms.png, worlds/haxima-1.002/arms.scm, worlds/haxima-1.002/sprites.scm:
+	o Moved paper-doll staff (and glow) to arms.png
+	o Added paper-doll halberd
+
+2006-09-17  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/books.scm, worlds/haxima-1.002/enchanters-tower.scm:
+	a spellbook for one of the new spells
+
+	* worlds/haxima-1.002/tools.png, worlds/haxima-1.002/tools.scm:
+	book shelf object
+
+	* worlds/haxima-1.002/cast-ui.scm, worlds/haxima-1.002/powers.scm:
+	spell bug fixes
+
+	* worlds/haxima-1.002/addons.png, worlds/haxima-1.002/arms.png, worlds/haxima-1.002/arms.scm, worlds/haxima-1.002/cast-ui.scm, worlds/haxima-1.002/powers.scm, worlds/haxima-1.002/spells.scm:
+	new spell- web
+
+2006-09-16  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/sprite.c, src/sprite.h, worlds/haxima-1.002/arms.scm, doc/MAP_HACKERS_GUIDE, src/kern.c, src/object.c:
+	Kernel changes:
+	o Added kern-sprite-blit-over to allow layered non-composite sprites.
+	0 Bugfix when reloading a game that involves type gobs.
+
+	Haxima changes:
+	o Made the staff "ready" sprite be blitted instead of composite. This preserves
+	  its glow effect across a ready/unready cycle.
+
+	* worlds/haxima-1.002/arms.scm, worlds/haxima-1.002/effects.scm, worlds/haxima-1.002/species.scm, src/kern.c, src/sprite.c, src/sprite.h:
+	Kernel changes:
+	o Added kern-sprite-strip-decorations to facilitate rebuilding decorated
+	  sprites
+
+	Haxima changes:
+	o Changed the slot ordering for species to follow the rendering order for paper
+	  dolls.
+	o Fixed the ready/unready effect hooks to rebuild the character's sprite if it
+	  supports a paper-doll.
+	o Modified the staff arms type to store the paper-doll staff sprite in the type
+	  gob.
+
+	* worlds/haxima-1.002/naz.scm:
+	Made a version of mk-composite-sprite which doesn't clone the base sprite
+
+	* src/kern.c, src/sprite.c, src/sprite.h:
+	Got rid of kern-sprite-tint; apply-matrix is better
+
+2006-09-16  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/cast-ui.scm, worlds/haxima-1.002/npc-types.scm, worlds/haxima-1.002/powers.scm, worlds/haxima-1.002/spells.scm:
+	more spell updating ... level 8!
+
+	* worlds/haxima-1.002/cast-ui.scm, worlds/haxima-1.002/effects.scm, worlds/haxima-1.002/powers.scm, worlds/haxima-1.002/spells.scm:
+	more spell updating 7
+
+2006-09-15  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/cast-ui.scm, worlds/haxima-1.002/powers.scm, worlds/haxima-1.002/spells.scm:
+	more spell updating 6
+
+	* worlds/haxima-1.002/powers.scm, worlds/haxima-1.002/spells.scm, worlds/haxima-1.002/cast-ui.scm:
+	more spell updating 5
+
+	* worlds/haxima-1.002/cast-ui.scm, worlds/haxima-1.002/powers.scm, worlds/haxima-1.002/spells.scm:
+	more spell updating 4
+
+	* worlds/haxima-1.002/ability.scm, worlds/haxima-1.002/cast-ui.scm, worlds/haxima-1.002/powers.scm, worlds/haxima-1.002/spells.scm:
+	more spell updating
+
+2006-09-14  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/ability.scm, worlds/haxima-1.002/cast-ui.scm, worlds/haxima-1.002/powers.scm, worlds/haxima-1.002/spells.scm:
+	more spell updating
+
+	* worlds/haxima-1.002/sprites.scm: fixed sprites off by one
+
+2006-09-13  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* doc/MAP_HACKERS_GUIDE: Cleaned up the introduction
+
+	* doc/MAP_HACKERS_GUIDE:
+	Added docs for kern-type-set/get-gob and comments about object types and gobs
+
+	* src/character.cpp, src/kern.c, src/object.c, worlds/haxima-1.002/effects.scm, worlds/haxima-1.002/start-new-game.scm:
+	Kernel changes:
+	o Changed kern-obj-type-set/get-gob to kern-type-set/get-gob
+	o Added Scheme-to-kernel conversions for the ready/unready hook names
+	o Bugfix: character was using a bad format arg for runHook() call
+
+	Haxima changes:
+	o Added a placeholder ready and unready effect that just print the equipment
+	  name and the affected slot.
+
+	* src/character.cpp, src/kern.c, src/object.c:
+	o Character's now run the "ready" and "unready" hooks
+	o Added kern-obj-type-set/get-gob
+
+	* src/character.cpp, src/closure.c, src/closure.h, src/ctrl.c, src/object.c, src/object.h, src/place.c, src/Party.cpp:
+	o Object hooks now run with variable argument lists.
+
+2006-09-12  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/sprite.c, src/character.cpp, src/closure.c, src/closure.h, src/object.c, src/object.h:
+	A few preliminary changes needed for the READY/UNREADY hooks
+
+2006-09-12  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/tools.scm:
+	fixed mirror/clock pclass being lost on reload
+
+2006-09-12  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/scheme.c:
+	Fixed the 'mismatched parenthesis: -1' error emitted by scheme when a file ends in )
+
+2006-09-11  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/adornments.png, worlds/haxima-1.002/enchanter.scm, worlds/haxima-1.002/kalcifax.scm, worlds/haxima-1.002/sprites.scm:
+	o Added a staff and a staff glow sprite for wizards.
+
+	* worlds/haxima-1.002/kalcifax.scm, worlds/haxima-1.002/sprite-sets.scm, worlds/haxima-1.002/sprites.scm, worlds/haxima-1.002/adornments.png:
+	o Added some humanoid hair sprites.
+
+	* worlds/haxima-1.002/bodies.png, worlds/haxima-1.002/clothes.png, worlds/haxima-1.002/enchanter.scm, worlds/haxima-1.002/kalcifax.scm, worlds/haxima-1.002/sprite-sets.scm, worlds/haxima-1.002/sprites.scm, worlds/haxima-1.002/start-new-game.scm:
+	o Added two more frames to the body and the robe template sprites.
+	o Added a mantle sprite to wear over robes.
+
+2006-09-10  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/start-new-game.scm:
+	Oops. Didn't mean to check in this file on the last commit.
+
+	* src/sprite.c, worlds/haxima-1.002/bodies.png, worlds/haxima-1.002/clothes.png, worlds/haxima-1.002/sprite-sets.scm, worlds/haxima-1.002/sprites.scm, worlds/haxima-1.002/start-new-game.scm:
+	Kernel changes:
+	o Fixed a bug in sprite_apply_matrix. Only the first frame of multi-frame
+	  sprites was being processed correctly. Also added some minor speed hacks.
+
+	Haxima changes:
+	o Added another animation frame to the body and robe sprites.
+
+	* doc/MAP_HACKERS_GUIDE: Time to start updating this
+
+	* worlds/haxima-1.002/oparine.scm, worlds/haxima-1.002/sprite-sets.scm, worlds/haxima-1.002/sprites.scm, worlds/haxima-1.002/start-new-game.scm, worlds/haxima-1.002/step.scm, worlds/haxima-1.002/tools.scm, worlds/haxima-1.002/Makefile.am, worlds/haxima-1.002/adornments.png, worlds/haxima-1.002/bodies.png, worlds/haxima-1.002/cast-ui.scm, worlds/haxima-1.002/clothes.png, worlds/haxima-1.002/enchanter.scm, worlds/haxima-1.002/game.scm, worlds/haxima-1.002/naz.scm, src/Missile.cpp, src/character.cpp, src/kern.c, src/object.c, src/sprite.c, src/sprite.h:
+	Kernel changes:
+	o Objects now save their custom sprites, if they have any, by generating a
+	  kern-obj-set-sprite call.
+	o Objects now use a 'let' block when saving themselves.
+	o Cloned sprites now take an optional tag. If none is provided their tag is set
+	  to NULL.
+	o Composite sprites now save themselves.
+	o Added kern-sprite-apply-matrix, which will apply a color-correction matrix to
+	  a sprite in order to change its color scheme.
+
+	Haxima changes:
+	o Calls to kern-sprite-clone update to pass the tag.
+	o Added 3 new sprite sets for paper doll development (bodies, adornments and
+	  clothes).
+	o Added an example call to kern-sprite-apply-matrix which turns a gray robe
+	  blue.
+	o The enchanter now uses a paper doll sprite.
+	o The sensor object now takes its target as a tag so it can save/reload.
+	o The mirror object now takes its background sprite as a tag so it can
+	  save/reload properly.
+
+2006-09-10  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/ifc.scm, worlds/haxima-1.002/tools.scm:
+	clocks xamineable
+
+	* src/character.h, src/cmd.c, src/object.c, src/object.h, src/place.c, src/place.h, src/character.cpp:
+	first pass at detailed xamine
+
+	* worlds/haxima-1.002/cast-ui.scm, worlds/haxima-1.002/powers.scm, worlds/haxima-1.002/spells.scm:
+	more spell sorting
+
+	* worlds/haxima-1.002/oparine.scm, worlds/haxima-1.002/tools.png, worlds/haxima-1.002/tools.scm:
+	improved mirror
+
+	* worlds/haxima-1.002/ifc.scm, worlds/haxima-1.002/step.scm:
+	sense ifc scheme implementation
+
+	* worlds/haxima-1.002/addons.png:
+	switch icon symetry fixed so they dont move when flipped
+
+	* src/object.c, src/object.h:
+	new standard ifc: 'sense' to detect all incoming/outgoing objects
+
+	* src/kern.c: added kern-stdout-msg to log to stdout
+
+2006-09-06  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/sprite.c:
+	o Tinted sprites now use caching to improve rendering speed.
+
+	* src/sprite.c:
+	Added sprite_new_internal() to pave the way for optimized tinted sprites
+
+	* src/sprite.c: Fixed faded sprites to work with new RGBA images
+
+2006-09-05  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/sprite.c:
+	o Cleanup: removed obsolete references to palettized surfaces from sprite.c.
+
+	* src/Missile.cpp, src/cmdwin.c, src/kern.c, src/map.c, src/nazghul.c, src/object.c, src/place.c, src/play.c, src/player.cpp, src/screen.c, src/sky.c, src/sprite.c, src/sprite.h, src/status.c, src/tile.c, src/vehicle.cpp:
+	o Cleanup: changed sprite API to consistently use underscores instead of
+	  mixed-case.
+
+	* src/cmd.c, src/cmd.h, src/ctrl.c, src/kern.c, src/place.c, src/player.cpp, src/session.c, src/sky.c, src/sprite.c, src/sprite.h, src/vehicle.cpp, src/Party.cpp, src/character.cpp:
+	o Made the sprite definition hidden outside of sprite.c.
+	o Removed the cmdDumpPalette function as a result of the above. I don't think
+	  anyone uses it anymore.
+
+2006-09-03  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/kern.c, src/sprite.c, src/sprite.h:
+	Initial (and very inefficient) cut at sprite-tinting.
+
+	* src/cmd.c, src/cmd.h, src/kern.c:
+	Added the a)ttack cursor movement shortcut keys to t)alk and targeted spells.
+
+	* worlds/haxima-1.002/spells.scm: Bugfix in grav por
+
+2006-09-01  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/oparine.scm, worlds/haxima-1.002/tools.scm:
+	New furniture- mirrors
+
+	* worlds/haxima-1.002/absalot.scm, worlds/haxima-1.002/bole.scm, worlds/haxima-1.002/enchanters-tower.scm, worlds/haxima-1.002/endless-deeps.scm, worlds/haxima-1.002/engineers-hut.scm, worlds/haxima-1.002/glasdrin.scm, worlds/haxima-1.002/goblin-kingdoms.scm, worlds/haxima-1.002/green-tower.scm, worlds/haxima-1.002/gregors-hut.scm, worlds/haxima-1.002/keep.scm, worlds/haxima-1.002/oparine.scm, worlds/haxima-1.002/portals.scm:
+	Added many clocks
+
+2006-08-31  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/effects.scm, worlds/haxima-1.002/tools.scm:
+	Clock faces show approximate time
+
+	* worlds/haxima-1.002/abandoned-farm.scm, worlds/haxima-1.002/tools.scm:
+	Broken clock available. Example at abandoned farm
+
+	* worlds/haxima-1.002/ability.scm, worlds/haxima-1.002/cast-ui.scm, worlds/haxima-1.002/game.scm, worlds/haxima-1.002/powers.scm, worlds/haxima-1.002/spells.scm:
+	1st circle spells with split off ui and caster stats
+
+2006-08-30  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/tools.png, worlds/haxima-1.002/tools.scm:
+	clock icon v3
+
+2006-08-29  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/earl.scm, worlds/haxima-1.002/trigrave.scm:
+	A few clocks added to the world.
+
+	* worlds/haxima-1.002/tools.png, worlds/haxima-1.002/tools.scm:
+	Not entirely happy with the icon yet, but heres a clock town feature
+
+2006-08-28  kaypy  <kaypy@localhost.localdomain>
+
+	* scripts/tocinator.pl, doc/users_guide.html:
+	autogenerated table of contents for manual
+
+	* doc/users_guide.html: Manual setup notes added as comment
+
+	* doc/null.gif, doc/users_guide.html: 2nd pass at manual.
+
+2006-08-27  kaypy  <kaypy@localhost.localdomain>
+
+	* src/cmd.c, src/clock.c, src/clock.h:
+	at gives vague description rather than accurate time
+
+	* worlds/haxima-1.002/tools.png, worlds/haxima-1.002/tools.scm:
+	added an in-game clock
+
+	* worlds/haxima-1.002/food.png, worlds/haxima-1.002/jewelry.png:
+	transparent shadows
+
+2006-08-27  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/game.scm, worlds/haxima-1.002/start-new-game.scm:
+	Moved max-health to game.scm so it will be defined even for saved games
+
+2006-08-27  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/books.png: transparent shadows
+
+	* worlds/haxima-1.002/shapes.png, worlds/haxima-1.002/addons.png:
+	alpha tweaks
+
+	* worlds/haxima-1.002/arms.png, worlds/haxima-1.002/potions.png:
+	arms and potion sprites alphanated
+
+2006-08-27  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/cmd.c:
+	Fixed a couple of bugs in X)amine caused by recent cursor-movement changes
+
+	* worlds/haxima-1.002/addons.png, worlds/haxima-1.002/books.png, worlds/haxima-1.002/food.png, worlds/haxima-1.002/jewelry.png, worlds/haxima-1.002/money.png, worlds/haxima-1.002/moons.png, worlds/haxima-1.002/newfolks.png, worlds/haxima-1.002/newmonst.png, worlds/haxima-1.002/newterrain.png, worlds/haxima-1.002/reagents.png, worlds/haxima-1.002/rune.png, worlds/haxima-1.002/runestones.png, worlds/haxima-1.002/scrolls.png, worlds/haxima-1.002/shapes.png, worlds/haxima-1.002/special.png, worlds/haxima-1.002/tools.png:
+	Updated images to John's RGBA versions
+
+	* src/ascii.c, src/screen.c, worlds/haxima-1.002/charset.png:
+	Support for 32 bit-per-pixel colored text added to ascii.c. Screen
+	bits-per-pixel changed to 32, and charset.png updated to the 32 PNGA version.
+
+	* src/screen.c: Hack to support scaling images with alpha channel.
+
+2006-08-27  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/effects.png:
+	Global effects (timestop, quicken, antimagic) given effect icons
+
+	* doc/users_guide.html:
+	First pass at html manual. Still a fair amount of cleaning up needed
+
+2006-08-27  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/images.c:
+	Transparent blitting now works for images with an alpha channel.
+
+2006-08-26  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/Makefile.am, src/screen_dims.h:
+	Forgot to add a new file on my last
+
+	* src/nazghul.c, src/sound.c, src/sound.h, src/status.c, src/cmd.h, src/ctrl.c, src/dimensions.c, src/kern.c, src/menus.c, src/menus.h, src/ascii.h, src/cfg.c, src/cfg.h, src/character.cpp, src/cmd.c:
+	o Added a Settings menu to change the screen size and turn sound on and
+	  off. This is accessible from the startup menu or via the F10 key.
+	o Changed the way the status browser handles generic list selection. Instead of
+	  always switching to tall mode it sets its height based on the number of entries
+	  in the list.
+
+2006-08-26  kaypy  <kaypy@localhost.localdomain>
+
+	* src/Party.cpp, src/Party.h, src/combat.c, src/player.cpp:
+	characters at top of party list move first and are placed further into maps on entry
+
+2006-08-24  kaypy  <kaypy@localhost.localdomain>
+
+	* src/cmdwin.c: cmdwin_vpush now +1 vs nullpointers
+
+2006-08-20  kaypy  <kaypy@localhost.localdomain>
+
+	* scripts/blenddat.txt: re-blending rivers was broken
+
+	* doc/USERS_GUIDE, worlds/haxima-1.002/arms.scm: all weapons bonusized
+
+2006-08-20  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* doc/USERS_GUIDE, src/Missile.cpp, src/Party.cpp, src/character.cpp, src/cmd.c, src/cmd.h, src/kern.c, src/object.c, src/player.cpp, src/vehicle.cpp, src/vehicle.h, worlds/haxima-1.002/bart.scm, worlds/haxima-1.002/edge-spawn.scm, worlds/haxima-1.002/naz.scm, worlds/haxima-1.002/prices.scm, worlds/haxima-1.002/terrain-to-ptype.scm:
+	o You can now sink empty ships with cannons.
+	o You can sell surplus ships to Bart in Oparine.
+	o You can name your ship when you board. Unnamed deserted ships will disappear
+	  from the map after some time has passed.
+	o Tweaked down the sea monster encounters. Monotonous.
+	o Temporary NPC parties weren't saving their time-to-live, so on reload they
+	  were permanent, meaning they accumulated until the player encountered them.
+
+2006-08-20  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/arms.scm: melee weapon bonuses set
+
+	* worlds/haxima-1.002/arms.scm, src/Arms.cpp, src/Arms.h, src/kern.c:
+	bonus modifiers shifted out to arms.scm
+
+2006-08-20  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/ctrl.c: Targeting self for attack switches weapons
+
+2006-08-20  kaypy  <kaypy@localhost.localdomain>
+
+	* src/Arms.h, src/character.cpp, src/character.h, src/ctrl.c, src/Arms.cpp:
+	Instead of using fixed bonus modifiers, combat now queries them from weapons (which use fixed bonus modifiers- sigh)
+
+2006-08-20  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/cmd.c:
+	Pressing a digit followed by the arrow key will make the cursor jump that distance when targeting
+
+	* src/cmd.c, src/cmd.h, src/ctrl.c, src/kern.c:
+	Added shortcut keys for moving attack cursor
+
+2006-08-19  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/addons.png, worlds/haxima-1.002/kraken-lakes.scm, worlds/haxima-1.002/palette.scm, worlds/haxima-1.002/shapes.png, worlds/haxima-1.002/sprites.scm, worlds/haxima-1.002/terrains.scm:
+	Added dirt and gravel terrain
+
+	* src/event.c, src/event.h, src/cmd.c: Mouse targeting done
+
+	* worlds/haxima-1.002/arms.png, worlds/haxima-1.002/arms.scm, worlds/haxima-1.002/potions.png, worlds/haxima-1.002/potions.scm:
+	Added some potion sprites
+
+	* src/closure.c: Another way to fix closure_exec(0)
+
+2006-08-19  kaypy  <kaypy@localhost.localdomain>
+
+	* src/character.cpp:
+	(x % 0) does nasty things to the system, so adding one to base attack/defense bonus.
+
+	* src/character.cpp:
+	groupExitTo calling closure_exec with NULL caused crash
+
+	* worlds/haxima-1.002/game.scm, worlds/haxima-1.002/occs.scm, src/character.cpp, src/character.h, src/ctrl.c, src/kern.c, src/session.c, src/session.h:
+	First pass at stats affecting combat
+
+2006-08-19  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/shroom.scm, worlds/haxima-1.002/tooth.scm:
+	Vials of slime
+
+	* src/closure.c:
+	closure_exec() now coerces returned floating-point values to ints
+
+	* worlds/haxima-1.002/arms.scm:
+	Needs some polish, but I had to add Vial of Slimes before I forgot about it
+
+	* src/cmd.c, src/event.c, src/map.c, src/map.h:
+	Initial hack at mouse targeting
+
+	* src/cmdwin.c:
+	cmdwin now right-justifies if string is too long to fit in window
+
+	* src/menus.c, src/player.cpp, src/status.c, worlds/haxima-1.002/chester.scm, worlds/haxima-1.002/jess.scm, src/Party.cpp, src/cmd.c, src/cmdwin.c, src/cmdwin.h, src/conv.c, src/ctrl.c, src/kern.c:
+	Re-wrote the cmdwin API and updated callers
+
+2006-08-17  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/ability.scm:
+	Ok, the fireball now mostly does what I want, but its awfally hacky
+
+2006-08-16  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/ability.scm, worlds/haxima-1.002/arms.scm:
+	first pass at more interesting fireball
+
+	* worlds/haxima-1.002/potions.scm: missing '+' in stat potions
+
+2006-08-15  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/ability.scm:
+	magic missiles gives xp/annoys target
+
+	* src/character.cpp, src/character.h, src/kern.c, src/object.c, src/object.h:
+	added kern-obj-inflict-damage- damage stuff with diplomatic and xp side effects
+
+	* worlds/haxima-1.002/spells.scm:
+	Cleaned out some debugging stuff left in by accident
+
+	* worlds/haxima-1.002/game.scm: Reseeds rng on script start
+
+	* src/kern.c:
+	Added kern-init-random  reseed rng based on time till script starts
+
+	* src/status.c:
+	Ready listing shows available quantity of weapons, not total quantity
+
+	* src/player.cpp, src/player.h, src/cmd.c:
+	Equipment sort on R)eady occurs before and after selection, rather that interrupt the ui
+
+2006-08-14  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/Container.cpp, src/Container.h, src/cmd.c, src/cmdwin.c:
+	U)sed and R)eadied items get moved to the top of the inventory list
+
+2006-08-14  kaypy  <kaypy@localhost.localdomain>
+
+	* src/cmd.c: Confirmation for quit without saving
+
+2006-08-13  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/trigrave.scm: fixed ai typo
+
+2006-08-13  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/mesmeme.scm, worlds/haxima-1.002/miggs.scm, worlds/haxima-1.002/moongate-clearing.scm, worlds/haxima-1.002/naz.scm, worlds/haxima-1.002/necromancer.scm, worlds/haxima-1.002/oscar.scm, worlds/haxima-1.002/patch.scm, worlds/haxima-1.002/roland.scm, worlds/haxima-1.002/selene.scm, worlds/haxima-1.002/shroom.scm, worlds/haxima-1.002/slywan.scm, worlds/haxima-1.002/steward.scm, worlds/haxima-1.002/the-man.scm, worlds/haxima-1.002/thud.scm, worlds/haxima-1.002/tooth.scm, worlds/haxima-1.002/trigrave.scm, worlds/haxima-1.002/zane.scm, worlds/haxima-1.002/deric.scm, worlds/haxima-1.002/doris.scm, worlds/haxima-1.002/douglas.scm, worlds/haxima-1.002/effects.scm, worlds/haxima-1.002/enchanter.scm, worlds/haxima-1.002/engineer.scm, worlds/haxima-1.002/fing.scm, worlds/haxima-1.002/gen.scm, worlds/haxima-1.002/gregors-hut.scm, worlds/haxima-1.002/hackle.scm, worlds/haxima-1.002/henry.scm, worlds/haxima-1.002/ini.scm, worlds/haxima-1.002/jake.scm, worlds/haxima-1.002/jeffreys.scm, worlds/haxima-1.002/jess.scm, worlds/haxima-1.002/joel.scm, worlds/haxima-1.002/jones.scm, worlds/haxima-1.002/kalcifax.scm, worlds/haxima-1.002/lia.scm, worlds/haxima-1.002/may.scm, worlds/haxima-1.002/meaney.scm, worlds/haxima-1.002/melvin.scm, worlds/haxima-1.002/abe.scm, worlds/haxima-1.002/abigail.scm, worlds/haxima-1.002/ai.scm, worlds/haxima-1.002/alchemist.scm, worlds/haxima-1.002/alex.scm, worlds/haxima-1.002/amy.scm, worlds/haxima-1.002/angela.scm, worlds/haxima-1.002/anne.scm, worlds/haxima-1.002/bart.scm, worlds/haxima-1.002/bill.scm, worlds/haxima-1.002/chester.scm, src/kern.c, src/character.cpp:
+	Feature request filled: NPC's as light sources
+
+	* doc/USERS_GUIDE, worlds/haxima-1.002/books.scm:
+	Added the L)oiter command to the docs
+
+	* src/character.cpp, src/character.h, src/cmd.c, src/cmd.h, src/ctrl.c, src/file.c, src/player.cpp, src/player.h:
+	Hacked in a L)oiter command to pass time
+
+	* worlds/haxima-1.002/gamestart-mech.scm, worlds/haxima-1.002/gamestart.scm, worlds/haxima-1.002/moongate.scm, worlds/haxima-1.002/start-new-game.scm:
+	Bugfix: subtle bug when saving/reloading from the character creation room
+
+	* doc/USERS_GUIDE: Updated section on status codes
+
+	* doc/USERS_GUIDE: Fixed up the comments around saving and quitting
+
+	* src/cmd.c, src/file.c, src/file.h, src/menus.c, src/nazghul.c, src/play.c, src/scheme.c, src/scheme.h, src/session.c, src/session.h:
+	Cleanup 2: everyplace is now using the same common file access functions
+
+	* src/Makefile.am, src/cmd.c, src/cmd.h, src/common.c, src/common.h, src/ctrl.c, src/file.c, src/file.h, src/images.c, src/menus.c, src/nazghul.c, src/scheme.c, src/session.c, src/sound.c:
+	Part 1 of some cleanup; consolidating file utility functions
+
+	* src/session.c, worlds/haxima-1.002/kern-init.scm, src/Makefile.am, src/cmd.c, src/cmd.h, src/ctrl.c, src/kern.c, src/menus.c, src/menus.h, src/nazghul.c, src/node.c, src/node.h, src/play.c:
+	Initial cut at multiple save games
+
+2006-08-12  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/status.c: Bug in ztats showing items in use
+
+	* worlds/haxima-1.002/Makefile.am:
+	Some new files needed to be added so they will get installed with make install
+
+2006-08-12  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/potions.scm: Testing stuff enhanced
+
+	* worlds/haxima-1.002/occs.scm: First pass at combat occ-abilities
+
+2006-08-10  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/newfolks.png, worlds/haxima-1.002/shapes.png:
+	Fixed some of the more excessive graphics glitches (perforated paladins, pink rats, etc)
+
+2006-08-08  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/kama.scm, worlds/haxima-1.002/kathryn.scm, worlds/haxima-1.002/lia.scm, worlds/haxima-1.002/luximene.scm, worlds/haxima-1.002/may.scm, worlds/haxima-1.002/meaney.scm, worlds/haxima-1.002/melvin.scm, worlds/haxima-1.002/mesmeme.scm, worlds/haxima-1.002/miggs.scm, worlds/haxima-1.002/moongate-clearing.scm, worlds/haxima-1.002/mouse.scm, worlds/haxima-1.002/necromancer.scm, worlds/haxima-1.002/nossifer.scm, worlds/haxima-1.002/npc-types.scm, worlds/haxima-1.002/oscar.scm, worlds/haxima-1.002/patch.scm, worlds/haxima-1.002/road_to_absalot.scm, worlds/haxima-1.002/roland.scm, worlds/haxima-1.002/selene.scm, worlds/haxima-1.002/shroom.scm, worlds/haxima-1.002/silas.scm, worlds/haxima-1.002/slywan.scm, worlds/haxima-1.002/start-new-game.scm, worlds/haxima-1.002/steward.scm, worlds/haxima-1.002/tetzl.scm, worlds/haxima-1.002/the-man.scm, worlds/haxima-1.002/thorald.scm, worlds/haxima-1.002/thud.scm, worlds/haxima-1.002/tooth.scm, worlds/haxima-1.002/trigrave.scm, worlds/haxima-1.002/warritrix.scm, worlds/haxima-1.002/zane.scm, worlds/haxima-1.002/abe.scm, worlds/haxima-1.002/abigail.scm, worlds/haxima-1.002/alchemist.scm, worlds/haxima-1.002/alex.scm, worlds/haxima-1.002/amy.scm, worlds/haxima-1.002/angela.scm, worlds/haxima-1.002/angriss.scm, worlds/haxima-1.002/anne.scm, worlds/haxima-1.002/bart.scm, worlds/haxima-1.002/bill.scm, worlds/haxima-1.002/chester.scm, worlds/haxima-1.002/dennis.scm, worlds/haxima-1.002/deric.scm, worlds/haxima-1.002/doris.scm, worlds/haxima-1.002/douglas.scm, worlds/haxima-1.002/enchanter.scm, worlds/haxima-1.002/engineer.scm, worlds/haxima-1.002/fing.scm, worlds/haxima-1.002/gen.scm, worlds/haxima-1.002/ghertie.scm, worlds/haxima-1.002/gholet.scm, worlds/haxima-1.002/gregors-hut.scm, worlds/haxima-1.002/hackle.scm, worlds/haxima-1.002/henry.scm, worlds/haxima-1.002/ini.scm, worlds/haxima-1.002/jake.scm, worlds/haxima-1.002/jeffreys.scm, worlds/haxima-1.002/jess.scm, worlds/haxima-1.002/joel.scm, worlds/haxima-1.002/jones.scm, worlds/haxima-1.002/jorn.scm, worlds/haxima-1.002/kalcifax.scm:
+	Megapatch no 2: Most characters have random appropriate xp. All characters start at max hp/mp
+
+	* src/status.c: XP and Lvl labels were on wrong screens
+
+	* src/status.c, src/character.cpp:
+	character::getXpForLevel(1) now returns 0
+	creating characters with 0 xp now gives them min xp for their level
+	creating characters with -ve xp now gives them random xp appropriate for their level
+
+	* worlds/haxima-1.002/abigail.scm, worlds/haxima-1.002/alchemist.scm, worlds/haxima-1.002/alex.scm, worlds/haxima-1.002/angela.scm, worlds/haxima-1.002/anne.scm, worlds/haxima-1.002/bill.scm, worlds/haxima-1.002/chester.scm, worlds/haxima-1.002/dennis.scm, worlds/haxima-1.002/deric.scm, worlds/haxima-1.002/doris.scm, worlds/haxima-1.002/douglas.scm, worlds/haxima-1.002/enchanter.scm, worlds/haxima-1.002/fing.scm, worlds/haxima-1.002/gen.scm, worlds/haxima-1.002/gholet.scm, worlds/haxima-1.002/hackle.scm, worlds/haxima-1.002/henry.scm, worlds/haxima-1.002/jeffreys.scm, worlds/haxima-1.002/jess.scm, worlds/haxima-1.002/joel.scm, worlds/haxima-1.002/jones.scm, worlds/haxima-1.002/jorn.scm, worlds/haxima-1.002/kalcifax.scm, worlds/haxima-1.002/lia.scm, worlds/haxima-1.002/may.scm, worlds/haxima-1.002/meaney.scm, worlds/haxima-1.002/melvin.scm, worlds/haxima-1.002/miggs.scm, worlds/haxima-1.002/mouse.scm, worlds/haxima-1.002/necromancer.scm, worlds/haxima-1.002/oscar.scm, worlds/haxima-1.002/patch.scm, worlds/haxima-1.002/roland.scm, worlds/haxima-1.002/selene.scm, worlds/haxima-1.002/shroom.scm, worlds/haxima-1.002/slywan.scm, worlds/haxima-1.002/steward.scm, worlds/haxima-1.002/tetzl.scm, worlds/haxima-1.002/the-man.scm, worlds/haxima-1.002/tooth.scm, worlds/haxima-1.002/trigrave.scm, worlds/haxima-1.002/abe.scm:
+	mega stats tweakage.  Not that the player will notice, but *I* will know that everyone hv unique stats
+
+2006-08-07  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/status.c: Changed XP to LVL
+
+2006-08-07  kaypy  <kaypy@localhost.localdomain>
+
+	* src/status.c:
+	Status window now reads HP:<hp> MP:<mp> XP:<level>(<+ percent>%)
+
+	* src/character.cpp:
+	Character::setLevel now sets experience appropriate for the new level rather than the old one
+
+2006-08-06  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/status.c: Status now uses a set of standardized colors
+
+2006-08-06  kaypy  <kaypy@localhost.localdomain>
+
+	* src/character.cpp: isAttackTargetInRange(NULL)  now returns true
+
+	* src/character.cpp, src/character.h, src/cmd.c, src/ctrl.c, src/kern.c, src/player.cpp, src/status.c:
+	arms and weapons enumerations in Character now use an external interation index (allows multiple simultaneous enumeration)
+
+2006-08-06  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/status.c:
+	Replaced the status code with the effect icon in the ztats view of the character effects
+
+	* src/kern.c, src/status.c:
+	Added effect icons to the party status viewer
+
+2006-08-06  kaypy  <kaypy@localhost.localdomain>
+
+	* src/screen.h, src/screen.c, src/ascii.c:
+	Text uses muted versions of colours
+
+	* worlds/haxima-1.002/effects.scm:
+	effect spites use s_whatever instead of 's_whatever
+
+	* worlds/haxima-1.002/sprites.scm:
+	fixed incrementing tile_number in effect sprites
+
+2006-08-06  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/kern.c:
+	kern_mk_effect must load sprites as pointers (not closures) or it throws a type error
+
+2006-08-06  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/effects.scm, worlds/haxima-1.002/sprites.scm:
+	most effects should now have icons
+
+	* worlds/haxima-1.002/effects.png: added paralysis
+
+	* worlds/haxima-1.002/cursor.png: nicer blue spinner
+
+2006-08-06  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/effect.c, src/kern.c, src/status.c:
+	Comment/formatting changes only
+
+2006-08-06  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/effects.scm, worlds/haxima-1.002/sprite-sets.scm, worlds/haxima-1.002/sprites.scm:
+	First few effect sprites set
+
+	* src/effect.c, src/kern.c: icon support added to kern-mk-effect
+
+2006-08-06  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/status.c: Added mini-icons to the party view for readied weapons
+
+	* src/effect.h: Added a field for a status icon to the effect struct
+
+2006-08-06  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/effects.png: first attempt at effect icons
+
+	* worlds/haxima-1.002/start-new-game.scm: uses character creation area
+
+	* worlds/haxima-1.002/gamestart-mech.scm, worlds/haxima-1.002/gamestart.scm:
+	character creation area
+
+	* worlds/haxima-1.002/potions.scm:
+	some booster potions for rapid playtesting
+
+	* src/images.c: image load error to stderr not stdout
+
+	* worlds/haxima-1.002/cursor.png: placeholder cursor.png
+
+2006-08-05  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/Makefile.am: Removed frame.h
+
+2006-08-05  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/spells.scm:
+	new spell: burning hands (bet flam hur)
+
+	* worlds/haxima-1.002/spells.scm:
+	wind spells now fire at arbitary angles
+
+2006-08-02  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/character.cpp, src/place.c, src/place.h:
+	Fixed player party members not pathfinding over step triggers
+
+	* worlds/haxima-1.002/spells.scm:
+	Added success/failure messages to spells that use contest-of-skill
+
+	* worlds/haxima-1.002/nossifer.scm: Made Nossifer immune to charm
+
+	* src/character.cpp, src/player.cpp:
+	Starvation is now a bit more serious
+
+	* worlds/haxima-1.002/species.scm:
+	Increased the vision radius of sea creatures so they will close with the player on sea/land or sea/ship combat maps
+
+	* worlds/haxima-1.002/npc-types.scm, worlds/haxima-1.002/start-new-game.scm:
+	Undead now immune to sleep and magic kill (in addition to fire, poison and disease)
+
+	* worlds/haxima-1.002/moongate.scm:
+	Fixed the problem where destination moongates remained open
+
+	* src/cmd.c:
+	Spells with a cost of 1 were not using any action points when cast
+
+2006-08-01  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/bill.scm, worlds/haxima-1.002/bole.scm:
+	Fixed up Bill's conv to match the change in the dryad location
+
+	* worlds/haxima-1.002/bole.scm:
+	Moved the dryad in Bole to a separate place accessible via a side-exit from Bole
+
+	* src/character.cpp:
+	When a PC tries to step off the edge of a map the code checks for a neighboring
+	place before it checks for a parent (this is opposite of what it used to
+	be). This allows towns to have side-exits to dungeon rooms (or other towns).
+
+2006-07-31  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/foogod.c:
+	Fixed a bug introduced with turn count changes; starting nazghul with no save game arg would cause a crash
+
+	* worlds/haxima-1.002/hackle.scm:
+	Fixed endless loop in Hackle's heal conversation when player alone
+
+	* worlds/haxima-1.002/mushroom-cave.scm, worlds/haxima-1.002/npc-types.scm:
+	Yellow slimes no longer divide into green slimes.
+
+	* src/foogod.c, src/kern.c, src/play.c, src/player.cpp, src/player.h, src/session.c, src/session.h, src/character.cpp:
+	Fixed saving, loading and general behavior of the turn counter in the foogod window
+
+2006-07-30  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/effects.scm, src/ctrl.c, src/effect.c, src/effect.h, src/status.c, src/character.cpp, src/character.h, src/cmd.c:
+	More fiddling with the stat UI. It's getting downright chatty now.
+
+	* src/status.c: Added species and occupation to character stat UI
+
+	* src/character.h, src/status.c, worlds/haxima-1.002/books.scm, src/ascii.c, src/character.cpp:
+	Removed AC from the status display. Modified the color-control syntax: ^c+=
+	pushes the current color but doesn't change it, ^c+<color-code> pushes the
+	current color and sets the new current color to <color-code>.
+
+	* src/ascii.c, src/ascii.h, src/ctrl.c, src/screen.c, src/screen.h, src/session.c, src/status.c, worlds/haxima-1.002/books.scm, worlds/haxima-1.002/gregor.scm:
+	Added support for colorized text. A few places in the code and the game scripts
+	were tweaked to test and demonstrate usage.
+
+	* src/dimensions.c, src/nazghul.c, src/status.c, src/Container.h, src/Party.cpp:
+	Small overhaul of the status viewer code. This includes a partial fix for SF
+	Bug: [ 1518735 ] ztats - AC, by adding armament stats to all the relevant
+	viewer windows.
+
+2006-07-29  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/dimensions.c, src/dimensions.h, src/nazghul.c:
+	Changed the -m (map size) option to -r (screen res). dimensions.c now converts
+	the desired screen res to a map size that will accomodate it.
+
+	* src/common.h, src/event.c, src/nazghul.c, src/play.c, src/play.h, src/session.c:
+	Moved some more global variables into the new cfg env.
+
+	* src/common.h, src/dimensions.c, src/dimensions.h, src/nazghul.c, src/screen.c:
+	Cleaned up the SCREEN_BPP stuff. For now it's hard-coded to 16 in screen.c.
+
+2006-07-27  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/nazghul.c, src/session.c, worlds/haxima-1.002/bakup.scm, worlds/haxima-1.002/kern-init.scm:
+	Moved more stuff to the new cfg
+
+2006-07-26  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/nazghul.c, worlds/haxima-1.002/Makefile.am:
+	Had to add some files to the install process; fixed a warning about the missing init script
+
+	* worlds/haxima-1.002/kern-init.scm, src/cfg.c, src/cfg.h, src/screen.c, src/screen.h, src/session.c, src/session.h, src/sound.c, worlds/haxima-1.002/Makefile.am, worlds/haxima-1.002/moongate.scm, src/Makefile.am, src/ascii.c, src/ascii.h, src/cmdwin.c, src/common.h, src/foogod.c, src/images.c, src/kern.c, src/nazghul.c, src/scheme.c:
+	This adds support for a general kernel initialization script. Early in startup,
+	right after parsing the command-line args, the kernel will attempt to load
+	INCLUDE_DIR/"kern-init.scm" to initialize itself enough to present the main
+	menu. This is done through the new kern-set-cfg/kern-get-cfg procedure calls,
+	and the new cfg.[ch] module, which basically provides a setenv/getenv-type
+	feature. Currently only a couple of values are in kern-init.scm, but I hope to
+	migrate more currently-hard-coded stuff out there in the days ahead. Beyond
+	that, the ability to load/save an options.scm file will enable us to have
+	persistent user options (eg, map viewer size and sound settings).
+
+2006-07-24  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/spells.scm: spells updated to use occ abilities
+
+2006-07-23  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/scheme.h:
+	USE_TRACING should be off by default; must have committed it by mistake
+
+	* src/status.c, src/vmask.c: Minor indentation and comment cleanup
+
+2006-07-22  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* doc/USERS_GUIDE: Added a note about food consumption
+
+	* worlds/haxima-1.002/arms.scm:
+	Melee and projectile weapons were adding an armor bonus instead of a deflection bonus
+
+	* doc/USERS_GUIDE:
+	Added info on effects and an appendix for weapons and armor spoilers to the user's guide
+
+	* src/angband.c: Fixed the LOS bugs related to map viewer sizes < 19x19
+
+	* src/map.c: Minor comment cleanup
+
+2006-07-16  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/nazghul.c:
+	The show-all-terrain option was missing from the -h(elp) command option
+
+2006-07-11  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/Makefile.am, src/Party.cpp, src/common.c, src/common.h, src/console.c, src/dimensions.c, src/dimensions.h, src/map.c, src/nazghul.c, src/sky.c, src/status.c, src/status.h, src/vmask.h:
+	Just committed a CVS change to allow a smaller UI. In common.h, uncomment the
+
+	//#define CONFIG_11X11_MAP
+
+	line, recompile, and the screen will be 736x400. I've only done some limited
+	testing but things look surprisingly good. There might be a line-of-sight bug
+	and the splash screen needs some tweaks. Need to test some more and figure out
+	how to do this automatically and dynamically so rebuilds aren't required. By
+	reducing the console width from 42 to 30 characters the screen could be
+	640x400, which will satisfy the 640x480 crowd at least.
+
+2006-07-10  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/common.h, src/screen.c: Smaller UI. In common.h, uncomment the
+
+	//#define CONFIG_11X11_MAP
+
+	line, recompile, and the screen will be 736x400.
+
+2006-07-09  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/Being.cpp, src/Being.h:
+	Patch from Eero Tamminen for link error under Suse 9.1
+
+2006-07-08  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/ability.scm, worlds/haxima-1.002/effects.scm, worlds/haxima-1.002/spells.scm:
+	circle 1 spells based on character abilities
+
+	* worlds/haxima-1.002/occs.scm:
+	fixed problem with getting abilities for chars without occs
+
+	* worlds/haxima-1.002/roland.scm: roland now a warrior
+
+	* src/kern.c: added kern-get-total-minutes for numeric clock access
+
+2006-07-07  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/lia.scm, worlds/haxima-1.002/shroom.scm, worlds/haxima-1.002/zane.scm:
+	Brought Shroom's prices inline with other reagent-sellers; reduced prices on more expensive reagents with all sellers
+
+2006-07-03  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/effects.scm: sleep effect reactivates on reload
+
+	* src/play.c: synchs place to reset sleepers on reload
+
+	* worlds/haxima-1.002/effects.scm:
+	spawned off slimes are less powerful than thier 'parent's
+
+2006-07-02  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/kathryn.scm, worlds/haxima-1.002/moongate.scm, worlds/haxima-1.002/mouse.scm:
+	Cleaned up logic in mouse.scm. Modified kathryn.scm such that if Kathryn joins,
+	and Thud is alive, then Thud automatically joins. This simplifies some of the
+	logic in mouse.scm.
+
+	* src/character.cpp:
+	Fix for kern-char-leave-player where kchar is not in party; call is benignly ignored
+
+2006-07-02  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/mouse.scm:
+	Thud had escaped down the wrong branch of an if/else. Now recaptured. Also, now goes beserk back in town if not present (or is this too evil?) Note that this file still crashes if t or k are dead
+
+2006-07-01  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/cmd.c, src/map.c, src/map.h:
+	bugfix for [ 1475928 ]: look works in complete darkness. Using the lightmap, if
+	no light is hitting a tile then x)amine won't report it. Changed the wording of
+	x)amine to say "can't see!" regardless if the reason is out-of-LOS or too dark.
+
+	* src/play.c:  bugfix for [ 1475929 ]: sleeping npcs wake on reloads
+
+	* worlds/haxima-1.002/spells.scm:
+	The big list of spells doesn't need to be permanent once it's registered in the kernel; takes up memory, slows down gc, etc
+
+	* src/occ.c: Occ destructor deletes its optional gob
+
+2006-07-01  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/occs.scm:
+	occ data for magical ability (theyre just meaningless numbers till the spells get revamped tho)
+
+	* worlds/haxima-1.002/occs.scm, worlds/haxima-1.002/tools.scm:
+	lockpicking based on occ gobs
+
+	* src/kern.c, src/occ.c, src/occ.h: added gob facilities to occupations
+
+2006-06-30  wolfoxbr  <wolfoxbr@localhost.localdomain>
+
+	* scripts/nazghul.iss:
+	Adding the Inno Setup script file used to generate the Windows installer
+
 2006-06-30  Gordon McNutt  <gmcnutt@localhost.localdomain>
 
 	* scripts/RELEASE_CHECKOFF: Added another note
