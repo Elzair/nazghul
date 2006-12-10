@@ -658,7 +658,7 @@
 (define skeletal-archer (mk-npct2 "skeletal archer" sp_skeleton oc_warrior s_skeleton basic-traps archer-equip undead-effects 'nolight-ai faction-monster nil 'drop-generic archer-loot))
 
 (define death-knight  (mk-npct2 "death knight"  sp_skeleton oc_warrior s_deathknight   basic-traps death-knight-equip  undead-effects 'death-knight-ai faction-monster  nil 'drop-generic dea-kni-loot))
-(define craven-archer (mk-npct2 "craven archer" sp_skeleton oc_warrior s_deathknight   basic-traps craven-archer-equip nil            'craven-archer-ai faction-monster nil 'drop-generic cra-arch-loot))
+(define craven-archer (mk-npct2 "craven archer" sp_skeleton oc_warrior s_deatharcher   basic-traps craven-archer-equip nil            'craven-archer-ai faction-monster nil 'drop-generic cra-arch-loot))
 
 (define halberdier    (mk-npct2 "halberdier"    sp_human    oc_warrior s_guard        no-traps halberdier-equip   nil 'guard-ai faction-men   nil 'drop-generic halberdier-loot))
 (define crossbowman   (mk-npct2 "crossbowman"   sp_human    oc_warrior s_xbowguard        no-traps crossbowman-equip  nil 'guard-ai faction-men   nil 'drop-generic crossbowman-loot))

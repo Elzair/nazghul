@@ -407,6 +407,7 @@
 (kern-mk-sprite 's_demon ss_humanoids 4 56 #f 0 )
 (kern-mk-sprite 's_ratling ss_humanoids 4 64 #f 0)
 (kern-mk-sprite 's_ratling_sorcerer ss_humanoids 4 68 #f 0)
+(kern-mk-sprite 's_deatharcher ss_humanoids 4 72 #f 0 )
 
 (kern-mk-sprite 's_gint ss_bigobjects 4 0 #f 0 )
 (kern-mk-sprite 's_gint_mage ss_bigobjects 4 4 #f 0 )
