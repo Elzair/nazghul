@@ -578,7 +578,6 @@ static void ctrl_attack_ui(class Character *character)
         class Character *target;
         struct terrain *terrain;
         class Object *mech;
-        struct nearest_hostile_info info;
 		
         // If in follow mode, when the leader attacks automatically switch to
         // turn-based mode.
@@ -588,15 +587,12 @@ static void ctrl_attack_ui(class Character *character)
                 player_party->enableRoundRobinMode();
         }
 
-        /* Partially initialize the suggestion info. */
-        memset(&info, 0, sizeof(info));
-        info.origin = character;
-        list_init(&info.suggest);
-
         // Loop over all readied weapons
-		int armsIndex=0;
+        int armsIndex=0;
         for (weapon = character->enumerateWeapons(&armsIndex); weapon != NULL; 
              weapon = character->getNextWeapon(&armsIndex)) {
+
+                struct nearest_hostile_info info;
                 				
                 // prompt the user
                 cmdwin_clear();
@@ -645,9 +641,9 @@ static void ctrl_attack_ui(class Character *character)
                 }
 
                 /* Build the list of suggested targets. */
-                info.range = weapon->getRange();
-                info.min_distance = 0;
-                info.nearest = 0;
+                memset(&info, 0, sizeof(info));
+                info.origin = character;
+                list_init(&info.suggest);
                 place_for_each_object(character->getPlace(),
                                       ctrl_suggest_visitor,
                                       &info);
