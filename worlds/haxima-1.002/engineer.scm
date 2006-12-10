@@ -117,7 +117,7 @@
 									#t))
 							((> nrem 0)
 								(begin
-									(say knpc "We still need a " (kern-type-get-name (car ktype)))
+									(say knpc "We still need the " (kern-type-get-name (car ktype)))
 									#t))
 							(else #f))))
 					voidship-parts)))
