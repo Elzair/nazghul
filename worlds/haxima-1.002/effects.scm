@@ -714,9 +714,6 @@
                                 1)
                    (kern-obj-get-location kobj)))
                    
-(define (fizzle kobj)
-  (kern-log-msg (kern-obj-get-name kobj) " shrugs off the attack"))
-
 ;; Prismatic -- pick a random effect. This isn't quite what I want, I'd rather
 ;; go through the powers layer, but that requires me to know who my caster
 ;; is. This was written to be used by a weapon like a prismatic wand, and the
@@ -730,7 +727,6 @@
                                             'burn
                                             'slip
                                             'apply-lightning
-                                            'fizzle
                                             'apply-random-field
                                             ))))
         (println selection)
