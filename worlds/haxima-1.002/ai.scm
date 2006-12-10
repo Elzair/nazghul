@@ -257,6 +257,9 @@
    (use-torch? kchar)
    ))
 
+(define (nixie-ai kchar)
+  (nolight-ai kchar))
+
 ;; Invoke a summoning ability if allies are outnumbered by a certain amount
 (define (ai-summon kchar ability)
   (and (can-use-ability? ability kchar)
