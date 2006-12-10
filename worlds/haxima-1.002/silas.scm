@@ -61,29 +61,42 @@
   (say knpc "Forgive me, I am Silas. And you, my friend, "
        "need no introduction."))
 
+(define (silas-ask-help knpc kpc)
+  (cond ((yes? kpc)
+         (say knpc "I can't tell you how gratified I am to hear that. "
+              "With you on my side we will bring a new age of hope and "
+              "peace to the Shard. When you are ready to begin, "
+              "I have a quest for you.")
+         (silas-set-will-help! (kobj-gob-data knpc))
+         )
+        (else
+         (say knpc "Although success is most doubtful now, "
+              "I shall have to do my best without you. "
+              "It is a pity. You know, in the past, the appearance of a "
+              "Wanderer always occurred at a pivotal moment in history. "
+              "The actions -- or inactions -- of the Wanderer sometimes "
+              "decided the fate of the world for centuries thereafter.")
+         )))
+
 (define (silas-join knpc kpc)
   (say knpc "[Chuckling] Actually, I was hoping to convince you to join ME. "
-       "I have a most difficult job ahead of me, but with your help I know it can be done."))
+       "I have a most difficult job ahead of me, but with your help I know it "
+       "can be done. Will you help me?")
+  (silas-ask-help knpc kpc)
+  )
 
 (define (silas-job knpc kpc)
   (say knpc "My goal is to bring a new golden age to the Shard. "
        "Many obstacles lie before me, "
        "and I greatly need someone with your talents. "
        "Will you help me, Wanderer? I cannot do this without you.")
-  (if (yes? knpc)
-      (begin
-        (say knpc "I can't tell you how gratified I am to hear that. "
-             "With you on my side we will bring a new age of hope and "
-             "peace to the Shard. When you are ready to begin, "
-             "I have a quest for you.")
-        (silas-set-will-help! (kobj-gob-data knpc))
-        )
-      (say knpc "Although success is most doubtful now, "
-           "I shall have to do my best without you. "
-           "It is a pity. You know, in the past, the appearance of a "
-           "Wanderer always occurred at a pivotal moment in history. "
-           "The actions -- or inactions -- of the Wanderer sometimes "
-           "decided the fate of the world for centuries thereafter.")))
+  (silas-ask-help knpc kpc)
+  )
+
+(define (silas-help knpc kpc)
+  (say knpc "Will you help me in my task?")
+  (silas-ask-help knpc kpc)
+  )
 
 (define (silas-bye knpc kpc)
   (say knpc "Farewell, Wanderer, and good fortune!"))
@@ -205,6 +218,89 @@
        "changing his mind. Unfortunately his notions of good and evil are misguided and "
        "unworkable."))
 
+(define (silas-deni knpc kpc)
+  (say knpc "Dennis is an earnest but frankly unimaginative young man."))
+
+(define (silas-sele knpc kpc)
+  (say knpc "Selene is a talented young woman. "
+       "Unfortunately her powers will always be inhibited by her insatiable "
+       "cruelty."))
+ 
+;; Quest-related
+(define (silas-ques knpc kpc)
+  (let* ((gob (kobj-gob-data knpc))
+        (quest (silas-quest gob)))
+
+    (define (has-all-runes?)
+      (all-in-inventory? kpc rune-types))
+
+    (define (missing-only-s-rune?)
+      (all-in-inventory? kpc
+                         (filter (lambda (ktype)
+                                   (not (eqv? ktype t_rune_s)))
+                                 rune-types)))
+
+    (define (give-last-rune)
+      (say knpc "I see you have all save 1 of the runes. Please forgive me for "
+           "a small deception, but I have hidden the last rune here in Old "
+           "Absalot. Consider it one last test for you to find it."))
+
+    (define (continue-quest) 
+      (say knpc "I see you are still missing at least one rune. Don't give up, "
+           "Wanderer! Ask among the Wise, delve into the deeps, search far and wide."))
+
+    (define (offer-quest)
+      (say knpc "Wanderer, I have a most important task for you: find the eight "
+           "rune-keys which lock the Demon Gate. Will you do this?")
+      (if (yes? kpc)
+          (begin
+            (quest-accepted! quest #t)
+            (say knpc "I know I can count on you. There is a most clever man, "
+                 "an Alchemist, who lives on Oparine. Perhaps you know of him already. He would "
+                 "be a good place to start."))
+          (say knpc "It is imperative that we find them. I am disappointed, my "
+               "friend, but no doubt you have your reasons.")))
+
+    (define (end-quest)
+      (quest-done! quest #t)
+      (say knpc "Well done, Wanderer! You have collected all the lost runes, "
+           "a feat worthy of legend. Well done, indeed!")
+      (prompt-for-key)
+      (say knpc "Now that all the runes are recovered, it is imperative that "
+           "they be kept safe. Forgive me for being overly suspicious, but I do not trust "
+           "their keeping to the Wise, not even to the Enchanter himself.")
+      (prompt-for-key)
+      (say knpc "I know what you are thinking, my friend, but perish the thought! "
+           "I could not possibly keep them here with me. Nor do I want to. "
+           "No, I have something much more daring in mind. ")
+      (prompt-for-key)
+      (say knpc "Wanderer, the time has come to grasp the nettle. Indeed, I "
+           "sense that this is what brought you to the Shard. Take the keys, find the Gate, "
+           "and unlock it. Face what lies within. Be bold, and you will usher in a New "
+           "Age. Will you do this?")
+      (if (yes? kpc)
+          (say knpc "Then I will tell you a great secret hidden even from the "
+               "Wise: the gods yet live, as do their foes. I know not which you will face. But "
+               "this I know: their foes sealed the Gate. ")
+          (say knpc "[His shoulders slump] It was not your burden to bear, "
+               "Wanderer, for you are a stranger to this "
+               "world. Keep the keys safe, at least, if you will not change your mind.")))
+
+    (if (silas-will-help? gob)
+        (if (quest-done? quest)
+            (say knpc "Seek the Demon Gate!")
+            (if (quest-accepted? quest)
+                (if (has-all-runes?)
+                    (end-quest)
+                    (if (missing-only-s-rune?)
+                        (give-last-rune)
+                        (continue-quest)))
+                (offer-quest)))
+        (say knpc "Join me, and there will be quests and glory in abundance. "
+             "You will become the most famous Wanderer -- indeed, "
+             "the greatest hero of the Shard -- for all time."))
+    ))
+
 
 (define (pissed-off-silas)
   (kern-dtable-dec faction-player faction-accursed)
@@ -246,25 +342,29 @@
        (method 'name silas-name)
        (method 'join silas-join)
 
-       (method 'expe silas-expe)
-       (method 'hist silas-hist)
-       (method 'wand silas-wand)
+       (method 'absa silas-absa)
+       (method 'accu silas-accu)
        (method 'demo silas-demo)
+       (method 'deni silas-deni)
+       (method 'desi silas-desi)
+       (method 'ench silas-ench)
+       (method 'evil silas-evil)
+       (method 'expe silas-expe)
+       (method 'gate silas-demo)
+       (method 'good silas-good)
+       (method 'help silas-help)
+       (method 'hist silas-hist)
        (method 'key silas-key)
        (method 'keys silas-key)
-       (method 'rune silas-rune)
-       (method 'accu silas-accu)
-       (method 'secr silas-secr)
-       (method 'wise silas-wise)
-       (method 'absa silas-absa)
-       (method 'evil silas-evil)
-       (method 'good silas-good)
-       (method 'desi silas-desi)
-       (method 'sacr silas-sacr)
-       (method 'ench silas-ench)
-       (method 'gate silas-demo)
        (method 'noss silas-noss)
-       (method 'ques silas-wand)
+       (method 'ques silas-ques)
+       (method 'rune silas-rune)
+       (method 'sacr silas-sacr)
+       (method 'secr silas-secr)
+       (method 'sele silas-sele)
+       (method 'task silas-job)
+       (method 'wand silas-wand)
+       (method 'wise silas-wise)
        ))
 
 (define (mk-silas)
