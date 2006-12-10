@@ -68,6 +68,7 @@
               "peace to the Shard. When you are ready to begin, "
               "I have a quest for you.")
          (silas-set-will-help! (kobj-gob-data knpc))
+         (make-allies knpc kpc)
          )
         (else
          (say knpc "Although success is most doubtful now, "
@@ -302,11 +303,7 @@
     ))
 
 
-(define (pissed-off-silas)
-  (kern-dtable-dec faction-player faction-accursed)
-  (kern-dtable-dec faction-player faction-accursed)
-  (kern-dtable-dec faction-player faction-accursed)
-  (kern-dtable-dec faction-player faction-accursed)
+(define (pissed-off-silas knpc kpc)
   (map (lambda (tag)
          (if (defined? tag)
              (let ((kchar (eval tag)))
@@ -315,8 +312,9 @@
                      (kern-being-set-base-faction kchar faction-accursed)
                      (kern-char-set-schedule kchar nil)
                      )))))
-       (list 'ch_silas 'ch_dennis 'ch_selene)))
-  
+       (list 'ch_silas 'ch_dennis 'ch_selene))
+  (make-enemies knpc kpc)
+  )
 
 (define (silas-noss knpc kpc)
   (say knpc "[His face freezes] How did you learn that name, friend?")
@@ -327,7 +325,7 @@
       (say knpc "I think you have. I think you have been misbehaving, "
            "and now you are telling a fib. You are not welcome here. "
            "Leave at once."))
-  (pissed-off-silas)
+  (pissed-off-silas knpc kpc)
   (kern-conv-end)
   )
 
