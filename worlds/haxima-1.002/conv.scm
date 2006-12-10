@@ -122,6 +122,8 @@
                (say knpc "Go south to Trigrave and ask there."))
               ((equal? kplace p_glasdrin)
                (say knpc "Take the road south."))
+              ((equal? kplace p_oparine)
+               (say knpc "Well, here you are already!"))
               (else 
                (say knpc "I'm not sure how to get there from here."))
               ))))
