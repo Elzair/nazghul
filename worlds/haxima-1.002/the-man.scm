@@ -149,7 +149,7 @@
   (if (kern-conv-get-yes-no? kpc)
       (say knpc "Well, aren't we the accomplished magician? I hope you don't "
            "know any love spells, Wizard!")
-      (say knpc "Mix mandrake, black pearl and spider silk, then chant Vas "
+      (say knpc "Mix mandrake, blood moss and spider silk, then chant Vas "
            "Uus Ylem next to the spot where the ship has sunk."))
   (say knpc "Ghertie will not give up the location of her ship freely. But "
        "even the dead have desires, indeed that is the worst part of "
