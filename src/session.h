@@ -56,13 +56,18 @@ extern void save_err(char *fmt, ...);
 extern int load_errs;
 extern int save_errs;
 
+typedef struct {
+        int duration;
+        struct sprite *sprite;
+} global_effect_t;
+
 /* Backwards-compatible replacements for the old global flags: */
 #define Reload (Session->reload)
-#define Reveal (Session->reveal)
-#define Quicken (Session->quicken)
-#define TimeStop (Session->time_stop)
-#define MagicNegated (Session->magic_negated)
-#define XrayVision (Session->xray)
+#define Reveal (Session->reveal.duration)
+#define Quicken (Session->quicken.duration)
+#define TimeStop (Session->time_stop.duration)
+#define MagicNegated (Session->magic_negated.duration)
+#define XrayVision (Session->xray.duration)
 
 #define add_reveal(val) ((Reveal) += val)
 #define add_quicken(val) ((Quicken) += val)
@@ -75,6 +80,12 @@ extern int save_errs;
 #define dec_time_stop(val) ((TimeStop) -= min((TimeStop), (val)))
 #define dec_magic_negated(val) ((MagicNegated) -= min((MagicNegated), (val)))
 #define dec_xray(val) ((XrayVision) -= min((XrayVision), (val)))
+
+#define reveal_effect_sprite() (Session->reveal.sprite)
+#define quicken_effect_sprite() (Session->quicken.sprite)
+#define time_stop_effect_sprite() (Session->time_stop.sprite)
+#define magic_negated_effect_sprite() (Session->magic_negated.sprite)
+#define xray_vision_effect_sprite() (Session->xray.sprite)
 
 /* Access to global session passability table: */
 #define session_ptable() (Session->ptable)
@@ -151,19 +162,19 @@ struct session {
         int reload;
 
         /* The number of turns until the "reveal hidden" effect expires: */
-        int reveal;
+        global_effect_t reveal;
 
         /* The number of turns until the "quicken" effect expires: */
-        int quicken;
+        global_effect_t quicken;
 
         /* The number of turns until the "time stop" effect expires: */
-        int time_stop;
+        global_effect_t time_stop;
 
         /* The number of turns until the "magic negated" effect expires: */
-        int magic_negated;
+        global_effect_t magic_negated;
 
         /* The number of turns until the "xray vision" effect expires: */
-        int xray;
+        global_effect_t xray;
 
         /* The passability table */
         struct ptable *ptable;

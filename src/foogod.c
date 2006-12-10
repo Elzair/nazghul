@@ -28,6 +28,7 @@
 #include "combat.h"
 #include "session.h"
 #include "vehicle.h"
+#include "sprite.h"
 
 struct foogod {
 	SDL_Rect screenRect;
@@ -103,15 +104,41 @@ int foogodInit(void)
         return 0;
 }
 
+static void foogodPaintEffect(SDL_Rect *rect, struct sprite *sprite)
+{
+        sprite_paint(sprite, 0, rect->x, rect->y);
+        rect->x += ASCII_W;
+}
+
+static void foogodPaintEffects()
+{
+        SDL_Rect rect = Foogod.effectsRect;
+
+        if (TimeStop) {
+                foogodPaintEffect(&rect, time_stop_effect_sprite());
+        }
+
+        if (Reveal) {
+                foogodPaintEffect(&rect, reveal_effect_sprite());
+        }
+
+        if (Quicken) {
+                foogodPaintEffect(&rect, quicken_effect_sprite());
+        }
+
+        if (MagicNegated) {
+                foogodPaintEffect(&rect, magic_negated_effect_sprite());
+        }
+
+        if (XrayVision) {
+                foogodPaintEffect(&rect, xray_vision_effect_sprite());
+        }
+}
+
 static void foogodPaintSessionInfo()
 {
         screenPrint(&Foogod.turnRect, 0, "Turn: %d", session_get_turn_count());
-        screenPrint(&Foogod.effectsRect, 0, "Eff: %s%s%s%s"
-                    , (TimeStop     ? "T" : "")
-                    , (Quicken      ? "Q" : "")
-                    , (MagicNegated ? "N" : "")
-                    , (Reveal       ? "R" : "")
-                );
+        foogodPaintEffects();
 
         if (player_party) {
                 screenPrint(&Foogod.foodRect, 0, "Food: %d", 

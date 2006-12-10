@@ -597,6 +597,7 @@ void Object::paint(int sx, int sy)
 
 void Object::describe()
 {
+        assert(getObjectType()); // else implement this method in subclass
         getObjectType()->describe(this);
         if (!isVisible())
                 consolePrint(" (invisible)");
@@ -604,17 +605,15 @@ void Object::describe()
 
 void Object::examine()
 {
-	if (getObjectType())
-	{
-		describe();
-	}
-	//todo: dont have examiner to pass in to ifc
-	if (getObjectType() && getObjectType()->canXamine())
-	{
-		log_end(":");
-		getObjectType()->xamine(this, this);
-		log_begin("");
-	} 
+        assert(getObjectType()); // else implement this method in subclass
+        describe();
+
+        //todo: dont have examiner to pass in to ifc
+        if (getObjectType()->canXamine()) {
+                log_end(":");
+                getObjectType()->xamine(this, this);
+                log_begin("");
+        }
 }
 
 sound_t *Object::get_movement_sound()

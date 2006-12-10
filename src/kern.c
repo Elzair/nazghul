@@ -7944,6 +7944,61 @@ KERN_API_CALL(kern_type_get_gob)
         return type->getGob()->p;
 }
 
+KERN_API_CALL(kern_set_quicken_sprite)
+{
+        struct sprite *sprite;
+        if (unpack(sc, &args, "p", &sprite)) {
+                load_err("kern-set-quicken-sprite: bad args");
+                return sc->F;
+        }
+        quicken_effect_sprite() = sprite;
+        return sc->T;
+}
+
+KERN_API_CALL(kern_set_magic_negated_sprite)
+{
+        struct sprite *sprite;
+        if (unpack(sc, &args, "p", &sprite)) {
+                load_err("kern-set-magic-negated-sprite: bad args");
+                return sc->F;
+        }
+        magic_negated_effect_sprite() = sprite;
+        return sc->T;
+}
+
+KERN_API_CALL(kern_set_reveal_sprite)
+{
+        struct sprite *sprite;
+        if (unpack(sc, &args, "p", &sprite)) {
+                load_err("kern-set-reveal-sprite: bad args");
+                return sc->F;
+        }
+        reveal_effect_sprite() = sprite;
+        return sc->T;
+}
+
+KERN_API_CALL(kern_set_xray_vision_sprite)
+{
+        struct sprite *sprite;
+        if (unpack(sc, &args, "p", &sprite)) {
+                load_err("kern-set-xray-vision-sprite: bad args");
+                return sc->F;
+        }
+        xray_vision_effect_sprite() = sprite;
+        return sc->T;
+}
+
+KERN_API_CALL(kern_set_time_stop_sprite)
+{
+        struct sprite *sprite;
+        if (unpack(sc, &args, "p", &sprite)) {
+                load_err("kern-set-time_stop-sprite: bad args");
+                return sc->F;
+        }
+        time_stop_effect_sprite() = sprite;
+        return sc->T;
+}
+
 KERN_OBSOLETE_CALL(kern_set_ascii);
 KERN_OBSOLETE_CALL(kern_set_frame);
 KERN_OBSOLETE_CALL(kern_set_cursor);
@@ -8229,6 +8284,11 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-set-camping-proc", kern_set_camping_proc);
         API_DECL(sc, "kern-set-combat-procs", kern_set_combat_procs);
         API_DECL(sc, "kern-set-camping-proc", kern_set_camping_proc);
+        API_DECL(sc, "kern-set-quicken-sprite", kern_set_quicken_sprite);
+        API_DECL(sc, "kern-set-time-stop-sprite", kern_set_time_stop_sprite);
+        API_DECL(sc, "kern-set-magic-negated-sprite", kern_set_magic_negated_sprite);
+        API_DECL(sc, "kern-set-reveal-sprite", kern_set_reveal_sprite);
+        API_DECL(sc, "kern-set-xray-vision-sprite", kern_set_xray_vision_sprite);
         API_DECL(sc, "kern-set-spell-words", kern_set_spell_words);
         API_DECL(sc, "kern-set-start-proc", kern_set_start_proc);
         API_DECL(sc, "kern-set-wind", kern_set_wind);

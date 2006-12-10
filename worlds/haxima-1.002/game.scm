@@ -267,4 +267,11 @@
 (kern-set-combat-procs proc-stratt proc-dexatt
 	proc-stratt proc-dexdef)
 
+;; Setup the global effect sprites
+(kern-set-quicken-sprite s_quicken)
+(kern-set-time-stop-sprite s_time_stop)
+(kern-set-magic-negated-sprite s_magic_negated)
+(kern-set-reveal-sprite s_reveal)
+(kern-set-xray-vision-sprite s_xray_vision)
+
 (kern-init-random)

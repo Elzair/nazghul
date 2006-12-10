@@ -567,12 +567,15 @@ int session_save(char *fname)
         windSave(save);
 
         /* Save the flags */
-        save->write(save, "(kern-add-reveal %d)\n", Session->reveal);
-        save->write(save, "(kern-add-quicken %d)\n", Session->quicken);
-        save->write(save, "(kern-add-time-stop %d)\n", Session->time_stop);
+        save->write(save, "(kern-add-reveal %d)\n", Session->reveal.duration);
+        save->write(save, "(kern-add-quicken %d)\n", 
+                    Session->quicken.duration);
+        save->write(save, "(kern-add-time-stop %d)\n", 
+                    Session->time_stop.duration);
         save->write(save, "(kern-add-magic-negated %d)\n", 
-                    Session->magic_negated);
-        save->write(save, "(kern-add-xray-vision %d)\n", Session->xray);
+                    Session->magic_negated.duration);
+        save->write(save, "(kern-add-xray-vision %d)\n", 
+                    Session->xray.duration);
 
         /* save the work queues */
         /* NOTE: don't see how we can, since work queue jobs use a void

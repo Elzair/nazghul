@@ -32,6 +32,15 @@ typedef enum {
         , FOOGOD_HINT
 } foogod_mode_t;
 
+typedef enum {
+        FOOGOD_QUICKEN = 0,
+        FOOGOD_REVEAL,
+        FOOGOD_MAGIC_NEGATED,
+        FOOGOD_TIME_STOP,
+        FOOGOD_XRAY_VISION,
+        FOOGOD_NUM_EFFECTS
+} foogod_effect_t;
+
 extern int foogodInit(void);
 extern void foogodRepaint(void);
 extern void foogodAdvanceTurns();
