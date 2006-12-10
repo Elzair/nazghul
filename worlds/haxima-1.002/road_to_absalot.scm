@@ -109,6 +109,8 @@
  (put (guard-pt 'death-knight) 8 8)
  (put (spawn-pt 'craven-archer) 10 6)
  (put (spawn-pt 'zorn) 8 6)
+ (put (spawn-pt 'zorn) 7 6)
+ (put (spawn-pt 'zorn) 9 6)
  )
 
 (define (mk-r2a-statue)
