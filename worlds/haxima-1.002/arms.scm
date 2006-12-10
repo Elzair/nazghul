@@ -208,7 +208,7 @@
    (list 't_acid_spray "acid spray" nil          "-7"     "1d6"    "+0"     slot-nil      2      2     t_slimeglob  #t      0        10       50       20       1.0  )
    (list 't_fire_glob  "fire glob"  nil          "-8"     "1d6"    "+0"     slot-nil      2      2     t_fireball   #t      0        10       50       20       1.0  )
    (list 't_stun_wand  "stun wand"  s_stun_wand  "-2"     "1d4"    "-1"     slot-weapon   1      6     t_stunball   #t      2        0        80       0        1.0  )
-   (list 't_prismatic_gaze "prismatic gaze" nil  "1d4"    "0"      "0"      slot-nil      1      2     t_prismatic_bolt #t  0        0        0        0        0.85 )
+   (list 't_prismatic_gaze "prismatic gaze" nil  "1d4"    "0"      "0"      slot-nil      1      3     t_prismatic_bolt #t  0        0        0        0        0.85 )
    ))
 
 ;; ============================================================================
