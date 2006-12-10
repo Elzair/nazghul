@@ -168,8 +168,7 @@ class PlayerParty : public Party {
         struct formation *formation;
         struct terrain_map *campsite_map;
         struct formation *campsite_formation;
-        struct position_info pinfo;
-		void sortReadiedItems(class Character * member);
+        void sortReadiedItems(class Character * member);
 
  protected:
         enum MoveResult try_to_move_off_map(struct move_info *info);

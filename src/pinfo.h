@@ -56,11 +56,6 @@ struct position_info {
         class Object *subject; // Use the subject being positioned instead of
                                // the obsolete pmask.
 
-        bool find_edge;      // When running the placement algorithm, true iff
-                             // the party member must be able to pathfind back
-                             // to the edge.
-
-
         bool find_party;     // When running the placement algorithm, true iff
                              // the party member must be able to pathfind back
                              // to the party coordinates.

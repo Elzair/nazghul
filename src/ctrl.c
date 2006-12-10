@@ -643,6 +643,7 @@ static void ctrl_attack_ui(class Character *character)
                 /* Build the list of suggested targets. */
                 memset(&info, 0, sizeof(info));
                 info.origin = character;
+                info.range = weapon->getRange();
                 list_init(&info.suggest);
                 place_for_each_object(character->getPlace(),
                                       ctrl_suggest_visitor,

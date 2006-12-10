@@ -213,7 +213,6 @@ static int location_is_safe(struct position_info *info)
 {
         struct astar_node *path;
         int flags = PFLAG_IGNOREBEINGS;
-        int edge_x = 0, edge_y = 0;
         struct astar_search_info as_info;
         struct terrain *terrain;
 
@@ -248,54 +247,7 @@ static int location_is_safe(struct position_info *info)
         
 
         memset(&as_info, 0, sizeof (as_info));
-
-        if (info->find_edge) {
-
-                assert(info->dx || info->dy);
-                assert(!info->dx || !info->dy); // assume no diagonals for now
-
-                dbg("searching for path to ");
-
-                if (info->dx < 0) {
-                        // facing west, find path back to east edge
-                        edge_x = place_w(info->place) - 1;
-                        flags |= PFLAG_VERT;
-                        dbg("east ");
-                }
-                else if (info->dx > 0) {
-                        // facing east, find path to back west edge
-                        edge_x = 0;
-                        flags |= PFLAG_VERT;
-                        dbg("west ");
-                }
-                else if (info->dy < 0) {
-                        // facing north, find path back to south edge
-                        edge_y = place_h(info->place) - 1;
-                        flags |= PFLAG_HORZ;
-                        dbg("north ");
-                }
-                else {
-                        // facing south, find path back to north edge
-                        edge_y = 0;
-                        flags |= PFLAG_HORZ;
-                        dbg("south ");
-                }
-
-                dbg("edge...");
-
-                as_info.x0 = info->px;
-                as_info.y0 = info->py;
-                as_info.x1 = edge_x;
-                as_info.y1 = edge_y;
-                as_info.flags = flags;
-
-                path = place_find_path(info->place, &as_info, info->subject);
-
-                if (!path)
-                        dbg("no path back to edge\n");
-
-        }
-        else if (info->find_party) {
+        if (info->find_party) {
                 // Each member should be able to find a path back to the
                 // party's originating location on the map.
                 dbg("searching for path to party [%d %d]...",
@@ -1422,7 +1374,8 @@ static bool position_player_party(struct combat_info *cinfo)
         }
 
         player_party->remove();
-        player_party->forEachReverseMember(combat_place_character, &player_party->pinfo);
+        player_party->forEachReverseMember(combat_place_character, 
+                                           &player_party->pinfo);
         return true;
 }
 
@@ -1430,9 +1383,10 @@ bool combat_enter(struct combat_info * info)
 {
         struct location loc;
 
-        if (player_party->allDead())
-                // Yes, this can happen in some rare circumstances...
+        if (player_party->allDead()) {
+                /* Yes, this can happen in some rare circumstances... */
                 return false;
+        }
 
         /* Our map-building code assumes 4-neighbor adjacency. If attacking on
          * a diagonal, randomly choose a cardinal direction. */
