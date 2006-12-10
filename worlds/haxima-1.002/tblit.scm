@@ -31,7 +31,6 @@
 
 ;; Do the blit upon receiving an "on" signal.
 (define (tblit-on kobj)
-  (display "tblit-on")(newline)
   (apply blit-map (map safe-eval (kobj-gob-data kobj))))
 
 ;; Blit mechs are not visible.
