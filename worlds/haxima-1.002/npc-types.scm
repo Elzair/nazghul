@@ -653,9 +653,9 @@
 
 (define ranger                (mk-npct2 "ranger"                sp_human        oc_ranger s_ranger basic-traps  ranger-equip     nil 'ranger-ai  faction-men  'ranger-conv 'drop-generic ranger-loot))
 
-(define skeletal-spear-thrower (mk-npct2 "skeletal spear-thrower" sp_skeleton oc_warrior s_skeleton basic-traps spear-thrower-equip    undead-effects 'nolight-ai faction-monster nil 'drop-generic spear-thrower-loot))
+(define skeletal-spear-thrower (mk-npct2 "skeletal spear-thrower" sp_skeleton oc_warrior s_spearskeleton basic-traps spear-thrower-equip    undead-effects 'nolight-ai faction-monster nil 'drop-generic spear-thrower-loot))
 (define skeletal-warrior (mk-npct2 "skeletal warrior" sp_skeleton oc_warrior s_skeleton basic-traps skeletal-warrior-equip undead-effects 'nolight-ai faction-monster nil 'drop-generic skel-war-loot))
-(define skeletal-archer (mk-npct2 "skeletal archer" sp_skeleton oc_warrior s_skeleton basic-traps archer-equip undead-effects 'nolight-ai faction-monster nil 'drop-generic archer-loot))
+(define skeletal-archer (mk-npct2 "skeletal archer" sp_skeleton oc_warrior s_skeletonarcher basic-traps archer-equip undead-effects 'nolight-ai faction-monster nil 'drop-generic archer-loot))
 
 (define death-knight  (mk-npct2 "death knight"  sp_skeleton oc_warrior s_deathknight   basic-traps death-knight-equip  undead-effects 'death-knight-ai faction-monster  nil 'drop-generic dea-kni-loot))
 (define craven-archer (mk-npct2 "craven archer" sp_skeleton oc_warrior s_deatharcher   basic-traps craven-archer-equip nil            'craven-archer-ai faction-monster nil 'drop-generic cra-arch-loot))

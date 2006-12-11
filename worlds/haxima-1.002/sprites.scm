@@ -154,7 +154,7 @@
 (kern-mk-sprite 's_gazer          ss_u4_shapes 4 184 #f 0 )
 (kern-mk-sprite 's_deathknight         ss_u4_shapes 4 188 #f 0 )
 (kern-mk-sprite 's_orc            ss_u4_shapes 4 192 #f 0 )
-(kern-mk-sprite 's_skeleton       ss_u4_shapes 4 196 #f 0 )
+;;(kern-mk-sprite 's_skeleton       ss_u4_shapes 4 196 #f 0 )
 ;;(kern-mk-sprite 's_brigand        ss_u4_shapes 4 200 #f 0 )
 (kern-mk-sprite 's_snake          ss_u4_shapes 4 204 #f 0 )
 ;;(kern-mk-sprite 's_ettin          ss_u4_shapes 4 208 #f 0 )
@@ -408,6 +408,9 @@
 (kern-mk-sprite 's_ratling ss_humanoids 4 64 #f 0)
 (kern-mk-sprite 's_ratling_sorcerer ss_humanoids 4 68 #f 0)
 (kern-mk-sprite 's_deatharcher ss_humanoids 4 72 #f 0 )
+(kern-mk-sprite 's_skeleton       ss_humanoids 4 76 #f 0 )
+(kern-mk-sprite 's_spearskeleton     ss_humanoids 4 80 #f 0 )
+(kern-mk-sprite 's_skeletonarcher    ss_humanoids 4 84 #f 0 )
 
 (kern-mk-sprite 's_gint ss_bigobjects 4 0 #f 0 )
 (kern-mk-sprite 's_gint_mage ss_bigobjects 4 4 #f 0 )
