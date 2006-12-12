@@ -151,7 +151,7 @@
 (kern-mk-sprite 's_mimic          ss_u4_shapes 4 172 #f 0 )
 (kern-mk-sprite 's_reaper         ss_u4_shapes 4 176 #f 0 )
 (kern-mk-sprite 's_insects        ss_u4_shapes 4 180 #f 0 )
-(kern-mk-sprite 's_gazer          ss_u4_shapes 4 184 #f 0 )
+;;(kern-mk-sprite 's_gazer          ss_u4_shapes 4 184 #f 0 )
 (kern-mk-sprite 's_deathknight         ss_u4_shapes 4 188 #f 0 )
 (kern-mk-sprite 's_orc            ss_u4_shapes 4 192 #f 0 )
 ;;(kern-mk-sprite 's_skeleton       ss_u4_shapes 4 196 #f 0 )
@@ -467,6 +467,8 @@
 (kern-mk-sprite 's_griffin_asleep ss_monsters 1 4 #f 0)
 (kern-mk-sprite 's_griffin_chick ss_monsters 4 12 #f 0)
 (kern-mk-sprite 's_griffin_chick_asleep ss_monsters 1 12 #f 0)
+(kern-mk-sprite 's_gazer          ss_monsters 4 8 #f 0 )
+(kern-mk-sprite 's_gazer_asleep   ss_monsters 1 16 #f 0 )
 
 (kern-mk-sprite 's_tower ss_buildings 2 0 #f 0)
 
