@@ -1,0 +1,77 @@
+Some notes on making sprites in The GIMP
+
+Where I give instructions they tend to be a bit long due to getting setting right, in repeated application, a lot of them are easier than they may appear.
+
+  Sprite Size
+  ===========
+
+Standard sprite size is 30x30, to allow a minimum 1 pixel border around the sprite.
+
+Working on a 128x128 base image, this means leaving 4 pixels around the edge.
+
+Some larger objects may relax this a little, having a 1/2 pixel border, but mostly big things should use the large icon support.
+
+  Layers
+  ======
+
+Use multiple layers for changes in poses, easily editable sections (eg patterns on a shirt), different versions, etc etc
+
+When in doubt, add another layer
+
+  Colours
+  =======
+  
+Use block colours, with the pencil tool, not antialiases colours as per the paintbrush. This makes editing colours a lot easier, and you still get the antialiasing when you scale down the sprite.
+
+Similarly, give the eraser the Hard Edge setting.
+
+Colours on objects can thus be changed relatively simply by selecting the new colour, and grabbing and filling regions.
+
+  Borders
+  =======
+
+Standard border around features within a sprite is 3px (1.5 on output), but may be altered if less distinction is needed
+
+Standard border around the sprite itself is 8px (2 on output). Where the sprite approaches the edge of the tile, this may reduce to 4 (1 on output) or even 2 (half on output) in extreme cases.
+
+  To create internal borders:
+
+Add a new layer below the feature
+Grab the By Color Select tool
+Set the select threshold to 0
+Turn off sample merged
+Go to the layer containing the feature
+Select the feature
+Go to the new layer
+menu->select->grow by the appropriate number of pixels
+Make the background color black
+menu->edit->fill with BG Color
+
+  To create external borders:
+	
+add a new layer below the sprite
+fill it entirely with black
+grab the fuzzy select 
+Set the select threshold to 0
+Turn ON sample merged
+make sure the sprite is visible, as it should look on a black background
+select the background on the new layer. This should have everything but your sprite selected.
+menu->select->shrink by 8px, with shrink from border turned OFF
+menu->edit->clear
+
+  Output
+  ======
+  
+Final sprite output can be achieved by doing the following for each frame:
+
+select appropriate layers for frame pose
+remove any selection (menu->select->none)
+menu->image->Scale Image down to 32x32
+menu->edit->copy visible (this merges the layers as it copies)
+paste into target image
+menu->edit->undo till the image is back to full size
+
+Note that you can normally get away with scaling down 2 frames, and using halves of those for the other 2.
+Eg make a "both hands down" sprite and a "both hands up" sprite, then chop it in half for the "one up, one down" sprites
+
+
