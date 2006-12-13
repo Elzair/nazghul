@@ -964,6 +964,7 @@ bool cmdSearch(class Character *pc)
 	place_describe(place, x2, y2, PLACE_DESCRIBE_ALL);
         log_end(".");
         Reveal = old_reveal;
+        pc->decActionPoints(NAZGHUL_BASE_ACTION_POINTS);
 	return true;
 }
 
@@ -1007,6 +1008,7 @@ bool cmdGet(class Object *actor)
         log_end_group();
 
         mapSetDirty();
+        actor->decActionPoints(NAZGHUL_BASE_ACTION_POINTS);
 
 	return true;
 }
@@ -1435,7 +1437,7 @@ bool cmdReady(class Character * member)
         foogodSetMode(FOOGOD_DEFAULT);
 
         if (committed) {
-				player_party->sortReadiedItems(member);
+                player_party->sortReadiedItems(member);
                 member->decActionPoints(NAZGHUL_BASE_ACTION_POINTS);
         }
 
