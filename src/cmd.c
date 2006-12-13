@@ -69,6 +69,12 @@
 #define MIN_XAMINE_LIGHT_LEVEL 32
 #define ESCAPE_CHARACTER 110
 
+/* Disabling the '>' command when standing over a subplace. This is generally
+ * not useful and can be abused for some towns. */
+#ifndef ENABLE_TOWN_ZOOM_IN
+#define ENABLE_TOWN_ZOOM_IN 0
+#endif
+
 extern int DeveloperMode;
 
 /* SAM: Using this typedef below */
@@ -3144,11 +3150,16 @@ void cmdZoomIn(void)
         if ((subplace = place_get_subplace(player_party->getPlace(),
                                                   player_party->getX(),
                                                   player_party->getY()))) {
-
-                // Standing over a subplace. Try to enter with no direction,
-                // this will prompt the player to provide a direction.
-                log_msg("Enter-%s\n", subplace->name);
-                player_party->try_to_enter_subplace_from_edge(subplace, 0, 0);
+                if (ENABLE_TOWN_ZOOM_IN) {
+                        // Standing over a subplace. Try to enter with no
+                        // direction, this will prompt the player to provide a
+                        // direction.
+                        log_msg("Enter-%s", subplace->name);
+                        player_party->try_to_enter_subplace_from_edge(subplace,
+                                                                      0, 0);
+                } else {
+                        log_msg("Enter-Use a side entrance!");
+                }
 
         } else if (!place_is_passable(player_party->getPlace(),
                                       player_party->getX(),
@@ -3166,14 +3177,14 @@ void cmdZoomIn(void)
                         place_get_terrain(player_party->getPlace(),
                                           player_party->getX(),
                                           player_party->getY() );
-                log_msg("Enter-Cannot zoom-in to %s!\n", tt->name);
+                log_msg("Enter-Cannot zoom-in to %s!", tt->name);
         } else {
                 // If standing on ordinary terrain, zoom in:
                 struct terrain * tt = 
                         place_get_terrain(player_party->getPlace(),
                                           player_party->getX(),
                                           player_party->getY() );
-                log_msg("Enter-%s\n", tt->name);
+                log_msg("Enter-%s", tt->name);
                 run_combat(false, 0, 0, NULL);
         }
 }
