@@ -76,7 +76,7 @@ static void vmask_error(char *msg)
 
 static void vmask_make_key(char *key, struct place *place, int x, int y)
 {
-        snprintf(key, VMASK_MAX_KEY_LEN, "%d:%d:%s", x, y, place->name);
+        snprintf(key, VMASK_MAX_KEY_LEN, "%d:%d:%p", x, y, place);
 }
 
 
