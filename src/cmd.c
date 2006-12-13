@@ -2576,8 +2576,11 @@ bool cmdCastSpell(class Character * pc)
         pc->addExperience(spell->cost);
 
 	/* If the spell was mixed then remove it from inventory. */
-	if (mixed)
+	if (mixed) {
+                int count = ie->count - 1;
 		player_party->takeOut(ie->type, 1);
+                log_msg("%d %s remaining", count, spell_name);
+        }
 
         /* Some spells have status in the foogod window, so repaint it now. */
         foogodRepaint();
