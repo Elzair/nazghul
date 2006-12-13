@@ -2594,7 +2594,7 @@ bool cmdMixReagents(class Character *character)
 	struct get_spell_name_data context;
 	struct list reagents, *elem;
 	int quantity, max_quantity;
-	struct inv_entry *ie;
+	struct inv_entry *ie, *ie_spell = 0;
 	bool mistake = false;
         char spell_name[MAX_SPELL_NAME_LENGTH];
 
@@ -2615,6 +2615,17 @@ bool cmdMixReagents(class Character *character)
 
 	// Lookup the spell. If null then keep going and bomb when done.
 	spell = magic_lookup_spell(&Session->magic, context.spell_name);
+
+        // Show the player how many he already has mixed...
+        ie_spell = 0;
+        if (spell) {
+                ie_spell = player_party->inventory->search(spell->type);
+        }
+        if (ie_spell && ie_spell->count) {
+                cmdwin_spush("%d mixed", ie_spell->count);
+        } else {
+                cmdwin_spush("0 mixed");
+        }
 
 	// Prompt for reagents 
 	cmdwin_spush("<select, then M)ix>");
