@@ -56,7 +56,6 @@
 #define mview_center_x(mview) (mview_x(mview) + mview_w(mview) / 2)
 #define mview_center_y(mview) (mview_y(mview) + mview_h(mview) / 2)
 
-
 /**
  *  Convert map coords to screen coords 
  */
@@ -1360,6 +1359,12 @@ void mapPaintDamage(int x, int y)
         rect.h = tile_h;
         rect.x = MX_TO_SX(x);
         rect.y = MY_TO_SY(y);
+
+        /* Sometimes a damage flash doesn't make sense to the player unless the
+         * map view is updated first. For example, a character that gets 2x the
+         * normal action points per turn might move and then attack. The move
+         * won't be shown until the map is updated. */
+        mapUpdate(REPAINT_IF_DIRTY);
 
         mapPaintProjectile(&rect, Session->damage_sprite, 
                            Map.tile_scratch_surf, 100);
