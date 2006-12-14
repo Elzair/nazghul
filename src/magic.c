@@ -24,6 +24,7 @@
 #include "magic.h"
 #include "debug.h"
 
+#include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -97,6 +98,12 @@ static void magic_del_spell_tree(struct spell *root)
         if (root->right)
                 magic_del_spell_tree(root->right);
         spell_del(root);
+}
+
+static int magic_is_code(char code)
+{
+        int index = code - 'A';
+        return (index >= 0 && index < MAX_SPELL_WORDS);
 }
 
 /*****************************************************************************
@@ -207,15 +214,16 @@ int magic_add_word(struct magic *magic, char *word)
 {
         int index = word[0] - 'A';
 
-        if (index < 0 || index >= MAX_SPELL_WORDS) {
+        if (! magic_is_code(word[0])) {
                 warn("magic_add_word: letter '%c' out of range [A, %c]\n",
-                     word[0], MAX_SPELL_WORDS - 'A');
+                     word[0], MAX_SPELL_WORDS + 'A' - 1);
                 return -1;
         }
 
         if (magic->words[index]) {
                 warn("magic_add_word: cannot add word '%s' because word "\
-                     "'%s' already starts with '%c'\n", word, magic->words[index],
+                     "'%s' already starts with '%c'\n", word, 
+                     magic->words[index],
                      word[0]);
                 return -1;
         }
@@ -230,16 +238,17 @@ char *magic_lookup_word(struct magic *magic, char first_letter)
 {
         int index = first_letter - 'A';
 
-        if (index < 0 || index >= MAX_SPELL_WORDS) {
-                warn("magic_lookup_word: letter '%c' out of range [0, %c]\n",
-                     first_letter, MAX_SPELL_WORDS - 'A');
+        if (! magic_is_code(first_letter)) {
+                warn("magic_lookup_word: letter '%c' out of range [A, %c]\n",
+                     first_letter, MAX_SPELL_WORDS + 'A' - 1);
                 return NULL;
         }
 
         return magic->words[index];
 }
 
-int magic_spell_code_to_name(struct magic *magic, char *buf, int len, char *code)
+int magic_spell_code_to_name(struct magic *magic, char *buf, int len, 
+                             char *code)
 {
         int n = 0;
 
@@ -260,6 +269,52 @@ int magic_spell_code_to_name(struct magic *magic, char *buf, int len, char *code
                 buf--;
                 *buf = 0;
         }
+
+        return 0;
+}
+
+int magic_spell_name_to_code(struct magic *magic, char *code, int len, 
+                             char *name)
+{
+        int state = 0, i = 0;
+        char *ptr = name;
+
+        len--; /* leave space for null terminator */
+
+        while (*ptr && len) {
+                char c = *ptr;
+                ptr++;
+                switch (state) {
+                case 0:
+                        /* looking for start of next word */
+                        if (! isspace(c)) {
+
+                                /* If this is a valid word then store it's
+                                 * first letter in the code buffer, else ignore
+                                 * it. Ignoring it lets us handle things like
+                                 * "vas Flam spell", where we ignore the
+                                 * "spell" part. */
+                                if (magic_is_code(c)) {
+                                        code[i] = c;
+                                        i++;
+                                        len--;
+                                }
+                                state = 1;
+                        }
+                        break;
+                case 1:
+                        /* looking for end of current word */
+                        if (isspace(c)) {
+                                state = 0;
+                        }
+                        break;
+                default:
+                        assert(0);
+                        break;
+                }
+        }
+
+        code[i] = 0; /* null-terminate */
 
         return 0;
 }

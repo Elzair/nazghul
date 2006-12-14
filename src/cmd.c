@@ -65,7 +65,6 @@
 #include <unistd.h>     // getpid()
 #include <errno.h>
 
-#define MAX_SPELL_NAME_LENGTH 64 /* arbitrarily chosen */
 #define MIN_XAMINE_LIGHT_LEVEL 32
 #define ESCAPE_CHARACTER 110
 

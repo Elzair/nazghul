@@ -3760,17 +3760,11 @@ KERN_API_CALL(kern_add_spell)
 
         /* unpack remaining fields (other than the reagent list) directly into
          * the spell structure. */
-        if (unpack(sc, &args, "dddddd", &spell->level, &spell->cost,
-                   &spell->context, &spell->flags, &spell->range,
-                   &spell->action_points)) {
+        if (unpack(sc, &args, "ddddp", &spell->level, &spell->cost,
+                   &spell->context, &spell->action_points, &spell->sprite)) {
                 load_err("kern-add-spell: bad args");
                 return sc->NIL;
         }
-
-/*         if (! scm_is_pair(sc, args)) { */
-/*                 load_err("kern-add-spell: no reagents listed"); */
-/*                 return sc->NIL; */
-/*         } */
 
         reagents = scm_car(sc, args);
         args = scm_cdr(sc, args);

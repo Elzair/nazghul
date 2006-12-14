@@ -37,8 +37,12 @@ BEGIN_DECL
 /* The max number of reagents allowed in the mixture for a spell. */
 #define MAX_MIX_REAGENTS 8
 
-/* Spell flags */
-#define SPELL_RANGE_LIMITED 1
+/* Arbitrary limit on the number of characters (not syllables!) in a full spell
+ * name */
+#define MAX_SPELL_NAME_LENGTH 64
+
+/* Arbitrary limit on the number of syllables in a spell name. */
+#define MAX_SYLLABLES_PER_SPELL 8
 
 /* Spells are stored in a tree indexed by their "code". The code is the first
  * letter of each word in the spell. For example, An Nox has the code AN. I
@@ -50,11 +54,10 @@ struct spell {
         int level;
         int cost;
         int context;
-        int range;    /* n/a if SPELL_RANGE_LIMITED flag clear */
-        int flags;
         int action_points;
         int n_reagents;
         ObjectType *reagents[MAX_MIX_REAGENTS];
+        struct sprite *sprite;
         struct spell *left;
         struct spell *right;
 };
@@ -89,7 +92,12 @@ extern struct spell *magic_lookup_spell(struct magic *, char *code);
 /* Add another reagent to a spell mixture during session load. */
 extern int spell_add_reagent(struct spell *spell, ObjectType *reagent);
 
+/* Given a spell code like "VF" convert it to a full name like "Vas Flam" */
 extern int magic_spell_code_to_name(struct magic *magic, char *buf, int len, char *code);
+
+/* Opposite of magic_spell_code_to_name() */
+extern int magic_spell_name_to_code(struct magic *magic, char *buf, int len, char *name);
+
 
 END_DECL
 

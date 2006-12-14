@@ -667,17 +667,39 @@ static void status_show_generic_object_type(SDL_Rect *rect, void *thing)
 static void status_show_ztat_spells(SDL_Rect *rect, void *thing)
 {
         struct inv_entry *ie = (struct inv_entry*)thing;
+        char code[MAX_SYLLABLES_PER_SPELL+1] = { 0 };
+        struct spell *spell = 0;
 
-        /* This is a single-line entry in a two-line rect, so center it
-         * vertically. */
-        rect->y += LINE_H / 4;
+        /* This assumes the type name matches the spelled-out code name, and
+         * doesn't include extra stuff like " spell" at the end. Eg, "Vas Flam"
+         * is great but "Vas Flam spell" will come back as "Vas Flam Sanct" or
+         * possibly an error. */
+        if (! magic_spell_name_to_code(&Session->magic, code, sizeof(code), 
+                                       ie->type->getName())) {
+                spell = magic_lookup_spell(&Session->magic, code);
+        }
 
-        /* Damn! There's no way to get from the object type back to the spell
-         * struct. Need to fix that somehow so we can print more info here. */
+        /* Blit the sprite on the left */
+        if (spell && spell->sprite) {
+                sprite_paint(spell->sprite, 0, rect->x, rect->y);
+        }
+        rect->x += TILE_W;
+
+        /* Print basic info available in the type. */
         screenPrint(rect, 0, "%2d %s", ie->count, ie->type->getName());
+        rect->y += ASCII_H;
+
+        /* Print info only available in the spell struct. */
+        if (spell) {
+                screenPrint(rect, 0, 
+                            "^c+GL:^c+y%d^c- MP:^c+b%d^c- AP:^c+r%d^c-^c-",
+                            spell->level, 
+                            spell->cost, spell->action_points);
+        }
 
         /* Carriage-return line-feed */
-        rect->y += (LINE_H * 3) / 4;
+        rect->y += ASCII_H;
+        rect->x -= TILE_W;
 }
 
 

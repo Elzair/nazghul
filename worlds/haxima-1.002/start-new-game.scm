@@ -109,7 +109,7 @@
   pc-hp-gain
   pc-mp-off
   pc-mp-gain
-  max-health 0 max-health 1              ; hp/xp/mp/lvl
+  max-health 0 max-health 9              ; hp/xp/mp/lvl
   #f                    ; dead
   nil                   ; conv
   nil                   ; sched
@@ -157,7 +157,59 @@
  nil                         ; campsite formation
  nil                         ; vehicle
  ;; inventory
- (kern-mk-inventory nil)
+ (kern-mk-inventory
+  (list
+
+   ;; reagents
+   (list 100 t_torch)
+   (list 100 t_picklock)
+   (list 100 spider_silk)
+   (list 100 mandrake)
+   (list 100 sulphorous_ash)
+   (list 100 blood_moss)
+   (list 100 black_pearl)
+
+   ;; spells
+   (list 100 bet_por)
+   (list 100 kal_xen)
+   (list 100 rel_hur)
+   (list 100 an_ex_por)
+   (list 100 in_ex_por)
+   (list 100 an_sanct)
+   (list 100 wis_an_ylem)
+   (list 100 rel_tym)
+
+   ;; scrolls
+   (list 100 t_xen_corp_scroll)
+   (list 100 t_an_tym_scroll)
+   (list 100 t_wis_quas_scroll)
+   (list 100 t_in_an_scroll)
+
+   ;; armor
+   (list 1 t_mystic_sword)
+   (list 1 t_armor_plate_4)
+   (list 1 t_shield_4)
+   (list 1 t_iron_helm_4)
+   (list 1 t_slime_vial)
+
+   ;; misc
+   (list 1 t_brundegardt_tower_4_key)
+   (list 100 t_mana_potion)
+   (list 100 t_invisibility_potion)
+   (list 1 t_lich_skull)
+
+   ;; runes
+   (list 1 t_rune_k)
+   (list 1 t_rune_p)
+   (list 1 t_rune_s)
+   (list 1 t_rune_c)
+   (list 1 t_rune_f)
+   (list 1 t_rune_w)
+   (list 1 t_rune_d)
+   (list 1 t_rune_l)
+   
+  ))
+
  nil ;; party members (should be nil for initial load file)
  )
 
@@ -241,8 +293,8 @@
  (list  -1   2   2  -1  -2  -2  -2  -2  -2  -2  -2  -2) ;; men
  (list  -1  -2  -2   2  -1  -2   0  -2  -2  -1  -2  -2) ;; cave goblin
  (list  -1  -2  -1  -1   2  -2  -1  -1  -2  -1  -2  -2) ;; accursed
- (list  -2  -2  -2  -2  -2   2  -2   0  -2   0  -2   0) ;; monsters
- (list  -2  -2  -2   0  -1  -2   2  -2  -2  -1  -2  -1) ;; hill trolls
+ (list  -2  -2  -2  -2  -2   2   0   0  -2   0  -2   0) ;; monsters
+ (list  -2  -2  -2   0  -1  -1   2  -2  -2  -1  -2  -2) ;; hill trolls
  (list  -2  -2  -2  -2  -1   0  -2   2  -2  -1  -2   0) ;; wood spiders
  (list   0  -2  -2  -2  -2  -2  -2  -2   2  -2  -2  -1) ;; outlaws
  (list  -2  -2  -2  -1  -1   0  -1  -1  -2   2  -2  -1) ;; gint
@@ -287,7 +339,7 @@
   )
 
 (define (simple-start kplayer)
-  (kern-obj-put-at kplayer (list p_brundegardt_tower_3 8 9)))
+  (kern-obj-put-at kplayer (list p_ratling_warren 6 22)))
   
 (define (create-char kplayer)
   (kern-obj-put-at kplayer (list p_char_setup 9 17)
@@ -298,5 +350,5 @@
 ;; the line after it.
 ;;----------------------------------------------------------------------------
 ;;(kern-set-start-proc start-scene)
-;;(kern-set-start-proc simple-start)
-(kern-set-start-proc create-char)
+(kern-set-start-proc simple-start)
+;;(kern-set-start-proc create-char)
