@@ -584,11 +584,11 @@ with the Nazghul engine.
 ============================================================================
 Name          To-Hit  Damage  To-Def  Hnds  Rng  Ammo       Weight
 ============================================================================
-Sling         1d2-2   1d3     -1      1     4    slingstone 0
-Sling+4       3       1d3+4    0      1     6    slingstone 0
+Sling         1d2-2   1d4     -1      1     4    slingstone 0
+Sling+4       3       1d4+4    0      1     6    slingstone 0
 Bow           1d3-2   2d4     -2      2     6    arrow      2
 Crossbow      1d4-2   4d4     -1      2     4    bolt       3
-Doom Staff    1d4     1       +2      2     6    -          2
+Doom Staff    1d4     1       +2      2     5    -          2
 Stun Wand [1] -2      1d4     -1      1     6    -          2
 ============================================================================
 [1] Temporarily paralyzes target

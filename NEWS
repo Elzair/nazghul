@@ -1,3 +1,43 @@
+Changes between nazghul 0.5.5 and 0.5.4:
+Kernel changes:
+o SAVED GAMES FROM PREVIOUS VERSIONS BROKEN! (sorry)
+o Support for smaller displays
+o Multiple saved games supported (with screenshots)
+o Colorized text
+o Character stats affect spell outcomes
+o Character stats have more effect on combat
+o Character and global effects now shown as icons instead of letter codes
+o U)sed and R)eadied items moved to top of list for quicker access next time
+o Mouse targeting
+o New settings menu to turn sound off and change the screen size
+o Better error handling if init script cannot be found
+o Missiles handle line-of-fire better when standing next to corners
+o Support for large icons on big critter (sorry, not multi-tile yet)
+o Disable '>' when standing over a town to prevent abuse
+o M)ix command now shows how many of that spell are already mixed
+o Spell inventory shows icons and stats about spell
+o Bugfixes
+Haxima changesL
+o Reduced most reagent and consumable prices
+o Undead immune to sleep and kill spells
+o Boss dude at end of game immune to charm
+o Some new spells
+o Some new quests and dungeons
+o Lots of new sprites
+o Simple character creation at start of game
+o New in-game objects: clocks, mirrors, watches, bookshelf, caltrops, viles of
+  slime (fun!) and a spell book
+o New NPCs: ratlings, sludge kraken, griffins and carybids
+o Better flee algorithm for NPCs who have had enough
+o Doors may be trapped like chests; multiple traps may be applied
+o S)earching chests or doors might detect a trap, or might set one off
+o Sextant and In Wis both report location as [x=<x> y=<y>]
+o When party members leave they U)nready their equipment and give it back
+o Mesmeme now has prismatic gaze, making him somewhat useful in combat
+o You can name your ships
+o Some new characters
+o Bugfixes
+
 Changes between nazghul 0.5.3 and nazghul 0.5.4:
 o Blended terrain [1]
 o Misc. improved sprites

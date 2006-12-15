@@ -1,3 +1,152 @@
+2006-12-15  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/spells.png, worlds/haxima-1.002/spells.scm, worlds/library/artwork/magic/spell_icons.xcf:
+	Added all the spell sprites
+
+2006-12-14  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/cmd.c, src/kern.c, src/magic.c, src/magic.h, src/status.c, worlds/haxima-1.002/spells.scm, worlds/haxima-1.002/start-new-game.scm:
+	Spells ready to show sprites in status browser; other spell stats now shown
+
+2006-12-13  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/vmask.c:
+	Bugfix: one more time for that pernicious LOS bug; using the place pointer instead of it's name in the hash key
+
+	* src/cmd.c: C)ast now shows how many mixtures are remaining
+
+	* src/cmd.c:
+	M)ix command now shows how many of that spell are already mixed before the player begins reagent selection
+
+	* src/map.c:
+	Bugfix: with fast critters sometimes the damage flash on their victim would appear to happen before they moved
+
+	* src/cmd.c: G)et and S)earch now use up standard AP
+
+	* src/cmd.c: Disable '>' when standing over a town to prevent abuse
+
+2006-12-12  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/sprites.scm, worlds/haxima-1.002/monsters.png, worlds/haxima-1.002/species.scm:
+	gazer sprites used
+
+	* worlds/library/artwork/monsters/gazer.xcf, worlds/library/artwork/monsters/gazersleep.xcf:
+	gazer sprites
+
+	* worlds/haxima-1.002/sprites.scm: lich sprite used
+
+	* worlds/haxima-1.002/humanoids.png: lich sprite added
+
+	* worlds/library/artwork/humanoids/lich.xcf: lich sprite
+
+	* worlds/library/spritenotes.txt:
+	old sprite notes I never got around to cvsing in
+
+2006-12-11  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/npc-types.scm, worlds/haxima-1.002/sprites.scm:
+	skeleton sprites upgraded
+
+	* worlds/haxima-1.002/humanoids.png, worlds/library/artwork/humanoids/skeletonarcher.xcf, worlds/library/artwork/humanoids/spearskeleton.xcf:
+	skeleton spearthrower and skeleton archer icons
+
+2006-12-10  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/the-man.scm: Spell recipe was wrong
+
+	* worlds/haxima-1.002/void-temple.scm: Wisps were not appearing
+
+	* worlds/haxima-1.002/tblit.scm: Annoying debug removed
+
+	* worlds/haxima-1.002/engineer.scm: Grammatical tweak to conv
+
+	* worlds/haxima-1.002/ai.scm, worlds/haxima-1.002/npc-types.scm:
+	Nixies shouldn't have torches
+
+	* src/combat.c, src/ctrl.c, src/pinfo.h, src/player.h:
+	Attempting to fix the sporadic camping-on-fireplace bug. Looks like it was caused by an unitialized and obsolete flag. Removing the flag
+
+	* worlds/haxima-1.002/arms.scm:
+	Reducing the range of the doom staff by 1
+
+	* worlds/haxima-1.002/arms.scm:
+	Extending range of prismatic gaze by 1; Mesmeme a bit too underpowered in the late game
+
+	* src/ctrl.c:
+	Re-initialize the list of suggested targets for every attack cycle; should fix rare assert on line 663
+
+2006-12-10  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/haxima-1.002/humanoids.png: warrior skeleton sprite
+
+	* worlds/library/artwork/humanoids/skeleton.xcf, worlds/library/artwork/humanoids/swordskeleton.xcf:
+	generic and warrior skeletons
+
+	* worlds/haxima-1.002/npc-types.scm, worlds/haxima-1.002/sprites.scm:
+	craven archers use new icon
+
+	* worlds/haxima-1.002/humanoids.png, worlds/library/artwork/humanoids/deadarcher.xcf:
+	deadarcher- floating armour, with bow
+
+	* worlds/library/artwork/monsters/dragon.xcf: Attempt at a dragon.
+
+2006-12-10  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* worlds/haxima-1.002/naz.scm: Added make-allies
+
+	* worlds/haxima-1.002/road_to_absalot.scm:
+	What we need are a few more zorns
+
+	* worlds/haxima-1.002/conv.scm:
+	People in Oparine ought to know where it is
+
+	* worlds/haxima-1.002/effects.scm:
+	Removed fizzle from prismatic attack; there are enough failure cases already
+
+	* worlds/haxima-1.002/dennis.scm: Dennis replies to keyword Selene
+
+	* worlds/haxima-1.002/silas.scm: A few more tweaks to Silas
+
+	* worlds/haxima-1.002/silas.scm: Improvements to Silas's conversation
+
+2006-12-10  kaypy  <kaypy@localhost.localdomain>
+
+	* doc/users_guide.html: Graphical foogod symbols added
+
+2006-12-10  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* doc/USERS_GUIDE:
+	Updated text USERS_GUIDE to reflect changes in foogod window icons
+
+	* src/foogod.c, src/foogod.h, src/kern.c, src/object.c, src/session.c, src/session.h, worlds/haxima-1.002/effects.png, worlds/haxima-1.002/game.scm, worlds/haxima-1.002/sprites.scm:
+	Replaced cryptic letters with cryptic icons to show global effects in the foogod window
+
+	* ChangeLog: Updated
+
+2006-12-09  Gordon McNutt  <gmcnutt@localhost.localdomain>
+
+	* src/Party.cpp: On detailed x)amine a party describes its members
+
+	* worlds/haxima-1.002/parties.scm:
+	More corrections to plural party names
+
+	* worlds/haxima-1.002/parties.scm: Fixed some plural party names
+
+	* worlds/haxima-1.002/anaxes.scm:
+	Forgot to add Lich's blood to Anaxes's drops
+
+	* worlds/haxima-1.002/anaxes.scm, worlds/haxima-1.002/books.scm, worlds/haxima-1.002/silas.scm:
+	Fixed loot and lich effects for Anaxes
+
+2006-12-09  kaypy  <kaypy@localhost.localdomain>
+
+	* worlds/library/artwork/humanoids/balron.xcf, worlds/haxima-1.002/bigobjects.png, worlds/haxima-1.002/sprites.scm:
+	bigger balron icon
+
+	* src/Party.h, src/place.c, src/Party.cpp, src/object.c:
+	fix for examine crashing on parties
+	linebreaks in examine
+
 2006-12-09  Gordon McNutt  <gmcnutt@localhost.localdomain>
 
 	* src/Party.cpp: On detailed x)amine a party describes its members
