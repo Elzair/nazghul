@@ -32,6 +32,10 @@ PART II: BUILD AND TEST SOURCE DIST
 
 PART III: BUILD AND TEST WINDOWS BINARY
 
+Note: This section is obsolete; Roberto Amorim now maintains the windows binary
+      distribution. This section explains how to do a release using Cygwin and
+      the Nullsoft installer, and I'm leaving it in for future reference.
+
 Note: this assumes Cygwin
 
 (1) ftp nazghul-x.y.z.tar.gz to a cygwin session
@@ -133,3 +137,11 @@ PART VI: PUBLICIZE
     freshmeat: http://www.freshmeat.net
         uname: gmcnutt
        passwd: f00z]3
+
+(3) Send an announcement to the nazghul-devel and nazghul-user lists. The
+    distro maintainers monitor nazghul-devel. You might email them individually
+    to check if they are still committed to managing their releases.
+
+(4) On the nazghul homepage add a news item
+
+(5) On the haxima.com homepage add a news item
