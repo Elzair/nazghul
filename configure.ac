@@ -161,6 +161,14 @@ CC="$CXX"
 dnl Add libraries to build process
 LIBS="$LIBS $SDL_LIBS"
 
+dnl Check specifically for libpng, i.e. -lpng switch
+AC_CHECK_LIB(png, png_create_write_struct)
+
+AC_CHECK_HEADER([png.h],
+               [],
+               [AC_MSG_ERROR([*** png include file not found!
+You should install development package.])])
+
 dnl Check specifically for SDL_image library, i.e. -lSDL_image switch
 AC_CHECK_LIB(SDL_image, IMG_ReadXPMFromArray)
 
