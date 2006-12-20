@@ -107,36 +107,39 @@ PART V: UPLOAD TO SOURCEFORGE
     admin->File Releases page and scroll to the bottom. Click "Add Release"
     next to "nazghul-devel" (or "nazghul" for stable releases).
 
+    (Or go directly to this URL:
+    https://sourceforge.net/project/admin/editpackages.php?group_id=82028)
+
     (a) Fill out the form:
         ...For "New release name" put something like "nazghul-x.y.z"
-        ...For "Of which package" keep "nazghul-devel" (or "nazghul" for a
-           stable release)
+        ...For "Of which package" use "nazghul" (nazghul-devel is obsolescent)
         ...Click on "Create this release"
 
     (b) Fill out the "Step 1:   Edit Existing Release" form:
         ...For "Upload Release Notes" browse to the file NEWS
-        ...For "Upload Change Log" nothing is needed (unless we add such a
-           file)
+        ...For "Upload Change Log" do nothing (our ChangeLog is too big and
+           will be rejected)
         ...Press "Submit/Refresh"
 
     (c)  Fill out the "Step 2:   Add Files To This Release" form and hit
          Submit/Refresh
 
     (d) Fill out the "Step 3:   Edit Files In This Release" form
-        ...Processor=Any
+        ...Processor=Platform-Independent
         ...File Type Update=Source.gz
         ...hit Update/Refresh
 
 PART VI: PUBLICIZE
 
+Use the ANNOUNCE template in this directory to create the release announcement.
+
 (1) From the main Nazghul project page on SourceForge submit a news item for
-    the file release.
+    the file release. (https://sourceforge.net/news/admin/?group_id=82028)
 
 (2) Go to the freshmeat account and announce there, too
 
     freshmeat: http://www.freshmeat.net
         uname: gmcnutt
-       passwd: f00z]3
 
 (3) Send an announcement to the nazghul-devel and nazghul-user lists. The
     distro maintainers monitor nazghul-devel. You might email them individually
@@ -145,3 +148,30 @@ PART VI: PUBLICIZE
 (4) On the nazghul homepage add a news item
 
 (5) On the haxima.com homepage add a news item
+
+
+
+APPENDIX A: Instructions for Release Maintainers
+
+(1) ftp to upload.sourceforge.net and login as "anonymous" (I don't believe a
+    password is required, or you can just use your email address) and put your
+    file in the /incoming directory. Make sure to use binary mode.
+
+(2) Login to sourceforge via your browser
+
+(3) Go to https://sourceforge.net/project/admin/editpackages.php?group_id=82028
+
+(4) Scroll to the bottom and click on "Edit Releases" for the "nazghul"
+    package
+
+(5) On the next page click on "Edit This Release" next to nazghul-0.5.5
+
+(6) On the next page scroll down to "Step 2: Add Files to This Release"
+
+(7) Your file should be on the list, so click next to it's box
+
+(8) Click on "Add Files and/or Refresh View"
+
+(9) From there I believe it will prompt you to select from some options to
+    describe what type of package it is (I can't see this part w/o a file to
+    add, so I'm recalling from memory)
