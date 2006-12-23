@@ -92,7 +92,7 @@ haxima_DATA = \
 	weather-vane.scm            wind-bridge.scm        keys.scm\
 	eye-of-brune.scm            tim.scm                map.png\
 	edward.scm                  nate.scm               landslide.scm\
-	spells.png
+	spells.png                  640x480_splash.png
 
 EXTRA_DIST = $(haxima_DATA)
 MAINTAINERCLEANFILES = Makefile.in
