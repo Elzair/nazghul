@@ -53,6 +53,7 @@
 #include "dtable.h"
 #include "wq.h"
 #include "cfg.h"
+#include "skill.h"
 
 #include <assert.h>
 #include <ctype.h>              // isspace()
@@ -213,6 +214,7 @@ struct session *session_new(void *interp)
         list_init(&session->turnq);
         node_init(&session->sched_chars);
         list_init(&session->blenders);
+        list_init(&session->skills);
         session->time_accel = 1;
         return session;
 }
@@ -288,6 +290,15 @@ void session_del(struct session *session)
         /* Now zilch the global player party */
         obj_dec_ref(session->player);
         session->player = 0;
+
+        /* clean up the list of skills */
+        elem = session->skills.next;
+        while (elem != &session->skills) {
+                struct skill *skill = list_entry(elem, struct skill, list);
+                elem = elem->next;
+                list_remove(&skill->list);
+                skill_unref(skill);
+        }
 
         /* Fixme: need to cleanup the interpreter, too, when I'm feeling
          * brave. */

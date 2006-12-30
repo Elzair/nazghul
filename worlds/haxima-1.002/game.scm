@@ -209,6 +209,7 @@
 (load "ability.scm")
 (load "cast-ui.scm")
 (load "spells.scm")
+(load "skills.scm")
 (load "items.scm")
 (load "vehicles.scm")
 (load "beds.scm")

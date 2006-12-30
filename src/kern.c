@@ -70,6 +70,7 @@
 #include "cfg.h"
 #include "menus.h"
 #include "file.h"
+#include "skill.h"
 
 #include <assert.h>
 #include <ctype.h>              // isspace()
@@ -3726,6 +3727,24 @@ KERN_API_CALL(kern_set_spell_words)
                 words = scm_cdr(sc, words);
         }
 
+        return sc->NIL;
+}
+
+KERN_API_CALL(kern_mk_skill)
+{
+        char *name = 0;
+        pointer proc = sc->NIL;
+        int lvl = 0;
+        struct skill *skill = 0;
+
+        if (unpack(sc, &args, "scd", &name, &proc, &lvl)) {
+                load_err("kern-mk-skill: bad args");
+                return sc->NIL;
+        }
+
+        skill = skill_new(name);
+        skill->closure = closure_new(sc, proc);
+        list_add(&Session->skills, &skill->list);
         return sc->NIL;
 }
 
@@ -8108,6 +8127,7 @@ scheme *kern_init(void)
         API_DECL(sc, "kern-mk-player", kern_mk_player);
         API_DECL(sc, "kern-mk-ptable", kern_mk_ptable);
         API_DECL(sc, "kern-mk-sched", kern_mk_sched);
+        API_DECL(sc, "kern-mk-skill", kern_mk_skill);
         API_DECL(sc, "kern-mk-sound", kern_mk_sound);
         API_DECL(sc, "kern-mk-species", kern_mk_species);
         API_DECL(sc, "kern-mk-sprite", kern_mk_sprite);

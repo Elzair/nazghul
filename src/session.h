@@ -213,6 +213,8 @@ struct session {
          * wrong, I know. Be careful with it. */
         Being *subject;
 
+        struct list skills; /* list of all the skills in the game */
+
         struct list blenders;
 
         /* The turn count shown in the foogod window; incremented once per game
