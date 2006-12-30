@@ -1173,11 +1173,27 @@ bool cmdOpen(class Character * pc)
 	return true;
 }
 
+static bool cmd_nop_qh(struct QuitHandler *kh)
+{
+        return false;
+}
+
+
 bool cmdQuit(void)
 {
 	int yesno;
+ 	struct QuitHandler qh;
         char *fname = 0;
+        bool ret = Quit;
 
+        /* Bugfix: if the player tries to close the window while we're in one
+         * of our getkey() calls, we'll enter this function recursively,
+         * messing up the prompts. So push a nop quit handler to prevent
+         * that. Kind of a hack: why should this function "know" it is called
+         * by the default quit handler? */
+	qh.fx = cmd_nop_qh;
+	eventPushQuitHandler(&qh);
+        
 	cmdwin_clear();
 	cmdwin_spush("Quit");
         cmdwin_spush("<y/n>");
@@ -1187,7 +1203,8 @@ bool cmdQuit(void)
         /* Cancel quit? */
 	if (yesno == 'n') {
                 cmdwin_spush("abort!");
-                return false;
+                ret = false;
+                goto pop_qh;
         }
 
         cmdwin_spush("save");
@@ -1199,7 +1216,8 @@ bool cmdQuit(void)
         if (yesno == 'n') {
                 cmdwin_spush("not saving!");
                 Quit = true;
-                return true;
+                ret = true;
+                goto pop_qh;
         }
 
         /* Select a filename to save to. */
@@ -1209,7 +1227,8 @@ bool cmdQuit(void)
         /* Did player cancel from the menu? */
         if (!fname) {
                 cmdwin_spush("abort!");
-                return false;
+                ret = false;
+                goto pop_qh;
         }
         
         log_begin("Saving to %s...", fname);
@@ -1219,11 +1238,14 @@ bool cmdQuit(void)
                 log_end("^c+gok!^c-");
                 log_msg("Goodbye!\n");
                 Quit = true;
+                ret = true;
         }
 
         free(fname);
+ pop_qh:
+        eventPopQuitHandler();
 
-	return Quit;
+	return ret;
 }
 
 void cmdAttack(void)
