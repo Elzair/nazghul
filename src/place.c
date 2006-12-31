@@ -1049,7 +1049,8 @@ struct terrain_map *place_get_combat_terrain_map(struct place *place,
 /* Pathfinding ***************************************************************/
 
 static int place_pathfind_is_valid_location(
-        struct place_pathfind_context *context, int x, int y)
+        struct place_pathfind_context *context, int from_x, int from_y,
+        int x, int y)
 {
 	class Object *portal;
 
@@ -1067,8 +1068,8 @@ static int place_pathfind_is_valid_location(
 		return 1;
         }
 
-	if (!place_is_passable(context->place, x, y, context->requestor, 
-                               context->pflags)) {
+	if (!place_move_is_passable(context->place, from_x, from_y, x, y, 
+                                    context->requestor, context->pflags)) {
                 //dbg("impassable\n");
 		return 0;
         }
@@ -1109,8 +1110,9 @@ static int place_pathfind_is_valid_location(
         // --------------------------------------------------------------------
 
 	if (0 == (context->pflags & PFLAG_IGNORESTEPTRIG)) {
-                if ((portal = place_get_object(context->place, x, y, mech_layer)) &&
-                    portal->canStep()) {
+                if ((portal = 
+                     place_get_object(context->place, x, y, mech_layer)) 
+                    && portal->canStep()) {
                         //dbg("portal!\n");
                         return 0;
                 }
@@ -1121,7 +1123,8 @@ static int place_pathfind_is_valid_location(
 }
 
 static void place_pathfind_heuristic(struct astar_search_info *info,
-                                    int *goodness, int *cost)
+                                     int *goodness, int *cost, 
+                                     int from_x, int from_y)
 {
 	struct terrain *terrain;
 	struct place_pathfind_context *context;
@@ -1158,8 +1161,9 @@ static void place_pathfind_heuristic(struct astar_search_info *info,
 	}
 
         /* Add the terrain cost. */
-        *cost += place_get_movement_cost(context->place, info->x0, info->y0, 
-                                         context->requestor);
+        *cost += place_get_diagonal_movement_cost(context->place, from_x, 
+                                                  from_y, info->x0, info->y0, 
+                                                  context->requestor);
 
 	/* And penalize tiles with hazards on them. I really should assign
 	 * different penalties to different hazerds. */
@@ -1181,15 +1185,23 @@ static int place_find_path_impossible(struct place_pathfind_context *context)
 {
         /* check four neighbors */
         if (place_pathfind_is_valid_location(context,
+                                             context->target_x,
+                                             context->target_y,
                                              context->target_x-1,
                                              context->target_y)
             || place_pathfind_is_valid_location(context,
+                                                context->target_x,
+                                                context->target_y,
                                                 context->target_x+1,
                                                 context->target_y)
             || place_pathfind_is_valid_location(context,
                                                 context->target_x,
+                                                context->target_y,
+                                                context->target_x,
                                                 context->target_y-1)
             || place_pathfind_is_valid_location(context,
+                                                context->target_x,
+                                                context->target_y,
                                                 context->target_x,
                                                 context->target_y+1))
                 return 0;
@@ -1219,7 +1231,8 @@ struct astar_node *place_find_path(struct place *place,
         
 	/* Fill out the search information */
 	info->is_valid_location =
-	    (int (*)(void *, int, int)) place_pathfind_is_valid_location;
+	    (int (*)(void *, int, int, int, int))
+                place_pathfind_is_valid_location;
 	info->heuristic = place_pathfind_heuristic;
 	info->width = place_w(place);
 	info->height = place_h(place);

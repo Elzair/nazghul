@@ -36,7 +36,7 @@
  * The number of neighbors to search. If you want to allow NPC's to have
  * diagonal movement, set this to 8. Otherwise set it to 4.
  */
-#define CONFIG_NEIGHBORS 4
+#define CONFIG_NEIGHBORS 8
 #define MAX_DEPTH 1000	/* hack to limit search time on large places */
 
 static struct heap *schedule;	/* Priority queue of nodes to explore */
@@ -231,7 +231,7 @@ astar_schedule_neighbor(struct astar_node *node,
          * so we can search the more promising nodes first. */
 	int goodness = 0;
 
-	info->heuristic(info, &goodness, &cost);
+	info->heuristic(info, &goodness, &cost, node->x, node->y);
 
         /* Cost is cumulative along a path, so add the parent node's cost. */
         cost += node->cost;
@@ -289,17 +289,15 @@ struct astar_node *astar_search(struct astar_search_info *info)
         int cost = 0;
         int goodness = 0;
 
-        // --------------------------------------------------------------------
-        // We can save ourselves a long, fruitless search by checking if the
-        // final destination is valid and bailing out now if it isn't.
-        // --------------------------------------------------------------------
-
-        if (! info->is_valid_location(info->context, info->x1, info->y1))
+        /* We can save ourselves a long, fruitless search by checking if the
+         * final destination is valid and bailing out now if it isn't. */
+        if (! info->is_valid_location(info->context, info->x0, info->y0,
+                                      info->x1, info->y1))
                 return NULL;
 
 	astar_search_init();
 
-        info->heuristic(info, &goodness, &cost);
+        info->heuristic(info, &goodness, &cost, info->x0, info->y0);
 	node = astar_node_create(info->x0, info->y0, cost, goodness, NULL, 
                                  COORD_TO_INDEX(info->x0, info->y0, 
                                                 info->width));
@@ -364,6 +362,8 @@ struct astar_node *astar_search(struct astar_search_info *info)
 				/* Skip this neighbor if it's not a valid
 				 * location (impassable, off-map, etc) */
 				if (!info->is_valid_location(info->context,
+                                                             node->x,
+                                                             node->y,
 							     info->x0,
 							     info->y0))
 					continue;

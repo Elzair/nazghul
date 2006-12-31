@@ -37,9 +37,9 @@ struct astar_search_info {
         int y0;
         int y1;
         int flags;
-        int (*is_valid_location) (void *context, int x, int y);
+        int (*is_valid_location) (void *context, int fx, int fy, int x, int y);
         void (*heuristic) (struct astar_search_info * info, 
-                           int *goodness, int *cost);
+                           int *goodness, int *cost, int fx, int fy);
         unsigned int width;
         unsigned int height;
         int wraps;
