@@ -3718,10 +3718,12 @@ void cmdDrop(class Character *ch)
 
         /* FIXME: prompt for location */
 
+        /* prompt for a count */
+
         /* put it on the map */
         obj = ie->type->createInstance();
         assert(obj);
-        obj->setCount(ie->count);
+        obj->setCount(ie->count - ie->ref);
         obj->relocate(ch->getPlace(), 
                       ch->getX(), 
                       ch->getY(), 
@@ -3729,7 +3731,7 @@ void cmdDrop(class Character *ch)
                       NULL);
 
         /* remove from party inventory */
-        ch->takeOut(ie->type, ie->count);
+        ch->takeOut(ie->type, ie->count - ie->ref);
 
         statusRepaint();
         return;

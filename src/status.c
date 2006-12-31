@@ -244,7 +244,8 @@ static bool stat_filter_misc(struct inv_entry *ie, void *cookie)
 
 static bool stat_filter_drop(struct inv_entry *ie, void *cookie)
 {
-        return (! ie->type->isCastable());
+        return (! ie->type->isCastable()
+                && (ie->ref < ie->count));
 }
 
 static void switch_to_tall_mode(void)
@@ -293,9 +294,9 @@ static void switch_to_short_mode(void)
     foogod_set_y(STAT_Y + Status.screenRect.h + BORDER_H);
     //console_set_y(foogod_get_y() + FOOGOD_H);
 
-	foogodRepaint();
-	consoleRepaint();
-	screen_repaint_frame();
+    foogodRepaint();
+    consoleRepaint();
+    screen_repaint_frame();
 }
 
 int statusInit()
@@ -665,7 +666,8 @@ static void status_show_generic_object_type(SDL_Rect *rect, void *thing)
          * vertically. */
         rect->y += LINE_H / 4;
 
-        screenPrint(rect, 0, "%2d %s", ie->count, ie->type->getName());
+        screenPrint(rect, 0, "%2d %s", ie->count - ie->ref, 
+                    ie->type->getName());
 
         /* Carriage-return line-feed */
         rect->y += (LINE_H * 3) / 4;
