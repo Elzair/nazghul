@@ -318,7 +318,7 @@ Character::~Character()
         obj_dec_ref_safe(container);
 
 	if (rdyArms != NULL)
-		free(rdyArms);
+		delete [] rdyArms;
 
 
         if (party)
@@ -1473,9 +1473,11 @@ bool Character::needToRearm()
 
 bool Character::initCommon(void)
 {
-	rdyArms = new class ArmsType *[species->n_slots];
-        assert(rdyArms);
-	memset(rdyArms, 0, species->n_slots * sizeof(class ArmsType *));
+        if (species && species->n_slots > 0) {
+                rdyArms = new class ArmsType *[species->n_slots];
+                assert(rdyArms);
+                memset(rdyArms, 0, species->n_slots * sizeof(class ArmsType *));
+        }
 
         ai = NULL;
 

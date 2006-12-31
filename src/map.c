@@ -489,8 +489,9 @@ void mapForEachView(void (*fx) (struct mview *, void *), void *data)
 
 void mapSetLosStyle(char *los)
 {
-        if (LosEngine)
-                delete LosEngine;
+        if (LosEngine) {
+                los_destroy(LosEngine);
+        }
 	LosEngine = los_create(los, VMASK_W, VMASK_H, -1);
         assert(LosEngine);
 }

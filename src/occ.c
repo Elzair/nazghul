@@ -56,9 +56,8 @@ extern struct occ *occ_new(char *tag,
 {
 	struct occ *occ = 0;
 
-	occ = new struct occ;
+	occ = (struct occ*)calloc(1, sizeof(*occ));;
         assert(occ);
-	memset(occ, 0, sizeof(struct occ));        
 
         occ->tag = strdup(tag);
         assert(occ->tag);

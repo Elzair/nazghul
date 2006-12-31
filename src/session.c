@@ -279,6 +279,10 @@ void session_del(struct session *session)
         /* Clean up the closures */
         closure_unref_safe(session->start_proc);
         closure_unref_safe(session->camping_proc);
+        closure_unref_safe(session->str_based_attack);
+        closure_unref_safe(session->dex_based_attack);
+        closure_unref_safe(session->damage_bonus);
+        closure_unref_safe(session->defense_bonus);
 
         /* Ensure that nothing is referencing the player party (except perhaps
          * its vehicle, which will be cleaned up with the party). */

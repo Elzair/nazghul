@@ -73,6 +73,7 @@ struct effect *effect_new(char *tag, scheme *sc, pointer exec_proc,
 
 extern void effect_del(struct effect *et)
 {
+        free(et->tag);
         free(et->name);
         free(et->description);
         closure_unref_safe(et->exec);

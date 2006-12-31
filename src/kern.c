@@ -6531,7 +6531,7 @@ KERN_API_CALL(kern_set_combat_procs)
                 return sc->NIL;
         }
 
-		session_set_combat_procs(Session, closure_new(sc, stra),closure_new(sc, dexa),closure_new(sc, dam),closure_new(sc, def));
+        session_set_combat_procs(Session, closure_new(sc, stra),closure_new(sc, dexa),closure_new(sc, dam),closure_new(sc, def));
 
         return sc->NIL;
 }
